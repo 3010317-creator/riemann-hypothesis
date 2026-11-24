@@ -265,11 +265,9 @@ theorem _root_.GlobalTheory.exists_hensel_generator_of_residue_finite_unramified
       rw [key _ _ hθ₀, ← derivative_map, hqf]
       exact isUnit_iff_ne_zero.2 hfder)
   have hθres : residue R θ = pb.gen := by
-    rw [← hθ₀, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-    exact hθ
+    rwa [← hθ₀, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
   refine ⟨θ, q, hqmonic, hroot, ?_, ?_, ?_⟩
-  · rw [← residue_ne_zero_iff_isUnit, key _ _ hθres, ← derivative_map, hqf]
-    exact hfder
+  · rwa [← residue_ne_zero_iff_isUnit, key _ _ hθres, ← derivative_map, hqf]
   · intro r
     obtain ⟨g, hg⟩ := pb.exists_eq_aeval' (residue R r)
     obtain ⟨P, hP⟩ := map_surjective (residue A) residue_surjective g
@@ -309,8 +307,7 @@ theorem localHom_map_mem_maximalIdeal_pow {A V : Type} [CommRing A] [IsLocalRing
     (hx : x ∈ maximalIdeal A ^ n) : α x ∈ maximalIdeal V ^ n := by
   have h1 : (maximalIdeal A).map α ≤ maximalIdeal V := by
     rw [Ideal.map_le_iff_le_comap]
-    intro y hy
-    exact map_nonunit α y hy
+    exact fun y hy => map_nonunit α y hy
   have := Ideal.mem_map_of_mem α hx
   rw [Ideal.map_pow] at this
   exact Ideal.pow_right_mono h1 n this
@@ -417,8 +414,7 @@ private lemma mem_ideal_of_sum_mul_mem_of_independent_mod_max {A : Type} [CommRi
   | succ d ih =>
     intro C hC I b hb
     have h0 : ∃ l0, C 0 l0 ∉ maximalIdeal A := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       have := hC (Pi.single 0 1) (fun l => by
         simpa [Fin.sum_univ_succ, Pi.single_apply] using h l) 0
       simp at this
@@ -676,10 +672,8 @@ theorem lift_with_value {A R V : Type} [CommRing A] [IsLocalRing A] [CommRing R]
           ring }
   refine ⟨ψ, ?_, ?_⟩
   · ext a
-    show ψ0 (φ a) = α a
     exact char _ _ fun n => ⟨Polynomial.C a, by simp, by simp⟩
-  · show ψ0 θ = ζ
-    exact char _ _ fun n => ⟨Polynomial.X, by simp, by simp⟩
+  · exact char _ _ fun n => ⟨Polynomial.X, by simp, by simp⟩
 
 theorem ringHom_ext_of_approx {A R V : Type} [CommRing A] [IsLocalRing A] [CommRing R]
     [IsLocalRing R] [CommRing V] [IsLocalRing V] [IsHausdorff (maximalIdeal V) V]
@@ -695,8 +689,7 @@ theorem ringHom_ext_of_approx {A R V : Type} [CommRing A] [IsLocalRing A] [CommR
       rw [Ideal.map_map, hg, Ideal.map_pow]
       apply Ideal.pow_right_mono
       rw [Ideal.map_le_iff_le_comap]
-      intro a ha
-      exact hloc a ha
+      exact fun a ha => hloc a ha
     exact hle (Ideal.mem_map_of_mem g hx)
   have hev : ∀ (g : R →+* V) (P : Polynomial A), g ((P.map φ).eval θ) = P.eval₂ (g.comp φ) (g θ) := by
     intro g P

@@ -419,8 +419,7 @@ private lemma quad_integral_eq_integral_quad (hJ : ∀ x, J (J x) = -x)
   rw [MeasureTheory.integral_finsetSum]
   · refine Finset.sum_congr rfl fun i _ => ?_
     rw [integral_smul, comm1, comm2]
-  · intro i _
-    exact (hD2 _ _).smul (c i)
+  · exact fun i _ => (hD2 _ _).smul (c i)
 
 open MeasureTheory Complex Matrix in
 open scoped RealInnerProductSpace ContDiff Real ComplexOrder Topology in
@@ -737,8 +736,7 @@ theorem hasDerivAt_osc (hJ : ∀ x, J (J x) = -x) (h : IsHeis (omJ J) ρ)
   rw [osc_eq, hc, one_smul] at h2
   simp only [hγ, hc, one_smul, h2] at h1
   simp only [osc_eq]
-  rw [add_smul, ← add_assoc]
-  exact h1
+  rwa [add_smul, ← add_assoc]
 
 end General
 
@@ -786,8 +784,7 @@ theorem norm_det_le (T : (ι → ι → ℂ) →L[ℝ] (ι → ι → ℂ)) (C :
       have h1 := T.le_opNorm M
       have h2 := mul_le_mul_of_nonneg_left hM (norm_nonneg T)
       nlinarith [norm_nonneg T, norm_nonneg C, mul_nonneg (norm_nonneg C) hS]
-  rw [nsmul_eq_mul, mul_pow, ← mul_assoc] at this
-  exact this
+  rwa [nsmul_eq_mul, mul_pow, ← mul_assoc] at this
 
 theorem differentiableAt_det {M : ℝ → ι → ι → ℂ} (hM : DifferentiableAt ℝ M 0) :
     DifferentiableAt ℝ (fun t => (Matrix.of (M t)).det) 0 := by

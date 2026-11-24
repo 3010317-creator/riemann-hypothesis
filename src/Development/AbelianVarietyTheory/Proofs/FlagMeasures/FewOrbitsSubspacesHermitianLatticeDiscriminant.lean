@@ -63,12 +63,10 @@ theorem mem_iff_prod_le {R : Type*} [CommRing R] {A : Set (Ideal R)} (hA : A.Fin
     (hm : ∀ P ∈ A, P.IsMaximal) (P : Ideal R) : P ∈ A ↔ P.IsMaximal ∧ ∏ᶠ Q ∈ A, Q ≤ P := by
   rw [finprod_mem_eq_finite_toFinset_prod _ hA]
   constructor
-  · intro hP
-    exact ⟨hm P hP, Ideal.prod_le_inf.trans (Finset.inf_le (hA.mem_toFinset.2 hP))⟩
+  · exact fun hP => ⟨hm P hP, Ideal.prod_le_inf.trans (Finset.inf_le (hA.mem_toFinset.2 hP))⟩
   · rintro ⟨hPm, hle⟩
     obtain ⟨Q, hQ, hQP⟩ := (Ideal.IsPrime.prod_le hPm.isPrime).1 hle
-    have hQm := hm Q (hA.mem_toFinset.1 hQ)
-    exact (hQm.eq_of_le hPm.ne_top hQP) ▸ hA.mem_toFinset.1 hQ
+    exact ((hm Q (hA.mem_toFinset.1 hQ)).eq_of_le hPm.ne_top hQP) ▸ hA.mem_toFinset.1 hQ
 
 alias nondeg := _root_.GlobalTheory.Mass.SameBad.nondeg_of_PD
 

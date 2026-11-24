@@ -37,8 +37,7 @@ theorem isHermPos_scale (h : IsHermPos C ip) {s : ℝ} (hs : 0 < s) :
   · intro x y
     simp only [map_mul, Complex.conj_ofReal, h.herm x y]
   · intro x hx
-    simp only [Complex.re_ofReal_mul]
-    exact mul_pos hs (h.pos x hx)
+    simpa only [Complex.re_ofReal_mul] using mul_pos hs (h.pos x hx)
 
 theorem IsHermPos.map_equiv {N' : Type} [AddCommGroup N'] [Module ℂ N'] (h : IsHermPos C ip) (e : N ≃ₗ[ℂ] N') :
     IsHermPos (C.map (e : N →ₗ[ℂ] N')) (fun x y => ip (e.symm x) (e.symm y)) := by
@@ -58,8 +57,7 @@ theorem IsHermPos.map_equiv {N' : Type} [AddCommGroup N'] [Module ℂ N'] (h : I
     show ip (e.symm (s • (x : N'))) (e.symm y) = starRingEnd ℂ s * ip (e.symm x) (e.symm y)
     rw [map_smul]
     exact h.smul s ⟨_, hm x⟩ ⟨_, hm y⟩
-  · intro x y
-    exact h.herm ⟨_, hm x⟩ ⟨_, hm y⟩
+  · exact fun x y => h.herm ⟨_, hm x⟩ ⟨_, hm y⟩
   · intro x hx
     refine h.pos ⟨_, hm x⟩ ?_
     intro h0
@@ -98,8 +96,7 @@ theorem isMultiplicityInner_smul_left {T T' : MMap M} {a : ℂ} (s : ℂ) (h : I
     intro g
     rw [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, star_mul', mul_assoc]
     rfl
-  simp only [hf]
-  exact ⟨Integrable.const_mul i1 _, by rw [integral_const_mul, e1, mul_assoc]⟩
+  simpa only [hf] using ⟨Integrable.const_mul i1 _, by rw [integral_const_mul, e1, mul_assoc]⟩
 
 theorem isMultiplicityInner_swap {T T' : MMap M} {a : ℂ} (h : IsMultIP M μ 𝓕 T T' a) :
     IsMultIP M μ 𝓕 T' T (starRingEnd ℂ a) := by
@@ -154,11 +151,8 @@ theorem isHermPos_mult (hθ : IsInfFam θ) (hfin : HCFinite θ M J χ)
       rw [Finset.prod_ne_zero_iff]
       intro τ _
       rw [inner_self_ne_zero]
-      intro h0
-      exact hw τ (Subtype.ext h0)
-    have e := (h w w).2
-    have e' := (h' w w).2
-    exact mul_right_cancel₀ hp (e.symm.trans e')
+      exact fun h0 => hw τ (Subtype.ext h0)
+    exact mul_right_cancel₀ hp (((h w w).2).symm.trans ((h' w w).2))
   have hval : ∀ (T T' : MMap M) (c : ℂ), IsMultIP M μ 𝓕 T T' c → ipM M μ 𝓕 T T' = c := by
     intro T T' c h
     have hex : ∃ c, IsMultIP M μ 𝓕 T T' c := ⟨c, h⟩
@@ -184,8 +178,7 @@ theorem isHermPos_mult (hθ : IsInfFam θ) (hfin : HCFinite θ M J χ)
     rw [hval _ _ _ hc]
     have hx' : (x : MMap M) ≠ 0 := fun h0 => hx (Subtype.ext h0)
     obtain ⟨v, hv⟩ : ∃ v, (x : MMap M) v ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hx' (MultilinearMap.ext hcon)
     obtain ⟨hi, he⟩ := hc v v
     have hcl := mult_cont_left M θ J χ x.2 v
@@ -196,8 +189,7 @@ theorem isHermPos_mult (hθ : IsInfFam θ) (hfin : HCFinite θ M J χ)
 
     have hvne : ∀ τ, ((v τ : M.sm τ) : M.H τ) ≠ 0 := by
       intro τ h0
-      apply hv
-      exact (x : MMap M).map_coord_zero τ (Subtype.ext h0)
+      exact hv ((x : MMap M).map_coord_zero τ (Subtype.ext h0))
     have hL : ∫ g in 𝓕, star ((x : MMap M) v g) * (x : MMap M) v g ∂μ =
         ((∫ g in 𝓕, ‖(x : MMap M) v g‖ ^ 2 ∂μ : ℝ) : ℂ) := by
       refine Eq.trans ?_ (integral_ofReal (𝕜 := ℂ) (μ := μ.restrict 𝓕) (f := fun g => ‖(x : MMap M) v g‖ ^ 2))

@@ -114,8 +114,7 @@ theorem VGeq.vw {w : HeightOneSpectrum (𝓞 K)} {s : ℝ} {z : K} (h : VGeq w s
   rcases h with h | h
   · exact Or.inl h
   right
-  rw [← vAdd_eq_vw w z hz]
-  exact h
+  rwa [← vAdd_eq_vw w z hz]
 
 end Formalism.L2.G.ServJoint
 

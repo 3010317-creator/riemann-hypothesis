@@ -84,9 +84,7 @@ lemma z_mem_orth {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) : F.fl.z ∈ ort
   | add x y _ _ hx hy => simp [hx, hy]
   | smul c x _ hx => simp [hx]
 
-lemma Xsp_le_Xplus {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) : Xsp F ≤ Xplus F := by
-  show F.fl.X ≤ F.fl.X ⊔ _
-  exact le_sup_left
+lemma Xsp_le_Xplus {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) : Xsp F ≤ Xplus F := le_sup_left
 
 lemma Xa_of_ge {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) {j : ℕ} (h : D.R.rS ≤ j) :
     Xflag F j = Xsp F := by
@@ -328,10 +326,8 @@ theorem scalar_of_same_coset : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u 
   refine ⟨?_, ?_⟩
   · show s0T t t' = 1
     unfold s0T
-    rw [if_pos ⟨hlam, hlam'⟩]
-    exact hs0
-  · show scalT t t'
-    exact ⟨⟨hlam, hlam'⟩, hs0, hsc⟩
+    rwa [ite_eq_left ⟨hlam, hlam'⟩]
+  · exact ⟨⟨hlam, hlam'⟩, hs0, hsc⟩
 
 end GlobalTheory.SnFamCoset
 end -- clump:auto

@@ -204,8 +204,7 @@ theorem hasSupport_transport (i : k ≃+* k') (hi : Continuous i) {x : IrrGL (k 
   have hrel : ∀ a, RepRel i (xs a) (IrrGL.of (σ' a) (hsm a) (hir a)) := fun a => by
     have h1 := (hT (xs a) (T (xs a))).2 rfl
     have h2 := eq_of_repRel i hi' h1
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
   have hcu : ∀ a, IsCuspidal (σ' a) := fun a =>
     (IrrGL.isCusp_of.1 ((hC _ _ (hrel a)).1.1 ⟨(hc a).1, (hc a).2.2⟩)).2
   obtain rfl := eq_of_repRel i hi' hx
@@ -237,8 +236,7 @@ theorem goodCusp_transport (i : k ≃+* k') (hi : Continuous i)
   obtain rfl : T y = y' := (hT _ _).1 hy
   rcases h with h1 | ⟨⟨g, hg, j, hj⟩, y₀, χ, hχ, hfix, rfl⟩
   · left
-    rw [hTd]
-    exact h1
+    rwa [hTd]
   · right
     have hv : ∀ z, (χ.comp (Units.map i.symm.toRingHom.toMonoidHom)) (Units.map i.toRingHom.toMonoidHom z) = χ z :=
       fun z => congrArg χ (Units.ext (by simp))
@@ -417,31 +415,7 @@ end GlobalTheory.KOneTransport
 
 open GlobalTheory.LocLanglands.FieldCompat GlobalTheory.LocLanglands.TransportGL in
 theorem GlobalTheory.KOneTransport.fixed_ne_bot_transport : ∀ (k k' : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k] [Field k'] [ValuativeRel k'] [TopologicalSpace k'] [IsNonarchimedeanLocalField k'] [CharZero k'] (i : k ≃+* k'), Continuous i → ∀ (x : IrrGL (k := k)) (x' : IrrGL (k := k')), RepRel i x x' → GlobalTheory.PRep.fixed x.rep (GlobalTheory.SplitWeil.KOne k (Fin x.1)) ≠ ⊥ → GlobalTheory.PRep.fixed x'.rep (GlobalTheory.SplitWeil.KOne k' (Fin x'.1)) ≠ ⊥ := by
-  intro k k' _ _ _ _ _ _ _ _ _ _ i hi x x' H hx
-  obtain ⟨-, hv, -⟩ := GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation k k' i hi
-  rw [← GlobalTheory.LocLanglands.FieldCompat.cls_rep x] at H
-  obtain ⟨π', e, rfl, he⟩ := GlobalTheory.TheRecTransport.exists_of_repRel _ H
-  obtain ⟨v, hv0, hvne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hx
-  let φ := equivRep π'
-  have h2 : ∀ g v, φ.toLinearEquiv (π'.ρ g v) = π'.cl.rep.ρ g (φ.toLinearEquiv v) := fun g v =>
-    φ.toIntertwiningMap.isIntertwining _ _ g v
-  rw [Submodule.ne_bot_iff]
-  refine ⟨φ.toLinearEquiv (e v), fun h => ?_, ?_⟩
-  · have hg : GeneralLinearGroup.map i.symm.toRingHom (h : GL (Fin x.1) k') ∈ GlobalTheory.SplitWeil.KOne k (Fin x.1) :=
-      GlobalTheory.KOneTransport.map_mem_kOne i.symm (GlobalTheory.KOneTransport.symm_hv i hv) h.2
-    have hfx : x.rep (GeneralLinearGroup.map i.symm.toRingHom (h : GL (Fin x.1) k')) v = v := by
-      have := hv0 ⟨_, hg⟩
-      simpa using this
-    have h3 := he (GeneralLinearGroup.map i.symm.toRingHom (h : GL (Fin x.1) k')) v
-    rw [GlobalTheory.LocLanglands.TransportGL.map_map_symm] at h3
-    show π'.cl.rep.ρ (h : GL (Fin x.1) k') (φ.toLinearEquiv (e v)) = ((1 : _ →* ℂˣ) h : ℂ) • φ.toLinearEquiv (e v)
-    rw [← h2, ← h3]
-    erw [hfx]
-    simp
-  · intro h0
-    apply hvne
-    have : e v = 0 := φ.toLinearEquiv.map_eq_zero_iff.1 h0
-    exact e.map_eq_zero_iff.1 this
+  exact GlobalTheory.FixedKOneTransport.fixed_kOne_transport
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -601,8 +575,7 @@ private theorem typeLaw_fwd (P : PlaceIso A w A' w' φ j i) (rc : IrrGL (k := w.
     (RingEquiv.refl _) P'' a'' a₃ ha'' ha₃ (ineIncl h'' t) (ineIncl h₃ ⟨t₁, ht₁⟩) hrt
   have hv' : Valued.v ((a₃ (ineIncl h₃ ⟨t₁, ht₁⟩) : w''.adicCompletion E'') -
       algebraMap E'' (w''.adicCompletion E'') (x : E'')) < 1 := by
-    rw [hart]
-    exact hv
+    rwa [hart]
   rw [← hp ⟨t₁, ht₁⟩ x z hxz hv']
   refine (inePol_transport P W fun z => ?_).symm
   have := hrt (φ z)

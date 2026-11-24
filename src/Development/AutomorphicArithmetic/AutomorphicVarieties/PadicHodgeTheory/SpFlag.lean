@@ -155,7 +155,7 @@ theorem sandwich {X : M4 R} {h : (M4 R)ˣ} {c : Fin 4 → R} (hd : ∀ i j, i �
     by_cases ha : a = j
     · by_cases hb : b = i
       · subst ha hb
-        rw [if_pos rfl, if_pos rfl, h0, mul_zero, zero_mul, Matrix.zero_apply]
+        rw [ite_eq_left rfl, ite_eq_left rfl, h0, mul_zero, zero_mul, Matrix.zero_apply]
       · simp [hb]
     · simp [ha]
 
@@ -207,10 +207,8 @@ theorem exists_diag (π : R →+* E) (hπ : ∀ a, π a = 1 → IsUnit a) {X : M
     apply hπ
     rw [RingHom.map_det, RingHom.mapMatrix_apply, hKmap, Matrix.det_one]
   refine ⟨hKu.unit, ?_, ?_, ?_⟩
-  · rw [IsUnit.unit_spec]
-    exact hXK
-  · rw [IsUnit.unit_spec]
-    exact hKmap
+  · rwa [IsUnit.unit_spec]
+  · rwa [IsUnit.unit_spec]
   · intro hT a b hab
     rw [IsUnit.unit_spec, hK, Matrix.of_apply, htri hT b hab, mul_zero]
 
@@ -275,15 +273,13 @@ theorem exists_symp (π : R →+* E) (hπ : ∀ a, π a = 1 → IsUnit a) {X : M
   have hdiag : ∀ a, N a.rev a.rev = N a a := by
     intro a
     have e := congrFun (congrFun hsym a) a
-    rw [adj_apply, hs a, one_smul] at e
-    exact e
+    rwa [adj_apply, hs a, one_smul] at e
   have hNmap : N.map π = 1 := by
     change π.mapMatrix N = 1
     rw [hN, map_mul, RingHom.mapMatrix_apply, RingHom.mapMatrix_apply, adj_map, hk1, mul_one,
       ← Matrix.diagonal_one, adj_diagonal]
   have hNaa : ∀ a, π (N a a) = 1 := fun a => by
-    have e := congrFun (congrFun hNmap a) a
-    simpa using e
+    simpa using congrFun (congrFun hNmap a) a
   have hNu : ∀ a, IsUnit (N a a) := fun a => hπ _ (hNaa a)
   obtain ⟨w, hw⟩ : ∃ w : Fin 4 → R, w = fun a => (((hNu a).unit⁻¹ : Rˣ) : R) := ⟨_, rfl⟩
   have hw1 : ∀ a, w a * N a a = 1 := fun a => by
@@ -294,8 +290,7 @@ theorem exists_symp (π : R →+* E) (hπ : ∀ a, π a = 1 → IsUnit a) {X : M
     exact Units.isUnit _
   have hwπ : ∀ a, π (w a) = 1 := fun a => by
     have e := congrArg π (hw1 a)
-    rw [map_mul, map_one, hNaa, mul_one] at e
-    exact e
+    rwa [map_mul, map_one, hNaa, mul_one] at e
   obtain ⟨d, hd'⟩ : ∃ d : Fin 4 → R, d = fun a : Fin 4 => if (a : ℕ) < 2 then w a else 1 := ⟨_, rfl⟩
   have hdu : ∀ a, IsUnit (d a) := fun a => by
     rw [hd']
@@ -317,12 +312,12 @@ theorem exists_symp (π : R →+* E) (hπ : ∀ a, π a = 1 → IsUnit a) {X : M
     · have hr : ¬ ((a.rev : ℕ) < 2) := by
         rw [Fin.val_rev]
         omega
-      rw [if_neg hr, if_pos ha, one_mul, mul_comm, hw1]
+      rw [ite_eq_right hr, ite_eq_left ha, one_mul, mul_comm, hw1]
     · have hr : (a.rev : ℕ) < 2 := by
         rw [Fin.val_rev]
         have := a.isLt
         omega
-      rw [if_pos hr, if_neg ha, mul_one, ← hdiag a, hw1]
+      rw [ite_eq_left hr, ite_eq_right ha, mul_one, ← hdiag a, hw1]
   have hHu : IsUnit ((k : M4 R) * Matrix.diagonal d) :=
     k.isUnit.mul (Matrix.isUnit_diagonal.mpr (Pi.isUnit_iff.mpr hdu))
   refine ⟨hHu.unit, ?_, ?_, ?_⟩
@@ -335,8 +330,7 @@ theorem exists_symp (π : R →+* E) (hπ : ∀ a, π a = 1 → IsUnit a) {X : M
     change π.mapMatrix ((k : M4 R) * Matrix.diagonal d) = 1
     rw [map_mul, RingHom.mapMatrix_apply, RingHom.mapMatrix_apply, hk1, one_mul,
       Matrix.diagonal_map (map_zero π)]
-    simp only [hdπ]
-    exact Matrix.diagonal_one
+    simpa only [hdπ] using Matrix.diagonal_one
   · rw [IsUnit.unit_spec, IsGSp, adj_mul, adj_diagonal, one_smul]
     have e : Matrix.diagonal (fun i : Fin 4 => d i.rev) * adj (k : M4 R) * ((k : M4 R) * Matrix.diagonal d) =
         Matrix.diagonal (fun i : Fin 4 => d i.rev) * N * Matrix.diagonal d := by
@@ -409,8 +403,7 @@ theorem ord_iff {H : Type} [Group H] (π : R →+* E) (hπ : ∀ a, π a = 1 →
         rw [Units.inv_mul, map_one]
       rw [map_mul] at e
       change ((h⁻¹ : (M4 R)ˣ) : M4 R).map π * (h : M4 R).map π = 1 at e
-      rw [hh1, mul_one] at e
-      exact e
+      rwa [hh1, mul_one] at e
     have hTred : (((h⁻¹ : (M4 R)ˣ) : M4 R) * r s₀ * (h : M4 R)).map π =
         Matrix.diagonal fun a => π (ps a s₀) := by
       change π.mapMatrix _ = _

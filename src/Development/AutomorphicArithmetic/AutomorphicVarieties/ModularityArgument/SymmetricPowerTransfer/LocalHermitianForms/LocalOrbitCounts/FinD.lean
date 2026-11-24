@@ -362,8 +362,7 @@ private theorem fin_between {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVa
       ext <;> simp [QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, - algebraMap_smul] <;> field_simp <;> ring
     rw [e2]
     exact T.add_mem hz (T.add_mem (T.smul_mem _ h1) (T.smul_mem _ h2))
-  · intro hw
-    exact ⟨⟨w, h3 w hw⟩, ⟨⟨w, h3 w hw⟩, hw, rfl⟩, rfl⟩
+  · exact fun hw => ⟨⟨w, h3 w hw⟩, ⟨⟨w, h3 w hw⟩, hw, rfl⟩, rfl⟩
 
 open UpperTheory.V.Z.Sym.Loc.GL in
 theorem UpperTheory.V.Z.Sym.Loc.finG : UpperTheory.V.Z.Sym.Loc.FinG := by
@@ -514,8 +513,7 @@ theorem UpperTheory.V.Z.Sym.Loc.stabG : UpperTheory.V.Z.Sym.Loc.StabG := by
   refine cint_relIndex_ne_zero L hτ hm H ?_
   intro z _ r hr hq
   have hrs : r ∈ Submodule.span O (s : Set (Etau K τ)) := by
-    rw [hs, Subalgebra.mem_toSubmodule, mem_integralClosure_iff]
-    exact hr
+    rwa [hs, Subalgebra.mem_toSubmodule, mem_integralClosure_iff]
   let X : Matrix (Fin 2) (Fin 2) O := Matrix.of fun a b => (hint r hrs a b).choose
   have hX : ∀ a b, algebraMap O K (X a b) = (d : O) • (((y⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) * j r * ((y : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K)) a b :=
     fun a b => (hint r hrs a b).choose_spec
@@ -530,8 +528,7 @@ theorem UpperTheory.V.Z.Sym.Loc.stabG : UpperTheory.V.Z.Sym.Loc.StabG := by
     linear_combination (-((z : Etau K τ) * z)) * hsw
   have h2 : IsUnit (2 : O) := L.two
   have hm' : algebraMap O K (π * d) ≠ 0 := by
-    rw [Ne, map_eq_zero_iff _ (IsFractionRing.injective O K)]
-    exact hm
+    rwa [Ne, map_eq_zero_iff _ (IsFractionRing.injective O K)]
   have htr0 : trace (z : Etau K τ) ≠ 0 := by
     intro h0
     rw [h0, map_zero, zero_mul] at hkey

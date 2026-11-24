@@ -66,8 +66,7 @@ theorem ldtensor_prod_mem_prod {R A : Type*} [CommSemiring R] [CommSemiring A] [
   revert hx
   refine Finset.induction_on T ?_ ?_
   · intro _
-    simp only [Finset.prod_empty]
-    exact Submodule.one_le.mp le_rfl
+    simpa only [Finset.prod_empty] using Submodule.one_le.mp le_rfl
   · intro s T hs ih hx
     rw [Finset.prod_insert hs, Finset.prod_insert hs]
     exact Submodule.mul_mem_mul (hx s (Finset.mem_insert_self s T))
@@ -82,8 +81,7 @@ theorem ldtensor_span_prod (R K : Type*) [CommRing R] [CommRing K] [Algebra R K]
   have h1 : ∀ s, blockEmb K s (F s) ∈ Submodule.span R (Set.range fun j => blockEmb K s (b s j)) := by
     intro s
     have h := Submodule.mem_map_of_mem (f := ((blockEmb K s).toLinearMap.restrictScalars R)) (hF s)
-    rw [Submodule.map_span, ← Set.range_comp] at h
-    exact h
+    rwa [Submodule.map_span, ← Set.range_comp] at h
   have h2 := ldtensor_prod_mem_prod Finset.univ _ _ fun s _ => h1 s
   rw [Submodule.prod_span] at h2
   refine Submodule.span_mono ?_ h2

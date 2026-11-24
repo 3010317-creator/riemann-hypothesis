@@ -84,8 +84,7 @@ theorem sc_col_inj {K : Type} [Field K] [NumberField K] {r : ℕ} {ι : Type} [F
     rw [← Matrix.map_mul, hWV, Matrix.map_one _ (map_zero σ) (map_one σ)]
   intro x y hxy
   have h2 := congrArg (fun z => (W.map σ) *ᵥ z) hxy
-  simp only [hV, Matrix.mulVec_mulVec, hWV', Matrix.one_mulVec] at h2
-  exact h2
+  simpa only [hV, Matrix.mulVec_mulVec, hWV', Matrix.one_mulVec] using h2
 
 theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < m)
     (H : Matrix (Fin r) (Fin r) ℂ) (hH : H.PosDef) (σ : K →+* ℂ) (N : Matrix (Fin r) (Fin r) K)
@@ -173,8 +172,7 @@ theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < 
         ⟨⟨0, hm⟩, Finset.mem_univ _⟩
       simpa using h
     have hPpos : 0 < P.det.re := by
-      have h := (Complex.lt_def.mp hP.det_pos).1
-      simpa using h
+      simpa using (Complex.lt_def.mp hP.det_pos).1
     rw [hdet, h1F, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
     exact lt_mul_of_one_lt_right hPpos hprod
   set Bm := embCols σ b with hBm
@@ -215,16 +213,14 @@ theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < 
     intro x y hxy
     have h0 : C' *ᵥ (x - y) = 0 := by rw [Matrix.mulVec_sub, hxy, sub_self]
     have h0' : Cm *ᵥ (x - y) - Bm *ᵥ (Y *ᵥ (x - y)) = 0 := by
-      rw [Matrix.mulVec_mulVec, ← Matrix.sub_mulVec]
-      exact h0
+      rwa [Matrix.mulVec_mulVec, ← Matrix.sub_mulVec]
     have h1 : embCols σ (Fin.append b c) *ᵥ Fin.append (-(Y *ᵥ (x - y))) (x - y) =
         embCols σ (Fin.append b c) *ᵥ Fin.append 0 0 := by
       rw [hE, hE, Matrix.mulVec_neg, Matrix.mulVec_zero, Matrix.mulVec_zero, add_zero, neg_add_eq_sub]
       exact h0'
     have h2 := hEinj h1
     funext j
-    have h3 := congrFun h2 (Fin.natAdd k j)
-    simpa [sub_eq_zero] using h3
+    simpa [sub_eq_zero] using congrFun h2 (Fin.natAdd k j)
   have hNB : Nσ * Bm = 0 := by
     rw [hNσ, hBm, ← sc_col_mul σ N b]
     ext a j
@@ -269,8 +265,7 @@ theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < 
     rw [hquot, hPq, Matrix.mul_sub C'ᴴ H K, Matrix.sub_mul]
     abel
   refine ⟨?_, ?_⟩
-  · have h := (Complex.lt_def.mp hPqpd.det_pos).1
-    simpa using h
+  · simpa using (Complex.lt_def.mp hPqpd.det_pos).1
   · rw [hsplit]
     exact detlt _ _ hPqpd hEpd
 
@@ -438,18 +433,18 @@ theorem wa_main {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r
         simp only [waExt_zero, waExt_last, waExt_mid, Fin.val_zero, Fin.val_last, Fin.val_succ,
           Fin.val_castSucc] <;>
         try simp only [true_and]
-      · rw [hxx, if_neg (by omega), if_neg (by omega)]
-      · rw [hxy, if_pos (by omega)]
+      · rw [hxx, ite_eq_right (by omega), ite_eq_right (by omega)]
+      · rw [hxy, ite_eq_left (by omega)]
       · have := j.2
-        rw [(hmem j).2.1, if_neg (by omega), if_neg (by omega)]
-      · rw [hyx, if_pos (by omega)]
-      · rw [hyy, if_neg (by omega), if_neg (by omega)]
+        rw [(hmem j).2.1, ite_eq_right (by omega), ite_eq_right (by omega)]
+      · rw [hyx, ite_eq_left (by omega)]
+      · rw [hyy, ite_eq_right (by omega), ite_eq_right (by omega)]
       · have := j.2
-        rw [(hmem j).2.2, if_neg (by omega), if_neg (by omega)]
+        rw [(hmem j).2.2, ite_eq_right (by omega), ite_eq_right (by omega)]
       · have := i.2
-        rw [hbx, if_neg (by omega), if_neg (by omega)]
+        rw [hbx, ite_eq_right (by omega), ite_eq_right (by omega)]
       · have := i.2
-        rw [hby, if_neg (by omega), if_neg (by omega)]
+        rw [hby, ite_eq_right (by omega), ite_eq_right (by omega)]
       · have := i.2
         have := j.2
         rw [hgram', wa_witt_apply]
@@ -477,8 +472,8 @@ theorem wa_main {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r
       have := i.2
       by_cases hij : i = j
       · subst hij
-        rw [if_neg (by omega), if_pos ⟨rfl, by omega, by omega⟩]
-      · rw [hbo i j hij, if_neg (by omega), if_neg (fun h => hij (Fin.ext h.1))]
+        rw [ite_eq_right (by omega), ite_eq_left ⟨rfl, by omega, by omega⟩]
+      · rw [hbo i j hij, ite_eq_right (by omega), ite_eq_right (fun h => hij (Fin.ext h.1))]
     · have hz : ∀ k, S.h (b k) (∑ i, t i • b i) = t k * S.h (b k) (b k) := fun k => by
         rw [wa_sum_right, Finset.sum_eq_single k
           (fun i _ hik => by rw [hbo k i (Ne.symm hik), mul_zero]) (by simp)]
@@ -520,18 +515,17 @@ theorem wa_witt_ker {K : Type} [Field K] (r m : ℕ) (g : Fin r → K)
   · have h := hv j
     rw [Finset.sum_eq_single j] at h
     · simp only [wittMat, Matrix.of_apply] at h
-      rw [if_neg (by omega), if_pos ⟨trivial, hmid.1, hmid.2⟩] at h
+      rw [ite_eq_right (by omega), ite_eq_left ⟨trivial, hmid.1, hmid.2⟩] at h
       exact (mul_eq_zero.1 h).resolve_right (hg j hmid.1 hmid.2)
     · intro i _ hij
       have hi := i.isLt
       simp only [wittMat, Matrix.of_apply]
-      rw [if_neg, if_neg, mul_zero]
+      rw [ite_eq_right, ite_eq_right, mul_zero]
       · rintro ⟨h1, -⟩
         exact hij h1.symm
       · rintro ⟨h1, h2⟩
         rcases h2 with h2 | h2 <;> omega
-    · intro h
-      exact absurd (Finset.mem_univ j) h
+    · exact fun h => absurd (Finset.mem_univ j) h
   · set p : Fin r := ⟨r - 1 - j, by omega⟩ with hp
     have hpv : (p : ℕ) = r - 1 - j := rfl
     have h := hv p
@@ -540,12 +534,11 @@ theorem wa_witt_ker {K : Type} [Field K] (r m : ℕ) (g : Fin r → K)
       have hc : (p : ℕ) + j + 1 = r ∧ ((p : ℕ) < m ∨ (j : ℕ) < m) := by
         rw [hpv]
         omega
-      rw [if_pos hc, mul_one] at h
-      exact h
+      rwa [ite_eq_left hc, mul_one] at h
     · intro i _ hij
       have hi := i.isLt
       simp only [wittMat, Matrix.of_apply]
-      rw [if_neg, if_neg, mul_zero]
+      rw [ite_eq_right, ite_eq_right, mul_zero]
       · rintro ⟨-, h2, h3⟩
         rw [hpv] at h2 h3
         omega
@@ -554,8 +547,7 @@ theorem wa_witt_ker {K : Type} [Field K] (r m : ℕ) (g : Fin r → K)
         ext
         rw [hpv] at h1
         omega
-    · intro h
-      exact absurd (Finset.mem_univ j) h
+    · exact fun h => absurd (Finset.mem_univ j) h
 
 theorem wittBasis_holds : WittBasisStatement := by
   intro K _ _ r S hdet
@@ -568,14 +560,12 @@ theorem wittBasis_holds : WittBasisStatement := by
       simpa [HermForm.h, Pi.single_apply, Matrix.vecMul, dotProduct] using h1
     have h2 : (fun a => S.c (x a)) = 0 := Matrix.eq_zero_of_vecMul_eq_zero hdet hrow
     funext a
-    have h3 := congrFun h2 a
-    simp only [Pi.zero_apply, map_eq_zero] at h3
-    exact h3
+    simpa only [Pi.zero_apply, map_eq_zero] using congrFun h2 a
   obtain ⟨m, bb, g, -, hm, hW, hg⟩ := wa_main S r ⊤ (by rw [finrank_top, Module.finrank_fin_fun]) hnd
   have hgmid : ∀ k : Fin r, m ≤ (k : ℕ) → (k : ℕ) + m < r → g k ≠ 0 := by
     intro k hk1 hk2 hgk
     have ht := hg (Pi.single k 1) (fun i hi => by
-      rw [Pi.single_apply, if_neg]
+      rw [Pi.single_apply, ite_eq_right]
       rintro rfl
       omega) (by
       rw [Finset.sum_eq_single k]
@@ -653,7 +643,7 @@ theorem sdd_factor {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.PosDef) :
 theorem sdd_star_self_eig {n : ℕ} {D : Matrix (Fin n) (Fin n) ℂ} (hD : D.IsHermitian) (i : Fin n) :
     star (⇑(hD.eigenvectorBasis i)) ⬝ᵥ (⇑(hD.eigenvectorBasis i)) = 1 := by
   have h := orthonormal_iff_ite.mp hD.eigenvectorBasis.orthonormal i i
-  rw [if_pos rfl, PiLp.inner_apply] at h
+  rw [ite_eq_left rfl, PiLp.inner_apply] at h
   rw [← h]
   simp only [dotProduct, Pi.star_apply, RCLike.inner_apply]
   refine Finset.sum_congr rfl fun x _ => ?_
@@ -910,8 +900,7 @@ theorem sdd_append_li {k₀ k₁ : ℕ} (b₀ : Fin k₀ → Fin r → K) (c b�
   have h1' := Fintype.linearIndependent_iff.mp hb₁li _ h1
   have h0 : ∑ i, g (Fin.castAdd k₁ i) • b₀ i = 0 := by simpa [h1'] using hg
   have h0' := Fintype.linearIndependent_iff.mp hb₀li _ h0
-  intro i
-  exact Fin.addCases (fun i => h0' i) (fun j => h1' j) i
+  exact fun i => Fin.addCases (fun i => h0' i) (fun j => h1' j) i
 
 theorem sdd_append_span {k₀ k₁ : ℕ} (B : Submodule (𝓞 K) (Fin r → K)) (b₀ : Fin k₀ → Fin r → K)
     (c b₁ : Fin k₁ → Fin r → K) (hb₀ : IsKBasisIn (B ⊓ cutSub K r e) b₀) (hcB : ∀ j, c j ∈ B)
@@ -1056,8 +1045,7 @@ theorem sdd_gram_step {K : Type} [Field K] [NumberField K] {r e k₀ k₁ : ℕ}
     (((embM σ b₀)ᴴ * D * embM σ b₀)⁻¹ * ((embM σ b₀)ᴴ * D * embM σ c)) with hE
 
   have hq : quotGramC D σ b₀ c = Eᴴ * D * E := by
-    simp only [quotGramC, sdd_gramC_eq, sdd_gramX_eq]
-    exact sdd_schur _ _ _ hDpd.1 hG0.1 hu
+    simpa only [quotGramC, sdd_gramC_eq, sdd_gramX_eq] using sdd_schur _ _ _ hDpd.1 hG0.1 hu
 
   have hB1 : ∀ (l : Fin r) (j : Fin k₁),
       embM σ b₁ l j = if e ≤ (l : ℕ) then E l j else 0 := by
@@ -1066,9 +1054,9 @@ theorem sdd_gram_step {K : Type} [Field K] [NumberField K] {r e k₀ k₁ : ℕ}
       rw [← hcb j]; rfl
     by_cases hl : e ≤ (l : ℕ)
     · have hz : ∀ i, b₀ i l = 0 := fun i => hcutz i l hl
-      rw [if_pos hl, hE]
+      rw [ite_eq_left hl, hE]
       simp [embM, Matrix.mul_apply, hb1, hl, hz]
-    · rw [if_neg hl]
+    · rw [ite_eq_right hl]
       simp [embM, hb1, hl]
   have hquad : ∀ v : Fin k₁ → ℂ, (star v ⬝ᵥ (((embM σ b₁)ᴴ * D * embM σ b₁) *ᵥ v)).re ≤
       (star v ⬝ᵥ ((Eᴴ * D * E) *ᵥ v)).re :=
@@ -1098,8 +1086,7 @@ theorem gradedExt_holds (hB : LatDegBasisStatement) (hD : DegAddStatement) :
   have hk : k = k₀ + k₁ := sdd_card_eq B b (Fin.append b₀ c) hb hmem hli hsp
   subst hk
   have hpd : ∀ σ, (diagMet δ σ).PosDef := fun σ => by
-    simp only [diagMet]
-    exact posDef_diagonal_ofReal_of_pos (δ σ) (hδ σ)
+    simpa only [diagMet] using posDef_diagonal_ofReal_of_pos (δ σ) (hδ σ)
   have h1 : latDeg (diagMet δ) B b = latDeg (diagMet δ) B (Fin.append b₀ c) :=
     hB K r (k₀ + k₁) (diagMet δ) B b (Fin.append b₀ c) hpd hFG hb ⟨hmem, hli, hsp⟩
   have h2 := hD K r k₀ k₁ (diagMet δ) B b₀ c hpd hFG hb₀B hcB hli hsp
@@ -1116,8 +1103,7 @@ theorem gradedExt_holds (hB : LatDegBasisStatement) (hD : DegAddStatement) :
   linarith [h1, h2, h3]
 
 theorem absDet_holds : AbsDetStatement := by
-  intro n A C hA hC h
-  exact sdd_absDet A C hA hC h
+  exact fun n A C hA hC h => sdd_absDet A C hA hC h
 
 end ReciprocityTheory.MultiplicativeHeights
 end -- clump:auto

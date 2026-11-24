@@ -24,8 +24,7 @@ theorem holoOn_comp_compatChart_symm {d : ℕ} {X : Type} [TopologicalSpace X]
   have h2 : AnalyticAt ℂ (g ∘ (A.chart j).symm) ((A.chart j ∘ e.symm) u) := by
     refine hg j _ ⟨(A.chart j).map_source hj, ?_⟩
     show (A.chart j).symm (A.chart j (e.symm u)) ∈ U
-    rw [(A.chart j).left_inv hj]
-    exact huU
+    rwa [(A.chart j).left_inv hj]
   have h3 : g ∘ e.symm =ᶠ[𝓝 u] (g ∘ (A.chart j).symm) ∘ (A.chart j ∘ e.symm) := by
     have : ∀ᶠ u' in 𝓝 u, e.symm u' ∈ (A.chart j).source :=
       (e.continuousAt_symm hu).preimage_mem_nhds ((A.chart j).open_source.mem_nhds hj)
@@ -53,8 +52,7 @@ theorem ProjHoloLocal.proof (hL : LocalOrbitChart.Statement)
     · exact (e.continuousAt_symm hex).preimage_mem_nhds (hUo.mem_nhds hexU)
     · refine (hsd _ hex hexU).continuousAt.preimage_mem_nhds (hNo.mem_nhds ?_)
       show s (e.symm (e (M.proj z))) ∈ N
-      rw [e.left_inv hze]
-      exact hsxN
+      rwa [e.left_inv hze]
   obtain ⟨T, hTsub, hTo, hxT⟩ := mem_nhds_iff.1 hTn
   have hψd : DifferentiableOn ℂ (κ ∘ s ∘ e.symm) T := fun u hu =>
     ((hκ _ (hTsub hu).2).differentiableAt.comp u
@@ -80,8 +78,7 @@ theorem ProjHoloLocal.proof (hL : LocalOrbitChart.Statement)
       rw [hOeq] at hz'
       exact hz'.1
     · show κ (s (e.symm (e (M.proj z)))) = κ z
-      rw [e.left_inv hze]
-      exact hκsx
+      rwa [e.left_inv hze]
   · intro w hw
     exact ((hg.differentiableAt (hψo.mem_nhds hw.2.2)).comp w
       (hκ w hw.2.1).differentiableAt).differentiableWithinAt
@@ -98,8 +95,7 @@ theorem ProjHoloLocal.proof (hL : LocalOrbitChart.Statement)
     have hκ' : κ (s (M.proj z')) = κ z' := by rw [hcc]; exact (hκt z' hz'N c' hc').2
     have hψz : (κ ∘ s ∘ e.symm) (e (M.proj z')) = κ z' := by
       show κ (s (e.symm (e (M.proj z')))) = κ z'
-      rw [e.left_inv hpe]
-      exact hκ'
+      rwa [e.left_inv hpe]
     show e (M.proj z') = g (κ z')
     rw [← hψz, hgψ _ hpT]
 

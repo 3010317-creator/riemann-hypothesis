@@ -145,11 +145,11 @@ theorem mfh_of : ∃ C₁ : ℝ, 0 < C₁ ∧ ∀ C : ℝ, C₁ ≤ C → ∀ CL
   · intro s hs
     rw [hF.1] at hs
     unfold dT
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
   · intro s hs
     rw [hF.1] at hs
     unfold dT
-    rw [if_neg hs]
+    rw [ite_eq_right hs]
   · intro jj xx hx hW
     have hBo := Bo_ge hF.2.1 (by omega) p (by omega) (flatDeg lam0) a
       (fun s hs => (hfd s (by rw [hF.1] at hs; exact hs)).1) jj xx hx hW
@@ -157,9 +157,7 @@ theorem mfh_of : ∃ C₁ : ℝ, 0 < C₁ ∧ ∀ C : ℝ, C₁ ≤ C → ∀ CL
       have := hF.2.2.1 jj
       omega
     have hq : a / Formalism.CountingSumsFrames.QII p (goodG' r de h x) ≤ Bo p F (flatDeg lam0) jj xx := by
-      refine le_trans ?_ hBo
-      apply div_le_div_of_nonneg_left ha0 (by positivity)
-      exact pow_le_pow_right₀ hp1 hE
+      exact le_trans (div_le_div_of_nonneg_left ha0 (by positivity) (pow_le_pow_right₀ hp1 hE)) hBo
     have q := (A0 _ hq).1
     have n1 : 0 ≤ 24 * (((orbitWindowCount r de h x : ℕ) : ℝ) + r) * c0 := by positivity
     have n2 : 0 ≤ Formalism.CountingSumsFrames.mStarII (orbitWindowCount r de h x) (r + K) (Formalism.CountingSumsFrames.QII p (goodG' r de h x))

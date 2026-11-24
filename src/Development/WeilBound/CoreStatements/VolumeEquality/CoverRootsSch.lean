@@ -115,8 +115,7 @@ theorem eq_of_val {U : X.Opens} (hU : IsAffineOpen U) {x x' : Sp F ⟶ X} (h : c
     rw [← cancel_mono (Scheme.ΓSpecIso (CommRingCat.of F)).hom]
     ext s
     have := e s
-    rw [val_eq, val_eq] at this
-    exact this
+    rwa [val_eq, val_eq] at this
   have a := hU.SpecMap_appLE_fromSpec x (isAffineOpen_top _) ((top_le_iff x U).2 h)
   have b := hU.SpecMap_appLE_fromSpec x' (isAffineOpen_top _) ((top_le_iff x' U).2 h')
   rw [e1, b, IsAffineOpen.fromSpec_top] at a
@@ -138,8 +137,7 @@ theorem exists_of_hom {U : X.Opens} (hU : IsAffineOpen U) (χ : Γ(X, U) →+* F
   have := congrArg (fun φ => φ.hom ((Scheme.ΓSpecIso Γ(X, U)).inv.hom s))
     (Scheme.ΓSpecIso_naturality (CommRingCat.ofHom χ))
   simp only [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE] at this
-  refine this.trans ?_
-  exact congrArg χ (congrArg (fun φ => φ.hom s) (Scheme.ΓSpecIso Γ(X, U)).inv_hom_id)
+  exact this.trans (congrArg χ (congrArg (fun φ => φ.hom s) (Scheme.ΓSpecIso Γ(X, U)).inv_hom_id))
 
 variable {Ω : Type} [Field Ω] {ξ : Sp Ω ⟶ X}
 

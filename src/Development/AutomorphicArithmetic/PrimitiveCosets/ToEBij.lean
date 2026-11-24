@@ -116,6 +116,4 @@ theorem UpperTheory.Comparison₂.toE_bij :
     change ((Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 1), Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 1)),
       φ.iotaInv (φ.iota t)) = (((0 : ZMod 2), (0 : ZMod 2)), t)
     rw [UpperTheory.Comparison₂.sign_character_one, Frame.iotaInv_iota]
-  · intro g
-    show φ.chD g = 1 ↔ _
-    exact UpperTheory.Comparison₂.sign_character_zero_iff g.1.2
+  · exact fun g => UpperTheory.Comparison₂.sign_character_zero_iff g.1.2

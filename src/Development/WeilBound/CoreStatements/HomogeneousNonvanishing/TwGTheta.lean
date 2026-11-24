@@ -53,8 +53,7 @@ namespace PositivityTheory.UnitarySelfGeneration
 theorem anti_one {B : Type} [CommRing B] (σ : B ≃+* B) (I : Ideal B)
     (hspan : Ideal.span (Set.range fun x : B => x - σ x) = ⊤) (P : Ideal B) (hP : ¬ I ≤ P * I) :
     ∃ x ∈ I, x - σ x ∉ P * I := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hP
   intro i hi
   have hJ : Ideal.span (Set.range fun x : B => x - σ x) ≤
@@ -72,8 +71,7 @@ theorem anti_one {B : Type} [CommRing B] (σ : B ≃+* B) (I : Ideal B)
   rw [hspan] at hJ
   have h1 : (1 : B) ∈ Submodule.comap (LinearMap.toSpanSingleton B B i) (P * I) :=
     hJ Submodule.mem_top
-  rw [Submodule.mem_comap, LinearMap.toSpanSingleton_apply, one_smul] at h1
-  exact h1
+  rwa [Submodule.mem_comap, LinearMap.toSpanSingleton_apply, one_smul] at h1
 
 theorem anti_avoid {B : Type} [CommRing B] (σ : B ≃+* B) (hσ : ∀ x, σ (σ x) = x) (I : Ideal B)
     (hI : ∀ x ∈ I, σ x ∈ I) (hspan : Ideal.span (Set.range fun x : B => x - σ x) = ⊤)
@@ -86,15 +84,13 @@ theorem anti_avoid {B : Type} [CommRing B] (σ : B ≃+* B) (hσ : ∀ x, σ (σ
     intro r hr s hs
     rw [Ideal.mem_comap, map_mul]
     refine Ideal.mul_mem_mul ?_ (hI s hs)
-    rw [Ideal.mem_comap, hσ]
-    exact hr
+    rwa [Ideal.mem_comap, hσ]
   have hneg : ∀ x : B, σ (x - σ x) = -(x - σ x) := by
     intro x
     rw [map_sub, hσ, neg_sub]
   revert hS
   refine Finset.induction_on S ?_ ?_
-  · intro _
-    exact ⟨0, I.zero_mem, fun P hP => by simp at hP⟩
+  · exact fun _ => ⟨0, I.zero_mem, fun P hP => by simp at hP⟩
   intro P S hPS ih hS
   obtain ⟨x, hxI, hx⟩ := ih (fun Q hQ => hS Q (Finset.mem_insert_of_mem hQ))
   obtain ⟨hPmax, hPI⟩ := hS P (Finset.mem_insert_self P S)
@@ -123,10 +119,8 @@ theorem anti_avoid {B : Type} [CommRing B] (σ : B ≃+* B) (hσ : ∀ x, σ (σ
         have hQle' : Q ≤ P.comap σ := fun q hq => by
           rw [Ideal.mem_comap]
           apply h
-          rw [Ideal.mem_comap, hσ]
-          exact hq
-        rw [← hQmax.eq_of_le hPc.ne_top hQle']
-        exact hQ
+          rwa [Ideal.mem_comap, hσ]
+        rwa [← hQmax.eq_of_le hPc.ne_top hQle']
     · obtain ⟨Q, hQ, hQle⟩ := (Ideal.IsPrime.inf_le' hPc).mp hle
       have hQmax := (hS Q (Finset.mem_insert_of_mem hQ)).1
       rcases hPc.inf_le.mp hQle with h | h
@@ -134,18 +128,15 @@ theorem anti_avoid {B : Type} [CommRing B] (σ : B ≃+* B) (hσ : ∀ x, σ (σ
       · apply hPS
         have hQle' : Q ≤ P := fun q hq => by
           have h2 := h (show σ q ∈ Q.comap σ by rw [Ideal.mem_comap, hσ]; exact hq)
-          rw [Ideal.mem_comap, hσ] at h2
-          exact h2
-        rw [← hQmax.eq_of_le hPmax.ne_top hQle']
-        exact hQ
+          rwa [Ideal.mem_comap, hσ] at h2
+        rwa [← hQmax.eq_of_le hPmax.ne_top hQle']
   obtain ⟨a, haK, haP⟩ := Set.not_subset.mp hnot
   rw [Set.mem_union, not_or] at haP
   obtain ⟨haP1, haP2⟩ := haP
   have hσa : σ a ∉ P := fun h => haP2 (Ideal.mem_comap.mpr h)
   have haQ : ∀ Q ∈ S, a ∈ Q := by
     intro Q hQ
-    have h := Finset.inf_le (f := fun Q : Ideal B => Q ⊓ Q.comap σ) hQ haK
-    exact (Submodule.mem_inf.mp h).1
+    exact (Submodule.mem_inf.mp (Finset.inf_le (f := fun Q : Ideal B => Q ⊓ Q.comap σ) hQ haK)).1
   have hc : σ (a * σ a) = a * σ a := by
     rw [map_mul, hσ, mul_comm]
   have hcP : a * σ a ∉ P := fun h => (hPmax.isPrime.mem_or_mem h).elim haP1 hσa
@@ -178,11 +169,9 @@ theorem anti_ded {B : Type} [CommRing B] [IsDedekindDomain B] (σ : B ≃+* B) (
     (p : B) (hp : p ≠ 0) : ∃ x ∈ I, ∀ P : Ideal B, P.IsMaximal → p ∈ P → x - σ x ∉ P * I := by
   classical
   have hspan0 : Ideal.span {p} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hp
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   have hI0' : I ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot]
-    exact hI0
+    rwa [Ne, Ideal.zero_eq_bot]
   have hT : ∀ P ∈ (Ideal.finite_factors hspan0).toFinset.image
       (fun v : IsDedekindDomain.HeightOneSpectrum B => v.asIdeal), P.IsMaximal ∧ ¬ I ≤ P * I := by
     intro P hP
@@ -197,8 +186,7 @@ theorem anti_ded {B : Type} [CommRing B] [IsDedekindDomain B] (σ : B ≃+* B) (
   refine ⟨x, hxI, fun P hPmax hpP => hx P ?_⟩
   have hPbot : P ≠ ⊥ := fun h => hp (by rw [h] at hpP; exact Ideal.mem_bot.mp hpP)
   refine Finset.mem_image.mpr ⟨⟨P, hPmax.isPrime, hPbot⟩, ?_, rfl⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
-  exact hpP
+  rwa [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
 
 theorem bar_bar {E : Type} [Field E] [NumberField E] [IsCMField E] (bar : 𝓞 E ≃+* 𝓞 E)
     (hbar : ∀ a : 𝓞 E, ((bar a : 𝓞 E) : E) = IsCMField.complexConj E (a : E)) (a : 𝓞 E) : bar (bar a) = a := by

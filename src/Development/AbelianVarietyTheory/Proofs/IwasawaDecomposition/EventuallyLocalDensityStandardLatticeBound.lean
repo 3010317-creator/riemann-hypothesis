@@ -92,14 +92,12 @@ lemma sum_dot {k : Type} [Field k] [Fintype k] [DecidableEq k] {ι : Type} [Fint
   · obtain ⟨i, hi⟩ := Function.ne_iff.mp hw
     have hi' : w i ≠ 0 := hi
     have h1 : ∃ a : k, ψ (a * w i) ≠ 1 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have := AddChar.sum_mulShift (w i) hψ
       simp [hcon, hi'] at this
     obtain ⟨a, ha⟩ := h1
     have h2 : ∑ x : ι → k, ψ (x ⬝ᵥ w) = ψ (a * w i) * ∑ x : ι → k, ψ (x ⬝ᵥ w) := by
-      rw [Finset.mul_sum]
-      rw [← Equiv.sum_comp (Equiv.addLeft (Pi.single i a : ι → k))]
+      rw [Finset.mul_sum, ← Equiv.sum_comp (Equiv.addLeft (Pi.single i a : ι → k))]
       refine Finset.sum_congr rfl fun x _ => ?_
       simp [add_dotProduct, AddChar.map_add_eq_mul]
     have h3 : (1 - ψ (a * w i)) * ∑ x : ι → k, ψ (x ⬝ᵥ w) = 0 := by
@@ -134,7 +132,7 @@ lemma gauss_normSq {k : Type} [Field k] [Fintype k] [DecidableEq k] {ι : Type} 
     rw [Finset.sum_eq_single (0 : ι → k)]
     · simp
     · intro z _ hz
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro h
       rcases smul_eq_zero.mp h with h | h
       · exact mul_ne_zero h2 ht h
@@ -464,8 +462,7 @@ theorem vol_fibre (hσ : IsCMExt F E σ) (h2 : Valued.v (2 : Fv F v) = 1)
     intro c
     have hae : ∀ᵐ X ∂(fib c), qR (Fv F v) σ J (X 0) = c := by
       have := hf.1 c
-      rw [Set.inter_univ] at this
-      exact this
+      rwa [Set.inter_univ] at this
     by_cases hc : c ∈ S
     · rw [Set.indicator_of_mem hc,
         ← fib_const σ b J v hσ h2 lam ν hl hν β c hβ hc m (fib c) hm ⟨fib, hf, rfl⟩]

@@ -57,8 +57,7 @@ theorem val_natCast_lt_one (v : HeightOneSpectrum (𝓞 F)) (p : ℕ) (hv : (p :
   have : (p : v.adicCompletion F) = algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F (p : 𝓞 F)) := by simp
   rw [this]
   have h2 := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' (K := F) v (algebraMap (𝓞 F) F (p : 𝓞 F))
-  have h3 := (HeightOneSpectrum.valuation_lt_one_iff_mem (K := F) v _).2 hv
-  exact h2 ▸ h3
+  exact h2 ▸ ((HeightOneSpectrum.valuation_lt_one_iff_mem (K := F) v _).2 hv)
 
 theorem redM_eq_one {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (p : ℕ) (hv : (p : 𝓞 F) ∈ v.asIdeal)
     (M : Matrix (Fin n) (Fin n) (v.adicCompletion F))
@@ -122,7 +121,6 @@ theorem mem_Uloc_of_cong : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
       Matrix.mulVec_smul, ← hy', hinv]
   have e5 := congrFun e4 r
   rw [Matrix.mulVec_single_one, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply] at e5
-  rw [Matrix.one_apply]
-  exact e5
+  rwa [Matrix.one_apply]
 
 end GlobalTheory.Mem.LevCong

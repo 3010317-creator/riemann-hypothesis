@@ -168,8 +168,7 @@ theorem trR_zero : trR P μ e 0 = 0 := by
 theorem trR_add (Φ Ψ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) (hΦ : ∀ ρ, rawR P μ e Φ ρ ∈ MA.smSub P.r P.TT)
     (hΨ : ∀ ρ, rawR P μ e Ψ ρ ∈ MA.smSub P.r P.TT) : trR P μ e (Φ + Ψ) = trR P μ e Φ + trR P μ e Ψ := by
   funext ρ
-  simp only [trR, rawR_add, Pi.add_apply]
-  exact toSm_add P (hΦ ρ) (hΨ ρ)
+  simpa only [trR, rawR_add, Pi.add_apply] using toSm_add P (hΦ ρ) (hΨ ρ)
 
 theorem trR_sub (Φ Ψ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) (hΦ : ∀ ρ, rawR P μ e Φ ρ ∈ MA.smSub P.r P.TT)
     (hΨ : ∀ ρ, rawR P μ e Ψ ρ ∈ MA.smSub P.r P.TT) : trR P μ e (Φ - Ψ) = trR P μ e Φ - trR P μ e Ψ := by
@@ -218,7 +217,7 @@ theorem fderiv_ext (hpl : Q.IsPlace P Bs.z Bs.z' Bs.π Bs.π') (hk : 2 ≤ P.k) 
   have heq : (fun c' : Fin P.r → ℂ => MA.ext (rawR P Bs.μsec e Φ ρ) (c', q.1.2)) =ᶠ[nhds q.1.1]
       fun c' => ((wR P.k P.TT q.1.2 : ℝ) : ℂ) * Lr (Φ c' m) := by
     filter_upwards [hopen] with c' hc'
-    simp only [MA.ext, hc', dif_pos, rawR, hLr, hv, hm]
+    simp only [MA.ext, hc', dite_eq_left, rawR, hLr, hv, hm]
   have hd : DifferentiableAt ℝ (fun c' => Φ c' m) q.1.1 :=
     Formalism.FourierDecayAlt.P.Qx3.fam_differentiableAt (x := (q.1.1, m)) hΦ.2.2.2.1 ⟨q.2.1, hΦ.2.2.1 q⟩ (muZ_glev hpl q)
   have hg : HasFDerivAt (fun c' => ((wR P.k P.TT q.1.2 : ℝ) : ℂ) * Lr (Φ c' m))
@@ -270,11 +269,9 @@ theorem inv_coordQ_apply (v : M.Var r) (hv : ∀ x ∈ MA.Qset r TT, MA.coordE v
   let w : MA.SmQ r TT := ⟨_, hsm⟩
   have h1 : MA.coordQ (TT := TT) v * w = 1 := by
     apply Subtype.ext; funext q
-    show MA.coordE v q.1 * (MA.coordE v q.1)⁻¹ = 1
     exact mul_inv_cancel₀ (hv q.1 q.2)
   have h2 : w * MA.coordQ (TT := TT) v = 1 := by
     apply Subtype.ext; funext q
-    show (MA.coordE v q.1)⁻¹ * MA.coordE v q.1 = 1
     exact inv_mul_cancel₀ (hv q.1 q.2)
   let u : (MA.SmQ r TT)ˣ := ⟨MA.coordQ v, w, h1, h2⟩
   have hu : (u : MA.SmQ r TT) = MA.coordQ v := rfl
@@ -311,10 +308,10 @@ theorem trR_p (hpl : Q.IsPlace P Bs.z Bs.z' Bs.π Bs.π') (hk : 2 ≤ P.k) (he :
     MA.Qp P.r P.TT → ℂ)) q.1
   have he1 : ((trR P Bs.μsec e Φ ρ : MA.SmQ P.r P.TT) : MA.Qp P.r P.TT → ℂ) = rawR P Bs.μsec e Φ ρ :=
     funext fun q' => trR_val hpl hk he hΦ ρ q'
-  rw [he1, MA.wirt, I_dirE_vc, dirE_vc, if_pos (sgn_vc l), coordE_vc, fderiv_ext hpl hk he hΦ,
+  rw [he1, MA.wirt, I_dirE_vc, dirE_vc, ite_eq_left (sgn_vc l), coordE_vc, fderiv_ext hpl hk he hΦ,
     fderiv_ext hpl hk he hΦ]
   have hc : q.1.1 ∈ OmX P.r := q.2.1
-  simp only [rawR, Q.crd, pOp, if_pos hc, wirt]
+  simp only [rawR, Q.crd, pOp, ite_eq_left hc, wirt]
   have key : ∀ X : Wq →L[ℂ] Wp, inner ℂ (B.hsVec (e ρ q.1.2)) (B.hsVec X) = Lin (B.hsVec (e ρ q.1.2)) X :=
     fun _ => rfl
   simp only [key, map_smul, map_sub, smul_eq_mul]
@@ -331,10 +328,10 @@ theorem trR_pb (hpl : Q.IsPlace P Bs.z Bs.z' Bs.π Bs.π') (hk : 2 ≤ P.k) (he 
     MA.Qp P.r P.TT → ℂ)) q.1
   have he1 : ((trR P Bs.μsec e Φ ρ : MA.SmQ P.r P.TT) : MA.Qp P.r P.TT → ℂ) = rawR P Bs.μsec e Φ ρ :=
     funext fun q' => trR_val hpl hk he hΦ ρ q'
-  rw [he1, MA.wirt, I_dirE_vcb, dirE_vcb, if_neg (sgn_vcb l), coordE_vcb, fderiv_ext hpl hk he hΦ,
+  rw [he1, MA.wirt, I_dirE_vcb, dirE_vcb, ite_eq_right (sgn_vcb l), coordE_vcb, fderiv_ext hpl hk he hΦ,
     fderiv_ext hpl hk he hΦ]
   have hc : q.1.1 ∈ OmX P.r := q.2.1
-  simp only [rawR, Q.crd, pbOp, if_pos hc, wirtBar]
+  simp only [rawR, Q.crd, pbOp, ite_eq_left hc, wirtBar]
   have key : ∀ X : Wq →L[ℂ] Wp, inner ℂ (B.hsVec (e ρ q.1.2)) (B.hsVec X) = Lin (B.hsVec (e ρ q.1.2)) X :=
     fun _ => rfl
   simp only [key, map_smul, map_add (f := _), smul_eq_mul]

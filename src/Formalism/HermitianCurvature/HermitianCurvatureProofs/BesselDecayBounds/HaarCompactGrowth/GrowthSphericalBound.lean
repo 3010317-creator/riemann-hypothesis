@@ -71,14 +71,12 @@ theorem s3dx1S_Fm (A : ℝ) : Measurable (haarCompactGrowthDensity (k := k) (r :
 theorem s3dx1S_mulc :
     Continuous (fun p : Mt k r × Mt k r => (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j : Mt k r)) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  simp only [Matrix.mul_apply, Matrix.of_apply]
-  exact continuous_finsetSum _ fun l _ => by fun_prop
+  simpa only [Matrix.mul_apply, Matrix.of_apply] using continuous_finsetSum _ fun l _ => by fun_prop
 
 theorem s3dx1S_mulxc (x : Mt k r) :
     Continuous (fun s : Mt k r => (fun i j => (Matrix.of s * Matrix.of x) i j : Mt k r)) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  simp only [Matrix.mul_apply, Matrix.of_apply]
-  exact continuous_finsetSum _ fun l _ => by fun_prop
+  simpa only [Matrix.mul_apply, Matrix.of_apply] using continuous_finsetSum _ fun l _ => by fun_prop
 
 theorem s3dx1S_lower {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Mt k r)} {A Rr : ℝ} (hA : 0 ≤ A)
     (hR : 0 < Rr) (hae : ∀ᵐ p ∂(μW.prod μN), Matrix.of p.1 ∈ UWset k r z ∧ Matrix.of p.2 ∈ Nset k r)
@@ -164,8 +162,7 @@ theorem growth_spherical_bound : Formalism.FourierDecayAlt.ThreeDimData.GrowthS 
   have hqG := s3dx1S_quot_pos hG hq hae
   obtain ⟨n, hn⟩ : ∃ n : ℕ,
       νq {x : Mt k r | Matrix.of x ∈ UH (Hpk k r) ∧ Formalism.FourierDecayAlt.B.gN (Matrix.of x) ≤ (n : ℝ) + 1} ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hqG
     have hU : {x : Mt k r | Matrix.of x ∈ UH (Hpk k r)} =
         ⋃ n : ℕ, {x : Mt k r | Matrix.of x ∈ UH (Hpk k r) ∧ Formalism.FourierDecayAlt.B.gN (Matrix.of x) ≤ (n : ℝ) + 1} := by

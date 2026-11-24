@@ -195,8 +195,7 @@ theorem test_compat {L : Type} [CommRing L] [IsLocalRing L] (e : Fr L) {A A' : T
     obtain ⟨hc1, -, k', hk', hd⟩ := hc
     obtain rfl : k' = (algebraMap _ Y.functionField).comp k :=
       lift_unique (pt _ c) (by rw [← hk', h0f, hk, DetExtendZero.spMap_comp, Category.assoc])
-    rw [map_mul, ← _root_.mul_assoc, ← hcoc _ _ _ _ _ _ _ _ hk h0f]
-    exact hd
+    rwa [map_mul, ← _root_.mul_assoc, ← hcoc _ _ _ _ _ _ _ _ hk h0f]
   have e1 := IsFractionRing.injective (Y.presheaf.stalk y) Y.functionField
     ((hunit _ _ _ _ _ h0f).mul_left_cancel ((key b α m hb hf).trans (key b' α' m' hb' hf').symm))
   rw [hcoc _ _ _ _ _ _ _ _ hf hef, hcoc _ _ _ _ _ _ _ _ hf' hef, RingHom.comp_apply, RingHom.comp_apply,
@@ -455,14 +454,13 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   let σ : Rule t π p q := fun R _ x v w =>
     if h : ∃ j, IsFrame t π s (Set.range io) (HermitianCompactForm.chi c τ) j x v w then f R ⟨x, v, w, h⟩ else 0
   have hσ : ∀ (R : Type) [CommRing R] j x v w (h : IsFrame t π s (Set.range io) (HermitianCompactForm.chi c τ) j x v w),
-      σ R x v w = f R ⟨x, v, w, j, h⟩ := fun R _ j x v w h => dif_pos ⟨j, h⟩
+      σ R x v w = f R ⟨x, v, w, j, h⟩ := fun R _ j x v w h => dite_eq_left ⟨j, h⟩
   refine ⟨σ, isSection_of_chg fun R R' _ _ g j j' x v w x' v' w' M N h h' hc => ?_, fun R _ j x v w h => ?_, ?_⟩
   · rw [hσ R j x v w h, hσ R' j' x' v' w' h', hf R R' g ⟨x, v, w, j, h⟩ ⟨x', v', w', j', h'⟩ hc.1,
       (factor_spec g ⟨x, v, w, j, h⟩ ⟨x', v', w', j', h'⟩ hc.1).2 M N hc]
     ring
   · rw [hσ R j x v w h]
     exact hu _ _
-  · rw [hσ _ j₀ _ v₀ w₀ h₀]
-    exact h0
+  · rwa [hσ _ j₀ _ v₀ w₀ h₀]
 
 end GlobalTheory.DetLine.FromGeneric

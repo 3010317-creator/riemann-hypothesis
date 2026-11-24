@@ -331,9 +331,7 @@ theorem generic_iff_local : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
   have hR : IsRowLat D (X.Fu u) t.lam := (Y.rowsOK u).1 _ t.mem
   have hgf := (_root_.term_function_const D u u' (X.Fu u) t.lam hR).1
   have hG0 : Gval (lf D (X.Fu u)) (GTerm.frame t) ≠ 0 := by
-    have e := Formalism.L2.SG.TermDef.Gt_mk hgf ⟨GTerm.frame t, hPD⟩
-    intro h0
-    exact hC.1 (e.trans h0)
+    exact fun h0 => hC.1 ((Formalism.L2.SG.TermDef.Gt_mk hgf ⟨GTerm.frame t, hPD⟩).trans h0)
   obtain ⟨g, hA1, hA2, hΛ⟩ := hTG
   rw [generic_iff_frame Z t]
   refine forall_congr' fun p => ?_
@@ -360,8 +358,7 @@ theorem generic_iff_local : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
   · intro hn d τ hτ hτL h
     exact hn ((_root_.GlobalTheory.HL.LocDefect.bbne_of_lam_eq (Z.M p) hOK (locH Z p) D.R.rS D.R.k (FP p) (rank_loc p) (hRel p) d d0 τ τ0 hτ hd0
       (hτL.trans hLam.symm)).1 h)
-  · intro h
-    exact h d0 τ0 hd0 hLam
+  · exact fun h => h d0 τ0 hd0 hLam
 
 end GlobalTheory.Unfold.GenLoc
 end -- clump:auto

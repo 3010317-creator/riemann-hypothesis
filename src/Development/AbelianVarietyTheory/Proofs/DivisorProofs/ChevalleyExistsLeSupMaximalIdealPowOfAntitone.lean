@@ -95,8 +95,7 @@ theorem exists_le_sup_maximalIdeal_pow_of_antitone :
       have : f (a n) = F - (F - f (a n)) := by abel
       rw [this]
       exact Submodule.sub_mem _ (hNK n hF) (hmK' n (ha n))
-    rw [← Ideal.comap_map_eq_self_of_faithfullyFlat (B := B) (K n)]
-    exact h1
+    rwa [← Ideal.comap_map_eq_self_of_faithfullyFlat (B := B) (K n)]
   let P : ℕ → Submodule B (B ⧸ N) := fun e ↦ Submodule.map (Submodule.mkQ N) (K' e : Submodule B B)
   have hdir : Directed (· ≥ ·) P := fun i j ↦
     ⟨max i j, Submodule.map_mono (hK' (le_max_left i j)), Submodule.map_mono (hK' (le_max_right i j))⟩
@@ -108,8 +107,7 @@ theorem exists_le_sup_maximalIdeal_pow_of_antitone :
     rw [Submodule.mem_iInf] at hx ⊢
     intro e
     have := Submodule.mem_comap.2 (hx e)
-    rw [Submodule.comap_map_mkQ, sup_eq_right.2 (hNK e)] at this
-    exact this
+    rwa [Submodule.comap_map_mkQ, sup_eq_right.2 (hNK e)] at this
   obtain ⟨e, he⟩ := exists_le_maximalIdeal_pow_smul_of_directed B (B ⧸ N) ℕ P ⟨0⟩ hdir hbot k
   refine ⟨e, ?_⟩
   have hsm : (maximalIdeal B ^ k • (⊤ : Submodule B (B ⧸ N))) =

@@ -276,15 +276,7 @@ theorem mem_std (R : Subalgebra o Ω) {κ : Type} (v : κ → Ω) :
   simp [stdLat, AddSubgroup.mem_pi]
 
 theorem std (κ : Type) [Fintype κ] : IsLatFamily o x fun c => stdLat (chartRing o (mseg x) c) κ := by
-  refine ⟨fun c hc a ha v hv => ?_, fun c t hc ht v hv => ?_⟩
-  · exact (mem_std o _ _).2 fun i => by simpa using mul_mem ha ((mem_std o _ _).1 hv i)
-  · choose m hm using fun i =>
-      ReciprocityTheory.ChartRestriction.G.Geo.exists_pow_mul_mem_chartRing (o := o) (mseg x) c t hc ((mem_std o _ _).1 hv i)
-    refine ⟨∑ i, m i, (mem_std o _ _).2 fun i => ?_⟩
-    have hle : m i ≤ ∑ i, m i :=
-      Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)
-    rw [← Nat.sub_add_cancel hle, pow_add, Pi.smul_apply, smul_eq_mul, mul_assoc]
-    exact mul_mem (pow_mem (ReciprocityTheory.ChartRestriction.G.Geo.div_mem_chartRing (o := o) (mseg x) t c) _) (hm i)
+  apply PositivityTheory.Xgn.A_fam_constr.fam_std
 
 theorem mem_dual (R : Subalgebra o Ω) {m : ℕ} (L : AddSubgroup (Fin m → Ω)) (v : Fin m → Ω) :
     v ∈ dotDual R L ↔ ∀ l ∈ L, l ⬝ᵥ v ∈ R := by

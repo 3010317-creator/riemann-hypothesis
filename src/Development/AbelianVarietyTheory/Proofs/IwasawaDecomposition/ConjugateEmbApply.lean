@@ -92,14 +92,7 @@ variable {R : Ranks} (H : Host R)
 
 theorem conjugate_emb (g : R.GG) :
     ComplexEmbedding.conjugate (H.emb g) = H.emb (g * R.cc) := by
-  rw [Formalism.L2.Geo.emb_mul_cc_comp]
-  refine RingHom.ext fun x => ?_
-  have hcm := H.isCMField_hostE
-  have h : IsCMField.complexConj H.E x = H.conj x := by
-    apply H.φ₀.injective
-    rw [IsCMField.complexEmbedding_complexConj, H.conjE_apply]
-  show starRingEnd ℂ (H.emb g x) = H.emb g (H.conj x)
-  rw [← h, IsCMField.complexEmbedding_complexConj]
+  exact GlobalTheory.Mem.BaseEx.conjugate_emb H g
 
 theorem conjugate_emb_apply (g : R.GG) (x : H.E) :
     ComplexEmbedding.conjugate (H.emb g) x = H.emb g (H.conj x) := by
@@ -123,17 +116,17 @@ theorem sum_emb_bijective : Function.Bijective
 open Classical in
 def typeExp (p q : ℕ) (σ : H.E →+* ℂ) : ℕ := if ∃ t : Tau R, H.emb t = σ then p else q
 
-theorem typeExp_emb (p q : ℕ) (t : Tau R) : typeExp H p q (H.emb t) = p := if_pos ⟨t, rfl⟩
+theorem typeExp_emb (p q : ℕ) (t : Tau R) : typeExp H p q (H.emb t) = p := ite_eq_left ⟨t, rfl⟩
 
 theorem typeExp_conj (p q : ℕ) (t : Tau R) :
-    typeExp H p q (ComplexEmbedding.conjugate (H.emb t)) = q := if_neg ((emb_cm H _).1 ⟨t, rfl⟩)
+    typeExp H p q (ComplexEmbedding.conjugate (H.emb t)) = q := ite_eq_right ((emb_cm H _).1 ⟨t, rfl⟩)
 
 theorem typeExp_add (p q : ℕ) (σ : H.E →+* ℂ) :
     typeExp H p q σ + typeExp H p q (ComplexEmbedding.conjugate σ) = p + q := by
   unfold typeExp
   by_cases h : ∃ t : Tau R, H.emb t = σ
-  · rw [if_pos h, if_neg ((emb_cm H σ).1 h)]
-  · rw [if_neg h, if_pos (not_not.1 (fun h' => h ((emb_cm H σ).2 h'))), add_comm]
+  · rw [ite_eq_left h, ite_eq_right ((emb_cm H σ).1 h)]
+  · rw [ite_eq_right h, ite_eq_left (not_not.1 (fun h' => h ((emb_cm H σ).2 h'))), add_comm]
 
 theorem prod_typeExp {M : Type} [CommMonoid M] (p q : ℕ) (F : (H.E →+* ℂ) → M) :
     ∏ σ, F σ ^ typeExp H p q σ =

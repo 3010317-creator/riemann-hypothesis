@@ -90,8 +90,7 @@ theorem exists_ne_one (ψ : AddChar (AF F) ℂ) (hψ : ∀ w : Pl (F := F), ∃ 
     (ha : a ≠ 0) : ∃ b : Af F, GlobalTheory.HeisSchA.finChar ψ (a * b) ≠ 1 := by
   classical
   obtain ⟨v, hv⟩ : ∃ v, evalV F v a ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact ha (af_ext fun u => by rw [h u, map_zero])
   obtain ⟨t, ht⟩ := hψ v
   refine ⟨singleFin v (t / evalV F v a), ?_⟩
@@ -104,8 +103,7 @@ theorem exists_ne_one (ψ : AddChar (AF F) ℂ) (hψ : ∀ w : Pl (F := F), ∃ 
       rw [evalV_singleFin_self, evalV_singleFin_self]
       field_simp
     · rw [evalV_singleFin_ne hu, evalV_singleFin_ne hu, mul_zero]
-  rw [e]
-  exact ht
+  rwa [e]
 
 theorem exists_chi_ne_one (ψ : AddChar (AF F) ℂ) (hψ : ∀ w : Pl (F := F), ∃ t, GlobalTheory.LatVac.psiAt ψ w t ≠ 1) {d : κ → Af F}
     (hd : d ≠ 0) : ∃ q : κ → Af F, chi ψ q d ≠ 1 := by

@@ -182,7 +182,7 @@ theorem good_indP (v : Pl D) : Good v (GlobalTheory.SelfDualAt.indP (D := D) (·
     split_ifs
     · exact one_mem _
     · exact zero_mem _
-  · rw [GlobalTheory.SelfDualAt.evalV_indP, if_neg hw]
+  · rw [GlobalTheory.SelfDualAt.evalV_indP, ite_eq_right hw]
 
 theorem indicatorAdele_mul_self (v : Pl D) :
     GlobalTheory.SelfDualAt.indP (D := D) (· = v) * GlobalTheory.SelfDualAt.indP (D := D) (· = v) = GlobalTheory.SelfDualAt.indP (D := D) (· = v) := by
@@ -195,11 +195,7 @@ theorem indicatorAdele_mul_self (v : Pl D) :
 
 theorem gen_mem_idAt (v : Pl D) (α : Af D.host.F) (hα : ∀ w, w ≠ v → evalV D.host.F w α = 0) (x : D.host.E) :
     (pairA D.host.F 0 α) ⊗ₜ[D.host.F] x ∈ idAt D (· = v) := by
-  refine Ideal.mem_inf.2 ⟨?_, Ideal.mem_iInf.2 fun w => ?_⟩
-  · change (0 : Ainf D.host.F) ⊗ₜ[D.host.F] x = 0
-    exact TensorProduct.zero_tmul _ _
-  · change (evalV D.host.F w.1 α) ⊗ₜ[D.host.F] x = 0
-    rw [hα _ w.2, TensorProduct.zero_tmul]
+  exact GlobalTheory.SeeSaw.IdVMul.tmul_mem_idAt hα x
 
 theorem AA_ne_zero : D.host.AA ≠ 0 :=
   (GlobalTheory.SeeSaw.LiftModel.AA_ne (D := D) Formalism.IndefR.Fin.factPrincipalDatum).1

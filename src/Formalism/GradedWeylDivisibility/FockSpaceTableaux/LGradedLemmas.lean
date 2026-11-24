@@ -63,7 +63,7 @@ theorem lgraded_rowGen_X {r n : ℕ} (a : Fin r) (v : Fin r × Fin n) :
   simp only [rowGen, aeval_X, lgraded_wa]
   by_cases h : b = a
   · subst h
-    rw [if_pos rfl, if_pos rfl, pow_one]
+    rw [ite_eq_left rfl, ite_eq_left rfl, pow_one]
     ring
   · simp [h]
 
@@ -143,9 +143,7 @@ theorem lgraded_sep {r n : ℕ} (M : Submodule ℚ (MvPolynomial (Fin r × Fin n
       · rw [hw]
         have hne : (∏ s ∈ V.erase t, ((t : ℚ) - (s : ℚ))) ≠ 0 := by
           rw [Finset.prod_ne_zero_iff]
-          intro s hs
-          have hst := (Finset.mem_erase.1 hs).1
-          exact sub_ne_zero.2 (by exact_mod_cast hst.symm)
+          exact fun s hs => sub_ne_zero.2 (by exact_mod_cast ((Finset.mem_erase.1 hs).1).symm)
         rw [← mul_assoc, inv_mul_cancel₀ hne, one_mul]
       · have hmem : Finsupp.weight (lgraded_wa a) m ∈ V.erase t := Finset.mem_erase.2 ⟨hw, hmV⟩
         have h0 : ∏ s ∈ V.erase t,

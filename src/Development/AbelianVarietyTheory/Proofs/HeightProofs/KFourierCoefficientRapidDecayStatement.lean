@@ -354,8 +354,7 @@ theorem casimir_inverse_bound : ∀ {n : ℕ} (ε : Fin n → Bool) {r : ℕ} (X
   · rw [← hcoe, hs]
   · have h := hbound M s
     rw [hs] at h
-    rw [le_inv_mul_iff₀ (by positivity)]
-    exact h
+    rwa [le_inv_mul_iff₀ (by positivity)]
 
 end GlobalTheory.KFourier
 end -- clump:auto
@@ -425,8 +424,7 @@ theorem integral_deriv_eq_zero {ε : Fin n → Bool} {X : Mx n} (hX : inK ε X) 
     have hfun : (fun t => G (k * expK ε X s * expK ε X (t - s))) = fun t => G (k * expK ε X t) := by
       funext t
       rw [mul_assoc, ← expK_add hX, add_sub_cancel]
-    rw [hfun] at h2
-    exact h2
+    rwa [hfun] at h2
   have h := (hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := muK ε) (𝕜 := ℝ)
     (F := fun t k => G (k * expK ε X t)) (F' := fun t k => D (k * expK ε X t)) (x₀ := 0) (bound := fun _ => C)
     (s := Set.univ) Filter.univ_mem
@@ -563,8 +561,7 @@ theorem casimir_pow_bound : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F : L
     have e : ∀ j, ∫ k, rder ε [X j, X j] q k * F u (y * toMK k) ∂(muK ε) =
         ∫ k, q k * F (X j :: X j :: u) (y * toMK k) ∂(muK ε) := fun j => by
       have a := by_parts hF hg hc hy hu (hX j) (hr j)
-      rw [by_parts hF hg hc hy (h1 j) (hX j) hq, neg_neg] at a
-      exact a
+      rwa [by_parts hF hg hc hy (h1 j) (hX j) hq, neg_neg] at a
     simp only [Finset.sum_apply, Finset.sum_mul]
     rw [integral_finsetSum _ fun j _ => integrable_mul_fam hF hg hc hy hu (continuous_of_mem (hrr j))]
     refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun j _ => ?_)
@@ -946,9 +943,9 @@ theorem kFourier_coeff_decay : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F 
     have hsm : Summable (fun i : ℕ => ((i + 1 : ℕ) : ℝ) ^ ((n : ℝ) ^ 2 - α * M)) :=
       (summable_nat_add_iff 1).mpr (Real.summable_nat_rpow.mpr hp)
     refine Summable.of_nonneg_of_le (fun i => ?_) (fun i => ?_) (hsm.mul_left (|C| * (c ^ M)⁻¹ * 2 ^ (n ^ 2)))
-    · simp only [Nat.add_one_ne_zero, if_false, B]
+    · simp only [Nat.add_one_ne_zero, ite_false, B]
       exact mul_nonneg (mul_nonneg (abs_nonneg _) (hlnn _ (Nat.cast_nonneg _))) (by positivity)
-    · simp only [Nat.add_one_ne_zero, if_false, B]
+    · simp only [Nat.add_one_ne_zero, ite_false, B]
       set x : ℝ := ((i + 1 : ℕ) : ℝ) with hx
       have hx1 : 1 ≤ x := by simp [hx]
       have hx0 : 0 < x := by linarith
@@ -971,7 +968,7 @@ theorem kFourier_coeff_decay : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F 
   · intro i y hy
     have hy0 : 0 ≤ (1 + hs y) ^ N := pow_nonneg (by linarith [_root_.GlobalTheory.TypeSum.hs_nonneg y]) _
     rcases Nat.eq_zero_or_pos i with rfl | hi
-    · simp only [if_true]
+    · simp only [ite_true]
       have h := hC0 0 (e 0) (he 0).1 y hy
       simp only [Function.iterate_zero, id] at h
       have hk := GlobalTheory.T.integral_normSq_reproducingKernel_le_finrank ε 0 (e 0) (he 0)
@@ -981,7 +978,7 @@ theorem kFourier_coeff_decay : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F 
               (Real.sqrt_nonneg _) (mul_nonneg (abs_nonneg _) hy0)
         _ = _ := by ring
     · have hi0 : i ≠ 0 := hi.ne'
-      simp only [hi0, if_false]
+      simp only [hi0, ite_false]
       have hl : 0 < c * (i : ℝ) ^ α := mul_pos hc (Real.rpow_pos_of_pos (by exact_mod_cast hi) _)
       obtain ⟨s, hsP, hse, hsn⟩ := GlobalTheory.T.compactUnitaryCasimir_inverse_topDegree_bound ε X hX i (c * (i : ℝ) ^ α) hl
         (fun p hp hq => hgap i hi p hp hq) M (e i) (he i).1

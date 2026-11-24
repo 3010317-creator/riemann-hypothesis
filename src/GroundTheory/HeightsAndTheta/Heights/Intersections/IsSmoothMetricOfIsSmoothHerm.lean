@@ -40,13 +40,11 @@ theorem isProjVarQ_of_isArithVar {P : Ideal (ReciprocityTheory.ChartRestriction.
   · intro k
     obtain ⟨i, hi⟩ := hrel k
     refine ⟨i, fun h => hi ?_⟩
-    rw [← hcomap, Ideal.mem_comap, MvPolynomial.map_X]
-    exact h
+    rwa [← hcomap, Ideal.mem_comap, MvPolynomial.map_X]
   · have hd' : ringKrullDim (MvPolynomial (Σ k, ι k) ℚ ⧸
         P.map (MvPolynomial.map (Int.castRingHom ℚ))) + 1 =
         ((e + 1 + Fintype.card K : ℕ) : WithBot ℕ∞) := by
-      rw [← hdim]
-      exact hd
+      rwa [← hdim]
     show ringKrullDim (MvPolynomial (Σ k, ι k) ℚ ⧸ P.map (MvPolynomial.map (Int.castRingHom ℚ))) =
       ((e + Fintype.card K : ℕ) : WithBot ℕ∞)
     generalize ringKrullDim (MvPolynomial (Σ k, ι k) ℚ ⧸

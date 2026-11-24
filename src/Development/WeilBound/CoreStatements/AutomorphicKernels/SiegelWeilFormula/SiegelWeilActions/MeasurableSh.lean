@@ -130,10 +130,8 @@ theorem unf_lint {Γ : AddSubgroup V} {Δ : AddSubgroup A} [Countable Γ] [Count
   have hT : IsAddFundamentalDomain (Γ.prod Γ) (Λ.symm ⁻¹' (𝓤 ×ˢ 𝓤)) (ν.prod ν) := by
     refine hUU.preimage_of_equiv hsymm.quasiMeasurePreserving
       (e := fun g => ⟨Λ g, (hΛ g).1 g.2⟩) ⟨?_, ?_⟩ ?_
-    · intro g h hgh
-      exact Subtype.ext (Λ.injective (congrArg Subtype.val hgh))
-    · intro h
-      exact ⟨⟨Λ.symm h, (hΛ _).2 (by simp [h.2])⟩, Subtype.ext (by simp)⟩
+    · exact fun g h hgh => Subtype.ext (Λ.injective (congrArg Subtype.val hgh))
+    · exact fun h => ⟨⟨Λ.symm h, (hΛ _).2 (by simp [h.2])⟩, Subtype.ext (by simp)⟩
     · intro g x
       simp [AddSubgroup.vadd_def, vadd_eq_add, map_add (f := _)]
   have hM : Measurable fun p : V × (V × A) =>

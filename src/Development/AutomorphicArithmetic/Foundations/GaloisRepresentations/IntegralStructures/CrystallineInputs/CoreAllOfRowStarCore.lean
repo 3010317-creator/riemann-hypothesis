@@ -289,8 +289,7 @@ theorem loc_eq_unrChar [_root_.NumberField.IsTotallyComplex E] (χ : HChar E) (h
     simp only [smul_eq_mul, mul_neg, mul_one, neg_neg]
     rw [WithZero.exp_log h0, mul_inv_cancel₀ h0]
   have h3 := hu _ h1
-  rw [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
-  exact h3
+  rwa [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
 
 theorem satWD_map_mul (h : Formalism.ConjugateSelfDual.IsPlaceOver A w) (a : ℕ) (B : Multiset ℂˣ) (c : ℂˣ)
     {art : Weil h →* (w.adicCompletion E)ˣ} (ha : IsLocalArtin h art)
@@ -429,8 +428,7 @@ theorem isSpherical_twist_of_unr {E : Type} [Field E] [NumberField E] [_root_.Nu
   have h1 : CuspSub.locDet a κ w g.1 = 1 := hκ _ (GlobalTheory.SphGal.isUnitAt_det_of_mem hg)
   have h3 := hv g
   show ((CuspSub.locDet a κ w g.1 : ℂˣ) : ℂ) • σ.ρ g.1 v = _
-  rw [h1, Units.val_one, one_smul]
-  exact h3
+  rwa [h1, Units.val_one, one_smul]
 
 theorem holds_good_crys : AutomorphicFormsFiniteGL → HeckeLAdicCharacterAbove → Holds .csd .crys → Holds .good .crys := by
   intro hF hA hC E Ω _ _ _ _ _ _ l _ ι a ha π χ hs r hr w hw
@@ -670,8 +668,7 @@ theorem _root_.UpperTheory.Gal.Int.Inp.holdsS_good_dR_of_csd : UpperTheory.Gal.I
     refine Multiset.map_congr rfl fun n _ => ?_
     simp only [Function.comp_apply, Pi.neg_apply, neg_neg, id, hm0]
     ring
-  rw [e2] at h2
-  exact h2
+  rwa [e2] at h2
 
 end GlobalTheory.RoadU
 
@@ -825,8 +822,7 @@ theorem _root_.UpperTheory.Gal.Int.Inp.holdsS_all_unr : UpperTheory.Gal.Int.Inp.
   have hrP : Weak P ι (r.comp (UpperTheory.V.Af.Bc.res E Ω Q.K)) := GlobalTheory.GalCut.weak_comp_res E Q.K Ω l ι a π P hP r hr
   obtain ⟨w', hunder, h', hN⟩ := GlobalTheory.PlaceNormDec.exists_place_normV_eq E Ω Q w A h (hQdec A h)
   have hB' : (CG.mk P).HasSat w' B := by
-    have e := hP.sat w' 1 B (by rw [pow_one, hunder, hN]) (hunder ▸ hB)
-    simpa using e
+    simpa using hP.sat w' 1 B (by rw [pow_one, hunder, hN]) (hunder ▸ hB)
   have hlw : ((l : ℕ) : 𝓞 Q.K) ∉ w'.asIdeal := by
     intro hw
     apply hl
@@ -841,8 +837,7 @@ theorem _root_.UpperTheory.Gal.Int.Inp.holdsS_all_unr : UpperTheory.Gal.Int.Inp.
     exact hcl.1 s' hs
   · obtain ⟨σ', rfl⟩ := hQdec A h hσ.1
     have e := hcl.2 σ' hσ
-    rw [← map_inv]
-    exact e
+    rwa [← map_inv]
 
 end GlobalTheory.UnrDescent
 
@@ -883,8 +878,7 @@ theorem _root_.UpperTheory.Gal.Int.Inp.holdsS_dR_all_of_good : UpperTheory.Gal.I
   obtain ⟨τK, τ'', hτK, hind⟩ := GlobalTheory.induced_embedding_extends E Ω Q.K l A O Bw Bw' e1 e2 τ LL' τ' hτ
   have hJK : J.map (fun n : ℤ => (n : ℂ)) =
       ((CG.mk P).infChar (ι.toRingHom.comp τK)).map (fun z => ((a : ℂ) - 1) / 2 - z) := by
-    rw [hP.inf, RingHom.comp_assoc, hτK]
-    exact hJ
+    rwa [hP.inf, RingHom.comp_assoc, hτK]
   have hres := D.2.2.2.2 τK J (hc'.2 τK LL' τ'' hind J hJK)
   rwa [hτK] at hres
 
@@ -989,8 +983,7 @@ theorem _root_.UpperTheory.Gal.Int.Inp.holdsS_all_phi : UpperTheory.Gal.Int.Inp.
     rw [hS, hTw, (hS _ _).mp h0]
   have hgc : WeilRel (RingEquiv.refl Ω) g (c g) := (hc g (c g)).2 rfl
   have hcl := hgood Q.K Ω l ι a ha P χ' hsc'' _ hr' w' (hQsplit w' hunder) B hB' Pr AI hT A h' O Bw' hj' (c g)
-  rw [charPol_eq hrel hgc, charPol_eq hsat hgc]
-  exact hcl
+  rwa [charPol_eq hrel hgc, charPol_eq hsat hgc]
 
 end GlobalTheory.RoadU
 end

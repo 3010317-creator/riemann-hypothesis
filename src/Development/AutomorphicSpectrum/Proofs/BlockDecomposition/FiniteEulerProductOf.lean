@@ -55,9 +55,7 @@ theorem exists_above {E : Type} [Field E] [NumberField E] [IsCMField E] (v : PlF
     ∃ w : Pl E, w.under (𝓞 (maximalRealSubfield E)) = v := by
   obtain ⟨Q, hQm, hQo⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) v.asIdeal
   have hQ0 : Q ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q
-  refine ⟨⟨Q, hQm.isPrime, hQ0⟩, ?_⟩
-  apply HeightOneSpectrum.ext
-  exact (hQo.over).symm
+  exact ⟨⟨Q, hQm.isPrime, hQ0⟩, HeightOneSpectrum.ext (hQo.over).symm⟩
 
 theorem eulerFinOf' : EulerFinOf' := by
   intro hC hR hG hL hH hI E _ _ _ hU a b S hS φ₁ φ₂ h1 h2 δ₁ δ₂ e1 e2
@@ -81,7 +79,7 @@ theorem eulerFinOf' : EulerFinOf' := by
   have h : ∃ w ∈ S, w.under (𝓞 (maximalRealSubfield E)) = v := by
     obtain ⟨u, ⟨huS, hu⟩, -⟩ := hS w0
     exact ⟨u, huS, hu.trans hw0⟩
-  simp only [secPl, dif_pos h, Option.elim]
+  simp only [secPl, dite_eq_left h, Option.elim]
   exact key _ h.choose_spec.1 h.choose_spec.2
 
 end GlobalTheory.CompanionTheory.EulerAsm

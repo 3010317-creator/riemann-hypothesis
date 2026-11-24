@@ -100,8 +100,7 @@ theorem chainE (hs : W.s = 1) (T : LocLat G Qp LL O) {M h : ZMod n → ℕ}
       congr 1
       refine Finset.prod_congr rfl fun s hs' => ?_
       rw [map_pow, pow_succ', AlgHom.mul_apply, show k + 1 - (s + 1) = k - s by omega]
-    rw [e] at h2
-    exact h2
+    rwa [e] at h2
 
 theorem hs_ge (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (hA : A.OK) (c' : ZMod n) (hc' : c' ∈ A.cuts) (e m : ℕ)
     (hm1 : 1 ≤ m) (hme : m ≤ e) :
@@ -111,11 +110,11 @@ theorem hs_ge (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (hA : A.OK) (c'
   unfold Formalism.MainNotions.ArcLiftingSetup.ArcP.Hs
   rw [hlet]
   by_cases h1 : A.ty (c' + (m : ZMod n)) = Formalism.MainNotions.LocalTheoryWindows.LT.thin
-  · rw [if_pos (Or.inl h1), h1]; simp [Mw]
+  · rw [ite_eq_left (Or.inl h1), h1]; simp [Mw]
   · by_cases h2 : e - (e - m) ≤ A.j
-    · rw [if_pos (Or.inr h2)]
+    · rw [ite_eq_left (Or.inr h2)]
       exact mw_le A hA c' hc' m hm1 (by omega)
-    · rw [if_neg (by tauto)]
+    · rw [ite_eq_right (by tauto)]
       have hth : (A.ty (c' + (m : ZMod n))).thick := by
         revert h1; cases A.ty (c' + (m : ZMod n)) <;> simp [Formalism.MainNotions.LocalTheoryWindows.LT.thick]
       have hsz := hA.2.2.2.2.2.2.2.1 _ hth
@@ -140,7 +139,7 @@ theorem hs_le_h (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (hA : A.OK) (
 
 theorem hs_top (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (a : ZMod n) (e s : ℕ) (h : e - s ≤ A.j) : A.Hs a e s = A.G₀ := by
   unfold Formalism.MainNotions.ArcLiftingSetup.ArcP.Hs
-  rw [if_pos (Or.inr h)]
+  rw [ite_eq_left (Or.inr h)]
 
 theorem two_h_lt (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (h5 : 5 ≤ PD.p) : 2 * A.h < (PD.p - 1) * A.M PD.p := by
   unfold Formalism.MainNotions.ArcLiftingSetup.ArcP.M
@@ -281,9 +280,9 @@ theorem hw_le_hs (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (hA : A.OK) 
   unfold Formalism.MainNotions.ArcLiftingSetup.ArcP.Hs
   rw [hlet]
   by_cases h1 : A.ty (c' + ((e - s : ℕ) : ZMod n)) = Formalism.MainNotions.LocalTheoryWindows.LT.thin
-  · rw [if_pos (Or.inl h1), h1]; simp [Hw]
+  · rw [ite_eq_left (Or.inl h1), h1]; simp [Hw]
   · by_cases h2 : e - s ≤ A.j
-    · rw [if_pos (Or.inr h2)]
+    · rw [ite_eq_left (Or.inr h2)]
       rcases hA.2.2.2.2.2.2.2.2 with h | ⟨hj, hth, hsz⟩
       · rw [h c' hc' (e - s) (by omega) h2]; simp [Hw]
       · have hk : e - s = 1 := by omega
@@ -297,7 +296,7 @@ theorem hw_le_hs (A : Formalism.MainNotions.ArcLiftingSetup.ArcP n) (hA : A.OK) 
         | up b => intro hs hok; simp only [Formalism.MainNotions.LocalTheoryWindows.LT.size] at hs; simp only [Hw]; omega
         | down b => intro hs hok; simp only [Formalism.MainNotions.LocalTheoryWindows.LT.size] at hs
                     simp only [Formalism.MainNotions.LocalTheoryWindows.LT.ok] at hok; simp only [Hw]; omega
-    · rw [if_neg (by tauto)]
+    · rw [ite_eq_right (by tauto)]
       have hth : (A.ty (c' + ((e - s : ℕ) : ZMod n))).thick := by
         revert h1; cases A.ty (c' + ((e - s : ℕ) : ZMod n)) <;> simp [Formalism.MainNotions.LocalTheoryWindows.LT.thick]
       have hsz := hA.2.2.2.2.2.2.2.1 _ hth
@@ -355,12 +354,10 @@ theorem iter_down (hs : W.s = 1) (T : LocLat G Qp LL O) {M hh : ZMod n → ℕ}
       rw [hQ] at h1
       have h2 := φpow_span W T _ k _ h1
       rw [SatPW.φD_pow_smulA, map_pow, ← hc] at h2
-      rw [hlet]
-      exact h2
+      rwa [hlet]
     have h3 := hle (ih y hy)
     simp only [U, Submodule.mem_comap, LinearMap.smul_apply, LinearMap.id_apply, smul_smul] at h3
-    rw [Finset.prod_range_succ, mul_comm]
-    exact h3
+    rwa [Finset.prod_range_succ, mul_comm]
 
 theorem span_pow_le (T : LocLat G Qp LL O) {r : ℕ} (b : Fin r → W.DD T)
     (hb : ∀ x ∈ W.N T, ∃ a : Fin r → LetA O n, x = ∑ j, a j • b j) (c : ZMod n) (e : ℕ) :
@@ -495,8 +492,7 @@ theorem γD_Nl (T : LocLat G Qp LL O) (c : ZMod n) (δ : W.Gam) {x : W.DD T} (hx
 
 theorem Nl_le_N (T : LocLat G Qp LL O) (c : ZMod n) {x : W.DD T} (hx : x ∈ W.Nl T c) : x ∈ W.N T := by
   obtain ⟨z, hz, rfl⟩ := hx
-  simp only [LinearMap.smul_apply, LinearMap.id_apply]
-  exact (W.N T).smul_mem _ hz
+  simpa only [LinearMap.smul_apply, LinearMap.id_apply] using (W.N T).smul_mem _ hz
 
 alias map_smulA := _root_.Formalism.MainNotions.LiftingTheory.wmap_map_smul
 

@@ -376,9 +376,7 @@ theorem continuous_of_cg [Algebra.IsAlgebraic ℚ Ω] (f : G ℚ Ω → Qbar l)
   obtain ⟨E0, hE⟩ := h n
   have hopen : ∀ᶠ t in nhds (1 : G ℚ Ω), ∀ z ∈ E0, t z = z := by
     rw [Filter.eventually_all_finset]
-    intro z _
-    have ho := stabilizer_isOpen_of_isIntegral (K := ℚ) (L := Ω) z
-    exact ho.mem_nhds (one_mem _)
+    exact fun z _ => (stabilizer_isOpen_of_isIntegral (K := ℚ) (L := Ω) z).mem_nhds (one_mem _)
   have hcont : Filter.Tendsto (fun t : G ℚ Ω => s⁻¹ * t) (nhds s) (nhds 1) := by
     have := (continuous_const_mul s⁻¹).tendsto s
     rwa [inv_mul_cancel] at this
@@ -429,8 +427,7 @@ theorem cg_intCast (n : ℕ) (j : ℤ) : Cg (l := l) n (((j : ZMod (l ^ n)).val 
   have e : (((j : ZMod (l ^ n)).val : ℕ) : Qbar l) - (j : Qbar l) =
       (l : Qbar l) ^ n * ((-(j / ((l ^ n : ℕ) : ℤ)) : ℤ) : Qbar l) := by
     have := congrArg (Int.cast : ℤ → Qbar l) h1
-    rw [Int.cast_sub, Int.cast_mul, Int.cast_natCast, Int.cast_natCast, Nat.cast_pow] at this
-    exact this
+    rwa [Int.cast_sub, Int.cast_mul, Int.cast_natCast, Int.cast_natCast, Nat.cast_pow] at this
   rw [Cg, e, norm_mul]
   exact mul_le_of_le_one_right (norm_nonneg _) (IsUltrametricDist.norm_intCast_le_one (Qbar l) _)
 
@@ -642,7 +639,7 @@ theorem smoothed_pres_of_shCoc [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω) (
     if h : (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) 1 1 ≠ 0 then Units.mk0 _ h else 1
   have hν : ∀ s ∈ Dec (F := ℚ) A, (ν s : Qbar l) = (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) 1 1 := by
     intro s hs
-    simp only [ν, dif_pos (hnz s hs), Units.val_mk0]
+    simp only [ν, dite_eq_left (hnz s hs), Units.val_mk0]
   refine smoothed_pres A hA c ν (fun r s y => Y r s y 1) (fun r => ⟨hO r, fun s hs u _ x => ?_⟩)
     (fun r => GlobalTheory.LambdaValuationPowers.AllRoots.continuous_of_cg _ fun n => ?_) (fun s hs => ?_) d₀ hd₀ m ζ hζ
   · have := congrFun (hY r s u x) 1
@@ -678,7 +675,7 @@ theorem exists_pres_smoothed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
     exact smoothed_pres_of_shCoc A hN.atL cf ρ hD hI Y (fun r => hfun ▸ hY r) hc hO d₀ hd₀ m ζ hζ
   · refine GlobalTheory.LambdaValuationPowers.AllRoots.pres_of_vanish A cf _ m ζ hζ fun s _ _ => ?_
     obtain ⟨Yx, -, hs⟩ := hZ
-    push_neg at hcw
+    push Not at hcw
     simp [hs, hcw]
 
 end GlobalTheory.LambdaValuationPowers.Smooth
@@ -782,13 +779,7 @@ theorem cycMod_one_of {m : ℕ} (hm : 1 ≤ m) {s : G ℚ Ω} (hs : cycMod ℚ �
   rw [ha, e, map_add (f := _), map_one, map_mul, map_natCast, ZMod.natCast_self, zero_mul, add_zero]
 
 theorem cg_per {per : ℕ → Qbar l} (h : ∀ n, Cg n (per (n + 1)) (per n)) {m n : ℕ} (hmn : m ≤ n) : Cg m (per n) (per m) := by
-  induction n, hmn using Nat.le_induction with
-  | base => simp [Cg]
-  | succ n hn ih =>
-    have h1 : Cg m (per (n + 1)) (per n) := GlobalTheory.KummerEisensteinGalois.cg_mono hn (h n)
-    unfold Cg at *
-    rw [← sub_add_sub_cancel _ (per n)]
-    exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h1 ih)
+  exact GlobalTheory.Ord2.cg_of_le h hmn
 
 theorem chain {Y P F pn pm E t a v u C lc μ ν : Qbar l} (hμ : ‖μ‖ < 1) (hlc : ‖lc‖ ≤ 1) (hP : ‖P‖ ≤ 1) (hC : ‖C‖ ≤ 1)
     (hv : ‖v‖ ≤ 1) (hu : ‖u‖ ≤ 1) (hpn : ‖pn‖ = 1) (hpm : ‖pm‖ = 1) (ht : t = a * (1 + μ * v) + ν * u)
@@ -966,8 +957,7 @@ theorem UpperTheory.Kd.L.thdiam :
   have key := hg s hs hcyc φ hφ tt htt β t hβy hβ1 hlt i
   have hinv : (((δ : ZMod N).val : ZMod N))⁻¹ = ((δ⁻¹ : (ZMod N)ˣ) : ZMod N) := by
     rw [ZMod.natCast_zmod_val, ZMod.inv_coe_unit]
-  rw [hinv] at key
-  exact key
+  rwa [hinv] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.Thdiam =====
@@ -1189,8 +1179,7 @@ theorem _root_.UpperTheory.V.Z.Kato.K5.hco : ∀ (Ω : Type) [Field Ω] [Algebra
     hcgmul m M _ _ hMle (GlobalTheory.KummerEisensteinGalois.cg_mono (by omega) hY1)
   have hFP : ‖lam (GlobalTheory.KummerEisensteinGalois.seqN 1 j Φ) - per n * (M * pr f 1)‖ ≤ ‖(l : Qbar l) ^ m‖ := by
     have := GlobalTheory.KummerEisensteinGalois.cg_mono (by omega : m ≤ n - cL) hF
-    rw [hpr1] at this
-    exact this
+    rwa [hpr1] at this
   have hpp : ‖per n - per m‖ ≤ ‖(l : Qbar l) ^ m‖ :=
     GlobalTheory.LambdaValuationPowers.ZetaCoef.cg_per (fun q => (hper q).2.1) (by omega : m ≤ n)
   have hEν : ‖E * (l : Qbar l) ^ n‖ ≤ ‖(l : Qbar l) ^ m‖ := by
@@ -1243,8 +1232,7 @@ theorem _root_.UpperTheory.V.Z.Kato.K5.hco : ∀ (Ω : Type) [Field Ω] [Algebra
           algebraMap ℤ_[l] (Qbar l) (u δ) * ((l : Qbar l) ^ c₁ * GlobalTheory.KummerEisensteinGalois.seqN 1 j (φδ δ) i) := by
         unfold GlobalTheory.KummerEisensteinGalois.seqN
         ring
-      rw [h4]
-      exact h3
+      rwa [h4]
     exact GlobalTheory.KummerEisensteinGalois.cg_mono (by omega) hcg
   have hch := GlobalTheory.LambdaValuationPowers.ZetaCoef.chain (l := l) (Y := M * Y m s y 1) (P := M * pr f 1) (F := lam (GlobalTheory.KummerEisensteinGalois.seqN 1 j Φ))
     (pn := per n) (pm := per m) (E := E) (t := (tt.val : Qbar l)) (a := lamv l m s) (v := v') (u := u') (C := Cs)
@@ -1348,8 +1336,7 @@ theorem fix_mu [IsAlgClosure ℚ Ω] (s : G ℚ Ω) (hs : cycBar ℚ Ω l s = 1)
     (algebraMap ℚ_[l] (Qbar l)).injective.comp (fun a b h => Subtype.ext h)
   have hz : cycZ ℚ Ω l s = 1 := by
     apply Units.map_injective (f := ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom) hinj
-    rw [map_one]
-    exact hs
+    rwa [map_one]
   have hz' : cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) = 1 := hz
   have h := cyclotomicCharacter.spec l (n := 1) (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) ζ (by rw [pow_one]; exact hζ)
   change s ζ = _ at h
@@ -1363,8 +1350,7 @@ theorem fix_sqrt_unit (hl : l ≠ 2) {A : ValuationSubring Ω} (hA : OverL l A) 
   exfalso
   obtain ⟨-, hI⟩ := hs
   have hβ1 : A.valuation β ≤ 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : 1 < A.valuation β ^ 2 := one_lt_pow₀ hc two_ne_zero
     rw [← map_pow, hβ] at h1
     have : A.valuation (N : Ω) ≤ 1 := (A.valuation_le_one_iff _).2 (intCast_mem A N)
@@ -1550,10 +1536,8 @@ theorem dt_eq_one [IsAlgClosure ℚ Ω] {W : R2 Ω l} (hcont : Continuous W) (hd
     have h3 := hfix _ q hq
     rw [hsα] at h3
     have h4 : (2 : Ω) * (x - s x) = 0 := by linear_combination -h3
-    have h5 := (mul_eq_zero.1 h4).resolve_left two_ne_zero
-    exact (sub_eq_zero.1 h5).symm
-  rw [InfiniteGalois.fixingSubgroup_fixedField Hc] at hsub
-  exact hsub
+    exact (sub_eq_zero.1 ((mul_eq_zero.1 h4).resolve_left two_ne_zero)).symm
+  rwa [InfiniteGalois.fixingSubgroup_fixedField Hc] at hsub
 
 end GlobalTheory.QuotInertia
 

@@ -137,8 +137,7 @@ theorem PositivityTheory.Xgn.summand_iff_locFree_quot : ∀ {o Ω : Type} [CommR
       intro x
 
       rw [map_sum]
-      simp only [map_smul, hwv]
-      exact hsum x
+      simpa only [map_smul, hwv] using hsum x
     refine ⟨LinearMap.id - (∑ i, LinearMap.smulRight (φ i) (w i)) ∘ₗ U.mkQ, ?_, ?_, ?_⟩
     · intro x
       rw [← Submodule.Quotient.mk_eq_zero, ← Submodule.mkQ_apply]
@@ -158,8 +157,7 @@ theorem PositivityTheory.Xgn.summand_iff_locFree_quot : ∀ {o Ω : Type} [CommR
       refine Module.Finite.of_surjective (∑ i, LinearMap.smulRight (LinearMap.proj i : (Fin k × Fin N → Ω) →ₗ[Ω] Ω) (v i)) ?_
       intro e
       refine ⟨fun i => φ i e, ?_⟩
-      simp only [LinearMap.sum_apply, LinearMap.smulRight_apply, LinearMap.proj_apply]
-      exact hsum e
+      simpa only [LinearMap.sum_apply, LinearMap.smulRight_apply, LinearMap.proj_apply] using hsum e
     constructor
     · refine PositivityTheory.Xgn.A_summand_of_quot.locFree_of_dual R (fun a ha e he => hst a ha _ he) rfl
         (fun i => (φ i).comp U.subtype) (fun i => ⟨ρ (v i), hρU _⟩) (fun i => hρL _ (hv i))

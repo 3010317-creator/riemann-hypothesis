@@ -255,8 +255,7 @@ theorem rayRec_of_has (hR : GlobalTheory.NT.RayField) {K : Ctx} (X : Stages) (f 
     · exact Or.inl h1
     · right
       have hw : w ∈ c.Wt := by_contra fun h => hmu (c.mu.off w h)
-      rw [← (c.nch_Q w hw).1]
-      exact hmem
+      rwa [← (c.nch_Q w hw).1]
   have hM0 := hspec.1 _ hM
   have hrs := (Classical.choose_spec (GlobalTheory.RayOnto.exists_finset_containsRayField hR X.B.toPre _ hM0)).2
   refine hrs X.B.LL X.B.embLL (GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.embK X.toD7) ?_ ?_
@@ -264,8 +263,7 @@ theorem rayRec_of_has (hR : GlobalTheory.NT.RayField) {K : Ctx} (X : Stages) (f 
     exact DFunLike.congr_fun X.B.embE_φ₀ _
   · intro z hz
     refine hH z (Finset.mem_biUnion.2 ⟨_, hM, ?_⟩)
-    rw [raySet, dite_eq_left hM0]
-    exact hz
+    rwa [raySet, dite_eq_left hM0]
 
 end GlobalTheory.Plug.RayLarge
 
@@ -634,8 +632,7 @@ theorem rayClassFields_in_coefficients : ∀ (K : Ctx) (β : BPt K), β.Is RayPo
   intro K β h
   obtain ⟨X, f, T, c, Y, hY, p, _, _, _, _, _, _, _, _, _⟩ := β
   change RayRec X.toD7 c.O.nch at h
-  rw [← hY] at h
-  exact h
+  rwa [← hY] at h
 
 end GlobalTheory.PlugPt
 end -- clump:auto

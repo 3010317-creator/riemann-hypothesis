@@ -130,8 +130,7 @@ theorem src_line (H : Hyp ε S m A ν τ r Z M c₁ R₀ C) (j : Fin m) (f₀ : 
   have hmeas : ∀ h ∈ T, Measurable fun t : ℝ =>
       ‖h (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (2 * ρ * t)) := by
     intro h hh
-    have hc := line_cont H j x h (H.cont h (hTS h hh))
-    exact (hc.enorm.measurable.pow_const 2).mul (by fun_prop)
+    exact ((line_cont H j x h (H.cont h (hTS h hh))).enorm.measurable.pow_const 2).mul (by fun_prop)
   calc ∫⁻ t in Set.Ioi (0 : ℝ), ‖f₀ (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (2 * R * t))
       ≤ ∫⁻ t in Set.Ioi (0 : ℝ), (T.card : ℝ≥0∞) * ∑ h ∈ T, ‖h (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 *
           ENNReal.ofReal (Real.exp (2 * ρ * t)) := setLIntegral_mono' measurableSet_Ioi hpt
@@ -268,8 +267,7 @@ theorem line_est (hLC : LineChain) (H : Hyp ε S m A ν τ r Z M c₁ R₀ C) (h
     · exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top ENNReal.ofReal_ne_top
     · exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) (ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) ENNReal.ofReal_ne_top)
   · exact Finset.measurable_sum Q (fun q hq => psiK_meas q s (H.cont q (hQS q hq)))
-  · intro g k
-    exact Finset.sum_congr rfl (fun q _ => psiK_inv q s g k)
+  · exact fun g k => Finset.sum_congr rfl (fun q _ => psiK_inv q s g k)
   · rw [lintegral_finsetSum Q (fun q hq => psiK_meas q s (H.cont q (hQS q hq)))]
     refine ENNReal.sum_lt_top.2 (fun q hq => ?_)
     obtain ⟨T', Cf, hT'S, hd⟩ := H.dom q (hQS q hq)
@@ -422,13 +420,11 @@ theorem far_est (hLC : LineChain) (H : Hyp ε S m A ν τ r Z M c₁ R₀ C) (hn
           simpa [mul_assoc] using this
         · show R₂ < Formalism.REAL.hs (S7.toM g)
           have h2' : R₂ < Formalism.REAL.hs (S7.toM (g * (k : S7.UJ ε))) := h2
-          rw [hsk] at h2'
-          exact h2'
+          rwa [hsk] at h2'
       · rintro ⟨h1, h2⟩
         refine ⟨hUK g k h1, ?_⟩
         show R₂ < Formalism.REAL.hs (S7.toM (g * (k : S7.UJ ε)))
-        rw [hsk]
-        exact h2
+        rwa [hsk]
     rw [e, hF, hF]
     by_cases hg : g ∈ V
     · rw [Set.indicator_of_mem hg, Set.indicator_of_mem (hmem.2 hg)]
@@ -677,8 +673,7 @@ theorem absolute_l2_of_line_chain (hLC : LineChain) : AbsoluteL2Bound := by
     intro N
     induction N with
     | zero =>
-      intro f hf
-      exact level_mono hn f (by simp) (hlev f hf)
+      exact fun f hf => level_mono hn f (by simp) (hlev f hf)
     | succ N ih =>
       obtain ⟨c'', h1, h2, hz⟩ := exists_good Z r (min (-M + N * c₁) 0)
       refine step hLC H hn _ (min_le_right _ _) ih c'' (by linarith) h2 hz _ ?_ ?_
@@ -1060,8 +1055,7 @@ lemma integrable_of_lt_top {S : ℝ} {u : ℝ → ℂ} (hu : Continuous u)
     IntegrableOn (wt S u) (Ioi 0) := by
   simp_rw [enn_wt] at h
   refine ⟨(wt_cont S hu).aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_ofReal (ae_of_all _ (wt_nonneg S u))]
-  exact h
+  rwa [hasFiniteIntegral_iff_ofReal (ae_of_all _ (wt_nonneg S u))]
 
 lemma lint_wt {S : ℝ} {u : ℝ → ℂ} (hi : IntegrableOn (wt S u) (Ioi 0)) :
     ∫⁻ t in Ioi (0 : ℝ), ‖u t‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (2 * S * t)) =

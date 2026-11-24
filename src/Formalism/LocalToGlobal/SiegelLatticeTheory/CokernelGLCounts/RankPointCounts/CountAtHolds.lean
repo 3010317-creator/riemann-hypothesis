@@ -105,14 +105,14 @@ theorem bd_lo {x : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) : IsLoUni (bd a x)
   · unfold bd; split_ifs
     · exact (hx i j).1 h
     · rfl
-  · subst h; unfold bd; rw [if_pos rfl]; exact (hx i i).2 rfl
+  · subst h; unfold bd; rw [ite_eq_left rfl]; exact (hx i i).2 rfl
 
 theorem bd_one : bd a (1 : Matrix (Fin n) (Fin n) R) = 1 := by
   ext i j
   unfold bd
   split_ifs with h
   · rfl
-  · rw [Matrix.one_apply, if_neg]
+  · rw [Matrix.one_apply, ite_eq_right]
     rintro rfl; exact h rfl
 
 theorem bd_mul {x y : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) (hy : IsLoUni y) :
@@ -120,11 +120,11 @@ theorem bd_mul {x y : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) (hy : IsLoUni y
   ext i j
   simp only [bd, Matrix.mul_apply]
   by_cases hij : bk a i = bk a j
-  · rw [if_pos hij]
+  · rw [ite_eq_left hij]
     refine Finset.sum_congr rfl fun k _ => ?_
     by_cases hk : bk a i = bk a k
-    · rw [if_pos hk, if_pos (hk.symm.trans hij)]
-    · rw [if_neg hk, zero_mul]
+    · rw [ite_eq_left hk, ite_eq_left (hk.symm.trans hij)]
+    · rw [ite_eq_right hk, zero_mul]
       by_cases h1 : i < k
       · rw [(hx i k).1 h1, zero_mul]
       · by_cases h2 : k < j
@@ -133,12 +133,12 @@ theorem bd_mul {x y : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) (hy : IsLoUni y
           have e1 := bk_mono a (not_lt.1 h1)
           have e2 := bk_mono a (not_lt.1 h2)
           omega
-  · rw [if_neg hij]
+  · rw [ite_eq_right hij]
     symm
     refine Finset.sum_eq_zero fun k _ => ?_
     by_cases hk : bk a i = bk a k
-    · rw [if_pos hk, if_neg (fun e => hij (hk.trans e)), mul_zero]
-    · rw [if_neg hk, zero_mul]
+    · rw [ite_eq_left hk, ite_eq_right (fun e => hij (hk.trans e)), mul_zero]
+    · rw [ite_eq_right hk, zero_mul]
 
 theorem bd_inv {x : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) : bd a x⁻¹ = (bd a x)⁻¹ := by
   obtain ⟨hi, -, h2⟩ := Formalism.L2.SG.Pf.ZsVolGrp.isLoUni_inv hx
@@ -150,8 +150,7 @@ theorem bd_eq_one_iff {x : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) :
   constructor
   · intro h i j hij hb
     have := congrFun (congrFun h i) j
-    simp only [bd, if_pos hb, Matrix.one_apply, if_neg hij] at this
-    exact this
+    simpa only [bd, ite_eq_left hb, Matrix.one_apply, ite_eq_right hij] using this
   · intro h
     ext i j
     unfold bd
@@ -172,7 +171,7 @@ theorem rvM_one : rvM a (1 : Matrix (Fin n) (Fin n) R) = 1 := by
   simp only [rvM, Matrix.one_apply]
   by_cases h : i = j
   · subst h; simp
-  · rw [if_neg (fun e => h (by rw [← rv_rv a i, e, rv_rv])), if_neg h]
+  · rw [ite_eq_right (fun e => h (by rw [← rv_rv a i, e, rv_rv])), ite_eq_right h]
 
 theorem rvM_up {x : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) : IsUpUni (rvM a (bd a x)) := by
   intro i j
@@ -182,21 +181,21 @@ theorem rvM_up {x : Matrix (Fin n) (Fin n) R} (hx : IsLoUni x) : IsUpUni (rvM a 
     · rw [bk_rv, bk_rv] at hb
       exact (hx _ _).1 (rv_anti a h hb.symm)
     · rfl
-  · subst h; unfold rvM bd; rw [if_pos rfl]; exact (hx _ _).2 rfl
+  · subst h; unfold rvM bd; rw [ite_eq_left rfl]; exact (hx _ _).2 rfl
 
 theorem bd_mat (x : Matrix (Fin n) (Fin n) R) : bd a x * a.mat = a.mat * rvM a (bd a x) := by
   ext i j
   have h1 : (bd a x * a.mat) i j = bd a x i (rv a j) * cc a (rv a j) := by
     rw [Matrix.mul_apply, Finset.sum_eq_single (rv a j)]
-    · rw [mat_apply, if_pos (rv_rv a j).symm]
+    · rw [mat_apply, ite_eq_left (rv_rv a j).symm]
     · intro k _ hk
-      rw [mat_apply, if_neg (fun e => hk (by rw [e, rv_rv])), mul_zero]
+      rw [mat_apply, ite_eq_right (fun e => hk (by rw [e, rv_rv])), mul_zero]
     · simp
   have h2 : (a.mat * rvM a (bd a x)) i j = cc a i * bd a x i (rv a j) := by
     rw [Matrix.mul_apply, Finset.sum_eq_single (rv a i)]
-    · rw [mat_apply, if_pos rfl, rvM, rv_rv]
+    · rw [mat_apply, ite_eq_left rfl, rvM, rv_rv]
     · intro k _ hk
-      rw [mat_apply, if_neg hk, zero_mul]
+      rw [mat_apply, ite_eq_right hk, zero_mul]
     · simp
   rw [h1, h2, cc_rv]
   unfold bd
@@ -216,12 +215,12 @@ def matI (a : Loc.Pt R n) : Matrix (Fin n) (Fin n) R := fun i j => if j = rv a i
 theorem matI_mul : matI a * a.mat = 1 := by
   ext i j
   rw [Matrix.mul_apply, Finset.sum_eq_single (rv a i)]
-  · rw [matI, if_pos rfl, mat_apply, rv_rv, Matrix.one_apply]
+  · rw [matI, ite_eq_left rfl, mat_apply, rv_rv, Matrix.one_apply]
     by_cases h : j = i
-    · subst h; rw [if_pos rfl, if_pos rfl, cc_eq, ccU_rv]; exact Units.inv_mul _
-    · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
+    · subst h; rw [ite_eq_left rfl, ite_eq_left rfl, cc_eq, ccU_rv]; exact Units.inv_mul _
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h), mul_zero]
   · intro k _ hk
-    rw [matI, if_neg hk, zero_mul]
+    rw [matI, ite_eq_right hk, zero_mul]
   · simp
 
 theorem bd_of_stab {l ρ : Matrix (Fin n) (Fin n) R} (hl : IsLoUni l) (hρ : IsUpUni ρ)
@@ -242,15 +241,15 @@ theorem bd_of_stab {l ρ : Matrix (Fin n) (Fin n) R} (hl : IsLoUni l) (hρ : IsU
       have e1 := congrFun (congrFun e i) (rv a j)
       have lhs : (l * a.mat) i (rv a j) = l i j * cc a j := by
         rw [Matrix.mul_apply, Finset.sum_eq_single j]
-        · rw [mat_apply, if_pos rfl]
+        · rw [mat_apply, ite_eq_left rfl]
         · intro k _ hk
-          rw [mat_apply, if_neg (fun e' => hk (by rw [← rv_rv a k, ← e', rv_rv])), mul_zero]
+          rw [mat_apply, ite_eq_right (fun e' => hk (by rw [← rv_rv a k, ← e', rv_rv])), mul_zero]
         · simp
       have rhs : (a.mat * ρ⁻¹) i (rv a j) = cc a i * ρ⁻¹ (rv a i) (rv a j) := by
         rw [Matrix.mul_apply, Finset.sum_eq_single (rv a i)]
-        · rw [mat_apply, if_pos rfl]
+        · rw [mat_apply, ite_eq_left rfl]
         · intro k _ hk
-          rw [mat_apply, if_neg hk, zero_mul]
+          rw [mat_apply, ite_eq_right hk, zero_mul]
         · simp
       have hlt : bk a j < bk a i := lt_of_le_of_ne (bk_mono a hij.le) (fun e' => hb e'.symm)
       have hz : ρ⁻¹ (rv a i) (rv a j) = 0 := (hρi _ _).1 (rv_lt_of_bk_lt a hlt)
@@ -355,7 +354,7 @@ theorem retr_id (s : UP p) (hs : s • a.mat = a.mat) : retr a s = s := by
 theorem intLow_bd {l : MP p} (h : Formalism.MainNotions.S.TieN.IntLow (M p) l) : Formalism.MainNotions.S.TieN.IntLow (M p) (bd a l) := by
   obtain ⟨h1, h2, h3⟩ := h
   refine ⟨fun i => ?_, fun i j hij => ?_, fun i j => ?_⟩
-  · unfold bd; rw [if_pos rfl]; exact h1 i
+  · unfold bd; rw [ite_eq_left rfl]; exact h1 i
   · unfold bd; split_ifs
     · exact h2 i j hij
     · rfl
@@ -391,8 +390,7 @@ theorem blockRetr_holds : BlockRetr M p a := by
       rw [← retrFun_fst a x]
       show ((((retr a x : UP p) : GG p).1 : GLp p) : MP p) = 1
       rw [h]; rfl
-    refine ⟨hx, fun i j hij hs => ?_⟩
-    exact (bd_eq_one_iff hx).1 h1 i j hij ((sameBlock_iff a i j).1 hs)
+    exact ⟨hx, fun i j hij hs => ((bd_eq_one_iff hx).1 h1 i j hij ((sameBlock_iff a i j).1 hs))⟩
   · rintro ⟨-, hV⟩
     have h1 : bd a (((x : GG p).1 : GLp p) : MP p) = 1 :=
       (bd_eq_one_iff hx).2 fun i j hij hb => hV i j hij ((sameBlock_iff a i j).2 hb)
@@ -442,8 +440,7 @@ theorem fC_range : Set.range (fC M a πa hker g) =
     | h x =>
       obtain ⟨hxN, k, hk, hxk⟩ := x.2
       refine ⟨pairOfU a πa hker x.1 (MonoidHom.mem_ker.1 hxN), rfl, ?_⟩
-      refine ⟨(((k : GG p).1 : GLp p)).val, (((k : GG p).2.unop : GLp p)).val, hk.1, hk.2, ?_⟩
-      exact hxk
+      exact ⟨(((k : GG p).1 : GLp p)).val, (((k : GG p).2.unop : GLp p)).val, hk.1, hk.2, hxk⟩
   · rintro ⟨pr, rfl, l, ρ, hl, hρ, he⟩
     have hv : IsLoUni pr.1.1 := fun i j => ⟨pr.2.1.2.1 i j, fun h => h ▸ pr.2.1.1 i⟩
     have hu : IsUpUni pr.1.2 := fun i j => ⟨pr.2.2.2 i j, fun h => h ▸ pr.2.2.1 i⟩
@@ -555,8 +552,7 @@ theorem fixes_base_iff (a : Loc.Pt (D.s.atP p).Ep (D.R.rS + 1)) (hB : BaseAt M �
     rw [← phi_smul p δ _ _ w x.2, h]
   · intro h
     apply phi_inj p δ (D.mem u).A.T (D.mem u').A.T w
-    rw [phi_smul p δ _ _ w x.2]
-    exact h
+    rwa [phi_smul p δ _ _ w x.2]
 
 theorem retr_of (a : Loc.Pt (D.s.atP p).Ep (D.R.rS + 1)) (πa : UP p →* UP p)
     (hD : CountAb.Data (a.mat) (MulAction.stabilizer (UP p) a.mat) πa.ker (KU M p) πa)
@@ -647,8 +643,7 @@ theorem mem_H_iff (x : UP p) :
     rw [← phi_smul p δ _ _ w x.2, h]
   · intro h
     apply phi_inj p δ (D.mem u).A.T (D.mem u').A.T w
-    rw [phi_smul p δ _ _ w x.2]
-    exact h
+    rwa [phi_smul p δ _ _ w x.2]
 
 end Parts
 
@@ -737,8 +732,7 @@ theorem index_eq_relIndex (hD : Data W S N' K π) :
   · rintro ⟨k, hk, hkx⟩
     refine ⟨k.1, ?_, ?_⟩
     · simpa [Hk, Subgroup.mem_subgroupOf] using hk
-    · have h2 := congrArg (fun y : ↥(Ak S K) => ((y : ↥K) : G)) hkx
-      simpa [πk, e] using h2
+    · simpa [πk, e] using congrArg (fun y : ↥(Ak S K) => ((y : ↥K) : G)) hkx
   · rintro ⟨y, hy, hyx⟩
     refine ⟨⟨y, hy.1⟩, ?_, ?_⟩
     · simpa [Hk, Subgroup.mem_subgroupOf] using hy
@@ -808,8 +802,7 @@ theorem Ag_eq :
     obtain ⟨hzU, hzY⟩ := (mem_StP_iff M δ u u' w p z).1 hS
     have hfix := (fixes_base_iff M δ u u' w p a hB ⟨z, hzU⟩).1 hzY
     refine ⟨⟨z, hzU⟩, ⟨tauU p ⟨z, hzU⟩, ⟨?_, ?_⟩, tauU_tauU p _⟩, rfl⟩
-    · show ((tauU p ⟨z, hzU⟩ : UP p) : GG p) ∈ KP M p
-      exact tau_mem_KP M p hK
+    · exact tau_mem_KP M p hK
     · exact hfix
   · rintro ⟨_, ⟨y, ⟨hyK, hyS⟩, rfl⟩, rfl⟩
     refine ⟨(mem_StP_iff M δ u u' w p _).2 ⟨(tauU p y).2, ?_⟩, ?_⟩
@@ -837,8 +830,7 @@ theorem countAt_of_parts (v : ℝ)
     apply Subgroup.map_mono
     rintro _ ⟨z, hz, rfl⟩
     exact ⟨hD.kπ z hz.1, hD.mem z⟩
-  · rw [hidx, ← hcard]
-    exact hpos
+  · rwa [hidx, ← hcard]
   · rw [hidx, ← hcard, hv]
 
 end Parts2
@@ -888,11 +880,11 @@ theorem modMat_ord (hA : ∀ p, Agree δ M p) (T T' : ℕ) (p : PlF D) (hM : (M 
   ext a b
   rw [modMat_apply', Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.map_apply, ptMat_apply']
   by_cases hb : b = sgF w a
-  · rw [if_pos hb, if_pos hb, modMat_blk Zd]
+  · rw [ite_eq_left hb, ite_eq_left hb, modMat_blk Zd]
     simp only [twist, qE, tau0, hR, Ring.inverse_one, mul_one, ite_self, sub_zero, map_mul]
     subst hb
     ring
-  · rw [if_neg hb, if_neg hb, map_zero, mul_zero, zero_mul]
+  · rw [ite_eq_right hb, ite_eq_right hb, map_zero, mul_zero, zero_mul]
 
 theorem baseConj_L (hA : ∀ p, Agree δ M p) (u u' : D.what₂.Word) (w : Point D.host.E (D.R.rS + 1)) (p : PlF D)
     (hM : (M p).split = none) (a : Loc.Pt (D.s.atP p).Ep (D.R.rS + 1))

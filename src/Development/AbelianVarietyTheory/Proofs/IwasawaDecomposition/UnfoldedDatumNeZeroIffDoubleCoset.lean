@@ -183,9 +183,7 @@ theorem mem_moved {i : ℕ} {P : HeightOneSpectrum (𝓞 X.E)} {h : AutY X R (i 
     have h1 : h.symm (z v) ∈ lamYat (Pr := Pr) (R := R) (i + 1) P := hz v hv
     have h2 := (hh (h.symm (z v))).2 h1
     rwa [LinearEquiv.apply_symm_apply] at h2
-  · intro hz v hv
-    show h.symm (z v) ∈ _
-    exact (inv_mem hh (z v)).2 (hz v hv)
+  · exact fun hz v hv => (inv_mem hh (z v)).2 (hz v hv)
 
 theorem intAt_chArg_G {i : ℕ} (hi : i + 2 ≤ R.m) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.vGs)
     (z : HomE X.E (R.N i + cOf R i) (R.N (i + 1) + cOf R (i + 1)))
@@ -202,15 +200,14 @@ theorem intAt_chArg_G {i : ℕ} (hi : i + 2 ≤ R.m) {P : HeightOneSpectrum (�
   rw [dite_eq_left l1, Proof.exists_xx1_eq_iff_inX_eN_Ufl_conditions.eN_eq_single l2]
   have h1 := hz
   unfold lamYat at h1
-  simp only [if_pos hP] at h1
+  simp only [ite_eq_left hP] at h1
   have h2 := LastSteps.mem_homS_sclLat.1 h1 ⟨_, l1⟩ ⟨_, l2⟩
   have e : LocE.scE (R.N i) (fun i => i + 1) (R.N i + s + 1) - LocE.scE (R.N (i + 1)) (fun i => i + 1) (R.N (i + 1) + s) = 1 := by
     unfold LocE.scE
-    rw [if_neg (by omega), if_neg (by omega)]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega)]
     dsimp only
     omega
-  rw [e, zpow_one, mul_comm] at h2
-  exact h2
+  rwa [e, zpow_one, mul_comm] at h2
 
 end Chain
 
@@ -245,7 +242,7 @@ theorem unfoldedDatum_ne_zero_of_doubleCoset_source (hX : X.Ok) (hPr : Pr.Ok) (h
     intro j g hg
     have hu : IsUnit (redP P.1 ((LinearEquiv.det g : X.Eˣ) : X.E)) := by
       unfold lamYat at hg
-      rw [if_pos hP] at hg
+      rw [ite_eq_left hP] at hg
       exact LastSteps.isUnit_det_of_stab hg
     unfold muAt
     rw [LastSteps.locChar_unit _ _ hu]
@@ -267,7 +264,7 @@ theorem unfoldedDatum_ne_zero_of_doubleCoset_source (hX : X.Ok) (hPr : Pr.Ok) (h
       rw [hD1, pow_one]
       have hr' := hrs
       unfold lamYat at hr'
-      rw [if_pos hP] at hr'
+      rw [ite_eq_left hP] at hr'
       exact Mem.LevFin.intAt_n1Arg_G (Proof.NormalFormAtPrime.qOf_ne_zero _) r hr'
     exact left_ne_zero_of_mul ((Mem.Col2.IdxEx.psi_mul_neg (Mem.Col2.IdxEx.charTo hok P) hint).trans_ne one_ne_zero)
 

@@ -36,8 +36,7 @@ theorem herm_eq_zero (X : DataX E r) {z0 : Frame X.Ψ r} (hz0 : z0 ∈ X.dom) {v
   · have hc : NumberField.ComplexEmbedding.conjugate σ ∈ X.Ψ := by
       by_contra h
       exact hσ ((X.cmType σ).2 h)
-    have h := key ⟨_, hc⟩
-    simpa [NumberField.ComplexEmbedding.conjugate_coe_eq] using h
+    simpa [NumberField.ComplexEmbedding.conjugate_coe_eq] using key ⟨_, hc⟩
 
 theorem herm_nsmul (G : Matrix (Fin r) (Fin r) E) (n : ℕ) (v : Fin r → E) :
     herm G ((n : E) • v) ((n : E) • v) = (n : E) * n * herm G v v := by
@@ -122,8 +121,7 @@ theorem tendsto_zero (X : DataX E r) (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ)
       a ν * cexp (4 * π * I * ∑ τ, (ν τ : ℂ) * (ζ / (n : ℂ) ^ 2))) (comap im atTop) (𝓝 0) := by
     intro ν
     by_cases hν : a ν = 0
-    · simp only [hν, zero_mul]
-      exact tendsto_const_nhds
+    · simpa only [hν, zero_mul] using tendsto_const_nhds
     rw [tendsto_zero_iff_norm_tendsto_zero]
     simp only [term_norm]
     have hk : 0 < 4 * π * (∑ τ, ν τ) / (n : ℝ) ^ 2 := by
@@ -132,8 +130,7 @@ theorem tendsto_zero (X : DataX E r) (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ)
       positivity
     have h1 : Tendsto (fun ζ : ℂ => ζ.im) (comap im atTop) atTop := tendsto_comap
     have h2 := Real.tendsto_exp_atBot.comp (tendsto_neg_atTop_atBot.comp (h1.const_mul_atTop hk))
-    have h3 := h2.const_mul ‖a ν‖
-    simpa using h3
+    simpa using h2.const_mul ‖a ν‖
   have hbound : ∀ᶠ ζ in comap im atTop, ∀ ν : X.Ψ → ℝ,
       ‖a ν * cexp (4 * π * I * ∑ τ, (ν τ : ℂ) * (ζ / (n : ℂ) ^ 2))‖ ≤ ‖a ν‖ := by
     have hev : ∀ᶠ ζ in comap im atTop, (0 : ℝ) ≤ ζ.im :=

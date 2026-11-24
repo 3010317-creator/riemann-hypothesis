@@ -130,8 +130,7 @@ private theorem const_zero {V ι : Type} [Fintype V] (μ : ι → V → ℝ) (B 
     simp only [ee_zero, mul_one] at h4
     have h5 : HasSum (fun i : {x // x ∉ S} => C i) d := by
       refine (hasSum_subtype_iff_of_support_subset (s := {x | x ∉ S}) ?_).2 h4
-      intro i hi hS
-      exact hi (h2 i hS)
+      exact fun i hi hS => hi (h2 i hS)
     exact h5.norm_le_of_bounded (hs.subtype _).hasSum fun i => h1 i
   simpa using this
 
@@ -158,8 +157,7 @@ private theorem genD_unique {y : Af F} {𝔪 𝔫 : Ideal (𝓞 F)} (h : GenD y 
     rw [WithZero.exp_inj] at this
     omega
   rw [← Ideal.finprod_heightOneSpectrum_factorization h.1, ← Ideal.finprod_heightOneSpectrum_factorization h'.1]
-  refine finprod_congr fun w => ?_
-  exact congrArg (fun n => w.asIdeal ^ n) (hc w)
+  exact finprod_congr fun w => congrArg (fun n => w.asIdeal ^ n) (hc w)
 
 private theorem coefAt_eq {y : Af F} {𝔪 : Ideal (𝓞 F)} (h : GenD y 𝔪) (a : Ideal (𝓞 F) → ℂ) : coefAt a y = a 𝔪 := by
   have h' : ∃ 𝔪, GenD y 𝔪 := ⟨𝔪, h⟩

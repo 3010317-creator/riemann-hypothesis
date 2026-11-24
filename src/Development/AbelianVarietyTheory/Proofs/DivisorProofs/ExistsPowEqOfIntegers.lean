@@ -315,8 +315,7 @@ theorem sqloc_present : ∀ (k A : Type) [CommRing k] [CommRing A] [Algebra k A]
     intro x
     obtain ⟨p, hp⟩ := ha x
     refine ⟨MvPolynomial.rename Sum.inr p, ?_⟩
-    rw [hΨ, MvPolynomial.aeval_rename, Sum.elim_comp_inr]
-    exact hp
+    rwa [hΨ, MvPolynomial.aeval_rename, Sum.elim_comp_inr]
   obtain ⟨u, hu⟩ := hΨsurj e
   set κ : MvPolynomial (Fin s ⊕ Fin r) k →ₐ[k] MvPolynomial (Fin s) k :=
     MvPolynomial.aeval (Sum.elim MvPolynomial.X h) with hκdef
@@ -390,8 +389,7 @@ theorem sqloc_present : ∀ (k A : Type) [CommRing k] [CommRing A] [Algebra k A]
   rw [hsplit]
   refine Submodule.add_mem_sup ?_ ?_
   · have h := Ideal.mul_mem_mul (Ideal.mem_span_singleton_self u) hFG
-    rw [Ideal.span_mul_span, Set.singleton_mul, ← Set.range_comp] at h
-    exact h
+    rwa [Ideal.span_mul_span, Set.singleton_mul, ← Set.range_comp] at h
   · refine Ideal.mul_mem_mul ?_ hF
     rw [RingHom.mem_ker]
     simp [hu, he]
@@ -747,8 +745,7 @@ theorem localFactor_counital_descends :
       | add s t hs ht => simp only [map_add (f := _), hs, ht]
     rw [← hmk, hΔ', gen, hR]
   · rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro y hy
-    exact mem_nilradical.2 (hnil y hy)
+    exact fun y hy => mem_nilradical.2 (hnil y hy)
 
 end GlobalTheory
 end -- clump:auto
@@ -995,8 +992,7 @@ theorem _root_.GlobalTheory.fibre_statement : ∀ (p : ℕ) (R k : Type) [CommRi
             (algebraMap R (G.A n) r) := (AlgHom.commutes _ r).symm
       rw [h1]
       refine Ideal.mem_map_of_mem _ ((hJ _).mpr ?_)
-      rw [AlgHom.commutes]
-      exact hr
+      rwa [AlgHom.commutes]
     obtain ⟨b, hb, hab⟩ := hle hmem
     have hker : a - b ∈ RingHom.ker
         (ρ : G.A (n + 1) →ₐ[R] G.A 1) := by
@@ -1055,8 +1051,7 @@ theorem GlobalTheory.derivation_normalise_family : ∀ (k A : Type) [Field k] [C
       have h : (M.det - 1) ^ n ∈ (RingHom.ker ε) ^ n := Ideal.pow_mem_pow hmem n
       rw [hn] at h
       simpa using h⟩
-    have h := hN.isUnit_one_add
-    simpa using h
+    simpa using hN.isUnit_one_add
   refine ⟨fun i => ∑ l, (M⁻¹ i l) • D l, fun i j => ?_⟩
   have hinv : M⁻¹ * M = 1 := Matrix.nonsing_inv_mul M hunit
   have h := congrFun (congrFun hinv i) j
@@ -1163,8 +1158,7 @@ theorem exists_generators_dual_point_derivations :
       rw [Submodule.coe_add, Submodule.coe_smul, Submodule.coe_smul, hT, hT, hT]
       have h0 : W.mkQ (P (a * c) - (ε a • P c + ε c • P a)) = 0 :=
         (Submodule.Quotient.mk_eq_zero W).mpr hmem
-      rw [map_sub, map_add, map_smul, map_smul, sub_eq_zero] at h0
-      exact h0
+      rwa [map_sub, map_add, map_smul, map_smul, sub_eq_zero] at h0
     simp only [l, LinearMap.coe_comp, Function.comp_apply, hTac, map_add, map_smul, smul_eq_mul]
   · intro i j
     have hTx : T (x j) = b j := by
@@ -1287,9 +1281,7 @@ theorem frobSubalgebra_counit : ∀ (p : ℕ) [Fact p.Prime] (k A : Type) [Field
   let e := AlgEquiv.ofInjective j hj
   let Δ' : B →ₐ[k] B ⊗[k] B := e.symm.toAlgHom.comp ((Δ.comp B.val).codRestrict j.range hΔ)
   have hjΔ : ∀ b : B, j (Δ' b) = Δ (B.val b) := by
-    intro b
-    have h1 := e.apply_symm_apply ⟨Δ (B.val b), hΔ b⟩
-    exact congrArg Subtype.val h1
+    exact fun b => congrArg Subtype.val (e.apply_symm_apply ⟨Δ (B.val b), hΔ b⟩)
   have kl : ∀ x : B ⊗[k] B, ((TensorProduct.lid k B (LinearMap.rTensor B (ε.comp B.val).toLinearMap x) : B) : A)
       = TensorProduct.lid k A (LinearMap.rTensor A ε.toLinearMap (j x)) := by
     intro x
@@ -1458,7 +1450,7 @@ theorem truncMono_eq_zero {p : ℕ} [Fact p.Prime] {k A : Type} [Field k] [CommR
       rw [coeff_C]
       by_cases hm : m = 0
       · subst hm; simp
-      · rw [if_neg (Ne.symm hm)]; exact hc m hm
+      · rw [ite_eq_right (Ne.symm hm)]; exact hc m hm
     rw [hFC, aeval_C] at hF
     have h0 : AddMonoidAlgebra.coeff F 0 = 0 := Subtype.ext (by simpa using hF)
     rw [hFC, h0, C_0]
@@ -1493,8 +1485,7 @@ theorem truncMono_eq_zero {p : ℕ} [Fact p.Prime] {k A : Type} [Field k] [CommR
     apply hconst F _ hF
     intro m hm
     obtain ⟨i, hi⟩ : ∃ i, m i ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hm (Finsupp.ext h)
     by_contra hc
     have hlt := (hs m (mem_support_iff.mpr hc)).1 i
@@ -1510,8 +1501,7 @@ theorem truncMono_eq_zero {p : ℕ} [Fact p.Prime] {k A : Type} [Field k] [CommR
       apply IsUnit.map
       apply Ne.isUnit
       rw [Ne, CharP.cast_eq_zero_iff k p]
-      intro hdvd
-      exact hi (Nat.eq_zero_of_dvd_of_lt hdvd hlt)
+      exact fun hdvd => hi (Nat.eq_zero_of_dvd_of_lt hdvd hlt)
     have hcoef' : F.coeff m * (((m - Finsupp.single i 1 : Fin d →₀ ℕ) i : B) + 1) = 0 := by
       have hmi' : m i - 1 = (m - Finsupp.single i 1 : Fin d →₀ ℕ) i := by
         omega
@@ -1552,7 +1542,7 @@ theorem truncMono_linearIndependent : ∀ (p : ℕ) [Fact p.Prime] (k A : Type) 
     obtain ⟨a, _, ha⟩ := Finset.exists_ne_zero_of_sum_ne_zero hm
     have hm' : toF a = m := by
       by_contra h
-      exact ha (if_neg h)
+      exact ha (ite_eq_right h)
     subst hm'
     refine ⟨fun i => by simp [toF], ?_⟩
     apply Finset.sum_le_sum
@@ -1617,15 +1607,14 @@ theorem square_presentation_counital_comul_of_finrank (p : ℕ) [Fact p.Prime] (
     have hBtop : B ≠ ⊤ := by
       intro h
       have h1 := hE ⟨0, hd⟩ ⟨0, hd⟩
-      rw [hEB _ _ (h ▸ Algebra.mem_top), if_pos rfl] at h1
+      rw [hEB _ _ (h ▸ Algebra.mem_top), ite_eq_left rfl] at h1
       exact zero_ne_one h1
     have hlt : Module.finrank k B < n := by
       rw [← hn]
       have : (Subalgebra.toSubmodule B) ≠ ⊤ := by
         intro h
         apply hBtop
-        rw [← Algebra.toSubmodule_eq_top]
-        exact h
+        rwa [← Algebra.toSubmodule_eq_top]
       exact Submodule.finrank_lt this
     have hfin : Module.Finite k B :=
       Module.Finite.of_injective B.val.toLinearMap Subtype.val_injective

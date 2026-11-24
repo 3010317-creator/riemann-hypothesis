@@ -600,7 +600,7 @@ theorem hecke_lift_reps : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
           have : Formalism.L2.PjFree.toC (cf τ m j) = 0 := by rw [h0j]; rfl
           simp [this, not_lt.2 hj.le, hj.ne']
       rw [Finset.sum_congr rfl (fun j _ => key j), Finset.sum_add_distrib, Finset.sum_ite_eq' Finset.univ m,
-        if_pos (Finset.mem_univ _), add_sub_cancel_right, ← Finset.sum_filter]
+        ite_eq_left (Finset.mem_univ _), add_sub_cancel_right, ← Finset.sum_filter]
       refine Submodule.sum_mem _ fun j hj => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, ?_, rfl⟩)
       simpa using hj
     · intro τ m
@@ -642,24 +642,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 theorem hermC_mulVec (τ : E →+* ℂ) (G N : Matrix (Fin r) (Fin r) E)
     (hN : ∀ u v, herm G (N *ᵥ u) (N *ᵥ v) = herm G u v) (u v : Fin r → ℂ) :
     hermC τ G (N.map τ *ᵥ u) (N.map τ *ᵥ v) = hermC τ G u v := by
-  classical
-  have key : ∀ i j, ∑ p, ∑ q, τ (N p i) * τ (G p q) * conj (τ (N q j)) = τ (G i j) := fun i j => by
-    have := congrArg τ (hN (Pi.single i 1) (Pi.single j 1))
-
-    simp only [herm, cc, Matrix.mulVec_single_one, Matrix.col_apply, map_sum, map_mul,
-    IsCMField.complexEmbedding_complexConj] at this
-    rw [this]
-    simp [Pi.single_apply, apply_ite, ite_mul]
-  have e : hermC τ G (N.map τ *ᵥ u) (N.map τ *ᵥ v) =
-      ∑ j, ∑ i, u i * (∑ p, ∑ q, τ (N p i) * τ (G p q) * conj (τ (N q j))) * conj (v j) := by
-
-    simp only [hermC, Matrix.mulVec, dotProduct, Matrix.map_apply, map_sum, map_mul, Finset.sum_mul, Finset.mul_sum]
-    rw [Finset.sum_congr rfl fun p _ => Finset.sum_comm, Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    rw [Finset.sum_congr rfl fun p _ => Finset.sum_comm, Finset.sum_comm]
-    refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun p _ => Finset.sum_congr rfl fun q _ => by ring
-  rw [e, Finset.sum_comm]
-  simp only [key, hermC]
+  exact GlobalTheory.PerMove.hermC_unitary τ G N hN u v
 
 theorem perFr_of_mat (X X' : Data E r) (hΨ : ∀ τ, τ ∈ X.Ψ ↔ τ ∈ X'.Ψ) (hp : X.p0 = X'.p0) (hG : X.Gm = X'.Gm)
     (N : Matrix (Fin r) (Fin r) E) (hN : IsUnit N.det) (hNu : ∀ u v, herm X.Gm (N *ᵥ u) (N *ᵥ v) = herm X.Gm u v)

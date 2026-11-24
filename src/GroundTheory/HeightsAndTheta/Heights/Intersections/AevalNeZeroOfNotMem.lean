@@ -32,14 +32,12 @@ theorem aeval_rename_eq (G : GenFibre v P') (A : MRing ι) :
 
 omit [Fintype K] [∀ k, Fintype (ι k)] [Fintype K'] [∀ k, Fintype (ι' k)] in
 theorem aeval_eq_zero_of_mem (G : GenFibre v P') {f : MRing ι'} (hf : f ∈ P') : aeval G.x' f = 0 := by
-  rw [← G.genericFibre_ker_target] at hf
-  exact hf
+  rwa [← G.genericFibre_ker_target] at hf
 
 
 omit [Fintype K] [∀ k, Fintype (ι k)] [Fintype K'] [∀ k, Fintype (ι' k)] in
 theorem aeval_ne_zero_of_not_mem (G : GenFibre v P') {f : MRing ι} (hf : f ∉ imageZ v P') : aeval G.x f ≠ 0 := by
-  rw [← G.ker_x] at hf
-  exact hf
+  rwa [← G.ker_x] at hf
 
 def coeffPoly {F : Type} [Field F] {m : ℕ} (a : Fin (m + 1) → F) : Polynomial F :=
   ∑ j : Fin (m + 1), Polynomial.C (a j) * Polynomial.X ^ (j : ℕ)

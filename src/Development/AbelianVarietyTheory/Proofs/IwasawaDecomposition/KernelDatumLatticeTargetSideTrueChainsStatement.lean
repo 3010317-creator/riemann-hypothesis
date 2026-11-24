@@ -121,8 +121,7 @@ theorem fm_succ_mem_valQ : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
       congr 1
       funext τ' r'
       exact hw τ' r'
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   refine ⟨Submodule.Quotient.mk ⟨_, hP⟩, ?_⟩
   funext y
   show evP O u μ (i + 1) ⟨_, hP⟩ y = _
@@ -215,8 +214,7 @@ theorem form_of_rat_values : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.O
       rfl
     simp only [fnOf, LinearMap.coe_mk, AddHom.coe_mk, Matrix.one_mul, shiftOf, twB, GL3Theta.evFr, hStd.frm u μ (i + 1) y, hde, Pi.one_apply]
     congr 1
-    refine Finset.prod_congr rfl fun τ _ => ?_
-    exact congrArg (fun e : ℤ => (y.1 τ).det ^ e) (h4 τ)
+    exact Finset.prod_congr rfl fun τ _ => congrArg (fun e : ℤ => (y.1 τ).det ^ e) (h4 τ)
   choose z hz using key
   let o : Frames (gramC (1 : Matrix (Fin (B.R.N (i + 1))) (Fin (B.R.N (i + 1))) B.fields.E) (embAt B.embLL B.fields.emb)) :=
     ⟨fun _ => 1, fun τ => by simp⟩
@@ -443,8 +441,7 @@ theorem GlobalTheory.Mem.Col2.GStep.locW_latOf_iff : ∀ {E K ι : Type} [Field 
           rw [e]; exact Submodule.smul_mem _ s2 (m1 c' hc')
     obtain ⟨s, hs, hsm⟩ := common Finset.univ
     have hsx : s • x ∈ S.latOf emb lam h (fun c => delAtr emb lam (S.Lsh c.1 (S.rep c))) := by
-      intro c
-      exact hsm c (Finset.mem_univ c)
+      exact fun c => hsm c (Finset.mem_univ c)
     have hs0 : (s : K) ≠ 0 := by
       intro h0; rw [h0, AddValuation.map_zero] at hs; exact WithTop.top_ne_zero hs
     have hinv : Pl.val w (s : K)⁻¹ = 0 := by
@@ -833,8 +830,7 @@ theorem map_mem_vlIntSpan_iff_delW : ∀ {K ι : Type} [Field K] [NumberField K]
   choose r e hr using fun τ => exists_weylBasis n (lam τ).natW (natW_anti (lam τ))
   set Z := zOf lam e with hZ
   have hG' : G ∈ Submodule.span K (Set.range fun i => MvPolynomial.map (Int.castRingHom K) (Z.bZ i)) := by
-    rw [Z.span_F K]
-    exact hG
+    rwa [Z.span_F K]
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun K).1 hG'
   have hmap : ∀ (L : Type) [Field L] (s : K →+* L), MvPolynomial.map s G =
       ∑ i, s (c i) • MvPolynomial.map (Int.castRingHom L) (Z.bZ i) := by
@@ -1191,8 +1187,7 @@ theorem mem_locW_iff_delW : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok
   obtain ⟨Bm, hBm0⟩ := Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.LocB.exists_isLocBasis (B.places.resChar w) B.fields.E _
     ((I.stp u μ (i + 1)).rep c').1.1.deco.2.lat.fg hspanN
   have hBm : Formalism.L2.Forms.IsLocBasis (B.places.resChar w) (((I.stp u μ (i + 1)).Lsh c'.1 ((I.stp u μ (i + 1)).rep c')) : Set _) Bm := by
-    intro x
-    exact (hloc x).trans (hBm0 x)
+    exact fun x => (hloc x).trans (hBm0 x)
   have hBmN : Formalism.L2.Forms.IsLocBasis (B.places.resChar w) (((O u μ).lat (i + 1) c').1 : Set (Fin ((I.rec7 l Z).R.N (i + 1)) → (I.rec7 l Z).host.E)) Bm := by
     intro x
     rw [hStd.lat u μ (i + 1) c']
@@ -1297,7 +1292,7 @@ theorem shiftOf_lamT_succ {R : Ranks} {ι : Type} [Fintype ι] {hc : ι → HCPa
   obtain ⟨c, hc'⟩ := R.t_odd
   have hcq : (R.t : ℚ) = 2 * c + 1 := by exact_mod_cast hc'
   have e2 : (R.t + 1) / 2 = c + 1 := by omega
-  simp only [shiftOf, DomWeight.detShift, dif_pos hpos, Col2.lamT, Col2.shW, Examples₂.lamOf, dif_pos (show i + 1 ≤ R.m by omega), Examples₂.wtQ, dif_neg hk]
+  simp only [shiftOf, DomWeight.detShift, dite_eq_left hpos, Col2.lamT, Col2.shW, Examples₂.lamOf, dite_eq_left (show i + 1 ≤ R.m by omega), Examples₂.wtQ, dite_eq_right hk]
   simp only [hq, e2]
   have hw : -wG R ((hc τ).e ⟨i, hi⟩) (i + 1) = ((-C.sDiv i τ + ((i + 1) * (c + 1) : ℕ) : ℤ) : ℚ) := by
     push_cast
@@ -1317,8 +1312,7 @@ theorem secC_eq_of_evC_eq_evV : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), 
       (MvPolynomial.map B.embLL ((secC O u μ (i + 1) v' : MvPolynomial (GL3Theta.FrV (I.rec7 l Z) ((I.rec7 l Z).R.N (i + 1))) (I.rec7 l Z).what₂.LL))) =
       fnOf (gramC (1 : Matrix (Fin (B.R.N (i + 1))) (Fin (B.R.N (i + 1))) B.fields.E) (embAt B.embLL B.fields.emb))
       (shiftOf (Col2.lamT (B.hcW u) (i + 1))) 1 (MvPolynomial.map B.embLL z.1) := by
-    rw [← evV_apply]
-    rw [← h]
+    rw [← evV_apply, ← h]
     refine Eq.trans ?_ (evC_sec O u μ (i + 1) v').symm
     funext y
     have hfr := hStd.frm u μ (i + 1) y

@@ -97,8 +97,7 @@ private theorem summable_inv_sq_nat_mul_add (c w : ℂ) (hw : w ≠ 0) :
   have hMK : K ≤ N + K := Nat.le_add_left K N
   generalize N + K = M at hMK ⊢
   have h1 : 2 * ‖c‖ / ‖w‖ < (M : ℝ) := lt_of_lt_of_le hK (by exact_mod_cast hMK)
-  have h2 : 2 * ‖c‖ < (M : ℝ) * ‖w‖ := by
-    exact (div_lt_iff₀ hw').mp h1
+  have h2 : 2 * ‖c‖ < (M : ℝ) * ‖w‖ := (div_lt_iff₀ hw').mp h1
   have e : ‖(M : ℂ) * w‖ = (M : ℝ) * ‖w‖ := by
     simp
   have h4 : ‖(M : ℂ) * w‖ ≤ ‖(M : ℂ) * w + c‖ + ‖c‖ := by
@@ -180,8 +179,7 @@ lemma core (u v : ℂ) (hu : u ≠ 0)
       - tm ((p.2 : ℂ) * u + (p.1 : ℂ) * v) (-(u / 2)) := (hS _).sub (hS _)
   have hfib : ∀ n : ℤ, Summable fun m : ℤ => tm ((m : ℂ) * u + (n : ℂ) * v) (u / 2)
       - tm ((m : ℂ) * u + (n : ℂ) * v) (-(u / 2)) := by
-    intro n
-    exact hsum.prod_factor n
+    exact fun n => hsum.prod_factor n
   have h1 : (∑' p : ℤ × ℤ, tm ((p.2 : ℂ) * u + (p.1 : ℂ) * v) (u / 2))
       - ∑' p : ℤ × ℤ, tm ((p.2 : ℂ) * u + (p.1 : ℂ) * v) (-(u / 2))
       = ∑' p : ℤ × ℤ, (tm ((p.2 : ℂ) * u + (p.1 : ℂ) * v) (u / 2)
@@ -344,8 +342,7 @@ lemma exists_const (hq : ZetaQuasi) (hl : SigmaLogDeriv) (hz : SigmaZero) (L : P
     have h1 : HasDerivAt (fun x => Formalism.L2.Th1.F.wSigma L (x + ω))
         (Formalism.L2.Th1.F.wZeta L (y + ω) * Formalism.L2.Th1.F.wSigma L (y + ω)) y := by
       have h' := (hl L (y + ω) (add_notMem hω hy)).comp y ((hasDerivAt_id' y).add_const ω)
-      rw [mul_one] at h'
-      exact h'
+      rwa [mul_one] at h'
     have h2 : HasDerivAt (fun x => Complex.exp (-(Formalism.L2.Th1.F.wEta L ω) * x))
         (Complex.exp (-(Formalism.L2.Th1.F.wEta L ω) * y) * (-(Formalism.L2.Th1.F.wEta L ω) * 1)) y :=
       ((hasDerivAt_id' y).const_mul (-(Formalism.L2.Th1.F.wEta L ω))).cexp
@@ -441,7 +438,7 @@ private theorem int_comb_periods_mem_lattice (L : PeriodPair) (a b : ℤ) :
 
 private theorem semiChar_zero_eq_one (L : PeriodPair) : Formalism.L2.Th1.F.semiChar L 0 = 1 := by
   unfold Formalism.L2.Th1.F.semiChar
-  rw [if_pos (by rw [zero_div]; exact L.lattice.zero_mem)]
+  rw [ite_eq_left (by rw [zero_div]; exact L.lattice.zero_mem)]
 
 private theorem quasiPeriodic_zero_semiChar_zero (L : PeriodPair) : QP L 0 (Formalism.L2.Th1.F.semiChar L 0) := by
   rw [semiChar_zero_eq_one]
@@ -473,13 +470,13 @@ lemma qp_coords (hq : ZetaQuasi) (hl : SigmaLogDeriv) (ho : SigmaOdd) (hz : Sigm
       have h3 := qp_two_mul L ih' (semiChar_sq L _)
       have hs1 : Formalism.L2.Th1.F.semiChar L (((2 * a' : ℤ) : ℂ) * L.ω₁ + ((2 * b' : ℤ) : ℂ) * L.ω₂) = 1 := by
         unfold Formalism.L2.Th1.F.semiChar
-        rw [if_pos h2]
+        rw [ite_eq_left h2]
       rw [hs1, show (((2 * a' : ℤ) : ℂ) * L.ω₁ + ((2 * b' : ℤ) : ℂ) * L.ω₂)
           = 2 * ((a' : ℂ) * L.ω₁ + (b' : ℂ) * L.ω₂) by push_cast; ring]
       exact h3
     · have hs1 : Formalism.L2.Th1.F.semiChar L ((a : ℂ) * L.ω₁ + (b : ℂ) * L.ω₂) = -1 := by
         unfold Formalism.L2.Th1.F.semiChar
-        rw [if_neg h2]
+        rw [ite_eq_right h2]
       rw [hs1]
       exact qp_of_half_notMem hq hl ho hz L (int_comb_periods_mem_lattice L a b) h2
 
@@ -501,8 +498,7 @@ theorem sigmaSimple_of (hq : SigmaQuasi) (he : SigmaEntire)
   refine ⟨h0 L, fun z hzL => ?_⟩
   have h : HasDerivAt (fun y => wSigma L (y + z)) (deriv (wSigma L) z) 0 := by
     have h' := (he L (0 + z)).hasDerivAt.comp (0 : ℂ) ((hasDerivAt_id' (0 : ℂ)).add_const z)
-    rw [zero_add, mul_one] at h'
-    exact h'
+    rwa [zero_add, mul_one] at h'
   have hd1 : HasDerivAt (fun y => semiChar L z * Complex.exp (wEta L z * (y + z / 2))
       * wSigma L y) (deriv (wSigma L) z) 0 := by
     convert h using 1
@@ -552,8 +548,7 @@ lemma diff_const (hd : ZetaHasDeriv) (L : PeriodPair) {ω : ℂ} (hω : ω ∈ L
     have h2 := h1.sub (hd L z hz)
     have h3 : L.weierstrassP (z + ω) = L.weierstrassP z := L.weierstrassP_add_coe z ⟨ω, hω⟩
     have e : -L.weierstrassP (z + ω) - -L.weierstrassP z = 0 := by rw [h3]; ring
-    rw [e] at h2
-    exact h2
+    rwa [e] at h2
   exact (isOpen_compl L).is_const_of_deriv_eq_zero (f := fun z => wZeta L (z + ω) - wZeta L z)
     (isPreconnected_compl L)
     (fun z hz => (hD z hz).differentiableAt.differentiableWithinAt)

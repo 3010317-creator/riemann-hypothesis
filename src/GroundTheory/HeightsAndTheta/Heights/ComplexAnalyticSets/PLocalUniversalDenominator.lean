@@ -54,8 +54,7 @@ theorem exists_eval_ne_zero {d : ℕ} {P : MvPolynomial (Fin d) ℂ} (hP : P ≠
     (fun i => infinite_of_mem_nhds (t₀ i) (Metric.ball_mem_nhds _ hε)) fun x hx => ?_)
   rw [map_zero]
   refine hall x (hball ?_)
-  rw [ball_pi _ hε]
-  exact hx
+  rwa [ball_pi _ hε]
 
 theorem exists_dim {n : ℕ} (I : Ideal (MvPolynomial (Fin n) ℂ)) (hI : I.IsPrime) :
     ∃ d : ℕ, ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ I) = d := by
@@ -110,8 +109,7 @@ theorem rootSum_single (P : Polynomial ℂ) (K : ℕ) (hK : P.natDegree ≤ K) (
     rw [ht.eq_zero, hτr.eq_zero, sub_zero] at h1
     have h2 : t - τ ≠ 0 := sub_ne_zero.2 (Ne.symm hτt)
     rw [(mul_eq_zero.1 h1).resolve_right h2, mul_zero]
-  · intro hnot
-    exact absurd (Multiset.mem_toFinset.2 ((Polynomial.mem_roots hP0).2 ht)) hnot
+  · exact fun hnot => absurd (Multiset.mem_toFinset.2 ((Polynomial.mem_roots hP0).2 ht)) hnot
 
 theorem differentiable_polyEval {d : ℕ} (P : Polynomial (MvPolynomial (Fin d) ℂ)) :
     Differentiable ℂ (fun p : (Fin d → ℂ) × ℂ => (P.map (eval p.1)).eval p.2) := by
@@ -143,13 +141,11 @@ theorem differentiable_mulVec {n d : ℕ} (A : Matrix (Fin d) (Fin n) ℂ) :
     Differentiable ℂ (fun x : Fin n → ℂ => A.mulVec x) := by
   refine differentiable_pi.2 fun i => ?_
   simp only [Matrix.mulVec, dotProduct]
-  refine Differentiable.fun_sum fun j _ => ?_
-  exact (differentiable_const _).mul (differentiable_apply j)
+  exact Differentiable.fun_sum fun j _ => (differentiable_const _).mul (differentiable_apply j)
 
 theorem differentiable_linForm {n : ℕ} (c : Fin n → ℂ) :
     Differentiable ℂ (fun x : Fin n → ℂ => ∑ j, c j * x j) := by
-  refine Differentiable.fun_sum fun j _ => ?_
-  exact (differentiable_const _).mul (differentiable_apply j)
+  exact Differentiable.fun_sum fun j _ => (differentiable_const _).mul (differentiable_apply j)
 
 end LocalUniversalDenominator
 
@@ -213,8 +209,7 @@ theorem LocalUniversalDenominator.fin_case
       rw [← Ideal.Quotient.eq, map_mul]
       exact hb.symm
     have h1 := hz _ hmem
-    rw [map_sub, map_mul, hz0, mul_zero, sub_zero, hevpb] at h1
-    exact h1
+    rwa [map_sub, map_mul, hz0, mul_zero, sub_zero, hevpb] at h1
 
   obtain ⟨y₁, -, hy₁⟩ := exists_eval_ne_zero hΔ isOpen_univ Set.univ_nonempty
   have hK : mp.natDegree ≠ 0 := by
@@ -316,7 +311,7 @@ theorem LocalUniversalDenominator.fin_case
         obtain ⟨hpI, -, -, hph, -⟩ := hfib p.1 hp.1.1 p.2 hroot
         have hp1 : zpt p.1 p.2 ∈ O' := hp.2.1
         have hp2 : zpt p.1 p.2 ∈ N0 := hp.2.2
-        rw [hΦ, hftil, if_pos hp2, hfFl ⟨⟨⟨hpI, hN0U hp2⟩, hph⟩, hp1⟩]
+        rw [hΦ, hftil, ite_eq_left hp2, hfFl ⟨⟨⟨hpI, hN0U hp2⟩, hph⟩, hp1⟩]
     · have hz₀M : zpt y₀ τ₀ ∈ M := hz₀NM.resolve_left hz₀N
       refine ⟨(W' ×ˢ Set.univ) ∩ (fun p : (Fin d → ℂ) × ℂ => zpt p.1 p.2) ⁻¹' M,
         hzc.isOpen_inter_preimage hGo hM, ⟨⟨hy₀, Set.mem_univ _⟩, hz₀M⟩, fun _ => 0,
@@ -324,7 +319,7 @@ theorem LocalUniversalDenominator.fin_case
       intro p hp _
       have hpM : zpt p.1 p.2 ∈ M := hp.2
       have hpN : zpt p.1 p.2 ∉ N0 := fun hN => Set.disjoint_left.1 hNM hN hpM
-      rw [hΦ, hftil, if_neg hpN, zero_mul]
+      rw [hΦ, hftil, ite_eq_right hpN, zero_mul]
 
   obtain ⟨R, hR⟩ := hbdd.exists_norm_le
   have hτb : ∀ y ∈ W', ∀ τ, (mp.map (eval y)).IsRoot τ → ‖τ‖ ≤ ∑ j, ‖c j‖ * R := by
@@ -423,8 +418,7 @@ theorem LocalUniversalDenominator.fin_case
       simp only [Polynomial.map_add (f := _), Polynomial.map_mul, Polynomial.map_C, Polynomial.eval_add,
         Polynomial.eval_mul, Polynomial.eval_C] at h1
       rw [← Polynomial.derivative_map, hroot.eq_zero, zero_mul, zero_add] at h1
-      rw [mul_comm]
-      exact h1
+      rwa [mul_comm]
     rw [hFs]
     have e1 : ∀ j ∈ Finset.range K, Cf j (A.mulVec z) * (∑ i, c i * z i) ^ j =
         ∑ τ ∈ (mp.map (eval (A.mulVec z))).roots.toFinset,
@@ -444,7 +438,7 @@ theorem LocalUniversalDenominator.fin_case
       ring
     rw [Finset.sum_congr rfl e2, rootSum_single _ K hPdeg hP0
       (fun τ => ftil (zpt (A.mulVec z) τ) * (q.map (eval (A.mulVec z))).eval τ) _ hroot]
-    rw [hzz, hftil, if_pos hzN, mul_assoc, hDq, mul_comm]
+    rw [hzz, hftil, ite_eq_left hzN, mul_assoc, hDq, mul_comm]
 
   refine ⟨GroundTheory.Heights₂.Heights.ComplexSets.pullback A D, fun hD' => hD (hpbI D hD'), Nf, hNfo,
     ⟨hwN0, Metric.mem_ball_self hr⟩, fun x hx => hN0U hx.1, Fs, hFd, ?_⟩
@@ -481,8 +475,7 @@ theorem LocalUniversalDenominator.fin_case
   have hsub : insert z T ⊆ O'' := Set.insert_subset_iff.2 ⟨hzO'', fun x hx => hx.1⟩
   have hfin := hT.of_subset_closure (hc1.mono hsub) (hc2.mono hsub) (Set.subset_insert z T)
     (Set.insert_subset_iff.2 ⟨hzT, subset_closure⟩) (Set.mem_insert z T)
-  rw [hfFl ⟨hzS, hzO'⟩]
-  exact hfin
+  rwa [hfFl ⟨hzS, hzO'⟩]
 
 theorem LocalUniversalDenominator.proof
     (hcl : GroundTheory.Heights₂.Heights.ComplexSets.FiniteProjectionCluster.Statement)
@@ -497,7 +490,6 @@ theorem LocalUniversalDenominator.proof
   have hTiT : ∀ z, Ti (T z) = z := fun z => funext fun i => by simp [T, Ti]
   have hev : ∀ (x : Fin (Fintype.card σ) → ℂ) (q : MvPolynomial σ ℂ), eval x (ρ q) = eval (Ti x) q :=
     fun x q => by
-      show eval x (rename e q) = eval (x ∘ e) q
       exact MvPolynomial.eval_rename _ _ _
   have hev' : ∀ (z : σ → ℂ) (q' : MvPolynomial (Fin (Fintype.card σ)) ℂ),
       eval z (ρ.symm q') = eval (T z) q' := fun z q' => by

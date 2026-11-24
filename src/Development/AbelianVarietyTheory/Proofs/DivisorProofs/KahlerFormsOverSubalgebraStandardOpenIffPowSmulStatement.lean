@@ -101,7 +101,6 @@ theorem omB_iff_pow_smul : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [F
   have hfB : f ∈ rB k K x {i} := by
     have hz : (∏ j ∈ I, x j / x i) ∈ rA k x {i} :=
       Subalgebra.prod_mem _ fun j _ => Algebra.subset_adjoin ⟨i, Finset.mem_singleton_self i, j, rfl⟩
-    show IsIntegral (rA k x {i}) f
     exact isIntegral_algebraMap (R := rA k x {i}) (A := K) (x := ⟨_, hz⟩)
   have hf0 : f ≠ 0 :=
     (map_ne_zero (algebraMap F K)).2 (Finset.prod_ne_zero_iff.2 fun j _ => div_ne_zero (h.pd.ne j) (h.pd.ne i))
@@ -146,8 +145,7 @@ theorem omB_iff_pow_smul : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [F
         intro v hv
         rw [ExteriorAlgebra.ιMulti_succ_apply]
         have := hQmul 1 n _ _ (hQ1 (v 0) (hv 0)) (ih (fun j => v j.succ) fun j => hv j.succ)
-        rw [Nat.add_comm 1 n] at this
-        exact this
+        rwa [Nat.add_comm 1 n] at this
     induction hy using Submodule.span_induction with
     | mem z hz =>
       obtain ⟨b, hb, v, hv, rfl⟩ := hz

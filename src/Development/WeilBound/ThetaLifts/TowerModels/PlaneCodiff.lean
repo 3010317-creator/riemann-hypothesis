@@ -113,8 +113,7 @@ private lemma sum_embeddings_eq_real_add_complex {F : Type} [Field F] [NumberFie
       rw [Complex.add_conj]
       push_cast
       rfl
-    · intro h
-      exact (isComplex_iff.mp w.2) (ComplexEmbedding.isReal_iff.mpr h.symm)
+    · exact fun h => (isComplex_iff.mp w.2) (ComplexEmbedding.isReal_iff.mpr h.symm)
 
 end UpperTheory.Reformulated.B.DYhb7
 
@@ -191,8 +190,7 @@ theorem val_le_one_of_codiff {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) {v : Pl 
     by_cases hw : w = v
     · subst hw
       change evalV _ w (singleFin w y) ∈ _
-      rw [evalV_singleFin_self]
-      exact hy
+      rwa [evalV_singleFin_self]
     · change evalV _ w (singleFin v y) ∈ _
       rw [evalV_singleFin_ne hw]
       exact zero_mem _
@@ -204,8 +202,7 @@ theorem val_le_one_of_codiff {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) {v : Pl 
       rw [map_mul, evalV_singleFin_self, evalV_singleFin_self, mul_comm]
       rfl
     · rw [map_mul, evalV_singleFin_ne hu, evalV_singleFin_ne hu, zero_mul]
-  rw [e] at h3
-  exact h3
+  rwa [e] at h3
 
 
 variable (E) in

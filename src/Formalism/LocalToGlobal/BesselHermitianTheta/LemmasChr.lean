@@ -25,8 +25,7 @@ theorem norm_idF (a : (AF D.host.F)ˣ) :
 
 theorem eta_sq {η : (AF D.host.F)ˣ →* Circle} (h : IsEta D η) (a : (AF D.host.F)ˣ) : η a ^ 2 = 1 := by
   have h1 := h.2.2.1 (idF D a)
-  rw [norm_idF, map_pow] at h1
-  exact h1
+  rwa [norm_idF, map_pow] at h1
 
 theorem eta_pow_parity {η : (AF D.host.F)ˣ →* Circle} (h : IsEta D η) (a : (AF D.host.F)ˣ) {n m : ℕ}
     (e : n % 2 = m % 2) : η a ^ n = η a ^ m := by
@@ -92,8 +91,7 @@ theorem row_lift_ok (T : ThetaTied D X) (μ : D.what₂.Tup) (s : ℕ) (h1 : 1 �
     by_contra hi'
     rw [Nat.not_odd_iff_even] at hi'
     exact (Nat.not_even_iff_odd.2 (hr.add_even (hi'.mul_right _))) he
-  · intro ho
-    exact hr.add_odd (ho.mul ht)
+  · exact fun ho => hr.add_odd (ho.mul ht)
 
 theorem rank_Y_ne (X : ThetaX D) (j : ℕ) (hj : j < D.R.m) : (D.sp.Y (j + 1)).rank ≠ (D.sp.Y j).rank := by
   rw [rank_Y X (j + 1) hj, rank_Y X j hj.le, Nat.succ_mul]

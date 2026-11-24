@@ -51,8 +51,7 @@ theorem ordL_eq_of {x : L} (hx : x ≠ 0) {a : ℤ}
     (h : Valued.v x = ((Multiplicative.ofAdd (-a) : Multiplicative ℤ) : WithZero (Multiplicative ℤ))) :
     ordL x = a := by
   have h2 := (_root_.Formalism.UG.P.fSatake_v_eq hx).symm.trans h
-  have h3 := WithZero.coe_injective h2
-  simpa using h3
+  simpa using WithZero.coe_injective h2
 
 theorem ordL_eq_zero_of_v_one {x : L} (h : Valued.v x = 1) : ordL x = 0 := by
   have hx : x ≠ 0 := by
@@ -89,8 +88,7 @@ theorem det_gram_change {n : ℕ} (σ : L →+* L) (V : Submodule L (Fin n → L
         (Matrix.of fun i j => ∑ k, σ ((c i : Fin n → L) k) * (c j : Fin n → L) k).det *
         (c.toMatrix b).det := by
   rw [gram_eq σ (fun i => (b i : Fin n → L)), gram_eq σ (fun i => (c i : Fin n → L))]
-  rw [coords_eq V b c]
-  rw [Matrix.map_mul, Matrix.transpose_mul, Matrix.transpose_transpose]
+  rw [coords_eq V b c, Matrix.map_mul, Matrix.transpose_mul, Matrix.transpose_transpose]
   rw [Matrix.mul_assoc, ← Matrix.mul_assoc ((of fun i k ↦ ((c i : V) : Fin n → L) k).map σ), ← Matrix.mul_assoc,
     Matrix.det_mul, Matrix.det_mul]
   congr 2

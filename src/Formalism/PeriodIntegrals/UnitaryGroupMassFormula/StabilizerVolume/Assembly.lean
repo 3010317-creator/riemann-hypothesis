@@ -393,7 +393,7 @@ theorem posTest_of (hN : TestNear) : PosTest := by
   have hs : ∀ y, (∃ g : HA (AF F) σ J, g • ratTup (AF F) X0 = y) →
       s y • ratTup (AF F) X0 = y := by
     intro y h
-    simp only [s, dif_pos h]
+    simp only [s, dite_eq_left h]
     exact h.choose_spec
   have hf : Measurable (U.indicator (1 : HA (AF F) σ J → ENNReal)) :=
     measurable_one.indicator hUo.measurableSet
@@ -460,16 +460,7 @@ open MeasureTheory Complex Filter Topology
 alias char_real := _root_.Bl.FunctionAtZero.goal1
 
 theorem freq_unique {u v : ℝ} (h : ∀ s : ℝ, exp (↑(u * s) * I) = exp (↑(v * s) * I)) : u = v := by
-  by_contra huv
-  have hne : u - v ≠ 0 := sub_ne_zero.2 huv
-  have h1 := h (Real.pi / (u - v))
-  have h2 : exp (↑((u - v) * (Real.pi / (u - v))) * I) = 1 := by
-    have : (↑((u - v) * (Real.pi / (u - v))) : ℂ) * I =
-        ↑(u * (Real.pi / (u - v))) * I - ↑(v * (Real.pi / (u - v))) * I := by
-      push_cast; ring
-    rw [this, Complex.exp_sub, h1, div_self (Complex.exp_ne_zero _)]
-  rw [mul_div_cancel₀ _ hne, Complex.exp_pi_mul_I] at h2
-  norm_num at h2
+  exact PI.AprimeInfW.ST.freq_unique h
 
 section Bichar
 
@@ -1243,7 +1234,7 @@ theorem unfold_abs {Γ H : Subgroup G} [Countable Γ]
 
   let s : Y → G := fun y => if h : ∃ g : G, g • y0 = y then h.choose else 1
   have hs : ∀ y, (∃ g : G, g • y0 = y) → s y • y0 = y := fun y h => by
-    simp only [s, dif_pos h]
+    simp only [s, dite_eq_left h]
     exact h.choose_spec
   have hsk : ∀ y, (∃ g : G, g • y0 = y) → ∀ k : H, Φ ((s y * (k : G)) • y0) = Φ y := by
     intro y hy k
@@ -1686,7 +1677,7 @@ theorem unimodStab_holds : UnimodStab := by
   have hs : ∀ y, (∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) X0 = y) →
       s y • ratTup (F := F) (AF F) X0 = y := by
     intro y h
-    simp only [s, dif_pos h]
+    simp only [s, dite_eq_left h]
     exact h.choose_spec
   exact us_rightInv_of_compat μ (stabT (AF F) σ J X0).subtype μ' νX s
     (fun f hf => hC.2 f hf s hs)

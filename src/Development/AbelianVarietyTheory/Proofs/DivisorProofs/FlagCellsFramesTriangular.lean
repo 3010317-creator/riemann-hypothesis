@@ -67,8 +67,7 @@ theorem tri_of_cols {L : Type} [CommRing L] {n m : ℕ} (U : Matrix (Fin n) (Fin
     have e1 := congrFun (hV j) r
     have e2 : (U * (Wm * V)) r j = U.mulVec (fun i => (Wm * V) i j) r := by
       simp [Matrix.mul_apply, Matrix.mulVec, dotProduct]
-    rw [e2, hc j]
-    exact e1
+    rwa [e2, hc j]
   · exact (congrFun (hc j) i).trans (ha j i hij)
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
@@ -162,8 +161,7 @@ theorem col_tri (hZ : Cells A π g κ) (k k' : A.B × Pm Dw.mult) (σ : E →+* 
   let cv' : Fin (j.1 + 1) → Fin (A.N + 1) → L := fun l => ψ' ∘ uvec (A.cv k'.1) k'.2 (std σ (j.1 + 1) hj l)
   have hpl : plk cv' id = (u : L) • plk cv id := by
     have := hu2
-    rw [map_plk, map_plk, Units.smul_def] at this
-    exact this
+    rwa [map_plk, map_plk, Units.smul_def] at this
   have h0 : plk cv' id ≠ 0 := fun h =>
     ne_zero_of_span_eq_top (span_range_comp_eq_top _ hu' ψ') (by rw [map_plk]; exact h)
   have hmem := mem_span_of_plk_eq_smul L A.N (j.1 + 1) cv cv' u h0 hpl (Fin.last j.1)
@@ -183,8 +181,7 @@ theorem col_tri (hZ : Cells A π g κ) (k k' : A.B × Pm Dw.mult) (σ : E →+* 
     rfl
   have hL : ∑ l, f l • cv l = ((A.A k.1).map (ψ.comp (cC A k.1))).mulVec (((uC A k.1 k.2 σ).map ψ).mulVec av) := by
     simp only [cv, av, Matrix.mulVec_sum, Matrix.mulVec_smul]
-    refine Finset.sum_congr rfl fun l _ => ?_
-    exact congrArg _ (hcol k.1 k.2 ψ (Fin.castLE hj l))
+    exact Finset.sum_congr rfl fun l _ => congrArg _ (hcol k.1 k.2 ψ (Fin.castLE hj l))
   have hR : cv' (Fin.last j.1) = (a0 : L) • ((A.A k.1).map (ψ.comp (cC A k.1))).mulVec
       (Chx.mulVec (fun s => ψ' (uC A k'.1 k'.2 σ s j))) := by
     have e : Fin.castLE hj (Fin.last j.1) = j := Fin.ext rfl
@@ -201,7 +198,7 @@ theorem col_tri (hZ : Cells A π g κ) (k k' : A.B × Pm Dw.mult) (σ : E →+* 
   refine ⟨((a0⁻¹ : Lˣ) : L) • av, fun i hi => ?_, ?_⟩
   · simp only [av, Pi.smul_apply, Finset.sum_apply, Pi.single_apply, smul_eq_mul]
     rw [Finset.sum_eq_zero fun l _ => ?_, mul_zero]
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h
     have := congrArg Fin.val h
     simp only [Fin.coe_castLE] at this
@@ -265,8 +262,7 @@ theorem flagCells_frames_triangular_common (hZ : Cells A π g κ) : FlagCellFram
   · ext r s
     refine ext_ev_field fun L _ z hz => ?_
     have := congrFun (congrFun (key L z hz).1 r) s
-    rw [← Matrix.map_mul] at this
-    exact this
+    rwa [← Matrix.map_mul] at this
 
 end GlobalTheory.FlagMod.FieldFlag
 

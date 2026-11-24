@@ -131,12 +131,7 @@ namespace GlobalTheory.Member
 theorem isEtaleCompletion_comp_bijective' {B A R : Type} [CommRing B] [IsLocalRing B] [CommRing A] [IsLocalRing A]
     [CommRing R] [IsLocalRing R] (e : B →+* A) (he : Function.Bijective e) (φ : A →+* R)
     (h : IsEtaleCompletion φ) : IsEtaleCompletion (φ.comp e) := by
-  obtain ⟨h1, h2, h3⟩ := h
-  refine ⟨RingHom.Flat.comp (RingHom.Flat.of_bijective he) h1, ?_, ?_⟩
-  · rw [← Ideal.map_map, IsLocalRing.map_maximalIdeal_of_surjective e he.2]
-    exact h2
-  · rw [← RingHom.comp_assoc]
-    exact RingHom.Finite.comp h3 (RingHom.Finite.of_surjective e he.2)
+  exact GlobalTheory.MemberEt.isEtaleCompletion_comp_bijective e he φ h
 
 theorem isEtaleCompletion_stalkClosedPointTo_comp_iso : ∀ {R : Type} [CommRing R] [IsLocalRing R] {X Y : Scheme.{0}} (ξ : Spec (CommRingCat.of R) ⟶ X) (g : X ⟶ Y) [IsIso g], IsEtaleCompletion (Scheme.stalkClosedPointTo ξ).hom → IsEtaleCompletion (Scheme.stalkClosedPointTo (ξ ≫ g)).hom := by
   intro R _ _ X Y ξ g _ h
@@ -326,7 +321,7 @@ theorem exists_unit_mul_pow (hm : maximalIdeal B = Ideal.span {ϖ}) (x : B) (hx 
   classical
   have hex : ∃ n, ¬ ϖ ^ n ∣ x := by
     by_contra h
-    push_neg at h
+    push Not at h
     exact hx (Ideal.mem_iInf.2 fun n => Ideal.mem_span_singleton.2 (h n))
   obtain ⟨N, hN, hmin⟩ : ∃ N, ¬ ϖ ^ N ∣ x ∧ ∀ m < N, ϖ ^ m ∣ x :=
     ⟨Nat.find hex, Nat.find_spec hex, fun m hm => not_not.1 (Nat.find_min hex hm)⟩
@@ -351,7 +346,7 @@ theorem isPrime_powInf (hm : maximalIdeal B = Ideal.span {ϖ}) (hϖ : ϖ ∈ non
     exact pow_not_mem_span_succ hm hϖ 0 (by simpa using Ideal.mem_iInf.1 h 1)
   · intro a b hab
     by_contra h
-    push_neg at h
+    push Not at h
     obtain ⟨m, u, rfl⟩ := exists_unit_mul_pow hm a h.1
     obtain ⟨k, v, rfl⟩ := exists_unit_mul_pow hm b h.2
     have hmem := Ideal.mem_iInf.1 hab (m + k + 1)
@@ -803,7 +798,7 @@ theorem exists_lift (n : ℕ) : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDisc
       exact (RingEquiv.ofBijective _ hb).symm_apply_apply x
   · obtain ⟨α, hα⟩ : ∃ α : k'', α ∉ Set.range (algebraMap (ResidueField V') k'') := by
       by_contra h
-      push_neg at h
+      push Not at h
       exact hs h
     have hint : IsIntegral (ResidueField V') α := .of_finite (ResidueField V') α
     have hmon := minpoly.monic hint
@@ -1064,31 +1059,7 @@ theorem not_X_dvd_X {σ k : Type} [Field k] {a b : σ} (hab : a ≠ b) :
 variable (k : Type) [Field k] (m e : ℕ)
 
 theorem prime_mvX {σ k : Type} [CommRing k] [IsDomain k] (s : σ) : Prime (MvPowerSeries.X s : MvPowerSeries σ k) := by
-  classical
-  let ρ := MvPowerSeries.rescale (σ := σ) (R := k) (fun i => if i = s then 0 else 1)
-  have key : ∀ g, MvPowerSeries.X s ∣ g ↔ ρ g = 0 := by
-    intro g
-    rw [MvPowerSeries.X_dvd_iff, MvPowerSeries.ext_iff]
-    refine forall_congr' fun n => ?_
-    rw [MvPowerSeries.coeff_rescale, map_zero]
-    by_cases hn : n s = 0
-    · have : (n.prod fun i m => (if i = s then (0 : k) else 1) ^ m) = 1 := by
-        refine Finset.prod_eq_one fun i hi => ?_
-        have : i ≠ s := fun h => (Finsupp.mem_support_iff.1 hi) (h ▸ hn)
-        simp [this]
-      simp [hn]
-    · have : (n.prod fun i m => (if i = s then (0 : k) else 1) ^ m) = 0 :=
-        Finset.prod_eq_zero (Finsupp.mem_support_iff.2 hn) (by simp [hn])
-      simp [hn]
-  refine ⟨?_, ?_, fun a b h => ?_⟩
-  · intro h
-    have := congrArg (MvPowerSeries.coeff (Finsupp.single s 1)) h
-    simp [MvPowerSeries.coeff_X] at this
-  · intro h
-    have := h.map (MvPowerSeries.constantCoeff (σ := σ) (R := k))
-    simp at this
-  · rw [key, map_mul, mul_eq_zero, ← key, ← key] at h
-    exact h
+  exact GlobalTheory.UCanonBd.prime_X s
 
 instance isPrime_span_bdParam (i : Fin m) : (Ideal.span {bdParam k m e i}).IsPrime :=
   (Ideal.span_singleton_prime (prime_mvX (k := k) _).ne_zero).2 (prime_mvX _)
@@ -1215,7 +1186,7 @@ theorem isTorsionFree_of_free (E : Type) [Field E] [NumberField E] (X : Type) [A
     [Module.Free ℤ X] : Module.IsTorsionFree (𝓞 E) X := by
   refine Module.IsTorsionFree.of_smul_eq_zero fun c x h => ?_
   by_contra hcx
-  push_neg at hcx
+  push Not at hcx
   obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_nonzero_dvd
     (mem_nonZeroDivisors_of_ne_zero hcx.1)
   have : r • x = 0 := by
@@ -1661,7 +1632,7 @@ theorem exists_rsp_of_isEtaleCompletion : ∀ (A : Type) [CommRing A] [IsLocalRi
       rw [bdParam, MvPowerSeries.X_def, MvPowerSeries.coeff_mul_monomial] at h
       simpa using h
     · intro j _ hj
-      rw [bdParam, MvPowerSeries.X_def, MvPowerSeries.coeff_mul_monomial, if_neg]
+      rw [bdParam, MvPowerSeries.X_def, MvPowerSeries.coeff_mul_monomial, ite_eq_right]
       simp [Finsupp.single_le_iff, hj.symm]
     · simp
 

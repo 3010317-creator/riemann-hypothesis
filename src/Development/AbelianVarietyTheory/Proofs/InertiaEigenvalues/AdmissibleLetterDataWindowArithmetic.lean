@@ -92,8 +92,7 @@ private theorem cast_ne_of_mem_cloud_of_typeG {k : Type} [Field k] {l n r : ℕ}
   intro he
   apply h3 i u hu y hy1 hy2
   have hm : u ≡ y [ZMOD l] := (CharP.intCast_eq_intCast k l).mp he
-  simp only [TopData.cloudRes, hG]
-  exact hm
+  simpa only [TopData.cloudRes, hG] using hm
 
 private theorem natCast_ne_of_mem_cloud_of_bd_of_mem_range {k : Type} [Field k] {l n r : ℕ} [CharP k l] {Dt : TopData n r}
     (h3 : Dt.T3 l) {i : ZMod n} (hB : Dt.ty i = LType.Bd) {u : ℤ} (hu : u ∈ Dt.cloud i) (y : ℤ)
@@ -102,8 +101,7 @@ private theorem natCast_ne_of_mem_cloud_of_bd_of_mem_range {k : Type} [Field k] 
   intro he
   apply h3 i u hu ((Dt.h i : ℤ) - y) hy1 hy2
   have hm : u ≡ y [ZMOD l] := (CharP.intCast_eq_intCast k l).mp he
-  simp only [TopData.cloudRes, hB]
-  exact Int.ModEq.sub (Int.ModEq.refl _) hm
+  simpa only [TopData.cloudRes, hB] using Int.ModEq.sub (Int.ModEq.refl _) hm
 
 theorem windows : ∀ {k : Type} [Field k] {l n r : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] (Dt : TopData n r), Dt.T1 l → Dt.T2 l → Dt.T3 l → ∀ i, ((Dt.sg l i : ℤ) + 1 ≤ l * (Dt.sg l (i - 1) + 1) - Dt.h i) ∧ (∀ u ∈ Dt.U i, ∀ y : ℤ, Dt.w i - Dt.sg l i - 2 ≤ y → y ≤ Dt.w i + Dt.t + 1 + Dt.sg l i → (u : k) ≠ (y : k)) ∧ (Dt.ty i = LType.G → (∀ u ∈ Dt.U i, ∀ y : ℤ, -(Dt.sg l i : ℤ) ≤ y → y ≤ 0 → (u : k) ≠ (y : k)) ∧ (∀ u ∈ Dt.cloud i, ∀ y : ℤ, 0 ≤ y → y ≤ Dt.η i → (u : k) ≠ (y : k)) ∧ 1 ≤ Dt.w i ∧ Dt.w i + Dt.t - 1 ≤ Dt.η i) ∧ (Dt.ty i = LType.Bd → (∀ u ∈ Dt.U i, ∀ y : ℤ, (Dt.h i : ℤ) ≤ y → y ≤ Dt.h i + Dt.sg l i + 1 → (u : k) ≠ (y : k)) ∧ (∀ u ∈ Dt.cloud i, ∀ y : ℤ, (Dt.h i : ℤ) - Dt.η i ≤ y → y ≤ Dt.h i → (u : k) ≠ (y : k)) ∧ (Dt.t : ℤ) ≤ Dt.wst i ∧ Dt.wst i ≤ Dt.η i) := by
   intro k _ l n r _ _ _ Dt hT1 hT2 hT3 i

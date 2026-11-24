@@ -75,16 +75,14 @@ section pol
 
 variable {X Y : Type} [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y]
 
-theorem IsPol.const (x : X) : IsPol 1 (fun _ => x) := by
-  exact ⟨fun _ => x, fun u => by simp⟩
+theorem IsPol.const (x : X) : IsPol 1 (fun _ => x) := ⟨fun _ => x, fun u => by simp⟩
 
 theorem IsPol.add {d : ℕ} {f g : ℂ → X} (hf : IsPol d f) (hg : IsPol d g) : IsPol d (fun u => f u + g u) := by
   obtain ⟨c1, h1⟩ := hf
   obtain ⟨c2, h2⟩ := hg
   exact ⟨fun s => c1 s + c2 s, fun u => by simp only [h1 u, h2 u, smul_add, Finset.sum_add_distrib]⟩
 
-theorem IsPol.zero (d : ℕ) : IsPol d (fun _ => (0 : X)) := by
-  exact ⟨fun _ => 0, fun u => by simp⟩
+theorem IsPol.zero (d : ℕ) : IsPol d (fun _ => (0 : X)) := ⟨fun _ => 0, fun u => by simp⟩
 
 theorem IsPol.sum {ι : Type} (S : Finset ι) {d : ℕ} {f : ι → ℂ → X} (hf : ∀ i ∈ S, IsPol d (f i)) :
     IsPol d (fun u => ∑ i ∈ S, f i u) := by
@@ -99,8 +97,8 @@ theorem IsPol.up {d : ℕ} {f : ℂ → X} (hf : IsPol d f) : IsPol (d + 1) f :=
   obtain ⟨c, h⟩ := hf
   refine ⟨fun s => if s < d then c s else 0, fun u => ?_⟩
   rw [Finset.sum_range_succ, h u]
-  simp only [lt_irrefl, if_false, smul_zero, add_zero]
-  exact Finset.sum_congr rfl (fun s hs => by rw [if_pos (Finset.mem_range.mp hs)])
+  simp only [lt_irrefl, ite_false, smul_zero, add_zero]
+  exact Finset.sum_congr rfl (fun s hs => by rw [ite_eq_left (Finset.mem_range.mp hs)])
 
 theorem IsPol.shift {d : ℕ} {f : ℂ → X} (hf : IsPol d f) : IsPol (d + 1) (fun u => u • f u) := by
   obtain ⟨c, h⟩ := hf
@@ -161,9 +159,7 @@ theorem polyVanish {X : Type} [AddCommGroup X] [Module ℂ X] (d : ℕ) (c : ℕ
       _ = 0 := h1
   have hp0 : p = 0 := by
     apply Polynomial.eq_zero_of_infinite_isRoot
-    refine Set.Infinite.mono ?_ F.finite_toSet.infinite_compl
-    intro u hu
-    exact hroot u hu
+    exact Set.Infinite.mono (fun u hu => hroot u hu) F.finite_toSet.infinite_compl
   have hc : p.coeff s = 0 := by rw [hp0, Polynomial.coeff_zero]
   rw [hp, Polynomial.finsetSum_coeff] at hc
   simpa [Polynomial.coeff_C_mul_X_pow, Finset.mem_range.mp hs] using hc
@@ -190,8 +186,8 @@ private theorem shift_sum_lemma {W : Type} [AddCommGroup W] [Module ℂ W] (d : 
 private theorem ite_sum_lemma_2 {W : Type} [AddCommGroup W] [Module ℂ W] (d : ℕ) (b : ℕ → W) (u : ℂ) :
     ∑ s ∈ Finset.range (d + 1), u ^ s • (if s < d then b s else 0) = ∑ s ∈ Finset.range d, u ^ s • b s := by
   rw [Finset.sum_range_succ]
-  simp only [lt_irrefl, if_false, smul_zero, add_zero]
-  exact Finset.sum_congr rfl (fun s hs => by rw [if_pos (Finset.mem_range.mp hs)])
+  simp only [lt_irrefl, ite_false, smul_zero, add_zero]
+  exact Finset.sum_congr rfl (fun s hs => by rw [ite_eq_left (Finset.mem_range.mp hs)])
 
 private theorem coeff_sum_lemma_3 {W : Type} [AddCommGroup W] [Module ℂ W] (d : ℕ) (P : ℂ[X])
     (hP : P.natDegree < d + 1) (Y : W) (u : ℂ) :
@@ -227,7 +223,7 @@ theorem ch_abstract {W : Type} [AddCommGroup W] [Module ℂ W] (G : Submodule �
   have hg : ∀ i ∈ Finset.range d, (if i < d then A i ((K ^ (i + 1)) X) else 0) =
       shiftC (fun t => A t ((K ^ (i + 1)) X)) (i + 1) := by
     intro i hi
-    rw [if_pos (Finset.mem_range.mp hi)]
+    rw [ite_eq_left (Finset.mem_range.mp hi)]
     rfl
   rw [Finset.sum_congr rfl hg, ← Finset.sum_sub_distrib,
     Finset.sum_range_sub' (fun i => shiftC (fun t => A t ((K ^ i) X)) i)]
@@ -297,8 +293,7 @@ def Gd (v : V) : Submodule ℂ (Fin (N + 1) → V) where
     exact ⟨_, isCov_smul k hη, fun j => by simp [hX]⟩
 
 theorem mem_Gd {v : V} {X : Fin (N + 1) → V} :
-    X ∈ Gd E v ↔ ∃ η : Fin (N + 1) → Module.End ℂ V, IsCov E η ∧ ∀ j, X j = η j v := by
-  exact Iff.rfl
+    X ∈ Gd E v ↔ ∃ η : Fin (N + 1) → Module.End ℂ V, IsCov E η ∧ ∀ j, X j = η j v := Iff.rfl
 
 theorem EE_mem (hE : GlRel E) {v : V} {X : Fin (N + 1) → V} (hX : X ∈ Gd E v) : EE E X ∈ Gd E v := by
   obtain ⟨η, hη, hXη⟩ := (mem_Gd E).mp hX
@@ -329,7 +324,7 @@ theorem comat (hE : GlRel E) (u : ℂ) (X : Fin (N + 1) → V) (i : Fin (N + 1))
 
   rw [← Finset.smul_sum, ← map_sum]
   congr 2
-  simp only [Tm_apply, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.add_apply,
+  simp only [Tm_apply, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.add_apply,
     Pi.smul_apply, EE_apply]
 
 theorem detCov (hE : GlRel E) {m : Fin (N + 1) → ℂ} {v : V} (hv : v ∈ CapSp E m) {X : Fin (N + 1) → V}
@@ -524,8 +519,7 @@ theorem Formalism.FourierDecayAlt.P.quantum_minor_polynomial : Formalism.Fourier
   exact Formalism.FourierDecayAlt.P.CapelliAbstractCharacter.qminor_isPol E a b
 
 theorem Formalism.FourierDecayAlt.P.polynomial_vanishing : Formalism.FourierDecayAlt.Qr.PolyVanish := by
-  intro X _ _ d c F h
-  exact Formalism.FourierDecayAlt.P.CapelliAbstractCharacter.polyVanish d c F h
+  exact fun X _ _ d c F h => Formalism.FourierDecayAlt.P.CapelliAbstractCharacter.polyVanish d c F h
 
 theorem Formalism.FourierDecayAlt.P.covariant_raising : Formalism.FourierDecayAlt.Qr.CovUp := by
   intro V _ _ n E η hE hη m hm v hv
@@ -544,5 +538,4 @@ theorem Formalism.FourierDecayAlt.P.covariant_raising : Formalism.FourierDecayAl
       · rfl
     obtain ⟨Ψ, h1, h2, h3⟩ := Formalism.FourierDecayAlt.P.CapelliAbstractCharacter.covUp_succ E η hE hη m hm v hv
     refine ⟨Ψ, h1, h2, fun i x u => ?_⟩
-    simp only [hs]
-    exact h3 i x u
+    simpa only [hs] using h3 i x u

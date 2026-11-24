@@ -308,8 +308,7 @@ theorem vanishing_sheet_measure_zero : ∀ (K : Type) [Fintype K] (J : K → Typ
       intro z hz h
       refine hΨ z hz (funext fun i => ?_)
       have := congrFun h (Equiv.swap 0 i0 i)
-      rw [hΨ'app, Equiv.swap_apply_self] at this
-      exact this
+      rwa [hΨ'app, Equiv.swap_apply_self] at this
     have hg'c : ContinuousOn (fun u => Ψ' (segre (γ u)) 0) (Metric.ball u0 r) := fun u hu =>
       (analyticAt_pi_iff.mp (analyticAt_psi_segre Ψ' (hγ u (hball hu))) 0).continuousAt.continuousWithinAt
     set O := Metric.ball u0 r ∩ (fun u => Ψ' (segre (γ u)) 0) ⁻¹' {0}ᶜ with hOdef
@@ -317,8 +316,7 @@ theorem vanishing_sheet_measure_zero : ∀ (K : Type) [Fintype K] (J : K → Typ
     have hu0O : u0 ∈ O := by
       refine ⟨Metric.mem_ball_self hr, ?_⟩
       show Ψ' (segre (γ u0)) 0 ≠ 0
-      rw [hΨ'app, Equiv.swap_apply_left]
-      exact hi0
+      rwa [hΨ'app, Equiv.swap_apply_left]
     have h0O : ∀ u ∈ O, Ψ' (segre (γ u)) 0 ≠ 0 := fun u hu => hu.2
     have hanO : AnalyticOnNhd ℂ (sheetProj Ψ' γ) O := fun u hu =>
       analyticAt_sheetProj Ψ' (hγ u (hball hu.1)) (h0O u hu)
@@ -444,9 +442,9 @@ theorem sheet_local : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintyp
   set c : K → (Fin n → ℂ) → ℂ := fun k y' => if k = k0 then (ψ y')⁻¹ else 1 with hcdef
   have hca : ∀ k, AnalyticAt ℂ (c k) (sheetProj Ψ γ t) := fun k => by
     by_cases hk : k = k0
-    · simp only [hcdef, hk, if_true]
+    · simp only [hcdef, hk, ite_true]
       exact hψa.inv hψ0
-    · simp only [hcdef, hk, if_false]
+    · simp only [hcdef, hk, ite_false]
       exact analyticAt_const
   have hcne : ∀ k y', ψ y' ≠ 0 → c k y' ≠ 0 := fun k y' h => by
     by_cases hk : k = k0
@@ -529,8 +527,7 @@ theorem sheet_term : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype
     exact (hmem t ht.1).1
   obtain ⟨G₂, hG₂a, hG₂⟩ := torus_log_re K J n A (fun y => γ (τ y)) σ c _ hγτ hz hca hc0 hσc
   have hCτ : ContDiffAt ℝ 2 (fun t' => Real.log (A.h (γ t'))) (τ (sheetProj Ψ γ t)) := by
-    rw [hτt]
-    exact hC
+    rwa [hτt]
   have hMA := maDensity_const_eq_normSq_jacobian_mul n (fun t' => Real.log (A.h (γ t')))
     (fun y' => Real.log (A.h (g y'))) τ (fun y' => G₁ y' + G₂ y') (sheetProj Ψ γ t) hτa (hG₁a.add hG₂a) hCτ
     (by
@@ -573,8 +570,7 @@ theorem sheets_tsum_eq {α β : Type*} (F : Set β) (T : ℕ → Set α) (Φ : �
   rw [← h]
   refine tsum_congr fun m => ?_
   rw [finsum_mem_image]
-  intro t ht t' ht' he
-  exact (hinj m t ht m t' ht' he).2
+  exact fun t ht t' ht' he => (hinj m t ht m t' ht' he).2
 
 theorem norm_fibSum_le {n : ℕ} {D : Set (Fin n → ℂ)} {Q : (Fin n → ℂ) → Fin n → ℂ} {h : (Fin n → ℂ) → ℝ}
     {y : Fin n → ℂ} (hfin : (D ∩ Q ⁻¹' {y}).Finite) :
@@ -732,8 +728,7 @@ theorem hasSum_sheets {X M : Type*} [AddCommMonoid M] [TopologicalSpace M] [Cont
     · exact Set.finite_of_encard_eq_coe (ht k hk)
     · apply Set.Finite.subset Set.finite_empty
       intro m hm
-      simp only [Set.mem_empty_iff_false]
-      exact hk (hm.1 ▸ hB m hm.2)
+      simpa only [Set.mem_empty_iff_false] using hk (hm.1 ▸ hB m hm.2)
   have hS : {m | t ∈ B m}.Finite := by
     have hU : {m | t ∈ B m} = ⋃ k, {m | pc m = k ∧ t ∈ B m} := by
       ext m
@@ -770,8 +765,7 @@ theorem hasSum_sheets {X M : Type*} [AddCommMonoid M] [TopologicalSpace M] [Cont
       ext m
       simp only [Finset.mem_filter, Finset.notMem_empty, iff_false, not_and, s, Set.Finite.mem_toFinset,
         Set.mem_setOf_eq]
-      intro hm h
-      exact hk (h ▸ hB m hm)
+      exact fun hm h => hk (h ▸ hB m hm)
     rw [he, Finset.card_empty, zero_smul]
 
 theorem sum_sheets {X : Type*} [MeasurableSpace X] (μ : Measure X) {np : ℕ}
@@ -825,8 +819,7 @@ theorem sum_sheets {X : Type*} [MeasurableSpace X] (μ : Measure X) {np : ℕ}
     rw [← integral_tsum (fun m => (hFint m).aestronglyMeasurable) hne]
     have hae2 : ∀ᵐ t ∂μ, ∑' m, F m t = ∑ k, (d k : ℝ) * (FF k).indicator (f k) t := by
       filter_upwards [hae] with t ht
-      have h := (hasSum_sheets FF pc B d hB f t ht).tsum_eq
-      simpa only [nsmul_eq_mul] using h
+      simpa only [nsmul_eq_mul] using (hasSum_sheets FF pc B d hB f t ht).tsum_eq
     rw [integral_congr_ae hae2,
       integral_finsetSum _ (fun k _ => ((hf k).integrable_indicator (hF k)).const_mul _)]
     apply Finset.sum_congr rfl

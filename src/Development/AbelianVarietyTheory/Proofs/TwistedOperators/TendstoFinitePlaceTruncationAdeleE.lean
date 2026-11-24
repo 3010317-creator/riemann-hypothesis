@@ -107,9 +107,7 @@ theorem tendsto_truncation : ∀ (D : D7) (ε : HeightOneSpectrum (𝓞 D.host.F
     intro s
     simp only [hαε]
     exact (map_sum (AddMonoidHom.inr (InfiniteAdeleRing D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) α s).symm
-  have hpair : Continuous (pairA D.host.F 0) := by
-    show Continuous fun y : GlobalTheoryTheory.GenusMassVolumes.Af D.host.F => ((0 : InfiniteAdeleRing D.host.F), y)
-    exact continuous_const.prodMk continuous_id
+  have hpair : Continuous (pairA D.host.F 0) := continuous_const.prodMk continuous_id
   have hlimF : Tendsto (fun s : Finset (HeightOneSpectrum (𝓞 D.host.F)) => ∑ v ∈ s, ε v) atTop
       (𝓝 (pairA D.host.F 0 1)) := by
     simp_rw [hsum]

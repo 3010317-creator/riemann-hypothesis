@@ -114,8 +114,7 @@ theorem yjtZ_cth (D : Formalism.BasicNotions.D7) (LL : ChainLetters N) {q : ℕ}
     intro m hm
     apply hy1
     rw [Finset.mem_coe, mem_support_iff] at hm ⊢
-    intro h0
-    exact hm (by rw [coeff_cth, h0, zero_mul])
+    exact fun h0 => hm (by rw [coeff_cth, h0, zero_mul])
   · rw [SetLike.mem_coe, Submodule.mem_iInf] at hy2 ⊢
     intro k
     refine ycond_op D LL LL rfl (J k) n (hthr k) _ _ ?_ (hy2 k)
@@ -149,9 +148,8 @@ theorem yjtZ_X (D : Formalism.BasicNotions.D7) (LL LL' : ChainLetters N) (hv : L
       simp [Finsupp.single_apply]
     · have : ∀ x : Fin r, (Finsupp.single (a, c) 1 : Fin N × Fin r →₀ ℕ) (i, x) = 0 := by
         intro x
-        rw [Finsupp.single_apply, if_neg]
-        intro h
-        exact hi (congrArg Prod.fst h).symm
+        rw [Finsupp.single_apply, ite_eq_right]
+        exact fun h => hi (congrArg Prod.fst h).symm
       simp [this, hi]
   · rw [SetLike.mem_coe, Submodule.mem_iInf] at hy2 ⊢
     intro k

@@ -292,8 +292,7 @@ private theorem exists_rat (ι : U3 Δ →* GA Δ) (hι : IsIotaG ι) (a : HH Δ
   obtain ⟨x, hx, e⟩ := Subgroup.mem_subgroupOf.1 ha
   have h1 : star (x : Matrix (Fin 3) (Fin 3) (Lsq F Δ)) * x = 1 := by
     have h : cT _ (x : Matrix (Fin 3) (Fin 3) (Lsq F Δ)) * 1 * x = 1 := hx
-    rw [Matrix.mul_one] at h
-    exact h
+    rwa [Matrix.mul_one] at h
   refine ⟨⟨x, h1, mul_eq_one_comm.1 h1⟩, fun v => ?_⟩
   rw [hι]
   ext1 i j
@@ -326,8 +325,7 @@ private theorem int_of_stab (k : HH Δ)
   have h3 := h1 _ ((hk _).1 h2)
   rw [Matrix.mulVec_single_one] at h3
   change IsIntegral (Ov v) (ev Δ v _)
-  rw [ev_eq]
-  exact h3
+  rwa [ev_eq]
 
 omit [NumberField F] in
 private theorem emb_star [IsTotallyReal F] (hneg : ∀ σ : F →+* ℝ, σ Δ < 0) (τ : Lsq F Δ →+* ℂ) (a : Lsq F Δ) :
@@ -389,8 +387,7 @@ theorem finG_cls {F : Type} [Field F] [NumberField F] [IsTotallyReal F] {Δ : F}
   refine ⟨γ, s, hs, u, fun v i j => ?_, e⟩
   have h : IsIntegral (Ov v) ((u.1 v : Matrix (Fin 3) (Fin 3) (Lsq (Kv v) (cv v Δ))) i j) := by
     have := int_of_stab Δ k hk v i j
-    rw [← hu v] at this
-    exact this
+    rwa [← hu v] at this
   exact ⟨h, int_star h⟩
 
 end UpperTheory.V.Z.Sym.Glob
@@ -769,16 +766,13 @@ theorem finG_stab [IsTotallyReal F] (hneg : ∀ σ : F →+* ℝ, σ Δ < 0) (ι
       rfl
     have e2 : cv v ((N * N : 𝓞 F) : F) = cv v (N : F) * cv v (N : F) := by
       simp
-    rw [e2, ← e1]
-    exact h3
+    rwa [e2, ← e1]
   apply Set.Finite.of_finite_image (f := fun γ : U3 Δ => (γ : Matrix (Fin 3) (Fin 3) (Lsq F Δ)))
   · refine (Set.Finite.pi (fun _ : Fin 3 => Set.Finite.pi (fun _ : Fin 3 => hL))).subset ?_
     rintro _ ⟨γ, hγ, rfl⟩
     simp only
-    intro i _ j _
-    exact key γ hγ i j
-  · intro a _ b _ hab
-    exact Subtype.ext hab
+    exact fun i _ j _ => key γ hγ i j
+  · exact fun a _ b _ hab => Subtype.ext hab
 
 theorem finG_stab' {D : Dat Δ} {V : Type} [AddCommGroup V] [Module ℂ V] {ch : F → ℂ} {B : Base (U3 Δ) (GA Δ) V} {s : B.Tw}
     (hD : D.Ok) (hB : D.IsBG ch B s) (g : GA Δ) :
@@ -805,8 +799,7 @@ theorem finG_stab' {D : Dat Δ} {V : Type} [AddCommGroup V] [Module ℂ V] {ch :
       rw [hJ] at hv
       exact (hD.sig v hs).J_le hv
     · have hJ : D.Jv v = KU (Ov v) (cv v Δ) := by simp [Dat.Jv, hs]
-      rw [hJ] at hv
-      exact hv
+      rwa [hJ] at hv
   haveI : Finite ((B.U.map (MulAut.conj g).toMonoidHom).comap B.ι) := (hfin.subset hsub).to_subtype
   exact Nat.card_ne_zero.mpr ⟨inferInstance, inferInstance⟩
 
@@ -910,8 +903,7 @@ theorem finG_theta_mem_KU (g : U3 Δ) : theta Δ g ∈ KU O Δ ↔ g ∈ KU O Δ
       IsInt O (star ((g : Matrix (Fin 3) (Fin 3) (Lsq K Δ)) i j))
   have hc : ∀ i j, ((theta Δ g : U3 Δ) : Matrix (Fin 3) (Fin 3) (Lsq K Δ)) i j =
       star ((g : Matrix (Fin 3) (Fin 3) (Lsq K Δ)) i j) := fun i j => rfl
-  simp only [hc, star_star]
-  exact ⟨fun h i j => (h i j).symm, fun h i j => (h i j).symm⟩
+  simpa only [hc, star_star] using ⟨fun h i j => (h i j).symm, fun h i j => (h i j).symm⟩
 
 end Local
 
@@ -935,10 +927,9 @@ theorem finG_fGv_inv (hD : D.Ok) {t : Dat.Par F} (ht : D.Cone t) (v : Pl F) (u :
     D.fGv t v (u * y) = D.fGv t v y ∧ D.fGv t v (y * theta _ u) = D.fGv t v y := by
   by_cases hv : v ∈ D.Sg
   · rw [finG_Jv_of_mem hv] at hu
-    simp only [Dat.fGv, hv, if_true]
-    exact (hD.sig v hv).G_inv (t v) (ht v hv) u hu y
+    simpa only [Dat.fGv, hv, ite_true] using (hD.sig v hv).G_inv (t v) (ht v hv) u hu y
   · rw [finG_Jv_of_not_mem hv] at hu
-    simp only [Dat.fGv, hv, if_false]
+    simp only [Dat.fGv, hv, ite_false]
     have hθ : theta _ u ∈ KU (Ov v) (cv v Δ) := (finG_theta_mem_KU u).mpr hu
     constructor
     · rw [Subgroup.mul_mem_cancel_left _ hu]
@@ -986,11 +977,9 @@ theorem finG_test (hD : D.Ok) {V : Type} [AddCommGroup V] [Module ℂ V] {ch : F
   have hmemU : ∀ g : GA Δ, g ∈ D.UG → g ∈ B.U := fun g hg => hU ▸ hg
   refine ⟨fun u y => ?_, fun u y => ?_, ?_⟩
   · rw [hω]
-    simp only [MonoidHom.one_apply, inv_one, Units.val_one, one_mul]
-    exact hL u (hUm u) y
+    simpa only [MonoidHom.one_apply, inv_one, Units.val_one, one_mul] using hL u (hUm u) y
   · rw [hω]
-    simp only [MonoidHom.one_apply, inv_one, Units.val_one, one_mul]
-    exact hR u (hUm u) y
+    simpa only [MonoidHom.one_apply, inv_one, Units.val_one, one_mul] using hR u (hUm u) y
   · let Bs : ∀ v, Set (U3 (cv v Δ) ⧸ D.Jv v) := fun v => {c | D.fGv t v (theta _ c.out) ≠ 0}
     have hBs : ∀ v ∈ D.Sg, (Bs v).Finite := by
       intro v hv

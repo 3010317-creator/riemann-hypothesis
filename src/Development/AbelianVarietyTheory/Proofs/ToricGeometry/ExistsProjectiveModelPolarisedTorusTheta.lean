@@ -535,7 +535,7 @@ private theorem valAt'_presheaf_map_of_le_of_whole_le_preimage' {Y : Over (Sp �
   have hU : ⊤ ≤ x.left ⁻¹ᵁ U := fun y hy => hVU (h hy)
   have hm : Y.left.presheaf.map (homOfLE hVU).op ≫ x.left.appLE V ⊤ h = x.left.appLE U ⊤ hU :=
     Scheme.Hom.map_appLE x.left h (homOfLE hVU).op
-  simp only [valAt', valAt, dif_pos h, dif_pos hU, resG]
+  simp only [valAt', valAt, dite_eq_left h, dite_eq_left hU, resG]
   exact congrArg (fun φ => (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom (φ.hom s)) hm
 
 private theorem preimage_basicOpen_whole_iff_valAt'_ne_zero {Y : Over (Sp ℂ)} (x : 𝟙_ (Over (Sp ℂ)) ⟶ Y) {U : Y.left.Opens}
@@ -543,8 +543,7 @@ private theorem preimage_basicOpen_whole_iff_valAt'_ne_zero {Y : Over (Sp ℂ)} 
     ⊤ ≤ x.left ⁻¹ᵁ Y.left.basicOpen s ↔ valAt' x.left U s ≠ 0 := by
   have hb : (Sp ℂ).basicOpen ((x.left.appLE U ⊤ h).hom s) = x.left ⁻¹ᵁ Y.left.basicOpen s := by
     have := Scheme.basicOpen_appLE x.left ⊤ U h s
-    rw [top_inf_eq] at this
-    exact this
+    rwa [top_inf_eq] at this
   have hv : valAt' x.left U s =
       (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom ((x.left.appLE U ⊤ h).hom s) := by
     simp [valAt', valAt, h]
@@ -577,8 +576,7 @@ private theorem point_eq_of_valAt'_eq_on_affine {Y : Over (Sp ℂ)}
     intro a
     rw [← hψ]
     have := valAt'_eval₂ x hx (σ := Empty) Empty.elim (MvPolynomial.C a)
-    rw [MvPolynomial.eval₂_C, MvPolynomial.eval_C] at this
-    exact this
+    rwa [MvPolynomial.eval₂_C, MvPolynomial.eval_C] at this
   exact (h1 U hU ψ hc).unique ⟨hx, hψ⟩ ⟨hx', fun s => (hv s).symm.trans (hψ s)⟩
 
 theorem exists_projModel_of_cone
@@ -612,8 +610,7 @@ theorem exists_projModel_of_cone
   obtain ⟨p₀⟩ : Nonempty ((𝟙_ (Over (Sp ℂ))).left) := inferInstanceAs (Nonempty (PrimeSpectrum ℂ))
   have hall : ∀ (x : 𝟙_ (Over (Sp ℂ)) ⟶ Y) (V : Y.left.Opens), x.left.base p₀ ∈ V → ⊤ ≤ x.left ⁻¹ᵁ V := by
     intro x V hV y _
-    rw [Subsingleton.elim y p₀]
-    exact hV
+    rwa [Subsingleton.elim y p₀]
   have hpt : ∀ c (x x' : 𝟙_ (Over (Sp ℂ)) ⟶ Y), ⊤ ≤ x.left ⁻¹ᵁ D c → ⊤ ≤ x'.left ⁻¹ᵁ D c →
       (∀ q, valAt' x.left (D c) (r c q) = valAt' x'.left (D c) (r c q)) → x = x' := by
     intro c x x' hx hx' hq
@@ -628,8 +625,7 @@ theorem exists_projModel_of_cone
     obtain ⟨ψ, hψ⟩ := exists_ringHom_valAt'_eq x hcc
     have := congrArg ψ (hOver c c' q)
     rw [map_mul] at this
-    simp only [← hψ, valAt'_presheaf_map_of_le_of_whole_le_preimage' x hcc] at this
-    exact this
+    simpa only [← hψ, valAt'_presheaf_map_of_le_of_whole_le_preimage' x hcc] using this
   have hone : ∀ (x : 𝟙_ (Over (Sp ℂ)) ⟶ Y) c, ⊤ ≤ x.left ⁻¹ᵁ D c → valAt' x.left (D c) (r c c) = 1 := by
     intro x c hc
     obtain ⟨ψ, hψ⟩ := exists_ringHom_valAt'_eq x hc
@@ -755,8 +751,7 @@ theorem exists_projModel_of_cone
         simp only [halg, map_mul, map_pow] at e1
         simp only [← hψ, valAt'_presheaf_map_of_le_of_whole_le_preimage' _ hB] at e1
         rw [hval w' hw'.1 h H hH, hval w' hw'.1 a A hA] at e1
-        rw [eq_div_iff (pow_ne_zero _ hw'.2)]
-        exact e1
+        rwa [eq_div_iff (pow_ne_zero _ hw'.2)]
       have hNopen : IsOpen N := by
         have hE : ContinuousOn (fun w' => MvPolynomial.eval (fun q => u q w') H) {w' | f (cz w) w' ≠ 0} :=
           (differentiableOn_eval_comp u {w' | f (cz w) w' ≠ 0}
@@ -793,10 +788,8 @@ theorem exists_projModel_of_cone
       have h3 := hover (ex z) (cz z) c (hexD z) hz c
       rw [hone (ex z) c hz, hv0, hfz, zero_div, zero_mul] at h3
       exact zero_ne_one h3
-    · intro hfz
-      exact (hchart z c hfz).1
-  · intro c' z hz
-    exact (hchart z c hz).2 c'
+    · exact fun hfz => (hchart z c hfz).1
+  · exact fun c' z hz => (hchart z c hz).2 c'
 
 theorem exists_projModel_torus : (∀ (X : Over (Sp ℂ)) (U : X.left.Opens), IsAffineOpen U → ∀ e : Γ(X.left, U) →+* ℂ, (∀ a, e (constFn X.hom U a) = a) → ∃! x : (𝟙_ (Over (Sp ℂ)) ⟶ X), ⊤ ≤ (x).left ⁻¹ᵁ U ∧ ∀ f, valAt' x.left U f = e f) → (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ ∈ SiegelH (Fin g) → ∀ N : ℕ, 1 ≤ N → (∀ c : Fin g → Fin N, (Differentiable ℂ (fun z => theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)) ∧ ∀ (n n' : Fin g → ℤ) z, (fun z => theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)) (z + τ *ᵥ ofIntVec n + ofIntVec n') = eC (-(N : ℂ) * (ofIntVec n ⬝ᵥ (τ *ᵥ ofIntVec n) / 2 + ofIntVec n ⬝ᵥ z)) * (fun z => theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)) z)) ∧ LinearIndependent ℂ (fun (c : Fin g → Fin N) (z : Fin g → ℂ) => theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ))) → (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ ∈ SiegelH (Fin g) → ∀ N : ℕ, 1 ≤ N → ∀ f : (Fin g → ℂ) → ℂ, (Differentiable ℂ f ∧ ∀ (n n' : Fin g → ℤ) z, f (z + τ *ᵥ ofIntVec n + ofIntVec n') = eC (-(N : ℂ) * (ofIntVec n ⬝ᵥ (τ *ᵥ ofIntVec n) / 2 + ofIntVec n ⬝ᵥ z)) * f z) → f ∈ Submodule.span ℂ (Set.range (fun (c : Fin g → Fin N) (z : Fin g → ℂ) => theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)))) → (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ ∈ SiegelH (Fin g) → ∀ N : ℕ, 2 ≤ N → ∀ z, ∃ f : (Fin g → ℂ) → ℂ, (Differentiable ℂ f ∧ ∀ (n n' : Fin g → ℤ) z, f (z + τ *ᵥ ofIntVec n + ofIntVec n') = eC (-(N : ℂ) * (ofIntVec n ⬝ᵥ (τ *ᵥ ofIntVec n) / 2 + ofIntVec n ⬝ᵥ z)) * f z) ∧ f z ≠ 0) → (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ ∈ SiegelH (Fin g) → ∀ N : ℕ, 3 ≤ N → ∀ (z z' : Fin g → ℂ) (gam : ℂ), (∀ f : (Fin g → ℂ) → ℂ, (Differentiable ℂ f ∧ ∀ (n n' : Fin g → ℤ) z, f (z + τ *ᵥ ofIntVec n + ofIntVec n') = eC (-(N : ℂ) * (ofIntVec n ⬝ᵥ (τ *ᵥ ofIntVec n) / 2 + ofIntVec n ⬝ᵥ z)) * f z) → f z = gam * f z') → z - z' ∈ periodLattice τ) → (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ ∈ SiegelH (Fin g) → ∀ N : ℕ, 2 ≤ N → ∀ (I : Ideal (MvPolynomial (Fin g → Fin N) ℂ)), (∀ F, F ∈ I ↔ ∀ (t : ℂ) (z : Fin g → ℂ), MvPolynomial.eval (fun c => t * theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)) F = 0) → I.IsPrime ∧ ringKrullDim (MvPolynomial (Fin g → Fin N) ℂ ⧸ I) ≤ (g + 1 : ℕ)) → (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ ∈ SiegelH (Fin g) → ∀ N : ℕ, 3 ≤ N → ∀ (I : Ideal (MvPolynomial (Fin g → Fin N) ℂ)), (∀ F, F ∈ I ↔ ∀ (t : ℂ) (z : Fin g → ℂ), MvPolynomial.eval (fun c => t * theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)) F = 0) → ∀ p : (Fin g → Fin N) → ℂ, (∀ F ∈ I, MvPolynomial.eval p F = 0) → ∃ (t : ℂ) (z : Fin g → ℂ), p = fun c => t * theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)) → (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ ∈ SiegelH (Fin g) → ∀ N : ℕ, 3 ≤ N → ∃ (X : Over (Sp ℂ)) (ex : (Fin g → ℂ) → (𝟙_ (Over (Sp ℂ)) ⟶ X)) (D : (Fin g → Fin N) → X.left.Opens), IsIntegral X.left ∧ IsProper X.hom ∧ Function.Surjective ex ∧ (∀ z z', ex z = ex z' ↔ z - z' ∈ periodLattice τ) ∧ (∀ (U : (X).left.Opens) (f : Γ((X).left, U)), IsOpen {w | w ∈ (Set.univ : Set (Fin g → ℂ)) ∧ ⊤ ≤ (ex w).left ⁻¹ᵁ U} ∧ DifferentiableOn ℂ (fun w => valAt' (ex w).left U f) {w | w ∈ (Set.univ : Set (Fin g → ℂ)) ∧ ⊤ ≤ (ex w).left ⁻¹ᵁ U}) ∧ (∀ c, IsAffineOpen (D c) ∧ ringKrullDim Γ(X.left, D c) ≤ g ∧ (∀ z, ⊤ ≤ (ex z).left ⁻¹ᵁ D c ↔ theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ) ≠ 0) ∧ ∃ r : (Fin g → Fin N) → Γ(X.left, D c), (∀ c' z, theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ) ≠ 0 → valAt' (ex z).left (D c) (r c') = theta (fun i => ((c' i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ) / theta (fun i => ((c i : ℕ) : ℝ) / N) 0 ((N : ℂ) • z) ((N : ℂ) • τ)) ∧ ∀ f : Γ(X.left, D c), ∃ F : MvPolynomial (Fin g → Fin N) ℂ, f = MvPolynomial.eval₂ (RingHom.comp (X.hom.appLE ⊤ _ le_top).hom (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv.hom) r F) ∧ (⨆ c, D c = ⊤)) := by
   intro h1 hTh hSpan hNZ hSep hPrime hZero g τ hτ N hN
@@ -817,8 +810,7 @@ theorem exists_projModel_torus : (∀ (X : Over (Sp ℂ)) (U : X.left.Opens), Is
     intro z
     obtain ⟨f, hfq, hfz⟩ := hNZ g τ hτ N hN2 z
     have hf := hSpan g τ hτ N hN1 f hfq
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     have h0 := hspan_rel z z 0 (fun c => by simp [hall c]) f hf
     simp only [zero_mul] at h0
     exact hfz h0

@@ -90,8 +90,7 @@ theorem comps_finite [NoetherianSpace α] (T : Set α) : (comps T).Finite := by
   have hSI : IsIrreducible ((↑) '' S : Set α) := hS.image _ continuous_subtype_val.continuousOn
   have hle := hC'.2 ⟨hSI, by rintro _ ⟨z, -, rfl⟩; exact z.2⟩
     (by rw [← himg]; exact Set.image_mono hCS)
-  intro z hz
-  exact hle ⟨z, hz, rfl⟩
+  exact fun z hz => hle ⟨z, hz, rfl⟩
 
 theorem isClosed_of_mem_comps {T : Set α} (hT : IsClosed T) {C : Set α} (hC : C ∈ comps T) :
     IsClosed C := by
@@ -110,8 +109,7 @@ theorem sUnion_comps (T : Set α) : ⋃₀ comps T = T := by
   have hpre := isIrreducible_preimage_coe_of_subset T D hD.2 hD.1
   have hsub : irreducibleComponent y ⊆ (↑) ⁻¹' D := fun z hz => hCD ⟨z, hz, rfl⟩
   have hle := (irreducibleComponent_mem_irreducibleComponents y).2 hpre hsub
-  intro d hd
-  exact ⟨⟨d, hD.2 hd⟩, hle hd, rfl⟩
+  exact fun d hd => ⟨⟨d, hD.2 hd⟩, hle hd, rfl⟩
 
 end Top
 
@@ -125,8 +123,7 @@ theorem existsUnique_branch [IsNoetherian W] {Z : W.IdealSheafData} (y : W) (U :
     [IsRegularLocalRing (W.presheaf.stalk y)]
     (hrsp : FinalTheorems.Rsp (W.presheaf.stalk y) n (fun i => W.presheaf.germ U.1 y hy (f i)))
     (hZU : Z.ideal U = Ideal.span {∏ i ∈ J, f i}) (i : Fin n) (hi : i ∈ J) :
-    ∃! C, IsBranch (Z.support : Set W) (f i) y C := by
-  exact existsUnique_branchH y U hy f J hrsp hZU i hi
+    ∃! C, IsBranch (Z.support : Set W) (f i) y C := existsUnique_branchH y U hy f J hrsp hZU i hi
 
 theorem branch_ne [IsNoetherian W] {Z : W.IdealSheafData} (y : W) (U : W.affineOpens)
     (hy : y ∈ U.1) {n : ℕ} (f : Fin n → Γ(W, U.1)) (J : Finset (Fin n))
@@ -144,8 +141,7 @@ theorem exists_open_comps [IsNoetherian W] {Z : W.IdealSheafData} (y : W) (U : W
     (hZU : Z.ideal U = Ideal.span {∏ i ∈ J, f i}) :
     ∃ O : W.Opens, y ∈ O ∧ O ≤ U.1 ∧ ∀ C ∈ comps (Z.support : Set W),
       C ∩ O = {z ∈ (O : Set W) | ∃ i ∈ J, IsBranch (Z.support : Set W) (f i) y C ∧
-        z ∈ W.zeroLocus {f i}} := by
-  exact exists_open_compsH y U hy f J hrsp hZU
+        z ∈ W.zeroLocus {f i}} := exists_open_compsH y U hy f J hrsp hZU
 
 section Chart
 

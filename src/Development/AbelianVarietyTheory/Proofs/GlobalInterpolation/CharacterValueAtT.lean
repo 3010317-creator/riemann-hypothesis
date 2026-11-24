@@ -172,14 +172,11 @@ theorem vp_main : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (P : Hei
     rw [conjP_conjP', ← FractionalIdeal.coe_mul, mul_assoc, inv_mul_cancel_left₀ (ne0 _), mul_inv_cancel₀ (ne0 _),
       FractionalIdeal.coe_one]
   · have := (maxV_self P).mul (maxV_inv one_ne_zero (maxV_ne P _ hP))
-    rw [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
-    exact this
+    rwa [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
   · have := (maxV_ne _ P hP.symm).mul (maxV_inv WithZero.exp_ne_zero (maxV_self (conjPrime₂ P)))
-    rw [one_mul, ← WithZero.exp_neg, neg_neg, ← FractionalIdeal.coe_mul] at this
-    exact this
+    rwa [one_mul, ← WithZero.exp_neg, neg_neg, ← FractionalIdeal.coe_mul] at this
   · have := (maxV_ne Q P h1).mul (maxV_inv one_ne_zero (maxV_ne Q _ h2))
-    rw [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
-    exact this
+    rwa [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
 
 end GlobalTheory.CharVal.Vp
 end -- clump:auto
@@ -273,8 +270,7 @@ theorem val_emb_le_one {φ : E →+* K} {w : HeightOneSpectrum (𝓞 K)} {Q : He
   obtain ⟨r, s, hs, hrs⟩ := (intAt_iff x).2 hx
   refine (intAt_iff _).1 ⟨RingOfIntegers.mapRingHom φ r, RingOfIntegers.mapRingHom φ s, fun h' => hs ((h s).2 h'), ?_⟩
   have := congrArg φ hrs
-  rw [map_mul] at this
-  exact this
+  rwa [map_mul] at this
 
 theorem val_emb_eq_one {φ : E →+* K} {w : HeightOneSpectrum (𝓞 K)} {Q : HeightOneSpectrum (𝓞 E)}
     (h : ∀ r : 𝓞 E, r ∈ Q.asIdeal ↔ RingOfIntegers.mapRingHom φ r ∈ w.asIdeal) {x : E} (hx : Q.valuation E x = 1) :
@@ -466,8 +462,7 @@ theorem splitOver_vT (hX : X.Ok) (hPr : Pr.Ok) (u : Pr.Word) {P : HeightOneSpect
   · intro e
     apply conj_piT_notMem hPr u ⟨P, hP⟩
     have := decoFin_mem_of_mem_divs hP
-    rw [e, mem_conjP] at this
-    exact this
+    rwa [e, mem_conjP] at this
 
 theorem val_q_vG (hX : X.Ok) (hPr : Pr.Ok) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.vGs) :
     P.valuation X.E (Formalism.L2.Col.qOf P : X.E) = exp (-1 : ℤ) := by
@@ -621,12 +616,10 @@ theorem partBChi (hs : s.Ok) (hχ : TaylorLogMetric.IsChi D χ) (hK : ChiInK s �
     refine val_prod_unit w (fun τ => ?_) _
     obtain ⟨Q, hQ⟩ := exists_pull (s.iE.symm : D.host.E →+* Z.X.E) (pullW τ w)
     have hT : ((Z.Pr.T u : ℕ) : 𝓞 D.host.E) ∈ Q.asIdeal := by
-      rw [hQ, map_natCast, natCast_mem_pullW]
-      exact hw
+      rwa [hQ, map_natCast, natCast_mem_pullW]
     have h3 := (maxV_of_localization_eq (hloc Q hT)).pow h
     rw [← hp, ← hyI, t4, one_pow] at h3
-    have h4 := val_emb_eq_one hQ ((maxV_span_singleton _).unique h3)
-    simpa using h4
+    simpa using val_emb_eq_one hQ ((maxV_span_singleton _).unique h3)
   · have h1 : w.valuation _ _ = 1 := chiDet_unit hs hχ hK hw hN hS
     have h2 : w.valuation _ _ = 1 := chiDet_unit hs hχ hK hw hN' hS'
     rw [UnitAt, chiFK_eq hs hK a b hN hN', map_mul, map_zpow₀, map_zpow₀, h1, h2]
@@ -994,7 +987,7 @@ theorem muAtT_unit (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ).
   unfold muAtT
   by_cases hP : P.1 ∈ Z.Pr.vGs
   · refine key _ _ (val_q_vG hZ.fields hZ.primes hP) ?_
-    rw [if_pos hP]
+    rw [ite_eq_left hP]
     have h1 := hc i.1 i.2 P hP (Units.mk0 _ (Proof.NormalFormAtPrime.qOf_ne_zero P.1)) rfl
     have h2 : Z.sig0 ((cst.muq (i.1 + 1) P * ((qVal (mu : Chr Z.X.F Z.X.E Z.X.K) P.1 : Z.X.Kˣ) : Z.X.K))⁻¹) =
         (((m0 i).locK P.1 (Units.mk0 _ (Proof.NormalFormAtPrime.qOf_ne_zero P.1)) : ℂˣ) : ℂ) := by
@@ -1008,7 +1001,7 @@ theorem muAtT_unit (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ).
     have hd := Proof.NormalFormAtPrime.degOne_of_split hZ.fields.rankE hgood.1 hgood.2.1 (P := P.1) (e ▸ hsel v)
     refine key _ _ (val_natCast_of_notMem_sq (Ideal.absNorm_mem _) hd.2) ?_
     have hg : ∀ k, ((Z.Pr.g k : ℕ) : 𝓞 Z.X.E) ∉ P.1.asIdeal := fun k h => hG k v ((natCast_mem_sel hsel v _).1 (e ▸ h)) hv
-    rw [if_neg hP, muqT, dite_eq_left i.2, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_mul, map_inv₀, map_inv₀,
+    rw [ite_eq_right hP, muqT, dite_eq_left i.2, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_mul, map_inv₀, map_inv₀,
       hq, muVal_unit hZ ht i hg hTP hw]
     simp
 
@@ -1050,8 +1043,7 @@ theorem muOff_vpLat (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ)
   have hno : ¬ ∃ Q ∈ rowSG Z.Pr sel mu, Q.asIdeal.under (𝓞 Z.X.F) = v₀.asIdeal := by
     rintro ⟨Q, hQ, e⟩
     apply T_notMem_rowSG hZ hsel hT hQ
-    rw [← e, Ideal.under_def, Ideal.mem_comap, map_natCast] at hTv
-    exact hTv
+    rwa [← e, Ideal.under_def, Ideal.mem_comap, map_natCast] at hTv
   have hsel0 : sel v₀ = P ∨ sel v₀ = conjPrime₂ P := eq_or_eq_conjP hZ.fields hS.ne (hsel v₀)
   obtain ⟨ε, hε, hord⟩ : ∃ ε : ℤ, ((sel v₀ = P ∧ ε = 1) ∨ (sel v₀ = conjPrime₂ P ∧ ε = -1)) ∧ ordDet (sel v₀) (vpLat P) = ε := by
     rcases hsel0 with h | h
@@ -1060,7 +1052,7 @@ theorem muOff_vpLat (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ)
   have hε2 : (ε : ℚ) * ε = 1 := by rcases hε with ⟨-, rfl⟩ | ⟨-, rfl⟩ <;> norm_num
   have hoff : muOff sel (rowSG Z.Pr sel mu) (mUof Z.Ch mu i.1) (vpLat P) = ((mUof Z.Ch mu i.1 (sel v₀) : Z.X.Kˣ) : Z.X.K) ^ ε := by
     unfold muOff
-    rw [finprod_eq_single _ v₀, if_neg hno, hord, Units.val_zpow_eq_zpow_val]
+    rw [finprod_eq_single _ v₀, ite_eq_right hno, hord, Units.val_zpow_eq_zpow_val]
     intro v hv
     split_ifs
     · rfl

@@ -84,9 +84,7 @@ theorem UpperTheory.V.Lit.Dr.retract :
     · have hback : (G.ρ γ) ((G.ρ γ⁻¹) p) = p := by
         rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]
         rfl
-      have hp' : (G.ρ γ⁻¹) p ∉ G.Y := by
-        intro h
-        exact hp (hback ▸ G.maps γ _ h)
+      have hp' : (G.ρ γ⁻¹) p ∉ G.Y := fun h => hp (hback ▸ G.maps γ _ h)
       simp only [w, Set.indicator_of_notMem hp, Set.indicator_of_notMem hp', map_zero]
   · intro s p hp v i hv
     show w s p v = 0

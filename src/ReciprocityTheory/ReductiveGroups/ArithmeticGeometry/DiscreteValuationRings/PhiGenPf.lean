@@ -29,8 +29,7 @@ theorem cPoint_nsmul (T : Over (Spec (CommRingCat.of R))) (k : ℕ) (a : D.X) : 
   | succ k ih => rw [succ_nsmul, cPoint_add, ih, pow_succ]
 
 theorem comp_cP {T T' : Over (Spec (CommRingCat.of R))} (ρ : T' ⟶ T) (a : D.X) : ρ ≫ cP D T a = cP D T' a := by
-  simp only [cP, ← Category.assoc]
-  exact congrArg (fun f => f ≫ D.c a) (toUnit_unique _ _)
+  simpa only [cP, ← Category.assoc] using congrArg (fun f => f ≫ D.c a) (toUnit_unique _ _)
 
 abbrev th {T : Over (Spec (CommRingCat.of R))} (z : T.left) (J : (T.left ⟶ D.P.A.left) → D.P.L.ι) := cubV D.cub z J
 
@@ -295,8 +294,7 @@ theorem gen_fe (hG : GlobalFnsSt) (k : ℕ) (mu α : D.X) :
     apply Additive.ofMul.injective
     simp only [ofMul_mul, ofMul_inv, ofMul_zpow, ofMul_pow]
     module)
-  rw [← trF_eq] at H
-  exact H
+  rwa [← trF_eq] at H
 
 theorem val_famMult {T : Over (Spec (CommRingCat.of R))} (σ : T ⟶ TF (R := R) F) {z : T.left}
     {J : (T.left ⟶ D.P.A.left) → D.P.L.ι} (hJ : Good D.P.L z J) (k : ℕ) (mu α : D.X) :
@@ -324,8 +322,7 @@ theorem phiRel_iff (s t : Fam D F k) : PhiRel D F k p w s t ↔ PhiVal p w s.s t
   · intro H α u hu hc
     refine (secRel_iff D.P.isLB _ _ _ _ _ _ _ _ _ u).2 fun y J hJ => ?_
     have := H α _ rfl _ (𝟙 _) y J hJ
-    rw [← (gen_phi hG p w hw α).2 u hu hc _ (𝟙 _) y J hJ] at this
-    exact this
+    rwa [← (gen_phi hG p w hw α).2 u hu hc _ (𝟙 _) y J hJ] at this
 
 omit hG hw in
 theorem uVal_id (α : D.X) (m : TF (R := R) F ⟶ D.P.A) (y : (DegPre.BF D F).left) (J) :
@@ -347,8 +344,7 @@ theorem tr_comm (m m' : TF (R := R) F ⟶ D.P.A) :
   · simp only [Category.assoc, tr_fst]
   · show _ ≫ DegPre.prB D F = _ ≫ DegPre.prB D F
     simp only [Category.assoc, tr_pr, MonObj.comp_mul]
-    simp only [← Category.assoc, tr_fst]
-    exact mul_right_comm _ _ _
+    simpa only [← Category.assoc, tr_fst] using mul_right_comm _ _ _
 
 omit hG hw in
 theorem units_comm (hB : D.TauBimult) (mu α : D.X) (y : (DegPre.BF D F).left) {J} (hJ : Good D.P.L y J) :

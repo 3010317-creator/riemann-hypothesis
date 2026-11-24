@@ -148,8 +148,7 @@ theorem smoothLev_slice (Φ : RadSp k r z z' π π') (c : Fin r → ℂ) (hc : c
   have hsm : ContDiff ℝ ∞ fun g : Mx k r => ((c, g) : (Fin r → ℂ) × Mx k r) := by fun_prop
   refine ⟨(fun g : Mx k r => ((c, g) : (Fin r → ℂ) × Mx k r)) ⁻¹' U, fun g => F (c, g), hU.preimage hcont, hxU,
     hF.comp hsm.contDiffOn (fun g hg => hg), ?_⟩
-  intro g hg hgG
-  exact hΦ (c, g) hg hgG
+  exact fun g hg hgG => hΦ (c, g) hg hgG
 
 theorem fn_pres_cpt (X : ActualOps k r z z' π π') (j : Fin 6) :
     ∀ Φ ∈ cptSub k r z z' π π', X.fn j Φ ∈ cptSub k r z z' π π' := by
@@ -352,16 +351,14 @@ theorem level_product_preserves_compact (hS : SliceIn (S := S) P z z' π π' L s
     ∀ x : Ix S → RadSp P.k P.r z z' π π', InK (K i) x → InK (K (Fin.last P.r)) (act (levelProduct L w i.val) x) := by
   suffices H : ∀ n i, P.r - i = n → ∀ (hi : i ≤ P.r) (x : Ix S → RadSp P.k P.r z z' π π'),
       InK (K ⟨i, Nat.lt_succ_of_le hi⟩) x → InK (K (Fin.last P.r)) (act (levelProduct L w i) x) by
-    intro x hx
-    exact H _ i.val rfl (Nat.lt_succ_iff.mp i.isLt) x hx
+    exact fun x hx => H _ i.val rfl (Nat.lt_succ_iff.mp i.isLt) x hx
   intro n
   induction n with
   | zero =>
     intro i hn hi x hx
     have hir : i = P.r := by omega
     subst hir
-    rw [level_product_of_ge L w _ le_rfl, act_one_hermitian_curvature]
-    exact hx
+    rwa [level_product_of_ge L w _ le_rfl, act_one_hermitian_curvature]
   | succ n ihn =>
     intro i hn hi x hx
     have hlt : i < P.r := by omega
@@ -427,7 +424,7 @@ private lemma densNonneg_S_consequence (hN : TopDensNonneg (S := S) P z z' π π
     have hwt : (0 : ℂ) ≤ ((∏ l, ‖q.1 l‖ ^ (-2 : ℤ) : ℝ) : ℂ) :=
       Complex.zero_le_real.mpr (Finset.prod_nonneg fun l _ => zpow_nonneg (norm_nonneg _) _)
     exact mul_nonneg hwt (hN w hw _ (level_product_preserves_compact hS w hw i u hu) _ hg _)
-  · push_neg at h0
+  · push Not at h0
     obtain ⟨j, hj⟩ := h0
     have h1 : (∏ l, ‖q.1 l‖ ^ (-2 : ℤ)) = 0 :=
       Finset.prod_eq_zero (Finset.mem_univ j) (by rw [hj, norm_zero]; exact zero_zpow _ (by norm_num))
@@ -539,8 +536,7 @@ theorem integral_formula_level_zero (hT : TopIdent (S := S) P z z' π π' μ L s
       topDens L st w (act (bTall L w) x) (act (bTall L w) y) (glue 0 c q.1) (Matrix.of q.2) := by
     funext q
     simp only [levelIntegrand, Fin.val_zero, level_product_zero]
-  rw [hf] at h0
-  exact h0
+  rwa [hf] at h0
 
 theorem integral_formula_of_steps : CompositeFormulaOfDensities := by
   intro Wp Wq _ _ _ _ _ _ S _ _ P z z' π π' μ _ L st l0 K hT hN hS hD hM
@@ -603,8 +599,7 @@ theorem nonneg_of_continuous {φ : ℂ → ℂ} (hc : Continuous φ) (h : ∀ t,
   have hsub : ({(0 : ℂ)}ᶜ : Set ℂ) ⊆ {t | 0 ≤ φ t} := fun t ht => h t ht
   have hcl2 := hcl.closure_subset_iff.mpr hsub
   rw [(dense_compl_singleton (0 : ℂ)).closure_eq] at hcl2
-  intro t
-  exact hcl2 (Set.mem_univ t)
+  exact fun t => hcl2 (Set.mem_univ t)
 
 theorem eq_of_continuous_off_zero {f g : ℂ → ℂ} (hf : Continuous f) (hg : Continuous g)
     (h : ∀ t, t ≠ 0 → f t = g t) : f = g := hf.ext_on (dense_compl_singleton (0 : ℂ)) hg (fun t ht => h t ht)

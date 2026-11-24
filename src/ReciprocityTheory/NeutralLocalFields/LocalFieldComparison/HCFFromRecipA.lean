@@ -79,8 +79,7 @@ theorem ordAt_eventually (a : Ideles K) : ∀ᶠ v in Filter.cofinite, ordAt K v
 theorem rayUnits_top_iff (u : Ideles K) :
     u ∈ rayUnits K ⊤ ∅ ↔ ∀ v : HeightOneSpectrum (𝓞 K), Valued.v ((u : AdeleRing (𝓞 K) K).2 v) = 1 := by
   constructor
-  · intro h v
-    exact (h.2 v).1
+  · exact fun h v => (h.2 v).1
   · intro h
     refine ⟨fun w hw => absurd hw (Set.notMem_empty w), fun v => ⟨h v, 1, Submodule.mem_top, ?_⟩⟩
     have h1 : Valued.v (algebraMap K (v.adicCompletion K) (((1 : 𝓞 K)) : K)) = 1 := by simp
@@ -181,8 +180,7 @@ theorem classOf_eq_one_iff (a : Ideles K) :
       apply FractionalIdeal.coeToSubmodule_injective
       show ((idealFI K a : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) =
         ((FractionalIdeal.spanSingleton (𝓞 K)⁰ x : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K)
-      rw [FractionalIdeal.coe_spanSingleton]
-      exact hx
+      rwa [FractionalIdeal.coe_spanSingleton]
     have hx0 : x ≠ 0 := by
       rintro rfl
       apply idealFI_ne_zero K a
@@ -242,8 +240,7 @@ theorem valued_eq_exp_of_isUniformiserAt (v : HeightOneSpectrum (𝓞 K)) (x : v
   obtain ⟨y, hy⟩ : ∃ y : v.adicCompletion K, Valued.v y = WithZero.exp (-1 : ℤ) := ⟨_, hy'⟩
   have hw0 : Valued.v x ≠ 0 := (Valuation.ne_zero_iff _).mpr hx0
   have hlog : WithZero.log (Valued.v x) ≤ 0 := by
-    rw [← WithZero.exp_le_exp, WithZero.exp_log hw0, WithZero.exp_zero]
-    exact hle
+    rwa [← WithZero.exp_le_exp, WithZero.exp_log hw0, WithZero.exp_zero]
   have hlog1 : WithZero.log (Valued.v x) ≠ 0 := by
     intro h
     apply hne1

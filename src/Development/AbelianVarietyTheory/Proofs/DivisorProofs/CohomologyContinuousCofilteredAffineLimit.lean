@@ -90,11 +90,9 @@ theorem contCone_of_affine_limit : ∀ (R : Type) [CommRing R] (F : Shv R), Fini
     have hyy : y = pull R (isoSpecSp (G.obj i)) F n y' := (pull_isoSpecSp_inv R F n _ y).symm
     have hz : pull R (spMap (c'.ι.app (op i)).hom) F n y' = 0 := by
       have e : pull R (isoSpecSp c.pt) F n (pull R (spMap (c.π.app i).appTop.hom) F n y') = 0 := by
-        rw [← pull_isoSpecSp_naturality R F n (X := c.pt) (Y := G.obj i) (c.π.app i) y', ← hyy]
-        exact hy
+        rwa [← pull_isoSpecSp_naturality R F n (X := c.pt) (Y := G.obj i) (c.π.app i) y', ← hyy]
       have e2 := congrArg (pull R (sch.map c.pt.isoSpec.inv) F n) e
-      rw [pull_isoSpecSp_inv', map_zero] at e2
-      exact e2
+      rwa [pull_isoSpecSp_inv', map_zero] at e2
     obtain ⟨k, f, hk⟩ := h2 (op i) y' hz
     refine ⟨k.unop, f.unop, ?_⟩
     change pull R (sch.map (G.map f.unop)) F n y = 0

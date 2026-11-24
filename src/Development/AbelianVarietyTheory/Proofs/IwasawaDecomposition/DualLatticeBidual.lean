@@ -176,8 +176,7 @@ theorem localization_dualL_le (σ : E →+* E) (J : Matrix (Fin n) (Fin n) E) (P
   intro x hx
   have := hty _ (hsM x hx)
   rw [← algebraMap_smul E s x, hform_smul_left] at this
-  rw [mul_smul, ← algebraMap_smul E s' (t • y), hform_smul_right, hs']
-  exact this
+  rwa [mul_smul, ← algebraMap_smul E s' (t • y), hform_smul_right, hs']
 
 theorem mem_mulLat (γ : GL (Fin n) E) (L : Submodule (𝓞 E) (Fin n → E)) (y : Fin n → E) :
     y ∈ mulLat γ.1 L ↔ (γ⁻¹).1 *ᵥ y ∈ L := by
@@ -207,8 +206,7 @@ theorem dualL_mulLat (σ : E →+* E) (J : Matrix (Fin n) (Fin n) E) (γ : GL (F
     exact h _ ⟨x, hx, rfl⟩
   · rintro h _ ⟨x, hx, rfl⟩
     have := h x hx
-    rw [← hform_unitary σ J γ.1 hγ, ey] at this
-    exact this
+    rwa [← hform_unitary σ J γ.1 hγ, ey] at this
 
 theorem dual_conj_primes : ∀ (E : Type) [Field E] [NumberField E] (σ : E →+* E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (P Q : Ideal (𝓞 E)) [P.IsPrime] [Q.IsPrime], (∀ x, σ (σ x) = x) → IsUnit J.det → cT σ J = J → (∀ a b : 𝓞 E, (b : E) = σ (a : E) → (a ∈ Q ↔ b ∈ P)) → ∀ M N : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E M → Submodule.IsFullLattice E N → (Formalism.HermitianLatticesTheory.localization₂ P M = Formalism.HermitianLatticesTheory.localization₂ P N → Formalism.HermitianLatticesTheory.localization₂ Q (dualL σ J M) = Formalism.HermitianLatticesTheory.localization₂ Q (dualL σ J N)) ∧ (Formalism.HermitianLatticesTheory.localization₂ P (dualL σ J M) = Formalism.HermitianLatticesTheory.localization₂ P (dualL σ J N) → Formalism.HermitianLatticesTheory.localization₂ Q M = Formalism.HermitianLatticesTheory.localization₂ Q N) ∧ ∀ γ : GL (Fin n) E, γ ∈ UJ σ J → Submodule.IsFullLattice E (mulLat γ.1 M) ∧ dualL σ J (mulLat γ.1 M) = mulLat γ.1 (dualL σ J M) := by
   intro E _ _ σ n J P Q _ _ hσ hJ hH hPQ M N hM hN

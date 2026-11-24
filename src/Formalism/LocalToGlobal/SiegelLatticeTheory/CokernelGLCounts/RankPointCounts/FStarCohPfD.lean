@@ -28,8 +28,7 @@ theorem coef_zero {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι → V} (hN :
     rw [← h]
     exact Finset.sum_congr rfl fun j _ => mul_comm _ _
   have h := congrArg (fun x => N *ᵥ x) hG
-  simp only [Matrix.mulVec_mulVec, hNG, Matrix.one_mulVec, Matrix.mulVec_zero] at h
-  exact h
+  simpa only [Matrix.mulVec_mulVec, hNG, Matrix.one_mulVec, Matrix.mulVec_zero] using h
 
 theorem linInd_of_gramInv {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι → V} (hN : GramInv H v) :
     LinearIndependent E v := by
@@ -67,8 +66,7 @@ theorem prim_inr {ι₁ ι₂ : Type} [Fintype ι₁] [Fintype ι₂] [Decidable
     rw [hsum, ← hx', sub_self]
   have hce := Fintype.linearIndependent_iff.1 (linInd_of_gramInv hN) _ hz
   have hl : ∀ i, c (Sum.inl i) = 0 := fun i => by
-    have h := hce (Sum.inl i)
-    simpa using h
+    simpa using hce (Sum.inl i)
   have hx2 : x = ∑ j, c (Sum.inr j) • b j := by
     conv_lhs => rw [hx']
     rw [Fintype.sum_sum_type]
@@ -142,8 +140,7 @@ theorem cohGen_of (hInt : CohInt Zd u u' F0 what₂) (hDG : CohDG Zd u u' F0 wha
   have hN' := hN
   rw [vP_eq Zd γ F'₂ hsn] at hN'
   have hv : ∀ k, vP Zd p γ F'₂ k ∈ lattice₂ D Zd.M p γ.lam := by
-    rw [vP_eq Zd γ F'₂ hsn]
-    exact hv'
+    rwa [vP_eq Zd γ F'₂ hsn]
   have hfr2 : (locH Zd p).IsFrame (lattice₂ D Zd.M p γ.lam) D.R.rS (locF' Zd p F'₂) (tLoc Zd p γ).T' :=
     ⟨Formalism.MainNotions.S.Loc.HermSp.CohU.prim_inr hN' hI hv', T1.2.2.1.1, T1.2.2.1.2, frf'.2.2.2.1, frf'.2.2.2.2⟩
   refine ⟨⟨sd, frf, hfr2, hdg.1, hdg.2, fun g hg => ?_⟩, ?_⟩

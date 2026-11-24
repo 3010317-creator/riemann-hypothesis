@@ -27,10 +27,7 @@ theorem typeOfHW (hL : LowSpan) (hS : StabLink) (hW : WtLink) : TypeOfHW := by
   have hU : FiniteDimensional ℂ (S₀.comap S.subtype) := by
     refine FiniteDimensional.of_injective
       (LinearMap.codRestrict S₀ (S.subtype ∘ₗ (S₀.comap S.subtype).subtype) (fun y => y.2)) ?_
-    intro a b hab
-    apply Subtype.ext
-    apply Subtype.ext
-    exact congrArg (fun y : S₀ => (y : H)) hab
+    exact fun a b hab => Subtype.ext (Subtype.ext (congrArg (fun y : S₀ => (y : H)) hab))
   have hUst : KStab ε E (S₀.comap S.subtype) := by
     refine (hS n ε H σ S E hσ hM _ hU).2 ?_
     rintro g hg _ ⟨v, hv, rfl⟩
@@ -49,8 +46,7 @@ theorem typeOfHW (hL : LowSpan) (hS : StabLink) (hW : WtLink) : TypeOfHW := by
       obtain ⟨z, hz, hzy⟩ := hle hy
       rwa [← hinj hzy]
     have hmap : (S'.comap S.subtype).map S.subtype = S' := by
-      apply Submodule.map_comap_eq_of_le
-      exact hle.trans LinearMap.map_le_range
+      exact Submodule.map_comap_eq_of_le (hle.trans LinearMap.map_le_range)
     have hst' : KStab ε E (S'.comap S.subtype) := by
       refine (hS n ε H σ S E hσ hM _ (Submodule.finiteDimensional_of_le hle')).2 ?_
       rwa [hmap]

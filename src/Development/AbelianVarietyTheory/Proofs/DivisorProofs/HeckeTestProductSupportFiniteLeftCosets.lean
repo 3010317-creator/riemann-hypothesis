@@ -145,8 +145,7 @@ theorem GlobalTheory.testProd_support_finite : ∀ (p : ℕ) [Fact p.Prime] (G :
   have hA : {a : G.GAf ⧸ L.K.toSubgroup | ∃ g, f g ≠ 0 ∧ a = (QuotientGroup.mk g : G.GAf ⧸ L.K.toSubgroup)}.Finite := by
     refine finite_mk_support L.K.toSubgroup L.K.toSubgroup ?_ ?_ f S hS
     · rw [Subgroup.relIndex_self]; exact one_ne_zero
-    · intro y
-      exact relIndex_ne_zero_open_compact _ _ (isOpen_map_conj _ L.K.isOpen y) L.compact
+    · exact fun y => relIndex_ne_zero_open_compact _ _ (isOpen_map_conj _ L.K.isOpen y) L.compact
 
   have hB : {b : Gr G 1 ⧸ K' | ∃ g, f' g ≠ 0 ∧ b = (QuotientGroup.mk g : Gr G 1 ⧸ K')}.Finite := by
     refine finite_mk_support (KHT p G.m G.n 1 G.Fw) K' hc'.1.relIndex_ne_zero ?_ f' S' hS'
@@ -160,8 +159,7 @@ theorem GlobalTheory.testProd_support_finite : ∀ (p : ℕ) [Fact p.Prime] (G :
     intro q r hqr
     simp only [ψ, Prod.mk.injEq, QuotientGroup.eq] at hqr
     rw [← QuotientGroup.out_eq' q, ← QuotientGroup.out_eq' r]
-    apply QuotientGroup.eq.2
-    exact Subgroup.mem_prod.2 ⟨by simpa using hqr.1, by simpa using hqr.2⟩
+    exact QuotientGroup.eq.2 (Subgroup.mem_prod.2 ⟨by simpa using hqr.1, by simpa using hqr.2⟩)
   refine ((hA.prod hB).preimage hψ.injOn).subset ?_
   intro q hq
   have h1 : f q.out.1 ≠ 0 := left_ne_zero_of_mul hq

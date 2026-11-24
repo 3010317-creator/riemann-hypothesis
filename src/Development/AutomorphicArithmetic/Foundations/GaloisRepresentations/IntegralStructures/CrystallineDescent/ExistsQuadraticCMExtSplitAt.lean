@@ -91,8 +91,7 @@ private theorem valuation_apply_le_one_of_mem_dec {F Ω : Type} [Field F] [Field
   have h2 := ValuationSubring.smul_mem_pointwise_smul e x A hx
   open Pointwise in
   have h3 : e • A = A := he
-  rw [h3] at h2
-  exact h2
+  rwa [h3] at h2
 
 private theorem valuation_apply_lt_one_of_mem_dec {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] (A : ValuationSubring Ω)
     (e : G F Ω) (he : e ∈ Dec A) (z : Ω) (hz : A.valuation z < 1) : A.valuation (e z) < 1 := by
@@ -100,18 +99,15 @@ private theorem valuation_apply_lt_one_of_mem_dec {F Ω : Type} [Field F] [Field
   · simpa using hz
   have hez : e z ≠ 0 := by simpa using hz0
   have key : 1 < A.valuation z⁻¹ := by
-    rw [Valuation.one_lt_val_iff _ (inv_ne_zero hz0), inv_inv]
-    exact hz
+    rwa [Valuation.one_lt_val_iff _ (inv_ne_zero hz0), inv_inv]
   have h1 : 1 < A.valuation (e z)⁻¹ := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h4 := valuation_apply_le_one_of_mem_dec A e⁻¹ (inv_mem he) _ hc
     have h5 : e⁻¹ (e z)⁻¹ = z⁻¹ := by
       rw [map_inv₀, ← AlgEquiv.mul_apply, inv_mul_cancel, AlgEquiv.one_apply]
     rw [h5] at h4
     exact absurd key (not_lt.mpr h4)
-  rw [Valuation.one_lt_val_iff _ (inv_ne_zero hez), inv_inv] at h1
-  exact h1
+  rwa [Valuation.one_lt_val_iff _ (inv_ne_zero hez), inv_inv] at h1
 
 private theorem inv_mul_mul_mem_ine_of_mem_dec {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     (A : ValuationSubring Ω) (d τ : G F Ω) (hd : d ∈ Dec A) (hτ : τ ∈ Ine A) :
@@ -124,8 +120,7 @@ private theorem inv_mul_mul_mem_ine_of_mem_dec {F Ω : Type} [Field F] [NumberFi
   have e : (d⁻¹ * τ * d) x - x = d⁻¹ (τ (d x) - d x) := by
     rw [map_sub, ← AlgEquiv.mul_apply d⁻¹ d, inv_mul_cancel, AlgEquiv.one_apply, AlgEquiv.mul_apply,
       AlgEquiv.mul_apply]
-  rw [e]
-  exact h2
+  rwa [e]
 
 theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.decGen :
     DecGen := by
@@ -278,15 +273,12 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.inertSplit :
   haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
   obtain ⟨v, hv⟩ : ∃ v : HeightOneSpectrum (𝓞 (maximalRealSubfield Y)), IsPlaceOver A v := by
     refine ⟨⟨u.asIdeal.comap (algebraMap (𝓞 (maximalRealSubfield Y)) (𝓞 Y)), Ideal.IsPrime.comap _, ?_⟩, ?_⟩
-    · intro hb
-      exact u.ne_bot (Ideal.eq_bot_of_comap_eq_bot hb)
-    · intro z
-      exact hu (algebraMap (𝓞 (maximalRealSubfield Y)) (𝓞 Y) z)
+    · exact fun hb => u.ne_bot (Ideal.eq_bot_of_comap_eq_bot hb)
+    · exact fun z => hu (algebraMap (𝓞 (maximalRealSubfield Y)) (𝓞 Y) z)
   obtain ⟨φ, hφ⟩ := exists_isFrob hv
   obtain ⟨e, he0, hce⟩ : ∃ e : Y, e ≠ 0 ∧ IsCMField.complexConj Y e = -e := by
     obtain ⟨y, hy⟩ : ∃ y : Y, IsCMField.complexConj Y y ≠ y := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact IsCMField.complexConj_ne_one Y (AlgEquiv.ext hc)
     refine ⟨y - IsCMField.complexConj Y y, sub_ne_zero.2 (Ne.symm hy), ?_⟩
     rw [map_sub, IsCMField.complexConj_apply_apply, neg_sub]
@@ -313,14 +305,12 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.inertSplit :
     rw [hx, map_intCast]
   have hkE : (φ ^ k) (algebraMap Y Ω e) ≠ algebraMap Y Ω e := by
     rw [← hk _ (by simp)]
-    intro hgE
-    exact hgY (fixes_of_imag e he0 hce g hgE)
+    exact fun hgE => hgY (fixes_of_imag e he0 hce g hgE)
   have hmE : (φ ^ m) (algebraMap Y Ω e) = algebraMap Y Ω e := by
     rw [← hm _ (by simp)]
     exact h.commutes e
   have hfx := fix_of_parity φ _ x hE0 hpmE hpmx k m hkE hmE
-  rw [← hm x (by simp)] at hfx
-  exact hfx
+  rwa [← hm x (by simp)] at hfx
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.InertiaQuadraticRamification.InertSplit =====
@@ -355,8 +345,7 @@ private theorem eq_of_pow_eq_one_of_valuation_sub_lt_one' {Ω : Type} [Field Ω]
     have he : u - 1 = (a - b) / b := by
       rw [hudef]
       field_simp
-    rw [he, map_div₀, hvb, div_one]
-    exact hab
+    rwa [he, map_div₀, hvb, div_one]
   have hvu : A.valuation u = 1 := by
     have := Valuation.map_eq_of_sub_lt A.valuation (x := 1) (y := u) (by rwa [map_one])
     rwa [map_one] at this
@@ -409,9 +398,7 @@ private theorem valuation_intCast_lt_one_iff_dvd {Ω : Type} [Field Ω] (A : Val
   constructor
   · intro hn
     by_contra hnd
-    have hnd' : ¬ p ∣ n.natAbs := by
-      intro h
-      exact hnd (Int.natCast_dvd.2 h)
+    have hnd' : ¬ p ∣ n.natAbs := fun h => hnd (Int.natCast_dvd.2 h)
     apply not_valuation_natCast_lt_one_of_not_dvd A p n.natAbs hp hpA hnd'
     rcases Int.natAbs_eq n with h | h
     · rw [h] at hn
@@ -460,8 +447,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
         {I : Ideal (𝓞 ℚ) | Ideal.absNorm I = n}).Finite :=
       Set.Finite.biUnion (Finset.finite_toSet _) (fun n _ => Ideal.finite_setOf_absNorm_eq n)
     refine (hfin.preimage (f := fun v : HeightOneSpectrum (𝓞 ℚ) => v.asIdeal) ?_).subset ?_
-    · intro a _ b _ hab
-      exact HeightOneSpectrum.ext hab
+    · exact fun a _ b _ hab => HeightOneSpectrum.ext hab
     · intro w hw
       simp only [hSdef, Set.mem_setOf_eq, pw_normV] at hw
       simp only [Set.mem_preimage, Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_range,
@@ -483,8 +469,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
     rw [hpdef, pw_normV, hcard]
     exact (Int.prime_absNorm J).2 hJp
   have hpB : B + M < p := by
-    simp only [hSdef, Set.mem_setOf_eq, not_le] at hvS
-    exact hvS
+    simpa only [hSdef, Set.mem_setOf_eq, not_le] using hvS
   have hφL : ∀ x ∈ L, φ x = g x := by
     intro x hx
     have h1 := congrArg (fun τ => ((τ ⟨x, hx⟩ : L) : Ω)) hφg
@@ -537,8 +522,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
     have hpowL : ∀ x ∈ L, (φ ^ k) x = (gA ^ k) x := by
       intro x hx
       have h1 := congrArg (fun τ => ((τ ^ k) ⟨x, hx⟩ : Ω)) hφg
-      simp only [← map_zpow, AlgEquiv.restrictNormalHom_apply] at h1
-      exact h1
+      simpa only [← map_zpow, AlgEquiv.restrictNormalHom_apply] using h1
     have hstab : ∀ z : Ω, (gA ^ 2) z = z → ∀ m : ℤ, ((gA ^ 2) ^ m) z = z := by
       intro z hz m
       have hmem2 : gA ^ 2 ∈ MulAction.stabilizer (Ω ≃ₐ[ℚ] Ω) z := hz
@@ -593,8 +577,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
         show σ (σ.symm (hA' (σ (j' α)))) = _
         exact σ.apply_symm_apply _
       have h6 : σ (h' (j' α)) = σ (j' α) := by rw [hh'j]
-      rw [e3, e2] at h6
-      exact h6
+      rwa [e3, e2] at h6
     have hext : (hA'.toAlgHom.comp (IsScalarTower.toAlgHom ℚ Y Ω)) = IsScalarTower.toAlgHom ℚ Y Ω := by
       apply AlgHom.ext_of_adjoin_eq_top (s := {α})
       · rw [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic
@@ -623,8 +606,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.realSpan :
     RealSpan := by
   intro E M Ω F _ _ _ _ _ _ _ _ _ _ _ _ _ g hE hR
   have hnot : ∃ e : E, algebraMap E M e ∉ maximalRealSubfield M := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     obtain ⟨φ⟩ : Nonempty (M →+* ℂ) := inferInstance
     apply IsTotallyComplex.complexEmbedding_not_isReal (φ.comp (algebraMap E M))
     show ComplexEmbedding.conjugate _ = _
@@ -661,8 +643,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.realSpan :
     · rw [Set.mem_singleton_iff] at hy
       subst hy
       have h1 := hE e
-      rw [IsScalarTower.algebraMap_apply E M Ω] at h1
-      exact h1
+      rwa [IsScalarTower.algebraMap_apply E M Ω] at h1
   exact hle hx'
 end -- clump:auto
 end -- clump:auto
@@ -993,9 +974,7 @@ theorem UpperTheory.Gal.Int.Core.exists_quadratic_CM_ext_split_at : UpperTheory.
       obtain ⟨q, hq, hδsq⟩ := hδ.1
       refine (mem_maximalRealSubfield_iff _).2 fun φ => conj_of_nat_sq hq ?_
       rw [← map_pow, ← map_pow, hδsq, map_natCast, map_natCast]
-    have hgδ : g (algebraMap Y Ω δ) = algebraMap Y Ω δ := by
-      have h := hZr ⟨_, hδZ⟩
-      exact h
+    have hgδ : g (algebraMap Y Ω δ) = algebraMap Y Ω δ := hZr ⟨_, hδZ⟩
     have hvp : ¬ A.valuation ((p : ℕ) : Ω) < 1 := fun h =>
       hgY (fun y => hTw A h g.toRingEquiv (fun z => apply_mem_iff_of_mem_Dec hg z) hgδ y)
     have hvp1 : A.valuation ((p : ℕ) : Ω) = 1 := le_antisymm (valuation_natCast_le_one A p) (not_lt.1 hvp)

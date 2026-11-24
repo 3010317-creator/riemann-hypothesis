@@ -118,8 +118,7 @@ theorem UpperTheory.V.Ws.phiAdj :
     have h2 : adj M * M * N = ν • N := by
       unfold IsGSp at hM
       rw [hM, smul_mul_assoc, one_mul]
-    rw [mul_assoc, hMN, mul_one] at h2
-    exact h2
+    rwa [mul_assoc, hMN, mul_one] at h2
   rw [← h1, adj_eq_conj, Matrix.charpoly_mul_comm, mul_assoc, formJ_mul, mul_one, Matrix.charpoly_transpose]
 end -- clump:auto
 end -- clump:auto
@@ -142,8 +141,7 @@ theorem UpperTheory.V.Ws.phiConj :
     have := RingHom.congr_fun (NumberField.ComplexEmbedding.isReal_iff.1 hr) x
     simp only [NumberField.ComplexEmbedding.conjugate_coe_eq, RingHom.comp_apply] at this
     apply j.injective
-    rw [hj]
-    exact this
+    rwa [hj]
   have hstab : ∀ (τ : G (W.Lp T.L) Ω) (x : T.L), ∃ y : T.L, τ (x : Ω) = y := by
     intro τ x
     exact ⟨τ.restrictNormal T.L x, (AlgEquiv.restrictNormal_commutes τ T.L x).symm⟩
@@ -274,8 +272,7 @@ private theorem ac_alg {Γ O R : Type} [TopologicalSpace Γ] [CommRing O] [IsLoc
   have hm : maximalIdeal O ≤ (maximalIdeal R).comap (algebraMap O R) := by
     intro x hx
     rw [Ideal.mem_comap, mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact ((mem_maximalIdeal _).mp hx) (isUnit_of_map_unit _ _ hu)
+    exact fun hu => ((mem_maximalIdeal _).mp hx) (isUnit_of_map_unit _ _ hu)
   intro N
   have hN : maximalIdeal O ^ N ≤ (maximalIdeal R ^ N).comap (algebraMap O R) :=
     (Ideal.pow_right_mono hm N).trans (Ideal.le_comap_pow _ N)
@@ -299,8 +296,7 @@ theorem UpperTheory.V.Ws.phiCpCont :
     simp [Link.sc, map_mul, map_pow]
   rw [e]
   have hcp : AdicCont (maximalIdeal X.B) fun g => (X.cp (resLe T.F_le g)).coeff j := by
-    intro N
-    exact (X.cp_cont j N).comp_continuous (continuous_resLe T.F_le)
+    exact fun N => (X.cp_cont j N).comp_continuous (continuous_resLe T.F_le)
   exact ac_mul hcp (ac_pow (ac_mul (ac_alg K.κ_cont) (ac_pow (ac_alg K.β_cont) n)) _)
 end -- clump:auto
 end -- clump:auto
@@ -532,11 +528,10 @@ private theorem lemB {n : ℕ} {B A G : Type} [CommRing B] [CommRing A] [Group G
     have hx' : ∀ g, x.coeff g = φ (y.coeff g) := fun g => by rw [← hx]; simp
     have hsub : x.coeff.support ⊆ y.coeff.support := fun g hg => by
       rw [Finsupp.mem_support_iff] at hg ⊢
-      intro h0
-      exact hg (by rw [hx', h0, map_zero])
+      exact fun h0 => hg (by rw [hx', h0, map_zero])
     rw [k1 ι y _ subset_rfl, k1 G (gen B x.coeff.support) y.coeff.support (fun g hg => by
       rw [Finsupp.mem_support_iff, gen_coeff] at hg
-      exact hsub (by_contra fun h0 => hg (if_neg h0))), ← AlgHom.comp_apply, ← AlgHom.comp_apply]
+      exact hsub (by_contra fun h0 => hg (ite_eq_right h0))), ← AlgHom.comp_apply, ← AlgHom.comp_apply]
     congr 1
     ext g
     simp only [AlgHom.comp_apply, MvPolynomial.aeval_X, gen_coeff, ← hx']
@@ -742,15 +737,13 @@ theorem UpperTheory.V.Ws.phiFlag :
   intro Ω _ _ _ l _ c D T c' h K X n ψ hψ v
   have hlow := X.pair.low (K.e v)
   have h1 : adj (X.P.n (K.e v)) * X.P.n (K.e v) = 1 := by
-    have h0 := hlow.1
-    simpa [UpperTheory.V.GradeZeroInterpolatingElement.IsGSp] using h0
+    simpa [UpperTheory.V.GradeZeroInterpolatingElement.IsGSp] using hlow.1
   have h2 : X.P.n (K.e v) * adj (X.P.n (K.e v)) = 1 := mul_eq_one_comm.mp h1
   refine ⟨⟨adj (X.P.n (K.e v)), X.P.n (K.e v), h1, h2⟩, fun s => ?_⟩
   obtain ⟨s, hs⟩ := s
   have hs' : resLe T.F_le s ∈ (T.fr ∅).Gv (K.e v) := by
     show resLe T.F_le s ∈ Dec (F := T.F) (T.pl (K.e v))
-    rw [← K.hA v]
-    exact hs
+    rwa [← K.hA v]
   have hval : (((⟨adj (X.P.n (K.e v)), X.P.n (K.e v), h1, h2⟩ : GL (Fin 4) X.A) *
       ((K.rho X n).toHomUnits.comp (Dec (F := T.L) (K.s.A v)).subtype) ⟨s, hs⟩ *
       (⟨adj (X.P.n (K.e v)), X.P.n (K.e v), h1, h2⟩ : GL (Fin 4) X.A)⁻¹ : GL (Fin 4) X.A) :
@@ -790,14 +783,12 @@ theorem UpperTheory.V.Ws.phiUnr :
     refine ⟨A, ?_, ?_, ?_⟩
     · intro p hp
       have hp' : p = l := by simpa using hp
-      rw [hp']
-      exact hl
+      rwa [hp']
     · exact hg
     · have he : resQ T.F (resLe T.F_le g) = resQ T.L g := by
         ext x
         rfl
-      rw [he]
-      exact hr
+      rwa [he]
   rw [MonoidHom.mem_ker, UpperTheory.V.Ws.Link.rho_apply]
   have hsc : K.sc n g = 1 := by simp [UpperTheory.V.Ws.Link.sc, hκ, hβ]
   rw [hsc, map_one, one_smul]
@@ -850,8 +841,7 @@ private theorem pp_tr {n : ℕ} {A B G H : Type} [CommRing A] [CommRing B] [Grou
   rw [e1]
   simp only [W.GDet.tr, W.GDet.lam]
   have h0 : f ((D.chi (MonoidAlgebra.mapDomainRingHom B π (MonoidAlgebra.single h 1 * y))).coeff (n - 1)) = 0 := by
-    rw [← Polynomial.coeff_map, hc, Polynomial.coeff_X_pow]
-    rw [if_neg (by omega)]
+    rw [← Polynomial.coeff_map, hc, Polynomial.coeff_X_pow, ite_eq_right (by omega)]
   rw [(map_eq_zero_iff f hf).1 h0, mul_zero]
 
 
@@ -915,8 +905,7 @@ theorem UpperTheory.V.Ws.phiPair :
       refine List.ofFn_inj.2 (funext fun i => ?_)
       rw [Function.comp_apply, map_sub, MonoidAlgebra.mapDomainRingHom_apply, MonoidAlgebra.mapDomainRingHom_apply,
         MonoidAlgebra.mapDomain_single, MonoidAlgebra.mapDomain_single, hj', map_one]
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · intro u g hg h
     obtain ⟨g', rfl, hg'⟩ := hI u g hg
     obtain ⟨h', rfl⟩ := hπ h
@@ -925,8 +914,7 @@ theorem UpperTheory.V.Ws.phiPair :
     have := pp_tr hn (algebraMap B A) hinj π D ρ hD h' _ hy
     have e : MonoidAlgebra.mapDomainRingHom B π (MonoidAlgebra.single g' (1 : B) - 1) = MonoidAlgebra.single (π g') 1 - 1 := by
       rw [map_sub, map_one, MonoidAlgebra.mapDomainRingHom_apply, MonoidAlgebra.mapDomain_single]
-    rw [e] at this
-    exact this
+    rwa [e] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.PhiCharacterResidues.PpSingle =====
@@ -945,8 +933,7 @@ theorem UpperTheory.V.Ws.phiMu :
   obtain ⟨k, hk⟩ : ∃ k : ℕ, (QuotientGroup.mk' (commutator H).topologicalClosure g) ^ l ^ k = 1 := hg
   refine ⟨k, ?_⟩
   have h1 : g ^ l ^ k ∈ (commutator H).topologicalClosure := by
-    rw [← map_pow, QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff] at hk
-    exact hk
+    rwa [← map_pow, QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff] at hk
   rw [← SetLike.mem_coe, Subgroup.topologicalClosure_coe] at h1
   rw [← map_pow, ← SetLike.mem_coe, Subgroup.topologicalClosure_coe]
   have hle : (⊤ : Subgroup H).map f ≤ D := by
@@ -996,8 +983,7 @@ private theorem adic_alg {Γ O R : Type} [TopologicalSpace Γ] [CommRing O] [IsL
     rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
     refine Ideal.pow_right_mono ?_ N
     rw [Ideal.map_le_iff_le_comap]
-    intro a ha
-    exact map_nonunit (algebraMap O R) a ha
+    exact fun a ha => map_nonunit (algebraMap O R) a ha
   have := (hf N).comp (Ideal.Quotient.lift ((maximalIdeal O) ^ N)
     ((Ideal.Quotient.mk ((maximalIdeal R) ^ N)).comp (algebraMap O R))
     (fun a ha => Ideal.Quotient.eq_zero_iff_mem.mpr (hN ha)))
@@ -1211,12 +1197,10 @@ theorem UpperTheory.V.Ws.phiPsiEx :
       rcases lt_or_gt_of_ne hk with hlt | hlt
       · rw [hM i k hlt, zero_mul]
       · rw [hN k i hlt, mul_zero]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
+    · exact fun hi => absurd (Finset.mem_univ i) hi
   have hleft : ∀ w, adj (X.P.n w) * X.P.n w = 1 := by
     intro w
-    have h1 := (X.pair.low w).1
-    simpa [IsGSp] using h1
+    simpa [IsGSp] using (X.pair.low w).1
   have hright : ∀ w, X.P.n w * adj (X.P.n w) = 1 := fun w => mul_eq_one_comm.mp (hleft w)
   have hPmul : ∀ w i, ∀ s ∈ (T.fr ∅).Gv w, ∀ t ∈ (T.fr ∅).Gv w,
       X.P.ψ w i (s * t) = X.P.ψ w i s * X.P.ψ w i t := by
@@ -1260,9 +1244,7 @@ theorem UpperTheory.V.Ws.phiPsiEx :
   have hsc1 : K.sc n 1 = 1 := by
     unfold Link.sc
     simp
-  have hscu : ∀ g : G T.L Ω, IsUnit (K.sc n g) := by
-    intro g
-    exact (K.κ g).isUnit.mul ((K.β g).isUnit.pow n)
+  have hscu : ∀ g : G T.L Ω, IsUnit (K.sc n g) := fun g => (K.κ g).isUnit.mul ((K.β g).isUnit.pow n)
   refine ⟨fun v i => IsUnit.liftRight
     { toFun := fun g => algebraMap c'.O X.B (K.sc n (g : G T.L Ω)) *
         X.ψ (K.e v) i (resLe (Tower.F_le T) (g : G T.L Ω))

@@ -187,8 +187,7 @@ theorem idealSheaf_glue_of_openImmersions :
       k W = loc (e i) (K i) W (haff i W hW) := by
     intro i W hW
     have hex : ∃ i, W.1 ≤ (e i).opensRange := ⟨i, hW⟩
-    simp only [k, dif_pos hex]
-    exact loc_indep P e K hK _ _ W hex.choose_spec hW _ _
+    simpa only [k, dite_eq_left hex] using loc_indep P e K hK _ _ W hex.choose_spec hW _ _
   have hcov' : ∀ x : X, ∃ W : X.affineOpens, ∃ i, W.1 ≤ (e i).opensRange ∧ x ∈ W.1 := by
     intro x
     obtain ⟨i, y, rfl⟩ := hcov x
@@ -217,8 +216,6 @@ theorem idealSheaf_glue_of_openImmersions :
   · intro W
     apply Ideal.comap_injective_of_surjective _ (app_bijective (e i) W.1.1 W.2).2
     have h1 := loc_comap (e i) I W.1 W.2 (haff i W.1 W.2)
-    have h2 := hk i W.1 W.2
-    have h3 := hI W.1 ⟨i, W.2⟩
-    exact h1.trans (h3.trans h2)
+    exact h1.trans ((hI W.1 ⟨i, W.2⟩).trans (hk i W.1 W.2))
 
 end GlobalTheory.IdealGlue

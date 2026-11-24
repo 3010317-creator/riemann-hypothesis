@@ -136,8 +136,7 @@ theorem dg_discrete (Λ : AddSubgroup ℂ) {r : ℝ} (hr : 0 < r) (H : ∀ w ∈
     · intro h0
       have : w = 0 := congrArg Subtype.val h0
       simpa [this] using hr
-    · intro h
-      exact Subtype.ext (H w hw h)
+    · exact fun h => Subtype.ext (H w hw h)
   rw [this]
   exact Metric.isOpen_ball.preimage continuous_subtype_val
 
@@ -160,8 +159,7 @@ theorem dg_span (Λ : AddSubgroup ℂ) (h : Formalism.MainNotions.TaylorLogMetri
     apply htop
     have hli : LinearIndependent ℝ ![w0, w] := by
       rw [LinearIndependent.pair_iff' hw0ne]
-      intro a ha
-      exact hno a (by rw [← ha, Complex.real_smul])
+      exact fun a ha => hno a (by rw [← ha, Complex.real_smul])
     have := hli.span_eq_top_of_card_eq_finrank' (by simp [Complex.finrank_real_complex])
     rw [eq_top_iff, ← this]
     apply Submodule.span_mono

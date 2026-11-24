@@ -95,13 +95,11 @@ theorem prim_adjoin (A : Type) [CommRing A] (q : ℕ) [NeZero q] (hq : IsUnit (q
   refine ⟨⟨AdjoinRoot.root _, by simpa using hq.map (algebraMap A (AdjoinRoot (cyclotomic q A))), ?_⟩⟩
   have h0 : aeval (AdjoinRoot.root (cyclotomic q A)) (cyclotomic q A) = 0 := by
     rw [AdjoinRoot.aeval_eq, AdjoinRoot.mk_self]
-  rw [← aeval_map_algebraMap A, map_cyclotomic]
-  exact h0
+  rwa [← aeval_map_algebraMap A, map_cyclotomic]
 
 theorem spec_surj (A B : CommRingCat.{0}) (φ : A ⟶ B) (hA : Subsingleton A) : Surjective (Spec.map φ) := by
   constructor
-  intro x
-  exact absurd (Subsingleton.elim _ _) x.isPrime.ne_top
+  exact fun x => absurd (Subsingleton.elim _ _) x.isPrime.ne_top
 
 theorem leafPrimCover_pf : LateralTheory.E.LeafOneSpecPf.LeafPrimCover := by
   intro q _ U hq

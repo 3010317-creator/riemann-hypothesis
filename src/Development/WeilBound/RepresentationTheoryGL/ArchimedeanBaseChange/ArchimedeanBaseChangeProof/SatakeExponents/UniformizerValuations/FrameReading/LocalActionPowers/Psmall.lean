@@ -80,11 +80,7 @@ namespace GlobalTheory
 theorem relIndex_ne_zero_of_isOpen_le_isCompact {H : Type} [Group H] [TopologicalSpace H]
     [IsTopologicalGroup H] (K U : Subgroup H) (hK : IsCompact (K : Set H))
     (hU : IsOpen (U : Set H)) (_hUK : U ≤ K) : U.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  have hO : IsOpen ((U.subgroupOf K : Subgroup K) : Set K) :=
-    hU.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hO
-  exact Subgroup.index_ne_zero_of_finite
+  apply GlobalTheory.TwTrLin.relIndex_ne_zero_of_isOpen <;> assumption
 
 end GlobalTheory
 end -- clump:auto
@@ -112,11 +108,9 @@ variable {P X : Type} [Group P] [Group X]
 theorem hint_smul (K : Subgroup P) (c : ℂ) (v : P → ℂ) : hint K (fun m => c * v m) = c * hint K v := by
   by_cases hc : c = 0
   · subst hc
-    simp only [zero_mul]
-    exact GlobalTheory.CompanionTheory.FamClP.hint_zero K
+    simpa only [zero_mul] using GlobalTheory.CompanionTheory.FamClP.hint_zero K
   · have hst : rStab (fun m => c * v m) = rStab v := by
       ext r
-      show (∀ x, c * v (x * r) = c * v x) ↔ ∀ x, v (x * r) = v x
       exact forall_congr' fun x => mul_right_inj' hc
     unfold hint
     rw [hst, show (∑ᶠ q : P ⧸ (rStab v ⊓ K), c * v q.out) = c * ∑ᶠ q : P ⧸ (rStab v ⊓ K), v q.out from
@@ -161,7 +155,7 @@ theorem idem_fix_iff (K L : Subgroup P) (hLK : L ≤ K) (hfin : L.relIndex K ≠
       have := QuotientGroup.eq.1 (QuotientGroup.out_eq' ((1 : P) : P ⧸ L))
       simpa using this
     rw [finsum_eq_single _ ((1 : P) : P ⧸ L)]
-    · simp only [Set.indicator_apply, SetLike.mem_coe, hone, if_true]
+    · simp only [Set.indicator_apply, SetLike.mem_coe, hone, ite_true]
       have hc : ((L.relIndex K : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hfin
       rw [← mul_assoc, inv_mul_cancel₀ hc, one_mul]
     · intro q hq
@@ -261,8 +255,7 @@ theorem actP_smul_vec (w : Pl E) (c : ℂ) (u : GLw a w × GLw b w → ℂ) (G :
 theorem actP_zero (w : Pl E) (G : H E a b → ℂ) : actP w (0 : GLw a w × GLw b w → ℂ) G = 0 := by
   funext z
   show hint _ (fun m => (0 : GLw a w × GLw b w → ℂ) m * _) = 0
-  simp only [Pi.zero_apply, zero_mul]
-  exact GlobalTheory.CompanionTheory.FamClP.hint_zero _
+  simpa only [Pi.zero_apply, zero_mul] using GlobalTheory.CompanionTheory.FamClP.hint_zero _
 
 theorem locM_iter_smul (w : Pl E) {k : Type} [Fintype k] (c : ℂ) (M : k → k → GLw a w × GLw b w → ℂ)
     (G : k → H E a b → ℂ) (m : ℕ) :
@@ -289,9 +282,8 @@ theorem locM_iter_diag (w : Pl E) {k : Type} [Fintype k] (q : k → GLw a w × G
     rw [Finset.sum_eq_single x]
     · simp
     · intro y _ hy
-      rw [if_neg (Ne.symm hy), actP_zero]
-    · intro h
-      exact absurd (Finset.mem_univ x) h
+      rw [ite_eq_right (Ne.symm hy), actP_zero]
+    · exact fun h => absurd (Finset.mem_univ x) h
   induction m with
   | zero => rfl
   | succ m ih =>

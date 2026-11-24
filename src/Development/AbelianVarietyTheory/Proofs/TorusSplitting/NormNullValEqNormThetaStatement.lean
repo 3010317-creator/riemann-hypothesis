@@ -284,8 +284,7 @@ theorem nv_apply (u : ((Sp ℂ).presheaf.stalk cpt)ˣ) : nv u = ‖ev u.val‖ :
 
 theorem nv_zpow (u : ((Sp ℂ).presheaf.stalk cpt)ˣ) (k : ℤ) : nv (u ^ k) = nv u ^ k := by
   have := congrArg Units.val (map_zpow nv.toHomUnits u k)
-  rw [Units.val_zpow_eq_zpow_val] at this
-  exact this
+  rwa [Units.val_zpow_eq_zpow_val] at this
 
 theorem value_val {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left} {a : ℤ} {T : Over S}
     {s : LB.Sec (Out.LPow A L a T)} {y : T ⟶ A}
@@ -440,8 +439,7 @@ theorem core {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonObj A] (L : RigL
     rw [nv_zpow, Category.id_comp, n0]
   have w₅ : ‖w‖ * n 0 ^ (N : ℤ) ^ 2 = C₂ * (n 0 ^ (N : ℤ) ^ 2 * n (0 + z) ^ (-(N : ℤ) ^ 2)) *
       (C₁ * (n z ^ (N : ℤ) ^ 2 * n ((N : ℂ) • z) ^ (-1 : ℤ)) * (t ((N : ℂ) • z) * n ((N : ℂ) • z))) := by
-    rw [← H₁, ← H₂, ← a₂, ← a₃, ← a₁]
-    exact w₄
+    rwa [← H₁, ← H₂, ← a₂, ← a₃, ← a₁]
   rw [c₁, c₂, zero_add, zpow_neg, zpow_neg_one] at w₅
   have b₁ := (zpow_pos (np 0) ((N : ℤ) ^ 2)).ne'
   have b₂ := (zpow_pos (np z) ((N : ℤ) ^ 2)).ne'

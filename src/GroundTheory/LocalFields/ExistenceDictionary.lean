@@ -32,8 +32,7 @@ theorem normal_subgroupOf_top_fixingOpenSubgroup_iff (L : IntermediateField K Ω
     refine ⟨fun n hn g => ?_⟩
     have := h.conj_mem ⟨n, Subgroup.mem_top n⟩ (Subgroup.mem_subgroupOf.2 hn) ⟨g, Subgroup.mem_top g⟩
     exact Subgroup.mem_subgroupOf.1 this
-  · intro h
-    exact h.subgroupOf _
+  · exact fun h => h.subgroupOf _
 
 theorem isAbelianExtension_fixingOpenSubgroup_iff (L : IntermediateField K Ω) [FiniteDimensional K L] :
     IsAbelianExtension ⊤ (fixingOpenSubgroup L) ↔
@@ -80,8 +79,7 @@ theorem mem_normGroup_iff_mem_range_normUnits (L : IntermediateField K Ω) [Fini
     a ∈ normGroup Ωˣ ⊤ (fixingOpenSubgroup L) ↔ baseUnitsEquiv a ∈ (normUnits K L).range := by
   rw [← map_baseUnitsEquiv_normGroup L]
   constructor
-  · intro ha
-    exact ⟨a, ha, rfl⟩
+  · exact fun ha => ⟨a, ha, rfl⟩
   · rintro ⟨b, hb, hba⟩
     rwa [← baseUnitsEquiv.injective hba]
 

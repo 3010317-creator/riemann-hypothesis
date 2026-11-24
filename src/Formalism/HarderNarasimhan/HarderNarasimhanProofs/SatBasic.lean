@@ -74,8 +74,7 @@ theorem satBasic_zl_bot : zl ρ (⊥ : Submodule R V) = ⊥ := by
   · rintro ⟨y, hy, rfl⟩
     rw [Submodule.mem_bot] at hy
     rw [hy, map_zero]
-  · intro hx
-    exact ⟨0, Submodule.zero_mem _, by rw [hx, map_zero]⟩
+  · exact fun hx => ⟨0, Submodule.zero_mem _, by rw [hx, map_zero]⟩
 
 end
 
@@ -90,8 +89,7 @@ theorem saturation_basic_properties : SatBasic := by
     obtain ⟨z, hz, hzy⟩ := (satR_mem_zl ρ A _).mp (h ((satR_mem_zl ρ B _).mpr ⟨y, hy, rfl⟩))
     rwa [← hL.1 (hAL hz) (hBL hy) hzy]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro N h
-    exact ⟨hL.1.mono h, hdisc N h⟩
+  · exact fun N h => ⟨hL.1.mono h, hdisc N h⟩
   · intro A B hAB hBL
     haveI := hdisc B hBL
     haveI := hdisc A (hAB.trans hBL)
@@ -112,8 +110,7 @@ theorem saturation_basic_properties : SatBasic := by
       rw [inv_smul_smul₀ (by exact_mod_cast ha)]
     rw [hx']
     refine Submodule.smul_mem _ _ (Submodule.subset_span ?_)
-    rw [Int.cast_smul_eq_zsmul]
-    exact hax
+    rwa [Int.cast_smul_eq_zsmul]
   · intro N hNL
     haveI := hdisc N hNL
     constructor

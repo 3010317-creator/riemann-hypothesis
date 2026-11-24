@@ -110,8 +110,7 @@ private theorem over_under {E Ω : Type} [Field E] [NumberField E] [IsCMField E]
 
 private theorem dec_res {E Ω : Type} [Field E] [NumberField E] [IsCMField E] [Field Ω] [Algebra E Ω]
     {A : ValuationSubring Ω} {g : G E Ω} (hg : g ∈ Dec (F := E) A) :
-    AlgEquiv.restrictScalarsHom (maximalRealSubfield E) g ∈ Dec (F := maximalRealSubfield E) A := by
-  exact hg
+    AlgEquiv.restrictScalarsHom (maximalRealSubfield E) g ∈ Dec (F := maximalRealSubfield E) A := hg
 
 private theorem ine_res {E Ω : Type} [Field E] [NumberField E] [IsCMField E] [Field Ω] [Algebra E Ω]
     {A : ValuationSubring Ω} {g : G E Ω} (hg : g ∈ Ine (F := E) A) :
@@ -233,8 +232,7 @@ theorem unrSplit_of (h1 : GroupStep) (h2 : UnrCharPP) (h3 : FreshSplit) (h4 : Ex
     have hφF : IsFrob A (normV v) (AlgEquiv.restrictScalarsHom (maximalRealSubfield E) φ) := by
       refine ⟨hφD, fun x hx => ?_⟩
       have := hφ.2 x hx
-      rw [hvw] at this
-      exact this
+      rwa [hvw] at this
     have hord := (hrv A hA').2 _ hφF
     refine h7 E X.K Ω A w w' hA hw' (hIne A hA) φ f hf hφ (fun k => ?_)
     rw [key, map_pow, map_pow, hr'D _ ⟨A, hA', hφD⟩, ← orderOf_dvd_iff_pow_eq_one, hord]
@@ -380,8 +378,7 @@ private theorem core {F Ω : Type} [Field F] [NumberField F] [Field Ω] [CharZer
   haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, inferInstance⟩
   let res : G F Ω →* G ℚ Ω := AlgEquiv.restrictScalarsHom ℚ
   have hres_inj : Function.Injective res := fun g h hgh => AlgEquiv.ext fun x => by
-    have e := congrArg (fun σ : G ℚ Ω => σ x) hgh
-    exact e
+    exact congrArg (fun σ : G ℚ Ω => σ x) hgh
   have hVo : IsOpen ((V.map res : Subgroup (G ℚ Ω)) : Set (G ℚ Ω)) :=
     GlobalTheory.KLift.isOpen_map_restrictScalars V hV
   obtain ⟨ψ₀, hG₀, hpow₀, hT₀, u₀, hu₀T, hp, hu₀, hram⟩ := hFC ℚ Ω (V.map res) hVo
@@ -409,23 +406,19 @@ private theorem core {F Ω : Type} [Field F] [NumberField F] [Field Ω] [CharZer
       rw [← e]
       exact under_place hA
     · left
-      intro g hg
-      exact hram _ A (under_place hA) hpt _ ((res_ine A g).2 hg)
+      exact fun g hg => hram _ A (under_place hA) hpt _ ((res_ine A g).2 hg)
   · refine MonoidHom.ext fun g => ?_
     rw [MonoidHom.pow_apply, MonoidHom.comp_apply, ← MonoidHom.pow_apply, hpow₀,
       MonoidHom.one_apply, MonoidHom.one_apply]
-  · intro t ht A hA g hg
-    exact hT₀ _ ⟨t, ht, rfl⟩ A (under_place hA) _ ((res_dec A g).2 hg)
-  · intro huT
-    exact hu₀T ⟨u, huT, eu⟩
+  · exact fun t ht A hA g hg => hT₀ _ ⟨t, ht, rfl⟩ A (under_place hA) _ ((res_dec A g).2 hg)
+  · exact fun huT => hu₀T ⟨u, huT, eu⟩
   · intro A hA
     refine ⟨decV A (hunder A hA), ?_⟩
     obtain ⟨τ₀, hτ₀, ho⟩ := (hu₀ A (hunder A hA)).2
     obtain ⟨h, -, hh⟩ := (hu₀ A (hunder A hA)).1 (Ine_le_Dec A hτ₀)
     refine ⟨h, (res_ine A h).1 (by rw [show res h = τ₀ from hh]; exact hτ₀), ?_⟩
     show orderOf (ψ₀ (res h)) = n
-    rw [show res h = τ₀ from hh]
-    exact ho
+    rwa [show res h = τ₀ from hh]
 
 theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.freshSplit :
     FreshChar → FreshSplit := by
@@ -463,8 +456,7 @@ private theorem relIndex_ker_prime {Γ : Type} [Group Γ] (H H' : Subgroup Γ) (
     rintro _ ⟨g, rfl⟩
     rw [mem_rootsOfUnity]
     exact hs g g.2
-  have hcard : Nat.card (rootsOfUnity p ℂ) = p := by
-    exact Complex.card_rootsOfUnity p
+  have hcard : Nat.card (rootsOfUnity p ℂ) = p := Complex.card_rootsOfUnity p
   have hdvd : Nat.card f.range ∣ p := by
     have := Subgroup.card_dvd_of_le hle
     rwa [hcard] at this
@@ -540,8 +532,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.groupStep :
       have hprime : ((H₀ ⊓ ((r * ψ) ^ n').ker).relIndex (H₀ ⊓ (r ^ (p * n')).ker)).Prime := by
         refine relIndex_ker_prime _ _ ((r * ψ) ^ n') p hp (fun g => ?_) (fun g hg => ?_) τ (hUH hτU) hτs
         · constructor
-          · intro hg
-            exact ⟨hle hg, hg.2⟩
+          · exact fun hg => ⟨hle hg, hg.2⟩
           · rintro ⟨hg, hs⟩
             exact ⟨hg.1, hs⟩
         · have h1 : (r ^ (p * n')) g = 1 := hg.2
@@ -553,8 +544,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.groupStep :
       refine ⟨r', h1, fun g hg => ?_, h3⟩
       rw [h2 g hg, MonoidHom.mul_apply, hψD g hg, mul_one]
   refine key n hn r hr ?_
-  rw [hrn, MonoidHom.ker_one, inf_top_eq]
-  exact hP
+  rwa [hrn, MonoidHom.ker_one, inf_top_eq]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.InertiaQuadraticRamification.GroupStep =====
@@ -574,8 +564,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.kumMove :
   obtain ⟨D, hDpos, hD⟩ := hNV Ω U hU q hq
   obtain ⟨e, D', hD'ℓ, hDe⟩ := Nat.exists_eq_pow_mul_and_not_dvd hDpos.ne' ℓ hℓ.one_lt.ne'
   refine ⟨b + e, fun k hk ζ y hζ hy => ?_⟩
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   haveI : NeZero (ℓ ^ k) := ⟨pow_ne_zero _ hℓ.ne_zero⟩
   have hpow : ∀ τ : G ℚ Ω, ∃ a, τ ζ = ζ ^ a := by
     intro τ
@@ -689,11 +678,9 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.moveRoot :
     generalize ℓ ^ (b - 1) = N at h2 h4
     omega
   have hex : ∃ σ ∈ E.fixingSubgroup, σ ζ0 ≠ ζ0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hnot
-    rw [← InfiniteGalois.fixedField_fixingSubgroup E, IntermediateField.mem_fixedField_iff]
-    exact hcon
+    rwa [← InfiniteGalois.fixedField_fixingSubgroup E, IntermediateField.mem_fixedField_iff]
   obtain ⟨σ, hσE, hσ⟩ := hex
   refine ⟨b, σ, hEsub hσE, fun ζ hζ hfix => hσ ?_⟩
   haveI : NeZero (ℓ ^ b) := ⟨hn.ne'⟩
@@ -719,8 +706,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.normVal :
   have hfix : K.fixingSubgroup = U :=
     InfiniteGalois.fixingSubgroup_fixedField ⟨U, U.isClosed_of_isOpen hU⟩
   have hfin : FiniteDimensional ℚ K := by
-    rw [← InfiniteGalois.isOpen_iff_finite, hfix]
-    exact hU
+    rwa [← InfiniteGalois.isOpen_iff_finite, hfix]
   have hq0 : q ≠ 0 := by omega
   have hpp : q.minFac.Prime := Nat.minFac_prime (by omega)
   haveI : Fact q.minFac.Prime := ⟨hpp⟩
@@ -785,8 +771,7 @@ private theorem exists_map_eq_conj_of_isAlgClosed_algebraic {Ω : Type} [Field �
     have h2 : aeval ((Complex.conjAe.toAlgHom.restrictScalars ℚ) (φ y)) p =
         (Complex.conjAe.toAlgHom.restrictScalars ℚ) (aeval (φ y) p) := Polynomial.aeval_algHom_apply _ _ _
     have h3 : aeval (φ y) p = 0 := h1
-    rw [h3, map_zero] at h2
-    exact h2
+    rwa [h3, map_zero] at h2
   set q := p.map (algebraMap ℚ Ω)
   have hq0 : q ≠ 0 := Polynomial.map_ne_zero hp0
   have hq := C_leadingCoeff_mul_prod_multiset_X_sub_C (IsAlgClosed.card_roots_eq_natDegree (p := q))
@@ -857,8 +842,7 @@ theorem exFld : ExFld := by
       apply hcomm
       rw [commutator_def]
       exact Subgroup.commutator_mem_commutator (Subgroup.mem_top _) (Subgroup.mem_top _)
-    rw [MonoidHom.mem_ker, map_commutatorElement, commutatorElement_eq_one_iff_mul_comm] at hk
-    exact hk
+    rwa [MonoidHom.mem_ker, map_commutatorElement, commutatorElement_eq_one_iff_mul_comm] at hk
   haveI : IsMulCommutative Gal(M/E) := ⟨⟨hab⟩⟩
   haveI : IsAbelianGalois E M := ⟨⟩
   haveI : NumberField M := { to_charZero := inferInstance, to_finiteDimensional := Module.Finite.trans E M }
@@ -876,8 +860,7 @@ theorem exFld : ExFld := by
     · rw [IntermediateField.adjoin_le_iff]
       intro x hx
       rw [SetLike.mem_coe, IntermediateField.mem_fixedField_iff]
-      intro g hg
-      exact (IntermediateField.mem_fixedField_iff H x).mp hx _ hg
+      exact fun g hg => (IntermediateField.mem_fixedField_iff H x).mp hx _ hg
   have hreal : ∀ x ∈ (KF : Set Ω), ∀ φ : Ω →+* ℂ, (φ x).im = 0 := by
     intro x hx φ
     obtain ⟨c, hc⟩ := exists_algEquiv_map_eq_conj_of_exists_conj (F := maximalRealSubfield E) φ (exists_map_eq_conj_of_isAlgClosed_algebraic φ) (fun a =>
@@ -893,8 +876,7 @@ theorem exFld : ExFld := by
   · intro h
     have hg : g ∈ M.fixingSubgroup :=
       (IntermediateField.mem_fixingSubgroup_iff _ _).mpr (fun x hx => h ⟨x, hx⟩)
-    rw [hfixM] at hg
-    exact hg
+    rwa [hfixM] at hg
   · intro h x
     have hg : g ∈ M.fixingSubgroup := by rw [hfixM]; exact h
     exact (IntermediateField.mem_fixingSubgroup_iff _ _).mp hg x.1 x.2
@@ -1080,8 +1062,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.ordPrime :
     intro h
     apply hvS
     simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
-    rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact h
+    rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   have hφN : σ⁻¹ * φ ∈ N := by
     have := hNn.conj_mem _ hφg σ⁻¹
     simpa [mul_assoc] using this
@@ -1091,8 +1072,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.ordPrime :
     have h3 := congrArg σ h2
     rw [AlgEquiv.mul_apply] at h3
     have h4 : σ ((σ⁻¹ : G ℚ Ω) (φ x)) = φ x := mul_inv_apply _
-    rw [h4] at h3
-    exact h3
+    rwa [h4] at h3
   have hφU : φ ∈ U0 := by
     have := U0.mul_mem hσU (hNU hφN).2
     simpa using this
@@ -1259,8 +1239,7 @@ private theorem normV_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpe
     rw [hc]; exact Ideal.absNorm_eq_zero_iff.not.2 v.ne_bot
   have h1 : normV v ≠ 1 := by
     rw [hc]
-    intro h
-    exact v.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
+    exact fun h => v.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
   omega
 
 private theorem not_mem_of_coprime {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) {p q : ℕ}
@@ -1325,8 +1304,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.unrCharPP :
     have h1 : hζ.autToPow (maximalRealSubfield E) φ = a := by
       apply Units.ext
       rw [chi_of_pow hζ φ _ hφζ, ha, ZMod.coe_unitOfCoprime]
-    rw [MonoidHom.comp_apply, h1]
-    exact hlamo
+    rwa [MonoidHom.comp_apply, h1]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.InertiaQuadraticRamification.UnrCharPP =====

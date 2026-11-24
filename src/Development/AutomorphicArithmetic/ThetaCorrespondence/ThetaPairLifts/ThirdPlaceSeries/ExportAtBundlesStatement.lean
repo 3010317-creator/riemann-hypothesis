@@ -252,8 +252,7 @@ theorem mem_span_of_faithful {rd : Rd ρ Y i j b} (hf : Faithful rd) (S : Set (Y
   have hv : LinearIndependent (FractionRing (X.O i)) v := bW.linearIndependent.map' W.subtype (Submodule.ker_subtype W)
   have hspan : Submodule.span (FractionRing (X.O i)) (Set.range v) = W := by
     have := congrArg (Submodule.map W.subtype) bW.span_eq
-    rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at this
-    exact this
+    rwa [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at this
   have hli : LinearIndependent (FractionRing (X.O i)) (Fin.cons x v : Fin _ → Y.Fm i ((j : ℕ) + 1) b) :=
     linearIndependent_finCons.2 ⟨hv, by rw [hspan]; exact hxW⟩
   have hC := hf _ _ hli
@@ -267,8 +266,7 @@ theorem mem_span_of_faithful {rd : Rd ρ Y i j b} (hf : Faithful rd) (S : Set (Y
   have hsW : s ∈ Submodule.span (FractionRing (X.O i)) (Set.range v) := by
     rw [hspan]; exact Submodule.subset_span hs
   have := rd_mem_span Y rd _ hsW
-  rw [← Set.range_comp] at this
-  exact this
+  rwa [← Set.range_comp] at this
 
 end Descent
 
@@ -475,8 +473,7 @@ theorem dec_le_of_frob_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
     (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A))
     (sup_le ((Subgroup.zpowers_le).2 (Subgroup.mem_subgroupOf.2 hm)) (fun x hx => hI hx)) hc
   rw [h] at h2
-  intro g hg
-  exact h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
+  exact fun g hg => h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
 
 theorem addVal_le_of_notMem {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] {l x : O}
     (hx : x ∉ Ideal.span {l} * IsLocalRing.maximalIdeal O) :
@@ -583,7 +580,7 @@ theorem thmC_of_parts : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.hos
     simpa [Fin.ext_iff] using this
   have hc := hco (fun a => φ (Fin.castAdd t a)) (fun a => GlobalTheory.TwistDet.cConj X (φ (Fin.castAdd t a)))
     (fun a => ⟨hcj _, g (Fin.castAdd t a), by simpa using (hg (Fin.castAdd t a)).1⟩)
-  rw [if_neg hl.ne'] at hc
+  rw [ite_eq_right hl.ne'] at hc
   obtain ⟨P', hP', hSt', -, hNF⟩ := induct hl f (fun j => (hP i _ (hT _ (hfT j))).2.1) (fun j => (hP i _ (hT _ (hfT j))).2.2)
     he hle (by omega) hd hLH hz (fun j => ⟨hLs _ (hfT j), hLζ, hLi _ (hfT j)⟩) _ h₀
     (fun j => (hP i _ (hT _ (hfT j))).1 M (R₀ + t) R₀ d A L z _ _ _ (Nat.le_add_right _ _) hlt hz (hLs _ (hfT j)) h₀
@@ -1394,8 +1391,7 @@ theorem exists_residue_char [IsAlgClosure E Ω] {N : ℕ} {P : HeightOneSpectrum
     constructor
     · intro h
       rw [h] at h3
-      rw [Valuation.map_sub_swap]
-      exact h3
+      rwa [Valuation.map_sub_swap]
     · intro h
       refine Subtype.ext (Units.ext (eq_one_of_pow_eq_one A hNA (hr _) ?_))
       have := Valuation.map_add_lt _ h3 h
@@ -1629,15 +1625,7 @@ theorem dec_le_of_frob_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
     {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F)} (hA : IsPlaceOver A v) {σ : G F Ω}
     (hσ : IsFrob A (normV v) σ) {L : Subgroup (G F Ω)} (hL : IsOpen (L : Set (G F Ω))) (hI : Ine (F := F) A ≤ L)
     (hm : σ ∈ L) : Dec (F := F) A ≤ L := by
-  have h := GlobalTheory.TameQuot.closure_frob_sup_Ine F Ω A v hA ⟨σ, hσ.1⟩ hσ
-  have hc : IsClosed ((L.subgroupOf (Dec (F := F) A) : Subgroup (Dec (F := F) A)) : Set (Dec (F := F) A)) :=
-    (L.isClosed_of_isOpen hL).preimage continuous_subtype_val
-  have h2 := Subgroup.topologicalClosure_minimal
-    (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A))
-    (sup_le ((Subgroup.zpowers_le).2 (Subgroup.mem_subgroupOf.2 hm)) (fun x hx => hI hx)) hc
-  rw [h] at h2
-  intro g hg
-  exact h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
+  exact GlobalTheory.StepTwo.TwoBound.dec_le_of_frob_mem hA hσ hL hI hm
 
 theorem residual_bound_of_parts : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X), (∀ i, StepAB X i) → (∀ i, ChooseH bkP i) → (∀ i s, GalHyp bkP i s → ResBound bkP i s) → ResidualBoundOddPrimes bkP := by
   intro D N X bkP hAB hCh hRB i hl T hT
@@ -1666,7 +1654,7 @@ theorem residual_bound_of_parts : ∀ (D : Formalism.BasicNotions.D7) (N : NData
     · exact (hLs s hs).2.2.2.2 k (dec_le_of_frob_mem (N.plOm.2 _) (hφ a) hLo
         ((hIne _ _ (Or.inl rfl) _ (N.plOm.2 _)).trans hUL') (hφL a) hk)
   have hc := hco φ (fun a => GlobalTheory.TwistDet.cConj X (φ a)) (fun a => ⟨hcj a, g a, (hg a).1⟩) s hs
-  rw [if_pos hl] at hc
+  rw [ite_eq_left hl] at hc
   obtain ⟨m, hm, hu⟩ := (hRB i s (hT s hs) M R P _ φ _ Q hlt hPos hQ a Φ hΦ).1 hc F hF
   exact ⟨m, hm, (IsDiscreteValuationRing.addVal_eq_zero_iff.2 hu).le⟩
 
@@ -1759,7 +1747,7 @@ theorem exportAt_of_bundles_alt : Cheb → PoitouTateTotallyComplex → CohDimTw
   · intro j hj b
     have h : D.ntw.NonzeroIndexPlace (nch.twI w) ∧ j ∈ Finset.Icc 1 D.R.m := ⟨hW w hw, hj⟩
     show IntegralHeckeForms.BasisOf D.nexp (nch.twI w) j b (IntegralHeckeForms.SgJ D.nexp (twEOf xd) (nch.twI w) j b) (S (nch.twI w) j b)
-    simp only [S, dif_pos h]
+    simp only [S, dite_eq_left h]
     exact Classical.choose_spec (GlobalTheory.T.exists_basis_averaged_series_of_class_sums D (twEOf xd) hI.t4 _ h.1 j h.2 b)
 end GlobalTheory.ExportClose
 end

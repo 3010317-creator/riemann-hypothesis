@@ -76,11 +76,11 @@ theorem gb_entry {i j : Fin (2 * r + k + 1)} (hj : r ≤ j.val) (hj' : j.val ≤
   by_cases h : i = j
   · subst h
     have h1 : ¬ (i.val < r ∧ i.val + i.val = 2 * r + k) := by omega
-    rw [if_neg h1, if_neg h1, if_pos ⟨hj, hj', rfl⟩, if_pos rfl]
+    rw [ite_eq_right h1, ite_eq_right h1, ite_eq_left ⟨hj, hj', rfl⟩, ite_eq_left rfl]
   · have h1 : ¬ (i.val < r ∧ i.val + j.val = 2 * r + k) := by omega
     have h2 : ¬ (j.val < r ∧ i.val + j.val = 2 * r + k) := by omega
     have h3 : ¬ (r ≤ i.val ∧ i.val ≤ r + k ∧ i = j) := fun hh => h hh.2.2
-    rw [if_neg h1, if_neg h2, if_neg h3, if_neg h]
+    rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, ite_eq_right h]
 
 theorem gb_mulVec {v : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v) :
     Hpk k r *ᵥ v = fun i => (if i.val = r + k then -1 else 1) * v i := by
@@ -88,11 +88,11 @@ theorem gb_mulVec {v : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v) :
   simp only [Matrix.mulVec, dotProduct]
   rw [Finset.sum_eq_single i]
   · by_cases hi : r ≤ i.val ∧ i.val ≤ r + k
-    · rw [gb_entry hi.1 hi.2, if_pos rfl]
+    · rw [gb_entry hi.1 hi.2, ite_eq_left rfl]
     · rw [hv i (by omega)]; ring
   · intro b _ hb
     by_cases hb' : r ≤ b.val ∧ b.val ≤ r + k
-    · rw [gb_entry hb'.1 hb'.2, if_neg (Ne.symm hb)]; ring
+    · rw [gb_entry hb'.1 hb'.2, ite_eq_right (Ne.symm hb)]; ring
     · rw [hv b (by omega)]; ring
   · intro h; exact absurd (Finset.mem_univ i) h
 
@@ -145,10 +145,10 @@ theorem gb_pos {z v : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < T
     intro a b ha
     rw [gb_herm ha, ← Finset.add_sum_erase _ _ (Finset.mem_univ t)]
     congr 1
-    · rw [if_pos htv]; ring
+    · rw [ite_eq_left htv]; ring
     · refine Finset.sum_congr rfl fun i hi => ?_
       have hne : i.val ≠ r + k := fun h => Finset.ne_of_mem_erase hi (Fin.ext (by rw [htv]; exact h))
-      rw [if_neg hne]; ring
+      rw [ite_eq_right hne]; ring
   have nsq : ∀ x : ℂ, (star x * x).re = ‖x‖ ^ 2 := by
     intro x
     rw [← Complex.normSq_eq_norm_sq]
@@ -184,8 +184,7 @@ theorem gb_pos {z v : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < T
   have hNz : 0 ≤ ∑ i ∈ Finset.univ.erase t, ‖z i‖ ^ 2 := Finset.sum_nonneg fun i _ => by positivity
   have hNv : 0 ≤ ∑ i ∈ Finset.univ.erase t, ‖v i‖ ^ 2 := Finset.sum_nonneg fun i _ => by positivity
   rw [hre v hv]
-  by_contra hneg
-  push_neg at hneg
+  by_contra! hneg
   have hle : (∑ i ∈ Finset.univ.erase t, ‖v i‖ ^ 2) ≤ ‖v t‖ ^ 2 := by linarith
   have hb : ‖v t‖ ^ 2 ≤ 0 := by
     nlinarith [mul_nonneg hNz (sub_nonneg.2 hle), sq_nonneg ‖v t‖]
@@ -195,8 +194,7 @@ theorem gb_pos {z v : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < T
   have hNv0 : ∑ i ∈ Finset.univ.erase t, ‖v i‖ ^ 2 = 0 := by linarith
   have hvE : ∀ i ∈ Finset.univ.erase t, v i = 0 := by
     intro i hi
-    have h3 := (Finset.sum_eq_zero_iff_of_nonneg (fun j _ => by positivity)).1 hNv0 i hi
-    simpa using h3
+    simpa using (Finset.sum_eq_zero_iff_of_nonneg (fun j _ => by positivity)).1 hNv0 i hi
   apply hv0
   funext i
   by_cases hi : i = t
@@ -243,8 +241,7 @@ theorem gb_perp {m : ℕ} (hm : m + 2 < k + 1) (cs : Fin m → Fin (2 * r + k + 
     ⟨(LinearMap.pi fun j => gbL (c j)) ∘ₗ emb, fun x j => rfl⟩
   have hrk := LinearMap.finrank_range_add_finrank_ker L
   have hle : Module.finrank ℂ (LinearMap.range L) ≤ m + 2 := by
-    have h1 := Submodule.finrank_le (LinearMap.range L)
-    simpa using h1
+    simpa using Submodule.finrank_le (LinearMap.range L)
   simp only [Module.finrank_fin_fun] at hrk
   have hpos : 0 < Module.finrank ℂ (LinearMap.ker L) := by omega
   obtain ⟨⟨x, hx⟩, hx0⟩ := Module.finrank_pos_iff_exists_ne_zero.1 hpos
@@ -252,8 +249,7 @@ theorem gb_perp {m : ℕ} (hm : m + 2 < k + 1) (cs : Fin m → Fin (2 * r + k + 
   have hL0 : ∀ j, herm (Hpk k r) (emb x) (c j) = 0 := by
     intro j
     have h1 := congrFun (LinearMap.mem_ker.1 hx) j
-    rw [hL] at h1
-    exact h1
+    rwa [hL] at h1
   have hinj : Function.Injective (wI k r) := by
     intro p q h
     simp only [wI, Fin.mk.injEq] at h
@@ -312,9 +308,9 @@ theorem exists_frame_of_positive_vector {a b : Fin (2 * r + k + 1) → ℂ} (hb 
       · rw [Fin.snoc_castSucc]; exact hB1 j
     · intro i j
       refine Fin.lastCases ?_ (fun i' => ?_) i <;> refine Fin.lastCases ?_ (fun j' => ?_) j
-      · rw [Fin.snoc_last, if_pos rfl]; exact hs
-      · rw [Fin.snoc_last, Fin.snoc_castSucc, h2, if_neg (Fin.castSucc_lt_last j').ne']
-      · rw [Fin.snoc_last, Fin.snoc_castSucc, h1, if_neg (Fin.castSucc_lt_last i').ne]
+      · rw [Fin.snoc_last, ite_eq_left rfl]; exact hs
+      · rw [Fin.snoc_last, Fin.snoc_castSucc, h2, ite_eq_right (Fin.castSucc_lt_last j').ne']
+      · rw [Fin.snoc_last, Fin.snoc_castSucc, h1, ite_eq_right (Fin.castSucc_lt_last i').ne]
       · rw [Fin.snoc_castSucc, Fin.snoc_castSucc, hB2]
         by_cases h : i' = j' <;> simp [h]
     · intro i w hw
@@ -344,9 +340,7 @@ theorem exists_unit {z a : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 
   have hwz : herm (Hpk k r) (a - c • z) z = 0 := by
     rw [gb_sub_left, gb_smul_left, hc]
     simp [hzz]
-  have hw0 : a - c • z ≠ 0 := by
-    intro h
-    exact hind c (sub_eq_zero.1 h)
+  have hw0 : a - c • z ≠ 0 := fun h => hind c (sub_eq_zero.1 h)
   obtain ⟨s, hs⟩ := gb_normalize hz hT hwb hwz hw0
   refine ⟨s • (a - c • z), gb_wb_smul hwb s, ?_, hs, ?_⟩
   · rw [gb_smul_left, hwz, mul_zero]

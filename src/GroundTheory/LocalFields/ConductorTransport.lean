@@ -63,13 +63,11 @@ theorem map_lowerRamificationGroup_autCongr (e : L₁ ≃ₐ[K] L₂) (i : ℤ) 
   · rintro ⟨σ, hσ, rfl⟩
     rw [mem_lowerRamificationGroup_iff_lowerIndex] at hσ ⊢
     show _ ≤ lowerIndex K L₂ (e.autCongr σ)
-    rw [lowerIndex_autCongr]
-    exact hσ
+    rwa [lowerIndex_autCongr]
   · intro hτ
     refine ⟨e.autCongr.symm τ, ?_, MulEquiv.apply_symm_apply _ _⟩
     rw [mem_lowerRamificationGroup_iff_lowerIndex] at hτ ⊢
-    rw [← lowerIndex_autCongr e, MulEquiv.apply_symm_apply]
-    exact hτ
+    rwa [← lowerIndex_autCongr e, MulEquiv.apply_symm_apply]
 
 theorem map_lowerRamificationGroupReal_autCongr (e : L₁ ≃ₐ[K] L₂) (t : ℝ) :
     (lowerRamificationGroupReal K L₁ t).map (e.autCongr : (L₁ ≃ₐ[K] L₁) →* (L₂ ≃ₐ[K] L₂)) =

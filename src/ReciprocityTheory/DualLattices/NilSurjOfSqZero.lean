@@ -128,10 +128,8 @@ lemma fp_isUnit (x : fpSub f₁ f₂) (h : IsUnit x.1.1) : IsUnit x := by
   refine isUnit_iff_exists_inv.mpr ⟨⟨_, hmem⟩, ?_⟩
   apply Subtype.ext
   apply Prod.ext
-  · show x.1.1 * ↑h.unit⁻¹ = 1
-    exact h.mul_val_inv
-  · show x.1.2 * ↑h2.unit⁻¹ = 1
-    exact h2.mul_val_inv
+  · exact h.mul_val_inv
+  · exact h2.mul_val_inv
 
 instance fp_local : IsLocalRing (fpSub f₁ f₂) := by
   have : Nontrivial (fpSub f₁ f₂) := ⟨⟨0, 1, fun h =>
@@ -158,8 +156,7 @@ lemma FP.ext {x y : (FP f₁ f₂ : Type u)} (h1 : x.1.1 = y.1.1) (h2 : x.1.2 = 
 lemma FP.isFibreSq (h₁ : f₁.NilSurj) (h₂ : f₂.NilSurj) :
     IsFibreSq (FP.p₁ f₁ f₂) (FP.p₂ f₁ f₂) f₁ f₂ := by
   refine ⟨AlgHom.ext fun x => FP.mem f₁ f₂ x, h₁, h₂, fun a b hab => ?_⟩
-  refine ⟨⟨(a, b), (mem_fpSub f₁ f₂ (a, b)).2 hab⟩, ⟨rfl, rfl⟩, fun c hc => ?_⟩
-  exact FP.ext f₁ f₂ hc.1 hc.2
+  exact ⟨⟨(a, b), (mem_fpSub f₁ f₂ (a, b)).2 hab⟩, ⟨rfl, rfl⟩, fun c hc => (FP.ext f₁ f₂ hc.1 hc.2)⟩
 
 def FP.lift {T : LAlg R₀} (g₁ : LHom T R₁) (g₂ : LHom T R₂)
     (h : ∀ t, f₁.1 (g₁.1 t) = f₂.1 (g₂.1 t)) : LHom T (FP f₁ f₂) :=

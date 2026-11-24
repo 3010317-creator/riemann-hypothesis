@@ -112,8 +112,7 @@ theorem quadratic_transfer_identity : GQBridge := by
     refine ⟨Qx5.isOpen_OpR P.k P.r Bs.z Bs.z', fun c _ => Qx8.Dp_dom P.k P.r Bs.z Bs.z', fun q => ?_, ?_, ?_⟩
     · exact (Gauge.GC.GT.sec_pt P Bs hpl q).1.2.2
     · exact NFx1.TC.radSp_fam hΦ
-    · intro c hc
-      exact Qx8.slice_FF hz hz' hΦ hc
+    · exact fun c hc => Qx8.slice_FF hz hz' hΦ hc
   have h := hg (fun _ => Qx8.Dp P.k P.r Bs.z Bs.z') (Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) hF Y a b
   funext ρ
   show MA.toSm P (Gauge.rawR P Bs.μsec e ((X.t (Y : ℂ) a b Φ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') :
@@ -181,8 +180,7 @@ theorem lagrange_all {T : Type} [Fintype T] (K : (T → ℂ) → Prop) (hc : ∀
     · intro t _ htu
       rw [Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨Ne.symm htu, Finset.mem_univ u⟩), mul_zero]
       rw [add_neg_cancel, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ u) h
+    · exact fun h => absurd (Finset.mem_univ u) h
   rw [key]
   exact hsum _ _ _ fun t _ => hmul _ _ (hc _) (hprod _ _ _ fun s _ => hmul _ _ (hadd _ _ hx (hc _)) (hc _))
 
@@ -356,12 +354,12 @@ private theorem ne_and_unique_index_of_up {l : ℕ} (hl : l ∈ Finset.Icc 1 (P.
   rw [Finset.mem_Icc] at hl
   obtain ⟨i, hi⟩ : ∃ i : Fin (P.k - 1), (i : ℕ) + 1 = l := ⟨⟨l - 1, by omega⟩, show l - 1 + 1 = l by omega⟩
   have h1 := hU i
-  rw [if_pos hi] at h1
+  rw [ite_eq_left hi] at h1
   refine ⟨fun h => ?_, fun j hj h2 => ?_⟩
   · subst h
     omega
   · have h3 := h2 i
-    rw [if_neg (by omega)] at h3
+    rw [ite_eq_right (by omega)] at h3
     omega
 
 theorem projected_block_lower_sum (hR : Rai κ S) {B : A} (hB : ∀ f, Commute (κ f) B) {l : ℕ} (hl : l ∈ Finset.Icc 1 (P.k - 1))
@@ -380,8 +378,7 @@ theorem projected_block_lower_sum (hR : Rai κ S) {B : A} (hB : ∀ f, Commute (
     Finset.sum_congr rfl (fun j _ => hterm j), Finset.sum_eq_single l]
   · intro j _ hjl
     rw [blk_zero κ S hR (hoth j hjl), smul_zero]
-  · intro h
-    exact absurd hl h
+  · exact fun h => absurd hl h
 
 theorem projected_block_upper_sum (hR : RaiS κ S) {B : A} (hB : ∀ f, Commute (κ f) B) {l : ℕ} (hl : l ∈ Finset.Icc 1 (P.k - 1))
     {ρ ρ' : M.Ty P} (hU : M.Up P l ρ ρ') (Y : ℂ) :
@@ -399,8 +396,7 @@ theorem projected_block_upper_sum (hR : RaiS κ S) {B : A} (hB : ∀ f, Commute 
     Finset.sum_congr rfl (fun j _ => hterm j), Finset.sum_eq_single l]
   · intro j _ hjl
     rw [blk_zeroS κ S hR (hoth j hjl), smul_zero]
-  · intro h
-    exact absurd hl h
+  · exact fun h => absurd hl h
 
 def yl (l : ℕ) (ρ : M.Ty P) : ℝ := -M.rho P ρ l
 
@@ -502,8 +498,7 @@ theorem intw_zero : Gauge.GC.Intw P Bs e 0 0 := by
   have h0 : Gauge.GC.trR P Bs e 0 = 0 := by
     have h := Gauge.GC.trR_smul hsm (0 : ℂ) 0
     rwa [zero_smul, zero_smul] at h
-  rw [Gauge.actA_zero]
-  exact h0
+  rwa [Gauge.actA_zero]
 
 theorem intw_smul' (c : ℂ) {X : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')} {X' : MA.A P (MA.DQ P)}
     (h : Gauge.GC.Intw P Bs e X X') : Gauge.GC.Intw P Bs e (c • X) (c • X') := by
@@ -514,13 +509,7 @@ theorem intw_smul' (c : ℂ) {X : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')
 theorem intw_sum' {ι : Type} (s : Finset ι) (X : ι → Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π'))
     (X' : ι → MA.A P (MA.DQ P)) (h : ∀ i ∈ s, Gauge.GC.Intw P Bs e (X i) (X' i)) :
     Gauge.GC.Intw P Bs e (∑ i ∈ s, X i) (∑ i ∈ s, X' i) := by
-  classical
-  revert h
-  refine Finset.induction_on s (fun _ => ?_) (fun a t hat ih h => ?_)
-  · rw [Finset.sum_empty, Finset.sum_empty]
-    exact intw_zero hsm
-  · rw [Finset.sum_insert hat, Finset.sum_insert hat]
-    exact _root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.intw_add hsm (h a (Finset.mem_insert_self a t)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
+  exact Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.intw_sum hsm s h
 
 theorem intw_ite' (c : Prop) [Decidable c] {X : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')} {X' : MA.A P (MA.DQ P)}
     (h : c → Gauge.GC.Intw P Bs e X X') : Gauge.GC.Intw P Bs e (if c then X else 0) (if c then X' else 0) := by
@@ -735,9 +724,7 @@ theorem second_shift_entry_holds : SSn.Rep.Core.SSEntry := by
   let Ψ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π' := ⟨Ψ0, hΨ0⟩
   have hΨ : (Ψ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c0 (NF.muZ P.k P.r Bs.μsec ζ) = e π ζ := by
     have hq : ((c0, ζ) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' := ⟨hc0, by rw [hTz]; exact hζ⟩
-    have h := congrFun hΨr (c0, ζ)
-    simp only [NF.radR, Set.indicator_of_mem hq] at h
-    exact h
+    simpa only [NF.radR, Set.indicator_of_mem hq] using congrFun hΨr (c0, ζ)
 
   have hv : ∀ (Θ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') (σ : M.Ty P),
       ((Gauge.GC.trR P Bs e Θ σ : MA.SmQ P.r P.TT) : MA.Qp P.r P.TT → ℂ) =
@@ -871,9 +858,7 @@ theorem second_shift_pointwise_holds : SSn.Rep.Core.SSPointwise := by
       (Ψ ρ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c (NF.muZ P.k P.r Bs0.μsec ζ) = e0 ρ ζ := by
     intro ρ c hc ζ hζ
     have hq : ((c, ζ) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' := ⟨hc, by rw [hTz]; exact hζ⟩
-    have h := congrFun (hΨr ρ) (c, ζ)
-    simp only [NF.radR, Set.indicator_of_mem hq] at h
-    exact h
+    simpa only [NF.radR, Set.indicator_of_mem hq] using congrFun (hΨr ρ) (c, ζ)
 
   have hdec : ∀ ζ : ℂ, ∃ hh : Q.Mx P.k P.r × Q.Mx P.k P.r, ζ ∈ Gauge.GC.Ann P →
       hh.1 ∈ UWset P.k P.r Bs.z ∧ hh.2 ∈ UWset P.k P.r Bs.z' ∧
@@ -983,12 +968,12 @@ theorem mat_gen {Ty : Type} [Fintype Ty] [DecidableEq Ty] (Qd : Ty → (Wq →L[
     B.hsInner (∑ π', ∑ ρ', c π' ρ' • Qd ρ' (T0 (Qd π' (e π)))) (e ρ) = c π ρ * B.hsInner (T0 (e π)) (e ρ) := by
   rw [kap_hsInner_sum_left, Finset.sum_eq_single π]
   · rw [kap_hsInner_sum_left, Finset.sum_eq_single ρ]
-    · rw [_root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, hQadj, hline π π, hline ρ ρ, if_pos rfl, if_pos rfl]
+    · rw [_root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, hQadj, hline π π, hline ρ ρ, ite_eq_left rfl, ite_eq_left rfl]
     · intro ρ' _ hne
-      rw [_root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, hQadj, hline ρ' ρ, if_neg hne, hsInner_zero_r, mul_zero]
+      rw [_root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, hQadj, hline ρ' ρ, ite_eq_right hne, hsInner_zero_r, mul_zero]
     · intro h; exact absurd (Finset.mem_univ ρ) h
   · intro π' _ hne
-    rw [hline π' π, if_neg hne, map_zero]
+    rw [hline π' π, ite_eq_right hne, map_zero]
     simp only [map_zero, smul_zero, Finset.sum_const_zero]
     exact _root_.Formalism.FourierDecayAlt.P5.HerA.hsInner_zero_left _
   · intro h; exact absurd (Finset.mem_univ π) h
@@ -1131,7 +1116,7 @@ theorem theta_gauge_constancy_holds : ThtGaugeConstOfCore := by
   have hSSF := hA (Wp (S.pl v)) (Wq (S.pl v)) (D.parOf S v) (T v).base hk X d hAct e hFrB hGQ
   refine ⟨θ, fun ζ hζ π ρ hup => ?_⟩
   have hent := hE (Wp (S.pl v)) (Wq (S.pl v)) (D.parOf S v) (T v).base hk X d hAct e hFrB hSSF l hl SS hSS ζ hζ π ρ
-  rw [if_pos hup] at hent
+  rw [ite_eq_left hup] at hent
   obtain ⟨hP1, hH1, -, -⟩ := hDU Cc E Wp Wq S T f χ ν' m₀ top A₀ hB v ζ hζ
   set n0 := SSn.nu0 S.G.k S.G.r (T v).base.z (T v).base.z' (T v).base.μsec ζ with hn0
   have hN0 : PRho.nrmW S.G.k S.G.r (T v).base.z n0 = 1 := by
@@ -1160,8 +1145,7 @@ theorem theta_gauge_constancy_holds : ThtGaugeConstOfCore := by
     intro Y
     have h1 := hsInner_lmul (Pr ρ n0) hsa Y (e ρ ζ)
     simp only [B.hsInner, lmul_apply] at h1
-    rw [hfixc ρ] at h1
-    exact h1
+    rwa [hfixc ρ] at h1
   have hsm : ∀ (c : ℂ) (A : Wq (S.pl v) →L[ℂ] Wp (S.pl v)), B.hsVec (c • A) = c • B.hsVec A := by
     intro c A
     unfold B.hsVec
@@ -1230,8 +1214,7 @@ theorem polynomial_finish_holds : PolyFinish := by
     have hb0 : q.eval b = 0 := (Polynomial.mem_roots hq).1 hb
     have := congrArg (Polynomial.eval b) hid
     simp only [eval_mul, hb0, zero_mul, eval_C, eval_pow, eval_sub, eval_X] at this
-    have h2 := (mul_eq_zero.1 this.symm).resolve_left hC
-    exact sub_eq_zero.1 (pow_eq_zero_iff'.1 h2).1
+    exact sub_eq_zero.1 (pow_eq_zero_iff'.1 ((mul_eq_zero.1 this.symm).resolve_left hC)).1
   have hcard : Multiset.card q.roots = q.natDegree := by
     first
       | exact IsAlgClosed.card_roots_eq_natDegree
@@ -1344,7 +1327,7 @@ theorem theta_constancy_assembly_scalar : ThConstOfCutS := by
   intro ζ hζ π ρ hup Xf hXf hfix
   have hex : ∃ ρ, M.Up P l π ρ := ⟨ρ, hup⟩
   have hρ : hex.choose = ρ := tc_up_unique hex.choose_spec hup
-  simp only [dif_pos hex]
+  simp only [dite_eq_left hex]
   have := (main π hex.choose hex.choose_spec).choose_spec ζ hζ Xf hXf hfix
   subst hρ
   exact this

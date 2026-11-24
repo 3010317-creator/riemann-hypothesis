@@ -190,7 +190,6 @@ theorem cfg_u (D : D7) (u : D.what₂.Word) (τ : D.what₂.Tau)
       rw [neg_neg]
       exact (uOne_last D u τ).symm
     · rw [cfg_top_iff] at ht
-      show vOne D τ (D.R.k - 1) - 1 / 2 = _
       exact (h5 ht).symm
   · have hik' : i ≠ D.R.k := hik
     obtain ⟨l, rfl⟩ : ∃ l, i = l + 2 := ⟨i - 2, by omega⟩
@@ -212,21 +211,19 @@ theorem cfg_lam (D : D7) (τ : D.what₂.Tau) (a : Fin D.R.r) :
   · have h1 : a.1 + 1 < (cfgOf D τ).k := by
       show a.1 + 1 < D.R.k
       omega
-    rw [if_pos h1, dite_eq_left h, cfg_v D τ (a.1 + 1) (by omega) (by omega), vOne_succ D τ a.1 h]
+    rw [ite_eq_left h1, dite_eq_left h, cfg_v D τ (a.1 + 1) (by omega) (by omega), vOne_succ D τ a.1 h]
   · have h1 : ¬ (a.1 + 1 < (cfgOf D τ).k) := by
       show ¬ (a.1 + 1 < D.R.k)
       omega
     have h2 : a.1 - (D.R.k - 1) < D.R.m := by
       have ha' : a.1 < D.R.k + D.R.m - 1 := ha
       omega
-    rw [if_neg h1, dite_eq_right h, dite_eq_left h2]
+    rw [ite_eq_right h1, dite_eq_right h, dite_eq_left h2]
     show -bOne D τ (a.1 + 1 + 1 - D.R.k) = _
     rw [show a.1 + 1 + 1 - D.R.k = (a.1 - (D.R.k - 1)) + 1 by omega, bOne_succ D τ _ h2]
 
 theorem cfg_lamH (D : D7) (τ : D.what₂.Tau) (a : Fin (2 * D.R.rS + D.R.k + 1)) :
-    (cfgOf D τ).lam (a.1 + 1) = lamSH D.R (D.hc τ) a := by
-  show (cfgOf D τ).lam (a.1 + 1) = lamS D.R (D.hc τ) (Fin.cast (dimS_eq D.R) a)
-  exact cfg_lam D τ (Fin.cast (dimS_eq D.R) a)
+    (cfgOf D τ).lam (a.1 + 1) = lamSH D.R (D.hc τ) a := cfg_lam D τ (Fin.cast (dimS_eq D.R) a)
 
 theorem prod_Icc_eq_fin (p : ℕ) (F : ℕ → ℝ) : ∏ i ∈ Icc 1 p, F i = ∏ a : Fin p, F (a.1 + 1) := by
   induction p with
@@ -381,8 +378,7 @@ theorem cfg_ok {D : D7} {large₂ : SizeData₂ D} {C0 C' Cl Cg cb Cu cT CT : �
     have h := (hbb τ 1 le_rfl (by omega)).1
     have h2 : (1 : ℝ) ≤ (D.R.k : ℝ) ^ Cl := Real.one_le_rpow (by linarith) hCl0.le
     exact le_trans h2 (le_trans (le_max_left _ _) h)
-  · intro j h1 h2
-    exact bOne_gap D τ j h1 h2
+  · exact fun j h1 h2 => bOne_gap D τ j h1 h2
   · rw [cfg_v D τ 1 le_rfl (by omega)]
     exact hau D.u₀ τ
   · intro ht
@@ -416,8 +412,7 @@ theorem cfg_small {D : D7} {large₂ : SizeData₂ D} {C' Cl Cg cb Cu cT CT : �
     nlinarith
   · intro j h1 h2
     have h := (hbb τ j h1 h2).2
-    rw [Real.rpow_two] at h
-    exact h
+    rwa [Real.rpow_two] at h
   · show 2 * (D.R.m : ℝ) * Real.log large₂.sc.b / (D.R.k : ℝ) ≤ 1 / 10
     rw [log_b, div_le_iff₀ (by linarith)]
     have hmL : (0 : ℝ) ≤ (D.R.m : ℝ) ^ 2 * large₂.sc.L := by positivity

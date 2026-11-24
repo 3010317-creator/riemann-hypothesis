@@ -39,16 +39,15 @@ theorem gaussRed_coeff {Ω U : Type} [Field Ω] [Field U] [Algebra Ω U] {σ : T
   rw [MvPolynomial.coeff_sum]
   by_cases h : α ∈ p.support
   · rw [Finset.sum_eq_single α]
-    · rw [MvPolynomial.coeff_monomial, if_pos rfl]
+    · rw [MvPolynomial.coeff_monomial, ite_eq_left rfl]
     · intro b _ hb
-      rw [MvPolynomial.coeff_monomial, if_neg hb]
-    · intro h'
-      exact absurd h h'
+      rw [MvPolynomial.coeff_monomial, ite_eq_right hb]
+    · exact fun h' => absurd h h'
   · have h0 : p.coeff α = 0 := by simpa [MvPolynomial.mem_support_iff] using h
     have hz : (⟨p.coeff α, hc α⟩ : V.comap (algebraMap Ω U)) = 0 := Subtype.ext h0
     rw [Finset.sum_eq_zero, hz, map_zero]
     intro b hb
-    rw [MvPolynomial.coeff_monomial, if_neg]
+    rw [MvPolynomial.coeff_monomial, ite_eq_right]
     rintro rfl
     exact h hb
 
@@ -245,8 +244,7 @@ theorem genericImageFinite : FieldOfSStatement := by
   let L := IntermediateField.adjoin E S
   have hK : IntermediateField.adjoin K (f '' (s : Set Ω)) ≤ L.restrictScalars K := by
     rw [IntermediateField.adjoin_le_iff]
-    intro z hz
-    exact IntermediateField.subset_adjoin E S (Or.inl hz)
+    exact fun z hz => IntermediateField.subset_adjoin E S (Or.inl hz)
   have hω : ∀ ω : Ω, f ω ∈ L := by
     intro ω
     have h1 : f ω ∈ (IntermediateField.adjoin K (s : Set Ω)).map f :=
@@ -258,8 +256,7 @@ theorem genericImageFinite : FieldOfSStatement := by
     intro p
     induction p using MvPolynomial.induction_on with
     | C a =>
-      have h := hω a
-      simpa [f, MvPolynomial.algebraMap_eq] using h
+      simpa [f, MvPolynomial.algebraMap_eq] using hω a
     | add p q hp hq =>
       rw [map_add (f := _)]
       exact L.add_mem hp hq
@@ -344,8 +341,7 @@ theorem normOrd_length_succ (O B : Type) [CommRing O] [CommRing B] [IsDedekindDo
     length O (B ⧸ P ^ (n + 1)) = length O (B ⧸ P) + length O (B ⧸ P ^ n) := by
   classical
   obtain ⟨a, ha, ha'⟩ : ∃ a ∈ P ^ n, a ∉ P ^ (n + 1) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hle : P ^ n ≤ P ^ (n + 1) := hcon
     have hPprime : Prime P := Ideal.prime_of_isPrime hP0 hP.isPrime
     have hPnu : ¬ IsUnit P := by rw [Ideal.isUnit_iff]; exact hP.ne_top
@@ -508,8 +504,7 @@ theorem normValuation_eq_factorization (hC1 : NormLengthStatement) : NormOrdStat
         Q.inertiaDeg O * Multiset.count Q (UniqueFactorizationMonoid.factors I)),
       Finset.filter_true_of_mem]
     · exact Finset.sum_congr rfl fun P _ => mul_comm _ _
-    · intro P hP
-      exact (hmax P (Multiset.mem_toFinset.mp hP)).1
+    · exact fun P hP => (hmax P (Multiset.mem_toFinset.mp hP)).1
   case sup =>
     intro Q hQ
     rw [Function.mem_support] at hQ

@@ -81,15 +81,12 @@ theorem UpperTheory.V.exists_numberField_isAbField_finrank_eq_deg :
     have hfix : (∀ x : F, τ (F.val x) = F.val x) ↔ τ ∈ G := by
       rw [← IntermediateField.fixingSubgroup_fixedField G, IntermediateField.mem_fixingSubgroup_iff]
       constructor
-      · intro h x hx
-        exact h ⟨x, hx⟩
-      · intro h x
-        exact h x.1 x.2
+      · exact fun h x hx => h ⟨x, hx⟩
+      · exact fun h x => h x.1 x.2
     have hker : τ ∈ G ↔ A.ker a := by
       rw [Subgroup.mem_comap]
       constructor
-      · intro h
-        exact ⟨e τ, h, he⟩
+      · exact fun h => ⟨e τ, h, he⟩
       · rintro ⟨u, hu, hua⟩
         have hue : u = e τ := Units.ext (hua.trans he.symm)
         have hmem : e τ ∈ A.H := hue ▸ hu

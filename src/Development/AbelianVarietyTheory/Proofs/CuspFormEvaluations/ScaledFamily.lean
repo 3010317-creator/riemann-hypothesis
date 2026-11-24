@@ -86,11 +86,9 @@ theorem scaled_family : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : ModuliInte
     · rw [h0, Nat.cast_zero, zero_mul, zero_div]
       linarith
     · have hc : (Fintype.card (B.KO →+* ℂ) : ℝ) ≠ 0 := by positivity
-      rw [mul_div_cancel_left₀ _ hc]
-      exact hG
+      rwa [mul_div_cancel_left₀ _ hc]
   refine ⟨⟨Finset.univ.image w, ?_, fun _ => a + b, ?_, hmean⟩, ?_⟩
-  · rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]
-    exact hspanw
+  · rwa [Finset.coe_image, Finset.coe_univ, Set.image_univ]
   · intro σ g hg
     obtain ⟨k, -, rfl⟩ := Finset.mem_image.mp hg
     exact hbound σ k

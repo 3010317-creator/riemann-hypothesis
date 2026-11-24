@@ -373,7 +373,7 @@ theorem flagDeg_le_gap : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ)
       rw [Fin.lt_def]
       show j - 1 < j
       omega
-    rw [if_pos hlt]
+    rw [ite_eq_left hlt]
     have hden : (((⟨j, hjN⟩ : Fin N) : ℕ) : ℝ) - (((⟨j - 1, hj1⟩ : Fin N) : ℕ) : ℝ) = 1 := by
       show ((j : ℕ) : ℝ) - ((j - 1 : ℕ) : ℝ) = 1
       rw [Nat.cast_sub hj, Nat.cast_one]
@@ -1202,7 +1202,7 @@ theorem RootFieldNumerics.intersection_section_log_integral : ReciprocityTheory.
   set PA := ptsIntegral (mCoordIdeal y)
     (fun j z => Real.log (((Fin.snoc L A : Fin (e + 1) → HermLine ι) j).h z)) (fun _ => 1)
   by_contra hneg
-  push_neg at hneg
+  push Not at hneg
   have hpos : 0 < -PA := by linarith
   obtain ⟨n, hn⟩ := exists_nat_gt (PB / -PA)
   have h1 := (div_lt_iff₀ hpos).mp hn
@@ -1246,16 +1246,7 @@ section Lines
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
 theorem smooth_comb {J : Type} [Fintype J] {ℓ : J → HermLine ι} (hℓ : ∀ j, IsSmoothHerm (ℓ j))
-    (n : J → ℤ) : IsSmoothHerm (combLine ℓ n) := by
-  refine contDiffOn_prod fun a _ => ?_
-  intro z hz
-  have h0 : (ℓ a).h z ≠ 0 := ((ℓ a).pos z hz).ne'
-  have hf := hℓ a z hz
-  cases n a with
-  | ofNat k => simpa only [Int.ofNat_eq_natCast, zpow_natCast] using hf.pow k
-  | negSucc k =>
-    simp only [zpow_negSucc]
-    exact (hf.pow (k + 1)).inv (pow_ne_zero _ h0)
+    (n : J → ℤ) : IsSmoothHerm (combLine ℓ n) := RootFieldNumerics.EffN.smooth_comb hℓ n
 
 theorem geomDeg_comb (II : IntersectionSystem) (hII : IsFullIntersectionSystem II) {J : Type} [Fintype J]
     {ℓ : J → HermLine ι} (hℓ : ∀ j, IsSmoothHerm (ℓ j)) (n : J → ℤ) (W : Ideal (MRing ι))
@@ -1788,12 +1779,12 @@ theorem thmW_tower : ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH.Kl
     by_cases h : τ = τ₀ ∧ (i : ℕ) < T.j
     · exact ⟨q + 2 * (5 * (Fintype.card Ψ : ℚ) / B), by
         show l τ i + (if τ = τ₀ ∧ (i : ℕ) < T.j then 2 * θ else 0) = _
-        rw [if_pos h, hq, hθdef]
+        rw [ite_eq_left h, hq, hθdef]
         push_cast
         ring⟩
     · exact ⟨q, by
         show l τ i + (if τ = τ₀ ∧ (i : ℕ) < T.j then 2 * θ else 0) = _
-        rw [if_neg h, hq, add_zero]⟩
+        rw [ite_eq_right h, hq, add_zero]⟩
   have hs0 : (0 : ℝ) < s := by rw [hs]; positivity
   have hsQ : (0 : ℚ) ≤ s := by exact_mod_cast hs0.le
   have hθ2 : θ ^ 2 ≤ θ := by nlinarith

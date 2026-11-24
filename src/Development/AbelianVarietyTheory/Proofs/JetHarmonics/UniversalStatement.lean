@@ -162,16 +162,7 @@ open Chart (JetR zR jetAug_zR jet_ext jetLift jetLift_zR ker_jetAug_pow zR_mem_k
 
 theorem ker_aug_eq (κ : Type) (m : ℕ) : RingHom.ker (Chart.jetAug V κ m) =
     (Ideal.span (Set.range (MvPolynomial.X : κ → MvPolynomial κ V))).map (Ideal.Quotient.mk _) := by
-  apply le_antisymm
-  · intro x hx
-    obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective x
-    have hp : MvPolynomial.aeval (fun _ : κ => (0 : V)) p = 0 := hx
-    have := Chart.sub_const_mem_span_X (R := V) p
-    rw [hp, map_zero, sub_zero] at this
-    exact Ideal.mem_map_of_mem _ this
-  · rw [Ideal.map_span, Ideal.span_le]
-    rintro _ ⟨_, ⟨j, rfl⟩, rfl⟩
-    exact zR_mem_ker m j
+  exact ReciprocityTheory.ChartRestriction.G.Chart.ker_jetAug_eq_map_span_X κ m
 
 theorem ker_aug_le {κ : Type} {m : ℕ} {K : Ideal (JetR V κ m)} (h : ∀ j, zR m j ∈ K) :
     RingHom.ker (Chart.jetAug V κ m) ≤ K := by
@@ -313,17 +304,17 @@ theorem univ_of_dirs {d : ℕ} {κ : Type} [Fintype κ] (β : Fin d ≃ κ)
 
       rw [AlgHom.comp_apply, hc, dualLift_zR, TrivSqZeroExt.snd_inr, ← β.sum_comp, map_sum, TrivSqZeroExt.snd_sum,
       Finset.sum_eq_single j] at e
-      · rw [map_smul, ht, if_pos rfl, TrivSqZeroExt.snd_smul, DualNumber.snd_eps, smul_eq_mul, _root_.mul_one,
+      · rw [map_smul, ht, ite_eq_left rfl, TrivSqZeroExt.snd_smul, DualNumber.snd_eps, smul_eq_mul, _root_.mul_one,
           Pi.single_apply] at e
         rw [e]
         simp only [eq_comm]
       · intro k _ hk
-        rw [map_smul, ht, if_neg hk, smul_zero, TrivSqZeroExt.snd_zero]
+        rw [map_smul, ht, ite_eq_right hk, smul_zero, TrivSqZeroExt.snd_zero]
       · intro h; exact absurd (Finset.mem_univ j) h
     rw [hc, ← β.sum_comp, Finset.sum_eq_single i]
-    · rw [hcj, if_pos rfl, one_smul]
+    · rw [hcj, ite_eq_left rfl, one_smul]
     · intro k _ hk
-      rw [hcj, if_neg hk, zero_smul]
+      rw [hcj, ite_eq_right hk, zero_smul]
     · intro h; exact absurd (Finset.mem_univ i) h
   have h3 : ∀ m, (toFirst κ m).comp (ψ (m + 1)) = (ψ 1).comp (toFirst (Fin d) m) := fun m => by
     have hp : RingHom.ker (Chart.jetAug V κ 1) ^ (m + 1 + 1) = ⊥ :=

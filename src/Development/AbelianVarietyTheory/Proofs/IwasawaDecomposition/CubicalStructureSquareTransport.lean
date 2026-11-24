@@ -138,8 +138,7 @@ theorem adj_sq (hL : L.IsLB) {y : Y} {J : (Y ⟶ X) → L.ι} (hJ : Good L y J) 
   have m := hJ.mem (fun _ : Fin 1 => 𝟙 X) χ
   simp only [Category.comp_id] at m
   unfold adj
-  simp only [Category.comp_id]
-  exact trF_self hL _ _ χ y m
+  simpa only [Category.comp_id] using trF_self hL _ _ χ y m
 
 end Chart
 

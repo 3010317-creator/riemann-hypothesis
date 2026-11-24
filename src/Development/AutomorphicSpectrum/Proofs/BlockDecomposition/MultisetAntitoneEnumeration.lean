@@ -64,8 +64,7 @@ theorem exists_antitone_listing {α : Type*} (m : Multiset α) (f : α → ℝ) 
   have hperm : l'.Perm l := List.perm_insertionSort r l
   have hsort : l'.Pairwise r := List.pairwise_insertionSort r l
   have hlt : ∀ i j : Fin l'.length, i < j → f (l'.get j) ≤ f (l'.get i) := by
-    intro i j hij
-    exact (List.pairwise_iff_get.mp hsort) i j hij
+    exact fun i j hij => (List.pairwise_iff_get.mp hsort) i j hij
   refine ⟨l'.length, l'.get, ?_, ?_, ?_⟩
   · have h1 : (Finset.univ : Finset (Fin l'.length)).val.map l'.get = ((List.ofFn l'.get : List α) : Multiset α) := by
       rw [Fin.univ_val_map]
@@ -75,7 +74,6 @@ theorem exists_antitone_listing {α : Type*} (m : Multiset α) (f : α → ℝ) 
     rcases hij.lt_or_eq with h | h
     · exact hlt i j h
     · subst h; exact le_rfl
-  · intro i j hij hp
-    exact absurd (hP _ _ hp) (not_lt.mpr (hlt i j hij))
+  · exact fun i j hij hp => absurd (hP _ _ hp) (not_lt.mpr (hlt i j hij))
 
 end GlobalTheory.CompanionTheory.Multiset

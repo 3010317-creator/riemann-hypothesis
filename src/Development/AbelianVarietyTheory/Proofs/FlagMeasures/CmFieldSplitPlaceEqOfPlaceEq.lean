@@ -130,8 +130,7 @@ theorem exists_approx (v : HeightOneSpectrum (𝓞 L⁺)) (y d : v.adicCompletio
     exact zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hd)
   obtain ⟨z, hz, a, rfl⟩ := mem_closure_iff_nhds.mp (denseRange_algebraMap L⁺ v y) _ (hU.mem_nhds hy)
   refine ⟨a, ?_⟩
-  rw [← Valuation.map_neg, neg_sub]
-  exact hz
+  rwa [← Valuation.map_neg, neg_sub]
 
 theorem eq_of_le_one_iff (v : HeightOneSpectrum (𝓞 L⁺)) (i i' : L →ₐ[L⁺] v.adicCompletion L⁺)
     (h : ∀ x : L, Valued.v (i x) ≤ 1 ↔ Valued.v (i' x) ≤ 1) : i = i' := by
@@ -152,8 +151,7 @@ theorem eq_of_le_one_iff (v : HeightOneSpectrum (𝓞 L⁺)) (i i' : L →ₐ[L�
   have hiz : i z = (i x - a') / b' := by simp [z, a', b', map_div₀, map_sub, AlgHom.commutes]
   have hi'z : i' z = (i' x - a') / b' := by simp [z, a', b', map_div₀, map_sub, AlgHom.commutes]
   have hlt : Valued.v (i z) < 1 := by
-    rw [hiz, map_div₀, div_lt_one₀ (zero_lt_iff.mpr hb0), hbv]
-    exact ha
+    rwa [hiz, map_div₀, div_lt_one₀ (zero_lt_iff.mpr hb0), hbv]
   have heq : Valued.v (i' z) = 1 := by
     have : i' x - a' = (i x - a') - δ := by rw [hδ]; ring
     rw [hi'z, map_div₀, this, Valuation.map_sub_eq_of_lt_right _ ha, hbv, div_self hδ0]

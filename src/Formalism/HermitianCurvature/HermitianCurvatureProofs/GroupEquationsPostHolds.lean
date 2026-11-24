@@ -98,8 +98,7 @@ theorem gp_ldV (X g : B.Mat k r) (f : B.Mat k r → E) (hf : DifferentiableAt �
       funext t; simp [gpMulR_apply]
     have e2 : gpMulR g (1 * NormedSpace.exp (((0 : ℝ) : ℂ) • X) * X) = X * g := by
       simp [gpMulR_apply]
-    rw [e, ← e2]
-    exact h1
+    rwa [e, ← e2]
   have h0 : NormedSpace.exp (((0 : ℝ) : ℂ) • X) * g = g := by simp
   exact (hf.hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) hγ h0.symm).deriv
 
@@ -186,8 +185,7 @@ theorem gp_foldr (ℓ : E →L[ℂ] ℂ) (EopE : Fin m → Fin m → (B.Mat k r 
   intro qs
   induction qs with
   | nil =>
-    intro j f hf
-    exact ⟨by simpa using hf, rfl⟩
+    exact fun j f hf => ⟨by simpa using hf, rfl⟩
   | cons q qs ih =>
     intro j f hf
     have hf' : ContDiff ℝ ((j + 1 + qs.length : ℕ) : WithTop ℕ∞) f := by
@@ -218,8 +216,7 @@ theorem gp_foldl (ℓ : E →L[ℂ] ℂ) (EopE : Fin m → Fin m → (B.Mat k r 
   intro qs
   induction qs with
   | nil =>
-    intro j f hf
-    exact ⟨by simpa using hf, rfl⟩
+    exact fun j f hf => ⟨by simpa using hf, rfl⟩
   | cons q qs ih =>
     intro j f hf
     have hf' : ContDiff ℝ ((j + qs.length + 1 : ℕ) : WithTop ℕ∞) f := by

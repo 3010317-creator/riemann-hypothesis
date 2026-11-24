@@ -133,8 +133,7 @@ theorem entries_bound : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
     have e2 : gFin (splitCentre E a 1 ^ n) = 1 := by
       rw [gFin_zpow, gFin_splitCentre, _root_.one_zpow]
     have h := congrArg gFin h1
-    rw [gFin_mul, e2, mul_one, gFin_mul, gFin_mul, gFin_inv, e1] at h
-    exact h
+    rwa [gFin_mul, e2, mul_one, gFin_mul, gFin_mul, gFin_inv, e1] at h
   have hinf : gInf (ratGL E a γ) =
       gInf g₀ * y * gInf q * y⁻¹ * (gInf g₀)⁻¹ * gInf (splitCentre E a 1 ^ (-n)) := by
     have h2 : ratGL E a γ = X * q * X⁻¹ * splitCentre E a 1 ^ (-n) := by
@@ -146,8 +145,7 @@ theorem entries_bound : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
     rw [h]
     group
   refine ⟨?_, fun w => ?_⟩
-  · refine Set.mem_iUnion.2 ⟨i, Set.mem_iUnion.2 ⟨j, ?_⟩⟩
-    exact ⟨gFin (ratGL E a γ), ⟨q, hq, hfin.symm⟩, rfl⟩
+  · exact Set.mem_iUnion.2 ⟨i, Set.mem_iUnion.2 ⟨j, ⟨gFin (ratGL E a γ), ⟨q, hq, hfin.symm⟩, rfl⟩⟩⟩
   · have hy := norm_toL_le_height y
     have hy' := norm_toL_inv_le_height y
     have hR : ‖toL (gInf q).val‖ ≤ B := (norm_toL_le_height _).trans (hB q hq)

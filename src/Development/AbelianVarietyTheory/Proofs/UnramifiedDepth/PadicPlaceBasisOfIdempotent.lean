@@ -75,8 +75,7 @@ private theorem exists_eps {C B OE : Type} [Field C] [CommRing B] [Algebra C B] 
     | mem τ x hx =>
       have hx' : ∀ a, j a * x = τ a • x := fun a => by
         have := (Submodule.mem_iInf _).1 hx a
-        rw [Module.End.mem_eigenspace_iff] at this
-        exact this
+        rwa [Module.End.mem_eigenspace_iff] at this
       by_cases h0 : σ x = 0
       · exact ⟨0, by simp [h0], by simp⟩
       · refine ⟨x, rfl, fun a => ?_⟩

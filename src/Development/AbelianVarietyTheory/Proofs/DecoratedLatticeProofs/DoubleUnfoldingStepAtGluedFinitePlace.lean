@@ -156,8 +156,8 @@ theorem dualInd_add (L : Submodule 𝒪[k] (n → k)) (η ξ : n → k) (hξ : I
     dualInd L (η + ξ) = dualInd L η := by
   unfold dualInd
   by_cases h : InDual L η
-  · rw [if_pos (inDual_add h hξ), if_pos h]
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_left (inDual_add h hξ), ite_eq_left h]
+  · rw [ite_eq_right h, ite_eq_right]
     intro h'
     apply h
     simpa using inDual_sub h' hξ
@@ -167,7 +167,7 @@ theorem dualInd_supp (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (η : n → 
   unfold dualInd at h
   by_cases hd : InDual L η
   · exact inDual_smul hd q.1
-  · exact absurd (if_neg hd) h
+  · exact absurd (ite_eq_right hd) h
 
 theorem cosetInd_add (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (f : Module.Dual 𝓀[k] (Red L)) (η ξ : n → k)
     (hξ : InDual L ξ) : cosetInd q L f (η + ξ) = cosetInd q L f η := by
@@ -184,8 +184,8 @@ theorem cosetInd_add (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (f : Module.
       have h := inDual_add hd hξ
       rwa [show η - q.inv • F + ξ = η + ξ - q.inv • F by abel] at h
   by_cases h : ∃ F : n → k, Lifts L F f ∧ InDual L (η - q.inv • F)
-  · rw [if_pos (e.2 h), if_pos h]
-  · rw [if_neg (fun h' => h (e.1 h')), if_neg h]
+  · rw [ite_eq_left (e.2 h), ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h (e.1 h')), ite_eq_right h]
 
 theorem inDual_of_lifts {L : Submodule 𝒪[k] (n → k)} {F : n → k} {f : Module.Dual 𝓀[k] (Red L)} (h : Lifts L F f) :
     InDual L F := by
@@ -208,7 +208,7 @@ theorem cosetInd_supp (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (f : Module
       rw [smul_sub, hq, sub_add_cancel]
     rw [h3]
     exact inDual_add (inDual_smul hd q.1) (inDual_of_lifts hF)
-  · exact absurd (if_neg hc) h
+  · exact absurd (ite_eq_right hc) h
 
 theorem inner_add (χ : AddChar k Circle) (hχ : HasConductor χ 1) {e : k} (he : e = 1 ∨ e = -1)
     [MeasurableSpace k] (μ : Measure (n → k)) (L : Submodule 𝒪[k] (n → k)) {a : (n → k) → ℂ}
@@ -267,8 +267,7 @@ theorem fpair_charInd_dualInd_add_cosets : ∀ (k : Type) [Field k] [ValuativeRe
   · exact (_root_.GlobalTheory.FinPl.CosetPairing.fpair_charInd_cosetInd k n q χ hχ e ε hε μ Q (ε • Q) (Pair.dia_lat ε Q)).1 rfl
   · intro Q'' hQ'' hne
     exact (_root_.GlobalTheory.FinPl.CosetPairing.fpair_charInd_cosetInd k n q χ hχ e ε hε μ Q Q'' (mem_withLat.1 hQ'')).2 hne
-  · intro h
-    exact absurd (mem_withLat.2 (Pair.dia_lat ε Q)) h
+  · exact fun h => absurd (mem_withLat.2 (Pair.dia_lat ε Q)) h
 
 end GlobalTheory.FinPl.Comm.DualCosets
 end -- clump:auto
@@ -531,8 +530,8 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
   let ε : 𝓀[k]ˣ := if e = 1 then 1 else -1
   have hεe : (e = 1 ∧ ε = 1) ∨ (e = -1 ∧ ε = -1) := by
     by_cases h1 : e = 1
-    · exact Or.inl ⟨h1, if_pos h1⟩
-    · exact Or.inr ⟨he.resolve_left h1, if_neg h1⟩
+    · exact Or.inl ⟨h1, ite_eq_left h1⟩
+    · exact Or.inr ⟨he.resolve_left h1, ite_eq_right h1⟩
   refine ⟨ε, ?_, ?_⟩
   · rcases hεe with ⟨-, h⟩ | ⟨-, h⟩
     · exact Or.inl h
@@ -546,8 +545,7 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
     have h2 : (fun a => ((χ a : Circle) : ℂ)) = fun a => psiE ψ (p.sec a) := funext hIs
     refine continuous_induced_rng.2 ?_
     change Continuous (fun a => ((χ a : Circle) : ℂ))
-    rw [h2]
-    exact h1
+    rwa [h2]
   obtain ⟨lS₁, lT₁, uS₁, uT₁, lin₁⟩ := _root_.GlobalTheory.SplitLinAt.linModelAt D k p ψ _ _ _ _ _ s₁.weil₀
   obtain ⟨lS₂, lT₂, uS₂, uT₂, lin₂⟩ := _root_.GlobalTheory.SplitLinAt.linModelAt D k p ψ _ _ _ _ _ s₂.weil₀
   have vS₁ := uS₁ hu₁.2
@@ -605,8 +603,7 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
       rw [b₂ ⟨_, o₂.2.2.2.1⟩ Ξ₂ o₂]
       congr 1
       apply Subtype.ext
-      simp only [Submodule.coe_add, Submodule.coe_sum]
-      exact D2 R
+      simpa only [Submodule.coe_add, Submodule.coe_sum] using D2 R
 
     have t0 : ∀ Q' ∈ withLat Q.lat, (Θ v' (x Q') y₀).1 = 0 := fun Q' hQ' => by
       have := key v' (phiOne P₁ Q') (GlobalTheory.IndefiniteRowSideFullHecke.IndicatorFunctionIdentity.phiOne_mem P₁ Q') (latInd Q.lat R.ker) (latInd_mem_SB _ _)
@@ -692,11 +689,9 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
       obtain ⟨g, hg⟩ := MulAction.exists_smul_eq (GL n k) (ε⁻¹ • Q) Q'
       have hgL : g • Q.lat = Q.lat := by
         have := congrArg Pair.lat hg
-        rw [Pair.smul_lat, Pair.dia_lat, mem_withLat.1 hQ'] at this
-        exact this
+        rwa [Pair.smul_lat, Pair.dia_lat, mem_withLat.1 hQ'] at this
       have := hmove (ε⁻¹ • Q) g hgL
-      rw [hg, smul_comm g ε (ε⁻¹ • Q), hg] at this
-      exact this
+      rwa [hg, smul_comm g ε (ε⁻¹ • Q), hg] at this
 
     have hid : ∀ Y', s₂.om₀ (1, 1) Y' = Y' := fun Y' => by
       rw [show ((1 : GA D J.W₀), (1 : GA D B'.V₀)) = 1 from rfl, map_one]

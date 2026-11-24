@@ -1014,21 +1014,7 @@ open GlobalTheory.ZM
 namespace GlobalTheory.ZM.FullLevel
 
 theorem finiteDimensional_KA {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (l : Level H) :
-    FiniteDimensional ℚ (KA l) := by
-  have hA := l.A_pos
-  refine IntermediateField.finiteDimensional_adjoin ?_
-  intro x hx
-  rcases hx with rfl | hx
-  · have h2 : H.rt0 ^ 2 = algebraMap ℚ ℂ (-(H.d : ℚ)) := by
-      rw [H.sqrt_neg_disc_sq]; simp
-    have hi : IsIntegral ℚ (H.rt0 ^ 2) := by rw [h2]; exact isIntegral_algebraMap
-    exact IsIntegral.of_pow two_pos hi
-  · rw [Set.mem_singleton_iff] at hx
-    subst hx
-    have hz : IsPrimitiveRoot (zeta l.A) l.A := by
-      unfold zeta; exact Complex.isPrimitiveRoot_exp l.A hA.ne'
-    refine IsIntegral.of_pow hA ?_
-    rw [hz.pow_eq_one]; exact isIntegral_one
+    FiniteDimensional ℚ (KA l) := GlobalTheory.LevelUp.finiteDimensional_KA l
 
 private theorem constPt_comp' {k : Type} [Field k] {X Y : Scheme.{0}} (x : Sp (DualNumber k) ⟶ X)
     (f : X ⟶ Y) : constPt (x ≫ f) = constPt x ≫ f := by
@@ -1424,15 +1410,7 @@ noncomputable section
 namespace GlobalTheory.LevelTower
 
 theorem zeta_eq_pow {n m : ℕ} (hm : 0 < m) (h : n ∣ m) : zeta n = zeta m ^ (m / n) := by
-  obtain ⟨c, rfl⟩ := h
-  have hn : 0 < n := Nat.pos_of_mul_pos_right hm
-  have hc : 0 < c := Nat.pos_of_mul_pos_left hm
-  have hn' : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hn.ne'
-  have hc' : (c : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hc.ne'
-  rw [Nat.mul_div_cancel_left c hn, zeta, zeta, ← Complex.exp_nat_mul]
-  congr 1
-  push_cast
-  field_simp
+  exact GlobalTheory.LevelCover.zeta_dvd hm h
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 
@@ -1461,14 +1439,7 @@ theorem exists_inclusion {l l₂ : Level H} (h : l.A ∣ l₂.A) :
     exact zeta_eq_pow l₂.A_pos h
 
 theorem finiteDimensional_KA (l : Level H) : FiniteDimensional ℚ (KA l) := by
-  refine IntermediateField.finiteDimensional_adjoin ?_
-  rintro x (rfl | rfl)
-  · refine IsIntegral.of_pow (n := 2) two_pos ?_
-    rw [H.sqrt_neg_disc_sq]
-    exact (isIntegral_natCast H.d).neg
-  · refine IsIntegral.of_pow l.A_pos ?_
-    rw [show zeta l.A ^ l.A = 1 from (Complex.isPrimitiveRoot_exp l.A l.A_pos.ne').pow_eq_one]
-    exact isIntegral_one
+  exact GlobalTheory.LevelUp.finiteDimensional_KA l
 
 theorem finite_of_numberField {K K' : Type} [Field K] [Field K'] [CharZero K] [CharZero K']
     [FiniteDimensional ℚ K'] (j : K →+* K') : j.Finite := by

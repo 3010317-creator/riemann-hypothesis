@@ -183,9 +183,7 @@ theorem realInv_cocycleTwo (t : galUnits.{0} F Ω) (ht : (galUnits.{0} F Ω).ρ 
           rw [← Units.val_mul, ← toMul_add, ← two_nsmul, h2t, toMul_zero, Units.val_one]
         rcases mul_self_eq_one_iff.1 hsq with h | h
         · exfalso
-          apply ht0
-          apply Additive.toMul.injective
-          exact Units.ext h
+          exact ht0 (Additive.toMul.injective (Units.ext h))
         · exact h
       have hnorm := coe_toMul_norm_galUnitsZ F Ω m
       rw [norm_apply (galUnitsZ F Ω) hG hc] at hnorm
@@ -474,8 +472,7 @@ theorem realInv_cocycleTwo_eq_cartierDualToQZ {n : ℕ} [NeZero n] (hMn : ∀ m 
     realInv F Ω h2 hN (cohomologyπ _ 2 (cocycleTwo (galUnits.{0} F Ω) hG hc t ht)) =
       cartierDualToQZ M hMn e φ m := by
   have h2φ : 2 • (φ : M →ₗ[ULift.{0} ℤ] galUnits.{0} F Ω) m = 0 := by
-    rw [← map_nsmul, ← cartierDualToQZ_apply_eq_zero_iff M hMn e, map_nsmul]
-    exact hq
+    rwa [← map_nsmul, ← cartierDualToQZ_apply_eq_zero_iff M hMn e, map_nsmul]
   have ht0 : t = 0 ↔ (φ : M →ₗ[ULift.{0} ℤ] galUnits.{0} F Ω) m = 0 := by
     rcases htφ with rfl | rfl
     · rfl
@@ -758,8 +755,7 @@ theorem bijective_dualToCartier {n : ℕ} [NeZero n] (hL : Nonempty (galRootsOfU
     rwa [← ConcreteCategory.comp_apply, ← ConcreteCategory.comp_apply, e.inv_hom_id] at h
   have : Finite (cartierDual K L (Rep.res ψ.toMonoidHom M)) := Finite.of_injective _ he
   refine Function.Injective.bijective_of_nat_card_le ?_ ?_
-  · intro f f' hff'
-    exact LinearMap.ext fun m => hρ (LinearMap.congr_fun hff' m)
+  · exact fun f f' hff' => LinearMap.ext fun m => hρ (LinearMap.congr_fun hff' m)
   · calc _ ≤ Nat.card (dualRep (galRootsOfUnity.{0} K L n) (Rep.res ψ.toMonoidHom M)) :=
           Nat.card_le_card_of_injective _ he
       _ ≤ Nat.card M := card_dualRep_le hL
@@ -773,11 +769,7 @@ theorem tensorHom_dualToCartier_cartierPairing :
     (𝟙 (Rep.res ψ.toMonoidHom M) ⊗ₘ _root_.GroundTheory.ProfCoh.dualToCartierDual ψ D ρ M) ≫
         cartierPairing K L (Rep.res ψ.toMonoidHom M) =
       _root_.GroundTheory.ProfCoh.resEvalPairing ψ D M ≫ ρ := by
-  refine Rep.Hom.ext (Representation.IntertwiningMap.ext (LinearMap.ext fun x => ?_))
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [map_zero]
-  | tmul a f => rfl
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
+  exact GroundTheory.ProfCoh.tensorHom_dualToCartierDual_cartierPairing ψ D ρ M
 
 theorem cupPairing_dualToCartier [Finite M] [IsDiscreteRep (galUnits.{0} K L)]
     [IsDiscreteRep (cartierDual K L (Rep.res ψ.toMonoidHom M))] {r s : ℕ} (h : r + s = 2)
@@ -891,10 +883,7 @@ theorem gsRealRootsToUnits_injective (w : {v : InfinitePlace K.1 // v.IsReal}) :
     AlgebraicClosure w.1.Completion)) hab
   change ιr w _ = ιr w _ at h
   apply Additive.toMul.injective
-  apply Subtype.ext
-  apply Units.ext
-  apply Subtype.ext
-  exact (ιr w).toRingHom.injective h
+  exact Subtype.ext (Units.ext (Subtype.ext ((ιr w).toRingHom.injective h)))
 
 def gsRealInvRootsQZ (w : {v : InfinitePlace K.1 // v.IsReal}) :
     cohomology (Rep.res (gsRealFamily S ιr w).toMonoidHom (gsRoots S n)) 2 →+ QZ :=

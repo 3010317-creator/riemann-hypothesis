@@ -154,7 +154,7 @@ theorem bounded_of_isIntegral_general {K Γ O : Type} [Field K] [LinearOrderedCo
   obtain ⟨a, ha0, haN⟩ : ∃ a : K, a ≠ 0 ∧ ∀ i j, v (a * N i j) ≤ 1 := by
     by_cases h : ∀ i j, v (N i j) ≤ 1
     · exact ⟨1, one_ne_zero, fun i j => by simpa using h i j⟩
-    · push_neg at h
+    · push Not at h
       obtain ⟨i0, j0, h0⟩ := h
       obtain ⟨p, -, hp⟩ := Finset.exists_max_image (Finset.univ : Finset (Fin n × Fin n))
         (fun p => v (N p.1 p.2)) ⟨(i0, j0), Finset.mem_univ _⟩
@@ -200,8 +200,7 @@ theorem bounded_of_isIntegral_general {K Γ O : Type} [Field K] [LinearOrderedCo
   have hcomm : ∀ k, Commute g (B k) := by
     intro k
     rw [hc0, hBpow]
-    refine Commute.sum_left _ _ _ fun l _ => ?_
-    exact ((Commute.pow_pow_self N l k).smul_left _).smul_right _
+    exact Commute.sum_left _ _ _ fun l _ => ((Commute.pow_pow_self N l k).smul_left _).smul_right _
   have ht : ∀ j, v ((g * B j).trace) ≤ 1 := fun j =>
     hint _ (isIntegral_trace_of_isIntegral (g * B j)
       (isIntegral_mul_of_commute (hcomm j) hgi (hBint j)))

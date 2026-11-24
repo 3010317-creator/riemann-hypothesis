@@ -121,8 +121,7 @@ theorem tate {H : Type} [CommGroup H] [TopologicalSpace H] [IsTopologicalGroup H
   have oz : ∀ (k : ℤ) x, o (ϖ ^ k * x) = k + o x := fun k x => by
     have := map_zpow O ϖ k
     have h2 : o (ϖ ^ k) = k := by
-      have h3 := congrArg Multiplicative.toAdd this
-      simpa [O, hϖ] using h3
+      simpa [O, hϖ] using congrArg Multiplicative.toAdd this
     rw [ho, h2]
   have h0 : χ ϖ ≠ 0 := fun e => by
     have := map_mul χ ϖ ϖ⁻¹
@@ -142,8 +141,8 @@ theorem tate {H : Type} [CommGroup H] [TopologicalSpace H] [IsTopologicalGroup H
     simp only [A, Set.mem_setOf_eq] at h h'; omega)
   have eU : (fun x => (if m ≤ o x then (1 : ℂ) else 0) * χ x) = (⋃ k, A k).indicator χ := funext fun x => by
     by_cases h : m ≤ o x
-    · rw [if_pos h, one_mul, Set.indicator_of_mem (Set.mem_iUnion.2 ⟨(o x - m).toNat, by simp only [A, Set.mem_setOf_eq]; omega⟩)]
-    · rw [if_neg h, zero_mul, Set.indicator_of_notMem fun h' => by
+    · rw [ite_eq_left h, one_mul, Set.indicator_of_mem (Set.mem_iUnion.2 ⟨(o x - m).toNat, by simp only [A, Set.mem_setOf_eq]; omega⟩)]
+    · rw [ite_eq_right h, zero_mul, Set.indicator_of_notMem fun h' => by
         obtain ⟨k, hk⟩ := Set.mem_iUnion.1 h'
         simp only [A, Set.mem_setOf_eq] at hk; omega]
   have iA : ∀ k, IntegrableOn χ (A k) γ := fun k =>
@@ -157,8 +156,7 @@ theorem tate {H : Type} [CommGroup H] [TopologicalSpace H] [IsTopologicalGroup H
     simp only [nA]; exact (summable_geometric_of_lt_one (norm_nonneg _) ht).mul_left _)
   rw [eU, integrable_indicator_iff (MeasurableSet.iUnion mA), integral_indicator (MeasurableSet.iUnion mA)]
   refine ⟨iU, (hasSum_integral_iUnion mA dA iU).unique ?_⟩
-  simp only [sA]
-  exact (hasSum_geometric_of_norm_lt_one ht).mul_left _
+  simpa only [sA] using (hasSum_geometric_of_norm_lt_one ht).mul_left _
 
 end PositivityTheory.ThKG.Fub
 

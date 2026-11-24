@@ -49,8 +49,7 @@ theorem jPred_iff (kk s : ℕ) {N g : ℕ} (hN : N = kk + 2 * s + 1) (M : Matrix
     refine ⟨fun i j hij => ?_, fun i => (hU i i).2 rfl, fun i j _ hji => (hU i j).1 hji,
       fun i j hj hij hbi => ?_⟩
     · have hji : j < i := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         have := blk_mono s kk (Fin.le_def.1 h)
         omega
       exact (hU i j).1 hji
@@ -62,8 +61,7 @@ theorem jPred_iff (kk s : ℕ) {N g : ℕ} (hN : N = kk + 2 * s + 1) (M : Matrix
       unfold entN at h5
       rw [dite_eq_left ⟨i.isLt, by omega⟩] at h5
       have hj' : j = ⟨s + kk, by omega⟩ := Fin.ext hj
-      rw [hj']
-      exact h5
+      rwa [hj']
   · rintro ⟨h1, h2, h3, h4⟩
     refine ⟨fun a b => ⟨fun hba => ?_, fun hab => by subst hab; exact h2 a⟩, fun a ha1 ha2 => ?_⟩
     · have hle := blk_mono s kk (Fin.le_def.1 hba.le)
@@ -261,7 +259,6 @@ theorem kppShape_of_fwd (hS : Function.Surjective (rhoX X)) (hF : KppFwd X) : Kp
   obtain ⟨y, hy⟩ := hmem.2
   have h1 : rhoX X ((Subgroup.inclusion (le3 X) y)⁻¹ * x) = 1 := by
     rw [map_mul, map_inv, ← hy]
-    show (rhoX X (Subgroup.inclusion (le3 X) y))⁻¹ * rhoX X (Subgroup.inclusion (le3 X) y) = 1
     exact inv_mul_cancel _
   have h2 := (rhoX_eq_one_iff X _).1 h1
   have h3 : ((Subgroup.inclusion (le3 X) y)⁻¹ * x : KSub X.B.I).1 ∈ concreteLevelAdelicSubset X := le2 X h2
@@ -269,8 +266,7 @@ theorem kppShape_of_fwd (hS : Function.Surjective (rhoX X)) (hF : KppFwd X) : Kp
   have e : (y : X.B.I.Gf) * ((Subgroup.inclusion (le3 X) y)⁻¹ * x : KSub X.B.I).1 = x := by
     show (y : X.B.I.Gf) * ((y : X.B.I.Gf)⁻¹ * (x : X.B.I.Gf)) = x
     group
-  rw [e] at h4
-  exact h4
+  rwa [e] at h4
 
 end Count
 

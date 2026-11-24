@@ -69,8 +69,7 @@ theorem det_map_conj_ne {y : Mt n} (h : y.det ≠ 0) : (y.map (starRingEnd ℂ))
     ext i j
     simp [Matrix.conjTranspose_apply]
   rw [e, det_transpose, det_conjTranspose]
-  intro h0
-  exact h (star_eq_zero.mp h0)
+  exact fun h0 => h (star_eq_zero.mp h0)
 
 theorem neg_gram_mul (Hm x b : Mt n) : -((x * b)ᴴ * Hm * (x * b)) = bᴴ * (-(xᴴ * Hm * x)) * b := by
   simp only [conjTranspose_mul, Matrix.mul_neg, Matrix.neg_mul, Matrix.mul_assoc]
@@ -193,8 +192,7 @@ theorem isPreconnected_frDom (h : OrthFr Hm q x₀) : IsPreconnected (frDom Hm q
         (fun y : Unit → Mt n => y ()) '' {y : Unit → Mt n | ∀ i, Ok q (y i)} := by
       ext y
       constructor
-      · intro hy
-        exact ⟨fun _ => y, fun _ => hy, rfl⟩
+      · exact fun hy => ⟨fun _ => y, fun _ => hy, rfl⟩
       · rintro ⟨z, hz, rfl⟩
         exact hz ()
     rw [e]
@@ -206,8 +204,7 @@ theorem isPreconnected_frDom (h : OrthFr Hm q x₀) : IsPreconnected (frDom Hm q
           ∀ i, (b i).det ≠ 0 ∧ ∀ a c : Fin n, c < a → b i a c = 0} := by
       ext b
       constructor
-      · intro hb
-        exact ⟨fun _ => b, fun _ => hb, rfl⟩
+      · exact fun hb => ⟨fun _ => b, fun _ => hb, rfl⟩
       · rintro ⟨z, hz, rfl⟩
         exact hz ()
     rw [e]

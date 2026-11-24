@@ -122,8 +122,7 @@ private theorem aux {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRin
     have h := hq 1 _ (by rw [pow_one]; exact hpt.red g a a)
     rw [pow_one, Matrix.sub_apply, map_sub, Matrix.map_apply, AlgHom.commutes] at h
     rw [c1, hent, hrz]
-    simp only [wt, sub_self, zpow_zero, Units.val_one, one_mul]
-    exact lt_of_le_of_lt h hq1
+    simpa only [wt, sub_self, zpow_zero, Units.val_one, one_mul] using lt_of_le_of_lt h hq1
   have hz : ‖zeta F.c g₁ r - zeta F.c g₁ (F.rz (PadicAlgCl l))‖ < 1 := by
     have e : zeta F.c g₁ r - zeta F.c g₁ (F.rz (PadicAlgCl l)) =
         ((r g₁).mat 0 0 - (F.rz (PadicAlgCl l) g₁).mat 0 0) +
@@ -140,10 +139,8 @@ private theorem aux {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRin
   · ext a b
     rw [hent, hpt.norm.atc]
     simp [Matrix.one_apply, apply_ite f]
-  · have h := congrArg f hpt.norm.z12
-    simpa only [zmat, Matrix.sub_apply, map_sub, map_zero, hent] using h
-  · have h := congrArg f hpt.norm.z21
-    simpa only [zmat, Matrix.sub_apply, map_sub, map_zero, hent] using h
+  · simpa only [zmat, Matrix.sub_apply, map_sub, map_zero, hent] using congrArg f hpt.norm.z12
+  · simpa only [zmat, Matrix.sub_apply, map_sub, map_zero, hent] using congrArg f hpt.norm.z21
   · refine continuous_matrix fun a b => ?_
     simp only [mats, c1, hent]
     refine continuous_const.mul (continuous_iff_continuousAt.2 fun g => ?_)

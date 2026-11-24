@@ -69,12 +69,11 @@ theorem exists_finset_eq_sum_cind {X : Type} [AddCommGroup X] [TopologicalSpace 
   by_cases hex : ∃ y ∈ (F0.image (QuotientAddGroup.mk (s := L))).image Quotient.out, Y - y ∈ L
   · obtain ⟨y, hy, hYy⟩ := hex
     rw [Finset.sum_eq_single y]
-    · rw [if_pos hYy, mul_one]
+    · rw [ite_eq_left hYy, mul_one]
       have := hper y (Y - y) hYy
-      rw [add_sub_cancel] at this
-      exact this
+      rwa [add_sub_cancel] at this
     · intro y' hy' hne
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro hY'
       apply hne
       obtain ⟨q', -, rfl⟩ := Finset.mem_image.mp hy'
@@ -84,8 +83,8 @@ theorem exists_finset_eq_sum_cind {X : Type} [AddCommGroup X] [TopologicalSpace 
       simp only [QuotientAddGroup.out_eq'] at e1 e2
       rw [← e1, ← e2]
     · intro h; exact absurd hy h
-  · push_neg at hex
-    rw [Finset.sum_eq_zero (fun y hy => by rw [if_neg (hex y hy), mul_zero])]
+  · push Not at hex
+    rw [Finset.sum_eq_zero (fun y hy => by rw [ite_eq_right (hex y hy), mul_zero])]
     apply image_eq_zero_of_notMem_tsupport
     intro hY
     have := hcov hY
@@ -95,7 +94,6 @@ theorem exists_finset_eq_sum_cind {X : Type} [AddCommGroup X] [TopologicalSpace 
         (F0.image (QuotientAddGroup.mk (s := L))).image Quotient.out :=
       Finset.mem_image.mpr ⟨_, Finset.mem_image.mpr ⟨y0, hy0, rfl⟩, rfl⟩
     apply hex _ hmem
-    rw [hmk _ hmem, QuotientAddGroup.out_eq']
-    rw [← QuotientAddGroup.eq_iff_sub_mem.mpr hYy0]
+    rw [hmk _ hmem, QuotientAddGroup.out_eq', ← QuotientAddGroup.eq_iff_sub_mem.mpr hYy0]
 
 end GlobalTheory.LinSchur

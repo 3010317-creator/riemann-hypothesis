@@ -30,17 +30,16 @@ theorem coeff_coeffMap (δ : Derivation K Ω Ω) (P : MvPolynomial σ Ω) (n : �
   rw [coeff_sum]
   by_cases h : n ∈ P.support
   · rw [Finset.sum_eq_single n]
-    · rw [coeff_monomial, if_pos rfl]
+    · rw [coeff_monomial, ite_eq_left rfl]
     · intro b _ hb
-      rw [coeff_monomial, if_neg hb]
-    · intro hn
-      exact absurd h hn
+      rw [coeff_monomial, ite_eq_right hb]
+    · exact fun hn => absurd h hn
   · have h0 : AddMonoidAlgebra.coeff P n = 0 := by
       by_contra hc
       exact h (mem_support_iff.mpr hc)
     rw [h0, map_zero]
     refine Finset.sum_eq_zero fun b hb => ?_
-    rw [coeff_monomial, if_neg]
+    rw [coeff_monomial, ite_eq_right]
     rintro rfl
     exact h hb
 
@@ -140,8 +139,7 @@ private theorem coeffDer_linearCombinationPoly_apply {K Ω : Type*} [CommRing K]
 private theorem restrictScalars_pderiv_apply {K Ω σ : Type*} [CommRing K] [CommRing Ω]
     [Algebra K Ω] (w : σ) (f : MvPolynomial σ Ω) :
     ((pderiv w : Derivation Ω (MvPolynomial σ Ω) (MvPolynomial σ Ω)).restrictScalars K) f =
-      pderiv w f := by
-  exact congrFun (Derivation.coe_restrictScalars K _) f
+      pderiv w f := congrFun (Derivation.coe_restrictScalars K _) f
 
 
 set_option maxHeartbeats 800000 in
@@ -201,7 +199,6 @@ theorem gFam_indep {K Ω : Type*} [Field K] [CharZero K] [Field Ω] [Algebra K �
     have h1 := hc (Sum.inr a)
     simp only [Sum.elim_inr, Fintype.sum_sum_type, hz_inl, hz_inr, coeffDer_X, mul_zero,
       Finset.sum_const_zero, zero_add, hcd, mul_neg, Finset.sum_neg_distrib, neg_eq_zero] at h1
-    show ∑ b, N a b * c (Sum.inr b) = 0
     exact (Finset.sum_congr rfl fun b _ => mul_comm (N a b) (c (Sum.inr b))).trans h1
   have hinr : ∀ b, c (Sum.inr b) = 0 := fun b =>
     congr_fun (Matrix.eq_zero_of_mulVec_eq_zero hdet hmv) b
@@ -212,12 +209,10 @@ theorem gFam_indep {K Ω : Type*} [Field K] [CharZero K] [Field Ω] [Algebra K �
     simp only [Sum.elim_inl, hinr, zero_mul, Finset.sum_const_zero, add_zero,
       restrictScalars_pderiv_apply, hz_inl] at h2
     rw [Finset.sum_eq_single w] at h2
-    · rw [pderiv_X_self, mul_one] at h2
-      exact h2
+    · rwa [pderiv_X_self, mul_one] at h2
     · intro w' _ hw'
       rw [pderiv_X_of_ne hw', mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ w) h
+    · exact fun h => absurd (Finset.mem_univ w) h
   · exact hinr b
 
 def eIdx (D m : ℕ) (p : Fin (D + 1) × Fin (m + 1)) : SVars D m ⊕ Fin D :=

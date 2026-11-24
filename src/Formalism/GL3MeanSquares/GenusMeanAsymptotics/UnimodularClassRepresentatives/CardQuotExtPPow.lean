@@ -86,8 +86,7 @@ theorem star_mk [Fact (IsFixF K F)] (𝔭 : Ideal (𝓞 F)) (k : ℕ) (a : 𝓞 
 theorem absNorm_extP_eq_sq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) : Ideal.absNorm (extP K 𝔭) = Ideal.absNorm 𝔭 ^ 2 := by
   have h := Ideal.absNorm_algebraMap (𝓞 F) (𝓞 K) 𝔭
-  rw [← IsFractionRing.finrank_eq (𝓞 F) F (𝓞 K) K, MeanB.finrank_eq_two hK hF] at h
-  exact h
+  rwa [← IsFractionRing.finrank_eq (𝓞 F) F (𝓞 K) K, MeanB.finrank_eq_two hK hF] at h
 
 theorem absNorm_extP_pow (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) (k : ℕ) :
@@ -163,8 +162,7 @@ theorem mk_mem_idQ {𝔭 : Ideal (𝓞 F)} {k j : ℕ} (hjk : j ≤ k) {z : 𝓞
     have h2 : z = z' - (z' - z) := by ring
     rw [h2]
     exact Ideal.sub_mem _ hz' h1
-  · intro hz
-    exact ⟨z, hz, rfl⟩
+  · exact fun hz => ⟨z, hz, rfl⟩
 
 theorem star_mem_idQ [hF : Fact (IsFixF K F)] {𝔭 : Ideal (𝓞 F)} {k j : ℕ}
     {a : 𝓞 K ⧸ extP K 𝔭 ^ k} (ha : a ∈ idQ K 𝔭 k j) : star a ∈ idQ K 𝔭 k j := by

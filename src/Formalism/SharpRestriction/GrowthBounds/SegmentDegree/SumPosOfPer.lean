@@ -107,8 +107,7 @@ theorem exists_shift_of_posOf_eq_of_mem_late (hV : X.F.Valid L₁ N₁) {j j' x 
   have p1 : eFr X.F (j + m * X.F.J) = eFr X.F j + m * n' := fr_add_mul_period hV j (r - 1) m
   have p0 : eFr X.F (j + m * X.F.J - 1) = eFr X.F (j - 1) + m * n' := by
     have := fr_add_mul_period hV (j - 1) (r - 1) m
-    rw [show j + m * X.F.J - 1 = j - 1 + m * X.F.J by ring]
-    exact this
+    rwa [show j + m * X.F.J - 1 = j - 1 + m * X.F.J by ring]
   exact idx_unique (eFr_strictMono hV) (x := x') a2.1.1 a2.1.2 (by rw [p0]; linarith [a1.1.1])
     (by rw [p1]; linarith [a1.1.2])
 
@@ -138,8 +137,7 @@ theorem sum_perW (hV : X.F.Valid L₁ N₁) (j : ℤ) (i : Fin r) :
     X.Bw p K (j + X.F.J) (X.F.fr (j + X.F.J - 1) i.val) = X.Bw p K j (X.F.fr (j - 1) i.val) := by
   have e1 : X.F.fr (j + X.F.J - 1) i.val = X.F.fr (j - 1) i.val + 1 * n' := by
     have := fr_add_mul_period hV (j - 1) i.val 1
-    rw [show j + (X.F.J : ℤ) - 1 = j - 1 + 1 * X.F.J by ring]
-    exact this
+    rwa [show j + (X.F.J : ℤ) - 1 = j - 1 + 1 * X.F.J by ring]
   have e2 : j + (X.F.J : ℤ) = j + 1 * X.F.J := by ring
   unfold Dat.Bw
   rw [e1, e2, sum_posOf_per, dist_add_mul_period hV, sum_Rj_per X p K hV]
@@ -167,8 +165,7 @@ theorem prod_tiling (hV : X.F.Valid L₁ N₁) (φ : Fin n' → ℝ) :
   set a := eFr X.F (((0 : ℕ) : ℤ) - 1) with ha
   symm
   refine Finset.prod_bij (fun x _ => posOf n' x) ?_ ?_ ?_ ?_
-  · intro x hx
-    exact (Finset.mem_filter.mp hx).2
+  · exact fun x hx => (Finset.mem_filter.mp hx).2
   · intro x hx y hy hxy
     exact posOf_injOn a (Finset.mem_Ioc.mp (Finset.mem_filter.mp hx).1) (Finset.mem_Ioc.mp (Finset.mem_filter.mp hy).1) hxy
   · intro t ht

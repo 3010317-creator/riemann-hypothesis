@@ -109,8 +109,7 @@ theorem isTangent_zero (v : epsR ℂ ⟶ (zeroPolAV (Sp ℂ)).A) : IsTangent v :
     (Category.comp_id _).symm.trans (Over.w η[(zeroPolAV (Sp ℂ)).A])
   unfold IsTangent
   rw [h, h']
-  refine (Spec.map_comp _ _).symm.trans ?_
-  exact Spec.map_id _
+  exact (Spec.map_comp _ _).symm.trans (Spec.map_id _)
 
 theorem isDiff_zero {O : Type} [CommRing O] [StarRing O] (A : AnArc O) [IsEmpty (Fin A.gB)] (w : Fin A.gB → ℂ)
     (v : epsR ℂ ⟶ (zeroPolAV (Sp ℂ)).A) : (zeroUnif A).IsDiff w v := by
@@ -125,7 +124,7 @@ theorem isDiff_zero {O : Type} [CommRing O] [StarRing O] (A : AnArc O) [IsEmpty 
   have e := GlobalTheory.Points.valR_constFn_of_over (𝟙 (Sp ℂ)) (algebraMap ℂ (DualNumber ℂ)) v.left hv U h (valAt' (𝟙 (Sp ℂ)) U f)
   have e' := (congrArg (valR v.left U) hf).trans e
   unfold valR at e'
-  rw [dif_pos h] at e'
+  rw [dite_eq_left h] at e'
   exact (congrArg TrivSqZeroExt.snd e').trans rfl
 
 variable (c : Coeff l) (bF : c.F →+* ℂ) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ]
@@ -199,8 +198,7 @@ theorem isScalarTower : IsScalarTower ℂ (FractionRing ℂ) ℂ := by
   have h : Out.jFK (R := ℂ) ℂ ≫ Out.jK ℂ = 𝟙 (Sp ℂ) :=
     (Over.w (Λ.ex0 0).b).symm.trans ((congrArg (· ≫ a.D₀.P.A.hom) (Λ.ex0_b 0)).trans (Over.w (Λ.u.ex _)))
   rw [← Spec.map_comp, ← Spec.map_id] at h
-  have h' := congrArg CommRingCat.Hom.hom (Spec.map_injective h)
-  exact IsScalarTower.of_algebraMap_eq' h'.symm
+  exact IsScalarTower.of_algebraMap_eq' (congrArg CommRingCat.Hom.hom (Spec.map_injective h)).symm
 
 theorem ex_zero : Λ.u.ex 0 = η[a.D₀.P.A] := by
   rw [(Λ.u.ker 0).2 (zero_mem _), Hom.one_def, toUnit_unit, Category.id_comp]
@@ -243,15 +241,12 @@ theorem corr_of_genVal {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} 
     if h : ∃ k, φ k = p then j h.choose else if h : ∃ k, φ' k = p then j' h.choose else chartAt hL p
   have i₁ : ∀ k, idx (φ k) = j k := fun k => by
     have e : ∃ k', φ k' = φ k := ⟨k, rfl⟩
-    simp only [idx, dif_pos e]
-    exact c₁ _ _ e.choose_spec
+    simpa only [idx, dite_eq_left e] using c₁ _ _ e.choose_spec
   have i₂ : ∀ k, idx (φ' k) = j' k := fun k => by
     have e : ∃ k', φ' k' = φ' k := ⟨k, rfl⟩
     by_cases e' : ∃ k', φ k' = φ' k
-    · simp only [idx, dif_pos e']
-      exact c₃ _ _ e'.choose_spec
-    · simp only [idx, dif_neg e', dif_pos e]
-      exact c₂ _ _ e.choose_spec
+    · simpa only [idx, dite_eq_left e'] using c₃ _ _ e'.choose_spec
+    · simpa only [idx, dite_eq_right e', dite_eq_left e] using c₂ _ _ e.choose_spec
   have hi : ∀ w, u.fr (idx (u.ex w).left) w ≠ 0 := fun w => u.fr_ne _ _ (by
     by_cases e : ∃ k, φ k = (u.ex w).left
     · obtain ⟨k, hk⟩ := e
@@ -259,7 +254,7 @@ theorem corr_of_genVal {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} 
     · by_cases e' : ∃ k, φ' k = (u.ex w).left
       · obtain ⟨k, hk⟩ := e'
         rw [← hk, i₂, hφ']; exact (hz'.le_iff j').1 h₂ k
-      · simp only [idx, dif_neg e, dif_neg e']
+      · simp only [idx, dite_eq_right e, dite_eq_right e']
         exact le_chartAt hL _)
   have := congrArg (Units.coeHom ℂ) (hs fun w => Units.mk0 _ (hi w))
   simp only [map_prod, map_zpow, Units.coeHom_apply, Units.val_mk0, ← hφ, ← hφ', i₁, i₂] at this

@@ -209,7 +209,7 @@ lemma hpart_kill (a b : Fin (mdim k r i)) (q : Fin (2 * r + k + 1))
   obtain ⟨hqa, _⟩ := out_ne a q hq
   obtain ⟨hqb, _⟩ := out_ne b q hq
   have h1 : Matrix.single (posL k r i a) (posL k r i b) (1 : ℂ) *ᵥ bvec q = 0 := by
-    rw [single_mulVec_bvec, if_neg hqb]
+    rw [single_mulVec_bvec, ite_eq_right hqb]
   have hw : (Hpk k r *ᵥ bvec q) (posL k r i a) = 0 := by
     have ha := a.isLt
     have hi := i.isLt
@@ -270,8 +270,7 @@ private theorem hasDerivAt_mul_exp_smul_zero' {n : ℕ} (g X : Matrix (Fin n) (F
     { toFun := fun M => g * M
       map_add' := fun M N => Matrix.mul_add g M N
       map_smul' := fun c M => by simp }
-  have h := large₂.hasFDerivAt.comp_hasDerivAt (0 : ℝ) (hasDerivAt_matrix_exp_smul_at_zero X)
-  exact h
+  exact large₂.hasFDerivAt.comp_hasDerivAt (0 : ℝ) (hasDerivAt_matrix_exp_smul_at_zero X)
 
 lemma hasDerivAt_f {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (f F : Mx k r → E) (U : Set (Mx k r)) (g X : Mx k r) (hU : IsOpen U) (hgU : g ∈ U)
@@ -381,9 +380,9 @@ theorem y_operator_leibniz_rule : YLeibniz := by
       rw [hlin, ← hv, single_mulVec_bvec]
       by_cases hbc : b = c
       · subst hbc
-        rw [if_pos rfl, if_pos rfl]
+        rw [ite_eq_left rfl, ite_eq_left rfl]
         rfl
-      · rw [if_neg (fun h => hbc ((posL_inj c b).mp h).symm), if_neg hbc, Matrix.mulVec_zero]
+      · rw [ite_eq_right (fun h => hbc ((posL_inj c b).mp h).symm), ite_eq_right hbc, Matrix.mulVec_zero]
         simp [herm]
     rw [eEH, eEH, R1, R2, L1, L2, e1, key2, ite_smul, zero_smul]
 

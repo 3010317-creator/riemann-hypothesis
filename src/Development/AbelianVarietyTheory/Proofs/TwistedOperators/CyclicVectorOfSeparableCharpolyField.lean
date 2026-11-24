@@ -91,10 +91,8 @@ private theorem exists_vec_annihilator_eq_of_dvd_charpoly {K : Type} [Field K] {
     q ∣ M.charpoly → ∃ w : n → K, Polynomial.aeval M q *ᵥ w = 0 ∧
       ∀ f : Polynomial K, Polynomial.aeval M f *ᵥ w = 0 → q ∣ f := by
   refine UniqueFactorizationMonoid.induction_on_prime q ?_ ?_ ?_
-  · intro h
-    exact absurd (zero_dvd_iff.mp h) M.charpoly_monic.ne_zero
-  · intro x hx _
-    exact ⟨0, Matrix.mulVec_zero _, fun _ _ => hx.dvd⟩
+  · exact fun h => absurd (zero_dvd_iff.mp h) M.charpoly_monic.ne_zero
+  · exact fun x hx _ => ⟨0, Matrix.mulVec_zero _, fun _ _ => hx.dvd⟩
   · intro r π _ hπ ih hd
     obtain ⟨wr, hwr0, hwr⟩ := ih (dvd_trans (dvd_mul_left r π) hd)
     obtain ⟨wp, hwpne, hwp0⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr

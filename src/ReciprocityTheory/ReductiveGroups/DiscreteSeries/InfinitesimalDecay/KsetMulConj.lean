@@ -80,8 +80,7 @@ theorem inner_dS_add (hσ : IsURepOn (UJset ε) σ) {X : Matrix (Fin n) (Fin n) 
     rw [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero]
     exact hσ.1.1
   rw [h0] at hf
-  have h2 := hf.unique (hasDerivAt_const (0 : ℝ) (inner ℂ y v))
-  simpa [add_comm] using h2
+  simpa [add_comm] using hf.unique (hasDerivAt_const (0 : ℝ) (inner ℂ y v))
 
 theorem inner_dSW (hσ : IsURepOn (UJset ε) σ) {w : List (Matrix (Fin n) (Fin n) ℂ)} (hw : ∀ X ∈ w, inG ε X)
     {y v : H} (hy : IsSmoothVecU ε σ y) (hv : IsSmoothVecU ε σ v) :

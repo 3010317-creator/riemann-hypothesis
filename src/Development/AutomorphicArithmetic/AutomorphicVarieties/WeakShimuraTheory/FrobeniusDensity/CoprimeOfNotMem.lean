@@ -155,7 +155,7 @@ theorem UpperTheory.V.Ws.Tw.extIdeal :
     else Units.mk0 (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) (FractionalIdeal.coeIdeal_ne_zero.mpr hI)
   have hιv : ∀ I : Ideal (𝓞 K), I ≠ ⊥ → ((ι I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)) = I := by
     intro I hI
-    simp only [ι, dif_neg hI, Units.val_mk0]
+    simp only [ι, dite_eq_right hI, Units.val_mk0]
   have hι : ∀ I J : Ideal (𝓞 K), I ≠ ⊥ → J ≠ ⊥ → ι (I * J) = ι I * ι J := by
     intro I J hI hJ
     have hIJ : I * J ≠ ⊥ := fun h => (Ideal.mul_eq_bot.mp h).elim hI hJ
@@ -205,8 +205,7 @@ theorem UpperTheory.V.Ws.Tw.extIdeal :
   · intro I J hI hJ _ _
     show F (ι (I * J)) = F (ι I) * F (ι J)
     rw [hι I J hI hJ, map_mul]
-  · intro a ha hca
-    exact hF ⟨a, ha, hca⟩
+  · exact fun a ha hca => hF ⟨a, ha, hca⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.ExtIdeal =====
@@ -373,7 +372,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
   let g : 𝓞 K → (PadicAlgCl l)ˣ := fun a => if h : IsUnit (ρ a) then χ.toUnitHom h.unit else 1
   have hg : ∀ a (h : IsUnit (ρ a)), ((g a : (PadicAlgCl l)ˣ) : PadicAlgCl l) = χ (ρ a) := by
     intro a h
-    simp only [g, dif_pos h, MulChar.coe_toUnitHom, IsUnit.unit_spec]
+    simp only [g, dite_eq_left h, MulChar.coe_toUnitHom, IsUnit.unit_spec]
   have hχm1 : χ (-1) = 1 := by
     obtain ⟨c0, hc0⟩ := exists_cc (Ω := Ω)
     have h1 := hcc c0 hc0
@@ -431,8 +430,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
         rw [IsFractionRing.ringEquivOfRingEquiv_algebraMap]
         exact hτc _ hci x
       unfold IsLift
-      intro x
-      exact RingHom.congr_fun hext x
+      exact fun x => RingHom.congr_fun hext x
     let Cg := conjGal hlift
     have hCg : ∀ s, resQ K (Cg s) = c * resQ K s * c⁻¹ := fun s => by
       ext x
@@ -452,8 +450,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
           apply (Chr.clsFacts ℚ Ω M).2.2.1
           intro ζ hζ
           have h5 := Chr.cls_spec M x ζ hζ
-          rw [h3'] at h5
-          exact h5
+          rwa [h3'] at h5
         rw [hFx, h1', h2']
         unfold Chr.dirG
         rw [MonoidHom.comp_apply, h4, map_one, inv_one, mul_one, mul_one]
@@ -517,14 +514,11 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
       rw [MonoidHom.comp_apply, MulChar.coe_toUnitHom, hcls, map_natCast]
     intro s s' hs'
     have hs'' : s' = Cg s := by
-      apply AlgEquiv.ext
-      intro x
-      exact congrArg (fun g : G ℚ Ω => g x) (hs'.trans (hCg s).symm)
+      exact AlgEquiv.ext (fun x => congrArg (fun g : G ℚ Ω => g x) (hs'.trans (hCg s).symm))
     subst hs''
     have hmem : s ∈ (κ0 * κ0.comp Cg * ((Chr.dirG ℚ Ω χ).comp (resQ K))⁻¹).ker :=
       closure_minimal hsub hclosed ((Tw.frobDense K Ω 𝔪 h𝔪).closure_eq ▸ Set.mem_univ s)
-    rw [MonoidHom.mem_ker, hFx, mul_inv_eq_one] at hmem
-    exact hmem
+    rwa [MonoidHom.mem_ker, hFx, mul_inv_eq_one] at hmem
   obtain ⟨j, m', hm', hκm, hj⟩ := primeTo κ0 hκopen (Fact.out : l.Prime) hm
   have kerle : κ0.ker ≤ (κ0 ^ j).ker := by
     intro x hx
@@ -536,8 +530,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
     have hpow : ∀ x : G ℚ Ω, Chr.dirG ℚ Ω χ x ^ j = Chr.dirG ℚ Ω χ x := by
       intro x
       have hxm : Chr.dirG ℚ Ω χ x ^ m = 1 := by
-        have h1 := congrArg (fun φ : G ℚ Ω →* (PadicAlgCl l)ˣ => φ x) hηm
-        simpa using h1
+        simpa using congrArg (fun φ : G ℚ Ω →* (PadicAlgCl l)ˣ => φ x) hηm
       rw [pow_eq_pow_mod j hxm, show j % m = 1 % m from hj, ← pow_eq_pow_mod 1 hxm, pow_one]
     simp only [MonoidHom.pow_apply]
     rw [← mul_pow, h0, hpow]

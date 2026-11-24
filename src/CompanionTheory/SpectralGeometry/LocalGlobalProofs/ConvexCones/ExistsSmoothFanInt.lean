@@ -101,7 +101,7 @@ theorem exists_isPosDef_of_basis {X : Type} [AddCommGroup X] {n : ℕ} (b : Modu
     · simp [Pi.single_apply, h]
   refine ⟨B₀, fun y z => ?_, (isPosDef_iff_basis b B₀).2 fun c hc => ?_⟩
   · simp only [B₀, LinearMap.sum_apply, toReal_apply, GlobalTheory.RedTh.sqForm_apply, mul_comm]
-  · simp only [hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  · simp only [hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     obtain ⟨i, hi⟩ := Function.ne_iff.1 hc
     exact Finset.sum_pos' (fun j _ => mul_self_nonneg _) ⟨i, Finset.mem_univ _, mul_self_pos.2 hi⟩
 
@@ -440,14 +440,12 @@ theorem isTwG_starLab {O : Type} [CommRing O] (w0 : O) {lab w : InvFun O}
   have hiff : IsCentreRay w (Fin n → O) (fun a b => B (fun i => σ (a i)) fun i => σ (b i)) ↔
       IsCentreRay w (Fin n → O) B := by
     refine ⟨fun h => ?_, fwd σ hσ n B⟩
-    have h2 := fwd σ.symm hσ' n _ h
-    simp only [RingEquiv.apply_symm_apply] at h2
-    exact h2
+    simpa only [RingEquiv.apply_symm_apply] using fwd σ.symm hσ' n _ h
   rw [← GlobalTheory.LocM.InvFun.eval_pi, ← GlobalTheory.LocM.InvFun.eval_pi, starLab_eval, starLab_eval,
     GlobalTheory.LocM.InvFun.eval_pi, GlobalTheory.LocM.InvFun.eval_pi, hl σ hσ n B]
   by_cases hc : IsCentreRay w (Fin n → O) B
-  · rw [if_pos (hiff.mpr hc), if_pos hc]
-  · rw [if_neg (mt hiff.mp hc), if_neg hc]
+  · rw [ite_eq_left (hiff.mpr hc), ite_eq_left hc]
+  · rw [ite_eq_right (mt hiff.mp hc), ite_eq_right hc]
 
 theorem exists_isTwG_simpLab_star : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZero O] [Module.Finite ℤ O] (bar : O → O) (w0 : O), CMOrd O bar → ∀ (q : ℕ) (φ lab w ψ' : InvFun O),
     (∀ (X : Type) [AddCommGroup X] [Module O X] [Module.Finite O X] [Module.Projective O X], Dominates bar X) →
@@ -526,8 +524,7 @@ theorem exists_isTwG_simpLab_star : ∀ (O : Type) [CommRing O] [IsDedekindDomai
     · refine inRCone_trans (fun k => ?_) (hin j)
       refine Fin.cases ?_ (fun k => ?_) k
       · simpa using inRCone_self (Fin.cons β₀ fun j => δ (s' j) : Fin (m₂ + 1) → LinearMap.BilinForm ℤ X) 0
-      · simp only [Fin.cons_succ]
-        exact inRCone_trans hself (inRCone_face hfs (hγδ (s k)) (hg2 k))
+      · simpa only [Fin.cons_succ] using inRCone_trans hself (inRCone_face hfs (hγδ (s k)) (hg2 k))
 
 end GlobalTheory.CompanionTheory.Ar.Fan.TwistedStarLabelling
 end -- clump:auto

@@ -102,8 +102,7 @@ private theorem cg_swap {ι : Type} [Fintype ι] {d n : ℕ} (b : Fin d → Qbar
     (h : ∀ k, Cg n (o k) (∑ i, b i * (a k i : Qbar l))) (hy : ∀ k, ‖y k‖ ≤ 1) :
     Cg n (∑ k, o k * y k) (∑ i, b i * ∑ k, (a k i : Qbar l) * y k) := by
   have e : ∑ i, b i * ∑ k, (a k i : Qbar l) * y k = ∑ k, (∑ i, b i * (a k i : Qbar l)) * y k := by
-    simp only [Finset.mul_sum, Finset.sum_mul, mul_assoc]
-    exact Finset.sum_comm
+    simpa only [Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
   rw [e]
   exact cg_sum n _ _ fun k => cg_mul (h k) (hy k)
 
@@ -141,8 +140,7 @@ private theorem ex_conj {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
   refine ⟨s, hs, ?_⟩
   have h1 := cyclotomicCharacter.spec (L := Ω) l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) z hz
   have h2 : (cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s)) = hu.unit := hs'
-  rw [h2, IsUnit.unit_spec, map_natCast, ZMod.natCast_zmod_val] at h1
-  exact h1
+  rwa [h2, IsUnit.unit_spec, map_natCast, ZMod.natCast_zmod_val] at h1
 
 end UpperTheory.Kd.C7.ToBasisLogarithm
 

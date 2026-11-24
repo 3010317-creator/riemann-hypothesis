@@ -84,8 +84,7 @@ lemma sum_complexEmbeddings_eq_sum_infinitePlace {E : Type} [Field E] [NumberFie
   rw [← hfw]
   refine Finset.sum_congr rfl fun w _ => ?_
   have hne : ComplexEmbedding.conjugate w.embedding ≠ w.embedding := by
-    intro h
-    exact (InfinitePlace.isComplex_iff.mp (hc w)) (ComplexEmbedding.isReal_iff.mpr h)
+    exact fun h => (InfinitePlace.isComplex_iff.mp (hc w)) (ComplexEmbedding.isReal_iff.mpr h)
   rw [← Finset.sum_pair (f := F) hne.symm]
   congr 1
   ext φ
@@ -105,8 +104,7 @@ lemma sum_complexEmbeddings_eq_sum_infinitePlace {E : Type} [Field E] [NumberFie
 lemma trace_eq_sum_infinitePlace {E : Type} [Field E] [NumberField E]
     (hc : ∀ w : InfinitePlace E, w.IsComplex) (a : E) :
     ((Algebra.trace ℚ E a : ℚ) : ℝ) = ∑ w : InfinitePlace E, 2 * (w.embedding a).re := by
-  have h : algebraMap ℚ ℂ (Algebra.trace ℚ E a) = ∑ σ : E →ₐ[ℚ] ℂ, σ a := by
-    exact trace_eq_sum_embeddings ℂ
+  have h : algebraMap ℚ ℂ (Algebra.trace ℚ E a) = ∑ σ : E →ₐ[ℚ] ℂ, σ a := trace_eq_sum_embeddings ℂ
 
   rw [eq_ratCast] at h
   have h1 : ((Algebra.trace ℚ E a : ℚ) : ℂ) = ∑ φ : E →+* ℂ, φ a := by

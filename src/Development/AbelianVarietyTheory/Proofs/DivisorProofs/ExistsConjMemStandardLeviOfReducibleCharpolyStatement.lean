@@ -135,12 +135,12 @@ theorem GlobalTheory.Cusp.ConjLevi.conj_mem_levi_stdVec : ∀ {D : D7} {V : HSp 
     · rintro (⟨i, hi, rfl⟩ | ⟨i, hi, rfl⟩)
       · by_cases h : i ≤ j
         · obtain ⟨k, rfl⟩ := (hmem i).1 h; exact ⟨k, rfl⟩
-        · rw [if_neg h] at hi; exact absurd hi (by decide)
+        · rw [ite_eq_right h] at hi; exact absurd hi (by decide)
       · by_cases h : i ≤ j
-        · rw [if_pos h] at hi; exact absurd hi (by decide)
-        · rw [if_neg h] at hi; exact absurd hi (by decide)
+        · rw [ite_eq_left h] at hi; exact absurd hi (by decide)
+        · rw [ite_eq_right h] at hi; exact absurd hi (by decide)
     · rintro ⟨k, rfl⟩
-      exact Or.inl ⟨_, by rw [if_pos ((hmem _).2 ⟨k, rfl⟩)], rfl⟩
+      exact Or.inl ⟨_, by rw [ite_eq_left ((hmem _).2 ⟨k, rfl⟩)], rfl⟩
   have hF : Φ.sub (-stdVec j) = Submodule.span D.host.E (Set.range fun i : Fin a => Φ.f (Fin.castLE ha i)) := by
     rw [WittFrame.sub]
     congr 1
@@ -149,14 +149,14 @@ theorem GlobalTheory.Cusp.ConjLevi.conj_mem_levi_stdVec : ∀ {D : D7} {V : HSp 
     constructor
     · rintro (⟨i, hi, rfl⟩ | ⟨i, hi, rfl⟩)
       · by_cases h : i ≤ j
-        · rw [if_pos h] at hi; exact absurd hi (by decide)
-        · rw [if_neg h] at hi; exact absurd hi (by decide)
+        · rw [ite_eq_left h] at hi; exact absurd hi (by decide)
+        · rw [ite_eq_right h] at hi; exact absurd hi (by decide)
       · by_cases h : i ≤ j
         · obtain ⟨k, rfl⟩ := (hmem i).1 h; exact ⟨k, rfl⟩
-        · rw [if_neg h] at hi; exact absurd hi (by decide)
+        · rw [ite_eq_right h] at hi; exact absurd hi (by decide)
     · rintro ⟨k, rfl⟩
       refine Or.inr ⟨_, ?_, rfl⟩
-      rw [if_pos ((hmem _).2 ⟨k, rfl⟩)]
+      rw [ite_eq_left ((hmem _).2 ⟨k, rfl⟩)]
   haveI : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
   unfold WittFrame.levi
   simp only [Finset.mem_singleton, iInf_iInf_eq_left]
@@ -310,7 +310,7 @@ theorem exists_dual_bases : ∀ {D : D7} {V : HSp D} (X X' : Submodule D.host.E 
 
       rw [map_add (f := _), map_sum, map_sum, map_zero] at this
       simp only [map_smul, smul_eq_mul, hTX (hxX k) (hxX _), mul_zero, Finset.sum_const_zero,
-        zero_add, hxx', mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true] at this
+        zero_add, hxx', mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at this
       exact this
     have hc' : ∑ i, c (Sum.inl i) • x i = 0 := by
       simpa [hd] using hc
@@ -328,12 +328,8 @@ theorem exists_dual_bases : ∀ {D : D7} {V : HSp D} (X X' : Submodule D.host.E 
   · apply Submodule.eq_of_le_of_finrank_eq
     · rw [Submodule.span_le]; rintro _ ⟨j, rfl⟩; exact hx'X j
     · rw [finrank_span_eq_card hx'li]; simp [a]; omega
-  · intro i j
-    show V.hT (x j) (x i) = 0
-    exact hTX (hxX j) (hxX i)
-  · intro i j
-    show V.hT (x' j) (x' i) = 0
-    exact hTX' (hx'X j) (hx'X i)
+  · exact fun i j => hTX (hxX j) (hxX i)
+  · exact fun i j => hTX' (hx'X j) (hx'X i)
   · intro i j
     show V.hT (x' j) (x i) = _
     rw [← hT_herm, hxx']
@@ -426,8 +422,7 @@ theorem exists_root (K : Type) [Field K] [Algebra F K] (h2 : Module.finrank F E 
     (ha : a ∉ Set.range (algebraMap F E)) (t s : F)
     (hts : a * a = algebraMap F E t * a - algebraMap F E s) (hK : ¬ IsField (K ⊗[F] E)) :
     ∃ β : K, β * β - algebraMap F K t * β + algebraMap F K s = 0 := by
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   apply hK
   haveI : Nontrivial (K ⊗[F] E) :=
     (Algebra.TensorProduct.includeLeft_injective (R := F) (S := F) (A := K) (B := E)
@@ -685,8 +680,7 @@ theorem exists_split_factor : ∀ {F E : Type} [Field F] [Field E] [Algebra F E]
   intro F E _ _ _ n σ J γ hn hreg hAlg hRank hirr hnf
   obtain ⟨k, K, hK, hKA, ⟨e⟩⟩ := hRank.1
   refine ⟨k, K, hK, hKA, ⟨e⟩, ?_⟩
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   have h2 := hRank.2 k K ⟨e⟩
   have hk1 : 1 ≤ k := h2.2.1 ⟨⟨0, hn⟩⟩
   rcases Nat.lt_or_ge k 2 with hk | hk
@@ -762,18 +756,18 @@ theorem exists_GF_carry_hyperbolic : ∀ {D : D7} {V : HSp D} (Φ : WittFrame V)
       (Sum.elim (fun i => V.hT (f' i)) (fun i => V.hT (e' i))) ?_ ?_
     · rintro (i | i) (j | j) hij
       · have : Fin.castLE ha j ≠ Fin.castLE ha i := fun h => hij (congrArg Sum.inl ((hcast j i).1 h).symm)
-        exact (Φ.ef _ _).trans (if_neg this)
+        exact (Φ.ef _ _).trans (ite_eq_right this)
       · exact Φ.ff _ _
       · exact Φ.ee _ _
       · have : Fin.castLE ha i ≠ Fin.castLE ha j := fun h => hij (congrArg Sum.inr ((hcast i j).1 h))
         show V.hD (f' j) (e' i) = 0
         rw [sw]; show star (V.hD (Φ.e (Fin.castLE ha i)) (Φ.f (Fin.castLE ha j))) = 0
-        rw [Φ.ef, if_neg this, star_zero]
+        rw [Φ.ef, ite_eq_right this, star_zero]
     · rintro (i | i)
-      · exact (Φ.ef _ _).trans (if_pos rfl)
+      · exact (Φ.ef _ _).trans (ite_eq_left rfl)
       · show V.hD (f' i) (e' i) = 1
         rw [sw]; show star (V.hD (Φ.e (Fin.castLE ha i)) (Φ.f (Fin.castLE ha i))) = 1
-        rw [Φ.ef, if_pos rfl, star_one]
+        rw [Φ.ef, ite_eq_left rfl, star_one]
   have hg : ∀ p q, V.hT (Sum.elim x x' p) (Sum.elim x x' q) = V.hT (Sum.elim e' f' p) (Sum.elim e' f' q) := by
     rintro (i | i) (j | j)
     · show V.hD (x j) (x i) = V.hD (e' j) (e' i)
@@ -943,8 +937,7 @@ theorem idem_isotropic_pair : ∀ {D : D7} {V : HSp D} (γ : GF V) (ε : Matrix 
   have herm : cT σ J = J := _root_.GlobalTheory.AutFunCounterexample.gram_herm V
   have hR' : cT σ ε' * J = J * ε := by
     have h := congrArg (cT σ) hR
-    rw [cT_mul, cT_mul, herm, cTcT] at h
-    exact h
+    rwa [cT_mul, cT_mul, herm, cTcT] at h
   have h0 : ε' * ε = 0 := cancel _ _ (by rw [← Matrix.mul_assoc, hR, hiso, Matrix.mul_zero])
   set g := (γ.1 : Matrix (Fin V.rank) (Fin V.rank) D.host.E) with hg
   set gi := ((γ.1⁻¹ : GL (Fin V.rank) D.host.E) : Matrix (Fin V.rank) (Fin V.rank) D.host.E) with hgi

@@ -238,8 +238,7 @@ theorem arc_bdExt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   refine ⟨χ', g, hχ'2, ?_, fun τ k => ?_, ?_⟩
   · rw [← hzF]
     apply pullback.hom_ext
-    · rw [Category.assoc, Category.assoc, hχ'1]
-      exact hz
+    · rwa [Category.assoc, Category.assoc, hχ'1]
     · rw [Category.assoc, Category.assoc, hχ'2, Y.jQ_over, hzF, Descent.ptF_snd, OpenReg.spMap_comp, hFr]
   · obtain ⟨v1, u', hL, h1, h2, h3⟩ := hu τ k
     obtain rfl : v1 = v τ k := (ConstLie.main hG E H Dw l Xo c O β Y ℂ (σ.comp β) a χ W (e τ k)).1.unique hL (hvL τ k)
@@ -248,8 +247,7 @@ theorem arc_bdExt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     · rw [Category.assoc, h0, h1]
     · rw [Category.assoc, hm, ← Category.assoc, h2, Category.assoc]
   · rw [mem_genBd_iff]
-    rw [← hχ'1] at hab
-    exact hab
+    rwa [← hχ'1] at hab
 
 end GlobalTheory.CuspFrom
 end -- clump:auto
@@ -589,7 +587,7 @@ theorem exists_arc_secZ' [Algebra c.F ℂ⸨X⸩]
   have := hT' w hw.2.1 yw hyw F hF.1
   rw [e1] at this
   convert this using 1
-  exact dif_pos hxw
+  exact dite_eq_left hxw
 
 end SecZ
 
@@ -642,11 +640,10 @@ theorem tendsto_dirichlet {ι : Type*} (A : ι → ℂ) (a : ι → ℝ) (F : �
       by_cases hz : a i = 0
       · simp [hz]
       have hp : 0 < a i := lt_of_le_of_ne (ha i hi) (Ne.symm hz)
-      rw [if_neg hz]
+      rw [ite_eq_right hz]
       have h1 : Tendsto (fun t : ℝ => Real.exp (-(a i * t))) atTop (𝓝 0) :=
         Real.tendsto_exp_neg_atTop_nhds_zero.comp (tendsto_id.const_mul_atTop hp)
-      have h2 := ((Complex.continuous_ofReal.tendsto 0).comp h1).const_mul (A i)
-      simpa using h2
+      simpa using ((Complex.continuous_ofReal.tendsto 0).comp h1).const_mul (A i)
     · filter_upwards [eventually_ge_atTop (T + 1)] with t ht i
       by_cases hi : A i = 0
       · simp [hi]
@@ -769,13 +766,11 @@ theorem isSec (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : ℕ) (o : ℝ)
         · simp [wtOf, wtZ]
       rw [hG, AllWt.modelWt_wtZ]
       have hf' : f ∈ sec Y.d.Xo₂ Y.d.c₂ (fun _ => 0) 0 := by
-        rw [← AllWt.secZ_nat, ← AllWt.exZ_wtZ, ← hG]
-        exact hf
+        rwa [← AllWt.secZ_nat, ← AllWt.exZ_wtZ, ← hG]
       exact hU.2.2.2.2.1 _ _ ⟨fun τ => fun a b _ => le_refl _, ⟨0, rfl⟩⟩ f hf' k
   · have hex : ∃ (τ : D.host.E →+* ℂ) (m : ℕ) (hm : m + 1 < (T.Q.Dw j).mult τ),
         (wtOf (T.Q.Dw j) la 0).1 (τ, m) < (wtOf (T.Q.Dw j) la 0).1 (τ, m + 1) := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       apply hdec
       intro τ i j' hij hj'
       revert hj'

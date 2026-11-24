@@ -142,9 +142,7 @@ theorem eq_one_of_pow_eq_one_of_geometric : ∀ (S : Scheme.{0}) (A : Over S) [G
     have hq : (Over.homMk q rfl : Over.mk (q ≫ T.hom) ⟶ T) ≫ x = (Over.homMk q rfl : Over.mk (q ≫ T.hom) ⟶ T) ≫ 1 := by
       rw [hgeo κ q, MonObj.comp_one]
     have hq' : q ≫ x.left = q ≫ (1 : T ⟶ A).left := by
-      have h0 := congrArg (fun h => h.left) hq
-      simp only [Over.comp_left, Over.homMk_left] at h0
-      exact h0
+      simpa only [Over.comp_left, Over.homMk_left] using congrArg (fun h => h.left) hq
     have e : q ≫ p = (q ≫ x.left) ≫ pullback.diagonal f := by
       refine pullback.hom_ext ?_ ?_
       · simp only [p, Category.assoc, pullback.lift_fst, pullback.diagonal_fst, Category.comp_id]
@@ -342,8 +340,7 @@ theorem pow_eq_one_of_lift {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Co
       Category.assoc]
   rw [e2, ← hc', hc, map_nsmul] at h1
   have h3 : GlobalTheory.AbDual.evc hP (snd o.A T' ≫ y ^ m) (fst o.A T') = 0 := by
-    rw [comp_pow, Hecke.evc_pow_left o.ab hP o.rig₁ o.rig₂]
-    exact h1
+    rwa [comp_pow, Hecke.evc_pow_left o.ab hP o.rig₁ o.rig₂]
   have h4 := hker T' (y ^ m) ((GlobalTheory.AbDual.triv_ev_iff hP _ _).2 h3)
   rwa [← pow_mul] at h4
 
@@ -533,8 +530,7 @@ theorem exists_pairing : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMon
   have he : ∀ g g' : Over.mk x ⟶ A, ∀ hg : g ^ c = 1, ∀ hg' : g' ^ c = 1,
       Out.WeilIs (G2 A) (Hecke.lbPow P c) 1 (lift g 1 : Over.mk x ⟶ G2 A) (lift 1 g') (unitOn (e g g')) := by
     intro g g' hg hg'
-    simp only [e, dif_pos (And.intro hg hg')]
-    exact (ex g g' hg hg').choose_spec
+    simpa only [e, dite_eq_left (And.intro hg hg')] using (ex g g' hg hg').choose_spec
   have hmulc : ∀ g₁ g₂ : Over.mk x ⟶ A, g₁ ^ c = 1 → g₂ ^ c = 1 → (g₁ * g₂) ^ c = 1 := by
     intro g₁ g₂ h₁ h₂
     rw [mul_pow, h₁, h₂, _root_.one_mul]
@@ -756,8 +752,7 @@ theorem sections_triv {s : S ⟶ Sp R} (o : Obj b N s) (c : ℕ) (h : 𝟙_ (Ove
   have hsw : GlobalTheory.CechPic.cls o.P hP = GlobalTheory.CechPic.cls (GlobalTheory.AbDual.swap o.P) (pull_isLB hP _) :=
     (GlobalTheory.CechPic.cls_eq_iff _ _).2 o.symm
   refine ⟨(GlobalTheory.AbDual.triv_ev_iff hQ _ _).2 hQth, (GlobalTheory.AbDual.triv_ev_iff hQ _ _).2 ?_⟩
-  rw [evcQ, evcCls hP, hsw, ← evcCls (pull_isLB hP _), GlobalTheory.AbDual.evc_swap hP, ← evcQ]
-  exact hQth
+  rwa [evcQ, evcCls hP, hsw, ← evcCls (pull_isLB hP _), GlobalTheory.AbDual.evc_swap hP, ← evcQ]
 
 theorem exists_quot {s : S ⟶ Sp R} (o : Obj b N s) (c : ℕ) (hc : ∃ e : ℕ, c = p ^ e) (hp : IsUnit ((p : ℕ) : R))
     (H : Subgroup (𝟙_ (Over S) ⟶ o.A)) (hfin : Finite H)

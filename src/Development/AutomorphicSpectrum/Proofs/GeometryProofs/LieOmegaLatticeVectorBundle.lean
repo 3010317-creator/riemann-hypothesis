@@ -83,11 +83,7 @@ theorem exists_tr {A B : Type} [CommRing A] [CommRing B] (a : Sp A ⟶ X) (b : S
     (h : spMap c ≫ a = b) {E E' : Type} [AddCommGroup E] [AddCommGroup E'] [Module A E] [Module B E']
     (M : LieModel G a E) (M' : LieModel G b E') :
     ∃ j : E →ₛₗ[c] E', ∀ e, (M'.pt (j e)).left = spMap (dualMap c) ≫ (M.pt e).left := by
-  subst h
-  obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts X G A B c a E E' M M'
-  refine ⟨j, fun e => ?_⟩
-  have := hj e
-  simpa [LieModel.Lifts] using this
+  exact GlobalTheory.CompanionTheory.Ar.LieFin.exists_tr a b c h M M'
 
 alias spMap_dual_comp := _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_dual_comp
 
@@ -218,8 +214,7 @@ theorem exists_chart (G : Over X) [GrpObj G] [Smooth G.hom] [IsCommMonObj G] (y 
   have hmem : P ∈ Set.range (spMap (algebraMap R₀ R)) := by
     have := PrimeSpectrum.localization_away_comap_range R f
     have h2 : P ∈ PrimeSpectrum.basicOpen f := hf
-    rw [← SetLike.mem_coe, ← this] at h2
-    exact h2
+    rwa [← SetLike.mem_coe, ← this] at h2
   obtain ⟨t, ht⟩ := hmem
   haveI : Nontrivial R := PrimeSpectrum.nontrivial t
   refine ⟨R, inferInstance, x, hx, F, inferInstance, inferInstance, MF, _, Module.finBasis R F, ?_⟩
@@ -247,8 +242,7 @@ theorem lieLat_isVB_of_smooth : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ 
     subst hn
     refine ⟨x.opensRange, hp, c, hsp, fun q _ hq => ?_⟩
     have hq' : (X.fromSpecStalk q.1) (IsLocalRing.closedPoint (X.presheaf.stalk q.1)) ∈ x.opensRange := by
-      rw [Scheme.fromSpecStalk_closedPoint]
-      exact hq
+      rwa [Scheme.fromSpecStalk_closedPoint]
     obtain ⟨ψ, hψ⟩ := exists_lift (A := X.presheaf.stalk q.1) x (X.fromSpecStalk q.1) hq'
     refine hfr q ψ hψ ?_
     have h1 : spMap ((genMap ξ q).comp ψ) ≫ x = spMap φ ≫ x := by
@@ -260,8 +254,7 @@ theorem lieLat_isVB_of_smooth : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ 
         _ = spMap (genMap ξ q) ≫ X.fromSpecStalk q.1 := by rw [hψ]
         _ = ξ := spec_genMap ξ q
         _ = spMap φ ≫ x := hφ.symm
-    have h2 := Spec.map_injective ((cancel_mono x).1 h1)
-    exact congrArg (fun g => g.hom) h2
+    exact congrArg (fun g => g.hom) (Spec.map_injective ((cancel_mono x).1 h1))
   exact ⟨hvb, (Lat.isVBOn_dual_and_bidual X Ω ξ Li M.lat Set.univ _ hvb).1⟩
 
 end GlobalTheory.CompanionTheory.Ar

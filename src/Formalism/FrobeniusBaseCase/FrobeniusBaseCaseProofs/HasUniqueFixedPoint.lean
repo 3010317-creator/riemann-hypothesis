@@ -87,11 +87,6 @@ theorem OrdGE.mul {a b : ℕ} {f g : MvPowerSeries Z k} (hf : OrdGE a f) (hg : O
   · rw [hf _ h1, zero_mul]
   · rw [hg _ (by omega), mul_zero]
 
-theorem OrdGE.C_mul {n : ℕ} {f : MvPowerSeries Z k} (x : k) (hf : OrdGE n f) :
-    OrdGE n (MvPowerSeries.C x * f) := by
-  intro A hA
-  rw [coeff_C_mul, hf A hA, mul_zero]
-
 theorem OrdGE.pow {f : MvPowerSeries Z k} (hf : OrdGE 1 f) (n : ℕ) : OrdGE n (f ^ n) := by
   induction n with
   | zero => intro A hA; exact absurd hA (Nat.not_lt_zero _)

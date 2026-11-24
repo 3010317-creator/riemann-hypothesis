@@ -358,7 +358,7 @@ theorem partBase : PartBase := by
     have h1 : ContMDiffAt 𝓘(ℝ, V) 𝓘(ℝ) ∞ (fun y : Y' => g (y : V)) ⟨x, hx⟩ := by
       have e : (fun y : Y' => g (y : V)) = f j := by
         funext y
-        exact dif_pos y.2
+        exact dite_eq_left y.2
       rw [e]
       exact (f j).contMDiff.contMDiffAt
     have h2 : ContMDiffAt 𝓘(ℝ, V) 𝓘(ℝ) ∞ g x :=
@@ -372,15 +372,15 @@ theorem partBase : PartBase := by
     by_cases hxY : x ∈ Y
     · have h : f j ⟨x, hxY⟩ ≠ 0 := by simpa [hxY] using hne
       exact ⟨⟨x, hxY⟩, h, hNt hxN⟩
-    · exact (hne (dif_neg hxY)).elim
+    · exact (hne (dite_eq_right hxY)).elim
   · intro p hp
     refine Eq.trans ?_ (f.sum_eq_one (x := ⟨p, hp⟩) (Set.mem_univ _))
-    exact finsum_congr fun j => dif_pos hp
+    exact finsum_congr fun j => dite_eq_left hp
   · intro j p hne
     by_cases hpY : p ∈ Y
     · have h : f j ⟨p, hpY⟩ ≠ 0 := by simpa [hpY] using hne
       exact hf j (subset_tsupport _ h)
-    · exact (hne (dif_neg hpY)).elim
+    · exact (hne (dite_eq_right hpY)).elim
 
 end UpperTheory.V.Cj.A
 end -- clump:auto
@@ -439,8 +439,7 @@ theorem UpperTheory.V.Cj.A.partProd :
         u ((G.σ x.1⁻¹) s) ((G.ρ x.1⁻¹) p) * ψ ((G.σ x.1⁻¹) s) x.2 ((G.ρ x.1⁻¹) p)).Finite := by
       obtain ⟨N, hN, hNf⟩ := hlf s p hp
       refine (hNf.preimage (idxEquiv Γ J).injective.injOn).subset ?_
-      intro x hx
-      exact ⟨p, mem_of_mem_nhds hN, hx⟩
+      exact fun x hx => ⟨p, mem_of_mem_nhds hN, hx⟩
     rw [← finsum_comp_equiv (idxEquiv Γ J)]
     show ∑ᶠ x : Γ × J, u ((G.σ x.1⁻¹) s) ((G.ρ x.1⁻¹) p) *
       ψ ((G.σ x.1⁻¹) s) x.2 ((G.ρ x.1⁻¹) p) = 1
@@ -494,16 +493,12 @@ theorem UpperTheory.V.Cj.A.coverEx :
       · simpa [hj] using hBm s p (((hAO s).2.2.2 hp).resolve_right hj))
   choose ψ h1 h2 h3 h4 using hψ
   have hsub : ∀ (i : Idx Γ V) s, G.ρ i.g⁻¹ ⁻¹' B (G.σ i.g⁻¹ s) i.j ⊆ A s := by
-    intro i s p hp
-    exact (hA i.g⁻¹ s p).1 (hBA _ _ hp)
+    exact fun i s p hp => (hA i.g⁻¹ s p).1 (hBA _ _ hp)
   refine ⟨fun i s => G.ρ i.g⁻¹ ⁻¹' B (G.σ i.g⁻¹ s) i.j, _, ⟨?_, ?_, ?_, ?_⟩,
     partProd Γ V S V d G u hu ψ h1 h2 h3, hsub, ?_⟩
-  · intro i s
-    exact (hBo _ _).preimage (G.ρ _).continuous
-  · intro i s
-    exact (hBc _ _).linear_preimage (G.ρ i.g⁻¹).toLinearMap
-  · intro i s
-    exact (hsub i s).trans (hAO s).2.1
+  · exact fun i s => (hBo _ _).preimage (G.ρ _).continuous
+  · exact fun i s => (hBc _ _).linear_preimage (G.ρ i.g⁻¹).toLinearMap
+  · exact fun i s => (hsub i s).trans (hAO s).2.1
   · intro γ i s p
     have e1 : G.ρ (γ * i.g)⁻¹ (G.ρ γ p) = G.ρ i.g⁻¹ p := by
       rw [mul_inv_rev, map_mul, ContinuousLinearMap.mul_apply, G.ρ_inv_apply]
@@ -514,10 +509,9 @@ theorem UpperTheory.V.Cj.A.coverEx :
     have h5 := h4 _ _ _ (right_ne_zero_of_mul hne)
     have h6 : G.ρ i.g⁻¹ p ∉ O (G.σ i.g⁻¹ s) := fun h => hp ((hO i.g⁻¹ s p).1 h)
     by_cases hj : i.j ∈ O (G.σ i.g⁻¹ s)
-    · rw [if_pos hj] at h5
+    · rw [ite_eq_left hj] at h5
       exact absurd h5 h6
-    · rw [if_neg hj] at h5
-      exact h5
+    · rwa [ite_eq_right hj] at h5
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.PartitionSolutions.CoverEx =====
@@ -608,9 +602,7 @@ theorem UpperTheory.V.Cj.A.pullAct :
     simp only [pull, ContinuousAlternatingMap.compContinuousLinearMap_apply, G.act_apply]
     rw [hleq, map_smul]
     simp only [Function.comp_def, hder]
-  · have hnot : G.ρ γ⁻¹ p ∉ G.Y := by
-      intro h
-      exact hp (hinv p ▸ G.maps γ _ h)
+  · have hnot : G.ρ γ⁻¹ p ∉ G.Y := fun h => hp (hinv p ▸ G.maps γ _ h)
     have h1 := ((P w).2 (G.σ γ⁻¹ s)).2 _ hnot
     have h2 := ((P (G.act q γ w)).2 s).2 p hp
     rw [h2]
@@ -667,8 +659,7 @@ theorem UpperTheory.V.Cj.A.pullOp :
         funext s p
         simp only [Submodule.coe_add, Pi.add_apply]
         by_cases hp : p ∈ G.Y
-        · simp only [Set.indicator_of_mem hp]
-          exact padd q s _ _ p
+        · simpa only [Set.indicator_of_mem hp] using padd q s _ _ p
         · simp [Set.indicator, hp]
       map_smul' := by
         intro c a
@@ -676,12 +667,10 @@ theorem UpperTheory.V.Cj.A.pullOp :
         funext s p
         simp only [Submodule.coe_smul, Pi.smul_apply, RingHom.id_apply]
         by_cases hp : p ∈ G.Y
-        · simp only [Set.indicator_of_mem hp]
-          exact psmul q s c _ p
+        · simpa only [Set.indicator_of_mem hp] using psmul q s c _ p
         · simp [Set.indicator, hp] }
   refine ⟨P, ?_, ?_, ?_⟩
-  · intro q w s p hp
-    exact Set.indicator_of_mem hp _
+  · exact fun q w s p hp => Set.indicator_of_mem hp _
   · intro q w
     apply Subtype.ext
     funext s p
@@ -735,8 +724,7 @@ theorem UpperTheory.V.Cj.A.orbClosed :
   refine ⟨hLY hqL, ?_⟩
   rintro ⟨γ, hσ, hγ⟩
   apply hqB
-  simp only [Set.mem_iUnion, Set.mem_preimage]
-  exact ⟨γ, ⟨hσ, q, Or.inl hqL, Or.inr hγ⟩, hγ⟩
+  simpa only [Set.mem_iUnion, Set.mem_preimage] using ⟨γ, ⟨hσ, q, Or.inl hqL, Or.inr hγ⟩, hγ⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.PartitionSolutions.OrbClosed =====
@@ -768,8 +756,7 @@ theorem UpperTheory.V.Cj.A.satClosed :
     have h2 := (hl.1 s).2.1 p hp
     refine h ⟨γ, (l (G.σ γ s) k)⁻¹ * l s p, mul_pos (inv_pos.2 h1) h2, hs', ?_⟩
     have h3 : l (G.σ γ s) k • k = l s p • G.ρ γ p := by rw [← map_smul]; exact hk'
-    rw [mul_smul, ← h3, inv_smul_smul₀ h1.ne']
-    exact hk
+    rwa [mul_smul, ← h3, inv_smul_smul₀ h1.ne']
   · rintro ⟨γ, t, ht, hs', hk⟩
     refine (h _ hs').2 ⟨γ, rfl, _, hk, ?_⟩
     show l (G.σ γ s) (t • G.ρ γ p) • t • G.ρ γ p = _
@@ -796,16 +783,12 @@ theorem UpperTheory.V.Cj.A.satFacts :
     constructor
     · rintro ⟨δ, t, ht, hT, hK⟩
       refine ⟨δ * γ, t, ht, ?_, ?_⟩
-      · rw [map_mul, Equiv.Perm.mul_apply]
-        exact hT
-      · rw [map_mul, ContinuousLinearMap.mul_apply]
-        exact hK
+      · rwa [map_mul, Equiv.Perm.mul_apply]
+      · rwa [map_mul, ContinuousLinearMap.mul_apply]
     · rintro ⟨δ, t, ht, hT, hK⟩
       refine ⟨δ * γ⁻¹, t, ht, ?_, ?_⟩
-      · rw [← Equiv.Perm.mul_apply, ← map_mul, inv_mul_cancel_right]
-        exact hT
-      · rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel_right]
-        exact hK
+      · rwa [← Equiv.Perm.mul_apply, ← map_mul, inv_mul_cancel_right]
+      · rwa [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel_right]
   · intro hK s
     rw [isOpen_iff_mem_nhds]
     rintro p ⟨γ, t, ht, hT, hp⟩
@@ -870,8 +853,7 @@ theorem UpperTheory.V.Cj.A.suppBwd :
         GeneralLinearGroup.map (pFin E) (ratGL E a γ.1 * GlobalTheory.UnitaryBC.splitCentre E a t * g)), ⟨?_, ?_⟩,
         infGL_mul_finGL _⟩
       · rw [geo_ρ, ← map_smul, ← ht] at hρ
-        simp only [Set.mem_setOf_eq, map_mul, ContinuousLinearMap.mul_apply]
-        exact hρ
+        simpa only [Set.mem_setOf_eq, map_mul, ContinuousLinearMap.mul_apply] using hρ
       · simp only [map_mul, h1, mul_one]
         refine Set.mem_biUnion hσ ?_
         have e : (geo ho U Ξ).σ γ (GeneralLinearGroup.map (pFin E) g : GL (Fin a) (Af E) ⧸ U) =
@@ -1075,8 +1057,7 @@ theorem UpperTheory.V.Cj.A.bwdStep :
         symm
         apply finsum_eq_sum_of_support_subset
         intro i hi
-        rw [Set.Finite.coe_toFinset]
-        exact hi
+        rwa [Set.Finite.coe_toFinset]
       rw [h1, one_smul]
     · have hz : ∀ w : ↥(G.Om q), ev w = 0 := fun w => (w.2 s).2 p hp
       simp only [hz]
@@ -1244,8 +1225,7 @@ theorem UpperTheory.V.Cj.A.relPrim :
       refine Filter.EventuallyEq.extDeriv_eq ?_
       filter_upwards [G.isOpen.mem_nhds hp] with x hx using Set.indicator_of_mem hx _
     · rw [((G.dOm q _).2 s).2 p hp, (w.2 s).2 p hp]
-  · intro s p hp
-    exact (Set.indicator_of_mem ((hC s).2 hp) _).trans (hz s p hp)
+  · exact fun s p hp => (Set.indicator_of_mem ((hC s).2 hp) _).trans (hz s p hp)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.PartitionSolutions.RelPrim =====
@@ -1270,12 +1250,9 @@ theorem UpperTheory.V.Cj.A.fwdStep :
       | cons i t => exact ⟨i, t, rfl⟩
     refine relPrim Γ V S d G hY (fun s => {p | ∀ i ∈ i0 :: t, p ∈ C i s}) (fun s => ⟨?_, ?_⟩) q
       (u (i0 :: t)) (hcl _ hy) ?_
-    · intro a ha b hb t1 t2 h1 h2 h i hi
-      exact hC.convex i s (ha i hi) (hb i hi) h1 h2 h
-    · intro p hp
-      exact hC.sub i0 s (hp i0 List.mem_cons_self)
-    · intro s p hp
-      exact hvan _ hy s p (Set.mem_univ _) hp
+    · exact fun a ha b hb t1 t2 h1 h2 h i hi => hC.convex i s (ha i hi) (hb i hi) h1 h2 h
+    · exact fun p hp => hC.sub i0 s (hp i0 List.mem_cons_self)
+    · exact fun s p hp => hvan _ hy s p (Set.mem_univ _) hp
   choose η hη using hex
   have hηc : ∀ (y y' : List I) (h : y.length = k + 1) (h' : y'.length = k + 1), y = y' → η y h = η y' h' := by
     rintro y _ h h' rfl
@@ -1294,7 +1271,7 @@ theorem UpperTheory.V.Cj.A.fwdStep :
     have hne : x ≠ [] := by
       rintro rfl
       simp at hx
-    simp only [dif_pos hx, dif_pos hx']
+    simp only [dite_eq_left hx, dite_eq_left hx']
     have hn : (x.map (γ • ·)).map ((g (x.map (γ • ·)))⁻¹ • ·) = x.map ((g x)⁻¹ • ·) := by
       rw [hg γ x hne, List.map_map]
       congr 1
@@ -1303,12 +1280,12 @@ theorem UpperTheory.V.Cj.A.fwdStep :
     rw [hηc _ _ _ ((hlen x).trans hx) hn, hg γ x hne, map_mul]
     rfl
   · intro x hx
-    simp only [dif_pos hx]
+    simp only [dite_eq_left hx]
     rw [UpperTheory.V.Lit.Dr.dEquiv Γ V S d G q, (hη _ _).1, ← hu (g x) _ ((hlen x).trans hx)]
     congr 1
     simp [List.map_map, Function.comp_def, smul_smul]
   · intro x hx s p _ hp
-    simp only [dif_pos hx]
+    simp only [dite_eq_left hx]
     have hp' : G.ρ (g x)⁻¹ p ∈ {p | ∀ i ∈ x.map ((g x)⁻¹ • ·), p ∈ C i ((G.σ (g x)⁻¹) s)} := by
       intro i hi
       obtain ⟨j, hj, rfl⟩ := List.mem_map.1 hi

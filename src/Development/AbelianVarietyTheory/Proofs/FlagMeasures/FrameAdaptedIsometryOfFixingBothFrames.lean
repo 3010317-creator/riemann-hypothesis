@@ -67,8 +67,7 @@ theorem sup_span_add {P : Submodule D.host.E (VS D).V} {x d : (VS D).V} (hd : d 
     have h2 : x + d ∈ P ⊔ Submodule.span D.host.E {x + d} :=
       Submodule.mem_sup_right (Submodule.mem_span_singleton_self (x + d))
     have h3 : d ∈ P ⊔ Submodule.span D.host.E {x + d} := Submodule.mem_sup_left hd
-    have h1 := Submodule.sub_mem _ h2 h3
-    simpa using h1
+    simpa using Submodule.sub_mem _ h2 h3
 
 variable {T : D.host.E}
 
@@ -190,7 +189,7 @@ theorem adapt_mapLF {A : LFlag (D.sp.Y 0) D.R.rS T} {γ : GV D} (hγ : γ ∈ Fo
     Adapt γ A (mapLF γ A) := by
   refine ⟨hγ, fun k => ?_⟩
   have : frame (mapLF γ A) k = γ (frame A k) := by
-    simp only [mapLF, dif_pos hγ, frame]
+    simp only [mapLF, dite_eq_left hγ, frame]
     rw [fvec_mapFlag]
   rw [this, sub_self]; exact zero_mem _
 

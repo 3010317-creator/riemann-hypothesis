@@ -181,8 +181,7 @@ theorem caySkew_holds : CaySkewU := by
   have hJ : Mᴴ * J * M = J := hM
   have h2' : Aᴴ * (Mᴴ + 1) = 1 := by
     have e := congrArg Matrix.conjTranspose h1
-    simp only [conjTranspose_mul, conjTranspose_add, conjTranspose_one] at e
-    exact e
+    simpa only [conjTranspose_mul, conjTranspose_add, conjTranspose_one] using e
   have hY : (Mᴴ - 1) * J * (M + 1) + (Mᴴ + 1) * J * (M - 1) = 0 := by
     have e : (Mᴴ - 1) * J * (M + 1) + (Mᴴ + 1) * J * (M - 1) = (Mᴴ * J * M + Mᴴ * J * M) - (J + J) := by
       noncomm_ring
@@ -257,8 +256,7 @@ theorem skew_of_lieOf {n : ℕ} (ε : Fin n → Bool) (X : Matrix (Fin n) (Fin n
     intro t
     have h1 := hX t
     simp only [Set.mem_setOf_eq, Formalism.REAL.inUJ] at h1
-    rw [← Complex.coe_smul]
-    exact h1
+    rwa [← Complex.coe_smul]
   have he : HasDerivAt (fun t : ℝ => NormedSpace.exp (t • X)) X 0 := by
     have := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
     exact this.congr_deriv (by simp)
@@ -291,7 +289,6 @@ theorem lieSkew_holds : LieSkewU := by
     have e : unrealify (c • a) = c • unrealify a := (unrLin n).map_smul c a
     rw [e, conjTranspose_smul, star_trivial, Matrix.smul_mul, Matrix.mul_smul, ← smul_add, ha, smul_zero]
 
-theorem expProdU_of_cayProdU (hC : CayProdU) : ExpProdU := by
-  exact expProdU_of_cay hC lieSkew_holds
+theorem expProdU_of_cayProdU (hC : CayProdU) : ExpProdU := expProdU_of_cay hC lieSkew_holds
 
 end PI.AprimeInfW

@@ -87,8 +87,7 @@ theorem multiInv {A S : Type} [CommRing A] [CommRing S] [Algebra A S] (r : ℕ)
         try ring
       · simp [hw, hf, Finset.sum_insert hj0]
         try ring
-    rw [← hφ, AlgHom.comp_apply, h0, MvPolynomial.aeval_rename]
-    exact ih
+    rwa [← hφ, AlgHom.comp_apply, h0, MvPolynomial.aeval_rename]
 
 variable {K : Type} [Field K] {r : ℕ}
 
@@ -134,7 +133,7 @@ theorem caseC (j0 : Fin r) (c : K) (b : Bool) (v : MvPolynomial (Fin (r + 1 + 1)
       rcases hw : midOf t with _ | j
       · have e1 : th K r b (X (a, t)) = X (a, t) := by simp [th, Formalism.MainNotions.flipOneThree.Pf.subY, hw]
         have hz : (∑ j ∈ Finset.univ, if t = midI r j then e j else 0) = 0 :=
-          Finset.sum_eq_zero fun j _ => if_neg (hnone t j hw)
+          Finset.sum_eq_zero fun j _ => ite_eq_right (hnone t j hw)
         rw [e1, hz, zero_mul, add_zero]
         simp [psiB, Formalism.GradedWeylDivisibility.colAdd, hnone t j0 hw]
       · have ht : t = midI r j := hsome t j hw
@@ -145,7 +144,7 @@ theorem caseC (j0 : Fin r) (c : K) (b : Bool) (v : MvPolynomial (Fin (r + 1 + 1)
           rw [Finset.sum_eq_single j]
           · simp
           · intro j' _ hj'
-            rw [if_neg]
+            rw [ite_eq_right]
             intro h
             apply hj'
             have := congrArg midOf h
@@ -284,8 +283,7 @@ theorem lam_caseM (L : MvPolynomial (Bool × (Fin r × Fin r)) K →ₗ[K] K) (N
       l.det ^ N • lamOf K r L (blockEmb K true v * blockEmb K false t) := by
   have hc : ∀ (h : MvPolynomial (Fin (r + 1 + 1) × Fin (r + 1 + 1)) (MvPolynomial (Bool × (Fin r × Fin r)) K))
       (u : Fin (r + 1 + 1) × Fin (r + 1 + 1) →₀ ℕ), AddMonoidAlgebra.coeff (lcoef L h) u = L (AddMonoidAlgebra.coeff h u) := by
-    intro h u
-    exact coeff_sum_monomial_linear L h u
+    exact fun h u => coeff_sum_monomial_linear L h u
   rw [lam_eq, lcoef_comm, map_mul, caseM ψ (rowAct K l) hgen hnone, caseM ψ (rowAct K l) hgen hnone]
   ext u
 
@@ -306,15 +304,14 @@ theorem lam_scaleM (L : MvPolynomial (Bool × (Fin r × Fin r)) K →ₗ[K] K) (
     simp
   have key := lam_caseM L N α α' hInv (scCol K (r + 1 + 1) (midI r j) c)
     (Matrix.diagonal (fun i : Fin r => if i = j then c else 1)) (by rw [hdet]; exact hc.isUnit) ?_ ?_ v t hv ht
-  · rw [hdet] at key
-    exact key
+  · rwa [hdet] at key
   · intro b a j'
     refine Finset.sum_congr rfl fun i _ => ?_
 
     simp only [scCol_X, midI_inj, rowAct, aeval_X, Matrix.diagonal_apply, blockEmb, map_mul, map_C, map_X,
     map_sum, rename_C, rename_X]
     rw [Finset.sum_eq_single i (fun x _ hx => by simp [Ne.symm hx]) (by simp)]
-    simp only [if_true, MvPolynomial.algebraMap_eq]
+    simp only [ite_true, MvPolynomial.algebraMap_eq]
     ring
   · intro a t' ht'
     rw [scCol_X]
@@ -326,7 +323,7 @@ theorem rowAct_transv (l j : Fin r) (c : K) (i t : Fin r) :
   classical
   simp only [rowAct, aeval_X, Matrix.transvection, Matrix.add_apply, Matrix.one_apply]
   simp only [map_add (f := _), add_mul, Finset.sum_add_distrib, apply_ite C, ite_mul, map_one, map_zero, one_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   congr 1
   by_cases h : i = l
   · subst h
@@ -349,8 +346,7 @@ theorem lam_addM (L : MvPolynomial (Bool × (Fin r × Fin r)) K →ₗ[K] K) (N 
   have hdet : (Matrix.transvection l j c).det = 1 := Matrix.det_transvection_of_ne l j hlj c
   have key := lam_caseM L N α α' hInv (colAdd K (midI r l) (midI r j) c) (Matrix.transvection l j c)
     (by rw [hdet]; exact isUnit_one) ?_ ?_ v t hv ht
-  · rw [hdet, one_pow, one_smul] at key
-    exact key
+  · rwa [hdet, one_pow, one_smul] at key
   · intro b a j'
     simp only [rowAct_transv, colAdd, aeval_X, midI_inj]
     have e : ∀ i : Fin r, (if i = j then X (a, midI r i) + C c * X (a, midI r l) else X (a, midI r i) :
@@ -367,7 +363,7 @@ theorem lam_addM (L : MvPolynomial (Bool × (Fin r × Fin r)) K →ₗ[K] K) (N 
       have h1 : ∀ x, (if x = k then f x + g x else f x + 0) = f x + if x = k then g x else 0 := by
         intro x
         split_ifs <;> simp
-      simp only [h1, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [h1, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [hs j (fun x => C (X (b, x, j')) * X (a, midI r x))
         (fun x => C (X (b, x, j')) * (C ((algebraMap K (MvPolynomial (Bool × Fin r × Fin r) K)) c) * X (a, midI r l))),
       hs l (fun x => C (X (b, x, j')) * X (a, midI r x)) (fun x => C (C c) * C (X (b, j, j')) * X (a, midI r x))]

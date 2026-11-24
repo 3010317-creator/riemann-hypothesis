@@ -119,12 +119,7 @@ namespace GlobalTheory.ColumnSymplectic
 variable {n g : ℕ}
 
 theorem blk_eq (τ : Matrix (Fin g) (Fin g) ℂ) :
-    blk n τ = (1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ τ := by
-  ext p q
-  change (if p.1 = q.1 then τ p.2 q.2 else 0) =
-    (1 : Matrix (Fin n) (Fin n) ℂ) p.1 q.1 * τ p.2 q.2
-  rw [Matrix.one_apply]
-  split_ifs <;> simp
+    blk n τ = (1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ τ := GlobalTheory.Phase.Doubling.blk_eq τ
 
 theorem blk_mul (A B : Matrix (Fin g) (Fin g) ℂ) : blk n A * blk n B = blk n (A * B) := by
   rw [blk_eq, blk_eq, blk_eq, ← mul_kronecker_mul, one_mul]
@@ -234,7 +229,7 @@ theorem actM_mulVec (h : Matrix (Fin n) (Fin n) E) (z : Fin n → Fin g → ℂ)
     (actM idx h *ᵥ fun p => z p.1 p.2) = fun p => Dict.hAct X idx h z p.1 p.2 := by
   funext p
   simp only [actM, Dict.hAct, mulVec, dotProduct, blockDiagonal_apply, Fintype.sum_prod_type, ite_mul,
-    zero_mul, RingHom.mapMatrix_apply, map_apply, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    zero_mul, RingHom.mapMatrix_apply, map_apply, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem det_actM (h : Matrix (Fin n) (Fin n) E) :
     (actM idx h).det = ∏ i, rowType X (idx i) h.det := by
@@ -932,8 +927,7 @@ theorem _root_.GlobalTheory.Phase.transS_intertwines : ∀ (κ ι : Type) [Finty
       σ.toBlocks₂₂ y.1 y.2 y'.1 y'.2 s1 s2 s3 s4)
   · have hy : _root_.GlobalTheory.Phase.Inter.rowAct σ (T y) = y := T.symm_apply_apply y
     have key := transS_heisS_rowAct hσ φ ψ hT (T y)
-    rw [hy] at key
-    exact key
+    rwa [hy] at key
 
 end GlobalTheory.Phase
 end -- clump:auto

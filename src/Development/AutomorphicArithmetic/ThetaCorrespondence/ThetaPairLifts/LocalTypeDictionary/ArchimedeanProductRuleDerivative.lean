@@ -111,8 +111,7 @@ theorem schwartz_tendsto_apply_of_tendsto_pointwise :
   have hq := schwartz_withSeminorms ℂ V ℂ
   have hUE : UniformEquicontinuous ((↑) ∘ fun n => S (u n)) := by
     refine hq.banach_steinhaus (𝓕 := fun n => S (u n)) ?_
-    intro k f
-    exact ((hq.continuous_seminorm k).tendsto f).comp ((hS f).comp hu) |>.bddAbove_range
+    exact fun k f => ((hq.continuous_seminorm k).tendsto f).comp ((hS f).comp hu) |>.bddAbove_range
   have hE := hUE.equicontinuous g₀
   have h1 : Tendsto (fun n => (S (u n) g₀, S (u n) (g (u n)))) atTop (𝓤 (SchwartzMap V ℂ)) := by
     intro U hU
@@ -295,8 +294,7 @@ theorem continuous_of_intertwining_operator (hP : _root_.GlobalTheory.FunPr.Thet
       have h1 := ha (omS g f)
       have e2 : omS g⁻¹ (omS g f) = f := by
         rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]
-      simp only [LinearMap.comp_apply, ContinuousLinearMap.coe_coe, e2] at h1
-      exact h1
+      simpa only [LinearMap.comp_apply, ContinuousLinearMap.coe_coe, e2] using h1
     rw [e]
     exact (omS g).continuous.const_smul a
 end GlobalTheory.ArchCont
@@ -340,8 +338,7 @@ theorem continuous_schrodinger_model_action (hP : _root_.GlobalTheory.FunPr.Thet
       funext x
       have := congrFun (hS (φ.symm w) ⇑f) x
       simp only [Function.comp_apply, LinearEquiv.apply_symm_apply] at this
-      simp only [htoV, Function.comp_apply, hf]
-      exact this.symm
+      simpa only [htoV, Function.comp_apply, hf] using this.symm
     have e2 := hTi t _ _ _ e1
     rw [hT' t f₁, hT' t f, htoE, htoE, e2]
     obtain ⟨G, hG⟩ : ∃ G : EuclideanSpace ℝ (Fin (Module.finrank ℝ V)) → ℂ, ⇑(T t (toV f)) = G ∘ ⇑C :=
@@ -413,19 +410,7 @@ open scoped SchwartzMap RealInnerProductSpace
 
 theorem lintegral_of_integral (l : Type) [Fintype l] (f g : GlobalTheory.RealWeil.Sch l)
     (h : ∫ x, ‖f x‖ ^ 2 = ∫ x, ‖g x‖ ^ 2) : ∫⁻ x, ‖f x‖ₑ ^ 2 = ∫⁻ x, ‖g x‖ₑ ^ 2 := by
-  have key : ∀ u : GlobalTheory.RealWeil.Sch l, ∫ x, ‖u x‖ ^ 2 = (∫⁻ x, ‖u x‖ₑ ^ 2).toReal := by
-    intro u
-    rw [integral_eq_lintegral_of_nonneg_ae (f := fun x => ‖u x‖ ^ 2) (Eventually.of_forall fun x => sq_nonneg ‖u x‖)
-      ((by fun_prop : Continuous fun x => ‖u x‖ ^ 2).aestronglyMeasurable)]
-    congr 1
-    refine lintegral_congr fun x => ?_
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
-  have fin : ∀ u : GlobalTheory.RealWeil.Sch l, ∫⁻ x, ‖u x‖ₑ ^ 2 ≠ ⊤ := by
-    intro u
-    rw [GlobalTheory.MetaplecticScalarDeriv.lintegral_sq_eq]
-    exact ENNReal.pow_ne_top (Lp.eLpNorm_ne_top _)
-  rw [key, key] at h
-  exact (ENNReal.toReal_eq_toReal_iff' (fin f) (fin g)).1 h
+  exact GlobalTheory.ArchCont.lintegral_of_integral f g h
 
 
 end GlobalTheory.SchwartzSlope
@@ -522,8 +507,7 @@ theorem schwartz_slope_bound (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) (
   have hT' : ∀ t h, T' t h = toE (T t (toV h)) := fun t h => rfl
   obtain ⟨k, hk, hint⟩ := SchrTransport.haar_coords μ C
   have c1 : ∀ w, Continuous fun t => A' t w := by
-    intro w
-    exact (φ.toLinearMap.continuous_of_finiteDimensional).comp (hAc (φ.symm w))
+    exact fun w => (φ.toLinearMap.continuous_of_finiteDimensional).comp (hAc (φ.symm w))
   have c2 : ∀ s t f, T' (s + t) f = T' s (T' t f) := by
     intro s t h
     simp only [hT', hVE, hTadd]
@@ -537,8 +521,7 @@ theorem schwartz_slope_bound (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) (
       funext x
       have := congrFun (hS (φ.symm w) ⇑f) x
       simp only [Function.comp_apply, LinearEquiv.apply_symm_apply] at this
-      simp only [htoV, Function.comp_apply, hf]
-      exact this.symm
+      simpa only [htoV, Function.comp_apply, hf] using this.symm
     have e2 := hTi t _ _ _ e1
     rw [hT' t f₁, hT' t f, htoE, htoE, e2]
     obtain ⟨G, hG⟩ : ∃ G : EuclideanSpace ℝ (Fin (Module.finrank ℝ V)) → ℂ, ⇑(T t (toV f)) = G ∘ ⇑C :=
@@ -553,9 +536,7 @@ theorem schwartz_slope_bound (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) (
     rw [hint, hint] at e
     simp only [htoV, Function.comp_apply, ContinuousLinearEquiv.apply_symm_apply] at e
     exact mul_left_cancel₀ hk.ne' e
-  have c6 : ∀ f y, Continuous fun t => T' t f y := by
-    intro h y
-    exact hTc (toV h) (C.symm y)
+  have c6 : ∀ f y, Continuous fun t => T' t f y := fun h y => hTc (toV h) (C.symm y)
   have hlim := _root_.GlobalTheory.SchwartzSlope.schwartz_coordinate_slope_bound hP (Fin (Module.finrank ℝ V)) A' T' c1 c2 c3 c4 c5 c6
   intro f
   obtain ⟨g, hg⟩ := hlim (toE f)
@@ -613,7 +594,6 @@ theorem lift_splits_locally : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀
           Complex.mul_conj] using h1
       have hre : (x.2 w).re = 0 := by nlinarith [mul_self_nonneg (x.2 w).re, mul_self_nonneg (x.2 w).im]
       have him : (x.2 w).im = 0 := by nlinarith [mul_self_nonneg (x.2 w).re, mul_self_nonneg (x.2 w).im]
-      show x.2 w = 0
       exact Complex.ext hre him
 
   have hPair : GlobalTheory.ArchUniq.IsPairing (GlobalTheory.ArchUniq.trP F (Fin n × Fin d)) := by
@@ -700,8 +680,7 @@ theorem archimedean_hasDerivAt_prod : _root_.GlobalTheory.FunPr.ThetaLocalInputs
     have h2 := (ev.continuous.tendsto _).comp (hQ i f)
     rw [hevq] at h2
     simp only [zero_add, h0] at h1
-    refine tendsto_nhds_unique h1 (h2.congr fun t => ?_)
-    exact hev _ _ _
+    exact tendsto_nhds_unique h1 (h2.congr fun t => (hev _ _ _))
   have hsum : (∑ i, c i) = ev (∑ i, Q i f) := by
 
     rw [map_sum]

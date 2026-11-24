@@ -236,8 +236,7 @@ theorem isAddFundamentalDomain_idealLatticePi (I : ι → (FractionalIdeal (𝓞
       fun z hz ↦ hspan i ▸ hz
     exact key _ (v i).2
   refine ⟨⟨fun i ↦ (v i : mixedSpace K), mem_idealLatticePi.mpr hvmem⟩, ?_, ?_⟩
-  · intro i _
-    exact hv i
+  · exact fun i _ => hv i
   · rintro g hg
     apply Subtype.ext
     funext i
@@ -300,8 +299,7 @@ theorem dualLattice_euclidLatticePi (I : ι → (FractionalIdeal (𝓞 K)⁰ K)�
     obtain ⟨k, hk⟩ := h _ hmem
     refine ⟨k, ?_⟩
     rw [hμ, real_inner_comm, ← mixedPairingPi_eq_inner, mixedPairingPi_single_left] at hk
-    rw [mixedTraceForm_comm]
-    exact hk
+    rwa [mixedTraceForm_comm]
   · intro h ℓ hℓ
     rw [mem_euclidLatticePi, mem_idealLatticePi] at hℓ
     have hk : ∀ i, ∃ n : ℤ, mixedTraceForm K (y i) (((toEuclidPi K).symm ℓ) i) = n := fun i ↦
@@ -371,8 +369,7 @@ theorem idealLatticePi_poisson_summation (I : ι → (FractionalIdeal (𝓞 K)�
     refine tsum_congr fun β ↦ ?_
     have heD : (eD β : EuclidPi K ι) = toEuclidPiConj K β := rfl
     rw [heD, hF, ← mixedFourierPi_eq, real_inner_comm, ← mixedPairingPi_eq_inner, mixedPairingPi_comm]
-  rw [hlhs, hrhs, covolume_euclidLatticePi] at h
-  exact h
+  rwa [hlhs, hrhs, covolume_euclidLatticePi] at h
 
 variable (K) in
 def embPi (ξ : ι → K) : ι → mixedSpace K := fun i ↦ mixedEmbedding K (ξ i)
@@ -417,8 +414,7 @@ theorem summable_norm_iff_and_tsum_eq_cosetPi (I : ι → (FractionalIdeal (𝓞
     refine Set.indicator_of_notMem (fun hm ↦ hξ ?_) _
     have hα : embPi K (fun i ↦ ξ i - c i) ∈ idealLatticePi I := by
       rw [mem_idealLatticePi]
-      intro i
-      exact (mem_idealLattice K (I i)).mpr ⟨ξ i - c i, hm i, rfl⟩
+      exact fun i => (mem_idealLattice K (I i)).mpr ⟨ξ i - c i, hm i, rfl⟩
     refine ⟨⟨_, hα⟩, funext fun i ↦ ?_⟩
     have h2 : mixedEmbedding K (y ⟨_, hα⟩ i) = mixedEmbedding K (ξ i - c i) := hy _ i
     have h3 := mixedEmbedding_injective K h2

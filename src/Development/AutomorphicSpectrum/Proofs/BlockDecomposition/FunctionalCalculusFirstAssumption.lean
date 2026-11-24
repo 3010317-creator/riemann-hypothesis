@@ -233,8 +233,7 @@ theorem Bn_props [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n))
   | succ N ih =>
     have h1 := CE_Om hR E ih.1
     have c1 := (hCp n μ E.V hL hR _ ih.1.1 ih.2).2
-    have c2 := (hCp n μ E.V hL hR _ h1.1 c1).2
-    exact ⟨CE_add E ih.1 (CE_Om hR E h1), cpt_add ih.2 c2⟩
+    exact ⟨CE_add E ih.1 (CE_Om hR E h1), cpt_add ih.2 ((hCp n μ E.V hL hR _ h1.1 c1).2)⟩
 
 section Fn
 
@@ -258,8 +257,7 @@ theorem resolvent_function_vanishes_at_infinity : Continuous rf ∧ Tendsto rf (
       rw [Real.norm_eq_abs, sq_abs]
       linarith
     have h4 := (Complex.continuous_ofReal.tendsto 0).comp (tendsto_inv_atTop_zero.comp h2)
-    rw [show (0 : ℂ) = ((0 : ℝ) : ℂ) from Complex.ofReal_zero.symm]
-    exact h4
+    rwa [show (0 : ℂ) = ((0 : ℝ) : ℂ) from Complex.ofReal_zero.symm]
 
 end Fn
 
@@ -364,8 +362,7 @@ theorem core (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] Msob
       refine cls_congr hC hU (Rw_congr w (cls_eq_of_sob hC hU (hUS (j + 1) t) hf'' ?_))
       rw [hUc, hc'']
       exact hstep (j + 2) (j + 1) t (by omega)
-    rw [e2]
-    exact hd
+    rwa [e2]
   obtain ⟨hjoint, hder⟩ := hCJ n μ E.V U hL hR hSG hUS hd
   refine ⟨U 0, ⟨hjoint, fun t => ⟨(hUS 0 t).1, hUE 0 t⟩, ?_, ?_⟩, ?_⟩
   · intro t g hg

@@ -81,8 +81,7 @@ lemma skewOf_gt (q : (G.UT j → ℂ) × (Fin j → ℝ)) {a b : Fin j} (h : b <
   rw [conjTranspose_apply, Matrix.neg_apply] at this
   have h2 : conj (skewOf q a b) = -skewOf q b a := this
   have h3 := congrArg conj h2
-  rw [Complex.conj_conj, map_neg] at h3
-  exact h3
+  rwa [Complex.conj_conj, map_neg] at h3
 
 lemma skewOf_skc {M : Matrix (Fin j) (Fin j) ℂ} (hM : Mᴴ = -M) : skewOf (_root_.Formalism.FourierDecayAlt.P.Ux3.skewCoords M) = M := by
   have hM' : ∀ a b, conj (M b a) = -M a b := fun a b => by
@@ -175,7 +174,7 @@ lemma rn_col (x : RC k r 0) (b : Fin r) : Rn k r 0 x *ᵥ bvec (eI k r b) = bvec
   have h := (rn_rset x).2.1
   ext i
   simp only [Matrix.mulVec, dotProduct, bvec, Pi.single_apply, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [h i (eI k r b) (by show b.val < r; exact b.isLt)]
 
 end n0
@@ -189,9 +188,9 @@ lemma hpk_mulVec_wb {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (i : Fin
   simp only [Matrix.mulVec, dotProduct]
   rw [Finset.sum_eq_single i]
   · by_cases h : r ≤ i.val ∧ i.val ≤ r + k
-    · rw [if_pos h]; congr 1; unfold Hpk
+    · rw [ite_eq_left h]; congr 1; unfold Hpk
       split_ifs <;> first | rfl | (exfalso; omega)
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       have : z i = 0 := hz i (by omega)
       simp [this]
   · intro j _ hji
@@ -215,17 +214,17 @@ lemma wb_last_ne {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) :
     simp only [dotProduct, Pi.star_apply, hpk_mulVec_wb hz.1, Complex.re_sum]
     refine Finset.sum_nonneg fun i _ => ?_
     by_cases h : r ≤ i.val ∧ i.val ≤ r + k
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       by_cases hl : i.val = r + k
       · have : i = ⟨r + k, by omega⟩ := Fin.ext hl
         rw [this, h0]; simp
-      · rw [if_neg hl, one_mul]
+      · rw [ite_eq_right hl, one_mul]
         have := Complex.mul_conj' (z i)
         rw [mul_comm] at this
         simp only [RCLike.star_def]
         rw [this]
         exact_mod_cast sq_nonneg ‖z i‖
-    · rw [if_neg h]; simp
+    · rw [ite_eq_right h]; simp
   linarith
 
 def hb (z : Fin (2 * r + k + 1) → ℂ) : Fin (2 * 0 + k + 1) → ℂ := Hpk k 0 *ᵥ yb z
@@ -245,7 +244,7 @@ lemma hermitian_form_rank_zero_apply (y : Fin (2 * 0 + k + 1) → ℂ) (v : Fin 
 
 lemma hb_last_ne {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) : hb z (Fin.last (2 * 0 + k)) ≠ 0 := by
   unfold hb
-  rw [hermitian_form_rank_zero_apply, if_pos (by simp)]
+  rw [hermitian_form_rank_zero_apply, ite_eq_left (by simp)]
   have := wb_last_ne hz
   have e : yb z (Fin.last (2 * 0 + k)) = z ⟨r + k, by omega⟩ := by
     unfold yb; congr 1; ext; rw [eB_lr]; simp
@@ -331,8 +330,7 @@ theorem E_mul (z : Fin (2 * r + k + 1) → ℂ) (x1 x2 : X0 k r) : E z x1 * E z 
 
 lemma w_mulVec_inj {d : ℕ} {v : Fin d → ℂ} (h : G.wMat d *ᵥ v = 0) : v = 0 := by
   have := congrArg (G.wMat d *ᵥ ·) h
-  simp only [Matrix.mulVec_mulVec, wMat_sq, Matrix.one_mulVec, Matrix.mulVec_zero] at this
-  exact this
+  simpa only [Matrix.mulVec_mulVec, wMat_sq, Matrix.one_mulVec, Matrix.mulVec_zero] using this
 
 theorem rn_fix_z_iff {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (x : RC k r 0) :
     Rn k r 0 x *ᵥ z = z ↔ Cstr z x.1 := by
@@ -419,8 +417,7 @@ theorem cont_extC (z : Fin (2 * r + k + 1) → ℂ) : Continuous (extC (k := k) 
   · simp only [extC, Fin.lastCases_last, lastRow]
     refine (Continuous.neg ?_).div_const _
     exact continuous_finsetSum _ fun i _ => (continuous_apply_apply i a).mul continuous_const
-  · simp only [extC, Fin.lastCases_castSucc]
-    exact continuous_apply_apply i a
+  · simpa only [extC, Fin.lastCases_castSucc] using continuous_apply_apply i a
 
 theorem cont_ofExtC (z : Fin (2 * r + k + 1) → ℂ) :
     Continuous fun c : Fin (2 * 0 + k) → Fin r → ℂ => (Matrix.of (extC z c) : Matrix (Fin (2 * 0 + k + 1)) (Fin r) ℂ) :=
@@ -703,11 +700,11 @@ lemma mul_upper_sub {m : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A ∈ C2.UT
       (if i < l then A i l * G.upper x l j else 0) + (if l = i then G.upper x i j else 0) := by
     intro l
     rcases lt_trichotomy l i with h | rfl | h
-    · rw [hA.1 i l h, zero_mul, if_neg (not_lt.mpr h.le), if_neg (ne_of_lt h), add_zero]
-    · rw [hA.2, one_mul, if_neg (lt_irrefl _), if_pos rfl, zero_add]
-    · rw [if_pos h, if_neg (ne_of_gt h), add_zero]
+    · rw [hA.1 i l h, zero_mul, ite_eq_right (not_lt.mpr h.le), ite_eq_right (ne_of_lt h), add_zero]
+    · rw [hA.2, one_mul, ite_eq_right (lt_irrefl _), ite_eq_left rfl, zero_add]
+    · rw [ite_eq_left h, ite_eq_right (ne_of_gt h), add_zero]
   rw [Matrix.mul_apply, Finset.sum_congr rfl fun l _ => hterm l, Finset.sum_add_distrib, Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   have hx : G.upper x i j = x ⟨(i, j), hij⟩ := by
     simp [G.upper, G.strictUpper, hij, ne_of_lt hij]
   rw [hx]; ring
@@ -804,8 +801,7 @@ theorem disint {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {μ0 μN :
   have hconc : P {x : Mt k r | Matrix.of x ∈ Nset k r}ᶜ = 0 := by
     rw [hP, Measure.map_apply hPm hNcl.measurableSet.compl]
     refine measure_mono_null (fun p hp => ?_) hbad
-    refine ⟨Set.mem_univ _, fun h2 => hp ?_⟩
-    exact hNc.mul_mem _ (tau_N hz (upper_mem p.1)) _ h2.1
+    exact ⟨Set.mem_univ _, fun h2 => hp (hNc.mul_mem _ (tau_N hz (upper_mem p.1)) _ h2.1)⟩
 
   have hleft : ∀ a ∈ Nset k r, P.map (lmulM a) = P := by
     intro a ha

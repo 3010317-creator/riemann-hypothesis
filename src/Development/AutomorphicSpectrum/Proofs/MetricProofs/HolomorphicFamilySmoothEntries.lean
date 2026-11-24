@@ -432,8 +432,7 @@ theorem LevelTowerAlt.holomorphic_family_smooth_hermitian : ∀ (E : Type) [Fiel
       ext a b
       rw [mul_entry]
       rfl
-    rw [e1]
-    exact h
+    rwa [e1]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

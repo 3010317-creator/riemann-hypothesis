@@ -106,8 +106,7 @@ theorem volume_compl_Yo (R : RegChartData A) (j : Fin A.n) :
       exact hyY ((R.mem_Yo k _ hk).2 h)
     refine Set.mem_iUnion.mpr ⟨k, R.chart k ((A.chart j).symm y), ⟨⟨(R.chart k).map_source hk, ?_⟩, hxc⟩, ?_⟩
     · show (R.chart k).symm (R.chart k ((A.chart j).symm y)) ∈ (A.chart j).source
-      rw [(R.chart k).left_inv hk]
-      exact hxs
+      rwa [(R.chart k).left_inv hk]
     · show (A.chart j) ((R.chart k).symm (R.chart k ((A.chart j).symm y))) = y
       rw [(R.chart k).left_inv hk, (A.chart j).right_inv hyT]
   refine measure_mono_null hsub (measure_iUnion_null fun k => ?_)
@@ -135,8 +134,7 @@ theorem continuousOn_r (R : RegChartData A) : ContinuousOn R.r R.Yo := by
       ((R.chart k).source ∩ (R.chart k) ⁻¹' (coordDiv (R.S k))ᶜ) := by
     intro z hz
     have h1 := R.r_chart k (R.chart k z) ⟨(R.chart k).map_source hz.1, hz.2⟩
-    rw [(R.chart k).left_inv hz.1] at h1
-    exact h1
+    rwa [(R.chart k).left_inv hz.1] at h1
   have hcont := hg.comp (s := (R.chart k).source ∩ (R.chart k) ⁻¹' (coordDiv (R.S k))ᶜ)
     ((R.chart k).continuousOn.mono Set.inter_subset_left)
     (fun _ hz => ⟨(R.chart k).map_source hz.1, hz.2⟩)
@@ -190,8 +188,7 @@ theorem isCompact_sublevel [CompactSpace X] (R : RegChartData A) (l : ℝ) :
   · have hlt : l < R.r x := not_le.mp fun h => hx ⟨hY, h⟩
     have hcont : ContinuousAt R.r x := (continuousOn_r R).continuousAt ((isOpen_Yo R).mem_nhds hY)
     filter_upwards [Filter.Tendsto.eventually hcont (lt_mem_nhds hlt)] with z hz
-    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_and, not_le]
-    exact fun _ => hz
+    simpa only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_and, not_le] using fun _ => hz
   · exact eventually_not_le_of_not_mem_Yo R hY l
 
 theorem regData_open_part : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [CompactSpace X] [T2Space X]

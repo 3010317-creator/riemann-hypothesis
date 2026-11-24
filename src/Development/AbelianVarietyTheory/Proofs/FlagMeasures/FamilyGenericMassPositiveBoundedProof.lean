@@ -203,8 +203,7 @@ theorem sq_dvd_at (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH
     simp
   · apply Subtype.ext
     push_cast
-    rw [← hA, ← hB']
-    exact hc
+    rwa [← hA, ← hB']
 
 end GlobalTheory.NormCong
 
@@ -219,8 +218,7 @@ theorem GlobalTheory.NormCong.norms_congr : ∀ (D : D7) (Z : LocDat D) (FP : �
   have h := dvd_sub_comm.1 (hcop.mul_dvd h0 h1)
   rw [Nat.modEq_iff_dvd, show gS D = D.host.g 0 * D.host.g 1 from rfl]
   push_cast
-  rw [mul_pow]
-  exact h
+  rwa [mul_pow]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagNormsCongrModLevelSq =====
@@ -338,8 +336,7 @@ theorem glueSum_le : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wha
     exact lt_irrefl _ hpos
   have hrow : ∃ Λ₁ ∈ Y.what₂ u,
       (Formalism.L2.SG.CntLocal.EZ (Formalism.L2.SG.CntLocal.Tn u') (X.Fu u) Λ₁ (ZhatL (lf D (X.Fu u)) G')).Nonempty := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     apply hnu
     unfold Formalism.L2.SG.CntLocal.nu
     rw [Finset.sum_eq_zero (fun Λ₁ h1 => by simp [Formalism.L2.SG.CntLocal.cntE, hno Λ₁ h1]), zero_div]
@@ -487,8 +484,7 @@ theorem one_le_partial {p : ℕ} (T : Fin p → ℝ) (m : Fin p → ℕ) (M : �
   have e2 : (∏ a : Fin p, T a ^ m a) = ∏ a ∈ range p, T' a ^ m' a := by
     rw [← Fin.prod_univ_eq_prod_range (fun i => T' i ^ m' i) p]
     exact Finset.prod_congr rfl fun a _ => by rw [hTT, hmm]
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]
 
 theorem sum_exponent {r : ℕ} (c : Composition (r + 1)) : ∀ n, n ≤ c.length →
     ∑ b ∈ univ.filter (fun b : Fin c.length => b.1 < n),
@@ -622,13 +618,7 @@ namespace GlobalTheory.WtPos
 
 theorem finrank_loc {D : D7} (p : PlF D) :
     Module.finrank (D.s.atP p).Ep (Vp D p) = D.R.k + 2 * D.R.rS + 1 := by
-  rw [finrank_Vp]
-  have h1 := D.R.m_even
-  have h2 := D.R.two_le_m
-  have h3 := D.R.m_add_three_le_k
-  obtain ⟨c, hc⟩ := h1
-  simp only [Ranks.r, Ranks.rS]
-  omega
+  exact Formalism.L2.SG.FamDefs.rank_Vp p
 
 theorem wt_pos : ∀ (D : D7) (Z : LocDat D) (p : PlF D) (P : LocNG.FPair (locH Z p) D.R.rS), P.RelG (LocNG.theta (Z.M p)) → ∀ d0 d : LocNG.Datum P, (∃ t, LocNG.IsTermOver P d0 t) → (∃ t, LocNG.IsTermOver P d t) → 0 < LocNG.Datum.wt d0 d := by
   intro D Z p P hR d0 d ⟨t0, ht0⟩ ⟨t, ht⟩
@@ -681,18 +671,7 @@ namespace GlobalTheory.FinitePlaceMassFactors
 
 theorem infinite_finPlaces (K : Type) [Field K] [NumberField K] :
     Infinite (IsDedekindDomain.HeightOneSpectrum (𝓞 K)) := by
-  have h : ∀ p : Nat.Primes, ∃ la : IsDedekindDomain.HeightOneSpectrum (𝓞 K),
-      la.asIdeal.comap (algebraMap ℤ (𝓞 K)) = Ideal.span {((p : ℕ) : ℤ)} := fun p => by
-    haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
-    haveI : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
-    obtain ⟨M, hM, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 K) (Ideal.span {((p : ℕ) : ℤ)})
-      (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 K)).injective_int]; exact bot_le)
-    exact ⟨⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField K)⟩, hc⟩
-  choose f hf using h
-  refine Infinite.of_injective f fun p q hpq => ?_
-  have e : Ideal.span {((p : ℕ) : ℤ)} = Ideal.span {((q : ℕ) : ℤ)} := by rw [← hf p, ← hf q, hpq]
-  have := Int.associated_iff_natAbs.1 (Ideal.span_singleton_eq_span_singleton.1 e)
-  exact Subtype.ext (by simpa using this)
+  exact GlobalTheory.LvT.Inh.ResFin.infinite_places K
 
 theorem wt_self {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
@@ -961,7 +940,7 @@ theorem countConst_eq_unscaledConst : PI.VolStabS.MassDataS.SWXS → ∀ (Cg cb 
   refine ⟨hng, ?_⟩
   set B0 := Formalism.L2.SG.MassDataConc.bCF X hb Y.hK (Y.FN u) (Y.FN u') u u' X0 ψ (Y.tO u u') 0 0 1 vR0 Q0 Y.M Y.δ i0 i0' νq
     with hB0
-  have eU : kapU D = Formalism.L2.SG.MassDataConc.kapN D := if_pos hκ
+  have eU : kapU D = Formalism.L2.SG.MassDataConc.kapN D := ite_eq_left hκ
   have eA : (bkU X hb Y u u' X0 ψ sd C Th vR Q i0 i0' νq).AA = B0.AA / kapU D := by
     show B0.volB * (B0.Coo / kapU D) * (B0.MM / B0.volZZ) / B0.μK =
       B0.volB * B0.Coo * (B0.MM / B0.volZZ) / B0.μK / kapU D
@@ -1038,8 +1017,7 @@ theorem rd_pow_f (D : D7) : D.host.rdE ^ D.R.f = |(NumberField.discr D.host.F : 
 
 theorem one_le_tprod_real {ι : Type} (a : ι → ℝ) (ha : ∀ i, 1 ≤ a i) : 1 ≤ ∏' i, a i := by
   by_cases h : Multipliable a
-  · refine ge_of_tendsto' h.hasProd fun s => ?_
-    exact Finset.one_le_prod₀ (fun i _ => ha i)
+  · exact ge_of_tendsto' h.hasProd fun s => Finset.one_le_prod₀ (fun i _ => ha i)
   · rw [tprod_eq_one_of_not_multipliable h]
 
 theorem one_le_nM {K V : Type} [Field K] [NumberField K] [StarRing K] (F : Type) [Field F] [NumberField F]
@@ -1233,7 +1211,7 @@ theorem weightsFam_of (hS : PI.VolStabS.MassDataS.SWXS) : GlobalTheory.SnFam.Wei
   have hc0 : 0 ≤ 2 * (bkU X hb Y u u' X0 ψ sd C Th vR Q i0 i0' νq).AA *
       PN.abelian₂ (2 * D.host.v) D.R.rS D.R.k D.R.f := by
     by_contra hneg
-    push_neg at hneg
+    push Not at hneg
     have h1 : HP ^ (3 * (D.R.rS + 1) ^ 2) * (2 * (bkU X hb Y u u' X0 ψ sd C Th vR Q i0 i0' νq).AA *
         PN.abelian₂ (2 * D.host.v) D.R.rS D.R.k D.R.f) ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hHa.le hneg.le
     have h2 := mul_nonpos_of_nonpos_of_nonneg h1 hY0

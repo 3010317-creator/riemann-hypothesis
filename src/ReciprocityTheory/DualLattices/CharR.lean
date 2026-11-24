@@ -163,8 +163,7 @@ lemma exists_factor (n : ℕ) : ∃ g' : (Tw.π n).ker →ₗ[R₀] (Tw.R n : Ty
     rw [LinearMap.mem_ker] at ha ⊢
     have h0 : Tw.ξ n * a = 0 := congrArg Subtype.val ha
     have hm : a ∈ Ideal.span {Tw.ξ n} := Tw.ann n a (by rw [mul_comm]; exact h0)
-    rw [← Tw.ker_eq n, RingHom.mem_ker] at hm
-    exact hm
+    rwa [← Tw.ker_eq n, RingHom.mem_ker] at hm
   have hs := Tw.ξmul_surj n
   refine ⟨(LinearMap.ker _).liftQ _ hle ∘ₗ
     (LinearMap.quotKerEquivOfSurjective _ hs).symm.toLinearMap, ?_⟩

@@ -39,9 +39,8 @@ theorem coeff_subst_rename_inj {σ τ : Type} [Finite σ] (φ : σ → τ) (hφ 
   rw [MvPowerSeries.coeff_subst hA, finsum_eq_single _ e]
   · rw [prod_X_rename, MvPowerSeries.coeff_monomial_same, smul_eq_mul, mul_one]
   · intro d hd
-    rw [prod_X_rename, MvPowerSeries.coeff_monomial, if_neg, smul_zero]
-    intro h
-    exact hd (Finsupp.mapDomain_injective hφ h).symm
+    rw [prod_X_rename, MvPowerSeries.coeff_monomial, ite_eq_right, smul_zero]
+    exact fun h => hd (Finsupp.mapDomain_injective hφ h).symm
 
 variable {dd : ℕ}
 
@@ -112,8 +111,7 @@ variable [CharZero C] {V : VF C} {O : Type} [CommRing O] [StarRing O] {dd : ℕ}
 
 theorem FBChart.lg_const (i : Fin dd) : MvPowerSeries.constantCoeff (Y.lg i) = 0 := by
   have h := Y.lg_lin i 0 (by simp)
-  rw [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, MvPowerSeries.coeff_zero_X] at h
-  exact h
+  rwa [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, MvPowerSeries.coeff_zero_X] at h
 
 end Inst
 

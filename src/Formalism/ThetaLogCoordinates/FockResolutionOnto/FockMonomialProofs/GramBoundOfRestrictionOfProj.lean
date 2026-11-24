@@ -85,7 +85,7 @@ theorem strip_monomial_ne (v : σ) (e : ℕ) (m : σ →₀ ℕ) (hm : m v ≠ e
   rw [coeff_strip]
   change (if n v = 0 then _ else 0) = 0
   split_ifs with h
-  · rw [coeff_monomial, if_neg]
+  · rw [coeff_monomial, ite_eq_right]
     rintro rfl
     apply hm
     simp [h]
@@ -97,14 +97,13 @@ theorem strip_monomial_eq (v : σ) (e : ℕ) (m : σ →₀ ℕ) (hm : m v = 0) 
   ext n
   rw [coeff_strip, coeff_monomial, coeff_monomial]
   by_cases h1 : n v = 0
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     by_cases h2 : m = n
     · subst h2
       simp
-    · rw [if_neg h2, if_neg]
-      intro h3
-      exact h2 (add_left_cancel h3)
-  · rw [if_neg h1, if_neg]
+    · rw [ite_eq_right h2, ite_eq_right]
+      exact fun h3 => h2 (add_left_cancel h3)
+  · rw [ite_eq_right h1, ite_eq_right]
     rintro rfl
     exact h1 hm
 
@@ -257,12 +256,11 @@ theorem projAtOf_of (hX : ProjX) : ProjAtOf := by
       by_cases hik : i = Fin.last K
       · subst hik
         simp at hi
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         omega
       · have hik' : ¬ Fin.last K = i := fun h => hik h.symm
         simp [hik'] at hi
-        rw [if_neg hik]
-        exact hi
+        rwa [ite_eq_right hik]
     obtain ⟨hP1, hP2, hP3⟩ := hPr' m' hMD hm'v
     have hPr : ((LinearMap.mulLeft ℚ_[p] (X (Fin.last K, ρ) ^ e)) ∘ₗ Pr' ∘ₗ strip p (Fin.last K, ρ) e)
         (monomial (Finsupp.single (Fin.last K, ρ) e + m') 1) = X (Fin.last K, ρ) ^ e * Pr' (monomial m' 1) := by
@@ -291,6 +289,6 @@ theorem projAtOf_of (hX : ProjX) : ProjAtOf := by
     · subst hn
       exact Or.inl (coeff_pow_mul_ne _ _ _ hyf _ hme)
     · right
-      rw [coeff_monomial, if_neg (Ne.symm hn)]
+      rw [coeff_monomial, ite_eq_right (Ne.symm hn)]
 
 end Formalism.InvariantFactorPaths.L4

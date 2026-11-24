@@ -245,8 +245,7 @@ theorem zalg_comm_rt_curve : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
       lie E a (toL ((c s).val * Matrix.of X * ((c s)⁻¹).val)) := by
     intro s X
     change rt E a (infGL E a (c s)) * lie E a X * Q s = _
-    rw [hconj (c s) X, mul_assoc]
-    rw [show rt E a (infGL E a (c s)) * Q s = 1 from hRQ s, mul_one]
+    rw [hconj (c s) X, mul_assoc, show rt E a (infGL E a (c s)) * Q s = 1 from hRQ s, mul_one]
   have hG : ∀ B ∈ Set.range (lie E a), HD (fun s => R s * B * Q s)
       (fun s => R s * (lie E a Y * B - B * lie E a Y) * Q s) := by
     rintro _ ⟨X, rfl⟩
@@ -396,8 +395,8 @@ theorem tst_finGL_inv_mul {E : Type} [Field E] [NumberField E] [_root_.NumberFie
   unfold tst ker
   rw [hinv, hfin, hinf]
   by_cases hm : GeneralLinearGroup.map (pFin E) y⁻¹ ∈ U
-  · rw [if_pos (U.mul_mem hm hu), if_pos hm]
-  · rw [if_neg (fun h => hm (by simpa using U.mul_mem h (U.inv_mem hu))), if_neg hm]
+  · rw [ite_eq_left (U.mul_mem hm hu), ite_eq_left hm]
+  · rw [ite_eq_right (fun h => hm (by simpa using U.mul_mem h (U.inv_mem hu))), ite_eq_right hm]
 
 theorem convR_tst_mul_finGL (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ)
     (μ : Measure (GA E a)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant]
@@ -649,11 +648,9 @@ theorem exists_compact_of_mul_mem_tsupport : ∀ (E : Type) [Field E] [NumberFie
     obtain ⟨b, hb⟩ := hβ.support hm
     refine ⟨(b, u), ⟨?_, ?_⟩, ?_⟩
     · change toL b.val ∈ tsupport β
-      rw [hb]
-      exact hm
+      rwa [hb]
     · change toL u.val ∈ N
-      rw [hu]
-      exact hx
+      rwa [hu]
     · change toL (b * u⁻¹).val = y
       have e : (b * u⁻¹).val = Matrix.of y := by
         rw [Units.val_mul, hb]
@@ -708,7 +705,7 @@ theorem convR_tst_mul_infGL (μ : Measure (GA E a)) [μ.IsMulLeftInvariant] (U :
   rw [wt_apply]
   by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
   · have h' : GeneralLinearGroup.map (pFin E) (infGL E a y * v)⁻¹ ∈ U := hf ▸ h
-    simp only [tst, ker, if_pos h, if_pos h', hb, psi, hi]
+    simp only [tst, ker, ite_eq_left h, ite_eq_left h', hb, psi, hi]
     have he : toL ((GeneralLinearGroup.map (pInf E) v⁻¹ * y⁻¹).val * y.val) =
         toL (GeneralLinearGroup.map (pInf E) v⁻¹).val := by
       rw [← Units.val_mul, inv_mul_cancel_right]
@@ -717,7 +714,7 @@ theorem convR_tst_mul_infGL (μ : Measure (GA E a)) [μ.IsMulLeftInvariant] (U :
       β (toL ((GeneralLinearGroup.map (pInf E) v⁻¹ * y⁻¹).val * y.val)) * Fl (g * (infGL E a y * v))
     rw [he]
   · have h' : GeneralLinearGroup.map (pFin E) (infGL E a y * v)⁻¹ ∉ U := hf ▸ h
-    simp only [tst, ker, if_neg h, if_neg h']
+    simp only [tst, ker, ite_eq_right h, ite_eq_right h']
     simp
 end GlobalTheory.CompanionTheory.SmoothRep.TstConv
 
@@ -751,7 +748,7 @@ theorem integrand_eq_zero {U : Subgroup (GL (Fin a) (Af E))} {β : Lie E a → �
   rw [wt_apply]
   by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
   · rw [hb, image_eq_zero_of_notMem_tsupport (hC v hv h x hx), zero_mul]
-  · rw [if_neg h, mul_zero]
+  · rw [ite_eq_right h, mul_zero]
 
 end GlobalTheory.CompanionTheory.SmoothRep.TstConv
 
@@ -799,8 +796,8 @@ theorem GlobalTheory.CompanionTheory.SmoothRep.convR_tst_mem_Sm : ∀ (E : Type)
       show dTest X β (psi v) * wt U Fl g v = tst U (dTest X β) v * Fl (g * v)
       rw [wt_apply]
       by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
-      · simp only [tst, ker, if_pos h, psi]
-      · simp only [tst, ker, if_neg h, mul_zero, zero_mul]
+      · simp only [tst, ker, ite_eq_left h, psi]
+      · simp only [tst, ker, ite_eq_right h, mul_zero, zero_mul]
     · intro v hv
       rw [wt_apply]
       by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
@@ -811,7 +808,7 @@ theorem GlobalTheory.CompanionTheory.SmoothRep.convR_tst_mem_Sm : ∀ (E : Type)
           by_contra h0
           exact hn (support_fderiv_subset ℝ h0)
         rw [dTest, h0, ContinuousLinearMap.zero_apply, zero_mul]
-      · rw [if_neg h, mul_zero]
+      · rw [ite_eq_right h, mul_zero]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1043,8 +1040,7 @@ theorem exists_typeSpace : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
     induction hv using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨k, rfl⟩ := hx
-      refine ⟨hI.1.2 _ _ hFH, fun u hu => ?_⟩
-      exact (hcomm u k F).trans (congrArg (π k) hu.2)
+      exact ⟨hI.1.2 _ _ hFH, fun u hu => ((hcomm u k F).trans (congrArg (π k) hu.2))⟩
     | zero => exact ⟨H.zero_mem, fun _ _ => map_zero _⟩
     | add x y _ _ hx hy =>
       exact ⟨H.add_mem hx.1 hy.1, fun u hu => by rw [map_add (f := _), hx.2 u hu, hy.2 u hu]⟩
@@ -1358,8 +1354,7 @@ theorem Zalg_comm_cptRep {z : Module.End ℂ (Sm E a)} (hz : z ∈ Zalg E a) (k 
     z * cptRep E a k = cptRep E a k * z := by
   obtain ⟨c, Y, h0, h1, hd, hi⟩ := _root_.GlobalTheory.CompanionTheory.SmoothRep.KCurve.exists_curve E a k
   have h := _root_.GlobalTheory.CompanionTheory.SmoothRep.Flow.zalg_comm_rt_curve E a (_root_.GlobalTheory.CompanionTheory.SmoothRep.rt_infGL_mul_lie E a) z hz (_root_.GlobalTheory.CompanionTheory.SmoothRep.Zalg_comm_lie E a z hz) c Y h0 hd hi
-  rw [h1] at h
-  exact h
+  rwa [h1] at h
 
 
 omit μ in
@@ -1562,9 +1557,7 @@ theorem smooth_rep (H : Submodule ℂ (L2 (latticeGL E a) μ)) (hH : H ≤ L2cus
       simp only [Module.End.mul_apply, e] at h1
       have h2 := congrFun (congrArg Subtype.val h1) x
       rw [e' _ (hloc _)] at h2
-      refine h2.trans ?_
-      have h3 := congrFun (e' _ (hloc G)) (x * infGL E a (Unitary.toUnits k))
-      exact h3
+      exact h2.trans (congrFun (e' _ (hloc G)) (x * infGL E a (Unitary.toUnits k)))
     have e2 : z ⟨_, cv_mem_Sm μ hUo hUc hβ (hloc G.1)⟩ = ⟨_, cv_mem_Sm μ hUo hUc h' (hloc G.1)⟩ :=
       Subtype.ext (e' _ (hloc G.1))
     beta_reduce

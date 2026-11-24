@@ -46,12 +46,10 @@ theorem BlowUpChart.proof : BlowUpChart.Statement := by
   have hφ : ∀ a : A, φ (algebraMap A (blowUpChart K x i) a) = f a := fun _ => rfl
   have hxm : x i ∈ maximalIdeal A := hx ▸ Ideal.subset_span ⟨i, rfl⟩
   have hnu : ¬ IsUnit (f (x i)) := by
-    rw [isUnit_map_iff f]
-    exact hxm
+    rwa [isUnit_map_iff f]
   refine ⟨i, hxi, fun hu => hnu (hφ (x i) ▸ hu.map φ), (maximalIdeal V).comap φ,
     Ideal.comap_isPrime _ _, ?_, ?_⟩
-  · rw [Ideal.mem_comap, hφ]
-    exact hnu
+  · rwa [Ideal.mem_comap, hφ]
   · ext a
     rw [Ideal.mem_comap, Ideal.mem_comap, hφ, mem_maximalIdeal, mem_nonunits_iff,
       mem_maximalIdeal, mem_nonunits_iff, isUnit_map_iff f]

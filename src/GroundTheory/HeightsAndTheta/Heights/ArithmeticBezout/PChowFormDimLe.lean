@@ -130,9 +130,7 @@ theorem exists_ne_zero_common_zero {K : Type} [Field K] [IsAlgClosed K] {n k : �
       rw [Ideal.Quotient.eq_zero_iff_mem.mpr hg]
       exact q.zero_mem
     simpa using (mem_zeroLocus_iff.mp hx) g hgQ'
-  · have hmem : ℓ i ∈ Q' := by
-      show mk (ℓ i) ∈ q
-      exact hqmin.1.2 (Ideal.subset_span (by simp [s]))
+  · have hmem : ℓ i ∈ Q' := hqmin.1.2 (Ideal.subset_span (by simp [s]))
     simpa [ℓ] using (mem_zeroLocus_iff.mp hx) _ hmem
 
 theorem proof : ChowFormDimLe.Statement := by
@@ -150,8 +148,7 @@ theorem proof : ChowFormDimLe.Statement := by
     obtain ⟨x, hx0, hxP, hxu⟩ := exists_ne_zero_common_zero P hPQ hdimP u
     refine ⟨x, hx0, fun g hg => ?_, hxu⟩
     have hgP : MvPolynomial.map (algebraMap F (AlgebraicClosure F)) g ∈ P := by
-      rw [← hPI] at hg
-      exact hg
+      rwa [← hPI] at hg
     have := hxP _ hgP
     rwa [eval_map, ← aeval_def] at this
   apply hf.1

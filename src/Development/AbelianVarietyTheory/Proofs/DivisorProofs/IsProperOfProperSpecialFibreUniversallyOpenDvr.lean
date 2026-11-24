@@ -84,13 +84,11 @@ theorem connectedSpace_specialFibre_of_morphisms : GlobalTheory.Published.Formal
   open GlobalTheory.SpecialConn GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits in
   have hT : Set.range (specialι f) = f ⁻¹' {IsLocalRing.closedPoint O} := by
     have h := Scheme.Pullback.range_fst f (Spec.map (CommRingCat.ofHom (IsLocalRing.residue O)))
-    rw [range_residue] at h
-    exact h
+    rwa [range_residue] at h
   open GlobalTheory.SpecialConn GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits in
   have hTn : ∀ n, Set.range (thickι f n) = f ⁻¹' {IsLocalRing.closedPoint O} := fun n => by
     have h := Scheme.Pullback.range_fst f (Spec.map (CommRingCat.ofHom (thickQ O n)))
-    rw [range_thickQ] at h
-    exact h
+    rwa [range_thickQ] at h
   open GlobalTheory.SpecialConn GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits in
   have hne : ∃ y : Y, f y = IsLocalRing.closedPoint O := by
     obtain ⟨y⟩ := (inferInstance : Nonempty Y)
@@ -111,13 +109,11 @@ theorem connectedSpace_specialFibre_of_morphisms : GlobalTheory.Published.Formal
   have hcl : Topology.IsClosedEmbedding (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f) :=
     (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f).isClosedEmbedding
   refine { toPreconnectedSpace := preconnectedSpace_iff_clopen.2 fun U hU => ?_, toNonempty := ‹_› }
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨hU0, hU1⟩ := hcon
   obtain ⟨u, hu⟩ := hU0
   obtain ⟨u', hu'⟩ : ∃ u', u' ∉ U := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hU1 (Set.eq_univ_of_forall h)
   let A := GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f '' U
   let B := GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f '' Uᶜ
@@ -135,8 +131,7 @@ theorem connectedSpace_specialFibre_of_morphisms : GlobalTheory.Published.Formal
       rw [hT, ← hTn n]; exact ⟨x, rfl⟩
     simp only [Set.mem_compl_iff, Set.mem_preimage, A, B, Set.mem_image]
     constructor
-    · intro h
-      exact ⟨z, fun hzU => h ⟨z, hzU, hz⟩, hz⟩
+    · exact fun h => ⟨z, fun hzU => h ⟨z, hzU, hz⟩, hz⟩
     · rintro ⟨w, hw, hw'⟩ ⟨w', hw'U, hw''⟩
       exact hw (hcl.injective (hw''.trans hw'.symm) ▸ hw'U)
   have hclo : ∀ n, IsClopen (GlobalTheory.SpecialConn.thickι f n ⁻¹' A) := fun n =>
@@ -233,8 +228,7 @@ theorem isClosed_image_closure : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDis
         (I.subschemeι ≫ s) ⁻¹' {IsLocalRing.closedPoint O} := by
       have h := Scheme.Pullback.range_fst (I.subschemeι ≫ s)
         (Spec.map (CommRingCat.ofHom (IsLocalRing.residue O)))
-      rw [GlobalTheory.SpecialConn.range_residue] at h
-      exact h
+      rwa [GlobalTheory.SpecialConn.range_residue] at h
     have hR : Set.range (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι (I.subschemeι ≫ s) ≫ I.subschemeι) =
         closure (q '' C) ∩ s ⁻¹' {IsLocalRing.closedPoint O} := by
       rw [Scheme.Hom.comp_base, TopCat.coe_comp, Set.range_comp, hT, ← hrange, Set.inter_comm,
@@ -253,8 +247,7 @@ theorem isClosed_image_closure : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDis
     haveI : IsProper (pullback.fst (q ≫ s) res ≫ q) := IsProper.of_comp _ s
     have hF : Set.range (pullback.fst (q ≫ s) res) = (q ≫ s) ⁻¹' {IsLocalRing.closedPoint O} := by
       have h := Scheme.Pullback.range_fst (q ≫ s) res
-      rw [GlobalTheory.SpecialConn.range_residue] at h
-      exact h
+      rwa [GlobalTheory.SpecialConn.range_residue] at h
     have hcl := (pullback.fst (q ≫ s) res ≫ q).isClosedMap _
       ((isClosed_closure (s := C)).preimage (pullback.fst (q ≫ s) res).continuous)
     have e : (pullback.fst (q ≫ s) res ≫ q) '' (pullback.fst (q ≫ s) res ⁻¹' closure C) =
@@ -288,8 +281,7 @@ theorem isClosed_image_closure : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDis
       (PrimeSpectrum.le_iff_specializes _ _).1 (IsLocalRing.le_maximalIdeal (s z).2.ne_top)
     obtain ⟨z', ⟨hz'Z, hz'U⟩, hz'⟩ := hsp.mem_closed hcl ⟨z, ⟨hz, hzU⟩, rfl⟩
     exact hz'U (hZkU ⟨hz'Z, hz'⟩)
-  rw [himg, Set.inter_eq_left.2 hZU]
-  exact hZc
+  rwa [himg, Set.inter_eq_left.2 hZU]
 
 end GlobalTheory.FibProperClosed
 end -- clump:auto

@@ -319,8 +319,7 @@ private theorem fin (P : LocalPublishedTheorems) (hφ : IsOpenEmbedding φ)
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin n → Fin n → E))
   have hcr := crOn_ad P hφ hr h w hw U hU hI hne
   have hκ : ∀ i, Continuous fun g => (κ i g : E) := fun i => by
-    simp only [← fun g => (h g).2 i]
-    exact hr.matrix_elem i i
+    simpa only [← fun g => (h g).2 i] using hr.matrix_elem i i
   have hκ2 : ∀ i j, Continuous fun g => ((κ i * (κ j)⁻¹) g : E) := fun i j => by
     simp only [MonoidHom.mul_apply, MonoidHom.inv_apply, ← map_inv, Units.val_mul]
     exact (hκ i).mul ((hκ j).comp continuous_inv)
@@ -778,8 +777,7 @@ theorem UpperTheory.V.Th.adjointLiftingTheorem_of_locPrints_of_core :
     · rw [d']
       exact hψ i i' g ((hi g).1 hg)
     · have h4 : cycZ (W.Lp L) Ω l (W.resP L Ω g₀.1) = 1 := by
-        rw [← V.hε]
-        exact hg₀
+        rwa [← V.hε]
       have h5 : Loc.cyc l l (φ g₀) = 1 := (d g₀).trans h4
       exact (congrArg (Units.map _) h5).trans (map_one _)
 end

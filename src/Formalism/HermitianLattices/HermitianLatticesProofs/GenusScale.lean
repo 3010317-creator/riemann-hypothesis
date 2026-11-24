@@ -115,8 +115,7 @@ theorem genusScale_transfer (hinj : Function.Injective (algebraMap R K))
       c * (algebraMap R K (locBasic_sigma hinj hstar s) * (algebraMap R K t * h x y)) := by
     rw [Algebra.smul_def, map_mul]
     ring
-  rw [e]
-  exact h1
+  rwa [e]
 
 end SlopeTestRemainingChoices
 
@@ -127,8 +126,7 @@ private theorem exists_nat_pos_mul_mem_one {K : Type} [Field K] [NumberField K] 
   obtain ⟨y, hy0, hy⟩ := hz.exists_integral_multiple
   have hw : IsIntegral ℤ ((y.natAbs : K) * z) := by
     rcases Int.natAbs_eq y with e | e
-    · rw [← Int.cast_natCast, ← e, ← zsmul_eq_mul]
-      exact hy
+    · rwa [← Int.cast_natCast, ← e, ← zsmul_eq_mul]
     · have e' : (y.natAbs : ℤ) = -y := by linarith
       rw [← Int.cast_natCast, e', Int.cast_neg, neg_mul, ← zsmul_eq_mul]
       exact hy.neg
@@ -155,7 +153,6 @@ theorem genusScale : GenusScale := by
     rw [hk, Nat.cast_mul, mul_comm ((n (h a b) : ℕ) : K), mul_assoc]
     have hm := genusBasic_mem_one_mul _ (hn (h a b)) (k : 𝓞 K)
     rwa [map_natCast] at hm
-  intro M hM x hx y hy
-  exact genusScale_transfer hinj hstar h _ L M hM.2 hLd x hx y hy
+  exact fun M hM x hx y hy => genusScale_transfer hinj hstar h _ L M hM.2 hLd x hx y hy
 
 end Formalism.HermitianLatticesTheory

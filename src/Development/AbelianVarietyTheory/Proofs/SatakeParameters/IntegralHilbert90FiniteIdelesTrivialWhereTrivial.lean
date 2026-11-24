@@ -129,8 +129,7 @@ theorem exists_finiteAdele_of_denom {F : Type} [Field F] [NumberField F] (r : He
   have h1 := h v
   rw [Formalism.UG.P.levelaf_valued_algebraMap] at h1 ⊢
   rw [map_natCast] at hv1
-  rw [map_mul, hv1, one_mul] at h1
-  exact h1
+  rwa [map_mul, hv1, one_mul] at h1
 
 theorem locMap_val_eq_one_iff {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (P : HeightOneSpectrum (𝓞 E)) (a : (P.under (𝓞 F)).adicCompletion F) :
@@ -186,8 +185,7 @@ theorem exists_glue_of_int {F E : Type} [Field F] [NumberField F] [Field E] [Num
         algebraMap F _ ((D : F) * (Module.finBasis F E).repr (algebraMap (𝓞 E) E (f v)) i) := by
       rw [← Algebra.algebraMap_eq_smul_one, nsmul_eq_mul, ← map_natCast (algebraMap F (FiniteAdeleRing (𝓞 F) F)),
         ← map_mul]
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   choose c hc' using hr
   refine ⟨∑ i, Module.finBasis F E i ⊗ₜ[F] c i, fun g ι hι P => ?_⟩
   have e1 : ι (sigR g (FiniteAdeleRing (𝓞 F) F) (∑ i, Module.finBasis F E i ⊗ₜ[F] c i)) =
@@ -208,8 +206,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem exists_sub_sig_notMem (σ : E →ₐ[F] E) (hσ : IsConjOf σ) [Algebra.Unramified (𝓞 F) (𝓞 E)]
     (P : HeightOneSpectrum (𝓞 E)) : ∃ b : 𝓞 E, b - RingOfIntegers.mapAlgHom σ b ∉ P.asIdeal := by
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   have h := Algebra.FormallyUnramified.ext_of_iInf (R := 𝓞 F) P.asIdeal
     (Ideal.iInf_pow_eq_bot_of_isDomain P.asIdeal P.isPrime.ne_top) (g₁ := AlgHom.id _ (𝓞 E))
     (g₂ := RingOfIntegers.mapAlgHom σ) (fun x => Ideal.Quotient.eq.2 (hn x))
@@ -236,8 +233,7 @@ theorem exists_val_add_eq_one (σ : E →ₐ[F] E) (hσ : IsConjOf σ) [Algebra.
     fun o => rfl
   have hle' : ∀ o, Valued.v (g o + dP * g (RingOfIntegers.mapAlgHom σ o)) ≤ 1 := fun o =>
     Valuation.map_add_le _ (hle o) (by rw [map_mul]; exact mul_le_one' hd (hle _))
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   have h1 : Valued.v (g 1 + dP * g (RingOfIntegers.mapAlgHom σ 1)) < 1 := lt_of_le_of_ne (hle' 1) (by
     rw [← hσg]; exact hn 1)
   have h2 : Valued.v (g b + dP * g (RingOfIntegers.mapAlgHom σ b)) < 1 := lt_of_le_of_ne (hle' b) (by
@@ -287,7 +283,6 @@ theorem exists_integral_h90_preimage_of_mem_intU_unramified (σ : E →ₐ[F] E)
       refine Subring.closure_le.2 ?_
       rintro _ (⟨⟨x, o, rfl⟩, rfl⟩ | ⟨y, rfl⟩)
       · obtain ⟨o', ho'⟩ := hstarO o
-        show σ (algebraMap (𝓞 E) E o) ⊗ₜ[F] (1 : FiniteAdeleRing (𝓞 F) F) ∈ RInt F E
         exact Subring.subset_closure (Or.inl ⟨⟨_, o', ho'⟩, rfl⟩)
       · show σ 1 ⊗ₜ[F] (y : FiniteAdeleRing (𝓞 F) F) ∈ RInt F E
         rw [map_one]
@@ -298,8 +293,7 @@ theorem exists_integral_h90_preimage_of_mem_intU_unramified (σ : E →ₐ[F] E)
   have hOint : ∀ (o : 𝓞 E) (P : HeightOneSpectrum (𝓞 E)),
       Valued.v (algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E o)) ≤ 1 := fun o P => by
     have h := hint _ (Formalism.UG.P.levelaf_tmul_mem o (one_mem (intAd F))) P
-    rw [map_tmul_one hι] at h
-    exact h
+    rwa [map_tmul_one hι] at h
   have hval1 : ∀ u w : AfE F E, u ∈ RInt F E → w ∈ RInt F E → u * w = 1 → ∀ P, Valued.v (ι u P) = 1 := by
     intro u w hu hw huw P
     refine le_antisymm (hint u hu P) ?_
@@ -331,8 +325,7 @@ theorem exists_integral_h90_preimage_of_mem_intU_unramified (σ : E →ₐ[F] E)
       show (Algebra.TensorProduct.map (AlgHom.id F E) (AlgHom.id F (FiniteAdeleRing (𝓞 F) F))).toRingHom a = a
       rw [Algebra.TensorProduct.map_id]
       rfl
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have haσ : ∀ P, ι (sR a) P = algebraMap E _ (σ (algebraMap (𝓞 E) E (f (P.under (𝓞 F))))) :=
     fun P => ha σ ι hι P
   obtain ⟨ε, hε⟩ := exists_finiteAdele_of_denom (fun v => if S v then (1 : F) else 0) 1 one_pos (fun v => by
@@ -354,13 +347,13 @@ theorem exists_integral_h90_preimage_of_mem_intU_unramified (σ : E →ₐ[F] E)
     rw [hιT, haι, haσ]
   have hxS : ∀ P : HeightOneSpectrum (𝓞 E), S (P.under (𝓞 F)) → ι x0 P = 1 := by
     intro P h
-    rw [ιx, if_pos h, hf0 _ h]
+    rw [ιx, ite_eq_left h, hf0 _ h]
     simp
   have hxN : ∀ P : HeightOneSpectrum (𝓞 E), ¬ S (P.under (𝓞 F)) → ι x0 P =
       algebraMap E _ (algebraMap (𝓞 E) E (f (P.under (𝓞 F)))) +
         ι d P * algebraMap E _ (σ (algebraMap (𝓞 E) E (f (P.under (𝓞 F))))) := by
     intro P h
-    rw [ιx, if_neg h, zero_add]
+    rw [ιx, ite_eq_right h, zero_add]
   have hde : (d : AfE F E) * T = T := by
     apply map_injective hι
     refine FiniteAdeleRing.ext _ fun P => ?_
@@ -404,8 +397,7 @@ theorem exists_integral_h90_preimage_of_mem_intU_unramified (σ : E →ₐ[F] E)
     · rw [hxS P hSP, map_one]
     · obtain ⟨Q, hQ, hQv⟩ := hfgood _ hSP P rfl
       have hxQ : Valued.v (ι x0 Q) = 1 := by
-        rw [hxN Q (hQ ▸ hSP), hQ]
-        exact hQv
+        rwa [hxN Q (hQ ▸ hSP), hQ]
       have h1 : Valued.v (adMap F E n Q) = 1 := by rw [hnv, hxQ, one_mul]
       rw [adMap_val_eq_one_iff, hQ] at h1
       have h2 : Valued.v (adMap F E n P) = 1 := (adMap_val_eq_one_iff n P).2 h1
@@ -433,8 +425,7 @@ theorem exists_integral_h90_preimage_of_mem_intU_unramified (σ : E →ₐ[F] E)
       exact h'.le
   · rw [h90, MonoidHom.div_apply, MonoidHom.id_apply, div_eq_iff_eq_mul]
     apply Units.ext
-    rw [Units.val_mul]
-    exact hrel
+    rwa [Units.val_mul]
   · intro P hP
     rw [← hιaf]
     exact hxS P fun P' hP' => by rw [hιaf]; exact hP P' hP'

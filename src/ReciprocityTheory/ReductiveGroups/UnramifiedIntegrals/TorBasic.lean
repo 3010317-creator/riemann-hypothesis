@@ -92,8 +92,7 @@ theorem integral_of_not_mem_formalGroup (h : GoodPair l g2 g3) (P : (shortW g2 g
       (IsUltrametricDist.norm_add_le_max _ _).trans
         (max_le ((IsUltrametricDist.norm_add_le_max _ _).trans (max_le hb1 hb2)) hb3)
     have hy2 : ‖y‖ ^ 2 ≤ 1 := by
-      rw [← norm_pow, heq]
-      exact hsum
+      rwa [← norm_pow, heq]
     refine ⟨by rintro (_ | _), ?_, ?_⟩
     · exact hx
     · show ‖y‖ ≤ 1
@@ -139,7 +138,6 @@ theorem tor_y_unit (h : GoodPair l g2 g3) (P : (shortW g2 g3).toAffine.Point) (N
   have hu := Formalism.L2.Th1.E.UnitPsi2_of Formalism.L2.Th1.E.nonsingular_norm ℂ_[l] _ (good_int h) P hP0 h2 hx hy hx2
   have he : Formalism.L2.Th1.E.psi2 (shortW g2 g3) P = 2 * py _ P := by
     simp [Formalism.L2.Th1.E.psi2, shortW]
-  rw [he, norm_mul, good_norm_two h, one_mul] at hu
-  exact hu
+  rwa [he, norm_mul, good_norm_two h, one_mul] at hu
 
 end ReciprocityTheory.ChartRestriction.L1

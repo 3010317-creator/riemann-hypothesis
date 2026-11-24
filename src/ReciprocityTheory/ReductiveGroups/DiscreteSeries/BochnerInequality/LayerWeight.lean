@@ -73,8 +73,7 @@ theorem lift_layer (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVfd : FiniteDimen
   have hzero : ∀ x, x ∈ Lk → x ∈ Lkᗮ → x = 0 := by
     intro x h1 h2
     have hm : x ∈ Lk ⊓ Lkᗮ := ⟨h1, h2⟩
-    rw [Submodule.inf_orthogonal_eq_bot, Submodule.mem_bot] at hm
-    exact hm
+    rwa [Submodule.inf_orthogonal_eq_bot, Submodule.mem_bot] at hm
   have hΨo : ∀ H, Ψ H ∈ Lkᗮ := fun H => by
     rw [hΨ]; exact Submodule.sub_starProjection_mem_orthogonal _
   have hΨeq : ∀ a b, ε a = ε b → ∀ H, Ψ (bAct E (k + 1) a b H) = E a b (Ψ H) := by
@@ -95,8 +94,7 @@ theorem lift_layer (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVfd : FiniteDimen
       rw [hΨ, sub_eq_zero] at h0
       rw [h0]; exact hPmem _
     have hm : H ∈ U ⊓ Uᗮ := ⟨⟨hHN, hphi⟩, hHo⟩
-    rw [Submodule.inf_orthogonal_eq_bot, Submodule.mem_bot] at hm
-    exact hm
+    rwa [Submodule.inf_orthogonal_eq_bot, Submodule.mem_bot] at hm
 
   obtain ⟨l, hl, y, hy, hly⟩ := Submodule.mem_sup.mp (layer_succ_le hE hVk k hw)
   obtain ⟨G0, hG0, rfl⟩ := Submodule.mem_map.mp hy
@@ -147,8 +145,7 @@ theorem khw_layer_weight (hE : IsGlRep E) (hU : IsInfUnitary ε E)
   obtain ⟨w₀, hw₀V, hw₀, ws, hsum, hws⟩ := layer_khw_decomp hE hU hV.1 hV.2.1 hw hμ
   by_cases h0 : w₀ = 0
   · have hex : ∃ j, ws j ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       apply hw0
       rw [hsum, h0]
       simp [hc]

@@ -16,8 +16,7 @@ theorem col_of_fix {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     {c : Fin (2 * r + k + 1)} (hc : h *ᵥ bvec c = bvec c) (p : Fin (2 * r + k + 1)) :
     h p c = if p = c then 1 else 0 := by
   have := congrFun hc p
-  simp only [bvec, Matrix.mulVec, dotProduct_single, mul_one, Pi.single_apply] at this
-  exact this
+  simpa only [bvec, Matrix.mulVec, dotProduct_single, mul_one, Pi.single_apply] using this
 
 theorem row_of_fixed_col {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hU : h ∈ UH (Hpk k r)) (c : Fin (2 * r + k + 1))
@@ -26,23 +25,22 @@ theorem row_of_fixed_col {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1))
   have hU' : hᴴ * Hpk k r * h = Hpk k r := hU
   have e := congrFun (congrFun hU' c) j
   rw [Matrix.mul_assoc, Matrix.mul_apply, Finset.sum_eq_single c] at e
-  · rw [conjTranspose_apply, hc c, if_pos rfl, star_one, one_mul, hpk_mul_apply, hpk_row] at e
+  · rw [conjTranspose_apply, hc c, ite_eq_left rfl, star_one, one_mul, hpk_mul_apply, hpk_row] at e
     have hs : sgn k r c ≠ 0 := by
       intro h0
       have := sgn_mul_self (k := k) (r := r) c
       rw [h0, zero_mul] at this
       exact zero_ne_one this
     by_cases hj : j = tau k r c
-    · rw [if_pos hj] at e
-      rw [if_pos hj.symm]
+    · rw [ite_eq_left hj] at e
+      rw [ite_eq_left hj.symm]
       exact mul_left_cancel₀ hs (e.trans (mul_one _).symm)
-    · rw [if_neg hj] at e
-      rw [if_neg (Ne.symm hj)]
+    · rw [ite_eq_right hj] at e
+      rw [ite_eq_right (Ne.symm hj)]
       exact (mul_eq_zero.1 e).resolve_left hs
   · intro p _ hp
-    rw [conjTranspose_apply, hc p, if_neg hp, star_zero, zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+    rw [conjTranspose_apply, hc p, ite_eq_right hp, star_zero, zero_mul]
+  · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem uw_fixed_col {z : Fin (2 * r + k + 1) → ℂ}
     {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hh : h ∈ UWset k r z)
@@ -74,8 +72,7 @@ theorem uw_block {z : Fin (2 * r + k + 1) → ℂ}
     block k r h := by
   refine ⟨fun i j hj => uw_fixed_col hh j hj i, fun i j hi => ?_⟩
   have := row_of_fixed_col hh.1 (tau k r i) (uw_fixed_col hh _ (tau_out i hi)) j
-  rw [tau_tau] at this
-  exact this
+  rwa [tau_tau] at this
 
 theorem uw_inv {z : Fin (2 * r + k + 1) → ℂ}
     {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hh : h ∈ UWset k r z) :
@@ -99,18 +96,17 @@ theorem block_mul_col {h g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) 
     (hh : block k r h) (hg : col k r g) (i q : Fin (2 * r + k + 1)) (hq : q.val ≤ r + k)
     (hi : q.val ≤ i.val ∨ r ≤ i.val) : (h * g) i q = h i q := by
   rw [Matrix.mul_apply, Finset.sum_eq_single q]
-  · rw [hg q q hq (by omega), if_pos rfl, mul_one]
+  · rw [hg q q hq (by omega), ite_eq_left rfl, mul_one]
   · intro p _ hpq
     by_cases hp : q.val ≤ p.val ∨ r ≤ p.val
-    · rw [hg p q hq hp, if_neg hpq, mul_zero]
+    · rw [hg p q hq hp, ite_eq_right hpq, mul_zero]
     · push Not at hp
       have hne : i ≠ p := by
         intro e
         subst e
         omega
-      rw [hh.1 i p (by omega), if_neg hne, zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+      rw [hh.1 i p (by omega), ite_eq_right hne, zero_mul]
+  · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem conj_col {h h' g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hh : block k r h) (hh' : block k r h') (hinv : h * h' = 1) (hg : col k r g) :
@@ -124,7 +120,7 @@ theorem conj_col {h h' g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) �
       · have hqj : q = j := by
           by_contra hne
           apply h0
-          rw [hh'.1 q j (Or.inl hjr), if_neg hne]
+          rw [hh'.1 q j (Or.inl hjr), ite_eq_right hne]
         subst hqj
         rw [block_mul_col hh hg i q hj hi]
       · have hqW : r ≤ q.val ∧ q.val ≤ r + k := by
@@ -134,7 +130,7 @@ theorem conj_col {h h' g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) �
             intro e
             subst e
             omega
-          rw [hh'.2 q j (by omega), if_neg hne]
+          rw [hh'.2 q j (by omega), ite_eq_right hne]
         rw [block_mul_col hh hg i q hqW.2 (by omega)]
   rw [Matrix.mul_apply, Finset.sum_congr rfl (fun q _ => term q), ← Matrix.mul_apply, hinv,
     Matrix.one_apply]
@@ -143,32 +139,29 @@ theorem mul_apply_of_row {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1))
     (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
     (hrow : ∀ p, h i p = if i = p then 1 else 0) : (h * M) i j = M i j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single i]
-  · rw [hrow, if_pos rfl, one_mul]
+  · rw [hrow, ite_eq_left rfl, one_mul]
   · intro p _ hp
-    rw [hrow, if_neg (Ne.symm hp), zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+    rw [hrow, ite_eq_right (Ne.symm hp), zero_mul]
+  · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem mul_apply_of_col {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
     (hcol : ∀ q, h q j = if q = j then 1 else 0) : (M * h) i j = M i j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single j]
-  · rw [hcol, if_pos rfl, mul_one]
+  · rw [hcol, ite_eq_left rfl, mul_one]
   · intro q _ hq
-    rw [hcol, if_neg hq, mul_zero]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+    rw [hcol, ite_eq_right hq, mul_zero]
+  · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem mulVec_apply_of_row {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1))
     (hrow : ∀ p, h i p = if i = p then 1 else 0) : (h *ᵥ v) i = v i := by
   simp only [Matrix.mulVec, dotProduct]
   rw [Finset.sum_eq_single i]
-  · rw [hrow, if_pos rfl, one_mul]
+  · rw [hrow, ite_eq_left rfl, one_mul]
   · intro p _ hp
-    rw [hrow, if_neg (Ne.symm hp), zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+    rw [hrow, ite_eq_right (Ne.symm hp), zero_mul]
+  · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem ellA_conj (z : Fin (2 * r + k + 1) → ℂ)
     {h h' g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}

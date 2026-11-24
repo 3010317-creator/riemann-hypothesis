@@ -127,8 +127,7 @@ theorem prim_div {r : ℕ} {Y : TupV (E := E) v n (r + 1)} (hP : IsPrim v Λ Y)
   apply hP.2 (fun a => sc (E := E) v t⁻¹ * c a) _ a
   have : ∑ a, (sc (E := E) v t⁻¹ * c a) • Y a = sc (E := E) v t⁻¹ • ∑ a, c a • Y a := by
     rw [Finset.smul_sum]; simp only [smul_smul]
-  rw [this, h, sc_smul_sc, inv_mul_cancel₀ ht, sc_one', one_smul]
-  exact hy
+  rwa [this, h, sc_smul_sc, inv_mul_cancel₀ ht, sc_one', one_smul]
 
 theorem hR_smul (x w : Fin n → Fv F v ⊗[F] E) (c : Fv F v ⊗[F] E) :
     hR (Fv F v) σ J x (c • w) = c * hR (Fv F v) σ J x w := by
@@ -270,8 +269,7 @@ theorem idx_abs {G V : Type*} [Group G] [MeasurableSpace G] [MeasurableMul G]
     constructor
     · intro hv
       obtain ⟨y, hy, hyB⟩ := hsur v hv
-      refine ⟨⟨(QuotientAddGroup.mk v : V ⧸ B), y, hy, (hmk _ _).mp hyB⟩, ?_⟩
-      exact (hmk _ _).mpr (hxq _)
+      exact ⟨⟨(QuotientAddGroup.mk v : V ⧸ B), y, hy, (hmk _ _).mp hyB⟩, (hmk _ _).mpr (hxq _)⟩
     · rintro ⟨q, hq⟩
       simpa using hCB _ (hφ _ (hxN q)) _ hq
   have hN : N = ⋃ q, (fun y => (x q)⁻¹ * y) ⁻¹' (K : Set G) := by
@@ -403,7 +401,7 @@ theorem sum_uMat {r : ℕ} (u : UIdx r → Fv F v ⊗[F] E) (X : Fin (r + 1) →
     (b : Fin (r + 1)) :
     ∑ a, uMat v u a b • X a = X b + ∑ a, (if h : a < b then u ⟨(a, b), h⟩ else 0) • X a := by
   simp only [uMat_split, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem sum_dite_lt {r : ℕ} (b : Fin (r + 1))
     (c : {a // a ∈ {a : Fin (r + 1) | a < b}} → Fv F v ⊗[F] E) (X : Fin (r + 1) → Fin n → Fv F v ⊗[F] E) :
@@ -503,8 +501,7 @@ theorem knat_cong {r g : ℕ} {P : Frame E n r} (hP : IsPrim v Λ (locF v (ratTu
     rw [locF_comb] at hin
     have := hP.2 _ hin a
     have hu' : uMat v u a b = u ⟨(a, b), hab⟩ := by simp [uMat, hab.ne, hab]
-    rw [hu'] at this
-    exact this
+    rwa [hu'] at this
   · intro b
     obtain ⟨z, hz, hze⟩ := ((kgv_iff κ).1 hκ).2 _ (hP.1 b)
     refine ⟨lin (Fv F v) σ J s z, kv_lat hsK hz, ?_⟩
@@ -609,8 +606,7 @@ theorem stepIdx_of (hL : CongruenceSubgroupLift) (hU : KUnip1) (hM : CongruenceS
     (Formalism.L2.SG.TypedSets.Knatv σ J Λ P g v) (UO (E := E) v r) (phi σ J v Λ g P)
     hNK (fun u hu b hb => uo_add hg0 hu hb) hφ hco hsur
   have := congrArg ENNReal.toReal key
-  rw [ENNReal.toReal_mul, ENNReal.toReal_mul] at this
-  exact this
+  rwa [ENNReal.toReal_mul, ENNReal.toReal_mul] at this
 
 end PI.LocMassTypW
 end -- clump:auto

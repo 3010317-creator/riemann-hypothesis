@@ -223,49 +223,22 @@ theorem gsTateCompactCohomology_coind_zmodRep_eq_zero_of
     (x : gsTateCompactCohomology S ιr ιs (Rep.coind (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
       (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2)) r) : x = 0 := by
   obtain ⟨n, rfl⟩ : ∃ n, r = n + 2 := ⟨r - 2, by omega⟩
-  have htriv : ∀ j, 1 ≤ j → ∀ v (d : MackeyDoubleCoset (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))
-      (gsRealFamily S ιr v).toMonoidHom),
-      mackeySubgroup (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)) (gsRealFamily S ιr v).toMonoidHom
-        d.out ≠ ⊤ →
-      Subsingleton (cohomology (mackeyRep (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))
-        (gsRealFamily S ιr v).toMonoidHom
-        (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2) d.out) j) :=
-    fun j hj v d hd => subsingleton_cohomology_mackeyRep_realFamily S ιr W _ hj v d hd
-  have hs := (surjective_tateGlobalToLocal_iff (gsFinFamily S ιs) (gsRealFamily S ιr) (Rep.coind
-      (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-        (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))
-      (fun v => Rep.res (gsFinFamily S ιs v).toMonoidHom (Rep.coind
-        (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-          (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))) (fun _ => 𝟙 _)
-      (fun w => Rep.res (gsRealFamily S ιr w).toMonoidHom (Rep.coind
-        (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-          (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))) (fun _ => 𝟙 _) (n + 1)
+  have htriv := fun (j : ℕ) (hj : 1 ≤ j) v d hd =>
+    subsingleton_cohomology_mackeyRep_realFamily S ιr W
+      (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2) hj v d hd
+  have hs := (surjective_tateGlobalToLocal_iff (gsFinFamily S ιs) (gsRealFamily S ιr) _ _
+      (fun _ => 𝟙 _) _ (fun _ => 𝟙 _) (n + 1)
       (fun v => subsingleton_cohomology_gsFinFamily_coind_zmodRep S ιs W v (by omega))).2
     ((surjective_globalToLocal_coind_iff (gsRealFamily S ιr) W
       (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2) (n + 1)).2
       ((surjective_mackeyRealRes_iff (htriv (n + 1) (by omega))).2 (hS (n + 1) (by omega))))
-  have hi := (injective_tateGlobalToLocal_iff (gsFinFamily S ιs) (gsRealFamily S ιr) (Rep.coind
-      (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-        (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))
-      (fun v => Rep.res (gsFinFamily S ιs v).toMonoidHom (Rep.coind
-        (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-          (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))) (fun _ => 𝟙 _)
-      (fun w => Rep.res (gsRealFamily S ιr w).toMonoidHom (Rep.coind
-        (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-          (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))) (fun _ => 𝟙 _) (n + 2)
+  have hi := (injective_tateGlobalToLocal_iff (gsFinFamily S ιs) (gsRealFamily S ιr) _ _
+      (fun _ => 𝟙 _) _ (fun _ => 𝟙 _) (n + 2)
       (fun v => subsingleton_cohomology_gsFinFamily_coind_zmodRep S ιs W v (by omega))).2
     ((injective_globalToLocal_coind_iff (gsRealFamily S ιr) W
       (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2) (n + 2)).2
       ((injective_mackeyRealRes_iff (htriv (n + 2) (by omega))).2 (hI (n + 2) (by omega))))
-  exact tateCompactCohomology_eq_zero_of_surjective_of_injective (gsFinFamily S ιs) (gsRealFamily S ιr)
-    (Rep.coind (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-      (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))
-    (fun v => Rep.res (gsFinFamily S ιs v).toMonoidHom (Rep.coind
-      (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-        (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))) (fun _ => 𝟙 _)
-    (fun w => Rep.res (gsRealFamily S ιr w).toMonoidHom (Rep.coind
-      (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)).subtype
-        (zmodRep.{0} (G := (W : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) 2))) (fun _ => 𝟙 _) n hs hi x
+  exact tateCompactCohomology_eq_zero_of_surjective_of_injective _ _ _ _ _ _ _ n hs hi x
 
 end GS
 

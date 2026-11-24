@@ -397,8 +397,7 @@ theorem good_gen (hS4 : S4) (hβ : ∀ y, (∀ x, β x y = 0) → y = 0)
     · exact (hasFDerivAt_orb_mul hDw (hστ x hx)).const_smul (η x)
     · have e : (fun p => Ψ (p, x)) = fun _ => 0 := by funext p; simp [hΨ, hη0 x hx]
       rw [e]
-      simp only [hLx, hη0 x hx, zero_smul]
-      exact hasFDerivAt_const _ _
+      simpa only [hLx, hη0 x hx, zero_smul] using hasFDerivAt_const _ _
   have hΨ0 : ∀ p ∈ {M : LieI ι a | IsUnit (Matrix.of M)}, ∀ x ∉ tsupport η, Ψ (p, x) = 0 := by
     intro p _ x hx
     simp [hΨ, image_eq_zero_of_notMem_tsupport hx]
@@ -432,8 +431,7 @@ theorem good_gen (hS4 : S4) (hβ : ∀ y, (∀ x, β x y = 0) → y = 0)
       congr 1
       funext x
       simp [hΨ, orb_eq, opI_mul]
-    rw [e]
-    exact hder
+    rwa [e]
 
 end Gen
 

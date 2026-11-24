@@ -132,9 +132,7 @@ theorem finCong_map {V : HSp D} {N : ℕ} {k : GA D V} (hk : FinCong V N k) :
   rw [e]
   exact add_mem (nsmul_mem hy N) hz
 
-theorem finCong_one (V : HSp D) (N : ℕ) : FinCong V N 1 := by
-  intro z _
-  exact ⟨0, zero_mem _, by simp⟩
+theorem finCong_one (V : HSp D) (N : ℕ) : FinCong V N 1 := fun z _ => ⟨0, zero_mem _, by simp⟩
 
 theorem finCong_mul {V : HSp D} {N : ℕ} {a b : GA D V} (ha : FinCong V N a) (hb : FinCong V N b) :
     FinCong V N (a * b) := by
@@ -177,8 +175,7 @@ theorem finCong_mem_nhds (V : HSp D) {N : ℕ} (hN : 0 < N) :
       (AddSubgroup.closure (S : Set (Fin V.rank → D.host.E)) : AddSubgroup (Fin V.rank → D.host.E)) := by
     intro x hx
     have hx' : x ∈ Submodule.span ℤ (S : Set (Fin V.rank → D.host.E)) := by rw [hS]; exact hx
-    rw [← Submodule.span_int_eq_addSubgroupClosure]
-    exact hx'
+    rwa [← Submodule.span_int_eq_addSubgroupClosure]
   have hU : (⋂ x ∈ S, {k : GA D V | ∃ y ∈ latHat V,
       (finHom V k).1 *ᵥ GlobalTheory.AdLat.fv D.host.F x - GlobalTheory.AdLat.fv D.host.F x = N • y}) ∈ 𝓝 (1 : GA D V) := by
     refine (Filter.biInter_finset_mem S).2 fun x _ => ?_

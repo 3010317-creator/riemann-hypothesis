@@ -105,8 +105,7 @@ theorem exists_chart_at_point (S : Scheme.{0}) (G : Over S) [GrpObj G] [Smooth G
     apply hsub
     have : (PrimeSpectrum.comap (algebraMap R (Localization.Away f))) y ∈
         Set.range (PrimeSpectrum.comap (algebraMap R (Localization.Away f))) := ⟨y, rfl⟩
-    rw [PrimeSpectrum.localization_away_comap_range (Localization.Away f) f] at this
-    exact this
+    rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away f) f] at this
   let l := IsOpenImmersion.lift hU.fromSpec (a ≫ t) hrange
   refine ⟨(Spec.preimage l).hom, ?_⟩
   have hl : spMap (Spec.preimage l).hom = l := by
@@ -152,8 +151,7 @@ theorem bijective_of_cover {R M N J : Type} [CommRing R] [AddCommGroup M] [Modul
     obtain ⟨Q, _, _, a, h1, h2⟩ := h i
     obtain ⟨⟨m, ⟨_, k, rfl⟩⟩, hk⟩ := IsLocalizedModule.surj (Submonoid.powers (f i)) (a ∘ₗ φ) (a n)
     have h0 : a (f i ^ k • n) = a (φ m) := by
-      rw [map_smul]
-      exact hk
+      rwa [map_smul]
     obtain ⟨⟨_, l, rfl⟩, hl⟩ := IsLocalizedModule.exists_of_eq (S := Submonoid.powers (f i)) h0
     refine ⟨l + k, f i ^ l • m, ?_⟩
     have hl' : f i ^ l • f i ^ k • n = f i ^ l • φ m := hl
@@ -258,8 +256,7 @@ theorem loc_of_charts {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
     have hrr : r = (e : _ →ₗ[R] _) ∘ₗ LinearMap.compRight R (cmap h).toLinearMap := by
       refine LinearMap.ext fun y => pt_left_inj (m (ix g') _ (unit_of_dvd (hix g'))) ?_
       rw [hr]
-      refine Eq.trans ?_ (he _).symm
-      exact (nat (ix g) _ _ (unit_of_dvd (hix g)) hu' (cmap h) y).symm
+      exact Eq.trans (nat (ix g) _ _ (unit_of_dvd (hix g)) hu' (cmap h) y).symm (he _).symm
     rw [hrr]
     exact IsLocalizedModule.of_linearEquiv _ _ _
   obtain ⟨ρ, hρ, hloc⟩ := loc_of_family x f hf M (fun g => P (ix g) →ₗ[R] Localization.Away g.1)
@@ -316,8 +313,7 @@ theorem exists_cover [Smooth G.hom] {R : Type} [CommRing R] (x : Sp R ⟶ S) :
     exact hf (hle (Ideal.subset_span h))
   obtain ⟨s, hs, hsp⟩ := (Ideal.span_eq_top_iff_finite _).mp hspan
   refine ⟨s, inferInstance, fun i => i, ?_, fun i => hs i.2⟩
-  rw [Subtype.range_coe_subtype]
-  exact hsp
+  rwa [Subtype.range_coe_subtype]
 
 theorem isBaseChange_lie [Smooth G.hom] {R : Type} [CommRing R] (x : Sp R ⟶ S) {L : Type} [AddCommGroup L]
     [Module R L] (M : LieModel G x L) (R' : Type) [CommRing R'] [Algebra R R'] (L' : Type) [AddCommGroup L']

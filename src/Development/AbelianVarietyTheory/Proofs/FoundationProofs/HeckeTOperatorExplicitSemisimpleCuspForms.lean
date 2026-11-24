@@ -188,7 +188,7 @@ private theorem B_slash [H.FiniteIndex] {α : GL (Fin 2) ℝ} (hα : 0 < α.det.
     (hG' : Good H k (G ∣[k] α)) :
     quotInt H (petersson k (F ∣[k] α) (G ∣[k] α)) = (α.det.val : ℂ) ^ (k - 2) * quotInt H (petersson k F G) := by
   have e : ∀ z, petersson k (F ∣[k] α) (G ∣[k] α) z = (α.det.val : ℂ) ^ (k - 2) * petersson k F G (α • z) := fun z => by
-    rw [petersson_slash, σ, if_pos hα, abs_of_pos hα]; rfl
+    rw [petersson_slash, σ, ite_eq_left hα, abs_of_pos hα]; rfl
   have h0 : (α.det.val : ℂ) ^ (k - 2) ≠ 0 := zpow_ne_zero _ (by exact_mod_cast hα.ne')
   obtain ⟨C, hC⟩ := hF.pbd hG
   rw [funext e, quotInt_mul, quotInt_conj H α h1 h2 (hF.cont hG) hC (hF.pinv hG) fun γ hγ z => ?_]
@@ -203,8 +203,7 @@ private theorem B_slashSL [H.FiniteIndex] [H.Normal] (γ : SL(2, ℤ)) (hF : Goo
     rwa [map_inv, map_inv] at this
   have := B_slash (α := (γ : GL (Fin 2) ℝ)) (by rw [hd]; exact one_pos) (Subgroup.finiteIndex_of_le (le_conj γ)) h2 hF hG
     (hF.slashSL γ) (hG.slashSL γ)
-  rw [hd, Complex.ofReal_one, one_zpow, one_mul] at this
-  exact this
+  rwa [hd, Complex.ofReal_one, one_zpow, one_mul] at this
 
 private theorem B_smul_left [H.FiniteIndex] (c : ℂ) :
     quotInt H (petersson k (c • F) G) = conj c * quotInt H (petersson k F G) := by
@@ -249,7 +248,7 @@ private theorem dg_fin' (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] (m n : ℕ) (h
 private theorem dg_slash (m n : ℕ) (h : m * n ≠ 0) (k : ℤ) (F : ℍ → ℂ) (z : ℍ) :
     (F ∣[k] dg m n h) z = ((m * n : ℕ) : ℂ) ^ (k - 1) * (n : ℂ) ^ (-k) * F (ofComplex (m * (z : ℂ) / n)) := by
   have hpos : 0 < (dg m n h).det.val := by rw [dg_det]; exact_mod_cast Nat.pos_of_ne_zero h
-  rw [slash_apply, σ, if_pos hpos, dg_det, ← ofComplex_apply (dg m n h • z), coe_smul_of_det_pos hpos]
+  rw [slash_apply, σ, ite_eq_left hpos, dg_det, ← ofComplex_apply (dg m n h • z), coe_smul_of_det_pos hpos]
   simp [num, denom, dg_val]
   ring
 
@@ -302,8 +301,7 @@ private theorem isDia_l {N l : ℕ} {d : ℤ} {s : SL(2, ℤ)} (h : IsDia N l d 
 
 private theorem det_SL (s : SL(2, ℤ)) : s 0 0 * s 1 1 - s 0 1 * s 1 0 = 1 := by
   have := s.2
-  rw [Matrix.det_fin_two] at this
-  exact this
+  rwa [Matrix.det_fin_two] at this
 
 private theorem isDia_mul_inv_mem {N l : ℕ} {d : ℤ} {s t : SL(2, ℤ)} (hs : IsDia N l d s) (ht : IsDia N l d t) :
     s * t⁻¹ ∈ lev N l := by
@@ -544,8 +542,7 @@ theorem pet_self_pos (N l : ℕ) (k : ℤ) (hN : 0 < N) (hl : 0 < l) (f : CuspFo
   set r : ℍ → ℝ := fun z => ‖f z‖ ^ 2 * z.im ^ k with hr_def
   have hr0 : ∀ z, 0 ≤ r z := fun z => mul_nonneg (sq_nonneg _) (zpow_nonneg z.im_pos.le _)
   have hrc : Continuous r := by
-    refine (f.holo'.continuous.norm.pow 2).mul ?_
-    exact (continuous_im).zpow₀ k fun z => Or.inl z.im_ne_zero
+    exact (f.holo'.continuous.norm.pow 2).mul ((continuous_im).zpow₀ k fun z => Or.inl z.im_ne_zero)
   have hrp : ∀ z, petersson k f f z = (r z : ℂ) := fun z => petersson_self_eq k f z
 
   set I : SL(2, ℤ) ⧸ lev N l → ℝ := fun q => ∫ z in ModularGroup.fd, r (q.out⁻¹ • z) with hI
@@ -557,8 +554,7 @@ theorem pet_self_pos (N l : ℕ) (k : ℤ) (hN : 0 < N) (hl : 0 < l) (f : CuspFo
   have hI0 : ∀ q, 0 ≤ I q := fun q => integral_nonneg fun z => hr0 _
 
   obtain ⟨z₀, hz₀⟩ : ∃ z, f z ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hf (CuspForm.ext h)
   obtain ⟨g, hg⟩ := ModularGroup.exists_smul_mem_fd z₀
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul (lev N l) g
@@ -585,8 +581,7 @@ theorem pet_self_pos (N l : ℕ) (k : ℤ) (hN : 0 < N) (hl : 0 < l) (f : CuspFo
       refine Measure.integrableOn_of_bounded (M := C) fin.2.ne hc.aestronglyMeasurable
         (Filter.Eventually.of_forall fun z => ?_)
       have := hC ((g : SL(2, ℤ) ⧸ lev N l).out⁻¹ • z)
-      rw [hrp, Complex.norm_real] at this
-      exact this
+      rwa [hrp, Complex.norm_real] at this
     exact UpperTheory.V.Af.Rs.fdPos UpperTheory.V.Af.Rs.volMap _ hc (fun z => hr0 _) hint _ hg hpos
   rw [hpet, Complex.ofReal_re, Complex.ofReal_im]
   exact ⟨Finset.sum_pos' (fun q _ => hI0 q) ⟨_, Finset.mem_univ _, hIpos⟩, rfl⟩
@@ -724,8 +719,7 @@ theorem eigen_dia (hN : 0 < N) (hl : 0 < l) {q : ℕ} {σ : SL(2, ℤ)} (hq : q.
     exact h
   have h3 : c * P ⇑v ⇑u = (starRingEnd ℂ) c * P ⇑u ⇑u := by
     have h := congrArg (starRingEnd ℂ) h2
-    rw [map_mul, map_mul, ← pet_conj hN hl, ← pet_conj hN hl, Complex.conj_conj] at h
-    exact h
+    rwa [map_mul, map_mul, ← pet_conj hN hl, ← pet_conj hN hl, Complex.conj_conj] at h
   have e : ⇑(c • u - (starRingEnd ℂ) c • v) = c • ⇑u - (starRingEnd ℂ) c • ⇑v := by
     rw [CuspForm.coe_sub, CuspForm.coe_smul, CuspForm.coe_smul]
   have hw : c • u - (starRingEnd ℂ) c • v = 0 := by
@@ -754,8 +748,7 @@ theorem ker_sq (hN : 0 < N) (hl : 0 < l) {q : ℕ} {σ : SL(2, ℤ)} (hq : q.Pri
     rw [hv]; exact _root_.GlobalTheory.Hk.pet_dia_dia N l k q σ hN hl hσ u u
   have h2 : P ⇑sdg ⇑v = (starRingEnd ℂ) c * P ⇑dg ⇑v := by
     have h := _root_.GlobalTheory.Hk.pet_heckeT_adj N l q k σ σ hN hl hq hqN hσ hσ dg u
-    rw [← hsdg, ← hv, hu, hw, pet_smul_right hN hl] at h
-    exact h
+    rwa [← hsdg, ← hv, hu, hw, pet_smul_right hN hl] at h
   apply eq_zero_of_pet_self hN hl
   have h3 := pet_lin_left hN hl v sdg dg 1 c
   rw [← hv', h1, h2] at h3

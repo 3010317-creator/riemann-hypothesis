@@ -120,14 +120,12 @@ theorem det_sub_exp (e : Fin j ↪ Fin N) (S : Set (Fin N)) (Y : Matrix (Fin N) 
     have h4 := h2.const_mul (f s)
     have h5 : HasDerivAt f (f s * c) s :=
       h4.congr_of_eventuallyEq (Filter.Eventually.of_forall fun u => congrFun h1 u)
-    rw [mul_comm]
-    exact h5
+    rwa [mul_comm]
   have hl : ∀ u : ℝ, HasDerivAt (fun u : ℝ => (u : ℂ)) 1 u := fun u => Complex.ofRealCLM.hasDerivAt
   have hg : ∀ u : ℝ, HasDerivAt (fun u : ℝ => f u * Complex.exp (-(c * u))) 0 u := by
     intro u
     have he : HasDerivAt (fun u : ℝ => Complex.exp (-(c * u))) (Complex.exp (-(c * u)) * (-c)) u := by
-      have h := ((hl u).const_mul c).neg.cexp
-      simpa using h
+      simpa using ((hl u).const_mul c).neg.cexp
     have := (hd u).mul he
     exact this.congr_deriv (by ring)
   have hconst : ∀ u : ℝ, f u * Complex.exp (-(c * u)) = 1 := by
@@ -170,8 +168,7 @@ theorem mem_range_eR (c : Fin (2 * (j + ρ) + k + 1)) : c ∈ Set.range (eR k j 
   constructor
   · rintro ⟨a, rfl⟩
     exact a.2
-  · intro h
-    exact ⟨⟨c.val, h⟩, Fin.ext rfl⟩
+  · exact fun h => ⟨⟨c.val, h⟩, Fin.ext rfl⟩
 
 theorem mem_range_eL (c : Fin (2 * (j + ρ) + k + 1)) :
     c ∈ Set.range (eL k j ρ) ↔ 2 * (j + ρ) + k + 1 ≤ c.val + j := by
@@ -192,8 +189,8 @@ theorem hpk_row {k r : ℕ} (i m : Fin (2 * r + k + 1)) (hi : i.val < r) :
   unfold Hpk
   by_cases h : i.val + m.val = 2 * r + k
   · simp [hi, h]
-  · rw [if_neg (fun h' => h h'.2), if_neg (fun h' => h h'.2), if_neg (fun h' => absurd h'.1 (by omega)),
-      if_neg h]
+  · rw [ite_eq_right (fun h' => h h'.2), ite_eq_right (fun h' => h h'.2), ite_eq_right (fun h' => absurd h'.1 (by omega)),
+      ite_eq_right h]
 
 variable {k j ρ}
 
@@ -215,20 +212,19 @@ theorem presL {Y : B.Mat k (j + ρ)} (hY : inLieP k j ρ Y) : Pres (Set.range (e
   have h1 : ∑ m, Yᴴ i m * Hpk k (j + ρ) m b = 0 := by
     refine Finset.sum_eq_zero fun m _ => ?_
     by_cases hm : m.val < j
-    · rw [hpk_row m b (by omega), if_neg (by omega), mul_zero]
+    · rw [hpk_row m b (by omega), ite_eq_right (by omega), mul_zero]
     · rw [Matrix.conjTranspose_apply, hY.2 m i hi (by omega), star_zero, zero_mul]
   have h2 : ∑ m, Hpk k (j + ρ) i m * Y m b = Y c b := by
     rw [Finset.sum_eq_single c]
-    · rw [hpk_row i c (by omega), if_pos (by omega), one_mul]
+    · rw [hpk_row i c (by omega), ite_eq_left (by omega), one_mul]
     · intro m _ hm
-      rw [hpk_row i m (by omega), if_neg, zero_mul]
+      rw [hpk_row i m (by omega), ite_eq_right, zero_mul]
       intro h
       apply hm
       ext
       omega
     · simp
-  rw [h1, h2, zero_add] at hL
-  exact hL
+  rwa [h1, h2, zero_add] at hL
 
 theorem zh_right (g E : B.Mat k (j + ρ)) (hE : Pres (Set.range (eR k j ρ)) E) :
     Zh k j ρ (g * E) = Zh k j ρ g * sub (eR k j ρ) E := by

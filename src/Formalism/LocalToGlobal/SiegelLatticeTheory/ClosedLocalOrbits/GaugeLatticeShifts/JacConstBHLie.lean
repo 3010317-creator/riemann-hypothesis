@@ -51,10 +51,8 @@ theorem lieG : LieG := by
   intro k r
   ext X
   constructor
-  · intro hX
-    exact adj_of_lie hX
-  · intro hX t
-    exact exp_mem_UH hX t
+  · exact fun hX => adj_of_lie hX
+  · exact fun hX t => exp_mem_UH hX t
 
 theorem col_zero {d : ℕ} {X : Matrix (Fin d) (Fin d) ℂ} (j : Fin d)
     (h : ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • X) *ᵥ bvec j = bvec j) : X *ᵥ bvec j = 0 := by

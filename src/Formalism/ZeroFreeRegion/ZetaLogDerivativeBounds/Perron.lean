@@ -68,8 +68,7 @@ lemma perron_Sz_eq_zero_of_le_one {x : ℝ} (hx : x ≤ 1) : Formalism.Sz x = 0 
   intro n hn
   rw [Finset.mem_Icc] at hn
   have hx0 : 0 ≤ x := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have h1 := Nat.floor_of_nonpos h.le
     omega
   have hnx : (n : ℝ) ≤ x := (Nat.le_floor_iff hx0).1 hn.2
@@ -146,8 +145,7 @@ lemma perron_continuous_Fy {y : ℝ} (hy : 0 < y) {σ₀ : ℝ} (hσ : 1 < σ₀
   refine Continuous.div (Continuous.mul (Continuous.neg (Continuous.div ?_ ?_ ?_)) ?_) ?_ ?_
   · exact hderiv.comp_continuous hline hU
   · exact hzd.continuousOn.comp_continuous hline hU
-  · intro t
-    exact riemannZeta_ne_zero_of_one_lt_re (hU t)
+  · exact fun t => riemannZeta_ne_zero_of_one_lt_re (hU t)
   · exact hline.const_cpow (Or.inl (by exact_mod_cast hy.ne'))
   · exact hline.mul (hline.sub continuous_const)
   · intro t
@@ -240,8 +238,7 @@ lemma perron_verticalIntegrable {σ₀ : ℝ} (hσ : 1 < σ₀) :
       perron_mellin_Sz hre]
     unfold Fy
     simp [Complex.one_cpow]
-  rw [heq]
-  exact hF
+  rwa [heq]
 
 theorem perron_formula : Perron := by
   intro y hy σ₀ hσ

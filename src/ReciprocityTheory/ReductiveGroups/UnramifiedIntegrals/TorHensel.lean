@@ -28,8 +28,7 @@ theorem hensel_mem (P : Polynomial ℂ_[l]) (hK : ∀ i, P.coeff i ∈ MaximalUn
   obtain ⟨Q, hQ⟩ : ∃ Q : Polynomial (MaximalUnramifiedExtension l), Q.map (MaximalUnramifiedExtension l).subtype = P := by
     have : P ∈ Polynomial.lifts (MaximalUnramifiedExtension l).subtype := by
       rw [Polynomial.lifts_iff_coeff_lifts]
-      intro i
-      exact ⟨⟨P.coeff i, hK i⟩, rfl⟩
+      exact fun i => ⟨⟨P.coeff i, hK i⟩, rfl⟩
     exact (Polynomial.mem_lifts P).mp this
   obtain ⟨ξ, hξ, hd⟩ := res_full l x hx
   have hξ1 : ‖ξ‖ ≤ 1 := tch_norm_le l hξ
@@ -43,8 +42,7 @@ theorem hensel_mem (P : Polynomial ℂ_[l]) (hK : ∀ i, P.coeff i ∈ MaximalUn
       exact (Polynomial.eval_map_apply (MaximalUnramifiedExtension l).subtype b).symm
   have hQc : ∀ i, ‖Q.coeff i‖ ≤ 1 := fun i => by
     have := hP i
-    rw [← hQ, Polynomial.coeff_map] at this
-    exact this
+    rwa [← hQ, Polynomial.coeff_map] at this
   have e0 : ‖P.eval ξ‖ < 1 := by
     have := newton_lipschitz P hP ξ x hξ1 hx
     rw [h0, sub_zero, norm_sub_rev] at this
@@ -96,8 +94,7 @@ theorem sqrt_mem (hl : l ≠ 2) (c y : ℂ_[l]) (hc : c ∈ MaximalUnramifiedExt
       have := IsUltrametricDist.norm_natCast_le_one ℂ_[l] 2
       exact_mod_cast this
     refine le_antisymm hle ?_
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have hcop : Nat.Coprime 2 l := (Nat.coprime_primes Nat.prime_two (Fact.out)).2 (Ne.symm hl)
     have hg : Int.gcd 2 (l : ℤ) = 1 := by
       have := Int.gcd_natCast_natCast 2 l
@@ -128,8 +125,7 @@ theorem sqrt_mem (hl : l ≠ 2) (c y : ℂ_[l]) (hc : c ∈ MaximalUnramifiedExt
     split_ifs <;> first | (exfalso; omega) | simp [hc1]
   · simp [h]
   · simp [norm_mul, hy]
-    rw [one_add_one_eq_two]
-    exact h2
+    rwa [one_add_one_eq_two]
 
 theorem exists_sqrt (hl : l ≠ 2) (c : ℂ_[l]) (hc : c ∈ MaximalUnramifiedExtension l) (h1 : ‖c‖ = 1) :
     ∃ b ∈ MaximalUnramifiedExtension l, b ^ 2 = c ∧ ‖b‖ = 1 := by

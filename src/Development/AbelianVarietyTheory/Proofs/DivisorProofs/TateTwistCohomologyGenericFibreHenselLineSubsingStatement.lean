@@ -94,8 +94,7 @@ theorem genFibre_prime_meets_polynomial :
   intro T _ _ _ hA O _ _ _ _ _ _ hind P hP hne
   haveI : IsDomain (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))) :=
     (locIndEtale_isDomain_isIntegrallyClosed T O 1 ⟨inferInstance, hA⟩ (by simp) one_pos hind).1
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
 
   obtain ⟨y, hyP, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   obtain ⟨⟨o, s⟩, rfl⟩ := IsLocalization.mk'_surjective (Algebra.algebraMapSubmonoid O (nonZeroDivisors T)) y
@@ -210,8 +209,7 @@ theorem exists_unit_pow_eq_of_krullDimLE_zero : ∀ (R : Type) [CommRing R] [Rin
     intro T
     induction T using Finset.induction_on with
     | empty =>
-      intro _
-      exact ⟨0, ⟨IsIdempotentElem.zero, 0, by simp⟩, by simp⟩
+      exact fun _ => ⟨0, ⟨IsIdempotentElem.zero, 0, by simp⟩, by simp⟩
     | insert a T ha ih =>
       intro hT
       have haS : a ∈ S := hT (by simp)
@@ -235,8 +233,7 @@ theorem exists_unit_pow_eq_of_krullDimLE_zero : ∀ (R : Type) [CommRing R] [Rin
       rw [Finset.sum_mul]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [smul_mul_assoc, hGT _ (Finset.mem_image_of_mem _ (Finset.mem_univ i))]
-    rw [hf, one_mul] at this
-    exact this
+    rwa [hf, one_mul] at this
   obtain ⟨x, hx⟩ := hG.2
   rw [hG1, one_mul] at hx
   have hxq : IsUnit (x ^ q) := by
@@ -811,8 +808,7 @@ theorem tateTwistCohomology_genericFibre_henselLine_subsingleton : ∀ (q : ℕ)
   obtain ⟨e⟩ := _root_.GlobalTheory.EtC.untwist q (TensorProduct T (FractionRing T) A) hqB hz 1 i 1
   have h1 : Subsingleton (Ht q (sp (TensorProduct T (FractionRing T) A)) 1 1) :=
     _root_.GlobalTheory.EtC.kummer_vanishing q _ hqB (fun u => (unitsL q T hT hq A hSH hA u).imp fun _ h => h.symm) (picL q T hT hq A hSH hA)
-  refine ⟨fun x y => e.injective ?_⟩
-  exact Subsingleton.elim _ _
+  exact ⟨fun x y => e.injective (Subsingleton.elim _ _)⟩
 
 end GlobalTheory.LocAcycDegOne
 end -- clump:auto

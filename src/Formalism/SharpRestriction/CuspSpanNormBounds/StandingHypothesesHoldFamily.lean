@@ -335,8 +335,7 @@ theorem linkS_concl (C0 C' Cl Cg cb Cu cT CT c7 : ℝ) (h1 : 1 ≤ C0)
   refine ⟨fun u u' huu => ?_, fun u => ?_, ?_⟩
   · have ha := h76.1 u u' huu
     have hb := h76.2.2.1 u u' huu
-    rw [ha, sub_zero] at hb
-    exact hb
+    rwa [ha, sub_zero] at hb
   · exact diag_unproj L C0 C' Cl Cg cb Cu cT CT hh h76 u
   · have := abs_le.1 (hc hH)
     have h2 := this.2
@@ -462,7 +461,7 @@ variable {D : D7}
 theorem lamS_lo (τ : D.what₂.Tau) (i : Fin D.R.r) (h : i.val < D.R.k - 1) :
     lamS D.R (D.hc τ) i = vOne D τ (i.val + 1) := by
   have h2 : 1 ≤ i.val + 1 ∧ i.val + 1 ≤ D.R.k - 1 := ⟨by omega, by omega⟩
-  simp only [lamS, vOne, dif_pos h, dif_pos h2]
+  simp only [lamS, vOne, dite_eq_left h, dite_eq_left h2]
   rfl
 
 theorem lamS_hi (τ : D.what₂.Tau) (i : Fin D.R.r) (h : ¬ i.val < D.R.k - 1) :
@@ -472,7 +471,7 @@ theorem lamS_hi (τ : D.what₂.Tau) (i : Fin D.R.r) (h : ¬ i.val < D.R.k - 1) 
   have hk := D.R.m_add_three_le_k
   have h' : i.val - (D.R.k - 1) < D.R.m := by omega
   have h2 : 1 ≤ i.val - (D.R.k - 1) + 1 ∧ i.val - (D.R.k - 1) + 1 ≤ D.R.m := ⟨by omega, by omega⟩
-  simp only [lamS, bOne, dif_neg h, dif_pos h', dif_pos h2]
+  simp only [lamS, bOne, dite_eq_right h, dite_eq_left h', dite_eq_left h2]
   rfl
 
 theorem bOne_gap (τ : D.what₂.Tau) (G : ℝ) (hG : 0 ≤ G)
@@ -746,19 +745,19 @@ variable {D : D7}
 theorem vOne_succ (τ : D.what₂.Tau) (l : ℕ) (h : l < D.R.k - 1) :
     vOne D τ (l + 1) = (((D.hc τ).v ⟨l, h⟩ : ℚ) : ℝ) := by
   have h2 : 1 ≤ l + 1 ∧ l + 1 ≤ D.R.k - 1 := ⟨by omega, by omega⟩
-  simp only [vOne, dif_pos h2]
+  simp only [vOne, dite_eq_left h2]
   rfl
 
 theorem bOne_succ (τ : D.what₂.Tau) (j : ℕ) (h : j < D.R.m) :
     bOne D τ (j + 1) = (((D.hc τ).b ⟨j, h⟩ : ℚ) : ℝ) := by
   have h2 : 1 ≤ j + 1 ∧ j + 1 ≤ D.R.m := ⟨by omega, by omega⟩
-  simp only [bOne, dif_pos h2]
+  simp only [bOne, dite_eq_left h2]
   rfl
 
 theorem uOne_succ (u : D.what₂.Word) (τ : D.what₂.Tau) (i : ℕ) (h : i < D.R.k) :
     uOne D u τ (i + 1) = (((D.hcW u τ).u ⟨i, h⟩ : ℚ) : ℝ) := by
   have h2 : 1 ≤ i + 1 ∧ i + 1 ≤ D.R.k := ⟨by omega, by omega⟩
-  simp only [uOne, uS, dif_pos h2]
+  simp only [uOne, uS, dite_eq_left h2]
   rfl
 
 theorem k_pos : 0 < D.R.k := by
@@ -1048,7 +1047,7 @@ theorem bOne_ge (hx2 : 2 ≤ L.sc.x) (τ : D.what₂.Tau) (j : ℕ) (h1 : 1 ≤ 
   have a := wj_ge L τ (j + 1) h1 h2
   have e : wj D (j + 1) τ = (((D.hc τ).e ⟨j, hj⟩ : ℚ) : ℝ) := by
     have : j + 1 - 1 < D.R.m := by omega
-    simp only [wj, dif_pos this]
+    simp only [wj, dite_eq_left this]
     rfl
   have b := abs_le.1 (L.be_close τ ⟨j, hj⟩ ⟨j, hj⟩)
   have c := P.teta
@@ -1376,8 +1375,7 @@ theorem type_prime_size_bounds (i : Fin 2) :
   have hY : 0 < Y := lt_of_lt_of_le (by positivity) y1
   refine ⟨le_trans y1 (y4 i).1, le_trans (y4 i).2 ?_⟩
   have a : Y ≤ L.sc.b ^ P.CYL := by
-    rw [← Real.log_le_log_iff hY (by positivity), Real.log_rpow hb0, log_scb L]
-    exact y3
+    rwa [← Real.log_le_log_iff hY (by positivity), Real.log_rpow hb0, log_scb L]
   rw [Real.rpow_add hb0, Real.rpow_one]
   have hp : 0 ≤ L.sc.b ^ P.CYL := by positivity
   have h2 := mul_le_mul_of_nonneg_left hb2 hp
@@ -1609,8 +1607,7 @@ theorem tuWin_of {D : D7} (L : SizeData₂ D) (C : ℝ) (h1 : L.TuGe)
   have hT : (0 : ℝ) < (D.mem u).A.T := by exact_mod_cast (D.mem u).A.T_prime.pos
   constructor
   · have := h1 u
-    rw [show (1 / 2 : ℝ) * (D.R.m : ℝ) = (D.R.m : ℝ) / 2 by ring]
-    exact this
+    rwa [show (1 / 2 : ℝ) * (D.R.m : ℝ) = (D.R.m : ℝ) / 2 by ring]
   · unfold Tr
     rw [← Real.log_le_log_iff hT (by positivity), Real.log_rpow hb0, log_scb L]
     exact h2 u

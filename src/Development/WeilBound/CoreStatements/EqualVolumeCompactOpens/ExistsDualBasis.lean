@@ -188,8 +188,7 @@ theorem eq_sum_coordR {k : ℕ} {y : Fin k → Fin N → E} {l : Fin k → (Fin 
     funext i
     simp only [coordR_tmul, Finset.sum_apply, TensorProduct.smul_tmul, ← TensorProduct.tmul_sum]
     congr 1
-    have hx := congrFun (h x) i
-    simpa [Finset.sum_apply] using hx
+    simpa [Finset.sum_apply] using congrFun (h x) i
   | h2 u v hu hv =>
     funext i
     have hu' := congrFun hu i
@@ -268,8 +267,7 @@ theorem hatRat : HatRat := by
     obtain ⟨o, ho⟩ := hc j
     rw [ho, IsScalarTower.algebraMap_smul]
     exact Submodule.smul_of_tower_mem Λ o (hy j)
-  · intro hx
-    exact incl_mem_hat hx
+  · exact fun hx => incl_mem_hat hx
 
 theorem hatCompactOpen : HatCompactOpen := by
   intro F E _ _ _ _ _ N Λ hΛ
@@ -317,8 +315,7 @@ theorem hatCompactOpen : HatCompactOpen := by
       Φ ⁻¹' (Set.univ.pi fun _ => (GroundTheory.Global.integralFiniteAdeles (𝓞 F) F : Set _)) := by
     ext z
     constructor
-    · intro hz j _
-      exact coordR_hat (hl j) hz
+    · exact fun hz j _ => coordR_hat (hl j) hz
     · intro hz
       rw [← hΨΦ z]
       exact hmemΨ _ (fun j => hz j (Set.mem_univ j))

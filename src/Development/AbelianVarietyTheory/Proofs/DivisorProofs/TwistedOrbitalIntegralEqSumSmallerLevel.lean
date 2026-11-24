@@ -124,10 +124,9 @@ theorem finsum_sigma_of_finite {ι : Type} {β : ι → Type} [∀ i, Finite (β
   have h2 : (support fun i => ∑ᶠ b, h ⟨i, b⟩) ⊆ (I : Set ι) := by
     intro i hi
     obtain ⟨b, hb⟩ : ∃ b, h ⟨i, b⟩ ≠ 0 := by
-      by_contra hc; push_neg at hc
+      by_contra hc; push Not at hc
       exact hi (finsum_eq_zero_of_forall_eq_zero hc)
-    simp only [Finset.mem_coe, I, Finset.mem_image]
-    exact ⟨⟨i, b⟩, hh.mem_toFinset.2 hb, rfl⟩
+    simpa only [Finset.mem_coe, I, Finset.mem_image] using ⟨⟨i, b⟩, hh.mem_toFinset.2 hb, rfl⟩
   rw [finsum_eq_sum_of_support_subset _ h1, finsum_eq_sum_of_support_subset _ h2, Finset.sum_sigma]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [finsum_eq_sum_of_fintype]
@@ -228,8 +227,7 @@ theorem twOrb_eq_sum_smallerLevel : ∀ (G : Type) [Group G] [TopologicalSpace G
       have : ω = Quotient.mk'' ((Quotient.out ω.out : K) : K ⧸ S) := by
         rw [QuotientGroup.out_eq', Quotient.out_eq']
       have h := fibRep_symm_mk hK'K Quotient.out (DoubleCoset.out_eq' (H := T) (K := K)) c (Quotient.out ω.out)
-      rw [← this] at h
-      exact h
+      rwa [← this] at h
     obtain ⟨γ, hγ, u, hu, hout⟩ := (@DoubleCoset.eq _ _ T K' (Quotient.out c * (Quotient.out ω.out : K))
       (Quotient.out (e.symm ⟨c, ω⟩))).1 (by rw [DoubleCoset.out_eq', hq])
     have hF : F (Quotient.out (e.symm ⟨c, ω⟩)) = F (Quotient.out c * (Quotient.out ω.out : K)) := by

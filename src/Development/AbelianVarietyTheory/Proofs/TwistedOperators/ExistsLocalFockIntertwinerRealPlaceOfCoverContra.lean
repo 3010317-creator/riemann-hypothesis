@@ -85,8 +85,7 @@ theorem exp_barMat {p q n : ℕ} (e : Ix p q ≃ Fin n) (Z : Mat p q) (t : ℝ) 
   have h0 : ∀ A : Mat p q, A.map (starRingEnd ℂ) = Aᴴᵀ := fun A => by ext a b; simp
   have h1 := exp_plainMat e (Z.map (starRingEnd ℂ)) t
   have h2 : t • Z.map (starRingEnd ℂ) = (t • Z)ᴴᵀ := by ext a b; simp
-  rw [h2, Matrix.exp_transpose, Matrix.exp_conjTranspose, ← h0] at h1
-  exact h1
+  rwa [h2, Matrix.exp_transpose, Matrix.exp_conjTranspose, ← h0] at h1
 
 variable {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) (τ : D.what₂.Tau)
 
@@ -145,8 +144,7 @@ theorem exists_locIt (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar) (M :
     refine ⟨κ.symm P, U'.symm (R₂.ι v), Submodule.subset_span (h₂.smooth _ ?_), ?_⟩
     · rw [U'.apply_symm_apply]; exact ⟨v, rfl⟩
     · rw [hA, U'.apply_symm_apply, κ.apply_symm_apply]
-      intro h0
-      exact hP (U.symm.injective (by rw [h0, map_zero]))
+      exact fun h0 => hP (U.symm.injective (by rw [h0, map_zero]))
   · haveI : CompleteSpace (M'.H τ) := U'.toIsometryEquiv.completeSpace
     obtain ⟨c, hc⟩ := hB.bdd (κ P)
     let L : M'.H τ →L[ℂ] M.H τ := (A P).mkContinuous c fun y => by

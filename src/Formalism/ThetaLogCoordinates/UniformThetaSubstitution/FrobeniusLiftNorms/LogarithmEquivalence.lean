@@ -138,8 +138,7 @@ theorem mvExp_zero' {K ι : Type} [NormedField K] [CharZero K] :
   · simp
   · intro k _ hk
     rw [zero_pow hk, map_zero, mul_zero]
-  · intro h
-    exact absurd (mem_range.2 (Nat.succ_pos _)) h
+  · exact fun h => absurd (mem_range.2 (Nat.succ_pos _)) h
 
 theorem constantCoeff_mvExp' {K ι : Type} [NormedField K] [CharZero K] {f : MvPowerSeries ι K}
     (hf : MvPowerSeries.constantCoeff f = 0) : MvPowerSeries.constantCoeff (mvExp f) = 1 := by
@@ -290,14 +289,14 @@ theorem norm_lamF_sub {K : Type} [NormedField K] [IsUltrametricDist K] {p : ℕ}
       have h' := coeff_lgF_pow K hp2 1
       rw [pow_one, h] at h'
       exact inv_ne_zero (pow_ne_zero 1 hpK) h'.symm
-    rw [h, if_neg h1, if_neg h2]
+    rw [h, ite_eq_right h1, ite_eq_right h2]
     simp
   · obtain ⟨j, rfl⟩ := coeff_lgF_ne_zero h
     rw [coeff_lgF_pow K hp2 j]
     rcases j with _ | _ | j
-    · rw [pow_zero, if_pos rfl, if_neg (Ne.symm hq1)]
+    · rw [pow_zero, ite_eq_left rfl, ite_eq_right (Ne.symm hq1)]
       simp
-    · rw [zero_add, pow_one, pow_one, hϖ, if_neg hq1, if_pos rfl, mul_inv_cancel₀ hpK]
+    · rw [zero_add, pow_one, pow_one, hϖ, ite_eq_right hq1, ite_eq_left rfl, mul_inv_cancel₀ hpK]
       simp
     · have h1 : (p ^ 2) ^ (j + 2) ≠ 1 := fun h' =>
         absurd (powq_inj hp2 (h'.trans (pow_zero _).symm)) (by omega)
@@ -306,7 +305,7 @@ theorem norm_lamF_sub {K : Type} [NormedField K] [IsUltrametricDist K] {p : ℕ}
       obtain ⟨g, hg, _, hj⟩ := geom_sum_mul_pred (q := p ^ 2) (by nlinarith) (j + 2)
       have hj' := hj (by omega)
       obtain ⟨t, rfl⟩ : ∃ t, g = (j + 2) + (t + 1) := ⟨g - (j + 2) - 1, by omega⟩
-      rw [if_neg h1, if_neg h2, sub_zero, sub_zero, hg, Nat.add_sub_cancel, pow_mul, hϖ, pow_add,
+      rw [ite_eq_right h1, ite_eq_right h2, sub_zero, sub_zero, hg, Nat.add_sub_cancel, pow_mul, hϖ, pow_add,
         mul_comm ((p : K) ^ (j + 2)), mul_assoc, mul_inv_cancel₀ (pow_ne_zero _ hpK), mul_one,
         norm_pow, hn, pow_succ]
       exact mul_le_of_le_one_left hpR.le (pow_le_one₀ hpR.le
@@ -337,7 +336,7 @@ theorem coeff_altR_of_not {R : Type} [CommRing R] {p n : ℕ} (h : ∀ l, n ≠ 
     PowerSeries.coeff n (altR R p) = 0 := by
   unfold altR
   rw [PowerSeries.coeff_mk]
-  exact Finset.sum_eq_zero fun l _ => if_neg (h l)
+  exact Finset.sum_eq_zero fun l _ => ite_eq_right (h l)
 
 theorem constantCoeff_altR (R : Type) [CommRing R] {p : ℕ} (hp : 2 ≤ p) :
     PowerSeries.constantCoeff (altR R p) = 0 := by
@@ -352,16 +351,16 @@ theorem altR_add_expand (R : Type) [CommRing R] {p : ℕ} (hp : 2 ≤ p) (hq : p
   by_cases h : ∃ l, n = (p ^ 2) ^ l
   · obtain ⟨l, rfl⟩ := h
     rcases l with _ | l
-    · rw [coeff_altR_pow R hp, pow_zero, pow_zero, if_pos rfl,
-        if_neg (fun hd => absurd (Nat.le_of_dvd one_pos hd) (by omega)), add_zero]
+    · rw [coeff_altR_pow R hp, pow_zero, pow_zero, ite_eq_left rfl,
+        ite_eq_right (fun hd => absurd (Nat.le_of_dvd one_pos hd) (by omega)), add_zero]
     · have h1 : (p ^ 2) ^ (l + 1) ≠ 1 := fun h' =>
         absurd (powq_inj hp (h'.trans (pow_zero _).symm)) (by omega)
-      rw [coeff_altR_pow R hp, if_pos (Dvd.intro_left _ (pow_succ _ _).symm), if_neg h1, pow_succ (p ^ 2),
+      rw [coeff_altR_pow R hp, ite_eq_left (Dvd.intro_left _ (pow_succ _ _).symm), ite_eq_right h1, pow_succ (p ^ 2),
         Nat.mul_div_cancel _ (by omega), coeff_altR_pow R hp]
       ring
   · have h' : ∀ l, n ≠ (p ^ 2) ^ l := fun l hl => h ⟨l, hl⟩
     have h1 : n ≠ 1 := by simpa using h' 0
-    rw [coeff_altR_of_not h', if_neg h1, zero_add]
+    rw [coeff_altR_of_not h', ite_eq_right h1, zero_add]
     split_ifs with hd
     · refine coeff_altR_of_not fun l hl => h' (l + 1) ?_
       rw [pow_succ, ← hl, Nat.div_mul_cancel hd]
@@ -412,8 +411,7 @@ theorem mem_span_p_iff {K : Type} [NormedField K] [IsUltrametricDist K] {p : ℕ
 theorem charP_quot {K : Type} [NormedField K] [IsUltrametricDist K] {p : ℕ} (hp : p.Prime)
     (hn : ‖(p : K)‖ = (p : ℝ)⁻¹) : CharP (ballRing K ⧸ Ideal.span {(p : ballRing K)}) p := by
   have hne : Ideal.span {(p : ballRing K)} ≠ ⊤ := by
-    rw [Ideal.ne_top_iff_one, mem_span_p_iff hp hn]
-    rw [Subring.coe_one, norm_one, not_le]
+    rw [Ideal.ne_top_iff_one, mem_span_p_iff hp hn, Subring.coe_one, norm_one, not_le]
     exact inv_lt_one_of_one_lt₀ (by exact_mod_cast hp.one_lt)
   have : Nontrivial (ballRing K ⧸ Ideal.span {(p : ballRing K)}) := Ideal.Quotient.nontrivial_iff.2 hne
   rw [CharP.charP_iff_prime_eq_zero hp, ← map_natCast (Ideal.Quotient.mk _) p,
@@ -492,8 +490,7 @@ theorem logRescale : LogRescale := by
       (subst_altR (ballRing K ⧸ Ideal.span {(p : ballRing K)}) hp)
     have h := (map_mk_eq_zero_iff hp hn (l0.substInvOfIsUnit hu0 - altR (ballRing K) p)).1 (by
       rw [map_sub, map_altR, key, sub_self])
-    rw [map_sub, map_altR] at h
-    exact h
+    rwa [map_sub, map_altR] at h
 
 end LogarithmEquivalence
 

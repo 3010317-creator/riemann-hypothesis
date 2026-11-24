@@ -286,8 +286,7 @@ theorem twistPlaces_not_over_leastSplitAuxiliaryPrime {B : Base} {f : Top.Fr B.t
     by_contra hn
     obtain ⟨-, h1, -, h2⟩ := (T.psi_tw v).2.2.2 PP hn
     have hmem := Ideal.absNorm_mem PP.asIdeal
-    have e := two _ h1 hmem
-    exact h2 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl e.symm))))))
+    exact h2 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (two _ h1 hmem).symm))))))
   refine (z.lev.is.Q_ram t PP).2 (Or.inl hP) ?_
   rw [z.lev.xiH t]
   have hm : w.I.xi (GlobalTheory.Mem.R3.ixOf w.I _ t) ∈ T.set f := w.xi_range ▸ ⟨_, rfl⟩
@@ -821,8 +820,7 @@ private theorem side_data_pz (D : D7) (cf : CharFrame D) (hCS : CharSide D cf) (
       D.naut.frobEig_char _ _ _ hu hue hd hfe]
   · refine ⟨eig (D.ntw.jS i s) (rowS i s) k P, ?_, hR i s k P a b hP h2⟩
     have := he k a b
-    rw [hj] at this
-    exact this
+    rwa [hj] at this
 private theorem read_cancel_pz (D : D7) (i : D.ntw.Tw) (b : Bool) (u : (D.ntw.O i)ˣ) (k : ℕ) (x y : ↥D.LL0)
     (h : algebraMap (D.ntw.O i) (FractionRing (D.ntw.O i)) u ^ k *
         IsFractionRing.map (A := D.ntw.O0 i) (B := D.ntw.O i) (K := FractionRing (D.ntw.O0 i))
@@ -909,8 +907,7 @@ private theorem joint_zero {K V ι : Type*} [Field K] [AddCommGroup V] [Module K
     intro y _ _ hs
     have : {z : V | ∃ μ ∈ (∅ : Finset (ι → K)), ∀ t, p t → T t z = μ t • z} = ∅ := by
       ext z; simp
-    rw [this, Submodule.span_empty, Submodule.mem_bot] at hs
-    exact hs
+    rwa [this, Submodule.span_empty, Submodule.mem_bot] at hs
   | insert μ0 M _ ih =>
     intro y hne hy hs
     obtain ⟨t0, hp0, hμ0⟩ := hne μ0 (Finset.mem_insert_self _ _)
@@ -992,8 +989,7 @@ private theorem hermFramePairNormalForm_frameSpan_le_of_generators (D : D7) (S :
       intro u
       have hu' : (u : G0g D.nd) ∈ D.nexp.U := by rw [hU]; exact u.2
       have h := (Submodule.mem_iInf _).mp hz ⟨u, hu'⟩
-      rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero, hψ i b u hu' u.2, ← hrd] at h
-      exact h
+      rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero, hψ i b u hu' u.2, ← hrd] at h
     simp only [pr, LinearMap.sum_apply, LinearMap.smul_apply, LinearEquiv.coe_coe, hu, smul_smul, ← map_mul]
     have hcu : ∀ u : ↥(Formalism.IndefR.NX.U D.nd), cU D In.θ u * ((psiUOf D.nd (NX.xiRed D) In.θ u : (↥D.LL0)ˣ) : ↥D.LL0) =
         (Fintype.card ↥(Formalism.IndefR.NX.U D.nd) : ↥D.LL0)⁻¹ := by
@@ -1054,8 +1050,7 @@ theorem UpperTheory.heckeEigenspace_descent_of_equivariant_equiv :
   · intro μ hμ
     obtain ⟨σ, hσ, rfl⟩ := Finset.mem_image.1 hμ
     rw [Set.Finite.mem_toFinset] at hσ
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     refine hno ⟨σ, hσ.1, hσ.2, fun k P a1 a2 a3 a4 => ?_⟩
     have := hne (k, P) ⟨a1, a2, a3, a4⟩
     simp only [sys, hrd] at this
@@ -1177,14 +1172,11 @@ private theorem mid {D : D7} {cf : CharFrame D} {low : Finset ℕ} (B : RingPart
     exact B.iCq_embO s (e x)
   · refine B.embO_star s (e x) (e y) (D.what₂.embLL.injective ?_)
     rw [← hc, ← hc] at hy
-    rw [D.starLL_cx]
-    exact hy
+    rwa [D.starLL_cx]
   · obtain ⟨x, hx, hx'⟩ := B.deltaRead s w h1 h2 A σ h3 h4
     refine ⟨e.symm x, ?_, ?_⟩
-    · rw [← hc, e.apply_symm_apply]
-      exact hx
-    · rw [← hm, e.apply_symm_apply]
-      exact hx'
+    · rwa [← hc, e.apply_symm_apply]
+    · rwa [← hm, e.apply_symm_apply]
 
 theorem UpperTheory.nonempty_coefficientRingData_of_isomorphic_CMDatum :
     ∀ {D D' : D7} {ι : D.what₂.LL →+* D'.what₂.LL} {e : ↥D'.LL0 ≃+* ↥D.LL0}, CopyAll D D' ι e → ∀ {cf : CharFrame D} {cf' : CharFrame D'}, SameFrame cf cf' → IsEmpty D'.nd.Loc → ∀ low : Finset ℕ, RingPart D cf low → Nonempty (RingPart D' cf' low) := by
@@ -1284,9 +1276,8 @@ theorem UpperTheory.sidePlace_exists_of_copyAll :
   have a := hs (e x)
   rw [hv, hL x] at a
   have b : D.ntw.emb0 i (e x) = (overD D r).ntw.emb0 i x := eq_of_heq (hE i i HEq.rfl x)
-  rw [if_pos rfl, b] at a
-  rw [if_pos rfl]
-  exact a
+  rw [ite_eq_left rfl, b] at a
+  rwa [ite_eq_left rfl]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.UnitTensorPairings.SidePlaceExistsOfCopyAll =====
@@ -1344,8 +1335,7 @@ private theorem hecke_coeff_transfer (h : CopyAll D D' ι e) {c : ∀ (i : D.ntw
   obtain ⟨r, rfl⟩ := h.cp.exists_rest
   intro i b P hP σ hσ
   have h1 := eq_of_heq (hc i i b P P HEq.rfl HEq.rfl)
-  have h2 := hs i b P hP σ hσ
-  exact (by with_unfolding_all exact ((h1.trans h2) :))
+  exact (by with_unfolding_all exact ((h1.trans (hs i b P hP σ hσ)) :))
 private theorem psi_law_transfer (h : CopyAll D D' ι e) {S : RatDat D.ntw} {S' : RatDat D'.ntw} {θ θ'} (h1 : PsiStd D θ) (h2 : PsiStd D' θ')
     (h3 : PsiLaw D S θ) : PsiLaw D' S' θ' := by
   obtain ⟨r, rfl⟩ := h.cp.exists_rest
@@ -1476,8 +1466,7 @@ private theorem is_eig_sys_sig_ev_of_eig_occ {cf : CharFrame D} {Rw low Pq S hL 
     rintro ⟨u, hu⟩
     have hu' : u ∈ Formalism.IndefR.NX.U D.nd := by
       have := hu
-      rw [Bs.exp.U_eq] at this
-      exact this
+      rwa [Bs.exp.U_eq] at this
     have hx2 := Module.End.mem_eigenspace_iff.1 ((Submodule.mem_iInf _).1 (Submodule.mem_inf.1 hxg).2 ⟨u, hu'⟩)
     apply e.injective
     rw [map_smul, e.apply_symm_apply, Bs.psiU i _ u hu hu']

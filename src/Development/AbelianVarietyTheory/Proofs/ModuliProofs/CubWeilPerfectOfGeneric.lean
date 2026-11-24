@@ -253,7 +253,7 @@ theorem mvPowerSeries_X_syzygy {k : Type} [CommRing k] {g : ℕ}
       have e2 : (∀ l < j, (m - single j 1 : Fin g →₀ ℕ) l = 0) ↔ ∀ l < j, m l = 0 := by
         refine forall_congr' fun l => forall_congr' fun hl => ?_
         simp [hl.ne']
-      simp only [e, e2, hj, ne_eq, not_false_eq_true, if_true, true_and]
+      simp only [e, e2, hj, ne_eq, not_false_eq_true, ite_true, true_and]
   have h2 : ∀ j, coeff m (t j i * X j) =
       if (∀ l < i, m l = 0) ∧ j ≠ i then coeff (m + single i 1) (r j * X j) else 0 := by
     intro j
@@ -274,30 +274,30 @@ theorem mvPowerSeries_X_syzygy {k : Type} [CommRing k] {g : ℕ}
     · have e2 : (∀ l < i, (m - single j 1 : Fin g →₀ ℕ) l = 0) ↔ ∀ l < i, m l = 0 := by
         refine forall_congr' fun l => forall_congr' fun hl => ?_
         simp [(hl.trans h).ne']
-      simp only [e2, hj, h, hji, ne_eq, not_false_eq_true, if_true, true_and, and_true]
+      simp only [e2, hj, h, hji, ne_eq, not_false_eq_true, ite_true, true_and, and_true]
 
   simp only [Matrix.mulVec, dotProduct, Matrix.sub_apply, Matrix.transpose_apply, sub_mul,
   map_sum, map_sub, h1, h2, Finset.sum_sub_distrib]
   by_cases hi : ∀ l < i, m l = 0
-  · rw [Finset.sum_eq_zero (fun j _ => if_neg (fun H => H.1 (hi j H.2.1)))]
+  · rw [Finset.sum_eq_zero (fun j _ => ite_eq_right (fun H => H.1 (hi j H.2.1)))]
     have h3 := congrArg (coeff (m + single i 1)) hr
 
     rw [map_sum, map_zero, ← Finset.add_sum_erase _ _ (Finset.mem_univ i), coeff_mul_X_ite] at h3
     simp only [iff_true_intro hi, true_and]
     rw [← Finset.sum_filter, Finset.filter_ne']
     simp only [Finsupp.add_apply, single_eq_same, add_tsub_cancel_right] at h3
-    rw [if_pos (by omega)] at h3
+    rw [ite_eq_left (by omega)] at h3
     linear_combination h3
-  · simp only [hi, false_and, if_false, Finset.sum_const_zero, sub_zero]
-    push_neg at hi
+  · simp only [hi, false_and, ite_false, Finset.sum_const_zero, sub_zero]
+    push Not at hi
     obtain ⟨l, hl, hml⟩ := hi
     obtain ⟨j, hj, hmin⟩ := WellFounded.has_min (wellFounded_lt (α := Fin g)) {j | m j ≠ 0} ⟨l, hml⟩
     have hj0 : ∀ a < j, m a = 0 := fun a ha => by
       by_contra h; exact hmin a h ha
     rw [Finset.sum_eq_single j]
-    · rw [if_pos ⟨hj, lt_of_le_of_lt (not_lt.1 (hmin l hml)) hl, hj0⟩]
+    · rw [ite_eq_left ⟨hj, lt_of_le_of_lt (not_lt.1 (hmin l hml)) hl, hj0⟩]
     · intro b _ hb
-      refine if_neg fun H => ?_
+      refine ite_eq_right fun H => ?_
       rcases lt_or_gt_of_ne hb with h | h
       · exact H.1 (hj0 b h)
       · exact hj (H.2.2 j h)
@@ -470,8 +470,7 @@ theorem exists_integral_of_local_presentation :
     have hz' : z ∈ m.map (algebraMap O S) ⊔ RingHom.ker π := by
       have := Ideal.comap_map_of_surjective (π : S →+* T) hπ (m.map (algebraMap O S))
       have h2 : z ∈ ((m.map (algebraMap O S)).map (π : S →+* T)).comap (π : S →+* T) := hz
-      rw [this] at h2
-      exact h2
+      rwa [this] at h2
     have hle : m.map (algebraMap O S) ⊔ RingHom.ker π ≤
         (Ideal.span (Set.range (A.mulVec MvPowerSeries.X))).comap ρ := by
       refine sup_le ?_ ?_
@@ -809,8 +808,7 @@ theorem exists_coords (π : MvPolynomial (Fin g) O →ₐ[O] B) (hπ : π.toRing
       rwa [Ideal.map_span, ← Set.range_comp] at this
     have hr : IsUnit (algebraMap B S r) := isUnit_of_aug e S eS he _ (by rw [he, hr1]; exact isUnit_one)
     have ht : IsUnit (algebraMap B S t) := IsLocalization.map_units S t
-    rw [map_mul, ← h, Ideal.unit_mul_mem_iff_mem _ hr, Ideal.mul_unit_mem_iff_mem _ ht] at h3
-    exact h3
+    rwa [map_mul, ← h, Ideal.unit_mul_mem_iff_mem _ hr, Ideal.mul_unit_mem_iff_mem _ ht] at h3
   · rw [Ideal.span_le]
     rintro _ ⟨i, rfl⟩
     simp [x, he, RingHom.mem_ker]
@@ -1032,8 +1030,7 @@ theorem local_presentation : ∀ (O : Type) [CommRing O] [IsLocalRing O] (G : Ov
   · refine le_antisymm (fun t ht => ?_) ?_
     · obtain ⟨s, rfl⟩ := hsurj t
       have h1 : s ∈ RingHom.ker eS := by
-        rw [← hεπ]
-        exact ht
+        rwa [← hεπ]
       have h2 := Ideal.mem_map_of_mem π (hker ▸ h1)
       rwa [Ideal.map_span, ← Set.range_comp] at h2
     · rw [Ideal.span_le]
@@ -1083,8 +1080,7 @@ theorem exists_algHom_localization_augmentation (O : Type) [CommRing O] [IsLocal
     by_contra hs
     apply s.2
     show ε s ∈ IsLocalRing.maximalIdeal O
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    exact hs
+    rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   refine ⟨IsLocalization.liftAlgHom (M := ((IsLocalRing.maximalIdeal O).comap ε).primeCompl)
     (S := Localization.AtPrime ((IsLocalRing.maximalIdeal O).comap ε)) hunit, fun h => ?_⟩
   rw [IsLocalization.liftAlgHom_apply]
@@ -1273,8 +1269,7 @@ theorem isUnit_det_of_bicharacter_of_dvd_trace :
     pow_ne_zero _ (by rwa [ne_eq, map_eq_zero_iff _ hinj])
   have h1 := mul_left_cancel₀ hu key
   rw [← map_one (algebraMap O K)] at h1
-  have h2 := hinj h1
-  exact isUnit_iff_exists_inv.mpr ⟨Tm.det ^ 4 * D.det ^ 3, by linear_combination h2⟩
+  exact isUnit_iff_exists_inv.mpr ⟨Tm.det ^ 4 * D.det ^ 3, by linear_combination (hinj h1)⟩
 
 end GlobalTheory
 end -- clump:auto

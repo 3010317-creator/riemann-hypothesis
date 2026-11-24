@@ -79,8 +79,7 @@ theorem IsMetricOn.mContDiffAt_chart (hM : IsMetricOn E O H) {y : CxPts X.str σ
   have h1 := (Complex.ofRealCLM.contDiff.contDiffAt.comp _ (hn hre)).add
     ((Complex.ofRealCLM.contDiff.contDiffAt.comp _ (hn him)).mul (contDiffAt_const (c := Complex.I)))
   refine h1.congr_of_eventuallyEq (Filter.Eventually.of_forall fun u => ?_)
-  simp only [Function.comp_apply, Complex.ofRealCLM_apply]
-  exact (Complex.re_add_im _).symm
+  simpa only [Function.comp_apply, Complex.ofRealCLM_apply] using (Complex.re_add_im _).symm
 
 theorem IsMetricOn.isUnit_det_chart (hM : IsMetricOn E O H) {y : CxPts X.str σ} (hy : y ∈ ptsIn X.str σ O)
     (c : AlgChart X.str σ X.dim) (hc : y ∈ c.e.source) {A : Mat m X.Fn} (hA : A ∈ E.S (under y)) (τ : ι) :
@@ -97,8 +96,7 @@ theorem IsMetricOn.chernTop_frame [Finite ι] (hM : IsMetricOn E O H) (R : MvPol
     (fun _ => one_pos) (fun τ i j => GlobalTheory.FrameLift.analyticAt_ratVal c hc (mem_O_ratOf.1 ((hP τ).1 i j)))
     (fun τ => ?_) (hM.mContDiffAt_chart hy c hc hA') (hM.isUnit_det_chart hy c hc hA') ?_
   · obtain ⟨ψ, hψ⟩ := exists_ratVal_hom y
-    simp only [c.e.left_inv hc]
-    exact ((hP.map_of (ratVal · y) ψ hψ).det_ne τ).isUnit
+    simpa only [c.e.left_inv hc] using ((hP.map_of (ratVal · y) ψ hψ).det_ne τ).isUnit
   · have hO : ∀ᶠ z in 𝓝 y, z ∈ ptsIn X.str σ O := (isOpen_ptsIn O).mem_nhds hy
     filter_upwards [(c.e.tendsto_symm hc).eventually
       (hO.and ((GlobalTheory.FrameLift.eventually_mem hA).and (GlobalTheory.FrameLift.eventually_mem hA')))] with w hw τ

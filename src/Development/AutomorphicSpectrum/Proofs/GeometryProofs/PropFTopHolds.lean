@@ -253,10 +253,8 @@ theorem sum_log_div_pred_le :
   have h1 : ∑ p ∈ S, Real.log p / (p : ℝ) ≤ Real.log x + Real.log 4 := by
     refine le_trans (Finset.sum_le_sum_of_subset_of_nonneg ?_ ?_) (_root_.GlobalTheory.CompanionTheory.Ar.Small.mertens_first_log_four x hx)
     · intro p hp
-      simp only [Finset.mem_filter, Finset.mem_Iic]
-      exact ⟨Nat.le_floor (hS p hp).2, (hS p hp).1⟩
-    · intro p _ _
-      exact div_nonneg (Real.log_natCast_nonneg p) (Nat.cast_nonneg p)
+      simpa only [Finset.mem_filter, Finset.mem_Iic] using ⟨Nat.le_floor (hS p hp).2, (hS p hp).1⟩
+    · exact fun p _ _ => div_nonneg (Real.log_natCast_nonneg p) (Nat.cast_nonneg p)
   have h2 : ∑ p ∈ S, Real.log p / ((p : ℝ) * ((p : ℝ) - 1)) ≤ 2 :=
     _root_.GlobalTheory.CompanionTheory.Ar.Small.log_tail S (fun p hp => (hS p hp).1.two_le)
   have hl4 : Real.log 4 < 7 / 5 := by
@@ -360,13 +358,11 @@ theorem sum_log_div_pred_SB :
     have h1 : ∑ p ∈ S.filter (fun p => ¬ p ≤ B), Real.log p / ((p : ℝ) - 1)
         ≤ (S.filter (fun p => ¬ p ≤ B)).card • (Real.log ((B : ℝ) + 1) / B) := by
       refine Finset.sum_le_card_nsmul _ _ _ ?_
-      intro p hp
-      exact log_div_pred_le_of_lt B p hB (not_le.mp (Finset.mem_filter.mp hp).2) hLge
+      exact fun p hp => log_div_pred_le_of_lt B p hB (not_le.mp (Finset.mem_filter.mp hp).2) hLge
     have h2 : (S.filter (fun p => ¬ p ≤ B)).card • (Real.log ((B : ℝ) + 1) / B)
         ≤ (B : ℝ) * (Real.log ((B : ℝ) + 1) / B) := by
       rw [nsmul_eq_mul]
-      refine mul_le_mul_of_nonneg_right (by exact_mod_cast hc) ?_
-      exact div_nonneg (by linarith) hB0.le
+      exact mul_le_mul_of_nonneg_right (by exact_mod_cast hc) (div_nonneg (by linarith) hB0.le)
     have h3 : (B : ℝ) * (Real.log ((B : ℝ) + 1) / B) = Real.log ((B : ℝ) + 1) := by
       field_simp
     linarith
@@ -406,7 +402,7 @@ theorem ep_inert : ∀ (p N j : ℕ), 2 ≤ p → j ≤ N → HasSum (fun n : �
       have hf : (fun k : ℕ => (if Even (2 * k + 1) then (j : ℝ) else (N : ℝ) - j) /
           (p : ℝ) ^ (2 * k + 1)) = fun k => ((N : ℝ) - j) / p * ((p : ℝ) ^ 2)⁻¹ ^ k := by
         funext k
-        rw [if_neg (Nat.not_even_two_mul_add_one k), inv_pow, ← pow_mul, pow_succ,
+        rw [ite_eq_right (Nat.not_even_two_mul_add_one k), inv_pow, ← pow_mul, pow_succ,
           ← div_eq_mul_inv, div_div, mul_comm ((p : ℝ) ^ (2 * k)) (p : ℝ)]
       rw [hf]
       exact hg.mul_left _
@@ -415,7 +411,7 @@ theorem ep_inert : ∀ (p N j : ℕ), 2 ≤ p → j ≤ N → HasSum (fun n : �
       have hf : (fun k : ℕ => (if Even (2 * k + 1 + 1) then (j : ℝ) else (N : ℝ) - j) /
           (p : ℝ) ^ (2 * k + 1 + 1)) = fun k => (j : ℝ) / (p : ℝ) ^ 2 * ((p : ℝ) ^ 2)⁻¹ ^ k := by
         funext k
-        rw [if_pos ⟨k + 1, by ring⟩, inv_pow, ← pow_mul, ← div_eq_mul_inv, div_div, ← pow_add,
+        rw [ite_eq_left ⟨k + 1, by ring⟩, inv_pow, ← pow_mul, ← div_eq_mul_inv, div_div, ← pow_add,
           show 2 * k + 1 + 1 = 2 + 2 * k by ring]
       rw [hf]
       exact hg.mul_left _
@@ -429,8 +425,7 @@ theorem ep_inert : ∀ (p N j : ℕ), 2 ≤ p → j ≤ N → HasSum (fun n : �
       rw [hinv]
       field_simp
       ring
-    rw [hv]
-    exact h
+    rwa [hv]
   · have hA : |(N : ℝ) - 2 * j| ≤ N := abs_le.2 ⟨by linarith, by linarith⟩
     rw [abs_div, abs_mul, abs_of_pos hp0, abs_of_pos hpsq, div_le_div_iff₀ hpsq hp1]
     nlinarith [abs_nonneg ((N : ℝ) - 2 * j),
@@ -467,8 +462,7 @@ theorem ep_split : ∀ (p j : ℕ), 2 ≤ p →
   have hv : (j : ℝ) / ((p : ℝ) - 1) = (j : ℝ) / p * (1 - 1 / (p : ℝ))⁻¹ := by
     rw [one_sub_div h0, inv_div]
     field_simp
-  rw [hf, hv]
-  exact hs
+  rwa [hf, hv]
 
 end GlobalTheory.CompanionTheory.Ar.Flat
 end -- clump:auto
@@ -490,8 +484,7 @@ variable {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ}
 
 theorem degFl_C_mul (a : ℝ) (Q : RP Ψ N) : degFl (C a * Q) = a * degFl Q := by
   unfold degFl
-  simp only [coeff_C_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun σ _ => by ring
+  simpa only [coeff_C_mul, Finset.mul_sum] using Finset.sum_congr rfl fun σ _ => by ring
 
 def rk (N j : ℕ) : Ψ ⊕ Ψ → ℝ
   | Sum.inl _ => j
@@ -587,13 +580,13 @@ theorem deltaTerm_one : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) 
       congr 1
       rcases hs : fr n with σ | σ
       · have : Odd n := (h n).1 ⟨σ, hs⟩
-        rw [if_pos this.add_one]
+        rw [ite_eq_left this.add_one]
         rfl
       · have : ¬ Odd n := fun ho => by
           obtain ⟨σ', h'⟩ := (h n).2 ho
           rw [hs] at h'
           cases h'
-        rw [if_neg (by simpa [Nat.even_add_one] using this)]
+        rw [ite_eq_right (by simpa [Nat.even_add_one] using this)]
         rfl
     unfold Bound₂.ep
     rw [e, (ep_inert p N j hp hj).1.tsum_eq]
@@ -740,7 +733,7 @@ theorem arMono_add_single (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (M
           (Finsupp.toMultiset (m.mapDomain some)).toList[(k : ℕ)] := by
         exact List.getElem_append_left hk
       rw [this, hL, Fin.snoc_castSucc]
-      simp only [monoLines, dif_pos hk]
+      simp only [monoLines, dite_eq_left hk]
       rfl
   have hLs : ∀ j, IsSmoothHerm (L j) := by
     intro j
@@ -755,10 +748,10 @@ theorem arMono_add_single (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (M
       rw [hlen₁]; exact i.2
     have h₂ : (σ i : ℕ) < ((Finsupp.toMultiset (m.mapDomain some)).toList ++ [some r]).length := by
       simp [hlen₀, (σ i).2]
-    simp only [monoLines, dif_pos h₁, Function.comp, hval (σ i) h₂, hσ i h₁ h₂]
+    simp only [monoLines, dite_eq_left h₁, Function.comp, hval (σ i) h₂, hσ i h₁ h₂]
     rfl
   unfold RootModel.arMono
-  rw [if_pos hdeg, hnone, pow_zero, mul_one, hfun]
+  rw [ite_eq_left hdeg, hnone, pow_zero, mul_one, hfun]
   congr 1
   exact (hII M.K M.ι).1 M.P (dimFl Ψ N + 1) L σ M.arith hLs
 
@@ -839,8 +832,7 @@ theorem exists_eq_mul_mult_of_units (F : Type) [Field F] [NumberField F]
     have hφv : φ (Pi.single v (1 : ℝ)) = a v := by
       show ∑ v', (Pi.single v (1 : ℝ) : {w : InfinitePlace F // w ≠ (w₀ : InfinitePlace F)} → ℝ) v' * a v' = a v
       simp [Pi.single_apply]
-    rw [← hφv]
-    exact hv
+    rwa [← hφv]
   refine ⟨D (w₀ : InfinitePlace F) / (mult (w₀ : InfinitePlace F) : ℝ), fun w => ?_⟩
   have hm : (mult w : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr mult_ne_zero
   by_cases hw : w = (w₀ : InfinitePlace F)
@@ -882,8 +874,7 @@ theorem sum_eq_mean_of_units :
     rcases InfinitePlace.mk_eq_iff.mp h2 with h3 | h3
     · rw [h3]
     · have h4 := ht (InfinitePlace.mk σ).embedding
-      rw [h3] at h4
-      exact h4
+      rwa [h3] at h4
   have hTfib : ∀ (w : InfinitePlace F) (f : (F →+* ℂ) → ℝ),
       ∑ σ ∈ Finset.univ.filter (fun σ => InfinitePlace.mk σ = w), t σ * f σ
         = t w.embedding * ∑ σ ∈ Finset.univ.filter (fun σ => InfinitePlace.mk σ = w), f σ := by
@@ -896,9 +887,7 @@ theorem sum_eq_mean_of_units :
   have hn : (Module.finrank ℚ F : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr Module.finrank_pos.ne'
   have hsum_d : ∑ σ, d σ = c * (Module.finrank ℚ F : ℝ) := by
     rw [hfib, ← InfinitePlace.sum_mult_eq, Nat.cast_sum, Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro w _
-    exact hc w
+    exact Finset.sum_congr rfl (fun w _ => hc w)
   have hsum_t : ∑ σ, t σ = ∑ w : InfinitePlace F, t w.embedding * (w.mult : ℝ) := by
     rw [hfib]
     apply Finset.sum_congr rfl
@@ -961,8 +950,7 @@ theorem exists_flatHerm_unit : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀
     have : (((α⁻¹ : (𝓞 F)ˣ) : 𝓞 F) : F) * ((α : 𝓞 F) : F) = 1 := by
       have h1 : ((α⁻¹ : (𝓞 F)ˣ) : 𝓞 F) * (α : 𝓞 F) = 1 := α.inv_mul
       have h2 := congrArg (algebraMap (𝓞 F) F) h1
-      rw [map_mul, map_one] at h2
-      exact h2
+      rwa [map_mul, map_one] at h2
     rw [this, map_one]
   have hfn := notMem_mCoordIdeal_of_aeval_ne_zero hG0
   have hgn := notMem_mCoordIdeal_of_aeval_ne_zero hg0
@@ -1019,8 +1007,7 @@ theorem sheetDensity_sum {S : Type} [Fintype S] {e : ℕ} (W : Ideal (MRing ι))
 
 theorem finsum_mem_sum {α S : Type} [Fintype S] {s : Set α} (hs : s.Finite) (t : S → ℝ) (f : S → α → ℝ) :
     ∑ᶠ w ∈ s, ∑ σ, t σ * f σ w = ∑ σ, t σ * ∑ᶠ w ∈ s, f σ w := by
-  simp only [finsum_mem_eq_finite_toFinset_sum _ hs, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [finsum_mem_eq_finite_toFinset_sum _ hs, Finset.mul_sum] using Finset.sum_comm
 
 theorem eq_sum {Ω : Type} [Field Ω] {F : Type} [Field F] [NumberField F] {y : (Σ k, ι k) → Ω} {φ : F →+* Ω}
     {t : (F →+* ℂ) → ℝ} {u : ((Σ k, ι k) → ℂ) → ℝ} {χ : (F →+* ℂ) → ((Σ k, ι k) → ℂ) → ℝ}
@@ -1068,8 +1055,7 @@ theorem PositivityTheory.Xgn.integral_over_place_density : PtsIntegrableStatemen
         funext z
         simp [logNorm, A, Real.exp_neg, Real.log_exp]
       have hI := hPI K ι W n hΨ.choose L A 1 hA hΨ.choose_spec hL hAs hsec
-      rw [hlog] at hI
-      exact hI
+      rwa [hlog] at hI
   · simp
 end -- clump:auto
 end -- clump:auto
@@ -1342,7 +1328,7 @@ theorem geoMono_eq (hD : DegreeStatement) (Ψ : Type) [Fintype Ψ] [DecidableEq 
     Finsupp.mapDomain_notin_range _ _ (by simp)
   rw [ptsIntegral_line_eq hD M t 1]
   unfold RootModel.geoMono
-  rw [if_pos hdeg, hnone, pow_zero, mul_one]
+  rw [ite_eq_left hdeg, hnone, pow_zero, mul_one]
   rfl
 
 end GlobalTheory.CompanionTheory.Ar.Flat
@@ -1455,7 +1441,7 @@ theorem propFTopE_spec {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} (T : 
     |propFTopE T frob p τ| ≤ N / ((p : ℝ) - 1) ∧
       ∀ Q : RP Ψ N, deltaTerm T.j p τ (frob p τ) 1 Q = propFTopE T frob p τ * Real.log p * degFl Q := by
   have h := Classical.choose_spec (_root_.GlobalTheory.CompanionTheory.Ar.Flat.deltaTerm_one Ψ N T.j p τ (frob p τ) T.j_lt.le hp)
-  simp only [propFTopE, dif_pos hp]
+  simp only [propFTopE, dite_eq_left hp]
   exact ⟨h.1, h.2.2.2⟩
 
 theorem propFTop : PropFTop := by
@@ -1513,15 +1499,15 @@ theorem propFTop : PropFTop := by
       (fun p hp => (hS p hp).1)
       (fun p hp => by
         by_cases hb : p ∈ T.bad
-        · simp only [v', hb, if_true]; exact (hdv p hb).1
+        · simp only [v', hb, ite_true]; exact (hdv p hb).1
         · simp [v', hb])
       (fun p hp => by
         have hlog : 0 ≤ Real.log p := Real.log_natCast_nonneg p
         by_cases hb : p ∈ T.bad
-        · simp only [d', v', hb, if_true]
+        · simp only [d', v', hb, ite_true]
           refine (hdv p hb).2.trans (le_of_eq ?_)
           ring
-        · simp only [d', v', hb, if_false, mul_zero, add_zero, abs_neg, abs_mul, abs_of_nonneg hlog]
+        · simp only [d', v', hb, ite_false, mul_zero, add_zero, abs_neg, abs_mul, abs_of_nonneg hlog]
           exact mul_le_mul_of_nonneg_right
             (propFTopE_spec T frob p τ (hS p hp).1.two_le).1 hlog)
       (by rw [hvb]; exact hvsum)

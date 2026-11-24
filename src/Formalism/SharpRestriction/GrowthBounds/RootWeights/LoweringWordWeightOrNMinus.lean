@@ -81,20 +81,20 @@ theorem weight_zero_lowering_kills_raising [CharZero K] [FiniteDimensional K V] 
   have rAA : ∀ y, E a a (E b a y) = E b a (E a a y) - E b a y := by
     intro y
     have h := LinearMap.congr_fun (hE.1 a a b a) y
-    rw [if_neg hab, if_pos rfl, LinearMap.sub_apply, LinearMap.sub_apply, LinearMap.zero_apply,
+    rw [ite_eq_right hab, ite_eq_left rfl, LinearMap.sub_apply, LinearMap.sub_apply, LinearMap.zero_apply,
       zero_sub] at h
     rw [sub_eq_add_neg]
     exact sub_eq_iff_eq_add'.mp h
   have rBB : ∀ y, E b b (E b a y) = E b a (E b b y) + E b a y := by
     intro y
     have h := LinearMap.congr_fun (hE.1 b b b a) y
-    rw [if_pos rfl, if_neg hab, LinearMap.sub_apply, LinearMap.sub_apply, LinearMap.zero_apply,
+    rw [ite_eq_left rfl, ite_eq_right hab, LinearMap.sub_apply, LinearMap.sub_apply, LinearMap.zero_apply,
       sub_zero] at h
     exact sub_eq_iff_eq_add'.mp h
   have rEF : ∀ y, E a b (E b a y) = E b a (E a b y) + (E a a y - E b b y) := by
     intro y
     have h := LinearMap.congr_fun (hE.1 a b b a) y
-    rw [if_pos rfl, if_pos rfl, LinearMap.sub_apply, LinearMap.sub_apply] at h
+    rw [ite_eq_left rfl, ite_eq_left rfl, LinearMap.sub_apply, LinearMap.sub_apply] at h
     exact sub_eq_iff_eq_add'.mp h
   have hstep : ∀ j : ℕ, E b a ((⇑(E b a))^[j] v) = (⇑(E b a))^[j+1] v :=
     fun j => (Function.iterate_succ_apply' _ j v).symm
@@ -125,8 +125,7 @@ theorem weight_zero_lowering_kills_raising [CharZero K] [FiniteDimensional K V] 
       push_cast
       module
   have hex : ∃ k : ℕ, (⇑(E b a))^[k+1] v = 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have hli : LinearIndependent K (fun k : ℕ => (⇑(E b a))^[k+1] v) := by
       refine Module.End.eigenvectors_linearIndependent' (E a a)
         (fun k : ℕ => -(((k+1 : ℕ) : K))) ?_ _ ?_
@@ -232,8 +231,7 @@ theorem lowering_word_span_operator_mem {E : GLOps n K V} (hE : IsGLRep E) {mu :
         · rw [LinearMap.zero_apply]; exact zero_mem _
     | one => intro w hw hwY c d; exact hwY c d
     | mul x z _ hz ihx ihz =>
-      intro w hw hwY c d
-      exact ihx (z * w) (mul_mem hz hw) (ihz w hw hwY) c d
+      exact fun w hw hwY c d => ihx (z * w) (mul_mem hz hw) (ihz w hw hwY) c d
   have base : ∀ c d, E c d ((1 : Module.End K V) v) ∈ loweringWordSpan E v := by
     intro c d
     show E c d v ∈ _
@@ -242,8 +240,7 @@ theorem lowering_word_span_operator_mem {E : GLOps n K V} (hE : IsGLRep E) {mu :
     · rw [(mem_weightSpace_iff_diag_eigen.mp hv.2.1) c]
       exact Submodule.smul_mem _ _ (hmem 1 (one_mem _))
     · exact hmem (E c d) (Submonoid.subset_closure ⟨c, d, h, rfl⟩)
-  intro c d
-  exact main 1 (one_mem _) base c d
+  exact fun c d => main 1 (one_mem _) base c d
 
 theorem lowering_word_span_gl_stable {E : GLOps n K V} (hE : IsGLRep E) {mu : Fin n → ℤ} {v : V} (hv : IsHWV E mu v)
     (c d : Fin n) : ∀ y ∈ loweringWordSpan E v, E c d y ∈ loweringWordSpan E v := by
@@ -262,8 +259,7 @@ theorem lowering_word_span_enveloping_stable {E : GLOps n K V} (hE : IsGLRep E) 
   induction hu' using Submonoid.closure_induction with
   | mem x hx =>
     obtain ⟨⟨a, b⟩, rfl⟩ := hx
-    intro y hy
-    exact lowering_word_span_gl_stable hE hv a b y hy
+    exact fun y hy => lowering_word_span_gl_stable hE hv a b y hy
   | one => intro y hy; exact hy
   | mul x z _ _ ihx ihz => intro y hy; exact ihx _ (ihz y hy)
 
@@ -289,8 +285,7 @@ theorem lowering_word_weight_or_nMinus {E : GLOps n K V} (hs : OperatorsShiftWei
     · rcases h1 with h1 | h1
       · left; exact h2.trans h1
       · right
-        rw [show (x * z) v = x (z v) from rfl, h2]
-        exact h1
+        rwa [show (x * z) v = x (z v) from rfl, h2]
     · right; exact h2
 
 theorem nontrivial_isotypic_weight_zero_killed {E : GLOps n K V} (hE : IsGLRep E) (hs : OperatorsShiftWeightsByRoots E) : NontrivialIsotypicWeightZeroKilled E := by
@@ -311,8 +306,7 @@ theorem nontrivial_isotypic_weight_zero_killed {E : GLOps n K V} (hE : IsGLRep E
           rw [hπ.1 _ hν]
           exact hP _ hν h
         · rw [hπ.2 ν hν0 _ hν, map_zero]
-    intro y hy
-    exact LinearMap.mem_ker.mp (key hy)
+    exact fun y hy => LinearMap.mem_ker.mp (key hy)
   have hiso : isoSub E mu ≤ LinearMap.ker (P * π) := by
     unfold isoSub
     rw [Submodule.span_le]

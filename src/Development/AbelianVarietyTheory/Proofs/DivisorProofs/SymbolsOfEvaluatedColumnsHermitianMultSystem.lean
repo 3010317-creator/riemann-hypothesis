@@ -104,8 +104,7 @@ theorem word_join (hc : ∀ u v, mul u * mul v = mul v * mul u) {D t : ℕ} (s :
     rfl
   rw [h1, h2, show mul l ^ (Finset.univ.filter fun q => β q = Fin.last D).card = φ (G l ^ (Finset.univ.filter fun q => β q = Fin.last D).card) from (map_pow φ (G l) _).symm, ← map_mul]
   congr 1
-  rw [Finset.prod_comp (fun b => G (H b)) β]
-  rw [Finset.prod_subset (Finset.subset_univ _)]
+  rw [Finset.prod_comp (fun b => G (H b)) β, Finset.prod_subset (Finset.subset_univ _)]
   · rw [Fin.prod_univ_castSucc]
     apply congrArg₂ (fun (x y : P) => x * y)
     · refine Finset.prod_congr rfl fun i _ => ?_
@@ -114,8 +113,7 @@ theorem word_join (hc : ∀ u v, mul u * mul v = mul v * mul u) {D t : ℕ} (s :
   · intro b _ hb
     have : (Finset.univ.filter fun q => β q = b).card = 0 := by
       rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
-      intro q _ hq
-      exact hb (Finset.mem_image.2 ⟨q, Finset.mem_univ _, hq⟩)
+      exact fun q _ hq => hb (Finset.mem_image.2 ⟨q, Finset.mem_univ _, hq⟩)
     rw [this]
     exact pow_zero _
 
@@ -125,8 +123,7 @@ theorem card_fibers {D t : ℕ} (β : Fin t → Fin (D + 1)) :
   classical
   have := Finset.card_eq_sum_card_fiberwise (s := Finset.univ) (t := Finset.univ) (f := β)
     (fun _ _ => Finset.mem_univ _)
-  rw [Finset.card_univ, Fintype.card_fin] at this
-  rw [Fin.sum_univ_castSucc] at this
+  rw [Finset.card_univ, Fintype.card_fin, Fin.sum_univ_castSucc] at this
   exact this.symm
 
 end GlobalTheory.HSShort.SymCols

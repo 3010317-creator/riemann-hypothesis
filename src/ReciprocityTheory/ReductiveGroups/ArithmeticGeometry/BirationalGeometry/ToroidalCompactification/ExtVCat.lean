@@ -39,7 +39,6 @@ theorem psum_one {n : ℕ} {T : Over S} (I : Finset (Fin n)) : psum G (fun _ => 
   | cons a l ih =>
     simp only [List.foldr_cons]
     rw [ih]
-    show (1 : T ⟶ G) * 1 = 1
     exact _root_.mul_one _
 
 theorem one_comp_proj_three (k : Fin 3) : (1 : 𝟙_ (Over S) ⟶ G3 G) ≫ x3 G k = 1 := by
@@ -93,15 +92,14 @@ theorem cub_at_one {L : RigLB G} (c : CubicalStr G L) (z : (𝟙_ (Over S)).left
     if χ = eSec G then q₀ else (exists_chart L.isLB (χ z)).choose
   have hJ : Good L.L z J := fun χ => by
     by_cases h : χ = eSec G
-    · subst h; simp only [J, if_pos rfl]; exact hq₀
-    · simp only [J, if_neg h]; exact (exists_chart L.isLB (χ z)).choose_spec
+    · subst h; simp only [J, ite_eq_left rfl]; exact hq₀
+    · simp only [J, ite_eq_right h]; exact (exists_chart L.isLB (χ z)).choose_spec
   have hv := val_corr hJ (c.face 0) (eSec (G2 G))
   have hv2 : val (φ := thφ G (x3 G)) (ε := thε) c.t (eSec (G2 G) ≫ (faceMap G 0).left) z J = 1 :=
     (val_pull hJ (φ := thφ G (x3 G)) (ε := thε) c.t (faceMap G 0).left (eSec (G2 G))).symm.trans
       (hv.trans (val_one _))
   have hm : ∀ I, J ((eSec (G2 G) ≫ (faceMap G 0).left) ≫ thφ G (x3 G) I) = q₀ := fun I => by
     rw [eSec_face, eSec_thφ]; simp [J]
-  rw [val_of (φ := thφ G (x3 G)) (ε := thε) c.t _ z J (fun _ => q₀) hm, eSec_face] at hv2
-  exact hv2
+  rwa [val_of (φ := thφ G (x3 G)) (ε := thε) c.t _ z J (fun _ => q₀) hm, eSec_face] at hv2
 
 end ReciprocityTheory.ChartRestriction.G.Geo.Tor

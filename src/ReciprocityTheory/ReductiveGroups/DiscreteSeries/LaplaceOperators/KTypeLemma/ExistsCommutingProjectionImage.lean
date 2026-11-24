@@ -26,8 +26,7 @@ theorem pi_submodule_finiteDimensional {M : Type*} [AddCommGroup M] [Module ℂ 
   have : Submodule.pi Set.univ (fun _ : Fin n => S) = LinearMap.range g := by
     ext f
     constructor
-    · intro hf
-      exact ⟨fun c => ⟨f c, mem_pi_submodule_iff.1 hf c⟩, rfl⟩
+    · exact fun hf => ⟨fun c => ⟨f c, mem_pi_submodule_iff.1 hf c⟩, rfl⟩
     · rintro ⟨w, rfl⟩
       exact mem_pi_submodule_iff.2 fun c => by simp [g]
   rw [this]
@@ -126,8 +125,7 @@ theorem exists_commuting_projection_image (V : Submodule ℂ M)
       have : P (tensVd E a b v) = tensVd E a b (P v) := by
         rw [← Module.End.mul_apply, hc, Module.End.mul_apply]
       rw [this, hφ a b _ (hPg v (mem_pi_submodule_iff.1 hv.1)), hv2, map_zero]
-  have hxT := hle (hGen x hx)
-  exact hPx (LinearMap.mem_ker.1 hxT.2)
+  exact hPx (LinearMap.mem_ker.1 (hle (hGen x hx)).2)
 
 end Gen
 

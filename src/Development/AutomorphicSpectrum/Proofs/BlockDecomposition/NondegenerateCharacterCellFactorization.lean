@@ -218,8 +218,7 @@ theorem trace_val (b : Mx D n n) (hb : adj b = b) (Vc : Mx D n 1) (Rw : Mx D 1 n
     (hS : Rw ⬝ b ⬝ Vc = 1) : Matrix.trace (b ⬝ (τ • (Vc ⬝ Rw + adj Rw ⬝ adj Vc))) = τ * 2 := by
   have hS' : adj Vc ⬝ b ⬝ adj Rw = 1 := by
     have h := congrArg adj hS
-    rw [adj_mul, adj_mul, hb, adj_one, ← Matrix.mul_assoc] at h
-    exact h
+    rwa [adj_mul, adj_mul, hb, adj_one, ← Matrix.mul_assoc] at h
   exact gen_trace b Vc Rw (adj Rw) (adj Vc) τ hS hS'
 
 theorem halfTr_algebraMap_mul (t : AF D.host.F) (z : AE D) :
@@ -283,13 +282,11 @@ theorem small_cell : ∀ {D : D7} {n : ℕ} {ψ : AddChar (AF D.host.F) ℂ}, Is
   · have h := trace_val (rat β.1) (adj_rat_herm β) (rat V0) (rat R0) (algebraMap (AF D.host.F) (AE D) t) hS
     change ψ (-halfTr (Matrix.trace ((rat β.1 : Mx D n n) ⬝ _))) ≠ 1
     rw [h, ht, AddChar.map_neg_eq_inv]
-    intro h1
-    exact hx0 (inv_eq_one.1 h1)
+    exact fun h1 => hx0 (inv_eq_one.1 h1)
   · intro γ u hγ x hx hW' hu
     refine cell_absorb (rat V0) (rat R0) _ rfl γ u hu ?_
     have hv : lowerC x *ᵥ v = 0 := by
-      rw [← hW'] at hvW
-      exact hvW
+      rwa [← hW'] at hvW
     have h0 : (HMul.hMul (lowerC x) V0 : Matrix (Fin n) (Fin 1) D.host.E) = 0 := by
       refine Matrix.ext fun i j => ?_
       have := congrFun hv i

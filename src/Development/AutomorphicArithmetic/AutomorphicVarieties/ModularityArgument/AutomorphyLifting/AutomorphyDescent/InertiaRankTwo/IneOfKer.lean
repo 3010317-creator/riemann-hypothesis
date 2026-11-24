@@ -116,8 +116,7 @@ theorem charpoly_powers (T : (Matrix (Fin n) (Fin n) k)ˣ) {m : ℕ} (hm : 0 < m
       rw [← Matrix.diagonal_pow, ← hc m, ← Units.val_pow_eq_pow_val, hT, Units.val_one, one_mul,
         mul_one]
     have h2 := (Units.mul_right_inj u).mp h1
-    have h3 := congrFun (congrFun h2 i) i
-    simpa using h3
+    simpa using congrFun (congrFun h2 i) i
   · have hdet : IsUnit u.val.det := (Matrix.isUnit_iff_isUnit_det _).mp u.isUnit
     have h1 : (T ^ a).val = u.val * Matrix.diagonal d ^ a * (u.val)⁻¹ := by
       rw [Units.val_pow_eq_pow_val, ← hc a, mul_assoc, Matrix.mul_nonsing_inv _ hdet, mul_one]
@@ -158,8 +157,7 @@ theorem charpoly_of_ker {Γ : Type} [Group Γ] (r : Γ →* (Matrix (Fin n) (Fin
     have h1 : χ (g * (g0 ^ a)⁻¹) = 1 := by
       rw [map_mul, map_inv, map_pow, hg0, hχa, mul_inv_cancel]
     have h2 := hk _ (I.mul_mem hg (I.inv_mem (I.pow_mem hg0I a))) h1
-    rw [map_mul, map_inv, map_pow, mul_inv_eq_one] at h2
-    exact h2
+    rwa [map_mul, map_inv, map_pow, mul_inv_eq_one] at h2
   rw [hrg, hchar a]
   refine Finset.prod_congr rfl (fun i _ => ?_)
   rw [← hj i, hχa, Units.val_pow_eq_pow_val, ← pow_mul, ← pow_mul, Nat.mul_comm]

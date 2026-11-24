@@ -137,9 +137,8 @@ theorem ev_dite {n : ℕ} {p : Pl E → Prop} (y : ∀ w : {w // p w}, GLw n w.1
   by_cases hp : p u
   · refine ⟨⟨u, hp⟩, ?_, rfl⟩
     have hu' : ¬ (if hu : p u then y ⟨u, hu⟩ else 1) ∈ GlobalTheory.LFun.KGL u (n := n) := hu
-    rw [dif_pos hp] at hu'
-    exact hu'
-  · exact absurd (by rw [dif_neg hp]; exact one_mem _) hu
+    rwa [dite_eq_left hp] at hu'
+  · exact absurd (by rw [dite_eq_right hp]; exact one_mem _) hu
 
 theorem cP_cP (v : Pl E) : cP (cP v) = v := GlobalTheory.CompanionTheory.SuppFinTw.cPl_cPl v
 
@@ -159,10 +158,8 @@ theorem cp_eq {a b : ℕ} {S : Set (Pl E)} (i : Slot S) (x : Gf E a b) : i.cp a 
 
 theorem continuous_cpn (n : ℕ) {S : Set (Pl E)} (i : Slot S) : Continuous (cpn (E := E) n i) := by
   rcases i with w | w
-  · show Continuous (loc n w.1)
-    exact continuous_loc n w.1
-  · show Continuous ((loc n w.1).comp (thF E n))
-    exact (continuous_loc n w.1).comp (PositivityTheory.Rg.BcB.G8.topo_holds E n).2.2.2.2.1
+  · exact continuous_loc n w.1
+  · exact (continuous_loc n w.1).comp (PositivityTheory.Rg.BcB.G8.topo_holds E n).2.2.2.2.1
 
 theorem continuous_cpH (a b : ℕ) {S : Set (Pl E)} (i : Slot S) : Continuous (cpH (E := E) a b i) :=
   ((continuous_cpn a i).comp continuous_fst).prodMk ((continuous_cpn b i).comp continuous_snd)
@@ -185,22 +182,22 @@ theorem F_exists {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) (y : ∀ i : Slot
         exact hw' hsp
     have h0 : loc n (cP w) g₂ = loc n (cP w) 1 := by
       rw [h₂, map_one]
-      exact dif_neg hn
+      exact dite_eq_right hn
     rw [loc_thF_congr w h0, map_one, map_one]
   have hS2 : ∀ w : Pl E, w ∈ S → IsSplitAt w → loc n w (thF E n g₁) = 1 := by
     intro w hw hsp
     have h0 : loc n (cP w) g₁ = loc n (cP w) 1 := by
       rw [h₁, map_one]
-      exact dif_neg (GlobalTheory.CompanionTheory.SuppFinTw.conj_not_mem hS hw hsp)
+      exact dite_eq_right (GlobalTheory.CompanionTheory.SuppFinTw.conj_not_mem hS hw hsp)
     rw [loc_thF_congr w h0, map_one, map_one]
   refine ⟨g₁ * thF E n g₂, fun i => ?_⟩
   rcases i with w | w
   · show loc n w.1 (g₁ * thF E n g₂) = y (.inl w)
     rw [map_mul, hS1 w.1 w.2, mul_one, h₁]
-    exact dif_pos w.2
+    exact dite_eq_left w.2
   · show loc n w.1 (thF E n (g₁ * thF E n g₂)) = y (.inr w)
     rw [map_mul, map_mul, GlobalTheory.EulerTw.Comm.thF_thF, hS2 w.1 w.2.1 w.2.2, one_mul, h₂]
-    exact dif_pos w.2
+    exact dite_eq_left w.2
 
 theorem F_ext {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {g h : GL (Fin n) (Af E)}
     (H : ∀ i : Slot S, cpn n i g = cpn n i h) : g = h := by
@@ -256,8 +253,7 @@ theorem pair_mem {a b : ℕ} {S : Set (Pl E)} (hS : IsSection S) (x : Gf E a b) 
   constructor
   · rintro ⟨h1, h2⟩ i
     exact Subgroup.mem_prod.2 ⟨h1 i, h2 i⟩
-  · intro h
-    exact ⟨fun i => (Subgroup.mem_prod.1 (h i)).1, fun i => (Subgroup.mem_prod.1 (h i)).2⟩
+  · exact fun h => ⟨fun i => (Subgroup.mem_prod.1 (h i)).1, fun i => (Subgroup.mem_prod.1 (h i)).2⟩
 
 theorem pair_compact {a b : ℕ} {S : Set (Pl E)} (hS : IsSection S) (C : ∀ i : Slot S, Set (GLw a i.pl × GLw b i.pl))
     (hC : ∀ i, IsCompact (C i)) (hCK : ∀ᶠ i in cofinite, C i = K2 a b i.pl) :
@@ -288,7 +284,7 @@ theorem pair_compact {a b : ℕ} {S : Set (Pl E)} (hS : IsSection S) (C : ∀ i 
     by_contra hn
     exact hi (by
       show (if h : i ∈ T then ((c ⟨i, h⟩).1 : GLw a i.pl × GLw b i.pl) else 1) ∈ K2 a b i.pl
-      rw [dif_neg hn]
+      rw [dite_eq_right hn]
       exact one_mem _)
   choose xc hxc using hlift
   have hcl : IsClosed {x : Gf E a b | ∀ i : Slot S, cpH a b i x ∈ C i} := by
@@ -312,12 +308,11 @@ theorem pair_compact {a b : ℕ} {S : Set (Pl E)} (hS : IsSection S) (C : ∀ i 
     refine (pair_mem hS _).2 fun i => ?_
     rw [map_mul, map_inv, hxc]
     by_cases hi : i ∈ T
-    · rw [dif_pos hi]
+    · rw [dite_eq_left hi]
       exact hc ⟨i, hi⟩
-    · rw [dif_neg hi, inv_one, one_mul]
+    · rw [dite_eq_right hi, inv_one, one_mul]
       have hi' : ¬ ¬ C i = K2 a b i.pl := by
-        rw [hT] at hi
-        exact hi
+        rwa [hT] at hi
       have := hx i
       rwa [not_not.1 hi'] at this
   exact Subgroup.mem_prod.1 hk

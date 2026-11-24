@@ -74,8 +74,7 @@ def matSub (C : Subalgebra ℂ A) (n : Type) [Fintype n] [DecidableEq n] : Subal
     · exact C.zero_mem
 
 theorem mem_matSub {C : Subalgebra ℂ A} {n : Type} [Fintype n] [DecidableEq n] {M : Matrix n n A} :
-    M ∈ matSub C n ↔ ∀ i j, M i j ∈ C := by
-  exact Iff.rfl
+    M ∈ matSub C n ↔ ∀ i j, M i j ∈ C := Iff.rfl
 
 variable {S : Type} [Fintype S] [DecidableEq S] (C : Subalgebra ℂ A)
 
@@ -99,8 +98,7 @@ theorem lift_mem_matrix_algebra {M : M2 A} (hM : ∀ i j, M i j ∈ C) :
     (lift0 M : M2 (SlopeTestRemainingChoices S A)) ∈ matSub (matSub C (Ix S)) (Fin 2) := by
   rw [mem_matSub]
   intro i j
-  simp only [lift0, Matrix.map_apply]
-  exact io_mem C (hM i j)
+  simpa only [lift0, Matrix.map_apply] using io_mem C (hM i j)
 
 theorem ins_mem (a : S) {M : M2 (SlopeTestRemainingChoices S A)} (hM : M ∈ matSub (matSub C (Ix S)) (Fin 2)) :
     ins a M ∈ matSub C (Ix S) := by
@@ -109,8 +107,7 @@ theorem ins_mem (a : S) {M : M2 (SlopeTestRemainingChoices S A)} (hM : M ∈ mat
   exact mem_matSub.1 hM i j
 
 theorem transpose_mem {n : Type} [Fintype n] [DecidableEq n] {C' : Subalgebra ℂ A} {M : Matrix n n A}
-    (hM : M ∈ matSub C' n) : Mᵀ ∈ matSub C' n := by
-  exact mem_matSub.2 fun i j => mem_matSub.1 hM j i
+    (hM : M ∈ matSub C' n) : Mᵀ ∈ matSub C' n := mem_matSub.2 fun i j => mem_matSub.1 hM j i
 
 theorem Rh0_mem (a : S) (D : ℂ) : (Rh0 a D : M2 (SlopeTestRemainingChoices S A)) ∈ matSub (matSub C (Ix S)) (Fin 2) := by
   have hP : (P0 a : M2 (SlopeTestRemainingChoices S A)) ∈ matSub (matSub C (Ix S)) (Fin 2) :=
@@ -128,8 +125,7 @@ theorem TTw_mem {QQ : ℂ → M2 A} (hQ : ∀ Y i j, QQ Y i j ∈ C) (w : List (
     TTw QQ w Y ∈ matSub (matSub C (Ix S)) (Fin 2) := by
   induction w generalizing Y with
   | nil =>
-    simp only [TTw]
-    exact lift_mem_matrix_algebra C (hQ Y)
+    simpa only [TTw] using lift_mem_matrix_algebra C (hQ Y)
   | cons l w ih =>
     simp only [TTw]
     split_ifs
@@ -140,8 +136,7 @@ theorem RRw_mem {QQ : ℂ → M2 A} (hQ : ∀ Y i j, QQ Y i j ∈ C) (w : List (
     RRw QQ w ∈ matSub C (Ix S) := by
   induction w with
   | nil =>
-    simp only [RRw]
-    exact Subalgebra.one_mem _
+    simpa only [RRw] using Subalgebra.one_mem _
   | cons l w ih =>
     simp only [RRw]
     refine Subalgebra.mul_mem _ ih (ins_mem C _ ?_)
@@ -158,8 +153,7 @@ theorem commute_io {f : A} {M : SlopeTestRemainingChoices S A} (hM : M ∈ matSu
     exact hm f (Set.mem_singleton f)
   show (io f : SlopeTestRemainingChoices S A) * M = M * io f
   ext i j
-  simp only [io, Matrix.scalar_apply, Matrix.diagonal_mul, Matrix.mul_diagonal]
-  exact h i j
+  simpa only [io, Matrix.scalar_apply, Matrix.diagonal_mul, Matrix.mul_diagonal] using h i j
 
 end MatSub
 
@@ -192,9 +186,8 @@ theorem act_io (f : Pr (RadSp k r z z' π π')) (x : Ix S → RadSp k r z z' π 
   rw [Finset.sum_eq_single a]
   · simp
   · intro b _ hb
-    rw [if_neg (Ne.symm hb), pr_fst_zero, LinearMap.zero_apply]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+    rw [ite_eq_right (Ne.symm hb), pr_fst_zero, LinearMap.zero_apply]
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 end Act
 

@@ -72,8 +72,7 @@ theorem orderAtLeastLocus_subset_preimage_of_isBlowupAlongIdealSheaf (hgeom : Or
   rw [Set.mem_preimage, mem_orderAtLeastLocus_iff]
   by_cases hE : x' ∈ (Blowup.exceptionalIdeal π Z).support
   · have hmem : x' ∈ (↑(Z.comap π).support : Set ↥X') := by
-      rw [← Blowup.exceptionalIdeal_eq_comap π Z]
-      exact hE
+      rwa [← Blowup.exceptionalIdeal_eq_comap π Z]
     have hπx : π x' ∈ (↑Z.support : Set ↥T.scheme) := by
       simpa [AlgebraicGeometry.Scheme.IdealSheafData.mem_support_comap] using hmem
     have h2 : (μ : ℕ∞) ≤ orderAt J (π x') := (mem_orderAtLeastLocus_iff J μ (π x')).1 (hZ hπx)
@@ -119,8 +118,7 @@ theorem orderAtLeastLocus_subset_preimage_transitionMap (hgeom : OrderAtComapOff
   induction j, hij using Nat.le_induction with
   | base =>
       intro _ x hx
-      rw [Set.mem_preimage, transitionMap_refl_apply]
-      exact hx
+      rwa [Set.mem_preimage, transitionMap_refl_apply]
   | succ j hij ih =>
       intro hj1
       have hjlt : j < s.toSequenceOfBlowups.length := Nat.lt_of_succ_le hj1
@@ -131,8 +129,7 @@ theorem orderAtLeastLocus_subset_preimage_transitionMap (hgeom : OrderAtComapOff
       have h1 : s.toSequenceOfBlowups.transitionMapSucc j x ∈ orderAtLeastLocus (s.ideal j) c := hstep hx
       have h2 : s.toSequenceOfBlowups.transitionMap hij (s.toSequenceOfBlowups.transitionMapSucc j x) ∈
           orderAtLeastLocus (s.ideal i) c := hih h1
-      rw [s.toSequenceOfBlowups.blowupMorphism_eq_transitionMap j, transitionMap_comp_apply] at h2
-      exact h2
+      rwa [s.toSequenceOfBlowups.blowupMorphism_eq_transitionMap j, transitionMap_comp_apply] at h2
 
 end MarkedSequenceOfBlowups
 

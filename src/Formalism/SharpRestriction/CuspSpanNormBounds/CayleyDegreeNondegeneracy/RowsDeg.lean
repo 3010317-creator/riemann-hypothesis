@@ -77,9 +77,9 @@ theorem rows_Kt_KZ (hrd : 0 < D.host.rdE) (t : D.s.Term u u') : rows_Kt Y t = ro
   unfold onePlusChSh
   by_cases h0 : Dr (X.fl t) (X.fl' t) = 0
   · have h0' : leadMinorE (termGramMatrix X t) D.R.rS = 0 := h0
-    rw [if_pos h0, if_pos h0']
+    rw [ite_eq_left h0, ite_eq_left h0']
   · have h0' : ¬ leadMinorE (termGramMatrix X t) D.R.rS = 0 := h0
-    rw [if_neg h0, if_neg h0']
+    rw [ite_eq_right h0, ite_eq_right h0']
     rfl
 
 def rows_KBound (Y : LoopTie D large₂ X u u' C1) (c : ℝ) : Prop :=
@@ -308,22 +308,14 @@ theorem rows_deg_prod (h : rows_Hyps Y C' Cl Cg cb Cu cT CT C0 A c Cpr Ca C2 Ch 
     rw [← e]
     unfold rows_alD
     rw [Real.sq_sqrt (div_nonneg (rows_lam_nonneg D large₂ c Ca C2 Ch q Z) (rows_den_pos Y h hZ).le)]
-    have hd := (rows_den_pos Y h hZ).ne'
-    refine le_of_eq ?_
-    calc wordPairGramNorm D u u' Z * (rows_lam D large₂ c Ca C2 Ch q Z /
-          (wordPairGramNorm D u u' Z * rows_KZ D u u' Z ^ (2 * D.R.k) * (Tr D u)⁻¹ ^ (D.R.k * D.R.f))) *
-          rows_KZ D u u' Z ^ (2 * D.R.k) * (Tr D u)⁻¹ ^ (D.R.k * D.R.f)
-        = (wordPairGramNorm D u u' Z * rows_KZ D u u' Z ^ (2 * D.R.k) * (Tr D u)⁻¹ ^ (D.R.k * D.R.f)) *
-            (rows_lam D large₂ c Ca C2 Ch q Z /
-              (wordPairGramNorm D u u' Z * rows_KZ D u u' Z ^ (2 * D.R.k) * (Tr D u)⁻¹ ^ (D.R.k * D.R.f))) := by ring
-      _ = _ := mul_div_cancel₀ _ hd
-  have n1 := Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.degRow D.R.k D.R.f s (gg D) D.host.v (Tr D u) (NT D u) (wordPairGramProduct D u u' x)
-    (wordPairGramProduct D u u' y) (rows_KZ D u u' x) (rows_KZ D u u' y)
-    (XiS D u (HHZ D large₂.sc.b c x * HHZ D large₂.sc.b c y) c s)
+    exact le_of_eq ((by ring : _ = _).trans (mul_div_cancel₀ _ (rows_den_pos Y h hZ).ne'))
+  have n1 := Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.degRow D.R.k D.R.f s (gg D)
+    D.host.v _ _ _ _ _ _ _
     ((HHZ D large₂.sc.b c x * HHZ D large₂.sc.b c y) ^ pairCountExponent D c s * (c * s * D.R.f) ^ (6 * s * D.R.f))
-    (wordSublatticeTripleBound D large₂ u c x y s (rows_DeD D u u' s x y)) (rows_alD D large₂ u u' c Ca C2 Ch q x)
-    (rows_alD D large₂ u u' c Ca C2 Ch q y)
-    (rows_lam D large₂ c Ca C2 Ch q x) (rows_lam D large₂ c Ca C2 Ch q y) hk1 hs (by linarith) (by linarith)
+    (wordSublatticeTripleBound D large₂ u c x y s (rows_DeD D u u' s x y))
+    (rows_alD D large₂ u u' c Ca C2 Ch q x) (rows_alD D large₂ u u' c Ca C2 Ch q y)
+    (rows_lam D large₂ c Ca C2 Ch q x) (rows_lam D large₂ c Ca C2 Ch q y) hk1 hs
+    (by linarith) (by linarith)
     (_root_.Formalism.MainNotions.BridgeLemma₂.rowsT_Tr_pos D u) (rows_NT_pos D u) (gramProductG0_pos Y h.hH.1 h.hT gx) (gramProductG0_pos Y h.hH.1 h.hT gy)
     (rows_KZ_pos Y h gx) (rows_KZ_pos Y h gy) (rows_XiS_nonneg D u hh0 hc s)
     (by positivity) (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
@@ -340,18 +332,11 @@ theorem rows_deg_prod (h : rows_Hyps Y C' Cl Cg cb Cu cT CT C0 A c Cpr Ca C2 Ch 
       2 * (q : ℝ) / ((D.R.rS : ℝ) + 1) / 2 ≤ -(12 * ((D.R.rS : ℝ) + 1) ^ 2) := by
     have e : 2 * (q : ℝ) / ((D.R.rS : ℝ) + 1) / 2 = (q : ℝ) / ((D.R.rS : ℝ) + 1) := by ring
     rw [e]; linarith
-  have n2 := rows_num_pair (P := rows_P D large₂ c Ch) (σ₁ := sizeZ D large₂.sc.b Ch x) (σ₂ := sizeZ D large₂.sc.b Ch y)
-    (h₁ := HHZ D large₂.sc.b c x) (h₂ := HHZ D large₂.sc.b c y)
-    (cr := c * (D.R.rS : ℝ) ^ 2) (Γ := rows_GamD D large₂ Ca C2) (a2 := C2 * (D.R.m : ℝ) ^ 2 + C2 * (D.R.m : ℝ) ^ 4 * 2)
-    (dq := 2 * (q : ℝ) / ((D.R.rS : ℝ) + 1)) (E1 := pairCountExponent D c s) (F6 := (c * s * D.R.f) ^ (6 * s * D.R.f))
-    (XiH := XiS D u (HHZ D large₂.sc.b c x * HHZ D large₂.sc.b c y) c s) (XiP := XiS D u (rows_P D large₂ c Ch ^ 2) c s)
-    (ck := c * D.R.k) (e := 12 * ((D.R.rS : ℝ) + 1) ^ 2) (l₁ := rows_lam D large₂ c Ca C2 Ch q x)
-    (l₂ := rows_lam D large₂ c Ca C2 Ch q y)
+  have n2 := rows_num_pair (F6 := (c * s * D.R.f) ^ (6 * s * D.R.f))
     hP1 sx1 sy1 hx1 hy1 cx cy (by positivity) (rows_GamD_nonneg D large₂ Ca C2) (pairCountExponent_nonneg D hc s) (by positivity)
     (rows_XiS_nonneg D u hh0 hc s) hXi (rows_lam_eq D large₂ c Ca C2 Ch q x) (rows_lam_eq D large₂ c Ca C2 Ch q y) he
   have hA0 : 0 ≤ (2 / gg D) ^ ((s - 2) * D.R.k * D.R.f) *
       ((D.R.k : ℝ) * D.host.v / (Real.exp 1 * Real.pi)) ^ (D.R.k * D.R.f) := by
-    have hpi := Real.pi_pos
     have : 0 ≤ gg D := by linarith
     have : 0 ≤ D.host.v := by linarith
     positivity

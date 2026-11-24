@@ -180,9 +180,9 @@ theorem diagW_box_indicator : ∀ (F : Type) [Field F] [NumberField F] (v : Pl (
       simp
     · rw [Set.indicator_of_notMem (fun h => hw2 (Set.mem_prod.1 h).2)]
       obtain ⟨i, hi⟩ : ∃ i, w.2 i ∉ v.adicCompletionIntegers F := by
-        by_contra h; push_neg at h; exact hw2 ((hmem _).2 h)
+        by_contra h; push Not at h; exact hw2 ((hmem _).2 h)
       obtain ⟨y, hy, hne⟩ : ∃ y ∈ v.adicCompletionIntegers F, psiLoc ψ v (w.2 i * y) ≠ 1 := by
-        by_contra h; push_neg at h; exact hi ((hψ _).1 h)
+        by_contra h; push Not at h; exact hi ((hψ _).1 h)
       have ha : Pi.single i y ∈ S := (hmem _).2 fun k => by
         rw [Pi.single_apply]; split_ifs
         · exact hy
@@ -423,18 +423,7 @@ open GlobalTheory.LatVac
 
 theorem exists_ne_of_cm {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  by_contra h
-  push_neg at h
-  obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-  have hreal : NumberField.ComplexEmbedding.IsReal τ := by
-    rw [NumberField.ComplexEmbedding.isReal_iff]
-    ext x
-    have h1 := hσ.2.2.2 τ x
-    rw [h x] at h1
-    rw [NumberField.ComplexEmbedding.conjugate_coe_eq, starRingEnd_apply]
-    exact h1.symm
-  exact (NumberField.InfinitePlace.not_isReal_iff_isComplex.2
-    (hσ.2.1.isComplex (NumberField.InfinitePlace.mk τ))) ⟨τ, hreal, rfl⟩
+  exact GlobalTheory.AdelicU.exists_cm_conj_ne hσ
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
@@ -534,8 +523,7 @@ theorem exists_scalar_inv_at : ∀ (F E : Type) [Field F] [NumberField F] [Field
     · exact_mod_cast sub_eq_zero.1 h
     · exact absurd h (mul_ne_zero two_ne_zero hξ0)
   obtain ⟨m, hm⟩ : ∃ m : ℕ, ¬ gv.charpoly.IsRoot (ι (lam m)) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact Set.infinite_range_of_injective (hι.comp hlam) (hfin.subset (by rintro _ ⟨m, rfl⟩; exact hcon m))
   set l := lam m with hl
   have hl1 : l ≠ 1 := by
@@ -765,10 +753,7 @@ theorem integrable_integrand (ψ : AddChar (Fv F v) ℂ) (hψ : Continuous ψ) (
   · apply HasCompactSupport.mul_left
     refine HasCompactSupport.intro (K := (fun y : κ ⊕ κ → Fv F v => y ∘ Sum.inr) '' tsupport Φ)
       (hΦ.2.image (by fun_prop)) ?_
-    intro x hx
-    apply image_eq_zero_of_notMem_tsupport
-    intro h
-    exact hx ⟨_, h, rfl⟩
+    exact fun x hx => image_eq_zero_of_notMem_tsupport (fun h => hx ⟨_, h, rfl⟩)
 
 theorem diagG_zero (ψ : AddChar (Fv F v) ℂ) (μ : @Measure (κ → Fv F v) (borel _)) :
     diagG ψ μ (0 : (κ ⊕ κ → Fv F v) → ℂ) = 0 := by
@@ -1209,8 +1194,7 @@ theorem param : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
   have hζat : ∀ y, At (evFin F v) (ζ y) := fun y => at_map_lift v _
   have hζc : ∀ y, (ζ y).map (compFin F E v) = e y := fun y => map_lift_compFin v _
   have hζadd : ∀ y y', ζ (y + y') = ζ y + ζ y' := fun y y' => by
-    simp only [ζ, map_add (f := _)]
-    exact Matrix.map_add _ (map_add _) _ _
+    simpa only [ζ, map_add (f := _)] using Matrix.map_add _ (map_add _) _ _
   have hζsmul : ∀ (a : Fv F v) y, ζ (a • y) = liftV v a • ζ y := fun a y => by
     have hat : At (evFin F v) (liftV v a • ζ y) := fun u hu => by rw [smul_comm, hζat y u hu, smul_zero]
     rw [eq_map_lift v _ hat]
@@ -1296,9 +1280,7 @@ theorem hasCompactSupport_comp_of_leftInverse {X Y M : Type} [TopologicalSpace X
     [Zero M] {f : X → Y} {l : Y → X} (hl : Continuous l) (hlf : ∀ x, l (f x) = x) {g : Y → M}
     (hg : HasCompactSupport g) : HasCompactSupport (g ∘ f) := by
   refine IsCompact.of_isClosed_subset (hg.image hl) isClosed_closure ?_
-  refine closure_minimal ?_ (hg.image hl).isClosed
-  intro x hx
-  exact ⟨f x, subset_tsupport _ hx, hlf x⟩
+  exact closure_minimal (fun x hx => ⟨f x, subset_tsupport _ hx, hlf x⟩) (hg.image hl).isClosed
 
 theorem integrable_of_cont_cs {X : Type} [TopologicalSpace X] (μ : @Measure X (borel X))
     [IsFiniteMeasureOnCompacts μ] {f : X → ℂ} (hf : Continuous f) (hcs : HasCompactSupport f) :
@@ -1338,13 +1320,11 @@ theorem GlobalTheory.InertLagChar.lagInt_linForm : ∀ (F : Type) [Field F] [Num
       diagW ψ μ (Φ + Φ') = diagW ψ μ Φ + diagW ψ μ Φ' := by
     intro Φ hΦ Φ' hΦ'
     funext w
-    simp only [diagW, Pi.add_apply, hschr_add]
-    exact integral_add (hin w Φ hΦ) (hin w Φ' hΦ')
+    simpa only [diagW, Pi.add_apply, hschr_add] using integral_add (hin w Φ hΦ) (hin w Φ' hΦ')
   have hdiag_smul : ∀ (c : ℂ) (Φ : (κ ⊕ κ → Fv F v) → ℂ), diagW ψ μ (c • Φ) = c • diagW ψ μ Φ := by
     intro c Φ
     funext w
-    simp only [diagW, Pi.smul_apply, hschr_smul, smul_eq_mul]
-    exact integral_const_mul (μ := μ) c _
+    simpa only [diagW, Pi.smul_apply, hschr_smul, smul_eq_mul] using integral_const_mul (μ := μ) c _
 
   obtain ⟨l, hl⟩ := LinearMap.exists_leftInverse_of_injective j (LinearMap.ker_eq_bot.mpr hj)
   have hjc : Continuous j := IsModuleTopology.continuous_of_linearMap j
@@ -1680,18 +1660,7 @@ namespace GlobalTheory.InertLagChar
 
 theorem box_mem_SB {k : Type} [CommRing k] [TopologicalSpace k] [T2Space k] {κ κ' : Type}
     {φ₁ : (κ → k) → ℂ} {φ₂ : (κ' → k) → ℂ} (h₁ : φ₁ ∈ SB (κ → k)) (h₂ : φ₂ ∈ SB (κ' → k)) :
-    boxFun φ₁ φ₂ ∈ SB (κ ⊕ κ' → k) := by
-  have cl : Continuous fun x : κ ⊕ κ' → k => x ∘ Sum.inl := continuous_pi fun i => continuous_apply _
-  have cr : Continuous fun x : κ ⊕ κ' → k => x ∘ Sum.inr := continuous_pi fun i => continuous_apply _
-  refine ⟨(h₁.1.comp_continuous cl).mul (h₂.1.comp_continuous cr), ?_⟩
-  let e := (Homeomorph.sumArrowHomeomorphProdArrow (X := k) (ι := κ) (ι' := κ'))
-  refine HasCompactSupport.intro ((h₁.2.prod h₂.2).image e.symm.continuous) fun x hx => ?_
-  have hx' : e x ∉ tsupport φ₁ ×ˢ tsupport φ₂ := fun h => hx ⟨e x, h, e.symm_apply_apply x⟩
-  rw [Homeomorph.sumArrowHomeomorphProdArrow_apply, Set.mem_prod, not_and_or] at hx'
-  simp only [boxFun]
-  rcases hx' with h | h
-  · rw [image_eq_zero_of_notMem_tsupport h, zero_mul]
-  · rw [image_eq_zero_of_notMem_tsupport h, mul_zero]
+    boxFun φ₁ φ₂ ∈ SB (κ ⊕ κ' → k) := GlobalTheory.BoxSpan.boxFun_mem_SB' h₁ h₂
 
 def boxL {k κ κ' : Type} [CommRing k] (φ₂ : (κ' → k) → ℂ) : ((κ → k) → ℂ) →ₗ[ℂ] ((κ ⊕ κ' → k) → ℂ) where
   toFun φ := boxFun φ φ₂

@@ -82,9 +82,7 @@ theorem fsum_line (t : ℤ) (c k0 : Fin N) (y : Matrix (Fin N) (Fin (N + 1)) ℂ
       fsum t c y - s * fderiv ℂ (H N t) (piF y) (Matrix.single k0 c 1) := by
   have hp : piF (y + s • Matrix.single k0 0 1) = piF y := by
     ext k l
-    simp [piF, Matrix.single_apply]
-    intro _ h
-    exact absurd h.symm (Fin.succ_ne_zero l)
+    simpa [piF, Matrix.single_apply] using fun _ h => absurd h.symm (Fin.succ_ne_zero l)
   simp only [fsum, hp]
   (simp [Matrix.add_apply, Matrix.single_apply, add_mul, Finset.sum_add_distrib,
     ite_mul, Finset.sum_ite_eq]) <;> ring
@@ -231,7 +229,7 @@ theorem rec_step (t : ℤ) (N : ℕ) : detD (H (N + 1) t) = ((t : ℂ) + N) * de
     intro e
     simp only [Equiv.Perm.decomposeFin_symm_apply_succ, Equiv.swap_self, Equiv.refl_apply]
     exact iterated_derivative_corner_case_int t e
-  simp only [h0, if_true, one_mul, Fin.succ_ne_zero, if_false]
+  simp only [h0, ite_true, one_mul, Fin.succ_ne_zero, ite_false]
   cases N with
   | zero => simp
   | succ M =>

@@ -527,10 +527,10 @@ theorem negX_fibClass (j : ℕ) : negX (fibClass j : RP Ψ N) = vR j := by
 def sAll : RP Ψ N := ∑ τ, pk τ 1
 
 theorem muSmall_of_le {j : ℕ} (h : N - j ≤ j) : (muSmall j : RP Ψ N) = muR j := by
-  rw [muSmall, if_pos h, muR_eq]
+  rw [muSmall, ite_eq_left h, muR_eq]
 
 theorem muR_sub_muSmall {j : ℕ} (h : ¬ N - j ≤ j) : (muR j : RP Ψ N) - muSmall j = sAll := by
-  rw [muSmall, if_neg h, muR_eq, sAll, sub_neg_eq_add, ← Finset.sum_add_distrib]
+  rw [muSmall, ite_eq_right h, muR_eq, sAll, sub_neg_eq_add, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [pk, pkLow, Finset.sum_filter, Finset.sum_filter, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -768,8 +768,7 @@ theorem gap_nonneg_of_dominant {Ψ : Type} [Fintype Ψ] {N : ℕ} {j : ℕ} (hj1
     {mu : Wt Ψ N} (hd : Dominant mu) (τ : Ψ) : 0 ≤ gap j mu τ := by
   have h1 : j - 1 < N := by omega
   have hle : mu τ ⟨j, hjN⟩ ≤ mu τ ⟨j - 1, h1⟩ := hd τ ⟨j - 1, h1⟩ ⟨j, hjN⟩ (by rw [Fin.mk_le_mk]; omega)
-  simp only [gap, ent, dif_pos h1, dif_pos hjN]
-  exact sub_nonneg.mpr hle
+  simpa only [gap, ent, dite_eq_left h1, dite_eq_left hjN] using sub_nonneg.mpr hle
 
 theorem NefThreshold.mono {Ψ : Type} [Fintype Ψ] {N : ℕ} {j : ℕ} (hj1 : 1 ≤ j) (hjN : j < N)
     {mu : Wt Ψ N} (hd : Dominant mu) {b b' : ℝ} (hb : b ≤ b') (h : NefThreshold j b mu) :
@@ -789,8 +788,7 @@ theorem RootTower.nefFib_of_nefThreshold :
   · have hBp : B < p := by
       by_contra hc
       exact hS (show p.Prime ∧ (p ≤ B ∨ p ∈ T.bad) from ⟨hp, Or.inl (not_lt.mp hc)⟩)
-    refine h2 B c p hp hS mu hd ?_
-    exact NefThreshold.mono T.j_pos T.j_lt hd (by exact_mod_cast hBp.le) hB
+    exact h2 B c p hp hS mu hd (NefThreshold.mono T.j_pos T.j_lt hd (by exact_mod_cast hBp.le) hB)
 
 end GlobalTheory.CompanionTheory.Ar.Top
 end -- clump:auto
@@ -1114,17 +1112,13 @@ theorem degFl_symmetry_invariance : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ
 
       rw [map_sum]
       congr 1
-      apply Finset.sum_congr rfl
-      intro i _
-      exact pderiv_rename hinj (τ, i) F
+      exact Finset.sum_congr rfl (fun i _ => pderiv_rename hinj (τ, i) F)
     · unfold Tot
       conv_rhs => rw [← pa_degFl_relabel σ]
 
       rw [map_sum]
       congr 1
-      apply Finset.sum_congr rfl
-      intro i _
-      exact pderiv_rename hinj (τ, i) F
+      exact Finset.sum_congr rfl (fun i _ => pderiv_rename hinj (τ, i) F)
 
 end RootFieldNumerics
 end -- clump:auto
@@ -1235,8 +1229,7 @@ theorem thmBA_of_thmB_propA : ∀ II : IntersectionSystem, ∀ (Ψ : Type) [Fint
   have hU : ∑ τ, β τ * Tot τ (rename φ F) = ∑ τ, β ((g : Equiv.Perm Ψ) τ) * Tot τ F := by
     rw [← Equiv.sum_comp (g : Equiv.Perm Ψ)]
     exact Finset.sum_congr rfl fun τ _ => by rw [(anti τ T.j).2]
-  rw [hR, hS, hU, hinv g g.2 B (le_trans (le_max_right _ _) hBge) F, hL g F] at hest
-  exact hest
+  rwa [hR, hS, hU, hinv g g.2 B (le_trans (le_max_right _ _) hBge) F, hL g F] at hest
 
 end GlobalTheory.CompanionTheory.Ar.Top
 end -- clump:auto
@@ -1310,9 +1303,8 @@ theorem inv_linear_eval (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (l
     rw [← hc, coeff_sum, Finset.sum_eq_single p]
     · simp
     · intro q _ hq
-      rw [MvPolynomial.coeff_smul, coeff_X, if_neg, smul_zero]
-      intro h
-      exact hq (Finsupp.single_left_injective one_ne_zero h)
+      rw [MvPolynomial.coeff_smul, coeff_X, ite_eq_right, smul_zero]
+      exact fun h => hq (Finsupp.single_left_injective one_ne_zero h)
     · simp
   have hinv : ∀ τ (i k : Fin N), ((i : ℕ) < j ↔ (k : ℕ) < j) → c (τ, i) = c (τ, k) := by
     intro τ i k hik
@@ -1546,9 +1538,7 @@ theorem antisymmetry_tower_theorem : GroundTheory.Heights₂.Heights.AntisymPert
   obtain ⟨hvol, -, -⟩ := hprop
   have hj0 : 1 ≤ T.j := T.j_pos
   have hjN : T.j < N := T.j_lt
-  have hv : 0 < T.volT := by
-    show 0 < ∑ c : T.Comp, T.vol c
-    exact Finset.sum_pos (fun c _ => hvol c) Finset.univ_nonempty
+  have hv : 0 < T.volT := Finset.sum_pos (fun c _ => hvol c) Finset.univ_nonempty
   obtain ⟨h, hhom, hev, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.polarisation_functional (Ψ × Fin N) (dimFl Ψ N + 1) hh
   let x0 : Ψ → Ψ × Fin N → ℝ := fun τ y => -(1 / (4 * ((N : ℝ) + 1)) *
     (((y.2 : ℕ) : ℝ) - if y.1 = τ ∧ T.j ≤ (y.2 : ℕ) then 1 else 0))
@@ -1613,8 +1603,7 @@ theorem antisymmetry_tower_theorem : GroundTheory.Heights₂.Heights.AntisymPert
       rw [key, key]
       have hsum := Finset.sum_congr rfl fun c (_ : c ∈ (Finset.univ : Finset T.Comp)) =>
         h8 B hB2 c τ a b hab hbj (fun s i => x (s, i))
-      rw [Finset.sum_neg_distrib] at hsum
-      exact hsum
+      rwa [Finset.sum_neg_distrib] at hsum
   have hsmall : ∀ τ : Ψ, ∀ x ∈ K τ, |eval x P| ≤ CW * Real.log B / B := by
     rintro τ x ⟨hxH, hxB⟩
     obtain ⟨hwall, -⟩ := inWall_and_dominant_of_eq_neighbors hj0 hjN τ x hxB hxH

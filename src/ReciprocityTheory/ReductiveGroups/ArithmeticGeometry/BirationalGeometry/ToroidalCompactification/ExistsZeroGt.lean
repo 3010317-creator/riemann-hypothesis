@@ -53,8 +53,7 @@ theorem exists_gt (b : TF (R := R) F ⟶ D.P.A) {K : Type} [Fintype K] {φ : D.X
   choose s hs hsv using fun χ => exists_gen D.P.isLB (hF χ) (v χ) (hv χ)
   refine ⟨{ b := b, s := s, isGen := hs, s_zero := ?_, mult := ?_ }, rfl, ?_⟩
   · refine corr_of_val D.P.isLB (fun y J hy => ?_)
-    refine (hsv 0 _ (𝟙 _) y J hy).trans ?_
-    exact (h₀ y J hy).trans (val_one _).symm
+    exact (hsv 0 _ (𝟙 _) y J hy).trans ((h₀ y J hy).trans (val_one _).symm)
   · intro χ χ'
     refine corr_of_val D.P.isLB (fun y J hy => ?_)
     refine (val_mul (hJ := hy) ..).trans ?_
@@ -71,8 +70,7 @@ theorem isAdd_iff (g g' g'' : GtPtF D F) : g.IsAdd g' g'' ↔ g''.b = g.b * g'.b
     refine ⟨hb, fun χ y J hy => ?_⟩
     rw [← val_cubAt hy]
     refine (val_mul (hJ := hy) ..).symm.trans ?_
-    refine (val_corr (hJ := hy) (hs χ) _).trans ?_
-    exact val_mul (hJ := hy) ..
+    exact (val_corr (hJ := hy) (hs χ) _).trans (val_mul (hJ := hy) ..)
   · rintro ⟨hb, hs⟩
     refine ⟨hb, fun χ => corr_of_val D.P.isLB (fun y J hy => ?_)⟩
     refine (val_mul (hJ := hy) ..).trans ?_

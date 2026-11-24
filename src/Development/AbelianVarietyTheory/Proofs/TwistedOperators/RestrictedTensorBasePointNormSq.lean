@@ -120,8 +120,7 @@ theorem vacAt_of_isLocal {p q : Place D} (h : IsLocal ψ θ S T sS sT ΛS ΛT p 
   · exact isLatVac_mono (latO_mono fun u hu => hu ▸ hq) h.2.1
   · exact h.2.2 τ hq
 
-theorem base_std (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) : IsStdChar D ψ (-1) := by
-  exact h.2.2.2.2.1
+theorem base_std (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) : IsStdChar D ψ (-1) := h.2.2.2.2.1
 
 theorem base_inf (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) : IsInfFam θ :=
   h.2.2.2.2.2.inf
@@ -130,8 +129,7 @@ theorem base_theta (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) : IsThetaFunO ψ S 
   h.2.2.2.2.2.theta
 
 theorem restrictedTensorBasePoint_norm_sq (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) {μ : Measure (WO S T)} {𝓕 : Set (WO S T)}
-    (hμ : IsCovolOne (ratL T S) μ 𝓕) : nrm2 μ 𝓕 f₀ = 1 := by
-  exact h.2.2.2.2.2.norm.2 (μ, 𝓕) hμ
+    (hμ : IsCovolOne (ratL T S) μ 𝓕) : nrm2 μ 𝓕 f₀ = 1 := h.2.2.2.2.2.norm.2 (μ, 𝓕) hμ
 
 theorem base_ne_zero (h : IsBase ψ θ S T sS sT ΛS ΛT f₀) : f₀ ≠ 0 := by
   rintro rfl

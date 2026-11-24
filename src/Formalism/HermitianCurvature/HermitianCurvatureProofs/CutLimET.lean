@@ -71,15 +71,13 @@ theorem limE_of_partsT (p : KB.Pl P Wp Wq) (nn : ℝ → ℝ) (χ : ℝ → ℝ)
       exact hnn _)
   by_cases hb : 0 < (B.beta p.T.base F F).re
   · refine ⟨(p.RR F 0 w [] []).re / (B.beta p.T.base F F).re, div_nonneg hP hb.le, (div_le_iff₀ hb).2 hB, ?_⟩
-    rw [div_mul_cancel₀ _ hb.ne']
-    exact hE
+    rwa [div_mul_cancel₀ _ hb.ne']
   · have hb' : (B.beta p.T.base F F).re ≤ 0 := not_lt.1 hb
     have hR0 : (p.RR F 0 w [] []).re = 0 :=
       le_antisymm (hB.trans (mul_nonpos_of_nonneg_of_nonpos hN hb')) hP
     refine ⟨0, le_refl 0, hN, ?_⟩
     rw [zero_mul]
-    rw [hR0] at hE
-    exact hE
+    rwa [hR0] at hE
 
 end place
 

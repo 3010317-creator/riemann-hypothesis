@@ -76,16 +76,14 @@ theorem inv_integral (τ : LL →+* Om p n) {d : 𝓞 LL} (hd : d ∉ placeIdeal
     rw [← IntermediateField.coe_mul, ← Subalgebra.coe_mul, u.mul_inv]
     simp
   rw [hval] at hmul
-  rw [← eq_inv_of_mul_eq_one_right hmul]
-  exact hint'
+  rwa [← eq_inv_of_mul_eq_one_right hmul]
 
 theorem exists_emb (w : HeightOneSpectrum (𝓞 LL)) (hw : (p : 𝓞 LL) ∈ w.asIdeal) :
     ∃ τ : LL →+* Om p n, placeOf τ = w := by
   classical
   haveI : CharZero (Om p n) :=
     charZero_of_injective_algebraMap (algebraMap (KO p n) (Om p n)).injective
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   let τ0 : LL →ₐ[ℚ] Om p n := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -102,8 +100,7 @@ theorem exists_emb (w : HeightOneSpectrum (𝓞 LL)) (hw : (p : 𝓞 LL) ∈ w.a
     apply HeightOneSpectrum.ext
     exact ((w.isMaximal).eq_of_le (placeOf σ.toRingHom).isPrime.ne_top hle).symm
   obtain ⟨e, hew, hen⟩ : ∃ e ∈ w.asIdeal, ∀ σ : LL →ₐ[ℚ] Om p n, e ∉ placeIdeal σ.toRingHom := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hav (fun x hx => by
       obtain ⟨σ, hσ⟩ := h x hx
       exact Set.mem_biUnion (Finset.mem_coe.2 (Finset.mem_univ σ)) hσ)
@@ -119,8 +116,7 @@ theorem exists_emb (w : HeightOneSpectrum (𝓞 LL)) (hw : (p : 𝓞 LL) ∈ w.a
       ← Algebra.coe_norm_int e, map_intCast]
   have he0 : e ≠ 0 := fun h => hen τ0 (h ▸ (placeIdeal τ0.toRingHom).zero_mem)
   have hN0 : Nz ≠ 0 := by
-    rw [hNz, Ne, Algebra.norm_eq_zero_iff]
-    exact he0
+    rwa [hNz, Ne, Algebra.norm_eq_zero_iff]
 
   have hmemN : ((Nz : ℤ) : 𝓞 LL) ∈ w.asIdeal := by
     have hd := Algebra.dvd_algebraMap_intNorm_self ℤ (𝓞 LL) e
@@ -132,8 +128,7 @@ theorem exists_emb (w : HeightOneSpectrum (𝓞 LL)) (hw : (p : 𝓞 LL) ∈ w.a
     simpa only [algebraMap_int_eq, eq_intCast] using h1
   have hNabs : ((Nz.natAbs : ℕ) : 𝓞 LL) ∈ w.asIdeal := by
     rcases Int.natAbs_eq Nz with h | h
-    · rw [h, Int.cast_natCast] at hmemN
-      exact hmemN
+    · rwa [h, Int.cast_natCast] at hmemN
     · rw [h] at hmemN
       have := w.asIdeal.neg_mem hmemN
       rwa [Int.cast_neg, neg_neg, Int.cast_natCast] at this

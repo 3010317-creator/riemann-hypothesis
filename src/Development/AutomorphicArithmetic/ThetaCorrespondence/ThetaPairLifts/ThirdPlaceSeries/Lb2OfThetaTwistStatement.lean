@@ -337,8 +337,7 @@ private theorem norm_to_pz (h : IsNorm Rl v₀ X ν) :
         refine hFam.coefL i t
     · intro τ
       exact hu τ
-    · intro F
-      exact hPoly F
+    · exact fun F => hPoly F
   · exact hPow
 private theorem norm_from_pz
     (h : @IsNorm (lt_pz c b).D Γ i1 i2 Pl0 I0 T (famInThreeCoefficientChange (a := lt_pz c a) (lt_pz c b) A3) Ks i3 i4 (alg (a := lt_pz c a) (lt_pz c b) iK)
@@ -358,8 +357,7 @@ private theorem norm_from_pz
         refine hFam.coefL i t
     · intro τ
       exact hu τ
-    · intro F
-      exact hPoly F
+    · exact fun F => hPoly F
   · exact hPow
 end L3
 section L4

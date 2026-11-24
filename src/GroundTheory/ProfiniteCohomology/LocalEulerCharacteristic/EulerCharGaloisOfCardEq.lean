@@ -290,8 +290,7 @@ theorem isPGroup_primaryQuotientPreimage_quotient [Finite G] {l : ℕ} (hl : l.P
     (isOfFinOrder_of_finite (QuotientGroup.mk (⟨a ^ l ^ n, ha0⟩ : G₀) : G₀ ⧸ G₁.subgroupOf G₀))
   have hB : (a ^ l ^ n) ^ l ^ k ∈ coprimeRelPreimage G₀ G₁ l := by
     refine (mem_coprimeRelPreimage_iff G₀ G₁).2 ⟨pow_mem ha0 _, ?_⟩
-    rw [← QuotientGroup.mk_pow] at hk
-    exact hk
+    rwa [← QuotientGroup.mk_pow] at hk
   refine ⟨n + k, ?_⟩
   rw [← QuotientGroup.mk_pow, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf, Subgroup.coe_pow,
     pow_add, pow_mul]
@@ -344,8 +343,7 @@ instance isCyclic_quotient_lowerRamificationGroup_zero :
 theorem natCast_residueField_ne_zero {l : ℕ} (hl : l.Prime) (hlp : l ≠ ringChar 𝓀[K]) :
     (l : 𝓀[L]) ≠ 0 := by
   rw [Ne, ringChar.spec, ← Algebra.ringChar_eq 𝓀[K] 𝓀[L]]
-  intro h
-  exact hlp ((Nat.prime_dvd_prime_iff_eq (CharP.char_is_prime 𝓀[K] _) hl).1 h).symm
+  exact fun h => hlp ((Nat.prime_dvd_prime_iff_eq (CharP.char_is_prime 𝓀[K] _) hl).1 h).symm
 
 
 variable {K L} in
@@ -517,8 +515,7 @@ theorem relIndex_preimageOpen (S S' : Subgroup Gal(fixedField (V : Subgroup Gal(
 theorem relIndex_V_preimageOpen (S : Subgroup Gal(fixedField (V : Subgroup Gal(Ksep/K))/K)) :
     (V : Subgroup Gal(Ksep/K)).relIndex (preimageOpen V S) = Nat.card S := by
   have h := relIndex_preimageOpen (V := V) ⊥ S
-  rw [preimageOpen_bot, Subgroup.relIndex_bot_left] at h
-  exact h
+  rwa [preimageOpen_bot, Subgroup.relIndex_bot_left] at h
 
 theorem index_preimageOpen (S : Subgroup Gal(fixedField (V : Subgroup Gal(Ksep/K))/K)) :
     ((preimageOpen V S : OpenSubgroup Gal(Ksep/K)) : Subgroup Gal(Ksep/K)).index = S.index := by
@@ -583,8 +580,7 @@ theorem valuation_sub_lt_one_of_mem_preimageOpen
   have h := hS hσ ⟨⟨x, hx⟩, hx'1⟩
   simp only [zero_add, Int.toNat_one, pow_one] at h
   have h2 := mem_maximalIdeal_integer_iff.1 h
-  have h3 := (valuation_lt_one_iff_coe _ _).1 h2
-  simpa [restrictFixed_apply] using h3
+  simpa [restrictFixed_apply] using (valuation_lt_one_iff_coe _ _).1 h2
 
 end Inertia
 
@@ -774,8 +770,7 @@ theorem eulerChar_of_forall_eq_bot_or_eq_top (M : Rep (ULift.{0} ℤ) Gal(Ksep/K
   ·
     have hl𝓀 : (l : 𝓀[K]) ≠ 0 := by
       rw [Ne, ringChar.spec]
-      intro h
-      exact hlq ((Nat.prime_dvd_prime_iff_eq (CharP.char_is_prime 𝓀[K] _) hlp).1 h).symm
+      exact fun h => hlq ((Nat.prime_dvd_prime_iff_eq (CharP.char_is_prime 𝓀[K] _) hlp).1 h).symm
     have hRHS : Nat.card (𝒪[K] ⧸ Ideal.span {(Nat.card M : 𝒪[K])}) = 1 :=
       card_quotient_span_natCast_eq_one (by rw [hd, Nat.cast_pow]; exact pow_ne_zero _ hl𝓀)
     rw [hRHS, Nat.cast_one, inv_one]
@@ -910,8 +905,7 @@ theorem eulerChar_galois_of_card_eq (n : ℕ) : ∀ (M : Rep (ULift.{0} ℤ) Gal
     constructor
     · rintro ⟨y, rfl⟩
       exact y.2
-    · intro hx
-      exact ⟨⟨x, hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
   have hX₁ : Nat.card (cokerShortComplex i).X₁ = Nat.card N := rfl
   have hX₃ : Nat.card (cokerShortComplex i).X₃ = Nat.card (M ⧸ LinearMap.range i.hom.toLinearMap) := rfl
   have hcardM : Nat.card M = Nat.card (cokerShortComplex i).X₁ * Nat.card (cokerShortComplex i).X₃ := by
@@ -943,8 +937,7 @@ theorem eulerChar_galois_of_card_eq (n : ℕ) : ∀ (M : Rep (ULift.{0} ℤ) Gal
   have hP3 : (Nat.card (cokerShortComplex i).X₃ : K) ≠ 0 :=
     hPdvd _ _ ⟨_, hcardM.trans (mul_comm _ _)⟩ hM
   change eulerChar (cokerShortComplex i).X₂ = _
-  rw [hχ, ih _ hlt1 _ rfl hP1, ih _ hlt3 _ rfl hP3]
-  rw [hcardM, card_quotient_span_natCast_mul hP1 hP3]
+  rw [hχ, ih _ hlt1 _ rfl hP1, ih _ hlt3 _ rfl hP3, hcardM, card_quotient_span_natCast_mul hP1 hP3]
   push_cast
   rw [mul_inv]
 

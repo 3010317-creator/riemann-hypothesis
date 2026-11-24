@@ -115,8 +115,7 @@ theorem hasDerivAt_linear {Z Q : Type} [NormedAddCommGroup Q] [NormedSpace ℂ Q
   rw [hasDerivAt_iff_tendsto_slope]
   have h1 : Filter.Tendsto (slope u t) (nhdsWithin t {t}ᶜ) (nhds u') := by
     rw [tendsto_pi_nhds]
-    intro z
-    exact hasDerivAt_iff_tendsto_slope.1 (hd z)
+    exact fun z => hasDerivAt_iff_tendsto_slope.1 (hd z)
   have hm : ∀ s, slope u t s ∈ U := fun s => U.smul_of_tower_mem _ (U.sub_mem (hu s) (hu t))
   have h2 : Filter.Tendsto (fun s => (⟨slope u t s, hm s⟩ : U)) (nhdsWithin t {t}ᶜ) (nhds ⟨u', hu'⟩) :=
     tendsto_subtype_rng.2 h1
@@ -735,8 +734,7 @@ theorem isCartan_conj {n : ℕ} {M θ : Matrix (Fin n) (Fin n) ℂ} (h : GlobalT
 
 theorem map_conj_of_herm {n : ℕ} {G : Matrix (Fin n) (Fin n) ℂ} (hG : Gᴴ = G) : G.map conj = Gᵀ := by
   ext i j
-  have h := congrFun (congrFun hG j) i
-  simpa [Matrix.conjTranspose_apply] using h
+  simpa [Matrix.conjTranspose_apply] using congrFun (congrFun hG j) i
 
 theorem commute_exp {n : ℕ} {Z C : Matrix (Fin n) (Fin n) ℂ} (h : Commute Z C) (s : ℝ) :
     Commute (NormedSpace.exp (s • Z)) C :=
@@ -808,8 +806,7 @@ theorem unitFam_gsOf (hJ : V.J = (1 : D.host.E) • W.gram) (k : GlobalTheory.In
     ext i j; simp [gsOf, Matrix.conjTranspose_apply]
   have e2 : ((GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat k).map (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig)).map (Eqv.psiT D t) = gsOf k t := by
     ext i j; simp only [Matrix.map_apply, gsOf]; exact psiT_cA t _
-  rw [e1, e2] at h1
-  exact h1
+  rwa [e1, e2] at h1
 
 theorem fin_one_of_mem {k : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UA D.sp.cm.sig V.J}
     (hk : k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UAt D.sp.cm.sig V (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F)) :
@@ -894,8 +891,7 @@ theorem cartan_data (hJ : V.J = (1 : D.host.E) • W.gram) (Bs : GlobalTheory.In
   · have rd : ∀ x : GA D W, (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ x)).map
         (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piInf (Bs.emb (GlobalTheory.AdelicU.placeOf D t))) = ((Eqv.matA D W x).map (Eqv.psiT D t)).map conj := by
       intro x; ext i j
-      simp only [mat_conjU, Matrix.map_apply]
-      exact piInf_cA_of_eq t _ he _
+      simpa only [mat_conjU, Matrix.map_apply] using piInf_cA_of_eq t _ he _
     refine ⟨(V.θ (GlobalTheory.AdelicU.placeOf D t)).map conj, ?_, ?_, fun x A hA hc => ?_⟩
     · have := isCartan_conj hV'
       rwa [he, ← hG, map_conj_of_herm (GlobalTheory.SmoothForms.RealPts.gramAt_herm W t)] at this
@@ -906,15 +902,13 @@ theorem cartan_data (hJ : V.J = (1 : D.host.E) • W.gram) (Bs : GlobalTheory.In
   · have rd : ∀ x : GA D W, (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ x)).map
         (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piInf (Bs.emb (GlobalTheory.AdelicU.placeOf D t))) = (Eqv.matA D W x).map (Eqv.psiT D t) := by
       intro x; ext i j
-      simp only [mat_conjU, Matrix.map_apply]
-      exact piInf_cA_of_eq_conj t _ he _
+      simpa only [mat_conjU, Matrix.map_apply] using piInf_cA_of_eq_conj t _ he _
     refine ⟨V.θ (GlobalTheory.AdelicU.placeOf D t), ?_, ?_, fun x A hA hc => ?_⟩
     · have e : W.gram.map ((starRingEnd ℂ).comp (tauE D t)) = (gramAt D W t).map conj := by
         rw [hG, Matrix.map_map]; rfl
       have := hV'
       rwa [he, e, map_conj_of_herm (GlobalTheory.SmoothForms.RealPts.gramAt_herm W t)] at this
-    · rw [rd, hgsA] at hcom
-      exact hcom
+    · rwa [rd, hgsA] at hcom
     · rw [rd, hA]; exact hc
 
 theorem line_mem (hJ : V.J = (1 : D.host.E) • W.gram) (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E)
@@ -964,8 +958,8 @@ theorem prod_eq (hJ : V.J = (1 : D.host.E) • W.gram) {k : GlobalTheory.Indefin
       show (Eqv.matA D W _).map (Eqv.psiT D τ) = _
       rw [← Eqv.infMat_thetaC]
       by_cases e : τ = t
-      · subst e; rw [if_pos rfl, (hat τ 1).2.1, one_smul, (hZ τ).2]
-      · rw [if_neg e]; exact (hat t 1).2.2 τ e
+      · subst e; rw [ite_eq_left rfl, (hat τ 1).2.1, one_smul, (hZ τ).2]
+      · rw [ite_eq_right e]; exact (hat t 1).2.2 τ e
     rw [Eqv.infMat_thetaC]
     show φ _ = gsOf k τ
     rw [map_list_prod, List.map_map]

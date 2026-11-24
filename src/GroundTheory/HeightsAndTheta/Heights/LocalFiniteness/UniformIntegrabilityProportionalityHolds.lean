@@ -152,8 +152,7 @@ theorem IsAdmissible.nrmv (h : HermNorm n) {Z : ProjCycle ℂ n} {v : Fin n → 
   exact W.mul_mem_left _ hmem'
 
 theorem AdmissibleAENrm.proof (h1 : AdmissibleAE.Statement) : AdmissibleAENrm.Statement := by
-  intro n h Z hrel
-  exact ae_restrict_of_ae ((h1 n Z hrel).mono fun v hv => hv.nrmv h)
+  exact fun n h Z hrel => ae_restrict_of_ae ((h1 n Z hrel).mono fun v hv => hv.nrmv h)
 
 end
 
@@ -595,8 +594,7 @@ theorem isRadical_map_dehom (i : (k : K) → ι k) {P' : Ideal (MvPolynomial (Σ
   have h1 : ratioMap i g ∈ (P'.map (algebraMap _ (ConeRing i))).radical :=
     ⟨n, by rw [← map_pow, heq]; exact Ideal.mem_map_of_mem _ hn⟩
   rw [← IsLocalization.map_radical (Submonoid.powers (coneUnit i)) (ConeRing i), hrad.radical, heq] at h1
-  rw [← comap_ratioMap_map i (P'.map (dehom i))]
-  exact h1
+  rwa [← comap_ratioMap_map i (P'.map (dehom i))]
 
 
 omit [Fintype K] in
@@ -646,8 +644,7 @@ theorem ChartConeLength.proof (hT : ConeRingLaurent.Statement) (hN : ChartDehomI
   have : W'.IsPrime := hW'min.1.1
   have hkerW' : RingHom.ker (segreDehom σ i) ≤ W' := le_trans (hIW ▸ hker _) hW'min.1.2
   have hW'Q : W' = Q.comap (segreDehom σ i) := by
-    rw [hQ, Ideal.comap_map_of_surjective _ hρ, eq_comm, sup_eq_left]
-    exact hkerW'
+    rwa [hQ, Ideal.comap_map_of_surjective _ hρ, eq_comm, sup_eq_left]
   have hQp : Q.IsPrime := hQ ▸ Ideal.map_isPrime_of_surjective hρ hkerW'
   have hQmin : Q ∈ ((W.map (MvPolynomial.map (Int.castRingHom ℂ))).map (dehom i)).minimalPrimes := by
     have hWyQ : (W.map (MvPolynomial.map (Int.castRingHom ℂ))).map (dehom i) ≤ Q := by
@@ -787,8 +784,7 @@ theorem ChartDehomIdeal.proof : ChartDehomIdeal.Statement := by
       have hle : J ≤ RingHom.ker (aeval (R := ℂ) y : MvPolynomial (Σ k, ι k) ℂ →+* ℂ) := by
         refine sup_le ?_ ?_
         · rw [hQ, Ideal.map_le_iff_le_comap]
-          intro f hf
-          exact hy.2 f hf
+          exact fun f hf => hy.2 f hf
         · rw [dehomIdeal, Ideal.span_le]
           rintro _ ⟨k, rfl⟩
           simp [RingHom.mem_ker, h1 k]
@@ -1042,8 +1038,7 @@ theorem exists_poly_of_linEval_eq_zero (J : Ideal (MvPolynomial (Fin n) ℂ)) [J
   refine ⟨g.coeff 0, hc, fun x hx hux => ?_⟩
   have hmem : Polynomial.eval₂ (pullback A).toRingHom (linForm u) g ∈ J := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, Polynomial.hom_eval₂]
-    rw [Polynomial.aeval_def] at hg
-    exact hg
+    rwa [Polynomial.aeval_def] at hg
   have h0 := hx _ hmem
   have hcomp : (eval x).comp (pullback A).toRingHom = eval (A *ᵥ x) :=
     RingHom.ext fun P => FibreBound.eval_pullback A x P
@@ -1055,11 +1050,7 @@ theorem measurable_chartDens {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix 
     (hdim : ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ J) = d) (hA : IsFiniteProjection J A)
     (hf : ContinuousOn f (zeroSet J)) (hψ : ∀ i, SmoothNear (zeroSet J) (ψ i)) :
     Measurable (chartDens J A f ψ) := by
-  classical
-  rw [CutOffDominated.chartDens_congr_zeroSet (g := (zeroSet J).piecewise f 0)
-    (fun x hx => (Set.piecewise_eq_of_mem _ _ _ hx).symm)]
-  exact (SheetSumMeasurable.proof n d J A _ ψ hJ hdim hA
-    (hf.measurable_piecewise continuousOn_const (SheetSumMeasurable.isClosed_zeroSet J).measurableSet) hψ).1
+  apply GroundTheory.Heights₂.Heights.CutOffBoundaryBound.measurable_chartDens <;> assumption
 
 theorem abs_chartDens_le {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin d) (Fin n) ℂ}
     (f : (Fin n → ℂ) → ℝ) (ψ : Fin d → (Fin n → ℂ) → ℝ) {y : Fin d → ℂ} (hfin : (fibre J A y).Finite) :
@@ -1115,8 +1106,8 @@ theorem LelongWeightDiff.proof (hM : ChartMassCompact.Statement) : LelongWeightD
   have hcs : ∃ i, HasCompactSupport (vecCons g φ i) := ⟨0, by simpa using hgc⟩
   by_cases hA : ∃ A : Matrix (Fin (d + 1)) (Fin n) ℂ, IsFiniteProjection J A
   swap
-  · simp only [varInt, dif_neg hA, sub_self]; exact tendsto_const_nhds
-  simp only [varInt, dif_pos hA]
+  · simp only [varInt, dite_eq_right hA, sub_self]; exact tendsto_const_nhds
+  simp only [varInt, dite_eq_left hA]
   set A := hA.choose
   have hAf : IsFiniteProjection J A := hA.choose_spec
   have hfin : ∀ y, (fibre J A y).Finite := fun y => (FibreBound.proof n (d + 1) J A hJ hdim hAf y).2.1
@@ -1169,8 +1160,8 @@ theorem LelongWeightDiff.proof (hM : ChartMassCompact.Statement) : LelongWeightD
     rw [Set.Finite.mem_toFinset] at hx
     by_cases hs : ∃ s, IsSheetAt J A x s
     swap
-    · simp only [dif_neg hs]; exact tendsto_const_nhds
-    simp only [dif_pos hs]
+    · simp only [dite_eq_right hs]; exact tendsto_const_nhds
+    simp only [dite_eq_left hs]
     have hux : linEval u x ≠ 0 := fun h0 => hy (by rw [← hx.2]; exact hPu x hx.1 h0)
     have ha : 0 < ‖linEval u x‖ ^ 2 := pow_pos (norm_pos_iff.mpr hux) 2
     have hc : ContinuousAt (fun ε : ℝ => D ε x) 0 := by

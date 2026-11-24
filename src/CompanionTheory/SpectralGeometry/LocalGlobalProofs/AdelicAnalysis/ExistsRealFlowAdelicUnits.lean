@@ -35,9 +35,7 @@ theorem exists_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       Prod.ext rfl (mul_one (1 : Af F)).symm
     simp only [g, Real.exp_add, map_mul, Algebra.TensorProduct.tmul_mul_tmul, mul_one, h]
   have gc : Continuous g := by
-    refine (continuous_tmul_one F E).comp ?_
-    show Continuous fun x : ℝ => ((θ (Real.exp x), 1) : AF F)
-    exact (hθ.comp Real.continuous_exp).prodMk continuous_const
+    exact (continuous_tmul_one F E).comp ((hθ.comp Real.continuous_exp).prodMk continuous_const)
   let f : Multiplicative ℝ →* AF F ⊗[F] E :=
     { toFun := fun x => g x.toAdd
       map_one' := g0

@@ -294,8 +294,7 @@ theorem Kunr_le_Kur : Kunr l a ≤ MaximalUnramifiedExtension l := by
   have h1 := one_lt_pow_l l a
   refine IntermediateField.subset_adjoin _ _ ⟨l ^ a - 1, by omega, fun h => hl.out.not_dvd_one
     ((Nat.dvd_sub_iff_right h1.le (dvd_pow_self l (NeZero.ne a))).1 h), mul_right_cancel₀ h0 ?_⟩
-  rw [← pow_succ, Nat.sub_add_cancel h1.le, one_mul]
-  exact hx
+  rwa [← pow_succ, Nat.sub_add_cancel h1.le, one_mul]
 
 structure PiSys (l : ℕ) [Fact l.Prime] (e : ℕ) where
 
@@ -596,8 +595,7 @@ theorem expand {l : ℕ} [Fact l.Prime] (F : IntermediateField ℚ_[l] (PadicAlg
   have hle : F ⊔ IntermediateField.adjoin ℚ_[l] {π} ≤
       (IntermediateField.adjoin F {π}).restrictScalars ℚ_[l] := by
     apply sup_le
-    · intro c hc
-      exact (IntermediateField.adjoin F {π}).algebraMap_mem ⟨c, hc⟩
+    · exact fun c hc => (IntermediateField.adjoin F {π}).algebraMap_mem ⟨c, hc⟩
     · rw [IntermediateField.adjoin_simple_le_iff]
       exact IntermediateField.mem_adjoin_simple_self F π
   have h1 : x ∈ (IntermediateField.adjoin F {π}).toSubalgebra := hle hx
@@ -847,8 +845,7 @@ theorem root_lift {l : ℕ} [hl : Fact l.Prime] (a : ℕ) [NeZero a] (ζ : Padic
   have ht : t ∈ resSub l (b + 1) := by
     change t ^ l ^ (b + 1) = t
     have := congrArg (Perfection.quotientMulEquiv l (Ideal.span {(l : Formalism.BasicNotions.Loc.OC l)})) hy
-    rw [map_pow] at this
-    exact this
+    rwa [map_pow] at this
   let t' : Fq l (b + 1) := ⟨t, ht⟩
   refine ⟨WittVector.teichmuller l t', ?_⟩
   have h1 : wA l (b + 1) (WittVector.teichmuller l t') = WittVector.teichmuller l t :=

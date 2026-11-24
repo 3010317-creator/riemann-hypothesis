@@ -93,14 +93,12 @@ theorem isLocalization_away_of_absorb {R R' : Type} [CommRing R] [CommRing R'] [
 theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Algebra R R'], Function.Injective (algebraMap R R') → ∀ c : Ideal R, (∀ x ∈ c, ∀ r : R', ∃ y ∈ c, algebraMap R R' y = algebraMap R R' x * r) → ∀ (g : ℕ) (B' C Y : Scheme.{0}) (b' : B' ⟶ Sp R') (e : C ⟶ Sp (R ⧸ c)) (i : Y ⟶ B') (q : Y ⟶ C), SmoothOfRelativeDimension g b' → ∀ x : B', (b' ≫ spMap (algebraMap R R')) x ∉ Set.range (spMap (Ideal.Quotient.mk c)) → GlobalTheory.Pinch.Pinched g (spMap (algebraMap R R')) (spMap (Ideal.Quotient.mk c)) b' e i q x := by
   intro R _ R' _ _ hinj c hc g B' C Y b' e i q hsm x hx
   obtain ⟨f, hfc, hfx⟩ : ∃ f ∈ c, f ∉ ((b' ≫ spMap (algebraMap R R')) x).asIdeal := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     apply hx
     have hr : Set.range (spMap (Ideal.Quotient.mk c)) =
         PrimeSpectrum.zeroLocus (RingHom.ker (Ideal.Quotient.mk c)) :=
       range_comap_of_surjective _ _ Ideal.Quotient.mk_surjective
-    rw [hr, Ideal.mk_ker]
-    exact hno
+    rwa [hr, Ideal.mk_ker]
   haveI : IsLocalization.Away f (Localization.Away (algebraMap R R' f)) :=
     isLocalization_away_of_absorb hinj c hc hfc
   let l' : Sp (Localization.Away (algebraMap R R' f)) ⟶ Sp R' := spMap (algebraMap R' _)
@@ -129,8 +127,7 @@ theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Alg
     simpa using this
   have hD : ∀ t : ↥(pullback b' l'), f ∉ (u t).asIdeal := fun t => by
     have : u t ∈ Set.range h := ⟨pullback.snd b' l' t, rfl⟩
-    rw [hrange] at this
-    exact this
+    rwa [hrange] at this
   have hEmpty : ∀ (T : Scheme.{0}) (a : T ⟶ pullback b' l') (a' : T ⟶ Sp (R ⧸ c)),
       a ≫ u = a' ≫ spMap (Ideal.Quotient.mk c) → IsEmpty T := by
     intro T a a' w
@@ -159,8 +156,7 @@ theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Alg
       have e1 : spMap (algebraMap R R') (s.snd t) = u (s.fst t) := by
         rw [← Scheme.Hom.comp_apply, ← s.condition, Scheme.Hom.comp_apply]
       have := hD (s.fst t)
-      rw [← e1] at this
-      exact this
+      rwa [← e1] at this
     have hl : IsOpenImmersion.lift l' s.snd hr ≫ l' = s.snd := IsOpenImmersion.lift_fac l' s.snd hr
     have hl2 : IsOpenImmersion.lift l' s.snd hr = s.fst ≫ pullback.snd b' l' := by
       rw [← cancel_mono h, ← hcomp, ← Category.assoc, hl, ← s.condition]
@@ -172,8 +168,7 @@ theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Alg
     exact congrArg (s.fst ≫ ·) pullback.condition
   · rw [IsOpenImmersion.range_pullbackFst l' b']
     show b' x ∈ Set.range l'
-    rw [hrange']
-    exact hfx
+    rwa [hrange']
   · intro T a a' _
     haveI : IsEmpty T := ⟨fun t => isEmptyElim (a' t)⟩
     exact ⟨isInitialOfIsEmpty.to Y, isInitialOfIsEmpty.hom_ext _ _, isInitialOfIsEmpty.hom_ext _ _⟩

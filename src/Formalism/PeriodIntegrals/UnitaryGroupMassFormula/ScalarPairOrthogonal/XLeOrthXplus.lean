@@ -93,8 +93,7 @@ theorem finrank_orth (U : Submodule E S.V) :
     have h1 : S.hT (∑ i, star (c i) • u i) = 0 := by
 
       rw [map_sum]
-      simp only [LinearMap.map_smulₛₗ, starRingEnd_apply, star_star]
-      exact hc
+      simpa only [LinearMap.map_smulₛₗ, starRingEnd_apply, star_star] using hc
     have h2 : ∑ i, star (c i) • u i = 0 :=
       S.nondeg.1 _ (fun y => by rw [h1, LinearMap.zero_apply])
     have h3 := Fintype.linearIndependent_iff.1 hu _ h2
@@ -128,8 +127,7 @@ theorem finrank_orth (U : Submodule E S.V) :
       | add x y _ _ hx hy => rw [LinearMap.add_apply, hx, hy, add_zero]
       | smul a x _ hx => rw [LinearMap.smul_apply, hx, smul_zero]
   have := Subspace.finrank_add_finrank_dualCoannihilator_eq (Submodule.span E (Set.range φ))
-  rw [hco, hW] at this
-  exact this
+  rwa [hco, hW] at this
 
 theorem le_orth_orth (U : Submodule E S.V) : U ≤ orth S (orth S U) := by
   intro x hx
@@ -166,8 +164,7 @@ theorem mem_orth_Xplus (F : FlagG S r T) {v : S.V} :
     v ∈ orth S F.Xplus ↔ (∀ a, S.hT (F.e a) v = 0) ∧ S.hT F.z v = 0 := by
   rw [Xplus_eq, mem_orth_span]
   constructor
-  · intro h
-    exact ⟨fun a => h _ (Or.inl ⟨a, rfl⟩), h _ (Or.inr rfl)⟩
+  · exact fun h => ⟨fun a => h _ (Or.inl ⟨a, rfl⟩), h _ (Or.inr rfl)⟩
   · rintro ⟨h1, h2⟩ x (⟨a, rfl⟩ | hx)
     · exact h1 a
     · rw [Set.mem_singleton_iff] at hx

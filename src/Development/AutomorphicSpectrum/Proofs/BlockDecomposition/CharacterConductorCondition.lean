@@ -133,8 +133,7 @@ theorem exists_sub_mem_of_infinite {G : Type*} [AddCommGroup G] [TopologicalSpac
     hi.exists_ne_map_eq_of_mapsTo (f := f) (t := (t : Set G)) (fun a ha => (hf a ha).1) t.finite_toSet
   refine ⟨a, ha, b, hb, hab, ?_⟩
   have h2 : (a - f a, b - f b) ∈ W ×ˢ W := ⟨(hf a ha).2, (hf b hb).2⟩
-  have h3 := hWV h2
-  simpa [hfab] using h3
+  simpa [hfab] using hWV h2
 
 variable {F : Type} [Field F] [NumberField F]
 
@@ -395,8 +394,7 @@ theorem finite_bad {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F ψ) :
       · show algebraMap F (Af F) x = 0 + algebraMap F (Af F) x
         rw [zero_add]
     have h2 := hψ.2.2.1 x
-    rw [e, AddChar.map_add_eq_mul, h1, mul_one] at h2
-    exact h2
+    rwa [e, AddChar.map_add_eq_mul, h1, mul_one] at h2
   have hαK : (α : F) ∈ K := by
     refine (hKmem _).2 fun c => ?_
     rw [mul_comm, map_mul]
@@ -494,8 +492,7 @@ theorem psiCond : PositivityTheory.SiegelWeilFormula.Gunr.PsiCond := by
   · intro h
     by_contra ha
     exact hb ⟨a, ha, h⟩
-  · intro ha b hb'
-    exact good_of_unit hk v hα hv (mul_mem ha hb')
+  · exact fun ha b hb' => good_of_unit hk v hα hv (mul_mem ha hb')
 
 end GlobalTheory.CompanionTheory.PsiCondLoc
 end

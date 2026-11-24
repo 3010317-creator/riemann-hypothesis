@@ -20,9 +20,7 @@ theorem isWeightedHomogeneous_map_of {σ M R S : Type*} [AddCommMonoid M] [CommR
     (hp : IsWeightedHomogeneous w p b) : IsWeightedHomogeneous w (MvPolynomial.map f p) b := by
   intro d hd
   rw [coeff_map] at hd
-  apply hp
-  intro h0
-  exact hd (by rw [h0, map_zero])
+  exact hp (fun h0 => hd (by rw [h0, map_zero]))
 
 theorem span_forms_of_isMultiHomogIdeal {K : Type} [DecidableEq K] {ι : K → Type}
     {R : Type*} [CommRing R] {P : Ideal (MRing ι R)} (hP : IsMultiHomogIdeal P) :
@@ -50,7 +48,6 @@ theorem SpecialIdealMultiHomog.proof : SpecialIdealMultiHomog.Statement := by
     rintro _ ⟨f, ⟨_, b, hb⟩, rfl⟩
     exact ⟨b, (mem_weightedHomogeneousSubmodule _ _ _ _).2
       (isWeightedHomogeneous_map_of _ _ hb)⟩
-  intro f hf b
-  exact weightedHomogeneousComponent_mem_of_mem _ _ hhom hf b
+  exact fun f hf b => weightedHomogeneousComponent_mem_of_mem _ _ hhom hf b
 
 end GroundTheory.Heights₂.Heights.NumbersDVR

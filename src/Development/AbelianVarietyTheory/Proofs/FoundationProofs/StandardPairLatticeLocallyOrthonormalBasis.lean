@@ -167,7 +167,7 @@ private theorem exists_orthonormal_mem_span_of_diagonal_square_prod {K V : Type}
     intro i j
     have hij : i = j := Fin.ext (by have := i.2; have := j.2; omega)
     subst hij
-    simp only [map_smul, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hv, if_true, map_ratCast,
+    simp only [map_smul, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hv, ite_true, map_ratCast,
       hs]
     push_cast
     field_simp
@@ -186,7 +186,7 @@ private theorem exists_orthonormal_mem_span_of_diagonal_square_prod {K V : Type}
     have hv11 := hv 1 1
     have hv01 := hv 0 1
     have hv10 := hv 1 0
-    simp only [if_true, h01, h01.symm, if_false] at hv00 hv11 hv01 hv10
+    simp only [ite_true, h01, h01.symm, ite_false] at hv00 hv11 hv01 hv10
     have hvs : ∀ (i : Fin r) (j : Fin (r + 2)), j = 0 ∨ j = 1 →
         h (v i.succ.succ) (v j) = 0 ∧ h (v j) (v i.succ.succ) = 0 := by
       intro i j hj
@@ -330,8 +330,7 @@ theorem exists_unit_norm_of_selfDual_hermitian_lattice :
       linear_combination h2 / 2
     exact ⟨a, by rw [hab, h1, add_zero]⟩
   have hnp : padicNorm p (p : ℚ) = (p : ℚ)⁻¹ := padicNorm.padicNorm_p_of_prime
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hdiv : ∀ y ∈ L, y ∈ W → h y y / p ∈ O := by
     intro y hy hyW
     obtain ⟨u, hu⟩ := hrat y
@@ -685,8 +684,7 @@ theorem selfDual_lattice_exists_norm_one_mod :
       · simpa using (hO s).2 hs
       · have : (s ^ 2 + (p : ℚ) * 0 ^ 2) * u1 - 1 = -((p : ℚ) * t ^ 2 * u1) := by
           linear_combination h2
-        rw [this, padicNorm.neg, padicNorm.mul, hu1n, mul_one]
-        exact ht
+        rwa [this, padicNorm.neg, padicNorm.mul, hu1n, mul_one]
     · haveI : Fact d.Prime := ⟨hd⟩
       have hdn : padicNorm p (d : ℚ) = 1 := padicNorm.padicNorm_of_prime_of_ne hpd
       obtain ⟨a, b, hab'⟩ := hab u1 (u1 * d) hu1n (by rw [padicNorm.mul, hu1n, hdn, mul_one])
@@ -862,8 +860,7 @@ theorem exists_local_ring : ∀ (K : Type) [Field K] [CharZero K] (p : ℕ), p.P
     have h2 : padicNorm p (s : ℚ) = 1 :=
       (padicNorm.nat_eq_one_iff s).2 ((Nat.Prime.coprime_iff_not_dvd hp).1 hs.symm)
     have h3 := padicNorm.of_int (p := p) n
-    rw [show (n : ℚ) = (s : ℚ) * r from hn', padicNorm.mul, h2, one_mul] at h3
-    exact h3
+    rwa [show (n : ℚ) = (s : ℚ) * r from hn', padicNorm.mul, h2, one_mul] at h3
   · refine ⟨r.den, ?_, ?_⟩
     · have h1 : ‖(r : ℚ_[p])‖ ≤ 1 := by rw [Padic.eq_padicNorm]; exact_mod_cast hr
       exact ((Nat.Prime.coprime_iff_not_dvd hp).2 (by
@@ -1067,7 +1064,7 @@ theorem exists_orthonormal (D : D7) (N N' : ℕ) (hev : Even (N * N')) :
         by_cases hk : k = k'
         · subst hk; simp [ha]
         · rw [← hh₁, hw k k' hk]; simp [hk]
-      · rw [Matrix.single_apply_of_ne _ _ _ _ _ hij, if_neg (by tauto)]; simp)
+      · rw [Matrix.single_apply_of_ne _ _ _ _ _ hij, ite_eq_right (by tauto)]; simp)
     (by
       rw [← ε.prod_comp (fun t => a (ε.symm t).1.1)]
       simp only [Equiv.symm_apply_apply, Fintype.prod_prod_type, Finset.prod_const, Finset.card_univ,
@@ -1214,8 +1211,7 @@ theorem odd_one : ∀ D : D7, odd1 D := by
     have h2 : ∀ j, IsIntegral ℤ (((∏ i, s i : ℕ) : D.host.K) * c j) := by
       intro j
       obtain ⟨t, ht'⟩ := Finset.dvd_prod_of_mem s (Finset.mem_univ j)
-      rw [ht']
-      rw [Nat.cast_mul, mul_comm (s j : D.host.K), mul_assoc]
+      rw [ht', Nat.cast_mul, mul_comm (s j : D.host.K), mul_assoc]
       exact (isIntegral_natCast (R := ℤ) t).mul (hsc j)
     refine ⟨∏ i, s i, Nat.Coprime.prod_left fun i _ => hs i, fun j => ⟨_, h2 j⟩, ?_⟩
     rw [Finset.smul_sum]

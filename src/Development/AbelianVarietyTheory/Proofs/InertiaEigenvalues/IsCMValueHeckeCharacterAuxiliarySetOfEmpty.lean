@@ -85,8 +85,7 @@ theorem isUnitOver_up {K E : Type} [Field K] [NumberField K] [Field E] [NumberFi
   · show GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.finiteCompletionMap K E P ((single v x : Af K) (P.under (𝓞 K))) = 1
     rw [suppAt_single v x _ fun h => hP ?_, map_one]
     subst h
-    rw [← map_natCast (algebraMap (𝓞 K) (𝓞 E))]
-    exact hv
+    rwa [← map_natCast (algebraMap (𝓞 K) (𝓞 E))]
 
 theorem finPart_of_isUnitOver {E : Type} [Field E] [NumberField E] {l : ℕ} {ξ : HChar E}
     (h : ∀ P : HeightOneSpectrum (𝓞 E), (l : 𝓞 E) ∈ P.asIdeal → ξ.UnrAt P) {y : (Af E)ˣ} (hy : IsUnitOver l y) :

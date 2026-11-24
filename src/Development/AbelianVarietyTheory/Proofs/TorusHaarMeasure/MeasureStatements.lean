@@ -154,8 +154,7 @@ theorem change_image (D0 : LUData X x0) (D1 : LUData X x1) :
   constructor
   · rintro ⟨z, hz, rfl⟩
     exact (change_mem D0 D1 hz).1
-  · intro hw
-    exact ⟨_, (change_mem D1 D0 hw).1, (change_mem D1 D0 hw).2⟩
+  · exact fun hw => ⟨_, (change_mem D1 D0 hw).1, (change_mem D1 D0 hw).2⟩
 
 theorem change_injOn (D0 : LUData X x0) (D1 : LUData X x1) :
     Set.InjOn (fun z => D1.zOf (cpt X x0 z)) (overlap x0 D1) := by
@@ -412,15 +411,14 @@ theorem lowMat_leftM {r : ℕ} {N : Matrix (Fin r) (Fin r) ℂ} (hN : LowU N) (u
     lowMat (leftM N *ᵥ u) = N * lowMat u := by
   ext a c
   by_cases h : c < a
-  · simp only [lowMat, Matrix.of_apply, dif_pos h]
-    exact leftM_mulVec N u ⟨(a, c), h⟩
+  · simpa only [lowMat, Matrix.of_apply, dite_eq_left h] using leftM_mulVec N u ⟨(a, c), h⟩
   · rw [Matrix.mul_apply]
-    simp only [lowMat, Matrix.of_apply, dif_neg h]
+    simp only [lowMat, Matrix.of_apply, dite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun k _ => ?_
     by_cases hk : c < k
     · rw [hN.1 a k (lt_of_le_of_lt (not_lt.mp h) hk), zero_mul]
-    · rw [dif_neg hk, mul_zero]
+    · rw [dite_eq_right hk, mul_zero]
 
 theorem differentiableAt_det {r : ℕ} (A : ℂ → Matrix (Fin r) (Fin r) ℂ) (t : ℂ)
     (h : ∀ i j, DifferentiableAt ℂ (fun s => A s i j) t) :
@@ -510,11 +508,10 @@ theorem hasDerivAt_nmat {r : ℕ} (X : Data E r) {w : ℂ → V (nd X)} {w' : V 
     HasDerivAt (fun s => mat (nmat X (w s)) τ i j) (lowMat (crd X w' τ) i j) t := by
   simp only [mat, nmat, lowMat, Matrix.of_apply]
   by_cases h : j < i
-  · simp only [dif_pos h, crd]
+  · simp only [dite_eq_left h, crd]
     exact (EuclideanSpace.proj (𝕜 := ℂ)
       ((Fintype.equivFin (Ent X)) ⟨τ, ⟨(i, j), h⟩⟩)).hasFDerivAt.comp_hasDerivAt t hw
-  · simp only [dif_neg h]
-    exact hasDerivAt_const _ _
+  · simpa only [dite_eq_right h] using hasDerivAt_const _ _
 
 theorem fderiv_rel {r : ℕ} (X : Data E r) (x0 x1 : Frame X.Ψ r) (γ : GL (Fin r) E) (U : Set (V (nd X)))
     (Φ : V (nd X) → V (nd X)) (bf : V (nd X) → Frame X.Ψ r) (hU : IsOpen U)
@@ -528,8 +525,7 @@ theorem fderiv_rel {r : ℕ} (X : Data E r) (x0 x1 : Frame X.Ψ r) (γ : GL (Fin
   have hrel : ∀ y ∈ U, mat x0 τ * mat (nmat X y) τ = G * (mat (nmat X (Φ y)) τ * mat (bf y) τ) := by
     intro y hy
     have := congrFun (h y hy).2.2 τ
-    rw [hG, Matrix.mul_assoc, ← Matrix.mul_assoc (mat x1 τ)]
-    exact this
+    rwa [hG, Matrix.mul_assoc, ← Matrix.mul_assoc (mat x1 τ)]
   have uG : IsUnit G.det := by
     have h1 : (mat x0 τ * mat (nmat X z) τ).det ≠ 0 := ((h z hz).1 τ).1
     rw [hrel z hz, Matrix.det_mul] at h1
@@ -554,8 +550,7 @@ theorem fderiv_rel {r : ℕ} (X : Data E r) (x0 x1 : Frame X.Ψ r) (γ : GL (Fin
       rw [Matrix.mul_assoc, hrel _ hs, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ uG, Matrix.one_mul])
     p.1.1 p.1.2 p.2
   simp only [zero_smul, add_zero] at this
-  rw [leftM_mulVec, ← Matrix.mulVec_mulVec, adM_mulVec, lowMat_leftM (nmat_lowU X z τ).inv]
-  exact this
+  rwa [leftM_mulVec, ← Matrix.mulVec_mulVec, adM_mulVec, lowMat_leftM (nmat_lowU X z τ).inv]
 
 theorem blockDiagonal_mulVec {m o : Type} [Fintype m] [Fintype o] [DecidableEq o]
     (A : o → Matrix m m ℂ) (u : m × o → ℂ) (p : m) (τ : o) :
@@ -910,7 +905,7 @@ theorem frameSplit : (∀ (r : ℕ) (X : Data E r) (R : ℝ), ∃ K : ℝ≥0∞
   · intro z
     ext j
     have h := ((Fintype.equivFin (Ent X)).symm j).2.2
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     exact congrArg (fun k => z k) ((Fintype.equivFin (Ent X)).apply_symm_apply j)
   · apply IsClosed.measurableSet
     simp only [Set.setOf_forall]

@@ -128,9 +128,9 @@ theorem pderiv_X_inj {f : Fin r → σ} (hf : Function.Injective f) (c d : Fin r
     pderiv (f c) (X (f d) : MvPolynomial σ k) = if d = c then 1 else 0 := by
   by_cases h : d = c
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact mvPolynomial_pderiv_X_self _
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact mvPolynomial_pderiv_X_of_ne (fun h' => h (hf h'))
 
 theorem pderiv_e_S (he : Function.Injective e) (hwe : ∀ c d, w c ≠ e d)
@@ -235,8 +235,7 @@ theorem euler_pow (hw : Function.Injective w) (he : Function.Injective e) (hwe :
     (∑ c, X (e c) * pderiv (e c) ((tieE w e ^ j) u) = ((b + j : ℕ) : k) • (tieE w e ^ j) u) := by
   induction j with
   | zero =>
-    simp only [linearMap_pow_zero_apply, Nat.add_zero]
-    exact ⟨hW, hE⟩
+    simpa only [linearMap_pow_zero_apply, Nat.add_zero] using ⟨hW, hE⟩
   | succ j ih =>
     rw [tieE_pow_succ_apply j u]
     refine ⟨?_, ?_⟩

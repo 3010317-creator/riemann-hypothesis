@@ -75,15 +75,14 @@ theorem resX_eN (i : ℕ) : resX c (Loc.eN k (n + c) (n + i)) = 0 := by
   show Loc.eN k (n + c) (n + i) (Fin.castAdd c l) = 0
   have := l.2
   unfold Loc.eN
-  rw [if_neg]
+  rw [ite_eq_right]
   simp only [Fin.val_castAdd]
   omega
 
 theorem inX_mem_Ufl (i : ℕ) (x : Fin n → k) : Loc.inX k n c x ∈ Loc.Ufl k n c i := by
   intro l hl
   rw [inX_apply, dite_eq_right]
-  intro h
-  exact hl (show l.1 < n + i by omega)
+  exact fun h => hl (show l.1 < n + i by omega)
 
 def extL (a : (Fin n → k) →ₗ[k] (Fin n → k)) : (Fin (n + c) → k) →ₗ[k] (Fin (n + c) → k) :=
   LinearMap.id + Loc.inX k n c ∘ₗ (a - LinearMap.id) ∘ₗ resX c
@@ -151,14 +150,13 @@ theorem sclLat_le (hq : (q : E) ≠ 0) (N : ℕ) (e : ℕ → ℤ) (p : ℕ → 
   intro l
   have h := hx l
   by_cases hp : p l.1
-  · rw [if_pos hp] at h
+  · rw [ite_eq_left hp] at h
     have h2 := (intAt_nat P q).mul h
     convert h2 using 1
     rw [zpow_add₀ hq, zpow_one]
     have := zpow_ne_zero (e l.1) hq
     field_simp
-  · rw [if_neg hp, add_zero] at h
-    exact h
+  · rwa [ite_eq_right hp, add_zero] at h
 
 theorem smul_mem_sclLat (hq : (q : E) ≠ 0) (N : ℕ) (e : ℕ → ℤ) (p : ℕ → Prop) [DecidablePred p]
     (x : Sp E N) (hx : (q : E)⁻¹ • x ∈ LocE.sclLat P q N e) :
@@ -169,11 +167,11 @@ theorem smul_mem_sclLat (hq : (q : E) ≠ 0) (N : ℕ) (e : ℕ → ℤ) (p : �
   rw [Pi.smul_apply, smul_eq_mul] at h
   have := zpow_ne_zero (e l.1) hq
   by_cases hp : p l.1
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     convert h using 1
     rw [zpow_add₀ hq, zpow_one]
     field_simp
-  · rw [if_neg hp, add_zero]
+  · rw [ite_eq_right hp, add_zero]
     have h2 := (intAt_nat P q).mul h
     convert h2 using 1
     field_simp
@@ -214,7 +212,7 @@ theorem inX_mem_lamY {n : ℕ} (c : ℕ) (ex : ℕ → ℕ) (x : Sp E n) (hx : x
   rw [inX_apply]
   split_ifs with h
   · unfold LocE.scE
-    rw [if_pos h, zpow_zero, inv_one, one_mul]
+    rw [ite_eq_left h, zpow_zero, inv_one, one_mul]
     exact (mem_localization_standardLattice P x).1 hx _
   · simpa using intAt_nat P 0
 
@@ -225,8 +223,7 @@ theorem resX_mem {n : ℕ} (c : ℕ) (ex : ℕ → ℕ) (v : Sp E (n + c)) (hv :
   refine (mem_localization_standardLattice P _).2 fun i => ?_
   have h := hv (Fin.castAdd c i)
   unfold LocE.scE at h
-  rw [if_pos (by simp), zpow_zero, inv_one, one_mul] at h
-  exact h
+  rwa [ite_eq_left (by simp), zpow_zero, inv_one, one_mul] at h
 
 theorem extE_maps {n : ℕ} (c : ℕ) (ex : ℕ → ℕ) (κ : Sp E n ≃ₗ[E] Sp E n) (hκ : κ ∈ GLint E n P)
     (v : Sp E (n + c)) (hv : v ∈ LocE.lamY P q n c ex) : extE c κ v ∈ LocE.lamY P q n c ex := by
@@ -255,8 +252,7 @@ theorem extE_cong {n : ℕ} (c : ℕ) (ex : ℕ → ℕ) (hd : ∀ a : E, IntAt 
   have h4 := reduction_add h1 h2
   rw [Pi.sub_apply, sub_add_cancel, h3] at h4
   have h5 := hd _ h1 (by rw [Pi.sub_apply]; exact (add_eq_right.1 h4.symm))
-  rw [Pi.smul_apply, smul_eq_mul, mul_comm, ← div_eq_mul_inv]
-  exact h5
+  rwa [Pi.smul_apply, smul_eq_mul, mul_comm, ← div_eq_mul_inv]
 
 omit [StarRing E] in
 theorem conj_cong {N : ℕ} (L : Submodule (𝓞 E) (Sp E N)) (g h : Sp E N ≃ₗ[E] Sp E N) (hh : h ∈ stabL E N L)
@@ -274,7 +270,7 @@ theorem cong_mem_prCat : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (sharp : B
     rw [Nat.cast_ne_zero]
     exact fun h0 => w.ne_bot (Ideal.absNorm_eq_zero_iff.1 h0)
   unfold lamYat at hh
-  rw [if_pos hw] at hh
+  rw [ite_eq_left hw] at hh
   refine ⟨extE _ κ, ⟨extendByIdOnLastCoordsLinearEquiv_mem_firstRowGroup _ κ, ?_⟩, extE_inX _ κ⟩
   have e : (MulAut.conj h⁻¹).toMonoidHom (extE (cOf R j) κ) = h⁻¹ * extE (cOf R j) κ * h := by simp
   show (MulAut.conj h⁻¹).toMonoidHom (extE (cOf R j) κ) ∈ Jat (Pr := Pr) sharp j w
@@ -282,7 +278,7 @@ theorem cong_mem_prCat : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (sharp : B
   have hs := mul_mem (mul_mem (inv_mem hh) (extE_stab w (qOf w) (cOf R j) (fun i => i + 1) κ hκ)) hh
   have hc := conj_cong (qOf w) _ _ h hh (extE_cong w (qOf w) (cOf R j) (fun i => i + 1) hd κ hκ hr)
   unfold Jat
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
   split_ifs
   · refine ⟨hs, mem_flagU (qOf w) _ _ _ _ _ (fun s => ?_) (fun s x hx => ?_) (fun s => ?_) _ hs hc⟩
     · exact sclLat_le w _ hq _ _ _

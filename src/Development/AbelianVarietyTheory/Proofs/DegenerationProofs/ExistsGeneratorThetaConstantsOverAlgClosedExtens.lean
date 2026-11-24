@@ -119,8 +119,7 @@ theorem exists_gen_thG_generic : Laws → Laws2 → ∀ (S : Scheme.{0}) (G : Ov
   choose y hy hy' using fun i => exists_torsion_up hp τ hτ (x i) (hx' i)
   have up : ∀ i, ThG G L ρ m th (y i) (fnOf (v i)) := fun i => by
     have q := ThG.up hp τ hτ hw hL hL₁ hr (hy i) (hy' i) hrel (hth i)
-    rw [hi] at q
-    exact q
+    rwa [hi] at q
   let T' : Over (Sp K) := Over.mk (spMap e)
   let u : T' ⟶ baseOver (Sp K) := Over.homMk (spMap e) (Category.comp_id _)
   let τ' : T'.left ⟶ (Over.mk x₀).left := spMap e
@@ -143,8 +142,7 @@ theorem exists_gen_thG_generic : Laws → Laws2 → ∀ (S : Scheme.{0}) (G : Ov
       (congrArg (fnOf a * ·)
         (congrArg (fun q => q.hom (v i)) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom e))).symm).trans
         (map_mul (Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom _ _).symm
-    rw [e₂] at q
-    exact q
+    rwa [e₂] at q
   have hK : ((m ^ 2 : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 (pow_ne_zero _ hm.pos.ne')
   refine ⟨fun i => ?_, fun z c hz => ?_⟩
   · obtain ⟨z, hz, hz'⟩ := exists_torsion_up hp σ hσ _ (hu i)

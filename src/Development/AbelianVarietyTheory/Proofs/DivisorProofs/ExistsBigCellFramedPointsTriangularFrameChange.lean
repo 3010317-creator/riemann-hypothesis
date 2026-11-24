@@ -174,10 +174,8 @@ theorem exists_cellFrames : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   · refine (GlobalTheory.Frames.frBor_iff_frChg Q P t).2 ⟨fun σ => (Lz σ)⁻¹, fun σ i j h => (hLinv σ).1 i j h,
       fun σ i => eq_inv_of_mul_eq_one_left ((hLinv σ).2 i), ?_⟩
     show GlobalTheory.Frames.FrChg _ ((1 : Kˣ) : K) Q P
-    rw [Units.val_one]
-    exact hQP
-  · show (Lz σ i i)⁻¹ * Lz σ i i = 1
-    exact inv_mul_cancel₀ (hLd σ i)
+    rwa [Units.val_one]
+  · exact inv_mul_cancel₀ (hLd σ i)
   · have h0 := CellFrames.frVec_of_comb (TF.X.F.inM hk hx) hQx hP₀x hP₀.1 σ i _ (hP₀.2.1 σ i)
     have hI := Matrix.nonsing_inv_mul _ (hAdet σ)
     have key : frVec TF.Y P₀ hP₀x σ i = GlobalTheory.LieMet.tanOf (hvT (e ⟨σ, i⟩)) := by
@@ -187,7 +185,7 @@ theorem exists_cellFrames : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       simp only [← Finset.sum_smul]
       have e2 : ∀ l, (∑ j, (Lz σ * Nz σ)⁻¹ i j * (Lz σ * Nz σ) j l) = (1 : Matrix _ _ K) i l := fun l => by
         rw [← hI, Matrix.mul_apply]
-      simp only [e2, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [e2, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have e1 : (tv (frVec TF.Y P₀ rfl σ i)).left = (tv (frVec TF.Y P₀ hP₀x σ i)).left := rfl
     rw [e1, key, GlobalTheory.LieMet.left_tanOf, ev_congr hP₀x U.1 hU' hU]
 

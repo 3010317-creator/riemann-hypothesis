@@ -115,8 +115,7 @@ theorem kaBig_anti (D : D7) (hK : DV.KapDef D) {j : ℕ} (h1 : 1 ≤ j) (h2 : j 
     rw [hq a, hq b]
     have h5 := step (b.1 - a.1) a.1 (by have := b.2; omega)
     have e : a.1 + (b.1 - a.1) = b.1 := by omega
-    rw [e] at h5
-    exact h5
+    rwa [e] at h5
   exact_mod_cast hq'
 
 theorem kaBig_nonneg (D : D7) (hK : DV.KapDef D) {j : ℕ} (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (τ : D.what₂.Tau)
@@ -169,8 +168,7 @@ private lemma aMinusQ_le_aMinusQ_succ (D : D7) (j : ℕ) (τ : D.what₂.Tau) (c
     have g3 := (D.hc τ).gap_eb ⟨j + c, h0⟩ (by show j + c + 1 < D.R.m; omega)
     have e3 : (⟨j + (c + 1), h1⟩ : Fin D.R.m) = ⟨j + c + 1, by omega⟩ :=
       Fin.ext (by show j + (c + 1) = j + c + 1; omega)
-    rw [e3]
-    exact g3
+    rwa [e3]
   have ht : (0 : ℚ) ≤ D.R.t := Nat.cast_nonneg _
   unfold DV.aMinusQ
   rw [dite_eq_left h0, dite_eq_left h1]
@@ -221,8 +219,7 @@ theorem kaSmall_nonpos (D : D7) (hK : DV.KapDef D) {j : ℕ} (h1 : 1 ≤ j) (h2 
     have g3 := (D.hc τ).gap_eb ⟨j - 1, hj1⟩ (by show j - 1 + 1 < D.R.m; omega)
     have e3 : (⟨j + 0, by omega⟩ : Fin D.R.m) = ⟨j - 1 + 1, by omega⟩ :=
       Fin.ext (by show j + 0 = j - 1 + 1; omega)
-    rw [e3]
-    exact g3
+    rwa [e3]
   have he : DV.eQ D j τ = (D.hc τ).e ⟨j - 1, hj1⟩ := by
     unfold DV.eQ
     rw [dite_eq_left ⟨h1, h2⟩]

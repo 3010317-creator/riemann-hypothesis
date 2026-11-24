@@ -216,8 +216,7 @@ theorem key {ι : Type} (h2 : (2 : K) ≠ 0) (On : Set ι) (A B : ι → Matrix 
     have h3 : Mm *ᵥ (Qm *ᵥ v) ∈ W := by
       have e := hdec v
       rw [h1, mulVec_zero, zero_add] at e
-      rw [e]
-      exact hv
+      rwa [e]
     have h4 := injM _ h3
     rw [Submodule.mem_bot, ← hdec v, h1, h4, mulVec_zero, mulVec_zero, add_zero]
   · exfalso
@@ -518,13 +517,11 @@ theorem UpperTheory.V.Cu.irrOf4_of : AlNe → IrrOf4 := by
     have E8 : f (chiO ℚ Ω l d.c₁.O h : d.c₁.O) ^ (d.m * 8) = 1 := by
       rcases d.tau.sgn (d.D.pl l) with hs | hs
       · rw [hs, mul_one] at hi
-        rw [hi, Units.val_pow_eq_pow_val, map_pow, ← pow_mul] at hx8
-        exact hx8
+        rwa [hi, Units.val_pow_eq_pow_val, map_pow, ← pow_mul] at hx8
       · rw [hs] at hi
         have hi' : d.τ h 0 0 - d.τ h 0 1 = ((chiO ℚ Ω l d.c₁.O h ^ d.m : d.c₁.Oˣ) : d.c₁.O) := by
           rw [← hi]; ring
-        rw [hi', Units.val_pow_eq_pow_val, map_pow, ← pow_mul] at hy8
-        exact hy8
+        rwa [hi', Units.val_pow_eq_pow_val, map_pow, ← pow_mul] at hy8
     have hE : f (chiO ℚ Ω l d.c₁.O h : d.c₁.O) = algebraMap ℤ_[l] (PadicAlgCl l) (cycZ ℚ Ω l h : ℤ_[l]) :=
       (IsScalarTower.algebraMap_apply ℤ_[l] d.c₁.O (PadicAlgCl l) _).symm
     have hinj : Function.Injective (algebraMap ℤ_[l] (PadicAlgCl l)) := by
@@ -533,8 +530,7 @@ theorem UpperTheory.V.Cu.irrOf4_of : AlNe → IrrOf4 := by
     have hc : (cycZ ℚ Ω l h) ^ (d.m * 8) = 1 := by
       apply Units.ext
       apply hinj
-      rw [Units.val_pow_eq_pow_val, map_pow, Units.val_one, map_one, ← hE]
-      exact E8
+      rwa [Units.val_pow_eq_pow_val, map_pow, Units.val_one, map_one, ← hE]
     rw [hhdef, map_pow, ← pow_mul] at hc
     exact hD.decompSigma_ord (isOfFinOrder_iff_pow_eq_one.2 ⟨n * (d.m * 8), Nat.mul_pos hn (Nat.mul_pos d.tau.pos (by norm_num)), hc⟩)
 

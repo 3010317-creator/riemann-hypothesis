@@ -38,8 +38,7 @@ theorem classNum_pairDiff_mul {n e : ℕ} {W : Ideal (MRing ι O)}
   rw [hsub, classNum_X_mul, classNum_X_mul, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun μ hμ => ?_
   have hlen : e ≤ (classList (Sum.elim z z') μ ++ Q).length := by
-    rw [List.length_append, classList_length_of_mem_support _ hH hμ]
-    exact ht
+    rwa [List.length_append, classList_length_of_mem_support _ hH hμ]
   have h := hadd (z j - z' j) (z' j) _ hlen
   rw [sub_add_cancel] at h
   simp only [Sum.elim_inl, Sum.elim_inr]
@@ -56,8 +55,7 @@ theorem cycEval_vNumL_comm (hC2 : VerticalDivisorsCommute.Statement.{0}) {O : Ty
     cycEval (fun W => vNumL W (b' :: l)) (ratDiv P f g) =
       cycEval (fun W => vNumL W (b :: l)) (ratDiv P f' g') := by
   have h := hC2 O ϖ hϖ K ι P l.length hP b b' f g f' g' hD hD' l.get
-  simp only [vNum_vecCons_eq, List.ofFn_get] at h
-  exact h
+  simpa only [vNum_vecCons_eq, List.ofFn_get] using h
 
 theorem PairNumberExpansionIndependence.proof (hC2 : VerticalDivisorsCommute.Statement.{0}) :
     PairNumberExpansionIndependence.Statement := by
@@ -116,8 +114,7 @@ theorem PairNumberExpansionIndependence.proof (hC2 : VerticalDivisorsCommute.Sta
     rw [hKa j i, support_neg, ← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun μ hμ => ?_
     have hP' : IsModelOver P ((classList (Sum.elim z z') μ ++ Q).length + 1) := by
-      rw [hlen i j μ hμ]
-      exact hP
+      rwa [hlen i j μ hμ]
     have hc := cycEval_vNumL_comm hC2 hϖ _ hP' (hD i) (hD j)
     simp only [V, MvPolynomial.coeff_neg]
     rw [hc]

@@ -78,8 +78,7 @@ theorem av_key {S : Type*} [CommRing S] [IsDomain S] [IsNoetherianRing S] [IsLoc
       (lt_of_le_of_lt hP0Q (lt_of_lt_of_le hQlt hmP)) hPh
 
   obtain ⟨x, hxm, hxP⟩ : ∃ x ∈ m, ∀ P ∈ (Ideal.span {g}).minimalPrimes, x ∉ P := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hsub : (m : Set S) ⊆ ⋃ P ∈ (hfin.toFinset : Set (Ideal S)), ((id P : Ideal S) : Set S) := by
       intro y hy
       obtain ⟨P, hP, hyP⟩ := hcon y hy
@@ -108,8 +107,7 @@ theorem av_key {S : Type*} [CommRing S] [IsDomain S] [IsNoetherianRing S] [IsLoc
   · haveI := hPp
     exact av_no_two_chain (bot_lt_iff_ne_bot.mpr hP00) hlt hP'h
   · apply hxP P hP
-    rw [heq]
-    exact hxP'
+    rwa [heq]
 
 theorem av_prime_dim_one {R : Type*} [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsLocalRing R]
     (hdim : 1 ≤ ringKrullDim R) (h : R) (hh : h ≠ 0) :
@@ -241,9 +239,7 @@ theorem local_step {B : Type*} [CommRing B] [IsDomain B] [IsNoetherianRing B] (M
     IsLocalization.injective R (Ideal.primeCompl_le_nonZeroDivisors M)
   have hcm : (IsLocalRing.maximalIdeal R).comap (algebraMap B R) = M :=
     Localization.AtPrime.under_maximalIdeal (I := M)
-  have hh : algebraMap B R (e * w) ≠ 0 := by
-    intro h
-    exact mul_ne_zero he hw0 (hinj (by rw [h, map_zero]))
+  have hh : algebraMap B R (e * w) ≠ 0 := fun h => mul_ne_zero he hw0 (hinj (by rw [h, map_zero]))
   have hmax : (⊥ : Ideal R) < IsLocalRing.maximalIdeal R := by
     rw [bot_lt_iff_ne_bot]
     intro h
@@ -270,8 +266,7 @@ theorem local_step {B : Type*} [CommRing B] [IsDomain B] [IsNoetherianRing B] (M
     by_contra hne
     have hdisj : Disjoint (M.primeCompl : Set B) P := by
       rw [Set.disjoint_left]
-      intro x hx hxP
-      exact hx (hPM hxP)
+      exact fun x hx hxP => hx (hPM hxP)
     haveI hP' : (P.map (algebraMap B R)).IsPrime :=
       IsLocalization.isPrime_of_isPrime_disjoint M.primeCompl R P hP hdisj
     have hcomap : (P.map (algebraMap B R)).comap (algebraMap B R) = P :=

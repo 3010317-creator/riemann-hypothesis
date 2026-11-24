@@ -41,24 +41,6 @@ theorem cc_subst_eq {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ C}
   rw [hf, MvPowerSeries.subst_add hs, map_add (f := _), h1, constantCoeff_subst_zero ha hg]
   simp [MvPowerSeries.algebraMap_apply]
 
-private theorem jetAt0_zero_left' {σ : Type} (G : MvPowerSeries σ C) :
-    jetAt0 (0 : MvPolynomial σ C) G = 0 := by
-  simp [jetAt0]
-
-private theorem jetAt0_finset_sum_left {σ ι : Type} (s : Finset ι) (P : ι → MvPolynomial σ C)
-    (G : MvPowerSeries σ C) : jetAt0 (∑ j ∈ s, P j) G = ∑ j ∈ s, jetAt0 (P j) G := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp [jetAt0_zero_left']
-  | insert j s hj ih => rw [Finset.sum_insert hj, Finset.sum_insert hj, tpjet_jetAt0_add, ih]
-
-theorem jet_lin {σ ι : Type} [Fintype ι] (e : ι → σ) (q : MvPolynomial σ C) (c : ι → C) (G : MvPowerSeries σ C) :
-    jetAt0 (q * ∑ w, MvPolynomial.C (c w) * MvPolynomial.X (e w)) G =
-      jetAt0 q (∑ w, c w • MvPowerSeries.pderiv (R := C) (e w) G) := by
-  rw [Finset.mul_sum, jetAt0_finset_sum_left, jet_sum_right]
-  refine Finset.sum_congr rfl fun w _ => ?_
-  rw [← mul_assoc, jet_mul_X, jet_mul_C, jet_smul_right, dVar_eq_pderiv]
-
 variable {Y : FBChart C V O dd} {p : ∀ o, PairData Y d (I o)}
 
 end VP

@@ -44,8 +44,7 @@ private lemma continuousAt_of_continuousOn_chart_comp {e : ℕ} {X β : Type} [T
   have hmem : (A.chart j) y ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' U := by
     refine ⟨(A.chart j).map_source hj, ?_⟩
     show (A.chart j).symm ((A.chart j) y) ∈ U
-    rw [(A.chart j).left_inv hj]
-    exact hy
+    rwa [(A.chart j).left_inv hj]
   have h1 : ContinuousAt (f ∘ (A.chart j).symm) ((A.chart j) y) :=
     (hf j).continuousAt (((A.chart j).isOpen_inter_preimage_symm hU).mem_nhds hmem)
   have h2 : ContinuousAt ((f ∘ (A.chart j).symm) ∘ (A.chart j)) y :=
@@ -132,8 +131,7 @@ theorem bdry_null : BdryNullStatement := by
         ((ψ.target ∩ ψ.symm ⁻¹' (A.chart j).source) ∩ {p | p i = 0}) :=
       ((hψc j).2.differentiableOn.restrictScalars ℝ).mono Set.inter_subset_left
     refine addHaar_image_eq_zero_of_differentiableOn_of_addHaar_eq_zero volume hdiff ?_
-    refine measure_mono_null Set.inter_subset_right ?_
-    exact Measure.pi_hyperplane _ i 0
+    exact measure_mono_null Set.inter_subset_right (Measure.pi_hyperplane _ i 0)
   exact withDensity_absolutelyContinuous _ _ hnull
 
 def RWOpenStatement : Prop :=
@@ -164,9 +162,7 @@ theorem rW_open : RWOpenStatement := by
   have hcont : ContinuousOn (rW L s) (bdry s)ᶜ := by
     have hne : ∀ y ∈ (bdry s)ᶜ, ‖s y y‖ * Real.exp (-L.φ y y) ≠ 0 := by
       intro y hy
-      rw [hB] at hy
-      exact hy
-    show ContinuousOn (fun y => Real.exp 1 - 2 * Real.log (‖s y y‖ * Real.exp (-L.φ y y))) _
+      rwa [hB] at hy
     exact continuousOn_const.sub (continuousOn_const.mul (hN.continuousOn.log hne))
   exact ⟨hcont, fun R => hcont.isOpen_inter_preimage hopen isOpen_Iio⟩
 
@@ -178,7 +174,7 @@ def CutoffStatement : Prop :=
       A.Smooth uR ∧ IsPsh A (Θ + LocPot.ofFun uR) ∧ (∀ y, -M - 1 ≤ uR y ∧ uR y ≤ 0) ∧
         ∀ y, -M + 1 ≤ u y → uR y = u y - 1 / 2
 
-theorem cutoff : CutoffStatement :=by
+theorem cutoff : CutoffStatement := by
   intro e X _ A Θ u M hΘ hΘpsh hu hΘu hu0 hM uR
   obtain ⟨hR, -⟩ := ReciprocityTheory.AnForm.A.regMax_thm (Fin 2)
   obtain ⟨hcd, -, -, hb, hdom, -, htr, -⟩ := hR 1 one_pos
@@ -191,8 +187,7 @@ theorem cutoff : CutoffStatement :=by
     · simpa using hf
     · simpa using hg
   refine ⟨fun j => ?_, ?_, fun y => ?_, fun y hy => ?_⟩
-  · show ContDiffOn ℝ ∞ (fun z => ReciprocityTheory.AnForm.A.regMax 1 ![u ((A.chart j).symm z), -M] - 1 / 2) _
-    exact (hcd.comp_contDiffOn (hvec (hu j) contDiffOn_const)).sub contDiffOn_const
+  · exact (hcd.comp_contDiffOn (hvec (hu j) contDiffOn_const)).sub contDiffOn_const
   · intro x j y hy w
     set c := A.chart j with hc
     let F0 : (Fin e → ℂ) → ℝ := fun z => Θ.φ x (c.symm z) + u (c.symm z)

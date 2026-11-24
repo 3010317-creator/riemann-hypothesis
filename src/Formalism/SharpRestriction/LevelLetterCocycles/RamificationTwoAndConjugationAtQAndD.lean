@@ -242,11 +242,9 @@ theorem Formalism.RepresentationBoundsCohomology.rowColength : Formalism.Represe
     have h1 : T.mkQ (G0 (fun i => bQ.repr (T.mkQ x) i)) = T.mkQ x := by
 
       rw [hG0, map_sum]
-      simp only [map_smul, hm]
-      exact bQ.sum_repr (T.mkQ x)
+      simpa only [map_smul, hm] using bQ.sum_repr (T.mkQ x)
     have h2 : G0 (fun i => bQ.repr (T.mkQ x) i) - x ∈ T := by
-      rw [← Submodule.Quotient.eq]
-      exact h1
+      rwa [← Submodule.Quotient.eq]
     show N.mkQ (I.mkQ (G0 _)) = N.mkQ (I.mkQ x)
     rw [Submodule.mkQ_apply, Submodule.mkQ_apply]
     apply (Submodule.Quotient.eq N).mpr
@@ -478,12 +476,10 @@ theorem locQuotLen : StatLocQuotLen.{u} := by
     obtain ⟨a, ha⟩ := (Submodule.mem_torsion_iff (x : M)).mp x.2
     refine ⟨a, nonZeroDivisors.coe_ne_zero a, ?_⟩
     apply Subtype.ext
-    rw [Submodule.coe_smul, Submodule.coe_zero]
-    exact ha
+    rwa [Submodule.coe_smul, Submodule.coe_zero]
   have hrank : finrank O (M ⧸ Q) = finrank O M := by
     have h := Submodule.finrank_quotient_add_finrank Q
-    rw [hT0, add_zero] at h
-    exact h
+    rwa [hT0, add_zero] at h
   have hB := Formalism.RepresentationBoundsCohomology.rowColength O (M ⧸ Q) (mulSub ((ℓ : O) ^ e) (M ⧸ Q)) ℓ e
     (fun m => (mem_mulSub _).2 ⟨m, rfl⟩)
   have htors : Module.length O (Submodule.torsion O (M ⧸ Q)) = 0 := by
@@ -586,8 +582,7 @@ theorem exists_quotKO : Nonempty ((LL ⧸ OL O LL) ≃ₗ[O] KO O) := by
 theorem length_quot_ne_top (a : O) (ha : a ≠ 0) :
     Module.length O (O ⧸ Ideal.span {a}) ≠ ⊤ := by
   rw [Formalism.NG.IdempotentNormalFormsLenFacts.length_quot_span]
-  intro h
-  exact ha (IsDiscreteValuationRing.addVal_eq_top_iff.mp h)
+  exact fun h => ha (IsDiscreteValuationRing.addVal_eq_top_iff.mp h)
 
 variable {V V' W W' : Type} [AddCommGroup V] [Module LL V] [Module O V] [IsScalarTower O LL V]
     [AddCommGroup V'] [Module LL V'] [Module O V'] [IsScalarTower O LL V']
@@ -723,11 +718,10 @@ theorem basis_repr_left_eq_pairing {ι : Type} [Fintype ι] [DecidableEq ι] (P 
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_smul, LinearMap.smul_apply, smul_eq_mul]
   rw [h, Finset.sum_eq_single i]
-  · rw [hδ, if_pos rfl, mul_one]
+  · rw [hδ, ite_eq_left rfl, mul_one]
   · intro j _ hj
-    rw [hδ, if_neg hj, mul_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+    rw [hδ, ite_eq_right hj, mul_zero]
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 theorem basis_repr_right_eq_pairing {ι : Type} [Fintype ι] [DecidableEq ι] (P : V →ₗ[LL] V' →ₗ[LL] LL)
     (b : Basis ι LL V) (b' : Basis ι LL V') (hδ : ∀ i j, P (b i) (b' j) = if i = j then 1 else 0)
@@ -739,11 +733,10 @@ theorem basis_repr_right_eq_pairing {ι : Type} [Fintype ι] [DecidableEq ι] (P
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_smul, smul_eq_mul]
   rw [h, Finset.sum_eq_single j]
-  · rw [hδ, if_pos rfl, mul_one]
+  · rw [hδ, ite_eq_left rfl, mul_one]
   · intro k _ hk
-    rw [hδ, if_neg (Ne.symm hk), mul_zero]
-  · intro hj
-    exact absurd (Finset.mem_univ j) hj
+    rw [hδ, ite_eq_right (Ne.symm hk), mul_zero]
+  · exact fun hj => absurd (Finset.mem_univ j) hj
 
 theorem dualS_lattice [FiniteDimensional LL V] [FiniteDimensional LL V']
     (P : V →ₗ[LL] V' →ₗ[LL] LL) (_h1 : ∀ x, (∀ y, P x y = 0) → x = 0)
@@ -772,11 +765,9 @@ theorem dualS_lattice [FiniteDimensional LL V] [FiniteDimensional LL V']
       have := congrArg (Submodule.subtype T) (b.sum_repr ⟨x, hx⟩)
 
       simp only [map_sum, map_smul, Submodule.subtype_apply] at this
-      refine this.symm.trans ?_
-      exact Finset.sum_congr rfl fun k _ => by rw [hbV, algebraMap_smul]
+      exact this.symm.trans (Finset.sum_congr rfl fun k _ => by rw [hbV, algebraMap_smul])
     have h := congrFun (bV.repr_sum_self fun k => algebraMap O LL (b.repr ⟨x, hx⟩ k)) i
-    rw [← hx'] at h
-    exact h
+    rwa [← hx'] at h
   have hmemT : ∀ x : V, (∀ i, ∃ a : O, bV.repr x i = algebraMap O LL a) → x ∈ T := by
     intro x hx
     rw [← bV.sum_repr x]
@@ -812,8 +803,7 @@ theorem dualS_lattice [FiniteDimensional LL V] [FiniteDimensional LL V']
       intro i
       rw [basis_repr_left_eq_pairing P bV bV' hδ]
       exact hx (bV' i) (hb' i)
-    · intro x hx y hy
-      exact hy x hx
+    · exact fun x hx y hy => hy x hx
 
 theorem exists_transpose [FiniteDimensional LL V] [FiniteDimensional LL V']
     (P : V →ₗ[LL] V' →ₗ[LL] LL) (h2 : ∀ y, (∀ x, P x y = 0) → y = 0)
@@ -917,13 +907,11 @@ theorem locConst_mk {O V : Type} [CommRing O] [AddCommGroup V] [Module O V] [Top
     ext z
     simp only [Set.mem_preimage, Set.mem_iUnion, Set.mem_image, exists_prop]
     constructor
-    · intro h
-      exact ⟨f z, h, 0, T.zero_mem, add_zero _⟩
+    · exact fun h => ⟨f z, h, 0, T.zero_mem, add_zero _⟩
     · rintro ⟨v, hv, w, hw, hvw⟩
       have h1 : (Submodule.Quotient.mk (f z) : V ⧸ T) = Submodule.Quotient.mk v := by
         rw [← hvw, Submodule.Quotient.mk_add, (Submodule.Quotient.mk_eq_zero T).mpr hw, add_zero]
-      rw [h1]
-      exact hv
+      rwa [h1]
   rw [hset]
   exact hf.isOpen_preimage _ (isOpen_biUnion fun v _ => (Homeomorph.addLeft v).isOpenMap _ hT)
 
@@ -1048,8 +1036,7 @@ theorem red_cob (hopen : IsOpen (Set.range (algebraMap O LL)))
     (hz : CobL PD z) : CobO PD L1 z := by
   obtain ⟨f, hf, rfl⟩ := hz
   have hT : IsOpen (L1.T : Set LL) := by
-    rw [hL1]
-    exact hopen
+    rwa [hL1]
   refine ⟨fun g => Submodule.Quotient.mk (f g), ⟨locConst_mk L1.T hT f hf, fun _ => trivial⟩, ?_⟩
   funext x
   rfl
@@ -1066,8 +1053,7 @@ theorem push_mem_Z1D (hopen : IsOpen (Set.range (algebraMap O LL))) {X U : GRep 
     have he : pushD LY LT φ y = fun g => (Submodule.Quotient.mk (ψ ((y : G → X.V) g)) : U.V ⧸ LT.T) := by
       funext g
       exact hψ (evT LY g y)
-    rw [he]
-    exact h
+    rwa [he]
   · have he : evT LY (g * h) y = evT LY g y + actT LY g (evT LY h y) :=
       Subtype.ext (y.2.1.2 g h)
     show φ (evT LY (g * h) y) = φ (evT LY g y) + actD LT g (φ (evT LY h y))
@@ -1163,12 +1149,10 @@ theorem cup_eq_pairing (c : ↥(divisibleCocycles LA')) (d : ↥(latticeCocycles
   rfl
 
 theorem torsion_cocycle_mul (c : ↥(divisibleCocycles LA')) (g h : G) : (c : G → A'.V ⧸ LA'.T) (g * h) =
-    (c : G → A'.V ⧸ LA'.T) g + repD LA' g ((c : G → A'.V ⧸ LA'.T) h) := by
-  exact c.2.2 g h
+    (c : G → A'.V ⧸ LA'.T) g + repD LA' g ((c : G → A'.V ⧸ LA'.T) h) := c.2.2 g h
 
 theorem lattice_cocycle_mul (d : ↥(latticeCocycles LA)) (g h : G) :
-    evT LA (g * h) d = evT LA g d + actT LA g (evT LA h d) := by
-  exact Subtype.ext (d.2.1.2 g h)
+    evT LA (g * h) d = evT LA g d + actT LA g (evT LA h d) := Subtype.ext (d.2.1.2 g h)
 
 theorem cup_differential_zero (c : ↥(divisibleCocycles LA')) (d : ↥(latticeCocycles LA)) :
     ReciprocityTheory.Def.d2 (repD L1) (cupModuloIntegers PD hd L1 hL1 c d) = 0 := by
@@ -1192,8 +1176,7 @@ variable {LA : Lattice (O := O) A.ρ} {LA' : Lattice (O := O) A'.ρ}
 
 include hL1 in
 theorem integers_isOpen (hopen : IsOpen (Set.range (algebraMap O LL))) : IsOpen (L1.T : Set LL) := by
-  rw [hL1]
-  exact hopen
+  rwa [hL1]
 
 theorem cup_isLocallyConstant (hopen : IsOpen (Set.range (algebraMap O LL))) (c : ↥(divisibleCocycles LA'))
     (d : ↥(latticeCocycles LA)) : IsLocallyConstant (cupModuloIntegers PD hd L1 hL1 c d) := by
@@ -1356,8 +1339,7 @@ theorem absorption_direct {X U : GRep G Qp LL O} (LT : Lattice (O := O) U.ρ) (e
       ((Submodule.Quotient.eq _).2 hm).symm
     have e2 : (Submodule.Quotient.mk (ψ (X.ρ g t)) : U.V ⧸ LT.T) = actD LT g (φ ⟨t, ht⟩) := by
       have := hφ g ⟨t, ht⟩
-      rw [hψ] at this
-      exact this
+      rwa [hψ] at this
     have e3 : (Submodule.Quotient.mk (ψ t) : U.V ⧸ LT.T) = φ ⟨t, ht⟩ := (hψ ⟨t, ht⟩).symm
     show ((PD.p : O) ^ e) • φ (evT LY g y) =
       Submodule.Quotient.mk (yt g).2 + (actD LT g (φ ⟨t, ht⟩) - φ ⟨t, ht⟩)
@@ -1396,8 +1378,7 @@ omit [TopologicalSpace G] [TopologicalSpace Qp] [TopologicalSpace LL] [IsTopolog
 theorem cyclotomic_mul_mem_integers (L1 : Lattice (O := O) (charRep (cycLL PD LL))) (hL1 : L1.T = OL O LL) (g : G)
     {x : LL} (hx : x ∈ OL O LL) : ((cycLL PD LL g : LLˣ) : LL) * x ∈ OL O LL := by
   have h := L1.stable g x (by rw [hL1]; exact hx)
-  rw [hL1] at h
-  exact h
+  rwa [hL1] at h
 
 theorem equivariance_defect_mem_lattice {X U : GRep G Qp LL O} (LY : Lattice (O := O) X.ρ) (LT : Lattice (O := O) U.ρ)
     (φ : ↥LY.T →ₗ[O] (U.V ⧸ LT.T)) (hφ : IsGMapD LY LT φ) (ψ : X.V →ₗ[LL] U.V)
@@ -1595,8 +1576,7 @@ theorem torsion_le_connecting_range {A : GRep G Qp LL O} (LA : Lattice (O := O) 
   have h1 : (Submodule.Quotient.mk ((a : O) • d) : LatticeCohomology LA) = 0 := by
     have := congrArg Subtype.val ha
     rw [Submodule.Quotient.mk_smul]
-    rw [show (Submodule.Quotient.mk d : LatticeCohomology LA) = x.1 from hdx]
-    exact this
+    rwa [show (Submodule.Quotient.mk d : LatticeCohomology LA) = x.1 from hdx]
   rw [Submodule.Quotient.mk_eq_zero] at h1
   obtain ⟨t, ht, htd⟩ := h1
   have htd' : cob A.ρ t = (a : O) • (d : G → A.V) := htd
@@ -1697,15 +1677,13 @@ theorem equivariant_coefficient_reproduced (hO : GoodO (Qp := Qp) LL O) (h1 : bk
       CobO PD L1 (cupLD LT PU.flip (d : G → U'.V) (c : G → U.V ⧸ LT.T)) := by
     intro c d
     rw [← hpr0 c d]
-    show ι (pr0 c (Submodule.Quotient.mk d)) = 0 ↔ _
     exact ι.map_eq_zero_iff
   have hbk := (h2 LL O hO L1 hL1 U' U LT' LT PU.flip hU' hflip).1
   have hann : annih pr (latticeFiniteCohomology PD LT') = (HfD PD LT).comap (divisibleCocycles LT).subtype := by
     ext c
     rw [mem_annih, Submodule.mem_comap, Submodule.subtype_apply, hbk c.1 c.2]
     constructor
-    · intro h d hd
-      exact (hpr c ⟨d, hd.1⟩).1 (h _ ⟨⟨d, hd.1⟩, hd, rfl⟩)
+    · exact fun h d hd => (hpr c ⟨d, hd.1⟩).1 (h _ ⟨⟨d, hd.1⟩, hd, rfl⟩)
     · rintro h _ ⟨d, hd, rfl⟩
       exact (hpr c d).2 (h d.1 hd)
   set S := spanPush PD X U LT with hSdef
@@ -1745,8 +1723,7 @@ theorem equivariant_coefficient_reproduced (hO : GoodO (Qp := Qp) LL O) (h1 : bk
   have hincl : (annih pr (latticeFiniteCohomology PD LT')).comap S₀.subtype ≤
       (H.comap (S ⊔ H).subtype).comap incl := by
     intro s hs
-    rw [hann] at hs
-    exact hs
+    rwa [hann] at hs
   have hsurj : Function.Surjective (Submodule.mapQ _ _ incl hincl) := by
     intro x
     obtain ⟨⟨x, hx⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ x
@@ -1764,8 +1741,7 @@ theorem equivariant_coefficient_reproduced (hO : GoodO (Qp := Qp) LL O) (h1 : bk
       ((e : ℕ∞) * (k : ℕ∞)) := by
     refine (hle0.trans hle1).trans ?_
     rw [hrk] at hle2
-    rw [hk']
-    exact hle2
+    rwa [hk']
   have hm : lenMod S H ≠ ⊤ := by
     intro h
     rw [h] at hfin
@@ -1821,8 +1797,7 @@ theorem mem_of_pow_bdd (a : O) (ha : a ≠ 0) (u : LL)
     refine Submodule.sum_mem _ fun k _ => ?_
     obtain ⟨b, hb⟩ := h k
     have ha0 : algebraMap O LL a ≠ 0 := by
-      intro h0
-      exact ha ((IsFractionRing.injective O LL) (by rw [h0, map_zero]))
+      exact fun h0 => ha ((IsFractionRing.injective O LL) (by rw [h0, map_zero]))
     have hu : u ^ k = b • (algebraMap O LL a)⁻¹ := by
       rw [Algebra.smul_def, ← hb]
       field_simp

@@ -100,7 +100,7 @@ theorem hom_one : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog (1 : Rec
   intro m hm k
   have : m = 0 := by
     by_contra h
-    rw [mem_support_iff, coeff_one, if_neg (Ne.symm h)] at hm
+    rw [mem_support_iff, coeff_one, ite_eq_right (Ne.symm h)] at hm
     exact hm rfl
   subst this
   simp
@@ -391,8 +391,8 @@ theorem flHeight_nonneg_dominant : Inputs → ∀ (II : IntersectionSystem), IsF
     refine Finset.sum_congr rfl fun w _ => ?_
     by_cases hw : ∀ j, ((w j).2 : ℕ) + 1 < N
     · congr 1
-      exact Finset.prod_congr rfl fun j _ => (if_pos (hw j)).symm
-    · push_neg at hw
+      exact Finset.prod_congr rfl fun j _ => (ite_eq_left (hw j)).symm
+    · push Not at hw
       obtain ⟨j, hj⟩ := hw
       rw [hzero w j (not_lt.2 hj), zero_mul, zero_mul]
   rw [e]
@@ -465,12 +465,7 @@ section Triv
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
 theorem hermLine_ext {A B : HermLine ι} (ha : A.a = B.a) (hh : A.h = B.h) : A = B := by
-  cases A
-  cases B
-  simp only at ha hh
-  subst ha
-  subst hh
-  rfl
+  apply GroundTheory.Heights₂.Heights.Inter.hermLine_eq_of <;> assumption
 
 theorem fs_zero_tensor : (fsHerm ι (0 : K → ℤ)).tensor (fsHerm ι 0) = fsHerm ι 0 := by
   apply hermLine_ext
@@ -500,8 +495,7 @@ private theorem imageZ_mCoordIdeal' {K : Type} {ι : K → Type} {K' : Type} {ι
   change (mConeMap y) (rename v g) = 0 ↔ (mConeMap (y ∘ v)) g = 0
   rw [h]
   constructor
-  · intro h'
-    exact rename_injective κ hκ (by rw [h', map_zero])
+  · exact fun h' => rename_injective κ hκ (by rw [h', map_zero])
   · intro h'
     rw [h', map_zero]
 
@@ -612,16 +606,14 @@ private theorem II_fsHerm_yDeg_eq_zero_of_ne (II : IntersectionSystem) (hII : Is
       (fun k => FlagArithVar.leadIdx Ψ N k.1) (fun k => hnz k.1) d hdL
     have himg : IsArithVar (imageZ (omitV q₀) (PFl Ψ N)) (d + 1) := by
       have hb := isBlockMap_omitV (Ψ := Ψ) (N := N) q₀
-      rw [show PFl Ψ N = mCoordIdeal (yFl Ψ N) from rfl, imageZ_mCoordIdeal' _ _ hb.1 hb.2.2.1]
-      exact hA'
+      rwa [show PFl Ψ N = mCoordIdeal (yFl Ψ N) from rfl, imageZ_mCoordIdeal' _ _ hb.1 hb.2.2.1]
     have hc := hII.2.2.2 {q : FlBlock Ψ N // q ≠ q₀} (fun q => FlIdx Ψ N q.1) (FlBlock Ψ N) (FlIdx Ψ N)
       Subtype.val (omitV q₀) (PFl Ψ N) (d + 1) (antisymDegree Ψ N + 1) 0
       (fun r => fsHerm (fun q : {q : FlBlock Ψ N // q ≠ q₀} => FlIdx Ψ N q.1) (fun k => yDeg Ψ N (w r) k.1))
       (fun r => fsHerm (FlIdx Ψ N) (yDeg Ψ N (w r))) Fin.elim0 (isBlockMap_omitV q₀) hP himg (by omega)
       (fun _ => FlagHeightMultilinear.isSmoothHerm_fsHerm _) (fun r => isPullHerm_fs q₀ _ (hz r))
       (fun j => j.elim0)
-    rw [Fin.append_elim0] at hc
-    exact hc
+    rwa [Fin.append_elim0] at hc
   · have hall : ∀ q : FlBlock Ψ N, q = q₀ := fun q => by_contra fun h => hK ⟨⟨q, h⟩⟩
     have hL : (fun r => fsHerm (FlIdx Ψ N) (yDeg Ψ N (w r))) = fun _ => fsHerm (FlIdx Ψ N) 0 := by
       funext r
@@ -668,7 +660,7 @@ theorem flZero_main : Inputs → ∀ (II : IntersectionSystem), IsFullIntersecti
   · obtain ⟨j, hj⟩ := hw
     apply mul_eq_zero_of_right
     exact Finset.prod_eq_zero (Finset.mem_univ j) (by rw [hj]; exact hgap)
-  · push_neg at hw
+  · push Not at hw
     apply mul_eq_zero_of_left
     exact II_fsHerm_yDeg_eq_zero_of_ne II hII Ψ N hN p hp w hw
 

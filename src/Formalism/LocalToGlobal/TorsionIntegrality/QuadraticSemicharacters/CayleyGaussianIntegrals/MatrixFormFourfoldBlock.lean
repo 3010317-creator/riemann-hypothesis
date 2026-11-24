@@ -60,12 +60,9 @@ theorem heisenbergIsometry : OpUIsom := by
 theorem precompHeisenberg : PullOpU := by
   intro V _ _ H δ hδ x F z
   have h1 : H z (δ x) = H (δ.symm z) x := by
-    have h := hδ (δ.symm z) x
-    simp only [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] at h
-    exact h
+    simpa only [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] using hδ (δ.symm z) x
   have h2 : H (δ x) (δ x) = H x x := by
-    have h := hδ x x
-    simpa only [LinearEquiv.coe_coe] using h
+    simpa only [LinearEquiv.coe_coe] using hδ x x
   simp only [pullInv, opU, map_add (f := _), LinearEquiv.symm_apply_apply, h1, h2]
 
 theorem semicharacterBasic : SemiCharBasic := by
@@ -158,8 +155,7 @@ theorem matrixFormBasic : MatHBasic := by
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   have hc : conj (h i j) = h j i := by
-    have h' := congrFun (congrFun hh j) i
-    simpa [Matrix.conjTranspose_apply] using h'
+    simpa [Matrix.conjTranspose_apply] using congrFun (congrFun hh j) i
   rw [hc]
   ring
 
@@ -190,7 +186,7 @@ theorem standardFormBasic : StdHBasic := by
     simp only [hi, Complex.ofReal_re]
     obtain ⟨i, hi0⟩ : ∃ i, x i ≠ 0 := by
       by_contra h
-      push_neg at h
+      push Not at h
       exact hx (funext h)
     exact Finset.sum_pos' (fun j _ => div_nonneg (Complex.normSq_nonneg _) harea.le)
       ⟨i, Finset.mem_univ _, div_pos (Complex.normSq_pos.mpr hi0) harea⟩

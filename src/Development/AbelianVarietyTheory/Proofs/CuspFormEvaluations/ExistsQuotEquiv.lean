@@ -65,8 +65,7 @@ theorem bar_mem {I : Ideal (𝓞 E)} {j : 𝓞 E} (hj : j ∈ I.map (H.bar : �
   have hc : (H.bar : 𝓞 E →+* 𝓞 E).comp (H.bar : 𝓞 E →+* 𝓞 E) = RingHom.id _ :=
     RingHom.ext fun a => bar_bar H a
   have h2 := Ideal.mem_map_of_mem (H.bar : 𝓞 E →+* 𝓞 E) hj
-  rw [Ideal.map_map, hc, Ideal.map_id] at h2
-  exact h2
+  rwa [Ideal.map_map, hc, Ideal.map_id] at h2
 
 theorem dvd_EF_smul (D : Datum H) {N : ℕ} {t : 𝓞 E} (ht : t ∈ Ideal.span {(N : 𝓞 E)}) (u v : D.La) :
     (N : ℤ) ∣ D.EF u (t • v) := by
@@ -124,16 +123,14 @@ theorem modN_of_dvd (D : Datum H) {n : ℕ} (hn : 0 < n) {w : D.La} (h : ∀ v, 
   obtain ⟨b, hb⟩ := D.unimod.2
     ({ toFun := fun v => D.EF w v / n
        map_add' := fun x y => by
-         simp only [map_add (f := _)]
-         exact Int.add_ediv_of_dvd_left (h x)
+         simpa only [map_add (f := _)] using Int.add_ediv_of_dvd_left (h x)
        map_smul' := fun m x => by
          simp only [map_zsmul, smul_eq_mul, RingHom.id_apply]
          exact Int.mul_ediv_assoc m (h x) } : D.La →ₗ[ℤ] ℤ)
   refine ⟨b, D.unimod.1 ?_⟩
   ext v
   rw [map_nsmul, LinearMap.smul_apply, hb]
-  simp only [LinearMap.coe_mk, AddHom.coe_mk, nsmul_eq_mul]
-  exact (Int.mul_ediv_cancel' (h v)).symm
+  simpa only [LinearMap.coe_mk, AddHom.coe_mk, nsmul_eq_mul] using (Int.mul_ediv_cancel' (h v)).symm
 
 theorem dvd_of_modN (D : Datum H) {n : ℕ} (u : D.La) {w : D.La} (h : D.ModN n w) : (n : ℤ) ∣ D.EF u w := by
   obtain ⟨b, rfl⟩ := h

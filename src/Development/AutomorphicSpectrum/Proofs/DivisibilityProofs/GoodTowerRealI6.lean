@@ -280,8 +280,7 @@ theorem nefAt_add {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k
   have hb' := hb W h1 h2 h3 h4
   obtain ⟨w, -, e⟩ := geoNum_one_linear W
   rw [e] at ha' hb' ⊢
-  simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
-  exact add_nonneg ha' hb'
+  simpa only [Pi.add_apply, add_mul, Finset.sum_add_distrib] using add_nonneg ha' hb'
 
 theorem nefAt_step {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} (M : Top.RootModel Ψ N) (p : ℕ)
     (h : ∀ mu : Top.Wt Ψ N, Top.Dominant mu → M.NefAt p mu 0) (τ : Ψ) (i : Fin N) :
@@ -575,8 +574,7 @@ theorem unit_off (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E)
     have ht' : ι (b₀ k) - i t₀ • o.Fl.b s k ∈ flagStep M.Ω (o.Fl.b s) k := by
       have h := mem_flagStep_map hsl (o₀.Fl.b s) k ht₀
       rw [map_sub, hsl] at h
-      rw [hbF]
-      exact h
+      rwa [hbF]
     have c1 := _root_.GlobalTheory.CompanionTheory.Ar.leadCoef_ratio_mem M.Ω _ W.toSubring _ (o.Fl.b s) b (fun a => ι (b₀ a)) _ k t (i t₀) hfr.1 hf hf' C1 ht ht'
     have c2 := _root_.GlobalTheory.CompanionTheory.Ar.leadCoef_ratio_mem M.Ω _ W.toSubring _ (o.Fl.b s) (fun a => ι (b₀ a)) b _ k (i t₀) t
       (hext.2 _ b₀ hfr₀.1) hf' hf C2 ht' ht
@@ -775,10 +773,9 @@ theorem exists_hermLine_of_local_smooth : ∀ (K : Type) [Fintype K] (ι : K →
         (GlobalTheory.CompanionTheory.Ar.Flat.PlaceWeightSmooth.nzBlocks K ι) :=
       Real.contDiff_exp.comp_contDiffOn
         (hg.comp_contDiffOn GlobalTheory.CompanionTheory.Ar.Flat.PlaceWeightSmooth.prMap_contDiffOn)
-    refine h1.congr fun z hz => ?_
-    exact if_pos hz
+    exact h1.congr fun z hz => ite_eq_left hz
   · have h2 : (CExt.expLine ι g).h z = Real.exp (g (GlobalTheory.CompanionTheory.Ar.Flat.PlaceWeightSmooth.prMap z)) :=
-      if_pos hz.1
+      ite_eq_left hz.1
     rw [h2, Real.log_exp, hgu z hz]
 
 end GlobalTheory.CompanionTheory.Ar.PB
@@ -818,8 +815,7 @@ theorem mem_ptsOver {P : Ideal (MRing ι)} {z : (Σ k, ι k) → ℂ} (hz : z �
 
 theorem analytic_aeval (f : MRing ι) (z : (Σ k, ι k) → ℂ) :
     AnalyticAt ℂ (fun z : (Σ k, ι k) → ℂ => aeval z f) z := by
-  simp only [aeval_eq_eval]
-  exact AnalyticOnNhd.eval_mvPolynomial _ _ (Set.mem_univ _)
+  simpa only [aeval_eq_eval] using AnalyticOnNhd.eval_mvPolynomial _ _ (Set.mem_univ _)
 
 def Rep (y : (Σ k, ι k) → Ω) (a : K → ℤ) (ks : K) (d : ι ks × MRing ι × MRing ι) : Prop :=
   ∃ dg dh : K → ℕ, IsMultiHomog d.2.1 dg ∧ IsMultiHomog d.2.2 dh ∧ (∀ k, (dg k : ℤ) = dh k + a k) ∧
@@ -981,8 +977,7 @@ theorem val_ne_of_integral {A : Type} [CommRing A] [Algebra A Ω] (W : Subring �
   let ρ : A →+* W := (algebraMap A Ω).codRestrict W hA
   obtain ⟨p, hp, e⟩ := ht
   have e1 : (p.map ρ).eval₂ W.subtype t = 0 := by
-    rw [Polynomial.eval₂_map]
-    exact e
+    rwa [Polynomial.eval₂_map]
   have e2 := Polynomial.scaleRoots_eval₂_eq_zero W.subtype (s := (⟨r, hr⟩ : W)) e1
   have e3 : ((p.map ρ).scaleRoots ⟨r, hr⟩).eval (⟨_, hrt⟩ : W) = 0 := by
     apply Subtype.ext
@@ -1048,8 +1043,7 @@ theorem exists_line {K₀ K : Type} [Fintype K₀] [Fintype K] [DecidableEq K] {
       intro k
       by_cases hk : ∃ b, κ b = k
       · obtain ⟨b, rfl⟩ := hk
-        simp only [pullDeg, hv.1.extend_apply]
-        exact hd b
+        simpa only [pullDeg, hv.1.extend_apply] using hd b
       · simp [pullDeg, Function.extend_apply' _ _ _ hk]
     have hE : aeval y (rename v g) = y ⟨ks, e j⟩ * aeval y (rename v h) := by
       rw [hren, hren, e1, map_mul, he]

@@ -125,8 +125,7 @@ theorem realRd_faithful : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] (Pl0 
     refine LinearMap.ker_eq_bot'.2 fun z hz => ?_
     have h0 : Fintype.linearCombination ℂ φ z = 0 := by
       have := hz
-      simp only [Ψ, LinearMap.smul_apply, smul_eq_zero, inv_eq_zero, hν, false_or] at this
-      exact this
+      simpa only [Ψ, LinearMap.smul_apply, smul_eq_zero, inv_eq_zero, hν, false_or] using this
     exact hφ.fintypeLinearCombination_injective (h0.trans (map_zero _).symm)
   suffices key : (fun c => realRd YS v₀ hρ i j b ν (v c)) = Ψ ∘ fun c k => ρ.e i b (B.equivFun (w c) k) by
     rw [key]; exact hr.map' Ψ hΨ
@@ -141,7 +140,6 @@ theorem realRd_faithful : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] (Pl0 
     Algebra.TensorProduct.basis_apply _ _]
   change evK YS v₀ hρ i j b ((B.equivFun (w c) k • (1 : NX.KB S i b)) ⊗ₜ[S.Ks] (bK k : NX.FmK S ((j : ℕ) + 1))) = _
   rw [smul_eq_mul, mul_one]
-  refine (evK_tmul YS v₀ hρ i j b _ _).trans ?_
-  exact congrArg _ (congrArg (evW YS v₀ j) (hbK k))
+  exact (evK_tmul YS v₀ hρ i j b _ _).trans (congrArg _ (congrArg (evW YS v₀ j) (hbK k)))
 
 end GlobalTheory.SeriesTie

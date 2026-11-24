@@ -127,12 +127,10 @@ theorem UpperTheory.V.AlgebraTools.clifford :
     have hφ : φ (sSup A) = sSup A := by
       rw [OrderIso.map_sSup]
       apply le_antisymm
-      · refine iSup₂_le fun a ha => le_sSup ?_
-        exact (hA _).2 ((φ.isAtom_iff a).2 ((hA a).1 ha))
+      · exact iSup₂_le fun a ha => le_sSup ((hA _).2 ((φ.isAtom_iff a).2 ((hA a).1 ha)))
       · refine sSup_le fun b hb => ?_
         have hb' : φ.symm b ∈ A := (hA _).2 ((φ.symm.isAtom_iff b).2 ((hA b).1 hb))
-        have h := le_iSup₂ (f := fun a (_ : a ∈ A) => φ a) (φ.symm b) hb'
-        simpa using h
+        simpa using le_iSup₂ (f := fun a (_ : a ∈ A) => φ a) (φ.symm b) hb'
     have h : v ∈ e.symm (φ (sSup A)) := by rw [hφ]; exact hv
     exact h
   let T : Subrepresentation ρ := ⟨(e.symm (sSup A)).toSubmodule, fun g v hv => inv g v hv⟩
@@ -147,8 +145,7 @@ theorem UpperTheory.V.AlgebraTools.clifford :
     have hne : (⊤ : Subrepresentation (ρ.comp N.subtype)) ≠ ⊥ := by
       intro h
       apply (bot_ne_top : (⊥ : Subrepresentation ρ) ≠ ⊤)
-      apply Subrepresentation.ext
-      exact (congrArg Subrepresentation.toSubmodule h).symm
+      exact Subrepresentation.ext (congrArg Subrepresentation.toSubmodule h).symm
     obtain ⟨a, ha, -⟩ :=
       (eq_bot_or_exists_atom_le (⊤ : Subrepresentation (ρ.comp N.subtype))).resolve_left hne
     have h1 : a ≤ e.symm (sSup A) := by
@@ -160,8 +157,7 @@ theorem UpperTheory.V.AlgebraTools.clifford :
     apply le_antisymm _ bot_le
     intro v hv
     have h3 : v ∈ (e.symm (sSup A)).toSubmodule := h1 hv
-    rw [h2] at h3
-    exact h3
+    rwa [h2] at h3
   · refine eq_top_iff.2 fun v _ => ?_
     have h3 : (show V from v) ∈ T.toSubmodule := by rw [hT]; exact Submodule.mem_top
     exact h3
@@ -241,15 +237,13 @@ private theorem exists_char {K G A : Type} [Field K] [IsAlgClosed K] [Group G] [
       intro hη
       apply hχ
       intro g
-      have h3 := congrArg (fun u : Kˣ => (u : K)) (DFunLike.congr_fun hη g)
-      simpa [η] using h3
+      simpa [η] using congrArg (fun u : Kˣ => (u : K)) (DFunLike.congr_fun hη g)
   have htop : (⊤ : Submodule K A) ≤ ⨅ i, Module.End.eigenspace (σ i) 1 := by
     rw [← hall]
     exact iSup_le hle
   intro g x
   have h4 := (Submodule.mem_iInf _).1 (htop (Submodule.mem_top (x := x))) g
-  rw [Module.End.mem_eigenspace_iff, one_smul] at h4
-  exact h4
+  rwa [Module.End.mem_eigenspace_iff, one_smul] at h4
 
 private theorem ker_cases {K G V : Type} [Field K] [Group G] [AddCommGroup V] [Module K V]
     (ρ : Representation K G V) (hirr : ρ.IsIrreducible) (f : V →ₗ[K] V) (η : G →* Kˣ)
@@ -277,8 +271,7 @@ private theorem exists_proj {K H V : Type} [Field K] [Group H] [AddCommGroup V] 
     rw [← h] at hv'
     exact hv ((Submodule.mem_bot K).1 hv')
   obtain ⟨W, hW0, hW1⟩ : ∃ W : Subrepresentation τ, W ≠ ⊥ ∧ W ≠ ⊤ := by
-    by_contra hW
-    push_neg at hW
+    by_contra! hW
     exact hn { exists_pair_ne := ⟨⊥, ⊤, hnt⟩
                eq_bot_or_eq_top := fun W => (em (W = ⊥)).imp_right (hW W) }
   obtain ⟨W', hWW'⟩ := exists_isCompl W
@@ -307,11 +300,9 @@ private theorem exists_proj {K H V : Type} [Field K] [Group H] [AddCommGroup V] 
     simp only [LinearMap.comp_apply, map_add (f := _), e1, e2, e3, e4]
     simp
   · rw [hker]
-    intro h
-    exact hW0 (Subrepresentation.toSubmodule_injective h)
+    exact fun h => hW0 (Subrepresentation.toSubmodule_injective h)
   · rw [hker]
-    intro h
-    exact hW1 (Subrepresentation.toSubmodule_injective h)
+    exact fun h => hW1 (Subrepresentation.toSubmodule_injective h)
 
 theorem UpperTheory.V.AlgebraTools.twistOfRed :
     ∀ (K G V : Type) [Field K] [IsAlgClosed K] [Group G] [AddCommGroup V] [Module K V] [FiniteDimensional K V] (ρ : Representation K G V)
@@ -430,8 +421,7 @@ theorem UpperTheory.V.AlgebraTools.twistOfRed :
     rcases ker_cases ρ hirr x.1 η hfx with h | h
     · exact LinearMap.ker_eq_bot.1 h
     · exfalso
-      apply hx0
-      exact Subtype.ext (LinearMap.ker_eq_top.1 h)
+      exact hx0 (Subtype.ext (LinearMap.ker_eq_top.1 h))
   exact ⟨η, hη1, hNker, LinearEquiv.ofInjectiveEndo x.1 hinj, fun g v => hfx g v⟩
 end -- clump:auto
 end -- clump:auto

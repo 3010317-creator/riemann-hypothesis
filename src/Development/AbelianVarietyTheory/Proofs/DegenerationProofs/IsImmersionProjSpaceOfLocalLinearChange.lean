@@ -230,8 +230,7 @@ theorem isImmersion_lift_of_linear_change : ∀ (o : Type) [CommRing o] (Y Z : S
         refine (Points.valR_appLE (η y ≫ j') _ hT le_top (a y i k)).trans ?_
         rw [Category.assoc, reassoc_of% hj']
         rfl
-      rw [eb, Category.assoc] at k
-      exact k
+      rwa [eb, Category.assoc] at k
   have : IsImmersion (j' ≫ g) := e ▸ hψ y
   exact IsImmersion.of_comp j' g
 

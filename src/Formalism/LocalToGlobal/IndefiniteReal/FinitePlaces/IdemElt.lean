@@ -58,8 +58,7 @@ theorem split_datum (P : HeightOneSpectrum (𝓞 D.host.E)) (hP : ¬ Lev.IsConjP
       algebraMap D.host.F D.host.E (N : D.host.F) = (b : D.host.E) * star (b : D.host.E) ∧
       t ∉ v.asIdeal ∧ N ∈ v.asIdeal := by
   have hnc : ∃ c ∈ P.asIdeal, starO c ∉ P.asIdeal := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hP (fun c hc => ⟨starO c, hcon c hc, rfl⟩)
   obtain ⟨b, hbP, hbs⟩ := hnc
   obtain ⟨t, ht⟩ := fixed_int (b + starO b) (by simp [coe_starO, add_comm])
@@ -74,8 +73,7 @@ theorem split_datum (P : HeightOneSpectrum (𝓞 D.host.E)) (hP : ¬ Lev.IsConjP
   · rw [← hv, Ideal.mem_comap, htO]
     intro hmem
     apply hbs
-    have h2 := P.asIdeal.sub_mem hmem hbP
-    simpa using h2
+    simpa using P.asIdeal.sub_mem hmem hbP
   · rw [← hv, Ideal.mem_comap, hNO]
     exact P.asIdeal.mul_mem_right _ hbP
 
@@ -139,8 +137,7 @@ theorem emb_exists (v : HeightOneSpectrum (𝓞 D.host.F)) (b : D.host.E) (t N :
     have h := NumberField.IsCMField.complexEmbedding_complexConj D.host.E φ b
     have h2 := (NumberField.mem_maximalRealSubfield_iff _).mp f.2 φ
     have hs : star b = (NumberField.IsCMField.complexConj D.host.E) b := rfl
-    rw [hs, h, ← hf]
-    exact h2
+    rwa [hs, h, ← hf]
   have hmin : minpoly D.host.F b = P := by
     have hdvd : minpoly D.host.F b ∣ P := minpoly.dvd D.host.F b hPb
     have hdeg : 2 ≤ (minpoly D.host.F b).natDegree := by

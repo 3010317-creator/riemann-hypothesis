@@ -89,8 +89,7 @@ theorem lintegral_translate {k r : ℕ} (ν : Measure (Mt k r)) (t : MatKR k r) 
       continuous_toFun := hc _
       continuous_invFun := hc _ }
   have := lintegral_map_equiv (μ := ν) (fun x => F (e.symm x)) e.toMeasurableEquiv
-  refine Eq.trans ?_ this.symm
-  exact lintegral_congr fun y => congrArg F (e.symm_apply_apply y).symm
+  exact Eq.trans (lintegral_congr fun y => congrArg F (e.symm_apply_apply y).symm) this.symm
 
 theorem sq_nnnorm {V : Type} [NormedAddCommGroup V] (v : V) : (‖v‖₊ : ℝ≥0∞) ^ 2 = ENNReal.ofReal (‖v‖ ^ 2) := by
   rw [← ENNReal.coe_pow, ← ENNReal.ofReal_coe_nnreal]; rfl

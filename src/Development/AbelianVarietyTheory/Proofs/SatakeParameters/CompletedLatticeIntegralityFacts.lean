@@ -103,8 +103,7 @@ theorem int_facts : ∀ {D : D7} (V : HSp D), (∀ a ∈ intAE D, ∀ y ∈ LamH
       by_contra hc
       exact hb ((he.2 _ hb0).2 hc)
     have hq : (ϖ' : D.host.E) ^ n / (ϖ : D.host.E) ^ n = (a : D.host.E) * ((b : 𝓞 D.host.E) : D.host.E)⁻¹ := by
-      rw [eq_mul_inv_iff_mul_eq₀ hb1]
-      exact hab
+      rwa [eq_mul_inv_iff_mul_eq₀ hb1]
     have ha : finPart D (incA D (a : D.host.E)) ∈ intAE D :=
       AddSubgroup.subset_closure ⟨1, fun v => one_mem _, a, rfl⟩
     have hm : ∀ {x y : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E}, x ∈ intAE D → y ∈ intAE D → x * y ∈ intAE D := by
@@ -122,8 +121,7 @@ theorem int_facts : ∀ {D : D7} (V : HSp D), (∀ a ∈ intAE D, ∀ y ∈ LamH
       · intro x y _ _ h; rw [mul_neg]; exact neg_mem h
     have := hm ha hi
     rw [RingHom.map_mul, mul_left_comm] at this
-    rw [hq, RingHom.map_mul, RingHom.map_mul]
-    exact this
+    rwa [hq, RingHom.map_mul, RingHom.map_mul]
   · intro ε B hε h
     obtain ⟨-, -, -, hspan, -⟩ := GlobalTheory.Member.latHat_eq_hat_and_gram D V
     have hx : ∀ x : Fin V.rank → D.host.E, ∃ z, ∀ a,

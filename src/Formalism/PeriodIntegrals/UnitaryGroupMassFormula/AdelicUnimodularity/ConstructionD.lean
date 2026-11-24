@@ -146,8 +146,7 @@ lemma mem_conj_map (K : Subgroup G) (g y : G) :
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa [mul_assoc] using hx
-  · intro h
-    exact ⟨g⁻¹ * y * g, h, by simp [mul_assoc]⟩
+  · exact fun h => ⟨g⁻¹ * y * g, h, by simp [mul_assoc]⟩
 
 end Cosets
 
@@ -265,8 +264,7 @@ theorem unimodIdx_main : PI.UnimodIdx := by
       simp only [Set.mem_preimage, SetLike.mem_coe, Set.mem_smul_set_iff_inv_smul_mem, inv_inv,
         smul_eq_mul, mem_conj_map]
       simp
-    rw [hset, measure_smul]
-    exact hconj
+    rwa [hset, measure_smul]
   have hc : haarScalarFactor (map (· * g) μ) μ = 1 := by
     have h := measure_isMulInvariant_eq_smul_of_isCompact_closure (map (· * g) μ) μ
       (s := (K : Set G)) (by rw [hKcl.closure_eq]; exact hKc)
@@ -359,8 +357,7 @@ theorem adUnimod_of (hA : KgSubgroup) (hC : KCompact) (hQ : KCountable) (hI : In
     exact I.topf_open (n + 1) (by omega)
   · obtain ⟨g, hg1, hgV⟩ := I.topf_basis V hV
     refine ⟨g - 1, ?_⟩
-    rw [hU (g - 1), show g - 1 + 1 = g by omega]
-    exact hgV
+    rwa [hU (g - 1), show g - 1 + 1 = g by omega]
   · rw [ksub_coe]
     exact kset_open I
   · rw [ksub_coe]

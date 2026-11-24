@@ -72,8 +72,7 @@ theorem isTorsionFree_alg (O : Type) [CommRing O] [IsDomain O]
   have hK : algebraMap O K r ≠ 0 := by
     simpa using (IsFractionRing.injective O K).ne hr0
   have h1 : (algebraMap O K r) • a = (algebraMap O K r) • b := by
-    rw [algebraMap_smul, algebraMap_smul]
-    exact hab'
+    rwa [algebraMap_smul, algebraMap_smul]
   calc a = ((algebraMap O K r)⁻¹ * algebraMap O K r) • a := by rw [inv_mul_cancel₀ hK, one_smul]
     _ = ((algebraMap O K r)⁻¹ * algebraMap O K r) • b := by rw [mul_smul, h1, ← mul_smul]
     _ = b := by rw [inv_mul_cancel₀ hK, one_smul]
@@ -85,8 +84,7 @@ theorem isTorsionFree_as (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuati
   obtain ⟨h⟩ := isTorsionFree_alg O K A
   refine ⟨fun r hr a b hab => ?_⟩
   have hab' : r • (a : A) = r • (b : A) := by
-    have h2 := congrArg (fun x : ↥(As O A) => (x : A)) hab
-    simpa using h2
+    simpa using congrArg (fun x : ↥(As O A) => (x : A)) hab
   exact Subtype.ext (h hr hab')
 
 theorem free_as (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]

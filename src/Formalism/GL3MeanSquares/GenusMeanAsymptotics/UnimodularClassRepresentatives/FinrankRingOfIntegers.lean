@@ -160,14 +160,12 @@ theorem discrIdeal_gmap {h : V →ₗ⋆[K] V →ₗ[K] K} {g : V ≃ₗ[K] V} (
     · obtain ⟨y, hy, hyx⟩ := Submodule.mem_map.mp (hx i)
       have : g y = x i := hyx
       change g.symm (x i) ∈ A
-      rw [← this, LinearEquiv.symm_apply_apply]
-      exact hy
+      rwa [← this, LinearEquiv.symm_apply_apply]
     · rw [e]
       congr 1
       ext i j
       have := hg (g.symm (x i)) (g.symm (x j))
-      rw [LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply] at this
-      exact this
+      rwa [LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply] at this
   · rintro ⟨x, hx, e⟩
     refine ⟨fun i => g (x i), fun i => Submodule.mem_map.mpr ⟨x i, hx i, rfl⟩, ?_⟩
     rw [e]

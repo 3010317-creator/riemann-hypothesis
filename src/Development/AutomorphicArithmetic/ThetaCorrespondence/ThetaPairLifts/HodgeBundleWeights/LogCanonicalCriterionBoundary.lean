@@ -300,8 +300,7 @@ theorem kodaira_spencer_map_properties : _root_.GlobalTheory.CovTop.Hypotheses''
   obtain ⟨A, _, j, hj⟩ := GlobalTheory.FlagTan.exists_isGrpPullback A' (GlobalTheory.DeRham.epsRed K)
   have hπ : IsGrpPullback A Xo.univ.t.G P.x (j ≫ π') := by
     have := hj.comp hπ'
-    rw [← hx.2]
-    exact this
+    rwa [← hx.2]
   have hUn := GlobalTheory.ObjDim.isAbelianScheme Xo.univ
   have hg := GlobalTheory.ObjDim.smoothOfRelativeDimension Xo.univ
   have hA := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hUn hπ
@@ -495,8 +494,7 @@ theorem exists_log_pole_along_boundary (hP : _root_.GlobalTheory.CovTop.Hypothes
   have hzW := FlagMod.le_preimage_mono hW'W hz
   have hU₀ : ⊤ ≤ z ⁻¹ᵁ U₀ TF.X Z := fun p hp => by
     have := ho hp
-    rw [Modif.off_eq] at this
-    exact this
+    rwa [Modif.off_eq] at this
   have hk : ⊤ ≤ (z ≫ inc₀ TF.X Z) ⁻¹ᵁ TF.X.F.U k := FlagMod.le_preimage_map _ hc.2.2.1 hzW
   obtain ⟨_, hch⟩ := exists_chartFr (z ≫ inc₀ TF.X Z) hU₀
   obtain ⟨Q, hQ⟩ := hch k hk
@@ -641,8 +639,7 @@ theorem logCanonical_refl_of_boundary : _root_.GlobalTheory.CovTop.Hypotheses'' 
     · have h := hv y (fun h => hy ((hoff y).1 h)) (pIdx _ (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ i) (mem_pIdx.2 hi)
       have e := H0.germ_pull (p := str₀ TF.X Z) (B := L₀ TF.X Z s) (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top (pIdx _ (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ i) y (memTop y) (mem_pIdx.2 hi) g
       erw [e] at h
-      intro hu
-      exact h (hu.map _)
+      exact fun hu => h (hu.map _)
     · rw [← hr]
       exact (H0.pull_restr (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).off_eq.le g).trans (restr_pull (isLB_L₀ TF.X Z s) (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top le_top g).symm
 end GlobalTheory.LogCanonicalReflexive

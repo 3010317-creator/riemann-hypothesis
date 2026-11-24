@@ -64,10 +64,8 @@ theorem smInv_mem (f : MA.SmQ r TT) (hf : ∀ q, (f : MA.Qp r TT → ℂ) q ≠ 
   have hsm : ContDiffOn ℝ MA.sm (MA.ext (f : MA.Qp r TT → ℂ)) (MA.Qset r TT) := f.2
   have hne : ∀ x ∈ MA.Qset r TT, MA.ext (f : MA.Qp r TT → ℂ) x ≠ 0 := by
     intro x hx
-    simp only [MA.ext, dif_pos hx]
-    exact hf _
-  show ContDiffOn ℝ MA.sm (MA.ext (fun q => ((f : MA.Qp r TT → ℂ) q)⁻¹)) (MA.Qset r TT)
-  exact (hsm.inv hne).congr fun x hx => by simp only [Pi.inv_apply, MA.ext, dif_pos hx]
+    simpa only [MA.ext, dite_eq_left hx] using hf _
+  exact (hsm.inv hne).congr fun x hx => by simp only [Pi.inv_apply, MA.ext, dite_eq_left hx]
 
 theorem inverse_apply (f : MA.SmQ r TT) (hf : ∀ q, (f : MA.Qp r TT → ℂ) q ≠ 0) (q : MA.Qp r TT) :
     ((Ring.inverse f : MA.SmQ r TT) : MA.Qp r TT → ℂ) q = ((f : MA.Qp r TT → ℂ) q)⁻¹ := by
@@ -127,7 +125,7 @@ theorem trR_unit (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (e : M.Ty P �
   by_cases hu : u ∈ MA.smSub P.r P.TT
   · have hmul : (fun q => (φ : MA.Qp P.r P.TT → ℂ) q * u q) ∈ MA.smSub P.r P.TT :=
       (MA.smSub P.r P.TT).mul_mem φ.2 hu
-    rw [dif_pos hmul, dif_pos hu]
+    rw [dite_eq_left hmul, dite_eq_left hu]
     rfl
   · have hmul : (fun q => (φ : MA.Qp P.r P.TT → ℂ) q * u q) ∉ MA.smSub P.r P.TT := by
       intro hm
@@ -149,9 +147,7 @@ theorem sec_pt (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (hpl : Q.IsPlace
   exact ⟨Formalism.FourierDecayAlt.P.NFRadRedA.mem_domR hpl.2.1 hpl.2.2.1 Bs.sec hq,
     Formalism.FourierDecayAlt.P.NFRadRedA.zeta_muZ hpl.2.1 hpl.2.2.1 Bs.sec hζ⟩
 
-theorem tt_pos (P : M.Par) (hP : P.OK) : 0 < P.TT := by
-  show 0 < P.T * P.T'
-  exact mul_pos hP.T_pos hP.T'_pos
+theorem tt_pos (P : M.Par) (hP : P.OK) : 0 < P.TT := mul_pos hP.T_pos hP.T'_pos
 
 theorem zeta_ne (P : M.Par) (hP : P.OK) (q : MA.Qp P.r P.TT) : q.1.2 ≠ 0 := by
   have h2 : P.TT < Complex.normSq q.1.2 :=

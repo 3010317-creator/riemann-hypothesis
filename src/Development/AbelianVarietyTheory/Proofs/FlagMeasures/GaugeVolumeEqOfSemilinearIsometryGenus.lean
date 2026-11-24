@@ -173,8 +173,7 @@ theorem covol_map {G G' : Type} [Mul G] [Mul G'] [MeasurableSpace G] [Measurable
     · intro x _
       obtain ⟨γ, hγ, h⟩ := hc (T.symm x) trivial
       refine ⟨T γ, (hΓ γ).1 hγ, ?_⟩
-      rw [← T.apply_symm_apply x, ← hT, Set.mem_preimage, T.symm_apply_apply]
-      exact h
+      rwa [← T.apply_symm_apply x, ← hT, Set.mem_preimage, T.symm_apply_apply]
     · rw [T.map_apply, ← Set.preimage_comp]
       simp
   · refine le_iInf fun D => le_iInf fun hD => le_iInf fun hc => ?_
@@ -182,8 +181,7 @@ theorem covol_map {G G' : Type} [Mul G] [Mul G'] [MeasurableSpace G] [Measurable
     · intro x _
       obtain ⟨γ, hγ, h⟩ := hc (T x) trivial
       refine ⟨T.symm γ, (hΓ _).2 (by rwa [T.apply_symm_apply]), ?_⟩
-      rw [Set.mem_preimage, hT, T.apply_symm_apply]
-      exact h
+      rwa [Set.mem_preimage, hT, T.apply_symm_apply]
     · rw [T.map_apply]
 
 theorem covol_smul {G : Type} [Mul G] [MeasurableSpace G] (Γ : Set G) (μ : Measure G) (A : Set G)
@@ -589,8 +587,7 @@ theorem placeMap_placeMap (I I' : AutInst) (e : I'.E ≃+* I.E) (v : InfinitePla
   have h' : ∀ a : I.F, v.embedding a = κ (I'.φ (placeMap I I' e v) (e.symm (algebraMap I.F I.E a))) := by
     intro a
     rw [← I.φ_over]
-    refine Eq.trans ?_ (h _)
-    exact congrArg (I.φ v) (e.apply_symm_apply _).symm
+    exact Eq.trans (congrArg (I.φ v) (e.apply_symm_apply _).symm) (h _)
   refine Eq.trans ?_ (InfinitePlace.mk_embedding v)
   rw [placeMap, InfinitePlace.mk_eq_iff]
   rcases hκ with hκ | hκ
@@ -716,8 +713,7 @@ theorem gaugeVol_transport : ∀ (I I' : AutInst) (e : I'.E ≃+* I.E) (A : Matr
       exact ⟨_, (Tq ⟨γ, hγ⟩).2, (key ⟨γ, hγ⟩).1 h⟩
     · rintro ⟨γ, hγ, h⟩
       refine ⟨_, (Tq.symm ⟨γ, hγ⟩).2, (key _).2 ?_⟩
-      rw [Tq.apply_symm_apply]
-      exact h
+      rwa [Tq.apply_symm_apply]
   have hC : ∀ (I : AutInst) (c : InfinitePlace I.F → ℝ), IsGaugeAll I c →
       ENNReal.ofReal (∏ v, c v) = ((∏ v, (c v).toNNReal : ℝ≥0) : ENNReal) ∧
         ((∏ v, (c v).toNNReal : ℝ≥0) : ENNReal) ≠ 0 := by

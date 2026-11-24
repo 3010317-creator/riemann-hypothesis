@@ -72,8 +72,7 @@ private theorem rs_cls (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
   have h' : PadicInt.toZModPow k ((cyclotomicCharacter Ω l
       (MulSemiringAction.toRingAut (Formalism.ConjugateSelfDual.G ℚ Ω) Ω σ) : ℤ_[l]ˣ) : ℤ_[l]) = 1 := h
   rw [h'] at key
-  rw [Units.val_one]
-  exact key
+  rwa [Units.val_one]
 
 private theorem rs_unit {l : ℕ} [hl : Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] (hO : ¬ IsUnit (l : O))
     (y : O) (k : ℕ) (h : IsUnit (y - 1)) : IsUnit (y ^ l ^ k - 1) := by
@@ -164,8 +163,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_sub :
         ((UpperTheory.V.Chr.clsFacts ℚ Ω N).2.1 (l ^ N.factorization l) (Nat.ordProj_dvd N l))
         ((x ^ l ^ N.factorization l : F.D F.vl) : Formalism.ConjugateSelfDual.G ℚ Ω)
       rw [MonoidHom.comp_apply] at hc
-      rw [hc]
-      exact hg
+      rwa [hc]
     refine ⟨x ^ l ^ N.factorization l, Subgroup.mem_inf.2 ⟨?_, ?_⟩, ?_, ?_⟩
     · rw [MonoidHom.mem_ker, map_pow, hx1, one_pow]
     · show MulChar.toUnitHom (UpperTheory.V.HV.comp l ψ)

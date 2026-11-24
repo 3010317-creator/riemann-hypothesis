@@ -51,8 +51,7 @@ theorem mem_R_split (M : Loc.Model F E) (g : Loc.SplitG M.L) (hs : M.split = som
   simp only [Subring.mem_comap, Subring.mem_map]
   refine ⟨(s1, s2), ?_, ?_⟩
   · rw [RingHom.mem_eqLocus]
-    simp only [RingHom.comp_apply, RingHom.coe_fst, RingHom.coe_snd]
-    exact Ideal.Quotient.eq.2 hc
+    simpa only [RingHom.comp_apply, RingHom.coe_fst, RingHom.coe_snd] using Ideal.Quotient.eq.2 hc
   · simp [he]
 
 theorem zzplus_mem (M : Loc.Model F E) (g : Loc.SplitG M.L) (hs : M.split = some g) {r : ℕ}
@@ -72,9 +71,9 @@ theorem zzplus_mem (M : Loc.Model F E) (g : Loc.SplitG M.L) (hs : M.split = some
   simp only [Matrix.of_apply]
   by_cases hcc : c
   · have hcc' : b = Fin.last r ∧ a = Fin.last r := hcs.2 hcc
-    rw [if_pos hcc]
-    rw [if_pos hcc] at hs1 hs3
-    rw [if_pos hcc'] at hs2
+    rw [ite_eq_left hcc]
+    rw [ite_eq_left hcc] at hs1 hs3
+    rw [ite_eq_left hcc'] at hs2
     refine mem_R_split M g hs _ s1 (k - s2) ?_ ?_
     · rw [map_sub, AlgEquiv.apply_symm_apply, AlgEquiv.apply_symm_apply]
       ext
@@ -91,11 +90,11 @@ theorem zzplus_mem (M : Loc.Model F E) (g : Loc.SplitG M.L) (hs : M.split = some
       push_cast
       apply mul_left_cancel₀ hq
       linear_combination hs1 + hs2 - hs3 - hk
-  · rw [if_neg hcc, sub_zero]
+  · rw [ite_eq_right hcc, sub_zero]
     have hcc' : ¬ (b = Fin.last r ∧ a = Fin.last r) := fun h' => hcc (hcs.1 h')
-    rw [if_neg hcc, add_zero] at hs1
-    rw [if_neg hcc, add_zero] at hs3
-    rw [if_neg hcc', add_zero] at hs2
+    rw [ite_eq_right hcc, add_zero] at hs1
+    rw [ite_eq_right hcc, add_zero] at hs3
+    rw [ite_eq_right hcc', add_zero] at hs2
     refine mem_R_split M g hs _ s1 (-s2) ?_ ?_
     · rw [AlgEquiv.apply_symm_apply]
       ext
@@ -236,8 +235,7 @@ theorem intOnEZR_of (hL : IntLR) (hG : IntGR) : IntOnEZR := by
   intro D δ M hA u u' hT F0 what₂ hR Λ hΛ Z F' hF' p a b
   rcases hs : (M p).split with _ | g
   · have h1 := hL D δ M hA u u' hT F0 what₂ hR Λ hΛ Z F' hF' p hs a b
-    simp only [ZZP, Loc.HermSp.ZZplusOf, Loc.Model.R, hs]
-    exact h1
+    simpa only [ZZP, Loc.HermSp.ZZplusOf, Loc.Model.R, hs] using h1
   · exact hG D δ M hA u u' hT F0 what₂ hR Λ hΛ Z F' hF' p g hs a b
 
 theorem intLR_of (hG : LocGen) : IntLR := by
@@ -252,8 +250,7 @@ theorem intLR_of (hG : LocGen) : IntLR := by
   have mb : xb • F'.fl.fvec b ∈ Λ := frame_mem Λ F' hOK.2 hz' b xb hxb
   have hd : xb • F'.fl.fvec b ∈ Formalism.HermitianLatticesTheory.dual (VS D).hT Λ := by
     have hU' : Formalism.HermitianLatticesTheory.dual (VS D).hT Λ = Λ := hU
-    rw [hU']
-    exact mb
+    rwa [hU']
   unfold Formalism.HermitianLatticesTheory.dual Formalism.E.hdual at hd
   rw [Submodule.mem_iInf] at hd
   have hd2 := hd (xa • F0.fvec a)
@@ -330,14 +327,14 @@ theorem normGR_of (h1 : FrIntG) (h2 : CongGR) : NormGR := by
   · obtain ⟨rfl, rfl⟩ := hc
     have h1' : xa = 1 := by rw [hxa, frFac_last, map_one]; rfl
     have h2' : xb = 1 := by rw [hxb, frFac_last, map_one]; rfl
-    simp only [and_self, if_true] at hs1 hs2 hs3 ⊢
+    simp only [and_self, ite_true] at hs1 hs2 hs3 ⊢
     rw [h1', h2']
     refine ⟨⟨s1, ?_⟩, ⟨s2, ?_⟩, ⟨s3, ?_⟩⟩
     · linear_combination hs1
     · linear_combination hs2
     · linear_combination hs3
   · have hc' : ¬ (b = Fin.last D.R.rS ∧ a = Fin.last D.R.rS) := fun h' => hc ⟨h'.2, h'.1⟩
-    simp only [hc, if_false, add_zero] at hs1 hs2 hs3 ⊢
+    simp only [hc, ite_false, add_zero] at hs1 hs2 hs3 ⊢
     refine ⟨⟨⟨xb, ib⟩ * ⟨xa, ia⟩ * s1, ?_⟩, ⟨⟨xb, ib⟩ * ⟨xa, ia⟩ * s2, ?_⟩, ⟨⟨xb, ib⟩ * ⟨xa, ia⟩ * s3, ?_⟩⟩
     · push_cast; linear_combination (xb * xa) * hs1
     · push_cast; linear_combination (xb * xa) * hs2
@@ -411,8 +408,7 @@ theorem notIntR_of (h : IntOnEZR) : NotIntR := by
   obtain ⟨p, a, b, hn⟩ := hZ
   refine nu_eq_zero_of_empty (Tn u') F0 what₂ Z fun Λ hΛ => ?_
   rw [Set.eq_empty_iff_forall_notMem]
-  intro F' hF'
-  exact hn (h D δ M hA u u' hT F0 what₂ hR Λ hΛ Z F' hF' p a b)
+  exact fun F' hF' => hn (h D δ M hA u u' hT F0 what₂ hR Λ hΛ Z F' hF' p a b)
 
 theorem integral_on_pairs_holds : IntOnEZR :=
   have hD : LocDiff := locDiff_of trace_dual_lattice (dualApprox_of small_powers_bound tensorLiftSurjective) small_powers_bound

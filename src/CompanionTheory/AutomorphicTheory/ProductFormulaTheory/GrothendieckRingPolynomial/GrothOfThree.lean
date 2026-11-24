@@ -207,8 +207,7 @@ theorem prod_X_of_map (s : Segment k →₀ ℕ) {h : ℕ} (Γ : Fin h → Segme
       (Finset.univ.val.map Γ).map MvPolynomial.X := by
     rw [Multiset.map_map]; rfl
   rw [Finset.prod_eq_multiset_prod, h1, hΓ, Finset.prod_multiset_map_count, Finsupp.toFinset_toMultiset]
-  simp only [Finsupp.count_toMultiset]
-  exact MvPolynomial.prod_X_pow_eq_monomial
+  simpa only [Finsupp.count_toMultiset] using MvPolynomial.prod_X_pow_eq_monomial
 
 theorem exists_enum (s : Segment k →₀ ℕ) :
     ∃ (h : ℕ) (Γ : Fin h → Segment k), Finset.univ.val.map Γ = Finsupp.toMultiset s :=
@@ -274,7 +273,7 @@ theorem vars_lt (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {Δ : Segm
   have hde : d ≠ Finsupp.single Δ 1 := by
     rintro rfl
     simp at hcd
-  rw [if_neg (Ne.symm hde), sub_zero] at hcd
+  rw [ite_eq_right (Ne.symm hde), sub_zero] at hcd
   have hne : Finsupp.toMultiset d ≠ {Δ} := fun h => hde ((toMultiset_eq_single_iff d Δ).1 h)
   exact len_lt_of_msupp hA (hp d (MvPolynomial.mem_support_iff.2 hcd)) hne t ((Finsupp.mem_toMultiset d t).2 htd)
 
@@ -517,8 +516,8 @@ theorem ell_phiOf (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hj : LS
     obtain ⟨h, Γ, hΓ⟩ := exists_enum s
     rw [← prod_X_of_map s Γ hΓ, hprod h _ Γ rfl, AddEquiv.symm_apply_apply, ell_prod hA hj hJ hAlt Lseg hL, hΓ]
     by_cases hs : s = Finsupp.single Δ 1
-    · rw [if_pos ((toMultiset_eq_single_iff s Δ).2 hs), if_pos hs]
-    · rw [if_neg (fun h => hs ((toMultiset_eq_single_iff s Δ).1 h)), if_neg hs]
+    · rw [ite_eq_left ((toMultiset_eq_single_iff s Δ).2 hs), ite_eq_left hs]
+    · rw [ite_eq_right (fun h => hs ((toMultiset_eq_single_iff s Δ).1 h)), ite_eq_right hs]
   have hm' : ∀ v, ell Δ (toR.symm (phiOf Lseg (MvPolynomial.monomial v (p.coeff v)))) =
       p.coeff v * (if v = Finsupp.single Δ 1 then (-1) ^ (Δ.len - 1) else 0) := by
     intro v
@@ -765,8 +764,7 @@ theorem annMap_surjective
     intro h hh w
     have h1 : contra (subQuot S T) h⁻¹ f = f := hKs (inv_mem hh)
     have h2 := LinearMap.congr_fun (congrArg Subtype.val h1) (Submodule.Quotient.mk w)
-    rw [contra_apply, inv_inv] at h2
-    exact h2
+    rwa [contra_apply, inv_inv] at h2
   let j : fixed S.toRepresentation K →ₗ[ℂ] fixed π K :=
     { toFun := fun w => ⟨w.1.1, GlobalTheory.ContraRefl.mem_fix.2 fun h hh =>
         congrArg Subtype.val (GlobalTheory.ContraRefl.mem_fix.1 w.2 h hh)⟩
@@ -782,8 +780,7 @@ theorem annMap_surjective
   have hlS : (l : Module.Dual ℂ V) ∘ₗ S.toSubmodule.subtype = m₀ := by
     refine GlobalTheory.ContraRefl.form_ext hSs hc (fun h hh w => ?_) hm (fun w hw => ?_)
     · have h1 := LinearMap.congr_fun (congrArg Subtype.val (hlK h⁻¹ (inv_mem hh))) (w : V)
-      rw [contra_apply, inv_inv] at h1
-      exact h1
+      rwa [contra_apply, inv_inv] at h1
     · have e1 := hl (j ⟨w, hw⟩)
       have e2 := LinearMap.congr_fun hj' ⟨w, hw⟩
       simp only [LinearMap.comp_apply, LinearMap.id_apply] at e2
@@ -856,15 +853,14 @@ theorem class_congr_equiv {N : ℕ} {V W : Type} [AddCommGroup V] [Module ℂ V]
     cl0 π = cl0 τ := by
   by_cases hπ : HasFiniteLength π
   · have hτ := hπ.of_equiv φ
-    simp only [cl0, dif_pos hπ, dif_pos hτ]
-    exact clsGL_congr φ hπ hτ
+    simpa only [cl0, dite_eq_left hπ, dite_eq_left hτ] using clsGL_congr φ hπ hτ
   · have hτ : ¬ HasFiniteLength τ := fun h => hπ (h.of_equiv φ.symm)
-    simp only [cl0, dif_neg hπ, dif_neg hτ]
+    simp only [cl0, dite_eq_right hπ, dite_eq_right hτ]
 
 theorem class_eq_of_jordan_holder_mult {N : ℕ} {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
     {π : Representation ℂ (GL (Fin N) k) V} {τ : Representation ℂ (GL (Fin N) k) W} (hπ : HasFiniteLength π)
     (hτ : HasFiniteLength τ) (h : ∀ σ : IrrRep (GL (Fin N) k), jhMult σ.ρ π = jhMult σ.ρ τ) : cl0 π = cl0 τ := by
-  simp only [cl0, dif_pos hπ, dif_pos hτ, clsGL]
+  simp only [cl0, dite_eq_left hπ, dite_eq_left hτ, clsGL]
   congr 1
   ext c
   rw [cls_apply, cls_apply, h c.rep]
@@ -1014,7 +1010,7 @@ variable {N : ℕ} {U V W : Type} [AddCommGroup U] [Module ℂ U] [AddCommGroup 
 
 theorem class_eq_finite_length_class (π : Representation ℂ (GL (Fin N) k) V) (h : HasFiniteLength π) : cl0 π = clsGL π h := by
   unfold cl0
-  exact dif_pos h
+  exact dite_eq_left h
 
 theorem class_irreducible_basis (π : Representation ℂ (GL (Fin N) k) V) (hs : IsSmooth π) (hi : π.IsIrreducible) :
     cl0 π = sg (IrrGL.of π hs hi) := by
@@ -1103,8 +1099,7 @@ theorem induction_length (P : ∀ (Y : Type) [AddCommGroup Y] [Module ℂ Y], Re
     { toLinearMap := 0, isIntertwining' := fun _ => by ext }
   refine hses _ _ _ _ ρ _ (topEquiv ρ).toIntertwiningMap z (topEquiv ρ).injective
     (fun _ => ⟨0, Subsingleton.elim _ _⟩) ?_ hs hf (key ⊤) (hzero _ _)
-  intro y
-  exact ⟨fun _ => (topEquiv ρ).surjective y, fun _ => Subsingleton.elim _ _⟩
+  exact fun y => ⟨fun _ => (topEquiv ρ).surjective y, fun _ => Subsingleton.elim _ _⟩
 
 end Induction
 
@@ -1380,16 +1375,16 @@ theorem jacquet_functional_class (W : List (IrrGL (k := k))) {N : ℕ} {V : Type
     (π : Representation ℂ (GL (Fin N) k) V) (hl : HasFiniteLength π) :
     J W (cl0 π) = (cls π hl).sum fun c m => m * ((jmL W (IrrGL.rep (⟨N, c⟩ : IrrGL (k := k)))).toNat : ℤ) := by
   unfold J cl0
-  rw [dif_pos hl, clsGL, Finsupp.sum_mapDomain_index (fun _ => zero_mul _) (fun _ _ _ => add_mul _ _ _)]
+  rw [dite_eq_left hl, clsGL, Finsupp.sum_mapDomain_index (fun _ => zero_mul _) (fun _ _ _ => add_mul _ _ _)]
 
 
 variable (k) in
 theorem jCls : JCls k := by
   intro W N V _ _ π hπ hl
   by_cases hd : ∑ a, (W.get a).1 = N
-  · have hjπ : jmL W π = jm W.get hd π := dif_pos hd
+  · have hjπ : jmL W π = jm W.get hd π := dite_eq_left hd
     have hjc : ∀ c : IrrCl (GL (Fin N) k), jmL W (IrrGL.rep (⟨N, c⟩ : IrrGL (k := k))) = jm W.get hd c.rep.ρ :=
-      fun c => dif_pos hd
+      fun c => dite_eq_left hd
     refine ⟨by rw [hjπ]; exact jm_ne_top W.get hd π hπ hl, ?_⟩
     set F := (finite_constituents hl).toFinset with hF
     have ha : ∀ c : IrrCl (GL (Fin N) k), jhMult c.rep.ρ π ≠ ⊤ := fun c => jhMult_ne_top c.rep.irr hl
@@ -1411,8 +1406,8 @@ theorem jCls : JCls k := by
         (fun c m => m * ((jmL W (IrrGL.rep (⟨N, c⟩ : IrrGL (k := k)))).toNat : ℤ)) (fun c _ => zero_mul _)]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [hjc c, cls_apply, Nat.cast_mul]
-  · have hjπ : jmL W π = 0 := dif_neg hd
-    have hjc : ∀ c : IrrCl (GL (Fin N) k), jmL W (IrrGL.rep (⟨N, c⟩ : IrrGL (k := k))) = 0 := fun c => dif_neg hd
+  · have hjπ : jmL W π = 0 := dite_eq_right hd
+    have hjc : ∀ c : IrrCl (GL (Fin N) k), jmL W (IrrGL.rep (⟨N, c⟩ : IrrGL (k := k))) = 0 := fun c => dite_eq_right hd
     refine ⟨by rw [hjπ]; exact ENat.zero_ne_top, ?_⟩
     rw [jacquet_functional_class W π hl, hjπ]
     simp [hjc, Finsupp.sum]
@@ -1540,8 +1535,8 @@ theorem jSeg : JSeg k := by
   have hA := CompanionTheory.Tls2.BZGL.irreducibleAdmissibleGL_top
   have hterm : ∀ a, (Δ.term a).1 = Δ.d := fun _ => rfl
   refine ⟨?_, fun S hS hne => ?_⟩
-  · rw [jmL_seg hA hZ Δ _ (fun w hw => by rw [List.mem_ofFn] at hw; obtain ⟨a, rfl⟩ := hw; rfl) List.length_ofFn, if_pos rfl]
-  · rw [jmL_seg hA hZ Δ _ ?_ ?_, if_neg (vWord_ne hA Δ S hS hne)]
+  · rw [jmL_seg hA hZ Δ _ (fun w hw => by rw [List.mem_ofFn] at hw; obtain ⟨a, rfl⟩ := hw; rfl) List.length_ofFn, ite_eq_left rfl]
+  · rw [jmL_seg hA hZ Δ _ ?_ ?_, ite_eq_right (vWord_ne hA Δ S hS hne)]
     · intro w hw
       obtain ⟨a, -, rfl⟩ := List.mem_map.1 hw
       rfl
@@ -1659,8 +1654,7 @@ theorem jhMult_mul_jm_le {g N : ℕ} (z : Fin g → IrrGL (k := k)) (hz : ∑ b,
   rwa [_root_.GlobalTheory.CompanionTheory.JacquetCongr.jm_congr_of_equiv z hz _ _ ⟨topEquiv π⟩] at h
 
 theorem ofFn_perm {α : Type*} {h : ℕ} (x : Fin h → α) (σ : Equiv.Perm (Fin h)) :
-    (List.ofFn (x ∘ σ)).Perm (List.ofFn x) := by
-  exact Equiv.Perm.ofFn_comp_perm σ x
+    (List.ofFn (x ∘ σ)).Perm (List.ofFn x) := Equiv.Perm.ofFn_comp_perm σ x
 
 theorem jhMult_le_one_of_equiv (y : IrrGL (k := k)) {V : Type} [AddCommGroup V] [Module ℂ V]
     {π : Representation ℂ (GL (Fin y.1) k) V} {g : ℕ} {z : Fin g → IrrGL (k := k)} {hz : ∑ b, (z b).1 = y.1}
@@ -1786,13 +1780,11 @@ theorem tri (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarc
   have hL := GlobalTheory.CompanionTheory.ZcWords.coe_map_ofFn hΓ
   have hne : 𝔪.map toA ≠ (((List.ofFn Γ).map toA : List _) : Multiset _) := by
     rw [hL]
-    intro e
-    exact he (Multiset.map_injective GlobalTheory.CompanionTheory.ZcWords.toA_injective e)
+    exact fun e => he (Multiset.map_injective GlobalTheory.CompanionTheory.ZcWords.toA_injective e)
   have key := _root_.GlobalTheory.CompanionTheory.MultiSeg.Rank.sqLen_lt_of_inSh sNu GlobalTheory.CompanionTheory.ZcWords.sNu_injective GlobalTheory.CompanionTheory.ZcWords.sNu_aperiodic
     ((List.ofFn Γ).map toA) (𝔪.map toA) (GlobalTheory.CompanionTheory.ZcWords.aOrdered_of_isOrderedForm hΓ)
     (GlobalTheory.CompanionTheory.ZcWords.inSh_of_inShW sh) hne
-  rw [hL, tri_sqLen_map_toA, tri_sqLen_map_toA] at key
-  exact key
+  rwa [hL, tri_sqLen_map_toA, tri_sqLen_map_toA] at key
 
 end CompanionTheory.Groth
 

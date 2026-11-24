@@ -69,8 +69,7 @@ theorem UpperTheory.V.Ws.H5.descend :
     · intro g g' hg hmem
       have h1 := (K.conj g g' hg).2.2
       rw [MonoidHom.mem_ker] at hmem ⊢
-      rw [hmem, one_mul] at h1
-      exact h1
+      rwa [hmem, one_mul] at h1
   let β₀ := K.V.pr.liftOfRightInverse (Function.surjInv hsurj) (Function.rightInverse_surjInv hsurj) ⟨K.β, hker⟩
   have hcomp : β₀.comp K.V.pr = K.β := MonoidHom.liftOfRightInverse_comp _ _ _ _
   have hβ₀ : ∀ g, β₀ (K.V.pr g) = K.β g := fun g => DFunLike.congr_fun hcomp g
@@ -95,8 +94,7 @@ theorem UpperTheory.V.Ws.H5.descend :
   · intro x hx
     obtain ⟨g, hg, rfl⟩ := hx
     exact hβt g (K.t_unr _ (not_lt_of_not_mem (K.s.hA K.s.v0) (not_mem_of_norm hl K.s.p_prime K.s.p_ne K.s.norm_v0_eq_one)) hg)
-  · intro v g hg
-    exact hβt _ (K.mu v g hg).2
+  · exact fun v g hg => hβt _ (K.mu v g hg).2
   · intro N s
     have hf : (fun g => Ideal.Quotient.mk (maximalIdeal c'.O ^ N) ((β₀ (K.V.pr g) : c'.O))) = (fun g => Ideal.Quotient.mk (maximalIdeal c'.O ^ N) ((K.β g : c'.O))) := funext fun g => by rw [hβ₀]
     have ho : IsOpen (K.V.pr ⁻¹' ((fun x => Ideal.Quotient.mk (maximalIdeal c'.O ^ N) ((β₀ x : c'.O))) ⁻¹' s)) := by

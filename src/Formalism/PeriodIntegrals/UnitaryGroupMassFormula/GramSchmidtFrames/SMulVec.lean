@@ -64,8 +64,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
 abbrev Sm {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] (f : E → F) (s : Set E) : Prop :=
   ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) f s
 
-lemma sv_iff {m : ℕ} {v : E → Fin m → ℂ} : Sm v s ↔ ∀ i, Sm (fun x => v x i) s := by
-  exact contDiffOn_pi
+lemma sv_iff {m : ℕ} {v : E → Fin m → ℂ} : Sm v s ↔ ∀ i, Sm (fun x => v x i) s := contDiffOn_pi
 
 lemma sm_iff {p q : ℕ} {M : E → Matrix (Fin p) (Fin q) ℂ} : Sm M s ↔ ∀ i j, Sm (fun x => M x i j) s := by
   unfold Sm
@@ -94,8 +93,7 @@ lemma s_smul {m : ℕ} {c : E → ℂ} {v : E → Fin m → ℂ} (hc : Sm c s) (
     Sm (fun x => c x • v x) s := by
   rw [sv_iff]
   intro i
-  simp only [Pi.smul_apply, smul_eq_mul]
-  exact hc.mul (sv_iff.1 hv i)
+  simpa only [Pi.smul_apply, smul_eq_mul] using hc.mul (sv_iff.1 hv i)
 
 lemma s_mmul {m : ℕ} {A B : E → Matrix (Fin m) (Fin m) ℂ} (hA : Sm A s) (hB : Sm B s) :
     Sm (fun x => A x * B x) s := by
@@ -107,8 +105,7 @@ lemma s_mmul {m : ℕ} {A B : E → Matrix (Fin m) (Fin m) ℂ} (hA : Sm A s) (h
 lemma s_ct {m : ℕ} {A : E → Matrix (Fin m) (Fin m) ℂ} (hA : Sm A s) : Sm (fun x => (A x)ᴴ) s := by
   rw [sm_iff]
   intro i j
-  simp only [Matrix.conjTranspose_apply]
-  exact s_star (sm_iff.1 hA j i)
+  simpa only [Matrix.conjTranspose_apply] using s_star (sm_iff.1 hA j i)
 
 private lemma sm_finset_prod {ι : Type*} (u : Finset ι) {f : ι → E → ℂ} (h : ∀ i ∈ u, Sm (f i) s) :
     Sm (fun x => ∏ i ∈ u, f i x) s := by
@@ -130,10 +127,8 @@ lemma s_adj {p : ℕ} {M : E → Matrix (Fin p) (Fin p) ℂ} (h : ∀ i j, Sm (f
   refine s_det fun i j => ?_
   simp only [Matrix.updateRow_apply]
   by_cases hi : i = b
-  · simp only [hi, if_true]
-    exact contDiffOn_const
-  · simp only [hi, if_false]
-    exact h i j
+  · simpa only [hi, ite_true] using contDiffOn_const
+  · simpa only [hi, ite_false] using h i j
 
 variable {k r : ℕ}
 
@@ -142,10 +137,8 @@ lemma s_wbPart {v : E → Fin (2 * r + k + 1) → ℂ} (hv : Sm v s) : Sm (fun x
   intro i
   simp only [wbPart]
   by_cases hc : r ≤ i.val ∧ i.val ≤ r + k
-  · simp only [hc, and_self, if_true]
-    exact sv_iff.1 hv i
-  · simp only [hc, if_false]
-    exact contDiffOn_const
+  · simpa only [hc, and_self, ite_true] using sv_iff.1 hv i
+  · simpa only [hc, ite_false] using contDiffOn_const
 
 lemma s_prW (z : Fin (2 * r + k + 1) → ℂ) {v : E → Fin (2 * r + k + 1) → ℂ} (hv : Sm v s) :
     Sm (fun x => prW k r z (v x)) s := by
@@ -154,8 +147,7 @@ lemma s_prW (z : Fin (2 * r + k + 1) → ℂ) {v : E → Fin (2 * r + k + 1) →
 
 lemma s_Zhat (z z' : Fin (2 * r + k + 1) → ℂ) {Y : E → B.Mat k r} (hY : Sm Y s) (a b : Fin (r + 1)) :
     Sm (fun x => Zhat k r z z' (Y x) a b) s := by
-  simp only [Zhat]
-  exact s_herm _ (s_mulVec hY contDiffOn_const) contDiffOn_const
+  simpa only [Zhat] using s_herm _ (s_mulVec hY contDiffOn_const) contDiffOn_const
 
 lemma s_xcofL (z z' : Fin (2 * r + k + 1) → ℂ) {Y : E → B.Mat k r} (hY : Sm Y s) :
     Sm (fun x => xcofL k r z z' (Y x)) s := by
@@ -171,8 +163,7 @@ lemma s_xcof (z z' : Fin (2 * r + k + 1) → ℂ) {Y : E → B.Mat k r} (hY : Sm
 
 lemma s_omW (z z' : Fin (2 * r + k + 1) → ℂ) {Y : E → B.Mat k r} (hY : Sm Y s) :
     Sm (fun x => omW k r z z' (Y x)) s := by
-  simp only [omW]
-  exact s_prW z (s_xcof z z' hY)
+  simpa only [omW] using s_prW z (s_xcof z z' hY)
 
 end smooth
 

@@ -206,8 +206,7 @@ theorem _root_.GlobalTheory.QNorm.hilbert90_sUnits_quadratic_extension_qnorm : �
         by_contra hne
         apply hv
         refine Finset.mem_image.mpr ⟨ch v, ?_, hch v⟩
-        rw [Set.Finite.mem_toFinset]
-        exact hne
+        rwa [Set.Finite.mem_toFinset]
       simp [n, hvS, h1]
   obtain ⟨a, ha⟩ := _root_.GlobalTheory.QNorm.exists_unit_valuation_eq_of_adm F S T n hS hnT
   have ha0 : algebraMap F E a ≠ 0 := by simp
@@ -219,7 +218,7 @@ theorem _root_.GlobalTheory.QNorm.hilbert90_sUnits_quadratic_extension_qnorm : �
     rw [map_mul, valuation_algebraMap_eq_of_unit_at_under hq w (hadm _ hvS).1 (hδ _ hvS), ha _ hvS,
       hfib w hw]
     have h0 : (ch (w.under (𝓞 F))).valuation E y ≠ 0 := (Valuation.ne_zero_iff _).mpr hy0
-    simp only [n, if_neg hvS]
+    simp only [n, ite_eq_right hvS]
     nth_rewrite 1 [← WithZero.exp_log h0]
     rw [← WithZero.exp_add, add_neg_cancel, WithZero.exp_zero]
   · show (u : E) = y * algebraMap F E a / σ (y * algebraMap F E a)
@@ -381,8 +380,7 @@ theorem two_mul_index_sqs_involution :
         · rw [h]; exact one_mem _
         · rw [h]; exact hεB
       simpa using mul_mem hyb hb
-    · intro hy
-      exact ⟨y, hy, rfl⟩
+    · exact fun hy => ⟨y, hy, rfl⟩
   obtain ⟨a0, ha0⟩ := h90 ε (by rw [hσε, ← sq, hε2])
   rw [← hf] at ha0
   have e6 : (sqs B).relIndex (S ⊓ B) = 2 := by
@@ -485,8 +483,7 @@ private theorem quad_unique {F E : Type} [Field F] [Field E] [Algebra F E] {δ :
   have hbd : b = d := by
     by_contra hne
     have h0 : b - d ≠ 0 := sub_ne_zero.mpr hne
-    have h0' : algebraMap F E (b - d) ≠ 0 := by
-      exact (map_ne_zero _).2 h0
+    have h0' : algebraMap F E (b - d) ≠ 0 := (map_ne_zero _).2 h0
     have hθ : θ = algebraMap F E ((c - a) / (b - d)) := by
       rw [map_div₀, eq_div_iff h0', map_sub, map_sub]
       linear_combination e
@@ -681,7 +678,7 @@ theorem two_mul_card_le_card_over : ∀ (F E : Type) [Field F] [NumberField F] [
   · obtain ⟨w, hw⟩ := (places_over F E).2.1 v
     have : 0 < (SE.filter (fun w => w.under (𝓞 F) = v)).card :=
       Finset.card_pos.2 ⟨w, Finset.mem_filter.2 ⟨(hSE w).2 (hw ▸ hv), hw⟩⟩
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
     omega
 
 end GlobalTheory.QNorm

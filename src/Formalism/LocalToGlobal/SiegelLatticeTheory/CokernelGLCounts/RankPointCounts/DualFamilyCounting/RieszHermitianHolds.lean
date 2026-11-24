@@ -56,8 +56,7 @@ theorem form_mem_locF_of (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} {X
     exact (hF _).2 ⟨_, rfl⟩
   rw [form_ozmul_right, ← algebraMap_smul K (algebraMap (𝓞 F) (𝓞 K) t) y, LinearMap.map_smulₛₗ,
     LinearMap.smul_apply, hst, algebraMap_smul K (algebraMap (𝓞 F) (𝓞 K) t) (h y v)] at H
-  rw [map_mul, mul_smul, smul_comm]
-  exact H
+  rwa [map_mul, mul_smul, smul_comm]
 
 theorem riesz_hermitian_holds : RieszH := by
   intro K V _ _ _ _ _ h _ hnd f
@@ -102,8 +101,7 @@ theorem mem_of_smul_mem {X : Submodule K V} {𝔭 : Ideal (𝓞 F)} {u : 𝓞 F}
     rw [e]
     exact (map_ne_zero _).2 hu0
   have h1 : algebraMap (𝓞 K) K (algebraMap (𝓞 F) (𝓞 K) u) • v ∈ X := by
-    rw [algebraMap_smul]
-    exact hv
+    rwa [algebraMap_smul]
   have := X.smul_mem (algebraMap (𝓞 K) K (algebraMap (𝓞 F) (𝓞 K) u))⁻¹ h1
   rwa [smul_smul, inv_mul_cancel₀ hc0, one_smul] at this
 

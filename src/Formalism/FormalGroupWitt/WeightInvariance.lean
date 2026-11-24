@@ -94,7 +94,7 @@ theorem coeff_expand_eq_zero {R : Type*} [CommRing R] {τ : Type*} (q : ℕ) (hq
         omega
       · exact h
     nlinarith
-  · push_neg at hdiv
+  · push Not at hdiv
     obtain ⟨i, hi⟩ := hdiv
     exact MvPowerSeries.coeff_expand_of_not_dvd q hq φ hi
 
@@ -142,14 +142,7 @@ variable {K : Type u} [NormedField K] [IsUltrametricDist K]
 
 lemma sigma_norm_le_one {p q : ℕ} {σ : K →+* K} (hp : ‖(p : K)‖ ≤ 1)
     (hσ : IsFrobLift p q σ) (a : K) (ha : ‖a‖ ≤ 1) : ‖σ a‖ ≤ 1 := by
-  unfold IsFrobLift at hσ
-  have h1 := hσ a ha
-  have h2 : ‖a ^ q‖ ≤ 1 := by
-    rw [norm_pow]
-    exact pow_le_one₀ (norm_nonneg _) ha
-  calc ‖σ a‖ = ‖(σ a - a ^ q) + a ^ q‖ := by rw [sub_add_cancel]
-    _ ≤ max ‖σ a - a ^ q‖ ‖a ^ q‖ := IsUltrametricDist.norm_add_le_max _ _
-    _ ≤ 1 := max_le (h1.trans hp) h2
+  exact Formalism.LT.CoeffP.sigma_norm_le_one hp hσ a ha
 
 lemma coeff_split {ι : Type v} [Fintype ι] {τ : Type w} (p q : ℕ) (hq : q ≠ 0) (σ : K →+* K)
     (M : ι → ι → K) (f : ι → MvPowerSeries τ K) (j : ι) (n : τ →₀ ℕ) :
@@ -259,7 +252,7 @@ theorem main : Formalism.FG.CoeffBoundV.{u, v, w} := by
                   (MvPowerSeries.expand q hq (MvPowerSeries.map σ (f l)))‖ * ‖(p : K)‖ ^ K0 := by
                   field_simp
               _ ≤ 1 := h12
-    · push_neg at hdiv
+    · push Not at hdiv
       obtain ⟨i, hi⟩ := hdiv
       refine ⟨0, fun i => by simp, ?_⟩
       have hz : ∀ l, MvPowerSeries.coeff n (MvPowerSeries.expand q hq (MvPowerSeries.map σ (f l))) = 0 :=

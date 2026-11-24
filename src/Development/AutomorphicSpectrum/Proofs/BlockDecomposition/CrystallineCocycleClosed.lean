@@ -304,8 +304,7 @@ theorem thick_nil {b : Base} {L : b.Fun} (T : Thick L) : ∀ x ∈ T.J, IsNilpot
   · obtain ⟨n, hn⟩ := T.adm.2 hp
     refine ⟨n, ?_⟩
     have h : x ^ n ∈ T.J ^ n := Ideal.pow_mem_pow hx n
-    rw [hn] at h
-    exact h
+    rwa [hn] at h
   · obtain ⟨n, hn⟩ : IsNilpotent ((b.p : ℕ) : T.B) := T.adm.1 hp
     refine ⟨b.p * n, ?_⟩
     have h1 : x ^ b.p = (b.p.factorial : T.B) * T.δ.dpow b.p x := (T.δ.factorial_mul_dpow_eq_pow hx).symm
@@ -488,8 +487,7 @@ theorem closed (Λ : CLift G D) {R : Type} [CommRing R] (c : R →+* b.R) (N : �
       dlog (G.obj (s.obj (Fin.last 3))).δ N (um h G (Rf Λ f g (f ≫ g))).val :=
     Eq.trans (congrArg (fun u : ((G.obj (s.obj ⟨2, by omega⟩)).B)ˣ => (G.map h).φ (dlog (G.obj (s.obj ⟨2, by omega⟩)).δ N u.val)) r3)
       (dlog_arrow h N (red_Rf Λ f g))
-  refine alt4 ?_
-  exact (congrArg₂ (· + ·) v0 v2).trans (key.trans (congrArg₂ (· + ·) v1 v3).symm)
+  exact alt4 ((congrArg₂ (· + ·) v0 v2).trans (key.trans (congrArg₂ (· + ·) v1 v3).symm))
 
 section Ind
 
@@ -570,8 +568,7 @@ theorem d_yc (hv : ∀ T, red T G (v T) = uq D (Λ.p T) (Λ'.p T) ((Λ.hp T).tra
     change dlog _ N (Rf Λ' f g (s.map' 0 2)).val = _
     rw [hfg]
   refine alt3 ?_
-  rw [c2, v0, v2, v1, c1]
-  exact key
+  rwa [c2, v0, v2, v1, c1]
 
 end Ind
 

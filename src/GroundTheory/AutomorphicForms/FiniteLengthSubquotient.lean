@@ -110,8 +110,7 @@ theorem hasFiniteLength_of_injective (f : Representation.IntertwiningMap ρ σ)
     show f x ∈ subrepMap f A
     rw [show subrepMap f A = subrepMap f B from h1]
     exact ⟨x, hx, rfl⟩
-  rw [← hf hyx]
-  exact hy
+  rwa [← hf hyx]
 
 theorem hasFiniteLength_of_surjective (f : Representation.IntertwiningMap ρ σ)
     (hf : Surjective f) (hρ : HasFiniteLength ρ) : HasFiniteLength σ := by
@@ -124,8 +123,7 @@ theorem hasFiniteLength_of_surjective (f : Representation.IntertwiningMap ρ σ)
   refine le_antisymm hAB.le fun y hy => ?_
   obtain ⟨x, rfl⟩ := hf y
   have hx : x ∈ subrepComap f B := hy
-  rw [← show subrepComap f A = subrepComap f B from h1] at hx
-  exact hx
+  rwa [← show subrepComap f A = subrepComap f B from h1] at hx
 
 end MapComap
 
@@ -446,7 +444,6 @@ theorem mem_ker_subrep_of_mem_ker (N : Subgroup G) [LocallyCompactSpace N] [T2Sp
   have h0 : Representation.Coinvariants.map _ _ f z = 0 := by
     obtain ⟨z, rfl⟩ := Representation.Coinvariants.mk_surjective _ z
     rw [Representation.Coinvariants.map_mk]
-    show Representation.Coinvariants.mk _ 0 = 0
     exact map_zero _
   rw [h0] at hz
   exact (Representation.Coinvariants.mk_eq_zero _).1 hz.symm
@@ -526,8 +523,7 @@ theorem hasFiniteLength_of_coinvariants {V : Type u} [AddCommGroup V] [Module �
     refine eq_top_iff.2 fun y _ => ?_
     obtain ⟨c, rfl⟩ := Submodule.mkQ_surjective Y0 y
     obtain ⟨c', hc', hcc'⟩ := hle c.2
-    rw [show c = c' from Subtype.ext hcc'.symm]
-    exact hc'
+    rwa [show c = c' from Subtype.ext hcc'.symm]
   obtain ⟨Z, hZ, hirr⟩ := exists_irreducible_quotient (τ := Q) {q₀} hgen
   let π := Representation.quotient Q Z hZ
   let p : Representation.IntertwiningMap C.toRepresentation π :=

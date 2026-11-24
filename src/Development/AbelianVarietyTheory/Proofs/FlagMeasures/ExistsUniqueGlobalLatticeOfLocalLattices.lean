@@ -215,8 +215,7 @@ theorem sig_ne_id (A : Places F E sig) : ¬ ∀ y, sig y = y := by
   norm_num at this
 
 theorem fix_mem (A : Places F E sig) (s : E) (hs : sig s = s) : ∃ t : F, algebraMap F E t = s := by
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   apply sig_ne_id A
   have hli : LinearIndependent F ![(1 : E), s] := by
     rw [LinearIndependent.pair_iff]
@@ -316,8 +315,7 @@ theorem GlobalTheory.glue_latt_isLattice {E : Type} [Field E] [NumberField E] (n
   refine ⟨?_, ?_⟩
   · rw [← Submodule.map_comap_eq_self hle]
     exact (IsNoetherian.noetherian _).map f
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeOfSqueezedBetweenNatMultiples =====
@@ -581,8 +579,7 @@ theorem natCast_isUnit_ae {F E : Type} [Field F] [NumberField F] [Field E] [Numb
   apply hp
   have hv : p.valuation F (N : F) = 1 := by
     have : ((N : F)) = algebraMap (𝓞 F) F (N : 𝓞 F) := by simp
-    rw [this, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
-    exact hmem
+    rwa [this, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
   have hι : (A.loc p).ιF (N : F) = (N : (A.loc p).Fp) := map_natCast _ _
   have h1 : (N : (A.loc p).Fp) ≤ᵥ 1 := by
     rw [← hι, ← map_one (A.loc p).ιF, (A.loc p).val, hv, map_one]

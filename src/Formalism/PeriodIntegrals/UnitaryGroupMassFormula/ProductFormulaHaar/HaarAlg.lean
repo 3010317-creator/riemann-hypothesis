@@ -153,11 +153,11 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
       simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_setOf_eq, hrepr_add]
       constructor
       · rintro ⟨h1, h2⟩
-        exact ⟨fun j hj => by rw [if_neg (Ne.symm hj), zero_add]; exact h1 j hj, h2⟩
+        exact ⟨fun j hj => by rw [ite_eq_right (Ne.symm hj), zero_add]; exact h1 j hj, h2⟩
       · rintro ⟨h1, h2⟩
         refine ⟨fun j hj => ?_, h2⟩
         have := h1 j hj
-        rwa [if_neg (Ne.symm hj), zero_add] at this
+        rwa [ite_eq_right (Ne.symm hj), zero_add] at this
     rw [hset, measure_preimage_add]
   haveI : IsFiniteMeasureOnCompacts ν := by
     refine ⟨fun C hC => ?_⟩
@@ -172,8 +172,7 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
           by_cases hj : j = i
           · subst hj
             rw [Function.update_self]
-            rw [Set.mem_preimage, hc] at hx2
-            exact hx2
+            rwa [Set.mem_preimage, hc] at hx2
           · rw [Function.update_of_ne hj]
             rw [hP] at hx1
             exact hx1 j hj
@@ -187,7 +186,7 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
     · rw [hP]
       intro j hj
       rw [map_smul, Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply,
-        if_neg (Ne.symm hj), smul_zero, map_zero]
+        ite_eq_right (Ne.symm hj), smul_zero, map_zero]
       exact zero_le'
     · rw [Set.mem_preimage, hc]
       simpa using hu
@@ -210,8 +209,7 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
     ext x
     rw [hP, hc]
     constructor
-    · intro h
-      exact ⟨fun j _ => h j, h i⟩
+    · exact fun h => ⟨fun j _ => h j, h i⟩
     · rintro ⟨h1, h2⟩ j
       by_cases hj : j = i
       · subst hj; exact h2
@@ -238,8 +236,7 @@ theorem scale_box (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (i :
         rw [hrepr]
         by_cases hj : j = i
         · subst hj
-          rw [Function.update_self, ← hzy', ← mul_assoc, inv_mul_cancel₀ ha, one_mul]
-          exact hz
+          rwa [Function.update_self, ← hzy', ← mul_assoc, inv_mul_cancel₀ ha, one_mul]
         · rw [Function.update_of_ne hj, Pi.one_apply, one_mul]
           exact h1 j hj
       · show Matrix.toLin b b _ (Matrix.toLin b b _ y) = y
@@ -285,9 +282,9 @@ theorem transvection_mulVec (t : Matrix.TransvectionStruct ι K) (v : ι → K) 
   simp only [Matrix.TransvectionStruct.toMatrix, Matrix.transvection, Matrix.add_mulVec,
     Matrix.one_mulVec, Pi.add_apply, add_right_inj]
   by_cases hk : k = t.i
-  · rw [if_pos hk, hk]
+  · rw [ite_eq_left hk, hk]
     simp [Matrix.mulVec, dotProduct, Matrix.single_apply, ite_mul]
-  · rw [if_neg hk]
+  · rw [ite_eq_right hk]
     simp [Matrix.mulVec, dotProduct, Ne.symm hk]
 
 def tγ (t : Matrix.TransvectionStruct ι K) : ι → ValueGroupWithZero K :=
@@ -314,7 +311,7 @@ theorem toLin_mem_box (b : Basis ι K E) (t : Matrix.TransvectionStruct ι K) (x
     rw [congrFun (repr_toLin b t.toMatrix x) k, transvection_mulVec]
   rw [e]
   by_cases hk : k = t.i
-  · rw [if_pos hk]
+  · rw [ite_eq_left hk]
     have hj : valuation K (b.repr x t.j) ≤ 1 := by
       have h := hx t.j
       rwa [tGamma_apply_of_ne t t.hij.symm] at h
@@ -330,7 +327,7 @@ theorem toLin_mem_box (b : Basis ι K E) (t : Matrix.TransvectionStruct ι K) (x
           | gcongr
       _ = valuation K t.c := mul_one _
       _ ≤ max (valuation K t.c) 1 := le_max_left _ _
-  · rw [if_neg hk, add_zero]
+  · rw [ite_eq_right hk, add_zero]
     exact hx k
 
 theorem transvection_box (b : Basis ι K E) (t : Matrix.TransvectionStruct ι K) :
@@ -373,8 +370,7 @@ theorem haarScaling : St.HaarAlg := by
   refine haarAlg_of ?_ ?_
   · intro K _ _ _ _ E _ _ _ _ _ _ n b μ _ i a ha
     exact PI.ProdFormulaE.HaarBox.scale_box b μ i a ha
-  · intro K _ _ _ _ E _ _ _ _ n b t
-    exact PI.ProdFormulaE.HaarBox.transvection_box b t
+  · exact fun K _ _ _ _ E _ _ _ _ n b t => PI.ProdFormulaE.HaarBox.transvection_box b t
 
 end PI.ProdFormulaE.HaarAlgP
 end -- clump:auto

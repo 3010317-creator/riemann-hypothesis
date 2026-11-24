@@ -73,18 +73,7 @@ theorem psd_of_rep {α ι H : Type} [Fintype ι] [NormedAddCommGroup H] [InnerPr
 
 theorem psd_smul {α : Type} (Y : Finset α) (k : α → α → ℂ) (a : ℝ) (ha : 0 ≤ a) (hk : TB.PSDOn Y k) :
     TB.PSDOn Y (fun x y => (a : ℂ) * k x y) := by
-  rw [PBA.psd_iff_qf] at hk ⊢
-  refine ⟨fun x hx y hy => ?_, fun c => ?_⟩
-  · rw [hk.1 x hx y hy, map_mul, Complex.conj_ofReal]
-  · have : PBA.qf Y (fun x y => (a : ℂ) * k x y) c = (a : ℂ) * PBA.qf Y k c := by
-      unfold PBA.qf
-      rw [Finset.mul_sum]
-      refine Finset.sum_congr rfl fun x _ => ?_
-      rw [Finset.mul_sum]
-      refine Finset.sum_congr rfl fun y _ => ?_
-      ring
-    rw [this, Complex.re_ofReal_mul]
-    exact mul_nonneg ha (hk.2 c)
+  exact Formalism.FourierDecayAlt.P.DensitySumsAndDomination.psd_smul a ha hk
 
 section top
 
@@ -101,8 +90,8 @@ theorem rr_top_rep (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp))
     unfold KB.Pl.RR D.RRplace
     by_cases hx : D.IsLocPt x (P.r + 1)
     · by_cases hy : D.IsLocPt y (P.r + 1)
-      · rw [dite_eq_left ⟨hx, hy⟩, dite_eq_right (by omega), if_pos rfl, if_pos hw]
-        simp only [hx, hy, if_true, B.hsInner]
+      · rw [dite_eq_left ⟨hx, hy⟩, dite_eq_right (by omega), ite_eq_left rfl, ite_eq_left hw]
+        simp only [hx, hy, ite_true, B.hsInner]
       · rw [dite_eq_right (fun h => hy h.2)]
         simp [hy]
     · rw [dite_eq_right (fun h => hx h.1)]
@@ -114,10 +103,10 @@ theorem rr_top_rep (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp))
     unfold KB.Pl.RR D.RRplace
     by_cases hx : D.IsLocPt x (P.r + 1)
     · by_cases hy : D.IsLocPt y (P.r + 1)
-      · rw [dite_eq_left ⟨hx, hy⟩, dite_eq_right (by omega), if_pos rfl, if_neg hw]
+      · rw [dite_eq_left ⟨hx, hy⟩, dite_eq_right (by omega), ite_eq_left rfl, ite_eq_right hw]
         unfold Top.topOf
         refine Finset.sum_congr rfl fun e _ => Finset.sum_congr rfl fun ρ _ => ?_
-        simp only [hx, hy, if_true, B.hsInner, inner_smul_left, inner_smul_right, Complex.conj_ofReal]
+        simp only [hx, hy, ite_true, B.hsInner, inner_smul_left, inner_smul_right, Complex.conj_ofReal]
         push_cast
         ring
       · rw [dite_eq_right (fun h => hy h.2)]

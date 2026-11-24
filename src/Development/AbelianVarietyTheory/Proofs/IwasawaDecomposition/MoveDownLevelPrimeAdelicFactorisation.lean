@@ -206,8 +206,7 @@ theorem primes_atT : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → �
     exact P.asIdeal.mul_mem_right _ hpiT
   have hTF : (((B.primes X).T u : ℕ) : 𝓞 B.host.F) ∈ (P.under (𝓞 B.host.F)).asIdeal := by
     show _ ∈ Ideal.comap (algebraMap _ _) _
-    rw [Ideal.mem_comap, map_natCast]
-    exact hT
+    rwa [Ideal.mem_comap, map_natCast]
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro hc
     have h2 : B.fields.conjO ((B.primes X).piT u) ∈ P.asIdeal := by
@@ -220,8 +219,7 @@ theorem primes_atT : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → �
   · intro w hw hov
     have hTw : (((B.primes X).T u : ℕ) : 𝓞 B.fields.E) ∈ w.asIdeal := by
       rw [IsOver] at hov
-      rw [hov, Ideal.mem_comap, map_natCast] at hTF
-      exact hTF
+      rwa [hov, Ideal.mem_comap, map_natCast] at hTF
     obtain ⟨i, hi⟩ : ∃ i, w ∈ (B.primes X).vG i := by
       classical
       rcases Finset.mem_union.mp hw with h | h
@@ -242,8 +240,7 @@ theorem primes_atT : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → �
       rw [hov, ← hsel]
       exact (hI.sel_ok v).symm
     have hTv : (((B.primes X).T u : ℕ) : 𝓞 B.fields.F ⧸ v.asIdeal) = 0 := by
-      rw [← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem, hv]
-      exact hTF
+      rwa [← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem, hv]
     have hd : ringChar (𝓞 B.fields.F ⧸ v.asIdeal) ∣ (B.primes X).T u := (ringChar.spec _ _).mp hTv
     rcases (Nat.dvd_prime (hpr.T_prime u)).mp hd with h1 | h1
     · exact CharP.ringChar_ne_one h1
@@ -292,10 +289,10 @@ theorem PtY.mv_dn_facts {X : Fields} {n : ℕ} {ST SG Q : Finset (HeightOneSpect
   intro d hd
   by_cases h : (∀ (P : Q) (x : Sp X.E n), p.1.1.1.2 P x ∈ d.1.at P.1 ↔ x ∈ stdAt X.E n P.1) ∧ p.1.2 ∈ y.ys d.1.N
   · have e : (p.mv d).1 = ((⟨(d, p.1.1.1.2), h.1⟩ : DecoF X.E n ST SG Q), p.1.2) :=
-      congrArg Subtype.val (dif_pos h)
+      congrArg Subtype.val (dite_eq_left h)
     rw [e]
     exact ⟨rfl, rfl, hd⟩
-  · have e : p.mv d = p := dif_neg h
+  · have e : p.mv d = p := dite_eq_right h
     rw [e]
     exact ⟨rfl, rfl, ⟨fun _ _ => rfl, fun _ _ => rfl, fun _ _ => rfl⟩⟩
 
@@ -394,8 +391,7 @@ theorem pointGen {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
   · have h2 := actSameOff v0 hoff (((((1 : UF E n), a.2)⁻¹ : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q)).1.1) (((((1 : UF E n), a.2)⁻¹ : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q)).2.1)
     have e2 : (((a.1, 1, 1) : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n SQ) • extTo SQ r').deco.1 = ((((1 : UF E n), a.2)⁻¹ : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q) • d).deco.1 := by
       rw [e1]; rfl
-    rw [e2]
-    exact h2
+    rwa [e2]
   · intro P _
     ext x
     show x ∈ localization₂ P.asIdeal (gmap _ r0.deco.1.N) ↔ x ∈ localization₂ P.asIdeal r0.deco.1.N

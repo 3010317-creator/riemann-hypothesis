@@ -59,8 +59,7 @@ theorem isIntegral_of_le {k F K : Type} [Field k] [Field F] [Field K] [Algebra k
     {A A' : Subalgebra k F} (h : A ≤ A') {y : K} (hy : IsIntegral A y) : IsIntegral A' y := by
   obtain ⟨p, hm, he⟩ := hy
   refine ⟨p.map (Subalgebra.inclusion h), hm.map _, ?_⟩
-  rw [eval₂_map]
-  exact he
+  rwa [eval₂_map]
 
 theorem rA_mono (k : Type) [Field k] {F : Type} [Field F] [Algebra k F] {d : ℕ} (x : Fin (d + 1) → F)
     {I J : Finset (Fin (d + 1))} (h : I ⊆ J) : rA k x I ≤ rA k x J := by
@@ -125,13 +124,11 @@ theorem rB_mono_loc : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field 
     obtain ⟨q0, hq0, -, hq0m⟩ := lifts_and_natDegree_eq_and_monic hl hqm
     refine ⟨N, q0, hq0m, ?_⟩
     have h1 : eval₂ (algebraMap F K) y (p.map (algebraMap (rA k x I) F)) = 0 := by
-      rw [eval₂_map]
-      exact he
+      rwa [eval₂_map]
     have h2 : eval₂ (algebraMap F K) (algebraMap F K (s ^ N) * y) q = 0 :=
       scaleRoots_eval₂_eq_zero (algebraMap F K) (s := s ^ N) h1
     rw [← map_pow, mul_comm]
-    rw [← hq0, eval₂_map] at h2
-    exact h2
+    rwa [← hq0, eval₂_map] at h2
   · rintro ⟨N, hN⟩
     have h1 : IsIntegral (rA k x I) (y * algebraMap F K s ^ N) := isIntegral_of_le hiI hN
     have h2 : IsIntegral (rA k x I) (algebraMap F K s⁻¹ ^ N) := by

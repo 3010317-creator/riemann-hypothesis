@@ -141,7 +141,7 @@ theorem exists_adelicNorm_le_mul_pow (hd : 0 < d) (Φ : (Fin N → 𝔸[K]) → 
     refine (Finset.prod_subset (fun v hv' => ?_) fun v _ hvS => ?_).symm
     · rw [hT, Finset.mem_union, Finset.mem_union]
       exact Or.inl (Or.inl hv')
-    · simp only [Bf, if_neg hvS]
+    · simp only [Bf, ite_eq_right hvS]
   have hfin_le : ∏ᶠ v, ‖Reduction.finComp v (Φ y)‖ ≤
       (∏ v ∈ S, Bf v) * (∏ᶠ v, ‖Reduction.finComp v y‖) ^ d := by
     rw [hfinΦ, hfiny, ← hST, ← Finset.prod_pow, ← Finset.prod_mul_distrib]
@@ -192,12 +192,10 @@ theorem exists_adelicNorm_aeval_le (hd : 0 < d) (P : Fin m → MvPolynomial (Fin
     rfl
   · intro v t y
     funext k
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact hvh v t y k
+    simpa only [Pi.smul_apply, smul_eq_mul] using hvh v t y k
   · intro w t y
     funext k
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact hwh w t y k
+    simpa only [Pi.smul_apply, smul_eq_mul] using hwh w t y k
   · intro v
     refine ⟨∑ k, ∑ s ∈ (P k).support, ‖algebraMap K (v.adicCompletion K) ((P k).coeff s)‖,
       fun y hy => (pi_norm_le_iff_of_nonneg (by positivity)).2 fun k => ?_⟩

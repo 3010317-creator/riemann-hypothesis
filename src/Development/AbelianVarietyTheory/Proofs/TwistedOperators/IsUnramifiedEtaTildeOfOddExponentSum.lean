@@ -55,8 +55,7 @@ namespace GlobalTheory.EtaTildeOddParity
 theorem isEta_sq (D : D7) (η : (AF D.host.F)ˣ →* Circle) (h : IsEta D η) (a : (AF D.host.F)ˣ) : η a ^ 2 = 1 := by
   obtain ⟨-, -, hnorm, -⟩ := h
   have hn := hnorm (idF D a)
-  rw [Formalism.L2.Theta.norm_idF, map_pow] at hn
-  exact hn
+  rwa [Formalism.L2.Theta.norm_idF, map_pow] at hn
 
 private theorem hasInfQ_half_of_isEtaT (D : D7) (χ : Formalism.L2.Host.HChar D.host.E) (h : Formalism.L2.Host.IsEtaT D.host χ) :
     χ.HasInfQ (tauE D) (fun _ => 1 / 2) := by
@@ -86,8 +85,7 @@ theorem isEtaTilde_of_odd : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formal
     intro x h1 h2 h3
     refine GlobalTheory.tame_heckeChar_eq_one_of_finUnit D c χ hc (fun P => ?_) 1 (fun P _ => hχ.unr P) x ⟨h1, h2, h3⟩
       ⟨finPart D (x : AE D) - 1, sub_mem h2 (one_mem_intAE_twisted_operators D), by rw [one_smul]⟩
-    intro y hy _
-    exact hχ.unr P y hy
+    exact fun y hy _ => hχ.unr P y hy
   ·
     unfold ResEta Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AllSome at hμ hμc ⊢
     refine ⟨hμ.1, fun η hη a => ?_⟩

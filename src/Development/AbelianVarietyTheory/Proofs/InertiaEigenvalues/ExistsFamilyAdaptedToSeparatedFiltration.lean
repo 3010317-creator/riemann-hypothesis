@@ -78,8 +78,7 @@ theorem exists_family_adapted_filtration :
       obtain ⟨m, hm⟩ := (s.image g).bddBelow
       refine ⟨m, ?_⟩
       rw [← hs, Submodule.span_le]
-      intro y hy
-      exact anti (hm (by simpa using ⟨y, hy, rfl⟩)) (hg y)
+      exact fun y hy => anti (hm (by simpa using ⟨y, hy, rfl⟩)) (hg y)
     have hbdd : ∃ b : ℤ, ∀ z, D ≤ F z → z ≤ b := by
       obtain ⟨y, hyD, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
       have : ∃ b, y ∉ F b := by
@@ -135,8 +134,6 @@ theorem exists_family_adapted_filtration :
           exact (mul_eq_zero.mp h3).resolve_right hf0
         · exact hc 0 ha
       rw [hc0, zero_smul, zero_add] at hs
-      have h5 := h2 a (fun j => c j.succ) (fun j hj => hc j.succ hj) hs
-      intro k
-      exact Fin.cases hc0 h5 k
+      exact fun k => Fin.cases hc0 (h2 a (fun j => c j.succ) (fun j hj => hc j.succ hj) hs) k
 
 end GlobalTheory

@@ -96,8 +96,7 @@ theorem exists_poly_proj {V : Type} [AddCommGroup V] [Module E V] [FiniteDimensi
     rw [map_mul, Module.End.mul_apply, hzW₁ x hx, map_zero]
   refine ⟨v * b, fun x => ?_, h1⟩
   obtain ⟨w, hw, w₁, hw₁, rfl⟩ := Submodule.mem_sup.mp (hc.sup_eq_top ▸ Submodule.mem_top (x := x))
-  rw [map_add (f := _), h1 w hw, h0 w₁ hw₁, add_zero]
-  exact hw
+  rwa [map_add (f := _), h1 w hw, h0 w₁ hw₁, add_zero]
 
 theorem exists_poly_proj_matrix {ι : Type} [Fintype ι] [DecidableEq ι]
     (M : Matrix (Fin n) (Fin n) E) (hM : M.charpoly.Separable) (P : Matrix (Fin n) ι E)
@@ -117,8 +116,7 @@ theorem exists_poly_proj_matrix {ι : Type} [Fintype ι] [DecidableEq ι]
   · apply Matrix.mulVec_injective
     funext y
     have h := hp2 (P *ᵥ y) ⟨y, rfl⟩
-    rw [hae, Matrix.mulVec_mulVec] at h
-    exact h
+    rwa [hae, Matrix.mulVec_mulVec] at h
   · have hcol : ∀ i : Fin n, ∃ c : ι → E, P *ᵥ c = aeval M p *ᵥ Pi.single i 1 := fun i => by
       obtain ⟨c, hc⟩ := hp1 (Pi.single i 1)
       exact ⟨c, by rw [← hae, ← hc]; rfl⟩
@@ -263,7 +261,7 @@ theorem stab_iff (A : Matrix (Fin n) (Fin n) E) (X : Matrix (Fin n) (Fin r) E) (
       _ = ∑ m, X a m * b l.1 l.2 m := h1
       _ = _ := h2
   · rintro ⟨C, hC⟩ l hl
-    refine ⟨fun m => if h : m ≤ j then C ⟨m, h⟩ ⟨l, hl⟩ else 0, ?_, fun m hm => dif_neg (not_le.mpr hm)⟩
+    refine ⟨fun m => if h : m ≤ j then C ⟨m, h⟩ ⟨l, hl⟩ else 0, ?_, fun m hm => dite_eq_right (not_le.mpr hm)⟩
     funext a
     have h1 := congrFun (congrFun hC a) ⟨l, hl⟩
     have h2 := sum_trunc (j := j) (fun m => X a m * (if h : m ≤ j then C ⟨m, h⟩ ⟨l, hl⟩ else 0))
@@ -330,8 +328,7 @@ theorem step (hs : ∀ x, s (s x) = x) (J : Matrix (Fin n) (Fin n) E) (hJ : cT s
     rw [hf, ← Matrix.mul_assoc, ← Matrix.mul_assoc, hJi', Matrix.one_mul]
   have hfJ : cT s f * J = J * e := by
     have := congrArg (cT s) hJf
-    rw [cT_mul, cT_mul, cT_cT s hs, hJ] at this
-    exact this
+    rwa [cT_mul, cT_mul, cT_cT s hs, hJ] at this
 
   have hNM : (J⁻¹ * cT s M * J) * M = 1 := by
     rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc (cT s M), hMU, hJi]
@@ -451,8 +448,7 @@ theorem step (hs : ∀ x, s (s x) = x) (J : Matrix (Fin n) (Fin n) E) (hJ : cT s
 
 theorem sep_conj (A : Matrix (Fin n) (Fin n) E) (u : (Matrix (Fin n) (Fin n) E)ˣ) (h : A.charpoly.Separable) :
     (((u⁻¹ : (Matrix (Fin n) (Fin n) E)ˣ) : Matrix (Fin n) (Fin n) E) * A * u).charpoly.Separable := by
-  rw [Matrix.coe_units_inv, Matrix.charpoly_units_conj']
-  exact h
+  rwa [Matrix.coe_units_inv, Matrix.charpoly_units_conj']
 
 end Flags
 

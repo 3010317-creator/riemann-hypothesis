@@ -534,8 +534,7 @@ theorem exists_gTateIso : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (k : Type) 
   · have h0 : n.factorization p = 0 :=
       Nat.factorization_eq_zero_of_not_dvd ((Nat.Prime.coprime_iff_not_dvd hp).1 hc.symm)
     have := Vr n hn y
-    rw [h0, pow_zero, pow_one, Nat.div_one] at this
-    exact this
+    rwa [h0, pow_zero, pow_one, Nat.div_one] at this
 
 end GlobalTheory.TateGlue
 end -- clump:auto
@@ -840,8 +839,7 @@ theorem geomFull {b : Base D R'} {N : ℕ} (hN : N.Coprime p) {t : S ⟶ Sp R'} 
   have hE : ∀ n, 0 < n → ∀ a b : Q, a ^ n = 1 → b ^ n = 1 → E n a b (W n a b ^ 2) := fun n hn a b ha hb => by
     have h := GlobalTheory.DiagSqAxes.weilIs_diag_sq S o.A o.ab o.P o.isLB o.rig₁ o.rig₂ o.symm k x n hn
       (Nat.cast_ne_zero.2 hn.ne') a b ha hb _ (hW n a b hn ha hb)
-    rw [← upow] at h
-    exact h
+    rwa [← upow] at h
   have lev : ∀ n m, 0 < n → 0 < m → ∀ a b : Q, a ^ (n * m) = 1 → b ^ (n * m) = 1 →
       W n (a ^ m) (b ^ m) = W (n * m) a b ^ m := fun n m hn hm a b ha hb => by
     have h := GlobalTheory.LevelChangePairing.weilIs_levelChange S o.A o.ab o.P o.isLB o.rig₁ o.rig₂ k x n m hn hm
@@ -899,8 +897,7 @@ theorem geomFull {b : Base D R'} {N : ℕ} (hN : N.Coprime p) {t : S ⟶ Sp R'} 
       have hq : 0 < p ^ r := pow_pos hp.pos r
       have h := hE _ hq (ev r y) (ev r z) (((hev r).1.2.2.2 _).2 ⟨y, rfl⟩) (((hev r).1.2.2.2 _).2 ⟨z, rfl⟩)
       have e := (hev r).2 y z
-      rw [e, ← zpow_natCast, ← zpow_mul, mul_comm] at h
-      exact h
+      rwa [e, ← zpow_natCast, ← zpow_mul, mul_comm] at h
   exact ⟨J, fun y => (hI y).trans (hJ N hN0 hN y).symm⟩
 
 end GlobalTheory.UPel.HT.GenCmp

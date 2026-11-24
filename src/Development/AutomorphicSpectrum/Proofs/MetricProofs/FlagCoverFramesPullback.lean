@@ -98,7 +98,7 @@ theorem moveMat_apply (I C : Finset (Fin N)) (e : I.card = C.card) (s t : Fin C.
   rw [Finset.sum_eq_single t]
   · simp
   · intro t' _ h
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨-, h2⟩
     exact h ((C.orderEmbOfFin rfl).injective h2).symm
   · simp
@@ -106,7 +106,7 @@ theorem moveMat_apply (I C : Finset (Fin N)) (e : I.card = C.card) (s t : Fin C.
 theorem moveMat_eq_zero (I C : Finset (Fin N)) (e : I.card = C.card) {a b : Fin N}
     (h : ¬ (a ∈ I ∧ b ∈ C)) : moveMat R I C e a b = 0 := by
   unfold moveMat
-  refine Finset.sum_eq_zero fun t _ => if_neg ?_
+  refine Finset.sum_eq_zero fun t _ => ite_eq_right ?_
   rintro ⟨rfl, rfl⟩
   exact h ⟨Finset.orderEmbOfFin_mem _ _ _, Finset.orderEmbOfFin_mem _ _ _⟩
 
@@ -118,24 +118,22 @@ theorem minorIJ_moveMat (I C I' : Finset (Fin N)) (e : I.card = C.card) :
     minorIJ (moveMat R I C e) I' C = if I' = I then 1 else 0 := by
   by_cases hI : I' = I
   · subst hI
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     unfold minorIJ
     rw [dite_eq_left e]
     have : (moveMat R I' C e).submatrix (I'.orderEmbOfFin e) (C.orderEmbOfFin rfl) = 1 := by
       ext s t
       rw [Matrix.submatrix_apply, moveMat_apply, Matrix.one_apply]
     rw [this, det_one]
-  · rw [if_neg hI]
+  · rw [ite_eq_right hI]
     unfold minorIJ
     split_ifs with e'
     · have hex : ∃ a ∈ I', a ∉ I := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         exact hI (Finset.eq_of_subset_of_card_le hc (by rw [e, e']))
       obtain ⟨a, ha, haI⟩ := hex
       have hr : a ∈ Set.range (I'.orderEmbOfFin e') := by
-        rw [Finset.range_orderEmbOfFin]
-        exact ha
+        rwa [Finset.range_orderEmbOfFin]
       obtain ⟨s, rfl⟩ := hr
       refine det_eq_zero_of_row_eq_zero s fun t => ?_
       rw [Matrix.submatrix_apply]
@@ -149,10 +147,10 @@ theorem stepRows_same (j : ℕ) (hj : j ≤ N) (i : Fin N) {I : Finset (Fin N)} 
   have ha' := hI.2 ha
   simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and] at hb
   by_cases c : (i : ℕ) + 1 ≤ j
-  · rw [if_pos c] at ha' hb
+  · rw [ite_eq_left c] at ha' hb
     simp only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and] at ha'
     omega
-  · rw [if_neg c] at ha' hb
+  · rw [ite_eq_right c] at ha' hb
     simp only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and] at ha'
     omega
 
@@ -163,11 +161,11 @@ theorem stepCols_nonempty (j : ℕ) (hj : j ≤ N) (i : Fin N) (hp : IsProperSte
   by_cases c : (i : ℕ) + 1 ≤ j
   · refine Finset.Nonempty.ne_empty ⟨⟨N - j, by omega⟩, ?_⟩
     simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-    rw [if_pos c]
+    rw [ite_eq_left c]
     omega
   · refine Finset.Nonempty.ne_empty ⟨⟨0, by omega⟩, ?_⟩
     simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-    rw [if_neg c]
+    rw [ite_eq_right c]
     omega
 
 theorem coeff_eq (j : ℕ) (hj : j ≤ N) (i : Fin N) (T : Matrix (Fin N) (Fin N) R) (c u : Finset (Fin N) → R) (D P : R)
@@ -177,7 +175,7 @@ theorem coeff_eq (j : ℕ) (hj : j ≤ N) (i : Fin N) (T : Matrix (Fin N) (Fin N
     D * ∑ I, c I * minorIJ T I I₀ = P * u I₀ := by
   have h1 := H (moveMat R I₀ (stepCols N j i) hI.1) (moveMat_blockDiag j _ _ _ (stepRows_same j hj i hI))
   have cb := (_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main R N j i hj).1
-  simp only [cb, minorIJ_moveMat, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
+  simp only [cb, minorIJ_moveMat, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h1
   exact h1
 
 theorem map_identity (j : ℕ) (hj : j ≤ N) (i : Fin N) (hC : stepCols N j i ≠ ∅) (T : Matrix (Fin N) (Fin N) R)
@@ -196,8 +194,7 @@ theorem map_identity (j : ℕ) (hj : j ≤ N) (i : Fin N) (hC : stepCols N j i �
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
   have r : ρ P * ∑ I, ρ (u I) * minorIJ h I (stepCols N j i) =
       ∑ I', ρ (P * u I') * minorIJ h I' (stepCols N j i) := by
-    simp only [map_mul, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun _ _ => by ring
+    simpa only [map_mul, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
   rw [l, r]
   refine Finset.sum_congr rfl fun I' _ => ?_
   by_cases hI : IsStepRows N j i I'
@@ -306,8 +303,7 @@ theorem read_minor (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) (
       α (∏ k', M.x ⟨k', F.c k'⟩ ^ M.b p k') * ∑ I, α (F.u ⟨k, m⟩ I) * minorIJ h I (stepCols N j p.2) := fun m => by
     have := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.FrameExt.frame_identity_map K ι Φ y Ψ N j M Φ α F hF p k hk m h hb
     rw [← hTdef, hTh] at this
-    rw [M.y_step p k hk m]
-    exact this
+    rwa [M.y_step p k hk m]
   have hv : ∀ I, ¬ IsStepRows N j p.2 I → minorIJ h I (stepCols N j p.2) = 0 := fun I hI =>
     ((_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main Φ N j p.2 M.j_le).2.1 h I hb hI).resolve_right (stepCols_ne_empty j p.2)
   calc detFac j p.2 T * ∑ m : ι k, α (F.u' I' ⟨k, m⟩) * y ⟨k, m⟩
@@ -325,9 +321,9 @@ theorem read_minor (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) (
 
           simp only [← map_mul, ← map_sum, this]
           split_ifs <;> simp
-        rw [Finset.sum_eq_single I' (fun I _ hne => ?_) (by simp), hs I' hI', if_pos rfl, one_mul]
+        rw [Finset.sum_eq_single I' (fun I _ hne => ?_) (by simp), hs I' hI', ite_eq_left rfl, one_mul]
         by_cases hI : IsStepRows N j p.2 I
-        · rw [hs I hI, if_neg (Ne.symm hne), zero_mul]
+        · rw [hs I hI, ite_eq_right (Ne.symm hne), zero_mul]
         · rw [hv I hI, mul_zero]
 
 theorem transPt_eq_smul_sum : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (M : FlagModel y Ψ N j) (K' : Type) [Fintype K'] (ι' : K' → Type) [∀ k, Fintype (ι' k)] (Φ' : Type) [Field Φ'] (y' : (Σ k, ι' k) → Φ') (M' : FlagModel y' Ψ N j) (Cv : FlagCover M' M) (F' : FrameData ι' Ψ N M'.Ω M'.blk) (F : FrameData ι Ψ N M.Ω M.blk), M'.IsFrame F' → M.IsFrame F → (∀ k, M'.x ⟨k, F'.c k⟩ ≠ 0) → (∀ k, M.x ⟨k, F.c k⟩ ≠ 0) → ∀ (p : Ψ × Fin N) (k : K) (k' : K'), M.blk p = some k → M'.blk p = some k' → ∃ c : Φ', c ≠ 0 ∧ ∀ m : ι k, transPt Cv ⟨k, m⟩ = c * ∑ m' : ι' k', algebraMap M'.Ω Φ' (coE Cv F' F p ⟨k, m⟩ ⟨k', m'⟩) * y' ⟨k', m'⟩ := by
@@ -379,8 +375,7 @@ theorem transPt_eq_smul_sum : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ 
       μ * ∑ I, α (Cv.φ (F.u ⟨k, m⟩ I)) * minorIJ h₀ I (stepCols N j p.2) := fun m => by
     have := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.FrameExt.frame_identity_map K ι Φ y Ψ N j M Φ' ρ F hF p k hk m h₀ hb₀
     rw [← hT, hTh₀] at this
-    rw [transPt_step Cv p k hk m]
-    exact this
+    rwa [transPt_step Cv p k hk m]
   refine ⟨μ / d * (d' / μ'), mul_ne_zero (div_ne_zero hμ hd) (div_ne_zero hd' hμ'), fun m => ?_⟩
   have htr : transPt Cv ⟨k, m⟩ = μ / d * ∑ I, α (Cv.φ (F.u ⟨k, m⟩ I)) * minorIJ h₀ I (stepCols N j p.2) := by
     rw [div_mul_eq_mul_div, eq_div_iff hd, mul_comm]

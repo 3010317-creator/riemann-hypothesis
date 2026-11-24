@@ -879,7 +879,7 @@ theorem heights_indefinite :
   let wR : Fin (N + 1) → T.R j := fun k => (G.w (eN k)).1
   let jc : Comp (T.Q.Xo j) T.Q.c → Fin (N + 1) := fun Z => eN.symm (k0 Z)
   let wsize : WTZ D.host.E → ℝ := fun g => if g = wtZ (wtA wL) wL.n then wL.size else wF.size
-  have hsL : wsize (wtZ (wtA wL) wL.n) = wL.size := if_pos rfl
+  have hsL : wsize (wtZ (wtA wL) wL.n) = wL.size := ite_eq_left rfl
   have hsF : wsize (wtZ (wtA wF) wF.n) = wF.size := by
     by_cases e : wtZ (wtA wF) wF.n = wtZ (wtA wL) wL.n
     · have e1 : wF = wL := by
@@ -889,7 +889,7 @@ theorem heights_indefinite :
         · have : (wF.n : ℤ) = wL.n := congrArg Prod.snd e
           exact_mod_cast this
       rw [e, hsL, e1]
-    · exact if_neg e
+    · exact ite_eq_right e
   have hwb : ∀ Z, evC hG Z (wR (jc Z)) ≠ 0 := fun Z => by
     simp only [wR, jc, Equiv.apply_symm_apply]
     exact hk0 Z

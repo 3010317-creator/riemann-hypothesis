@@ -116,8 +116,7 @@ theorem stabilizer_kappa_of_isThetaSubgroup : _root_.GlobalTheory.FunPr.ThetaLoc
     | nil =>
       intro _ Ψ hΨ
       simp only [List.map_nil, List.prod_nil]
-      rw [Prod.mk_one_one, map_one]
-      exact hΨ
+      rwa [Prod.mk_one_one, map_one]
     | cons x l' ih =>
       intro hx Ψ hΨ
       simp only [List.map_cons, List.prod_cons]
@@ -255,8 +254,7 @@ theorem GlobalTheory.SquareAgree.StabLieAdelic.stabilizer_lie_adelic : _root_.Gl
     have h1 := (hO.weilB _ Φ₀ hD 1 (oneP θ X τ Y t)).2 u
     rw [conjU_one, ← hγt t] at h1
     exact h1.symm
-  rw [e2, ← hD₁.2 u]
-  exact key
+  rwa [e2, ← hD₁.2 u]
 end
 end
 
@@ -296,8 +294,7 @@ theorem ker_projection_maximal_thetaSubspace : _root_.GlobalTheory.FunPr.ThetaLo
   have hfun : ∀ ΦD ∈ algD Γ.M' Bs.ψ Bs.emb, ∀ Φ₀, IsDatum Γ.M' ψ cB ΦD Φ₀ → Φ₀ ∈ algF ψ θ false A₁ B := by
     intro ΦD hΦD Φ₀ hD
     obtain ⟨Φ₁, hΦ₁, hD₁⟩ := hO.algB' ΦD hΦD
-    rw [IsDatum.fun_eq Γ.M' ψ cB cB.surjective hD hD₁]
-    exact hΦ₁
+    rwa [IsDatum.fun_eq Γ.M' ψ cB cB.surjective hD hD₁]
   let S : Submodule ℂ Pi :=
     { carrier := {x | ∃ ΦD ∈ N', ∃ Φ₀, IsDatum Γ.M' ψ cB ΦD Φ₀ ∧ p' Φ₀ = x}
       zero_mem' := ⟨0, N'.zero_mem, 0, hz, map_zero p'⟩

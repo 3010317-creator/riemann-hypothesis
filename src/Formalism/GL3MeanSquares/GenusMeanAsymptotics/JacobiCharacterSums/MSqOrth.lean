@@ -142,14 +142,12 @@ private theorem dvd_of_jacobiSym_agree_on_residue_class (m₀ s₁ s₂ : ℕ) (
   have hua : u.Coprime a := by
     by_contra hn
     have h0 : jacobiSym (u : ℤ) a = 0 := by
-      rw [jacobiSym.eq_zero_iff_not_coprime, Int.gcd_natCast_natCast]
-      exact hn
+      rwa [jacobiSym.eq_zero_iff_not_coprime, Int.gcd_natCast_natCast]
     rw [h0] at hJ
     norm_num at hJ
   have hus' : u.Coprime s₂ := by
     have e : Nat.gcd u s₂ = Nat.gcd 1 s₂ := Nat.ModEq.gcd_eq hus
-    rw [Nat.gcd_one_left] at e
-    exact e
+    rwa [Nat.gcd_one_left] at e
   have hug' : u.Coprime g := Nat.Coprime.coprime_dvd_right (Nat.gcd_dvd_right s₁ s₂) hus'
   have hus1 : u.Coprime s₁ := by
     rw [← hga]

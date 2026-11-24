@@ -244,8 +244,7 @@ theorem index_le_of_chars {N P : Type} [AddCommGroup N] [AddCommGroup P] (M : Ad
   have hinj : Function.Injective f := fun x x' h => by
     have : χ x.out = χ x'.out := by
       ext p; rw [← hf, ← hf, h]
-    have h3 := QuotientAddGroup.eq_iff_sub_mem.2 (h2 _ _ this)
-    simpa using h3
+    simpa using QuotientAddGroup.eq_iff_sub_mem.2 (h2 _ _ this)
   calc M.index ≤ Nat.card (AddChar (P ⧸ Q) ℂ) := Nat.card_le_card_of_injective f hinj
     _ ≤ Q.index := by
       rw [AddSubgroup.index, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
@@ -477,8 +476,7 @@ theorem lead_translate {n n' : S.GLV} (hn : n ∈ S.N) (hn' : n' ∈ S.N') (l : 
   have h1 := congrArg Matrix.transpose (gram_change L S.Hm S.f' S.f _ _ s' s h' h)
   have h2 : (Matrix.of fun a b => hf L S.Hm (n' (S.f' b)) (n (S.f a))) =
       (s.map L.cj)ᵀ * (S.Zh * s') := by
-    rw [Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose] at h1
-    exact h1
+    rwa [Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose] at h1
   rw [h2, (lead_mul_tri _ (s.map L.cj) ⟨fun i j h => by simp [hs.1 i j h], fun i => by simp [hs.2]⟩ l).2,
     (lead_mul_tri _ s' hs' l).1]
   rfl
@@ -512,14 +510,14 @@ theorem det_gens {n n' : S.GLV} (hn : n ∈ S.N) (hn' : n' ∈ S.N') :
         Matrix.diagonal_apply]
       by_cases h : i = j
       · simp [h]
-      · rw [if_neg h, if_neg]; rintro ⟨rfl, rfl⟩; exact h rfl
+      · rw [ite_eq_right h, ite_eq_right]; rintro ⟨rfl, rfl⟩; exact h rfl
     · exact (hf_cj L S.herm.1 _ _).symm
     · rfl
     · simp only [e, Matrix.of_apply, Sum.elim_inr, Matrix.fromBlocks_apply₂₂, i2 _ _, S.gram',
         Matrix.diagonal_apply]
       by_cases h : i = j
       · simp [h]
-      · rw [if_neg h, if_neg]; rintro ⟨rfl, rfl⟩; exact h rfl
+      · rw [ite_eq_right h, ite_eq_right]; rintro ⟨rfl, rfl⟩; exact h rfl
   have hD1 : Z.det = S.D (Fin.last (r + 1)) := lead_translate S hn hn' (Fin.last (r + 1))
   have hD0 : (Z.submatrix Fin.castSucc Fin.castSucc).det = S.D (Fin.last r).castSucc :=
     lead_translate S hn hn' (Fin.last r).castSucc

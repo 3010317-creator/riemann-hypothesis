@@ -254,8 +254,7 @@ namespace GlobalTheory
 theorem spMap_base_mem_basicOpen {R T : Type} [CommRing R] [CommRing T] (χ : R →+* T) (a : R)
     (ha : IsUnit (χ a)) (t : Sp T) : (spMap χ).base t ∈ (PrimeSpectrum.basicOpen a : (Sp R).Opens) := by
   change a ∉ (PrimeSpectrum.comap χ t).asIdeal
-  intro h
-  exact t.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ h ha)
+  exact fun h => t.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ h ha)
 
 theorem tube_of_universallyClosed : ∀ (R k : Type) [CommRing R] [Field k] (φ : R →+* k) (X X' : Scheme.{0})
     (f : X ⟶ Sp R) (f' : X' ⟶ Sp k) (π : X' ⟶ X) [UniversallyClosed f] (W : X.Opens),
@@ -491,7 +490,6 @@ theorem GlobalTheory.LogPair.relSnc_spread : ∀ (R k : Type) [CommRing R] [Fiel
     refine top_unique fun y _ => ?_
     obtain ⟨C', hC'⟩ := hrel.chart y
     obtain ⟨C, hC⟩ := _root_.GlobalTheory.ChartDesc.chart_desc R k φ X X' f f' π d s L σ C' y hpb hC'
-    show π y ∈ W
     exact (Opens.mem_iSup).2 ⟨C, hC⟩
   obtain ⟨a, ha, h⟩ := _root_.GlobalTheory.tube_of_universallyClosed R k φ X X' f f' π W hpb hW
   refine ⟨a, ha, fun T _ χ hχ Z g ρ hρ => ?_⟩
@@ -503,8 +501,7 @@ theorem GlobalTheory.LogPair.relSnc_spread : ∀ (R k : Type) [CommRing R] [Fiel
   obtain ⟨C, hC⟩ := (Opens.mem_iSup).1 hz
   obtain ⟨C', hC'⟩ := _root_.GlobalTheory.LogPair.sncChart_baseChange R T χ X Z f g ρ d s L σ C hρ
   refine ⟨C', ?_⟩
-  rw [hC']
-  exact hC
+  rwa [hC']
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.RelativeSncGenericSpread =====
@@ -947,10 +944,8 @@ theorem exists_finiteType_subring_ge_finset {k : Type} [CommRing k] (R₀ : Subr
     h0.sup (Subalgebra.fg_adjoin_finset F)
   refine ⟨(subalgebraOfSubring R₀ ⊔ Algebra.adjoin ℤ (F : Set k)).toSubring, ?_, ?_,
     (Subalgebra.fg_iff_finiteType _).1 h1⟩
-  · intro x hx
-    exact (le_sup_left : subalgebraOfSubring R₀ ≤ _) hx
-  · intro x hx
-    exact (le_sup_right : Algebra.adjoin ℤ (F : Set k) ≤ _) (Algebra.subset_adjoin hx)
+  · exact fun x hx => (le_sup_left : subalgebraOfSubring R₀ ≤ _) hx
+  · exact fun x hx => (le_sup_right : Algebra.adjoin ℤ (F : Set k) ≤ _) (Algebra.subset_adjoin hx)
 
 theorem exists_model_with_sections : ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k), Smooth f → IsProper f → ∀ (s : ℕ) (L : Fin s → LB X) (σ : ∀ i, (L i).Sec) (h : ∀ i, (L i).IsLB) (M : LB X) (hM : M.IsLB), ∃ (R : Subring k) (X₁ : Scheme.{0}) (f₁ : X₁ ⟶ Sp R) (π : X ⟶ X₁) (L₁ : Fin s → LB X₁) (σ₁ : ∀ i, (L₁ i).Sec) (h₁ : ∀ i, (L₁ i).IsLB) (M₁ : LB X₁) (hM₁ : M₁.IsLB), Algebra.FiniteType ℤ R ∧ Smooth f₁ ∧ IsProper f₁ ∧ IsPullback π f f₁ (spMap R.subtype) ∧ (∀ i, cls (L i) (h i) = CechPic.pull π (cls (L₁ i) (h₁ i))) ∧ (∀ i, SameDiv (σ i) (Cartier.secPull (σ₁ i) π)) ∧ cls M hM = CechPic.pull π (cls M₁ hM₁) := by
   classical
@@ -1243,9 +1238,8 @@ theorem vanishing_ample_snc_cartier : ∀ (k : Type) [Field k] [CharZero k] (Y :
         omega
       · intro l _ hl
         rw [(hD l).2 (w j) (fun h => hl (hw h.symm)), smul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
-    · push_neg at hz
+      · exact fun h => absurd (Finset.mem_univ j) h
+    · push Not at hz
       rw [Finset.sum_eq_zero fun j _ => by rw [(hD j).2 z (hz j), smul_zero], sub_zero]
       by_contra hne
       obtain ⟨j, hj⟩ := hBw z (CartierDiv.coheight_eq_one_of_mult_ne_zero hne)
@@ -1594,8 +1588,7 @@ theorem GlobalTheory.cechCube_nonzeroLocus_colimit : ∀ (X : Scheme.{0}) (F : X
   refine ⟨fun j c d h => cechCubeMap ℤ ⊤ U
       (Twist.mulSecOfEq F (Twist.zpowSec (Twist.zofSec σ₀) j) (by omega)),
     fun c => TwistCube.cubeDiv F U hL (Twist.zofSec σ₀) c hVσ, ?_, ?_, ?_, ?_⟩
-  · intro j c d h
-    exact TwistCube.cechCubeMap_mul_comp_cubeDiv F U hL _ j c d h _ hVσ
+  · exact fun j c d h => TwistCube.cechCubeMap_mul_comp_cubeDiv F U hL _ j c d h _ hVσ
   · intro j j' c d e h h' h''
     exact congrArg (cechCubeMap ℤ ⊤ U) (TwistCube.mulSecOfEq_zpowSec_comp F _ j j' (by omega) _ _)
   · intro s hs b
@@ -1784,8 +1777,7 @@ theorem exists_cover_of_isCompact {X : Scheme.{0}} {H : LB X} (h : IsAmpleLB H) 
     obtain ⟨j, hj⟩ : ∃ j, t.equivFin.symm j = ⟨i, hi⟩ := ⟨_, Equiv.symm_apply_apply _ _⟩
     refine ⟨j, ?_⟩
     show y ∈ nonzeroLocus (s ↑(t.equivFin.symm j))
-    rw [hj]
-    exact hyi
+    rwa [hj]
 
 end GlobalTheory.PassageDown
 

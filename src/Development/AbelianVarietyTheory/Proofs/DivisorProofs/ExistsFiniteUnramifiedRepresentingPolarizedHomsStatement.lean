@@ -238,8 +238,7 @@ theorem bases_transfer : ∀ {S S' : Scheme.{0}} (A : Over S) [GrpObj A] (Ag : O
       E ∘ fun i => (SecM.ofSec A (b i) : SecM A L k (Over.mk y)) :=
     funext fun i => by rw [hb' i]; rfl
   have key := li_span_map E _ hli hsp
-  rw [← hv] at key
-  exact key
+  rwa [← hv] at key
 
 end GlobalTheory.SecBasisTransfer
 end -- clump:auto
@@ -931,12 +930,10 @@ theorem universallyClosed_snd_of_lift {Y S : Scheme.{0}} (π : Y ⟶ S) [Locally
     let x3 : Sp V ⟶ pullback π u := pullback.lift x'' y hx2
     have h3 : Out.jK V ≫ x3 = Spec.map (CommRingCat.ofHom ε) ≫ x ≫ I.subschemeι := by
       apply pullback.hom_ext
-      · simp only [x3, Category.assoc, pullback.lift_fst]
-        exact hx1
+      · simpa only [x3, Category.assoc, pullback.lift_fst] using hx1
       · have : Spec.map (CommRingCat.ofHom ε) ≫ (x ≫ I.subschemeι ≫ s) = Out.jK V ≫ y := by
           rw [hxy, ← he1]; simp
-        simp only [x3, Category.assoc, pullback.lift_snd]
-        exact this.symm
+        simpa only [x3, Category.assoc, pullback.lift_snd] using this.symm
     have hdom : IsDominant (Out.jK V) := by
       have hinj : Function.Injective (algebraMap V (FractionRing V)) := IsFractionRing.injective _ _
       refine ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical _).mpr ?_⟩

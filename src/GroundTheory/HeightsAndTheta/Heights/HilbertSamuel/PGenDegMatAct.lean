@@ -94,8 +94,7 @@ theorem map_coordIdeal_int (x : J → Ω) :
   have h := IsLocalization.map_under ((nonZeroDivisors ℤ).map (C (σ := J))) (MvPolynomial J ℚ)
     (coordIdeal ℚ x)
   rw [e] at h
-  rw [hker]
-  exact h
+  rwa [hker]
 
 end Ideals
 
@@ -122,8 +121,7 @@ theorem isWeightedHomogeneous_iff (f : MvPolynomial (Ix κ) ℚ) (m : Unit → �
     simp [blockWeight]
   simp only [IsHomogeneous, IsWeightedHomogeneous, hw]
   constructor
-  · intro h d hd
-    exact congrFun (h hd) ()
+  · exact fun h d hd => congrFun (h hd) ()
   · intro h d hd
     funext u
     exact h hd

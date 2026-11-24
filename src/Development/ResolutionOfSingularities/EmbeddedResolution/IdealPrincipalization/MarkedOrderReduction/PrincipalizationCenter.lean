@@ -335,8 +335,7 @@ theorem isInvariantUnderIso_hasPrincipalizationCenter {k : Type u} [Field k] (hT
       rw [key]; exact hx
     exact (mem_comap_support_iff_base_mem_support e.hom D.center (e.inv.base x)).2 hmem
   · have hcert := PrincipalizationCertificate.comap_iso hT e hD.cert
-    rw [MarkedSchemeWithCenter.boundarySupport_transport]
-    exact hcert
+    rwa [MarkedSchemeWithCenter.boundarySupport_transport]
 
 namespace MarkedBlowupSequenceData
 
@@ -360,8 +359,7 @@ theorem nonempty_center_and_certificate_of_hasPrincipalizationCenter (s : Marked
       rw [← s.toMarkedSequence_length]; exact hi
     have h := (hs i hi').cert
     rw [s.boundarySupport_dataAt i] at h
-    rw [toMarkedSequence_projectionToSpec]
-    exact h
+    rwa [toMarkedSequence_projectionToSpec]
 
 end MarkedBlowupSequenceData
 

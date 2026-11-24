@@ -28,14 +28,12 @@ theorem CoinvIdealRepresentation.proof : CoinvIdealRepresentation.Statement := b
       · simp
       · intro b _ hb
         simp [hb]
-      · intro h
-        exact absurd (Finset.mem_univ b₀) h
+      · exact fun h => absurd (Finset.mem_univ b₀) h
     · intro m _ hm
       apply Finset.sum_eq_zero
       intro b _
       simp [hm]
-    · intro h
-      exact absurd hm₀ h
+    · exact fun h => absurd hm₀ h
   | zero =>
     exact ⟨0, by simp⟩
   | add x y _ _ hx hy =>

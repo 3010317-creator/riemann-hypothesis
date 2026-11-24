@@ -36,7 +36,7 @@ theorem compact_sq_le_A (hU : IsInfUnitary ε E) (x : M) {a b : Fin n} (hab : ε
   have key : ∀ a' b', ε b' = ε a' →
       RCLike.re (inner ℂ ((E a' b' * E b' a') x) x) = ‖E b' a' x‖ ^ 2 := by
     intro a' b' h
-    rw [Module.End.mul_apply, hU a' b', adjSign, if_pos h.symm, one_mul, inner_self_eq_norm_sq]
+    rw [Module.End.mul_apply, hU a' b', adjSign, ite_eq_left h.symm, one_mul, inner_self_eq_norm_sq]
   have hsum : RCLike.re (inner ℂ (casimirK ε E x) x) =
       ∑ a', ∑ b' ∈ Finset.univ.filter (fun b' => ε b' = ε a'), ‖E b' a' x‖ ^ 2 := by
 
@@ -221,12 +221,7 @@ theorem exists_log_A (n : ℕ) : ∃ L : (Fin n → Fin n → ℂ) → (Fin n �
   · filter_upwards [hs.eventually_left_inverse] with Y hY
     exact hY
 
-theorem Jm_sq_A : Jm ε * Jm ε = 1 := by
-  unfold Jm
-  rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-  congr 1
-  funext a
-  split_ifs <;> norm_num
+theorem Jm_sq_A : Jm ε * Jm ε = 1 := ReciprocityTheory.ChartRestriction.DS.S7.Jm_mul_self ε
 
 theorem exp_theta_A {Y : Matrix (Fin n) (Fin n) ℂ} (h : NormedSpace.exp Y ∈ Formalism.MainNotions.S.UJset ε) :
     NormedSpace.exp (Jm ε * (-Yᴴ) * Jm ε) = NormedSpace.exp Y := by
@@ -274,8 +269,7 @@ theorem exists_logG_A (ε : Fin n → Bool) : ∃ L : (Fin n → Fin n → ℂ) 
       show Matrix.of.symm (NormedSpace.exp (Jm ε * (-(Matrix.of (L z))ᴴ) * Jm ε)) = z
       rw [h3, hz1]
       rfl
-    rw [h6] at hz2
-    exact hz2
+    rwa [h6] at hz2
   have h5 : Matrix.of (L z) = Jm ε * (-(Matrix.of (L z))ᴴ) * Jm ε := congrArg Matrix.of h4
   generalize Matrix.of (L z) = X at h5 ⊢
   show Xᴴ * Jm ε + Jm ε * X = 0
@@ -379,8 +373,7 @@ theorem kFiniteAnalytic_of (hK : KFSm) (hW : WordBd) : GlobalTheory.Published.KF
   have hJ : Formalism.REAL.Jm ε * Formalism.REAL.Jm ε = 1 := Jm_sq_A
   have hg : g₀ᴴ * Formalism.REAL.Jm ε * g₀ = Formalism.REAL.Jm ε := hg₀
   have hg' : g₀ᴴ * (Formalism.REAL.Jm ε * g₀) = Formalism.REAL.Jm ε := by
-    rw [← Matrix.mul_assoc]
-    exact hg
+    rwa [← Matrix.mul_assoc]
   have hB : (Formalism.REAL.Jm ε * g₀ᴴ * Formalism.REAL.Jm ε) * g₀ = 1 := by
     simp only [Matrix.mul_assoc]
     rw [hg', hJ]
@@ -412,8 +405,7 @@ theorem kFiniteAnalytic_of (hK : KFSm) (hW : WordBd) : GlobalTheory.Published.KF
     eventually_nhds_iff.1 ((hLa.eventually_analyticAt.and hL).and (hLt.eventually hΦev))
   refine ⟨ψ ⁻¹' t, fun z => σ g₀ (Φ (L (ψ z))), hto.preimage ψ.continuous, ?_, ?_, ?_⟩
   · show ψ (Matrix.of.symm g₀) ∈ t
-    rw [hψ0]
-    exact ht1
+    rwa [hψ0]
   · intro z hz
     obtain ⟨⟨hLz, _⟩, hΦz, _⟩ := ht _ hz
     have hA : AnalyticAt ℝ (L ∘ ψ) z := hLz.comp (ψ.analyticAt z)

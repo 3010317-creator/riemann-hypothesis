@@ -77,12 +77,10 @@ theorem AAv_head {A : Type} [Ring A] [Algebra ℂ A] (k r : ℕ) (E : Fin (2 * r
     exact hab
   have hX : ∀ (a : Fin i0) (p : Fin (2 * r + k + 1)), p ∉ Set.range (sR k r i0 hi0) →
       y (Fin.castLE hi0 a) p = 0 := by
-    intro a p hp
-    exact hz _ p a.isLt hp
+    exact fun a p hp => hz _ p a.isLt hp
   have hu : ∀ c : Fin i0 → Fin (2 * r + k + 1), StrictMono (fun l => keyS k r (c l)) →
       (∀ l, c l ∈ Set.range (sR k r i0 hi0)) → c = sR k r i0 hi0 := by
-    intro c hc hS
-    exact uniq_key (keyS k r) (keyS_inj k r) (sR k r i0 hi0) c he hc hS
+    exact fun c hc hS => uniq_key (keyS k r) (keyS_inj k r) (sR k r i0 hi0) c he hc hS
   have hs := sum_single (M := A) (fun B : Fin i0 → Fin (2 * r + k + 1) => StrictMono (fun l => keyS k r (B l)))
     (fun a p => y (Fin.castLE hi0 a) p) (Set.range (sR k r i0 hi0)) hX (sR k r i0 hi0) he hu
     (fun B => qminor E B (sR k r i0 hi0) (ell + (i0 : ℂ) - 1))
@@ -117,13 +115,13 @@ theorem second_expansion_identity : ExpansionDualColumn := by
       (Set.range e2) ?_ e2 he2 ?_]
     · congr 1
       have hp := minors_first_case i0 s' h t ⟨i0, by omega⟩
-      rw [if_pos rfl] at hp
+      rw [ite_eq_left rfl] at hp
       rw [← hp, ← det_star]
       congr 1
       ext a l
       simp only [Matrix.of_apply]
       have hl := ((⟨i0, by omega⟩ : Fin (i0 + s' + 1)).succAbove l).isLt
-      rw [hy _ _ (by simp; omega), if_pos (by rw [he2v]; omega), he2v]
+      rw [hy _ _ (by simp; omega), ite_eq_left (by rw [he2v]; omega), he2v]
       congr 2 <;> (try simp) <;> omega
     · intro a p hp
       rw [hy _ _ (by simp; omega)]
@@ -150,12 +148,11 @@ theorem second_expansion_identity : ExpansionDualColumn := by
     · intro a b
       have hb := b.isLt
       rw [hy _ _ (by simp; omega)]
-      rw [if_pos (by simp [sR, esI]; omega)]
+      rw [ite_eq_left (by simp [sR, esI]; omega)]
       have hsv : (sR k r i0 (by omega) b).val = 2 * r + k - b.val := by simp [sR, esI]
       have hav : (Fin.castLE (by omega : i0 ≤ r) a).val = a.val := by simp
       unfold Zb
-      rw [hav, hsv]
-      rw [dite_eq_left a.isLt, dite_eq_left (by omega)]
+      rw [hav, hsv, dite_eq_left a.isLt, dite_eq_left (by omega)]
       congr 2
       apply Fin.ext; simp only; omega
   have hP := third_peeling_identity A k r z' E hG (i0 + s') hm' ⟨i0, by omega⟩ ell

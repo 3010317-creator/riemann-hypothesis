@@ -136,12 +136,7 @@ theorem dv_sum (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T)
 
 theorem dv_eq_sum (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T) (c₀ : Fin d → LL) :
     dv W T e b c₀ = ∑ m, c₀ m • dv W T e b (Pi.single m 1) := by
-  have h : c₀ = ∑ m, c₀ m • (Pi.single m 1 : Fin d → LL) := by
-    ext k
-    simp [Finset.sum_apply, Pi.single_apply]
-  conv_lhs => rw [h]
-  rw [dv_sum]
-  simp only [dv_smul]
+  exact Formalism.MainNotions.N.FrobeniusPowerSeries.TC.dv_eq_sum W T e b c₀
 
 theorem dvO_eq (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T) (c₀ : Fin d → O) :
     dvO W T e b c₀ = ∑ m, algebraMap O LL (c₀ m) • dv W T e b (Pi.single m 1) := by
@@ -189,8 +184,7 @@ theorem filS_zero_of (T : LocLat G Qp LL O) (a : ZMod n) (u : ℤ) (x : T.V ⊗[
   unfold FilS at hx
   rw [pow_one, Nat.cast_one, add_sub_cancel_right, Submodule.mem_map] at hx
   obtain ⟨y, hy, hyx⟩ := hx
-  rw [← φVB_inj T hyx]
-  exact hy
+  rwa [← φVB_inj T hyx]
 
 theorem repVV_smulA {T : LocLat G Qp LL O} {c' : ZMod n} {e M : ℕ} {Λ : LetA O n} {d : ℕ}
     {b : Fin d → W.DD T} {sol : Fin d → ℕ → Fin d → LL} {x : W.DD T} {f : Fin d → W.EE}
@@ -263,7 +257,7 @@ theorem lam_inner [NeZero n] {c : ZMod n} (hlen : (arcOf b w S η up size).len c
   have hs0 : ∀ a : ZMod n, (arcOf b w S η up size).Hs a 2 0 = (arcOf b w S η up size).h := by
     intro a
     unfold Formalism.MainNotions.ArcLiftingSetup.ArcP.Hs
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro (hc | hc)
     · simp only [arcOf] at hc
       split at hc <;> simp at hc
@@ -271,7 +265,7 @@ theorem lam_inner [NeZero n] {c : ZMod n} (hlen : (arcOf b w S η up size).len c
   have hs1 : ∀ a : ZMod n, (arcOf b w S η up size).Hs a 2 1 = (arcOf b w S η up size).G₀ := by
     intro a
     unfold Formalism.MainNotions.ArcLiftingSetup.ArcP.Hs
-    rw [if_pos (Or.inr (by simp [arcOf]))]
+    rw [ite_eq_left (Or.inr (by simp [arcOf]))]
   rw [hs0, hs1]
 
 end ThetaShiftProofs
@@ -323,8 +317,7 @@ theorem dvO_lin (T : LocLat G Qp LL O) (e : ℕ) {d : ℕ} (b : Fin d → W.DD T
     dvO W T e b (fun k => ∑ i, t i * c i k) = ∑ i, algebraMap O LL (t i) • dvO W T e b (c i) := by
   unfold dvO dv
 
-  simp only [map_sum, map_mul, Finset.sum_smul, mul_smul, Finset.smul_sum]
-  exact Finset.sum_comm
+  simpa only [map_sum, map_mul, Finset.sum_smul, mul_smul, Finset.smul_sum] using Finset.sum_comm
 
 theorem isDist_XP (i j : ℕ) : IsDist ((X : PowerSeries O) ^ i * Br.P.p 1 ^ j) := by
   unfold IsDist PhiData.p
@@ -400,7 +393,7 @@ theorem coef_fil (hinj : Function.Injective (algebraMap O LL)) {T : LocLat G Qp 
       rw [← mul_assoc, mul_comm (algebraMap (LetA O n) W.EE _) (algebraMap (LetA O n) W.EE _), mul_assoc,
         hU i, cst_mul_ea, cst_mul_ea]
       congr 1
-      simp only [Gi, if_pos hi]
+      simp only [Gi, ite_eq_left hi]
       have e0 := toNat_split m₀ (α i 0) (hα0 i hi)
       have e1 := toNat_split m₁ (α i 1) (hα1 i hi)
       calc X ^ m₀ * Br.P.p 1 ^ m₁ * (X ^ (α i 0).toNat * Br.P.p 1 ^ (α i 1).toNat * U i)
@@ -409,7 +402,7 @@ theorem coef_fil (hinj : Function.Injective (algebraMap O LL)) {T : LocLat G Qp 
               Br.P.p 1 ^ ((-(α i 1)).toNat + (m₁ + α i 1).toNat) * U i := by rw [e0, e1]
         _ = _ := by ring
     · rw [hbad i hi]
-      simp [Gi, if_neg hi, ea_zero]
+      simp [Gi, ite_eq_right hi, ea_zero]
   let V : Fin d → PowerSeries O := fun k => ∑ i, C (c₀ i k) * Gi i
   have hV : ∀ k, lE W κ * (algebraMap (LetA O n) W.EE (Br.cst (X ^ m₀ * Br.P.p 1 ^ m₁)) * f k) =
       ea Br a (V k) := by
@@ -470,20 +463,19 @@ theorem coef_fil (hinj : Function.Injective (algebraMap O LL)) {T : LocLat G Qp 
       rw [coeff_C_mul] at h3
       rw [← h3]
 
-      simp only [V, map_sum, coeff_C_mul]
-      exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+      simpa only [V, map_sum, coeff_C_mul] using Finset.sum_congr rfl fun i _ => mul_comm _ _
     have hmem : dvO W T 2 b (fun k => ((PD.p : ℕ) : O) ^ κ * coeff j (Gs k)) ∈ FilS W T a 0 bs := by
       rw [hco, dvO_lin]
       refine Submodule.sum_mem _ fun i _ => ?_
       by_cases h0 : coeff j (Gi i) = 0
       · rw [h0, map_zero, zero_smul]; exact Submodule.zero_mem _
       · refine Submodule.smul_mem _ _ ?_
-        have hi : good i := fun hz => h0 (by simp only [Gi]; rw [if_neg (fun h => h hz)]; exact map_zero _)
+        have hi : good i := fun hz => h0 (by simp only [Gi]; rw [ite_eq_right (fun h => h hz)]; exact map_zero _)
         have hle : (m₀ + α i 0).toNat ≤ j := by
           by_contra hlt
           apply h0
-          simp only [Gi, if_pos hi]
-          rw [coeff_X_pow_mul', if_neg hlt]
+          simp only [Gi, ite_eq_left hi]
+          rw [coeff_X_pow_mul', ite_eq_right hlt]
         have hα : (η : ℤ) + 1 ≤ -(α i 0) := by
           have h4 := hα0 i hi
           have h5 := Int.toNat_of_nonneg (show 0 ≤ (m₀ : ℤ) + α i 0 by omega)
@@ -522,7 +514,7 @@ theorem mem_pair_X_iff (a : O) (f : O⟦X⟧) (B : ℕ) :
   constructor
   · intro hf j hj
     obtain ⟨u, w, huw⟩ := Ideal.mem_span_pair.mp hf
-    rw [← huw, map_add (f := _), PowerSeries.coeff_mul_C, PowerSeries.coeff_mul_X_pow', if_neg (by omega), add_zero]
+    rw [← huw, map_add (f := _), PowerSeries.coeff_mul_C, PowerSeries.coeff_mul_X_pow', ite_eq_right (by omega), add_zero]
     exact dvd_mul_left _ _
   · intro h
     choose c hc using h
@@ -617,7 +609,7 @@ theorem content_notMem {l : ℕ} [Fact l.Prime] (P : PhiData O l) (σ A S y b₁
     rw [← map_pow, mem_pair_X_iff]
     intro j hj
     have h2 := hK (j + (A + t - 1 + S)) (by omega)
-    rwa [PowerSeries.coeff_X_pow_mul', if_pos (by omega), Nat.add_sub_cancel] at h2
+    rwa [PowerSeries.coeff_X_pow_mul', ite_eq_left (by omega), Nat.add_sub_cancel] at h2
   rw [pair_l_eq hϖ P.hl0 t] at hP
   have hdX : IsDist ((X : O⟦X⟧) ^ B) := by
     unfold IsDist
@@ -642,8 +634,7 @@ theorem content_notMem {l : ℕ} [Fact l.Prime] (P : PhiData O l) (σ A S y b₁
     rw [ht]
     push_cast [show 2 * σ ≤ s₁ by omega]
     ring
-  rw [← this]
-  exact htle
+  rwa [← this]
 
 end ArcLengthThreeFiltration
 end Formalism.MainNotions.N.FrobeniusPowerSeries
@@ -843,7 +834,7 @@ theorem coeff_zero_of_coord (hinj : Function.Injective (algebraMap O LL)) (a : Z
   intro j hj
   have h1 := congrArg (coeff j) hD
   rw [coeff_C_mul, show (X - C ((PD.p : ℕ) : O)) * (X ^ h * Y) * U = X ^ h * ((X - C ((PD.p : ℕ) : O)) * Y * U) by ring,
-    coeff_X_pow_mul', if_neg (by omega)] at h1
+    coeff_X_pow_mul', ite_eq_right (by omega)] at h1
   have hpF : Fact PD.p.Prime := ⟨PD.hp⟩
   exact (mul_eq_zero.1 h1).resolve_left (pow_ne_zero _ Br.P.hl0)
 
@@ -938,7 +929,7 @@ theorem arc_length_three_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain
   have hb₁b' : size (c - 1) ≤ b + η := hTc1.2
   have hAh : (arcOf b w S η up size).h = b + η + S := by
     show Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size = b + η + S
-    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [if_pos ⟨c, hTc⟩]
+    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [ite_eq_left ⟨c, hTc⟩]
   have hj2 : (arcOf b w S η up size).j ≤ 2 := by show 1 ≤ 2; norm_num
   have h2l : 2 ≤ (arcOf b w S η up size).len c := by rw [hlen]; norm_num
   have hT₁ : IsCrys PD T₁.ρ := hW₁.1
@@ -1016,8 +1007,8 @@ theorem arc_length_three_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain
       rw [e, ArcLengthThreeFiltration.ea_def]
     · beta_reduce
       rw [ArcLengthThreeFiltration.inId_two Br]
-      have h0 : α₂ 0 = -((size (c - 1) : ℕ) : ℤ) := if_pos rfl
-      have h1 : α₂ 1 = ((size (c - 2) + S : ℕ) : ℤ) := if_neg one_ne_zero
+      have h0 : α₂ 0 = -((size (c - 1) : ℕ) : ℤ) := ite_eq_left rfl
+      have h1 : α₂ 1 = ((size (c - 2) + S : ℕ) : ℤ) := ite_eq_right one_ne_zero
       rw [h0, h1, neg_neg, Int.toNat_natCast, Int.toNat_natCast,
         Int.toNat_eq_zero.2 (show -((size (c - 1) : ℕ) : ℤ) ≤ 0 by omega),
         Int.toNat_eq_zero.2 (show -((size (c - 2) + S : ℕ) : ℤ) ≤ 0 by omega),
@@ -1027,9 +1018,9 @@ theorem arc_length_three_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomain
     · intro s hs
       interval_cases s
       · show dvO W T₂ 2 bb (Pi.single k₀ 1) ∈ FilS W T₂ a 0 (-(α₂ 0))
-        rw [show α₂ 0 = -((size (c - 1) : ℕ) : ℤ) from if_pos rfl, neg_neg]; exact hℓa
+        rw [show α₂ 0 = -((size (c - 1) : ℕ) : ℤ) from ite_eq_left rfl, neg_neg]; exact hℓa
       · show dvO W T₂ 2 bb (Pi.single k₀ 1) ∈ FilS W T₂ a 1 (-(α₂ 1))
-        rw [show α₂ 1 = ((size (c - 2) + S : ℕ) : ℤ) from if_neg one_ne_zero]; exact hℓa1
+        rw [show α₂ 1 = ((size (c - 2) + S : ℕ) : ℤ) from ite_eq_right one_ne_zero]; exact hℓa1
     · simp [f₂, lE]
   obtain ⟨n₂, ⟨y₂, hy₂N, hy₂a, rfl⟩, hn₂R⟩ := hAC9₂ f₂ hNL₂
   rw [one_smul] at hn₂R

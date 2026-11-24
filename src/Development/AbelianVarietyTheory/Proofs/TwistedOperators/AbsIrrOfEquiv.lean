@@ -90,8 +90,7 @@ theorem absIrr_of_equiv {p q : ℕ} (N : GKMod p q) (hI : Formalism.MainNotions.
       rintro Z hZ _ ⟨x, hx, rfl⟩
       obtain ⟨g, c, hg⟩ := hy Z hZ
       have hmem : a g x - c • x ∈ W := W.sub_mem (hW g x hx) (W.smul_mem c hx)
-      have hout := Submodule.mem_map_of_mem (f := (e : K →ₗ[ℂ] N.V)) hmem
-      simpa [hg] using hout
+      simpa [hg] using Submodule.mem_map_of_mem (f := (e : K →ₗ[ℂ] N.V)) hmem
     rcases hI.2 _ (act_mem_of_forall_upq_act_mem N _ hst) with h0 | h1
     · left
       rw [eq_bot_iff]
@@ -117,8 +116,7 @@ theorem absIrr_of_equiv {p q : ℕ} (N : GKMod p q) (hI : Formalism.MainNotions.
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, hg, LinearEquiv.symm_apply_apply, map_sub, map_smul, hTg]
     obtain ⟨c, hc'⟩ := GlobalTheory.IrrTensor.schur N hI hA _ (comm_act_of_comm_act_upq N _ hc)
     refine ⟨c, LinearMap.ext fun x => e.injective ?_⟩
-    have hx := LinearMap.congr_fun hc' (e x)
-    simpa using hx
+    simpa using LinearMap.congr_fun hc' (e x)
 
 theorem absIrr_kFin : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (τ : D.what₂.Tau) (p q : ℕ) (T : GrpData p q) (R : DSRep T) (φ : Mat p q → Matrix (Fin V.rank) (Fin V.rank) ℂ) (m : ℤ) (U : M.H τ ≃ₗ[ℂ] R.U.H) (a : Matrix (Fin V.rank) (Fin V.rank) ℂ → Module.End ℂ (kFin M τ)), GlobalTheory.IndefiniteRowSideFullHecke.BarMatrix.Matches R M τ φ m U → Formalism.MainNotions.SchurIrreducible.IrrGK R.HK → Formalism.MainNotions.SchurIrreducible.AdmGK R.HK → IsKAct M τ a → AbsIrr fun X : lieAt V τ => a X := by
   intro D V S M τ p q T R φ m U a hM hI hA hK
@@ -144,8 +142,7 @@ theorem absIrr_kFin : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M :
     let e2 := LinearEquiv.ofInjective R.ι R.ι_inj
     refine ⟨(LinearEquiv.ofBijective f hbij).trans e2.symm, fun y => ?_⟩
     have h3 := congrArg Subtype.val (e2.apply_symm_apply (f y))
-    rw [LinearEquiv.ofInjective_apply, hf] at h3
-    exact h3
+    rwa [LinearEquiv.ofInjective_apply, hf] at h3
   obtain ⟨e, hιe⟩ := hequiv
   refine absIrr_of_equiv R.HK hI hA (fun X : lieAt V τ => a X) e ?_
   intro Z hZ

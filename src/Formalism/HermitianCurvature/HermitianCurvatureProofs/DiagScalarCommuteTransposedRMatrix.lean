@@ -139,7 +139,6 @@ theorem lift_reduction_mul (M N : M2 A) : (lift0 (M * N) : M2 (SlopeTestRemainin
   exact Matrix.map_mul
 
 theorem liftMatrix_one : (lift0 (1 : M2 A) : M2 (SlopeTestRemainingChoices S A)) = 1 := by
-  show (1 : M2 A).map (Matrix.scalar (Ix S)) = 1
   exact Matrix.map_one _ (map_zero _) (map_one _)
 
 theorem liftMatrix_diagonal_eq_diagScalar (f : A) : (lift0 (Matrix.diagonal fun _ => f) : M2 (SlopeTestRemainingChoices S A)) = d0 (io f) := by
@@ -365,21 +364,19 @@ theorem letter_wave (σ : Site A) (f fi : A) (s : K) (l : Letter K S)
       Matrix.diagonal (fun _ => f) * (if l.plus then Ts σ l.pt else (Ts σ l.pt).map star) := by
   obtain ⟨h1, h2, h3⟩ := hW
   by_cases hl : l.plus
-  · simp only [hl, if_true]
+  · simp only [hl, ite_true]
     exact (Formalism.YangianSpanCharacter.Final.T_PlaneWave K A σ.p σ.c σ.ci f s l.pt hc hci hp).2.2
-  · simp only [hl, Bool.false_eq_true, if_false]
+  · simp only [hl, Bool.false_eq_true, ite_false]
     unfold Ts
     rw [Tm_map_star]
     refine (Formalism.YangianSpanCharacter.Final.T_PlaneWave K A (star σ.p) (star σ.c) (star σ.ci) f (star s) (star l.pt)
       ?_ ?_ ?_).2.2
     · refine comm_of_inv h1 h2 ?_
       have := congrArg star hc
-      rw [star_mul, star_mul, h3] at this
-      exact this
+      rwa [star_mul, star_mul, h3] at this
     · refine comm_of_inv h1 h2 ?_
       have := congrArg star hci
-      rw [star_mul, star_mul, h3] at this
-      exact this
+      rwa [star_mul, star_mul, h3] at this
     · have hs := congrArg star hp
       rw [star_mul, star_add, star_mul, star_mul, star_mul, h3, ← algebraMap_star_comm] at hs
       have hz : ∀ x : A, algebraMap K A (star s) * x = x * algebraMap K A (star s) :=
@@ -652,16 +649,16 @@ theorem planeWaveWord (QQ : K → M2 A) (f fi : A) (s : K) (w : List (Letter K S
     · rw [mul_assoc, (comm_insL (cen_Uinv _) hVi).left_comm, h2, mul_one, insL_Um_Uinv]
     · unfold RRw
       by_cases hl : l.plus
-      · simp only [hl, if_true]
+      · simp only [hl, ite_true]
         exact plus_RR l.intersection_update_fsHerm_neg_one s hV hVi hRR (hT _) h1 h3 (h4 _)
-      · simp only [hl, Bool.false_eq_true, if_false]
+      · simp only [hl, Bool.false_eq_true, ite_false]
         exact minus_RR l.intersection_update_fsHerm_neg_one s hV hVi hRR (hT _) h1 h3 (h4 _)
     · intro Y
       unfold TTw
       by_cases hl : l.plus
-      · simp only [hl, if_true]
+      · simp only [hl, ite_true]
         exact plus_TT l.intersection_update_fsHerm_neg_one s _ hV (hT _) (h4 _)
-      · simp only [hl, Bool.false_eq_true, if_false]
+      · simp only [hl, Bool.false_eq_true, ite_false]
         exact minus_TT l.intersection_update_fsHerm_neg_one s _ hV hVi (hT _) (h4 _)
 
 end Steps
@@ -675,7 +672,6 @@ theorem plane_wave_vector_identity : Formalism.FourierDecayAlt.Wd.PlaneWaveVec :
   exact Wd11.planeWaveVec σ f fi s w hW hc hci hp hw
 
 theorem plane_wave_word_identity : Formalism.FourierDecayAlt.Wd.PlaneWaveWord := by
-  intro K A S _ _ _ _ _ _ _ _ QQ f fi s w hW hQ hw
-  exact Wd11.planeWaveWord QQ f fi s w hW hQ hw
+  exact fun K A S _ _ _ _ _ _ _ _ QQ f fi s w hW hQ hw => Wd11.planeWaveWord QQ f fi s w hW hQ hw
 
 end Formalism.FourierDecayAlt.P

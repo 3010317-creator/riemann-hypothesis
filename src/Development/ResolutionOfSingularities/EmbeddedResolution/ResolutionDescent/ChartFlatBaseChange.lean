@@ -102,8 +102,7 @@ private theorem isIso_pullbackTransitionMap_add (s : SequenceOfBlowups X) {X' : 
         hstep (n + k) (Nat.le_add_right n k) (by omega)
       have key : IsIso (s.pullbackTransitionMap φ (Nat.le_succ (n + k)) ≫
           s.pullbackTransitionMap φ (Nat.le_add_right n k)) := inferInstance
-      rw [s.pullbackTransitionMap_trans φ (Nat.le_add_right n k) (Nat.le_succ (n + k))] at key
-      exact key
+      rwa [s.pullbackTransitionMap_trans φ (Nat.le_add_right n k) (Nat.le_succ (n + k))] at key
 
 theorem isIso_pullbackTransitionMap (s : SequenceOfBlowups X) {X' : Scheme.{u}} (φ : X' ⟶ X) {n n' : ℕ}
     (h : n ≤ n') (hstep : ∀ m, n ≤ m → m < n' → IsIso (s.pullbackTransitionMap φ (Nat.le_succ m))) :
@@ -378,16 +377,14 @@ private theorem strictTransformIdeal_comap_transitionMap_eq (F : ChartFlatBaseCh
         (fun m hm hm2 j' hj' => hskip m (by omega) hm2 j' hj')
       have hdown : S.ambientSeq.transitionMap hi1 ≫ S.blowdown i = S.ambientSeq.transitionMap hi := by
         have h := S.ambientSeq.transitionMap_trans (Nat.le_succ i) hi1
-        rw [← S.ambientSeq.blowupMorphism_eq_transitionMap] at h
-        exact h
+        rwa [← S.ambientSeq.blowupMorphism_eq_transitionMap] at h
       have htop : (S.ambientCenter i).comap (F.levelMap j hj ≫ S.ambientSeq.transitionMap hi) = ⊤ :=
         F.comap_center_skipped i (by omega) (fun j' hj' => hskip i le_rfl (by omega) j' hj')
           (S'.schemeAt j) (F.levelMap j hj ≫ S.ambientSeq.transitionMap hi)
           (S'.ambientSeq.projectionToBase j) (F.isPullback_down j hj i hi hskip)
       have hg : ((S.ambientCenter i).comap (S.blowdown i)).comap
           (F.levelMap j hj ≫ S.ambientSeq.transitionMap hi1) = ⊤ := by
-        rw [← Scheme.IdealSheafData.comap_comp, Category.assoc, hdown]
-        exact htop
+        rwa [← Scheme.IdealSheafData.comap_comp, Category.assoc, hdown]
       have hst := strictTransform_comap_of_comap_center_eq_top (S.blowdown i)
         (S.ambientCenter i) (S.strictTransformIdeal i) (F.levelMap j hj ≫ S.ambientSeq.transitionMap hi1) hg
       rw [← hIH, S.strictTransformIdeal_succ i, hst, ← Scheme.IdealSheafData.comap_comp, Category.assoc,

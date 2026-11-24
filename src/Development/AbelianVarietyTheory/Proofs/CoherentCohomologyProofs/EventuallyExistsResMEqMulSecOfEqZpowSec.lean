@@ -163,8 +163,7 @@ theorem eventually_exists_resM_eq_mulSecOfEq_zpowSec (hL : L.IsLB) (σ : LB.Sec 
       (zchartEquiv hL n (c α) hc' (resM _ inf_le_right b))
     have hk' : resG X hc' (zfun σ (c α)) ^ k • zchartEquiv hL n (c α) hc' (resM _ inf_le_right b) =
         resM F inf_le_left t := by
-      rw [← resG_resG (hTc α) inf_le_left]
-      exact hk
+      rwa [← resG_resG (hTc α) inf_le_left]
     refine eventually_atTop.2 ⟨k, fun j hj => ?_⟩
     obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le' hj
     refine ⟨(zchartEquiv hL _ (c α) (hTc α)).symm (resG X (hTc α) (zfun σ (c α)) ^ j • t), ?_⟩
@@ -192,8 +191,7 @@ theorem eventually_exists_resM_eq_mulSecOfEq_zpowSec (hL : L.IsLB) (σ : LB.Sec 
     (fun α => (mulSecOfEq F (zpowSec σ j) hd').app _ (a α)) fun α β => by
       have := hj₀ j (by omega) (α, β) d hd'
       rw [map_sub, sub_eq_zero] at this
-      rw [← app_resM, ← app_resM]
-      exact this
+      rwa [← app_resM, ← app_resM]
   refine ⟨t, sec_ext_of_cover (fun α => T α ⊓ V) (fun _ => inf_le_right)
     ((le_inf (h.trans hc) le_rfl).trans (iSup_inf_eq _ _).le) fun α => ?_⟩
   rw [resM_resM, ← resM_resM (hTW α) inf_le_left, ht, ← app_resM, ha, ← app_resM,

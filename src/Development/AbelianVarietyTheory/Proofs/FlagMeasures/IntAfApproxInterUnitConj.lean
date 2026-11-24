@@ -67,8 +67,7 @@ theorem _root_.GlobalTheory.RowLev.intAf_approx_inter_unit_conj : ∀ (I : _root
   · intro z hz
     obtain ⟨b, t, hbt⟩ := _root_.GlobalTheory.RowLev.Inhab.exists_approx (F := I.F) (E := I.E) hg0 ⟨z, hz⟩
     refine ⟨b, t, t.2, ?_⟩
-    have h := congrArg Subtype.val hbt
-    simpa [_root_.GlobalTheory.RowLev.Inhab.psi] using h
+    simpa [_root_.GlobalTheory.RowLev.Inhab.psi] using congrArg Subtype.val hbt
   · intro a
     constructor
     · intro ha
@@ -78,7 +77,6 @@ theorem _root_.GlobalTheory.RowLev.intAf_approx_inter_unit_conj : ∀ (I : _root
       exact _root_.Formalism.UG.CS.incl_int b
   · have hF : IsUnit (g : I.F) := isUnit_iff_ne_zero.mpr (by exact_mod_cast hg0)
     simpa using hF.map (algebraMap I.F (I.E ⊗[I.F] _root_.Formalism.MainNotions.S.Af I.F))
-  · intro z hz
-    exact _root_.Formalism.UG.P.csDual_sig_mem _ hz
+  · exact fun z hz => _root_.Formalism.UG.P.csDual_sig_mem _ hz
 
 end GlobalTheory.RowLev

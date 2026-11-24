@@ -79,38 +79,34 @@ private theorem exists_intertwiner_decomp_of_kernel_intertwines {σ O : Type} [F
     simp only [coeff_monomial_mul, one_mul]
     by_cases hn : n.support.Nonempty
     · have hi0 : hn.choose ∈ n.support := hn.choose_spec
-      have hsel : sel n = some hn.choose := dif_pos hn
+      have hsel : sel n = some hn.choose := dite_eq_left hn
       have hle0 : Finsupp.single hn.choose 1 ≤ n := by
         rw [Finsupp.single_le_iff]
         exact Nat.one_le_iff_ne_zero.2 (Finsupp.mem_support_iff.1 hi0)
       rw [Finset.sum_eq_single hn.choose]
-      · rw [if_pos hle0, hc, tsub_add_cancel_of_le hle0, if_pos hsel]
+      · rw [ite_eq_left hle0, hc, tsub_add_cancel_of_le hle0, ite_eq_left hsel]
       · intro i _ hi
         by_cases hle : Finsupp.single i 1 ≤ n
-        · rw [if_pos hle, hc, tsub_add_cancel_of_le hle, if_neg]
+        · rw [ite_eq_left hle, hc, tsub_add_cancel_of_le hle, ite_eq_right]
           rw [hsel]
-          intro heq
-          exact hi (Option.some_injective _ heq).symm
-        · rw [if_neg hle]
-      · intro hnot
-        exact absurd (Finset.mem_univ _) hnot
+          exact fun heq => hi (Option.some_injective _ heq).symm
+        · rw [ite_eq_right hle]
+      · exact fun hnot => absurd (Finset.mem_univ _) hnot
     · have hn0 : n = 0 := by
-        rw [Finset.not_nonempty_iff_eq_empty, Finsupp.support_eq_empty] at hn
-        exact hn
+        rwa [Finset.not_nonempty_iff_eq_empty, Finsupp.support_eq_empty] at hn
       subst hn0
       rw [Finset.sum_eq_zero]
-      · rw [coeff_zero_eq_constantCoeff_apply]
-        exact hg
+      · rwa [coeff_zero_eq_constantCoeff_apply]
       · intro i _
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hle
         have h1 := Finsupp.single_le_iff.1 hle
         simp at h1
   · intro i
-    rw [← coeff_zero_eq_constantCoeff_apply, hc, zero_add, if_pos]
+    rw [← coeff_zero_eq_constantCoeff_apply, hc, zero_add, ite_eq_left]
     have hn : (Finsupp.single i 1 : σ →₀ ℕ).support.Nonempty := ⟨i, by simp⟩
     show (if hn : (Finsupp.single i 1 : σ →₀ ℕ).support.Nonempty then some hn.choose else none) = some i
-    rw [dif_pos hn]
+    rw [dite_eq_left hn]
     have hs : hn.choose ∈ ({i} : Finset σ) := by
       rw [← Finsupp.support_single_ne_zero i (one_ne_zero : (1 : ℕ) ≠ 0)]
       exact hn.choose_spec
@@ -127,7 +123,7 @@ private lemma π_mem_sq {O X R : Type} [CommRing O] [AddCommGroup X] [CommRing R
     intro i
     rw [RingHom.mem_ker]
     erw [WPres.origin_π]
-    rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, if_neg]
+    rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, ite_eq_right]
     exact (Finsupp.single_ne_zero.2 one_ne_zero).symm
 
   rw [hf, map_sum]
@@ -168,12 +164,11 @@ theorem UpperTheory.V.Alg.chart_free :
       ← coeff_zero_eq_constantCoeff_apply, MvPowerSeries.coeff_map]
   · intro i
     refine ⟨W.π (MvPowerSeries.X i), ?_, ?_⟩
-    · rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, if_pos rfl]
+    · rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, ite_eq_left rfl]
       exact one_ne_zero
     · intro i' hi'
-      rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, if_neg]
-      intro heq
-      exact hi' (Finsupp.single_left_injective one_ne_zero heq)
+      rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, ite_eq_right]
+      exact fun heq => hi' (Finsupp.single_left_injective one_ne_zero heq)
   · intro f hf0 hlin
     obtain ⟨g, rfl⟩ := W.surj f
     unfold satSq
@@ -181,8 +176,7 @@ theorem UpperTheory.V.Alg.chart_free :
     refine ⟨1, one_ne_zero, ?_⟩
     rw [one_smul]
     apply π_mem_sq W h g
-    · rw [← WPres.origin_π W h]
-      exact hf0
+    · rwa [← WPres.origin_π W h]
     · intro i
       have hi := hlin i
       rw [hφ, MvPowerSeries.coeff_map] at hi
@@ -206,8 +200,7 @@ private theorem chart_add_coeff {K τ τ' : Type} [CommRing K] (ε : τ ≃ τ')
   have h := coeff_embDomain_rename ε.toEmbedding p (Finsupp.mapDomain ε.symm n)
   rw [Finsupp.embDomain_eq_mapDomain, ← Finsupp.mapDomain_comp] at h
   have h2 : (ε.toEmbedding : τ → τ') ∘ ε.symm = id := funext fun x => ε.apply_symm_apply x
-  rw [h2, Finsupp.mapDomain_id] at h
-  exact h
+  rwa [h2, Finsupp.mapDomain_id] at h
 
 private theorem chart_add_weight {τ τ' X : Type} [AddCommGroup X] (g : τ' → τ) (wt : τ → X) (n : τ' →₀ ℕ) :
     Finsupp.weight wt (Finsupp.mapDomain g n) = Finsupp.weight (fun s => wt (g s)) n := by
@@ -296,8 +289,7 @@ theorem UpperTheory.V.Alg.chart_add :
   refine ⟨h', ((rename ε).restrictScalars O).comp ψ, chart_add_rename hψ ε _ ?_, fun s => ?_, fun s => ?_⟩
   · rintro (s | s) <;> rfl
   · have h1 := congrArg (rename ε) (hz true s)
-    rw [rename_rename] at h1
-    exact h1
+    rwa [rename_rename] at h1
   · have h1 := congrArg (rename ε) (hz false s)
     rw [rename_rename] at h1
     refine h1.trans ?_

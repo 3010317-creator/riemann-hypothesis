@@ -117,8 +117,7 @@ private lemma prod_X_sub_C_dvd_sum_lagPoly_sub_one :
     simp only [_root_.GlobalTheory.LagIdem.lagPoly, eval_mul, eval_C, eval_prod, eval_sub, eval_X]
     exact mul_eq_zero_of_right _
       (Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hik.symm, Finset.mem_univ k⟩) (sub_self _))
-  · intro h
-    exact absurd (Finset.mem_univ k) h
+  · exact fun h => absurd (Finset.mem_univ k) h
 
 open TensorProduct Polynomial IsLocalRing in
 variable {R E ι : Type} [CommRing R] [Ring E] [Algebra R E] [Fintype ι] [DecidableEq ι] in
@@ -323,8 +322,7 @@ theorem idem_spec [Algebra.IsAlgebraic K Ω] [Normal K Ω] {B : Type} [CommRing 
   have hP : aeval b (∏ j : conj K Ω θ, (X - C (j : Ω))) = 0 := by
     rw [map_prod]
     simp only [map_sub, aeval_X, aeval_C, RingHom.algebraMap_toAlgebra]
-    rw [Finset.prod_coe_sort (conj K Ω θ) (fun s => b - g₀ s)]
-    exact hb
+    rwa [Finset.prod_coe_sort (conj K Ω θ) (fun s => b - g₀ s)]
   obtain ⟨h1, h2, h3, -⟩ := GlobalTheory.lagIdem_spec Ω B (conj K Ω θ) b _ hu hP
   rw [hid]
   refine ⟨h1, fun s => ?_, ?_⟩
@@ -452,12 +450,12 @@ private theorem prod_tens_idem_mul {K Ω : Type} [Field K] [Field Ω] [Algebra K
   rw [← Finset.prod_mul_distrib]
   by_cases hts : t = s
   · subst hts
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact Finset.prod_congr rfl fun i _ => ((exists_unitary_diagonal_of_isHermitian g₀ (gs i) (hgs i) θ).1.idem (t i)).eq
   · obtain ⟨i, hi⟩ := Function.ne_iff.mp hts
-    rw [if_neg hts]
+    rw [ite_eq_right hts]
     refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
-    rw [(exists_unitary_diagonal_of_isHermitian g₀ (gs i) (hgs i) θ).1.toOrthogonalIdempotents.mul_eq (t i) (s i), if_neg hi]
+    rw [(exists_unitary_diagonal_of_isHermitian g₀ (gs i) (hgs i) θ).1.toOrthogonalIdempotents.mul_eq (t i) (s i), ite_eq_right hi]
 
 theorem GlobalTheory.EtC.GalSec.Tens.lem_hom : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (B : Type) [CommRing B] (k : ℕ) (g₀ : Ω →+* B) (gs : Fin k → (Ω →+* B)), (∀ i, (gs i).comp (algebraMap K Ω) = g₀.comp (algebraMap K Ω)) → ∀ θ : Ω, ∃ v : GlobalTheory.EtC.GalSec.LCRing K Ω k →+* B, ∀ φ, v φ = GlobalTheory.EtC.GalSec.Tens.lev g₀ gs θ φ := by
   intro K Ω _ _ _ _ B _ k g₀ gs hgs θ
@@ -470,7 +468,7 @@ theorem GlobalTheory.EtC.GalSec.Tens.lem_hom : ∀ (K Ω : Type) [Field K] [Fiel
     rw [Finset.sum_mul_sum]
     refine Finset.sum_congr rfl fun t _ => ?_
     rw [Finset.sum_congr rfl fun s _ => by rw [mul_mul_mul_comm, prod_tens_idem_mul g₀ gs hgs θ]]
-    simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   · simp [Tens.lev]
   · intro φ ψ
     simp only [Tens.lev, LocallyConstant.coe_add, Pi.add_apply, map_add (f := _), add_mul, Finset.sum_add_distrib]
@@ -585,7 +583,7 @@ theorem GlobalTheory.EtC.GalSec.Tens.lem_indep : ∀ (K Ω : Type) [Field K] [Fi
   simp only [hsum, Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun t' _ => ?_
-  simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, key]
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, key]
 theorem GlobalTheory.EtC.GalSec.Tens.lem_legs : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (B : Type) [CommRing B] (k : ℕ) (g₀ : Ω →+* B) (gs : Fin k → (Ω →+* B)), (∀ i, (gs i).comp (algebraMap K Ω) = g₀.comp (algebraMap K Ω)) → (∀ (θ a : Ω), GlobalTheory.EtC.GalSec.Tens.lev g₀ gs θ (GlobalTheory.EtC.GalSec.legHom K Ω k 0 a) = g₀ a) ∧ ∀ (i : Fin k) (a : Ω), GlobalTheory.EtC.GalSec.Tens.lev g₀ gs a (GlobalTheory.EtC.GalSec.legHom K Ω k i.succ a) = gs i a := by
   intro K Ω _ _ _ _ B _ k g₀ gs hgs
   classical
@@ -601,14 +599,14 @@ theorem GlobalTheory.EtC.GalSec.Tens.lem_legs : ∀ (K Ω : Type) [Field K] [Fie
         g₀ (t i : Ω) * ∏ j, Tens.idem (K := K) g₀ a (gs j a) (t j) =
           ∏ j, (if j = i then g₀ (t j : Ω) else 1) * Tens.idem (K := K) g₀ a (gs j a) (t j) := by
       intro t
-      rw [Finset.prod_mul_distrib, Finset.prod_ite_eq' Finset.univ i, if_pos (Finset.mem_univ _)]
+      rw [Finset.prod_mul_distrib, Finset.prod_ite_eq' Finset.univ i, ite_eq_left (Finset.mem_univ _)]
     rw [Finset.sum_congr rfl fun t _ => hfac t,
       sum_pi_prod_eq_prod_sum (fun (j : Fin k) (s : Tens.conj K Ω a) => (if j = i then g₀ (s : Ω) else 1) * Tens.idem (K := K) g₀ a (gs j a) s)]
     rw [Finset.prod_eq_single i]
-    · simp only [if_true]
+    · simp only [ite_true]
       exact (exists_unitary_diagonal_of_isHermitian g₀ (gs i) (hgs i) a).2.2.symm
     · intro j _ hj
-      simp only [if_neg hj, one_mul]
+      simp only [ite_eq_right hj, one_mul]
       exact (exists_unitary_diagonal_of_isHermitian g₀ (gs j) (hgs j) a).1.complete
     · intro h; exact absurd (Finset.mem_univ i) h
 private theorem map_tens_idem {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] {B C : Type} [CommRing B]
@@ -714,8 +712,7 @@ theorem lcRing_universal : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω]
       ext x
       have hdep : DependsOn K Ω k x (legHom K Ω k j.succ x) := by
         intro y y' h
-        simp only [legHom, Fin.cases_succ, coord_apply]
-        exact h j
+        simpa only [legHom, Fin.cases_succ, coord_apply] using h j
       rw [RingHom.comp_apply, hu, ← hwd _ x hdep, (lem_legs K Ω B k g₀ gs hgs).2 j x]
   have hbase : u.comp (baseHom K Ω k) = c := by
     ext a
@@ -910,8 +907,7 @@ theorem gal_sec_of (TopsChoicePartA : ∀ (K Ω : Type) [Field K] [Field Ω] [Al
           (FreeHom.desc P F φ hφ).hom = FreeHom.descP P F φ hφ := by
         have he := ((sheafificationAdjunction Scheme.etaleTopology.{0}
           (ModuleCat.{1} (ULift.{1} R))).homEquiv _ _).apply_symm_apply (FreeHom.descP P F φ hφ)
-        rw [Adjunction.homEquiv_unit] at he
-        exact he
+        rwa [Adjunction.homEquiv_unit] at he
       rw [hdesc]
       change (ModuleCat.freeDesc _).hom (ModuleCat.freeMk (ULift.up p)) = a
       erw [ModuleCat.freeDesc_apply]
@@ -937,8 +933,7 @@ theorem gal_sec_of (TopsChoicePartA : ∀ (K Ω : Type) [Field K] [Field Ω] [Al
         (S3 R F hF K Ω (Sec.res (Spec.map (CommRingCat.ofHom (LocallyConstant.evalRingHom (tailG K Ω k σ)))) (val s (Spec (CommRingCat.of (LCRing K Ω k))) (cechPt (Spec.map (CommRingCat.ofHom (algebraMap K Ω))) k (Spec.map (CommRingCat.ofHom (baseHom K Ω k))) (fun i => Spec.map (CommRingCat.ofHom (legHom K Ω k i))) (fun i => by rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, legHom_comp])))))
         (σ 0))
     filter_upwards [h1, h2] with τ e1 e2
-    rw [gal_sec_of_lemma, gal_sec_of_lemma, e1]
-    exact e2
+    rwa [gal_sec_of_lemma, gal_sec_of_lemma, e1]
   · intro φ hφ heq
     have hψ : IsLocallyConstant (fun g : Fin k → (Ω ≃ₐ[K] Ω) => φ (Fin.cons 1 g)) :=
       hφ.comp_continuous (continuous_const.finCons continuous_id)

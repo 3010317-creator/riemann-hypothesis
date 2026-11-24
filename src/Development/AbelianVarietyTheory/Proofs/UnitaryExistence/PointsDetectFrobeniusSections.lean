@@ -69,12 +69,10 @@ theorem eq_zero_of_forall_algClosed {K R : Type} [Field K] [CommRing R] [Algebra
   have h0 := h _ φ
   have h1 : algebraMap (R ⧸ J) (FractionRing (R ⧸ J)) (Ideal.Quotient.mk J x) = 0 := by
     apply (algebraMap (FractionRing (R ⧸ J)) (AlgebraicClosure (FractionRing (R ⧸ J)))).injective
-    rw [map_zero]
-    exact h0
+    rwa [map_zero]
   have h2 : Ideal.Quotient.mk J x = 0 := by
     apply IsFractionRing.injective (R ⧸ J) (FractionRing (R ⧸ J))
-    rw [map_zero]
-    exact h1
+    rwa [map_zero]
   exact Ideal.Quotient.eq_zero_iff_mem.mp h2
 
 theorem ptsDetect_of {K : Type} [Field K] {ι : Type} [Fintype ι]

@@ -70,8 +70,7 @@ theorem card_filter_val_lt_alt (n m : ℕ) (hm : m ≤ n) :
     constructor
     · rintro ⟨j, hj, rfl⟩
       exact hj
-    · intro hk
-      exact ⟨⟨k, lt_of_lt_of_le hk hm⟩, hk, rfl⟩
+    · exact fun hk => ⟨⟨k, lt_of_lt_of_le hk hm⟩, hk, rfl⟩
   rw [← Finset.card_map, h, Finset.card_range]
 
 theorem sum_ite_val_lt_one (n m : ℕ) (hm : m ≤ n) :
@@ -91,11 +90,11 @@ theorem sum_ite_val_lt_sub_mul_mono (n m₁ m₂ : ℕ) (h₁₂ : m₁ ≤ m₂
   rw [sum_ite_val_lt_sub_mul n m₁ (le_trans h₁₂ h₂) x a, sum_ite_val_lt_sub_mul n m₂ h₂ x a]
   refine Finset.sum_le_sum fun j _ => ?_
   by_cases h1 : (j : ℕ) < m₁
-  · simp only [if_pos h1, if_pos (lt_of_lt_of_le h1 h₁₂), le_refl]
+  · simp only [ite_eq_left h1, ite_eq_left (lt_of_lt_of_le h1 h₁₂), le_refl]
   · by_cases h2 : (j : ℕ) < m₂
-    · rw [if_neg h1, if_pos h2]
+    · rw [ite_eq_right h1, ite_eq_left h2]
       linarith [hx j (not_lt.mp h1) h2]
-    · simp only [if_neg h1, if_neg h2, le_refl]
+    · simp only [ite_eq_right h1, ite_eq_right h2, le_refl]
 
 theorem sum_ite_val_lt_sub_mul_anti (n m₁ m₂ : ℕ) (h₁₂ : m₁ ≤ m₂) (h₂ : m₂ ≤ n) (x : Fin n → ℝ) (a : ℝ)
     (hx : ∀ j : Fin n, m₁ ≤ (j : ℕ) → (j : ℕ) < m₂ → x j ≤ a) :
@@ -183,8 +182,7 @@ theorem hnSlopes_of (h1 : HNStep.{u, v, w}) (h2 : MuChar.{u, v, w})
     have hne0 : hnStep ρ L θ₀ ≠ ⊥ :=
       hne_of θ₀ (lt_of_le_of_lt (Nat.zero_le j) (hbelow θ₀ hθ₀s))
     have hμ : s ≤ muMin ρ (hnStep ρ L θ₀) := by
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       obtain ⟨θ, hθdef⟩ : ∃ θ, θ = max θ₀ ((muMin ρ (hnStep ρ L θ₀) + s) / 2) := ⟨_, rfl⟩
       have h1' : θ₀ ≤ θ := by rw [hθdef]; exact le_max_left _ _
       have h2' : θ < s := by rw [hθdef]; exact max_lt hθ₀s (by linarith)
@@ -200,8 +198,7 @@ theorem hnSlopes_of (h1 : HNStep.{u, v, w}) (h2 : MuChar.{u, v, w})
       ((j : ℕ) < rk ρ (hnStep ρ L θ) ↔ θ ≤ slopeList ρ L j) := by
     intro j θ
     constructor
-    · intro h
-      exact le_csSup (hbdd j) h
+    · exact fun h => le_csSup (hbdd j) h
     · intro h
       exact lt_of_lt_of_le (hatt j j.2)
         (hr_anti θ (sSup {θ : ℝ | (j : ℕ) < rk ρ (hnStep ρ L θ)}) h)
@@ -295,7 +292,7 @@ theorem hnSlopes_of (h1 : HNStep.{u, v, w}) (h2 : MuChar.{u, v, w})
     have h := hpoly θ
     rw [hθ] at h
     rw [h, hP]
-    exact Finset.sum_congr rfl fun j _ => (if_pos j.2).symm
+    exact Finset.sum_congr rfl fun j _ => (ite_eq_left j.2).symm
 
   have hsubmax : ∀ θ (M : Submodule R V), M ≤ hnStep ρ L θ →
       deg ρ M - θ * rk ρ M ≤ deg ρ (hnStep ρ L θ) - θ * rk ρ (hnStep ρ L θ) := by
@@ -346,8 +343,7 @@ theorem hnSlopes_of (h1 : HNStep.{u, v, w}) (h2 : MuChar.{u, v, w})
   intro θ
   convert card_filter_val_lt_alt _ _ (hr_le θ) using 2
   ext j
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-  exact (hiff j θ).symm
+  simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using (hiff j θ).symm
 
 theorem polygon_slopes_characterization : HNSlopes :=
   hnSlopes_of (hnStep_of degree_supermodular slope_characterization maximal_slope_ratio finite_supremum_slopes real_saturation_property

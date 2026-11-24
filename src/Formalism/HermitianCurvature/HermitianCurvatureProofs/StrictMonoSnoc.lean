@@ -114,14 +114,12 @@ theorem strictMono_snoc {α : Type} [Preorder α] {m : ℕ} (f : Fin m → α) (
     induction a using Fin.lastCases with
     | last => exact absurd hab (lt_irrefl _)
     | cast a =>
-      simp only [Fin.snoc_castSucc, Fin.snoc_last]
-      exact hx a
+      simpa only [Fin.snoc_castSucc, Fin.snoc_last] using hx a
   | cast b =>
     induction a using Fin.lastCases with
     | last => exact absurd hab (not_lt.2 (Fin.castSucc_lt_last b).le)
     | cast a =>
-      simp only [Fin.snoc_castSucc]
-      exact hf (Fin.castSucc_lt_castSucc_iff.1 hab)
+      simpa only [Fin.snoc_castSucc] using hf (Fin.castSucc_lt_castSucc_iff.1 hab)
 
 theorem hpk_zero_alt (k r : ℕ) (p q : Fin (2 * r + k + 1)) (hq : r ≤ q.val ∧ q.val ≤ r + k)
     (hp : ¬ (r ≤ p.val ∧ p.val ≤ r + k)) : Hpk k r q p = 0 := by
@@ -143,8 +141,7 @@ theorem herm_bvec_sum (k r : ℕ) (yb : Fin (2 * r + k + 1) → ℂ) (hyb : inWb
       split_ifs with h
       · exact absurd (Fin.ext (by simp only [Fin.ext_iff, Fin.val_mk] at h ⊢; omega)) hb
       · exact mul_zero _
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · have hL : star yb ⬝ᵥ Hpk k r *ᵥ Pi.single p 1 = 0 := by
       apply Finset.sum_eq_zero
       intro i _

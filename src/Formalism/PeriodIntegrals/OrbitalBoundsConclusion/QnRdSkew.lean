@@ -301,8 +301,7 @@ theorem skew_reduction_analytic : StepAnalytic := by
           star (f₂ (Matrix.of x * NormedSpace.exp (((0 : ℝ) : ℂ) • X))) +
         f₁ (Matrix.of x * NormedSpace.exp (((0 : ℝ) : ℂ) • X)) *
           star (RdV X f₂ (Matrix.of x * NormedSpace.exp (((0 : ℝ) : ℂ) • X)))) μ := by
-    simp only [flow_zero]
-    exact aesm_of_contOn hGc hconc hQc
+    simpa only [flow_zero] using aesm_of_contOn hGc hconc hQc
   obtain ⟨C, hC⟩ := (hK₁c.inter_left hGc).exists_bound_of_continuousOn (hQc.mono Set.inter_subset_left)
   set L : Set (Matrix (Fin n) (Fin n) ℂ) :=
     (fun p : Matrix (Fin n) (Fin n) ℂ × ℝ => p.1 * NormedSpace.exp ((p.2 : ℂ) • X)) ''
@@ -422,14 +421,7 @@ lemma glev_closed (k r : ℕ) (i : Fin (r + 1)) : IsClosed (Glev k r i) := by
   · exact isClosed_eq (continuous_id.matrix_mulVec continuous_const) continuous_const
 
 lemma exp_mem_glev {k r : ℕ} {i : Fin (r + 1)} {X : Mx k r} (hX : inLieLev k r i X) (t : ℝ) :
-    NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i := by
-  obtain ⟨hL, hF⟩ := hX
-  have hH : Hpk k r * Hpk k r = 1 := (hpkFacts k r).2.1
-  refine ⟨exp_mem_UH _ _ hH ?_, fun a ha => ?_⟩
-  · rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_ofReal, Matrix.smul_mul,
-      Matrix.mul_smul, ← smul_add, hL, smul_zero]
-  · obtain ⟨h1, h2⟩ := hF a ha
-    exact ⟨exp_mulVec_fix X _ h1 t, exp_mulVec_fix X _ h2 t⟩
+    NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i := QnYLeibnizW.exp_mem_glev hX t
 
 theorem skew_reduction_group : StepGroup := by
   intro k r i X hX

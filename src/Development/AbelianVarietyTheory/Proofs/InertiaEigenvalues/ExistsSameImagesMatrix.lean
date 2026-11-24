@@ -131,8 +131,7 @@ theorem exists_det_add_mul_one_sub_mul_ne_zero {k : Type*} [Field k] {n : ℕ}
     have : f v = 0 := hv
     change U.subtype ((e : K →ₗ[k] U) ⟨v, hvK⟩) = 0
     simpa only [f, LinearMap.comp_apply, hp] using this
-  have he' : e ⟨v, hvK⟩ = e 0 := by
-    exact he.trans (map_zero (e : K →ₗ[k] U)).symm
+  have he' : e ⟨v, hvK⟩ = e 0 := he.trans (map_zero (e : K →ₗ[k] U)).symm
   have : (⟨v, hvK⟩ : K) = 0 := e.injective he'
   simpa using congrArg Subtype.val this
 
@@ -153,8 +152,7 @@ theorem exists_GL_of_span_range_eq : ∀ (O M : Type) [CommRing O] [IsLocalRing 
   have hmul : ∀ (P Q : Matrix (Fin n) (Fin n) O) (z : Fin n → M) i,
       ∑ j, (P * Q) i j • z j = ∑ l, P i l • ∑ j, Q l j • z j := by
     intro P Q z i
-    simp only [Matrix.mul_apply, Finset.sum_smul, Finset.smul_sum, mul_smul]
-    exact Finset.sum_comm
+    simpa only [Matrix.mul_apply, Finset.sum_smul, Finset.smul_sum, mul_smul] using Finset.sum_comm
   have hC : ∀ l, ∑ j, ((1 : Matrix (Fin n) (Fin n) O) - B * A) l j • x j = 0 := by
     intro l
     simp only [Matrix.sub_apply, sub_smul, Finset.sum_sub_distrib, hmul, hA, hB]
@@ -169,8 +167,7 @@ theorem exists_GL_of_span_range_eq : ∀ (O M : Type) [CommRing O] [IsLocalRing 
   have hdet : IsUnit H.det := by
     have hne : r H.det ≠ 0 := by
       rw [RingHom.map_det]
-      simp only [H, map_add (f := _), map_mul, map_sub, map_one, hT]
-      exact hTb
+      simpa only [H, map_add (f := _), map_mul, map_sub, map_one, hT] using hTb
     by_contra hnu
     exact hne ((IsLocalRing.residue_eq_zero_iff _).mpr ((IsLocalRing.mem_maximalIdeal _).mpr hnu))
   have hHu : IsUnit H := (Matrix.isUnit_iff_isUnit_det H).mpr hdet
@@ -238,10 +235,9 @@ theorem mem_span_indicator_lowerSets :
     cases hx : ρ x with
     | none => simpa using h0 x hx
     | some m =>
-      simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       have hex : ∃ y, ρ y = some m := ⟨x, hx⟩
-      simp only [c, dif_pos hex]
-      exact hΦ _ _ (hx.trans hex.choose_spec.symm)
+      simpa only [c, dite_eq_left hex] using hΦ _ _ (hx.trans hex.choose_spec.symm)
   rw [hdecomp]
   exact S.sum_mem fun l _ => S.smul_mem _ (key l)
 
@@ -470,7 +466,7 @@ theorem _root_.GlobalTheory.DownLift.SplitGen.exists_same_images_matrix (hr : r 
     · rintro ⟨z, hz⟩
       replace hz := (key x z).1 hz
       have hx : ∃ y : Matrix (Fin n) (Fin r) O, ι d • x = y.map ι := ⟨_, hz⟩
-      refine ⟨_, dif_pos hx, ?_⟩
+      refine ⟨_, dite_eq_left hx, ?_⟩
       have hy : hx.choose = z * B := Matrix.map_injective hιinj (hx.choose_spec.symm.trans hz)
       rw [Submodule.span_le]
       rintro _ ⟨a, rfl⟩
@@ -520,10 +516,9 @@ theorem _root_.GlobalTheory.DownLift.SplitGen.exists_same_images_matrix (hr : r 
       Pi.smul_apply, Set.indicator_apply, Set.mem_setOf_eq, smul_eq_mul, mul_ite, mul_one, mul_zero]
     rcases hρ : ρ x with _ | l0
     · simp [hnone i x hρ]
-    · rw [Finset.sum_eq_single l0 (fun l _ hl => by simp [Ne.symm hl]) (by simp), if_pos rfl]
+    · rw [Finset.sum_eq_single l0 (fun l _ hl => by simp [Ne.symm hl]) (by simp), ite_eq_left rfl]
       have h : ∃ x', ρ x' = some l0 := ⟨x, hρ⟩
-      simp only [rep, h, dite_true]
-      exact hfib i _ _ (hρ.trans h.choose_spec.symm)
+      simpa only [rep, h, dite_true] using hfib i _ _ (hρ.trans h.choose_spec.symm)
   rw [hdecomp]
   refine Submodule.sum_mem _ fun l _ => hE _ _ ?_
   apply _root_.GlobalTheory.mem_span_indicator_lowerSets

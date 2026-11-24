@@ -67,25 +67,25 @@ theorem zfull_zb {j : ℕ} (Z : Matrix (Fin j) (Fin j) ℂ) (τ : ℂ) (a b : Fi
   · rw [dite_eq_right h1]
     by_cases ha : a.val < j
     · have hb : ¬ b.val < j := fun hb => h1 ⟨ha, hb⟩
-      rw [dite_eq_left ha, dite_eq_right hb, if_neg (fun h => by omega)]
+      rw [dite_eq_left ha, dite_eq_right hb, ite_eq_right (fun h => by omega)]
     · rw [dite_eq_right ha]
       by_cases h2 : a.val = j ∧ b.val = j
-      · rw [if_pos h2, if_pos (by omega)]
-      · rw [if_neg h2, if_neg (by omega)]
+      · rw [ite_eq_left h2, ite_eq_left (by omega)]
+      · rw [ite_eq_right h2, ite_eq_right (by omega)]
 
 theorem normal_form_x0 : NormalFormsAtBasePoint := by
   intro k r j hj Z τ γ hZ hτ hγ
   refine ⟨fun a p ha => ?_, fun a p ha => ?_⟩
   · rw [upper_minor_of_level_point hj Z τ γ a p ha]
     by_cases hp : p.val < j + 1
-    · rw [dite_eq_left hp, if_pos hp]
+    · rw [dite_eq_left hp, ite_eq_left hp]
       exact zfull_zb Z τ _ _
-    · rw [dite_eq_right hp, if_neg hp]
+    · rw [dite_eq_right hp, ite_eq_right hp]
   · rw [lower_minor_of_level_point hj hZ hτ hγ a p ha]
     by_cases hp : r + k < p.val ∧ 2 * r + k - p.val < j + 1
-    · rw [dite_eq_left hp, if_pos hp]
+    · rw [dite_eq_left hp, ite_eq_left hp]
       exact congrArg star (zfull_zb Z τ _ _)
-    · rw [dite_eq_right hp, if_neg hp]
+    · rw [dite_eq_right hp, ite_eq_right hp]
 
 theorem leading_minors_at_base_point : LeadingMinorsAtBasePoint := by
   intro k r j hj z z' Z τ γ hZ hτ hγ
@@ -107,11 +107,9 @@ theorem first_component_of_parts : Comp1OfParts := by
     fun g hg p q hpq => Formalism.FourierDecayAlt.P.rule_of_eq E k r z' Φ g hz' (fun n hn => (hR.2.1 g hg n hn).2) p q hpq
   refine ⟨?_, ?_⟩
   · have h := PBG.letter_plus_component_one_eq_smul_component_zero hD z z' j 1 le_rfl hj Z τ hZ hτ _ hx1 hnf Φ hK hRule Y
-    rw [show ((-1 : ℂ) ^ (1 - 1) * τ⁻¹) = τ⁻¹ by simp] at h
-    exact h
+    rwa [show ((-1 : ℂ) ^ (1 - 1) * τ⁻¹) = τ⁻¹ by simp] at h
   · have h := PBG.letter_minus_component_one_eq_smul_component_zero hD z z' j 1 le_rfl hj Z τ hZ hτ _ hx1 hxG hnf hnfy Φ hK hRule Y
-    rw [show ((-1 : ℂ) ^ (1 - 1) * (conj τ)⁻¹) = (conj τ)⁻¹ by simp] at h
-    exact h
+    rwa [show ((-1 : ℂ) ^ (1 - 1) * (conj τ)⁻¹) = (conj τ)⁻¹ by simp] at h
 
 theorem headLetter_of_open (hL : LeftActionRuleAtBasePoint) (hT : TorusDirectionAtBasePoint) (hSL : ConjugateActionRuleAtBasePoint) (hST : ConjugateTorusDirectionAtBasePoint)
     (hFX : FrozenX) (hFV : FrozenV) (hPP : PlusPosOfParts) (hPZ : PlusZeroOfParts) (hMP : MinusPosOfParts)

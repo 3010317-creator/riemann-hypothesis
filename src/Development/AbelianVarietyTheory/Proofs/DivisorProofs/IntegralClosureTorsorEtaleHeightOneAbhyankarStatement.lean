@@ -733,8 +733,7 @@ theorem isSeparable_of_natCast_finrank_ne_zero' {F E : Type*} [Field F] [Field E
   rw [hlead, one_mul] at hc
   have hn0 : (n : F) = 0 := by
     have : ((n - 1 : ℕ) : F) + 1 = ((n - 1 + 1 : ℕ) : F) := by push_cast; ring
-    rw [this, Nat.sub_add_cancel hpos] at hc
-    exact hc
+    rwa [this, Nat.sub_add_cancel hpos] at hc
   obtain ⟨c, hc'⟩ := hdvd
   exact h (by rw [hc', Nat.cast_mul, hn0, zero_mul])
 
@@ -891,8 +890,7 @@ theorem eq_of_comp_eq [NeZero q] {Ω : Type} [Field Ω] [Algebra K Ω]
   have e1 := congrArg (fun F => F w) (hZ g)
   have e2 := congrArg (fun F => F w) (hZ g')
   simp only [AlgHom.comp_apply, hw, Pi.evalAlgHom_apply] at e1 e2
-  rw [h] at e1
-  rw [Pi.single_eq_same] at e1
+  rw [h, Pi.single_eq_same] at e1
   rw [Pi.single_eq_of_ne (Ne.symm hne)] at e2
   have := e1.symm.trans e2
   simp at this

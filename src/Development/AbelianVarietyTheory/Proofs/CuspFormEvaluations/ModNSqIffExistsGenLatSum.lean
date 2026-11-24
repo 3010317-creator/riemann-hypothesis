@@ -193,8 +193,7 @@ theorem modN_sq_iff_exists_genLat_sum : ∀ (E : Type) [Field E] [NumberField E]
     calc ((N : 𝓞 E) ^ 2) • a b = ∑ j, (∑ i, v i b * lam i (e j)) • a j := by
           simp [hd]
       _ = ∑ i, v i b • ∑ j, lam i (e j) • a j := by
-          simp only [Finset.sum_smul, Finset.smul_sum, mul_smul]
-          exact Finset.sum_comm
+          simpa only [Finset.sum_smul, Finset.smul_sum, mul_smul] using Finset.sum_comm
       _ = ((N : 𝓞 E) ^ 2) • ∑ i, v i b • x i := by
           rw [Finset.smul_sum]
           refine Finset.sum_congr rfl fun i _ => ?_
@@ -217,8 +216,7 @@ theorem modN_sq_iff_exists_genLat_sum : ∀ (E : Type) [Field E] [NumberField E]
       rw [hcm, hvw]; simp; ring
     refine ⟨∑ k, y k • x k, ?_⟩
     calc ∑ j, cm i j • a j = ∑ k, (∑ j, cm i j * v k j) • x k := by
-          simp only [ha, Finset.sum_smul, Finset.smul_sum, mul_smul]
-          exact Finset.sum_comm
+          simpa only [ha, Finset.sum_smul, Finset.smul_sum, mul_smul] using Finset.sum_comm
       _ = _ := by
           rw [← Nat.cast_smul_eq_nsmul (𝓞 E), Nat.cast_pow, Finset.smul_sum]
           simp only [hd, mul_smul]

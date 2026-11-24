@@ -143,8 +143,7 @@ theorem cyclic_of_components {A K ι : Type} [CommRing A] [CommRing K] (sp : A �
   obtain ⟨s, hs⟩ := hbij.2 (QuotientAddGroup.mk ⟨x, hx⟩)
   have hm : -(a s • d) + x ∈ M := QuotientAddGroup.eq.mp hs
   refine ⟨a s, (a s).2, ?_⟩
-  rw [sub_eq_neg_add]
-  exact hm
+  rwa [sub_eq_neg_add]
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
@@ -310,8 +309,7 @@ theorem sq_le_local_index : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   obtain ⟨x, hxB, hxA⟩ := hnt v hv
   have hsc := split_components F E cm n J hJ hdet v sp hsp h1
   have hnot1 : ¬ (∀ y ∈ loc v (dualL cm.sig J L), ∃ z ∈ loc v L, ∀ b, (sp (z b)).1 = (sp (y b)).1) := by
-    intro hP1
-    exact hxA ((hsc.1 L x).2 ⟨hP1 x hxB, hiff.1 hP1 x hxB⟩)
+    exact fun hP1 => hxA ((hsc.1 L x).2 ⟨hP1 x hxB, hiff.1 hP1 x hxB⟩)
   have hnot2 : ¬ (∀ y ∈ loc v (dualL cm.sig J L), ∃ z ∈ loc v L, ∀ b, (sp (z b)).2 = (sp (y b)).2) :=
     fun hP2 => hnot1 (hiff.2 hP2)
   push Not at hnot1 hnot2
@@ -389,15 +387,14 @@ theorem prod_relIndex_dvd {G ι : Type} [AddCommGroup G] {M : ι → Type} [∀ 
     choose r hr using fun i : S => QuotientAddGroup.mk_surjective (q i)
     obtain ⟨x, hx, h⟩ := hs (fun i => if hi : i ∈ S then (r ⟨i, hi⟩ : M i) else 0) (fun i => by
       by_cases hi : i ∈ S
-      · simp only [hi, dif_pos]; exact (r ⟨i, hi⟩).2
-      · simp only [hi, dif_neg, not_false_eq_true]; exact zero_mem _)
+      · simp only [hi, dite_eq_left]; exact (r ⟨i, hi⟩).2
+      · simp only [hi, dite_eq_right, not_false_eq_true]; exact zero_mem _)
     refine ⟨⟨x, hx⟩, funext fun i => ?_⟩
     rw [← hr i]
     have h1 := h i i.2
-    simp only [i.2, dif_pos] at h1
+    simp only [i.2, dite_eq_left] at h1
     show (QuotientAddGroup.mk (⟨φ i x, hA i x hx⟩ : K i) : K i ⧸ (H i).addSubgroupOf (K i)) = _
-    rw [QuotientAddGroup.eq_iff_sub_mem, AddSubgroup.mem_addSubgroupOf]
-    exact h1
+    rwa [QuotientAddGroup.eq_iff_sub_mem, AddSubgroup.mem_addSubgroupOf]
   have hker : B.addSubgroupOf A ≤ ψ.ker := by
     intro x hx
     rw [AddMonoidHom.mem_ker]
@@ -407,8 +404,7 @@ theorem prod_relIndex_dvd {G ι : Type} [AddCommGroup G] {M : ι → Type} [∀ 
     exact hB i x hx
   have h1 : ψ.ker.index ∣ B.relIndex A := AddSubgroup.index_dvd_of_le hker
   rw [AddSubgroup.index_ker, AddMonoidHom.range_eq_top.2 hψ, AddSubgroup.card_top, Nat.card_pi] at h1
-  rw [← Finset.prod_coe_sort S]
-  exact h1
+  rwa [← Finset.prod_coe_sort S]
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
 
@@ -602,8 +598,7 @@ theorem dual_components_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     have h3 := ((hint _).1 (hp y hy z hz)).1
     rw [hint, h1, h2]
     rw [h1] at h3
-    simp only [sp.apply_symm_apply, zero_mul, Finset.sum_const_zero, ← e]
-    exact ⟨h3, zero_mem _⟩
+    simpa only [sp.apply_symm_apply, zero_mul, Finset.sum_const_zero, ← e] using ⟨h3, zero_mem _⟩
   · intro h y hy
     refine ⟨fun b => sp.symm ((sp (y b)).1, 0), ?_, fun b => by rw [sp.apply_symm_apply]⟩
     refine DualComp.mem_loc_of_pair cm.sig J hdet L hT.1 v hσ _ fun w hw => ?_
@@ -611,8 +606,7 @@ theorem dual_components_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     have h3 := ((hint _).1 (hp y hy z hz)).2
     rw [hint, h1, h2]
     rw [h2] at h3
-    simp only [sp.apply_symm_apply, zero_mul, Finset.sum_const_zero, ← e]
-    exact ⟨zero_mem _, h3⟩
+    simpa only [sp.apply_symm_apply, zero_mul, Finset.sum_const_zero, ← e] using ⟨zero_mem _, h3⟩
 
 end GlobalTheory.St.G
 end -- clump:auto

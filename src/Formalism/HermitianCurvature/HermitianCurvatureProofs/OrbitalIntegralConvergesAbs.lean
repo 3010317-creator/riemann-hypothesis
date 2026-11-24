@@ -113,9 +113,9 @@ theorem norm_det_wMat (n : ℕ) : ‖(wMat n).det‖ = 1 := by
 theorem continuous_strictUpper (d : ℕ) : Continuous (strictUpper : (UT d → ℂ) → Matrix (Fin d) (Fin d) ℂ) := by
   refine continuous_matrix fun i j => ?_
   by_cases h : i < j
-  · simp only [strictUpper, Matrix.of_apply, h, dif_pos]
+  · simp only [strictUpper, Matrix.of_apply, h, dite_eq_left]
     exact continuous_apply _
-  · simp only [strictUpper, Matrix.of_apply, h, dif_neg, not_false_iff]
+  · simp only [strictUpper, Matrix.of_apply, h, dite_eq_right, not_false_iff]
     exact continuous_const
 
 theorem continuous_upper (d : ℕ) : Continuous (upper : (UT d → ℂ) → Matrix (Fin d) (Fin d) ℂ) :=
@@ -288,8 +288,7 @@ theorem affine_fibre {Y : Type} [MeasurableSpace Y] (ν : Measure Y) [SFinite ν
     have hpos : (0 : ℝ) < ‖α y‖ ^ 2 := by positivity
     apply NNReal.eq
     rw [NNReal.coe_mul, Real.coe_toNNReal _ (by positivity)]
-    simp only [NNReal.coe_pow, coe_nnnorm, NNReal.coe_one]
-    exact mul_inv_cancel₀ hpos.ne'
+    simpa only [NNReal.coe_pow, coe_nnnorm, NNReal.coe_one] using mul_inv_cancel₀ hpos.ne'
   rw [h2, ENNReal.coe_one, one_mul]
 
 theorem integral_affine_fibre {Y : Type} [MeasurableSpace Y] (ν : Measure Y) [SFinite ν] (β : ℂ)
@@ -329,8 +328,7 @@ theorem mp_consMap (β : ℂ) (m : ℕ) : MeasurePreserving (consMap m) (muRed �
     refine Prod.ext ?_ rfl
     funext i
     refine Fin.cases ?_ (fun j => ?_) i <;> simp [MeasurableEquiv.piFinSuccAbove, MeasurableEquiv.prodAssoc]
-  rw [e]
-  exact h3
+  rwa [e]
 
 theorem cof_single {m : ℕ} (X : Matrix (Fin (m + 1)) (Fin (m + 1)) ℂ) (hX : IsStrictUpper X) (t : ℂ) :
     Cof X (Pi.single 0 1) t = t ^ m := by

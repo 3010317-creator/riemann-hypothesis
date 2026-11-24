@@ -164,8 +164,7 @@ theorem UpperTheory.V.Cj.S.cuspProj :
   · simpa [h] using p1 φ
   · have := d2 (.fin g) _ (p1 x)
     rw [map_sub] at this
-    rw [hy]
-    exact this
+    rwa [hy]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.CuspidalSupport.CuspProj =====
@@ -189,8 +188,7 @@ theorem UpperTheory.V.Cj.S.iwa :
   refine ⟨_, hK E (r + s) φ m B hφ k hk, m₁, m₂, ?_⟩
   have hl : GroundTheory.Automorphic.AutomorphicForm.IsLeftInvariant φ.1 := hφ.aut.left
   rw [mul_assoc, UpperTheory.constantTerm_unipotent_left_invariant E (r + s) r φ.1 hl] at hg
-  rw [← GroundTheory.Automorphic.AutomorphicForm.constantTerm_rightTranslate] at hg
-  exact hg
+  rwa [← GroundTheory.Automorphic.AutomorphicForm.constantTerm_rightTranslate] at hg
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.CuspidalSupport.Imports =====
@@ -443,8 +441,7 @@ theorem UpperTheory.V.Cj.S.stabSp :
     fun w hw => inf_le_right.trans (hK w hw), ?_⟩
   · refine GlobalTheory.LGrp.mem_fixed.2 fun u hu => Subtype.ext (funext fun g => ?_)
     have := hl _ ⟨φ, hφ, rfl⟩ u (hle hu) g
-    rw [UpperTheory.V.Fb.finEmb_eq] at this
-    exact this
+    rwa [UpperTheory.V.Fb.finEmb_eq] at this
   · haveI := UpperTheory.V.Af.Fin.formsFinite E a _ hb
     exact Module.Finite.equiv (Submodule.equivMapOfInjective _ (UpperTheory.V.Cm.smEq E a).injective _).symm
   · exact (UpperTheory.V.Cm.isAutForm_iff φ).2 (UpperTheory.isAutomorphicForm_of_bdd_submodule E a _ hb _ ⟨φ, hφ, rfl⟩)
@@ -529,8 +526,7 @@ private theorem fin_mem {E : Type} [Field E] [NumberField E] [_root_.NumberField
     (m : (E →+* ℂ) → Multiset ℂ) (g : GL (Fin a) (Af E)) {φ : Sm E a} (hφ : φ ∈ CI a m) : finRep E a g φ ∈ CI a m := by
   refine mem_CI.2 ⟨UpperTheory.V.Cm.isCuspForm_act (.fin g) (mem_CI.1 hφ).1, fun t u => ?_⟩
   have h := LinearMap.congr_fun ((capAct E a t u).2.1 (.fin g)).eq φ
-  rw [Module.End.mul_apply, Module.End.mul_apply, (mem_CI.1 hφ).2 t u, map_smul] at h
-  exact h
+  rwa [Module.End.mul_apply, Module.End.mul_apply, (mem_CI.1 hφ).2 t u, map_smul] at h
 
 private noncomputable def ciRep {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ)
     (m : (E →+* ℂ) → Multiset ℂ) : Representation ℂ (GL (Fin a) (Af E)) (CI a m) where
@@ -730,7 +726,7 @@ theorem cuspSupport_of (hS : Step) (hT : SuppTwist) (hA : SuppAdd) (hC : SuppCus
     let B : Pl E → Multiset ℂˣ := fun w =>
       if h : ∃ B, HasSatGL w (locOf τ.ρ w) B ∧ IsSatVecGL w (locOf τ.ρ w) v B then h.choose else 0
     have h2 : ∀ᶠ w in Filter.cofinite, HasSatGL w (locOf τ.ρ w) (B w) ∧ IsSatVecGL w (locOf τ.ρ w) v (B w) :=
-      h1.mono fun w h => by simp only [B, dif_pos h]; exact h.choose_spec
+      h1.mono fun w h => by simp only [B, dite_eq_left h]; exact h.choose_spec
     have he : Eig (j v) m B :=
       ⟨h0, haut v, hcap v, h2.mono fun w h => h.2.map j (fun g y => hfin _ y) h0⟩
     obtain ⟨ι, _, n, π, μ, c1, c2, c3, c4, c5, c6⟩ :=

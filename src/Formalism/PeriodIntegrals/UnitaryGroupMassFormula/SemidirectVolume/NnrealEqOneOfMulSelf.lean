@@ -93,8 +93,7 @@ theorem modM_transv (hT : TransvHaar) (X : GL (Fin k) A) (i j : Fin k) (hij : i 
     funext v
     rw [phi_apply, hX]
   apply modM_of_map X (addHaar : Measure (Fin k → A))
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem transvection_transpose (i j : Fin k) (c : A) :
     (Matrix.transvection i j c).transpose = Matrix.transvection j i c := by
@@ -157,7 +156,6 @@ theorem orthInv_of (h1 : AdeleStableRankOne) (h2 : ElimSR1) (h3 : TransvHaar) : 
   have e2 : (phi Xu : (Fin k → AF F) → (Fin k → AF F)) = Matrix.mulVec X := by
     funext v
     rfl
-  rw [e2] at e
-  exact e
+  rwa [e2] at e
 
 end PI.VolSemiDirect.W.Cj

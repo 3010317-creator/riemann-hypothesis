@@ -134,8 +134,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.infW_of :
   obtain ⟨ν', hν'⟩ := (inSub_iff_exists_algHom_factor i' g).mp ((hiP' _ g).mpr hP'g)
   have hInf0' : Inf (ε₀.comp π) i' := by
     unfold Inf at hInf0 ⊢
-    rw [Mod.spMap_algComp, Category.assoc, ← hiL]
-    exact hInf0
+    rwa [Mod.spMap_algComp, Category.assoc, ← hiL]
   have hεν : ε.comp ν' = ε₀.comp π := by
     apply exists_integer_mul_eq_of_valuation_le i'
     unfold Inf at hInf hInf0'
@@ -148,8 +147,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.infW_of :
       unfold Inf at hInf0' ⊢
       rw [Over.comp_left]
       change spMap _ ≫ spMap v.toRingHom ≫ i'.left = _
-      rw [← Category.assoc, ← Mod.spMap_algComp, hv]
-      exact hInf0'
+      rwa [← Category.assoc, ← Mod.spMap_algComp, hv]
     obtain ⟨c, hc⟩ := hv₀ _ ((hiP' _ _).mp ⟨Mod.ptOf v, rfl⟩) hvI
     rw [hm₀, Over.comp_left, ← Category.assoc, _root_.GlobalTheory.spMap_comp_ring] at hc
     have hr := Mod.spMap_inj' ((cancel_mono i'.left).mp hc)

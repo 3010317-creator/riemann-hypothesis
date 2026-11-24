@@ -48,7 +48,7 @@ theorem coeff_rename_zero {σ τ : Type} [Finite σ] (φ : σ → τ) (F : MvPow
     MvPowerSeries.hasSubst_of_constantCoeff_zero (fun a => by simp)
   rw [MvPowerSeries.coeff_subst hA]
   refine finsum_eq_zero_of_forall_eq_zero fun d => ?_
-  rw [prod_X_rename, MvPowerSeries.coeff_monomial, if_neg, smul_zero]
+  rw [prod_X_rename, MvPowerSeries.coeff_monomial, ite_eq_right, smul_zero]
   intro h
   apply hs
   rw [h, Finsupp.mapDomain_notin_range]
@@ -164,8 +164,7 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
       rw [← Finsupp.mapDomain_comp]
       conv_rhs => rw [← Finsupp.mapDomain_id (v := μ)]
       apply Finsupp.mapDomain_congr rfl
-      intro x hx
-      exact Prod.ext (hr x (Finsupp.mem_support_iff.1 hx)).symm rfl
+      exact fun x hx => Prod.ext (hr x (Finsupp.mem_support_iff.1 hx)).symm rfl
     rw [← hμ, coeff_subst_rename_inj _ (col_inj c)]
     show -∑ i, v (c, i) * MvPowerSeries.coeff
       ((μ.mapDomain Prod.snd).mapDomain (fun x : Fin dd => ((0 : Fin 2), x)) + Finsupp.single ((1 : Fin 2), i) 1) Y.h = _
@@ -188,9 +187,8 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
       intro q hq
       simp only [Prod.mk.injEq] at hq
       exact hc' hq.2.1.symm
-    · intro h
-      exact absurd (Finset.mem_univ c) h
-  · push_neg at hr
+    · exact fun h => absurd (Finset.mem_univ c) h
+  · push Not at hr
     obtain ⟨x0, hx0, hx0c⟩ := hr
     rw [coeff_rename_zero (fun x : Fin dd => (c, x)) _ μ x0 hx0 (fun a ha => hx0c (by rw [← ha]))]
     symm
@@ -200,7 +198,7 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
     have hne : (μ.mapDomain (fun x => ((0 : Fin 2), x)) + Finsupp.single ((1 : Fin 2), x) 1 : Fin 2 × (Fin 2 × Fin dd) →₀ ℕ)
         ((0 : Fin 2), x0) ≠ 0 := by
       rw [Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective (fun a b h => (Prod.ext_iff.1 h).2), Finsupp.single_apply,
-        if_neg (by simp)]
+        ite_eq_right (by simp)]
       simpa using hx0
     rw [coeff_rename_zero (fun q : Fin 2 × Fin dd => (q.1, (c, q.2))) _ _ ((0 : Fin 2), x0) hne, mul_zero]
     intro q hq
@@ -217,8 +215,7 @@ theorem FBChart.rawSelf_sg (v : Fin 2 × Fin dd → C) :
       Finsupp.single ((1 : Fin 2), x) 1) (∑ col, hCol col Y.h) = _
   congr 1
 
-  simp only [map_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [map_sum, Finset.mul_sum] using Finset.sum_comm
 
 theorem addCvSelf_of (hG : GermIAllSt) : AddCvSelfSt := by
   intro C _ _ V O _ _ dd Y d _ I0 _ p γ γ' hγ hγ'

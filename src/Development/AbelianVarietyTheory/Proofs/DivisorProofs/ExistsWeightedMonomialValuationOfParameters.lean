@@ -289,7 +289,7 @@ theorem weightedRelation_step (z : Fin n → R) (w : Fin n → ℕ) (hw : ∀ i,
       (MvPolynomial.homogeneousComponent_isHomogeneous k H) hmem
   refine ⟨fun β hβ => ?_, ?_⟩
   · have := hI β
-    rwa [hcoeffk, if_pos hβ] at this
+    rwa [hcoeffk, ite_eq_left hβ] at this
   obtain ⟨G, hG, hGs⟩ := exists_eval_eq_shift z Hk hI
   have hGw : ∀ γ, G.coeff γ ≠ 0 → k + 1 ≤ γ.degree ∧ D + 1 ≤ Finsupp.weight w γ := by
     intro γ hγ
@@ -311,7 +311,7 @@ theorem weightedRelation_step (z : Fin n → R) (w : Fin n → ℕ) (hw : ∀ i,
     · exact hrest' β h1
   · rw [map_add (f := _), hG, ← map_add (f := _), sub_add_cancel, h0]
   · intro β hβw hβd
-    rw [MvPolynomial.coeff_add, hrest, if_neg (by omega)]
+    rw [MvPolynomial.coeff_add, hrest, ite_eq_right (by omega)]
     by_cases h : G.coeff β = 0
     · rw [h, add_zero]
     · have := hGw β h
@@ -387,8 +387,7 @@ theorem dvr_loc_principal_prime : ∀ {L : Type} [Field L] (A : Subring L) (t : 
     rw [← IsLocalization.AtPrime.map_eq_maximalIdeal p V0, hpdef, Ideal.map_span, Set.image_singleton]
   have ht0 : algebraMap A V0 t ≠ 0 := fun h => ht (congrArg Subtype.val h)
   have hnf : ¬ IsField V0 := by
-    rw [IsLocalRing.isField_iff_maximalIdeal_eq, hmax, Ideal.span_singleton_eq_bot]
-    exact ht0
+    rwa [IsLocalRing.isField_iff_maximalIdeal_eq, hmax, Ideal.span_singleton_eq_bot]
   have hdvr : IsDiscreteValuationRing V0 :=
     ((IsDiscreteValuationRing.TFAE V0 hnf).out 1 5).2
       (⟨⟨_, hmax⟩⟩ : (IsLocalRing.maximalIdeal V0).IsPrincipal)
@@ -406,15 +405,13 @@ theorem dvr_loc_principal_prime : ∀ {L : Type} [Field L] (A : Subring L) (t : 
   have hA : ∀ a ∈ A, a ∈ V := fun a ha => V0.algebraMap_mem (⟨a, ha⟩ : A)
   refine ⟨V, hA, hdvr, ?_, ?_, ?_, ?_⟩
   · exact (IsDiscreteValuationRing.irreducible_iff_uniformizer _).2 hmax
-  · intro s hs
-    exact IsLocalization.map_units V0 (⟨s, hs⟩ : p.primeCompl)
+  · exact fun s hs => IsLocalization.map_units V0 (⟨s, hs⟩ : p.primeCompl)
   · intro f
     obtain ⟨⟨x, y⟩, hxy⟩ := IsLocalization.mk'_surjective p.primeCompl (show V0 from f)
     refine ⟨x, y, y.2, ?_⟩
     have := congrArg (algebraMap V0 L) (IsLocalization.mk'_spec V0 x y)
     have hxy' : IsLocalization.mk' V0 x y = (show V0 from f) := hxy
-    rw [hxy', map_mul] at this
-    exact this
+    rwa [hxy', map_mul] at this
   · have h := (RingHom.essFiniteType_algebraMap (R := A) (S := V0)).2
       (Algebra.EssFiniteType.of_isLocalization V0 p.primeCompl)
     exact h
@@ -527,7 +524,7 @@ theorem exists_weightedMonomialPlace : ∀ {L : Type} [Field L] (c : ℂ →+* L
     have h1 : z 0 = 0 := Subtype.ext h
     have := _root_.GlobalTheory.weightedRelation_coeff_mem_span z wt hw hz (wt 0) (X 0) (isWeightedHomogeneous_X Q wt 0)
       (by simp [h1]) (Finsupp.single 0 1)
-    rw [coeff_X, if_pos rfl, hm] at this
+    rw [coeff_X, ite_eq_left rfl, hm] at this
     exact (IsLocalRing.maximalIdeal.isMaximal Q).ne_top ((Ideal.eq_top_iff_one _).mpr this)
   set u : Fin r → L := fun i => (z i.succ : L) / (z 0 : L) ^ wt i.succ with hu
   have key0 : ∀ P : MvPolynomial (Fin r) Q, eval₂ Q.subtype u P = 0 →
@@ -715,7 +712,7 @@ theorem dForm_cons_pow_mul : ∀ {k A : Type} [CommRing k] [CommRing A] (α : k 
   | zero => simp [powCoeffMatrix]
   | succ i' =>
     simp only [powCoeffMatrix, Fin.cons_succ, Fin.cases_zero, Fin.cases_succ, Fin.cons_zero,
-      ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     letI := α.toAlgebra
     change KaehlerDifferential.D k A (t ^ e i' * w i') = _
     rw [Derivation.leibniz, Derivation.leibniz_pow, add_comm]
@@ -742,7 +739,7 @@ theorem monomial_place : ∀ {L : Type} [Field L] (c : ℂ →+* L) (Q : Subring
   have h1m : (1 : Q) ∉ IsLocalRing.maximalIdeal Q := fun h =>
     (IsLocalRing.maximalIdeal.isMaximal Q).ne_top ((Ideal.eq_top_iff_one _).mpr h)
   have huu : ∀ i, IsUnit (u i) := fun i => by
-    have h := hunit (MvPolynomial.X i) ⟨Finsupp.single i 1, by rw [MvPolynomial.coeff_X, if_pos rfl]; exact h1m⟩
+    have h := hunit (MvPolynomial.X i) ⟨Finsupp.single i 1, by rw [MvPolynomial.coeff_X, ite_eq_left rfl]; exact h1m⟩
     rw [MvPolynomial.eval₂_X] at h
     exact h
   have hu0 : ∀ i, (u i : L) ≠ 0 := fun i h => (huu i).ne_zero (Subtype.ext h)

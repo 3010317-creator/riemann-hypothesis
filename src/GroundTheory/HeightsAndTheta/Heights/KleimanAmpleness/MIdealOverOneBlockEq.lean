@@ -28,8 +28,7 @@ variable {S : Type} [CommRing S] {Ω : Type} [Field Ω] [Algebra S Ω]
 theorem not_mem_iff_unit_locIn {A : Subalgebra S Ω} {p : Ideal A} [hp : p.IsPrime] (a : A) :
     a ∉ p ↔ (a : Ω) ≠ 0 ∧ (a : Ω)⁻¹ ∈ IndefiniteRowSideFullHecke.Kleiman2.locIn A p := by
   constructor
-  · intro ha
-    exact ⟨coe_ne_zero_of_not_mem ha, mem_locIn.mpr ⟨1, a, ha, by simp⟩⟩
+  · exact fun ha => ⟨coe_ne_zero_of_not_mem ha, mem_locIn.mpr ⟨1, a, ha, by simp⟩⟩
   · rintro ⟨h0, hinv⟩ ha
     obtain ⟨a', b', hb', he⟩ := mem_locIn.mp hinv
     have hb0 := coe_ne_zero_of_not_mem hb'
@@ -144,14 +143,12 @@ theorem ModelCurvesLift.proof : ModelCurvesLift.Statement := by
     obtain ⟨g, rfl⟩ := hsurj f
     rw [hmemP]
     apply hxP
-    rw [mIdealOver_oneBlock_eq, Ideal.mem_comap]
-    exact hf
+    rwa [mIdealOver_oneBlock_eq, Ideal.mem_comap]
   obtain ⟨j, hjP⟩ := hP.relevant ()
   have hXj : (X j : Kleiman.Poly F N) ∉ pp := by
     have h1 : (X j : Kleiman.Poly F N) = Kleiman.oneBlock (S := F) (N := N) (X ⟨(), j⟩) := by
       rw [Kleiman.oneBlock, rename_X]
-    rw [h1, hmemP]
-    exact hjP
+    rwa [h1, hmemP]
   have hj : x j ≠ 0 := by
     intro h0
     apply hjP

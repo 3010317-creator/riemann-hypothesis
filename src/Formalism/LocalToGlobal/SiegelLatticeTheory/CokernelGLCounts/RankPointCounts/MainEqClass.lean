@@ -83,23 +83,20 @@ theorem gval_ne (t : TauC Y u u) (ht : t ∈ (Y.tO u u).genSet) : Gval (lf D (X.
   have h : (Y.tO u u).G t ≠ 0 := ht.1
   change Formalism.L2.SG.TermOp.Gt t ≠ 0 at h
   unfold Formalism.L2.SG.TermOp.Gt at h
-  have hG : t.G ≠ 0 := fun h0 => h (if_pos h0)
+  have hG : t.G ≠ 0 := fun h0 => h (ite_eq_left h0)
   have hrow : IsRowLat D (X.Fu u) t.lam := (Y.rowsOK u).1 t.lam t.mem
   have hGF := (_root_.term_function_const D u u (X.Fu u) t.lam hrow).1
   have hmk := Formalism.L2.SG.TermDef.Gt_mk hGF ⟨t.frame, t.rep.2.2.2.2⟩
   intro h0
   apply hG
   show Formalism.L2.SG.TermDef.Gt _ _ _ (Formalism.L2.SG.TermDef.mk _ _ _ ⟨t.frame, t.rep.2.2.2.2⟩) = 0
-  rw [hmk]
-  exact h0
+  rwa [hmk]
 
 theorem lam_eq {t t' : TauC Y u u} (h : (Y.tO u u).rowOf t = (Y.tO u u).rowOf t') : t.lam = t'.lam := by
-  have h2 := congrArg Prod.fst h
-  exact congrArg Subtype.val h2
+  exact congrArg Subtype.val (congrArg Prod.fst h)
 
 theorem lam'_eq {t t' : TauC Y u u} (h : (Y.tO u u).rowOf t = (Y.tO u u).rowOf t') : t.lam' = t'.lam' := by
-  have h2 := congrArg Prod.fst (congrArg Prod.snd h)
-  exact congrArg Subtype.val h2
+  exact congrArg Subtype.val (congrArg Prod.fst (congrArg Prod.snd h))
 
 theorem pairOfRowC_of (h : LiftIotaEqC) : PairOfRowC := by
   intro D X Y u hc t₁ t₂ h₁ h₂ hr
@@ -140,7 +137,7 @@ theorem stepClassG_of_pair_unram (hP : PairOfRowC) (hU : GUnramC) : StepClassG :
     obtain ⟨e1, e2⟩ := hBF (X.Fu u) t.lam hΛ (carr Y u t) (carr Y u t) hg hg β _ hp hp0
     show s0T t t = 1 ∧ scalT t t
     unfold s0T scalT
-    rw [if_pos ⟨rfl, rfl⟩]
+    rw [ite_eq_left ⟨rfl, rfl⟩]
     refine ⟨?_, ⟨rfl, rfl⟩, ?_, ?_⟩
     · exact e1.symm.trans hs
     · exact e1.symm.trans hs
@@ -162,7 +159,7 @@ theorem stepClassG_of_pair_unram (hP : PairOfRowC) (hU : GUnramC) : StepClassG :
     obtain ⟨e1, e2⟩ := hBF (X.Fu u) t.lam hΛ y (carr Y u t) hg' hg β _ hp hp0
     show s0T t' t = 1 ∧ scalT t' t
     unfold s0T scalT
-    rw [if_pos ⟨hl.symm, hl'.symm⟩, ← hl]
+    rw [ite_eq_left ⟨hl.symm, hl'.symm⟩, ← hl]
     refine ⟨?_, ⟨rfl, hl'.symm⟩, ?_, ?_⟩
     · exact e1.symm.trans hs2
     · exact e1.symm.trans hs2
@@ -192,7 +189,7 @@ theorem stepClassG_of_pair_unram (hP : PairOfRowC) (hU : GUnramC) : StepClassG :
     obtain ⟨e1, e2⟩ := hBF (X.Fu u) t.lam hΛ (carr Y u t) z hg hg'' β _ hp hp0
     show s0T t t'' = 1 ∧ scalT t t''
     unfold s0T scalT
-    rw [if_pos ⟨hl.trans hl2, hl'.trans hl2'⟩]
+    rw [ite_eq_left ⟨hl.trans hl2, hl'.trans hl2'⟩]
     refine ⟨?_, ⟨hl.trans hl2, hl'.trans hl2'⟩, ?_, ?_⟩
     · exact e1.symm.trans hs3
     · exact e1.symm.trans hs3

@@ -89,8 +89,7 @@ theorem FfG_sat (hB : ∀ v : V, coD0 ρV v ∈ Zf) (hiL : ∀ g m, iL (ρL g m)
   unfold finPreG at hw ⊢
   rw [Submodule.mem_comap, Submodule.restrictScalars_mem] at hw ⊢
   have hc' : algebraMap O (FractionRing O) c ≠ 0 := by
-    intro h0
-    exact hc ((IsFractionRing.injective O (FractionRing O)) (by rw [h0, map_zero]))
+    exact fun h0 => hc ((IsFractionRing.injective O (FractionRing O)) (by rw [h0, map_zero]))
   have key : LinearMap.compLeft iL Γ (z₀ : Γ → L) =
       (algebraMap O (FractionRing O) c)⁻¹ • (LinearMap.compLeft iL Γ (w : Γ → L) - coD0 ρV (iL m)) := by
     funext g
@@ -136,16 +135,16 @@ def kapG (j : ℕ) : Fin j → coZ1s ρL :=
 
 theorem kapG_fin (j : ℕ) (a : Fin j) : (fun g => iL ((kapG ρL iL Zf j a : Γ → L) g)) ∈ Zf := by
   by_cases h : LatBasisG ρL iL Zf j
-  · have e : kapG ρL iL Zf j = h.choose := dif_pos h
+  · have e : kapG ρL iL Zf j = h.choose := dite_eq_left h
     rw [e]
     exact h.choose_spec.1 a
-  · have e : kapG ρL iL Zf j = fun _ => 0 := dif_neg h
+  · have e : kapG ρL iL Zf j = fun _ => 0 := dite_eq_right h
     rw [e]
     convert Zf.zero_mem using 1
     ext g
     simp
 
-theorem kapG_eq {j : ℕ} (h : LatBasisG ρL iL Zf j) : kapG ρL iL Zf j = h.choose := dif_pos h
+theorem kapG_eq {j : ℕ} (h : LatBasisG ρL iL Zf j) : kapG ρL iL Zf j = h.choose := dite_eq_left h
 
 theorem kapG_basis {j : ℕ} (h : LatBasisG ρL iL Zf j) :
     (∀ z ∈ FfG ρL iL Zf, ∃ (b : Fin j → O) (c : O), c ≠ 0 ∧
@@ -178,16 +177,14 @@ theorem latBasisG_of [IsPrincipalIdealRing O] (j : ℕ) (hfg : Module.Finite O �
     intro a
     have h := (f a).2
     unfold FfG at h
-    rw [Submodule.mem_map] at h
-    exact h
+    rwa [Submodule.mem_map] at h
   choose w hwmem hwf using hw
   refine ⟨w, ?_, ?_, ?_⟩
   · intro a
     have h := hwmem a
     rw [Submodule.mem_comap] at h
     unfold finPreG at h
-    rw [Submodule.mem_comap, Submodule.restrictScalars_mem] at h
-    exact h
+    rwa [Submodule.mem_comap, Submodule.restrictScalars_mem] at h
   · intro z hz
     let zF : ↥(FfG ρL iL Zf) := ⟨z, hz⟩
     let b := e.repr (Submodule.Quotient.mk zF)
@@ -211,8 +208,7 @@ theorem latBasisG_of [IsPrincipalIdealRing O] (j : ℕ) (hfg : Module.Finite O �
     have hT : ∑ a, b a • f a ∈ Submodule.torsion O ↥(FfG ρL iL Zf) :=
       (Submodule.mem_torsion_iff _).2 ⟨⟨c, mem_nonZeroDivisors_of_ne_zero hc⟩, hF⟩
     have h0 : (Submodule.torsion O ↥(FfG ρL iL Zf)).mkQ (∑ a, b a • f a) = 0 := by
-      rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact hT
+      rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
 
     rw [map_sum] at h0
     simp only [map_smul, Submodule.mkQ_apply, hf] at h0
@@ -341,7 +337,7 @@ theorem latBasis_of (l : K.Col i dc) (hf : FinFf i dc Dd l) (hr : RankFf i dc Dd
 theorem κ_mem (l : K.Col i dc) a (g : ↥(Γc i dc l)) :
     κ i dc Dd ρ π l a g = (κz i dc Dd ρ π l a : ↥(Γc i dc l) → Lr i Dd) g := by
   unfold κ
-  rw [dif_pos g.2]
+  rw [dite_eq_left g.2]
 
 theorem iL_equiv (l : K.Col i dc) (g : ↥(Γc i dc l)) (m : Lr i Dd) :
     iLr i Dd (ρL i dc Dd l g m) = ρV i dc Dd l g (iLr i Dd m) := iLM_smul (D.nd.O i) _ (Dd.ρk 0).toRingHom (Formalism.NG.uElt Dd.r Dd.χ (g : D.nd.Om ≃ₐ[D.host.E] D.nd.Om)) m
@@ -352,8 +348,7 @@ theorem finRhoAt (l : K.Col i dc) (hB : CobFin i dc Dd l) (hL : LatBasis i dc Dd
     KHf.FinRhoAt i dc Dd.r Dd.χ (Ffr i dc Dd) (jr i dc ρ π) (κ i dc Dd ρ π) (κz i dc Dd ρ π) l := by
   unfold KHf.FinRhoAt
   refine ⟨fun a g => (κ_mem i dc Dd ρ π l a g).symm, ?_, fun a => ?_, ?_, ?_⟩
-  · intro c z hc hz
-    exact FfG_sat _ _ _ _ hB (iL_equiv i dc Dd l) c z hc hz
+  · exact fun c z hc hz => FfG_sat _ _ _ _ hB (iL_equiv i dc Dd l) c z hc hz
   · exact _root_.Formalism.MainNotions.N.KFin.kapG_mem' _ _ _ _ a
   · exact (kapG_basis (ρL i dc Dd l) (iLr i Dd) (Zf i dc Dd l) hL).1
   · exact (kapG_basis (ρL i dc Dd l) (iLr i Dd) (Zf i dc Dd l) hL).2
@@ -410,11 +405,11 @@ def uCol (l : K.Col i dc) : ↥(Γc i dc l) → D.nd.O i :=
 
 theorem uCol_add (l : K.Col i dc) (g h : ↥(Γc i dc l)) : uCol i dc l (g * h) = uCol i dc l g + uCol i dc l h := by
   by_cases hU : UnrHom i dc l
-  · have e : uCol i dc l = hU.choose := dif_pos hU
+  · have e : uCol i dc l = hU.choose := dite_eq_left hU
     rw [e]
     obtain ⟨⟨hadd, _, _⟩, _⟩ := hU.choose_spec
     exact hadd g h
-  · have e : uCol i dc l = 0 := dif_neg hU
+  · have e : uCol i dc l = 0 := dite_eq_right hU
     rw [e]
     simp
 
@@ -426,11 +421,11 @@ def uz (l : K.Col i dc) : Formalism.NG.coZ1s (Representation.trivial (D.nd.O i) 
 
 theorem u_mem (l : K.Col i dc) (g : ↥(Γc i dc l)) : u i dc l g = uCol i dc l g := by
   unfold u
-  rw [dif_pos g.2]
+  rw [dite_eq_left g.2]
 
 theorem uCol_spec (l : K.Col i dc) (hU : UnrHom i dc l) :
     UnrAdm i dc l (uCol i dc l) ∧ ∃ g, uCol i dc l g = 1 := by
-  have e : uCol i dc l = hU.choose := dif_pos hU
+  have e : uCol i dc l = hU.choose := dite_eq_left hU
   rw [e]
   exact hU.choose_spec
 

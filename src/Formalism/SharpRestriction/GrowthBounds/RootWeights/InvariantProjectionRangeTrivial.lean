@@ -205,13 +205,13 @@ private theorem E_apply_eq_zero_of_isHWV_zero {n : ℕ} {K V : Type} [Field K] [
   have r1 : ∀ y, E b a (E a b y) = E a b (E b a y) + (E b b y - E a a y) := by
     intro y
     have h1 := congrArg (fun F : Module.End K V => F y) (hE.1 b a a b)
-    simp only [LinearMap.sub_apply, Module.End.mul_apply, if_true] at h1
+    simp only [LinearMap.sub_apply, Module.End.mul_apply, ite_true] at h1
     rw [← h1]
     abel
   have r2 : ∀ y, E b b (E a b y) = E a b (E b b y) - E a b y := by
     intro y
     have h1 := congrArg (fun F : Module.End K V => F y) (hE.1 b b a b)
-    simp only [LinearMap.sub_apply, Module.End.mul_apply, if_true, if_neg hne.symm, zero_sub,
+    simp only [LinearMap.sub_apply, Module.End.mul_apply, ite_true, ite_eq_right hne.symm, zero_sub,
       LinearMap.neg_apply] at h1
     rw [sub_eq_iff_eq_add] at h1
     rw [h1]
@@ -219,7 +219,7 @@ private theorem E_apply_eq_zero_of_isHWV_zero {n : ℕ} {K V : Type} [Field K] [
   have r3 : ∀ y, E a a (E a b y) = E a b (E a a y) + E a b y := by
     intro y
     have h1 := congrArg (fun F : Module.End K V => F y) (hE.1 a a a b)
-    simp only [LinearMap.sub_apply, Module.End.mul_apply, if_true, if_neg hne.symm, sub_zero] at h1
+    simp only [LinearMap.sub_apply, Module.End.mul_apply, ite_true, ite_eq_right hne.symm, sub_zero] at h1
     rw [sub_eq_iff_eq_add] at h1
     rw [h1]
     abel
@@ -384,7 +384,7 @@ theorem equivariant_commutes_isotypic (D : Formalism.BasicNotions.D7) (h2 : adm2
 
 theorem invariant_projection_range_trivial (D : Formalism.BasicNotions.D7) (h2 : adm2 D) {n : ℕ} {K V : Type} [Field K] [CharZero K] [AddCommGroup V]
     [Module K V] [FiniteDimensional K V] (E : GLOps n K V) (hE : IsGLRep E) (P : Module.End K V)
-    (hP : IsInvProj E P) (x : V) : P x ∈ isoSub E 0 :=  by
+    (hP : IsInvProj E P) (x : V) : P x ∈ isoSub E 0 := by
   have htop := isotypic_submodules_span_top D h2 n K V E hE
   have hx : x ∈ ⨆ mu, isoSub E mu := by
     rw [htop]
@@ -393,8 +393,7 @@ theorem invariant_projection_range_trivial (D : Formalism.BasicNotions.D7) (h2 :
   · intro mu y hy
     by_cases hmu : mu = 0
     · subst hmu
-      rw [hP.1 y hy]
-      exact hy
+      rwa [hP.1 y hy]
     · rw [hP.2 mu hmu y hy]
       exact Submodule.zero_mem _
   · rw [map_zero]

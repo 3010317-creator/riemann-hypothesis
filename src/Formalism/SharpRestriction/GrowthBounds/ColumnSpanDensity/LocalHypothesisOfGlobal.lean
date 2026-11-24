@@ -65,8 +65,7 @@ theorem card_fiber_restriction_pi {ι ι' : Type} [Fintype ι] [DecidableEq ι] 
       by_cases h : ∃ i', φ i' = i
       · simp only [h, dite_true, Finset.mem_singleton]
         rw [← hc, Function.comp, h.choose_spec]
-      · simp only [h, dite_false]
-        exact hA i
+      · simpa only [h, dite_false] using hA i
     · intro hA
       constructor
       · intro i
@@ -198,7 +197,7 @@ theorem segment_mean_kappa_bound (D : Formalism.BasicNotions.D7) (K : Cst) (hK :
     · intro s hs
       have hs' : s ∈ X.TT := hs
       have h1 := Finset.mem_Icc.1 (hB ⟨s, hs'⟩)
-      have h2 : ex B s = B ⟨s, hs'⟩ := dif_pos hs'
+      have h2 : ex B s = B ⟨s, hs'⟩ := dite_eq_left hs'
       show X.bl ≤ (ex B s : ℝ) ∧ (ex B s : ℝ) ≤ X.bu + 2 * X.J0 K
       rw [h2]
       refine ⟨?_, ?_⟩
@@ -235,8 +234,8 @@ theorem segment_sum_kappa_bound (D : Formalism.BasicNotions.D7) (K : Cst) (hK : 
     show kapSeg K X R jj B (segATop X.TT (ex A) jj) (segAPlus X.TT (ex A) jj) = _
     have e1 : segATop X.TT (ex A) jj = fun i => (A ∘ sgTop X.TT jj) (some i) := by
       funext i
-      exact dif_pos (sg_pos_spec X.TT jj i).1
-    have e2 : segAPlus X.TT (ex A) jj = (A ∘ sgTop X.TT jj) none := dif_pos (sg_next_mem X.TT jj).1
+      exact dite_eq_left (sg_pos_spec X.TT jj i).1
+    have e2 : segAPlus X.TT (ex A) jj = (A ∘ sgTop X.TT jj) none := dite_eq_left (sg_next_mem X.TT jj).1
     rw [e1, e2]
   have h3 := sum_pi_marginal_injective (sgTop X.TT jj) (sgTop_inj X.TT jj) (X.WaP K)
     (fun A' : Option (Fin (segS X.TT jj)) → ℕ => kapSeg K X R jj B (fun i => A' (some i)) (A' none))
@@ -317,9 +316,7 @@ theorem meanX_of (D : Formalism.BasicNotions.D7) (K : Cst) (hK : K.Pos) (hA : K.
         X.c4 (ex A) (ex B) jj =
       ∑ jj, ∑ B ∈ PB, ∑ A ∈ PA, kapTI R.O K.C₀ K.CA K.CE1 K.CE2 K.Cm X.p X.n' X.m X.TT X.G' X.N₁ X.Y X.a X.b'
         X.c4 (ex A) (ex B) jj := by
-    rw [Finset.sum_comm]
-    rw [Finset.sum_congr rfl fun B _ => Finset.sum_comm]
-    rw [Finset.sum_comm]
+    rw [Finset.sum_comm, Finset.sum_congr rfl fun B _ => Finset.sum_comm, Finset.sum_comm]
   have e3 : ∑ jj, ∑ B ∈ PB, ∑ A ∈ PA, kapTI R.O K.C₀ K.CA K.CE1 K.CE2 K.Cm X.p X.n' X.m X.TT X.G' X.N₁ X.Y X.a X.b'
         X.c4 (ex A) (ex B) jj ≤
       ∑ jj : Fin (numSeg X.TT), (PB.card : ℝ) * (((X.WaP K).card : ℝ) ^ X.N *

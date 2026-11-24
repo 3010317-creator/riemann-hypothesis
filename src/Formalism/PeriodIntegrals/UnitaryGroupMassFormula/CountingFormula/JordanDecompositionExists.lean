@@ -99,8 +99,7 @@ theorem pb_coords (x : ι → V) (𝔞 : ι → FractionalIdeal (nonZeroDivisors
     refine ⟨Pi.single i c, fun j => ?_, ?_⟩
     · by_cases hj : j = i
       · subst hj
-        rw [Pi.single_eq_same]
-        exact hc
+        rwa [Pi.single_eq_same]
       · rw [Pi.single_eq_of_ne hj]
         exact (𝔞 j : Submodule (𝓞 K) K).zero_mem
     · symm
@@ -251,8 +250,7 @@ theorem determinant_local : DetLocal := by
       obtain ⟨t, ht, rfl⟩ := hs
       intro hmem
       apply ht
-      rw [← hP]
-      exact hmem
+      rwa [← hP]
     | one => exact fun h1 => P.isPrime.ne_top ((Ideal.eq_top_iff_one _).mpr h1)
     | mul s s' _ _ h1 h2 => exact fun hm => (P.isPrime.mem_or_mem hm).elim h1 h2
   have hS2 : ∀ s ∈ S, star ((s : 𝓞 K) : K) = (s : K) := by

@@ -80,15 +80,14 @@ theorem mirSet_true_conj {r : ℕ} (a : Fin r → ZMod g) (y z : Gn g r) :
     mirSet a true (y * z * y⁻¹) ↔ mirSet ((↑y⁻¹ : Mt g r) *ᵥ a) true z := by
   have hAB : (y : Mt g r) * (↑y⁻¹ : Mt g r) = 1 := y.mul_inv
   have hBA : (↑y⁻¹ : Mt g r) * (y : Mt g r) = 1 := y.inv_mul
-  simp only [mirSet, if_true, Units.val_mul]
+  simp only [mirSet, ite_true, Units.val_mul]
   constructor
   · intro h x
     obtain ⟨c, hc⟩ := h ((y : Mt g r) *ᵥ x)
     refine ⟨c, ?_⟩
     have := congrArg (fun v => (↑y⁻¹ : Mt g r) *ᵥ v) hc
     simp only [mulVec_sub, mulVec_smul, mulVec_mulVec, ← Matrix.mul_assoc, hBA, Matrix.one_mul] at this
-    rw [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
-    exact this
+    rwa [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
   · intro h x
     obtain ⟨c, hc⟩ := h ((↑y⁻¹ : Mt g r) *ᵥ x)
     refine ⟨c, ?_⟩
@@ -100,15 +99,14 @@ theorem mirSet_false_conj {r : ℕ} (a : Fin r → ZMod g) (y z : Gn g r) :
     mirSet a false (y * z * y⁻¹) ↔ mirSet (a ᵥ* (y : Mt g r)) false z := by
   have hAB : (y : Mt g r) * (↑y⁻¹ : Mt g r) = 1 := y.mul_inv
   have hBA : (↑y⁻¹ : Mt g r) * (y : Mt g r) = 1 := y.inv_mul
-  simp only [mirSet, Bool.false_eq_true, if_false, Units.val_mul]
+  simp only [mirSet, Bool.false_eq_true, ite_false, Units.val_mul]
   constructor
   · intro h x hx
     rw [← dotProduct_mulVec] at hx
     have := h _ hx
     have := congrArg (fun v => (↑y⁻¹ : Mt g r) *ᵥ v) this
     simp only [mulVec_mulVec, ← Matrix.mul_assoc, hBA, Matrix.one_mul] at this
-    rw [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
-    exact this
+    rwa [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
   · intro h x hx
     have h2 : (a ᵥ* (y : Mt g r)) ⬝ᵥ ((↑y⁻¹ : Mt g r) *ᵥ x) = 0 := by
       rw [← dotProduct_mulVec, mulVec_mulVec, hAB, one_mulVec]; exact hx
@@ -152,7 +150,7 @@ theorem GlobalTheory.MirAvg.tr_mirEl_indep : ∀ (g : ℕ) [Fact g.Prime] (n : �
   | true =>
     obtain ⟨y, hy⟩ := exists_gl_mulVec_single_eq (0 : Fin (n + 1)) ha
     refine tr_mirEl_conj ψ hψ θ a _ true y fun z => ?_
-    rw [mirSet_true_conj, if_pos rfl, ← hy, mulVec_mulVec, y.inv_mul, one_mulVec]
+    rw [mirSet_true_conj, ite_eq_left rfl, ← hy, mulVec_mulVec, y.inv_mul, one_mulVec]
   | false =>
     obtain ⟨P, hP⟩ := exists_gl_mulVec_single_eq (Fin.last n) ha
     let y : Gn g (n + 1) := ⟨(↑P⁻¹ : Mt g (n + 1))ᵀ, (P : Mt g (n + 1))ᵀ,

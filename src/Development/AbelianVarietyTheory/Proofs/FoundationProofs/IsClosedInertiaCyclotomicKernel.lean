@@ -106,8 +106,7 @@ theorem isOpen_setOf_apply [Algebra.IsAlgebraic ℚ Ω] (x : Ω) (P : Ω → Pro
   have hτx : τ x = x :=
     (IntermediateField.mem_fixingSubgroup_iff _ _).1 hτ x (IntermediateField.mem_adjoin_simple_self ℚ x)
   show P ((σ * τ) x)
-  rw [AlgEquiv.mul_apply, hτx]
-  exact hσ
+  rwa [AlgEquiv.mul_apply, hτx]
 
 theorem isClosed_setOf_apply [Algebra.IsAlgebraic ℚ Ω] (x : Ω) (P : Ω → Prop) :
     IsClosed {σ : G ℚ Ω | P (σ x)} := by
@@ -131,8 +130,7 @@ theorem isClosed_Ine [Algebra.IsAlgebraic ℚ Ω] (A : ValuationSubring Ω) :
     ext σ
     simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
     constructor
-    · intro h
-      exact ⟨fun x => apply_mem_iff_of_mem_Dec (F := ℚ) h.1 x, h.2⟩
+    · exact fun h => ⟨fun x => apply_mem_iff_of_mem_Dec (F := ℚ) h.1 x, h.2⟩
     · rintro ⟨h1, h2⟩
       exact ⟨mem_dec_of_forall h1, h2⟩
   rw [e]

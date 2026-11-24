@@ -190,11 +190,9 @@ theorem entry_le_of_maps (hQ : Q' * P' = 1) (hP : LocBasisW D ρ L P) (hP' : Loc
     have e2 : (∑ x, c x • fun b => (1 : Matrix (Fin N') (Fin N') D.host.E) b x) b = (c b : D.host.E) := by
       rw [Finset.sum_apply]
       simp [Algebra.smul_def, Matrix.one_apply]
-    rw [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
-    exact h1
+    rwa [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
   have h4 := norm_int_le_one ρ (c b)
-  rw [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
-  exact h4
+  rwa [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
 
 def IntIn (ρ : D.host.E →+* ℂ_[p]) (Q' : Matrix (Fin N') (Fin N') D.host.E) (P : Matrix (Fin N) (Fin N) D.host.E)
     (B : Matrix (Fin N') (Fin N) D.host.E) : Prop :=
@@ -356,7 +354,7 @@ theorem rho_yy (i : Fin r) (j : (Bool × HH D) × Fin N × Fin N') :
   rw [Fintype.sum_prod_type, Finset.sum_eq_single (tauPl D j.1)]
   · rw [Fintype.sum_prod_type]
 
-    simp only [yy, map_sum, map_mul, cA, if_true, lamBc_eq]
+    simp only [yy, map_sum, map_mul, cA, ite_true, lamBc_eq]
     refine Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => ?_
     ring
   · intro t _ ht
@@ -369,7 +367,7 @@ theorem rho_conj_yy (i : Fin r) (j : (Bool × HH D) × Fin N × Fin N') :
   rw [Fintype.sum_prod_type, Finset.sum_eq_single (tauPl D j.1)]
   · rw [Fintype.sum_prod_type]
 
-    simp only [yy, map_sum, map_mul, cB, if_true, lamB_eq, conj_conj]
+    simp only [yy, map_sum, map_mul, cB, ite_true, lamB_eq, conj_conj]
     refine Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => ?_
     ring
   · intro t _ ht
@@ -397,10 +395,10 @@ theorem chgB_eq (hU : ∀ z, ((P (tauPl D z)).map D.host.conj).transpose * P (ta
     rw [tauEmb_eq, ← Matrix.map_mul, hU, Matrix.map_one _ (map_zero _) (map_one _)]
   unfold chgB cA
   by_cases h : tauPl D j.1 = k.1
-  · simp only [if_pos h]
+  · simp only [ite_eq_left h]
     rw [hinv, tauEmb_eq]
     rfl
-  · simp only [if_neg h]
+  · simp only [ite_eq_right h]
 
 theorem sum_cB_cA (hU : ∀ z, ((P (tauPl D z)).map D.host.conj).transpose * P (tauPl D z) = 1)
     (hU' : ∀ z, ((P' (tauPl D z)).map D.host.conj).transpose * P' (tauPl D z) = 1)
@@ -412,12 +410,10 @@ theorem sum_cB_cA (hU : ∀ z, ((P (tauPl D z)).map D.host.conj).transpose * P (
   · subst hz
     have e1 : ∑ x, D.host.conj (P' (tauPl D z) x b) * P' (tauPl D z) x b' = if b = b' then 1 else 0 := by
       have := congrFun (congrFun (hU' z) b) b'
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     have e2 : ∑ x, D.host.conj (P (tauPl D z) x a') * P (tauPl D z) x a = if a' = a then 1 else 0 := by
       have := congrFun (congrFun (hU z) a') a
-      rw [Matrix.mul_apply, Matrix.one_apply] at this
-      exact this
+      rwa [Matrix.mul_apply, Matrix.one_apply] at this
     have e3 : ∑ k, cB D lam P P' (z, a, b) k * cA D lam P P' (z, a', b') k =
         rho D lam (tauPl D z) (∑ x, D.host.conj (P' (tauPl D z) x b) * P' (tauPl D z) x b') *
           rho D lam (tauPl D z) (∑ x, D.host.conj (P (tauPl D z) x a') * P (tauPl D z) x a) := by
@@ -426,7 +422,7 @@ theorem sum_cB_cA (hU : ∀ z, ((P (tauPl D z)).map D.host.conj).transpose * P (
 
         rw [map_sum, map_sum, Finset.sum_mul_sum]
         refine Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => ?_
-        simp only [map_mul, cA, cB, if_true]
+        simp only [map_mul, cA, cB, ite_true]
         ring
       · intro t _ ht
         refine Finset.sum_eq_zero fun x _ => ?_
@@ -440,7 +436,7 @@ theorem sum_cB_cA (hU : ∀ z, ((P (tauPl D z)).map D.host.conj).transpose * P (
         simp [hb, ha, ha']
     · simp [hb]
   · have hne : tauPl D z ≠ tauPl D z' := fun h => hz ((tauPl_bij D).1 h)
-    rw [if_neg (fun h => hz (congrArg Prod.fst h))]
+    rw [ite_eq_right (fun h => hz (congrArg Prod.fst h))]
     refine Finset.sum_eq_zero fun k _ => ?_
     by_cases h : tauPl D z = k.1
     · have h' : tauPl D z' ≠ k.1 := fun h2 => hne (h.trans h2.symm)

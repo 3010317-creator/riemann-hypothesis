@@ -95,8 +95,7 @@ theorem volU_two_card_uidx (r : ℕ) : 2 * Fintype.card (UIdx r) = r * (r + 1) :
     · intro p _ q _ h
       simp only [Prod.mk.injEq] at h
       exact Prod.ext h.2 h.1
-    · intro q hq
-      exact ⟨(q.2, q.1), by simpa using hq, rfl⟩
+    · exact fun q hq => ⟨(q.2, q.1), by simpa using hq, rfl⟩
   have heq : (Finset.univ.filter (fun p : Fin (r + 1) × Fin (r + 1) => p.1 = p.2)).card = r + 1 := by
     have : Finset.univ.filter (fun p : Fin (r + 1) × Fin (r + 1) => p.1 = p.2) =
         Finset.univ.map ⟨fun a : Fin (r + 1) => (a, a), fun a b h => by simpa using h⟩ := by
@@ -157,7 +156,7 @@ theorem volUZZAt_of (v : PlX X) (hv : TypAt X v)
     (hH : VolTHermCnt X.B.I.cm.sig ψ v (gAt X v) D.R.rS)
     (hC : VolTTFCong X u u' v) : VolTZZAt X u u' ψ v := by
   unfold VolTZZAt ZZX volS
-  rw [if_pos hv]
+  rw [ite_eq_left hv]
   have hset : ZZTyp X.B.I.cm.sig v (gAt X v) D.R.rS (TFv X u v) (TFv X u' v) =
       {z | (fun p => locZ (E := X.B.I.E) v z p.1 p.2) ∈
         {w | (fun p => (w p - TFv X u v p.1 p.2) * sc (E := X.B.I.E) v (gAt X v : Fv X.B.I.F v)⁻¹) ∈
@@ -176,7 +175,7 @@ theorem volume_deep_congruence_of_fubini (v : PlX X) (hv : TypAt X v)
     (hP : VolTProdU (E := X.B.I.E) ψ v (gAt X v) D.R.rS)
     (hO : VolTOne (E := X.B.I.E) ψ v (UIdx D.R.rS)) : VolumeDeepCongruenceSubgroup X ψ v := by
   unfold VolumeDeepCongruenceSubgroup localVolumeUnit volU
-  rw [if_pos hv, hE, hP, hO, one_mul, ENNReal.toReal_inv, ENNReal.toReal_pow, ENNReal.toReal_natCast,
+  rw [ite_eq_left hv, hE, hP, hO, one_mul, ENNReal.toReal_inv, ENNReal.toReal_pow, ENNReal.toReal_natCast,
     volU_two_card_uidx, zpow_neg, zpow_natCast]
 
 def VolUSteps (v : PlX X) : Prop :=
@@ -225,8 +224,7 @@ theorem val_natCast_of (g : ℕ) (hg1 : (g : 𝓞 F) ∈ v.asIdeal) (hg2 : (g : 
     exact hg2 (h ▸ Ideal.zero_mem _)
   have h1 := (intValuation_le_pow_iff_dvd v (g : 𝓞 F) 1).mpr (by rwa [pow_one, Ideal.dvd_span_singleton])
   have h2 : ¬ v.intValuation (g : 𝓞 F) ≤ WithZero.exp (-((2 : ℕ) : ℤ)) := by
-    rw [intValuation_le_pow_iff_dvd, Ideal.dvd_span_singleton]
-    exact hg2
+    rwa [intValuation_le_pow_iff_dvd, Ideal.dvd_span_singleton]
   rw [intValuation_eq_exp_neg_multiplicity v hg0] at h1 h2 ⊢
   rw [WithZero.exp_le_exp] at h1 h2
   congr 1
@@ -245,8 +243,7 @@ theorem split_transport {K L : Type} [Field K] [NumberField K] [Field L] [Number
     ?_ ?_ ?_
   · intro w hw
     have h1 := Ideal.mem_map_of_mem φ hw
-    rw [map_natCast] at h1
-    exact h1
+    rwa [map_natCast] at h1
   · intro a b _ _ hab
     have h1 : a.asIdeal.map φ = b.asIdeal.map φ := congrArg HeightOneSpectrum.asIdeal hab
     have h2 := congrArg (Ideal.comap φ) h1
@@ -259,8 +256,7 @@ theorem split_transport {K L : Type} [Field K] [NumberField K] [Field L] [Number
       rw [← Ideal.map_comap_of_surjective φ φ.surjective w'.asIdeal, hb, Ideal.map_bot]
     refine ⟨⟨w'.asIdeal.comap φ, Ideal.IsPrime.comap φ, hne⟩, ?_, ?_⟩
     · show _ ∈ Ideal.comap φ w'.asIdeal
-      rw [Ideal.mem_comap, map_natCast]
-      exact hw'
+      rwa [Ideal.mem_comap, map_natCast]
     · exact HeightOneSpectrum.ext (Ideal.map_comap_of_surjective φ φ.surjective w'.asIdeal)
 
 section K
@@ -295,8 +291,7 @@ theorem locDeg_one (l : ℕ) [hl : Fact l.Prime]
       have h3 : ((l : ℕ) : ℤ) ∈ Q.under ℤ := by
         rw [← Ideal.over_def Q (Ideal.span {((l : ℕ) : ℤ)})]
         exact Ideal.mem_span_singleton_self _
-      have h4 := Ideal.mem_comap.mp h3
-      simpa using h4
+      simpa using Ideal.mem_comap.mp h3
     refine ⟨⟨Q, hQ.1, ?_⟩, hmem, rfl⟩
     intro hb
     rw [hb, Ideal.mem_bot] at hmem
@@ -366,8 +361,7 @@ theorem arith_of_loc (l : ℕ) [hl : Fact l.Prime] (p : HeightOneSpectrum (𝓞 
       rw [Ne, Ideal.span_singleton_eq_bot]
       exact_mod_cast hl.out.ne_zero
     have h1 : (Ideal.span {((l : ℕ) : ℤ)}).ramificationIdx' p.asIdeal = 1 := by
-      rw [Ideal.ramificationIdx'_eq_ramificationIdx _ _ hne]
-      exact he
+      rwa [Ideal.ramificationIdx'_eq_ramificationIdx _ _ hne]
     intro hmem
     have hle : Ideal.map (algebraMap ℤ (𝓞 F)) (Ideal.span {((l : ℕ) : ℤ)}) ≤ p.asIdeal ^ 2 := by
       rw [Ideal.map_span, Set.image_singleton, Ideal.span_le, Set.singleton_subset_iff]

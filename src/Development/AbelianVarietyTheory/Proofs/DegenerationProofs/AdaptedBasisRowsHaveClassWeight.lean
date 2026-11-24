@@ -259,11 +259,8 @@ open GlobalTheory.UT GlobalTheory.ZH.ClassWeight
 noncomputable section
 namespace GlobalTheory.ZH.CrdMove
 
-theorem stk_onto {F : Type} [Field F] (z : Sp F) : Function.Surjective (toStk z) := fun a => by
-  obtain ⟨U, hU, f, rfl⟩ := (Sp F).presheaf.exists_germ_eq a
-  obtain rfl : U = ⊤ := eq_top_iff.2 fun y _ => (Subsingleton.elim (α := PrimeSpectrum F) z y) ▸ hU
-  obtain ⟨x, rfl⟩ := (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of F)).inv).2 f
-  exact ⟨x, rfl⟩
+theorem stk_onto {F : Type} [Field F] (z : Sp F) : Function.Surjective (toStk z) :=
+  GlobalTheory.ZH.ParTranslate.toStk_onto z
 
 theorem stk_valR {F : Type} [Field F] {X : Scheme.{0}} (x : Sp F ⟶ X) (U : X.Opens) (z : Sp F) (h : x z ∈ U)
     (a : Γ(X, U)) : toStk z (valR x U a) = gs x z U a := by

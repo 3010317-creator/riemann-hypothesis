@@ -167,8 +167,7 @@ theorem adm_three_iff_representative (D : Formalism.BasicNotions.D7) (X : Sys p)
       intro φ'
       have H1 := H j hj (c, L1) La' hL0 hL' (frmBack X (La := (c, L1)) (delt X hfin j c L1) hh φ') I n
       change GeZ _ at H1
-      rw [key, frmMove_frmBack, smul_eq_mul, geZ_mul_iff (hn j (c, L1))] at H1
-      exact H1
+      rwa [key, frmMove_frmBack, smul_eq_mul, geZ_mul_iff (hn j (c, L1))] at H1
     obtain ⟨L2, h2, e2⟩ := delt_spec X hfin j c L1 hL0
     have h21 : L2 = L1 := (repOf_ex X.Lv hfin j c L1 hL0).unique ⟨h2, _, e2⟩ ⟨h0, 1, (lsmul_one _ L1).symm⟩
     have e3 : (X.Lv.lev j c).smul (delt X hfin j c L1)⁻¹ L1 = L1 := by
@@ -254,8 +253,7 @@ theorem adm_two_pendant_iff_representative (D : Formalism.BasicNotions.D7) (X : 
       have hr : frmMove X δ hh (frmBack X δ hh ψ) = ψ := by
         cases ψ
         simp only [frmMove, frmBack, inv_mul_cancel_left]
-      rw [hr] at h
-      exact h
+      rwa [hr] at h
     rw [hS] at key2
     exact key2 φ
   · intro H j hj La La' hLa hLa' φ
@@ -269,8 +267,7 @@ theorem adm_two_pendant_iff_representative (D : Formalism.BasicNotions.D7) (X : 
       rw [lsmul_lsmul_inv]
     rw [thA_SA X ℂ_[p] δ hh φ]
     have hrep : (La.1, (X.Lv.lev j La.1).smul δ⁻¹ La.2) ∈ repOf X.Lv hfin j := by
-      rw [hS]
-      exact hL1
+      rwa [hS]
     exact H j hj _ hrep La' hLa' (frmMove X δ hh φ)
 
 end Formalism.L2.PairingIndexBounds.PowerSeriesNecessity

@@ -76,8 +76,7 @@ theorem vtf_local (hol : IsHolFam e) (V : (pullback f u).Opens) (φ : Γ(pullbac
   obtain ⟨W, hW, huW, -⟩ := exists_isAffineOpen_mem_and_subset (x := u cpt) (U := ⊤) trivial
   have hfy : e z0 cpt ∈ f ⁻¹ᵁ W := by
     show f (e z0 cpt) ∈ W
-    rw [← Scheme.Hom.comp_apply, he]
-    exact huW
+    rwa [← Scheme.Hom.comp_apply, he]
   obtain ⟨U, hU, hyU, hUW⟩ := exists_isAffineOpen_mem_and_subset hfy
   have : IsAffine U := hU
   have : IsAffine W := hW
@@ -93,13 +92,13 @@ theorem vtf_local (hol : IsHolFam e) (V : (pullback f u).Opens) (φ : Γ(pullbac
     if h : ⊤ ≤ e z ⁻¹ᵁ U then IsOpenImmersion.lift U.ι (e z) (vtf_range (e z) U h)
     else IsOpenImmersion.lift U.ι (e z0) (vtf_range (e z0) U h0U)
   have heU : ∀ z, ⊤ ≤ e z ⁻¹ᵁ U → eU z ≫ U.ι = e z := fun z h => by
-    simp only [eU, dif_pos h, IsOpenImmersion.lift_fac]
+    simp only [eU, dite_eq_left h, IsOpenImmersion.lift_fac]
   have heU' : ∀ z, eU z ≫ fU = uW := fun z => by
     rw [← cancel_mono W.ι]
     simp only [fU, uW, Category.assoc, IsOpenImmersion.lift_fac]
     by_cases h : ⊤ ≤ e z ⁻¹ᵁ U
     · rw [← Category.assoc, heU z h, he]
-    · simp only [eU, dif_neg h, IsOpenImmersion.lift_fac_assoc, he]
+    · simp only [eU, dite_eq_right h, IsOpenImmersion.lift_fac_assoc, he]
   have hpb : IsPullback (pullback.fst fU uW) (pullback.snd fU uW) fU uW := IsPullback.of_hasPullback fU uW
   have hgen := vtf_closure_eq_top (isPushout_appTop_of_isPullback hpb)
   have hw' : (pullback.fst fU uW ≫ U.ι) ≫ f = pullback.snd fU uW ≫ u := by
@@ -201,8 +200,7 @@ theorem vtf_local (hol : IsHolFam e) (V : (pullback f u).Opens) (φ : Γ(pullbac
           valAt' (pP z) ⊤ (h ^ n) := by
         rw [← hn]
         exact valAt'_res (pP z) ((pullback fU uW).basicOpen_le h) (hD z hz) _
-      rw [ra, rs] at e2
-      exact e2
+      rwa [ra, rs] at e2
     rw [e1, eq_mul_inv_iff_mul_eq₀ (by rw [hpow]; exact pow_ne_zero _ hne), e3]
   refine ⟨N, hN, ⟨h0U, ?_⟩, hVz, ?_⟩
   · exact (valAt'_ne_zero_iff (pP z0) ⊤ (vtf_top _) h cpt).2 hmem

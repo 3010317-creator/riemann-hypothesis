@@ -608,8 +608,7 @@ theorem continuous_pairHerm_gramH_sub (R : Type) [CommRing R] [Algebra F R] [Top
     have h := hp.comp m2
     exact h
   have := h1.sub h2
-  refine this.congr fun z => ?_
-  exact (pairHerm_sub R σ z.1 _ c).symm
+  exact this.congr fun z => (pairHerm_sub R σ z.1 _ c).symm
 
 end Cm
 
@@ -670,8 +669,7 @@ theorem fubini_starN_fouH : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     have h2 := hψc.comp h1
     have : GlobalTheory.CompanionTheory.SiegelND.Coef.chiT σ ψ T =
         fun y => ψ (-pairHerm (AF F) σ n y (hermOf (AF F) σ T hT)) := funext (chiT_eq σ ψ T hT)
-    rw [this]
-    exact h2
+    rwa [this]
   · have hmeas : AEStronglyMeasurable (Function.uncurry fun (y : HermR (AF F) σ n)
         (x : Fin n → Fin M → AF F ⊗[F] E) =>
         ψ (pairHerm (AF F) σ n y (gramH hCM hJ (AF F) x - hermOf (AF F) σ T hT))) (db.prod dx) :=
@@ -819,8 +817,7 @@ theorem sub_gramH_mem_latH : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have hS : ∀ a c, ((hermOf (Fv F v) σ T hT - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ (Fv F v) X :
       HermR (Fv F v) σ n) : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) a c ∈
       Formalism.L2.SG.Pf.NcS.IntWittPf.oevRing (E := E) v := by
-    intro a c
-    exact sub_mem (hTv a c) (hG a c)
+    exact fun a c => sub_mem (hTv a c) (hG a c)
   have htrace : ∀ z ∈ Formalism.L2.SG.Pf.NcS.IntWittPf.oevRing (E := E) v,
       Algebra.trace (Fv F v) (Fv F v ⊗[F] E) z ∈ v.adicCompletionIntegers F := by
     intro z hz
@@ -981,8 +978,7 @@ theorem trace_eq {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (e : E) :
     have hc : (({1, sigE h} : Finset Gal(E/F))).card = 2 := Finset.card_pair hne
     have hu : ({1, sigE h} : Finset Gal(E/F)) = Finset.univ := by
       apply Finset.eq_univ_of_card
-      rw [hc]
-      rw [← Nat.card_eq_fintype_card]
+      rw [hc, ← Nat.card_eq_fintype_card]
       have : 2 ≤ Nat.card Gal(E/F) := by
         rw [Nat.card_eq_fintype_card, ← hc]; exact Finset.card_le_univ _
       omega
@@ -1227,15 +1223,14 @@ theorem mem_gramNear_iff {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
   · rintro ⟨u, hu, e⟩
     have : c - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ R X = u := Subtype.ext e
     rwa [this]
-  · intro h
-    exact ⟨_, h, rfl⟩
+  · exact fun h => ⟨_, h, rfl⟩
 
 theorem gramTest_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {M : ℕ} {J : Matrix (Fin M) (Fin M) E} (hJ : IsHermND σ J) (R : Type) [CommRing R] [Algebra F R] {n : ℕ} (c : HermR R σ n) (ρ : HermR R σ n → ℝ) (X : Fin n → Fin M → R ⊗[F] E) :
     gramTest R σ J c ρ X = ρ (c - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ R X) := by
   have h : (c : Matrix (Fin n) (Fin n) (R ⊗[F] E)) - gramR R σ J X ∈ HermR R σ n :=
     (c - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ R X).2
   unfold gramTest
-  exact dif_pos h
+  exact dite_eq_left h
 
 theorem hermMap_sub_gramH {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {M : ℕ} {J : Matrix (Fin M) (Fin M) E} (hJ : IsHermND σ J) {R R' : Type} [CommRing R] [Algebra F R] [CommRing R'] [Algebra F R'] (f : R →ₐ[F] R') {n : ℕ} (c : HermR R σ n) (X : Fin n → Fin M → R ⊗[F] E) :
     GlobalTheory.CompanionTheory.SiegelND.Coef.hermMap f σ (c - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ R X) =
@@ -1275,8 +1270,7 @@ theorem mem_intH_iff {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F
     exact (h3 v hv _).2 hh
   · intro h v hv
     have hh := (h3 v hv _).1 (h v hv)
-    rw [hermV_entries] at hh
-    exact hh
+    rwa [hermV_entries] at hh
 
 theorem indicator_intH {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] {σ : E →ₐ[F] E} {d n : ℕ} (b : Module.Basis (Fin d) F E) (S : Finset (IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F))) (B : HermR (AF F) σ n)
     (h3 : ∀ v, v ∉ S → ∀ Y : HermR (Fv F v) σ n, Y ∈ GlobalTheory.CompanionTheory.SiegelND.Coef.latH σ b v n ↔
@@ -1386,18 +1380,16 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     let A' : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F), Set (Fin n → Fin M → Fv F v ⊗[F] E) := fun v =>
       if v ∈ S then A v ∩ gramNear (Fv F v) σ J (hermOf (Fv F v) σ T hT) (U k v) else A v
     have hA'S : ∀ v ∈ S, A' v = A v ∩ gramNear (Fv F v) σ J (hermOf (Fv F v) σ T hT) (U k v) :=
-      fun v hv => if_pos hv
-    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (if_neg hv).trans (hAl v hv)
+      fun v hv => ite_eq_left hv
+    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (ite_eq_right hv).trans (hAl v hv)
     have h3 : ∀ (x : Fin n → Fin M → AF F ⊗[F] E) v,
         GlobalTheory.CompanionTheory.SiegelND.Coef.hermV σ v (GlobalTheory.CompanionTheory.SiegelND.Coef.hermFin σ (hermOf (AF F) σ T hT - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ (AF F) x)) =
           hermOf (Fv F v) σ T hT - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ (Fv F v) (HeckeCharacterZeroLocus.SiegelWeilU.projV v (HeckeCharacterZeroLocus.SiegelWeilU.projFin x)) := by
-      intro x v
-      exact hermV_sub_gram hCM hJ T hT x v
+      exact fun x v => hermV_sub_gram hCM hJ T hT x v
     have h0 : ∀ x : Fin n → Fin M → AF F ⊗[F] E,
         GlobalTheory.CompanionTheory.SiegelND.Coef.hermInf σ (hermOf (AF F) σ T hT - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ (AF F) x) =
           cI - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ (Ainf F) (HeckeCharacterZeroLocus.SiegelWeilU.projInf x) := by
-      intro x
-      exact hermInf_sub_gram hCM hJ T hT x
+      exact fun x => hermInf_sub_gram hCM hJ T hT x
     have hmem : ∀ x : Fin n → Fin M → AF F ⊗[F] E,
         (HeckeCharacterZeroLocus.SiegelWeilU.projFin x ∈ boxF A ∧ GlobalTheory.CompanionTheory.SiegelND.Coef.hermFin σ (hermOf (AF F) σ T hT - GlobalTheory.CompanionTheory.SiegelND.Coef.gramH hCM hJ (AF F) x) ∈ GlobalTheory.CompanionTheory.SiegelND.Coef.boxH σ b n S (U k)) ↔
           HeckeCharacterZeroLocus.SiegelWeilU.projFin x ∈ boxF A' := by
@@ -1409,7 +1401,7 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
           refine ⟨h v, ?_⟩
           rw [mem_gramNear_iff hCM hJ, ← h3 x v]
           exact h'.1 v hv
-        · rw [show A' v = A v from if_neg hv]
+        · rw [show A' v = A v from ite_eq_right hv]
           exact h v
       · intro h
         refine ⟨fun v => ?_, fun v hv => ?_, fun v hv => ?_⟩
@@ -1418,7 +1410,7 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
             rw [hA'S v hv] at this
             exact this.1
           · have := h v
-            rwa [show A' v = A v from if_neg hv] at this
+            rwa [show A' v = A v from ite_eq_right hv] at this
         · have := h v
           rw [hA'S v hv] at this
           rw [h3 x v, ← mem_gramNear_iff hCM hJ]
@@ -1454,7 +1446,7 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       intro v
       by_cases hv : v ∈ S
       · rw [hA'S v hv]; exact ((hV v).1 k).1
-      · rw [show A' v = A v from if_neg hv]; exact (hV0 v).1
+      · rw [show A' v = A v from ite_eq_right hv]; exact (hV0 v).1
     have hfinA' : ∀ v, GlobalTheory.CompanionTheory.SW.coordW (Fv F v) b (lam v) n M (A' v) ≠ ⊤ := by
       intro v
       by_cases hv : v ∈ S
@@ -1482,8 +1474,7 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     rw [div_mul_div_comm]
   have hint : ∀ B : HermR (AF F) σ n, (intH σ b S).indicator (fun _ => (1 : ℂ)) B =
       (GlobalTheory.CompanionTheory.SiegelND.Coef.intH σ b n S).indicator (fun _ => (1 : ℂ)) (GlobalTheory.CompanionTheory.SiegelND.Coef.hermFin σ B) := by
-    intro B
-    exact indicator_intH b S B hS3
+    exact fun B => indicator_intH b S B hS3
   have lim1 : Filter.Tendsto (fun k => ∫ B, (GlobalTheory.CompanionTheory.SiegelND.Coef.fouH σ ψ db (GlobalTheory.CompanionTheory.SiegelND.Coef.testH σ b (ρ k) S (U k)) B /
         ∫ y, GlobalTheory.CompanionTheory.SiegelND.Coef.testH σ b (ρ k) S (U k) y ∂db) *
         (starN σ J ψ dx (pureN φ A) B * GlobalTheory.CompanionTheory.SiegelND.Coef.chiT σ ψ T B) ∂db) Filter.atTop
@@ -1504,8 +1495,7 @@ theorem coefS_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       rw [norm_mul, norm_mul, hnorm, mul_one, norm_div]
       exact mul_le_of_le_one_left (norm_nonneg _)
         ((div_le_one (norm_pos_iff.2 (hck k))).2 (hbd k B))
-    · refine Filter.Eventually.of_forall fun B => ?_
-      exact (hlim B).mul_const _
+    · exact Filter.Eventually.of_forall fun B => (hlim B).mul_const _
   have lim2 := hInf.2.mul (tendsto_finsetProd S fun v _ =>
     (Complex.continuous_ofReal.tendsto _).comp (hV v).2)
   exact tendsto_nhds_unique lim1 (lim2.congr fun k => by simpa using (key k).symm)

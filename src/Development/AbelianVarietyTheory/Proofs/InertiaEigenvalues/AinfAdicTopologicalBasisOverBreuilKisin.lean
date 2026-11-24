@@ -156,7 +156,7 @@ theorem Approx.eq_zero (hH : IsHausdorff I S)
     · rw [Finsupp.onFinset_sum _ (fun j => by simp)]
       have e : ∑ j ∈ F, s (if j ∈ F then h j else 0) * b j = -(0 - ∑ j ∈ F, s (h j) * b j) := by
         rw [zero_sub, neg_neg]
-        exact Finset.sum_congr rfl fun j hj => by rw [if_pos hj]
+        exact Finset.sum_congr rfl fun j hj => by rw [ite_eq_left hj]
       rw [e]
       exact neg_mem (Ideal.map_mono (Ideal.pow_le_pow_right (le_max_right n m)) hs)
   · exact Ideal.pow_le_pow_right (le_max_left n m) (hF i hi)
@@ -291,10 +291,8 @@ theorem GlobalTheory.BSP.exists_topBasis_of_span_of_strict : ∀ (S A : Type) [C
     change coef (b j) i = 0
     rw [huniq (hcoef (b j)) (approx_single j)]
     exact Pi.single_eq_of_ne hij _
-  · intro x n
-    exact (hcoef x).finite n
-  · intro x n F hF
-    exact (hcoef x).approx n F hF
+  · exact fun x n => (hcoef x).finite n
+  · exact fun x n F hF => (hcoef x).approx n F hF
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -319,8 +317,7 @@ theorem TopBasis.exists_of_pow_le_of_pow_le :
     rw [pow_mul]; exact Ideal.pow_right_mono h1 k
   classical
   refine ⟨{ TB with fin := ?_, approx := ?_, complete := ?_ }, rfl, rfl⟩
-  · intro x k
-    exact (TB.fin x (n * k)).subset fun i hi h => hi (hk k h)
+  · exact fun x k => (TB.fin x (n * k)).subset fun i hi h => hi (hk k h)
   · intro x k F hF
     set G : Finset ι := F ∪ (TB.fin x (n * k)).toFinset with hG
     have hG' : ∀ i, i ∉ G → TB.c i x ∈ I ^ (n * k) := by
@@ -557,8 +554,7 @@ theorem dvd_of_dvd_pow_mul (s : S →+* A) (p q : S)
     intro x h
     apply h2
     apply ih
-    rw [pow_succ, mul_assoc] at h
-    exact h
+    rwa [pow_succ, mul_assoc] at h
 
 theorem pow_dvd_of_dvd_pow_mul (s : S →+* A) (p q : S)
     (h1 : ∀ x : A, s p * x = 0 → x = 0)
@@ -578,8 +574,7 @@ theorem pow_dvd_of_dvd_pow_mul (s : S →+* A) (p q : S)
     intro x h
     apply base
     apply ih
-    rw [pow_succ, mul_assoc] at h
-    exact h
+    rwa [pow_succ, mul_assoc] at h
 
 theorem step_one (s : S →+* A) (p q : S) {ι : Type} (b : ι → A)
     (h1 : ∀ x : A, s p * x = 0 → x = 0)
@@ -592,8 +587,7 @@ theorem step_one (s : S →+* A) (p q : S) {ι : Type} (b : ι → A)
   intro n
   induction n with
   | zero =>
-    intro T c _ i _
-    exact Ideal.mem_span_pair.2 ⟨0, c i, by simp⟩
+    exact fun T c _ i _ => Ideal.mem_span_pair.2 ⟨0, c i, by simp⟩
   | succ n ih =>
     intro T c h
     obtain ⟨x, y, hxy⟩ := Ideal.mem_span_pair.1 h
@@ -634,8 +628,7 @@ theorem step_three (s : S →+* A) (p q : S) {ι : Type} (b : ι → A)
   intro m
   induction m with
   | zero =>
-    intro T c _ i _
-    exact Ideal.mem_span_pair.2 ⟨c i, 0, by simp⟩
+    exact fun T c _ i _ => Ideal.mem_span_pair.2 ⟨c i, 0, by simp⟩
   | succ m ih =>
     intro T c h
     obtain ⟨x, y, hxy⟩ := Ideal.mem_span_pair.1 h

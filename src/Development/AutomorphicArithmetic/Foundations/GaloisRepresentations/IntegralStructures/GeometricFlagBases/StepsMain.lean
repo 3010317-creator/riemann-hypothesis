@@ -169,8 +169,7 @@ theorem UpperTheory.Gal.Int.Geo.jumpsOf :
   have e : J = (GlobalTheory.RoadWGeo.wtJumps lam).val :=
     Multiset.map_injective Int.cast_injective (hJm.trans (GlobalTheory.RoadWGeo.wtJumps_val lam).symm)
   refine ⟨J', h1, fun j hj => h2 j (hQ _ (GlobalTheory.CongL.LimAtLU.overPl_of_induced ι hA hBw hi) lam hl j ?_)⟩
-  rw [e] at hj
-  exact hj
+  rwa [e] at hj
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.JumpsOf =====
@@ -220,8 +219,7 @@ private theorem exists_isClopen_preimage {X P : Type*} [TopologicalSpace X] [Top
       simpa using hbU
     have h2 : (W ∩ B).Nonempty := by
       refine ⟨f a, ha, ?_⟩
-      rw [← Set.mem_preimage, hBU]
-      exact haU
+      rwa [← Set.mem_preimage, hBU]
     obtain ⟨x, hxW, hxA, hxB⟩ := hWi A B hA hB h1 h2
     obtain ⟨_, ⟨q, rfl⟩, -, hqA, hqB⟩ := hd.exists_mem_open (hW.inter (hA.inter hB)) ⟨x, hxW, hxA, hxB⟩
     have hq1 : q ∈ U := by rw [← hAU]; exact hqA
@@ -325,8 +323,7 @@ theorem corrCut : CorrCut := by
         rw [hV]
         exact u.2
       change T.p (i ((s' ⁻¹ᵁ Y'.basicOpen (l : Γ(Y', ⊤))).ι u)) ∈ Y.basicOpen (l : Γ(Y, ⊤))
-      rw [← Scheme.Hom.comp_apply, ← hr.es, Scheme.Hom.comp_apply]
-      exact hu
+      rwa [← Scheme.Hom.comp_apply, ← hr.es, Scheme.Hom.comp_apply]
     haveI : Etale (IsOpenImmersion.lift _ a ha ≫ (T.p ⁻¹ᵁ Y.basicOpen (l : Γ(Y, ⊤))).ι) := by
       rw [IsOpenImmersion.lift_fac]
       infer_instance
@@ -350,8 +347,7 @@ theorem corrCut : CorrCut := by
         rw [Scheme.Hom.preimage_basicOpen, map_natCast]
         apply Scheme.basicOpen_of_isUnit
         have hu := (IsUnit.mk0 (l : K) hl).map (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom
-        rw [map_natCast] at hu
-        exact hu
+        rwa [map_natCast] at hu
       have hu' : u ∈ f ⁻¹ᵁ Y.basicOpen (l : Γ(Y, ⊤)) := by
         rw [htop]
         trivial
@@ -422,8 +418,7 @@ private theorem splits_cancel {A B Z : Scheme.{0}} (m : A ⟶ B) [Mono m] (f : Z
       repeat' rw [pullback.lift_snd]
   haveI : IsIso ((Limits.Sigma.desc fun j => pullback.lift (a j) (𝟙 Z) (by simp [h' j]) :
       (∐ fun _ : J => Z) ⟶ pullback f f) ≫ e) := by
-    rw [heq]
-    exact hi
+    rwa [heq]
   exact IsIso.of_isIso_comp_right _ e
 
 end UpperTheory.Gal.Int.Geo.Cut
@@ -494,8 +489,7 @@ theorem UpperTheory.Gal.Int.Geo.Cut.coverCut :
     have hw : m w ∈ ⇑(pullback.fst C.p (gen O k)) ⁻¹' (V : Set C.Y) := by
       rw [Set.mem_preimage, ← Scheme.Hom.comp_apply]
       simp only [m, pullback.lift_fst]
-      apply (show Set.range ⇑V.ι ⊆ (V : Set C.Y) by rw [Scheme.Opens.range_ι])
-      exact ⟨_, rfl⟩
+      exact (show Set.range ⇑V.ι ⊆ (V : Set C.Y) by rw [Scheme.Opens.range_ι]) ⟨_, rfl⟩
     rw [hpre] at hw
     obtain ⟨z, hz⟩ := hw
     refine ⟨z, m.isOpenEmbedding.injective ?_⟩
@@ -570,8 +564,7 @@ private theorem fEt_surj {Y X : Scheme.{0}} {f : Y ⟶ X} {d : ℕ} (hf : FEt f 
   refine ⟨y pt, ?_⟩
   have h1 : a pt ∈ Set.range (X.fromSpecResidueField x) := ⟨b pt, by simp [a]⟩
   rw [X.range_fromSpecResidueField] at h1
-  rw [← Scheme.Hom.comp_apply, hy]
-  exact h1
+  rwa [← Scheme.Hom.comp_apply, hy]
 
 private theorem fEt_comp_iso {Y X X' : Scheme.{0}} {f : Y ⟶ X} (e : X ⟶ X') [IsIso e] {d : ℕ}
     (hf : FEt f d) : FEt (f ≫ e) d := by
@@ -690,8 +683,7 @@ private theorem identity_of_comp_injective_semiconj_image (q n : ℕ) {P Q : Typ
   apply Multiset.map_injective hg
   have e : ∀ (k : ℕ) (x : P), F^[k] (g x) = g (F'^[k] x) := fun k x => ((hc.iterate_right k) x).symm
   simp only [e] at h
-  rw [multiset_map_pts, multiset_map_pts]
-  exact h
+  rwa [multiset_map_pts, multiset_map_pts]
 
 private theorem genPt_openImmersion_of_genPt_appTop {Y' Y : Scheme} (j : Y' ⟶ Y) [IsOpenImmersion j] (π : Γ(Y, ⊤)) (x : Y')
     (h : crystallineComparison.GenPt ((ConcreteCategory.hom (Scheme.Hom.appTop j)) π) x) : crystallineComparison.GenPt π (j x) := by
@@ -735,9 +727,7 @@ private theorem bijective_sec_comp_of_ne_zero {l : ℕ} {Y' Y : Scheme} (j : Y' 
   haveI := hP.op
   haveI := hR.op
   constructor
-  · intro u v h
-    apply Subtype.ext
-    exact (cancel_mono i).1 (congrArg Subtype.val h)
+  · exact fun u v h => Subtype.ext ((cancel_mono i).1 (congrArg Subtype.val h))
   · intro z
     have hsub := range_subset_range_of_comp_eq_of_ne_zero j hP T T' i hR hr V hl y' z.1 z.2
     refine ⟨⟨IsOpenImmersion.lift i z.1 hsub, ?_⟩, Subtype.ext (IsOpenImmersion.lift_fac _ _ _)⟩
@@ -766,8 +756,7 @@ theorem ptIdCut : PtIdCut := by
       fun a b => crystallineComparison.resPt V ≫ (w a b).1 ≫ (T a).r := by
     funext a b
     simp only [w, Category.assoc, (hR a).et]
-  rw [e]
-  exact h
+  rwa [e]
 
 end UpperTheory.Gal.Int.Geo.Cut
 end -- clump:auto
@@ -832,12 +821,10 @@ private theorem cut {k L O : Type} [Field k] [Field L] [CommRing O] [IsDomain O]
   intro y hy hgen
   have hyV : y ∈ (V : Set C.Y) := hrj ▸ hy
   have hy' : y ∈ Set.range (pullback.fst C.p (gen O k)) := by
-    rw [(genRange O k C.Y C.p).1]
-    exact hgen
+    rwa [(genRange O k C.Y C.p).1]
   obtain ⟨z, rfl⟩ := hy'
   have hz : z ∈ Set.range (pullback.lift C.π H.q C.ov) := by
-    rw [← hVpre]
-    exact hyV
+    rwa [← hVpre]
   obtain ⟨x, rfl⟩ := hz
   exact ⟨x, by rw [← Scheme.Hom.comp_apply, pullback.lift_fst]⟩
 
@@ -862,8 +849,7 @@ private theorem mem_range_of_fEt_of_lies_of_mem_range {k L O : Type} [Field k] [
   haveI := C.smooth
   haveI := hj.op
   have hD := genDense O T (s ≫ C.p) inferInstance
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨x, hx, hxt⟩ := hne
   have hopen : IsOpen ({x | s x ∈ Set.range j} ∩ {x | t x ∈ Set.range j}ᶜ) :=
     IsOpen.inter (j.isOpenEmbedding.isOpen_range.preimage s.continuous)
@@ -892,8 +878,7 @@ private theorem asIdeal_eq_bot_of_mem_basicOpen_natCast {E : Type} [Field E] [Nu
   rw [basicOpen_eq_of_affine] at h5
   have h6 : (p : Ow w) ∉ (q y).asIdeal := h5
   by_contra hne
-  have hM := IsLocalRing.eq_maximalIdeal ((q y).isPrime.isMaximal hne)
-  exact h6 (hM ▸ hmax)
+  exact h6 ((IsLocalRing.eq_maximalIdeal ((q y).isPrime.isMaximal hne)) ▸ hmax)
 
 theorem cutStep_holds : CutStep := by
   intro E _ _ L _ H θ _ w
@@ -1165,8 +1150,7 @@ theorem UpperTheory.Gal.Int.Geo.phiOf :
   intro E Ω _ _ _ _ _ l _ ι dd ρ w a B _ hK P AI hT A h O _ _ _ Bw hj
   obtain ⟨hc, g, hg, m, hd⟩ := hK P AI hT A h O Bw hj
   refine ⟨hc, g, hg, m, ?_⟩
-  rw [UpperTheory.Gal.TP.Sub.satPol_holds E Ω A w h a B g, hg, unrPol_neg_one]
-  exact hd
+  rwa [UpperTheory.Gal.TP.Sub.satPol_holds E Ω A w h a B g, hg, unrPol_neg_one]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.UnrPolNegOne =====

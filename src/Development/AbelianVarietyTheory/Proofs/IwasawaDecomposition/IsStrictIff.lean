@@ -65,8 +65,7 @@ theorem evalW_toReal (w : (X × X) →₀ ℤ) (β : LinearMap.BilinForm ℤ X) 
   simp [evalW, linW_apply, Finsupp.sum]
 
 theorem evalW_add (w : (X × X) →₀ ℤ) (B B' : X →ₗ[ℤ] X →ₗ[ℤ] ℝ) : evalW w (B + B') = evalW w B + evalW w B' := by
-  simp only [evalW, LinearMap.add_apply, mul_add]
-  exact Finsupp.sum_add
+  simpa only [evalW, LinearMap.add_apply, mul_add] using Finsupp.sum_add
 
 theorem evalW_smul (w : (X × X) →₀ ℤ) (t : ℝ) (B : X →ₗ[ℤ] X →ₗ[ℤ] ℝ) : evalW w (t • B) = t * evalW w B := by
   simp only [evalW, LinearMap.smul_apply, smul_eq_mul, Finsupp.mul_sum]

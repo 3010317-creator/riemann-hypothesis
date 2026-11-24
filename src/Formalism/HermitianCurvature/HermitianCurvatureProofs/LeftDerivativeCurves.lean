@@ -120,8 +120,7 @@ theorem l_hasDeriv_ext {f F : Mx k r → E} {U : Set (Mx k r)} (hU : IsOpen U) {
     have hU' : ∀ᶠ t : ℝ in 𝓝 (0 : ℝ), NormedSpace.exp ((t : ℂ) • X) * g ∈ U := by
       apply hc.continuousAt.preimage_mem_nhds
       have h0 := hU.mem_nhds hgU
-      rw [← lcurve_zero X g] at h0
-      exact h0
+      rwa [← lcurve_zero X g] at h0
     filter_upwards [hU'] with t ht
     exact he _ ht (lcurve_lev hg hX t)
   exact h1.congr_of_eventuallyEq hev
@@ -133,8 +132,7 @@ theorem ld_hasDeriv {f : Mx k r → E} (hf : SmoothLev k r i D f) {g X : Mx k r}
   have hFd : DifferentiableAt ℝ F g := (hF.contDiffAt (hU.mem_nhds hgU)).differentiableAt (by simp)
   have h := l_hasDeriv_ext hU hgU hg.1 hX hFd he
   unfold LdV
-  rw [h.deriv]
-  exact h
+  rwa [h.deriv]
 
 theorem ld_smooth {f : Mx k r → E} (hf : SmoothLev k r i D f) {X : Mx k r} (hX : inLieLev k r i X) :
     SmoothLev k r i D (LdV X f) := by
@@ -148,9 +146,7 @@ theorem ld_smooth {f : Mx k r → E} (hf : SmoothLev k r i D f) {X : Mx k r} (hX
 theorem ld_lin {f f₂ : Mx k r → E} (hf : SmoothLev k r i D f) (hf₂ : SmoothLev k r i D f₂) (s : ℂ)
     {g X : Mx k r} (hg : g ∈ Glev k r i ∩ D) (hX : inLieLev k r i X) :
     LdV X (fun x => f x + s • f₂ x) g = LdV X f g + s • LdV X f₂ g := by
-  have h1 := ld_hasDeriv hf hg hX
-  have h2 := ld_hasDeriv hf₂ hg hX
-  exact (h1.add (h2.const_smul s)).deriv
+  exact ((ld_hasDeriv hf hg hX).add ((ld_hasDeriv hf₂ hg hX).const_smul s)).deriv
 
 theorem good_ld (hD : IsOpen D) {X : Mx k r} (hX : inLieLev k r i X) :
     Good k r i D (fun f : Mx k r → E => LdV X f) := by
@@ -161,8 +157,7 @@ theorem good_ld (hD : IsOpen D) {X : Mx k r} (hX : inLieLev k r i X) :
   have hD' : ∀ᶠ t : ℝ in 𝓝 (0 : ℝ), NormedSpace.exp ((t : ℂ) • X) * x ∈ D := by
     apply hc.preimage_mem_nhds
     have h0 := hD.mem_nhds hx.2
-    rw [← lcurve_zero X x] at h0
-    exact h0
+    rwa [← lcurve_zero X x] at h0
   filter_upwards [hD'] with t ht
   exact h _ ⟨lcurve_lev hx.1 hX t, ht⟩
 
@@ -441,7 +436,7 @@ private theorem unitB_mulVec_bvec_eq_zero_of_not_inV {k r m : ℕ} {i : Fin (r +
       rintro rfl
       omega
     simp only [Hpk, hne, and_false, ↓reduceIte]
-    rw [if_neg (by omega), if_neg (by omega)]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega)]
   have hherm : herm (Hpk k r) (bvec p) (Bs b) = 0 := by
     unfold herm
     simp only [dotProduct, hcol]
@@ -518,8 +513,7 @@ private theorem swap_lemma_4 {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [Nor
       obtain ⟨l, rfl⟩ := List.mem_ofFn.1 hp
       obtain ⟨l', rfl⟩ := List.mem_ofFn.1 hq
       exact hcomm l l') f hf
-  rw [List.map_ofFn, List.map_ofFn] at h
-  exact h
+  rwa [List.map_ofFn, List.map_ofFn] at h
 
 theorem unitB_conj {m : ℕ} {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (Bs : Fin m → Fin (2 * r + k + 1) → ℂ)
     (a b : Fin m) :

@@ -90,8 +90,7 @@ theorem mem_range_zp (Ω : Type) [Field Ω] [CharZero Ω] (p : ℕ) [Fact p.Prim
   constructor
   · rintro ⟨z, rfl⟩
     exact z.2
-  · intro hx
-    exact ⟨⟨x, hx⟩, rfl⟩
+  · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
 
 theorem mem_adjoin_of_range_le {o o' : Type} [CommRing o] [CommRing o'] {Ω : Type} [Field Ω] [Algebra o Ω]
     [Algebra o' Ω] (hr : ∀ a : o, algebraMap o Ω a ∈ (algebraMap o' Ω).range) (T : Set Ω)
@@ -197,8 +196,7 @@ theorem PositivityTheory.Xgn.torsion_packing_facts : ∀ (E : Type) [Field E] [N
     refine eq_inv_of_mul_eq_one_left ?_
     rw [← map_natCast (algebraMap O Ω) b, ← map_mul, hu.val_inv_mul, map_one]
   have hle : ∀ w ∈ chartRing (zp Ω p) (mseg y) c', w ∈ CR O y c' := by
-    intro w hw
-    exact eO.ge (mem_adjoin_of_range_le hr _ (eo.le hw))
+    exact fun w hw => eO.ge (mem_adjoin_of_range_le hr _ (eo.le hw))
   have hA : ∀ a : A, algebraMap A Ω a ∈
       Algebra.adjoin (zp Ω p) (Set.range fun j => mseg y j / mseg y c') := by
     intro a
@@ -224,5 +222,4 @@ theorem PositivityTheory.Xgn.torsion_packing_facts : ∀ (E : Type) [Field E] [N
     refine ⟨spMap ψ ≫ x₀, ?_⟩
     have e : spMap (algebraMap (CR O y c') Ω) ≫ spMap ψ = spMap ((algebraMap (CR O y c') Ω).comp ψ) :=
       (Spec.map_comp _ _).symm
-    rw [← Category.assoc, e]
-    exact hx₀
+    rwa [← Category.assoc, e]

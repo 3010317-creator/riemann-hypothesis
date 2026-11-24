@@ -73,8 +73,7 @@ theorem _root_.GlobalTheory.LeastExponentCompare.isCMField_of_conj (E : Type) [F
     rw [pow_two, AlgEquiv.mul_apply, hσ, hσ, hinv, AlgEquiv.one_apply]
   have hne1 : σ ≠ 1 := by
     obtain ⟨z, hz⟩ := hne
-    intro h1
-    exact hz (by rw [← hσ, h1, AlgEquiv.one_apply])
+    exact fun h1 => hz (by rw [← hσ, h1, AlgEquiv.one_apply])
   have hord : orderOf σ = 2 := orderOf_eq_prime hsq hne1
   have hfix : ∀ x, x ∈ IntermediateField.fixedField (Subgroup.zpowers σ) ↔ cj x = x := by
     intro x
@@ -121,8 +120,7 @@ theorem _root_.GlobalTheory.LeastExponentCompare.conj_iff (E : Type) [Field E] [
     exact φ₀.injective (by rw [h, complexEmbedding_complexConj, RCLike.star_def])
   · rintro ⟨_, rfl⟩
     refine ⟨fun φ z => by rw [complexEmbedding_complexConj, RCLike.star_def], ?_⟩
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     exact complexConj_ne_one E (AlgEquiv.ext hall)
 
 section Comparison₂

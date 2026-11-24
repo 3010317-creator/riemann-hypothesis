@@ -87,8 +87,7 @@ theorem hasSum_prod_offS [DecidableEq P] (θ0 : ∀ p, C p) (f : ∀ p, C p → 
           refine Prod.ext (Function.update_self _ _ _) (Subtype.ext (funext fun p => ?_))
           by_cases hpq : p = q
           · subst hpq
-            simp only [Function.update_self]
-            exact (x.2.2 p hq).symm
+            simpa only [Function.update_self] using (x.2.2 p hq).symm
           · simp only [Function.update_of_ne hpq]
         right_inv := fun θ => Subtype.ext (funext fun p => by
           by_cases hpq : p = q
@@ -232,7 +231,7 @@ theorem bbG_eq_prod {θ0 : ∀ p, Option ((M p).Cls D.R.rS)} {S : Finset (PlF D)
     (hu : UnramOff M δ T T' θ0 S w) {θ : ∀ p, Option ((M p).Cls D.R.rS)} (hθ : ∀ p ∉ S, θ p = θ0 p)
     {κ : Option D.host.E} (hk : kind w = κ) : BBG M δ T T' w κ θ = ∏ p ∈ S, BBtop M δ T T' p w (θ p) := by
   unfold BBG
-  rw [if_pos hk]
+  rw [ite_eq_left hk]
   refine finprod_eq_prod_of_mulSupport_subset _ fun p hp => ?_
   by_contra hpS
   exact hp (by simp [hθ p hpS, (hu p hpS).2])
@@ -276,7 +275,7 @@ theorem ktopG_hasSum {θ0 : ∀ p, Option ((M p).Cls D.R.rS)} {S : Finset (PlF D
     (fun p => KtopP M δ T T' p w w') S hS hN
   have hK : KtopG M δ T T' w w' = ∏ p ∈ S, KtopP M δ T T' p w w' := by
     unfold KtopG
-    rw [if_pos hk]
+    rw [ite_eq_left hk]
     exact finprod_eq_prod_of_mulSupport_subset _ (fun p hp => by
       by_contra hpS
       exact hp (topTerm_off hu hu' hpS))
@@ -352,8 +351,7 @@ theorem totPos_of_kind {T T' : ℕ} {w w' : Point D.host.E (D.R.rS + 1)} (hk : k
     have hp' : 0 < Complex.normSq (D.host.emb (D.eTau τ : D.R.GG) (Dmin w' D.R.rS)) :=
       Complex.normSq_pos.mpr ((map_ne_zero _).mpr h0')
     have hq : 0 < Complex.normSq (D.host.emb (D.eTau τ : D.R.GG) (zetaOf w')) - (T : ℝ) * T' := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       nlinarith
     nlinarith [mul_pos hq hp]
 
@@ -380,8 +378,7 @@ theorem det_assoc_cls (Mo : Loc.Model F E) {m : ℕ} (a b : Loc.Pt E (m + 1)) (c
   refine ⟨hZ1 ▸ Z1.unit, u, ?_⟩
   have e := congrArg Mo.R.subtype hu
   rw [map_mul, RingHom.map_det, RingHom.map_det] at e
-  rw [← hZ1, ← hZ2]
-  exact e
+  rwa [← hZ1, ← hZ2]
 
 end LocCls
 
@@ -399,9 +396,9 @@ theorem modK_eq_of_assoc (δ : ∀ p, (D.s.atP p).Fp) (M : ∀ p : PlF D, Loc.Mo
   by_cases h0 : Dmin w D.R.rS = 0
   · have h0' : Dmin w' D.R.rS = 0 := by
       unfold kind at hk
-      rw [if_pos h0] at hk
+      rw [ite_eq_left h0] at hk
       by_contra hne
-      rw [if_neg hne] at hk
+      rw [ite_eq_right hne] at hk
       exact absurd hk (by simp)
     rw [h0, map_zero, mul_zero, mul_zero, add_zero] at ea
     rw [h0', map_zero, mul_zero, mul_zero, add_zero] at eb
@@ -416,13 +413,13 @@ theorem modK_eq_of_assoc (δ : ∀ p, (D.s.atP p).Fp) (M : ∀ p : PlF D, Loc.Mo
     rw [hX, modK_mul_unit]
   · have h0' : Dmin w' D.R.rS ≠ 0 := by
       unfold kind at hk
-      rw [if_neg h0] at hk
+      rw [ite_eq_right h0] at hk
       intro hne
-      rw [if_pos hne] at hk
+      rw [ite_eq_left hne] at hk
       exact absurd hk (by simp)
     have hz : zetaOf w = zetaOf w' := by
       unfold kind at hk
-      rw [if_neg h0, if_neg h0'] at hk
+      rw [ite_eq_right h0, ite_eq_right h0'] at hk
       exact Option.some.inj hk
     obtain ⟨l0, t, hb0, hs0⟩ := last_one w h0
     obtain ⟨l0', t', hb0', hs0'⟩ := last_one w' h0'
@@ -488,12 +485,12 @@ theorem supportVec_of_normProd (hN : NormProd D) : SupportVec D := by
   unfold BBG at h1 h2
   have hk1 : kind w = κ := by
     by_contra h
-    exact h1 (if_neg h)
+    exact h1 (ite_eq_right h)
   have hk2 : kind w' = κ := by
     by_contra h
-    exact h2 (if_neg h)
-  rw [if_pos hk1] at h1
-  rw [if_pos hk2] at h2
+    exact h2 (ite_eq_right h)
+  rw [ite_eq_left hk1] at h1
+  rw [ite_eq_left hk2] at h2
   have hk : kind w = kind w' := hk1.trans hk2.symm
   refine normG_eq_of_loc hN hA T T' hk fun p => ?_
   have e1 : BBtop M δ T T' p w (th p) ≠ 0 := fun h => h1 (finprod_eq_zero _ p h hf)
@@ -520,8 +517,7 @@ theorem n0_pos {c : ℝ} (hc : 0 < c) {T T' : ℕ} {w : Point D.host.E (D.R.rS +
 theorem unramOff_mono {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {δ : ∀ p, (D.s.atP p).Fp}
     {T T' : ℕ} {θ0 : ∀ p, Option ((M p).Cls D.R.rS)} {S S' : Finset (PlF D)} {w : Point D.host.E (D.R.rS + 1)}
     (hu : UnramOff M δ T T' θ0 S w) (hS : S ⊆ S') : UnramOff M δ T T' θ0 S' w := by
-  intro p hp
-  exact hu p (fun h => hp (hS h))
+  exact fun p hp => hu p (fun h => hp (hS h))
 
 theorem ktop_sub_posSemidef {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {δ : ∀ p, (D.s.atP p).Fp}
     {T T' : ℕ} {ι : Type*} [Fintype ι] (w : ι → Point D.host.E (D.R.rS + 1)) (θ0 : ∀ p, Option ((M p).Cls D.R.rS))
@@ -558,7 +554,7 @@ theorem ktop_sub_posSemidef {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.at
         simp [BBG, hne]
     · have hK0 : KtopG M δ T T' (w x) (w y) = 0 := by
         unfold KtopG
-        rw [if_neg hk]
+        rw [ite_eq_right hk]
       rw [hK0]
       convert hasSum_zero using 1
       funext j
@@ -576,11 +572,10 @@ theorem ktop_sub_posSemidef {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.at
     · convert hasSum_fintype _ using 1
       rw [← Finset.sum_coe_sort Θs]
       refine Finset.sum_congr rfl (fun i _ => ?_)
-      simp only [Function.comp_apply, e, Prod.mk.eta, if_pos i.2]
+      simp only [Function.comp_apply, e, Prod.mk.eta, ite_eq_left i.2]
     · intro j hj
-      rw [if_neg]
-      intro hmem
-      exact hj ⟨⟨(j.1, j.2.1), hmem⟩, rfl⟩
+      rw [ite_eq_right]
+      exact fun hmem => hj ⟨⟨(j.1, j.2.1), hmem⟩, rfl⟩
   convert hA.sub hB' using 1
   all_goals first
     | rfl

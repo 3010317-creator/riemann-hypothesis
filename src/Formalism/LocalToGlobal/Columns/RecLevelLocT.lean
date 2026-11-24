@@ -167,9 +167,7 @@ theorem rll_mem_loc_dLat (v : HeightOneSpectrum (𝓞 F)) (c : E) (hc0 : c ≠ 0
     z ∈ Formalism.L2.Herm.locL v (rll_dLat n c) ↔ (∀ i, i ≠ lastIdx n → z i ∈ Formalism.BasicNotions.intV E v) ∧
       inclE (F := F) (v.adicCompletion F) c * z (lastIdx n) ∈ Formalism.BasicNotions.intV E v := by
   have hO : ∀ e ∈ intOE E, inclE (F := F) (v.adicCompletion F) e ∈ Formalism.BasicNotions.intV E v := by
-    intro e he
-    show _ ∈ Subring.closure _
-    exact Subring.subset_closure (Set.mem_union_left _ ⟨⟨e, he⟩, rfl⟩)
+    exact fun e he => Subring.subset_closure (Set.mem_union_left _ ⟨⟨e, he⟩, rfl⟩)
   constructor
   · intro hz
     change z ∈ Submodule.span (Formalism.BasicNotions.intV E v)
@@ -297,8 +295,7 @@ theorem rll_baseLb_eq (h : BasePi ST π) : baseLb E n ST = rll_dLat n (algebraMa
       · subst hi
         dsimp only
         rw [dite_eq_left rfl, map_mul, ht, mul_inv_cancel_left₀ h.coe_ne_zero]
-      · simp only [dif_neg hi]
-        exact ((hI _).mp (h1 i hi)).choose_spec
+      · simpa only [dite_eq_right hi] using ((hI _).mp (h1 i hi)).choose_spec
     · intro P hP
       dsimp only
       rw [dite_eq_left rfl]
@@ -325,8 +322,7 @@ theorem rll_dual_iff (h : BasePi ST π) (y : Fin n → E) :
     · rw [Pi.single_eq_same]
     · intro j _ hj
       rw [Pi.single_eq_of_ne hj, star_zero, zero_mul]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
+    · exact fun hi => absurd (Finset.mem_univ i) hi
   rw [rll_mem_dLat]
   constructor
   · intro H
@@ -382,7 +378,7 @@ theorem rll_baseDual_eq (h : BasePi ST π) : baseDual hc n ST = rll_dLat n (star
     intro x y
     show _ = ∑ i, star (x i) * y i
     simp only [Formalism.UG.hform, Matrix.one_apply, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rfl
   have hset : Formalism.BasicNotions.dualSet (hc.sig : E →+* E) (1 : Matrix (Fin n) (Fin n) E) (baseLb E n ST) =
       (rll_dLat n (star (algebraMap (𝓞 E) E π)) : Set (Fin n → E)) := by

@@ -316,8 +316,7 @@ theorem zmod_cancel {t : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F} (ht : t ∈ IntAf X.B.
   rw [Nat.Coprime.gcd_eq_one hc] at hb
   have key : (1 : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) = (c : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * ((Nat.gcdA c X.B.g : ℤ) : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) +
       (X.B.g : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * ((Nat.gcdB c X.B.g : ℤ) : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) := by
-    have h1 := congrArg (fun z : ℤ => (z : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F)) hb
-    simpa using h1
+    simpa using congrArg (fun z : ℤ => (z : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F)) hb
   refine ⟨((Nat.gcdA c X.B.g : ℤ) : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * s + ((Nat.gcdB c X.B.g : ℤ) : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) * t, ?_, ?_⟩
   · exact add_mem (mul_mem (intCast_mem _ _) hs) (mul_mem (intCast_mem _ _) ht)
   · calc t = 1 * t := (one_mul t).symm
@@ -450,8 +449,7 @@ theorem yu_stable (η : X.B.I.Gf) (hη : η ∈ Hfin X u) (hK : (X.xu u)⁻¹ * 
     have hw : X.zR u ∈ fixSet X u := by
       unfold fixSet
       exact Or.inr (Set.mem_singleton _)
-    rw [hinv _ hw _ (transport_fixes_z X u)]
-    exact hv4
+    rwa [hinv _ hw _ (transport_fixes_z X u)]
 
 theorem crd_sub (v w : (VS D).V) : X.crd (v - w) = X.crd v - X.crd w := by
   funext i
@@ -538,17 +536,14 @@ theorem q_aut (δ : V ≃ₗ[E] V) (W : Submodule E V) (hW : W.map (δ : V →�
   apply le_antisymm
   · rintro _ ⟨q, hq, rfl⟩
     obtain ⟨w, hw, rfl⟩ := hq
-    refine ⟨δ.ofSubmodules W W hW w, ?_, rfl⟩
-    show δ (w : V) ∈ Λ
-    exact (hδΛ (w : V)).2 hw
+    exact ⟨δ.ofSubmodules W W hW w, (hδΛ (w : V)).2 hw, rfl⟩
   · rintro _ ⟨w, hw, rfl⟩
     have e1 : δ (((δ.ofSubmodules W W hW).symm w : W) : V) = (w : V) :=
       congrArg Subtype.val ((δ.ofSubmodules W W hW).apply_symm_apply w)
     refine ⟨Submodule.Quotient.mk ((δ.ofSubmodules W W hW).symm w),
       ⟨(δ.ofSubmodules W W hW).symm w, ?_, rfl⟩, ?_⟩
     · show (((δ.ofSubmodules W W hW).symm w : W) : V) ∈ Λ
-      rw [← hδΛ, e1]
-      exact hw
+      rwa [← hδΛ, e1]
     · show Submodule.Quotient.mk ((δ.ofSubmodules W W hW) ((δ.ofSubmodules W W hW).symm w)) =
         Submodule.Quotient.mk w
       rw [LinearEquiv.apply_symm_apply]
@@ -736,8 +731,7 @@ theorem globStep_holds (hK : X.LevelSubgroupCharacter) : GlobalCondition X u hK 
       rw [he]
       change X.B.I.fmat ((h : X.B.I.Gf) * X.xu u)⁻¹ *ᵥ
         incl X.B.I (X.crd (LatticeCoordinateLemmas.gv X (t • X.crd w.val))) ∈ X.B.I.Lf
-      rw [LatticeCoordinateLemmas.crd_gv]
-      exact htw
+      rwa [LatticeCoordinateLemmas.crd_gv]
     have hmem : Submodule.Quotient.mk (s • w) ∈ qLat Λ W ⊥ :=
       mem_qLat.2 ⟨s • w, by simpa using hsw, rfl⟩
     have hsE : algebraMap (𝓞 D.host.E) D.host.E s ≠ 0 := by simpa using hs

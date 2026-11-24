@@ -73,8 +73,7 @@ theorem mem_of_forall_mem_sup_pow {V : Type} [CommRing V] [IsNoetherianRing V] [
     refine pow_le_pow_left' hmax j ?_
     rw [← Ideal.map_pow]
     exact Ideal.mem_map_of_mem _ hb
-  rw [hbot, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at hz
-  exact hz
+  rwa [hbot, Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem] at hz
 
 end GlobalTheory.Poinc.SepLam
 
@@ -191,13 +190,11 @@ theorem lam_of_exact : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (
     rw [hsingle] at hle
     have hdx := hδpos x hx
     have hW : 0 < W ⟨0, hs⟩ ⟨0, hs⟩ := by
-      by_contra hW
-      push_neg at hW
+      by_contra! hW
       have : W ⟨0, hs⟩ ⟨0, hs⟩ * Φ.δ y i x x ≤ 0 := Int.mul_nonpos_of_nonpos_of_nonneg hW hdx.le
       omega
     zify
-    rw [Int.toNat_of_nonneg hW.le, Int.toNat_of_nonneg hdx.le, hn₀z]
-    exact hle
+    rwa [Int.toNat_of_nonneg hW.le, Int.toNat_of_nonneg hdx.le, hn₀z]
 
 end GlobalTheory.Poinc.SepLam
 end -- clump:auto

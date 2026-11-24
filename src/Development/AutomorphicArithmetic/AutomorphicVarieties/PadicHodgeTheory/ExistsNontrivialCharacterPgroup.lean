@@ -97,8 +97,7 @@ private theorem exists_eigenvector_tame_inertia {p : ℕ} [Fact p.Prime] {G : Ty
     intro τ σ
     have h1 : c τ = c σ ↔ φ (σ⁻¹ * τ : ↥((Iq p).comap φ)) ∈ J := by
       constructor
-      · intro h
-        exact ⟨_, ⟨σ⁻¹ * τ, by simp [h], rfl⟩, rfl⟩
+      · exact fun h => ⟨_, ⟨σ⁻¹ * τ, by simp [h], rfl⟩, rfl⟩
       · rintro ⟨_, ⟨a, ha, rfl⟩, h⟩
         have h2 : a = σ⁻¹ * τ := Subtype.ext (hφ.injective h)
         rw [h2] at ha
@@ -133,8 +132,7 @@ private theorem exists_eigenvector_tame_inertia {p : ℕ} [Fact p.Prime] {G : Ty
     rw [← hs, ← map_inv, hfix]
   have e2 : φ τ (F q z) = F (c.rangeRestrict τ * q) z := by
     have := (key (τ * s q) (s (c.rangeRestrict τ * q))).1 (by rw [map_mul, hs, hs]; rfl) z
-    rw [Subgroup.coe_mul, map_mul, AlgEquiv.mul_apply] at this
-    exact this
+    rwa [Subgroup.coe_mul, map_mul, AlgEquiv.mul_apply] at this
   rw [e1, e2, Equiv.coe_mulLeft, ← mul_assoc, ← Units.val_mul]
   congr 2
   simp [mul_comm]
@@ -326,8 +324,7 @@ theorem UpperTheory.V.Loc.v0b :
         intro a
         refine Subtype.ext (Units.ext ?_)
         have := hρ a 1 (by rw [hκ a a.2, map_one, Units.val_one])
-        rw [one_pow, map_one, map_one, map_pow] at this
-        exact this
+        rwa [one_pow, map_one, map_one, map_pow] at this
       have hP : IsPGroup l ρ'.range := by
         rintro ⟨_, a, rfl⟩
         exact ⟨_, h1 a⟩

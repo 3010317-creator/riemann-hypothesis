@@ -155,7 +155,7 @@ theorem ext_of_derivCombInt {f : ℂ → ℂ} {I : ℂ} (hf : DerivCombInt f I) 
           funext t; rw [iteratedFDeriv_apply_of_eq_zero (j i) (v i) (D' i) h0 t]
         have hInt : Integrable (D' i) :=
           (hdat i).1.congr (ae_ne_zero_C.mono fun t ht => (hD'e i t ht).symm)
-        rw [e, if_pos h0]
+        rw [e, ite_eq_left h0]
         exact ⟨hInt.const_mul _, by rw [integral_const_mul, hD'i i]⟩
       · have hj1 : 1 ≤ j i := Nat.one_le_iff_ne_zero.mpr h0
         obtain ⟨hIi, hzero⟩ := hder i (j i) hj1 (hjn i)
@@ -166,10 +166,9 @@ theorem ext_of_derivCombInt {f : ℂ → ℂ} {I : ℂ} (hf : DerivCombInt f I) 
           simp only [ContinuousMultilinearMap.apply_apply] at this
           rw [this, hzero]
           simp
-        rw [if_neg h0]
+        rw [ite_eq_right h0]
         exact ⟨hIv.const_mul _, by rw [integral_const_mul, hz, mul_zero]⟩
-    rw [integral_finsetSum _ fun i _ => (hterm i).1]
-    rw [← hI]
+    rw [integral_finsetSum _ fun i _ => (hterm i).1, ← hI]
     exact Finset.sum_congr rfl fun i _ => (hterm i).2
 
 theorem derivCombInt_congr {f g : ℂ → ℂ} {I : ℂ} (c : ℂ) (hf : DerivCombInt f I) (h : ∀ t, t ≠ 0 → g t = c * f t) :
@@ -196,8 +195,7 @@ theorem stepDens_of_exp (P : M.Par) (z z' : Fin (2 * P.r + P.k + 1) → ℂ) (π
       DerivCombInt (ph L st μ l w x y c) (RRform L st μ l.castSucc w x y c)) :
     StepDens (S := S) P z z' π π' μ L st K l0 := by
   unfold StepDens
-  intro w hw l x y hx hy c hc
-  exact ext_of_derivCombInt (h w hw l x y hx hy c hc)
+  exact fun w hw l x y hx hy c hc => ext_of_derivCombInt (h w hw l x y hx hy c hc)
 
 end Gen
 
@@ -240,12 +238,10 @@ theorem stepDensCptAll_of_levT (hT : Formalism.FourierDecayAlt.P.PTie.LevTranspo
     rw [Fin.val_succ, hl'v]
   have hb : Formalism.FourierDecayAlt.P.PBH.ARel T (bTl L l w) (bTl Li l' w) := by
     have := hbT l'
-    simp only [e0] at this
-    exact this
+    simpa only [e0] using this
   have hR1 : Formalism.FourierDecayAlt.P.PBH.ARel T (RRi L st l.succ w) (RRi Li sti l'.succ w) := by
     have := hRR 1 (by simp only [Fin.val_castSucc]; omega)
-    simp only [e1, e2] at this
-    exact this
+    simpa only [e1, e2] using this
   have hM := Formalism.FourierDecayAlt.P.PBH.arel_mul hR1 hb
   have hSM := Formalism.FourierDecayAlt.P.PBH.arel_mul (arel_star hb) hM
   have hl0 : l'.castSucc = 0 := Fin.ext rfl
@@ -269,8 +265,7 @@ theorem stepDensCptAll_of_levT (hT : Formalism.FourierDecayAlt.P.PTie.LevTranspo
     rw [Fin.val_castSucc, hl'v]
   have hR0 : Formalism.FourierDecayAlt.P.PBH.ARel T (RRi L st l.castSucc w) (RRi Li sti l'.castSucc w) := by
     have := hRR 0 (by simp only [Fin.val_castSucc]; omega)
-    simp only [e3, e4] at this
-    exact this
+    simpa only [e3, e4] using this
   have hD0 := h0 Wp Wq S (JC.parLev P (l.castSucc : Fin (P.r + 1))) Di.z Di.z' Di.π Di.π' Xi μi Li sti
     l0 Di hDi h1 h2 rfl rfl rfl rfl w (hWO hw) l' rfl _ _ hx' hy' _ hc0
   have hjl0 : l'.castSucc.val + (l.castSucc : Fin (P.r + 1)).val = (l.castSucc : Fin (P.r + 1)).val := by

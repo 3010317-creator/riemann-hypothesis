@@ -87,8 +87,7 @@ private theorem finite_comp {V : Type} [AddCommGroup V] [Module ℂ V] (A : V �
     FiniteDimensional ℂ (LinearMap.range (A ∘ₗ (I : V →ₗ[ℂ] V))) := by
   have e : LinearMap.range (A ∘ₗ (I : V →ₗ[ℂ] V)) = LinearMap.range A :=
     LinearMap.range_comp_of_range_eq_top A (LinearEquiv.range I)
-  rw [e]
-  exact h
+  rwa [e]
 
 end UpperTheory.Gal.InertialTypesAlt.G.FiniteTraces
 

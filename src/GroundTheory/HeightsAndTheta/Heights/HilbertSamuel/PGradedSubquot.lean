@@ -143,8 +143,7 @@ theorem mem_iSup_inf {𝓜 : (K → ℤ) → Submodule S M} (hM : KH.IsMGraded S
       intro _
       exact Submodule.add_mem _ (ihy (hHN (span_monTimes_le H hy))) (ihz (hHN (span_monTimes_le H hz)))
     | smul s y hy ihy =>
-      intro _
-      exact Submodule.smul_mem _ s (ihy (hHN (span_monTimes_le H hy)))
+      exact fun _ => Submodule.smul_mem _ s (ihy (hHN (span_monTimes_le H hy)))
   exact hmem x (span_le_span_monTimes H hx) hxN
 
 end GradedSubquot
@@ -172,8 +171,7 @@ theorem GradedSubquot.proof : GradedSubquot.Statement := by
     simp [hfdef]
   have hL : LinearMap.ker f ≤ ⨆ c, (LinearMap.ker f ⊓ subGrading 𝓜 (Submodule.span (MRingOver S ι) H) c) := by
     rw [hker]
-    intro x hx
-    exact mem_iSup_inf hM hG hGH x hx
+    exact fun x hx => mem_iSup_inf hM hG hGH x hx
   have hind2 := iSupIndep_map_of_ker_le hind f hL
   have hsup2 : ⨆ c, quotGrading (subGrading 𝓜 (Submodule.span (MRingOver S ι) H)) L c = ⊤ := by
     change ⨆ c, (subGrading 𝓜 (Submodule.span (MRingOver S ι) H) c).map f = ⊤

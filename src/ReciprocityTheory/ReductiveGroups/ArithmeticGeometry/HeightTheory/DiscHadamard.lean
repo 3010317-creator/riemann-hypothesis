@@ -93,8 +93,7 @@ theorem ae_evT_ne_zero (sg : K →+* ℂ) (q : KTp K d.D d.N) (hq : q ≠ 0) (m 
       rw [h0, map_zero] at hs
       exact hs rfl
     have hmem : Finsupp.mapDomain ψ s ∈ q.support := by
-      rw [MvPolynomial.mem_support_iff, ← hq', MvPolynomial.coeff_rename_mapDomain ψ hψ]
-      exact hs'
+      rwa [MvPolynomial.mem_support_iff, ← hq', MvPolynomial.coeff_rename_mapDomain ψ hψ]
     exact (Finset.sum_congr rfl fun j _ => (Finsupp.mapDomain_apply_of_injective hψ s (b, j)).symm).trans
       (hqm' _ hmem b.succ)
 
@@ -143,8 +142,7 @@ theorem ae_evT_ne_zero (sg : K →+* ℂ) (q : KTp K d.D d.N) (hq : q ≠ 0) (m 
   refine MeasureTheory.measure_mono_null ?_ key
   intro w hw
   simp only [Set.mem_setOf_eq, not_not] at hw ⊢
-  rw [← hev w]
-  exact hw
+  rwa [← hev w]
 
 end Data
 
@@ -388,8 +386,7 @@ theorem trace_gram_det_ne_zero {F : Type} [Field F] [CharZero F] {κ : Type} [Fi
       exact (Nat.cast_ne_zero.mpr (Module.finrank_pos (R := F) (M := E c0)).ne') ht
     · intro c _ hc
       simp [hc]
-    · intro h
-      exact absurd (Finset.mem_univ c0) h
+    · exact fun h => absurd (Finset.mem_univ c0) h
   exact hv0 (hind v fun c => by simpa [hy] using congrFun hy0 c)
 
 variable {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι]
@@ -711,8 +708,7 @@ theorem evT_eq_blockPoint_of_mh (sg : K →+* ℂ) (q : KTp K d.D d.N) (hq : q �
       exact Finset.mem_image_of_mem _ hs'
     show _ = m b.succ
     rw [← hqm _ hsq b.succ]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    exact (Finsupp.mapDomain_apply_of_injective hφi s (b, j)).symm
+    exact Finset.sum_congr rfl fun j _ => (Finsupp.mapDomain_apply_of_injective hφi s (b, j)).symm
   exact ⟨g, hg0, hgm, heval⟩
 
 theorem logInt_evT_of_mh (sg : K →+* ℂ) (q : KTp K d.D d.N) (m : Fin (d.D + 1) → ℕ)

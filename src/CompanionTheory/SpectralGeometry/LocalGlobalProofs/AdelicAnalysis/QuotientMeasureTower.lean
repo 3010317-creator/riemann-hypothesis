@@ -52,9 +52,7 @@ theorem exists_weight_mass_one_right_coset :
   have hcomp : Measurable fun a : G₁ => β (g⁻¹ * (e a : G)) := hf.comp hem
   rw [lintegral_map hf hem, Measure.inv, lintegral_map hcomp measurable_inv] at h1
   refine Eq.trans (lintegral_congr fun u => ?_) h1
-  have : ((e u⁻¹ : ι.range) : G) = (ι u)⁻¹ := by
-    show ι u⁻¹ = _
-    exact map_inv ι u
+  have : ((e u⁻¹ : ι.range) : G) = (ι u)⁻¹ := map_inv ι u
   show β (ι u * g)⁻¹ = β (g⁻¹ * ((e u⁻¹ : ι.range) : G))
   rw [this, mul_inv_rev]
 
@@ -113,8 +111,7 @@ theorem bijective_pair (ι : G₁ →* G) (hι : Function.Injective ι)
     subst hq
     have h3 : ι (v : G₁)⁻¹ = ι (v' : G₁)⁻¹ := mul_right_cancel hval
     have hv : (v : G₁) = v' := inv_injective (hι h3)
-    simp only [Prod.mk.injEq, true_and]
-    exact Subtype.ext hv
+    simpa only [Prod.mk.injEq, true_and] using Subtype.ext hv
   · rintro ⟨γ, hγ⟩
     obtain ⟨q, ⟨u, hu, hγu⟩, -⟩ := hQ γ hγ
     refine ⟨(q, ⟨u⁻¹, Γ₁.inv_mem hu⟩), ?_⟩
@@ -156,8 +153,7 @@ theorem lintegral_sum_cosets_eq (ι : G₁ →* G) (hιc : Continuous ι) (hι :
   have key : ∀ u : G₁, ∫⁻ g, w g * ψ (ι u * g) ∂μ = ∫⁻ g, w ((ι u)⁻¹ * g) * ψ g ∂μ := by
     intro u
     have h := lintegral_mul_left_eq_self (μ := μ) (fun x => w ((ι u)⁻¹ * x) * ψ x) (ι u)
-    simp only [inv_mul_cancel_left] at h
-    exact h
+    simpa only [inv_mul_cancel_left] using h
   have hpt : ∀ h : G, ∑' γ : Γ, ψ (γ • h) * ∫⁻ u in 𝓕₁, w ((ι u)⁻¹ * (γ • h)) ∂μ₁ =
       ∑' q, ψ (r q * h) := by
     intro h

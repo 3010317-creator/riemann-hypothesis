@@ -73,13 +73,7 @@ section Ring
 variable {R : Type} [CommRing R] {B : Type} [CommRing B] [Algebra R B] {J : Ideal B} (δ : DividedPowers J)
 
 theorem sgn_mem_rel_of_mem {x : DR R B} (hx : x ∈ rel R δ) : sgn x ∈ rel R δ := by
-  induction hx using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨n, a, ha, rfl⟩ := hx
-    rw [sgn_ι]; exact neg_mem (Ideal.subset_span ⟨n, a, ha, rfl⟩)
-  | zero => simp
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
-  | smul r x _ ih => rw [smul_eq_mul, map_mul]; exact Ideal.mul_mem_left _ _ ih
+  exact GlobalTheory.PDForm.sgn_mem_rel R δ hx
 
 theorem mul_ι_mem_rel {x : DR R B} (hx : x ∈ rel R δ) (ω : Ω[B⁄R]) : x * ι1 ω ∈ rel R δ := by
   have h := ι_mul ω (sgn x)

@@ -71,8 +71,7 @@ theorem tri_inv {Ω : Type} [Field Ω] {V : Type} [AddCommGroup V] [Module Ω V]
     rcases lt_or_gt_of_ne hki with hk | hk
     · rw [hM hk, zero_mul]
     · rw [hN hk, mul_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 theorem repr_of_pair {Ω : Type} [Field Ω] {V : Type} [AddCommGroup V] [Module Ω V]
     {V₁ : Type} [AddCommGroup V₁] [Module Ω V₁] {N : ℕ} (β : V →ₗ[Ω] V₁ →ₗ[Ω] Ω)
@@ -111,8 +110,7 @@ theorem PositivityTheory.Xgn.t_flagframe_dual : ∀ (O : Type) [CommRing O] (Ω 
   have hex : ∀ i, ∃ v ∈ E.lat c, (∀ j, i < j → w.repr v j = 0) ∧ w.repr v i = m i := by
     intro i
     have hmem : m i ∈ degLat O x (b i) c := ⟨1, one_mem _, (one_mul _).symm⟩
-    rw [← hgr i] at hmem
-    exact hmem
+    rwa [← hgr i] at hmem
   choose e he1 he2 he3 using hex
   have hP : (w.toMatrix e).BlockTriangular id := fun i j hij => he2 j i hij
   have hdet : IsUnit (w.det e) := by
@@ -184,8 +182,7 @@ theorem PositivityTheory.Xgn.t_flagframe_dual : ∀ (O : Type) [CommRing O] (Ω 
           have hb : β (w k) w' = w₁.repr w' k.rev := by rw [hrep, Fin.rev_rev]
           rw [hb, hz _ hjk, mul_zero]
         · rw [he2 _ _ hk, zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     refine ⟨β (e j.rev) w', (hD.2 c hc w').1 hw' (e j.rev) (he1 _), ?_⟩
     show w₁.repr w' j = β (e j.rev) w' * ∏ k, x ⟨k, c k⟩ ^ (-b j.rev) k
     rw [key, hinvm, mul_comm (m j.rev), mul_assoc, mul_inv_cancel₀ (hm _), mul_one]

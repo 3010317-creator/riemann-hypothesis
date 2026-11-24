@@ -115,8 +115,7 @@ theorem isCompact_integral :
     (R := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
     (A := fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F)))
     (𝓕 := Filter.cofinite)).continuous
-  rw [RestrictedProduct.range_structureMap] at h
-  exact h
+  rwa [RestrictedProduct.range_structureMap] at h
 
 theorem exists_compact_adele : ∀ (F : Type) [Field F] [NumberField F], ∃ K : Set (AdeleRing (𝓞 F) F), IsCompact K ∧ ∀ a : AdeleRing (𝓞 F) F, ∃ x : F, a - algebraMap F (AdeleRing (𝓞 F) F) x ∈ K := by
   intro F _ _
@@ -133,7 +132,6 @@ theorem exists_compact_adele : ∀ (F : Type) [Field F] [NumberField F], ∃ K :
         b - algebraMap F (FiniteAdeleRing (𝓞 F) F) y := by
       rw [hab, map_add (f := _), one_smul]; ring
     rw [h]
-    intro v
-    exact sub_mem (hb v) (HeightOneSpectrum.coe_mem_adicCompletionIntegers v y)
+    exact fun v => sub_mem (hb v) (HeightOneSpectrum.coe_mem_adicCompletionIntegers v y)
 
 end GlobalTheory.AdeleCocompact

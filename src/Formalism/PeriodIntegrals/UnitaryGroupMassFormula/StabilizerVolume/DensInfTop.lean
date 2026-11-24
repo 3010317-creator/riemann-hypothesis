@@ -112,9 +112,7 @@ theorem linDens_holds : LinDens := by
   have hψ : ∀ y, ∫ k, H (y, k) ∂lam = ψ y := by
     intro y
     refine (setIntegral_eq_integral_of_forall_compl_eq_zero fun k hk => ?_).symm
-    apply image_eq_zero_of_notMem_tsupport
-    intro h'
-    exact hk ⟨(y, k), h', rfl⟩
+    exact image_eq_zero_of_notMem_tsupport (fun h' => hk ⟨(y, k), h', rfl⟩)
   refine ⟨fun y => c.toReal * ψ y, continuous_const.mul hψc, fun S hS => ?_⟩
   have hSm : MeasurableSet S := hS.isClosed.measurableSet
   simp only [Set.image_id]
@@ -135,7 +133,7 @@ theorem linDens_holds : LinDens := by
   congr 1
   funext y
   by_cases hy : y ∈ S
-  · simp only [Q, Set.indicator, Set.mem_preimage, hy, if_true, ← hψ y]
+  · simp only [Q, Set.indicator, Set.mem_preimage, hy, ite_true, ← hψ y]
   · simp [Q, Set.indicator, hy]
 
 end PI.VolStabS
@@ -187,8 +185,7 @@ theorem changeVar_holds : ChangeVar := by
       ((ContinuousLinearEquiv.refl ℝ (Fin n → ℝ) : (Fin n → ℝ) ≃L[ℝ] (Fin n → ℝ)) :
         (Fin n → ℝ) →L[ℝ] (Fin n → ℝ)) x0 := by
     have := hΘc.contDiffAt.hasStrictFDerivAt_fderiv (x := x0) one_ne_zero
-    rw [hid] at this
-    exact this
+    rwa [hid] at this
   let PH := hs.toOpenPartialHomeomorph Θ
   have hPH : ∀ x, PH x = Θ x := fun x => rfl
   let D : (Fin n → ℝ) → ℝ := fun x => (fderiv ℝ Θ x).det

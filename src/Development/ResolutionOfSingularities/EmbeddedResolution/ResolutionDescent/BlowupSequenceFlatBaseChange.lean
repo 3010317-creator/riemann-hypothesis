@@ -170,8 +170,7 @@ theorem isStrictPullbackSequenceOfBlowups_baseChange {X X' : Scheme.{u}} (s : Se
   · show pullback.snd φ (s.projectionToBase 0) ≫ s.isoZero.hom
       = pullback.fst φ (s.projectionToBase 0) ≫ φ
     rw [← s.projectionToBase_zero, pullback.condition]
-  · intro i _
-    exact s.isPullback_pullbackTransitionMap φ i
+  · exact fun i _ => s.isPullback_pullbackTransitionMap φ i
   · intro i _
     rfl
 

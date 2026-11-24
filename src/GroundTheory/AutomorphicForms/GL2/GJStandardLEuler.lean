@@ -208,8 +208,7 @@ theorem isCompact_box_inter_preimage [∀ i, IsTopologicalGroup (G i)] [∀ i, T
       rw [hW] at hx
       change ∀ i ∈ S, x i ∈ C i
       exact hx.2
-    rw [inter_eq_left.2 hsubset]
-    exact hWc
+    rwa [inter_eq_left.2 hsubset]
   have heq : (box C T : Set (Πʳ i, [G i, (C i : Set (G i))])) ∩ proj C T ⁻¹' E =
       RestrictedProduct.inclusion G (fun i ↦ (C i : Set (G i))) hS '' Z := by
     ext x
@@ -268,8 +267,7 @@ theorem isHaarMeasure_projMeasure (hCo : ∀ i, IsOpen (C i : Set (G i)))
     refine ((isOpen_box C hCo T).inter (hU.preimage (continuous_proj C T))).measure_ne_zero μ
       ⟨sec C T a, sec_mem_box C T a, ?_⟩
     show proj C T (sec C T a) ∈ U
-    rw [proj_sec]
-    exact ha
+    rwa [proj_sec]
 
 theorem setOf_forall_mem_eq :
     {x : Πʳ i, [G i, (C i : Set (G i))] | ∀ i, x i ∈ C i} =
@@ -327,8 +325,7 @@ theorem projMeasure_eq (hCo : ∀ i, IsOpen (C i : Set (G i))) (hCc : ∀ i, IsC
       by_cases hi : i ∈ T
       · exact h2 ⟨i, hi⟩
       · exact h1 i hi
-    · intro h
-      exact ⟨fun i _ ↦ h i, fun i ↦ h i⟩
+    · exact fun h => ⟨fun i _ ↦ h i, fun i ↦ h i⟩
   have hc : ((projMeasure C μ T).haarScalarFactor (Measure.pi fun i : T ↦ ν i) : ℝ≥0∞) =
       μ {x : Πʳ i, [G i, (C i : Set (G i))] | ∀ i, x i ∈ C i} := by
     have := congrArg (fun m : Measure ((i : T) → G i) ↦ m B) h
@@ -517,8 +514,7 @@ theorem continuous_matrixCoeff_of_smooth (π : Representation ℂ (GL (Fin n) F)
   have hopen : IsOpen ((fun h ↦ g⁻¹ * h) ⁻¹' (stabilizerOf π ξ : Set (GL (Fin n) F))) :=
     (mem_smoothVectors.1 hξ).preimage (continuous_const.mul continuous_id)
   have hg : g ∈ (fun h ↦ g⁻¹ * h) ⁻¹' (stabilizerOf π ξ : Set (GL (Fin n) F)) := by
-    simp only [mem_preimage, inv_mul_cancel, SetLike.mem_coe]
-    exact (stabilizerOf π ξ).one_mem
+    simpa only [mem_preimage, inv_mul_cancel, SetLike.mem_coe] using (stabilizerOf π ξ).one_mem
   refine (continuousAt_const (y := Parabolic.matrixCoeff π ξ ℓ g)).congr ?_
   filter_upwards [hopen.mem_nhds hg] with h hh
   have hfix : π (g⁻¹ * h) ξ = ξ := mem_stabilizerOf.1 hh

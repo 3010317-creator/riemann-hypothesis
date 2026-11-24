@@ -98,8 +98,7 @@ theorem exists_lift_family {P : Ideal (MRing ι)}
     let p : D × ℕ := (⟨d, hdD⟩, n)
     have hyB : y ∈ Bl p := by
       show y ∈ ball d (1 / ((n : ℝ) + 1))
-      rw [mem_ball, dist_comm]
-      exact hdy
+      rwa [mem_ball, dist_comm]
     have hBsub : Bl p ⊆ ball y ε := by
       intro y' hy'
       have hy'' : dist y' d < 1 / ((n : ℝ) + 1) := hy'
@@ -115,8 +114,7 @@ theorem exists_lift_family {P : Ideal (MRing ι)}
     obtain ⟨m, hm⟩ := hf (some t)
     refine ⟨m, ?_, ?_⟩
     · show y ∈ Bo (f m)
-      rw [hm, hBsome, if_pos hL]
-      exact hyB
+      rwa [hm, hBsome, ite_eq_left hL]
     · show segre (γo (f m) y) = w
       rw [hm, hγsome t hL, (hL.choose_spec y hyB).2.2]
       simp only [t]

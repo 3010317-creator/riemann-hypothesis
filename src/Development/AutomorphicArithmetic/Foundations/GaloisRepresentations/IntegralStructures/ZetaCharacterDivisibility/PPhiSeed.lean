@@ -251,8 +251,7 @@ theorem UpperTheory.Gal.crystallineComparison.detCore_of :
   set mb := LinearMap.toMatrix b b M with hmb
   have hM : ∀ k, M (b k) = ∑ l, mb l k • b l := by
     intro k
-    simp only [hmb, LinearMap.toMatrix_apply]
-    exact (b.sum_repr _).symm
+    simpa only [hmb, LinearMap.toMatrix_apply] using (b.sum_repr _).symm
   have hmat : A.map π * (P0.map s).map π = P0.map π * mb.map (algebraMap C S) := by
     ext i k
     have e1 : (A.map π * (P0.map s).map π) i k = π (c (w (x k)) i) := by
@@ -736,8 +735,7 @@ theorem detWD_of (hW : WdModel) (hC : CommonModel) (hE : DetE) : DetWD := by
     rw [← m₁.2, ← m₂.2] at e
     refine Units.ext ((algebraMap ↥LL.1 (Om l)).injective ?_)
     simp only [Matrix.GeneralLinearGroup.val_det_apply] at e ⊢
-    rw [RingHom.map_det, RingHom.map_det]
-    exact e
+    rwa [RingHom.map_det, RingHom.map_det]
   have k := hE l P AI hT ι E Ω A w h O Bw hj a LL r' c' hd hs p₁ p₂ g hg
   have e₁ := (hW l P ι E Ω A w h O Bw hj a r LL r' m₁ p₁ g).1
   have e₂ := (hW l P ι E Ω A w h O Bw hj 1 c LL c' m₂ p₂ g).1
@@ -767,7 +765,6 @@ open UpperTheory.Gal.crystallineComparison
 
 private theorem coe_bind (B : Multiset ℂˣ) :
     (do let a ← B; pure (a : ℂ) : Multiset ℂ) = B.map fun b : ℂˣ => (b : ℂ) := by
-  show B.bind (fun b => {(b : ℂ)}) = _
   exact Multiset.bind_singleton B _
 
 theorem UpperTheory.Gal.crystallineComparison.satGeom_of :

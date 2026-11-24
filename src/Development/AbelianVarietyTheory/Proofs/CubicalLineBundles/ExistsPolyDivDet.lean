@@ -133,9 +133,7 @@ theorem exists_poly_div_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     refine (GlobalTheory.Frames.ChgBC.frChg_baseChange E H Dw l Xo c A S k u₀ u w z' _ _ hu hw).2 ?_
     have e : (fun τ => ((X τ).transpose).map k) = fun b => (Y b).transpose :=
       funext fun b => by rw [Matrix.transpose_map, hkX]
-    rw [e, Units.val_one, map_one]
-    exact hz'
-  rw [evR_frMap hWD F hF.1 k u (hT _ u) z' hm]
-  exact hk
+    rwa [e, Units.val_one, map_one]
+  rwa [evR_frMap hWD F hF.1 k u (hT _ u) z' hm]
 
 end GlobalTheory.LamT.RatFn

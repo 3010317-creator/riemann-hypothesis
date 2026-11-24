@@ -333,7 +333,7 @@ lemma herm_lift_right (k r' : ℕ) (u : Fin (2 * (1 + r') + k + 1) → ℂ) (y :
 lemma herm_sum {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (u v : Fin m → ℂ) :
     ∑ j, herm H (bvec j) v * u j = herm H u v := by
   simp only [herm, bvec, dotProduct, mulVec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, Pi.star_apply, Finset.sum_mul, Finset.mul_sum]
+    Finset.mem_univ, ite_true, Pi.star_apply, Finset.sum_mul, Finset.mul_sum]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
 
@@ -372,12 +372,7 @@ lemma heisG_zero (k r' : ℕ) : heisG k r' (liftVec k 1 r' 0) 0 = 1 := by
   refine mat_ext fun w => ?_
   simpa [lift_zero, herm_zero_right] using heis_act' k r' 0 w 0
 
-lemma Hherm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
-  ext i j
-  have hi := i.isLt
-  have hj := j.isLt
-  simp only [conjTranspose_apply, Hpk, Fin.ext_iff]
-  split_ifs <;> first | omega | simp
+lemma Hherm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := Formalism.FourierDecayAlt.P.B2x4.Hpk_herm k r
 
 lemma herm_self_im (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) : (herm (Hpk k r) y y).im = 0 := by
   exact Complex.conj_eq_iff_im.mp (herm_conj _ (Hherm k r) y y)
@@ -456,9 +451,9 @@ lemma continuous_lift (k r' : ℕ) : Continuous (liftVec k 1 r') := by
   apply continuous_pi
   intro p
   by_cases hp : 1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1
-  · simp only [liftVec, dif_pos hp]
+  · simp only [liftVec, dite_eq_left hp]
     exact continuous_apply _
-  · simp only [liftVec, dif_neg hp]
+  · simp only [liftVec, dite_eq_right hp]
     exact continuous_const
 
 lemma continuous_hb (k r' : ℕ) : Continuous fun x : HPar k r' => hb k r' x.1 x.2 := by
@@ -517,36 +512,32 @@ theorem heisClosed : HeisClosed := by
 lemma levi_first_row (k r' : ℕ) (g : Mat k r') (q : Fin (2 * (1 + r') + k + 1)) :
     ιLev k 1 r' g (i0 k r') q = if i0 k r' = q then 1 else 0 := by
   simp only [ιLev]
-  rw [dif_neg]
+  rw [dite_eq_right]
   all_goals first | rfl | omega | (simp only [first_index_val]; omega) | (rw [lev_val]; constructor <;> omega) | (simp_all [Fin.ext_iff] <;> omega)
 
 lemma lev_row_iL (k r' : ℕ) (g : Mat k r') (q : Fin (2 * (1 + r') + k + 1)) :
     ιLev k 1 r' g (iL k r') q = if iL k r' = q then 1 else 0 := by
   simp only [ιLev]
-  rw [dif_neg]
+  rw [dite_eq_right]
   all_goals first | rfl | omega | (simp only [iL_val]; omega)
 
 lemma levi_entry_first_zero (k r' : ℕ) (g : Mat k r') (i : Fin (2 * r' + k + 1)) :
     ιLev k 1 r' g (levPos k 1 r' i) (i0 k r') = 0 := by
   have hi := i.isLt
   simp only [ιLev]
-  rw [dif_pos, dif_neg]
+  rw [dite_eq_left, dite_eq_right]
   all_goals first | omega | (simp only [first_index_val, lev_val]; omega) | (rw [lev_val]; constructor <;> omega) | (simp_all [Fin.ext_iff] <;> omega)
 
 lemma lev_lev_iL (k r' : ℕ) (g : Mat k r') (i : Fin (2 * r' + k + 1)) :
     ιLev k 1 r' g (levPos k 1 r' i) (iL k r') = 0 := by
   have hi := i.isLt
   simp only [ιLev]
-  rw [dif_pos, dif_neg]
+  rw [dite_eq_left, dite_eq_right]
   all_goals first | omega | (simp only [iL_val, lev_val]; omega)
 
 lemma lev_lev_lev (k r' : ℕ) (g : Mat k r') (i j : Fin (2 * r' + k + 1)) :
     ιLev k 1 r' g (levPos k 1 r' i) (levPos k 1 r' j) = g i j := by
-  have hi := i.isLt
-  have hj := j.isLt
-  simp only [ιLev]
-  rw [dif_pos, dif_pos]
-  all_goals first | rfl | omega | (simp only [lev_val]; omega)
+  exact Formalism.FourierDecayAlt.P.B2x2.lev_mm k r' g i j
 
 lemma levi_action_first_coordinate (k r' : ℕ) (g : Mat k r') (u : Fin (2 * (1 + r') + k + 1) → ℂ) :
     (ιLev k 1 r' g *ᵥ u) (i0 k r') = u (i0 k r') := by
@@ -564,11 +555,7 @@ lemma lev_act_res (k r' : ℕ) (g : Mat k r') (u : Fin (2 * (1 + r') + k + 1) �
   simp [levi_entry_first_zero, lev_lev_iL, lev_lev_lev]
 
 lemma lev_mul (k r' : ℕ) (g h : Mat k r') : ιLev k 1 r' g * ιLev k 1 r' h = ιLev k 1 r' (g * h) := by
-  apply mat_ext
-  intro u
-  rw [← mulVec_mulVec]
-  apply vec_ext <;> simp only [levi_action_first_coordinate, lev_act_res, lev_act_iL]
-  rw [mulVec_mulVec]
+  exact (Formalism.FourierDecayAlt.P.B2x2.lev_mul k r' g h).symm
 
 lemma lev_one (k r' : ℕ) : ιLev k 1 r' (1 : Mat k r') = 1 := by
   apply mat_ext

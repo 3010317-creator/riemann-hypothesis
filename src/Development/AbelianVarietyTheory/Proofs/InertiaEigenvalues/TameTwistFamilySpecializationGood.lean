@@ -275,7 +275,7 @@ theorem spec_good (D : D7) (C A : Type) [AddCommGroup C] [CommGroup A] (u : Univ
   · intro PP hPP x h1 hx v hv
     show χ (u.delQ Q x) = (u.spec Q χ).res PP v
     rw [show (u.spec Q χ).res PP = χ.comp ((AddMonoidHom.toMultiplicative (AddMonoidHom.single (fun _ : ↥Q => C) ⟨PP, hPP⟩)).comp
-      (u.kap PP)) from dif_pos hPP, MonoidHom.comp_apply]
+      (u.kap PP)) from dite_eq_left hPP, MonoidHom.comp_apply]
     have hfu := finUnit_of_res PP (h.1.isIdemAt hPP) x h1 hx v hv
     refine congrArg χ ?_
     ext ⟨P', hP'⟩
@@ -291,9 +291,7 @@ theorem spec_good (D : D7) (C A : Type) [AddCommGroup C] [CommGroup A] (u : Univ
         have z1 : idemAt P' * idemAt PP = 0 := h.1.mul_eq_zero hP' hPP (Ne.symm hne)
         have z2 : idemAt PP * cA D (idemAt P') = 0 := h.1.mul_conj hPP hP'
         linear_combination (idemAt P' + cA D (idemAt P')) * h1 + ((x : AE D) - 1) * (z1 + z2)
-      simp [UnivTwist.delQ, hd, Pi.single_apply]
-      intro e
-      exact absurd (congrArg Subtype.val e) hne
+      simpa [UnivTwist.delQ, hd, Pi.single_apply] using fun e => absurd (congrArg Subtype.val e) hne
 
 end GlobalTheory.ExportSeries.SpecGood
 end -- clump:auto

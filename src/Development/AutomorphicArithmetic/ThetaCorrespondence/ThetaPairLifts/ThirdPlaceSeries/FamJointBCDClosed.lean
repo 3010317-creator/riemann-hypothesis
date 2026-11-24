@@ -255,13 +255,11 @@ theorem frozenCD_of (h : RecS.JointCD L HW) (h1 : InertUnr D (D.nd.l i))
       ext τ'
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
       exact ⟨fun h' => (existsUnique_over _ _ _ (RecS.WW HW i w hw Cx hG) hB.unram a).unique h' hτ, fun h' => h' ▸ hτ⟩
-    rw [hfil, Finset.sum_singleton] at h
-    exact h
+    rwa [hfil, Finset.sum_singleton] at h
   · change Wd.up a = true ↔ _
     rw [hA.2.1 a]; simp only [decide_eq_true_eq]; omega
   · have := hS.2.2.2.2.2.2.2.2.1 a
-    rw [hp] at this
-    exact this
+    rwa [hp] at this
 end
 
 theorem inert_iff (D : D7) (p : ℕ) : InertUnr D p ↔ TwistedPlaces.InertK D p := by
@@ -342,8 +340,7 @@ theorem clusters_letterwise : ∀ {n : ℕ} (th : ZMod n → Prop) (j : ℕ), Cl
   · exact Or.inl hbefore
   · by_cases hsp0 : sp x = 0
     · left
-      rw [hsp0, Nat.cast_zero, add_zero]
-      exact hbefore
+      rwa [hsp0, Nat.cast_zero, add_zero]
     · right
       refine ⟨sp x, Nat.one_le_iff_ne_zero.2 hsp0, hspj, by simpa using hthx, fun k hk1 hk2 hkd => ?_⟩
       rcases lt_or_gt_of_ne hkd with hlt | hgt
@@ -410,9 +407,8 @@ theorem winClusters_exists_step {n : ℕ} (th : ZMod n → Prop) (j : ℕ) (x : 
   by_cases h : ∃ q : ℕ, 1 ≤ q ∧ q ≤ j ∧ th (x + q)
   · obtain ⟨h1, h2, h3⟩ := Nat.find_spec h
     refine ⟨Nat.find h, h2, fun h0 => absurd h0 (by omega), fun _ => h3, ?_⟩
-    intro q hq hqs hth
-    exact Nat.find_min h hqs ⟨hq, by omega, hth⟩
-  · push_neg at h
+    exact fun q hq hqs hth => Nat.find_min h hqs ⟨hq, by omega, hth⟩
+  · push Not at h
     refine ⟨0, Nat.zero_le _, fun _ q hq hqj hth => absurd hth (h q hq hqj), fun h0 => absurd h0 (lt_irrefl 0),
       fun q hq hq0 => absurd hq0 (by omega)⟩
 
@@ -450,7 +446,7 @@ theorem winClusters : ∀ {n : ℕ} (th : ZMod n → Prop) (L j : ℕ), 1 ≤ j 
     have ex : ∃ x, x ∈ F ∧ (y = x ∨ y = x + (sp x : ZMod n)) := by
       by_cases hyF : ∀ q : ℕ, 1 ≤ q → q ≤ j → ¬ th (y - q)
       · exact ⟨y, ⟨hy, hyF⟩, Or.inl rfl⟩
-      · push_neg at hyF
+      · push Not at hyF
         obtain ⟨q, hq1, hqj, hq⟩ := hyF
         have hxF : y - (q : ZMod n) ∈ F := by
           refine ⟨hq, ?_⟩
@@ -636,8 +632,7 @@ theorem jointB_of_large : ∀ eps ez C₂ A : ℝ, 0 < eps → 0 < ez → ∃ x0
     rw [Prod.snd_inv, orderOf_inv]
     exact hrow.lt_orderOf
   refine ⟨_, hB, _root_.GlobalTheory.HTW.RecS.setting_of_wordBase L HW i r ρ π w hw Cx hG _ hin.ne_two hB, h11, hWB.j_lt, hWB.par, ?_⟩
-  intro t ht
-  exact _root_.GlobalTheory.HTW.Rec.clusters_letterwise _ _ hWB.clusters t ht
+  exact fun t ht => _root_.GlobalTheory.HTW.Rec.clusters_letterwise _ _ hWB.clusters t ht
 
 end GlobalTheory.HTW.RecS
 end -- clump:auto
@@ -662,9 +657,9 @@ theorem abs_szT_sub_floor_le {R : Ranks} (P : HCParam R) (j : Fin R.m) (s : Bool
   unfold szT
   generalize ((R.t : ℤ) + 1) / 2 = q at h0' h1'
   cases s
-  · simp only [Bool.false_eq_true, if_false, Int.cast_sub]
+  · simp only [Bool.false_eq_true, ite_false, Int.cast_sub]
     rw [abs_le]; constructor <;> linarith
-  · simp only [if_true, Int.cast_add]
+  · simp only [ite_true, Int.cast_add]
     rw [abs_le]; constructor <;> linarith
 
 theorem pageWord_not_thick_size : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.m) (ε : ℤˣ) (τ φ : D.R.GG), Roomy L C → ∀ i, ¬ (pageWord L j ε τ φ).thick i → ∃ s : ℝ, L.sc.w'' D.R.n ≤ s ∧ s ≤ (wMax D : ℝ) ∧ s ≤ 8 / 5 * L.sc.b' ∧ |(((pageWord L j ε τ φ).sz i : ℤ) : ℝ) - s| ≤ ((D.R.t : ℝ) + 1) / 2 := by
@@ -822,8 +817,7 @@ theorem _root_.GlobalTheory.noThree_of_windowTwo : ∀ {n : ℕ} (th : ZMod n �
     simp only [Nat.cast_zero, add_zero, Nat.cast_one, Nat.cast_ofNat] at this
     exact this h
   refine ⟨key, ?_⟩
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   exact key 0 ⟨hall _, hall _, hall _⟩
 
 end GlobalTheory
@@ -876,8 +870,7 @@ theorem inert_nothree_nonthick : ∀ {R : Ranks} (H : Host R) (τ φ : R.GG), 3 
       apply hτ
       have := (_root_.GlobalTheory.HTW.ConjWord.conj_word_one_place τ).2 i
       unfold Thick at h ⊢
-      rw [this] at h
-      exact h
+      rwa [this] at h
     exact _root_.GlobalTheory.noThree_of_atMostOne _ h2 (fun a b ha _ => absurd ha (hno a))
   · by_cases hlen : 4 * H.Lw < orderOf φ.2
     · exact _root_.GlobalTheory.noThree_of_windowTwo _ H.Lw hL (_root_.GlobalTheory.HTW.LongWindow.main H τ φ hlen)
@@ -995,8 +988,7 @@ theorem conjWord_hypAT {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.m) (�
     intro i
     rw [_root_.GlobalTheory.HTW.pageWord_thick_iff L C j ε τ (D.R.cc) hR i]
     unfold Thick at hτ ⊢
-    rw [hplc i]
-    exact hτ
+    rwa [hplc i]
   refine ⟨⟨?_, ?_, ?_⟩, hth⟩
   · rw [hord]; exact even_two
   · exact (_root_.GlobalTheory.signs_alternate_inert ε τ (D.R.cc) rfl).2
@@ -1053,8 +1045,7 @@ theorem pageWord_inert_dichotomy : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j
     obtain ⟨h3, i, hi⟩ := _root_.GlobalTheory.HTW.InertWord.inert_nothree_nonthick D.host τ φ hLw hφ h
     have hth := _root_.GlobalTheory.HTW.pageWord_thick_iff L C j ε τ φ hR
     refine ⟨(_root_.GlobalTheory.signs_alternate_inert ε τ φ hφ).2, ⟨i, fun h' => hi ((hth i).1 h')⟩, ?_⟩
-    intro k hk
-    exact h3 k ⟨(hth _).1 hk.1, (hth _).1 hk.2.1, (hth _).1 hk.2.2⟩
+    exact fun k hk => h3 k ⟨(hth _).1 hk.1, (hth _).1 hk.2.1, (hth _).1 hk.2.2⟩
 
 end GlobalTheory.HTW
 end -- clump:auto

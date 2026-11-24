@@ -129,15 +129,14 @@ theorem superdiagSum_col {k : ℕ} (hk : k + 1 < n) (x : Fin (k + 1) → F) :
   unfold Whittaker.superdiagSum
   rw [Finset.sum_eq_single (⟨k, by omega⟩ : Fin n)]
   · rw [Finset.sum_eq_single (⟨k + 1, hk⟩ : Fin n)]
-    · rw [if_pos rfl, Matrix.add_apply, Matrix.one_apply_ne (Fin.ne_of_val_ne (by simp)),
+    · rw [ite_eq_left rfl, Matrix.add_apply, Matrix.one_apply_ne (Fin.ne_of_val_ne (by simp)),
         cM_apply_pos k x rfl (by simp), zero_add]
       rfl
     · intro j _ hj
       split_ifs with h
       · exact absurd (Fin.ext (by simpa using h)) hj
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · intro i _ hi
     apply Finset.sum_eq_zero
     intro j _
@@ -148,8 +147,7 @@ theorem superdiagSum_col {k : ℕ} (hk : k + 1 < n) (x : Fin (k + 1) → F) :
       apply hi
       exact Fin.ext (by simp; omega)
     · rfl
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem psiN_col {k : ℕ} (hk : k + 1 < n) (ψ : AddChar F ℂ) (x : Fin (k + 1) → F) :
     Whittaker.psiN ψ (col n k x) = ψ (x (Fin.last k)) := by
@@ -242,8 +240,7 @@ theorem cM_mul_row {k : ℕ} (hk : k + 1 < n) (g : Matrix (Fin n) (Fin n) F)
         cM_apply_neg k y (fun h => hj (Fin.ext h.1))]
   · intro l _ hl
     rw [cM_apply_neg k y (fun h => hl (Fin.ext h.1)), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem conj_col {k : ℕ} (hk : k + 1 < n) (g : GL (Fin n) F)
     (hM : ∀ i j : Fin n, k + 1 ≤ (i : ℕ) →
@@ -294,8 +291,7 @@ theorem exists_block {k : ℕ} (hk : k + 1 < n) (g : GL (Fin n) F) (hg : inP (k 
     exact Units.ne_zero _
   have hdet' : ((g : Matrix (Fin n) (Fin n) F).submatrix (Fin.castLE hk.le)
       (Fin.castLE hk.le)).det ≠ 0 := by
-    rw [← hd]
-    exact hdet
+    rwa [← hd]
   exact ⟨Matrix.nonsingInvUnit ((g : Matrix (Fin n) (Fin n) F).submatrix (Fin.castLE hk.le)
     (Fin.castLE hk.le)) (isUnit_iff_ne_zero.mpr hdet'), rfl, hd.symm⟩
 
@@ -310,8 +306,7 @@ theorem last_mulVec {k : ℕ} (hk : k + 1 < n) (g : GL (Fin n) F) (hg : inP k g)
   · rw [h1 _ _ (by simp), Matrix.one_apply_eq, one_mul]
   · intro l _ hl
     rw [h1 _ _ (by simp), Matrix.one_apply_ne (fun e => hl (Fin.castLE_injective _ e).symm), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem exists_ext {k : ℕ} (hk : k + 1 < n) (t : GL (Fin (k + 1)) F) :
     ∃ g : GL (Fin n) F, (g : Matrix (Fin n) (Fin n) F) =
@@ -320,8 +315,7 @@ theorem exists_ext {k : ℕ} (hk : k + 1 < n) (t : GL (Fin (k + 1)) F) :
     rw [← Matrix.GeneralLinearGroup.val_det_apply]
     exact Units.ne_zero _
   have hdet' : (extM n (t : Matrix (Fin (k + 1)) (Fin (k + 1)) F)).det ≠ 0 := by
-    rw [det_extM hk.le]
-    exact hdet
+    rwa [det_extM hk.le]
   exact ⟨Matrix.nonsingInvUnit (extM n (t : Matrix (Fin (k + 1)) (Fin (k + 1)) F))
     (isUnit_iff_ne_zero.mpr hdet'), rfl⟩
 

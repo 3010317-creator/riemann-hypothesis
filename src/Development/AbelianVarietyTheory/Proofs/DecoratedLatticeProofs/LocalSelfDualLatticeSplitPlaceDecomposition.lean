@@ -124,8 +124,7 @@ theorem half_c_of_mem {u : WO S T} (hu : u ∈ lat p ψ S T FS FT) (hc : IsHalf 
     u ∈ dualHalf p ψ S T FS FT := by
   obtain ⟨x, hx, y, hy, rfl⟩ := (mem_lat p ψ FS FT).1 hu
   have hxc : IsHalf (cA D p.e) (p.up FS FT x) := (Witness.half_add hy.1).1 hc
-  rw [eq_zero_of_halves p.split (Witness.up_half p FS FT x) hxc, zero_add]
-  exact hy
+  rwa [eq_zero_of_halves p.split (Witness.up_half p FS FT x) hxc, zero_add]
 
 end
 
@@ -150,7 +149,7 @@ theorem selfDual_lattice_split : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel
     intro y hy hyΛ
     have hyx : p.up FS FT (p.down FS FT y) = y := Witness.up_down p FS FT hy
     have hx : ¬ ∀ r q, p.down FS FT y r q ∈ 𝒪[k] := fun hx => hyΛ (hyx ▸ up_mem_lat p ψ FS FT hx)
-    push_neg at hx
+    push Not at hx
     obtain ⟨r, q, hrq⟩ := hx
     set a := p.down FS FT y r q with ha
     have hrq' : ¬ valuation k a ≤ 1 := fun h => hrq ((Valuation.mem_integer_iff _ _).2 h)
@@ -161,7 +160,7 @@ theorem selfDual_lattice_split : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel
       have h' : valuation k (c : k) * valuation k a ≤ valuation k (c : k) * 1 := by rwa [mul_one]
       exact hrq' ((mul_le_mul_iff_of_pos_left hc0).1 h')
     obtain ⟨z, hz, hzne⟩ : ∃ z, valuation k z ≤ valuation k (c * a) ∧ ψk z ≠ 1 := by
-      by_contra hcon; push_neg at hcon; exact hcv ((hc _).1 hcon)
+      by_contra hcon; push Not at hcon; exact hcv ((hc _).1 hcon)
     have hsum : ∀ t : Matrix Y Y' k, ∑ r', ∑ q', Matrix.single r q (z / a) r' q' * t r' q' = z / a * t r q := by
       intro t; simp [Matrix.single_apply, ite_and]
     obtain ⟨y', hy'c, hy'p⟩ := hpair (Matrix.single r q (z / a))
@@ -183,7 +182,7 @@ theorem selfDual_lattice_split : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel
     have hyd : y ∉ dualHalf p ψ S T FS FT := fun h => hyΛ (dualHalf_le_lat p ψ FS FT h)
     have : ¬ ∀ t : Matrix Y Y' k, (∀ r q, t r q ∈ 𝒪[k]) → ψ (symplO S T (p.up FS FT t) y) = 1 :=
       fun h => hyd ⟨hy, h⟩
-    push_neg at this
+    push Not at this
     obtain ⟨t, ht, hne⟩ := this
     exact ⟨p.up FS FT t, up_mem_lat p ψ FS FT ht, Witness.up_half p FS FT t, hne⟩
   ·
@@ -193,9 +192,7 @@ theorem selfDual_lattice_split : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel
     have := congrArg (p.down FS FT) hxx
     rw [Witness.down_up, Witness.down_up] at this
     exact this ▸ hx'
-  · intro u hu he
-    exact half_e_of_mem p ψ FS FT hu he
-  · intro u hu hc' t ht
-    exact (half_c_of_mem p ψ FS FT hu hc').2 t ht
+  · exact fun u hu he => half_e_of_mem p ψ FS FT hu he
+  · exact fun u hu hc' t ht => (half_c_of_mem p ψ FS FT hu hc').2 t ht
 
 end GlobalTheory.SplitSelfDual

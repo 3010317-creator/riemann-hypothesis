@@ -22,8 +22,7 @@ theorem prod_mem_span {O Y ι : Type} [CommRing O] [CommRing Y] [Algebra O Y] (t
   classical
   induction t using Finset.induction_on with
   | empty =>
-    apply Submodule.subset_span
-    exact ⟨fun _ => 1, by simp, by simp⟩
+    exact Submodule.subset_span ⟨fun _ => 1, by simp, by simp⟩
   | insert j t hj ih =>
     have h1 : x j ∈ Submodule.span O (A j) := hx j (Finset.mem_insert_self j t)
     have h2 := ih (fun i hi => hx i (Finset.mem_insert_of_mem hi))
@@ -70,13 +69,7 @@ variable {O Kf LL : Type} [CommRing O] [Field Kf] [Algebra O Kf] [Field LL] (e :
 theorem rowAct_map {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) {k n : ℕ}
     (U : Matrix (Fin k) (Fin k) R) (f : MvPolynomial (Fin k × Fin n) R) :
     rowAct S (U.map φ) (map φ f) = map φ (rowAct R U f) := by
-  induction f using MvPolynomial.induction_on with
-  | C a => simp [rowAct]
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
-  | mul_X p v hp =>
-    rw [map_mul, map_mul, map_mul, hp]
-
-    simp [rowAct, map_sum, Matrix.map_apply]
+  exact (Formalism.UG.P.wlocal_map_rowAct φ U f).symm
 
 theorem glMap_inv {k : ℕ} (g : GL (Fin k) LL) :
     ((g : Matrix (Fin k) (Fin k) LL).map e)⁻¹ = ((g⁻¹ : GL (Fin k) LL) : Matrix (Fin k) (Fin k) LL).map e := by
@@ -127,8 +120,7 @@ theorem dl_rat (hinj : Function.Injective (algebraMap O Kf)) (m : ℕ) (lam : Fi
   have hF0 : F0 = rowAct Kf gK⁻¹ (map (algebraMap O Kf) f) := by
     rw [hfe', ldlat_rowAct_inv_right rowActMul gK hdet]
   have := key hf
-  rw [Submodule.mem_comap, hT, ← hF0] at this
-  exact this
+  rwa [Submodule.mem_comap, hT, ← hF0] at this
 
 theorem htenW_rat (hinj : Function.Injective (algebraMap O Kf)) {n' m : ℕ} (lam0 : Fin n' → Fin (m + 1) → ℤ)
     (hdom : ∀ s, Antitone (lamAt lam0 s)) (g : Fin n' → GL (Fin (m + 1)) LL) :

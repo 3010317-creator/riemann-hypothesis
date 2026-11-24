@@ -86,8 +86,7 @@ section Uniq
 
 theorem exists_pos_fin {β : Type*} [MeasurableSpace β] (ν : Measure β) [SigmaFinite ν] (h : ν ≠ 0) :
     ∃ t, MeasurableSet t ∧ ν t ≠ 0 ∧ ν t ≠ ∞ := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   apply h
   rw [← Measure.measure_univ_eq_zero, ← iUnion_spanningSets ν]
   refine measure_iUnion_null fun n => ?_
@@ -131,8 +130,7 @@ theorem uniq_on_closed {G : Type*} [Group G] [TopologicalSpace G] [IsTopological
           exact H.mul_mem (H.inv_mem g.2) y.2
         refine ⟨⟨x, hx⟩, ?_, rfl⟩
         have hgy : g * (⟨x, hx⟩ : H) = y := Subtype.ext (by rw [Subgroup.coe_mul]; exact hxy.symm)
-        rw [hgy]
-        exact hy
+        rwa [hgy]
     rw [himg, ← Measure.map_apply (measurable_const_mul (g : G)) (he.measurableSet_image.2 hs),
       hm g g.2]
   have hsf : ∀ (m : Measure G) [SigmaFinite m], m (H : Set G)ᶜ = 0 →

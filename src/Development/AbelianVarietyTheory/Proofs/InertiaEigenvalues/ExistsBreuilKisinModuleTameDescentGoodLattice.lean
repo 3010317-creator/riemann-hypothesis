@@ -94,13 +94,7 @@ namespace GlobalTheory.BKGal.StableFix
 
 theorem SemiBC.span_eq {A B M N : Type} [CommRing A] [CommRing B] [AddCommGroup M] [Module A M]
     [AddCommGroup N] [Module B N] {f : A →+* B} {u : M →ₛₗ[f] N} (h : SemiBC u) :
-    Submodule.span B (Set.range u) = ⊤ := by
-  have h1 : (Submodule.span B (Set.range u)).mkQ = 0 := h.hom_ext fun x => by
-    rw [LinearMap.zero_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    exact Submodule.subset_span ⟨x, rfl⟩
-  exact Submodule.eq_top_iff'.2 fun y => by
-    have := LinearMap.congr_fun h1 y
-    rwa [LinearMap.zero_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at this
+    Submodule.span B (Set.range u) = ⊤ := GlobalTheory.CrysGalValue.span_range_eq_top h
 
 variable {l : ℕ} [hl : Fact l.Prime] {a : ℕ} [NeZero a] {e : ℕ} [NeZero e]
   {O K : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O]
@@ -800,7 +794,7 @@ theorem one_tmul_inj {O : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Free �
   set b := Module.Free.chooseBasis ℤ_[l] O
   obtain ⟨i, hi⟩ : ∃ i, b.repr 1 i ≠ 0 := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     exact one_ne_zero (b.repr.injective (by ext i; simp [hc i]))
   have h1 := congrArg (fun w => TensorProduct.lid ℤ_[l] (Ainf l) ((b.coord i).rTensor (Ainf l) w)) h
   simp only [LinearMap.rTensor_tmul, TensorProduct.lid_tmul, Module.Basis.coord_apply] at h1
@@ -1289,7 +1283,7 @@ private lemma exists_eq_prime_mul_of_eisenstein_mul {g h : PowerSeries K}
   · ext m
     have key := congrArg (coeff (m + e)) hgh
     simp only [_root_.GlobalTheory.BK.E, add_mul, map_add (f := _),
-      coeff_X_pow_mul', le_add_iff_nonneg_left, zero_le, if_true, Nat.add_sub_cancel] at key
+      coeff_X_pow_mul', le_add_iff_nonneg_left, zero_le, ite_true, Nat.add_sub_cancel] at key
     rw [← map_natCast (PowerSeries.C (R := K)), coeff_C_mul, coeff_C_mul] at key
     rw [← map_natCast (PowerSeries.C (R := K)), coeff_C_mul, coeff_mk]
     linear_combination key

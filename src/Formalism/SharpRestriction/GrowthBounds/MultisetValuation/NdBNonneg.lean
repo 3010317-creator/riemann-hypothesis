@@ -224,11 +224,7 @@ theorem nd_aT_le (t : D.host.TT) : (L.aT t : ℝ) ≤ 2 * L.sc.a := by
   linarith
 
 theorem nd_N_le (hS : Formalism.MainNotions.SizesAt L) : (D.R.N D.R.m : ℝ) ≤ L.sc.a := by
-  have hS' := hS
-  unfold Formalism.MainNotions.SizesAt at hS'
-  obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, hE, -⟩ := hS'
-  unfold Formalism.MainNotions.SizeEta at hE
-  obtain ⟨h1, h2, -⟩ := hE
+  obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, ⟨h1, h2, -⟩, -⟩ := hS
   have hx : (1 : ℝ) ≤ L.sc.x := nd_x_ge
   have hb : 0 ≤ L.sc.b := by unfold Scale.b; exact (Real.exp_pos _).le
   have hm2 := D.R.two_le_m
@@ -239,32 +235,31 @@ theorem nd_N_le (hS : Formalism.MainNotions.SizesAt L) : (D.R.N D.R.m : ℝ) ≤
   have ht : 1 ≤ D.R.t := by omega
   have hk : 5 ≤ D.R.k := by omega
   have hNn : D.R.N D.R.m ≤ D.R.t ^ 3 * D.R.f * D.R.k ^ 3 := by
-    have e1 : D.R.m * (D.R.t + 1) ≤ D.R.k * (D.R.t + 1) := Nat.mul_le_mul_right _ (by omega)
-    have e2 : D.R.k * (D.R.t + 2) ≤ D.R.k * (3 * D.R.t) := Nat.mul_le_mul_left _ (by omega)
     have e3 : 3 ≤ D.R.f * D.R.k ^ 2 :=
       calc 3 ≤ 2 * 5 ^ 2 := by norm_num
         _ ≤ D.R.f * D.R.k ^ 2 := Nat.mul_le_mul hf (Nat.pow_le_pow_left hk 2)
     have e4 : D.R.t * 3 ≤ D.R.t ^ 3 * (D.R.f * D.R.k ^ 2) :=
       Nat.mul_le_mul (Nat.le_self_pow (by norm_num) _) e3
     unfold Ranks.N
-    calc D.R.k + D.R.m * (D.R.t + 1) ≤ D.R.k + D.R.k * (D.R.t + 1) := Nat.add_le_add_left e1 _
+    calc _ ≤ D.R.k + D.R.k * (D.R.t + 1) :=
+          Nat.add_le_add_left (Nat.mul_le_mul_right _ (by omega)) _
       _ = D.R.k * (D.R.t + 2) := by ring
-      _ ≤ D.R.k * (3 * D.R.t) := e2
+      _ ≤ D.R.k * (3 * D.R.t) := Nat.mul_le_mul_left _ (by omega)
       _ = D.R.k * (D.R.t * 3) := by ring
       _ ≤ D.R.k * (D.R.t ^ 3 * (D.R.f * D.R.k ^ 2)) := Nat.mul_le_mul_left _ e4
       _ = D.R.t ^ 3 * D.R.f * D.R.k ^ 3 := by ring
   have hNr : (D.R.N D.R.m : ℝ) ≤ (D.R.t : ℝ) ^ 3 * D.R.f * (D.R.k : ℝ) ^ 3 := by exact_mod_cast hNn
-  have ht0 : (0 : ℝ) < D.R.t := by exact_mod_cast (show 0 < D.R.t by omega)
-  have hf0 : (0 : ℝ) < D.R.f := by exact_mod_cast (show 0 < D.R.f by omega)
-  have hk0 : (0 : ℝ) < D.R.k := by exact_mod_cast (show 0 < D.R.k by omega)
+  have ht0 : (0 : ℝ) < D.R.t := Nat.cast_pos.mpr (by omega)
+  have hf0 : (0 : ℝ) < D.R.f := Nat.cast_pos.mpr (by omega)
+  have hk0 : (0 : ℝ) < D.R.k := Nat.cast_pos.mpr (by omega)
   have hdpos : 0 < (D.R.t : ℝ) ^ 3 * D.R.f * (D.R.k : ℝ) ^ 3 :=
     mul_pos (mul_pos (pow_pos ht0 3) hf0) (pow_pos hk0 3)
   have ht1 : (1 : ℝ) ≤ L.etaSz := le_trans (by exact_mod_cast ht) h1
   have hde : (D.R.t : ℝ) ^ 3 * D.R.f * (D.R.k : ℝ) ^ 3 * L.etaSz ≤ L.sc.b := by
     rw [le_div_iff₀ hdpos] at h2
     linarith
-  calc (D.R.N D.R.m : ℝ) ≤ (D.R.t : ℝ) ^ 3 * D.R.f * (D.R.k : ℝ) ^ 3 := hNr
-    _ ≤ (D.R.t : ℝ) ^ 3 * D.R.f * (D.R.k : ℝ) ^ 3 * L.etaSz := le_mul_of_one_le_right hdpos.le ht1
+  calc (D.R.N D.R.m : ℝ) ≤ _ := hNr
+    _ ≤ _ := le_mul_of_one_le_right hdpos.le ht1
     _ ≤ L.sc.b := hde
     _ ≤ L.sc.a := by unfold Scale.a; exact le_mul_of_one_le_left hb hx
 
@@ -331,7 +326,7 @@ theorem nd_size : nd_NeedSize := by
           _ = (2 * L.sc.a) ^ 2 := by ring
       linarith
     · unfold al
-      rw [if_neg hsT]
+      rw [ite_eq_right hsT]
       push_cast
       positivity
   · obtain ⟨_, _, _, hw⟩ := hs s

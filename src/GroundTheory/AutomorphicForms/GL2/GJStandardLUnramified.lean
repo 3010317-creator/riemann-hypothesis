@@ -138,16 +138,14 @@ theorem zetaIntegral_sphericalCoeff_of_integrable (μ : Measure (GL (Fin n) F)) 
     have h1 := (hasSum_integral_shell μ hIn).summable
     have h2 : Summable fun k : ℤ ↦ ∫ g in {g : GL (Fin n) F | ordDet g = k}, ‖H g‖ ∂μ := by
       rw [← Complex.summable_ofReal]
-      refine h1.congr fun k ↦ ?_
-      exact integral_complex_ofReal
+      exact h1.congr fun k ↦ integral_complex_ofReal
     have h3 := h2.comp_injective Nat.cast_injective
     refine Summable.of_nonneg_of_le (fun m ↦ norm_nonneg _) (fun m ↦ ?_)
       (h3.mul_left (μ.real (integralGL F n : Set (GL (Fin n) F)))⁻¹)
     have hle := norm_integral_le_integral_norm (μ := μ.restrict {g : GL (Fin n) F | ordDet g = (m : ℤ)}) H
     rw [hterm m, norm_mul, hcdef, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hcpos] at hle
     simp only [Function.comp_apply]
-    rw [le_inv_mul_iff₀ hcpos]
-    exact hle
+    rwa [le_inv_mul_iff₀ hcpos]
   have hw := norm_lt_one_of_summable hnorm
   refine ⟨hw, ?_⟩
   have hsum := hasSum_integral_shell μ hI
@@ -162,8 +160,7 @@ theorem zetaIntegral_sphericalCoeff_of_integrable (μ : Measure (GL (Fin n) F)) 
     funext hterm
   rw [hfun] at hsum
   rw [zetaIntegral]
-  have hgen := (hasSum_sum_antidiagonalTuple hw).mul_left c
-  exact hsum.unique hgen
+  exact hsum.unique ((hasSum_sum_antidiagonalTuple hw).mul_left c)
 
 end GodementJacquet
 

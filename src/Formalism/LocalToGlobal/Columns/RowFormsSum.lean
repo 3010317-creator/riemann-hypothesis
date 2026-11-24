@@ -159,8 +159,7 @@ theorem rf_cs_split (H : LevFam.Split ι ΛP ΛK Λ0) (hinj : ∀ a : ↥Λ0.grp
         rw [← h1, sK.spec])
   rw [Finset.sum_image (fun c _ c' _ hc => hinjK hc), Finset.sum_image (fun c _ c' _ hc => hinjP hc)] at key
   unfold GSD.csOf
-  rw [← Nat.card_congr (rf_cosetEquiv H hinj)] at key
-  rw [Rat.smul_def, Rat.cast_natCast] at key
+  rw [← Nat.card_congr (rf_cosetEquiv H hinj), Rat.smul_def, Rat.cast_natCast] at key
   refine Eq.trans (Finset.sum_congr rfl fun c _ => ?_) (key.trans (congrArg _ (Finset.sum_congr rfl fun c _ => ?_)))
   · rw [(formGSD C ΛK).wt_eq, Rat.smul_def, Rat.cast_inv, Rat.cast_natCast, ← Nat.card_congr (hstab (sK.rep c)), smul_eq_mul]
   · rw [(formGSD C ΛP).wt_eq, Rat.smul_def, Rat.cast_inv, Rat.cast_natCast, smul_eq_mul]
@@ -206,8 +205,7 @@ theorem rf_g0Hat_injX (a : G0 X.E Pr.vGs R.r) (ha : unipotentGroupBlockEmbedding
   rw [LevFam.glue_of_mem _ _ (inlSG w) w.2] at h1
   have h2 : unipotentGroupBlockEmbedding Pr sel mu (r_le_X' R) a (inlSG w) = diagEmb _ (r_le_X' R) (a w) := extGLG_of_mem _ (inlSG w) w.2
   have h3 : diagEmb _ (r_le_X' R) (a w) ∈ HK (R.N R.m - 1) (𝓞 X.E ⧸ w.1.asIdeal) R.r (List.replicate R.m R.t) := by
-    rw [← h2]
-    exact h1
+    rwa [← h2]
   exact rf_diagEmb_mem_HK _ _ _ h3
 
 theorem levelSumX (h : (mtildeGSD W Ch sel mu P).Ok) (h' : (mtildeKGSD W Ch sel mu).Ok)

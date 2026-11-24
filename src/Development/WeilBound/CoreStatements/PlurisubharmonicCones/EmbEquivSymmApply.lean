@@ -65,8 +65,7 @@ variable {E : Type} [Field E] [NumberField E]
 theorem exists_mul_eq_nat {a : 𝓞 E} (h : a ≠ 0) : ∃ (n : ℕ) (c : 𝓞 E), n ≠ 0 ∧ c * a = n := by
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {a}))
   refine ⟨_, c, ?_, hc⟩
-  rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-  exact h
+  rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
 
 theorem emb_inj (s : 𝓞 E →+* ℂ) : Function.Injective s := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -139,8 +138,7 @@ theorem conj_of_real {h : (𝓞 E →+* ℂ) → ℂ} (hr : ∀ a, (∑ s : 𝓞
     simp only [smul_eq_mul]
 
     rw [← hc, map_sum]
-    simp only [map_mul]
-    exact Fintype.sum_equiv (cjEquiv E) _ _ (fun t => by simp [cjEquiv, cj_cj])
+    simpa only [map_mul] using Fintype.sum_equiv (cjEquiv E) _ _ (fun t => by simp [cjEquiv, cj_cj])
   rw [key ((starRingEnd ℂ).comp s), cj_cj]
 
 variable (E) in
@@ -212,7 +210,7 @@ theorem sum_coef (s : 𝓞 E →+* ℂ) : ∑ j, coef j s * s (RingOfIntegers.ba
     (w' := fun t => if t = s then 1 else 0) (fun a => by
       have h1 := dec_spec (W := ℂ) (RingHom.toAddMonoidHom s) a
       simp only [smul_eq_mul] at h1
-      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       exact h1.symm) s
   simpa using h0
 
@@ -273,16 +271,14 @@ theorem proj_eig_self {s : 𝓞 E →+* ℂ} {x : W} (hx : x ∈ eigSp ρ s) : p
   simpa using proj_eig hx s
 
 theorem proj_eig_ne {s t : 𝓞 E →+* ℂ} {x : W} (hx : x ∈ eigSp ρ s) (h : t ≠ s) : proj ρ t x = 0 := by
-  rw [proj_eig hx, if_neg h]
+  rw [proj_eig hx, ite_eq_right h]
 
 variable (ρ)
 
 theorem eigComp_eq (s : 𝓞 E →+* ℂ) (x : W) : eigComp ρ s x = proj ρ s x := by
   classical
   have hsup : (⨆ σ' ∈ {σ' : 𝓞 E →+* ℂ | σ' ≠ s}, eigSp ρ σ') ≤ LinearMap.ker (proj ρ s) := by
-    refine iSup₂_le fun t ht => ?_
-    intro y hy
-    exact LinearMap.mem_ker.mpr (proj_eig_ne hy (Ne.symm ht))
+    exact iSup₂_le fun t ht => fun y hy => LinearMap.mem_ker.mpr (proj_eig_ne hy (Ne.symm ht))
   have hex : ∃ p ∈ eigSp ρ s, x - p ∈ ⨆ σ' ∈ {σ' : 𝓞 E →+* ℂ | σ' ≠ s}, eigSp ρ σ' := by
     refine ⟨proj ρ s x, proj_mem ρ s x, ?_⟩
     have h1 := sum_proj ρ x
@@ -418,8 +414,7 @@ theorem real_indep {ι : Type} {v : ι → Λ} (h : LinearIndependent ℤ v) :
   have h3 : (fun i => R.P (v i)) = (L ∘ fun x => TensorProduct.tmul ℤ (1 : ℝ) (v x)) := by
     funext i
     simp [hL]
-  rw [h3]
-  exact h2
+  rwa [h3]
 
 theorem emb_conj (s : 𝓞 E →+* ℂ) (a : 𝓞 E) : s (IsCMField.ringOfIntegersComplexConj E a) = conj (s a) := by
   rw [← extE_apply s, ← extE_apply s a]
@@ -441,8 +436,7 @@ theorem ip_adj (a : 𝓞 E) (x y : Fin g → ℂ) :
       simp only [F, G, LinearMap.compl₂_apply, LinearMap.comp_apply, LinearMap.restrictScalars_apply, imB_apply]
       exact hlat u v
     intro u v
-    have h0 := congrArg (fun f => f u v) hFG
-    simpa [F, G, imB_apply] using h0
+    simpa [F, G, imB_apply] using congrArg (fun f => f u v) hFG
   apply Complex.ext
   · have h1 := hIm y (Complex.I • x)
     rw [map_smul, ip_smul_right, ip_smul_right] at h1
@@ -466,8 +460,7 @@ theorem ip_act (a : 𝓞 E) (x y : Fin g → ℂ) :
   rw [Finset.sum_eq_single t]
   · intro u _ hut
     rw [ip_orth R (Ne.symm hut) (proj_mem _ t x) (proj_mem _ u y), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ t) h
+  · exact fun h => absurd (Finset.mem_univ t) h
 
 theorem gram_conj {I : Submodule (𝓞 E) Λ} (hI : IsIsoSub R.form I) (s : 𝓞 E →+* ℂ) {v w : Λ} (hv : v ∈ I)
     (hw : w ∈ I) :
@@ -483,7 +476,7 @@ private theorem coef_ne_lemma {u t : 𝓞 E →+* ℂ} (h : u ≠ t) :
     (w' := fun u => if u = t then 1 else 0) (fun a => by
       have h1 := dec_spec (W := ℂ) (RingHom.toAddMonoidHom t) a
       simp only [smul_eq_mul] at h1
-      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       exact h1.symm) u
   simpa [h] using h0
 
@@ -545,8 +538,8 @@ theorem proj_indep {I : Submodule (𝓞 E) Λ} (hI : IsIsoSub R.form I) (s : �
           refine Finset.sum_congr rfl fun u _ => ?_
           by_cases hu : u = t
           · subst hu
-            rw [if_pos rfl, sum_coef]
-          · rw [if_neg hu, coef_ne_lemma hu]
+            rw [ite_eq_left rfl, sum_coef]
+          · rw [ite_eq_right hu, coef_ne_lemma hu]
       _ = ∑ j, x a j * t (RingOfIntegers.basis E j) := by
           simp only [x, Finset.mul_sum, Finset.sum_mul]
           rw [Finset.sum_comm]
@@ -569,10 +562,9 @@ theorem proj_indep {I : Submodule (𝓞 E) Λ} (hI : IsIsoSub R.form I) (s : �
         apply_ite (starRingEnd ℂ), map_zero, Complex.conj_conj, add_comm]
     have hzero : ∑ a, ∑ t, γ a t • proj R.B t (R.P (v a)) = 0 := by
       simp only [γ, add_smul, ite_smul, zero_smul, Finset.sum_add_distrib, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       rw [hc, hc', add_zero]
-    have h3 := key γ hγ hzero a s
-    simpa [γ] using h3
+    simpa [γ] using key γ hγ hzero a s
   rw [Fintype.linearIndependent_iff]
   intro c hc a
   have h1 := main c hc a
@@ -581,12 +573,11 @@ theorem proj_indep {I : Submodule (𝓞 E) Λ} (hI : IsIsoSub R.form I) (s : �
       simp only [mul_smul]
       rw [← Finset.smul_sum, hc, smul_zero]) a
   by_cases hs : s = (starRingEnd ℂ).comp s
-  · rw [if_pos hs] at h1 h2
+  · rw [ite_eq_left hs] at h1 h2
     rw [map_mul, Complex.conj_I] at h2
     have h4 : (2 : ℂ) * Complex.I * c a = 0 := by linear_combination Complex.I * h1 + h2
     simpa [Complex.I_ne_zero] using h4
-  · rw [if_neg hs, add_zero] at h1
-    exact h1
+  · rwa [ite_eq_right hs, add_zero] at h1
 
 end Riem
 

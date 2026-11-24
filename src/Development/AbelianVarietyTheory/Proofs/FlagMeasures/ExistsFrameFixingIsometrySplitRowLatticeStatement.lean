@@ -123,8 +123,7 @@ theorem mem_one_iff (x : E) : x ∈ (1 : FI E) ↔ IsIntegral ℤ x := by
   constructor
   · rintro ⟨y, rfl⟩
     exact y.isIntegral_coe
-  · intro h
-    exact ⟨⟨x, h⟩, rfl⟩
+  · exact fun h => ⟨⟨x, h⟩, rfl⟩
 
 theorem star_int {x : E} (h : IsIntegral ℤ x) : IsIntegral ℤ (star x) :=
   map_isIntegral_int (starRingEnd E) h
@@ -139,8 +138,7 @@ theorem mem_unimod {Λ : Submodule (𝓞 E) S.V} (hu : Formalism.HermitianLattic
     have ho' : (o : E) = S.hT y x := ho
     rw [← ho']
     exact o.isIntegral_coe
-  · intro h
-    exact ⟨⟨_, h⟩, rfl⟩
+  · exact fun h => ⟨⟨_, h⟩, rfl⟩
 
 def StarStable (I : FI E) : Prop := ∀ x ∈ I, star x ∈ I
 
@@ -295,7 +293,7 @@ theorem exists_dual_frame (hE : Formalism.HermitianLatticesTheory.IsCMUnram E) {
 
   · simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, map_smul, h.1, hge, heg,
     smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one, Finset.sum_ite_eq,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, star_mul, hsym]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, star_mul, hsym]
     linear_combination (-(S.hT (g a) (g b))) * ht
 
   · simp only [map_sub, map_sum, map_smul, h.1, heg, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero]
@@ -578,8 +576,7 @@ theorem main : ∀ (D : D7) (u : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D), Is
     · simpa [frame, FlagG.fvec] using hnz
     · simpa [frame, FlagG.fvec] using hne a
   · unfold IsSplit
-    rw [hXS, Wb, ← he]
-    exact hs
+    rwa [hXS, Wb, ← he]
   · rw [hXL]; exact hloc
   · exact hprim c (Lsub_gmap_le (lf D F0) Λ n hn hnX hq hc)
 

@@ -342,8 +342,7 @@ theorem part_pull_eq_zero : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsInteg
       _ ≤ 0 := by rw [h1, zero_add]; exact h2
   show glueMeas _ _ = 0
   unfold glueMeas
-  simp only [hc]
-  exact le_antisymm (iSup_le fun _ => le_rfl) (Measure.zero_le _)
+  simpa only [hc] using le_antisymm (iSup_le fun _ => le_rfl) (Measure.zero_le _)
 
 end GlobalTheory.MixDrop
 end -- clump:auto
@@ -1116,8 +1115,7 @@ theorem exists_isLocalization_stalk {X : Scheme.{0}} (U : X.affineOpens) {y η :
   refine ⟨algYη, (IsLocalization.isLocalization_iff_of_ringEquiv (M := p.primeCompl)
       (S := T) φ.symm.toRingEquiv).mp inferInstance, fun a => ?_⟩
   have h1 := (φ.symm.commutes a).symm
-  rw [IsScalarTower.algebraMap_apply Γ(X, U.1) (X.presheaf.stalk y) T] at h1
-  exact h1
+  rwa [IsScalarTower.algebraMap_apply Γ(X, U.1) (X.presheaf.stalk y) T] at h1
 
 theorem germ_eq_unit_mul_monomial : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (B : LB X) (hB : B.IsLB) (s : B.Sec) (hs : genericPoint X ∈ nonzeroLocus s) (r : ℕ) (z : Fin r → X), Function.Injective z → (∀ a, Order.coheight (z a) = 1) → ((nonzeroLocus s : Set X)ᶜ = ⋃ a, closure {z a}) → ∀ x : X, FinalTheorems.LSncAt X (fun a => (Closeds.closure {z a})) x → ∀ (i : B.ι) (hi : x ∈ B.U i), ∃ (n : ℕ) (g : Fin n → X.presheaf.stalk x) (e : {a : Fin r // x ∈ (Closeds.closure {z a})} ↪ Fin n) (u : (X.presheaf.stalk x)ˣ) (_ : Fintype {a : Fin r // x ∈ (Closeds.closure {z a})}), FinalTheorems.Rsp (X.presheaf.stalk x) n g ∧ (∀ a, FinalTheorems.stalkId (Scheme.IdealSheafData.vanishingIdeal (Closeds.closure {z a.1})) x = Ideal.span {g (e a)}) ∧ X.presheaf.germ _ x hi (s.f i) = u * ∏ a, g (e a) ^ ((divOfSec hB s hs).mult (z a.1)).toNat := by
   classical
@@ -1167,8 +1165,7 @@ theorem germ_eq_unit_mul_monomial : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocal
     have hxa : x ∈ Closeds.closure {z a} := hPx.mem_closed isClosed_closure ha
     have hsup : hV.fromSpec P ∈
         ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure {z a})).support : Set X) := by
-      rw [Scheme.IdealSheafData.coe_support_vanishingIdeal]
-      exact ha
+      rwa [Scheme.IdealSheafData.coe_support_vanishingIdeal]
     rw [WMult.mem_support_fromSpec_iff _ U hV] at hsup
     have h3 : Ideal.span {g (e ⟨a, hxa⟩)} ≤ Q := by
       rw [← hI ⟨a, hxa⟩, WMult.stalkId_eq_map_germ _ x U hxV]
@@ -1255,15 +1252,13 @@ theorem mem_range_ptMap_closι (z : X) (y : CxPts p σ) :
   constructor
   · rintro ⟨w, rfl⟩
     have : closι z (w.1 (IsLocalRing.closedPoint ℂ)) ∈ Set.range (closι z) := ⟨_, rfl⟩
-    rw [hr] at this
-    exact this
+    rwa [hr] at this
   · intro hy
     have : IsReduced (Sp ℂ) := inferInstanceAs (IsReduced (Spec _))
     have hle : Set.range y.1 ⊆ Set.range (closι z) := by
       rintro _ ⟨a, rfl⟩
       have ha : a = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
-      rw [hr, ha]
-      exact hy
+      rwa [hr, ha]
     have hk : (closι z).ker ≤ y.1.ker := ker_le_ker_of_range_subset_of_isReduced (closι z) y.1 hle
     have hl := IsClosedImmersion.lift_fac (closι z) y.1 hk
     exact ⟨⟨IsClosedImmersion.lift (closι z) y.1 hk, by rw [← Category.assoc, hl, y.2]⟩, Subtype.ext hl⟩
@@ -1303,8 +1298,7 @@ theorem exists_compatChart {F : Type} [Field F] {X : Scheme.{0}} {p : X ⟶ Sp F
   refine ⟨hn, ψ, ?_, hψs ▸ ⟨hx0, hxO⟩, fun y hy => hON (hψs ▸ hy).2, fun y hy => hsub (hψs ▸ hy).1,
     fun y hy j => hev y (hψs ▸ hy).1 (Fin.castLE hn j) j.2⟩
   refine GlobalTheory.DivSec.isCompatChart_of_holAlong F X p σ D A hA ψ (fun j => ?_) ?_
-  · intro V _ _ _ B' y hB' hy hm
-    exact hhol j V B' y hB' hy (fun b hb => (hψs ▸ hm hb).1)
+  · exact fun V _ _ _ B' y hB' hy hm => hhol j V B' y hB' hy (fun b hb => (hψs ▸ hm hb).1)
   · exact GlobalTheory.LocLift.isHolTo_mono hsymm ψ.open_target fun z hz => hz.1
 
 theorem isSNC_locSec : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (D : ℕ), IsProjOver p → SmoothOfRelativeDimension D p → ∀ (A : FinHolAtlas D (CxPts p σ)), IsAlgAtlas A → ∀ (M : MLine p σ) (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s) (r : ℕ) (z : Fin r → X), Function.Injective z → (∀ a, Order.coheight (z a) = 1) → ((nonzeroLocus s : Set X)ᶜ = ⋃ a, closure {z a}) → (∀ x : X, FinalTheorems.LSncAt X (fun a => (Closeds.closure {z a})) x) → IsSNC A M.φ.locPot (M.φ.locSec (secVal p σ s)) (fun a => ((divOfSec M.φ.isLB s hs).mult (z a)).toNat) (fun a => Set.range (ptMap (closι (z a)) rfl σ)) := by
@@ -1347,9 +1341,9 @@ theorem isSNC_locSec : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] 
     simp only [Set.mem_inter_iff, Set.mem_setOf_eq, mem_range_ptMap_closι]
     refine and_comm.trans (and_congr_right fun hy => ?_)
     by_cases h : x.1 (IsLocalRing.closedPoint ℂ) ∈ Closeds.closure {z a}
-    · simp only [τ, dif_pos h, Option.some.injEq, exists_eq_left', hev y hy]
+    · simp only [τ, dite_eq_left h, Option.some.injEq, exists_eq_left', hev y hy]
       exact ((hN hy).2.2.1 ⟨a, h⟩).symm
-    · simp only [τ, dif_neg h, reduceCtorEq, false_and, exists_false, iff_false]
+    · simp only [τ, dite_eq_right h, reduceCtorEq, false_and, exists_false, iff_false]
       exact (hN hy).2.2.2.1 a h
   · exact (hA.holoOn_iff hA.anRead ψ.open_source).2 ((hA.anRead.holoOn_ev V.1 (G' 0)).mono hψV)
   · intro y hy
@@ -1359,9 +1353,9 @@ theorem isSNC_locSec : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] 
     congr 1
     rw [Finset.prod_eq_one (s := Finset.univ)
       (f := fun a : {a // ¬ x.1 (IsLocalRing.closedPoint ℂ) ∈ Closeds.closure {z a}} => _)
-      (fun a _ => by simp only [τ, dif_neg a.2]), mul_one]
+      (fun a _ => by simp only [τ, dite_eq_right a.2]), mul_one]
     refine Finset.prod_congr (by ext; simp) fun a _ => ?_
-    simp only [τ, dif_pos a.2, map_pow, hev y hy, ev_eq (hψV hy)]
+    simp only [τ, dite_eq_left a.2, map_pow, hev y hy, ev_eq (hψV hy)]
 
 end GlobalTheory.SecSnc
 end -- clump:auto
@@ -1422,8 +1416,7 @@ theorem smooth_component : ∀ (F : Type) [Field F] [CharZero F] (X : Scheme.{0}
   obtain ⟨hreg, n, t, ε, hR, hI⟩ := hL (closι (z a) y)
   have hmem : closι (z a) y ∈ Closeds.closure {z a} := by
     have := Vanishing.ι_mem_support I y
-    have h := Scheme.IdealSheafData.coe_support_vanishingIdeal (Closeds.closure {z a})
-    exact h.le this
+    exact (Scheme.IdealSheafData.coe_support_vanishingIdeal (Closeds.closure {z a})).le this
   have hker : RingHom.ker ((closι (z a)).stalkMap y).hom = Ideal.span {t (ε ⟨a, hmem⟩)} :=
     (Vanishing.ker_stalkMap I y).trans (hI ⟨a, hmem⟩)
   have hm : t (ε ⟨a, hmem⟩) ∈ IsLocalRing.maximalIdeal _ := hR.1 ▸ Ideal.subset_span ⟨_, rfl⟩
@@ -1808,8 +1801,7 @@ theorem poincareLelong_sec : GlobalTheory.Published.Principalisation → ∀ (F 
         _ = _ := by
           rw [hdeg, Nat.cast_one, one_mul, ((presents_divOfRatSec M.φ.isLB _).isEqn i z hi).mult_eq])
     L u hmu
-  rw [hA, hB, hS] at hPL
-  exact hPL
+  rwa [hA, hB, hS] at hPL
 
 end GlobalTheory
 end -- clump:auto

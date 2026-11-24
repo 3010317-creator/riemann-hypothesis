@@ -81,9 +81,9 @@ theorem EigenFrame_of (hB : GramBasic) (hC : EigenCompat) : EigenFrame := by
         simp
         ring
     · have h1 := hsplit x y
-      simp only [if_neg hxy, zero_add] at h1
+      simp only [ite_eq_right hxy, zero_add] at h1
       refine ⟨q1 x y, hq1 x y, ?_⟩
-      rw [if_neg, zero_add]
+      rw [ite_eq_right, zero_add]
       · exact h1
       · rintro ⟨h2, _, h3⟩
         apply hxy
@@ -92,9 +92,7 @@ theorem EigenFrame_of (hB : GramBasic) (hC : EigenCompat) : EigenFrame := by
         revert h3
         cases x.1.1 <;> cases y.1.1 <;> simp
   choose q hq hqe using main
-  refine ⟨q, hv, hA, hq, ?_⟩
-  intro x y
-  exact (hBB x y).symm.trans (hqe x y)
+  exact ⟨q, hv, hA, hq, fun x y => (hBB x y).symm.trans (hqe x y)⟩
 
 theorem EigenFrameE_of (hF : EigenFrame) (hS : SepPairs) (hN : IntNorm) : EigenFrameE := by
   intro a b c d ha hd lam hlam hcm n _ _ h Λ g hg p _ ι hidx J _ v hv hpd E _ _ _ cE s δ hδ hcδ hsδ hcc hss
@@ -105,16 +103,12 @@ theorem EigenFrameE_of (hF : EigenFrame) (hS : SepPairs) (hN : IntNorm) : EigenF
   refine hF a b c d ha hd lam hlam hcm n h Λ g hg p ι hidx J v hv H N0 N1 A u hA
     {ee : 𝓞 E × 𝓞 E // (ee.2 : E) = cE (ee.1 : E)} (fun ee => act ee.1.1) (fun ee => act ee.1.2)
     (fun ee τ => emb τ (ee.1.1 : E)) (fun ee τ => emb τ (ee.1.2 : E)) ?_ ?_ ?_ ?_ ?_ ?_ hnorm
-  · intro ee x y
-    exact hadj ee.1.1 ee.1.2 ee.2 x y
-  · intro ee
-    exact hpres ee.1.2
+  · exact fun ee x y => hadj ee.1.1 ee.1.2 ee.2 x y
+  · exact fun ee => hpres ee.1.2
   · intro ee τ
     exact hN p E (emb τ) ee.1.2
-  · intro ee x i
-    exact heig ee.1.1 x i
-  · intro ee x i
-    exact heig ee.1.2 x i
+  · exact fun ee x i => heig ee.1.1 x i
+  · exact fun ee x i => heig ee.1.2 x i
   · intro τ ρ hρ
     obtain ⟨e, he⟩ := hS p hp2 E cE s δ hδ hcδ hsδ hcc hss hsc H emb hinj hembδ hembt hKur τ ρ hρ
     have hint : IsIntegral ℤ (cE (e : E)) := map_isIntegral_int cE (RingOfIntegers.isIntegral_coe e)

@@ -79,8 +79,7 @@ theorem gm_eq_one {X Z : Scheme.{0}} (κ : Z ⟶ X) [IsOpenImmersion κ] (z : Z)
   have e' := congrArg Units.val e
   apply Units.ext
   apply (ConcreteCategory.bijective_of_isIso (κ.stalkMap z)).1
-  refine ((Scheme.Hom.germ_stalkMap_apply κ U z h (a : Γ(X, U))).trans ?_).trans (map_one _).symm
-  exact e'
+  exact ((Scheme.Hom.germ_stalkMap_apply κ U z h (a : Γ(X, U))).trans e').trans (map_one _).symm
 
 private theorem gm_res_eq_gm {S T : Scheme.{0}} (f : T ⟶ S) (t : T) {U V : S.Opens} (hVU : V ≤ U) (a : Γ(S, U)ˣ)
     (ht : f t ∈ V) : gm f t V (res hVU a) = gm f t U a := by
@@ -134,8 +133,7 @@ theorem exists_push : ∀ (X Y : Scheme.{0}) (ψ : Y ⟶ X) [IsOpenImmersion ψ]
     · intro hy
       obtain ⟨y', hy', e⟩ := Set.mem_iInter.1 hy PUnit.unit
       rwa [ψ.isOpenEmbedding.injective e] at hy'
-    · intro hy
-      exact Set.mem_iInter.2 fun k => ⟨y, hy, rfl⟩
+    · exact fun hy => Set.mem_iInter.2 fun k => ⟨y, hy, rfl⟩
   have Gself : ∀ i y, y ∈ L.U i → gm (𝟙 Y) y (L.U i ⊓ L.U i) (L.g i i) = 1 := by
     intro i y hy
     have := congrArg (gm (𝟙 Y) y _) (hL.g_self i)
@@ -186,8 +184,7 @@ theorem exists_push : ∀ (X Y : Scheme.{0}) (ψ : Y ⟶ X) [IsOpenImmersion ψ]
     apply _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.unit_ext
     intro y hy
     have h1 := (hmem j y).1 hy
-    rw [gm_res_eq_gm (𝟙 Y) y, map_one, hN j j y h1 h1, Gself _ y h1]
-    exact hy
+    rwa [gm_res_eq_gm (𝟙 Y) y, map_one, hN j j y h1 h1, Gself _ y h1]
   · intro j j' j''
     apply _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.unit_ext
     intro y hy
@@ -216,8 +213,7 @@ theorem exists_push : ∀ (X Y : Scheme.{0}) (ψ : Y ⟶ X) [IsOpenImmersion ψ]
           (gm (𝟙 Y) y (L.U p.2 ⊓ L.U q.2) (L.g p.2 q.2))⁻¹ *
             gm (𝟙 Y) y (L.U (q.1 PUnit.unit) ⊓ L.U q.2) (L.g (q.1 PUnit.unit) q.2) := by
       rw [mul_right_comm, Gcoc _ _ _ y ha ha' hi', ← Gcoc _ _ _ y ha hi hi', mul_inv_cancel_right]
-    refine eA.trans (hG.trans ?_)
-    exact congrArg₂ (· * ·) (congrArg₂ (· * ·) eB.symm rfl) eD.symm
+    exact eA.trans (hG.trans (congrArg₂ (· * ·) (congrArg₂ (· * ·) eB.symm rfl) eD.symm))
 
 end GlobalTheory.LBPush
 end -- clump:auto
@@ -268,7 +264,7 @@ private theorem units_ext_of_gm_id_eq {Z : Scheme.{0}} {W : Z.Opens} (u v : Γ(Z
     intro x hx
     have hx' : (𝟙 Z) x ∈ W := hx
     have e := congrArg Units.val (h x hx)
-    simp only [gm, pullU, dif_pos hx', MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at e
+    simp only [gm, pullU, dite_eq_left hx', MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at e
     exact e
   ext1
   exact (ConcreteCategory.bijective_of_isIso (Scheme.Hom.app (𝟙 Z) W)).1 key
@@ -305,8 +301,7 @@ theorem exists_iso_normalised : ∀ (X S : Scheme.{0}) (p : X ⟶ S) (e : S ⟶ 
     simp only [c]
     rw [map_mul, map_mul, map_inv, map_inv, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx,
       _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx]
-    refine congrArg (HMul.hMul _) (congrArg Inv.inv ?_)
-    exact gm_id_pull e x _ hx.2 _
+    exact congrArg (HMul.hMul _) (congrArg Inv.inv (gm_id_pull e x _ hx.2 _))
 
   have hcomp : ∀ k l, res (inf_le_left : O k ⊓ O l ≤ O k) (c k) = res (inf_le_right : O k ⊓ O l ≤ O l) (c l) := by
     rintro ⟨a, b⟩ ⟨a', b'⟩
@@ -349,12 +344,10 @@ theorem exists_iso_normalised : ∀ (X S : Scheme.{0}) (p : X ⟶ S) (e : S ⟶ 
     rw [hV'] at h2
     have h3 : e (p y) ∈ p ⁻¹ᵁ V := by
       show p (e (p y)) ∈ V
-      rw [hpe]
-      exact h1
+      rwa [hpe]
     have h4 : e (p y) ∈ p ⁻¹ᵁ V' := by
       show p (e (p y)) ∈ V'
-      rw [hpe]
-      exact h2
+      rwa [hpe]
     rw [← hV] at h3
     rw [← hV'] at h4
     obtain ⟨a', ha'⟩ := TopologicalSpace.Opens.mem_iSup.1 h3
@@ -371,8 +364,7 @@ theorem exists_iso_normalised : ∀ (X S : Scheme.{0}) (p : X ⟶ S) (e : S ⟶ 
     have hx0 : x ∈ ⨆ k, O k := le_iSup O (a, b) hx
     have hz : x ∈ e ⁻¹ᵁ (p ⁻¹ᵁ (⨆ k, O k)) := by
       show p (e x) ∈ ⨆ k, O k
-      rw [hpe]
-      exact hx0
+      rwa [hpe]
     have hP : gm e x (M.U a ⊓ M'.U b) (res (hk (a, b)) (pullU p _ c0)) = gm (𝟙 S) x (O (a, b)) (c (a, b)) := by
       calc gm e x (M.U a ⊓ M'.U b) (res (hk (a, b)) (pullU p _ c0))
           = gm e x (p ⁻¹ᵁ (⨆ k, O k)) (pullU p _ c0) := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res e x (hk (a, b)) hxab _
@@ -534,8 +526,7 @@ private theorem gm_id_pullU_eq_gm {X Y : Scheme.{0}} (c : Y ⟶ X) (y : Y) {U : 
   apply Units.ext
   rw [← gs_unit (𝟙 Y) y (c ⁻¹ᵁ U) (by simpa using hy), ← gs_unit c y U hy]
   have e := gs_pull (𝟙 Y) c y U (by simpa using hy) a.val
-  rw [Category.id_comp] at e
-  exact e
+  rwa [Category.id_comp] at e
 
 private theorem mem_pull_U_of_mem {X Y : Scheme.{0}} (N : LB X) (c : Y ⟶ X) {y : Y} {a : N.ι} (ha : c y ∈ N.U a) :
     y ∈ (N.pull c).U (fun _ => a) := by
@@ -600,8 +591,7 @@ theorem gen_stalk {N : LB Y} {t : N.Gen} (ht : t.IsGen) (y : Y) (i j : N.ι) (hi
   unfold LB.Gen.IsGen at ht
   have hm : (𝟙 Y) y ∈ N.U i ⊓ N.U j := by simpa using (⟨hi, hj⟩ : y ∈ N.U i ⊓ N.U j)
   have e := congrArg (gm (𝟙 Y) y (N.U i ⊓ N.U j)) (ht i j)
-  rw [map_mul, gm_res_eq_gm (𝟙 Y) y hm, gm_res_eq_gm (𝟙 Y) y hm] at e
-  exact e
+  rwa [map_mul, gm_res_eq_gm (𝟙 Y) y hm, gm_res_eq_gm (𝟙 Y) y hm] at e
 
 theorem gen_iso_of_charts_le_range : ∀ (X Y : Scheme.{0}) (c : Y ⟶ X) [IsOpenImmersion c], (∀ N : LB X, (∀ a, N.U a ≤ c.opensRange) → (∃ t : (N.pull c).Gen, t.IsGen) → ∃ t : N.Gen, t.IsGen) ∧ ∀ M M' : LB X, (∀ a b, M.U a ⊓ M'.U b ≤ c.opensRange) → LBIso (M.pull c) (M'.pull c) → LBIso M M' := by
   intro X Y c _

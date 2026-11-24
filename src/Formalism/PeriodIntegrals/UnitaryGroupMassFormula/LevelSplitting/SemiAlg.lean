@@ -440,8 +440,7 @@ theorem N_part (H : D.Hyp) {S : (n → A) →ₗ[A] (n → A)} (hX : D.MapX S) (
   have hdec : D.pU v = D.pX v + D.pz v := by
     simp only [pU, LinearMap.add_apply, hpXv, add_zero]
   have hpz : S (D.pz v) - D.pz v ∈ Submodule.span A (Set.range D.e) := by
-    simp only [pz, LinearMap.smulRight_apply, map_smul, ← smul_sub]
-    exact Submodule.smul_mem _ _ hZ
+    simpa only [pz, LinearMap.smulRight_apply, map_smul, ← smul_sub] using Submodule.smul_mem _ _ hZ
   have hSv : S v = S (D.pU v) + S (D.pW v) := by
     rw [← map_add (f := _)]
     congr 1
@@ -556,8 +555,7 @@ theorem span_frame_castSucc (b : Fin r) :
     have hcl : c ≠ Fin.last r := Fin.ne_last_of_lt hc
     refine ⟨c.castPred hcl, ?_, ?_⟩
     · show c.castPred hcl < b
-      rw [← Fin.castSucc_lt_castSucc_iff, Fin.castSucc_castPred]
-      exact hc
+      rwa [← Fin.castSucc_lt_castSucc_iff, Fin.castSucc_castPred]
     · show ratV (F := F) R (P.e (c.castPred hcl)) = ratV (F := F) R (F0 P c)
       rw [← F0_castSucc, Fin.castSucc_castPred]
   · rintro ⟨a, ha, rfl⟩
@@ -598,15 +596,13 @@ theorem S_e {g : HA R σ J} (hg : g ∈ Ssub R σ J P) (b : Fin r) :
       spanR (F := F) R P.e {a | a < b} := by
   have hu : UniC R σ J (F0 P) g := hg
   have h := hu (Fin.castSucc b)
-  rw [F0_castSucc, span_frame_castSucc] at h
-  exact h
+  rwa [F0_castSucc, span_frame_castSucc] at h
 
 theorem stabilizer_fixes_tail_coords {g : HA R σ J} (hg : g ∈ Ssub R σ J P) :
     lin R σ J g (ratV (F := F) R P.z) - ratV (F := F) R P.z ∈ spanR (F := F) R P.e Set.univ := by
   have hu : UniC R σ J (F0 P) g := hg
   have h := hu (Fin.last r)
-  rw [frameInitialVectors_last, span_frame_last] at h
-  exact h
+  rwa [frameInitialVectors_last, span_frame_last] at h
 
 theorem H_fix_e {h : HA R σ J} (hh : h ∈ Hsub R σ J P) (a : Fin r) :
     lin R σ J h (ratV (F := F) R (P.e a)) = ratV (F := F) R (P.e a) := by

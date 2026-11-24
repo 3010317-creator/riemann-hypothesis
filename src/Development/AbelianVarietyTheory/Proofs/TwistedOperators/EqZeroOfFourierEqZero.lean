@@ -133,8 +133,7 @@ theorem real_eq_zero (χ : A → G → ℂ) (hc : ∀ a, Continuous (χ a)) (hx 
   have hsepA : (Al.map (BoundedContinuousFunction.toContinuousMapStarₐ ℂ)).SeparatesPoints := by
     intro x y hxy
     obtain ⟨a, hax⟩ : ∃ a, χ a (x - y) ≠ 1 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hxy (sub_eq_zero.mp (hsep _ hcon))
     refine ⟨_, ⟨BoundedContinuousFunction.toContinuousMapStarₐ ℂ (B a),
       StarSubalgebra.mem_map.mpr ⟨B a, hmem a, rfl⟩, rfl⟩, ?_⟩
@@ -312,18 +311,15 @@ theorem eq_zero_of_fourier_eq_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
   have htr : Continuous (Algebra.trace (AF D.host.F) (AE D)) := IsModuleTopology.continuous_of_linearMap _
   refine GlobalTheory.CharFourierInj.eq_zero (A := Mx D n m)
     (fun y u => ψ (Algebra.trace (AF D.host.F) (AE D) (Matrix.trace (y * u)))) ?_ ?_ ?_ ?_ ?_ ?_ μ N hN hi h
-  · intro y
-    exact hψ.1.1.comp (htr.comp (continuous_const.matrix_mul continuous_id).matrix_trace)
+  · exact fun y => hψ.1.1.comp (htr.comp (continuous_const.matrix_mul continuous_id).matrix_trace)
   · intro y u u'
     simp only [Matrix.mul_add, Matrix.trace_add, map_add (f := _), AddChar.map_add_eq_mul]
   · intro y y' u
     simp only [Matrix.add_mul, Matrix.trace_add, map_add (f := _), AddChar.map_add_eq_mul]
   · intro u
     simp only [Matrix.zero_mul, Matrix.trace_zero, map_zero, AddChar.map_zero_eq_one]
-  · intro y u
-    exact hψ.1.2.1 _
-  · intro u hu
-    exact eq_zero_of_psi_trace_mat hψ u hu
+  · exact fun y u => hψ.1.2.1 _
+  · exact fun u hu => eq_zero_of_psi_trace_mat hψ u hu
 
 end GlobalTheory.AdelicMatFourier
 

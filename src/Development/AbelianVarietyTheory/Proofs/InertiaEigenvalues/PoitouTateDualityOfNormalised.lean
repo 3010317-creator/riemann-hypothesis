@@ -189,8 +189,7 @@ theorem exists_pow_normV {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alg
     rw [map_sub, map_pow, IsLocalRing.ResidueField.residue_smul, sub_eq_zero]
     have : normV v = Fintype.card (𝓞 F ⧸ v.asIdeal) := Nat.card_eq_fintype_card
     rw [this]; exact hi
-  rw [IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff] at hi'
-  exact hi'
+  rwa [IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff] at hi'
 
 theorem exists_unramified {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F)}
@@ -399,14 +398,12 @@ theorem exists_place_map {v : HeightOneSpectrum (𝓞 F)} (hAv : IsPlaceOver A v
     show x ∈ v.asIdeal.map (e : 𝓞 F →+* 𝓞 F) ↔ _
     rw [Ideal.map_comap_of_equiv, Ideal.mem_comap]
   refine ⟨v', fun x => ?_, ?_, fun ϖ h1 h2 => ⟨e ϖ, ?_, ?_, ?_⟩⟩
-  · rw [hmem, ← hAv, ← valuation_lt_one_iff_of_map σ hA, hστ]
-    rw [← he, RingEquiv.apply_symm_apply]
+  · rw [hmem, ← hAv, ← valuation_lt_one_iff_of_map σ hA, hστ, ← he, RingEquiv.apply_symm_apply]
   · unfold normV
     exact Nat.card_congr (Ideal.quotientEquiv v.asIdeal v'.asIdeal e rfl).toEquiv.symm
   · rw [hmem, RingEquiv.symm_apply_apply]; exact h1
   · show e ϖ ∉ (v.asIdeal.map (e : 𝓞 F →+* 𝓞 F)) ^ 2
-    rw [← Ideal.map_pow, Ideal.map_comap_of_equiv, Ideal.mem_comap, RingEquiv.symm_apply_apply]
-    exact h2
+    rwa [← Ideal.map_pow, Ideal.map_comap_of_equiv, Ideal.mem_comap, RingEquiv.symm_apply_apply]
   · rw [he, hστ]
 
 end GlobalTheory.PoitouTateConj

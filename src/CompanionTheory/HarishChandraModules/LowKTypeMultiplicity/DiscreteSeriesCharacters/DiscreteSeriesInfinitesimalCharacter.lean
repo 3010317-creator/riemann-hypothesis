@@ -135,8 +135,7 @@ theorem algCore_of (hF : FRel) (hB : BdFacts) (hCO : CO) (hZ : ZetaHW) (hW : WLe
   have h1 : (∑ A, ‖T c A‖ ^ 2 : ℝ) = 0 := by
     have h := congrArg (RCLike.re (K := ℂ)) h0
 
-    simp only [ip, map_sum, inner_self_eq_norm_sq, map_zero] at h
-    exact h
+    simpa only [ip, map_sum, inner_self_eq_norm_sq, map_zero] using h
   have h2 := (Finset.sum_eq_zero_iff_of_nonneg fun A _ => sq_nonneg _).1 h1 (A1 ε) (Finset.mem_univ _)
   have h3 : T c (A1 ε) = 0 := by simpa using h2
   simpa [T, hcv, sub_eq_zero] using h3
@@ -161,8 +160,7 @@ theorem dsInfCharCap_of (hC : AlgCoreSub) (hM : SmMod) (hQ : ActQ) (hSp : Spread
       exact hmin μ T' hT')
   have h := hSp n ε lam H σ S E hU hI hS v₀ h0 hcore ⟨v, (hS.mem v).2 hv⟩ Y
   have hq := hQ n ε H σ S E hS (Y + ((n : ℂ) - 1) / 2) ⟨v, (hS.mem v).2 hv⟩
-  rw [h] at hq
-  exact hq
+  rwa [h] at hq
 
 end CompanionTheory.D.DSIC
 end -- clump:auto
@@ -241,28 +239,28 @@ theorem qdet_adj {n : ℕ} {ε : Fin n → Bool} {E : Fin n → Fin n → Module
       congr 1
       · by_cases h : b = c
         · subst h
-          simp only [if_true, P, mkP, sgn]
+          simp only [ite_true, P, mkP, sgn]
           congr 1
           cases ε a <;> cases ε b <;> cases ε d <;> simp
-        · rw [if_neg h, if_neg (Ne.symm h), smul_zero]; rfl
+        · rw [ite_eq_right h, ite_eq_right (Ne.symm h), smul_zero]; rfl
       · by_cases h : d = a
         · subst h
-          simp only [if_true, P, mkP, sgn]
+          simp only [ite_true, P, mkP, sgn]
           congr 1
           cases ε c <;> cases ε b <;> cases ε d <;> simp
-        · rw [if_neg h, if_neg (Ne.symm h), smul_zero]; rfl
+        · rw [ite_eq_right h, ite_eq_right (Ne.symm h), smul_zero]; rfl
   have hs : ∀ a b, star (P a b) = (((e a * e b : ℤˣ) : ℤ) : Pr V) * P b a := by
     intro a b
     by_cases h : ε a = ε b
     · have : e a * e b = 1 := by simp only [e, h]; split_ifs <;> simp
       rw [this]
-      simp only [Units.val_one, Int.cast_one, one_mul, P, sgn, h, if_true, Complex.ofReal_one, one_smul]
+      simp only [Units.val_one, Int.cast_one, one_mul, P, sgn, h, ite_true, Complex.ofReal_one, one_smul]
       rfl
     · have : e a * e b = -1 := by
         simp only [e]; revert h; cases ε a <;> cases ε b <;> simp
       rw [this]
       simp only [Units.val_neg, Units.val_one, Int.cast_neg, Int.cast_one, neg_mul, one_mul, P, sgn, h, Ne.symm h,
-        if_false, Complex.ofReal_neg, Complex.ofReal_one, neg_smul, one_smul]
+        ite_false, Complex.ofReal_neg, Complex.ofReal_one, neg_smul, one_smul]
       show mkP (-E b a) (E a b) = mkP (-E b a) (- -E a b)
       rw [neg_neg]
   have h := Formalism.FourierDecayAlt.P.star_quantum_minor (Pr V) n n P e hP hs id id w
@@ -507,7 +505,7 @@ theorem stab_pplus (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ
   generalize w _ = x
   have h := LinearMap.congr_fun (hE c d a b) x
   have hda : d ≠ a := by rintro rfl; simp [ha] at hd
-  rw [if_neg hda, zero_sub, LinearMap.sub_apply, sub_eq_iff_eq_add, LinearMap.neg_apply,
+  rw [ite_eq_right hda, zero_sub, LinearMap.sub_apply, sub_eq_iff_eq_add, LinearMap.neg_apply,
     Module.End.mul_apply, Module.End.mul_apply] at h
   rw [h]
   refine Submodule.add_mem _ (Submodule.neg_mem _ ?_) (mem_pplus ε E ha hb _)
@@ -518,7 +516,7 @@ theorem stab_pplus (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ
 theorem Tm_mem (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ V) {a b : Fin n}
     (ha : ε a = true) (hb : ε b = false) (u : ℂ) (v : V) : Tm E u a b v ∈ pplus ε E := by
   have hab : a ≠ b := by rintro rfl; simp [ha] at hb
-  rw [Tm, if_neg hab, zero_add]
+  rw [Tm, ite_eq_right hab, zero_add]
   exact mem_pplus ε E ha hb v
 
 theorem Tm_stab (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ V) (hE : GlRel E) (a : Fin n) {b : Fin n}
@@ -611,8 +609,7 @@ theorem co0 : CompanionTheory.D.DSIC.CapelliDeterminantBlockProduct := by
   intro n ε V _ _ E hE u v
   have h := block_mem ε E hE (Sum.elim (blk ε false) (blk ε true)) (blk_val ε false) (blk_val ε true) u v
   have h2 := qminor_equiv E hE (finSumFinEquiv.symm.trans (Equiv.ofBijective _ (blk_bijective ε))) u
-  rw [← h2]
-  exact h
+  rwa [← h2]
 
 end GlobalTheory.CompanionTheory.CapelliBlocks
 end -- clump:auto
@@ -722,8 +719,7 @@ theorem wt_false (ε : Fin n → Bool) (c : Fin n) (hc : ε c = false) :
       simp only [mem_filter, mem_univ, true_and] at ha
       refine ⟨⟨(a, c), ?_, hc⟩, ?_, rfl⟩
       · have := ha.2; rw [hc] at this; simpa using this
-      · simp only [A1, mem_filter, mem_univ, true_and]
-        exact ⟨ha.1, trivial⟩
+      · simpa only [A1, mem_filter, mem_univ, true_and] using ⟨ha.1, trivial⟩
   unfold wtA
   rw [h1, h2]; simp
 
@@ -747,8 +743,7 @@ theorem wt_true (ε : Fin n → Bool) (c : Fin n) (hc : ε c = true) :
       simp only [mem_filter, mem_univ, true_and] at ha
       refine ⟨⟨(c, a), hc, ?_⟩, ?_, rfl⟩
       · have := ha.2; rw [hc] at this; simpa using this
-      · simp only [A1, mem_filter, mem_univ, true_and]
-        exact ⟨ha.1, trivial⟩
+      · simpa only [A1, mem_filter, mem_univ, true_and] using ⟨ha.1, trivial⟩
   unfold wtA
   rw [h1, h2]; simp
 
@@ -1209,8 +1204,8 @@ lemma sgR_mul_self (i : NC ε) (A : Finset (NC ε)) : sgR i A * sgR i A = 1 := b
 lemma hh_symm (i j : NC ε) (A B : Finset (NC ε)) : hh i j A B = hh j i B A := by
   unfold hh
   by_cases h : i ∈ A ∧ j ∈ B ∧ A.erase i = B.erase j
-  · rw [if_pos h, if_pos ⟨h.2.1, h.1, h.2.2.symm⟩, mul_comm]
-  · rw [if_neg h, if_neg (fun h' => h ⟨h'.2.1, h'.1, h'.2.2.symm⟩)]
+  · rw [ite_eq_left h, ite_eq_left ⟨h.2.1, h.1, h.2.2.symm⟩, mul_comm]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h ⟨h'.2.1, h'.1, h'.2.2.symm⟩)]
 
 lemma coef_symm (c d : Fin n) (i j : NC ε) : coef c d i j = coef d c j i := by
   unfold coef
@@ -1224,33 +1219,33 @@ lemma cre_ann_apply {V : Type} [AddCommGroup V] [Module ℂ V] (i j : NC ε) (x 
   change (if i ∈ A then sg i A • (if j ∈ A.erase i then 0 else
     sg j (A.erase i) • x (insert j (A.erase i))) else 0) = _
   by_cases hi : i ∈ A
-  · rw [if_pos hi]
+  · rw [ite_eq_left hi]
     by_cases hj : j ∈ A.erase i
-    · rw [if_pos hj, smul_zero]
+    · rw [ite_eq_left hj, smul_zero]
       symm
       refine Finset.sum_eq_zero fun B _ => ?_
       have : ¬ (i ∈ A ∧ j ∈ B ∧ A.erase i = B.erase j) := by
         rintro ⟨_, _, h⟩
         rw [h] at hj
         exact Finset.notMem_erase _ _ hj
-      simp only [hh, if_neg this, Complex.ofReal_zero, zero_smul]
-    · rw [if_neg hj, Finset.sum_eq_single (insert j (A.erase i))]
+      simp only [hh, ite_eq_right this, Complex.ofReal_zero, zero_smul]
+    · rw [ite_eq_right hj, Finset.sum_eq_single (insert j (A.erase i))]
       · have : i ∈ A ∧ j ∈ insert j (A.erase i) ∧ A.erase i = (insert j (A.erase i)).erase j :=
           ⟨hi, mem_insert_self _ _, (Finset.erase_insert hj).symm⟩
-        rw [hh, if_pos this, Finset.erase_insert hj, sgR_erase, smul_smul, sg_eq, sg_eq,
+        rw [hh, ite_eq_left this, Finset.erase_insert hj, sgR_erase, smul_smul, sg_eq, sg_eq,
           Complex.ofReal_mul]
       · intro B _ hB
         have : ¬ (i ∈ A ∧ j ∈ B ∧ A.erase i = B.erase j) := by
           rintro ⟨_, h1, h⟩
           apply hB
           rw [h, Finset.insert_erase h1]
-        simp only [hh, if_neg this, Complex.ofReal_zero, zero_smul]
+        simp only [hh, ite_eq_right this, Complex.ofReal_zero, zero_smul]
       · intro h; exact absurd (mem_univ _) h
-  · rw [if_neg hi]
+  · rw [ite_eq_right hi]
     symm
     refine Finset.sum_eq_zero fun B _ => ?_
     have : ¬ (i ∈ A ∧ j ∈ B ∧ A.erase i = B.erase j) := fun h => hi h.1
-    simp only [hh, if_neg this, Complex.ofReal_zero, zero_smul]
+    simp only [hh, ite_eq_right this, Complex.ofReal_zero, zero_smul]
 
 lemma Gop_apply {V : Type} [AddCommGroup V] [Module ℂ V] (c d : Fin n) (x : Ch ε V)
     (A : Finset (NC ε)) : Gop ε c d x A = ∑ B, (gg c d A B : ℂ) • x B := by
@@ -1291,9 +1286,9 @@ lemma exists_of_ne {c d : Fin n} {A B : Finset (NC ε)} (h : gg c d A B ≠ 0) :
   refine ⟨i, j, ?_, ?_⟩
   · by_contra h'
     rw [not_or] at h'
-    exact left_ne_zero_of_mul h (by rw [coef, if_neg h'.1, if_neg h'.2, sub_zero])
+    exact left_ne_zero_of_mul h (by rw [coef, ite_eq_right h'.1, ite_eq_right h'.2, sub_zero])
   · by_contra h'
-    exact right_ne_zero_of_mul h (by rw [hh, if_neg h'])
+    exact right_ne_zero_of_mul h (by rw [hh, ite_eq_right h'])
 
 lemma gg_diag (c : Fin n) (A B : Finset (NC ε)) : gg c c A B = if A = B then wtA A c else 0 := by
   have h1 : ∀ i : NC ε, ∑ j : NC ε, coef c c i j * hh i j A B = coef c c i i * hh i i A B := by
@@ -1305,7 +1300,7 @@ lemma gg_diag (c : Fin n) (A B : Finset (NC ε)) : gg c c A B = if A = B then wt
     have e2 : ¬ (i.1.2 = c ∧ j.1.2 = c ∧ i.1.1 = j.1.1) := by
       rintro ⟨a, b, e⟩
       exact hj (Subtype.ext (Prod.ext e.symm (b.trans a.symm)))
-    rw [coef, if_neg e1, if_neg e2, sub_zero, zero_mul]
+    rw [coef, ite_eq_right e1, ite_eq_right e2, sub_zero, zero_mul]
   unfold gg
   simp only [h1]
   split_ifs with h
@@ -1324,7 +1319,7 @@ lemma gg_diag (c : Fin n) (A B : Finset (NC ε)) : gg c c A B = if A = B then wt
       rintro ⟨a, b, e⟩
       apply h
       rw [← Finset.insert_erase a, e, Finset.insert_erase b]
-    rw [hh, if_neg this, mul_zero]
+    rw [hh, ite_eq_right this, mul_zero]
 
 theorem gFacts : GFacts := by
   intro n ε
@@ -1513,7 +1508,7 @@ theorem aux₃ : FRel → GFacts → GamDom → KHWExists → HWMap → PRV := b
       · subst h
         have h1 := hγ1 a
         simp only [gam, Pi.add_apply] at h1
-        simp only [Pi.single_eq_same, if_true, Pi.smul_apply, ← sub_smul, ← h1]
+        simp only [Pi.single_eq_same, ite_true, Pi.smul_apply, ← sub_smul, ← h1]
         congr 1
         push_cast
         ring
@@ -1543,9 +1538,9 @@ theorem aux₃ : FRel → GFacts → GamDom → KHWExists → HWMap → PRV := b
         by_cases h0 : g a b A B = 0
         · simp [h0]
         · have := (hgc a b A B h0).1
-          simp only [c, ← this, hA, if_true]
+          simp only [c, ← this, hA, ite_true]
       simp only [h2]
-      simp only [c, hA, if_true]
+      simp only [c, hA, ite_true]
       rw [← hφ2 a b hab, hET, h1]
 
       simp only [map_sub, map_sum, map_smul]
@@ -1555,14 +1550,14 @@ theorem aux₃ : FRel → GFacts → GamDom → KHWExists → HWMap → PRV := b
         by_cases h0 : g a b A B = 0
         · simp [h0]
         · have := (hgc a b A B h0).1
-          simp only [c, ← this, hA, if_false, smul_zero]
+          simp only [c, ← this, hA, ite_false, smul_zero]
       simp only [h2]
       simp [c, hA]
   refine ⟨c, fun A hA => by simp [c, hA], ⟨fun a => ?_, fun a b hab hε => ?_⟩, by simp [c, hφ1]⟩
   · funext A
     rw [key a a rfl, hu.1 a, Pi.smul_apply, hγ1 a]
     by_cases hA : A.card = (A1 ε).card
-    · simp only [c, hA, if_true]
+    · simp only [c, hA, ite_true]
       rw [Pi.single_smul, map_smul, map_smul]
     · simp [c, hA]
   · funext A
@@ -1607,7 +1602,7 @@ variable {n : ℕ} {ε : Fin n → Bool}
 
 theorem sg_insert (i : NC ε) (A : Finset (NC ε)) : sg i (insert i A) = sg i A := by
   unfold sg
-  rw [Finset.filter_insert, if_neg (lt_irrefl _)]
+  rw [Finset.filter_insert, ite_eq_right (lt_irrefl _)]
 
 theorem conj_sg (i : NC ε) (A : Finset (NC ε)) : (starRingEnd ℂ) (sg i A) = sg i A := by
   unfold sg
@@ -1756,8 +1751,7 @@ theorem wlem_of_gfacts (hG : GFacts) : WLem := by
       have h4 := ht_add_root (wtA B) a b hab
       rw [← (hwt a b A B hgB).2] at h4
       exact absurd h3 (not_le.mpr h4)
-    rw [h2, add_zero] at h1
-    exact h1
+    rwa [h2, add_zero] at h1
 
 end GlobalTheory.CompanionTheory.DSICWLem
 end -- clump:auto

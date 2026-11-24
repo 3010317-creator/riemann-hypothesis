@@ -65,8 +65,7 @@ theorem eq_of_idem (A : PAlg l) {a b : A.W} (ha : IsIdempotentElem a) (hb : IsId
     rw [hd]
     linear_combination (a + 1 - 3 * b) * ha' + (3 * a - b - 1) * hb'
   have hmem : d ∈ Ideal.span {(l : A.W)} := by
-    rw [A.mem_span_l_iff, hd, ← WittVector.constantCoeff_apply, map_sub, sub_eq_zero]
-    exact h
+    rwa [A.mem_span_l_iff, hd, ← WittVector.constantCoeff_apply, map_sub, sub_eq_zero]
   have hall : ∀ k : ℕ, d ∈ Ideal.span {(l : A.W)} ^ k := by
     intro k
     induction k with
@@ -92,8 +91,7 @@ theorem teich_sum_one (A : PAlg l) {ι : Type} [Fintype ι] {e : ι → A.A}
   show WittVector.constantCoeff (∑ a, (WittVector.teichmuller l (e a) : A.W)) = WittVector.constantCoeff (1 : A.W)
 
   rw [map_sum, map_one]
-  simp only [WittVector.constantCoeff_apply, WittVector.teichmuller_coeff_zero]
-  exact he.complete
+  simpa only [WittVector.constantCoeff_apply, WittVector.teichmuller_coeff_zero] using he.complete
 
 theorem mul_pow_congr {R : Type*} [CommRing R] {s x y : R} (h : s * x = s * y) (k : ℕ) :
     s * x ^ k = s * y ^ k := by
@@ -205,8 +203,7 @@ theorem log_on_part (hEx : LogEx) (hMul : LogMul) (hEps : LogEps) (A : PAlg l) (
   have key := (hEx l A n).2.2 E _ _ _ _ (show IsIdempotentElem E from hEi) hid hwq hprod
   have hm' : (m : A.Acr n) + (v : A.Acr n) = 0 := by
     have := congrArg (Nat.cast : ℕ → A.Acr n) hm
-    rw [Nat.cast_add, Nat.cast_mul, natCast_q, zero_mul] at this
-    exact this
+    rwa [Nat.cast_add, Nat.cast_mul, natCast_q, zero_mul] at this
   linear_combination (-1 : A.Acr n) * key + (A.toAcr n E * A.cris n (ACris.periodT (untilt_epsilon (p := l)))) * (-hm')
 
 theorem lcLog : CrystallineSemistableComparison.E.LcIdem → CrystallineSemistableComparison.E.LcSpec → CrystallineSemistableComparison.E.LcCover → CrystallineSemistableComparison.E.LogEx → CrystallineSemistableComparison.E.LogMul → CrystallineSemistableComparison.E.LogEps →

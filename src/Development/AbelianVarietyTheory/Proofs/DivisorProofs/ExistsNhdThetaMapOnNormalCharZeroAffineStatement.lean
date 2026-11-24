@@ -577,8 +577,7 @@ theorem exists_eq_algebraMap_of_forall_ringHom_eq : ∀ (R R₁ : Type) [CommRin
   have hee := SymDesc.eq_of_sub_mem s hs Q₀ Q hQ₀b hQb e e₁ he he₁
   subst hee
   have hm : s - algebraMap R R₁ e ∈ P := hQP he₁
-  rw [RingHom.mem_ker, map_sub, sub_eq_zero] at hm
-  exact hm
+  rwa [RingHom.mem_ker, map_sub, sub_eq_zero] at hm
 
 end GlobalTheory
 end -- clump:auto
@@ -601,12 +600,7 @@ noncomputable section
 namespace GlobalTheory.UMin.SymCmp
 
 theorem grpPullback_id {S : Scheme.{0}} (G : Over S) [GrpObj G] : IsGrpPullback G G (𝟙 S) (𝟙 G.left) := by
-  refine ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy => ?_⟩
-  let ρ : Over.mk (T.hom ≫ 𝟙 S) ⟶ T := Over.homMk (𝟙 T.left) (by simp)
-  have ex : x₀ = ρ ≫ x := Over.OverMorphism.ext (hx.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  have ey : y₀ = ρ ≫ y := Over.OverMorphism.ext (hy.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  rw [ex, ey, ← MonObj.comp_mul]
-  exact (Category.id_comp _).trans (Category.comp_id _).symm
+  exact GlobalTheory.SiegLower.isGrpPullback_id G
 
 theorem pullS_pullS {S : Scheme.{0}} (G : Over S) [GrpObj G] {L : LB G.left} (hL : L.IsLB) (a : ℤ) {T T' T'' : Over S}
     (h : T' ⟶ T) (h' : T'' ⟶ T') (s : LB.Sec (LPow G L a T)) :
@@ -932,8 +926,7 @@ theorem exists_local : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
     unfold SecAt.pull
     rw [pullS_comp G hL]
     congr 1
-    refine Over.OverMorphism.ext ?_
-    exact spMap_comp i_f j
+    exact Over.OverMorphism.ext (spMap_comp i_f j)
   have ec : δ.left.appTop.hom ((inv (𝟙 Tf.left)).appTop.hom ((e : Γ(Tf.left, ⊤)) * wv a)) =
       fn (j ((Scheme.ΓSpecIso (CommRingCat.of Lf)).hom.hom ((e : Γ(Tf.left, ⊤)) * wv a))) := by
     have h1 : (inv (𝟙 Tf.left)).appTop.hom ((e : Γ(Tf.left, ⊤)) * wv a) =
@@ -943,8 +936,7 @@ theorem exists_local : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
     rw [h1]
     exact (congrArg (fun q => q.hom ((Scheme.ΓSpecIso (CommRingCat.of Lf)).hom.hom ((e : Γ(Tf.left, ⊤)) * wv a)))
       (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom j))).symm
-  rw [ept, eθ, ← ec]
-  exact down
+  rwa [ept, eθ, ← ec]
 
 end GlobalTheory.UMin.ThLocal
 end -- clump:auto
@@ -1011,8 +1003,7 @@ theorem glue_field_points (R : Type) [CommRing R]
     · have := hc k K j
       rwa [hj] at this
     · have h2 := congrArg j (ha k)
-      rw [map_mul, ← RingHom.comp_apply, ← RingHom.comp_apply, hj, map_pow] at h2
-      exact h2
+      rwa [map_mul, ← RingHom.comp_apply, ← RingHom.comp_apply, hj, map_pow] at h2
 
   have hnil : ∀ k l : {p : Ideal R // p.IsPrime},
       IsNilpotent (f k * f l * (a k * f l ^ n l - a l * f k ^ n k)) := by
@@ -1138,8 +1129,7 @@ theorem thG_unique_of_polFib : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsC
   have m2 : ThG P.A P.L ρ₁ m th₁ x₁ ((𝟙 (Sp K) : Sp K ⟶ Sp K).appTop.hom (fn c')) :=
     ThG.move (T := T) (T₀ := T₀) hp (𝟙 _) hτ hw hL P.isLB hr hx hn hth H'
   have e := ThG.unique (T := T) abelianSchemeLaws_all.1 P hm hu' m1 m2
-  have e2 := congrArg (Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom e
-  simpa using e2
+  simpa using congrArg (Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom e
 
 end GlobalTheory.UMin
 end -- clump:auto

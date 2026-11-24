@@ -200,8 +200,7 @@ theorem UpperTheory.V.abelian₂.mu_dvd :
   refine ⟨h1, ⟨hmu0, ?_⟩, ?_, ?_⟩
   · intro h
     obtain ⟨n, hn⟩ : ∃ n, coeff n (map (residue O) f) ≠ 0 := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       exact h (PowerSeries.ext fun n => by simpa using hall n)
     rw [PowerSeries.coeff_map, residue_ne_zero_iff_isUnit,
       ← IsDiscreteValuationRing.addVal_eq_zero_iff] at hn
@@ -321,8 +320,7 @@ open IsLocalRing UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite UpperTheor
 
 private theorem algHom_mvPowerSeries_C_eq_algebraMap {A K : Type} [CommRing A] [CommRing K] [Algebra A K] {σ : Type}
     (y : MvPowerSeries σ A →ₐ[A] K) (a : A) : y (MvPowerSeries.C a) = algebraMap A K a := by
-  have h := y.commutes a
-  simpa [MvPowerSeries.algebraMap_apply] using h
+  simpa [MvPowerSeries.algebraMap_apply] using y.commutes a
 
 private theorem exists_injective_mvPowerSeries_last_to_powerSeries (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     [IsAdicComplete (IsLocalRing.maximalIdeal R) R] (D : ℕ) :
@@ -354,8 +352,7 @@ private theorem exists_injective_mvPowerSeries_last_to_powerSeries (R : Type) [C
         MvPowerSeries Unit (MvPowerSeries (Fin D) R)) ∈ IsLocalRing.maximalIdeal _ := by
     intro s
     refine Fin.lastCases ?_ (fun i => ?_) s
-    · rw [Fin.lastCases_last]
-      exact nX'
+    · rwa [Fin.lastCases_last]
     · rw [Fin.lastCases_castSucc, IsLocalRing.mem_maximalIdeal]
       intro h
       rw [MvPowerSeries.isUnit_iff_constantCoeff, MvPowerSeries.constantCoeff_C] at h
@@ -451,8 +448,7 @@ private theorem eq_zero_of_eval_eq_zero_on_infinite_unit_ball (l : ℕ) [Fact l.
     have h4 := congrArg (PowerSeries.coeff n) hg
     rw [PowerSeries.coeff_map, map_zero] at h4
     have h5 := congrArg Subtype.val h4
-    rw [hycr] at h5
-    exact h5
+    rwa [hycr] at h5
 
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.denseBox :
     ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (D : ℕ) (Z : Fin D → Set (PadicAlgCl l)), (∀ i, (Z i).Infinite) → (∀ i, ∀ z ∈ Z i, ‖z‖ < 1) → Sep {y : MvPowerSeries (Fin D) c.O →ₐ[c.O] PadicAlgCl l | ∀ i, y (MvPowerSeries.X i) ∈ Z i} := by

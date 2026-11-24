@@ -870,7 +870,7 @@ theorem avgSt : AvgSt := by
     have hM := Subgroup.index_inf_ne_zero h0 (hN0 φ hφ)
     rw [← avgQ_le inf_le_left hM hH', avgQ_le inf_le_right hM (hNinv φ hφ)]
   let lamF : S → ℂ := fun φ => if hφ : φ ∈ V then avgQ (N φ hφ) (f φ) else 0
-  have hlamF : ∀ φ (hφ : φ ∈ V), lamF φ = avgQ (N φ hφ) (f φ) := fun φ hφ => dif_pos hφ
+  have hlamF : ∀ φ (hφ : φ ∈ V), lamF φ = avgQ (N φ hφ) (f φ) := fun φ hφ => dite_eq_left hφ
   let lamV : V →ₗ[ℂ] ℂ :=
     { toFun := fun φ => lamF φ
       map_add' := fun φ ψ => by
@@ -1095,14 +1095,14 @@ theorem count_core {U P K : Subgroup G} (hPU : P ≤ U) {f f' : G → ℂ} (f1 :
       fun d _ => by
       by_cases h1 : e ∈ orb (P ⊓ K) (Quotient.out d)⁻¹
       · have h2 := orb_symm (P ⊓ K) h1
-        rw [if_pos h1, if_pos h2]
+        rw [ite_eq_left h1, ite_eq_left h2]
         obtain ⟨a, ha, hd'⟩ := h2
         obtain ⟨m, hm⟩ := QuotientGroup.mk_out_eq_mul (P ⊓ K) (a * (Quotient.out e)⁻¹)
         have hod : Quotient.out d = a * (Quotient.out e)⁻¹ * m := by rw [hd', hm]
         simp only [w]
         rw [hod, bi' a ha _ (hPU hr) m m.2, mul_inv_rev, mul_inv_rev, inv_inv, ← mul_assoc,
           orb_mul ((P ⊓ K).inv_mem m.2) ((P ⊓ K).inv_mem ha)]
-      · rw [if_neg h1, if_neg (fun h2 => h1 (orb_symm (P ⊓ K) h2))]
+      · rw [ite_eq_right h1, ite_eq_right (fun h2 => h1 (orb_symm (P ⊓ K) h2))]
     rw [Finset.sum_congr rfl hcond, ← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul]
     have e1 : ((hA.toFinset.filter (· ∈ orb (P ⊓ K) (Quotient.out e)⁻¹) : Finset (G ⧸ (P ⊓ K))) : Set (G ⧸ (P ⊓ K))) =
         orb (P ⊓ K) (Quotient.out e)⁻¹ := by
@@ -1298,12 +1298,7 @@ theorem finSt_relIndex_le {G : Type} [Group G] {H K L : Subgroup G} (hKL : K ≤
 
 theorem finSt_relIndex_nhds {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {K H : Subgroup G}
     (hK : IsCompact (K : Set G)) {U : Set G} (hU : U ∈ 𝓝 (1 : G)) (hH : ∀ k ∈ K, k ∈ U → k ∈ H) : H.relIndex K ≠ 0 := by
-  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have ho : IsOpen ((H.subgroupOf K : Subgroup K) : Set K) :=
-    (H.subgroupOf K).isOpen_of_mem_nhds (Filter.mem_of_superset (continuous_subtype_val.continuousAt (x := (1 : K)) hU)
-      fun k hk => Subgroup.mem_subgroupOf.2 (hH k.1 k.2 hk))
-  have : Finite (K ⧸ H.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ ho
-  exact Subgroup.index_ne_zero_of_finite
+  exact PositivityTheory.Sph.relIndex_ne_zero_of_nhds hK hU hH
 
 theorem finSt_KGL {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (n : ℕ)
     (b : GL (Fin n) (w.adicCompletion E)) :
@@ -1352,8 +1347,7 @@ theorem finSt : FinSt := by
       rw [this]; exact hy
     · simp [MulAut.conj_apply, mul_assoc]
   have h3 : (H'.comap Φ ⊓ K).relIndex K ≠ 0 := by rwa [Subgroup.inf_relIndex_right]
-  intro h0
-  exact h3 (Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_of_le_left K h2))
+  exact fun h0 => h3 (Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_of_le_left K h2))
 
 end PositivityTheory.Sph
 
@@ -1469,8 +1463,7 @@ theorem iso_cT_cart2 (hc : ∀ x, c (c x) = x) {n : ℕ} (M : Matrix (Fin n) (Fi
   · intro h
     have := congrArg (fun N => N.map c) h
     simp only [Matrix.map_mul, antiJ_map_cart2] at this
-    rw [cT, Matrix.transpose_map, hcc] at this
-    exact this
+    rwa [cT, Matrix.transpose_map, hcc] at this
 
 theorem inv_mem_KgK_cart2 {ϖ : L} {q : ℕ} (hU : IsUnramInv ϖ c q) {n : ℕ} {G : Type} [Group G] (U : Subgroup G)
     (Φ : G →* Matrix (Fin n) (Fin n) L) (hiso : ∀ g, Iso c (antiJ L n) (antiJ L n) (Φ g))
@@ -1514,8 +1507,7 @@ theorem inv_mem_KgK_cart2 {ϖ : L} {q : ℕ} (hU : IsUnramInv ϖ c q) {n : ℕ} 
     inj _ (inv_mem hh) _ (mul_mem (mul_mem hg₁ hh) hg₂) ?_⟩
   have e' := congrArg (fun x : GL (Fin n) L => (x : Matrix (Fin n) (Fin n) L)) e
   simp only [Units.val_mul] at e'
-  rw [map_mul, map_mul, e₁, e₂, ← eg h⁻¹, map_inv]
-  exact e'
+  rwa [map_mul, map_mul, e₁, e₂, ← eg h⁻¹, map_inv]
 
 end Abstract
 
@@ -1548,8 +1540,7 @@ theorem cartanSt2 : CartanSt := by
     rw [hΦ]
     exact (iso_smul_iff hl _ _).1 (((hai.inv a.mul_inv).mul h1).mul hai)
   · have e1 : (mat g).map (piE hu) = (mat g').map (piE hu) := by
-      have e2 := congrArg (fun N => a.1 * N * (a⁻¹).1) e
-      simpa [hΦ, Matrix.mul_assoc] using e2
+      simpa [hΦ, Matrix.mul_assoc] using congrArg (fun N => a.1 * N * (a⁻¹).1) e
     refine Subtype.ext (Units.ext (mat_inj hw hu ?_ e1))
     have := at_sub (show At (evFin F v) (mat g - 1) from hg) (show At (evFin F v) (mat g' - 1) from hg')
     rwa [sub_sub_sub_cancel_right] at this
@@ -1588,8 +1579,7 @@ theorem unitLiftSt : UnitLiftSt := by
   intro F E _ _ _ _ _ v y
   have hab : ∀ a b : Ev E v, sgE E v a * sgE E v b = sgE E v (a * b) := fun a b => by
     have e := GlobalTheory.EmbChart.tensAt_mul_right (E := E) v a (sgE E v b)
-    rw [comp_sgE] at e
-    exact e
+    rwa [comp_sgE] at e
   have key : ∀ a b : Ev E v, (1 + sgE E v a) * (1 + sgE E v b) = 1 + sgE E v ((1 + a) * (1 + b) - 1) := fun a b => by
     have e : (1 + a) * (1 + b) - 1 = a + b + a * b := by ring
     rw [e, map_add (f := _), map_add (f := _), ← hab]

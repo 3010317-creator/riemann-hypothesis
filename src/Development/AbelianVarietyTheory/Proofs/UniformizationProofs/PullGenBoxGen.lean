@@ -68,7 +68,6 @@ lemma gU_boxGen (F : J → (X' ⟶ X)) (φ : K → (Y ⟶ X')) (ε : K → ℤ)
     (hy : y ∈ LB.wchart (LB.LinComb L F (fun _ => 1)) φ jj) :
     gU y hy ((GeneratorPullback.boxGen L F φ ε t).s jj) =
       ∏ i, gU y (GeneratorPullback.box_le L F φ jj i hy) ((t i).s (fun k _ => jj k i)) := by
-  show gU y hy (∏ i, _) = _
   exact (map_prod (gU y hy) _ _).trans (Finset.prod_congr rfl fun i _ => gU_res _ _ _ _)
 
 lemma gU_pullGen (M : LB X') (φ : K → (Y ⟶ X')) (ε : K → ℤ) (t : LB.Gen (LB.LinComb M φ ε))
@@ -113,8 +112,7 @@ lemma oneGen_boxGen (F : J → (X' ⟶ X)) :
   apply LBxP.gen_ext
   intro jj y hy
   refine Eq.trans ?_ (gU_boxGen L F PEmpty.elim PEmpty.elim _ jj y hy).symm
-  refine (map_one (gU y hy)).trans (Finset.prod_eq_one fun i _ => ?_).symm
-  exact map_one (gU y _)
+  exact (map_one (gU y hy)).trans (Finset.prod_eq_one fun i _ => (map_one (gU y _))).symm
 
 lemma corr_boxGen (F : J → (X' ⟶ X)) (φ : K → (Y ⟶ X')) (ε : K → ℤ)
     (φ' : K' → (Y ⟶ X')) (ε' : K' → ℤ)
@@ -149,8 +147,7 @@ lemma gU_pull_lcg (F : J → (X' ⟶ X)) (δ : J → ℤ) (a : Y ⟶ X') (i j : 
     (LBxP.gU_lcg L F δ i j (a.base y) hy)).trans ?_
   refine (map_prod _ _ _).trans (Finset.prod_congr rfl fun n _ => ?_)
   refine (map_zpow _ _ _).trans (congrArg (· ^ δ n) ?_)
-  refine (gU_pullU a _ y _ _).symm.trans ?_
-  exact LBxP.gU_pullU_comp a (F n) _ _ y _ _
+  exact (gU_pullU a _ y _ _).symm.trans (LBxP.gU_pullU_comp a (F n) _ _ y _ _)
 
 lemma isGen_boxGen (F : J → (X' ⟶ X)) (φ : K → (Y ⟶ X')) (ε : K → ℤ)
     (t : ∀ i, LB.Gen (LB.LinComb (L.pull (F i)) φ ε)) (h : ∀ i, (t i).IsGen) :

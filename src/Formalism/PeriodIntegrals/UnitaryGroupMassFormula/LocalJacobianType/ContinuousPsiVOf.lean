@@ -132,8 +132,7 @@ theorem continuous_psiV_of (h : OpenKer v ψ) : Continuous (psiV F ψ v) := by
     have h1 : Tendsto (fun t => t - r) (𝓝 r) (𝓝 0) := tendsto_sub_nhds_zero_iff.2 tendsto_id
     filter_upwards [h1 (ballK_mem_nhds v k)] with t ht
     have := psiV_add' v ψ r (t - r)
-    rw [add_sub_cancel, psiV_ballK v ψ hk ht, mul_one] at this
-    exact this
+    rwa [add_sub_cancel, psiV_ballK v ψ hk ht, mul_one] at this
   exact continuousAt_const.congr (hev.mono fun t ht => ht.symm)
 
 theorem norm_psiV_of (h : OpenKer v ψ) (r : Fv F v) : ‖psiV F ψ v r‖ = 1 := by
@@ -163,8 +162,7 @@ theorem norm_psiV_of (h : OpenKer v ψ) (r : Fv F v) : ‖psiV F ψ v r‖ = 1 :
       rw [mul_smul_comm]
       exact (v.adicCompletionIntegers F).toAddSubgroup.nsmul_mem hj n
     have h2 := hB _ hn
-    rw [psiV_nsmul, norm_norm, norm_pow] at h2
-    exact h2
+    rwa [psiV_nsmul, norm_norm, norm_pow] at h2
   have hle : ∀ x : Fv F v, ‖psiV F ψ v x‖ ≤ 1 := by
     intro x
     obtain ⟨B, hB⟩ := hbd x

@@ -187,8 +187,7 @@ theorem exists_cayley (hS : IsLocUnif S ϖ) {H E : Matrix n n K} (hH : Hᴴ = H)
   rw [hR] at hRQ
   have hRQ' : Q + star c • (Δ * Q) = 1 := by
     have h := hRQ
-    rw [Matrix.add_mul, Matrix.one_mul, Matrix.smul_mul] at h
-    exact h
+    rwa [Matrix.add_mul, Matrix.one_mul, Matrix.smul_mul] at h
   refine ⟨(X - c • Δ) * Q, -(star c * c) • (X * (D₁ * (A * Q))) - (c * c) • (D₁ * (A * Q)), ?_, ?_, ?_⟩
   · exact Ent.sub (Ent.smul (neg_mem (mul_mem hcs hc)) (Ent.mul hX (Ent.mul hD₁ent (Ent.mul hAent hQent))))
       (Ent.smul (mul_mem hc hc) (Ent.mul hD₁ent (Ent.mul hAent hQent)))
@@ -247,8 +246,7 @@ theorem div_mem (hS : IsLocUnif S ϖ) : ∀ (l : ℕ) (f : K), f ∈ S → star 
       have := ih (f * ϖ⁻¹) h hgs hgn
       rw [mul_inv, inv_inv] at this
       have e : ϖ ^ (l + 1) * f⁻¹ = ϖ ^ l * (f⁻¹ * ϖ) := by ring
-      rw [e]
-      exact this
+      rwa [e]
 
 theorem exists_pow (hS : IsLocUnif S ϖ) {ι : Type*} (s : Finset ι) (a : ι → K) :
     ∃ l : ℕ, ∀ i ∈ s, ϖ ^ l * a i ∈ S := by
@@ -352,8 +350,7 @@ theorem exists_node [CharZero K] (hS : IsLocUnif S ϖ) (n : Type*) [Fintype n] [
     · exact S.one_mem
     · exact S.zero_mem
   have hex : ∃ k ∈ s, R.eval (v k) * (ϖ⁻¹) ^ (l + 1) ∉ S := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hnot
     have h1 : R.eval 1 * ϖ⁻¹ ∈ S := by
       have e : R.eval 1 * ϖ⁻¹ =
@@ -473,8 +470,7 @@ theorem step (hS : IsLocUnif S ϖ) {H E : Matrix n n K} (hH : Hᴴ = H) (hES : E
     rw [← Matrix.mul_assoc, hHE, smul_mul_assoc, one_mul]
   have hEH : Eᴴ * H = ϖ ^ e • (1 : Matrix n n K) := by
     have h3 := congrArg conjTranspose hHE
-    rw [conjTranspose_mul, hH, conjTranspose_smul, conjTranspose_one, hstar] at h3
-    exact h3
+    rwa [conjTranspose_mul, hH, conjTranspose_smul, conjTranspose_one, hstar] at h3
   have hYH : (E * (τ • Z))ᴴ * H = ϖ ^ e • (star τ • Z) := by
     rw [conjTranspose_mul, Matrix.mul_assoc, hEH, conjTranspose_smul, hZH, mul_smul_comm, mul_one]
   have hV : star τ • Z + τ • Z = Z := by rw [← add_smul, add_comm, hτ1, one_smul]
@@ -588,8 +584,7 @@ theorem exists_unitary_near [CharZero K] (hS : IsLocUnif S ϖ) {H E : Matrix n n
     rw [hGe]
     exact hX1S.add (hD2.smul hpk)
   have hG0 : Gᴴ * H * G = H + ϖ ^ k • (0 : Matrix n n K) := by
-    rw [smul_zero, add_zero]
-    exact hG
+    rwa [smul_zero, add_zero]
   obtain ⟨hd, hdS⟩ := det_unit hS hH hHS hES hHE hk hGS Ent.zero hG0
   refine ⟨G, G.det⁻¹ • G.adjugate, D1 + D2, hGS, hGS.adjugate.smul hdS, hD1.add hD2, ?_, hG, ?_⟩
   · rw [Matrix.mul_smul, Matrix.mul_adjugate, smul_smul, inv_mul_cancel₀ hd, one_smul]

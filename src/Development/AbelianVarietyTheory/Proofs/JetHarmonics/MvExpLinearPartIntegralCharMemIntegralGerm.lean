@@ -120,7 +120,7 @@ theorem mfact_mul_coeff_mvExp_linear [Fintype σ] (y : σ → C) (m : σ →₀ 
     rw [Finsupp.degree_apply]; rfl
   rw [mvExp_coeff_apply, hL, Finset.sum_eq_single m.degree]
   · rw [← MvPolynomial.coe_pow, MvPolynomial.coeff_coe,
-      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, if_pos hdeg]
+      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, ite_eq_left hdeg]
     have hs : mfact m * m.multinomial = m.degree.factorial := by
       rw [Finsupp.multinomial_eq, Finsupp.degree_apply, ← Nat.multinomial_spec]; rfl
     have hs' : (mfact m : C) * (m.multinomial : C) = (m.degree.factorial : C) := by exact_mod_cast hs
@@ -129,9 +129,8 @@ theorem mfact_mul_coeff_mvExp_linear [Fintype σ] (y : σ → C) (m : σ →₀ 
     rfl
   · intro k _ hk
     rw [← MvPolynomial.coe_pow, MvPolynomial.coeff_coe,
-      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, if_neg (by rw [hdeg]; exact Ne.symm hk), zero_div]
-  · intro h
-    exact absurd (Finset.self_mem_range_succ _) h
+      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, ite_eq_right (by rw [hdeg]; exact Ne.symm hk), zero_div]
+  · exact fun h => absurd (Finset.self_mem_range_succ _) h
 
 end
 
@@ -183,8 +182,7 @@ theorem subst_zero_eq {C : Type} [Field C] {κ τ : Type} [Fintype κ] (F : MvPo
   · intro d hd
     obtain ⟨w, hw⟩ := Finsupp.ne_iff.1 hd
     have : (d.prod fun s e => (0 : MvPowerSeries τ C) ^ e) = 0 := by
-      refine Finset.prod_eq_zero (i := w) (by simpa using hw) ?_
-      exact zero_pow (by simpa using hw)
+      exact Finset.prod_eq_zero (i := w) (by simpa using hw) (zero_pow (by simpa using hw))
     simp [this]
 
 
@@ -269,7 +267,7 @@ theorem eq_mvExp_of_additive : ∀ (C : Type) [Field C] [CharZero C] (κ : Type)
         Finset.sum_range_succ', Finset.mul_sum, add_mul, Finset.sum_mul]
       have h0 : MvPowerSeries.coeff (m + Finsupp.single w 1)
           ((∑ x, (coeff (Finsupp.single x 1) U) • (X x : MvPowerSeries κ C)) ^ 0) = 0 := by
-        rw [pow_zero, coeff_one, if_neg]
+        rw [pow_zero, coeff_one, ite_eq_right]
         intro h
         have := DFunLike.congr_fun h w
         simp at this

@@ -65,8 +65,7 @@ theorem exists_near (v : HeightOneSpectrum (𝓞 F)) (c : v.adicCompletion F) (n
   have hr : Valued.v r = WithZero.exp (-(n : ℤ)) := by
     rw [hr_def]
     refine (HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v (π ^ n)).trans ?_
-    rw [map_pow, hπ]
-    rw [← WithZero.exp_nsmul]
+    rw [map_pow, hπ, ← WithZero.exp_nsmul]
     congr 1
     simp
   have hr0 : Valued.v r ≠ 0 := by rw [hr]; exact WithZero.exp_ne_zero
@@ -144,8 +143,7 @@ theorem pr_eq_of_adAt : ∀ {D : Formalism.BasicNotions.D7} {k : Type} [Field k]
     · rw [(GlobalTheory.StdFrames.cpt_of_isIdemAt he).2 Q hQ, zero_mul, zero_mul]
   have h2 : q.pr (q.e * z - q.e * incA D x) = 0 :=
     q.pr_eq_zero_of_toEAf he _ (by rw [RingHom.map_sub, h1, sub_self])
-  rw [RingHom.map_sub, sub_eq_zero, ← q.sec_pr, ← q.sec_pr, q.pr_sec, q.pr_sec] at h2
-  exact h2
+  rwa [RingHom.map_sub, sub_eq_zero, ← q.sec_pr, ← q.sec_pr, q.pr_sec, q.pr_sec] at h2
 
 end GlobalTheory.SplitProj
 

@@ -114,8 +114,7 @@ theorem tsum_det_eq_zero_eq_sum_rank {f : Matrix (Fin n) (Fin n) K → E} (hf : 
     ext ξ
     simp only [Set.mem_ofPred_eq, Finset.mem_univ, Set.iUnion_true, Set.mem_iUnion]
     constructor
-    · intro h
-      exact ⟨⟨ξ.rank, rank_lt_of_det_eq_zero h⟩, rfl⟩
+    · exact fun h => ⟨⟨ξ.rank, rank_lt_of_det_eq_zero h⟩, rfl⟩
     · rintro ⟨r, hr⟩
       by_contra h
       have := (rank_eq_iff_isUnit_det ξ).2 (isUnit_iff_ne_zero.2 h)
@@ -438,8 +437,7 @@ theorem integral_setIntegral_eq (h : Hyp ν u L D Λ E S) {Ψ : G → ℂ} (hΨ 
     refine ⟨hm0.aestronglyMeasurable, ?_⟩
     rw [HasFiniteIntegral, lintegral_prod _ hm0.enorm.aemeasurable]
     simp only [uncurry_apply_pair, enorm_mul, hind, enorm_indicator_real]
-    rw [h.lintegral_indicator_mul hHm]
-    exact hfin
+    rwa [h.lintegral_indicator_mul hHm]
   rw [integral_integral_swap hI]
 
   have hc : ∀ g, ∫ X in D, ind X g * Ψ g ∂ν = ((weight ν u D E g).toReal : ℂ) * Ψ g := by
@@ -570,7 +568,7 @@ variable {k}
 
 theorem single_mem_U0 {j : Fin n} (hj : (j : ℕ) < k) (c : K) : (Pi.single j c : Fin n → K) ∈ U0 k := by
   intro i hi
-  rw [Pi.single_apply, if_neg (by rintro rfl; omega)]
+  rw [Pi.single_apply, ite_eq_right (by rintro rfl; omega)]
 
 theorem finrank_U0 (hk : k ≤ n) : finrank K (U0 (K := K) (n := n) k) = k := by
   classical
@@ -628,7 +626,7 @@ def parabolic (k : ℕ) : Subgroup (GL (Fin n) K) where
   one_mem' := by
     refine ⟨fun i j hi hj => ?_, fun i j hi hj => ?_⟩ <;>
     · simp only [inv_one, Units.val_one]
-      rw [Matrix.one_apply, if_neg (by intro h; subst h; omega)]
+      rw [Matrix.one_apply, ite_eq_right (by intro h; subst h; omega)]
   inv_mem' := by
     rintro a ⟨h1, h2⟩
     exact ⟨h2, by simpa using h1⟩
@@ -1176,14 +1174,12 @@ theorem existsUnique_reps (k : ℕ) (g : normOneGL (K := K) (n := n)) (γ₀ : G
   obtain ⟨p, hp, hpq⟩ := mem_parabolicOne_iff.1 q.2
   refine ⟨⟨p, hp⟩, ?_, ?_⟩
   · show ratOne K n (p * γ₀) * g ∈ fundamentalDomain (parabolicOne K n k)
-    rw [map_mul, mul_assoc, hpq]
-    exact hq
+    rwa [map_mul, mul_assoc, hpq]
   · rintro ⟨p', hp'⟩ h
     have h' : (⟨ratOne K n p', ⟨p', hp', rfl⟩⟩ : parabolicOne K n k) • (ratOne K n γ₀ * g) ∈
         fundamentalDomain (parabolicOne K n k) := by
       show ratOne K n p' * (ratOne K n γ₀ * g) ∈ fundamentalDomain (parabolicOne K n k)
-      rw [← mul_assoc, ← map_mul]
-      exact h
+      rwa [← mul_assoc, ← map_mul]
     have := hqu _ h'
     refine Subtype.ext (ratOne_injective ?_)
     rw [hpq]
@@ -1431,8 +1427,7 @@ theorem setIntegral_mul_tsum_rank_eq_zero (μ : Measure (normOneGL (K := K) (n :
       rw [← lintegral_indicator (measurableSet_fundamentalDomain _)]
       refine lintegral_congr fun g => ?_
       rw [hH, enorm_indicator_eq_indicator_enorm]
-    rw [this]
-    exact hlint
+    rwa [this]
   have hzero : ∫ g in E, ψ' g * F g ∂μ = 0 := by
     have : SFinite μ := instSFiniteOfSigmaFinite (μ := μ)
     refine (hyp (K := K) (n := n) k).setIntegral_mul_eq_zero (μ := μ) hψm hFm ?_ ?_ hint ?_
@@ -1440,8 +1435,7 @@ theorem setIntegral_mul_tsum_rank_eq_zero (μ : Measure (normOneGL (K := K) (n :
     · intro p hp g
       obtain ⟨p', hp', rfl⟩ := mem_parabolicOne_iff.1 hp
       rw [hψΓ, hF, thetaR_ratOne hkn' Φ y hp']
-    · intro X g
-      exact thetaR_unipOne Φ y X g
+    · exact fun X g => thetaR_unipOne Φ y X g
     · intro g
       have := hψ k hk hkn (g : AdelicGLn.AdelicGL K n)
       rw [constantTerm] at this
@@ -1579,8 +1573,7 @@ theorem setIntegral_mul_tsum_det_eq_zero (hn : 2 ≤ n) {ψ : AdelicGLn.AdelicGL
     have hkn : n - (r : ℕ) < n := Nat.sub_lt (by omega) (Nat.pos_of_ne_zero hr)
     have e : n - (n - (r : ℕ)) = r := Nat.sub_sub_self r.2.le
     have := UnfoldGL.setIntegral_mul_tsum_rank_eq_zero μ hψc hψl hψ hΦ y hsum ⟨C, hC⟩ hk hkn
-    rw [e] at this
-    exact this
+    rwa [e] at this
 
 
 

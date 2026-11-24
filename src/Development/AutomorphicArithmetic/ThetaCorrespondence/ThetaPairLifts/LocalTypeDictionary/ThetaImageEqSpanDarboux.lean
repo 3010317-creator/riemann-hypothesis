@@ -101,8 +101,7 @@ private theorem hD_eq_mul_add_fderiv {G R : Type} [AddCommGroup G] [NormedAddCom
     have h0 : ((0 : ℝ) • u) = 0 := zero_smul ℝ u
     have hf' : DifferentiableAt ℝ (fun x : R => f (w + ι x)) ((0 : ℝ) • u) := by rwa [h0]
     have := hf'.hasFDerivAt.comp_hasDerivAt (0 : ℝ) hlin
-    rw [h0] at this
-    exact this
+    rwa [h0] at this
   have hP : HasDerivAt (fun t : ℝ => Complex.exp (-(Real.pi * Complex.I) * ((om (π w) (t • u) : ℝ) : ℂ)))
       (-(Real.pi * Complex.I) * ((om (π w) u : ℝ) : ℂ)) 0 := by
     have e : (fun t : ℝ => Complex.exp (-(Real.pi * Complex.I) * ((om (π w) (t • u) : ℝ) : ℂ))) =
@@ -430,8 +429,7 @@ theorem exists_darbouxAlgebra_theta_eq_fockFunction : GlobalTheory.Published.How
   obtain ⟨Φ, hΦ, hd⟩ := key (fockF ψ θ false A₁ B g P) (Submodule.subset_span ⟨g, P, hg, rfl⟩)
   refine ⟨Φ, hΦ, funext fun x => ?_⟩
   have h2 := hd.2 ((crd W₁.gram hG e).symm x)
-  rw [AddEquiv.apply_symm_apply] at h2
-  exact h2
+  rwa [AddEquiv.apply_symm_apply] at h2
 end GlobalTheory.DarbImageRevB
 end
 end
@@ -689,7 +687,7 @@ theorem theta_pure_tensor_gaussian_mem_fockAlgebraic : GlobalTheory.Published.Ho
     (fun w => by
       obtain ⟨τ, h1, -, h3, h4⟩ := h.cart w
       exact ⟨τ, h1, by simpa using h3, h4⟩)
-    Γ.M' hM.triple.geo.hM' (crd W₁ X e) (fun u => by simp only [Bool.false_eq_true, if_false, one_smul]; rfl)
+    Γ.M' hM.triple.geo.hM' (crd W₁ X e) (fun u => by simp only [Bool.false_eq_true, ite_false, one_smul]; rfl)
     f₀ φ hg hφ hvac
   have e1 : GlobalTheory.TripleRead.thO Γ.M' ψ (sgn false W₁).gram e (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f₀ φ) = f := by
     funext x
@@ -973,13 +971,7 @@ theorem schr_comp_apply {R : Type} [CommRing R] [Invertible (2 : R)] (ψ : AddCh
     (w w' : (κ → R) × (κ → R)) (Φ : (κ → R) → ℂ) (x : κ → R) :
     GlobalTheory.WeilM.schr ψ w (GlobalTheory.WeilM.schr ψ w' Φ) x =
       ψ (⅟(2 : R) * (w.1 ⬝ᵥ w'.2 - w'.1 ⬝ᵥ w.2)) * GlobalTheory.WeilM.schr ψ (w + w') Φ x := by
-  simp only [GlobalTheory.WeilM.schr, ← mul_assoc, ← AddChar.map_add_eq_mul, add_assoc]
-  congr 2
-  simp only [Prod.fst_add, Prod.snd_add, add_dotProduct, dotProduct_add]
-  rw [dotProduct_comm w'.1 w.2]
-  first
-    | linear_combination (w.1 ⬝ᵥ w'.2) * invOf_mul_self (2 : R)
-    | linear_combination (-(w.1 ⬝ᵥ w'.2)) * invOf_mul_self (2 : R)
+  exact GlobalTheory.ThetaDer.schr_comp_apply ψ w w' Φ x
 
 theorem exists_transpose_mul_equiv {A : Type} [CommRing A] {α β γ : Type} [Fintype β] [DecidableEq β] (e : γ ≃ α)
     {G H : Matrix β β A} (hHG : H * G = 1) :
@@ -1004,7 +996,6 @@ theorem exists_transpose_mul_equiv {A : Type} [CommRing A] {α β γ : Type} [Fi
 theorem finPart_realAd_smul (D : D7) (t : ℝ) (y : AE D) :
     finPart D (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t • y) = 0 := by
   have h0 : finPart D (algebraMap (AF D.host.F) (AE D) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t)) = 0 := by
-    show ((0 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) ⊗ₜ[D.host.F] (1 : D.host.E)) = 0
     exact TensorProduct.zero_tmul _ _
   rw [Algebra.smul_def, map_mul, h0, zero_mul]
 
@@ -1057,7 +1048,6 @@ theorem exists_line (D : D7) (S X : HSp D) {d : ℕ} (e : Fin d ≃ Fin X.rank)
   refine ⟨AddMonoidHom.mk' (fun t => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t • cS u₀) fun s t => by
     rw [GlobalTheory.ThetaLineDeriv.realAd_add, add_smul], ?_, fun t => ?_, funext fun x => ?_⟩
   · refine continuous_pi fun i => continuous_pi fun j => ?_
-    show Continuous fun t : ℝ => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t • cS u₀ i j
     exact (GlobalTheory.ThetaLineDeriv.continuous_realAd (F := D.host.F)).fun_smul continuous_const
   · ext i j
     exact finPart_realAd_smul D t (cS u₀ i j)

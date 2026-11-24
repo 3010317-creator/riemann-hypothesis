@@ -119,8 +119,8 @@ private theorem wcomp_self_eq_of_mem_wtPart {O σ X : Type} [CommRing O] [AddCom
   ext n
   rw [coeff_wcomp]
   by_cases h1 : Finsupp.weight wt n = j
-  · rw [if_pos h1]
-  · rw [if_neg h1]
+  · rw [ite_eq_left h1]
+  · rw [ite_eq_right h1]
     exact (hf' n h1).symm
 
 private theorem wcomp_eq_zero_of_mem_wtPart_of_ne {O σ X : Type} [CommRing O] [AddCommGroup X] {wt : σ → X} {j : X}
@@ -129,9 +129,9 @@ private theorem wcomp_eq_zero_of_mem_wtPart_of_ne {O σ X : Type} [CommRing O] [
   ext n
   rw [coeff_wcomp, map_zero]
   by_cases h1 : Finsupp.weight wt n = j'
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     exact hf' n (by rw [h1]; exact hj)
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
 
 private theorem aGraded_internal {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime]
     {c : Coef l} {D : Raw Ω c} (M : Model D) : DirectSum.IsInternal M.gr := by
@@ -441,8 +441,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.conjTorus :
     refine block_of_intertwine (r D.ph) (r' D.ph) u _ (fun i j => hdiag D.ph ▸ hc _ i j) (fun i j => hdiag D.ph ▸ hc' _ i j)
       hN.1 hN'.1 (fun i j hij => (norm_sub_of_res c ?_).ge) (hint _)
     have := (hT l (Finset.mem_insert_self _ _)).2.2 i j hij
-    rw [← hbar, ← hbar, ← hph, hbar, hbar] at this
-    exact this
+    rwa [← hbar, ← hbar, ← hph, hbar, hbar] at this
   have hth : ∀ g, ‖algebraMap c.O (PadicAlgCl l) (D.th g : c.O)‖ = 1 := fun g => norm_unit c (Units.isUnit _)
   have hH : ∀ s : G ℚ Ω →* M4 (PadicAlgCl l), (∀ g i j, ‖s g i j - D.r0E g i j‖ < 1) → ∀ i,
       ‖D.hEl s i i - algebraMap c.O (PadicAlgCl l) ((D.ps i D.g0 : c.O) + (D.th D.g0 : c.O) * (D.ps i D.g0⁻¹ : c.O))‖ < 1 := by
@@ -530,8 +529,7 @@ private theorem block_of_comm {K : Type} [NormedField K] [IsUltrametricDist K] (
     calc ‖X i j‖ = ‖X i j * (d i - d j)‖ := by rw [norm_mul, hd i j hij, mul_one]
       _ ≤ _ := by rw [h1]; exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h2 h3)
   have h5 : ‖X i j‖ ≤ 0 := by nlinarith
-  intro a b h
-  exact norm_le_zero_iff.1 ((hm' a b h).trans h5)
+  exact fun a b h => norm_le_zero_iff.1 ((hm' a b h).trans h5)
 
 private theorem diag_of_comm {K : Type} [Field K] (X h : M4 K) (hX : X ∈ sp4 K) (hb : IsBlock X)
     (h02 : h 0 2 = 0) (h20 : h 2 0 = 0) (hne : h 0 0 ≠ h 2 2)
@@ -767,7 +765,7 @@ private theorem ts_agree (hι : Function.Injective ι)
       obtain ⟨c, hc, hc'⟩ := ts_step W ξ ι t g hg (J ^ N) J {n | Finsupp.weight W.wt n = 0 ∧ n ≠ 0} 0
         (fun n hn => hn.1) (fun n hn => by
           have := GlobalTheory.algHom_sub_constantCoeff_mem g hJ (monomial n 1)
-          rwa [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, if_neg hn.2.symm, map_zero,
+          rwa [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, ite_eq_right hn.2.symm, map_zero,
             sub_zero] at this) ih
         (b - algebraMap O _ (constantCoeff b)) (fun n hn => by
           rw [map_sub, MvPowerSeries.algebraMap_apply, coeff_C]
@@ -1599,8 +1597,7 @@ private theorem aW_comb {σ : Type} [Fintype σ] (lam : σ → ℤ) (hl : ∀ s,
       rcases mul_eq_zero.1 h3 with h4 | h4
       · exact h (by exact_mod_cast h4)
       · exact hz u h h4
-  rw [this]
-  exact h0
+  rwa [this]
 
 private theorem aW_wts : ∀ w ∈ wts, (w.1 = -1 ∨ w.1 = 0 ∨ w.1 = 1) ∧ (-1 ≤ w.2 ∧ w.2 ≤ 1) := by decide
 
@@ -1793,8 +1790,7 @@ private theorem real_ratio_bound (s n e L S : ℝ) (he : 0 < e) (hL : 0 < L) (h1
     have := mul_le_mul_of_nonneg_right (h1.trans h2) hL.le
     have e1 : 2 * (S * e / L) * L = 2 * S * e := by field_simp
     rwa [e1] at this
-  rw [div_mul_eq_mul_div, div_le_iff₀ he]
-  exact h3
+  rwa [div_mul_eq_mul_div, div_le_iff₀ he]
 
 section Pts
 

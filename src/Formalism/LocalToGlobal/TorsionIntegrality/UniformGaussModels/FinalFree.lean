@@ -332,9 +332,8 @@ lemma vol_std_ne_bot {a : ℕ} {b : ℤ} {d : ℕ} {ha : 0 < a} {hd : 0 < d} {la
         UnitDetRootDefs.cmPair]
       exact Submodule.subset_span (Set.mem_insert _ _)
     by_cases h : i = j
-    · rw [if_pos h]
-      exact hω
-    · rw [if_neg h]
+    · rwa [ite_eq_left h]
+    · rw [ite_eq_right h]
       exact zero_mem _
   · have hD : (Matrix.of fun (j i : m) => if i = j then lam * (a : ℂ) else 0) =
         Matrix.diagonal (fun _ => lam * (a : ℂ)) := by
@@ -502,7 +501,7 @@ theorem mv_mul_apply {R : Type*} [CommRing R] (a : Fin 4) (G : Matrix (Fin 4 × 
   · rw [Fintype.sum_eq_single (0, z.2)]
     · simp [h]
     · intro y hy
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       rintro ⟨-, h0, h2⟩
       exact hy (Prod.ext h0 h2.symm)
   · simp [h]
@@ -514,7 +513,7 @@ theorem blockShift_mul_apply {R : Type*} [CommRing R] (k : Fin 4) (G : Matrix (F
   · rw [Fintype.sum_eq_single (k, z.2)]
     · simp [h]
     · intro y hy
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       rintro ⟨-, h0, h2⟩
       exact hy (Prod.ext h0 h2.symm)
   · simp [h]
@@ -527,7 +526,7 @@ theorem mv_mulVec (a : Fin 4) (y : Fin 4 × n → ℂ) :
   · rw [Fintype.sum_eq_single (0, x.2)]
     · simp [h]
     · intro z hz
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       rintro ⟨-, h0, h2⟩
       exact hz (Prod.ext h0 h2.symm)
   · simp [h]
@@ -540,7 +539,7 @@ theorem blockShift_mulVec (k : Fin 4) (y : Fin 4 × n → ℂ) :
   · rw [Fintype.sum_eq_single (k, x.2)]
     · simp [h]
     · intro z hz
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       rintro ⟨-, h0, h2⟩
       exact hz (Prod.ext h0 h2.symm)
   · simp [h]
@@ -607,7 +606,7 @@ theorem blockDiag_mul_blockShift {R : Type*} [CommRing R] (P : Matrix n n R) (k 
   · intro z hz
     by_cases hc : z.1 = 0 ∧ y.1 = k ∧ z.2 = y.2
     · exact absurd (Prod.ext hc.1 hc.2.2 : z = (0, y.2)) hz
-    · rw [if_neg hc, mul_zero]
+    · rw [ite_eq_right hc, mul_zero]
 
 theorem exists_cols (G Gi : Matrix (Fin 4 × n) (Fin 4 × n) ℂ) (hG : G * Gi = 1) :
     ∃ w : n → Fin 4 × n, IsUnit (Matrix.of fun i j => G (0, i) (w j)) := by
@@ -872,9 +871,7 @@ theorem gram_G (L : PeriodPair) {n : Type} [Fintype n] [DecidableEq n] (h : Matr
     by_cases huw : u = w
     · subst huw
       simp [Pi.single_apply]
-    · simp [Pi.single_apply, huw]
-      intro hi
-      exact absurd hi.symm huw
+    · simpa [Pi.single_apply, huw] using fun hi => absurd hi.symm huw
   rw [hl] at h1
   rw [h1]
   simp only [matH, LinearMap.mk₂'ₛₗ_apply, Matrix.mul_apply, Matrix.transpose_apply,
@@ -962,8 +959,7 @@ theorem ratStep : RatStep := by
           = (G * Gi).transpose * bd4 h * (G * Gi).map (starRingEnd ℂ) := by
         rw [Matrix.transpose_mul, Matrix.map_mul]; simp only [Matrix.mul_assoc]
       rw [this, hGGi]; simp
-    rw [hGdef] at e1
-    rw [hgram, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul] at e1
+    rw [hGdef, hgram, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul] at e1
     rw [← e1, smul_smul, mul_inv_cancel₀ hA, one_smul]
   set R : Matrix n n ℂ := ((area L : ℝ) : ℂ) • (P.transpose * h * P.map conj) with hR
   clear_value R
@@ -1067,8 +1063,7 @@ theorem delta_mem (l : ℕ) [Fact l.Prime] (dK : ℕ) (hd : dK.Prime) (hd4 : dK 
       refine ⟨dK, hd.pos, hld, ?_⟩
       rw [← pow_mul, mul_comm a.val dK, pow_mul, hζ.pow_eq_one, one_pow]
   rcases sq_eq_sq_iff_eq_or_eq_neg.1 (hx.trans hG.symm) with h | h
-  · rw [h]
-    exact hmem
+  · rwa [h]
   · rw [h]
     exact Subfield.neg_mem _ hmem
 
@@ -1435,8 +1430,7 @@ theorem jac_fin : ∀ (m : ℕ) (Γ : Matrix (Fin m) (Fin m) K), S.IntM Γ → S
         rw [ite_eq_right (Fin.succ_ne_zero c').symm]
       · simp only [Fin.cons_zero, Fin.cons_succ, S.hf_proj_self hΓ hH ha haa (hv'I c)]
         rw [ite_eq_right (Fin.succ_ne_zero c)]
-      · simp only [Fin.cons_succ, S.hf_proj_proj haa, Fin.succ_inj]
-        exact hv'o c c'
+      · simpa only [Fin.cons_succ, S.hf_proj_proj haa, Fin.succ_inj] using hv'o c c'
     · rw [Fin.sum_univ_succ]
       simp only [Fin.cons_zero, Fin.cons_succ]
       have : ∀ c, vecMulVec (Γ *ᵥ S.proj Γ a (v' c)) (S.cv (S.proj Γ a (v' c)) ᵥ* Γ)
@@ -1572,16 +1566,16 @@ theorem blockShift_mul_apply {m : Type*} [Fintype m] (c : Fin 4) (X : Matrix (Fi
     (w : m) : ((bmv0 c : Matrix (Fin 4 × n) (Fin 4 × n) K) * X) (b, i) w = if b = 0 then X (c, i) w else 0 := by
   simp only [bmv0, Matrix.mul_apply, ite_mul, one_mul, zero_mul]
   by_cases hb : b = 0
-  · rw [if_pos hb, Finset.sum_eq_single (c, i)]
+  · rw [ite_eq_left hb, Finset.sum_eq_single (c, i)]
     · simp [hb]
     · rintro ⟨b', j⟩ _ hne
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨-, h1, h2⟩
       exact hne (Prod.ext h1 h2.symm)
     · simp
-  · rw [if_neg hb]
+  · rw [ite_eq_right hb]
     refine Finset.sum_eq_zero fun y _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨h, -⟩
     exact hb h
 
@@ -1697,8 +1691,7 @@ theorem local_core' : LocCore := by
   have hZc : ∀ b, what₂ M b = Z * U b := by
     intro b; refine Matrix.ext fun i w => ?_
     have := congrFun (congrFun (hUeq b) (0, i)) w
-    rw [blockShift_mul_apply, if_pos rfl] at this
-    exact this
+    rwa [blockShift_mul_apply, ite_eq_left rfl] at this
   have hrowsN : ∀ b, what₂ (M * U 0) b = if b = 0 then Z else 0 := by
     intro b; refine Matrix.ext fun i w => ?_
     have := congrFun (congrFun (hUeq 0) (b, i)) w
@@ -1841,8 +1834,7 @@ theorem local_core' : LocCore := by
     rwa [hSσ] at h
   · have h := congrFun (congrFun hU1 a) b
     rw [Matrix.mul_apply, Matrix.one_apply] at h
-    simp only [transpose_apply, Matrix.map_apply] at h
-    exact h
+    simpa only [transpose_apply, Matrix.map_apply] using h
 
 end Formalism.L2.Th1.Top.FrP.UnitaryGroupMassFormula.HermFrame.Loc
 end -- clump:auto

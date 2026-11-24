@@ -19,8 +19,7 @@ theorem mem_coneRing_rat_of_int (y : ι → Ω) (v : (Polynomial Ω)) (hv : v �
   rw [coneRing, AlgHom.mem_range] at hv ⊢
   obtain ⟨p, rfl⟩ := hv
   refine ⟨MvPolynomial.map (algebraMap ℤ ℚ) p, ?_⟩
-  simp only [coneMap]
-  exact MvPolynomial.aeval_map_algebraMap ℚ _ p
+  simpa only [coneMap] using MvPolynomial.aeval_map_algebraMap ℚ _ p
 
 def coneRingIntToRat (y : ι → Ω) : coneRing ℤ y →+* coneRing ℚ y where
   toFun s := ⟨s, mem_coneRing_rat_of_int y s s.2⟩
@@ -116,8 +115,7 @@ theorem exists_nat_mul_isIntegral_int (y : ι → Ω) (a : (Polynomial Ω)) (ha 
     exact ⟨⟨_, hmem⟩, rfl⟩
   obtain ⟨q, hqmap, -, hqm⟩ := lifts_and_natDegree_eq_and_monic hQl hQm
   refine ⟨q, hqm, ?_⟩
-  rw [← eval_map, hqmap]
-  exact hQa
+  rwa [← eval_map, hqmap]
 
 end Int
 
@@ -161,7 +159,7 @@ theorem exists_scaleOff_isProjFrame (x : κ → Ω) (e : Fin (D + 1) → κ)
     · have e1 : C (scaleOff e (∏ i, n i) x i) * X =
           ((∏ j ∈ Finset.univ.erase i, n j : ℕ) : Polynomial Ω) * ((n i : Polynomial Ω) * (C (x i) * X)) := by
         rw [← mul_assoc, ← Nat.cast_mul, Finset.prod_erase_mul _ _ (Finset.mem_univ i)]
-        simp only [scaleOff, if_neg hi, map_mul, map_natCast]
+        simp only [scaleOff, ite_eq_right hi, map_mul, map_natCast]
         ring
       rw [e1]
       exact isIntegral_natCast_mul_coneRing (x ∘ e) _ (hint i)
@@ -172,8 +170,7 @@ private theorem isIntegral_coneRing_rat_of_int {ι : Type*} (y : ι → Ω) {a :
   have hcomp : (algebraMap (coneRing ℚ y) (Polynomial Ω)).comp (coneRingIntToRat y) =
       algebraMap (coneRing ℤ y) (Polynomial Ω) := RingHom.ext fun _ => rfl
   refine ⟨p.map (coneRingIntToRat y), hpm.map _, ?_⟩
-  rw [eval₂_map, hcomp]
-  exact hp0
+  rwa [eval₂_map, hcomp]
 
 theorem IsProjFrame.isRatProjFrame {x : κ → Ω} {e : Fin (D + 1) → κ} (h : IsProjFrame x e) :
     IsRatProjFrame x e := ⟨h.inj, h.free, fun i => isIntegral_coneRing_rat_of_int _ (h.integral i)⟩

@@ -81,8 +81,7 @@ theorem kappaOnto_of (hF : DualFrame X u) (hE : LeviElt TR u) (hL : MatLift TR) 
   have hu : IsUnit (leviM TR κ v).det := by
     rw [hM]
     exact Matrix.isUnits_det_units (s v)
-  simp only [levi, dif_pos hu]
-  exact Units.ext hM
+  simpa only [levi, dite_eq_left hu] using Units.ext hM
 
 theorem LeviOntoS_xu_inv_fix (y : Fin X.B.I.n → X.B.I.E)
     (hy : X.B.I.fmat (X.xu u) *ᵥ incl X.B.I y = incl X.B.I y) :
@@ -132,12 +131,10 @@ theorem leviOntoS_of (hK : KappaOnto TR u) : LeviOntoS TR cs := by
     simp only [colDS, Subgroup.coe_mul]
     group
   refine ⟨cs.h (cs.base q.1) * ⟨X.xu u * κ * (X.xu u)⁻¹, LeviOntoS_conj_mem u κ hfix⟩, ?_, ?_, ?_⟩
-  · rw [e1]
-    exact hκK
+  · rwa [e1]
   · rw [e2]
     exact LeviOntoS_K_inv hκK
-  · rw [e1]
-    exact hlev
+  · rwa [e1]
 
 theorem leviOntoS_of_steps (hS : SIdem X) (hFS : FrameOfS X u) (hE : LeviElt TR u) (hL : MatLift TR) : LeviOntoS TR cs :=
   leviOntoS_of (TR := TR) (u := u) (cs := cs) (kappaOnto_of (TR := TR) (u := u) (hFS hS) hE hL)

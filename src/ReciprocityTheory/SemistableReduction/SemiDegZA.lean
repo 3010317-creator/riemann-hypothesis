@@ -127,8 +127,7 @@ theorem exists_adapted_majorant {K : Type} [Field K] [NumberField K] {r : ℕ} (
         _ = 1 := by rw [hYHY, hHH']
     refine ⟨?_, ?_⟩
     · have hD : D.PosDef := by
-        simp only [D, diagMet]
-        exact Matrix.posDef_diagonal_iff.2 fun i => by exact_mod_cast hpos i
+        simpa only [D, diagMet] using Matrix.posDef_diagonal_iff.2 fun i => by exact_mod_cast hpos i
       have hAu : IsUnit A := (Matrix.isUnit_iff_isUnit_det A).2
         (Matrix.isUnit_det_of_right_inverse e1)
       exact hD.conjTranspose_mul_mul_same (Matrix.mulVec_injective_of_isUnit hAu)
@@ -352,7 +351,7 @@ theorem mid_le_zero (hN : IntegralIndexStatement) (hA : AbsDetStatement) {K : Ty
       Sm.h z z = ∑ a, S.c (z a) * g a * z a := by
     intro z hz
     simp only [HermForm.h, hSm, midForm, midG, Matrix.diagonal_apply, mul_ite, mul_zero, ite_mul,
-      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     refine Finset.sum_congr rfl fun a _ => ?_
     split_ifs with h
     · rfl
@@ -414,8 +413,7 @@ theorem mid_le_zero (hN : IntegralIndexStatement) (hA : AbsDetStatement) {K : Ty
             gcongr
             split_ifs with h
             · rw [hδmid σ a h.1 h.2]
-            · simp only [map_zero, norm_zero]
-              exact (hδ σ a).le
+            · simpa only [map_zero, norm_zero] using (hδ σ a).le
         _ = (∑ a : Fin r, ((δ σ a : ℝ) : ℂ) * ((‖(E *ᵥ v) a‖ ^ 2 : ℝ) : ℂ)).re := by
             rw [Complex.re_sum]
             refine Finset.sum_congr rfl fun a _ => ?_
@@ -427,9 +425,7 @@ theorem mid_le_zero (hN : IntegralIndexStatement) (hA : AbsDetStatement) {K : Ty
       ∑ σ : K →+* ℂ, Real.log (gramC (diagMet δ σ) σ c).det.re := by
     rw [← sum_log_norm_emb]
     refine Finset.sum_le_sum fun σ _ => Real.log_le_log ?_ (hσ σ)
-    apply norm_pos_iff.2
-    intro h0
-    exact hdet (σ.injective (by rw [h0, map_zero]))
+    exact norm_pos_iff.2 (fun h0 => hdet (σ.injective (by rw [h0, map_zero])))
   have hone : 1 ≤ (spanIdx C c : ℝ) :=
     Nat.one_le_cast.2 (Nat.one_le_iff_ne_zero.2 (spanIdx_ne_zero C c hCfg hc))
   have hidx' : 2 * Real.log (spanIdx C c : ℝ) ≤ Real.log |((Algebra.norm ℚ (hGram Sm c).det : ℚ) : ℝ)| := by
@@ -475,7 +471,7 @@ theorem exists_at {K : Type} [Field K] [NumberField K] {r : ℕ} (Lp : Submodule
     simp [this]
   refine ⟨projGe K r j (a • Pi.single j 1), ⟨_, ⟨hav, hcut⟩, rfl⟩, ?_⟩
   show (if (j : ℕ) ≤ j then (a • (Pi.single j 1 : Fin r → K)) j else 0) ≠ 0
-  rw [if_pos le_rfl]
+  rw [ite_eq_left le_rfl]
   simpa using ha
 
 theorem pair_int {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r) (m : ℕ)
@@ -490,10 +486,10 @@ theorem pair_int {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K 
   have hj' := j.isLt
   have e1 : projGe K r j x j = x j := by
     show (if (j : ℕ) ≤ j then x j else 0) = x j
-    rw [if_pos le_rfl]
+    rw [ite_eq_left le_rfl]
   have e2 : projGe K r (Fin.rev j) y (Fin.rev j) = y (Fin.rev j) := by
     show (if ((Fin.rev j : Fin r) : ℕ) ≤ (Fin.rev j : Fin r) then y (Fin.rev j) else 0) = _
-    rw [if_pos le_rfl]
+    rw [ite_eq_left le_rfl]
   rw [e1, e2]
   have h := hint x hxL y hyL
   rw [formM_witt, Finset.sum_eq_single j] at h
@@ -506,8 +502,7 @@ theorem pair_int {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K 
       rw [this, mul_zero, mul_zero]
     · have : x a = 0 := hxc a (by have : (a : ℕ) ≠ j := fun e => ha (Fin.ext e); omega)
       rw [this, map_zero, zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+  · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem mid_supp {K : Type} [Field K] [NumberField K] {r : ℕ} (m : ℕ)
     (Lp : Submodule (𝓞 K) (Fin r → K)) :
@@ -529,7 +524,7 @@ theorem mid_int {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r
   convert h using 1
   rw [formM_witt]
   simp only [HermForm.h, midForm, midG, Matrix.diagonal_apply, mul_ite, mul_zero, ite_mul,
-    zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   refine Finset.sum_congr rfl fun a _ => ?_
   have ha := a.isLt
   show (if m ≤ (a : ℕ) ∧ (a : ℕ) + m < r then
@@ -537,10 +532,10 @@ theorem mid_int {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r
       else 0) = _
   by_cases hmid : m ≤ (a : ℕ) ∧ (a : ℕ) + m < r
   · have ho : ¬ ((a : ℕ) < m ∨ r ≤ (a : ℕ) + m) := by omega
-    simp only [if_pos hmid, if_pos hmid.1]
+    simp only [ite_eq_left hmid, ite_eq_left hmid.1]
     rw [wVal_mid r m g a ho, wPart_mid r m a ho]
     ring
-  · rw [if_neg hmid]
+  · rw [ite_eq_right hmid]
     by_cases hlt : (a : ℕ) < m
     · have ho : (a : ℕ) < m ∨ r ≤ (a : ℕ) + m := Or.inl hlt
       rw [wPart_outer r m a ho]
@@ -576,8 +571,7 @@ theorem cutSub_zero (K : Type) [Field K] [NumberField K] (r : ℕ) : cutSub K r 
 
 theorem cutSub_self (K : Type) [Field K] [NumberField K] (r : ℕ) : cutSub K r r = ⊤ := by
   rw [eq_top_iff]
-  intro x _ i hi
-  exact absurd i.isLt (by omega)
+  exact fun x _ i hi => absurd i.isLt (by omega)
 
 theorem flag_base {K : Type} [Field K] [NumberField K] {r : ℕ}
     (D : (K →+* ℂ) → Matrix (Fin r) (Fin r) ℂ) (Lp : Submodule (𝓞 K) (Fin r → K)) :
@@ -659,7 +653,7 @@ theorem adapted_semistable (hB : LatDegBasisStatement) (hN : IntegralIndexStatem
     have hδj : ∀ σ, δ σ (Fin.rev p) = dd (Fin.rev p) := fun σ => by
       show adMet r m g dd σ (Fin.rev p) = _
       unfold adMet
-      rw [if_pos hj]
+      rw [ite_eq_left hj]
     have hδp : ∀ σ, δ σ p = (dd (Fin.rev p))⁻¹ := fun σ => by
       have h1 : ¬ (p : ℕ) < m := by omega
       simp [hδdef, adMet, h1, hp]
@@ -790,8 +784,7 @@ theorem kBasis_card {K : Type} [Field K] [NumberField K] {r k : ℕ}
     (hb : IsKBasisIn L b) : k = r := by
   have hspan : Submodule.span K (Set.range b) = ⊤ := by
     rw [eq_top_iff, ← hL.2, Submodule.span_le]
-    intro x hx
-    exact hb.2.2 x hx
+    exact fun x hx => hb.2.2 x hx
   have h := finrank_span_eq_card hb.2.1
   rw [hspan, finrank_top, Module.finrank_fin_fun, Fintype.card_fin] at h
   exact h.symm

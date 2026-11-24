@@ -83,8 +83,7 @@ theorem norm_singular_value_bound : Formalism.HermitianLatticeCounting.S6.NormSg
         rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, hf, ← pow_mul, ← pow_mul]
         congr 2; ring
     _ ≤ Hh * ∏ v, sg v ^ 2 := by
-        apply mul_le_mul_of_nonneg_right hHh
-        exact Finset.prod_nonneg (fun v _ => by positivity)
+        exact mul_le_mul_of_nonneg_right hHh (Finset.prod_nonneg (fun v _ => by positivity))
 
 theorem coefficient_field_bound : Formalism.HermitianLatticeCounting.S6.CfBound := by
   intro f x k hf hx
@@ -327,8 +326,7 @@ lemma fs_sum (A x : ℝ) (hA0 : 0 ≤ A) (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (k r f 
     apply mul_le_mul_of_nonneg_left _ hA0
     exact pow_le_pow_of_le_one hx0 hx1 (fs_exp j k f hj1 (by omega))
   have := Finset.sum_le_card_nsmul (Finset.Icc 1 r) (fun j => A * x ^ (j * (k - 1 - j) * f)) _ hterm
-  rw [Nat.card_Icc, Nat.add_sub_cancel, nsmul_eq_mul] at this
-  exact this
+  rwa [Nat.card_Icc, Nat.add_sub_cancel, nsmul_eq_mul] at this
 
 theorem final_sum_bound : Formalism.HermitianLatticeCounting.S6.FinalSum := by
   intro C hC
@@ -456,8 +454,7 @@ lemma gsK (h : U →ₗ[K] U →ₗ⋆[K] K) (herm : ∀ x y : U, star (h x y) =
         simp only [hLlc, hLll, hgc, hgl, one_smul]
         simp [gl]
       · rw [Fin.sum_univ_castSucc]
-        simp only [hLcc, hLcl, hgc, zero_smul, add_zero]
-        exact hw₀ b'
+        simpa only [hLcc, hLcl, hgc, zero_smul, add_zero] using hw₀ b'
     · intro a b hab
       rcases Fin.eq_castSucc_or_eq_last a with ⟨a', rfl⟩ | rfl <;>
         rcases Fin.eq_castSucc_or_eq_last b with ⟨b', rfl⟩ | rfl

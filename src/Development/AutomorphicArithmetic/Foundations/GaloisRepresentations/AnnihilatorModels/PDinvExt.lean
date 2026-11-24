@@ -64,16 +64,14 @@ private theorem mem_baseChange_iInf_ker_sub_id_of_baseChange_eq {F L X ι : Type
     simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply,
       sub_eq_zero]
     intro k
-    have h := congrArg (fun w => e w j) (hz k)
-    simpa only [nat] using h
+    simpa only [nat] using congrArg (fun w => e w j) (hz k)
   have hsingle : ∀ j (x : X), e.symm (Finsupp.single j x) = b j ⊗ₜ[F] x := by
     intro j x
     simp [e]
   have hz' : z = (e z).sum (fun j x => b j ⊗ₜ[F] x) := by
     conv_lhs => rw [← e.symm_apply_apply z, ← Finsupp.sum_single (e z)]
 
-    simp only [Finsupp.sum, map_sum]
-    exact Finset.sum_congr rfl fun j _ => hsingle j _
+    simpa only [Finsupp.sum, map_sum] using Finset.sum_congr rfl fun j _ => hsingle j _
   rw [hz']
   exact Submodule.sum_mem _ fun j _ => Submodule.tmul_mem_baseChange_of_mem _ (hmem j)
 

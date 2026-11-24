@@ -57,8 +57,7 @@ theorem exists_monic_aeval_apply_eq_zero {M : Type*} [AddCommGroup M] [Module �
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [map_mul, Polynomial.aeval_C, map_pow, Polynomial.aeval_X, Module.End.mul_apply,
         Module.algebraMap_end_apply]
-    rw [e1]
-    exact hc
+    rwa [e1]
   have hQ0 : Q ≠ 0 := by
     intro h0
     apply hi
@@ -161,10 +160,8 @@ theorem finiteDimensional_archKSpan (hK : IsKFinite (φ : AdelicGLn.AdelicGL K n
     · rintro _ ⟨k, rfl⟩
       exact Submodule.subset_span ⟨⟨infEmb K n k, k.2⟩, rfl⟩
     · exact Wf.zero_mem
-    · intro x y _ _ hx hy
-      exact Wf.add_mem hx hy
-    · intro c x _ hx
-      exact Wf.smul_mem c hx
+    · exact fun x y _ _ hx hy => Wf.add_mem hx hy
+    · exact fun c x _ hx => Wf.smul_mem c hx
   refine FiniteDimensional.of_injective
     (((archSmooth K n).subtype ∘ₗ (archKSpan φ).subtype).codRestrict Wf hW) ?_
   intro x y hxy
@@ -199,8 +196,7 @@ theorem uAction_ι_mem_archKSpan (hK : IsKFinite (φ : AdelicGLn.AdelicGL K n �
     have h := (isExpLieAlgebra K n).hasDerivAt_rightDeriv ((mem_archSmooth.1 ψ.2) x)
       ((isExpLieAlgebra K n).ofLie X) 1
     simp only [one_mul, archSlice_apply] at h
-    rw [uAction_ι_apply]
-    exact h
+    rwa [uAction_ι_apply]
   have : FiniteDimensional ℂ Wf := inferInstance
   obtain ⟨w, hw, e⟩ := mem_of_hasDerivAt Wf hc hd
   rwa [show w = uAction (UniversalEnvelopingAlgebra.ι ℝ X) ψ from Subtype.ext e] at hw
@@ -231,8 +227,7 @@ theorem finiteDimensional_zkArchSpan (hK : IsKFinite (φ : AdelicGLn.AdelicGL K 
   rw [← hs] at hψ
   change uAction z ψ ∈ ⨆ x, S x
   refine Submodule.span_induction (p := fun ψ _ => uAction z ψ ∈ ⨆ x, S x) ?_ ?_ ?_ ?_ hψ
-  · intro x hx
-    exact Submodule.mem_iSup_of_mem ⟨x, hx⟩ (Submodule.subset_span ⟨z, hz, rfl⟩)
+  · exact fun x hx => Submodule.mem_iSup_of_mem ⟨x, hx⟩ (Submodule.subset_span ⟨z, hz, rfl⟩)
   · rw [map_zero]; exact Submodule.zero_mem _
   · intro x y _ _ hx hy; rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
   · intro c x _ hx; rw [map_smul]; exact Submodule.smul_mem _ c hx

@@ -221,7 +221,7 @@ theorem eq_zero_of_forall_isUnit (P : MvPolynomial (ι × Fin n × Fin n) ℂ)
     rw [map_mul, map_zero, eval_detAll]
     by_cases hy : ∀ τ, IsUnit (y τ).det
     · rw [h y hy, zero_mul]
-    · push_neg at hy
+    · push Not at hy
       obtain ⟨τ, hτ⟩ := hy
       rw [Finset.prod_eq_zero (Finset.mem_univ τ) (by simpa [isUnit_iff_ne_zero] using hτ), mul_zero]
   exact (mul_eq_zero.mp h2).resolve_right detAll_ne_zero
@@ -276,8 +276,7 @@ theorem fnOf_injective (G : ι → Matrix (Fin n) (Fin n) ℂ) (sh : ι → ℤ)
 
 theorem evFr_injective (G : ι → Matrix (Fin n) (Fin n) ℂ) (sh : ι → ℤ) (s : K →+* ℂ) (o : Frames G) :
     Function.Injective (evFr (K := K) G sh s) := by
-  intro P Q h
-  exact mapS_injective s (fnOf_injective G sh 1 (fun τ => by simp) o h)
+  exact fun P Q h => mapS_injective s (fnOf_injective G sh 1 (fun τ => by simp) o h)
 
 end Inj
 
@@ -303,8 +302,7 @@ def stdFrC (emb : ι → E →+* ℂ) : Frames (gramC (1 : Matrix (Fin n) (Fin n
 
 theorem natW_anti (lam : DomWeight n) : Antitone lam.natW := by
   intro i j hij
-  simp only [DomWeight.natW]
-  exact Int.toNat_le_toNat (by linarith [lam.anti hij])
+  simpa only [DomWeight.natW] using Int.toNat_le_toNat (by linarith [lam.anti hij])
 
 def extV (K : Type) [Field K] (lam : ι → DomWeight n) : VV K lam :=
   ⟨∏ τ, Formalism.GradedWeylDivisibility.blockEmb K τ (extremal K n (lam τ)),

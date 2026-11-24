@@ -48,8 +48,7 @@ theorem lu_exists {M : Matrix (Fin n) (Fin n) ℂ} (hM : ∀ i : Fin (n + 1), lm
     have hv : x r ᵥ* A r = -(fun j => M r (Fin.castLE r.isLt.le j)) := by
       simp only [x, Matrix.neg_vecMul, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul _ (hA r),
         Matrix.vecMul_one]
-    have h := congrFun hv j
-    simpa [Matrix.vecMul, dotProduct, A] using h
+    simpa [Matrix.vecMul, dotProduct, A] using congrFun hv j
 
   let L : Matrix (Fin n) (Fin n) ℂ := Matrix.of fun r c =>
     if h : c < r then x r ⟨c, h⟩ else if c = r then 1 else 0
@@ -76,19 +75,15 @@ theorem lu_exists {M : Matrix (Fin n) (Fin n) ℂ} (hM : ∀ i : Fin (n + 1), lm
       rw [← Finset.sum_subset (Finset.subset_univ (Finset.univ.map (Fin.castLEEmb r.isLt.le)))]
       · rw [Finset.sum_map]
         refine Finset.sum_congr rfl fun j _ => ?_
-        have hj : (Fin.castLEEmb r.isLt.le j) < r := by
-          show (j : ℕ) < r
-          exact j.isLt
+        have hj : (Fin.castLEEmb r.isLt.le j) < r := j.isLt
         rw [dite_eq_left hj]
         rfl
       · intro k _ hk
         have hk' : ¬ k < r := by
-          intro h
-          apply hk
-          exact Finset.mem_map.mpr ⟨⟨k, h⟩, Finset.mem_univ _, Fin.ext rfl⟩
+          exact fun h => hk (Finset.mem_map.mpr ⟨⟨k, h⟩, Finset.mem_univ _, Fin.ext rfl⟩)
         rw [dite_eq_right hk']
     rw [Matrix.mul_apply, Finset.sum_congr rfl fun k _ => e1 k, Finset.sum_add_distrib,
-      Finset.sum_ite_eq' Finset.univ r (fun k => M k c), if_pos (Finset.mem_univ _), hsub]
+      Finset.sum_ite_eq' Finset.univ r (fun k => M k c), ite_eq_left (Finset.mem_univ _), hsub]
     have h := hx r ⟨c, hcr⟩
     have hc : Fin.castLE r.isLt.le (⟨c, hcr⟩ : Fin r) = c := Fin.ext rfl
     rw [hc] at h
@@ -108,10 +103,8 @@ theorem lu_exists {M : Matrix (Fin n) (Fin n) ℂ} (hM : ∀ i : Fin (n + 1), lm
         rw [h0, mul_zero]
       · have h0 : L a k = 0 := hLlow (OrderDual.toDual_lt_toDual.mpr h)
         rw [h0, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
-  · intro r c hcr
-    exact hrow r c hcr
+    · exact fun h => absurd (Finset.mem_univ a) h
+  · exact fun r c hcr => hrow r c hcr
   · rw [Matrix.det_mul, hLdet, one_mul, ← lminor_last']
     exact hM _
   · rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul L hLu, Matrix.one_mul]
@@ -155,10 +148,8 @@ lemma eq_of_sl_up {w w' : Ix ι r → ℂ} (h1 : ∀ τ, sl w τ = sl w' τ) (h2
   funext i
   obtain ⟨τ, a, b⟩ := i
   by_cases hba : b < a
-  · have h := congrFun (congrFun (h1 τ) a) b
-    simpa [sl, hba] using h
-  · have h := congrFun (congrFun (h2 τ) a) b
-    simpa [up, hba] using h
+  · simpa [sl, hba] using congrFun (congrFun (h1 τ) a) b
+  · simpa [up, hba] using congrFun (congrFun (h2 τ) a) b
 
 theorem lu_injOn : Set.InjOn (lu (ι := ι) (r := r)) (sS ι r) := by
   intro w hw w' hw' h
@@ -176,7 +167,7 @@ theorem BC_subset_image : BC ι r ⊆ lu '' sS ι r := by
   refine ⟨fun i => if i.2.2 < i.2.1 then N i.1 i.2.1 i.2.2 else U i.1 i.2.1 i.2.2, ?_, ?_⟩
   · intro τ b
     show (if b < b then N τ b b else U τ b b) ≠ 0
-    rw [if_neg (lt_irrefl b)]
+    rw [ite_eq_right (lt_irrefl b)]
     intro h0
     have hdet : (U τ).det = ∏ b, U τ b b := Matrix.det_of_upperTriangular (hU τ)
     exact hUd τ (hdet ▸ Finset.prod_eq_zero (Finset.mem_univ b) h0)

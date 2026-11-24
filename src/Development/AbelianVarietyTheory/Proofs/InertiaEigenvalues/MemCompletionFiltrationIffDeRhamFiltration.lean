@@ -350,16 +350,14 @@ private theorem gen {l : ℕ} [Fact l.Prime] {a e : ℕ} [NeZero a] [NeZero e] {
       · rw [Pi.smul_apply, Pi.single_eq_same, smul_eq_mul, mul_one]
       · intro j _ hj
         rw [Pi.smul_apply, Pi.single_eq_of_ne hj.symm, smul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
 
     rw [h2, map_sum, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [jB.map_smul]
     exact hact _ _ (UpperTheory.KN.crisIncl_iB_eq_deRhamIncl_iD l a e O K t ϖ C _) _
 
-  simp only [h1, hco, map_sum, map_mul, AddMonoidHom.finsetSum_apply, hmul]
-  exact Finset.sum_comm
+  simpa only [h1, hco, map_sum, map_mul, AddMonoidHom.finsetSum_apply, hmul] using Finset.sum_comm
 
 theorem _root_.GlobalTheory.T.bdR_image_bcris_eq_ainfHat_coordinates : GlobalTheory.Published.FontaineBcris → ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (ϖ : PiSys l e) (LL : FinExt l) [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a], l ≠ 2 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod ↥(OL LL) ↥LL.1 l e a ι) (T : QLat LL) (jB : (ι → OB l ↥(OL LL)) ≃ₗ[OB l ↥(OL LL)] TW (OB l ↥(OL LL)) T) (Pl : LocPrime l) (AI : LocAinf l Pl) (Td : LocTied l Pl AI) (X : TW (OB l ↥(OL LL)) T →+ T.V ⊗[ℚ_[l]] Pl.R.BdR), (∀ (o : ↥(OL LL)) (b : Per.Bcris l) (x : ↥T.L.T), X ((o ⊗ₜ[ℤ_[l]] b) ⊗ₜ[↥(OL LL)] x) = ((o : ↥LL.1) • (x : T.V)) ⊗ₜ[ℚ_[l]] GlobalTheory.BKGal.JumpDR.cB Td b) → ∀ (A : OD l ↥(OL LL) →+ (T.V ⊗[ℚ_[l]] Pl.R.BdR →+ T.V ⊗[ℚ_[l]] Pl.R.BdR)), (∀ (o : ↥(OL LL)) (b : Per.BdRp l) (v : T.V) (c : Pl.R.BdR), A (o ⊗ₜ[ℤ_[l]] b) (v ⊗ₜ[ℚ_[l]] c) = ((o : ↥LL.1) • v) ⊗ₜ[ℚ_[l]] (GlobalTheory.BKGal.JumpDR.cD Td b * c)) → ∀ (n : ℕ) (s : Fin n → ZMod a → Ahat ↥(OL LL) ↥LL.1 l e) (m : Fin n → P.MMl) (c : ZMod a → ι → Ahat ↥(OL LL) ↥LL.1 l e), (∀ τ j, algebraMap (Ahat ↥(OL LL) ↥LL.1 l e) (AhatE ↥(OL LL) ↥LL.1 l e) (c τ j) = ∑ i, hat ↥(OL LL) l e (P.mxInv τ j i) * GlobalTheory.BKGal.JumpDR.hsum P s (fun k => (m k).1) τ i) → ∑ k, A (ϖ.iD (thetaW a LL) ↥LL.1 (s k)) (X (jB (toBcris (thetaW a LL) ϖ P (m k)))) = ∑ j, A (ϖ.iD (thetaW a LL) ↥LL.1 (fun τ => c τ j)) (X (jB (Pi.single j 1))) := by
   intro _ l _ a e _ _ ϖ LL _ _ _ ι _ _ P T jB Pl AI Td Y hY act hA n s m c hc
@@ -384,9 +382,7 @@ theorem _root_.UpperTheory.KN.crisComparison_ainf_eq_deRhamComparison :
     ∀ (l : ℕ) [Fact l.Prime] (Pl : LocPrime l) (AI : LocAinf l Pl) (Td : LocTied l Pl AI) (w : Ainf l), GlobalTheory.BKGal.JumpDR.cB Td (acrisToBcris l (ainfToAcris l w)) = GlobalTheory.BKGal.JumpDR.cD Td (ainfToBdRp l w) := by
   intro l _ Pl AI Td w
   refine Td.eD.injective ?_
-  have h := GlobalTheory.CrisIncl.incl_aB l _ Td.incl w
-  refine Eq.trans h ?_
-  exact (Td.eD.apply_symm_apply _).symm
+  exact Eq.trans (GlobalTheory.CrisIncl.incl_aB l _ Td.incl w) (Td.eD.apply_symm_apply _).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CyclotomicBounds.DeRhamLattices.CrisComparisonAinfEqDeRhamComparison =====
@@ -469,8 +465,7 @@ private theorem sum_through_tensor_basis {O A B M V ι κ : Type} [CommRing O] [
   rw [e1, e2, map_sum] at h
   have h2 := congrArg X h
 
-  simp only [map_sum, map_smul, hF] at h2
-  exact h2
+  simpa only [map_sum, map_smul, hF] using h2
 
 theorem _root_.UpperTheory.KN.crisComparison_transfer_basis_coordinates :
     ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (ϖ : PiSys l e) (LL : FinExt l) [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a] (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod ↥(OL LL) ↥LL.1 l e a ι) (T : QLat LL) (I : Ident (thetaW a LL) ϖ P T) (jB : (ι → OB l ↥(OL LL)) ≃ₗ[OB l ↥(OL LL)] TW (OB l ↥(OL LL)) T) (Pl : LocPrime l) (AI : LocAinf l Pl) (Td : LocTied l Pl AI), IsCrisCmp I jB → ∀ (X : TW (OB l ↥(OL LL)) T →+ T.V ⊗[ℚ_[l]] Pl.R.BdR), (∀ (o : ↥(OL LL)) (b : Per.Bcris l) (x : ↥T.L.T), X ((o ⊗ₜ[ℤ_[l]] b) ⊗ₜ[↥(OL LL)] x) = ((o : ↥LL.1) • (x : T.V)) ⊗ₜ[ℚ_[l]] GlobalTheory.BKGal.JumpDR.cB Td b) → ∀ (act : OD l ↥(OL LL) →+ (T.V ⊗[ℚ_[l]] Pl.R.BdR →+ T.V ⊗[ℚ_[l]] Pl.R.BdR)), (∀ (o : ↥(OL LL)) (b : Per.BdRp l) (v : T.V) (c : Pl.R.BdR), act (o ⊗ₜ[ℤ_[l]] b) (v ⊗ₜ[ℚ_[l]] c) = ((o : ↥LL.1) • v) ⊗ₜ[ℚ_[l]] (GlobalTheory.BKGal.JumpDR.cD Td b * c)) → ∀ (κ : Type) [Fintype κ] (c : ι → OA l ↥(OL LL)) (r : κ → OA l ↥(OL LL)) (x : κ → ↥T.L.T), I.j (inclL (thetaW a LL) ϖ P c) = TWincl (inclO l ↥(OL LL)) T (∑ k, r k ⊗ₜ[↥(OL LL)] x k) → ∑ j, act (toOD l ↥(OL LL) (c j)) (X (jB (Pi.single j 1))) = ∑ k, act (toOD l ↥(OL LL) (r k)) (((x k : ↥T.L.T) : T.V) ⊗ₜ[ℚ_[l]] (1 : Pl.R.BdR)) := by
@@ -536,8 +531,7 @@ theorem _root_.UpperTheory.KN.inclL_eisensteinPow_phiInv_eq_single : ∀ (l : �
     refine congrArg _ (funext fun τ => Subtype.ext ?_)
     rw [Finset.sum_apply, AddSubmonoidClass.coe_finsetSum]
     have h1 := key i' i' τ
-    rw [Matrix.one_apply_eq, mul_one] at h1
-    exact h1
+    rwa [Matrix.one_apply_eq, mul_one] at h1
   · have hz : ∀ F : ZMod a → invE l e (A ↥(OL LL) ↥LL.1), (∀ τ, ((F τ : invE l e (A ↥(OL LL) ↥LL.1)) : PowerSeries ↥LL.1) = 0) →
         ϖ.iW (thetaW a LL) ↥LL.1 F = 0 := fun F hF => by
       have hF0 : F = 0 := funext fun τ => Subtype.ext (hF τ)
@@ -546,8 +540,7 @@ theorem _root_.UpperTheory.KN.inclL_eisensteinPow_phiInv_eq_single : ∀ (l : �
     refine hz _ fun τ => ?_
     rw [Finset.sum_apply, AddSubmonoidClass.coe_finsetSum]
     have h1 := key i' i τ
-    rw [Matrix.one_apply_ne h, mul_zero] at h1
-    exact h1
+    rwa [Matrix.one_apply_ne h, mul_zero] at h1
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CyclotomicBounds.DeRhamLattices.InclLEisensteinPowPhiInvEqSingle =====
@@ -580,8 +573,7 @@ private theorem ennreal_volume_ratio_step_cancel {R W ι : Type} [CommRing R] [A
   obtain ⟨u, rfl⟩ := hu
   have h2 := congrArg (act ((u⁻¹ : Rˣ) : R)) h
 
-  simp only [map_sum, hy, hz, ← hmul, ← mul_assoc, Units.inv_mul, one_mul] at h2
-  exact h2
+  simpa only [map_sum, hy, hz, ← hmul, ← mul_assoc, Units.inv_mul, one_mul] using h2
 
 private theorem tame_lattice_inclusion (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O]
     [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K]
@@ -724,8 +716,7 @@ private theorem UpperTheory.KN.basis_change_matrices_algebra_map {O R R' M ι : 
 
     simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul,
     Module.Basis.repr_self, Finsupp.single_apply] at h3
-    simp only [Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply]
-    exact h3.symm
+    simpa only [Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply] using h3.symm
   · intro i k
     have e1 : (fun j => f ((Pi.single i u : ι → R) j)) = f u • (Pi.single i 1 : ι → R') := by
       funext j
@@ -916,7 +907,7 @@ theorem linIndep_of_mutual_span_of_indep :
     have h0 : ∑ k'', ((Matrix.vecMul (Q k) (Matrix.of P)) k'' - (1 : Matrix ι ι R) k k'') • b k''
         = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, ← expand, ← hQ, Matrix.one_apply,
-        ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
+        ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
     have := hb _ h0 k'
     rw [sub_eq_zero] at this
     rw [← this, Matrix.mul_apply]
@@ -1006,10 +997,8 @@ theorem GlobalTheory.BKGal.JumpDR.BasisGlue.exists_basis {R W : Type} [CommRing 
       rw [hcomm, hf i]
   refine ⟨fun i => ginv^[β] (g i), h1, h2, ?_⟩
   refine _root_.GlobalTheory.linIndep_of_mutual_span_of_indep R W act hmul hone ι b _ hbi ?_ ?_
-  · intro i
-    exact (hb0 _).1 ((h2 _).2 ⟨Pi.single i 1, (hsingle (fun i => ginv^[β] (g i)) i).symm⟩)
-  · intro k
-    exact (h2 _).1 ((hb0 _).2 ⟨Pi.single k 1, (hsingle b k).symm⟩)
+  · exact fun i => (hb0 _).1 ((h2 _).2 ⟨Pi.single i 1, (hsingle (fun i => ginv^[β] (g i)) i).symm⟩)
+  · exact fun k => (h2 _).1 ((hb0 _).2 ⟨Pi.single k 1, (hsingle b k).symm⟩)
 
 
 private theorem mulVec_smul_single_one_apply {R ι : Type} [CommSemiring R] [Fintype ι]
@@ -1034,8 +1023,7 @@ theorem GlobalTheory.BKGal.JumpDR.basis_images : GlobalTheory.Published.Fontaine
   have hLM1 : ∀ v ∈ P.M, E ↥LL.1 l e ^ (β0 + β) • v ∈ P.L := by
     intro v hv
     have := P.L.smul_mem (⟨_, pow_mem (E_mem l e _) β⟩ : A ↥(OL LL) ↥LL.1) (hBounds.2 v hv)
-    rw [pow_add, mul_comm, mul_smul]
-    exact this
+    rwa [pow_add, mul_comm, mul_smul]
   have hβ1 : ∀ τ j i, E ↥LL.1 l e ^ (β0 + β) * P.mxInv τ j i ∈ A ↥(OL LL) ↥LL.1 := by
     intro τ j i
     let v : ι → (↥LL.1)⟦X⟧ := Pi.single i 1

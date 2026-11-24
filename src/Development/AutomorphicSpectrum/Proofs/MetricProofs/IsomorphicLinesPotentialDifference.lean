@@ -92,8 +92,7 @@ theorem locUnif {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) 
   have hz : c x ∈ c.target ∩ c.symm ⁻¹' (bdry s)ᶜ := by
     refine ⟨c.map_source hj, ?_⟩
     show c.symm (c x) ∈ (bdry s)ᶜ
-    rw [c.left_inv hj]
-    exact hx
+    rwa [c.left_inv hj]
   obtain ⟨r, hr, hball⟩ := Metric.isOpen_iff.mp hO' (c x) hz
   have hsub : Metric.closedBall (c x) (r / 2) ⊆ c.target ∩ c.symm ⁻¹' (bdry s)ᶜ :=
     (Metric.closedBall_subset_ball (half_lt_self hr)).trans hball
@@ -106,8 +105,7 @@ theorem locUnif {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) 
     have e : c.symm (c y) = y := c.left_inv hy.1
     have := ht (c y) (Metric.ball_subset_closedBall hy.2)
     simp only [Function.comp] at this
-    rw [← hc, e] at this
-    exact this
+    rwa [← hc, e] at this
 
 theorem mInt_zero {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) (Φ : Fin e → LocPot X) :
     mInt A Φ (fun _ => 0) = 0 := by
@@ -160,13 +158,12 @@ theorem PositivityTheory.Xgp.t_an_two : ConvergenceSignedStatement → ∀ (e : 
   have hcont : ∀ t, ContinuousOn (gT t) (bdry S.s)ᶜ := by
     intro t
     by_cases hp : 0 < t ∧ t ≤ S.t₀
-    · have e1 : gT t = f t := if_pos hp
+    · have e1 : gT t = f t := ite_eq_left hp
       rw [e1]
       have c1 := projLine_continuous_of_smooth S.A ((S.reg (Sum.inl a)).2.2 t hp.1 hp.2).1
       have c2 := projLine_continuous_of_smooth S.A ((S.reg (Sum.inr a)).2.2 t hp.1 hp.2).1
-      have c3 := projLine_continuous_of_smooth S.A (hd a)
-      exact ((c1.sub c2).sub c3).continuousOn
-    · have e1 : gT t = 0 := if_neg hp
+      exact ((c1.sub c2).sub (projLine_continuous_of_smooth S.A (hd a))).continuousOn
+    · have e1 : gT t = 0 := ite_eq_right hp
       rw [e1]
       exact continuousOn_const
   have hbound : ∀ t, ∀ y ∉ bdry S.s, |gT t y| ≤ C₆ * Real.log (rW S.L S.s y) := by
@@ -175,7 +172,7 @@ theorem PositivityTheory.Xgp.t_an_two : ConvergenceSignedStatement → ∀ (e : 
     have hC6 : 0 ≤ C₆ := by positivity
     show |gT t y| ≤ C₆ * L y
     by_cases hp : 0 < t ∧ t ≤ S.t₀
-    · have e1 : gT t = f t := if_pos hp
+    · have e1 : gT t = f t := ite_eq_left hp
       rw [e1]
       obtain ⟨l1, u1⟩ := abs_le.mp (hphT (Sum.inl a) t hp.1 hp.2 y hy)
       obtain ⟨l2, u2⟩ := abs_le.mp (hphT (Sum.inr a) t hp.1 hp.2 y hy)
@@ -197,7 +194,7 @@ theorem PositivityTheory.Xgp.t_an_two : ConvergenceSignedStatement → ∀ (e : 
       · show S.phT (Sum.inl a) t y - S.phT (Sum.inr a) t y - d a y ≤
           2 * (|S.C| * L y) + 2 * (|S.C₅| * L y) + |M| * L y
         linarith
-    · have e1 : gT t = 0 := if_neg hp
+    · have e1 : gT t = 0 := ite_eq_right hp
       rw [e1, Pi.zero_apply, abs_zero]
       exact mul_nonneg hC6 (zero_le_one.trans hLy)
   have hO : IsOpen (bdry S.s)ᶜ := (ReciprocityTheory.AnForm.P.LeviFormBoundaryTopology.isClosed_bdry S.sec).isOpen_compl
@@ -210,7 +207,7 @@ theorem PositivityTheory.Xgp.t_an_two : ConvergenceSignedStatement → ∀ (e : 
       (PositivityTheory.Xgp.an_two.locUnif S.A S.s hO _ _ (S.c2 (Sum.inr a))) (ε / 2) (half_pos hε) x hx
     refine ⟨t1 ∩ t2 ∩ (bdry S.s)ᶜ, Filter.inter_mem (Filter.inter_mem ht1 ht2) self_mem_nhdsWithin, ?_⟩
     filter_upwards [ev1, ev2, Ioo_mem_nhdsGT ht0] with t e1 e2 htt y hy
-    have e3 : gT t = f t := if_pos ⟨htt.1, htt.2.le⟩
+    have e3 : gT t = f t := ite_eq_left ⟨htt.1, htt.2.le⟩
     have hdy := hdiff a y hy.2
     have d1 := e1 y hy.1.1
     have d2 := e2 y hy.1.2
@@ -232,7 +229,7 @@ theorem PositivityTheory.Xgp.t_an_two : ConvergenceSignedStatement → ∀ (e : 
   rw [hz] at key
   refine key.congr' ?_
   filter_upwards [Ioo_mem_nhdsGT ht0] with t ht
-  have e1 : gT t = f t := if_pos ⟨ht.1, ht.2.le⟩
+  have e1 : gT t = f t := ite_eq_left ⟨ht.1, ht.2.le⟩
   rw [e1]
   rfl
 end -- clump:auto
@@ -303,8 +300,7 @@ theorem samePot_line {D : ℕ} {σ : Type} {S : AnSys D σ} {P : Ideal (MRing ι
   intro x _
   obtain ⟨V, hV, hxV, G, hG, hVG⟩ := Re.ref_pot c x (Set.mem_univ x)
   refine ⟨V ∩ Re.R.U x, hV.inter (Re.R.isOpen_U x), ⟨hxV, Re.R.mem_U x⟩, G, ?_, ?_⟩
-  · intro j
-    exact (hG j).mono fun y hy => ⟨hy.1, hy.2.1⟩
+  · exact fun j => (hG j).mono fun y hy => ⟨hy.1, hy.2.1⟩
   · rintro y ⟨hyV, hyU⟩
     have hm := Re.R.mem x y hyU
     have ho : SameOrbit (Re.R.lift y y) (Re.R.lift x y) := Re.R.compat y x y ⟨Re.R.mem_U y, hyU⟩
@@ -358,8 +354,7 @@ theorem step_eq (hR : RatRStatement) (hB : ResBridgeStatement) (hG : GoodProjExi
   have hl₁ := Re.line_smooth a₁ t h0 h1
   have hl₂ := Re.line_smooth a₂ t h0 h1
   have hIso : IsLineIso P (Re.line a₁ t).a (Re.line a₂ t).a f g := by
-    rw [Re.line_deg, Re.line_deg]
-    exact hiso
+    rwa [Re.line_deg, Re.line_deg]
   obtain ⟨w, hw, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.defect_exists_smooth K ι P Re.J D Re.R (Re.line a₁ t) (Re.line a₂ t) f g Re.arith.2.1 hIso hl₁ hl₂
   have h := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.OneSlot.inter_sub_eq_neg_mInt hR hB hG hA K ι (II K ι) hI P Re.J D Re.R (fun j => Re.line (u j) t) (Re.line a₁ t)
     (Re.line a₂ t) f g w Re.arith (fun j => Re.line_smooth _ t h0 h1) hl₁ hl₂ hIso hw

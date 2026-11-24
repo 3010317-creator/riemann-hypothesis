@@ -207,18 +207,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem sdc_exists_int_smul_mem (L : Submodule (𝓞 E) (Fin n → E))
     (hL : Submodule.span E (L : Set (Fin n → E)) = ⊤) (x : Fin n → E) :
-    ∃ y : ℤ, y ≠ 0 ∧ y • x ∈ L := by
-  classical
-  have hx : x ∈ Submodule.span E (L : Set (Fin n → E)) := hL ▸ Submodule.mem_top
-  obtain ⟨m, f, g, rfl⟩ := Submodule.mem_span_set'.1 hx
-  obtain ⟨y, hy, hint⟩ := exists_integral_multiples ℤ ℚ (Finset.univ.image f)
-  refine ⟨y, hy, ?_⟩
-  rw [Finset.smul_sum]
-  refine Submodule.sum_mem _ fun i _ => ?_
-  have hi : IsIntegral ℤ (y • f i) := hint _ (Finset.mem_image_of_mem _ (Finset.mem_univ i))
-  convert L.smul_mem (⟨y • f i, hi⟩ : 𝓞 E) (g i).2 using 1
-  rw [← smul_assoc]
-  rfl
+    ∃ y : ℤ, y ≠ 0 ∧ y • x ∈ L := PI.OmLocU.basInt_smul_mem L hL x
 
 theorem exists_int_smul_mem_all (L : Submodule (𝓞 E) (Fin n → E))
     (hL : Submodule.span E (L : Set (Fin n → E)) = ⊤) {ι : Type} [Fintype ι] (w : ι → Fin n → E) :
@@ -232,11 +221,7 @@ theorem exists_int_smul_mem_all (L : Submodule (𝓞 E) (Fin n → E))
 theorem ratV_single (i : Fin n) (e : E) :
     ratV (F := F) (Fv F v) (Pi.single i e : Fin n → E) =
       (Pi.single i (inclR (F := F) (Fv F v) e) : Fin n → Fv F v ⊗[F] E) := by
-  funext j
-  by_cases h : j = i
-  · subst h
-    simp [ratV]
-  · simp [ratV, Pi.single_eq_of_ne h]
+  exact PI.OmLocU.basRatV_single v i e
 
 theorem ratV_mem_latLoc {Λ : Set (Fin n → E)} {x : Fin n → E} (hx : x ∈ Λ) :
     ratV (F := F) (Fv F v) x ∈ latLoc (E := E) v Λ :=
@@ -338,12 +323,12 @@ theorem hm_apply_ne {a : ℕ} (hinv : ∀ y, σ (σ y) = y) {k l i j : Fin a} (c
     (h1 : ¬(k = i ∧ l = j)) (h2 : ¬(l = i ∧ k = j)) :
     (hm σ v hinv k l c : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) i j = 0 := by
   show (Matrix.single k l c + Matrix.single l k (sigR (Fv F v) σ c)) i j = 0
-  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, if_neg h1, if_neg h2, add_zero]
+  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, ite_eq_right h1, ite_eq_right h2, add_zero]
 
 theorem hd_apply_ne {a : ℕ} {k i j : Fin a} (h : ¬(k = i ∧ k = j)) :
     (hd σ v k : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) i j = 0 := by
   show Matrix.single k k (1 : Fv F v ⊗[F] E) i j = 0
-  rw [Matrix.single_apply, if_neg h]
+  rw [Matrix.single_apply, ite_eq_right h]
 
 def hb {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v ⊗[F] E) (p : Fin a × Fin a) : HermR (Fv F v) σ a :=
   if p.1 < p.2 then hm σ v hinv p.1 p.2 (β 0) else if p.2 < p.1 then hm σ v hinv p.2 p.1 (β 1) else hd σ v p.1
@@ -363,41 +348,41 @@ theorem hb_zero {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v �
 theorem hermitian_basis_above_first {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v ⊗[F] E) {i j : Fin a} (h : i < j) :
     (hb σ v hinv β (i, j) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) i j = β 0 := by
   unfold hb
-  rw [if_pos h]
+  rw [ite_eq_left h]
   show (Matrix.single i j (β 0) + Matrix.single j i (sigR (Fv F v) σ (β 0))) i j = β 0
-  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, if_pos ⟨rfl, rfl⟩,
-    if_neg (fun e => h.ne e.2), add_zero]
+  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, ite_eq_left ⟨rfl, rfl⟩,
+    ite_eq_right (fun e => h.ne e.2), add_zero]
 
 theorem hermitian_basis_above_second {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v ⊗[F] E) {i j : Fin a} (h : i < j) :
     (hb σ v hinv β (j, i) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) i j = β 1 := by
   unfold hb
-  rw [if_neg (not_lt.2 h.le), if_pos h]
+  rw [ite_eq_right (not_lt.2 h.le), ite_eq_left h]
   show (Matrix.single i j (β 1) + Matrix.single j i (sigR (Fv F v) σ (β 1))) i j = β 1
-  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, if_pos ⟨rfl, rfl⟩,
-    if_neg (fun e => h.ne e.2), add_zero]
+  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, ite_eq_left ⟨rfl, rfl⟩,
+    ite_eq_right (fun e => h.ne e.2), add_zero]
 
 theorem hermitian_basis_below_first {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v ⊗[F] E) {i j : Fin a} (h : j < i) :
     (hb σ v hinv β (i, j) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) i j = sigR (Fv F v) σ (β 1) := by
   unfold hb
-  rw [if_neg (not_lt.2 h.le), if_pos h]
+  rw [ite_eq_right (not_lt.2 h.le), ite_eq_left h]
   show (Matrix.single j i (β 1) + Matrix.single i j (sigR (Fv F v) σ (β 1))) i j = sigR (Fv F v) σ (β 1)
-  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, if_neg (fun e => h.ne e.1),
-    if_pos ⟨rfl, rfl⟩, zero_add]
+  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, ite_eq_right (fun e => h.ne e.1),
+    ite_eq_left ⟨rfl, rfl⟩, zero_add]
 
 theorem hermitian_basis_below_second {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v ⊗[F] E) {i j : Fin a} (h : j < i) :
     (hb σ v hinv β (j, i) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) i j = sigR (Fv F v) σ (β 0) := by
   unfold hb
-  rw [if_pos h]
+  rw [ite_eq_left h]
   show (Matrix.single j i (β 0) + Matrix.single i j (sigR (Fv F v) σ (β 0))) i j = sigR (Fv F v) σ (β 0)
-  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, if_neg (fun e => h.ne e.1),
-    if_pos ⟨rfl, rfl⟩, zero_add]
+  rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply, ite_eq_right (fun e => h.ne e.1),
+    ite_eq_left ⟨rfl, rfl⟩, zero_add]
 
 theorem hb_eq {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v ⊗[F] E) (i : Fin a) :
     (hb σ v hinv β (i, i) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) i i = 1 := by
   unfold hb
-  rw [if_neg (lt_irrefl i), if_neg (lt_irrefl i)]
+  rw [ite_eq_right (lt_irrefl i), ite_eq_right (lt_irrefl i)]
   show Matrix.single i i (1 : Fv F v ⊗[F] E) i i = 1
-  rw [Matrix.single_apply, if_pos ⟨rfl, rfl⟩]
+  rw [Matrix.single_apply, ite_eq_left ⟨rfl, rfl⟩]
 
 theorem coe_sum_hb {a : ℕ} (hinv : ∀ y, σ (σ y) = y) (β : Fin 2 → Fv F v ⊗[F] E) (c : Fin a × Fin a → Fv F v)
     (i j : Fin a) :

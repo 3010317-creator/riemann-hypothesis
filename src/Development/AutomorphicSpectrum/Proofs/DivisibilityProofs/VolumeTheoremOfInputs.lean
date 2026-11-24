@@ -464,8 +464,7 @@ theorem tower_I1_of_reference_linked : PB.Coefficients → PB.AgreementPos → P
             Finset.single_le_sum (f := fun m => |(Pfix c).coeff m|) (fun _ _ => abs_nonneg _) hm
         _ ≤ A := Finset.single_le_sum (f := fun c => ∑ m ∈ (Pfix c).support, |(Pfix c).coeff m|)
             (fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _) (Finset.mem_univ c)
-    · rw [notMem_support_iff.1 hm, abs_zero]
-      exact hA0
+    · rwa [notMem_support_iff.1 hm, abs_zero]
   have hl2 : 0 < Real.log 2 := Real.log_pos one_lt_two
   have hS0 : 0 ≤ ∑ c, |C₂ c| * |Cl| := Finset.sum_nonneg fun _ _ => by positivity
   unfold RootTower.I1
@@ -624,8 +623,7 @@ theorem slX_lower_of_stokesAt (hZ : ZhangLowerX.Statement) {II : IntersectionSys
           geomDeg (mCoordIdeal D.y) (MUc X.H X.S' B p q t') D.n := by
       rw [pow_succ]
       field_simp
-    rw [e]
-    exact hz
+    rwa [e]
   have h6 := hS a hyp
   have hj' : 1 ≤ D.j' := by
     have := D.j_le
@@ -719,8 +717,7 @@ private theorem cross_ne_zero_of_linearIndependent (a b : Fin 2 → ℤ) (h : Li
 private theorem card_le_one_of_linearIndependent_cross_zero (I : Submodule ℤ (Fin 2 → ℤ))
     (hI : ∀ v ∈ I, ∀ w ∈ I, v 0 * w 1 - v 1 * w 0 = 0) (ρ : ℕ) (v : Fin ρ → (Fin 2 → ℤ))
     (hv : ∀ a, v a ∈ I) (hli : LinearIndependent ℤ v) : ρ ≤ 1 := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hli2 : LinearIndependent ℤ ![v ⟨0, by omega⟩, v ⟨1, h⟩] := by
     have h3 := hli.comp (fun i : Fin 2 => (⟨i.1, Nat.lt_of_lt_of_le i.2 h⟩ : Fin ρ))
       (fun i j hij => Fin.ext (by simpa using congrArg Fin.val hij))
@@ -863,8 +860,7 @@ private theorem corrected_weight_regularization_lemma_5 {K : Type} [Fintype K] {
             have h7 : w 0 • e0 = w := by
               funext i
               fin_cases i <;> simp [e0, hw1]
-            rw [h7]
-            exact hwI
+            rwa [h7]
         have hr := relIndex_span_le_natAbs_of_cross_zero I (fun a ha b hb => by rw [← hform]; exact hiso a ha b hb) w hwI hw1
         have hrpos : (0 : ℝ) < ((Submodule.span ℤ {w}).toAddSubgroup.relIndex I.toAddSubgroup : ℝ) := by
           exact_mod_cast Nat.pos_of_ne_zero hrel
@@ -890,8 +886,7 @@ private theorem corrected_weight_regularization_lemma_5 {K : Type} [Fintype K] {
         have h10 := Real.log_le_log (Real.exp_pos _) hkey
         rw [Real.log_exp] at h10
         linarith
-      · rw [Real.log_one, neg_zero]
-        exact hu
+      · rwa [Real.log_one, neg_zero]
   unfold CuspData.cuspWeight
   rw [IsGreatest.csSup_eq ⟨hmem, hub⟩, max_eq_right hu]
 
@@ -1032,8 +1027,7 @@ private theorem exists_cuspData_cuspWeight_eq_of_torus_invariant (K : Type) [Fin
           have := hC z
           positivity
         apply mul_pos hC1
-        by_contra hle
-        push_neg at hle
+        by_contra! hle
         have h1 : ((v 0 : ℤ) : ℝ) ^ 2 = 0 := by nlinarith [sq_nonneg ((v 0 : ℤ) : ℝ), sq_nonneg ((v 1 : ℤ) : ℝ)]
         have h2 : ((v 1 : ℤ) : ℝ) ^ 2 = 0 := by nlinarith [sq_nonneg ((v 0 : ℤ) : ℝ), sq_nonneg ((v 1 : ℤ) : ℝ)]
         have e0' : v 0 = 0 := by exact_mod_cast (pow_eq_zero_iff two_ne_zero).mp h1
@@ -1210,16 +1204,7 @@ theorem genPt_eq_of_factor {X : Scheme.{0}} {Ω Ω₁ Ω₂ : Type} [Field Ω] [
     {a : Spec (CommRingCat.of Ω) ⟶ X} {ξ₁ : Spec (CommRingCat.of Ω₁) ⟶ X} {ξ₂ : Spec (CommRingCat.of Ω₂) ⟶ X}
     {g₁ : Ω₁ →+* Ω} {g₂ : Ω₂ →+* Ω}
     (h₁ : a = Spec.map (CommRingCat.ofHom g₁) ≫ ξ₁) (h₂ : a = Spec.map (CommRingCat.ofHom g₂) ≫ ξ₂) :
-    genPt ξ₁ = genPt ξ₂ := by
-  have e₁ : ∀ w : Spec (CommRingCat.of Ω), genPt ξ₁ = a w := by
-    intro w
-    rw [h₁, Scheme.Hom.comp_apply]
-    exact congrArg ξ₁ (Subsingleton.elim (α := PrimeSpectrum Ω₁) _ _)
-  have e₂ : ∀ w : Spec (CommRingCat.of Ω), genPt ξ₂ = a w := by
-    intro w
-    rw [h₂, Scheme.Hom.comp_apply]
-    exact congrArg ξ₂ (Subsingleton.elim (α := PrimeSpectrum Ω₂) _ _)
-  exact (e₁ (IsLocalRing.closedPoint Ω)).trans (e₂ (IsLocalRing.closedPoint Ω)).symm
+    genPt ξ₁ = genPt ξ₂ := GlobalTheory.CompanionTheory.Ar.TowerPropA.genPt_eq_of_factor h₁ h₂
 
 theorem base_setting_of_good_origin : ∀ Ch Cu : ℝ, NineGeoU Ch Cu → Out.WeilSt → PB.AgreementPos → PB.Proportional → Cmp.CmpSt → Top.Given → PtsIntegrableStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (D.p + D.q)) (o : Top.GoodOrigin Y T) (II : IntersectionSystem), Top.IsGlobal Xo l c Y → o.Extra → IsFullIntersectionSystem II → 1 ≤ D.p → 1 ≤ D.q → D.q ≤ D.p → T.bad.card ≤ 4 * Fintype.card (CMType H) * (D.p + D.q) ^ 2 → ∀ B : ℕ, 4 * Fintype.card (CMType H) * (D.p + D.q) ^ 2 ≤ B → ∀ a, T.HasBaseDegreeSettingStrict II Ch Cu (hostRd E) (hostLval H) B a := by
   intro Ch Cu hNine hWeil hAgr hProp hCmp hGiven hPts E _ _ _ _ H D Xo l c Y _ T o II hGlob hExtra hFull hp hq hqp
@@ -1301,11 +1286,7 @@ namespace PositivityTheory.Xgp.vert_deg
 
 theorem isC2At_of_isPotential {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) {Q : LocPot X}
     (h : IsPotential A Q) (x : X) : IsTwiceDifferentiableAt A Q x := by
-  intro j hj
-  refine potSmoothAt A Q h x j ⟨(A.chart j).map_source hj, ?_⟩
-  show (A.chart j).symm (A.chart j x) ∈ Q.U x
-  rw [(A.chart j).left_inv hj]
-  exact Q.mem_U x
+  exact PositivityTheory.Xgp.re_pot.isC2At_of_isPotential A h x
 
 theorem isNull_zeros {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {P J : Ideal (MRing ι)} {D : ℕ}
     (R : AnLogRes P J D) (hP : ReciprocityTheory.ChartRestriction.G.Geo.IsArithVar P (D + 1)) {s : MRing ι} {a : K → ℕ} (hs : IsMultiHomog s a)
@@ -1493,8 +1474,8 @@ theorem abs_sub_le_telescope (II : IntersectionSystem) (hII : IsFullIntersection
         have hne' : ((τ i.castSucc : Fin (D + 1)) : ℕ) ≠ k := fun e => hne (Fin.ext e)
         simp only [Function.comp, Fin.snoc_castSucc, E, X]
         by_cases h1 : ((τ i.castSucc : Fin (D + 1)) : ℕ) < k
-        · rw [if_pos h1, if_pos (by omega)]
-        · rw [if_neg h1, if_neg (by omega)]
+        · rw [ite_eq_left h1, ite_eq_left (by omega)]
+        · rw [ite_eq_right h1, ite_eq_right (by omega)]
     rw [← hsym P _ (X k) τ hP (hX k), ← hsym P _ (X (k + 1)) τ hP (hX (k + 1)), e1, e2]
     refine h kk E fun i => ⟨τ i.castSucc, ?_⟩
     simp only [E, X]
@@ -1564,8 +1545,7 @@ theorem samePot_congr {P J : Ideal (MRing ι)} {D : ℕ} (R : AnLogRes P J D) {Y
   refine ⟨V, o, m, G, h, fun y hy => ?_⟩
   have := e y hy
   simp only [LocPot.pullback] at this ⊢
-  rw [hW]
-  exact this
+  rwa [hW]
 
 variable {D : ℕ} {σ : Type}
 

@@ -60,8 +60,7 @@ theorem lev_zero_of_kHighest : ∀ (M : Type) [NormedAddCommGroup M] [InnerProdu
     · simp [Real.sq_sqrt h]
     · simp [Real.sqrt_eq_zero'.mpr h, h]
   refine ⟨⟨kSpan ε E w, hfin, ?_, mem_compact_span_self w, ?_⟩, ?_⟩
-  · intro a b hab x hx
-    exact compact_span_stable w a b hab x hx
+  · exact fun a b hab x hx => compact_span_stable w a b hab x hx
   · intro x hx
     rw [compact_casimir_span_holds M n ε E (lowK ε μ) w hk hhi x hx, inner_smul_right,
       inner_self_eq_norm_sq_to_K]
@@ -70,7 +69,6 @@ theorem lev_zero_of_kHighest : ∀ (M : Type) [NormedAddCommGroup M] [InnerProdu
     simp only [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
     congr 1
     norm_cast
-  · apply Submodule.subset_span
-    exact ⟨lowK ε μ, by simp, hhi.1⟩
+  · exact Submodule.subset_span ⟨lowK ε μ, by simp, hhi.1⟩
 
 end GlobalTheory

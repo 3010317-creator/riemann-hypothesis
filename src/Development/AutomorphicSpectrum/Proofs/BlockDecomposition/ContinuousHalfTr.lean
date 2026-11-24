@@ -286,8 +286,7 @@ theorem annihilator_eq : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal
       Finset.sum_congr rfl fun w _ => by rw [map_mul, Pi.mul_apply, heρ]; ring
     have e2 : algebraMap F (Af F) a * (algebraMap F (Af F) t * x.2) =
         algebraMap F (Af F) t * (algebraMap F (Af F) a * x.2) := mul_left_comm _ _ _
-    rw [e1, e2] at h
-    exact h
+    rwa [e1, e2] at h
   obtain ⟨c, hc1, hc2⟩ := core hF ρ hρ ψf hstd _ _ H
   refine ⟨a⁻¹ * c, ?_⟩
   have hx1 : x.1 = algebraMap F (Ainf F) (a⁻¹ * c) := by
@@ -364,8 +363,8 @@ theorem ann_gen (P : A → Prop) (hP : ∀ x : A, (∀ t : F, P (algebraMap F A 
     simp only [h2] at h1
     have h4 : ∑ l, B.repr z l * algebraMap F A (if l = k then t else 0) =
         algebraMap F A t * B.repr z k := by
-      rw [Finset.sum_eq_single k (fun l _ hl => by rw [if_neg hl, map_zero, mul_zero])
-        (fun hk => absurd (Finset.mem_univ k) hk), if_pos rfl, mul_comm]
+      rw [Finset.sum_eq_single k (fun l _ hl => by rw [ite_eq_right hl, map_zero, mul_zero])
+        (fun hk => absurd (Finset.mem_univ k) hk), ite_eq_left rfl, mul_comm]
     rwa [h4] at h1
   choose c hc using hak
   refine ⟨∑ k, c k • b k, ?_⟩
@@ -407,7 +406,7 @@ theorem adj_single' (a b : Fin r) (v : AE D) :
   by_cases h : a = l ∧ b = k
   · obtain ⟨rfl, rfl⟩ := h
     simp
-  · rw [if_neg h, if_neg (by tauto), map_zero]
+  · rw [ite_eq_right h, ite_eq_right (by tauto), map_zero]
 
 theorem hE_mem (i j : Fin r) (w : AE D) : hE i j w ∈ hermA D r := by
   change adj (hE i j w) = hE i j w
@@ -425,8 +424,8 @@ theorem rat_single' (a b : Fin r) (e : D.host.E) :
   ext k l
   simp only [rat, Matrix.map_apply, Matrix.single_apply]
   by_cases h : a = k ∧ b = l
-  · rw [if_pos h, if_pos h]
-  · rw [if_neg h, if_neg h, map_zero]
+  · rw [ite_eq_left h, ite_eq_left h]
+  · rw [ite_eq_right h, ite_eq_right h, map_zero]
 
 theorem hE_rat (i j : Fin r) (e : D.host.E) : hE i j (incA D e) ∈ ratMx D r r := by
   refine ⟨Matrix.single j i e + Matrix.single i j (star e), ?_⟩
@@ -498,8 +497,7 @@ theorem rat_of_chi {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ)
     refine ann_E hψ _ fun e => ?_
     have h1 := h ⟨⟨hE i j (incA D e), hE_mem _ _ _⟩, AddSubgroup.mem_comap.2 (hE_rat i j e)⟩
     have h2 : chi ψ (hE i j (incA D e)) z = ψ (halfTr (Matrix.trace (HMul.hMul (hE i j (incA D e)) z.1 : Mx D r r))) := rfl
-    rw [show chi ψ (hE i j (incA D e)) z = 1 from h1] at h2
-    rw [trace_hE_mul i j _ z.2, halfTr_add_cA] at h2
+    rw [show chi ψ (hE i j (incA D e)) z = 1 from h1, trace_hE_mul i j _ z.2, halfTr_add_cA] at h2
     exact h2.symm
   choose w hw using key
   refine AddSubgroup.mem_comap.2 ⟨Matrix.of w, ?_⟩
@@ -532,8 +530,7 @@ theorem exists_chi_ne {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F 
     rw [← hγ']
     show incA D (γ i j)⁻¹ * (x₀ • incA D e₀) * incA D (γ i j) = _
     rw [mul_comm, ← mul_assoc, ← map_mul, mul_inv_cancel₀ hij, map_one, one_mul]
-  rw [h2, map_smul, Formalism.IndefR.Fin.trace_incA, he₀, map_one, smul_eq_mul, mul_one]
-  exact hx₀
+  rwa [h2, map_smul, Formalism.IndefR.Fin.trace_incA, he₀, map_one, smul_eq_mul, mul_one]
 
 end GlobalTheory.CompanionTheory.HermPoisson
 end -- clump:auto

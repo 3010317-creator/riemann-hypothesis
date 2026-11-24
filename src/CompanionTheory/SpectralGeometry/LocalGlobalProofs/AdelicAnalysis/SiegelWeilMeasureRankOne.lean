@@ -493,8 +493,7 @@ theorem fibre_lintegral_eq_density {V X Y : Type}
   have hLB : L ⊆ B := hLO.trans hOB
 
   have hex : ∃ b₁ ∈ L, ∫⁻ v, w v ∂(fib b₁) < ∞ := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h1 : ∫⁻ v in g ⁻¹' L, w v ∂μ = ∫⁻ b in L, ∫⁻ v, w v ∂(fib b) ∂ν :=
       FibreDensity.lintegral_preimage hι hf hg hfib hLc hLB hw
     have h2 : ∫⁻ b in L, ∫⁻ v, w v ∂(fib b) ∂ν = ∞ := by
@@ -620,8 +619,7 @@ theorem fibre_rapid_eq_density : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     have e : g ⁻¹' B = {X | IsUnit (gramR (Ainf F) σ J X).det} := by
       ext X
       simp [hBdef, hgf]
-    rw [e]
-    exact hfib
+    rwa [e]
   obtain ⟨B₁, s, hB₁, hSB₁, hsc, hs1, hsS⟩ := _root_.GlobalTheory.CompanionTheory.SW.exists_local_section F E σ hσ (Ainf F) hLoc 1 S hS
   obtain ⟨κ, hκc, hκ0, -, hκ⟩ := _root_.GlobalTheory.CompanionTheory.SW.ScaleCont.fibre_scale_continuous F E σ hσ M J hJ (Ainf F) hLoc 1 μ ν m hμ hν hfib
   obtain ⟨-, hsz0, N, hN⟩ := _root_.GlobalTheory.CompanionTheory.SW.SizeInt.size_neg_pow_integrable F E σ hσ d b 1 M μ hμ

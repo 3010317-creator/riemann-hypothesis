@@ -95,8 +95,7 @@ theorem eq_zero_of_ae (μ : Measure (GA D V)) (𝓕 : Set (GA D V)) (hμ : μ.Is
   funext g
   by_contra hg
   have : g ∈ t := hg
-  rw [h5] at this
-  exact this
+  rwa [h5] at this
 
 theorem exists_vec (M : DSModel V S) (h : ∀ τ, M.sm τ ≠ ⊥) :
     ∃ v : M.Vec, ∏ τ, ⟪(v τ : M.H τ), (v τ : M.H τ)⟫_ℂ ≠ 0 := by
@@ -144,8 +143,7 @@ theorem re_pos_of_isMultIP (M : DSModel V S) (μ : Measure (GA D V)) (𝓕 : Set
   rw [e] at hi he
   have hi' : IntegrableOn (fun g => ‖T v g‖ ^ 2) 𝓕 μ := by
     have := hi.re
-    simp only [RCLike.re_to_complex, Complex.ofReal_re] at this
-    exact this
+    simpa only [RCLike.re_to_complex, Complex.ofReal_re] using this
   rw [integral_complex_ofReal] at he
   have e2 : ∏ τ, ⟪(v τ : M.H τ), (v τ : M.H τ)⟫_ℂ = ((∏ τ, ‖(v τ : M.H τ)‖ ^ 2 : ℝ) : ℂ) := by
     rw [Complex.ofReal_prod]
@@ -179,8 +177,7 @@ theorem ipM_posDef : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau
       (isMultiplicityInner_add_smul_right M μ 𝓕 T T' T'' c (hs T hT T' hT') (hs T hT T'' hT''))
   · exact hasPeterssonInner_unique M μ 𝓕 _ _ v0 hv0 (hs T' hT' T hT) (isMultiplicityInner_symm M μ 𝓕 T T' (hs T hT T' hT'))
   · obtain ⟨v, hv⟩ : ∃ v, T v ≠ 0 := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       exact h0 (MultilinearMap.ext hn)
     have := left_cont_of_mem θ M J χ T hT v
     exact re_pos_of_isMultIP M μ 𝓕 hμ hF T (hs T hT T hT) v this.1 this.2 hv

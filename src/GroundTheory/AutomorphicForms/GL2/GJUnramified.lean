@@ -122,8 +122,7 @@ theorem eq_of_bdd_digitSum_sub (m : ℕ) {a b : Fin m → 𝓀[F]}
             simpa [Bdd] using h0)
         rwa [pow_one] at this
       have := (IsLocalRing.residue_eq_zero_iff _).2 hmax
-      rw [map_sub, residue_residueLift, residue_residueLift, sub_eq_zero] at this
-      exact this
+      rwa [map_sub, residue_residueLift, residue_residueLift, sub_eq_zero] at this
     have htail : Bdd F m D := by
       rw [ha0, sub_self, zero_add] at h
       have := (bdd_zpow (F := F) (-1)).mul h
@@ -134,8 +133,7 @@ theorem eq_of_bdd_digitSum_sub (m : ℕ) {a b : Fin m → 𝓀[F]}
       ring
     have ht := ih htail
     funext t
-    refine Fin.cases ha0 (fun t => ?_) t
-    exact congrFun ht t
+    exact Fin.cases ha0 (fun t => (congrFun ht t)) t
 
 abbrev UpperPairs (n : ℕ) : Type := {p : Fin n × Fin n // p.1 < p.2}
 
@@ -290,7 +288,7 @@ theorem exists_reduce_row (l : Fin n → ℕ) {h : GL (Fin n) F} (hB : h ∈ Iwa
     · simp
   have hEd : ∀ a, E a a = 1 := fun a => by
     simp only [hE, hA, Matrix.add_apply, Matrix.of_apply, Matrix.one_apply_eq]
-    rw [if_neg (fun h => by obtain ⟨rfl, h2⟩ := h; exact lt_irrefl _ h2), add_zero]
+    rw [ite_eq_right (fun h => by obtain ⟨rfl, h2⟩ := h; exact lt_irrefl _ h2), add_zero]
   have hEO : ∀ a b, E a b ∈ 𝒪[F] := fun a b => by
     simp only [hE, hA, Matrix.add_apply, Matrix.of_apply]
     refine Subring.add_mem _ ?_ ?_
@@ -318,12 +316,12 @@ theorem exists_reduce_row (l : Fin n → ℕ) {h : GL (Fin n) F} (hB : h ∈ Iwa
     rw [Units.val_mul, hEg, hE, Matrix.mul_add, Matrix.mul_one, Matrix.add_apply, Matrix.mul_apply]
     congr 1
     by_cases hib : i < b
-    · rw [if_pos hib, Finset.sum_eq_single i]
+    · rw [ite_eq_left hib, Finset.sum_eq_single i]
       · simp [hA, hib]
       · intro m _ hm
         simp [hA, hm]
       · simp
-    · rw [if_neg hib]
+    · rw [ite_eq_right hib]
       exact Finset.sum_eq_zero fun m _ => by simp [hA, hib]
   refine ⟨Eg, hEgK, (Iwasawa.borel F n).mul_mem hB (unipotent_le_borel F n hEgN), fun a => ?_,
     fun a b => ?_, fun a b hia => ?_, fun j hij => ⟨e j, ?_⟩⟩
@@ -334,7 +332,7 @@ theorem exists_reduce_row (l : Fin n → ℕ) {h : GL (Fin n) F} (hB : h ∈ Iwa
     · exact Subring.mul_mem _ (hO a i) (Subring.neg_mem _ (hyO b))
     · exact (𝒪[F]).zero_mem
   · rw [hmul, hBU hia, zero_mul, ite_self, add_zero]
-  · rw [hmul, if_pos hij, hd]
+  · rw [hmul, ite_eq_left hij, hd]
     linear_combination hxy j
 
 theorem exists_normalGL {g : GL (Fin n) F} (hg : ∀ i j, g i j ∈ 𝒪[F]) :
@@ -346,8 +344,7 @@ theorem exists_normalGL {g : GL (Fin n) F} (hg : ∀ i j, g i j ∈ 𝒪[F]) :
   set h := u * torusPow F n L with hh
   have hhg : h = g * k₀⁻¹ := by rw [he, mul_inv_cancel_right]
   have hO : ∀ i j, h i j ∈ 𝒪[F] := fun i j => by
-    rw [hhg]
-    rw [Units.val_mul]
+    rw [hhg, Units.val_mul]
     exact mul_mem_of_forall_mem hg
       ((mem_integralGL_iff F n).1 ((integralGL F n).inv_mem hk₀)).1 i j
   have hdiag : ∀ i, h i i = ϖ ^ L i := fun i => by
@@ -479,8 +476,7 @@ theorem integralShell_eq (k : ℕ) :
     exact ⟨⟨l, hl⟩, c, _, hk, by simp [smul_eq_mul]⟩
   · rintro ⟨⟨l, hl⟩, c, k', hk', rfl⟩
     have := mul_mem_integralShell (normalGL_mem_integralShell l c) (integralGL F n).one_mem hk'
-    rw [one_mul, Finset.Nat.mem_antidiagonalTuple.1 hl] at this
-    exact this
+    rwa [one_mul, Finset.Nat.mem_antidiagonalTuple.1 hl] at this
 
 theorem isCompact_integralShell (k : ℕ) : IsCompact (integralShell F n k) := by
   rw [integralShell_eq]
@@ -1088,8 +1084,7 @@ theorem exists_zeta_rat_natDegree [π.IsIrreducible] (hπ : IsAdmissible π) (μ
   rw [qs_add, ← hcdef] at h1
   have hDx' : D.eval (qs F s * c) ≠ 0 := by
     rw [mul_comm]
-    rw [hD'def, eval_comp, eval_mul, eval_C, eval_X] at hDx
-    exact hDx
+    rwa [hD'def, eval_comp, eval_mul, eval_C, eval_X] at hDx
   have h2 := eq_div_of_mul_eq hDx' ((mul_comm _ _).trans h1)
   rw [zetaIntegral, h2]
   simp only [D', eval_mul, eval_comp, eval_C, eval_X, eval_pow]
@@ -1208,8 +1203,7 @@ theorem hasSum_prod_pow_real (m : ℕ) : ∀ {b : Fin m → ℝ}, (∀ i, 0 ≤ 
       show ∏ i, b i ^ (Fin.cons x.1 x.2 : Fin (m + 1) → ℕ) i = _
       rw [Fin.prod_univ_succ]
       simp only [Fin.cons_zero, Fin.cons_succ]
-    rw [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
-    exact hm
+    rwa [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
 
 theorem hasSum_prod_pow (m : ℕ) : ∀ {b : Fin m → ℂ}, (∀ i, ‖b i‖ < 1) →
     HasSum (fun l : Fin m → ℕ => ∏ i, b i ^ l i) (∏ i, (1 - b i)⁻¹) := by
@@ -1240,8 +1234,7 @@ theorem hasSum_prod_pow (m : ℕ) : ∀ {b : Fin m → ℂ}, (∀ i, ‖b i‖ <
       show ∏ i, b i ^ (Fin.cons x.1 x.2 : Fin (m + 1) → ℕ) i = _
       rw [Fin.prod_univ_succ]
       simp only [Fin.cons_zero, Fin.cons_succ]
-    rw [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
-    exact hm
+    rwa [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
 
 theorem hasSum_sum_antidiagonalTuple {m : ℕ} {b : Fin m → ℂ} (h : ∀ i, ‖b i‖ < 1) :
     HasSum (fun k : ℕ => ∑ l ∈ Finset.Nat.antidiagonalTuple m k, ∏ i, b i ^ l i)
@@ -1425,8 +1418,7 @@ theorem zetaIntegral_sphericalCoeff [π.IsIrreducible] (hπ : IsAdmissible π)
       c * ∑ l ∈ Finset.Nat.antidiagonalTuple n m, ∏ i, ((z i : ℂ) * qs F s) ^ l i := funext hterm
   rw [hfun] at hsum
   rw [zetaIntegral]
-  have hgen := (hasSum_sum_antidiagonalTuple hzs).mul_left c
-  exact hsum.unique hgen
+  exact hsum.unique ((hasSum_sum_antidiagonalTuple hzs).mul_left c)
 
 theorem natDegree_prod_one_sub {m : ℕ} (z : Fin m → ℂˣ) :
     (∏ i, (1 - C (z i : ℂ) * X)).natDegree = m := by

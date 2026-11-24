@@ -146,8 +146,7 @@ theorem v2con_stable {R : Type*} [CommRing R] {ι : Type*} [Fintype ι] {n : ℕ
         rw [Finsupp.single_le_iff]; omega
       have e1 : (m - Finsupp.single w 1).degree + 1 = m.degree := by
         have := congrArg Finsupp.degree (tsub_add_cancel_of_le hle)
-        rw [map_add (f := _), Finsupp.degree_single] at this
-        exact this
+        rwa [map_add (f := _), Finsupp.degree_single] at this
       rw [map_add (f := _), Finsupp.degree_single]
       omega
 
@@ -175,7 +174,6 @@ theorem polynomial_locally_finite : PolynomialLocallyFinite := by
     show m.degree ≤ x.totalDegree
     rw [Finsupp.degree_apply]
     exact le_totalDegree hm
-  · intro a b y hy
-    exact v2con_stable LL S _ a b y hy
+  · exact fun a b y hy => v2con_stable LL S _ a b y hy
 
 end Formalism.MainNotions.G.GLWeightTheory

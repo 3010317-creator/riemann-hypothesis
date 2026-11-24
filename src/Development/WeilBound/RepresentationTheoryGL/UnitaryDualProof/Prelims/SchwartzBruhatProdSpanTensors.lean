@@ -125,11 +125,10 @@ theorem span_of_factor {A B S T : Type} [TopologicalSpace A] [T2Space A] [Topolo
     rw [Finset.sum_apply, Finset.sum_eq_single (ξ q.1, η q.2)]
     · simp
     · intro p _ hp
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨h1, h2⟩
       exact hp (Prod.ext h1.symm h2.symm)
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   refine Eq.mpr (congrArg (· ∈ _) hsum) (Submodule.sum_mem _ fun p _ => ?_)
   by_cases hex : ∃ q0 : A × B, ξ q0.1 = p.1 ∧ η q0.2 = p.2 ∧ (f : A × B → ℂ) q0 ≠ 0
   · obtain ⟨q0, h1, h2, h3⟩ := hex
@@ -149,8 +148,7 @@ theorem span_of_factor {A B S T : Type} [TopologicalSpace A] [T2Space A] [Topolo
         by_contra h
         apply hb
         simp [hib, h]
-      rw [hΦ q q0 (e1.trans h1.symm) (e2.trans h2.symm)]
-      exact h3
+      rwa [hΦ q q0 (e1.trans h1.symm) (e2.trans h2.symm)]
     · funext q
       by_cases e1 : ξ q.1 = p.1
       · by_cases e2 : η q.2 = p.2
@@ -160,10 +158,10 @@ theorem span_of_factor {A B S T : Type} [TopologicalSpace A] [T2Space A] [Topolo
   · have hz : (fun q : A × B => if ξ q.1 = p.1 ∧ η q.2 = p.2 then (f : A × B → ℂ) q else 0) = 0 := by
       funext q
       by_cases e : ξ q.1 = p.1 ∧ η q.2 = p.2
-      · rw [if_pos e]
+      · rw [ite_eq_left e]
         by_contra h
         exact hex ⟨q, e.1, e.2, h⟩
-      · rw [if_neg e]
+      · rw [ite_eq_right e]
         rfl
     rw [hz]
     exact Submodule.zero_mem _

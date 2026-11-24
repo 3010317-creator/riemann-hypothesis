@@ -197,8 +197,7 @@ theorem l2_one_eq_integral_fundamentalDomain_div_volume {E : Type} [Field E] [Nu
     have : Countable (Submodule.span ℤ (Set.range T.b)) := inferInstance
     refine Function.Injective.countable
       (f := fun a : A => (⟨ψ a, (hL a).1 a.2⟩ : Submodule.span ℤ (Set.range T.b))) ?_
-    intro a a' h
-    exact Subtype.ext (ψ.injective (congrArg Subtype.val h))
+    exact fun a a' h => Subtype.ext (ψ.injective (congrArg Subtype.val h))
   rw [hl2, MeasureTheory.setAverage_eq, MeasureTheory.measureReal_def, hfd0.measure_eq hFd,
     hfd0.setIntegral_eq hFd hper, smul_eq_mul, div_eq_inv_mul]
 
@@ -426,8 +425,7 @@ theorem isogeny_sum_tensorLat (T : PT E) (w₀ : 𝓞 E) (hw : (w₀ : E) + cc (
       obtain ⟨γ, rfl⟩ := (flat (n := n) (ι := Idx T.dim)).surjective y
       obtain ⟨r, ⟨hr, hr'⟩, hu⟩ := hR' γ ((hY' γ).1 hy)
       refine ⟨flat r, ⟨Finset.mem_map.2 ⟨r, hr, rfl⟩, ?_⟩, ?_⟩
-      · rw [← map_sub, hY, mem_tensorLat_stdLat]
-        exact hr'
+      · rwa [← map_sub, hY, mem_tensorLat_stdLat]
       · rintro z ⟨hz, hz'⟩
         obtain ⟨r', hr2, rfl⟩ := Finset.mem_map.1 hz
         rw [he, ← map_sub, hY, mem_tensorLat_stdLat] at hz'
@@ -438,8 +436,7 @@ theorem isogeny_sum_tensorLat (T : PT E) (w₀ : 𝓞 E) (hw : (w₀ : E) + cc (
     rw [Finset.sum_map]
     funext v
     simp only [he, hka', h4 U hU, Finset.sum_apply, Function.comp_apply, Pi.smul_apply]
-  rw [e1, Finset.card_map, hFl] at key
-  exact key
+  rwa [e1, Finset.card_map, hFl] at key
 
 theorem exists_min_period (T : PT E) (Λ' : Submodule (𝓞 E) (Fin n → E)) (hfg : Λ'.FG)
     (hint : ∀ x ∈ Λ', ∀ y ∈ Λ', IsIntegral ℤ (herm 1 x y))

@@ -70,11 +70,7 @@ variable {H : Type} [Group H]
 
 theorem mem_map_conj_iff (B : Subgroup H) (x y : H) :
     y ∈ B.map (MulAut.conj x).toMonoidHom ↔ x⁻¹ * y * x ∈ B := by
-  constructor
-  · rintro ⟨z, hz, rfl⟩
-    simpa [mul_assoc] using hz
-  · intro hy
-    exact ⟨x⁻¹ * y * x, hy, by simp [mul_assoc]⟩
+  exact GlobalTheory.LKCountPoint.mem_map_conj
 
 theorem map_conj_mul (B : Subgroup H) (x s : H) :
     (B.map (MulAut.conj s).toMonoidHom).map (MulAut.conj x).toMonoidHom =
@@ -398,7 +394,6 @@ theorem pointSum_eq_pointSide_of_commensurable : ∀ {Γ G₁ G₂ : Type} [Grou
   intro Γ G₁ G₂ _ _ _ ι₁ ι₂ θ K₁ K₂ γ δ f₁ φ hK₁ hK₂ _ hf₁ hφ hc₁ hc₂ hι hstab hsupp
   have hΓT : (ι₁.prod ι₂).range ≤ GlobalTheory.BCT.twCent ((MonoidHom.id G₁).prodMap θ) (γ, δ) := by
     rintro _ ⟨g, rfl⟩
-    show (ι₁.prod ι₂) g * (γ, δ) = (γ, δ) * ((MonoidHom.id G₁).prodMap θ) ((ι₁.prod ι₂) g)
     exact Prod.ext (hc₁ g) (hc₂ g)
   have hFinv : ∀ t ∈ GlobalTheory.BCT.twCent ((MonoidHom.id G₁).prodMap θ) (γ, δ), ∀ x : G₁ × G₂, ∀ k ∈ K₁.prod K₂,
       f₁ ((t * x * k).1⁻¹ * γ * (t * x * k).1) * φ ((t * x * k).2⁻¹ * δ * θ (t * x * k).2) =
@@ -460,15 +455,14 @@ theorem pointSum_eq_pointSide_of_commensurable : ∀ {Γ G₁ G₂ : Type} [Grou
     unfold pointSide
     rw [← hprod]
     rfl
-  · push_neg at hne
+  · push Not at hne
     have hF0 : ∀ x : G₁ × G₂, f₁ (x.1⁻¹ * γ * x.1) * φ (x.2⁻¹ * δ * θ x.2) = 0 := by
       intro x
       obtain ⟨h, hh, k, hk, he⟩ := DoubleCoset.mk_out_eq_mul (ι₁.prod ι₂).range (K₁.prod K₂) x
       rw [← hFinv h (hΓT hh) x k hk, ← he]
       exact hne _
     have hor : (∀ x₁ : G₁, f₁ (x₁⁻¹ * γ * x₁) = 0) ∨ (∀ x₂ : G₂, φ (x₂⁻¹ * δ * θ x₂) = 0) := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       obtain ⟨⟨a, ha⟩, ⟨b, hb⟩⟩ := hc
       exact mul_ne_zero ha hb (hF0 (a, b))
     rw [hPS]

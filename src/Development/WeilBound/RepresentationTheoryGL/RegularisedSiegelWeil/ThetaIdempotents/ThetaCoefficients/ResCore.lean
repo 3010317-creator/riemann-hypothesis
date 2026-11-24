@@ -164,12 +164,10 @@ theorem qv_smul {e : AE D} (he : e * e = e ∧ cA D e = e) (V : HSp D) (b₀ : H
   simp only [qv, yv_smul he, ip_smul he, pr_smul he, smul_sub]
 
 theorem continuous_ip (V : HSp D) : Continuous fun p : Mx D V.rank a × Mx D V.rank b => ip V p.1 p.2 := by
-  show Continuous fun p : Mx D V.rank a × Mx D V.rank b => adj p.1 * (gA V * p.2)
   exact (continuous_adj.comp continuous_fst).matrix_mul (continuous_const.matrix_mul continuous_snd)
 
 theorem continuous_yv (V : HSp D) (b₀ : HermE D r) :
     Continuous fun z : Mx D V.rank r × Mx D V.rank t => yv V b₀ z := by
-  show Continuous fun z : Mx D V.rank r × Mx D V.rank t => rat b₀.1⁻¹ * ip V z.1 z.2
   exact continuous_const.matrix_mul (continuous_ip V)
 
 theorem isClosed_qv (V : HSp D) (b₀ : HermE D r) :
@@ -179,7 +177,6 @@ theorem isClosed_qv (V : HSp D) (b₀ : HermE D r) :
     show Continuous fun z : Mx D V.rank r × Mx D V.rank t => adj z.2 * (gA V * z.2)
     exact (continuous_adj.comp continuous_snd).matrix_mul (continuous_const.matrix_mul continuous_snd)
   have h2 : Continuous fun z : Mx D V.rank r × Mx D V.rank t => pr b₀ (yv V b₀ z) (yv V b₀ z) := by
-    show Continuous fun z : Mx D V.rank r × Mx D V.rank t => adj (yv V b₀ z) * ((b₀.1.map (incA D)) * yv V b₀ z)
     exact (continuous_adj.comp hy).matrix_mul (continuous_const.matrix_mul hy)
   have e : {z : Mx D V.rank r × Mx D V.rank t | qv V b₀ z = 0} =
       {z | ip V z.2 z.2 = pr b₀ (yv V b₀ z) (yv V b₀ z)} := Set.ext fun z => sub_eq_zero
@@ -268,7 +265,6 @@ theorem measurable_C (M : Mx D c c) : Measurable fun z : Mx D a b × Mx D a c =>
   (continuous_fst.prodMk (continuous_mulR M)).measurable
 
 theorem continuous_hermitian_inner_self (V : HSp D) : Continuous fun z : Mx D V.rank r × Mx D V.rank t => ip V z.1 z.1 := by
-  show Continuous fun z : Mx D V.rank r × Mx D V.rank t => adj z.1 * (gA V * z.1)
   exact (continuous_adj.comp continuous_fst).matrix_mul (continuous_const.matrix_mul continuous_fst)
 
 theorem isOrb_e {V : HSp D} {b₀ : HermE D r} {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e)
@@ -399,11 +395,11 @@ theorem intOff_jn (S : Finset (Pl D)) (hn : r + t = n) (x : Mx D a r) (v : Mx D 
 
 theorem good_pos {S : Finset (Pl D)} {e : AE D} {Φ : Mx D a b → ℂ} (h : Good S e Φ) {x : Mx D a b} (hx : IntOff S x) :
     Φ x = Φ (e • x) := by
-  rw [h x, if_pos hx]
+  rw [h x, ite_eq_left hx]
 
 theorem good_neg {S : Finset (Pl D)} {e : AE D} {Φ : Mx D a b → ℂ} (h : Good S e Φ) {x : Mx D a b} (hx : ¬ IntOff S x) :
     Φ x = 0 := by
-  rw [h x, if_neg hx]
+  rw [h x, ite_eq_right hx]
 
 theorem continuous_jn (hn : r + t = n) : Continuous fun z : Mx D a r × Mx D a t => jn hn z.1 z.2 := by
   have h : Continuous fun z : Mx D a r × Mx D a t => Matrix.fromCols z.1 z.2 := by
@@ -577,8 +573,7 @@ theorem dense_loc (F E : Type) [Field F] [NumberField F] [Field E] [NumberField 
       (algebraMap F E).injective).nontrivial
   have : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
   have b1 : IsOpen {x : Fv F v | IsUnit x} := by
-    simp only [isUnit_iff_ne_zero]
-    exact isOpen_ne
+    simpa only [isUnit_iff_ne_zero] using isOpen_ne
   have b2 : ∀ x : Fv F v, IsUnit x → ContinuousAt Ring.inverse x := by
     intro x hx
     rw [Ring.inverse_eq_inv']
@@ -713,8 +708,7 @@ theorem approx_loc (D : D7) (n : ℕ) (v : Pl D) (x : GLoc D.sp.cm.sig (Jst D n)
   show matHom _ _ _ _ ∈ O₀
   have e2 : matHom (Fv D.host.F v) D.sp.cm.sig (Jst D n) (ratLoc D.sp.cm.sig (Jst D n) v ⟨γ', hE ▸ hγ'⟩) =
       Formalism.UG.bc (inclR (F := D.host.F) (Fv D.host.F v)) γ' := rfl
-  rw [e2, e]
-  exact h'O
+  rwa [e2, e]
 
 end PositivityTheory.Rg.Rsw.L.LWa1
 
@@ -1032,8 +1026,7 @@ theorem vanish_at {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) 
   have key := hFP D n ψ hψ lam 𝓖 hcov (fun b => cutR nb C F (nb b * g)) (cont_nb (cutR_cont C hF) hnb g)
     (fun γ hγ b => per_nb (cutR_left C hinv) hnb g γ hγ b) hco
   have h0 := congrFun key 0
-  simp only [GlobalTheory.CompanionTheory.FourierN.nb_zero hnb, one_mul, Pi.zero_apply] at h0
-  exact h0
+  simpa only [GlobalTheory.CompanionTheory.FourierN.nb_zero hnb, one_mul, Pi.zero_apply] using h0
 
 end PositivityTheory.Rg.Rsw.L.LCutLow
 
@@ -1362,8 +1355,7 @@ theorem resCore : Polar → CfFJ → IdemEx → GoodEv → FixW → WMaj → JPo
         have h3 := h1 g
         simp only [h2, Pi.zero_apply, integral_zero] at h3
         exact (mul_eq_zero.1 h3.symm).resolve_left hc0
-    intro k hk
-    exact key (N + 1) k hk (by omega)
+    exact fun k hk => key (N + 1) k hk (by omega)
   refine ⟨hhigh, ?_⟩
   intro X _ π _ cX κ hcX hcomp hκ hkill
   obtain ⟨a, ha⟩ := GlobalTheory.RegSch.exists_good_frameLat D B
@@ -1410,8 +1402,7 @@ theorem resCore : Polar → CfFJ → IdemEx → GoodEv → FixW → WMaj → JPo
     ring
   have hzero : ∀ p : KAt D n v × GA D W, ∫ x, theta ωW Ψ' (cX x * p.1) p.2 * κ x ∂π = 0 := by
     intro p
-    simp only [theta_mul]
-    exact hkill (ωW p.1 Ψ') p.2
+    simpa only [theta_mul] using hkill (ωW p.1 Ψ') p.2
   simp only [hpt]
   rw [integral_const_mul, integral_integral_swap hint]
   simp only [hzero, integral_zero, mul_zero]
@@ -1595,8 +1586,7 @@ theorem PositivityTheory.Rg.Rsw.L.rowTotal : IdemEx → BumpEx → RowTotal := b
       · have hall : ∀ i, R y i ∈ t i := by
           intro i
           by_contra hn
-          apply hPr
-          exact Finset.prod_eq_zero (Finset.mem_univ i) (by rw [hηN i _ hn, Complex.zero_re])
+          exact hPr (Finset.prod_eq_zero (Finset.mem_univ i) (by rw [hηN i _ hn, Complex.zero_re]))
         have hyU : y ∈ U := by
           have := hsub (fun i _ => hall i)
           simpa using this
@@ -1679,15 +1669,7 @@ theorem oneTh (hW : L.WMaj) {p : ℕ} (μ : Measure (Mx D 1 p)) (𝓕 : Set (Mx 
   rfl
 
 theorem hecke_mul_inv {χ ε : (AE D)ˣ →* Circle} (hχ : IsHeckeChar D χ) (hε : IsHeckeChar D ε) :
-    IsHeckeChar D (χ * ε⁻¹) := by
-  have e : ⇑(χ * ε⁻¹) = fun x => χ x * (ε x)⁻¹ := by
-    funext x
-    simp
-  refine ⟨?_, fun x => ?_⟩
-  · rw [e]
-    exact hχ.1.mul hε.1.inv
-  · rw [e]
-    simp only [hχ.2 x, hε.2 x, inv_one, mul_one]
+    IsHeckeChar D (χ * ε⁻¹) := GlobalTheory.WeilVacChar.hecke_mul_inv hχ hε
 
 theorem resEta_mul_inv {χ ε : (AE D)ˣ →* Circle} {k : ℕ} (hχ : ResEta D χ (k + 1)) (hε : ResEta D ε 1) :
     ResEta D (χ * ε⁻¹) k := by

@@ -239,7 +239,7 @@ theorem exists_isotropic_dual_of_skew {V : Type*} [AddCommGroup V] [Module ℚ V
 
     simp only [map_add (f := _), map_sum, map_smul, LinearMap.add_apply, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, hε, h1, h2, mul_zero,
     Finset.sum_const_zero, add_zero, mul_ite, mul_one, mul_neg, Finset.sum_neg_distrib,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     linarith [hB (ψ i) (ψ j)]
   · intro i j
 
@@ -323,10 +323,8 @@ theorem exists_lagrangian_containing_isotropic_rat : ∀ (g r : ℕ) (Mq : Matri
     omega
   have hLo : B.orthogonal L = L := by
     apply le_antisymm
-    · intro x hx
-      exact hmax x (fun l hl => by rw [hskewB, hx l hl, neg_zero])
-    · intro x hx l hl
-      exact hLiso l hl x hx
+    · exact fun x hx => hmax x (fun l hl => by rw [hskewB, hx l hl, neg_zero])
+    · exact fun x hx l hl => hLiso l hl x hx
   have hdim := LinearMap.BilinForm.finrank_orthogonal hnd L
   rw [hLo] at hdim
   have hV : finrank ℚ (Fin r → ℚ) = r := by simp
@@ -730,8 +728,7 @@ theorem exists_adapted_rational_symplectic_basis : ∀ (g r r₀ : ℕ) (M : Mat
     ext m k
     have h := congrFun (_root_.GlobalTheory.coords_in_rational_symplectic_basis g r Mq ε φ hr hskq hdq hεiso hφiso hφε (cq m)) k
     simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul] at h
-    rw [Matrix.add_apply, Matrix.mul_apply, Matrix.mul_apply]
-    exact h
+    rwa [Matrix.add_apply, Matrix.mul_apply, Matrix.mul_apply]
 
 end GlobalTheory.SymplecticNormalForm
 end -- clump:auto

@@ -94,8 +94,7 @@ theorem supI_subset {U₀ : M.Z.Opens} (h : S.Over₀ M U₀) (z : M.Z) {z' : M.
 theorem exists_ne_zero_of_le {T T' : AddSubgroup S.Gam} (h : T' ≤ T) (hT : S.IsoFree T) (hT' : S.IsoFree T')
     {K : Type} [Field K] (ψ : o →+* K) (v : S.J → K) {i : S.J} (hi : ∑ j, ψ (S.proj T 0 j i) * v j ≠ 0) :
     ∃ i, ∑ j, ψ (S.proj T' 0 j i) * v j ≠ 0 := by
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   apply hi
   rw [← GlobalTheory.ThetaBound.proj_mul_proj S T T' h hT.1 hT' 0 0 fun _ => rfl]
 
@@ -112,8 +111,7 @@ theorem le_preimage_G_iff : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o
   have hψ' : x ≫ (Q.P.hom ≫ M.s) = spMap ψ := hψ
   have hxz : Q.P.hom (x (IsLocalRing.closedPoint K)) = z := by
     have : (x ≫ Q.P.hom) (IsLocalRing.closedPoint K) ∈ Set.range (x ≫ Q.P.hom) := ⟨_, rfl⟩
-    rw [hz] at this
-    exact this
+    rwa [hz] at this
   rw [CrdCalc.top_le_iff]
   simp only [Clos.G, TopologicalSpace.Opens.mem_iSup]
   constructor
@@ -137,7 +135,6 @@ theorem le_preimage_G_iff : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o
     refine ⟨z', hz', ⟨_, isOpen_supI_subset z'⟩, fun _ h => h, i, φ, hφ, ?_,
       (CrdCalc.top_le_iff x _).1 ((le_nonzeroLocus_iff hφ hψ' hv).2 hi)⟩
     change S.supI M z' ⊆ S.supI M (Q.P.hom (x (IsLocalRing.closedPoint K)))
-    rw [hxz]
-    exact hs
+    rwa [hxz]
 
 end GlobalTheory.ZH.OpenPart

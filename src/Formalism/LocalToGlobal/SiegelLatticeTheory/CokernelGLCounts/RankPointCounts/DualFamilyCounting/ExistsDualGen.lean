@@ -41,8 +41,7 @@ theorem surj_pairing {m : ℕ} (f : Fin m → S.V) (hf : LinearIndependent E f) 
     have h1 : φ ((LinearMap.pi (fun a => S.hT (f a)) : S.V →ₗ[E] (Fin m → E)) v) = 0 := by
       have : (LinearMap.pi (fun a => S.hT (f a)) : S.V →ₗ[E] (Fin m → E)) v ∈
           LinearMap.range (LinearMap.pi (fun a => S.hT (f a)) : S.V →ₗ[E] (Fin m → E)) := ⟨v, rfl⟩
-      have h2 := Submodule.mem_map_of_mem (f := φ) this
-      exact (Submodule.eq_bot_iff _).1 hφ _ h2
+      exact (Submodule.eq_bot_iff _).1 hφ _ (Submodule.mem_map_of_mem (f := φ) this)
     rw [hφx] at h1
 
     rw [map_sum, LinearMap.sum_apply]
@@ -91,13 +90,12 @@ theorem exists_dual_gen (e : Fin r → S.V) (z : S.V) (N : ℕ) (hN : 0 < N) (hi
   have hey0 : ∀ b a, S.hT (e b) (y0 a) = if b = a then 1 else 0 := by
     intro b a
     have := congrFun (hy0 a) (Fin.castSucc b)
-    simp only [LinearMap.pi_apply, f, Fin.snoc_castSucc, Fin.castSucc_inj] at this
-    exact this
+    simpa only [LinearMap.pi_apply, f, Fin.snoc_castSucc, Fin.castSucc_inj] using this
   have hzy0 : ∀ a, S.hT z (y0 a) = 0 := by
     intro a
     have := congrFun (hy0 a) (Fin.last r)
     simp only [LinearMap.pi_apply, f, Fin.snoc_last] at this
-    rw [this, if_neg (Fin.castSucc_lt_last a).ne']
+    rw [this, ite_eq_right (Fin.castSucc_lt_last a).ne']
   have hy0e : ∀ a d, S.hT (y0 a) (e d) = if d = a then 1 else 0 := by
     intro a d; rw [hsw, hey0]; split_ifs <;> simp
   have hL : ∀ (c : Fin r → E) (v : S.V), S.hT (∑ d, c d • e d) v = ∑ d, star (c d) * S.hT (e d) v := by

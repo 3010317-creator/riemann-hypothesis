@@ -95,12 +95,10 @@ lemma isIso_cmp [PreservesColimitsOfShape (WidePushoutShape J) Ψ] : IsIso (cmp 
     · intro i
       have := congrArg Quiver.Hom.unop (hC.fac (coc Ψ g J) (some i))
       refine (Category.assoc _ _ _).trans ?_
-      refine (congrArg _ (cmp_π Ψ g J i)).trans ?_
-      exact this.trans (Category.id_comp _).symm
+      exact (congrArg _ (cmp_π Ψ g J i)).trans (this.trans (Category.id_comp _).symm)
     · have := congrArg Quiver.Hom.unop (hC.fac (coc Ψ g J) none)
       refine (Category.assoc _ _ _).trans ?_
-      refine (congrArg _ (cmp_base Ψ g J)).trans ?_
-      exact this.trans (Category.id_comp _).symm
+      exact (congrArg _ (cmp_base Ψ g J)).trans (this.trans (Category.id_comp _).symm)
 
 end GlobalTheory.EtC.ConerveNerve
 
@@ -138,8 +136,7 @@ theorem conerve_nerve : ∀ (T : Type 1) [Category.{0} T] [HasFiniteWidePushouts
       haveI := hΨ n.unop.len
       exact isIso_cmp Ψ g _
     exact (NatTrans.isIso_iff_isIso_app _).2 this
-  · refine NatTrans.ext (funext fun n => ?_)
-    exact cmp_base Ψ g _
+  · exact NatTrans.ext (funext fun n => (cmp_base Ψ g _))
 
 end GlobalTheory.EtC.ConerveNerve
 end -- clump:auto

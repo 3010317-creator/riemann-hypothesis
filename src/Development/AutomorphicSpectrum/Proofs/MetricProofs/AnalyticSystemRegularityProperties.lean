@@ -72,8 +72,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.anSys_open_basics : ∀ (e : ℕ) (σ
     have h := analyticNull S.A (bdry S.s) hAn hInt j
     have hc : S.open'ᶜ = bdry S.s := compl_compl _
     rw [hc]
-    rw [Set.inter_comm, (S.A.chart j).image_source_inter_eq'] at h
-    exact h
+    rwa [Set.inter_comm, (S.A.chart j).image_source_inter_eq'] at h
   · intro a x hx j hj
     obtain ⟨hth, hph, -, -⟩ := S.sing a
     have h1 := hth.1 x j
@@ -91,7 +90,6 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.anSys_open_basics : ∀ (e : ℕ) (σ
         simpa [(S.A.chart j).left_inv hj] using hx'⟩
     have hle : (2 : WithTop ℕ∞) ≤ ∞ := ENat.LEInfty.out
     have hA := (h1.contDiffAt (hO1.mem_nhds hm1)).of_le hle
-    have hB := (h2.contDiffAt (hO2.mem_nhds hm2)).of_le hle
-    exact hA.add hB
+    exact hA.add ((h2.contDiffAt (hO2.mem_nhds hm2)).of_le hle)
   · intro a t ht ht'
     exact isPotentialAdd S.A _ _ (S.sing a).1 (isPotential_ofFun S.A _ ((S.reg a).2.2 t ht ht').1)

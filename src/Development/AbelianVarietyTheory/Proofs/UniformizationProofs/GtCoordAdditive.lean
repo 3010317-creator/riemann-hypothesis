@@ -112,8 +112,7 @@ theorem exists_lifts {e : ℕ} (g : GtCoord I D e G) {x : 𝟙_ (Over (Spec (Com
   · exact (congrArg (·.left) h₁).trans (congrArg (· ≫ x.left) hu)
   · exact (congrArg (·.left) h₂).trans (congrArg (· ≫ gp.b.left) hu)
   · have := (val_pull hJ _ _ _).symm.trans ((val_corr hJ (h₃ χ) (𝟙 _)).trans (val_pull hJ _ _ _))
-    rw [Category.id_comp, Category.id_comp, hu] at this
-    exact this
+    rwa [Category.id_comp, Category.id_comp, hu] at this
 
 omit [IsDomain R] [IsCommMonObj G] in
 theorem push_injective {e : ℕ} {T : Over (Spec (CommRingCat.of (R ⧸ I ^ (e + 1))))} :
@@ -169,8 +168,7 @@ theorem isAdd_of_lifts (hGF : GlobalFnsSt) (hI : I ≠ ⊤) (g : ∀ e, GtCoord 
     rw [← hm, (ha e).2.2 χ z J hJ, (ha' e).2.2 χ z J hJ, (ha'' e).2.2 χ z J hJ, c] at k
     have := ((val_mul hJ _ _ _).trans (congrArg₂ (· * ·) rfl (val_cub D.cub (levι I e) hJ _ _ _))).trans
       (k.trans (val_mul hJ _ _ _).symm)
-    rw [levι_left] at this
-    exact this
+    rwa [levι_left] at this
 
 theorem isZero_of_lifts (hI : I ≠ ⊤) (g : ∀ e, GtCoord I D e G)
     {gp : GtPt D (𝟙_ (Over (Spec (CommRingCat.of R))))}

@@ -26,8 +26,7 @@ theorem isOpen_setOf_forall_mem (hAopen : ∀ i, IsOpen (A i)) {V : ∀ i, Set (
     ext x
     simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage]
     constructor
-    · intro h
-      exact ⟨fun i hi ↦ (show V i = A i from hi) ▸ h i, fun i _ ↦ h i⟩
+    · exact fun h => ⟨fun i hi ↦ (show V i = A i from hi) ▸ h i, fun i _ ↦ h i⟩
     · rintro ⟨h1, h2⟩ i
       by_cases hi : i ∈ S
       · rw [show V i = A i from hi]
@@ -55,10 +54,8 @@ theorem isTopologicalBasis (hAopen : ∀ i, IsOpen (A i)) :
     obtain ⟨t, ht, htu⟩ := hu'
     have hx't : (x' : ∀ i, R i) ∈ t := by
       have : x' ∈ _root_.RestrictedProduct.inclusion R A hT ⁻¹' u := by
-        rw [Set.mem_preimage, hxx']
-        exact hxu
-      rw [← htu] at this
-      exact this
+        rwa [Set.mem_preimage, hxx']
+      rwa [← htu] at this
     obtain ⟨I, W, hW, hIW⟩ := isOpen_pi_iff.1 ht _ hx't
     let V : ∀ i, Set (R i) := fun i ↦
       (if i ∈ I then W i else Set.univ) ∩ (if i ∈ T then A i else Set.univ)
@@ -71,7 +68,7 @@ theorem isTopologicalBasis (hAopen : ∀ i, IsOpen (A i)) :
     · filter_upwards [x.2, I.finite_toSet.compl_mem_cofinite] with i hi hiI
       have hiI' : i ∉ I := hiI
       have hiT : i ∈ T := hi
-      simp only [V, if_neg hiI', if_pos hiT, Set.univ_inter]
+      simp only [V, ite_eq_right hiI', ite_eq_left hiT, Set.univ_inter]
     · intro i
       rw [← hxx']
       refine ⟨?_, ?_⟩
@@ -82,13 +79,13 @@ theorem isTopologicalBasis (hAopen : ∀ i, IsOpen (A i)) :
     · intro y hy
       let y' : Πʳ i, [R i, A i]_[𝓟 T] := ⟨y.1, eventually_principal.2 fun i hi ↦ by
         have := (hy i).2
-        simp only [if_pos hi] at this
+        simp only [ite_eq_left hi] at this
         exact this⟩
       have hy' : y' ∈ _root_.RestrictedProduct.inclusion R A hT ⁻¹' u := by
         rw [← htu]
         refine hIW fun i hi ↦ ?_
         have := (hy i).1
-        simp only [if_pos (Finset.mem_coe.1 hi)] at this
+        simp only [ite_eq_left (Finset.mem_coe.1 hi)] at this
         exact this
       exact hy'
 

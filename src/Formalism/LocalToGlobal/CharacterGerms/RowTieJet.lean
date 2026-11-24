@@ -100,8 +100,7 @@ theorem rtj_jet_mul (A : Set σ) (P Q : MvPolynomial σ K) (F G : MvPowerSeries 
     have hb := hQs x.2 hx.2
     have hdis : Disjoint x.1.support x.2.support := by
       rw [Finset.disjoint_left]
-      intro i hia hib
-      exact hb hib (ha hia)
+      exact fun i hia hib => hb hib (ha hia)
     rw [MvPolynomial.coeff_mul, MvPowerSeries.coeff_mul,
       rtj_antidiag_split (A := A) (fun c => AddMonoidAlgebra.coeff P c) (fun d => AddMonoidAlgebra.coeff Q d)
         (fun c hc => rtj_supp_of_supported hP c hc) (fun d hd => rtj_supp_of_supported hQ d hd) ha hb,
@@ -296,7 +295,7 @@ theorem rtj_rename_mvExp (e : σ ↪ τ) (L : MvPowerSeries σ K) :
     rw [rtj_degree_embDomain]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [← map_pow, coeff_embDomain_rename_character_germs]
-  · push_neg at hx
+  · push Not at hx
     rw [coeff_rename_eq_zero_of_ne_embDomain e _ x hx]
     change (0 : K) = ∑ k ∈ Finset.range (Finsupp.degree x + 1),
         MvPowerSeries.coeff x ((MvPowerSeries.rename e L) ^ k) / (k.factorial : K)

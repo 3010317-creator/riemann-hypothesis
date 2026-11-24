@@ -132,8 +132,7 @@ theorem tb_iff_ta (F : Finset α) (k : α → α → ℂ) : TB.PSDOn F k ↔ TA.
     · let a : α → ℂ := fun i => if h : i ∈ F then x ⟨i, h⟩ else 0
       have hx : (fun i : F => a i) = x := funext fun i => dite_eq_left i.2
       have hr := hp a
-      rw [← quadM, hx] at hr
-      exact hr
+      rwa [← quadM, hx] at hr
     · simpa using (hH.im_star_dotProduct_mulVec_self x).symm
 
 theorem quad1 [DecidableEq α] (F : Finset α) (k : α → α → ℂ) (x : α) (hx : x ∈ F) :
@@ -320,20 +319,20 @@ theorem t_UniformMajorant : UniformMajorant := by
     obtain ⟨Th, hOk⟩ := hyp (u.biUnion id)
     have hOk' : (LocSys.mk N (fun t h h' => if h ∈ u.biUnion id ∧ h' ∈ u.biUnion id then Th t h h' else 0)
         B L L').Ok (u.biUnion id) :=
-      ok_congr (fun t x hx y hy => by rw [if_pos ⟨hx, hy⟩]) hOk
+      ok_congr (fun t x hx y hy => by rw [ite_eq_left ⟨hx, hy⟩]) hOk
     refine ⟨_, ?_, Set.mem_iInter₂.2 fun F hF => ok_mono (subset_biUnion_of_mem id hF) hOk'⟩
     intro t _ h _ h' _
     rw [mem_closedBall_zero_iff]
     beta_reduce
     by_cases hc : h ∈ u.biUnion id ∧ h' ∈ u.biUnion id
-    · rw [if_pos hc]
+    · rw [ite_eq_left hc]
       have hOk2 := hOk
       simp only [LocSys.Ok] at hOk2
       have a0 := psd_off (hOk2.2.2.2.1 t) hc.1 hc.2
       have a1 := (hdiag _ Th hOk t h hc.1).2
       have a2 := (hdiag _ Th hOk t h' hc.2).2
       linarith
-    · rw [if_neg hc, norm_zero]; exact add_nonneg (hB h) (hB h')
+    · rw [ite_eq_right hc, norm_zero]; exact add_nonneg (hB h) (hB h')
 
 theorem psd_pull {α β : Type} {G : Finset β} {F : Finset α} (f : G → F) {k : α → α → ℂ}
     {k' : β → β → ℂ} (h : ∀ x y : G, k' x y = k (f x) (f y)) (hk : TB.PSDOn F k) : TB.PSDOn G k' := by
@@ -353,8 +352,7 @@ theorem t_UniformMajorantOn : UniformMajorantOn := by
     have hm : ∀ x ∈ F', (x : α) ∈ F'.image Subtype.val := fun x hx => Finset.mem_image_of_mem _ hx
     let f : F' → (F'.image Subtype.val : Finset α) := fun x => ⟨x.1.1, hm x.1 x.2⟩
     refine ⟨fun t h h' => Th t h.1 h'.1, ?_, ?_, ?_, ?_, ?_, ?_⟩
-    · intro t t' ht ht' h hh h' hh' hne
-      exact h1 t t' ht ht' h.1 (hm h hh) h'.1 (hm h' hh') hne
+    · exact fun t t' ht ht' h hh h' hh' hne => h1 t t' ht ht' h.1 (hm h hh) h'.1 (hm h' hh') hne
     · intro t ht; exact psd_pull f (fun _ _ => rfl) (h2 t ht)
     · intro t t' htt h hh h' hh'; exact h3 t t' htt h.1 (hm _ hh) h'.1 (hm _ hh')
     · intro t; exact psd_pull f (fun _ _ => rfl) (h4 t)
@@ -363,8 +361,8 @@ theorem t_UniformMajorantOn : UniformMajorantOn := by
   let Th : E → α → α → ℂ := fun t h h' =>
     if hh : h ∈ A ∧ h' ∈ A then Th' t ⟨h, hh.1⟩ ⟨h', hh.2⟩ else 0
   have hT : ∀ t x y (hx : x ∈ A) (hy : y ∈ A), Th t x y = Th' t ⟨x, hx⟩ ⟨y, hy⟩ :=
-    fun t x y hx hy => dif_pos ⟨hx, hy⟩
-  have hz : ∀ t x y, ¬ (x ∈ A ∧ y ∈ A) → Th t x y = 0 := fun t x y h => dif_neg h
+    fun t x y hx hy => dite_eq_left ⟨hx, hy⟩
+  have hz : ∀ t x y, ¬ (x ∈ A ∧ y ∈ A) → Th t x y = 0 := fun t x y h => dite_eq_right h
   have part1 : ∀ F : Finset α, (∀ h ∈ F, h ∈ A) → (LocSys.mk N Th B L L').Ok F := by
     intro F hF
     obtain ⟨g1, g2, g3, g4, g5, g6⟩ := hTh' (F.subtype (· ∈ A))
@@ -380,8 +378,7 @@ theorem t_UniformMajorantOn : UniformMajorantOn := by
       rw [hT t h h' (hF h hh) (hF h' hh'), hT t' h h' (hF h hh) (hF h' hh')]
       exact g3 t t' htt ⟨h, hF h hh⟩ (Finset.mem_subtype.2 hh) ⟨h', hF h' hh'⟩
         (Finset.mem_subtype.2 hh')
-    · intro t
-      exact psd_pull f (fun x y => hT t x.1 y.1 (hF x.1 x.2) (hF y.1 y.2)) (g4 t)
+    · exact fun t => psd_pull f (fun x y => hT t x.1 y.1 (hF x.1 x.2) (hF y.1 y.2)) (g4 t)
     · intro t ht
       refine psd_pull f (fun x y => ?_) (g5 t ht)
       show Th t x.1 y.1 - N t t x.1 y.1 = _
@@ -414,8 +411,7 @@ theorem t_UniformMajorantOn : UniformMajorantOn := by
         exact hne (Finset.sum_eq_zero fun y _ => by rw [hz t x y (fun h => hx h.1)]; simp))
     have := q2 a
     simp only [inner] at this
-    rw [outer] at this
-    exact this
+    rwa [outer] at this
 
 theorem t_OutsideSysOk : OutsideSysOk := by
   intro E α _ N L L' F h1 h2 h3
@@ -429,13 +425,13 @@ theorem t_OutsideDomination : OutsideDomination := by
   refine psd_congr (fun x _ y _ => ?_) this
   congr 1
   by_cases h : t ∈ ⨅ p, L p
-  · rw [if_pos h]
-    exact Finset.prod_eq_one fun p _ => if_pos (AddSubgroup.mem_iInf.1 h p)
-  · rw [if_neg h]
+  · rw [ite_eq_left h]
+    exact Finset.prod_eq_one fun p _ => ite_eq_left (AddSubgroup.mem_iInf.1 h p)
+  · rw [ite_eq_right h]
     rw [AddSubgroup.mem_iInf] at h
     push Not at h
     obtain ⟨p, hp⟩ := h
-    exact Finset.prod_eq_zero (Finset.mem_univ p) (if_neg hp)
+    exact Finset.prod_eq_zero (Finset.mem_univ p) (ite_eq_right hp)
 
 theorem t_PhaseOk : PhaseOk := by
   intro E α _ d S F hd hS

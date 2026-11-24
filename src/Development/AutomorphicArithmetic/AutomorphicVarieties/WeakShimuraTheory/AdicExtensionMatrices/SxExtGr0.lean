@@ -58,16 +58,14 @@ theorem UpperTheory.V.Ws.sxExtGr0 :
   intro Λ _ _ _ _ X _ _ _ _ R _ _ _ W hz _ R' _ _ _ f f' h
   obtain ⟨-, u, hu, hm⟩ := UpperTheory.V.Alg.wPres_maximalIdeal_gr_zero_eq_sup_span_monomials Λ X R W hz
   have hloc : ∀ g : W.gr 0 →ₐ[Λ] R', ∀ x ∈ maximalIdeal (W.gr 0), g x ∈ maximalIdeal R' := fun g x hx => by
-    rw [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
-    exact hx
+    rwa [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
   refine UpperTheory.V.Alg.co_ext Λ (W.gr 0) Λ R' (maximalIdeal R') (Algebra.ofId Λ (W.gr 0)) (u : Set (W.gr 0)) ?_ ?_ f f'
     ⟨1, fun x hx => ?_⟩ (Subsingleton.elim _ _) fun s hs => ?_
   · intro b hb
     show b ∈ maximalIdeal (W.gr 0)
     rw [hm]
     exact Ideal.mem_sup_right (Ideal.subset_span hb)
-  · refine le_trans (hm.trans (sup_comm _ _)).le ?_
-    exact le_sup_left
+  · exact le_trans (hm.trans (sup_comm _ _)).le le_sup_left
   · rw [pow_one] at hx
     exact ⟨hloc f x hx, hloc f' x hx⟩
   · obtain ⟨n, -, hn, hb⟩ := hu s hs

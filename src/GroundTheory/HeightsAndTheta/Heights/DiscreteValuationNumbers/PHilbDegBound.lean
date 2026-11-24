@@ -176,8 +176,7 @@ theorem HilbDegBound.proof (h1 : HilbFnVanishBlock.Statement.{u}) (h2 : HilbFnCu
       exact hp3 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
     have := hQ
     have := hp1
-    have hd := h4 (MRing ι F) Q p.1 hlt
-    exact lt_of_add_one_le_natCast (hd.trans hdimle)
+    exact lt_of_add_one_le_natCast ((h4 (MRing ι F) Q p.1 hlt).trans hdimle)
 
 end
 

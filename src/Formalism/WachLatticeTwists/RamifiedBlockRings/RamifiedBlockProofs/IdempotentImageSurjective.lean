@@ -72,12 +72,10 @@ theorem globalModule_of (hF : StatFinPres.{max u w, x}) : StatGlobalModule.{u, v
     obtain ⟨φ, hφ0⟩ := hφ x' hx
     refine ⟨φ.comp eM.symm.toLinearMap, fun h => hφ0 ?_⟩
     refine LinearMap.ext fun y => ?_
-    have hy := LinearMap.congr_fun h (eM y)
-    simpa using hy
+    simpa using LinearMap.congr_fun h (eM y)
   have hcard' : ((Fintype.card (Fin g₀) * ∑ k : α, Fintype.card {a // bl a = k} : ℕ) : Cardinal) <
       Cardinal.mk (IsLocalRing.ResidueField O) := by
-    rw [Fintype.card_fin]
-    exact hcard
+    rwa [Fintype.card_fin]
   refine (globalConcrete O X X' T T' Z p q b hT hZ d R' (Fin m) (Fin g₀) P (fun Θ => hdet (Fin g₀) Θ)
     hφ' π' ρπ hρπ α bl hbl ρk hsurj hblk hcard').trans
     (le_of_eq (Finset.sum_congr rfl fun k _ => ?_))
@@ -130,8 +128,7 @@ theorem resConst : StatResConst := by
   have hmax : (RingHom.ker ψ).IsMaximal := RingHom.ker_isMaximal_of_surjective ψ hsurj
   have hker : RingHom.ker ψ = IsLocalRing.maximalIdeal T := IsLocalRing.eq_maximalIdeal hmax
   have hgm : g ∈ RingHom.ker ψ := by
-    rw [hker, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    exact hgnu
+    rwa [hker, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   rw [RingHom.mem_ker] at hgm
   simp [ψ, hg, sub_eq_zero] at hgm
   exact hgm.symm

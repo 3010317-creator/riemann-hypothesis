@@ -29,14 +29,13 @@ theorem antiB_sq (t : K) (s : ℕ) : antiB t s * antiB t s = (t * t) • (1 : Ma
     split_ifs <;> first | omega | simp
   · intro j _ hj
     simp only [antiB]
-    rw [if_neg, zero_mul]
+    rw [ite_eq_right, zero_mul]
     intro h
     apply hj
     ext
     show (j : ℕ) = s - 1 - i.val
     omega
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem antiB_det (t : K) (ht : t ≠ 0) (s : ℕ) : (antiB t s).det ≠ 0 := by
   intro h
@@ -76,8 +75,7 @@ private theorem det_ptEntry_ne_zero_of_blocks : ∀ (bs : List (K × ℕ)), (∀
     exact mul_ne_zero (antiB_det t ht s) ih
 
 theorem ptMat_det {n : ℕ} (w : Formalism.MainNotions.S.Point K n) : (Formalism.MainNotions.S.ptMat w).det ≠ 0 := by
-  have h := det_ptEntry_ne_zero_of_blocks w.1 w.2.1 n w.2.2
-  exact h
+  exact det_ptEntry_ne_zero_of_blocks w.1 w.2.1 n w.2.2
 
 theorem ptMat_isUnit {n : ℕ} (w : Formalism.MainNotions.S.Point K n) : IsUnit (Formalism.MainNotions.S.ptMat w).det :=
   isUnit_iff_ne_zero.mpr (ptMat_det w)

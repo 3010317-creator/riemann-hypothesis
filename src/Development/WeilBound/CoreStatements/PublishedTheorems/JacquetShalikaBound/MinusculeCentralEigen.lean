@@ -195,13 +195,11 @@ theorem eig_central (ρ : Representation ℂ (GL (Fin n) F) V) (v : V) (z : Fin 
     rw [centralHecke_apply]
     by_cases hy : y ∈ integralGL F n
     · have hm : g₀ * y ∈ centralSet F n := by
-        rw [mem_centralSet, inv_mul_cancel_left]
-        exact hy
+        rwa [mem_centralSet, inv_mul_cancel_left]
       rw [Set.indicator_of_mem hm, Set.indicator_of_mem (show y ∈ (integralGL F n : Set (GL (Fin n) F))
         from hy), one_mul, ← mul_assoc, map_mul, Module.End.mul_apply, h.1 y hy]
     · have hm : g₀ * y ∉ centralSet F n := by
-        rw [mem_centralSet, inv_mul_cancel_left]
-        exact hy
+        rwa [mem_centralSet, inv_mul_cancel_left]
       rw [Set.indicator_of_notMem hm, Set.indicator_of_notMem (show y ∉ (integralGL F n :
         Set (GL (Fin n) F)) from hy), zero_mul]
   rw [hpt, integral_indicator (isOpen_integralGL F n).measurableSet, setIntegral_const,

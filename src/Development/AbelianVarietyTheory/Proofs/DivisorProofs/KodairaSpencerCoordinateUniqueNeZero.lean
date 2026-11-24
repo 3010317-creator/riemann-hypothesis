@@ -118,8 +118,7 @@ theorem derivation_eq_zero_of_jacobian {k B F : Type} [CommRing k] [CommRing B] 
     exact congrArg _ hc'.symm
   have h3 : (φ.mapMatrix m).det ≠ 0 := by
     rw [← RingHom.map_det]
-    intro h0
-    exact hJ0 (by rw [h2, map_mul, h0, zero_mul])
+    exact fun h0 => hJ0 (by rw [h2, map_mul, h0, zero_mul])
   have h4 : (φ.mapMatrix m).mulVec (fun c => ℓ (e c)) = 0 := by
     funext a
 
@@ -183,8 +182,7 @@ theorem eq_zero_tangent_of_jacobian {k : Type} [CommRing k] {Y : Scheme.{0}} {p 
     (h t t.2 Γ(Y, Y.basicOpen (t : Γ(Y, K.bundle.U i))))
   have hVU : Y.basicOpen (t : Γ(Y, K.bundle.U i)) ≤ K.bundle.U i := Y.basicOpen_le _
   have h₂ : (algX p (Y.basicOpen (t : Γ(Y, K.bundle.U i)))).IsStandardSmoothOfRelativeDimension D := by
-    rw [← resG_comp_algX p hVU]
-    exact h₁
+    rwa [← resG_comp_algX p hVU]
   have hV : IsAffineOpen (Y.basicOpen (t : Γ(Y, K.bundle.U i))) := hU.basicOpen _
   generalize Y.basicOpen (t : Γ(Y, K.bundle.U i)) = V at hxt hVU h₂ hV
   have hzV : ⊤ ≤ z ⁻¹ᵁ V := fun y _ => by
@@ -193,8 +191,7 @@ theorem eq_zero_tangent_of_jacobian {k : Type} [CommRing k] {Y : Scheme.{0}} {p 
   have hwV : ⊤ ≤ w ⁻¹ᵁ V := fun y _ => by
     obtain ⟨y', rfl⟩ := spMap_fst_surjective_field F y
     have := hzV (Set.mem_univ y')
-    rw [← hfst] at this
-    exact this
+    rwa [← hfst] at this
   have hinlV : ⊤ ≤ (spMap (TrivSqZeroExt.inlHom F F) ≫ z) ⁻¹ᵁ V := fun y _ =>
     hzV (Set.mem_univ _)
   have key : ∀ (y : Sp F ⟶ Y) (hy : ⊤ ≤ y ⁻¹ᵁ V),
@@ -256,8 +253,7 @@ namespace GlobalTheory
 open GlobalTheory.TopForm in
 theorem CanonLB.exists_jacobian_evalPt_ne_zero : ∀ {k : Type} [CommRing k] {Y : Scheme.{0}} {p : Y ⟶ Sp k} {D : ℕ} [SmoothOfRelativeDimension D p] (K : GlobalTheory.CanonLB p D) (i : K.bundle.ι) {F : Type} [Field F] (z : Sp F ⟶ Y) (hz : ⊤ ≤ z ⁻¹ᵁ K.bundle.U i), ∃ g : Fin D → Γ(Y, K.bundle.U i), evalPt z _ hz (K.jacobian i le_rfl g) ≠ 0 := by
   intro k _ Y p D _ K i F _ z hz
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   let Sm : Submodule Γ(Y, K.bundle.U i) (FormsOn p D (K.bundle.U i)) :=
     Submodule.comap (K.coeff i le_rfl) (RingHom.ker (evalPt z _ hz))
   have hsub : Set.range (dForm (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p (K.bundle.U i)) (D := D)) ⊆ (Sm : Set _) := by
@@ -333,8 +329,7 @@ theorem exists_lift_sqZero {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     rw [← cancel_mono (inc₀ X Z), Category.assoc, hw₀f, hw, Category.assoc]
   have hzU : ∀ s, M.σ (z s) ∈ U₀ X Z := fun s => by
     have := hz (Set.mem_univ s)
-    rw [M.off_eq] at this
-    exact this
+    rwa [M.off_eq] at this
   have hU : ⊤ ≤ w₀ ⁻¹ᵁ U₀ X Z := by
     intro t _
     obtain ⟨s, rfl⟩ := hs t
@@ -537,8 +532,7 @@ theorem exists_datum {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
     (((common₀ X Z).pull M.σ).mem _ k _).1 (hz hs).2.2
   have hfo : ⊤ ≤ (z ≫ toFlag M) ⁻¹ᵁ flagOpen X := fun s hs => by
     have := ho hs
-    rw [M.off_eq] at this
-    exact this
+    rwa [M.off_eq] at this
   obtain ⟨alg, hQex⟩ := exists_chartFr (z ≫ toFlag M) hfo
   obtain ⟨Q, hQ⟩ := hQex k hk
   have hzQ : z ≫ toFlag M = X.ptY Q := FlagCover.eq_ptY hQ.lies

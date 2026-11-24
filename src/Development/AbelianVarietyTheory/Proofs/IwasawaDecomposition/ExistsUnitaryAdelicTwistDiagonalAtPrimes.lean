@@ -87,7 +87,7 @@ theorem exists_tw : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   have hval : ∀ P ∈ Q, ∀ i : Fin n, P.valuation E (dEnt n (π : E) i) = 1 := by
     intro P hP i
     unfold dEnt
-    rw [if_neg (hπ0 P hP)]
+    rw [ite_eq_right (hπ0 P hP)]
     split_ifs
     · exact le_antisymm (HeightOneSpectrum.valuation_le_one _ π)
         (not_lt.1 fun h => hπ P hP ((HeightOneSpectrum.valuation_lt_one_iff_mem _ _).1 h))
@@ -109,9 +109,7 @@ theorem exists_tw : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     ⟨(⟨decoRaw ST SG (1 : GL (Fin n) (AfE F E)),
       decorated_lattice_exists hc n ST SG 1 (one_mem _)⟩, fun P => Finset.notMem_empty _ P.2 |>.elim),
       fun P => Finset.notMem_empty _ P.2 |>.elim⟩
-  have hb : IsPtOf hc 1 p := by
-    apply (PtDeco.isPtOf_iff_decoRaw F E hc n ST SG ∅ 1 p rfl).2
-    exact ⟨one_mem _, rfl⟩
+  have hb : IsPtOf hc 1 p := (PtDeco.isPtOf_iff_decoRaw F E hc n ST SG ∅ 1 p rfl).2 ⟨one_mem _, rfl⟩
   have hpt : IsPtOf hc g p := by
     refine ⟨hg, ?_, fun P x hx i hi => ?_, fun w x hx i => ?_, fun P => absurd P.2 (Finset.notMem_empty _)⟩
     · exact c1
@@ -128,7 +126,7 @@ theorem exists_tw : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     show dAut n (π : E) (Pi.single j 1) i = _
     rw [dAut_apply]
     unfold dEnt
-    rw [if_neg (hπ0 P.1 P.2)]
+    rw [ite_eq_right (hπ0 P.1 P.2)]
     by_cases h : i = j
     · subst h; simp
     · simp [h]
@@ -162,7 +160,6 @@ theorem exists_tw : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
       simp only [Matrix.map_mul, hMi, mul_one] at h
       rw [h, Matrix.map_one _ (map_zero _) (map_one _)]
     have h := congrFun (congrFun hM i) j
-    rw [Matrix.map_apply, Matrix.one_apply] at h
-    exact h
+    rwa [Matrix.map_apply, Matrix.one_apply] at h
 
 end GlobalTheory.Mem.Col2.TwUnit

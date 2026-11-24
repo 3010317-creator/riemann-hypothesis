@@ -20,8 +20,7 @@ namespace P_exGrp
 
 theorem exists_level (μ : kˣ →* ℂˣ) (hμ : IsSmoothChar μ) :
     ∃ c : ℕ, ∀ u : 𝒪[k]ˣ, (u : 𝒪[k]) - 1 ∈ IsLocalRing.maximalIdeal 𝒪[k] ^ c → res μ u = 1 := by
-  have hopen : IsOpen (μ.ker : Set kˣ) := hμ
-  obtain ⟨V, hVo, hV⟩ := (Units.isEmbedding_val₀ (G₀ := k)).isInducing.isOpen_iff.mp hopen
+  obtain ⟨V, hVo, hV⟩ := (Units.isEmbedding_val₀ (G₀ := k)).isInducing.isOpen_iff.mp hμ
   have h1 : (1 : k) ∈ V := by
     have : (1 : kˣ) ∈ (Units.val ⁻¹' V) := by rw [hV]; exact μ.ker.one_mem
     simpa using this
@@ -33,26 +32,18 @@ theorem exists_level (μ : kˣ →* ℂˣ) (hμ : IsSmoothChar μ) :
     ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
   obtain ⟨c, hc⟩ := exists_pow_lt₀ hlt γ
   refine ⟨c, fun u hu => ?_⟩
-  have hm : IsLocalRing.maximalIdeal 𝒪[k] = Ideal.span {ϖ} :=
-    (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ
-  rw [hm, Ideal.span_singleton_pow, Ideal.mem_span_singleton] at hu
+  rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ, Ideal.span_singleton_pow,
+    Ideal.mem_span_singleton] at hu
   obtain ⟨t, ht⟩ := hu
   have e : ((u : 𝒪[k]) : k) - 1 = (algebraMap 𝒪[k] k ϖ) ^ c * algebraMap 𝒪[k] k t := by
     have := congrArg (algebraMap 𝒪[k] k) ht
-    rw [map_sub, map_one, map_mul, map_pow] at this
-    exact this
-  have ht1 : valuation k (algebraMap 𝒪[k] k t) ≤ 1 := t.2
+    rwa [map_sub, map_one, map_mul, map_pow] at this
   have hv : valuation k (((u : 𝒪[k]) : k) - 1) < γ := by
     rw [e, map_mul, map_pow]
     calc valuation k (algebraMap 𝒪[k] k ϖ) ^ c * valuation k (algebraMap 𝒪[k] k t)
-        ≤ valuation k (algebraMap 𝒪[k] k ϖ) ^ c := mul_le_of_le_one_right' ht1
+        ≤ valuation k (algebraMap 𝒪[k] k ϖ) ^ c := mul_le_of_le_one_right' t.2
       _ < γ := hc
-  have hmem : ((u : 𝒪[k]) : k) ∈ V := hγ hv
-  have hk : unitIncl k u ∈ μ.ker := by
-    have : unitIncl k u ∈ (Units.val ⁻¹' V : Set kˣ) := hmem
-    rw [hV] at this
-    exact this
-  exact hk
+  exact (hV ▸ hγ hv : unitIncl k u ∈ (μ.ker : Set kˣ))
 
 def Good {α : Type} (d : α → α → ℕ) (l : List α) : Prop :=
   ∀ (a a' b' b : ℕ) (h1 : a ≤ a') (h2 : a' < b') (h3 : b' ≤ b) (hb : b < l.length),
@@ -229,9 +220,7 @@ theorem step_exGrp : ExistsGroupElementProp (k := k) := by
   let rep : Fin l.length → Fin n := fun a => Classical.choose (hrep a)
   have hrep' : ∀ a, res (χ (rep a)) = l[(a : ℕ)] := fun a => Classical.choose_spec (hrep a)
   have hfrep : ∀ a, f (rep a) = a := by
-    intro a
-    apply Fin.ext
-    exact (hnd.getElem_inj_iff).mp ((hf (rep a)).trans (hrep' a))
+    exact fun a => Fin.ext ((hnd.getElem_inj_iff).mp ((hf (rep a)).trans (hrep' a)))
   let G : Grp k n :=
     { s := l.length
       d := fun a => Fintype.card {i // f i = a}

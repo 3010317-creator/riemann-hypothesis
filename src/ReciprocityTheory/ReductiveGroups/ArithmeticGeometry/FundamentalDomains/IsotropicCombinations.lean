@@ -35,8 +35,7 @@ lemma herm_sum_smul (c : Fin n → E) (β : Fin n → Fin r → E) (y : Fin r �
 
 lemma herm_add_smul (x ξ y : Fin r → E) (e : E) : herm G (x + e • ξ) y = herm G x y + e * herm G ξ y := by
   have h := map_add (hermLin G y) x (e • ξ)
-  rw [map_smul, smul_eq_mul] at h
-  exact h
+  rwa [map_smul, smul_eq_mul] at h
 
 variable {G} (hG : ∀ a b, cc (G a b) = G b a) {ξ : Fin r → E} {β : Fin n → Fin r → E}
   (hβ : ∀ k, herm G (β k) ξ = 0) (hξξ : herm G ξ ξ = 0)
@@ -156,15 +155,14 @@ lemma hC_comb2_ortho (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) {n p : �
     refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun b _ => ?_
     ring
   rw [h1]
-  simp_rw [h2, hf, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp_rw [h2, hf, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   unfold ReciprocityTheory.MultiplicativeHeights.jForm ReciprocityTheory.MultiplicativeHeights.sgn
   refine Finset.sum_congr rfl fun k _ => ?_
   split_ifs <;> ring
 
 lemma comb_swap {m n : ℕ} (w : Fin n → ℂ) (y : Fin n → Fin m → ℂ) (f : Fin m → Fin r → ℂ) :
     ∑ j, w j • ∑ k, y j k • f k = ∑ k, (∑ j, w j * y j k) • f k := by
-  simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
 
 lemma qcomb {m n : ℕ} (Q : Matrix (Fin m) (Fin m) ℂ) (w : Fin n → ℂ) (a : Fin n → Fin m → ℂ)
     (k : Fin m) : (Q *ᵥ ∑ j, w j • a j) k = ∑ j, w j * (Q *ᵥ a j) k := by

@@ -176,17 +176,14 @@ theorem good_localGraph {n d : ℕ} (J : Ideal (MvPolynomial (Fin n) ℂ)) (U : 
         funext k
         simp [hσ]
       refine ⟨fun i => w0 (e.symm i), ⟨by rw [hσw]; exact hw0, ?_⟩, ?_⟩
-      · rw [Set.mem_ofPred_eq, hσw, ← hAg w0 hw0, hgw0]
-        exact hz'P
+      · rwa [Set.mem_ofPred_eq, hσw, ← hAg w0 hw0, hgw0]
       · simp only [hσw, hL, hgw0]
     · rintro ⟨w, ⟨hwU, hwP⟩, rfl⟩
       have hmem : g (σ w) ∈ ComplexSets.zeroSet J ∩ V := hZV ▸ ⟨σ w, hwU, rfl⟩
       have hA : A *ᵥ WithLp.ofLp (L (g (σ w))) = σ w := hAg _ hwU
       refine ⟨⟨fun q hq => hmem.1 q hq, ?_⟩, hmem.2, ?_⟩
-      · rw [Set.mem_ofPred_eq, hA]
-        exact hwP
-      · rw [hA]
-        exact hwP
+      · rwa [Set.mem_ofPred_eq, hA]
+      · rwa [hA]
 
 end MassFinite
 
@@ -224,8 +221,7 @@ theorem MassFinite.proof (hG : ComplexSets.GenericProjectionFinite.Statement)
       obtain ⟨a, rfl⟩ := Ideal.mem_span_singleton'.mp hc
       have hzj : eval (fun i => z i) j = 0 := hz j hj
       have hpb : eval (fun i => z i) (ComplexSets.pullback A P) = 0 := by
-        rw [MassFinite.eval_pullback]
-        exact hzP
+        rwa [MassFinite.eval_pullback]
       simp [hzj, hpb]
     · exact Or.inr ⟨⟨hz, hzP⟩, hzR⟩
   have hgood := hL n d b I₀ G hI₀ (MassFinite.good_localGraph J U b hb I₀ hI₀ P

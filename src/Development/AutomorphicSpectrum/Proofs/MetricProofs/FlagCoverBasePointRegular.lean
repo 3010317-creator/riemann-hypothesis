@@ -91,7 +91,7 @@ theorem isMultiHomog_rename_block {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι
   · rw [Function.extend_apply' _ _ _ hk, Pi.zero_apply]
     apply Finset.sum_eq_zero
     intro p _
-    rw [if_neg (fun h => hk ⟨p.1, h⟩)]
+    rw [ite_eq_right (fun h => hk ⟨p.1, h⟩)]
 
 theorem mConeMap_rename {Ω : Type} [Field Ω] {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hb : IsBlockMap κ v)
     (y : (Σ k, ι' k) → Ω) (g : MRing ι) : mConeMap y (rename v g) = rename κ (mConeMap (y ∘ v) g) := by
@@ -155,8 +155,7 @@ theorem comp_mem_mcPts {Ω Ω' : Type} [Field Ω] [Field Ω'] {κ : K → K'} {v
     subst hk0
     refine ⟨i, ?_⟩
     show z (v ⟨k0, i⟩) ≠ 0
-    rw [hp]
-    exact hi'
+    rwa [hp]
   · rw [← eval_rename_block v z f]
     apply hz2
     rw [mCoordIdeal, RingHom.mem_ker] at hf ⊢
@@ -202,8 +201,7 @@ theorem regAt_φ_valAt : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fi
     refine ⟨_, _, _, hg', hh', ?_, he', ?_, ?_⟩
     · rw [hae]
       exact (map_ne_zero Cv.φ).2 hax
-    · rw [eval_rename_block]
-      exact hev
+    · rwa [eval_rename_block]
     · rw [eval_rename_block, eval_rename_block]
   have hex1 : ∃ v, IsValueAt M.x s (zb ∘ Cv.v) v := ⟨_, hv1⟩
   have hex2 : ∃ v, IsValueAt M'.x (Cv.φ s) zb v := ⟨_, hv2⟩

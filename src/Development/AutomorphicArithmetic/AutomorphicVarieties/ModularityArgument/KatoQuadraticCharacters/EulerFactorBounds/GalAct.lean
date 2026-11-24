@@ -208,10 +208,8 @@ theorem UpperTheory.V.Z.Kato.Nb.sGalAct :
       X.act l (δ : Matrix (Fin 2) (Fin 2) ℤ) b, act_mem X l N w δ hδ b hb, ?_⟩, hcomm δ hδ⟩⟩
   · exact hE.trans (hE.symm (hcomm γ (gam_le N l hγ))) (hgal s _ _ (hinv γ hγ))
   · have h := hgal s _ _ hba'
-    rw [map_smul] at h
-    exact h
+    rwa [map_smul] at h
   · rw [act_act_conj]
     exact hact _ _ _ (hinv _ (conj_mem N l γ δ hγ hδ))
   · have h := hact (δ : Matrix (Fin 2) (Fin 2) ℤ) _ _ hba'
-    rw [map_smul] at h
-    exact h
+    rwa [map_smul] at h

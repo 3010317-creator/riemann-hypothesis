@@ -80,14 +80,14 @@ lemma contDiff_lead (i : ℕ) : ContDiff ℂ ω (fun z : 𝕄 => lead i z) := by
   · have e : (fun z : 𝕄 => lead i z) = fun z : 𝕄 =>
         Matrix.det (fun a b => z (Fin.castLE h a) (Fin.castLE h b) : Fin i → Fin i → ℂ) := by
       funext z
-      simp only [lead, dif_pos h]
+      simp only [lead, dite_eq_left h]
       rfl
     rw [e]
     exact contDiff_det_k_type.comp (contDiff_pi.2 fun a => contDiff_pi.2 fun b =>
       contDiff_pi.1 (contDiff_pi.1 contDiff_id (Fin.castLE h a)) (Fin.castLE h b))
   · have e : (fun z : 𝕄 => lead i z) = fun _ => 0 := by
       funext z
-      simp only [lead, dif_neg h]
+      simp only [lead, dite_eq_right h]
     rw [e]
     exact contDiff_const
 
@@ -100,8 +100,7 @@ lemma contDiffOn_phiQ (μ : Fin n → ℤ) : ContDiffOn ℂ ω (_root_.Reciproci
   have hg : ContDiffOn ℂ ω (fun y : 𝕄 => lead ((i : ℕ) + 1) y) (OmegaSet n : Set 𝕄) :=
     (contDiff_lead _).contDiffOn
   rcases Int.eq_nat_or_neg (-(μ i - muNext μ i)) with ⟨k, hk | hk⟩
-  · simp only [hk, zpow_natCast]
-    exact hg.pow k
+  · simpa only [hk, zpow_natCast] using hg.pow k
   · simp only [hk, _root_.zpow_neg, zpow_natCast]
     exact (hg.pow k).inv fun y hy => pow_ne_zero _ (hne y hy)
 

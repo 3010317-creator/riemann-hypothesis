@@ -483,8 +483,7 @@ theorem identOf' : IdentOf := by
   have h0 := O.eigArch (.inl ()) (F.t₀ i) rfl rfl
   have h3 := hχ.2.1 (.inl ())
   have one : (F.t₀ i).val O.χa O.χb = 1 := by
-    rw [← h0]
-    exact h3
+    rwa [← h0]
   have key : ∀ (v : InfinitePlace E) (s : Bool) (m : ℕ) (side : Bool),
       (if side then zVal [(s, m)] (O.χb v) else zVal [(s, m)] (O.χa v)) =
         (if side then zVal [(s, m)] ((F₀.A i).χb v) else zVal [(s, m)] ((F₀.A i).χa v)) := by
@@ -826,7 +825,7 @@ theorem candT_of (h1 : Tail.ReadT) (h2 : Tail.ExpRead) (h3 : RS.JoinSat) : CandT
   have hm : (F.d.betaL _ (F₀.C.le i)).m w = fun x y => if x = y then F.d.qT (F₀.C.a i) w x.1.1 else 0 := by
     funext x y
     show (if w ∈ F.d.T then _ else _) = _
-    rw [if_pos hwd]
+    rw [ite_eq_left hwd]
     rfl
   let G' : F.d.kap w → H E (F₀.C.a i) (n - F₀.C.a i) → ℂ := fun y => G (α, Function.update x ⟨w, hwP⟩ y)
   change (locM w ((F.d.betaL _ (F₀.C.le i)).m w))^[F.m] G' ≠ 0 at hx
@@ -843,7 +842,7 @@ theorem candT_of (h1 : Tail.ReadT) (h2 : Tail.ExpRead) (h3 : RS.JoinSat) : CandT
   · exfalso
     have h0 : F.d.qT (F₀.C.a i) w s.1.1 = 0 := by
       funext y
-      simp only [LocData.qT, dif_neg hadm]
+      simp only [LocData.qT, dite_eq_right hadm]
       rfl
     obtain ⟨k, hk⟩ : ∃ k, F.m = k + 1 := ⟨F.m - 1, by have := F.m_pos; omega⟩
     rw [h0, hk, Function.iterate_succ_apply', Psmall.actP_zero] at hs
@@ -853,7 +852,7 @@ theorem candT_of (h1 : Tail.ReadT) (h2 : Tail.ExpRead) (h3 : RS.JoinSat) : CandT
         (((I2 (F₀.C.a i) (n - F₀.C.a i) w).relIndex (K2 (F₀.C.a i) (n - F₀.C.a i) w) : ℕ) : ℂ)) *
       dc2 w (F.d.ϖ w) (restr (j : Fin n → ℤ) _ hadm.2.1) (restr (j : Fin n → ℤ) _ hadm.2.2) g := by
     funext g
-    simp only [LocData.qT, dif_pos hadm, Finsupp.sum]
+    simp only [LocData.qT, dite_eq_left hadm, Finsupp.sum]
     rw [← Finset.sum_coe_sort]
   rw [hq] at hs
   obtain ⟨ξa, ξb, hJ, hsum⟩ := h1 E n (F₀.C.a i) (n - F₀.C.a i) F₀.μ s₁ s₂ Pa Pb D hc.ctx w (F.d.ϖ w)
@@ -871,8 +870,7 @@ theorem candT_of (h1 : Tail.ReadT) (h2 : Tail.ExpRead) (h3 : RS.JoinSat) : CandT
     refine Finset.sum_congr rfl fun j _ => ?_
     ring
   have hJ' : JEig Pa Pb w (F₀.d₀.ϖ w) ξa ξb := by
-    rw [← F.same.2.2.2.1]
-    exact hJ
+    rwa [← F.same.2.2.2.1]
   obtain ⟨hma, hmb, hbc⟩ := F.choiceT i s₁ s₂ Pa Pb D hc w hwd s.1.1 hadm ξa ξb hJ' hsum'
   obtain ⟨hSa, hSb⟩ := h2 E (F₀.C.a i) (n - F₀.C.a i) Pa Pb w (F.d.ϖ w) ξa ξb (hd.unif w) hma hmb hJ
   have hS0 : w ∉ F₀.d₀.S₀ := by
@@ -928,22 +926,13 @@ theorem dcos_eq (m : ℕ) (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (x : Fin m �
     dcos m w (tdiag ϖ x) = GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.cosetInd (fun i => ϖ ^ x i) := by
   funext g
   by_cases h : ∃ a ∈ iwGL m w, ∃ b ∈ iwGL m w, g = a * tdiag ϖ x * b
-  · rw [dcos, if_pos h, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.cosetInd, Set.indicator_of_mem]
+  · rw [dcos, ite_eq_left h, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.cosetInd, Set.indicator_of_mem]
     exact h
-  · rw [dcos, if_neg h, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.cosetInd, Set.indicator_of_notMem]
+  · rw [dcos, ite_eq_right h, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.cosetInd, Set.indicator_of_notMem]
     exact h
 
 theorem dcos_right (m : ℕ) (w : Pl E) (t g : GLw m w) (i : GLw m w) (hi : i ∈ iwGL m w) :
-    dcos m w t (g * i) = dcos m w t g := by
-  have key : (∃ a ∈ iwGL m w, ∃ b ∈ iwGL m w, g * i = a * t * b) ↔
-      (∃ a ∈ iwGL m w, ∃ b ∈ iwGL m w, g = a * t * b) := by
-    constructor
-    · rintro ⟨a, ha, b, hb, e⟩
-      exact ⟨a, ha, b * i⁻¹, mul_mem hb (inv_mem hi), by rw [← mul_assoc, ← e]; group⟩
-    · rintro ⟨a, ha, b, hb, e⟩
-      exact ⟨a, ha, b * i, mul_mem hb hi, by rw [e]; group⟩
-  unfold dcos
-  simp only [key]
+    dcos m w t (g * i) = dcos m w t g := PositivityTheory.Rg.BcB.F.LocComm.dcos_mul_right t g i hi
 
 theorem smul_cancel {M : Type} [AddCommGroup M] [Module ℂ M] {δ dh c p d : ℂ} {J y : M} (hne : δ ≠ 0)
     (hd : d = δ * dh) (h : (c * (d * p)) • y = δ • J) : J = (c * p * dh) • y := by
@@ -1233,8 +1222,7 @@ theorem pw_single {N : ℕ} (ξ : Fin N → ℂˣ) (i : Fin N) : pw ξ (Pi.singl
   · simp
   · intro j _ hj
     simp [hj]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 def x0 (N : ℕ) : Fin N → ℤ := fun i => -(2 * ((i : ℕ) : ℤ))
 
@@ -1316,8 +1304,7 @@ theorem je_finite (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) {V : Type} [AddCommGr
     show ((hkW ρ (I2 a b w) _ _ _ ⟨v, hv⟩ : GlobalTheory.PRep.fixed ρ (I2 a b w)) : V) = _
     rw [hkW_apply]
     exact hev _ _ (hgap o).1 (hgap o).2
-  · intro h0
-    exact hne (congrArg Subtype.val h0)
+  · exact fun h0 => hne (congrArg Subtype.val h0)
 
 end Place
 
@@ -1352,12 +1339,12 @@ theorem key_mem {n : ℕ} (P₀ P : Pre E n) (w : Pl E) (hP : PreEquiv P₀ P) :
   have hc := c_eq hP
   obtain ⟨e, he, -⟩ := hP
   intro j _
-  simp only [key, dif_pos hc]
+  simp only [key, dite_eq_left hc]
   exact ⟨e.symm (Fin.cast hc j), by show P₀.cls _ w = _; rw [he, Equiv.apply_symm_apply]⟩
 
 theorem key_eqv {n : ℕ} (P₀ P Q : Pre E n) (w : Pl E) (hP : P₀.c = P.c) (hQ : P₀.c = Q.c)
     (hk : key P₀ w P = key P₀ w Q) : Nonempty ((lp P w).Equiv (lp Q w)) := by
-  simp only [key, dif_pos hP, dif_pos hQ] at hk
+  simp only [key, dite_eq_left hP, dite_eq_left hQ] at hk
   obtain ⟨e1, ⟨φ1⟩⟩ := lp_equiv_cast P w hP
   obtain ⟨e2, ⟨φ2⟩⟩ := lp_equiv_cast Q w hQ
   obtain ⟨ψ⟩ := GlobalTheory.CompanionTheory.SegReorder.famCongr (f := fun j => P.cls (Fin.cast hP j) w)
@@ -1408,13 +1395,12 @@ theorem mem_zs (Pa : Pre E a) (Pb : Pre E b) (w : Pl E) (ϖ : (w.adicCompletion 
     (h : ∃ p, Good Pa Pb w κ p) (ξ : (Fin a → ℂˣ) × (Fin b → ℂˣ)) (hJ : JEig h.choose.1 h.choose.2 w ϖ ξ.1 ξ.2) :
     ξ ∈ ZS Pa Pb w ϖ κ := by
   unfold ZS
-  rw [dif_pos h]
-  exact hJ
+  rwa [dite_eq_left h]
 
 theorem ms_eq (Pa : Pre E a) (Pb : Pre E b) (w : Pl E)
     (κ : (Fin Pa.c → GlobalTheory.LocGL.IrrGL (k := w.adicCompletion E)) × (Fin Pb.c → GlobalTheory.LocGL.IrrGL (k := w.adicCompletion E)))
     (h : ∃ p, Good Pa Pb w κ p) : MS Pa Pb w κ = fr w h.choose :=
-  dif_pos h
+  dite_eq_left h
 
 theorem jEigFin_at (Pa : Pre E a) (Pb : Pre E b) (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) :
     ∃ (Z : Set ((Fin a → ℂˣ) × (Fin b → ℂˣ))) (m : ℕ), Z.Finite ∧ ∀ (Pa' : Pre E a) (Pb' : Pre E b),
@@ -1471,8 +1457,7 @@ theorem isoV_map_mulChi {N : ℕ} {V V' : Submodule ℂ (Sm E N)} (χ : HChar E)
   obtain ⟨ψ, rfl⟩ := S.surjective ψ
   have h1 : ψ.1 = ((opMul χ o : ℂˣ) : ℂ) • act o φ.1 + opAdd χ o • φ.1 := by
     apply (mulChi N χ).injective
-    rw [← act_mulChi]
-    exact hψ
+    rwa [← act_mulChi]
   have hm : act o φ.1 ∈ V := by
     have h2 : ((opMul χ o : ℂˣ) : ℂ) • act o φ.1 ∈ V := by
       have h3 := V.sub_mem ψ.2 (V.smul_mem (opAdd χ o) φ.2)

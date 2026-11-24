@@ -70,10 +70,10 @@ theorem sum_addChar_trace_rectMatrix_mul {k : Type} [Field k] [Fintype k] {R : T
     rw [show Fintype.card (Matrix (Fin r) (Fin t) k) = Fintype.card (Fin r → Fin t → k) from rfl]
     simp [← pow_mul, mul_comm]
   · obtain ⟨i, j, hij⟩ : ∃ i j, m i j ≠ 0 := by
-      by_contra h; push_neg at h; exact hm (Matrix.ext h)
+      by_contra h; push Not at h; exact hm (Matrix.ext h)
     have h1 := hψ hij
     obtain ⟨c, hc⟩ : ∃ c, ψ (m i j * c) ≠ 1 := by
-      by_contra h; push_neg at h; apply h1; ext c; simp [AddChar.mulShift_apply, h]
+      by_contra h; push Not at h; apply h1; ext c; simp [AddChar.mulShift_apply, h]
     set a₀ : Matrix (Fin r) (Fin t) k := Matrix.single j i c
     have ha₀ : trace (a₀ * m) = m i j * c := by
       simp [a₀, Matrix.trace_single_mul, mul_comm]
@@ -133,8 +133,7 @@ theorem sum_GL_character_neg_det_addChar_trace (k : Type) [Field k] [Fintype k] 
     (fun x y e => Units.ext (neg_injective e)) _ _ ?_ ?_
   · intro a ha
     rw [dite_eq_right, zero_mul]
-    intro h
-    exact ha ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero (-a) h.ne_zero, by simp⟩
+    exact fun h => ha ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero (-a) h.ne_zero, by simp⟩
   · intro x
     have hx : IsUnit (-(-(x : Matrix (Fin r) (Fin r) k))).det := by
       rw [neg_neg]; exact (Matrix.isUnit_iff_isUnit_det _).mp x.isUnit
@@ -178,8 +177,7 @@ theorem fourier_flatDatum_finite : ∀ (k : Type) [Field k] [Fintype k] (ψ : Ad
   · have : q ^ (r * t + r ^ 2) * (q ^ (r * t) * G)⁻¹ = q ^ (r ^ 2) * G⁻¹ := by
       rw [pow_add, mul_inv]
       field_simp
-    rw [this]
-    exact hGinv
+    rwa [this]
 
   set u₁ := u.submatrix (Fin.castAdd t) id
   set u₂ := u.submatrix (Fin.natAdd r) id
@@ -204,8 +202,8 @@ theorem fourier_flatDatum_finite : ∀ (k : Type) [Field k] [Fintype k] (ψ : Ad
   rw [sum_GL_character_neg_det_addChar_trace, sum_addChar_trace_rectMatrix_mul ψ hψ u₂]
   by_cases hu2 : u₂ = 0
   swap
-  · rw [if_neg hu2, mul_zero, dite_eq_right (fun h => hu2 ((lowZero_iff_submatrix_natAdd_eq_zero u).mp h.1)), mul_zero]
-  rw [if_pos hu2]
+  · rw [ite_eq_right hu2, mul_zero, dite_eq_right (fun h => hu2 ((lowZero_iff_submatrix_natAdd_eq_zero u).mp h.1)), mul_zero]
+  rw [ite_eq_left hu2]
   by_cases hdet : IsUnit u₁.det
   swap
   · have h0 : u₁.det = 0 := by

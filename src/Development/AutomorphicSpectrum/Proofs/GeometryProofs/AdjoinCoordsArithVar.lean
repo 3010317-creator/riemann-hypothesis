@@ -125,8 +125,7 @@ theorem dense_point_lift (Ω : Type) [Field Ω] [CharZero Ω] (X X' : Scheme.{0}
     simpa [W'] using hwW
   · intro x _
     have hx : ξ x ∈ U := hU (show x ∈ (⊤ : (Sp Ω).Opens) from trivial)
-    rw [← hfac] at hx
-    exact hx
+    rwa [← hfac] at hx
 
 end GlobalTheory.CompanionTheory.Ar.Coords
 end -- clump:auto
@@ -148,7 +147,7 @@ namespace GlobalTheory.CompanionTheory.Ar.TupleCoords
 private theorem valR_eq_valMap {A : Type} [CommRing A] {X : Scheme} (x : Sp A ⟶ X)
     (U : X.Opens) (h : ⊤ ≤ (TopologicalSpace.Opens.map x.base).obj U) (f : X.presheaf.obj (op U)) :
     valR x U f = (GlobalTheory.Points.valMap x U h).hom f := by
-  simp only [valR, dif_pos h, GlobalTheory.Points.valMap, CommRingCat.hom_comp, RingHom.comp_apply]
+  simp only [valR, dite_eq_left h, GlobalTheory.Points.valMap, CommRingCat.hom_comp, RingHom.comp_apply]
 
 theorem exists_tuple_eq_point : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (r : ℕ) (p : Sp Ω ⟶ PSpace ℚ r),
     ∃ (x' : Fin (r + 1) → Ω) (hx' : x' ≠ 0), p = point ℚ x' hx' := by
@@ -311,8 +310,7 @@ theorem val_mem_of_components (hU : IsAffineOpen U) (hV : IsAffineOpen V) (C : S
     rw [← appLE_valMap (Spec.map ι) q hqW (le_preimage_top _) h', valMap_specMap]
     simp only [valMap, Category.assoc]
   have h' : ⊤ ≤ (Spec.map ι ≫ q) ⁻¹ᵁ (pullback.fst f g ⁻¹ᵁ U ⊓ pullback.snd f g ⁻¹ᵁ V) := by
-    rw [hq]
-    exact h
+    rwa [hq]
   have e : (valMap p _ h).hom t = (valMap (Spec.map ι ≫ q) _ h').hom t := by
     rw [← valR_eq, ← valR_eq, hq]
   rw [e, key]
@@ -413,8 +411,7 @@ theorem hom_to_spQ_ext {X : Scheme.{0}} (a b : X ⟶ Sp ℚ) : a = b := by
   haveI : IsAffine (Sp ℚ) := inferInstanceAs (IsAffine (Spec (CommRingCat.of ℚ)))
   apply ext_of_isAffine
   apply (cancel_epi (Scheme.ΓSpecIso (CommRingCat.of ℚ)).inv).mp
-  apply CommRingCat.hom_ext
-  exact RingHom.ext_rat _ _
+  exact CommRingCat.hom_ext (RingHom.ext_rat _ _)
 
 theorem smoothOfRelativeDimension_spMap (B : Type) [CommRing B] [Algebra ℚ B] (e : ℕ)
     [Algebra.IsStandardSmoothOfRelativeDimension e ℚ B] :
@@ -443,7 +440,7 @@ theorem smoothOfRelativeDimension_basicOpen_of_away : ∀ (Ω : Type) [Field Ω]
     apply Subtype.ext
     rw [hg]
     show (valMap ζ W h).hom σ = valR ζ W σ
-    simp only [valR, valMap, dif_pos h]
+    simp only [valR, valMap, dite_eq_left h]
     rfl
   let ψ : Γ(Z, Z.basicOpen σ) ≃+* Localization.Away g₀ :=
     IsLocalization.ringEquivOfRingEquiv (M := Submonoid.powers σ) (T := Submonoid.powers g₀) _ _ (valEquiv ζ W h A hA)
@@ -559,8 +556,7 @@ theorem form_section {N : ℕ} {Z : Scheme.{0}} (u : Z ⟶ PSpace ℚ N) (η : S
         set e := Proj.basicOpenIsoSpec (grading ℚ N) (X a) (X_mem ℚ N a) Nat.one_pos
         have : IsIso (Proj.awayToSection (grading ℚ N) (X a)) :=
           (Proj.basicOpenIsoAway (grading ℚ N) (X a) (X_mem ℚ N a) Nat.one_pos).isIso_hom
-        have hι : e.hom ≫ A = (chart ℚ N a).ι := by
-          exact Iso.hom_inv_id_assoc e _
+        have hι : e.hom ≫ A = (chart ℚ N a).ι := Iso.hom_inv_id_assoc e _
         have gen : ∀ (g : (chart ℚ N a).toScheme ⟶ Proj (grading ℚ N)) (_ : e.hom ≫ A = g)
             (hle : ⊤ ≤ g ⁻¹ᵁ chart ℚ N a),
             g.appLE (chart ℚ N a) ⊤ hle = A.appLE (chart ℚ N a) ⊤ hpre ≫ e.hom.appLE ⊤ ⊤ le_rfl := by
@@ -674,8 +670,7 @@ theorem snc_of_res (hR : ResKStatement) (N e d : ℕ) (x : Fin (N + 1) → Ω) (
         set e := Proj.basicOpenIsoSpec (grading ℚ r) (X l) (X_mem ℚ r l) Nat.one_pos
         have : IsIso (Proj.awayToSection (grading ℚ r) (X l)) :=
           (Proj.basicOpenIsoAway (grading ℚ r) (X l) (X_mem ℚ r l) Nat.one_pos).isIso_hom
-        have hι : e.hom ≫ A = (chart ℚ r l).ι := by
-          exact Iso.hom_inv_id_assoc e _
+        have hι : e.hom ≫ A = (chart ℚ r l).ι := Iso.hom_inv_id_assoc e _
         have gen : ∀ (g : (chart ℚ r l).toScheme ⟶ Proj (grading ℚ r)) (_ : e.hom ≫ A = g)
             (hle : ⊤ ≤ g ⁻¹ᵁ chart ℚ r l),
             g.appLE (chart ℚ r l) ⊤ hle = A.appLE (chart ℚ r l) ⊤ hpre ≫ e.hom.appLE ⊤ ⊤ le_rfl := by
@@ -701,8 +696,7 @@ theorem snc_of_res (hR : ResKStatement) (N e d : ℕ) (x : Fin (N + 1) → Ω) (
         ← valR_appLE _ _ hpre (le_preimage_top _), hA, ← CommRingCat.comp_apply, key, valR_specMap]
       apply eq_div_of_mul_eq hl
       simpa using ProjPoint.awayLift_mk_mul (grading ℚ r) ((aeval x').toRingHom) hu (X_mem ℚ r l) 1 (X i) hmem
-    rw [pullRatio, valR_appLE ζ (j ≫ pullback.snd _ _) le_rfl hW, hp₂, hratio] at this
-    exact this
+    rwa [pullRatio, valR_appLE ζ (j ≫ pullback.snd _ _) le_rfl hW, hp₂, hratio] at this
   · obtain ⟨hWa, hW, hAW⟩ := prod_chart j ζ x hx x' hx' hp₁ hp₂ a l ha hl
     obtain ⟨σ, hσ, hb⟩ := form_section (j ≫ pullback.fst _ _) ζ x hx (by simpa using hp₁) hW inf_le_left hG
     rw [← hσ]

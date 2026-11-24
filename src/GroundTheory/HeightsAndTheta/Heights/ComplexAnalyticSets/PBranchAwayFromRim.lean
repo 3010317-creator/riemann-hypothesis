@@ -59,8 +59,7 @@ theorem BranchAwayFromRim.proof (hex : NormalModelExists.Statement)
   have hh : h ∉ M.ideal := by
     intro hm
     apply hgJ
-    rw [← M.comap_eq]
-    exact hm
+    rwa [← M.comap_eq]
   have heval : ∀ w : Fin n ⊕ Fin M.m → ℂ,
       eval w h = GroundTheory.Heights₂.Heights.linEval u (firstCoords w) *
         ∏ i, eval (firstCoords w) (bd i) := by
@@ -115,8 +114,7 @@ theorem BranchAwayFromRim.proof (hex : NormalModelExists.Statement)
     exact squeeze_zero (fun j => dist_nonneg) (fun j => (Metric.mem_ball.mp (hτx (φ j))).le) h1j
   have hνx : firstCoords xh = x := by
     refine tendsto_nhds_unique ((hcontν.tendsto xh).comp hlim') ?_
-    refine hγlim.congr fun j => ?_
-    exact ((hΓZ b _ (hτr _)).2).symm
+    exact hγlim.congr fun j => ((hΓZ b _ (hτr _)).2).symm
 
   have hUN : firstCoords ⁻¹' N ∈ 𝓝 xh :=
     hcontν.continuousAt.preimage_mem_nhds (by rw [hνx]; exact hN)
@@ -131,8 +129,7 @@ theorem BranchAwayFromRim.proof (hex : NormalModelExists.Statement)
     refine ⟨c, t, ht, ?_⟩
     have hν : firstCoords (Γ c t) = firstCoords q := by rw [(hΓZ c t ht).2, hteq]
     refine hinj _ (hΓZ c t ht).1 q hqZ hν ?_
-    rw [heval, hν, ← heval]
-    exact hqh
+    rwa [heval, hν, ← heval]
   have hPdisj : ∀ q ∈ P, ∀ c c', c ≠ c' → q ∈ Γ c '' Metric.ball 0 (γ c).radius →
       q ∉ Γ c' '' Metric.ball 0 (γ c').radius := by
     rintro q ⟨-, hqh⟩ c c' hcc' ⟨t, ht, rfl⟩ ⟨t', ht', hteq⟩

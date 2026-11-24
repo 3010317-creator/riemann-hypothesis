@@ -133,8 +133,7 @@ theorem val_lt_one_of_mem (he : Formalism.L2.NTheta.IsIdemAt e PP) (hπ : Chart 
       exact fun h => h0 (Subtype.ext h)
     rw [he.2 x h0, hπ.2.2.2, isInt_Ov] at hx
     have hx' : ¬ Valued.v ((π.comp (incA D)) (x : D.host.E)⁻¹) ≤ 1 := hx
-    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)] at hx'
-    exact hx'
+    rwa [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)] at hx'
 
 theorem exists_chart_levels (he : Formalism.L2.NTheta.IsIdemAt e PP) (hπ : Chart e v π) :
     ∃ φ : Datum.EAf D →+* Fv D.host.F v, (∀ z, φ (toEAf D z) = π z) ∧
@@ -211,12 +210,12 @@ theorem val_sub_lt (φ : Datum.EAf D →+* Fv D.host.F v)
   have h1 := congrFun (congrFun hU' j) i
   rw [topL, dite_eq_left ⟨(Fin.castLE hr j).2, i.2⟩, redM, dite_eq_left (hU _ _), Matrix.one_apply] at h1
   by_cases h : j = i
-  · rw [if_pos h] at h1 ⊢
+  · rw [ite_eq_left h] at h1 ⊢
     have h2 := hres (⟨_, hU (Fin.castLE hr j) i⟩ - 1) (by
       rw [RingHom.map_sub, sub_eq_zero, RingHom.map_one]
       exact h1)
     rwa [AddSubgroupClass.coe_sub, RingHom.map_sub, Subring.coe_one, RingHom.map_one] at h2
-  · rw [if_neg h] at h1 ⊢
+  · rw [ite_eq_right h] at h1 ⊢
     rw [sub_zero]
     exact hres ⟨_, hU (Fin.castLE hr j) i⟩ h1
 
@@ -324,8 +323,7 @@ theorem exists_eigen {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp
     refine Matrix.ext fun i j => ?_
     rw [Matrix.smul_apply, vecMulVec_apply, vecMulVec_apply, Pi.smul_apply, nsmul_eq_mul, nsmul_eq_mul, mul_left_comm]
   have hhalf : IsHalf e (vecMulVec c (k • l)) := fun i j => by
-    rw [vecMulVec_apply, Pi.smul_apply, nsmul_eq_mul]
-    rw [← hl j]
+    rw [vecMulVec_apply, Pi.smul_apply, nsmul_eq_mul, ← hl j]
     linear_combination (c i * k * l j) * h3
   refine ⟨Matrix.ext fun i j => by
     rw [Matrix.map_apply, ← hhalf i j, RingHom.map_mul, ho.infPart_eq, zero_mul]; rfl, ?_⟩
@@ -337,7 +335,7 @@ theorem exists_eigen {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp
         topL T.rank (redM PP (frMapAdj S T βS βT t)) = 1
     · rw [← hconst t ht.2 (hK PP hPP).2, hk, ← GlobalTheory.LatVac.symplHom_apply, map_nsmul, AddChar.map_nsmul_eq_pow]
       rfl
-    · rw [omegaK, if_neg hK, zero_mul, mul_zero, mul_zero]
+    · rw [omegaK, ite_eq_right hK, zero_mul, mul_zero, mul_zero]
   · rw [mul_zero, mul_zero]
 
 theorem exists_mem_Pg {T : Type} {L : LevCh D T} {μ0 : T} (h : L.Is μ0) : ∃ PP, PP ∈ L.Pg := by

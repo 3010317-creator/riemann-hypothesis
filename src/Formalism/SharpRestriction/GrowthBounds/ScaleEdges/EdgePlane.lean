@@ -136,8 +136,7 @@ theorem prime_smul_target_mem_source (p r : ℕ) (hp : (p : Qq) ≠ 0) (B : Matr
 
 theorem mulVec_cancel (B : Matrix (Fin k) (Fin k) Qq) (hB : IsUnit B.det) {u v : Fin k → Qq}
     (h : B.mulVec u = B.mulVec v) : u = v := by
-  have h2 := congrArg (fun w => B⁻¹.mulVec w) h
-  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hB] using h2
+  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hB] using congrArg (fun w => B⁻¹.mulVec w) h
 
 theorem dD_det (p r : ℕ) (hp : (p : Qq) ≠ 0) : IsUnit (dD Qq p r k).det := by
   unfold dD
@@ -163,7 +162,7 @@ private theorem mem_src_iff_lemma_2 [IsDomain W] [IsFractionRing W Qq] (p r : �
   · rintro ⟨z, hz⟩ c hc
     have h1 := congrFun (mulVec_cancel B hB hz) c
     unfold dD at h1
-    simp only [Matrix.mulVec_diagonal, if_pos hc] at h1
+    simp only [Matrix.mulVec_diagonal, ite_eq_left hc] at h1
     rw [Ideal.mem_span_singleton]
     refine ⟨z c, hinj ?_⟩
     rw [map_mul, map_natCast, ← h1, ← mul_assoc, mul_inv_cancel₀ hpQ, one_mul]
@@ -174,8 +173,8 @@ private theorem mem_src_iff_lemma_2 [IsDomain W] [IsFractionRing W Qq] (p r : �
       by_cases hc : c.val < r
       · obtain ⟨w, hw⟩ := Ideal.mem_span_singleton.mp (h c hc)
         refine ⟨w, ?_⟩
-        rw [if_pos hc, hw, map_mul, map_natCast, ← mul_assoc, inv_mul_cancel₀ hpQ, one_mul]
-      · exact ⟨y c, by rw [if_neg hc, one_mul]⟩
+        rw [ite_eq_left hc, hw, map_mul, map_natCast, ← mul_assoc, inv_mul_cancel₀ hpQ, one_mul]
+      · exact ⟨y c, by rw [ite_eq_right hc, one_mul]⟩
     choose z hz using hex
     refine ⟨z, ?_⟩
     congr 1
@@ -212,9 +211,7 @@ theorem isEdge_of_basis [IsDomain W] [IsFractionRing W Qq] (p n' r : ℕ) (hp0 :
     have h0 : (B * dD Qq p r k).mulVec (fun c => algebraMap W Qq (y c)) =
         (B * dD Qq p r k).mulVec 0 := by
       rw [hy, Matrix.mulVec_zero]
-    have h2 := mulVec_cancel _ hMu h0
-    intro c
-    exact hinj (by simpa using congrFun h2 c)
+    exact fun c => hinj (by simpa using congrFun (mulVec_cancel _ hMu h0) c)
   let b : Module.Basis (Fin k) W ↥(colSpan W (B * dD Qq p r k)) := Module.Basis.span hli
   have hcoe : ∀ y : Fin k → W, ((b.equivFun.symm y : ↥(colSpan W (B * dD Qq p r k))) : Fin k → Qq) =
       (B * dD Qq p r k).mulVec (fun c => algebraMap W Qq (y c)) := by
@@ -236,31 +233,28 @@ theorem isEdge_of_basis [IsDomain W] [IsFractionRing W Qq] (p n' r : ℕ) (hp0 :
     constructor
     · intro h c
       by_cases hc : c.val < r
-      · rw [if_pos hc]
+      · rw [ite_eq_left hc]
         exact h c hc
-      · rw [if_neg hc]
+      · rw [ite_eq_right hc]
         exact Submodule.mem_top
     · intro h c hc
       have h' := h c
-      rwa [if_pos hc] at h'
+      rwa [ite_eq_left hc] at h'
   have e1 := Submodule.Quotient.equiv _ _ b.equivFun hP
   rw [Nat.card_congr e1.toEquiv, Nat.card_congr (Submodule.quotientPi _).toEquiv, Nat.card_pi]
   have hfac : ∀ c : Fin k, Nat.card (W ⧸ (if c.val < r then Ideal.span {(p : W)} else ⊤ :
       Submodule W W)) = if c.val < r then p ^ n' else 1 := by
     intro c
     by_cases hc : c.val < r
-    · simp only [hc, ↓reduceIte]
-      exact hcard
-    · simp only [hc, ↓reduceIte]
-      exact Nat.card_unique
+    · simpa only [hc, ↓reduceIte] using hcard
+    · simpa only [hc, ↓reduceIte] using Nat.card_unique
   rw [Finset.prod_congr rfl (fun c _ => hfac c)]
   have hcardF : (Finset.univ.filter fun c : Fin k => c.val < r).card = r := by
     have hF : (Finset.univ.filter fun c : Fin k => c.val < r) = Finset.univ.map (Fin.castLEEmb hr) := by
       ext c
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map, Fin.castLEEmb_apply]
       constructor
-      · intro hc
-        exact ⟨⟨c.val, hc⟩, Fin.ext rfl⟩
+      · exact fun hc => ⟨⟨c.val, hc⟩, Fin.ext rfl⟩
       · rintro ⟨a, rfl⟩
         exact a.isLt
     rw [hF, Finset.card_map, Finset.card_univ, Fintype.card_fin]
@@ -321,17 +315,15 @@ theorem mem_plane (r : ℕ) (g : Matrix (Fin k) (Fin k) (WF p n')) (x : Fin k �
     rintro _ ⟨i, rfl⟩
     dsimp only
     by_cases hi : i.val < r
-    · rw [if_pos hi]
-      apply Submodule.subset_span
-      exact ⟨i, hi, rfl⟩
-    · rw [if_neg hi]
+    · rw [ite_eq_left hi]
+      exact Submodule.subset_span ⟨i, hi, rfl⟩
+    · rw [ite_eq_right hi]
       exact Submodule.zero_mem _
   have hS : ratPlane p n' r g ≤ Submodule.span (GaloisField p n') (Set.range fun i : Fin k =>
       if i.val < r then (fun c => WittVector.constantCoeff (g⁻¹ i c)) else 0) := by
     refine Submodule.span_le.mpr ?_
     rintro _ ⟨i, hi, rfl⟩
-    apply Submodule.subset_span
-    exact ⟨i, if_pos hi⟩
+    exact Submodule.subset_span ⟨i, ite_eq_left hi⟩
   have hEq := le_antisymm hS (Submodule.span_le.mpr hR)
   rw [hEq, Submodule.mem_span_range_iff_exists_fun]
   constructor
@@ -353,9 +345,7 @@ private theorem cc_zero_lemma_3 (r : ℕ) (g g' : Matrix (Fin k) (Fin k) (WF p n
     (hpl : ratPlane p n' r g ≤ ratPlane p n' r g') (c i : Fin k) (hc : c.val < r) (hi : ¬ i.val < r) :
     WittVector.constantCoeff ((g⁻¹ * g') c i) = 0 := by
   have hmem : (fun j => WittVector.constantCoeff (g⁻¹ c j)) ∈ ratPlane p n' r g' := by
-    apply hpl
-    apply Submodule.subset_span
-    exact ⟨c, hc, rfl⟩
+    exact hpl (Submodule.subset_span ⟨c, hc, rfl⟩)
   obtain ⟨a, ha⟩ := (mem_plane r g' _).mp hmem
   have hrow : ∀ j, WittVector.constantCoeff (g⁻¹ c j) =
       ∑ l, a l * (if l.val < r then WittVector.constantCoeff (g'⁻¹ l j) else 0) := by
@@ -367,8 +357,7 @@ private theorem cc_zero_lemma_3 (r : ℕ) (g g' : Matrix (Fin k) (Fin k) (WF p n
     intro l hl
     have h1 : (g'⁻¹ * g') l i = 0 := by
       rw [Matrix.nonsing_inv_mul _ hg', Matrix.one_apply_ne]
-      intro hli
-      exact hi (hli ▸ hl)
+      exact fun hli => hi (hli ▸ hl)
     have h2 := congrArg WittVector.constantCoeff h1
 
     rw [Matrix.mul_apply, map_sum] at h2
@@ -379,7 +368,7 @@ private theorem cc_zero_lemma_3 (r : ℕ) (g g' : Matrix (Fin k) (Fin k) (WF p n
   rw [Finset.sum_comm]
   refine Finset.sum_eq_zero (fun l _ => ?_)
   by_cases hl : l.val < r
-  · simp only [hl, if_true, mul_assoc, ← Finset.mul_sum, hone l hl, mul_zero]
+  · simp only [hl, ite_true, mul_assoc, ← Finset.mul_sum, hone l hl, mul_zero]
   · simp [hl]
 
 theorem tgt_le_of_plane (φ : WF p n' ≃+* W) (r : ℕ) (hpQ : (p : Qq) ≠ 0)
@@ -403,16 +392,16 @@ theorem tgt_le_of_plane (φ : WF p n' ≃+* W) (r : ℕ) (hpQ : (p : Qq) ≠ 0)
     intro i c
     by_cases hi : i.val < r
     · by_cases hc : c.val < r
-      · exact ⟨(Ngi φ g' * Ng φ g) i c, by rw [if_pos hi, if_pos hc, mul_comm]⟩
+      · exact ⟨(Ngi φ g' * Ng φ g) i c, by rw [ite_eq_left hi, ite_eq_left hc, mul_comm]⟩
       · refine ⟨(p : W) * (Ngi φ g' * Ng φ g) i c, ?_⟩
-        rw [if_pos hi, if_neg hc, mul_one, map_mul, map_natCast, ← mul_assoc,
+        rw [ite_eq_left hi, ite_eq_right hc, mul_one, map_mul, map_natCast, ← mul_assoc,
           inv_mul_cancel₀ hpQ, one_mul]
     · by_cases hc : c.val < r
       · obtain ⟨w, hw⟩ := hZ i c hi hc
         refine ⟨w, ?_⟩
-        rw [if_neg hi, if_pos hc, one_mul, hw, map_mul, map_natCast, mul_comm, ← mul_assoc,
+        rw [ite_eq_right hi, ite_eq_left hc, one_mul, hw, map_mul, map_natCast, mul_comm, ← mul_assoc,
           inv_mul_cancel₀ hpQ, one_mul]
-      · exact ⟨(Ngi φ g' * Ng φ g) i c, by rw [if_neg hi, if_neg hc, mul_one, one_mul]⟩
+      · exact ⟨(Ngi φ g' * Ng φ g) i c, by rw [ite_eq_right hi, ite_eq_right hc, mul_one, one_mul]⟩
   choose Y hY using hd
   have hE : (Ngi φ g' * Ng φ g).map (algebraMap W Qq) * dD Qq p r k =
       dD Qq p r k * Matrix.map Y (algebraMap W Qq) := by
@@ -457,7 +446,7 @@ theorem plane_le_of_tgt [IsDomain W] [IsFractionRing W Qq] (φ : WF p n' ≃+* W
   have h2 := mulVec_cancel h hh h1
   funext j
   have h3 := congrFun h2 j
-  simp only [dD, Matrix.mul_diagonal, Matrix.map_apply, Ng, Matrix.mulVec, dotProduct, if_pos hc] at h3
+  simp only [dD, Matrix.mul_diagonal, Matrix.map_apply, Ng, Matrix.mulVec, dotProduct, ite_eq_left hc] at h3
   have h5 : algebraMap W Qq (φ (g⁻¹ c j)) = (∑ i, algebraMap W Qq (φ (g'⁻¹ i j)) *
       (if i.val < r then ((p : Qq))⁻¹ else 1) * algebraMap W Qq (Y c i)) * (p : Qq) := by
     rw [← h3, mul_assoc, inv_mul_cancel₀ hpQ, mul_one]
@@ -467,9 +456,9 @@ theorem plane_le_of_tgt [IsDomain W] [IsFractionRing W Qq] (φ : WF p n' ≃+* W
     rw [h5, map_sum, Finset.sum_mul]
     refine Finset.sum_congr rfl (fun i _ => ?_)
     by_cases hi : i.val < r
-    · simp only [hi, if_true, map_mul, mul_one]
+    · simp only [hi, ite_true, map_mul, mul_one]
       rw [mul_assoc, mul_assoc, mul_left_comm ((p : Qq))⁻¹, inv_mul_cancel₀ hpQ, mul_one]
-    · simp only [hi, if_false, map_mul, map_natCast, mul_one]
+    · simp only [hi, ite_false, map_mul, map_natCast, mul_one]
       ring
   have h6 := hinj h4
   have h7 : g⁻¹ c j = ∑ i, g'⁻¹ i j * (if i.val < r then 1 else (p : WF p n')) * φ.symm (Y c i) := by
@@ -482,8 +471,8 @@ theorem plane_le_of_tgt [IsDomain W] [IsFractionRing W Qq] (φ : WF p n' ≃+* W
   rw [h7, map_sum]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   by_cases hi : i.val < r
-  · rw [if_pos hi, if_pos hi, mul_one, map_mul, mul_comm]
-  · rw [if_neg hi, if_neg hi, mul_zero, map_mul, map_mul, cc_p, mul_zero, zero_mul]
+  · rw [ite_eq_left hi, ite_eq_left hi, mul_one, map_mul, mul_comm]
+  · rw [ite_eq_right hi, ite_eq_right hi, mul_zero, map_mul, map_mul, cc_p, mul_zero, zero_mul]
 
 end Witt
 
@@ -529,8 +518,8 @@ theorem edgePlane : EdgePlane := by
         _ = φ ((1 : Matrix (Fin (m + 1)) (Fin (m + 1)) (WF p n')) a b) := by
             rw [Matrix.one_apply, Matrix.one_apply]
             by_cases hab : a = b
-            · rw [if_pos hab, if_pos hab.symm, map_one]
-            · rw [if_neg hab, if_neg (Ne.symm hab), map_zero]
+            · rw [ite_eq_left hab, ite_eq_left hab.symm, map_one]
+            · rw [ite_eq_right hab, ite_eq_right (Ne.symm hab), map_zero]
     have hgl : IsGLW g := by
       unfold IsGLW
       have h1 : g.det * gi.det = 1 := by rw [← Matrix.det_mul, hggi, Matrix.det_one]

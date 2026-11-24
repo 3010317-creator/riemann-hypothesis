@@ -61,8 +61,7 @@ lemma pullQ_sq (AA : HopfOrder (C := C) R N) (AQ : HopfOrder (C := C) R (N ⧸ K
       (sqIdeal (augIdeal AA.carrier)).comap (pullQ (R := R) K) := by
     rw [sqIdeal, Submodule.span_le]
     rintro h ⟨f, hf, f', hf', rfl⟩
-    apply Submodule.subset_span
-    exact ⟨_, pullQ_aug K AA AQ hAQ hf, _, pullQ_aug K AA AQ hAQ hf', rfl⟩
+    exact Submodule.subset_span ⟨_, pullQ_aug K AA AQ hAQ hf, _, pullQ_aug K AA AQ hAQ hf', rfl⟩
   exact key hz
 
 lemma IK_mul_le (AA : HopfOrder (C := C) R N) (AQ : HopfOrder (C := C) R (N ⧸ K))
@@ -186,7 +185,7 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
   intro N _ _ _ hk hN AA
   by_cases htriv : ∀ x : N, x = 0
   · exact claim_base v hv N htriv AA
-  push_neg at htriv
+  push Not at htriv
   obtain ⟨x, hx0⟩ := htriv
   set K : AddSubgroup N := AddSubgroup.zmultiples x with hKdef
   let e : ZMod p ≃+ K := zmodEquiv p x (hN x) hx0
@@ -249,14 +248,12 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
     induction i using Fin.lastCases with
     | last => simpa only [Fin.snoc_last] using hyaug
     | cast i0 =>
-      simp only [Fin.snoc_castSucc]
-      exact pullQ_aug K AA AQ hAQ (hg1 i0)
+      simpa only [Fin.snoc_castSucc] using pullQ_aug K AA AQ hAQ (hg1 i0)
   · intro f hf
     have hrf : resK (R := R) K f ∈ augIdeal AK.carrier := by
       rw [mem_aug, hAK]
       refine ⟨Submodule.mem_map_of_mem ((mem_aug _ _).1 hf).1, ?_⟩
-      have h0 := ((mem_aug _ _).1 hf).2
-      simpa [resK, LinearMap.funLeft_apply] using h0
+      simpa [resK, LinearMap.funLeft_apply] using ((mem_aug _ _).1 hf).2
     obtain ⟨r0, hr0⟩ := hxKgen _ hrf
     have hgm : f - r0 • y0 ∈ augIdeal AA.carrier :=
       Submodule.sub_mem _ hf (Submodule.smul_mem _ _ hyaug)
@@ -292,8 +289,8 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
         simp [h0, show p - 1 ≠ 0 by omega]
       refine ⟨Fin.snoc (fun j => -a j) 0, ?_⟩
       rw [Fin.sum_univ_castSucc]
-      simp only [Fin.snoc_last, Fin.snoc_castSucc, Fin.castSucc_lt_last, if_true,
-        lt_self_iff_false, if_false, zero_smul, add_zero]
+      simp only [Fin.snoc_last, Fin.snoc_castSucc, Fin.castSucc_lt_last, ite_true,
+        lt_self_iff_false, ite_false, zero_smul, add_zero]
       have h1 := Submodule.sub_mem _ hpow ha
       convert h1 using 1
       simp only [neg_smul, Finset.sum_neg_distrib, sub_neg_eq_add]
@@ -303,7 +300,7 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
       refine ⟨Fin.snoc a 0, ?_⟩
       have hnl : ¬ (Fin.last n < Fin.castSucc i0) := not_lt.2 (Fin.castSucc_lt_last i0).le
       rw [Fin.sum_univ_castSucc]
-      simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.castSucc_lt_castSucc_iff, hnl, if_false,
+      simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.castSucc_lt_castSucc_iff, hnl, ite_false,
         zero_smul, add_zero]
       have h1 := pullQ_sq K AA AQ hAQ ha
 

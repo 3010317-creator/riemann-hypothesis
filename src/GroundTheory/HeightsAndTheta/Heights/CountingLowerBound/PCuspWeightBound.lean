@@ -20,7 +20,7 @@ theorem CuspWeightBound.proof : CuspWeightBound.Statement := by
   have hlam := h.lam_pos
   have hNI := h.NI_pos
   have h2fρ : (0 : ℝ) < 2 * f * ρ := by positivity
-  have hsq : 0 < √(2 * f * ρ : ℝ) := Real.sqrt_pos.mpr h2fρ
+  have hsq := Real.sqrt_pos.mpr h2fρ
 
   have hmk : (lam / √(2 * f * ρ : ℝ)) ^ (2 * f * ρ) ≤ NI * rd ^ (f * ρ) :=
     h.covol_eq ▸ h.minkowski
@@ -36,22 +36,14 @@ theorem CuspWeightBound.proof : CuspWeightBound.Statement := by
     nlinarith
 
   have hB : 0 ≤ 2 * max 0 (log (1 / lam)) + log (2 * f * j' * rd) := by
-    have : 0 ≤ log (2 * f * j' * rd) := by
-      have h1 : (1 : ℝ) ≤ f * j' := one_le_mul_of_one_le_of_one_le hf hj
-      have h2 : (1 : ℝ) ≤ f * j' * rd := one_le_mul_of_one_le_of_one_le h1 hrd
-      exact Real.log_nonneg (by linarith)
-    have : 0 ≤ max 0 (log (1 / lam)) := le_max_left _ _
-    linarith
+    have h2 := one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le hf hj) hrd
+    have := Real.log_nonneg (show (1 : ℝ) ≤ 2 * f * j' * rd by linarith)
+    linarith [le_max_left 0 (log (1 / lam))]
   have hin : 2 * log (1 / lam) + log (2 * f * ρ * rd) ≤
       2 * max 0 (log (1 / lam)) + log (2 * f * j' * rd) := by
-    have h1 : log (1 / lam) ≤ max 0 (log (1 / lam)) := le_max_right _ _
-    have h2 : log (2 * f * ρ * rd) ≤ log (2 * f * j' * rd) :=
-      Real.log_le_log (by positivity) (by gcongr)
-    linarith
-  calc -log NI ≤ f * ρ * (2 * log (1 / lam) + log (2 * f * ρ * rd)) := hρbound
-    _ ≤ f * ρ * (2 * max 0 (log (1 / lam)) + log (2 * f * j' * rd)) := by
-        gcongr
-    _ ≤ f * j' * (2 * max 0 (log (1 / lam)) + log (2 * f * j' * rd)) := by
-        gcongr
+    linarith [le_max_right 0 (log (1 / lam)),
+      Real.log_le_log (by positivity) (by gcongr : 2 * f * ρ * rd ≤ 2 * f * j' * rd)]
+  refine hρbound.trans ((mul_le_mul_of_nonneg_left hin (by positivity)).trans ?_)
+  gcongr
 
 end GroundTheory.Heights₂.Heights.LowerBound

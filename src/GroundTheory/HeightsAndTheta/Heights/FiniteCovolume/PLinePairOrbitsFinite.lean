@@ -150,28 +150,24 @@ theorem LinePairOrbitsFinite.proof (h : HermitianForm F E W) [FiniteDimensional 
       simpa using hy
     · intro hx
       have := AddSubgroup.smul_mem_pointwise_smul _ gm⁻¹ La₁ hx
-      rw [inv_smul_smul] at this
-      exact this
+      rwa [inv_smul_smul] at this
   refine ⟨(gm⁻¹ • La₁, Submodule.span E {v₀}), ⟨?_, rfl⟩, g * gm, ?_, ?_⟩
   · refine Set.mem_iUnion₂.2 ⟨_, hK, Set.mem_iUnion₂.2 ⟨L, hL, ?_, ?_, ?_⟩⟩
     · refine sup_le (sup_le ?_ ?_) ?_
       · rintro _ ⟨a, ha, rfl⟩
         rw [hmem]
         change gm • (a • v₀) ∈ La₁
-        rw [hsmul, hgv₀]
-        exact ha
+        rwa [hsmul, hgv₀]
       · rintro _ ⟨y, hy, rfl⟩
         rw [hmem]
         change gm • (y : W) ∈ La₁
         rw [hgx]
         have : m • y ∈ m • L := AddSubgroup.smul_mem_pointwise_smul y m L hy
-        rw [hmL] at this
-        exact this
+        rwa [hmL] at this
       · rintro _ ⟨b, hb, rfl⟩
         rw [hmem]
         change gm • (b • w₀) ∈ La₁
-        rw [hsmul, hgw₀]
-        exact hb
+        rwa [hsmul, hgw₀]
     · intro x hx
       rw [hmem] at hx
       obtain ⟨a, ha, b, hb, hz⟩ := hsplit _ hx
@@ -179,8 +175,7 @@ theorem LinePairOrbitsFinite.proof (h : HermitianForm F E W) [FiniteDimensional 
       have hzL : z ∈ La₁ :=
         La₁.sub_mem (La₁.sub_mem (La₁.nsmul_mem hx n) ha) hb
       have hz' : (⟨z, hz⟩ : hypComplement h v₀ w₀) ∈ m • L := by
-        rw [hmL]
-        exact hzL
+        rwa [hmL]
       obtain ⟨y, hy, hyz⟩ := (AddSubgroup.mem_smul_pointwise_iff_exists _ _ _).1 hz'
       have hnx : n • x = a • v₀ + (y : W) + b • w₀ := by
         apply (MulAction.injective gm)
@@ -221,8 +216,7 @@ theorem LinePairOrbitsFinite.proof (h : HermitianForm F E W) [FiniteDimensional 
     change Submodule.span E {((g * gm : h.unitaryGroup) : W ≃ₗ[E] W) v₀} = l
     rw [hg']
     refine Submodule.eq_of_le_of_finrank_eq ?_ ?_
-    · rw [Submodule.span_singleton_le_iff_mem]
-      exact hgv
+    · rwa [Submodule.span_singleton_le_iff_mem]
     · rw [finrank_span_singleton hgv0, hl.1]
 
 end Pairs

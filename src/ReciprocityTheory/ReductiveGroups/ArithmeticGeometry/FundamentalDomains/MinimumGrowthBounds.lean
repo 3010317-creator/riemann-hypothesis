@@ -96,11 +96,9 @@ theorem sqrt_rpow_le (A : ℝ) {k1 k2 L Ly : ℝ} (hk1 : 0 < k1) (hk12 : k1 ≤ 
     rw [hs Ly hLy.le, hs L hL]
     have hLy_eq : Ly = Ly / L * L := (div_mul_cancel₀ Ly hLpos.ne').symm
     have hs1 : k1 ≤ Ly / L := by
-      rw [le_div_iff₀ hLpos]
-      exact h1
+      rwa [le_div_iff₀ hLpos]
     have hs2 : Ly / L ≤ k2 := by
-      rw [div_le_iff₀ hLpos]
-      exact h2
+      rwa [div_le_iff₀ hLpos]
     have hspos : 0 < Ly / L := lt_of_lt_of_le hk1 hs1
     rw [hLy_eq, Real.mul_rpow hspos.le hL]
     apply mul_le_mul_of_nonneg_right _ (Real.rpow_nonneg hL _)

@@ -146,8 +146,7 @@ theorem exists_twist (Hm : ι → Mt n) (q : ι → ℕ) (x₀ : ι → Mt n) (h
     · refine diffOn_prod _ _ _ fun τ => ?_
       refine DifferentiableOn.zpow ?_ (Or.inl fun y hy => div_ne_zero (hy τ).1 (mul_ne_zero (hAd τ) (hx τ)))
       have hd := det_diff (fun y : ι → Fin n → Fin n → ℂ => y τ) fun a b => by fun_prop
-      simp only [div_eq_mul_inv]
-      exact (hd.mul_const _).differentiableOn
+      simpa only [div_eq_mul_inv] using (hd.mul_const _).differentiableOn
     · have hd : Differentiable ℂ (fun (y : ι → Fin n → Fin n → ℂ) (τ : ι) (a b : Fin n) =>
           ∑ j, (A τ)⁻¹ a j * y τ j b) := by fun_prop
       exact hP.1.comp hd.differentiableOn hmap
@@ -348,23 +347,21 @@ theorem exists_sec (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → S
     · rw [hT]
       have := hst _ (hΓ δ hδ) (fun _ => 1) (fun _ => upT_one) _ hx'
       simp only [Matrix.mul_one] at this
-      rw [show T (lact δ x) = _ from funext (hTl δ x)]
-      exact this
+      rwa [show T (lact δ x) = _ from funext (hTl δ x)]
   refine ⟨fun x => if x ∈ (X (dict h).1).dom then (c (dict h).1 * mu h)⁻¹ * Q (T x) else 0,
-    fun x hx => if_neg hx, ⟨?_, ?_, ?_⟩, ?_⟩
+    fun x hx => ite_eq_right hx, ⟨?_, ?_, ?_⟩, ?_⟩
   · have hd : Differentiable ℂ T := by
       simp only [T]
       fun_prop
     refine ((hQ.1.comp hd.differentiableOn fun x hx => (hT x).1 hx).const_mul (c (dict h).1 * mu h)⁻¹).congr ?_
-    intro x hx
-    exact if_pos hx
+    exact fun x hx => ite_eq_left hx
   · intro x hx b hb
     obtain ⟨h1, h2⟩ := hweight x hx b hb
-    simp only [if_pos hx, if_pos h2, h1]
+    simp only [ite_eq_left hx, ite_eq_left h2, h1]
     ring
   · intro δ hδ x hx
     obtain ⟨h1, h2⟩ := hinv δ hδ x hx
-    simp only [if_pos hx, if_pos h2, h1, hG.chi _ δ hδ, one_mul]
+    simp only [ite_eq_left hx, ite_eq_left h2, h1, hG.chi _ δ hδ, one_mul]
   · intro g x hg
     obtain ⟨γg, -, hfr, -⟩ := hG.base.2.2 g
     have key : ∀ p : Σ k, Frame (X k).Ψ V.rank, p = ⟨(dict h).1, x⟩ → p.2 ∈ (X p.1).dom →
@@ -384,7 +381,7 @@ theorem exists_sec (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → S
     obtain ⟨⟨γ₁, hγ₁, e₁⟩, f₁⟩ := hunit u hu x hxu
     obtain ⟨g₁, g₂⟩ := hsame _ _ _ _ hγ₁ hg e₁
     rw [g₁, g₂] at f₁
-    simp only [if_pos hx]
+    simp only [ite_eq_left hx]
     have := hmu0 h
     have := hG.cNe (dict h).1
     field_simp

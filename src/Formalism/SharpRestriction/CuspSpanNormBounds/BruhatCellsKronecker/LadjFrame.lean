@@ -58,8 +58,7 @@ theorem ladj_ext (y : S.V) (h : ∀ i, S.hT (S.frame i) y = 0) : y = 0 := by
   apply S.nondeg.2 y
   intro x
   have : S.hT.flip y = 0 := S.frame.ext (fun i => by simpa using h i)
-  have h2 := LinearMap.congr_fun this x
-  simpa using h2
+  simpa using LinearMap.congr_fun this x
 
 theorem ladj_det : (ladjG S).det ≠ 0 := by
   intro hdet
@@ -106,8 +105,7 @@ theorem ladj_adj (B : S.V →ₗ[E] S.V) : LAdj S B (ladjOp S B) := by
   intro x y
   have : (S.hT.flip y).comp B = S.hT.flip (ladjOp S B y) :=
     S.frame.ext (fun i => by simpa using (ladj_frame S B i y).symm)
-  have h2 := LinearMap.congr_fun this x
-  simpa using h2
+  simpa using LinearMap.congr_fun this x
 
 end
 

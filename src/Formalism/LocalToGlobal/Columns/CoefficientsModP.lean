@@ -70,8 +70,7 @@ theorem nd_half (lam : ι → DomWeight n) (T T' : Submodule (𝓞 K) (Pol K ι 
       actP lam G (x : Pol K ι n) ∈ transLat lam T' fun τ => dualFr (bcLat (starRingEnd K) (M τ)) := by
     constructor
     · rintro ⟨z, hz, hzx⟩
-      rw [← hzx, LinearMap.coe_restrictScalars, ← polyAction_mul, mul_inv_cancel, polyAction_one₂]
-      exact hz
+      rwa [← hzx, LinearMap.coe_restrictScalars, ← polyAction_mul, mul_inv_cancel, polyAction_one₂]
     · intro h
       refine ⟨_, h, ?_⟩
       rw [LinearMap.coe_restrictScalars, ← polyAction_mul, inv_mul_cancel, polyAction_one₂]
@@ -105,8 +104,7 @@ theorem nabDelDual_of (hD : NabDelDescent) (hK : PairBDualK) : NabDelDual := by
           Submodule.coe_subtype] at h1
         rw [h1]
         constructor
-        · intro H y hy hyV
-          exact H ⟨y, hyV⟩ hy
+        · exact fun H y hy hyV => H ⟨y, hyV⟩ hy
         · intro H y hy
           exact H y hy y.2)
       x
@@ -120,8 +118,7 @@ theorem nabDelDual_of (hD : NabDelDescent) (hK : PairBDualK) : NabDelDual := by
           Submodule.coe_subtype] at h1
         rw [h1]
         constructor
-        · intro H y hy hyV
-          exact H ⟨y, hyV⟩ hy
+        · exact fun H y hy hyV => H ⟨y, hyV⟩ hy
         · intro H y hy
           exact H y hy y.2)
       x

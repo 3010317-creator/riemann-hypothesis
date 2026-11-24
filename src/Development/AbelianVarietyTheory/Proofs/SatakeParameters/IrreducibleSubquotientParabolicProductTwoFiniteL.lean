@@ -97,8 +97,7 @@ theorem isSubquotient_of_exact_middle (G : Type) [Group G] (U V A Q : Type) [Add
     have hvan : ∀ t : T.toSubmodule, q (t : V) = 0 → f t = 0 := by
       intro t ht
       have hm : f t ∈ W'.toSubmodule := ⟨t, ht, rfl⟩
-      rw [h] at hm
-      exact hm
+      rwa [h] at hm
     let S : Subrepresentation κ := ⟨T.toSubmodule.map q.toLinearMap, by
       rintro g _ ⟨v, hv, rfl⟩
       exact ⟨ρ g v, T.apply_mem_toSubmodule g hv, q.isIntertwining _ _ g v⟩⟩
@@ -362,8 +361,7 @@ theorem prod₂_exact_left : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
     refine ⟨hiq b, ?_⟩
     rintro ⟨a, rfl⟩
     exact hqi a
-  intro y hy
-  exact (hE y).1 hy
+  exact fun y hy => (hE y).1 hy
 
 theorem prod₂_exact_right : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (r t : ℕ) (X A B : Type) [AddCommGroup X] [Module ℂ X] [AddCommGroup A] [Module ℂ A] [AddCommGroup B] [Module ℂ B] (ρ₁ : Representation ℂ (GL (Fin r) k) X) (α : Representation ℂ (GL (Fin t) k) A) (β : Representation ℂ (GL (Fin t) k) B) (i : α.IntertwiningMap β), Function.Injective i → ∃ I : (prod₂ ρ₁ α).IntertwiningMap (prod₂ ρ₁ β), Function.Injective I ∧ ∀ (C : Type) [AddCommGroup C] [Module ℂ C] (γ : Representation ℂ (GL (Fin t) k) C) (q : β.IntertwiningMap γ), Function.Surjective q → (∀ a, q (i a) = 0) → (∀ b, q b = 0 → ∃ a, i a = b) → ∃ Q : (prod₂ ρ₁ β).IntertwiningMap (prod₂ ρ₁ γ), ∀ φ, Q φ = 0 → ∃ ψ, I ψ = φ := by
   intro k _ _ _ _ r t X A B _ _ _ _ _ _ ρ₁ α β i hi
@@ -380,8 +378,7 @@ theorem prod₂_exact_right : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
     refine ⟨hiq b, ?_⟩
     rintro ⟨a, rfl⟩
     exact hqi a
-  intro y hy
-  exact (hE y).1 hy
+  exact fun y hy => (hE y).1 hy
 
 theorem nontrivial_of_prod₂ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {r t : ℕ} (π : Irr k (r + t)) {X Y : Type} [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y]
     (σ₁ : Representation ℂ (GL (Fin r) k) X) (σ₂ : Representation ℂ (GL (Fin t) k) Y)

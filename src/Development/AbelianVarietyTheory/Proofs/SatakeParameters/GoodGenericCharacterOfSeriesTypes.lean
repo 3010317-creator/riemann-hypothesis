@@ -138,8 +138,7 @@ def alternatingSignDiagonalLevelGroup (Pg : Finset (Pl E)) (r : ℕ) : G0 Pg r :
 
 theorem alternatingSignDiagonal_conj_mem_genericLevel (ψ : ∀ PP : Pl E, AddChar (kP PP) ℂ) {x : G0 Pg r} (hx : x ∈ (P0 Pg r ψ).H) :
     alternatingSignDiagonalLevelGroup Pg r * x * (alternatingSignDiagonalLevelGroup Pg r)⁻¹ ∈ (P0 Pg r ψ).H := by
-  intro PP _
-  exact sgnDiag_conj_mem_unip (hx PP (Set.mem_univ _))
+  exact fun PP _ => sgnDiag_conj_mem_unip (hx PP (Set.mem_univ _))
 
 theorem genericLevelCharacter_alternatingSign_conj_inv (ψ : ∀ PP : Pl E, AddChar (kP PP) ℂ) {x : G0 Pg r} (hx : x ∈ (P0 Pg r ψ).H) :
     (P0 Pg r ψ).chi ⟨alternatingSignDiagonalLevelGroup Pg r * x * (alternatingSignDiagonalLevelGroup Pg r)⁻¹, alternatingSignDiagonal_conj_mem_genericLevel ψ hx⟩ = ((P0 Pg r ψ).chi ⟨x, hx⟩)⁻¹ := by
@@ -243,11 +242,9 @@ theorem goodGenericCharacter_of_seriesTypes : ∀ {D : D7} {G : Type} [Group G] 
         _ = ((P0 R.Pg D.R.r ψ').chi ⟨x, hx1⟩)⁻¹ := genericLevelCharacter_alternatingSign_conj_inv ψ' hx1
         _ = ((R.toRealDat.levR F.lv2 false).chi ⟨x, hh⟩)⁻¹ := by rw [level_character_eq_of_eq hlev x hh hx1]
         _ = (Units.map D.what₂.embLL.toMonoidHom (F.ψ0 ⟨_, hh⟩))⁻¹ := rfl
-    have k3 := congrArg Units.val k1
-    simpa [Units.coe_map, Units.val_inv_eq_inv_val, map_inv₀] using k3
+    simpa [Units.coe_map, Units.val_inv_eq_inv_val, map_inv₀] using congrArg Units.val k1
   refine GlobalTheory.GoodTypeGeneric.chiIdem_mul_lvlIdem_ne_zero _ _ (hone χ hχ) ?_
-  rw [typeSum_inv_eq F.P0 F.ψ0 χ hcls t ht hψ, hsum χ hχ]
-  exact hcard
+  rwa [typeSum_inv_eq F.P0 F.ψ0 χ hcls t ht hψ, hsum χ hχ]
 
 end GlobalTheory.GoodGenericSer
 

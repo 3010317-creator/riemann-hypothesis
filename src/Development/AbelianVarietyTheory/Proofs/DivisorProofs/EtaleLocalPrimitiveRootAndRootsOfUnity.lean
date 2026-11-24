@@ -121,8 +121,7 @@ lemma appTop_comp {V W U : Scheme.{0}} (g : V ⟶ U) (k : W ⟶ V) (a : Γ(U, �
   rw [Scheme.Hom.comp_appTop]; rfl
 
 lemma isUnit_prod' {R : Type*} [CommRing R] (S : Finset ℕ) (f : ℕ → R) (h : ∀ a ∈ S, IsUnit (f a)) :
-    IsUnit (∏ a ∈ S, f a) := by
-  exact IsUnit.prod_iff.mpr h
+    IsUnit (∏ a ∈ S, f a) := IsUnit.prod_iff.mpr h
 
 lemma loc_of_prod_eq_zero {U : Scheme.{0}} (y : Γ(U, ⊤)) (z : ℕ → Γ(U, ⊤)) (S : Finset ℕ)
     (hprod : ∏ a ∈ S, (y - z a) = 0) (hu : ∀ a ∈ S, ∀ b ∈ S, a ≠ b → IsUnit (z a - z b)) :
@@ -134,8 +133,7 @@ lemma loc_of_prod_eq_zero {U : Scheme.{0}} (y : Γ(U, ⊤)) (z : ℕ → Γ(U, �
   intro x
   let γ := (U.presheaf.germ ⊤ x trivial).hom
   have hex : ∃ a ∈ S, ¬ IsUnit (γ (y - z a)) := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : IsUnit (γ (∏ a ∈ S, (y - z a))) := by
       rw [map_prod]; exact isUnit_prod' S _ hc
     rw [hprod, map_zero] at h1
@@ -174,8 +172,7 @@ lemma loc_of_prod_eq_zero {U : Scheme.{0}} (y : Γ(U, ⊤)) (z : ℕ → Γ(U, �
       rw [appTop_comp]; exact hsW.map _
     have hm : (y - z a0) * s = 0 := by rw [hs, Finset.mul_prod_erase S (fun b => y - z b) ha0, hprod]
     have h2 := congrArg (k ≫ W.ι).appTop.hom hm
-    rw [map_mul, map_zero, hk.mul_left_eq_zero, map_sub, sub_eq_zero] at h2
-    exact h2
+    rwa [map_mul, map_zero, hk.mul_left_eq_zero, map_sub, sub_eq_zero] at h2
 
 end GlobalTheory.EtC.PrimLoc
 
@@ -278,8 +275,7 @@ theorem prim_loc : ∀ (q : ℕ) [NeZero q] (U : Scheme.{0}), (IsUnit (q : Γ(U,
     refine loc_mono ?_ (loc_of_prod_eq_zero x (fun a => ζ.1 ^ a) _ (h4 ζ x hx) ?_)
     · rintro V g ⟨a, -, h⟩
       exact ⟨a, by rw [h, map_pow]⟩
-    · intro a ha b hb hab
-      exact h3 ζ a b (hmod a ha b hb hab)
+    · exact fun a ha b hb hab => h3 ζ a b (hmod a ha b hb hab)
   · intro hq u
     refine loc_of_alg (fun V g => ∃ v : (Γ(V, ⊤))ˣ, v ^ q = Units.map g.appTop.hom.toMonoidHom u) ?_ ?_
     · rintro V W g k ⟨v, hv⟩

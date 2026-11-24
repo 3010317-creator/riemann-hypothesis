@@ -251,14 +251,12 @@ namespace CosetIntegralMeasure
 
 variable {E : Type} [Field E] [NumberField E] {k : ℕ}
 
-theorem meas_mul (g : GA E k) : Measurable (fun h : GA E k => g * h) := by
-  exact measurable_const_mul g
+theorem meas_mul (g : GA E k) : Measurable (fun h : GA E k => g * h) := measurable_const_mul g
 
 theorem lint_nuG (Γ : Set (GL (Fin k) E)) (d : ℕ) (F : GA E k → ℝ≥0∞) (hF : Measurable F) :
     ∫⁻ h, F h ∂nuG Γ d = ∑' γ : Γ, ∫⁻ h, F (ratGL E k γ * h) ∂nuD E k d := by
   rw [nuG, lintegral_sum_measure]
-  refine tsum_congr fun γ => ?_
-  exact lintegral_map hF (meas_mul _)
+  exact tsum_congr fun γ => lintegral_map hF (meas_mul _)
 
 end CosetIntegralMeasure
 
@@ -393,8 +391,7 @@ theorem kir_of : jumpWindows.S2 → jumpWindows.G0 → jumpWindows.G2a → jumpW
     · intro g hg z hz
       rw [hmem] at hz ⊢
       exact ⟨⟨hYi g z hz.1.1, hYgi g z hz.1.2⟩, fun w => hYwi w g (hg w.1 w.2) z (hz.2 w)⟩
-    · intro z hz
-      exact ((hYgm z).1 ((hmem z).1 hz).1.2).1
+    · exact fun z hz => ((hYgm z).1 ((hmem z).1 hz).1.2).1
   have hcusp := π.cusp φ hφ
   have hxY' : Rt E k h x ∈ Y' := by
     have hxg : x ∈ Yg := by
@@ -880,10 +877,10 @@ theorem rspole_of : GlobalTheory.Published.JacquetShalikaBound → jumpWindows.G
       have hx' : ∀ g, x g = φ₁.1 g := congrFun hx
       refine (hYm x).2 ⟨fun t g => by rw [hx', hx']; exact hπ φ₁ hφ₁ t g, fun h => ?_⟩
       by_cases he : π = π'
-      · have e0 : φ'' = 0 := if_pos he
+      · have e0 : φ'' = 0 := ite_eq_left he
         rw [e0]
         simp
-      · have e1 : φ'' = φ' := if_neg he
+      · have e1 : φ'' = φ' := ite_eq_right he
         have hO := hORT E k μ hk b hb π π' hπ hπ' he φ₁ hφ₁ φ₀' hφ₀' h h'
         rw [e1]
         simp only [hx', hφ'e]
@@ -898,7 +895,7 @@ theorem rspole_of : GlobalTheory.Published.JacquetShalikaBound → jumpWindows.G
     refine ⟨Z, ZS, max 1 σ₀, hZd, hZSd.differentiableOn, fun σ _ => hZS0 σ, fun s hs => ?_, fun hne => hZ1 ?_⟩
     · rw [hZe s (lt_of_le_of_lt (le_max_left _ _) hs), hZSe s (lt_of_le_of_lt (le_max_right _ _) hs), mul_assoc]
     · have hne' : π ≠ π' := fun e => hne (by rw [e])
-      have e1 : φ'' = φ' := if_neg hne'
+      have e1 : φ'' = φ' := ite_eq_right hne'
       have hz := hYz φ hφY ψ S U η s hcut
       rw [e1] at hz
       exact hz
@@ -1513,8 +1510,7 @@ theorem spherical_function_of : jumpWindows.G0 → jumpWindows.G5 → C0 → K7 
   refine ⟨hφ, fun g κ hinf hS hint => ?_, fun g hg => ⟨fun g₀ hi hS hIn h0 => ?_, fun w hw => ?_⟩⟩
   · have e : Rt E k κ φ = φ := by
       ext x
-      simp only [Rt_apply]
-      exact hφ x κ hinf hS hint
+      simpa only [Rt_apply] using hφ x κ hinf hS hint
     rw [← hrt, e]
   · refine hg (jumpWindows.convergence_entries_general_linear hG0 E k S (Wh ψ φ) hcont (fun w hw h hh h0 u => ?_) g g₀ hi hS hIn h0)
     obtain ⟨χ, -, -, hK⟩ := hK7 E k ψ hψ w (hcond w hw)
@@ -1527,7 +1523,7 @@ theorem spherical_function_of : jumpWindows.G0 → jumpWindows.G5 → C0 → K7 
     have h2 := right_ne_zero_of_mul hg
     by_contra hA
     apply h2
-    rw [sphericalWhittaker, if_neg hA]
+    rw [sphericalWhittaker, ite_eq_right hA]
 
 end PositivityTheory.AdelicQuotientData
 

@@ -111,8 +111,8 @@ private theorem map_eq_zero_of_cc {O A σ : Type} [CommRing O] [CommRing A] [Fin
     rw [map_sum]
     simp only [hq]
     by_cases h : n ≠ 0
-    · simp [dif_pos h]
-    · simp only [dif_neg h, Finset.sum_const_zero]
+    · simp [dite_eq_left h]
+    · simp only [dite_eq_right h, Finset.sum_const_zero]
       push Not at h
       subst h
       simpa using hp
@@ -154,7 +154,7 @@ private theorem exists_norm {G C : Type} [Group G] [CommRing C] (η : G →* ℤ
     simpa using this
   have hcc : ∀ a b, γ c a b = γ c b.rev a.rev := fun a b => by
     have := congrFun (congrFun (hc c c) a) b
-    rw [hM.csq, h1, Matrix.add_apply, adRep_baseLift_apply, if_neg hne, hM.Ψc] at this
+    rw [hM.csq, h1, Matrix.add_apply, adRep_baseLift_apply, ite_eq_right hne, hM.Ψc] at this
     simp only [_root_.one_zpow, Units.val_one, one_mul, Matrix.zero_apply] at this
     linear_combination -this
   obtain ⟨hz, hu⟩ := zeta_reducible_rep_eq_sub_inv_and_isUnit η Ψ c g₁ hM
@@ -176,20 +176,20 @@ private theorem exists_norm {G C : Type} [Group G] [CommRing C] (η : G →* ℤ
       rwa [this])
     fin_cases a <;> fin_cases b <;> simp [Fin.rev] at e1 e2 e3 <;> simp [hs, ht, e1, e2, e3]
   · ext a b
-    rw [Pi.sub_apply, cob, Matrix.sub_apply, Matrix.sub_apply, adRep_baseLift_apply, if_neg hne, hM.Ψc]
+    rw [Pi.sub_apply, cob, Matrix.sub_apply, Matrix.sub_apply, adRep_baseLift_apply, ite_eq_right hne, hM.Ψc]
     have e := hcc a b
     fin_cases a <;> fin_cases b <;> simp [Fin.rev] at e ⊢ <;>
       first | linear_combination (-γ c 0 0) * hw2 | linear_combination (-γ c 0 2) * hw2 | linear_combination (-γ c 1 1) * hw2 | linear_combination (-γ c 2 0) * hw2 | linear_combination e | linear_combination e - γ c 0 0 * hw2
   · have w0 : wt 0 1 = 1 := by decide
     have w1 : wt1 1 = 0 := by decide
     simp only [zvar, diagonal_rep_matrix_eq, Matrix.sub_apply, Matrix.mul_diagonal, Pi.sub_apply,
-      cob, adRep_baseLift_apply, hηs, hM.ηg, if_true, hΨs, w0, w1, zpow_one, zpow_zero, Units.val_one]
+      cob, adRep_baseLift_apply, hηs, hM.ηg, ite_true, hΨs, w0, w1, zpow_one, zpow_zero, Units.val_one]
     simp only [Matrix.of_apply, Matrix.cons_val, ← hp, ← hq]
     linear_combination (-(γ g₁ 0 1 - γ (gstar c g₁) 0 1)) * hv + (p - q) * hs
   · have w0 : wt 1 0 = -1 := by decide
     have w1 : wt1 0 = 1 := by decide
     simp only [zvar, diagonal_rep_matrix_eq, Matrix.sub_apply, Matrix.mul_diagonal, Pi.sub_apply,
-      cob, adRep_baseLift_apply, hηs, hM.ηg, if_true, hΨs, w0, w1, zpow_one, _root_.zpow_neg_one, inv_inv]
+      cob, adRep_baseLift_apply, hηs, hM.ηg, ite_true, hΨs, w0, w1, zpow_one, _root_.zpow_neg_one, inv_inv]
     simp only [Matrix.of_apply, Matrix.cons_val, ← hp, ← hq]
     linear_combination (-(γ g₁ 1 0 * p - γ (gstar c g₁) 1 0 * q)) * hv - (p - q) * ht
 
@@ -230,8 +230,7 @@ private theorem commAlgFunctorCoboundaryZero_mem_cocyclesOne (hF : F.Ok) (j : �
   have hloc : Continuous (F.loc v) := hF.π_cont.comp continuous_subtype_val
   refine ⟨⟨hlc.continuous.comp hloc, fun g h => ?_⟩, fun _ s hs => ?_, fun _ _ => ⟨Y, rfl⟩, fun e e' s hs => ?_⟩
   · have := hcoc (F.loc v g) (F.loc v h)
-    rw [← map_mul] at this
-    exact this
+    rwa [← map_mul] at this
   · show d0 (F.gbar j) Y (F.loc v s) = 0
     rw [amitsur_d0_apply, gbar_congr F j (h := 1) (hs.1.2.trans (map_one _).symm) (hs.2.trans (map_one _).symm)]
     simp
@@ -240,7 +239,7 @@ private theorem commAlgFunctorCoboundaryZero_mem_cocyclesOne (hF : F.Ok) (j : �
     rw [amitsur_d0_apply, sub_eq_zero]
     apply val_ext
     ext a b
-    rw [gRep_val, adRep_baseLift_apply, if_pos h1]
+    rw [gRep_val, adRep_baseLift_apply, ite_eq_left h1]
     by_cases hab : wt a b = j
     · rw [hab.trans e', zpow_zero, Units.val_one, one_mul]
     · have : Y.val a b = 0 := Y.2 a b hab
@@ -261,8 +260,7 @@ private theorem psi_dual (g : Γ) (n : ℤ) :
       TrivSqZeroExt.inl ((F.Ψbar g ^ n : (ResidueField O)ˣ) : ResidueField O) := by
   have e1 := congrArg Units.val (map_zpow (Units.map (algebraMap O (DualNumber (ResidueField O))).toMonoidHom) (F.Ψ g) n)
   have e2 := congrArg Units.val (map_zpow (Units.map (residue O).toMonoidHom) (F.Ψ g) n)
-  refine e1.symm.trans ?_
-  exact congrArg TrivSqZeroExt.inl e2
+  exact e1.symm.trans (congrArg TrivSqZeroExt.inl e2)
 
 private theorem coc_dual (j : ℤ) (y : Γ → Gb (k := ResidueField O) j) (hy : y ∈ F.selmerCocycles j) :
     IsCoc (F.rz (DualNumber (ResidueField O))) fun g => (y g).val.map TrivSqZeroExt.inr := by
@@ -510,8 +508,7 @@ private theorem eq_zero_of_coord (hF : F.Ok) (hV : F.LocVan) (g₁ : Γ) {R : Ty
   have := hm s a b
   rw [hrr, left_eq_add] at this
   have h3 := congrArg TrivSqZeroExt.snd this
-  rw [TrivSqZeroExt.snd_inr, TrivSqZeroExt.snd_zero, Units.mul_left_eq_zero] at h3
-  exact h3
+  rwa [TrivSqZeroExt.snd_inr, TrivSqZeroExt.snd_zero, Units.mul_left_eq_zero] at h3
 
 end Main
 

@@ -81,8 +81,7 @@ theorem exists_inv {e : ℕ} {X Y : Type} [TopologicalSpace X] [TopologicalSpace
   refine (hF j t ht).congr ?_
   filter_upwards [((A.chart j).isOpen_inter_preimage_symm hU).mem_nhds ht] with u hu
   have := hFf (φ.symm ((A.chart j).symm u)) (by rw [h1]; exact hu.2)
-  rw [h1] at this
-  exact this
+  rwa [h1] at this
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Tor.Level H} {Xo : Moduli D l}
   {c : Coeff l} {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)}
@@ -178,8 +177,7 @@ theorem ptsFam (Gr : RefGeo Y) (An : Gr.An) (ψ : An.Sys.X → An.Re.R.X) (hψ :
     have hg0 : MvPolynomial.aeval w g ≠ 0 := fun h0 => hwg ⟨hw.1, fun f hf => by
       obtain ⟨a, rfl⟩ := Ideal.mem_span_singleton'.1 hf
       have : MvPolynomial.eval w (MvPolynomial.map (Int.castRingHom ℂ) g) = 0 := by
-        rw [MvPolynomial.eval_map]
-        exact h0
+        rwa [MvPolynomial.eval_map]
       rw [map_mul, map_mul, this, mul_zero]⟩
     obtain ⟨w₁, hw₁⟩ := An.Re.R.surj w hw (hnJ w)
     have hsym : SameOrbit w (An.Re.R.lift w₁ w₁) := by

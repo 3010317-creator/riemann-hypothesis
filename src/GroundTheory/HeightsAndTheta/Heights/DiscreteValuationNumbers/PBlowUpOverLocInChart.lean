@@ -62,7 +62,7 @@ theorem coeff_eval₂_C_mul_X_fst {B : Type*} [CommRing B] (f : R →+* B) (a : 
     by_cases hd : d.mapDomain Sigma.fst = e
     · subst hd
       simp
-    · rw [if_neg hd, if_neg (fun h => hd (DFunLike.coe_injective h)), mul_zero, eval₂_zero]
+    · rw [ite_eq_right hd, ite_eq_right (fun h => hd (DFunLike.coe_injective h)), mul_zero, eval₂_zero]
   | add p q hp hq => simp only [eval₂_add, map_add (f := _), MvPolynomial.coeff_add, hp, hq]
 
 theorem eval₂_C_mul_X_fst_of_homog [Fintype κ] {B : Type*} [CommRing B] (f : R →+* B)
@@ -77,9 +77,9 @@ theorem eval₂_C_mul_X_fst_of_homog [Fintype κ] {B : Type*} [CommRing B] (f : 
   · have : Finsupp.equivFunOnFinite.symm b = e := by
       rw [← he]
       exact Finsupp.equivFunOnFinite.symm_apply_apply e
-    rw [if_pos this, he, hp.weightedHomogeneousComponent_same]
+    rw [ite_eq_left this, he, hp.weightedHomogeneousComponent_same]
   · have : Finsupp.equivFunOnFinite.symm b ≠ e := fun h => he (by rw [← h]; simp)
-    rw [if_neg this, hp.weightedHomogeneousComponent_ne _ he, eval₂_zero]
+    rw [ite_eq_right this, hp.weightedHomogeneousComponent_ne _ he, eval₂_zero]
 
 theorem eval₂_mul_fst_of_homog [Fintype κ] {B : Type*} [CommRing B] (f : R →+* B)
     (x : (Σ o, E o) → B) (s : κ → B) {p : MvPolynomial (Σ o, E o) R} {b : κ → ℕ}
@@ -168,8 +168,7 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
         simp only [Set.mem_setOf_eq, Subring.coe_add, add_mul] at ha hb ⊢
         exact Cr.add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, zero_mul]
-        exact Cr.zero_mem
+        simpa only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, zero_mul] using Cr.zero_mem
       smul_mem' := by
         intro c d hd
         simp only [Set.mem_setOf_eq, smul_eq_mul, Subring.coe_mul, mul_assoc] at hd ⊢
@@ -201,8 +200,7 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
       simpa [aL, x, Dinv, blowUpAtOne, div_eq_mul_inv] using h
   obtain ⟨aC, haC⟩ : ∃ aC : (Σ o, extIdx ι J o) → Cr, ∀ v, (aC v : L) = aL v := ⟨fun v => ⟨aL v, haL v⟩, fun _ => rfl⟩
   have hcst : ∀ r : R, ev (C r) ∈ Cr := fun r => by
-    have h := hgen 0 (C r) 1 (isWeightedHomogeneous_C _ _) (isWeightedHomogeneous_one _ _) h1W
-    simpa using h
+    simpa using hgen 0 (C r) 1 (isWeightedHomogeneous_C _ _) (isWeightedHomogeneous_one _ _) h1W
   obtain ⟨fC, hfCv⟩ : ∃ fC : R →+* Cr, ∀ r, (fC r : L) = ev (C r) :=
     ⟨(ev.comp C).codRestrict Cr hcst, fun _ => rfl⟩
   obtain ⟨ψ, hψ⟩ : ∃ ψ : MvPolynomial (Σ o, extIdx ι J o) R →+* MvPolynomial (Option K) Cr,
@@ -262,7 +260,7 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
       rw [hQdef, RingHom.mem_ker, RingHom.comp_apply] at hmem
       simp only [hψ, coe_eval₂Hom, eval₂_X, map_mul, map_C, map_X] at hmem
       have h2 := congrArg (AddMonoidAlgebra.coeff · (Finsupp.single o 1)) hmem
-      simp only [coeff_C_mul, coeff_X, if_true, mul_one, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at h2
+      simp only [coeff_C_mul, coeff_X, ite_true, mul_one, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at h2
       rw [Ideal.Quotient.eq_zero_iff_mem] at h2
       have h1' : aC ⟨o, l⟩ = 1 := Subtype.ext (by rw [haC]; exact h1)
       rw [h1'] at h2
@@ -271,12 +269,10 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
     cases o with
     | none =>
       refine ⟨j, hXnot none j ?_⟩
-      simp only [aL, x, Dinv, blowUpAtOne, Option.elim]
-      exact mul_inv_cancel₀ hune
+      simpa only [aL, x, Dinv, blowUpAtOne, Option.elim] using mul_inv_cancel₀ hune
     | some k =>
       refine ⟨i k, hXnot (some k) (i k) ?_⟩
-      simp only [aL, x, Dinv, blowUpAtOne, Option.elim]
-      exact mul_inv_cancel₀ (hXne k)
+      simpa only [aL, x, Dinv, blowUpAtOne, Option.elim] using mul_inv_cancel₀ (hXne k)
   have hQb : blowUpOf P u ≤ Q := by
     intro F hF
     rw [memQ]
@@ -290,15 +286,13 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
         show Polynomial.eval 1 (aeval (blowUpSubst P u) _) = 0
         rw [hFe, Polynomial.eval_zero]
       rw [hz, map_zero, zero_mul, ZeroMemClass.coe_zero]
-    rw [h0]
-    exact h0mem
+    rwa [h0]
   have hQW : Q.comap (liftForm (ι := ι) (J := J) (R := R)) ≤ W := by
     intro g hg
     rw [Ideal.mem_comap] at hg
     by_contra hgW
     obtain ⟨c, hc⟩ : ∃ c, weightedHomogeneousComponent (blockWeight ι) c g ∉ W := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       apply hgW
       rw [← sum_weightedHomogeneousComponent (blockWeight ι) g,
         finsum_eq_sum _ (weightedHomogeneousComponent_finsupp g)]

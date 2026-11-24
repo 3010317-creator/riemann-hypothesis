@@ -30,8 +30,7 @@ theorem posDef_int_lower {N : ℕ} {A : Matrix (Fin N) (Fin N) ℝ} (hA : A.PosD
     continuous_id.dotProduct (continuous_const.matrix_mulVec continuous_id)
   have hpos : ∀ y : Fin N → ℝ, y ≠ 0 → 0 < q y := by
     intro y hy
-    have h0 := hA.dotProduct_mulVec_pos hy
-    simpa [q] using h0
+    simpa [q] using hA.dotProduct_mulVec_pos hy
 
   obtain ⟨y0, hy0, hmin⟩ := (isCompact_sphere (0 : Fin N → ℝ) 1).exists_isMinOn
     (NormedSpace.sphere_nonempty.mpr zero_le_one) hqc.continuousOn
@@ -41,8 +40,7 @@ theorem posDef_int_lower {N : ℕ} {A : Matrix (Fin N) (Fin N) ℝ} (hA : A.PosD
     exact zero_ne_one hy0
   refine ⟨q y0, hpos y0 hy0ne, fun x hx => ?_⟩
   obtain ⟨i, hi⟩ : ∃ i, x i ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hx (funext hc)
   have hs1 : 1 ≤ ‖(fun i => (x i : ℝ))‖ := by
     have h1 : (1 : ℝ) ≤ |(x i : ℝ)| := by exact_mod_cast Int.one_le_abs hi
@@ -80,8 +78,7 @@ theorem first_minimum_pos (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) (
       simp only [ReciprocityTheory.ChartRestriction.G.FD.QuadraticLatticeForms.Qy, hm]
     have hc : (ReciprocityTheory.ChartRestriction.G.FD.RealPlaceEmbeddings.zb (X := X)).repr ⟨v, hv⟩ ≠ 0 := by
       intro h0
-      have h1 := (LinearEquiv.map_eq_zero_iff _).mp h0
-      exact hv0 (by simpa using congrArg Subtype.val h1)
+      exact hv0 (by simpa using congrArg Subtype.val ((LinearEquiv.map_eq_zero_iff _).mp h0))
     have hx0 : (fun i => (ReciprocityTheory.ChartRestriction.G.FD.RealPlaceEmbeddings.zb (X := X)).repr ⟨v, hv⟩ i) ≠ 0 := by
       intro h0
       apply hc

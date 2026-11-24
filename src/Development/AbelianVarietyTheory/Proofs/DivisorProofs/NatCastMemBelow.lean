@@ -136,8 +136,7 @@ theorem isBaseCond_condF (P : Places L) (hg : ∀ i, D.host.g i % LevelStarExpon
       intro p hp h15 hs
       have hs' : GlobalTheory.Mem.Chr.SplitsC D.host.E p := by
         have e := GlobalTheory.HostSplit.ncard_placesOver D.host.E hp
-        rw [hs] at e
-        exact e
+        rwa [hs] at e
       exact ⟨hp, by omega, good_prime D.host hp hs'⟩
     rintro p (rfl | rfl | rfl | rfl | rfl)
     · exact ofMod _ (D.host.g_prime 0) (hg 0)
@@ -152,7 +151,7 @@ theorem isBaseCond_condF (P : Places L) (hg : ∀ i, D.host.g i % LevelStarExpon
     intro v hv
     by_contra h
     have e := expIn_condF' P v
-    rw [if_neg h] at e
+    rw [ite_eq_right h] at e
     have hne : condF P ≠ 0 := Finset.prod_ne_zero_iff.2 fun u _ => pow_ne_zero _ u.ne_bot
     have := (multiplicity_eq_zero (FiniteMultiplicity.of_prime_left v.prime hne)).1 e
     exact this hv
@@ -161,13 +160,13 @@ theorem isBaseCond_condF (P : Places L) (hg : ∀ i, D.host.g i % LevelStarExpon
   · intro e
     have h0 : P.v0 ∈ P.S0 := P.mem_S0_of_sum_eq.2 (Or.inl rfl)
     have e1 := expIn_condF' P P.v0
-    rw [if_pos h0, condExp, if_pos rfl] at e1
+    rw [ite_eq_left h0, condExp, ite_eq_left rfl] at e1
     have e2 : expIn (condF P) P.v0 = 0 := by
       rw [e]; exact multiplicity_eq_zero_of_not_dvd fun h => P.v0.isPrime.ne_top (top_le_iff.1 (Ideal.le_of_dvd h))
     omega
   · have hS := hexp v hv
     have hle : expIn (condF P) v ≤ 2 := by
-      rw [expIn_condF', if_pos hS, condExp]; split_ifs <;> omega
+      rw [expIn_condF', ite_eq_left hS, condExp]; split_ifs <;> omega
     obtain ⟨p, hp, hpv⟩ : ∃ p : ℕ, (p = D.host.g 0 ∨ p = D.host.g 1 ∨ p = D.host.pde ∨ p = D.host.pde' ∨ p = q0 D) ∧
         (p : OF D.host.E) ∈ v.asIdeal := by
       rcases P.mem_S0_of_sum_eq.1 hS with h | h
@@ -187,8 +186,7 @@ theorem isCMType_cmPhi (D : D7) : IsCMType (cmPhi D) ∧ ∀ τ τ', cmPhi D τ 
   refine ⟨fun σ => ?_, fun τ τ' => by rw [e, e]; exact hsq _ _⟩
   obtain ⟨g, hg, hu⟩ := hcm σ
   refine ⟨D.eTau.symm g, ?_, fun τ hτ => ?_⟩
-  · simp only [e, Equiv.apply_symm_apply]
-    exact hg
+  · simpa only [e, Equiv.apply_symm_apply] using hg
   · have hτ' : σ = GlobalTheory.LamTie.phi D.host (D.eTau τ) ∨ σ = ComplexEmbedding.conjugate (GlobalTheory.LamTie.phi D.host (D.eTau τ)) := by
       simpa only [e] using hτ
     rw [← hu _ hτ', Equiv.symm_apply_apply]

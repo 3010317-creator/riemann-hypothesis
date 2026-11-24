@@ -87,8 +87,7 @@ theorem hom_value_congruent_int_mod_prime :
   intro A O _ _ _ g hg hgu hA σ x
   have hy : σ x ^ g - σ x ∈ Ideal.span {(g : O)} := by
     have h := Ideal.mem_map_of_mem σ (hA x)
-    rw [Ideal.map_span, Set.image_singleton, map_natCast, map_sub, map_pow] at h
-    exact h
+    rwa [Ideal.map_span, Set.image_singleton, map_natCast, map_sub, map_pow] at h
   refine ⟨?_, fun hn => mem_span_prime_of_not_isUnit_of_pow_sub_mem g hg (σ x) hy hn⟩
   have : Fact g.Prime := ⟨hg⟩
   have : NeZero g := ⟨hg.ne_zero⟩
@@ -96,8 +95,7 @@ theorem hom_value_congruent_int_mod_prime :
   have hspan : Ideal.span {(g : O)} ≤ IsLocalRing.maximalIdeal O :=
     (Ideal.span_singleton_le_iff_mem _).mpr hgm
   have hgk : ((g : ℕ) : IsLocalRing.ResidueField O) = 0 := by
-    rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
-    exact hgm
+    rwa [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
   have : CharP (IsLocalRing.ResidueField O) g := (CharP.charP_iff_prime_eq_zero hg).mpr hgk
   have hfix : IsLocalRing.residue O (σ x) ^ g = IsLocalRing.residue O (σ x) := by
     have h := (IsLocalRing.residue_eq_zero_iff _).mpr (hspan hy)

@@ -275,9 +275,9 @@ private theorem pairing_monomial_eq_coeff_mul_prod_factorial_mul (F : MvPolynomi
   classical
   rw [pairing_eq_sum_of_support_subset F _ (insert A F.support)
       (Finset.subset_insert _ _), Finset.sum_eq_single A]
-  · rw [coeff_monomial, if_pos rfl]
+  · rw [coeff_monomial, ite_eq_left rfl]
   · intro B _ hB
-    rw [coeff_monomial, if_neg (Ne.symm hB)]; ring
+    rw [coeff_monomial, ite_eq_right (Ne.symm hB)]; ring
   · intro h; exact absurd (Finset.mem_insert_self _ _) h
 
 open MvPolynomial in
@@ -320,8 +320,8 @@ private theorem pairing_X_mul_eq_pairing_pderiv (x : κ) (F G : MvPolynomial κ 
       coeff_X_mul']
     by_cases hx : A x = 0
     · have : x ∉ A.support := by simpa using hx
-      rw [if_neg this, hx]; simp
-    · rw [if_pos (by simpa using hx)]
+      rw [ite_eq_right this, hx]; simp
+    · rw [ite_eq_left (by simpa using hx)]
       have hA : A = (A - Finsupp.single x 1) + Finsupp.single x 1 := by
         ext y
         by_cases hy : x = y
@@ -476,8 +476,7 @@ theorem _root_.GlobalTheory.newtonBound_pos_and_newtonStep : _root_.Formalism.L2
     nlinarith [mul_lt_mul_of_pos_left key hpos]
   · unfold _root_.Formalism.L2.FormalSeriesBounds.P7
     intro C _ v S a hS ha0 hpos Y0
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hadd : ∀ x y : C, 0 < v x → 0 < v y → 0 < v (x + y) := fun x y hx hy =>
       lt_of_lt_of_le (lt_min hx hy) (v.map_add x y)
     have hsub : ∀ x y : C, 0 < v x → 0 < v y → 0 < v (x - y) := fun x y hx hy => by
@@ -827,8 +826,7 @@ theorem form_add (φ ψ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) :
 
 theorem form_mul_left (c : C) (φ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) :
     form (fun A => c * φ A) P = c * form φ P := by
-  simp only [form_eq_sum, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => by ring
+  simpa only [form_eq_sum, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem form_rename {τ : Type} (e : σ → τ) (φ : (τ →₀ ℕ) → C) (P : MvPolynomial σ C) :
     form φ (MvPolynomial.rename e P) = form (fun A => φ (A.mapDomain e)) P := by
@@ -1188,7 +1186,7 @@ theorem homPart_isHomogeneous (N : ℕ) (S : MvPowerSeries κ C) :
   rw [coeff_homPart] at hA
   rw [weight_one]
   by_contra h
-  exact hA (if_neg h)
+  exact hA (ite_eq_right h)
 
 theorem pair_mul {F R : MvPolynomial κ C} {d N : ℕ} (hF : F.IsHomogeneous (d + N))
     (hR : R.IsHomogeneous d) (S : MvPowerSeries κ C) :
@@ -1208,7 +1206,7 @@ theorem pair_mul {F R : MvPolynomial κ C} {d N : ℕ} (hF : F.IsHomogeneous (d 
     have h2 : x.1 + x.2 = A := by simpa using hx
     rw [← h2] at hA'
     simp only [Finsupp.add_apply, Finset.sum_add_distrib] at hA'
-    rw [coeff_homPart, if_pos (by omega)]
+    rw [coeff_homPart, ite_eq_left (by omega)]
 
 end General
 
@@ -1338,7 +1336,7 @@ theorem main :
         rw [e']; simpa using hg0
       simp only [actMon, e]
       simpa using e2
-    · rw [if_neg (Ne.symm hA), if_neg]
+    · rw [ite_eq_right (Ne.symm hA), ite_eq_right]
       intro h
       apply hA
       ext q
@@ -1494,8 +1492,7 @@ theorem pair_self [CharZero C] (n x : ℕ) :
     ∑ A ∈ (cayDet n C ^ x).support, AddMonoidAlgebra.coeff (cayDet n C ^ x) A * (A.prod fun _ e => (e.factorial : C)) *
       AddMonoidAlgebra.coeff (cayDet n C ^ x) A = (capNat n x : C) := by
   obtain ⟨h1, h2, -, -⟩ := GlobalTheory.CayleyCapelli.main.2 C n x
-  rw [h2, GlobalTheory.CayleyCapelli.detL_eq, ← map_pow, jetAt0_rename _ Sum.inl_injective] at h1
-  exact h1
+  rwa [h2, GlobalTheory.CayleyCapelli.detL_eq, ← map_pow, jetAt0_rename _ Sum.inl_injective] at h1
 
 theorem hP_eq (l i n : ℕ) (h1 : MvPowerSeries (PVar n) C) :
     hP C l i n h1 = ((∑ q : Fin n × Fin n, MvPolynomial.C (-((l : C) ^ expE l i)⁻¹) *
@@ -1593,8 +1590,7 @@ theorem main : CoefficientExpansionLambda := by
     rw [eq_div_of_mul_eq (hcap _) h4]
     ring
   · have := _root_.GlobalTheory.DetPairingBound.main C v l hl hv i n0 s (Q s) hs hn (hQv s hs hn)
-    rw [pair_self] at this
-    exact this
+    rwa [pair_self] at this
 
 end GlobalTheory.OddBlock.BinomialValue
 
@@ -1717,8 +1713,7 @@ namespace GlobalTheory.OddBlock.BlockContent
 variable {C : Type} [Field C] (v : AddValuation C (WithTop ℝ))
 
 theorem val_coprime_le {l m : ℕ} (hv : v (l : C) = 1) (h : Nat.Coprime l m) : v (m : C) ≤ 0 := by
-  by_contra hm
-  push_neg at hm
+  by_contra! hm
   have hb : (1 : ℤ) = l * Nat.gcdA l m + m * Nat.gcdB l m := by
     have := Nat.gcd_eq_gcd_ab l m
     rw [h] at this

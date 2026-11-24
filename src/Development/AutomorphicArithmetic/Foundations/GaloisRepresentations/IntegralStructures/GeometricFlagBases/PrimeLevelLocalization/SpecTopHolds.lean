@@ -145,8 +145,7 @@ theorem wtOf_of (h0 : WtCore) : WtOf := by
       simp only [Matrix.mul_assoc, Units.inv_mul_cancel_left, Matrix.mul_nonsing_inv_cancel_left _ _ hu] at h2
       rw [← Algebra.smul_def, Matrix.mul_smul, Matrix.mul_smul, Matrix.mul_smul] at h2
       simp only [Matrix.mul_assoc]
-      rw [Rat.cast_smul_eq_qsmul]
-      exact h2
+      rwa [Rat.cast_smul_eq_qsmul]
     rw [e1]
     simp only [smul_mul_assoc, Matrix.mul_assoc, Units.mul_inv_cancel_left, Units.inv_mul, Matrix.mul_one]
   have hsep' : y₀.1.val.charpoly.Separable := hmin ▸ hsep
@@ -158,8 +157,7 @@ theorem wtOf_of (h0 : WtCore) : WtOf := by
     rw [hmin]
     refine congrArg LocalSmoothExtension.invPol (Polynomial.ext fun i => ?_)
     exact (Polynomial.coeff_map _ _).trans (hc _)
-  rw [← V.jz_eq, ← e2, ← e3] at key
-  exact key
+  rwa [← V.jz_eq, ← e2, ← e3] at key
 
 theorem expOf_of (h0 : ExpCore) (h1 : AutEx) (h2 : WtAt) (h3 : EpsIff) : ExpOf := by
   intro E _ _ _ A n p _ S x U w₀ Up V d hd hx hG
@@ -315,8 +313,7 @@ theorem UpperTheory.Reformulated.B.Qk58.agree_of_adjoin :
   intro E _ _ φ ψ a b ha hb
   induction hb using IntermediateField.adjoin_induction with
   | mem x hx =>
-    rw [Set.mem_singleton_iff.mp hx]
-    exact ha
+    rwa [Set.mem_singleton_iff.mp hx]
   | algebraMap q => simp
   | add x y _ _ hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
   | inv x _ hx => rw [map_inv₀, map_inv₀, hx]
@@ -373,8 +370,7 @@ theorem pEpsIff_of : EpsIff := by
   constructor
   · intro h
     have h' : φ ω = ComplexEmbedding.conjugate τ ω := by
-      rw [ComplexEmbedding.conjugate_coe_eq]
-      exact h
+      rwa [ComplexEmbedding.conjugate_coe_eq]
     rw [_root_.UpperTheory.Reformulated.B.Qk58.agree_of_adjoin φ _ h' hx', hc]
   · intro h
     have h' : φ x = ComplexEmbedding.conjugate τ x := by rw [h, hc]
@@ -460,12 +456,12 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpCore_of :
     rcases InfinitePlace.embedding_mk_eq τ with hv | hv
     · have hc : ComplexEmbedding.conjugate τ ≠ (InfinitePlace.mk (ComplexEmbedding.conjugate τ)).embedding := by
         rw [InfinitePlace.mk_conjugate_eq, hv]; exact conjugate_ne τ
-      have l1 : ∀ i, lamOf W m τ i = m (InfinitePlace.mk τ) := fun i => if_pos hv.symm
+      have l1 : ∀ i, lamOf W m τ i = m (InfinitePlace.mk τ) := fun i => ite_eq_left hv.symm
       have l2 : ∀ i, ((lamOf W m (ComplexEmbedding.conjugate τ) i : ℕ) : ℤ) =
           (W (InfinitePlace.mk τ)).w i + m (InfinitePlace.mk τ) := fun i => by
         have h : lamOf W m (ComplexEmbedding.conjugate τ) i =
           ((W (InfinitePlace.mk (ComplexEmbedding.conjugate τ))).w i +
-            m (InfinitePlace.mk (ComplexEmbedding.conjugate τ))).toNat := if_neg hc
+            m (InfinitePlace.mk (ComplexEmbedding.conjugate τ))).toNat := ite_eq_right hc
         rw [h, InfinitePlace.mk_conjugate_eq]
         exact Int.toNat_of_nonneg (hm _ _)
       have hw : W.at τ = W (InfinitePlace.mk τ) := by
@@ -485,7 +481,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpCore_of :
             ∑ j, (W (InfinitePlace.mk τ)).w j + (n : ℤ) * m (InfinitePlace.mk τ) := by
           rw [Finset.sum_add_distrib]
           simp
-        rw [if_pos hv.symm] at hs
+        rw [ite_eq_left hv.symm] at hs
         rw [hw, ← hs]
         push_cast at hsum ⊢
         rw [hsum]
@@ -493,14 +489,14 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpCore_of :
     · have hn : τ ≠ (InfinitePlace.mk τ).embedding := by
         rw [hv]; exact (conjugate_ne τ).symm
       have l1 : ∀ i, ((lamOf W m τ i : ℕ) : ℤ) = (W (InfinitePlace.mk τ)).w i + m (InfinitePlace.mk τ) := fun i => by
-        have h : lamOf W m τ i = ((W (InfinitePlace.mk τ)).w i + m (InfinitePlace.mk τ)).toNat := if_neg hn
+        have h : lamOf W m τ i = ((W (InfinitePlace.mk τ)).w i + m (InfinitePlace.mk τ)).toNat := ite_eq_right hn
         rw [h]
         exact Int.toNat_of_nonneg (hm _ _)
       have l2 : ∀ i, lamOf W m (ComplexEmbedding.conjugate τ) i = m (InfinitePlace.mk τ) := fun i => by
         have h : lamOf W m (ComplexEmbedding.conjugate τ) i = m (InfinitePlace.mk (ComplexEmbedding.conjugate τ)) :=
-          if_pos (by rw [InfinitePlace.mk_conjugate_eq, hv])
+          ite_eq_left (by rw [InfinitePlace.mk_conjugate_eq, hv])
         rw [h, InfinitePlace.mk_conjugate_eq]
-      have hw : W.at τ = (W (InfinitePlace.mk τ)).dual := if_neg fun h => hn h.symm
+      have hw : W.at τ = (W (InfinitePlace.mk τ)).dual := ite_eq_right fun h => hn h.symm
       refine ⟨fun i => ((n - 1) * m (InfinitePlace.mk τ) + R) + (lamOf W m τ i + (n - 1 - (i : ℕ))), Fin.rev k,
         Or.inl ⟨m (InfinitePlace.mk τ), fun i => by rw [c2, l2], fun i => ?_⟩, ?_⟩
       · simp only [c1, hR]
@@ -510,7 +506,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpCore_of :
           omega
         have e4 : (((n - 1 : ℕ) : ℤ)) = (n : ℤ) - 1 := by
           rw [Nat.cast_sub hk]; simp
-        rw [if_neg hn] at hs
+        rw [ite_eq_right hn] at hs
         rw [hw, ← hs]
         simp only [e3, DomWeight.dual]
         push_cast
@@ -604,7 +600,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpSum_of :
       rw [InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding]
     have h1 : ∀ j, lamOf W m (ComplexEmbedding.conjugate v.embedding) j = ((W v).w j + m v).toNat := fun j => by
       unfold lamOf
-      rw [hv, if_neg (hne _)]
+      rw [hv, ite_eq_right (hne _)]
     simp only [h1]
     push_cast
     rw [Finset.sum_congr rfl fun i _ => Int.toNat_of_nonneg (hm v i), Finset.sum_add_distrib]
@@ -616,10 +612,10 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpSum_of :
     rcases hpm v.embedding with h | h
     · have h1 : v.embedding x ≠ -τ x := by rw [h]; exact hnn
       have h2 : -v.embedding x = -τ x := by rw [h]
-      rw [if_neg h1, if_pos h2, if_neg h1, zero_mul, one_mul, hl1]
+      rw [ite_eq_right h1, ite_eq_left h2, ite_eq_right h1, zero_mul, one_mul, hl1]
       push_cast; ring
     · have h2 : -v.embedding x ≠ -τ x := by rw [h, neg_neg]; exact hnn
-      rw [if_pos h, if_neg h2, if_pos h, zero_mul, one_mul, hl0]
+      rw [ite_eq_left h, ite_eq_right h2, ite_eq_left h, zero_mul, one_mul, hl0]
       push_cast; ring
   have hF1 : ∑ φ, F φ = mOf x W (∑ v, ((∑ i, (W v).w i) + n * m v)) τ := by
     rw [sum_emb hne, Finset.sum_congr rfl fun v _ => hFv v]
@@ -632,11 +628,11 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpSum_of :
   have hF2 : ∑ φ, F φ = F τ + (F (ComplexEmbedding.conjugate τ) +
       ∑ φ ∈ (Finset.univ.erase τ).erase (ComplexEmbedding.conjugate τ), F φ) := by
     rw [Finset.add_sum_erase _ F hmem, Finset.add_sum_erase _ F (Finset.mem_univ τ)]
-  have hFτ : F τ = 0 := by simp only [hF]; rw [if_neg hnn]; simp
+  have hFτ : F τ = 0 := by simp only [hF]; rw [ite_eq_right hnn]; simp
   have hFc : F (ComplexEmbedding.conjugate τ) = n * m (InfinitePlace.mk τ) +
       if τ = (InfinitePlace.mk τ).embedding then ∑ i, (W (InfinitePlace.mk τ)).w i else 0 := by
     simp only [hF]
-    rw [if_pos (hcj τ), one_mul]
+    rw [ite_eq_left (hcj τ), one_mul]
     split_ifs with h
     · conv_lhs => rw [h]
       rw [hl1]
@@ -869,10 +865,10 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pWtCore_of :
     if τ = (InfinitePlace.mk τ).embedding then (t (InfinitePlace.mk τ) i)⁻¹ else t (InfinitePlace.mk τ) i / ((s : ℚ) : ℂ)
   have gE : ∀ v : InfinitePlace E, g v.embedding = fun i => (t v i)⁻¹ := fun v => by
     funext i
-    simp only [g, InfinitePlace.mk_embedding, if_true]
+    simp only [g, InfinitePlace.mk_embedding, ite_true]
   have gC : ∀ v : InfinitePlace E, g (ComplexEmbedding.conjugate v.embedding) = fun i => t v i / ((s : ℚ) : ℂ) := fun v => by
     funext i
-    simp only [g, InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding, if_neg (conjugate_ne v.embedding)]
+    simp only [g, InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding, ite_eq_right (conjugate_ne v.embedding)]
   have hL : LocalSmoothExtension.Lists (LocalSmoothExtension.invPol y.val.charpoly) g := by
     intro τ
     rw [_root_.UpperTheory.Gal.LocalSmoothExtension.invRoots_of E _ h0 τ]
@@ -889,11 +885,11 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pWtCore_of :
       simp only [Function.comp, inv_div]
   have lE : ∀ v : InfinitePlace E, lamOf W m v.embedding = fun _ => m v := fun v => by
     funext i
-    simp only [lamOf, InfinitePlace.mk_embedding, if_true]
+    simp only [lamOf, InfinitePlace.mk_embedding, ite_true]
   have lC : ∀ v : InfinitePlace E, lamOf W m (ComplexEmbedding.conjugate v.embedding) =
       fun i => ((W v).w i + m v).toNat := fun v => by
     funext i
-    simp only [lamOf, InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding, if_neg (conjugate_ne v.embedding)]
+    simp only [lamOf, InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding, ite_eq_right (conjugate_ne v.embedding)]
   have hs0 : ((s : ℚ) : ℂ) ≠ 0 := by exact_mod_cast s.ne_zero
   have hpair : ∀ v : InfinitePlace E,
       UpperTheory.Gal.Schur.sch (lamOf W m v.embedding) (g v.embedding) *
@@ -1133,8 +1129,7 @@ theorem UpperTheory.Gal.Spc.auxiliary_prime_holds :
     rcases UpperTheory.Gal.Spc.EntrywiseClass.eq_or_cj A w.1 w'.1 heq with h | h
     · exact hne (Subtype.ext h.symm)
     · refine (SD w.1 m.1).1 (((SD w.1 m.1).2.2.2.2.2.2 ρ m.2 _).2 ?_)
-      rw [← h]
-      exact m'
+      rwa [← h]
   · obtain ⟨w, hw, -⟩ := hmk w₁ hw₁ hρ
     exact ⟨w, hw⟩
 end -- clump:auto
@@ -1305,8 +1300,7 @@ private theorem isCompact_comap_th (F : Frame S) {K : Subgroup (GUf E n)} (hK : 
   have hImage : (K.comap F.th : Set (GUf E n)) = CertificateRingHomMap.th '' (K : Set (GUf E n)) := by
     ext g
     constructor
-    · intro h
-      exact ⟨F.th g, h, by rw [th_eq F, CertificateRingHomMap.th_th]⟩
+    · exact fun h => ⟨F.th g, h, by rw [th_eq F, CertificateRingHomMap.th_th]⟩
     · rintro ⟨y, hy, rfl⟩
       change F.th (CertificateRingHomMap.th y) ∈ K
       rwa [th_eq F, CertificateRingHomMap.th_th]
@@ -1411,8 +1405,7 @@ theorem UpperTheory.Gal.Spc.tyEx :
       · rw [hcomp]
         by_cases h1 : u = w₀
         · subst h1
-          rw [UpperTheory.Gal.CertificateRingHomMap.comp_loc, V.Kw0]
-          exact hy
+          rwa [UpperTheory.Gal.CertificateRingHomMap.comp_loc, V.Kw0]
         · have h2 : u ≠ cj w₀ := fun h => (V.shape.up w₀ hS0 V.split).2 (h ▸ hu)
           rw [UpperTheory.Gal.CertificateRingHomMap.comp_loc_of_apart hw.1 ((hap u).2 ⟨h1, h2⟩), map_one]
           exact one_mem _
@@ -1427,8 +1420,7 @@ theorem UpperTheory.Gal.Spc.tyEx :
       have e : (L ⟨w₀, hw⟩).pr (F.j k') = comp w₀ k' := (hL ⟨w₀, hw⟩).1 k'
       have h := (UpperTheory.Gal.CertificateRingHomMap.mem_lev.1 hk').2.1 w₀ hS0
       rw [hcomp, V.Kw0] at h
-      rw [e]
-      exact h
+      rwa [e]
   have hle : S.L.KN N.1 ≤ K := by
     intro k hk
     obtain ⟨k', rfl, hk', -⟩ := hSt k hk
@@ -1701,7 +1693,6 @@ private theorem secAdd_eval {p : ℕ} (v₀ : AwayP p) (r a : AfP p) (h1 : AfP.e
   · subst hv
     rw [eval_secAdd, h1, one_mul]
   · rw [h0 v hv, zero_mul]
-    show (Pi.single v₀ _ : ∀ v : AwayP p, v.1.adicCompletion ℚ) v = 0
     exact Pi.single_eq_of_ne hv _
 
 private theorem core {E R : Type} [Field E] [NumberField E] [CommRing R] [Algebra ℚ R] {n p : ℕ}
@@ -1736,15 +1727,13 @@ private theorem core {E R : Type} [Field E] [NumberField E] [CommRing R] [Algebr
       have h1 := congrFun (congrFun h i) k
       simp only [smul_mul_assoc, one_mul, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.smul_apply, smul_eq_mul,
         Matrix.zero_apply] at h1
-      have h2 := (Φ_ker _).1 h1 w hw
-      simpa [map_mul] using h2
+      simpa [map_mul] using (Φ_ker _).1 h1 w hw
     · intro h
       refine Matrix.ext fun i k => ?_
       simp only [smul_mul_assoc, one_mul, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.smul_apply, smul_eq_mul,
         Matrix.zero_apply]
       refine (Φ_ker _).2 fun w hw => ?_
-      have h1 := congrFun (congrFun (h w hw) i) k
-      simpa [map_mul] using h1
+      simpa [map_mul] using congrFun (congrFun (h w hw) i) k
   have hd : ∀ (u v : R ⊗[ℚ] Matrix (Fin n) (Fin n) E) (U V : Matrix (Fin n) (Fin n) (Af E)), Φ.mapMatrix U = μ u →
       Φ.mapMatrix V = μ v → μ ((r ⊗ₜ[ℚ] (1 : Matrix (Fin n) (Fin n) E)) * (u * v - v * u)) =
         Φ.mapMatrix ((c • (1 : Matrix (Fin n) (Fin n) (Af E))) * (U * V - V * U)) := by

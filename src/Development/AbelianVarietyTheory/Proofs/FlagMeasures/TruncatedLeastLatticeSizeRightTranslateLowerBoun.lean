@@ -85,8 +85,7 @@ theorem opN_conj_le {n : ℕ} (g : Matrix (Fin n) (Fin n) ℂ) :
   have e3 : ‖(WithLp.toLp 2 (star (WithLp.ofLp x)) : EuclideanSpace ℂ (Fin n))‖ = ‖x‖ := by
     rw [norm_toLp_star_eq_norm_toLp]
   rw [e1, norm_toLp_star_eq_norm_toLp, ← e2]
-  rw [e3] at key
-  exact key
+  rwa [e3] at key
 
 theorem opN_conj {n : ℕ} (g : Matrix (Fin n) (Fin n) ℂ) :
     opN (g.map (starRingEnd ℂ)) = opN g := by
@@ -136,7 +135,7 @@ private theorem inv_frm_mul_frm_mul_eq_uMat_of_eq_embedding (I : AutInst) (x k :
     (h : w.embedding = I.φ (w.comap (algebraMap I.F I.E))) :
     (frm I x w)⁻¹ * frm I (x * k) w = uMat (k.1 (w.comap (algebraMap I.F I.E))) := by
   simp only [frm]
-  rw [if_pos h, if_pos h]
+  rw [ite_eq_left h, ite_eq_left h]
   clear h
   generalize w.comap (algebraMap I.F I.E) = v
   have hA : IsUnit (I.P v * uMat (x.1 v)) := (I.P_unit v).mul (Units.isUnit _)
@@ -151,7 +150,7 @@ private theorem inv_frm_mul_frm_mul_eq_conj_uMat_of_ne_embedding (I : AutInst) (
     (frm I x w)⁻¹ * frm I (x * k) w =
       (uMat (k.1 (w.comap (algebraMap I.F I.E)))).map (starRingEnd ℂ) := by
   simp only [frm]
-  rw [if_neg h, if_neg h]
+  rw [ite_eq_right h, ite_eq_right h]
   clear h
   generalize w.comap (algebraMap I.F I.E) = v
   have hA : IsUnit (I.P v * uMat (x.1 v)) := (I.P_unit v).mul (Units.isUnit _)
@@ -287,14 +286,12 @@ theorem tendsto_dist (I : AutInst) (hn : 1 ≤ I.n) :
     have h1 : (fun k : I.GA => uMat (k.1 v)) 1 = 1 := rfl
     exact (continuousAt_dOp hn).comp_of_eq hu.continuousAt h1
   have h0 : ∀ v, dOp (uMat ((1 : I.GA).1 v)) = 0 := fun v => by
-    show dOp (1 : Matrix (Fin I.n) (Fin I.n) ℂ) = 0
     exact dOp_one hn
   have hs := tendsto_finsetSum (f := fun v (k : I.GA) => dOp (uMat (k.1 v))) Finset.univ
     (fun v _ => (hc v).tendsto)
   rw [Finset.sum_eq_zero (fun v _ => h0 v)] at hs
   have hq := hs.div_const (I.f : ℝ)
-  rw [zero_div] at hq
-  exact hq
+  rwa [zero_div] at hq
 
 theorem continuous_least (I : AutInst) (hn : 1 ≤ I.n) : Continuous (least I) := by
   obtain ⟨Ks, hKs⟩ := (GlobalTheory.CongTop.adelic_topology I).2.2.2.2.2.1
@@ -307,8 +304,7 @@ theorem continuous_least (I : AutInst) (hn : 1 ≤ I.n) : Continuous (least I) :
     refine Filter.mem_of_superset (ho.mem_nhds h1) ?_
     intro k hk
     have hk' : k.2 ∈ (Ks : Set I.Gf) := by
-      rw [hKs]
-      exact hk
+      rwa [hKs]
     refine ⟨hk, ?_⟩
     show k⁻¹.2 ∈ I.Kset
     rw [← hKs]
@@ -318,8 +314,7 @@ theorem continuous_least (I : AutInst) (hn : 1 ≤ I.n) : Continuous (least I) :
       (fun k : I.GA => least I x * Real.exp (-((∑ v, dOp (uMat (k.1 v))) / I.f)))
       (nhds 1) (nhds (least I x)) := by
     have h2 := ((Real.continuous_exp.tendsto _).comp (tendsto_dist I hn).neg).const_mul (least I x)
-    rw [neg_zero, Real.exp_zero, mul_one] at h2
-    exact h2
+    rwa [neg_zero, Real.exp_zero, mul_one] at h2
   have hup : Filter.Tendsto
       (fun k : I.GA => least I x * Real.exp ((∑ v, dOp (uMat (k⁻¹.1 v))) / I.f))
       (nhds 1) (nhds (least I x)) := by
@@ -327,8 +322,7 @@ theorem continuous_least (I : AutInst) (hn : 1 ≤ I.n) : Continuous (least I) :
         (nhds 1) (nhds 0) :=
       (tendsto_dist I hn).comp (continuous_inv.tendsto' (1 : I.GA) 1 inv_one)
     have h2 := ((Real.continuous_exp.tendsto _).comp h1).const_mul (least I x)
-    rw [Real.exp_zero, mul_one] at h2
-    exact h2
+    rwa [Real.exp_zero, mul_one] at h2
   have hg : Filter.Tendsto (fun k : I.GA => least I (x * k)) (nhds 1) (nhds (least I x)) := by
     refine tendsto_of_tendsto_of_tendsto_of_le_of_le' hlow hup ?_ ?_
     · filter_upwards [hU] with k hk
@@ -351,13 +345,11 @@ theorem continuous_least (I : AutInst) (hn : 1 ≤ I.n) : Continuous (least I) :
   have he : ((fun k : I.GA => least I (x * k)) ∘ fun y : I.GA => x⁻¹ * y) = least I := by
     funext y
     simp only [Function.comp_apply, mul_inv_cancel_left]
-  rw [he] at hfin
-  exact hfin
+  rwa [he] at hfin
 
 theorem least_variation_continuity : ∀ I : AutInst, 1 ≤ I.n → (∀ x k : I.GA, k.2 ∈ I.Kset → least I x * Real.exp (-((∑ v, dOp (uMat (k.1 v))) / I.f)) ≤ least I (x * k) ∧ tau1 I x * Real.exp (-((∑ v, dOp (uMat (k.1 v))) / I.f)) ≤ tau1 I (x * k)) ∧ Continuous (least I) ∧ Continuous (tau1 I) := by
   intro I hn
   refine ⟨fun x k hk => ⟨least_var I hn x k hk, truncatedLeastLatticeSize_rightTranslate_lower_bound I hn x k hk⟩, continuous_least I hn, ?_⟩
-  show Continuous (fun x => min (1 / 2 : ℝ) (least I x))
   exact continuous_const.min (continuous_least I hn)
 
 end GlobalTheory.LeastVar

@@ -396,8 +396,7 @@ theorem exists_evVal_ne_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
   obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.CompanionTheory.MirPair.AvgBox.exists_JJ_ne_zero ν ψ T B hψ hT hnd v hv
   obtain ⟨t, htt₀, htc⟩ := exists_large_unit c r t₀
   obtain ⟨v', hv'⟩ := ht₀ t htt₀
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hev : ∀ w : V', ∃ τ : kˣ, ∀ u : kˣ, valuation k (τ : k) ≤ valuation k (u : k) →
       JJ ν ψ T B (box (n + 1) u : Set (Fin (n + 1) → k)) v w = 0 := by
     intro w
@@ -417,8 +416,7 @@ theorem exists_evVal_ne_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
       (hfix b (box_subset_of_valuation_le hrr₁ hbr)) ?_]
     · exact hτ _ u (hu _ ⟨b, hbr, rfl⟩)
     · intro x
-      have h := hlat b (box_subset_of_valuation_le hrr₂ hbr) u x
-      simpa using h
+      simpa using hlat b (box_subset_of_valuation_le hrr₂ hbr) u x
   have hm : MeasurableSet (box (n + 1) u : Set (Fin (n + 1) → k)) := by
     rw [coe_box]
     exact MeasurableSet.univ_pi fun _ => (isOpen_cball u).measurableSet

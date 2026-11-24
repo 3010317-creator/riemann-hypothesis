@@ -123,8 +123,7 @@ theorem filS_top (W : LocWach PD LL O v n) (hcase : Formalism.MainNotions.Liftin
         by_contra h
         have := hu _ (hJ (u + k) h)
         omega
-      rw [Nat.cast_succ, ← add_assoc, heq]
-      exact ih
+      rwa [Nat.cast_succ, ← add_assoc, heq]
   have hallV : ∀ b : ℤ, ιV PD (LL := LL) (V := T.V) x ∈ FilV PD (LL := LL) (V := T.V) b := by
     intro b
     by_cases h : b ≤ u
@@ -132,7 +131,6 @@ theorem filS_top (W : LocWach PD LL O v n) (hcase : Formalism.MainNotions.Liftin
     · have hk := (Submodule.mem_inf.mp (hall (b - u).toNat)).2
       have : u + ((b - u).toNat : ℤ) = b := by omega
       rwa [this] at hk
-  have h0 := filV_sep _ hallV
-  exact Formalism.MainNotions.UnusedSlot80.LevR.ιV_inj (h0.trans (map_zero _).symm)
+  exact Formalism.MainNotions.UnusedSlot80.LevR.ιV_inj ((filV_sep _ hallV).trans (map_zero _).symm)
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries

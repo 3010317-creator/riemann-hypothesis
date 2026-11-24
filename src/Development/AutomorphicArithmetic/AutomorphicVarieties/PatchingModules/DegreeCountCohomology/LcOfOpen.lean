@@ -63,8 +63,7 @@ private theorem lc_of_open {R Γ M : Type} [CommRing R] [Group Γ] [TopologicalS
     hH.isOpenMap_subtype_val _ ((h m).isOpen_fiber m)
   have h1 : (1 : Γ) ∈ (Subtype.val : H → Γ) '' {z : H | ρ z m = m} := ⟨1, by simp, rfl⟩
   have ht : Filter.Tendsto (fun y => x⁻¹ * y) (nhds x) (nhds 1) := by
-    have h0 := (continuous_const_mul x⁻¹).tendsto x
-    simpa using h0
+    simpa using (continuous_const_mul x⁻¹).tendsto x
   filter_upwards [ht (hU.mem_nhds h1)] with y hy
   obtain ⟨z, hz, hzy⟩ := hy
   have hz' : ρ z m = m := hz
@@ -78,9 +77,7 @@ private theorem lc_mat {Γ R : Type} [TopologicalSpace Γ] {n : ℕ} (f : Γ →
   rw [IsLocallyConstant.iff_eventually_eq]
   intro x
   have hev : ∀ᶠ y in nhds x, ∀ i j, f y i j = f x i j := by
-    simp only [Filter.eventually_all]
-    intro i j
-    exact (h i j).eventually_eq x
+    simpa only [Filter.eventually_all] using fun i j => (h i j).eventually_eq x
   filter_upwards [hev] with y hy
   exact Matrix.ext hy
 

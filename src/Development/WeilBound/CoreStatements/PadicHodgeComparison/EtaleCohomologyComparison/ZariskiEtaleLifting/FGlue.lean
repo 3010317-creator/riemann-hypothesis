@@ -371,7 +371,7 @@ theorem face_E {p : ℕ} (i : Fin (p + 1)) (b : ℕ) (y : Ch (p + 1)) :
   have hl : ∀ {m : ℕ} (a : Fin (m + 1)), a.castSucc.succAbove (Fin.last m) = Fin.last (m + 1) := fun a => by
     have := a.2
     ext; simp [Fin.succAbove, Fin.lt_def]
-    rw [if_neg (by omega)]; simp
+    rw [ite_eq_right (by omega)]; simp
   induction x using Fin.lastCases with
   | last => simp [hl]
   | cast x =>
@@ -393,7 +393,7 @@ theorem face_EE {p : ℕ} (a b : ℕ) (m : Ch p) :
     have : (Fin.last (p + 1)).castSucc.succAbove x.castSucc = x.castSucc.castSucc := by
       have := x.2
       ext; simp [Fin.succAbove, Fin.lt_def]
-      rw [if_pos (by omega)]; simp
+      rw [ite_eq_left (by omega)]; simp
     simp [this]
 
 theorem len_E {n : ℕ} (a : ℕ) (m : Ch n) : len (E a m) = a := by
@@ -456,7 +456,7 @@ theorem d_eq {n : ℕ} (f : Ch n → Vv N) (s : Ch (n + 1)) :
       have hl : i.castSucc.succAbove (Fin.last n) = Fin.last (n + 1) := by
         have := i.2
         ext; simp [Fin.succAbove, Fin.lt_def]
-        rw [if_neg (by omega)]; simp
+        rw [ite_eq_right (by omega)]; simp
       have key : ∀ (x : Fin (n + 2)) (hx : x ≤ Fin.last (n + 1)), x = Fin.last (n + 1) → val (s.map (homOfLE hx)) = 0 := by
         intro x hx e
         subst e
@@ -472,8 +472,7 @@ theorem dp_add {n : ℕ} (φ ψ : Ch n → Vv N) (s : Ch (n + 1)) :
 
 theorem dp_zsmul {n : ℕ} (e : ℤ) (φ : Ch n → Vv N) (s : Ch (n + 1)) :
     dp N (fun x => e • φ x) s = e • dp N φ s := by
-  simp only [dp, Finset.smul_sum]
-  exact Finset.sum_congr rfl fun i _ => smul_comm _ _ _
+  simpa only [dp, Finset.smul_sum] using Finset.sum_congr rfl fun i _ => smul_comm _ _ _
 
 theorem dp_map {n : ℕ} (g : Vv N →ₗ[R] Vv N) (φ : Ch n → Vv N) (s : Ch (n + 1)) :
     dp N (fun x => g (φ x)) s = g (dp N φ s) := by
@@ -518,8 +517,7 @@ theorem cocycle_zero {p : ℕ} (e : Ch (p + 2) → Vv N) (he : d N (p + 2) (e : 
       have h := rel N e he b 1 k
       have hz : (fun x => e (E 1 x)) = fun _ => 0 := funext h1
       rw [hz, dp_zero, ih, map_zero, smul_zero, add_zero, zero_add] at h
-      have h2 := congrArg (fun v => (-1 : ℤ) ^ (p + 2) • v) h
-      simpa [smul_smul, ← mul_pow, ← pow_add] using h2
+      simpa [smul_smul, ← mul_pow, ← pow_add] using congrArg (fun v => (-1 : ℤ) ^ (p + 2) • v) h
   rw [← E_surj s]
   exact key _ _
 
@@ -671,8 +669,7 @@ theorem resUpTo_of_acyc : ∀ {R : Type} [CommRing R] {M : Type w} [AddCommGroup
       rw [← neg_sub, h5, neg_zero]
     obtain ⟨x, hx⟩ := hex (y' m0) (by rw [LinearMap.sub_apply]; exact h3)
     refine ⟨x, funext fun t => ?_⟩
-    rw [cochain_degree_zero_subsingleton t m0]
-    exact hx
+    rwa [cochain_degree_zero_subsingleton t m0]
   · cases n with
     | zero =>
       obtain ⟨x, hx⟩ := exact_one N s hsurj y hy
@@ -844,8 +841,7 @@ theorem CrystallineSemistableComparison.B.P.kstep : ∀ {R : Type} [CommRing R] 
     rfl
   have htr := (CrystallineSemistableComparison.P.res_transfer (Mor.restrict F' (kstepL π hπ)).hom (aug F' e) s 1 hup).2
     (_root_.CrystallineSemistableComparison.Auxfi.d_aug F' e he) (hε ▸ hb)
-  rw [mul_one] at htr
-  exact htr
+  rwa [mul_one] at htr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FKstep =====
@@ -1252,8 +1248,7 @@ theorem CrystallineSemistableComparison.B.P.gam : ∀ n : ℕ, ∃ N : ℕ, ∀ 
   have h3 := (CrystallineSemistableComparison.P.upTo_alg _ _ _ _).2.2.1 hA h2
   have e : s ^ ((2 * n + 3) + ((2 * n + 3) + (2 * n + 6) * (2 * n + 3))) =
       s ^ (2 * n + 3) * (s ^ (2 * n + 3) * (s * (1 * s ^ (2 * (n + 1) + 3))) ^ (2 * n + 3)) := by ring
-  rw [e]
-  exact h3
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.GamDat =====
@@ -1446,11 +1441,9 @@ theorem tors_tower {R : Type} [CommRing R] {C : Type u} [Category.{v} C] {C' : T
       · refine hψu ψ' ⟨hχu _ ⟨by rw [← Category.assoc]; exact h'.1, fun k => ?_⟩, ?_⟩
         · have := h'.2 k.castSucc
           simp only [Fin.lastCases_castSucc] at this
-          rw [← U.map_comp] at this
-          exact this
+          rwa [← U.map_comp] at this
         · have := h'.2 (Fin.last e)
-          simp only [Fin.lastCases_last] at this
-          exact this
+          simpa only [Fin.lastCases_last] using this
     · have hk := CrystallineSemistableComparison.B.P.kstep (SingleObj.functor g ⋙ F) (SingleObj.functor (torsStep L g) ⋙ F) (torsPi e)
         (fun a k => rfl) (F.map (L.i.app S)).hom (fun a x => by
           have h := congrArg (fun f => (F.map f).hom x) (tors_istep L g a)
@@ -1503,8 +1496,7 @@ theorem CrystallineSemistableComparison.B.P.tors : ∀ d n : ℕ, ∃ N : ℕ, �
     · obtain ⟨a, ha, hau⟩ := A.trans t' (c₀ ≫ φ) c
       obtain ⟨ψ, ⟨hψ1, hψ2⟩, hψu⟩ := h3 t' φ a
       refine ⟨ψ, ⟨?_, hψ1⟩, fun ψ' h' => ?_⟩
-      · rw [A.act_comp, Category.assoc, hψ1, show (fun k => U.map ψ (η k)) = a from funext hψ2]
-        exact ha
+      · rwa [A.act_comp, Category.assoc, hψ1, show (fun k => U.map ψ (η k)) = a from funext hψ2]
       · refine hψu ψ' ⟨h'.2, fun k => ?_⟩
         have hh := h'.1
         rw [A.act_comp, Category.assoc, h'.2] at hh
@@ -1574,8 +1566,7 @@ theorem CrystallineSemistableComparison.B.P.glue : ∀ d n : ℕ, ∃ N : ℕ, �
   have t5 : RI (s ^ (2 * n + 3)) n (G ⋙ F) j := P.fib (Mor.restrict (G ⋙ F) j) s hD n
   have t6 := (P.ri_calc F G j _ _ n).1 t4 t5
   have he : s ^ (N₂ + (N₁ + 2) + (2 * n + 3)) = s ^ N₂ * (s ^ N₁ * s ^ 2) * s ^ (2 * n + 3) := by ring
-  rw [he]
-  exact t6
+  rwa [he]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FGlue =====

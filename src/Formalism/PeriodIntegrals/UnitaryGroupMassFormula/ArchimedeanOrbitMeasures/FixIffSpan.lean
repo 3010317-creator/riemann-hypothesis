@@ -81,14 +81,12 @@ theorem fix_iff_span {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) {ι : Type} (u :
     have h1 := (hker _).2 (h ⟨i, hi, rfl⟩)
     rw [Matrix.mulVec_single_one] at h1
     have := congrFun h1 j
-    simp only [Matrix.col_apply, Pi.single_apply] at this
-    exact this
+    simpa only [Matrix.col_apply, Pi.single_apply] using this
   · rintro h _ ⟨i, hi, rfl⟩
     refine (hker _).1 ?_
     rw [Matrix.mulVec_single_one]
     funext j
-    simp only [Matrix.col_apply, Pi.single_apply]
-    exact h i hi j
+    simpa only [Matrix.col_apply, Pi.single_apply] using h i hi j
 
 theorem stdConjEx_of (h1 : StabInfV) (h2 : WittBlock) : StdConjEx := by
   intro D X u' ψ hT μinf νinf fibInf hP hb
@@ -108,8 +106,7 @@ theorem stdConjEx_of (h1 : StabInfV) (h2 : WittBlock) : StdConjEx := by
   · intro h
     have h' := congrArg (fun y => uMat (c v)⁻¹ *ᵥ y) h
     simp only [Matrix.mulVec_mulVec, ← Matrix.mul_assoc, hci, Matrix.one_mul] at h'
-    rw [Matrix.mulVec_mulVec]
-    exact h'
+    rwa [Matrix.mulVec_mulVec]
   · intro h
     calc (uMat (c v) * uMat (g v) * uMat (c v)⁻¹) *ᵥ wV X u' v b
         = uMat (c v) *ᵥ (uMat (g v) *ᵥ (uMat (c v)⁻¹ *ᵥ wV X u' v b)) := by

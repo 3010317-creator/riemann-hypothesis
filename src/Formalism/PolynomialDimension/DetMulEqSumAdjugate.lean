@@ -189,12 +189,10 @@ theorem graphMinor : Formalism.CountingSumsFrames.GraphMinor := by
     rw [h0, Matrix.mulVec_zero] at h1
     exact (smul_eq_zero.mp h1.symm).resolve_left hA
   obtain ⟨i, hi⟩ : ∃ i, Matrix.mulVec (H.submatrix id (Fin.castLE h)).adjugate (fun m => H m c) i ≠ 0 := by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     exact hw (funext hh)
   refine ⟨i, c, hc, ?_⟩
-  rw [submatrix_swapCol, ← Matrix.cramer_apply, Matrix.cramer_eq_adjugate_mulVec]
-  exact hi
+  rwa [submatrix_swapCol, ← Matrix.cramer_apply, Matrix.cramer_eq_adjugate_mulVec]
 theorem localizerVanishes : Formalism.CountingSumsFrames.LocalizerVanishes := by
   intro p _ F _ _ _ n' r k J h hcard z hz hzJ pos hpos H hH A _ _ t
   classical
@@ -215,8 +213,7 @@ theorem localizerVanishes : Formalism.CountingSumsFrames.LocalizerVanishes := by
         ((p ^ z 0 * (p ^ n' - 1) : ℕ) : ℤ) := by
       rw [Nat.cast_sum, Finset.sum_congr rfl fun j _ => by
         rw [Nat.cast_mul, Nat.cast_sub (hp1 _), Nat.cast_pow, Nat.cast_pow, Nat.cast_one]]
-      rw [Nat.cast_mul, Nat.cast_sub (hp1 _), Nat.cast_pow, Nat.cast_pow, Nat.cast_one]
-      exact h1
+      rwa [Nat.cast_mul, Nat.cast_sub (hp1 _), Nat.cast_pow, Nat.cast_pow, Nat.cast_one]
     exact_mod_cast h2
   have hexp : ∀ x : F, x ≠ 0 →
       ∏ j ∈ Finset.range J, (x ^ p ^ z j) ^ (p ^ (z (j + 1) - z j) - 1) = 1 := by
@@ -306,8 +303,7 @@ theorem detMulEqSumAdjugate : Formalism.CountingSumsFrames.DetMulEqSumAdjugate :
     _ = Matrix.mulVec (T.adjugate * T) s a := by rw [Matrix.adjugate_mul]
     _ = Matrix.mulVec T.adjugate (Matrix.mulVec T s) a := by rw [Matrix.mulVec_mulVec]
     _ = ∑ l, Matrix.mulVec T s l * T.adjugate a l := by
-        simp only [Matrix.mulVec, dotProduct]
-        exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
+        simpa only [Matrix.mulVec, dotProduct] using Finset.sum_congr rfl fun _ _ => mul_comm _ _
 theorem keyVanish : Formalism.CountingSumsFrames.KeyVanish := by
   intro p _ F _ _ r k h hdet s
   classical
@@ -345,8 +341,7 @@ theorem keyVanish : Formalism.CountingSumsFrames.KeyVanish := by
       omega
     convert hz using 2
     ext l c
-    rw [Matrix.of_apply, frob_row h (A l) s (hA l) (t l) (cols c)]
-    rw [Matrix.mul_apply]
+    rw [Matrix.of_apply, frob_row h (A l) s (hA l) (t l) (cols c), Matrix.mul_apply]
     simp only [Matrix.mul_diagonal, Matrix.vecMul, dotProduct, T', P, G, Matrix.of_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
     by_cases hi : i.val < r

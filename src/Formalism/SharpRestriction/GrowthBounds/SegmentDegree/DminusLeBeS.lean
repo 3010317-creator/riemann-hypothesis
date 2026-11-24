@@ -119,16 +119,14 @@ lemma shift_iff (Q a s c : ℕ) (hQ : 1 ≤ Q) :
     have h2 : a + s + R * a = s + (R + 1) * a := by ring
     rw [h2] at h1
     have h3 : (s + (R + 1) * a) % (R + 1) = (c + R * a) % (R + 1) := h1
-    rw [Nat.add_mul_mod_self_left] at h3
-    exact h3
+    rwa [Nat.add_mul_mod_self_left] at h3
   · intro h
     have h0 : Nat.ModEq (R + 1) s (c + R * a) := h
     have h1 : Nat.ModEq (R + 1) (a + s) (a + (c + R * a)) := h0.add_left a
     have h2 : a + (c + R * a) = c + (R + 1) * a := by ring
     rw [h2] at h1
     have h3 : (a + s) % (R + 1) = (c + (R + 1) * a) % (R + 1) := h1
-    rw [Nat.add_mul_mod_self_left] at h3
-    exact h3
+    rwa [Nat.add_mul_mod_self_left] at h3
 
 lemma cnt_succ (T Q r c : ℕ) (hQ : 1 ≤ Q) :
     cnt T Q (r + 1) c = ∑ a : Fin T, cnt T Q r (c + (Q - 1) * a) := by
@@ -158,16 +156,12 @@ lemma cnt_one (T Q c : ℕ) (hT : T ≤ Q) : cnt T Q 1 c = if c % Q < T then 1 e
   unfold cnt
   rw [Finset.card_filter, step]
   by_cases h : c % Q < T
-  · rw [if_pos h, Finset.sum_eq_single (⟨c % Q, h⟩ : Fin T)]
+  · rw [ite_eq_left h, Finset.sum_eq_single (⟨c % Q, h⟩ : Fin T)]
     · simp
-    · intro b _ hb
-      exact if_neg (fun e => hb (Fin.ext e))
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
-  · rw [if_neg h]
-    apply Finset.sum_eq_zero
-    intro a _
-    exact if_neg (fun e => h (lt_of_eq_of_lt e.symm a.isLt))
+    · exact fun b _ hb => ite_eq_right (fun e => hb (Fin.ext e))
+    · exact fun hn => absurd (Finset.mem_univ _) hn
+  · rw [ite_eq_right h]
+    exact Finset.sum_eq_zero (fun a _ => ite_eq_right (fun e => h (lt_of_eq_of_lt e.symm a.isLt)))
 
 private theorem eq_of_add_pred_mul_mod_eq_of_lt (Q c a b : ℕ) (hQ : 1 ≤ Q) (ha : a < Q) (hb : b < Q)
     (h : (c + (Q - 1) * a) % Q = (c + (Q - 1) * b) % Q) : a = b := by
@@ -202,13 +196,11 @@ lemma cnt_two (T Q c : ℕ) (hQ : 1 ≤ Q) (hT : T ≤ Q) : T - (Q - T) ≤ cnt 
       apply Finset.card_le_card_of_injOn (fun a : Fin T => (c + (Q - 1) * (a : ℕ)) % Q)
       · intro a ha
         have ha' : T ≤ (c + (Q - 1) * (a : ℕ)) % Q := by simpa using ha
-        simp only [Finset.mem_coe, Finset.mem_Ico]
-        exact ⟨ha', Nat.mod_lt _ (by omega)⟩
+        simpa only [Finset.mem_coe, Finset.mem_Ico] using ⟨ha', Nat.mod_lt _ (by omega)⟩
       · intro a _ b _ hab
         exact Fin.ext (eq_of_add_pred_mul_mod_eq_of_lt Q c a b hQ (lt_of_lt_of_le a.isLt hT)
           (lt_of_lt_of_le b.isLt hT) hab)
-    rw [Nat.card_Ico] at hc
-    exact hc
+    rwa [Nat.card_Ico] at hc
   omega
 
 lemma cnt_ge (T Q : ℕ) (hQ : 1 ≤ Q) (hT : T ≤ Q) (s : ℕ) :

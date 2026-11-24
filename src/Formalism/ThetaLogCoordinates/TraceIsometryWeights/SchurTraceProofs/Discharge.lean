@@ -63,8 +63,7 @@ theorem pow_smul_mem_of_le {p : ℕ} [Fact p.Prime] {σ : Type} (L : Submodule �
   rw [← algebraMap_smul ℚ_[p] ((p : ℤ_[p]) ^ (e - k)), smul_smul] at h
   have e2 : ((p : ℚ_[p]) ^ e) = algebraMap ℤ_[p] ℚ_[p] ((p : ℤ_[p]) ^ (e - k)) * (p : ℚ_[p]) ^ k := by
     rw [map_pow, map_natCast, ← pow_add, Nat.sub_add_cancel hke]
-  rw [e2]
-  exact h
+  rwa [e2]
 
 theorem dischargeP_of (h1 : ProjP) (h2 : CommP) (h3 : IntP) : DischargeP := by
   intro p _ N r LL ρ e1 he
@@ -80,8 +79,7 @@ theorem dischargeW_of (h : WeylP) : DischargeW := by
   intro p _ N r LL e1 he
   have h0 := h p N r LL
   unfold Formalism.GM.M.HypW at h0 ⊢
-  intro j hj la x hx hxI
-  exact pow_smul_mem_of_le _ he (h0 j hj la x hx hxI)
+  exact fun j hj la x hx hxI => pow_smul_mem_of_le _ he (h0 j hj la x hx hxI)
 
 theorem dischargeE_of (h : ExtP) : DischargeE := by
   intro p _ N r LL ρ e1 he
@@ -112,8 +110,7 @@ theorem kapC_le_real (p : ℕ) [Fact p.Prime] (r d a : ℕ) (h : d + r ≤ p ^ 2
     have hpow : (p : ℝ) ^ (Nat.log p (d + r - 1)) ≤ ((d + r - 1 : ℕ) : ℝ) := by
       exact_mod_cast Nat.pow_log_le_self p hD
     have h1 : ((Nat.log p (d + r - 1) : ℕ) : ℝ) ≤ Real.logb p ((d + r - 1 : ℕ) : ℝ) := by
-      rw [Real.le_logb_iff_rpow_le hp1 hpos, Real.rpow_natCast]
-      exact hpow
+      rwa [Real.le_logb_iff_rpow_le hp1 hpos, Real.rpow_natCast]
     have h2 : ((d + r - 1 : ℕ) : ℝ) ≤ (p : ℝ) ^ 2 * (8 * a + r) ^ 2 := by
       exact_mod_cast (Nat.sub_le _ _).trans h
     have h3 := Real.logb_le_logb_of_le hp1 hpos h2

@@ -182,8 +182,7 @@ theorem homG_fg (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E
     have hspan : Submodule.span E (G : Set (Sp E a)) = ⊤ := by
       rw [← Submodule.span_span_of_tower (𝓞 E), hG]
       exact hN.span_eq_top
-    refine LinearMap.ext_on hspan fun g hg => ?_
-    exact congrArg Subtype.val (congrFun h ⟨g, hg⟩)
+    exact LinearMap.ext_on hspan fun g hg => congrArg Subtype.val (congrFun h ⟨g, hg⟩)
   have : Module.Finite (𝓞 E) ↥(homG N N') := Module.Finite.of_injective ev hinj
   exact Module.Finite.iff_fg.1 this
 
@@ -396,8 +395,7 @@ theorem Seam.int_iff (z : X.E) : s.iE z ∈ (algebraMap (𝓞 D.host.E) D.host.E
   · intro h
     have := map_isIntegral_int s.iE.symm.toRingHom h
     simpa using this
-  · intro h
-    exact map_isIntegral_int s.iE.toRingHom h
+  · exact fun h => map_isIntegral_int s.iE.toRingHom h
 
 theorem Seam.vec_add {n : ℕ} (x y : Sp X.E n) : s.vec (x + y) = s.vec x + s.vec y := by
   funext i
@@ -646,8 +644,7 @@ theorem exists_unit_pow (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : �
     rw [← map_mul]
     simpa using this.symm
   have hrE : (r : E) ≠ 0 := by
-    intro h
-    exact hr (FaithfulSMul.algebraMap_injective (𝓞 E) E (h.trans (map_zero _).symm))
+    exact fun h => hr (FaithfulSMul.algebraMap_injective (𝓞 E) E (h.trans (map_zero _).symm))
   have hr'E : (r' : E) ≠ 0 := by
     intro h
     apply hr'P
@@ -704,7 +701,7 @@ theorem nuW_last_nonneg (u : Pr.Word) (i : ℕ) (hi : i < R.m) (τ : X.Tau) : 0 
       (Examples₂.lamOf (W.hc u τ) i).w ⟨R.N i - 1, by omega⟩ + ⌊wG R ((W.hc u τ).e ⟨i, hi⟩) (i + 1)⌋ := by
     show (shiftW (W.lamN u i τ) ⌊wG R ((RowPar.of (W.hc u τ)).eAt i) (i + 1)⌋).detShift = _
     unfold DomWeight.detShift RowPar.eAt
-    rw [dif_pos hNpos, dif_pos hi]
+    rw [dite_eq_left hNpos, dite_eq_left hi]
     rfl
   have a1 : (((Examples₂.lamOf (W.hc u τ) i).w ⟨R.N i - 1, by omega⟩ : ℤ) : ℚ) = Examples₂.wtN (W.hc u τ) (R.N i - 1) := by
     rw [Examples₂.lamOf_eq (W.hc u τ) i hi.le, Examples₂.wtQ_eq_wtN]
@@ -715,7 +712,7 @@ theorem nuW_last_nonneg (u : Pr.Word) (i : ℕ) (hi : i < R.m) (τ : X.Tau) : 0 
     have gen : ∀ (c : ℕ) (hc : c < R.m), c = i → -wG R ((W.hc u τ).e ⟨c, hc⟩) (c + 1) = -wG R ((W.hc u τ).e ⟨i, hi⟩) (i + 1) := by
       rintro c hc rfl; rfl
     unfold Examples₂.wtN
-    rw [dite_eq_right (by unfold Ranks.N; omega), dif_pos (by rw [hb]; exact hi)]
+    rw [dite_eq_right (by unfold Ranks.N; omega), dite_eq_left (by rw [hb]; exact hi)]
     exact gen _ _ hb
   have hlt : R.N i < R.N (i + 1) := by unfold Ranks.N; rw [Nat.succ_mul]; omega
   have hle : R.N (i + 1) ≤ R.N R.m := by
@@ -752,19 +749,19 @@ theorem lamTrue_natW (u : Pr.Word) {i : ℕ} (hi : i < R.m) (τ : X.Tau) (r : Fi
   have hlt : R.N i < R.N (i + 1) := by unfold Ranks.N; rw [Nat.succ_mul]; omega
   have d' : (W.lamTrue u (i + 1) τ).detShift = (W.lamTrue u (i + 1) τ).w ⟨R.N (i + 1) - 1, by omega⟩ := by
     unfold DomWeight.detShift
-    exact dif_pos hN'
+    exact dite_eq_left hN'
   have d0 : (W.lamTrue u i τ).detShift = (W.lamTrue u i τ).w ⟨R.N i - 1, by omega⟩ := by
     unfold DomWeight.detShift
-    exact dif_pos hN
+    exact dite_eq_left hN
   have dn : (W.nuW u (i + 1) τ).detShift = (W.nuW u (i + 1) τ).w (⟨R.N i - 1, by omega⟩ : Fin (R.N i)) := by
     unfold DomWeight.detShift
-    exact dif_pos hN
+    exact dite_eq_left hN
   have e' := W.lamTrue_new u hi τ ⟨R.N (i + 1) - 1, by omega⟩ (by show ¬ R.N (i + 1) - 1 < R.N i; omega)
   have en := W.nuW_eq_true u hi τ ⟨R.N i - 1, by omega⟩
   have hl := nuLast_eq W u i hi τ
   unfold DomWeight.natW extNu
   by_cases h : r.1 < R.N i
-  · rw [dif_pos h]
+  · rw [dite_eq_left h]
     have eo := W.lamTrue_old u hi τ r h
     have hanti : (W.lamTrue u i τ).w ⟨R.N i - 1, by omega⟩ ≤ (W.lamTrue u i τ).w ⟨r.1, h⟩ :=
       (W.lamTrue u i τ).anti (by show r.1 ≤ R.N i - 1; omega)
@@ -889,7 +886,7 @@ theorem qe_one : QE sel (1 : Chr X.F X.E X.K) = ∅ := by
     ext v
     simp [Qprime]
   unfold QE
-  rw [dif_pos (by rw [h]; exact Set.finite_empty)]
+  rw [dite_eq_left (by rw [h]; exact Set.finite_empty)]
   simp [h]
 
 variable (cst : LocCst X (rowSG Pr sel (mu0 X.F X.E X.K S)))

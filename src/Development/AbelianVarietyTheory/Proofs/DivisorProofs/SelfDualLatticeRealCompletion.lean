@@ -66,8 +66,7 @@ theorem GlobalTheory.UCls.selfDual_latOf_translate : ∀ (E : Type) [Field E] [N
     constructor
     · rintro ⟨y, rfl⟩
       exact y.isIntegral_coe
-    · intro hx
-      exact ⟨⟨x, hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
   have hsd' : ∀ v : Fin r → E, (∀ y ∈ Λ, (∑ a, ∑ b, v a * G a b * (IsCMField.complexConj E) (y b)) ∈
       (1 : FractionalIdeal (𝓞 E)⁰ E)) ↔ v ∈ Λ := by
     intro v

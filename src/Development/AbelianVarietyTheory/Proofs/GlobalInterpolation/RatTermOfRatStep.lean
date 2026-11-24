@@ -120,7 +120,6 @@ omit [NumberField E] [StarRing E] in
 theorem mulLat_le_divLat {H : Type} [AddCommGroup H] [Module (𝓞 E) H] (c D : ℕ) (M : Submodule (𝓞 E) H) :
     mulLat c M ≤ divLat D M := by
   rintro _ ⟨y, hy, rfl⟩
-  show (D : 𝓞 E) • ((c : 𝓞 E) • y) ∈ M
   exact M.smul_mem _ (M.smul_mem _ hy)
 
 end Gen
@@ -161,15 +160,14 @@ theorem ratTerm_of_ratStep : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (W : W
     ((rhoVr X.emb (W.lamTrue u (i + 1))).comp (ufGL X.E (R.N (i + 1)))) γ γ' d.1.N fr (fun P => γ.1 * fr P) d'.1.N fr' (fun P => γ'.1 * fr' P)
     (fun x => phiT X.K d.1 d'.1 x * Ξ₀ x)
     (fun x => phiT X.K (d.1.act γ.1 1) (d'.1.act γ'.1 1) x * Ξ₀ (γ'.1.symm.toLinearMap ∘ₗ x ∘ₗ γ.1.toLinearMap)) ?_ ?_ ?_ ?_
-  · intro x x' h
-    exact thDistC_class A _ _ _ _ _ _ _ _ _ _ _ _ _ _ x x' h
+  · exact fun x x' h => thDistC_class A _ _ _ _ _ _ _ _ _ _ _ _ _ _ x x' h
   · intro x
     by_cases hx : x ∈ divLat (cAof sel mu cst * cBof sel mu cst u) (homAt (Sall sel mu u) d.1.N d'.1.N)
     · exact hR γ γ' d.1.N fr d'.1.N fr' _ x ⟨⟨d.2.lat, d.2.uni⟩, ⟨d'.2.lat, d'.2.uni⟩, hB, Dvd.intro_left _ rfl, hx⟩
     · have hx2 := mt (mem_divLat_equiv_iff _ _ _ (homConjEquiv_mem_homAt (Sall sel mu u) γ.1 γ'.1 d.1.N d'.1.N)
         (cAof sel mu cst * cBof sel mu cst u) x).1 hx
       unfold stepT thDistC
-      rw [if_neg fun h => hx2 h.2, if_neg fun h => hx h.2, LinearMap.zero_comp, LinearMap.comp_zero]
+      rw [ite_eq_right fun h => hx2 h.2, ite_eq_right fun h => hx h.2, LinearMap.zero_comp, LinearMap.comp_zero]
   · rintro x _ ⟨y₀, hy₀, rfl⟩
     refine congrArg₂ (· * ·) ?_ ?_
     · refine GlobalTheory.TopInv.phiT_add _ _ d'.2 x y₀ _ (fun P => ?_) fun P v hv => hy₀ P.1 (Finset.mem_union_left _ P.2) v hv

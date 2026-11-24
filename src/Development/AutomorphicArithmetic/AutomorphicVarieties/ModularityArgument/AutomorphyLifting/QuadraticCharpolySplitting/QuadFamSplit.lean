@@ -85,8 +85,7 @@ private theorem fix_root {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : ValuationS
     rw [Valuation.map_mul]
     exact lt_of_le_of_lt (mul_le_of_le_one_right' hc1) hl
   have key : A.valuation u < 1 ∨ A.valuation (1 - u) < 1 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have h1 : 1 ≤ A.valuation (u * (1 - u)) := by
       rw [Valuation.map_mul]
       exact one_le_mul hne.1 hne.2
@@ -153,9 +152,7 @@ theorem quadFamSplit (l : ℕ) [hl : Fact l.Prime] (N : ℕ) :
   let P : Fin N → ℕ := fun i => (e (i : ℕ)).1
   have hPp : ∀ i, (P i).Prime := fun i => (e (i : ℕ)).2.1
   have hPm : ∀ i, ((P i : ℕ) : ZMod (4 * l)) = -1 := fun i => (e (i : ℕ)).2.2
-  have hPinj : Function.Injective P := by
-    intro i j h
-    exact Fin.ext (e.injective (Subtype.ext h))
+  have hPinj : Function.Injective P := fun i j h => Fin.ext (e.injective (Subtype.ext h))
   have hdvd : ∀ i, ∃ c, P i + 1 = 4 * l * c := by
     intro i
     have h0 : ((P i + 1 : ℕ) : ZMod (4 * l)) = 0 := by
@@ -259,8 +256,7 @@ theorem thirdSplit (K K' Ω : Type) [Field K] [NumberField K] [IsCMField K] [Fie
       (tw (r.comp (resG ℚ K Ω)) ((δf i).comp (resG ℚ K Ω)))) ∪
       (Finset.univ.filter fun i => RepIso (r.comp (resG ℚ K' Ω))
       (tw (r.comp (resG ℚ K' Ω)) ((δf i).comp (resG ℚ K' Ω)))) := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     have h1 : (Finset.univ : Finset (Fin (4 * n ^ 2 + 1))) ⊆ _ := fun i _ => hall i
     have h2 := (Finset.card_le_card h1).trans ((Finset.card_union_le _ _).trans (add_le_add hbadK hbadK'))
     simp at h2

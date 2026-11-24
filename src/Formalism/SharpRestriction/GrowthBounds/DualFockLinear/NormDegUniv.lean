@@ -72,14 +72,12 @@ def NDsub (R : Type) [CommRing R] (n' k r T : ℕ) : Submodule R (MvPolynomial (
 
 theorem mem_NDsub {r T : ℕ} {P : MvPolynomial (TV n' k) R} :
     P ∈ NDsub R n' k r T ↔ ∀ mm ∈ P.support, normDeg r mm ≤ T := by
-  show P ∈ restrictSupport R {mm | normDeg r mm ≤ T} ↔ _
   exact ⟨fun h mm hm => h hm, fun h mm hm => h mm hm⟩
 
 theorem NDsub_mono {r T T' : ℕ} (h : T ≤ T') : NDsub R n' k r T ≤ NDsub R n' k r T' := by
   intro P hP
   rw [mem_NDsub] at hP ⊢
-  intro mm hm
-  exact (hP mm hm).trans h
+  exact fun mm hm => (hP mm hm).trans h
 
 theorem nd_move (r : ℕ) (mm : TV n' k →₀ ℕ) (v v' : TV n' k) :
     normDeg r (Finsupp.single v 1 + (mm - Finsupp.single v' 1)) ≤ normDeg r mm + 1 := by
@@ -95,8 +93,7 @@ theorem nd_move (r : ℕ) (mm : TV n' k →₀ ℕ) (v v' : TV n' k) :
     apply Finset.sum_le_sum
     intro w _
     split_ifs
-    · simp only [Finsupp.tsub_apply]
-      exact tsub_le_self
+    · simpa only [Finsupp.tsub_apply] using tsub_le_self
     · exact le_rfl
   omega
 

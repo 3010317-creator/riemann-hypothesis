@@ -107,11 +107,9 @@ theorem nu_congr {ϖ : kˣ} (hϖ : IsUnif ϖ) {c : ℕ} (hc1 : 1 ≤ c) {ν : k�
     refine ⟨by simp [ha, hb], ?_⟩
     have e : ((a * b⁻¹ : kˣ) : k) - 1 = ((a : k) - b) * (b : k)⁻¹ := by
       rw [Units.val_mul, Units.val_inv_eq_inv_val, sub_mul, mul_inv_cancel₀ b.ne_zero]
-    rw [e, map_mul, map_inv₀, hb, inv_one, mul_one, Units.val_pow_eq_pow_val, map_pow]
-    exact h
+    rwa [e, map_mul, map_inv₀, hb, inv_one, mul_one, Units.val_pow_eq_pow_val, map_pow]
   have := hc _ hw
-  rw [map_mul, map_inv, mul_inv_eq_one] at this
-  exact this
+  rwa [map_mul, map_inv, mul_inv_eq_one] at this
 
 end Generic
 end GlobalTheory.GaussNonvanish

@@ -68,8 +68,7 @@ theorem coefX_single_add {T : E} (G : FlagG S r T) (i : Fin r) (c : E) {w : S.V}
   rw [hrepr, Finsupp.add_apply, Finsupp.single_eq_same]
   have hli : l i = 0 := by
     by_contra hne
-    have h1 := (Finsupp.mem_supported _ _).mp hl (Finsupp.mem_support_iff.mpr hne)
-    exact lt_irrefl (i.1) h1
+    exact lt_irrefl (i.1) ((Finsupp.mem_supported _ _).mp hl (Finsupp.mem_support_iff.mpr hne))
   rw [hli, add_zero]
 
 end Gen

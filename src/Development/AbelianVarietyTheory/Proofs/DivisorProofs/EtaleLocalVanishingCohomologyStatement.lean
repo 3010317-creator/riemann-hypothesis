@@ -367,8 +367,7 @@ theorem exists_isolating (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRin
     rintro Q' ⟨hQ', hfQ'⟩
     refine Set.mem_biUnion (x := Q'.comap (algebraMap B D)) ⟨Ideal.IsPrime.comap _, ?_⟩
       ⟨hQ', Ideal.map_comap_le⟩
-    rw [Ideal.span_le, Set.singleton_subset_iff]
-    exact hfQ'
+    rwa [Ideal.span_le, Set.singleton_subset_iff]
   have hfib : ∀ P ∈ T, {Q' : Ideal D | Q'.IsPrime ∧ P.map (algebraMap B D) ≤ Q'}.Finite ∧
       ∀ Q' : Ideal D, Q'.IsPrime → P.map (algebraMap B D) ≤ Q' → Q'.IsMaximal := by
     rintro P ⟨hP, hfP⟩
@@ -380,8 +379,7 @@ theorem exists_isolating (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRin
     obtain ⟨P, hP, hQ'P⟩ := Set.mem_iUnion₂.mp (hsub hQ')
     exact (hfib P hP).2 Q' hQ'P.1 hQ'P.2
   have hch : ∀ Q' ∈ S, Q' ≠ Q → ∃ x, x ∈ Q' ∧ x ∉ Q := fun Q' hQ' hne => by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne ((hSmax Q' hQ').eq_of_le hQ.ne_top h)
   choose! x hxmem hxnot using hch
   refine ⟨∏ Q' ∈ hSfin.toFinset.filter (· ≠ Q), x Q', ?_, ?_⟩
@@ -545,8 +543,7 @@ theorem surj_mod_of_surj_mod_map_sup_of_pow_map_le :
     intro n
     induction n with
     | zero =>
-      intro a
-      exact ⟨0, by simp⟩
+      exact fun a => ⟨0, by simp⟩
     | succ n ih =>
 
       have hspan : ∀ x ∈ J ^ n, ∀ c : A, ∃ b : B, c * x - f b ∈ J ^ (n + 1) ⊔ K := by
@@ -696,8 +693,7 @@ theorem etale_away_quotient_eq_localization :
     have hPN : (P ^ N).map (algebraMap B (Localization.Away g)) ≤
         Ideal.span {algebraMap B (Localization.Away g) f} := by
       rw [Ideal.map_le_iff_le_comap]
-      intro b hb
-      exact hker b (hN b hb)
+      exact fun b hb => hker b (hN b hb)
     have hfib : ∀ Q' : Ideal (Localization.Away g), Q'.IsPrime →
         P.map (algebraMap B (Localization.Away g)) ≤ Q' →
         Q' = Q.map (algebraMap D (Localization.Away g)) := by
@@ -787,8 +783,7 @@ theorem isIndEtale_of_model (X E Y G F : Type) [CommRing X] [CommRing E] [CommRi
     rw [← Algebra.TensorProduct.algebraMap_apply', IsScalarTower.algebraMap_apply E Y (Y ⊗[E] G),
       e.commutes, ← IsScalarTower.algebraMap_apply X E Y]
     rfl
-  rw [h6]
-  exact h5
+  rwa [h6]
 
 theorem isIndEtale_etale_comp {X Y F : Type} [CommRing X] [CommRing Y] [CommRing F]
     (f : X →+* Y) (g : Y →+* F) (hf : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale f) (hg : g.Etale) :
@@ -870,8 +865,7 @@ theorem isSepClosed_of_ringEquiv {K L : Type} [Field K] [Field L] [IsSepClosed K
   have := congrArg (e : K →+* L) hx
   rw [Polynomial.eval_map, map_zero, Polynomial.hom_eval₂] at this
   have h2 : (e : K →+* L).comp e.symm.toRingHom = RingHom.id L := by ext; simp
-  rw [h2, Polynomial.eval₂_id] at this
-  exact this
+  rwa [h2, Polynomial.eval₂_id] at this
 
 end GlobalTheory.HensMax
 
@@ -911,8 +905,7 @@ theorem GlobalTheory.HensMax.exists_strictHens_of_maximal : ∀ (B : Type) [Comm
       rw [IsLocalization.AtPrime.equivQuotMaximalIdeal_apply_mk, Ideal.Quotient.eq] at hb
       refine ⟨b, ?_⟩
       have h1 : residue _ (algebraMap B (Localization.AtPrime P) b) = residue _ r := by
-        rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
-        exact hb
+        rwa [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
       rw [← IsLocalRing.residue_eq_zero_iff, map_sub, ← hy, IsScalarTower.algebraMap_apply B (Localization.AtPrime P) S,
         ← ResidueField.map_residue, h1, sub_self]
 end -- clump:auto
@@ -947,8 +940,7 @@ theorem exists_etale_kill_of_indEt : ∀ (q : ℕ) (B O : Type) [CommRing B] [Co
   obtain ⟨j⟩ := IsFiltered.nonempty (C := J)
   have hqj : IsUnit ((q : ((D ⋙ Under.forget _).obj j))) := by
     have := hq.map (D.obj j).hom.hom
-    rw [map_natCast] at this
-    exact this
+    rwa [map_natCast] at this
   have hyj : pull _ (spMap ((Under.forget _).mapCocone (Cocone.mk _ ι) |>.ι.app j).hom) _ _
       (pull _ (spMap (D.obj j).hom.hom) _ _ y) = 0 := by
     erw [← pull_comp]
@@ -1019,8 +1011,7 @@ theorem dies_on_etale_with_point (q : ℕ) [NeZero q] (B : Type) [CommRing B] (h
   · intro d
     obtain ⟨b, hb⟩ := hres (φ d)
     refine ⟨b, ?_⟩
-    rw [Ideal.mem_comap, map_sub, AlgHom.commutes]
-    exact hb
+    rwa [Ideal.mem_comap, map_sub, AlgHom.commutes]
 
 end GlobalTheory.EtC.OneCoh
 
@@ -1101,8 +1092,7 @@ theorem finite_maximal_ideals_containing (B : Type) [CommRing B] [IsDedekindDoma
     exact hf ((Submodule.mem_bot B).mp hfP)
   refine ⟨⟨P, hmax.isPrime, hne⟩, ?_, rfl⟩
   show P ∣ Ideal.span {f}
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hfP
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 end GlobalTheory
 end -- clump:auto

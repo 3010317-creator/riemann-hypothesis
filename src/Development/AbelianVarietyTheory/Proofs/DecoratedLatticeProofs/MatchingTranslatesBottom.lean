@@ -223,8 +223,7 @@ theorem typePlaces_noConj : ∀ (D : D7) (Pg : Finset (Pl D.host.E)), GlobalTheo
     exact (hmax.eq_of_le hne hle).symm
   have hgP := hT.1 PP hP
   have hgv : ((D.host.g 0 * D.host.g 1 : ℕ) : 𝓞 D.host.F) ∈ (HeightOneSpectrum.under (𝓞 D.host.F) PP).asIdeal := by
-    rw [HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, map_natCast]
-    exact hgP
+    rwa [HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, map_natCast]
   obtain ⟨W, _, hW⟩ := hT.2 _ hgv
   have e1 : PP = W := hW PP ⟨hP, rfl⟩
   have e2 : PP' = W := hW PP' ⟨hP', hund⟩
@@ -690,11 +689,11 @@ theorem divN_zero' : divN X.B.I (D.mem u).A.T 0 = 0 := by
 
 theorem prj_eV (b : Fin D.R.rS) : prj X u (eV X b) = eV X b := by
   simp only [prj, hA_fV_eV, hA_eV_eV, hA_zV_eV, divN_zero', ite_smul, one_smul, zero_smul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const_zero, add_zero, sub_zero]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const_zero, add_zero, sub_zero]
 
 theorem prj_fV (b : Fin D.R.rS) : prj X u (fV X b) = fV X b := by
   simp only [prj, hA_fV_fV, hA_eV_fV, hA_zV_fV, divN_zero', ite_smul, one_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_const_zero, zero_add, sub_zero]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.sum_const_zero, zero_add, sub_zero]
 
 theorem prj_zV : prj X u (zV X u) = zV X u := by
   have hT : ((D.mem u).A.T : ℕ) ≠ 0 := (D.mem u).A.T_prime.ne_zero
@@ -1089,8 +1088,7 @@ theorem scalar_diag_mod_g : ∀ (D : D7) (X : HidaSetting D) (u : D.what₂.Word
     with hP'
   set M := Mb * Mc * M6 * (D.mem u).A.T with hMdef
   have hMg : Nat.Coprime M X.B.g := by
-    simp only [hMdef, Nat.coprime_mul_iff_left]
-    exact ⟨⟨⟨hMb, hMc⟩, hM6⟩, hTg⟩
+    simpa only [hMdef, Nat.coprime_mul_iff_left] using ⟨⟨⟨hMb, hMc⟩, hM6⟩, hTg⟩
   have smulL : ∀ {s : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F}, s ∈ IntAf X.B.I.F X.B.I.E → ∀ {y : VA X.B.I},
       y ∈ X.B.I.Lf → s • y ∈ X.B.I.Lf := fun hs _ hy => X.B.I.Lf.smul_mem (⟨_, hs⟩ : IntAf X.B.I.F X.B.I.E) hy
   have smulM : ∀ {s : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F}, s ∈ IntAf X.B.I.F X.B.I.E → ∀ {y : VA X.B.I},
@@ -1350,8 +1348,7 @@ theorem hatL_selfDual (I : AutInst) : GlobalTheory.ParahoricLift.HatSelfDual I.c
   refine GlobalTheory.ParahoricLift.hatL_selfDual_gen (conjEquiv I) I.cm.sig (fun _ => rfl) I.J I.L I.L_fg I.L_span
     (fun x => by show star (star x) = x; exact star_star x) (fun a b => ?_) (by rw [Matrix.det_transpose]; exact I.J_det)
     (fun v => ?_) (fun s hs => Formalism.UG.P.csDual_sig_mem I.cm.sig hs) mem_integral_adelic_lattice_iff
-  · simp only [Matrix.transpose_apply, conjEquiv_apply]
-    exact hJ a b
+  · simpa only [Matrix.transpose_apply, conjEquiv_apply] using hJ a b
   · rw [I.L_dual v]
     refine forall₂_congr fun y _ => ?_
     rw [FractionalIdeal.mem_one_iff]
@@ -1424,7 +1421,7 @@ theorem gram_frame_int : ∀ (I : AutInst) (β : GL (Fin I.n) (I.E ⊗[I.F] Form
         simp only [Matrix.mulVec, dotProduct, hc, this, Pi.single_apply, Matrix.one_apply]
       rw [e]
       simp only [dotProduct, Function.comp_apply, Pi.single_apply, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       exact Formalism.L2.SG.Pf.unitaryCongruence.sigA_mem I (hz' j)
     have := (hβ _).1 hx i
     rwa [Matrix.mulVec_mulVec, hB, Units.inv_mul, Matrix.one_mulVec] at this
@@ -1434,11 +1431,9 @@ theorem gram_frame_int : ∀ (I : AutInst) (β : GL (Fin I.n) (I.E ⊗[I.F] Form
     Matrix.map_injective S.subtype_injective
   refine ⟨⟨Matrix.of fun i j => ⟨Gm i j, hG i j⟩, Matrix.of fun i j => ⟨(Gm⁻¹) i j, hG' i j⟩, inj ?_, inj ?_⟩, ?_⟩
   · show Matrix.map _ S.subtype = Matrix.map _ S.subtype
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact hGi
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
   · show Matrix.map _ S.subtype = Matrix.map _ S.subtype
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact hiG
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
   · rfl
 
 end GlobalTheory.GramFrame
@@ -1613,8 +1608,7 @@ theorem frame_normaliser (I : AutInst) (g : ℕ) (hg : g ≠ 1) {ρ κ : ℕ} (h
       simp only [midDiag, Matrix.diagonal_apply]
       split_ifs <;> simp
     have e4 : bc (resS I.F PP) x₁ = bc (resS I.F PP) x * h := Units.ext (by rw [Units.val_mul, e3]; exact e2)
-    rw [e, redFn_frGL, map_mul, map_inv, e4, inv_mul_cancel_left]
-    exact hh
+    rwa [e, redFn_frGL, map_mul, map_inv, e4, inv_mul_cancel_left]
 
 theorem sigInt_oToS (I : AutInst) {c c' : 𝓞 I.E} (h : (c' : I.E) = star (c : I.E)) :
     sigInt I (oToS I.F I.E c) = oToS I.F I.E c' :=

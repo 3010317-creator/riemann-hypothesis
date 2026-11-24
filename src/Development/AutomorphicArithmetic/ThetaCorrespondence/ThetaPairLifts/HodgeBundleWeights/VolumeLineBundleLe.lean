@@ -251,8 +251,7 @@ theorem semiPos_of_isModelOf : ∀ (K V Ω : Type) [Field K] [NumberField K] [Ad
     funext fun i => funext fun y => (hφ σ i y).trans (combWeight_φ L.isLB (fun k => s (gw k)) M hz i y).symm
   intro i ch y hy ξ
   have := semiPosReg_combWeight L.isLB (fun k => s (gw k)) M hz D i ch y hy ξ
-  rw [key]
-  exact this
+  rwa [key]
 
 end GlobalTheory.ImageModelSemi
 end -- clump:auto
@@ -338,15 +337,13 @@ theorem horizontal_of_small : ∀ (k : Type) [CommRing k] (X : AlgebraicGeometry
   have hZ : GlobalTheory.IsArithVar (i ≫ p) 0 := hX.of_isClosedImmersion i hc hd
   obtain ⟨u, hu1, hu⟩ := hL (i (genericPoint Z))
   have hu' : genericPoint Z ∈ ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus (GlobalTheory.secPull u i) := by
-    rw [GlobalTheory.nonzeroLocus_secPull]
-    exact hu
+    rwa [GlobalTheory.nonzeroLocus_secPull]
   have h0 : ∀ σ (y : GlobalTheory.CxPts (i ≫ p) σ), y ∈ GlobalTheory.CxPts.ptsIn _ σ
       (ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus (GlobalTheory.secPull u i)) := fun σ y => by
     rw [GlobalTheory.CxPts.mem_ptsIn]
     have e := hZ.under_eq_genericPoint y
     simp only [GlobalTheory.Cartier.under] at e
-    rw [e]
-    exact hu'
+    rwa [e]
   refine ⟨_, GlobalTheory.Cartier.isRatSec_ratOfSec _ hu', ?_⟩
   rw [GlobalTheory.HermLB.curveDeg_sec (L := L) i _ hu' h0]
   refine sub_nonneg.2 (le_trans ?_ (finsum_nonneg fun z => mul_nonneg
@@ -499,8 +496,7 @@ theorem exists_spread : ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [
         fnOf _ hn ((t (i PUnit.unit)).f n) := by
       have e₁ := key a
       rw [map_mul, fnOf_resG, fnOf_resG, ← ProjSpace.resG_pullRatio (hi := hU) inf_le_left, fnOf_resG] at e₁
-      rw [he, SmallSec.fnMap_fnOf j hη h h', hf]
-      exact e₁
+      rwa [he, SmallSec.fnMap_fnOf j hη h h', hf]
     have h₀ := hy k l n hn
     rw [key' k, key' l, ← mul_assoc, ← mul_assoc] at h₀
     rw [map_mul, map_mul, he', he']
@@ -965,8 +961,7 @@ theorem exists_normal_model : ∀ (K Ω : Type) [Field K] [NumberField K] [Field
     hbij.comp hψ, fun a => ?_, fun k l i h => ?_⟩
   · have e₁ : ν.app ⊤ (algX p ⊤ a) = algX (ν ≫ p) ⊤ a := by
       simp only [algX, RingHom.comp_apply]
-      rw [← Scheme.Hom.appLE_comp_appLE ν p ⊤ ⊤ ⊤ (by simp) (by simp)]
-      rw [Scheme.Hom.app_eq_appLE ν]
+      rw [← Scheme.Hom.appLE_comp_appLE ν p ⊤ ⊤ ⊤ (by simp) (by simp), Scheme.Hom.app_eq_appLE ν]
       rfl
     rw [RingHom.comp_apply, hK, SmallSec.fnMap_fnOf ν hη _ (Opens.mem_top _), e₁]
     rfl
@@ -1099,7 +1094,7 @@ theorem exists_ne_zero_of_rel {K V : Type} [Field K] [AddCommGroup V] [Module K 
           _ = ∑ j, r j • b j := by simp only [hb]
           _ = u l := b.sum_repr (u l)
       simp only [sub_smul, Finset.sum_sub_distrib, e, Pi.single_apply, ite_smul, one_smul,
-        zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+        zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
     have h2 := hrel _ hl
     have h3 : ∀ j, ∑ k, w k * σ (c k j) = 0 := fun j => by
       have := congrFun hx j
@@ -1118,8 +1113,7 @@ theorem exists_ne_zero_of_rel {K V : Type} [Field K] [AddCommGroup V] [Module K 
         exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
     rw [h4] at h2
     simpa [h3] using h2
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have h0 : Matrix.vecMul (Matrix.vecMul w (c.map σ)) A = 0 := by
     rw [Matrix.vecMul_vecMul]
     funext a
@@ -1176,8 +1170,7 @@ theorem GlobalTheory.FubiniStudyFrame.noCommonZero_comb : ∀ (K V : Type) [Fiel
   have hw : w ≠ 0 := by
     obtain ⟨k, hk⟩ := TopologicalSpace.Opens.mem_iSup.1
       (show y.1 (IsLocalRing.closedPoint ℂ) ∈ ⨆ k, nonzeroLocus (s k) by rw [hsup]; trivial)
-    intro h0
-    exact (secVal_ne_zero_iff (s k) hy).2 (mem_ptsIn.2 hk) (congrFun h0 k)
+    exact fun h0 => (secVal_ne_zero_iff (s k) hy).2 (mem_ptsIn.2 hk) (congrFun h0 k)
   have H : ∀ lam : Fin (m + 1) → 𝓞 K, ∑ k, lam k • u k = 0 → ∑ k, τ (lam k) * w k = 0 := by
     intro lam h
     have e := congrArg (fun t => secVal p τ t i y) (hrel lam h)
@@ -1242,8 +1235,7 @@ theorem linComb_ratio_and_vanish : ∀ (K Ω : Type) [Field K] [NumberField K] [
     ring
   refine ⟨hA, fun hy lam hsum => ?_⟩
   obtain ⟨k₀, hk₀⟩ : ∃ k₀, y k₀ ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hy (funext hc)
   apply GlobalTheory.LB.f_injective
   funext i
@@ -1328,8 +1320,7 @@ theorem exists_model_of_image : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
     have h0 := hrelV (coef (gw k) - Pi.single k 1) (by
       simp only [Pi.sub_apply, sub_smul, Finset.sum_sub_distrib, hcoef, e1]
       exact sub_eq_zero.2 (hcoef (gw k)))
-    simp only [Pi.sub_apply, map_sub, sub_smul, Finset.sum_sub_distrib, e3, sub_eq_zero] at h0
-    exact h0
+    simpa only [Pi.sub_apply, map_sub, sub_smul, Finset.sum_sub_distrib, e3, sub_eq_zero] using h0
   have hbpf : ⨆ k, nonzeroLocus (sk k) = ⊤ :=
     ProjSpace.iSup_nonzeroLocus_secPull (ProjSpace.iSup_nonzeroLocus_coord (𝓞 K) m) g
   let A' : (𝓞 K →+* ℂ) → Matrix (Fin (m + 1)) (Fin N) ℂ := fun τ =>

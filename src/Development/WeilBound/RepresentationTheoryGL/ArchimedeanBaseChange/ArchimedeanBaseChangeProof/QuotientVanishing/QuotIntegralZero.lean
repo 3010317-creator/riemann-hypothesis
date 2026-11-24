@@ -110,17 +110,11 @@ theorem classVanish2_of (hS : SliceTerm) (hV : ClassVanish) (hZ : SizeBasic) : C
     by_cases he₁ : IsRegEll d₁
     · have he₂ : ¬ IsRegEll d₂ := fun h => hne ⟨he₁, h⟩
       rw [(hS E a b μ₁ μ₂ τ r φ d₁ d₂ hφ).2]
-      have : ∀ x : GA E a, chiT τ x *
-          cutTerm μ₂ τ (fun g => φ (twConj (thetaA E a) x (ratGL E a d₁), g)) d₂ = 0 := fun x => by
-        rw [h₂ μ₂ τ r _ d₂ (hφ.test₂ _).1 (fun g hg => (hφ.size _ hg).2) (hφ.test₂ _).2.2 l₂ hd₂ he₂, mul_zero]
-      simp only [this]
-      exact quotIntegral_zero _ _ _
+      simp only [h₂ μ₂ τ r _ d₂ (hφ.test₂ _).1 (fun g hg => (hφ.size _ hg).2) (hφ.test₂ _).2.2 l₂
+        hd₂ he₂, mul_zero, quotIntegral_zero]
     · rw [(hS E a b μ₁ μ₂ τ r φ d₁ d₂ hφ).1]
-      have : ∀ y : GA E b, chiT τ y *
-          cutTerm μ₁ τ (fun g => φ (g, twConj (thetaA E b) y (ratGL E b d₂))) d₁ = 0 := fun y => by
-        rw [h₁ μ₁ τ r _ d₁ (hφ.test₁ _).1 (fun g hg => (hφ.size _ hg).1) (hφ.test₁ _).2.2 l₁ hd₁ he₁, mul_zero]
-      simp only [this]
-      exact quotIntegral_zero _ _ _
+      simp only [h₁ μ₁ τ r _ d₁ (hφ.test₁ _).1 (fun g hg => (hφ.size _ hg).1) (hφ.test₁ _).2.2 l₁
+        hd₁ he₁, mul_zero, quotIntegral_zero]
   · have h0 : ∀ g, φ g = 0 := fun g => by
       by_contra h
       have := (hφ.size g h).1
@@ -148,7 +142,7 @@ theorem ellFormula2_of (hU : Unfold2) (hE : EllTerm) (hV : ClassVanish2) (hS : S
   rw [(hU E a b μ₁ μ₂ F₁ F₂ τ r φ hF₁ hF₂ hφ).2, ellSum2]
   refine finsum_congr fun c => ?_
   by_cases he : IsRegEll (Quot.out c.1) ∧ IsRegEll (Quot.out c.2)
-  · rw [finsum_eq_if, if_pos he, cutTerm2, orbTerm2]
+  · rw [finsum_eq_if, ite_eq_left he, cutTerm2, orbTerm2]
     congr 1
     funext x
     by_cases h0 : φ (twConj (thetaA E a) x.1 (ratGL E a (Quot.out c.1)), twConj (thetaA E b) x.2 (ratGL E b (Quot.out c.2))) = 0
@@ -163,14 +157,13 @@ theorem ellFormula2_of (hU : Unfold2) (hE : EllTerm) (hV : ClassVanish2) (hS : S
         have a0 := (hS E b).2.1 (twConj (thetaA E b) x.2 (ratGL E b (Quot.out c.2)))
         exact mul_le_mul l₂ (by linarith [hs.2]) (by linarith) (le_max_left _ _)
       simp [chiT, hx₁, hx₂]
-  · rw [finsum_eq_if, if_neg he]
+  · rw [finsum_eq_if, ite_eq_right he]
     by_cases hd : IsRegD (Quot.out c.1) ∧ IsRegD (Quot.out c.2)
     · exact h₃ μ₁ μ₂ τ r φ _ _ hφ (le_trans (mul_le_mul_of_nonneg_right l₃ h1r) hτ) hd.1 hd.2 he
     · have : ∀ x : GA E a × GA E b, φ (twConj (thetaA E a) x.1 (ratGL E a (Quot.out c.1)),
           twConj (thetaA E b) x.2 (ratGL E b (Quot.out c.2))) = 0 := fun x => by
         by_contra h
-        apply hd
-        exact ⟨(hφ.test₁ _).2.1 _ x.1 h, (hφ.test₂ _).2.1 _ x.2 h⟩
+        exact hd ⟨(hφ.test₁ _).2.1 _ x.1 h, (hφ.test₂ _).2.1 _ x.2 h⟩
       simp [cutTerm2, this, quotIntegral]
 
 end PositivityTheory.Rg.BcB.D4

@@ -143,8 +143,7 @@ theorem resBase : ResBase := by
       rw [← PadicInt.ker_toZMod, RingHom.mem_ker, map_sub, map_natCast, ha₀, sub_self]
     have h5 : ‖xq - (a₀ : ℚ_[g])‖ < 1 := by
       have h := (PadicInt.mem_nonunits).mp hmem
-      rw [PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast, huqv] at h
-      exact h
+      rwa [PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast, huqv] at h
     have h6 := val_lt_one_of_norm_lt_one w g i hi _ h5
     rw [map_sub, hixq, map_natCast] at h6
     rw [show algebraMap E (w.adicCompletion E) (((a₀ : 𝓞 E)) : E) = (a₀ : w.adicCompletion E) by simp]
@@ -165,8 +164,7 @@ theorem resBase : ResBase := by
     rw [e1]; exact hb
   have hred : ((a₀ : D.K)) = D.red x' ^ e := by
     have h7 : D.red ((a₀ : 𝓞 D.E') - x' ^ e) = 0 := by rw [← RingHom.mem_ker, D.ker]; exact hmem'
-    rw [map_sub, map_pow, map_natCast, sub_eq_zero] at h7
-    exact h7
+    rwa [map_sub, map_pow, map_natCast, sub_eq_zero] at h7
   have hprod : ∏ j ∈ Finset.range n, ((R t ^ g ^ j : D.Kˣ) : D.K) = D.red x' ^ e := by
     rw [hRt]
     simp only [Units.val_pow_eq_pow_val, Units.val_mk0]

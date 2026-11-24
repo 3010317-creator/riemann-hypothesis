@@ -66,8 +66,7 @@ theorem cover_of {G : Type} [Group G] (K : Set G) (P : G → Prop) {C : Type} [C
 theorem nsmul_cancel {K V : Type} [Field K] [CharZero K] [AddCommGroup V] [Module K V] {N : ℕ}
     (hN : 0 < N) {v w : V} (h : N • v = N • w) : v = w := by
   have h' : (N : K) • v = (N : K) • w := by
-    rw [Nat.cast_smul_eq_nsmul K, Nat.cast_smul_eq_nsmul K]
-    exact h
+    rwa [Nat.cast_smul_eq_nsmul K, Nat.cast_smul_eq_nsmul K]
   exact smul_right_injective V (Nat.cast_ne_zero.mpr hN.ne') h'
 
 section
@@ -102,7 +101,7 @@ theorem half (hm : ∀ i, m i ∈ I.L) (hgen : ∀ l ∈ I.L, ∃ z : Fin k → 
   have hTy : N • (I.fmat y *ᵥ ivec (F := I.F) (m j)) ∈ Tset (F := I.F) m :=
     lam_sub_alt hm hgen (hyj j).1
   have hej := congrFun he j
-  simp only [fN, dif_pos hTx, dif_pos hTy] at hej
+  simp only [fN, dite_eq_left hTx, dite_eq_left hTy] at hej
   obtain ⟨haI, haE⟩ := hTx.choose_spec
   obtain ⟨ha'I, ha'E⟩ := hTy.choose_spec
 
@@ -143,8 +142,7 @@ theorem step (hm : ∀ i, m i ∈ I.L) (hgen : ∀ l ∈ I.L, ∃ z : Fin k → 
   intro w
   rw [hco]
   constructor
-  · intro hw
-    exact mulVec_lam hm hgen _ (half I m hm hgen hx hy he) hw
+  · exact fun hw => mulVec_lam hm hgen _ (half I m hm hgen hx hy he) hw
   · intro hw
     have h2 := mulVec_lam hm hgen _ (half I m hm hgen hy hx he.symm) hw
     have h1 : I.fmat x⁻¹ * I.fmat y * (I.fmat y⁻¹ * I.fmat x) = 1 := by

@@ -135,8 +135,7 @@ theorem exists_field (h2 : Module.finrank ℚ K = 2) (σ : K →+* ℂ)
     intro a z hz
     obtain ⟨x, hx, rfl⟩ := (hL z).1 hz
     refine (hL _).2 ⟨(a : K) * x, ?_, by rw [map_mul]⟩
-    have hax := Submodule.smul_mem (I.1 : Submodule (𝓞 K) K) a hx
-    simpa [Algebra.smul_def] using hax
+    simpa [Algebra.smul_def] using Submodule.smul_mem (I.1 : Submodule (𝓞 K) K) a hx
   obtain ⟨W, hW, hj⟩ := hF L hstab
   refine ⟨W, hW, fun L' h4 hD => ?_⟩
   obtain ⟨c, hc, hc'⟩ := exists_mul_of_invariants hj h4 hD
@@ -158,8 +157,7 @@ theorem mem_inv_iff (𝔟 : (Ideal (𝓞 K))⁰) (x : K) :
   · intro h b hb
     obtain ⟨a, ha⟩ := (FractionalIdeal.mem_one_iff _).1 (h _ ((FractionalIdeal.mem_coeIdeal _).2 ⟨b, hb, rfl⟩))
     have hint : IsIntegral ℤ (algebraMap (𝓞 K) K a) := RingOfIntegers.isIntegral_coe a
-    rw [ha] at hint
-    exact hint
+    rwa [ha] at hint
   · intro h y hy
     obtain ⟨b, hb, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 hy
     exact (FractionalIdeal.mem_one_iff _).2 ⟨⟨_, h b hb⟩, rfl⟩

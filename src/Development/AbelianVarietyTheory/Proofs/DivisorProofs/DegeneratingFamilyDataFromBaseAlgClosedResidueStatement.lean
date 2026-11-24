@@ -383,8 +383,7 @@ theorem psiUnitOn_pull_top {R R' : Type} [CommRing R] [IsDomain R] [CommRing R']
   have e₁ := PsiEvenPull.psi_pull hD x (𝟙 _) y hJ hJ'
   have e₂ := va _ (𝟙 _ ≫ jK R') y J J' hJ hJ'
   rw [Fintype.prod_unique, zpow_neg_one, Category.assoc (𝟙 _) (jK R') h, ← hg] at e₂
-  have e := e₁.symm.trans e₂
-  exact (val_pull hJ' _ _ _).trans (mul_left_cancel e).symm
+  exact (val_pull hJ' _ _ _).trans (mul_left_cancel (e₁.symm.trans e₂)).symm
 
 end GlobalTheory.PullTopUnit
 end -- clump:auto
@@ -1005,8 +1004,7 @@ theorem stalk_regular_essFiniteType_dim : ∀ (F : Type) [Field F] (Cs : Scheme.
         Spec.preimage (Cs.fromSpecStalk z ≫ g) ≫ Cs.residue z := by
       rw [← Spec.map_inj, Spec.map_preimage, Spec.map_comp, Spec.map_preimage, Scheme.fromSpecResidueField,
         Category.assoc]
-    rw [he] at h
-    exact h
+    rwa [he] at h
 
 end GlobalTheory.SmoothStalk
 end -- clump:auto

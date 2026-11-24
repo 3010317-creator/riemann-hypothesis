@@ -270,8 +270,7 @@ theorem exists_section_extending_level : ∀ (E : Type) [Field E] [NumberField E
     (p' (IsLocalRing.closedPoint k))
   have hr : Set.range p' ⊆ Set.range W.ι := by
     rintro _ ⟨w, rfl⟩
-    rw [Subsingleton.elim w (IsLocalRing.closedPoint k), Scheme.Opens.range_ι]
-    exact hW
+    rwa [Subsingleton.elim w (IsLocalRing.closedPoint k), Scheme.Opens.range_ι]
   refine ⟨i.out, W, W.ι ≫ (torsion t.G l.A).hom, hW₁, W.ι ≫ (torsion.ι t.G l.A).left,
     IsOpenImmersion.lift W.ι p' hr, ?_, ?_, ?_, ?_⟩
   · rw [IsOpenImmersion.lift_fac_assoc]; exact hP.lift_snd _ _ _

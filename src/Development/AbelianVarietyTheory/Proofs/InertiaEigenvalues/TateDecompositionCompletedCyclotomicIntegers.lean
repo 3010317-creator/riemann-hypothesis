@@ -258,8 +258,7 @@ theorem Xlev_form (K : FinExt l) {i : ℕ} (hi : 1 ≤ i) {ζ : Om l} (hζ : IsP
       · exact mul_mem (pow_mem hl _) hv
       · exact zero_mem _
     · rw [Pi.single_eq_of_ne]
-      intro h
-      exact hk2 (congrArg Fin.val h).symm
+      exact fun h => hk2 (congrArg Fin.val h).symm
     · rw [Finset.sum_eq_single ⟨k % l, Nat.mod_lt _ hp.pos⟩]
       · rw [Pi.single_eq_same, ← mul_assoc, ← pow_mul, ← pow_add, Nat.mod_add_div, map_mul, map_pow]
         rfl
@@ -435,7 +434,6 @@ theorem tate_decomposition : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (Padi
     have h1 := sub_mem hyx (mul_Xj hy hb)
     rw [mul_add, add_sub_cancel_right] at h1
     have h2 := Xj_inter K hj h1 (mul_mem (intC_iff.1 hy).1 (intC_iff.1 ha).1)
-    rw [(mul_eq_zero.1 h2).resolve_left h0, zero_add]
-    exact hb
+    rwa [(mul_eq_zero.1 h2).resolve_left h0, zero_add]
 
 end GlobalTheory.TateDecomp

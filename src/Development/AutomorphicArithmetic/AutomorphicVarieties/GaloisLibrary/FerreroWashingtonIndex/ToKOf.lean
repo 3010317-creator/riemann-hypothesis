@@ -164,7 +164,7 @@ private theorem UpperTheory.V.FW.phiDvd_nil (k A : Type) [Field k] [CommRing A] 
   by_cases hv : N ≤ Polynomial.rootMultiplicity 0 f
   · exfalso
     exact h (hφ ▸ dvd_mul_of_dvd_left (pow_dvd_pow T hv) _)
-  · push_neg at hv
+  · push Not at hv
     rw [hφ]
     refine ⟨↑hu.unit⁻¹ * T ^ (N - Polynomial.rootMultiplicity 0 f), ?_⟩
     calc T ^ N = T ^ Polynomial.rootMultiplicity 0 f * T ^ (N - Polynomial.rootMultiplicity 0 f) := by
@@ -311,9 +311,7 @@ theorem UpperTheory.V.FW.algK :
       show ((g * (p g)⁻¹) ^ (l ^ a)) ^ m = 1
       rw [← pow_mul]
       exact hord g
-    have h2 : orderOf d ∣ m := by
-      apply orderOf_dvd_of_pow_eq_one
-      exact Subtype.ext (by simpa using h1)
+    have h2 : orderOf d ∣ m := orderOf_dvd_of_pow_eq_one (Subtype.ext (by simpa using h1))
     rw [hd] at h2
     have h3 : l ∣ Nat.gcd m l := Nat.dvd_gcd h2 dvd_rfl
     rw [hml] at h3
@@ -382,8 +380,7 @@ private theorem UpperTheory.V.FW.descZ_retr (l : ℕ) [Fact l.Prime] (k : Type) 
     exact (algebraMap (ZMod l) k).injective h
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective _ hinj
   refine ⟨g.toAddMonoidHom, ?_⟩
-  have h1 := LinearMap.congr_fun hg 1
-  simpa using h1
+  simpa using LinearMap.congr_fun hg 1
 
 private theorem UpperTheory.V.FW.descZ_mul {k F G : Type} [CommRing k] [CommRing F] [CommGroup G] (ϖ : k →+ F)
     (u : MonoidAlgebra k G) (a : MonoidAlgebra ℤ G) :
@@ -552,7 +549,7 @@ theorem UpperTheory.V.FW.gcDiff :
       have t0 : t = 0 := by rw [ht, h0, mul_zero]
       rw [t0, ZMod.val_zero] at hvt
       omega
-    rw [hvt, if_neg hs0, sub_zero]
+    rw [hvt, ite_eq_right hs0, sub_zero]
     have e : c * (w + 1) = c * w + c := by ring
     rw [e, key]
     ring
@@ -561,7 +558,7 @@ theorem UpperTheory.V.FW.gcDiff :
       omega
     have ht0 : t = 0 := by rw [htw, hwe, ZMod.natCast_self]
     have hs0 : s = 0 := by rw [hs, ht0, mul_zero]
-    rw [ht0, ZMod.val_zero, if_pos hs0]
+    rw [ht0, ZMod.val_zero, ite_eq_left hs0]
     have e : c * w + c = c * M := by rw [← hwe]; ring
     rw [e, Nat.mul_div_cancel _ hM] at key
     simp only [mul_zero, Nat.zero_div, Nat.cast_zero]
@@ -631,7 +628,7 @@ theorem UpperTheory.V.FW.gcShift :
   rw [hp c, ← sub_mul, ← Int.cast_sub, gauss_count_shift_eq_sum M c s hc F, Int.cast_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun j _ => ?_
   by_cases h : (j : ZMod M) = s
-  · rw [if_pos h, if_pos h, h, mul_comm]
+  · rw [ite_eq_left h, ite_eq_left h, h, mul_comm]
     by_cases h' : c ∣ j <;> simp [h']
   · simp [h]
 end -- clump:auto
@@ -677,8 +674,8 @@ theorem UpperTheory.V.FW.pushDiff :
     rw [Finset.mem_filter, ZMod.castHom_apply, ZMod.cast_natCast h]
     simp
   by_cases hj : (j : ZMod m) = y
-  · rw [if_pos (key.mpr hj), if_pos hj]
-  · rw [if_neg (fun t => hj (key.mp t)), if_neg hj]
+  · rw [ite_eq_left (key.mpr hj), ite_eq_left hj]
+  · rw [ite_eq_right (fun t => hj (key.mp t)), ite_eq_right hj]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.FerreroWashingtonIndex.PushDiff =====
@@ -695,8 +692,7 @@ private theorem sep_pair (l : ℕ) [Fact l.Prime] (x y : ℤ_[l]) :
   by_cases h : x = y
   · exact Filter.Eventually.of_forall fun _ _ => h
   · obtain ⟨m, hm⟩ : ∃ m, PadicInt.toZModPow m x ≠ PadicInt.toZModPow m y := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact h (PadicInt.ext_of_toZModPow.mp hc)
     filter_upwards [Filter.eventually_ge_atTop m] with n hn heq
     exfalso
@@ -809,8 +805,7 @@ theorem UpperTheory.V.FW.nzd :
     | succ n ih => rw [succ_nsmul, ← add_assoc, step, ih]
   by_contra hne
   obtain ⟨b, hb⟩ : ∃ b, x.coeff b ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne (AddMonoidAlgebra.ext (Finsupp.ext fun c => by simp [hc c]))
   have hinj : Function.Injective fun n : ℕ => b + n • a := by
     intro n m hnm
@@ -879,7 +874,7 @@ theorem UpperTheory.V.FW.sinLem :
     rw [Finset.sum_eq_single s] at hcoef
     · simpa using hcoef
     · intro t ht hts
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro he
       rw [← map_nsmul φ, ← map_nsmul φ] at he
       have hmem := (QuotientAddGroup.eq (s := H)).mp he
@@ -896,8 +891,7 @@ theorem UpperTheory.V.FW.sinLem :
           omega
         · nlinarith
       exact hts (by exact_mod_cast hts')
-    · intro h
-      exact absurd (Finset.mem_range.mpr hs) h
+    · exact fun h => absurd (Finset.mem_range.mpr hs) h
   · intro i _ hi
     have hmem : i0 ∈ Finset.univ.erase i := Finset.mem_erase.mpr ⟨fun h => hi h.symm, Finset.mem_univ _⟩
     rw [Finset.prod_eq_zero hmem, mul_zero]
@@ -906,8 +900,7 @@ theorem UpperTheory.V.FW.sinLem :
       exact (QuotientAddGroup.eq_zero_iff _).mpr (AddSubgroup.mem_zmultiples _)
     rw [hz, sub_eq_zero]
     rfl
-  · intro h
-    exact absurd (Finset.mem_univ i0) h
+  · exact fun h => absurd (Finset.mem_univ i0) h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.FerreroWashingtonIndex.SinLem =====
@@ -932,8 +925,7 @@ private theorem prod_single_eq_single_sum {k A ι : Type} [CommRing k] [AddCommG
 private theorem coeff_monic_poly_sum {k A ι : Type} [CommRing k] [AddCommGroup A]
     (T : Finset ι) (f : ι → AddMonoidAlgebra k A) (a : A) (h : (∑ j ∈ T, f j).coeff a ≠ 0) :
     ∃ j ∈ T, (f j).coeff a ≠ 0 := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   apply h
   rw [AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
   exact Finset.sum_eq_zero hc
@@ -1003,8 +995,7 @@ theorem UpperTheory.V.FW.sinnott :
     simpa using this
   have h7 : (sinE (fun i => (η i : ℤ_[l])) N P).coeff = 0 := by
     apply Finsupp.mapDomain_injOn (S : Set ℤ_[l]) (hn₀ n hn)
-    · intro a ha
-      exact hS k P a (Finsupp.mem_support_iff.mp ha)
+    · exact fun a ha => hS k P a (Finsupp.mem_support_iff.mp ha)
     · simp
     · simpa using h6
   refine sinLem k ℤ_[l] ι (fun i => (η i : ℤ_[l])) N P hN ?_ ?_ ?_
@@ -1037,13 +1028,11 @@ theorem UpperTheory.V.FW.halfSum :
   · intro x hx
     by_cases h : x ∈ H'
     · simp [h]
-    · simp only [h, if_false]
-      exact (hHH' x hx).resolve_left h
+    · simpa only [h, ite_false] using (hHH' x hx).resolve_left h
   · intro y hy
     by_cases h : y ∈ H
     · simp [h]
-    · simp only [h, if_false]
-      exact (hH'H y hy).resolve_left h
+    · simpa only [h, ite_false] using (hH'H y hy).resolve_left h
   · intro x hx
     by_cases h : x ∈ H'
     · simp [h, hx]
@@ -1079,8 +1068,7 @@ private theorem push_units {k : Type} [CommRing k] {M : ℕ} [NeZero M] {m : ℕ
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hu ⊢
     rw [← hu]
     rfl
-  · intro u₁ _ _ u₂ _ _ h12
-    exact Units.ext h12
+  · exact fun u₁ _ _ u₂ _ _ h12 => Units.ext h12
   · intro s hs hne
     have hu : IsUnit s := by
       by_contra hn
@@ -1117,7 +1105,7 @@ private theorem half_val {M : ℕ} [NeZero M] (hM : 2 < M) (s : (ZMod M)ˣ) :
     rw [ZMod.natCast_eq_zero_iff] at h5
     have := Nat.le_of_dvd (by norm_num) h5
     omega
-  rw [Units.val_neg, ZMod.neg_val, if_neg hs0]
+  rw [Units.val_neg, ZMod.neg_val, ite_eq_right hs0]
   omega
 
 theorem UpperTheory.V.FW.twCoef :
@@ -1166,8 +1154,7 @@ theorem UpperTheory.V.FW.twCoef :
     simp only [map_sum, toK, MonoidAlgebra.mapRingHom_single, eq_intCast, tw_single,
     MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply, MonoidAlgebra.single_apply,
     MonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] at h1
-    rw [Finset.sum_filter]
-    exact h1
+    rwa [Finset.sum_filter]
   have hpu : ∀ z, push h (fun s => (g s : k) * MulChar.ofUnitHom χ s) z =
       ∑ s : (ZMod M)ˣ with ((ZMod.unitsMap h s : (ZMod (l ^ n₀))ˣ) : ZMod (l ^ n₀)) = z,
         (g s : k) * (χ s : k) := fun z => push_units h χ (fun s => (g s : k)) z
@@ -1206,8 +1193,7 @@ theorem UpperTheory.V.FW.twCoef :
     apply Subtype.ext
     apply hredinj _ (hRW _ r₁.2) _ (hRW _ r₂.2)
     have h12 := hs1.symm.trans hs2
-    rw [mul_left_inj, inv_inj] at h12
-    exact h12
+    rwa [mul_left_inj, inv_inj] at h12
   refine Eq.trans (Finset.sum_biUnion hdisj).symm ?_
   have hπ : ∀ v ∈ WW l, ∀ x : (ZMod M)ˣ, ZMod.unitsMap h x = (redU l n₀ v)⁻¹ * u →
       piQ l n₀ h x = QuotientGroup.mk' (Subgroup.map (redU l n₀) (WW l)) u := by
@@ -1235,8 +1221,7 @@ theorem UpperTheory.V.FW.twCoef :
     have h2 := mul_right_cancel hr'
     have h3 : redU l n₀ r'.1 = redU l n₀ (-r.1) := by
       rw [hredneg, ← inv_inj, ← h2, inv_neg]
-    have h4 := hredinj _ (hRW _ r'.2) _ (hnegmem _ (hRW _ r.2)) h3
-    exact hRneg _ r.2 (h4 ▸ r'.2)
+    exact hRneg _ r.2 ((hredinj _ (hRW _ r'.2) _ (hnegmem _ (hRW _ r.2)) h3) ▸ r'.2)
   · intro x hx hnx
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hx hnx
     exact ((half_val hM x).mp hnx.1) hx.1
@@ -1323,7 +1308,7 @@ theorem UpperTheory.V.FW.nonvan :
     intro hd
     have := Nat.le_of_dvd one_pos hd
     omega
-  simp only [hndvd, if_false, sub_zero, mul_one, Nat.cast_one, hΨ, map_one] at hP
+  simp only [hndvd, ite_false, sub_zero, mul_one, Nat.cast_one, hΨ, map_one] at hP
   exact one_ne_zero hP
 end -- clump:auto
 end -- clump:auto
@@ -1367,8 +1352,7 @@ private theorem map_map {a b c : ℕ} (h1 : a ∣ b) (h2 : b ∣ c) (x : (ZMod c
 
 private theorem map_redU (l : ℕ) [Fact l.Prime] {m n : ℕ} (hmn : m ≤ n) (h : l ^ m ∣ l ^ n) (w : ℤ_[l]ˣ) :
     ZMod.unitsMap h (redU l n w) = redU l m w := by
-  apply Units.ext
-  exact RingHom.congr_fun (PadicInt.zmod_cast_comp_toZModPow m n hmn) (w : ℤ_[l])
+  exact Units.ext (RingHom.congr_fun (PadicInt.zmod_cast_comp_toZModPow m n hmn) (w : ℤ_[l]))
 
 theorem UpperTheory.V.FW.deltaBij :
     ∀ (l : ℕ) [Fact l.Prime] (f n : ℕ) (h : f * l ^ ee l ∣ f * l ^ n) (h' : l ^ n ∣ f * l ^ n), f.Coprime l → ee l ≤ n → Function.Bijective ((ZMod.unitsMap h).comp (((WW l).map (redU l n)).comap (ZMod.unitsMap h')).subtype) := by

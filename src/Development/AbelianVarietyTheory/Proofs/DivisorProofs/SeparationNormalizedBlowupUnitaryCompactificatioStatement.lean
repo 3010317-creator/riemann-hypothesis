@@ -301,8 +301,7 @@ theorem polarised_part_model : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ :
   obtain ⟨v, hv⟩ := ZM.TObj.exists_hasTh_of_isLocalRing L1 L2 (hodd.pow) t
   have hspan := ZM.FamilyScheme.span_theta L1 L2 t n v hn.two_le (dvd_pow_self n (by omega)) hv
   obtain ⟨a', ha'⟩ : ∃ a', v a' ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have : Set.range v ⊆ {0} := by rintro _ ⟨a, rfl⟩; exact h a
     rw [Ideal.span_eq_bot.2 (fun x hx => this hx)] at hspan
     exact bot_ne_top hspan
@@ -465,8 +464,7 @@ theorem defOver_of_coord_proportional : ∀ (K : Type) [Field K] [IsAlgClosed K]
       rw [hv i, map_mul, hσ _ (hr i)]
       field_simp
     have := (U₄ hm3 hall (h ≫ z) z v H3 H).1
-    have e2 := congrArg CommaMorphism.left this
-    exact e2
+    exact congrArg CommaMorphism.left this
   refine defOver_of_finite_orbit K k₀ hk₀ _ z.left ((Set.finite_singleton z.left).subset ?_)
   rintro _ ⟨σ, hσ, rfl⟩
   exact horb σ hσ
@@ -581,8 +579,7 @@ theorem lift_pow {m : ℕ} {T : Over (Sp V)} {y : T ⟶ D.P.A} (hy : y ^ m ^ 2 =
       MonObj.comp_mul, MonObj.comp_pow, MonObj.comp_pow, lift_snd, ← Category.assoc, lift_fst, Category.id_comp,
       mul_inv_eq_iff_eq_mul, mul_pow, _root_.mul_assoc] at e
     simp only [f]
-    rw [mul_pow θ.pt]
-    exact e
+    rwa [mul_pow θ.pt]
   have hp : ∏ j ∈ Finset.range (m ^ 2), tval θ (lift (𝟙 T) (θ.pt ^ j * x)).left z J = 1 := by
     have c := val_corr hJ hθ.pow_eq (lift (𝟙 T) x).left
     rw [ThetaPullback.val_powGen θ _ _ hJ, val_one] at c
@@ -601,8 +598,7 @@ theorem lift_pow {m : ℕ} {T : Over (Sp V)} {y : T ⟶ D.P.A} (hy : y ^ m ^ 2 =
   rw [hp, hy, one_pow, _root_.one_mul, _root_.one_mul, eq_comm, mul_eq_right] at ha1
   have k := congrArg (· ^ m ^ 2) (key x)
   simp only [f] at k
-  rw [mul_pow (gm _ _ _ _), ha1, _root_.one_mul, mul_pow θ.pt, ← _root_.mul_assoc, ← mul_pow] at k
-  exact k
+  rwa [mul_pow (gm _ _ _ _), ha1, _root_.one_mul, mul_pow θ.pt, ← _root_.mul_assoc, ← mul_pow] at k
 
 theorem exists_scalar {K R : Type} [Field K] [CommRing R] (φ : K →+* R) (hφ : Function.Injective φ) (k₀ : Subfield K)
     [IsAlgClosed k₀] {M : ℕ} (hM : 1 ≤ M) {I : Type} (v : I → K) (Λ : R)
@@ -1233,7 +1229,7 @@ theorem GlobalTheory.USep.sepB_of_normBl : ∀ (E : Type) [Field E] [NumberField
       have e2 := hlam ⟨pull e.toLinearMap ((l.M' : ℤ) • ε (.inl (h k)) : balForms (H.bar : 𝓞 E → 𝓞 E) _),
         pull_mem _ ((l.M' : ℤ) • ε (.inl (h k))).2⟩
       rw [hF] at e2
-      rw [e1, e2, map_zsmul, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply, if_neg (by simp)]
+      rw [e1, e2, map_zsmul, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply, ite_eq_right (by simp)]
       simp
     obtain ⟨l₁, l₂, MM, a, a', c₁, c₂, hMM, hu₁, hu₂, hlin, r, hr, hre⟩ := V3 lam hlam0
     obtain ⟨R₁, hR₁, hR₁e⟩ := hT a c₁
@@ -1255,7 +1251,7 @@ theorem GlobalTheory.USep.sepB_of_normBl : ∀ (E : Type) [Field E] [NumberField
         rw [← hlam1, ← hlin _ (hβ' k)]; ring
       simp only [this, zpow_add, Finset.prod_mul_distrib]
       congr 1
-      rw [Finset.prod_eq_single i (fun k _ hk => by rw [if_neg (Ne.symm hk)]; simp) (by simp)]
+      rw [Finset.prod_eq_single i (fun k _ hk => by rw [ite_eq_right (Ne.symm hk)]; simp) (by simp)]
       simp
     have hne : ev₁ (Φ.coefT y a c₁) ^ 2 ≠ 0 := pow_ne_zero _ (hu₁.map ev₁).ne_zero
     have hR₁ne : R₁ ≠ 0 := fun h0 => hne (by rw [hR₁e, h0, zero_mul])

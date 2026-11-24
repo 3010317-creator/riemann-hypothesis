@@ -121,8 +121,7 @@ theorem exists_transport {L : LB G} {M : LB B} (hL : L.IsLB) (hM : M.IsLB) {f : 
   have le : ∀ Q : K → (L.pull f).ι,
       LB.wchart (L.pull f) φ Q ≤ LB.wchart L (fun k => φ k ≫ f) (fun k => Q k PUnit.unit) :=
     fun Q y hy => Set.mem_iInter.2 fun k => by
-      have h := (mem_pull (L := L) (F := f) (x := φ k y)).1 (Set.mem_iInter.1 hy k)
-      simpa using h
+      simpa using (mem_pull (L := L) (F := f) (x := φ k y)).1 (Set.mem_iInter.1 hy k)
   let a : LB.Gen (LB.LinComb (L.pull f) φ ε) := ⟨fun Q => res (le Q) (b.s fun k => Q k PUnit.unit)⟩
   have ha_gm : ∀ (Z : Scheme.{0}) (r : Z ⟶ Y) (z : Z) (Q : K → (L.pull f).ι),
       r z ∈ LB.wchart (L.pull f) φ Q → gm r z (LB.wchart (L.pull f) φ Q) (a.s Q) =
@@ -443,8 +442,7 @@ theorem triv_of_thick (hG : GlobalFnsSt) {V : Type} [CommRing V] [IsDomain V] (I
     have hu := e1.symm ▸ Units.isUnit (val (t 0) (𝟙 _) z J)
     have hz := (Scheme.mem_basicOpen _ _ z hW).2 hu
     have hz' : z ∈ (fstG I 0 B).left ⁻¹ᵁ B.left.basicOpen (s.f (fun _ => J ((fstG I 0 B).left ≫ 𝟙 B.left))) := by
-      rw [AlgebraicGeometry.Scheme.preimage_basicOpen]
-      exact hz
+      rwa [AlgebraicGeometry.Scheme.preimage_basicOpen]
     unfold nonzeroLocus
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨_, hz'⟩
   have htop : nonzeroLocus s = ⊤ := eq_top_of_thick I B (nonzeroLocus s) hmem

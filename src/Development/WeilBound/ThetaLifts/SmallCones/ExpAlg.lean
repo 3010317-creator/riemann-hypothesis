@@ -128,8 +128,7 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ ≠ 0 := by
   classical
   obtain ⟨yi, hyi⟩ : ∃ y, f y ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hf (SchwartzMap.ext h)
   have hS : Set.Finite {v | ¬ (φ v = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers F} 1)} :=
     Filter.eventually_cofinite.mp hstd
@@ -144,7 +143,7 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
       apply hv
       have hvS' : v ∉ S := fun h => hvS (Finset.mem_coe.mpr h)
       show (if v ∈ S then p v i else 0) ∈ (v.adicCompletionIntegers F : Set (v.adicCompletion F))
-      rw [if_neg hvS']
+      rw [ite_eq_right hvS']
       exact zero_mem (v.adicCompletionIntegers F)⟩ :
       RestrictedProduct (fun v : Pl F => v.adicCompletion F) (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) cofinite)
   let x : κ → AdeleRing (𝓞 F) F := fun i =>
@@ -153,7 +152,6 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
   have hx := congrFun hz x
   have h1 : (fun i => evI F (x i)) = yi := by
     funext i
-    show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (yi i)) = yi i
     exact RingEquiv.apply_symm_apply _ _
   have h2 : ∀ v, (fun i => evFin F v (x i)) = fun i => if v ∈ S then p v i else 0 := fun v => rfl
   simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.zero_apply, h1, h2] at hx
@@ -163,7 +161,7 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
       by_contra h
       exact hv (hS.mem_toFinset.mpr h)
     rw [hv']
-    have hzero : (fun i : κ => if v ∈ S then p v i else 0) = fun _ => 0 := funext fun i => if_neg hv
+    have hzero : (fun i : κ => if v ∈ S then p v i else 0) = fun _ => 0 := funext fun i => ite_eq_right hv
     rw [hzero, Set.indicator_of_mem (show (fun _ : κ => (0 : Fv F v)) ∈ {x : κ → Fv F v | ∀ i, x i ∈ v.adicCompletionIntegers F} from fun i => zero_mem _)]
     rfl
   have hsub : Function.mulSupport (fun v => φ v (fun i => if v ∈ S then p v i else 0)) ⊆ S := by
@@ -172,7 +170,7 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
     exact hv (hg v h)
   rw [finprod_eq_prod_of_mulSupport_subset _ hsub] at hx
   refine (mul_ne_zero hyi (Finset.prod_ne_zero_iff.mpr fun v hv => ?_)) hx
-  have hpv : (fun i : κ => if v ∈ S then p v i else 0) = p v := funext fun i => if_pos hv
+  have hpv : (fun i : κ => if v ∈ S then p v i else 0) = p v := funext fun i => ite_eq_left hv
   rw [hpv]
   exact hp v
 
@@ -223,8 +221,7 @@ theorem ev_ne_zero (hM : M.IsGood B.ψ) (hM₁ : M₁.IsGood B.ψ) (he : IsEv B 
     ⟨GlobalTheory.WeilM.isLocallyConstant_finprod_evalV M.vac hsb hM.std,
       GlobalTheory.AdelicCoordSupport.hasCompactSupport_finprod M.vac hsb hM.std⟩, rfl⟩, ?_⟩
   rw [h2 f M.vac hsb (Eventually.of_forall fun _ => rfl)]
-  simp only [(h1 _).1]
-  exact pure_ne_zero _ hf _ (fun v => (hM₁.vac v).2.1) hM₁.std
+  simpa only [(h1 _).1] using pure_ne_zero _ hf _ (fun v => (hM₁.vac v).2.1) hM₁.std
 
 theorem lin_add (y y' : Fin m → AF F) : lin u (y + y') = lin u y + lin u y' := by
   simp [lin, add_smul, Finset.sum_add_distrib]
@@ -252,7 +249,7 @@ theorem sy_lin_uz (M : Model σ X W) (hP : Dual σ X W I u z) (y t : Fin m → A
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [form_sum_right M.co]
   simp only [show ∀ j, symp (R := AF F) (cA σ) (-1) (incM F X.J) (incM F W.J) (incM F (z i)) (incM F (u j)) = _ from hP.pair i, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem sy_lin_uu (M : Model σ X W) (hP : Polar σ X W X₁ W₁ ι ι' I u z) (y t : Fin m → AF F) :
     sy σ X W (lin u y) (lin u t) = 0 := by

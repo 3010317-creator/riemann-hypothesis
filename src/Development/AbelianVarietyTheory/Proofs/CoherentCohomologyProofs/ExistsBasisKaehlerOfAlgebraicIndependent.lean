@@ -208,8 +208,7 @@ theorem smul_dlogWedge_mem_regForms (t : V) (ht : algebraMap V F t ≠ 0) (S : F
         rwa [Function.update_self]
       · rw [Function.update_of_ne hl]
         exact hw' l
-  rw [dlogWedge, funext hw]
-  exact this
+  rwa [dlogWedge, funext hw]
 
 end LogWedge
 
@@ -340,8 +339,7 @@ theorem one_tmul_D_ne_zero {t : V} (ht : Irreducible t) :
   intro h
   have h₁ : (RingHom.ker (algebraMap V (ResidueField V))).toCotangent ⟨t, hmem⟩ = 0 := by
     apply hinj
-    rw [kerCotangentToTensor_toCotangent, map_zero]
-    exact h
+    rwa [kerCotangentToTensor_toCotangent, map_zero]
   have h₂ : t ∈ RingHom.ker (algebraMap V (ResidueField V)) ^ 2 :=
     (Ideal.toCotangent_eq_zero _ _).mp h₁
   rw [hker, Ideal.span_singleton_pow, Ideal.mem_span_singleton] at h₂
@@ -365,8 +363,7 @@ theorem exists_basis_kaehler_uniformiser {t : V} (ht : Irreducible t) :
   have h₁ : LinearIndepOn κ f {t} := LinearIndepOn.singleton (one_tmul_D_ne_zero K ht)
   obtain ⟨T, -, htT, hT, hli⟩ := exists_linearIndepOn_extension h₁ (Set.subset_univ _)
   have hT' : Submodule.span κ (f '' T) = ⊤ := by
-    rw [eq_top_iff, ← hspan, Submodule.span_le, ← Set.image_univ]
-    exact hT
+    rwa [eq_top_iff, ← hspan, Submodule.span_le, ← Set.image_univ]
   have hfin : Finite T := hli.linearIndependent.finite
   have hne : Nonempty T := ⟨⟨t, htT rfl⟩⟩
   obtain ⟨m, hm⟩ : ∃ m, Nat.card T = m + 1 := Nat.exists_eq_succ_of_ne_zero Nat.card_pos.ne'

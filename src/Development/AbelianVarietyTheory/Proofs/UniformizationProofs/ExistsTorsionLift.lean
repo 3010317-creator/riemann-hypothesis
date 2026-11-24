@@ -148,11 +148,9 @@ theorem exists_section_lift {F : Type} [Field F] [IsAlgClosed F] (O : ValuationS
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
   obtain ⟨ψ, hψ1, hψ2⟩ := exists_ringHom_lift F χ.hom hcomp
   refine ⟨Spec.map (CommRingCat.ofHom ψ) ≫ H.isoSpec.inv, ?_, ?_⟩
-  · have h2 : φ ≫ CommRingCat.ofHom ψ = 𝟙 _ := by
-      exact CommRingCat.hom_ext hψ1
+  · have h2 : φ ≫ CommRingCat.ofHom ψ = 𝟙 _ := CommRingCat.hom_ext hψ1
     rw [Category.assoc, ← hφ, ← Spec.map_comp, h2, Spec.map_id]
-  · have h3 : CommRingCat.ofHom ψ ≫ CommRingCat.ofHom (residue O) = χ := by
-      exact CommRingCat.hom_ext hψ2
+  · have h3 : CommRingCat.ofHom ψ ≫ CommRingCat.ofHom (residue O) = χ := CommRingCat.hom_ext hψ2
     rw [← Category.assoc, ← Spec.map_comp, h3, hχ, Category.assoc, Iso.hom_inv_id,
       Category.comp_id]
 

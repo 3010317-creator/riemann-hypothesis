@@ -68,8 +68,7 @@ theorem hasRes_mk_iff {P : HeightOneSpectrum (𝓞 E)} {z : P.adicCompletion E} 
       ring
     rw [e]
     exact Valuation.map_add_lt _ h h2
-  · intro h
-    exact ⟨r, rfl, h⟩
+  · exact fun h => ⟨r, rfl, h⟩
 
 theorem hasRes_le_one {P : HeightOneSpectrum (𝓞 E)} {z : P.adicCompletion E} {c : 𝓞 E ⧸ P.asIdeal}
     (h : HasRes P z c) : Valued.v z ≤ 1 := by
@@ -103,7 +102,7 @@ theorem last_sub_lt {P : HeightOneSpectrum (𝓞 E)} {n : ℕ} (r : Fin n) (Ki :
   by_cases hj : j = r
   · subst hj
     have e2 : (∑ l, D j l * U l) - C * U j = ∑ l, (D j l - if l = j then C else 0) * U l := by
-      simp only [_root_.sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [_root_.sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [e2]
     refine lt_of_le_of_lt (mul_le_of_le_one_left' (hK j)) ?_
     exact Valuation.map_sum_lt _ one_ne_zero fun l _ => by
@@ -136,7 +135,7 @@ theorem adAt_pullV_triv {n : ℕ} (y δ k : GL (Fin n) (AfE F E)) (w : HeightOne
   rw [pullbackVector_triple_mul, pullbackVector_mul_right]
 
   simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, ht, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-  Finset.mem_univ, if_true]
+  Finset.mem_univ, ite_true]
 
 theorem adeleComponentAt_triple_mul_dilation_trivial {n : ℕ} (y δ k : GL (Fin n) (AfE F E)) (w : HeightOneSpectrum (𝓞 E))
     (ht : ∀ i j, adAt F w ((δ⁻¹ : GL (Fin n) (AfE F E)).1 i j) = if i = j then 1 else 0) (i j : Fin n) :
@@ -168,8 +167,7 @@ theorem isPointOf_last_coordinate_dilation_one_prime_alt : ∀ (F E : Type) [Fie
       ∀ i, (((δ⁻¹ : GL (Fin n) (AfE F E)) : Matrix (Fin n) (Fin n) (AfE F E)) *ᵥ z) i ∈ RInt F E := by
     intro z
     constructor
-    · intro hz i
-      exact PtExist.mulVec_int hδi' hz i
+    · exact fun hz i => PtExist.mulVec_int hδi' hz i
     · intro hz i
       have := PtExist.mulVec_int hδi hz i
       rwa [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec] at this
@@ -219,17 +217,16 @@ theorem isPointOf_last_coordinate_dilation_one_prime_alt : ∀ (F E : Type) [Fie
         (fun j => hasRes_le_one (hkr i j hi))
         (fun j hj => by
           have := hkr i j hi
-          rw [if_neg hj] at this
+          rw [ite_eq_right hj] at this
           exact hasRes_lt_one this)
         (fun j l => hint _ (hδi' j l))
         (fun l => by
           have := hδr i l hi
           by_cases hl : l = i
-          · rw [if_pos hl, ← hcr, hasRes_mk_iff] at this
-            rw [if_pos hl]
-            exact this
-          · rw [if_neg hl] at this
-            rw [if_neg hl, sub_zero]
+          · rw [ite_eq_left hl, ← hcr, hasRes_mk_iff] at this
+            rwa [ite_eq_left hl]
+          · rw [ite_eq_right hl] at this
+            rw [ite_eq_right hl, sub_zero]
             exact hasRes_lt_one this)
         (fun l => hint _ (hu x hx l)) hCle
       rw [pullbackVector_mul_right] at hv'

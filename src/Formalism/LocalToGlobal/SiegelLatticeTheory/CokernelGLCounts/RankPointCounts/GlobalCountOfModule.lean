@@ -301,8 +301,7 @@ theorem glueFwd_of (M : Model F E) (r n : ℕ) (hM : M.OK) (hC : CorrIso M r n) 
       obtain ⟨hn₁, hψn⟩ := (hψC n₁ n₂).1 hc
       have hd : n₁ - w ∈ H.W0 t₁.f t₁.f' := Submodule.sub_mem _ hn₁ ((memS _ _ _).1 w.2).1
       have hdL : n₁ - w ∈ t₁.abelian₂ := by
-        have h4 := t₁.abelian₂.sub_mem h1 hmw
-        simpa using h4
+        simpa using t₁.abelian₂.sub_mem h1 hmw
       have hψd : (ψ ⟨n₁ - w, hd⟩ : V) = n₂ - (e w : V) := by
         rw [← hψn]
         exact congrArg Subtype.val (map_sub ψ ⟨n₁, hn₁⟩ ⟨(w : V), ((memS _ _ _).1 w.2).1⟩)
@@ -312,8 +311,7 @@ theorem glueFwd_of (M : Model F E) (r n : ℕ) (hM : M.OK) (hC : CorrIso M r n) 
       have h6 : (m₂ : V) + (e w : V) ∈ t₂.abelian₂ := by
         convert h5 using 1
         abel
-      apply (LinearEquiv.symm_apply_eq η₂).2
-      exact ((hη₂a m₂ (e w)).2 h6).symm
+      exact (LinearEquiv.symm_apply_eq η₂).2 ((hη₂a m₂ (e w)).2 h6).symm
 
 end Fwd
 
@@ -441,15 +439,14 @@ theorem prim_comp {M : Model F E} {V : Type} [AddCommGroup V] [Module E V] (H : 
       simp only [sub_smul, Finset.sum_sub_distrib]
       rw [hd', ha']
       simpa using hd.symm ▸ sub_self x
-    intro i
-    exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hv.2.1 _ h0 i)
+    exact fun i => sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hv.2.1 _ h0 i)
   have hzero : ∀ i, i ∉ Set.range e → a i = 0 := by
     intro i hi
     apply Subtype.ext
     rw [hcoef i]
     apply Finset.sum_eq_zero
     intro j _
-    rw [if_neg (fun h => hi ⟨j, h⟩)]
+    rw [ite_eq_right (fun h => hi ⟨j, h⟩)]
   rw [Submodule.mem_span_range_iff_exists_fun]
   refine ⟨fun j => a (e j), ?_⟩
   rw [← ha]
@@ -560,8 +557,7 @@ theorem genOfPrim_holds (M : Model F E) (r n : ℕ) : GenOfPrim M r n := by
     rw [hs]
   have hy : algebraMap F E ((g.q : F)⁻¹) • (f₂' b - f₂ b) ∈ Λ₂ := by
     have := hprim.1 (Sum.inr b)
-    rw [hMM] at this
-    exact this
+    rwa [hMM] at this
   have e : f₂' b - f₂ b = algebraMap F E (g.q : F) • (algebraMap F E ((g.q : F)⁻¹) • (f₂' b - f₂ b)) := by
     rw [smul_smul, ← map_mul, mul_inv_cancel₀ hq0, map_one, one_smul]
   show f₂' b - f₂ b ∈ H.smulLat (algebraMap F E (g.q : F)) Λ₂
@@ -985,8 +981,7 @@ private theorem rg_fwd_sup_lemma {g₁ g₂ : Fin (r + 1) → V} {U₁ U₂ W₁
   rw [mkW_add H a b ha' (hW₁ b.2), map_add (f := _), e, hC1, mkW_add H u _ hu' (hW₂ (ψ w).2)] at h
   have h5 : H.mkW g₂ (⟨a₂, ha₂'⟩ + ⟨ψ b, hW₂ (ψ b).2⟩) =
       H.mkW g₂ (⟨u, hu'⟩ + ⟨ψ w, hW₂ (ψ w).2⟩) := by
-    rw [map_add (f := _), map_add (f := _)]
-    exact h
+    rwa [map_add (f := _), map_add (f := _)]
   simp only [HermSp.mkW, Submodule.mkQ_apply] at h5
   rw [Submodule.Quotient.eq, Submodule.mem_comap] at h5
   simp only [Submodule.subtype_apply, Submodule.coe_sub, Submodule.coe_add] at h5
@@ -1253,8 +1248,7 @@ theorem glueConv_holds (M : Model F E) (r : ℕ) : GlueConv M r := by
   have hNΛ : N ≤ Λ := by
     intro n hn
     refine ⟨0, ⟨n, hNs n hn⟩, ?_, by simp⟩
-    rw [ddMk_zero, η.map_zero, eq_comm, dwMk_eq_zero]
-    exact hn
+    rwa [ddMk_zero, η.map_zero, eq_comm, dwMk_eq_zero]
   have hgΛ : ∀ a, H.MMfam t a ∈ Λ := by
     intro a
     have ha : H.MMfam t a ∈ MMo H t := Submodule.subset_span ⟨a, rfl⟩
@@ -1273,8 +1267,7 @@ theorem glueConv_holds (M : Model F E) (r : ℕ) : GlueConv M r := by
       subst hm
       rw [ddMk_zero, η.map_zero, eq_comm, dwMk_eq_zero] at h
       simpa using h
-    · intro n hn
-      exact ⟨hNΛ hn, hNW hn⟩
+    · exact fun n hn => ⟨hNΛ hn, hNW hn⟩
 
   have hPrim : H.Prim Λ (H.MMfam t) := by
     refine ⟨hgΛ, linIndep_of_gram H (H.MMfam t) hG, ?_⟩
@@ -1470,12 +1463,10 @@ theorem rgHyp_of (M : Model F E) (hM : M.OK) {r n : ℕ} {V : Type} [AddCommGrou
   have hZ₁' : IsUnit (H.Zhat t₁.f' t₁.f).det := det_Zhat_swap_unit H _ _ hZ₁
   have hzφ : φ (H.mkW t₁.f ⟨t₁.f (Fin.last r), z_mem_perpX H hF₁⟩) =
       H.mkW f₂ ⟨f₂ (Fin.last r), z_mem_perpX H hyp.2.1⟩ := by
-    have e := hyp.2.2.2.2.1 ⟨_, z_mem_perpX H hF₁⟩ ⟨_, z_mem_perpX H hyp.2.1⟩ rfl rfl
-    simpa using e
+    simpa using hyp.2.2.2.2.1 ⟨_, z_mem_perpX H hF₁⟩ ⟨_, z_mem_perpX H hyp.2.1⟩ rfl rfl
   have hzφ' : φ' (H.mkW t₁.f' ⟨t₁.f' (Fin.last r), z_mem_perpX H hF₁'⟩) =
       H.mkW f₂' ⟨f₂' (Fin.last r), z_mem_perpX H hyp.2.2.1⟩ := by
-    have e := hyp.2.2.2.2.2 ⟨_, z_mem_perpX H hF₁'⟩ ⟨_, z_mem_perpX H hyp.2.2.1⟩ rfl rfl
-    simpa using e
+    simpa using hyp.2.2.2.2.2 ⟨_, z_mem_perpX H hF₁'⟩ ⟨_, z_mem_perpX H hyp.2.2.1⟩ rfl rfl
   obtain ⟨u, hu⟩ := hD₂
   have hoφ : φ (H.mkW t₁.f ⟨H.om' t₁.f t₁.f', om'_mem_perpX H _ _⟩) =
       ((↑u⁻¹ : E) * H.Dl t₁.f t₁.f' (r + 1)) • H.mkW f₂ ⟨H.om' f₂ f₂', om'_mem_perpX H _ _⟩ := by
@@ -1557,8 +1548,7 @@ theorem claimRG_at (M : Model F E) (r n : ℕ) (hM : M.OK) : ClaimRG M r n := by
       hyp.2.2.2.2.1,
       (congrArg (φ' '' ·) hL1').trans (e'.trans ((congrArg (Prod.fst '' ·) hI).trans hL2'.symm)),
       hyp.2.2.2.2.2, fun g' hg' => ?_⟩
-    rw [Option.some.inj (hg'.symm.trans hs)]
-    exact hI
+    rwa [Option.some.inj (hg'.symm.trans hs)]
 
 theorem claimR_at (M : Model F E) (r n : ℕ) (hM : M.OK) : ClaimR M r n :=
   claimR_of_modes M r n (claimRL_at M r n hM) (claimRG_at M r n hM)

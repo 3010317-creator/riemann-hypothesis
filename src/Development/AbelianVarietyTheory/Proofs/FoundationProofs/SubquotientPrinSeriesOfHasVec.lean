@@ -408,7 +408,7 @@ theorem mem_strip {g : GL (Fin n) k} : g ∈ strip ψ r ϖ m ↔ ∀ i j : Fin n
 theorem sub_one_of_mem {g : GL (Fin n) k} (hg : g ∈ strip ψ r ϖ m) (i j : Fin n)
     (h : ¬ ((i : ℕ) < r ∧ r ≤ (j : ℕ))) : (g.val - 1) i j = 0 := by
   have := mem_strip.mp hg i j
-  rw [if_neg h] at this
+  rw [ite_eq_right h] at this
   simp [Matrix.sub_apply, this]
 
 theorem one_mem : (1 : GL (Fin n) k) ∈ strip ψ r ϖ m := by
@@ -432,12 +432,12 @@ theorem mul_mem {a b : GL (Fin n) k} (ha : a ∈ strip ψ r ϖ m) (hb : b ∈ st
   have hB := mem_strip.mp hb i j
   rw [key]
   split_ifs with h
-  · rw [if_pos h] at hA hB
+  · rw [ite_eq_left h] at hA hB
     have h1 : (1 : Matrix (Fin n) (Fin n) k) i j = 0 := Matrix.one_apply_ne (ne_of_blk h)
     simp only [Matrix.add_apply, Matrix.sub_apply, h1, sub_zero, zero_add]
     rw [mul_add]
     exact ⟨(Valuation.map_add _ _ _).trans (max_le hA.1 hB.1), triv_add hA.2 hB.2⟩
-  · rw [if_neg h] at hA hB
+  · rw [ite_eq_right h] at hA hB
     simp only [Matrix.add_apply, Matrix.sub_apply, hA, hB, sub_self, add_zero]
 
 theorem inv_mem {a : GL (Fin n) k} (ha : a ∈ strip ψ r ϖ m) : a⁻¹ ∈ strip ψ r ϖ m := by
@@ -450,11 +450,11 @@ theorem inv_mem {a : GL (Fin n) k} (ha : a ∈ strip ψ r ϖ m) : a⁻¹ ∈ str
   have hA := mem_strip.mp ha i j
   rw [key]
   split_ifs with h
-  · rw [if_pos h] at hA
+  · rw [ite_eq_left h] at hA
     have h1 : (1 : Matrix (Fin n) (Fin n) k) i j = 0 := Matrix.one_apply_ne (ne_of_blk h)
     simp only [Matrix.sub_apply, h1, sub_zero, zero_sub, mul_neg, Valuation.map_neg]
     exact ⟨hA.1, triv_neg hA.2⟩
-  · rw [if_neg h] at hA
+  · rw [ite_eq_right h] at hA
     simp only [Matrix.sub_apply, hA, sub_self, sub_zero]
 
 theorem mono {m m' : ℕ} (hϖ : valuation k ϖ < 1) (hmm : m ≤ m') :
@@ -462,13 +462,13 @@ theorem mono {m m' : ℕ} (hϖ : valuation k ϖ < 1) (hmm : m ≤ m') :
   intro g hg i j
   have hA := mem_strip.mp hg i j
   split_ifs with h
-  · rw [if_pos h] at hA
+  · rw [ite_eq_left h] at hA
     have hle : valuation k (ϖ ^ m' * g.val i j) ≤ valuation k (ϖ ^ m * g.val i j) := by
       rw [map_mul, map_mul, map_pow, map_pow]
       gcongr ?_ * _
       exact pow_le_pow_right_of_le_one' hϖ.le hmm
     exact ⟨hle.trans hA.1, triv_mono hle hA.2⟩
-  · rwa [if_neg h] at hA
+  · rwa [ite_eq_right h] at hA
 
 variable [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -479,8 +479,7 @@ theorem isClosed_triv (χ : kˣ →* ℂˣ) : IsClosed {x : k | Triv χ x} := by
     have : x = 0 := (Valuation.zero_iff _).mp h0
     rw [this]; exact triv_zero χ)
   refine Filter.mem_of_superset ((valuation k).locally_const hx0) ?_
-  intro y hy hT
-  exact hx (triv_mono (le_of_eq hy.symm) hT)
+  exact fun y hy hT => hx (triv_mono (le_of_eq hy.symm) hT)
 
 theorem isClosed_strip : IsClosed (strip ψ r ϖ m) := by
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
@@ -495,9 +494,9 @@ theorem isClosed_strip : IsClosed (strip ψ r ϖ m) := by
     have hc : Continuous fun A : Matrix (Fin n) (Fin n) k => A i j :=
       (continuous_apply j).comp (continuous_apply i)
     by_cases h : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-    · simp only [if_pos h]
+    · simp only [ite_eq_left h]
       exact (hball.inter (isClosed_triv _)).preimage (continuous_const.mul hc)
-    · simp only [if_neg h]
+    · simp only [ite_eq_right h]
       exact isClosed_eq hc continuous_const
   exact hS.preimage Units.continuous_val
 
@@ -513,8 +512,7 @@ theorem isCompact_strip (hϖ0 : ϖ ≠ 0) (hϖ : valuation k ϖ < 1) : IsCompact
     · exact le_inv_of_mul_le ha0 (by rw [ha_def, ← map_mul]; exact hA.1)
     · rw [hA]; exact (val_one_apply_le i j).trans h1t
   refine (GlobalTheory.PairingOne.isCompact_bounded (m := Fin n) a⁻¹).of_isClosed_subset isClosed_strip ?_
-  intro g hg
-  exact ⟨hbd g hg, hbd g⁻¹ (inv_mem hg)⟩
+  exact fun g hg => ⟨hbd g hg, hbd g⁻¹ (inv_mem hg)⟩
 
 theorem strip_datum_monotone : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (ψ : Fin n → kˣ →* ℂˣ) (r : ℕ) (ϖ : k), (∀ i, IsSmoothChar (ψ i)) → ϖ ≠ 0 → valuation k ϖ < 1 → (∀ x : k, valuation k x < 1 → valuation k x ≤ valuation k ϖ) → (∀ m, Datum (strip ψ r ϖ m) (fun _ => 1)) ∧ Monotone (strip ψ r ϖ) := by
   intro k _ _ _ _ n ψ r ϖ _ hϖ0 hϖ _
@@ -543,8 +541,7 @@ theorem conj_blockLower_mem_theta : ∀ (k : Type) [Field k] [ValuativeRel k] [T
   have hd0 : ∀ i, d i ≠ 0 := by
     intro i; simp only [hd]; split_ifs <;> simp [hϖ]
   have h2 : diagonal (fun i => (d i)⁻¹) * z.val = 1 := by
-    rw [hz, diagonal_mul_diagonal]
-    rw [← diagonal_one]
+    rw [hz, diagonal_mul_diagonal, ← diagonal_one]
     congr 1
     funext i
     exact inv_mul_cancel₀ (hd0 i)
@@ -561,25 +558,25 @@ theorem conj_blockLower_mem_theta : ∀ (k : Type) [Field k] [ValuativeRel k] [T
     have hij' : (i : ℕ) < j := hij
     by_cases hi : (i : ℕ) < r
     · by_cases hj : (j : ℕ) < r
-      · simp only [hd, if_pos hi, if_pos hj]; field_simp
+      · simp only [hd, ite_eq_left hi, ite_eq_left hj]; field_simp
       · rw [hup i j hi (not_lt.1 hj)]; simp
     · have hj : ¬ (j : ℕ) < r := by omega
-      simp only [hd, if_neg hi, if_neg hj]; simp
+      simp only [hd, ite_eq_right hi, ite_eq_right hj]; simp
   have hle : ∀ i j, valuation k ((z⁻¹ * g * z).val i j) ≤ valuation k (g.val i j) := by
     intro i j
     rw [hent]
     by_cases hi : (i : ℕ) < r
     · by_cases hj : (j : ℕ) < r
-      · simp only [hd, if_pos hi, if_pos hj]
+      · simp only [hd, ite_eq_left hi, ite_eq_left hj]
         have : ϖ⁻¹ * g.val i j * ϖ = g.val i j := by field_simp
         rw [this]
       · rw [hup i j hi (not_lt.1 hj)]; simp
     · by_cases hj : (j : ℕ) < r
-      · simp only [hd, if_neg hi, if_pos hj, inv_one, one_mul, map_mul]
+      · simp only [hd, ite_eq_right hi, ite_eq_left hj, inv_one, one_mul, map_mul]
         calc valuation k (g.val i j) * valuation k ϖ ≤ valuation k (g.val i j) * 1 := by
               gcongr
           _ = _ := mul_one _
-      · simp only [hd, if_neg hi, if_neg hj]; simp
+      · simp only [hd, ite_eq_right hi, ite_eq_right hj]; simp
   have hdet : (z⁻¹ * g * z).val.det = g.val.det := by
     rw [Units.val_mul, Units.val_mul, det_mul, det_mul, mul_comm, ← mul_assoc, ← det_mul,
       ← Units.val_mul, mul_inv_cancel, Units.val_one, det_one, one_mul]
@@ -627,8 +624,7 @@ theorem translate_mem_aug_of_not_intertwine {G V : Type} [Group G] [AddCommGroup
       simp
     rw [this, hu j hj, map_smul]
   have h2 : (θ j - θ (y * j * y⁻¹)) • π y u ∈ aug π J θ := by
-    apply Submodule.subset_span
-    exact ⟨_, hc, π y u, by rw [h1, sub_smul]⟩
+    exact Submodule.subset_span ⟨_, hc, π y u, by rw [h1, sub_smul]⟩
   exact (Submodule.smul_mem_iff _ (sub_ne_zero.mpr hne)).mp h2
 
 theorem eig_eq_zero_of_mem_aug_of_not_intertwine : ∀ (G V : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
@@ -843,8 +839,7 @@ theorem val_det_eq_one {n r : ℕ} {M M' : Matrix (Fin n) (Fin n) k}
         (toSquareBlockProp ((IsLocalRing.residue 𝒪[k]).mapMatrix B) (fun i => r ≤ (i : ℕ))).det *
         (toSquareBlockProp ((IsLocalRing.residue 𝒪[k]).mapMatrix B) (fun i => ¬ r ≤ (i : ℕ))).det := by
     intro B hB
-    refine twoBlockTriangular_det _ _ fun i hi j hj => ?_
-    exact (res_zero_iff _).2 (hB i j (by omega) hj)
+    exact twoBlockTriangular_det _ _ fun i hi j hj => (res_zero_iff _).2 (hB i j (by omega) hj)
   have e1 : ((IsLocalRing.residue 𝒪[k]).mapMatrix A).det = ((IsLocalRing.residue 𝒪[k]).mapMatrix A').det := by
     rw [key A hur, key A' hur']
     congr 2
@@ -894,11 +889,11 @@ theorem clear_upper_right : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     · simp
     · exact hint a b
   have hDdet : valuation k Dm.det = 1 :=
-    val_det_eq_one hint hDint (fun a b h => by rw [hDm, if_pos h]) hur
-      (fun a b ha hb => by rw [hDm, if_neg (by omega)]; simp) hdet
+    val_det_eq_one hint hDint (fun a b h => by rw [hDm, ite_eq_left h]) hur
+      (fun a b ha hb => by rw [hDm, ite_eq_right (by omega)]; simp) hdet
   have hUdet : valuation k Um.det = 1 :=
-    val_det_eq_one hint hUint (fun a b h => by rw [hUm, if_neg (by omega)]) hur
-      (fun a b ha hb => by rw [hUm, if_neg (by omega)]; exact hur a b ha hb) hdet
+    val_det_eq_one hint hUint (fun a b h => by rw [hUm, ite_eq_right (by omega)]) hur
+      (fun a b ha hb => by rw [hUm, ite_eq_right (by omega)]; exact hur a b ha hb) hdet
   obtain ⟨Dg, hDK, hDv⟩ := GlobalTheory.LocStd.mem_image_KO.2
     ⟨fun a b => (Valuation.mem_integer_iff _ _).2 (hDint a b), hDdet⟩
   obtain ⟨Ug, hUK, hUv⟩ := GlobalTheory.LocStd.mem_image_KO.2
@@ -928,7 +923,7 @@ theorem clear_upper_right : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   have hDioff : ∀ l b : Fin n, r ≤ (l : ℕ) → (b : ℕ) < r → Di l b = 0 := by
     intro l b hl hb
     have := congrFun (congrFun hQDi l) b
-    simp only [Q, mul_diagonal, diagonal_mul, if_pos hb, if_neg (Nat.not_lt.2 hl)] at this
+    simp only [Q, mul_diagonal, diagonal_mul, ite_eq_left hb, ite_eq_right (Nat.not_lt.2 hl)] at this
     simpa using this.symm
   refine ⟨Ug * Dg⁻¹, ?_, ?_⟩
   · have hyv : (Ug * Dg⁻¹).val = (Um - Dm) * Di + 1 := by
@@ -938,8 +933,7 @@ theorem clear_upper_right : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     · rw [pow_zero, one_mul]
       exact ⟨GlobalTheory.BlockType.val_le_one_of_mem_KO hy.1 a b,
         hy.2 a b (Fin.lt_iff_val_lt_val.2 (by omega))⟩
-    · rw [hyv, Matrix.add_apply, Matrix.mul_apply]
-      rw [Finset.sum_eq_zero, zero_add]
+    · rw [hyv, Matrix.add_apply, Matrix.mul_apply, Finset.sum_eq_zero, zero_add]
       intro l _
       rw [Matrix.sub_apply]
       by_cases ha : (a : ℕ) < r
@@ -955,9 +949,9 @@ theorem clear_upper_right : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
       rw [_root_.mul_inv_rev, inv_inv, Units.val_mul, Units.val_mul, hDv, Matrix.mul_sub, Matrix.mul_assoc Dm Ui Um, hUi1,
         Matrix.mul_one, add_sub_cancel]
     rw [e, Matrix.add_apply, Matrix.mul_apply, Finset.sum_eq_zero]
-    · rw [hDm, if_neg (by omega), zero_add]
+    · rw [hDm, ite_eq_right (by omega), zero_add]
     · intro l _
-      rw [Matrix.sub_apply, hUm, if_neg (by omega), sub_self, mul_zero]
+      rw [Matrix.sub_apply, hUm, ite_eq_right (by omega), sub_self, mul_zero]
 
 end GlobalTheory.PsType
 end -- clump:auto
@@ -1065,7 +1059,7 @@ theorem corner_rankOne : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
   intro k _ _ _ _ n ψ hord x hx a b hab hnt htr
   have hnt' := hnt
   unfold Triv at hnt'
-  push_neg at hnt'
+  push Not at hnt'
   obtain ⟨u, hu, hle, hne⟩ := hnt'
   have hx0 : x.val a b ≠ 0 := fun h0 => hnt (h0 ▸ triv_zero _)
   set s : k := ((u : k) - 1) / x.val a b with hs
@@ -1116,8 +1110,7 @@ theorem corner_rankOne : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     · ext l
       have := congrFun (congrFun hxx a) l
       rw [Matrix.mul_apply] at this
-      rw [Matrix.vecMul, dotProduct]
-      rw [Pi.single_apply, this, Matrix.one_apply]
+      rw [Matrix.vecMul, dotProduct, Pi.single_apply, this, Matrix.one_apply]
       simp [eq_comm]
 
 end GlobalTheory.PsType
@@ -1142,8 +1135,7 @@ theorem not_intertwine : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
   classical
 
   have hbad : ∃ a b : Fin n, a < b ∧ ¬ Triv (ψ a / ψ b) (y.val a b) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hny ⟨hy, fun i j hij => h i j hij⟩
   let S : Finset (Fin n) := Finset.univ.filter (fun a => ∃ b, a < b ∧ ¬ Triv (ψ a / ψ b) (y.val a b))
   have hS : S.Nonempty := by
@@ -1176,7 +1168,7 @@ theorem not_intertwine : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     by_cases hi' : i' = a
     · subst hi'
       simp only [Matrix.add_apply, Matrix.one_apply, Matrix.vecMulVec_apply, Pi.single_eq_same, mul_one,
-        if_neg (ne_of_lt hii'), zero_add]
+        ite_eq_right (ne_of_lt hii'), zero_add]
 
       have hiS : i ∉ S := fun h => absurd (hamin i h) (not_le.mpr hii')
       have hib : Triv (ψ i / ψ b) (y.val i b) := by
@@ -1188,7 +1180,7 @@ theorem not_intertwine : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
       first
         | exact mul_le_of_le_one_left' hs
     · simp only [Matrix.add_apply, Matrix.one_apply, Matrix.vecMulVec_apply, Pi.single_eq_of_ne hi', mul_zero,
-        if_neg (ne_of_lt hii'), add_zero]
+        ite_eq_right (ne_of_lt hii'), add_zero]
       exact hprops.2.2.1 _
   · have hθ : theta ψ (y * j * y⁻¹) = (ψ a u : ℂ) := by
       refine _root_.GlobalTheory.PsType.theta_rankOne k n ψ (y * j * y⁻¹) (fun i => s * y.val i b) (Pi.single a 1) a u hu hval ?_
@@ -1197,8 +1189,7 @@ theorem not_intertwine : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
       · subst hi; simp [hsu]
       · simp [hi]
     rw [hθj, hθ]
-    intro h
-    exact hne (Units.ext h).symm
+    exact fun h => hne (Units.ext h).symm
 
 end GlobalTheory.PsType
 end -- clump:auto
@@ -1245,16 +1236,14 @@ theorem strip_off {ψ : Fin n → kˣ →* ℂˣ} {r : ℕ} {ϖ : k} {m : ℕ} {
     (i j : Fin n) (h : ¬ ((i : ℕ) < r ∧ r ≤ (j : ℕ))) : y.val i j = (1 : Matrix (Fin n) (Fin n) k) i j := by
   simp only [strip, Set.mem_ofPred_eq] at hy
   have h0 := hy i j
-  rw [if_neg h] at h0
-  exact h0
+  rwa [ite_eq_right h] at h0
 
 theorem strip_on {ψ : Fin n → kˣ →* ℂˣ} {r : ℕ} {ϖ : k} {m : ℕ} {y : GL (Fin n) k} (hy : y ∈ strip ψ r ϖ m)
     (i j : Fin n) (h : (i : ℕ) < r ∧ r ≤ (j : ℕ)) :
     valuation k (ϖ ^ m * y.val i j) ≤ 1 ∧ Triv (ψ i / ψ j) (ϖ ^ m * y.val i j) := by
   simp only [strip, Set.mem_ofPred_eq] at hy
   have h0 := hy i j
-  rw [if_pos h] at h0
-  exact h0
+  rwa [ite_eq_left h] at h0
 
 theorem strip_lower {ψ : Fin n → kˣ →* ℂˣ} {r : ℕ} {ϖ : k} {m : ℕ} {y : GL (Fin n) k} (hy : y ∈ strip ψ r ϖ m)
     (i j : Fin n) (h : j < i) : y.val i j = 0 := by
@@ -1334,11 +1323,11 @@ theorem strip_props : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
     simp only [strip, Set.mem_ofPred_eq, hentry]
     refine forall_congr' fun i => forall_congr' fun j => ?_
     by_cases h : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-    · rw [if_pos h, if_pos h]
-      have hdi : d i = ϖ := by simp only [hd_def]; rw [if_pos h.1]
-      have hdj : d j = 1 := by simp only [hd_def]; rw [if_neg (by omega)]
+    · rw [ite_eq_left h, ite_eq_left h]
+      have hdi : d i = ϖ := by simp only [hd_def]; rw [ite_eq_left h.1]
+      have hdj : d j = 1 := by simp only [hd_def]; rw [ite_eq_right (by omega)]
       rw [hdi, hdj, show ϖ ^ m * (ϖ * y.val i j * (1 : k)⁻¹) = ϖ ^ (m + 1) * y.val i j by ring]
-    · rw [if_neg h, if_neg h]
+    · rw [ite_eq_right h, ite_eq_right h]
       by_cases hij : i = j
       · subst hij
         rw [Matrix.one_apply_eq, mul_comm (d i), mul_inv_cancel_right₀ (hd i)]
@@ -1417,7 +1406,7 @@ theorem strip_exhaust : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       else y.val i j = (1 : Matrix (Fin (r + t)) (Fin (r + t)) k) i j) := by
     intro i j
     by_cases hij : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-    · simp only [hij, and_self, if_true]
+    · simp only [hij, and_self, ite_true]
       have hsm : IsSmoothChar (ψ i / ψ j) := by
         have h1 := hψ i
         have h2 := hψ j
@@ -1433,8 +1422,7 @@ theorem strip_exhaust : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
         simpa using hpow.mul_const (y.val i j)
       filter_upwards [ht (inter_mem hball hT)] with m hm
       exact ⟨hm.1.le, hm.2⟩
-    · simp only [hij, if_false]
-      exact Eventually.of_forall fun _ => hy' i j hij
+    · simpa only [hij, ite_false] using Eventually.of_forall fun _ => hy' i j hij
   have hall : ∀ᶠ m : ℕ in atTop, ∀ i j : Fin (r + t),
       (if (i : ℕ) < r ∧ r ≤ (j : ℕ) then
         valuation k (ϖ ^ m * y.val i j) ≤ 1 ∧ Triv (ψ i / ψ j) (ϖ ^ m * y.val i j)
@@ -1571,7 +1559,7 @@ theorem cut_or_const : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     have h2 : (⟨m, by omega⟩ : Fin n) ≤ ⟨m + 1, hm⟩ := by rw [Fin.le_def]; simp
     have h3 : (⟨m + 1, hm⟩ : Fin n) ≤ j := by rw [Fin.le_def]; simp; omega
     exact hnt (hord i _ _ j h1 h2 h3 1 htr)
-  · push_neg at hc
+  · push Not at hc
     right
     rcases Nat.eq_zero_or_pos n with hn | hn
     · subst hn
@@ -1588,8 +1576,7 @@ theorem cut_or_const : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
           have h1 := apply_eq_one_of_triv_one_unit (hc m hm) u hu
           rw [MonoidHom.div_apply, div_eq_one] at h1
           rw [← h1, ih (by omega) u hu]
-      intro i u hu
-      exact key i.1 i.2 u hu
+      exact fun i u hu => key i.1 i.2 u hu
 
 end GlobalTheory.PsType
 end -- clump:auto
@@ -1650,8 +1637,7 @@ theorem agree_main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
   · intro H i a b j hi ha hb x hT
     rw [← agree_triv_iff h]
     exact H i a b j hi ha hb x ((agree_triv_iff h i j x).2 hT)
-  · intro r H i j hi hj hT
-    exact H i j hi hj ((agree_triv_iff h i j 1).2 hT)
+  · exact fun r H i j hi hj hT => H i j hi hj ((agree_triv_iff h i j 1).2 hT)
 
 end GlobalTheory.PsType
 end -- clump:auto

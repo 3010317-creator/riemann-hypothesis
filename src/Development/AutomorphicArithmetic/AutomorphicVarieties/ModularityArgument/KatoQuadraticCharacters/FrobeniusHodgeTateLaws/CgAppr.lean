@@ -176,8 +176,7 @@ theorem theta_one (φ : HahnSeries ℚ Ω) : theta 1 φ = qD φ := by
 
 theorem mem_of_pow_eq_one (A : ValuationSubring Ω) {y : Ω} {k : ℕ} (hk : k ≠ 0) (hy : y ^ k = 1) : y ∈ A := by
   rw [← A.valuation_le_one_iff]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have h := one_lt_pow' hlt hk
   rw [← map_pow, hy, map_one] at h
   exact lt_irrefl _ h
@@ -1386,11 +1385,7 @@ theorem eval_kmap {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X
     (σ : X.K ≃+* X.K) (x : X.Khat l) (f : X.Kˣ)
     (h : AdicCompletion.eval (idl l) (X.Kl l) n x = X.cls l n f) :
     AdicCompletion.eval (idl l) (X.Kl l) n (X.kmap l σ x) = X.cls l n (Units.map σ.toMonoidHom f) := by
-  rw [AdicCompletion.eval_apply]
-  change (AdicCompletion.map _ _ x).val n = _
-  rw [AdicCompletion.map_val_apply, ← AdicCompletion.eval_apply, h]
-  rw [Tower.cls, Tower.cls, LinearMap.reduceModIdeal_apply, LinearMap.baseChange_tmul]
-  rfl
+  exact GlobalTheory.HeckeTh.eval_kmap X l n σ x f h
 
 theorem cls_mul {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ)
     (f g : X.Kˣ) : X.cls l n (f * g) = X.cls l n f + X.cls l n g := by
@@ -1424,8 +1419,7 @@ theorem isThB_zero {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (
   · obtain ⟨y, hy⟩ := Submodule.Quotient.mk_surjective _ (AdicCompletion.eval (idl l) (X.Kl l) 0 (b ![1, 0]))
     rw [← hy, Tower.cls, Submodule.Quotient.eq]
     simp
-  · simp only [map_one, mul_one, one_mul, sub_self, HahnSeries.coeff_zero, sub_zero]
-    exact hψ r
+  · simpa only [map_one, mul_one, one_mul, sub_self, HahnSeries.coeff_zero, sub_zero] using hψ r
 
 theorem isThB_act_heckeU_same : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε)
     (A : ValuationSubring Ω) (N l : ℕ) [Fact l.Prime] (n w d : ℕ), d.Coprime N → ¬ l ∣ N → ∀ b : X.Fn l,
@@ -1780,7 +1774,7 @@ theorem UpperTheory.V.Z.Kato.Joint.thOp :
     rw [GlobalTheory.CyclotomicQExpansion.Api.hq_eq_uq_of_isAlgClosed hqp.pos (hψ n).2] at h1
     have h1' := cg_j hj h1
     simp only [HahnSeries.coeff_add, HahnSeries.coeff_smul, GlobalTheory.CyclotomicQExpansion.Api.coeff_uq hqp.pos,
-      GlobalTheory.CyclotomicQExpansion.Api.coeff_vq hqp.pos, map_add, Nat.cast_one, div_one, Rat.den_natCast, if_true,
+      GlobalTheory.CyclotomicQExpansion.Api.coeff_vq hqp.pos, map_add, Nat.cast_one, div_one, Rat.den_natCast, ite_true,
       one_mul, smul_eq_mul, map_mul, map_pow, map_natCast] at h1'
     have hx : Cg n (j ((thN X A N l n q b).coeff ((i : ℚ) / q)))
         (((χ q : ℤ_[l]) : Qbar l) *
@@ -1803,11 +1797,10 @@ theorem UpperTheory.V.Z.Kato.Joint.thOp :
       (j ((thN X A N l n 1 b).coeff (((l * i : ℕ) : ℚ) / ((1 : ℕ) : ℚ))))
     have h2 := cg_j hj (hrel.2.1 ((i : ℚ) / (1 : ℕ)))
     simp only [GlobalTheory.CyclotomicQExpansion.Api.coeff_uq (Fact.out : l.Prime).pos, Nat.cast_one, div_one, Rat.den_natCast,
-      if_true] at h2
+      ite_true] at h2
     have h3 := cg_j hj (_root_.GlobalTheory.ThBCompat.isThB_succ_coeff_cong Ω ε X A N l hl2 hlN (by omega) hl n _ _ _ (hψ (n + 1)).1 (hψ n).1
       ((l : ℚ) * i))
-    simp only [Nat.cast_one, div_one, Nat.cast_mul]
-    exact cg_trans h2 h3
+    simpa only [Nat.cast_one, div_one, Nat.cast_mul] using cg_trans h2 h3
   | D d =>
     simp only [th, seqN, fop, Tower.op, LinearMap.smul_apply, Module.End.one_apply, Pi.smul_apply,
       smul_eq_mul]

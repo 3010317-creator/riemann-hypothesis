@@ -198,8 +198,7 @@ theorem lintegral_Tf (hn : 1 ≤ n) (u : ℝ → ℂ) (hu : Continuous u) (F : L
         ∂quotMeasure (latticeGL E n) (muG D) := by
   have e1 : ∀ x : H E n 0, ‖Tf D u F x‖ₑ ^ (2 : ℝ) =
       (fun g => ‖lift (latticeGL E n) F g‖ₑ ^ (2 : ℝ) * ‖u (lg g)‖ₑ ^ (2 : ℝ)) x.1 := fun x => by
-    simp only [Tf, enorm_mul, ldet_eq]
-    exact ENNReal.mul_rpow_of_nonneg _ _ (by norm_num)
+    simpa only [Tf, enorm_mul, ldet_eq] using ENNReal.mul_rpow_of_nonneg _ _ (by norm_num)
   refine (lintegral_congr e1).trans ((lintegral_nu D _ fun γ hγ g => ?_).trans
     ((lintegral_unfold (muG D) hn (fun g => ‖lift (latticeGL E n) F g‖ₑ ^ (2 : ℝ))
       (fun γ hγ g => by simp only [(memL2_lift F).1 γ hγ g])
@@ -231,8 +230,7 @@ theorem exists_bound (hn : 1 ≤ n) (u : ℝ → ℂ) (hu : Continuous u) (hs : 
       convert (Lp.aestronglyMeasurable F).const_smul (Real.sqrt K.toReal : ℂ) using 1
     rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top (aesm_Tf D u hu F),
       eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top hm]
-    simp only [ENNReal.toReal_ofNat]
-    exact ENNReal.rpow_le_rpow hle (by norm_num)
+    simpa only [ENNReal.toReal_ofNat] using ENNReal.rpow_le_rpow hle (by norm_num)
   have key2 : eLpNorm (fun q => (Real.sqrt K.toReal : ℂ) • F q) 2 (quotMeasure (latticeGL E n) (muG D)) =
       ENNReal.ofReal (Real.sqrt K.toReal) * eLpNorm F 2 (quotMeasure (latticeGL E n) (muG D)) := by
     change eLpNorm ((Real.sqrt K.toReal : ℂ) • (F : GlobalTheory.AutomorphicL2Unitary.Quot (latticeGL E n) → ℂ)) 2 _ = _

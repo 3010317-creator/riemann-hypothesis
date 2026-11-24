@@ -92,8 +92,7 @@ variable {K : Type} [Field K] [NumberField K] {p : ℕ} [hp : Fact p.Prime]
 theorem pinv_lt_one : (p : ℝ)⁻¹ < 1 :=
   inv_lt_one_of_one_lt₀ (by exact_mod_cast hp.out.one_lt)
 
-theorem pinv_nonneg : (0 : ℝ) ≤ (p : ℝ)⁻¹ := by
-  exact inv_nonneg.mpr (Nat.cast_nonneg _)
+theorem pinv_nonneg : (0 : ℝ) ≤ (p : ℝ)⁻¹ := inv_nonneg.mpr (Nat.cast_nonneg _)
 
 def tseq (τ : K →+* ℂ_[p]) (a : 𝓞 K) (k : ℕ) : ℂ_[p] := τ ((a ^ ((p ^ 2) ^ k) : 𝓞 K) : K)
 
@@ -125,9 +124,7 @@ theorem teich_spec (τ : K →+* ℂ_[p]) (hq : ∀ b : 𝓞 K, (p : 𝓞 K) ∣
 
 theorem teich_close (τ : K →+* ℂ_[p]) (hq : ∀ b : 𝓞 K, (p : 𝓞 K) ∣ b ^ (p ^ 2) - b) (a : 𝓞 K) :
     ‖teich τ a - τ (a : K)‖ ≤ (p : ℝ)⁻¹ := by
-  have h := (teich_spec τ hq a).2 0
-  simp only [tseq, pow_zero, pow_one, zero_add] at h
-  exact h
+  simpa only [tseq, pow_zero, pow_one, zero_add] using (teich_spec τ hq a).2 0
 
 theorem teich_pow (τ : K →+* ℂ_[p]) (hq : ∀ b : 𝓞 K, (p : 𝓞 K) ∣ b ^ (p ^ 2) - b) (a : 𝓞 K) :
     teich τ a ^ (p ^ 2) = teich τ a := by

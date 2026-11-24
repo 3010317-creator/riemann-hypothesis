@@ -190,8 +190,7 @@ theorem cent_map (P Q : DPair G) (y : G.Cˣ) (s : ℚ) (hs : s ≠ 0)
   constructor
   · rintro ⟨v, hv, rfl⟩
     exact mem_of P Q y s hβ hγ v hv
-  · intro hw
-    exact ⟨(cj y).symm w, mem_back P Q y s hs hβ hγ w hw, by simp⟩
+  · exact fun hw => ⟨(cj y).symm w, mem_back P Q y s hs hβ hγ w hw, by simp⟩
 
 theorem toAf_val (P : DPair G) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) P.β x t) (v : P.cent) :
     ((P.toAf x t hx v : G.GAf) : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) =
@@ -253,8 +252,7 @@ theorem charpoly_rho_eq_map_pol (G : HTGroup p) (P : DPair G) (w : Fin G.m) :
   have hdeg : (minpoly G.F γ).natDegree = G.n := P.reg.1
   have hli : LinearIndependent G.F (fun i : Fin G.n => γ ^ (i : ℕ)) := by
     have := linearIndependent_pow (K := G.F) γ
-    rw [hdeg] at this
-    exact this
+    rwa [hdeg] at this
   letI : Module.Free G.F (G.Fw w) := Module.Free.of_divisionRing G.F (G.Fw w)
   letI : Module.Flat G.F (G.Fw w) := Module.Flat.of_free
   have hT : LinearIndependent (G.Fw w) (fun i : Fin G.n => (1 : G.Fw w) ⊗ₜ[G.F] (γ ^ (i : ℕ))) :=
@@ -266,14 +264,12 @@ theorem charpoly_rho_eq_map_pol (G : HTGroup p) (P : DPair G) (w : Fin G.m) :
       funext i
       simp only [Function.comp_apply, AlgHom.toLinearMap_apply]
       rw [hL, map_pow]
-    rw [e]
-    exact this
+    rwa [e]
   have hint : IsIntegral (G.Fw w) (G.rho w γ) := Algebra.IsIntegral.isIntegral _
   set q := minpoly (G.Fw w) (G.rho w γ) with hq
   have hqm : q.Monic := minpoly.monic hint
   have hqdeg : G.n ≤ q.natDegree := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have h0 : aeval (G.rho w γ) q = 0 := minpoly.aeval _ _
     rw [Polynomial.aeval_eq_sum_range' hlt, Finset.sum_range] at h0
     have h1 := Fintype.linearIndependent_iff.1 hM (fun i => q.coeff i) h0 ⟨q.natDegree, hlt⟩
@@ -283,8 +279,7 @@ theorem charpoly_rho_eq_map_pol (G : HTGroup p) (P : DPair G) (w : Fin G.m) :
   have hpol : aeval (G.rho w γ) (P.pol.map (G.embW w)) = 0 := by
     have h : aeval (g γ) (minpoly G.F γ) = 0 := by rw [Polynomial.aeval_algHom_apply, minpoly.aeval, map_zero]
     change aeval (G.rho w γ) ((minpoly G.F γ).map (algebraMap G.F (G.Fw w))) = 0
-    rw [Polynomial.aeval_map_algebraMap]
-    exact h
+    rwa [Polynomial.aeval_map_algebraMap]
   have hFint : IsIntegral G.F γ := Algebra.IsIntegral.isIntegral _
   have hm1 : (P.pol.map (G.embW w)).Monic := (minpoly.monic hFint).map _
   have hn1 : (P.pol.map (G.embW w)).natDegree = G.n := by
@@ -364,8 +359,7 @@ theorem term_eq_of_rel (G : HTGroup p) (P Q : DPair G) (Kf : Subgroup G.GAf)
   have hc : Q.c = P.c := (rel_pol_c P Q ⟨y, s, hs, hβ, hγ⟩).2
   have hat : Q.atP = locC G (y, 1) * P.atP * (locC G (y, 1))⁻¹ := by
     have := locC_conj y (P.γ, P.c)
-    simp only [DPair.atP, hγ, hc]
-    exact this
+    simpa only [DPair.atP, hγ, hc] using this
   have hnrm : ∀ δ z, IsNrm G r P.atP δ z → IsNrm G r Q.atP δ (inclG G r (locC G (y, 1)) * z) := by
     intro δ z h
     unfold IsNrm at h ⊢

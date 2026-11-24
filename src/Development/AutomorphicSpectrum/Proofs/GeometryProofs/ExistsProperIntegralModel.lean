@@ -163,7 +163,7 @@ instance gradedRing : GradedRing (grading o x) where
   one_mem := by
     intro i hi
     change (1 : (Polynomial Ω)).coeff i = 0
-    rw [Polynomial.coeff_one, if_neg hi]
+    rw [Polynomial.coeff_one, ite_eq_right hi]
   mul_mem := by
     intro i j a b ha hb k hk
     change ((a : (Polynomial Ω)) * (b : (Polynomial Ω))).coeff k = 0
@@ -316,7 +316,7 @@ lemma unit_coord {c : κ} (hc : x c ≠ 0) : IsUnit (ev (coord (o := o) (x := x)
 lemma algebraMap_mem_grading (r : o) : algebraMap o (rees o x) r ∈ grading o x 0 := by
   intro i hi
   change (algebraMap o (Polynomial Ω) r).coeff i = 0
-  rw [Polynomial.algebraMap_apply, Polynomial.coeff_C, if_neg hi]
+  rw [Polynomial.algebraMap_apply, Polynomial.coeff_C, ite_eq_right hi]
 
 lemma ev_algebraMap (r : o) : ev (algebraMap o (rees o x) r) = algebraMap o Ω r := by
   rw [ev_apply]
@@ -336,15 +336,13 @@ lemma mem_adjoin_iff_mem_range {c : κ} (hc : x c ≠ 0) (a : Ω) :
         (by simpa using coord_mem j)
       rw [ev_coord, ev_coord, pow_one] at h1
       change _ = x j / x c
-      rw [eq_div_iff hc]
-      exact h1
+      rwa [eq_div_iff hc]
     | algebraMap r =>
       refine ⟨Away.mk (grading o x) (coord_mem c) 0 (algebraMap o (rees o x) r)
         (by simpa using algebraMap_mem_grading r), ?_⟩
       have h1 := chartVal_mk (unit_coord (o := o) hc) (coord_mem c) 0 (algebraMap o (rees o x) r)
         (by simpa using algebraMap_mem_grading r)
-      rw [pow_zero, mul_one, ev_algebraMap] at h1
-      exact h1
+      rwa [pow_zero, mul_one, ev_algebraMap] at h1
     | add a b _ _ ha hb => exact add_mem ha hb
     | mul a b _ _ ha hb => exact mul_mem ha hb
   · rintro ⟨z, rfl⟩
@@ -353,8 +351,7 @@ lemma mem_adjoin_iff_mem_range {c : κ} (hc : x c ≠ 0) (a : Ω) :
     rw [ev_coord] at h1
     have h2 : chartVal (coord c) (unit_coord (o := o) hc) (Away.mk (grading o x) (coord_mem c) n a ha)
         = ev a / x c ^ n := by
-      rw [eq_div_iff (pow_ne_zero _ hc)]
-      exact h1
+      rwa [eq_div_iff (pow_ne_zero _ hc)]
     rw [h2]
     refine div_pow_mem_adjoin hc n ?_
     simpa using ev_mem_pow ha
@@ -486,15 +483,13 @@ theorem chart_stalk {B : Type} [CommRing B] (θ : B →+* Ω) (j : Spec (.of B) 
     have h6 : (j.stalkMap p).hom (e.inv.hom t) = t := by
       change (e.hom).hom (e.inv.hom t) = t
       simp
-    rw [h6] at h5
-    exact h5
+    rwa [h6] at h5
   haveI : p.asIdeal.IsPrime := p.isPrime
   let p' : PrimeSpectrum.Top B := p
   haveI hloc : IsLocalization.AtPrime ((structurePresheafInCommRingCat B).stalk p') p'.asIdeal :=
     inferInstance
   refine ⟨(StructureSheaf.toStalk B p ≫ e.inv).hom, ?_, ?_, ?_⟩
-  · intro b
-    exact (hg _).trans (genMap_toStalk θ p h' b)
+  · exact fun b => (hg _).trans (genMap_toStalk θ p h' b)
   · intro s hs
     have h1 := IsLocalization.map_units (M := p'.asIdeal.primeCompl)
       ((structurePresheafInCommRingCat B).stalk p') (⟨s, hs⟩ : p'.asIdeal.primeCompl)
@@ -509,8 +504,7 @@ theorem chart_stalk {B : Type} [CommRing B] (θ : B →+* Ω) (j : Spec (.of B) 
       simp
     have h9 : e.inv.hom ((j.stalkMap p).hom t) * e.inv.hom ((StructureSheaf.toStalk B p).hom s.1) =
         e.inv.hom ((StructureSheaf.toStalk B p).hom a) := (map_mul e.inv.hom _ _).symm.trans h7
-    rw [h8] at h9
-    exact h9
+    rwa [h8] at h9
 
 end GlobalTheory.CompanionTheory.Ar.ClSch
 
@@ -736,8 +730,7 @@ lemma exists_chart_point (q : Proj (grading o x)) :
       refine Subtype.ext ?_
       change Polynomial.monomial 1 (x c) = 0
       rw [h0, map_zero]
-    rw [h3, Proj.basicOpen_zero] at hc
-    exact hc
+    rwa [h3, Proj.basicOpen_zero] at hc
   rw [← Proj.opensRange_awayι (grading o x) _ (coord_mem c) one_pos] at hc
   obtain ⟨p, hp⟩ := hc
   exact ⟨c, hxc, p, hp⟩
@@ -761,13 +754,11 @@ lemma chart_overlap {c d : κ} (hc : x c ≠ 0) (hd : x d ≠ 0)
     exact h3.symm
   have h4 : p ∈ PrimeSpectrum.basicOpen
       (Away.isLocalizationElem (coord_mem (o := o) (x := x) d) (coord_mem c)) := by
-    rw [← h2]
-    exact hp
+    rwa [← h2]
   rw [← h1] at h4
   have h5 : Proj.awayι (grading o x) (coord d) (coord_mem d) one_pos p ∈
       Proj.basicOpen (grading o x) (coord c) := h4
-  rw [← Proj.opensRange_awayι (grading o x) _ (coord_mem c) one_pos] at h5
-  exact h5
+  rwa [← Proj.opensRange_awayι (grading o x) _ (coord_mem c) one_pos] at h5
 
 lemma chartVal_fromZero {g : rees o x} (hu : IsUnit (ev g)) (a : grading o x 0) :
     chartVal g hu (fromZeroRingHom (grading o x) _ a) = ev (a : rees o x) := by

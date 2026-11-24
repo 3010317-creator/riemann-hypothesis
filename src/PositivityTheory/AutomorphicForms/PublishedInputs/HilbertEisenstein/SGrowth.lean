@@ -34,8 +34,7 @@ def sig (v : InfinitePlace F) (x : F) : ℝ := UpperTheory.V.TR.pInf F (algebraM
 theorem abs_pInf (x : Ad F) (v : InfinitePlace F) : |UpperTheory.V.TR.pInf F x v| = ‖x.1 v‖ := by
   have h := (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal
     (IsTotallyReal.isReal v)).norm_map_of_map_zero (map_zero _) (x.1 v)
-  rw [Real.norm_eq_abs] at h
-  exact h
+  rwa [Real.norm_eq_abs] at h
 
 theorem abs_sig (v : InfinitePlace F) (x : F) : |sig v x| = v x := by
   rw [sig, abs_pInf]
@@ -140,7 +139,7 @@ theorem summable_beta (D : 𝓞 F) (hD : D ≠ 0) : ∃ m : ℕ, Summable (fun x
       positivity
     · exact le_rfl
   · by_cases hx : ∃ r : 𝓞 F, (D : F) * x = r
-    · rw [if_pos hx, if_pos ((hmem x).2 hx)]
+    · rw [ite_eq_left hx, ite_eq_left ((hmem x).2 hx)]
       set P := ∏ v, (1 + sig v x ^ 2) with hP
       have hP1 : ∀ v, 1 + sig v x ^ 2 ≤ P := by
         intro v
@@ -167,7 +166,7 @@ theorem summable_beta (D : 𝓞 F) (hD : D ≠ 0) : ∃ m : ℕ, Summable (fun x
       rw [inv_le_iff_one_le_mul₀ hPn]
       rw [← div_eq_mul_inv, div_mul_eq_mul_div, le_div_iff₀ hpos, one_mul]
       linarith
-    · rw [if_neg hx, if_neg (fun h => hx ((hmem x).1 h))]
+    · rw [ite_eq_right hx, ite_eq_right (fun h => hx ((hmem x).1 h))]
 
 
 omit [IsTotallyReal F] in
@@ -198,7 +197,7 @@ theorem abs_pInf_moduleSection (t : {r : ℝ // 0 < r}) (v : InfinitePlace F) :
   rw [abs_pInf, norm_moduleSection_apply]
   split_ifs with h
   · have h1 := norm_posRealElem_pow (w0 F) t.2.le
-    rwa [InfinitePlace.mult, if_pos (IsTotallyReal.isReal _), pow_one] at h1
+    rwa [InfinitePlace.mult, ite_eq_left (IsTotallyReal.isReal _), pow_one] at h1
   · rfl
 
 end UpperTheory.HilbertEisensteinWeightOne.eisensteinGrowth
@@ -293,8 +292,7 @@ theorem fin_part {e : HeightOneSpectrum (𝓞 F) → ℤ} (D : 𝓞 F)
     have hB : Valued.v (algebraMap F (w.adicCompletion F) (D1 : F) *
         (pLoc F w (pFin F ((a⁻¹ : Ideles F) : Ad F)) * pLoc F w (Mf' i j))) ≤ 1 := by
       have := hD1 _ hs w
-      rw [HeightOneSpectrum.mem_adicCompletionIntegers] at this
-      exact this
+      rwa [HeightOneSpectrum.mem_adicCompletionIntegers] at this
     have hc : ((D * D1 : 𝓞 F) : F) = (D : F) * (D1 : F) := by simp
     have key : algebraMap F (w.adicCompletion F) ((D * D1 : 𝓞 F) : F) *
         (pLoc F w (pFin F (v i)) * (pLoc F w (pFin F ((a⁻¹ : Ideles F) : Ad F)) * pLoc F w (Mf' i j))) =
@@ -551,8 +549,7 @@ theorem term_bound {D' : 𝓞 F} (hD'0 : D' ≠ 0) (m₁ : ℕ) {Ca B : ℝ} (hB
       h1.trans (mul_le_mul_of_nonneg_left h2 hND0)
     have e : ND * (P * ((t : ℝ)⁻¹ * B ^ n) * (1 + m') ^ n) = (ND * L ^ n * P) * (t : ℝ)⁻¹ := by
       rw [hLdef, mul_pow]; ring
-    rw [e, le_mul_inv_iff₀ ht0, one_mul] at h3
-    exact h3
+    rwa [e, le_mul_inv_iff₀ ht0, one_mul] at h3
 
   set Q := ∏ p, (1 + ρ p ^ 2) with hQ
   have hQ0 : 0 < Q := Finset.prod_pos fun p _ => by positivity
@@ -635,8 +632,7 @@ theorem core {Ψ : (Fin 2 → Ad F) → ℂ} {e : HeightOneSpectrum (𝓞 F) →
     · exact inv_nonneg.2 (pow_nonneg (Finset.prod_nonneg fun v _ => by positivity) _)
     · exact le_rfl
   have hG : Summable (fun ξ : Fin 2 → F => β (ξ 0) * β (ξ 1)) := by
-    have h := hsum.mul_of_nonneg hsum hβ0 hβ0
-    exact (finTwoArrowEquiv F).summable_iff.mpr h
+    exact (finTwoArrowEquiv F).summable_iff.mpr (hsum.mul_of_nonneg hsum hβ0 hβ0)
   set S := ∑' ξ : Fin 2 → F, β (ξ 0) * β (ξ 1) with hS
   have hS0 : 0 ≤ S := tsum_nonneg fun ξ => mul_nonneg (hβ0 _) (hβ0 _)
   set ND := |((Algebra.norm ℚ (D' : F) : ℚ) : ℝ)| with hND
@@ -656,8 +652,8 @@ theorem core {Ψ : (Fin 2 → Ad F) → ℂ} {e : HeightOneSpectrum (𝓞 F) →
     split_ifs with hbox
     · have hint := hfin a ha t ξ.1 M M' hM hM' hbox
       have hT := term_bound hD'0 m₁ hB1 hCa ξ.1 ξ.2 hint a (fun v => (hB a ha v).2) t ht M M' hM
-      have e0 : β (ξ.1 0) = ((∏ v, (1 + sig v (ξ.1 0) ^ 2)) ^ m₁)⁻¹ := if_pos (hint 0)
-      have e1 : β (ξ.1 1) = ((∏ v, (1 + sig v (ξ.1 1) ^ 2)) ^ m₁)⁻¹ := if_pos (hint 1)
+      have e0 : β (ξ.1 0) = ((∏ v, (1 + sig v (ξ.1 0) ^ 2)) ^ m₁)⁻¹ := ite_eq_left (hint 0)
+      have e1 : β (ξ.1 1) = ((∏ v, (1 + sig v (ξ.1 1) ^ 2)) ^ m₁)⁻¹ := ite_eq_left (hint 1)
       rw [mul_one, e0, e1, hc]
       calc _ ≤ _ := hT
         _ = _ := by ring

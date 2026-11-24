@@ -67,8 +67,7 @@ theorem exists_valuation_lt_one_of_transcendental {x : K} (hx : Transcendental k
     rcases B.mem_nonunits_iff_or.1 hxB with h | h
     · exact hx (h ▸ isAlgebraic_zero)
     · exact h (htop ▸ ValuationSubring.mem_top x⁻¹)
-  · intro c
-    exact hAB (Subalgebra.algebraMap_mem (Algebra.adjoin k {x}) c)
+  · exact fun c => hAB (Subalgebra.algebraMap_mem (Algebra.adjoin k {x}) c)
 
 theorem exists_not_mem_of_transcendental {x : K} (hx : Transcendental k x) :
     ∃ v : Place k K, x ∉ v.ring := by
@@ -102,8 +101,7 @@ theorem eq_of_le [IsFunctionField k K] {v w : Place k K} (h : v.ring ≤ w.ring)
     · have hmax : P.IsMaximal := Ideal.IsPrime.isMaximal hP h0
       have hm := IsLocalRing.eq_maximalIdeal hmax
       subst hm
-      rw [ValuationSubring.ofPrime_top] at hPw
-      exact hPw
+      rwa [ValuationSubring.ofPrime_top] at hPw
   exact key _ (v.ring.ofPrime_idealOfLE w.ring h)
 
 end Place

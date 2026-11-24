@@ -59,8 +59,7 @@ theorem ker_finite_free {O : Type} [CommRing O] [IsDomain O] [ValuationRing O] {
     rintro x ⟨a, ha⟩
     have h1 : (a : O) • (x : Fin h → O) = 0 := congrArg Subtype.val ha
     rw [Submodule.mem_bot]
-    apply Subtype.ext
-    exact (smul_eq_zero.1 h1).resolve_left (nonZeroDivisors.ne_zero a.2)
+    exact Subtype.ext ((smul_eq_zero.1 h1).resolve_left (nonZeroDivisors.ne_zero a.2))
   haveI := flat (LinearMap.range b)
   haveI : Module.Free O (LinearMap.range b) := Module.free_of_flat_of_isLocalRing
   obtain ⟨s, hs⟩ := Module.projective_lifting_property b.rangeRestrict LinearMap.id

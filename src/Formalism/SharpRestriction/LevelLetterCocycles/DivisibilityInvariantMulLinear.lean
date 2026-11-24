@@ -98,9 +98,7 @@ theorem kappa_window_bound : KapWin := by
     refine h.trans (Finset.sum_le_sum fun k _ => ?_)
     rw [← Finset.card_eq_sum_ones]
     calc (S.filter (fun i => i ∈ W k)).card ≤ (W k).card := by
-          apply Finset.card_le_card
-          intro i hi
-          exact (Finset.mem_filter.mp hi).2
+          exact Finset.card_le_card (fun i hi => (Finset.mem_filter.mp hi).2)
       _ = L k := by simp [hWdef]
   have hsumv : ((∑ i ∈ S, padicValInt ℓ i : ℕ) : ℝ) ≤
       ∑ k, ((L k : ℝ) / ((ℓ : ℝ) - 1) + Real.logb ℓ D) := by
@@ -112,13 +110,11 @@ theorem kappa_window_bound : KapWin := by
       _ ≤ ∑ k, ((L k : ℝ) / ((ℓ : ℝ) - 1) + Real.logb ℓ D) := by
           refine Finset.sum_le_sum fun k _ => ?_
           refine _root_.Formalism.WindowSums.sum_padicValInt_le ℓ (a k) (L k) D _ ?_ ?_ ?_
-          · intro i hi
-            exact (Finset.mem_filter.mp hi).2
+          · exact fun i hi => (Finset.mem_filter.mp hi).2
           · intro h0
             have := (Finset.mem_filter.mp h0).1
             simp [hSdef] at this
-          · intro i hi
-            exact hD i (Finset.mem_of_mem_erase (Finset.mem_filter.mp hi).1)
+          · exact fun i hi => hD i (Finset.mem_of_mem_erase (Finset.mem_filter.mp hi).1)
   have hsplit : ∑ i ∈ S, (1 + ell + padicValInt ℓ i) =
       S.card * (1 + ell) + ∑ i ∈ S, padicValInt ℓ i := by
     rw [Finset.sum_add_distrib, Finset.sum_const, smul_eq_mul]
@@ -218,7 +214,7 @@ private lemma exists_divisibilityInvariant {O : Type} [CommRing O] (ϖ : O) (e :
 private lemma coeff_dvd_of_mem_span {O : Type} [CommRing O] (d : O) (B : ℕ) (F : PowerSeries O)
     (hF : F ∈ Ideal.span {C d, (X : PowerSeries O) ^ B}) (j : ℕ) (hj : j < B) : d ∣ coeff j F := by
   obtain ⟨a, b, rfl⟩ := Ideal.mem_span_pair.mp hF
-  rw [map_add (f := _), coeff_mul_C, coeff_mul_X_pow', if_neg (by omega), add_zero]
+  rw [map_add (f := _), coeff_mul_C, coeff_mul_X_pow', ite_eq_right (by omega), add_zero]
   exact dvd_mul_left _ _
 
 theorem content_divisibility : R2 := by
@@ -244,11 +240,9 @@ theorem content_divisibility : R2 := by
       convert h using 1
       rw [hlu, Units.val_pow_eq_pow_val, mul_pow, ← pow_mul]
       ring
-    have h'' := (mul_dvd_mul_iff_left (pow_ne_zero _ hϖ.ne_zero)).mp h'
-    exact Units.dvd_mul_left.mp h''
+    exact Units.dvd_mul_left.mp ((mul_dvd_mul_iff_left (pow_ne_zero _ hϖ.ne_zero)).mp h')
   have hk : k < e * (v₁ - i₀) + 1 + e * a := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hnd ((pow_dvd_pow ϖ hcon).trans hd)
   have h1 : e * (v₁ - i₀) ≤ e * v₁ := Nat.mul_le_mul_left e (Nat.sub_le _ _)
   have h3 : e * (a + v₁ + 1) = e * a + e * v₁ + e := by ring
@@ -450,8 +444,7 @@ end KillerBridge
 theorem killerModL_of (LT : LocTheory) (A : ∀ (l : ℕ) [Fact l.Prime], LocAinf l (LT l)) (HW : HWOf LT)
     (F : FonOf LT A HW)
     (h : AtCaseA fun l _ K LL hG => Pi0Stable ((HW l).W K 1 LL hG)) : KillerModL LT A HW F := by
-  intro l _ K LL hG hA h5
-  exact killer_module_of_pi_stable _ (h l K LL hG hA h5)
+  exact fun l _ K LL hG hA h5 => killer_module_of_pi_stable _ (h l K LL hG hA h5)
 
 theorem pi_stability_content_clause (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) {C : ℝ} (hC : 8 ≤ C) (hLev : KillerLevL D.loc D.locA HW F)
     (h : AtCaseA fun l _ K LL hG => Pi0Stable ((HW l).W K 1 LL hG)) : adm8 D HW F C :=

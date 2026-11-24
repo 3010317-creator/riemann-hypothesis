@@ -121,8 +121,7 @@ theorem ev_diag_monomial (θ : Fin n → ℝ) (g : Mat n) (s : (Fin n × Fin n) 
     ev (Matrix.diagonal (fun a => Complex.exp (-((θ a : ℂ) * Complex.I))) * g) (monomial s 1) =
       Complex.exp (((∑ a, monWt s a * θ a : ℝ) : ℂ) * Complex.I) * ev g (monomial s 1) := by
   have h1 : (∑ a, monWt s a * θ a : ℝ) = ∑ i, (s i : ℝ) * ∑ a, varWt i a * θ a := by
-    simp only [monWt, Finset.sum_mul, Finset.mul_sum, mul_assoc]
-    exact Finset.sum_comm
+    simpa only [monWt, Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
   rw [h1]
   simp only [ev, eval_monomial, one_mul]
   rw [Finsupp.prod_fintype _ _ (by simp), Finsupp.prod_fintype _ _ (by simp), Complex.ofReal_sum, Finset.sum_mul,
@@ -210,8 +209,7 @@ theorem polyAvg : ∀ (n : ℕ) (ε : Fin n → Bool) (d : ℕ), ∃ A : Set (Fi
     rw [apply_avg]
     simp only [hQ']
     rfl
-  · intro P hP
-    exact ⟨P, (mem_restrictTotalDegree _ _ _).2 hP, rfl⟩
+  · exact fun P hP => ⟨P, (mem_restrictTotalDegree _ _ _).2 hP, rfl⟩
   · rintro μ v ⟨P, hP, rfl⟩ hv hw
     by_contra hμ
     apply hv
@@ -545,8 +543,7 @@ theorem finDimStable_isSumOfKTypes : SumTypesP := by
     simpa using this
   have hz0 : z ∈ T := ⟨hzS, hz⟩
   rw [hT, Submodule.mem_bot] at hz0
-  rw [hz0, add_zero]
-  exact hy
+  rwa [hz0, add_zero]
 
 end GlobalTheory.PsCo.PcEF.UF
 

@@ -98,8 +98,7 @@ lemma wlocal_rowAct_one {r n : ℕ} : rowAct R (n := n) (1 : Matrix (Fin r) (Fin
   · simp [Matrix.one_apply_eq]
   · intro b _ hb
     simp [Matrix.one_apply_ne (Ne.symm hb)]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private lemma C_ite_add_ite_mul {σ : Type} (p q : Prop) [Decidable p] [Decidable q] (c : R)
     (Y : MvPolynomial σ R) :
@@ -119,7 +118,7 @@ lemma wlocal_eval_rowGen {r n : ℕ} (a b : Fin r) (c : R) (f : MvPolynomial (Fi
     congr 1
     obtain ⟨i, j⟩ := v
     simp only [rowGen, rowAct, aeval_X, wlocal_E, C_ite_add_ite_mul, Finset.sum_add_distrib,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, Polynomial.eval_add, Polynomial.eval_C]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, Polynomial.eval_add, Polynomial.eval_C]
     by_cases h : i = a
     · simp [h] <;> ring
     · simp [h]
@@ -130,8 +129,7 @@ def wlocal_Good {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) (M : Matrix (Fin
 lemma wlocal_good_one {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) :
     wlocal_Good hn ν (1 : Matrix (Fin r) (Fin r) R) := by
   intro f hf
-  rw [wlocal_rowAct_one]
-  exact hf
+  rwa [wlocal_rowAct_one]
 
 lemma wlocal_good_mul {r n : ℕ} {hn : n ≤ r} {ν : Fin n → ℕ} {A B : Matrix (Fin r) (Fin r) R}
     (hA : wlocal_Good hn ν A) (hB : wlocal_Good hn ν B) : wlocal_Good hn ν (A * B) := by
@@ -280,8 +278,7 @@ lemma wlocal_unit_add {a b : R} (ha : ¬IsUnit a) (hb : IsUnit b) : IsUnit (a + 
 lemma wlocal_pivot {r : ℕ} (k : Fin r) (M N : Matrix (Fin r) (Fin r) R) (hNM : N * M = 1)
     (hstd : ∀ i j : Fin r, j.val < k.val → M i j = if i = j then 1 else 0) :
     ∃ i : Fin r, k.val ≤ i.val ∧ IsUnit (M i k) := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hNcol : ∀ j : Fin r, j.val < k.val → N k j = 0 := by
     intro j hj
     have h1 : (N * M) k j = 0 := by
@@ -292,13 +289,11 @@ lemma wlocal_pivot {r : ℕ} (k : Fin r) (M N : Matrix (Fin r) (Fin r) R) (hNM :
     rw [Matrix.mul_apply] at h1
     have h2 : ∑ l, N k l * M l j = N k j := by
       rw [Finset.sum_eq_single j]
-      · rw [hstd j j hj, if_pos rfl, mul_one]
+      · rw [hstd j j hj, ite_eq_left rfl, mul_one]
       · intro l _ hl
-        rw [hstd l j hj, if_neg hl, mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
-    rw [← h2]
-    exact h1
+        rw [hstd l j hj, ite_eq_right hl, mul_zero]
+      · exact fun h => absurd (Finset.mem_univ j) h
+    rwa [← h2]
   have hsum : (N * M) k k ∈ IsLocalRing.maximalIdeal R := by
     rw [Matrix.mul_apply]
     apply Ideal.sum_mem
@@ -343,7 +338,7 @@ theorem wlocal_main {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) :
         intro l j
         rw [hM2, wlocal_E_mul_apply]
       have h2kk : M2 kk kk = 1 := by
-        rw [h2, if_pos rfl, ← hu]
+        rw [h2, ite_eq_left rfl, ← hu]
         linear_combination (Units.inv_mul u)
       have h2std : ∀ l j : Fin r, j.val < k → M2 l j = if l = j then 1 else 0 := by
         intro l j hj
@@ -351,7 +346,7 @@ theorem wlocal_main {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) :
           intro h
           rw [← h] at hj
           omega
-        rw [h2, hstd1 l j hj, hstd1 kk j hj, if_neg hkj, mul_zero, ite_self, add_zero]
+        rw [h2, hstd1 l j hj, hstd1 kk j hj, ite_eq_right hkj, mul_zero, ite_self, add_zero]
       obtain ⟨M3, hM3⟩ : ∃ M3, M3 = wlocal_L kk (fun l => -(M2 l kk)) * M2 := ⟨_, rfl⟩
       have h3 : ∀ l j : Fin r, M3 l j = M2 l j + (if l ≠ kk then -(M2 l kk) * M2 kk j else 0) := by
         intro l j
@@ -364,14 +359,14 @@ theorem wlocal_main {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) :
             intro h
             rw [← h] at hjk
             omega
-          rw [h2std l j hjk, h2std kk j hjk, if_neg hkj, mul_zero, ite_self, add_zero]
+          rw [h2std l j hjk, h2std kk j hjk, ite_eq_right hkj, mul_zero, ite_self, add_zero]
         · have hj' : j = kk := by
             apply Fin.ext
             omega
           rw [hj', h2kk, mul_one]
           by_cases hl : l = kk
           · simp [hl, h2kk]
-          · rw [if_pos hl, if_neg hl]
+          · rw [ite_eq_left hl, ite_eq_right hl]
             ring
       have hLL : wlocal_L kk (fun l => M2 l kk) * wlocal_L kk (fun l => -(M2 l kk)) = 1 := by
         rw [wlocal_L_mul_L]
@@ -380,7 +375,7 @@ theorem wlocal_main {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) :
           simp
         rw [h0, wlocal_L_one]
       have hEE : wlocal_E kk kk ((u : R) - 1) * wlocal_E kk kk ((↑u⁻¹ : R) - 1) = 1 := by
-        rw [wlocal_E_mul_E, if_pos rfl,
+        rw [wlocal_E_mul_E, ite_eq_left rfl,
           show ((u : R) - 1) + ((↑u⁻¹ : R) - 1) + ((u : R) - 1) * ((↑u⁻¹ : R) - 1) = 0 by
             linear_combination (Units.mul_inv u),
           wlocal_E_zero]
@@ -401,8 +396,7 @@ theorem wlocal_main {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) :
       exact wlocal_good_of_factor hP' hPP (by rw [← hM1]; exact hM1g)
     by_cases hu0 : IsUnit (M kk kk)
     · refine cont 1 1 (Matrix.one_mul 1) (wlocal_good_one hn ν) ?_ ?_
-      · rw [Matrix.one_mul]
-        exact hu0
+      · rwa [Matrix.one_mul]
       · intro l j hj
         rw [Matrix.one_mul]
         exact hstd l j hj
@@ -412,15 +406,15 @@ theorem wlocal_main {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ) :
         rw [h] at hiu
         exact hu0 hiu
       refine cont (wlocal_E kk i 1) (wlocal_E kk i (-1)) ?_ (wlocal_good_E hn ν kk i (-1)) ?_ ?_
-      · rw [wlocal_E_mul_E, if_neg (Ne.symm hik), show (-1 : R) + 1 + 0 = 0 by ring, wlocal_E_zero]
-      · rw [wlocal_E_mul_apply, if_pos rfl, one_mul]
+      · rw [wlocal_E_mul_E, ite_eq_right (Ne.symm hik), show (-1 : R) + 1 + 0 = 0 by ring, wlocal_E_zero]
+      · rw [wlocal_E_mul_apply, ite_eq_left rfl, one_mul]
         exact wlocal_unit_add hu0 hiu
       · intro l j hj
         have hij : i ≠ j := by
           intro h
           rw [← h] at hj
           omega
-        rw [wlocal_E_mul_apply, hstd i j hj, if_neg hij, mul_zero, ite_self, add_zero]
+        rw [wlocal_E_mul_apply, hstd i j hj, ite_eq_right hij, mul_zero, ite_self, add_zero]
         exact hstd l j hj
 
 end
@@ -608,18 +602,15 @@ theorem wlocal_global : Formalism.UG.WeylGLStable := by
     have hmem : map (algebraMap R (Localization.AtPrime P)) (dwAct R r n g f) ∈
         weyl (Localization.AtPrime P) r n hn ν := by
       unfold dwAct at hloc ⊢
-      rw [hg, ← wlocal_map_rowAct] at hloc
-      exact hloc
+      rwa [hg, ← wlocal_map_rowAct] at hloc
     obtain ⟨t, ht, hty⟩ := wlocal_loc P hn ν _ hmem
     have htJ : t ∈ J := by
-      rw [hJdef, Submodule.mem_comap, LinearMap.toSpanSingleton_apply, MvPolynomial.smul_eq_C_mul]
-      exact hty
+      rwa [hJdef, Submodule.mem_comap, LinearMap.toSpanSingleton_apply, MvPolynomial.smul_eq_C_mul]
     exact (Ideal.mem_primeCompl_iff.mp ht) (hJP htJ)
   have h1 : (1 : R) ∈ J := by
     rw [hJ]
     exact Submodule.mem_top
-  rw [hJdef, Submodule.mem_comap, LinearMap.toSpanSingleton_apply, one_smul] at h1
-  exact h1
+  rwa [hJdef, Submodule.mem_comap, LinearMap.toSpanSingleton_apply, one_smul] at h1
 
 theorem weyl_module_GL_stable : Formalism.UG.WeylGLStable := wlocal_global
 

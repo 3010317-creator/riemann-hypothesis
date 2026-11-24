@@ -184,8 +184,7 @@ theorem weightProjection_preserves_lattice [CharZero (KK O)] [FiniteDimensional 
           rfl
         · intro ρ x hx
           exact shwt a _ _ ρ x hx
-        · intro x hx
-          exact shM a _ _ x hx
+        · exact fun x hx => shM a _ _ x hx
       · obtain ⟨d, hd⟩ : ∃ d : ℕ, nu a - mu a = (d : ℤ) := ⟨(nu a - mu a).toNat, by omega⟩
         refine ⟨sh a (-(mu a)) 0 - sh a (-(mu a)) d,
           fun ρ => Ring.choose (ρ a + -(mu a)) 0 - Ring.choose (ρ a + -(mu a)) d, ?_, ?_, ?_, ?_⟩
@@ -226,8 +225,7 @@ theorem weightProjection_preserves_lattice [CharZero (KK O)] [FiniteDimensional 
         congr 1
         push_cast
         ring
-      · intro x hx
-        exact hhM _ (hgM x hx)
+      · exact fun x hx => hhM _ (hgM x hx)
   obtain ⟨F, hF⟩ : ∃ F : Finset (Fin n → ℤ), (⊤ : Submodule (KK O) W) ≤ ⨆ nu ∈ F, weightSp E nu := by
     let bs := Module.finBasis (KK O) W
     have hb : ∀ i, ∃ s : Finset (Fin n → ℤ), bs i ∈ ⨆ nu ∈ s, weightSp E nu := by
@@ -256,8 +254,7 @@ theorem weightProjection_preserves_lattice [CharZero (KK O)] [FiniteDimensional 
         simp
     ext x
     have hx := hle (hF (Submodule.mem_top (x := x)))
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at hx
-    exact hx
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at hx
   intro x hx
   rw [hπP]
   exact hgM x hx
@@ -375,15 +372,13 @@ theorem mem_homLattice_iff_basis (M : Submodule O W) (L : Submodule (KK O) W) {d
     (hbc : ∀ x : L, (x : W) ∈ M → ∀ i, ∃ o : O, b.coord i x = algebraMap O (KK O) o) (f : L →ₗ[KK O] W) :
     f ∈ homLattice M L ↔ ∀ i, f (b i) ∈ M := by
   constructor
-  · intro hf i
-    exact hf (b i) (hbM i)
+  · exact fun hf i => hf (b i) (hbM i)
   · intro hf
     show ∀ x : L, (x : W) ∈ M → f x ∈ M
     intro x hx
     choose o ho using hbc x hx
     have hx' : x = ∑ i, b.coord i x • b i := by
-      simp only [Module.Basis.coord_apply]
-      exact (b.sum_repr x).symm
+      simpa only [Module.Basis.coord_apply] using (b.sum_repr x).symm
 
     rw [hx', map_sum]
     refine M.sum_mem fun i _ => ?_
@@ -405,8 +400,7 @@ theorem hom_lattice_dividedPower_stable : HomLatticeDividedPowerStable := by
       ext f
       rw [hiff]
       constructor
-      · intro hf
-        exact ⟨fun i => f (b i), fun i _ => hf i, b.constr_self (KK O) f⟩
+      · exact fun hf => ⟨fun i => f (b i), fun i _ => hf i, b.constr_self (KK O) f⟩
       · rintro ⟨y, hy, rfl⟩ i
         have : (b.constr (KK O) y) (b i) = y i := b.constr_basis (KK O) y i
         simpa [this] using hy i trivial
@@ -468,8 +462,7 @@ theorem exists_equivariant_cyclic_to_hwv (D : Formalism.BasicNotions.D7) (h2 : a
   have hinj : Function.Injective F := LinearMap.ker_eq_bot.1 hker
   have hrange : LinearMap.range F = cyclicSubmodule E v0 := by
     have := equivariant_map_cyclicSubmodule _ E F hF ⟨(v0, v), self_mem_cyclicSubmodule _ _⟩
-    rw [hcyc, Submodule.map_top] at this
-    exact this
+    rwa [hcyc, Submodule.map_top] at this
   have hmem : ∀ z, F z ∈ cyclicSubmodule E v0 := fun z => by rw [← hrange]; exact ⟨z, rfl⟩
   let e : cyclicSubmodule (prodRepresentation E E) (v0, v) ≃ₗ[K] cyclicSubmodule E v0 :=
     LinearEquiv.ofBijective (F.codRestrict _ hmem)
@@ -667,8 +660,7 @@ theorem isotypic_projector_trace_formula (D : Formalism.BasicNotions.D7) (h2 : a
   have hm : m ∈ (⨆ mu, isoSub E mu) := by rw [isotypic_submodules_span_top D h2 n K W E hE]; trivial
   have := hle hm
   change ((Fintype.card ι : K) • Θ) m = e m at this
-  rw [LinearMap.smul_apply, hΘ] at this
-  exact this
+  rwa [LinearMap.smul_apply, hΘ] at this
 
 end Formalism.MainNotions.G.GLWeightTheory
 end -- clump:auto
@@ -718,14 +710,14 @@ theorem weight_difference_le_ell [CharZero (KK O)] [FiniteDimensional (KK O) V] 
     generalize ((E a c) ^ j) x = y at hy0 hytop hyw
     have hmu : (nu + (j : ℤ) • rootW a c) a - (nu + (j : ℤ) • rootW a c) c = nu a - nu c + 2 * j := by
       simp only [rootW, Pi.add_apply, Pi.smul_apply, Pi.sub_apply, smul_eq_mul, Pi.single_apply, hac,
-        Ne.symm hac, if_true, if_false]
+        Ne.symm hac, ite_true, ite_false]
       ring
     obtain ⟨N, hN⟩ : ∃ N : ℕ, (N : ℤ) = nu a - nu c + 2 * j :=
       ⟨(nu a - nu c + 2 * j).toNat, Int.toNat_of_nonneg (by omega)⟩
     have hcomm : ∀ w : V, E a c (E c a w) = E c a (E a c w) + (E a a w - E c c w) := by
       intro w
       have h1 := hE.1 a c c a
-      rw [if_pos rfl, if_pos rfl] at h1
+      rw [ite_eq_left rfl, ite_eq_left rfl] at h1
       have h2 := LinearMap.congr_fun h1 w
       first
         | simp only [LinearMap.sub_apply, Module.End.mul_apply] at h2
@@ -799,7 +791,7 @@ theorem weight_difference_le_ell [CharZero (KK O)] [FiniteDimensional (KK O) V] 
       exact le_csSup (root_differences_bddAbove E hE ⊤) hmem
     have hle' : (N : ℤ) ≤ (ellOf E ⊤ : ℤ) := by exact_mod_cast hle
     omega
-  · push_neg at hpos
+  · push Not at hpos
     have : (0 : ℤ) ≤ (ellOf E ⊤ : ℤ) := Nat.cast_nonneg _
     omega
 
@@ -923,8 +915,7 @@ theorem lattice_theorem_single_rep_linf (h : InvariantDenominatorLinftyBound) (h
           refine Submodule.span_le.2 ?_
           rintro y ⟨u, _, v, hv', _⟩
           exact absurd ⟨v, hv'⟩ hv
-        · intro y hy
-          exact he.2 mu hmu y hy
+        · exact fun y hy => he.2 mu hmu y hy
       have : x ∈ (⨆ mu, isoSub E mu) := by rw [hTop n (KK O) V E hE]; trivial
       exact hle this
     rw [h0, smul_zero]; exact M.zero_mem

@@ -95,12 +95,10 @@ theorem flagVarieties_flagSys : Inputs → ∀ (Ψ : Type) [Fintype Ψ] [Decidab
   obtain ⟨d, hd1⟩ : ∃ d, d + 1 = antisymDegree Ψ N := ⟨antisymDegree Ψ N - 1, Nat.sub_add_cancel hpos⟩
   have hAr : IsArithVar (mCoordIdeal (yFl Ψ N)) (d + 2) := by
     have hd2 : d + 2 = antisymDegree Ψ N + 1 := by omega
-    rw [hd2]
-    exact hA
+    rwa [hd2]
   have h0 : (N - N).choose 2 = 0 := Nat.choose_eq_zero_of_lt (by omega)
   have hdeg : d + 1 = 0 + Fintype.card Ψ * (N.choose 2 + (N - N).choose 2) := by
-    rw [h0, add_zero, zero_add]
-    exact hd1
+    rwa [h0, add_zero, zero_add]
   have hhom' : ∀ p : Ψ × Fin N, BM.hom p = fsHerm (FlIdx Ψ N) (M.dy p) := fun p => (hhom p).trans (hdy p).symm
   obtain ⟨FA, hFAline⟩ := _root_.GlobalTheory.CompanionTheory.Relay.flag_analytic_data_fubini_study _ _ _ _ Ψ N N M 0 d BM hAr hdeg hbd hhom'
   obtain ⟨Cv, CR, hCv, hCRref, hCRline⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.identity_cover _ _ _ _ Ψ N N M 0 d BM FA

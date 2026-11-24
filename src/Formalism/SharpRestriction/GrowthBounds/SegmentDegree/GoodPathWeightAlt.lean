@@ -150,8 +150,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
       have hs1 : s - 1 < N := by omega
       have h1 := ((hv.2.2 ⟨s - 1, hs1⟩ (by simp only; omega)).2 (by simp only; omega)).2 m (by simp only; omega)
       have he : (⟨s - 1, hs1⟩ : Fin N).succ = (⟨s, hs⟩ : Fin N).castSucc := Fin.ext (by simp; omega)
-      rw [he, hlaeq] at h1
-      exact h1
+      rwa [he, hlaeq] at h1
     have hν : ∀ l : Fin (K + t + 1), (tailT (t + 1) la : Fin (K + t + 1) → ℤ) l =
         la ⟨(r - (t + 1)) + l.val, by have := l.2; omega⟩ := fun l => tailT_apply (t + 1) ht la l
     have hνdom : Dominant (tailT (t + 1) la : Fin (K + t + 1) → ℤ) := by
@@ -187,8 +186,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
         · have := hS.2.1 ⟨(r - (t + 1)) + l.val, by omega⟩ (by simp only; omega)
           have he : (⟨(r - (t + 1)) + l.val + 1, by omega⟩ : Fin (r + K)) = ⟨(r - t) + l.val, by omega⟩ :=
             Fin.ext (by simp only; omega)
-          rw [he] at this
-          exact this
+          rwa [he] at this
       · funext m
         by_cases hm : m.val < r - t
         · rw [glueT_lt t _ _ m hm, hh m (by simp only; omega)]
@@ -230,8 +228,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
           rw [hν] at h2
           have he : (⟨(r - (t + 1)) + ((⟨x.val - (r - t), by have := x.2; omega⟩ : Fin (K + t)).succ :
               Fin (K + t + 1)).val, by have := x.2; simp; omega⟩ : Fin (r + K)) = x := Fin.ext (by simp; omega)
-          rw [he] at h2
-          exact h2
+          rwa [he] at h2
       have hst' : StepOK LL n0 B ⟨s, hs⟩ (μ0 (⟨s, hs⟩ : Fin N).castSucc) (glueT (r := r) t (beA n0 B : ℤ) τ) := by
         rw [hlaeq]
         refine ⟨fun h => absurd h (by simp only; omega), fun _ => ⟨⟨(∑ x, (glueT (r := r) t (beA n0 B : ℤ) τ x - la x)).toNat,
@@ -244,8 +241,7 @@ theorem tau_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
             rw [hν] at h2
             have he : (⟨(r - (t + 1)) + ((⟨x.val + 1 - (r - t), by have := x.2; omega⟩ : Fin (K + t)).castSucc :
                 Fin (K + t + 1)).val, by have := x.2; simp; omega⟩ : Fin (r + K)) = x := Fin.ext (by simp; omega)
-            rw [he] at h2
-            exact h2
+            rwa [he] at h2
         · exact (Int.toNat_of_nonneg (Finset.sum_nonneg fun x _ => sub_nonneg.mpr (hS1 x))).symm
       have hv' := vp_update hs hv _ hd' hst'
       rw [ih (s + 1) (by omega) (by omega) _ hv']
@@ -293,19 +289,19 @@ theorem prodFrom_succ (n0 : ℕ) (B : Fin N → ℕ) (s : ℕ) (hs : s < N) (hsn
     intro i
     by_cases he : i = ⟨s, hs⟩
     · subst he
-      rw [if_pos ⟨le_rfl, hsn⟩, if_pos rfl, if_neg (by simp), mul_one]
+      rw [ite_eq_left ⟨le_rfl, hsn⟩, ite_eq_left rfl, ite_eq_right (by simp), mul_one]
     · have hne : i.val ≠ s := fun h => he (Fin.ext h)
-      rw [if_neg he, one_mul]
+      rw [ite_eq_right he, one_mul]
       by_cases h1 : s ≤ i.val ∧ i.val < n0
-      · rw [if_pos h1, if_pos ⟨by omega, h1.2⟩]
-      · rw [if_neg h1, if_neg (by omega)]
+      · rw [ite_eq_left h1, ite_eq_left ⟨by omega, h1.2⟩]
+      · rw [ite_eq_right h1, ite_eq_right (by omega)]
   rw [Finset.prod_congr rfl fun i _ => hpt i, Finset.prod_mul_distrib, Finset.prod_ite_eq' ]
   simp
 
 theorem prodFrom_self_eq_one (n0 : ℕ) (B : Fin N → ℕ) : prodFrom r K n0 B n0 = 1 := by
   unfold prodFrom
   refine Finset.prod_eq_one fun i _ => ?_
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 section
 variable {n0 : ℕ} {LL : Letters (Fin N)} {B : Fin N → ℕ} {od : Fin N → Fin N} {bb : Fin N → ℝ} {a La : ℝ} {p : ℕ}
@@ -344,7 +340,7 @@ theorem pre_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
       · refine Finset.sum_congr rfl fun la' hla' => ?_
         rw [Finset.mem_filter] at hla'
         have hst : StepOK LL n0 B ⟨s, hs⟩ (μ0 (⟨s, hs⟩ : Fin N).castSucc) la' :=
-          ⟨fun _ => by rw [if_pos hvec]; exact hla'.2, fun h => absurd h (by simp only; omega)⟩
+          ⟨fun _ => by rw [ite_eq_left hvec]; exact hla'.2, fun h => absurd h (by simp only; omega)⟩
         have hv' := vp_update hs hv la' (dom_of_strip_up hla'.2 hlad) hst
         rw [ih (s + 1) (by omega) _ hv']
         congr 2
@@ -353,7 +349,7 @@ theorem pre_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
       · intro q hq
         obtain ⟨_, hstq⟩ := Af_step H hfin s hs μ0 q hq
         have hS := hstq.1 hsn
-        rw [if_pos hvec] at hS
+        rw [ite_eq_left hvec] at hS
         rw [Finset.mem_filter, Fintype.mem_piFinset]
         exact ⟨fun x => Finset.mem_Icc.mpr ⟨hS.1 x, strip_le_add hS x⟩, hS⟩
     | false =>
@@ -362,7 +358,7 @@ theorem pre_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
       · refine Finset.sum_congr rfl fun la' hla' => ?_
         rw [Finset.mem_filter] at hla'
         have hst : StepOK LL n0 B ⟨s, hs⟩ (μ0 (⟨s, hs⟩ : Fin N).castSucc) la' :=
-          ⟨fun _ => by rw [if_neg (by simp [hvec])]; exact hla'.2, fun h => absurd h (by simp only; omega)⟩
+          ⟨fun _ => by rw [ite_eq_right (by simp [hvec])]; exact hla'.2, fun h => absurd h (by simp only; omega)⟩
         have hv' := vp_update hs hv la' (dom_of_strip_down hla'.2 hlad) hst
         rw [ih (s + 1) (by omega) _ hv']
         congr 2
@@ -371,7 +367,7 @@ theorem pre_count (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (h4 : ColumnFam
       · intro q hq
         obtain ⟨_, hstq⟩ := Af_step H hfin s hs μ0 q hq
         have hS := hstq.1 hsn
-        rw [if_neg (by simp [hvec])] at hS
+        rw [ite_eq_right (by simp [hvec])] at hS
         rw [Finset.mem_filter, Fintype.mem_piFinset]
         refine ⟨fun x => Finset.mem_Icc.mpr ⟨?_, hS.1 x⟩, hS⟩
         have := strip_le_add hS x
@@ -425,11 +421,11 @@ variable {N r K : ℕ}
 theorem entry_eq_of_lt (LL : Letters (Fin N)) (B : Fin N → ℕ) (μ : Fin (N + 1) → Fin (r + K) → ℤ) (s m : ℕ)
     (hs : s < N + 1) (hm : m < r + K) :
     BranchingDimensions.Letters.ent (D := toL r K LL B) μ s m = μ ⟨s, hs⟩ ⟨m, hm⟩ :=
-  dif_pos (⟨hs, hm⟩ : s < N + 1 ∧ m < r + K)
+  dite_eq_left (⟨hs, hm⟩ : s < N + 1 ∧ m < r + K)
 
 theorem entry_eq_zero_of_ge (LL : Letters (Fin N)) (B : Fin N → ℕ) (μ : Fin (N + 1) → Fin (r + K) → ℤ) (s m : ℕ)
     (hm : ¬ m < r + K) : BranchingDimensions.Letters.ent (D := toL r K LL B) μ s m = 0 :=
-  dif_neg (fun h : s < N + 1 ∧ m < r + K => hm h.2)
+  dite_eq_right (fun h : s < N + 1 ∧ m < r + K => hm h.2)
 
 theorem sum_Icc_one_eq_sum_range {M : Type} [AddCommMonoid M] (f : ℕ → M) (n : ℕ) :
     ∑ i ∈ Finset.Icc 1 n, f i = ∑ m ∈ Finset.range n, f (m + 1) := by
@@ -448,18 +444,18 @@ theorem prod_fin_ite_lt_eq {M : Type} [CommMonoid M] (n j : ℕ) (hj : j ≤ n) 
   rw [Fin.prod_univ_eq_prod_range (fun m => if m < j then h m else 1) n]
   rw [← Finset.prod_subset (Finset.range_subset_range.mpr hj)]
   · refine Finset.prod_congr rfl fun m hm => ?_
-    rw [if_pos (Finset.mem_range.mp hm)]
+    rw [ite_eq_left (Finset.mem_range.mp hm)]
   · intro m _ hm
-    rw [if_neg (by simpa using hm)]
+    rw [ite_eq_right (by simpa using hm)]
 
 theorem sum_fin_ite_lt_eq {M : Type} [AddCommMonoid M] (n j : ℕ) (hj : j ≤ n) (h : ℕ → M) :
     ∑ i : Fin n, (if i.val < j then h i.val else 0) = ∑ i ∈ Finset.range j, h i := by
   rw [Fin.sum_univ_eq_sum_range (fun m => if m < j then h m else 0) n]
   rw [← Finset.sum_subset (Finset.range_subset_range.mpr hj)]
   · refine Finset.sum_congr rfl fun m hm => ?_
-    rw [if_pos (Finset.mem_range.mp hm)]
+    rw [ite_eq_left (Finset.mem_range.mp hm)]
   · intro m _ hm
-    rw [if_neg (by simpa using hm)]
+    rw [ite_eq_right (by simpa using hm)]
 
 theorem beta_eq_sum_thresholds (LL : Letters (Fin N)) (B : Fin N → ℕ) (n0 : ℕ) (hn : n0 ≤ N) :
     ∑ i ∈ Finset.Icc 1 n0, (toL r K LL B).B i = beA n0 B := by
@@ -467,9 +463,9 @@ theorem beta_eq_sum_thresholds (LL : Letters (Fin N)) (B : Fin N → ℕ) (n0 : 
   rw [sum_Icc_one_eq_sum_range, ← sum_fin_ite_lt_eq N n0 hn (fun m => (toL r K LL B).B (m + 1))]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : i.val < n0
-  · rw [if_pos hi, if_pos hi, toL_B LL B (i.val + 1) ⟨by omega, by have := i.2; omega⟩]
+  · rw [ite_eq_left hi, ite_eq_left hi, toL_B LL B (i.val + 1) ⟨by omega, by have := i.2; omega⟩]
     congr 1
-  · rw [if_neg hi, if_neg hi]
+  · rw [ite_eq_right hi, ite_eq_right hi]
 
 theorem rank_eq_prod_choose (LL : Letters (Fin N)) (B : Fin N → ℕ) (n0 : ℕ) (hn : n0 ≤ N) :
     ∏ i ∈ Finset.Icc 1 n0, ((toL r K LL B).B i + (r + K) - 1).choose (r + K - 1) = rkA r K n0 B := by
@@ -477,9 +473,9 @@ theorem rank_eq_prod_choose (LL : Letters (Fin N)) (B : Fin N → ℕ) (n0 : ℕ
   rw [prod_Icc_one_eq_prod_range, ← prod_fin_ite_lt_eq N n0 hn (fun m => ((toL r K LL B).B (m + 1) + (r + K) - 1).choose (r + K - 1))]
   refine Finset.prod_congr rfl fun i _ => ?_
   by_cases hi : i.val < n0
-  · rw [if_pos hi, if_pos hi, toL_B LL B (i.val + 1) ⟨by omega, by have := i.2; omega⟩]
+  · rw [ite_eq_left hi, ite_eq_left hi, toL_B LL B (i.val + 1) ⟨by omega, by have := i.2; omega⟩]
     congr 3
-  · rw [if_neg hi, if_neg hi]
+  · rw [ite_eq_right hi, ite_eq_right hi]
 
 theorem entry_weight_eq_sum (LL : Letters (Fin N)) (B : Fin N → ℕ) (μ : Fin (N + 1) → Fin (r + K) → ℤ) (s : ℕ) (hs : s < N + 1) :
     BranchingDimensions.wsize (r + K) (BranchingDimensions.Letters.ent (D := toL r K LL B) μ s) = ∑ m : Fin (r + K), μ ⟨s, hs⟩ m := by
@@ -591,11 +587,11 @@ theorem toL_wt (D : Formalism.BasicNotions.D7) (h3 : admB3 D) (μ : Fin (N + 1) 
   refine Finset.prod_congr rfl fun i _ => ?_
   by_cases hij : i < j
   · have hij' : i.val < j.val := hij
-    rw [if_pos hij, if_pos hij', hka i, hka j]
+    rw [ite_eq_left hij, ite_eq_left hij', hka i, hka j]
     push_cast
     ring
   · have hij' : ¬ i.val < j.val := hij
-    rw [if_neg hij, if_neg hij']
+    rw [ite_eq_right hij, ite_eq_right hij']
     simp
 
 end
@@ -678,15 +674,13 @@ theorem count_from_eq_vcount (LL : Letters (Fin N)) (B : Fin N → ℕ) (M t : �
     beta_reduce
     rw [toL_vec LL B (l.val + 1) ⟨by omega, by omega⟩]
     exact ⟨⟨by omega, by omega⟩, hl.2.2, by omega⟩
-  · intro l _ l' _ h
-    exact Fin.ext (by omega)
+  · exact fun l _ l' _ h => Fin.ext (by omega)
   · intro y hy
     rw [Finset.mem_filter, Finset.mem_Icc] at hy
     have hv : (toL r K LL B).vec y = true := hy.2.1
     rw [toL_vec LL B y ⟨hy.1.1, by omega⟩] at hv
     refine ⟨⟨y - 1, by omega⟩, ?_, by simp only; omega⟩
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact ⟨by omega, by omega, hv⟩
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using ⟨by omega, by omega, hv⟩
 
 theorem vcount_tau_eq_add (H : HypT N n0 r K LL B od bb a La p) (t : ℕ) (ht : t ≤ n0) :
     ∀ s, n0 ≤ s → s ≤ N → vcount LL t s = vcount LL t n0 + (s - n0) := by
@@ -695,7 +689,7 @@ theorem vcount_tau_eq_add (H : HypT N n0 r K LL B od bb a La p) (t : ℕ) (ht : 
   | base => intro _; simp
   | succ s hs ih =>
     intro hsN
-    rw [vcount_succ LL t s (by omega) (by omega), ih (by omega), if_pos (H.vec_true_of_late ⟨s, by omega⟩ (by simp only; omega))]
+    rw [vcount_succ LL t s (by omega) (by omega), ih (by omega), ite_eq_left (H.vec_true_of_late ⟨s, by omega⟩ (by simp only; omega))]
     omega
 
 theorem oldest_threshold_eq (H : HypT N n0 r K LL B od bb a La p) (i : Fin N) (hi : r ≤ i.val) :
@@ -772,8 +766,7 @@ theorem typ_of_Typical [NeZero r] (H : HypT N n0 r K LL B od bb a La p) {dd : Fi
       show BranchingDimensions.Letters.ent (D := toL r K LL B) P.mu i.val (r - 1) = _
       rw [entry_eq_of_lt LL B P.mu i.val (r - 1) (by omega) (by have := H.r1; omega)]
       rfl
-    rw [he] at h
-    exact h
+    rwa [he] at h
 
 end
 
@@ -799,8 +792,7 @@ theorem atypical_path_small_weight (D : Formalism.BasicNotions.D7) (h3 : admB3 D
     unfold BranchingDimensions.Letters.rankAA
     rw [hn0]
     exact rank_eq_prod_choose LL B n0 (by omega)
-  rw [hk', hrk] at h
-  exact h
+  rwa [hk', hrk] at h
 
 end Formalism.MainNotions.SelectionLemmas.Pf.T
 end -- clump:auto

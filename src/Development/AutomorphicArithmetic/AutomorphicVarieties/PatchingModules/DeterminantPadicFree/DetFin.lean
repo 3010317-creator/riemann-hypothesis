@@ -133,8 +133,7 @@ private theorem ac_sum {G R ι : Type} [TopologicalSpace G] [CommRing R] {I : Id
   induction s using Finset.induction_on with
   | empty => simpa using ac_const (G := G) (I := I) 0
   | insert a s ha ih =>
-    simp only [Finset.sum_insert ha]
-    exact ac_add (hf a) ih
+    simpa only [Finset.sum_insert ha] using ac_add (hf a) ih
 
 private theorem ac_map {G A R : Type} [TopologicalSpace G] [CommRing A] [CommRing R] (φ : A →+* R) (t : A)
     {f : G → A} (hf : AdicCont (Ideal.span {t}) f) : AdicCont (Ideal.span {φ t}) fun g => φ (f g) := by

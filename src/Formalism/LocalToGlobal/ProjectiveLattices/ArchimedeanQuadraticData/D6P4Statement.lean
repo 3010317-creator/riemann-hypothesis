@@ -130,8 +130,7 @@ theorem cover_round {N : ℕ} (b : Fin N → Fin N → ℝ) (hb : LinearIndepend
     intro j
     have h := hℓ j
     rw [dot_self_eq_sq_norm, ← sq_abs ℓ] at h
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     nlinarith [abs_nonneg ℓ]
   have hnorm : ‖(WithLp.linearEquiv 2 ℝ (Fin N → ℝ)).symm (∑ j, (c j - round (c j)) • b j)‖ ≤
       (N : ℝ) * |ℓ| / 2 := by
@@ -320,13 +319,11 @@ theorem phi_dot_self (σ : ι → K →+* ℂ) (Q : ι → Matrix (Fin r) (Fin r
     rho eqv (Phi σ Q v) ⬝ᵥ rho eqv (Phi σ Q v) = majSq σ Q v := by
   rw [rho_dot_self_lemma]
   unfold Phi majSq normSq
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  exact Complex.normSq_eq_norm_sq _
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => Complex.normSq_eq_norm_sq _
 
 theorem trace_one_ne : Algebra.trace ℚ K 1 ≠ 0 := by
   rw [← map_one (algebraMap ℚ K), Algebra.trace_algebraMap]
-  simp only [nsmul_eq_mul, mul_one, ne_eq, Nat.cast_eq_zero]
-  exact Module.finrank_pos.ne'
+  simpa only [nsmul_eq_mul, mul_one, ne_eq, Nat.cast_eq_zero] using Module.finrank_pos.ne'
 
 theorem nondeg [Nonempty ι] (σ : ι → K →+* ℂ) (Q : ι → Matrix (Fin r) (Fin r) ℂ)
     (hQ : ∀ i, (Q i).det ≠ 0) (p : ℕ) (S : HermForm K r)

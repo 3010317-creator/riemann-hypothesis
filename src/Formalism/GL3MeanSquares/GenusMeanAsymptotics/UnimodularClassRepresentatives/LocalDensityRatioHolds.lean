@@ -158,8 +158,7 @@ theorem exists_autSub_mul_nSub (hK : Formalism.HermitianLatticesTheory.IsCMUnram
       (x' : V) - X x ∈ extP K 𝔭 ^ k • A := by
     intro x x' hx
     have h1 : x' - f x ∈ ((extP K 𝔭) ^ k • ⊤ : Submodule (𝓞 K) ↥A) := by
-      rw [← Submodule.Quotient.eq]
-      exact hx
+      rwa [← Submodule.Quotient.eq]
     exact coe_mem_of_mem_smul_top _ _ h1
   have h0 : ∀ {z : V}, z ∈ A → z ∈ extP K 𝔭 ^ 0 • A := fun hz => by rwa [pow_zero_smul]
   let := hA₀
@@ -263,15 +262,13 @@ theorem redEnd_eq_iff {A : Submodule (𝓞 K) V} {𝔭 : Ideal (𝓞 F)} {k : �
     have h1 : Submodule.Quotient.mk (⟨b x, apply_mem hb hx⟩ : ↥A) =
         redEnd A 𝔭 k a ha (Submodule.Quotient.mk ⟨x, hx⟩) := by
       rw [hab, redEnd_mk]
-    have h2 := apply_mem_smul (inv_mem ha) _ ((mk_eq_redEnd_iff ha _ _).1 h1)
-    simpa [e] using h2
+    simpa [e] using apply_mem_smul (inv_mem ha) _ ((mk_eq_redEnd_iff ha _ _).1 h1)
   · rintro ⟨-, hab⟩
     refine LinearMap.ext fun q => ?_
     induction q using Submodule.Quotient.induction_on with | _ x => ?_
     symm
     rw [redEnd_mk, mk_eq_redEnd_iff]
-    have h2 := apply_mem_smul ha _ (hab x x.2)
-    simpa [e'] using h2
+    simpa [e'] using apply_mem_smul ha _ (hab x x.2)
 
 theorem redEnd_cond (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} {A₀ : Submodule (𝓞 K) V}
     (hA₀i : Formalism.HermitianLatticesTheory.IsIntegralLat h A₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {k : ℕ} {X : V ≃ₗ[K] V}
@@ -292,8 +289,7 @@ theorem redEnd_cond (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} {A₀ :
       h (X x) (X y) - h (x : V) (y : V) + h ((x' : V) - X x) (y' : V) + h (X x) ((y' : V) - X y) := by
     simp only [map_sub, LinearMap.sub_apply]
     abel
-  rw [e]
-  exact h4
+  rwa [e]
 
 theorem mem_smul_of_smul_mem {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (A : Submodule (𝓞 K) V) (k : ℕ)
     {t : 𝓞 F} (ht : t ∉ 𝔭) {v : V} (hv : v ∈ A)
@@ -373,8 +369,7 @@ theorem exists_lift {A₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsFullLatti
       D (algebraMap (𝓞 F) (𝓞 K) t • (x : V)) - algebraMap (𝓞 F) (𝓞 K) t • (w : V) := by
     rw [hs, smul_sub]
   show algebraMap (𝓞 F) (𝓞 K) t • (D x - (w : V)) ∈ _
-  rw [e5]
-  exact e1
+  rwa [e5]
 
 theorem exists_redEnd_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : IsTotPosDef h) {A₀ : Submodule (𝓞 K) V}
@@ -398,8 +393,7 @@ theorem exists_redEnd_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (h
     have h3 := neg_mem h2
     have e3 : E x = -(g⁻¹ (g x - D x)) := by
       simp [E]
-    rw [e3]
-    exact h3
+    rwa [e3]
   obtain ⟨Z, hZ, hZA⟩ := exists_equiv_of_mem_endL hA₀ h𝔭 hE
   have hXD : ∀ x, (g * Z) x = D x := fun x => by
     rw [LinearEquiv.mul_apply, hZ]
@@ -527,8 +521,7 @@ theorem exists_gram_det (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} (hs
   simp only [Set.mem_ofPred_eq]
   rw [← mem_pow_iff (K := K), hD]
   constructor
-  · intro hle
-    exact hle (Ideal.subset_span ⟨b, fun i => Submodule.subset_span ⟨i, rfl⟩, hdet⟩)
+  · exact fun hle => hle (Ideal.subset_span ⟨b, fun i => Submodule.subset_span ⟨i, rfl⟩, hdet⟩)
   · intro hmem
     refine BallB.discrIdeal_le b fun x hx z hz => ?_
     have hx' : b.det x = algebraMap (𝓞 K) K (Matrix.of fun i j => crd b ⟨x j, hx j⟩ i).det := by
@@ -769,8 +762,7 @@ theorem exists_skew_unit (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (h
     rw [RingOfIntegers.algebraMap.injective F K this]
     exact 𝔭.zero_mem
   have hdK : ((d : 𝓞 K) : K) ≠ 0 := by
-    intro h0
-    exact hd0 (RingOfIntegers.ext (h0.trans (map_zero (algebraMap (𝓞 K) K)).symm))
+    exact fun h0 => hd0 (RingOfIntegers.ext (h0.trans (map_zero (algebraMap (𝓞 K) K)).symm))
   refine ⟨(d : K), ?_, hdK, algebraMap_mem_pK 𝔭 d, ?_⟩
   · rw [← conjO_coe, hcd]
     exact map_neg (algebraMap (𝓞 K) K) _
@@ -797,12 +789,10 @@ theorem map_symF_sesqL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
     obtain ⟨θ, hθ⟩ := exists_add_conj_eq hK hF (1 : 𝓞 F)
     have hθK : (θ : K) + star (θ : K) = 1 := by
       have := congrArg (algebraMap (𝓞 K) K) hθ
-      rw [map_add (f := _), map_one, map_one] at this
-      exact this
+      rwa [map_add (f := _), map_one, map_one] at this
     refine ⟨(θ : K) • t, fun x hx y hy => ?_, ?_⟩
     · have := (pK K 𝔭 k).smul_mem θ (ht' x hx y hy)
-      rw [Algebra.smul_def] at this
-      exact this
+      rwa [Algebra.smul_def] at this
     · ext x y
       rw [symF_apply]
       simp only [LinearMap.smul_apply, smul_eq_mul, star_mul', ht y x]
@@ -933,8 +923,7 @@ theorem relIndex_sesqL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
     ext s
     rw [← hA, mem_sesqL_iff hF a h𝔭]
     constructor
-    · intro H i j
-      exact ⟨_, H i j, by rw [hΦ]⟩
+    · exact fun H i j => ⟨_, H i j, by rw [hΦ]⟩
     · intro H i j
       obtain ⟨w, hw, e⟩ := H i j
       rw [one_mul, one_mul, hΦ] at e
@@ -1010,8 +999,7 @@ theorem relIndex_hermL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
   rw [relIndex_sesqL_eq_sq hK hF A₀ B₀ h𝔭 hle] at h1
   apply Nat.pow_left_injective (n := 2) (by norm_num)
   show _ ^ 2 = _ ^ 2
-  rw [mul_pow, ← pow_mul, ← pow_mul, mul_comm _ 2, mul_comm _ 2]
-  exact h1
+  rwa [mul_pow, ← pow_mul, ← pow_mul, mul_comm _ 2, mul_comm _ 2]
 
 end Formalism.HermitianLattices.Ext.L3.D2
 end -- clump:auto
@@ -1081,10 +1069,7 @@ theorem relIndex_nSub_eq {A₀ B₀ : Submodule (𝓞 K) V}
 
   have hle : endL (locF 𝔭 B₀) (extP K 𝔭 ^ (k + c) • locF 𝔭 B₀) ≤
       endL (locF 𝔭 A₀) (extP K 𝔭 ^ k • locF 𝔭 A₀) := by
-    intro D hD
-    refine hr k ?_
-    intro x hx
-    exact smul_anti 𝔭 _ (by omega) (hD x hx)
+    exact fun D hD => hr k (fun x hx => smul_anti 𝔭 _ (by omega) (hD x hx))
 
   have hlift : ∀ D ∈ endL (locF 𝔭 A₀) (extP K 𝔭 ^ k • locF 𝔭 A₀),
       ∃ X ∈ nSub (locF 𝔭 A₀) 𝔭 k, (X : V →ₗ[K] V) - LinearMap.id = D := by
@@ -1110,8 +1095,7 @@ theorem relIndex_nSub_eq {A₀ B₀ : Submodule (𝓞 K) V}
       ext v
       have := LinearMap.congr_fun hX' v
       simpa using this
-    rw [← hXX]
-    exact hX'm
+    rwa [← hXX]
   refine ⟨hnsub, hle, ?_⟩
   refine relIndex_eq_of_map _ _ _ _ (fun X => (X : V →ₗ[K] V) - LinearMap.id) (fun X hX => ?_)
     (fun D hD => ?_) (fun x hx y hy => ?_)
@@ -1143,8 +1127,7 @@ theorem relIndex_nSub_eq {A₀ B₀ : Submodule (𝓞 K) V}
           map_sub, LinearEquiv.mul_apply]
         rw [← LinearEquiv.mul_apply x⁻¹ x, inv_mul_cancel]
         rfl
-      rw [e2] at h'
-      exact h'
+      rwa [e2] at h'
 
 theorem relIndex_endL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {A₀ B₀ : Submodule (𝓞 K) V}
     (hA₀ : Submodule.IsFullLattice K A₀) (hB₀ : Submodule.IsFullLattice K B₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {k c : ℕ}
@@ -1161,8 +1144,7 @@ theorem relIndex_endL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
   have heK : ∀ i, eK i ≠ 0 := fun i => (map_ne_zero_iff _ hinj).2 (he i)
   have hc0K : c0K ≠ 0 := (map_ne_zero_iff _ hinj).2 hc0
   have hbeK : ∀ i, c0K • b i = eK i • a i := fun i => by
-    simp only [c0K, eK, algebraMap_smul]
-    exact hbe i
+    simpa only [c0K, eK, algebraMap_smul] using hbe i
   have hab : ∀ l, a l = (c0K / eK l) • b l := fun l => by
     rw [div_eq_mul_inv, mul_comm, ← smul_smul, hbeK l, smul_smul, inv_mul_cancel₀ (heK l), one_smul]
   have hba : ∀ j, b j = (eK j / c0K) • a j := fun j => by
@@ -1179,7 +1161,7 @@ theorem relIndex_endL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
     rw [LinearMap.toMatrix_apply b b, hba j, map_smul, h2, map_smul, Finsupp.smul_apply, map_sum,
     Finsupp.finsetSum_apply]
     simp only [map_smul, Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul, mul_ite,
-      mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     field_simp [heK i, hc0K]
   let φA : (V →ₗ[K] V) →+ Matrix (Fin (finrank K V)) (Fin (finrank K V)) K :=
     (LinearMap.toMatrix a a).toLinearMap.toAddMonoidHom
@@ -1189,13 +1171,11 @@ theorem relIndex_endL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
     ext D
     rw [AddSubgroup.mem_comap, ← hA, mem_endL_iff a h𝔭]
     constructor
-    · intro h i j
-      exact ⟨_, h i j, by simp [φA]⟩
+    · exact fun h i j => ⟨_, h i j, by simp [φA]⟩
     · intro h i j
       obtain ⟨w, hw, hw'⟩ := h i j
       simp only [one_mul, φA] at hw'
-      rw [show LinearMap.toMatrix a a D i j = w from hw']
-      exact hw
+      rwa [show LinearMap.toMatrix a a D i j = w from hw']
   have hEB : endL (locF 𝔭 B₀) (extP K 𝔭 ^ (k + c) • locF 𝔭 B₀) =
       (matL 𝔭 (k + c) (fun _ j => eK j) (fun i _ => eK i)).comap φA := by
     ext D
@@ -1209,8 +1189,7 @@ theorem relIndex_endL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
       obtain ⟨w, hw, hw'⟩ := h i j
       simp only [φA, LinearEquiv.coe_toLinearMap, LinearMap.toAddMonoidHom_coe] at hw'
       rw [← key, mul_comm] at hw'
-      rw [mul_left_cancel₀ (heK i) hw']
-      exact hw
+      rwa [mul_left_cancel₀ (heK i) hw']
   rw [hEA, hEB] at hle ⊢
   have hle' : matL 𝔭 (k + c) (fun _ j => eK j) (fun i _ => eK i) ≤
       matL 𝔭 k (fun _ _ => (1 : K)) (fun _ _ => 1) := by
@@ -1399,8 +1378,7 @@ private theorem exists_int_add_star_eq_one_of_isCMUnram (hK : Formalism.Hermitia
       algebraMap F K (algebraMap (𝓞 F) F x) := fun x => rfl
   let tr : 𝓞 K → K := fun θ => algebraMap (𝓞 K) K θ + star (algebraMap (𝓞 K) K θ)
   show ∃ θ : 𝓞 K, tr θ = 1
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   let I : Ideal (𝓞 F) :=
     { carrier := {a | ∃ θ : 𝓞 K, tr θ = algebraMap F K (algebraMap (𝓞 F) F a)}
       add_mem' := by
@@ -1491,9 +1469,7 @@ theorem exists_newton (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
     {k c : ℕ} (hk : c + 2 * e + 2 * r' + r + r' + 1 ≤ k) {Z : V →ₗ⋆[K] V →ₗ[K] K}
     (hZ : Z ∈ hermL (locF 𝔭 A₀) 𝔭 k) :
     ∃ X ∈ sSub h (locF 𝔭 A₀) 𝔭 k ⊓ glSub (locF 𝔭 B₀), IA.phi h X - Z ∈ hermL (locF 𝔭 B₀) 𝔭 (k + c) := by
-  have hsym : ∀ a b : V, star (h a b) = h b a := by
-    intro a b
-    exact hs.eq a b
+  have hsym : ∀ a b : V, star (h a b) = h b a := fun a b => hs.eq a b
   obtain ⟨θ₀, hθ1⟩ := exists_int_add_star_eq_one_of_isCMUnram hK hF
   set θ : K := algebraMap (𝓞 K) K θ₀ with hθdef
   obtain ⟨Y0, hY0⟩ := IA.exists_adj hs (nondegenerate hd) Z
@@ -1614,8 +1590,7 @@ theorem relIndex_sSub_inf_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K
     | H X =>
     induction q₂ using QuotientGroup.induction_on with
     | H Y =>
-    intro hXY
-    exact (key X Y).mpr ((keyA _ _).mp hXY)
+    exact fun hXY => (key X Y).mpr ((keyA _ _).mp hXY)
   have hsurj : Function.Surjective f := by
     intro q
     induction q using QuotientAddGroup.induction_on with
@@ -1627,7 +1602,6 @@ theorem relIndex_sSub_inf_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K
       QuotientAddGroup.mk Z
     rw [keyA]
     simpa only [inv_inv] using hXZ
-  show Nat.card (G ⧸ H.subgroupOf G) = Nat.card (HA ⧸ HB.addSubgroupOf HA)
   exact Nat.card_congr (Equiv.ofBijective f ⟨hinj, hsurj⟩)
 
 end Formalism.HermitianLattices.Ext.L3.D2

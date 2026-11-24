@@ -66,9 +66,7 @@ theorem UpperTheory.V.Pr.locProp :
     intro p hp hS
     rcases hL.nice_type p hp with hpt | hpt
     · obtain ⟨Q, hQp, _, hQg⟩ := hS
-      have hpg := hL.good_up Q p hQp hQg
-      intro P' hP' _
-      exact hL.p1 p hp hpt hpg P' hP'
+      exact fun P' hP' _ => hL.p1 p hp hpt (hL.good_up Q p hQp hQg) P' hP'
     · exact hL.p23 p hp hpt p Relation.ReflTransGen.refl hS
   let Inv : PrimeSpectrum R → Prop := fun Q =>
     (Q ∈ L.TI → Q ∈ L.Good) ∧ ((Q ∈ L.TI ∧ Q ∈ L.Good) ∨

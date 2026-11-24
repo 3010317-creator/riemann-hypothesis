@@ -159,8 +159,7 @@ theorem UpperTheory.card_fiber_eq_relIndex_of_normal_quotient :
   let cl : K₀ → (K₀ ⧸ KN.subgroupOf K₀) := fun x => ((x⁻¹ : K₀) : K₀ ⧸ KN.subgroupOf K₀)
   have hmem : ∀ x : K₀, ((cl x).out : Γ)⁻¹ * (x : Γ)⁻¹ ∈ KN := by
     intro x
-    have h := QuotientGroup.eq.mp (QuotientGroup.out_eq' (cl x))
-    simpa [Subgroup.mem_subgroupOf] using h
+    simpa [Subgroup.mem_subgroupOf] using QuotientGroup.eq.mp (QuotientGroup.out_eq' (cl x))
   let uu : K₀ → KN := fun x => ⟨((cl x).out : Γ)⁻¹ * (x : Γ)⁻¹, hmem x⟩
   have key : ∀ x : K₀, ((cl x).out : Γ) * (uu x : Γ) = (x : Γ)⁻¹ := by
     intro x
@@ -186,8 +185,7 @@ theorem UpperTheory.card_fiber_eq_relIndex_of_normal_quotient :
       simpa using hmN h1
     refine Prod.ext hc ?_
     show act (uu x) = act (uu y)
-    rw [he, hcleq x y hc]
-    exact h1
+    rwa [he, hcleq x y hc]
   let f : K₀ → (K₀ ⧸ KN.subgroupOf K₀) × V := fun x => (cl x, act (uu x))
   let Φ : (K₀ ⧸ Km.subgroupOf K₀) → (K₀ ⧸ KN.subgroupOf K₀) × V :=
     Quotient.lift f (fun a b hab => hwd a b (by
@@ -398,8 +396,7 @@ private theorem etale_of_restrict {X Y : Scheme.{0}} (f : X ⟶ Y) (U : Y.Opens)
   have h4 : Etale ((⊤ : X.Opens).ι ≫ f) := h3
   have h5 : Etale ((Scheme.topIso X).inv ≫ (⊤ : X.Opens).ι ≫ f) := inferInstance
   have e : f = (Scheme.topIso X).inv ≫ (⊤ : X.Opens).ι ≫ f := by simp
-  rw [e]
-  exact h5
+  rwa [e]
 
 private theorem tr_comp {B : Scheme.{0}} {Γ : Type} [Group Γ] (X : UpperTheory.Gal.G3.Tower B Γ) {i j m : X.ι} {h h' h'' : Γ}
     (a) (b) (a') (b') (e : h' * h = h'') (a'') (b'') :
@@ -564,8 +561,7 @@ theorem UpperTheory.heckeCorrespondence_lies_in_tower_of_lift_count :
       refine Nat.card_congr ⟨fun y => ⟨pullback.lift z y.1 y.2.symm, pullback.lift_fst _ _ _⟩,
         fun y => ⟨y.1 ≫ pullback.snd _ _, ?_⟩, ?_, ?_⟩
       · rw [Category.assoc, ← pullback.condition, ← Category.assoc, y.2]
-      · intro y
-        exact Subtype.ext (pullback.lift_snd _ _ _)
+      · exact fun y => Subtype.ext (pullback.lift_snd _ _ _)
       · intro y
         refine Subtype.ext (pullback.hom_ext ?_ ?_)
         · rw [pullback.lift_fst]; exact y.2.symm

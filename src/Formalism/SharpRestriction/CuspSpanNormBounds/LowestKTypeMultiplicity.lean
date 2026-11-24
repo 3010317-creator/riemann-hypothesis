@@ -189,20 +189,6 @@ theorem smooth2_step (H X : Matrix (Fin n) (Fin n) ℂ)
     · intro p hpU a b
       exact (key U F hU hF hE p hpU a b).deriv
 
-theorem Smooth2.continuousOn_left {H : Matrix (Fin n) (Fin n) ℂ}
-    {Ψ : Matrix (Fin n) (Fin n) ℂ × Matrix (Fin n) (Fin n) ℂ → E} (h : Smooth2 H Ψ)
-    (a : Matrix (Fin n) (Fin n) ℂ) (ha : inUH H a) :
-    ContinuousOn (fun g => Ψ (g, a)) {g | inUH H g} := by
-  intro g₀ hg₀
-  obtain ⟨U, F, hU, hp, hF, hE⟩ := h (g₀, a) hg₀ ha
-  have hcont : Continuous fun g : Matrix (Fin n) (Fin n) ℂ => (g, a) := by fun_prop
-  have hFc : ContinuousAt F (g₀, a) := hF.continuousOn.continuousAt (hU.mem_nhds hp)
-  have hc : ContinuousAt (fun g => F (g, a)) g₀ := ContinuousAt.comp (g := F) hFc hcont.continuousAt
-  have hV : ∀ᶠ g in nhds g₀, (g, a) ∈ U := hcont.continuousAt.preimage_mem_nhds (hU.mem_nhds hp)
-  refine hc.continuousWithinAt.congr_of_eventuallyEq ?_ (hE _ hp hg₀ ha)
-  filter_upwards [nhdsWithin_le_nhds hV, self_mem_nhdsWithin] with g hgU hg
-  exact hE (g, a) hgU hg ha
-
 end Formalism.MainNotions.LowestKTypeMultiplicity
 
 end
@@ -379,13 +365,6 @@ theorem dsigW_hasDeriv (hσ : IsURepOn (UH (Hpk k r)) σ) {u : H} (hu : IsSmooth
   simp only [Matrix.one_mul, hσ.1.1, ContinuousLinearMap.one_apply] at hd1
   exact hd1.hasDerivAt
 
-theorem orbit_cont (hσ : IsURepOn (UH (Hpk k r)) σ) {v : H} (hv : IsSmoothVec (k := k) (r := r) σ v)
-    (D : List (Mx k r)) (hD : ∀ X ∈ D, InLieHpk k r X) :
-    ContinuousOn (fun g => dsigW σ D (σ g v)) (UH (Hpk k r)) := by
-  have := (psiD_smooth hσ hv D hD).continuousOn_left 1 (UH_one k r)
-  simp only [hσ.1.1, ContinuousLinearMap.one_apply] at this
-  exact this
-
 end Rep
 
 end Formalism.MainNotions.LowestKTypeMultiplicity
@@ -435,21 +414,21 @@ theorem rp_eq_blockW (m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ
   ext i j
   simp only [blockW]
   by_cases hi : r ≤ i.val ∧ i.val < r + k
-  · rw [dif_pos hi]
+  · rw [dite_eq_left hi]
     by_cases hj : r ≤ j.val ∧ j.val < r + k
-    · rw [dif_pos hj]
+    · rw [dite_eq_left hj]
       have e1 : rp_ι k r ⟨i.val - r, by omega⟩ = i := Fin.ext (by show r + (i.val - r) = i.val; omega)
       have e2 : rp_ι k r ⟨j.val - r, by omega⟩ = j := Fin.ext (by show r + (j.val - r) = j.val; omega)
       show m i j = m (rp_ι k r ⟨i.val - r, by omega⟩) (rp_ι k r ⟨j.val - r, by omega⟩)
       rw [e1, e2]
-    · rw [dif_neg hj]
+    · rw [dite_eq_right hj]
       have h2 := (h j hj).2 i
-      rw [h2, if_neg]
+      rw [h2, ite_eq_right]
       intro e
       apply hj
       rw [← e]
       exact hi
-  · rw [dif_neg hi]
+  · rw [dite_eq_right hi]
     exact (h i hi).1 j
 
 theorem rp_sum (f : Fin (2 * r + k + 1) → ℂ) (h : ∀ l, ¬ rp_Mid k r l → f l = 0) :
@@ -476,7 +455,7 @@ theorem rp_blk_mul (a b : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ
   intro l hl
   have h0 := (ha l hl).2 (rp_ι k r i)
   have hne : rp_ι k r i ≠ l := fun e => hl (e ▸ rp_mid_ι i)
-  rw [h0, if_neg hne, zero_mul]
+  rw [h0, ite_eq_right hne, zero_mul]
 
 theorem rp_blk_one : rp_blk k r 1 = 1 := by
   ext i j
@@ -568,21 +547,21 @@ theorem rp_blk_unitary (m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) �
   have e2 : ∑ l, mᴴ (rp_ι k r i) l * (Hpk k r * m) l (rp_ι k r j) =
       ∑ a, mᴴ (rp_ι k r i) (rp_ι k r a) * (Hpk k r * m) (rp_ι k r a) (rp_ι k r j) :=
     rp_sum _ fun l hl => by
-      rw [Matrix.conjTranspose_apply, (hs l hl).1 (rp_ι k r i), if_neg, star_zero, zero_mul]
+      rw [Matrix.conjTranspose_apply, (hs l hl).1 (rp_ι k r i), ite_eq_right, star_zero, zero_mul]
       rintro rfl
       exact hl (rp_mid_ι i)
   have e3 : ∀ a, (Hpk k r * m) (rp_ι k r a) (rp_ι k r j) = m (rp_ι k r a) (rp_ι k r j) := by
     intro a
     rw [Matrix.mul_apply]
-    simp only [rp_H_mid _ (rp_mid_ι a), ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [rp_H_mid _ (rp_mid_ι a), ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [e2] at e
   simp only [e3] at e
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, rp_blk, Matrix.one_apply]
   simp only [Matrix.conjTranspose_apply] at e
   rw [e]
   by_cases h : i = j
-  · rw [if_pos h, if_pos (by rw [h])]
-  · rw [if_neg h, if_neg (fun e => h (rp_ι_inj e))]
+  · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+  · rw [ite_eq_right h, ite_eq_right (fun e => h (rp_ι_inj e))]
 
 theorem rp_blk_mem (m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (hU : m ∈ UH (Hpk k r))
     (hs : rp_Std k r m) : rp_blk k r m ∈ UJset (allPos k) := by

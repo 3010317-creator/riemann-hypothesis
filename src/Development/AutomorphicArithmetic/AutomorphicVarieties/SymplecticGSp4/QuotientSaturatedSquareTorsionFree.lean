@@ -125,7 +125,7 @@ private theorem crLin_wt (h : IsChart 𝒜 x wt φ) (i : τ) {j : X} (hij : wt i
 private theorem crLin_const (φ : A →ₐ[O] MvPowerSeries τ (FractionRing O)) (i : τ) (c : O) :
     crLin φ i (algebraMap O A c) = 0 := by
   classical
-  rw [crLin_apply, AlgHom.commutes, MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, if_neg (by simp)]
+  rw [crLin_apply, AlgHom.commutes, MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, ite_eq_right (by simp)]
 
 private theorem cr_fixed (h : IsChart 𝒜 x wt φ) {j : X} (hj : j ≠ 0) {f : A} (hf : f ∈ 𝒜 j) : x f = 0 := by
   have h1 := h.graded j f hf 0 (by simpa using hj.symm)
@@ -256,8 +256,7 @@ theorem UpperTheory.V.Alg.cot_fg :
   · rintro _ ⟨x, ⟨⟨f, hf, hfx⟩, hx⟩, rfl⟩
     have hfx' : W.π f = (x : R) := hfx
     have h0 : constantCoeff f = 0 := by
-      rw [← W.origin_π h, hfx']
-      exact hx
+      rwa [← W.origin_π h, hfx']
     have key : x - ∑ s : {s // W.wt s = j}, coeff (Finsupp.single s.1 1) f • W.zA s ∈
         RingHom.ker (W.originA h) ^ 2 := by
       refine sq_mem W h j (f - ∑ s : {s // W.wt s = j}, coeff (Finsupp.single s.1 1) f • MvPowerSeries.X s.1)
@@ -267,18 +266,17 @@ theorem UpperTheory.V.Alg.cot_fg :
       simp only [map_smul, coeff_X, smul_eq_mul, mul_ite, mul_one, mul_zero]
       by_cases hw : Finsupp.weight W.wt m = j
       · rcases deg_lt_two m (not_le.1 fun h2 => hm ⟨hw, h2⟩) with rfl | ⟨s, rfl⟩
-        · rw [Finset.sum_eq_zero fun s _ => if_neg (Finsupp.single_ne_zero.2 one_ne_zero).symm]
+        · rw [Finset.sum_eq_zero fun s _ => ite_eq_right (Finsupp.single_ne_zero.2 one_ne_zero).symm]
           simpa using h0
         · have hs : W.wt s = j := by simpa [Finsupp.weight_single] using hw
-          rw [Finset.sum_eq_single (⟨s, hs⟩ : {s // W.wt s = j}), if_pos rfl, sub_self]
+          rw [Finset.sum_eq_single (⟨s, hs⟩ : {s // W.wt s = j}), ite_eq_left rfl, sub_self]
           · intro t _ ht
-            rw [if_neg]
-            intro h2
-            exact ht (Subtype.ext (Finsupp.single_left_injective one_ne_zero h2).symm)
+            rw [ite_eq_right]
+            exact fun h2 => ht (Subtype.ext (Finsupp.single_left_injective one_ne_zero h2).symm)
           · simp
       · rw [hf m hw, Finset.sum_eq_zero, sub_self]
         intro s _
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro rfl
         exact hw (by simpa [Finsupp.weight_single] using s.2)
     have h2 : (satSq (W.originA h)).mkQ x = (satSq (W.originA h)).mkQ
@@ -311,8 +309,7 @@ private theorem UpperTheory.V.Alg.exists_form_of_not_torsion {O L : Type} [CommR
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h
     obtain ⟨⟨c, hc⟩, hcp⟩ := h
     refine hp c (nonZeroDivisors.ne_zero hc) ?_
-    rw [← Submodule.Quotient.mk_eq_zero]
-    exact hcp
+    rwa [← Submodule.Quotient.mk_eq_zero]
   obtain ⟨ψ, hψ⟩ := Module.Projective.exists_dual_ne_zero O hne
   refine ⟨ψ ∘ₗ (Submodule.torsion O (L ⧸ S)).mkQ ∘ₗ S.mkQ, fun s hs => ?_, hψ⟩
   have : S.mkQ s = 0 := (Submodule.Quotient.mk_eq_zero S).2 hs
@@ -434,9 +431,9 @@ private theorem prj_fst {O : Type} [CommRing O] (c : Fin 4 → O) (X : M4 (DualN
     by_cases hai : a = i
     · subst hai
       simp
-    · rw [if_pos rfl, if_neg (fun h => hai h.1)]
+    · rw [ite_eq_left rfl, ite_eq_right (fun h => hai h.1)]
       exact Finset.prod_eq_zero (Finset.mem_erase.2 ⟨hai, Finset.mem_univ _⟩) (sub_self _)
-  · rw [if_neg hab, if_neg (fun h => hab (h.1.trans h.2.symm))]
+  · rw [ite_eq_right hab, ite_eq_right (fun h => hab (h.1.trans h.2.symm))]
 
 private theorem triple {O : Type} [CommRing O] (A B C : M4 (DualNumber O)) (p q : Fin 4) (α γ : O) (β : Fin 4 → O)
     (hA : ∀ a b, (A a b).fst = if a = p ∧ b = p then α else 0)
@@ -474,8 +471,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.tanLz :
     rw [Finset.prod_ne_zero_iff]
     intro j hj
     rw [sub_ne_zero]
-    intro h
-    exact (Finset.mem_erase.1 hj).1 (hinj h).symm
+    exact fun h => (Finset.mem_erase.1 hj).1 (hinj h).symm
   refine ⟨?_, ?_⟩
   · intro z hz
     obtain ⟨hzw, -, ρ, ⟨-, hord⟩, hρ⟩ := hz
@@ -962,8 +958,7 @@ private theorem spans_cotangent_transfer_equal_rank {A' X' : Type} [CommRing A']
         show x' (ι y) = 0
         rw [hx]; exact hy) 2) (Ideal.le_comap_pow _ 2)
     have := hle ha
-    rw [Ideal.mem_comap, RingHom.coe_coe, map_smul] at this
-    exact this
+    rwa [Ideal.mem_comap, RingHom.coe_coe, map_smul] at this
   let P : (A ⧸ satSq x) →ₗ[O] (A' ⧸ satSq x') := Submodule.mapQ _ _ ι.toLinearMap hsat
   have hP : ∀ a, P ((satSq x).mkQ a) = (satSq x').mkQ (ι a) := fun a => rfl
   have hPL : ∀ q ∈ cotLat x 𝒜 j, P q ∈ cotLat x' 𝒜' j' := by
@@ -997,8 +992,7 @@ private theorem spans_cotangent_transfer_equal_rank {A' X' : Type} [CommRing A']
   obtain ⟨s, hs, h⟩ := h
   refine ⟨c, hc, ?_⟩
   have := hinj (c • q - s) (sub_mem (Submodule.smul_mem _ _ hq) (hle hs)) (by rw [map_sub, map_smul, h, sub_self])
-  rw [sub_eq_zero.1 this]
-  exact hs
+  rwa [sub_eq_zero.1 this]
 
 end
 

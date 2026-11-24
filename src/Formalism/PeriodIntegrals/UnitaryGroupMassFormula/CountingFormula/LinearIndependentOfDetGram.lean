@@ -77,9 +77,7 @@ theorem linearIndependent_of_det_gram {K V ι : Type} [Field K] [StarRing K] [Ad
     simp only [Matrix.mulVec, dotProduct, gram, Matrix.of_apply, Pi.zero_apply]
     rw [← hj]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
-  have h0 := Matrix.eq_zero_of_mulVec_eq_zero hd hv
-  intro i
-  exact congrFun h0 i
+  exact fun i => congrFun (Matrix.eq_zero_of_mulVec_eq_zero hd hv) i
 
 variable {D : Formalism.BasicNotions.D7}
 

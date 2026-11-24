@@ -199,16 +199,14 @@ theorem exists_basicOpen_le_of_app_eq_one_of_isClosedImmersion :
       obtain ⟨f, hfN, hf⟩ := hY.exists_basicOpen_le (V := N) ⟨_, hwN⟩ hyY
       exact (hmem z f).mp hf (hJm (Ideal.mem_sup_right hfN))
     · have h1 : hY.fromSpec z ∉ (i'.ker.support : Set X') := by
-        rw [Scheme.Hom.support_ker, i'.isClosedEmbedding.isClosed_range.closure_eq]
-        exact hy
+        rwa [Scheme.Hom.support_ker, i'.isClosedEmbedding.isClosed_range.closure_eq]
       have h2 : hY.fromSpec z ∉ X'.zeroLocus (U := Y') (i'.ker.ideal ⟨Y', hY⟩ : Set Γ(X', Y')) :=
         fun h ↦ h1 ((i'.ker.coe_support_inter ⟨Y', hY⟩).ge ⟨h, hyY⟩).1
       rw [Scheme.mem_zeroLocus_iff] at h2
-      push_neg at h2
+      push Not at h2
       obtain ⟨a, ha, hya⟩ := h2
       have ha' : a ∈ RingHom.ker (i'.app Y').hom := by
-        rw [Scheme.Hom.ker_apply] at ha
-        exact ha
+        rwa [Scheme.Hom.ker_apply] at ha
       exact (hmem z a).mp hya (hJm (Ideal.mem_sup_left ha'))
   have h1 : (1 : Γ(X', Y')) ∈ RingHom.ker (i'.app Y').hom ⊔ K := hJ ▸ Submodule.mem_top
   obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.mp h1
@@ -286,8 +284,7 @@ theorem exists_affine_nbhd_of_closedImm {X Z : Scheme.{0}} (i : Z ⟶ X) [IsClos
     (show i z ∈ (⟨O, hO⟩ : X.Opens) by show i z ∈ O; rw [← Set.mem_preimage, hOV]; exact hz)
   refine ⟨W, hW, hzW, fun y hy => ?_⟩
   have : i y ∈ O := hWO hy
-  rw [← Set.mem_preimage, hOV] at this
-  exact this
+  rwa [← Set.mem_preimage, hOV] at this
 
 theorem gm_idHom_val {Y : Scheme.{0}} (y : Y) (U : Y.Opens) (h : y ∈ U) (a : Γ(Y, U)ˣ) :
     (gm (𝟙 Y) y U a).val = Y.presheaf.germ U y h a.val := by
@@ -371,8 +368,7 @@ theorem near_matched : ∀ (X X' Z Z' : Scheme.{0}) (p : X' ⟶ X) (i : Z ⟶ X)
     rw [Scheme.Hom.appLE, CommRingCat.comp_apply, hb1, map_one, map_one])
   have hzW : i z ∈ X.basicOpen s := by
     show z ∈ i ⁻¹ᵁ X.basicOpen s
-    rw [Scheme.preimage_basicOpen, hsi, Scheme.basicOpen_of_isUnit _ isUnit_one]
-    exact hzW₀
+    rwa [Scheme.preimage_basicOpen, hsi, Scheme.basicOpen_of_isUnit _ isUnit_one]
   have hpW : p ⁻¹ᵁ X.basicOpen s = X'.basicOpen b := by rw [Scheme.preimage_basicOpen, hsp]
   have hWle : X.basicOpen s ≤ W₀ := X.basicOpen_le s
   have hbY : X'.basicOpen b ≤ p ⁻¹ᵁ W₀ := X'.basicOpen_le b
@@ -395,8 +391,7 @@ theorem near_matched : ∀ (X X' Z Z' : Scheme.{0}) (p : X' ⟶ X) (i : Z ⟶ X)
       (X'.presheaf.map (homOfLE (hle3 k)).op).hom
     have h2 : (homOfLE (hle2 k)).op = (homOfLE (X'.basicOpen_le (θ k))).op ≫ (homOfLE (hle3 k)).op :=
       Subsingleton.elim _ _
-    rw [h2, Functor.map_comp, CommRingCat.comp_apply]
-    exact e
+    rwa [h2, Functor.map_comp, CommRingCat.comp_apply]
   have hZle : ∀ j, LZ.U j ⊓ i ⁻¹ᵁ X.basicOpen s ≤ LZ.U j ⊓ LZ.U j₀ := fun j y hy => ⟨hy.1, hW₀j (hWle hy.2)⟩
   refine ⟨X.basicOpen s, fun k => (hu k).unit, fun j => res (hZle j) (LZ.g j j₀), hzW, ?_, ?_, ?_⟩
   · intro k l y hk hl hy
@@ -824,7 +819,7 @@ theorem exists_pic_patch : ∀ (X X' Z Z' : Scheme.{0}) (p : X' ⟶ X) (i : Z �
   by_cases hx : ∃ z, i z = x
   · obtain ⟨z, rfl⟩ := hx
     exact hA2 X X' Z Z' p i i' p' hsq hp hi hgl L' LZ hL' hLZ w hw z
-  · push_neg at hx
+  · push Not at hx
     obtain ⟨W, s', hxW, hbot, hs'⟩ := hA1 X X' Z Z' p i i' p' hsq hp hi hgl L' hL' x hx
     have hno : ∀ y : Z, y ∉ i ⁻¹ᵁ W := fun y hy => by rw [hbot] at hy; exact hy
     refine ⟨W, s', fun _ => 1, hxW, hs', fun k l y _ _ hy => (hno y hy).elim,
@@ -1207,8 +1202,7 @@ theorem isPushout_of_isPullback {P R₁ R₂ R₀ : CommRingCat.{0}} {f₁ : P �
     CommRingCat.ofHom (RingHom.liftOfRightInverse g₁.hom (Function.surjInv hg₁)
       (Function.rightInverse_surjInv hg₁) ⟨s.inl.hom, key s⟩)
   have hd : ∀ (s : PushoutCocone f₁ f₂) (r : R₁), (d s).hom (g₁.hom r) = s.inl.hom r := fun s r => by
-    simp only [d, CommRingCat.hom_ofHom]
-    exact RingHom.liftOfRightInverse_comp_apply _ _ _ _ r
+    simpa only [d, CommRingCat.hom_ofHom] using RingHom.liftOfRightInverse_comp_apply _ _ _ _ r
   refine IsPushout.of_isColimit (c := PushoutCocone.mk g₁ g₂ H.w) ?_
   refine PushoutCocone.IsColimit.mk _ d ?_ ?_ ?_
   · intro s
@@ -1228,8 +1222,7 @@ theorem isPushout_of_isPullback {P R₁ R₂ R₀ : CommRingCat.{0}} {f₁ : P �
     have e := congrArg (fun φ => φ.hom r) h1
     simp only [CommRingCat.hom_comp, RingHom.comp_apply] at e
     change m.hom (g₁.hom r) = (d s).hom (g₁.hom r)
-    rw [hd]
-    exact e
+    rwa [hd]
 
 theorem spec_eq_of_artinian (P : CommRingCat.{0}) [IsLocalRing P] [IsArtinianRing P] (x y : Spec P) :
     x = y := by
@@ -1256,8 +1249,7 @@ theorem glues_spec {P R₁ R₂ R₀ : CommRingCat.{0}} {f₁ : P ⟶ R₁} {f�
   refine GlobalTheory.PinchLift.glues_of_basis _ _ _ _ {⊤} ?_ ?_
   · intro W x hx
     refine ⟨⊤, rfl, trivial, fun y _ => ?_⟩
-    rw [hP y x]
-    exact hx
+    rwa [hP y x]
   · rintro W rfl a b hab
     set V := Spec.map g₂ ⁻¹ᵁ Spec.map f₂ ⁻¹ᵁ (⊤ : (Spec P).Opens) ⊓
       Spec.map g₁ ⁻¹ᵁ Spec.map f₁ ⁻¹ᵁ (⊤ : (Spec P).Opens) with hVdef

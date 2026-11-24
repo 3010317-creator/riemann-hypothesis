@@ -236,8 +236,7 @@ theorem pr_mem (g : UG c (dbl J)) : glPr s (g : GL (β ⊕ β) S) ∈ UG c₁ (d
       ((glPr s (g : GL (β ⊕ β) S) : GL (β ⊕ β) E₁) : Matrix (β ⊕ β) (β ⊕ β) E₁).map c₁ = dbl (J.map (pr₁ s))
   rw [glPr_coe]
   have h1 := congrArg (fun M => M.map (pr₁ s)) hg
-  simp only [Matrix.map_mul, map_c₁ c c₁ s hc1, Matrix.transpose_map, dbl_map] at h1
-  exact h1
+  simpa only [Matrix.map_mul, map_c₁ c c₁ s hc1, Matrix.transpose_map, dbl_map] using h1
 
 end Unitary
 
@@ -388,7 +387,7 @@ def toRS (S : Finset (HeightOneSpectrum (𝓞 F))) : AF F →ₐ[F] RS F S :=
 theorem toRS_eps (S : Finset (HeightOneSpectrum (𝓞 F))) : toRS S (eps S) = 1 := by
   refine Prod.ext rfl (funext fun v => ?_)
   change evalV F v.1 (ind S) = 1
-  rw [ev_ind, if_pos v.2]
+  rw [ev_ind, ite_eq_left v.2]
 
 theorem eps_mul_of (S : Finset (HeightOneSpectrum (𝓞 F))) {a : AF F} (h : toRS S a = 0) : eps S * a = 0 := by
   have h1 : a.1 = 0 := congrArg Prod.fst h
@@ -413,8 +412,7 @@ theorem toRS_surj (S : Finset (HeightOneSpectrum (𝓞 F))) : Function.Surjectiv
     beta_reduce
     rw [dite_eq_right hvS']
     exact zero_mem (v.adicCompletionIntegers F)⟩
-  refine ⟨pairA F r.1 y, Prod.ext rfl (funext fun v => ?_)⟩
-  exact dif_pos v.2
+  exact ⟨pairA F r.1 y, Prod.ext rfl (funext fun v => (dite_eq_left v.2))⟩
 
 def splitS (S : Finset (HeightOneSpectrum (𝓞 F))) : AF F ≃ₐ[F] RS F S × (AF F ⧸ Ideal.span {eps S}) :=
   AlgEquiv.ofBijective ((toRS S).prod (Ideal.Quotient.mkₐ F _)) ⟨by

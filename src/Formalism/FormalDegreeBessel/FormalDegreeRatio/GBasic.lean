@@ -150,16 +150,16 @@ lemma herm_bvec (k r : ℕ) (x y : Fin (2 * r + k + 1)) :
 
 lemma sig_lo (k r : ℕ) (i : Fin (2 * r + k + 1)) (h : i.val < r) :
     (sig k r i).val = 2 * r + k - i.val := by
-  rw [sig_val, if_pos (Or.inl h)]
+  rw [sig_val, ite_eq_left (Or.inl h)]
 
 lemma sig_hi (k r : ℕ) (i : Fin (2 * r + k + 1)) (h : r + k < i.val) :
     (sig k r i).val = 2 * r + k - i.val := by
-  rw [sig_val, if_pos (Or.inr h)]
+  rw [sig_val, ite_eq_left (Or.inr h)]
 
 lemma sig_mid (k r : ℕ) (i : Fin (2 * r + k + 1)) (h1 : r ≤ i.val) (h2 : i.val ≤ r + k) :
     sig k r i = i := by
   unfold sig
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 lemma eq_sig_iff (k r : ℕ) (i l : Fin (2 * r + k + 1)) : i = sig k r l ↔ l = sig k r i := by
   constructor <;> intro h <;> subst h <;> rw [sig_sig]
@@ -195,13 +195,12 @@ lemma PJP_apply (k r : ℕ) (i j : Fin (2 * r + k + 1)) :
   rw [Hpk_eq, Matrix.mul_apply]
   simp only [Formalism.REAL.Jm, Matrix.mul_diagonal, Matrix.conjTranspose_apply, Pk_star]
   simp only [Pk, add_mul, mul_add, ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_add_distrib,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   by_cases hs : j = sig k r i
   · subst hs
     rcases lt_or_ge i.val r with h | h
     · have hsv := sig_lo k r i h
-      have hne : ¬ sig k r i = i := fun e => by have := congrArg Fin.val e; omega
-      have hne' : ¬ i = sig k r i := fun e => hne e.symm
+      have hne' : ¬ i = sig k r i := fun e => by have := congrArg Fin.val e; omega
       have f1 : ¬ (2 * r + k - i.val < r) := by omega
       have f2 : r + k < 2 * r + k - i.val := by omega
       have f3 : ¬ (i.val = r + k) := by omega
@@ -210,17 +209,12 @@ lemma PJP_apply (k r : ℕ) (i j : Fin (2 * r + k + 1)) :
       simp [c1, c2, epsK, sgn, sig_sig, hsv, hne', h, f1, f2, f3, f4, f5]
       all_goals norm_num
     rcases le_or_gt i.val (r + k) with h' | h'
-    · have hm := sig_mid k r i h h'
-      simp only [hm]
-      have f1 : ¬ (i.val < r) := by omega
-      have f2 : ¬ (r + k < i.val) := by omega
+    · simp only [sig_mid k r i h h']
       by_cases h3 : i.val = r + k
       · simp [c1, c2, epsK, sgn, h3]
-      · have f4 : i.val < r + k := by omega
-        simp [c1, c2, epsK, sgn, f1, f2, h3, f4]
+      · simp [c1, c2, epsK, sgn, not_lt.2 h, not_lt.2 h', h3, lt_of_le_of_ne h' h3]
     · have hsv := sig_hi k r i h'
-      have hne : ¬ sig k r i = i := fun e => by have := congrArg Fin.val e; omega
-      have hne' : ¬ i = sig k r i := fun e => hne e.symm
+      have hne' : ¬ i = sig k r i := fun e => by have := congrArg Fin.val e; omega
       have f1 : 2 * r + k - i.val < r := by omega
       have f2 : ¬ (i.val < r) := by omega
       have f3 : ¬ (i.val = r + k) := by omega
@@ -228,8 +222,7 @@ lemma PJP_apply (k r : ℕ) (i j : Fin (2 * r + k + 1)) :
       have f5 : 2 * r + k - i.val < r + k := by omega
       simp [c1, c2, epsK, sgn, sig_sig, hsv, hne', h', f1, f2, f3, f4, f5]
       all_goals norm_num
-  · have hs' : ¬ i = sig k r j := fun e => hs ((eq_sig_iff k r i j).1 e)
-    by_cases hij : j = i
+  · by_cases hij : j = i
     · subst hij
       rcases lt_or_ge j.val r with h | h
       · have hsv := sig_lo k r j h
@@ -237,7 +230,6 @@ lemma PJP_apply (k r : ℕ) (i j : Fin (2 * r + k + 1)) :
         have f2 : r + k < 2 * r + k - j.val := by omega
         have f4 : j.val < r + k := by omega
         have f5 : ¬ (2 * r + k - j.val < r + k) := by omega
-        have hne : ¬ sig k r j = j := fun e => hs e.symm
         simp [c1, c2, epsK, hs, hsv, h, f1, f2, f4, f5]
       rcases le_or_gt j.val (r + k) with h' | h'
       · exact absurd (sig_mid k r j h h').symm hs
@@ -246,15 +238,9 @@ lemma PJP_apply (k r : ℕ) (i j : Fin (2 * r + k + 1)) :
         have f2 : ¬ (j.val < r) := by omega
         have f4 : ¬ (j.val < r + k) := by omega
         have f5 : 2 * r + k - j.val < r + k := by omega
-        have hne : ¬ sig k r j = j := fun e => hs e.symm
         simp [c1, c2, epsK, hs, hsv, h', f1, f2, f4, f5]
         all_goals norm_num
-    · have hij' : ¬ i = j := fun e => hij e.symm
-      have hss : ¬ sig k r i = sig k r j := fun e => hij' ((sig_inj k r i j).1 e)
-      have hs'' : ¬ sig k r j = i := fun e => hs' e.symm
-      have hs3 : ¬ sig k r i = j := fun e => hs e.symm
-      have hss' : ¬ sig k r j = sig k r i := fun e => hss e.symm
-      simp [hs, hs', hij', hss']
+    · simp [hs, mt (eq_sig_iff k r i j).1 hs, Ne.symm hij, mt (sig_inj k r j i).1 hij]
 
 lemma PJP (k r : ℕ) : (Pk k r)ᴴ * Formalism.REAL.Jm (epsK k r) * Pk k r = Hpk k r := by
   ext i j
@@ -264,10 +250,10 @@ lemma Hpk_herm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
   ext i j
   rw [Matrix.conjTranspose_apply, Hpk_eq, Hpk_eq]
   by_cases h : j = sig k r i
-  · rw [if_pos ((eq_sig_iff k r i j).2 h), if_pos h, h, sgn_sig]
+  · rw [ite_eq_left ((eq_sig_iff k r i j).2 h), ite_eq_left h, h, sgn_sig]
     unfold sgn
     split_ifs <;> simp
-  · rw [if_neg (fun e => h ((eq_sig_iff k r i j).1 e)), if_neg h, star_zero]
+  · rw [ite_eq_right (fun e => h ((eq_sig_iff k r i j).1 e)), ite_eq_right h, star_zero]
 
 lemma Hpk_sq (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
   first
@@ -290,14 +276,14 @@ theorem hermitian_pos_facts_hold : HpkFacts := by
       omega
     have h2 : sgn k r (esI k r b) = 1 := by
       unfold sgn
-      rw [if_neg]
+      rw [ite_eq_right]
       show ¬ (2 * r + k - b.val = r + k)
       omega
     rw [herm_bvec, Hpk_eq, h1, h2]
     by_cases h : a = b
     · subst h
       simp
-    · rw [if_neg, if_neg h]
+    · rw [ite_eq_right, ite_eq_right h]
       intro e
       apply h
       have e2 := congrArg Fin.val e

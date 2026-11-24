@@ -67,9 +67,7 @@ theorem IsArithFrobAt.apply_of_pow_eq_one (hm : ¬ p ∣ m) {σ : Gal(K/ℚ)}
     refine ⟨Polynomial.X ^ m - 1, Polynomial.monic_X_pow_sub_C 1 (NeZero.ne m), ?_⟩
     simp [hx]
   let y : 𝓞 K := ⟨x, hxi⟩
-  have hy : y ^ m = 1 := by
-    apply RingOfIntegers.ext
-    exact hx
+  have hy : y ^ m = 1 := RingOfIntegers.ext hx
   have h := AlgHom.IsArithFrobAt.apply_of_pow_eq_one hσ hy
     (natCast_notMem_of_not_dvd p K P hm)
   rw [card_quotient_under p K P] at h

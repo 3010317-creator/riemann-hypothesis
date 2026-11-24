@@ -37,12 +37,10 @@ theorem ProjFrameGenPtRel.proof : ProjFrameGenPtRel.Statement := by
       constructor
       · intro h0
         have h2 : rename (fun p : Ix κ => aV D p.2) h ∈ graphP x e := by
-          rw [graphP, ← G.genericFibre_ker_target, RingHom.mem_ker, aeval_rename]
-          exact h0
+          rwa [graphP, ← G.genericFibre_ker_target, RingHom.mem_ker, aeval_rename]
         rwa [graphP, graphIdeal, RingHom.mem_ker, graphMap_rename_inl, C_eq_zero,
           Ideal.Quotient.eq_zero_iff_mem] at h2
-      · intro hh
-        exact aeval_inl_eq_zero G hh
+      · exact fun hh => aeval_inl_eq_zero G hh
     ext f
     have hu : f ∈ coordIdeal ℤ (fun p : Ix κ => G.x' ⟨Sum.inl p.1, p.2⟩) ↔
         ∀ d, homogeneousComponent d f ∈ coordIdeal ℤ x := by
@@ -53,8 +51,7 @@ theorem ProjFrameGenPtRel.proof : ProjFrameGenPtRel.Statement := by
     · intro h
       rw [← sum_homogeneousComponent f]
       exact Ideal.sum_mem _ fun d _ => h d
-    · intro h d
-      exact coordIdeal_isHomogIdeal ℤ x f h d
+    · exact fun h d => coordIdeal_isHomogIdeal ℤ x f h d
   ·
     intro k
     have h := x'_frame_mul G (e := e) k

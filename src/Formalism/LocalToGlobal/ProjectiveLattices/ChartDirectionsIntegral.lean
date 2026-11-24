@@ -48,9 +48,7 @@ variable {X X' Y : Scheme.{0}} (L : LB X) (F : X' ⟶ X) {K : Type} [Fintype K] 
 
 lemma wchart_pull_le (j : K → PUnit.{1} → L.ι) :
     LB.wchart (L.pull F) φ j ≤ LB.wchart L (fun k => φ k ≫ F) (fun k => j k ⟨⟩) := by
-  intro y hy
-  show y ∈ (⋂ k, (φ k ≫ F).base ⁻¹' (L.U (j k ⟨⟩) : Set _))
-  exact Set.mem_iInter.2 fun k => Set.mem_iInter.1 (Set.mem_iInter.1 hy k) ⟨⟩
+  exact fun y hy => Set.mem_iInter.2 fun k => Set.mem_iInter.1 (Set.mem_iInter.1 hy k) ⟨⟩
 
 def flatGen (c : LB.Gen (LB.LinComb L (fun k => φ k ≫ F) ε)) : LB.Gen (LB.LinComb (L.pull F) φ ε) where
   s := fun j => res (wchart_pull_le L F φ j) (c.s (fun k => j k ⟨⟩))

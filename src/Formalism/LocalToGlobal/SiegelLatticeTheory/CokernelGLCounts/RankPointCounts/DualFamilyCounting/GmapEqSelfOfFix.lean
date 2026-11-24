@@ -34,15 +34,13 @@ theorem gmap_eq_self_of_fix (g : V ≃ₗ[K] V) {A : Submodule (𝓞 K) V} (hA :
   · intro hx
     have e := hA _ hx
     rw [LinearEquiv.apply_symm_apply] at e
-    rw [e]
-    exact hx
+    rwa [e]
   · intro hx
     have e := hA _ hx
     have : g.symm x = x := by
       conv_lhs => rw [← e]
       simp
-    rw [this]
-    exact hx
+    rwa [this]
 
 theorem mem_orthK {h : V →ₗ⋆[K] V →ₗ[K] K} {U : Submodule K V} {v : V} :
     v ∈ orthK h U ↔ ∀ u ∈ U, h u v = 0 := by
@@ -66,8 +64,7 @@ theorem gmap_orthK {h : V →ₗ⋆[K] V →ₗ[K] K} {U : Submodule K V} {g : V
   · intro hx
     have := map_mem_orthK hg hx
     simpa using this
-  · intro hx
-    exact map_mem_orthK hgi hx
+  · exact fun hx => map_mem_orthK hgi hx
 
 theorem gmap_U {h : V →ₗ⋆[K] V →ₗ[K] K} {U : Submodule K V} {g : V ≃ₗ[K] V}
     (hg : g ∈ isomFix h U) :

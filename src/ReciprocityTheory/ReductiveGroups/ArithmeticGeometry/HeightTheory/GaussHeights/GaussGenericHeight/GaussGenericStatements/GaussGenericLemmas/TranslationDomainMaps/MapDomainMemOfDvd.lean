@@ -208,7 +208,7 @@ theorem eq_zero_of_transl [Infinite K] {g : MvPolynomial (Fin (D + 1) × Fin (N 
     refine Finset.sum_eq_zero fun s hs => ?_
     obtain ⟨j, hj⟩ : ∃ j, s (0, j) ≠ 0 := by
       by_contra hne
-      push_neg at hne
+      push Not at hne
       have h1 := h0 s hs
       simp [bdeg, hne] at h1
     apply mul_eq_zero_of_right
@@ -250,8 +250,7 @@ theorem multiHom_of_dvd [CharZero K] {g : MvPolynomial (Fin (D + 1) × Fin (N + 
         have hmem := mapDomain_mem_of_dvd (Equiv.swap 1 b) (hsw _ he0) hs
         have h2 := bdeg_mapDomain (Equiv.swap (1 : Fin (D + 1)) b) 1 s
         rw [Equiv.swap_apply_left] at h2
-        rw [← hc1 b _ hmem]
-        exact h2
+        rwa [← hc1 b _ hmem]
     show bdeg b s = g.support.sup fun r => bdeg 1 r
     rw [hb1]
     apply le_antisymm

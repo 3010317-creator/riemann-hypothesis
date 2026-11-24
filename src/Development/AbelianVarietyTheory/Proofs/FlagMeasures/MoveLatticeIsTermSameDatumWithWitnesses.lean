@@ -91,8 +91,7 @@ theorem exists_den (L : Formalism.MainNotions.S.Loc.LocE F E) (c : E) :
   rw [L.O_def]
   have h : m • c = algebraMap F E ((m : 𝒪[F]) : F) * c := by
     rw [Submonoid.smul_def, Algebra.smul_def, IsScalarTower.algebraMap_apply 𝒪[F] F E]; rfl
-  rw [← h]
-  exact hm
+  rwa [← h]
 
 theorem main (L : Formalism.MainNotions.S.Loc.LocE F E) {n : ℕ} [IsNonarchimedeanLocalField F]
     {Λ : Submodule (↥(Formalism.MainNotions.S.Loc.LocE.O L)) (Fin n → E)} (hΛ : GlobalTheory.HL.IsLat L Λ)
@@ -377,8 +376,7 @@ theorem mem_smul (g : S.GLV) (Λ : Submodule L.O S.V) (v : S.V) : v ∈ g • Λ
   · rintro ⟨b, hb, rfl⟩
     have : g⁻¹ (g • b) = b := g.symm_apply_apply b
     rwa [this]
-  · intro h
-    exact ⟨_, h, g.apply_symm_apply v⟩
+  · exact fun h => ⟨_, h, g.apply_symm_apply v⟩
 
 theorem inv_app (g : S.GLV) (v : S.V) : g⁻¹ (g v) = v := g.symm_apply_apply v
 theorem app_inv (g : S.GLV) (v : S.V) : g (g⁻¹ v) = v := g.apply_symm_apply v
@@ -459,7 +457,7 @@ theorem f'_perp (b : Fin (r + 1)) : S.f' b ∈ perp L S.Hm S.X' := by
   induction hy using Submodule.span_induction with
   | mem y hy =>
     obtain ⟨j, rfl⟩ := hy
-    rw [S.gram', if_neg]
+    rw [S.gram', ite_eq_right]
     exact fun h => (Fin.castSucc_lt_last j).ne h.2
   | zero => exact h_zero_r S _
   | add y z _ _ h1 h2 => exact (h_add_r S _ _ _).trans (by unfold Frames.h; rw [h1, h2, add_zero])
@@ -556,8 +554,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     have e1 : (g * n₀' * (S.wit d Λ).2) (S.f' b) = n₀' ((S.wit d Λ).2 (S.f' b)) :=
       hfix _ ((hn₀'.2.1 _).2 hp)
     have e2 : n₀ ((n₀⁻¹ * (S.wit d Λ).1) (S.f b)) = (S.wit d Λ).1 (S.f b) := app_inv S n₀ _
-    rw [map_sub, e1, e2]
-    exact h1
+    rwa [map_sub, e1, e2]
   · rw [hgr]
     exact Set.Subset.antisymm (graph_sub S hm hn₀ hn₀' H)
       (graph_sub S hm' (S.N.inv_mem hn₀) (S.N'.inv_mem hn₀') H₁)

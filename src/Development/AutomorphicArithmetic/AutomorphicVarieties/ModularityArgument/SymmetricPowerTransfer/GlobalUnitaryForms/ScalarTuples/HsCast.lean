@@ -52,9 +52,9 @@ private theorem hs_cast {F A : Type} [Field F] [NumberField F] [Field A] (φ : F
   unfold Loc.hs
   by_cases hx : x ∈ GlobalTheory.HilbertRecip.nrm p d
   · obtain ⟨a, b, e⟩ := h.1 hx
-    rw [if_pos ⟨a, b, e.symm⟩, GlobalTheory.HilbertRecip.hs_eq_one_iff.2 hx]
+    rw [ite_eq_left ⟨a, b, e.symm⟩, GlobalTheory.HilbertRecip.hs_eq_one_iff.2 hx]
     simp
-  · rw [if_neg fun ⟨a, b, e⟩ => hx (h.2 ⟨a, b, e.symm⟩), GlobalTheory.HilbertRecip.hs_eq_neg_one_iff.2 hx]
+  · rw [ite_eq_right fun ⟨a, b, e⟩ => hx (h.2 ⟨a, b, e.symm⟩), GlobalTheory.HilbertRecip.hs_eq_neg_one_iff.2 hx]
     simp
 
 theorem UpperTheory.V.Z.Sym.Glob.recip :
@@ -77,11 +77,9 @@ theorem UpperTheory.V.Z.Sym.Glob.recip :
   refine ⟨hfin.subset hsub, ?_⟩
   have h := GlobalTheory.HilbertRecip.prod_hs x d (hfin.toFinset.disjSum Finset.univ) (by
     rintro (v | σ) hv
-    · rw [Finset.inl_mem_disjSum, Set.Finite.mem_toFinset]
-      exact hv
+    · rwa [Finset.inl_mem_disjSum, Set.Finite.mem_toFinset]
     · simp)
   rw [Finset.prod_disjSum, mul_eq_one_iff_eq_inv, Int.units_inv_eq_self] at h
   rw [finprod_eq_prod_of_mulSupport_subset _ (s := hfin.toFinset) (by rw [Set.Finite.coe_toFinset]; exact hsub)]
   simp only [h1, h2]
-  have h' := congrArg (fun u : ℤˣ => ((u : ℤ) : ℂ)) h
-  simpa only [Units.coe_prod, Int.cast_prod] using h'
+  simpa only [Units.coe_prod, Int.cast_prod] using congrArg (fun u : ℤˣ => ((u : ℤ) : ℂ)) h

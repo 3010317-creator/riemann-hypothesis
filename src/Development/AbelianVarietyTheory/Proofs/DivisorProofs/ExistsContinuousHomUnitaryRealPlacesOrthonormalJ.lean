@@ -76,8 +76,7 @@ theorem exists_comp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     fun g w => (g.1 : Matrix β β (AE F E)).map (piInf (τ w)) with hM
   have hMmul : ∀ g h w, M (g * h) w = M g w * M h w := by
     intro g h w
-    simp only [hM, Subgroup.coe_mul, Units.val_mul]
-    exact Matrix.map_mul
+    simpa only [hM, Subgroup.coe_mul, Units.val_mul] using Matrix.map_mul
   have hM1 : ∀ w, M 1 w = 1 := by
     intro w
     simp only [hM, OneMemClass.coe_one, Units.val_one]

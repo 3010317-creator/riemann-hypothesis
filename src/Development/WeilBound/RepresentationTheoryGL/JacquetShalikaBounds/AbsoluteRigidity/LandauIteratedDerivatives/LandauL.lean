@@ -107,8 +107,7 @@ theorem propagate (f g : ℂ → ℂ) (a b : ℝ) (hf : ∀ σ : ℝ, a < σ →
   set B := {τ : ℝ | a < τ ∧ ¬ (f =ᶠ[𝓝 (τ : ℂ)] g)} with hB
   have hBne : σ ∈ B := ⟨hσ, hne⟩
   have hBbdd : BddAbove B := ⟨max a b, fun τ hτ => by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hτ.2 (good τ h)⟩
   set γ := sSup B with hγdef
   have hγσ : σ ≤ γ := le_csSup hBbdd hBne
@@ -143,8 +142,7 @@ theorem linL (I : Type) (c l : I → ℝ) (σ₀ σ₁ : ℝ) (F : ℂ → ℂ) 
   have hAbdd : BddBelow A := ⟨σ₀, fun τ hτ => hτ.1.le⟩
   set β := sInf A with hβdef
   have hβσ : σ ≤ β := le_csInf ⟨_, hAne⟩ fun τ hτ => by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hns (mono τ σ h.le hτ.2)
   have hβ0 : σ₀ < β := lt_of_lt_of_le hσ hβσ
   obtain ⟨r, hr, hFr⟩ := (hF β hβ0).exists_ball_analyticOnNhd
@@ -205,8 +203,7 @@ theorem linL (I : Type) (c l : I → ℝ) (σ₀ σ₁ : ℝ) (F : ℂ → ℂ) 
       rw [mul_assoc, ← Real.exp_add]
       congr 2
       rw [hz, hs0]; ring
-    rw [e]
-    exact h1
+    rwa [e]
   have hzA : Summable fun i => c i * Real.exp (-(l i * z)) := by
     refine summable_of_sum_le (fun i => mul_nonneg (hc i) (Real.exp_pos _).le) (c := (F z).re) (fun S => ?_)
     refine hasSum_le (fun n => ?_) (hasSum_sum (fun i _ => hj i)) hT
@@ -230,8 +227,7 @@ theorem linL (I : Type) (c l : I → ℝ) (σ₀ σ₁ : ℝ) (F : ℂ → ℂ) 
     have e2 : (((n.factorial : ℂ)⁻¹ • (((z : ℝ) : ℂ) - ((s0 : ℝ) : ℂ)) ^ n • iteratedDeriv n F ((s0 : ℝ) : ℂ))).re =
         ((n.factorial : ℂ)⁻¹ * (((z : ℝ) : ℂ) - ((s0 : ℝ) : ℂ)) ^ n * iteratedDeriv n F ((s0 : ℝ) : ℂ)).re := by
       simp only [smul_eq_mul, mul_assoc]
-    rw [e2]
-    exact h4
+    rwa [e2]
   have hzA' : z ∈ A := ⟨by linarith, hzA⟩
   have := csInf_le hAbdd hzA'
   linarith

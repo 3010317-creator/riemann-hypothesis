@@ -175,8 +175,7 @@ theorem sec_mem_lat_iff {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOr
     have hR' : R.map (fun x => p.pr (incA D x)) * (fromCols (frameMat B A d.ι) d.a).map (fun x => p.pr (incA D x)) = 1 := by
       have := congrArg (fun M => M.map (p.pr.comp (incA D))) hR
       simp only [Matrix.map_mul] at this
-      rw [Matrix.map_one _ (map_zero _) (map_one _)] at this
-      exact this
+      rwa [Matrix.map_one _ (map_zero _) (map_one _)] at this
     have key : ∀ s, (fun i => incA D (R s i)) ⬝ᵥ
         (fun i => p.sec (((fromCols (frameMat B A d.ι) d.a).map (fun x => p.pr (incA D x)) *ᵥ z) i)) = p.sec (z s) := fun s => by
       rw [dot_sec]
@@ -192,8 +191,7 @@ theorem sec_mem_lat_iff {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOr
         rw [e]
         exact hy) h
       have e : (fun i => p.sec (z (Sum.inl i))) = _ := funext fun i => (key (Sum.inl i)).symm
-      rw [e]
-      exact h1
+      rwa [e]
     · rw [← key]
       refine dot_mem_idV _ ?_ h
       rintro _ ⟨y, hy, u, hu, rfl⟩
@@ -253,8 +251,7 @@ theorem exists_frame {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
     have := congrArg (fun M => M.map (p.pr.comp (incA D))) hR
     simp only [Matrix.map_mul] at this
     rw [Matrix.map_one _ (map_zero _) (map_one _)] at this
-    rw [hC]
-    exact this
+    rwa [hC]
   obtain ⟨b, hb⟩ : ∃ b : Matrix (Fin B.rank) (Fin B.rank) k,
     b = (C * fromBlocks bP 0 0 (diagonal g)).submatrix id σ.symm := ⟨_, rfl⟩
   have hbv : ∀ x, b *ᵥ x = C *ᵥ Sum.elim (bP *ᵥ fun i => x (σ (Sum.inl i))) (fun r => g r * x (σ (Sum.inr r))) := fun x => by
@@ -307,8 +304,7 @@ theorem exists_frame {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
         rw [Matrix.mul_assoc, h1]
       have h2 : ((d.a)ᴴ * B.gram).map (fun x => p.pr (incA D x)) * (frameMat B A d.ι).map (fun x => p.pr (incA D x)) = 0 := by
         have := congrArg (fun M => M.map (p.pr.comp (incA D))) h0
-        rw [Matrix.map_mul, Matrix.map_zero _ (map_zero _)] at this
-        exact this
+        rwa [Matrix.map_mul, Matrix.map_zero _ (map_zero _)] at this
       have h3 : (((d.a)ᴴ * B.gram).map (fun x => p.pr (incA D x)) * β.b) r (σ (Sum.inl l)) =
           (((d.a)ᴴ * B.gram).map (fun x => p.pr (incA D x)) * ((frameMat B A d.ι).map (fun x => p.pr (incA D x)) * bP)) r l := by
         rw [Matrix.mul_apply, Matrix.mul_apply]
@@ -337,8 +333,7 @@ theorem pr_mem_of_valuation_le {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : For
   have h3 : p.pr (incA D a) * p.pr (incA D (s.1 : D.host.E)) = p.pr (incA D (n : D.host.E)) := by
     rw [← map_mul, ← map_mul]
     exact congrArg _ (congrArg _ h)
-  rw [← h3, Valuation.map_mul, hs, mul_one] at hn
-  exact hn
+  rwa [← h3, Valuation.map_mul, hs, mul_one] at hn
 
 
 
@@ -376,8 +371,7 @@ theorem sec_mem_idV_iff {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.
     · intro h
       refine ⟨⟨s / (ϖ : k) ^ n, ?_⟩, by field_simp⟩
       show valuation k _ ≤ 1
-      rw [map_div₀, Valuation.map_pow, div_le_one₀ hγ]
-      exact h
+      rwa [map_div₀, Valuation.map_pow, div_le_one₀ hγ]
   rw [hiff]
   constructor
   · have key : ∀ s ∈ idV I p.v, valuation k (p.pr s) ≤ valuation k (ϖ : k) ^ n := by
@@ -424,8 +418,7 @@ theorem sec_mem_idV_iff {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.
         obtain ⟨o, rfl⟩ := (FractionalIdeal.mem_one_iff _).1 hc
         refine AddSubgroup.subset_closure ⟨α, hα, h0, _, ?_, GlobalTheory.UnitaryEmbeddingColumns.incA_mul_tmul' _ _ _⟩
         have := (I : Submodule (𝓞 D.host.E) D.host.E).smul_mem o ha
-        rw [Algebra.smul_def, mul_comm] at this
-        exact this
+        rwa [Algebra.smul_def, mul_comm] at this
       | zero => rw [mul_zero]; exact zero_mem _
       | add a b _ _ ha hb => rw [mul_add]; exact add_mem ha hb
       | neg a _ ha => rw [mul_neg]; exact neg_mem ha
@@ -461,7 +454,7 @@ theorem count_stairIdeal_at_S0 (hq : OffQ D) {μ₀ : T} (hL : L.Is μ₀) (G : 
   rw [GlobalTheory.FunObj.count_stairId h2.1 h3, Places.stA, Places.stAbar,
     FractionalIdeal.count_mul _ _ h1.1 (inv_ne_zero hmb), FractionalIdeal.count_mul _ _ (GlobalTheory.FunObj.ne_zero_of_conj h1.1 h1.2)
       (inv_ne_zero hmo), FractionalIdeal.count_inv, FractionalIdeal.count_inv, GlobalTheory.FunObj.count_modulBar G hw,
-    GlobalTheory.FunObj.count_modul, hA.1, hA.2, cosExp, if_pos hW, G.pl.under_w hv]
+    GlobalTheory.FunObj.count_modul, hA.1, hA.2, cosExp, ite_eq_left hW, G.pl.under_w hv]
   push_cast
   ring
 

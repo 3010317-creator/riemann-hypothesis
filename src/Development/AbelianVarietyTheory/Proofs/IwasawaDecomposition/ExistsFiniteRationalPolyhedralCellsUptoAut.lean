@@ -402,8 +402,7 @@ theorem exists_contact_baseFun_lamW : ∀ (E : Type) [Field E] [NumberField E] [
       fun M _ => Finset.sum_le_sum fun y _ =>
         classMin_le_of_nonneg M (fun x => nonneg_of_mem_psdCone hB (r x)) (ha M y)
     have h3 := Finset.sum_le_sum fun M hM => mul_le_mul_of_nonneg_left (h2 M hM) (hc M hM).le
-    have h4 := mul_le_mul_of_nonneg_left h1 hP.le
-    exact mul_le_mul_of_nonneg_left (add_le_add h4 h3) hD'.le
+    exact mul_le_mul_of_nonneg_left (add_le_add (mul_le_mul_of_nonneg_left h1 hP.le) h3) hD'.le
 
   have hback : ∀ B ∈ rcone u, (∀ M ∈ 𝓜, ∀ y, classMin M (fun x z => B (r x) (r z)) y = B (r (a M y)) (r (a M y))) →
       (kDen N n 𝓜 : ℝ) * evalR (baseFun (𝓞 E) D φs 𝓜) B = evalW (lamW D N n 𝓜 r w a) B := by
@@ -481,8 +480,7 @@ theorem exists_contact_baseFun_lamW : ∀ (E : Type) [Field E] [NumberField E] [
     obtain ⟨a', ha'F, hle⟩ := hF M y ⟨x, hx⟩
     have hmem : vec M y a'.1 ∈ ⋃ M ∈ (𝓜 : Set ℕ), ⋃ y : Fin n → ZMod (M + 1),
         (fun a' : {a' : Fin n → ℤ // redV M a' = y} => vec M y a'.1) '' (F M y : Set _) := by
-      simp only [Set.mem_iUnion, Set.mem_image, Finset.mem_coe]
-      exact ⟨M, hM, y, a', ha'F, rfl⟩
+      simpa only [Set.mem_iUnion, Set.mem_image, Finset.mem_coe] using ⟨M, hM, y, a', ha'F, rfl⟩
     have h1 := hA _ hmem
     have h2 : ∑ i, ((vec M y a'.1 i : ℤ) : ℝ) * t i =
         ∑ i, t i * (u i (r (a M y)) (r (a M y)) : ℝ) - ∑ i, t i * (u i (r a'.1) (r a'.1) : ℝ) := by
@@ -647,8 +645,7 @@ theorem exists_cells : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   choose a0 ha0F ha0 using fun (M : 𝓜) y => hFmin j M.1 y _ hBP
   let d : Fin (s j) × (∀ M : 𝓜, ∀ y : Fin n → ZMod (M.1 + 1), ↥(F j M.1 y)) := (kk, fun M y => ⟨a0 M y, ha0F M y⟩)
   obtain ⟨c', hc', hBc⟩ := hγc j d _ hB' hkk fun M hM y => by
-    simp only [toA, d, dif_pos hM]
-    exact ha0 ⟨M, hM⟩ y
+    simpa only [toA, d, dite_eq_left hM] using ha0 ⟨M, hM⟩ y
   exact ⟨e, _, γ j d, c', hγ j d, fun i => Set.mem_iUnion.2 ⟨j, Set.mem_iUnion.2 ⟨d, i, rfl⟩⟩, hc', hBc⟩
 
 end GlobalTheory.PolCell

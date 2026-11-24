@@ -241,8 +241,7 @@ theorem quot_le (L A B : Submodule O V) (P : V →ₗ[O] V) (hA : ∀ v ∈ A, P
     refine Submodule.mem_inf.mpr ⟨?_, hPA v⟩
     have h1 : (v : V) ∈ L ⊔ B := Submodule.mem_sup_left v.2
     have h2 : (v : V) - P v ∈ L ⊔ B := Submodule.mem_sup_right (hPB v)
-    have h3 := Submodule.sub_mem _ h1 h2
-    simpa using h3
+    simpa using Submodule.sub_mem _ h1 h2
   let g : ↥L →ₗ[O] ↥((L ⊔ B) ⊓ A) := LinearMap.codRestrict ((L ⊔ B) ⊓ A) (P ∘ₗ L.subtype) hmem
   let q := (Submodule.mkQ ((L ⊓ A).comap ((L ⊔ B) ⊓ A).subtype)) ∘ₗ g
   have hK : ((A ⊓ L) ⊔ (B ⊓ L)).comap L.subtype ≤ LinearMap.ker q := by
@@ -442,7 +441,7 @@ theorem len_le (hsep : ∀ x y : X, x ≠ y → ∃ f ∈ T, f x ≠ f y)
     refine iSup₂_le fun x hx => ?_
     intro v hv
     rw [LinearMap.mem_ker, LinearMap.sub_apply, hvx x _ v hv, hfun S x,
-      if_pos (Finset.mem_coe.mp hx)]
+      ite_eq_left (Finset.mem_coe.mp hx)]
     simp
   have hBle : VS T (actK T act).toRingHom ((S : Set X)ᶜ) ≤
       LinearMap.ker (actK T act (∑ x ∈ S, e x)) := by
@@ -450,7 +449,7 @@ theorem len_le (hsep : ∀ x y : X, x ≠ y → ∃ f ∈ T, f x ≠ f y)
     refine iSup₂_le fun x hx => ?_
     intro v hv
     have hx' : x ∉ S := fun h => hx (Finset.mem_coe.mpr h)
-    rw [LinearMap.mem_ker, hvx x _ v hv, hfun S x, if_neg hx']
+    rw [LinearMap.mem_ker, hvx x _ v hv, hfun S x, ite_eq_right hx']
     simp
   have hPA' : ∀ v, actK T act (∑ x ∈ S, e x) v ∈ VS T (actK T act).toRingHom (S : Set X) := by
     intro v
@@ -498,18 +497,15 @@ theorem len_le (hsep : ∀ x y : X, x ≠ y → ∃ f ∈ T, f x ≠ f y)
     show (algebraMap O (FractionRing O) C)⁻¹ • actK T act (∑ x ∈ S, e x) v ∈
       VS T (actK T act).toRingHom (S : Set X)
     exact Submodule.smul_mem _ _ (hPA' v)
-  · intro v
-    exact hPB' v
+  · exact fun v => hPB' v
 
 theorem mem_ccIdeal_iff (Z : Finset X) (f : T) :
     f ∈ Formalism.BasicNotions.ccIdeal T Z ↔ f ∈ Formalism.NG.ccIdeal T (Z : Set X) := by
   simp only [Formalism.BasicNotions.ccIdeal, Formalism.NG.ccIdeal, Formalism.NG.resOff, RingHom.mem_ker]
   rw [funext_iff, funext_iff]
   constructor
-  · intro h y
-    exact h ⟨y.1, y.2⟩
-  · intro h y
-    exact h ⟨y.1, y.2⟩
+  · exact fun h y => h ⟨y.1, y.2⟩
+  · exact fun h y => h ⟨y.1, y.2⟩
 
 theorem length_ccAt (Z : Finset X) (π : X) :
     Module.length O (O ⧸ ccAt T Z π) = vcc T (Z : Set X) π := by
@@ -536,12 +532,12 @@ theorem vcc_ne_top (hsep : ∀ x y : X, x ≠ y → ∃ f ∈ T, f x ≠ f y) (Z
     funext y
     have hy : y.1 ≠ π := fun h => y.2 (by rw [Finset.mem_coe, h]; exact hπ)
     show (e : X → O) y.1 = 0
-    rw [he, if_neg (by simpa using hy)]
+    rw [he, ite_eq_right (by simpa using hy)]
   have hle : vcc T (Z : Set X) π ≤ IsDiscreteValuationRing.addVal O ((e : X → O) π) := by
     unfold Formalism.NG.vcc
     exact iInf₂_le e heI
   intro htop
-  rw [htop, top_le_iff, he, if_pos (Finset.mem_singleton_self π)] at hle
+  rw [htop, top_le_iff, he, ite_eq_left (Finset.mem_singleton_self π)] at hle
   exact hC ((IsDiscreteValuationRing.addVal_eq_top_iff).mp hle)
 
 theorem addVal_int (l : ℕ) [Fact l.Prime] (hl : ¬ IsUnit (l : O)) (A : ℤ) (hA : A ≠ 0) :
@@ -681,8 +677,7 @@ theorem EigSpan_holds {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N : NDat
   have h := eigSpan (N.T i) (N.act i) (N.T_sep i)
   have hE : heckeEig (N.T i) (N.act i) = Formalism.NG.Vx (N.T i) (actK (N.T i) (N.act i)).toRingHom :=
     funext (heckeEig_eq (N.T i) (N.act i))
-  rw [hE]
-  exact h
+  rwa [hE]
 
 theorem etaLoc_eq {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N : NData R H what₂) (i : N.Loc) :
     N.etaLoc i = lenUnit (O := N.O i) (N.l i)

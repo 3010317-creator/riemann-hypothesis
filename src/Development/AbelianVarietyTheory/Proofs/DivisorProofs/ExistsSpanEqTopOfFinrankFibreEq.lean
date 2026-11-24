@@ -127,8 +127,7 @@ theorem _root_.GlobalTheory.nonempty_basis_of_basis_baseChange {B A M : Type*} [
       intro P'
       have := hc P' P
       split_ifs at this ⊢ with h
-      · rw [← map_one (Ideal.Quotient.mk _), Ideal.Quotient.eq]
-        exact this
+      · rwa [← map_one (Ideal.Quotient.mk _), Ideal.Quotient.eq]
       · exact Ideal.Quotient.eq_zero_iff_mem.mpr (by simpa using this)
     have hsm : ∀ (a : B) (y : (B ⧸ P.asIdeal) ⊗[B] M),
         a • y = Ideal.Quotient.mk P.asIdeal a • y := fun a y =>
@@ -137,7 +136,7 @@ theorem _root_.GlobalTheory.nonempty_basis_of_basis_baseChange {B A M : Type*} [
       intro j
       simp only [x, tmul_sum, tmul_smul]
       simp only [hsm, hmk, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ,
-        if_true]
+        ite_true]
     have h0 : N.mkQ.baseChange (B ⧸ P.asIdeal) = 0 := by
       apply LinearMap.ext_on_range (he P)
       intro j
@@ -168,8 +167,7 @@ theorem _root_.GlobalTheory.nonempty_basis_of_basis_baseChange {B A M : Type*} [
     simpa [Submodule.Quotient.mk_eq_zero] using this
   let f := Fintype.linearCombination B x
   have hfs : Function.Surjective f := by
-    rw [← LinearMap.range_eq_top, Fintype.range_linearCombination]
-    exact hN
+    rwa [← LinearMap.range_eq_top, Fintype.range_linearCombination]
   let F := f.baseChange A
   have hFs : Function.Surjective F := LinearMap.lTensor_surjective A hfs
   let φ : (Fin r → A) →ₗ[A] (Fin r → A) := b.equivFun.toLinearMap ∘ₗ F ∘ₗ

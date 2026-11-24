@@ -262,19 +262,17 @@ theorem twAct_lie {q : Tens F p₁ q₁ r s →ₗ[ℂ] P} {w : InfinitePlace F}
     (hK : ∀ Y, Keeps q (atPl w (fockAct2 p₁ q₁ r s Y))) (ε : Bool) (Y Z : Mat r s) :
     twAct ε q w (Y * Z - Z * Y) = twAct ε q w Y * twAct ε q w Z - twAct ε q w Z * twAct ε q w Y := by
   cases ε
-  · simp only [twAct, Bool.false_eq_true, if_false, LinearMap.comp_apply]
+  · simp only [twAct, Bool.false_eq_true, ite_false, LinearMap.comp_apply]
     rw [negT_lie, fockOp_lie hq hK]
-  · simp only [twAct, if_true]
-    exact fockOp_lie hq hK Y Z
+  · simpa only [twAct, ite_true] using fockOp_lie hq hK Y Z
 
 theorem twAct_comm {q : Tens F p₁ q₁ r s →ₗ[ℂ] P} (hq : Function.Surjective q)
     (hK : ∀ w Y, Keeps q (atPl w (fockAct2 p₁ q₁ r s Y))) (ε : Bool) {w w' : InfinitePlace F} (hw : w ≠ w')
     (Y Z : Mat r s) : twAct ε q w Y * twAct ε q w' Z = twAct ε q w' Z * twAct ε q w Y := by
   cases ε
-  · simp only [twAct, Bool.false_eq_true, if_false, LinearMap.comp_apply]
+  · simp only [twAct, Bool.false_eq_true, ite_false, LinearMap.comp_apply]
     exact fockOp_comm hq hK hw _ _
-  · simp only [twAct, if_true]
-    exact fockOp_comm hq hK hw _ _
+  · simpa only [twAct, ite_true] using fockOp_comm hq hK hw _ _
 
 end Laws
 
@@ -377,7 +375,7 @@ theorem exp_col {n : Type} [Fintype n] [DecidableEq n] (Y : Matrix n n ℂ) (c :
     | succ k ih =>
       intro a
       rw [pow_succ', Matrix.mul_apply]
-      simp only [ih, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, h]
+      simp only [ih, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, h]
       split_ifs <;> simp [pow_succ']
   have h1 := (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) Y).mapL
     (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℂ ℂ a c))
@@ -828,8 +826,7 @@ theorem good_lin (D : Derivation ℂ R R) {τ : Type} [Fintype τ] [DecidableEq 
 
       rw [map_sum]
       exact Finset.sum_congr rfl fun a _ => by rw [map_smul, smul_eq_mul]
-    rw [e1, e2]
-    exact T
+    rwa [e1, e2]
 
 theorem der_sum_apply {ι : Type} (s : Finset ι) (f : ι → Derivation ℂ R R) (x : R) :
     (∑ i ∈ s, f i) x = ∑ i ∈ s, f i x := by
@@ -889,7 +886,7 @@ private theorem fock_second_action_eq_derivation {n d : ℕ} (Y : Mat d 0) :
       LinearMap.sum_apply, LinearMap.smul_apply, Module.End.mul_apply,
       LinearMap.mulLeft_apply, smul_eq_mul]
   · simp only [Prod.mk.injEq, true_and, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ,
-      if_true, Finset.sum_const, Finset.card_univ, smul_smul, ← Finset.sum_smul]
+      ite_true, Finset.sum_const, Finset.card_univ, smul_smul, ← Finset.sum_smul]
     have hcard : Fintype.card (FockH1Action.Ix n 0) = n := by simp [FockH1Action.Ix]
     rw [hcard, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, ← Finset.sum_mul, Matrix.trace]
     simp only [Matrix.diag]
@@ -1026,9 +1023,7 @@ private theorem isExp_add {A B U W : Module.End ℂ V} (hU : IsExp A U) (hW : Is
   have cA : ∀ x : N, ((A' x : N) : V) = A x := fun x => rfl
   have cB : ∀ x : N, ((B' x : N) : V) = B x := fun x => rfl
   have cS : ∀ x : N, (((A' + B') x : N) : V) = (A + B) x := fun x => rfl
-  have hc' : Commute A' B' := by
-    refine LinearMap.ext fun x => Subtype.ext ?_
-    exact LinearMap.congr_fun hc.eq (x : V)
+  have hc' : Commute A' B' := LinearMap.ext fun x => Subtype.ext (LinearMap.congr_fun hc.eq (x : V))
   have e1 : W v = (Ex B' ⟨v, hv⟩ : V) := eq_compat cB hW (isExp_Ex B') ⟨v, hv⟩
   have e : (U * W) v = (Ex (A' + B') ⟨v, hv⟩ : V) := by
     rw [Ex_add hc', Module.End.mul_apply, Module.End.mul_apply, e1]
@@ -1122,7 +1117,7 @@ private theorem isExp_partial (L U : ∀ i, Module.End ℂ (V i)) (hL : ∀ i, L
   | empty =>
     have : (PiTensorProduct.map fun i =>
         if i ∈ (∅ : Finset ι) then U i else (LinearMap.id : V i →ₗ[ℂ] V i)) = 1 := by
-      simp only [Finset.notMem_empty, if_false]
+      simp only [Finset.notMem_empty, ite_false]
       exact PiTensorProduct.map_id
     rw [this, Finset.sum_empty]
     exact isExp_zero_one
@@ -1156,8 +1151,7 @@ theorem UpperTheory.TP.RP.expSum :
     ∀ {ι : Type} [Fintype ι] [DecidableEq ι] {V : ι → Type} [∀ i, AddCommGroup (V i)] [∀ i, Module ℂ (V i)]
       (L U : ∀ i, Module.End ℂ (V i)), (∀ i, LocFin (L i)) → (∀ i, IsExp (L i) (U i)) → IsExp (sumPl L) (PiTensorProduct.map U) := by
   intro ι _ _ V _ _ L U hL hU
-  have h := UpperTheory.TP.RP.isExp_partial L U hL hU Finset.univ
-  simpa [sumPl] using h
+  simpa [sumPl] using UpperTheory.TP.RP.isExp_partial L U hL hU Finset.univ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.BlockDeterminants.ExponentialEntries.ExpSum =====
@@ -1359,7 +1353,7 @@ private theorem omAct_one_pk {n d : ℕ} (M : Matrix (Ln n 0 d 0) (Ln n 0 d 0) �
     · exact i.elim0
     · exact i.elim0
   simp only [omAct, LinearMap.sum_apply, LinearMap.smulRight_apply, Matrix.entryLinearMap_apply, LinearMap.smul_apply, hE]
-  simp only [smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, Matrix.trace, Matrix.diag_apply]
+  simp only [smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Matrix.trace, Matrix.diag_apply]
   rw [← Finset.sum_smul, smul_smul, mul_comm]
 private theorem fock_first_action_one_polynomial {n d : ℕ} (Y : Mat n 0) :
     fockAct1 n 0 d 0 Y (1 : Formalism.BasicNotions.TH.Pol n 0 d 0) = (((d : ℂ) / 2) * Y.trace) • (1 : Formalism.BasicNotions.TH.Pol n 0 d 0) := by
@@ -1493,15 +1487,13 @@ private theorem acts_of_k_pk (hcm : IsCMExt (maximalRealSubfield E) E (UpperTheo
     refine hlast w _ _ ?_
     have h1 := hgen 1 w
     rw [one_smul, hγ1] at h1
-    rw [← he.emb w (B.emb w) k]
-    exact h1
+    rwa [← he.emb w (B.emb w) k]
   change γ (Multiplicative.ofAdd 1) = e k at hγ1
   obtain ⟨U, hU1, hU2⟩ := exp_gen_pk hact hadm hloc hγ hgen
   have e2 := isExp_unique_pk hU1 (UpperTheory.TP.RP.expSum _ _ (fun w => hloc _ _) fun w => hU w (Y w) _ (hg w))
   have := hU2 T
   change Acts (evI (maximalRealSubfield E)) (om' (γ (Multiplicative.ofAdd 1))) (Φ T) (Φ (U T)) at this
-  rw [hγ1, e2] at this
-  exact this
+  rwa [hγ1, e2] at this
 private theorem parity_of_pk (hcm : IsCMExt (maximalRealSubfield E) E (UpperTheory.TP.cj E)) {B : Base (maximalRealSubfield E) E} {N : ℕ}
     {W : Spc (maximalRealSubfield E) E N} {b : ℂ} (hN : 1 ≤ N)
     {C : InfinitePlace (maximalRealSubfield E) → Matrix (Fin N) (Ix N 0) ℂ}

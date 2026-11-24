@@ -90,7 +90,6 @@ end LateralTheory.KummerTheory.SecSHPf
 namespace LateralTheory.KummerTheory
 
 theorem SecSH_of (h : SecSHPf.ShSect) : SecSH := by
-  intro A _ hA R _ M
-  exact SecSHPf.bij_of_top R M _ (SecSHPf.top_of_sect h A hA)
+  exact fun A _ hA R _ M => SecSHPf.bij_of_top R M _ (SecSHPf.top_of_sect h A hA)
 
 end LateralTheory.KummerTheory

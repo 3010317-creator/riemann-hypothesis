@@ -62,8 +62,7 @@ theorem injective_of_charZero {F : Type} [Field F] [CharZero F] (f : 𝓞 E →+
     Function.Injective f := by
   rw [RingHom.injective_iff_ker_eq_bot]
   apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
-  rw [Ideal.under_def, RingHom.comap_ker]
-  rw [RingHom.ker_eq_bot_iff_eq_zero]
+  rw [Ideal.under_def, RingHom.comap_ker, RingHom.ker_eq_bot_iff_eq_zero]
   intro n hn
   have : f.comp (algebraMap ℤ (𝓞 E)) = Int.castRingHom F := RingHom.ext_int _ _
   rw [this] at hn
@@ -184,8 +183,7 @@ theorem sum_proj_eq_one {F : Type} [Field F] [CharZero F] {ι : Type} [Fintype �
     have h := (b.traceDual).traceDual_repr_apply (algebraMap (𝓞 E) E 1) k
     rw [Module.Basis.traceDual_traceDual, integralBasis_repr_apply, Algebra.traceForm_apply,
       RingHom.map_one (algebraMap (𝓞 E) E), one_mul] at h
-    rw [← h]
-    rw [eq_intCast, eq_ratCast, Rat.cast_intCast]
+    rw [← h, eq_intCast, eq_ratCast, Rat.cast_intCast]
   simp_rw [h1]
   rw [Finset.sum_comm]
 
@@ -301,8 +299,7 @@ theorem colength_dvd : ∀ (E F T : Type) [Field E] [NumberField E] [Field F] [C
       Finset.prod_congr rfl fun i _ => by
         by_cases h0 : δ i = 0
         · rw [hz i h0, pow_zero, pow_zero]
-        · simp only [δ', if_neg h0]
-    rw [hp]
-    exact h
+        · simp only [δ', ite_eq_right h0]
+    rwa [hp]
 
 end GlobalTheory.ColengthDifferent

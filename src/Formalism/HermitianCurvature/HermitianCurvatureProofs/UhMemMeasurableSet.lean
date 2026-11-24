@@ -93,9 +93,7 @@ theorem sigma_mul' {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1
   have hprod : P * a * P⁻¹ * (P * b * P⁻¹) = P * (a * b) * P⁻¹ := by
     rw [show P * a * P⁻¹ * (P * b * P⁻¹) = P * a * (P⁻¹ * P) * b * P⁻¹ by
       simp only [Matrix.mul_assoc], h2, Matrix.mul_one, Matrix.mul_assoc P a b]
-  have hmul := hmulU _ (conj_mem_lemma h1 hPJ ha) _ (conj_mem_lemma h1 hPJ hb)
-  simp only [hprod, key] at hmul
-  exact hmul
+  simpa only [hprod, key] using hmulU _ (conj_mem_lemma h1 hPJ ha) _ (conj_mem_lemma h1 hPJ hb)
 
 theorem dd_stable {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1) → ℝ}
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {σ : Mx k r → (H →L[ℂ] H)} {w0 : H}

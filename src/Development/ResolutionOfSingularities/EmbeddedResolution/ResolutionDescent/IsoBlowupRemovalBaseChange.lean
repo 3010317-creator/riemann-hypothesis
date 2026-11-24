@@ -55,8 +55,7 @@ private theorem support_nonempty_iff_ne_top {A : Scheme.{u}} (I : A.IdealSheafDa
     (∃ x, x ∈ I.support) ↔ I ≠ ⊤ := by
   constructor
   · rintro ⟨x, hx⟩ rfl
-    rw [Scheme.IdealSheafData.support_top] at hx
-    exact hx
+    rwa [Scheme.IdealSheafData.support_top] at hx
   · intro hne
     by_contra hc
     push Not at hc
@@ -135,8 +134,7 @@ theorem isPullbackSequenceOfBlowups_withoutIsoBlowups {X' X : Scheme.{u}} {φ : 
   · intro i hi
     have h1 := t.nontrivialIndex_lt_length hi
     omega
-  · intro i j _ hij
-    exact t.nontrivialIndex_strictMono hij
+  · exact fun i j _ hij => t.nontrivialIndex_strictMono hij
   · exact t.nontrivialIndex_lengthWithoutIsoBlowups.trans hlen
   · intro i hi
     have hi' : i < t.length := by omega
@@ -149,8 +147,7 @@ theorem isPullbackSequenceOfBlowups_withoutIsoBlowups {X' X : Scheme.{u}} {φ : 
     constructor
     · intro hne
       refine t.exists_nontrivialIndex_eq_of_center_ne_top hi' ?_
-      intro htop
-      exact hne ((comap_isoHom_eq_top_iff _ _).mp (hcomap.trans htop))
+      exact fun htop => hne ((comap_isoHom_eq_top_iff _ _).mp (hcomap.trans htop))
     · rintro ⟨j, hj, rfl⟩
       intro htop
       refine t.center_nontrivialIndex_ne_top hj ?_

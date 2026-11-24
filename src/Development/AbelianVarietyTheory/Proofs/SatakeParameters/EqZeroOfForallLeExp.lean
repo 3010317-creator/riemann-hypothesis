@@ -76,8 +76,7 @@ theorem continuous_of_valuation_eq {A B Γ : Type} [Ring A] [Ring B]
   refine ⟨Units.mk0 _ hk1, trivial, fun x hx => ?_⟩
   simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
   simp only [Set.mem_setOf_eq]
-  rw [Valuation.restrict_lt_iff_lt_embedding, hg, ← hk]
-  exact hx
+  rwa [Valuation.restrict_lt_iff_lt_embedding, hg, ← hk]
 
 theorem exists_extension {K : Type} [Field K] [NumberField K] {R L : Type} [CommRing R]
     [IsDedekindDomain R] [Field L] [Algebra R L] [IsFractionRing R L]
@@ -186,8 +185,7 @@ theorem le_of_forall_le_exp {a b : ℤᵐ⁰} (hb : b ≤ 1)
     obtain ⟨n, hn⟩ := WithZero.exists_exp_neg_natCast_lt ha0
     exact absurd (h n zero_le') (not_le.2 hn)
   · have hl : log b ≤ 0 := by
-      rw [← exp_le_exp, exp_log hb0, exp_zero]
-      exact hb
+      rwa [← exp_le_exp, exp_log hb0, exp_zero]
     have hn : (((-log b).toNat : ℕ) : ℤ) = -log b := Int.toNat_of_nonneg (by omega)
     have he : exp (-(((-log b).toNat : ℕ) : ℤ)) = b := by
       rw [hn, neg_neg, exp_log hb0]
@@ -208,8 +206,7 @@ theorem continuous_of_valued_eq {A B Γ : Type*} [Ring A] [Ring B] [LinearOrdere
   refine ⟨Units.mk0 _ ha0, trivial, fun x hx => ?_⟩
   simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
   simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
-  rw [hf, ← ha]
-  exact hx
+  rwa [hf, ← ha]
 
 
 end GlobalTheory.DenseCompl

@@ -122,7 +122,7 @@ theorem redV_zero_of_frame {F E : Type} [Field F] [NumberField F] [Field E] [Num
 theorem single_mem_pi_bot {κ : Type} [CommRing κ] {n : ℕ} {A : Set (Fin n)} {p : Fin n} (hp : p ∈ A) :
     (Pi.single p (1 : κ) : Fin n → κ) ∈ Submodule.pi {q | q ∉ A} (fun _ => (⊥ : Submodule κ κ)) := by
   refine Submodule.mem_pi.2 fun q hq => ?_
-  rw [Submodule.mem_bot, Pi.single_apply, if_neg]
+  rw [Submodule.mem_bot, Pi.single_apply, ite_eq_right]
   intro h
   subst h
   exact hq hp
@@ -153,19 +153,19 @@ theorem restrictedBlock_mem_unipSym_of_columns {κ : Type} [CommRing κ] {n r : 
     exfalso
     have hi : i.1 < r := by have := i.2; omega
     have hj : j.1 < r := by have := j.2; omega
-    simp only [blk2, hi, hj, if_true, lt_irrefl] at hij
+    simp only [blk2, hi, hj, ite_true, lt_irrefl] at hij
   have hv : ∀ i j : Fin r, ((upperLeftBlock hle N : GL (Fin r) κ) : Matrix (Fin r) (Fin r) κ) i j =
       (N : Matrix (Fin n) (Fin n) κ) (Fin.castLE hle i) (Fin.castLE hle j) := by
     intro i j
     rw [upper_block_val_submatrix hle hall]
     rfl
   have hne : ∀ i j : Fin r, i.1 ≠ j.1 → (if Fin.castLE hle i = Fin.castLE hle j then (1 : κ) else 0) = 0 :=
-    fun i j h => if_neg (fun e => h (by simpa using congrArg Fin.val e))
+    fun i j h => ite_eq_right (fun e => h (by simpa using congrArg Fin.val e))
   refine ⟨⟨fun i j hij => ?_, fun i => ?_⟩, fun i j h0 h1 h2 => ?_⟩
   · have hij' : j.1 < i.1 := hij
     show ((upperLeftBlock hle N : GL (Fin r) κ) : Matrix (Fin r) (Fin r) κ) i j = 0
     rw [hv, hcol _ _ (by simp only [Fin.coe_castLE]; omega), hne i j (by omega)]
-  · rw [hv, hcol _ _ (by simp only [Fin.coe_castLE]; omega), if_pos rfl]
+  · rw [hv, hcol _ _ (by simp only [Fin.coe_castLE]; omega), ite_eq_left rfl]
   · rw [hv, hcol _ _ (by simp only [Fin.coe_castLE]; omega), hne i j (by omega)]
 
 theorem mem_hatL_of_Lf (D : D7) : ∀ v ∈ (II D).Lf, v ∈ Formalism.L2.Herm.hatL (F := D.host.F) (E := D.host.E) (n := (Yc D 0).rank) (II D).L :=
@@ -297,8 +297,7 @@ theorem redFn_mem_unipSym_of_cong : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS �
     funext i
     obtain ⟨hm, he⟩ := hRed i j
     unfold redV
-    rw [dite_eq_left hm, Pi.single_apply]
-    exact he
+    rwa [dite_eq_left hm, Pi.single_apply]
   have hcol : ∀ j q : Fin (Yc D 0).rank, ¬ ((j.1 = D.R.rS + D.R.k ∧ q.1 < D.R.rS) ∨ (j.1 ≠ D.R.rS + D.R.k ∧ q.1 < j.1)) →
       ((redFn β PP M : GL (Fin (Yc D 0).rank) (kP PP)) : Matrix (Fin (Yc D 0).rank) (Fin (Yc D 0).rank) (kP PP)) q j =
         if q = j then 1 else 0 := by
@@ -435,8 +434,7 @@ theorem bwd_move : ∀ (I : AutInst) (g : ℕ) {r k : ℕ} (e0 f0 : Fin r → VA
       · have hl' : l.1 < i.1 := hl
         have hlj : j ≠ l := fun e => hji (by rw [e]; exact hl')
         have := Zsym (h.dual j l)
-        rw [if_neg hlj, map_zero, sub_zero] at this
-        exact this
+        rwa [ite_eq_right hlj, map_zero, sub_zero] at this
 
 end GlobalTheory.SeeConjBwd
 end -- clump:auto
@@ -481,8 +479,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
   have hred := _root_.GlobalTheory.SeeConjGroup.redV_add_smul_stab β (II D).L hβ PP
   have hLf : ∀ v, v ∈ (II D).Lf → v ∈ Formalism.L2.Herm.hatL (F := ↥D.host.F) (E := D.host.E) (II D).L := by
     intro v hv
-    have e := Formalism.IndefR.Eqv.lamAf_eq_hatL (V := Yc D 0) (II D).L
-    exact (Set.ext_iff.mp e v).mp hv
+    exact (Set.ext_iff.mp (Formalism.IndefR.Eqv.lamAf_eq_hatL (V := Yc D 0) (II D).L) v).mp hv
   have hint : ∀ i : Fin D.R.k, ew ∈ IntAf (II D).F (II D).E ∧ sigA (II D) ew ∈ IntAf (II D).F (II D).E := by
     intro i
     obtain ⟨t, ht, he⟩ := hF.dual i i
@@ -507,7 +504,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
       have hi : ew ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := (hint i).1
       have hs := hred.2.1 ⟨ew, hi⟩ (bw i) (hLf _ (hF.mem.2.2 i).1)
       have h0 := hL.2.1 hi
-      simp only [Bool.false_eq_true, if_false] at h0
+      simp only [Bool.false_eq_true, ite_false] at h0
       rw [h0, zero_smul] at hs
       rw [hF.bw_w i]; exact hs
     · intro a; rw [← hM]; exact hc.1 a
@@ -546,7 +543,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
       have hi : sigA (II D) ew ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := (hint i).2
       have hs := hred.2.1 ⟨sigA (II D) ew, hi⟩ (bwd i) (hLf _ (hF.mem.2.2 i).2)
       have h0 := hL.2.2.1 hi
-      simp only [if_true] at h0
+      simp only [ite_true] at h0
       rw [h0, zero_smul] at hs
       rw [hF.bwd_w i]; exact hs
     · intro a; rw [← hM]; exact hc.1 a
@@ -714,8 +711,7 @@ theorem main : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A :
             (h _ ((hPg _).2 ⟨k, hk⟩)).2
     refine ⟨t.1, t.2, ?_⟩
     have e := congrArg Subtype.val ht
-    rw [Subring.coe_mul, Subring.coe_natCast] at e
-    exact e
+    rwa [Subring.coe_mul, Subring.coe_natCast] at e
 
 end GlobalTheory.SeeConjZMod
 end -- clump:auto
@@ -830,8 +826,7 @@ theorem coord_mL {D : D7} (g : ℕ) (β : GL (Fin (Yc D 0).rank) (EAf D))
     have e1 : (((g : IntAf (II D).F (II D).E) : (II D).E ⊗[(II D).F] Af (II D).F)) = (g : EAf D) :=
       map_natCast (IntAf (II D).F (II D).E).subtype g
     have e2 := mulVec_smul_apply (β⁻¹).val (show EAf D from ((g : IntAf (II D).F (II D).E) : (II D).E ⊗[(II D).F] Af (II D).F)) (y : Fin (Yc D 0).rank → EAf D) i
-    rw [e1] at e2
-    exact e2
+    rwa [e1] at e2
   | zero => intro i; exact ⟨0, zero_mem _, (mulVec_zero_apply (β⁻¹).val i).trans (mul_zero _).symm⟩
   | add x y _ _ hx hy =>
     intro i
@@ -993,12 +988,10 @@ theorem GlobalTheory.SeeConjRead.mem_deeperLevel_iff_reductions_symmetricUnipote
     · intro hx
       refine ⟨(VS D).frame.equivFun.symm x, ?_, (VS D).frame.equivFun.apply_symm_apply x⟩
       have e := Module.Basis.equivFun_symm_apply (VS D).frame x
-      rw [← e] at hx
-      exact hx
+      rwa [← e] at hx
     · rintro ⟨y, hy, hyx⟩
       change (VS D).frame.equivFun y = x at hyx
-      rw [← hyx, (VS D).frame.sum_equivFun y]
-      exact hy
+      rwa [← hyx, (VS D).frame.sum_equivFun y]
   have hβ' : IsFrame β (II D).L := by rw [hL]; exact hβ
   have hloc : ∀ PP ∈ R.Pg, ∃ w : Bool,
       LocAt (D.host.g 0 * D.host.g 1) e0 f0 z0 bw bwd ew β PP w := by
@@ -1008,9 +1001,9 @@ theorem GlobalTheory.SeeConjRead.mem_deeperLevel_iff_reductions_symmetricUnipote
         flagV D.R.rS D.R.k (Yc D 0).rank e0 f0 bw z0
       else flagV D.R.rS D.R.k (Yc D 0).rank e0 f0 (fun i => bwd (Fin.rev i)) z0) := hred PP hP
     by_cases hc : GlobalTheory.StdFrames.cpt PP ew = 1
-    · rw [if_pos hc] at hr
+    · rw [ite_eq_left hc] at hr
       exact ⟨true, hgP PP hP, fun _ => by simpa using (hA1 hc).1, fun _ => by simpa using (hA1 hc).2, hr⟩
-    · rw [if_neg hc] at hr
+    · rw [ite_eq_right hc] at hr
       exact ⟨false, hgP PP hP, fun _ => by simpa using (hA0 hc).1, fun _ => by simpa using (hA0 hc).2, hr⟩
   have hxM : (II D).fmat ((Formalism.IndefR.RationalEmbedding.iota D) κ).2 = (finE (Yc D 0) κ).val := GlobalTheory.T.finiteMatrix_iota_eq_finitePart κ
   show _ ∧ _ ↔ _

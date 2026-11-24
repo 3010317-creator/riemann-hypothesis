@@ -188,8 +188,7 @@ theorem exists_geom_level : ∀ (h n N : ℕ) (B : Type) [CommRing B] (b : TBase
     simp
   have ψi : Function.Injective ψ := fun g g' e => by
     refine GlobalTheory.SiegelPull.push_injective pb T0 ?_
-    have e' := congrArg (V ≫ ·) e
-    simpa [ψ, preHom, ← Category.assoc, VU] using e'
+    simpa [ψ, preHom, ← Category.assoc, VU] using congrArg (V ≫ ·) e
   have ψs : Function.Surjective ψ := fun g => by
     obtain ⟨y, hy⟩ := GlobalTheory.SiegelPull.push_surjective pb T0 (V ≫ g)
     refine ⟨y, ?_⟩
@@ -498,10 +497,8 @@ theorem exists_levelCover : ∀ (h n N : ℕ) (B B' : Type) [CommRing B] [CommRi
       constructor
       · intro e β' hβ'
         obtain rfl : β' = β := spMap_inj' (hβ'.symm.trans hβ)
-        rw [← hu, ← e]
-        exact hW'
-      · intro H
-        exact CommutatorPairing.weilIs_unique hG c₀.ab hLB hW' (hu ▸ H β hβ)
+        rwa [← hu, ← e]
+      · exact fun H => CommutatorPairing.weilIs_unique hG c₀.ab hLB hW' (hu ▸ H β hβ)
 
   obtain ⟨κ, hκ, q, hq⟩ := exists_finite_mod (Fin h ⊕ Fin h → ℤ) hNpos
   haveI := hκ

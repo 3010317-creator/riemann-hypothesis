@@ -96,14 +96,14 @@ theorem pderiv_prim (ω : τ → MvPowerSeries τ k)
     · subst hw
       have h1 : n w = m w + 1 := by simp [hn]
       have h2 : n - Finsupp.single w 1 = m := by rw [hn]; exact add_tsub_cancel_right _ _
-      rw [if_neg (by omega), h2, h1]
+      rw [ite_eq_right (by omega), h2, h1]
       push_cast
       ring
     · have h1 : n w = m w := by simp [hn, hw]
       by_cases hm : m w = 0
-      · rw [if_pos (by rw [h1, hm]), h1, hm]
+      · rw [ite_eq_left (by rw [h1, hm]), h1, hm]
         simp
-      · rw [if_neg (by rw [h1]; exact hm), h1]
+      · rw [ite_eq_right (by rw [h1]; exact hm), h1]
         have hle : Finsupp.single w 1 ≤ m := Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr hm)
         have hc := congrArg (coeff (m - Finsupp.single w 1)) (hω w v)
         rw [coeff_pderiv, coeff_pderiv] at hc
@@ -176,105 +176,17 @@ theorem om_closed (i a c : Fin d) :
 
 theorem d_evY (h : PS k 1 d) (b : Fin d) :
     pderiv (R := k) ((1 : Fin 2), b) (ev (n := 2) ![pt k d 1] h) = ev (n := 2) ![pt k d 1] (pderiv (R := k) ((0 : Fin 1), b) h) := by
-  have hXd : ∀ v w : Fin 2 × Fin d, pderiv (R := k) v (X w : PS k 2 d) = if v = w then 1 else 0 := by
-    intro v w
-    first
-    | (simp [MvPowerSeries.pderiv_X, Pi.single_apply]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X_self, MvPowerSeries.pderiv_X_of_ne]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X]; done)
-  have hcz : CZ (![pt k d 1] : Fin 1 → Pt k 2 d) := by
-    intro j i
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show constantCoeff (X ((1 : Fin 2), i) : PS k 2 d) = 0
-    first
-    | exact MvPowerSeries.constantCoeff_X _
-  rw [pderiv_ev hcz, Fintype.sum_eq_single ((0 : Fin 1), b)]
-  · show ev _ (pderiv (R := k) ((0 : Fin 1), b) h) * pderiv (R := k) ((1 : Fin 2), b) (X ((1 : Fin 2), b)) = _
-    rw [hXd, if_pos rfl, mul_one]
-  · rintro ⟨j, i⟩ hne
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show ev _ _ * pderiv (R := k) ((1 : Fin 2), b) (X ((1 : Fin 2), i)) = 0
-    rw [hXd, if_neg, mul_zero]
-    intro heq
-    apply hne
-    rw [(Prod.mk.inj heq).2]
+  exact GlobalTheory.FormalLog.d_evY h b
 
 theorem d_evX (h : PS k 1 d) (a : Fin d) :
     pderiv (R := k) ((0 : Fin 2), a) (ev (n := 2) ![pt k d 0] h) = ev (n := 2) ![pt k d 0] (pderiv (R := k) ((0 : Fin 1), a) h) := by
-  have hXd : ∀ v w : Fin 2 × Fin d, pderiv (R := k) v (X w : PS k 2 d) = if v = w then 1 else 0 := by
-    intro v w
-    first
-    | (simp [MvPowerSeries.pderiv_X, Pi.single_apply]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X_self, MvPowerSeries.pderiv_X_of_ne]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X]; done)
-  have hcz : CZ (![pt k d 0] : Fin 1 → Pt k 2 d) := by
-    intro j i
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show constantCoeff (X ((0 : Fin 2), i) : PS k 2 d) = 0
-    first
-    | exact MvPowerSeries.constantCoeff_X _
-  rw [pderiv_ev hcz, Fintype.sum_eq_single ((0 : Fin 1), a)]
-  · show ev _ (pderiv (R := k) ((0 : Fin 1), a) h) * pderiv (R := k) ((0 : Fin 2), a) (X ((0 : Fin 2), a)) = _
-    rw [hXd, if_pos rfl, mul_one]
-  · rintro ⟨j, i⟩ hne
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show ev _ _ * pderiv (R := k) ((0 : Fin 2), a) (X ((0 : Fin 2), i)) = 0
-    rw [hXd, if_neg, mul_zero]
-    intro heq
-    apply hne
-    rw [(Prod.mk.inj heq).2]
+  exact GlobalTheory.FormalLog.d_evX h a
 
 theorem pderiv_first_ev_second_point_eq_zero (h : PS k 1 d) (a : Fin d) : pderiv (R := k) ((0 : Fin 2), a) (ev (n := 2) ![pt k d 1] h) = 0 := by
-  have hXd : ∀ v w : Fin 2 × Fin d, pderiv (R := k) v (X w : PS k 2 d) = if v = w then 1 else 0 := by
-    intro v w
-    first
-    | (simp [MvPowerSeries.pderiv_X, Pi.single_apply]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X_self, MvPowerSeries.pderiv_X_of_ne]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X]; done)
-  have hcz : CZ (![pt k d 1] : Fin 1 → Pt k 2 d) := by
-    intro j i
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show constantCoeff (X ((1 : Fin 2), i) : PS k 2 d) = 0
-    first
-    | exact MvPowerSeries.constantCoeff_X _
-  rw [pderiv_ev hcz]
-  refine Finset.sum_eq_zero fun p _ => ?_
-  obtain ⟨j, i⟩ := p
-  have hj : j = 0 := Subsingleton.elim _ _
-  subst hj
-  show ev _ _ * pderiv (R := k) ((0 : Fin 2), a) (X ((1 : Fin 2), i)) = 0
-  rw [hXd, if_neg, mul_zero]
-  intro heq
-  exact absurd (Prod.mk.inj heq).1 (by decide)
+  exact GlobalTheory.FormalLog.pderiv_first_ev_second_point_eq_zero h a
 
 theorem pderiv_second_ev_first_point_eq_zero (h : PS k 1 d) (b : Fin d) : pderiv (R := k) ((1 : Fin 2), b) (ev (n := 2) ![pt k d 0] h) = 0 := by
-  have hXd : ∀ v w : Fin 2 × Fin d, pderiv (R := k) v (X w : PS k 2 d) = if v = w then 1 else 0 := by
-    intro v w
-    first
-    | (simp [MvPowerSeries.pderiv_X, Pi.single_apply]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X_self, MvPowerSeries.pderiv_X_of_ne]; done)
-    | (by_cases hvw : v = w <;> simp [hvw, MvPowerSeries.pderiv_X]; done)
-  have hcz : CZ (![pt k d 0] : Fin 1 → Pt k 2 d) := by
-    intro j i
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show constantCoeff (X ((0 : Fin 2), i) : PS k 2 d) = 0
-    first
-    | exact MvPowerSeries.constantCoeff_X _
-  rw [pderiv_ev hcz]
-  refine Finset.sum_eq_zero fun p _ => ?_
-  obtain ⟨j, i⟩ := p
-  have hj : j = 0 := Subsingleton.elim _ _
-  subst hj
-  show ev _ _ * pderiv (R := k) ((1 : Fin 2), b) (X ((0 : Fin 2), i)) = 0
-  rw [hXd, if_neg, mul_zero]
-  intro heq
-  exact absurd (Prod.mk.inj heq).1 (by decide)
+  exact GlobalTheory.FormalLog.pderiv_second_ev_first_point_eq_zero h b
 
 variable [Algebra ℚ k]
 
@@ -312,70 +224,14 @@ theorem logOf_add (i : Fin d) :
   rw [eq_C_of_pderiv_zero hd, hc, map_zero]
 
 theorem addPt : (![G.add (pt k (n := 2) d 0) (pt k d 1)] : Fin 1 → Pt k 2 d) = ![G.F] := by
-  have hid : ∀ f : PS k 2 d, ev (n := 2) ![pt k d 0, pt k d 1] f = f := by
-    intro f
-    have hfam : (fun p : Fin 2 × Fin d => (![pt k (n := 2) d 0, pt k d 1] : Fin 2 → Pt k 2 d) p.1 p.2) =
-        fun p => (X p : PS k 2 d) := by
-      funext p
-      obtain ⟨j, i⟩ := p
-      fin_cases j <;> rfl
-    unfold ev
-    rw [hfam]
-    first
-    | exact congrFun MvPowerSeries.subst_self f
-  funext j i
-  have hj : j = 0 := Subsingleton.elim _ _
-  subst hj
-  exact hid (G.F i)
+  exact GlobalTheory.FormalLog.addPt G
 
 theorem logSt : LogSt := by
   apply GlobalTheory.FormalLog.logSt
 
 omit [Algebra ℚ k] in
 theorem ez_y (h : PS k 1 d) : ev (n := 1) ![pt k d 0, 0] (ev (n := 2) ![pt k d 1] h) = C (constantCoeff h) := by
-  have ha : CZ (![pt k d 0, 0] : Fin 2 → Pt k 1 d) := by
-    intro j i
-    fin_cases j
-    · show constantCoeff (X ((0 : Fin 1), i) : PS k 1 d) = 0
-      first
-      | exact MvPowerSeries.constantCoeff_X _
-    · show constantCoeff (0 : PS k 1 d) = 0
-      exact map_zero _
-  have hb : CZ (![pt k d 1] : Fin 1 → Pt k 2 d) := by
-    intro j i
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show constantCoeff (X ((1 : Fin 2), i) : PS k 2 d) = 0
-    first
-    | exact MvPowerSeries.constantCoeff_X _
-  have hc : CZ (fun (j : Fin 0) (_ : Fin d) => (0 : PS k 1 d)) := fun j => Fin.elim0 j
-  have hz : CZ (fun (_ : Fin 1) (_ : Fin d) => (0 : PS k 0 d)) := fun _ _ => map_zero _
-  have hev0 : ev (fun (j : Fin 0) (_ : Fin d) => (0 : PS k 1 d)) (0 : PS k 0 d) = 0 := by
-    have h0 := ev_sub hc (0 : PS k 0 d) 0
-    simp only [sub_self] at h0
-    exact h0
-  have hfam : (fun (j : Fin 1) (i : Fin d) =>
-      ev (![pt k d 0, 0] : Fin 2 → Pt k 1 d) ((![pt k d 1] : Fin 1 → Pt k 2 d) j i)) =
-      fun (j : Fin 1) (i : Fin d) => ev (fun (j : Fin 0) (_ : Fin d) => (0 : PS k 1 d))
-        ((fun (_ : Fin 1) (_ : Fin d) => (0 : PS k 0 d)) j i) := by
-    funext j i
-    have hj : j = 0 := Subsingleton.elim _ _
-    subst hj
-    show ev (![pt k d 0, 0] : Fin 2 → Pt k 1 d) (X ((1 : Fin 2), i)) =
-      ev (fun (j : Fin 0) (_ : Fin d) => (0 : PS k 1 d)) (0 : PS k 0 d)
-    rw [hev0, ev_X ha]
-    all_goals rfl
-  have hconst : ∀ g : PS k 0 d, g = C (constantCoeff g) := by
-    intro g
-    ext e
-    have he : e = 0 := by
-      first
-      | exact Subsingleton.elim _ _
-    subst he
-    first
-    | (simp; done)
-  rw [ev_ev ha hb, hfam, ← ev_ev hc hz, hconst (ev (fun (_ : Fin 1) (_ : Fin d) => (0 : PS k 0 d)) h),
-    cc_ev hz, ev_C hc]
+  exact GlobalTheory.FormalLog.ez_y h
 
 end ReciprocityTheory.ChartRestriction.G.TB.LogPf
 end -- clump:auto

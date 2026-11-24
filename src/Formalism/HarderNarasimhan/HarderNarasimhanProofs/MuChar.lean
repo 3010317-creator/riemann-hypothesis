@@ -114,8 +114,7 @@ theorem muChar_of (h1 : SatR.{u, v, w}) (h2 : SatBasic.{u, v, w}) (h3 : RatioMax
         rw [P5, hrk0]
         simp
       · have h1 : slope ρ N ≤ θ := (le_csSup hTbdd ⟨N, hN, hN0, rfl⟩).trans h
-        rw [hslope, div_le_iff₀ (hrkpos N hN hN0)] at h1
-        exact h1
+        rwa [hslope, div_le_iff₀ (hrkpos N hN hN0)] at h1
     · intro h
       refine csSup_le hTne ?_
       rintro t ⟨N, hN, hN0, rfl⟩
@@ -168,8 +167,7 @@ theorem muChar_of (h1 : SatR.{u, v, w}) (h2 : SatBasic.{u, v, w}) (h3 : RatioMax
       have hN'sat : IsSat ρ L N' := ⟨hN'L, by rw [hzl]; exact hsat⟩
       have hrk' : rk ρ N' = rk ρ N := by
         show Formalism.F.rk (zl ρ N') = Formalism.F.rk (zl ρ N)
-        rw [hzl]
-        exact hrkeq
+        rwa [hzl]
       have hdeg' : deg ρ N ≤ deg ρ N' := (P2 N N' hNN' hN'L).2 hrk'.symm
       by_cases hN'L' : N' = L
       · have hr : rk ρ N = rk ρ L := by rw [← hrk', hN'L']

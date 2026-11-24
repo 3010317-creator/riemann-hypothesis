@@ -135,18 +135,7 @@ variable {D : D7}
 
 theorem continuous_mixed (F : Type) [Field F] [NumberField F] :
     Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace F) := by
-  have : (InfiniteAdeleRing.ringEquiv_mixedSpace F : InfiniteAdeleRing F → mixedEmbedding.mixedSpace F) =
-      fun x => ((fun v : {w : InfinitePlace F // InfinitePlace.IsReal w} =>
-          InfinitePlace.Completion.extensionEmbeddingOfIsReal v.2 (x v)),
-        (fun v : {w : InfinitePlace F // InfinitePlace.IsComplex w} =>
-          InfinitePlace.Completion.extensionEmbedding v.1 (x v))) := by
-    funext x; exact InfiniteAdeleRing.ringEquiv_mixedSpace_apply F x
-  rw [this]
-  refine Continuous.prodMk (continuous_pi fun v => ?_) (continuous_pi fun v => ?_)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal v.2).continuous.comp
-      (continuous_apply _)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbedding v.1).continuous.comp
-      (continuous_apply _)
+  exact GlobalTheory.ThetaTransformMeas.continuous_mixed F
 
 def realCoord (σ : (D.what₂.Tau → ℂ) →+ AE D) {m n d : ℕ} (ε : Module.Basis (Fin d) D.host.F D.host.E) :
     (D.what₂.Tau → Fin m → Fin n → ℂ) →+ (Fin m × Fin n × Fin d → mixedEmbedding.mixedSpace D.host.F) where
@@ -431,7 +420,7 @@ theorem absThetaInt_le_contSeminorm : GlobalTheory.Published.WeilThetaConvergenc
   refine Seminorm.continuous_of_lowerSemicontinuous (ν.comp L) fun f y hy => ?_
   by_cases hy0 : y < 0
   · exact Filter.Eventually.of_forall fun f' => hy0.trans_le ENNReal.toReal_nonneg
-  · push_neg at hy0
+  · push Not at hy0
     have h1 : ENNReal.ofReal y < absThetaInt B m ((pureS g f).1 ∘ coord ε) :=
       (ENNReal.ofReal_lt_iff_lt_toReal hy0 (hfin _)).2 hy
     filter_upwards [hN f _ h1] with f' hf'

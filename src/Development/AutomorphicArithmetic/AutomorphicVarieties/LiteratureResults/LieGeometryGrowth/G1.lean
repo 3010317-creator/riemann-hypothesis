@@ -639,8 +639,7 @@ private theorem cut_unif (φ : Sm E a) (h : BddDer φ) :
     obtain ⟨C, hC⟩ := h X []
     refine ⟨C, fun g => ?_⟩
     have := hC g
-    rw [List.map_singleton, List.prod_singleton] at this
-    exact this
+    rwa [List.map_singleton, List.prod_singleton] at this
   exact ⟨K, (norm_nonneg _).trans (hK 1), fun X g =>
     ((fderiv ℝ (chart φ.1 g) (oneL E a)).le_opNorm X).trans (mul_le_mul_of_nonneg_right (hK g) (norm_nonneg _))⟩
 
@@ -692,8 +691,7 @@ private theorem cutFn_flat (R : ℝ) (z : ℂ) (h : cutRe R z = 0 ∨ cutRe R z 
         rw [h]; exact Real.smoothTransition.le_one _)
   have h1 := (Complex.ofRealCLM.hasFDerivAt.comp z
     ((cutRe_smooth R).differentiable (by simp) z).hasFDerivAt).fderiv
-  rw [h0, ContinuousLinearMap.comp_zero] at h1
-  exact h1
+  rwa [h0, ContinuousLinearMap.comp_zero] at h1
 
 theorem UpperTheory.V.Lit.Geo.stepCut :
     StepCut := by
@@ -724,8 +722,7 @@ theorem UpperTheory.V.Lit.Geo.stepCut :
     refine Subtype.ext (funext fun g => ?_)
     change cutFn R (φ.1 (g * finGL E a k)) = cutFn R (φ.1 g)
     rw [hφ, hφ, H.f_lev k hk]
-  · intro g
-    exact ⟨_, Real.smoothTransition.nonneg _, Real.smoothTransition.le_one _, rfl⟩
+  · exact fun g => ⟨_, Real.smoothTransition.nonneg _, Real.smoothTransition.le_one _, rfl⟩
   · rw [cut_lie (cutFn_smooth R) φ X g, mul_assoc]
     exact ((fderiv ℝ (cutFn R) _).le_opNorm _).trans (mul_le_mul (hM R _) (hK X g) (norm_nonneg _) hM0)
   · have h1 : cutRe R (φ.1 g) = 1 := by

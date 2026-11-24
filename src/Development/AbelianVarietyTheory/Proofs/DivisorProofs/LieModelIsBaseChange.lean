@@ -79,8 +79,7 @@ theorem weilIs_one_of_gen {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonObj
     LBIso.trans (GlobalTheory.isLB_lbPow hL 1) hL (pull_isLB hM _) (GlobalTheory.lbIso_lbPow_one hL)
       (GlobalTheory.ZH.AbelianFibre.lbIso_of_gens t ht (GlobalTheory.UU.unitGen _ _) (GlobalTheory.UU.unitGen_isGen _ _))
   have h2 := GlobalTheory.WeilIsogeny.weilIs_pull_hom hG hA hL hM (𝟙 A) hw h1
-  simp only [Nat.cast_one, _root_.mul_one] at h2
-  exact h2
+  simpa only [Nat.cast_one, _root_.mul_one] using h2
 
 theorem weilIs_axis {S : Scheme.{0}} {A B : Over S} [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B]
     (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB B.left} (hP : P.IsLB) (ψ : A ⟶ B) [IsMonHom ψ]
@@ -118,8 +117,7 @@ theorem weilIs_diag_sq : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMon
     have h' : Out.WeilIs (G2 A) P N (lift 1 a ≫ lift (snd A A) (fst A A)) (lift b 1 ≫ lift (snd A A) (fst A A)) c := by
       simpa only [comp_lift, lift_fst, lift_snd] using hc
     have h := GlobalTheory.WeilIsogeny.weilIs_pull_hom hG hAA hP hP _ hw h'
-    simp only [Nat.cast_one, _root_.mul_one] at h
-    exact h
+    simpa only [Nat.cast_one, _root_.mul_one] using h
   have r1 := GlobalTheory.DiagPairing.weilIs_mul_left hG hAA hP e11 e21
   have r2 := GlobalTheory.DiagPairing.weilIs_mul_left hG hAA hP hc e22
   rw [lift_mul_lift₂] at r1 r2
@@ -134,7 +132,6 @@ theorem weilIs_diag_sq : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMon
     rw [← _root_.mul_inv, inv_inv, pow_two]
   have hD : (P.pull (lift (𝟙 A) (𝟙 A)).left).IsLB := pull_isLB hP _
   have h := GlobalTheory.WeilIsogeny.weilIs_pull_hom hG hA hD hP (lift (𝟙 A) (𝟙 A)) (GlobalTheory.lbIso_lbPow_one hD) hd
-  simp only [Nat.cast_one, _root_.mul_one] at h
-  exact h
+  simpa only [Nat.cast_one, _root_.mul_one] using h
 
 end GlobalTheory.DiagSqAxes

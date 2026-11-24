@@ -97,8 +97,7 @@ theorem _root_.GlobalTheory.PowLie.isLieComb_iff_prod {G : Over (_root_.Reciproc
   · intro hw
     refine ⟨fun i => _root_.GlobalTheory.PowLie.sc (c i) ≫ v i, fun i => by
       simp [_root_.GlobalTheory.PowLie.sc], ?_⟩
-    rw [List.prod_ofFn]
-    exact hw
+    rwa [List.prod_ofFn]
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj MeasureTheory in
 attribute [local instance] Over.cartesianMonoidalCategory in
@@ -132,8 +131,7 @@ theorem _root_.GlobalTheory.PowLie.isLieBasis_pow : ∀ (R : Type) [CommRing R] 
       if (finProdFinEquiv.symm m).1 = i' then v (finProdFinEquiv.symm m).2 else 1)
   have hv' : ∀ (i i' : Fin j) (k : Fin g),
       v' (finProdFinEquiv (i, k)) ≫ p.pr i' = if i = i' then v k else 1 := by
-    intro i i' k
-    exact (Fan.IsLimit.fac p.lim _ i').trans (by simp only [Equiv.symm_apply_apply])
+    exact fun i i' k => (Fan.IsLimit.fac p.lim _ i').trans (by simp only [Equiv.symm_apply_apply])
   have hpr : ∀ (w : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.epsR R ⟶ G') (i : Fin j), _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsTangent w → _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsTangent (w ≫ p.pr i) := by
     intro w i hw
     rw [_root_.GlobalTheory.PowLie.isTangent_iff] at hw ⊢

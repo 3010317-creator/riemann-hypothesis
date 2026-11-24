@@ -102,8 +102,7 @@ theorem piTensor_isSubquotient_jac_degZero : ∀ (k : Type) [Field k] [Valuative
     rw [Ne, Submodule.Quotient.mk_eq_zero, hK, Submodule.mem_bot]; exact hv
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ (Jacquet π (unipRad k e)),
       φ (Submodule.Quotient.mk v) ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hx ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 h)
   let L : Jacquet π (unipRad k e) →ₗ[ℂ] PiTensorProduct ℂ X :=
     (PiTensorProduct.isEmptyEquiv (Fin 0)).symm.toLinearMap ∘ₗ φ
@@ -457,7 +456,7 @@ theorem jMinus_contract (e : (Σ a, m a) ≃ n) : ∀ U ∈ 𝓝 (1 : GL n k), �
     · subst h
       rw [leviEmb_apply_same]
       simp [S, T, Matrix.scalar_apply, diagonal_pow, diagonal_apply, inv_pow]
-    · rw [leviEmb_apply_ne k e _ h, if_neg fun h' => h (congrArg Sigma.fst (e.injective h'))]
+    · rw [leviEmb_apply_ne k e _ h, ite_eq_right fun h' => h (congrArg Sigma.fst (e.injective h'))]
   have hcomm : ∀ x (d : Levi k m), d * S x = S x * d := fun x d => funext fun a => Units.ext
     ((Matrix.scalar_commute _ (fun _ => Commute.all _ _) _).eq).symm
   let F : Filter (kˣ × jMinus k e) := (comap (fun x : kˣ => (x : k)) (𝓝 0)) ×ˢ ⊤
@@ -477,14 +476,12 @@ theorem jMinus_contract (e : (Σ a, m a) ≃ n) : ∀ U ∈ 𝓝 (1 : GL n k), �
     rcases lt_trichotomy a b with hab | rfl | hab
     · have h0 : ∀ p : kˣ × jMinus k e, (p.2.1 : Matrix n n k) (e ⟨a, i⟩) (e ⟨b, j⟩) = 0 := fun p =>
         (mem_parabLower_iff k).1 ((mem_unipRadLower k).1 p.2.2.1).1 a b i j hab
-      simp only [h0, mul_zero, zero_mul, IwahoriFactor.one_ne e hab.ne]
-      exact tendsto_const_nhds
+      simpa only [h0, mul_zero, zero_mul, IwahoriFactor.one_ne e hab.ne] using tendsto_const_nhds
     · have h1 : ∀ p : kˣ × jMinus k e, (p.1 : k) ^ r a * (p.2.1 : Matrix n n k) (e ⟨a, i⟩) (e ⟨a, j⟩) *
           ((p.1 : k) ^ r a)⁻¹ = (1 : Matrix n n k) (e ⟨a, i⟩) (e ⟨a, j⟩) := fun p => by
         rw [((mem_unipRadLower k).1 p.2.2.1).2 a i j, IwahoriFactor.one_same, mul_comm, ← mul_assoc,
           inv_mul_cancel₀ (pow_ne_zero _ p.1.ne_zero), one_mul]
-      simp only [h1]
-      exact tendsto_const_nhds
+      simpa only [h1] using tendsto_const_nhds
     · rw [IwahoriFactor.one_ne e hab.ne', (IsValuativeTopology.hasBasis_nhds_zero k).tendsto_right_iff]
       intro γ _
       have h1 : {x : k | valuation k x < γ} ∈ 𝓝 (0 : k) :=
@@ -562,9 +559,7 @@ theorem fixed_ne_bot_of_isSubquotient {G : Type} [Group G] [TopologicalSpace G] 
     rw [this]
     exact hρ v
   obtain ⟨v, hv, hfv⟩ := IwahoriOnto.exists_fixed_map_eq hS hH f.toLinearMap u fun g hg => by
-    have h1 := mem_fixed.1 hw g hg
-    show f (S.toRepresentation g u) = f u
-    exact (f.isIntertwining _ _ g u).trans h1
+    exact (f.isIntertwining _ _ g u).trans (mem_fixed.1 hw g hg)
   refine (Submodule.ne_bot_iff _).2 ⟨(v : V), mem_fixed.2 fun g hg => ?_, ?_⟩
   · have := mem_fixed.1 hv g hg
     exact congrArg Subtype.val this

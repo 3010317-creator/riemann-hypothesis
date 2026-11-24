@@ -119,7 +119,7 @@ def pTerm (P : B.Mat k r → ℂ) (w : List (B.Mat k r)) : B.DTerm k r Wp Wq whe
 theorem pTerm_word {P : B.Mat k r → ℂ} {w : List (B.Mat k r)} (hw : ∀ X ∈ w, B.inLie k r X) :
     (pTerm (Wp := Wp) (Wq := Wq) P w).word = w := by
   simp only [pTerm]
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 theorem pTerm_word_le (P : B.Mat k r → ℂ) (w : List (B.Mat k r)) :
     (pTerm (Wp := Wp) (Wq := Wq) P w).word.length ≤ w.length := by
@@ -138,8 +138,7 @@ private theorem foldr_max_le_lemma (t : ℕ) : ∀ l : List ℕ, (∀ x ∈ l, x
   | nil => intro _; simp
   | cons a l ih =>
     intro h
-    simp only [List.foldr_cons]
-    exact max_le (h a (by simp)) (ih fun x hx => h x (by simp [hx]))
+    simpa only [List.foldr_cons] using max_le (h a (by simp)) (ih fun x hx => h x (by simp [hx]))
 
 private theorem le_foldr_max_lemma_2 : ∀ (l : List ℕ) (x : ℕ), x ∈ l → x ≤ l.foldr max 0 := by
   intro l
@@ -153,8 +152,7 @@ private theorem le_foldr_max_lemma_2 : ∀ (l : List ℕ) (x : ℕ), x ∈ l →
     · exact le_trans (ih x hx) (le_max_right _ _)
 
 theorem foldr_max_eq (t : ℕ) : ∀ l : List ℕ, (∀ x ∈ l, x ≤ t) → t ∈ l → l.foldr max 0 = t := by
-  intro l hl ht
-  exact le_antisymm (foldr_max_le_lemma t l hl) (le_foldr_max_lemma_2 l t ht)
+  exact fun l hl ht => le_antisymm (foldr_max_le_lemma t l hl) (le_foldr_max_lemma_2 l t ht)
 
 end terms
 

@@ -37,7 +37,7 @@ lemma sum_range_even {M : Type} [AddCommMonoid M] (m : ℕ) (g : ℕ → M) :
       Finset.sum_range_succ]
     have h1 : (2 * m) % 2 = 0 := by omega
     have h2 : ¬ (2 * m + 1) % 2 = 0 := by omega
-    rw [if_pos h1, if_neg h2, add_zero]
+    rw [ite_eq_left h1, ite_eq_right h2, add_zero]
 
 lemma norm_det_le {K : Type} [NormedField K] [IsUltrametricDist K] {n : Type} [Fintype n]
     [DecidableEq n] (M : Matrix n n K) (h : ∀ i j, ‖M i j‖ ≤ 1) : ‖M.det‖ ≤ 1 := by
@@ -63,8 +63,7 @@ lemma inv_shift {K : Type} [Field K] {m : ℕ} [NeZero m] (τ : K →+* K)
     rw [← Matrix.submatrix_mul _ _ _ _ _ Function.bijective_id, hVP, Matrix.submatrix_one_equiv]
   have h4 : P.map τ = P.submatrix id (Equiv.addRight (1 : Fin m)) := by
     rw [← Matrix.inv_eq_right_inv h1, h2, Matrix.inv_eq_right_inv h3]
-  intro r k
-  exact congrFun (congrFun h4 r) k
+  exact fun r k => congrFun (congrFun h4 r) k
 
 end TraceDualSums
 
@@ -108,8 +107,7 @@ theorem trace_dual_exists : TrDualExists := by
     rfl
   have hper' : Function.IsPeriodicPt τ m ζ := by
     show τ^[m] ζ = ζ
-    rw [hτ, two_mul]
-    exact hper
+    rwa [hτ, two_mul]
   let x : Fin m → K := fun k => σ^[2 * k.val] ζ
   have hxn : ∀ j : ℕ, x (j : Fin m) = τ^[j] ζ := by
     intro j

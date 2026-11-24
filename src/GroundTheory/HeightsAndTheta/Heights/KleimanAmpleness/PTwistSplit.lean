@@ -336,8 +336,7 @@ theorem locEmb_locRes {I J : Finset (Fin (N + 1))} (hI : I ⊆ support x) (hJ : 
     rw [locRes_mk]
     have hu := isUnit_xyHom η hJ (monos_mono h s.2)
     have k1 := xyHom_mul_locEmb_mk η M₀ hJ m ⟨(s : Poly _ N), monos_mono h s.2⟩
-    have k2 := xyHom_mul_locEmb_mk η M₀ hI m s
-    exact hu.mul_left_cancel (k1.trans k2.symm)
+    exact hu.mul_left_cancel (k1.trans (xyHom_mul_locEmb_mk η M₀ hI m s).symm)
 
 theorem twLocMod_subsingleton {J : Finset (Fin (N + 1))} (hJ : ¬ J ⊆ support x) :
     Subsingleton (LocMod (MvPolynomial (Fin (r + 1)) S) N (TwM η M₀) J) := by
@@ -574,12 +573,12 @@ def Fmap (i : ℕ) (t : Cech.Cochain (fun K : Chart x => ↥(((G.twist (B.pow n)
 theorem Fmap_pos (i : ℕ) (t : Cech.Cochain (fun K : Chart x => ↥(((G.twist (B.pow n)).twist (twistSys S x c)).sub K)) i)
     (J : Cech.Idx (Finset.univ : Finset (Fin (N + 1))) i) (h : J.1.1 ⊆ support x) :
     Fmap η M₀ n c hG hB i t J = ιfun η M₀ n c hG hB (downI J h).1 (t (downI J h)) :=
-  dif_pos h
+  dite_eq_left h
 
 theorem Fmap_neg (i : ℕ) (t : Cech.Cochain (fun K : Chart x => ↥(((G.twist (B.pow n)).twist (twistSys S x c)).sub K)) i)
     (J : Cech.Idx (Finset.univ : Finset (Fin (N + 1))) i) (h : ¬ J.1.1 ⊆ support x) :
     Fmap η M₀ n c hG hB i t J = 0 :=
-  dif_neg h
+  dite_eq_right h
 
 theorem Fmap_add (i : ℕ) (t t' : Cech.Cochain (fun K : Chart x => ↥(((G.twist (B.pow n)).twist (twistSys S x c)).sub K)) i) :
     Fmap η M₀ n c hG hB i (t + t') = Fmap η M₀ n c hG hB i t + Fmap η M₀ n c hG hB i t' := by
@@ -812,8 +811,7 @@ end Retract
 theorem TwistSplit.proof : TwistSplit.Statement := by
   intro S _ _ Ω _ _ N x M₀ G B r η hG _ hB
   refine ⟨TwM η M₀, inferInstance, inferInstance, inferInstance, inferInstance, twGraded η M₀, inferInstance, ?_⟩
-  intro b c i
-  exact twist_retract η M₀ b c hG hB i
+  exact fun b c i => twist_retract η M₀ b c hG hB i
 
 end
 

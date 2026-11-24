@@ -58,7 +58,6 @@ theorem locInA_spanO_mem {ι : Type} (v : ι → V) {x : V}
       (Submodule.span M.L.O (Set.range fun i => e (v i))).comap (eO e) := by
     rw [Submodule.span_le]
     rintro _ ⟨i, rfl⟩
-    show e (v i) ∈ Submodule.span M.L.O (Set.range fun i => e (v i))
     exact Submodule.subset_span ⟨i, rfl⟩
   exact key hx
 
@@ -71,8 +70,7 @@ theorem locInA_map_eq : Lam' = abelian₂.map (eO e) := by
   ext x
   rw [hL, Submodule.mem_map]
   constructor
-  · intro hx
-    exact ⟨e.symm x, hx, (by first | exact e.apply_symm_apply x)⟩
+  · exact fun hx => ⟨e.symm x, hx, (by first | exact e.apply_symm_apply x)⟩
   · rintro ⟨y, hy, rfl⟩
     show e.symm (e y) ∈ abelian₂
     rwa [LinearEquiv.symm_apply_apply]
@@ -113,9 +111,7 @@ theorem locInA_selfDual (h : H.IsSelfDual abelian₂) : H.IsSelfDual Lam' := by
     have key : Submodule.span E (abelian₂ : Set V) ≤
         (Submodule.span E (Lam' : Set V)).comap (e : V →ₗ[E] V) := by
       rw [Submodule.span_le]
-      intro y hy
-      show e y ∈ Submodule.span E (Lam' : Set V)
-      exact Submodule.subset_span (locInA_mem e hL y hy)
+      exact fun y hy => Submodule.subset_span (locInA_mem e hL y hy)
     have h5 : e (e.symm x) ∈ Submodule.span E (Lam' : Set V) := key hx
     rwa [LinearEquiv.apply_symm_apply] at h5
   · intro x
@@ -148,8 +144,7 @@ theorem locInA_frame {r : ℕ} (f : Fin (r + 1) → V) (T : F) (h : H.IsFrame ab
     rw [hiso]
     exact h2 a b hab
   · show H.h (e (f (Fin.last r))) (e (f (Fin.last r))) = -algebraMap F E T
-    rw [hiso]
-    exact h3
+    rwa [hiso]
 
 omit hL hiso in
 theorem locInA_mmfam {r : ℕ} (f f' : Fin (r + 1) → V) (T T' : F) :
@@ -171,11 +166,9 @@ theorem isGeneric_map {r : ℕ} (f f' : Fin (r + 1) → V) (T T' : F)
   refine ⟨⟨locInA_selfDual H e hiso hL hsd, locInA_frame H e hiso hL f T hfr,
     locInA_frame H e hiso hL f' T' hfr', ?_, ?_, ?_⟩, ?_⟩
   · show IsUnit (H.Dl (fun a => e (f a)) (fun b => e (f' b)) (r + 1))
-    rw [hdl]
-    exact hu
+    rwa [hdl]
   · show H.Gdet (fun a => e (f a)) (fun b => e (f' b)) T T' ≠ 0
-    simp only [Loc.HermSp.Gdet, hdl]
-    exact hg
+    simpa only [Loc.HermSp.Gdet, hdl] using hg
   · intro g hgs
     obtain ⟨h1, h2, h3⟩ := hsp g hgs
     refine ⟨h1, h2, ?_⟩
@@ -250,8 +243,7 @@ theorem lset_eq {Lam₂ Lam₃ : Submodule M.L.O V} (hL : ∀ x, x ∈ Lam₃ �
     have hp : e x ∈ H.perp (H.X t₁.f) := perp_map H e hiso _ _ (locInA_Xs H e hiso t₁ hf) x.2
     refine ⟨⟨e x, hp⟩, (hL _).2 ?_, locInA_mk_e H e hiso t₁ hX x ⟨e x, hp⟩ rfl⟩
     show e.symm (e (x : V)) ∈ Lam₂
-    rw [LinearEquiv.symm_apply_apply]
-    exact hx
+    rwa [LinearEquiv.symm_apply_apply]
   · rintro ⟨y, hy, rfl⟩
     have hp : e.symm y ∈ H.perp (H.X t₁.f) := perp_map_symm H e hiso _ _ (locInA_X H e hiso t₁ hf) y.2
     refine ⟨⟨e.symm y, hp⟩, (hL _).1 hy, ?_⟩
@@ -275,8 +267,7 @@ theorem lset_q {Lam₂ Lam₃ : Submodule M.L.O V} (hL : ∀ x, x ∈ Lam₃ ↔
     have hp : e x ∈ H.perp (H.X f₃') := perp_map H e hiso _ _ (locInA_Xs' H e hiso hf') x.2
     refine ⟨⟨e x, hp⟩, (hL _).2 ?_, (locInA_q_mk H e hiso hf' x ⟨e x, hp⟩ rfl).symm⟩
     show e.symm (e (x : V)) ∈ Lam₂
-    rw [LinearEquiv.symm_apply_apply]
-    exact hx
+    rwa [LinearEquiv.symm_apply_apply]
   · rintro ⟨y, hy, rfl⟩
     have hp : e.symm y ∈ H.perp (H.X f₂') := perp_map_symm H e hiso _ _ (locInA_X' H e hiso hf') y.2
     exact ⟨H.mkW f₂' ⟨e.symm y, hp⟩, ⟨⟨e.symm y, hp⟩, (hL _).1 hy, rfl⟩,
@@ -312,11 +303,9 @@ theorem iota_q {Lam₂ Lam₃ : Submodule M.L.O V} (hL : ∀ x, x ∈ Lam₃ ↔
       perp_map H e hiso _ _ (locInA_Xs H e hiso t₁ hf) x.2
     refine ⟨⟨e x', hp1⟩, ⟨e x, hp2⟩, (hL _).2 ?_, (hL _).2 ?_, ?_, ?_⟩
     · show e.symm (e (x' : V)) ∈ Lam₂
-      rw [LinearEquiv.symm_apply_apply]
-      exact hx'L
+      rwa [LinearEquiv.symm_apply_apply]
     · show e.symm (e (x : V)) ∈ Lam₂
-      rw [LinearEquiv.symm_apply_apply]
-      exact hxL
+      rwa [LinearEquiv.symm_apply_apply]
     · show e (x : V) - e x' ∈ H.smulLat (algebraMap F E (g.q : F)) Lam₃
       rw [← map_sub]
       exact locInA_smulLat H e hL _ hsub
@@ -451,15 +440,13 @@ theorem locSet_back {Lam₂ Lam₃ : Submodule M.L.O V} (hL : ∀ x, x ∈ Lam�
     have h1 := isGeneric_map H e.symm hiso' hL' t₁.f f₃' t₁.T t₁.T' hgen
     have h2 : (fun a => e.symm (t₁.f a)) = t₁.f := funext (locInA_fs H e hiso t₁ hf)
     have h3 : (fun b => e.symm (f₃' b)) = f₂' := funext (locInA_fs' H e hiso hf')
-    rw [h2, h3] at h1
-    exact h1
+    rwa [h2, h3] at h1
   · obtain ⟨r1, r2, r3, r4, r5⟩ := hres
     refine ⟨r1.trans ?_, r2, ?_, hz, ?_⟩
     · exact (lset_eq H e hiso t₁ hf hX hL).symm
     · have hc : (qE H e hiso hf') '' (φ' '' H.Lset t₁.abelian₂ t₁.f') =
           (qE H e hiso hf') '' H.Lset Lam₂ f₂' := by
-        rw [lset_q H e hiso hf' hL, Set.image_image]
-        exact r3
+        rwa [lset_q H e hiso hf' hL, Set.image_image]
       exact Set.image_injective.2 (qE H e hiso hf').injective hc
     · intro g hg
       have he : Prod.map (qE H e hiso hf') id '' (Prod.map φ' (LinearEquiv.refl E (H.Wb t₁.f)) ''
@@ -563,7 +550,7 @@ theorem locX_move {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (n : (VS D).V ≃�
       intro a
 
       simp only [hπ, map_sub, map_sum, map_smul, smul_eq_mul, hy, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, hkk, sub_self]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, hkk, sub_self]
     simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
     intro x hx
     change x ∈ Submodule.span D.host.E (Set.range F0.e) at hx
@@ -592,8 +579,7 @@ theorem locX_move {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (n : (VS D).V ≃�
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [hermitian_base_change_smul]
       rfl
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   have hev : betaP p n v - v = ∑ j, v j • baseChange₂ D p (n (b j) - b j) := by
     conv_lhs => rw [vp_eq_sum p v]
 
@@ -643,8 +629,7 @@ theorem localLattice_translate (n : (VS D).V ≃ₗ[D.host.E] (VS D).V) (Λ : Su
   simp only [Formalism.L2.SG.TermLoc.lattice₂]
   rw [himg, ← LinearEquiv.coe_toLinearMap, Submodule.span_image, Submodule.mem_map]
   constructor
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
   · rintro ⟨y, hy, hyx⟩
     have h' : y = x := e.injective (by simpa using hyx)
     rwa [← h']
@@ -716,8 +701,7 @@ theorem locPart_of (h1 : GenPart Zd u u' F0 what₂) (h2 : LprPart Zd u u' F0 wh
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact hx
-    · intro hw
-      exact ⟨w, hw, rfl⟩
+    · exact fun hw => ⟨w, hw, rfl⟩
   · have hxy : x = y := Subtype.ext (hx.trans hy.symm)
     subst hxy
     rfl

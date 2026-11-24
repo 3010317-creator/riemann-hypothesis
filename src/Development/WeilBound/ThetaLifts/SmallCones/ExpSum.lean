@@ -63,7 +63,7 @@ theorem summable_lat_wt {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [F
     simp only [norm_zero, add_zero, inv_one, one_pow]
     exact le_add_of_nonneg_left (by positivity)
   · have h0 : 0 < ‖z‖ := norm_pos_iff.2 hz
-    simp only [hz, if_false, add_zero]
+    simp only [hz, ite_false, add_zero]
     gcongr
     linarith
 
@@ -90,7 +90,7 @@ theorem summable_wt {κ : Type} [Fintype κ] {C : Set (κ → Af F)} (hC : IsCom
   let S : Set (κ → F) := {ξ | (fun i => mixedEmbedding F (ξ i)) ∈ denomLattice F κ N}
   refine ((Subtype.val_injective (p := fun ξ => ξ ∈ S)).summable_iff ?_).1 ?_
   · intro ξ hξ
-    refine if_neg fun h0 => hξ ⟨⟨ξ, fun i => ?_⟩, rfl⟩
+    refine ite_eq_right fun h0 => hξ ⟨⟨ξ, fun i => ?_⟩, rfl⟩
     obtain ⟨y, hy⟩ := (GlobalTheory.IntegralFinAdele.integral_finiteAdele_properties F).2.2.2.1 ((N : F) * ξ i) fun v => by
       rw [map_mul, map_natCast]
       exact hK _ h0 i v
@@ -114,8 +114,7 @@ theorem summable_wt {κ : Type} [Fintype κ] {C : Set (κ → Af F)} (hC : IsCom
         have h := norm_le_sz (fun i => algebraMap F (AF F) (ξ.1 i))
         have e : (fun i => evI F (algebraMap F (AF F) (ξ.1 i))) = fun i => mixedEmbedding F (ξ.1 i) :=
           funext fun i => (InfiniteAdeleRing.mixedEmbedding_eq_algebraMap_comp F).symm
-        rw [e] at h
-        exact h
+        rwa [e] at h
       · positivity
 
 variable {n d n₁ d₁ m : ℕ} {B : Base F E} {X : Spc F E n} {W : Spc F E d} {X₁ : Spc F E n₁} {W₁ : Spc F E d₁}

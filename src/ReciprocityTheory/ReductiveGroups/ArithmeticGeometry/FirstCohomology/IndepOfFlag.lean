@@ -40,8 +40,7 @@ lemma indep_of_flag [FiniteDimensional ℝ E] {d : ℕ} (hd : d = finrank ℝ E)
     (h : ∀ k, f k ∉ V f k.val) : LinearIndependent ℝ f := by
   rw [Fintype.linearIndependent_iff]
   intro g hg
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   let s := Finset.univ.filter (fun l => g l ≠ 0)
   have hs : s.Nonempty := by
     obtain ⟨i, hi⟩ := hne
@@ -66,8 +65,7 @@ lemma indep_of_flag [FiniteDimensional ℝ E] {d : ℕ} (hd : d = finrank ℝ E)
       rw [Finset.sum_congr (s₁ := Finset.univ) rfl (fun l _ => hsplit l), Finset.sum_add_distrib,
         Finset.sum_filter]
       simp
-    rw [← e]
-    exact hg
+    rwa [← e]
   have hmem : g k • f k ∈ V f k.val := by
     rw [eq_neg_of_add_eq_zero_left h2]
     refine Submodule.neg_mem _ (_root_.sum_mem fun l hl => Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, ?_, rfl⟩))
@@ -93,8 +91,7 @@ lemma phi_smul (a : ℝ) (x : E) : phi u k (a • x) = a * phi u k x := by
 
 private lemma inner_gs_eq_zero_of_mem_V {x : E} (hx : x ∈ V u k.val) : ⟪gs u k, x⟫_ℝ = 0 := by
   have hx' : x ∈ span ℝ (gramSchmidt ℝ u '' Set.Iio k) := by
-    rw [span_gramSchmidt_Iio, V_eq]
-    exact hx
+    rwa [span_gramSchmidt_Iio, V_eq]
   have hle : span ℝ (gramSchmidt ℝ u '' Set.Iio k) ≤ (ℝ ∙ gramSchmidt ℝ u k)ᗮ := by
     rw [Submodule.span_le]
     rintro _ ⟨j, hj, rfl⟩
@@ -146,8 +143,7 @@ private lemma exists_coeffs_of_mem_V {d : ℕ} (u : Fin d → E) {n : ℕ} {x : 
     have := (Finsupp.mem_supported ℝ c).1 hc (Finsupp.mem_support_iff.2 h)
     exact absurd this (not_lt.2 hl)
   · rw [Finsupp.linearCombination_apply, Finsupp.sum_fintype]
-    intro i
-    exact zero_smul _ _
+    exact fun i => zero_smul _ _
 
 lemma decomp (hu : LinearIndependent ℝ u) {x : E} (hx : x ∈ V u (k.val + 1)) :
     x - phi u k x • u k ∈ V u k.val := by

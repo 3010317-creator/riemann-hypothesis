@@ -93,7 +93,7 @@ theorem flowMat_isom_real (hiso : hermC τ.1 X.Gm (Data.emb τ.1 ξ) (Data.emb �
     funext i
     show ∑ b, X.flowMat ξ τ t i b * w b = _
     simp only [Data.flowMat, Matrix.of_apply, sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul,
-      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.sub_apply, Pi.smul_apply,
+      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.sub_apply, Pi.smul_apply,
       smul_eq_mul, hermC, Data.emb]
     congr 1
     simp only [Finset.mul_sum, Finset.sum_mul]
@@ -203,8 +203,7 @@ theorem maj_jp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (v : Fin r → ℂ) :
     ← hermC_conj τ.1 X.Gm_herm v (X.jp x τ v), Complex.conj_re]
 
 theorem herm_eq_Hf_jp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (u v : Fin r → ℂ) :
-    hermC τ.1 X.Gm u v = X.Hf x τ u (X.jp x τ v) := by
-  exact (hermC_jp_lemma_6 X τ hx u v).symm
+    hermC τ.1 X.Gm u v = X.Hf x τ u (X.jp x τ v) := (hermC_jp_lemma_6 X τ hx u v).symm
 
 private lemma flowMat_mulVec_lemma_10 (t : ℝ) (w : Fin r → ℂ) :
     Matrix.mulVec (X.flowMat ξ τ t) w =
@@ -212,7 +211,7 @@ private lemma flowMat_mulVec_lemma_10 (t : ℝ) (w : Fin r → ℂ) :
   funext i
   show ∑ b, X.flowMat ξ τ t i b * w b = _
   simp only [Data.flowMat, Matrix.of_apply, sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul,
-    zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.sub_apply, Pi.smul_apply,
+    zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.sub_apply, Pi.smul_apply,
     smul_eq_mul, hermC, Data.emb]
   congr 1
   simp only [Finset.mul_sum, Finset.sum_mul]

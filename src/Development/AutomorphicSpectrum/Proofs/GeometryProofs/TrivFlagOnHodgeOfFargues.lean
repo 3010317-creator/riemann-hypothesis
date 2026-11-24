@@ -103,8 +103,7 @@ theorem vanish_above (w u : Module.Basis (Fin N) Ω V) (hup : ∀ i j, i < j →
     (hd : ∀ i, w.repr (u i) i ≠ 0) (v : V) (i : Fin N) (hv : ∀ j, i < j → w.repr v j = 0) :
     ∀ j, i < j → u.repr v j = 0 := by
   classical
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hne : (Finset.univ.filter (fun j => i < j ∧ u.repr v j ≠ 0)).Nonempty := by
     obtain ⟨j, hj, hj'⟩ := hcon
     exact ⟨j, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hj, hj'⟩⟩
@@ -129,8 +128,7 @@ theorem exists_basis (w : Module.Basis (Fin N) Ω V) (f : Fin N → V)
   · have hli : LinearIndependent Ω f := by
       rw [Fintype.linearIndependent_iff]
       intro g hg
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have hne : (Finset.univ.filter (fun j => g j ≠ 0)).Nonempty := by
         obtain ⟨j, hj⟩ := hcon
         exact ⟨j, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hj⟩⟩
@@ -149,8 +147,7 @@ theorem exists_basis (w : Module.Basis (Fin N) Ω V) (f : Fin N → V)
             by_contra hq
             exact absurd (hmax q (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hq⟩)) (not_le.mpr h)
           rw [hgq, zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ m) h
+      · exact fun h => absurd (Finset.mem_univ m) h
     refine ⟨basisOfLinearIndependentOfCardEqFinrank hli ?_, fun i => ?_⟩
     · rw [Module.finrank_eq_card_basis w]
     · rw [coe_basisOfLinearIndependentOfCardEqFinrank]
@@ -185,25 +182,23 @@ theorem coords_mem {O : Type*} [CommRing O] [Algebra O Ω] (R : Subalgebra O Ω)
           · have hne : (⟨k, hk⟩ : Fin N) ≠ j := fun e => by
               rw [← e] at h
               exact lt_irrefl _ h
-            rw [hv j h, if_neg hne, mul_zero, sub_zero]
+            rw [hv j h, ite_eq_right hne, mul_zero, sub_zero]
           · have he : (⟨k, hk⟩ : Fin N) = j := Fin.ext h
             subst he
-            rw [if_pos rfl, mul_one, sub_self]
+            rw [ite_eq_left rfl, mul_one, sub_self]
         intro i
         have hi := ih _ hv'L hv' i
         rw [hrep i] at hi
         have h2 : u.repr v ⟨k, hk⟩ * (if (⟨k, hk⟩ : Fin N) = i then (1 : Ω) else 0) ∈ R := by
           split_ifs
-          · rw [mul_one]
-            exact ha
+          · rwa [mul_one]
           · rw [mul_zero]
             exact R.zero_mem
         have h3 := R.add_mem hi h2
         rwa [sub_add_cancel] at h3
       · intro i
         exact ih v hvL (fun j hj => hv j (by have := j.isLt; omega)) i
-  intro v hv i
-  exact main N v hv (fun j hj => absurd j.isLt (not_lt.mpr hj)) i
+  exact fun v hv i => main N v hv (fun j hj => absurd j.isLt (not_lt.mpr hj)) i
 
 end PositivityTheory.Xgn.A_flagframe_basis
 
@@ -221,8 +216,7 @@ theorem PositivityTheory.Xgn.t_flagframe_basis : ∀ (O : Type) [CommRing O] (Ω
     have hdeg : ∀ i, ∃ f ∈ E.lat s, (∀ j, i < j → w.repr f j = 0) ∧ w.repr f i = chartMon x s (b i) := by
       intro i
       have hmem : chartMon x s (b i) ∈ degLat O x (b i) s := ⟨1, Subalgebra.one_mem _, (one_mul _).symm⟩
-      rw [← hF.graded s hs i] at hmem
-      exact hmem
+      rwa [← hF.graded s hs i] at hmem
     choose f hfL hfup hfd using hdeg
     obtain ⟨u, hu⟩ := exists_basis w f hfup (fun i => by rw [hfd i]; exact hmon s hs (b i))
     have hup_u : ∀ i j, i < j → w.repr (u i) j = 0 := fun i j hij => by
@@ -239,8 +233,7 @@ theorem PositivityTheory.Xgn.t_flagframe_basis : ∀ (O : Type) [CommRing O] (Ω
       obtain ⟨a, ha, hae⟩ := hin
       rw [ht.2, hu i, hfd i] at hae
       have hc := mul_right_cancel₀ (hmon s hs (b i)) hae
-      rw [hc]
-      exact ha
+      rwa [hc]
     · rw [← u.sum_repr v]
       exact AddSubgroup.sum_mem _ fun q _ => by
         rw [hu q]
@@ -261,8 +254,7 @@ theorem PositivityTheory.Xgn.t_flagframe_basis : ∀ (O : Type) [CommRing O] (Ω
       refine ⟨a • u i, (hmem _).mpr fun j => ?_, fun j hj => ?_, ?_⟩
       · rw [map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul]
         split_ifs
-        · rw [mul_one]
-          exact ha
+        · rwa [mul_one]
         · rw [mul_zero]
           exact Subalgebra.zero_mem _
       · rw [map_smul, Finsupp.smul_apply, hup i j hj, smul_zero]
@@ -457,8 +449,7 @@ theorem exists_frame [DecidableEq K] (hPQ : redIdeal O (mcIdeal O x) ≤ Q) {ϖ 
     rw [← lat_iff _ _ h1 hh hd u hu v]
     refine (mem_scaledTrivLat (R := kap O)).trans (forall_congr' fun q => ⟨?_, fun hq => ⟨v q, hq, (one_mul _).symm⟩⟩)
     rintro ⟨a, ha, e⟩
-    rw [e, one_mul]
-    exact ha
+    rwa [e, one_mul]
 
 end Res
 
@@ -476,8 +467,7 @@ theorem PositivityTheory.Xgn.t_trivflagmod_at : ∀ (O : Type) [CommRing O] [IsD
   have hs : mseg (GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.NumbersDVR.Bundles.genPt (IsLocalRing.ResidueField O)
       (specialIdeal W)) s₀ ≠ 0 := by
     refine Finset.prod_ne_zero_iff.2 fun k _ h => hs₀ k ?_
-    rw [← aeval_genPt_eq_zero_iff (specialIdeal W), aeval_X]
-    exact h
+    rwa [← aeval_genPt_eq_zero_iff (specialIdeal W), aeval_X]
   obtain ⟨w, hw⟩ := exists_frame hPQ hϖ H hs
   exact ⟨_, inferInstance, inferInstance, _, w, mcIdeal_genPt (specialIdeal W) hhom, hw⟩
 end -- clump:auto
@@ -543,8 +533,7 @@ theorem mem_range_zpLocSubalg (Ω : Type) [Field Ω] [CharZero Ω] (p : ℕ) [Fa
   constructor
   · rintro ⟨z, rfl⟩
     exact z.2
-  · intro hx
-    exact ⟨⟨x, hx⟩, rfl⟩
+  · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
 
 theorem mem_chartRing_of_range_le {o o' : Type} [CommRing o] [CommRing o'] {Ω : Type} [Field Ω] [Algebra o Ω]
     [Algebra o' Ω] (hr : ∀ a : o, algebraMap o Ω a ∈ (algebraMap o' Ω).range) {ι' : Type} (z : ι' → Ω) (s : ι')
@@ -587,8 +576,7 @@ theorem isUnit_natCast_of_not_dvd {A O : Type} [CommRing A] [CommRing O] [IsLoca
     (hb : ¬ p ∣ b) : IsUnit (b : O) := by
   by_contra hu
   have hbO : algebraMap A O (b : A) ∈ IsLocalRing.maximalIdeal O := by
-    rw [map_natCast]
-    exact hu
+    rwa [map_natCast]
   have hbm : (b : A) ∈ m := (IsLocalization.AtPrime.to_map_mem_maximal_iff O m _).1 hbO
   have hcop : IsCoprime (b : ℤ) (p : ℤ) :=
     Nat.isCoprime_iff_coprime.2 ((Nat.Prime.coprime_iff_not_dvd (Fact.out : p.Prime)).2 hb).symm

@@ -90,8 +90,7 @@ theorem seen_pos (A : AtTTied u) (w : D.what₂.places.Pl) (hw : Formalism.MainN
     exact Iff.rfl
   have hπ : 0 < ν (A.piU : D.host.E) := by
     have := A.seenP w hw' ((D.fm u).tauOf w v)
-    rw [if_pos hseen] at this
-    exact this
+    rwa [ite_eq_left hseen] at this
   have hpb : A.res v (cO A.piU) ≠ 0 := A.res_conj v (cO A.piU) rfl
   have hπb : ν ((cO A.piU : 𝓞 D.host.E) : D.host.E) = 0 := by
     obtain ⟨zF, hzF⟩ := mkF (A.piU + cO A.piU) (by
@@ -196,8 +195,7 @@ theorem coord_mem (A : AtTTied u) (w : D.what₂.places.Pl) (hw : Formalism.Main
     · exact hs h
   · have e : (((m : 𝓞 D.host.E) * s : 𝓞 D.host.E) : D.host.E) = (m : D.host.E) * (s : D.host.E) := by
       push_cast; ring
-    rw [e]
-    exact hma
+    rwa [e]
 
 end PI.UnitaryGroupMassFormula.IAT
 
@@ -224,8 +222,7 @@ variable {D : D7} {u : D.what₂.Word}
 theorem le_locP' {E : Type} [Field E] [NumberField E] {n : ℕ} (P : Ideal (𝓞 E)) [P.IsPrime]
     (L : Submodule (𝓞 E) (Fin n → E)) : L ≤ Formalism.HermitianLatticesTheory.localization₂ P L := by
   unfold Formalism.HermitianLatticesTheory.localization₂ Formalism.HermitianLatticesTheory.locS
-  intro x hx
-  exact ⟨1, P.primeCompl.one_mem, by simpa using hx⟩
+  exact fun x hx => ⟨1, P.primeCompl.one_mem, by simpa using hx⟩
 
 theorem localization_mono' {E : Type} [Field E] [NumberField E] {n : ℕ} (P : Ideal (𝓞 E)) [P.IsPrime]
     {L M : Submodule (𝓞 E) (Fin n → E)} (h : L ≤ M) : Formalism.HermitianLatticesTheory.localization₂ P L ≤ Formalism.HermitianLatticesTheory.localization₂ P M := by
@@ -288,8 +285,7 @@ theorem intInv_of_loc (A : AtTTied u) (w : D.what₂.places.Pl) (hw : Formalism.
         _ = _ := by rw [hgx', Matrix.mulVec_smul, Matrix.mulVec_smul, hsmul]
     have hmemX := hx'eq ▸ hx'
     have hc := coord_mem A w hw hseen v hBx _ _ (hprime t s ht hs) hmemX a
-    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at hc
-    exact hc
+    rwa [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at hc
   have hN' : ∀ a b, embT D ((D.fm u).tauOf w v)
       ((((By⁻¹ : GL (Fin n) D.host.E) : Matrix (Fin n) (Fin n) D.host.E) *
         (g : Matrix (Fin n) (Fin n) D.host.E) *
@@ -308,8 +304,7 @@ theorem intInv_of_loc (A : AtTTied u) (w : D.what₂.places.Pl) (hw : Formalism.
       rw [hsmul, Matrix.mulVec_smul]
     rw [← heq] at htY
     have hc := coord_mem A w hw hseen v hBy _ _ (hprime t s ht hs) htY a
-    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at hc
-    exact hc
+    rwa [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at hc
   have hprod : ((Bx⁻¹ : GL (Fin n) D.host.E) : Matrix (Fin n) (Fin n) D.host.E) *
       ((g⁻¹ : GL (Fin n) D.host.E) : Matrix (Fin n) (Fin n) D.host.E) *
       (By : Matrix (Fin n) (Fin n) D.host.E) *
@@ -334,8 +329,7 @@ theorem intInv_of_loc (A : AtTTied u) (w : D.what₂.places.Pl) (hw : Formalism.
       (By : Matrix (Fin n) (Fin n) D.host.E).map (embT D ((D.fm u).tauOf w v))) a b ∈ bwA_Ow D w
     rw [← Matrix.map_mul, ← Matrix.map_mul, Matrix.map_apply]
     exact hN a b
-  · intro a b
-    exact hN' a b
+  · exact fun a b => hN' a b
 
 end PI.UnitaryGroupMassFormula.IAT
 

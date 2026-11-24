@@ -101,9 +101,7 @@ theorem exists_cong_ker (lam : (AF F)ˣ →* Circle) (hlam : Continuous lam)
     have := congrArg Units.val h2
     exact Subtype.ext (by simpa [ψ] using this)
   set a : (AF F)ˣ := b * (finU F (sndU F b))⁻¹ with ha
-  have hfin : ((a : AF F)).2 = 1 := by
-    show (b : AF F).2 * ((b⁻¹ : (AF F)ˣ) : AF F).2 = 1
-    exact congrArg Prod.snd (Units.mul_inv b)
+  have hfin : ((a : AF F)).2 = 1 := congrArg Prod.snd (Units.mul_inv b)
   have hA : At (evI F) ((a : AF F) - 1) := by
     intro u hu
     have hu1 : u.1 = 0 := (map_eq_zero_iff _ (InfiniteAdeleRing.ringEquiv_mixedSpace F).injective).1 hu

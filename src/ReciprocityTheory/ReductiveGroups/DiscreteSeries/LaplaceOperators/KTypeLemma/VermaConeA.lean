@@ -27,8 +27,7 @@ theorem vc_genSub_stable (T : Fin n → Fin n → Module.End ℂ U) (S : Submodu
     (hv : v ∈ genSub T S) : T a b v ∈ genSub T S := by
   unfold genSub at hv ⊢
   rw [Submodule.mem_sInf] at hv ⊢
-  intro X hX
-  exact hX.2 a b v (hv X hX)
+  exact fun X hX => hX.2 a b v (hv X hX)
 
 theorem vc_genSub_le (T : Fin n → Fin n → Module.End ℂ U) (S X : Submodule ℂ U) (hSX : S ≤ X)
     (hX : ∀ a b, ∀ v ∈ X, T a b v ∈ X) : genSub T S ≤ X := by
@@ -142,7 +141,7 @@ theorem vc_inRootCone_add_root {β : Fin n → ℝ} (hβ : InRootCone β) {c d :
     by_cases hab : a = c ∧ b = d
     · obtain ⟨rfl, rfl⟩ := hab
       simp [h, add_smul]
-    · rw [if_neg hab, if_neg hab]
+    · rw [ite_eq_right hab, ite_eq_right hab]
       simp
   have hind : (∑ a : Fin n, ∑ b : Fin n, (if a = c ∧ b = d then root c d else 0)) = root c d := by
     rw [Finset.sum_eq_single c (fun a _ ha => by simp [ha]) (by simp)]
@@ -185,23 +184,23 @@ theorem vcMon_weight (T : Fin n → Fin n → Module.End ℂ U) (hT : IsGlRep T)
       · have h2 : ¬ b = c := by
           rw [h1]
           exact fun h => hab h.symm
-        rw [if_pos h1, if_neg h2, sub_zero] at hc
+        rw [ite_eq_left h1, ite_eq_right h2, sub_zero] at hc
         rw [h1] at hc ⊢
-        rw [if_pos rfl, if_neg hab, sub_zero, Complex.ofReal_add, Complex.ofReal_one, add_smul,
+        rw [ite_eq_left rfl, ite_eq_right hab, sub_zero, Complex.ofReal_add, Complex.ofReal_one, add_smul,
           one_smul]
         rw [sub_eq_iff_eq_add] at hc
         rw [hc, add_comm]
       · by_cases h3 : c = b
         · have h2 : b = c := h3.symm
-          rw [if_neg h1, if_pos h2, zero_sub] at hc
+          rw [ite_eq_right h1, ite_eq_left h2, zero_sub] at hc
           rw [h3] at hc ⊢
-          rw [if_neg (Ne.symm hab), if_pos rfl, zero_sub, ← sub_eq_add_neg, Complex.ofReal_sub,
+          rw [ite_eq_right (Ne.symm hab), ite_eq_left rfl, zero_sub, ← sub_eq_add_neg, Complex.ofReal_sub,
             Complex.ofReal_one, sub_smul, one_smul]
           rw [LinearMap.neg_apply, sub_eq_iff_eq_add] at hc
           rw [hc, neg_add_eq_sub]
         · have h2 : ¬ b = c := fun h => h3 h.symm
-          rw [if_neg h1, if_neg h2, sub_zero, LinearMap.zero_apply, sub_eq_zero] at hc
-          rw [if_neg h1, if_neg h3, sub_zero, add_zero, hc]
+          rw [ite_eq_right h1, ite_eq_right h2, sub_zero, LinearMap.zero_apply, sub_eq_zero] at hc
+          rw [ite_eq_right h1, ite_eq_right h3, sub_zero, add_zero, hc]
     have e : ν + root a b - base = (ν - base) + root a b := by abel
     refine ⟨ν + root a b, hw, ?_, ?_⟩
     · rw [e]
@@ -218,10 +217,8 @@ theorem vc_sup_stable {G : Set U} {F : Submodule ℂ U} (X : Module.End ℂ U)
   have h : Submodule.span ℂ G ⊔ F ≤ (Submodule.span ℂ G ⊔ F).comap X := by
     refine sup_le ?_ ?_
     · rw [Submodule.span_le]
-      intro w hw
-      exact hG w hw
-    · intro y hy
-      exact Submodule.mem_sup_right (hF y hy)
+      exact fun w hw => hG w hw
+    · exact fun y hy => Submodule.mem_sup_right (hF y hy)
   exact h hx
 
 theorem vc_genSub_le_mon (T : Fin n → Fin n → Module.End ℂ U) (hT : IsGlRep T) (v : U)
@@ -229,20 +226,13 @@ theorem vc_genSub_le_mon (T : Fin n → Fin n → Module.End ℂ U) (hT : IsGlRe
     (hdiag : ∀ a, ∃ c : ℂ, T a a v = c • v) :
     genSub T (Submodule.span ℂ {v}) ≤ Submodule.span ℂ (vcMonAll T v) ⊔ F := by
   have hz : ∀ w, w ∈ vcMon T v 0 → w = v := fun w hw => hw
-  have hv0 : v ∈ vcMon T v 0 := by
-    show v ∈ ({v} : Set U)
-    exact Set.mem_singleton v
+  have hv0 : v ∈ vcMon T v 0 := Set.mem_singleton v
   have hs : ∀ k w, w ∈ vcMon T v (k + 1) → ∃ a b, a < b ∧ ∃ x ∈ vcMon T v k, w = T a b x :=
     fun k w hw => hw
   have hn : ∀ k a b, a < b → ∀ x ∈ vcMon T v k, T a b x ∈ vcMon T v (k + 1) := by
-    intro k a b hab x hx
-    show ∃ a' b', a' < b' ∧ ∃ y ∈ vcMon T v k, T a b x = T a' b' y
-    exact ⟨a, b, hab, x, hx, rfl⟩
+    exact fun k a b hab x hx => ⟨a, b, hab, x, hx, rfl⟩
   have hmon : ∀ k, ∀ w ∈ vcMon T v k, w ∈ Submodule.span ℂ (vcMonAll T v) ⊔ F := by
-    intro k w hw
-    refine Submodule.mem_sup_left (Submodule.subset_span ?_)
-    show w ∈ ⋃ k, vcMon T v k
-    exact Set.mem_iUnion.mpr ⟨k, hw⟩
+    exact fun k w hw => Submodule.mem_sup_left (Submodule.subset_span (Set.mem_iUnion.mpr ⟨k, hw⟩))
   have hup : ∀ c d, c < d → ∀ y ∈ Submodule.span ℂ (vcMonAll T v) ⊔ F,
       T c d y ∈ Submodule.span ℂ (vcMonAll T v) ⊔ F := by
     intro c d hcd

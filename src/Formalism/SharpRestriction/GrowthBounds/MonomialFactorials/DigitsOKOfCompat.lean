@@ -60,7 +60,7 @@ theorem segChain_deg_even (x : Fin (2 * s + 1)) (u : Fin s) (hx : (x : ℕ) = 2 
   have hne : (x : ℕ) ≠ 2 * s := by omega
   have ht : topOf x hne = u := Fin.ext (by simp [topOf]; omega)
   simp only [segChain]
-  rw [dite_eq_right hne, if_pos (by omega), ht, if_neg (by omega)]
+  rw [dite_eq_right hne, ite_eq_left (by omega), ht, ite_eq_right (by omega)]
 
 theorem segChain_deg_odd (x : Fin (2 * s + 1)) (u : Fin s) (hx : (x : ℕ) = 2 * (u : ℕ) + 1)
     (hu : S.sigma ≤ (u : ℕ)) : (segChain p S aTop b).deg x = coarseC p S aTop b u := by
@@ -68,7 +68,7 @@ theorem segChain_deg_odd (x : Fin (2 * s + 1)) (u : Fin s) (hx : (x : ℕ) = 2 *
   have hne : (x : ℕ) ≠ 2 * s := by omega
   have ht : topOf x hne = u := Fin.ext (by simp [topOf]; omega)
   simp only [segChain]
-  rw [dite_eq_right hne, if_neg (by omega), ht, if_neg (by omega)]
+  rw [dite_eq_right hne, ite_eq_right (by omega), ht, ite_eq_right (by omega)]
 
 theorem segChain_deg_last (x : Fin (2 * s + 1)) (hx : (x : ℕ) = 2 * s) : (segChain p S aTop b).deg x = b.oPlus := by
   simp only [segChain]
@@ -134,8 +134,8 @@ theorem idx_sub (hS : SegFacts C0 CE1 CE2 X) (dl : DCl X) (aTop aTop' : Fin X.s 
     idx C0 CE1 CE2 X dl aTop ⊆ idx C0 CE1 CE2 X dl aTop' := by
   haveI : NeZero X.r := ⟨X.hm⟩
   have hF := hS.hF
-  have hwin : ∀ i, X.L.a ≤ aTop' i := fun i =>
-    (Finset.mem_Icc.mp (Fintype.mem_piFinset.mp (mem_cbox' ha').1 i)).1
+  have hwin : ∀ i, (X.L.a : ℝ) ≤ aTop' i := fun i => by
+    exact_mod_cast (Finset.mem_Icc.mp (Fintype.mem_piFinset.mp (mem_cbox' ha').1 i)).1
   have hp : (25:ℝ) ≤ X.L.p := by
     have h1 := hF.p_ge
     have h2 : (4:ℝ) ≤ X.L.m := by exact_mod_cast hF.m4
@@ -154,8 +154,7 @@ theorem idx_sub (hS : SegFacts C0 CE1 CE2 X) (dl : DCl X) (aTop aTop' : Fin X.s 
       Finset.sum_lt_sum_of_nonempty Finset.univ_nonempty (fun c _ => (hD'.1 i c).2)
     rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at h1
     have h2 := hS.kP i
-    have h3 : ((∑ c, b.ry i c : ℕ) : ℝ) < (((X.r + 1) * SegData.P X.p (X.S C0 CE1 CE2) i : ℕ) : ℝ) := by
-      exact_mod_cast h1
+    have h3 := (Nat.cast_lt (α := ℝ)).2 h1
     push_cast at h3 ⊢
     linarith
   have hC : ∀ i, (coarseC X.p (X.S C0 CE1 CE2) aTop' b i : ℝ) * (SegData.P X.p (X.S C0 CE1 CE2) i : ℝ) =
@@ -169,31 +168,25 @@ theorem idx_sub (hS : SegFacts C0 CE1 CE2 X) (dl : DCl X) (aTop aTop' : Fin X.s 
     intro i
     have h1 := hS.bTop i
     have h2 := hsum i
-    have h3 : (X.L.a : ℝ) ≤ aTop' i := by exact_mod_cast hwin i
     have h4 : (((X.S C0 CE1 CE2).bTop i + ∑ c, b.ry i c : ℕ) : ℝ) < aTop' i := by
       push_cast at h2 ⊢
-      linarith
+      linarith [hwin i]
     have h5 : (X.S C0 CE1 CE2).bTop i + ∑ c, b.ry i c < aTop' i := by exact_mod_cast h4
     unfold coarseA coarseC
     exact Nat.div_le_div_right (by omega)
-  have hSG : ∀ i, ((b.sg i : ℕ) : ℝ) ≤ 2 * (X.S C0 CE1 CE2).La *
-      ((SegData.A0 X.p (X.S C0 CE1 CE2) : ℤ) : ℝ) / ((X.r : ℝ) + 1) →
-      b.sg i ≤ coarseC X.p (X.S C0 CE1 CE2) aTop' b i := by
-    intro i h
+  refine ⟨⟨⟨hD', hk.2.1, fun i hi => ?_, hk.2.2.2⟩, hdl⟩, ?_⟩
+  · obtain ⟨h1, h2, _, h4, h5⟩ := hk.2.2.1 i hi
+    refine ⟨h1, h2, ?_, h4, h5⟩
+    clear h1 h2 h4 hi
     have hP1 : (1:ℝ) ≤ (SegData.P X.p (X.S C0 CE1 CE2) i : ℝ) := by exact_mod_cast hS.P1 i
     have hPQ : (SegData.P X.p (X.S C0 CE1 CE2) i : ℝ) ≤ (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ) := by
       exact_mod_cast hS.PQ i
     have hQ : (0:ℝ) < (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ) := by linarith
-    have hA : ((SegData.A0 X.p (X.S C0 CE1 CE2) : ℤ) : ℝ) ≤ (X.L.a : ℝ) / (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ) := by
-      have h1 := Int.floor_le ((((X.S C0 CE1 CE2).a : ℝ) - (X.S C0 CE1 CE2).E0) /
-        (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ))
-      have h2 := hS.E0
-      have h3 : (((X.S C0 CE1 CE2).a : ℝ) - (X.S C0 CE1 CE2).E0) / (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ) ≤
-          (X.L.a : ℝ) / (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ) := by
-        apply div_le_div_of_nonneg_right _ hQ.le
+    have hA : ((SegData.A0 X.p (X.S C0 CE1 CE2) : ℤ) : ℝ) ≤
+        (X.L.a : ℝ) / (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ) :=
+      (Int.floor_le _).trans (div_le_div_of_nonneg_right (by
         show (X.L.a : ℝ) - (X.S C0 CE1 CE2).E0 ≤ X.L.a
-        linarith
-      exact h1.trans h3
+        linarith [hS.E0]) hQ.le)
     have hLa0 : 0 ≤ (X.S C0 CE1 CE2).La := hF.La0
     have hLa4 : 4 * (X.S C0 CE1 CE2).La < (X.r : ℝ) + 1 := hS.La4
     have hr : (0:ℝ) < (X.r : ℝ) + 1 := by positivity
@@ -206,26 +199,15 @@ theorem idx_sub (hS : SegFacts C0 CE1 CE2 X) (dl : DCl X) (aTop aTop' : Fin X.s 
       rw [div_le_div_iff₀ hr (by norm_num)]
       nlinarith
     have e3 : ((b.sg i : ℕ) : ℝ) * (SegData.P X.p (X.S C0 CE1 CE2) i : ℝ) ≤ (X.L.a : ℝ) / 2 := by
-      have h0 : ((b.sg i : ℕ) : ℝ) ≤ ((X.L.a : ℝ) / (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ)) / 2 :=
-        h.trans (e1.trans e2)
       calc ((b.sg i : ℕ) : ℝ) * (SegData.P X.p (X.S C0 CE1 CE2) i : ℝ)
           ≤ ((X.L.a : ℝ) / (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ)) / 2 * (SegData.Qj X.p (X.S C0 CE1 CE2) : ℝ) :=
-            mul_le_mul h0 hPQ (by linarith) (by positivity)
+            mul_le_mul (h5.trans (e1.trans e2)) hPQ (by linarith) (by positivity)
         _ = (X.L.a : ℝ) / 2 := by field_simp
-    have e4 : (X.L.a : ℝ) - X.L.b' < (aTop' i : ℝ) - ((∑ c, b.ry i c : ℕ) : ℝ) := by
-      have h1 := hsum i
-      have h2 : (X.L.a : ℝ) ≤ aTop' i := by exact_mod_cast hwin i
-      linarith
     have e5 : ((b.sg i : ℕ) : ℝ) * (SegData.P X.p (X.S C0 CE1 CE2) i : ℝ) <
         (coarseC X.p (X.S C0 CE1 CE2) aTop' b i : ℝ) * (SegData.P X.p (X.S C0 CE1 CE2) i : ℝ) := by
       rw [hC i]
-      linarith
-    have e6 : ((b.sg i : ℕ) : ℝ) < (coarseC X.p (X.S C0 CE1 CE2) aTop' b i : ℝ) :=
-      lt_of_mul_lt_mul_right e5 (by linarith)
-    exact_mod_cast e6.le
-  refine ⟨⟨⟨hD', hk.2.1, fun i hi => ?_, hk.2.2.2⟩, hdl⟩, ?_⟩
-  · obtain ⟨h1, h2, _, h4, h5⟩ := hk.2.2.1 i hi
-    exact ⟨h1, h2, hSG i h5, h4, h5⟩
+      linarith [hsum i, hwin i]
+    exact_mod_cast (lt_of_mul_lt_mul_right e5 (by linarith)).le
   · have hx' := (mem_lv aTop b x).mp hx
     refine (mem_lv aTop' b x).mpr ⟨fun i => ⟨(hx'.1 i).1, ?_⟩, hx'.2⟩
     exact (hx'.1 i).1.trans (((hk.2.1 _ (uTop_ge i)).1).trans (hAC _))

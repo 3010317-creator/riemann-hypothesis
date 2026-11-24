@@ -842,8 +842,7 @@ theorem tvStalk_fst (u v : TanM (𝟙 (Sp R)) G) (f : G.left.presheaf.stalk (ori
   have e4 : epsMul (0 : R) ((tvStalk G u).hom f) = epsMul (0 : R) ((tvStalk G v).hom f) := by
     have := congrArg (fun q : G.left.presheaf.stalk (origin G) ⟶ CommRingCat.of (DualNumber R) => q.hom f) e3
     simpa using this
-  have e5 := congrArg TrivSqZeroExt.fst e4
-  simpa [epsMul] using e5
+  simpa [epsMul] using congrArg TrivSqZeroExt.fst e4
 
 theorem tanM_eq_of_tanDer : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G]
     (u v : TanM (𝟙 (Sp R)) G), (∀ f, tanDer G u f = tanDer G v f) → u = v := by
@@ -853,9 +852,7 @@ theorem tanM_eq_of_tanDer : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : Ove
   have hs : tvStalk G u = tvStalk G v := by
     ext f
     · exact tvStalk_fst G u v f
-    · have hu := tanDer_eq G u f
-      have hv := tanDer_eq G v f
-      exact hu.symm.trans ((h f).trans hv)
+    · exact (tanDer_eq G u f).symm.trans ((h f).trans (tanDer_eq G v f))
   rw [tv_left_eq G u, tv_left_eq G v, hs]
 
 end GlobalTheory.CoordsOrigin

@@ -100,13 +100,11 @@ theorem cong_at (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} (G :
   have hw : ∀ c, frame G₁ c - frame G c ∈ LP P (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
     intro c
     have := hA1.2.2 c P hP
-    rw [frameAct_one] at this
-    exact this
+    rwa [frameAct_one] at this
   have hw2 : ∀ c, frame G₂ c - frame G c ∈ LP P (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
     intro c
     have := hA2.2.2 c P hP
-    rw [frameAct_one] at this
-    exact this
+    rwa [frameAct_one] at this
   have hNU := (stepExp D Λ G n hn).1
   have hMU := (stepExp D Λ G₁ m hm).1
 
@@ -128,9 +126,9 @@ theorem cong_at (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} (G :
     rw [Matrix.sub_apply, Matrix.mul_apply, Finset.sum_eq_single (Fin.last D.R.rS)]
     · rw [(hNU _ _).2 rfl, one_mul, Matrix.one_apply]
       by_cases hb : Fin.last D.R.rS = b
-      · rw [(hMU _ _).2 hb, if_pos hb, sub_self]
+      · rw [(hMU _ _).2 hb, ite_eq_left hb, sub_self]
       · have hlt : b < Fin.last D.R.rS := lt_of_le_of_ne (Fin.le_last b) (Ne.symm hb)
-        rw [(hMU _ _).1 hlt, if_neg hb, sub_self]
+        rw [(hMU _ _).1 hlt, ite_eq_right hb, sub_self]
     · intro c _ hc
       have hlt : c < Fin.last D.R.rS := lt_of_le_of_ne (Fin.le_last c) hc
       rw [(hNU _ _).1 hlt, zero_mul]
@@ -145,9 +143,8 @@ theorem cong_at (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} (G :
   have hcoef := coef_intP_g P hC hP hg hYLg hYX d
   have hYd : G.fl.coefX Y d = (fmat D G n * fmat D G₁ m - 1) d.castSucc b := by
     rw [hYsum, coefX_finset_sum _ _ _ (fun d' => Submodule.smul_mem _ _ (e_mem_X _ d'))]
-    simp only [coefX_smul_e, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  rw [hYd] at hcoef
-  exact hcoef
+    simp only [coefX_smul_e, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+  rwa [hYd] at hcoef
 
 end Cong
 
@@ -379,7 +376,7 @@ theorem modeG (hs : (Z.M p).split = some g) (u u' : D.what₂.Word)
   obtain ⟨hL0, hL1⟩ := lmat_low Z p g hl0low.1 hl0low.2 hM0 hM1
   obtain ⟨hR0, hR1⟩ := lmat_up Z p g hl0low.1 hl0low.2 hM0 hM1
   have hcorner := corner_fix p hL0 hL1 hR0 hR1 (C := Cm) (fun a b h => by
-    simp only [hCm, Matrix.of_apply]; rw [if_neg h])
+    simp only [hCm, Matrix.of_apply]; rw [ite_eq_right h])
   have hmain : Formalism.L2.SG.CntLocal.ZZP (M := Z.M) Z.δ u u' p Z₂ =
       lmat Z p g K⁻¹ Ml * Formalism.L2.SG.CntLocal.ZZP (M := Z.M) Z.δ u u' p Z₁ * lmat Z p g Ml K⁻¹ := by
     rw [hZZ, hZZ, hY, emap_mul, Matrix.mul_sub, Matrix.sub_mul, hcorner]
@@ -557,9 +554,9 @@ theorem nm_last (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} (G :
   rw [Matrix.sub_apply, Matrix.mul_apply, Finset.sum_eq_single (Fin.last D.R.rS)]
   · rw [(hNU _ _).2 rfl, one_mul, Matrix.one_apply]
     by_cases hb : Fin.last D.R.rS = b
-    · rw [(hMU _ _).2 hb, if_pos hb, sub_self]
+    · rw [(hMU _ _).2 hb, ite_eq_left hb, sub_self]
     · have hlt : b < Fin.last D.R.rS := lt_of_le_of_ne (Fin.le_last b) (Ne.symm hb)
-      rw [(hMU _ _).1 hlt, if_neg hb, sub_self]
+      rw [(hMU _ _).1 hlt, ite_eq_right hb, sub_self]
   · intro c _ hc
     have hlt : c < Fin.last D.R.rS := lt_of_le_of_ne (Fin.le_last c) hc
     rw [(hNU _ _).1 hlt, zero_mul]
@@ -599,9 +596,7 @@ theorem one_dir {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS (Formalism.L2.
     have hφ := fun a => Formalism.L2.SG.Pf.BBTie.bt_typed_frFac Zd (Formalism.L2.SG.Pf.locEqC_holds D Zd)
       (Formalism.L2.SG.Pf.locDiffC_holds D Zd) p F0 Λ hRL.2.1.1.fg hRL.2.2 hRL.2.1.2.2.2 hgP a
     have hκ := (Formalism.L2.SG.Pf.BBTie.bt_kappa Zd p sg hsg).1
-    have hq0 : (sg.q : (D.s.atP p).Fp) ≠ 0 := by
-      intro h
-      exact sg.q_irr.ne_zero (Subtype.ext h)
+    have hq0 : (sg.q : (D.s.atP p).Fp) ≠ 0 := fun h => sg.q_irr.ne_zero (Subtype.ext h)
     have hOO : (Zd.M p).L.O = (D.s.atP p).O := (Zd.agree p).2.2.2.1
     rw [locU_mul, locU_sub_one]
     intro i j
@@ -685,8 +680,7 @@ theorem tupFun_holds {D : D7} (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.
   have key := kkOrb_eq_of hl' hρ' hl hρ h2 h1
   show kkOrb M p (Formalism.L2.SG.CntLocal.ZZP (M := M) δ u u' p (zT γ) * sgnP p) =
     kkOrb M p (Formalism.L2.SG.CntLocal.ZZP (M := M) δ u u' p Z * sgnP p)
-  rw [hzT, ← hZ2]
-  exact key
+  rwa [hzT, ← hZ2]
 
 end Formalism.L2.SG.Pf.FibQ
 end -- clump:auto

@@ -65,9 +65,7 @@ theorem map_mul_right_eq_of_mem_compact {G : Type} [Group G] [TopologicalSpace G
   obtain ⟨V, hVc, hV1⟩ := exists_compact_mem_nhds (1 : G)
   set S : Set G := V * (K : Set G) with hS
   have hScpt : IsCompact S := hVc.mul hK
-  have hVsubS : V ⊆ S := by
-    intro v hv
-    exact Set.mem_mul.2 ⟨v, hv, 1, K.one_mem, mul_one v⟩
+  have hVsubS : V ⊆ S := fun v hv => Set.mem_mul.2 ⟨v, hv, 1, K.one_mem, mul_one v⟩
   have hSpre : (· * k) ⁻¹' S = S := by
     ext x
     simp only [Set.mem_preimage, hS, Set.mem_mul, SetLike.mem_coe]
@@ -86,8 +84,7 @@ theorem map_mul_right_eq_of_mem_compact {G : Type} [Group G] [TopologicalSpace G
     have hcEq : (c : ENNReal) * μ S = 1 * μ S := by
       have hcS := hmapS
       rw [hmapEq, smul_apply, ENNReal.smul_def, smul_eq_mul] at hcS
-      rw [one_mul]
-      exact hcS
+      rwa [one_mul]
     exact_mod_cast (ENNReal.mul_left_inj hSpos hSfin).1 hcEq
   rw [hmapEq, hcOne, one_smul]
 

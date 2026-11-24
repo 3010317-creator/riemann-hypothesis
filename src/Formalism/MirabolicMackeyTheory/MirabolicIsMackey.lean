@@ -155,8 +155,7 @@ theorem idxPsiGood_of (hMono : IdxMono) (hSc : IdxScaleIn) (hCut : IdxCutLe) (hI
       rwa [hkey] at h1
     rw [hkey]
     have hkc : k ∈ cut Zψ ThK := by
-      simp only [cut, Submodule.mem_inf, Submodule.restrictScalars_mem]
-      exact ⟨hk, hkψ⟩
+      simpa only [cut, Submodule.mem_inf, Submodule.restrictScalars_mem] using ⟨hk, hkψ⟩
     exact ⟨hucut ((mem_sc _ _ _).2 ⟨k, hkc, rfl⟩), V₀.smul_mem _ hkV⟩
   have hmono := hMono K Z w L (cut L M) (sc (u : K) (sc (a * σ⁻¹) (cut L N))) (cut V₀ Th0)
     hX hB2.1 hT hle2
@@ -436,8 +435,7 @@ theorem gg_isLatIn_cut [FiniteDimensional K Z] (W : Submodule K Z) (B : Submodul
     rwa [this] at h2
   · apply le_antisymm
     · rw [Submodule.span_le]
-      intro x hx
-      exact hx.2
+      exact fun x hx => hx.2
     · intro z hz
       have htop := Formalism.HermitianLatticesTheory.indexBasic_locS_top (K := K) B hB.2
       have hz' : z ∈ Formalism.HermitianLatticesTheory.locS (nonZeroDivisors (𝓞 K)) B := by rw [htop]; trivial
@@ -542,8 +540,7 @@ theorem lemmaGG_of (hSc : IdxScaleIn) : LemmaGG := by
         have : σ ≠ 0 := fun h => hσ (by rw [h]; exact w.asIdeal.zero_mem)
         exact_mod_cast this
       refine ⟨(σ : K)⁻¹ • y, ⟨σ, hσ, ?_⟩, ?_⟩
-      · rw [← algebraMap_smul K σ, smul_smul, mul_inv_cancel₀ hσ0, one_smul]
-        exact hy
+      · rwa [← algebraMap_smul K σ, smul_smul, mul_inv_cancel₀ hσ0, one_smul]
       · have hyc' : (N : K) • y = (σ : K) • c := by
           rw [algebraMap_smul]
           simpa using hyc

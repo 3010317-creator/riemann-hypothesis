@@ -102,14 +102,11 @@ theorem finsum_GL_toLin' {F : Type} [Field F] (m : ℕ) (f : Module.End F (Fin m
   refine finsum_mem_eq_of_bijOn
     (fun x : GL (Fin m) F => (Matrix.toLin' (x : Matrix (Fin m) (Fin m) F) : Module.End F (Fin m → F)))
     ⟨?_, ?_, ?_⟩ (fun _ _ => rfl)
-  · intro x _
-    exact (Units.isUnit x).map (Matrix.toLinAlgEquiv' (R := F) (n := Fin m))
-  · intro x _ y _ h
-    exact Units.ext (Matrix.toLin'.injective h)
+  · exact fun x _ => (Units.isUnit x).map (Matrix.toLinAlgEquiv' (R := F) (n := Fin m))
+  · exact fun x _ y _ h => Units.ext (Matrix.toLin'.injective h)
   · intro g hg
     have h : IsUnit ((Matrix.toLinAlgEquiv' (R := F) (n := Fin m)).symm g) := IsUnit.map _ hg
-    refine ⟨h.unit, Set.mem_univ _, ?_⟩
-    exact (Matrix.toLinAlgEquiv' (R := F) (n := Fin m)).apply_symm_apply g
+    exact ⟨h.unit, Set.mem_univ _, (Matrix.toLinAlgEquiv' (R := F) (n := Fin m)).apply_symm_apply g⟩
 
 theorem finsum_cusp_mul_star_chG : ∀ (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ), (∀ x y : AlgebraicClosure F, x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ m k l : ℕ, 0 < m → ∑ᶠ x, cusp θ m k x * star (chG (rootSum θ l) m x) = (-1) ^ (m - 1) * (Nat.card (GL (Fin m) F) : ℂ) * (((Finset.range m).filter (fun i => k * Nat.card F ^ i ≡ l [MOD (Nat.card F ^ m - 1)])).card : ℂ) := by
   intro F _ _ θ hθ m k l hm
@@ -289,8 +286,7 @@ theorem hfree_two_le {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F �
     simp [dg]
   have hxcols : ∀ x ∈ hSf.toFinset, ∀ i j, j ≠ l →
       (x : Matrix (Fin m) (Fin m) F) i j = (1 : Matrix (Fin m) (Fin m) F) i j := by
-    intro x hx i j hj
-    exact (hSf.mem_toFinset.1 hx) i j ((hjl j).2 hj)
+    exact fun x hx i j hj => (hSf.mem_toFinset.1 hx) i j ((hjl j).2 hj)
   have key : ∑ x ∈ hSf.toFinset, psi (rootSum θ k) (Fin m → F) (Matrix.toLin' (x : Matrix (Fin m) (Fin m) F))
       = ∑ p ∈ (Finset.univ.filter (fun d : F => d ≠ 0)) ×ˢ hN.toFinset,
         psi (rootSum θ k) (Fin m → F) (Matrix.toLin' (dg l p.1) + p.2) := by
@@ -314,9 +310,7 @@ theorem hfree_two_le {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F �
       · rw [Matrix.sub_apply]; simp [dg]
     · intro p hp
       have hp' := Finset.mem_product.1 hp
-      have h2 := hN.mem_toFinset.1 hp'.2
-      refine hSf.mem_toFinset.2 fun i j hj => ?_
-      exact hNcols _ _ h2 i j ((hjl j).1 hj)
+      exact hSf.mem_toFinset.2 fun i j hj => hNcols _ _ (hN.mem_toFinset.1 hp'.2) i j ((hjl j).1 hj)
     · intro x hx
       refine Matrix.GeneralLinearGroup.ext fun i j => ?_
       change LinearMap.toMatrix' _ i j = _
@@ -511,7 +505,7 @@ theorem avg {G H : Type} [Group G] [Fintype G] [Fintype H] (S : Subgroup G) (T :
     calc _ = ∑ u, ∑ g, (if u ∈ T then (if g ∈ S then φ (g * ψ u) else 0) else 0) := by
             refine Finset.sum_congr rfl fun u _ => ?_
             by_cases hu : u ∈ T
-            · simp only [hu, if_true]; exact (h1 u hu).symm
+            · simp only [hu, ite_true]; exact (h1 u hu).symm
             · simp [hu]
       _ = ∑ g, ∑ u, (if u ∈ T then (if g ∈ S then φ (g * ψ u) else 0) else 0) := Finset.sum_comm
       _ = 0 := by
@@ -709,8 +703,7 @@ theorem coset_zero {m : ℕ} [Finite F] [Fintype (GL (Fin m) F)] (Y : GL (Fin m)
   have h1 : ∑ᶠ u : fixSub f, Y u = 0 := by
     rw [sub_sum]; exact h0
   have h2 := char_coset_sum_eq_zero (GL (Fin m) F) Y hY (fixSub f) h1 c
-  rw [sub_sum (fixSub f) (fun u => Y (c * u))] at h2
-  exact h2
+  rwa [sub_sum (fixSub f) (fun u => Y (c * u))] at h2
 
 theorem core [Finite F] (a b : ℕ) [Fintype (GL (Fin (a + b)) F)] (A : GL (Fin a) F → ℂ) (B : GL (Fin b) F → ℂ)
     (hA : IsChar ℂ ℂ A) (hB : IsChar ℂ ℂ B) (hfA : HFree A) (hfB : HFree B) (f : Fin (a + b) → F) (hf : f ≠ 0) :
@@ -980,11 +973,11 @@ theorem sum_powerset_single (i : ℕ) (S T : Finset ℕ) (hiS : i ∉ S) (hT : T
       have hU1 : U.card = 1 := by omega
       obtain ⟨j, rfl⟩ := Finset.card_eq_one.1 hU1
       have hjT : j ∈ T := hsub (Finset.mem_singleton_self j)
-      rw [hf1 j hjT, if_neg (fun h => hUi (by rw [h])), zero_mul]
+      rw [hf1 j hjT, ite_eq_right (fun h => hUi (by rw [h])), zero_mul]
     · rw [mul_zero]
   by_cases hiT : i ∈ T
   · have hmem : {i} ∈ T.powerset := Finset.mem_powerset.2 (Finset.singleton_subset_iff.2 hiT)
-    rw [Finset.sum_eq_single_of_mem {i} hmem hz, hf1 i hiT, if_pos rfl,
+    rw [Finset.sum_eq_single_of_mem {i} hmem hz, hf1 i hiT, ite_eq_left rfl,
       hg {i} hmem (Finset.singleton_ne_empty i)]
     have hiff : (T \ {i} = S) ↔ T = insert i S := by
       constructor
@@ -993,11 +986,11 @@ theorem sum_powerset_single (i : ℕ) (S T : Finset ℕ) (hiS : i ∉ S) (hT : T
       · intro h
         rw [h, Finset.sdiff_singleton_eq_erase, Finset.erase_insert hiS]
     by_cases hc : T = insert i S
-    · rw [if_pos (hiff.2 hc), if_pos hc]
-    · rw [if_neg (fun h => hc (hiff.1 h)), if_neg hc, mul_zero]
+    · rw [ite_eq_left (hiff.2 hc), ite_eq_left hc]
+    · rw [ite_eq_right (fun h => hc (hiff.1 h)), ite_eq_right hc, mul_zero]
   · rw [Finset.sum_eq_zero fun U hU => hz U hU (fun h => hiT (by
       rw [h] at hU; exact Finset.singleton_subset_iff.1 (Finset.mem_powerset.1 hU)))]
-    rw [if_neg (fun h => hiT (by rw [h]; exact Finset.mem_insert_self i S))]
+    rw [ite_eq_right (fun h => hiT (by rw [h]; exact Finset.mem_insert_self i S))]
 
 theorem pair_J_prod_rootSum : ∀ (F : Type) [Field F] [Finite F], ∀ (θ : AlgebraicClosure F →* ℂ) (m : ℕ) (e : ℕ → ℕ) (ε : ℤ), (∀ i, ∑ᶠ x, cusp θ m (e i) x = 0) → ∀ N : ℕ, (∀ i j, i < N → j < N → ∑ᶠ x, cusp θ m (e i) x * star (chG (rootSum θ (e j)) m x) = if i = j then (ε : ℂ) * (Nat.card (GL (Fin m) F) : ℂ) else 0) → ∀ (L : List ℕ) (T : Finset ℕ), L.Nodup → (∀ i ∈ L, i < N) → (∀ j ∈ T, j < N) → T.card ≤ L.length → ∀ n, n = m * L.length → ∑ᶠ x, J θ (L.map fun i => (m, e i)) n x * star (chG (fun P => ∏ j ∈ T, rootSum θ (e j) P) n x) = if T = L.toFinset then (ε : ℂ) ^ L.length * (Nat.card (GL (Fin n) F) : ℂ) else 0 := by
   intro F _ _ θ m e ε h1 N h2 L
@@ -1111,8 +1104,7 @@ theorem hc_one_orth_hfree : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : �
         exact this.symm }
   have hH : ∑ᶠ u : H, Y u = 0 := by
     have := hF hn0
-    rw [← finsum_set_coe_eq_finsum_mem] at this
-    exact this
+    rwa [← finsum_set_coe_eq_finsum_mem] at this
   have hcos := char_coset_sum_eq_zero (GL (Fin n) F) Y hY H hH
   haveI : Fintype H := Fintype.ofFinite _
   let f : GL (Fin n) F → ℂ := fun x => if InPar a x then α (tlG a x) else 0
@@ -1289,10 +1281,10 @@ theorem gram_lift {K : Type} [Field K] [Finite K] (θ : AlgebraicClosure K →* 
       simp
     · intro h
       by_cases hij : i = j
-      · rw [if_pos hij, Finset.mem_singleton] at h
+      · rw [ite_eq_left hij, Finset.mem_singleton] at h
         subst h; subst hij
         exact ⟨hm, (h3 0 hi hi hm).2 ⟨rfl, rfl⟩⟩
-      · rw [if_neg hij] at h
+      · rw [ite_eq_right hij] at h
         simp at h
   rw [hf]
   by_cases hij : i = j
@@ -1365,8 +1357,7 @@ theorem pairing_pm_one : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
     have hS : chG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) n =
         chG (fun P => ∏ j ∈ Finset.range l, rootSum θ (k * q ^ j) P) n := by
       funext x
-      simp only [chG]
-      exact _root_.GlobalTheory.Shin.prod_rootSum_map_algEquiv F F' θ k _
+      simpa only [chG] using _root_.GlobalTheory.Shin.prod_rootSum_map_algEquiv F F' θ k _
     rw [hS]
     have hZ := _root_.GlobalTheory.Shin.pair_J_prod_rootSum F' θ m (fun i => k * q ^ i) ((-1) ^ (m - 1))
       (fun i => sum_cusp_eq_zero θ hθ m _ hm (by
@@ -1376,7 +1367,7 @@ theorem pairing_pm_one : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
       l (gram_lift θ hθ q l m k hq hl0 hm hK hreg') (List.range l) (Finset.range l) List.nodup_range
       (fun i hi => List.mem_range.1 hi) (fun j hj => Finset.mem_range.1 hj) (by simp) n
       (by rw [hn, List.length_range, mul_comm])
-    rw [List.toFinset_range, if_pos rfl, List.length_range, ← hLL] at hZ
+    rw [List.toFinset_range, ite_eq_left rfl, List.length_range, ← hLL] at hZ
     have hst : ∀ (a b : GL (Fin n) F' → ℂ), ∑ᶠ x, a x * star (b x) = star (∑ᶠ x, b x * star (a x)) := by
       intro a b
       rw [show star (∑ᶠ x, b x * star (a x)) = starAddEquiv (∑ᶠ x, b x * star (a x)) from rfl,
@@ -1744,8 +1735,7 @@ theorem shLift_cusp_kills_J : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F 
   have hK := _root_.GlobalTheory.Shin.kills_of_norm_one_of_pairing_prime (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s (hΓ ▸ hl) hs X' hX'v hnorm'
     (J θ (liftL q l [(n, k)]) n) hYchar hYst _ hpair hndvd
   have hfun : (fun δ => X' (inl δ * inr s)) = shLift s (cusp (pullθ ι θ) n k) := funext hX's
-  rw [hfun] at hK
-  exact hK
+  rwa [hfun] at hK
 
 end GlobalTheory.Shin
 end -- clump:auto

@@ -360,12 +360,7 @@ theorem tw_sub_injective (s : Bool) {V W : Submodule ℂ E} (h : Tw.sub s V = Tw
 
 theorem tw_span_image (s : Bool) (S : Set E) :
     Submodule.span ℂ ((Tw.mk s : E → Tw s E) '' S) = Tw.sub s (Submodule.span ℂ S) := by
-  have h1 : Tw.sub s (Submodule.span ℂ S) = (Submodule.span ℂ S).map (Tw.mkL s E) := by
-    ext x
-    constructor
-    · intro hx; exact ⟨Tw.out x, hx, rfl⟩
-    · rintro ⟨y, hy, rfl⟩; exact hy
-  rw [h1, Submodule.map_span]; rfl
+  exact GlobalTheory.QPosCompare.tw_span s S
 
 theorem tw_commute (s : Bool) {a b : Module.End ℂ E} (h : Commute a b) : Commute (Tw.map s a) (Tw.map s b) := by
   show Tw.map s a * Tw.map s b = Tw.map s b * Tw.map s a
@@ -848,7 +843,7 @@ theorem eig_in_sum {H : Type} [AddCommGroup H] [Module ℂ H] [FiniteDimensional
   have hV : ∀ k, V k ≤ Formalism.L2.Col.eigAt op (χ k) := fun k x hx =>
     Formalism.L2.Col.mem_eigAt_of_forall_apply fun i => hev k i.1.1 i.1.2 i.2 x hx
   by_contra hne
-  push_neg at hne
+  push Not at hne
   have h1 : (⨆ (k : K) (_ : S k), V k) ≤ Formalism.L2.Col.eigSum op (fun x => x ≠ χ k0) := by
     refine iSup₂_le fun k hk => (hV k).trans (Formalism.L2.Col.eigAt_le_eigSum ?_)
     intro he

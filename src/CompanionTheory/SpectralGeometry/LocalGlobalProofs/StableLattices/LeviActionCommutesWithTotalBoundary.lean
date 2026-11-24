@@ -47,7 +47,7 @@ theorem adL_ann (p q : Fin n) (l : Pos n) :
       ← Finset.sum_sub_distrib]
   rw [h]
   simp only [term_ann, smul_neg, Finset.sum_neg_distrib, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true]
+    ite_true]
 
 theorem lift_mul_ann (T : Module.End ℂ V) (i : Pos n) :
     ((lift n T : Module.End ℂ (Cn n V)) * ann i : Module.End ℂ (Cn n V)) = ann i * (lift n T : Module.End ℂ (Cn n V)) := by
@@ -116,8 +116,8 @@ theorem bd_eq (E : Fin n → Fin n → Module.End ℂ V) : bd (allT n) E = S1 E 
   congr 1
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun k _ => ?_
   by_cases h : i.1.2 = j.1.1 ∧ k.1.1 = i.1.1 ∧ k.1.2 = j.1.2
-  · rw [if_pos ⟨rfl, rfl, h⟩, if_pos h, one_smul]
-  · rw [if_neg (fun c => h c.2.2), if_neg h, zero_smul]
+  · rw [ite_eq_left ⟨rfl, rfl, h⟩, ite_eq_left h, one_smul]
+  · rw [ite_eq_right (fun c => h c.2.2), ite_eq_right h, zero_smul]
 
 theorem comm3 {R : Type*} [Ring R] (L c a b dc da db : R) (hc : L * c - c * L = dc) (ha : L * a - a * L = da)
     (hb : L * b - b * L = db) : L * (c * a * b) - c * a * b * L = dc * a * b + c * da * b + c * a * db := by
@@ -143,8 +143,7 @@ theorem reindex {M : Type*} [AddCommGroup M] [Module ℂ M] (c : Pos n → Pos n
   simp only [smul_sub, sub_smul, Finset.sum_sub_distrib]
   have t1 : ∑ i, ∑ j, ∑ k, c i j k • ∑ m, d k m • w i j m = ∑ a, ∑ b, ∑ m, (∑ k, c a b k * d k m) • w a b m := by
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
-    simp only [Finset.smul_sum, Finset.sum_smul, smul_smul]
-    exact Finset.sum_comm
+    simpa only [Finset.smul_sum, Finset.sum_smul, smul_smul] using Finset.sum_comm
   have t2 : ∑ i, ∑ j, ∑ k, c i j k • ∑ l, d l j • w i l k = ∑ a, ∑ b, ∑ m, (∑ j, c a j m * d b j) • w a b m := by
     refine Finset.sum_congr rfl fun a _ => ?_
     simp only [Finset.smul_sum, Finset.sum_smul, smul_smul]
@@ -222,11 +221,11 @@ theorem levi_bracket_sum_first (a b m : Pos n) : ∑ k : Pos n, tc a b k * adC p
   by_cases h : a.1.2 = b.1.1
   · have hlt : a.1.1 < b.1.2 := lt_trans a.2 (h ▸ b.2)
     rw [Finset.sum_eq_single (⟨(a.1.1, b.1.2), hlt⟩ : Pos n)]
-    · have : tc a b (⟨(a.1.1, b.1.2), hlt⟩ : Pos n) = 1 := if_pos ⟨h, rfl, rfl⟩
+    · have : tc a b (⟨(a.1.1, b.1.2), hlt⟩ : Pos n) = 1 := ite_eq_left ⟨h, rfl, rfl⟩
       rw [this, one_mul, adC_eq, cX, cY]
       simp [h]
     · intro k _ hk
-      rw [tc, if_neg, zero_mul]
+      rw [tc, ite_eq_right, zero_mul]
       rintro ⟨-, e1, e2⟩
       exact hk (Subtype.ext (Prod.ext e1 e2))
     · simp
@@ -242,7 +241,7 @@ theorem levi_bracket_sum_second (hm : Monotone lev) (hpq : lev p = lev q) {a b :
   by_cases h1 : m.1.1 = a.1.1
   · by_cases hlt : a.1.2 < m.1.2
     · rw [Finset.sum_eq_single (⟨(a.1.2, m.1.2), hlt⟩ : Pos n)]
-      · have : tc a (⟨(a.1.2, m.1.2), hlt⟩ : Pos n) m = 1 := if_pos ⟨rfl, h1, rfl⟩
+      · have : tc a (⟨(a.1.2, m.1.2), hlt⟩ : Pos n) m = 1 := ite_eq_left ⟨rfl, h1, rfl⟩
         rw [this, one_mul, adC_eq, cZ, cY]
         simp only [h1, true_and]
         congr 1
@@ -259,28 +258,26 @@ theorem levi_bracket_sum_second (hm : Monotone lev) (hpq : lev p = lev q) {a b :
           · rintro ⟨e1, e2, e3⟩
             exact ⟨e2, e1, e3⟩
       · intro j _ hj
-        rw [tc, if_neg, zero_mul]
+        rw [tc, ite_eq_right, zero_mul]
         rintro ⟨e1, -, e2⟩
         exact hj (Subtype.ext (Prod.ext e1.symm e2.symm))
       · simp
-    · rw [hz, cZ, cY, if_neg, if_neg, sub_zero]
+    · rw [hz, cZ, cY, ite_eq_right, ite_eq_right, sub_zero]
       · rintro ⟨e1, e2, -, e3⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e1, e3, ← hpq, ← e2]
-        exact hb
+        rwa [e1, e3, ← hpq, ← e2]
       · rintro ⟨e1, e2, -, e3⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e1, hpq, e2, e3]
-        exact hb
+        rwa [e1, hpq, e2, e3]
       · intro j
-        rw [tc, if_neg]
+        rw [tc, ite_eq_right]
         rintro ⟨e1, -, e2⟩
         exact hlt (by rw [e1, e2]; exact j.2)
-  · rw [hz, cZ, cY, if_neg, if_neg, sub_zero]
+  · rw [hz, cZ, cY, ite_eq_right, ite_eq_right, sub_zero]
     · exact fun c => h1 c.2.2.1
     · exact fun c => h1 c.2.2.1
     · intro j
-      rw [tc, if_neg]
+      rw [tc, ite_eq_right]
       exact fun c => h1 c.2.1
 
 theorem levi_bracket_sum_third (hm : Monotone lev) (hpq : lev p = lev q) {a b : Pos n} (ha : inU lev a) (hb : inU lev b) (m : Pos n) :
@@ -290,7 +287,7 @@ theorem levi_bracket_sum_third (hm : Monotone lev) (hpq : lev p = lev q) {a b : 
   by_cases h1 : m.1.2 = b.1.2
   · by_cases hlt : m.1.1 < b.1.1
     · rw [Finset.sum_eq_single (⟨(m.1.1, b.1.1), hlt⟩ : Pos n)]
-      · have : tc (⟨(m.1.1, b.1.1), hlt⟩ : Pos n) b m = 1 := if_pos ⟨rfl, rfl, h1⟩
+      · have : tc (⟨(m.1.1, b.1.1), hlt⟩ : Pos n) b m = 1 := ite_eq_left ⟨rfl, rfl, h1⟩
         rw [this, one_mul, adC_eq, cX, cZ]
         simp only [h1, and_true]
         congr 1
@@ -307,28 +304,26 @@ theorem levi_bracket_sum_third (hm : Monotone lev) (hpq : lev p = lev q) {a b : 
           · rintro ⟨e1, e2, e3⟩
             exact ⟨e1, e3, e2.symm⟩
       · intro i _ hi
-        rw [tc, if_neg, zero_mul]
+        rw [tc, ite_eq_right, zero_mul]
         rintro ⟨e1, e2, -⟩
         exact hi (Subtype.ext (Prod.ext e2.symm e1))
       · simp
-    · rw [hz, cX, cZ, if_neg, if_neg, sub_zero]
+    · rw [hz, cX, cZ, ite_eq_right, ite_eq_right, sub_zero]
       · rintro ⟨e1, e2, e3, -⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e3, ← e2, ← hpq, ← e1]
-        exact ha
+        rwa [e3, ← e2, ← hpq, ← e1]
       · rintro ⟨e1, e2, e3, -⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e3, hpq, e2, ← e1]
-        exact ha
+        rwa [e3, hpq, e2, ← e1]
       · intro i
-        rw [tc, if_neg]
+        rw [tc, ite_eq_right]
         rintro ⟨e1, e2, -⟩
         exact hlt (by rw [e2, ← e1]; exact i.2)
-  · rw [hz, cX, cZ, if_neg, if_neg, sub_zero]
+  · rw [hz, cX, cZ, ite_eq_right, ite_eq_right, sub_zero]
     · exact fun c => h1 c.2.2.2
     · exact fun c => h1 c.2.2.2
     · intro i
-      rw [tc, if_neg]
+      rw [tc, ite_eq_right]
       exact fun c => h1 c.2.2
 
 theorem Dc_eq_zero (hm : Monotone lev) (hpq : lev p = lev q) {a b : Pos n} (ha : inU lev a) (hb : inU lev b) (m : Pos n) :
@@ -341,7 +336,7 @@ theorem sum_ind {M : Type*} [AddCommGroup M] [Module ℂ M] {u v : Fin n} (h : u
   rw [Finset.sum_eq_single (⟨(u, v), h⟩ : Pos n)]
   · simp
   · intro k _ hk
-    rw [if_neg, zero_smul]
+    rw [ite_eq_right, zero_smul]
     rintro ⟨e1, e2⟩
     exact hk (Subtype.ext (Prod.ext e1 e2))
   · simp
@@ -353,15 +348,13 @@ theorem lin_zero (hm : Monotone lev) (hpq : lev p = lev q) {E : Fin n → Fin n 
       if q = l.1.1 then E p l.1.2 else 0 := by
     by_cases h : q = l.1.1
     · have hlt : p < l.1.2 := lt_of_lev hm (by rw [hpq, h]; exact hl)
-      simp only [h, true_and, if_true]
-      exact sum_ind hlt fun k => E k.1.1 k.1.2
+      simpa only [h, true_and, ite_true] using sum_ind hlt fun k => E k.1.1 k.1.2
     · simp [h]
   have h2 : ∑ k : Pos n, (if l.1.2 = p ∧ k.1.1 = l.1.1 ∧ k.1.2 = q then (1 : ℂ) else 0) • E k.1.1 k.1.2 =
       if l.1.2 = p then E l.1.1 q else 0 := by
     by_cases h : l.1.2 = p
     · have hlt : l.1.1 < q := lt_of_lev hm (by rw [← hpq, ← h]; exact hl)
-      simp only [h, true_and, if_true]
-      exact sum_ind hlt fun k => E k.1.1 k.1.2
+      simpa only [h, true_and, ite_true] using sum_ind hlt fun k => E k.1.1 k.1.2
     · simp [h]
   simp only [adC_eq, sub_smul, Finset.sum_sub_distrib]
   rw [h1, h2, hE p q l.1.1 l.1.2, sub_self]
@@ -374,8 +367,7 @@ theorem ann_eq_zero {P : Pos n → Prop} {x : Cn n V} (hx : SuppIn P x) {i : Pos
   exact hi (hx _ (CompanionTheory.D.LK.ann_ne h).2 i (mem_insert_self _ _))
 
 theorem ann_supp {P : Pos n → Prop} {x : Cn n V} (hx : SuppIn P x) (i : Pos n) : SuppIn P (ann i x) := by
-  intro A h j hj
-  exact hx _ (CompanionTheory.D.LK.ann_ne h).2 j (mem_insert_of_mem hj)
+  exact fun A h j hj => hx _ (CompanionTheory.D.LK.ann_ne h).2 j (mem_insert_of_mem hj)
 
 theorem lF_bd : ∀ (n : ℕ) (lev : Fin n → ℕ) (V : Type) [AddCommGroup V] [Module ℂ V]
     (E : Fin n → Fin n → Module.End ℂ V), Monotone lev → GlRel E → ∀ (x : Cn n V), SuppIn (inU lev) x →

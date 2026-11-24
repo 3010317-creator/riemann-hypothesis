@@ -242,8 +242,7 @@ theorem UpperTheory.lowerTriangular_conj_antidiag :
     rw [ordProd, List.ofFn_succ, List.ofFn_succ, List.ofFn_succ, List.ofFn_zero, List.prod_cons, List.prod_cons,
       List.prod_cons, List.prod_nil, mul_one]
     show (r _ - (ψ v 0 (g 0) : Q) • 1) * ((r _ - (ψ v 1 (g 1) : Q) • 1) * (r _ - (ψ v 2 (g 2) : Q) • 1)) = 0
-    rw [e0, e1, e2]
-    exact this
+    rwa [e0, e1, e2]
   · show r g i i = _
     rw [hr]
     fin_cases i
@@ -371,8 +370,7 @@ theorem UpperTheory.one_add_maximalIdeal_subset_units :
     refine ⟨α, β, γ, fun s => ?_⟩
     obtain ⟨h1, h2, h3⟩ := H s
     simp only [hb.2, w0, w1, w2, zpow_one, zpow_zero, _root_.zpow_neg, Units.val_one, map_one] at h1 h2 h3
-    simp only [Algebra.smul_def, map_sub, map_one, s1]
-    exact ⟨h1, h2, h3⟩
+    simpa only [Algebra.smul_def, map_sub, map_one, s1] using ⟨h1, h2, h3⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.OneAddMaximalIdealSubsetUnits =====

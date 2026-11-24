@@ -211,11 +211,9 @@ theorem chartWR_vol (η : ℝ) (hη : 0 < η) :
   rw [himg]
   refine ⟨?_, ?_⟩
   · have := hc1 _ g hap'
-    rw [hvol] at this
-    exact this
+    rwa [hvol] at this
   · have := hc2 _ g hap'
-    rw [hvol] at this
-    exact this
+    rwa [hvol] at this
 
 end ReciprocityTheory.ChartRestriction.DS
 end -- clump:auto
@@ -398,8 +396,7 @@ theorem gaussE_qr_const (μ : Measure (UNgrp N)) [IsProbabilityMeasure μ] (C : 
       ENNReal.ofReal (qrWt t)) =
       ENNReal.ofReal (Real.pi ^ (N * (N - 1) / 2) * (∏ i ∈ range N, (i.factorial : ℝ)) / 2 ^ N) := by
     intro k
-    simp only [qrMap, Equiv.apply_symm_apply, gaussB_hs_unitary_mul]
-    exact gaussD_tri
+    simpa only [qrMap, Equiv.apply_symm_apply, gaussB_hs_unitary_mul] using gaussD_tri
   simp only [hin, lintegral_const, measure_univ, mul_one, gaussC_mat] at h
   set X := Real.pi ^ (N * (N - 1) / 2) * (∏ i ∈ range N, (i.factorial : ℝ)) / 2 ^ N with hXdef
   have hXpos : 0 < X := by
@@ -484,8 +481,7 @@ theorem exists_row_mem_span_of_det_eq_zero {n : ℕ} (Z : Fin (n + 1) → Fin (n
     have hu : IsUnit (Matrix.of Z) := Matrix.linearIndependent_rows_iff_isUnit.mp h
     exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero hZ
   have hex : ∃ i, Z i ∈ Submodule.span ℂ (Z '' (Set.univ \ {i})) := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     apply hli
     first
     | exact linearIndependent_iff_notMem_span.mpr hno
@@ -494,8 +490,7 @@ theorem exists_row_mem_span_of_det_eq_zero {n : ℕ} (Z : Fin (n + 1) → Fin (n
   have himg : Z '' (Set.univ \ {i}) = Set.range fun j : Fin n => Z (i.succAbove j) := by
     rw [show (fun j : Fin n => Z (i.succAbove j)) = Z ∘ i.succAbove from rfl, Set.range_comp,
       Fin.range_succAbove, Set.compl_eq_univ_diff]
-  rw [himg] at hi
-  exact hi
+  rwa [himg] at hi
 
 theorem volume_det_eq_zero :
     volume {Z : Fin N → Fin N → ℂ | (Matrix.of Z).det = 0} = 0 := by
@@ -775,8 +770,7 @@ theorem det_upMat (t : TriCo N) : (upMat t).det = ∏ j, ((t.1 j : ℝ) : ℂ) :
 
 theorem det_upMat_ne (t : TriCo N) (ht : t ∈ triPos N) : IsUnit (upMat t).det := by
   rw [det_upMat, isUnit_iff_ne_zero, Finset.prod_ne_zero_iff]
-  intro j _
-  exact Complex.ofReal_ne_zero.mpr (ht j).ne'
+  exact fun j _ => Complex.ofReal_ne_zero.mpr (ht j).ne'
 
 theorem inv_up (t : TriCo N) (ht : t ∈ triPos N) : (upMat t)⁻¹.BlockTriangular id := by
   let _ := (upMat t).invertibleOfIsUnitDet (det_upMat_ne t ht)
@@ -924,8 +918,7 @@ theorem triMeas_ne_zero : triMeas N ≠ 0 := by
     · intro h
       by_contra hx
       exact h (fun h' => absurd h' hx)
-    · intro h h'
-      exact triDens_pos x h (h' h)
+    · exact fun h h' => triDens_pos x h (h' h)
   rw [h3] at h2
   exact isOpen_triPos.measure_ne_zero volume ⟨(fun _ => 1, 0), fun j => one_pos⟩ h2
 
@@ -1007,8 +1000,7 @@ theorem range_qrW : Set.range (qrW (N := N)) = glSet N := by
 
 theorem measurableEmbedding_qrW : MeasurableEmbedding (qrW (N := N)) := by
   refine ⟨?_, measurable_qrMap.comp measurable_subtype_coe, ?_⟩
-  · intro p q h
-    exact Subtype.ext (qrMap_injOn p.2 q.2 h)
+  · exact fun p q h => Subtype.ext (qrMap_injOn p.2 q.2 h)
   · intro s hs
     have h1 : MeasurableSet (Subtype.val '' s : Set (UNgrp N × TriCo N)) :=
       (MeasurableEmbedding.subtype_coe measurableSet_qrDom).measurableSet_image' hs
@@ -1049,9 +1041,7 @@ theorem nuQR_map_eq (φ : UNgrp N × TriCo N → UNgrp N × TriCo N) (hφ : Meas
       rw [hc, ← Measure.map_map hψ measurableEmbedding_qrW.measurable, map_qrW_nuW]
       conv_lhs => rw [← hψG]
       rw [← Measure.restrict_map hψ measurableSet_glSet, hψm]
-    have h2 := congrArg (fun m => m.comap qrW) h1
-    simp only [measurableEmbedding_qrW.comap_map] at h2
-    exact h2
+    simpa only [measurableEmbedding_qrW.comap_map] using congrArg (fun m => m.comap qrW) h1
   rw [nuQR, Measure.map_map hφ measurable_subtype_coe]
   have : φ ∘ Subtype.val = Subtype.val ∘ φW := rfl
   rw [this, ← Measure.map_map measurable_subtype_coe hφWm, key]
@@ -1135,8 +1125,7 @@ theorem kap_compact [CompactSpace (UNgrp N)] (K : Set (TriCo N)) (hK : IsCompact
     exact ⟨p.1, ⟨trivial, hp⟩, rfl⟩
   · rintro _ ⟨p, hp, rfl⟩
     have : qrMap p ∈ qrMap '' (Set.univ ×ˢ triPos N) := ⟨p, ⟨trivial, hKs hp.2⟩, rfl⟩
-    rw [qrMap_image] at this
-    exact this
+    rwa [qrMap_image] at this
 
 theorem kap_inv (t0 : TriCo N) (h0 : t0 ∈ triPos N) : (kap N).map (triR t0) = kap N := by
   have hm : Measurable fun p : UNgrp N × TriCo N => (p.1, triR t0 p.2) :=
@@ -1191,8 +1180,7 @@ theorem nuQR_eq_prod (μ : Measure (UNgrp N)) [μ.IsHaarMeasure] [IsProbabilityM
         lt_of_le_of_lt (measure_mono Set.inter_subset_right) (measure_spanningSets_lt_top (kap N) n)⟩
   · intro s hs t ht _
     exact ⟨hs.1.inter ht.1, lt_of_le_of_lt (measure_mono Set.inter_subset_left) hs.2⟩
-  · intro s hs t ht
-    exact nuQR_rect μ s hs t ht.1 ht.2
+  · exact fun s hs t ht => nuQR_rect μ s hs t ht.1 ht.2
 
 theorem norm_det_toM (k : UNgrp N) : ‖(toM k).det‖ = 1 := by
   have hk : inUJ (fun _ : Fin N => true) (toM k) := k.2
@@ -1233,8 +1221,7 @@ theorem d_qrMap (k : UNgrp N) (t : TriCo N) (ht : t ∈ triPos N) :
     ENNReal.ofReal (‖(Matrix.of (qrMap (k, t))).det‖ ^ (2 * N)) =
       ENNReal.ofReal ((∏ j, t.1 j) ^ (2 * N)) := by
   congr 2
-  have : Matrix.of (qrMap (k, t)) = toM k * upMat t := by
-    exact Matrix.of.apply_symm_apply _
+  have : Matrix.of (qrMap (k, t)) = toM k * upMat t := Matrix.of.apply_symm_apply _
   rw [this, Matrix.det_mul, norm_mul, norm_det_toM, one_mul, _root_.ReciprocityTheory.ChartRestriction.DS.PositiveTriangularSet.det_upMat, norm_prod]
   refine Finset.prod_congr rfl fun j _ => ?_
   rw [Complex.norm_real, Real.norm_of_nonneg (ht j).le]
@@ -1336,8 +1323,7 @@ theorem qr_lintegral (μ : Measure (UNgrp N)) [μ.IsHaarMeasure] [IsProbabilityM
       rw [MeasureTheory.volume_pi, Measure.pi_univ, Finset.prod_ne_zero_iff]
       intro i _
       rw [MeasureTheory.volume_pi, Measure.pi_univ, Finset.prod_ne_zero_iff]
-      intro j _
-      exact isOpen_univ.measure_ne_zero volume Set.univ_nonempty
+      exact fun j _ => isOpen_univ.measure_ne_zero volume Set.univ_nonempty
     exact hv h1
   refine ⟨c.toReal, ENNReal.toReal_pos hc0 hct, ?_⟩
   intro f hf

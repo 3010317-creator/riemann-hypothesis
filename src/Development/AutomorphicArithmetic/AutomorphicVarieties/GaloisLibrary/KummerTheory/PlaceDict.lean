@@ -104,12 +104,10 @@ theorem UpperTheory.V.Kum.placeDict :
     ext x
     have h := hg.2 x ((ValuationSubring.valuation_le_one_iff _ _).2 (ValuationSubring.mem_top _))
     exact sub_eq_zero.1 (val_top h)
-  · intro A hA
-    exact exists_place K Ω A hA
+  · exact fun A hA => exists_place K Ω A hA
   · rintro A N hN h rfl
     exact hN (Nat.cast_eq_zero.1 (val_top h))
   · intro A v N hv
     have h := hv (N : 𝓞 K)
     have e : algebraMap K Ω ((N : 𝓞 K) : K) = (N : Ω) := by simp
-    rw [← e]
-    exact h
+    rwa [← e]

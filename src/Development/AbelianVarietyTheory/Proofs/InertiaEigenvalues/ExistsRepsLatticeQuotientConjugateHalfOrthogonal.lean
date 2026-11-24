@@ -188,15 +188,13 @@ theorem reps_orth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D),
     have hx'Λ : x' ∉ Λ := fun h => hnot ⟨x', h, (isHalf_iff S T).2 hx'h, hx'.symm⟩
     have hx'fin := hxfin ((isHalf_iff S T).2 hx'h)
     obtain ⟨l, hl, hψl⟩ : ∃ l ∈ Λ, ψ (symplO S T x' l) ≠ 1 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hx'Λ ((hdual x' hx'fin).2 hcon)
     have hl' := hsm hc l hl
     obtain ⟨y₀, hy₀h, hy₀⟩ := half_div S T c k hk _ hl'.2
     have hy₀M : y₀ ∈ M := (hM _).2 ⟨(isHalf_iff S T).2 hy₀h, hy₀ ▸ hl'.1⟩
     have hψ0 : ψ (symplO S T x y₀) ≠ 1 := by
-      rw [← hx', symplO_nsmul_swap, hy₀, ← hcdef, ← symplO_smul, (mem_half S T).1 hx'h]
-      exact hψl
+      rwa [← hx', symplO_nsmul_swap, hy₀, ← hcdef, ← symplO_smul, (mem_half S T).1 hx'h]
 
     have hsum : ∑ y ∈ Finset.univ.image rep, ψ (symplO S T x y) = ∑ q : M ⧸ N', ψ (symplO S T x (rep q)) :=
       Finset.sum_image fun q₁ _ q₂ _ h => hrepinj h

@@ -92,8 +92,7 @@ theorem reduction_sum₂ {ι : Type*} (s : Finset ι) (f : ι → E) (hf : ∀ i
   have h := map_sum (redHom P) (fun i => (⟨f i, hf i⟩ : intRing P)) s
   have h2 : ((∑ i ∈ s, (⟨f i, hf i⟩ : intRing P) : intRing P) : E) = ∑ i ∈ s, f i := by
     simp
-  rw [← h2]
-  exact h
+  rwa [← h2]
 
 theorem reduction_det {t : ℕ} (A : Matrix (Fin t) (Fin t) E) (hA : ∀ i j, IntAt P (A i j)) :
     redP P A.det = (Matrix.of fun i j => redP P (A i j)).det := by
@@ -102,8 +101,7 @@ theorem reduction_det {t : ℕ} (A : Matrix (Fin t) (Fin t) E) (hA : ∀ i j, In
     have := (intRing P).subtype.map_det B
     exact this
   have h2 := (redHom P).map_det B
-  rw [← h1]
-  exact h2
+  rwa [← h1]
 
 
 end Red

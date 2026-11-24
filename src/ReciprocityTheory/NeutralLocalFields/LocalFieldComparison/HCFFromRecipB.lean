@@ -129,10 +129,8 @@ theorem mem_of_pow (N : Subgroup (Ideles K)) (m : ℕ) (hm : 0 < m) (hpow : ∀ 
       refine Eq.trans ?_ hpa.symm
       rw [Finset.prod_eq_single w']
       · exact (infIdele_fst_self K w' (x w')).symm
-      · intro w _ hw
-        exact infIdele_fst_ne K w w' (Ne.symm hw) (x w)
-      · intro hw'
-        exact absurd (Finset.mem_univ _) hw'
+      · exact fun w _ hw => infIdele_fst_ne K w w' (Ne.symm hw) (x w)
+      · exact fun hw' => absurd (Finset.mem_univ _) hw'
     · rw [map_prod]
       show (a : AdeleRing (𝓞 K) K).2 = ∏ w, sndU K (infIdele K w (x w))
       rw [ha]

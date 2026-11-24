@@ -74,10 +74,10 @@ def ind (p : Prop) : ℝ := by
 
 theorem ind_pos {p : Prop} (h : p) : ind p = 1 := by
   unfold ind
-  rw [if_pos h]
+  rw [ite_eq_left h]
 theorem ind_neg {p : Prop} (h : ¬ p) : ind p = 0 := by
   unfold ind
-  rw [if_neg h]
+  rw [ite_eq_right h]
 theorem ind_nonneg (p : Prop) : 0 ≤ ind p := by
   unfold ind
   split_ifs <;> norm_num
@@ -182,9 +182,7 @@ theorem ex_split {A S : Finset ℕ} (hA : A ⊆ S) (f g : Finset ℕ → ℝ) :
 
 theorem ex_restrict {A S : Finset ℕ} (hA : A ⊆ S) (f : Finset ℕ → ℝ) :
     ex δ S (fun T => f (T ∩ A)) = ex δ A f := by
-  have h := ex_split (δ := δ) hA f (fun _ => 1)
-  simp only [mul_one, ex_const] at h
-  exact h
+  simpa only [mul_one, ex_const] using ex_split (δ := δ) hA f (fun _ => 1)
 
 theorem ex_prod {ι : Type*} (J : Finset ι) (A : ι → Finset ℕ) (g : ι → Finset ℕ → ℝ)
     (hd : ∀ i ∈ J, ∀ j ∈ J, i ≠ j → Disjoint (A i) (A j)) (S : Finset ℕ)
@@ -234,8 +232,7 @@ theorem ex_contains {Q B : Finset ℕ} (hQ : Q ⊆ B) :
     beta_reduce
     rw [ind_neg, mul_zero]
     exact fun h => hne (subset_antisymm (mem_powerset.mp hT) h)
-  · intro h
-    exact absurd (mem_powerset_self Q) h
+  · exact fun h => absurd (mem_powerset_self Q) h
 
 theorem tail_le_choose (h0 : 0 ≤ δ) (h1 : δ ≤ 1) {B : Finset ℕ} {L : ℕ} (hB : B.card ≤ L) (K : ℕ) :
     ex δ B (fun T => ind (K ≤ T.card)) ≤ (L.choose K : ℝ) * δ ^ K := by
@@ -319,8 +316,7 @@ theorem ex_isEmpty (C : Finset ℕ) : ex δ C (fun V => ind (V = ∅)) = (1 - δ
   · intro T _ hne
     beta_reduce
     rw [ind_neg hne, mul_zero]
-  · intro h
-    exact absurd (empty_mem_powerset C) h
+  · exact fun h => absurd (empty_mem_powerset C) h
 
 theorem ex_single_even (h0 : 0 ≤ δ) (h1 : δ ≤ 1) (a u : ℕ) :
     ((u / 2 : ℕ) : ℝ) * δ * (1 - δ) ^ (u - 1) ≤
@@ -364,7 +360,7 @@ theorem prod_alternate (a b : ℝ) (m : ℕ) :
     have h1 : ¬ Even (2 * m + 1) := Nat.not_even_iff_odd.mpr (odd_two_mul_add_one m)
     have h2 : Even (2 * m + 1 + 1) := ⟨m + 1, by ring⟩
     rw [show 2 * (m + 1) + 1 = 2 * m + 1 + 1 + 1 by ring, prod_range_succ, prod_range_succ, ih,
-      if_neg h1, if_pos h2]
+      ite_eq_right h1, ite_eq_left h2]
     ring
 
 theorem marked_ge (h0 : 0 ≤ δ) (h1 : δ ≤ 1) (r u s : ℕ) :
@@ -408,7 +404,7 @@ theorem marked_ge (h0 : 0 ≤ δ) (h1 : δ ≤ 1) (r u s : ℕ) :
         have he : Even (c - 1) := by
           obtain ⟨k, hk⟩ := hodd
           exact ⟨k, by omega⟩
-        rw [if_pos he] at h
+        rw [ite_eq_left he] at h
         by_contra hne
         exact h (ind_neg hne)
       · intro hev
@@ -416,7 +412,7 @@ theorem marked_ge (h0 : 0 ≤ δ) (h1 : δ ≤ 1) (r u s : ℕ) :
           rintro ⟨k, hk⟩
           obtain ⟨k', hk'⟩ := hev
           omega
-        rw [if_neg he] at h
+        rw [ite_eq_right he] at h
         by_contra hne
         exact h (ind_neg hne)
   calc markedBound δ r u
@@ -431,9 +427,9 @@ theorem marked_ge (h0 : 0 ≤ δ) (h1 : δ ≤ 1) (r u s : ℕ) :
           · exact hP0
           · exact hX
         · by_cases he : Even c'
-          · simp only [if_pos he]
+          · simp only [ite_eq_left he]
             exact le_of_eq (by rw [ex_isEmpty, cell_card (c := c' + 1) (by omega)])
-          · simp only [if_neg he]
+          · simp only [ite_eq_right he]
             rw [hcell]
             exact ex_single_even h0 h1 _ u
     _ = ex δ (tile r u s) (fun T => ∏ c' ∈ range (6 * r + 1),

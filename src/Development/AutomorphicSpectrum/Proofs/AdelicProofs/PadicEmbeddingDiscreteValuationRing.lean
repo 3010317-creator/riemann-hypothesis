@@ -61,8 +61,7 @@ variable {K : Type} [Field K] [NumberField K] {p : Nat.Primes} (j : K →+* ℂ_
 
 theorem norm_natCast_padicComplex (p : Nat.Primes) (n : ℕ) :
     ‖(n : ℂ_[p])‖ = ‖(n : ℚ_[p])‖ := by
-  have h := PadicComplex.norm_extends' (p : ℕ) (n : ℚ_[p])
-  simpa using h
+  simpa using PadicComplex.norm_extends' (p : ℕ) (n : ℚ_[p])
 
 def unitBall : ValuationSubring K where
   carrier := {a | ‖j a‖ ≤ 1}
@@ -110,7 +109,7 @@ instance primeBelow_isPrime : (primeBelow j).IsPrime := by
   · have : (1 : 𝓞 K) ∈ primeBelow j := h ▸ Submodule.mem_top
     simp [mem_primeBelow] at this
   · by_contra hc
-    push_neg at hc
+    push Not at hc
     obtain ⟨ha, hb⟩ := hc
     have ha1 : ‖j (a : K)‖ = 1 := le_antisymm (norm_integer_le_one j a) (not_lt.1 ha)
     have hb1 : ‖j (b : K)‖ = 1 := le_antisymm (norm_integer_le_one j b) (not_lt.1 hb)
@@ -149,8 +148,7 @@ theorem norm_lt_one_of_valuation_lt_one {y : K} (hy : (place j).valuation K y < 
     le_antisymm (norm_integer_le_one j _) (not_lt.1 d.2)
   have hdv : (place j).valuation K ((d : 𝓞 K) : K) = 1 := by
     have := ((place j).intValuation_eq_one_iff_mem_primeCompl (d : 𝓞 K)).2 d.2
-    rw [← (place j).valuation_of_algebraMap (K := K)] at this
-    exact this
+    rwa [← (place j).valuation_of_algebraMap (K := K)] at this
   have hn : (place j).valuation K (n : K) < 1 := by
     have h3 := congrArg ((place j).valuation K) h
     rw [map_mul] at h3

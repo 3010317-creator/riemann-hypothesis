@@ -20,15 +20,13 @@ theorem multipliable_of_summable_abs_sub_one {ι : Type} {a : ι → ℝ}
   rwa [hfun] at hm
 
 theorem tprod_nonneg_of_nonneg {ι : Type} {a : ι → ℝ} (hm : Multipliable a)
-    (h0 : ∀ v, 0 ≤ a v) : 0 ≤ ∏' v, a v := by
-  exact tprod_nonneg h0
+    (h0 : ∀ v, 0 ≤ a v) : 0 ≤ ∏' v, a v := tprod_nonneg h0
 
 theorem tprod_ne_zero_of_summable {ι : Type} {a : ι → ℝ}
     (h : Summable (fun v => |a v - 1|)) (h0 : ∀ v, a v ≠ 0) : ∏' v, a v ≠ 0 := by
   have h' : Summable (fun v => ‖a v - 1‖) := by simpa [Real.norm_eq_abs] using h
   have hne : ∀ v, 1 + (a v - 1) ≠ 0 := fun v => by simpa using h0 v
-  have hp := tprod_one_add_ne_zero_of_summable (f := fun v => a v - 1) hne h'
-  simpa using hp
+  simpa using tprod_one_add_ne_zero_of_summable (f := fun v => a v - 1) hne h'
 
 theorem tprod_eq_prod_mul_tprod_compl {ι : Type} {a : ι → ℝ}
     (h : Summable (fun v => |a v - 1|)) (S : Finset ι) :

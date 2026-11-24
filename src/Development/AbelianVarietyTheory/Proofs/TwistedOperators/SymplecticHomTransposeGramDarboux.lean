@@ -109,9 +109,7 @@ theorem hO_darboux (S T S' T' : HSp D) (e₁ : Fin T'.rank ≃ Fin S.rank) (e₂
     intro F hF
     refine Fintype.sum_equiv e₂ _ _ fun a => ?_
     refine Fintype.sum_equiv e₂ _ _ fun b => ?_
-    refine Fintype.sum_equiv e₁ _ _ fun c => ?_
-    refine Fintype.sum_equiv e₁ _ _ fun d => ?_
-    exact hF a b c d
+    exact Fintype.sum_equiv e₁ _ _ fun c => Fintype.sum_equiv e₁ _ _ fun d => hF a b c d
   rw [hR (fun b c d k => cA D (y (e₁.symm k) (e₂.symm c)) * incA D (S.gram b k) * incA D (T.gram c d) * x (e₁.symm b) (e₂.symm d))
     (fun a b c d => by simp only [Equiv.symm_apply_apply, map_neg]; ring)]
   simp only [Finset.sum_mul]

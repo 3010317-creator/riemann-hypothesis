@@ -261,8 +261,7 @@ theorem SnapperSection.proof (hA : SnapperQuotAdd.Statement.{u, w, w})
     rw [hF₁def, tensorProd_sub (twistBundle k x a) D I, twistBundle_sub]
   obtain ⟨G₀, hG₀, -⟩ := IdealTwistFamily.proof k Ω N x F₁ pp hh
   have hG₀sub : ∀ I, G₀.sub I = idealMod (x := x) pp I * (D.sub I * (twistSys k x a).sub I) := fun I => by
-    rw [hG₀, SubSystem.twist_sub_eq_mul_of_line, idealSys_sub]
-    rw [hF₁sub]
+    rw [hG₀, SubSystem.twist_sub_eq_mul_of_line, idealSys_sub, hF₁sub]
   obtain ⟨F₂, hF₂def⟩ : ∃ F₂ : SubFamily k x Ω,
       F₂ = SubFamily.sup ((twistBundle k x a).tensorProd (spanBundle k x s hs0)).toSubFamily G₀ := ⟨_, rfl⟩
   have hF₂sub : ∀ I, F₂.sub I = Submodule.span (chartRing k x I) {s} * (twistSys k x a).sub I ⊔
@@ -328,8 +327,7 @@ theorem SnapperSection.proof (hA : SnapperQuotAdd.Statement.{u, w, w})
       constructor
       · intro h
         refine hI k Ω N x pp hp hh hle D M s ⟨f₀, hf₀Z, hf₀p⟩ I y hy ?_
-        rw [hG₁] at h
-        exact h
+        rwa [hG₁] at h
       · intro h
         rw [SubSystem.twist_sub_eq_mul_of_line, idealSys_sub] at h
         rw [hG₁sub, show idealMod (x := x) pp I * (D.sub I * M.sub I) =
@@ -350,8 +348,7 @@ theorem SnapperSection.proof (hA : SnapperQuotAdd.Statement.{u, w, w})
   have hE2 : pieceChar k pp a L n c = eulerCharQuot k M.toSubSystem (M.toSubSystem.twist (idealSys x pp)) := by
     unfold pieceChar
     congr 1 <;> refine SubSystem.ext_sub fun I => ?_
-    · rw [SubSystem.twist_sub_eq_mul_of_line, twistPows_sub]
-      rw [hMsub]
+    · rw [SubSystem.twist_sub_eq_mul_of_line, twistPows_sub, hMsub]
     · rw [SubSystem.twist_sub_eq_mul_of_line, twistPows_sub, SubSystem.twist_sub_eq_mul_of_line, idealSys_sub,
         SubSystem.twist_sub_eq_mul_of_line, idealSys_sub]
       rw [hMsub]
@@ -361,11 +358,9 @@ theorem SnapperSection.proof (hA : SnapperQuotAdd.Statement.{u, w, w})
       ((F₂.toSubSystem.twistPows t (fun i => (L i).toSubSystem) n).twist (twistSys k x c)) =
       eulerCharQuot k (M.tensorProd D).toSubSystem F₂'.toSubSystem := by
     congr 1 <;> refine SubSystem.ext_sub fun I => ?_
-    · rw [SubSystem.twist_sub_eq_mul_of_line, twistPows_sub]
-      rw [hF₁sub, hMD, hMsub]
+    · rw [SubSystem.twist_sub_eq_mul_of_line, twistPows_sub, hF₁sub, hMD, hMsub]
       ring
-    · rw [SubSystem.twist_sub_eq_mul_of_line, twistPows_sub]
-      rw [hF₂sub, hF₂'sub, hMsub]
+    · rw [SubSystem.twist_sub_eq_mul_of_line, twistPows_sub, hF₂sub, hF₂'sub, hMsub]
       simp only [← Submodule.add_eq_sup]
       ring
   rw [hE1, hE2, hadd, hmul, ← hE3, hdev t L n c]

@@ -62,8 +62,7 @@ omit [Fintype ι] in
 theorem mem_dualFr_tauLat {n : ℕ} (τ : ι) (L : Submodule (𝓞 E) (Fin n → E)) (φ : Fin n → K) :
     φ ∈ dualFr (tauLat emb τ L) ↔ ∀ y ∈ L, φ ⬝ᵥ (fun a => emb τ (y a)) ∈ (1 : Submodule (𝓞 K) K) := by
   constructor
-  · intro h y hy
-    exact h _ (Submodule.subset_span ⟨y, hy, rfl⟩)
+  · exact fun h y hy => h _ (Submodule.subset_span ⟨y, hy, rfl⟩)
   · intro h x hx
     induction hx using Submodule.span_induction with
     | mem z hz => obtain ⟨y, hy, rfl⟩ := hz; exact h y hy
@@ -243,8 +242,7 @@ theorem weights_ok (emb : ι → E →+* K) [StarRing K] (h : ∀ τ, Q.sg τ = 
   have := GlobalTheory.BranchMembers.members X Unit R W
     ⟨fun τ => ⟨hc τ, rfl⟩, fun _ _ => rfl, fun _ _ _ _ => rfl, fun _ _ _ _ => rfl⟩ () τ
   unfold PerIn.sgT
-  rw [h τ]
-  exact this
+  rwa [h τ]
 
 end General
 

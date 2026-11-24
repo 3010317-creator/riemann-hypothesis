@@ -285,8 +285,7 @@ theorem step_dC (hA : TAv) {k : ℕ} {ω : Form (HS L N) (k + 1)} (hc : Continuo
     · congr 1
       funext i
       rw [intervalIntegral.integral_const_mul]
-    · intro i _
-      exact ((hcont _).const_mul _).intervalIntegrable _ _
+    · exact fun i _ => ((hcont _).const_mul _).intervalIntegrable _ _
   rw [e, hd]
   simp
 
@@ -316,8 +315,7 @@ theorem step_ev (hEv : SEv) (hSc : TScal) (hSi : TSimp) (hA : TAv) {k : ℕ} {ω
     · congr 1
       funext g
       rw [intervalIntegral.integral_const_mul]
-    · intro g _
-      exact ((hcont _).const_mul _).intervalIntegrable _ _
+    · exact fun g _ => ((hcont _).const_mul _).intervalIntegrable _ _
   rw [e]
   simp only [key]
   simp
@@ -401,8 +399,7 @@ theorem join (hSp : TSpan) (hSc : TScal) (hSi : TSimp) (hA : TAv) (hEv : SEv) : 
   have := key _ (hl (fun w => Real.log ‖(s w : ℂ)‖)) 1 h hh
   rw [one_smul] at this
   change pb (scal L N s) ω' h = ω' h
-  rw [pb_congr (hscal s)]
-  exact this
+  rwa [pb_congr (hscal s)]
 
 end PositivityTheory.KB.CentralizerFixed
 

@@ -61,16 +61,13 @@ theorem eq_of_flag_of_hermForm : ∀ {α : Type} {m : α → ℕ} {g : ℕ} (e :
           Submodule.mem_map_of_mem (Submodule.subset_span ⟨j, hj, rfl⟩)
         have h2 : h' (ev j) - s • bv τ j ∈ (E i).map h'.toLinearMap := by
           have := ih j hj (hh' τ j)
-          have hsub : {k : Fin (m τ) | k < j} ⊆ {k | k < i} := by
-            intro k hk
-            exact lt_trans hk hj
+          have hsub : {k : Fin (m τ) | k < j} ⊆ {k | k < i} := fun k hk => lt_trans hk hj
           exact Submodule.map_mono (Submodule.span_mono (Set.image_mono hsub)) this
         have h3 : s • bv τ j ∈ (E i).map h'.toLinearMap := by
           have := Submodule.sub_mem _ h1 h2
           simpa using this
         have := Submodule.smul_mem _ s⁻¹ h3
-        rw [smul_smul, inv_mul_cancel₀ hs, one_smul] at this
-        exact this
+        rwa [smul_smul, inv_mul_cancel₀ hs, one_smul] at this
     intro i
     induction i using WellFoundedLT.induction with
     | _ i ih =>

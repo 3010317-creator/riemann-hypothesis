@@ -45,8 +45,7 @@ theorem tensorSub_comp_perm {n : ℕ} (L : Fin n → SubSystem S x Ω) (σ : Equ
     constructor
     · rintro ⟨b, hb, rfl⟩
       simpa using hb
-    · intro ha
-      exact ⟨σ.symm a, ha, by simp⟩
+    · exact fun ha => ⟨σ.symm a, ha, by simp⟩
   have hfun : (fun i => L (σ i)) = L ∘ σ := rfl
   rw [hfun, ← List.map_map]
   exact (hp.map L).foldl_eq' (fun F _ P _ Q => by
@@ -73,8 +72,7 @@ theorem interSum_eventually_eq_interNum (pp : Ideal (Poly S N)) {n : ℕ} (L : F
   have ht : Tendsto (interSum pp L) atTop (nhds m) :=
     tendsto_const_nhds.congr' (h.mono fun _ hc => hc.symm)
   have hm : interNum pp L = m := ht.limUnder_eq
-  rw [hm]
-  exact h
+  rwa [hm]
 
 end Symmetry
 

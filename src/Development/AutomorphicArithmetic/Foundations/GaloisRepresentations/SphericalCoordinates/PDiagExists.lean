@@ -59,8 +59,7 @@ private theorem sep_of_integer {F : Type} [Field F] [NumberField F] {R : Type} [
     have hm := hsep.map (f := algebraMap ℚ ℂ)
     rw [hq, Polynomial.map_map, RingOfIntegers.minpoly_coe] at hm
     have e : (algebraMap ℚ ℂ).comp (algebraMap ℤ ℚ) = Int.castRingHom ℂ := RingHom.ext_int _ _
-    rw [e] at hm
-    exact hm
+    rwa [e] at hm
   · rw [aeval_def, eval₂_map]
     have e : (algebraMap ℂ R).comp (Int.castRingHom ℂ) = f.comp (algebraMap ℤ (𝓞 F)) :=
       RingHom.ext_int _ _
@@ -81,8 +80,7 @@ theorem UpperTheory.Gal.W2.diagExists_of :
     apply Matrix.toLin'.injective
     apply LinearMap.ext
     intro z
-    have hz := LinearMap.congr_fun hlin z
-    simpa using hz
+    simpa using LinearMap.congr_fun hlin z
   obtain ⟨pH, hpHsep, hpH⟩ := hHSep F O bar g ρ a H hcomm χ hmin.1 hsep
     (fun q hq => (hKills F O bar g ρ a D P₀ hP ga H hH q).1 ((hmin.2 q).2 hq))
   obtain ⟨Sb, d, hdet, hM⟩ := hSim g (Option (𝓞 F))

@@ -58,8 +58,7 @@ private theorem affine_point_comp {X Y : Scheme.{0}} (f : X ⟶ Y) {V : X.Opens}
 private theorem affine_point_injective {X : Scheme.{0}} {V : X.Opens} (hV : IsAffineOpen V) {Ω : Type} [Field Ω]
     {a b : Γ(X, V) →+* Ω}
     (h : Spec.map (CommRingCat.ofHom a) ≫ hV.fromSpec = Spec.map (CommRingCat.ofHom b) ≫ hV.fromSpec) : a = b := by
-  have h' := Spec.map_injective ((cancel_mono _).1 h)
-  exact congrArg CommRingCat.Hom.hom h'
+  exact congrArg CommRingCat.Hom.hom (Spec.map_injective ((cancel_mono _).1 h))
 
 private theorem cech_section_local_split (hP : PtsOfSplits) (hS : AlgSplit) (hT : AlgTr) {k : Type} [Field k] {Z Y W : Scheme.{0}}
     (p : Z ⟶ sp k) (q : Y ⟶ sp k) (s : Y ⟶ Z) [IsFinite s] [Etale s] (c : W ⟶ Z) (J : Type) [Fintype J]
@@ -83,8 +82,7 @@ private theorem cech_section_local_split (hP : PtsOfSplits) (hS : AlgSplit) (hT 
   obtain ⟨e, he⟩ := hS _ _ _ J τ (by
     intro Ω _ _ x y hxy
     have hring : y.comp (s.appLE U (s ⁻¹ᵁ U) le_rfl).hom = x.comp (c.appLE U V hVU).hom := by
-      rw [← Scheme.Hom.app_eq_appLE]
-      exact hxy
+      rwa [← Scheme.Hom.app_eq_appLE]
     have hpt : (Spec.map (CommRingCat.ofHom y) ≫ hA'.fromSpec) ≫ s =
         (Spec.map (CommRingCat.ofHom x) ≫ hV.fromSpec) ≫ c :=
       (affine_point_comp s hU hA' le_rfl y).trans

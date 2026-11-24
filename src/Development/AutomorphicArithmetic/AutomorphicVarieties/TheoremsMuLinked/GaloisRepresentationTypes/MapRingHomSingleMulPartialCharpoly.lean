@@ -296,8 +296,7 @@ private theorem pl_normal (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ]
     (PL l H).Normal := by
   refine ⟨fun a ha g => ?_⟩
   simp only [PL, Subgroup.mem_iInf] at ha ⊢
-  intro U hU
-  exact U.isNormal'.conj_mem a (ha U hU) g
+  exact fun U hU => U.isNormal'.conj_mem a (ha U hU) g
 
 private theorem pl_le (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] (H : OpenNormalSubgroup Γ) :
     PL l H.toSubgroup ≤ H.toSubgroup := by
@@ -501,8 +500,7 @@ private theorem surj_of_gen {O : Type} [CommRing O] [IsLocalRing O] {R C : Type}
     rw [h2]
     exact sub_mem hx (hsq hxa)
   have hyM : y ∈ maximalIdeal R := by
-    rw [← mem_iff f y, hy']
-    exact haM
+    rwa [← mem_iff f y, hy']
   have hx' : x = f y + (x - a) := by rw [hy']; ring
   rw [hx']
   exact add_mem (Ideal.mem_sup_left (Ideal.mem_map_of_mem f hyM)) (Ideal.mem_sup_right hxa)
@@ -522,8 +520,7 @@ private theorem surjective_levelChangeBaseGroupHom {l : ℕ} [Fact l.Prime] {L :
   rintro ⟨x, hx⟩
   obtain ⟨y, rfl⟩ := h.surj x
   refine ⟨⟨y, ?_⟩, rfl⟩
-  rw [MonoidHom.mem_ker, ← h.η y]
-  exact hx
+  rwa [MonoidHom.mem_ker, ← h.η y]
 
 theorem UpperTheory.V.Th.Sp.betaSurj :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 G : Glob l L) (h : G.Hom G0) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (b : TWBase u J Empty D) (q N : ℕ) (A : OpMod b h q N), GenBy O (pairVals u) → Function.Surjective A.β := by
@@ -667,8 +664,7 @@ theorem UpperTheory.V.Th.Sp.msp :
       linear_combination (ψ (MvPolynomial.X v)) * hp +
         h (MvPolynomial.eval₂ (x : B →+* O) (fun p => α p.1 p.2) p) * hδX v
   have hk := key a
-  rw [ha, map_zero, sub_zero] at hk
-  exact hk
+  rwa [ha, map_zero, sub_zero] at hk
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TheoremsMuLinked.SpectralEigenvalues.Msp =====
@@ -957,11 +953,11 @@ private theorem qq_tr {O G : Type} [CommRing O] [IsDomain O] [Group G] {n : ℕ}
     by_cases hk : k = i <;> simp [hk, rep_single, Algebra.algebraMap_eq_smul_one]
   rw [tr_rep (Nat.succ_le_of_lt (lt_of_le_of_lt (Nat.zero_le _) i.2)), e, Sp.trp O n _ α _ h,
     Finset.sum_eq_single i]
-  · rw [Polynomial.eval_pow, Polynomial.eval_prod, ← Finset.prod_erase_mul _ _ (Finset.mem_univ i), if_pos rfl,
+  · rw [Polynomial.eval_pow, Polynomial.eval_prod, ← Finset.prod_erase_mul _ _ (Finset.mem_univ i), ite_eq_left rfl,
       Polynomial.eval_one, mul_one]
     congr 1
     refine Finset.prod_congr rfl fun k hk => ?_
-    rw [if_neg (Finset.mem_erase.1 hk).1]
+    rw [ite_eq_right (Finset.mem_erase.1 hk).1]
     simp
   · intro a _ ha
     rw [Polynomial.eval_pow, Polynomial.eval_prod, Finset.prod_eq_zero (Finset.mem_univ a) (by simp [ha]), zero_pow E.succ_ne_zero]
@@ -1203,8 +1199,7 @@ theorem UpperTheory.Reformulated.B.Qf1.lam0 :
       refine ⟨z, ?_⟩
       change algebraMap _ _ z = c * g y
       rw [hz, Algebra.smul_def]
-    intro m
-    exact hle (hS ▸ Submodule.mem_top)
+    exact fun m => hle (hS ▸ Submodule.mem_top)
   let h : M →ₗ[B] (B ⧸ p) := LinearMap.codRestrictOfInjective g' i hi hr
   have hh : ∀ m, i (h m) = g' m := fun m =>
     LinearMap.codRestrictOfInjective_comp_apply g' i hi hr m
@@ -1333,8 +1328,8 @@ private theorem mapRingHom_single_mul_partial_charpoly {S : Type} [CommRing S] (
   congr 4
   funext k
   by_cases hk : k = i
-  · simp only [Function.comp_apply, if_pos hk, map_one]
-  · simp only [Function.comp_apply, if_neg hk, map_sub, hs, map_one]
+  · simp only [Function.comp_apply, ite_eq_left hk, map_one]
+  · simp only [Function.comp_apply, ite_eq_right hk, map_sub, hs, map_one]
 
 private theorem mapDomain_partial_charpoly_power_zero {H : Type} [Group H] (φ : G →* H) (E : ℕ) (ph ta : G) (u : Fin n → R) (i : Fin n)
     (h : φ ta = 1) : MonoidAlgebra.mapDomainRingHom R φ (twoPowerModulus E ph ta u i 0) = 0 := by
@@ -1456,7 +1451,7 @@ theorem UpperTheory.V.Th.count :
           rfl
         rw [A.segmentWeightExponent, der_wt hδs, hδs_apply, k4, hw, map_zero, smul_zero]
       rw [LinearMap.smul_apply, hev, k3] at k2
-      simp only [hδw, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, zero_add] at k2
+      simp only [hδw, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, zero_add] at k2
       simp only [Algebra.algebraMap_eq_smul_one, smul_smul] at k2
       rw [← k2]
       congr 1
@@ -1467,7 +1462,7 @@ theorem UpperTheory.V.Th.count :
         obtain ⟨τ, hτ⟩ := tr_lin u.D hn
         rw [hδs_apply, hβtr, mapRingHom_single_mul_partial_charpoly, mapDomain_partial_charpoly_power_zero _ _ _ _ _ _ (Subtype.ext (T.ta_ker N j)), hτ, map_zero, map_zero, map_zero]
       rw [LinearMap.smul_apply, hev, k3] at k1
-      simp only [hδq, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, zero_add] at k1
+      simp only [hδq, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, zero_add] at k1
       simp only [Algebra.algebraMap_eq_smul_one, smul_smul] at k1
       have : c1 * c2 * c3 * t (some (.inr (j, i))) = c2 * (c1 * (t (some (.inr (j, i))) * c3)) := by ring
       rw [this, mul_smul, k1, smul_zero]

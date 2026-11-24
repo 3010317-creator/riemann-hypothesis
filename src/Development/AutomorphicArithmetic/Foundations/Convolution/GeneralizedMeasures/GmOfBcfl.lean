@@ -164,9 +164,7 @@ theorem UpperTheory.ConvolutionTheory.GM.htTot :
       AdeleBaseChange.below F x = q := by
     intro x hx
     refine HeightOneSpectrum.ext ?_
-    have e1 := (AdeleBaseChange.liesOver_below (K := F) x).over
-    have e2 := hx.over
-    exact e1.trans e2.symm
+    exact ((AdeleBaseChange.liesOver_below (K := F) x).over).trans (hx.over).symm
   have split : (∏ᶠ w : HeightOneSpectrum (𝓞 E), locHeight (finAt w (g : AdelicGLn.AdelicGL E n))) =
       (∏ᶠ (w : HeightOneSpectrum (𝓞 E)) (_ : AdeleBaseChange.below F w ≠ q),
         locHeight (finAt w (g : AdelicGLn.AdelicGL E n))) *
@@ -179,14 +177,12 @@ theorem UpperTheory.ConvolutionTheory.GM.htTot :
     have hu : {w : HeightOneSpectrum (𝓞 E) | AdeleBaseChange.below F w ≠ q} ∪
         {w | AdeleBaseChange.below F w = q} = Set.univ := by
       ext w
-      simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_univ, iff_true]
-      exact (em _).symm
-    rw [hu, finprod_mem_univ] at h
-    exact h
+      simpa only [Set.mem_union, Set.mem_setOf_eq, Set.mem_univ, iff_true] using (em _).symm
+    rwa [hu, finprod_mem_univ] at h
   have hC : (∏ᶠ (w : HeightOneSpectrum (𝓞 E)) (_ : AdeleBaseChange.below F w = q),
         locHeight (finAt w (g : AdelicGLn.AdelicGL E n))) ≤
       locHeight (Cartan.diagPow (w₀.1.adicCompletion E) n ν) ^ j := by
-    rw [finprod_eq_single _ w₀.1 ?_, finprod_eq_if, if_pos (hbelow _ w₀.2)]
+    rw [finprod_eq_single _ w₀.1 ?_, finprod_eq_if, ite_eq_left (hbelow _ w₀.2)]
     · obtain ⟨a, ha, b, hb, e⟩ := h2
       rw [e]
       refine (locHeight_mul_le_of_ultrametric _ _).trans ?_
@@ -237,16 +233,15 @@ private theorem finprod_split_at {α : Type*} (a : α → ℂ) (ha : (Function.m
   have hA : (Function.mulSupport fun v => if v = q then (1 : ℂ) else a v).Finite := by
     refine ha.subset fun v hv => ?_
     by_cases h : v = q
-    · exact absurd (if_pos h) hv
-    · intro h0
-      exact hv ((if_neg h).trans h0)
+    · exact absurd (ite_eq_left h) hv
+    · exact fun h0 => hv ((ite_eq_right h).trans h0)
   have hB : (Function.mulSupport fun v => if v = q then a q else (1 : ℂ)).Finite := by
     refine (Set.finite_singleton q).subset fun v hv => ?_
     by_contra h
-    exact hv (if_neg h)
+    exact hv (ite_eq_right h)
   have hq : (∏ᶠ v, if v = q then a q else (1 : ℂ)) = a q := by
-    rw [finprod_eq_single _ q fun v hv => if_neg hv]
-    exact if_pos rfl
+    rw [finprod_eq_single _ q fun v hv => ite_eq_right hv]
+    exact ite_eq_left rfl
   rw [← hq, ← finprod_mul_distrib hA hB]
   refine finprod_congr fun v => ?_
   by_cases h : v = q
@@ -364,16 +359,14 @@ private theorem comm_abs {H : Type*} [NormedAddCommGroup H] [InnerProductSpace �
   have hsa : ContinuousLinearMap.adjoint (prj V) = prj V := (isSelfAdjoint_starProjection _).adjoint_eq
   have hAP : A ∘L prj V = A := by
     have := congrArg ContinuousLinearMap.adjoint hPB
-    rw [ContinuousLinearMap.adjoint_comp, hsa, ← hAB, ContinuousLinearMap.adjoint_adjoint] at this
-    exact this
+    rwa [ContinuousLinearMap.adjoint_comp, hsa, ← hAB, ContinuousLinearMap.adjoint_adjoint] at this
   have h3 : E = A ∘L ContinuousLinearMap.adjoint Y := by
     have := congrArg ContinuousLinearMap.adjoint h2
     rw [← hEE, ContinuousLinearMap.adjoint_adjoint, ContinuousLinearMap.adjoint_comp, ← hAB,
       ContinuousLinearMap.adjoint_adjoint] at this
     exact this
   have h5 : prj V ∘L ContinuousLinearMap.adjoint Y = X ∘L prj V := by
-    rw [ContinuousLinearMap.adjoint_comp, hsa] at h4
-    exact h4
+    rwa [ContinuousLinearMap.adjoint_comp, hsa] at h4
   have hc' : X ∘L prj V = prj V ∘L X := hc
   have hfin : X ∘L A = A ∘L X := by
     calc X ∘L A = A ∘L ContinuousLinearMap.adjoint Y := h1.symm.trans h3
@@ -568,11 +561,11 @@ theorem UpperTheory.ConvolutionTheory.GM.sideF : SideF := by
   have hrl : Free q r := fun y z => finprod_congr fun v => by
     by_cases hv : v = q
     · simp [hv]
-    · simp only [hv, if_false, cf_mul, cfl v hv, one_mul]
+    · simp only [hv, ite_false, cf_mul, cfl v hv, one_mul]
   have hrr : ∀ y z, r (z * AdelicGLn.localEmbedding q y) = r z := fun y z => finprod_congr fun v => by
     by_cases hv : v = q
     · simp [hv]
-    · simp only [hv, if_false, cf_mul, cfl v hv, mul_one]
+    · simp only [hv, ite_false, cf_mul, cfl v hv, mul_one]
   obtain ⟨W, hWo, hWi⟩ := UpperTheory.exists_open_subgroup_rightInvariant_finiteAdelicGL F n eg hegc
 
   let St : Subgroup (AdelicGLn.FiniteAdelicGL F n) :=
@@ -618,8 +611,7 @@ theorem UpperTheory.ConvolutionTheory.GM.sideF : SideF := by
   have hrrT := UpperTheory.ConvolutionTheory.Tf.rrTens F n hn μ νF m hC
   have hop_a : Rop μ (tens aF e₀) = Oinf μ νF aF ∘L prj (fixF μ (levF L.UF)) := by
     have := hrrT aF e₀
-    rw [he₀o] at this
-    exact this
+    rwa [he₀o] at this
   have hop_g : Rop μ (tens aF eg) = Oinf μ νF aF ∘L Ofin μ m eg := hrrT aF eg
   have hcomG : Commute (Rop μ (tens aF eg)) (Uiw μ q ν) := by
     rw [hop_g]
@@ -648,8 +640,7 @@ theorem UpperTheory.ConvolutionTheory.GM.sideF : SideF := by
             a := tens aF e₀, a_op := hop_a, a_smooth := has, g := tens aF eg, g_smooth := hgs,
             Uq := fun _ => Uiw μ q ν, Uq_inner := fun _ => hinner, Uq_comm := fun _ _ => Commute.refl _,
             Uq_amp := fun _ => ?_, Uq_perm := fun _ => ?_ }, rfl, rfl, ?_, rfl, hegt, rfl⟩
-  · have h1 := (hcomI aF).symm
-    exact h1.mul_right hcomP
+  · exact ((hcomI aF).symm).mul_right hcomP
   · have h2 : Rop μ (tens aF eg) ∘L Uiw μ q ν = Uiw μ q ν ∘L Rop μ (tens aF eg) := hcomG.eq
     exact h2
   · intro v
@@ -911,8 +902,7 @@ private theorem gal_self (F : Type) [Field F] (τ : F ≃ₐ[F] F) : τ ∈ Subg
   rw [this]; exact one_mem _
 
 private theorem degree_le_totalDegree_of_mem_support {τ R : Type} [CommSemiring R] {p : MvPolynomial τ R} {d : τ →₀ ℕ} (h : d ∈ p.support) :
-    d.degree ≤ p.totalDegree := by
-  exact le_totalDegree h
+    d.degree ≤ p.totalDegree := le_totalDegree h
 
 
 theorem UpperTheory.ConvolutionTheory.GM.gm_of_unit :
@@ -1093,12 +1083,10 @@ theorem UpperTheory.ConvolutionTheory.L1.unitSplit :
     rw [GM.prodFn, finprod_eq_prod_of_fintype]
     by_cases hg : g ∈ unitSet E n v
     · rw [Set.indicator_of_mem hg]
-      refine Finset.prod_eq_one fun u _ => ?_
-      exact Set.indicator_of_mem (hg u) _
+      exact Finset.prod_eq_one fun u _ => Set.indicator_of_mem (hg u) _
     · rw [Set.indicator_of_notMem hg]
       obtain ⟨u, hu⟩ : ∃ u : PlacesOver E v, GM.cmp u g ∉ GLnLocal.integralGL (u.1.adicCompletion E) n := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         exact hg h
       exact Finset.prod_eq_zero (Finset.mem_univ u) (Set.indicator_of_notMem hu _)
   have e2 : cvAll mF m (fun i g => (GLnLocal.integralGL ((w i).1.adicCompletion E) n : Set (GL (Fin n) ((w i).1.adicCompletion E))).indicator (1 : GL (Fin n) ((w i).1.adicCompletion E) → ℂ)
@@ -1111,8 +1099,7 @@ theorem UpperTheory.ConvolutionTheory.L1.unitSplit :
     · rw [Set.indicator_of_mem (show g ∈ (_ : Set _) from hg), Set.indicator_of_mem (show _ ∈ (_ : Set _) from hi.2 hg)]
       rfl
     · rw [Set.indicator_of_notMem (show g ∉ (_ : Set _) from hg), Set.indicator_of_notMem (show _ ∉ (_ : Set _) from fun h => hg (hi.1 h))]
-  rw [e1, e2] at key
-  exact key
+  rwa [e1, e2] at key
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

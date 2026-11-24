@@ -276,12 +276,10 @@ theorem rep_of_DS {ε : Fin (2 * r + k + 1) → Bool} {lm : Fin (2 * r + k + 1) 
       calc P * a * P.conjTranspose * (P * b * P.conjTranspose) = P * a * (P.conjTranspose * P) * b * P.conjTranspose := by simp only [Matrix.mul_assoc]
         _ = P * (a * b) * P.conjTranspose := by rw [hsP, Matrix.mul_one, Matrix.mul_assoc P a b]
     have := hmul _ (hmem a ha) _ (hmem b hb)
-    simp only [e, conj] at this
-    exact this
+    simpa only [e, conj] using this
   · intro a ha v
     have := hiso _ (hmem a ha) v
-    simp only [conj] at this
-    exact this
+    simpa only [conj] using this
 
 private theorem isUnit_det_of_mem_UH_Hpk' {a : Mat k r} (ha : a ∈ UH (Hpk k r)) : IsUnit a.det := by
   have ha' : a.conjTranspose * Hpk k r * a = Hpk k r := ha
@@ -365,22 +363,22 @@ private theorem aDil_mem_gv {k r : ℕ} {t : ℝ} (ht : 0 < t) : aDil k r t ∈ 
     have hj1 : ¬ j.val < r := by omega
     have hj2 : ¬ j.val ≤ r + k := by omega
     have hne : t ^ (r - i.val) ≠ 0 := pow_ne_zero _ ht.ne'
-    rw [if_pos h1, if_pos h1.1, if_neg hj1, if_neg hj2, hs, e, mul_one, ← Complex.ofReal_mul,
+    rw [ite_eq_left h1, ite_eq_left h1.1, ite_eq_right hj1, ite_eq_right hj2, hs, e, mul_one, ← Complex.ofReal_mul,
       mul_inv_cancel₀ hne, Complex.ofReal_one]
   · by_cases h2 : j.val < r ∧ i.val + j.val = 2 * r + k
     · have e : i.val - (r + k) = r - j.val := by omega
       have hi1 : ¬ i.val < r := by omega
       have hi2 : ¬ i.val ≤ r + k := by omega
       have hne : t ^ (r - j.val) ≠ 0 := pow_ne_zero _ ht.ne'
-      rw [if_neg h1, if_pos h2, if_pos h2.1, if_neg hi1, if_neg hi2, hs, e, mul_one,
+      rw [ite_eq_right h1, ite_eq_left h2, ite_eq_left h2.1, ite_eq_right hi1, ite_eq_right hi2, hs, e, mul_one,
         ← Complex.ofReal_mul, inv_mul_cancel₀ hne, Complex.ofReal_one]
     · by_cases h3 : r ≤ i.val ∧ i.val ≤ r + k ∧ i = j
       · have hij : i = j := h3.2.2
         subst hij
         have hi1 : ¬ i.val < r := by omega
-        rw [if_neg h1, if_neg h2, if_pos h3, if_neg hi1, if_pos h3.2.1]
+        rw [ite_eq_right h1, ite_eq_right h2, ite_eq_left h3, ite_eq_right hi1, ite_eq_left h3.2.1]
         simp
-      · rw [if_neg h1, if_neg h2, if_neg h3, mul_zero, zero_mul]
+      · rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, mul_zero, zero_mul]
 
 theorem phiAt_of (hS : Formalism.FourierDecayAlt.ThreeDimData.SchurH) : PhiAt := by
   intro k r Wp Wq _ _ _ _ _ _ D ε lm H _ _ _ σ hlm hDS
@@ -922,8 +920,7 @@ theorem lim_leftLimit : LeftLimit := by
   have key := lim_dil_fubini D.μW D.μN hJ D.χ D.χ_smooth.continuous (lim_chi_hcs D) (fun t ht => lim_chi_zero D ht)
     D.χ_int {n : Mt k r | Matrix.of n ∈ Nset k r} (ae_iff.2 D.haarN.conc)
     (fun n : Mt k r => lam k r D.z (Matrix.of n)) hΛ (Lf D σ v ξ) hLi2
-  rw [← hfint, ← hLint]
-  exact key
+  rwa [← hfint, ← hLint]
 
 theorem lim_rightLimit : RightLimit := by
   intro k r Wp Wq _ _ _ _ _ _ D ε lm H _ _ _ σ hHC hDS v' ξ' hv' hI
@@ -958,8 +955,7 @@ theorem lim_rightLimit : RightLimit := by
   have key := lim_dil_fubini D.μW' D.μN hJ D.χ D.χ_smooth.continuous (lim_chi_hcs D) (fun t ht => lim_chi_zero D ht)
     D.χ_int {n : Mt k r | Matrix.of n ∈ Nset k r} (ae_iff.2 D.haarN.conc)
     (fun n : Mt k r => -lam k r D.z' (Matrix.of n)) hΛ (Rf D σ v' ξ') hLi2
-  rw [← hfint, ← hLint]
-  exact key
+  rwa [← hfint, ← hLint]
 
 end PI.BICNZ
 end -- clump:auto

@@ -130,8 +130,7 @@ theorem exists_upts_det {n : ℕ} (hn : 0 < n) (Gm : Matrix (Fin n) (Fin n) E) (
       funext k
       by_cases hk : k = ⟨0, hn⟩
       · subst hk
-        rw [hf, Pi.mulSingle_eq_same, mul_comm]
-        exact hx
+        rwa [hf, Pi.mulSingle_eq_same, mul_comm]
       · rw [hf, Pi.mulSingle_eq_of_ne hk, Units.val_one, map_one, one_mul]
     have h1 : cT (sigR σ R) ((Cb⁻¹ : GL (Fin n) (E ⊗[F] R)) : Matrix (Fin n) (Fin n) (E ⊗[F] R)) *
         cT (sigR σ R) (Cb : Matrix (Fin n) (Fin n) (E ⊗[F] R)) = 1 := by
@@ -154,7 +153,7 @@ theorem exists_upts_det {n : ℕ} (hn : 0 < n) (Gm : Matrix (Fin n) (Fin n) E) (
       _ = _ := by rw [hdd, Matrix.mul_one]
   · ext
     simp only [Matrix.GeneralLinearGroup.val_det_apply, Units.val_mul, Matrix.det_mul, hd, Matrix.det_diagonal]
-    rw [← Units.coe_prod, hf, Finset.prod_pi_mulSingle', if_pos (Finset.mem_univ _)]
+    rw [← Units.coe_prod, hf, Finset.prod_pi_mulSingle', ite_eq_left (Finset.mem_univ _)]
     calc _ = (Matrix.det ((Cb⁻¹ : GL (Fin n) (E ⊗[F] R)) : Matrix (Fin n) (Fin n) (E ⊗[F] R)) *
           Matrix.det (Cb : Matrix (Fin n) (Fin n) (E ⊗[F] R))) * (x : E ⊗[F] R) := by ring
       _ = _ := by rw [← Matrix.det_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.det_one, one_mul]
@@ -260,8 +259,7 @@ theorem exists_h90_eq_oneOff_of_normOne_at_split_place : ∀ {F E : Type} [Field
     simpa [conjId] using this
   have hp1 : p * sigR σ (w.adicCompletion F) p = 1 := by
     have h2 := congrArg (prV (E := E) w) hU
-    rw [hπe, sigR_oneAt, oneAt_mul, prV_oneAt_self, map_one] at h2
-    exact h2
+    rwa [hπe, sigR_oneAt, oneAt_mul, prV_oneAt_self, map_one] at h2
   have hab : (spl p).1 * (spl p).2 = 1 ∧ (spl p).2 * (spl p).1 = 1 := by
     have h3 := congrArg spl hp1
     rw [map_mul, hsig, map_one] at h3
@@ -318,9 +316,7 @@ theorem natCast_mem_heightOneSpectrum_coprime :
   have hqp : (ringChar (𝓞 E ⧸ P.asIdeal)).Prime :=
     (CharP.char_is_prime_or_zero (𝓞 E ⧸ P.asIdeal) _).resolve_right hq0
   refine ⟨ringChar (𝓞 E ⧸ P.asIdeal), hqp.pos, (hmem _).2 dvd_rfl, ?_⟩
-  refine (Nat.coprime_primes hqp hp).2 ?_
-  intro hq
-  exact hpP ((hmem p).2 (hq ▸ dvd_rfl))
+  exact (Nat.coprime_primes hqp hp).2 (fun hq => hpP ((hmem p).2 (hq ▸ dvd_rfl)))
 
 end GlobalTheory
 end -- clump:auto
@@ -359,8 +355,7 @@ theorem exists_nat_mul_div_pow_mem : ∀ {F E : Type} [Field F] [NumberField F] 
         HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
       intro hm
       apply hℓ
-      rw [← hP, HeightOneSpectrum.under_asIdeal, Ideal.mem_comap, map_natCast]
-      exact hm
+      rwa [← hP, HeightOneSpectrum.under_asIdeal, Ideal.mem_comap, map_natCast]
     have h1 := hDz P
     change algebraMap E (P.adicCompletion E) (D : E) * ι z P ∈ P.adicCompletionIntegers E at h1
     have e : algebraMap E (P.adicCompletion E) ((D : E) / (ℓ : E) ^ n) * ι z P =
@@ -368,8 +363,7 @@ theorem exists_nat_mul_div_pow_mem : ∀ {F E : Type} [Field F] [NumberField F] 
           (algebraMap E (P.adicCompletion E) (D : E) * ι z P) := by
       rw [div_eq_mul_inv, map_mul, map_inv₀, map_pow, inv_pow]; ring
     rw [HeightOneSpectrum.mem_adicCompletionIntegers] at h1 ⊢
-    rw [e, map_mul, map_pow, map_inv₀, hv, inv_one, one_pow, one_mul]
-    exact h1
+    rwa [e, map_mul, map_pow, map_inv₀, hv, inv_one, one_pow, one_mul]
   · have h0 : ι z P = 0 := (prV_eq_zero_iff hι (P.under (𝓞 F)) z).1 (hz _ hP) P rfl
     rw [h0, mul_zero]
     exact zero_mem _
@@ -484,8 +478,7 @@ theorem loc_eq_val_zpow {L : Type} [Field L] [NumberField L] (χ : HChar L) (P :
       ← WithZero.exp_add]
     simp
   have h3 := hP _ hu
-  rw [map_mul, map_zpow, mul_eq_one_iff_eq_inv, ← zpow_neg] at h3
-  exact h3
+  rwa [map_mul, map_zpow, mul_eq_one_iff_eq_inv, ← zpow_neg] at h3
 
 theorem eq_prod_val_zpow : ∀ {L : Type} [Field L] [NumberField L] (χ : Formalism.L2.Host.HChar L) (T : Finset (HeightOneSpectrum (𝓞 L)))
     (b : Neutral.B1.Ideles L), Formalism.L2.Host.IsFinIdele b → (∀ P, P ∉ T → (b : AdeleRing (𝓞 L) L).2 P = 1) →
@@ -496,15 +489,13 @@ theorem eq_prod_val_zpow : ∀ {L : Type} [Field L] [NumberField L] (χ : Formal
     ⟨pv P b, pv P b⁻¹, by rw [← map_mul, mul_inv_cancel, map_one], by rw [← map_mul, inv_mul_cancel, map_one]⟩
   have hdec : b = ∏ P ∈ T, localIdele L P (u P) := by
     refine idele_ext (fun w => ?_) (fun v => ?_)
-    · rw [map_prod]
-      rw [Finset.prod_eq_one fun P _ => pw_local w P (u P)]
+    · rw [map_prod, Finset.prod_eq_one fun P _ => pw_local w P (u P)]
       exact hb w
     · rw [map_prod]
       by_cases hv : v ∈ T
       · rw [Finset.prod_eq_single v]
         · rw [pv_local_self]
-        · intro P _ hPv
-          exact pv_local_ne P v (Ne.symm hPv) _
+        · exact fun P _ hPv => pv_local_ne P v (Ne.symm hPv) _
         · intro h; exact absurd hv h
       · rw [Finset.prod_eq_one fun P hP => pv_local_ne P v (fun e => hv (e ▸ hP)) _]
         exact hout v hv
@@ -576,8 +567,7 @@ theorem exists_unitaryOneFiniteAdelic_of_det_normOne (D : D7) (π : (AfE D.host.
     ext a b
     fin_cases a; fin_cases b
     simp [cT, Matrix.mul_apply]
-    rw [mul_comm]
-    exact hd'
+    rwa [mul_comm]
   · ext
     simp
 
@@ -679,7 +669,7 @@ theorem mu_mem_LL : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fa
   · obtain ⟨ξ, hξ, hmt⟩ := J.pins.tw μ hμ rfl
     have e : (t.O u μ).mt (j + 1) = D.muTil (j + 1) * ξ := by
       rw [hmt u]
-      exact if_pos (⟨by omega, by omega⟩ : 1 ≤ j + 1 ∧ j + 1 ≤ D.R.m)
+      exact ite_eq_left (⟨by omega, by omega⟩ : 1 ≤ j + 1 ∧ j + 1 ≤ D.R.m)
     obtain ⟨r, hr⟩ := hK ((kU : t.X.K) * ((t.tup μ : Chr t.X.F t.X.E t.X.K) x : t.X.K))
     refine ⟨r, ?_⟩
     rw [hr, e, MonoidHom.mul_apply, Units.val_mul, hmuTil, hξ x, ← hk, map_mul]
@@ -750,8 +740,8 @@ theorem GlobalTheory.TwV.Xc.two_units : Sites (fun {D L hT Gi Gl Kc Dx cX ex u �
     · exact ((GlobalTheory.TwV.Xc.OrdA.ordA_props _ _ _ _ _ (A0 J) (GlobalTheory.TwV.LbB.locInt_locAt _) hS.1 v').2.2.2 v (Ne.symm h) π hπ.2.1)
   have hsum : (∑ v' : (sysS H X std).Pl, (sysS H X std).vm v' (j + 1) * ordA (A0 J) v' π) = (sysS H X std).vm v (j + 1) := by
     rw [Finset.sum_eq_single v]
-    · rw [hord v, if_pos rfl, mul_one]
-    · intro b _ hb; rw [hord b, if_neg hb, mul_zero]
+    · rw [hord v, ite_eq_left rfl, mul_one]
+    · intro b _ hb; rw [hord b, ite_eq_right hb, mul_zero]
     · intro h; exact absurd (Finset.mem_univ v) h
   rw [hsum] at hnorm
   obtain ⟨𝔞, h𝔞, hχ⟩ := (GlobalTheory.T.charOnNormOneIdeles_mul_unramified_classValue S hD hS).2.2.2 π hπU

@@ -127,8 +127,7 @@ theorem lminor_mul_upper {n : ℕ} (A N : Matrix (Fin n) (Fin n) ℂ) (hN : N.Bl
     simp only [Matrix.submatrix_apply, Matrix.mul_apply]
     refine (Fintype.sum_of_injective e (Fin.castLE_injective _) _ _ (fun k hk => ?_) (fun k => rfl)).symm
     have hk' : (i : ℕ) ≤ k := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hk ⟨⟨k, h⟩, Fin.ext rfl⟩
     apply mul_eq_zero_of_right
     apply hN
@@ -139,8 +138,7 @@ theorem lminor_mul_upper {n : ℕ} (A N : Matrix (Fin n) (Fin n) ℂ) (hN : N.Bl
     intro a c hac
     apply hN
     show e c < e a
-    rw [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
-    exact hac
+    rwa [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
   rw [hsub, Matrix.det_mul, Matrix.det_of_upperTriangular hT]
   rfl
 
@@ -161,7 +159,7 @@ theorem lminor_nmat (X : Data E r) (z : V (nd X)) (τ : X.Ψ) (i : Fin (r + 1)) 
       have h3 := congrArg Fin.val h
       rw [Fin.coe_castLE, Fin.coe_castLE] at h3
       omega
-    simp only [Matrix.submatrix_apply, mat, Matrix.of_apply, nmat, dif_neg h1, if_neg h2]
+    simp only [Matrix.submatrix_apply, mat, Matrix.of_apply, nmat, dite_eq_right h1, ite_eq_right h2]
 
 end
 
@@ -269,8 +267,7 @@ theorem prod_bdiag_ne (X : Data E r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) 
   have hd := (hb τ).1
   rw [Matrix.det_of_upperTriangular hT] at hd
   rw [Finset.prod_ne_zero_iff]
-  intro j _
-  exact (Finset.prod_ne_zero_iff.mp hd) _ (Finset.mem_univ _)
+  exact fun j _ => (Finset.prod_ne_zero_iff.mp hd) _ (Finset.mem_univ _)
 
 theorem lminor_gM_ne (X : Data E r) {x0 y : Frame X.Ψ r} (hx0 : IsOrth X x0) (hy : y ∈ X.dom)
     (τ : X.Ψ) : lminor (gM X x0 y τ) (i0 X) ≠ 0 := by
@@ -355,7 +352,7 @@ theorem kaY_orth (X : Data E r) {x0 x : Frame X.Ψ r} (hx0 : IsOrth X x0) (hx : 
     have ha : ((Fin.castLE (Nat.le_of_lt_succ (i0 X).isLt) a : Fin r) : ℕ) < X.p0 := by
       rw [Fin.coe_castLE]
       exact a.2
-    simp only [Function.comp_apply, sgn, if_pos ha]
+    simp only [Function.comp_apply, sgn, ite_eq_left ha]
     norm_num
   have hpos : ∀ σ : X.Ψ, 0 < ‖lminor (gM X x0 x σ) (i0 X)‖ :=
     fun σ => norm_pos_iff.2 (lminor_orth_ne X hx0 hx σ)
@@ -443,7 +440,7 @@ theorem sep (X : Data E r) {x0 : Frame X.Ψ r} (hx0 : IsOrth X x0) (hPD : PropDi
         (gM X x0 (lact δ x0) τ k b - (1 : Matrix (Fin r) (Fin r) ℂ) k b) := by
       rw [show lact δ x0 τ a b = mat (lact δ x0) τ a b from rfl, ← hm, Matrix.mul_apply]
       simp only [mul_sub, Finset.sum_sub_distrib, Matrix.one_apply, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       rfl
     rw [he]
     calc ‖∑ k, x0 τ a k * (gM X x0 (lact δ x0) τ k b - (1 : Matrix (Fin r) (Fin r) ℂ) k b)‖

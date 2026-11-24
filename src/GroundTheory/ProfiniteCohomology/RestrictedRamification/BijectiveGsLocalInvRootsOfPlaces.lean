@@ -358,17 +358,7 @@ theorem revD_zero_apply (f : (Fin 0 → G) → A) (g : G) :
 
 theorem revD_one_apply (w : (Fin 1 → G) → A) (g h : G) :
     (inhomogeneousCochains.d A 1).hom w ![g, h] = A.ρ g (w ![h]) - w ![g * h] + w ![g] := by
-  have e1 : (fun i : Fin 1 => (![g, h] : Fin 2 → G) i.succ) = ![h] := by
-    funext i; rw [Fin.fin_one_eq_zero i]; rfl
-  have e2 : Fin.contractNth 0 (· * ·) (![g, h] : Fin 2 → G) = ![g * h] := by
-    funext i; rw [Fin.fin_one_eq_zero i]; simp [Fin.contractNth]
-  have e3 : Fin.contractNth 1 (· * ·) (![g, h] : Fin 2 → G) = ![g] := by
-    funext i; rw [Fin.fin_one_eq_zero i]; simp [Fin.contractNth]
-  simp only [inhomogeneousCochains.d_hom_apply]
-  simp only [e1]
-  simp
-  rw [e2, e3]
-  abel
+  exact GroundTheory.ProfCoh.inhomogeneousCochains_d_one_apply_vec A w g h
 
 theorem revD_two_apply (f : (Fin 2 → G) → A) (a b c : G) :
     (inhomogeneousCochains.d A 2).hom f ![a, b, c] =

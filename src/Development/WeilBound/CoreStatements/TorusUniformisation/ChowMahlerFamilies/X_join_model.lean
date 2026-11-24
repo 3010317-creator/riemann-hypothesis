@@ -76,13 +76,11 @@ theorem trdeg_add (hinj : Function.Injective (algebraMap O Ω)) (F F' : Subfield
   have hU : (F : Set Ω) ∪ (F' : Set Ω) = F' := Set.union_eq_right.2 hle
   have h := AdjoinTrdegAdd.proof O Ω hinj (F : Set Ω) (F' : Set Ω) (Fin r) t
     (by rintro _ ⟨i, rfl⟩; exact hmem i) ?_ ?_
-  · rw [hU, Fintype.card_fin] at h
-    exact h
+  · rwa [hU, Fintype.card_fin] at h
   · let f : Algebra.adjoin O (F : Set Ω) →+* F :=
       (Algebra.adjoin O (F : Set Ω)).val.toRingHom.codRestrict F fun a => mem_of_mem_adjoin F hO a.2
     refine AlgebraicIndependent.of_ringHom_of_comp_eq f (RingHom.id Ω) hind ?_ ?_
-    · intro a b hab
-      exact Subtype.ext (congrArg (fun w : F => (w : Ω)) hab)
+    · exact fun a b hab => Subtype.ext (congrArg (fun w : F => (w : Ω)) hab)
     · ext a; rfl
   · intro a ha
     have h1 : IsAlgebraic (Algebra.adjoin F (Set.range t)) a :=

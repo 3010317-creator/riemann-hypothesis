@@ -86,7 +86,6 @@ theorem eq_zero_of_trace (x : mixedEmbedding.mixedSpace F)
         Complex.mul_conj] using h1
     have hre : (x.2 w).re = 0 := by nlinarith [mul_self_nonneg (x.2 w).re, mul_self_nonneg (x.2 w).im]
     have him : (x.2 w).im = 0 := by nlinarith [mul_self_nonneg (x.2 w).re, mul_self_nonneg (x.2 w).im]
-    show x.2 w = 0
     exact Complex.ext hre him
 
 theorem isPairing_trP (κ : Type) [Fintype κ] : IsPairing (trP F κ) := by
@@ -103,14 +102,12 @@ theorem isPairing_trP (κ : Type) [Fintype κ] : IsPairing (trP F κ) := by
       funext i
       apply eq_zero_of_trace
       intro b
-      have h := hx (Pi.single i b)
-      simpa [trP, Pi.single_apply, mul_ite, Finset.sum_ite_eq'] using h
+      simpa [trP, Pi.single_apply, mul_ite, Finset.sum_ite_eq'] using hx (Pi.single i b)
     nondegR y hy := by
       funext i
       apply eq_zero_of_trace
       intro b
-      have h := hy (Pi.single i b)
-      simpa [trP, Pi.single_apply, ite_mul, Finset.sum_ite_eq', mul_comm] using h
+      simpa [trP, Pi.single_apply, ite_mul, Finset.sum_ite_eq', mul_comm] using hy (Pi.single i b)
   }
 
 

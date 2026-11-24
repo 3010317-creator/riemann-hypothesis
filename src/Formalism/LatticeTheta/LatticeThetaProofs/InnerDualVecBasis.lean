@@ -71,8 +71,7 @@ abbrev dualB (e : Module.Basis ι ℝ V) : Module.Basis ι ℝ V :=
 
 theorem inner_dualB (e : Module.Basis ι ℝ V) (i j : ι) :
     ⟪dualB e i, e j⟫ = if j = i then 1 else 0 := by
-  have h := LinearMap.BilinForm.apply_dualBasis_left (innerₗ_nondegenerate (V := V)) e i j
-  simpa using h
+  simpa using LinearMap.BilinForm.apply_dualBasis_left (innerₗ_nondegenerate (V := V)) e i j
 
 def dualVec (e : Module.Basis ι ℝ V) (m : ι → ℤ) : V := ∑ i, m i • dualB e i
 

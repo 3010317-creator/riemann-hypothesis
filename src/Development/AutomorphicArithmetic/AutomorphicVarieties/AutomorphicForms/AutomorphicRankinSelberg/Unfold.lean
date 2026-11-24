@@ -120,11 +120,9 @@ theorem UpperTheory.V.Af.Rs.unfold :
     obtain ⟨γ0, ⟨h0row, h0s⟩, huniq⟩ := hR.2 z x
     have hg0 : g γ0 = x := Subtype.ext h0row
     rw [tsum_eq_single ⟨γ0, hg0⟩]
-    · rw [hfγ, if_pos h0s, h0row]
+    · rw [hfγ, ite_eq_left h0s, h0row]
     · intro c hc
-      rw [hfγ, if_neg]
-      intro hs
-      apply hc
-      exact Subtype.ext (huniq c.1 ⟨congrArg Subtype.val c.2, hs⟩)
+      rw [hfγ, ite_eq_right]
+      exact fun hs => hc (Subtype.ext (huniq c.1 ⟨congrArg Subtype.val c.2, hs⟩))
   simp only [heq] at h
   exact h

@@ -97,16 +97,16 @@ theorem lieNUpper : LieNUpper := by
   simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.zero_apply, Matrix.conjTranspose_apply] at e
   have s1 : ∑ l, star (X l p) * Hpk k r l j = star (X b p) := by
     rw [Finset.sum_eq_single b]
-    · rw [hpk_col_f _ _ hj2, if_pos (by omega), mul_one]
+    · rw [hpk_col_f _ _ hj2, ite_eq_left (by omega), mul_one]
     · intro l _ hl
-      rw [hpk_col_f _ _ hj2, if_neg, mul_zero]
+      rw [hpk_col_f _ _ hj2, ite_eq_right, mul_zero]
       intro h; apply hl; ext; omega
     · simp
   have s2 : ∑ l, Hpk k r p l * X l j = X i j := by
     rw [Finset.sum_eq_single i]
-    · rw [hpk_row_e _ _ (by omega), if_pos (by omega), one_mul]
+    · rw [hpk_row_e _ _ (by omega), ite_eq_left (by omega), one_mul]
     · intro l _ hl
-      rw [hpk_row_e _ _ (by omega), if_neg, zero_mul]
+      rw [hpk_row_e _ _ (by omega), ite_eq_right, zero_mul]
       intro h; apply hl; ext; omega
     · simp
   have hz : X b p = 0 := hA1 ⟨p.val, by omega⟩ b (by simp only; omega)
@@ -209,8 +209,7 @@ theorem hsN_le (A : Matrix (Fin m) (Fin m) ℂ) {b : ℝ} (hb : 0 ≤ b) (h : �
 theorem one_le_hsN_exp (hm : 0 < m) {X : Matrix (Fin m) (Fin m) ℂ} (hX : SUpper X) :
     1 ≤ hsN (NormedSpace.exp X) := by
   have h := entry_le_hsN (NormedSpace.exp X) ⟨0, hm⟩ ⟨0, hm⟩
-  rw [exp_diag hX, norm_one] at h
-  exact h
+  rwa [exp_diag hX, norm_one] at h
 
 theorem pow_entry_bound {X : Matrix (Fin m) (Fin m) ℂ} (hX : SUpper X) {h : ℕ} {b : ℝ} (hb : 0 ≤ b)
     (hB : ∀ i j : Fin m, (j : ℕ) < i + h → ‖X i j‖ ≤ b) :
@@ -228,11 +227,9 @@ theorem pow_entry_bound {X : Matrix (Fin m) (Fin m) ℂ} (hX : SUpper X) {h : �
     have hterm : ∀ l : Fin m, ‖(X ^ (p + 1)) i l * X l j‖ ≤ (m : ℝ) ^ p * b ^ (p + 1) * b := by
       intro l
       by_cases h1 : (j : ℕ) ≤ l
-      · rw [hX l j (Fin.le_iff_val_le_val.mpr h1), mul_zero, norm_zero]
-        exact hR
+      · rwa [hX l j (Fin.le_iff_val_le_val.mpr h1), mul_zero, norm_zero]
       by_cases h2 : (l : ℕ) < i + (p + 1)
-      · rw [pow_entry_zero hX (p + 1) i l h2, zero_mul, norm_zero]
-        exact hR
+      · rwa [pow_entry_zero hX (p + 1) i l h2, zero_mul, norm_zero]
       rw [norm_mul]
       exact mul_le_mul (ih i l (by omega)) (hB l j (by omega)) (norm_nonneg _) hR0
     calc ‖∑ l, (X ^ (p + 1)) i l * X l j‖ ≤ ∑ l, ‖(X ^ (p + 1)) i l * X l j‖ := norm_sum_le _ _

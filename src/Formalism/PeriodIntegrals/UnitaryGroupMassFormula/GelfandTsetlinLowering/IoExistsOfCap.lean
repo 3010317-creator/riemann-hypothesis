@@ -82,8 +82,7 @@ theorem io_dw_ext {n : ℕ} {mu sg : DomWeight n} (hw : mu.w = sg.w) : mu = sg :
   rfl
 
 theorem exists_capelliPolynomial_ne {n : ℕ} (mu sg : DomWeight n) (hne : mu.w ≠ sg.w) : ∃ u, capP mu u ≠ capP sg u := by
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   apply hne
   have hzero : ∀ (nu : DomWeight n) (i : Fin n), capP nu (((i : ℕ) : ℂ) - ((nu.w i : ℤ) : ℂ)) = 0 := by
     intro nu i
@@ -170,8 +169,7 @@ theorem io_eig_sep {ι V : Type*} [DecidableEq ι] [AddCommGroup V] [Module ℂ 
   have hF := Finset.sum_filter_add_sum_filter_not F (fun i => i = i0) y
   have hz : ∑ i ∈ F.filter (fun i => ¬ i = i0), y i = 0 := by
     apply sum_eq_zero_of_eigen_separated C p i0 hp _ (by simp)
-    · intro i hi u
-      exact hy i (Finset.mem_filter.mp hi).1 u
+    · exact fun i hi u => hy i (Finset.mem_filter.mp hi).1 u
     · intro u
       have h2 : ∑ i ∈ F.filter (fun i => ¬ i = i0), y i =
           ∑ i ∈ F, y i - ∑ i ∈ F.filter (fun i => i = i0), y i := by
@@ -254,7 +252,7 @@ theorem io_last_emb {n N : ℕ} (h : n + 1 = N) (a : ℂˣ) (g : GL (Fin n) ℂ)
       simp only [Equiv.trans_apply, finSumFinEquiv_apply_left, finCongr_apply, Fin.coe_cast,
         Fin.coe_castAdd]
       omega
-    rw [if_neg hk, if_neg hl]
+    rw [ite_eq_right hk, ite_eq_right hl]
     simp
   · simp
   · simp
@@ -293,8 +291,7 @@ theorem ioExists_of_cap (h3 : PI.HwIrred) (h4 : PI.GTBranch) (hx : XiFacts) (hC 
     exact hy' u
   have hxiT : xi ℂ h lam sg ∈ ⨆ mu, T mu := by
     have hm := hxiM
-    rw [hB2] at hm
-    exact hm
+    rwa [hB2] at hm
   obtain ⟨f, hfT, hfsum⟩ := (Submodule.mem_iSup_iff_exists_finsupp T _).mp hxiT
   have hs : ∑ i ∈ f.support, f i = xi ℂ h lam sg := hfsum
   have hsep := io_eig_sep C (fun mu u => capP mu u) sg
@@ -352,8 +349,7 @@ theorem ioExists_of_cap (h3 : PI.HwIrred) (h4 : PI.GTBranch) (hx : XiFacts) (hC 
     have hv : sqAct ℂ n sg g t - t ∈ K := by
       refine Submodule.mem_inf.mpr ⟨Submodule.sub_mem _ (io_sqAct_mem sg g ht) ht, ?_⟩
       rw [LinearMap.mem_ker, map_sub, hφ0.2 g t ht, hφt, hxiU g hg1 hg2, sub_self]
-    rw [hK, Submodule.mem_bot, sub_eq_zero] at hv
-    exact hv
+    rwa [hK, Submodule.mem_bot, sub_eq_zero] at hv
   obtain ⟨c, hc⟩ := (h3 n sg).2.2 t ht hfix
   have hext := io_extremal_mem h3 n sg
   let io0 := c • φ0

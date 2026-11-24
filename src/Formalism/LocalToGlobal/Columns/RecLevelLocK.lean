@@ -88,8 +88,7 @@ theorem rll_col {g : GL (Fin n) Rv} (hg : g ∈ UPts hc.sig (1 : Matrix (Fin n) 
   rw [rll_inv_entry (hg := hg), Matrix.one_apply_ne (Ne.symm hne), sub_zero] at hs'
   refine ⟨sigR hc.sig (v.adicCompletion F) s, rll_sigV_mem hc v hs, ?_⟩
   have h2 := congrArg (sigR hc.sig (v.adicCompletion F)) hs'
-  rw [sigR_sigR_apply hc v, map_mul, rll_sigV_incl hc v] at h2
-  exact h2
+  rwa [sigR_sigR_apply hc v, map_mul, rll_sigV_incl hc v] at h2
 
 theorem rll_mulVec_single (M : Matrix (Fin n) (Fin n) Rv) (j : Fin n) (x : Rv) (i : Fin n) :
     (M *ᵥ Pi.single j x) i = M i j * x := by
@@ -255,7 +254,7 @@ theorem rll_resS_one (P : Pl E) (i j : Fin n) :
     resS F P ((1 : Matrix (Fin n) (Fin n) (Formalism.L2.Herm.intAf F E)) i j) = if j = i then 1 else 0 := by
   rcases eq_or_ne j i with rfl | hji
   · simp
-  · rw [Matrix.one_apply_ne (Ne.symm hji), if_neg hji]
+  · rw [Matrix.one_apply_ne (Ne.symm hji), ite_eq_right hji]
     simp
 
 variable (h : BasePi ST π)
@@ -291,8 +290,7 @@ theorem lastRow_identity_of_mirabolic {k : GL (Fin n) (E ⊗[F] Formalism.L2.Her
       by_cases hj : lastIdx n = j
       · rw [← hj, Matrix.one_apply_eq, Matrix.one_apply_eq, map_one]
       · rw [Matrix.one_apply_ne hj, Matrix.one_apply_ne hj, map_zero]
-    rw [e2, ← hy] at e1
-    exact e1
+    rwa [e2, ← hy] at e1
 
 theorem rll_mem_levLoc_of_Row (hG : v ∉ plUnder F SG) {g : GL (Fin n) Rv}
     (hU : g ∈ UPts hc.sig (1 : Matrix (Fin n) (Fin n) E) (v.adicCompletion F)) (h1 : rowLocalCondition n π v g)
@@ -310,8 +308,7 @@ theorem rll_mem_levLoc_of_Row (hG : v ∉ plUnder F SG) {g : GL (Fin n) Rv}
     have e2 : y (lastIdx n) j - (1 : Matrix (Fin n) (Fin n) (Formalism.L2.Herm.intAf F E)) (lastIdx n) j =
         Formalism.L2.DIV.oToS F E π * (⟨afsplitIE v s, afsplit_IE_int v _ hs⟩ : Formalism.L2.Herm.intAf F E) := by
       apply Subtype.ext
-      rw [AddSubgroupClass.coe_sub, Formalism.L2.DIV.lc_one_coe]
-      exact e1
+      rwa [AddSubgroupClass.coe_sub, Formalism.L2.DIV.lc_one_coe]
     have e3 := congrArg (resS F P) e2
     rw [map_sub, map_mul, Formalism.L2.DIV.resS_oToS, Ideal.Quotient.eq_zero_iff_mem.2 (h.mem hP), zero_mul, sub_eq_zero,
       rll_resS_one] at e3

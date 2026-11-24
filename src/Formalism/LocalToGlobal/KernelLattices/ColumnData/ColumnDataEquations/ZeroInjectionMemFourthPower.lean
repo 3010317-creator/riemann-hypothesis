@@ -59,7 +59,7 @@ theorem is_lattice_of_fourth_power (ΛM : AddSubgroup (n → ℂ)) (g : (Fin 4 �
       have h2 := g.injective h1
       apply Subtype.ext
       have h3 := congrArg (slice 0) h2
-      rwa [slice_zero_injection, slice_zero_injection, if_pos rfl, if_pos rfl] at h3
+      rwa [slice_zero_injection, slice_zero_injection, ite_eq_left rfl, ite_eq_left rfl] at h3
     exact DiscreteTopology.of_continuous_injective hφc hφi
   · rw [eq_top_iff]
     intro x _
@@ -78,7 +78,7 @@ theorem is_lattice_of_fourth_power (ΛM : AddSubgroup (n → ℂ)) (g : (Fin 4 �
     apply hmap
     refine ⟨g (inj0 n x), ?_⟩
     show slice 0 (g.symm (g (inj0 n x))) = x
-    rw [g.symm_apply_apply, slice_zero_injection, if_pos rfl]
+    rw [g.symm_apply_apply, slice_zero_injection, ite_eq_left rfl]
 
 def putL (n : Type) (N N' : ℕ) (k : Fin N' × Fin N) : (n → ℂ) →ₗ[ℂ] (n → Fin N' → Fin N → ℂ) where
   toFun x := fun τ i j => if (i, j) = k then x τ else 0
@@ -92,8 +92,7 @@ theorem putL_mem (ΛM : AddSubgroup (n → ℂ)) (N N' : ℕ) (k : Fin N' × Fin
   · have e : (fun τ => putL n N N' k x τ i j) = x := by
       funext τ
       simp [putL, h]
-    rw [e]
-    exact hx
+    rwa [e]
   · have e : (fun τ => putL n N N' k x τ i j) = 0 := by
       funext τ
       simp [putL, h]
@@ -128,8 +127,7 @@ theorem isLat_powLat (ΛM : AddSubgroup (n → ℂ)) (h : IsLat ΛM) (N N' : ℕ
       intro x y hxy
       apply Subtype.ext
       funext τ i j
-      have h1 := congrArg (fun f => ((f (i, j) : ΛM) : n → ℂ) τ) hxy
-      exact h1
+      exact congrArg (fun f => ((f (i, j) : ΛM) : n → ℂ) τ) hxy
     exact DiscreteTopology.of_continuous_injective hψc hψi
   · rw [eq_top_iff]
     intro z _

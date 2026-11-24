@@ -36,8 +36,7 @@ theorem Cont.mem_iff_le (ϖ : O) (g f : O⟦X⟧) (k : ℕ) :
     f ∈ Ideal.span {C ϖ ^ k, g} ↔ (k : ℕ∞) ≤ cont ϖ g f := by
   unfold cont
   constructor
-  · intro h
-    exact le_iSup₂ (f := fun (j : ℕ) (_ : f ∈ Ideal.span {C ϖ ^ j, g}) => (j : ℕ∞)) k h
+  · exact fun h => le_iSup₂ (f := fun (j : ℕ) (_ : f ∈ Ideal.span {C ϖ ^ j, g}) => (j : ℕ∞)) k h
   · intro hk
     by_contra hnot
     have hk0 : k ≠ 0 := by
@@ -47,8 +46,7 @@ theorem Cont.mem_iff_le (ϖ : O) (g f : O⟦X⟧) (k : ℕ) :
       apply iSup₂_le
       intro j hj
       have hj' : j ≤ k - 1 := by
-        by_contra hjk
-        push_neg at hjk
+        by_contra! hjk
         exact hnot (Cont.mem_pair_mono ϖ g f (by omega) hj)
       exact_mod_cast hj'
     have h3 := le_trans hk hbound
@@ -120,8 +118,7 @@ theorem C2' {g : O⟦X⟧} (hg : IsDist g) (f : O⟦X⟧) (k : ℕ) :
     exact ⟨v, by ring⟩
 
 theorem mem_iff_le_cont {g : O⟦X⟧} (hg : IsDist g) (f : O⟦X⟧) (k : ℕ) :
-    f ∈ Ideal.span {C ϖ ^ k, g} ↔ (k : ℕ∞) ≤ cont ϖ g f := by
-  exact Cont.mem_iff_le ϖ g f k
+    f ∈ Ideal.span {C ϖ ^ k, g} ↔ (k : ℕ∞) ≤ cont ϖ g f := Cont.mem_iff_le ϖ g f k
 
 theorem m1 {g g' : O⟦X⟧} (hg : IsDist g) (hg' : IsDist g') (hdvd : g ∣ g') (f : O⟦X⟧) :
     cont ϖ g' f ≤ cont ϖ g f := by

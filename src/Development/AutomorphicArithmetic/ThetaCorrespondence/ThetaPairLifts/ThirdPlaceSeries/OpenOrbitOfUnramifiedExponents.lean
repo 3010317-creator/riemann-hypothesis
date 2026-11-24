@@ -1025,11 +1025,7 @@ theorem of_built_of_bWit {R : BdP _root_.GlobalTheory.Fc.BundleCondition} {Q : V
 theorem linked_atAll_of_imp {A R : BdP _root_.GlobalTheory.Fc.BundleCondition}
     (h : ∀ (K : Ctx) (q : WPt p.s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c), _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b → A _ _ c b → R _ _ c b)
     (hA : _root_.GlobalTheory.Fc.RL.LinkedAt p fun S L => Row S L (AtAll A)) : _root_.GlobalTheory.Fc.RL.LinkedAt p fun S L => Row S L (AtAll R) := by
-  obtain ⟨S, hS, hA⟩ := hA
-  refine ⟨S, hS, Row.imp hA fun 𝒜 σ s H => ?_⟩
-  intro eps Fm hc x hx i
-  obtain ⟨κ, -, -, t⟩ := s Fm hc
-  exact _root_.GlobalTheory.Fc.JoinLinked.of_built_of_bWit (R := fun D O c b => A D O c b → R D O c b) h (t x hx i).1 (H Fm hc x hx i)
+  exact GlobalTheory.Fc.DivLinked.linked_atAll_of_imp h hA
 end Constructions₂
 theorem at_selJ_alt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.DiscreteSeriesCover →
     GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay →

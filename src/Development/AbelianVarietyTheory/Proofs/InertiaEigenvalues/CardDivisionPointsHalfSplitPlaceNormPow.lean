@@ -302,8 +302,7 @@ theorem GlobalTheory.Core.Rk.SWQ.LatHalf.mem_latO_iff_intM : ∀ (D : D7) (q : F
     have : (π⁻¹ • (b₀⁻¹).1 * u.map (cw h) * a.1) *ᵥ (Pi.single j 1) = (b₀⁻¹).1 *ᵥ z := by
       rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, e', Matrix.smul_mulVec, Matrix.mulVec_smul, smul_smul,
         inv_mul_cancel₀ hπ0, one_smul]
-    rw [← this, Matrix.mulVec_single_one] at hz'
-    exact hz'
+    rwa [← this, Matrix.mulVec_single_one] at hz'
   · intro H
     refine ⟨fun i j => ?_, fun y hy => ?_⟩
     · rw [← hu1]
@@ -543,8 +542,7 @@ theorem red_surjective {N : ℕ} (hN : 0 < N) (m n : ℕ) : Function.Surjective 
     rw [← hZ]
     change Ideal.Quotient.mk _ _ = _
     congr 1
-    apply Subtype.ext
-    exact key i j
+    exact Subtype.ext (key i j)
 
 theorem ker_red {N : ℕ} (hN : 0 < N) (m n : ℕ) :
     (red w N m n).ker = (locInt w m n).addSubgroupOf (locDiv w N m n) := by
@@ -814,8 +812,7 @@ theorem idemAt_eq_iota_one : ∀ (D : D7) (P : Formalism.L2.DIV.Pl D.host.E) (e 
   rcases idem01 e hee with h | h
   · rw [h, map_zero] at h6e
     exact absurd h6e hne
-  · rw [h] at h6e
-    exact h6e
+  · rwa [h] at h6e
 
 end GlobalTheory.IdemIota
 

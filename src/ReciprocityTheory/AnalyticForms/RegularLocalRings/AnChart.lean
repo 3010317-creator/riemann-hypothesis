@@ -68,8 +68,7 @@ theorem hasFDerivAt_mvPolynomial_eval {n : ℕ} (Q : MvPolynomial (Fin n) ℂ) (
       rw [hs]
       congr 1
       exact Finset.sum_congr rfl (fun j _ => by ring)
-    rw [hfun, hder]
-    exact h2
+    rwa [hfun, hder]
 
 end ReciprocityTheory.AnForm
 end -- clump:auto
@@ -242,8 +241,7 @@ theorem eq_zero_of_grad (K : Ideal (MvPolynomial (Fin n) ℂ)) (p : Fin n → �
   simpa [pderiv_X, Pi.single_apply] using h2
 
 theorem analyticOnNhd_eval_univ (q : MvPolynomial (Fin n) ℂ) :
-    AnalyticOnNhd ℂ (fun y : Fin n → ℂ => eval y q) Set.univ := by
-  exact AnalyticOnNhd.eval_mvPolynomial q
+    AnalyticOnNhd ℂ (fun y : Fin n → ℂ => eval y q) Set.univ := AnalyticOnNhd.eval_mvPolynomial q
 
 end
 

@@ -171,23 +171,11 @@ include hp hτ
 
 theorem torsion_up [IsIso τ] {n : ℕ} (x : T ⟶ A) (hx : x ^ n = 1) :
     ∃ x₀ : T₀ ⟶ G, τ ≫ x₀.left = x.left ≫ φ ∧ x₀ ^ n = 1 := by
-  have hw : (inv τ ≫ x.left ≫ φ) ≫ G.hom = T₀.hom := by
-    rw [Category.assoc, Category.assoc, hp.1.w, ← Category.assoc x.left, Over.w x, ← hτ, IsIso.inv_hom_id_assoc]
-  have h1 : τ ≫ (Over.homMk (inv τ ≫ x.left ≫ φ) hw : T₀ ⟶ G).left = x.left ≫ φ := by simp
-  refine ⟨Over.homMk (inv τ ≫ x.left ≫ φ) hw, h1, ?_⟩
-  apply Over.OverMorphism.ext
-  apply (cancel_epi τ).1
-  rw [over_pow hp τ hτ h1 n, hx, over_one hp τ hτ]
+  exact GlobalTheory.Ex.OneGen.exists_torsion_up hp τ hτ x hx
 
 theorem torsion_down {n : ℕ} (x₀ : T₀ ⟶ G) (hx : x₀ ^ n = 1) :
     ∃ x : T ⟶ A, τ ≫ x₀.left = x.left ≫ φ ∧ x ^ n = 1 := by
-  have hc : (τ ≫ x₀.left) ≫ G.hom = T.hom ≫ f := by rw [Category.assoc, Over.w x₀, hτ]
-  have h1 : τ ≫ x₀.left = (Over.homMk (hp.1.lift _ _ hc) (hp.1.lift_snd _ _ hc) : T ⟶ A).left ≫ φ := by simp
-  refine ⟨Over.homMk (hp.1.lift _ _ hc) (hp.1.lift_snd _ _ hc), h1, ?_⟩
-  apply Over.OverMorphism.ext
-  apply hp.1.hom_ext
-  · rw [← over_pow hp τ hτ h1 n, hx, over_one hp τ hτ]
-  · rw [Over.w, Over.w]
+  exact GlobalTheory.Ex.OneGen.exists_torsion_down hp τ hτ x₀ hx
 
 theorem isGenSec_down [IsIso τ] {L₀ : LB G.left} {L₁ : LB A.left} {w : LB.Iso L₁ (L₀.pull φ)} (hw : w.IsGen)
     (hL₀ : L₀.IsLB) (hL₁ : L₁.IsLB) {a : ℤ} {th : LB.Sec (LPow A L₁ a T)} {th₀ : LB.Sec (LPow G L₀ a T₀)}

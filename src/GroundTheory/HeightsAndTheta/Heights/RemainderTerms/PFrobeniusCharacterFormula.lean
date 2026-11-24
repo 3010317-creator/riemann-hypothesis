@@ -19,8 +19,7 @@ theorem vandermondeOf_X_fin_ne_zero (r : ℕ) :
   unfold vandermondeOf
   refine Finset.prod_ne_zero_iff.mpr fun i _ => Finset.prod_ne_zero_iff.mpr fun j hj => ?_
   have hij : i ≠ j := ne_of_lt (Finset.mem_Ioi.mp hj)
-  refine sub_ne_zero.mpr fun h => hij ?_
-  exact X_injective (R := ℚ) h
+  exact sub_ne_zero.mpr fun h => hij (X_injective (R := ℚ) h)
 
 theorem vandermondeOf_X_isHomogeneous (r : ℕ) :
     (vandermondeOf (fun i : Fin r => (X i : MvPolynomial (Fin r) ℚ))).IsHomogeneous
@@ -34,8 +33,7 @@ theorem vandermondeOf_X_isHomogeneous (r : ℕ) :
     simp only [Finset.sum_const, smul_eq_mul, mul_one, Fin.card_Ioi]
     rw [Fin.sum_univ_eq_sum_range (fun i => r - 1 - i) r, ← Finset.sum_range_id]
     exact Finset.sum_range_reflect (fun i => i) r
-  rw [hdeg] at h
-  exact h
+  rwa [hdeg] at h
 
 theorem psum_isHomogeneous (σ : Type*) [Fintype σ] (q : ℕ) :
     (psum σ ℚ q).IsHomogeneous q := by

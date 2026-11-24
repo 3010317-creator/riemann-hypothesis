@@ -82,8 +82,8 @@ private lemma norm_sq_apply_eq_re_inner_of_isUnitary {M : Type} [NormedAddCommGr
     rw [← inner_self_eq_norm_sq (𝕜 := ℂ)]; rfl
   rw [hn, h, Module.End.mul_apply]
   by_cases hab : ε a = ε b
-  · rw [if_pos hab.symm, if_pos hab]; simp; ring
-  · rw [if_neg (fun h' => hab h'.symm), if_neg hab]; simp
+  · rw [ite_eq_left hab.symm, ite_eq_left hab]; simp; ring
+  · rw [ite_eq_right (fun h' => hab h'.symm), ite_eq_right hab]; simp
 
 open Finset in
 open scoped InnerProductSpace in
@@ -95,7 +95,6 @@ private lemma mul_sq_sqrt_sub_le_sq_div_sixteen {n : ℕ} (μ U T ρ L : Fin n �
     (n : ℝ) * (2 * (√K + 4 * n * j) ^ 2 - c - (∑ a, L a ^ 2 - 8 * bv * j)) ≤ (bv / 16) ^ 2 := by
   have hN1 : (1 : ℝ) ≤ n := by linarith
   have hN0 : (0 : ℝ) ≤ n := by linarith
-  have hJ0 : (0 : ℝ) ≤ j := Nat.cast_nonneg j
   have h7 : ∀ k ≤ 7, (n : ℝ) ^ k ≤ (n : ℝ) ^ 7 := fun k hk => pow_le_pow_right₀ hN1 hk
   have hn7 : (1 : ℝ) ≤ (n : ℝ) ^ 7 := one_le_pow₀ hN1
   have hn2 : (4 : ℝ) ≤ (n : ℝ) ^ 2 := by nlinarith
@@ -122,9 +121,7 @@ private lemma mul_sq_sqrt_sub_le_sq_div_sixteen {n : ℕ} (μ U T ρ L : Fin n �
     rcases le_or_gt 0 K with h | h
     · rw [Real.sq_sqrt h]; linarith
     · rw [Real.sqrt_eq_zero'.mpr h.le, hK]; norm_num; linarith
-  have hsqrt : √K ≤ 4 * n * bv := by
-    calc √K ≤ √((4 * n * bv) ^ 2) := Real.sqrt_le_sqrt (by rw [hK]; linarith)
-      _ = 4 * n * bv := Real.sqrt_sq (by positivity)
+  have hsqrt : √K ≤ 4 * n * bv := Real.sqrt_le_iff.2 ⟨by positivity, by rw [hK]; linarith⟩
   have hpt : ∀ a, 2 * (μ a + U a) ^ 2 - μ a ^ 2 + ρ a ^ 2 - (μ a + U a - T a) ^ 2
       ≤ 12 * n * bv + 4 * (n : ℝ) ^ 2 := by
     intro a
@@ -150,32 +147,19 @@ private lemma mul_sq_sqrt_sub_le_sq_div_sixteen {n : ℕ} (μ U T ρ L : Fin n �
       _ = _ := by rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
   have hcross : 16 * n * j * √K ≤ 16 * n * j * (4 * n * bv) :=
     mul_le_mul_of_nonneg_left hsqrt (by positivity)
-  have b1 : 64 * (n : ℝ) ^ 2 * j * bv ≤ 320 * (n : ℝ) ^ 4 * bv := by
-    have := mul_le_mul_of_nonneg_left hJ5 (by positivity : (0 : ℝ) ≤ 64 * (n : ℝ) ^ 2 * bv)
-    linarith
-  have b2 : 32 * (n : ℝ) ^ 2 * (j : ℝ) ^ 2 ≤ 800 * (n : ℝ) ^ 6 := by
-    have h1 : (j : ℝ) ^ 2 ≤ (5 * (n : ℝ) ^ 2) ^ 2 := pow_le_pow_left₀ hJ0 hJ5 2
-    have := mul_le_mul_of_nonneg_left h1 (by positivity : (0 : ℝ) ≤ 32 * (n : ℝ) ^ 2)
-    linarith
-  have b3 : 8 * bv * j ≤ 40 * (n : ℝ) ^ 2 * bv := by
-    have := mul_le_mul_of_nonneg_left hJ5 hbv0
-    linarith
   have hX' : 2 * (√K + 4 * n * j) ^ 2 - c - (∑ a, L a ^ 2 - 8 * bv * j)
       ≤ 52 * (n : ℝ) ^ 2 * bv + 4 * (n : ℝ) ^ 3 + 320 * (n : ℝ) ^ 4 * bv
-        + 800 * (n : ℝ) ^ 6 := by linarith
-  have c1 : (n : ℝ) ^ 3 * bv ≤ (n : ℝ) ^ 7 * bv :=
-    mul_le_mul_of_nonneg_right (h7 3 (by norm_num)) hbv0
-  have c2 : (n : ℝ) ^ 5 * bv ≤ (n : ℝ) ^ 7 * bv :=
-    mul_le_mul_of_nonneg_right (h7 5 (by norm_num)) hbv0
-  have c3 : (n : ℝ) ^ 4 ≤ (n : ℝ) ^ 7 := h7 4 (by norm_num)
+        + 800 * (n : ℝ) ^ 6 := by
+    linarith [mul_le_mul_of_nonneg_left hJ5 (by positivity : (0 : ℝ) ≤ 64 * (n : ℝ) ^ 2 * bv),
+      mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (Nat.cast_nonneg j) hJ5 2)
+        (by positivity : (0 : ℝ) ≤ 32 * (n : ℝ) ^ 2),
+      mul_le_mul_of_nonneg_left hJ5 hbv0]
+  have c1 := mul_le_mul_of_nonneg_right (h7 3 (by norm_num)) hbv0
+  have c2 := mul_le_mul_of_nonneg_right (h7 5 (by norm_num)) hbv0
+  have c3 := h7 4 (by norm_num)
   have c4 : (n : ℝ) ^ 7 ≤ (n : ℝ) ^ 7 * bv := le_mul_of_one_le_right (by positivity) hbvone
-  have c5 : 10 ^ 6 * (n : ℝ) ^ 7 * bv ≤ bv * bv := mul_le_mul_of_nonneg_right hbv hbv0
-  calc (n : ℝ) * (2 * (√K + 4 * n * j) ^ 2 - c - (∑ a, L a ^ 2 - 8 * bv * j))
-      ≤ (n : ℝ) * (52 * (n : ℝ) ^ 2 * bv + 4 * (n : ℝ) ^ 3 + 320 * (n : ℝ) ^ 4 * bv
-        + 800 * (n : ℝ) ^ 6) := mul_le_mul_of_nonneg_left hX' hN0
-    _ = 52 * ((n : ℝ) ^ 3 * bv) + 4 * (n : ℝ) ^ 4 + 320 * ((n : ℝ) ^ 5 * bv)
-        + 800 * (n : ℝ) ^ 7 := by ring
-    _ ≤ (bv / 16) ^ 2 := by linarith
+  have c5 := mul_le_mul_of_nonneg_right hbv hbv0
+  exact (mul_le_mul_of_nonneg_left hX' hN0).trans (by linarith)
 
 
 open Finset in

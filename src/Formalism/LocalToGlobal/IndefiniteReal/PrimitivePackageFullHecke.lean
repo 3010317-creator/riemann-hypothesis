@@ -357,8 +357,7 @@ theorem all_parts_transfer_of_facts (hE : IdemE) (hP : IdemP) (hC : Core) (hD : 
       (fun s i => epP H₀ χ₀ ρ ∘ₗ ρ (δ s i)) (fg_cut hfg _) (fg_cut hfg _) h0 hN
       (fun s => (hD K G S T τ hτ s).2 H χ) (horth H χ) sw1.1 sw1.2.1 sw0.1 hym
       (fun s i v => hnorm H₀ χ₀ _ v) hyi
-    rw [h85] at this
-    exact this
+    rwa [h85] at this
 
 end Formalism.IndefR.LatticeTransfer
 end -- clump:auto
@@ -417,8 +416,7 @@ theorem norm_chi (H : Subgroup G) [Finite H] (χ : H →* (𝓞 K)ˣ) (h : H) (�
     rw [← Units.val_pow_eq_pow_val, ← map_pow, pow_card_eq_one', map_one, Units.val_one]
   have h2 : σ (((χ h : (𝓞 K)ˣ) : 𝓞 K) : K) ^ Nat.card H = 1 := by
     have := congrArg (σ.comp (algebraMap (𝓞 K) K)) hu
-    rw [map_pow, map_one] at this
-    exact this
+    rwa [map_pow, map_one] at this
   exact Complex.norm_eq_one_of_pow_eq_one h2 Nat.card_pos.ne'
 
 variable [NumberField K]
@@ -616,7 +614,7 @@ lemma charOf_conj {T : Type} [AddCommGroup T] [Module K T] (τ : Representation 
       inv_mul_cancel, map_one, one_mul]
   · have h0 : LinearMap.trace K T = 0 := by
       first
-      | (rw [LinearMap.trace, dif_neg]; rintro ⟨_, ⟨b⟩⟩; exact hf (Module.Finite.of_basis b))
+      | (rw [LinearMap.trace, dite_eq_right]; rintro ⟨_, ⟨b⟩⟩; exact hf (Module.Finite.of_basis b))
     simp [h0]
 
 lemma eS_mul_rho {T V : Type} [AddCommGroup T] [Module K T] [AddCommGroup V] [Module K V]
@@ -870,8 +868,7 @@ theorem idemP_of (h : CharFacts) : IdemP := by
     let r : 𝓞 K := ⟨_, hx⟩
     have hm := A.smul_mem r (hA x a ha)
     have he : (charOf τ 1 * charOf τ x⁻¹) • ρ x a = r • ρ x a := hs' r (ρ x a)
-    rw [he]
-    exact hm
+    rwa [he]
   · have hn : (Nat.card H : K) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
     show epP H χ ρ * epP H χ ρ = epP H χ ρ
     unfold epP
@@ -1069,15 +1066,13 @@ theorem passage_of_steps [_root_.NumberField.IsTotallyComplex K] {s : ℕ} (H : 
           exact (L _).smul_mem r (ha _ x hx)
         obtain ⟨z, hz, hz'⟩ := (exponent_index_lattice.mem_matLat _ _ _).mp hdmem
         refine ⟨1, one_mem _, z, hz, ?_⟩
-        rw [one_smul]
-        exact hz'
+        rwa [one_smul]
       have hdK : algebraMap (𝓞 K) K d ≠ 0 := (IsFractionRing.injective (𝓞 K) K).ne hd
       have hmem : d • x ∈ Submodule.span K (I.Sg.RR : Set (Fin I.Sg.D → K)) :=
         Submodule.subset_span hdx
       have hs := (Submodule.span K (I.Sg.RR : Set (Fin I.Sg.D → K))).smul_mem
         (algebraMap (𝓞 K) K d)⁻¹ hmem
-      rw [← algebraMap_smul K d x, smul_smul, inv_mul_cancel₀ hdK, one_smul] at hs
-      exact hs
+      rwa [← algebraMap_smul K d x, smul_smul, inv_mul_cancel₀ hdK, one_smul] at hs
     refine { toIsLattice := hLat s H, span_eq_top := ?_ }
     exact top_unique (by rw [← (hfull I.A3.fam3.base3.μ0).span_eq_top]; exact Submodule.span_le.mpr hle)
   have key0 : (I.LA τ nbar).ep0.mulVecLin = Formalism.IndefR.TransferLatticeStatement.epP I.P0 χ0 (I.rep h1 hm) :=
@@ -1211,8 +1206,7 @@ theorem sum_eq_one_of {E : Type} [AddCommGroup E] [Module ℂ E] (σ : K →+* �
   have h1 : f (cpt σ ((∑ g, c g • ρ g) *ᵥ x)) = f (cpt σ x) := by
 
     rw [mulVec_sum_smul, cpt_sum_smul, map_sum]
-    simp only [map_smul, hρ]
-    exact hfix x
+    simpa only [map_smul, hρ] using hfix x
   have h2 := hf h1
   funext i
   exact σ.injective (congrFun h2 i)
@@ -1379,21 +1373,18 @@ private lemma exists_toF_bot_eq_toF (B : BlockDat K G Pl0) (Xs : Finset (G → K
     obtain ⟨v, hv⟩ := h0
     refine ⟨B.S.gaMat B.r (lvlIdem P ψ) *ᵥ v, ?_⟩
     simp only [Matrix.mulVecLin_apply] at hv ⊢
-    rw [Matrix.mulVec_mulVec, ← hmul]
-    exact hv
+    rwa [Matrix.mulVec_mulVec, ← hmul]
   obtain ⟨u1, hu1⟩ : ∃ u1, B.vE ⟨Xs, ⊥, 1⟩ *ᵥ u1 = B.vE ⟨Xs, P, ψ⟩ *ᵥ (B.zE ⟨Xs, P, ψ⟩ Z *ᵥ x) := by
     have e : B.S.gaMat B.r (goodAt Xs ⊥ 1) = B.S.gaMat B.r (idemOf Xs) := by rw [goodAt, hbot, mul_one]
     have h1 : B.vE ⟨Xs, P, ψ⟩ *ᵥ (B.zE ⟨Xs, P, ψ⟩ Z *ᵥ x) ∈
         LinearMap.range (B.S.gaMat B.r (goodAt Xs ⊥ 1)).mulVecLin := by
-      rw [e]
-      exact hr1
+      rwa [e]
     rw [← (hS _ (LinearMap.range (B.S.gaMat B.r (goodAt Xs ⊥ 1)).mulVecLin)).2] at h1
     obtain ⟨u1, hu1⟩ := h1
     exact ⟨u1, hu1⟩
   have hu1Z : u1 ∈ B.Z0 ⟨Xs, ⊥, 1⟩ Z := by
     show B.vE ⟨Xs, ⊥, 1⟩ *ᵥ u1 ∈ B.coord Z
-    rw [hu1]
-    exact hw
+    rwa [hu1]
   rw [← (hS _ (B.Z0 ⟨Xs, ⊥, 1⟩ Z)).2] at hu1Z
   obtain ⟨y, hy⟩ := hu1Z
   refine ⟨y, ?_⟩
@@ -1561,8 +1552,7 @@ theorem pRho : I.PRho := by
     rfl
 
 theorem pJ : I.PJ := by
-  intro s H b
-  exact iCg_cpt_Jm_mulVec_and_Jm_injective I H b
+  exact fun s H b => iCg_cpt_Jm_mulVec_and_Jm_injective I H b
 
 theorem pRange : I.PRange := by
   intro s H b

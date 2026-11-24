@@ -81,8 +81,7 @@ theorem exists_isometry {n : ℕ} {ι : Type} (b b' : Basis ι ℚ (Fin n → E)
   have hg : ∀ x y, herm 1 (g x) (g y) = herm 1 x y := by
     have : (hermRat n).compl₁₂ g.toLinearMap g.toLinearMap = hermRat (E := E) n :=
       LinearMap.ext_basis b b fun i j => by simp [g, hermRat_apply, h]
-    intro x y
-    exact LinearMap.congr_fun₂ this x y
+    exact fun x y => LinearMap.congr_fun₂ this x y
   have hs : ∀ (c : E) x, g (c • x) = c • g x := by
     intro c x
     rw [← sub_eq_zero]
@@ -108,8 +107,7 @@ theorem finite_integral_of_basis {n : ℕ} {ι : Type} [Fintype ι] (b : Basis �
     have hx : (x : Fin n → E) ∈ span ℚ (Set.range b) := b.mem_span _
     obtain ⟨t, ht⟩ := multiple_mem_span_of_mem_localization_span (nonZeroDivisors ℤ) ℚ _ _ hx
     refine ⟨t, ?_⟩
-    rw [Submonoid.smul_def, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
-    exact ht
+    rwa [Submonoid.smul_def, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
   have h0 : ∀ Λ : Submodule (𝓞 E) (Fin n → E), (∀ i, b i ∈ Λ) → ∀ x ∈ L₀, x ∈ Λ := by
     intro Λ hΛ
     have : L₀ ≤ Λ.restrictScalars ℤ := span_le.mpr (by rintro _ ⟨i, rfl⟩; exact hΛ i)

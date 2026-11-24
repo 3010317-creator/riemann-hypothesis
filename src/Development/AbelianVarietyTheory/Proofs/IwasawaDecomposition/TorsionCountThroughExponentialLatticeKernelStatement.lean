@@ -145,13 +145,11 @@ theorem exp_lattice_torsion_count : ∀ (Q : Type) [Group Q] (g r N : ℕ) (e : 
     rw [← hm, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, inv_mul_cancel₀ hN0, one_smul]
   let F : (Fin r → ZMod N) → Q := fun s => ψ (fun j => ((s j).val : ℤ))
   have hFval : ∀ a : Fin r → ℤ, F (fun j => (a j : ZMod N)) = ψ a := by
-    intro a
-    exact (key _ _).2 fun j => by simp
+    exact fun a => (key _ _).2 fun j => by simp
   have hFinj : Function.Injective F := by
     intro s s' h
     funext j
-    have h1 := (key _ _).1 h j
-    simpa using h1
+    simpa using (key _ _).1 h j
   have hR : Nat.card {p : Q // p ^ N = 1} = N ^ r := by
     have hbij : Function.Bijective (fun s => (⟨F s, hpow _⟩ : {p : Q // p ^ N = 1})) := by
       refine ⟨fun s s' h => hFinj (congrArg Subtype.val h), fun p => ?_⟩
@@ -174,8 +172,7 @@ theorem exp_lattice_torsion_count : ∀ (Q : Type) [Group Q] (g r N : ℕ) (e : 
     rw [hS, ← hR, hcard]
   · intro a ha
     show ψ a ∈ T
-    rw [← hFval]
-    exact ha
+    rwa [← hFval]
 
 end GlobalTheory.ShFam.Hor.LogCh
 end -- clump:auto

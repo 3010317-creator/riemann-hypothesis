@@ -40,8 +40,7 @@ theorem lift_mem_iff {x z : R.X} (hz : z ∈ R.U x) :
     funext p
     rw [hzc]
     field_simp [hc p.1]
-  · intro h
-    exact mem_mcPts_of_sameOrbit R.homog ⟨c, hc, hzc⟩ h
+  · exact fun h => mem_mcPts_of_sameOrbit R.homog ⟨c, hc, hzc⟩ h
 
 theorem psi_lift_eq {x z : R.X} (hz : z ∈ R.U x)
     (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)) :
@@ -65,8 +64,7 @@ theorem isOpen_chart_notB (j : Fin R.A.n) :
     (MvPolynomial.continuous_eval _).continuousAt.comp
       (analyticAt_lift_chart R x1 j ⟨hu1, R.mem_U x1⟩).continuousAt
   filter_upwards [hV, hcont.eventually_ne hf0] with u hu hne
-  refine ⟨hu.1, fun hB => ?_⟩
-  exact hne (((lift_mem_iff R hu.2).mp hB).2 f hfJ)
+  exact ⟨hu.1, fun hB => (hne (((lift_mem_iff R hu.2).mp hB).2 f hfJ))⟩
 
 theorem not_flat (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ))
     (hP : IsArithVar P (e + 1)) (hΨ : IsGoodProj P Ψ) (j : Fin R.A.n) {O : Set (Fin e → ℂ)}
@@ -90,8 +88,7 @@ theorem not_flat (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) →
       refine ⟨hOt hvO, ?_⟩
       by_contra hB
       have : v ∈ O' := ⟨hvO, hOt hvO, hB⟩
-      rw [h] at this
-      exact this
+      rwa [h] at this
     exact (Metric.measure_ball_pos volume u hr).ne' (measure_mono_null hsub (R.null j))
   obtain ⟨y, hy⟩ := exists_infinite_fibre hO' hne' (han.mono inter_subset_left)
     (fun u hu => hdet u hu.1)

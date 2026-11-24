@@ -125,8 +125,7 @@ theorem largePrimeDivisorCount_holds : PrimeCount := by
   intro L T P hL hT hP
   choose! f hfT hfd using fun l (hl : l ∈ P) => (hP l hl).2.2
   apply Finset.card_le_card_of_injOn f
-  · intro l hl
-    exact hfT l hl
+  · exact fun l hl => hfT l hl
   · intro l hl l' hl' heq
     have h1 := hT (f l) (hfT l hl)
     refine eq_of_dvd_of_abs_lt_sq hL h1.1 h1.2 (hP l hl).1 (hP l' hl').1 (hP l hl).2.1
@@ -160,8 +159,7 @@ theorem residueIndicatorPrimeSum_holds : ISum := by
     exact Real.log_le_log hl0 (by exact_mod_cast hle)
   have hcard : P'.card ≤ (Finset.Icc xm xp).card := by
     apply Finset.card_le_card_of_injOn g
-    · intro l hl
-      exact Finset.mem_Icc.mpr ⟨hg1 l hl, hg2 l hl⟩
+    · exact fun l hl => Finset.mem_Icc.mpr ⟨hg1 l hl, hg2 l hl⟩
     · intro l hl l' hl' heq
       have hlP := ((hmem l).mp hl).1
       have hlP' := ((hmem l').mp hl').1
@@ -341,8 +339,7 @@ namespace Formalism.RankGapBounds.ChebyshevFactorialBounds
 theorem chebyshevThetaLe_holds : ChebyshevTheta := by
   intro n
   have h := Chebyshev.theta_le_log4_mul_x (Nat.cast_nonneg n : (0 : ℝ) ≤ n)
-  rw [Chebyshev.theta_eq_sum_primesLE_log] at h
-  exact h
+  rwa [Chebyshev.theta_eq_sum_primesLE_log] at h
 
 end Formalism.RankGapBounds.ChebyshevFactorialBounds
 end -- clump:auto
@@ -810,11 +807,9 @@ private theorem toNat_cast_le_of_le {a : ℤ} {r : ℝ} (h : (a : ℝ) ≤ r) (h
   rcases le_or_gt 0 a with h0 | h0
   · have e : ((a.toNat : ℕ) : ℤ) = a := Int.toNat_of_nonneg h0
     have e' : ((a.toNat : ℕ) : ℝ) = (a : ℝ) := by exact_mod_cast e
-    rw [e']
-    exact h
+    rwa [e']
   · have : a.toNat = 0 := by omega
-    rw [this, Nat.cast_zero]
-    exact hr
+    rwa [this, Nat.cast_zero]
 
 theorem exceptionalCount_holds : ExceptionalCount := by
   intro P H G Q hQ
@@ -833,8 +828,7 @@ theorem exceptionalCount_holds : ExceptionalCount := by
     rw [Finset.mem_Icc] at hn
     obtain ⟨h1, h2⟩ := exceptionalRange_holds P H G n (Int.ceil_le.1 hn.1) (Int.le_floor.1 hn.2)
     refine ⟨h1.ne', ?_⟩
-    rw [abs_of_pos h1]
-    exact h2
+    rwa [abs_of_pos h1]
   have hc := Formalism.CohomologicalDescent.largePrimeDivisorCount_holds P.lJ _ Q hJ0 hTT hP
   rw [Int.card_Icc] at hc
   have hcR : (Q.card : ℝ) ≤ ((⌊P.b + P.S + P.η + 1 + ((P.t : ℝ) - 1) / 2 + (P.kmax : ℝ)⌋ + 1
@@ -913,9 +907,8 @@ theorem thinSum_holds : SumA := by
       intro l hl
       have h2 := two_le_prime_cast (hQ l hl)
       rw [(hA τ hτ l (hQ l hl)).1 (by linarith), Nat.cast_zero, zero_mul]
-    rw [this]
-    exact hRHS
-  · push_neg at hw1
+    rwa [this]
+  · push Not at hw1
     have hlogpos : 0 < Real.log (D.hw τ) := Real.log_pos hw1
     have hC := choose_two_le_sq_div_two P.Nr
     have hC0 : (0 : ℝ) ≤ (P.Nr.choose 2 : ℝ) := Nat.cast_nonneg _
@@ -971,8 +964,7 @@ theorem log_h_bounds {P : Par} (H : P.Hyp) (G : P.Large) :
         _ = Real.log 2 + P.L := by rw [Real.log_mul (by norm_num) hb.ne', log_b']
         _ ≤ P.L + 7 / 10 := by linarith
     have d : (0.7 : ℝ) = 7 / 10 := by norm_num
-    rw [d]
-    exact this
+    rwa [d]
 
 private theorem log_h_pos_and_le {P : Par} (H : P.Hyp) (G : P.Large) :
     0 < Real.log P.h ∧ Real.log P.h ≤ P.L + 7 / 10 := by
@@ -1011,7 +1003,7 @@ theorem ex_mul_log_le_of_thinA {P : Par} (H : P.Hyp) (G : P.Large) {ι : Type} {
   by_cases hlw : D.hw τ < l
   · rw [h1 hlw, Nat.cast_zero, zero_mul]
     exact mul_nonneg (sq_nonneg _) (by linarith)
-  · push_neg at hlw
+  · push Not at hlw
     have hhw := hw_le_two_mul_b' H G hW hτ
     have hbb := smaller_exponent_lt H G
     have hb := b_pos' P
@@ -1073,7 +1065,7 @@ theorem thickTerm_holds : TermC := by
     have e3 : indexDenominator P * l ≤ indexDenominator P * P.lJ := mul_le_mul_of_nonneg_left hlJ hJpos.le
     have e4 := mul_le_mul_of_nonneg_right e2 hl0.le
     linarith
-  · push_neg at hbig
+  · push Not at hbig
     have hl3 : (l : ℝ) < 3 * P.η := by linarith
     obtain ⟨c1, c2⟩ := log_h_pos_and_le H G
     have hC := choose_two_le_sq_div_two P.Nr
@@ -1202,8 +1194,7 @@ theorem h_add_Nr_bounds {P : Par} (H : P.Hyp) (G : P.Large) :
       _ = Real.log 3 + P.L := by rw [Real.log_mul (by norm_num) hb.ne', log_b']
       _ ≤ P.L + 11 / 10 := by linarith
   have d : (1.1 : ℝ) = 11 / 10 := by norm_num
-  rw [d]
-  exact this
+  rwa [d]
 
 theorem subset_primesLe_h_add_Nr {P : Par} (H : P.Hyp) (G : P.Large) {R : Finset ℕ}
     (hR : ∀ l ∈ R, l.Prime ∧ P.lJ < (l : ℝ) ∧ (l : ℝ) ≤ P.h) : R ⊆ pr (P.h + (P.Nr : ℝ)) := by
@@ -1352,7 +1343,7 @@ theorem sum_J_mul_log_le_totalBound (rs3 : PrimeCountingBound) {P : Par} (H : P.
   have memW : ∀ l ∈ W, l.Prime ∧ P.lJ < (l : ℝ) ∧ ¬ P.Excl l ∧ l ∉ D.Sp := by
     intro l hl
     rw [hWd, Finset.mem_filter, hBd, Finset.mem_filter] at hl
-    push_neg at hl
+    push Not at hl
     exact ⟨hQ l hl.1.1, hl.1.2, hl.2.1, hl.2.2⟩
   have hdisj : Disjoint A W := by
     rw [Finset.disjoint_left]
@@ -1416,7 +1407,7 @@ theorem sum_J_mul_log_le_totalBound (rs3 : PrimeCountingBound) {P : Par} (H : P.
       XC + (XD + 2 * (P.k : ℝ) * (P.S + 1) * (P.L + 2)) := by
     intro τ hτ
     have e : ∑ l ∈ W, (if τ ∈ D.T2 then min (D.ex τ l : ℝ) (D.cW P τ l) else (D.ex τ l : ℝ)) * Real.log (l : ℝ) = ∑ l ∈ W, min (D.ex τ l : ℝ) (D.cW P τ l) * Real.log (l : ℝ) :=
-      Finset.sum_congr rfl (fun l _ => by rw [if_pos hτ])
+      Finset.sum_congr rfl (fun l _ => by rw [ite_eq_left hτ])
     rw [e]
     exact add_le_add (hXC τ hτ A memA)
       (hXD τ hτ W (fun l hl => ⟨(memW l hl).1, (memW l hl).2.1, (memW l hl).2.2.1⟩))
@@ -1424,7 +1415,7 @@ theorem sum_J_mul_log_le_totalBound (rs3 : PrimeCountingBound) {P : Par} (H : P.
       1.3 * (P.Nr : ℝ) ^ 2 * P.b' := by
     intro τ hτ
     have e : ∑ l ∈ W, (if τ ∈ D.T2 then min (D.ex τ l : ℝ) (D.cW P τ l) else (D.ex τ l : ℝ)) * Real.log (l : ℝ) = ∑ l ∈ W, (D.ex τ l : ℝ) * Real.log (l : ℝ) :=
-      Finset.sum_congr rfl (fun l _ => by rw [if_neg hτ])
+      Finset.sum_congr rfl (fun l _ => by rw [ite_eq_right hτ])
     rw [e, ← Finset.sum_union hdisj]
     refine thinSum_holds rs3 P H G ι D I.thinA I.widths τ hτ (A ∪ W) (fun l hl => ?_)
     rcases Finset.mem_union.1 hl with h | h

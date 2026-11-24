@@ -188,9 +188,7 @@ theorem UpperTheory.exists_integral_rep_detecting_invariant_subspace :
   let Λ : Submodule O (G → O) := (I.restrictScalars O).comap ι
   obtain ⟨m, b⟩ := Submodule.basisOfPid (Pi.basisFun O G) Λ
   let T : G → (G → O) →ₗ[O] (G → O) := fun g => LinearMap.funLeft O O (fun h => g⁻¹ * h)
-  have hT : ∀ g, ∀ y ∈ Λ, T g y ∈ Λ := by
-    intro g y hy
-    exact hI g _ hy
+  have hT : ∀ g, ∀ y ∈ Λ, T g y ∈ Λ := fun g y hy => hI g _ hy
   let A : G → Matrix (Fin m) (Fin m) O := fun g => LinearMap.toMatrix b b ((T g).restrict (hT g))
   have hA1 : A 1 = 1 := by
     have e : (T 1).restrict (hT 1) = LinearMap.id := by
@@ -202,8 +200,7 @@ theorem UpperTheory.exists_integral_rep_detecting_invariant_subspace :
     have e : (T (g * g')).restrict (hT _) = ((T g).restrict (hT g)).comp ((T g').restrict (hT g')) := by
       refine LinearMap.ext fun y => Subtype.ext (funext fun h => ?_)
       simp [T, LinearMap.funLeft_apply, LinearMap.restrict_apply, _root_.mul_inv_rev, mul_assoc]
-    simp only [A, e]
-    exact LinearMap.toMatrix_comp b b b _ _
+    simpa only [A, e] using LinearMap.toMatrix_comp b b b _ _
   let τ0 : G →* Matrix (Fin m) (Fin m) O :=
     { toFun := fun g => (A g⁻¹)ᵀ
       map_one' := by simp [hA1]
@@ -270,7 +267,6 @@ theorem UpperTheory.exists_integral_rep_detecting_invariant_subspace :
     have hker : Submodule.span ℂ (Set.range u') ≤ LinearMap.ker Φ := by
       refine Submodule.span_le.2 ?_
       rintro _ ⟨j, rfl⟩
-      show Φ (u' j) = 0
       exact congrFun hF0 j
     exact hker (hsp hx)
 end -- clump:auto
@@ -350,8 +346,7 @@ theorem UpperTheory.le_span_integralValued_of_galoisStable :
       · rw [h0]
         exact Submodule.zero_mem _
       obtain ⟨g0, hg0⟩ : ∃ g, y g ≠ 0 := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         exact h0 (funext h)
       obtain ⟨x, hx⟩ : ∃ x : X → ℂ, x = (y g0)⁻¹ • y := ⟨_, rfl⟩
       have hxI : x ∈ I := by
@@ -369,7 +364,7 @@ theorem UpperTheory.le_span_integralValued_of_galoisStable :
       by_cases hall : ∀ γ : ℂ ≃ₐ[O] ℂ, (fun g => γ (x g)) = x
       · rw [hyx]
         exact Submodule.smul_mem _ _ (hfix x hxI hall)
-      · push_neg at hall
+      · push Not at hall
         obtain ⟨γ, hγ⟩ := hall
         obtain ⟨d, hd⟩ : ∃ d : X → ℂ, d = (fun g => γ (x g)) - x := ⟨_, rfl⟩
         have hdI : d ∈ I := by
@@ -379,8 +374,7 @@ theorem UpperTheory.le_span_integralValued_of_galoisStable :
           rw [hd]
           exact sub_ne_zero.2 hγ
         obtain ⟨g1, hg1⟩ : ∃ g, d g ≠ 0 := by
-          by_contra h
-          push_neg at h
+          by_contra! h
           exact hd0 (funext h)
         have hdsupp : ∀ g, y g = 0 → d g = 0 := by
           intro g hg
@@ -428,8 +422,7 @@ theorem UpperTheory.le_span_integralValued_of_galoisStable :
           rw [hy', sub_add_cancel]
         rw [hyy]
         exact Submodule.add_mem _ hy'W (Submodule.smul_mem _ _ hdW)
-  intro y hy
-  exact key _ y hy le_rfl
+  exact fun y hy => key _ y hy le_rfl
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.LeSpanIntegralValuedOfGaloisStable =====
@@ -596,8 +589,7 @@ theorem UpperTheory.V.Hi.typeLoc : ∀ (O : Type) [CommRing O] [IsDomain O] [IsP
   · rintro ⟨F, hF, he⟩
     refine ⟨fun a => F a, fun h0 => hF (funext fun a => Subtype.ext (congrFun h0 a)), fun k i => ?_⟩
     have := congrArg Subtype.val (he (k : K ⧸ U) i)
-    rw [Submodule.coe_sum] at this
-    exact this
+    rwa [Submodule.coe_sum] at this
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

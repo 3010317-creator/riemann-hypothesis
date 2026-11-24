@@ -61,8 +61,7 @@ theorem hasSubst_pts {m n : ℕ} {a : Fin m → Pt S n d} (ha : ∀ j i, constan
 
 theorem map_ev {m n : ℕ} (a : Fin m → Pt S n d) (ha : ∀ j i, constantCoeff (a j i) = 0) (f : PS S m d) :
     map ψ (ev a f) = ev (fun j i => map ψ (a j i)) (map ψ f) := by
-  simp only [ev]
-  exact MvPowerSeries.map_subst (hasSubst_pts ha) f
+  simpa only [ev] using MvPowerSeries.map_subst (hasSubst_pts ha) f
 
 theorem const_ev {m n : ℕ} (a : Fin m → Pt S n d) (ha : ∀ j i, constantCoeff (a j i) = 0) (f : PS S m d) :
     constantCoeff (ev a f) = constantCoeff f := by
@@ -72,8 +71,7 @@ theorem const_ev {m n : ℕ} (a : Fin m → Pt S n d) (ha : ∀ j i, constantCoe
   · simp
   · intro e he
     obtain ⟨s, hs'⟩ : ∃ s, e s ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact he (Finsupp.ext h)
     simp only [Finsupp.prod, map_prod, map_pow, ha]
     rw [Finset.prod_eq_zero (Finsupp.mem_support_iff.mpr hs') (zero_pow hs'), smul_zero]

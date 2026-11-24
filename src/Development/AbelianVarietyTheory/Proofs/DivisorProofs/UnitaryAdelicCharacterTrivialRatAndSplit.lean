@@ -468,8 +468,7 @@ theorem tendsto_scal {w : ℕ → D.host.E} {u : D.host.E} {e : ℕ → Af D.hos
   have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
   have : ContinuousAdd (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.toContinuousAdd (Af D.host.F) _
   refine tendsto_AE ?_ ?_
-  · rw [inf_scal 1 u, funext fun k => inf_scal (e k) (w k)]
-    exact t1
+  · rwa [inf_scal 1 u, funext fun k => inf_scal (e k) (w k)]
   · rw [fin_scal 1 u, sub_self, TensorProduct.zero_tmul, funext fun k => fin_scal (e k) (w k)]
     exact t2.const_add 1
 
@@ -618,8 +617,7 @@ theorem tendsto_one_of_finCong {k : ℕ → GA D V} (hk : ∀ n, k n ∈ GfC V) 
       refine GlobalTheory.SplitRepsOpen.tendsto_one_of_cong D.host.F D.host.E _ h3 h4 _ fun n => ?_
       have := hu' n
       unfold GlobalTheory.Member.FinCong at this
-      rw [h1] at this
-      exact this
+      rwa [h1] at this
     refine tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun j => tendsto_AE ?_
       (tendsto_pi_nhds.1 (tendsto_pi_nhds.1 t i) j)
     refine tendsto_const_nhds.congr fun n => ?_

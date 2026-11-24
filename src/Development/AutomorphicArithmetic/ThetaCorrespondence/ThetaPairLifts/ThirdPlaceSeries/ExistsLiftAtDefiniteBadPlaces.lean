@@ -272,12 +272,12 @@ theorem exists_poly {g : ℕ} (hg : g.Prime) : ∃ Q : Polynomial ℤ,
   have e : ((g : Polynomial ℤ) * Polynomial.X * 1 * F) = Polynomial.C (g : ℤ) * (Polynomial.X * F) := by
     simp [mul_assoc]
   simp only [Polynomial.coeff_X_add_one_pow, one_pow, Polynomial.coeff_add, Polynomial.coeff_X_pow, e, Polynomial.coeff_C_mul,
-    Nat.choose_one_right, if_neg hg1] at h1
+    Nat.choose_one_right, ite_eq_right hg1] at h1
   have h2 : (Polynomial.X * F).coeff 1 = F.coeff 0 := Polynomial.coeff_X_mul F 0
   rw [h2, Polynomial.coeff_one] at h1
   have h3 : F.coeff 0 = 1 := by
     have hg0 : (g : ℤ) ≠ 0 := by exact_mod_cast hg.ne_zero
-    simp only [one_ne_zero, if_false, add_zero, zero_add] at h1
+    simp only [one_ne_zero, ite_false, add_zero, zero_add] at h1
     exact (mul_eq_left₀ hg0).1 h1.symm
   refine ⟨F.divX, ?_⟩
   have h4 : F = 1 + Polynomial.X * F.divX := by
@@ -678,8 +678,7 @@ theorem unip_mod_place {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Forma
           Matrix (Fin D.R.r) (Fin D.R.r) (kP P)) (Fin.cast hr a) (Fin.cast hr c) =
         ((redFn (p.R.βW i) P (Lev.finE (Wc D i) κ) : GL (Fin (Wc D i).rank) (kP P)) :
           Matrix (Fin (Wc D i).rank) (Fin (Wc D i).rank) (kP P)) a c := by
-      intro a c
-      exact (congrFun (congrFun hv (Fin.cast hr a)) (Fin.cast hr c)).trans rfl
+      exact fun a c => (congrFun (congrFun hv (Fin.cast hr a)) (Fin.cast hr c)).trans rfl
     rw [← hr]
     apply sub_one_pow_eq_zero'
     · intro a c hca
@@ -1036,8 +1035,7 @@ theorem exists_pt {X : Scheme.{0}} [IsAffine X] {S : Type} [CommRing S] (χ : Γ
   have h : X.isoSpec.hom.appTop.hom (X.isoSpec.inv.appTop.hom b) = b := by
     rw [← CommRingCat.comp_apply, ← Scheme.Hom.comp_appTop, Iso.hom_inv_id]
     simp
-  rw [Scheme.isoSpec_hom, Scheme.toSpecΓ_appTop] at h
-  exact h
+  rwa [Scheme.isoSpec_hom, Scheme.toSpecΓ_appTop] at h
 
 theorem fnAt_toΓ {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) (k : R) : fnAt (spMap φ) (toΓ R k) = φ k := by
   have h := fnAt_comp φ (𝟙 (Sp R)) (toΓ R k)
@@ -1401,8 +1399,7 @@ theorem span_inf_eq (T : Set (Fin n → LL)) (hT : Submodule.span LL T = ⊤) (S
       Set (Fin n → LL)) = S := by
   apply le_antisymm
   · rw [Submodule.span_le]
-    intro x hx
-    exact hx.2
+    exact fun x hx => hx.2
   · intro x hx
     have hxT : x ∈ Submodule.span LL T := by rw [hT]; exact Submodule.mem_top
     obtain ⟨d, hd, hdx⟩ := _root_.GlobalTheory.NonzeroMultipleInSpan.exists_ne_zero_smul_mem_span T x hxT
@@ -1775,8 +1772,7 @@ theorem point_read_alt (p : PtAt ex Csz) (i : Fin D.R.m) (hp : _root_.GlobalTheo
     have hEG : eGood p.R.toRealDat i = ∑ g, ((Formalism.L2.DIV.idemOf p.P.A3.A.X).coeff g *
         (((p.R.toRealDat.FW i).chi g)⁻¹ : D.what₂.LLˣ)) • (p.R.toRealDat.FW i).ρ g := by
       unfold eGood Formalism.IndefR.Arith.FormsL.eOp; rfl
-    rw [hB.2, typeSubspace_eq_iInf_ker, hEG, hA.2]
-    rw [hEig, hK]
+    rw [hB.2, typeSubspace_eq_iInf_ker, hEG, hA.2, hEig, hK]
 end GlobalTheory.DefRead
 namespace GlobalTheory.DefRead
 end GlobalTheory.DefRead

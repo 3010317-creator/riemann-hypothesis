@@ -83,11 +83,11 @@ theorem exists_common_mul (M N : Submodule (𝓞 K) V) (hM : M.FG)
   have hf0 : ∀ y, f y ≠ 0 := by
     intro y
     by_cases hy : y ∈ M
-    · simp only [f, dif_pos hy]; exact (h y hy).choose_spec.1
-    · simp only [f, dif_neg hy]; exact one_ne_zero
+    · simp only [f, dite_eq_left hy]; exact (h y hy).choose_spec.1
+    · simp only [f, dite_eq_right hy]; exact one_ne_zero
   have hfN : ∀ y ∈ M, f y • y ∈ N := by
     intro y hy
-    simp only [f, dif_pos hy]; exact (h y hy).choose_spec.2
+    simp only [f, dite_eq_left hy]; exact (h y hy).choose_spec.2
   refine ⟨∏ y ∈ S, f y, Finset.prod_ne_zero_iff.2 (fun y _ => hf0 y), ?_⟩
   have hle : Submodule.span (𝓞 K) (S : Set V) ≤ N.comap (LinearMap.lsmul (𝓞 K) V (∏ y ∈ S, f y)) := by
     rw [Submodule.span_le]
@@ -124,8 +124,7 @@ theorem nuAtT_of {D : D7} {L : SizeData₂ D} (hAtT : NuAtTDef D L)
   refine ⟨s, hs, ?_⟩
   rw [pow_zero, Ideal.one_eq_top, Submodule.top_smul]
   show (D.nuIn u).restrictScalars (𝓞 D.what₂.LL) (s • x) ∈ ((D.fm u).lat 0).L
-  rw [map_smul]
-  exact hsx
+  rwa [map_smul]
 
 theorem nu_le_mram {D : D7} {L : SizeData₂ D} (hNu : DV.NuDef D L) (hT : NuAtT D L) (u : D.what₂.Word) :
     L.NuLat u ≤ DV.MramL D u := by
@@ -146,11 +145,11 @@ theorem exists_free_prime (D : D7) (u : D.what₂.Word) :
   by_cases hT : (D.mem u).A.T = 2
   · refine ⟨D.host.q, D.host.hyp.1, by rw [hT]; exact hq2, ?_⟩
     unfold DV.InertK Host.cls primeClass
-    rw [if_neg D.host.q_notMem_small, if_pos rfl]
+    rw [ite_eq_right D.host.q_notMem_small, ite_eq_left rfl]
     simp
   · refine ⟨2, Nat.prime_two, fun h => hT h.symm, ?_⟩
     unfold DV.InertK Host.cls primeClass
-    rw [if_pos D.host.two_mem_small]
+    rw [ite_eq_left D.host.two_mem_small]
     simp
 
 theorem nuCommens_of {D : D7} {L : SizeData₂ D} (hNu : DV.NuDef D L) (hT : NuAtT D L) : NuCommens D L := by
@@ -160,8 +159,7 @@ theorem nuCommens_of {D : D7} {L : SizeData₂ D} (hNu : DV.NuDef D L) (hT : NuA
   · have : Module.Finite (𝓞 D.what₂.LL) (DV.MramL D u) := Module.Finite.iff_fg.2 (D.MramL_fg u)
     have : IsNoetherian (𝓞 D.what₂.LL) (DV.MramL D u) := inferInstance
     have h2 := (IsNoetherian.noetherian ((L.NuLat u).comap (DV.MramL D u).subtype)).map (DV.MramL D u).subtype
-    rw [Submodule.map_comap_subtype, inf_eq_right.2 hle] at h2
-    exact h2
+    rwa [Submodule.map_comap_subtype, inf_eq_right.2 hle] at h2
   · obtain ⟨p, hp, hpT, hin⟩ := exists_free_prime D u
     obtain ⟨w, hw⟩ := _root_.Formalism.MainNotions.Lnk.place_over D p hp
     have hEq := hNu.2.1 u w (by rw [hw]; exact hpT) (Or.inr (by rw [hw]; exact hin))

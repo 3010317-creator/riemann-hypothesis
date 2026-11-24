@@ -62,11 +62,7 @@ theorem kform_w0_sq (H : Host E) : H.w0 * H.w0 = H.w0 - (((1 + H.d) / 4 : ℕ) :
   linear_combination h
 
 theorem kform_bar_w0 (H : Host E) : H.bar H.w0 = 1 - H.w0 := by
-  obtain ⟨br, h1, h2, -⟩ := (_root_.GlobalTheory.CM.OK_isDedekindDomain_and_projective E H).2.2.1
-  have h := congrArg (fun a : OK H => (a : 𝓞 E)) h2
-  simp only [Subalgebra.coe_add, h1, Subalgebra.coe_one] at h
-  simp only [wK] at h
-  linear_combination h
+  exact GlobalTheory.HostModel.cmHost_bar_halfIntegerGenerator H
 
 theorem kform_skew {H : Host E} (D : Datum H) (x y : D.La) : D.EF y x = - D.EF x y := by
   have h := D.alt (x + y)

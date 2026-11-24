@@ -92,10 +92,10 @@ theorem ind_tmul_mul (Sb : Finset (HeightOneSpectrum (𝓞 F))) (z : Af F ⊗[F]
     · rw [Finset.sum_eq_single u (fun v _ hv => GlobalTheory.AdelicU.evalV_singleFin_ne (Ne.symm hv) _)
         (fun h => absurd hu h), GlobalTheory.AdelicU.evalV_singleFin_self]
       show (if u ∈ Sb then (1 : Fv F u) else 0) * _ = _
-      rw [if_pos hu, one_mul]
+      rw [ite_eq_left hu, one_mul]
     · rw [Finset.sum_eq_zero (fun v hv => GlobalTheory.AdelicU.evalV_singleFin_ne (fun e : u = v => hu (e ▸ hv)) _)]
       show (if u ∈ Sb then (1 : Fv F u) else 0) * _ = _
-      rw [if_neg hu, zero_mul]
+      rw [ite_eq_right hu, zero_mul]
   | add x y hx hy => rw [mul_add, hx, hy, ← Finset.sum_add_distrib]; simp only [map_add (f := _)]
 
 theorem ind_tmul_mul_eq_zero (Sb : Finset (HeightOneSpectrum (𝓞 F))) (z : Af F ⊗[F] E)
@@ -184,8 +184,7 @@ theorem redFn_eq_one_of_proj {V : HSp D} (β : GL (Fin V.rank) (EAf D)) (Sb : Fi
     rw [Matrix.smul_apply, smul_eq_mul, ex]
     show Formalism.IndefR.Lev.swapAE D (b ⊗ₜ[D.host.F] (1 : D.host.E)) * _ = _
     rw [← RingHom.map_mul]
-    refine congrArg (Formalism.IndefR.Lev.swapAE D) ?_
-    exact one_sub_ind_tmul_mul Sb _ hz
+    exact congrArg (Formalism.IndefR.Lev.swapAE D) (one_sub_ind_tmul_mul Sb _ hz)
 
 open GlobalTheory.AdelicU
 
@@ -207,8 +206,7 @@ theorem level_offS : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ
     exact ⟨e, f, hpe, h1, h2⟩
   · intro g hg
     constructor
-    · intro h
-      exact ⟨⟨g, h, fun _ _ => rfl⟩, fun v _ => hK g h v⟩
+    · exact fun h => ⟨⟨g, h, fun _ _ => rfl⟩, fun v _ => hK g h v⟩
     · rintro ⟨⟨k, hk, heq⟩, hoff⟩
       have hxf : g * k⁻¹ ∈ GfC V := mul_mem hg (inv_mem hk.1)
       have hx1 : ∀ v ∈ Sb, projV V v (g * k⁻¹) = 1 := fun v hv => by

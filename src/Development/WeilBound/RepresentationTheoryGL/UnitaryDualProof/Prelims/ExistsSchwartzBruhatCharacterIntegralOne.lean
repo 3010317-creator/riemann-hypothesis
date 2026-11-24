@@ -137,9 +137,7 @@ theorem exists_compact_open_subgroup_trivial {G : Type} [Group G] [TopologicalSp
     have hWW : W ∩ {g | g⁻¹ ∈ W} ∈ 𝓝 (1 : G) := Filter.inter_mem hW1 (inv_mem_nhds_one G hW1)
     refine Filter.mem_of_superset hWW ?_
     rintro g ⟨hg, hg'⟩
-    show ∀ x ∈ s, x * g ∈ s ∧ x * g⁻¹ ∈ s
-    intro x hx
-    exact ⟨hWs (Set.mul_mem_mul hx hg), hWs (Set.mul_mem_mul hx hg')⟩
+    exact fun x hx => ⟨hWs (Set.mul_mem_mul hx hg), hWs (Set.mul_mem_mul hx hg')⟩
   have hHo : IsOpen (H : Set G) := Subgroup.isOpen_of_mem_nhds H hHn
   have hHs : (H : Set G) ⊆ s := by
     intro g hg

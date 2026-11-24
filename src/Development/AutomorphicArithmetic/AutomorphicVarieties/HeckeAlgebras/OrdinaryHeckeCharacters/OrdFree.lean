@@ -153,8 +153,7 @@ theorem UpperTheory.exists_linear_preimage_of_successive_approximation :
   let a' : ℕ → M → ι → A := fun k g => if h : g ∈ V k then (hstep k g h).choose else 0
   have ha' : ∀ k g, g ∈ V k → (∀ i, a' k g i ∈ I ^ k) ∧ g - σ (a' k g) ∈ V (k + 1) := by
     intro k g h
-    simp only [a', dif_pos h]
-    exact (hstep k g h).choose_spec
+    simpa only [a', dite_eq_left h] using (hstep k g h).choose_spec
   let r : ℕ → M := fun n => Nat.rec f (fun n g => g - σ (a' (j + n) g)) n
   have hrs : ∀ n, r (n + 1) = r n - σ (a' (j + n) (r n)) := fun n => rfl
   have hr : ∀ n, r n ∈ V (j + n) := by
@@ -244,8 +243,7 @@ private theorem UpperTheory.periodic_difference_shift {A M : Type} [CommRing A] 
   have e : (T ^ r) ((T ^ (a + q)) f - (T ^ a) f) = (T ^ (a + r + q)) f - (T ^ (a + r)) f := by
     rw [show a + r + q = r + (a + q) by ring, show a + r = r + a by ring,
       pow_add T r (a + q), pow_add T r a, Module.End.mul_apply, Module.End.mul_apply, map_sub]
-  rw [e] at h'
-  exact h'
+  rwa [e] at h'
 
 private theorem UpperTheory.periodic_difference_mul_period {A M : Type} [CommRing A] [AddCommGroup M] [Module A M]
     (U : Submodule A M) (T : Module.End A M) (hT : ∀ f ∈ U, T f ∈ U) (f : M) (a q : ℕ)
@@ -258,8 +256,7 @@ private theorem UpperTheory.periodic_difference_mul_period {A M : Type} [CommRin
     have e : m + q * (c + 1) = m + q * c + q := by ring
     rw [e]
     have hs := U.add_mem h2 ih
-    rw [sub_add_sub_cancel] at hs
-    exact hs
+    rwa [sub_add_sub_cancel] at hs
 
 private theorem UpperTheory.factorial_powers_cauchy {A M : Type} [CommRing A] [AddCommGroup M] [Module A M]
     (U : Submodule A M) (T : Module.End A M) (hT : ∀ f ∈ U, T f ∈ U) (f : M) (a p : ℕ)
@@ -505,8 +502,7 @@ theorem UpperTheory.V.Hi.ordAbs {A M : Type} [CommRing A] [IsCNL A] [AddCommGrou
   have heO : ∀ f, e f ∈ O := fun f => (hO _).2 fun k => (he f k).2.1
   have heV : ∀ k f, f ∈ V k → e f ∈ V k := fun k f hf => (he f k).2.2.1 hf
   have heid : ∀ f ∈ O, e f = f := by
-    intro f hf
-    exact sub_eq_zero.1 (hsep _ fun k => (he f k).2.2.2 ((hO f).1 hf k))
+    exact fun f hf => sub_eq_zero.1 (hsep _ fun k => (he f k).2.2.2 ((hO f).1 hf k))
   have happ : ∀ k, ∃ (ι : Type) (_ : Fintype ι) (s : (ι → A) →ₗ[A] M) (ev : M →ₗ[A] (ι → A)),
       (∀ j, ∀ f ∈ V j, ∀ i, ev f i ∈ maximalIdeal A ^ j) ∧ ∀ f ∈ O, f - e (s (ev f)) ∈ V k := by
     intro k
@@ -637,8 +633,7 @@ private theorem ordFree_valU (k : ℕ) {a : Gp} (ha : a ∈ X.I.P) (f : X.Fn A m
   have hterm : ∀ y : Gp, X.rp A m y f ∈ X.valIn A m k := by
     intro y
     rw [ordFree_val] at hf ⊢
-    intro g i
-    exact hf _ i
+    exact fun g i => hf _ i
   show X.I.uOp (X.rp A m) a f ∈ X.valIn A m k
   unfold Iwa.uOp
   exact finsum_induction (fun φ : Module.End A (X.Fn A m) => φ f ∈ X.valIn A m k)
@@ -705,16 +700,14 @@ theorem UpperTheory.V.Hi.ordStruct (τ : X.Ub →* GL (Fin m) A) (θ : X.I.T →
   have hanti : Antitone V := by
     intro a b hab f hf
     rw [hV] at hf ⊢
-    intro g i
-    exact Ideal.pow_le_pow_right hab (hf g i)
+    exact fun g i => Ideal.pow_le_pow_right hab (hf g i)
   have hm : ∀ k, (maximalIdeal A ^ k • ⊤ : Submodule A S) ≤ V k := by
     intro k
     rw [Submodule.smul_le]
     intro r hr f _
     rw [hV]
     intro g i
-    simp only [Submodule.coe_smul, Pi.smul_apply, smul_eq_mul]
-    exact Ideal.mul_mem_right _ _ hr
+    simpa only [Submodule.coe_smul, Pi.smul_apply, smul_eq_mul] using Ideal.mul_mem_right _ _ hr
   have hm1 : ∀ k, ∀ r ∈ maximalIdeal A ^ k, ∀ f ∈ V 1, r • f ∈ V (k + 1) := by
     intro k r hr f hf
     rw [hV] at hf ⊢
@@ -722,9 +715,7 @@ theorem UpperTheory.V.Hi.ordStruct (τ : X.Ub →* GL (Fin m) A) (θ : X.I.T →
     simp only [Submodule.coe_smul, Pi.smul_apply, smul_eq_mul]
     rw [pow_succ]
     exact Ideal.mul_mem_mul hr (by simpa using hf g i)
-  have hTV : ∀ k, ∀ f ∈ V k, T f ∈ V k := by
-    intro k f hf
-    exact ordFree_valU X k X.I.z_mem _ hf
+  have hTV : ∀ k, ∀ f ∈ V k, T f ∈ V k := fun k f hf => ordFree_valU X k X.I.z_mem _ hf
   have hsep : ∀ f, (∀ k, f ∈ V k) → f = 0 := by
     intro f hf
     apply Subtype.ext
@@ -750,8 +741,7 @@ theorem UpperTheory.V.Hi.ordStruct (τ : X.Ub →* GL (Fin m) A) (θ : X.I.T →
         map_add' := by intros; rfl
         map_smul' := by intros; rfl }
     refine ⟨Fin N × Fin m, inferInstance, LinearMap.codRestrict S s (fun v => (hs v).1), ev, ?_, ?_⟩
-    · intro j f hf p
-      exact (hV j f).1 hf _ _
+    · exact fun j f hf p => (hV j f).1 hf _ _
     · intro f
       obtain ⟨n₀, hn₀⟩ := uOperator_pow_eventually_invariant_mod_pow Γ Ga Gp X A m θ hθ f.1 (Submodule.mem_inf.1 f.2).1 k c hc
       refine ⟨n₀, fun n hn => ?_⟩
@@ -785,8 +775,7 @@ theorem UpperTheory.V.Hi.ordStruct (τ : X.Ub →* GL (Fin m) A) (θ : X.I.T →
       obtain ⟨n, hn⟩ := h k
       refine ⟨n, ?_⟩
       show (((T ^ (n + 1)) f - f : S) : X.Fn A m) ∈ X.valIn A m k
-      rw [Submodule.coe_sub, hTpow]
-      exact hn
+      rwa [Submodule.coe_sub, hTpow]
     · intro h
       refine ⟨f.2, fun k => ?_⟩
       obtain ⟨n, hn⟩ := h k
@@ -811,14 +800,12 @@ theorem UpperTheory.V.Hi.ordStruct (τ : X.Ub →* GL (Fin m) A) (θ : X.I.T →
     rw [Submodule.map_smul'', Submodule.map_top, LinearEquiv.range] at h2
     simpa using h2
   · refine ⟨E.toLinearMap ∘ₗ LinearMap.codRestrict O e heO, ?_, ?_⟩
-    · intro f hf
-      exact congrArg Subtype.val (heid f hf)
+    · exact fun f hf => congrArg Subtype.val (heid f hf)
     · intro f k
       obtain ⟨J, hJ⟩ := hconv f k
       refine ⟨J, fun j hj => ?_⟩
       have h' : (((T ^ j.factorial) f - e f : S) : X.Fn A m) ∈ X.valIn A m k := hJ j hj
-      rw [Submodule.coe_sub, hTpow] at h'
-      exact h'
+      rwa [Submodule.coe_sub, hTpow] at h'
 
 end
 

@@ -326,16 +326,13 @@ theorem rigSym_descends_to_subring_containing_finset : ∀ (R : Type) [CommRing 
     (cls_eq_iff (pull_isLB hP₁ _) (pull_isLB (pull_isLB hP₁ _) _)).1 ?_⟩
   · have := (cls_eq_iff (pull_isLB (pull_isLB hP₁ _) _) (pull_isLB hT _)).2 k₁
     rw [cls_pull (pull_isLB hP₁ _), cls_pull hP₁, cls_pull hT, z, ← pull_comp] at this
-    rw [cls_pull (pull_isLB hP₁ _), cls_pull hP₁, ← pull_comp, f₁]
-    exact this
+    rwa [cls_pull (pull_isLB hP₁ _), cls_pull hP₁, ← pull_comp, f₁]
   · have := (cls_eq_iff (pull_isLB (pull_isLB hP₁ _) _) (pull_isLB hT _)).2 k₂
     rw [cls_pull (pull_isLB hP₁ _), cls_pull hP₁, cls_pull hT, z, ← pull_comp] at this
-    rw [cls_pull (pull_isLB hP₁ _), cls_pull hP₁, ← pull_comp, f₂]
-    exact this
+    rwa [cls_pull (pull_isLB hP₁ _), cls_pull hP₁, ← pull_comp, f₂]
   · have := (cls_eq_iff (pull_isLB hP₁ _) (pull_isLB (pull_isLB hP₁ _) _)).2 k₃
     rw [cls_pull hP₁, cls_pull (pull_isLB hP₁ _), cls_pull hP₁, ← pull_comp] at this
-    rw [cls_pull hP₁, cls_pull (pull_isLB hP₁ _), cls_pull hP₁, ← pull_comp, f₃]
-    exact this
+    rwa [cls_pull hP₁, cls_pull (pull_isLB hP₁ _), cls_pull hP₁, ← pull_comp, f₃]
 
 end GlobalTheory
 end -- clump:auto
@@ -397,8 +394,7 @@ theorem sections_eq_of_spMap_subtype_comp_eq : ∀ (R : Type) [CommRing R] (R₀
   haveI : IsIso c :=
     (MorphismProperty.arrow_mk_iso_iff (MorphismProperty.isomorphisms _) (arrowIsoSpecΓOfIsAffine c)).mpr
       (inferInstanceAs (IsIso (Spec.map c.appTop)))
-  rw [← cancel_epi c]
-  exact hc
+  rwa [← cancel_epi c]
 
 end GlobalTheory
 end -- clump:auto
@@ -630,8 +626,7 @@ theorem exists_geomPt_specializes (R : Type) [CommRing R] (R₁ : Subring R) (p 
   rw [Scheme.Hom.comp_apply, e]
   refine (PrimeSpectrum.le_iff_specializes _ _).1 ?_
   show P.comap R₁.subtype ≤ p.asIdeal
-  rw [hPq]
-  exact hqp
+  rwa [hPq]
 
 section Labels
 
@@ -758,8 +753,7 @@ theorem cond_push (hp : IsGrpPullback A A₁ f φ) (hl : ∀ a, (lv a).left ≫ 
   have P := push_lv hp hl (Over.mk x)
   have inj := push_injective hp (Over.mk x)
   refine ⟨fun a b e => H.1 (inj ?_), fun g => ?_⟩
-  · rw [P, P]
-    exact e
+  · rwa [P, P]
   · obtain ⟨g', rfl⟩ := push_surjective hp (Over.mk x) g
     rw [← map_pow, ← map_one (pushHom hp (Over.mk x)), inj.eq_iff, H.2 g']
     refine exists_congr fun a => ?_
@@ -1197,7 +1191,7 @@ theorem kernelAlong_of_trivAlong {S' : Scheme.{0}} (g : S' ⟶ S) (u₀ : Fin n)
     exact (congrArg _ h).trans (map_zero _)⟩
   have := hmon u₀
   have h := hy u₀
-  rw [if_pos rfl, h1, MonObj.one_comp] at h
+  rw [ite_eq_left rfl, h1, MonObj.one_comp] at h
   exact h.symm
 
 end Calc
@@ -1328,8 +1322,7 @@ theorem prime_contraction_or_dvr : ∀ (R : Type) [CommRing R] (R₁ : Subring R
       refine le_antisymm (IsLocalRing.le_maximalIdeal (Ideal.comap_ne_top _ (IsLocalRing.maximalIdeal.isMaximal V).ne_top)) ?_
       intro x hx
       rw [Ideal.mem_comap, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-      intro hu
-      exact (IsLocalRing.mem_maximalIdeal x).1 hx (isUnit_of_map_unit ρ₀ x hu)
+      exact fun hu => (IsLocalRing.mem_maximalIdeal x).1 hx (isUnit_of_map_unit ρ₀ x hu)
     refine ⟨⟨IsLocalRing.maximalIdeal V, inferInstance⟩, PrimeSpectrum.ext ?_⟩
     show (IsLocalRing.maximalIdeal V).comap ρ = p.asIdeal
     rw [show ρ = (ρ₀.comp (algebraMap A O)).comp (Ideal.Quotient.mk q) from rfl, ← Ideal.comap_comap,
@@ -1474,8 +1467,7 @@ theorem isSymplectic_of_subring : ∀ (h M : ℕ) (B R : Type) [CommRing B] [Com
     intro x y hxy
     have h2 := congrArg (Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom hxy
     rw [k, k] at h2
-    have h3 := congrArg (Scheme.ΓSpecIso (CommRingCat.of R₁)).inv.hom (Subtype.val_injective h2)
-    simpa using h3
+    simpa using congrArg (Scheme.ΓSpecIso (CommRingCat.of R₁)).inv.hom (Subtype.val_injective h2)
   intro a b
   obtain ⟨c, hc⟩ := CommutatorPairing.exists_weilIs globalFns_holds H₁.1 hD (th a) (th b)
   let X' : Over (Sp R₁) := Over.mk ((𝟙_ (Over (Sp R))).hom ≫ spMap R₁.subtype)
@@ -1498,8 +1490,7 @@ theorem isSymplectic_of_subring : ∀ (h M : ℕ) (B R : Type) [CommRing B] [Com
         (unitOn (ζ ^ (2 * stdForm a b).val)) := by
     rw [← GlobalTheory.SympDescent.units_map_comp_appTop, Over.toUnit_left, u₂, Category.id_comp]
     rfl
-  rw [← hinj (q.trans q₂.symm)]
-  exact hc
+  rwa [← hinj (q.trans q₂.symm)]
 
 end GlobalTheory.SympDescent
 end -- clump:auto
@@ -1547,8 +1538,7 @@ theorem siegPre_descends_fg : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (R : Ty
     change IsPrincipal A₀ P₀
     exact hpr
   · change IsPullbackTriple c.A c.P (lvOf c) A₀ P₀ (lvOf (ofTriple (ζ := u) hn0 hζ A₀ P₀ lv₀ hsym hlev₀ hsymp₀)) (spMap R₀.subtype)
-    rw [lvOf_ofTriple]
-    exact hpb'
+    rwa [lvOf_ofTriple]
 
 end GlobalTheory.SiegFG
 end -- clump:auto

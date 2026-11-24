@@ -44,8 +44,7 @@ theorem homAt_gmap {m n : ℕ} (S : Finset (HeightOneSpectrum (𝓞 E))) (g : Sp
     simpa [conjE_symm_apply] using h1
   · intro h P hP y hy
     rw [mem_localization_gmap]
-    have h1 := h P hP (g.symm y) ((mem_localization_gmap P g N y).1 hy)
-    simpa [conjE_symm_apply] using h1
+    simpa [conjE_symm_apply] using h P hP (g.symm y) ((mem_localization_gmap P g N y).1 hy)
 
 theorem divLat_map {H : Type} [AddCommGroup H] [Module (𝓞 E) H] (Φ : H ≃ₗ[𝓞 E] H) (c : ℕ) (M : Submodule (𝓞 E) H) :
     divLat c (M.map (Φ : H →ₗ[𝓞 E] H)) = (divLat c M).map (Φ : H →ₗ[𝓞 E] H) := by
@@ -83,8 +82,7 @@ theorem latSum_map {H M : Type} [AddCommGroup H] [Module (𝓞 E) H] [AddCommMon
   rw [Submodule.Quotient.eq] at hrs
   have hd : ((r : H) - Φ (s : H)) ∈ B.map (Φ : H →ₗ[𝓞 E] H) := hrs
   have := hF (Φ (s : H)) _ hd
-  rw [add_sub_cancel] at this
-  exact this
+  rwa [add_sub_cancel] at this
 
 theorem finsum_map_of_injective {ι M N : Type} [AddCommMonoid M] [AddCommMonoid N] (T : M →+ N)
     (hT : Function.Injective T) (f : ι → M) : ∑ᶠ i, T (f i) = T (∑ᶠ i, f i) := by

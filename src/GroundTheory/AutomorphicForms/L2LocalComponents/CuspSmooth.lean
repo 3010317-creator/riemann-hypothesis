@@ -74,8 +74,7 @@ theorem exists_kernel_cuspForm (φ : cuspForms K n) (ν : Measure (archGroup K n
   have e1 : ∀ x, ((sliceL g ⟨(φ : AdelicGLn.AdelicGL K n → ℂ), φ.2.1.isSmooth.1⟩ :
       (isExpLieAlgebra K n).smoothFuns (F := ℂ)) : archGroup K n → ℂ) x =
         (φ : AdelicGLn.AdelicGL K n → ℂ) (g * infEmb K n x) := fun x => rfl
-  simp only [e1, one_mul, map_one, mul_one] at h
-  exact h
+  simpa only [e1, one_mul, map_one, mul_one] using h
 
 theorem integrated_cuspToL2 {φ : cuspForms K n} (hφ : φ ∈ centralCuspForms K n)
     (ν : Measure (archGroup K n)) [ν.IsHaarMeasure] {κ : archGroup K n → ℂ}
@@ -151,8 +150,7 @@ theorem uAction_cuspToL2 {φ : cuspForms K n} (hφ : φ ∈ centralCuspForms K n
       ((y : AdelicGLn.AdelicGL K n) * (archP K n a : AdelicGLn.AdelicGL K n))
     simp only [hΨ]
     rw [apply_mul_infEmb_of_mem hφ, mul_comm]
-  rw [hf] at h2
-  exact h2
+  rwa [hf] at h2
 
 theorem toOne_eq_retractOne (g : AdelicGLn.AdelicGL K n) : toOne g = retractOne g := by
   ext1
@@ -169,8 +167,7 @@ theorem cuspToL2_sigma (k : archCompact K n) {φ : cuspForms K n} (hφ : φ ∈ 
   apply toLp_injective μ
   rw [toLp_cuspRepT, toLp_cuspVecL, toLp_cuspVecL, RightCosetSpace.rightRegularRep_apply]
   have h2 := congrArg Subtype.val this
-  rw [coe_cuspRep_apply] at h2
-  exact h2
+  rwa [coe_cuspRep_apply] at h2
 
 
 
@@ -183,8 +180,7 @@ theorem cuspToL2_finRepCusp (h : AdelicGLn.FiniteAdelicGL K n) {φ : cuspForms K
   apply toLp_injective μ
   rw [toLp_cuspRepT, toLp_cuspVecL, toLp_cuspVecL, RightCosetSpace.rightRegularRep_apply]
   have h2 := congrArg Subtype.val this
-  rw [coe_cuspRep_apply] at h2
-  exact h2
+  rwa [coe_cuspRep_apply] at h2
 
 end CuspidalSpectrum
 

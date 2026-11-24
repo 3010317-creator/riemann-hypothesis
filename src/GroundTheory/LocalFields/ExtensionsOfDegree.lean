@@ -151,8 +151,7 @@ theorem exists_adjoin_eq_of_norm_coeff_sub_lt (f : L[X]) (hm : f.Monic) (hirr : 
       rw [← hmin, isConjRoot_def.1 hx']
       exact minpoly.aeval L x'
     have hx'R : x' ∈ R := by
-      rw [hR, Multiset.mem_toFinset, mem_roots hfC, IsRoot, eval_map_algebraMap]
-      exact hx'root
+      rwa [hR, Multiset.mem_toFinset, mem_roots hfC, IsRoot, eval_map_algebraMap]
     rw [norm_sub_rev]
     exact ha.trans_le (hrle a haR x' hx'R hne)
 
@@ -163,8 +162,7 @@ theorem exists_adjoin_eq_of_norm_coeff_sub_lt (f : L[X]) (hm : f.Monic) (hirr : 
     simpa using h'
   have hα : aeval (y : Ω') f = 0 := by
     have := aeval_algebraMap_apply Ω' y f
-    rw [hy0, map_zero] at this
-    exact this
+    rwa [hy0, map_zero] at this
   refine ⟨(y : Ω'), hα, ?_⟩
   have hαint : IsIntegral L (y : Ω') := ⟨f, hm, by rwa [← aeval_def]⟩
   refine eq_of_le_of_finrank_le (adjoin_simple_le_iff.2 y.2) ?_
@@ -186,9 +184,9 @@ theorem coeff_sum_fin_C_mul_X_pow {n : ℕ} (c : Fin n → R) (k : ℕ) :
   rw [finsetSum_coeff]
   simp only [coeff_C_mul_X_pow]
   split_ifs with h
-  · rw [Finset.sum_eq_single ⟨k, h⟩ (fun j _ hj ↦ if_neg fun hk ↦ hj (Fin.ext hk.symm))
-      (fun h' ↦ absurd (Finset.mem_univ _) h'), if_pos rfl]
-  · exact Finset.sum_eq_zero fun j _ ↦ if_neg fun (hk : k = (j : ℕ)) ↦ h (hk ▸ j.2)
+  · rw [Finset.sum_eq_single ⟨k, h⟩ (fun j _ hj ↦ ite_eq_right fun hk ↦ hj (Fin.ext hk.symm))
+      (fun h' ↦ absurd (Finset.mem_univ _) h'), ite_eq_left rfl]
+  · exact Finset.sum_eq_zero fun j _ ↦ ite_eq_right fun (hk : k = (j : ℕ)) ↦ h (hk ▸ j.2)
 
 theorem monic_monicOfCoeffs {n : ℕ} (c : Fin n → R) : (monicOfCoeffs c).Monic :=
   monic_X_pow_add (degree_sum_fin_lt c)

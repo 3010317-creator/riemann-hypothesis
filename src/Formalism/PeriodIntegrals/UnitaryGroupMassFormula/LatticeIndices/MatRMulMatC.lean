@@ -220,7 +220,7 @@ theorem adapt_of_eps (hθ : IsSplitEquiv X p θ) (hε : θ (epsP X p) = (1, 0)) 
     simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, hgA, Matrix.one_apply, Pi.single_apply, sgnV]
     by_cases h : (Sum.inr (Sum.inr (Fin.rev a)) : IdxD D) = t
     · subst h; simp
-    · rw [if_neg h, if_neg (Ne.symm h)]; ring
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]; ring
   · have hs : X.z0 = rowV X zI := rfl
     refine ⟨fun t => -(zf zI t : FpX X p), fun t => neg_mem (zf zI t).2, ?_⟩
     funext t
@@ -230,9 +230,8 @@ theorem adapt_of_eps (hθ : IsSplitEquiv X p θ) (hε : θ (epsP X p) = (1, 0)) 
     rw [this]
     by_cases h : zI = t
     · subst h; simp; ring
-    · rw [if_neg h, if_neg (Ne.symm h)]; ring
-  · intro i
-    exact PIW.MassDataColumns.secondProj_weight_vector_zero (X := X) (p := p) (θ := θ) hε i
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]; ring
+  · exact fun i => PIW.MassDataColumns.secondProj_weight_vector_zero (X := X) (p := p) (θ := θ) hε i
 
 theorem adaptA_holds : ∃ θ : TpX X p ≃ₐ[FpX X p] FpX X p × FpX X p, IsSplitEquiv X p θ ∧
     ∃ Q : GL (IdxD D) (FpX X p), LatBasis X p θ (reindex₂ X p Q) ∧ AdaptA X p θ Q := by

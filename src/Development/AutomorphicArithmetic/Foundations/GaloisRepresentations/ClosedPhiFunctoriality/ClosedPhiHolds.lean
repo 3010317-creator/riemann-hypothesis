@@ -245,8 +245,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.colInv_holds :
   · rw [mem_Dst]
     intro g
     have hinv : ∀ i', ∑ i, Per.zB l ((ρ g).val i' i) * Per.σB (g : GQ l) (U i j) = U i' j := fun i' => by
-      have h := congrFun (congrFun (hU.inv g) i') j
-      simpa [Matrix.mul_apply, Matrix.map_apply] using h
+      simpa [Matrix.mul_apply, Matrix.map_apply] using congrFun (congrFun (hU.inv g) i') j
 
     rw [map_sum]
     have step : ∀ i, (stRep P R g) (v i ⊗ₜ[ℚ_[l]] (Polynomial.C (T.eB.symm (U i j)) : Bst P)) =
@@ -723,8 +722,7 @@ theorem func_holds : IntBasis → Func := by
   · intro i
     rw [← hyx i, hc2, key]
     exact hc1 _ _
-  · rw [hlz]
-    rw [← hyz, hc2]
+  · rw [hlz, ← hyz, hc2]
     refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (norm_nonneg _) ?_
     intro j _
     rw [norm_mul]
@@ -788,8 +786,7 @@ theorem invU_holds : InvU := by
       rw [hA, ← Matrix.map_mul, hYY, GlobalTheory.BcrisInv.map_smul_matrix, Matrix.map_one _ (map_zero _) (map_one _), map_pow]
     have hc : IsUnit (((W⁻¹ : (Per.Bcris l)ˣ) : Per.Bcris l) * alg ((l : Per.Acris l) ^ (2 * k)) * f τ ^ (2 * N)) := by
       refine (W⁻¹.isUnit.mul ?_).mul (hw.pow _)
-      have h := (isUnit_l_Bcris l).pow (2 * k)
-      simpa [halg, map_pow, map_natCast] using h
+      simpa [halg, map_pow, map_natCast] using (isUnit_l_Bcris l).pow (2 * k)
     obtain ⟨c, hcv⟩ := hc
     set V := Q'.map alg * Y'.map f
     have hUV : (((W⁻¹ : (Per.Bcris l)ˣ) : Per.Bcris l) • (A * B)) * V = (c : Per.Bcris l) • (1 : Matrix (Fin d) (Fin d) (Per.Bcris l)) := by
@@ -1005,8 +1002,7 @@ private theorem phi_zC (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (n : 
     have h := (_root_.GlobalTheory.AcrisFrobE.main l K bk).2.2.2.1 (Per.zA l z)
     have h2 : WittVector.frobenius (Per.zA l z) = Per.zA l z := by
       rw [← GlobalTheory.RingBasics.φA_apply]; exact (ActLaws.act_laws l).2.2.2.2.2.2.2.2.1 z
-    rw [h2] at h
-    exact h
+    rwa [h2] at h
   induction n with
   | zero => simp
   | succ n ih =>
@@ -1203,8 +1199,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.opOne_holds :
           (Per.φB l ^ n₁) (iB l τ₁) ^ N := by
       rw [opOne_pow, opOne_pow, map_mul, map_mul, map_pow, map_pow, map_pow, ← pow_mul,
         show 2 * k * 2 = 4 * k by ring]
-    rw [hsm, Matrix.map_mul, hmap, hmap, hsc, hs]
-    exact key
+    rwa [hsm, Matrix.map_mul, hmap, hmap, hsc, hs]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ClosedPhiFunctoriality.OpOneHolds =====
@@ -1278,8 +1273,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.linkA_holds :
   · intro i j
     apply GlobalTheory.HTBound.pow_dvd_of_inclW
     have e1 : (Pi.map (Per.zA l)).map (inclW l) = zW Pi := by
-      refine Matrix.ext fun a b => ?_
-      exact (inclWA l).commutes _
+      exact Matrix.ext fun a b => (inclWA l).commutes _
     have e2 : (R.map bk.ev).map (inclW l) = R.map bk.evW := by
       rw [Matrix.map_map]; rfl
     have e : (Pi.map (Per.zA l) * Y' - Y * R.map bk.ev).map (inclW l) =
@@ -1330,8 +1324,7 @@ theorem eig_pow_of_rep {K Ω : Type} [Field Ω] [Field K] [NumberField K] [Algeb
   rw [WD.eig_mk, WD.eig_mk, map_pow]
   have h2 := GlobalTheory.CharpolyPow.roots_charpoly_pow ℂ n k
     (LinearMap.toMatrix (Pi.basisFun ℂ (Fin n)) (Pi.basisFun ℂ (Fin n)) (a.ρ σ))
-  rw [LinearMap.toMatrix_pow, LinearMap.charpoly_toMatrix, LinearMap.charpoly_toMatrix] at h2
-  exact h2
+  rwa [LinearMap.toMatrix_pow, LinearMap.charpoly_toMatrix, LinearMap.charpoly_toMatrix] at h2
 
 end GlobalTheory.AboveL
 

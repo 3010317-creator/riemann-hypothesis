@@ -201,8 +201,7 @@ theorem exists_box {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
       rw [div_lt_iff₀ hg] at hs
       simpa [mul_comm] using hs
     exact Set.mem_iInter.mp (hγ hsmall) s
-  · rw [dotProduct_single, mul_div_cancel₀ _ hus]
-    exact ha
+  · rwa [dotProduct_single, mul_div_cancel₀ _ hus]
 
 theorem row_support_uniform : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : Type) [Fintype n] [DecidableEq n] (c p : ℕ) (_ : 1 ≤ p) (_ : p < c) (ψ : AddChar k Circle) (_ : ψ ≠ 1) (A : Type) [AddCommGroup A] [Module ℂ A] (σ : Representation ℂ (GL (n ⊕ Fin c) k) A) (_ : IsSmoothRep σ) (F : A) (Ω : Set (GL (n ⊕ Fin c) k)) (_ : IsCompact Ω), ∃ B : Set (n → k), IsCompact B ∧ ∀ l : A →ₗ[ℂ] ℂ, IsNEquiv ψ p σ l → ∀ w ∈ Ω, ∀ u, u ∉ B → l (σ (rowE c p u) (σ w F)) = 0 := by
   intro k _ _ _ _ n _ _ c p hp hc ψ hψ A _ _ σ hσ F Ω hΩ
@@ -234,9 +233,7 @@ theorem row_support_uniform : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
       σ (rowE c p u) (σ w F) := by
     rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel_right, map_mul, Module.End.mul_apply, hβ w hw]
   rw [lhs] at key
-  have hne' : (ψ (u ⬝ᵥ β) : ℂ) ≠ 1 := by
-    intro h
-    exact hne (Subtype.ext (by simpa using h))
+  have hne' : (ψ (u ⬝ᵥ β) : ℂ) ≠ 1 := fun h => hne (Subtype.ext (by simpa using h))
   have : (1 - (ψ (u ⬝ᵥ β) : ℂ)) * l (σ (rowE c p u) (σ w F)) = 0 := by
     rw [sub_mul, one_mul, ← key, sub_self]
   rcases mul_eq_zero.mp this with h | h
@@ -320,9 +317,9 @@ omit [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField
 theorem cut_eq {p : ℕ} (hp : 1 ≤ p) (hc : p < c) (χ : (n' → k) → ℂ) (y : Matrix (n ⊕ Fin c) n' k) :
     cut p χ y = χ fun s => y (Sum.inr ⟨p - 1, by omega⟩) s := by
   unfold cut
-  rw [Finset.sum_eq_single (⟨p - 1, by omega⟩ : Fin c), if_pos (by simp only; omega)]
+  rw [Finset.sum_eq_single (⟨p - 1, by omega⟩ : Fin c), ite_eq_left (by simp only; omega)]
   · intro l _ hl
-    exact if_neg fun e => hl (Fin.ext (by simp only; omega))
+    exact ite_eq_right fun e => hl (Fin.ext (by simp only; omega))
   · simp
 
 def cutL (p : ℕ) (χ : (n' → k) → ℂ) (hχ : IsLocallyConstant χ) :
@@ -455,8 +452,7 @@ theorem fc_row (hp : 1 ≤ p) (hc : p < c) {b₁ : P →ₗ[ℂ] A →ₗ[ℂ] �
     rw [← omR_val, omR_mul, one_mul, h1.2] at this
     rw [e0]
     apply Subtype.ext
-    rw [neg_zero, AddChar.map_zero_eq_one, Circle.coe_one, one_smul] at this
-    exact this
+    rwa [neg_zero, AddChar.map_zero_eq_one, Circle.coe_one, one_smul] at this
   simp only [fc, e, map_mul, Module.End.mul_apply]
 
 def ev {X : Type*} [TopologicalSpace X] (x : X) : SB X →ₗ[ℂ] ℂ := (LinearMap.proj x).comp (SB X).subtype

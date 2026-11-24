@@ -96,8 +96,7 @@ theorem mem_tSet_iff (d : m → A) (T : Matrix m m A) : T ∈ tSet d ↔ T ∈ h
 
 theorem star_entry (hd : ∀ i, star (d i) = d i) {a : A} {i j : m} (h : d i * a * d j = 0) :
     d j * star a * d i = 0 := by
-  have h' := congrArg star h
-  simpa [star_mul, hd, mul_assoc] using h'
+  simpa [star_mul, hd, mul_assoc] using congrArg star h
 
 theorem card_entD [Finite A] (d : m → A) :
     Nat.card (entD d) = ∏ i, ∏ j, Nat.card {a : A // d i * a * d j = 0} := by
@@ -275,8 +274,7 @@ theorem card_kerX_eq [Finite A] (hd : ∀ i, star (d i) = d i) {θ e : A}
     constructor
     · intro h
       refine ⟨herm Y, ?_⟩
-      have h' := congrArg (fun Z => Z - diagonal d) h
-      simpa using h'
+      simpa using congrArg (fun Z => Z - diagonal d) h
     · rintro ⟨-, h⟩
       rw [h, add_zero]
   let YS := {Y : Matrix m m A // Y + Yᴴ + Yᴴ * diagonal d * Y ∈ tSet d}
@@ -376,8 +374,7 @@ theorem mul_mk_eq_zero_iff {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {a :
   have haP : algebraMap (𝓞 F) (𝓞 K) a ∈ extP K 𝔭 ^ e := by
     have h1 : algebraMap (𝓞 F) (𝓞 K) a ∈ (𝔭 ^ e).map (algebraMap (𝓞 F) (𝓞 K)) :=
       Ideal.mem_map_of_mem _ ha
-    rw [Ideal.map_pow] at h1
-    exact h1
+    rwa [Ideal.map_pow] at h1
   constructor
   · intro hw
     obtain ⟨J, hJ⟩ : 𝔭 ^ e ∣ Ideal.span {a} := Ideal.dvd_span_singleton.mpr ha
@@ -393,15 +390,13 @@ theorem mul_mk_eq_zero_iff {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {a :
     have hspan : Ideal.span {algebraMap (𝓞 F) (𝓞 K) a} =
         extP K 𝔭 ^ e * J.map (algebraMap (𝓞 F) (𝓞 K)) := by
       have h1 := congrArg (Ideal.map (algebraMap (𝓞 F) (𝓞 K))) hJ
-      rw [Ideal.map_span, Set.image_singleton, Ideal.map_mul, Ideal.map_pow] at h1
-      exact h1
+      rwa [Ideal.map_span, Set.image_singleton, Ideal.map_mul, Ideal.map_pow] at h1
     have hcop : IsCoprime (extP K 𝔭 ^ (k - e)) (J.map (algebraMap (𝓞 F) (𝓞 K))) := by
       apply IsCoprime.pow_left
       rw [Ideal.isCoprime_iff_sup_eq]
       have h1 := congrArg (Ideal.map (algebraMap (𝓞 F) (𝓞 K))) hJP
       rw [Ideal.map_sup, Ideal.map_top] at h1
-      rw [sup_comm]
-      exact h1
+      rwa [sup_comm]
     have hιinj : ∀ x : 𝓞 F, algebraMap (𝓞 F) (𝓞 K) x = 0 → x = 0 := by
       intro x hx
       have h1 : algebraMap F K (algebraMap (𝓞 F) F x) = 0 := by
@@ -782,8 +777,7 @@ theorem phiCount_of (h1 : PhiModP) : PhiCount := by
     have hT' : T = 0 := by
       ext i j
       have := hT0 i j
-      rw [hb, Ideal.mem_bot] at this
-      exact this
+      rwa [hb, Ideal.mem_bot] at this
     subst hT'
     rw [mul_one]
     exact h1 K F hK 𝔭 h𝔭 m a ha
@@ -852,8 +846,7 @@ theorem vF_ne_zero_iff {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {x : �
       simp only [Submodule.mem_iInf, not_forall] at h0
       obtain ⟨n, hn⟩ := h0
       refine ⟨n, fun e he => ?_⟩
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       exact hn (Ideal.pow_le_pow_right hlt.le he)
     have h1 : 1 ≤ sSup {e : ℕ | x ∈ 𝔭 ^ e} :=
       le_csSup hbdd (show x ∈ 𝔭 ^ 1 by rwa [pow_one])
@@ -900,8 +893,7 @@ theorem card_U_diag (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭 :
       rw [h]
       exact Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)
     have h2 := congrArg (Ideal.map (algebraMap (𝓞 F) (𝓞 K))) hF
-    rw [Ideal.map_sup, Ideal.map_span, Set.image_singleton, Ideal.map_top] at h2
-    exact h2
+    rwa [Ideal.map_sup, Ideal.map_span, Set.image_singleton, Ideal.map_top] at h2
   rw [hcard, ← hD]
   exact Formalism.HermitianLattices.Ext.L3.IsotropicCounts.isoCount_one hK h𝔭 u hu hunit
 

@@ -42,7 +42,6 @@ theorem withBot_le_of_lt_succ (a : WithBot ℕ∞) (m : ℕ) (h : a < ((m + 1 : 
     | coe c =>
       have h' : (((c : ℕ) : ℕ∞) : WithBot ℕ∞) < (((m + 1 : ℕ) : ℕ∞) : WithBot ℕ∞) := h
       have hc : c < m + 1 := by exact_mod_cast WithBot.coe_lt_coe.mp h'
-      show (((c : ℕ) : ℕ∞) : WithBot ℕ∞) ≤ (((m : ℕ) : ℕ∞) : WithBot ℕ∞)
       exact WithBot.coe_le_coe.mpr (by exact_mod_cast (by omega : c ≤ m))
 
 variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
@@ -88,8 +87,7 @@ theorem vNumL_eq_zero_of_contract {ϖ : O} (hϖ : Irreducible ϖ) {P W : Ideal (
     rw [SpecialQuotDim.full O ϖ hϖ K' ι' W hϖW]
     refine lt_natCast_of_add_one_le ?_
     have e : l.length + Fintype.card K' + 1 = l.length + 1 + Fintype.card K' := by omega
-    rw [e]
-    exact hdrop
+    rwa [e]
   change intNum (IsLocalRing.ResidueField O) (specialIdeal W) l.get = 0
   by_cases hcase : ¬ IsRelevant (specialIdeal W) ∨ ringKrullDim (MRing ι' (IsLocalRing.ResidueField O) ⧸ specialIdeal W) <
       ((l.length + Fintype.card K' : ℕ) : WithBot ℕ∞)

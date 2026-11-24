@@ -115,8 +115,7 @@ theorem algHom_coe {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
   have : f.comp (Polynomial.coeToPowerSeries.algHom R) = Polynomial.aeval (f PowerSeries.X) := by
     apply Polynomial.algHom_ext
     simp
-  have h := DFunLike.congr_fun this p
-  simpa using h
+  simpa using DFunLike.congr_fun this p
 
 theorem algHom_ext_of_isHausdorff {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
     (I : Ideal A) [h : IsHausdorff I A] (f f' : PowerSeries R →ₐ[R] A)
@@ -446,8 +445,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) 
         change AI.μ ∣ AI.actW g (ev PowerSeries.X)
         rw [hev, hgμ]
         exact dvd_mul_right _ _)
-    intro f
-    exact DFunLike.congr_fun this f
+    exact fun f => DFunLike.congr_fun this f
   have hχ : ∀ h ∈ Hinf K, (P.χQ h : ℚ_[l]) = ((1 : ℕ) : ℚ_[l]) := by
     intro h hh
     have := ((GlobalTheory.Cyc.cyc_basic l P.χQ P.χQ_cyc).2.2 K h (Hinf_le_fix hh)).2.mp hh
@@ -464,8 +462,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) 
         rw [hev, hμ]) (by
         change AI.μ ∣ AI.actW h (ev PowerSeries.X)
         rw [hev, hμ])
-    intro f
-    exact DFunLike.congr_fun this f
+    exact fun f => DFunLike.congr_fun this f
   have hgE : AI.actW g (epsT AI s) = epsT AI s * (1 + AI.μ) := by
     rw [actW_epsT AI g _ hg, pow_add, pow_one, epsT_pow]
   choose pp FF hpF using GlobalTheory.ExpImage.solve_mod_pow l s hs m hm U hU γ v hv.symm hγ
@@ -641,8 +638,7 @@ theorem exists_Ainf_series_limit (l : ℕ) [Fact l.Prime] (a : ℕ → Ainf l) :
         Dvd.dvd.mul_right (pow_dvd_pow _ (Finset.mem_Ico.mp hi).1) _)
   refine ⟨x, fun n => ?_⟩
   have := hx n
-  rw [key, ← dvd_neg, neg_sub] at this
-  exact this
+  rwa [key, ← dvd_neg, neg_sub] at this
 
 theorem exists_series_limit_Lat (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (M : ℕ)
     (c : ℕ → P.R.BdR) (h0 : ∀ k, c k ∈ FilB P 0)
@@ -982,14 +978,7 @@ open scoped Formalism.Per
 variable {l : ℕ} [Fact l.Prime]
 
 theorem oB_mem {P : LocPrime l} {AI : LocAinf l P} (T : LocTied l P AI) (α : Om l) :
-    oB P α ∈ FilB P 0 := by
-  have hα : IsIntegral ℚ_[l] α := Algebra.IsIntegral.isIntegral α
-  obtain ⟨K, hK⟩ : ∃ K : FinExt l, α ∈ K.1 :=
-    ⟨⟨IntermediateField.adjoin ℚ_[l] {α}, IntermediateField.adjoin.finiteDimensional hα⟩,
-      IntermediateField.mem_adjoin_simple_self _ α⟩
-  have h := ((P.PD K).Fil 0).smul_mem (⟨α, hK⟩ : ↥K.1) (P.PD K).one_mem
-  rw [Algebra.smul_def, mul_one, IsScalarTower.algebraMap_apply ↥K.1 (Om l) P.R.BdR] at h
-  exact (T.fil _ _ _).2 ((T.fil K _ _).1 h)
+    oB P α ∈ FilB P 0 := GlobalTheory.ExpImage.oB_mem_zero T α
 
 theorem act_qB (P : LocPrime l) (g : GQ l) (c : ℚ_[l]) : P.actQdR g (qB P c) = qB P c :=
   AlgEquiv.commutes _ c
@@ -1008,7 +997,7 @@ theorem norm_chi (σ : GQ l) : ‖((LT l).χQ σ : ℚ_[l])‖ = 1 :=
 
 theorem logChi_coe (σ : GQ l) :
     ((logChi LT σ : ℤ_[l]) : ℚ_[l]) = logZl l ((LT l).χQ σ : ℚ_[l]) := by
-  exact congrArg Subtype.val (dif_pos ((GlobalTheory.PadicLogUnits.logZl_hom l).2.2.1 _ (norm_chi LT σ)))
+  exact congrArg Subtype.val (dite_eq_left ((GlobalTheory.PadicLogUnits.logZl_hom l).2.2.1 _ (norm_chi LT σ)))
 
 theorem logChi_mul (σ τ : GQ l) : ((logChi LT (σ * τ) : ℤ_[l]) : ℚ_[l]) =
     ((logChi LT σ : ℤ_[l]) : ℚ_[l]) + ((logChi LT τ : ℤ_[l]) : ℚ_[l]) := by
@@ -1059,8 +1048,7 @@ theorem small_mul {P : LocPrime l} {AI : LocAinf l P} (T : LocTied l P AI) {M n 
     qB P c * x ∈ Lat AI M n := by
   have h0 : ((l : ℚ_[l]) ^ k) ≠ 0 := pow_ne_zero _ (by exact_mod_cast (Fact.out : l.Prime).ne_zero)
   have h1 : ‖c / (l : ℚ_[l]) ^ k‖ ≤ 1 := by
-    rw [norm_div, div_le_one (norm_pos_iff.2 h0), Padic.norm_p_pow]
-    exact hc
+    rwa [norm_div, div_le_one (norm_pos_iff.2 h0), Padic.norm_p_pow]
   have := qB_mul_mem_Lat AI T ⟨_, h1⟩ hx
   rwa [← mul_assoc, ← map_natCast (qB P), ← map_pow, ← map_mul, div_mul_cancel₀ _ h0] at this
 
@@ -1187,8 +1175,7 @@ theorem integral_cocycle_of_gen : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] 
     rwa [sub_sub_sub_cancel_right, ← map_sub] at this
   · intro σ hσ
     have := hz σ hσ
-    rw [coc, ← sub_sub, Nat.cast_add_one] at this
-    exact this
+    rwa [coc, ← sub_sub, Nat.cast_add_one] at this
 
 end GlobalTheory.ExpImage
 end -- clump:auto
@@ -1234,7 +1221,7 @@ theorem expStar_of_sum : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] (AI : Loc
     rw [← norm_pos_iff, hlog s hs.1 hs.2 u hg.2.le, hg.2]
     exact zpow_pos hl _
   have hLc : ((logChi LT g : ℤ_[l]) : ℚ_[l]) = logZl l u :=
-    congrArg Subtype.val (dif_pos (hint _ (hn g)))
+    congrArg Subtype.val (dite_eq_left (hint _ (hn g)))
   have hne : ∀ j ∈ Finset.range e, u ^ ((j : ℤ) - e) - 1 ≠ 0 := by
     intro j hj
     have hj' := Finset.mem_range.1 hj
@@ -1378,13 +1365,7 @@ theorem frob_mu : WittVector.frobenius AI.μ =
     rw [WittVector.frobenius_eq_map_frobenius, WittVector.map_teichmuller, frobenius_def, map_pow]
   rw [LocAinf.μ, map_sub, map_one, h, geom_sum_mul]
 
-theorem mu_not_isUnit : ¬ IsUnit AI.μ := by
-  intro h
-  obtain ⟨θ, hθ⟩ := exists_isTheta l P AI
-  have h0 : θ AI.μ = 0 := (hθ.2.2.2.1 _).2 ⟨AI.π₁, by rw [AI.μ_eq, mul_comm]⟩
-  have := h.map θ
-  rw [h0] at this
-  exact not_isUnit_zero this
+theorem mu_not_isUnit : ¬ IsUnit AI.μ := GlobalTheory.ExpImage.EpsSolve.μ_not_unit AI
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), (∀ q : Ainf l, ∃ y : Ainf l, AI.μ * y - WittVector.frobenius (AI.μ * y) = AI.μ * q) ∧ ∀ M n : ℕ, ∃ k₀ : ℕ, ∀ k ≥ k₀, (WittVector.frobenius : Ainf l →+* Ainf l)^[k] AI.μ ∈ Ideal.span {((l : ℕ) : Ainf l) ^ n, AI.ξ ^ M} := by
   intro l _ P AI
@@ -1483,13 +1464,7 @@ theorem taylor0 (hT : LocTied l P AI) (m M : ℕ) :
 
 theorem span_mem_Lat {M n : ℕ} {a : Ainf l}
     (ha : a ∈ Ideal.span {((l : ℕ) : Ainf l) ^ n, AI.ξ ^ M}) : io AI a ∈ Lat AI M n := by
-  obtain ⟨x, y, rfl⟩ := Ideal.mem_span_pair.mp ha
-  refine ⟨x, ?_⟩
-  have h := FilB_zero_mul (io_mem AI y) (FilB_pow (io_ξ_mem AI) M)
-  rw [mul_one] at h
-  convert h using 1
-  simp only [map_add (f := _), map_mul, map_pow]
-  ring
+  exact GlobalTheory.ExpImage.io_mem_Lat_of_mem_span AI ha
 
 theorem tail (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (hT : LocTied l P AI)
     (K : FinExt l) (ι : Type) (T : Finset ι) (w : ι → Ainf l) (c : ι → ↥(K0 K)) (m : ι → ℕ) (M : ℕ)
@@ -1640,8 +1615,7 @@ theorem root_pow (AI : LocAinf l P) (m : ℕ) : AI.εroot m ^ (l ^ m) = AI.ε :=
   induction m with
   | zero => simp [LocAinf.εroot]
   | succ m ih =>
-    rw [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
-    exact ih
+    rwa [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
 
 theorem epsT_pow (AI : LocAinf l P) (s : ℕ) :
     epsT AI s ^ (l ^ s) = WittVector.teichmuller l AI.ε := by
@@ -1843,8 +1817,7 @@ theorem expStar_levSum : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] (AI : Loc
       convert this using 1
       ring⟩
   refine ⟨z, hz, ?_⟩
-  rw [hχ, ← mul_assoc, ← map_mul, ← mul_inv] at hE
-  exact hE
+  rwa [hχ, ← mul_assoc, ← map_mul, ← mul_inv] at hE
 
 end GlobalTheory.ExpImage
 end -- clump:auto

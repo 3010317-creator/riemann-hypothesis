@@ -82,8 +82,7 @@ theorem liftPairForm_mem_iff {y : (Σ k, ι k) → Ω} {pt : (Σ o, bundleIdx (b
     (hpt : ∀ p : Σ k, ι k, pt ⟨some (some p.1), p.2⟩ = algebraMap Ω Φ (y p)) (f : ReciprocityTheory.ChartRestriction.G.Geo.MRingOver O ι) :
     liftPairForm M M' f ∈ pointIdeal O pt ↔ f ∈ pointIdeal O y := by
   unfold pointIdeal
-  rw [RingHom.mem_ker, RingHom.mem_ker]
-  rw [pointConeMap_liftPairForm hpt]
+  rw [RingHom.mem_ker, RingHom.mem_ker, pointConeMap_liftPairForm hpt]
   have hinj : Function.Injective (fun k : K => (some (some k) : Option (Option K))) :=
     fun a b h => Option.some_injective _ (Option.some_injective _ h)
   constructor
@@ -210,12 +209,12 @@ theorem flagLineCoord_flag (w w' e : Module.Basis (Fin N) Ω E)
     · rw [repr_flag_inv w w' hsame j ⟨k, hk⟩ hlt, map_zero, mul_zero]
     · have h0 : flagCoord w e t (k + 1) j = 0 := by
         unfold flagCoord
-        rw [if_neg]
+        rw [ite_eq_right]
         exact fun h => absurd hgt (by rw [Fin.lt_def]; simp only; omega)
       rw [h0, zero_mul]
   · simp
   · intro j _ hj
-    rw [Module.Basis.repr_self, Finsupp.single_apply, if_neg hj, map_zero, mul_zero]
+    rw [Module.Basis.repr_self, Finsupp.single_apply, ite_eq_right hj, map_zero, mul_zero]
   · simp
 
 end Flags
@@ -304,8 +303,7 @@ theorem pairNum_single {P : Ideal (MRing ι O)} {r : ℕ} (z z' : Fin r → K �
   · rw [Pi.single_eq_same]
   · intro i _ hi
     rw [Pi.single_eq_of_ne hi]
-    simp only [classNum_zero_poly]
-    exact cycEval_zero_fun _
+    simpa only [classNum_zero_poly] using cycEval_zero_fun _
   · simp
 
 theorem pairNum_mul_pairSum {ϖ : O} (hϖ : Irreducible ϖ) {P : Ideal (MRing ι O)} {e : ℕ} (hP : IsModelOver P (e + 1))
@@ -322,8 +320,7 @@ theorem pairNum_mul_pairSum {ϖ : O} (hϖ : Irreducible ϖ) {P : Ideal (MRing ι
   unfold classNum
   refine Finset.sum_congr rfl fun μ hμ => ?_
   have hlen : e ≤ (classList (Sum.elim z z') μ ++ Q).length := by
-    rw [List.length_append, classList_length_of_mem_support _ (hBs i) hμ]
-    exact hQ
+    rwa [List.length_append, classList_length_of_mem_support _ (hBs i) hμ]
   rw [vNumL_perm W List.perm_middle, vNumL_add_of_ratDiv_ne_zero hϖ hP (hD i) hW _ _ _ hlen]
   simp only [Sum.elim_inr]
   ring

@@ -66,8 +66,7 @@ private theorem away_local {B : Type} [CommRing B] (f : B) (p : PrimeSpectrum B)
       exact ⟨q, rfl⟩
     exact hs hq
   obtain ⟨q, -⟩ : p ∈ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away f))) := by
-    rw [hrange]
-    exact hp
+    rwa [hrange]
   obtain ⟨M, hM, -⟩ := Ideal.exists_le_maximal q.asIdeal q.2.ne_top
   refine IsLocalRing.of_unique_max_ideal ⟨M, hM, fun N hN => ?_⟩
   have h := hinj ((key ⟨N, hN.isPrime⟩).trans (key ⟨M, hM.isPrime⟩).symm)
@@ -93,8 +92,7 @@ private theorem exists_eps (κ B : Type) [Field κ] [IsAlgClosed κ] [CommRing B
   apply hf
   rw [← Ideal.Quotient.eq_zero_iff_mem]
   apply φ.toRingHom.injective
-  rw [map_zero]
-  exact h
+  rwa [map_zero]
 
 private theorem local_kill (κ : Type) [Field κ] (A A' : Over (Sp κ)) [GrpObj A] [GrpObj A'] (χ : A ⟶ A') [IsMonHom χ]
     (P : ∀ T : Over (Sp κ), (T ⟶ A) → Prop) (hsub : IsSub A P)

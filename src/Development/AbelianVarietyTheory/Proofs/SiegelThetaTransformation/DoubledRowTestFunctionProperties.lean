@@ -208,8 +208,7 @@ theorem pv_dup {φ : Matrix (Fin n) (Fin g) ℚ → ℂ} (h : PV φ) : PV (dup �
     have h0 := congrFun (hV.fix _ hy.1) (rowM 0 x)
     have h1 := congrFun (hV.fix _ hy.2) (rowM 1 x)
     simp only [Pi.smul_apply, smul_eq_mul] at h0 h1 ⊢
-    rw [heisS_dup, dup_apply, ← h0, ← h1]
-    rw [h0, h1]
+    rw [heisS_dup, dup_apply, ← h0, ← h1, h0, h1]
     linear_combination (ε (comp 1 y) * heisS (comp 1 y).1 (comp 1 y).2 φ (rowM 1 x)) * h0 +
       φ (rowM 0 x) * h1
 

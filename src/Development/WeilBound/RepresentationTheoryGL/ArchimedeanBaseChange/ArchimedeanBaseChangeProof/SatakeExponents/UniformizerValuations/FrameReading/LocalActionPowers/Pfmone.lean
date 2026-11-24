@@ -127,8 +127,7 @@ theorem swap_key {φ₁ φ₂ f : Γ → ℂ} (h₁ : Continuous φ₁) (s₁ : 
     · rw [image_eq_zero_of_notMem_tsupport h1, zero_mul, zero_mul]
   calc ∫ g, (∫ h, φ₁ h * φ₂ (h⁻¹ * g) ∂ν) * f g ∂ν
       = ∫ g, ∫ h, φ₁ h * φ₂ (h⁻¹ * g) * f g ∂ν ∂ν := by
-        refine integral_congr_ae (Eventually.of_forall fun g => ?_)
-        exact (integral_mul_const _ _).symm
+        exact integral_congr_ae (Eventually.of_forall fun g => (integral_mul_const _ _).symm)
     _ = ∫ h, ∫ g, φ₁ h * φ₂ (h⁻¹ * g) * f g ∂ν ∂ν := integral_integral_swap_of_hasCompactSupport hc hs
     _ = ∫ h, φ₁ h * ∫ k, φ₂ k * f (h * k) ∂ν ∂ν := by
         refine integral_congr_ae (Eventually.of_forall fun h => ?_)
@@ -211,7 +210,7 @@ theorem fmOneOf_holds : FmOneOf := by
       exact hw₀P (this ▸ hwP)
     have hQ : Quiet S P B e L (Sum.inl ⟨w₀, hw₀⟩) F := by
       refine ⟨fun w hwP hw x y hxy' => ?_, fun j hj p x y hxe => ?_⟩
-      · rw [hD w hwP, if_neg hxy']
+      · rw [hD w hwP, ite_eq_right hxy']
       · have hx : x = y := hxy x y fun w => hxe w fun h => hne w.1 w.2 h
         subst hx
         rcases j with ⟨w, hwS⟩ | ⟨w, hwS, hwsp⟩
@@ -229,7 +228,7 @@ theorem fmOneOf_holds : FmOneOf := by
       cases heq
     have hQ : Quiet S P B e L (Sum.inr ⟨w₀, hw₀, hsp⟩) F := by
       refine ⟨fun w hwP hw x y hxy' => ?_, fun j hj p x y hxe => ?_⟩
-      · rw [hD w hwP, if_neg hxy']
+      · rw [hD w hwP, ite_eq_right hxy']
       · have hx : x = y := hxy x y fun w => hxe w fun h => hne w.1 w.2 h
         subst hx
         rcases j with ⟨w, hwS⟩ | ⟨w, hwS, hwsp⟩

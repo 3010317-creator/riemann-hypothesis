@@ -113,8 +113,7 @@ theorem Tj_eq {n r : ℕ} (hr : r ≤ n) :
       ((integralGL (w.adicCompletion E) n).inv_mem (GroundTheory.BlockD.SatakeBound.unipC_mem_integralGL _ c₀))
       (integralGL (w.adicCompletion E) n).one_mem
     rw [card_initSeg] at h
-    rw [e]
-    exact h
+    rwa [e]
   have hS : {g : GL (Fin n) (w.adicCompletion E) | ∃ a ∈ Formalism.UG.GLint (Fin n) (Formalism.UG.Ov E w),
       ∃ b ∈ Formalism.UG.GLint (Fin n) (Formalism.UG.Ov E w),
       (g : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = (a : Matrix (Fin n) (Fin n) (w.adicCompletion E)) *
@@ -156,9 +155,7 @@ theorem satake_eigenvalue_formula : lift_levelP_alt₂ := by
   have hK := SatakeEigenvalues.KGL_eq w n
   refine ⟨fun g hg => GlobalTheory.LGrp.mem_fixed.1 hfix g (hK ▸ hg), fun r hr => ?_⟩
   have h1 := hT _ (SatakeEigenvalues.isUnifV_uniformizer w) r hr
-  rw [heckeVec, SatakeEigenvalues.Tj_eq w hr, SatakeEigenvalues.satEig_eq w hr] at h1
-  rw [hK] at h1
-  exact h1
+  rwa [heckeVec, SatakeEigenvalues.Tj_eq w hr, SatakeEigenvalues.satEig_eq w hr, hK] at h1
 
 end PositivityTheory.JacquetShalikaLocal
 

@@ -133,8 +133,7 @@ theorem exists_prime_hom_zmod_of_ne_top (X : Type) [AddCommGroup X] [Module.Fini
   have hp : (n.natAbs).Prime := by
     have := hI.isPrime
     rw [hn'] at this
-    have h2 := (Ideal.span_singleton_prime (by simpa using hn0)).mp this
-    exact Nat.prime_iff_prime_int.mpr h2
+    exact Nat.prime_iff_prime_int.mpr ((Ideal.span_singleton_prime (by simpa using hn0)).mp this)
   let g : (ℤ ⧸ I) ≃+* ZMod n.natAbs :=
     (Ideal.quotEquivOfEq hn').trans (Int.quotientSpanNatEquivZMod n.natAbs)
   refine ⟨n.natAbs, hp, g.toAddMonoidHom.comp (e.toLinearMap.toAddMonoidHom.comp M.mkQ.toAddMonoidHom), ?_, ?_⟩
@@ -205,8 +204,7 @@ attribute [local instance] GlobalTheory.TorusExt.gtGroup
 theorem exists_gtPt_of_character : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (F : Type) [Field F] [Algebra (FractionRing R) F] (χ₀ : Multiplicative D.X →* Fˣ), ∃ g : GtPtF D F, g.b = DegPre.zeroF D F ∧ (∀ α z J, Good D.P.L z J → (val (g.s α) (𝟙 _) z J).val = gs (𝟙 _) z ⊤ (scal (𝟙 (Spec (CommRingCat.of F))) (χ₀ (Multiplicative.ofAdd α)).val)) ∧ (∀ N : ℕ, χ₀ ^ N = 1 → GtTors D N g) ∧ (g.IsZero ↔ χ₀ = 1) := by
   intro R _ _ D F _ _ χ₀
   refine ⟨TorusExt.torusPt D F (Additive.ofMul χ₀), TorusExt.torusPt_b _, fun α z J hJ => ?_, fun N hN => ?_, ?_⟩
-  · refine (congrArg Units.val (TorusExt.torusPt_val χ₀ α hJ)).trans ?_
-    exact (gs_eq (𝟙 _) z ⊤ trivial _).symm
+  · exact (congrArg Units.val (TorusExt.torusPt_val χ₀ α hJ)).trans (gs_eq (𝟙 _) z ⊤ trivial _).symm
   · refine ⟨_, (TorusExt.isNsmul_iff_eq N _ _).2 rfl, (TorusExt.isZero_iff_eq _).2 ?_⟩
     rw [← map_nsmul, ← ofMul_pow, hN, ofMul_one, map_zero]
   · rw [TorusExt.isZero_iff_eq, map_eq_zero_iff _ TorusExt.torusPt_injective]
@@ -253,8 +251,7 @@ theorem line_zero_const {R : Type} [CommRing R] [IsDomain R] (D : DegPre R) (F :
     exact (val w (𝟙 _) z I).ne_zero (e.trans ((congrArg _ (map_zero _)).trans (map_zero _)))
   refine ⟨Units.mk0 c hc, fun Z r z J hJ => ?_⟩
   have e := ha Z r z J hJ
-  rw [Category.comp_id] at e
-  exact e
+  rwa [Category.comp_id] at e
 
 theorem trPt_zero {R : Type} [CommRing R] [IsDomain R] (D : DegPre R) (F : Type) [Field F]
     [Algebra (FractionRing R) F] : DegPre.trPt D F (DegPre.zeroF D F) = 𝟙 _ := by
@@ -297,8 +294,7 @@ theorem phiRaw_torus : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (
     have e := rel _ (𝟙 _) y J hJ
     rw [vu _ _ y J hJ, val_pull hJ, val_mul hJ, Category.id_comp, Category.id_comp, Units.val_mul, hc _ _ y J hJ] at e
     dsimp only at e
-    rw [trPt_zero, add_zero] at e
-    exact e
+    rwa [trPt_zero, add_zero] at e
   refine fn_ext fun y hy => ?_
   choose I hI using fun χ : (DegPre.BF D F).left ⟶ D.P.A.left => exists_chart D.P.isLB (χ y)
   have hI' : Good D.P.L y I := hI
@@ -315,7 +311,7 @@ theorem phiRaw_torus : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (
     · have hcorr : LB.Gen.Corr D.P.L _ _ _ _ (gs' α) (LB.oneGen D.P.L) :=
         corr_of_val D.P.isLB fun z J hJ => (hs α hz z J hJ).trans (val_one _).symm
       rw [val_corr hI' hcorr, val_one, Units.val_one, _root_.mul_one]
-    · push_neg at hz
+    · push Not at hz
       have : sval (s α) (𝟙 _) y I = 0 :=
         (congrArg (gs (𝟙 _) y _) (hz _)).trans ((gs_eq _ y _ (hI'.mem _ (𝟙 _)) _).trans
           ((congrArg _ (map_zero _)).trans (map_zero _)))
@@ -641,8 +637,7 @@ theorem hom_zmod_eq_zero_of_support : Laws → Laws2 → (AllPre fun {V} _ _ _ {
   refine hϑ.symm.trans (_root_.GlobalTheory.ThetaEigen.main _ A (Kbar V) (jFK (R := V) (Kbar V)) l hl1 (SecMod.mk _ th) (SecMod.mk _ t) ϑ c
     (fun h0 => hj₀ ((SecMod.eq_zero_iff_coord _).1 h0 j₀))
     (fun z J hJ => sval_pow_of_pullG U (Kbar V) (toUnit _) l θ σ th t hth ht hpow z J hJ) ?_)
-  rw [← e]
-  exact hact
+  rwa [← e]
 
 end GlobalTheory.UU.PrimeIndex
 end
@@ -1000,8 +995,7 @@ theorem kappa_translate (hG : GlobalFnsSt) {S : Scheme.{0}} (P : PolAV S) {F : T
   have f₂ : lift ρ (lift x y) ≫ lift (fst _ _) b = lift ρ y := by simp [b]
   have f₃ : lift ρ (lift x y) ≫ lift (fst _ _) (lift (d * a) (d * b)) =
       lift ρ (lift ((ρ ≫ c) * x) ((ρ ≫ c) * y)) := by simp [a, b, d, MonObj.comp_mul]
-  rw [f₁, f₂, f₃, lift_fst] at this
-  exact this
+  rwa [f₁, f₂, f₃, lift_fst] at this
 
 theorem tensor_eq_smul {F : Type} [Field F] {X Y : Scheme.{0}} {L : LB X} (hL : L.IsLB)
     (q : Y ⟶ Spec (CommRingCat.of F)) [QuasiCompact q] [IsSeparated q] {K : Type} [Fintype K] {φ : K → (Y ⟶ X)}
@@ -1312,10 +1306,8 @@ theorem tensor_component_ne_zero_iff (F : Type) [Field F] (X C : Type) [Finite C
 
     rw [LinearMap.sum_apply, map_sum, Finset.sum_eq_single (cl x)]
     · exact h1 _ s x rfl
-    · intro c _ hc
-      exact h0 c s x (Ne.symm hc)
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun c _ hc => h0 c s x (Ne.symm hc)
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hfac : ∀ x, ex x ≠ 0 → ∃ r : W x →ₗ[F] E, r ∘ₗ ex x = π (cl x) := by
     intro x hx
     have hk : LinearMap.ker (ex x ∘ₗ (LinearMap.range (π (cl x))).subtype) = ⊥ := by
@@ -1326,8 +1318,7 @@ theorem tensor_component_ne_zero_iff (F : Type) [Field F] (X C : Type) [Finite C
     refine ⟨(LinearMap.range (π (cl x))).subtype ∘ₗ g, LinearMap.ext fun s => ?_⟩
     have h2 := congrArg Subtype.val
       (LinearMap.congr_fun hg ⟨π (cl x) s, LinearMap.mem_range_self _ s⟩)
-    rw [LinearMap.comp_apply, ← h1 (cl x) s x rfl]
-    exact h2
+    rwa [LinearMap.comp_apply, ← h1 (cl x) s x rfl]
   have hpass : ∀ x y, ex x ≠ 0 → ex y ≠ 0 → TensorProduct.map (ex x) (ex y) w = 0 →
       TensorProduct.map (π (cl x)) (π (cl y)) w = 0 := by
     intro x y hx hy h

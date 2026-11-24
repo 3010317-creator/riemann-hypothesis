@@ -53,8 +53,7 @@ theorem exists_isFullRankFamily_of_fg (E : Submodule (𝓞 K) V) (hE : E.FG) :
       constructor
       · rintro ⟨i, rfl⟩; exact ((Fintype.equivFin b).symm i).2
       · intro hy; exact ⟨Fintype.equivFin b ⟨y, hy⟩, by simp⟩
-    rw [SetLike.mem_coe, hr]
-    exact this
+    rwa [SetLike.mem_coe, hr]
 
 theorem IsFrame.relIndex_span_frame_ne_zero {E : Submodule (𝓞 K) V} (hE : E.FG) {r : ℕ} {v : Fin r → V}
     (hv : IsFrame K E v) :
@@ -89,8 +88,7 @@ theorem IsFrame.relIndex_span_frame_ne_zero {E : Submodule (𝓞 K) V} (hE : E.F
         rw [this]
         exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
       show (y : ℤ) • (QuotientAddGroup.mk x : E.toAddSubgroup ⧸ H) = 0
-      rw [← QuotientAddGroup.mk_zsmul, QuotientAddGroup.eq_zero_iff]
-      exact hmem
+      rwa [← QuotientAddGroup.mk_zsmul, QuotientAddGroup.eq_zero_iff]
   exact AddSubgroup.index_ne_zero_of_finite
 
 section

@@ -126,10 +126,8 @@ theorem Ia_fg_and_mem_iff {E : Type} [Field E] [NumberField E] [StarRing E] (S :
     unfold GlobalTheory.RowLatXS.Ia
     apply le_antisymm
     · rw [Submodule.span_le]
-      intro t ht
-      exact (hrange t).2 ht
-    · intro t ht
-      exact Submodule.subset_span ((hrange t).1 ht)
+      exact fun t ht => (hrange t).2 ht
+    · exact fun t ht => Submodule.subset_span ((hrange t).1 ht)
   refine ⟨?_, fun t => by rw [hIa]; exact hrange t⟩
 
   have : IsNoetherian (𝓞 E) Λ := isNoetherian_of_fg_of_noetherian Λ hΛ
@@ -260,15 +258,7 @@ lemma Xa_le_X (F : FlagG S r T) (j : ℕ) : F.Xa j ≤ F.X := by
   unfold FlagG.Xa FlagG.X
   exact Submodule.span_mono (Set.image_subset_range _ _)
 
-lemma X_eq_Xa (F : FlagG S r T) : F.X = F.Xa r := by
-  unfold FlagG.Xa FlagG.X
-  congr 1
-  ext v
-  constructor
-  · rintro ⟨i, rfl⟩
-    exact ⟨i, i.isLt, rfl⟩
-  · rintro ⟨i, -, rfl⟩
-    exact ⟨i, rfl⟩
+lemma X_eq_Xa (F : FlagG S r T) : F.X = F.Xa r := (Formalism.L2.SG.Pf.Xa_r' F).symm
 
 lemma e_mem (F : FlagG S r T) (a : Fin r) : F.e a ∈ F.Xa (a.val + 1) := by
   unfold FlagG.Xa
@@ -316,8 +306,7 @@ lemma mem_Xa_of_coefX_eq_zero (F : FlagG S r T) (a : Fin r) {y : S.V} (hy : y �
   rcases lt_or_eq_of_le hi with h | h
   · exact hl i (by simp only [Set.mem_ofPred_eq]; omega)
   · have hia : i = a := Fin.ext h.symm
-    rw [hia]
-    exact h0
+    rwa [hia]
 
 lemma sub_smul_mem (F : FlagG S r T) (a : Fin r) {y w : S.V} (hy : y ∈ F.Xa (a.val + 1))
     (hw : w ∈ F.Xa (a.val + 1)) (hw1 : F.coefX w a = 1) :
@@ -364,7 +353,7 @@ theorem xLam_eq_span : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] (S 
     fun a => exists_section G.fl Λ (J a) (hJ a) a (h3 a)
   choose e' he'X he'c he'Λ using hsec
   refine ⟨e', fun a => ?_, ?_⟩
-  · have hea : G.fl.coefX (G.fl.e a) a = 1 := by rw [coefX_e, if_pos rfl]
+  · have hea : G.fl.coefX (G.fl.e a) a = 1 := by rw [coefX_e, ite_eq_left rfl]
     have h := sub_smul_mem G.fl a (he'X a) (e_mem G.fl a) hea
     rwa [he'c a, one_smul] at h
   · apply le_antisymm
@@ -399,7 +388,6 @@ theorem xLam_eq_span : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] (S 
       exact step r le_rfl v hvΛ hvX
     · rw [Submodule.span_le]
       rintro y ⟨a, x, hx, rfl⟩
-      show x • e' a ∈ Λ ⊓ Formalism.MainNotions.S.Lat.toO S (Formalism.MainNotions.S.Lat.Xsp G)
       exact Submodule.mem_inf.mpr ⟨he'Λ a x hx, (G.fl.X).smul_mem x (Xa_le_X G.fl _ (he'X a))⟩
 
 end GlobalTheory.RowLatAssembly
@@ -434,7 +422,7 @@ theorem locStd_exists_flag_coef_one : ∀ {F : Type} [Field F] [ValuativeRel F] 
     · rw [hiso]
       exact zero_mem _
     · simp only [Formalism.MainNotions.S.LocNG.FrameD.prF, hes, hiso, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const_zero, sub_self,
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const_zero, sub_self,
         ZeroMemClass.coe_zero]
     · rw [map_zero]
       exact L.zero_mem
@@ -444,7 +432,7 @@ theorem locStd_exists_flag_coef_one : ∀ {F : Type} [Field F] [ValuativeRel F] 
     induction hw using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨b, hb, rfl⟩ := hx
-      rw [hes, if_neg (Fin.ne_of_val_ne (Nat.ne_of_lt hb))]
+      rw [hes, ite_eq_right (Fin.ne_of_val_ne (Nat.ne_of_lt hb))]
     | zero => exact H.h_zero_left _
     | add x y _ _ hx hy => rw [H.h_add_left, hx, hy, add_zero]
     | smul c x _ hx => rw [H.h_smul_left, hx, mul_zero]
@@ -461,7 +449,7 @@ theorem locStd_exists_flag_coef_one : ∀ {F : Type} [Field F] [ValuativeRel F] 
   · have := (Fr.Fj (a.val + 1)).add_mem (hmono hdiff) hmem
     simpa using this
   · have hsplit : n (Fr.e a) = (n (Fr.e a) - Fr.e a) + Fr.e a := by abel
-    rw [hsplit, H.h_add_left, hperp _ hdiff, hes, if_pos rfl, zero_add]
+    rw [hsplit, H.h_add_left, hperp _ hdiff, hes, ite_eq_left rfl, zero_add]
 
 end GlobalTheory
 end -- clump:auto
@@ -488,7 +476,7 @@ theorem h_es_eq_zero_of_mem_Fj {F : Type} [Field F] [ValuativeRel F] [Topologica
     have hb' : b.val < a.val := hb
     have hba : b ≠ a := fun h => by subst h; exact lt_irrefl _ hb'
     unfold Formalism.MainNotions.S.LocNG.FrameD.e
-    rw [Fr.h_es b a, if_neg hba]
+    rw [Fr.h_es b a, ite_eq_right hba]
   | zero => exact H.h_zero_left _
   | add x y _ _ hx hy => rw [H.h_add_left, hx, hy, add_zero]
   | smul c x _ hx => rw [H.h_smul_left, hx, mul_zero]
@@ -522,8 +510,7 @@ theorem GlobalTheory.locCoef_integral : ∀ {F : Type} [Field F] [ValuativeRel F
   have hwO := GlobalTheory.LocCoef.h_es_mem_O_of_mem_LamStd Fr L a w hw
   have hdecomp : H.h w (Fr.es a) = H.h (w - v) (Fr.es a) + H.h v (Fr.es a) := by
     rw [← H.h_add_left, sub_add_cancel]
-  rw [hdecomp, h0, zero_add] at hwO
-  exact hwO
+  rwa [hdecomp, h0, zero_add] at hwO
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagStepLocallyStandardDualCoeffIntegral =====
@@ -547,7 +534,7 @@ theorem isUnit_frFac {D : D7} {T : D.host.E} (G : LFlag (D.sp.Y 0) D.R.rS T) (Z 
   subst hA
   have hb := h4 b b
   dsimp only at hb
-  rw [if_pos rfl, (locH Z p).h_smul_left] at hb
+  rw [ite_eq_left rfl, (locH Z p).h_smul_left] at hb
   exact ⟨⟨_, _, hb, (mul_comm _ _).trans hb⟩, rfl⟩
 
 theorem span_bcP_Xa_eq_Fj : ∀ (D : D7) (T : D.host.E) (G : LFlag (D.sp.Y 0) D.R.rS T) (Z : LocDat D) (A : ∀ p : PlF D, LocNG.FrameD (locH Z p) D.R.rS), (∀ p, (A p).f = fun a => frFac Z.δ p a • baseChange₂ D p (frame G a)) → ∀ (p : PlF D) (j : ℕ), Submodule.span (D.s.atP p).Ep (baseChange₂ D p '' (G.fl.Xa j : Set (VS D).V)) = (A p).Fj j := by
@@ -570,8 +557,7 @@ theorem span_bcP_Xa_eq_Fj : ∀ (D : D7) (T : D.host.E) (G : LFlag (D.sp.Y 0) D.
         rw [Formalism.L2.SG.Pf.frame_castSucc_sat]
       rw [hf, ← hu] at hmem
       have hv := Submodule.smul_mem _ (↑u⁻¹ : (D.s.atP p).Ep) hmem
-      rw [smul_smul, Units.inv_mul, one_smul] at hv
-      exact hv
+      rwa [smul_smul, Units.inv_mul, one_smul] at hv
     | zero =>
       rw [map_zero]
       exact Submodule.zero_mem _
@@ -636,21 +622,19 @@ theorem scaled_local_coef_eq :
   have hunit : ∀ b : Fin D.R.rS, IsUnit (frFac Z.δ p b.castSucc) := by
     intro b
     have h1 := (A p).h_es b b
-    rw [hA p] at h1
-    rw [if_pos rfl, (locH Z p).h_smul_left] at h1
+    rw [hA p, ite_eq_left rfl, (locH Z p).h_smul_left] at h1
     exact isUnit_iff_exists_inv.mpr ⟨_, by simpa [frame, Formalism.MainNotions.S.FlagG.fvec, Fin.snoc_castSucc] using h1⟩
   have hzero : ∀ b : Fin D.R.rS, b ≠ a → (locH Z p).h (baseChange₂ D p (G.fl.e b)) ((A p).es a) = 0 := by
     intro b hb
     have h1 := hes b
-    rw [if_neg hb] at h1
+    rw [ite_eq_right hb] at h1
     exact (hunit b).mul_right_eq_zero.mp h1
 
   have hxs : x ∈ Submodule.span D.host.E (Set.range G.fl.e) := hx
   have hexp : x = ∑ b, G.fl.coefX x b • G.fl.e b := by
     have h2 := G.fl.e_indep.linearCombination_repr ⟨x, hxs⟩
     rw [Finsupp.linearCombination_apply, Finsupp.sum_fintype _ _ (by simp)] at h2
-    simp only [Formalism.MainNotions.S.FlagG.coefX, dif_pos hxs]
-    exact h2.symm
+    simpa only [Formalism.MainNotions.S.FlagG.coefX, dite_eq_left hxs] using h2.symm
 
   have hsum : ∀ (s : Finset (Fin D.R.rS)) (v : Fin D.R.rS → Vp D p) (y : Vp D p),
       (locH Z p).h (∑ b ∈ s, v b) y = ∑ b ∈ s, (locH Z p).h (v b) y := by
@@ -664,7 +648,7 @@ theorem scaled_local_coef_eq :
     rw [map_sum]
     exact Finset.sum_congr rfl fun b _ => baseChange_smul₂ p _ _
   rw [hbc, hsum, Finset.mul_sum, Finset.sum_eq_single a]
-  · rw [(locH Z p).h_smul_left, mul_left_comm, hes a, if_pos rfl, mul_one]
+  · rw [(locH Z p).h_smul_left, mul_left_comm, hes a, ite_eq_left rfl, mul_one]
   · intro b _ hb
     rw [(locH Z p).h_smul_left, hzero b hb, mul_zero, mul_zero]
   · intro h; exact absurd (Finset.mem_univ a) h
@@ -717,8 +701,7 @@ theorem span_coef_mem {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   | smul r x _ hx =>
     have hmem := N.smul_mem r hx
     rw [Subring.smul_def, smul_eq_mul] at hmem
-    rw [Subring.smul_def, H.h_smul_left, mul_left_comm]
-    exact hmem
+    rwa [Subring.smul_def, H.h_smul_left, mul_left_comm]
 
 
 
@@ -759,8 +742,7 @@ theorem span_coefIdeal_eq_span_frFac : ∀ (D : D7) (T : D.host.E) (G : LFlag (D
         hint _ (NumberField.RingOfIntegers.isIntegral r).algebraMap
       have hmem := Submodule.smul_mem _ (⟨_, hrO⟩ : (Z.M p).L.O) hx
       rw [Subring.smul_def, smul_eq_mul] at hmem
-      rw [Algebra.smul_def, map_mul]
-      exact hmem
+      rwa [Algebra.smul_def, map_mul]
   ·
     rw [Submodule.span_le, Set.singleton_subset_iff]
     obtain ⟨v, hvΛ, hvF, hv1⟩ := _root_.GlobalTheory.locStd_exists_flag_coef_one (A p) n hn L a
@@ -802,13 +784,11 @@ theorem span_coefIdeal_eq_span_frFac : ∀ (D : D7) (T : D.host.E) (G : LFlag (D
       have h3 : v ∈ (PI.LocLatEq.latL (D.s.atP p)
           ((Λ ⊓ Xr.restrictScalars (𝓞 D.host.E)).map (Formalism.L2.SG.Pf.LocFacts.phi D)) : Set (Vp D p)) := by
         rw [hmap, key]; exact ⟨hvΛ', hvF'⟩
-      rw [← Formalism.L2.SG.Pf.LocFacts.localLattice_coe Z p] at h3
-      exact h3
+      rwa [← Formalism.L2.SG.Pf.LocFacts.localLattice_coe Z p] at h3
     have key := span_coef_mem (locH Z p) (frFac Z.δ p a.castSucc) ((A p).es a)
       (baseChange₂ D p '' ((Λ ⊓ Xr.restrictScalars (𝓞 D.host.E) : Submodule (𝓞 D.host.E) (VS D).V) : Set (VS D).V))
       (Submodule.span (Z.M p).L.O ((D.s.atP p).ιE '' (GlobalTheory.RowLatXS.Ia Λ G.fl a : Set D.host.E))) ?_ v hsat
-    · rw [hv1, mul_one] at key
-      exact key
+    · rwa [hv1, mul_one] at key
     · rintro _ ⟨x, ⟨hxΛ, hxX⟩, rfl⟩
       rw [GlobalTheory.T.scaled_local_dual_coeff_eq_global_coeff D T G Z A hA p a x (hXle hxX)]
       exact Submodule.subset_span ⟨_, Submodule.subset_span ⟨x, hxΛ, hxX, rfl⟩, rfl⟩

@@ -77,14 +77,12 @@ theorem isMultiHomog_X_pow [DecidableEq K] (k : K) (i : ι k) (n : ℕ) :
     · simp
     · intro j _ hj
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hj (eq_of_heq (Sigma.mk.inj_iff.mp h).2).symm
+      exact fun h => hj (eq_of_heq (Sigma.mk.inj_iff.mp h).2).symm
     · simp
   · rw [Pi.single_eq_of_ne hl]
     refine Finset.sum_eq_zero fun j _ => ?_
     rw [Finsupp.single_apply, ite_eq_right]
-    intro h
-    exact hl (Sigma.mk.inj_iff.mp h).1.symm
+    exact fun h => hl (Sigma.mk.inj_iff.mp h).1.symm
 
 theorem isMultiHomog_prod_X (c : ∀ k, ι k) (e : K → ℕ) :
     IsMultiHomog (∏ k, (X ⟨k, c k⟩ : MRingOver S ι) ^ e k) e := by
@@ -322,8 +320,7 @@ theorem exists_of_mem_chartRing (c : ∀ k, ι k) (hc : ∀ k, y ⟨k, c k⟩ �
     · simp
     · intro k _ hk
       rw [Pi.single_eq_of_ne hk, pow_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   | algebraMap r =>
     exact ⟨0, C r, isMultiHomog_C r, by simp⟩
   | add x x' _ _ h h' =>
@@ -542,7 +539,7 @@ theorem constD_pair {V : Type} [AddCommGroup V] (f : Cell K ι 0 → V) (J : Cel
     · exact (h1 (by rw [e1]; exact (cell0 _).2)).elim
     · exact (h1 (by rw [e1]; exact (cell0 _).2)).elim
   · intro l _ hl
-    refine Finset.sum_eq_zero fun i hi => dif_neg ?_
+    refine Finset.sum_eq_zero fun i hi => dite_eq_right ?_
     rintro ⟨h, -⟩
     have := h l
     rw [Function.update_self, hJl l hl] at this
@@ -781,8 +778,7 @@ theorem HZeroRowPlaceData.full : GlobalSectionsComparisonStatement := by
     · intro s hs
       have hs' : ∀ c : ∀ k, ι k, (∀ k, y ⟨k, c k⟩ ≠ 0) →
           s * ∏ k, y ⟨k, c k⟩ ^ (-n k) ∈ chartRingOver S y c := by
-        intro c hc
-        exact (Submodule.mem_iInf _).mp ((Submodule.mem_iInf _).mp hs c) hc
+        exact fun c hc => (Submodule.mem_iInf _).mp ((Submodule.mem_iInf _).mp hs c) hc
       have hlift : ∀ I : Cell K ι 0, Good y I.1 → ∃ w ∈ locPart ι (quotPart S (mIdealOver S y)) (cellMon S I.1) n,
           evMap y I.1 w = s := fun I hI =>
         exists_lift hI (fun k => Finset.min'_mem _ (I.2.1 k)) n
@@ -793,12 +789,11 @@ theorem HZeroRowPlaceData.full : GlobalSectionsComparisonStatement := by
       have hzC : ∀ I : Cell K ι 0, z I ∈ locPart ι (quotPart S (mIdealOver S y)) (cellMon S I.1) n := by
         intro I
         by_cases hI : Good y I.1
-        · simp only [z, dif_pos hI]; exact (hlift I hI).choose_spec.1
-        · simp only [z, dif_neg hI]; exact Submodule.zero_mem _
+        · simp only [z, dite_eq_left hI]; exact (hlift I hI).choose_spec.1
+        · simp only [z, dite_eq_right hI]; exact Submodule.zero_mem _
       have hzv : ∀ I : Cell K ι 0, Good y I.1 → evMap y I.1 (z I) = s := by
         intro I hI
-        simp only [z, dif_pos hI]
-        exact (hlift I hI).choose_spec.2
+        simpa only [z, dite_eq_left hI] using (hlift I hI).choose_spec.2
       have hzCc : z ∈ cechCc ι (quotPart S (mIdealOver S y)) n 0 :=
         Submodule.mem_pi.mpr fun I _ => hzC I
       have hzD : cechD S ι _ 0 z = 0 := by

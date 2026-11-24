@@ -254,8 +254,7 @@ theorem eq_zero_of_sqZero_baseChange_nsmul : ∀ (k : ℕ) (R R₀ : Type) [Comm
       ← map_mul, h2X.mul_val_inv, map_one]
   have hS : ρa (σ' a).val = (D.g a b).val ^ (k + 1) * ρb (σ' b).val := by
     have := congrArg Units.val (hσ' a b)
-    rw [Units.val_mul, Units.val_pow_eq_pow_val] at this
-    exact this
+    rwa [Units.val_mul, Units.val_pow_eq_pow_val] at this
   have hNa : ρa (n a) = ρa (σ' a).val - 1 := by simp only [n, map_sub, map_one]
   have hNb : ρb (n b) = ρb (σ' b).val - 1 := by simp only [n, map_sub, map_one]
   have hNa2 : ρa (n a) * ρa (n a) = 0 := by rw [← map_mul, hn2 a, map_zero]
@@ -305,8 +304,7 @@ theorem exists_isGen_of_lbPow_of_sqZero_abelianScheme : ∀ (T : Type) [CommRing
     rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, ← Scheme.Hom.comp_appTop,
       ← Scheme.Hom.comp_appTop, hP.w]
   have hpull : pull π (cls M hM) = 0 := by
-    rw [← cls_pull hM π (pull_isLB hM π), cls_eq_zero_iff]
-    exact hπ
+    rwa [← cls_pull hM π (pull_isLB hM π), cls_eq_zero_iff]
   have hnsmul : (k + 1) • cls M hM = 0 := by
     have h := cls_linComb hM (fun _ : Fin (k + 1) => 𝟙 A.left) (fun _ => 1) (LB.isLB_linComb hM _ _)
     have h0 : cls (LB.LinComb M (fun _ : Fin (k + 1) => 𝟙 A.left) (fun _ => 1)) (LB.isLB_linComb hM _ _) = 0 :=
@@ -491,8 +489,7 @@ theorem triv_of_geometricFibres : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [
     simp [φ]
   have hrig' := (key' _).2 (by rw [hone, pull_comp, hc0, map_zero])
   have hk' : IsUnit (k : R) := by
-    have h := hk.map ((Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom.comp j'.appTop.hom)
-    simpa using h
+    simpa using hk.map ((Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom.comp j'.appTop.hom)
   have hpow' : ∃ t : (GlobalTheory.UPel.HT.Hecke.lbPow (M.pull φ) k).Gen, t.IsGen := by
     refine (cls_eq_zero_iff (LB.isLB_linComb hM' _ _)).1 ?_
     rw [cls_linComb hM']

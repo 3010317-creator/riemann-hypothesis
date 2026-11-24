@@ -63,8 +63,7 @@ private theorem local_of_finite {R S : Type} [CommRing R] [IsLocalRing R] [CommR
       Ideal.Quotient.maximal_of_isField _ (Finite.isField_of_domain _)
     exact IsLocalRing.eq_maximalIdeal hmax
   have hg : g a = 0 := by
-    rw [← RingHom.mem_ker, hker]
-    exact hm
+    rwa [← RingHom.mem_ker, hker]
   have hfa : f a ∈ maximalIdeal S := by
     simpa [g, residue_eq_zero_iff] using hg
   exact hfa ha
@@ -91,8 +90,7 @@ theorem UpperTheory.V.Th.Nm.redOf :
   have hym : ∀ z ∈ maximalIdeal R, y z ∈ maximalIdeal c'.O := by
     intro z hz
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact hz ((isUnit_map_iff y _).1 hu)
+    exact fun hu => hz ((isUnit_map_iff y _).1 hu)
   have hres : ∀ z, residue c'.O (y z) = f (res c.O R z) := by
     intro z
     obtain ⟨a, ha⟩ := IsCO.res_surj (O := c.O) z

@@ -100,15 +100,13 @@ theorem isoC_glStableC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (la : Fi
     ∀ x ∈ IsoC p LL j Cs la, glAct p LL j c d x ∈ IsoC p LL j Cs la := by
   intro x hx
   rw [IsoC, Submodule.mem_sInf] at hx ⊢
-  intro S hS
-  exact hS.2 c hc d hd x (hx S hS)
+  exact fun S hS => hS.2 c hc d hd x (hx S hS)
 
 theorem hwc_le_isoCC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (la : Fin r → ℤ) :
     HWC p LL j Cs la ≤ IsoC p LL j Cs la := by
   intro x hx
   rw [IsoC, Submodule.mem_sInf]
-  intro S hS
-  exact hS.1 hx
+  exact fun S hS => hS.1 hx
 
 theorem isoC_keepC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (la : Fin r → ℤ)
     (Q : MvPolynomial (Fin N × Fin r) ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial (Fin N × Fin r) ℚ_[p])
@@ -213,8 +211,7 @@ private theorem compP_weight_eq_mem_of_glAct_stable (LL : Letters N) (j : ℕ) (
     rw [Finset.prod_ne_zero_iff]
     intro w hw
     rw [sub_ne_zero]
-    intro h
-    exact (Finset.ne_of_mem_erase hw) (by exact_mod_cast h.symm)
+    exact fun h => (Finset.ne_of_mem_erase hw) (by exact_mod_cast h.symm)
   have heq : compP (fun m => wt LL j c m = k) x = (∏ w ∈ F, ((k : ℚ_[p]) - (w : ℚ_[p])))⁻¹ • y := by
     ext m
     rw [coeff_compP, MvPolynomial.coeff_smul, smul_eq_mul, hym m]
@@ -238,8 +235,7 @@ private theorem compP_weights_eq_mem_of_glAct_stable (LL : Letters N) (j : ℕ)
   induction F using Finset.induction_on with
   | empty =>
     intro _ x hx
-    rw [compP_congr _ (fun _ => True) (fun m => by simp), compP_true]
-    exact hx
+    rwa [compP_congr _ (fun _ => True) (fun m => by simp), compP_true]
   | insert a F ha ih =>
     intro hS x hx
     rw [compP_congr _ (fun m => wt LL j a m = μ a ∧ ∀ c ∈ F, wt LL j c m = μ c)
@@ -277,8 +273,7 @@ theorem exists_hwC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
   set φ : (Fin N × Fin r →₀ ℕ) → ℤ := fun m => ∑ c ∈ Cs, -((c : ℕ) : ℤ) * wt LL j c m with hφ
   have hAne : A.Nonempty := by
     have hne : x.support.Nonempty := by
-      rw [Finset.nonempty_iff_ne_empty, Ne, support_eq_empty]
-      exact hx0
+      rwa [Finset.nonempty_iff_ne_empty, Ne, support_eq_empty]
     obtain ⟨m0, hm0⟩ := hne
     refine ⟨m0, ?_⟩
     rw [hA, Finset.mem_filter, hM0, Set.Finite.mem_toFinset]
@@ -286,7 +281,7 @@ theorem exists_hwC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
       wcomp_memC LL j Cs S hSd _ x hx, ?_, ?_⟩
     · intro h0
       have := congrArg (AddMonoidAlgebra.coeff · m0) h0
-      rw [coeff_compP, if_pos (fun c _ => rfl), AddMonoidAlgebra.coeff_zero] at this
+      rw [coeff_compP, ite_eq_left (fun c _ => rfl), AddMonoidAlgebra.coeff_zero] at this
       exact (mem_support_iff.mp hm0) this
     · rw [WtSpC, mem_restrictSupport_iff]
       intro m hm
@@ -308,8 +303,7 @@ theorem exists_hwC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
   have hyS : y ∈ S := hS c hc d hd h hhS
   have hyW := glAct_wtspC LL j Cs c d (fun c => wt LL j c ms) h hhW
   have hne : y.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, support_eq_empty]
-    exact hy0
+    rwa [Finset.nonempty_iff_ne_empty, Ne, support_eq_empty]
   obtain ⟨m', hm'⟩ := hne
   have hw' : ∀ e ∈ Cs, wt LL j e m' = shiftW (fun c => wt LL j c ms) c d e := by
     have := hyW
@@ -327,7 +321,7 @@ theorem exists_hwC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
         ∑ e ∈ Cs, ((-((e : ℕ) : ℤ) * wt LL j e ms + (if c = e then -((e : ℕ) : ℤ) else 0)) -
           (if d = e then -((e : ℕ) : ℤ) else 0)) from
         Finset.sum_congr rfl (fun e _ => by simp only [shiftW]; split_ifs <;> ring),
-      Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq, if_pos hc, if_pos hd]
+      Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq, ite_eq_left hc, ite_eq_left hd]
     ring
   have hlt' : (c : ℕ) < (d : ℕ) := hlt
   have : ((c : ℕ) : ℤ) < ((d : ℕ) : ℤ) := by exact_mod_cast hlt'
@@ -426,16 +420,14 @@ theorem first_weight_le_of_support [NeZero r] (LL : Letters N) (j : ℕ) (Cs : F
     (h1 : h ∈ restrictSupport ℚ_[p] {m : Fin N × Fin r →₀ ℕ | ((wt LL j 0 m : ℤ) : WithTop ℤ) ≤ Mt})
     (h3 : h ∈ WtSpC p LL j Cs μ) : ((μ 0 : ℤ) : WithTop ℤ) ≤ Mt := by
   have hne : h.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, support_eq_empty]
-    exact hh0
+    rwa [Finset.nonempty_iff_ne_empty, Ne, support_eq_empty]
   obtain ⟨m, hm⟩ := hne
   rw [mem_restrictSupport_iff] at h1
   rw [WtSpC, mem_restrictSupport_iff] at h3
   have a := h1 (Finset.mem_coe.mpr hm)
   have b := h3 (Finset.mem_coe.mpr hm)
   rw [Set.mem_setOf_eq] at a b
-  rw [← b 0 h0]
-  exact a
+  rwa [← b 0 h0]
 
 theorem ycondC_fix [NeZero r] (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (h0 : (0 : Fin r) ∈ Cs)
     (Mt : WithTop ℤ) (T : Set (Fin r → ℤ))
@@ -466,8 +458,7 @@ theorem mem_typesLE_of_ycondC [NeZero r] (LL : Letters N) (j : ℕ) (Cs : Finset
   intro x hx
   have hfix := ycondC_fix LL j Cs h0 Mt _ P hP (fun la h => h) x hx
   have h1 : x ∈ LinearMap.range P := ⟨x, hfix⟩
-  rw [hP.2.1] at h1
-  exact h1
+  rwa [hP.2.1] at h1
 
 theorem typeProj_range_le_ycond [NeZero r] (LL : Letters N) (j : ℕ) (T : Set (Fin r → ℤ)) (Mt : WithTop ℤ)
     (P : MvPolynomial (Fin N × Fin r) ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial (Fin N × Fin r) ℚ_[p])
@@ -509,16 +500,14 @@ theorem glRest_mem (LL : Letters N) (j j' : ℕ) (hjj : j ≤ j') (c d : Fin r) 
   refine Subalgebra.sum_mem _ fun i _ => ?_
   by_cases h1 : (i : ℕ) < j
   · have h2 : (i : ℕ) < j' := lt_of_lt_of_le h1 hjj
-    simp only [if_pos h1, if_pos h2, sub_self]
-    exact Subalgebra.zero_mem _
+    simpa only [ite_eq_left h1, ite_eq_left h2, sub_self] using Subalgebra.zero_mem _
   · have hm : ∀ e : Fin r, (i, e) ∈ {v : Fin N × Fin r | j ≤ (v.1 : ℕ)} := fun e => not_lt.mp h1
     by_cases h2 : (i : ℕ) < j'
-    · simp only [if_pos h2, if_neg h1, sub_zero]
+    · simp only [ite_eq_left h2, ite_eq_right h1, sub_zero]
       split_ifs
       · exact Subalgebra.mul_mem _ (FockB.mulLeftX_mem (hm c)) (FockB.pderiv_mem (hm d))
       · exact Subalgebra.neg_mem _ (Subalgebra.mul_mem _ (FockB.mulLeftX_mem (hm d)) (FockB.pderiv_mem (hm c)))
-    · simp only [if_neg h2, if_neg h1, sub_zero]
-      exact Subalgebra.zero_mem _
+    · simpa only [ite_eq_right h2, ite_eq_right h1, sub_zero] using Subalgebra.zero_mem _
 
 theorem glRest_comm (LL : Letters N) (j j' : ℕ) (hjj : j ≤ j') (c d a b : Fin r)
     (x : MvPolynomial (Fin N × Fin r) ℚ_[p]) :

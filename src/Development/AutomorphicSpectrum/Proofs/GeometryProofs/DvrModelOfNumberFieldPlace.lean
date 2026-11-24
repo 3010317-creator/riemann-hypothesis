@@ -83,8 +83,7 @@ theorem isProper_of_coordTie {κ : Type} [Finite κ] {x : κ → Ω} (hall : ∀
   let f : S.R →+* V := (algebraMap S.R S.K).codRestrict V hV
   have hf : Function.Bijective f := by
     constructor
-    · intro a b h
-      exact IsFractionRing.injective S.R S.K (congrArg Subtype.val h)
+    · exact fun a b h => IsFractionRing.injective S.R S.K (congrArg Subtype.val h)
     · rintro ⟨y, hy⟩
       obtain ⟨a, rfl⟩ := (ValuationRing.mem_integer_iff S.R S.K y).1 hy
       exact ⟨a, rfl⟩
@@ -274,8 +273,7 @@ theorem irreducible_intAt {π : intAt v} (hπ : v.valuation F' (π : F') = WithZ
       intro c hc
       refine ⟨WithZero.log _, ?_, (WithZero.exp_log hc).symm⟩
       have := c.2
-      rw [← WithZero.exp_le_exp, WithZero.exp_log hc, WithZero.exp_zero]
-      exact this
+      rwa [← WithZero.exp_le_exp, WithZero.exp_log hc, WithZero.exp_zero]
     have hab : v.valuation F' (a : F') * v.valuation F' (b : F') = WithZero.exp (-1 : ℤ) := by
       rw [← map_mul, ← Subring.coe_mul, hπ]
     have hne : WithZero.exp (-1 : ℤ) ≠ 0 := WithZero.exp_ne_zero
@@ -308,8 +306,7 @@ theorem exists_localisation : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : 
     norm_num
   refine ⟨intAt v, inferInstance, inferInstance, isDVR_intAt v, alg, X', ξ', s, g, ⟨π, hπ1⟩, h1,
     irreducible_intAt v hπ, ?_, h2, h3, h4, h5, rfl, ?_, h6, fun p hp => h7 p fun b => hp _ b.2⟩
-  · intro a b h
-    exact Subtype.ext (ψ.injective h)
+  · exact fun a b h => Subtype.ext (ψ.injective h)
   · intro a
     constructor
     · rintro ⟨b, rfl⟩

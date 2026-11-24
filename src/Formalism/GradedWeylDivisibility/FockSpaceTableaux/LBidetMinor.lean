@@ -57,20 +57,19 @@ theorem sum_single_castLE {n s : ℕ} (hs : s ≤ n) :
   rw [Finset.sum_apply]
   simp only [initW]
   by_cases h : t.val < s
-  · rw [if_pos h, Finset.sum_eq_single ⟨t.val, h⟩]
+  · rw [ite_eq_left h, Finset.sum_eq_single ⟨t.val, h⟩]
     · have e : Fin.castLE hs ⟨t.val, h⟩ = t := Fin.ext rfl
       rw [e, Pi.single_eq_same]
     · intro q _ hq
-      rw [Pi.single_apply, if_neg]
+      rw [Pi.single_apply, ite_eq_right]
       intro htq
       apply hq
       subst htq
       exact Fin.ext rfl
-    · intro hq
-      exact absurd (Finset.mem_univ _) hq
-  · rw [if_neg h]
+    · exact fun hq => absurd (Finset.mem_univ _) hq
+  · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun q _ => ?_
-    rw [Pi.single_apply, if_neg]
+    rw [Pi.single_apply, ite_eq_right]
     intro htq
     apply h
     subst htq
@@ -87,8 +86,7 @@ theorem initMinor_isWeightedHomogeneous {R : Type*} [CommRing R] {r n s : ℕ}
   refine zsmul_mem ?_ _
   rw [mem_weightedHomogeneousSubmodule, ← sum_single_castLE hs]
   apply IsWeightedHomogeneous.prod
-  intro q _
-  exact isWeightedHomogeneous_X (R := R) (colW r n) (I (σ q), Fin.castLE hs q)
+  exact fun q _ => isWeightedHomogeneous_X (R := R) (colW r n) (I (σ q), Fin.castLE hs q)
 
 theorem algHom_det_of {R A B : Type*} [CommRing R] [CommRing A] [CommRing B] [Algebra R A]
     [Algebra R B] (φ : A →ₐ[R] B) {s : ℕ} (M : Fin s → Fin s → A) :
@@ -128,7 +126,7 @@ theorem initMinor_invariant {R : Type*} [CommRing R] {r n s : ℕ}
         intro h
         have hv := congrArg Fin.val h
         exact hq (Fin.ext hv)
-      rw [if_neg hne, if_neg hq]
+      rw [ite_eq_right hne, ite_eq_right hq]
   · congr 1
     ext p q
     simp only [Matrix.of_apply]
@@ -137,7 +135,7 @@ theorem initMinor_invariant {R : Type*} [CommRing R] {r n s : ℕ}
       apply hj
       rw [← h]
       exact q.isLt
-    rw [if_neg hne]
+    rw [ite_eq_right hne]
 
 theorem initMinor_mem {R : Type*} [CommRing R] {r n s : ℕ}
     (I : Fin s → Fin r) (hs : s ≤ n) :

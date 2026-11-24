@@ -260,16 +260,14 @@ theorem fibAt_lat_eq_stdLat : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] (Ω :
         · simp
         · intro b _ hb
           simp [hb]
-        · intro hi
-          exact absurd (Finset.mem_univ i) hi
+        · exact fun hi => absurd (Finset.mem_univ i) hi
       have hs : (fun j => ψ ((Pi.single i 1 : Fin g → regAt ξ ⟨_, h₁⟩) j)) = (Pi.single i 1 : Fin g → K) := by
         ext j
         by_cases hj : j = i
         · subst hj; simp
         · simp [hj]
       rw [hc, hs] at h3
-      rw [hMC]
-      exact h3
+      rwa [hMC]
 
 end GlobalTheory.CompanionTheory.Ar.Flat.CPoint
 end -- clump:auto

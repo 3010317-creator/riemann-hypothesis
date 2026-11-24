@@ -37,8 +37,7 @@ theorem GenericDimBound.proof (hmax : MaximalIdealHeightFG.Statement.{u}) :
     rw [weightedHomogeneousComponent_zero] at h0
     · have : AddMonoidAlgebra.coeff f 0 ∈ P.comap (C : O →+* S) := h0
       rw [hT, Ideal.mem_bot] at this
-      rw [constantCoeff_eq]
-      exact this
+      rwa [constantCoeff_eq]
     · intro v h
       have := congrFun h v.1
       simp [blockWeight] at this
@@ -129,8 +128,7 @@ theorem GenericDimBound.proof (hmax : MaximalIdealHeightFG.Statement.{u}) :
     obtain ⟨p, hplast, hplen⟩ :=
       Order.exists_series_of_le_height (⟨m, hm.isPrime⟩ : PrimeSpectrum A) hn
     have hlt : (p.map g hg).last < top := by
-      rw [LTSeries.last_map, hplast]
-      exact htop
+      rwa [LTSeries.last_map, hplast]
     have := Order.LTSeries.length_le_krullDim ((p.map g hg).snoc top hlt)
     simpa [hplen] using this
 

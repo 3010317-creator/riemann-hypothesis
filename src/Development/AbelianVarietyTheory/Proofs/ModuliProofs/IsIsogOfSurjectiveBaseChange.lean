@@ -92,9 +92,7 @@ theorem mul_comp [Surjective f] [IsSeparated G₂.hom] (h₁ : IsGrpPullback G�
   rw [← MonObj.mul_comp (l x) (l y) ψ'] at e₂
   replace e₂ : _ = (l x * l y).left ≫ ψ'.left ≫ φ₂ := e₂.trans (Category.assoc _ _ _)
   rw [hψ, ← Category.assoc, ← e₁] at e₂
-  refine over_ext q ?_
-  refine Eq.trans ?_ e₂.symm
-  exact (Category.assoc _ _ _).symm
+  exact over_ext q (Eq.trans (Category.assoc _ _ _).symm e₂.symm)
 
 theorem isMonHom [IsReduced S] [Surjective f] [Smooth G₁.hom] [IsSeparated G₂.hom] (h₁ : IsGrpPullback G₁' G₁ f φ₁)
     (h₂ : IsGrpPullback G₂' G₂ f φ₂) (ψ : G₁ ⟶ G₂) (ψ' : G₁' ⟶ G₂') [IsMonHom ψ']

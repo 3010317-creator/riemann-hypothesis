@@ -244,8 +244,7 @@ theorem keyEig_of (hT : TeichSt) (hJ : JointEigSt) : KeyEigSt := by
     intro j x
     obtain ⟨σ, hσ⟩ := scal K hT hc hd (S_mem K x) (w' j) (hw'e j)
     refine ⟨σ, ?_⟩
-    rw [← hPw' j, Matrix.mulVec_mulVec, ← P_comm, hPw' j]
-    exact hσ
+    rwa [← hPw' j, Matrix.mulVec_mulVec, ← P_comm, hPw' j]
   have hχ : ∀ j, ∃ χ : O →+* C, ∀ x, Matrix.mulVec (K.ρ x) (w' j) = χ x • w' j := by
     intro j
     by_cases h0 : w' j = 0
@@ -426,8 +425,7 @@ theorem tends_pow {s : ℕ → Matrix (Fin n) (Fin n) C} {x : Matrix (Fin n) (Fi
     intro w
     exact ⟨0, fun k _ => by simp only [sub_self]; exact VF.Ge.zero w⟩
   | succ m ih =>
-    simp only [pow_succ]
-    exact tends_mul (fun i j => ih i j) hs i j
+    simpa only [pow_succ] using tends_mul (fun i j => ih i j) hs i j
 
 theorem tends_shift {s : ℕ → C} {x : C} (h : Tends V s x) : Tends V (fun k => s (k + 1)) x := by
   unfold Tends at h ⊢
@@ -461,8 +459,7 @@ private theorem ge_inv_l_mul_of_ge_add_one {C : Type} [Field C] {V : VF C} {w : 
   have e1 : e = (V.l : C) * ((V.l : C)⁻¹ * e) := by
     rw [← mul_assoc, mul_inv_cancel₀ (l_cast_ne_zero V), one_mul]
   have h2 : ((w + 1 : ℝ) : WithTop ℝ) ≤ V.v (V.l : C) + V.v ((V.l : C)⁻¹ * e) := by
-    rw [← AddValuation.map_mul, ← e1]
-    exact he
+    rwa [← AddValuation.map_mul, ← e1]
   rw [V.4] at h2
   show ((w : ℝ) : WithTop ℝ) ≤ V.v ((V.l : C)⁻¹ * e)
   generalize V.v ((V.l : C)⁻¹ * e) = u at h2 ⊢
@@ -483,10 +480,8 @@ private theorem ge_add_matrix_mul_entry_of_ge {C : Type} [Field C] {V : VF C} {n
 private theorem ge_zero_matrix_one_entry {C : Type} [Field C] (V : VF C) (n : ℕ) (i j : Fin n) :
     V.Ge 0 ((1 : Matrix (Fin n) (Fin n) C) i j) := by
   by_cases h : i = j
-  · simp only [Matrix.one_apply, h, if_true]
-    exact VF.Ge.one
-  · simp only [Matrix.one_apply, h, if_false]
-    exact VF.Ge.zero 0
+  · simpa only [Matrix.one_apply, h, ite_true] using VF.Ge.one
+  · simpa only [Matrix.one_apply, h, ite_false] using VF.Ge.zero 0
 
 private theorem ge_zero_matrix_pow_entry_of_ge_zero {C : Type} [Field C] {V : VF C} {n : ℕ} {P : Matrix (Fin n) (Fin n) C}
     (hP : ∀ i j, V.Ge 0 (P i j)) (m : ℕ) : ∀ i j, V.Ge 0 ((P ^ m) i j) := by
@@ -524,8 +519,7 @@ theorem teich_holds : TeichSt := by
     intro a ha k
     induction k with
     | zero =>
-      rw [zero_add, pow_one]
-      exact ha
+      rwa [zero_add, pow_one]
     | succ k ih =>
       rw [pow_succ]
       exact hmul _ ih _ ha
@@ -570,8 +564,7 @@ theorem teich_holds : TeichSt := by
     induction e with
     | zero =>
       intro x hx y hy t ht h i j
-      simp only [pow_zero, pow_one, Nat.cast_zero, add_zero]
-      exact h i j
+      simpa only [pow_zero, pow_one, Nat.cast_zero, add_zero] using h i j
     | succ e ih =>
       intro x hx y hy t ht h i j
       have hpos : 0 < V.l ^ e := pow_pos V.3.pos e
@@ -628,8 +621,7 @@ theorem teich_holds : TeichSt := by
     intro k
     induction k with
     | zero =>
-      rw [hs 0, pow_zero, pow_one, sub_self, smul_zero]
-      exact h0
+      rwa [hs 0, pow_zero, pow_one, sub_self, smul_zero]
     | succ k ih =>
       have e : (V.l : C)⁻¹ • (b - s (k + 1)) =
           (V.l : C)⁻¹ • (b - s k) - (V.l : C)⁻¹ • (s k ^ V.l ^ d - s k) := by

@@ -86,8 +86,7 @@ theorem exists_nhds_one_mul_mem_iff {R : Type} [Group R] [TopologicalSpace R]
   · intro h
     have : w⁻¹ * (w * x) ∈ U := hVU (Set.mul_mem_mul (Set.mem_inv.1 hw') h)
     simpa using this
-  · intro h
-    exact hVU (Set.mul_mem_mul hw h)
+  · exact fun h => hVU (Set.mul_mem_mul hw h)
 
 theorem isLocallyConstant_indicator_one {R : Type} [TopologicalSpace R] {U : Set R}
     (hU : IsClopen U) : IsLocallyConstant (U.indicator (fun _ => (1 : ℝ))) := by
@@ -145,8 +144,7 @@ theorem exists_cutoff : ∀ (R S : Type) [Group R] [TopologicalSpace R] [IsTopol
   · exact IsLocallyConstant.comp₂ hβlc hFlc (· / ·)
   · refine HasCompactSupport.intro hUk fun x hx => ?_
     simp [hβ, hx]
-  · intro g
-    exact div_nonneg (hβ0 g) (integral_nonneg fun s => hβ0 _)
+  · exact fun g => div_nonneg (hβ0 g) (integral_nonneg fun s => hβ0 _)
   · intro z hz s₀
     have h1 : ∫ s, β (z * i s₀ * i s) / F (z * i s₀ * i s) ∂ν
         = ∫ s, β (z * i s) / F (z * i s) ∂ν := by

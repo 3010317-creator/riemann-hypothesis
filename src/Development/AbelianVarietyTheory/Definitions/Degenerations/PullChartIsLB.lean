@@ -165,11 +165,9 @@ theorem pullChart_isLB {X Y : Scheme.{0}} (f : Y ⟶ X) {L : LB X} (hL : L.IsLB)
   · show ⨆ l, f ⁻¹ᵁ L.U l = ⊤
     rw [← Scheme.Hom.preimage_iSup, hL.cover, Scheme.Hom.preimage_top]
   · have e := congrArg (pullU f _) (hL.g_self i)
-    rw [map_one, pullU_res_eq] at e
-    exact e
+    rwa [map_one, pullU_res_eq] at e
   · have e := congrArg (pullU f _) (hL.cocycle i j l)
-    rw [map_mul, pullU_res_eq, pullU_res_eq, pullU_res_eq] at e
-    exact e
+    rwa [map_mul, pullU_res_eq, pullU_res_eq, pullU_res_eq] at e
 
 theorem FibPre.H_isLB {k : Type} [Field k] (Φ : FibPre k) (d : ℕ) : (Φ.H d).IsLB :=
   npw_isLB (pullChart_isLB Φ.D.q.left Φ.isLB) d

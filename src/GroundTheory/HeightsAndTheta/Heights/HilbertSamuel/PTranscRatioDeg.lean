@@ -89,8 +89,7 @@ theorem transcendental_subfieldClosure {E : Type*} [Field E] {ι : Type*} (u : �
   have : IsFractionRing R Q := IsFractionRing.of_field R Q (fun z => by
     obtain ⟨y, hy, z', hz', h⟩ := Subfield.mem_closure_iff.1 z.2
     exact ⟨⟨y, (hR y).2 hy⟩, ⟨z', (hR z').2 hz'⟩, Subtype.ext (by rw [Subfield.coe_div]; exact h.symm)⟩)
-  intro halg
-  exact ht ((IsFractionRing.isAlgebraic_iff R Q E).2 halg)
+  exact fun halg => ht ((IsFractionRing.isAlgebraic_iff R Q E).2 halg)
 
 theorem transcendental_of_subfield {E : Type*} [Field E] {S : Type*} [CommRing S] [Algebra S E]
     (Q : Subfield E) (h : ∀ x : S, algebraMap S E x ∈ Q) (hinj : Function.Injective (algebraMap S E))
@@ -99,8 +98,7 @@ theorem transcendental_of_subfield {E : Type*} [Field E] {S : Type*} [CommRing S
   let φ : S →+* Q := (algebraMap S E).codRestrict Q h
   have hφ : Function.Injective φ := fun a b hab => hinj (congrArg Subtype.val hab :)
   refine ht ⟨p.map φ, (Polynomial.map_ne_zero_iff hφ).2 hp0, ?_⟩
-  rw [aeval_def, eval₂_map]
-  exact hp
+  rwa [aeval_def, eval₂_map]
 
 
 open scoped IntermediateField.algebraAdjoinAdjoin in
@@ -168,8 +166,7 @@ theorem finrank_adjoin_eq_of_transcendental {K E : Type*} [Field K] [Field E] [A
     linearIndependent_adjoin_of_transcendental A ht a.linearIndependent
   by_cases hfin : Module.Finite K A
   · have H : A.LinearDisjoint L := IntermediateField.LinearDisjoint.of_basis_left a hind
-    have hr := H.adjoin_rank_eq_rank_left_of_isAlgebraic_left
-    exact congrArg Cardinal.toNat hr
+    exact congrArg Cardinal.toNat H.adjoin_rank_eq_rank_left_of_isAlgebraic_left
   · rw [Module.finrank_of_not_finite hfin]
     set M := IntermediateField.adjoin L (A : Set E)
     letI : Module.Free L M := Module.Free.of_divisionRing L M
@@ -278,8 +275,7 @@ theorem TranscRatioDeg.proof : TranscRatioDeg.Statement := by
     constructor
     · rintro ⟨y, rfl⟩
       exact (hL _).1 y.2
-    · intro hx
-      exact ⟨⟨x, (hL x).2 hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨x, (hL x).2 hx⟩, rfl⟩
 
   have hQ : ∀ x ∈ fnField u, x ∈ Subfield.closure (Set.range u) := hfn u _ fun i j =>
     div_mem (Subfield.subset_closure ⟨i, rfl⟩) (Subfield.subset_closure ⟨j, rfl⟩)

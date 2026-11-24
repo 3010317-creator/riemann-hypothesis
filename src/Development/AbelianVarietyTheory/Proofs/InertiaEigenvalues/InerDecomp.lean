@@ -87,10 +87,8 @@ theorem iner_decomp : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K K' : FinE
     have e := InfiniteGalois.fixingSubgroup_fixedField SC
     have : (g : GQ l) ∈ (IntermediateField.fixedField (SC : Subgroup (GQ l))).fixingSubgroup := by
       rw [IntermediateField.mem_fixingSubgroup_iff]
-      intro x hx
-      exact hfix x (hfe hx)
-    rw [e] at this
-    exact this
+      exact fun x hx => hfix x (hfe hx)
+    rwa [e] at this
   haveI := GlobalTheory.FrobGen.normal_fix (l := l)
   have hgS' : (g : GQ l) ∈ ((MaximalUnramifiedExtension l).fixingSubgroup : Set (GQ l)) * ((K'.1).fixingSubgroup : Set (GQ l)) := by
     rw [← Subgroup.normal_mul]; exact hgS

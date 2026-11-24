@@ -274,19 +274,12 @@ theorem topIso_inv_appTop {X Z : Scheme.{0}} (W : X.Opens) (y : Z ⟶ W.toScheme
 
 theorem topIso_inv_restrict_appTop {X Y : Scheme.{0}} (π : X ⟶ Y) (U : Y.Opens) :
     U.topIso.inv ≫ (π ∣_ U).appTop = π.app U ≫ (π ⁻¹ᵁ U).topIso.inv := by
-  have h0 : (⊤ : (π ⁻¹ᵁ U).toScheme.Opens) ≤ (π ⁻¹ᵁ U).ι ⁻¹ᵁ (π ⁻¹ᵁ U) := fun x _ => x.2
-  have h1 : ∀ g : (π ⁻¹ᵁ U).toScheme ⟶ Y, g = (π ⁻¹ᵁ U).ι ≫ π → ∀ h : ⊤ ≤ g ⁻¹ᵁ U,
-      g.appLE U ⊤ h = π.app U ≫ (π ⁻¹ᵁ U).topIso.inv := by
-    rintro _ rfl h
-    rw [topIso_inv_eq_appLE _ h0, Scheme.Hom.app_eq_appLE, Scheme.Hom.appLE_comp_appLE]
-  rw [topIso_inv_appTop U (π ∣_ U) (fun x _ => ((π ∣_ U) x).2)]
-  exact h1 _ (morphismRestrict_ι π U) _
+  exact (GlobalTheory.TorusTrivial.app_comp_topIso_inv π U).symm
 
 theorem evU_val_restrict {X Z : Scheme.{0}} (W : X.Opens) (y : Z ⟶ W.toScheme)
     (h : ∀ z, (y ≫ W.ι) z ∈ W) (r : Γ(X, W)ˣ) :
     (evU (y ≫ W.ι) h r).val = y.appTop.hom (W.topIso.inv.hom r.val) := by
-  have e := congrArg (fun φ => φ.hom r.val) (topIso_inv_appTop W y (fun z _ => h z))
-  exact e.symm
+  exact (congrArg (fun φ => φ.hom r.val) (topIso_inv_appTop W y (fun z _ => h z))).symm
 
 theorem unit_descends : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) [Flat π] [Surjective π] [IsAffineHom π] (U : Y.Opens) (r : Γ(X, π ⁻¹ᵁ U)ˣ),
     (∀ (Z : Scheme.{0}) (g₁ g₂ : Z ⟶ X) (h₁ : ∀ z, g₁ z ∈ π ⁻¹ᵁ U) (h₂ : ∀ z, g₂ z ∈ π ⁻¹ᵁ U),
@@ -513,9 +506,9 @@ theorem exists_gen_of_val_eq (hL : L.IsLB) {E F : Scheme.{0}} (π : E ⟶ F) (hF
     have hJ : Good L z J := by
       intro ψ
       by_cases hψ : ψ z ∈ L.U (j PUnit.unit)
-      · simp only [J, if_pos hψ]
+      · simp only [J, ite_eq_left hψ]
         exact hψ
-      · simp only [J, if_neg hψ]
+      · simp only [J, ite_eq_right hψ]
         exact (exists_chart hL (ψ z)).choose_spec
     set_option synthInstance.maxHeartbeats 200000 in
     have hj : ∀ (g : Z ⟶ E), g z ∈ π ⁻¹ᵁ (L.pull φ).U j → (fun k : PUnit => J (g ≫ (π ≫ φ))) = j := by
@@ -525,7 +518,7 @@ theorem exists_gen_of_val_eq (hL : L.IsLB) {E F : Scheme.{0}} (π : E ⟶ F) (hF
         have := (hmem j (g z)).2 hg
         simp [LB.pull, LB.LinComb, LB.wchart] at this
         simpa using this PUnit.unit
-      simp only [J, if_pos hin]
+      simp only [J, ite_eq_left hin]
     have hv := hval Z g₁ g₂ hπ z J hJ
     unfold val at hv
     rw [hj g₁ (h₁ z)] at hv
@@ -771,8 +764,7 @@ theorem exists_pairing {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A �
 theorem bar_bar (D : Datum p) (a : 𝓞 D.F) : D.bar (D.bar a) = a := by
   apply Subtype.ext
   have h1 := D.bar_eq (D.bar a)
-  rw [D.bar_eq a, IsCMField.complexConj_apply_apply] at h1
-  exact h1
+  rwa [D.bar_eq a, IsCMField.complexConj_apply_apply] at h1
 
 theorem uIdeal_conj (D : Datum p) (r : ℤ) : uIdeal D (D.tr - r) = (uIdeal D r).map (D.bar : 𝓞 D.F →+* 𝓞 D.F) := by
   rw [uIdeal, uIdeal, Ideal.map_span, Set.image_pair]
@@ -1221,8 +1213,7 @@ private theorem opensRange_πp :
   have h := basicOpen_eq_of_affine (R := CommRingCat.of R) ((p : ℕ) : R)
   rw [map_natCast] at h
   rw [h]
-  apply SetLike.coe_injective
-  exact PrimeSpectrum.localization_away_comap_range (Rp p R) ((p : ℕ) : R)
+  exact SetLike.coe_injective (PrimeSpectrum.localization_away_comap_range (Rp p R) ((p : ℕ) : R))
 
 private theorem preimage_bo {X : Scheme.{0}} (s : X ⟶ Sp R) :
     s ⁻¹ᵁ (Sp R).basicOpen ((p : ℕ) : Γ(Sp R, ⊤)) = X.basicOpen ((p : ℕ) : Γ(X, ⊤)) := by
@@ -1241,8 +1232,7 @@ private theorem range_sU {b : Base D R} (M : Model b N) :
     have h2 : (Uo M).ι z ∈ Set.range (Uo M).ι := ⟨z, rfl⟩
     rwa [Scheme.Opens.range_ι] at h2
   have h3 : M.s ((Uo M).ι z) ∈ (πp p R).opensRange := by
-    rw [opensRange_πp]
-    exact h1
+    rwa [opensRange_πp]
   simpa using h3
 
 private def sU {b : Base D R} (M : Model b N) : (Uo M).toScheme ⟶ Sp (Rp p R) :=

@@ -65,9 +65,9 @@ theorem unitae_nrm (hU : Unr E) (n : ℕ) (w : Pl E) (δ : GL (Fin n) E) :
     nrmL n w (locEl n w δ) = GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) (δ * thE E n δ) := by
   by_cases hs : IsSplitAt w
   · unfold nrmL locEl
-    rw [if_pos hs, if_pos hs]
+    rw [ite_eq_left hs, ite_eq_left hs]
   · unfold nrmL locEl
-    rw [if_neg hs, if_neg hs]
+    rw [ite_eq_right hs, ite_eq_right hs]
     obtain ⟨-, -, -, hns, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
     obtain ⟨hp, -⟩ := hns hs
     rw [map_mul, thE, GlobalTheory.ThetaPull.map_thetaGL (algebraMap E (w.adicCompletion E)) _ (cj w) (fun x => (hp x).symm)]
@@ -87,8 +87,7 @@ theorem unitae_single (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E) (hsep : (polE �
       u * (nrmL n w (locEl n w δ)).val.charpoly + v * derivative (nrmL n w (locEl n w δ)).val.charpoly = 1 := by
     have e : (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) (δ * thE E n δ)).val.charpoly =
         (polE δ).map (algebraMap E (w.adicCompletion E)) := Matrix.charpoly_map _ _
-    rw [hN, e]
-    exact h3
+    rwa [hN, e]
   have hy : locEl n w δ ∈ GlobalTheory.LFun.KGL w (n := n) := by
     unfold locEl
     split_ifs
@@ -98,36 +97,32 @@ theorem unitae_single (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E) (hsep : (polE �
   refine ⟨hy, ?_, ?_⟩
   · intro g hg
     by_cases hs : IsSplitAt w
-    · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
-      have hnr : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [if_pos hs]
+    · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
+      have hnr : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [ite_eq_left hs]
       rw [hθ, MonoidHom.id_apply] at hg
       rw [hnr] at hbez
       obtain ⟨t, ht, k, hk, hgk⟩ := GlobalTheory.SplitUniq.splitUniq E n w _ g hy hbez hg
       refine ⟨t, ?_, ?_⟩
       · show t * locEl n w δ = locEl n w δ * thL n w t
-        rw [hθ, MonoidHom.id_apply]
-        exact ht
-      · rw [hgk, inv_mul_cancel_left]
-        exact hk
+        rwa [hθ, MonoidHom.id_apply]
+      · rwa [hgk, inv_mul_cancel_left]
     · obtain ⟨t, ht, k, hk, hgk⟩ := GlobalTheory.InertUniq.eq_twCent_mul_KGL E hU n w hs _ g hy hbez hg
       refine ⟨t, ht, ?_⟩
-      rw [hgk, inv_mul_cancel_left]
-      exact hk
+      rwa [hgk, inv_mul_cancel_left]
   · intro t ht hc
     have ht' : t * locEl n w δ = locEl n w δ * thL n w t := ht
     have hcomm : t * nrmL n w (locEl n w δ) = nrmL n w (locEl n w δ) * t := by
       by_cases hs : IsSplitAt w
-      · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
+      · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
         rw [hθ, MonoidHom.id_apply] at ht'
         unfold nrmL
-        rw [if_pos hs]
-        exact ht'
-      · have hθ : thL n w = thetaGL n (cj w) := by unfold thL; rw [if_neg hs]
+        rwa [ite_eq_left hs]
+      · have hθ : thL n w = thetaGL n (cj w) := by unfold thL; rw [ite_eq_right hs]
         obtain ⟨-, hinv, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
         rw [hθ] at ht'
         have hth := GlobalTheory.ThetaPull.thetaGL_thetaGL (a := n) (cj w) hinv t
         unfold nrmL
-        rw [if_neg hs]
+        rw [ite_eq_right hs]
         calc t * (locEl n w δ * thetaGL n (cj w) (locEl n w δ))
             = locEl n w δ * thetaGL n (cj w) t * thetaGL n (cj w) (locEl n w δ) := by rw [← mul_assoc, ht']
           _ = locEl n w δ * thetaGL n (cj w) (t * locEl n w δ) := by rw [map_mul, mul_assoc]

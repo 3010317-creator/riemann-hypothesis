@@ -110,17 +110,7 @@ section -- clump:auto
 theorem UpperTheory.Reformulated.B.LocallyConstantOfOpen.ho_locConst :
     ∀ {Γ A : Type} [inst : Group Γ] [inst_1 : TopologicalSpace Γ]
     [IsTopologicalGroup Γ] [inst_3 : Group A] (ψ : Γ →* A), IsOpen (↑ψ.ker : Set Γ) → IsLocallyConstant (⇑ψ : Γ → A) := by
-  intro Γ A _ _ _ _ ψ h
-  rw [IsLocallyConstant.iff_exists_open]
-  intro x
-  refine ⟨(fun y => x⁻¹ * y) ⁻¹' (ψ.ker : Set Γ),
-    h.preimage (continuous_const.mul continuous_id), ?_, ?_⟩
-  · change x⁻¹ * x ∈ ψ.ker
-    simp
-  · intro y hy
-    have hy' : ψ (x⁻¹ * y) = 1 := hy
-    rw [map_mul, map_inv, inv_mul_eq_one] at hy'
-    exact hy'.symm
+  exact UpperTheory.Reformulated.B.LocallyConstantOfKernel.lc_of_ker
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.LocallyConstantOfOpen =====
@@ -164,8 +154,7 @@ private theorem ho_val {Ω : Type} [Field Ω] [CharZero Ω] {A : ValuationSubrin
     A.valuation (n : Ω) < 1 ↔ ((n : ℕ) : 𝓞 ℚ) ∈ v.asIdeal := by
   have h := hv ((n : ℕ) : 𝓞 ℚ)
   have e : algebraMap ℚ Ω (((n : ℕ) : 𝓞 ℚ) : ℚ) = (n : Ω) := by simp
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 private theorem ho_root {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] {u : O} {n : ℕ} (hn : IsUnit (n : O))
     (hu : u ^ n = 1) (h : residue O u = 1) : u = 1 := by
@@ -236,8 +225,7 @@ private theorem ho_odd {O : Type} [CommRing O] [IsDomain O] {N : ℕ} [NeZero N]
   rintro rfl
   have h4 := (partOrd _ l hl ψ (MulChar.orderOf_pos ψ)).1
   have h5 := ((compOrd O N (kap l ψ) 2 hpp).2.2.2 l _ hl h2.symm (h4 ▸ pow_orderOf_eq_one _) h3).1
-  have h6 := (Nat.modEq_iff_dvd' (by norm_num)).1 h5.symm
-  exact hl.one_lt.ne' (Nat.dvd_one.1 h6)
+  exact hl.one_lt.ne' (Nat.dvd_one.1 ((Nat.modEq_iff_dvd' (by norm_num)).1 h5.symm))
 
 private theorem ho_teich (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [hl : Fact l.Prime] {O : Type} [CommRing O]
     [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] {N : ℕ} [NeZero N] (e : ℕ)
@@ -296,8 +284,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.hostFrame_ok :
     simp only [hη]
     exact _root_.UpperTheory.Reformulated.B.LocallyConstantOfOpen.ho_locConst _ (ho_dir_open Ω _)
   · rw [← hF.π]
-    simp only [hΨ]
-    exact ho_psi_cont Ω e ψ n
+    simpa only [hΨ] using ho_psi_cont Ω e ψ n
   · obtain ⟨j, hj⟩ := hσ'
     have h : σ * σ = 1 := AlgEquiv.ext fun x => j.injective (by
       have h1 : j (σ (σ x)) = starRingEnd ℂ (j (σ x)) := hj (σ x)

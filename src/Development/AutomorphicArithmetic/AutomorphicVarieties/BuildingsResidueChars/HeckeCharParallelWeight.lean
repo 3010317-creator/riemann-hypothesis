@@ -90,8 +90,7 @@ private theorem eventually_unit_pow_factorial_sub_one_mem {F : Type} [Field F] [
   have h3 : (Ideal.Quotient.mk I (u : NumberField.RingOfIntegers F)) ^
       Nat.card (NumberField.RingOfIntegers F ⧸ I)ˣ = 1 := by
     have := congrArg Units.val h1
-    rw [Units.val_pow_eq_pow_val, Units.coe_map, Units.val_one] at this
-    exact this
+    rwa [Units.val_pow_eq_pow_val, Units.coe_map, Units.val_one] at this
   rw [hc, pow_mul, map_pow, map_pow, h3, one_pow]
 
 private theorem tendsto_unit_pow_factorial_finiteAdele_one {F : Type} [Field F] [NumberField F]
@@ -145,18 +144,15 @@ private theorem infDiag_inv_unit_eq_infinite_one {F : Type} [Field F] [NumberFie
     change q _ = _
     rw [map_prod, Finset.prod_eq_single w]
     · exact Pi.mulSingle_eq_same (M := fun v : NumberField.InfinitePlace F => v.Completion) w _
-    · intro b _ hb
-      exact Pi.mulSingle_eq_of_ne (Ne.symm hb) _
-    · intro h
-      exact absurd (Finset.mem_univ w) h
+    · exact fun b _ hb => Pi.mulSingle_eq_of_ne (Ne.symm hb) _
+    · exact fun h => absurd (Finset.mem_univ w) h
   · change p2 _ = _
     rw [map_prod]
     exact Finset.prod_eq_one (fun _ _ => rfl)
 
 private theorem one_le_of_tendsto_pow_factorial_one (r : ℝ) (h0 : 0 ≤ r)
     (h : Filter.Tendsto (fun k : ℕ => r ^ (Nat.factorial k)) Filter.atTop (nhds 1)) : 1 ≤ r := by
-  by_contra hr
-  push_neg at hr
+  by_contra! hr
   have hf : Filter.Tendsto (fun k : ℕ => Nat.factorial k) Filter.atTop Filter.atTop :=
     Filter.tendsto_atTop_mono Nat.self_le_factorial Filter.tendsto_id
   have h2 := (tendsto_pow_atTop_nhds_zero_of_lt_one h0 hr).comp hf

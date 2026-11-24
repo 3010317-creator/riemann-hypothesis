@@ -112,11 +112,9 @@ theorem discNeZero_of (hp : PDerivZero) (hi : PInjective) : DiscNeZero := by
   have n3 : (L.ω₁ + L.ω₂) / 2 ∉ L.lattice :=
     notMem_of_rat L 2⁻¹ 2⁻¹ (by push_cast; ring) (by first | norm_num)
   have d1 : 2 * (L.ω₁ / 2) ∈ L.lattice := by
-    rw [show 2 * (L.ω₁ / 2) = L.ω₁ by ring]
-    exact hw1
+    rwa [show 2 * (L.ω₁ / 2) = L.ω₁ by ring]
   have d2 : 2 * (L.ω₂ / 2) ∈ L.lattice := by
-    rw [show 2 * (L.ω₂ / 2) = L.ω₂ by ring]
-    exact hw2
+    rwa [show 2 * (L.ω₂ / 2) = L.ω₂ by ring]
   have d3 : 2 * ((L.ω₁ + L.ω₂) / 2) ∈ L.lattice := by
     rw [show 2 * ((L.ω₁ + L.ω₂) / 2) = L.ω₁ + L.ω₂ by ring]
     exact add_mem hw1 hw2

@@ -112,8 +112,7 @@ theorem C_nil (M : ι → Module.End ℂ U) (hc : ∀ i j, Commute (M i) (M j)) 
     refine lt_of_le_of_ne inf_le_left fun h => hMv ?_
     have h2 : v ∈ P' := h ▸ hv
     have h3 := (Submodule.mem_inf.1 h2).2
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero] at h3
-    exact h3
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero] at h3
   have hne : P' ≠ ⊥ := by
     obtain ⟨u, hu, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP
     have hex : ∃ k, (((M i - 1) ^ k : Module.End ℂ U)) u = 0 := hnil i u hu
@@ -394,10 +393,8 @@ theorem E_cont_join {n : ℕ} {S : Finset ℕ} (q : ℕ) :
     Continuous fun b : {x : PPos n S // ¬ IsTop q x} → Ad E => (parGL (joinPos (r := q) 0 b) : GA E n) := by
   refine continuous_parGL.comp (continuous_pi fun x => ?_)
   by_cases hx : IsTop q x
-  · simp only [joinPos, dif_pos hx]
-    exact continuous_const
-  · simp only [joinPos, dif_neg hx]
-    exact continuous_apply _
+  · simpa only [joinPos, dite_eq_left hx] using continuous_const
+  · simpa only [joinPos, dite_eq_right hx] using continuous_apply _
 
 theorem E_pos_top {N p q : ℕ} (hpq : p < q) (x : PPos N {p, q}) (hx : ¬ IsTop q x) :
     (x.1.1 : ℕ) < p ∧ p ≤ (x.1.2 : ℕ) ∧ (x.1.2 : ℕ) < q := by
@@ -674,8 +671,7 @@ theorem exp_left (hD : Dict) (hT : FinTr) {r s : ℕ} (hr : 0 < r) (hs : 0 < s) 
     (An.ctn r₁ φ.1) B hadd hsm c₁ 0 hBL F' hF'2 hF'ne hF'3
   refine ⟨G, hset ▸ hG, hGne, fun t g => ?_⟩
   have := congrFun (hGeig t) g
-  rw [E_L_apply, add_zero] at this
-  exact this
+  rwa [E_L_apply, add_zero] at this
 
 variable {r s : ℕ}
 
@@ -836,8 +832,7 @@ theorem exp_right (hD : Dict) (hT : FinTr) {r s : ℕ} (hr : 0 < r) (hs : 0 < s)
     (An.ctn (r + r₂) φ.1) B hadd hsm c₂ c hBL F' hF'2 hF'ne hF'3
   refine ⟨G, hset ▸ hG, hGne, fun t g => ?_⟩
   have := congrFun (hGeig t) g
-  rw [E_L_apply, add_comm c₂ c] at this
-  exact this
+  rwa [E_L_apply, add_comm c₂ c] at this
 
 end PositivityTheory.Rg.Rs.SliceClasses
 

@@ -98,8 +98,7 @@ theorem relIndex_ne_zero {R W : Type} [CommRing R] [AddCommGroup W] [Module R W]
       Submodule.mem_smul_pointwise_iff_exists] at hx
     obtain ⟨y, -, rfl⟩ := hx
     exact hP y y.2
-  intro h0
-  exact h2 (Nat.eq_zero_of_zero_dvd (h0 ▸ AddSubgroup.index_dvd_of_le h3))
+  exact fun h0 => h2 (Nat.eq_zero_of_zero_dvd (h0 ▸ AddSubgroup.index_dvd_of_le h3))
 
 section
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -248,8 +247,7 @@ theorem shares : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
     have h6 : ((R.filter S.InZ).card : ℝ) / R.card * (S.q : ℝ) ^ S.a - 1 =
         (((R.filter S.InZ).card : ℝ) - R.card / (S.q : ℝ) ^ S.a) / (R.card / (S.q : ℝ) ^ S.a) := by
       field_simp
-    rw [h6, abs_div, abs_of_pos (div_pos h0 hq), div_le_iff₀ (div_pos h0 hq)]
-    exact h3
+    rwa [h6, abs_div, abs_of_pos (div_pos h0 hq), div_le_iff₀ (div_pos h0 hq)]
   · obtain ⟨R, h0, h1, h2⟩ := main (S.a.toNat + 1) (by omega) (by omega)
     have h3 := (_root_.GlobalTheory.HL.QuadricShare.shares L r k S hk J d Λ hT (S.a.toNat + 1) R S.InZ (by omega) (fun _ => Iff.rfl)
       h1 (fun u hu hu' => h2 u ⟨hu, hu'⟩)).2.1
@@ -299,7 +297,6 @@ theorem shares : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
     have h6 : ∀ c : ℝ, c / R.card * (S.q : ℝ) ^ S.a = c / (R.card / (S.q : ℝ) ^ S.a) := by
       intro c
       field_simp
-    rw [h4, norm_div, Complex.norm_natCast, h6, div_le_iff₀ (div_pos h0 hq)]
-    exact h3
+    rwa [h4, norm_div, Complex.norm_natCast, h6, div_le_iff₀ (div_pos h0 hq)]
 
 end GlobalTheory.HL.FibU

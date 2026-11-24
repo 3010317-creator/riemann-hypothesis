@@ -152,12 +152,10 @@ theorem conj_eq_of_path (hH : Hm.det ≠ 0) (hP : P.det ≠ 0) (ha : a.det ≠ 0
     have := hinv2 0
     rw [h0, Matrix.mul_one, Matrix.nonsing_inv_mul _ ha.isUnit] at this
     show P * u 0 * _ = 1
-    rw [h0]
-    exact this
+    rwa [h0]
   have := (hδ 1).2
   rw [hc, hF0, Matrix.one_mul] at this
-  have h3 := congrArg (P⁻¹ * ·) this
-  simpa only [Matrix.nonsing_inv_mul_cancel_left _ _ hP.isUnit] using h3
+  simpa only [Matrix.nonsing_inv_mul_cancel_left _ _ hP.isUnit] using congrArg (P⁻¹ * ·) this
 
 theorem polar (x y : Fin n → ℂ) : vecMulVec x (star y) = (1 / 2 : ℂ) •
     ((vecMulVec (x + y) (star (x + y)) - vecMulVec x (star x) - vecMulVec y (star y)) +

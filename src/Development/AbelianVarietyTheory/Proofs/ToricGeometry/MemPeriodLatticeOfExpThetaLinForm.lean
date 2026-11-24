@@ -87,8 +87,7 @@ theorem autFactor_eq_zero_mul_exp {g : ℕ} (a b : Fin g → ℝ) (τ : Matrix (
 
 theorem autFactor_ne_zero' {g : ℕ} (a b : Fin g → ℝ) (τ : Matrix (Fin g) (Fin g) ℂ) (n n' : Fin g → ℤ)
     (z : Fin g → ℂ) : autFactor a b τ n n' z ≠ 0 := by
-  simp only [autFactor, eC]
-  exact mul_ne_zero (Complex.exp_ne_zero _) (Complex.exp_ne_zero _)
+  simpa only [autFactor, eC] using mul_ne_zero (Complex.exp_ne_zero _) (Complex.exp_ne_zero _)
 
 theorem ofIntVec_single' {g : ℕ} (i : Fin g) : ofIntVec (Pi.single i 1 : Fin g → ℤ) = Pi.single i 1 := by
   funext j
@@ -134,7 +133,7 @@ theorem mem_periodLattice_of_exp_thetaLinForm {g : ℕ} {τ : Matrix (Fin g) (Fi
     rw [hm]
     congr 1
     simp only [dotProduct, mulVec, hk, ofIntVec, Pi.single_apply, mul_ite, _root_.mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.mul_sum]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [hτ.apply i j]
     ring
@@ -320,8 +319,7 @@ theorem thetaBundle_kTriv :
     exact ⟨(n, n'), hn⟩
   choose p hp using hmem
   have hpn : ∀ n n' : Fin g → ℤ, ∀ hl : τ *ᵥ ofIntVec n + ofIntVec n' ∈ u.Λ, (p ⟨_, hl⟩).1 = n := by
-    intro n n' hl
-    exact ((huniq _ _ _ _ (hp ⟨_, hl⟩)).1).symm
+    exact fun n n' hl => ((huniq _ _ _ _ (hp ⟨_, hl⟩)).1).symm
   have hlat : ∀ n n' : Fin g → ℤ, τ *ᵥ ofIntVec n + ofIntVec n' ∈ u.Λ := fun n n' => (hΛ _).2 ⟨n, n', rfl⟩
 
   let θ : (Fin g → Fin N) → (Fin g → ℂ) → ℂ := fun c z =>
@@ -335,8 +333,7 @@ theorem thetaBundle_kTriv :
       trivial
     obtain ⟨c, hc⟩ := TopologicalSpace.Opens.mem_iSup.mp hx
     refine ⟨c, fun y _ => ?_⟩
-    rw [hsub y x₀]
-    exact hc
+    rwa [hsub y x₀]
 
   have hsep : ∀ w : Fin g → ℂ, (∀ (U : X.left.Opens) (f : Γ(X.left, U)), ⊤ ≤ (u.ex 0).left ⁻¹ᵁ U →
       fderiv ℂ (fun z => valAt' (u.ex z).left U f) 0 w = 0) → w = 0 := by

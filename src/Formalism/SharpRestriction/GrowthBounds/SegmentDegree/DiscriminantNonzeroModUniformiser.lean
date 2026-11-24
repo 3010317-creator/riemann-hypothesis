@@ -198,8 +198,7 @@ theorem late_vectors_distinct_tops : LateVectorsDistinctLeadingTerms := by
       simp only [Finset.coe_range, Set.mem_Iio] at ha hb
       exact (hinjfr _ _ a ha b hb h).2
     have hc := Finset.card_le_card hsub
-    rw [Finset.card_image_of_injOn hinj', Finset.card_range] at hc
-    exact hc
+    rwa [Finset.card_image_of_injOn hinj', Finset.card_range] at hc
   simp only [row_eq]
   generalize evL X.F j x = l at hmem hsort hlen ⊢
   have hNr : r ≤ l.length := hlen ▸ hlenr
@@ -218,8 +217,7 @@ theorem late_vectors_distinct_tops : LateVectorsDistinctLeadingTerms := by
       · rw [h]
       · rw [hget _ hm, hget _ hk2]
         exact (hpw _ _ hm hk2 h).le
-    · by_contra hz
-      push_neg at hz
+    · by_contra! hz
       have hy1S := hinS _ hm
       have hzS := hinS _ hk2
       obtain ⟨hy1lo, -, -⟩ := hSlo _ hy1S
@@ -246,8 +244,7 @@ theorem late_vectors_distinct_tops : LateVectorsDistinctLeadingTerms := by
           rw [hT, Finset.mem_filter] at hs
           obtain ⟨k', hk', rfl⟩ := List.getElem_of_mem ((hmem _).2 hs.1)
           refine Finset.mem_image.2 ⟨k', Finset.mem_Ico.2 ⟨?_, hk'⟩, hget k' hk'⟩
-          by_contra hlt2
-          push_neg at hlt2
+          by_contra! hlt2
           have h3 := hpw k' _ hk' hm hlt2
           have h2 := hs.2
           rw [hy1, hget _ hm] at h2
@@ -352,8 +349,7 @@ theorem degAt_ellP {R : Type} [CommRing R] {n' r : ℕ} [NeZero n'] (X : Dat n' 
     · simp
     · intro y _ hy; simp [hy]
     · intro h; exact absurd hx h
-  rw [hD] at h
-  exact h
+  rwa [hD] at h
 
 theorem degAt_ellN {R : Type} [CommRing R] {n' r : ℕ} [NeZero n'] (X : Dat n' r) (K : ℕ) (j : ℤ)
     (e : ℤ × Fin (r + K) →₀ ℕ) (x : ℤ) (hx : x ∈ X.toLate j) :
@@ -369,8 +365,7 @@ theorem degAt_ellN {R : Type} [CommRing R] {n' r : ℕ} [NeZero n'] (X : Dat n' 
     · simp
     · intro y _ hy; simp [hy]
     · intro h; exact absurd hx h
-  rw [hD] at h
-  exact h
+  rwa [hD] at h
 
 theorem word_order_bound_of_numeric_bound (D : Formalism.BasicNotions.D7) (hA3 : Formalism.MainNotions.CovariantDegrees.DefiniteRankOne D) (C₀ : ℝ) (hRow : LateIndexInjective) (hN3 : OrderNumericBound C₀) :
     ProductOrdersBounded C₀ := by
@@ -403,8 +398,7 @@ theorem word_order_bound_of_numeric_bound (D : Formalism.BasicNotions.D7) (hA3 :
     refine degAt_mul (degAt_mul (degAt_pow (degAt_segRen X.F j u1.1 i) _) (degAt_ellP X K j e _ hxl)) ?_
     refine degAt_of_supported {v : ℤ × Fin r | Even v.1} (DlSeg_supported _ X p K j _
       fun x' hx' a _ => ((hrows x' hx').2 a).2.1) ?_
-    intro v hv hvx
-    exact he (hvx ▸ hv)
+    exact fun v hv hvx => he (hvx ▸ hv)
   have a1 : ∑ c : Fin r, e (segE X.F j i, Fin.castAdd K c) ≤ r * p ^ X.Rj p K j := by
     have := Finset.sum_le_card_nsmul Finset.univ (fun c : Fin r => e (segE X.F j i, Fin.castAdd K c))
       (p ^ X.Rj p K j) (fun c _ => (hc.he.2 _).le)

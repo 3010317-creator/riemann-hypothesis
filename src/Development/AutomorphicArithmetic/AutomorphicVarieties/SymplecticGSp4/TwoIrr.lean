@@ -62,7 +62,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem mem_gradedSub {O S X : Type} [CommRing O] [CommRing S] [Algebra O S] [AddCommGroup X]
     (𝒜 : X → Submodule O S) [SetLike.GradedMonoid 𝒜] {j : X} {f : S} (hf : f ∈ 𝒜 j) : f ∈ gradedSub 𝒜 := by
-  show f ∈ ⨆ i, 𝒜 i
   exact Submodule.mem_iSup_of_mem j hf
 
 private theorem limit_graded {O S X K : Type} [CommRing O] [CommRing S] [Algebra O S] [AddCommGroup X]
@@ -80,8 +79,7 @@ private theorem limit_graded {O S X K : Type} [CommRing O] [CommRing S] [Algebra
   have hc : IsCompl P0 P1 := by
     constructor
     · rw [Submodule.disjoint_def]
-      intro x h0 h1
-      exact Subtype.ext (Submodule.disjoint_def.mp hdisj _ h0 h1)
+      exact fun x h0 h1 => Subtype.ext (Submodule.disjoint_def.mp hdisj _ h0 h1)
     · rw [codisjoint_iff, eq_top_iff]
       rintro ⟨x, hx⟩ -
       have hle : (⨆ j, 𝒜 j) ≤ (⨆ j ∈ Z, 𝒜 j) ⊔ (⨆ j ∈ Zᶜ, 𝒜 j) := by
@@ -125,7 +123,7 @@ private theorem limit_graded {O S X K : Type} [CommRing O] [CommRing S] [Algebra
     · have : p j + p k ≠ 0 := by omega
       simp [hj, hk]
     · by_cases hs : p j + p k = 0
-      · simp only [hs, hj, hk, if_true, if_false, mul_zero, hm]
+      · simp only [hs, hj, hk, ite_true, ite_false, mul_zero, hm]
         rcases lt_or_gt_of_ne hj with hj' | hj'
         · rw [h1 hj', zero_mul]
         · rw [h2 (by omega), mul_zero]
@@ -152,11 +150,8 @@ private theorem limit_graded {O S X K : Type} [CommRing O] [CommRing S] [Algebra
   have hone : L 1 = 1 := by
     have h1 : (1 : S) ∈ 𝒜 0 := SetLike.GradedOne.one_mem
     have e : (1 : B) = ⟨1, mem_gradedSub 𝒜 h1⟩ := rfl
-    rw [e, hform _ _ h1, if_pos (map_zero p)]
-    rw [← e, map_one]
-  refine ⟨AlgHom.ofLinearMap L hone (fun x y => hmul x.1 x.2 y.1 y.2), ?_⟩
-  intro j f hf
-  exact hform j f hf
+    rw [e, hform _ _ h1, ite_eq_left (map_zero p), ← e, map_one]
+  exact ⟨AlgHom.ofLinearMap L hone (fun x y => hmul x.1 x.2 y.1 y.2), fun j f hf => hform j f hf⟩
 
 private theorem vanish_mono {O S K H : Type} [CommRing O] [CommRing S] [Algebra O S] [CommRing K] [Algebra O K]
     [Group H] (A : Subalgebra O S) (r : H →* M4 S) (hr : ∀ g i j, r g i j ∈ A) (ξ : A →ₐ[O] K)
@@ -197,8 +192,7 @@ private theorem vanish_mono {O S K H : Type} [CommRing O] [CommRing S] [Algebra 
     by_contra hne
     have hall : ∀ a ∈ L, 0 ≤ p (wt a.2.1 a.2.2) := by
       intro a ha
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       exact hne (List.mem_map.mpr ⟨a, ha, h a.1 a.2.1 a.2.2 hlt⟩)
     have hnn : 0 ≤ p w := by
       rw [← hL, map_list_sum, List.map_map]
@@ -256,8 +250,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.ptLimit :
   have hvan : ∀ j f (hf : f ∈ M.sPart j), p j < 0 → ξ ⟨f, mem_gradedSub M.sPart hf⟩ = 0 := by
     intro j f hf hj
     have hf' : f ∈ Submodule.span c.O (mono M.ru.hom j) := by
-      rw [← spanMono D hD M hF j]
-      exact hf
+      rwa [← spanMono D hD M hF j]
     exact vanish_mono M.SS M.ru.hom (fun g i j => M.sPart_le (M.entry_mem g i j)) ξ p
       (fun g i j hlt => (hrep ξ g i j).symm.trans (hp g i j hlt)) j hj f hf' _
   obtain ⟨ξ₀, hξ₀⟩ : ∃ ξ₀ : M.SS →ₐ[c.O] PadicAlgCl l, ∀ j f (hf : f ∈ M.sPart j),
@@ -266,8 +259,8 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.ptLimit :
   refine ⟨ξ₀, fun g i j => ?_⟩
   rw [hrep, hrep, hξ₀ (wt i j) _ (M.entry_mem g i j)]
   by_cases hij : lamW i = lamW j
-  · rw [if_pos ((hp0 i j).mpr hij), if_pos hij]
-  · rw [if_neg (fun h => hij ((hp0 i j).mp h)), if_neg hij]
+  · rw [ite_eq_left ((hp0 i j).mpr hij), ite_eq_left hij]
+  · rw [ite_eq_right (fun h => hij ((hp0 i j).mp h)), ite_eq_right hij]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.PtLimit =====
@@ -330,10 +323,10 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.twoIrr :
     obtain ⟨hm, -, -, -, -, he, -⟩ := ptIn D hD (PadicAlgCl l) r₀ hr₀
     obtain ⟨-, -, -, -, -, h6⟩ := geAlg (PadicAlgCl l) r₀ _ hm he
     have hb : ∀ g, IsBlock (r₀ g) := fun g i j hij => by
-      rw [hrt₀, twoIrr_entry, h₀, if_neg hij]
+      rw [hrt₀, twoIrr_entry, h₀, ite_eq_right hij]
     have key : ∀ i j, lamW i = lamW j → Ge r i j → Ge r₀ i j := fun i j hij hg => by
       obtain ⟨g, hg⟩ := (hge i j).1 hg
-      exact (hge₀ i j).2 ⟨g, by rw [h₀, if_pos hij]; exact hg⟩
+      exact (hge₀ i j).2 ⟨g, by rw [h₀, ite_eq_left hij]; exact hg⟩
     exact hNE r₀ hr₀ hb (h6 (key 0 2 (by decide) h02) (key 2 0 (by decide) h20) hb)
 end -- clump:auto
 end -- clump:auto

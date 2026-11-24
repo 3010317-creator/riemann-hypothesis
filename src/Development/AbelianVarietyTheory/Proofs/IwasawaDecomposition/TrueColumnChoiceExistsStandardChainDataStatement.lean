@@ -312,8 +312,7 @@ theorem ptC_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
     let kk : GA B (B.R.N B.R.m - 1) := κ.1
     have e' : yc = bc (inclE (F := B.host.F) (FiniteAdeleRing (𝓞 B.host.F) B.host.F)) ((I.stX a).gam c.1 s.1) * yc * kk := by
       have h0 := e
-      rw [show (K.stabI c s).1 = (I.stX a).gam c.1 s.1 from hst] at h0
-      exact h0
+      rwa [show (K.stabI c s).1 = (I.stX a).gam c.1 s.1 from hst] at h0
     have hyk : yc * kk = ratAd B.host.F (s.1.1)⁻¹ * yc := by
       have e3 : ratAd B.host.F (s.1.1)⁻¹ =
           (bc (inclE (F := B.host.F) (FiniteAdeleRing (𝓞 B.host.F) B.host.F)) ((I.stX a).gam c.1 s.1))⁻¹ := by
@@ -324,8 +323,7 @@ theorem ptC_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
       conv_rhs => rw [e']
       group
     have hq : PtOf (yc * kk) ((I.stX a).act c.1 κ0 ((I.stX a).rep c)).1.1 := by
-      rw [hyk, hact]
-      exact hp
+      rwa [hyk, hact]
     exact hR.chr c κ κ0 hgam hq
   letI : Algebra (I.rec7 l Z).host.F B.fields.E := (inferInstance : Algebra (I.rec7 l Z).host.F (I.rec7 l Z).host.E)
   exact mem_Fi_iff (I.stX a) B.fields.emb B.embLL (I.perIn u a).sgT K.lev hemb hsg K.y K.y_bij K.stabI
@@ -418,11 +416,7 @@ namespace GlobalTheory.Mem.Col2.TwLat
 open GlobalTheory.Mem.Col2.RowTie
 
 theorem natW_shW' {N : ℕ} (l : DomWeight N) (c : ℤ) : (GlobalTheory.Mem.Col2.shW l c).natW = l.natW := by
-  funext i
-  have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) i.2
-  simp only [DomWeight.natW, DomWeight.detShift, dif_pos hN, GlobalTheory.Mem.Col2.shW]
-  congr 1
-  ring
+  exact GlobalTheory.Mem.Col2.RowTie.natW_shW l c
 
 theorem delStd_shW' {K ι : Type} [Field K] [NumberField K] [Fintype ι] {N : ℕ} (lam : ι → DomWeight N) (c : ℤ) :
     delStd K (fun τ => GlobalTheory.Mem.Col2.shW (lam τ) c) = delStd K lam := by
@@ -893,8 +887,7 @@ theorem tuplePrimedSpace_classes : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X
     have e4 : C'.lev.chi κ = KP.lev.chi κ' * ψ ⟨κ.1, hκ⟩ := hchi κ κ' ⟨κ.1, hκ⟩ e rfl
     have e5 : ψ ⟨κ.1, hκ⟩ = 1 := hψ ⟨κ.1, hκ⟩ fun P => by
       have hv : P.1.under (𝓞 B.host.F) ∈ Q := (hQv _).2 ⟨P.1, P.2, rfl⟩
-      have h1 := hκQ _ hv
-      exact (localComponent_congr rfl (h1.trans (map_one _).symm)).trans (map_one _)
+      exact (localComponent_congr rfl ((hκQ _ hv).trans (map_one _).symm)).trans (map_one _)
     rw [e4, e5]
     exact mul_one _
 

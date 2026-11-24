@@ -200,9 +200,7 @@ theorem rank_eq {κ : Type} [Fintype κ] (x : Ix κ → Ω) (D : ℕ)
   have hvalx : ∀ p, ((g p : (coneMap ℚ x).range) : Polynomial Ω) = aeval w p := fun p => by
     rw [← hval]
     rfl
-  have hinj : Function.Injective g := by
-    intro a b hab
-    exact hind (by rw [← hvalx, ← hvalx, hab])
+  have hinj : Function.Injective g := fun a b hab => hind (by rw [← hvalx, ← hvalx, hab])
   have hcomp : ((coneMap ℚ x).range.val : (coneMap ℚ x).range →+* Polynomial Ω).comp
       (g : MvPolynomial (Fin r) ℚ →+* (coneMap ℚ x).range) =
       (aeval w : MvPolynomial (Fin r) ℚ →ₐ[ℚ] Polynomial Ω) :=
@@ -239,8 +237,7 @@ theorem exists_completion [Fintype J] {n : ℕ} (L : Fin n → J → ℚ) (hL : 
   let B : Matrix J J ℚ := Matrix.of fun i => ((σ.symm i : hs.extend (Set.subset_univ _)) : J → ℚ)
   have hBrow : LinearIndependent ℚ (fun i => B i) := by
     have h1 := b.linearIndependent.comp σ.symm σ.symm.injective
-    rw [Module.Basis.coe_extend] at h1
-    exact h1
+    rwa [Module.Basis.coe_extend] at h1
   have hdet : IsUnit B.det :=
     (Matrix.isUnit_iff_isUnit_det B).mp (Matrix.linearIndependent_row_iff_isUnit.mp hBrow)
   refine ⟨B, fun k => σ ⟨L k, hsub k⟩,
@@ -288,8 +285,7 @@ theorem proof : RatNoetherFrame.Statement := by
       intro t
       obtain ⟨p, hp, hpa⟩ := hint t
       refine ⟨p.map (A.rangeRestrict : MvPolynomial (Fin (D + 1)) ℚ →+* _), hp.map _, ?_⟩
-      rw [Polynomial.eval₂_map]
-      exact hpa
+      rwa [Polynomial.eval₂_map]
     rw [show Polynomial.C (matAct B x i) * Polynomial.X = ∑ j, B i j • v j from
       (sum_smul_cone x (B i)).symm]
     refine IsIntegral.sum _ fun j _ => ?_

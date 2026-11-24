@@ -135,7 +135,7 @@ theorem standard_hermitian_apply (x : Ad F) : H1 F x = phi1 F (homeomorphMixedSp
 
 theorem cosetIndicator_one_of_mem {z : Af F} (h : z ∈ idealFiniteAdeles (1 : (FractionalIdeal (𝓞 F)⁰ F)ˣ)) :
     cosetIndicator 1 0 z = 1 := by
-  rw [cosetIndicator_apply, sub_zero, if_pos h]
+  rw [cosetIndicator_apply, sub_zero, ite_eq_left h]
 
 theorem cosetIndicator_real (z : Af F) : ∃ r : ℝ, 0 ≤ r ∧ cosetIndicator (1 : (FractionalIdeal (𝓞 F)⁰ F)ˣ) 0 z = (r : ℂ) := by
   rw [cosetIndicator_apply]
@@ -220,8 +220,7 @@ theorem exists_m {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 0}.
   refine ⟨δ * p, mul_ne_zero hδ0 hp0, fun w => ?_⟩
   have hδv : w.intValuation δ ≤ exp (-dd w) := by
     have h := intValuation_le_of_mem_ideal w (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F)) hδmem
-    rw [FractionalIdeal.count_coe F w (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F))] at h
-    exact h
+    rwa [FractionalIdeal.count_coe F w (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F))] at h
   have hpv : w.intValuation p ≤ exp (-(c w : ℤ)) := by
     refine (w.intValuation_le_pow_iff_mem p (c w)).2 ?_
     by_cases hw : w ∈ S
@@ -465,8 +464,8 @@ theorem integrable_gB_pos : Integrable gB posRealMeasure := by
   have he : ((expPos x : {r : ℝ // 0 < r}) : ℝ) = Real.exp x := rfl
   simp only [Function.comp_apply, gB, he]
   by_cases h : 0 ≤ x
-  · rw [if_pos (Real.one_le_exp h), abs_of_nonneg h, Real.exp_neg]
-  · rw [if_neg (by rw [Real.one_le_exp_iff]; exact h), abs_of_neg (not_le.1 h), neg_neg]
+  · rw [ite_eq_left (Real.one_le_exp h), abs_of_nonneg h, Real.exp_neg]
+  · rw [ite_eq_right (by rw [Real.one_le_exp_iff]; exact h), abs_of_neg (not_le.1 h), neg_neg]
 
 theorem integrable_gB : Integrable (fun p : {r : ℝ // 0 < r} × normOneSubgroup F => gB p.1) (muE F) := by
   have : IsFiniteMeasure ((normOneMeasure F).restrict (normOneFundamentalDomain F)) :=
@@ -518,7 +517,7 @@ theorem theta_prod_le (hH : H1 F ∈ schwartzBruhat F) (hpos : ∀ x, H1 F x = (
   · have d1 := hA1 _ hu1 t h1
     have g2 := hB2 _ hu2 t⁻¹ (by rw [hinv]; exact inv_le_one_of_one_le₀ h1)
     rw [hinv, inv_inv] at g2
-    have hg : gB t = (t : ℝ)⁻¹ := if_pos h1
+    have hg : gB t = (t : ℝ)⁻¹ := ite_eq_left h1
     rw [hg]
     calc θ1 * θ2 ≤ (A1 * ((t : ℝ) ^ 2)⁻¹) * (B2 * t) := mul_le_mul d1 g2 n2 (n1.trans d1)
       _ = (A1 * B2) * (t : ℝ)⁻¹ := by field_simp
@@ -527,7 +526,7 @@ theorem theta_prod_le (hH : H1 F ∈ schwartzBruhat F) (hpos : ∀ x, H1 F x = (
     have g1 := hB1 _ hu1 t h1.le
     have d2 := hA2 _ hu2 t⁻¹ (by rw [hinv]; exact (one_le_inv₀ ht).2 h1.le)
     rw [hinv] at d2
-    have hg : gB t = (t : ℝ) := if_neg (not_le.2 h1)
+    have hg : gB t = (t : ℝ) := ite_eq_right (not_le.2 h1)
     rw [hg]
     calc θ1 * θ2 ≤ (B1 * (t : ℝ)⁻¹) * (A2 * (((t : ℝ)⁻¹) ^ 2)⁻¹) := mul_le_mul g1 d2 n2 (n1.trans g1)
       _ = (B1 * A2) * (t : ℝ) := by field_simp
@@ -714,8 +713,7 @@ theorem valued_finiteEmbedding (w : HeightOneSpectrum (𝓞 F)) (x : (w.adicComp
   by_cases h : w' = w
   · subst h
     show Valued.v (finiteAdeleSingle w' (x : w'.adicCompletion F) w') = 1
-    rw [finiteAdeleSingle_apply_self]
-    exact hx
+    rwa [finiteAdeleSingle_apply_self]
   · show Valued.v (finiteAdeleSingle w (x : w.adicCompletion F) w') = 1
     rw [finiteAdeleSingle_apply_of_ne h]
     exact map_one _
@@ -802,8 +800,7 @@ theorem null_term_holds : SFin → SKern → SNull := by
   rw [integral_const_mul] at hI
   have hne : ((ω.1 (finiteEmbedding w x) : ℂˣ) : ℂ)⁻¹ ≠ 1 := by
     rw [Ne, inv_eq_one, loc_eq]
-    intro h1
-    exact hω (Units.ext h1)
+    exact fun h1 => hω (Units.ext h1)
   have h3 : (((ω.1 (finiteEmbedding w x) : ℂˣ) : ℂ)⁻¹ - 1) *
       ∫ u in normOneFundamentalDomain F, h u ∂normOneMeasure F = 0 := by
     rw [sub_mul, one_mul, hI, sub_self]
@@ -1082,8 +1079,7 @@ theorem finite_expansion_holds : SFin := by
       Valued.v ((x : w.adicCompletion F) - 1) ≤ WithZero.exp (-(n : ℤ)) → ω.loc w x = 1} := by
     intro x hx _
     have h1 := hk (mem_units_of_isUnitAt w x hx)
-    rw [MonoidHom.mem_ker] at h1
-    exact h1
+    rwa [MonoidHom.mem_ker] at h1
   exact Nat.le_zero.1 ((H.cond w).2 hmem)
 
 theorem kernel_expansion_holds : SKern := by
@@ -1222,7 +1218,7 @@ theorem char_xAd (ξ : F) (x : UpperTheory.V.TR.Rinf F) :
       (((algebraMap F (Ad F) ξ).1 * UpperTheory.V.TR.infEq F x) w)).re) = _
     refine Finset.sum_congr rfl fun w _ => ?_
     have hm : (w.mult : ℝ) = 1 := by
-      rw [InfinitePlace.mult, if_pos (IsTotallyReal.isReal w)]; simp
+      rw [InfinitePlace.mult, ite_eq_left (IsTotallyReal.isReal w)]; simp
     have h1 : InfinitePlace.Completion.extensionEmbedding w
         (((algebraMap F (Ad F) ξ).1 * UpperTheory.V.TR.infEq F x) w) = (w.embedding ξ) * ((x w : ℝ) : ℂ) := by
       show InfinitePlace.Completion.extensionEmbedding w ((algebraMap F (Ad F) ξ).1 w * UpperTheory.V.TR.infEq F x w) = _
@@ -1232,8 +1228,7 @@ theorem char_xAd (ξ : F) (x : UpperTheory.V.TR.Rinf F) :
         rw [InfiniteAdeleRing.algebraMap_apply, InfinitePlace.Completion.extensionEmbedding_coe]
         rfl
       · have := ext_pInf (xAd x) w
-        rw [pInf_xAd] at this
-        exact this
+        rwa [pInf_xAd] at this
     rw [hm, h1, one_mul, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero, reAt]
   rw [h0, adelicChar_infinite, (infiniteTrace F).map_neg, neg_neg, Real.fourierChar_apply, ex, hT]
   congr 1
@@ -1283,8 +1278,8 @@ theorem fin_le (c : HeightOneSpectrum (𝓞 F) → ℕ) (A Z : Ad F) (P Q : Prop
       rw [WithZero.exp_le_exp]
       have : (0 : ℤ) ≤ dd w := by unfold dd; positivity
       omega
-    rw [if_pos h, if_pos hq]
-  · rw [if_neg h, norm_zero]
+    rw [ite_eq_left h, ite_eq_left hq]
+  · rw [ite_eq_right h, norm_zero]
     exact norm_nonneg _
 
 theorem kernF_le (c : HeightOneSpectrum (𝓞 F) → ℕ) (A Z : Ad F) :
@@ -1410,9 +1405,9 @@ def rowEquiv : Fˣ ⊕ (Fˣ × F) ≃ {ξ : Fin 2 → F // ξ ≠ 0} where
     · simp [a.ne_zero]
   right_inv ξ := by
     by_cases h : ξ.1 0 = 0
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       ext i; fin_cases i <;> simp [h]
-    · simp only [dif_neg h]
+    · simp only [dite_eq_right h]
       ext i; fin_cases i <;> simp
 
 theorem main_of (hsl : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (c : HeightOneSpectrum (𝓞 F) → ℕ),
@@ -1452,8 +1447,7 @@ theorem main_of (hsl : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F
       (adelicChar F (-(algebraMap F (Ad F) ξ * xAd x)) : ℂ) * coefK c (yAd y yf) τ ξ := fun ξ => by
     rw [tsum_mul_left]; rfl
   have hsξ : Summable (fun ξ : F => (adelicChar F (-(algebraMap F (Ad F) ξ * xAd x)) : ℂ) * coefK c (yAd y yf) τ ξ) := by
-    refine hU.prod_symm.prod.congr fun ξ => ?_
-    exact hin ξ
+    exact hU.prod_symm.prod.congr fun ξ => hin ξ
   rw [tsum_congr hin, tsum_split_zero _ hsξ]
   simp only [map_zero, zero_mul, neg_zero, AddChar.map_zero_eq_one, Circle.coe_one, one_mul, char_xAd]
   ring
@@ -1525,8 +1519,7 @@ theorem norm_infEq (r : UpperTheory.V.TR.Rinf F) (w : InfinitePlace F) : ‖Uppe
   have h := (InfinitePlace.Completion.isometryEquivRealOfIsReal hv).symm.dist_eq (r w) 0
   have h0 : (InfinitePlace.Completion.isometryEquivRealOfIsReal hv).symm 0 = 0 :=
     map_zero (InfinitePlace.Completion.ringEquivRealOfIsReal hv).symm
-  rw [h0, dist_zero_right, dist_zero_right, Real.norm_eq_abs] at h
-  exact h
+  rwa [h0, dist_zero_right, dist_zero_right, Real.norm_eq_abs] at h
 
 theorem infId_val (y : (UpperTheory.V.TR.Rinf F)ˣ) :
     ((UpperTheory.V.TR.infId F y : (Ad F)ˣ) : Ad F) = (UpperTheory.V.TR.infEq F y.val, 1) := by
@@ -1614,12 +1607,10 @@ theorem sExp_assembly (hPt : SPoint) (hZ : SZero) (hNl : SNull) (hA : SAbs) (hU 
   have hSsum : ∀ p, HasSum (fun ξ : Fˣ => Sf ξ p) (S p) := by
     intro p
     refine Summable.hasSum (Summable.of_norm ?_)
-    simp only [hSfb]
-    exact (hsum p).mul_right _
+    simpa only [hSfb] using (hsum p).mul_right _
   have hbound : Integrable (fun p : {r : ℝ // 0 < r} × normOneSubgroup F =>
       ∑' ξ : Fˣ, ‖coefK c Y (tau p.1 p.2) ξ‖ * (p.1 : ℝ)) (muE F) := by
-    simp only [tsum_mul_right]
-    exact hint
+    simpa only [tsum_mul_right] using hint
   have hSint : HasSum (fun ξ : Fˣ => ∫ p, Sf ξ p ∂(muE F)) (∫ p, S p ∂(muE F)) :=
     hasSum_integral_of_dominated_convergence (fun ξ p => ‖coefK c Y (tau p.1 p.2) ξ‖ * (p.1 : ℝ)) hSfm
       (fun ξ => Eventually.of_forall fun p => (hSfb ξ p).le)
@@ -1691,9 +1682,8 @@ theorem sExp_assembly (hPt : SPoint) (hZ : SZero) (hNl : SNull) (hA : SAbs) (hU 
   have hout : ∀ ξ ∉ Set.range e, (fun ξ : Fˣ => ∫ p, Sf ξ p ∂(muE F)) ξ = 0 := by
     intro ξ hξ
     simp only [hcoef]
-    rw [if_neg, mul_zero, mul_zero]
-    intro hpos
-    exact hξ ⟨⟨ξ, hpos⟩, Units.ext rfl⟩
+    rw [ite_eq_right, mul_zero, mul_zero]
+    exact fun hpos => hξ ⟨⟨ξ, hpos⟩, Units.ext rfl⟩
   have h2 := (he.hasSum_iff hout).2 hSint
   convert h2 using 1
   funext ξ

@@ -155,8 +155,7 @@ theorem eventually_mem_factoredIdeals {I : Ideal R} (hI : I ≠ ⊥) :
     ∀ᶠ S : Finset (HeightOneSpectrum R) in atTop, I ∈ factoredIdeals S := by
   have hfin := Ideal.finite_factors (I := I) (by simpa [Submodule.zero_eq_bot] using hI)
   refine Filter.eventually_atTop.2 ⟨hfin.toFinset, fun S hS ↦ ⟨hI, fun v hv ↦ hS ?_⟩⟩
-  rw [Set.Finite.mem_toFinset]
-  exact hv
+  rwa [Set.Finite.mem_toFinset]
 
 end Factored
 
@@ -183,9 +182,9 @@ theorem hasSum_indicator_factoredIdeals (hsum : Summable fun I ↦ ‖g I‖)
     have h : ({⊤} : Set (Ideal R)).indicator g = fun I ↦ if I = ⊤ then 1 else 0 := by
       ext I
       by_cases h : I = ⊤
-      · rw [h, Set.indicator_of_mem (Set.mem_singleton _), if_pos rfl, ← Ideal.one_eq_top,
+      · rw [h, Set.indicator_of_mem (Set.mem_singleton _), ite_eq_left rfl, ← Ideal.one_eq_top,
           map_one]
-      · rw [Set.indicator_of_notMem (by simpa using h), if_neg h]
+      · rw [Set.indicator_of_notMem (by simpa using h), ite_eq_right h]
     rw [h]
     exact hasSum_ite_eq ⊤ 1
   | insert v S hv ih =>
@@ -238,8 +237,7 @@ theorem hasProd_euler (hsum : Summable fun I ↦ ‖g I‖) (h0 : g ⊥ = 0) :
   · subst hI
     have : ∀ S : Finset (HeightOneSpectrum R), (factoredIdeals S).indicator g ⊥ = g ⊥ :=
       fun S ↦ by rw [Set.indicator_of_notMem (by exact fun h ↦ h.1 rfl), h0]
-    simp only [this]
-    exact tendsto_const_nhds
+    simpa only [this] using tendsto_const_nhds
   · refine tendsto_const_nhds.congr' ?_
     filter_upwards [eventually_mem_factoredIdeals hI] with S hS
     rw [Set.indicator_of_mem hS]
@@ -268,8 +266,7 @@ theorem not_dvd_of_isCoprime {I 𝔪 : Ideal (𝓞 K)} (h : IsCoprime I 𝔪)
 theorem isCoprime_asIdeal_iff (v : HeightOneSpectrum (𝓞 K)) (𝔪 : Ideal (𝓞 K)) :
     IsCoprime v.asIdeal 𝔪 ↔ ¬ v.asIdeal ∣ 𝔪 := by
   constructor
-  · intro h hv
-    exact not_dvd_of_isCoprime h hv (dvd_refl _)
+  · exact fun h hv => not_dvd_of_isCoprime h hv (dvd_refl _)
   · intro h
     rw [Ideal.isCoprime_iff_sup_eq]
     exact v.isMaximal.out.2 _ (left_lt_sup.2 fun hle ↦ h (Ideal.dvd_iff_le.2 hle))
@@ -304,11 +301,11 @@ def coeff (I : Ideal (𝓞 K)) : ℂ :=
 
 theorem coeff_of_mem {I : Ideal (𝓞 K)} (h : I ≠ ⊥ ∧ IsCoprime I χ.conductor) :
     χ.coeff I = χ.idealCharacter ⟨idealUnit I h.1, idealUnit_mem_idealsPrimeTo h.1 h.2⟩ :=
-  dif_pos h
+  dite_eq_left h
 
 theorem coeff_of_not {I : Ideal (𝓞 K)} (h : ¬ (I ≠ ⊥ ∧ IsCoprime I χ.conductor)) :
     χ.coeff I = 0 :=
-  dif_neg h
+  dite_eq_right h
 
 @[simp]
 theorem coeff_bot : χ.coeff ⊥ = 0 :=
@@ -324,7 +321,7 @@ theorem norm_coeff_le (I : Ideal (𝓞 K)) : ‖χ.coeff I‖ ≤ 1 := by
 theorem coeff_top : χ.coeff ⊤ = 1 := by
   have h : (⊤ : Ideal (𝓞 K)) ≠ ⊥ ∧ IsCoprime (⊤ : Ideal (𝓞 K)) χ.conductor :=
     ⟨top_ne_bot, by rw [← Ideal.one_eq_top]; exact isCoprime_one_left⟩
-  rw [coeff, dif_pos h]
+  rw [coeff, dite_eq_left h]
   have h1 : (⟨idealUnit ⊤ h.1, idealUnit_mem_idealsPrimeTo h.1 h.2⟩ : idealsPrimeTo χ.conductor) =
       1 :=
     Subtype.ext (Units.ext (by simp [idealUnit]))
@@ -335,7 +332,7 @@ theorem coeff_mul (I J : Ideal (𝓞 K)) : χ.coeff (I * J) = χ.coeff I * χ.co
   · by_cases hJ : J ≠ ⊥ ∧ IsCoprime J χ.conductor
     · have hIJ : I * J ≠ ⊥ ∧ IsCoprime (I * J) χ.conductor :=
         ⟨fun h ↦ (Ideal.mul_eq_bot.1 h).elim hI.1 hJ.1, hI.2.mul_left hJ.2⟩
-      rw [coeff, coeff, coeff, dif_pos hI, dif_pos hJ, dif_pos hIJ, ← Circle.coe_mul, ← map_mul]
+      rw [coeff, coeff, coeff, dite_eq_left hI, dite_eq_left hJ, dite_eq_left hIJ, ← Circle.coe_mul, ← map_mul]
       congr 2
       exact Subtype.ext (Units.ext (by simp [idealUnit, coeIdeal_mul]))
     · rw [χ.coeff_of_not hJ, mul_zero]
@@ -352,7 +349,7 @@ theorem coeff_asIdeal_of_dvd {v : HeightOneSpectrum (𝓞 K)} (hv : v.asIdeal �
 theorem coeff_asIdeal_of_not_dvd {v : HeightOneSpectrum (𝓞 K)} (hv : ¬ v.asIdeal ∣ χ.conductor) :
     χ.coeff v.asIdeal =
       χ.idealCharacter ⟨primeIdealUnit v, primeIdealUnit_mem_idealsPrimeTo hv⟩ := by
-  rw [coeff, dif_pos ⟨v.ne_bot, (isCoprime_asIdeal_iff v _).2 hv⟩]
+  rw [coeff, dite_eq_left ⟨v.ne_bot, (isCoprime_asIdeal_iff v _).2 hv⟩]
   rfl
 
 def coeffTerm (s : ℂ) : Ideal (𝓞 K) →* ℂ where
@@ -480,7 +477,7 @@ theorem conductor_one : (1 : HeckeCharacter K).conductor = ⊤ := by
 theorem coeff_one {I : Ideal (𝓞 K)} (hI : I ≠ ⊥) : (1 : HeckeCharacter K).coeff I = 1 := by
   have h : I ≠ ⊥ ∧ IsCoprime I (1 : HeckeCharacter K).conductor :=
     ⟨hI, by rw [conductor_one, ← Ideal.one_eq_top]; exact isCoprime_one_right⟩
-  rw [coeff, dif_pos h]
+  rw [coeff, dite_eq_left h]
   exact congrArg ((↑) : Circle → ℂ) rfl |>.trans Circle.coe_one
 
 theorem LFunction_one (s : ℂ) : (1 : HeckeCharacter K).LFunction s = dedekindZeta K s := by

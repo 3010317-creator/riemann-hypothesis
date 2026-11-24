@@ -212,8 +212,7 @@ private theorem pW_smul' (D : Formalism.BasicNotions.D7) (c : D.host.E) (v : (VS
   simp only [map_smul, smul_eq_mul, mul_div_assoc, mul_smul, smul_sub, smul_add, Finset.smul_sum]
 
 private theorem pW_sum' (D : Formalism.BasicNotions.D7) {ι : Type} (s : Finset ι) (f : ι → (VS D).V) :
-    pW D (∑ i ∈ s, f i) = ∑ i ∈ s, pW D (f i) := by
-  exact map_sum (AddMonoidHom.mk' (pW D) (pW_add' D)) f s
+    pW D (∑ i ∈ s, f i) = ∑ i ∈ s, pW D (f i) := map_sum (AddMonoidHom.mk' (pW D) (pW_add' D)) f s
 
 private theorem hT_pW_self_of_hT_hypE_eq_zero (D : Formalism.BasicNotions.D7) (w : (VS D).V)
     (hw : ∀ a, (VS D).hT (D.sp.hypE a) w = 0) :
@@ -266,8 +265,7 @@ theorem tv_norm (D : Formalism.BasicNotions.D7) {T : D.host.E} (T' : D.host.E) (
     simp only [pW_smul']
   have hEu : ∀ a b', (VS D).hT (D.sp.hypE a) (fr D x b') = Z (Fin.castSucc a) b' := by
     intro a b'
-    have h := hZ (Fin.castSucc a) b'
-    simpa [brS, FlagG.fvec, he] using h
+    simpa [brS, FlagG.fvec, he] using hZ (Fin.castSucc a) b'
   have hzu : ∀ b', (VS D).hT D.sp.zm (fr D x b') = Z (Fin.last D.R.rS) b' / star c0 := by
     intro b'
     have h := hZ (Fin.last D.R.rS) b'
@@ -648,17 +646,17 @@ theorem semidef (D : Formalism.BasicNotions.D7) (w : (VS D).V) (hE : ∀ a, (VS 
     · have ha : a ≠ a' := fun h => hij (by rw [h])
       have ha' : a' ≠ a := fun h => ha h.symm
       simp only [wv, Sum.elim_inl, map_sub, LinearMap.sub_apply, D.sp.hyp_ee, D.sp.hyp_ff, D.sp.hyp_ef,
-        hFE, if_neg ha, if_neg ha']
+        hFE, ite_eq_right ha, ite_eq_right ha']
       simp
     · cases b'
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, if_false, map_sub,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, ite_false, map_sub,
           LinearMap.sub_apply, hEz, hFz, sub_zero]
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, if_true, map_sub, LinearMap.sub_apply, hE, hF,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, ite_true, map_sub, LinearMap.sub_apply, hE, hF,
           sub_zero]
     · cases b
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, if_false, map_sub,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, ite_false, map_sub,
           (D.sp.hyp_orthz a').1, (D.sp.hyp_orthz a').2, sub_zero]
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, if_true, map_sub, hzero_swap D (hE a'),
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, ite_true, map_sub, hzero_swap D (hE a'),
           hzero_swap D (hF a'), sub_zero]
     · cases b <;> cases b'
       · exact absurd rfl hij
@@ -669,21 +667,20 @@ theorem semidef (D : Formalism.BasicNotions.D7) (w : (VS D).V) (hE : ∀ a, (VS 
     intro i
     rcases i with a | b
     · simp only [wv, d, Sum.elim_inl, map_sub, LinearMap.sub_apply, D.sp.hyp_ee, D.sp.hyp_ff,
-        D.sp.hyp_ef, hFE, if_true]
+        D.sp.hyp_ef, hFE, ite_true]
       rw [map_zero, map_one]
       push_cast; ring
     · cases b
-      · simp only [wv, d, Sum.elim_inr, Bool.false_eq_true, if_false, D.sp.zm_norm, map_neg,
+      · simp only [wv, d, Sum.elim_inr, Bool.false_eq_true, ite_false, D.sp.zm_norm, map_neg,
           map_natCast]
         push_cast; ring
-      · simp only [wv, d, Sum.elim_inr, if_true]
-        exact real_of_emb D τ w
+      · simpa only [wv, d, Sum.elim_inr, ite_true] using real_of_emb D τ w
   have hneg : ∀ i, d i < 0 := by
     intro i
     rcases i with a | b
     · simp [d]
     · cases b
-      · simp only [d, Sum.elim_inr, Bool.false_eq_true, if_false]; linarith
+      · simp only [d, Sum.elim_inr, Bool.false_eq_true, ite_false]; linarith
       · simpa [d] using hlt
   have hc := PI.CntNotPosW.card_le_of_negFamily (VS D) τ hτ (D.sp.Y_sig 0 τ) wv d hoff hdiag hneg
   have hq : ((D.sp.Y 0).sig τ).2 = D.R.rS + 1 := by rw [D.sp.baseSpace_signature_eq τ]; rfl
@@ -912,7 +909,7 @@ theorem stage1_of_unipotentIntegralIsGroup (hN : UnipotentIntegralIsGroup) : Sta
       abel
     rw [Finset.sum_congr rfl fun a _ => e4 a, Finset.sum_add_distrib, ← Finset.smul_sum]
     simp only [tv, Pm, Matrix.sub_apply, Matrix.one_apply, sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul,
-      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.mul_apply, Finset.sum_smul,
+      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Matrix.mul_apply, Finset.sum_smul,
       Finset.sum_neg_distrib, Finset.smul_sum, smul_smul]
     rw [Finset.sum_comm (f := fun a b' => (betaZ D Z a b * R b' a) • pWf D x b')]
     have e5 : ∀ b' a, (betaZ D Z a b * R b' a) • pWf D x b' = (R b' a * betaZ D Z a b) • pWf D x b' :=

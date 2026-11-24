@@ -215,7 +215,7 @@ theorem lojasiewicz (e : ℕ) (f g : (Fin e → ℂ) → ℂ) (x : Fin e → ℂ
     (hf.eventually_analyticAt.and hg.eventually_analyticAt)
   obtain ⟨y₁, hy₁, hgy₁⟩ : ∃ y₁ ∈ ball x r₀, g y₁ ≠ 0 := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     exact hz (by filter_upwards [ball_mem_nhds x hr₀] with y hy using hcon y hy)
   set v := y₁ - x with hv
   have hvr : ‖v‖ < r₀ := by simpa [hv, dist_eq_norm] using hy₁
@@ -248,7 +248,7 @@ theorem lojasiewicz (e : ℕ) (f g : (Fin e → ℂ) → ℂ) (x : Fin e → ℂ
       exact hz1 hz2
     obtain ⟨d, hd⟩ := ENat.ne_top_iff_exists.1 hne
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     have := (natCast_le_analyticOrderAt_iff_iteratedDeriv_eq_zero (n := d + 1) hφ00).2
       (fun j _ => hcon j)
     rw [← hd] at this
@@ -596,12 +596,7 @@ theorem mh_mul {f g : MRing ι} {a b : K → ℕ} (hf : IsMultiHomog f a) (hg : 
   simp only [Finsupp.add_apply, Finset.sum_add_distrib, Pi.add_apply, hf m1 hm1 k, hg m2 hm2 k]
 
 theorem mh_add {f g : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) (hg : IsMultiHomog g a) :
-    IsMultiHomog (f + g) a := by
-  classical
-  intro m hm k
-  rcases Finset.mem_union.mp (MvPolynomial.support_add hm) with h | h
-  · exact hf m h k
-  · exact hg m h k
+    IsMultiHomog (f + g) a := GlobalTheory.CompanionTheory.Ar.AlgPoly.form_add hf hg
 
 theorem mh_neg {f : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) : IsMultiHomog (-f) a := by
   intro m hm k
@@ -1393,7 +1388,7 @@ theorem root_origin_weight_free : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   obtain ⟨T, hT, hJT⟩ := Or.Re.R.homog
   obtain ⟨f, hfT, hfP⟩ : ∃ f ∈ T, f ∉ RM.P := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     exact Or.Re.R.nondeg (hJT ▸ Ideal.span_le.2 hc)
   obtain ⟨df, hf⟩ := hT f hfT
   have hfJ : f ∈ Or.Re.J := hJT ▸ Ideal.subset_span hfT

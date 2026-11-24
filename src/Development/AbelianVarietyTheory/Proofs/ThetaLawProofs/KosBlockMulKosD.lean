@@ -104,12 +104,10 @@ theorem torsSq_conj : ∀ (R Ix : Type) [CommRing R] [Fintype Ix] [DecidableEq I
   have hGG' : G' * G = 1 := mul_eq_one_comm.mp hGG
   have hev : ∀ (p : {p // Even (deg p)}) r,
       r ∉ Set.range (fun p : {p // Even (deg p)} => p.1) → deg p.1 ≠ deg r := by
-    intro p r hr hd
-    exact hr ⟨⟨r, hd ▸ p.2⟩, rfl⟩
+    exact fun p r hr hd => hr ⟨⟨r, hd ▸ p.2⟩, rfl⟩
   have hod : ∀ (p : {p // Even (deg p)}) r,
       r ∉ Set.range (fun p : {p // Even (deg p)} => (e p).1) → deg r ≠ deg (e p).1 := by
-    intro p r hr hd
-    exact hr ⟨e.symm ⟨r, hd ▸ (e p).2⟩, by simp⟩
+    exact fun p r hr hd => hr ⟨e.symm ⟨r, hd ▸ (e p).2⟩, by simp⟩
   refine ⟨_, ⟨G' * h * G, ?_, ?_, e, rfl⟩, ?_⟩
   · intro p q hpq
     rw [Matrix.mul_apply]
@@ -239,7 +237,7 @@ theorem kosBlock_det_sub (C : ∀ j, Matrix (Fin (N j)) (Fin (N j)) R) (P : Matr
         (fun p : {p // s (kdeg p)} => p.1) (fun p : {p // s (kdeg p)} => p.1) := by
     ext p q
     exact kosBlock_congr (fun j => if s (j + 1) then C j else 1) C (if s 0 then P else 1) P p.1 q.1
-      (fun j hj => if_pos (hj ▸ p.2)) (fun hj => if_pos (hj ▸ p.2))
+      (fun j hj => ite_eq_left (hj ▸ p.2)) (fun hj => ite_eq_left (hj ▸ p.2))
   have e2 : Matrix.toSquareBlockProp
       (kosBlock (fun j => if s (j + 1) then C j else 1) (if s 0 then P else 1) :
       Matrix (KIx g d N) (KIx g d N) R) (fun p => ¬ s (kdeg p)) = 1 := by
@@ -247,7 +245,7 @@ theorem kosBlock_det_sub (C : ∀ j, Matrix (Fin (N j)) (Fin (N j)) R) (P : Matr
       Subtype.val_injective, ← kosBlock_one]
     ext p q
     exact kosBlock_congr (fun j => if s (j + 1) then C j else 1) (fun _ => 1) (if s 0 then P else 1) 1
-      p.1 q.1 (fun j hj => if_neg (hj ▸ p.2)) (fun hj => if_neg (hj ▸ p.2))
+      p.1 q.1 (fun j hj => ite_eq_right (hj ▸ p.2)) (fun hj => ite_eq_right (hj ▸ p.2))
   rw [e1, e2, Matrix.det_one, mul_one, kosBlock_det] at h
   rw [← h]
   congr 1
@@ -307,8 +305,8 @@ theorem kosBlock_mul_kosD (m m' : Fin g → ∀ j j', Matrix (Fin (N j)) (Fin (N
         omega
       have := congrFun (congrFun (hm' i _ _ hl hc) a) b
       simp only [Matrix.mul_apply] at this
-      simp only [if_pos h, mul_left_comm (C _ _ _), mul_assoc, ← Finset.mul_sum, this]
-    · simp only [if_neg h, mul_zero, zero_mul, Finset.sum_const_zero]
+      simp only [ite_eq_left h, mul_left_comm (C _ _ _), mul_assoc, ← Finset.mul_sum, this]
+    · simp only [ite_eq_right h, mul_zero, zero_mul, Finset.sum_const_zero]
   · rw [kosBlock_mul_inl, mul_kosBlock_inr]
     simp [kosD]
   · rw [kosBlock_mul_inr, mul_kosBlock_inl]
@@ -318,8 +316,7 @@ theorem kosBlock_mul_kosD (m m' : Fin g → ∀ j j', Matrix (Fin (N j)) (Fin (N
           ev (∅ : Finset (Fin g)).card * C (∅ : Finset (Fin g)).card := he
       have := congrFun (congrFun he' a) b
       rw [Matrix.mul_apply, Matrix.mul_apply] at this
-      simp only [kosD, if_true]
-      exact this
+      simpa only [kosD, ite_true] using this
     · simp [kosD, h]
   · rw [kosBlock_mul_inr, mul_kosBlock_inr]
     simp [kosD]
@@ -344,7 +341,7 @@ theorem torsSq_kosD_conj : ∀ (R : Type) [CommRing R] (g d : ℕ) (N : ℕ → 
   set O : Rˣ := ∏ j ∈ Finset.range (g + 1), if ¬ Even (j + 1) then u j else 1 with hO
   set p : Rˣ := Matrix.GeneralLinearGroup.det Pm with hp
   have h3 : t' * ((E * p) ^ 2 : Rˣ) = ((t * O ^ 2 : Rˣ) : R) := by
-    simp only [Even.zero, if_true, not_true, if_false, mul_one] at h2
+    simp only [Even.zero, ite_true, not_true, ite_false, mul_one] at h2
     simp only [Units.val_mul, Units.val_pow_eq_pow_val, hE, hO, hp, hu, Units.coe_prod,
       apply_ite Units.val, Units.val_one, Matrix.GeneralLinearGroup.val_det_apply]
     exact h2
@@ -359,11 +356,11 @@ theorem torsSq_kosD_conj : ∀ (R : Type) [CommRing R] (g d : ℕ) (N : ℕ → 
     refine Finset.prod_congr rfl fun j _ => ?_
     rcases Nat.even_or_odd j with hj | hj
     · have : ¬ Even (j + 1) := by rw [Nat.even_add_one]; simpa using hj
-      rw [if_pos this, if_neg this, hj.neg_one_pow, one_pow, inv_one, mul_one, mul_one, hu,
+      rw [ite_eq_left this, ite_eq_right this, hj.neg_one_pow, one_pow, inv_one, mul_one, mul_one, hu,
         ← pow_mul, ← zpow_natCast]
       congr 1; push_cast; ring
     · have : Even (j + 1) := hj.add_one
-      rw [if_pos this, if_neg (not_not.mpr this), hj.neg_one_pow, one_pow, one_mul, hu,
+      rw [ite_eq_left this, ite_eq_right (not_not.mpr this), hj.neg_one_pow, one_pow, one_mul, hu,
         ← pow_mul, ← zpow_natCast, ← zpow_neg]
       congr 1; push_cast; ring
   rw [h5, mul_pow, mul_inv, ← mul_assoc, mul_assoc _ (p ^ 2)⁻¹, inv_mul_cancel, mul_one, mul_assoc]

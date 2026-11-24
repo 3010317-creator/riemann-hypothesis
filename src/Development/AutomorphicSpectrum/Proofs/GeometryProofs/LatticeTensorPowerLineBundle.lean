@@ -98,8 +98,7 @@ theorem tens_eq_span {I : Type} [Fintype I] (Λ : I → Lat ξ Ω) (a : I → �
 
 theorem isGenAt_tens {I : Type} [Fintype I] (Λ : I → Lat ξ Ω) (a : I → ℤ) (p : Cpt ξ) (s : I → Ω)
     (hs : ∀ i, (Λ i).IsGenAt p (s i)) : (Lat.tens Λ a).IsGenAt p (∏ i, s i ^ a i) := by
-  refine ⟨?_, tens_eq_span Λ a p s hs⟩
-  exact Finset.prod_ne_zero_iff.mpr fun i _ => zpow_ne_zero _ (hs i).1
+  exact ⟨Finset.prod_ne_zero_iff.mpr fun i _ => zpow_ne_zero _ (hs i).1, tens_eq_span Λ a p s hs⟩
 
 theorem mem_finset_inf {I : Type} (S : Finset I) (U : I → X.Opens) (x : X) :
     x ∈ S.inf U ↔ ∀ i ∈ S, x ∈ U i := by
@@ -108,8 +107,7 @@ theorem mem_finset_inf {I : Type} (S : Finset I) (U : I → X.Opens) (x : X) :
   · rw [Finset.inf_empty]
     exact ⟨fun _ i hi => by simp at hi, fun _ => TopologicalSpace.Opens.mem_top x⟩
   · intro j S' _ ih
-    rw [Finset.inf_insert, TopologicalSpace.Opens.mem_inf, ih]
-    rw [Finset.forall_mem_insert]
+    rw [Finset.inf_insert, TopologicalSpace.Opens.mem_inf, ih, Finset.forall_mem_insert]
 
 theorem isGenAt_of_isFrameAt {Λ : Lat ξ Ω} {b : Fin 1 → Ω} {p : Cpt ξ} (h : Λ.IsFrameAt b p) :
     Λ.IsGenAt p (b 0) := by

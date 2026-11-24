@@ -227,9 +227,9 @@ theorem let_exists {n : ℕ} [NeZero n] (y : S) [IsAdicComplete (Ideal.span {y})
   · rw [Finset.sum_mul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Finset.sum_eq_single i]
-    · rw [mul_mul_mul_comm, h2, if_pos rfl, Pi.mul_apply, map_mul]
+    · rw [mul_mul_mul_comm, h2, ite_eq_left rfl, Pi.mul_apply, map_mul]
     · intro j _ hj
-      rw [mul_mul_mul_comm, h2, if_neg hj.symm, zero_mul]
+      rw [mul_mul_mul_comm, h2, ite_eq_right hj.symm, zero_mul]
     · simp
   · change ∑ i, u (Pi.single i 1) * ev (algebraMap O O⟦X⟧ r) = _
     rw [ev.commutes, ← Finset.sum_mul, h1, one_mul]
@@ -307,22 +307,13 @@ section Concrete
 
 variable {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P)
 
-theorem εroot_pow (s : ℕ) : AI.εroot s ^ l ^ s = AI.ε := by
-  induction s with
-  | zero => simp [LocAinf.εroot]
-  | succ s ih =>
-    rw [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
-    exact ih
+theorem εroot_pow (s : ℕ) : AI.εroot s ^ l ^ s = AI.ε := GlobalTheory.Cyc.εroot_pow AI s
 
 theorem εroot_ne_one (s : ℕ) : AI.εroot s ≠ 1 := fun h =>
   AI.ε_ne_one (by rw [← _root_.GlobalTheory.Cyc.εroot_pow AI s, h, one_pow])
 
 theorem εroot_sub_not_unit (s : ℕ) : ¬ IsUnit (AI.εroot s - 1) := by
-  intro h
-  have h1 := (h.pow (l ^ s)).map (PreTilt.coeff 0)
-  rw [sub_pow_char_pow, εroot_pow, one_pow, map_sub, AI.ε_coeff, AI.ζ_zero, map_one, map_one,
-    sub_self] at h1
-  exact not_isUnit_zero h1
+  exact GlobalTheory.Cyc.εroot_sub_one_not_unit AI s
 
 theorem coeff_εroot (s n : ℕ) : PreTilt.coeff n (AI.εroot s) =
     Ideal.Quotient.mk (Ideal.span {((l : ℕ) : OC l)}) (AI.ζ (n + s)) := by
@@ -337,8 +328,7 @@ theorem io_binomial (s : ℕ) (g : GQ l) (c : ℤ_[l]) (hc : (c : ℚ_[l]) = (P.
     simp [GlobalTheory.Cyc.cyc]
   have h1 : GlobalTheory.Cyc.phi l ℤ_[l] (binomialSeries ℤ_[l] c) = binomialSeries ℤ_[l] c ^ l := by
     have := hmul (l : ℤ_[l]) c X
-    rw [hX, hX, hcyc, hcyc, map_sub, map_one, binomialSeries_natMul, sub_left_inj] at this
-    exact this
+    rwa [hX, hX, hcyc, hcyc, map_sub, map_one, binomialSeries_natMul, sub_left_inj] at this
   have h2 := eq_teichmuller_of_frobenius (io (binomialSeries ℤ_[l] c)) (by rw [← hφ, h1, map_pow])
   rw [h2]
   congr 1
@@ -486,8 +476,7 @@ theorem inclR_φRA (LL : FinExt l) : (inclR LL).comp (φRA LL) = (φRW LL).comp 
 theorem inclR_gRA (LL : FinExt l) (g : GQ l) :
     (inclR LL).comp (gRA AI LL g) = (AI.gRW LL g).comp (inclR LL) := by
   have h : (inclWA l).comp (AI.actWHom g).toAlgHom = (AI.actWCbHom g).toAlgHom.comp (inclWA l) := by
-    refine AlgHom.ext fun w => WittVector.ext fun k => ?_
-    exact (autCb_alg l (AI.actT g) (w.coeff k)).symm
+    exact AlgHom.ext fun w => WittVector.ext fun k => (autCb_alg l (AI.actT g) (w.coeff k)).symm
   rw [inclR, gRA, LocAinf.gRW, ← Algebra.TensorProduct.map_comp, ← Algebra.TensorProduct.map_comp, h]
 
 theorem tmul_sub_one (LL : FinExt l) (w : Ainf l) :

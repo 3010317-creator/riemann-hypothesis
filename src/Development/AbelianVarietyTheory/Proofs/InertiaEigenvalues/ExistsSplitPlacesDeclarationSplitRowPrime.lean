@@ -76,9 +76,8 @@ theorem embTypeUc_iff (τ : Br.Kw D.nbr i w hw →ₐ[ℚ_[D.nd.l i]] Br.LL D.nb
 theorem embTypeUe_iff (ep : Bool) (τ : Br.Kw D.nbr i w hw →ₐ[ℚ_[D.nd.l i]] Br.LL D.nbr i w hw) :
     EmbeddingTypes.EmbTypeUe ep τ ↔ GlobalTheory.IndefiniteRowSideFullHecke.SplitPlaceTypes.EmbIn (N := D.nd) D.nbr i ep w hw τ := by
   cases ep
-  · simp only [EmbeddingTypes.EmbTypeUe, Bool.false_eq_true, if_false]
-    exact embTypeUc_iff τ
-  · simp only [EmbeddingTypes.EmbTypeUe, if_true]
+  · simpa only [EmbeddingTypes.EmbTypeUe, Bool.false_eq_true, ite_false] using embTypeUc_iff τ
+  · simp only [EmbeddingTypes.EmbTypeUe, ite_true]
     rfl
 
 theorem plTypeUe_iff (ep : Bool) :
@@ -96,8 +95,7 @@ theorem placesOver_finite (E : Type) [Field E] [NumberField E] (p : ℕ) (hp : p
     exact_mod_cast hp
   refine (Ideal.finite_factors h0).subset fun v hv => ?_
   show v.asIdeal ∣ _
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 def decl (D : D7) (i : D.nd.Loc) (hl : D.nd.l i ≠ 0) (ep : Bool) : TruncatedSeriesCountingIdentities.Decl D i where
   row := (placesOver_finite D.host.E (D.nd.l i) hl).toFinset.filter
@@ -136,8 +134,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (ep : Bool), GlobalTheory.IndefiniteR
     constructor
     · rintro ⟨-, hv', h⟩
       exact h
-    · intro h
-      exact ⟨hv, hv, h⟩
+    · exact fun h => ⟨hv, hv, h⟩
   · intro v
     rw [mem_row]
     constructor

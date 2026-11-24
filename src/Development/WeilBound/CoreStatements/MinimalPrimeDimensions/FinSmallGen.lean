@@ -399,16 +399,14 @@ theorem fin_small_gen {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z :
     (h2 : ∀ a ∈ la.asIdeal, ν (algebraMap c.F (Om Z) (a : c.F)) < 1) (τ : ℕ) (f : cuspOn U Z (τ • G))
     (hf : ∀ v ∈ (recVals Xo c).1 la, (τ : EReal) * depthOn U Z G v ≤ v (f : Rul Xo c)) :
     ∃ l ∈ latOn U Z G, ν (genVal Z (f : Rul Xo c)) ≤ ν (genVal Z (l : Rul Xo c)) ^ τ := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨hGF, hGT⟩ := GlobalTheory.Reg.genFrEx_and_genFromTest E H Dw l Xo c
   obtain ⟨n, w, hw⟩ := Submodule.fg_iff_exists_fin_generating_family.1 hFG
   have hspan : Submodule.span c.F (Set.range w) = ⊤ := by
     rw [← hsp, ← hw, Submodule.span_span_of_tower]
   let a : Fin n → Om Z := fun i => genVal Z (w i : Rul Xo c)
   have hex : ∃ i, a i ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     exact hB.1 (LinearMap.ext_on_range hspan fun i => hall i)
   obtain ⟨i₁, hi₁⟩ := hex
   have : Nonempty (Fin n) := ⟨i₁⟩
@@ -428,11 +426,9 @@ theorem fin_small_gen {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z :
   let y : Fin n → Om Z := fun i => a i / a i₀
   let q : Om Z := a i₀ ^ τ / b
   have hy : ∀ i, ν (y i) ≤ 1 := fun i => by
-    simp only [y, map_div₀]
-    exact div_le_one_of_le₀ (hi₀ i) hνa.le
+    simpa only [y, map_div₀] using div_le_one_of_le₀ (hi₀ i) hνa.le
   have hq : ν q < 1 := by
-    simp only [q, map_div₀, map_pow]
-    exact (div_lt_one₀ hνb).2 hlt
+    simpa only [q, map_div₀, map_pow] using (div_lt_one₀ hνb).2 hlt
   classical
   let Gn : Finset (Om Z) := Finset.univ.image y ∪ {q}
   have hGn : ∀ g ∈ Gn, ν g ≤ 1 := fun g hg => by
@@ -452,8 +448,7 @@ theorem fin_small_gen {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z :
   have hN : ∀ x ∈ N, x ≠ 0 := fun x hx => by
     rcases Finset.mem_insert.1 hx with h | h
     · exact h ▸ ha0
-    · rw [Finset.mem_singleton.1 h]
-      exact hb0
+    · rwa [Finset.mem_singleton.1 h]
   obtain ⟨T, io, e, ho, hfin, S, ρ, hρK, hSG, hSW, hSN, hρN, hρG, hρL⟩ :=
     exists_cdvr_point_gen la ν h1 h2 Gn Wf N hGn hgen hN
   have hχS : ∀ x : p.R, χ x ∈ S := fun x => by

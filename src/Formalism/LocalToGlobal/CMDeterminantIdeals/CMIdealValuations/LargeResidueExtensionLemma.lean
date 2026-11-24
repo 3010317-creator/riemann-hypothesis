@@ -210,8 +210,7 @@ theorem coeffIntegralOfUnitEval : LemmaGCore := by
     simp [Xf, RingHom.mapMatrix_apply, hy]
   have hyx : (residue R) ∘ y = x := funext hy
   have hQy : IsUnit (eval y Q) := by
-    rw [← residue_ne_zero_iff_isUnit, map_eval, hyx]
-    exact hxQ
+    rwa [← residue_ne_zero_iff_isUnit, map_eval, hyx]
   obtain ⟨r, hr⟩ := hval Xf hdet
   have hev : evalFr P (fun b => (Xf b).map (algebraMap R K)) = eval (algebraMap R K ∘ y) P := rfl
   have hyQ : eval y Q = ϖ ^ e * r := by
@@ -289,8 +288,7 @@ theorem exists_monic_irreducible_card_gt (k : Type) [Field k] [Finite k] (N : �
     intro f hf
     rw [Nat.card_congr (AdjoinRoot.powerBasis hf.ne_zero).basis.equivFun.toEquiv, Nat.card_fun]
     simp [AdjoinRoot.powerBasis_dim]
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hq : 2 ≤ Nat.card k := Finite.one_lt_card
 
   have hdeg : ∀ α : AlgebraicClosure k, (minpoly k α).natDegree ≤ N := by
@@ -323,10 +321,8 @@ theorem mem_smul_top_iff_repr {R M ι : Type} [CommRing R] [AddCommGroup M] [Mod
   constructor
   · intro hx i
     refine Submodule.smul_induction_on (p := fun x => b.repr x i ∈ J) hx (fun r hr m _ => ?_) (fun x y hx hy => ?_)
-    · simp only [map_smul, Finsupp.smul_apply, smul_eq_mul]
-      exact J.mul_mem_right _ hr
-    · simp only [map_add (f := _), Finsupp.add_apply]
-      exact J.add_mem hx hy
+    · simpa only [map_smul, Finsupp.smul_apply, smul_eq_mul] using J.mul_mem_right _ hr
+    · simpa only [map_add (f := _), Finsupp.add_apply] using J.add_mem hx hy
   · intro h
     rw [← b.sum_repr x]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem_smul (h i) Submodule.mem_top

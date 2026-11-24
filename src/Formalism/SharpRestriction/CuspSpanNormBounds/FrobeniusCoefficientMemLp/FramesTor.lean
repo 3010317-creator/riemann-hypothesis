@@ -73,19 +73,15 @@ theorem dT_unit' {k r : ℕ} (i : Fin (2 * r + k + 1)) : dT k r i * star (dT k r
 
 theorem tTi_mul_tT (k r : ℕ) : tTi k r * tT k r = 1 := by
   rw [tTi, tT, Matrix.diagonal_mul_diagonal]
-  simp only [dT_unit]
-  exact Matrix.diagonal_one
+  simpa only [dT_unit] using Matrix.diagonal_one
 
 theorem tT_mul_tTi (k r : ℕ) : tT k r * tTi k r = 1 := by
   rw [tTi, tT, Matrix.diagonal_mul_diagonal]
-  simp only [dT_unit']
-  exact Matrix.diagonal_one
+  simpa only [dT_unit'] using Matrix.diagonal_one
 
-theorem tT_inv (k r : ℕ) : (tT k r)⁻¹ = tTi k r := by
-  exact Matrix.inv_eq_left_inv (tTi_mul_tT k r)
+theorem tT_inv (k r : ℕ) : (tT k r)⁻¹ = tTi k r := Matrix.inv_eq_left_inv (tTi_mul_tT k r)
 
-theorem tTi_inv (k r : ℕ) : (tTi k r)⁻¹ = tT k r := by
-  exact Matrix.inv_eq_left_inv (tT_mul_tTi k r)
+theorem tTi_inv (k r : ℕ) : (tTi k r)⁻¹ = tT k r := Matrix.inv_eq_left_inv (tT_mul_tTi k r)
 
 theorem conjI_apply {k r : ℕ} (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1)) :
     (tTi k r * M * tT k r) i j = star (dT k r i) * M i j * dT k r j := by
@@ -124,13 +120,13 @@ theorem dT_esI {k r : ℕ} (a : Fin r) : dT k r (esI k r a) = Complex.I ^ a.val 
 
 theorem dT_mid {k r : ℕ} (i : Fin (2 * r + k + 1)) (h1 : r ≤ i.val) (h2 : i.val ≤ r + k) : dT k r i = Complex.I ^ r := by
   unfold dT
-  rw [if_neg (by omega), if_neg (by omega)]
+  rw [ite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem dT_pair {k r : ℕ} (i j : Fin (2 * r + k + 1)) (hi : i.val < r) (hij : i.val + j.val = 2 * r + k) :
     dT k r j = dT k r i := by
   have hj := j.isLt
   unfold dT
-  rw [if_neg (by omega), if_pos (by omega), if_pos hi]
+  rw [ite_eq_right (by omega), ite_eq_left (by omega), ite_eq_left hi]
   congr 1
   omega
 
@@ -184,7 +180,7 @@ theorem tT_mulVec_Wb {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k 
   simp only [tT, Matrix.mulVec_diagonal, Pi.smul_apply, smul_eq_mul]
   by_cases hi : i.val < r ∨ r + k < i.val
   · rw [hz i hi, mul_zero, mul_zero]
-  · push_neg at hi
+  · push Not at hi
     rw [dT_mid i hi.1 hi.2]
 
 theorem tTi_mulVec_Wb {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) :
@@ -193,7 +189,7 @@ theorem tTi_mulVec_Wb {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k
   simp only [tTi, Matrix.mulVec_diagonal, Pi.smul_apply, smul_eq_mul]
   by_cases hi : i.val < r ∨ r + k < i.val
   · rw [hz i hi, mul_zero, mul_zero]
-  · push_neg at hi
+  · push Not at hi
     rw [dT_mid i hi.1 hi.2]
 
 theorem ell_conjI {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z)

@@ -103,7 +103,7 @@ theorem coeff_subst_low {σ : Type*} {A : MvPowerSeries σ K}
     rcases Nat.lt_or_ge d 3 with h | h
     · have h0 : d = 0 := by omega
       subst h0
-      rw [pow_zero, MvPowerSeries.coeff_one, if_neg he, smul_zero]
+      rw [pow_zero, MvPowerSeries.coeff_one, ite_eq_right he, smul_zero]
     · rw [coeff_pow_eq_zero hA d e (by omega), smul_zero]
 
 theorem coeff_subst_of_degree_eq_one {σ : Type*} {A : MvPowerSeries σ K}
@@ -224,7 +224,6 @@ theorem pcoeff2_subst {A : PowerSeries K} (hA : PowerSeries.constantCoeff A = 0)
       Finset.Nat.sum_antidiagonal_succ, Finset.Nat.antidiagonal_zero, Finset.sum_singleton]
     simp [hA]
     ring
-  rw [← h2]
-  exact h
+  rwa [← h2]
 
 end PI.JetsPhW.Low

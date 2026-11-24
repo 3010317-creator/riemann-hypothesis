@@ -447,8 +447,7 @@ theorem GlobalTheory.PrimCentIdem.main : ∀ (g a : ℕ) [Fact g.Prime] (L : Pai
   obtain ⟨hfin, hsum⟩ := GlobalTheory.SerOSys.zIdem_finite_and_finsum_eq_one (GL (Fin a) (ZMod g))
   have hex : ∃ ρ : FDRep ℂ (GL (Fin a) (ZMod g)), CategoryTheory.Simple ρ ∧
       L.idem τ * Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ ≠ 0 := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     apply L.idem_ne τ
     rw [← mul_one (L.idem τ), ← hsum, finsum_mem_eq_finite_toFinset_sum _ hfin, Finset.mul_sum]
     refine Finset.sum_eq_zero fun z hz => ?_
@@ -668,8 +667,7 @@ theorem lab_unique {ι : Type} {S : Finset A} (hS : IsDecomp S) (hP : IsPrim S) 
   have h0 : (e j * t) * (e i * t) = 0 := by
     rw [mul_assoc, ← mul_assoc t, hS.2.1 t ht (e i), mul_assoc, ← mul_assoc (e j), he_o j i hji,
       zero_mul]
-  rw [hjt, hit, hS.1 t ht] at h0
-  exact h0
+  rwa [hjt, hit, hS.1 t ht] at h0
 
 end Alg
 
@@ -889,9 +887,7 @@ theorem charpoly_eq_of_gen {n : ℕ} (ρ : Ine (F := E) A →* GL (Fin n) ℂ)
   have hWo : IsOpen W := continuous_subtype_val.isOpen_preimage _ (hU.inter (isOpen_iInter_of_finite hV))
   have hWk : ∀ σ ∈ W, Φ σ = 1 := by
     intro σ hσ
-    refine Prod.ext (hUρ σ hσ.1) (funext fun x => Units.ext ?_)
-    show χ x (σ : G E Ω) = 1
-    exact hVχ x σ (Set.mem_iInter.1 hσ.2 x) σ.2
+    exact Prod.ext (hUρ σ hσ.1) (funext fun x => Units.ext (hVχ x σ (Set.mem_iInter.1 hσ.2 x) σ.2))
   have h1W : (1 : Ine (F := E) A) ∈ W := ⟨U.one_mem, Set.mem_iInter.2 fun x => (V x).one_mem⟩
   have hker : IsOpen (Φ.ker : Set (Ine (F := E) A)) :=
     Subgroup.isOpen_of_mem_nhds _ (g := 1)
@@ -912,9 +908,7 @@ theorem charpoly_eq_of_gen {n : ℕ} (ρ : Ine (F := E) A →* GL (Fin n) ℂ)
       exact Units.ext (GlobalTheory.FinOrd.eq_one_of_pow_eq_one_of_charpoly ℂ n _
         ⟨m, hm, by rw [← Units.val_pow_eq_pow_val, hpow, Units.val_one]⟩ (hρw τ hτ))
     have hΦ1 : Φ τ = 1 := by
-      refine Prod.ext hρ1 (funext fun x => Units.ext ?_)
-      show χ x (τ : G E Ω) = 1
-      exact hwild x (Multiset.mem_toFinset.1 x.2) τ hτ
+      exact Prod.ext hρ1 (funext fun x => Units.ext (hwild x (Multiset.mem_toFinset.1 x.2) τ hτ))
     rw [hΦ1]
     exact one_mem _
   obtain ⟨m, hm⟩ := ((isOfFinOrder_of_isOpen Φ hker γ').mem_powers_iff_mem_zpowers).2 (Subgroup.mem_comap.1 hσH)
@@ -982,24 +976,11 @@ namespace GlobalTheory.TwistLabel
 
 theorem teich_zero' {g : ℕ} [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
     (ht : ∀ x y, x ≠ 0 → y ≠ 0 → t x = t y → x = y) : t 0 = 0 := by
-  classical
-  obtain ⟨x, hx⟩ := Infinite.exists_notMem_finset ({0, 1} : Finset (Formalism.CyclotomicNorms.Fbar g))
-  simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hx
-  by_contra h0
-  have h1 : t 0 * t x = t 0 * t 1 := by rw [← map_mul, ← map_mul, zero_mul, zero_mul]
-  exact hx.2 (ht x 1 hx.1 one_ne_zero (mul_left_cancel₀ h0 h1))
+  exact GlobalTheory.TameLabels.teich_zero t ht
 
 theorem teich_injective' {g : ℕ} [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
     (ht : ∀ x y, x ≠ 0 → y ≠ 0 → t x = t y → x = y) : Function.Injective t := by
-  have h0 := teich_zero' t ht
-  have hne : ∀ x, x ≠ 0 → t x ≠ 0 := fun x hx => ((IsUnit.mk0 x hx).map t).ne_zero
-  intro x y h
-  by_cases hx : x = 0
-  · by_contra hxy
-    exact hne y (fun hy => hxy (hx.trans hy.symm)) (by rw [← h, hx, h0])
-  · by_cases hy : y = 0
-    · exact absurd (by rw [h, hy, h0]) (hne x hx)
-    · exact ht x y hx hy h
+  exact GlobalTheory.TameLabels.teich_injective t ht
 
 theorem prod_scaleRoots {α : Type*} (s : Multiset α) (f : α → ℂ) (c : ℂ) :
     ((s.map fun x => X - C (f x)).prod).scaleRoots c = (s.map fun x => X - C (f x * c)).prod := by
@@ -1291,8 +1272,7 @@ theorem main : ∀ (D : D7) (M : MtFam D) (i : D.nd.Loc), HeckeTied D M → Heck
     have hpa : q ⟨a, ha⟩ = q 0 := by
       rw [map_zero]
       show p a = 0
-      rw [map_add (f := _), hnone n hn, add_zero] at hz
-      exact hz
+      rwa [map_add (f := _), hnone n hn, add_zero] at hz
     have := congrArg Subtype.val (hqi hpa)
     simp only [Submodule.coe_zero] at this
     rw [this, zero_add]; exact hn
@@ -1308,8 +1288,7 @@ theorem main : ∀ (D : D7) (M : MtFam D) (i : D.nd.Loc), HeckeTied D M → Heck
     have h1 : e.symm (πh u) = 0 := Subtype.ext hu
     have h2 : πh u = 0 := by
       have h := congrArg (fun z : G => e z) h1
-      rw [e.apply_symm_apply, e.map_zero] at h
-      exact h
+      rwa [e.apply_symm_apply, e.map_zero] at h
     refine bW.repr.injective (Finsupp.ext fun k => ?_)
     have h3 := congrFun h2 k
     rw [hπ] at h3
@@ -1349,8 +1328,7 @@ theorem main : ∀ (D : D7) (M : MtFam D) (i : D.nd.Loc), HeckeTied D M → Heck
       have := congrArg Subtype.val (hqi (a₁ := ⟨c, hcG⟩) (a₂ := 0) (by
         rw [map_zero]; exact hpc))
       simpa using this
-    rw [← hac, hc0, add_zero]
-    exact ha
+    rwa [← hac, hc0, add_zero]
   ·
     intro y
     refine hkerG _ ?_
@@ -1665,8 +1643,7 @@ theorem continuous_conjHom (c : Ω ≃+* Ω)
       rw [conjHom_apply, hg _ (IntermediateField.subset_adjoin _ _ (by simpa using hx)), RingEquiv.apply_symm_apply]
     exact (Subgroup.zpowers_le (H := MulAction.stabilizer (G E Ω) x)).2 h1 hf
   rw [SetLike.mem_coe, IntermediateField.mem_fixingSubgroup_iff]
-  intro x hx
-  exact (IntermediateField.mem_fixedField_iff _ _).1 (key hx) _ (Subgroup.mem_zpowers _)
+  exact fun x hx => (IntermediateField.mem_fixedField_iff _ _).1 (key hx) _ (Subgroup.mem_zpowers _)
 
 theorem tameGenAt_transport (c : Ω ≃+* Ω)
     (hc : ∀ x : E, ∃ y : E, c.symm (algebraMap E Ω x) = algebraMap E Ω y)

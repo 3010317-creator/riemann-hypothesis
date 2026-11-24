@@ -137,8 +137,7 @@ theorem exists_pt (x : X) :
   · intro hU
     have := hU (Set.mem_univ (IsLocalRing.closedPoint (X.residueField x)))
     exact e _ ▸ this
-  · intro hx y _
-    exact (congrArg (· ∈ U) (e y)).mpr hx
+  · exact fun hx y _ => (congrArg (· ∈ U) (e y)).mpr hx
 
 theorem mem_chart {H : LB X} (t : H.Sec) (l : H.ι) {x : X} (hx : x ∈ nonzeroLocus t) (hl : x ∈ H.U l) :
     x ∈ X.basicOpen (t.f l) := by
@@ -179,8 +178,7 @@ theorem exists_chart_unit [IsReduced X] (hs : ⨆ j, nonzeroLocus (s j) = ⊤)
   · intro j x hx
     have hx' := X.basicOpen_le _ hx
     obtain ⟨K, _, φ, c, hc, hunit⟩ := hv x hx'
-    rw [← hunit, hc, Units.isUnit_units_mul, hunit]
-    exact hx
+    rwa [← hunit, hc, Units.isUnit_units_mul, hunit]
   · intro j k
     rw [← sub_eq_zero, ← basicOpen_eq_bot_iff, eq_bot_iff]
     intro x hx
@@ -223,8 +221,7 @@ theorem exists_iso_of_crd : ∀ (X : Scheme.{0}) [IsIntegral X] (H H' : LB X) (J
   · intro j x i i' hi hi'
     have hx : (𝟙 X : X ⟶ X) x ∈ H'.U i' ⊓ H.U i := ⟨hi', hi⟩
     have e := congrArg (gs (𝟙 X) x (H'.U i' ⊓ H.U i)) (hw i i' j)
-    rw [gs_mul _ _ _ hx, gs_res _ _ _ hx, gs_res _ _ _ hx] at e
-    exact e
+    rwa [gs_mul _ _ _ hx, gs_res _ _ _ hx, gs_res _ _ _ hx] at e
 
 end GlobalTheory.ZH.CrdIso
 end

@@ -135,8 +135,7 @@ theorem relIndex_eq_of_surj {G A : Type} [Group G] [AddGroup A] (H K : Subgroup 
     exact h u u'
   refine Nat.card_congr (Equiv.ofBijective (Quotient.map' f fun a b e => (h' a b).1 e) ⟨?_, ?_⟩)
   · intro x y
-    refine Quotient.inductionOn₂' x y fun a b e => ?_
-    exact Quotient.sound' ((h' a b).2 (Quotient.exact' e))
+    exact Quotient.inductionOn₂' x y fun a b e => Quotient.sound' ((h' a b).2 (Quotient.exact' e))
   · intro x
     refine Quotient.inductionOn' x fun a => ?_
     obtain ⟨b, rfl⟩ := hf a
@@ -277,11 +276,9 @@ theorem relIndex_unipLat (L : Type) [Field L] [Valued L (WithZero (Multiplicativ
       rw [mem_borelU_U]
       refine ⟨fun i j e => ?_, fun i => ?_⟩
       · have := hu.1 i j (le_of_lt e)
-        rw [Matrix.sub_apply, Matrix.one_apply_ne (ne_of_gt e), sub_zero] at this
-        exact this
+        rwa [Matrix.sub_apply, Matrix.one_apply_ne (ne_of_gt e), sub_zero] at this
       · have := hu.1 i i le_rfl
-        rw [Matrix.sub_apply, Matrix.one_apply_eq, sub_eq_zero] at this
-        exact this
+        rwa [Matrix.sub_apply, Matrix.one_apply_eq, sub_eq_zero] at this
     exact ⟨⟨⟨⟨g, hg⟩, hU⟩, hu⟩, Subtype.ext e⟩
   · intro u u'
     have h1 : (u.1.1.1⁻¹).val - 1 ∈ upLat L c := (unipLat h.2.1 hc).inv_mem u.2

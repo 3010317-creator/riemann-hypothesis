@@ -34,18 +34,15 @@ theorem colH_le_of (hν : Antitone ν) {k : ℕ} (t : Fin n) (h : ν t ≤ k) : 
   intro s hs
   rw [Finset.mem_filter] at hs
   rw [Finset.mem_Iio]
-  by_contra hst
-  push_neg at hst
+  by_contra! hst
   exact absurd (lt_of_lt_of_le hs.2 (hν hst)) (not_lt.mpr h)
 
 theorem lt_colH_iff (hν : Antitone ν) (k : ℕ) (t : Fin n) : t.val < colH ν k ↔ k < ν t := by
   constructor
   · intro h
-    by_contra h'
-    push_neg at h'
+    by_contra! h'
     exact absurd (colH_le_of hν t h') (not_le.mpr h)
-  · intro h
-    exact Nat.lt_of_succ_le (colH_ge hν t h)
+  · exact fun h => Nat.lt_of_succ_le (colH_ge hν t h)
 
 end Heights
 
@@ -57,13 +54,11 @@ theorem card_fin_lt (c m : ℕ) (hm : m ≤ c) : (Finset.univ.filter fun k : Fin
     constructor
     · rintro ⟨k, hk, rfl⟩
       exact hk
-    · intro hx
-      exact ⟨⟨x, by omega⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, by omega⟩, hx, rfl⟩
   rw [← Finset.card_map Fin.valEmbedding, e, Finset.card_range]
 
 theorem kap_antitone {n : ℕ} {μ : Fin n → ℕ} (hμ : Antitone μ) (c : ℕ) : Antitone fun t : Fin n => c - μ t.rev := by
-  intro s t hst
-  exact Nat.sub_le_sub_left (hμ (Fin.rev_le_rev.mpr hst)) c
+  exact fun s t hst => Nat.sub_le_sub_left (hμ (Fin.rev_le_rev.mpr hst)) c
 
 theorem colH_kap {n : ℕ} {μ : Fin n → ℕ} (c : ℕ) (hc : ∀ t, μ t ≤ c) (k : Fin c) :
     n - colH μ k.val = colH (fun t : Fin n => c - μ t.rev) (Fin.rev k).val := by
@@ -76,8 +71,7 @@ theorem colH_kap {n : ℕ} {μ : Fin n → ℕ} (c : ℕ) (hc : ∀ t, μ t ≤ 
       have := hc t.rev
       have := k.isLt
       omega
-    · intro a _ b _ h
-      exact Fin.rev_injective h
+    · exact fun a _ b _ h => Fin.rev_injective h
     · intro s hs
       refine ⟨s.rev, ?_, Fin.rev_rev s⟩
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.val_rev, Fin.rev_rev] at hs ⊢
@@ -108,9 +102,8 @@ theorem card_ge_eq {n K K' : ℕ} (sz : Fin K → ℕ) (sz' : Fin K' → ℕ) (h
       ext k
       simp only [Finset.mem_filter, Finset.mem_univ, true_and]
       constructor <;> intro <;> omega
-    rw [e1, e2]
-    exact e
-  · push_neg at hln
+    rwa [e1, e2]
+  · push Not at hln
     have e1 : (Finset.univ.filter fun k => l ≤ sz k) = ∅ :=
       Finset.filter_eq_empty_iff.mpr fun k _ => by have := hsz k; omega
     have e2 : (Finset.univ.filter fun k => l ≤ sz' k) = ∅ :=
@@ -165,8 +158,7 @@ theorem shape_even_holds : ShapeE := by
   rw [← card_fin_lt c (ν t) (hc t)]
   congr 1
   ext k
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-  exact lt_colH_iff hν k.val t
+  simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using lt_colH_iff hν k.val t
 
 theorem reorder_holds : Reorder := by
   intro B _ r n K K' sz sz' hsz hsz' h I
@@ -202,7 +194,7 @@ theorem reorder_holds : Reorder := by
     obtain ⟨k', hk'⟩ := x'
     subst hk'
     have hI : I' k' = fun j => I (e (sz' k') hl ⟨k', rfl⟩).1 (Fin.cast (e (sz' k') hl ⟨k', rfl⟩).2.symm j) :=
-      dif_pos hl
+      dite_eq_left hl
     simp only
     rw [hI]
     exact initMinor_cast B (e (sz' k') hl ⟨k', rfl⟩).2 _ _ _

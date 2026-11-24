@@ -68,7 +68,7 @@ theorem IdeleGroup.exists_continuous_ideleModule_eq_exp (w : InfinitePlace K) :
       have hw' : ¬ w.IsReal := InfinitePlace.not_isReal_iff_isComplex.2 hw
       rw [hval, hn, RingEquiv.apply_symm_apply, Complex.norm_real,
         Real.norm_of_nonneg (Real.exp_pos _).le]
-      simp only [InfinitePlace.mult, hw', if_false]
+      simp only [InfinitePlace.mult, hw', ite_false]
       rw [sq, ← Real.exp_add, add_halves]
 
 theorem IdeleClassGroup.exists_mem_normOneSubgroup_mul_eq (c : IdeleClassGroup K) :
@@ -149,8 +149,7 @@ theorem artinMap_surjective : Function.Surjective (artinMap K Ω) := by
     · exact restrictAb_eq_of_le (le_maximalAbelianExtension _) le_sup_right hd
   obtain ⟨d, hd⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed t hdir hne
     (fun L ↦ (hcl L).isCompact) hcl
-  refine ⟨d, ext_restrictAb fun L _ _ ↦ ?_⟩
-  exact Set.mem_iInter.1 hd ⟨L, inferInstance, inferInstance⟩
+  exact ⟨d, ext_restrictAb fun L _ _ ↦ (Set.mem_iInter.1 hd ⟨L, inferInstance, inferInstance⟩)⟩
 
 end Surjective
 
@@ -189,8 +188,7 @@ theorem ker_artinMap :
     refine Set.eq_univ_of_forall fun q ↦ ?_
     obtain ⟨c', rfl⟩ := QuotientGroup.mk_surjective q
     obtain ⟨d, hd, e, he, rfl⟩ := IdeleClassGroup.exists_mem_normOneSubgroup_mul_eq c'
-    refine ⟨d, hd, QuotientGroup.eq.2 ?_⟩
-    exact (inv_mul_cancel_left d e).symm ▸ he
+    exact ⟨d, hd, QuotientGroup.eq.2 ((inv_mul_cancel_left d e).symm ▸ he)⟩
   have : CompactSpace (IdeleClassGroup K ⧸ D) :=
     ⟨himage ▸ (IdeleClassGroup.isCompact_normOneSubgroup K).image hπc⟩
 

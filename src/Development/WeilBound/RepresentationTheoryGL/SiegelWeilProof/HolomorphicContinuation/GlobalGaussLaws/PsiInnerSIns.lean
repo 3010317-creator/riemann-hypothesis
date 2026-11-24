@@ -66,8 +66,7 @@ theorem map_inner (V : HSp D) (τ : D.what₂.Tau) (x y : Mx D V.rank n) :
     exact psiT_sigR D τ (x j i)
   have h2 : (gA V).map (psiT D τ) = gramAt D V τ := by
     ext i j
-    simp only [gA, rat, Matrix.map_apply, gramAt]
-    exact psiT_inclR D τ _
+    simpa only [gA, rat, Matrix.map_apply, gramAt] using psiT_inclR D τ _
   show (adj x * (gA V * y)).map (psiT D τ) = _
   rw [Matrix.map_mul, Matrix.map_mul, h1, h2]
 
@@ -101,12 +100,11 @@ theorem psi_inner_sIns {θ : InfFam D} (hθ : IsInfFam θ) {ψ : AddChar (AF D.h
   have hins : ∀ τ', (sIns (D := D) τ fr u).map (psiT D τ') = if τ' = τ then fr * Matrix.of u else 0 := by
     intro τ'
     have := compAt_insT (D := D) hθ τ τ' (fr * Matrix.of u)
-    rw [eq_thetaC D hθ] at this
-    exact this
+    rwa [eq_thetaC D hθ] at this
   rw [psi_trA_tau hθ hl τ]
   · congr 2
     · simp only [tLoc]; push_cast; ring
-    · rw [psiT_trace, map_inner, hins, if_pos rfl]
+    · rw [psiT_trace, map_inner, hins, ite_eq_left rfl]
       congr 2
       obtain ⟨hdet, hg, -⟩ := hfr
       have hx : Matrix.of (piF θ τ fr x) = fr⁻¹ * x.map (psiT D τ) := by
@@ -117,7 +115,7 @@ theorem psi_inner_sIns {θ : InfFam D} (hθ : IsInfFam θ) {ψ : AddChar (AF D.h
       simp only [Matrix.mul_assoc]
       rw [← Matrix.mul_assoc (fr⁻¹)ᴴ frᴴ, hinv, Matrix.one_mul]
   · intro τ' hne
-    rw [psiT_trace, map_inner, hins, if_neg hne, Matrix.mul_zero, Matrix.mul_zero, Matrix.trace_zero]
+    rw [psiT_trace, map_inner, hins, ite_eq_right hne, Matrix.mul_zero, Matrix.mul_zero, Matrix.trace_zero]
   · rw [finPart_trace, finMap_inner V x (sIns τ fr u) (finMap_insT τ (fr * Matrix.of u)), Matrix.trace_zero]
 
 end PositivityTheory.Rg.Sw.Glob.FTP

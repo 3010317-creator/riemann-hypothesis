@@ -187,8 +187,7 @@ theorem enorm_term_le_iSup : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Mat
           (isoPart V W C z + midPart V V' W B 0)‖ₑ ∂μ := enorm_integral_le_lintegral_enorm _
     _ ≤ ∫⁻ _ in 𝓨, (⨆ w, ‖G w‖ₑ) ∂μ := by
         refine lintegral_mono fun z => ?_
-        simp only [heisO, enorm_mul, hψ1, one_mul]
-        exact le_iSup (fun w => ‖G w‖ₑ) _
+        simpa only [heisO, enorm_mul, hψ1, one_mul] using le_iSup (fun w => ‖G w‖ₑ) _
     _ = ⨆ w, ‖G w‖ₑ := by rw [setLIntegral_const, hμ.2.2, mul_one]
 
 end GlobalTheory.MixedTerm
@@ -601,8 +600,7 @@ theorem exists_u {D : D7} {V W : HSp D} {r : ℕ} (P : Matrix (Fin r) (Fin V.ran
   refine ⟨u, ?_, hinf, ?_⟩
   · refine hsub u hinf fun i j k => ⟨_, hden i j k, ?_⟩
     rw [entry_of_map_eq (finPr D) u _ wf hfin i j, finCoord_natCast_mul, hN, Nat.cast_mul, mul_assoc]
-  · rw [hu, actO_u]
-    exact hY
+  · rwa [hu, actO_u]
 
 theorem levelheight : ∀ (D : D7) (V W : HSp D) (r : ℕ) (P : Matrix (Fin r) (Fin V.rank) D.host.E), ∃ e : ℕ,
     ∀ U : AddSubgroup (WO V W), IsOpen (U : Set (WO V W)) → ∃ M : ℕ, 0 < M ∧ ∀ (g : GA D V) (h : GA D W),
@@ -803,16 +801,14 @@ theorem integral : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix (Fin V
   obtain ⟨u, huU, hufin, hact⟩ := hx x hxi
   have h1 : heisO ψ V W (isoPart V W C (finLift ((N : D.host.E) • x))) F = F := by
     have := hinv u huU hufin
-    rw [hact] at this
-    exact this
+    rwa [hact] at this
   have h2 := GlobalTheory.T.mixedModelTerm_heisenbergIsotropic_character D V V' W r C C' B hs ψ hψ μ 𝓨 hY F hF y (finLift ((N : D.host.E) • x))
   rw [h1] at h2
   have hph : phase ψ V W C C' y (finLift ((N : D.host.E) • x)) = 1 :=
     mul_right_cancel₀ hy (by rw [one_mul]; exact h2.symm)
   have hinf : phase ψ V W C C' y (infLift ((N : D.host.E) • x)) = 1 := by
     have := phase_rat ψ hψ.1 V W C C' y ((N : D.host.E) • x)
-    rw [map_incA_eq, phase_add, hph, one_mul] at this
-    exact this
+    rwa [map_incA_eq, phase_add, hph, one_mul] at this
   rw [GlobalTheory.T.mixedModelHeisenbergPhase_eq_cexp_realPoints D V W r C C' hCC ψ hψ θ hθ y _ (infLift_finPart _)] at hinf
   obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.1 hinf
   have hsum : (∑ τ, 2 * (Matrix.trace ((pairQ W y).map (tauE D τ) *
@@ -913,8 +909,8 @@ theorem phase_lineAt (hθ : IsInfFam θ) (V W : HSp D) {r : ℕ} (C C' : Matrix 
   rw [GlobalTheory.T.mixedModelHeisenbergPhase_eq_cexp_realPoints D V W r C C' hCC ψ hψ θ hθ y _ (hL.2.1 t)]
   congr 4
   simp only [hL.2.2 t]
-  rw [Finset.sum_eq_single τ (fun b _ hb => by rw [if_neg hb, Matrix.mul_zero, Matrix.trace_zero, Complex.zero_re,
-    mul_zero]) (by simp), if_pos rfl, Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul, Complex.re_ofReal_mul]
+  rw [Finset.sum_eq_single τ (fun b _ hb => by rw [ite_eq_right hb, Matrix.mul_zero, Matrix.trace_zero, Complex.zero_re,
+    mul_zero]) (by simp), ite_eq_left rfl, Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul, Complex.re_ofReal_mul]
   ring
 
 end GlobalTheory.MixedTerm.IsoDeriv
@@ -1179,8 +1175,7 @@ lemma pi_sum_le (n : ℕ) (f : ℤ → ℝ≥0∞) :
   have hs : s ⊆ Fintype.piFinset t := by
     intro x hx
     rw [Fintype.mem_piFinset]
-    intro j
-    exact Finset.mem_image_of_mem _ hx
+    exact fun j => Finset.mem_image_of_mem _ hx
   calc ∑ c ∈ s, ∏ j, f (c j) ≤ ∑ c ∈ Fintype.piFinset t, ∏ j, f (c j) :=
         Finset.sum_le_sum_of_subset hs
     _ = ∏ j, ∑ z ∈ t j, f z := (Finset.prod_univ_sum t (fun _ z => f z)).symm

@@ -51,7 +51,7 @@ theorem fibSys_finite {W : Type*} [Fintype W] (r : W → ℕ) (H : W → MvPolyn
       have e : monomial u a = a • monomial u (1 : ℂ) := by rw [smul_monomial, smul_eq_mul, mul_one]
       rw [e, hMdef]
       exact Submodule.smul_mem _ a (Submodule.subset_span ⟨u, (hB u).mpr hall, rfl⟩)
-    · push_neg at hall
+    · push Not at hall
       obtain ⟨i, hi⟩ := hall
       have hle : Finsupp.single i (r i) ≤ u := Finsupp.single_le_iff.mpr hi
       obtain ⟨u', hu'⟩ : ∃ u', u = u' + Finsupp.single i (r i) :=
@@ -155,8 +155,7 @@ theorem fibSys_finite {W : Type*} [Fintype W] (r : W → ℕ) (H : W → MvPolyn
     · rw [map_mul, eval_C, hLself, mul_one, hf']
     · intro x _ hxt
       rw [map_mul, hLother x t t.2 (Ne.symm hxt), mul_zero]
-    · intro h
-      exact absurd t.2 h
+    · exact fun h => absurd t.2 h
   have h1 := LinearMap.finrank_range_le Φ
   rw [LinearMap.range_eq_top.mpr hsurj, finrank_top, Module.finrank_fintype_fun_eq_card,
     Module.finrank_fintype_fun_eq_card, Fintype.card_coe, Fintype.card_coe] at h1
@@ -274,8 +273,7 @@ theorem segre_rel {P : Ideal (MRing ι)} (hP : IsMultiHomogIdeal P)
     apply hΨ z hmc
     funext j
     have := hz (psiPoly Ψ j) (Ideal.mem_sup_right (Ideal.subset_span ⟨j, rfl⟩))
-    rw [eval_psiPoly] at this
-    exact this
+    rwa [eval_psiPoly] at this
   rw [MvPolynomial.vanishingIdeal_zeroLocus_eq_radical] at hvan
   obtain ⟨n, hn⟩ := hvan
   have hn1 : segMono ι i ^ (n + 1) ∈ J := by
@@ -299,8 +297,7 @@ theorem segre_rel {P : Ideal (MRing ι)} (hP : IsMultiHomogIdeal P)
     exact weightedHomogeneousComponent_eq_self hh
   have hgc : weightedHomogeneousComponent (blkW ι) (fun _ : K => n + 1) g ∈ idealC ι P := by
     have h := (idealC_homog hP) (fun _ : K => n + 1) hg
-    rw [← weightedDecomposition.decompose'_apply ℂ (blkW ι) g (fun _ : K => n + 1)]
-    exact h
+    rwa [← weightedDecomposition.decompose'_apply ℂ (blkW ι) g (fun _ : K => n + 1)]
   have hterm : ∀ j, weightedHomogeneousComponent (blkW ι) (fun _ : K => n + 1) (c j * psiPoly Ψ j) =
       weightedHomogeneousComponent (blkW ι) (fun _ : K => n) (c j) * psiPoly Ψ j := by
     intro j

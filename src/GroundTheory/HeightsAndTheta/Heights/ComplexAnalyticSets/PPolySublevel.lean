@@ -144,16 +144,15 @@ theorem PolySublevel.proof : PolySublevel.Statement := by
   | succ d ih =>
     intro Q hQ R hR
     set P := finSuccEquiv ℂ d Q with hP_def
-    set m := P.natDegree with hm
-    set q := P.leadingCoeff with hq_def
-    have hP : P ≠ 0 := by
-      intro h; apply hQ; rw [← (finSuccEquiv ℂ d).symm_apply_apply Q, ← hP_def, h, map_zero]
-    have hq : q ≠ 0 := Polynomial.leadingCoeff_ne_zero.2 hP
-    obtain ⟨C', α', hC', hα', hIH⟩ := ih q hq R hR
-    set W : ℝ := (volume (Metric.ball (0 : ℂ) R)).toReal with hW
-    set V : ℝ := (volume (Metric.ball (0 : Fin d → ℂ) R)).toReal with hV
-    have hW0 : 0 ≤ W := ENNReal.toReal_nonneg
-    have hV0 : 0 ≤ V := ENNReal.toReal_nonneg
+    set m := P.natDegree
+    set q := P.leadingCoeff
+    have hP : P ≠ 0 := (map_ne_zero_iff _ (finSuccEquiv ℂ d).injective).2 hQ
+    obtain ⟨C', α', hC', hα', hIH⟩ := ih q (Polynomial.leadingCoeff_ne_zero.2 hP) R hR
+    obtain ⟨W, hW0, hc1⟩ : ∃ W : ℝ, 0 ≤ W ∧ volume (Metric.ball (0 : ℂ) R) = ENNReal.ofReal W :=
+      ⟨_, ENNReal.toReal_nonneg, (ENNReal.ofReal_toReal measure_ball_lt_top.ne).symm⟩
+    obtain ⟨V, hV0, hc2⟩ : ∃ V : ℝ,
+        0 ≤ V ∧ volume (Metric.ball (0 : Fin d → ℂ) R) = ENNReal.ofReal V :=
+      ⟨_, ENNReal.toReal_nonneg, (ENNReal.ofReal_toReal measure_ball_lt_top.ne).symm⟩
     refine ⟨W * C' + 4 * Real.pi * m * V + 1, min (α' / 2) ((m : ℝ) + 1)⁻¹,
       by positivity, lt_min (by positivity) (by positivity), fun η hη hη1 => ?_⟩
     set S := {x : Fin (d + 1) → ℂ | x ∈ Metric.ball 0 R ∧ ‖eval x Q‖ ≤ η} with hS_def
@@ -167,9 +166,7 @@ theorem PolySublevel.proof : PolySublevel.Statement := by
       simp only [Set.mem_preimage, e, MeasurableEquiv.piFinSuccAbove_symm_apply, hS_def,
         Set.mem_ofPred_eq, mem_ball_zero_iff, pi_norm_lt_iff hR, Fin.forall_fin_succ]
       simp [← eval_eq_eval_mv_eval', hP_def]
-    have hvol : volume S = (volume.prod (Measure.pi fun _ : Fin d => (volume : Measure ℂ)))
-        (e.symm ⁻¹' S) := ((MeasurePreserving.symm e he).measure_preimage hS.nullMeasurableSet).symm
-    set A := {y : Fin d → ℂ | y ∈ Metric.ball 0 R ∧ ‖eval y q‖ ≤ Real.sqrt η} with hA_def
+    set A := {y : Fin d → ℂ | y ∈ Metric.ball 0 R ∧ ‖eval y q‖ ≤ Real.sqrt η}
     have hA : MeasurableSet A := Metric.isOpen_ball.measurableSet.inter
       (isClosed_le (MvPolynomial.continuous_eval q).norm continuous_const).measurableSet
     have hfib : ∀ y : Fin d → ℂ, volume ((fun z => (z, y)) ⁻¹' (e.symm ⁻¹' S)) ≤
@@ -181,25 +178,16 @@ theorem PolySublevel.proof : PolySublevel.Statement := by
       · by_cases hyA : ‖eval y q‖ ≤ Real.sqrt η
         · rw [Set.indicator_of_mem (show y ∈ A from ⟨hy, hyA⟩)]
           refine le_trans (measure_mono fun z hz => ?_) le_self_add
-          rw [Set.mem_preimage, hmem] at hz
-          exact mem_ball_zero_iff.2 hz.1.1
+          exact mem_ball_zero_iff.2 ((hmem z y).1 hz).1.1
         · rw [Set.indicator_of_mem hy]
           refine le_trans ?_ le_add_self
-          have hlc : eval y q ≠ 0 := by
-            intro h; rw [h, norm_zero] at hyA; exact hyA (Real.sqrt_nonneg η)
-          have hdeg : (Polynomial.map (eval y) P).natDegree = m :=
-            Polynomial.natDegree_map_of_leadingCoeff_ne_zero _ hlc
-          have hlead : (Polynomial.map (eval y) P).leadingCoeff = eval y q :=
-            Polynomial.leadingCoeff_map_of_leadingCoeff_ne_zero _ hlc
-          have hsq : η < ‖(Polynomial.map (eval y) P).leadingCoeff‖ ^ 2 := by
-            rw [hlead]
-            push Not at hyA
-            exact (Real.sqrt_lt' (lt_of_le_of_lt (Real.sqrt_nonneg η) hyA)).1 hyA
-          have h1 := volume_sublevel_one_var (Polynomial.map (eval y) P) hη hη1 hsq
-          rw [hdeg] at h1
+          have hlc : eval y q ≠ 0 := fun h => hyA (by simp [h])
+          have h1 := volume_sublevel_one_var (Polynomial.map (eval y) P) hη hη1 (by
+            rw [Polynomial.leadingCoeff_map_of_leadingCoeff_ne_zero _ hlc]
+            exact (Real.sqrt_lt' ((Real.sqrt_nonneg η).trans_lt (not_le.1 hyA))).1 (not_le.1 hyA))
+          rw [Polynomial.natDegree_map_of_leadingCoeff_ne_zero _ hlc] at h1
           refine le_trans (measure_mono fun z hz => ?_) h1
-          rw [Set.mem_preimage, hmem] at hz
-          exact hz.2
+          exact ((hmem z y).1 hz).2
       · have h0 : (fun z => (z, y)) ⁻¹' (e.symm ⁻¹' S) = ∅ := by
           ext z
           simp only [Set.mem_preimage, hmem, Set.mem_empty_iff_false, iff_false]
@@ -209,17 +197,14 @@ theorem PolySublevel.proof : PolySublevel.Statement := by
     have hint : volume S ≤ volume (Metric.ball (0 : ℂ) R) * volume A +
         ENNReal.ofReal (4 * Real.pi * m * η ^ ((m : ℝ)⁻¹)) *
           volume (Metric.ball (0 : Fin d → ℂ) R) := by
-      rw [hvol, Measure.prod_apply_symm (e.symm.measurable hS)]
+      rw [show volume S = _ from ((he.symm e).measure_preimage hS.nullMeasurableSet).symm,
+        Measure.prod_apply_symm (e.symm.measurable hS)]
       refine le_trans (lintegral_mono hfib) (le_of_eq ?_)
       rw [lintegral_add_left (measurable_const.indicator hA), lintegral_indicator_const hA,
         lintegral_indicator_const Metric.isOpen_ball.measurableSet]
       rfl
     have hA_le : volume A ≤ ENNReal.ofReal (C' * Real.sqrt η ^ α') :=
       hIH (Real.sqrt η) (Real.sqrt_pos.2 hη) ((Real.sqrt_le_sqrt hη1).trans_eq Real.sqrt_one)
-    have hc1 : volume (Metric.ball (0 : ℂ) R) = ENNReal.ofReal W :=
-      (ENNReal.ofReal_toReal measure_ball_lt_top.ne).symm
-    have hc2 : volume (Metric.ball (0 : Fin d → ℂ) R) = ENNReal.ofReal V :=
-      (ENNReal.ofReal_toReal measure_ball_lt_top.ne).symm
     have hsqrt : Real.sqrt η ^ α' ≤ η ^ min (α' / 2) ((m : ℝ) + 1)⁻¹ := by
       rw [Real.sqrt_eq_rpow, ← Real.rpow_mul hη.le]
       apply Real.rpow_le_rpow_of_exponent_ge hη hη1
@@ -229,26 +214,18 @@ theorem PolySublevel.proof : PolySublevel.Statement := by
       · simp [h0]
       · apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg m)
         apply Real.rpow_le_rpow_of_exponent_ge hη hη1
-        calc min (α' / 2) ((m : ℝ) + 1)⁻¹ ≤ ((m : ℝ) + 1)⁻¹ := min_le_right _ _
-          _ ≤ (m : ℝ)⁻¹ := inv_anti₀ (Nat.cast_pos.2 hpos) (by linarith)
+        exact (min_le_right _ _).trans (inv_anti₀ (Nat.cast_pos.2 hpos) (by linarith))
     have hreal : W * (C' * Real.sqrt η ^ α') + 4 * Real.pi * m * η ^ ((m : ℝ)⁻¹) * V ≤
         (W * C' + 4 * Real.pi * m * V + 1) * η ^ min (α' / 2) ((m : ℝ) + 1)⁻¹ := by
       have hpα : 0 ≤ η ^ min (α' / 2) ((m : ℝ) + 1)⁻¹ := Real.rpow_nonneg hη.le _
       have hpi := Real.pi_pos
       nlinarith [mul_le_mul_of_nonneg_left hsqrt (mul_nonneg hW0 hC'.le),
         mul_le_mul_of_nonneg_left hmη (mul_nonneg (by positivity : (0 : ℝ) ≤ 4 * Real.pi) hV0)]
-    calc volume S ≤ volume (Metric.ball (0 : ℂ) R) * volume A +
-          ENNReal.ofReal (4 * Real.pi * m * η ^ ((m : ℝ)⁻¹)) *
-            volume (Metric.ball (0 : Fin d → ℂ) R) := hint
-      _ ≤ ENNReal.ofReal W * ENNReal.ofReal (C' * Real.sqrt η ^ α') +
-          ENNReal.ofReal (4 * Real.pi * m * η ^ ((m : ℝ)⁻¹)) * ENNReal.ofReal V := by
-        rw [hc1, hc2]
-        exact add_le_add (by gcongr) le_rfl
-      _ = ENNReal.ofReal (W * (C' * Real.sqrt η ^ α') +
-          4 * Real.pi * m * η ^ ((m : ℝ)⁻¹) * V) := by
-        rw [← ENNReal.ofReal_mul hW0, ← ENNReal.ofReal_mul (by positivity),
-          ← ENNReal.ofReal_add (by positivity) (by positivity)]
-      _ ≤ _ := ENNReal.ofReal_le_ofReal hreal
+    rw [hc1, hc2] at hint
+    refine hint.trans ((add_le_add (mul_le_mul' le_rfl hA_le) le_rfl).trans ?_)
+    rw [← ENNReal.ofReal_mul hW0, ← ENNReal.ofReal_mul (by positivity),
+      ← ENNReal.ofReal_add (by positivity) (by positivity)]
+    exact ENNReal.ofReal_le_ofReal hreal
 
 end
 

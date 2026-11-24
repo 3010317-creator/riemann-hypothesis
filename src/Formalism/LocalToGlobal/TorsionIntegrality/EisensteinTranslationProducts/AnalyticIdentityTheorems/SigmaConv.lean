@@ -107,8 +107,7 @@ lemma eventually_large (L : PeriodPair) (R : ℝ) :
   have hpos : 0 < ‖(l : ℂ)‖ := by
     rw [norm_pos_iff]
     exact fun h => hl0 (Subtype.ext h)
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have := Real.rpow_le_rpow_of_nonpos hpos hlt.le (by norm_num : (-3 : ℝ) ≤ 0)
   linarith
 
@@ -138,8 +137,7 @@ theorem sigma_product_locally_uniform : SigmaProdLU := by
       hK (summable_majorant L r) ?_ ?_
     · filter_upwards [eventually_large L (2 * r)] with l hl x hx
       exact norm_wFactor_sub_one_le r l x (by simpa using hr hx) hl
-    · intro l
-      exact ((continuous_wFactor _).sub continuous_const).continuousOn
+    · exact fun l => ((continuous_wFactor _).sub continuous_const).continuousOn
   simpa only [add_sub_cancel] using key
 
 end Formalism.L2.Th1.F

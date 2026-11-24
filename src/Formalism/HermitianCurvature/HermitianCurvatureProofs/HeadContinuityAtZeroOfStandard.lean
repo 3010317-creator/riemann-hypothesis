@@ -71,8 +71,7 @@ theorem vecCutAt_of_one (p : KB.Pl P Wp Wq) (χ : ℝ → ℝ) (F : B.Mat P.k P.
 
 theorem hsInner_self_re_nonneg (A : Wq →L[ℂ] Wp) : 0 ≤ (B.hsInner A A).re := by
   unfold B.hsInner
-  have h := inner_self_nonneg (𝕜 := ℂ) (x := B.hsVec A)
-  simpa using h
+  simpa using inner_self_nonneg (𝕜 := ℂ) (x := B.hsVec A)
 
 theorem rr_top_re_nonneg (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (i : ℕ) (w : List C.Letter)
     (h : C.LPt) (hi : P.r < i) : 0 ≤ (p.RR F i w h h).re := by
@@ -80,11 +79,11 @@ theorem rr_top_re_nonneg (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ
   by_cases h1 : D.IsLocPt h i ∧ D.IsLocPt h i
   · rw [dite_eq_left h1, dite_eq_right (by omega)]
     by_cases h2 : i = P.r + 1
-    · rw [if_pos h2]
+    · rw [ite_eq_left h2]
       by_cases h3 : w = []
-      · rw [if_pos h3]
+      · rw [ite_eq_left h3]
         exact hsInner_self_re_nonneg _
-      · rw [if_neg h3]
+      · rw [ite_eq_right h3]
         unfold Top.topOf
         rw [Complex.re_sum]
         refine Finset.sum_nonneg fun e _ => ?_
@@ -92,7 +91,7 @@ theorem rr_top_re_nonneg (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ
         refine Finset.sum_nonneg fun ρ _ => ?_
         rw [Complex.re_ofReal_mul]
         exact mul_nonneg (mul_self_nonneg _) (hsInner_self_re_nonneg _)
-    · rw [if_neg h2]
+    · rw [ite_eq_right h2]
       simp
   · rw [dite_eq_right h1]
     simp
@@ -136,8 +135,7 @@ theorem limZeroAt_of_limits (p : KB.Pl P Wp Wq) (nn : ℝ → ℝ) (χ : ℝ →
       (p.RR (D.cutF p.T.base χ F ε) 0 w [] []).re / TBB.normC nn w := fun ε => ew_zero_nil p nn _ w
   have hlim2 : Tendsto (fun ε => ENNReal.ofReal (TBB.Ew p nn (D.cutF p.T.base χ F ε) 0 w [])) (𝓝[>] 0)
       (𝓝 (ENNReal.ofReal (sz * (B.beta p.T.base F F).re / TBB.normC nn w))) := by
-    simp only [hEw]
-    exact ENNReal.tendsto_ofReal (hlim.div_const _)
+    simpa only [hEw] using ENNReal.tendsto_ofReal (hlim.div_const _)
   rw [hlim2.limsup_eq]
   refine le_trans ?_ hB
   rw [ENNReal.ofReal_le_ofReal_iff']
@@ -149,10 +147,9 @@ theorem limZeroAt_of_limits (p : KB.Pl P Wp Wq) (nn : ℝ → ℝ) (χ : ℝ →
       calc sz * (B.beta p.T.base F F).re ≤ TBB.normC nn w * (B.beta p.T.base F F).re :=
             mul_le_mul_of_nonneg_right hszn hb
         _ = (B.beta p.T.base F F).re * TBB.normC nn w := mul_comm _ _
-    · rw [← hzero, div_zero]
-      exact hb
+    · rwa [← hzero, div_zero]
   · right
-    push_neg at hb
+    push Not at hb
     exact div_nonpos_of_nonpos_of_nonneg (mul_nonpos_of_nonneg_of_nonpos hsz0 hb.le) hn0
 
 end

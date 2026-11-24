@@ -72,8 +72,7 @@ theorem anisotropic' : Anisotropic := by
   unfold Anisotropic
   intro K V _ _ _ _ _ B hB U hU
   obtain ⟨x, hx, y, hy, hxy⟩ := hU
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hz : x + star (B x y) • y ∈ U := U.add_mem hx (U.smul_mem _ hy)
   have h0 := hcon _ hz
   have hxx := hcon x hx
@@ -167,7 +166,7 @@ theorem one_vector_holds : OneVector := by
   intro K V _ _ _ _ _ B hB x y hxy hx0
   by_cases ha : B (x - y) x ≠ 0
   · exact oneVector_generic B hB x y hxy ha
-  · push_neg at ha
+  · push Not at ha
     have hyx : B y x = B x x := by
       have h : B (x - y) x = B x x - B y x := by simp only [map_sub, LinearMap.sub_apply]
       rw [h] at ha
@@ -226,11 +225,9 @@ theorem riesz [FiniteDimensional K V] (B : V →ₗ⋆[K] V →ₗ[K] K) (hB : �
     have h1 : B (∑ j, star (g j) • b j) = 0 := by
 
       rw [map_sum]
-      simp only [map_smulₛₗ, starRingEnd_apply, star_star]
-      exact hg
+      simpa only [map_smulₛₗ, starRingEnd_apply, star_star] using hg
     have h2 : ∑ j, star (g j) • b j = 0 := hnd _ (fun y => by rw [h1, LinearMap.zero_apply])
-    have h3 := (Fintype.linearIndependent_iff.mp b.linearIndependent) _ h2 i
-    exact star_eq_zero.mp h3
+    exact star_eq_zero.mp ((Fintype.linearIndependent_iff.mp b.linearIndependent) _ h2 i)
   have hcard : Fintype.card (Fin (Module.finrank K V)) = Module.finrank K (V →ₗ[K] K) := by
     rw [Fintype.card_fin]; exact (Subspace.dual_finrank_eq).symm
   let b' := basisOfLinearIndependentOfCardEqFinrank hli hcard
@@ -292,8 +289,7 @@ theorem enlarge_step [FiniteDimensional K V] (B : V →ₗ⋆[K] V →ₗ[K] K)
   classical
 
   obtain ⟨φ0, hφ0⟩ : ∃ φ : Module.Dual K V, φ r ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hr0 ((Module.forall_dual_apply_eq_zero_iff K r).1 h)
   set φ : V →ₗ[K] K := (φ0 r)⁻¹ • φ0 with hφdef
   have hφr : φ r = 1 := by simp [hφdef, hφ0]
@@ -432,8 +428,7 @@ theorem nondeg_extend (h1 : OneVector) (h2 : Anisotropic) [FiniteDimensional K V
       intro x hx hxy
       refine hnd x (hle hx) fun y hy => ?_
       have h := hxy _ (hproj y hy)
-      rw [map_sub, map_smul, hwu x hx, smul_zero, sub_zero] at h
-      exact h
+      rwa [map_sub, map_smul, hwu x hx, smul_zero, sub_zero] at h
     let f' : U' →ₗ[K] V := g₁.symm.toLinearMap ∘ₗ f ∘ₗ Submodule.inclusion hle
     have hf'x : ∀ x : U', f' x = g₁.symm (f (Submodule.inclusion hle x)) := fun x => rfl
     have hf' : ∀ x y : U', B (f' x) (f' y) = B x y := by
@@ -505,8 +500,7 @@ theorem witt_of (h1 : OneVector) (h2 : Anisotropic) : PI.WittExtension := by
       obtain ⟨g, hg, hge⟩ := ih (Module.finrank K V - Module.finrank K U') (by omega) U' rfl f' hinj' hf'
       refine ⟨g, hg, fun x => ?_⟩
       rw [← hext x, ← hge]
-  intro U f hinj hf
-  exact key _ U rfl f hinj hf
+  exact fun U f hinj hf => key _ U rfl f hinj hf
 
 end PI.Witt
 end -- clump:auto

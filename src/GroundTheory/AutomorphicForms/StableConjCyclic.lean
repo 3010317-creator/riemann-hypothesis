@@ -63,8 +63,7 @@ theorem exists_linearIndependent_pow_apply_of_isAlgClosed (f : Module.End K W)
     have h2 : ∑ j, (∑ k : Fin n, c k * μ j ^ (k : ℕ)) • w j = 0 := by
       rw [← hc]
 
-      simp only [map_sum, hpow, Finset.smul_sum, smul_smul, Finset.sum_smul]
-      exact Finset.sum_comm
+      simpa only [map_sum, hpow, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
     exact fun j => (Fintype.linearIndependent_iff.1 hli) _ h2 j
   have hV : Matrix.vandermonde μ *ᵥ c = 0 := by
     ext j
@@ -113,8 +112,7 @@ theorem exists_det_krylov_ne_zero {L : Type*} [Field L] (φ : E →+* L)
   have hD0 : D ≠ 0 := by
     intro h0
     have := map_det_krylov_C_X M (MvPolynomial.eval₂Hom φ w)
-    rw [← hD] at this
-    rw [h0, map_zero] at this
+    rw [← hD, h0, map_zero] at this
     apply hw
     rw [this]
     congr 2
@@ -159,8 +157,7 @@ theorem exists_linearIndependent_pow_apply [Infinite E] (f : Module.End E V)
     have hcol : (krylov (M.map φ) w).col = fun k : Fin n => (Matrix.toLin' (M.map φ) ^ (k : ℕ)) w := by
       ext1 k
       rw [krylov_col, ← Matrix.toLin'_pow, Matrix.toLin'_apply]
-    rw [hcol]
-    exact hw
+    rwa [hcol]
   obtain ⟨v₀, hv₀⟩ := exists_det_krylov_ne_zero φ M w hw'
   have hli : LinearIndependent E (krylov M v₀).col := by
     rw [Matrix.linearIndependent_cols_iff_isUnit, Matrix.isUnit_iff_isUnit_det,

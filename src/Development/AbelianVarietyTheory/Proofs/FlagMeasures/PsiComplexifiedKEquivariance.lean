@@ -155,12 +155,7 @@ lemma comm_J_iff (ε : Fin n → Bool) (x : Matrix (Fin n) (Fin n) ℂ) :
     · rw [h i j hij]; simp
 
 lemma isLo_mul {a b : Matrix (Fin n) (Fin n) ℂ} (ha : IsLo a) (hb : IsLo b) : IsLo (a * b) := by
-  intro i j hij
-  rw [Matrix.mul_apply]
-  refine Finset.sum_eq_zero fun k _ => ?_
-  by_cases hk : i < k
-  · rw [ha i k hk, zero_mul]
-  · rw [hb k j (lt_of_le_of_lt (not_lt.1 hk) hij), mul_zero]
+  exact GlobalTheory.Dec.IwKC.lo_mul ha hb
 
 lemma isLo_mul_diag {a b : Matrix (Fin n) (Fin n) ℂ} (ha : IsLo a) (hb : IsLo b) (i : Fin n) :
     (a * b) i i = a i i * b i i := by

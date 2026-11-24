@@ -286,12 +286,10 @@ theorem valuation_primeHS (q : (maximalIdeal v.ring).primesOver (integralClosure
       algebraMap_mem := fun c => hle ((v.placeOfPrime q).algebraMap_mem c) }
   have heq : v.placeOfPrime q = P := Place.eq_of_le hle
   constructor
-  · intro hx
-    exact hle hx
+  · exact fun hx => hle hx
   · intro hx
     have hxP : x ∈ P.ring := hx
-    rw [← heq] at hxP
-    exact hxP
+    rwa [← heq] at hxP
 
 theorem ramificationIdx_primeOfPlace_eq
     (q : (maximalIdeal v.ring).primesOver (integralClosure v.ring K')) :

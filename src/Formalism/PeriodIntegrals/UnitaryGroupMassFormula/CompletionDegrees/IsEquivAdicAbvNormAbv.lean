@@ -126,15 +126,13 @@ private lemma le_one_lemma_2 {E : Type} [Field E] [NumberField E] (w : AbsoluteV
   have hnpos : 0 < w u := w.pos hu0
   constructor
   · refine ⟨hle u, fun h => ?_⟩
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     have h1 : v.valuation E u⁻¹ < 1 := by rw [map_inv₀]; exact inv_lt_one_of_one_lt₀ hn
     have h2 := hlt _ h1
     rw [map_inv₀] at h2
     exact absurd h (not_le.mpr ((inv_lt_one₀ hnpos).mp h2))
   · refine ⟨hlt u, fun h => ?_⟩
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     have h1 : v.valuation E u⁻¹ ≤ 1 := by rw [map_inv₀]; exact inv_le_one_of_one_le₀ hn
     have h2 := hle _ h1
     rw [map_inv₀] at h2
@@ -161,8 +159,7 @@ theorem intValuation_natCast {l : ℕ} [hl : Fact l.Prime] {E : Type} [Field E] 
   have hle : Ideal.span {((l : ℕ) : ℤ)} ≤ v.asIdeal.under ℤ := by
     rw [Ideal.span_le, Set.singleton_subset_iff]
     show _ ∈ Ideal.comap _ _
-    rw [Ideal.mem_comap, map_natCast]
-    exact hv
+    rwa [Ideal.mem_comap, map_natCast]
   have hunder : Ideal.span {((l : ℕ) : ℤ)} = v.asIdeal.under ℤ :=
     (Int.ideal_span_isMaximal_of_prime l).eq_of_le (Ideal.comap_ne_top _ v.isPrime.ne_top) hle
   haveI : v.asIdeal.LiesOver (Ideal.span {((l : ℕ) : ℤ)}) := ⟨hunder⟩
@@ -170,8 +167,7 @@ theorem intValuation_natCast {l : ℕ} [hl : Fact l.Prime] {E : Type} [Field E] 
       Ideal.span {((l : ℕ) : 𝓞 E)} := by
     rw [Ideal.map_span, Set.image_singleton, map_natCast]
   have hne : Ideal.map (algebraMap ℤ (𝓞 E)) (Ideal.span {((l : ℕ) : ℤ)}) ≠ ⊥ := by
-    rw [hmap, Ne, Ideal.span_singleton_eq_bot]
-    exact hl0
+    rwa [hmap, Ne, Ideal.span_singleton_eq_bot]
   rw [Ideal.IsDedekindDomain.ramificationIdx_eq_factors_count _ _ hne, hmap,
     Ideal.count_associates_factors_eq (by rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot])
       v.isPrime v.ne_bot,

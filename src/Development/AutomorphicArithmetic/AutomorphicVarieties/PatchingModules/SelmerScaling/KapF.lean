@@ -62,8 +62,7 @@ theorem UpperTheory.V.Pa.indF :
     obtain ⟨γ, hγ⟩ := h.surj g'
     refine ⟨⟨γ, ?_⟩, Subtype.ext hγ⟩
     show G.η γ = 1
-    rw [← h.η, hγ]
-    exact hg'
+    rwa [← h.η, hγ]
   have hb : ∃ b : nonZeroDivisors x.A, ∀ i : Fin k.g ⊕ (Fin n × Fin n),
       ∃ r : x.A, algebraMap x.A x.Fr r = (b : x.A) • Sum.elim c (fun p => Y p.1 p.2) i :=
     IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors x.A) _
@@ -100,8 +99,7 @@ theorem UpperTheory.V.Pa.indF :
       apply hinj
       rw [map_zero]
       have := ha (Sum.inr (i, j))
-      rw [Sum.elim_inr, h0, smul_zero] at this
-      exact this
+      rwa [Sum.elim_inr, h0, smul_zero] at this
     · refine Matrix.ext fun i j => ?_
       apply hinj
       have h1 := ha (Sum.inr (j, i))

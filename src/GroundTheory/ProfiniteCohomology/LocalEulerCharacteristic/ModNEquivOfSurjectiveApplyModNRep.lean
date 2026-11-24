@@ -395,7 +395,7 @@ theorem coeffToRegular_perm [Group Γ] (τ : Γ) (c : Γ → O) :
   rw [Finset.sum_eq_single (τ⁻¹ * ρ)]
   · simp
   · intro σ _ hσ
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hσ
     rw [← h]
@@ -552,8 +552,7 @@ theorem finite_quotient_range_toAdditive {G : Type*} [CommGroup G] (H : Subgroup
     constructor
     · rintro ⟨a, rfl⟩
       exact a.toMul.2
-    · intro hx
-      exact ⟨Additive.ofMul ⟨x.toMul, hx⟩, rfl⟩
+    · exact fun hx => ⟨Additive.ofMul ⟨x.toMul, hx⟩, rfl⟩
   rw [h]
   have : H.toAddSubgroup.FiniteIndex :=
     ⟨by rw [Subgroup.index_toAddSubgroup]; exact Subgroup.FiniteIndex.index_ne_zero⟩
@@ -704,8 +703,7 @@ theorem finite_torsN_integerUnits (l : ℕ) [NeZero l] : Finite (TorsN (Additive
   refine Finite.of_injective
     (fun x : TorsN (Additive 𝒪[F]ˣ) l ↦
       (⟨_, key x⟩ : (Polynomial.nthRootsFinset l (1 : 𝒪[F]) : Set 𝒪[F]))) ?_
-  intro x y h
-  exact Subtype.ext (Additive.toMul.injective (Units.ext (congrArg Subtype.val h)))
+  exact fun x y h => Subtype.ext (Additive.toMul.injective (Units.ext (congrArg Subtype.val h)))
 
 variable {l : ℕ} [NeZero l] (d : AdditiveFunction.{u} l (F ≃ₐ[E] F))
 
@@ -757,8 +755,7 @@ theorem finite_quotient_maxPow {θ : F} {k : ℕ} (hle : maxPow F k ≤ normalSu
     constructor
     · rintro ⟨y, rfl⟩
       exact y.2
-    · intro hx
-      exact ⟨⟨x, hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
   have hfin : Finite (𝒪[F] ⧸ maxPow F k) :=
     IsLocalRing.finite_quotient_iff.mpr ⟨k, le_rfl⟩
   have hidx : (maxPow F k).index ≠ 0 := AddSubgroup.index_ne_zero_of_finite
@@ -874,8 +871,7 @@ theorem g_integerUnits_eq (hl : (l : F) ≠ 0) {n : ℕ}
       map_add' := by intro c d; ext; simp [add_smul, Finset.sum_add_distrib] }
   have hf : Function.Bijective f := by
     constructor
-    · intro c d h
-      exact coeff_injective θ hθ (congrArg (fun x : S ↦ ((x : 𝒪[F]) : F)) h)
+    · exact fun c d h => coeff_injective θ hθ (congrArg (fun x : S ↦ ((x : 𝒪[F]) : F)) h)
     · intro x
       have hx : ((x : 𝒪[F]) : F) ∈ normalLattice (1 : 𝒪[E]) θ 0 := x.2
       obtain ⟨c, hc⟩ := (mem_normalLattice_iff 1 θ).mp hx

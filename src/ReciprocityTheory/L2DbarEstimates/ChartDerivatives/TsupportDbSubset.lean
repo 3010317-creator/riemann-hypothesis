@@ -20,20 +20,16 @@ open scoped ContDiff ENNReal
 noncomputable section
 
 theorem Smooth.const {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (c : ℂ) :
-    Smooth n z (fun _ => c) := by
-  exact fun _ _ => contDiffOn_const
+    Smooth n z (fun _ => c) := fun _ _ => contDiffOn_const
 
 theorem Smooth.add {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f g : M → ℂ) (hf : Smooth n z f) (hg : Smooth n z g) :
-    Smooth n z (fun x => f x + g x) := by
-  exact fun e he => (hf e he).add (hg e he)
+    Smooth n z (fun x => f x + g x) := fun e he => (hf e he).add (hg e he)
 
 theorem Smooth.sub {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f g : M → ℂ) (hf : Smooth n z f) (hg : Smooth n z g) :
-    Smooth n z (fun x => f x - g x) := by
-  exact fun e he => (hf e he).sub (hg e he)
+    Smooth n z (fun x => f x - g x) := fun e he => (hf e he).sub (hg e he)
 
 theorem Smooth.mul {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f g : M → ℂ) (hf : Smooth n z f) (hg : Smooth n z g) :
-    Smooth n z (fun x => f x * g x) := by
-  exact fun e he => (hf e he).mul (hg e he)
+    Smooth n z (fun x => f x * g x) := fun e he => (hf e he).mul (hg e he)
 
 theorem Smooth.conj {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f : M → ℂ) (hf : Smooth n z f) :
     Smooth n z (fun x => (starRingEnd ℂ) (f x)) := by
@@ -44,8 +40,7 @@ theorem Smooth.conj {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (
 
 theorem Smooth.cexp {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f : M → ℂ) (hf : Smooth n z f) :
     Smooth n z (fun x => Complex.exp (f x)) := by
-  intro e he
-  exact Complex.contDiff_exp.comp_contDiffOn (hf e he)
+  exact fun e he => Complex.contDiff_exp.comp_contDiffOn (hf e he)
 
 theorem SmoothR.comp {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℝ → ℝ) (hk : ContDiff ℝ ∞ k) (f : M → ℝ) (hf : SmoothR n z f) :
     SmoothR n z (fun x => k (f x)) := by
@@ -68,36 +63,28 @@ theorem SmoothR.mul {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (
   simpa using h1
 
 theorem Holo.const {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (c : ℂ) :
-    Holo n z (fun _ => c) := by
-  exact fun _ _ => differentiableOn_const _
+    Holo n z (fun _ => c) := fun _ _ => differentiableOn_const _
 
 theorem Holo.add {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f g : M → ℂ) (hf : Holo n z f) (hg : Holo n z g) :
-    Holo n z (fun x => f x + g x) := by
-  exact fun e he => (hf e he).add (hg e he)
+    Holo n z (fun x => f x + g x) := fun e he => (hf e he).add (hg e he)
 
 theorem Holo.sub {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f g : M → ℂ) (hf : Holo n z f) (hg : Holo n z g) :
-    Holo n z (fun x => f x - g x) := by
-  exact fun e he => (hf e he).sub (hg e he)
+    Holo n z (fun x => f x - g x) := fun e he => (hf e he).sub (hg e he)
 
 theorem Holo.mul {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f g : M → ℂ) (hf : Holo n z f) (hg : Holo n z g) :
-    Holo n z (fun x => f x * g x) := by
-  exact fun e he => (hf e he).mul (hg e he)
+    Holo n z (fun x => f x * g x) := fun e he => (hf e he).mul (hg e he)
 
 theorem Ck.const {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (c : ℂ) :
-    Ck n z k (fun _ => c) := by
-  exact fun _ _ => contDiffOn_const
+    Ck n z k (fun _ => c) := fun _ _ => contDiffOn_const
 
 theorem Ck.add {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (f g : M → ℂ) (hf : Ck n z k f) (hg : Ck n z k g) :
-    Ck n z k (fun x => f x + g x) := by
-  exact fun e he => (hf e he).add (hg e he)
+    Ck n z k (fun x => f x + g x) := fun e he => (hf e he).add (hg e he)
 
 theorem Ck.sub {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (f g : M → ℂ) (hf : Ck n z k f) (hg : Ck n z k g) :
-    Ck n z k (fun x => f x - g x) := by
-  exact fun e he => (hf e he).sub (hg e he)
+    Ck n z k (fun x => f x - g x) := fun e he => (hf e he).sub (hg e he)
 
 theorem Ck.mul {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (f g : M → ℂ) (hf : Ck n z k f) (hg : Ck n z k g) :
-    Ck n z k (fun x => f x * g x) := by
-  exact fun e he => (hf e he).mul (hg e he)
+    Ck n z k (fun x => f x * g x) := fun e he => (hf e he).mul (hg e he)
 
 theorem Ck.conj {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (f : M → ℂ) (hf : Ck n z k f) :
     Ck n z k (fun x => (starRingEnd ℂ) (f x)) := by
@@ -108,8 +95,7 @@ theorem Ck.conj {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : 
 
 theorem Ck.cexp {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) (f : M → ℂ) (hf : Ck n z k f) :
     Ck n z k (fun x => Complex.exp (f x)) := by
-  intro e he
-  exact Complex.contDiff_exp.comp_contDiffOn (hf e he)
+  exact fun e he => Complex.contDiff_exp.comp_contDiffOn (hf e he)
 
 private theorem isChart_choose_and_symm_apply {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (x : M)
     (h : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source) :
@@ -123,12 +109,12 @@ private theorem isChart_choose_and_symm_apply {M : Type*} [TopologicalSpace M] (
 private theorem d_eq_wd_comp_chosen_chart_symm {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (j : Fin n)
     (f : M → ℂ) (x : M) (h : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source) :
     d n z j f x = wd n j (f ∘ (Classical.choose h).symm) (z x) := by
-  simp only [d, dif_pos h]
+  simp only [d, dite_eq_left h]
 
 private theorem db_eq_wdb_comp_chosen_chart_symm {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (j : Fin n)
     (f : M → ℂ) (x : M) (h : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source) :
     db n z j f x = wdb n j (f ∘ (Classical.choose h).symm) (z x) := by
-  simp only [db, dif_pos h]
+  simp only [db, dite_eq_left h]
 
 private theorem differentiableAt_comp_chart_symm_of_mem_target {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f : M → ℂ)
     (hf : Ck n z 1 f) (e : OpenPartialHomeomorph M (V n)) (he : IsChart n z e) (w : V n)
@@ -263,8 +249,7 @@ theorem d_conj {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f : M
 
 theorem db_ofReal {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (ph : M → ℝ) (j : Fin n) (x : M) :
     db n z j (fun y => (ph y : ℂ)) x = (starRingEnd ℂ) (d n z j (fun y => (ph y : ℂ)) x) := by
-  have h1 := db_conj n z (fun y => (ph y : ℂ)) j x
-  simpa using h1
+  simpa using db_conj n z (fun y => (ph y : ℂ)) j x
 
 theorem d_cexp {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f : M → ℂ) (hf : Ck n z 1 f) (j : Fin n) (x : M) :
     d n z j (fun y => Complex.exp (f y)) x = Complex.exp (f x) * d n z j f x := by

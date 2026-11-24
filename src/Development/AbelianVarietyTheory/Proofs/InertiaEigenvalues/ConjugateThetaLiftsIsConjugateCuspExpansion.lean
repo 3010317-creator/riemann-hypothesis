@@ -286,8 +286,7 @@ theorem xi_det_eq_of_marked_isometry : ∀ {D : D7} {H : ReciprocityTheory.Chart
     simpa using e)
   have h4 := congrArg (fun g => xi (Matrix.GeneralLinearGroup.det g)) h2
   simp only [map_mul] at h4
-  rw [hK, hxi2 δ hδQ, mul_one, one_mul] at h4
-  exact h4
+  rwa [hK, hxi2 δ hδQ, mul_one, one_mul] at h4
 
 end GlobalTheory.MarkIso
 end -- clump:auto
@@ -356,8 +355,7 @@ theorem isPeriod_permP {D : Datum H} {ty : Fin g → (E →+* ℂ)} {ty' : Fin g
     · obtain ⟨x, hx⟩ := v.2
       exact ⟨x, by rw [← hx, permCLE_permP]⟩
     · exact Continuous.subtype_mk ((permCLE π).continuous.comp continuous_subtype_val) _
-    · intro v w hvw
-      exact Subtype.ext ((permCLE π).injective (congrArg Subtype.val hvw))
+    · exact fun v w hvw => Subtype.ext ((permCLE π).injective (congrArg Subtype.val hvw))
   · have hr : Set.range (permP π P) = ((permCLE π).symm.toLinearEquiv.restrictScalars ℝ).toLinearMap '' Set.range P := by
       ext v
       constructor
@@ -1094,8 +1092,7 @@ theorem conj_lifts : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2
   have hlev2 : M.lev2 = (O i).lev2 := by funext g; simp only [OMDat.lev2, hlev]
   have hEqM : M.EquivAt (κ i) (T.cE ((i : ℕ) + 1) M.s0) := by
     unfold OMDat.EquivAt at hEq0 ⊢
-    rw [GlobalTheory.OneMapAll.phi_eq M (O i) (T.cE ((i : ℕ) + 1)), hlev2]
-    exact hEq0
+    rwa [GlobalTheory.OneMapAll.phi_eq M (O i) (T.cE ((i : ℕ) + 1)), hlev2]
   have hcM : ExtC R i (inC M.c') M.c0' c := (hext c).1 hc
 
   obtain ⟨ζ, z, hζ, -, hser⟩ := GlobalTheory.T.oneMap_every_normalisedFamily_at_coreConstants hCI D G Pl0 T0 A T R F κ v₀ O ph hsz hC hT0 ⟨fw⟩ hio hQ i hOP hPT T0 id M hMP
@@ -1189,8 +1186,7 @@ theorem conj_lifts : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2
     have hcan : ζ * k0 / τ ζ * τ ζ = ζ * k0 := div_mul_cancel₀ _ hτζ
     rw [mul_left_comm, hB k g, hu', map_mul]
     linear_combination (-(τ (α k) * ((R.xi t' s : Circle) : ℂ) * psi M (κ i) z (galRul hf (f k)) g)) * hcan
-  rw [conjFun_congr (O i) M, conjFun_iff, hΦ, hΦ']
-  exact hcomb
+  rwa [conjFun_congr (O i) M, conjFun_iff, hΦ, hΦ']
 
 end GlobalTheory.ConjClassSum
 end -- clump:auto

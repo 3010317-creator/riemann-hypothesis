@@ -143,9 +143,7 @@ theorem levelaf_adele_res (D : 𝓞 F) (hD : D ≠ 0) :
   have : Finite P := hP.to_subtype
   let Dv : ∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F :=
     fun v => ⟨_, levelaf_int_mem_v v D⟩
-  have hDv0 : ∀ v, Dv v ≠ 0 := by
-    intro v h
-    exact levelaf_algebraMap_ne_zero v D hD (congrArg Subtype.val h)
+  have hDv0 : ∀ v, Dv v ≠ 0 := fun v h => levelaf_algebraMap_ne_zero v D hD (congrArg Subtype.val h)
   have : ∀ v : P, Finite ((v : HeightOneSpectrum (𝓞 F)).adicCompletionIntegers F ⧸
       Ideal.span {Dv v}) := fun v =>
     glint_finite_quotient_of_dvr (glint_finite_residueField (v : HeightOneSpectrum (𝓞 F))) _
@@ -200,7 +198,7 @@ theorem levelaf_adele_res (D : 𝓞 F) (hD : D ≠ 0) :
   · intro a ha
     have hex : ∃ b, φ b = φ ⟨a, ha⟩ := ⟨_, rfl⟩
     have hrep : φ (rep (φ ⟨a, ha⟩)) = φ ⟨a, ha⟩ := by
-      simp only [rep, dif_pos hex]; exact hex.choose_spec
+      simp only [rep, dite_eq_left hex]; exact hex.choose_spec
     obtain ⟨y, hy, e⟩ := key ⟨a, ha⟩ _ hrep.symm
     exact ⟨_, ⟨_, rfl⟩, y, hy, e⟩
 
@@ -388,8 +386,7 @@ theorem levelaf_princ_relIndex_ne_zero (O : Subring L) (I : Ideal O) [Finite (O 
     rw [MonoidHom.comap_bot]
   rw [hprinc, MonoidHom.range_eq_map, Subgroup.relIndex_map_map, top_sup_eq,
     Subgroup.relIndex_top_right]
-  intro h
-  exact hN (Nat.eq_zero_of_zero_dvd (h ▸ Subgroup.index_dvd_of_le le_sup_left))
+  exact fun h => hN (Nat.eq_zero_of_zero_dvd (h ▸ Subgroup.index_dvd_of_le le_sup_left))
 
 end Generic
 

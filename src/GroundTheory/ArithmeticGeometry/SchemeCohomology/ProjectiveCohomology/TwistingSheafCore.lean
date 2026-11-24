@@ -50,8 +50,7 @@ theorem isBasisOn_upow {u : A} (hu : u ∈ 𝒜 1) (k : ℤ) :
     rw [val_upow, mul_comm]
   have hb := twistMap_bijective hu k (W := V) hW
   refine ⟨fun a b hab => hb.1 ?_, fun s => ?_⟩
-  · rw [← e, ← e]
-    exact hab
+  · rwa [← e, ← e]
   · obtain ⟨r, hr⟩ := hb.2 s
     exact ⟨r, (e r).trans hr⟩
 
@@ -82,8 +81,7 @@ theorem basicOpen_ratio {u v : A} (hu : u ∈ 𝒜 1) (hv : v ∈ 𝒜 1) :
     erw [Proj.stalkIso'_germ] at h1
     rw [← HomogeneousLocalization.isUnit_iff_isUnit_val] at h1
     erw [ratio_apply_val] at h1
-    rw [Localization.mk_eq_mk', IsLocalization.AtPrime.isUnit_mk'_iff] at h1
-    exact h1
+    rwa [Localization.mk_eq_mk', IsLocalization.AtPrime.isUnit_mk'_iff] at h1
   · rintro ⟨hx, hv'⟩
     refine ⟨hx, ?_⟩
     have h1 : IsUnit (Proj.stalkIso' 𝒜 x ((ProjectiveSpectrum.Proj.structureSheaf 𝒜).presheaf.germ _ x hx
@@ -91,11 +89,9 @@ theorem basicOpen_ratio {u v : A} (hu : u ∈ 𝒜 1) (hv : v ∈ 𝒜 1) :
       erw [Proj.stalkIso'_germ]
       rw [← HomogeneousLocalization.isUnit_iff_isUnit_val]
       erw [ratio_apply_val]
-      rw [Localization.mk_eq_mk', IsLocalization.AtPrime.isUnit_mk'_iff]
-      exact hv'
+      rwa [Localization.mk_eq_mk', IsLocalization.AtPrime.isUnit_mk'_iff]
     have h2 := h1.map (Proj.stalkIso' 𝒜 x).symm
-    rw [RingEquiv.symm_apply_apply] at h2
-    exact h2
+    rwa [RingEquiv.symm_apply_apply] at h2
 
 theorem ratio_self {u : A} (hu : u ∈ 𝒜 1) : ratio 𝒜 hu hu = 1 := by
   apply Subtype.ext

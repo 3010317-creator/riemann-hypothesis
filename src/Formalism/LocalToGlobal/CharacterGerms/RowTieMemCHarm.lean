@@ -69,8 +69,7 @@ theorem isotropic_to_std_subst_degree : IsotropicToStdSubstLineDegree := by
     have h := (isWeightedHomogeneous_C (wLet r n σ c0) (gm x.2.1 x.2.2.2.1 col x.2.2.1)).mul
       (isWeightedHomogeneous_X (R := C) (wLet r n σ c0)
         (⟨tau x.2.1 x.2.2.2.1, x.2.2.2.2, plc (x.1, col)⟩ : Letter T r n))
-    rw [zero_add, wLet_mk] at h
-    exact h
+    rwa [zero_add, wLet_mk] at h
   · by_cases hσ : ∃ o t, tau o t = σ
     · obtain ⟨o0, t0, rfl⟩ := hσ
       have keyEq : ∀ o t (c : Fin (r (tau o t))),
@@ -92,7 +91,7 @@ theorem isotropic_to_std_subst_degree : IsotropicToStdSubstLineDegree := by
       have hD : a (tau o0 t0) c0 = ∑ o, (if o = o0 then ∑ i : Fin (L o).length,
           ((∑ k ∈ Finset.Icc ((c0 : ℕ) + 1) ((X o).rkF 0 t0), (blkAt L o i).wt (X o) 0 t0 k) +
             ∑ k ∈ Finset.Icc ((c0 : ℕ) + 1) ((X o).rkF 1 (t0 + 1)), (blkAt L o i).wt (X o) 1 (t0 + 1) k) else 0) := by
-        rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _), hR0, hR1, H.tie.1 o0 t0 c0 c0.2]
+        rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _), hR0, hR1, H.tie.1 o0 t0 c0 c0.2]
         simp only [← Finset.sum_add_distrib]
         rw [Finset.sum_comm]
         refine Finset.sum_congr rfl fun k _ => ?_
@@ -103,7 +102,7 @@ theorem isotropic_to_std_subst_degree : IsotropicToStdSubstLineDegree := by
       refine IsWeightedHomogeneous.prod _ _ _ fun o _ => ?_
       by_cases ho : o = o0
       · subst ho
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         unfold toAll
         apply isWH_rename
         unfold prodAll
@@ -115,20 +114,20 @@ theorem isotropic_to_std_subst_degree : IsotropicToStdSubstLineDegree := by
         rintro ⟨ρ, gg, tt, cc'⟩
         simp only [Function.comp_apply, keyEq, wRowG, true_and, H.hty]
         fin_cases gg <;> simp
-      · rw [if_neg ho]
+      · rw [ite_eq_right ho]
         unfold toAll
         apply isWH_rename
         refine isWH_of_zero (fun x => ?_) _
         obtain ⟨ρ, gg, tt, cc'⟩ := x
         simp only [Function.comp_apply, keyEq]
-        rw [if_neg]
+        rw [ite_eq_right]
         exact fun hh => ho hh.1
     · push Not at hσ
       rw [H.tie.2 σ hσ c0 c0.2]
       refine isWH_of_zero (fun x => ?_) _
       obtain ⟨ρ, o, g, t, c⟩ := x
       show (if (⟨tau o t, c⟩ : Σ σ, Fin (r σ)) = ⟨σ, c0⟩ then 1 else 0) = 0
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun hh => hσ o t (congrArg Sigma.fst hh)
 
 end Formalism.L2.FormalSeriesBounds.RF
@@ -211,7 +210,7 @@ theorem lap_plane (inj : Function.Injective fun x : Orb × ZMod 2 => tau x.1 x.2
   by_cases hg : g1 = g2
   · have hK : ∑ col, gm o t col g1 * gm o (t + 1) col g2 = 0 := by
       have h := gm_hyp o t g2 g1
-      rw [if_pos hg.symm] at h
+      rw [ite_eq_left hg.symm] at h
       rw [← h]
       exact Finset.sum_congr rfl fun q _ => mul_comm _ _
     rw [hK, map_zero, zero_mul]
@@ -281,8 +280,7 @@ theorem SelfConjugatePlaceSetting.rowsOK (H : SelfConjugatePlaceSetting r cc a t
       rw [zmod_two_add_one_add_one_eq] at h1
       have h2 := (H.supp o (t + 1) k (by omega)).2
       rw [H.rkF_eq o 0 (t + 1)] at h2
-      rw [H.rkF_eq o 1 t]
-      exact h2
+      rwa [H.rkF_eq o 1 t]
   choose kind hk using h
   exact ⟨_, rowsOK_prodAll _ _ (plAt_inj N H.plinj o) _ kind hk⟩
 
@@ -330,8 +328,7 @@ theorem isotropic_to_std_subst_harmonic : IsotropicToStdSubstHarmonic := by
   · push Not at hτ
     refine Finset.sum_eq_zero fun b _ => ?_
     rw [pderiv_comm', pderiv_subG_off plc (ℓ := ⟨τ, a1, b⟩), map_zero]
-    intro z e
-    exact hτ _ _ (congrArg Sigma.fst e).symm
+    exact fun z e => hτ _ _ (congrArg Sigma.fst e).symm
 
 end Formalism.L2.FormalSeriesBounds.RF
 end -- clump:auto

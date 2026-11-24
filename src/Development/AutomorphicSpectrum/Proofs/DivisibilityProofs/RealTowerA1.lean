@@ -163,8 +163,7 @@ theorem differentiableAt_affCoord (p : (k : K) → J k) (z : (Σ k, J k) → ℂ
 theorem affCoord_torus (p : (k : K) → J k) (c : K → ℂ) (hc : ∀ k, c k ≠ 0) (z : (Σ k, J k) → ℂ) :
     affCoord p (torusSmul c z) = affCoord p z := by
   funext q
-  simp only [affCoord, torusSmul]
-  exact mul_div_mul_left _ _ (hc q.1)
+  simpa only [affCoord, torusSmul] using mul_div_mul_left _ _ (hc q.1)
 
 theorem fderiv_affCoord_torus (p : (k : K) → J k) (z : (Σ k, J k) → ℂ) (hp : ∀ k, z ⟨k, p k⟩ ≠ 0) (b : K → ℂ) :
     fderiv ℂ (affCoord p) z (torusSmul b z) = 0 := by
@@ -419,8 +418,7 @@ theorem psh_sum_potentials_small_parameter : ∀ (e : ℕ) (σ : Type) [Fintype 
           rw [neg_mul, neg_mul, Finset.sum_mul, Finset.sum_mul]
       _ ≤ -(∑ a ∈ Finset.univ.erase a', |c a| * E * θ) := by
           refine neg_le_neg (Finset.sum_le_sum_of_subset_of_nonneg (Finset.erase_subset _ _) ?_)
-          intro a _ _
-          exact mul_nonneg (mul_nonneg (abs_nonneg _) hE0) hθ
+          exact fun a _ _ => mul_nonneg (mul_nonneg (abs_nonneg _) hE0) hθ
       _ = ∑ a ∈ Finset.univ.erase a', -(|c a| * E * θ) := by rw [Finset.sum_neg_distrib]
       _ ≤ _ := Finset.sum_le_sum fun a _ => hterm a
   have hA : c a' * dl S.A (S.potT a' t) j y w ≥ s * (c₀ * θ) := by
@@ -466,17 +464,17 @@ theorem telescope (g : ℕ → ℝ) (k n : ℕ) (h : k ≤ n) :
   induction n, h using Nat.le_induction with
   | base =>
     rw [sub_self]
-    refine Finset.sum_eq_zero fun i hi => if_neg ?_
+    refine Finset.sum_eq_zero fun i hi => ite_eq_right ?_
     have := Finset.mem_range.1 hi
     omega
-  | succ n hn ih => rw [Finset.sum_range_succ, ih, if_pos hn]; ring
+  | succ n hn ih => rw [Finset.sum_range_succ, ih, ite_eq_left hn]; ring
 
 private theorem sum_gap_of_le_eq {Ψ : Type} {N : ℕ} (lam : Ψ × Fin N → ℝ) (ψ : Ψ) (j : Fin N) :
     ∑ k : Fin N, (if j ≤ k then PB.gap lam (ψ, k) else 0) = lam (ψ, j) := by
   set g : ℕ → ℝ := fun i => if h : i < N then lam (ψ, ⟨i, h⟩) else 0 with hgdef
   have hg : ∀ k : Fin N, PB.gap lam (ψ, k) = g k - g (k + 1) := by
     intro k
-    simp only [PB.gap, PB.gapX, map_sub, eval_X, hgdef, dif_pos k.2]
+    simp only [PB.gap, PB.gapX, map_sub, eval_X, hgdef, dite_eq_left k.2]
     split_ifs with h
     · simp
     · simp
@@ -520,8 +518,7 @@ theorem log_h_torus (L : HermLine ι) (c : K → ℂ) (z : (Σ k, ι k) → ℂ)
   have hsm : L.h (torusSmul c z) = (∏ k, ‖c k‖ ^ L.a k) * L.h z := L.smul c z hc
   have hpos : 0 < L.h z := L.pos z hz
   have hprod : ∀ k ∈ (Finset.univ : Finset K), ‖c k‖ ^ L.a k ≠ 0 := by
-    intro k _
-    exact zpow_ne_zero _ (norm_ne_zero_iff.mpr (hc k))
+    exact fun k _ => zpow_ne_zero _ (norm_ne_zero_iff.mpr (hc k))
   rw [hsm, Real.log_mul (Finset.prod_ne_zero_iff.mpr hprod) hpos.ne', Real.log_prod hprod]
   congr 1
   apply Finset.sum_congr rfl
@@ -560,8 +557,7 @@ theorem levi_chart_nonneg {D : ℕ} {σ : Type} [Fintype σ] {S : PB.AnSys D σ}
     apply Re.holo.2 j k
     refine ⟨hv0, ?_⟩
     show Re.π (χ.symm (χ x)) ∈ ψ.source
-    rw [hχx]
-    exact hk
+    rwa [hχx]
   have hψx : ψ (Re.π x) ∈ ψ.target := ψ.map_source hk
   have hψxl : ψ.symm (ψ (Re.π x)) = Re.π x := ψ.left_inv hk
   have hΦsm : ContDiffAt ℝ 2 (Φ ∘ ψ.symm) (ψ (Re.π x)) := by

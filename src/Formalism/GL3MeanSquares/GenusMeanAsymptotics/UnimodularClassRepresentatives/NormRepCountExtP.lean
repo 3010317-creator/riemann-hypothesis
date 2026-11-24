@@ -64,17 +64,7 @@ variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberFi
 
 theorem absNorm_extP (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) (𝔭 : Ideal (𝓞 F)) :
     Ideal.absNorm (extP K 𝔭) = Ideal.absNorm 𝔭 ^ 2 := by
-  induction 𝔭 using UniqueFactorizationMonoid.induction_on_prime with
-  | h₁ => simp [extP]
-  | h₂ x hx =>
-    rw [Ideal.isUnit_iff.mp hx]
-    simp only [extP]
-    simp only [Ideal.map_top, Ideal.absNorm_top, one_pow]
-  | h₃ a p ha hp ih =>
-    have hpm : p.IsMaximal := (Ideal.isPrime_of_prime hp).isMaximal hp.ne_zero
-    have hq := idealPowerSpanBounds.absNorm_extP_eq_sq hK hF hpm
-    simp only [extP] at ih hq ⊢
-    rw [Ideal.map_mul, map_mul, map_mul, ih, hq, mul_pow]
+  exact Formalism.HermitianLattices.Ext.L3.unitaryAbsoluteValueBounds.absNorm_extP hK hF 𝔭
 
 theorem map_comap_eq_of_inert (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {P : Ideal (𝓞 K)}
     (hP : P.IsMaximal) (hc : Formalism.HermitianLatticesTheory.conjIdeal (K := K) P = P) :
@@ -100,11 +90,11 @@ theorem normRepCount_extP (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
   have hd := localDensity K hK P hP 1 j le_rfl hj 1 (map_one _) h1
   rw [alphaStd_one, etaF_comap hK hF hP]
   by_cases hc : Formalism.HermitianLatticesTheory.conjIdeal (K := K) P = P
-  · rw [map_comap_eq_of_inert hK hF hP hc, hd.1 hc, if_pos hc, ← absNorm_comap_inert hK hF hP hc]
+  · rw [map_comap_eq_of_inert hK hF hP hc, hd.1 hc, ite_eq_left hc, ← absNorm_comap_inert hK hF hP hc]
     push_cast
     rw [Real.sqrt_sq (Nat.cast_nonneg _)]
     simp
-  · rw [extP_split hK hF hP hc, hd.2 hc, if_neg hc, absNorm_comap_split hK hF hP hc]
+  · rw [extP_split hK hF hP hc, hd.2 hc, ite_eq_right hc, absNorm_comap_split hK hF hP hc]
     simp
 
 end Formalism.HermitianLattices.Ext.L3.ThirdPropositionSlot

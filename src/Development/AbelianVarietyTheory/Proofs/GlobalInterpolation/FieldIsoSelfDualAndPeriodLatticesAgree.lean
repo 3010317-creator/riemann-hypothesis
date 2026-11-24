@@ -77,8 +77,7 @@ theorem trL_span {N : Submodule (𝓞 E) (Fin n → E)} (h : Submodule.span E (N
     Submodule.span E' (trL e N : Set (Fin n → E')) = ⊤ := by
   have h1 := span_image_span e (vecT e n) (fun r x => funext fun i => map_mul e r (x i)) (N : Set (Fin n → E))
   rw [h, Submodule.top_coe, Set.image_univ, (vecT e n).surjective.range_eq, Submodule.span_univ] at h1
-  refine top_le_iff.1 (h1.le.trans (Submodule.span_mono ?_))
-  exact Submodule.subset_span
+  exact top_le_iff.1 (h1.le.trans (Submodule.span_mono Submodule.subset_span))
 
 def matT (a b : ℕ) : HomE E a b ≃+ Matrix (Fin b) (Fin a) E' :=
   (LinearMap.toMatrix' (R := E) (m := Fin b) (n := Fin a)).toAddEquiv.trans e.toAddEquiv.mapMatrix
@@ -143,8 +142,7 @@ theorem sd_lat (hs : s.Ok) {n : ℕ} {N : Submodule (𝓞 X.E) (Sp X.E n)} (h : 
       let coord := (LinearMap.proj i : Sp X.E n →ₗ[X.E] X.E).restrictScalars (𝓞 X.E)
       have htop : N.map coord = ⊤ := by
         rw [eq_top_iff]
-        intro x _
-        exact ⟨(x / v i) • v, hline _, div_mul_cancel₀ _ hi⟩
+        exact fun x _ => ⟨(x / v i) • v, hline _, div_mul_cancel₀ _ hi⟩
       have : Module.Finite (𝓞 X.E) X.E := Module.finite_def.mpr (htop ▸ h.1.fg.map coord)
       exact RingOfIntegers.not_isField X.E
         (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 X.E) X.E) (Field.toIsField X.E))

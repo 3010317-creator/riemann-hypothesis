@@ -196,7 +196,6 @@ theorem exists_diagEmb : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     exact hs a b
   · intro e h y hy
     show (y : Formalism.IndefR.DatumF.AEF F E) = e * (Formalism.IndefR.DatumF.mtF σ _ (diagU σ J h)).det + (1 - e)
-    rw [mtF_diagU, det_dg]
-    exact hy
+    rwa [mtF_diagU, det_dg]
 
 end GlobalTheory.DiagEmbU

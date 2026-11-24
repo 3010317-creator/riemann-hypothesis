@@ -92,8 +92,7 @@ theorem UpperTheory.V.Base.princZl :
       · intro hd
         have := Nat.le_of_dvd (by omega) hd
         omega
-      · rw [mem_rootsOfUnity]
-        exact ht
+      · rwa [mem_rootsOfUnity]
   refine ⟨?_, tors⟩
   classical
   let L : ℤ_[l]ˣ →* Multiplicative ℤ_[l] := GroundTheory.Global.Cyclotomic.padicUnitsLog l
@@ -136,8 +135,7 @@ theorem UpperTheory.V.Base.princZl :
     intro y
     have h : y ∈ I ↔ y ∈ Ideal.span {Submodule.IsPrincipal.generator I} := by
       rw [Ideal.span_singleton_generator]
-    rw [Ideal.mem_span_singleton'] at h
-    exact h
+    rwa [Ideal.mem_span_singleton'] at h
   set g := Submodule.IsPrincipal.generator I with hgdef
   obtain ⟨a0, ha0⟩ := (Subgroup.ne_bot_iff_exists_ne_one).1 hH1
   have hg0 : g ≠ 0 := by
@@ -152,8 +150,7 @@ theorem UpperTheory.V.Base.princZl :
   have hec : Continuous e := by
     rw [hmemb.continuous_iff]
     have : ((fun t : ℤ_[l] => t * g) ∘ e) = f := funext he
-    rw [this]
-    exact hfc
+    rwa [this]
   have hemul : ∀ a b : H, e (a * b) = e a + e b := by
     intro a b
     apply hminj

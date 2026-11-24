@@ -88,8 +88,7 @@ lemma dotProduct_padZero {m N : ℕ} (h : m ≤ N) (F : Fin N → R) (v : Fin m 
   · intro i hi
     simp only [padZero]
     rw [dite_eq_right, mul_zero]
-    intro hlt
-    exact hi ⟨⟨i, hlt⟩, Fin.ext rfl⟩
+    exact fun hlt => hi ⟨⟨i, hlt⟩, Fin.ext rfl⟩
   · intro i
     simp [restrFirst, padZero]
 
@@ -112,7 +111,7 @@ lemma mem_uniSeq_iff {n : ℕ} (l : List (Fin n → R)) :
   · rintro ⟨f, hf⟩
     refine ⟨fun i => if h : i < l.length then f ⟨i, h⟩ else 0, fun i j hi hj => ?_⟩
     have := hf ⟨i, hi⟩ ⟨j, hj⟩
-    simp only [dif_pos hi]
+    simp only [dite_eq_left hi]
     simpa [Fin.ext_iff] using this
   · rintro ⟨f, hf⟩
     refine ⟨fun i => f i, fun i j => ?_⟩
@@ -128,8 +127,7 @@ lemma map_mem_uniSeq {m N : ℕ} (e : (Fin m → R) → (Fin N → R)) (A : (Fin
   · rintro ⟨f, hf⟩
     refine ⟨fun i => A (f i), fun i j hi hj => ?_⟩
     have := hf i j (by simpa using hi) (by simpa using hj)
-    rw [List.getElem_map, hA] at this
-    exact this
+    rwa [List.getElem_map, hA] at this
   · rintro ⟨f, hf⟩
     refine ⟨fun i => B (f i), fun i j hi hj => ?_⟩
     rw [List.getElem_map, hB]
@@ -203,15 +201,12 @@ theorem GlobalTheory.SeqCx.exactAt_uniSeq_killed_by_split : ∀ (R : Type) [Comm
     · rintro ⟨hw, h⟩
       have hw' : w.map (fun u => e (restrFirst hmN (G *ᵥ u))) = w := by
         conv_rhs => rw [← List.map_id w]
-        apply List.map_congr_left
-        intro u hu
-        exact (hkey u).mp (fun y hy => h y hy u hu)
+        exact List.map_congr_left (fun u hu => (hkey u).mp (fun y hy => h y hy u hu))
       refine ⟨w.map (fun u => restrFirst hmN (G *ᵥ u)), ?_, ?_⟩
       · rw [← map_mem_uniSeq e _ _ hA hB, List.map_map]
         convert hw using 1
         exact hw'
-      · rw [List.map_map]
-        exact hw'
+      · rwa [List.map_map]
     · rintro ⟨vs, hvs, rfl⟩
       refine ⟨(map_mem_uniSeq e _ _ hA hB vs).mpr hvs, ?_⟩
       intro y hy u hu
@@ -338,7 +333,7 @@ theorem slicePr_mapDomain (V W : Type) (w w' : List W) (x : List V →₀ ℤ) :
   rw [Finsupp.linearCombination_mapDomain]
   split_ifs with h
   · simp [Function.comp_def, h, lc_single_one]
-  · simp only [Function.comp_def, h, if_false]
+  · simp only [Function.comp_def, h, ite_false]
     induction x using Finsupp.induction_linear with
     | zero => simp
     | add f g hf hg => rw [map_add (f := _), hf, hg, add_zero]
@@ -710,9 +705,9 @@ theorem incl_apply (w w' : List W) (z : List V →₀ ℤ) (l : List V) :
     incl w z (l, w') = if w = w' then z l else 0 := by
   by_cases h : w = w'
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact Finsupp.mapDomain_apply_of_injective (pair_injective w) z l
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     apply Finsupp.mapDomain_notin_range
     rintro ⟨l', hl'⟩
     exact h (congrArg Prod.snd hl')
@@ -762,7 +757,7 @@ theorem dblRow_exact : ∀ (V W : Type) (D : Set (List V × List W)) (a b : ℕ)
     ext l
     have := congrArg (fun z => z (l, w)) h1
     simp only [h0, Finsupp.coe_zero, Pi.zero_apply, Finsupp.finsetSum_apply, incl_apply] at this
-    rw [Finset.sum_ite_eq', if_pos hw] at this
+    rw [Finset.sum_ite_eq', ite_eq_left hw] at this
     simpa using this.symm
   have hslice : ∀ w ∈ T, ∃ y ∈ chains {l | (l, w) ∈ D} (a + 1), bd V y = proj w x := by
     intro w hw
@@ -810,8 +805,7 @@ open GlobalTheory.SeqCx
 namespace GlobalTheory.SeqCx.ColDecomp
 
 lemma inj_pair {V W : Type} (l : List V) : Function.Injective (fun w : List W => (l, w)) := by
-  intro u v h
-  exact (Prod.mk.inj h).2
+  exact fun u v h => (Prod.mk.inj h).2
 
 open Classical in
 lemma sum_apply_pair {V W : Type} (T : Finset (List V)) (g : List V → List W →₀ ℤ) (l : List V) (w : List W) :
@@ -824,8 +818,7 @@ lemma sum_apply_pair {V W : Type} (T : Finset (List V)) (g : List V → List W �
       apply Finsupp.mapDomain_notin_range
       rintro ⟨w', hw'⟩
       exact hne (congrArg Prod.fst hw')
-    · intro hl
-      exact absurd h hl
+    · exact fun hl => absurd h hl
   · apply Finset.sum_eq_zero
     intro l' hl'
     apply Finsupp.mapDomain_notin_range
@@ -835,14 +828,7 @@ lemma sum_apply_pair {V W : Type} (T : Finset (List V)) (g : List V → List W �
 
 lemma vbd_mapDomain {V W : Type} (l : List V) (c : List W →₀ ℤ) :
     vbd V W (Finsupp.mapDomain (fun w => (l, w)) c) = Finsupp.mapDomain (fun w => (l, w)) (bd W c) := by
-  induction c using Finsupp.induction_linear with
-  | zero => simp
-  | add f g hf hg =>
-    rw [Finsupp.mapDomain_add, map_add (f := _), hf, hg, map_add (f := _), Finsupp.mapDomain_add]
-  | single w k =>
-    rw [Finsupp.mapDomain_single]
-    simp only [vbd, bd, Finsupp.linearCombination_single]
-    rw [one_smul, Finsupp.mapDomain_smul]
+  exact GlobalTheory.SeqCx.DblBd.vbd_mapDomain V W l c
 
 end GlobalTheory.SeqCx.ColDecomp
 
@@ -871,7 +857,7 @@ theorem GlobalTheory.SeqCx.vertical_exact_of_columns : ∀ (V W : Type) (D : Set
     intro l hl
     ext w
     have := congrArg (fun f => f (l, w)) hvdec
-    simp only [hvx, sum_apply_pair, if_pos hl] at this
+    simp only [hvx, sum_apply_pair, ite_eq_left hl] at this
     simpa using this.symm
   have hchain : ∀ l ∈ T, g l ∈ chains {w | (l, w) ∈ D} b := by
     intro l hl
@@ -886,8 +872,7 @@ theorem GlobalTheory.SeqCx.vertical_exact_of_columns : ∀ (V W : Type) (D : Set
     have := hsupp z hz
     exact ⟨this.2.1, z.2, this.1⟩
   have hy : ∀ l ∈ T, ∃ y ∈ chains {w | (l, w) ∈ D} (b + 1), bd W y = g l := by
-    intro l hl
-    exact hex l (hpre l hl).1 (hpre l hl).2 (g l) (hchain l hl) (hcyc l hl)
+    exact fun l hl => hex l (hpre l hl).1 (hpre l hl).2 (g l) (hchain l hl) (hcyc l hl)
   choose! y hymem hybd using hy
   refine ⟨∑ l ∈ T, Finsupp.mapDomain (fun w => (l, w)) (y l), ?_, ?_⟩
   · refine Submodule.sum_mem _ (fun l hl => ?_)
@@ -939,8 +924,7 @@ theorem exactAt_split_kill_uni : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
       exact h2 y hy z hz
   rw [hF]
   refine _root_.GlobalTheory.SeqCx.exactAt_of_links _ _ {y : (Fin n → R) × (Fin n → R) | ∀ z ∈ γ, z.2 ⬝ᵥ y.1 = 0} ?_ a ?_
-  · intro l hl l' hl'
-    exact ⟨hsubS l hl.1 l' hl', fun y hy z hz => hl.2 y (hl'.subset hy) z hz⟩
+  · exact fun l hl l' hl' => ⟨hsubS l hl.1 l' hl', fun y hy z hz => hl.2 y (hl'.subset hy) z hz⟩
   · intro σ hσ hσlen
     obtain ⟨ρ, hρ, hρlen, hlink⟩ := T.exists_splitSeq_linkIn_orthogonal_eq_linkIn R n γ σ hγ hσ.1 hσ.2
     rw [hlink]
@@ -975,8 +959,7 @@ theorem splitPairs_subClosed2 : ∀ (R : Type) [CommRing R] (n : ℕ), SubClosed
     refine ⟨fun i => F (g i), fun i j => ?_⟩
     rw [hg j, hF]
     simp only [g.eq_iff_eq]
-  · intro y hy u hu
-    exact h3 y (hx.subset hy) u (hw.subset hu)
+  · exact fun y hy u hu => h3 y (hx.subset hy) u (hw.subset hu)
 
 end GlobalTheory.SeqCx
 
@@ -1014,8 +997,7 @@ theorem zigzag_double_complex : ∀ (A : Type) [AddCommGroup A] (C : ℕ → ℕ
       refine ⟨y - v u, Submodule.sub_mem _ hy (hC2 (a + 1) (b + 1) u hu), ?_, ?_⟩
       · rw [map_sub, hhv u, hu', hvz', sub_self]
       · rw [map_sub, hvv u, sub_zero, hyc]
-  intro c hc hhc hvc
-  exact key p 0 (by simp) c hc hhc hvc
+  exact fun c hc hhc hvc => key p 0 (by simp) c hc hhc hvc
 
 end GlobalTheory
 end -- clump:auto

@@ -100,12 +100,10 @@ theorem span_eq_top {D : D7} {M : IntermediateField ℚ ℂ} [NumberField M]
     have h1 : IsIntegral ℤ (((c : M) : ℂ)) := (isIntegral_coe_iff _).2 c.isIntegral_coe
     have h2 : ((c : M) : ℂ) = (x : ℂ) * ((s : ℂ) * TaylorLogMetric.embT D τ (D.host.conj y)) :=
       congrArg (fun a : M => (a : ℂ)) hc
-    rw [h2, ← mul_assoc] at h1
-    exact h1
+    rwa [h2, ← mul_assoc] at h1
   rw [hs, Submodule.mem_span_singleton] at hxs
   obtain ⟨c, hc⟩ := hxs
-  refine hx1 ((FractionalIdeal.mem_one_iff _).2 ⟨c, ?_⟩)
-  exact mul_right_cancel₀ hs0 hc
+  exact hx1 ((FractionalIdeal.mem_one_iff _).2 ⟨c, mul_right_cancel₀ hs0 hc⟩)
 
 theorem ellT_eq_span_of_le : ∀ (D : D7) (M M' : IntermediateField ℚ ℂ) [NumberField M] [NumberField M'] (hle : M ≤ M'), (∀ τ x, TaylorLogMetric.embT D τ x ∈ M) → ∀ (τ : D.what₂.Tau) (s : M), TaylorLogMetric.ellT D M τ = Submodule.span (𝓞 M) {s} → TaylorLogMetric.ellT D M' τ = Submodule.span (𝓞 M') {(⟨(s : ℂ), hle s.2⟩ : M')} := by
   intro D M M' _ _ hle hM τ s hs
@@ -190,8 +188,7 @@ theorem ellT_eq_span (D : D7) (cD : D.what₂.Tau → ℂ) (h : IsDgen D cD)
     exact inv_mul_cancel_right₀ (fun h => hc0 (congrArg (fun a : M => (a : ℂ)) h)) x
   · rw [Submodule.span_singleton_le_iff_mem, GlobalTheory.Glob.mem_ellT_iff hM]
     have := (GlobalTheory.Glob.mem_ellT_iff hM₀ τ s).1 (hs ▸ Submodule.mem_span_singleton_self s)
-    rw [hsc] at this
-    exact this
+    rwa [hsc] at this
 
 theorem mean_logMet_eq : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (dl : ℂ) (cD : D.what₂.Tau → ℂ), StandardLatticesGL3.Crv D cc dl → GlobalTheory.IndefiniteRowSideFullHecke.MeanPeriodLogarithms.MeanPeriodAt D cc dl → IsDgen D cD → (∀ τ, cD τ ≠ 0) ∧ ∀ (M : IntermediateField ℚ ℂ) [FiniteDimensional ℚ M], TaylorLogMetric.DataIn D (TaylorLogMetric.tor0 D cc dl) M → (∀ τ, cD τ ∈ M) → ∀ τ, (∑ ρ : M →ₐ[ℚ] ℂ, -TaylorLogMetric.logMet M (TaylorLogMetric.lamOf D cc dl) ρ (TaylorLogMetric.liftM M (cD τ))) / (Module.finrank ℚ M : ℝ) = TaylorLogMetric.logOmVal D := by
   intro D cc dl cD hc hmean hgen
@@ -203,7 +200,7 @@ theorem mean_logMet_eq : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (dl : ℂ) (c
   refine ⟨hne, fun M _ hD hcM τ => ?_⟩
   haveI : NumberField M := NumberField.mk
   have hell := ellT_eq_span D cD hgen M hD.1 τ (hcM τ)
-  have hl : TaylorLogMetric.liftM M (cD τ) = ⟨cD τ, hcM τ⟩ := dif_pos (hcM τ)
+  have hl : TaylorLogMetric.liftM M (cD τ) = ⟨cD τ, hcM τ⟩ := dite_eq_left (hcM τ)
   rw [hl, ← hmean M hD τ, Finset.sum_neg_distrib]
   exact (GlobalTheory.Glob.meanLogOm_eq_of_gen hD.1 (GlobalTheory.Glob.area_lamConj_pos hc hD) hell.symm).symm
 

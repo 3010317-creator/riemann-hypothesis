@@ -134,8 +134,7 @@ theorem alg_inv {A B : Matrix (Fin b) (Fin b) k} (hA : A ∈ alg (k := k) k₀ m
     intro X Y hXY
     have h1 : A * X.1 = A * Y.1 := by rw [← hf, ← hf, hXY]
     apply Subtype.ext
-    have h2 := congrArg (B * ·) h1
-    simpa only [← Matrix.mul_assoc, hBA, Matrix.one_mul] using h2
+    simpa only [← Matrix.mul_assoc, hBA, Matrix.one_mul] using congrArg (B * ·) h1
   obtain ⟨X, hX⟩ := (LinearMap.injective_iff_surjective.1 hinj) ⟨1, alg_one⟩
   have hAX : A * X.1 = 1 := by rw [← hf, hX]
   have : B = X.1 := by
@@ -150,8 +149,7 @@ theorem alg_diag {A B : Matrix (Fin b) (Fin b) k} (hA : A ∈ alg (k := k) k₀ 
   · intro s _ hs
     by_contra h
     exact hs (Fin.ext (S_antisymm hp (hA p s (left_ne_zero_of_mul h)) (hB s p (right_ne_zero_of_mul h)))).symm
-  · intro h
-    exact absurd (Finset.mem_univ p) h
+  · exact fun h => absurd (Finset.mem_univ p) h
 
 theorem fIdx_lt {k₀ c n p : ℕ} (hk : k₀ ≤ n) (hp : p < n + c) : fIdx k₀ c n p < n + c := by
   unfold fIdx
@@ -174,7 +172,7 @@ theorem ent_eq {c n : ℕ} (hk : k₀ ≤ n) (κ : (Fin (n + c) → k) ≃ₗ[k]
   have e : eN k (n + c) (fIdx k₀ c n q.1) = Pi.single (fe k₀ c n hk q) (1 : k) := by
     funext j'
     simp only [eN, Pi.single_apply, fe, Equiv.ofBijective_apply, Fin.ext_iff]
-  simp only [Pm, Matrix.submatrix_apply, LinearMap.toMatrix'_apply, ent, atN, dif_pos (fIdx_lt hk p.2), e]
+  simp only [Pm, Matrix.submatrix_apply, LinearMap.toMatrix'_apply, ent, atN, dite_eq_left (fIdx_lt hk p.2), e]
   rfl
 
 theorem Pm_mul {c n : ℕ} (hk : k₀ ≤ n) (κ₁ κ₂ : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)) :
@@ -230,7 +228,6 @@ theorem patClosed : PatClosed := by
     rw [injs_iff hk hr]
     refine ⟨hB, fun p hp => ?_⟩
     have := congrFun (congrFun hBA p) p
-    rw [alg_diag hB h₁.1 p hp, h₁.2 p hp, mul_one, Matrix.one_apply_eq] at this
-    exact this
+    rwa [alg_diag hB h₁.1 p hp, h₁.2 p hp, mul_one, Matrix.one_apply_eq] at this
 
 end PI.OneCosetSharp.W

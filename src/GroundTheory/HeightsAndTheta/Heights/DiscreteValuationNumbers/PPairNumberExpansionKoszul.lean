@@ -49,8 +49,7 @@ theorem rename_pairCollapse_pairDiff (p i : Fin n) :
 theorem pairDiff_ne_zero (i : Fin n) : pairDiff i ≠ 0 := by
   unfold pairDiff
   rw [sub_ne_zero]
-  intro h
-  exact Sum.inl_ne_inr (X_injective h)
+  exact fun h => Sum.inl_ne_inr (X_injective h)
 
 theorem isHomogeneous_pairDiff (i : Fin n) : (pairDiff i).IsHomogeneous 1 :=
   (isHomogeneous_X _ _).sub (isHomogeneous_X _ _)
@@ -109,8 +108,7 @@ theorem koszul_finset (s : Finset (Fin n)) :
   classical
   induction s using Finset.induction_on with
   | empty =>
-    intro G hG _
-    exact ⟨0, fun _ _ => by simp, fun i => by simp [hG i (Finset.notMem_empty i)]⟩
+    exact fun G hG _ => ⟨0, fun _ _ => by simp, fun i => by simp [hG i (Finset.notMem_empty i)]⟩
   | insert p s hp ih =>
     intro G hG hrel
     choose Q hQ using fun i => exists_sub_rename_pairCollapse p (G i)
@@ -147,7 +145,7 @@ theorem koszul_finset (s : Finset (Fin n)) :
       rw [map_mul, rename_pairCollapse_pairDiff]
       by_cases hip : i = p
       · simp [hip]
-      · rw [if_neg hip, if_neg hip]
+      · rw [ite_eq_right hip, ite_eq_right hip]
         by_cases hi : i ∈ s
         · rw [hs i hi, rename_pairCollapse_idem]
         · rw [hout i (by rw [Finset.mem_insert, not_or]; exact ⟨hip, hi⟩), map_zero]
@@ -161,7 +159,7 @@ theorem koszul_finset (s : Finset (Fin n)) :
         · subst hip
           simp
         · simp [hip]
-      rw [hrel', hcol, zero_add, Finset.sum_ite_eq', if_pos (Finset.mem_univ p)] at hsplit
+      rw [hrel', hcol, zero_add, Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ p)] at hsplit
       rcases mul_eq_zero.mp hsplit.symm with h | h
       · exact absurd h (pairDiff_ne_zero p)
       · exact h
@@ -184,7 +182,7 @@ theorem koszul_homogeneous {m : ℕ} (G : Fin n → MvPolynomial (Fin n ⊕ Fin 
   obtain ⟨K, hK, hGK⟩ := koszul_finset Finset.univ G
     (fun i h => absurd (Finset.mem_univ i) h) hrel
   refine ⟨fun i j => if m - 1 = 0 then 0 else homogeneousComponent (m - 2) (K i j),
-    fun i j => ?_, fun i j => ?_, fun hm i j => if_pos hm, fun i => ?_⟩
+    fun i j => ?_, fun i j => ?_, fun hm i j => ite_eq_left hm, fun i => ?_⟩
   · split_ifs
     · simp
     · show homogeneousComponent (m - 2) (K i j) = -homogeneousComponent (m - 2) (K j i)
@@ -194,13 +192,13 @@ theorem koszul_homogeneous {m : ℕ} (G : Fin n → MvPolynomial (Fin n ⊕ Fin 
     · exact homogeneousComponent_isHomogeneous _ _
   · have h := congrArg (homogeneousComponent (m - 1)) (hGK i)
 
-    rw [homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).mpr (hG i)), if_pos rfl,
+    rw [homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).mpr (hG i)), ite_eq_left rfl,
     map_sum] at h
     simp only [homogeneousComponent_linear_mul (isHomogeneous_pairDiff _)] at h
     rw [h]
     by_cases hm : m - 1 = 0
     · simp [hm]
-    · simp only [hm, if_false]
+    · simp only [hm, ite_false]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [show m - 1 - 1 = m - 2 by omega]
 
@@ -231,8 +229,7 @@ theorem foldr_diffStep_perm {l₁ l₂ : List (K → ℤ)} (hl : l₁.Perm l₂)
   | nil => rfl
   | cons x _ ih => simp only [List.foldr_cons, ih]
   | swap x y l =>
-    simp only [List.foldr_cons]
-    exact diffStep_comm' _ _ _
+    simpa only [List.foldr_cons] using diffStep_comm' _ _ _
   | trans _ _ ih₁ ih₂ => exact ih₁.trans ih₂
 
 theorem vNumL_perm (W : Ideal (MRing ι O)) {l₁ l₂ : List (K → ℤ)} (hl : l₁.Perm l₂) :

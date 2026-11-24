@@ -93,8 +93,7 @@ theorem pos_iff (f : Fin n → ℚ) (hseg : ∀ i i' : Fin n, i < i' → 0 < f i
       intro j hj
       simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hj
       rw [Finset.mem_Iio]
-      by_contra hji
-      push_neg at hji
+      by_contra! hji
       rcases hji.lt_or_eq with h | h
       · exact hn (hseg i j h hj)
       · rw [h] at hn; exact hn hj
@@ -125,8 +124,7 @@ theorem neg_iff (f : Fin n → ℚ) (hseg : ∀ i i' : Fin n, i < i' → f i < 0
       intro j hj
       simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hj
       rw [Finset.mem_Ioi]
-      by_contra hji
-      push_neg at hji
+      by_contra! hji
       rcases hji.lt_or_eq with h | h
       · exact hn (hseg j i h hj)
       · rw [← h] at hn; exact hn hj

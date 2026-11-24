@@ -66,7 +66,7 @@ variable {F : Type} [Field F] [NumberField F] {n : ℕ} (v : HeightOneSpectrum (
 theorem redM_map (X : Matrix (Fin n) (Fin n) (v.adicCompletionIntegers F)) :
     redM F v (X.map (v.adicCompletionIntegers F).subtype) = X.map (IsLocalRing.residue _) := by
   ext a b
-  exact dif_pos (X a b).2
+  exact dite_eq_left (X a b).2
 
 theorem exists_map {X : Matrix (Fin n) (Fin n) (v.adicCompletion F)} (h : ∀ a b, X a b ∈ v.adicCompletionIntegers F) :
     ∃ X' : Matrix (Fin n) (Fin n) (v.adicCompletionIntegers F), X'.map (v.adicCompletionIntegers F).subtype = X :=
@@ -221,8 +221,7 @@ theorem exists_gLevH (S : StepLevel F E σ J T f bad) (G : GLoc F E σ gp) (hg0 
     have h0 : Ideal.span {(gp j : 𝓞 F)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact_mod_cast hg0 j
-    refine (Ideal.finite_factors h0).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.2 hv
   have hdis : Disjoint {v : HeightOneSpectrum (𝓞 F) | (gp 0 : 𝓞 F) ∈ v.asIdeal} {v | (gp 1 : 𝓞 F) ∈ v.asIdeal} := by
     rw [Set.disjoint_left]
     intro v h0 h1
@@ -251,8 +250,7 @@ theorem exists_gLevH (S : StepLevel F E σ J T f bad) (G : GLoc F E σ gp) (hg0 
         exact ⟨hx b, zero_mem _⟩
       · exact congrArg Prod.fst ((G.sp j v h).apply_symm_apply _)
   · constructor
-    · intro hU
-      exact ⟨r j v h ⟨x, hU⟩, ⟨_, rfl⟩, rfl⟩
+    · exact fun hU => ⟨r j v h ⟨x, hU⟩, ⟨_, rfl⟩, rfl⟩
     · rintro ⟨_, ⟨y, rfl⟩, e⟩
       have e1 : redHom G j v h J (hL j v h) ⟨y.1, S.Uloc_lev v y.2⟩ = redHom G j v h J (hL j v h) ⟨x, hx⟩ := Units.ext e
       obtain ⟨h1, -⟩ := hK j v h ((⟨y.1, S.Uloc_lev v y.2⟩ : levelVL σ J v S.Lb)⁻¹ * ⟨x, hx⟩)
@@ -264,8 +262,7 @@ theorem exists_gLevH (S : StepLevel F E σ J T f bad) (G : GLoc F E σ gp) (hg0 
   · simp only [hlam, Units.val_inv_eq_inv_val, inv_inv]
     rw [Fin.prod_univ_two, hchi x, Units.coe_prod]
     have := finprod_mem_union (f := fun v => ((S.chi (embU S v (cmp S v x)) : ℂˣ) : ℂ)) hdis (hfin 0) (hfin 1)
-    rw [finprod_mem_eq_finite_toFinset_prod _ ((hfin 0).union (hfin 1))] at this
-    exact this
+    rwa [finprod_mem_eq_finite_toFinset_prod _ ((hfin 0).union (hfin 1))] at this
   · rw [hchi x, Units.coe_prod, norm_prod]
     refine Finset.prod_eq_one fun v hv => ?_
     have hj : ∃ j, (gp j : 𝓞 F) ∈ v.asIdeal := by
@@ -300,8 +297,7 @@ theorem latS_eq_std {Lb : Submodule (𝓞 E) (Fin n → E)} {T : ℕ} {v : Heigh
     rw [afsplit_mem_stdLat] at hx
     have hv : Valued.v ((T : ℕ) : v.adicCompletion F) = 1 := by
       have e : ((T : ℕ) : v.adicCompletion F) = algebraMap F _ (algebraMap (𝓞 F) F (T : 𝓞 F)) := by simp
-      rw [e, valued_algebraMap, HeightOneSpectrum.valuation_eq_one_iff_notMem]
-      exact hT
+      rwa [e, valued_algebraMap, HeightOneSpectrum.valuation_eq_one_iff_notMem]
     have h0 : ((T : ℕ) : v.adicCompletion F) ≠ 0 := fun h => by simp [h] at hv
     have hi : (1 : E) ⊗ₜ[F] ((T : ℕ) : v.adicCompletion F)⁻¹ ∈ intV E v :=
       Subring.subset_closure (Or.inr ⟨⟨_, by
@@ -375,8 +371,7 @@ theorem val_adAt_lt (G : GLoc F E σ gp) (j : Fin 2) (v : HeightOneSpectrum (�
   rw [hz, map_mul, afsplit_decomp, mul_comm (afsplitEps E v), mul_assoc, afsplit_eps_mul_IE, map_mul, map_mul, adAt_inclE,
     valued_algebraMap]
   refine mul_lt_one_of_lt_of_le ?_ ((mem_rInt_iff F E _).1 (afsplit_IE_int v _ hy) P)
-  rw [he, HeightOneSpectrum.valuation_lt_one_iff_mem]
-  exact haP
+  rwa [he, HeightOneSpectrum.valuation_lt_one_iff_mem]
 
 theorem val_emb_lt (G : GLoc F E σ gp) (j : Fin 2) (v : HeightOneSpectrum (𝓞 F)) (h : (gp j : 𝓞 F) ∈ v.asIdeal)
     {J : Matrix (Fin n) (Fin n) E} (hJ : J = 1) {Lb : Submodule (𝓞 E) (Fin n → E)}
@@ -399,8 +394,7 @@ theorem val_emb_lt (G : GLoc F E σ gp) (j : Fin 2) (v : HeightOneSpectrum (𝓞
     rfl
   refine val_adAt_lt G j v h ?_ ?_ P
   · have := hs x⁻¹ (by rw [map_inv, hx, inv_one]) a b
-    rw [← hone] at this
-    exact this
+    rwa [← hone] at this
   · have hu := levelvsplit_unitary _ (G.sp j v h) (G.sp_sig j v h) _ x.1⁻¹ (x⁻¹).2.1
     rw [Matrix.map_one _ (map_zero _) (map_one _), Matrix.map_one _ (map_zero _) (map_one _)] at hu
     have h3 := levelvsplit_solve 1 1 _ (x.1.1.map (G.phi j v h)) _ (mul_one _) (by
@@ -515,8 +509,7 @@ theorem reads_gLevH {B : Base} {X : PreX B.toPre} (I : TC B X) (hPr : (B.primes 
   have hU : emb v x.1 ∈ (S (chOf c)).U := (hR.lev c _ _ hp1).2 ⟨1, map_one _, by rw [ha], by rw [ha]⟩
   refine ⟨hU, Units.ext ?_⟩
   have := hR.chr c ⟨_, hU⟩ 1 (map_one _) (by rw [ha]; exact hp1)
-  rw [map_one, Units.val_one, map_one] at this
-  exact this
+  rwa [map_one, Units.val_one, map_one] at this
 
 
 

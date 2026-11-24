@@ -179,8 +179,8 @@ theorem applyAt0_monomial' (D : D7) {N N' : ℕ} (α : Mono D N N') (G : VC D N 
       = (α.prod fun _ n => (n.factorial : ℂ)) * Formalism.MainNotions.TaylorLogMetric.taylor D G α := by
   classical
   unfold Formalism.MainNotions.GL3Theta.applyAt0
-  rw [MvPolynomial.support_monomial, if_neg one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
-    if_pos rfl, one_mul]
+  rw [MvPolynomial.support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
+    ite_eq_left rfl, one_mul]
 
 end GlobalTheory.MovedKappaEx
 
@@ -289,8 +289,7 @@ theorem exists_movedKappa_decomposition : _root_.GlobalTheory.FunPr.ThetaLocalIn
         rw [mul_inv_cancel_left] at this
         exact eqAt_symm this
     have := key s hs' (k * (ch.S.N.u X)⁻¹)
-    rw [hB] at this
-    exact this
+    rwa [hB] at this
   · rw [← mul_assoc, ← e, mul_inv_cancel_right]
 end GlobalTheory.MovedKappaDec
 end
@@ -642,8 +641,7 @@ private theorem jets_scale {N N' : ℕ} (δ a : ℂ) {Θ : VC D N N' → ℂ} (h
     rw [GlobalTheory.FunObj.period, GlobalTheory.AdTh.Fock.norm_embedding_hostFormConstant_eq, div_eq_mul_inv]
   have hprod : (k.prod fun v n => GlobalTheory.FunObj.period δ v.1 ^ n) =
       (δ * (((Real.sqrt (2 * Real.pi * Formalism.L2.Pj.xiR D) : ℝ) : ℂ)⁻¹)) ^ (k.sum fun _ n => n) := by
-    simp only [hper, Finsupp.prod, Finsupp.sum]
-    exact Finset.prod_pow_eq_pow_sum _ _ _
+    simpa only [hper, Finsupp.prod, Finsupp.sum] using Finset.prod_pow_eq_pow_sum _ _ _
   rw [hprod, mul_pow]
   ring
 private theorem sum_norm_sq {m n : ℕ} (y : Matrix (Fin m) (Fin n) ℂ) : ∑ i, ∑ j, ((‖y i j‖ ^ 2 : ℝ) : ℂ) = (y * yᴴ).trace := by
@@ -777,8 +775,7 @@ private theorem arith {N N' : ℕ} (U : Matrix.unitaryGroup (Fin N) D.host.E) (U
   refine ⟨⟨(hc (algebraMap Qbar ℂ)).1, fun σ => (hc σ).2⟩, (hc (algebraMap Qbar ℂ)).2, fun M M' q _ a1 a2 a3 a4 lam => ?_⟩
   obtain ⟨h3, h4⟩ := h ℂ_[q] lam (fun τ => normOne_emb lam _ _ (norm_det_padic U a1 a3))
     fun τ => normOne_emb lam _ _ (norm_det_padic U' a2 a4)
-  rw [lamC, dite_eq_left h3]
-  exact h4
+  rwa [lamC, dite_eq_left h3]
 theorem fock_jetTheta_rational : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type}
     {A : FamIn D.what₂.LL Γ Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks}
     (ch : Choice R), ch.Is → ∀ (p : Pair T), DefPair D.R.m p → ∀ (x : FinPt ch.G p.small) (y : FinPt ch.G p.big)
@@ -1271,8 +1268,7 @@ theorem twist_pairing_pullback_of_rational : _root_.GlobalTheory.FunPr.ThetaLoca
     h1 ℂ σ fun τ => ⟨(norm_det_complex _ A').1, (norm_det_complex _ A).2⟩
   refine ⟨ε, ⟨(hc (algebraMap Qbar ℂ)).1, fun σ => (hc σ).2⟩, fun q _ a1 a2 a3 a4 lam => ?_, h2⟩
   obtain ⟨h3, h4⟩ := h1 ℂ_[q] lam fun τ => ⟨(norm_det_padic _ A' a2 a4).1, (norm_det_padic _ A a1 a3).2⟩
-  rw [lamC, dite_eq_left h3]
-  exact h4
+  rwa [lamC, dite_eq_left h3]
 end GlobalTheory.RatMoveIop
 end
 end
@@ -1401,16 +1397,14 @@ private theorem isOpen_principal_level_subgroup {D : D7} (T : HSp D) {N : ℕ} (
     ext x
     simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, Set.mem_preimage]
     constructor
-    · intro hx
-      exact Subgroup.mem_map.2 ⟨x.1, hx, rfl⟩
+    · exact fun hx => Subgroup.mem_map.2 ⟨x.1, hx, rfl⟩
     · intro hx
       obtain ⟨k', hk', e⟩ := Subgroup.mem_map.1 hx
       have e' : finHom T k' = finHom T x.1 := congrArg Subtype.val e
       refine ⟨x.2, ?_⟩
       have hc := hk'.2
       unfold GlobalTheory.Member.FinCong at hc ⊢
-      rw [← e']
-      exact hc
+      rwa [← e']
   rw [e]
   exact (GlobalTheory.SmoothVac.isOpen_map_levelGroup T hN).preimage hF
 private theorem exists_pow_mem_open_subgroup {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (H K U : Subgroup G)
@@ -1443,8 +1437,7 @@ private theorem exists_pow_mem_principal_level {D : D7} (V : HSp D) (Λ : Submod
       Matrix.mulVec ((Formalism.IndefR.Lev.finE V k)⁻¹).1 u ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ := key
   have hst : Formalism.IndefR.Lev.finE V k ∈ Formalism.L2.DIV.St β := by
     refine (GlobalTheory.LevSplit.mem_St_iff β Λ hβ _).2 ⟨fun y hy => (key' _).2 ?_, fun y hy => (key' y).1 hy⟩
-    rw [Matrix.mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec]
-    exact hy
+    rwa [Matrix.mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec]
   exact exists_pow_mem_open_subgroup (GfC V) (Formalism.IndefR.Lev.levA V (Formalism.L2.DIV.St β)) _ inf_le_left
     (GlobalTheory.AscInh.stab_compact_open V β).1 (isOpen_principal_level_subgroup V hN) ⟨hk, hst⟩
 
@@ -1513,8 +1506,7 @@ theorem movedVacuum_root_exists_algebraic (hP : _root_.GlobalTheory.FunPr.ThetaL
     intro V g hg
     have e : matHom (negSp V) (negGA V g) = matHom V g := Units.ext (mt_negGA V g)
     simp only [GfC, MonoidHom.mem_ker, infHom, MonoidHom.comp_apply] at hg ⊢
-    rw [e]
-    exact hg
+    rwa [e]
   have hvac := _root_.GlobalTheory.MovedDict.moved_vacuum_isVacuumIntegral hP hI ch hch p hp x y
   have hv := ch.S.Z.vac_is p hp
   have gx := GlobalTheory.MovedHomLat.movedLat_eq ch.S.toGridChoice _ h1 x
@@ -1705,8 +1697,7 @@ theorem exists_moved_kappa : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀
     · obtain ⟨hqx, hqy⟩ := hQx q hq
       rw [mul_assoc] at hqx hqy
       exact @hcu q hf (hsx q hq) (hsy q hq) hqx hqy
-    · rw [mul_assoc, mul_assoc]
-      exact hjc
+    · rwa [mul_assoc, mul_assoc]
   obtain ⟨κ₀, hm, -, hj⟩ := chain ∅ (by simp) (by simp)
   refine ⟨κ₀, hm, fun q hf hx hy lam => ?_, hj⟩
   obtain ⟨κq, -, hu, hjq⟩ := chain {q} (by simpa using hf.out) (by simpa using ⟨hx, hy⟩)

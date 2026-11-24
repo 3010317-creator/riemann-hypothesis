@@ -180,14 +180,7 @@ theorem cm_generator_sq_quadratic_eq (D : D7) : ∃ n : ℤ, w0 D * w0 D = w0 D 
 
 theorem lamOf_stable (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (a : 𝓞 D.host.K) :
     ∀ w ∈ lamOf D cc δ, D.host.φ₀ (((a : D.host.K) : D.host.E)) * w ∈ lamOf D cc δ := by
-  intro w hw
-  induction hw using AddSubgroup.closure_induction with
-  | mem x hx =>
-    obtain ⟨c, hc, rfl⟩ := hx
-    exact AddSubgroup.subset_closure ⟨a * c, cc.mul_mem_left a hc, by simp; ring⟩
-  | zero => simp
-  | add x y _ _ hx hy => rw [mul_add]; exact add_mem hx hy
-  | neg x _ hx => rw [mul_neg]; exact neg_mem hx
+  apply GlobalTheory.ThetaInter.lam_mul_mem
 
 theorem lamOf_eq_closure (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hc : Crv D cc δ) :
     ∃ w₁ w₂ : ℂ, LinearIndependent ℝ ![w₁, w₂] ∧ lamOf D cc δ = AddSubgroup.closure {w₁, w₂} := by
@@ -477,8 +470,7 @@ theorem index_coprime_of_multiples {G : Type*} [AddCommGroup G] [AddGroup.FG G] 
     obtain ⟨z, rfl⟩ := QuotientAddGroup.mk_surjective x
     obtain ⟨s, hs, hz⟩ := h z
     refine ⟨s, hs, ?_⟩
-    rw [← QuotientAddGroup.mk_nsmul, QuotientAddGroup.eq_zero_iff]
-    exact hz
+    rwa [← QuotientAddGroup.mk_nsmul, QuotientAddGroup.eq_zero_iff]
   have htor : AddMonoid.IsTorsion (G ⧸ H) := by
     intro x
     obtain ⟨s, hs, hx⟩ := hq x
@@ -604,8 +596,7 @@ theorem evenTheta_properties_curveLattice (D : D7) (cc : Ideal (𝓞 D.host.K)) 
   obtain ⟨hn, hp⟩ := Parity.even_im_hermitian_sub D hG cc δ hC t0 ht
   set Λ := lamOf D cc δ
   have h0 : U1 Λ t0 (sgStar Λ) 0 ≠ 0 := by
-    simp only [U1, zero_add]
-    exact mul_ne_zero (fun h => hn ((hz _).1 h)) (Complex.exp_ne_zero _)
+    simpa only [U1, zero_add] using mul_ne_zero (fun h => hn ((hz _).1 h)) (Complex.exp_ne_zero _)
   refine ⟨?_, div_self h0, fun ω hω => ?_⟩
   · unfold GL3Theta.th0
     refine Differentiable.div_const ?_ _
@@ -878,8 +869,7 @@ theorem exists_vacuum : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), Cr
     have hε : (ε : ℂ) = κ / (c * μ) := by simp [ε]
     refine ⟨b, ε, hb, hl, ε.2, ?_, ?_, ?_⟩
     · rw [lamC_coe]
-      simp only [ε, map_div₀, map_mul, norm_div, norm_mul, n2, n3, mul_one]
-      exact div_self n4
+      simpa only [ε, map_div₀, map_mul, norm_div, norm_mul, n2, n3, mul_one] using div_self n4
     · exact _root_.GlobalTheory.NormSum.LocIndex.index_coprime D hG cc δ N N' _ _ _ b p hp.out
         (_root_.GlobalTheory.ThetaLine.theta_line D hG cc δ hC N N' _ hK0).2.2.2.2.1 hl
     · rw [hpull, Iop_smul, hI, hε]

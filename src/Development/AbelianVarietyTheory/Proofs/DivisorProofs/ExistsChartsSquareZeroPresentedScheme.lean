@@ -140,8 +140,7 @@ theorem exists_of_mem_chartOpen (hI : I ^ 2 = 0) (P : S.Presents s i) (T : AffOp
   obtain ⟨q₀, rfl⟩ := (S.surjective_spMap_p hI T).surj q
   refine ⟨affPt s₀ T.unop q₀, ?_, ?_⟩
   · have : affPt s₀ T.unop q₀ ∈ Set.range (affPt s₀ T.unop) := Set.mem_range_self _
-    rw [range_affPt] at this
-    exact this
+    rwa [range_affPt] at this
   · rw [← Scheme.Hom.comp_apply, ← P.red T, Scheme.Hom.comp_apply]
 
 theorem le_preimage_chartOpen (P : S.Presents s i) (T : AffOp X₀) :
@@ -158,8 +157,7 @@ theorem preimage_chartOpen_eq (hI : I ^ 2 = 0) (hinj : Function.Injective i) (P 
     (T : AffOp X₀) : i ⁻¹ᵁ chartOpen P T = T.unop.1 := by
   refine le_antisymm (fun x₀ hx₀ ↦ ?_) (le_preimage_chartOpen P T)
   obtain ⟨y₀, hy₀, e⟩ := exists_of_mem_chartOpen hI P T (i x₀) hx₀
-  rw [← hinj e]
-  exact hy₀
+  rwa [← hinj e]
 
 theorem appLE_chartSec (P : S.Presents s i) (T : AffOp X₀) (hT : T.unop.1 ≤ i ⁻¹ᵁ chartOpen P T) :
     i.appLE (chartOpen P T) T.unop.1 hT = chartSec P T ≫ CommRingCat.ofHom (S.p T) := by

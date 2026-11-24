@@ -101,8 +101,7 @@ theorem qO_extTensor_unip : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     intro a
     rw [Submodule.mkQ_apply, Submodule.mkQ_apply, Submodule.Quotient.eq]
     unfold twKer
-    apply Submodule.subset_span
-    exact ⟨u, a, by simp [hu]⟩
+    exact Submodule.subset_span ⟨u, a, by simp [hu]⟩
   have key : ∀ w : τ.V ⊗[ℂ] σ.V, qO τ σ ψ (L w) = qO τ σ ψ w := by
     intro w
     induction w using TensorProduct.induction_on with
@@ -134,8 +133,7 @@ theorem smInt_subst : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
     IsLocallyConstant F → HasCompactSupport F →
     @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k n) (fun d => F ((w⁻¹ : GL (Fin n) k).1.mulVec d)) =
       ((dpow n 1 w : ℂˣ) : ℂ) • @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k n) F := by
-  intro k _ _ _ _ n W _ _ w F l c
-  exact smInt_mulVec k n W w F l c
+  exact fun k _ _ _ _ n W _ _ w F l c => smInt_mulVec k n W w F l c
 
 end GlobalTheory.CompanionTheory.BZPhiPG.Scale
 
@@ -170,9 +168,7 @@ theorem isOpen_rightPeriods {G Z : Type} [Group G] [TopologicalSpace G] [IsTopol
         have := ha (m * a⁻¹)
         rw [inv_mul_cancel_right] at this
         exact this.symm }
-  refine T.isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset hN ?_)
-  intro g hg
-  exact h g hg
+  exact T.isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset hN (fun g hg => h g hg))
 
 theorem isOpen_stab_ind {G W : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup W] [Module ℂ W]
     (H : Subgroup G) (σ : Representation ℂ H W) (v : smoothPart (ind H σ)) :
@@ -182,10 +178,8 @@ theorem isOpen_stab_ind {G W : Type} [Group G] [TopologicalSpace G] [IsTopologic
   ext x
   simp only [Set.mem_setOf_eq]
   constructor
-  · intro hx
-    exact Subtype.ext (funext hx)
-  · intro hx y
-    exact congrFun (congrArg Subtype.val hx) y
+  · exact fun hx => Subtype.ext (funext hx)
+  · exact fun hx y => congrFun (congrArg Subtype.val hx) y
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -304,7 +298,7 @@ def rowB {ι : Type} [Fintype ι] [DecidableEq ι] (ρ : ι → k) (c j : ι) : 
 
 theorem rowB_val {ι : Type} [Fintype ι] [DecidableEq ι] (ρ : ι → k) (c j : ι) (hc : ρ c ≠ 0) :
     (rowB ρ c j).val = rowM ρ c j := by
-  rw [rowB, dif_pos (rowM_det_ne ρ c j hc)]
+  rw [rowB, dite_eq_left (rowM_det_ne ρ c j hc)]
   rfl
 
 end Alg
@@ -355,8 +349,7 @@ theorem core' (i t : ℕ) (p : Mir k ((i + 1) + t + 1)) (X B : GL (Fin ((i + 1) 
     have h1 : (g⁻¹ * (B⁻¹ * X)) ∈ Mir k ((i + 1) + t) := by
       rw [mem_Mir_iff, Units.val_mul, Matrix.mul_apply_eq_vecMul, ← hBj, ← Matrix.mul_apply_eq_vecMul, ← Units.val_mul,
         mul_inv_cancel_left, hX]
-    have h2 := (Mir k ((i + 1) + t)).inv_mem h1
-    simpa [mul_assoc] using h2
+    simpa [mul_assoc] using (Mir k ((i + 1) + t)).inv_mem h1
   let v : Fin ((i + 1) + (t + 1)) → k := fun r =>
     (p : GL (Fin ((i + 1) + t + 1 + 1)) k).val (Fin.castSucc r) (Fin.last _)
   let v' : Fin ((i + 1) + (t + 1)) → k := B.val.mulVec v
@@ -387,8 +380,7 @@ theorem core' (i t : ℕ) (p : Mir k ((i + 1) + t + 1)) (X B : GL (Fin ((i + 1) 
       · intro x y
         refine (glEmb_castSucc_castSucc _ B _ _).trans ?_
         exact hB _ _ (by simp; omega) (by simp; omega)
-      · intro x
-        exact glEmb_castSucc_last _ B _
+      · exact fun x => glEmb_castSucc_last _ B _
     rw [map_inv]
     exact (HPG k (i + 1) (t + 1)).inv_mem this
   refine ⟨hM, levi k _ B⁻¹ * ua, (HPG k (i + 1) (t + 1)).mul_mem hlB hua, d, ?_⟩
@@ -427,7 +419,7 @@ theorem chart :
   classical
   intro k _ _ _ _ i t p₀ h₀
   have hp' : ¬ _ := fun h => h₀ ((Cl_iff i t p₀).2 h)
-  push_neg at hp'
+  push Not at hp'
   obtain ⟨c, hcs, hc⟩ := hp'
   have hj : (piPerm i t (Fin.last ((i + 1) + t))).val < i + 1 := by rw [piPerm_last_val]; omega
   set j := piPerm i t (Fin.last ((i + 1) + t)) with hjdef
@@ -457,9 +449,7 @@ theorem chart :
   refine ⟨V, hV.mem_nhds hc, μ, ?_, ?_⟩
   · have hB : ContinuousOn (fun p => rowB (ρ p) c j) V := by
       refine continuousOn_GL _ _ ?_
-      refine (continuousOn_rowM ρ c j hρ).continuousOn.congr ?_
-      intro p hp
-      exact rowB_val _ _ _ hp
+      exact (continuousOn_rowM ρ c j hρ).continuousOn.congr (fun p hp => rowB_val _ _ _ hp)
     have hW : ContinuousOn W V :=
       (continuousOn_const.mul hB).mul hG.continuousOn
     refine (Topology.IsEmbedding.subtypeVal.isInducing.continuousOn_iff).2 ?_
@@ -467,13 +457,12 @@ theorem chart :
     intro p hp
     obtain ⟨hM, -⟩ := key p hp
     show ((μ p : Mir k ((i + 1) + t)) : GL _ k) = W p
-    simp only [μ, dif_pos hM]
+    simp only [μ, dite_eq_left hM]
   · intro p hp
     obtain ⟨hM, h, hh, d, e⟩ := key p hp
     refine ⟨h, hh, d, ?_⟩
-    have hμ : μ p = ⟨W p, hM⟩ := dif_pos hM
-    rw [hμ]
-    exact e
+    have hμ : μ p = ⟨W p, hM⟩ := dite_eq_left hM
+    rwa [hμ]
 
 end GlobalTheory.CompanionTheory.BZPhiPG.Chart
 
@@ -682,8 +671,7 @@ theorem entry_zero (i t : ℕ) (r : Mir k ((i + 1) + t)) (d d' : Fin (t + 1) →
     ⟨(GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t y : ℕ), hc⟩
   have e₂ : (Fin.castLE (by omega) (⟨(GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t y : ℕ), hc⟩ : Fin (i + 1)) :
       Fin ((i + 1) + t + 1 + 1)) = Fin.castSucc (GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t y) := Fin.ext rfl
-  rw [e₂] at hz
-  exact hz
+  rwa [e₂] at hz
 
 end Ent
 
@@ -736,8 +724,7 @@ theorem isClosed_support (H : Subgroup G) (σ : Representation ℂ H W) (f : smo
     IsClosed {c : G | f.1.1 c ≠ 0} := by
   have hopen : IsOpen {g : G | GlobalTheory.PRep.ind H σ g f.1 = f.1} := f.2
   have htrans : ∀ g x : G, GlobalTheory.PRep.ind H σ g f.1 = f.1 → f.1.1 (x * g) = f.1.1 x := by
-    intro g x hg
-    exact congrArg (fun φ : GlobalTheory.PRep.indSpace H σ => (φ : G → W) x) hg
+    exact fun g x hg => congrArg (fun φ : GlobalTheory.PRep.indSpace H σ => (φ : G → W) x) hg
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   intro c hc
   have hc0 : f.1.1 c = 0 := by simpa using hc
@@ -824,8 +811,7 @@ theorem dpowM_half (i : ℕ) (a : Mir k i) :
     rw [show ((1 / 2 + -1 / 2 : ℝ)) = 0 by norm_num]
     ext g
     simp [dpow, detChar, absPow]
-  have h1 := congrArg (fun f => ((f (a : GL (Fin (i + 1)) k) : ℂˣ) : ℂ)) (h.symm.trans h0)
-  simpa [dpowM] using h1
+  simpa [dpowM] using congrArg (fun f => ((f (a : GL (Fin (i + 1)) k) : ℂˣ) : ℂ)) (h.symm.trans h0)
 
 theorem dpow_step (i t : ℕ) (w : GL (Fin (t + 1)) k) :
     ((dpow (t + 1) (-((i + 1 + 1 : ℕ) : ℝ) / 2) w : ℂˣ) : ℂ) =
@@ -1373,8 +1359,7 @@ theorem eO_supp (ψ : AddChar k Circle) (τ : MRep k (i + 1)) (σ : GRep k (t + 
     unfold eO
     rw [show wEl k i t * sEmb k ((i + 1) + t) (castM k (by omega) g) = y from rfl, h0, map_zero, smul_zero])
   obtain ⟨d, hd⟩ : ∃ d, evX f (dEmb k i t d * y) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hne
     unfold intO
     rw [show (fun d => evX f (dEmb k i t d * y)) = fun _ => 0 from funext hcon]
@@ -1404,10 +1389,8 @@ theorem memOAlt (i t : ℕ) (ψ : AddChar k Circle) (τ : MRep k (i + 1)) (σ : 
     ext g
     simp only [Set.mem_setOf_eq]
     constructor
-    · intro h m
-      exact congrFun (congrArg Subtype.val h) m
-    · intro h
-      exact Subtype.ext (funext h)
+    · exact fun h m => congrFun (congrArg Subtype.val h) m
+    · exact fun h => Subtype.ext (funext h)
   obtain ⟨C, hC, hs⟩ := eO_supp ψ τ σ f hf
   exact ⟨⟨⟨F, hF⟩, C, hC, hs⟩, rfl⟩
 end

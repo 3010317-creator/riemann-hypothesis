@@ -30,8 +30,7 @@ theorem detId_eq_vol {N : ℕ} {L L' : Submodule (𝓞 D.host.E) (Fin N → D.ho
     _ ≤ DN.vol D L' * CU.cS D (DN.vol D L) := by
         have h := DN.detId_mul_vol_le D L L'
         rw [Submodule.mul_le]
-        intro m hm n hn
-        exact Submodule.mul_mem_mul (h hm) hn
+        exact fun m hm n hn => Submodule.mul_mem_mul (h hm) hn
 
 theorem vol_unit {N : ℕ} {L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)} (hL : SD D L) :
     DN.vol D L * CU.cS D (DN.vol D L) = 1 := by
@@ -104,8 +103,7 @@ theorem smulSD : SmulSD D := by
   have hγ : star (γ : Matrix (Fin N) (Fin N) D.host.E) * γ = 1 := γ.2.1
   have hγ' : (γ : Matrix (Fin N) (Fin N) D.host.E) * star (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 := γ.2.2
   have hin : ∀ v ∈ L, (γ : Matrix (Fin N) (Fin N) D.host.E) *ᵥ v ∈ SDLat.smulLat (γ : Matrix (Fin N) (Fin N) D.host.E) L := fun v hv => by
-    rw [smulLat_mem_lemma D L _ _ hγ hγ', mulVec_mulVec, hγ, one_mulVec]
-    exact hv
+    rwa [smulLat_mem_lemma D L _ _ hγ hγ', mulVec_mulVec, hγ, one_mulVec]
   have hex : ∀ x ∈ SDLat.smulLat (γ : Matrix (Fin N) (Fin N) D.host.E) L, ∃ v ∈ L, (γ : Matrix (Fin N) (Fin N) D.host.E) *ᵥ v = x := fun x hx =>
     ⟨_, (smulLat_mem_lemma D L _ _ hγ hγ' x).mp hx, by rw [mulVec_mulVec, hγ', one_mulVec]⟩
   unfold SD Formalism.BasicNotions.IsSDLat at hL

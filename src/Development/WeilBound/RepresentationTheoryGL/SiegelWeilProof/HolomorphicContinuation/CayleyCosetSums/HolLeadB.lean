@@ -104,16 +104,7 @@ theorem inG_mul {x y : M2 n} (hx : InG x) (hy : InG y) : InG (x * y) := by
     _ = JJ n := by rw [hx, hy]
 
 theorem det_ne_zero_of_inG {x : M2 n} (hx : InG x) : x.det ≠ 0 := by
-  intro h
-  have h1 := congrArg Matrix.det hx
-  rw [Matrix.det_mul, Matrix.det_mul, h, mul_zero] at h1
-  have h2 : (JJ n).det ≠ 0 := by
-    have := congrArg Matrix.det (JJ_mul_JJ (n := n))
-    rw [Matrix.det_mul, Matrix.det_neg] at this
-    intro h3
-    rw [h3, zero_mul] at this
-    simp at this
-  exact h2 h1.symm
+  exact PositivityTheory.Rg.Sw.LVs.det_ne_zero_of_inG hx
 
 def toGR (x : M2 n) (hx : InG x) : GR n := ⟨(Matrix.isUnit_iff_isUnit_det _ |>.2 (isUnit_iff_ne_zero.2
   (det_ne_zero_of_inG hx))).unit, hx⟩
@@ -182,7 +173,7 @@ theorem crLem_of (hsec : LocSec) (hfib : Fib) (ha : CauchyRiemannFacts) : CRLem 
   have hH : ∀ y : GR n, φ y = F0 m 0 e y * H (zOfE (mR y)) := by
     intro y
     have hex : ∃ y' : GR n, zOfE (mR y') = zOfE (mR y) := ⟨y, rfl⟩
-    simp only [hHdef, dif_pos hex]
+    simp only [hHdef, dite_eq_left hex]
     have hz : zOfE (mR hex.choose) = zOfE (mR y) := hex.choose_spec
     have hk := hfib n hex.choose y hz
     have hkK : (hex.choose⁻¹ * y) ∈ AbsSt.KR n := hk
@@ -496,15 +487,7 @@ theorem mul_cm₁₂ (x : M2 n) : (x * Cm n).toBlocks₁₂ = Nm' x := by
   simp [toBlocks₁₂_mul', Cm, Nm']
 
 theorem det_ne_of_inG {x : M2 n} (hx : InG x) : x.det ≠ 0 := by
-  intro h0
-  have h1 := congrArg Matrix.det hx
-  rw [Matrix.det_mul, Matrix.det_mul, h0, mul_zero] at h1
-  have h2 : (JJ n).det ≠ 0 := by
-    intro h3
-    have := congrArg Matrix.det (JJ_mul_JJ (n := n))
-    rw [Matrix.det_mul, h3, zero_mul, Matrix.det_neg] at this
-    simp at this
-  exact h2 h1.symm
+  exact PositivityTheory.Rg.Sw.LVs.det_ne_zero_of_inG hx
 
 theorem det_cm_ne : (Cm n).det ≠ 0 := by
   intro h

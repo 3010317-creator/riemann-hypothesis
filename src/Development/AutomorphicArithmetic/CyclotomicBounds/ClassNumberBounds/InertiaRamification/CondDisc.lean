@@ -135,8 +135,7 @@ theorem localUnits_spec :
   constructor
   · rintro ⟨u, rfl⟩
     exact compl_localUnits l u
-  · intro hx
-    exact ⟨_, localUnits_proj l x hx⟩
+  · exact fun hx => ⟨_, localUnits_proj l x hx⟩
 
 private lemma localPart_toUnitHom (ψ : DirichletCharacter ℂ N) :
     MulChar.toUnitHom (localPart N l ψ) = (MulChar.toUnitHom ψ).comp (localUnits N l) := by
@@ -163,8 +162,7 @@ private lemma conductor_localPart_dvd_iff (ψ : DirichletCharacter ℂ N) (t : �
       ZMod.unitsMap (h1.trans (Nat.ordProj_dvd N l)) x = 1 ∧
         ZMod.unitsMap (Nat.ordCompl_dvd N l) x = 1 := by
     intro x
-    simp only [unitsMap_eq_one_iff_modEq]
-    exact (Nat.modEq_and_modEq_iff_modEq_mul hcop).symm
+    simpa only [unitsMap_eq_one_iff_modEq] using (Nat.modEq_and_modEq_iff_modEq_mul hcop).symm
   have key : (localPart N l ψ).conductor ∣ l ^ t ↔ ψ.conductor ∣ l ^ t * ordCompl[l] N := by
     rw [← mem_conductorSet_iff_conductor_dvd _ h1, ← mem_conductorSet_iff_conductor_dvd _ h2,
       mem_conductorSet_iff, mem_conductorSet_iff, factorsThrough_iff_ker_unitsMap h1,
@@ -373,8 +371,7 @@ theorem relDifferent_eq_span_prod (E : IntermediateField ℚ K) {ζ : K} (hζ : 
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     refine ⟨?_, ?_⟩
     · rw [IntermediateField.mem_fixingSubgroup_iff]
-      intro x hx
-      exact σ.commutes ⟨x, hx⟩
+      exact fun x hx => σ.commutes ⟨x, hx⟩
     · intro h
       apply (Finset.mem_erase.mp hσ).1
       ext x
@@ -594,8 +591,8 @@ theorem avgCondExp_annihilator (H : Subgroup (ZMod N)ˣ) :
       intro t ht
       have := filt_mem_ann l (Finset.mem_range.mp ht).le ψ
       by_cases h : t < condExp l ψ
-      · rw [if_neg (by rw [this]; omega), if_pos h, sub_zero]
-      · rw [if_pos (by rw [this]; omega), if_neg h, sub_self]
+      · rw [ite_eq_right (by rw [this]; omega), ite_eq_left h, sub_zero]
+      · rw [ite_eq_left (by rw [this]; omega), ite_eq_right h, sub_self]
     rw [Finset.sum_congr rfl h1, Finset.sum_boole]
     have : (Finset.range (N.factorization l)).filter (fun t => t < condExp l ψ) =
         Finset.range (condExp l ψ) := by
@@ -753,11 +750,11 @@ theorem padicValNat_absNorm_one_sub {K : Type*} [Field K] [NumberField K] (l : �
       by_cases hpl : p = l
       · subst hpl
         rw [Nat.padicValNat_def, Nat.Prime.multiplicity_self, rootWeight,
-          if_pos ⟨hne, j + 1, rfl⟩]
+          ite_eq_left ⟨hne, j + 1, rfl⟩]
         have ht : ((p ^ (j + 1)).totient : ℚ) ≠ 0 := by
           exact_mod_cast (Nat.totient_pos.mpr (by positivity)).ne'
         rw [Nat.cast_one, mul_one_div, div_self ht]
-      · rw [Nat.padicValNat_def, multiplicity_primes (Ne.symm hpl), rootWeight, if_neg]
+      · rw [Nat.padicValNat_def, multiplicity_primes (Ne.symm hpl), rootWeight, ite_eq_right]
         · simp
         · rintro ⟨-, s, hs⟩
           apply hpl
@@ -775,7 +772,7 @@ theorem padicValNat_absNorm_one_sub {K : Type*} [Field K] [NumberField K] (l : �
         · rw [pow_zero] at hj
           omega
         · exact hpp ⟨p, j, hp, hj.symm⟩
-      rw [h1, rootWeight, if_neg]
+      rw [h1, rootWeight, ite_eq_right]
       · simp [_root_.Nat.padicValNat_def (n := 1)]
       · rintro ⟨-, s, hs⟩
         rcases s with _ | s

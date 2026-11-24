@@ -80,9 +80,9 @@ theorem isLocONB_of_orthonormal (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[
   refine ⟨b, 1, hb, ?_, ?_, ?_, ?_⟩
   · intro i j
     by_cases h : i = j
-    · rw [Matrix.one_apply, if_pos h]
+    · rw [Matrix.one_apply, ite_eq_left h]
       refine ⟨by simp [IsIntP], subset_closure ⟨1, lamC_phi_K_one lam⟩⟩
-    · rw [Matrix.one_apply, if_neg h]
+    · rw [Matrix.one_apply, ite_eq_right h]
       refine ⟨by simp [IsIntP], subset_closure ⟨0, lamC_phi_K_zero lam⟩⟩
   · rw [Matrix.det_one, norm_one]
   · intro i j
@@ -94,12 +94,11 @@ theorem isLocONB_of_orthonormal (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[
       · rw [Matrix.one_apply_eq, map_one, mul_one]
       · intro n _ hn
         rw [Matrix.one_apply_ne (Ne.symm hn), map_zero, mul_zero]
-    rw [Finset.sum_congr rfl (fun m _ => h1 m)]
-    rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ i)]
+    rw [Finset.sum_congr rfl (fun m _ => h1 m), Finset.sum_eq_single_of_mem i (Finset.mem_univ i)]
     · rw [Matrix.one_apply_eq, one_mul, ho i j]
       by_cases h : i = j
-      · rw [if_pos h, if_pos h, lamC_phi_K_one]
-      · rw [if_neg h, if_neg h, lamC_phi_K_zero]
+      · rw [ite_eq_left h, ite_eq_left h, lamC_phi_K_one]
+      · rw [ite_eq_right h, ite_eq_right h, lamC_phi_K_zero]
     · intro m _ hm
       rw [Matrix.one_apply_ne (Ne.symm hm), zero_mul]
   · intro i k
@@ -134,8 +133,7 @@ theorem homL_le_intS (N N' : ℕ) : homL D (Formalism.MainNotions.StandardLattic
     by_cases h : i = c
     · subst h; simpa using (isInt_one (D := D))
     · simp [h]
-  have h2 := (mem_stdL _).1 (hA _ h1) a
-  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h2
+  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using (mem_stdL _).1 (hA _ h1) a
 
 def pos : Fin 2 × Fin 2 ≃ Fin 4 := finProdFinEquiv
 
@@ -270,12 +268,12 @@ theorem orth_bq {m : ℕ} (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n dn 
     · subst hkl
       have hq : ((((n i * dn i : ℕ) : ℤ) : ℚ) * 1 / ((n i : ℚ) * (n i : ℚ)) * ((n i : ℚ) / (dn i : ℚ))) = 1 := by
         push_cast; field_simp
-      rw [if_pos rfl, if_pos rfl, hq, Rat.cast_one]
+      rw [ite_eq_left rfl, ite_eq_left rfl, hq, Rat.cast_one]
     · have hne : (i, k) ≠ (i, l) := fun h => hkl (congrArg Prod.snd h)
-      rw [if_neg hkl, if_neg hne]
+      rw [ite_eq_right hkl, ite_eq_right hne]
       simp
   · have hne : (i, k) ≠ (i', l) := fun h => hi (congrArg Prod.fst h)
-    rw [horth i i' hi, mul_zero, if_neg hne]
+    rw [horth i i' hi, mul_zero, ite_eq_right hne]
 
 theorem smul_bq {m : ℕ} (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n : Fin m → ℕ)
     (Q : Fin m → Matrix (Fin 4) (Fin 4) ℤ) (hn0 : ∀ i, n i ≠ 0) (ik : Fin m × Fin 4) (s : ℕ) :
@@ -287,7 +285,7 @@ theorem smul_bq {m : ℕ} (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n : F
     rw [Nat.cast_mul]
     field_simp
   · intro j _ hj
-    simp only [plc, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply, Matrix.smul_apply, if_neg (Ne.symm hj), smul_zero]
+    simp only [plc, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply, Matrix.smul_apply, ite_eq_right (Ne.symm hj), smul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem mem_bq {m : ℕ} (p : ℕ) (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n : Fin m → ℕ)
@@ -315,7 +313,7 @@ theorem col_sum {F : Type*} [Field F] (Q : Matrix (Fin 4) (Fin 4) ℤ) (N : ℤ)
   rw [Finset.sum_congr rfl (fun pc _ => h pc)]
   simp_rw [hQ]
   push_cast
-  simp only [EmbeddingLike.apply_eq_iff_eq, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [EmbeddingLike.apply_eq_iff_eq, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 theorem span_bq {m : ℕ} (p : ℕ) (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n dn : Fin m → ℕ)
@@ -512,8 +510,7 @@ theorem loop (hU : UnitVec) (p : ℕ) [Fact p.Prime] (hp : 5 ≤ p) (hin : jacob
         induction j using Fin.cases with
         | zero => simpa using orth_symm (D := D) (hz2 i)
         | succ j =>
-          simp only [Fin.cons_succ]
-          exact h2 i j (fun h => hij (by rw [h]))
+          simpa only [Fin.cons_succ] using h2 i j (fun h => hij (by rw [h]))
     · intro i
       refine Fin.cases ?_ (fun i => ?_) i
       · simpa using hz3
@@ -699,8 +696,7 @@ theorem unit_or_PZ {q : ℚ} (hz : Zp p q) : (¬ (p : ℤ) ∣ q.num ∧ ¬ p �
     have h1 : ((q.den : ℤ)) ∣ (b : ℤ) := by
       have := Rat.den_dvd a b
       rw [Rat.divInt_eq_div] at this
-      rw [hq]
-      exact this
+      rwa [hq]
     exact hb (Int.natCast_dvd_natCast.1 ((Int.natCast_dvd_natCast.2 h).trans h1))
   by_cases hn : (p : ℤ) ∣ q.num
   · right
@@ -1272,8 +1268,7 @@ theorem gram_schmidt_unit_vector : UnitVec := by
     rw [e1, trace_rat_mul, hq0e]
     push_cast
     ring
-  rw [hq] at hZ
-  exact hZ
+  rwa [hq] at hZ
 
 end unit
 

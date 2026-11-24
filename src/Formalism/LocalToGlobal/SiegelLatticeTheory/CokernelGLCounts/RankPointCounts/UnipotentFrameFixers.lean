@@ -27,15 +27,12 @@ theorem equiv_of_corr {X L S : Type*} (P : X → Prop) (cl : X → S) (G : Set L
     apply Subtype.ext
     have h1 := (ha _ hO.choose_spec.1).choose_spec
     have h2 := (hb _ h1.1).choose_spec
-    have h3 := (hc _ _ _ _ hO.choose_spec.1 h2.1 h1.2 h2.2).1 rfl
-    show cl (hb _ h1.1).choose = O
-    exact (hO.choose_spec.2.trans h3).symm
+    exact (hO.choose_spec.2.trans ((hc _ _ _ _ hO.choose_spec.1 h2.1 h1.2 h2.2).1 rfl)).symm
   · rintro ⟨y, hy⟩
     apply Subtype.ext
     have h2 := (hb y hy).choose_spec
     have hm : ∃ x, P x ∧ cl (hb y hy).choose = cl x := ⟨_, h2.1, rfl⟩
     have h4 := (ha _ hm.choose_spec.1).choose_spec
-    show (ha _ hm.choose_spec.1).choose = y
     exact (hc _ _ _ _ hm.choose_spec.1 h2.1 h4.2 h2.2).2 hm.choose_spec.2.symm
 
 variable {D : Formalism.BasicNotions.D7} (Zd : LocDat D) {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS (CntLocal.Tn u)}

@@ -154,8 +154,7 @@ theorem UpperTheory.symmetric_cube_root_mem :
   intro σ hσ
   rw [IntermediateField.mem_fixingSubgroup_iff] at hσ
   have hrel' : c + d * σ x = (a + b * σ x) * σ x := by
-    have h := congrArg σ hrel
-    simpa only [map_add (f := _), map_mul, hσ a ha, hσ b hb, hσ c hc, hσ d hd] using h
+    simpa only [map_add (f := _), map_mul, hσ a ha, hσ b hb, hσ c hc, hσ d hd] using congrArg σ hrel
   by_contra hne
   have hyn : ‖σ x‖ ≤ 1 := by rw [hn]; exact hx
   have key : (σ x - x) * (b * (x + σ x) - (d - a)) = 0 := by linear_combination hrel - hrel'
@@ -298,8 +297,7 @@ theorem exists_ribetLattice_of_eisensteinRep (ι : Qbar l ≃+* ℂ) (φ θ Φ :
       congr 1
       funext i
       fin_cases i <;> simp [h1, h2]
-    rw [mul_inv_eq_one, mul_eq_left] at e
-    exact e
+    rwa [mul_inv_eq_one, mul_eq_left] at e
   · by_cases hA : A.valuation (l : Ω) < 1
     · obtain ⟨s, hs, hn⟩ := hloc A hA
       refine UpperTheory.symmetric_cube_root_mem l E _ _ _ _ _ (hE s 0 0) (hE s 0 1) (hE s 1 0) (hE s 1 1) (red s).2.2.1 ?_ (x1 A)
@@ -405,8 +403,7 @@ theorem modEx4 : ModEx4 := by
     rw [hρ₁, e]
     simp only [Units.val_one, Matrix.one_apply]
     split_ifs <;> rfl
-  · intro A hA s hs
-    exact Subtype.ext (hB.flag A hA s hs)
+  · exact fun A hA s hs => Subtype.ext (hB.flag A hA s hs)
   · intro A hA s hs
     obtain ⟨h1, h2⟩ := hB.ine A hA s hs
     refine ⟨Subtype.ext ?_, Subtype.ext h2⟩

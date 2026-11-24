@@ -171,8 +171,7 @@ private theorem exists_dual_pair_af_of_summand_locFree {o Ω : Type} [CommRing o
   obtain ⟨k, φ, u, hφ, hsum⟩ := GlobalTheory.CompanionTheory.Ar.Num.LocFreeProj.exists_dualBasis (L := L1) hl1
   refine ⟨k * Fintype.card F ^ n, fun i => π (u (finProdFinEquiv.symm i)),
     fun i j => φ (finProdFinEquiv.symm i) (linMap n χ (Pi.single j 1)), ?_, ?_, ?_⟩
-  · intro i
-    exact hπL _ (u _).2
+  · exact fun i => hπL _ (u _).2
   · intro i
     rw [_root_.PositivityTheory.Xgn.A_dotdual_bc.mem_dotDual]
     intro v hv
@@ -232,8 +231,7 @@ theorem PositivityTheory.Xgn.image_lattice_base_change : ∀ {o Ω : Type} [Comm
     constructor
     · rintro ⟨⟨b, c'⟩, hbc, rfl⟩
       have := ((hB.del τ).1 b).1 ⟨c', hbc⟩
-      rw [_root_.PositivityTheory.Xgn.GoodLatticeBaseChange.mem_stdLat] at this
-      exact this
+      rwa [_root_.PositivityTheory.Xgn.GoodLatticeBaseChange.mem_stdLat] at this
     · intro hv
       obtain ⟨c', hc'⟩ := ((hB.del τ).1 v).2 ((_root_.PositivityTheory.Xgn.GoodLatticeBaseChange.mem_stdLat R _).2 hv)
       exact ⟨(v, c'), hc', rfl⟩

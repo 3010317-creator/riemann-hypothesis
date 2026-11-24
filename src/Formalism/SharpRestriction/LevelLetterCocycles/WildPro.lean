@@ -103,8 +103,7 @@ theorem val_intCast_le (a : ℤ) : A.valuation ((a : ℤ) : Ω) ≤ 1 :=
 
 theorem val_natCast_eq_one {p m : ℕ} (hpA : A.valuation ((p : ℕ) : Ω) < 1) (hm : Nat.Coprime m p) :
     A.valuation ((m : ℕ) : Ω) = 1 := by
-  have hle : A.valuation ((m : ℕ) : Ω) ≤ 1 := by
-    exact (A.valuation_le_one_iff _).2 (natCast_mem A m)
+  have hle : A.valuation ((m : ℕ) : Ω) ≤ 1 := (A.valuation_le_one_iff _).2 (natCast_mem A m)
   by_contra hne
   have hlt : A.valuation ((m : ℕ) : Ω) < 1 := lt_of_le_of_ne hle hne
   have hb : ((m : ℤ) * Nat.gcdA m p + (p : ℤ) * Nat.gcdB m p : ℤ) = 1 := by
@@ -179,8 +178,7 @@ theorem exists_ppow_fix {p : ℕ} (hp : p.Prime) (hpA : A.valuation ((p : ℕ) :
   have hcop : Nat.Coprime m p := ((Nat.Prime.coprime_iff_not_dvd hp).2 hpm).symm
   have h1 : (σ ^ (p ^ a)) y = y := by
     refine fix_of_coprime hpA hcop (hσ.pow _) y ?_
-    rw [← pow_mul]
-    exact hfix
+    rwa [← pow_mul]
   refine ⟨a, fun k hk => ?_⟩
   have h2 : σ ^ (p ^ k) = (σ ^ (p ^ a)) ^ (p ^ (k - a)) := by
     rw [← pow_mul, ← pow_add]

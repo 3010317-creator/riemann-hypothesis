@@ -148,7 +148,7 @@ theorem tie4 (D : Formalism.BasicNotions.D7) (h3 : Formalism.MainNotions.ColumnS
   by_cases hab : a = 0 ∨ b = 0
   · have hk0 : Module.finrank R.Kf (LinearMap.ker T) = 0 := by
       unfold dimHar dimPol at hrn
-      rw [if_pos hab] at hrn
+      rw [ite_eq_left hab] at hrn
       omega
     have hbot : LinearMap.ker T = ⊥ := Submodule.finrank_eq_zero.1 hk0
     rw [hbot, Submodule.mem_bot] at hfk
@@ -175,7 +175,7 @@ theorem tie4 (D : Formalism.BasicNotions.D7) (h3 : Formalism.MainNotions.ColumnS
     have heq : LinearMap.range μ = LinearMap.ker T := by
       apply Submodule.eq_of_le_of_finrank_eq hle
       unfold dimHar dimPol at hrn
-      rw [if_neg (by omega)] at hrn
+      rw [ite_eq_right (by omega)] at hrn
       simp only [Nat.add_sub_cancel] at hrn
       have hkle : Module.finrank R.Kf (LinearMap.ker T) ≤
           (a + 1 + (m + 1)).choose (m + 1) * (b + 1 + (m + 1)).choose (m + 1) := by omega
@@ -195,10 +195,8 @@ theorem tiePsi_of (D : Formalism.BasicNotions.D7) (h1 : ExplicitMapInjective) (h
   · rintro Λ ⟨g, hg, rfl⟩
     have hgi : IsUnit (g⁻¹).det := Matrix.isUnit_nonsing_inv_det g hg
     refine ⟨Matrix.GeneralLinearGroup.mk'' g⁻¹ hgi, ?_, ?_⟩
-    · intro P Q f hf
-      exact h5 p n' R m hm1 g hg _ rfl P Q f hf
-    · intro a b y
-      exact tie5b h2 h5 hCO R m hm1 g hg _ rfl a b y
+    · exact fun P Q f hf => h5 p n' R m hm1 g hg _ rfl P Q f hf
+    · exact fun a b y => tie5b h2 h5 hCO R m hm1 g hg _ rfl a b y
 
 end Formalism.MainNotions.flipOneThree.Pf
 

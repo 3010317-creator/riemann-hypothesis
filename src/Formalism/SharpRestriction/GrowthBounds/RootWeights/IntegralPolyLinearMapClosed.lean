@@ -68,8 +68,7 @@ theorem mem_fock_lattice_iff_coeff {p : ℕ} (hV : ValuationProperties p O) {σ 
     · exact h m hm
     · rw [MvPolynomial.notMem_support_iff.1 hm, hV0, top_add]
       exact le_top
-  · intro h m _
-    exact h m
+  · exact fun h m _ => h m
 
 theorem fock_lattice_zero_mem {p : ℕ} (hV : ValuationProperties p O) {σ : Type} : InBB (O := O) p (0 : MvPolynomial σ (KK O)) := by
   obtain ⟨hV0, -, -, -, -, -⟩ := id hV
@@ -110,12 +109,11 @@ theorem fock_lattice_monomial_iff {p : ℕ} (hV : ValuationProperties p O) {σ :
   constructor
   · intro h
     have hm := h m
-    rwa [coeff_monomial, if_pos rfl] at hm
+    rwa [coeff_monomial, ite_eq_left rfl] at hm
   · intro h m'
     rw [coeff_monomial]
     split_ifs with hm
-    · rw [← hm]
-      exact h
+    · rwa [← hm]
     · rw [hV0, top_add]
       exact le_top
 

@@ -81,8 +81,7 @@ theorem inf_map_conj_le_cptPart [TopologicalSpace G] [IsTopologicalGroup G] (T K
     rw [coe_map_conj]; exact (Homeomorph.isOpenMap _) _ hKo
   have hCcl := Subgroup.isClosed_of_isOpen _ hCo
   refine hC.of_isClosed_subset isClosed_closure (closure_minimal ?_ hCcl)
-  intro y hy
-  exact (Subgroup.zpowers_le.2 ht'.2) hy
+  exact fun y hy => (Subgroup.zpowers_le.2 ht'.2) hy
 
 theorem cptPart_le_comap_conj [TopologicalSpace G] [IsTopologicalGroup G] (T : Subgroup G) {c : G}
     (hc : c ∈ T) : cptPart T ≤ (cptPart T).comap (MulAut.conj c).toMonoidHom := by
@@ -138,8 +137,7 @@ theorem twOrb_indicator_eq_inv_index [TopologicalSpace G] [IsTopologicalGroup G]
         I.map (MulAut.conj x).toMonoidHom ⊓ cptPart (twCent θ δ) :=
       le_antisymm (le_inf (inf_le_left.trans inf_le_right) inf_le_right)
         (le_inf (le_inf (inf_le_right.trans hcpT) inf_le_left) inf_le_right)
-    rw [e, Subgroup.inf_relIndex_right]
-    exact h2
+    rwa [e, Subgroup.inf_relIndex_right]
   have hq : ∀ q : DoubleCoset.Quotient (twCent θ δ : Set G) (I : Set G),
       X.indicator (1 : G → ℂ) ((Quotient.out q)⁻¹ * δ * θ (Quotient.out q)) ≠ 0 →
         q = DoubleCoset.mk (twCent θ δ) I p0 := by
@@ -166,8 +164,7 @@ theorem twOrb_indicator_eq_inv_index [TopologicalSpace G] [IsTopologicalGroup G]
     calc c * p0 * i * (i⁻¹ * j * i) * (c * p0 * i)⁻¹ = c * (p0 * j * p0⁻¹) * c⁻¹ := by group
       _ = y := by rw [hj']; group
   have key := _root_.GlobalTheory.BCT.OrbLev.twOrb_eq_sum_smallerLevel G θ K hKo hKc hθK I ⟨hIo, hIK, hθI⟩ δ (X.indicator 1) hH hb hfin
-  rw [key.1, key.2]
-  rw [finsum_eq_single _ (DoubleCoset.mk (twCent θ δ) I p0)]
+  rw [key.1, key.2, finsum_eq_single _ (DoubleCoset.mk (twCent θ δ) I p0)]
   · obtain ⟨h, hh, k, hk, hq0⟩ := (@DoubleCoset.eq _ _ (twCent θ δ) I _ _).1
       (DoubleCoset.out_eq' (DoubleCoset.mk (twCent θ δ) I p0))
     have ho : Quotient.out (DoubleCoset.mk (twCent θ δ) I p0) = h⁻¹ * p0 * k⁻¹ :=
@@ -223,7 +220,7 @@ theorem clSum_eq_single (θ : G →* G) [TopologicalSpace G] (K : Subgroup G) (S
       exact (Quot.sound ⟨g, rfl⟩).symm
     · exact hne rfl
   · obtain ⟨g, hg⟩ := rep_mk_eq θ δ0
-    rw [hg, if_pos (hS0 g), hinv g]
+    rw [hg, ite_eq_left (hS0 g), hinv g]
 
 end Gen
 
@@ -280,7 +277,6 @@ theorem twCent_prod {G' : Type} [Group G'] (θ : G →* G) (θ' : G' →* G') (�
     twCent (θ.prodMap θ') (δ, δ') = (twCent θ δ).prod (twCent θ' δ') := by
   ext p
   rw [Subgroup.mem_prod]
-  show p * (δ, δ') = (δ, δ') * (θ.prodMap θ') p ↔ p.1 * δ = δ * θ p.1 ∧ p.2 * δ' = δ' * θ' p.2
   exact Prod.ext_iff
 
 theorem map_conj_prod_le {G' : Type} [Group G'] (I : Subgroup G) (I' : Subgroup G') (x : G) (x' : G') :

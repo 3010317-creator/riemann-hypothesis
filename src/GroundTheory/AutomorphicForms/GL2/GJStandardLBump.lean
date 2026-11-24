@@ -63,8 +63,7 @@ theorem exists_localBump (μ : Measure (GL (Fin n) F)) [μ.IsHaarMeasure] {V : T
     constructor
     · rintro ⟨h, hh, he⟩
       rwa [← Units.ext he]
-    · intro h
-      exact ⟨g, h, rfl⟩
+    · exact fun h => ⟨g, h, rfl⟩
   set Φ : Matrix (Fin n) (Fin n) F → ℂ := S.indicator fun _ ↦ (1 : ℂ) with hΦ
   set c : ℂ := Parabolic.matrixCoeff π ξ ℓ g₀ with hc
   have hfW : ∀ g ∈ W, Parabolic.matrixCoeff π ξ ℓ g = c := by
@@ -101,8 +100,7 @@ theorem exists_localBump (μ : Measure (GL (Fin n) F)) [μ.IsHaarMeasure] {V : T
   · simp_rw [hfun', enorm_indicator_eq_indicator_enorm]
     rw [lintegral_indicator_const hWm]
     exact mul_ne_zero (enorm_ne_zero.2 (mul_ne_zero h0 (hdne _))) (hWo.measure_pos μ ⟨g₀, hg₀⟩).ne'
-  · rw [zetaIntegral]
-    rw [hfun, integral_indicator_const _ hWm, Complex.real_smul]
+  · rw [zetaIntegral, hfun, integral_indicator_const _ hWm, Complex.real_smul]
     ring
 
 end Local
@@ -131,8 +129,7 @@ def infInv (x : InfiniteAdeleRing K) : InfiniteAdeleRing K := fun w ↦ (x w)⁻
 theorem ringInverse_eq_infInv {x : InfiniteAdeleRing K} (hx : IsUnit x) : Ring.inverse x = infInv x := by
   have h1 : Ring.inverse x * x = 1 := Ring.inverse_mul_cancel x hx
   funext w
-  have h2 := congrFun h1 w
-  exact eq_inv_of_mul_eq_one_left h2
+  exact eq_inv_of_mul_eq_one_left (congrFun h1 w)
 
 
 variable (K n) in
@@ -355,8 +352,7 @@ theorem exists_archBump (μ : Measure (AdelicGLn.InfiniteAdelicGL K n)) [μ.IsHa
       rw [integral_pos_iff_support_of_nonneg hr0 hrint]
       refine hrc.isOpen_support.measure_pos μ ⟨x₀, ?_⟩
       show r x₀ ≠ 0
-      simp only [hr, hψ₀, one_mul]
-      exact hc₀re.ne'
+      simpa only [hr, hψ₀, one_mul] using hc₀re.ne'
     have hre := integral_re ((hInt (-(((n : ℂ) - 1) / 2))).const_mul (starRingEnd ℂ c₀))
     simp only [RCLike.re_to_complex] at hre
     have heq : ∫ x, r x ∂μ = (starRingEnd ℂ c₀ * archZeta μ φ f (-(((n : ℂ) - 1) / 2))).re := by

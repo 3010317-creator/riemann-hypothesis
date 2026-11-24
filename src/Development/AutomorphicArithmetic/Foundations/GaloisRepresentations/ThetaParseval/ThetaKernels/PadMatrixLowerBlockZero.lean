@@ -131,8 +131,7 @@ def prj_k : nA σ d.Y d.b →+ nA σ L.Y L.b where
     rfl
 theorem prj_val_k (β : nA σ d.Y d.b) : (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β).1 = β.1.submatrix L.em L.em := rfl
 theorem continuous_prj_k : Continuous (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L) := by
-  refine Continuous.subtype_mk ?_ _
-  exact continuous_subtype_val.matrix_submatrix L.em L.em
+  exact Continuous.subtype_mk (continuous_subtype_val.matrix_submatrix L.em L.em) _
 theorem pad_matrix_lower_block_zero (M : Matrix (Fin L.n ⊕ Fin L.n) (Fin L.n ⊕ Fin L.n) (AE F E)) (hM : M.toBlocks₂₁ = 0) :
     (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padM_k L M).toBlocks₂₁ = 0 := by
   ext i k
@@ -148,8 +147,7 @@ theorem pad_matrix_lower_block_zero (M : Matrix (Fin L.n ⊕ Fin L.n) (Fin L.n �
       have h1 := _root_.PositivityTheory.SiegelWeilFormula.Act.C4.padM_emS_k L M (Sum.inr a) (Sum.inl a')
       simp only [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.emS_k, Sum.map_inr, Sum.map_inl] at h1
       rw [h1]
-      have h2 := congrFun (congrFun hM a) a'
-      simpa [Matrix.toBlocks₂₁] using h2
+      simpa [Matrix.toBlocks₂₁] using congrFun (congrFun hM a) a'
 theorem embedding_lower_block_zero {x : G2 σ L.Y} (hx : ∃ t, IsPar x t) : (inFrame d.b (L.j x)).toBlocks₂₁ = 0 := by
   obtain ⟨t, ht⟩ := hx
   obtain ⟨-, t₀, ht₀⟩ := L.ok.frame

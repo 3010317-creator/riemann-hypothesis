@@ -273,8 +273,7 @@ theorem frame_cube_const : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ 
       X₁.ρ.fr X₁.ρ.fr_tors a a' a'' y J hJ)
     have e'' := (congrArg (· ^ ((X₁.S.r * X₁.S.N) ^ 2)) e).symm.trans ((Units.val_pow_eq_pow_val _ _).symm.trans e')
     rw [gs_eq _ y ⊤ trivial, ← map_pow, ← map_pow] at e''
-    rw [gs_eq _ y ⊤ trivial, gs_eq _ y ⊤ trivial, map_one, map_one]
-    exact e''
+    rwa [gs_eq _ y ⊤ trivial, gs_eq _ y ⊤ trivial, map_one, map_one]
   intro V _ _ _ ev X _ t δ 𝔪 x fr hx hfr ρ hρ c a a' a'' z JA hJA
   have := 𝔪.A.isAb.comm
   obtain ⟨J, hJ⟩ := GlobalTheory.ConstFam.exists_good' X₁.ρ.P.isLB z
@@ -904,8 +903,7 @@ theorem sec_eq_of_valAt : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ :
     rcases mul_eq_zero.1 this with h | h
     · exact sub_eq_zero.1 h
     · exact absurd h hb
-  rw [c1, one_smul] at hc
-  exact hc
+  rwa [c1, one_smul] at hc
 
 end GlobalTheory.GSep.GMem
 end
@@ -965,8 +963,7 @@ theorem expandsF_unique {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} (hR :
     refine ReciprocityTheory.ChartRestriction.G.Geo.Tor.sec_ext_val U.LG.isLB (fun y J hJ => ?_)
     choose J₁ hJ₁ using fun χ : _ ⟶ A.A.left => exists_chart A.isLB (χ y)
     have e₁ := GlobalTheory.Jets.sval_of_isoRelM hσ (𝟙 _) y hJ hJ₁
-    have e₂ := GlobalTheory.Jets.sval_of_isoRelM hσ₂ (𝟙 _) y hJ hJ₁
-    exact e₁.trans e₂.symm
+    exact e₁.trans (GlobalTheory.Jets.sval_of_isoRelM hσ₂ (𝟙 _) y hJ hJ₁).symm
   obtain rfl : σ = σ₂ := by
     rcases σ with ⟨a, _⟩
     rcases σ₂ with ⟨b, _⟩
@@ -1044,8 +1041,7 @@ theorem coef_congr' {k : ℕ} {g g₂ : GtPtF D F} {w : Frm D F k g.b} {w₂ : F
   refine coef_eq fun z J hJ => ?_
   have a := isCoef_coef g hw χ s z J hJ
   have e : lift (𝟙 (TF (R := R) F)) g₂.b = lift (𝟙 (TF (R := R) F)) g.b := by rw [hb]
-  rw [hs χ z J hJ, hv z J hJ, e]
-  exact a
+  rwa [hs χ z J hJ, hv z J hJ, e]
 end Gen
 
 theorem frame_val_eq : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (Y : Type) [AddCommGroup Y] (t : Y → V) (δ : I → Y → Y) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev Y t δ) (w₀ : W0 𝔪.U.toUnifPre) (x : TFK (R := V) (FractionRing V) ⟶ 𝔪.A.A) (fr : FrAt x)
@@ -1330,8 +1326,7 @@ theorem coef_smul {k : ℕ} {g : GtPtF D F} {w : Frm D F k g.b} (hw : w.IsGen) (
   simp only [_root_.one_smul, _root_.add_zero, _root_.one_mul] at e0
   have h0 : coef (0 : Fam D F k) g w χ = 0 := by linear_combination (-1 : F) * e0
   have e := hlin s 0 u χ
-  rw [_root_.add_zero, h0, _root_.add_zero] at e
-  exact e
+  rwa [_root_.add_zero, h0, _root_.add_zero] at e
 end Gen
 
 section Transport
@@ -1358,8 +1353,7 @@ theorem over_transport (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev Y t δ)
       map_pow]
   have e : coef (u ^ k • s') g wk = coef s' g wk' := funext fun χ => by
     rw [coef_smul hwkg, TorsionValue.coef_scale hwkg hcv s' χ]
-  rw [e] at H
-  exact H
+  rwa [e] at H
 end Transport
 
 theorem coef_eq : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (Y : Type) [AddCommGroup Y] (t : Y → V) (δ : I → Y → Y) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev Y t δ) (b : X₁.S.Gam)
@@ -1539,10 +1533,10 @@ theorem trans_exp_affine : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ 
   let E2 : X₁.S.Gam → ℕ := fun a => if ha : a ∈ X₁.S.HH X₁.M z₁ then
     Classical.choose (GlobalTheory.T.thetaMember_exists_frame_exponent I X₁ z₁ act x₀ hd V2 ev2 Y2 t2 δ2 𝔪2 a ha τ hτ) else 0
   have h1 : ∀ a ∈ X₁.S.HH X₁.M z₁, FrExp 𝔪1 a τ (E1 a) := fun a ha => by
-    simp only [E1, dif_pos ha]
+    simp only [E1, dite_eq_left ha]
     exact Classical.choose_spec (GlobalTheory.T.thetaMember_exists_frame_exponent I X₁ z₁ act x₀ hd V1 ev1 Y1 t1 δ1 𝔪1 a ha τ hτ)
   have h2 : ∀ a ∈ X₁.S.HH X₁.M z₁, FrExp 𝔪2 a τ (E2 a) := fun a ha => by
-    simp only [E2, dif_pos ha]
+    simp only [E2, dite_eq_left ha]
     exact Classical.choose_spec (GlobalTheory.T.thetaMember_exists_frame_exponent I X₁ z₁ act x₀ hd V2 ev2 Y2 t2 δ2 𝔪2 a ha τ hτ)
   exact ⟨E1, E2, fun a ha => GlobalTheory.T.translationExponent_of_frameExponent I X₁ z₁ act x₀ hd V1 ev1 Y1 t1 δ1 𝔪1 a ha τ hτ _ (h1 a ha),
     fun a ha => GlobalTheory.T.translationExponent_of_frameExponent I X₁ z₁ act x₀ hd V2 ev2 Y2 t2 δ2 𝔪2 a ha τ hτ _ (h2 a ha),

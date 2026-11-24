@@ -104,8 +104,7 @@ lemma chart_le_bcB (α : D.X) (j : Fin 4 → D.P.L.ι) :
   refine Set.mem_iInter.2 fun i => ?_
   have h1 : (DegPre.famφ D F α i).base y ∈ (D.P.L.U (j i) : Set D.P.A.left) :=
     Set.mem_iInter.1 hy i
-  rw [← bcB_famφ D F α i] at h1
-  exact h1
+  rwa [← bcB_famφ D F α i] at h1
 
 def FamComb (k : ℕ) {n : ℕ} (c : Fin n → F) (f : Fin n → Fam D (FractionRing R) k)
     (s : Fam D F k) : Prop :=
@@ -159,8 +158,7 @@ lemma cmpW_le_L (U : UnifPre I D A G) (k : ℕ) (a : U.LG.L.ι) (b : A.L.ι) :
 lemma cmpW_le_LG (U : UnifPre I D A G) (a : U.LG.L.ι) (b : A.L.ι) :
     cmpW F U a b ≤ toGK F U ⁻¹ᵁ
       LB.wchart U.LG.L (fun _ : Fin 1 => pullback.fst G.hom (jK R)) (fun _ => a) := by
-  intro y hy
-  exact Set.mem_iInter.2 fun _ => Set.mem_iInter.1 hy.1 PUnit.unit
+  exact fun y hy => Set.mem_iInter.2 fun _ => Set.mem_iInter.1 hy.1 PUnit.unit
 
 def SecComb (U : UnifPre I D A G) (w : Ident U) (k : ℕ) {n : ℕ} (c : Fin n → F)
     (σ : Fin n → U.SecK k) (t : SecF F A k) : Prop :=

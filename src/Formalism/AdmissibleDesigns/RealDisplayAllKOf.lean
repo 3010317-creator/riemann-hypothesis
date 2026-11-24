@@ -126,9 +126,7 @@ theorem bkbConv : StatBKbConv := by
     have hle : LinearMap.ker ψ ≤ LinearMap.ker (pr x) := by
       intro t ht
       rw [LinearMap.mem_ker] at ht ⊢
-      apply hx t
-      show j' t ∈ HfV'
-      exact (Submodule.Quotient.mk_eq_zero HfV' (x := j' t)).1 ht
+      exact hx t ((Submodule.Quotient.mk_eq_zero HfV' (x := j' t)).1 ht)
     let φ0 := (LinearMap.ker ψ).liftQ (pr x) hle
     let e := ψ.quotKerEquivRange
     let φbar : LinearMap.range ψ →ₗ[O] KO O := φ0 ∘ₗ e.symm.toLinearMap
@@ -145,8 +143,7 @@ theorem bkbConv : StatBKbConv := by
         have hc' : algebraMap O (FractionRing O) c ≠ 0 :=
           (map_ne_zero_iff _ (IsFractionRing.injective O (FractionRing O))).2 hc
         have h' : algebraMap O (FractionRing O) c • v = 0 := by
-          rw [algebraMap_smul]
-          exact hcv
+          rwa [algebraMap_smul]
         exact (smul_eq_zero.1 h').resolve_left hc'
     haveI : Module.Free O (LinearMap.range ψ) := Module.free_of_finite_type_torsion_free'
     let b := Module.Free.chooseBasis O (LinearMap.range ψ)
@@ -470,8 +467,7 @@ theorem c3 : SelmerFInjective := by
   obtain ⟨b, c', hc'0, hc'⟩ := hF3 _ hZF
   have h1 : c' • (Submodule.mkQ _ ⟨z, hzc⟩ : H1z ρL) =
       c' • ∑ a, b a • (Submodule.mkQ _ (κ a) : H1z ρL) := by
-    rw [smul_sub, sub_eq_zero] at hc'
-    exact hc'
+    rwa [smul_sub, sub_eq_zero] at hc'
   have hsplit : ∑ a, (d * y a - d * c * b a) • (Submodule.mkQ _ (κ a) : H1z ρL) =
       ∑ a, (d * y a) • (Submodule.mkQ _ (κ a) : H1z ρL) -
         (d * c) • ∑ a, b a • (Submodule.mkQ _ (κ a) : H1z ρL) := by
@@ -532,10 +528,8 @@ theorem selmer_inj_column_place : SelmerInjColumnPlace := by
   refine selmer_inj_tensor_form O Dl L V M (resRep (uRep O (M := L) r χ) Dl)
     (resRep (uRep (FractionRing O) (M := V) r χ) Dl) (resRep (uRep O (M := M) r χ) Dl) i q tens
     htens hi hq hker hsat ?_ ?_ Ff j κz hF1 hF2 hF3 hF4 x m ?_
-  · intro g v
-    exact hiA (uElt r χ (g : G)) v
-  · intro g v
-    exact hqA (uElt r χ (g : G)) v
+  · exact fun g v => hiA (uElt r χ (g : G)) v
+  · exact fun g v => hqA (uElt r χ (g : G)) v
   · intro g
     have h1 := congrFun hm g
     simp only [hκ]
@@ -567,9 +561,7 @@ variable {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 lemma unit_add {w a : O} (hw : IsUnit w) (ha : ¬ IsUnit a) : IsUnit (w + a) := by
   by_contra h
   have h1 : w + a ∈ nonunits O := h
-  have h2 : -a ∈ nonunits O := by
-    intro hh
-    exact ha (by simpa using hh.neg)
+  have h2 : -a ∈ nonunits O := fun hh => ha (by simpa using hh.neg)
   have h3 := IsLocalRing.nonunits_add h1 h2
   rw [add_neg_cancel_right] at h3
   exact h3 hw
@@ -814,8 +806,7 @@ theorem unr_vanish (ρ : Representation O Γ M) (h : ∀ g m, ρ g m = m) (I : S
   have h1 : resH1 ρ I (Submodule.mkQ _ z) = 0 := hz
   have h2 : (Submodule.mkQ _ (restrictCocycles1 ρ I z) : H1z (resRep ρ I)) = 0 := h1
   rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h2
-  have h3 := coboundary_trivial_action_zero (resRep ρ I) (fun g m => h g m) _ h2
-  exact congrFun h3 ⟨g, hg⟩
+  exact congrFun (coboundary_trivial_action_zero (resRep ρ I) (fun g m => h g m) _ h2) ⟨g, hg⟩
 
 end Triv
 
@@ -848,8 +839,7 @@ theorem vhEInChi : StatVhEInChi := by
       have h3 := unr_vanish (resRep (uRep O (M := M) r χ) (D w)) (fun g m => hρ g m) I
         (Formalism.NG.restrictCocycles1 (uRep O (M := M) r χ) (D w) z) h2 g' hg'
       show (z : G E Ω → M) g = 0
-      rw [← hgg]
-      exact h3
+      rwa [← hgg]
     show (Submodule.mkQ _ (Formalism.NG.restrictCocycles1 (uRep O (M := M) r χ) (Ine (F := E) (Av v)) z) :
       H1z (resRep (uRep O (M := M) r χ) (Ine (F := E) (Av v)))) = 0
     rw [this, map_zero]
@@ -920,8 +910,7 @@ theorem psiCont (p : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuat
   refine Filter.mem_of_superset (hopen.mem_nhds (zero_mem _)) ?_
   rintro _ ⟨z, rfl⟩
   show ψ (a • z) ∈ U
-  rw [map_smul, hka]
-  exact hU0
+  rwa [map_smul, hka]
 
 theorem inRowReal_of (p : ℕ) {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [TopologicalSpace O] [TopologicalSpace (FractionRing O)]
@@ -1145,15 +1134,14 @@ theorem clause5Row : StatClause5Row := by
     rw [e1, map_add (f := _), map_add (f := _), hπ, hv]
   have e2 : clsRow D v (fun g => π (a g)) = Submodule.Quotient.mk ⟨_, ht⟩ := by
     unfold clsRow
-    exact dif_pos ht
+    exact dite_eq_left ht
   rw [e2]
   refine clause5Gen D _ u hu (ReciprocityTheory.ChartRestriction.T2.contAction_quotient hT D.T D.stT) hk b hb _ ht c hc fun g k => ?_
   have h4 := hcob g k
   rw [hγ] at h4
   have h5 : u (uElt r χ (g : G) • (b : Dw → M) k) = D.ρA g (u ((b : Dw → M) k)) := hu g _
   rw [h5] at h4
-  rw [hε g]
-  exact h4
+  rwa [hε g]
 
 end Formalism.RepresentationBoundsCohomology.LocallyConstantCohomology
 end -- clump:auto
@@ -1309,8 +1297,7 @@ theorem lc_of_torsion (p : ℕ) {O : Type} [CommRing O] [IsDomain O] [IsDiscrete
     have hz' : a • z = yY r χ E g - yY r χ E g₀ := hz
     have h1 : ψ (yY r χ E g - yY r χ E g₀) = 0 := by
       rw [← hz', map_smul, hka]
-    rw [map_sub, sub_eq_zero] at h1
-    exact h1
+    rwa [map_sub, sub_eq_zero] at h1
 
 theorem colPsi_lc (p : ℕ) {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [TopologicalSpace O] [TopologicalSpace (FractionRing O)]
@@ -1374,8 +1361,7 @@ theorem liftCoc : StatLiftCoc := by
   obtain ⟨x, hx, hxe⟩ := hL _ hκ
   obtain ⟨K₀, rfl⟩ := Submodule.mkQ_surjective _ x
   have h1 : (Submodule.Quotient.mk (cocycles1MapOfEquivariant ρ₁ ρ₂ p hp K₀ - ((ℓ : O) ^ e) • κ) : H1z ρ₂) = 0 := by
-    rw [Submodule.Quotient.mk_sub, Submodule.Quotient.mk_smul, sub_eq_zero]
-    exact hxe
+    rwa [Submodule.Quotient.mk_sub, Submodule.Quotient.mk_smul, sub_eq_zero]
   rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap] at h1
   obtain ⟨v, hv⟩ := h1
   obtain ⟨w, rfl⟩ := hs v
@@ -1386,8 +1372,7 @@ theorem liftCoc : StatLiftCoc := by
   · have hcb : Submodule.mkQ _ cb = (0 : H1z ρ₁) := by
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, Submodule.mem_comap]
       exact ⟨w, by funext g; rfl⟩
-    rw [map_sub, hcb, sub_zero]
-    exact hx
+    rwa [map_sub, hcb, sub_zero]
   · have h2 : ρ₂ g (p w) - p w = p ((K₀ : D → M₁) g) - ((ℓ : O) ^ e) • (κ : D → M₂) g :=
       congrFun hv g
     show p ((K₀ : D → M₁) g - (ρ₁ g w - w)) = _
@@ -1432,8 +1417,7 @@ theorem colFun : StatColFun := by
     funext g
     rw [hK g]
     rfl
-  rw [e]
-  exact h
+  rwa [e]
 
 end Formalism.RepresentationBoundsCohomology.JL
 end -- clump:auto

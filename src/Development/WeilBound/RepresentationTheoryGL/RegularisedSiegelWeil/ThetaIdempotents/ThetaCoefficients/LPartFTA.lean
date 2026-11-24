@@ -93,8 +93,7 @@ theorem theta_levi_w {D : D7} {n : ℕ} {V : HSp D} {ψ χ θ μ ω} (hS : SetW 
   have hdet : Matrix.GeneralLinearGroup.det a' =
       Units.map (incA D).toMonoidHom (Matrix.GeneralLinearGroup.det a) := by
     apply Units.ext
-    simp [a', Matrix.GeneralLinearGroup.map]
-    exact (RingHom.map_det _ _).symm
+    simpa [a', Matrix.GeneralLinearGroup.map] using (RingHom.map_det _ _).symm
   have h1 : absA D (Matrix.GeneralLinearGroup.det a') = 1 := by
     rw [hdet]; exact absE_inclR _
   have h2 : χ (Matrix.GeneralLinearGroup.det a') = 1 := by
@@ -221,7 +220,6 @@ theorem partial_fourier_second_term {D : D7} {n : ℕ} {V : HSp D} {ψ χ θ μ 
   have hv : HMul.hMul (HMul.hMul (zy y) (mat γ)) (mat γ⁻¹) = zy y := by
     rw [Matrix.mul_assoc, hinv, Matrix.mul_one]
   rw [hv] at h1
-  rw [h1] at h2
-  exact h2
+  rwa [h1] at h2
 
 end PositivityTheory.Rg.Rsw.L.LPartFT

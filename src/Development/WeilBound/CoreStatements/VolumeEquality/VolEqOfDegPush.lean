@@ -213,8 +213,7 @@ theorem mem_hat_iff {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
             have : (a • fun i => b ⊗ₜ[maximalRealSubfield E] x i) = fun i => (a * b) ⊗ₜ[maximalRealSubfield E] x i := rfl
             rw [this, coordR_tmul, coordR_tmul, mul_smul_comm]
           | h2 x y hx hy => rw [smul_add, coordR_add, coordR_add, hx, hy, mul_add]
-        have e2 := this a x
-        exact (show coordR (l j) _ (a • x) = _ from e2) ▸ mul_mem a.2 hx
+        exact (show coordR (l j) _ (a • x) = _ from (this a x)) ▸ mul_mem a.2 hx
     exact key _ (h v)
 
 open GroundTheory.Heights₂.Heights.StrongApprox in
@@ -329,8 +328,8 @@ theorem isotropic_of_sig {r p : ℕ} (G : Matrix (Fin r) (Fin r) E) (hG : ∀ a 
   let d : Fin r → E := fun a => if a = m then G.det * π else ε a
   have hdet : (diagonal d).det = G.det := by
     rw [det_diagonal, ← Finset.mul_prod_erase _ _ (Finset.mem_univ m), Finset.prod_congr rfl
-      (g := fun a => (ε a : E)) fun a ha => if_neg (Finset.ne_of_mem_erase ha)]
-    simp only [d, if_true]
+      (g := fun a => (ε a : E)) fun a ha => ite_eq_right (Finset.ne_of_mem_erase ha)]
+    simp only [d, ite_true]
     rw [← Int.cast_prod, mul_assoc, ← Int.cast_mul, hπ, Int.cast_one, mul_one]
   have hcd : ∀ a, cc (d a) = d a := fun a => by
     have := GlobalTheory.Published.cc_det_of_herm hG
@@ -363,7 +362,7 @@ theorem isotropic_of_sig {r p : ℕ} (G : Matrix (Fin r) (Fin r) E) (hG : ∀ a 
         by_cases h : a = m
         · subst h
           have hπ' : (π : ℂ) * π = 1 := by exact_mod_cast hπ
-          simp only [d, if_true, map_mul, map_intCast]
+          simp only [d, ite_true, map_mul, map_intCast]
           linear_combination (π : ℂ) * h2 + (ε m : ℂ) * hπ'
         · simp [d, h]⟩)
     ⟨1, by rw [hdet, div_self hd]; simp [cc]⟩
@@ -723,8 +722,7 @@ theorem levelDict : LevelDict := by
         exact (hs u).1 hu
       · intro hv
         refine ⟨γ₀.symm v, (hs _).2 ?_, γ₀.apply_symm_apply v⟩
-        rw [← hγ₀, γ₀.apply_symm_apply]
-        exact hv
+        rwa [← hγ₀, γ₀.apply_symm_apply]
     let δ : D.La ≃ₗ[𝓞 E] D.La := φ.trans ((γ₀.ofSubmodules _ _ hm).trans φ.symm)
     have hδ : ∀ x, e (δ x) = (γ : Matrix (Fin N) (Fin N) E) *ᵥ e x := fun x =>
       congrArg Subtype.val (φ.apply_symm_apply ((γ₀.ofSubmodules _ _ hm) (φ x)))
@@ -1146,8 +1144,7 @@ theorem permFam_fund {F : UnivFam E Ψ j j' n g Λ} (π : Ψ ≃ Ψ) {Γ : Subgr
     (h : F.IsFundSet Γ FF) : (permFam F π).IsFundSet Γ FF := by
   have e : ballDom (permFam F π).q = ballDom F.q := ballDom_permQ F.q π
   unfold UnivFam.IsFundSet
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem conjFam_fund {F : UnivFam E Ψ j j' n g Λ} {Γ : Subgroup (Λ ≃ₗ[𝓞 E] Λ)} {FF : Set (Fin n → ℂ)}
     (h : F.IsFundSet Γ FF) : (conjFam F).IsFundSet Γ (star ⁻¹' FF) := by
@@ -1250,20 +1247,11 @@ theorem stdZ_sgU (τ : Ψ) {A A' : Matrix (Fin (j + j')) (Sg j j') ℂ} (hA : A�
   simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
 
 theorem stdZ_eqvBy_symm {R R' : RiemLat E g Λ} (h : R.EqvBy R' 1) : R'.EqvBy R 1 := by
-  obtain ⟨k, hk⟩ := h
-  refine ⟨k.symm, fun x => ?_⟩
-  have := hk x
-  simp only [LinearEquiv.coe_one, id_eq] at this ⊢
-  rw [this, LinearEquiv.symm_apply_apply]
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.Dict.eqvBy_symm h
 
 omit [Fintype Ψ] in
 theorem stdZ_zero_mem (q : Ψ × Fin j × Fin j' ≃ Fin n) : (0 : Fin n → ℂ) ∈ ballDom q := by
-  intro τ
-  have : ballMat q 0 τ = 0 := by
-    ext a b
-    simp [ballMat]
-  rw [this]
-  simpa using Matrix.PosDef.one
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.BallConvex.zero_mem_ballDom q
 
 theorem stdZ_reach (A : Ψ → Matrix (Fin (j + j')) (Sg j j') ℂ) (hA : ∀ τ, (A τ)ᴴ * C.sgr τ * A τ = sgI j j') :
     ∃ t ∈ ballDom F.q, C.IsAdapted (F.R t) A := by
@@ -1283,8 +1271,7 @@ theorem stdZ_reach (A : Ψ → Matrix (Fin (j + j')) (Sg j j') ℂ) (hA : ∀ τ
   have hs : R'.HasSig F.σ j j' := by
     have := F.sig 0 h0
     unfold RiemLat.HasSig at this ⊢
-    rw [h2]
-    exact this
+    rwa [h2]
   obtain ⟨t, ht, he⟩ := (F.univ R' (h1.trans (F.form_eq 0)) hs).exists
   exact ⟨t, ht, _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.isAdapted_of_eqvBy E Ψ j j' n g Λ F C R' (F.R t) A h5 (stdZ_eqvBy_symm he)⟩
 
@@ -1495,8 +1482,7 @@ theorem onePiece : OnePiece := by
     refine ⟨IsOpenImmersion.lift (W'.ι ≫ f) z ?_, IsOpenImmersion.lift_fac _ _ _⟩
     rintro _ ⟨q, rfl⟩
     have : q = IsLocalRing.closedPoint R := Subsingleton.elim (α := PrimeSpectrum R) _ _
-    rw [hrange, this]
-    exact hz
+    rwa [hrange, this]
   obtain ⟨π, hπ⟩ : ∃ π, π = f ≫ pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) := ⟨_, rfl⟩
   obtain ⟨s', hs'⟩ : ∃ s', s' = f ≫ pullback.snd Y.s (spMap (algebraMap (𝓞 c.F) c.F)) := ⟨_, rfl⟩
   haveI hemb : IsPreimmersion (W'.ι ≫ π) := by
@@ -1524,8 +1510,7 @@ theorem onePiece : OnePiece := by
       rw [← hrange]
       exact ⟨⟨centre x, GagaRat.centre_mem hx⟩, rfl⟩
     rw [← Y.ab_gen] at h1
-    rw [hπ]
-    exact h1
+    rwa [hπ]
   have hexF : ∀ x : Sp ℂ ⟶ X', ∃ r : ℂ, r ≠ 0 ∧ ∀ k, ∀ t ∈ Cusp.ballDom (B.F k).q, x ≫ π = B.pt k t →
       r = (((k : ℕ) + 1 : ℕ) : ℂ) := by
     intro x
@@ -1566,8 +1551,7 @@ theorem onePiece : OnePiece := by
       exact a3.map W'.ι.continuous
   have hgU : genPt (ξW ≫ W'.ι) ∈ W' ⊓ π ⁻¹ᵁ U := by
     refine ⟨hgW, ?_⟩
-    rw [← h2] at hU
-    exact hU
+    rwa [← h2] at hU
   obtain ⟨x, hx, hxU⟩ := exists_point κ s' _ hgU
   obtain ⟨k, t, ht, e⟩ := B.onto _ (hab x fun q hq => (hxU hq).1)
   have hk : B.κ k = κ := by

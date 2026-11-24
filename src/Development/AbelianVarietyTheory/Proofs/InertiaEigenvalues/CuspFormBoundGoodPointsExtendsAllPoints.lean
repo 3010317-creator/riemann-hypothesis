@@ -433,8 +433,8 @@ theorem point_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     ComplexEmbedding.involutive_conjugate E τ
   obtain ⟨f, hf⟩ := FrameUnif.exists_letter_equiv (U.X k).Ψ (U.X k).cmType Dw.p Dw.q r hr
     (Formalism.L2.PjFree.relab c σ) hbij Dw.mult
-    (fun τ h => by unfold Datum.mult; rw [if_pos ((hrt τ).1 ((hty _).1 h))])
-    (fun τ h => by unfold Datum.mult; rw [if_neg (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_left ((hrt τ).1 ((hty _).1 h))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_right (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
   obtain ⟨idx, hi⟩ : ∃ idx : Fin g ≃ (U.X k).Ψ × Fin r, ∀ j,
       (Formalism.L2.PjFree.relab c σ (e j).1 ∈ (U.X k).Ψ ∧ (idx j).1.1 = Formalism.L2.PjFree.relab c σ (e j).1 ∧
         ((idx j).2 : ℕ) = Dw.q + (e j).2) ∨
@@ -451,10 +451,10 @@ theorem point_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     obtain ⟨⟨τ, hτ⟩, ⟨n, hn⟩⟩ := t
     dsimp only at h ⊢
     rcases h with ⟨a, rfl, rfl⟩ | ⟨a, rfl, rfl, d⟩
-    · rw [if_neg (by omega)]
+    · rw [ite_eq_right (by omega)]
       unfold Formalism.L2.PjFree.perFr
       rw [dite_eq_left a, dite_eq_left hn]
-    · rw [if_pos (by omega)]
+    · rw [ite_eq_left (by omega)]
       unfold Formalism.L2.PjFree.perFr
       rw [dite_eq_right a, dite_eq_left (show conjEmb (Formalism.L2.PjFree.relab c σ (e j).1) ∈ (U.X k).Ψ from hτ), dite_eq_left hn]
       rfl
@@ -467,13 +467,13 @@ theorem point_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     intro b hb j j' hne
     obtain ⟨h1, h2⟩ := PerBor.moveMat_support _ idx hb j j' hne
     rcases hi j with ⟨a1, b1, c1⟩ | ⟨a1, b1, c1, d1⟩ <;> rcases hi j' with ⟨a2, b2, c2⟩ | ⟨a2, b2, c2, d2⟩
-    · rw [if_neg (by omega)] at h2
+    · rw [ite_eq_right (by omega)] at h2
       exact ⟨hbij.1 (by rw [← b1, ← b2, h1]), by simp only; omega⟩
-    · rw [if_neg (by omega)] at h2
+    · rw [ite_eq_right (by omega)] at h2
       omega
-    · rw [if_pos (by omega)] at h2
+    · rw [ite_eq_left (by omega)] at h2
       omega
-    · rw [if_pos (by omega)] at h2
+    · rw [ite_eq_left (by omega)] at h2
       exact ⟨hbij.1 (by rw [← hcc (Formalism.L2.PjFree.relab c σ (e j).1), ← b1, ← h1, b2, hcc]), by simp only; omega⟩
   obtain ⟨T, hT, hT1, hTf⟩ := exists_tri_unit (U.X k) idx hinj hs x.1 x.2 hx
   have hPv : ∀ a, P a = perVec (U.X k) idx x.1 (φ k a : Fin r → E) := fun a => funext fun j =>
@@ -967,8 +967,7 @@ theorem abLocus_eq_univ_of_definite (Xo : Moduli Dw l) (hq : Dw.q = 0) (T : CDVR
   have h₃ : ActsBy G.G (G.act.act H.w0) (𝟙 _) z₀ := by
     refine actsBy_of_injective (a.comp (algebraMap T.V T.Fr))
       (a.injective.comp (IsFractionRing.injective T.V T.Fr)) _ _ ?_
-    rw [Category.comp_id, ← sp_comp, RingHom.comp_apply, hz₀]
-    exact h₂
+    rwa [Category.comp_id, ← sp_comp, RingHom.comp_apply, hz₀]
   refine Set.eq_univ_of_forall fun p K _ _ t _ => ?_
   obtain ⟨j, hj⟩ := Spec.map_surjective t
   have h₄ := actsBy_baseChange (k := K) j.hom (𝟙 _) _ h₃
@@ -1131,8 +1130,7 @@ theorem exists_model (hr : 1 ≤ Dw.p + Dw.q) (Xo : Moduli Dw l) (c : Coeff l) (
       IsOpen (abLocus Y.t.G) ∧ Y.SplitFibres ∧ Y.N3 ∧ Y.N4 :=
     ⟨_, h.2.2.1, hU ▸ U.isOpen, (hY p W hp hW).2 ⟨l, c, hg⟩⟩
   have he : c.V W = (la.valuation c.F).valuationSubring := hWe
-  rw [he, hX] at h'
-  exact h'
+  rwa [he, hX] at h'
 
 alias sp_comp := _root_.Formalism.L2.Pj.spMap_comp_ring
 

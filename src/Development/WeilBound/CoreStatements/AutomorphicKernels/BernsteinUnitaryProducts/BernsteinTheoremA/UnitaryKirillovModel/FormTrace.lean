@@ -115,11 +115,9 @@ theorem riesz_exists [FiniteDimensional ℂ W] (hpos : ∀ v, v ≠ 0 → 0 < (B
   refine antilin_ext_basis (W := W) (B₀ _) (C (A x)) (fun i => ?_) y
   have h1 : β B₀ W.subtype (e.symm (β C A x)) = β C A x := by
     have := e.apply_symm_apply (β C A x)
-    rw [LinearMap.linearEquivOfInjective_apply] at this
-    exact this
+    rwa [LinearMap.linearEquivOfInjective_apply] at this
   have := congrFun h1 i
-  rw [hβ, hβ] at this
-  exact this
+  rwa [hβ, hβ] at this
 
 end Riesz
 
@@ -177,8 +175,7 @@ theorem heckeLin_fixedProj {K : Subgroup G} (hKc : IsCompact (K : Set G)) (hKo :
   have hri := (mem_biInvariant_iff_idem hKc hKo).1 hmem
   have e : groupConv μ (f : G → ℂ) (idem μ hKc hKo) = f := by
     have := congrArg (fun F' : HeckeAlgebra μ => (F' : G → ℂ)) hri.2
-    rw [HeckeAlgebra.coe_mul] at this
-    exact this
+    rwa [HeckeAlgebra.coe_mul] at this
   rw [heckeLin_apply, heckeLin_apply, ← heckeAct_idem_eq_fixedProj (μ := μ) hKc hKo hρ.1,
     ← heckeAct_groupConv f.2 (idem μ hKc hKo).mem (hρ.1 _), e]
 

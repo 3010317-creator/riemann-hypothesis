@@ -85,9 +85,7 @@ theorem exists_chart_conductor (y : (Σ k, ι k) → Ω) (hbir : Birational y) (
     | smul r w _ hw =>
       rw [Subalgebra.coe_smul, Algebra.smul_def, mul_left_comm]
       exact mul_mem r.2 hw
-  have hb0 : ((b : A) : Ω) ≠ 0 := by
-    intro h
-    exact nonZeroDivisors.coe_ne_zero b (Subtype.ext h)
+  have hb0 : ((b : A) : Ω) ≠ 0 := fun h => nonZeroDivisors.coe_ne_zero b (Subtype.ext h)
   obtain ⟨δ, e, he, hv⟩ := SectionBounded.exists_form_of_mem_chartRingZ y c hc (b : A).2
   have hm : (∏ k, y ⟨k, c k⟩ ^ δ k) ≠ 0 := Finset.prod_ne_zero_iff.mpr fun k _ => pow_ne_zero _ (hc k)
   have hbv : aeval y e * invMon y c δ = ((b : A) : Ω) := by

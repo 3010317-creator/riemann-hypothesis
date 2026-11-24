@@ -134,8 +134,7 @@ theorem c_rhoVr {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : F
     show c (rhoVr (fun τ => D.what₂.embLL.comp (labLL D τ)) (lamV D i) γE (mapVV D.what₂.embLL (lamV D i) (bVV D.what₂.LL (lamV D i) k))) =
       (R.cV i).coef.ρ γ (c (mapVV D.what₂.embLL (lamV D i) (bVV D.what₂.LL (lamV D i) k)))
     rw [← mapVV_rhoVr]
-    refine (key _).trans (((hT.mapL i).1 γ γE hγ _).trans ?_)
-    exact congrArg _ (key _).symm
+    exact (key _).trans (((hT.mapL i).1 γ γE hγ _).trans (congrArg _ (key _).symm))
   exact LinearMap.congr_fun hL x
 
 end GlobalTheory.ConjTwist
@@ -203,13 +202,11 @@ theorem exists_conjForm_equiv : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (P
     intro γ w
     apply TW.injective
     refine (TW.apply_symm_apply _).trans ?_
-    refine Eq.trans ?_ (hρ γ (TW.symm w)).symm
-    exact congrArg _ (TW.apply_symm_apply w).symm
+    exact Eq.trans (congrArg _ (TW.apply_symm_apply w).symm) (hρ γ (TW.symm w)).symm
   have hχ' : ∀ k (hk : k ∈ levJ R i t') (hk' : k ∈ levJ R i t),
       (((levEnv (Vc D i) (R.βV i) (R.datVt i t)).χ ⟨k, hk'⟩ : ℂˣ) : ℂ) =
         τ.symm (((levEnv (Vc D i) (R.βV i) (R.datVt i t')).χ ⟨k, hk⟩ : ℂˣ) : ℂ) := by
-    intro k hk hk'
-    exact (τ.symm_apply_apply _).symm.trans (congrArg τ.symm (hχ k hk' hk).symm)
+    exact fun k hk hk' => (τ.symm_apply_apply _).symm.trans (congrArg τ.symm (hχ k hk' hk).symm)
   have hmem := fun y => hV.2.1.le (LinearMap.mem_range_self (R.HV i t).e y)
   have hmem' := fun y => hV'.2.1.le (LinearMap.mem_range_self (R.HV i t').e y)
   have hfwd : ∀ y, ∃ y', (R.HV i t').e y' = fun g => TW ((R.HV i t).e y g) := fun y =>

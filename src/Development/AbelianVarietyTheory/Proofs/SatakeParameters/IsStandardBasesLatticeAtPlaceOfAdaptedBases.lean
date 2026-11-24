@@ -127,8 +127,7 @@ theorem tauSg_invol_norm_conj_eq : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : 
       have hd : (D.host.d : 𝓞 D.host.E) ∈ primeOf (rhoH D lam τ) := natCast_mem_primeOf _
       obtain ⟨z, hz, hze⟩ := (Formalism.MainNotions.GlobalTheoryTheory.jnt_inertiaD D _ hPp hd σ).2 (Or.inr hgσ) a
       have hz' : ‖rhoH D lam τ (σ (a : D.host.E)) - rhoH D lam τ (a : D.host.E)‖ < 1 := by
-        rw [← map_sub, ← hze]
-        exact hz
+        rwa [← map_sub, ← hze]
       change ‖rhoH D lam τ (a : D.host.E)‖ < 1 ↔ ‖rhoH D lam τ (σ (a : D.host.E))‖ < 1
       constructor
       · intro h
@@ -188,8 +187,7 @@ theorem dualM_left {N : ℕ} (M : Matrix (Fin N) (Fin N) D.host.E) (hM : M.det �
     ext i j; simp [hc]
   rw [h3] at h2
   have h4 := congrArg Matrix.transpose h2
-  rw [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.transpose_one] at h4
-  exact h4
+  rwa [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.transpose_one] at h4
 
 end GlobalTheory.KerStd.AdBas
 
@@ -359,8 +357,7 @@ theorem locBasis_of (D : D7) (ρ : D.host.E →+* ℂ_[p]) {N : ℕ} (L : Submod
       have e : (fun i => ρ (x i)) = (P.map ρ).mulVec (fun b => ρ (y b)) := by
         conv_lhs => rw [hPy]
         exact hmv P y
-      rw [e, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ (Ne.isUnit h1), Matrix.one_mulVec] at h
-      exact h
+      rwa [e, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ (Ne.isUnit h1), Matrix.one_mulVec] at h
     obtain ⟨s, m, hs, hm⟩ := exists_common_denom ρ y hyi
     refine ⟨s, hs, m, ?_⟩
     conv_lhs => rw [hPy]

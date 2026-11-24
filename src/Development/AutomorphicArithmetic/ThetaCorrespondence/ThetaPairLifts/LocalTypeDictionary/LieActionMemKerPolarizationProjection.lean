@@ -135,8 +135,7 @@ theorem coinvariants_kill_line_derivative : _root_.GlobalTheory.FunPr.ThetaLocal
     rcases isEmpty_or_nonempty D.what₂.Tau with h0 | h0
     · have e : ∀ t : ℝ, t • Z = Z := fun t => funext fun τ => isEmptyElim τ
       simp only [e] at hz
-      simp only [Finset.univ_eq_empty, Finset.sum_empty]
-      exact hz.unique (hasDerivAt_const _ _)
+      simpa only [Finset.univ_eq_empty, Finset.sum_empty] using hz.unique (hasDerivAt_const _ _)
     · let 𝒮 : Set (GA D W₁ → ℂ) := {φ | ∃ f z, IsThetaFunO ψ W₁ X f ∧ φ = fun g => ωB (g, 1) f z}
       have hΘ := isThetaFunO_of_mem_algF hθ hψ A₁ B hΨ
       refine hz.unique (GlobalTheory.OmegaDer.der_sum hθ 𝒮 ?_ ?_ ⟨Ψ, z, hΘ, rfl⟩ Z (fun τ => Ψ' τ z) fun τ => hd τ z)
@@ -212,15 +211,13 @@ theorem lie_action_mem_ker_polarizationProjection : _root_.GlobalTheory.FunPr.Th
       rw [GlobalTheory.KapXLine.kapX_one] at h
       have e1 : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W₁ (-1) hO.JW₁ (GlobalTheory.ConjUTransport.conjUInv W₁ (-1) hc hO.JW₁ (γ (Multiplicative.ofAdd t))) =
           γ (Multiplicative.ofAdd t) := (GlobalTheory.ConjUTransport.conjEquiv W₁ (-1) hc hO.JW₁).apply_symm_apply _
-      rw [e1] at h
-      exact h
+      rwa [e1] at h
     have h2 := hΨ₁D.2 u
     have e3 : (fun t : ℝ => ωB (GlobalTheory.ConjUTransport.conjUInv W₁ (-1) hc hO.JW₁ (γ (Multiplicative.ofAdd t)), 1) Ψ (cB u)) =
         fun t : ℝ => GlobalTheory.WeilM.thetaSum D.host.F (Γ.M'.co.rho ψ u (om' (γ (Multiplicative.ofAdd t), 1)
         (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) (⇑f) (fun x => ∏ᶠ v, φ v fun i => GlobalTheory.AdelicU.evFin D.host.F v (x i))))) :=
       funext fun t => (hval t).symm
-    rw [e3, ← h2]
-    exact h1
+    rwa [e3, ← h2]
   exact _root_.GlobalTheory.CoinvLine.coinvariants_kill_line_derivative hP D ψ θ W W₁ X A A₁ B α β ωA ωB Pi rf rl p p' hθ hstd hTr hm Γ.V' hO.JW₁ γ hγ Ψ hΨ Ψ₁ hΨ₁ hder
 end GlobalTheory.SquareAgree.KerLie
 end

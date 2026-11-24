@@ -178,14 +178,12 @@ theorem not_keyOn_of_sec_zero : ∀ (K : Type) [Field K] (G : Over (Sp K)) [GrpO
   have e := hsec j i h
   rw [hσ, map_zero] at e
   have e0 : resG x.P.A.left (inf_le_right : (L.L.pull φ).U j ⊓ x.P.L.U i ≤ x.P.L.U i) (x.th.f i) = 0 := by
-    have u := (ψ.s (j, i)).isUnit
-    exact (u.mul_right_eq_zero).1 e.symm
+    exact (((ψ.s (j, i)).isUnit).mul_right_eq_zero).1 e.symm
   have hb : z ∈ x.P.A.left.basicOpen
       (resG x.P.A.left (inf_le_right : (L.L.pull φ).U j ⊓ x.P.L.U i ≤ x.P.L.U i) (x.th.f i)) := by
     rw [Scheme.basicOpen_res]
     exact ⟨⟨hzj, hzi⟩, hi⟩
-  rw [e0, Scheme.basicOpen_zero] at hb
-  exact hb
+  rwa [e0, Scheme.basicOpen_zero] at hb
 
 end GlobalTheory.KeyEven
 end -- clump:auto
@@ -304,8 +302,7 @@ theorem keyValue_homog_of_fibres : ∀ κ : Rule, Homog (fun _ => 1) κ → Func
   have e2 := hH K x.P x.g_pos x.rig x.rig_gen x.th x.th_ne x.v x.basis (KeyOnPol.scale x.P.A.hom a x.th) hth v hv a M
     (fun _ => rfl) hvM
   simp only [Nat.mul_one] at e2
-  rw [e1, RingHom.id_apply]
-  exact e2
+  rwa [e1, RingHom.id_apply]
 
 end GlobalTheory.KeyEven
 end -- clump:auto

@@ -126,8 +126,7 @@ theorem quotEqRestrC : QuotEqRestrC := by
     Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp hA.isUnit), Matrix.one_mul, h1]
 
 theorem stdFrameHermAt : StdFrameHermAt := by
-  intro K _ _ v0 n H h2
-  exact ⟨fun v => (frameOfSpec n _ (h2 v)).1, (frameOfSpec n _ (h2 v0)).2⟩
+  exact fun K _ _ v0 n H h2 => ⟨fun v => (frameOfSpec n _ (h2 v)).1, (frameOfSpec n _ (h2 v0)).2⟩
 
 theorem quotFrameIsQuot : QuotFrameIsQuot := by
   intro K _ _ _ n D H h2 P hP v
@@ -186,8 +185,7 @@ theorem quot_eq_restr_of {K : Type} [Field K] [NumberField K] [StarRing K] (v : 
   rw [quotFrame, restrFrame, quotEqRestrC n d _ hH _ _ h1 h2]
 
 theorem quotEqRestrAt : QuotEqRestrAt := by
-  intro K _ _ _ v0 hv0 n d H hH E Pr hP
-  exact quot_eq_restr_of v0 H hH E Pr (fun i a => hv0 _) hP
+  exact fun K _ _ _ v0 hv0 n d H hH E Pr hP => quot_eq_restr_of v0 H hH E Pr (fun i a => hv0 _) hP
 
 theorem quotEqRestrRat : QuotEqRestrRat := by
   intro K _ _ _ K0 hcm n d H hH E Pr hE hP
@@ -242,8 +240,7 @@ theorem weightMet_posDef (pr : Ix → Matrix (Fin n) (Fin n) K) (t : Ix → Infi
   rw [weightMet_form]
   have ht' : ∀ p, (0 : ℂ) < ((t p v : ℝ) : ℂ) := fun p => by exact_mod_cast ht p v
   apply Finset.sum_pos'
-  · intro p _
-    exact mul_nonneg (ht' p).le (hM.posSemidef.dotProduct_mulVec_nonneg _)
+  · exact fun p _ => mul_nonneg (ht' p).le (hM.posSemidef.dotProduct_mulVec_nonneg _)
   · by_contra hcon
     apply hx
     have h0 : ∀ p, ((pr p).map v.embedding).mulVec x = 0 := by

@@ -98,8 +98,7 @@ theorem inr_mem_iff {ρ : 𝓞 E →+* Module.End K W} {ρH : 𝓞 E →+* Modul
     rw [h]
     refine Prod.ext (by simp) (LinearMap.ext fun x => ?_)
     have h1 := H (bar a) x
-    rw [hσ, hb] at h1
-    exact h1
+    rwa [hσ, hb] at h1
 
 end PositivityTheory.Xgn.AdaptedEigenbasis
 
@@ -167,8 +166,7 @@ theorem PositivityTheory.Xgn.adapted_eigenbasis_exists : ∀ (E : Type) [Field E
         refine Prod.ext ?_ ?_
         · rw [hz1]
           simp [Prod.fst_sum]
-        · rw [Prod.snd_sum]
-          exact hz2
+        · rwa [Prod.snd_sum]
       rw [e]
       refine add_mem (Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span
         ⟨Fin.castAdd q i, by simp only [Fin.addCases_left]⟩)) (Submodule.sum_mem _ fun j _ =>

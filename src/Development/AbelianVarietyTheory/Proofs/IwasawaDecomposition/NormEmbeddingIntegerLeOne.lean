@@ -64,8 +64,7 @@ theorem norm_embedding_integer_le_one {E : Type} [Field E] [NumberField E] {l : 
     have := (RingOfIntegers.isIntegral_coe a).map τ.toIntAlgHom
     simpa using this
   obtain ⟨p, hp, hp0⟩ := h
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   set y := τ (a : E)
   rw [Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ, hp.coeff_natDegree, map_one,
     one_mul] at hp0
@@ -76,8 +75,7 @@ theorem norm_embedding_integer_le_one {E : Type} [Field E] [NumberField E] {l : 
   have h2 : ‖∑ i ∈ Finset.range p.natDegree, algebraMap ℤ (PadicAlgCl l) (p.coeff i) * y ^ i‖
       < ‖y‖ ^ p.natDegree := by
     refine Finset.sum_induction _ (fun z => ‖z‖ < ‖y‖ ^ p.natDegree) ?_ (by simpa using hpos) ?_
-    · intro u v hu hv
-      exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max u v) (max_lt hu hv)
+    · exact fun u v hu hv => lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max u v) (max_lt hu hv)
     · intro i hi
       rw [norm_mul, norm_pow]
       have h3 : ‖algebraMap ℤ (PadicAlgCl l) (p.coeff i)‖ ≤ 1 := by
@@ -140,8 +138,7 @@ theorem exists_place_of_embedding :
         rw [← h, map_mul]
         exact lt_of_le_of_lt (mul_le_of_le_one_right' (v.valuation_le_one s)) hx
       exact (v.valuation_lt_one_iff_mem a).mp this
-    rw [hP, ← h, map_mul, norm_mul, hone s hs, mul_one] at ha
-    exact ha
+    rwa [hP, ← h, map_mul, norm_mul, hone s hs, mul_one] at ha
   · by_contra hn
     have hn' : 1 ≤ v.valuation E x := not_lt.mp hn
     have hx0 : x ≠ 0 := by
@@ -154,7 +151,6 @@ theorem exists_place_of_embedding :
       rw [← h, ← mul_assoc, mul_inv_cancel₀ hx0, one_mul]
     have h3 := hone s hs
     rw [h2, map_mul, norm_mul] at h3
-    have h4 := mul_lt_one_of_nonneg_of_lt_one_left (norm_nonneg _) hx (hle a)
-    exact absurd h3 h4.ne
+    exact absurd h3 (mul_lt_one_of_nonneg_of_lt_one_left (norm_nonneg _) hx (hle a)).ne
 
 end GlobalTheory.LadicPlace

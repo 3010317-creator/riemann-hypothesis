@@ -151,7 +151,7 @@ theorem flagClosurePt_top {K : Type*} {ι : K → Type} {Ω : Type*} [Field Ω] 
       calc ψ (e i) = ψ (∑ j, w.repr (e i) j • w j) := by rw [w.sum_repr]
         _ = ∑ j, w.repr (e i) j * ψ (w j) := by simp only [map_sum, map_smul, smul_eq_mul]
 
-    simp only [flagCoord, Fin.is_lt, if_true, hψ, map_sum, map_mul, Finset.sum_mul, Finset.mul_sum]
+    simp only [flagCoord, Fin.is_lt, ite_true, hψ, map_sum, map_mul, Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     ring
@@ -225,10 +225,10 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
       rw [hPull O ϖ hϖ Ω K ι y d hV N E B B' hBB' w w' x x' f g hF M M' a₀ a₀' φ φ' hφ hφ' Φ e t ht
         (k + 1) (by omega) (by omega) f₁ g₁ hv₁ hg₁ n z z' fz gz hz r Bf hB Es Bs hEs' hBs Q' (by omega)]
       rcases Nat.eq_zero_or_pos k with rfl | hk0
-      · rw [if_pos rfl, if_pos le_rfl, Nat.sub_self, pow_zero, one_mul]
+      · rw [ite_eq_left rfl, ite_eq_left le_rfl, Nat.sub_self, pow_zero, one_mul]
         refine hVexp r Bf hB Bs Fs hBs ?_ Q' (by omega)
         simpa only [Nat.sub_self, zero_add, flagHsymm_zero_right, one_mul] using hFs
-      · rw [if_neg (by omega), if_neg (by omega)]
+      · rw [ite_eq_right (by omega), ite_eq_right (by omega)]
     | succ i ih =>
       intro r Bf hB Es hEs Fs hFs Q' hQ'
       have hfv : flagVar N n k = X (Fin.castAdd n ⟨k, hk⟩) := by
@@ -256,8 +256,7 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
             (X (Fin.castAdd (N + n) (0 : Fin 1)) ^ i * rename (Fin.natAdd 1) Bf)) (Es + Ts) := by
         have hTs' : IsPairExpansion (i + 1 + r) (X (Fin.castAdd (N + n) (0 : Fin 1)) ^ i *
             rename (Fin.natAdd 1) (X (Fin.castAdd n ⟨k, hk⟩) * Bf)) Ts := by
-          rw [show i + 1 + r = i + (r + 1) by omega]
-          exact hTs
+          rwa [show i + 1 + r = i + (r + 1) by omega]
         have h := isPairExpansion_add hEs hTs'
         have hpoly : X (Fin.castAdd (N + n) (0 : Fin 1)) ^ (i + 1) * rename (Fin.natAdd 1) Bf +
             X (Fin.castAdd (N + n) (0 : Fin 1)) ^ i * rename (Fin.natAdd 1) (X (Fin.castAdd n ⟨k, hk⟩) * Bf) =
@@ -265,8 +264,7 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
               (X (Fin.castAdd (N + n) (0 : Fin 1)) ^ i * rename (Fin.natAdd 1) Bf) := by
           rw [map_mul, rename_X]
           ring
-        rw [← hpoly, show i + r + 1 = i + 1 + r by omega]
-        exact h
+        rwa [← hpoly, show i + r + 1 = i + 1 + r by omega]
       have hcut := hCut O ϖ hϖ Ω K ι y d hV N E B B' hBB' w w' x x' f g hF M M' a₀ a₀' φ φ' hφ hφ' Φ e t ht
         k hk f₁ g₁ f₂ g₂ hv₁ hg₁ h₂ n z z' fz gz hz (i + r) _ hA (Es + Ts) Ds hsum hDs Q' (by omega)
       rw [pairNum_add_expansion] at hcut
@@ -292,12 +290,11 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
       rcases lt_trichotomy k (i + 1) with hlt | heq | hgt
       ·
         have hki : k ≤ i := by omega
-        rw [if_pos hlt.le, if_pos hki, if_pos hlt.le]
+        rw [ite_eq_left hlt.le, ite_eq_left hki, ite_eq_left hlt.le]
         have hc : i + 1 - k = i - k + 1 := by omega
         have hFs₁' : IsPairExpansion (i + 1 - k + r) (flagHsymm N n (k + 1) (i - k) *
             (X (Fin.castAdd n ⟨k, hk⟩) * Bf)) Fs₁ := by
-          rw [show i + 1 - k + r = i - k + (r + 1) by omega]
-          exact hFs₁
+          rwa [show i + 1 - k + r = i - k + (r + 1) by omega]
         have h12 := isPairExpansion_add hFs₂ hFs₁'
         have hpoly : flagHsymm N n k (i + 1 - k) * Bf +
             flagHsymm N n (k + 1) (i - k) * (X (Fin.castAdd n ⟨k, hk⟩) * Bf) =
@@ -310,12 +307,12 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
         ring
       ·
         subst heq
-        rw [if_pos le_rfl, if_neg (by omega), if_pos le_rfl, Nat.sub_self, pow_zero, one_mul, sub_zero, one_mul]
+        rw [ite_eq_left le_rfl, ite_eq_right (by omega), ite_eq_left le_rfl, Nat.sub_self, pow_zero, one_mul, sub_zero, one_mul]
         refine hVexp _ _ hB Fs₂ Fs ?_ ?_ Q' (by omega)
         · simpa only [Nat.sub_self, zero_add, flagHsymm_zero_right, one_mul] using hFs₂
         · simpa only [Nat.sub_self, zero_add, flagHsymm_zero_right, one_mul] using hFs
       ·
-        rw [if_neg (by omega), if_neg (by omega), if_neg (by omega), sub_zero]
+        rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), sub_zero]
 
   have claim : ∀ (k : ℕ) (hk : k < N) (f₁ g₁ : MRing (bundleIdx (bundleIdx ι M) M') O),
       IsVerticalDivisor (pointIdeal O (flagClosurePt y w e φ φ' t (k + 1))) ϖ
@@ -342,7 +339,7 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
       intro i r Bf hB Ds hDs Fs hFs Q' hQ'
       have hFs' : IsPairExpansion (i + 1 - 0 + r) 0 Fs := by
         simpa only [Nat.sub_zero, flagHsymm_zero_succ, zero_mul] using hFs
-      rw [if_pos rfl, if_pos (Nat.zero_le _), hVexp _ 0 (isHomogeneous_zero _ _ _) Fs 0 hFs'
+      rw [ite_eq_left rfl, ite_eq_left (Nat.zero_le _), hVexp _ 0 (isHomogeneous_zero _ _ _) Fs 0 hFs'
         isPairExpansion_zero_zero Q' (by omega), pairNum_zero_expansion, mul_zero]
     | succ k ihk =>
       intro hk f₁ g₁ hv₁ hg₁
@@ -350,7 +347,7 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
         φ φ' hφ hφ' Φ e t ht (k + 1) (by omega) (by omega)
       refine stepCore (k + 1) hk f₁ g₁ f₂ g₂ hv₁ hg₁ (fun _ => ⟨hv₂, hg₂⟩) ?_
       intro i r Bf hB Ds hDs Fs hFs Q' hQ'
-      rw [if_neg (Nat.succ_ne_zero k), ihk (by omega) f₂ g₂ hv₂ hg₂ i r Bf hB Ds hDs Fs
+      rw [ite_eq_right (Nat.succ_ne_zero k), ihk (by omega) f₂ g₂ hv₂ hg₂ i r Bf hB Ds hDs Fs
         (by simpa only [Nat.add_sub_add_right] using hFs) Q' hQ']
       simp only [Nat.add_sub_add_right, Nat.add_le_add_iff_right]
 
@@ -358,11 +355,9 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
   have hpt : flagClosurePt y w e φ φ' t (k + 1) = pairProjCoord y e φ φ' t := flagClosurePt_top y w e φ φ' t
   have hv₀ : IsVerticalDivisor (pointIdeal O (flagClosurePt y w e φ φ' t (k + 1))) ϖ
       (zetaFirst a₀ - zetaSecond a₀') f₀ g₀ := by
-    rw [hpt]
-    exact hD₀
+    rwa [hpt]
   have hg₀ : aeval (flagClosurePt y w e φ φ' t (k + 1)) f₀ = aeval (flagClosurePt y w e φ φ' t (k + 1)) g₀ := by
-    rw [hpt]
-    exact hD₀gen
+    rwa [hpt]
 
   let σ : Fin (1 + n) → Fin (1 + (k + 1 + n)) :=
     Fin.append (fun _ : Fin 1 => Fin.castAdd (k + 1 + n) (0 : Fin 1)) (fun j => Fin.natAdd 1 (Fin.natAdd (k + 1) j))
@@ -379,11 +374,10 @@ theorem SegreClosureNumber.proof (hExp : PairNumberExpansionIndependence.Stateme
     funext fun i => Fin.ext rfl
   have hAs' : IsPairExpansion (k + 1 - 1 + a - k + r)
       (flagHsymm (k + 1) n (k + 1) (k + 1 - 1 + a - k) * rename (Fin.natAdd (k + 1)) R) As := by
-    rw [hi, flagHsymm_eq_rename (k + 1) n (k + 1) le_rfl a, hcast]
-    exact hAs
+    rwa [hi, flagHsymm_eq_rename (k + 1) n (k + 1) le_rfl a, hcast]
   have hcl := claim k (by omega) f₀ g₀ hv₀ hg₀ (k + 1 - 1 + a) r _ hR.rename_isHomogeneous _ hEs As hAs' Q
     (by omega)
-  rw [if_pos (by omega), pairNum_pushExpansion, hi, hpt] at hcl
+  rw [ite_eq_left (by omega), pairNum_pushExpansion, hi, hpt] at hcl
   have e1 : closureDeg (zetaFirst a₀) (Fin.append x z) ∘ σ =
       Fin.append (fun _ : Fin 1 => zetaFirst a₀) (fun j => liftPairDeg (z j)) := by
     funext j

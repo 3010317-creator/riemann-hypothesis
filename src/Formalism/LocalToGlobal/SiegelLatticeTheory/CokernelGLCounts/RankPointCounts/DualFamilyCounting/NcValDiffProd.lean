@@ -25,8 +25,7 @@ variable (F : Type) [Field F] [NumberField F]
 abbrev mDiff (v : HeightOneSpectrum (𝓞 F)) : ℕ :=
   (Associates.mk v.asIdeal).count (Associates.mk (differentIdeal ℤ (𝓞 F))).factors
 
-lemma differentIdeal_ne_zero' : differentIdeal ℤ (𝓞 F) ≠ 0 := by
-  exact differentIdeal_ne_bot
+lemma differentIdeal_ne_zero' : differentIdeal ℤ (𝓞 F) ≠ 0 := differentIdeal_ne_bot
 
 variable {F}
 
@@ -140,8 +139,7 @@ theorem hasProd_absV_dV :
       NumberField.absNorm_differentIdeal F (𝓞 F), Nat.cast_natAbs, Int.cast_abs]
   have key : HasProd (fun v : HeightOneSpectrum (𝓞 F) => absV v (dV v)) (∏ v ∈ hfin.toFinset, absV v (dV v)) :=
     hasProd_prod_of_ne_finset_one hone
-  rw [hval] at key
-  exact key
+  rwa [hval] at key
 
 end General
 
@@ -149,8 +147,7 @@ section Loc
 
 variable {D : D7} (X : HidaSetting D)
 
-theorem diffProd_holds : DiffProd X := by
-  exact hasProd_absV_dV _
+theorem diffProd_holds : DiffProd X := hasProd_absV_dV _
 
 end Loc
 

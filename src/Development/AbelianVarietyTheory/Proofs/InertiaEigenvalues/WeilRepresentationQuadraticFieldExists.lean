@@ -229,9 +229,7 @@ theorem fOp_nOp_fOp (F E : Type) [NontriviallyNormedField F] [NontriviallyNormed
   have htrKc : Continuous (Algebra.trace F A.K) := IsModuleTopology.continuous_of_linearMap _
   have htrLc : Continuous (Algebra.trace A.K A.L) :=
     IsModuleTopology.continuous_of_linearMap ((Algebra.trace A.K A.L).restrictScalars F)
-  have hec : Continuous (A.psiK ψ) := by
-    show Continuous fun t => ψ (Algebra.trace F A.K t)
-    exact hψc.comp htrKc
+  have hec : Continuous (A.psiK ψ) := hψc.comp htrKc
   have hNc := EtMeas.continuous_NL A
   have hk2 : Continuous (fun p : A.L × A.L => A.kerL ψ x p.1 p.2) := by
     show Continuous fun p : A.L × A.L => A.psiK ψ ((x : A.K) * Algebra.trace A.K A.L (star p.1 * p.2))
@@ -408,13 +406,7 @@ namespace GlobalTheory.JR.WeilQuad
 
 theorem NL_smul {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [hU : Unram F E] (A : Et F E) (s : A.K) (y : A.L) :
-    A.NL (s • y) = s ^ 2 * A.NL y := by
-  have hfin : Module.Finite F E := Module.finite_of_finrank_eq_succ hU.finrank_eq
-  let b : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E hU.finrank_eq
-  have hp := ((Algebra.IsPushout.comm F E A.K A.L).1 A.push).out
-  let c := hp.basis b
-  unfold Et.NL
-  rw [Algebra.smul_def, map_mul, Algebra.norm_algebraMap_of_basis c, Fintype.card_fin]
+    A.NL (s • y) = s ^ 2 * A.NL y := GlobalTheory.JR.WeilQuad.Fnf.NL_smul A s y
 
 theorem mOp_nOp : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ) (x : A.Kˣ) (μ : Measure A.L) (ω : A.K → ℂ),
@@ -559,11 +551,11 @@ lemma three_eq {a a' b b' : K} (ha : a = a') (hb : b = b') :
 
 lemma rho_pos {g : SpecialLinearGroup (Fin 2) K} (h : en g 1 0 = 0) :
     rho n m t g = mx m (en g 0 0) * n (en g 0 1 / en g 0 0) := by
-  unfold rho; rw [if_pos h]
+  unfold rho; rw [ite_eq_left h]
 
 lemma rho_neg {g : SpecialLinearGroup (Fin 2) K} (h : en g 1 0 ≠ 0) :
     rho n m t g = n (en g 0 0 / en g 1 0) * mx m (-1 / en g 1 0) * t * n (en g 1 1 / en g 1 0) := by
-  unfold rho; rw [if_neg h]
+  unfold rho; rw [ite_eq_right h]
 
 lemma rho_n (hn : ∀ a b, n (a + b) = n a * n b) (g : SpecialLinearGroup (Fin 2) K) (z : K) :
     rho n m t (g * nS z) = rho n m t g * n z := by
@@ -640,7 +632,7 @@ lemma rho_one (hn0 : n 0 = 1) (hm1 : m 1 = 1) : rho n m t (1 : SpecialLinearGrou
   have e : ∀ i j : Fin 2, en (1 : SpecialLinearGroup (Fin 2) K) i j = (1 : Matrix (Fin 2) (Fin 2) K) i j :=
     fun _ _ => rfl
   simp only [rho, e, Matrix.one_apply_ne (show (1 : Fin 2) ≠ 0 by decide),
-    Matrix.one_apply_ne (show (0 : Fin 2) ≠ 1 by decide), Matrix.one_apply_eq, if_true, zero_div, hn0, mul_one]
+    Matrix.one_apply_ne (show (0 : Fin 2) ≠ 1 by decide), Matrix.one_apply_eq, ite_true, zero_div, hn0, mul_one]
   have := mx_unit m 1; rw [Units.val_one] at this; rw [this, hm1]
 
 lemma rho_mul (hn0 : n 0 = 1) (hn : ∀ a b, n (a + b) = n a * n b) (hm : ∀ a b, m (a * b) = m a * m b)
@@ -706,15 +698,12 @@ theorem exists_hom_of_bruhat : ∀ (K : Type) [CommRing K], IsField K → ∀ (M
   refine ⟨ρ, ?_, ?_, ?_⟩
   · intro z
     have := rho_n n m t hn 1 z
-    rw [one_mul, rho_one n m t hn0 hm1, one_mul] at this
-    exact this
+    rwa [one_mul, rho_one n m t hn0 hm1, one_mul] at this
   · intro s
     have := rho_m n m t hm hmn htm 1 s
-    rw [one_mul, rho_one n m t hn0 hm1, one_mul] at this
-    exact this
+    rwa [one_mul, rho_one n m t hn0 hm1, one_mul] at this
   · have := rho_w n m t hn0 hn hm hmn htt htnt 1
-    rw [one_mul, rho_one n m t hn0 hm1, one_mul] at this
-    exact this
+    rwa [one_mul, rho_one n m t hn0 hm1, one_mul] at this
 
 end GlobalTheory.BruhatRep
 end -- clump:auto
@@ -734,8 +723,7 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
 
 theorem finite_E_L [Unram F E] (A : Et F E) : Module.Finite E A.L := by
   have hE : Module.Finite F E := Module.finite_of_finrank_pos (by rw [Unram.finrank_eq (F := F) (E := E)]; norm_num)
-  have h := A.push.out
-  exact Module.Finite.equiv h.equiv
+  exact Module.Finite.equiv (A.push.out).equiv
 
 theorem finite_F_L [Unram F E] (A : Et F E) : Module.Finite F A.L := by
   have hE : Module.Finite F E := Module.finite_of_finrank_pos (by rw [Unram.finrank_eq (F := F) (E := E)]; norm_num)
@@ -874,8 +862,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
         calc ‖e'‖ * ‖t‖ * ‖Φ (e i) j‖ ≤ 1 * ‖t‖ * Km := by gcongr; exact hKm i j
           _ ≤ R := by rw [one_mul]; exact hRt
       have := hy _ hw
-      rw [hker, map_smul, LinearMap.smul_apply, smul_eq_mul] at this
-      rw [← hΦ] at this
+      rw [hker, map_smul, LinearMap.smul_apply, smul_eq_mul, ← hΦ] at this
       rwa [← mul_assoc]
     rw [norm_mul] at h1
     have h2 : ‖Φ y i‖ ≤ 1 / ‖t‖ := by rw [le_div_iff₀ ht0]; linarith
@@ -906,12 +893,10 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     exact (isCompact_closedBall 0 R).image hΨc
   · intro y hy
     rw [SetLike.mem_coe, hmem]
-    intro i
-    exact ((norm_le_pi_norm (Φ y) i).trans (hb y hy)).trans hRb
+    exact fun i => ((norm_le_pi_norm (Φ y) i).trans (hb y hy)).trans hRb
   · intro y hy
     rw [SetLike.mem_coe, hmem]
-    intro i
-    exact (hperp y hy i).le.trans hRε
+    exact fun i => (hperp y hy i).le.trans hRε
   · intro y hy
     have hb' : Φe y ∈ Metric.ball (0 : Fin (Module.finrank F A.L) → F) ε := by
       rw [mem_ball_zero_iff, pi_norm_lt_iff hε0, hΦe]; exact hperp y hy
@@ -1361,24 +1346,24 @@ theorem weilField_main : WeilField := by
   obtain ⟨ρ, hρn, hρm, hρw⟩ := _root_.GlobalTheory.BruhatRep.exists_hom_of_bruhat A.K hK (Module.End ℂ S) Nz Ms Tw e1 e2 e3 e4 e5 e6 e7 e8
   refine ⟨G₁⁻¹, fun g φ => if h : IsTest φ then ((ρ g ⟨φ, h⟩ : S) : A.L → ℂ) else 0, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
   · intro g f hf
-    simp only [dif_pos hf]
+    simp only [dite_eq_left hf]
     exact (ρ g ⟨f, hf⟩).2
   · intro f hf
-    simp [dif_pos hf]
+    simp [dite_eq_left hf]
   · intro g h f hf
     have hh : IsTest ((ρ h ⟨f, hf⟩ : S) : A.L → ℂ) := (ρ h ⟨f, hf⟩).2
-    simp only [dif_pos hf, dif_pos hh, map_mul, Module.End.mul_apply]
+    simp only [dite_eq_left hf, dite_eq_left hh, map_mul, Module.End.mul_apply]
   · intro g c f f' hf hf'
     have hc : IsTest (c • f + f') := S.add_mem (S.smul_mem c hf) hf'
-    simp only [dif_pos hf, dif_pos hf', dif_pos hc]
+    simp only [dite_eq_left hf, dite_eq_left hf', dite_eq_left hc]
     have : (⟨c • f + f', hc⟩ : S) = c • ⟨f, hf⟩ + ⟨f', hf'⟩ := rfl
     rw [this, map_add (f := _), map_smul]
     rfl
   · intro φ hφ
     refine ⟨fun z y => ?_, fun s y => ?_, fun y => ?_⟩
-    · simp only [dif_pos hφ, hρn]; rfl
-    · simp only [dif_pos hφ, hρm]; rfl
-    · simp only [dif_pos hφ, hρw]; rfl
+    · simp only [dite_eq_left hφ, hρn]; rfl
+    · simp only [dite_eq_left hφ, hρm]; rfl
+    · simp only [dite_eq_left hφ, hρw]; rfl
 
 end GlobalTheory.JR.WeilQuad
 

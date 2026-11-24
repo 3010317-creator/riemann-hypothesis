@@ -77,9 +77,7 @@ theorem assemble {α ι Z : Type*} (A : Finset α) (Wn : Finset ℕ) (I : Finset
           intro z _
           rw [Finset.sum_mul]
       _ ≤ ∑ z ∈ I, (ε₁ * ∑ i ∈ T, ∑ a ∈ A, dy (u a i) z) * dx z := by
-          apply Finset.sum_le_sum
-          intro z hz
-          exact mul_le_mul_of_nonneg_right (htm z hz) (hdx z)
+          exact Finset.sum_le_sum (fun z hz => mul_le_mul_of_nonneg_right (htm z hz) (hdx z))
       _ = ∑ z ∈ I, ∑ i ∈ T, ∑ a ∈ A, ε₁ * (dy (u a i) z * dx z) := by
           apply Finset.sum_congr rfl
           intro z _

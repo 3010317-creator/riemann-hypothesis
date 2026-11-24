@@ -71,8 +71,7 @@ theorem exists_eq_algebraMap_of_aeval_eq_zero [ρ.IsIrreducible]
       have h1 := congrArg (fun f : Representation.IntertwiningMap ρ ρ => f w) hφ
       change (φ - algebraMap ℂ (Representation.IntertwiningMap ρ ρ) r) ((aeval φ q) w) =
         (φ - algebraMap ℂ (Representation.IntertwiningMap ρ ρ) r) 0
-      rw [map_zero]
-      exact h1
+      rwa [map_zero]
 
 theorem algebraMap_intertwiningMap_bijective_of_rank_le_aleph0 [ρ.IsIrreducible]
     (hV : Module.rank ℂ V ≤ ℵ₀) :
@@ -99,8 +98,7 @@ theorem algebraMap_intertwiningMap_bijective_of_rank_le_aleph0 [ρ.IsIrreducible
         (∑ j ∈ s, f j) x = ∑ j ∈ s, f j x := by
       intro s f x
       have h1 := congrFun (map_sum (Representation.IntertwiningMap.coeFnAddMonoidHom ρ ρ) f s) x
-      rw [Finset.sum_apply] at h1
-      exact h1
+      rwa [Finset.sum_apply] at h1
     have hli : LinearIndependent ℂ w := by
       rw [linearIndependent_iff']
       intro s a hsum i hi
@@ -116,8 +114,7 @@ theorem algebraMap_intertwiningMap_bijective_of_rank_le_aleph0 [ρ.IsIrreducible
 
         rw [map_sum, map_zero] at h0
 
-        rw [hPdef, map_sum, sum_apply]
-        rw [← h0]
+        rw [hPdef, map_sum, sum_apply, ← h0]
         refine Finset.sum_congr rfl fun j hj => ?_
         rw [map_smul, map_smul, key j hj]
         rfl
@@ -134,8 +131,7 @@ theorem algebraMap_intertwiningMap_bijective_of_rank_le_aleph0 [ρ.IsIrreducible
       · intro j _ hji
         rw [eval_smul, eval_prod, Finset.prod_eq_zero (i := i) (Finset.mem_erase.2 ⟨Ne.symm hji, hi⟩)
           (by rw [eval_sub, eval_X, eval_C, sub_self]), smul_zero]
-      · intro h
-        exact absurd hi h
+      · exact fun h => absurd hi h
     have h1 := hli.cardinal_lift_le_rank
     rw [Cardinal.mk_complex, Cardinal.lift_continuum] at h1
     have h2 : Cardinal.lift.{0} (Module.rank ℂ V) ≤ ℵ₀ := Cardinal.lift_le_aleph0.2 hV

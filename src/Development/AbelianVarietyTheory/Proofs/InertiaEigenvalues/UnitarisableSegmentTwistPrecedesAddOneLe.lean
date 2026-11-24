@@ -98,8 +98,7 @@ theorem log_norm_centralChar {δ : IrrGL (k := k)} {Δ : Segment k} (hL : IsLSeg
   have hterm : ∀ a : Fin Δ.len,
       HasCentralChar (Δ.term a).rep (ω * absPow k (((a : ℕ) : ℝ) : ℂ) ^ Δ.d) := fun a => by
     have h := hasCentralChar_nu Δ.first hω ((a : ℕ) : ℂ)
-    rw [Complex.ofReal_natCast]
-    exact h
+    rwa [Complex.ofReal_natCast]
   have hsc : ∀ v, δ.rep (GeneralLinearGroup.scalar (Fin δ.1) z) v =
       (∏ a : Fin Δ.len, (((ω * absPow k (((a : ℕ) : ℝ) : ℂ) ^ Δ.d) z : ℂˣ) : ℂ)) • v := by
     intro v
@@ -149,8 +148,7 @@ theorem add_one_le_of_precedes (k : Type) [Field k] [ValuativeRel k] [Topologica
     rw [e1] at hA'
     linear_combination hA' - hA
   have hlen : Δ.len < j + Δ'.len := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hnsub
     intro w hw
     obtain ⟨a, ha, rfl⟩ := Segment.mem_carrier.1 hw

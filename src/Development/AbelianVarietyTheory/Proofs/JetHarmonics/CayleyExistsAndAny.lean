@@ -132,8 +132,7 @@ private theorem isKTypeOf_map_of_intertwining {σ₁ σ₂ : Matrix (Fin n) (Fin
     · right
       refine le_antisymm hT ?_
       rintro _ ⟨x, hx, rfl⟩
-      rw [← h] at hx
-      exact hx
+      rwa [← h] at hx
   · intro ν y hy hy0 hyw
     obtain ⟨x, hx, rfl⟩ := hy
     exact hmax ν x hx (by rintro rfl; simp at hy0) (wt' ν x hyw)
@@ -190,8 +189,7 @@ theorem _root_.GlobalTheory.CayleyChoice.isDS_conj {lam : Fin n → ℝ} (hσ : 
     rw [show u' * a * u * (u' * b * u) = u' * a * (u * u') * b * u by
       simp only [Matrix.mul_assoc], h1, Matrix.mul_one]
     simp only [Matrix.mul_assoc]
-  · intro g hg v
-    exact hiso _ (conj_mem hg) v
+  · exact fun g hg v => hiso _ (conj_mem hg) v
   · intro v
     exact (hcont v).comp ((continuous_const.mul continuous_id).mul continuous_const).continuousOn
       (fun g hg => conj_mem hg)
@@ -204,8 +202,7 @@ theorem _root_.GlobalTheory.CayleyChoice.isDS_conj {lam : Fin n → ℝ} (hσ : 
       have hx' : σ u' x ∈ T := hx
       show σ u' (σ g x) ∈ T
       have := hTinv g hg (σ u' x) hx'
-      rw [show σ u' (σ g x) = σ (u' * g * u) (σ u' x) by rw [hconj g hg, hAB]]
-      exact this
+      rwa [show σ u' (σ g x) = σ (u' * g * u) (σ u' x) by rw [hconj g hg, hAB]]
     rcases hirr _ hT'c hT'inv with h | h
     · left
       rw [eq_bot_iff]

@@ -71,10 +71,8 @@ theorem UpperTheory.ConvolutionTheory.K.qmapPres :
   let ε : Γ → Γ := fun γ => ⟨e.symm γ, (hΓ _).1 (by simpa using γ.2)⟩
   have hε : Function.Bijective ε := by
     constructor
-    · intro a b hab
-      exact Subtype.ext (e.symm.injective (congrArg Subtype.val hab))
-    · intro b
-      exact ⟨⟨e b, (hΓ _).2 b.2⟩, Subtype.ext (by simp [ε])⟩
+    · exact fun a b hab => Subtype.ext (e.symm.injective (congrArg Subtype.val hab))
+    · exact fun b => ⟨⟨e b, (hΓ _).2 b.2⟩, Subtype.ext (by simp [ε])⟩
   have hF' : IsFundamentalDomain Γ (e ⁻¹' fundamentalDomain Γ) μ :=
     (isFundamentalDomain_fundamentalDomain Γ μ).preimage_of_equiv
       he.quasiMeasurePreserving (e := ε) hε fun γ x => by

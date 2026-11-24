@@ -115,8 +115,7 @@ theorem exists_good_place : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
   obtain ⟨p, hp, hlt, hc⟩ := Nat.exists_prime_gt_modEq_one (∑ u ∈ S, Ideal.absNorm u.asIdeal) hm
   obtain ⟨h1, -, -⟩ := GlobalTheory.HostSplit.split_completely_of_modEq_one D.R D.host p hp hc
   have h : (Ideal.primesOver (Ideal.span {(p : ℤ)}) (𝓞 D.host.E)).ncard = Module.finrank ℚ D.host.E := by
-    rw [← GlobalTheory.HostSplit.ncard_placesOver _ hp]
-    exact h1
+    rwa [← GlobalTheory.HostSplit.ncard_placesOver _ hp]
   obtain ⟨v, hv⟩ := GlobalTheory.SplitChoice.exists_place_over D.host.F hp
   have hnot : ∀ u ∈ S, u ≠ v := by
     intro u hu e
@@ -134,8 +133,7 @@ theorem exists_good_place : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     have hunder : v.asIdeal.under ℤ = Ideal.span {(p : ℤ)} :=
       (hmax.eq_of_le (Ideal.IsPrime.under ℤ v.asIdeal).ne_top hle).symm
     unfold SplitsFully
-    rw [hunder]
-    exact h
+    rwa [hunder]
   · rw [GlobalTheory.AdelicU.nonempty_split_iff (GlobalTheory.AdelicU.isCMExt_host D)]
     exact ncard_primesOver_eq_two (GlobalTheory.AdelicU.isCMExt_host D).2.2.1 hp h v hv
 

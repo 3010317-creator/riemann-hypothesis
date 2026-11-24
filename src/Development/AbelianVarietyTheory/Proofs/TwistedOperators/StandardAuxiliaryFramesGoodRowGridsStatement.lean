@@ -510,15 +510,7 @@ theorem isHalf_mul_left' (M : Mx D k m) {x : Mx D m n} (hx : IsHalf e x) : IsHal
   exact Finset.sum_congr rfl fun l _ => by rw [mul_left_comm, hx l j]
 
 theorem symplOH_half (he : e * cA D e = 0) {x y : WO S T} (hx : IsHalf e x) (hy : IsHalf e y) :
-    symplOH S T x y = 0 := by
-  have h0 : hO S T x y = 0 := by
-    unfold hO
-    refine Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => Finset.sum_eq_zero fun c _ =>
-      Finset.sum_eq_zero fun d _ => ?_
-    rw [← hx d a, ← hy c b, map_mul]
-    linear_combination (incA D (S.gram⁻¹ a b) * cA D (y c b) * incA D (T.gram c d) * x d a) * he
-  unfold symplOH symplO
-  rw [h0, mul_zero, map_zero, mul_zero]
+    symplOH S T x y = 0 := Formalism.IndefR.Fin.LevelGroupLemmas.Lat.symplOH_half_zero he hx hy
 
 end GlobalTheory.AscFin.SplitVac
 
@@ -953,7 +945,7 @@ theorem psi_of_shift (hG : GoodAt dV dW x ψ LV LV₀ LW LW₀ v) (hS : StdAt dV
       simp only [HypDec.extX_apply, Matrix.mul_assoc, Matrix.mul_one])
   have e2 : upSum (u.1 ⬝ (Matrix.single i j s : Mx D ρ ρ)) = s := by
     unfold upSum
-    rw [Finset.sum_eq_single i, Finset.sum_eq_single j, if_pos hij, Matrix.mul_single_apply_same, (hU i i).2, one_mul]
+    rw [Finset.sum_eq_single i, Finset.sum_eq_single j, ite_eq_left hij, Matrix.mul_single_apply_same, (hU i i).2, one_mul]
     · intro l _ hl; rw [Matrix.mul_single_apply_of_ne _ _ _ _ _ hl, ite_self]
     · intro h; exact absurd (Finset.mem_univ _) h
     · intro k _ hk
@@ -1177,16 +1169,7 @@ theorem hatL_mono {n : ℕ} {Λ Λ' : Submodule (𝓞 D.host.E) (Fin n → D.hos
   Submodule.span_mono (Set.image_mono h)
 
 theorem mem_GfC_of_grpAt {S : HSp D} {P : GlobalTheory.FinPl.Pl D → Prop} {κ : GA D S} (h : κ ∈ grpAt S P) : κ ∈ GfC S := by
-  unfold GlobalTheory.FinPl.grpAt at h
-  rw [GlobalTheory.FinPlLoc.mem_congGrp] at h
-  show infHom S κ = 1
-  apply Units.ext
-  ext i j
-  have h1 := GlobalTheory.FinPlLoc.infPart_of_idAt (h i j)
-  rw [map_sub, sub_eq_zero] at h1
-  change infPart D (mt S κ i j) = (1 : Matrix (Fin S.rank) (Fin S.rank) (Ainf D.host.F ⊗[D.host.F] D.host.E)) i j
-  rw [h1, Matrix.one_apply, Matrix.one_apply]
-  split_ifs <;> simp
+  exact GlobalTheory.DStepSuppSecond.grpAt_fin h
 
 theorem finE_coe {S : HSp D} (κ : GA D S) :
     ((Lev.finE S κ : GL (Fin S.rank) (Lev.EAf D)) : Matrix (Fin S.rank) (Fin S.rank) (Lev.EAf D)) =
@@ -1247,7 +1230,7 @@ theorem exists_unit_mem_modul {T : Type} {L : LevCh D T} {sc : Consts} (G : Grid
   have hex : ∀ u ∈ G.pl.S0, ∃ c ∈ u.asIdeal, c ∉ v.asIdeal := by
     intro u hu
     by_contra h
-    push_neg at h
+    push Not at h
     have huv : u = v := HeightOneSpectrum.ext (u.isMaximal.eq_of_le v.isPrime.ne_top h)
     exact hv (huv ▸ hu)
   choose! f hf hfv using hex
@@ -1395,7 +1378,7 @@ theorem exists_mixS_ne {V V₀ W W₀ : HSp D} {ρ σ : ℕ} (dV : HypDec V V₀
     (x : Mx D W.rank ρ) (y : Mx D V₀.rank σ) (F : WO V W → ℂ) (hF : flatS dV dW s x y F ≠ 0) :
     ∃ u : UX D ρ, ∃ w₀, (_root_.I195MixedCoordinates.source dV) W ψ s.vS.μ s.vS.𝓕 F (x ⬝ u.1.1) w₀ ≠ 0 := by
   by_contra hne
-  push_neg at hne
+  push Not at hne
   apply hF
   funext w
   have h0 : ∀ u : UX D ρ, GlobalTheory.MixPer.flatFun ψ dV dW s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 x y F w u = 0 := by

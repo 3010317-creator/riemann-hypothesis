@@ -108,8 +108,7 @@ theorem finite_quot (h : IsFinCover k K x) : Module.Finite k (rB k K x {0} ⧸ c
     have hq : Polynomial.eval₂ (incl k K x).toRingHom b p = 0 := by
       apply Subtype.ext
       change (rB k K x {0}).val.toRingHom (Polynomial.eval₂ (incl k K x).toRingHom b p) = (0 : K)
-      rw [Polynomial.hom_eval₂, hcomp]
-      exact hp
+      rwa [Polynomial.hom_eval₂, hcomp]
     refine ⟨p.map ε.toRingHom, hpm.map _, ?_⟩
     rw [Polynomial.eval₂_map, hε', ← Polynomial.hom_eval₂, hq, map_zero]⟩
   exact Algebra.IsIntegral.finite
@@ -146,13 +145,11 @@ theorem fib_finite_and_sep [IsAlgClosed k] (h : IsFinCover k K x)
           (Ideal.subset_span (Set.mem_range_self (f := fun j : Fin d => (⟨_, tco_mem k K x j⟩ : rB k K x {0})) j))
       simp only [χ, AlgHom.comp_apply, hz, map_zero]
     have h0 : ψ (Ideal.Quotient.mk m (Ideal.Quotient.mk (coordIdeal k K x) f)) = 0 := hf ⟨χ, hχ⟩
-    rw [map_eq_zero_iff _ ψ.injective, Ideal.Quotient.eq_zero_iff_mem] at h0
-    exact h0
+    rwa [map_eq_zero_iff _ ψ.injective, Ideal.Quotient.eq_zero_iff_mem] at h0
   obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := rB k K x {0} ⧸ coordIdeal k K x)
   have hpow : (Ideal.Quotient.mk (coordIdeal k K x) f) ^ n = 0 := by
     have := Ideal.pow_mem_pow hmem n
-    rw [hn, Ideal.zero_eq_bot, Ideal.mem_bot] at this
-    exact this
+    rwa [hn, Ideal.zero_eq_bot, Ideal.mem_bot] at this
   exact IsNilpotent.eq_zero ⟨n, hpow⟩
 
 end GlobalTheory.PD.FibFin

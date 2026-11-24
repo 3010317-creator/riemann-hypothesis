@@ -64,8 +64,7 @@ theorem star_eq_hostConj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
 theorem isConjPl_iff (D : D7) (P Q : PlE D.host) :
     IsConjPl D.host P Q ↔ ∀ x : 𝓞 D.host.E, x ∈ P.asIdeal ↔ conjO D.host.E x ∈ Q.asIdeal := by
   constructor
-  · intro h x
-    exact h x (conjO D.host.E x) (by rw [conjO_coe, star_eq_hostConj])
+  · exact fun h x => h x (conjO D.host.E x) (by rw [conjO_coe, star_eq_hostConj])
   · intro h x y hy
     have : y = conjO D.host.E x := RingOfIntegers.ext (by rw [hy, conjO_coe, star_eq_hostConj])
     subst this
@@ -120,8 +119,7 @@ theorem conjPl_ne_of_split (D : D7) {P : PlE D.host} (h : IsSplitPl D.host P) :
   obtain ⟨x, hx, hcx⟩ := (isSplitPl_iff D P).1 h
   intro he
   apply hcx
-  rw [← mem_conjPl, he]
-  exact hx
+  rwa [← mem_conjPl, he]
 
 theorem isSplitPl_conjPl (D : D7) {P : PlE D.host} (h : IsSplitPl D.host P) :
     IsSplitPl D.host (conjPl D P) := by

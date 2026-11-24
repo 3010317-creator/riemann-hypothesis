@@ -76,7 +76,7 @@ theorem weyl_word_row_weight_sum (hn : n ≤ r) (ν : Fin n → ℕ) (hν : Anti
     obtain ⟨μ, hμ, hs⟩ := ih
     refine ⟨_, bwA_G_of_homog x.1 x.2.1 _ μ hμ x.2.2, ?_⟩
     simp only [Pi.add_apply, Pi.smul_apply, bwA_del, Pi.sub_apply, Finset.sum_add_distrib, smul_eq_mul,
-      ← Finset.mul_sum, Finset.sum_sub_distrib, Finset.sum_pi_single', Finset.mem_univ, if_true, sub_self, mul_zero,
+      ← Finset.mul_sum, Finset.sum_sub_distrib, Finset.sum_pi_single', Finset.mem_univ, ite_true, sub_self, mul_zero,
       add_zero, hs]
 
 end Grade
@@ -262,7 +262,7 @@ theorem weyl_lattice_internal_sum (hν : Antitone ν) :
         | mem hj y hy =>
           have hy' : (y : MvPolynomial (Fin r × Fin n) ℤ) ∈
               weightedHomogeneousSubmodule ℤ (Formalism.GradedWeylDivisibility.rowW r n) (j : Fin r → ℕ) := hy
-          rw [weightedHomogeneousComponent_of_mem hy', if_neg]
+          rw [weightedHomogeneousComponent_of_mem hy', ite_eq_right]
           intro h; exact hj (Subtype.ext h.symm)
         | zero => simp
         | add y z _ _ hy hz => rw [Submodule.coe_add, map_add (f := _), hy, hz, add_zero]
@@ -271,7 +271,7 @@ theorem weyl_lattice_internal_sum (hν : Antitone ν) :
     have h1 := key x hx'
     have hx2 : (x : MvPolynomial (Fin r × Fin n) ℤ) ∈
         weightedHomogeneousSubmodule ℤ (Formalism.GradedWeylDivisibility.rowW r n) (i : Fin r → ℕ) := hx
-    rw [weightedHomogeneousComponent_of_mem hx2, if_pos rfl] at h1
+    rw [weightedHomogeneousComponent_of_mem hx2, ite_eq_left rfl] at h1
     exact Subtype.ext h1
   · rw [eq_top_iff]
     rintro ⟨x, hx⟩ -
@@ -285,8 +285,7 @@ theorem weyl_lattice_internal_sum (hν : Antitone ν) :
       · by_contra hne
         apply h
         simp only [t2wW, Fintype.mem_piFinset, Finset.mem_range]
-        intro a
-        exact Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν x hx d hne a)
+        exact fun a => Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν x hx d hne a)
     have hmem : ∀ m : t2wW r K, weightedHomogeneousComponent (Formalism.GradedWeylDivisibility.rowW r n) (m : Fin r → ℕ) x ∈
         Formalism.GradedWeylDivisibility.weyl ℤ r n hn ν := fun m => weyl_homogeneous_component_mem ℤ hn ν hν _ x hx
     have : (⟨x, hx⟩ : Formalism.GradedWeylDivisibility.weyl ℤ r n hn ν) = ∑ m : t2wW r K, ⟨_, hmem m⟩ := by
@@ -297,7 +296,6 @@ theorem weyl_lattice_internal_sum (hν : Antitone ν) :
       exact hsum
     rw [this]
     refine Submodule.sum_mem _ fun m _ => Submodule.mem_iSup_of_mem m ?_
-    show weightedHomogeneousComponent (Formalism.GradedWeylDivisibility.rowW r n) (m : Fin r → ℕ) x ∈ weightedHomogeneousSubmodule ℤ _ _
     exact weightedHomogeneousComponent_mem _ _ _
 
 end Pieces
@@ -384,7 +382,7 @@ theorem weighted_homogeneous_rename_perm (σ : Equiv.Perm (Fin r)) (f : MvPolyno
   intro d hd
   have : ∃ u, Finsupp.mapDomain (t2wE σ) u = d ∧ AddMonoidAlgebra.coeff f u ≠ 0 := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     apply hd
     apply MvPolynomial.coeff_rename_eq_zero
     exact hcon
@@ -454,8 +452,7 @@ theorem weyl_piece_eq_bot_of_large (hν : Antitone ν) (m : Fin r → ℕ) (hm :
   apply hm
   rw [← hxm hd]
   simp only [t2wW, Fintype.mem_piFinset, Finset.mem_range]
-  intro a
-  exact Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν _ x.2 d hd a)
+  exact fun a => Nat.lt_succ_of_le (weyl_support_row_weight_le ℤ hn ν hν _ x.2 d hd a)
 
 theorem weyl_homogeneous_basis (hν : Antitone ν) :
     ∃ (ι : Type) (_ : Fintype ι) (b : Module.Basis ι ℤ (Formalism.GradedWeylDivisibility.weyl ℤ r n hn ν)) (μ : ι → Fin r → ℕ),
@@ -497,11 +494,11 @@ theorem weyl_homogeneous_basis (hν : Antitone ν) :
     · rw [Finset.sum_eq_single ⟨m, hm⟩]
       · simp [Module.finrank_eq_card_chooseBasisIndex] <;> convert rfl
       · intro b _ hb
-        refine Finset.sum_eq_zero fun j _ => if_neg ?_
+        refine Finset.sum_eq_zero fun j _ => ite_eq_right ?_
         intro h; exact hb (Subtype.ext h)
       · simp
     · rw [weyl_piece_eq_bot_of_large hn ν hν m hm, finrank_bot]
-      refine Finset.sum_eq_zero fun b _ => Finset.sum_eq_zero fun j _ => if_neg ?_
+      refine Finset.sum_eq_zero fun b _ => Finset.sum_eq_zero fun j _ => ite_eq_right ?_
       intro h; exact hm (h ▸ b.2)
 
 theorem weyl_weight_average (hν : Antitone ν) {ι : Type} [Fintype ι] (μ : ι → Fin r → ℕ)
@@ -637,7 +634,7 @@ theorem length_quotient_dvr_basis (R : Type) [CommRing R] [IsDomain R] [IsDiscre
       have : x = ∑ i, c i • b.equivFun (ϖ ^ a i • b i) := by
         funext j
         simp only [map_smul, Module.Basis.equivFun_self, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
-          mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, hc j]
+          mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, hc j]
       rw [this]
       exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨_, ⟨i, rfl⟩, rfl⟩)
   have e := Submodule.Quotient.equiv _ P b.equivFun hmap
@@ -703,8 +700,7 @@ theorem prod_update_pow_alt {R : Type} [CommRing R] (j : Fin r) (p : R) (μ : Fi
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 theorem weyl_length_diagonal_unit_uniformiser (hν : Antitone ν) (K : Type) [Field K] [CharZero K] (O : Subring K)
     [IsDiscreteValuationRing O] (ϖ : O) (hϖ : Irreducible ϖ) (u : Oˣ) (j : Fin r) (a : ℕ) :
@@ -752,8 +748,7 @@ theorem weyl_length_diagonal_unit_uniformiser (hν : Antitone ν) (K : Type) [Fi
     intro i
     have hom := weighted_homogeneous_map (Int.castRingHom K) _ (μ i) (hh i)
     show Formalism.GradedWeylDivisibility.rowAct K _ (e i) = _
-    rw [row_action_diagonal_homogeneous K _ (e i) (μ i) hom, prod_update_pow_alt]
-    rw [Subring.smul_def]
+    rw [row_action_diagonal_homogeneous K _ (e i) (μ i) hom, prod_update_pow_alt, Subring.smul_def]
     simp
   set W : Submodule O Λ := Submodule.span O (Set.range fun i => ((u : O) * ϖ ^ a) ^ μ i j • bΛ i) with hW
   have hWeq : W = Submodule.span O (Set.range fun i => ϖ ^ (a * μ i j) • bΛ i) := by

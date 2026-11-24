@@ -153,8 +153,7 @@ theorem eventually_mul_hom (N : ℕ) (hN : N ≠ 0)
   refine sum_mem fun i _ => ?_
   have := hb i
   rw [mul_assoc, Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul] at this
-  rw [hB, Algebra.TensorProduct.basis_apply, TensorProduct.smul_tmul', smul_eq_mul, mul_one, hφ]
-  exact this
+  rwa [hB, Algebra.TensorProduct.basis_apply, TensorProduct.smul_tmul', smul_eq_mul, mul_one, hφ]
 
 end General
 
@@ -179,8 +178,7 @@ theorem eventually_conj {A B : Type} [CommRing A] [TopologicalSpace A] [IsTopolo
   rw [Matrix.mul_apply, Finset.sum_mul]
   refine sum_mem fun k _ => ?_
   have := hg i j k l
-  rw [Matrix.map_apply, mul_right_comm]
-  exact this
+  rwa [Matrix.map_apply, mul_right_comm]
 
 section Group
 
@@ -216,8 +214,7 @@ theorem finE_mem_UA (g : GA D V) : finE V g ∈ UA D.sp.cm V.gram := by
   have e2 : (finRing D).mapMatrix (Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AF D.host.F) D.sp.cm.sig) (matHom V g).val) =
       Formalism.UG.cT (Formalism.UG.sigR D.sp.cm.sig (Formalism.L2.Herm.Af D.host.F)) (finE V g).val := by
     ext i j; exact finRing_sig _
-  rw [e1, e2] at h2
-  exact h2
+  rwa [e1, e2] at h2
 
 theorem isModTop : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
 
@@ -495,11 +492,7 @@ theorem fixed_of_killed (hs : L.s = 0) (hQ : L.Q = ∅) {x : X} (hx : x ∈ kill
   simpa [h2, sub_eq_zero] using this
 
 theorem isTopologicalGroup_GA (V : HSp D) : IsTopologicalGroup (GA D V) := by
-  have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
-    IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  exact inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  exact GlobalTheory.AutFunCounterexample.topGroup_GA D V
 
 alias isOpen_stab := _root_.GlobalTheory.FiniteRingMultiplication.isOpen_stabiliser
 

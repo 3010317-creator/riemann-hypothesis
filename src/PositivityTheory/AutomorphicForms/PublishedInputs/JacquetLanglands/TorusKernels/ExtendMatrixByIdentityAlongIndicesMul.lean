@@ -88,8 +88,7 @@ theorem hol_comp (g : GL (Fin 2) ℝ) (k : ℕ) {f : P → ℂ} (hf : Hol1 f) :
   have hmob : DifferentiableOn ℂ (fun t => num g t / den g t) {t : ℂ | t.im ≠ 0} :=
     fun t ht => ((hnum t).div (hden t) (den_ne g ht)).differentiableWithinAt
   have hmaps : Set.MapsTo (fun t => num g t / den g t) {t : ℂ | t.im ≠ 0} {t | t.im ≠ 0} := by
-    intro t ht
-    exact (g • mkP t ht).2
+    exact fun t ht => (g • mkP t ht).2
   have h1 : DifferentiableOn ℂ (fun t => ext1 f (num g t / den g t) /
       (den g t ^ k * ((|g.val.det| ^ (-(k : ℝ) / 2) : ℝ) : ℂ))) {t | t.im ≠ 0} := by
     refine (hf.comp hmob hmaps).div ?_ ?_
@@ -142,7 +141,7 @@ theorem pt_eq (f : P → ℂ) (m : ℕ) {r θ : ℝ} (hr0 : 0 < r) (hr1 : r < 1)
   have hqi : q1 (m + 2) iP (mkP w hwim.ne') =
       (((m + 2 : ℕ) : ℂ) - 1) / (4 * π) * ((w - conj w) / (Complex.I - conj w)) ^ (m + 2) := by
     unfold q1
-    rw [if_pos (by show 0 < Complex.I.im * w.im; rw [Complex.I_im, one_mul]; exact hwim)]
+    rw [ite_eq_left (by show 0 < Complex.I.im * w.im; rw [Complex.I_im, one_mul]; exact hwim)]
     rfl
   have hcs : s * conj s = (r : ℂ) ^ 2 := by rw [Complex.mul_conj, hsq]; push_cast; ring
   have h1c : (1 - conj s) ≠ 0 := by
@@ -218,7 +217,7 @@ theorem at_i (B1b' : B1b) (B1c' : B1c) (B2' : B2) (B6' : B6) {k : ℕ} (hk : 4 �
       show ¬ (0 < Complex.I.im * w.1.im)
       rw [Complex.I_im, one_mul, not_lt]; exact hw.le
     unfold q1
-    rw [if_neg this, zero_mul]
+    rw [ite_eq_right this, zero_mul]
   obtain ⟨hIO, heq⟩ := B2' (fun w => q1 (m + 2) iP w * f w) hvan hint
   rw [heq]
   have hS : MeasurableSet (Set.Ioo (0 : ℝ) 1 ×ˢ Set.Ioo (-π) π) :=
@@ -230,8 +229,7 @@ theorem at_i (B1b' : B1b) (B1c' : B1c) (B2' : B2) (B6' : B6) {k : ℕ} (hk : 4 �
         (ext1 f (Complex.I * (1 + circleMap 0 p.1 p.2) / (1 - circleMap 0 p.1 p.2)) /
           (1 - circleMap 0 p.1 p.2) ^ (m + 2)))
       (Set.Ioo 0 1 ×ˢ Set.Ioo (-π) π) := by
-    intro p hp
-    exact pt_eq f m hp.1.1 hp.1.2
+    exact fun p hp => pt_eq f m hp.1.1 hp.1.2
   rw [setIntegral_congr_fun hS hpt]
   have hI2 := hIO.congr_fun hpt hS
   rw [Measure.volume_eq_prod] at hI2 ⊢

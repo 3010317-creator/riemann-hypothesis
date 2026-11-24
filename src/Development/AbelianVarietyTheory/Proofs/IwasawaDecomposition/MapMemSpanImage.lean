@@ -81,8 +81,7 @@ theorem _root_.GlobalTheory.exists_oLat_of_fg_ringOfIntegers : ∀ (O K : Type) 
     refine Finset.sum_induction _ (fun y => y ∈ j '' (N : Set V)) ?_ ⟨0, N.zero_mem, map_zero j⟩ ?_
     · rintro _ _ ⟨n₁, hn₁, rfl⟩ ⟨n₂, hn₂, rfl⟩
       exact ⟨n₁ + n₂, N.add_mem hn₁ hn₂, map_add j n₁ n₂⟩
-    · intro v hv
-      exact hsmul (c v) v ((hmem v).1 (Submodule.subset_span hv))
+    · exact fun v hv => hsmul (c v) v ((hmem v).1 (Submodule.subset_span hv))
   have hint : ∀ y ∈ j '' (N : Set V), ∃ f : W → ℤ, y = ∑ v ∈ S, (f v : ℂ) • v := by
     intro y hy
     obtain ⟨f, -, hf⟩ := Submodule.mem_span_finset.1 ((hmem y).2 hy)
@@ -323,16 +322,14 @@ theorem GlobalTheory.Mem.Df.rowsDef_nonempty : ∀ {B : Base} {X : PreX B.toPre}
     have h' : (W.eMt0 u).symm (g (I.cols l).mu0 (gA I.mu0 F)) = mq u I.mu0 F := by
       rw [← h]; exact (W.eMt0 u).symm_apply_apply _
     have hs := hmq u I.mu0 F
-    rw [← h'] at hs
-    exact hs
+    rwa [← h'] at hs
   · intro u a F
     have h : W.eMtTw u a (mq u a F) = g a (gA a F) :=
       (heT u a _).trans (congrArg (g a) (congrArg (gA a) ((mq u a).symm_apply_apply F)))
     have h' : (W.eMtTw u a).symm (g a (gA a F)) = mq u a F := by
       rw [← h]; exact (W.eMtTw u a).symm_apply_apply _
     have hs := hmq u a F
-    rw [← h'] at hs
-    exact hs
+    rwa [← h'] at hs
   · intro a x
     have h := (g a).norm_map (gA a (toCx I hX a x))
     exact (hgA a x).trans ((congrArg (fun z => ‖gA a z‖) (hj a x)).trans h.symm)
@@ -348,8 +345,7 @@ theorem GlobalTheory.Mem.Df.rowsDef_nonempty : ∀ {B : Base} {X : PreX B.toPre}
     · rintro ⟨x, hx, rfl⟩
       have h1 : jj a x = gA a (toCx I hX a x) := congrArg (gA a) (hj a x)
       have h2 : g a (jj a x) ∈ (W.Mtilde a).carrier := (hcar a _).2 ((Set.ext_iff.1 (hLc a) _).2 ⟨x, hx, rfl⟩)
-      rw [h1] at h2
-      exact h2
+      rwa [h1] at h2
   · intro a y hy
     have hy' : g a ((g a).symm y) ∈ (W.Mtilde a).gen := by simpa using hy
     have h1 := hLg a _ ((hgen a _).1 hy')

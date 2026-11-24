@@ -130,10 +130,10 @@ theorem zzrel_G (hs : M.split = some g) {X X' L P : Matrix (Fin (r + 1)) (Fin (r
     intro Y
     ext a b
     by_cases hab : a = Fin.last r ∧ b = Fin.last r
-    · simp only [Matrix.map_apply, hZ, hπ1, map_sub, Prod.fst_sub, AlgEquiv.apply_symm_apply, if_pos hab,
+    · simp only [Matrix.map_apply, hZ, hπ1, map_sub, Prod.fst_sub, AlgEquiv.apply_symm_apply, ite_eq_left hab,
         Matrix.add_apply, Matrix.smul_apply, Ec, Matrix.of_apply, smul_eq_mul, mul_one]
       ring
-    · simp only [Matrix.map_apply, hZ, hπ1, AlgEquiv.apply_symm_apply, if_neg hab,
+    · simp only [Matrix.map_apply, hZ, hπ1, AlgEquiv.apply_symm_apply, ite_eq_right hab,
         sub_zero, Matrix.add_apply, Matrix.smul_apply, Ec, Matrix.of_apply, smul_eq_mul,
         mul_zero, add_zero]
       ring
@@ -142,11 +142,11 @@ theorem zzrel_G (hs : M.split = some g) {X X' L P : Matrix (Fin (r + 1)) (Fin (r
     intro Y
     ext a b
     by_cases hab : a = Fin.last r ∧ b = Fin.last r
-    · simp only [Matrix.map_apply, hZ, hπ2, map_sub, Prod.snd_sub, AlgEquiv.apply_symm_apply, if_pos hab,
+    · simp only [Matrix.map_apply, hZ, hπ2, map_sub, Prod.snd_sub, AlgEquiv.apply_symm_apply, ite_eq_left hab,
         Matrix.sub_apply, Matrix.neg_apply, Matrix.smul_apply, Matrix.transpose_apply, Ec, Matrix.of_apply,
         smul_eq_mul, mul_one]
       ring
-    · simp only [Matrix.map_apply, hZ, hπ2, AlgEquiv.apply_symm_apply, if_neg hab,
+    · simp only [Matrix.map_apply, hZ, hπ2, AlgEquiv.apply_symm_apply, ite_eq_right hab,
         sub_zero, Matrix.sub_apply, Matrix.neg_apply, Matrix.smul_apply,
         Matrix.transpose_apply, Ec, Matrix.of_apply, smul_eq_mul, mul_zero]
       ring
@@ -156,7 +156,7 @@ theorem zzrel_G (hs : M.split = some g) {X X' L P : Matrix (Fin (r + 1)) (Fin (r
     simp only [Matrix.mul_apply, Matrix.map_apply, Ec, Matrix.of_apply]
     rw [Finset.sum_eq_single (Fin.last r)]
     · rw [Finset.sum_eq_single (Fin.last r)]
-      · simp only [and_self, if_true, mul_one, hL, hP]
+      · simp only [and_self, ite_true, mul_one, hL, hP]
         split_ifs <;> simp_all
       · intro k _ hk
         simp [hk]
@@ -217,7 +217,7 @@ theorem condM_G {L P : Matrix (Fin (r + 1)) (Fin (r + 1)) E}
   simp only [cjT, cornerM, Matrix.mul_apply, Matrix.of_apply, Matrix.transpose_apply, Matrix.map_apply]
   rw [Finset.sum_eq_single (Fin.last r)]
   · rw [Finset.sum_eq_single (Fin.last r)]
-    · simp only [and_self, if_true, hm]
+    · simp only [and_self, ite_true, hm]
       split_ifs <;> simp_all
     · intro k _ hk
       simp [hk]
@@ -238,7 +238,7 @@ theorem condU_G {L P : Matrix (Fin (r + 1)) (Fin (r + 1)) E}
   simp only [cjT, cornerM, Matrix.mul_apply, Matrix.of_apply, Matrix.transpose_apply, Matrix.map_apply]
   rw [Finset.sum_eq_single (Fin.last r)]
   · rw [Finset.sum_eq_single (Fin.last r)]
-    · simp only [and_self, if_true, hm]
+    · simp only [and_self, ite_true, hm]
       split_ifs <;> simp_all
     · intro k _ hk
       simp [hk]
@@ -425,8 +425,7 @@ theorem cross_of_comp {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   have d : ∀ (f : E →+* F) (B : Matrix (Fin (r + 1)) (Fin (r + 1)) E), (B.map f).det = f B.det :=
     fun f B => (RingHom.map_det f B).symm
   rw [ld_map, ld_map, d, d, ← map_mul, ← map_mul] at h1 h2
-  apply g.e.injective
-  exact Prod.ext h1 h2
+  exact g.e.injective (Prod.ext h1 h2)
 
 theorem gaPlusTh_of (hLO : LiftOrb) (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep)
     (δ : ∀ p : PlF D, (D.s.atP p).Fp) (u u' : D.what₂.Word) : GaPlusTh M δ u u' := by
@@ -458,11 +457,11 @@ theorem gaPlusTh_of (hLO : LiftOrb) (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp
   unfold clsOf at hne heq
   by_cases h1 : (∀ a b, Y a b ∈ (M p).R) ∧ IsUnit Y.det
   swap
-  · exact absurd (dif_neg h1) hne
+  · exact absurd (dite_eq_right h1) hne
   rw [dite_eq_left h1] at heq
   by_cases h2 : (∀ a b, Y' a b ∈ (M p).R) ∧ IsUnit Y'.det
   swap
-  · rw [dif_neg h2] at heq; exact absurd heq (by simp)
+  · rw [dite_eq_right h2] at heq; exact absurd heq (by simp)
   rw [dite_eq_left h2] at heq
   set ZZ : (M p).Mat (D.R.rS + 1) := ⟨Matrix.of fun a b => ⟨Y a b, h1.1 a b⟩, h1.2⟩ with hZZ
   set ZZ' : (M p).Mat (D.R.rS + 1) := ⟨Matrix.of fun a b => ⟨Y' a b, h2.1 a b⟩, h2.2⟩ with hZZ'
@@ -504,8 +503,7 @@ theorem gaPlusTh_of (hLO : LiftOrb) (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp
     have hX : ZhatLoc M δ p Z' = L * ZhatLoc M δ p Z * P := by
       have e := hZrel
       unfold CntLocal.ZZP Loc.HermSp.ZZplusOf at e
-      rw [hs] at e
-      exact e
+      rwa [hs] at e
     obtain ⟨yL, hyL, hLy⟩ := hLu
     obtain ⟨yP, hyP, hPy⟩ := hPu
     exact gaCong_L δ M hA p hs _ _ Z Z' L P hL hP (fun i j => hRO ▸ hLR i j) (fun i j => hRO ▸ hPR i j)
@@ -694,14 +692,14 @@ theorem liftOrb_of (hSR : SRLift) : LiftOrb := by
   · have h1 : Matrix.vecMul e ρ₀ = e := by
       funext j
       simp only [Matrix.vecMul, dotProduct, he, Pi.single_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       rw [hρl]
     have h2 : Matrix.vecMul e ρ₀⁻¹ = e := by
       conv_lhs => rw [← h1]
       rw [Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv _ hρu, Matrix.vecMul_one]
     have := congrFun h2 j
     simp only [Matrix.vecMul, dotProduct, he, Pi.single_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true] at this
+      Finset.mem_univ, ite_true] at this
     rw [this]
   · calc Z'.Z = Z'.Z * ρ₀ * ρ₀⁻¹ := by rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hρu, Matrix.mul_one]
       _ = l * Z.Z * ρ₀⁻¹ := by rw [hZρ]
@@ -773,8 +771,7 @@ theorem srLift_field (A : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (K : Submodule k
     rw [Submodule.disjoint_def]
     intro x hx1 hx2
     obtain ⟨t, rfl⟩ := Submodule.mem_span_singleton.1 hx2
-    rw [LinearMap.mem_ker, map_smul, Matrix.mulVecLin_apply, he] at hx1
-    exact hx1
+    rwa [LinearMap.mem_ker, map_smul, Matrix.mulVecLin_apply, he] at hx1
   obtain ⟨C, hC, heC⟩ := exists_isCompl_mem hdisj
   have hdim : finrank k (LinearMap.ker A.mulVecLin) = finrank k W := by
     have h1 := LinearMap.finrank_range_add_finrank_ker A.mulVecLin
@@ -811,8 +808,7 @@ theorem srLift_field (A : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (K : Submodule k
       have e : h (x + c) = (φ ⟨x, hx⟩ : Fin (n + 1) → k) := by
         simp only [h, LinearMap.comp_apply, hproj]
         rfl
-      rw [Matrix.mulVec_add, hfx, zero_add, e] at hv
-      exact hv
+      rwa [Matrix.mulVec_add, hfx, zero_add, e] at hv
     have hz : A *ᵥ c = 0 := by
       refine Submodule.disjoint_def.1 hW.disjoint _
         (LinearMap.mem_range.2 ⟨c, Matrix.mulVecLin_apply A c⟩) ?_
@@ -882,9 +878,9 @@ theorem exists_local (m : Ideal R) [hm : m.IsMaximal] (A : Matrix (Fin (n + 1)) 
   let G : Matrix (Fin (n + 1)) (Fin (n + 1)) R := fun i j => if j = Fin.last n then 0 else g j i
   refine ⟨G, fun j => ?_, fun i => by simp [G], ?_⟩
   · by_cases hj : j = Fin.last n
-    · simp only [G, hj, if_true]
+    · simp only [G, hj, ite_true]
       exact K.zero_mem
-    · simp only [G, hj, if_false]
+    · simp only [G, hj, ite_false]
       exact hgK j
   · intro hmem
     apply hdet
@@ -896,8 +892,8 @@ theorem exists_local (m : Ideal R) [hm : m.IsMaximal] (A : Matrix (Fin (n + 1)) 
       congr 1
       by_cases hj : j = Fin.last n
       · subst hj
-        rw [hHlast i, show G i (Fin.last n) = 0 from if_pos rfl, map_zero]
-      · rw [show G i j = g j i from if_neg hj]
+        rw [hHlast i, show G i (Fin.last n) = 0 from ite_eq_left rfl, map_zero]
+      · rw [show G i j = g j i from ite_eq_right hj]
         exact congrFun (hgr j) i
     calc (Ab + Hb).det = Ideal.Quotient.mk m (A + G).det := e.symm
       _ = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hmem
@@ -968,8 +964,7 @@ theorem srLift_of_finite (hfin : {m : Ideal R | m.IsMaximal}.Finite) (A : Matrix
     · intro b hb hbM
       rw [Matrix.smul_apply, smul_eq_mul, map_mul,
         Ideal.Quotient.eq_zero_iff_mem.2 (he0 b hb M hMS (Ne.symm hbM)), zero_mul]
-    · intro h
-      exact absurd hMS h
+    · exact fun h => absurd hMS h
 
 end Semilocal
 
@@ -1207,8 +1202,7 @@ theorem rFinMax_holds : RFinMax := by
   | some g =>
     haveI := isLocal_R M hOK hs
     refine (Set.finite_singleton (IsLocalRing.maximalIdeal M.R)).subset ?_
-    intro m hm
-    exact IsLocalRing.eq_maximalIdeal hm
+    exact fun m hm => IsLocalRing.eq_maximalIdeal hm
 
 theorem srLift_holds : SRLift := srLift_of_finMax rFinMax_holds
 

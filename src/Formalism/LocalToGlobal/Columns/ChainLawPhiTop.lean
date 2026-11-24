@@ -184,8 +184,8 @@ variable {E K : Type} [Field E] [NumberField E] [StarRing E] [Field K] {P : Heig
 theorem clPf_unitV (χ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) (a : E) : LocE.unitV χ a = clPfUV χ (redP P a) := by
   unfold LocE.unitV clPfUV
   by_cases h : IsUnit (redP P a)
-  · simp only [dif_pos h]
-  · simp only [dif_neg h]
+  · simp only [dite_eq_left h]
+  · simp only [dite_eq_right h]
 
 theorem clPf_cond_iff (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) {k₀ rS r t j c n : ℕ}
     (hr : k₀ + rS < r) (han : r + (j - 1) * t ≤ n + c) (M : ℕ → ℕ → E) :
@@ -208,7 +208,7 @@ theorem clPf_cond_iff (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ)
         by_cases hpr : p < r
         · right; left
           unfold betaExponentOfRanks at hlt
-          rwa [if_pos hp'r, if_pos hpr] at hlt
+          rwa [ite_eq_left hp'r, ite_eq_left hpr] at hlt
         · left; omega
       · by_cases hpr : p < r
         · have h5 := (clPf_beta_lt_iff (t := t) hr p).2 hpr
@@ -232,7 +232,7 @@ theorem clPf_cond_iff (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ)
         omega
       · by_cases hpr : p < r
         · unfold betaExponentOfRanks at hb
-          rw [if_pos hpr, if_pos hp'] at hb
+          rw [ite_eq_left hpr, ite_eq_left hp'] at hb
           omega
         · have h5 := (clPf_beta_lt_iff (t := t) hr p).not.2 hpr
           have h6 := (clPf_beta_lt_iff (t := t) hr p').2 hp'
@@ -272,7 +272,7 @@ theorem clPf_phiGS_val (ψ₀ : AddChar (𝓞 E ⧸ P.asIdeal) K) (χ : ℕ → 
     LocE.PhiGS q ψ₀ χ k₀ rS r t j c' n' c n x =
       clPfLam ψ₀ χ k₀ r t (j - 1) (clPfRed P q k₀ c' n' c n x) *
         (clPfUV (χ (j - 1)) (clPfTop (r + (j - 1) * t) (clPfRed P q k₀ c' n' c n x)).det)⁻¹ := by
-  rw [phiGS_eq, if_pos hC, clPf_lamGvS ψ₀ χ hkr _ (fun p p' hp hp' => hC.1 p p' (by omega) hp'), clPf_unitV,
+  rw [phiGS_eq, ite_eq_left hC, clPf_lamGvS ψ₀ χ hkr _ (fun p p' hp hp' => hC.1 p p' (by omega) hp'), clPf_unitV,
     redP_det (Matrix.of fun s s' : Fin (r + (j - 1) * t) => LocE.entB q k₀ c' n' c n (fun i => i + 1) (fun i => i + 1) x s.1 s'.1)
       fun s s' => hC.1 _ _ (by have := s.2; omega) s'.2]
   rfl
@@ -371,35 +371,30 @@ theorem clPf_main {P : HeightOneSpectrum (𝓞 E)} {q k₀ rS r t j c' n' c n : 
     obtain ⟨j', rfl⟩ : ∃ j', j = j' + 1 := ⟨j - 1, by omega⟩
     rw [Nat.add_sub_cancel]
     ring
-  have hra : r ≤ r + (j - 1) * t := Nat.le_add_right _ _
   have hkr : k₀ < r := by omega
-  have hrN : r ≤ n + c := by omega
-  have hrN' : r ≤ n' + c' := by omega
   obtain ⟨hXI, hXP⟩ := (clPf_cond_iff hq hu hr (by omega) _).1 hC
-  have hGP : clPfPat k₀ rS r t (r + (j - 1) * t + t) (r + (j - 1) * t + t) (clPfRed P q k₀ c n c n γ.toLinearMap) :=
-    clPf_pat_cast hBt hBt (clPf_pat_JGsym hq hu hk hr hrN hγ)
-  have hKP : clPfPat k₀ rS r t (r + (j - 1) * t) (r + (j - 1) * t) (clPfRed P q k₀ c' n' c' n' κ.toLinearMap) :=
-    clPf_pat_cast hsrc hsrc (clPf_pat_JGsym hq hu hk' hr hrN' hκ)
-  have hXP' : clPfPat k₀ rS r t (r + (j - 1) * t + t) (r + (j - 1) * t) (clPfRed P q k₀ c' n' c n x) := clPf_pat_cast hBt rfl hXP
+  have hGP := clPf_pat_cast hBt hBt (clPf_pat_JGsym hq hu hk hr (by omega) hγ)
+  have hKP := clPf_pat_cast hsrc hsrc (clPf_pat_JGsym hq hu hk' hr (by omega) hκ)
+  have hXP' := clPf_pat_cast hBt rfl hXP
   have hGu : IsUnit (clPfTop (r + (j - 1) * t + t) (clPfRed P q k₀ c n c n γ.toLinearMap)).det := by
     rw [← clPf_top_cast _ hBt]
     exact clPf_det_unit hq0 hk hγ.1
   obtain ⟨hpat, hval⟩ := clPf_core (k₀ := k₀) (rS := rS) hr ht (A := r + (j - 1) * t) (J := j - 1) rfl ψ₀ χ hGP hXP' hKP hGu
-  have hx : ∀ p p', p < n + c → p' < n' + c' → IntAt P (LocE.entB q k₀ c' n' c n (fun i => i + 1) (fun i => i + 1) x p p') :=
-    fun p p' hp hp' => hXI p p' hp (by omega)
   have hR : ∀ p p', p < n + c → p' < r + (j - 1) * t →
       IntAt P (LocE.entB q k₀ c' n' c n (fun i => i + 1) (fun i => i + 1) (γ.toLinearMap ∘ₗ x ∘ₗ κ.toLinearMap) p p') ∧
         clPfRed P q k₀ c' n' c n (γ.toLinearMap ∘ₗ x ∘ₗ κ.toLinearMap) p p' =
           clPfMul (r + (j - 1) * t) (clPfMul (r + (j - 1) * t + t) (clPfRed P q k₀ c n c n γ.toLinearMap) (clPfRed P q k₀ c' n' c n x))
             (clPfRed P q k₀ c' n' c' n' κ.toLinearMap) p p' := by
     intro p p' hp hp'
-    obtain ⟨h1, h2⟩ := clPf_red_comp (p := p) (p' := p') hq0 hk hk' hγ.1 hκ.1 hx hp (by omega)
+    obtain ⟨h1, h2⟩ := clPf_red_comp (p := p) (p' := p') hq0 hk hk' hγ.1 hκ.1
+      (fun p p' hp hp' => hXI p p' hp (by omega)) hp (by omega)
     refine ⟨h1, ?_⟩
     rw [h2, clPf_mul_assoc, clPf_mul_cast hBt, clPf_mul_cast hsrc]
   have hC' : symPhiCond P q k₀ rS r t j c n
       (LocE.entB q k₀ c' n' c n (fun i => i + 1) (fun i => i + 1) (γ.toLinearMap ∘ₗ x ∘ₗ κ.toLinearMap)) := by
     refine (clPf_cond_iff hq hu hr (by omega) _).2 ⟨fun p p' hp hp' => (hR p p' hp hp').1, ?_⟩
-    refine clPf_pat_congr hra (by omega) (fun p p' hp hp' => ((hR p p' hp hp').2).symm) ?_
+    refine clPf_pat_congr (Nat.le_add_right _ _) (by omega)
+      (fun p p' hp hp' => ((hR p p' hp hp').2).symm) ?_
     exact clPf_pat_cast hBt.symm rfl hpat
   refine ⟨hC', ?_⟩
   have hanc : r + (j - 1) * t ≤ n + c := by omega
@@ -408,12 +403,10 @@ theorem clPf_main {P : HeightOneSpectrum (𝓞 E)} {q k₀ rS r t j c' n' c n : 
     clPf_unitV, clPf_unitV, clPf_det_red hq0 hk hγ.1, clPf_det_red hq0 hk' hκ.1,
     clPf_top_cast (clPfRed P q k₀ c n c n γ.toLinearMap) hBt, clPf_top_cast (clPfRed P q k₀ c' n' c' n' κ.toLinearMap) hsrc]
   have e1 : clPfLam ψ₀ χ k₀ r t (j - 1) (clPfRed P q k₀ c' n' c n (γ.toLinearMap ∘ₗ x ∘ₗ κ.toLinearMap)) =
-      clPfLam ψ₀ χ k₀ r t (j - 1) (clPfMul (r + (j - 1) * t) (clPfMul (r + (j - 1) * t + t) (clPfRed P q k₀ c n c n γ.toLinearMap)
-        (clPfRed P q k₀ c' n' c n x)) (clPfRed P q k₀ c' n' c' n' κ.toLinearMap)) :=
+      clPfLam ψ₀ χ k₀ r t (j - 1) _ :=
     clPf_lam_congr ψ₀ χ (by omega) (le_refl _) fun p p' hp hp' => (hR p p' (by omega) hp').2
   have e2 : clPfTop (r + (j - 1) * t) (clPfRed P q k₀ c' n' c n (γ.toLinearMap ∘ₗ x ∘ₗ κ.toLinearMap)) =
-      clPfTop (r + (j - 1) * t) (clPfMul (r + (j - 1) * t) (clPfMul (r + (j - 1) * t + t) (clPfRed P q k₀ c n c n γ.toLinearMap)
-        (clPfRed P q k₀ c' n' c n x)) (clPfRed P q k₀ c' n' c' n' κ.toLinearMap)) :=
+      clPfTop (r + (j - 1) * t) _ :=
     clPf_top_congr fun p p' hp hp' => (hR p p' (by omega) hp').2
   rw [Nat.sub_add_cancel hj] at hval
   rw [e1, e2]
@@ -435,7 +428,7 @@ theorem clPf_phiGSLaw {P : HeightOneSpectrum (𝓞 E)} {q k₀ rS r t j c' n' c 
         rw [LinearEquiv.apply_symm_apply, LinearEquiv.symm_apply_apply]
       rw [e] at h2
       exact hC h2
-    rw [phiGS_eq, if_neg hC', phiGS_eq, if_neg hC, mul_zero]
+    rw [phiGS_eq, ite_eq_right hC', phiGS_eq, ite_eq_right hC, mul_zero]
 
 end ClPfLaw
 

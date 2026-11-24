@@ -97,8 +97,7 @@ theorem localDensity : LocalDensity := by
   intro K _ _ _ hK P hP M k hM hk n hn hnP
   have hPbot : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField K)
   have hN0 : Ideal.absNorm P ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff]
-    exact hPbot
+    rwa [Ne, Ideal.absNorm_eq_zero_iff]
   constructor
   · intro hc
     obtain ⟨q, hq⟩ := exists_sq_absNorm_of_inert hK hP hc
@@ -142,7 +141,7 @@ theorem normRepCount_eq_eulerFac_inert (hK : Formalism.HermitianLatticesTheory.I
     (hk : 1 ≤ k) (n : 𝓞 K) (hn : conjO K n = n) (hnP : n ∉ P) :
     (normRepCount K (P ^ k) M n : ℝ) =
       Real.sqrt (Ideal.absNorm P : ℝ) ^ ((2 * M - 1) * k) * (Formalism.HermitianLatticesTheory.eulerFac K M P)⁻¹ := by
-  rw [(localDensity K hK P hP M k hM hk n hn hnP).1 hc, Formalism.HermitianLatticesTheory.eulerFac, if_pos hc, inv_inv]
+  rw [(localDensity K hK P hP M k hM hk n hn hnP).1 hc, Formalism.HermitianLatticesTheory.eulerFac, ite_eq_left hc, inv_inv]
 
 theorem normRepCount_eq_eulerFac_split (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {P : Ideal (𝓞 K)}
     (hP : P.IsMaximal) (hc : Formalism.HermitianLatticesTheory.conjIdeal (K := K) P ≠ P) (M k : ℕ) (hM : 1 ≤ M)
@@ -154,8 +153,7 @@ theorem normRepCount_eq_eulerFac_split (hK : Formalism.HermitianLatticesTheory.I
     fun h => hc ((conjIdeal_conjIdeal hK P).symm.trans h).symm
   have hPbot : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField K)
   have hN0 : Ideal.absNorm P ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff]
-    exact hPbot
+    rwa [Ne, Ideal.absNorm_eq_zero_iff]
   have hN1 : Ideal.absNorm P ≠ 1 := by
     rw [Ne, Ideal.absNorm_eq_one_iff]
     exact hP.ne_top
@@ -165,8 +163,8 @@ theorem normRepCount_eq_eulerFac_split (hK : Formalism.HermitianLatticesTheory.I
   have hx : 0 < 1 - (Ideal.absNorm P : ℝ) ^ (-(M : ℤ)) := by
     rw [zpow_neg, zpow_natCast, sub_pos]
     exact inv_lt_one_of_one_lt₀ (one_lt_pow₀ hN2 (by omega))
-  rw [(localDensity K hK P hP M k hM hk n hn hnP).2 hc, Formalism.HermitianLatticesTheory.eulerFac, Formalism.HermitianLatticesTheory.eulerFac, if_neg hc,
-    if_neg hc', absNorm_conjIdeal hK, ← Real.rpow_add hx,
+  rw [(localDensity K hK P hP M k hM hk n hn hnP).2 hc, Formalism.HermitianLatticesTheory.eulerFac, Formalism.HermitianLatticesTheory.eulerFac, ite_eq_right hc,
+    ite_eq_right hc', absNorm_conjIdeal hK, ← Real.rpow_add hx,
     show (-(1 : ℝ) / 2 + -(1 : ℝ) / 2) = -1 by norm_num, Real.rpow_neg_one, inv_inv]
 
 end Formalism.HermitianLattices.Ext.L3

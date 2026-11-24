@@ -126,14 +126,12 @@ theorem exists_muVal : ∀ (D : D7) (V : HSp D), ∀ χ : (AE D)ˣ →* Circle, 
     obtain ⟨x, hxW, hx⟩ := hNW _ hg (GlobalTheory.Member.finHom_herm_det D V g).2.2
     have : m g = χ x := hval g x hx
     show m g ∈ U
-    rw [this]
-    exact hxW
+    rwa [this]
   refine ⟨fun g => (m g : ℂ), ?_, ?_, ?_, ?_, ?_⟩
   · exact ⟨fun g => ⟨r g, hr g⟩, fun g x hx => congrArg (fun z : Circle => (z : ℂ)) (hval g x hx)⟩
   · intro g g'
     simp only [map_mul, Circle.coe_mul]
-  · intro g
-    exact Circle.norm_coe _
+  · exact fun g => Circle.norm_coe _
   · intro γ hγ
     obtain ⟨x, hx⟩ := hrat γ hγ
     have : m γ = 1 := (hval γ _ hx).trans (hχ.2 x)

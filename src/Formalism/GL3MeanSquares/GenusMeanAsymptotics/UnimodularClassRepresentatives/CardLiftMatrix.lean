@@ -95,7 +95,7 @@ theorem exists_shift (B : AddSubgroup A) (Z' : AddSubgroup Z) (g : A → Z) (p :
     show β' _ = β' _
     rw [hq]
   · have h : good (a : A ⧸ B) := ⟨a, rfl, hpa, hga⟩
-    simp only [β', dif_pos h]
+    simp only [β', dite_eq_left h]
     exact key _ h.choose_spec.2.1 h.choose_spec.2.2 _
       (hφ _ h.choose_spec.2.1 h.choose_spec.2.2).choose_spec.1 _
       ((hφ _ h.choose_spec.2.1 h.choose_spec.2.2).choose_spec.2 z hz).choose_spec a
@@ -152,9 +152,7 @@ theorem card_preimage [Finite A] (f : A →+ Z) (hf : Function.Surjective f) (T 
       rw [map_add (f := _), AddMonoidHom.mem_ker.mp x.1.2, hs, zero_add]
       exact x.2.2⟩
     left_inv := fun a => by
-      apply Subtype.ext
-      show a.1 - s (f a.1) + s (f a.1) = a.1
-      exact sub_add_cancel _ _
+      exact Subtype.ext (sub_add_cancel _ _)
     right_inv := by
       rintro ⟨⟨k, hk⟩, ⟨z, hz⟩⟩
       have hfk : f (k + s z) = z := by rw [map_add (f := _), AddMonoidHom.mem_ker.mp hk, hs, zero_add]
@@ -320,8 +318,7 @@ theorem card_lift_matrix [Finite A] (π : A →+* A') (hπ : Function.Surjective
     constructor
     · intro h i j
       have h' := congrFun (congrFun h i) j
-      rw [RingHom.mem_ker]
-      exact h'
+      rwa [RingHom.mem_ker]
     · intro h
       ext i j
       exact RingHom.mem_ker.mp (h i j)
@@ -344,8 +341,7 @@ theorem card_lift_matrix [Finite A] (π : A →+* A') (hπ : Function.Surjective
       ext i j
       have h' := hk i j
       rw [RingHom.mem_ker, Matrix.sub_apply, map_sub, sub_eq_zero] at h'
-      simp only [Matrix.map_apply]
-      exact h'
+      simpa only [Matrix.map_apply] using h'
     · rintro ⟨hp, he'⟩
       refine ⟨hp, hh, fun i j => ?_⟩
       have h' := congrFun (congrFun he' i) j

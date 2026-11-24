@@ -461,8 +461,7 @@ theorem exists_surj_of_torsion {N : Type} [AddCommGroup N] [Finite N] (l n c : �
       intro x
       obtain ⟨y, hy⟩ := ih x
       have h3 : (QuotientAddGroup.mk (v (e y)) : N ⧸ m.range) = QuotientAddGroup.mk y := by
-        simp only [v, QuotientAddGroup.out_eq']
-        exact Function.leftInverse_invFun e.injective _
+        simpa only [v, QuotientAddGroup.out_eq'] using Function.leftInverse_invFun e.injective _
       obtain ⟨z, hz⟩ := QuotientAddGroup.eq.1 h3
       have hz' : l • z = - v (e y) + y := hz
       refine ⟨z, ?_⟩
@@ -515,8 +514,7 @@ theorem exists_monic_torsion {M : Type} [AddCommGroup M] (l : ℕ) (hf : ∀ n :
   obtain ⟨χ, h1, h2, h3⟩ := exists_monic_of_surj _ π hπ (T.restrict hT)
   refine ⟨χ, h1, h2, fun x hx => ?_⟩
   have h := aeval_intertwine N.subtype (T.restrict hT) T (fun _ => rfl) χ ⟨x, (hN x).2 hx⟩
-  rw [h3] at h
-  exact h
+  rwa [h3] at h
 
 section
 variable {S : Scheme.{0}} {B : Over S} [GrpObj B] [IsCommMonObj B]
@@ -584,8 +582,7 @@ theorem exists_poly_normSq_roots : ∀ (k : Type) [Field k] [IsAlgClosed k] (B :
     have h := aeval_intertwine (evalPt x ∘ₗ (homSub B).subtype) φ (ptEnd F hF _)
       (fun f => congrArg Additive.ofMul (Category.assoc x (Additive.toMul f.1) F.asHom)) p e
     have h' : (evalPt x ∘ₗ (homSub B).subtype) e = Additive.ofMul x := congrArg Additive.ofMul (Category.comp_id x)
-    rw [h'] at h
-    exact h
+    rwa [h'] at h
   obtain ⟨P, hP, h0, hβ⟩ := _root_.GlobalTheory.SimAlg.similitude_algebraic (homSub B) (fun f => Q (Additive.toMul f.1)) φ e q l r hl2
     (fun x y => by
       have := Q1 (Additive.toMul x.1) (Additive.toMul y.1)
@@ -637,8 +634,7 @@ theorem Raises.mul {S : Scheme.{0}} {G : Over S} (F : End G) (q m : ℕ) {U : G.
   | base => rwa [Nat.mul_one]
   | succ n hn ih =>
     have := h.comp ih
-    rw [Nat.mul_succ, pow_add, End.mul_asHom, pow_add, mul_comm (q ^ (m * n))]
-    exact this
+    rwa [Nat.mul_succ, pow_add, End.mul_asHom, pow_add, mul_comm (q ^ (m * n))]
 
 theorem Raises.pull {X Y : Scheme.{0}} (ν : Y ⟶ X) {φ : X ⟶ X} {ψ : Y ⟶ Y} (hc : ψ ≫ ν = ν ≫ φ) {a : ℕ}
     {V : X.Opens} {g : Γ(X, V)} (h : Raises φ a V g) : Raises ψ a (ν ⁻¹ᵁ V) ((ν.app V).hom g) := by
@@ -707,8 +703,7 @@ theorem GlobalTheory.SS.frobG_pow_and_closed_subgroup :
   · obtain ⟨n, hn, h⟩ := hF.2 U hU f
     refine ⟨n, hn, ?_⟩
     have := Raises.mul F q n h m hm
-    rw [mul_comm, pow_mul, pow_mul] at this
-    exact this
+    rwa [mul_comm, pow_mul, pow_mul] at this
   · have key : ∀ x : U, ∃ (W : N.left.Opens) (hW : W ≤ U) (m : ℕ), x.1 ∈ W ∧ 1 ≤ m ∧
         Raises (F' ^ m).asHom.left (q ^ m) W ((N.left.presheaf.map (homOfLE hW).op).hom f) := by
       intro x
@@ -724,8 +719,7 @@ theorem GlobalTheory.SS.frobG_pow_and_closed_subgroup :
       obtain ⟨m, hm, h⟩ := hF.2 V hV g
       refine ⟨_, hle, m, hxV, hm, ?_⟩
       rw [← hg]
-      refine Raises.pull ν.left ?_ h
-      exact congrArg (fun t => t.left) (pow_comm_hom ν F F' hc m)
+      exact Raises.pull ν.left (congrArg (fun t => t.left) (pow_comm_hom ν F F' hc m)) h
     choose W hW m hxW hm hR using key
     obtain ⟨t, ht⟩ := hU.isCompact.elim_finite_subcover (fun x => (W x : Set N.left)) (fun x => (W x).isOpen)
       (fun y hy => Set.mem_iUnion.2 ⟨⟨y, hy⟩, hxW ⟨y, hy⟩⟩)
@@ -964,8 +958,7 @@ theorem card_torsion_le_mul {A B : Type} [CommGroup A] [CommGroup B] (f : A →*
   have hc : ∀ x : {x : A // x ^ n = 1}, (c (f x)) ^ n = 1 ∧ f (c (f x)) = f x := by
     intro x
     have h : ∃ a : {x : A // x ^ n = 1}, f a = f x := ⟨x, rfl⟩
-    simp only [c, dif_pos h]
-    exact ⟨h.choose.2, h.choose_spec⟩
+    simpa only [c, dite_eq_left h] using ⟨h.choose.2, h.choose_spec⟩
   let Φ : {x : A // x ^ n = 1} → {x : A // f x = 1 ∧ x ^ n = 1} × {y : B // y ^ n = 1} := fun x =>
     (⟨x * (c (f x))⁻¹, by
         refine ⟨?_, ?_⟩
@@ -1023,8 +1016,7 @@ theorem pullPow_pull {X Y : Scheme.{0}} (ν : Y ⟶ X) {F : X ⟶ X} {E : Y ⟶ 
     have h3 := congrArg (fun m : Y ⟶ X => m y) (hc k)
     simp only at h3
     change (ν ≫ (![F, 𝟙 X] : Fin 2 → (X ⟶ X)) k) y ∈ L.U (j k PUnit.unit)
-    rw [h3]
-    exact h2
+    rwa [h3]
   let a : ChartPull (LB.LinComb (L.pull ν) (![E, 𝟙 Y] : Fin 2 → (Y ⟶ Y)) ![1, -Q])
       (LB.LinComb L (![F, 𝟙 X] : Fin 2 → (X ⟶ X)) ![1, -Q]) ν :=
     { idx := fun j k => j k PUnit.unit
@@ -1176,8 +1168,7 @@ private theorem isClosedImmersion_of_isPullback_unit {k : Type} [Field k] {T N B
   exact MorphismProperty.of_isPullback (P := @IsClosedImmersion) h'.flip hη
 
 private theorem eq_of_comp_mono_eq {k : Type} [Field k] {N G : Over (Sp k)} [GrpObj N] [GrpObj G] (ν : N ⟶ G) [Mono ν]
-    {x y : 𝟙_ (Over (Sp k)) ⟶ N} (h : x ≫ ν = y ≫ ν) : x = y := by
-  exact (cancel_mono ν).1 h
+    {x y : 𝟙_ (Over (Sp k)) ⟶ N} (h : x ≫ ν = y ≫ ν) : x = y := (cancel_mono ν).1 h
 
 end GlobalTheory.SS.FrobTorsion
 
@@ -1231,8 +1222,7 @@ theorem GlobalTheory.SS.frobenius_on_torsion : ∀ (k : Type) [Field k] [IsAlgCl
   have hE : PullPow (F'e ^ (m1 * m2)).asHom.left (L.pull ν.left) ((q ^ (m1 * m2) : ℕ) : ℤ) := by
     have h := hpow2 m1
     rw [show m2 * m1 = m1 * m2 from Nat.mul_comm _ _] at h
-    rw [Nat.cast_pow]
-    exact h
+    rwa [Nat.cast_pow]
   have hiE : i ≫ (F'e ^ (m1 * m2)).asHom = i ^ (q ^ (m1 * m2)) := by
     rw [← GlobalTheory.SS.FrobSub.pow_comm_hom i F'e F''e hF''i (m1 * m2), hpow1 m2, MonObj.pow_comp, Category.id_comp]
   obtain ⟨a', C, P, ha'le, hroots, hbounds, hfix⟩ :=

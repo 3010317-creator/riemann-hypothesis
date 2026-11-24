@@ -111,13 +111,11 @@ theorem fv_rat_eq {n : ℕ} (J : Matrix (Fin n) (Fin n) E) :
     have h : ((γ.1.map (inclR (F := F) (AF F))).map (sigR (AF F) σ))ᵀ * J.map (inclR (F := F) (AF F)) *
         γ.1.map (inclR (F := F) (AF F)) = J.map (inclR (F := F) (AF F)) := by
       have h0 := g.2
-      rw [← hγ] at h0
-      exact h0
+      rwa [← hγ] at h0
     show (γ.1.map (σ : E →+* E))ᵀ * J * γ.1 = J
     refine Matrix.map_injective hinj ?_
     show ((γ.1.map (σ : E →+* E))ᵀ * J * γ.1).map (inclR (F := F) (AF F)) = J.map (inclR (F := F) (AF F))
-    rw [Matrix.map_mul, Matrix.map_mul]
-    exact h
+    rwa [Matrix.map_mul, Matrix.map_mul]
   · rintro ⟨γ, -, hγ⟩
     exact ⟨γ, hγ⟩
 

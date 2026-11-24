@@ -416,8 +416,7 @@ theorem isLattice_compan {R : Ranks} {F E : Type} [Field F] [NumberField F] [Fie
   refine { toIsLattice := Submodule.IsLattice.of_fg E hfg, span_eq_top := ?_ }
   apply top_unique
   rw [← full_span M hM]
-  apply Submodule.span_mono
-  exact SetLike.coe_subset_coe.mpr le_sup_left
+  exact Submodule.span_mono (SetLike.coe_subset_coe.mpr le_sup_left)
 theorem compan_latAd_eq {R : Ranks} {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
     (sp : Spaces R F E) {N : ℕ} (σ : E →ₐ[F] E) (hσ : (σ : E →+* E) = sp.cm.sig) (J : Matrix (Fin N) (Fin N) E)
     (hJ : IsUnit J.det) (a : 𝓞 E) (x : GL (Fin N) (E ⊗[F] FiniteAdeleRing (𝓞 F) F))
@@ -543,12 +542,10 @@ theorem localization_map_seamVec {D : D7} {X : Fields} (s : Seam D X) {n : ℕ} 
         rw [(seamVec s n).map_smulₛₗ, hfy, hzx]
         show ψ (ψ.symm r) • x = r • x
         rw [RingEquiv.apply_symm_apply]
-      rw [this]
-      exact hz
+      rwa [this]
   · rintro ⟨y, ⟨r, hr, hy⟩, rfl⟩
     refine ⟨ψ r, ?_, r • y, hy, ?_⟩
-    · intro hm
-      exact hr ((mem_seamP s P r).1 hm)
+    · exact fun hm => hr ((mem_seamP s P r).1 hm)
     · rw [(seamVec s n).map_smulₛₗ]
       rfl
 
@@ -630,11 +627,7 @@ theorem locP_mvL_comm {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ
   _root_.GlobalTheory.LatAway.locP_map_equiv ((toLE c).restrictScalars (𝓞 E)) q Λ
 
 theorem mvL_one' {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ} (Λ : Submodule (𝓞 E) (Fin N → E)) : mvL 1 Λ = Λ := by
-  unfold mvL
-  convert Submodule.map_id _
-  refine LinearMap.ext fun z => ?_
-  show toLE 1 z = z
-  rw [toLE_apply, Units.val_one, Matrix.one_mulVec]
+  apply GlobalTheory.TwV.mvL_one_lat
 
 theorem span_mvL {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ} (c : GL (Fin N) E) (Λ : Submodule (𝓞 E) (Fin N → E))
     (h : Submodule.span E (Λ : Set (Fin N → E)) = ⊤) : Submodule.span E ((mvL c Λ : Submodule (𝓞 E) (Fin N → E)) : Set (Fin N → E)) = ⊤ := by
@@ -668,8 +661,7 @@ theorem GlobalTheory.TwV.baseFrame_std_eq_compan : UnderTie (fun {D L hT Gi Gl K
   set C := compan (sp := D.sp) (gramN D i hi) a ((St i hi).K β).lev.Lb with hC
   have hCs : Submodule.span D.host.E (C : Set (Fin (D.R.N i) → D.host.E)) = ⊤ := by
     refine eq_top_iff.2 (hsp ▸ Submodule.span_mono ?_)
-    intro z hz
-    exact (le_sup_left : ((St i hi).K β).lev.Lb ≤ C) hz
+    exact fun z hz => (le_sup_left : ((St i hi).K β).lev.Lb ≤ C) hz
   unfold latCo at hR
   rw [locP_mvL_comm, h4, ← locP_mvL_comm] at hR
   have e1 : mvL (A.crd i hi) (latAd x.1 C) = latAd (ratA D.host.F (A.crd i hi) * x.1 * ratA D.host.F (A.fb i hi β P)) (mvL (A.fb i hi β P)⁻¹ C) := by
@@ -726,17 +718,10 @@ theorem lev_mulVec_mem (S : StepLevel F E σ J T f bad) (g : GL (Fin n) (E ⊗[F
         fun i => prV (E := E) v (z i) := by
     funext i
     exact RingHom.map_mulVec (prV (E := E) v) (g : Matrix (Fin n) (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) z i
-  rw [e]
-  exact h3
+  rwa [e]
 
 theorem hatStab_lev (S : StepLevel F E σ J T f bad) (κ : S.U) : HatStab S.Lb κ.1 := by
-  intro z
-  constructor
-  · intro hz
-    have := lev_mulVec_mem S κ.1 κ.2 _ hz
-    rwa [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec] at this
-  · intro hz
-    exact lev_mulVec_mem S κ.1⁻¹ (S.U.inv_mem κ.2) z hz
+  exact GlobalTheory.TwU.hatStab_of_lev S κ
 
 end HatS
 
@@ -861,12 +846,10 @@ theorem globLat_compan_of_lev {D : D7} (i : ℕ) (hi : i ≤ D.R.m) {T : ℕ} {b
     exact Formalism.UG.P.global_lattice_one_holds _ _ _ _ lev.Lb_fin lev.Lb_span
   by_cases ha : a = 0
   · subst ha
-    rw [GlobalTheory.SDCompan.compan_zero (sp := D.sp)]
-    exact hL
+    rwa [GlobalTheory.SDCompan.compan_zero (sp := D.sp)]
   · have := Formalism.L2.GlobalTheoryTheory.Comp.glob_companion (sigD D) (gramN D i hi) (Formalism.L2.GlobalTheoryTheory.Br.isLat_dlN D i hi) hLb ha g hU
     rw [hL] at this
-    rw [GlobalTheory.SDCompan.compan_eq (sp := D.sp)]
-    exact this
+    rwa [GlobalTheory.SDCompan.compan_eq (sp := D.sp)]
 
 theorem lev_stab_cong : ∀ {D : D7} (i : ℕ) (hi : i ≤ D.R.m) {T : ℕ} {bad : Set (HeightOneSpectrum (𝓞 D.host.F))}
     (lev : StepLevel D.host.F D.host.E (sigD D) (gramN D i hi) T D.R.f bad) (a : 𝓞 D.host.E) (κ : lev.U)
@@ -990,7 +973,7 @@ theorem intAtA_of_val {ι : AfE F E ≃+* FiniteAdeleRing (𝓞 E) E} (hι : IsA
   have hsP : s ∉ P.asIdeal := by
     intro hm
     have h1 := hs P (Finset.mem_insert_self _ _)
-    simp only [if_true, pow_one] at h1
+    simp only [ite_true, pow_one] at h1
     apply P.isPrime.ne_top
     rw [Ideal.eq_top_iff_one]
     have := P.asIdeal.sub_mem hm h1
@@ -998,8 +981,7 @@ theorem intAtA_of_val {ι : AfE F E ≃+* FiniteAdeleRing (𝓞 E) E} (hι : IsA
   have hsQ : ∀ Q ∈ T, s ∈ Q.asIdeal ^ e Q := by
     intro Q hQ
     have hQP : Q ≠ P := fun h' => hPT (h' ▸ hQ)
-    have h1 := hs Q (Finset.mem_insert_of_mem hQ)
-    simpa [hQP] using h1
+    simpa [hQP] using hs Q (Finset.mem_insert_of_mem hQ)
   refine ⟨s, hsP, ?_⟩
   have hmem : iA F E (algebraMap (𝓞 E) E s) * z ∈ RInt F E := by
     refine (hι.2 _).2 fun Q => ?_
@@ -1168,9 +1150,7 @@ theorem exists_glint_nearAt {D : D7} {X : Fields} (s : Seam D X) {n : ℕ} (P : 
     refine fun w => ⟨fun hw => ?_, fun hw => GlobalTheory.FrameMove.mem_of_local P 0 h l1 w hw⟩
     have := GlobalTheory.FrameMove.mem_of_local P 0 h⁻¹ l2 _ hw
     rwa [show (h⁻¹ : Sp X.E n ≃ₗ[X.E] Sp X.E n) (h w) = w from h.symm_apply_apply w] at this
-  refine ⟨⟨h, hmem⟩, ?_⟩
-  show CongAt _ d (k⁻¹ * ratA D.host.F (seamGL s h))
-  exact GlobalTheory.FrameMove.congAt_mono (Nat.le_succ d) hC
+  exact ⟨⟨h, hmem⟩, GlobalTheory.FrameMove.congAt_mono (Nat.le_succ d) hC⟩
 
 end GlobalTheory.FrameShift
 
@@ -1192,8 +1172,7 @@ theorem exists_pt_mul : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU 
     refine GlobalTheory.CplPt.nearAt_mul _ base ?_
     rw [hD]
     exact GlobalTheory.CplPt.congAt_one_of_redGL t.seam hq ((g P)⁻¹ * (κ P)⁻¹) (hκ P).1
-  · rw [(hκ P).2 hP]
-    exact base
+  · rwa [(hκ P).2 hP]
 
 end GlobalTheory.FrameShift
 end -- clump:auto
@@ -1353,8 +1332,8 @@ theorem ratPt : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀
     rw [hx, hmv, mul_assoc (ratA D.host.F (seamGL t.seam g.1))]
     by_cases hPg : P.1 ∈ t.Pr.vGs
     · have hD : (t.cst μ).D P = 1 := (t.idx_ok μ).depthG P hPg
-      have e0 : frsF t.sel (t.tup μ) p P = p.deco.1.liftFr ⟨P.1, hPg⟩ := dif_pos hPg
-      have e1 : frsF (R := D.R) t.sel (t.tup μ) (a' • p) P = ((g, (1 : GLG (E := t.X.E) (n := D.R.N i) (SG := t.Pr.vGs))) • p.deco).1.liftFr ⟨P.1, hPg⟩ := dif_pos hPg
+      have e0 : frsF t.sel (t.tup μ) p P = p.deco.1.liftFr ⟨P.1, hPg⟩ := dite_eq_left hPg
+      have e1 : frsF (R := D.R) t.sel (t.tup μ) (a' • p) P = ((g, (1 : GLG (E := t.X.E) (n := D.R.N i) (SG := t.Pr.vGs))) • p.deco).1.liftFr ⟨P.1, hPg⟩ := dite_eq_left hPg
       rw [hD, e0] at hb
       rw [hD, e1]
       exact _root_.GlobalTheory.FrameRat.nearAt_liftFr_smul t.seam p.deco ⟨P.1, hPg⟩ g (mq_rowSG_unif (t.tup μ) hP.fields.ok t.pr_ok hP.sel P) _ hb
@@ -1363,8 +1342,7 @@ theorem ratPt : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀
         rw [dite_eq_right hPg, dite_eq_right hPg]
         show g.1 * p.fr _ * (((1 : GLQ t.X.E (D.R.N i) (QE t.sel (t.tup μ : Chr t.X.F t.X.E t.X.K))) _)⁻¹).1 = _
         simp
-      rw [e1, map_mul, nearAt_rat_mul]
-      exact hb
+      rwa [e1, map_mul, nearAt_rat_mul]
   · intro P v h hv
     rw [hx, hmv]
     exact _root_.GlobalTheory.TwU.funMoved_ratA_act t.seam _ P v h _ _ _ g.1 1 (hp.fnl P v h hv)
@@ -1399,8 +1377,7 @@ theorem isPtAd_cls (H : AdTie A dtU a) (i : ℕ) (hi : i ≤ D.R.m) (c : (D.chTw
   refine ⟨?_, H.frame i hi c, ?_⟩
   · rw [← H.N_eq i hi c]
     exact H.lat i hi c
-  · intro P v h hv
-    exact Classical.epsilon_spec (H.fnl i hi ((St i hi).chOf c) P v h hv) c rfl
+  · exact fun P v h hv => Classical.epsilon_spec (H.fnl i hi ((St i hi).chOf c) P v h hv) c rfl
 
 theorem exists_cls_eq (i : ℕ) (hi : i ≤ D.R.m) (β : (St i hi).Ch) (x : UA D i hi) :
     ∃ c : (D.chTw u μ).cls i, (St i hi).chOf c = β ∧ ∃ γ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D i hi),

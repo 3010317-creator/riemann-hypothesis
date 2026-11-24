@@ -95,12 +95,12 @@ theorem glueMapS_continuous (l : Fin r) (c : Fin r → ℂ) : Continuous (glueMa
   refine Continuous.prodMk ?_ ?_
   · refine continuous_pi fun m => ?_
     by_cases h : (l.succ : Fin (r + 1)).val ≤ m.val
-    · simp only [glue, h, dif_pos]
+    · simp only [glue, h, dite_eq_left]
       exact (continuous_apply _).comp (continuous_snd.comp continuous_fst)
-    · simp only [glue, h, dif_neg, not_false_eq_true, Function.update_apply]
+    · simp only [glue, h, dite_eq_right, not_false_eq_true, Function.update_apply]
       by_cases hm : m = l
-      · simp only [hm, if_true] <;> fun_prop
-      · simp only [hm, if_false] <;> fun_prop
+      · simp only [hm, ite_true] <;> fun_prop
+      · simp only [hm, ite_false] <;> fun_prop
   · exact continuous_matrix fun i j => by simp only [Matrix.of_apply]; fun_prop
 
 theorem measurableSet_glueMapS_DomR (l : Fin r) (c : Fin r → ℂ) :
@@ -277,8 +277,7 @@ variable (X : ActualOps k r z z' π π') (l : Fin r) (s : ℂ) (Wv : Module.End 
 theorem nfp_nil (hW : multiplicationOperator Wv (fun c _ => fsv s (c l))) : NFP X l s Wv [] := by
   refine ⟨1, fun _ _ => 1, fun _ => [], fun _ => contDiffOn_const, fun _ j hj => by simp at hj, ?_⟩
   intro Φ p _ g
-  simp only [wOp_nil, Fin.sum_univ_one, one_mul]
-  exact hW Φ p g
+  simpa only [wOp_nil, Fin.sum_univ_one, one_mul] using hW Φ p g
 
 theorem nfp_mul (j : Fin 6) (a : ℂ → ℂ) (ha : ContDiffOn ℝ ∞ a {0}ᶜ)
     (hop : ∀ (Ψ : RadSp k r z z' π π') (p : Fin r → ℂ) (g : Mx k r),
@@ -356,25 +355,25 @@ theorem nfp_der (b : Bool) (js : List (Fin 6)) (h : NFP X l s Wv js) :
     intro i
     rw [wOp_cons, op_pt]
     cases b
-    · simp only [Bool.false_eq_true, if_false]
+    · simp only [Bool.false_eq_true, ite_false]
       show Formalism.QuantumDeterminants.pbOp l _ p = _
-      unfold Formalism.QuantumDeterminants.pbOp; rw [if_pos hp]
-    · simp only [if_true]
+      unfold Formalism.QuantumDeterminants.pbOp; rw [ite_eq_left hp]
+    · simp only [ite_true]
       show Formalism.QuantumDeterminants.pOp l _ p = _
-      unfold Formalism.QuantumDeterminants.pOp; rw [if_pos hp]
+      unfold Formalism.QuantumDeterminants.pOp; rw [ite_eq_left hp]
   simp only [hR]
   cases b
-  · simp only [Bool.false_eq_true, if_false, mL]
+  · simp only [Bool.false_eq_true, ite_false, mL]
     show Formalism.QuantumDeterminants.pbOp l _ p = _
     unfold Formalism.QuantumDeterminants.pbOp
-    rw [if_pos hp, hW2, Finset.smul_sum, ← Finset.sum_add_distrib]
+    rw [ite_eq_left hp, hW2, Finset.smul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [v]
     module
-  · simp only [if_true, mL]
+  · simp only [ite_true, mL]
     show Formalism.QuantumDeterminants.pOp l _ p = _
     unfold Formalism.QuantumDeterminants.pOp
-    rw [if_pos hp, hW1, Finset.smul_sum, ← Finset.sum_add_distrib]
+    rw [ite_eq_left hp, hW1, Finset.smul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [v]
     module
@@ -496,8 +495,7 @@ theorem four_le_seven (X : ActualOps k r z z' π π') (l : Fin r) (Ξ : RadSp k 
   have eS : ∀ Ψ Ψ' : RadSp k r z z' π π', a (Ψ - Ψ') = a Ψ - a Ψ' := fun Ψ Ψ' => by
     simp only [ha, Submodule.coe_sub, Pi.sub_apply, map_sub]
   have eI : ∀ Ψ : RadSp k r z z' π π', ‖a (Complex.I • Ψ)‖ = ‖a Ψ‖ := fun Ψ => by
-    simp only [ha, Submodule.coe_smul, Pi.smul_apply]
-    exact hsVecR_Ismul _
+    simpa only [ha, Submodule.coe_smul, Pi.smul_apply] using hsVecR_Ismul _
   have hx : ‖a (Dx X l Ξ)‖ ^ 2 ≤ 2 * ‖a (dT X l Ξ)‖ ^ 2 + 2 * ‖a (dTb X l Ξ)‖ ^ 2 := by
     rw [Dx, eA]; exact sq_add_le_two _ _
   have hy : ‖a (Dy X l Ξ)‖ ^ 2 ≤ 2 * ‖a (dT X l Ξ)‖ ^ 2 + 2 * ‖a (dTb X l Ξ)‖ ^ 2 := by
@@ -821,14 +819,7 @@ theorem seven_derivatives_of_word_operator (X : ActualOps k r z z' π π') (l : 
 
 theorem wOp_lcJ (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6)) :
     ∀ Ψ ∈ lcSub k r z z' π π', wOp X l js Ψ ∈ lcSub k r z z' π π' := by
-  induction js with
-  | nil => intro Ψ h; simpa [wOp] using h
-  | cons j js ih =>
-    intro Ψ h
-    have e : wOp X l (j :: js) Ψ = X.op l j (wOp X l js Ψ) := by
-      simp [wOp, List.map_cons, List.prod_cons]
-    rw [e]
-    exact op_lc X l j _ (ih Ψ h)
+  apply Formalism.FourierDecayAlt.P.CutSE.wOp_lc
 
 end Gen
 
@@ -892,27 +883,7 @@ private theorem opL_eq_zero_of_eventuallyEq_zero {m : ℕ} {E : Type*} [NormedAd
 
 theorem jsl_wOp_lc (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6)) :
     ∀ Φ ∈ lcSub k r z z' π π', wOp X l js Φ ∈ lcSub k r z z' π π' := by
-  have hmem : ∀ Ψ : RadSp k r z z' π π', Ψ ∈ lcSub k r z z' π π' ↔ ∀ c ∈ OmX r, LCptAt Ψ c :=
-    fun Ψ => Iff.rfl
-  have hop : ∀ j, ∀ Ψ ∈ lcSub k r z z' π π', X.op l j Ψ ∈ lcSub k r z z' π π' := by
-    intro j Ψ hΨ
-    rw [hmem] at hΨ ⊢
-    intro c hc
-    obtain ⟨U', hU', hcU, K, hK, hKG, h0⟩ := hΨ c hc
-    refine ⟨U', hU', hcU, K, hK, hKG, fun c' hc' g hg hgK => ?_⟩
-    rw [X.op_apply]
-    show opL l j (fun c'' => (Ψ : Fn k r (Wq →L[ℂ] Wp)) c'' g) c' = 0
-    apply opL_eq_zero_of_eventuallyEq_zero
-    filter_upwards [hU'.mem_nhds hc'] with c'' hc''
-    exact h0 c'' hc'' g hg hgK
-  induction js with
-  | nil =>
-    intro Φ hΦ
-    simpa [wOp] using hΦ
-  | cons j js ih =>
-    intro Φ hΦ
-    show X.op l j (wOp X l js Φ) ∈ lcSub k r z z' π π'
-    exact hop j _ (ih Φ hΦ)
+  apply Formalism.FourierDecayAlt.P.CutSE.wOp_lc
 
 theorem jsl_hsInner_self_norm (C : Wq →L[ℂ] Wp) : ‖B.hsInner C C‖ = ‖B.hsVec C‖ ^ 2 := by
   rw [B.hsInner, inner_self_eq_norm_sq_to_K]
@@ -1040,8 +1011,7 @@ theorem jSL2Loc_of : JSWordNF → JSRadLoc → SpectralL2Locality := by
     intro c' g
     by_cases hxo : glue l.succ (Function.update c l t) c' ∈ OmX P.r
     · have e := hE (Wn Ψ) _ hxo g
-      rw [hΨeq, jsl_glue_self] at e
-      exact e
+      rwa [hΨeq, jsl_glue_self] at e
     · have h0 : ∀ w : RadSp P.k P.r z z' π π',
           (w : Fn P.k P.r (Wq →L[ℂ] Wp)) (glue l.succ (Function.update c l t) c') g = 0 :=
         fun w => radSp_zero_off w (x := (glue l.succ (Function.update c l t) c', g)) (fun h => hxo h.1)
@@ -1174,8 +1144,7 @@ theorem sob1' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {a b : ℝ}
   have hd' : ∀ t ∈ Icc a b, HasDerivAt (fun s => ι (φ s)) (ι (φ' t)) t := fun t ht =>
     ι.hasFDerivAt.comp_hasDerivAt t (hd t ht)
   have hc' : ContinuousOn (fun s => ι (φ' s)) (Icc a b) := ι.continuous.comp_continuousOn hc
-  have h := sob1 hab hd' hc' hx
-  simpa [ι, UniformSpace.Completion.norm_coe] using h
+  simpa [ι, UniformSpace.Completion.norm_coe] using sob1 hab hd' hc' hx
 
 theorem path_hasDerivAt_im (x v : ℝ) :
     HasDerivAt (fun w : ℝ => (x : ℂ) + (w : ℂ) * Complex.I) Complex.I v := by

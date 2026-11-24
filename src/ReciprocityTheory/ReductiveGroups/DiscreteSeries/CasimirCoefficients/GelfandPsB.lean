@@ -188,8 +188,7 @@ lemma contOn_FD (T : KType ε Λ) (hg : ContDiffOn ℂ ∞ g (Wset n)) :
     (((hg.continuousOn_fderiv_of_isOpen isOpen_kappaOpenNeighbourhood (by simp)).comp continuous_emb.continuousOn
       (fun q (hq : q ∈ Ps1.Uset ε ×ˢ (Set.univ : Set (KG ε))) => emb_mem hq.1 q.2)).clm_apply
       continuousOn_const).smul (hPk.comp continuous_snd).continuousOn
-  refine hc.congr fun q hq => ?_
-  exact FD_apply T hg q.2 (emb_mem hq.1 q.2) H
+  exact hc.congr fun q hq => FD_apply T hg q.2 (emb_mem hq.1 q.2) H
 
 lemma cont_int (T : KType ε Λ) (hg : ContDiffOn ℂ ∞ g (Wset n)) {x : Matrix (Fin n) (Fin n) ℂ}
     (hx : x ∈ Ps1.Uset ε) : Continuous fun k => g (emb x k) • Pk T k := by
@@ -329,8 +328,7 @@ theorem gelfand_Fint (T : KType ε Λ) (μ : Fin n → ℤ) (M : Fin n → Fin n
     rw [Finset.sum_apply, Finset.sum_congr rfl fun a _ => opPowH_slice M (smooth_g0_on_Wset μ) m a a _ hp]
     have h := hM k z (hz k)
     unfold opGelfand at h
-    rw [Finset.sum_apply] at h
-    exact h
+    rwa [Finset.sum_apply] at h
   rw [psM_eq]
   unfold opGelfand
   rw [Finset.sum_apply, Finset.sum_congr rfl fun a _ => opPow_Fint T M (smooth_g0_on_Wset μ) m a a z hz,

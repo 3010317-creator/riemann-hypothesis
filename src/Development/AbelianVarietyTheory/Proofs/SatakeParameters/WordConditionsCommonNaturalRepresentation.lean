@@ -479,7 +479,7 @@ theorem hcAt_eq_hc : ∀ (D : D7) (ρ : D.what₂.Tau) (g : D.R.GG), (((D.eTau �
     · unfold plc
       have h2 : (((D.eTau ρ : D.R.Psi) : D.R.GG) * D.R.cc).1.2 ≠ 1 := by
         simp [Formalism.HC.Frame.cc, c0, hm]
-      rw [if_neg h2, mul_comm, mul_assoc, _root_.Formalism.HC.Frame.cc_mul_cc, mul_one]
+      rw [ite_eq_right h2, mul_comm, mul_assoc, _root_.Formalism.HC.Frame.cc_mul_cc, mul_one]
   unfold hcAt
   have : (⟨plc g, plc_mem g⟩ : D.R.Psi) = D.eTau ρ := Subtype.ext hp
   rw [this, Equiv.symm_apply_apply]
@@ -547,18 +547,16 @@ theorem mem_twistedDualJumpsWithoutBlock_iff {R : Ranks} (P : HCParam R) (j : Fi
     u ∈ jT2 P j s ↔ (if s then -u - 1 else (R.t : ℤ) - 1 - (-u - 1)) ∈ cloud P j + lows P j := by
   unfold jT2 jW
   cases s
-  · simp only [Bool.false_eq_true, if_false, Multiset.map_map, Function.comp_def, Multiset.mem_map]
+  · simp only [Bool.false_eq_true, ite_false, Multiset.map_map, Function.comp_def, Multiset.mem_map]
     constructor
     · rintro ⟨x, hx, rfl⟩
       convert hx using 1; ring
-    · intro h
-      exact ⟨_, h, by ring⟩
-  · simp only [if_true, Multiset.mem_map]
+    · exact fun h => ⟨_, h, by ring⟩
+  · simp only [ite_true, Multiset.mem_map]
     constructor
     · rintro ⟨x, hx, rfl⟩
       convert hx using 1; ring
-    · intro h
-      exact ⟨_, h, by ring⟩
+    · exact fun h => ⟨_, h, by ring⟩
 
 theorem jumps_rat {R : Ranks} (P : HCParam R) (j : Fin R.m) (s : Bool) (u : ℤ) :
     (u ∈ jT2 P j s ↔ ((∃ a, (if s then (-(u : ℚ) - 1) else (R.t : ℚ) - 1 - (-(u : ℚ) - 1)) = P.e j + P.v a + ((R.t : ℚ) - 1) / 2) ∨ ∃ a, (if s then (-(u : ℚ) - 1) else (R.t : ℚ) - 1 - (-(u : ℚ) - 1)) = P.e j - P.b a + ((R.t : ℚ) - 1) / 2)) ∧ (u ∈ jT1 P j s ↔ u ∈ jT2 P j s ∨ ∃ c : ℕ, c < R.t ∧ -u - 1 = c) := by
@@ -623,13 +621,13 @@ theorem rat_jump_sets_eq_int_multisets : ∀ (D : D7) (i : D.nd.Loc) (ρ : D.wha
       ring
   cases up
   · simp only [LJ.dualS, LJ.JJ, LJ.JW, LJ.cloudT, LJ.lowT, LJ.Jm, LJ.Jp, LJ.reflS, LJ.refl, LJ.cloudJ, LJ.lowJ,
-      LJ.blockJ, Set.mem_setOf_eq, Set.mem_union, Bool.false_eq_true, if_false, hsz, hc0]
+      LJ.blockJ, Set.mem_setOf_eq, Set.mem_union, Bool.false_eq_true, ite_false, hsz, hc0]
     refine ⟨or_congr Iff.rfl ?_, by push_cast⟩
     have := hblk' (-a - 1)
     push_cast at this
     exact this
   · simp only [LJ.dualS, LJ.JJ, LJ.JW, LJ.cloudT, LJ.lowT, LJ.Jm, LJ.Jp, LJ.reflS, LJ.refl, LJ.cloudJ, LJ.lowJ,
-      LJ.blockJ, Set.mem_setOf_eq, Set.mem_union, if_true, hsz, hc0]
+      LJ.blockJ, Set.mem_setOf_eq, Set.mem_union, ite_true, hsz, hc0]
     refine ⟨or_congr Iff.rfl ?_, by push_cast⟩
     have := hblk (-a - 1)
     push_cast at this
@@ -669,8 +667,7 @@ theorem hodgeTateJumps_coefficientExtension : ∀ {D : D7} (L : SizeData₂ D) (
     intro k M hM
     refine continuous_matrix fun a b => ?_
     have h1 := locC_cont D i M hM w hw Cx (Pi.single b 1)
-    have h2 := (continuous_apply a).comp h1
-    simpa [Function.comp_def, Matrix.mulVec_single] using h2
+    simpa [Function.comp_def, Matrix.mulVec_single] using (continuous_apply a).comp h1
   have hW : Continuous fun g => WpO D.nd i ρ π g := by
     have h1 : Continuous fun g : GE D.nd => ((((chiU D.nd i 1)⁻¹ g : (D.nd.O i)ˣ)) : D.nd.O i) := by
       have e : (fun g : GE D.nd => ((((chiU D.nd i 1)⁻¹ g : (D.nd.O i)ˣ)) : D.nd.O i)) =
@@ -689,13 +686,12 @@ theorem hodgeTateJumps_coefficientExtension : ∀ {D : D7} (L : SizeData₂ D) (
   have hup : (decide (LJ.TypeU D ep g) = true ↔ LJ.TypeU D ep g) := decide_eq_true_iff
   have hs := _root_.GlobalTheory.HTW.Rec.rat_jump_sets_eq_int_multisets D i ρ' g ep _ hrd.2 hup
   refine ⟨g, hκ τ g hrd.1, ?_, ?_⟩
-  · intro x a ha
-    exact ((hs a).1).1 (((hx x a).2.2.1).1 ha)
+  · exact fun x a ha => ((hs a).1).1 (((hx x a).2.2.1).1 ha)
   · intro a
     refine ((hπ ρ π hP.mem hP.dec a).2.2.2).trans ?_
     by_cases h : a ∈ jT2 (hcAt D g) (liftIdx D i) (pos (if ep = true then 1 else -1) g)
-    · rw [if_pos ((hs a).2.2 h), if_pos h]
-    · rw [if_neg (fun h' => h ((hs a).2.1 h')), if_neg h]
+    · rw [ite_eq_left ((hs a).2.2 h), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h ((hs a).2.1 h')), ite_eq_right h]
 
 end GlobalTheory.HTW.Rec
 end -- clump:auto
@@ -746,7 +742,6 @@ theorem recWord_small_pos : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin 
   · have hB' := GlobalTheory.T.twistedDualOrbitPageWord_box L C j ε (g a) (1 : D.R.GG) hR
     have h := hB'.2.2.2.2.2 (0 : ZMod (orderOf (1 : D.R.GG)))
     simp only [pageWord, letter, one_pow, mul_one] at h
-    show etaHat L < (szT (hcAt D (g a)) j (pos ε (g a))).toNat
     exact Int.lt_toNat.mpr h
   · show 1 ≤ sHat L
     unfold sHat
@@ -780,8 +775,7 @@ theorem good_conjugates_mem : ∀ (l : ℕ) [Fact l.Prime] (K LL : Loc.FinExt l)
     rw [AlgHom.liftNormal_commutes]
     rfl
   have hx := hall ((σ : Loc.Om l →ₐ[ℚ_[l]] Loc.Om l).comp (Loc.Ks K s).val) ⟨x, hle x.2⟩
-  rw [← hσ]
-  exact hx
+  rwa [← hσ]
 
 end GlobalTheory
 end -- clump:auto
@@ -840,18 +834,7 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
     {V : Type} [AddCommGroup V] [Module LL V] [Module Qp V] [IsScalarTower Qp LL V]
 
 theorem filV_succ_le (a : ℤ) : FilV PD (LL := LL) (V := V) (a + 1) ≤ FilV PD (LL := LL) (V := V) a := by
-  rintro x ⟨y, rfl⟩
-  have hle : (PD.Fil (a + 1)).restrictScalars Qp ≤ (PD.Fil a).restrictScalars Qp := PD.Fil_anti a
-  have hc : (TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V)
-      ((PD.Fil a).restrictScalars Qp).subtype).comp
-      (TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V) (Submodule.inclusion hle)) =
-      TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V)
-        ((PD.Fil (a + 1)).restrictScalars Qp).subtype := by
-    apply TensorProduct.AlgebraTensorModule.ext
-    intro v b
-    rfl
-  exact ⟨TensorProduct.AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V) (Submodule.inclusion hle) y,
-    LinearMap.congr_fun hc y⟩
+  exact GlobalTheory.SubSumJumps.FilV_anti PD a
 
 theorem fildR_succ_le (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL) (a : ℤ) :
     FildR PD ρ τ (a + 1) ≤ FildR PD ρ τ a :=
@@ -977,8 +960,7 @@ theorem recWord_wordNum : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.
       have h' : (((recWord L j ε (letter τ ψ)).sz a : ℕ) : ℤ) ≤ ((wHat D : ℕ) : ℤ) := by
         rw [hsz]; exact h
       exact_mod_cast h'
-  · have h := bHat_add_etaHat_add_sHat_le_hPage L C hR
-    exact h
+  · exact bHat_add_etaHat_add_sHat_le_hPage L C hR
   · exact (_root_.GlobalTheory.HTW.Rec.wMax_le_wB L).2
 
 end GlobalTheory.HTW.Rec
@@ -1066,8 +1048,7 @@ theorem embeddings_orbit : ∀ {R : Ranks} (H : Host R) (l : ℕ) [Fact l.Prime]
       have h3 : s ^ j.val = s ^ (k : ZMod N).val := by
         rw [← hgj, hpow, ZMod.val_intCast, ← hord, zpow_mod_orderOf, hk]
       have h4 := pow_inj_mod.1 h3
-      rw [hord, Nat.mod_eq_of_lt (ZMod.val_lt j), Nat.mod_eq_of_lt (ZMod.val_lt _)] at h4
-      exact h4
+      rwa [hord, Nat.mod_eq_of_lt (ZMod.val_lt j), Nat.mod_eq_of_lt (ZMod.val_lt _)] at h4
 
 end GlobalTheory.LocalFrobeniusOrbit
 end -- clump:auto
@@ -1085,12 +1066,7 @@ namespace GlobalTheory.FrobPeriod
 
 theorem norm_int_le_one {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberField E]
     (c : E →+* PadicAlgCl l) (x : 𝓞 E) : ‖c (x : E)‖ ≤ 1 := by
-  have hx : IsIntegral ℤ (c (x : E)) := map_isIntegral_int c x.isIntegral_coe
-  have h : c (x : E) ∈ (NormedField.valuation (K := PadicAlgCl l)).integer :=
-    (Valuation.integer.integers (NormedField.valuation (K := PadicAlgCl l))).mem_of_integral
-      hx.tower_top
-  rw [Valuation.mem_integer_iff, NormedField.valuation_apply] at h
-  exact_mod_cast h
+  exact GlobalTheory.LocPlace.norm_int_le_one l c x
 
 theorem exists_comp_of_normal {E L : Type} [Field E] [Field L] [CharZero E] [CharZero L]
     [Normal ℚ E] (φ ψ : E →+* L) : ∃ g : E ≃ₐ[ℚ] E, ∀ x, ψ x = φ (g x) := by
@@ -1141,13 +1117,11 @@ theorem GlobalTheory.FrobPeriod.periodFrob_restrict : ∀ (D : D7) {l : ℕ} [Fa
     have e : ((g • z - z ^ l : 𝓞 D.host.E) : D.host.E) = g (z : D.host.E) - (z : D.host.E) ^ l := by
       push_cast
       rfl
-    rw [e, map_sub, map_pow, ← hc0, ← hc0, ← hg]
-    exact h
+    rwa [e, map_sub, map_pow, ← hc0, ← hc0, ← hg]
   set F := D.host.sigmaOf (DV.frobG D l) with hFdef
   have hF : ∀ z : 𝓞 D.host.E, F • z - z ^ l ∈ v.asIdeal := fun z => by
     have h := (_root_.GlobalTheory.FrobSign.frobG_isArithFrob_and_sign D l h2 hq hd).1 v.asIdeal z
-    rw [card_quot_under l v.asIdeal] at h
-    exact h
+    rwa [card_quot_under l v.asIdeal] at h
   have hin := (D.host.der.frob l hlN v.asIdeal).2.2.2
   have hgF : g * F⁻¹ = 1 := by
     refine (hin _).1 fun z => ?_
@@ -1155,8 +1129,7 @@ theorem GlobalTheory.FrobPeriod.periodFrob_restrict : ∀ (D : D7) {l : ℕ} [Fa
     have e : (g * F⁻¹) • z - z = g • F⁻¹ • z - (F⁻¹ • z) ^ l - (F • F⁻¹ • z - (F⁻¹ • z) ^ l) := by
       rw [mul_smul, smul_inv_smul]
       ring
-    rw [e]
-    exact h
+    rwa [e]
   have hgF' : g = F := by simpa using mul_inv_eq_one.1 hgF
   subst hyx
   apply Subtype.ext

@@ -103,8 +103,7 @@ theorem agreeOnH : AgreeOnH := by
     exact (show Xsp F ≤ Xplus F from le_sup_left).trans le_sup_left
   have hHp : finrank E (Hp Λ F F') + (2 * r + 2) = finrank E S.V := by
     have := finrank_orth_add S (UUE Λ F F')
-    rw [n'.1] at this
-    exact this
+    rwa [n'.1] at this
   have hle : ∀ β, Th Λ F F' F'' β ≤ Hp Λ F F' := by
     intro β y hy
     obtain ⟨p, hp, rfl⟩ := Submodule.mem_map.mp hy
@@ -189,14 +188,7 @@ theorem mem_orth_sup {U U' : Submodule E S.V} {v : S.V} :
     rw [map_add (f := _), LinearMap.add_apply, h1 a ha, h2 b hb, add_zero]
 
 theorem mem_orth_span {s : Set S.V} {v : S.V} :
-    v ∈ orth S (Submodule.span E s) ↔ ∀ x ∈ s, S.hT x v = 0 := by
-  rw [mem_orth]
-  refine ⟨fun h x hx => h x (Submodule.subset_span hx), fun h x hx => ?_⟩
-  induction hx using Submodule.span_induction with
-  | mem x hx => exact h x hx
-  | zero => simp
-  | add x y _ _ hx hy => rw [map_add (f := _), LinearMap.add_apply, hx, hy, add_zero]
-  | smul c x _ hx => rw [LinearMap.map_smulₛₗ, LinearMap.smul_apply, hx, smul_zero]
+    v ∈ orth S (Submodule.span E s) ↔ ∀ x ∈ s, S.hT x v = 0 := PI.ScalarPairDr.W.mem_orth_span S
 
 theorem mem_orth_span_singleton {z v : S.V} :
     v ∈ orth S (Submodule.span E {z}) ↔ S.hT z v = 0 := by
@@ -221,12 +213,7 @@ theorem finrank_Xsp {r : ℕ} {T : E} (F : LFlag S r T) : finrank E (Xsp F) = r 
   rw [finrank_span_eq_card F.fl.e_indep]; simp
 
 theorem Xflag_r {r : ℕ} {T : E} (F : LFlag S r T) : Xflag F r = Xsp F := by
-  show Submodule.span E (F.fl.e '' {i | i.1 < r}) = Submodule.span E (Set.range F.fl.e)
-  congr 1
-  rw [← Set.image_univ]
-  congr 1
-  ext i
-  simp
+  exact PI.UnitaryGroupMassFormula.BetaLUniq.EigB.Xflag_r F
 
 theorem inf_span_eq_bot {P : Submodule E S.V} {v : S.V} (hv : v ∉ P) :
     P ⊓ Submodule.span E {v} = ⊥ := by
@@ -293,8 +280,7 @@ theorem line_reduction_holds : LineReduce' := by
     have hUB : U ≤ B := by
       show Submodule.span E (UU Λ F F' : Set S.V) ≤ B
       rw [Submodule.span_le]
-      intro x hx
-      exact hUU hx
+      exact fun x hx => hUU hx
     have hB1 : finrank E B ≤ finrank E (Xsp F ⊔ Submodule.span E {F.zt} : Submodule E S.V) + finrank E X' :=
       Submodule.finrank_add_le_finrank_add_finrank _ _
     have hB2 := Submodule.finrank_add_le_finrank_add_finrank (Xsp F) (Submodule.span E {F.zt})
@@ -591,8 +577,7 @@ theorem eigenOne_gen (Λ : Submodule (𝓞 E) S.V) {g r : ℕ} {T T' : E} {F : L
     exact hqv ((Module.forall_dual_apply_eq_zero_iff E _).mp h)
   let π : S.V →ₗ[E] E := (f (X'.mkQ v))⁻¹ • (f ∘ₗ X'.mkQ)
   have hπv : π v = 1 := by
-    simp only [π, LinearMap.smul_apply, LinearMap.comp_apply, smul_eq_mul]
-    exact inv_mul_cancel₀ hf
+    simpa only [π, LinearMap.smul_apply, LinearMap.comp_apply, smul_eq_mul] using inv_mul_cancel₀ hf
   have hπX : ∀ x ∈ X', π x = 0 := by
     intro x hx
     simp only [π, LinearMap.smul_apply, LinearMap.comp_apply, smul_eq_mul,

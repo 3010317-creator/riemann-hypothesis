@@ -152,8 +152,7 @@ theorem mem_span_ker [IsDedekindDomain R] {L : Submodule R V} (hL : L.FG) {M : S
     have := Submodule.smul_mem _ a h1
     rw [smul_sub] at this
     change (a : ℂ) • y - s' (T ((a : ℂ) • y)) ∈ _
-    rw [map_smul, map_smul]
-    exact this
+    rwa [map_smul, map_smul]
 
 theorem mem_span_iInf_ker [IsDedekindDomain R] {M : Submodule R W} (hM : Indep M) {A : Type} (T : A → V →ₗ[ℂ] W) (n : ℕ) :
     ∀ L : Submodule R V, L.FG → Module.finrank ℂ (Submodule.span ℂ (L : Set V)) = n → (∀ a, ∀ x ∈ L, T a x ∈ M) →
@@ -273,8 +272,7 @@ theorem coefLat_le_span (hB : B.Good) (R O : Subring ℂ) (h : Bridge.Gf S) {P :
   obtain ⟨Q, hQ, e⟩ := h1 hP.2
   have h0 : P - Q = 0 := GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D _ _ B.w B.F.BS hB.wt (pq_le hB) _ (sub_mem hP.1 (hle hQ))
     (by rw [map_sub]; exact sub_eq_zero.2 e.symm)
-  rw [sub_eq_zero.1 h0]
-  exact hQ
+  rwa [sub_eq_zero.1 h0]
 
 theorem mtLat_eq_span : ∀ (D : D7) (S T : HSp D) (B : Base S T), B.Good → ∀ ψ : Twist D Circle, ψ.Good → B.admitted ψ.Q → ∀ (K : Type) [Field K] [NumberField K] (σ : K →+* ℂ) (emb : D.what₂.Tau → (D.host.E →+* K)) (R : Type) [CommRing R] [IsDedekindDomain R] (φ : R →+* ℂ), Function.Injective φ → IsCoefRing σ emb φ.range →
   (∀ k : B.levJ ψ, ((B.levLam ψ k : ℂˣ) : ℂ) ∈ φ.range) → ∀ O : Subring ℂ, φ.range ≤ O →
@@ -343,8 +341,7 @@ theorem mtLat_eq_span : ∀ (D : D7) (S T : HSp D) (B : Base S T), B.Good → �
       (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ hy'
     change (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ •
       ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at this
-    rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
-    exact this
+    rwa [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
   refine le_antisymm (fun f hf => ?_) (Submodule.span_le.2 fun f hf => ?_)
   · obtain ⟨m, y, hy⟩ := exists_isClassSystem B hB.frame ψ
     obtain ⟨h1, h2⟩ := (B.mem_mtLat σ emb O).1 hf

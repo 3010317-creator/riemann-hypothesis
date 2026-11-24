@@ -202,8 +202,7 @@ theorem Pre.orth {s s' : Ψ ⊕ Ψ} (h : s ≠ s') (ι : L →+* ℂ) {x y : V�
     (hy : P.j y ∈ eigSp P.ρ (P.σ s')) :
     (B.metric.form ι).inner ((1 : ComplexAt ι) ⊗ₜ[𝓞 L] P.f x) ((1 : ComplexAt ι) ⊗ₜ[𝓞 L] P.f y) = 0 := by
   obtain ⟨a, ha⟩ : ∃ a, P.σ s a ≠ P.σ s' a := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact h (P.σ_bij.1 (RingHom.ext hc))
   have key : ∀ (c : 𝓞 L) (u : B.carrier), ((1 : ComplexAt ι) ⊗ₜ[𝓞 L] (c • u) : Fibre ι B.carrier) =
       (ι (c : L) : ℂ) • ((1 : ComplexAt ι) ⊗ₜ[𝓞 L] u) := by
@@ -218,8 +217,7 @@ theorem Pre.orth {s s' : Ψ ⊕ Ψ} (h : s ≠ s') (ι : L →+* ℂ) {x y : V�
   simp only [RingHom.comp_apply] at hb
   rw [hb] at e
   have hne : (starRingEnd ℂ) (ι (P.σ s a)) ≠ (starRingEnd ℂ) (ι (P.σ s' a)) := by
-    intro heq
-    exact ha (ι.injective ((starRingEnd ℂ).injective heq))
+    exact fun heq => ha (ι.injective ((starRingEnd ℂ).injective heq))
   have : ((starRingEnd ℂ) (ι (P.σ s a)) - (starRingEnd ℂ) (ι (P.σ s' a))) *
       (B.metric.form ι).inner ((1 : ComplexAt ι) ⊗ₜ[𝓞 L] P.f x) ((1 : ComplexAt ι) ⊗ₜ[𝓞 L] P.f y) = 0 := by
     rw [sub_mul, e, sub_self]
@@ -538,8 +536,7 @@ theorem exists_lin {Ψ : Type} {X : Scheme.{0}} (t : SAB H X) (z : Sp (𝓞 L) �
     rw [← hκ]
     exact ⟨fun h => by rw [h], fun h => (MV.inj h).symm⟩
   · have := hfl (Q.inv x)
-    rw [show j (Q.inv x) = x from Q.j_inv x] at this
-    exact this
+    rwa [show j (Q.inv x) = x from Q.j_inv x] at this
 
 end LevelTowerAlt.Lin
 end -- clump:auto
@@ -944,8 +941,7 @@ theorem bracket_le (f j' B : ℕ) (rd L : ℝ) (hrd : 2 ≤ rd) (hf : 1 ≤ f) (
     apply mul_le_mul_of_nonneg_right _ hrd0.le
     nlinarith
   have h2 : Real.log (2 * (f : ℝ) * j' * rd) ≤ Real.log ((B : ℝ) * rd) := by
-    apply Real.log_le_log (by positivity)
-    exact mul_le_mul_of_nonneg_right hB' hrd0.le
+    exact Real.log_le_log (by positivity) (mul_le_mul_of_nonneg_right hB' hrd0.le)
   have h3 : 3 ≤ Real.log ((B : ℝ) * rd) := by
     have h128 : (128 : ℝ) ≤ (B : ℝ) * rd := by nlinarith
     have hl : Real.log (128 : ℝ) = 7 * Real.log 2 := by

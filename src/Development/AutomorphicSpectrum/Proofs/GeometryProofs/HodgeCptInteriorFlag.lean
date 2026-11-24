@@ -142,7 +142,7 @@ theorem frame_change (A : Subring Ω) {b b' : Fin r → E} (hb : LinearIndepende
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun m _ => by rw [smul_comm]
   have e' := congrFun e k
-  simp only [if_true] at e'
+  simp only [ite_true] at e'
   rw [Finset.sum_eq_single k] at e'
   · have : P k k * Q k k = 1 := Subtype.ext e'
     exact IsUnit.of_mul_eq_one _ this
@@ -168,7 +168,7 @@ theorem leadMinor_conj (Γ C : Matrix (Fin r) (Fin r) ℂ) (hC : ∀ l k, k < l 
     leadMinor (Cᴴ * Γ * C) n =
       (∏ a : Fin n, Complex.normSq (C (Fin.castLE hn a) (Fin.castLE hn a))) * leadMinor Γ n := by
   unfold leadMinor
-  rw [dif_pos hn, dif_pos hn]
+  rw [dite_eq_left hn, dite_eq_left hn]
   set ic := Fin.castLE hn with hι2
   have hz : ∀ (a : Fin n) (l : Fin r), n ≤ l → C l (ic a) = 0 := fun a l hl =>
     hC l (ic a) (Fin.lt_def.2 (lt_of_lt_of_le (show ((ic a : Fin r) : ℕ) < n by simp [hι2]) hl))
@@ -180,9 +180,7 @@ theorem leadMinor_conj (Γ C : Matrix (Fin r) (Fin r) ℂ) (hC : ∀ l k, k < l 
     congr 1
     rw [sum_castLE hn _ (fun l hl => by rw [hz a l hl]; simp)]
   have hdet : (C.submatrix ic ic).det = ∏ a, C (ic a) (ic a) := by
-    refine Matrix.det_of_upperTriangular ?_
-    intro a c hac
-    exact hC _ _ (show (c : ℕ) < a from hac)
+    exact Matrix.det_of_upperTriangular (fun a c hac => hC _ _ (show (c : ℕ) < a from hac))
   rw [hsub, Matrix.det_mul, Matrix.det_mul, Matrix.det_conjTranspose, hdet, ← map_prod Complex.normSq]
   set d := ∏ a, C (ic a) (ic a)
   have : star d * (Γ.submatrix ic ic).det * d = ((Complex.normSq d : ℝ) : ℂ) * (Γ.submatrix ic ic).det := by
@@ -460,8 +458,7 @@ theorem injective_of_algebraic {O : Type} [CommRing O] {F : Type} [Field F] [Cha
     exact (Polynomial.aeval_algHom_apply β.toIntAlgHom o q).symm
   have h3 : Polynomial.aeval (g o) q = 0 := by
     have := Polynomial.aeval_algHom_apply g.toIntAlgHom o q
-    rw [h2, map_zero] at this
-    exact this
+    rwa [h2, map_zero] at this
   rw [ho, Polynomial.aeval_def, Polynomial.eval₂_at_zero] at h3
   exact hq' (by simpa using h3)
 
@@ -510,8 +507,7 @@ theorem interior_pol (𝔐 : HodgeCpt Y S y) (hβ : Function.Injective β) (z : 
     rw [Y.ab_gen] at hw'
     obtain ⟨v, rfl⟩ := hw'
     refine ⟨v, ?_⟩
-    rw [Scheme.Hom.comp_apply]
-    exact hw
+    rwa [Scheme.Hom.comp_apply]
   have := GlobalTheory.GenericPol.proper_ample_kTriv Y.m Y.oF.proper Y.oF.ample Y.oF.ktriv n hr
   exact ⟨_, m₁, this.1, this.2.1⟩
 
@@ -573,7 +569,7 @@ theorem exists_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     simpa using this.map eA
 
   let val : 𝔐.Li → Vz := fun e => if he : e ∈ 𝔐.M.lat q then ev ⟨e, he⟩ else 0
-  have hval : ∀ e (he : e ∈ 𝔐.M.lat q), val e = ev ⟨e, he⟩ := fun e he => dif_pos he
+  have hval : ∀ e (he : e ∈ 𝔐.M.lat q), val e = ev ⟨e, he⟩ := fun e he => dite_eq_left he
   have h0 : val 0 = 0 := by
     rw [hval 0 (zero_mem _)]
     exact map_zero ev
@@ -645,8 +641,7 @@ theorem exists_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     have e : (d : Ω) * d' = 1 := by
       have e1 : (d : Ω) * ((d' : Ω) * t) = t := by
         have e2 : (d' : Ω) * t = a := hd'
-        rw [e2]
-        exact hd
+        rwa [e2]
       have : ((d : Ω) * d' - 1) * t = 0 := by linear_combination e1
       exact sub_eq_zero.1 ((mul_eq_zero.1 this).resolve_right ht.1)
     exact IsUnit.of_mul_eq_one _ (Subtype.ext e : d * d' = 1)

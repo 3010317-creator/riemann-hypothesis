@@ -118,8 +118,7 @@ theorem formOrd_ratPull_of_over : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [I
       ext x
       rfl
     have k1 := TopForm.formMap_formMap (D := n) E.ring.subtype φ _ e rfl hpc hτ ω
-    have k2 := TopForm.formMap_formMap (D := n) ψ E'.ring.subtype _ rfl hc rfl hτ ω
-    exact k1.trans k2.symm
+    exact k1.trans (TopForm.formMap_formMap (D := n) ψ E'.ring.subtype _ rfl hc rfl hτ ω).symm
   have hτ' : (E.ring.subtype.comp χ).comp E'.const = Cartier.constFn p := by
     rw [RingHom.comp_assoc, hc']
     rfl
@@ -132,8 +131,7 @@ theorem formOrd_ratPull_of_over : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [I
       exact (hχv y).symm
     have k1 := TopForm.formMap_formMap (D := n) E'.ring.subtype
       (φe.symm : Y.functionField →+* X.functionField) _ e rfl hcc hτ' ω
-    have k2 := TopForm.formMap_formMap (D := n) χ E.ring.subtype _ rfl hc' rfl hτ' ω
-    exact k1.trans k2.symm
+    exact k1.trans (TopForm.formMap_formMap (D := n) χ E.ring.subtype _ rfl hc' rfl hτ' ω).symm
   have fwd : ∀ a, E.IsFormOrd η a → E'.IsFormOrd (EtaleKlt.ratPull p s n η) a := by
     rintro a ⟨ω, hω, g, hη', hg⟩
     refine ⟨_, hfe ω hω, Units.map φ.toMonoidHom g, ?_, (hord g).trans hg⟩

@@ -282,15 +282,13 @@ theorem pow_div_mem_of_esymm_pow_div_mem (K : Type) [Field K] (V : ValuationSubr
     intro y
     rw [← V.valuation_le_one_iff, ← hv, map_div₀, div_le_one₀ (zero_lt_iff.mpr hvc)]
   rw [mem_iff]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   rw [Valuation.map_pow] at hlt
   have key : ∀ k, 1 ≤ k → k ≤ Multiset.card s → v (s.esymm k) < v (x a) ^ k := by
     intro k hk1 hkn
     obtain ⟨hkD, hmem⟩ := h k hk1 (hcard ▸ hkn)
     rw [mem_iff, Valuation.map_pow] at hmem
-    by_contra hge
-    push_neg at hge
+    by_contra! hge
     have hp : (v (x a) ^ k) ^ (D / k) ≤ v (s.esymm k) ^ (D / k) := pow_le_pow_left₀ zero_le' hge _
     rw [← pow_mul, Nat.mul_div_cancel' hkD] at hp
     exact absurd (hp.trans hmem) (not_le.mpr hlt)
@@ -361,8 +359,7 @@ theorem hasDiv_of_hasDiv_symTup : ∀ (k Ω : Type) [CommRing k] [Field Ω] [Alg
       have := hdiv ⟨i - 1, by omega⟩
       simp only [symTup, Nat.sub_add_cancel hi1] at this
       exact this
-    rw [← Subring.eq_iInf_of_isIntegrallyClosedIn] at hmem
-    exact hmem
+    rwa [← Subring.eq_iInf_of_isIntegrallyClosedIn] at hmem
   haveI : IsLocalRing (M.O z).toSubring := inferInstanceAs (IsLocalRing (M.O z))
   obtain ⟨a, ha, hea⟩ := exists_esymm_pow_div_mem_of_isLocalRing Ω (M.O z).toSubring (Fin N) c D ((j : ℕ) + 1) e hD1
     (by omega) (Nat.dvd_factorial (by omega) (by omega)) he rfl h1
@@ -595,8 +592,7 @@ theorem norm_key_eq_one : ∀ κ : Rule, Rule4 κ → ∀ (V : Type) [CommRing V
     have h := (hcj j (tt a) (ss a) (hfam a).2.2.1).2.2
     have e := hind a j
     simp only [hSf] at e
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have hJC := hJ m th _ pt yA (fun a => Sf a j₁) Ss hOn (fun j => ⟨(hyA j).1, hyAs j⟩) hTJ
   have hio : (fun a => io (pt a)) = levelPoint lev hgC := funext fun a => io.apply_symm_apply _
   rw [hio] at hJC
@@ -646,8 +642,7 @@ theorem norm_key_eq_one : ∀ κ : Rule, Rule4 κ → ∀ (V : Type) [CommRing V
   have hJ3 : ThJet x'' hgC m (levelPoint lev hgC) (fun i => ∑' α, aa i α) (fun i j => ∑' α, bb i j α) := by
     have e1 : (fun i => ∑' α, aa i α) = fun i => c⁻¹ * Sf i j₁ := funext fun i => (hSa i).symm
     have e2 : (fun i j => ∑' α, bb i j α) = fun i j => c⁻¹ * Ss i j := funext fun i => funext fun j => (hSb i j).symm
-    rw [e1, e2]
-    exact hJ''
+    rwa [e1, e2]
   have hba : ∀ i α, ‖aa i α‖ ≤ B * ‖π‖ ^ nn α := fun i α => by
     have h := ((hbd i j₁) α).1
     rw [hexp α] at h
@@ -662,8 +657,7 @@ theorem norm_key_eq_one : ∀ κ : Rule, Rule4 κ → ∀ (V : Type) [CommRing V
     obtain ⟨hsm, x₀, hg₀, lev₀, ϑ₀, hϑ₀, hJ₀, hk⟩ := hAε u hu hu'
     refine ⟨⟨fun i => (hsm i j₁).1, fun i j => (hsm i j).2⟩, x₀, hg₀, lev₀, ?_, hk⟩
     have e3 : ϑ₀ = fun i => ∑' α, (e : C →+* ℂ) (aa i α) * u ^ nn α := funext fun i => hϑ₀ i j₁
-    rw [e3] at hJ₀
-    exact hJ₀
+    rwa [e3] at hJ₀
   have hk := hj₀ j (le_max_left _ _) C (e : C →+* ℂ) x'' hgC ζ lev k₀ hDef
   have h1 : (κ C xC : C) = toF V C u * algebraMap (FractionRing V) C (κ (FractionRing V) x) := by
     rw [hκC, hu, map_mul]
@@ -1000,8 +994,7 @@ theorem keyVal_compat : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ → �
   have hs := GlobalTheory.T.localFormsTensorSection_genericFibre_transitionGerm S G L δ σ hδ i i' h2 t t' ht ht'
   have := GlobalTheory.KeyEven.keyValue_homog_of_fibres κ hH hF (KeyVals.FF S) (KeyVals.bG G (KeyVals.genPt S)) (KeyVals.bL L (KeyVals.genPt S)) t' t g y' y
     x' x hg' hg _ M hk' hk hs hM
-  rw [← hdet, mul_comm]
-  exact this
+  rwa [← hdet, mul_comm]
 
 theorem keyVals : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ →
   ∀ (S : Scheme.{0}) [IsIntegral S] (G : Over S) [GrpObj G] [IsCommMonObj G] (g : ℕ) (L : RigLB G) (δ : LB S)
@@ -1032,8 +1025,7 @@ theorem keyVals : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ →
   have hf : ∀ c i, genericPoint S ∈ (VB.det (LieVB.omega G) g).U c ⊓ δ.U i → KeyVals.IsKeyVal κ g L σ c i (f c i) := by
     intro c i h
     have ex := exists_keyVal κ S G g L δ σ hg hsa hsm hne hop hsym hδ hpol hnz c i h
-    simp only [f, dif_pos ex]
-    exact ex.choose_spec
+    simpa only [f, dite_eq_left ex] using ex.choose_spec
   have hgen : ∀ U : S.Opens, (U : Set S).Nonempty → genericPoint S ∈ U := fun U ⟨p, hp⟩ =>
     ((genericPoint_spec S).mem_open_set_iff U.isOpen).2 ⟨p, trivial, hp⟩
   refine ⟨f, fun c i p hp => ?_, fun c c' i i' h1 h2 => ?_⟩
@@ -1257,9 +1249,7 @@ theorem pullT_iso {S S' : Scheme.{0}} (f : S' ⟶ S) (t : SAB H S) {L : LB t.G.l
       rw [CechPic.cls_pull t.PP.isLB, CechPic.cls_pull hL, (CechPic.cls_eq_iff t.PP.isLB hL).2 h])
   have i₀ : LB.IsLB (X := ((Over.pullback f).obj t.G).left) (pullT f t).PP.L := (pullT f t).PP.isLB
   have i₁ := pull_isLB t.PP.isLB (pullback.fst t.G.hom f)
-  have i₂ := pull_isLB hL (pullback.fst t.G.hom f)
-  have e'' := LBIso.trans i₁ i₂ hL' e' h'
-  exact LBIso.trans i₀ i₁ hL' e e''
+  exact LBIso.trans i₀ i₁ hL' e (LBIso.trans i₁ (pull_isLB hL (pullback.fst t.G.hom f)) hL' e' h')
 
 
 open Cardinal in
@@ -1374,8 +1364,7 @@ end Triples
 theorem lbPow_U' {S : Scheme.{0}} (M : LB S) (n : ℕ) (j : (lbPow M n).ι) : (lbPow M n).U j = M.U (j PUnit.unit) := by
   ext x
   simp only [lbPow, LB.LinComb, LB.wchart]
-  simp
-  exact ⟨fun h => h _, fun h i => h⟩
+  simpa using ⟨fun h => h _, fun h i => h⟩
 
 theorem germ_lbPow_g' {S : Scheme.{0}} (M : LB S) (n : ℕ) (j j' : (lbPow M n).ι) (x : S)
     (h : x ∈ (lbPow M n).U j ⊓ (lbPow M n).U j') (h' : x ∈ M.U (j PUnit.unit) ⊓ M.U (j' PUnit.unit)) :

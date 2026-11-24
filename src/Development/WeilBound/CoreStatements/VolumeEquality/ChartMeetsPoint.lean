@@ -133,8 +133,7 @@ theorem exists_point_hom {κ : Type} {x : κ → Ω} (T : CoordTie ℤ ξ x) (c 
     obtain ⟨r, hr, hwr⟩ := (hzc.2 () c (by rw [hw1]; exact isUnit_one)).2 i
     rw [hw1, mul_one] at hwr
     have e : ψ ⟨x i / x c, hgen i⟩ = r := hwr
-    rw [e]
-    exact hr
+    rwa [e]
   refine ⟨z, hz, ?_⟩
   rintro ⟨a, ha⟩
   induction ha using Algebra.adjoin_induction with

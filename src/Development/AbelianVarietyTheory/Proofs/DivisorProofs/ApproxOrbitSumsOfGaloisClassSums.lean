@@ -364,8 +364,7 @@ theorem sum_orbit_eq [Module.Free ℤ X] [Module.Finite ℤ X] {m s : ℕ} {K : 
       ∑ c ∈ C, ∏ i, ∑ ν ∈ T.filter (fun ν => ∀ u, CongMod N (ν u) (k (c (i, u)))), t i ν := by
   have hinj : ∀ x y, CongMod N (k x) (k y) → CongMod N x y := by
     obtain ⟨-, ε, hε⟩ := hk
-    intro x y h
-    exact cm_of_det _ hε (cm_map ε.toLinearMap h)
+    exact fun x y h => cm_of_det _ hε (cm_map ε.toLinearMap h)
   have step : ∀ c ∈ C, ∏ i, ∑ ν ∈ T.filter (fun ν => ∀ u, CongMod N (ν u) (k (c (i, u)))), t i ν =
       ∑ μ ∈ S, if (∀ j, CongMod N (μ j) (k (c j))) then ∏ i, t i (fun u => μ (i, u)) else 0 := by
     intro c hc
@@ -386,11 +385,10 @@ theorem sum_orbit_eq [Module.Free ℤ X] [Module.Finite ℤ X] {m s : ℕ} {K : 
   obtain ⟨γ, g1, g2, g3, g4⟩ := ((hS μ).1 hμ).1
   obtain ⟨c, hc, hc'⟩ := hC3 (fun j => γ (a j)) ⟨γ, g1, g2, g3, fun j => cm_refl _⟩
   have hμc : ∀ j, CongMod N (μ j) (k (c j)) := fun j => cm_trans (g4 j) (cm_map k (cm_symm (hc' j)))
-  rw [Finset.sum_eq_single_of_mem c hc, if_pos hμc]
+  rw [Finset.sum_eq_single_of_mem c hc, ite_eq_left hμc]
   intro c' hc'' hne
-  rw [if_neg]
-  intro h
-  exact hne (hC2 _ hc'' _ hc fun j => hinj _ _ (cm_trans (cm_symm (h j)) (hμc j)))
+  rw [ite_eq_right]
+  exact fun h => hne (hC2 _ hc'' _ hc fun j => hinj _ _ (cm_trans (cm_symm (h j)) (hμc j)))
 
 end Classes
 
@@ -446,8 +444,7 @@ theorem orbitSums_of_classSums : ∀ (O : Type) [CommRing O] (bar : O → O) (q 
   refine ⟨hSfin.toFinset, fun μ hμ => (hSfin.mem_toFinset.1 hμ).1, fun μ hμ hμS => ?_, ?_⟩
   · rw [hSfin.mem_toFinset] at hμS
     obtain ⟨i, hi⟩ : ∃ i, (fun u => μ (i, u)) ∉ T := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hμS ⟨hμ, hcon⟩
     have h1 : R < ((qW W (Φ.β y) (fun u => μ (i, u)) : ℤ) : ℝ) := by
       by_contra hcon

@@ -83,8 +83,7 @@ theorem wt_shift {ν : Measure (GA E k)} (β : GA E k → ℝ≥0∞) (hβ : IsW
   have hc : ∀ h : GA E k, z⁻¹ * (h * g) = h * (z⁻¹ * g) := fun h => by
     have : z⁻¹ * h = h * z⁻¹ := ((Commute.inv_left (hz h))).eq
     rw [← mul_assoc, this, mul_assoc]
-  simp only [hc]
-  exact hβ.2 _
+  simpa only [hc] using hβ.2 _
 
 
 omit [_root_.NumberField.IsTotallyComplex E] [NumberField E] in
@@ -215,8 +214,7 @@ theorem volume_shell_of : Q1 → Q2 → D0 → N3 → W0 → V1 := by
       · have := mul_le_mul_of_nonneg_left h1 e0.le
         linarith
       · have := mul_lt_mul_of_pos_left h2 e0
-        rw [← mul_assoc, e1, one_mul] at this
-        exact this
+        rwa [← mul_assoc, e1, one_mul] at this
     rw [Set.indicator_of_mem hmem]
     exact le_rfl
   have hf : Measurable fun g : GA E k => min (Dt g) (Dt g)⁻¹ ^ ε := (hD.min hD.inv).pow_const ε

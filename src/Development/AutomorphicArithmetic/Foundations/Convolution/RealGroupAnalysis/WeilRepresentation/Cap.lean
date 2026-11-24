@@ -160,11 +160,11 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.capAbs :
     have h1 : a 0 0 s + a 1 1 s = -h s := by simpa using LinearMap.congr_fun hz s
     have h2 : Λ v (a 0 0 s) + Λ v (a 1 1 s) = Λ ((E 0 0 - E 1 1) v) s := by
       rw [← map_add (f := _), h1, map_neg, hhΛ v hv s hs, neg_neg]
-    simp only [LinearMap.add_apply, hPΛ _ _ v hv s hs, if_true, map_add (f := _)]
+    simp only [LinearMap.add_apply, hPΛ _ _ v hv s hs, ite_true, map_add (f := _)]
     simp only [LinearMap.sub_apply, map_sub] at h2
     linear_combination (norm := module) h2
   have hHP : ∀ v ∈ V₀, ∀ s ∈ S₀, (P 0 0 - P 1 1) (Λ v s) = Λ v ((a 0 0 - a 1 1) s) := fun v hv s hs => by
-    simp only [LinearMap.sub_apply, hPΛ _ _ v hv s hs, if_true, map_sub]
+    simp only [LinearMap.sub_apply, hPΛ _ _ v hv s hs, ite_true, map_sub]
     abel
   have hA : ∀ s ∈ S₀, (a 0 0 - a 1 1) s ∈ S₀ := fun s hs => S₀.sub_mem (haS 0 0 s hs) (haS 1 1 s hs)
   have hBr : (P 0 0 - P 1 1) ((P 0 0 - P 1 1) (Λ v s)) + (2 : ℂ) • (P 0 1 (P 1 0 (Λ v s)) + P 1 0 (P 0 1 (Λ v s)))
@@ -179,8 +179,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.capAbs :
         = h (h s) + (2 : ℂ) • (e (f s) + f (e s)) := by
       have := LinearMap.congr_fun hb s
       simp only [two_mul, LinearMap.add_apply, Module.End.mul_apply] at this
-      rw [two_smul, two_smul]
-      exact this
+      rwa [two_smul, two_smul]
     rw [hHP v hv s hs, hHP v hv _ (hA s hs), p10, p01, p01', p10', ← map_add (f := _), ← map_smul, ← map_add (f := _), hb', map_add (f := _), map_smul,
       map_add, hef v hv s hs, hfe v hv s hs, hhΛ v hv _ (hhS s hs), hhΛ _ (hHV v hv) s hs, neg_neg,
       map_add, map_smul, map_add, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.add_apply, add_comm (Λ (E 1 0 _) s)]
@@ -223,10 +222,10 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.capelli :
   have h01 : ¬ ((0 : Fin 2) = 1) := by decide
   have h10 : ¬ ((1 : Fin 2) = 0) := by decide
   subst hq hΔ hh
-  simp only [ha, Fin.sum_univ_two, h2, h01, h10, if_true, if_false]
+  simp only [ha, Fin.sum_univ_two, h2, h01, h10, ite_true, ite_false]
   refine ⟨?_, ?_, ?_⟩
   all_goals
-    try simp only [mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul, neg_zero, zero_sub, mul_one, one_mul, mul_assoc, hDX, hDX', h01, h10, and_self, and_true, and_false, if_true, if_false, add_zero,
+    try simp only [mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul, neg_zero, zero_sub, mul_one, one_mul, mul_assoc, hDX, hDX', h01, h10, and_self, and_true, and_false, ite_true, ite_false, add_zero,
       hX' 1 1 0 0, hX' 1 1 0 1, hX' 1 1 1 0, hX' 1 0 0 0, hX' 1 0 0 1, hX' 0 1 0 0,
       hD 1 1 0 0, hD 1 1 0 1, hD 1 1 1 0, hD 1 0 0 0, hD 1 0 0 1, hD 0 1 0 0]
   all_goals abel
@@ -249,16 +248,16 @@ private theorem coord_half {E : Type} [Field E] [NumberField E] [_root_.NumberFi
   by_cases h : InfinitePlace.mk σ = InfinitePlace.mk τ
   · rcases InfinitePlace.mk_eq_iff.1 h with e | e
     · subst e
-      rw [if_pos rfl, coord_atEmb, coord_atEmb, Complex.I_mul_I]
+      rw [ite_eq_left rfl, coord_atEmb, coord_atEmb, Complex.I_mul_I]
       norm_num
     · have hne : ComplexEmbedding.conjugate τ ≠ τ := fun h' =>
         InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex (InfinitePlace.mk τ))
           (InfinitePlace.isReal_mk_iff.2 (ComplexEmbedding.isReal_iff.2 h'))
       obtain rfl : σ = ComplexEmbedding.conjugate τ := by
         rw [← e]; exact (star_star σ).symm
-      rw [if_neg hne, GlobalTheory.IsoPull.coord_conj, GlobalTheory.IsoPull.coord_conj, coord_atEmb, coord_atEmb]
+      rw [ite_eq_right hne, GlobalTheory.IsoPull.coord_conj, GlobalTheory.IsoPull.coord_conj, coord_atEmb, coord_atEmb]
       simp
-  · rw [GlobalTheory.IsoPull.coord_atEmb_of_ne h, GlobalTheory.IsoPull.coord_atEmb_of_ne h, if_neg (fun e => h (by rw [e]))]
+  · rw [GlobalTheory.IsoPull.coord_atEmb_of_ne h, GlobalTheory.IsoPull.coord_atEmb_of_ne h, ite_eq_right (fun e => h (by rw [e]))]
     simp
 
 private theorem coord_single {E : Type} [Field E] (σ : E →+* ℂ) (i j k l : Fin 2) (c : Cinf E) :
@@ -268,7 +267,7 @@ private theorem coord_single {E : Type} [Field E] (σ : E →+* ℂ) (i j k l : 
   by_cases h : k = i ∧ l = j
   · obtain ⟨rfl, rfl⟩ := h
     simp
-  · rw [if_neg h, if_neg (fun e => h ⟨e.1.symm, e.2.symm⟩), map_zero]
+  · rw [ite_eq_right h, ite_eq_right (fun e => h ⟨e.1.symm, e.2.symm⟩), map_zero]
 
 private theorem half_comb {E N : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] [AddCommGroup N] [Module ℂ N]
     (R : (E →+* ℂ) → Fin 2 → Fin 2 → N) (τ : E →+* ℂ) (i j : Fin 2) (x y : N)
@@ -454,8 +453,7 @@ open scoped Classical
 private theorem lift_neg_form {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] {D : Dat F E} (W : Weil D) (M : Meas F) (u : GL (Fin 2) (A F) → ℂ) (φ : S4 F) (h : GL (Fin 2) (A E)) :
     lift W M (fun x => -u x) φ h = -lift W M u φ h := by
   unfold lift
-  simp only [neg_mul]
-  exact integral_neg _
+  simpa only [neg_mul] using integral_neg _
 
 private theorem lift_neg_data {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] {D : Dat F E} (W : Weil D) (M : Meas F) (u : GL (Fin 2) (A F) → ℂ) (φ : S4 F) (h : GL (Fin 2) (A E)) :
     lift W M u (-φ) h = -lift W M u φ h := by
@@ -463,8 +461,7 @@ private theorem lift_neg_data {F E : Type} [Field F] [NumberField F] [Field E] [
   have e : ∀ χ : S4 F, Th (-χ).1 = -Th χ.1 := fun χ => by
     unfold Th
     exact tsum_neg
-  simp only [map_neg, e, mul_neg]
-  exact integral_neg _
+  simpa only [map_neg, e, mul_neg] using integral_neg _
 
 theorem UpperTheory.ConvolutionTheory.R2.Fo.moveF :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] (D : Dat F E) (W : Weil D) (M : Meas F) (π : TR.CuspSub F 2) (O : Ops F), MoveE O W M π →
@@ -486,21 +483,18 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.moveF :
   have e2 : O.f D.δ v φ = -W.Om (wW F) (O.e D.δ v φ') := by
     have := congrArg (fun T : Module.End ℂ (S4 F) => T φ') (UpperTheory.ConvolutionTheory.R2.Fo.fW F E D W O v)
     simp only [Module.End.mul_apply, LinearMap.neg_apply] at this
-    rw [← e1] at this
-    exact this
+    rwa [← e1] at this
   have e3 : lift W M f.1 (W.Om (wW F) (O.e D.δ v φ')) = lift W M f'.1 (O.e D.δ v φ') :=
     UpperTheory.ConvolutionTheory.R2.Fo.moveG F E D W M f.1 (left f hf) _ _
   have e4 : lift W M f''.1 φ' = lift W M (TR.rt F 2 (gl (wW F)) f'').1 φ := by
     have := UpperTheory.ConvolutionTheory.R2.Fo.moveG F E D W M f''.1 (left f'' hf'') φ (wW F)⁻¹
-    rw [inv_inv] at this
-    exact this
+    rwa [inv_inv] at this
   have e5 : TR.rt F 2 (gl (wW F)) f'' = -TR.Eop v 1 0 f := by
     have a := congrArg (fun T : Module.End ℂ (TR.Sm F 2) => T f') (hAd v)
     simp only [Module.End.mul_apply, LinearMap.neg_apply] at a
     have b : TR.rt F 2 (gl (wW F)) f' = f := by
       rw [hf'def, ← Module.End.mul_apply, ← map_mul, ← map_mul, mul_inv_cancel, map_one, map_one, Module.End.one_apply]
-    rw [b] at a
-    exact a
+    rwa [b] at a
   have e6 : (TR.rt F 2 (gl (wW F)) f'').1 = fun x => -(TR.Eop v 1 0 f).1 x := by
     rw [e5]; rfl
   rw [e2, lift_neg_data, e3, hE f' hf' φ' hφ' v h, neg_neg, e4, e6, lift_neg_form]
@@ -759,8 +753,7 @@ open scoped Classical
 private lemma th_add {F : Type} [Field F] [NumberField F] (a b : S4 F) :
     Th (a + b).1 = Th a.1 + Th b.1 := by
   have ha := (poisson_of_mem_schwartzBruhatPi a.2).1.of_norm
-  have hb := (poisson_of_mem_schwartzBruhatPi b.2).1.of_norm
-  exact ha.tsum_add hb
+  exact ha.tsum_add ((poisson_of_mem_schwartzBruhatPi b.2).1.of_norm)
 
 private lemma th_smul {F : Type} [Field F] [NumberField F] (c : ℂ) (a : S4 F) :
     Th (c • a).1 = c * Th a.1 :=
@@ -782,8 +775,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.liftLin :
     exact integral_add (hI f hf φ hφ h) (hI f hf φ' hφ' h)
   · funext h
     have e : ∀ x, (c • f).1 x = c * f.1 x := fun x => rfl
-    simp only [lift, Pi.smul_apply, smul_eq_mul, e, mul_assoc]
-    exact integral_const_mul _ _
+    simpa only [lift, Pi.smul_apply, smul_eq_mul, e, mul_assoc] using integral_const_mul _ _
   · funext h
     simp only [lift, Pi.smul_apply, smul_eq_mul, map_smul, th_smul, mul_left_comm _ c]
     exact integral_const_mul _ _
@@ -948,11 +940,9 @@ private theorem ab_aI (w : InfinitePlace F) (t : ℝ) : ab (aI w t) = Real.exp t
     have h := (InfinitePlace.Completion.isometryEquivRealOfIsReal (IsTotallyReal.isReal v)).symm.dist_eq (eR w t v) 0
     have h0 : ((InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal v)).symm 0 : v.Completion) = 0 :=
       map_zero _
-    rw [← dist_zero_right, ← Real.norm_eq_abs, ← dist_zero_right, ← h0]
-    exact h
+    rwa [← dist_zero_right, ← Real.norm_eq_abs, ← dist_zero_right, ← h0]
   unfold ab
-  rw [IdeleGroup.ideleModule_eq, h1, h2, h3, mul_one]
-  rw [Finset.prod_eq_single w]
+  rw [IdeleGroup.ideleModule_eq, h1, h2, h3, mul_one, Finset.prod_eq_single w]
   · rw [(IsTotallyReal.isReal w).mult_eq_one, pow_one, h4]
     simp [eR, abs_of_pos (Real.exp_pos t)]
   · intro v _ hv
@@ -979,8 +969,7 @@ private theorem key (O : Fo.Ops F) (hS : SDiff O) (w : InfinitePlace F) (φ : S4
   let x' : Fin 4 → TR.Rinf F := fun i => (Pi.single w 1 : TR.Rinf F) * TR.pInf F (v i)
   have hx0 : x 0 = 0 := by funext i; simp [x, eR_zero]
   have hx : HasDerivAt x x' 0 := by
-    refine hasDerivAt_pi.2 fun i => ?_
-    exact ((hasDerivAt_eR w).sub_const 1).mul_const _
+    exact hasDerivAt_pi.2 fun i => ((hasDerivAt_eR w).sub_const 1).mul_const _
   have h1 := hS φ v x x' hx0 hx
   have h2 : (fun r : ℝ => φ.1 fun i => ((aI w r : (A F)ˣ) : A F) * v i) =
       fun r => φ.1 fun i => v i + TR.sInf F (x r i) := by
@@ -1104,8 +1093,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.curveH :
     refine congrArg _ (congrArg φ.1 (funext fun i => ?_))
     rw [← mul_assoc, ← Units.val_mul, ← aI_add, sub_add_cancel]
   change HasDerivAt (fun s => (W.Om (mD (aI w s)) φ).1 v) ((W.Om (mD (aI w t)) (O.h w φ)).1 v) t
-  rw [e, om_aI W w t (O.h w φ) v]
-  exact h
+  rwa [e, om_aI W w t (O.h w φ) v]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.ThetaBounds.CurveH =====

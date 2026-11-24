@@ -84,8 +84,7 @@ theorem lev_transform {N l : ℕ} {k : ℤ} {f : ℍ → ℂ}
 theorem lev_periodic {N l : ℕ} {k : ℤ} {f : ℍ → ℂ}
     (hf : ∀ γ ∈ lev N l, f ∣[k] γ = f) (z : ℂ) (hz : 0 < z.im) :
     f (ofComplex (z + 1)) = f (ofComplex z) := by
-  have h := lev_transform hf 1 1 0 1 (by norm_num) (by simp) (by simp) (by simp) (by simp) z hz
-  simpa using h
+  simpa using lev_transform hf 1 1 0 1 (by norm_num) (by simp) (by simp) (by simp) (by simp) z hz
 
 theorem sum_range_affine {q : ℕ} (hq : 0 < q) (F : ℤ → ℂ) (hF : Function.Periodic F q)
     (u v : ℤ) (hu : ∃ w : ZMod q, w * u = 1) :
@@ -183,8 +182,7 @@ theorem uOp_slash_lev : ∀ (N l q : ℕ) (k : ℤ) (f : ℍ → ℂ), 0 < N →
       push_cast
       field_simp
       linear_combination heC
-    rw [harg] at h
-    exact h
+    rwa [harg] at h
   have hunit : ∃ w : ZMod q, w * ((d * d : ℤ) : ZMod q) = 1 := by
     refine ⟨(a : ZMod q) * a, ?_⟩
     have h := congrArg (Int.cast : ℤ → ZMod q) hdet

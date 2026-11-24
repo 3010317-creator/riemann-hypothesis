@@ -130,8 +130,7 @@ private theorem cont_m {K T : Type} [Fintype K] [TopologicalSpace T] {d : ℕ} (
         simp only [Set.mem_setOf_eq, LinearMap.add_apply] at *
         exact ha.add hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, LinearMap.zero_apply]
-        exact continuous_const
+        simpa only [Set.mem_setOf_eq, LinearMap.zero_apply] using continuous_const
       smul_mem' := by
         intro c a ha
         simp only [Set.mem_setOf_eq, LinearMap.smul_apply, smul_eq_mul] at *
@@ -158,8 +157,7 @@ private theorem cont_m {K T : Type} [Fintype K] [TopologicalSpace T] {d : ℕ} (
     have := hv _ (hev y)
     have e : (MvPolynomial.aeval y) (v : MvPolynomial (K × Fin d) ℂ) = MvPolynomial.eval y (v : MvPolynomial (K × Fin d) ℂ) :=
       DFunLike.congr_fun (MvPolynomial.coe_aeval_eq_eval y) _
-    rw [Submodule.coe_zero, map_zero, ← e]
-    exact this
+    rwa [Submodule.coe_zero, map_zero, ← e]
   have htop : W = ⊤ := by
     rw [← Subspace.dualCoannihilator_dualAnnihilator_eq (W := W), hb, Submodule.dualAnnihilator_bot]
   have hf : f ∈ W := htop ▸ Submodule.mem_top
@@ -195,10 +193,8 @@ theorem UpperTheory.V.Z.Sym.Wt.contRep :
         split_ifs <;> rfl
       rw [hfun]
       by_cases hk : k.2 = true
-      · simp only [hk, if_true]
-        exact entci 3 k.1 i' i
-      · simp only [if_neg hk]
-        exact entc 3 k.1 i i'
+      · simpa only [hk, ite_true] using entci 3 k.1 i' i
+      · simpa only [ite_eq_right hk] using entc 3 k.1 i i'
     exact cont_m (fun k : I × Bool => dg j S k.1) (fun g : I → GL (Fin 3) ℂ => dbl 3 g) hent (x S)
       (f ∘ₗ LinearMap.single ℂ (fun S => ↥(Bi 3 (dg j S))) S)
   · have hdet : ∀ v : I, Continuous fun g : I → GL (Fin 2) ℂ => Matrix.GeneralLinearGroup.det (g v) := by
@@ -214,7 +210,6 @@ theorem UpperTheory.V.Z.Sym.Wt.contRep :
         simp only [h]
         exact ((Units.continuous_coe_inv (M := Matrix (Fin 2) (Fin 2) ℂ)).comp (continuous_apply v)).matrix_det
     have hd : Continuous fun g : I → GL (Fin 2) ℂ => detE 2 e g := by
-      show Continuous fun g : I → GL (Fin 2) ℂ => ∏ v, Matrix.GeneralLinearGroup.det (g v) ^ e
       exact continuous_finsetProd _ fun v _ => (hdet v).zpow e
     simp only [repD_apply, LinearMap.smul_apply, map_smul, smul_eq_mul]
     exact (Units.continuous_val.comp hd).mul
@@ -327,8 +322,7 @@ private theorem sdom_mul {d d' : Fin n → kˣ} (h : Sig.SDom d) (h' : Sig.SDom 
 private theorem sdom_mul_unit {d u : Fin n → kˣ} (h : Sig.SDom d) (hu : ∀ i, u i ∈ UpperTheory.V.Hi.Uo k) : Sig.SDom (d * u) := by
   intro i j hij
   have h1 : ∀ i, valuation k (u i : k) = 1 := hu
-  simp only [Pi.mul_apply, Units.val_mul, map_mul, h1, mul_one]
-  exact h i j hij
+  simpa only [Pi.mul_apply, Units.val_mul, map_mul, h1, mul_one] using h i j hij
 
 private theorem exists_div (t : Fin n → kˣ) : ∃ a b : Fin n → kˣ, Sig.SDom a ∧ Sig.SDom b ∧ t = a * b⁻¹ := by
   let B : ℤ := ∑ i, |ord k (t i)|
@@ -469,8 +463,7 @@ private theorem sec_mem_lev {U : Subgroup (UA L n)} {S : Finset (Plc L)} (hP : P
   rw [Subgroup.mem_comap]
   by_cases e : w' = w
   · subst e
-    rw [h2]
-    exact hj
+    rwa [h2]
   · have hne : w.under (𝓞 (Lp L)) ≠ w'.under (𝓞 (Lp L)) := fun h =>
       e (hP.inj (Finset.mem_coe.2 hw') (Finset.mem_coe.2 hw) h.symm)
     rw [away_one ((factor L n w').2.2.1 w hne (h1 j))]
@@ -523,8 +516,7 @@ private theorem op_keep {R : Representation ℂ (InfinitePlace L → GL (Fin n) 
     ⟨by simpa using mul_mem (inv_mem hxA) ha, hy⟩
   rw [← mul_assoc, hB.level y hyA]
   have h := congrFun (hfix _ hxJ) g
-  rw [← hsec x hx]
-  exact h
+  rwa [← hsec x hx]
 
 private theorem op_comm {w w' : Plc L} (hw : IsSplitAt w) (hw' : IsSplitAt w')
     (hne : w'.under (𝓞 (Lp L)) ≠ w.under (𝓞 (Lp L))) (d : Fin n → (Kw w)ˣ) (d' : Fin n → (Kw w')ˣ) :
@@ -582,7 +574,7 @@ theorem UpperTheory.V.Z.Sym.Al.afOps :
   have hu : ∀ w, w ∈ S → ∀ d (φ : AF R (lev U S iw)),
       ((u w d φ : AF R (lev U S iw)) : UA L n → V) = op w (iw w) d φ := by
     intro w hw d φ
-    simp only [u, dif_pos hw]
+    simp only [u, dite_eq_left hw]
     rfl
   refine ⟨u, fun w hw d _ φ => hu w hw d φ, fun w hw d d' hd hd' => ?_, fun w hw d hd => ?_,
     fun w hw w' hw' hne d d' _ _ => ?_⟩
@@ -684,8 +676,7 @@ private theorem dom_of_sdom {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
 private theorem dom_mul {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     {n : ℕ} (d d' : Fin n → kˣ) (h : AlgebraTools.Dom d) (h' : AlgebraTools.Dom d') : AlgebraTools.Dom (d * d') := by
   intro i j hij
-  simp only [Pi.mul_apply, Units.val_mul, map_mul]
-  exact mul_le_mul' (h i j hij) (h' i j hij)
+  simpa only [Pi.mul_apply, Units.val_mul, map_mul] using mul_le_mul' (h i j hij) (h' i j hij)
 
 private theorem loc_char {k M : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     [AddCommGroup M] [Module ℂ M] (u : (Fin 2 → kˣ) → Module.End ℂ M) (b : kˣ →* ℂˣ) (v : M) (hv : v ≠ 0)
@@ -765,8 +756,7 @@ theorem UpperTheory.V.Z.Sym.Al.refine :
   haveI : FiniteDimensional ℂ (AF R (lev U S iw)) :=
     afFin L 2 V R (lev U S iw) ((cof L 2).2.2.1 U hU S iw)
   have hdomU : ∀ (w : Plc L) (d : Fin 2 → (Kw w)ˣ), (∀ i, d i ∈ Hi.Uo (Kw w)) → AlgebraTools.Dom d := by
-    intro w d hd i j _
-    exact ((hd i).trans (hd j).symm).le
+    exact fun w d hd i j _ => ((hd i).trans (hd j).symm).le
   have hpair : ∀ (w : Plc L) (t : (Kw w)ˣ), valuation (Kw w) (t : Kw w) < 1 → AlgebraTools.Dom ![t, t⁻¹] :=
     fun w t ht => dom_of_sdom _ (sdom_pair t ht)
 
@@ -821,8 +811,7 @@ theorem UpperTheory.V.Z.Sym.Al.refine :
   obtain ⟨h1, h2, h3⟩ := hψ w hw
   refine ⟨h1, h2, fun d hd => ?_⟩
   have := congrArg Subtype.val (h3 d hd)
-  rw [hu_op w hw d (dom_of_sdom d hd) v] at this
-  exact this
+  rwa [hu_op w hw d (dom_of_sdom d hd) v] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.SmoothDepth.OpenLevelSubgroups.Refine =====
@@ -861,8 +850,7 @@ theorem UpperTheory.V.Z.Sym.Al.smoothDepth :
       _ < γ := hc₀
   have hmem : (u : k) ∈ U := hγ ⟨(u : k) - 1, hlt, by ring⟩
   have h : u ∈ Units.val ⁻¹' U := hmem
-  rw [hUe] at h
-  exact h
+  rwa [hUe] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.SmoothDepth.OpenLevelSubgroups.SmoothDepth =====
@@ -1440,8 +1428,8 @@ theorem UpperTheory.V.Z.Sym.W.adjoint_lift_w_of_literal_automorphy_spec_out : _r
       have hsub : ((S₀ : Set (Plc L)) ∪ S₁) ⊆ (S₀ : Set (Plc L)) ∪ P := Set.union_subset_union_right _ fun w hw => (h1 w hw).1
       have hp1 : Places (S₁ : Set (Plc L)) := mono fun w hw => Or.inr (h1 w hw).1
       let W : ∀ w : Plc L, Sig.Lev (Kw w) := fun w => if w ∈ S₀ then deep c w else iw w
-      have W0 : ∀ w ∈ S₀, W w = deep c w := fun w hw => if_pos hw
-      have W1 : ∀ w ∈ S₁, W w = iw w := fun w hw => if_neg (hn w hw)
+      have W0 : ∀ w ∈ S₀, W w = deep c w := fun w hw => ite_eq_left hw
+      have W1 : ∀ w ∈ S₁, W w = iw w := fun w hw => ite_eq_right (hn w hw)
       obtain ⟨e, φ, h0, hAF, hE⟩ := _root_.UpperTheory.V.Z.Sym.Al.inVec_alt H L π hπ j hwt (S₀ ∪ S₁) (by rw [Finset.coe_union]; exact mono hsub)
         (fun w hw => hunr w fun w' hw' => hw w' (Finset.mem_union_left _ hw')) W ψ fun w hw => by
           rcases Finset.mem_union.1 hw with hw | hw

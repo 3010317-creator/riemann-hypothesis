@@ -104,11 +104,9 @@ theorem mem_O_iff {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     refine ⟨Polynomial.X ^ 2 + (Polynomial.C b - Polynomial.C a * Polynomial.X),
       Polynomial.monic_X_pow_add hdeg, ?_⟩
     have h1 : algebraMap 𝒪[F] E a = x + M.L.cj x := by
-      rw [IsScalarTower.algebraMap_apply 𝒪[F] F E]
-      exact ha
+      rwa [IsScalarTower.algebraMap_apply 𝒪[F] F E]
     have h2 : algebraMap 𝒪[F] E b = x * M.L.cj x := by
-      rw [IsScalarTower.algebraMap_apply 𝒪[F] F E]
-      exact hb
+      rwa [IsScalarTower.algebraMap_apply 𝒪[F] F E]
     rw [Polynomial.eval₂_add, Polynomial.eval₂_X_pow, Polynomial.eval₂_sub, Polynomial.eval₂_C,
       Polynomial.eval₂_mul, Polynomial.eval₂_C, Polynomial.eval₂_X, h1, h2]
     ring
@@ -125,8 +123,7 @@ theorem alg_mem_O {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 
 theorem exists_not_mem_range {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E) : ∃ y : E, y ∉ Set.range (algebraMap F E) := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have hs : Function.Surjective (Algebra.linearMap F E) := fun y => hc y
   have h := LinearMap.finrank_range_le (Algebra.linearMap F E)
   rw [LinearMap.range_eq_top.mpr hs, finrank_top, Module.finrank_self, M.L.rank] at h
@@ -142,7 +139,7 @@ theorem exists_mul_mem_integer {F : Type} [Field F] [ValuativeRel F] (s : F) :
     refine ⟨s⁻¹, ?_, inv_ne_zero hs0, by rw [inv_mul_cancel₀ hs0]; exact one_mem _⟩
     rw [Valuation.mem_integer_iff] at hs ⊢
     rw [map_inv₀]
-    push_neg at hs
+    push Not at hs
     exact inv_le_one_of_one_le₀ hs.le
 
 theorem exists_omega0 {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -226,14 +223,12 @@ theorem coords_exist {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 theorem mem_of_sq_mem {F : Type} [Field F] [ValuativeRel F] {y : F} (h : y ^ 2 ∈ 𝒪[F]) : y ∈ 𝒪[F] := by
   rw [Valuation.mem_integer_iff] at h ⊢
   rw [map_pow] at h
-  by_contra hy
-  push_neg at hy
+  by_contra! hy
   have h2 : 1 < (ValuativeRel.valuation F) y ^ 2 := one_lt_pow₀ hy two_ne_zero
   exact absurd h (not_le.mpr h2)
 
 theorem four_mem {F : Type} [Field F] [ValuativeRel F] : (4 : F) ∈ 𝒪[F] := by
-  have h := natCast_mem (𝒪[F]) 4
-  simpa using h
+  simpa using natCast_mem (𝒪[F]) 4
 
 theorem bD_mem {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E) {w : E} {t n0 : F} (ht : algebraMap F E t = w + M.L.cj w)

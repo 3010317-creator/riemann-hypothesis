@@ -155,8 +155,7 @@ lemma measurePreserving_snocMeasurableEquiv (n : ℕ) :
 
 lemma ae_coords_ne_zero (n : ℕ) : ∀ᵐ c : Fin n → ℂ, ∀ i, c i ≠ 0 := by
   rw [ae_all_iff]
-  intro i
-  exact Measure.ae_eval_ne (fun _ : Fin n => (volume : Measure ℂ)) i 0
+  exact fun i => Measure.ae_eval_ne (fun _ : Fin n => (volume : Measure ℂ)) i 0
 
 theorem iterated_integral_eq_integral_pi :
     ∀ (n : ℕ) (W : ℕ → ℂ → ℝ) (R : (j : ℕ) → (Fin j → ℂ) → ℝ), (∀ j t, 0 ≤ W j t) → (∀ c : Fin n → ℂ, (∀ i, c i ≠ 0) → 0 ≤ R n c) → AEMeasurable (fun c : Fin n → ℂ => (∏ i : Fin n, W ((i : ℕ) + 1) (c i)) * R n c) → (∀ j, j < n → ∀ c : Fin j → ℂ, (∀ i, c i ≠ 0) → Integrable (fun t : ℂ => W (j + 1) t * R (j + 1) (Fin.snoc c t)) ∧ R j c = ∫ t : ℂ, W (j + 1) t * R (j + 1) (Fin.snoc c t)) → Integrable (fun c : Fin n → ℂ => (∏ i : Fin n, W ((i : ℕ) + 1) (c i)) * R n c) ∧ R 0 (fun i => i.elim0) = ∫ c : Fin n → ℂ, (∏ i : Fin n, W ((i : ℕ) + 1) (c i)) * R n c := by
@@ -215,8 +214,7 @@ theorem iterated_integral_eq_integral_pi :
       rw [integrable_prod_iff hFm]
       constructor
       · filter_upwards [ae_coords_ne_zero n] with c hc
-        simp only [hFeq]
-        exact (hstep n (Nat.lt_succ_self n) c hc).1.const_mul _
+        simpa only [hFeq] using (hstep n (Nat.lt_succ_self n) c hc).1.const_mul _
       · refine hint.congr ?_
         filter_upwards [ae_coords_ne_zero n] with c hc
         rw [← hslice c hc]
@@ -252,12 +250,7 @@ lemma levWeight_nonneg (P : M.Par) (j : ℕ) (t : ℂ) : 0 ≤ KB.levW P j t := 
 
 lemma isLocPt_ofFn_unit {j : ℕ} (c : Fin j → ℂ) (hc : ∀ i, c i ≠ 0) :
     D.IsLocPt (List.ofFn fun l : Fin j => ((1 : ℕ), c l)) j := by
-  refine ⟨?_, ?_⟩
-  · intro b hb
-    rw [List.mem_ofFn] at hb
-    obtain ⟨i, rfl⟩ := hb
-    exact ⟨le_rfl, hc i⟩
-  · simp [D.ptSize, List.map_ofFn, List.sum_ofFn]
+  exact GlobalTheory.LevelFormsReal.isLocPt_ofFn c hc
 
 theorem levelZero_eq_integral_topVector_of_cpt :
     P5.ThmPActualCpt → ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (P : M.Par) (p : KB.Pl P Wp Wq) (Cb : ℝ) (H : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (w : List C.Letter), KB.InDDplus2 P p.l0 p.T.base Cb p.Θ → KB.CptCoef p.T.base H → KB.CutWord P p.l0 w → MemLp (tv p H w) 2 volume ∧ B.beta p.T.base (List.foldr (fun (a : Bool × ℝ) G => M.sgn P p.l0 • Q.CV P.k P.r (a.2 : ℂ) G) (H) w) H = ((∫ c, ‖tv p H w c‖ ^ 2 : ℝ) : ℂ) := by

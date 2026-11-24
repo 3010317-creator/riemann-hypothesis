@@ -124,8 +124,7 @@ theorem UpperTheory.Gal.W2.locTan_of :
     rw [map_zero T, map_zero co, perC_zero, hx j, sub_sub_cancel]
   have hsec0 : (y : Sp ℂ ⟶ (KS.pow A k).left) = sec ((0 : Fin d → ℂ), z₀) := by
     show _ = S.pt k (perC P₀ (co 0)) z₀
-    rw [map_zero co, perC_zero]
-    exact hy
+    rwa [map_zero co, perC_zero]
   have hev : ∀ᶠ v in 𝓝 ((0 : Fin d → ℂ), z₀), sec v ≫ c₂ = sec (G v) ≫ c₁ := by
     have hTc : Continuous (fun v : (Fin d → ℂ) × (Fin k → Fin g → ℂ) => T v.1) :=
       (LinearMap.continuous_of_finiteDimensional T).comp continuous_fst
@@ -142,8 +141,7 @@ theorem UpperTheory.Gal.W2.locTan_of :
     have hPb : PELU.IsPeriod D ρ (perC P₀ (co b)) := hB0'.1 b hv1
     have hPTb : PELU.IsPeriod D ρ (perC P₀ (co (T b))) := hB0'.1 (T b) hv2
     have hPTb' : PELU.IsPeriod D ρ (perC P₀ (H * co b * (H.map star)⁻¹)) := by
-      rw [← hT b]
-      exact hPTb
+      rwa [← hT b]
     have step := hCorr O bar g ρ D X s A S k Z c₁ c₂ P₀ M₀ hP₀ hM ga H hfix L hL (co b) hPb hPTb' z
     show S.pt k (perC P₀ (co b)) z ≫ c₂ =
       S.pt k (perC P₀ (co (T b))) (fibMap H L z - fun j => perC P₀ (co (T b)) (x j)) ≫ c₁

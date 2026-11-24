@@ -144,8 +144,7 @@ theorem prod_le_span {O : Type*} [CommRing O] [IsDedekindDomain O] {g : O} (hg :
     intro x hx hd
     have hp : Prime x := UniqueFactorizationMonoid.irreducible_iff_prime.1 hx
     refine hsq ⟨x, Ideal.isPrime_of_prime hp, hp.ne_zero⟩ ?_
-    rw [Ideal.dvd_span_singleton, ← pow_two] at hd
-    exact hd
+    rwa [Ideal.dvd_span_singleton, ← pow_two] at hd
   have hrad : (Ideal.span {g}).radical ≤ Ideal.span {g} := by
     rintro x ⟨n, hn⟩
     rw [← Ideal.dvd_span_singleton] at hn ⊢
@@ -264,8 +263,7 @@ theorem inMod_iff_forall_modW : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Fo
     refine mem_sup_smul_mono ?_ h1
     have h2 := prod_le_span hg (fun w => by rw [X.g_eq]; exact g_not_mem_sq w) hfin.toFinset
       (fun w hw => hfin.mem_toFinset.2 hw)
-    refine le_trans (le_of_eq ?_) (Ideal.map_mono h2)
-    exact (map_prod (Ideal.mapHom (hostInt X)) _ _).symm
+    exact le_trans (le_of_eq (map_prod (Ideal.mapHom (hostInt X)) _ _).symm) (Ideal.map_mono h2)
 
 end GlobalTheory.Mem.GroupLoc.Crt
 
@@ -748,8 +746,7 @@ theorem coords (w : HeightOneSpectrum (𝓞 D.host.E)) {n : ℕ} (u v : Fin n �
     have h4 : ∀ i, hA X.B.I (v j) (c i • u i) =
         (c i : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F) * hA X.B.I (v j) (u i) := fun i => hA_smul_right _ _ _ _
     simp only [h4] at h2
-    have h5 := sub_mem h2 h3
-    simpa [mul_sub, Finset.sum_sub_distrib] using h5
+    simpa [mul_sub, Finset.sum_sub_distrib] using sub_mem h2 h3
 
 theorem pres_w (w : HeightOneSpectrum (𝓞 D.host.E)) {x : X.B.I.Gf} (hx : x ∈ X.B.I.Kset) (S : Set (VA X.B.I))
     (hS : ∀ s ∈ S, GroupLoc.ModW X w S ((X.B.I.fmat x - 1) *ᵥ s)) {y : VA X.B.I} (hy : GroupLoc.ModW X w S y) :

@@ -117,8 +117,7 @@ theorem inv_mem {p : ℕ} (hp : p.Prime) {n : ℤ} (hn : ¬ (p : ℤ) ∣ n) : (
   have hE : (n : I.E) ≠ 0 := Int.cast_ne_zero.mpr hn0
   have hcop : Nat.Coprime n.natAbs p := by
     rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
-    intro h
-    exact hn (Int.natCast_dvd.mpr h)
+    exact fun h => hn (Int.natCast_dvd.mpr h)
   refine (mem_Ap_lemma I p _).mpr ⟨n.natAbs, hcop, ?_⟩
   rcases Int.natAbs_eq n with h | h
   · have h' : (n.natAbs : ℤ) = n := by linarith
@@ -154,9 +153,7 @@ theorem isLoc {p : ℕ} [hpf : Fact p.Prime] :
     linear_combination ha
   · intro x y h
     refine ⟨1, ?_⟩
-    have h2 : (x : I.E) = y := by
-      have h3 := congrArg (fun z : Ap I p => (z : I.E)) h
-      exact h3
+    have h2 : (x : I.E) = y := congrArg (fun z : Ap I p => (z : I.E)) h
     have hxy : x = y := NumberField.RingOfIntegers.ext h2
     subst hxy
     rfl
@@ -271,8 +268,7 @@ theorem dual_LA (hp : p.Prime) {x : Fin I.n → I.E} (hx : ∀ y ∈ I.L, hG I y
   classical
   obtain ⟨T, hT⟩ := I.L_fg
   have hden : ∀ t ∈ T, ∃ s : ℕ, Nat.Coprime s p ∧ ∃ a : 𝓞 I.E, (s : I.E) * hG I t x = (a : I.E) := by
-    intro t ht
-    exact hx t (hT ▸ Submodule.subset_span ht)
+    exact fun t ht => hx t (hT ▸ Submodule.subset_span ht)
   choose! s hs a ha using hden
   let S : ℕ := ∏ t ∈ T, s t
   have hS : Nat.Coprime S p := Nat.Coprime.prod_left fun t ht => hs t ht
@@ -514,8 +510,7 @@ theorem wFrame_of (hPID : ApPID) (hWB : WBasis) : WFrame := by
         simp [hG_smul_right] }
   have hTi : Function.Injective T := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro u hu
-    exact hT0 u (fun j => congrFun hu j)
+    exact fun u hu => hT0 u (fun j => congrFun hu j)
   have hdim : Module.finrank I.E (Fin I.n → I.E) =
       Module.finrank I.E (Fin r ⊕ (Fin r ⊕ Fin (k + 1)) → I.E) := by
     rw [Module.finrank_fin_fun, Module.finrank_fintype_fun_eq_card, Fintype.card_sum,
@@ -656,15 +651,10 @@ theorem hG_sum_right {ι : Type*} (s : Finset ι) (x : Fin I.n → I.E) (y : ι 
 
 theorem J_entry (i j : Fin I.n) : star (I.J j i) = I.J i j := by
   have h := congrFun (congrFun I.J_herm i) j
-  simp only [Formalism.UG.cT, Matrix.transpose_apply, Matrix.map_apply, starRingEnd_apply] at h
-  exact h
+  simpa only [Formalism.UG.cT, Matrix.transpose_apply, Matrix.map_apply, starRingEnd_apply] using h
 
 theorem hG_symm (x y : Fin I.n → I.E) : hG I y x = star (hG I x y) := by
-  simp only [hG_def, star_sum, star_mul', star_star]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  rw [J_entry]
-  ring
+  exact PI.ScRefExists.WF.hG_symm I x y
 
 variable {I}
 
@@ -745,7 +735,7 @@ theorem weil_basis_existence : WBasis := by
     rw [hG_symm, hef]
     by_cases h : b = a
     · subst h; simp
-    · rw [if_neg h, if_neg (Ne.symm h), star_zero]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h), star_zero]
   let φ : (Fin I.n → I.E) →ₗ[I.E] (Fin r → I.E) × (Fin r → I.E) :=
     { toFun := fun x => (fun a => hG I (e a) x, fun a => hG I (f a) x)
       map_add' := fun x y => by
@@ -849,8 +839,7 @@ theorem weil_basis_existence : WBasis := by
     have h1 := (linearIndependent_iff_card_eq_finrank_span.1 (hLI b))
     rw [Fintype.card_fin] at h1
     unfold Set.finrank at h1
-    rw [hspan, hker] at h1
-    exact h1
+    rwa [hspan, hker] at h1
   let b' := b.reindex (finCongr hm)
   refine ⟨fun i => ((b' i : WA I p r e f) : Fin I.n → I.E), fun i => (mem_WA I).mp (b' i).2, hLI b', ?_⟩
   intro x hxL hxo

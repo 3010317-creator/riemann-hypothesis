@@ -97,8 +97,7 @@ theorem rep_shift {a b : IdF A} {j : ℕ} {z z' : ∀ s : ComposableArrows C (j 
   rw [add_zero] at h1
   refine rep_congr h1 fun s => ?_
   have h2 := (b.S _).neg_mem (e s)
-  rw [neg_sub] at h2
-  exact h2
+  rwa [neg_sub] at h2
 
 theorem term_id {k : ℕ} (u : ComposableArrows C k) (f : CH.Cn (CH.modF A) k) (g : Fin (k + 1) → Fin (k + 1))
     (hg : Monotone g) (e : g = id) :
@@ -172,7 +171,7 @@ theorem addC_near {s : ℕ} {V : X.Opens} {d : ℕ} {t : Fin d → Γ(X, V)} {E 
         ((show (sP (KS q s {V})).A.obj (u.obj 0) from liftV (u.obj 0).obj (ks_in q s V _ (u.obj 0).property) (t k)) -
           ((sP (KS q s {V})).A.map (σ _)).hom (ε (t k))))) = 0 := by
   rw [Finset.sum_eq_single k (fun i _ hi => by
-    rw [if_neg (Ne.symm hi)]; unfold Frame.form; rw [map_zero, mul_zero]) (by simp), if_pos rfl]
+    rw [ite_eq_right (Ne.symm hi)]; unfold Frame.form; rw [map_zero, mul_zero]) (by simp), ite_eq_left rfl]
   unfold Frame.form Frame.a
   rw [Fin.prod_univ_one]
   simp only [Matrix.cons_val_zero, map_one, mul_one]
@@ -240,8 +239,7 @@ theorem key {s : ℕ} {V : X.Opens} {n : ℕ} {t : Fin (n + 1) → Γ(X, V)} {E 
       simp [cc]
     · intro I _ hI
       obtain ⟨k, hk'⟩ : ∃ k, I k ≠ k := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         exact hI (funext h)
       have h0' : ∏ k, cc k (I k) = 0 := Finset.prod_eq_zero (Finset.mem_univ k) (by simp [cc, Ne.symm hk'])
       rw [h0']
@@ -312,8 +310,7 @@ theorem top_chart : CrystallineSemistableComparison.Pb.KH.LocGr → CrystallineS
     intro x z
     obtain ⟨G, hG, hGe⟩ := key hL σ x
     constructor
-    · intro h
-      exact rep_shift h G hG hGe
+    · exact fun h => rep_shift h G hG hGe
     · intro h
       refine rep_shift h (-G) (fun u => (Ideal.neg_mem_iff _).2 (hG u)) (fun u => ?_)
       have e : (show (sP (KS q s {V})).A.obj (u.obj (Fin.last (n + 1))) from CH.d _ n (-G) u) =
@@ -342,8 +339,7 @@ theorem top_chart : CrystallineSemistableComparison.Pb.KH.LocGr → CrystallineS
         ring
       rw [e1]
       exact zero_mem _
-    have h4 := congrFun (huniq (fun _ => x - x') h3) (J0 _)
-    exact sub_eq_zero.1 h4
+    exact sub_eq_zero.1 (congrFun (huniq (fun _ => x - x') h3) (J0 _))
   obtain ⟨y', hy'⟩ := hex y
   have h1 : CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {V}) ((n : ℤ) + 1)) (sFil (KS q s {V}) ((n : ℤ) + 1 + 1))
       (E.form σ id (ε (y' (J0 _)))) y := by
@@ -538,16 +534,8 @@ variable {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] {Φ : PDF R C} {F
 
 theorem cupList_mem (hF : IsFil Φ Fil) : ∀ (m : ℕ) (ℓ : Fin m → CH.Cn (CH.modF Φ.A) 1),
     (∀ k, ℓ k ∈ FC (Fil ((1 : ℕ) : ℤ)) 1) → cupListC Φ.A ℓ ∈ FC (Fil (m : ℤ)) m := by
-  intro m
-  induction m with
-  | zero =>
-    intro ℓ _
-    refine mem_FC.2 fun s => ?_
-    rw [hF.top _ (by simp)]
-    trivial
-  | succ m ih =>
-    intro ℓ h
-    exact cup_mem hF _ (ih _ fun k => h _) (h _)
+  intros
+  apply GlobalTheory.CompanionTheory.RepLifts.cupList_mem <;> assumption
 
 theorem rep_cup (hF : IsFil Φ Fil) (E : Frame Φ d) (σ : ∀ T : C, E.D ⟶ T) (hc : E.GrConst Fil)
     (n : ℕ) (ℓ : Fin (n + 1) → CH.Cn (CH.modF Φ.A) 1) (c : Fin (n + 1) → Fin d → Φ.A.obj E.D)
@@ -561,8 +549,7 @@ theorem rep_cup (hF : IsFil Φ Fil) (E : Frame Φ d) (σ : ∀ T : C, E.D ⟶ T)
   have hh : ∀ k, h0 (h k) ∈ FC (Fil ((1 : ℕ) : ℤ)) 0 := fun k => mem_FC.2 fun s => by
     have := hJ k (s.obj (Fin.last 0))
     rw [← hF.one] at this
-    rw [Nat.cast_one]
-    exact this
+    rwa [Nat.cast_one]
   have he : ∀ k, ℓ k - (∑ i, fc E σ ![i] (c k i) + CH.d (CH.modF Φ.A) 0 (h0 (h k))) ∈
       FC (Fil ((1 + 1 : ℕ) : ℤ)) 1 := fun k => mem_FC.2 fun u => by
     have e : vl (ℓ k - (∑ i, fc E σ ![i] (c k i) + CH.d (CH.modF Φ.A) 0 (h0 (h k)))) u =
@@ -620,22 +607,19 @@ theorem rep_zero_cup (hF : IsFil Φ Fil) (E : Frame Φ d) (σ : ∀ T : C, E.D �
       (Φ.A.map φ).hom (vl zc s0) := rfl
   have a1 : (Φ.A.map φ).hom (vl zc s0) - (Φ.A.map (σ _ ≫ φ)).hom w ∈ Φ.J.S (u.obj (Fin.last m)) := by
     have h := Φ.J.map_mem φ (hz s0)
-    rw [map_sub, map_map] at h
-    exact h
+    rwa [map_sub, map_map] at h
   have a2 : (Φ.A.map (σ _ ≫ φ)).hom w - (Φ.A.map (σ _)).hom w ∈ Φ.J.S (u.obj (Fin.last m)) :=
     GlobalTheory.CompanionTheory.ConeLocal.DlogApprox.const1 hF hc _ _ w
   have a3 := (Φ.J.S (u.obj (Fin.last m))).neg_mem ((Φ.J.S (u.obj (Fin.last m))).add_mem a1 a2)
   rw [sub_add_sub_cancel, neg_sub] at a3
   have a4 : (Φ.A.map (σ _)).hom w - (Φ.A.map φ).hom (vl zc s0) ∈ (Fil ((1 : ℕ) : ℤ)).S (u.obj (Fin.last m)) := by
-    rw [Nat.cast_one, hF.one]
-    exact a3
+    rwa [Nat.cast_one, hF.one]
   have a5 := hF.mul m 1 _ (mem_FC.1 hL u) a4
   have e6 : ((m + 1 : ℕ) : ℤ) = (m : ℤ) + 1 := by push_cast; ring
   rw [e6, mul_sub] at a5
   rw [e1]
   change vl L u * (Φ.A.map (σ _)).hom w - (Φ.A.map φ).hom (vl zc s0) * vl L u ∈ _
-  rw [mul_comm ((Φ.A.map φ).hom (vl zc s0))]
-  exact a5
+  rwa [mul_comm ((Φ.A.map φ).hom (vl zc s0))]
 
 end Gen
 
@@ -661,8 +645,8 @@ theorem rep_xdt {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ Sp
   let hh : Fin (n + 1) → ∀ T, (sP (KS q s {V})).A.obj T :=
     fun k T => (show (sP (KS q s {V})).A.obj T from l k T) - ((sP (KS q s {V})).A.map (σ T)).hom (ε (t k))
   let cc : Fin (n + 1) → Fin (n + 1) → (sP (KS q s {V})).A.obj E.D := fun k i => if k = i then 1 else 0
-  have cc_self : ∀ k, cc k k = 1 := fun k => if_pos rfl
-  have cc_ne : ∀ {k i : Fin (n + 1)}, k ≠ i → cc k i = 0 := fun h => if_neg h
+  have cc_self : ∀ k, cc k k = 1 := fun k => ite_eq_left rfl
+  have cc_ne : ∀ {k i : Fin (n + 1)}, k ≠ i → cc k i = 0 := fun h => ite_eq_right h
   let ℓ : Fin (n + 1) → CH.Cn (CH.modF (sP (KS q s {V})).A) 1 := fun k => addC (KS q s {V}) (l k)
   have heq : ∀ (k : Fin (n + 1)) (u : ComposableArrows (KS q s {V}).FullSubcategory 1),
       (show (sP (KS q s {V})).A.obj (u.obj (Fin.last 1)) from ℓ k u) =
@@ -688,8 +672,7 @@ theorem rep_xdt {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ Sp
       exact Ideal.zero_mem _
     · intro i _ hi
       rw [cc_ne (Ne.symm hi), map_zero, mul_zero]
-    · intro h0
-      exact absurd (Finset.mem_univ _) h0
+    · exact fun h0 => absurd (Finset.mem_univ _) h0
   have hmem : ∀ k, ℓ k ∈ FC (sFil (KS q s {V}) ((1 : ℕ) : ℤ)) 1 := by
     intro k
     refine mem_FC.2 fun u => ?_
@@ -711,8 +694,7 @@ theorem rep_xdt {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ Sp
         rw [e0, mul_zero]
         unfold Frame.form
         simp
-      · intro h0
-        exact absurd (Finset.mem_univ _) h0
+      · exact fun h0 => absurd (Finset.mem_univ _) h0
     rw [e, sub_self]
     exact Ideal.zero_mem _
   have h2 := rep_cup hF E σ hc n ℓ cc hh hJ hl (ε x) r hr cl h1
@@ -782,16 +764,7 @@ def ee {d : ℕ} (E : Frame Φ d) (k i : Fin d) : Φ.A.obj E.D := if i = k then 
 
 theorem cupList_mem (hF : IsFil Φ Fil) : ∀ (m : ℕ) (ℓ : Fin m → CH.Cn (CH.modF Φ.A) 1),
     (∀ k, ℓ k ∈ FC (Fil ((1 : ℕ) : ℤ)) 1) → cupListC Φ.A ℓ ∈ FC (Fil (m : ℤ)) m := by
-  intro m
-  induction m with
-  | zero =>
-    intro ℓ _
-    refine mem_FC.2 fun s => ?_
-    rw [Nat.cast_zero, hF.top 0 le_rfl]
-    trivial
-  | succ m ih =>
-    intro ℓ hl
-    exact cup_mem hF rfl (ih _ fun k => hl _) (hl (Fin.last m))
+  exact GlobalTheory.CompanionTheory.ConeLRestr.cupList_mem hF
 
 theorem form_id_eq {n : ℕ} (E : Frame Φ n) (σ : ∀ T : C, E.D ⟶ T) (w : Φ.A.obj E.D)
     (u : ComposableArrows C n) :
@@ -805,14 +778,12 @@ theorem form_id_eq {n : ℕ} (E : Frame Φ n) (σ : ∀ T : C, E.D ⟶ T) (w : �
     rw [e, mul_one]
   · intro I _ hI
     obtain ⟨k, hk⟩ : ∃ k, I k ≠ k := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hI (funext hc)
     have e : ∏ k, ee E k (I k) = 0 := Finset.prod_eq_zero (Finset.mem_univ k) (by simp [ee, hk])
     rw [e, mul_zero]
     simp [Frame.form]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem rep_back (hF : IsFil Φ Fil) {n : ℕ} (E : Frame Φ (n + 1)) (σ : ∀ T : C, E.D ⟶ T) (hc : E.GrConst Fil)
     (ℓ : Fin (n + 1) → CH.Cn (CH.modF Φ.A) 1) (h : Fin (n + 1) → ∀ T : C, Φ.A.obj T)
@@ -829,8 +800,7 @@ theorem rep_back (hF : IsFil Φ Fil) {n : ℕ} (E : Frame Φ (n + 1)) (σ : ∀ 
   have hh : ∀ k, h0 (h k) ∈ FC (Fil ((1 : ℕ) : ℤ)) 0 := fun k => mem_FC.2 fun s => by
     have := hJ k (s.obj (Fin.last 0))
     rw [← hF.one] at this
-    rw [Nat.cast_one]
-    exact this
+    rwa [Nat.cast_one]
   have he : ∀ k, ℓ k - (∑ i, fc E σ ![i] (ee E k i) + CH.d (CH.modF Φ.A) 0 (h0 (h k))) ∈
       FC (Fil ((1 + 1 : ℕ) : ℤ)) 1 := fun k => mem_FC.2 fun u => by
     have e : vl (ℓ k - (∑ i, fc E σ ![i] (ee E k i) + CH.d (CH.modF Φ.A) 0 (h0 (h k)))) u =
@@ -919,11 +889,10 @@ theorem xdt_rep (s : ℕ) {V : X.Opens} {n : ℕ} (t : Fin (n + 1) → Γ(X, V))
     have e1 : ∑ i, E.a σ i (u.map (homOfLE (Fin.zero_le (Fin.last 1)))) *
         ((sP (KS q s {V})).A.map (σ _)).hom (ee E k i) = E.a σ k (u.map (homOfLE (Fin.zero_le (Fin.last 1)))) := by
       rw [Finset.sum_eq_single k]
-      · rw [show ee E k k = 1 from if_pos rfl, map_one, mul_one]
+      · rw [show ee E k k = 1 from ite_eq_left rfl, map_one, mul_one]
       · intro i _ hi
-        rw [show ee E k i = 0 from if_neg hi, map_zero, mul_zero]
-      · intro hk
-        exact absurd (Finset.mem_univ _) hk
+        rw [show ee E k i = 0 from ite_eq_right hi, map_zero, mul_zero]
+      · exact fun hk => absurd (Finset.mem_univ _) hk
     rw [e1]
     have e2 : E.a σ k (u.map (homOfLE (Fin.zero_le (Fin.last 1)))) =
         ((sP (KS q s {V})).A.map (σ _)).hom (ε (t k)) -
@@ -971,8 +940,7 @@ theorem xdt_rep (s : ℕ) {V : X.Opens} {n : ℕ} (t : Fin (n + 1) → Γ(X, V))
     have e1 := (sP (KS q s {V})).J.map_mem (u.map (homOfLE (Fin.le_last p))) (lift_sub_mem q s t E ε hL σ y (u.obj p))
     have e2 := const1 hF hc (σ (u.obj p) ≫ u.map (homOfLE (Fin.le_last p))) (σ _) (ε y)
     have e3 := ((sP (KS q s {V})).J.S _).add_mem e1 e2
-    rw [map_sub, GlobalTheory.CompanionTheory.CocProd.map_map, sub_add_sub_cancel] at e3
-    exact e3
+    rwa [map_sub, GlobalTheory.CompanionTheory.CocProd.map_map, sub_add_sub_cancel] at e3
   have e4 := hF.mul _ _ _ hb (ha (CH.front (Nat.zero_add (n + 1)) (Fin.last 0)))
   have e5 : ((n + 1 + 1 : ℕ) : ℤ) = ((n + 1 : ℕ) : ℤ) + 1 := by push_cast; ring
   rw [e5] at e4
@@ -1005,7 +973,7 @@ theorem sgn_det {B : Type} [CommRing B] {m : ℕ} (c : Fin m → Fin m → B) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [Finset.sum_eq_single (⇑π)]
-  · simp only [i0, Function.id_comp, if_true]
+  · simp only [i0, Function.id_comp, ite_true]
     rw [Units.smul_def]
     simp
   · intro J _ hJ
@@ -1013,13 +981,7 @@ theorem sgn_det {B : Type} [CommRing B] {m : ℕ} (c : Fin m → Fin m → B) :
   · simp
 
 theorem inv_map {A B : Type*} [CommRing A] [CommRing B] (e : A ≃+* B) (a : A) : Ring.inverse (e a) = e (Ring.inverse a) := by
-  by_cases h : IsUnit a
-  · obtain ⟨v, rfl⟩ := h
-    have e1 : e (v : A) = ((Units.map e.toMonoidHom v : Bˣ) : B) := rfl
-    rw [e1, Ring.inverse_unit, Ring.inverse_unit]
-    rfl
-  · have h' : ¬ IsUnit (e a) := fun hu => h ((MulEquiv.isUnit_map e).1 hu)
-    rw [Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ h', map_zero]
+  exact GlobalTheory.CompanionTheory.ConeLocal.inv_map e a
 
 theorem inv_prod {A : Type*} [CommRing A] {ι : Type*} [Fintype ι] (u : ι → A) (h : ∀ k, IsUnit (u k)) :
     Ring.inverse (∏ k, u k) = ∏ k, Ring.inverse (u k) := by

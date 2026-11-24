@@ -106,8 +106,7 @@ theorem exists_embedding (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Alg
   have hA0l : A0.valuation (l : Ω) < 1 := by
     rw [valuation_lt_one_iff', hA0, hA0, map_inv₀, map_natCast, norm_inv]
     have h0 : 0 < ‖(l : PadicAlgCl l)‖ := norm_pos_iff.2 (by exact_mod_cast hl.ne_zero)
-    refine ⟨norm_l_lt_one.le, Or.inr (not_le.2 ?_)⟩
-    exact (one_lt_inv₀ h0).2 norm_l_lt_one
+    exact ⟨norm_l_lt_one.le, Or.inr (not_le.2 ((one_lt_inv₀ h0).2 norm_l_lt_one))⟩
   let v : HeightOneSpectrum (𝓞 ℚ) := w.under (𝓞 ℚ)
   have h1 : IsPlaceOver (F := ℚ) A v := fun x => by
     have := hA (algebraMap (𝓞 ℚ) (𝓞 E) x)
@@ -269,8 +268,7 @@ theorem mem_GK_iff (K : Loc.FinExt l)
     (τ : Loc.GQ l) : τ ∈ Loc.GK K ↔ ∀ x : E, τ (j (algebraMap E Ω x)) = j (algebraMap E Ω x) := by
   rw [Loc.GK, IntermediateField.mem_fixingSubgroup_iff, hK]
   constructor
-  · intro h x
-    exact h _ (IntermediateField.subset_adjoin _ _ ⟨x, rfl⟩)
+  · exact fun h x => h _ (IntermediateField.subset_adjoin _ _ ⟨x, rfl⟩)
   · intro h y hy
     induction hy using IntermediateField.adjoin_induction with
     | mem y hy => obtain ⟨x, rfl⟩ := hy; exact h x

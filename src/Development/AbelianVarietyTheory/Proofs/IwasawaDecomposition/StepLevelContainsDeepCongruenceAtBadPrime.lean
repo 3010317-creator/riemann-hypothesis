@@ -147,8 +147,7 @@ theorem exists_princ (σ : E →ₐ[F] E) {n : ℕ} (U : Subgroup (GL (Fin n) �
   have h1 : Units.embedProduct _ (1 : GL (Fin n) 𝒜) ∈ T' := by
     have : (1 : UPts σ (1 : Matrix (Fin n) (Fin n) E) 𝔸) ∈ {x : UPts σ (1 : Matrix (Fin n) (Fin n) E) 𝔸 | (x : GL (Fin n) 𝒜) ∈ U} :=
       U.one_mem
-    rw [← hTU] at this
-    exact this
+    rwa [← hTU] at this
   let g : 𝒜 × Matrix (Fin n) (Fin n) 𝒜 → Matrix (Fin n) (Fin n) 𝒜 × (Matrix (Fin n) (Fin n) 𝒜)ᵐᵒᵖ :=
     fun p => (1 + p.1 • p.2, MulOpposite.op (1 + cT (sigR σ 𝔸) (p.1 • p.2)))
   have hs : Continuous fun p : 𝒜 × Matrix (Fin n) (Fin n) 𝒜 => p.1 • p.2 := continuous_fst.smul continuous_snd
@@ -231,8 +230,7 @@ theorem exists_depth (hc : CMData F E) {n : ℕ} (U : Subgroup (GL (Fin n) 𝒜)
     exact Nat.cast_ne_zero.2 this
   have hlt : ∀ Q : HeightOneSpectrum (𝓞 E), ((qOf P : ℕ) : 𝓞 E) ∈ Q.asIdeal → Q.valuation E q < 1 := fun Q hQ => by
     have e : q = algebraMap (𝓞 E) E (qOf P : 𝓞 E) := by rw [map_natCast]
-    rw [e, HeightOneSpectrum.valuation_lt_one_iff_mem]
-    exact hQ
+    rwa [e, HeightOneSpectrum.valuation_lt_one_iff_mem]
   have hP := hlt P (Ideal.absNorm_mem _)
   have hP' := hlt (conjPrime₂ P) (by rw [mem_conjP, map_natCast]; exact Ideal.absNorm_mem _)
   have hMv : ∀ Q : HeightOneSpectrum (𝓞 E), 0 < Q.valuation E (M : E) := fun Q =>
@@ -267,8 +265,7 @@ theorem exists_depth (hc : CMData F E) {n : ℕ} (U : Subgroup (GL (Fin n) 𝒜)
           rw [map_inv₀, map_pow, hq, map_natCast]
         rw [map_mul, e] at h1
         have h2 := hι.val_le h1
-        rw [val_cp_mul hι, mul_inv_le_iff₀ (hqv _ _), one_mul] at h2
-        exact h2
+        rwa [val_cp_mul hι, mul_inv_le_iff₀ (hqv _ _), one_mul] at h2
   · refine hι.val_le (GlobalTheory.VanishAwayInt.intAtA_of_prV_eq_zero Q _ fun w hw => ?_)
     have hne : w ≠ v := fun e => hQ (e ▸ hw)
     have h2 := congrArg (fun g : GL (Fin n) (E ⊗[F] w.adicCompletion F) => (g : Matrix (Fin n) (Fin n) (E ⊗[F] w.adicCompletion F)) a b)

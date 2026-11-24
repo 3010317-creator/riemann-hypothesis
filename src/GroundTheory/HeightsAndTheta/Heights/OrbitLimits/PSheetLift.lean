@@ -67,7 +67,7 @@ theorem lift_spec [DecidableEq K] {P : Ideal (MRing ι)} (hP : IsMultiHomogIdeal
   rw [lift_segre i0 k0 hne]
   refine ⟨bsmul_mem hP (fun k => div_ne_zero (by split_ifs <;> simp [hne]) (h0 k)) hz, ?_⟩
   have hprod : ∏ k, (if k = k0 then segre z i0 else 1) / z ⟨k, i0 k⟩ = 1 := by
-    rw [Finset.prod_div_distrib, Finset.prod_ite_eq' Finset.univ k0, if_pos (Finset.mem_univ _)]
+    rw [Finset.prod_div_distrib, Finset.prod_ite_eq' Finset.univ k0, ite_eq_left (Finset.mem_univ _)]
     exact div_self hne
   rw [segre_bsmul, hprod]
   funext i
@@ -83,10 +83,8 @@ theorem differentiableAt_lift [DecidableEq K] {e : ℕ} (i0 : (k : K) → ι k) 
   simp only [lift, div_eq_mul_inv]
   refine DifferentiableAt.mul ?_ ((hc (Function.update i0 p.1 p.2)).mul ((hc i0).inv hne))
   by_cases hp : p.1 = k0
-  · simp only [hp, if_true]
-    exact hc i0
-  · simp only [hp, if_false]
-    exact differentiableAt_const _
+  · simpa only [hp, ite_true] using hc i0
+  · simpa only [hp, ite_false] using differentiableAt_const _
 
 theorem proof : SheetLift.Statement := by
   intro K _ ι _ P e Ψ y h hP hev
@@ -97,8 +95,7 @@ theorem proof : SheetLift.Statement := by
     have hzz : z0 = z := funext fun p => (IsEmpty.false p.1).elim
     refine ⟨differentiableAt_const _, hzz ▸ hz, ?_⟩
     show Ψ (segre z0) = _
-    rw [hzz, hs]
-    exact hΨ
+    rwa [hzz, hs]
   · choose i0 hi0 using hz0.1
     have hy : h y i0 ≠ 0 := by
       rw [← hs0]
@@ -113,11 +110,9 @@ theorem proof : SheetLift.Statement := by
       obtain ⟨h1, h2⟩ := lift_spec hP i0 k0 hz hne'
       refine ⟨differentiableAt_lift i0 k0 hd hne, ?_, ?_⟩
       · show lift i0 k0 (h y') ∈ mcPts P
-        rw [← hs]
-        exact h1
+        rwa [← hs]
       · show Ψ (segre (lift i0 k0 (h y'))) = _
-        rw [← hs, h2, hs]
-        exact hΨ
+        rwa [← hs, h2, hs]
 
 end SheetLift
 

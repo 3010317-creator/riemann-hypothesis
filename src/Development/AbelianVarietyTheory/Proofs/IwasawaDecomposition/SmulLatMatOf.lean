@@ -76,8 +76,7 @@ theorem int_iff (z : X.E) : s.iE z ∈ (algebraMap (𝓞 D.host.E) D.host.E).ran
   · intro h
     have := map_isIntegral_int s.iE.symm.toRingHom h
     simpa using this
-  · intro h
-    exact map_isIntegral_int s.iE.toRingHom h
+  · exact fun h => map_isIntegral_int s.iE.toRingHom h
 
 theorem vec_add {n : ℕ} (x y : Sp X.E n) : vec s (x + y) = vec s x + vec s y := by
   funext i

@@ -173,8 +173,7 @@ theorem UpperTheory.V.AlgebraTools.simpleQuad :
       rintro y ⟨hy, hy'⟩
       obtain ⟨c', -, rfl⟩ := Finset.mem_image.1 hy
       rw [hu c' hy']) v
-    rw [Finset.sum_image fun c _ c' _ h => hinj h] at this
-    exact this
+    rwa [Finset.sum_image fun c _ c' _ h => hinj h] at this
   have hex : ∀ c : 𝓀[k], ∃ (y : GL (Fin n) k) (t : Fin n → kˣ), t ∈ torusO k (Fin n) ∧ (c ≠ 0 → y ∈ iwC k n C ∧
       (∀ c', x c' * y = y * x c') ∧ s * x c * s = y * s * diagT k (Fin n) t * y) := by
     intro c
@@ -199,8 +198,7 @@ theorem UpperTheory.V.AlgebraTools.simpleQuad :
       simp only [mul_add, add_mul, mul_one, one_mul, single_mul_single_of_ne _ _ _ _ hij.symm]
       abel
     · ext1
-      simp only [Units.val_mul, hz', hxc]
-      exact matId i j hij a
+      simpa only [Units.val_mul, hz', hxc] using matId i j hij a
   choose y t ht hy using hex
   have Q := quadAbs ρ _ hI s hss x (fun c => hU (hx2 c)) hT 0 hx0 y (fun c => diagT k (Fin n) (t c))
     (fun c h => (hy c h).1) (fun c h => (hy c h).2.1) (fun c _ => diagNorm C (ht c)) (fun c h => (hy c h).2.2)
@@ -225,8 +223,7 @@ theorem UpperTheory.V.AlgebraTools.simpleQuad :
       simp only [hsw]
       rw [add_sub_cancel_right, smul_smul, ← hq', Units.inv_mul, one_smul]
     refine ⟨⟨_, _, h1, ?_⟩, rfl⟩
-    rw [← left_inv_eq_right_inv h2 h1]
-    exact h2
+    rwa [← left_inv_eq_right_inv h2 h1]
   · have h1 : ∀ c, hk ρ (iwC k n C) (diagT k (Fin n) (t c)) = 1 := fun c => by
       refine LinearMap.ext fun v => Subtype.ext ?_
       rw [(hkNorm A _ M ρ _ _ hI (diagNorm C (ht c))).1]

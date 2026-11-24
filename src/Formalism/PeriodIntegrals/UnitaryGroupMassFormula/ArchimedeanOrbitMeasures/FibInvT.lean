@@ -81,8 +81,7 @@ theorem fibTrans {D : D7} (X : HidaSetting D) (μinf : Measure (TupI X)) (νinf 
     have hs' : HasCompactSupport (fun v => φ (g • v)) := hs.comp_homeomorph (smulH X g)
     have hU2 : tsupport (fun v => φ (g • v)) ⊆ IndI X := by
       rw [show (fun v => φ (g • v)) = φ ∘ smulH X g from rfl, tsupport_comp_eq_preimage]
-      intro y hy
-      exact (indI_smul_iff X g y).1 (hU hy)
+      exact fun y hy => (indI_smul_iff X g y).1 (hU hy)
     obtain ⟨hI, hC⟩ := hfib.2.2 _ hc' hs' hU2
     refine ⟨fun b hb => ?_, ?_⟩
     · rw [integrable_map_measure hc.aestronglyMeasurable hm.aemeasurable]
@@ -90,8 +89,7 @@ theorem fibTrans {D : D7} (X : HidaSetting D) (μinf : Measure (TupI X)) (νinf 
     · have e : (fun b => ∫ v, φ v ∂((fibInf b).map (fun y => g • y))) =
           fun b => ∫ v, φ (g • v) ∂(fibInf b) := by
         funext b; rw [integral_map hm.aemeasurable hc.aestronglyMeasurable]
-      rw [e]
-      exact hC
+      rwa [e]
 
 theorem fibEqI {D : D7} (X : HidaSetting D) (ψ : AddChar (AF X.B.I.F) ℂ) (μinf : Measure (TupI X))
     (νinf : Measure (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS))) (fib1 fib2 : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS) → Measure (TupI X))

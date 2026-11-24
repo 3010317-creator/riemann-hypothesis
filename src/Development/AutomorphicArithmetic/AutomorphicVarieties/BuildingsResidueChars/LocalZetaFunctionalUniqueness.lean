@@ -239,8 +239,7 @@ theorem UpperTheory.local_zeta_functional_uniqueness :
     fun h0 => hv (congrArg Subtype.val h0)
   obtain ⟨f, hf⟩ : ∃ f : Module.Dual ℂ (fixedVectors σ ((congruenceSubgroup F n (m0 + 1)).subgroupOf (levi F n β))),
       f ⟨v, hvK⟩ ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hv' ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 hc)
   let E := fixedContragredientEquiv (ρ := σ) hadm.1 hKc hKo
   let x := E.symm f
@@ -249,8 +248,7 @@ theorem UpperTheory.local_zeta_functional_uniqueness :
     rw [fixedContragredientEquiv_apply] at h1
     have h2 := restrictFixed_apply σ _ x ⟨v, hvK⟩
     rw [h1] at h2
-    rw [← h2]
-    exact hf
+    rwa [← h2]
   have hφ : ∀ ij : LeviIndex n β, (fun ij : LeviIndex n β =>
       UpperTheory.V.Z.Gam.ballInd (m0 + 1) ((1 : Matrix (Fin n) (Fin n) F) ij.1.1 ij.1.2)) ij ∈
       GroundTheory.LocalField.schwartzBruhat F := fun ij => UpperTheory.V.Z.Gam.ballInd_mem _ _
@@ -287,8 +285,7 @@ theorem UpperTheory.local_zeta_functional_uniqueness :
     simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, Set.mem_preimage, Set.mem_setOf_eq,
       mem_congruenceSubgroup_iff]
     constructor
-    · intro hm i j
-      exact UpperTheory.V.Z.Gam.mem_valBall_iff_val_le.2 (hm.2 i j)
+    · exact fun hm i j => UpperTheory.V.Z.Gam.mem_valBall_iff_val_le.2 (hm.2 i j)
     · intro hm
       have hall := fun i j => UpperTheory.V.Z.Gam.mem_valBall_iff_val_le.1 (hm i j)
       exact ⟨UpperTheory.V.Z.Gam.mem_integralGL_of_congr hr hall, hall⟩

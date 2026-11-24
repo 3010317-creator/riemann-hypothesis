@@ -162,13 +162,10 @@ def red (hR : RedData ϖ k r n b Λ) (x : V) : Fin n → k := fun j => r ⟨cO h
 theorem cO_lincomb (hR : RedData ϖ k r n b Λ) {ι : Type} [Fintype ι] (h : ι → E) (v : ι → V)
     (hv : ∀ a, v a ∈ Λ) (hh : ∀ a, h a ∈ M.L.O) :
     cO hR (∑ a, h a • v a) = fun j => ∑ a, h a * cO hR (v a) j := by
-  have hmem : ∑ a, h a • v a ∈ Λ := by
-    refine Λ.sum_mem fun a _ => ?_
-    exact Λ.smul_mem (⟨h a, hh a⟩ : M.L.O) (hv a)
+  have hmem : ∑ a, h a • v a ∈ Λ := Λ.sum_mem fun a _ => Λ.smul_mem (⟨h a, hh a⟩ : M.L.O) (hv a)
   refine cO_eq hR hmem _ ?_
   conv_lhs => rw [Finset.sum_congr rfl fun a _ => by rw [cO_sum hR (hv a)]]
-  simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
 
 theorem red_lincomb (hR : RedData ϖ k r n b Λ) {ι : Type} [Fintype ι] (h : ι → M.L.O) (v : ι → V)
     (hv : ∀ a, v a ∈ Λ) :

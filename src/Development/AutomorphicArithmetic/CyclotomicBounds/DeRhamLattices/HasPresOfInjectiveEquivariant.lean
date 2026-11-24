@@ -67,8 +67,7 @@ theorem _root_.UpperTheory.KN.hasPres_of_injective_equivariant :
       have : z = y := Subtype.ext hzy
       subst this
       exact hz
-    · intro hy
-      exact ⟨y, hy, rfl⟩
+    · exact fun hy => ⟨y, hy, rfl⟩
   have hfg' : Y'.FG := by
     haveI : IsNoetherian O Y := isNoetherian_of_fg_of_noetherian Y hfg
     exact Submodule.FG.map _ (IsNoetherian.noetherian _)
@@ -80,8 +79,7 @@ theorem _root_.UpperTheory.KN.hasPres_of_injective_equivariant :
     rw [heq, hu]
     exact (hφ g ⟨y, hle hy⟩).symm
   have hE' : ∀ g, actN LL (fun j => N (x j)) g E - E ∈ Y' := by
-    intro g
-    exact (hmem ⟨_, hE g⟩).2 ⟨f' g, by rw [hf, hfφ]⟩
+    exact fun g => (hmem ⟨_, hE g⟩).2 ⟨f' g, by rw [hf, hfφ]⟩
   let ψ : Y' →ₗ[O] LinearMap.range ι :=
     LinearMap.codRestrict _ (φ ∘ₗ Submodule.inclusion hle)
       (fun y => (hmem ⟨y.1, hle y.2⟩).1 y.2)

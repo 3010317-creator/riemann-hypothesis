@@ -67,8 +67,7 @@ theorem F_0P {n : ℕ} (P : Pt C n d) (hP : ∀ j, constantCoeff (P j) = 0) (a :
     fin_cases k
     · exact ev_zero (z0_1 P hP)
     · exact ev_X (z0_1 P hP) 0 i
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem group_law_zero_right {n : ℕ} (P : Pt C n d) (hP : ∀ j, constantCoeff (P j) = 0) (a : Fin d) :
     ev ![P, 0] (G.F a) = P a := by
@@ -102,7 +101,7 @@ theorem cc_Mm (j k : Fin d) : constantCoeff (Mm G j k) = if j = k then 1 else 0 
     rw [h2]
     by_cases hjk : j = k
     · subst hjk; simp
-    · rw [pderiv_X_of_ne (by simp [hjk]), if_neg hjk, map_zero]
+    · rw [pderiv_X_of_ne (by simp [hjk]), ite_eq_right hjk, map_zero]
   · intro c _ hc
     rw [show ((![0, pt C d 0] : Fin 2 → Pt C 1 d) 1 c) = X ((0 : Fin 1), c) from rfl,
       pderiv_X_of_ne (by simp [hc]), mul_zero]
@@ -153,13 +152,12 @@ theorem vec_cancel (u : Fin d → PS C 1 d) (a : Fin d) :
     ∑ k, (∑ c, Mm G c k * u c) * NN G k a = u a := by
   have h : ∀ c, ∑ k, Mm G c k * NN G k a = if c = a then 1 else 0 := fun c => by
     have := congrFun (congrFun (MM_NN G) c) a
-    simp only [Matrix.mul_apply, Matrix.one_apply, MM, Matrix.of_apply] at this
-    exact this
+    simpa only [Matrix.mul_apply, Matrix.one_apply, MM, Matrix.of_apply] using this
   simp_rw [Finset.sum_mul]
   rw [Finset.sum_comm]
   have e : ∀ c, ∑ k, Mm G c k * u c * NN G k a = u c * ∑ k, Mm G c k * NN G k a := fun c => by
     rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun k _ => by ring
-  simp only [e, h, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [e, h, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 end Law
 

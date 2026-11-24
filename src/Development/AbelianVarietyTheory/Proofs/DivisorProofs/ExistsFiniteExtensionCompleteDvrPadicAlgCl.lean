@@ -64,8 +64,7 @@ theorem exists_finite_intermediateField (F K Ω : Type) [Field F] [Field K] [Fie
   let u : F →+* K := e.symm.toRingHom.comp ((algebraMap F Ω).codRestrict _ hQ)
   have hu : (algebraMap K Ω).comp u = (RingHom.id Ω).comp (algebraMap F Ω) := by
     ext q
-    have h := e.apply_symm_apply ((algebraMap F Ω).codRestrict _ hQ q)
-    exact congrArg Subtype.val h
+    exact congrArg Subtype.val (e.apply_symm_apply ((algebraMap F Ω).codRestrict _ hQ q))
   have hint : ∀ x : Ω, IsIntegral K x := fun x =>
     IsIntegral.map_of_comp_eq u (RingHom.id Ω) hu (Algebra.IsIntegral.isIntegral (R := F) x)
   obtain ⟨s, hs⟩ := Algebra.FiniteType.out (R := ℤ) (A := R)
@@ -94,8 +93,7 @@ theorem exists_finite_extension : ∀ (p : ℕ) [Fact p.Prime] (V : Type) [CommR
     intro a
     apply e.injective
     rw [e.commutes]
-    have h := congrArg (fun g : V →+* L => g a) hcomp
-    exact (e.apply_symm_apply _).trans h.symm
+    exact (e.apply_symm_apply _).trans (congrArg (fun g : V →+* L => g a) hcomp).symm
   have hκ' : κ'.comp fK = κ := by
     refine RingHom.ext fun x => ?_
     show ((e (e.symm (algebraMap (FractionRing V) L x)) : L) : PadicAlgCl p) = κ x

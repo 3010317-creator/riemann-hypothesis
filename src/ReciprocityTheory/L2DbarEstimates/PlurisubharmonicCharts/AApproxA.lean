@@ -157,22 +157,16 @@ private theorem dv_sum_smul {n : ℕ} (a : Fin n → ℂ) (L : Fin n → V n →
 theorem leviV_comp {n : ℕ} {f : V n → ℂ} {Φ : V n → V n} {y : V n}
     (hf : ContDiffAt ℝ 2 f (Φ y)) (hΦ : ContDiffAt ℂ 2 Φ y) (ξ : Fin n → ℂ) :
     leviV n (f ∘ Φ) y ξ = leviV n f (Φ y) (fderiv ℂ Φ y (WithLp.toLp 2 ξ)).ofLp := by
-  have hΦR : ContDiffAt ℝ 2 Φ y := hΦ.restrict_scalars ℝ
-  rw [leviV_eq_dv (hf.comp y hΦR) ξ, leviV_eq_dv hf]
+  rw [leviV_eq_dv (hf.comp y (hΦ.restrict_scalars ℝ)) ξ, leviV_eq_dv hf]
   simp only [WithLp.toLp_ofLp]
   have hfF : DifferentiableAt ℝ (fderiv ℝ f) (Φ y) :=
     (hf.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
   have hA : ∀ k, DifferentiableAt ℝ (wdb n k f) (Φ y) := by
     intro k
     unfold wdb
-    have h1 : DifferentiableAt ℝ (fun v => fderiv ℝ f v (bas n k)) (Φ y) :=
-      hfF.clm_apply (differentiableAt_const _)
-    have h2 : DifferentiableAt ℝ (fun v => fderiv ℝ f v (I • bas n k)) (Φ y) :=
-      hfF.clm_apply (differentiableAt_const _)
-    have h3 : DifferentiableAt ℝ
-        (fun v => fderiv ℝ f v (bas n k) + I * fderiv ℝ f v (I • bas n k)) (Φ y) :=
-      h1.add (h2.const_mul I)
-    simpa only [div_eq_mul_inv] using h3.mul_const (2⁻¹ : ℂ)
+    have h1 := hfF.clm_apply (differentiableAt_const (bas n k))
+    have h2 := hfF.clm_apply (differentiableAt_const (I • bas n k))
+    simpa only [div_eq_mul_inv, Pi.add_apply] using (h1.add (h2.const_mul I)).mul_const (2⁻¹ : ℂ)
   have hΦd : DifferentiableAt ℂ Φ y := hΦ.differentiableAt (by norm_num)
   have hDΦ : DifferentiableAt ℂ (fderiv ℂ Φ) y :=
     (hΦ.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
@@ -183,8 +177,7 @@ theorem leviV_comp {n : ℕ} {f : V n → ℂ} {Φ : V n → V n} {y : V n}
       fun v => ∑ k, wdb n k f (Φ v) * conj ((fderiv ℂ Φ v (WithLp.toLp 2 ξ)) k) := by
     have h1 : ∀ᶠ v in 𝓝 y, ContDiffAt ℝ 2 f (Φ v) :=
       hΦd.continuousAt.eventually (hf.eventually (by simp))
-    have h2 : ∀ᶠ v in 𝓝 y, ContDiffAt ℂ 2 Φ v := hΦ.eventually (by simp)
-    filter_upwards [h1, h2] with v hv1 hv2
+    filter_upwards [h1, hΦ.eventually (by simp)] with v hv1 hv2
     rw [dbv_comp (hv1.differentiableAt (by norm_num)) (hv2.differentiableAt (by norm_num)),
       ← sum_wdb_eq]
   have hK : HasFDerivAt
@@ -192,16 +185,11 @@ theorem leviV_comp {n : ℕ} {f : V n → ℂ} {Φ : V n → V n} {y : V n}
       (∑ k, (wdb n k f (Φ y) • fderiv ℝ (fun v => conj ((fderiv ℂ Φ v (WithLp.toLp 2 ξ)) k)) y +
         conj ((fderiv ℂ Φ y (WithLp.toLp 2 ξ)) k) • fderiv ℝ (wdb n k f ∘ Φ) y)) y := by
     refine HasFDerivAt.fun_sum fun k _ => ?_
-    have ha : HasFDerivAt (wdb n k f ∘ Φ) (fderiv ℝ (wdb n k f ∘ Φ) y) y :=
-      ((hA k).comp y (hΦd.restrictScalars ℝ)).hasFDerivAt
-    have hb : HasFDerivAt (fun v => conj ((fderiv ℂ Φ v (WithLp.toLp 2 ξ)) k))
-        (fderiv ℝ (fun v => conj ((fderiv ℂ Φ v (WithLp.toLp 2 ξ)) k)) y) y :=
+    exact ((hA k).comp y (hΦd.restrictScalars ℝ)).hasFDerivAt.mul
       ((hc k).restrictScalars ℝ).star.hasFDerivAt
-    exact ha.mul hb
   have hR : (fun w => dbv (fderiv ℝ f w) (fderiv ℂ Φ y (WithLp.toLp 2 ξ))) =
-      fun w => ∑ k, wdb n k f w * conj ((fderiv ℂ Φ y (WithLp.toLp 2 ξ)) k) := by
-    funext w
-    rw [← sum_wdb_eq]
+      fun w => ∑ k, wdb n k f w * conj ((fderiv ℂ Φ y (WithLp.toLp 2 ξ)) k) :=
+    funext fun w => by rw [← sum_wdb_eq]
   have hRD : HasFDerivAt (fun w => ∑ k, wdb n k f w * conj ((fderiv ℂ Φ y (WithLp.toLp 2 ξ)) k))
       (∑ k, conj ((fderiv ℂ Φ y (WithLp.toLp 2 ξ)) k) • fderiv ℝ (wdb n k f) (Φ y)) (Φ y) :=
     HasFDerivAt.fun_sum fun k _ => (hA k).hasFDerivAt.mul_const _

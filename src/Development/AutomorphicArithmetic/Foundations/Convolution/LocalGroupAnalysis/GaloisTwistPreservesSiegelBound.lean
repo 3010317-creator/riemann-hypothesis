@@ -133,8 +133,7 @@ theorem UpperTheory.exists_lower_entry_ne_zero_of_norm_charpoly_irreducible :
           p.map (algebraMap F E) = ((normGL σ δ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).charpoly →
           ∀ r : ℕ, 0 < r → r < n → ∃ i j : Fin n, (i : ℕ) < r ∧ r ≤ (j : ℕ) ∧ (δ : Matrix (Fin n) (Fin n) E) j i ≠ 0 := by
   intro F E _ _ _ _ _ σ hgen n δ p hp hpc r hr0 hrn
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   let Q : Fin n → Prop := fun i => (i : ℕ) < r
   have hL : LowZero Q (δ : Matrix (Fin n) (Fin n) E) :=
     fun j hj i hi => hcon i j hi (not_lt.mp hj)
@@ -180,12 +179,10 @@ theorem UpperTheory.exists_lower_entry_ne_zero_of_norm_charpoly_irreducible :
   have hdvd : ((normGL σ δ₁ : GL {i // Q i} E) : Matrix {i // Q i} {i // Q i} E).charpoly ∣
       ((normGL σ δ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).charpoly := by
     have h := charpoly_toSq_dvd Q (key (Module.finrank F E)).1
-    rw [(key (Module.finrank F E)).2] at h
-    exact h
+    rwa [(key (Module.finrank F E)).2] at h
   obtain ⟨P₁, hP₁⟩ := charpoly_normGL_lifts σ hgen δ₁
   have hdvd' : P₁ ∣ p := by
-    rw [← Polynomial.map_dvd_map' (algebraMap F E), hP₁, hpc]
-    exact hdvd
+    rwa [← Polynomial.map_dvd_map' (algebraMap F E), hP₁, hpc]
   have hdegP : P₁.natDegree = Fintype.card {i // Q i} := by
     rw [← Polynomial.natDegree_map (algebraMap F E) (p := P₁), hP₁, Matrix.charpoly_natDegree_eq_dim]
   have hdegp : p.natDegree = n := by
@@ -194,8 +191,7 @@ theorem UpperTheory.exists_lower_entry_ne_zero_of_norm_charpoly_irreducible :
   have hpos : 0 < Fintype.card {i // Q i} :=
     Fintype.card_pos_iff.mpr ⟨⟨⟨0, by omega⟩, hr0⟩⟩
   have hlt : Fintype.card {i // Q i} < n := by
-    have h := Fintype.card_subtype_lt (p := Q) (x := (⟨r, hrn⟩ : Fin n)) (by simp [Q])
-    simpa using h
+    simpa using Fintype.card_subtype_lt (p := Q) (x := (⟨r, hrn⟩ : Fin n)) (by simp [Q])
   rcases hp.dvd_iff.mp hdvd' with hu | ha
   · have h0 := Polynomial.natDegree_eq_zero_of_isUnit hu
     omega
@@ -307,9 +303,7 @@ theorem UpperTheory.one_le_entry_bound_of_borel_diagonal_decomp :
       rw [hδ]
       simp only [finAt_mul, finAt_inv, hfin, mul_one, inv_one]
     have h2 := AutomorphicForm.norm_apply_le_locHeight (finAt v (b * m * b')) j i
-    rw [← h1, finAt_apply, AdelicGLn.diagonal_apply] at h2
-    rw [h1] at h2
-    exact h2
+    rwa [← h1, finAt_apply, AdelicGLn.diagonal_apply, h1] at h2
   have hw : ∀ w : InfinitePlace K,
       ‖(((δ : Matrix (Fin n) (Fin n) K) j i : K) : w.Completion)‖ ≤
         (n : ℝ) ^ 2 * ε * (AutomorphicForm.locHeight (infAt w b) *
@@ -327,9 +321,7 @@ theorem UpperTheory.one_le_entry_bound_of_borel_diagonal_decomp :
       (fun p q h => by rw [infAt_apply, mem_adelicBorel.1 hb h]; rfl)
       (fun p q h => by rw [infAt_apply, mem_adelicBorel.1 hb' h]; rfl)
       r ε hε hr i j hi hj
-    rw [← h1, infAt_apply, AdelicGLn.diagonal_apply] at h2
-    rw [AdeleRing.algebraMap_fst_apply] at h2
-    exact h2
+    rwa [← h1, infAt_apply, AdelicGLn.diagonal_apply, AdeleRing.algebraMap_fst_apply] at h2
   have hN : 0 ≤ (n : ℝ) ^ 2 * ε := by positivity
   have pb := AutomorphicForm.height_pos b
   have pm := AutomorphicForm.height_pos m
@@ -450,11 +442,9 @@ private theorem map_pos' (s : ℝ) (hs : 0 < s) :
       ((InfinitePlace.Completion.isometry_extensionEmbedding w).continuous.comp
         (AbsoluteValue.Completion.continuous_map _ _)) _ s (ext_pos s hs _)
   · have h1 : ((posIdele (K := F) s hs : IdeleGroup F) : 𝔸[F]).2 = 1 := by
-      refine DFunLike.ext _ _ fun v => ?_
-      exact posIdele_finite s hs v
+      exact DFunLike.ext _ _ fun v => posIdele_finite s hs v
     have h2 : ((posIdele (K := E) s hs : IdeleGroup E) : 𝔸[E]).2 = 1 := by
-      refine DFunLike.ext _ _ fun v => ?_
-      exact posIdele_finite s hs v
+      exact DFunLike.ext _ _ fun v => posIdele_finite s hs v
     rw [h2]
     change finiteAdeleMap F E ((posIdele (K := F) s hs : IdeleGroup F) : 𝔸[F]).2 = 1
     rw [h1, map_one]

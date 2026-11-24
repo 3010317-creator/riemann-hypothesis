@@ -101,8 +101,7 @@ private theorem inUJ_mul_exp_smul_of_inG {g X : Matrix (Fin n) (Fin n) ℂ} (hg 
   have hE : (NormedSpace.exp Y)ᴴ = Jm ε * NormedSpace.exp (-Y) * Jm ε := by
     rw [← Matrix.exp_conjTranspose, hYc]
     have := Matrix.exp_conj (Jm ε) (-Y) hJu
-    rw [hJinv] at this
-    exact this
+    rwa [hJinv] at this
   have e1 : NormedSpace.exp (-Y) * NormedSpace.exp Y = 1 := by
     rw [← Matrix.exp_add_of_commute _ _ (Commute.neg_left (Commute.refl Y)), neg_add_cancel,
       NormedSpace.exp_zero]
@@ -215,7 +214,7 @@ variable {φ : E →L[ℂ] ℂ}
 
 private theorem toL2_zero' : toL2 ε (fun _ : Matrix (Fin n) (Fin n) ℂ => (0 : ℂ)) = 0 := by
   simp only [toL2]
-  rw [dif_pos (show MemLp (fun _ : Formalism.REAL.UJ ε => (0 : ℂ)) 2 (Formalism.REAL.muG ε) from MemLp.zero)]
+  rw [dite_eq_left (show MemLp (fun _ : Formalism.REAL.UJ ε => (0 : ℂ)) 2 (Formalism.REAL.muG ε) from MemLp.zero)]
   exact MemLp.toLp_zero _
 
 private theorem toL2_add_mul_of_memLp (F G : Matrix (Fin n) (Fin n) ℂ → ℂ)
@@ -224,7 +223,7 @@ private theorem toL2_add_mul_of_memLp (F G : Matrix (Fin n) (Fin n) ℂ → ℂ)
     toL2 ε (fun x => F x + c * G x) = toL2 ε F + c • toL2 ε G := by
   have hFG : MemLp (fun y : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat y) + c * G (Formalism.MainNotions.S.umat y)) 2
       (Formalism.REAL.muG ε) := hF.add (hG.const_mul c)
-  simp only [toL2, dif_pos hF, dif_pos hG, dif_pos hFG]
+  simp only [toL2, dite_eq_left hF, dite_eq_left hG, dite_eq_left hFG]
   rw [← MemLp.toLp_const_smul c hG, ← MemLp.toLp_add hF (hG.const_smul c)]
   rfl
 
@@ -248,8 +247,7 @@ theorem icxGood_zero : IcxGood ε φ 0 (fun _ => (0 : E)) := by
     intro g₀ _
     exact ⟨Set.univ, fun _ => 0, isOpen_univ, Set.mem_univ _, contDiffOn_const, fun _ _ _ => rfl⟩
   · simpa using (isSmoothL2_zero (ε := ε))
-  · simp only [map_zero, Submodule.coe_zero]
-    exact toL2_zero'.symm
+  · simpa only [map_zero, Submodule.coe_zero] using toL2_zero'.symm
 
 private theorem smoothOnGV_add_smul {Φ Φ' : Matrix (Fin n) (Fin n) ℂ → E}
     (hΦ : S7.SmoothOnGV ε Φ) (hΦ' : S7.SmoothOnGV ε Φ') (c : ℂ) :
@@ -298,8 +296,7 @@ theorem icxGood_sum {ι : Type*} (s : Finset ι) {x : ι → smD ε (rreg ε)} {
   classical
   revert h
   refine Finset.induction_on s ?_ ?_
-  · intro _
-    exact icxGood_congr (icxGood_zero (ε := ε) (φ := φ)) (by simp) (fun g _ => by simp)
+  · exact fun _ => icxGood_congr (icxGood_zero (ε := ε) (φ := φ)) (by simp) (fun g _ => by simp)
   · intro i s hi ih h
     have h1 := h i (Finset.mem_insert_self i s)
     have h2 := ih (fun j hj => h j (Finset.mem_insert_of_mem hj))
@@ -359,10 +356,10 @@ theorem icxGood_tm {x : smD ε (rreg ε)} {Φ : Matrix (Fin n) (Fin n) ℂ → E
       (icxGood_eab hx a a) 1
     refine icxGood_congr h1 ?_ (fun g _ => ?_)
     · simp [Formalism.REAL.Tm]
-    · simp only [Formalism.QuantumDeterminants.Top, if_true, zero_add, one_smul, S7_EabV_eq_REAL_EabV]
+    · simp only [Formalism.QuantumDeterminants.Top, ite_true, zero_add, one_smul, S7_EabV_eq_REAL_EabV]
   · refine icxGood_congr (icxGood_eab hx a b) ?_ (fun g _ => ?_)
     · simp [Formalism.REAL.Tm, hab]
-    · simp only [Formalism.QuantumDeterminants.Top, if_neg hab, zero_add, S7_EabV_eq_REAL_EabV]
+    · simp only [Formalism.QuantumDeterminants.Top, ite_eq_right hab, zero_add, S7_EabV_eq_REAL_EabV]
 
 theorem icxGood_qdet {x : smD ε (rreg ε)} {Φ : Matrix (Fin n) (Fin n) ℂ → E} (hx : IcxGood ε φ x Φ) (u : ℂ) :
     IcxGood ε φ (Formalism.REAL.qdet (smE ε (rreg ε)) u x) (Formalism.QuantumDeterminants.qdetOp (Formalism.REAL.EabV ε) u Φ) := by
@@ -387,19 +384,18 @@ private theorem toL2_const_mul (F : Matrix (Fin n) (Fin n) ℂ → ℂ) (c : ℂ
   by_cases hm : MemLp (fun y : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat y)) 2 (Formalism.REAL.muG ε)
   · have hm' : MemLp (fun y : Formalism.REAL.UJ ε => c * F (Formalism.MainNotions.S.umat y)) 2 (Formalism.REAL.muG ε) :=
       hm.const_mul c
-    simp only [toL2, dif_pos hm, dif_pos hm']
+    simp only [toL2, dite_eq_left hm, dite_eq_left hm']
     rw [← MemLp.toLp_const_smul c hm]
     rfl
   · by_cases hc : c = 0
     · subst hc
-      simp only [zero_mul, zero_smul]
-      exact toL2_zero'
+      simpa only [zero_mul, zero_smul] using toL2_zero'
     · have hm' : ¬ MemLp (fun y : Formalism.REAL.UJ ε => c * F (Formalism.MainNotions.S.umat y)) 2 (Formalism.REAL.muG ε) := by
         intro h
         apply hm
         have := h.const_mul c⁻¹
         simpa [hc] using this
-      simp only [toL2, dif_neg hm, dif_neg hm', smul_zero]
+      simp only [toL2, dite_eq_right hm, dite_eq_right hm', smul_zero]
 
 theorem icx_val {x y : smD ε (rreg ε)} {Φ Φ₀ : Matrix (Fin n) (Fin n) ℂ → E} (hy : IcxGood ε φ y Φ)
     (hx : (x : L2 ε) = toL2 ε (fun g => φ (Φ₀ g))) (c : ℂ) (hΦ : ∀ g, inUJ ε g → Φ g = c • Φ₀ g) :

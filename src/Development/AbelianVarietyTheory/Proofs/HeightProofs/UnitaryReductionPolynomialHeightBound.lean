@@ -338,8 +338,7 @@ theorem den_cT {n d : ℕ} (X : Matrix (Fin n) (Fin n) (Af D.host.F ⊗[D.host.F
     (h : ∀ i j, d • X i j ∈ intAE D) (i j : Fin n) :
     d • Formalism.UG.cT (sigR (Af D.host.F) D.sp.cm.sig) X i j ∈ intAE D := by
   have h5 := sig_mem (h j i)
-  rw [map_nsmul] at h5
-  exact h5
+  rwa [map_nsmul] at h5
 
 theorem bddDen_of_frame : ∀ (D : D7) (V : HSp D) (T : Set (GL (Fin V.rank) D.host.E)), T.Finite → ∃ d : ℕ, 0 < d ∧ ∀ (g γ : GA D V) (γ' : GL (Fin V.rank) D.host.E), ∀ Q ∈ T, GlobalTheory.Member.IsRat V γ γ' → (∀ j, (fun i => ((γ'⁻¹ * Q : GL (Fin V.rank) D.host.E) : Matrix (Fin V.rank) (Fin V.rank) D.host.E) i j) ∈ Formalism.L2.Pj.latG V g) → BddDen V d (γ * g) := by
   intro D V T hT
@@ -360,8 +359,7 @@ theorem bddDen_of_frame : ∀ (D : D7) (V : HSp D) (T : Set (GL (Fin V.rank) D.h
       rw [Matrix.mulVec_mulVec, ← Units.val_mul, ← map_mul, inv_mul_cancel, map_one, Units.val_one, one_mulVec]
     rw [e] at e2
     have := H₀ z hz i
-    rw [← e2] at this
-    exact this
+    rwa [← e2] at this
   have hinv : ∀ i j, (m₁ * m₀) • (finHom V (γ * g)⁻¹).1 i j ∈ intAE D := by
     intro i j
     have := H₁ ⟨Q, hQ⟩ _ _ hZ i j
@@ -373,8 +371,7 @@ theorem bddDen_of_frame : ∀ (D : D7) (V : HSp D) (T : Set (GL (Fin V.rank) D.h
   intro i j
   constructor
   · have := H₂ () _ _ (den_cT _ hinv) i j
-    rw [finHom_eq] at this
-    exact this
+    rwa [finHom_eq] at this
   · rw [mul_smul]
     exact AddSubgroup.nsmul_mem _ (hinv i j) _
 
@@ -400,8 +397,7 @@ theorem exists_int_bounds {E : Type} [Field E] [NumberField E]
     obtain ⟨r, hr⟩ := this
     rw [← hr]; exact r.2
   · have h : (⟨z, hz⟩ : 𝓞 E) • (m : E) ∈ J := Submodule.smul_mem (J : Submodule (𝓞 E) E) _ h3
-    rw [Algebra.smul_def, mul_comm] at h
-    exact h
+    rwa [Algebra.smul_def, mul_comm] at h
 
 theorem normInf_le {D : D7} {θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)} {V : HSp D}
     (hθ : IsInfFam θ) {γ : GA D V} {γ' : GL (Fin V.rank) D.host.E} (h : GlobalTheory.Member.IsRat V γ γ') {K : ℝ}

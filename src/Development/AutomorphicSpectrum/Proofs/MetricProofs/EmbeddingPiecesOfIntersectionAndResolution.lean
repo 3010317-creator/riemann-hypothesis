@@ -116,8 +116,7 @@ theorem const_of_orthogonal_log_units : ∀ (F : Type) [Field F] [NumberField F]
     · rw [← h, hconj]
   set mw : InfinitePlace F → ℝ := fun w => m w.embedding with hmw
   have hmk : ∀ sg : F →+* ℂ, m sg = mw (InfinitePlace.mk sg) := by
-    intro sg
-    exact hdesc _ _ (by simp [InfinitePlace.mk_embedding])
+    exact fun sg => hdesc _ _ (by simp [InfinitePlace.mk_embedding])
 
   have hplace : ∀ θ : (𝓞 F)ˣ,
       ∑ w : InfinitePlace F, (mult w : ℝ) * Real.log (w ((θ : 𝓞 F) : F)) * mw w = 0 := by
@@ -276,11 +275,7 @@ theorem smooth_update {D : ℕ} {W : Fin D → HermLine ι} (hW : ∀ j, IsSmoot
 theorem smooth_snoc {D : ℕ} {W : Fin D → HermLine ι} (hW : ∀ j, IsSmoothHerm (W j)) {X : HermLine ι}
     (hX : IsSmoothHerm X) (j : Fin (D + 1)) :
     IsSmoothHerm ((Fin.snoc W X : Fin (D + 1) → HermLine ι) j) := by
-  refine Fin.lastCases ?_ (fun i => ?_) j
-  · rw [Fin.snoc_last]
-    exact hX
-  · rw [Fin.snoc_castSucc]
-    exact hW i
+  apply RootFieldNumerics.smooth_snoc <;> assumption
 
 theorem position_change (I : Ideal (MRing ι) → (n : ℕ) → (Fin n → HermLine ι) → ℝ)
     (hI : IsIntersectionFamily I) (P : Ideal (MRing ι)) {D : ℕ} (hP : IsArithVar P (D + 1))
@@ -373,8 +368,7 @@ theorem mass_eq_of_degrees : ArithIntersectionSystemStatement → PtsIntegrableS
     · simp [Λ]
     · intro s _ hs
       simp [Λ, hs]
-    · intro h
-      exact absurd (Finset.mem_univ sg) h
+    · exact fun h => absurd (Finset.mem_univ sg) h
   rw [← mass L hL, ← mass L' hL']
   refine word_change (II K ι) (hII K ι) _ hP L L' hL hL' ha B hBs ?_
   intro z hz
@@ -657,9 +651,9 @@ theorem logNorm_one_eq_indicator {Ω F : Type} [Field Ω] [Field F] [Algebra F �
   rw [hone, hB z hz s hs]
   by_cases hst : s = tg
   · subst hst
-    rw [Set.indicator_of_mem (show z ∈ {z | LiesOver y s z} from hs), if_pos rfl, one_div,
+    rw [Set.indicator_of_mem (show z ∈ {z | LiesOver y s z} from hs), ite_eq_left rfl, one_div,
       Real.log_inv, Real.log_exp, neg_neg]
-  · rw [Set.indicator_of_notMem (fun h => hst (hs' tg h).symm), if_neg hst]
+  · rw [Set.indicator_of_notMem (fun h => hst (hs' tg h).symm), ite_eq_right hst]
     simp
 
 end SlopeTestRemainingChoices

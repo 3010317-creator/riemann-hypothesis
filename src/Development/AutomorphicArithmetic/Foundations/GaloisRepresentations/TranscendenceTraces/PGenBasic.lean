@@ -63,8 +63,7 @@ private theorem genPt_open {U S : Scheme.{0}} (j : U ⟶ S) [IsOpenImmersion j] 
     GenPt (j s) ↔ GenPt s := by
   have he := j.isOpenEmbedding
   constructor
-  · intro h t hts
-    exact he.injective (h _ (hts.map he.continuous))
+  · exact fun h t hts => he.injective (h _ (hts.map he.continuous))
   · intro h t hts
     have hmem : t ∈ Set.range j := hts.mem_open he.isOpen_range ⟨s, rfl⟩
     obtain ⟨t', rfl⟩ := hmem
@@ -74,8 +73,7 @@ private theorem genPt_open {U S : Scheme.{0}} (j : U ⟶ S) [IsOpenImmersion j] 
 private theorem genPt_integral (S : Scheme.{0}) [IsIntegral S] (s : S) :
     GenPt s ↔ s = genericPoint S := by
   constructor
-  · intro h
-    exact (h _ (genericPoint_specializes s)).symm
+  · exact fun h => (h _ (genericPoint_specializes s)).symm
   · rintro rfl t ht
     exact (ht.antisymm (genericPoint_specializes t)).eq
 

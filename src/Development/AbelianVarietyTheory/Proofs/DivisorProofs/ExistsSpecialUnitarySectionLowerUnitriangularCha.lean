@@ -249,7 +249,7 @@ theorem det_secM_eq_one : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
       simp only [nmat]
       have hab' : a < b := hab
       have h1 : ¬ b < a := not_lt.2 (le_of_lt hab')
-      rw [dite_eq_right h1, if_neg (ne_of_lt hab')]
+      rw [dite_eq_right h1, ite_eq_right (ne_of_lt hab')]
   set t : ℝ := ∏ k, gsS X w τ k with ht
   have hpos : 0 ≤ t := Finset.prod_nonneg fun k _ => inv_nonneg.2 (Real.sqrt_nonneg _)
   rw [hY, Complex.conj_ofReal] at hd
@@ -312,8 +312,7 @@ theorem nmat_differentiableAt (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
 
 theorem nmat_zero_apply (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
     nmat X 0 τ a b = (1 : Matrix (Fin r) (Fin r) ℂ) a b := by
-  have h := congrFun (congrFun (PoinPf.nmat_zero X τ) a) b
-  simpa [mat] using h
+  simpa [mat] using congrFun (congrFun (PoinPf.nmat_zero X τ) a) b
 
 theorem gsB_zero_apply (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
     gsB X 0 τ a b = (1 : Matrix (Fin r) (Fin r) ℂ) a b := by
@@ -349,7 +348,7 @@ theorem dY_lower (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (z : V (nd 
         gsB X 0 τ k b • fderiv ℝ (fun w => nmat X w τ a k) 0)) =
       fderiv ℝ (fun w => gsB X w τ a b) 0 + fderiv ℝ (fun w => nmat X w τ a b) 0 := by
     simp only [nmat_zero_apply, gsB_zero_apply, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [hsum, ContinuousLinearMap.add_apply]
   rw [hB0, hN, fderiv_const_apply, ContinuousLinearMap.fderiv, ContinuousLinearMap.zero_apply, zero_add]
   simp [nmat, hba, e] <;> rfl
@@ -404,8 +403,7 @@ theorem diagreal {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X
   swap
   · simp [dY, fderiv_zero_of_not_differentiableAt hd]
   have hY : ∀ k j : Fin r, DifferentiableAt ℝ (fun w => yF X w τ k j) 0 := by
-    intro k j
-    exact differentiableAt_pi.1 (differentiableAt_pi.1 (differentiableAt_pi.1 hd τ) k) j
+    exact fun k j => differentiableAt_pi.1 (differentiableAt_pi.1 (differentiableAt_pi.1 hd τ) k) j
   have hN : ∀ k m : Fin r, DifferentiableAt ℝ (fun w : V (nd X) => nmat X w τ k m) 0 := fun k m =>
     ((PoinPf.diff_nmat X τ k m) 0).restrictScalars ℝ
   have hB : ∀ n : ℕ, ∀ k : Fin r, k.val = n → DifferentiableAt ℝ (fun w => gsB X w τ k a) 0 := by
@@ -424,11 +422,10 @@ theorem diagreal {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X
   have hN0 : ∀ m : Fin r, m < a → nmat X 0 τ a m = 0 := by
     intro m hm
     have := congrFun (congrFun (PoinPf.nmat_zero X τ) a) m
-    simp only [mat, Matrix.of_apply, Matrix.one_apply, hm.ne', if_false] at this
-    exact this
+    simpa only [mat, Matrix.of_apply, Matrix.one_apply, hm.ne', ite_false] using this
   have hB0 : ∀ m : Fin r, m < a → gsB X 0 τ m a = 0 := by
     intro m hm
-    rw [gsB_zero, Matrix.one_apply, if_neg hm.ne]
+    rw [gsB_zero, Matrix.one_apply, ite_eq_right hm.ne]
   have hsum : HasFDerivAt (fun w => ∑ m ∈ Finset.univ.filter (· < a), nmat X w τ a m * gsB X w τ m a)
       (0 : V (nd X) →L[ℝ] ℂ) 0 := by
     have h : HasFDerivAt (fun w => ∑ m ∈ Finset.univ.filter (· < a), nmat X w τ a m * gsB X w τ m a)
@@ -524,7 +521,7 @@ theorem dY_skew (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (z : V (nd X
     rw [yM_zero, Matrix.one_apply]
   simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply, h0] at key
-  simp only [ite_mul, one_mul, zero_mul, apply_ite (starRingEnd ℂ), map_one, map_zero, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true, smul_eq_mul,
+  simp only [ite_mul, one_mul, zero_mul, apply_ite (starRingEnd ℂ), map_one, map_zero, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true, smul_eq_mul,
     ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply, P, ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply] at key
   linear_combination key
 
@@ -574,7 +571,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hσ : ∀ w (h : w ∈ Metric.ball (0 : V (nd X)) R) τ,
       ((((σ w : realSU X.Ψ X.Gm) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) =
         secM X x w τ := fun w h τ => by
-    simp only [σ, dif_pos h]; rfl
+    simp only [σ, dite_eq_left h]; rfl
   have hx0 : ∀ τ, IsUnit (mat x τ).det := fun τ => isUnit_iff_ne_zero.2 (det_ne_of_orth X hx τ)
   have h0 : (0 : V (nd X)) ∈ Metric.ball (0 : V (nd X)) R := Metric.mem_ball_self hR
   let Cx : (X.Ψ → Fin r → Fin r → ℂ) →ₗ[ℝ] (X.Ψ → Fin r → Fin r → ℂ) :=
@@ -601,8 +598,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       exact ((PoinPf.cont_nmatm X τ).comp continuous_subtype_val).matrix_mul (hg τ)
     refine continuous_induced_rng.2 (continuous_pi fun τ => Units.continuous_iff.2 ⟨?_, ?_⟩)
     · refine (hM τ).congr fun w => ?_
-      simp only [Function.comp_apply, Set.restrict_apply]
-      exact (hσ w w.2 τ).symm
+      simpa only [Function.comp_apply, Set.restrict_apply] using (hσ w w.2 τ).symm
     · refine ((hM τ).matrix_adjugate).congr fun w => ?_
       simp only [Function.comp_apply, Set.restrict_apply]
       rw [Matrix.coe_units_inv, hσ w w.2 τ, Matrix.inv_def, GlobalTheory.T.det_unitaryChartSectionConjugatedMatrix X hx (hball w w.2) τ, Ring.inverse_one, one_smul]

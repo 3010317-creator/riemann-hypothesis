@@ -100,8 +100,7 @@ theorem emb_trace (v : InfinitePlace X.B.I.F) (e : X.B.I.E) :
     apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
     rw [Finset.card_univ, hcard, Finset.card_pair hne]
   have h := trace_eq_sum_embeddings (K := X.B.I.F) (L := X.B.I.E) ℂ (x := e)
-  rw [huniv, Finset.sum_pair hne] at h
-  exact h
+  rwa [huniv, Finset.sum_pair hne] at h
 
 theorem evInf_conj (v : InfinitePlace X.B.I.F) (a : Ainf X.B.I.F) :
     conj (PI.AprimeInfU.evInf X v a) = PI.AprimeInfU.evInf X v a := by
@@ -167,7 +166,7 @@ theorem form_Jm {n : ℕ} (ε : Fin n → Bool) (p q : Fin n → ℂ) :
     (∑ i, ∑ j, conj (p i) * Formalism.REAL.Jm ε i j * q j).re =
       ∑ i, (if ε i then 1 else -1 : ℝ) * ((p i).re * (q i).re + (p i).im * (q i).im) := by
   simp only [Formalism.REAL.Jm, Matrix.diagonal_apply, mul_ite, ite_mul, mul_zero, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, Complex.re_sum]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, Complex.re_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs <;> simp [Complex.mul_re, Complex.conj_re, Complex.conj_im]
 

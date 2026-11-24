@@ -439,8 +439,7 @@ theorem pTor_range_of_injective (p : ℕ) {A B : Type} [CommGroup A] [CommGroup 
   symm
   refine Nat.card_congr (Equiv.ofBijective
     (fun x => ⟨j x.1, ⟨x.1, rfl⟩, by rw [← map_pow, x.2.2, map_one]⟩) ⟨?_, ?_⟩)
-  · intro x y h
-    exact Subtype.ext (hj (congrArg Subtype.val h))
+  · exact fun x y h => Subtype.ext (hj (congrArg Subtype.val h))
   · rintro ⟨_, ⟨a, rfl⟩, h⟩
     exact ⟨⟨a, trivial, hj (by rw [map_pow, h, map_one])⟩, rfl⟩
 
@@ -538,15 +537,13 @@ theorem pIdx_units_finite_extension_adicCompletion (p : ℕ) (F : Type) [Field F
   have hq : Ideal.absNorm v.asIdeal ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]; exact v.ne_bot
   have hπO : algebraMap (v.adicCompletionIntegers F) O π ≠ 0 := by
-    intro h
-    exact hπL (congrArg Subtype.val h)
+    exact fun h => hπL (congrArg Subtype.val h)
   have hcomp := isAdicComplete_span_algebraMap_of_free_finite (v.adicCompletionIntegers F) O π
     (hc π (by rw [hπ]; exact hlt))
   have hc1 : Nat.card (O ⧸ Ideal.span {(p : O)}) =
       (Ideal.absNorm v.asIdeal ^ e) ^ Module.finrank (v.adicCompletion F) L := by
     have := card_quot_span_algebraMap (v.adicCompletionIntegers F) O (p : _)
-    rw [map_natCast, hcard _ e hvp, hrank] at this
-    exact this
+    rwa [map_natCast, hcard _ e hvp, hrank] at this
   have hc2 : Nat.card (O ⧸ Ideal.span
       {(p : O) * algebraMap (v.adicCompletionIntegers F) O π}) ≠ 0 := by
     have := card_quot_span_algebraMap (v.adicCompletionIntegers F) O ((p : _) * π)

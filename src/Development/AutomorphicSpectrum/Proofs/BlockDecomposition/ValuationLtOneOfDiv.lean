@@ -256,8 +256,7 @@ theorem g0_image (m c : ℕ) :
   · rintro ⟨y, hy, rfl⟩ i
     have := hy i
     rw [pow_zero, one_mul] at this
-    rw [Pi.smul_apply, smul_eq_mul, mul_inv_cancel_left₀ hϖ]
-    exact this
+    rwa [Pi.smul_apply, smul_eq_mul, mul_inv_cancel_left₀ hϖ]
   · intro hx
     refine ⟨((uniformizer F : F) ^ (c + 1)) • x, fun i => ?_, ?_⟩
     · rw [pow_zero, one_mul]
@@ -281,8 +280,7 @@ theorem continuous_of_periodic {m c' : ℕ} {f : (Fin m → F) → ℂ}
   filter_upwards [h1 h0] with z hz
   have hz' := hf x (z - x) fun i => ⟨((uniformizer F : F) ^ c')⁻¹ * (z - x) i,
     Measures.mem_box.1 hz i, by rw [mul_inv_cancel_left₀ hϖ]⟩
-  rw [add_sub_cancel] at hz'
-  exact hz'
+  rwa [add_sub_cancel] at hz'
 
 section Integrals
 
@@ -347,8 +345,8 @@ theorem integral_image_eq (hL0 : L0) (hL1 : L1) (μ : Measure F) [μ.IsAddHaarMe
     simp only [hΦ]
     rw [integral_mul_const, hL1' (gi *ᵥ x)]
     by_cases hx : x ∈ S
-    · rw [if_pos ((hmemS x).1 hx), Set.indicator_of_mem hx]
-    · rw [if_neg (fun h => hx ((hmemS x).2 h)), Set.indicator_of_notMem hx, zero_mul]
+    · rw [ite_eq_left ((hmemS x).1 hx), Set.indicator_of_mem hx]
+    · rw [ite_eq_right (fun h => hx ((hmemS x).2 h)), Set.indicator_of_notMem hx, zero_mul]
   have h2 : ∫ x in lat F (k + 1) M, ∫ ξ in lat F (k + 1) 0, Φ x ξ ∂ν ∂ν =
       (vol : ℂ) * ∫ x in S, G x ∂ν := by
     simp_rw [h1]
@@ -413,8 +411,7 @@ theorem stability : L0 → L1 → L2 := by
       lat F (k + 1) 0 ⊆ lat F (k + 1) M := by
     refine himg.elim_directed_cover (fun M => lat F (k + 1) M) (fun M => (hcomp M).2.1) ?_
       (directed_of_isDirected_le fun _ _ h => lat_mono h)
-    intro x _
-    exact Set.mem_iUnion.2 (exists_mem_lat x)
+    exact fun x _ => Set.mem_iUnion.2 (exists_mem_lat x)
   rw [integral_image_eq hL0 hL1 μ ψ hψ hfc hf₂ g hg
       (hM₁.trans (lat_mono (le_max_left M₁ (c + 1)))),
     ← g0_image (k + 1) c,

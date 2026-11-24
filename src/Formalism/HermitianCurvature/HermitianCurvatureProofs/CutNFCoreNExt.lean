@@ -121,11 +121,9 @@ theorem nf_scoef_unique (p : KB.Pl P Wp Wq) (w : List C.Letter) (e : Wd.Ix (Fin 
     rw [dite_eq_left qq.isLt] at hz
     by_cases hq : (qq : ℕ) ≤ Q'
     · rw [dite_eq_left hq]
-      rw [dite_eq_left (by omega : (qq : ℕ) < Q' + 1)] at hz
-      exact hz
+      rwa [dite_eq_left (by omega : (qq : ℕ) < Q' + 1)] at hz
     · rw [dite_eq_right hq]
-      rw [dite_eq_right (by omega : ¬ (qq : ℕ) < Q' + 1)] at hz
-      exact hz
+      rwa [dite_eq_right (by omega : ¬ (qq : ℕ) < Q' + 1)] at hz
   · rintro _ ⟨s, rfl⟩
     have e1 : ∑ i ∈ Finset.range (max Q Q' + 1),
         (s : ℂ) ^ i • (if h : i < Q + 1 then B.opApply (L ⟨i, h⟩) F g else 0) =
@@ -272,8 +270,7 @@ theorem nf_vExtract (p : KB.Pl P Wp Wq) (w : List C.Letter) (e : Wd.Ix (Fin w.le
       intro x
       push_cast
       ring
-    simp only [h3, h4]
-    exact e1.symm
+    simpa only [h3, h4] using e1.symm
   have := coeff_eq_zero_of_sum_pow_smul_eq_zero_nat _ key qq
   exact sub_eq_zero.mp this
 

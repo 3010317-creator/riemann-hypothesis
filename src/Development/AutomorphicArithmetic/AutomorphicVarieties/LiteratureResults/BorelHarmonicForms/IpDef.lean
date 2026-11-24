@@ -46,10 +46,8 @@ theorem UpperTheory.V.Lit.Bor.ipDef :
   intro E _ _ _ a n e he M _ _ _ _ H N hH q
   refine ⟨fun ω η => ?_, fun ω hω => ⟨?_, fun h0 => ?_⟩⟩
 
-  · simp only [ip, map_sum]
-    exact Finset.sum_congr rfl fun I _ => hH.herm _ _
-  · simp only [ip, Complex.re_sum]
-    exact Finset.sum_nonneg fun I _ => hH.nonneg _ (hω _)
+  · simpa only [ip, map_sum] using Finset.sum_congr rfl fun I _ => hH.herm _ _
+  · simpa only [ip, Complex.re_sum] using Finset.sum_nonneg fun I _ => hH.nonneg _ (hω _)
   · have hre : ∑ I : Fin q → Fin n, (H (ω fun i => e (I i)) (ω fun i => e (I i))).re = 0 := by
       rw [← Complex.re_sum]
       exact congrArg Complex.re h0

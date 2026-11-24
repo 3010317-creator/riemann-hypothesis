@@ -126,8 +126,7 @@ theorem exists_det_int {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)} {g : GA D 
       simp [frGL]
     have h3 := congrArg Units.val h2
     rw [h1, ← hy]
-    refine Eq.trans ?_ h3.symm
-    exact (Formalism.L2.Herm.intAf D.host.F D.host.E).subtype.map_det y.val
+    exact Eq.trans ((Formalism.L2.Herm.intAf D.host.F D.host.E).subtype.map_det y.val) h3.symm
   · rw [← hy, redFn_frGL]
     exact ((resS D.host.F PP).map_det y.val).symm
 

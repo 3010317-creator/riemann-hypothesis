@@ -46,10 +46,8 @@ theorem mem_secOver_oneBlock (x : κ → Ω) (n : ℤ) (t : Ω) :
   simp only [Submodule.mem_iInf, Submodule.mem_comap, LinearMap.mulRight_apply, Finset.univ_unique,
     Finset.prod_singleton, Subalgebra.mem_toSubmodule, chartRingOver_oneBlock_eq]
   constructor
-  · intro h j hj
-    exact h (fun _ => j) (fun _ => hj)
-  · intro h c hc
-    exact h (c ()) (hc ())
+  · exact fun h j hj => h (fun _ => j) (fun _ => hj)
+  · exact fun h c hc => h (c ()) (hc ())
 
 
 omit [Fintype κ] in

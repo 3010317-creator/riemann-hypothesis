@@ -152,8 +152,7 @@ theorem eq_zero_of_mem_eigenSub_of_sum {O k N : Type} [CommRing O] [Field k] [Ad
   | insert j s hj ih =>
     intro m y hm hy h
     obtain ⟨c, hc⟩ : ∃ c, χ j c ≠ σ c := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hχ j (RingHom.ext hcon)
     let f : Module.End k N := ρ c - χ j c • LinearMap.id
     have hfm : f m = (σ c - χ j c) • m := by
@@ -226,8 +225,7 @@ theorem exists_ringHom_avoid {F : Type} [Field F] [NumberField F] [IsCMField F] 
     · intro τ _; ext z; simp [hcc]
   have htot : T.card + Tc.card = Module.finrank ℚ F := by
     rw [Finset.card_filter_add_card_filter_not, Finset.card_univ, NumberField.Embeddings.card]
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hsub : T.image (fun τ => τ.comp (algebraMap (𝓞 F) F)) ⊆ Finset.univ.image χ := by
     intro σ hσ
     obtain ⟨τ, hτ, rfl⟩ := Finset.mem_image.1 hσ
@@ -403,8 +401,7 @@ theorem comp_eq_prodPts (hv : IsLieBasis v) (u : G ⟶ G) [IsMonHom u] (j : Fin 
     v j ≫ u = prodPts (fun i => lieMat hv u i j) v := by
   have h := (SqZero.existsUnique_lieMatrix u hv.1 hv).exists.choose_spec j
   rw [ReciprocityTheory.ChartRestriction.G.Chart.isLieComb_iff] at h
-  rw [lieMat, dite_eq_left (show IsMonHom u from inferInstance)]
-  exact h
+  rwa [lieMat, dite_eq_left (show IsMonHom u from inferInstance)]
 
 end GlobalTheory.LieCoordFibre
 
@@ -525,8 +522,7 @@ theorem exists_unit_coeff {W V ι : Type} [CommRing W] [IsDomain W] [IsDiscreteV
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [hv i]; ring
   refine ⟨v, ?_, ?_⟩
-  · by_contra hnu
-    push_neg at hnu
+  · by_contra! hnu
     have h1 : (1 : W) ∈ IsLocalRing.maximalIdeal W := by
       rw [← hsum]
       exact Ideal.sum_mem _ fun i _ =>
@@ -543,8 +539,7 @@ theorem exists_vecMul_eq_zero {W Ω ι κ : Type} [CommRing W] [IsDomain W] [Fie
     (A : Matrix ι κ W) (x : ι → Ω) (hx : x ≠ 0) (h : x ᵥ* A.map f = 0) :
     ∃ w : ι → W, w ≠ 0 ∧ w ᵥ* A = 0 := by
   classical
-  by_contra H
-  push_neg at H
+  by_contra! H
   let L := FractionRing W
   let g : L →+* Ω := IsFractionRing.lift hf
   have hg : ∀ r, g (algebraMap W L r) = f r := fun r => IsFractionRing.lift_algebraMap hf r
@@ -666,8 +661,7 @@ theorem exists_primitive_annihilator : ∀ (F : Type) [Field F] [NumberField F] 
       split_ifs with hτ
       · subst hτ; rw [hσ']; ring
       · ring)
-    intro j
-    exact sub_eq_zero.1 (congrFun this j)
+    exact fun j => sub_eq_zero.1 (congrFun this j)
   let N : Matrix (Fin n) (Fin n) Ω := ∑ i, x i • Φ (b i)
   have hN : ∀ a, Φ a * N = σ a • N := by
     intro a
@@ -768,8 +762,7 @@ theorem dvd_coord_of_action_dvd (F : Type) [Field F] [NumberField F] (X : Type)
     rw [map_zero]
     have := Polynomial.aeval_algHom_apply (ρ.toIntAlgHom) a (f.scaleRoots p)
     change ρ.toIntAlgHom _ = 0
-    rw [← this]
-    exact h1
+    rwa [← this]
   have h3 : aeval (algebraMap (𝓞 F) F a) (f.scaleRoots p) = 0 := by
     rw [Polynomial.aeval_algebraMap_apply, h2, map_zero]
   have hpF : (algebraMap ℤ F p) ≠ 0 := by simpa using hp
@@ -802,7 +795,7 @@ theorem finrank_eq_zero_of_dual_killed : ∀ (F : Type) [Field F] [NumberField F
   by_contra hX
   haveI : Nontrivial X := Module.finrank_pos_iff.mp (Nat.pos_of_ne_zero hX)
   obtain ⟨i0, hi0⟩ : ∃ i, w i ≠ 0 := by
-    by_contra hc; push_neg at hc; exact hw (funext hc)
+    by_contra hc; push Not at hc; exact hw (funext hc)
   set B := Module.Free.chooseBasis ℤ X
   have key : ∀ (χ : X) (r : Module.Free.ChooseBasisIndex ℤ X),
       ∑ i, (B.repr (ρ (b i) χ) r) • w i = 0 := by
@@ -822,7 +815,7 @@ theorem finrank_eq_zero_of_dual_killed : ∀ (F : Type) [Field F] [NumberField F
     haveI : CharP k p := ringChar.charP k
     letI : Algebra (ZMod p) k := ZMod.algebra k p
     obtain ⟨π, hπ⟩ : ∃ π : Module.Dual (ZMod p) k, π (w i0) ≠ 0 := by
-      by_contra hc; push_neg at hc
+      by_contra hc; push Not at hc
       exact hi0 ((Module.forall_dual_apply_eq_zero_iff (ZMod p) (w i0)).mp hc)
     set e : ι → ℤ := fun i => ((π (w i)).val : ℤ) with hedef
     have hdiv : ∀ (χ : X) (r : Module.Free.ChooseBasisIndex ℤ X),
@@ -847,7 +840,7 @@ theorem finrank_eq_zero_of_dual_killed : ∀ (F : Type) [Field F] [NumberField F
       have := ringChar.charP k; rw [hp] at this; exact CharP.charP_to_charZero k
     letI : Algebra ℚ k := DivisionRing.toRatAlgebra
     obtain ⟨π, hπ⟩ : ∃ π : Module.Dual ℚ k, π (w i0) ≠ 0 := by
-      by_contra hc; push_neg at hc
+      by_contra hc; push Not at hc
       exact hi0 ((Module.forall_dual_apply_eq_zero_iff ℚ (w i0)).mp hc)
     set c : ι → ℚ := fun i => π (w i) with hcdef
     set e : ι → ℤ := fun i => (c i).num * ∏ j ∈ Finset.univ.erase i, ((c j).den : ℤ) with hedef
@@ -961,8 +954,7 @@ theorem splitTorus_tangent_addHom : ∀ (k : Type) [Field k] (X : Type) [AddComm
     ext χ
     have e := congrArg (fun t => (chV t χ).val) h
     simp only [chV_tanPt] at e
-    have e2 := congrArg TrivSqZeroExt.snd (hΓ e)
-    simpa using e2
+    simpa using congrArg TrivSqZeroExt.snd (hΓ e)
   · intro l
     let j : Over.mk (𝟙 (Sp k)) ⟶ epsPt (𝟙 (Sp k)) :=
       Over.homMk (spMap (TrivSqZeroExt.fstHom k k k).toRingHom) (by
@@ -1238,8 +1230,7 @@ theorem finrank_zero (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRi
   have T'0 : T' 0 = 1 := by simpa using T'add 0 0
   have U0 : U 0 = 1 := by simpa using Uadd 0 0
   refine _root_.GlobalTheory.finrank_eq_zero_of_dual_killed F E.X ρ (ResidueField W) _ b (fun i => residue W (w i)) ?_ ?_
-  · intro h
-    exact (residue_ne_zero_iff_isUnit _).2 hu (congrFun h i0)
+  · exact fun h => (residue_ne_zero_iff_isUnit _).2 hu (congrFun h i0)
   · intro l χ
     obtain ⟨c, hc⟩ := (T'range (U l)).1 (Ufst l)
     have step : ∀ i, U ((AddMonoidHom.mulLeft (residue W (w i))).comp (l.comp (ρ (b i)).toAddMonoidHom)) =
@@ -1367,8 +1358,7 @@ theorem divAlg_order_no_small_lattice : ∀ (B : Type) [Ring B] [Algebra ℚ B] 
   let φ : O →ₗ[ℤ] X := (AddMonoidHom.mk' (fun a => ρ a x) (by intro a b; simp)).toIntLinearMap
   have hφ : Function.Injective φ := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro a ha
-    exact divAlg_smul_injective ι hunit hinj hspan ρ x hx a ha
+    exact fun a ha => divAlg_smul_injective ι hunit hinj hspan ρ x hx a ha
   let ι' : O →ₗ[ℤ] B := ι.toAddMonoidHom.toIntLinearMap
   obtain ⟨b, hbsub, hbspan, hbli⟩ := exists_linearIndependent ℚ (Set.range ι)
   rw [hspan] at hbspan
@@ -1507,8 +1497,7 @@ theorem potModel_of_divAlg_leftAction : ∀ (V K : Type) [CommRing V] [IsDomain 
   · intro x hx
     have hx' : x.unop ≠ 0 := by simpa using hx
     simpa using (hunit x.unop hx').op
-  · intro a b h
-    exact MulOpposite.unop_injective (hinj (MulOpposite.op_injective h))
+  · exact fun a b h => MulOpposite.unop_injective (hinj (MulOpposite.op_injective h))
   · have : Set.range (RingHom.op jj) = (MulOpposite.opLinearEquiv ℚ (M := B)) '' Set.range jj := by
       ext x; constructor
       · rintro ⟨a, rfl⟩; exact ⟨jj a.unop, ⟨a.unop, rfl⟩, rfl⟩

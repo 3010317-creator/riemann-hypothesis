@@ -140,8 +140,7 @@ theorem lattice_stable_weight_separator [CharZero (KK O)] (E : GLOps n (KK O) V)
       (∀ mu, ∀ x ∈ weightSp E mu, T x = ((g mu : ℤ) : KK O) • x) ∧
       ∀ M : Submodule O V, UZStable (O := O) E M → ∀ x ∈ M, T x ∈ M := by
   have hex : ∃ a, nu a ≠ lam a := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact h (funext hc)
   obtain ⟨a, ha⟩ := hex
   rcases lt_or_gt_of_ne ha with hlt | hgt
@@ -152,8 +151,7 @@ theorem lattice_stable_weight_separator [CharZero (KK O)] (E : GLOps n (KK O) V)
     · show Ring.choose (nu a + -nu a) δ = 0
       rw [show nu a + -nu a = ((0 : ℕ) : ℤ) by simp, Ring.choose_natCast,
         Nat.choose_eq_zero_of_lt (by omega), Nat.cast_zero]
-    · intro mu x hx
-      exact shifted_binomial_on_weight hx a (-nu a) δ
+    · exact fun mu x hx => shifted_binomial_on_weight hx a (-nu a) δ
     · exact fun M hM x hx => shifted_binomial_preserves_lattice hM a (-nu a) δ hx
   · obtain ⟨δ, hδ⟩ : ∃ δ : ℕ, nu a - lam a = δ := ⟨(nu a - lam a).toNat, by omega⟩
     refine ⟨1 - shiftedBinomialOperator E a (-lam a) δ, fun mu => 1 - Ring.choose (mu a + -lam a) δ, ?_, ?_, ?_, ?_⟩

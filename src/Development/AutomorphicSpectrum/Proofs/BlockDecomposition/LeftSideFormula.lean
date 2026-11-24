@@ -119,8 +119,7 @@ theorem cK_tmul_mul (r : R) (y : R ⊗[F] E) (k : Fin d) :
 
 theorem cK_nat_mul (N : ℕ) (y : R ⊗[F] E) (k : Fin d) :
     cK R b ((N : R ⊗[F] E) * y) k = (N : R) * cK R b y k := by
-  have e : (N : R ⊗[F] E) = (N : R) ⊗ₜ[F] (1 : E) := by
-    exact (map_natCast (algebraMap R (R ⊗[F] E)) N).symm
+  have e : (N : R ⊗[F] E) = (N : R) ⊗ₜ[F] (1 : E) := (map_natCast (algebraMap R (R ⊗[F] E)) N).symm
   rw [e, cK_tmul_mul]
 
 theorem cK_incl (e : E) (k : Fin d) : cK R b (inclR R e) k = algebraMap F R (b.repr e k) := by
@@ -425,7 +424,7 @@ theorem pointwise : Equi → ∀ (F E : Type) [Field F] [NumberField F] [Field E
         simp only [hTd, hU]
         rw [e1, mul_zero, Set.indicator_of_notMem (by exact hall)]
     · rw [Set.indicator_of_notMem (by exact hx)]
-      push_neg at hx
+      push Not at hx
       obtain ⟨v, hv, i, hi⟩ := hx
       simp only [hU]
       have hn : X ∉ {X : Fin 1 → Fin 2 → E | ∀ v, actW (Fv F v) σ J (g v) (ratTup (Fv F v) X) ∈ A v} :=
@@ -551,8 +550,7 @@ theorem dom_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
         rw [hN1, hc]
         push_cast
         ring
-      rw [e]
-      exact h1
+      rwa [e]
     · rw [hAoff v hv] at hY
       exact nat_mul_latV b v N1 hY
   obtain ⟨r1, hr1⟩ := (IsCompact.image hφs t9).bddAbove
@@ -654,9 +652,7 @@ theorem domination : Equi → ∀ (F E : Type) [Field F] [NumberField F] [Field 
   set Y := fun X : Fin 1 → Fin 2 → E => fun p : Fin 1 × Fin 2 × Fin 2 => (N : F) * b.repr (X p.1 p.2.1) p.2.2 with hY
   have hYi : Function.Injective Y := fun X X' e => by
     funext a i
-    refine b.repr.injective (Finsupp.ext fun k => ?_)
-    have h1 := congrFun e (a, i, k)
-    exact mul_left_cancel₀ hN0 h1
+    exact b.repr.injective (Finsupp.ext fun k => (mul_left_cancel₀ hN0 (congrFun e (a, i, k))))
   set T : Set ({X : Fin 1 → Fin 2 → E | X ≠ 0} : Set _) :=
     {X | Phi θ ε φ A (actW (AF F) σ J c (ratTup (AF F) X.1)) ≠ 0} with hTdef
   have hPhi : ∀ Z : Fin 1 → Fin 2 → AF F ⊗[F] E, Phi θ ε φ A Z ≤ Real.toNNReal B0 := fun Z => by

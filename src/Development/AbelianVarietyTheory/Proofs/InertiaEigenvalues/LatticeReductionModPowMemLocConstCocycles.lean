@@ -73,7 +73,6 @@ theorem redT_mem_Z1Q : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt
     · rintro ⟨y, hy, hxy⟩
       refine ⟨⟨y, hy⟩, Subtype.ext ?_⟩
       rw [← hxy]
-      show c • y = ϖ ^ r • y
       exact hsm y
   have ha : (a : _ → A.V) ∈ latticeCocycles LA := a.2
   obtain ⟨⟨hcont, hcoc⟩, -⟩ := ha
@@ -87,8 +86,7 @@ theorem redT_mem_Z1Q : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt
     · show (a : _ → A.V) g0 - (a : _ → A.V) g0 ∈ (fun v : A.V => c • v) '' (LA.T : Set A.V)
       rw [sub_self]; exact ⟨0, LA.T.zero_mem, smul_zero c⟩
     · intro g hg
-      rw [hval, hval, Submodule.Quotient.eq, hmem]
-      exact hg
+      rwa [hval, hval, Submodule.Quotient.eq, hmem]
   · intro g h
     change (Submodule.Quotient.mk (evT LA (g * h) a) : ↥LA.T ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥LA.T)) =
       Submodule.Quotient.mk (evT LA g a) + actQ LA _ hI g (Submodule.Quotient.mk (evT LA h a))

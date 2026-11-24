@@ -26,8 +26,7 @@ theorem isFdeg_dv (v : InfinitePlace X.B.I.F) :
     rw [h0, norm_zero] at h1
     exact zero_ne_one h1
   have e : X.dv v = d := Formalism.MainNotions.DiscreteSeriesInnerProducts.fdegOf_eq hd hw
-  rw [e]
-  exact hd
+  rwa [e]
 
 theorem inner_tens_orbit (g : X.B.I.Ginf) :
     ⟪X.B.tens X.B.w, X.B.σs g (X.B.tens X.B.w)⟫_ℂ = mInf X.B.I X.B.σ X.B.w g := by
@@ -49,8 +48,7 @@ theorem integral_ph_m
   have hs := Formalism.L2.SG.Pf.glob_schur X.B.I X.B.σ X.dv X.B.w hU (isFdeg_dv X) hw hL X.B.σs X.B.tens
     X.B.tens_spec (X.B.tens X.B.w)
   simp_rw [inner_tens_orbit X] at hs
-  rw [inner_tens_self X] at hs
-  exact hs
+  rwa [inner_tens_self X] at hs
 
 theorem rph_isRowProj
     (hL : ∀ v, Integrable (phLoc (ε := X.B.I.ε v) (X.B.σ v) (X.B.w v) (X.dv v)) (Formalism.REAL.muG (X.B.I.ε v))) :

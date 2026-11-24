@@ -202,8 +202,7 @@ theorem summable_cf_mul (hB : ∀ N, ∀ u ∈ S, ∀ z, (1 + ‖z‖) ^ N * ‖
   have h := cf_mul_le hB (m + 1) j
   have hp : (0 : ℝ) < 2 ^ j := by positivity
   rw [pow_succ, ← mul_assoc] at h
-  rw [one_div_pow, ← div_eq_mul_one_div, le_div_iff₀ hp]
-  exact h
+  rwa [one_div_pow, ← div_eq_mul_one_div, le_div_iff₀ hp]
 
 end Coef
 
@@ -276,9 +275,7 @@ theorem schDom {Z : Type} [NormedAddCommGroup Z] [NormedSpace ℝ Z] [FiniteDime
           (by exact_mod_cast (le_top : (k : ℕ∞) ≤ ⊤))]
         exact hC x }
   refine ⟨F, fun u hu z => ?_⟩
-  have hF : ‖F z‖ = |Fr z| := by
-    show ‖((Fr z : ℝ) : ℂ)‖ = _
-    exact Complex.norm_real _
+  have hF : ‖F z‖ = |Fr z| := Complex.norm_real _
   rw [hF]
   obtain ⟨n0, hn0⟩ := pow_unbounded_of_one_lt ‖z‖ (one_lt_two : (1 : ℝ) < 2)
   have hex : ∃ j : ℕ, ‖z‖ ≤ 2 ^ j := ⟨n0, hn0.le⟩
@@ -296,8 +293,7 @@ theorem schDom {Z : Type} [NormedAddCommGroup Z] [NormedSpace ℝ Z] [FiniteDime
     apply ρ.one_of_mem_closedBall
     rw [mem_closedBall, dist_zero_right, norm_sc]
     show ‖z‖ / 2 ^ j ≤ 1
-    rw [div_le_one (by positivity)]
-    exact hj
+    rwa [div_le_one (by positivity)]
   have hnn : ∀ i, 0 ≤ f i z := fun i => mul_nonneg (cf_nonneg hB i) (ρ.nonneg)
   have hsum : Summable fun i => f i z := by
     refine Summable.of_nonneg_of_le hnn (fun i => ?_) (summable_cf_mul hB 0 1 zero_le_one)
@@ -365,13 +361,12 @@ theorem adMaj (θ : InfFam D) (hθ : IsInfFam θ) {m n : ℕ} (K : Set (Mx D m n
     rintro v ⟨u, hu, x, rfl⟩ z
     by_cases hz : z = rc x
     · subst hz
-      simp only [if_true]
+      simp only [ite_true]
       calc (1 + ‖rc x‖) ^ N * ‖u x‖ ≤ (1 + GlobalTheory.Unf.realSize θ x) ^ N * ‖u x‖ :=
             mul_le_mul_of_nonneg_right (pow_le_pow_left₀ (by positivity) (by linarith [hrc x]) N) (norm_nonneg _)
         _ = ‖u x‖ * (1 + GlobalTheory.Unf.realSize θ x) ^ N := mul_comm _ _
         _ ≤ max B 0 := (hB u hu x).trans (le_max_left _ _)
-    · simp only [hz, if_false, norm_zero, mul_zero]
-      exact le_max_right _ _
+    · simpa only [hz, ite_false, norm_zero, mul_zero] using le_max_right _ _
   obtain ⟨F, hF⟩ := schDom S' hS'
 
   let fp : Mx D m n → (Fin m → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) := fun x i j => finPart D (x i j)
@@ -413,9 +408,8 @@ theorem adMaj (θ : InfFam D) (hθ : IsInfFam θ) {m n : ℕ} (K : Set (Mx D m n
   · rw [hx, norm_zero]; exact norm_nonneg _
   · have hW : fp x ∈ W := hKW x (hsupp u hu x hx)
     have h1 := hF _ ⟨u, hu, x, rfl⟩ (rc x)
-    simp only [if_true] at h1
-    simp only [g, Set.indicator_of_mem hW, Pi.one_apply, mul_one]
-    exact h1
+    simp only [ite_true] at h1
+    simpa only [g, Set.indicator_of_mem hW, Pi.one_apply, mul_one] using h1
 
 end PositivityTheory.Rg.Rsw.L.LWMaj
 
@@ -655,11 +649,9 @@ theorem unifLevel {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE 
     refine Filter.mem_of_superset (hv.mem_nhds (h0v rfl)) fun u hu => ?_
     refine (hmem u).2 fun g hg => ?_
     have h := hsv (Set.mk_mem_prod (hCs hg) hu)
-    rw [Set.mem_preimage] at h
-    exact h
+    rwa [Set.mem_preimage] at h
   refine ⟨U', hopen, fun g hg => ⟨hom.om_pres _ _ hf, fun u hu h0 => ?_⟩⟩
-  have hu' : actO S T g⁻¹ 1 u ∈ U := by
-    exact (hmem u).1 hu g hg
+  have hu' : actO S T g⁻¹ 1 u ∈ U := (hmem u).1 hu g hg
   have h0' : (actO S T g⁻¹ 1 u).map (infPart D) = 0 := by
     simp only [actO, Matrix.map_mul, h0, Matrix.zero_mul, Matrix.mul_zero]
   have h1 := hom.om_heis g 1 (actO S T g⁻¹ 1 u) f hf

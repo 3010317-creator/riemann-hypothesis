@@ -78,8 +78,7 @@ theorem pdI_span : ∀ {S : Type} [CommRing S], TF (S := S) → ∀ s : Set S,
   induction hx using Submodule.span_induction with
   | mem x hx => exact h x hx
   | zero =>
-    intro k hk
-    exact ⟨0, Ideal.zero_mem _, by simp [zero_pow hk]⟩
+    exact fun k hk => ⟨0, Ideal.zero_mem _, by simp [zero_pow hk]⟩
   | smul a x _ ih =>
     intro k hk
     obtain ⟨y, hy, e⟩ := ih k hk
@@ -130,8 +129,7 @@ theorem exists_natCast_mul_eq_l_pow {n k : ℕ} (hn : n ≠ 0) (hk : n.factoriza
     ∃ w : A.Acr0, (n : A.Acr0) * w = (l : A.Acr0) ^ k := by
   obtain ⟨w, hw⟩ := ACris.exists_natCast_mul_eq_pow (K := ℂ_[l]) (p := l) hn hk
   refine ⟨algebraMap A.W A.Acr0 (A.sW w), ?_⟩
-  have h := congrArg (fun t => algebraMap A.W A.Acr0 (A.sW t)) hw
-  simpa using h
+  simpa using congrArg (fun t => algebraMap A.W A.Acr0 (A.sW t)) hw
 
 theorem exists_divided_power_of_dividedXi {j k : ℕ} (hj : j ≠ 0) (hk : k ≠ 0) :
     ∃ y ∈ A.Fil0 1, (k.factorial : A.Acr0) * y = A.dxi0 j ^ k := by
@@ -201,8 +199,7 @@ theorem mem_filtration_of_prime_pow_mul_mem (r N : ℕ) (z : A.Acr0) (h : (l : A
   | zero => simpa using h
   | succ N ih =>
     refine ih (_root_.GlobalTheory.CompanionTheory.PerfFil.crystalline_filtration_l_saturated A r _ ?_)
-    rw [← mul_assoc, ← pow_succ']
-    exact h
+    rwa [← mul_assoc, ← pow_succ']
 
 theorem mem_filtration_of_factorial_mul_eq_pow {x : A.Acr0} (hx : x ∈ A.Fil0 1) (k : ℕ) (y : A.Acr0)
     (e : (k.factorial : A.Acr0) * y = x ^ k) : y ∈ A.Fil0 k := by

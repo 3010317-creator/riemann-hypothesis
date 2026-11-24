@@ -229,16 +229,14 @@ private theorem lcount_std (hl : IsLoc O Δ) (hu : ∃ u : Oˣ, algebraMap O K u
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact ⟨hy.1, (hq z hz.1).mul hτ hy.2⟩
-    · intro hx
-      exact ⟨tor Δ z⁻¹ x, ⟨hx.1, (hq z⁻¹ hz.2).mul hτ hx.2⟩, tor_inv z x⟩
+    · exact fun hx => ⟨tor Δ z⁻¹ x, ⟨hx.1, (hq z⁻¹ hz.2).mul hτ hx.2⟩, tor_inv z x⟩
   have w := wCard (Etau K τ)ˣ (Set (Sp Δ τ)) (Cint O τ) {S | IsFix O (algebraMap O K e) d m S} {lat O Δ τ}
     ?_ ?_ (Set.finite_singleton _) ?_ ?_ ?_
   · rw [Set.ncard_singleton, Nat.cast_one] at w
     rw [← w]
     unfold lcount
     congr 1
-  · intro z S hS
-    exact (isFix_tor _ d m z S).2 hS
+  · exact fun z S hS => (isFix_tor _ d m z S).2 hS
   · rintro _ rfl
     exact hfix
   · rintro z hz _ rfl
@@ -251,8 +249,7 @@ private theorem lcount_std (hl : IsLoc O Δ) (hu : ∃ u : Oˣ, algebraMap O K u
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact (hz y).1 hy
-    · intro hx
-      exact ⟨tor Δ z⁻¹ x, (hz _).2 (by rwa [tor_inv]), tor_inv z x⟩
+    · exact fun hx => ⟨tor Δ z⁻¹ x, (hz _).2 (by rwa [tor_inv]), tor_inv z x⟩
   · rintro z _ rfl hz
     exact ⟨1, one_mem _, by rw [one_smul]; exact Eq.symm hz⟩
 
@@ -280,9 +277,9 @@ private theorem gen_loc (hl : IsLoc O Δ) (hu : ∃ u : Oˣ, algebraMap O K u = 
     simp [hne] at this
   rw [key t, Units.val_mul, hsMul O K Δ hl _ _ _ hD t.ne_zero s.ne_zero, h1, mul_one]
   by_cases ht : t ∈ NE τ
-  · rw [if_pos ((hsNE O K Δ τ hl hD t).1 ht)]
+  · rw [ite_eq_left ((hsNE O K Δ τ hl hD t).1 ht)]
     simp [one, ht]
-  · rw [if_neg (fun h => ht ((hsNE O K Δ τ hl hD t).2 h))]
+  · rw [ite_eq_right (fun h => ht ((hsNE O K Δ τ hl hD t).2 h))]
     simp [one, ht]
 
 end Lat

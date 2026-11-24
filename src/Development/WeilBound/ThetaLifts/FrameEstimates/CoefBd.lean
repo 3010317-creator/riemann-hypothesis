@@ -98,7 +98,7 @@ theorem dual_one [IsTotallyReal F] {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F �
     · exact hO v
     · exact (hO v).image (continuous_const.mul continuous_id)
   · filter_upwards [h2] with v hv
-    rw [if_pos hv]
+    rw [ite_eq_left hv]
   · have key : ∀ t ∈ v.adicCompletionIntegers F, psiV F ψ v (evalV F v y * t) = 1 := fun t ht => by
       have := hy (singleFin v t) fun u => by
         show evalV F u (singleFin v t) ∈ _
@@ -143,9 +143,7 @@ def spl : ((κ → mixedSpace F) × (κ → Af F)) ≃+ (κ → AF F) where
 
 theorem spl_cont : Continuous (spl F κ) := by
   show Continuous (fun p : (κ → mixedSpace F) × (κ → Af F) => fun i => re F (p.1 i) + fi F (p.2 i))
-  have hfi : Continuous (fi F) := by
-    show Continuous fun x : Af F => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.pairA F 0 x
-    exact continuous_const.prodMk continuous_id
+  have hfi : Continuous (fi F) := continuous_const.prodMk continuous_id
   exact continuous_pi fun i => (continuous_re.comp ((continuous_apply i).comp continuous_fst)).add
     (hfi.comp ((continuous_apply i).comp continuous_snd))
 
@@ -164,7 +162,6 @@ theorem pureA_spl (f : (κ → mixedSpace F) → ℂ) (φ : (κ → Af F) → �
     rw [evI_add, evI_re, evI_fi, add_zero]
   · congr 1
     funext i
-    show (re F (p.1 i)).2 + (fi F (p.2 i)).2 = p.2 i
     exact zero_add _
 
 theorem spl_dot (p q : (κ → mixedSpace F) × (κ → Af F)) :
@@ -257,8 +254,7 @@ theorem lin_cont (m : ((κ → AF F) × (κ → AF F)) →ₗ[AF F] Ten F E n d)
   have he : (⇑m : (κ → AF F) × (κ → AF F) → Ten F E n d) = fun x =>
       (∑ i, x.1 i • m (Pi.single i 1, 0) + ∑ i, x.2 i • m (0, Pi.single i 1) : Matrix (Fin n) (Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) :=
     funext hm
-  rw [he]
-  exact hc
+  rwa [he]
 
 theorem piInf_fi {w : InfinitePlace F} (τ : EmbOver E w) (z : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) : piInf τ (fi F 1 • z) = 0 := by
   rw [Algebra.smul_def, map_mul]
@@ -331,7 +327,7 @@ theorem coefBd_of : CoefReal → CoefBd := by
   · rw [h0, norm_zero]
     exact mul_nonneg (mul_nonneg (apply_nonneg _ _) (apply_nonneg _ _)) (LatticeQuotientCompactness.maj_nonneg _ _ _ _)
   have s0 := LatticeQuotientCompactness.sz_nonneg B.emb (M.co.e.symm (spl F _ x, spl F _ y))
-  rw [maj, if_pos, ← div_eq_mul_inv, le_div_iff₀ (by positivity)]
+  rw [maj, ite_eq_left, ← div_eq_mul_inv, le_div_iff₀ (by positivity)]
   · have q := mul_nonneg (apply_nonneg p f₁) (apply_nonneg p f₂)
     calc _ ≤ _ * (L * (1 + ‖x.1‖ + ‖y.1‖)) ^ N := by gcongr; exact hsz x y
       _ = L ^ N * (_ * (1 + ‖x.1‖ + ‖y.1‖) ^ N) := by rw [mul_pow, mul_left_comm]

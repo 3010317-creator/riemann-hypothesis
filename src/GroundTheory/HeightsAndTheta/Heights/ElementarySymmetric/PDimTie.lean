@@ -128,8 +128,7 @@ theorem isAlgebraic_range :
       exact ⟨⟨y j / y i, ratio_mem y hi j⟩, hgen i j hi, rfl⟩)
     intro d
     obtain ⟨d', hd', he⟩ := hM d.2
-    rw [show d = d' from Subtype.ext he.symm]
-    exact hd'
+    rwa [show d = d' from Subtype.ext he.symm]
   refine ⟨fun p => ?_⟩
   induction p using Polynomial.induction_on with
   | C a => exact hCD a
@@ -164,8 +163,7 @@ theorem ringKrullDim_eq (y : Fin (N + 1) → Ω) (hy : y ≠ 0) :
   have hk : primeOf (S := k) y = RingHom.ker (dehom (k := k) y hi₀).rangeRestrict := by
     rw [primeOf_eq_ker (k := k) y hi₀]
     ext f
-    simp only [RingHom.mem_ker]
-    exact ⟨fun h => Subtype.ext h, fun h => congrArg Subtype.val h⟩
+    simpa only [RingHom.mem_ker] using ⟨fun h => Subtype.ext h, fun h => congrArg Subtype.val h⟩
   let e : (Poly k N ⧸ primeOf (S := k) y) ≃ₐ[k] (dehom (k := k) y hi₀).range :=
     (Ideal.quotientEquivAlgOfEq k hk).trans
       (Ideal.quotientKerAlgEquivOfSurjective (dehom (k := k) y hi₀).rangeRestrict_surjective)
@@ -192,8 +190,7 @@ theorem DimTie.proof : DimTie.Statement := by
   · intro h
     have h' : trdeg k (funField (k := k) y) = e := h
     refine ⟨inferInstance, fun p hp d => homogeneousComponent_mem_primeOf y hp d, le_rfl, ⟨i₀, ?_⟩, ?_⟩
-    · rw [mem_primeOf_of_isHomogeneous y (isHomogeneous_X k i₀), aeval_X]
-      exact hi₀
+    · rwa [mem_primeOf_of_isHomogeneous y (isHomogeneous_X k i₀), aeval_X]
     · rw [hdim, Cardinal.toENat_eq_natCast.mpr h']
       push_cast
       rfl

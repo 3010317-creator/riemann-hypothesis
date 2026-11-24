@@ -35,8 +35,7 @@ theorem aeval_eval₂ (ℓ : Fin e → MvPolynomial σ ℚ) (Q : Polynomial (MvP
       (aeval fun j => aeval z (ℓ j)).toRingHom := by
     apply MvPolynomial.ringHom_ext <;> intro <;> simp
   have := Polynomial.hom_eval₂ Q (aeval (R := ℚ) ℓ).toRingHom (aeval (R := ℚ) z).toRingHom g
-  rw [hc] at this
-  exact this
+  rwa [hc] at this
 
 theorem exists_monic_coeff_zero_ne {P : Ideal (MvPolynomial σ ℚ)} (hP : P.IsPrime)
     (ℓ : Fin e → MvPolynomial σ ℚ) {f : MvPolynomial σ ℚ} (hf : f ∉ P)
@@ -91,12 +90,11 @@ theorem exists_separating [Fintype σ] (S : Finset (σ → ℂ)) (x : σ → ℂ
     have h1 := congrArg (fun r => _root_.AddMonoidAlgebra.coeff (M := ℕ) r (k i : ℕ)) h
     simp only [q, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow, Polynomial.coeff_zero] at h1
     rw [Finset.sum_eq_single i] at h1
-    · rw [if_pos rfl] at h1
+    · rw [ite_eq_left rfl] at h1
       exact hi (sub_eq_zero.mp h1)
     · intro j _ hj
-      rw [if_neg]
-      intro h'
-      exact hj (k.injective (Fin.ext h'.symm))
+      rw [ite_eq_right]
+      exact fun h' => hj (k.injective (Fin.ext h'.symm))
     · simp
   let Q : Polynomial ℂ := ∏ z ∈ S.erase x, q z
   have hQ : Q ≠ 0 := Finset.prod_ne_zero_iff.mpr fun z hz => hq z (Finset.ne_of_mem_erase hz)
@@ -156,7 +154,6 @@ theorem FiniteSeparatingModel.proof (hN : NoetherProjection.Statement)
     rwa [FiniteSeparatingModel.aeval_eval₂] at this
   · apply hc
     have := hz _ hqf
-    rw [FiniteSeparatingModel.aeval_eval₂, hfz, Polynomial.eval₂_at_zero] at this
-    exact this
+    rwa [FiniteSeparatingModel.aeval_eval₂, hfz, Polynomial.eval₂_at_zero] at this
 
 end GroundTheory.Heights₂.Heights.HilbertSamuel

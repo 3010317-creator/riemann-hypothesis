@@ -118,8 +118,7 @@ theorem dcrel_refl (F₁ : LFlag S r T') : DCRel Λ F F₁ F₁ := by
 variable {Λ F P}
 
 theorem const_of_mk {β : Sort*} (f : Carrier P → β) (hf : ∀ x y, Rel Λ F P x y → f x = f y)
-    {x y : Carrier P} (h : mk Λ F P x = mk Λ F P y) : f x = f y := by
-  exact congrArg (Quot.lift f hf) h
+    {x y : Carrier P} (h : mk Λ F P x = mk Λ F P y) : f x = f y := congrArg (Quot.lift f hf) h
 
 theorem rep_mk (x : Carrier P) : Rep Λ F P (mk Λ F P x) x.1 := by
   unfold Rep
@@ -135,8 +134,7 @@ theorem isRel_mk (K : Type) [Field K] [Algebra K E] (hR : RelFun Λ F P K) (x : 
   · rintro ⟨F', ⟨h, e⟩, hr⟩
     have e' := const_of_mk (fun y : Carrier P => Relevant K F.fl y.1.fl) (fun a b r => propext (hR a b r)) e
     exact cast e' hr
-  · intro hr
-    exact ⟨x.1, rep_mk x, hr⟩
+  · exact fun hr => ⟨x.1, rep_mk x, hr⟩
 
 theorem isGen_mk (g : ℕ) (hR : GenFun Λ F P g) (x : Carrier P) :
     IsGen Λ F P g (mk Λ F P x) ↔ IsGeneric Λ g F x.1 := by
@@ -145,8 +143,7 @@ theorem isGen_mk (g : ℕ) (hR : GenFun Λ F P g) (x : Carrier P) :
   · rintro ⟨F', ⟨h, e⟩, hr⟩
     have e' := const_of_mk (fun y : Carrier P => IsGeneric Λ g F y.1) (fun a b r => propext (hR a b r)) e
     exact cast e' hr
-  · intro hr
-    exact ⟨x.1, rep_mk x, hr⟩
+  · exact fun hr => ⟨x.1, rep_mk x, hr⟩
 
 theorem atPt_mk (hG : GFun Λ F P) (hC : CellFun Λ F P) (x : Carrier P) (w : Point E (r + 1)) :
     AtPt Λ F P (mk Λ F P x) w ↔ Gval F x.1 ≠ 0 ∧ IsInCell (ZhatOM (ZhatL F x.1)) w := by
@@ -254,14 +251,12 @@ theorem pd_self {u : D.what₂.Word} (F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) :
       · simp
       · intro a _ hab
         simp [Matrix.one_apply_ne hab]
-      · intro h
-        exact absurd (Finset.mem_univ b) h
+      · exact fun h => absurd (Finset.mem_univ b) h
     rw [h0]
     change ModG (hS D) Λ (gS D) (frame (lf D F0) b - frame (lf D F0) b)
     rw [sub_self]
     unfold ModG
-    intro P _
-    exact zero_mem _
+    exact fun P _ => zero_mem _
   · unfold FrameOK
     exact ⟨hconv, hX⟩
 

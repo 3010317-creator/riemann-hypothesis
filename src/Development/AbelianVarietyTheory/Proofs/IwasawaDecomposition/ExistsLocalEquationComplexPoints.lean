@@ -102,8 +102,7 @@ theorem holTan_dualMap {A : Type} [CommRing A] (hB : IsOpen B) (v : Sp (DualNumb
   classical
   by_cases hne : B.Nonempty
   swap
-  · intro U f b hb
-    exact (hne ⟨b, hb.1⟩).elim
+  · exact fun U f b hb => (hne ⟨b, hb.1⟩).elim
   obtain ⟨b₀, hb₀⟩ := hne
   let ψ' : V → (A →+* ℂ) := fun b => if hb : b ∈ B then ψ b hb else ψ b₀ hb₀
   have e : ∀ b hb, ψ' b = ψ b hb := fun b hb => dite_eq_left hb
@@ -122,8 +121,7 @@ theorem holTan_dualMap {A : Type} [CommRing A] (hB : IsOpen B) (v : Sp (DualNumb
   intro U f
   refine ((h0 (v ⁻¹ᵁ U) ((v.app U).hom f)).mono (s := {b ∈ B | ⊤ ≤ w b ⁻¹ᵁ U}) fun b hb => ⟨hb.1, ?_⟩).congr fun b hb => ?_
   · have := hb.2
-    rw [hw b hb.1, ← e b hb.1] at this
-    exact this
+    rwa [hw b hb.1, ← e b hb.1] at this
   · rw [hw b hb.1, ← e b hb.1, valR_comp]
 
 theorem valR_eq_germ {C : Type} [CommRing C] [IsLocalRing C] (p : Sp C ⟶ T) (U : T.Opens) (h : ⊤ ≤ p ⁻¹ᵁ U) :

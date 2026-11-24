@@ -49,7 +49,7 @@ lemma matrixForm_diagBlocks_blockEmbed {n : Type} [Fintype n] [DecidableEq n] (h
   rw [matH_apply']
   by_cases hab : a = b
   · subst hab
-    rw [if_pos rfl, matH_apply', Fintype.sum_prod_type, Finset.sum_eq_single a]
+    rw [ite_eq_left rfl, matH_apply', Fintype.sum_prod_type, Finset.sum_eq_single a]
     · refine Finset.sum_congr rfl fun i _ => ?_
       rw [Fintype.sum_prod_type, Finset.sum_eq_single a]
       · simp [emb, blk4]
@@ -65,7 +65,7 @@ lemma matrixForm_diagBlocks_blockEmbed {n : Type} [Fintype n] [DecidableEq n] (h
       intro w _
       simp [emb, hc]
     · simp
-  · rw [if_neg hab]
+  · rw [ite_eq_right hab]
     apply Finset.sum_eq_zero
     intro x _
     apply Finset.sum_eq_zero
@@ -127,8 +127,7 @@ theorem IotaOK_proof : IotaOK := by
   have hx2 : ι (omegaK d) ^ 2 = ι (omegaK d) - (((d + 1) / 4 : ℕ) : ℂ_[p]) := by
     rw [← map_pow, hω2, map_sub, map_natCast]
   have hx : ‖ι (omegaK d)‖ ≤ 1 := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have h1 : ‖ι (omegaK d)‖ ^ 2 ≤ ‖ι (omegaK d)‖ := by
       rw [← norm_pow, hx2, sub_eq_add_neg]
       refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le le_rfl ?_)
@@ -200,8 +199,7 @@ theorem GramTransfer_of (hM : MulRing) (hI : IotaOK) : GramTransfer := by
     have h3 : (N • (ω • Y x)) w = (N : ℂ) * Y x w * ω := by
       simp only [Pi.smul_apply, smul_eq_mul, nsmul_eq_mul]
       ring
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   choose M Nn hMN using hrep
   have hI := IotaOK_proof d hd3 p ι
   have hD : ∀ w x, ‖ι (Y x w)‖ ≤ 1 := by

@@ -124,14 +124,12 @@ theorem cartan_dbl : ∀ (D : D7) (θ : InfFam D) (A : HSp D) (sA : RealMat A) (
         Matrix.conjTranspose_conjTranspose, herm_of_isCartanInv (hs τ), ← mul_assoc])
     rw [← gramAt_dblSp] at h
     have h' : IsCartanInv (gramAt D (dblSp A) τ) (frameInv θ (dblSp A) (blkGL finSumFinEquiv (a, a)) τ) := h
-    rw [e] at h'
-    exact h'
+    rwa [e] at h'
   · rw [Khat_eq] at hk
     have h := commute_of_mem_Kmax hθ (V := dblSp A) (a := blkGL finSumFinEquiv (a, a)) τ (by
       rw [gramAt_dblSp]
       exact (congrArg₂ (· * ·) (hd τ) (hd τ)).trans (hd2 τ)) hk
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 end GlobalTheory.Core.Rk.IP.Cartan
 

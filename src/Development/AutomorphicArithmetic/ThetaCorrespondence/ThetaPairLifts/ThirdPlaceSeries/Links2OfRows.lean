@@ -137,7 +137,7 @@ theorem exists_isScal : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : T
   choose f1 hf1 hf1' using fun i p v => exists_lamOff R F i p v (Real.exp ((F.Zsc (R.toCx F).zs).l6m i))
   obtain ⟨lam, h0, h1⟩ : ∃ lam : Fin D.R.m → T → A.fam.base.Ix → InfinitePlace D.what₂.LL → ℝ,
       (∀ i t p, lam i t p A.v0 = f0 i t p) ∧ ∀ i t p v, v ≠ A.v0 → lam i t p v = f1 i p v :=
-    ⟨fun i t p v => if v = A.v0 then f0 i t p else f1 i p v, fun i t p => if_pos rfl, fun i t p v hv => if_neg hv⟩
+    ⟨fun i t p v => if v = A.v0 then f0 i t p else f1 i p v, fun i t p => ite_eq_left rfl, fun i t p v hv => ite_eq_right hv⟩
   obtain ⟨kap, hk⟩ := exists_pin (fun κ => Lift.IsKap D.R.m (fun t => R.Th t ∘ₗ LinearMap.adjoint (R.Th t)) R.EEp
       (withScal R lam 0).lamN κ ∧ ∃ t p, R.EEp p ≠ ⊥ ∧ ∏ j ∈ Finset.Icc 1 D.R.m, (withScal R lam 0).lamN t j p ≠ 0)
     (fun a b ha hb => by
@@ -310,8 +310,7 @@ theorem w1_of_inW1_split_part (C CH : ℝ) (w : HeightOneSpectrum (𝓞 D.what�
 theorem tupTw_of_w1Row : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : Formalism.MainNotions.G.Inst D L) (Gl : Formalism.MainNotions.G.LatInst D)
     (Kc : Formalism.MainNotions.G.Consts) (Y : DivX D) (cX : ExtraC) (ex : Extra D L hT Gi Gl Kc Y cX) (Csz : ℝ) (p : PtAt ex Csz),
     SingleIndexPlacesAreTwisted p → p.R.toRealDat.tup_tw (F2 p) := by
-  intro D L hT Gi Gl Kc Y cX ex Csz p h w hw
-  exact h w (w1_of_inW1_split_part p 0 0 w hw)
+  exact fun D L hT Gi Gl Kc Y cX ex Csz p h w hw => h w (w1_of_inW1_split_part p 0 0 w hw)
 
 end GlobalTheory.BigOn
 
@@ -403,8 +402,7 @@ theorem phaseCompatible_splitPart_of_liftUniformisation (hU : p.R.toRealDat.LUni
     PhaseTie p.T (R2 p) p.κ p.v₀ (om2 p) (fun _ => 1) i := by
   have h := p.phase i hU
   have he : phEff p.R = fun _ => 1 := funext fun j => p.phEff_one j
-  rw [he] at h
-  exact h
+  rwa [he] at h
 
 end
 
@@ -484,18 +482,15 @@ theorem lUnif_of_rows_alt (p : PtAt ex Csz) (h : p.PointConditions') : (R2 p).LU
 theorem split_lifts_bijective_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : ((R2 p).toCx (F2 p)).H5 (F2 p).cr false := by
   have hR := complex_data_conditions_base_level_of_primitive_links h.ok h.sep p.charW h.prim
   have h5 := hR.lifts0.1
-  rw [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at h5
-  exact h5
+  rwa [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at h5
 theorem rat_theta_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : ((R2 p).toCx (F2 p)).RATth (F2 p).cr false := by
   have hR := complex_data_conditions_base_level_of_primitive_links h.ok h.sep p.charW h.prim
   have hr := hR.ratTh
-  rw [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hr
-  exact hr
+  rwa [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hr
 theorem level_proviso_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : (lv ((F2 p).fc ((R2 p).toCx (F2 p)).zs) false).Proviso := by
   have hR := complex_data_conditions_base_level_of_primitive_links h.ok h.sep p.charW h.prim
   have hv := hR.proviso0
-  rw [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hv
-  exact hv
+  rwa [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hv
 theorem base_links_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : BaseLinks (R2 p) (F2 p) :=
   ⟨_root_.GlobalTheory.BigOn.SplitRows.split_lifts_bijective_of_split_data p h, _root_.GlobalTheory.BigOn.SplitRows.rat_theta_of_split_data p h, _root_.GlobalTheory.BigOn.SplitRows.level_proviso_of_split_data p h⟩
 theorem rank_conditions_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : RankRows (S2 p) := by

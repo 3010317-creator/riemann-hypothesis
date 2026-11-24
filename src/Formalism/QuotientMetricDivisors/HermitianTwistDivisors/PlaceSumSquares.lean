@@ -149,12 +149,10 @@ theorem log_product_formula : LogProductFormula := by
       I = FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 L)) x := ⟨_, rfl⟩
   rw [← hIdef]
   have hI : I ≠ 0 := by
-    rw [hIdef, Ne, FractionalIdeal.spanSingleton_eq_zero_iff]
-    exact hx
+    rwa [hIdef, Ne, FractionalIdeal.spanSingleton_eq_zero_iff]
   have hfin : (Function.support fun v : HeightOneSpectrum (𝓞 L) => FractionalIdeal.count L v I).Finite :=
     by
-      have hev := FractionalIdeal.finite_factors I
-      exact Filter.eventually_cofinite.mp hev
+      exact Filter.eventually_cofinite.mp (FractionalIdeal.finite_factors I)
   have hR : (∑ᶠ v : HeightOneSpectrum (𝓞 L), (FractionalIdeal.count L v I : ℝ) *
         Real.log (Ideal.absNorm v.asIdeal : ℝ)) =
       ∑ v ∈ hfin.toFinset, (FractionalIdeal.count L v I : ℝ) * Real.log (Ideal.absNorm v.asIdeal : ℝ) := by
@@ -162,16 +160,14 @@ theorem log_product_formula : LogProductFormula := by
     intro v hv
     rw [Set.Finite.coe_toFinset, Function.mem_support]
     rw [Function.mem_support] at hv
-    intro h0
-    exact hv (by simp [h0])
+    exact fun h0 => hv (by simp [h0])
   have hsub2 : Function.mulSupport (fun v : HeightOneSpectrum (𝓞 L) =>
       (v.asIdeal : FractionalIdeal (nonZeroDivisors (𝓞 L)) L) ^ FractionalIdeal.count L v I) ⊆
       (hfin.toFinset : Set _) := by
     intro v hv
     rw [Set.Finite.coe_toFinset, Function.mem_support]
     rw [Function.mem_mulSupport] at hv
-    intro h0
-    exact hv (by simp [h0])
+    exact fun h0 => hv (by simp [h0])
   have hfac : ∏ v ∈ hfin.toFinset, (v.asIdeal : FractionalIdeal (nonZeroDivisors (𝓞 L)) L) ^
       FractionalIdeal.count L v I = I := by
     rw [← finprod_eq_prod_of_mulSupport_subset _ hsub2]
@@ -435,7 +431,7 @@ lemma blk (K : ℕ) (hK : 40 ≤ K) :
       rw [e, Finset.sum_Ico_succ_top (by omega), Finset.sum_Ico_succ_top (by omega),
         Finset.sum_Ico_succ_top (by omega), Finset.sum_Ico_succ_top (by omega),
         Finset.sum_Ico_succ_top (by omega), Finset.sum_Ico_succ_top (by omega),
-        if_neg c0, if_pos c1, if_neg c2, if_neg c3, if_neg c4, if_pos c5]
+        ite_eq_right c0, ite_eq_left c1, ite_eq_right c2, ite_eq_right c3, ite_eq_right c4, ite_eq_left c5]
       ring
     rw [hsum]
     have hKr : (240 : ℝ) ≤ ((6 * K : ℕ) : ℝ) := by exact_mod_cast (by omega : 240 ≤ 6 * K)
@@ -477,8 +473,7 @@ lemma prime_sum_le (s : Finset ℕ) (hs : ∀ p ∈ s, p.Prime) :
     · intro p hp
       rw [Finset.mem_filter] at hp
       exact Finset.mem_filter.2 ⟨Finset.mem_range.2 hp.2, hs p hp.1⟩
-    · intro n _ _
-      exact term_nonneg n
+    · exact fun n _ _ => term_nonneg n
   have htail : ∑ p ∈ s.filter (fun p => ¬ p < 240), Real.log (p : ℝ) / (p : ℝ) ^ 2 ≤
       ∑ n ∈ Finset.Ico 240 (6 * K),
         (if n % 6 = 1 ∨ n % 6 = 5 then Real.log (n : ℝ) / (n : ℝ) ^ 2 else 0) := by
@@ -488,8 +483,7 @@ lemma prime_sum_le (s : Finset ℕ) (hs : ∀ p ∈ s, p.Prime) :
       rw [Finset.mem_filter] at hp
       exact Finset.mem_filter.2 ⟨Finset.mem_Ico.2 ⟨by omega, hK p hp.1⟩,
         aux_statement_15 p (hs p hp.1) (by omega)⟩
-    · intro n _ _
-      exact term_nonneg n
+    · exact fun n _ _ => term_nonneg n
   have hb := blk K hK40
   have hpos : 0 ≤ (Real.log ((6 * K : ℕ) - 6 : ℝ) + 1) / ((6 * K : ℕ) - 6 : ℝ) := by
     have h1 : (234 : ℝ) ≤ ((6 * K : ℕ) : ℝ) - 6 := by
@@ -601,11 +595,11 @@ theorem untwisted_choice : UntwistedChoice := by
     fun w j => if w ∈ Tw then Jx w j else jT w j / D,
     fun w j => if w ∈ Tw then η w j else 0, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro w hw j
-    simp only [hw, if_true, and_self]
+    simp only [hw, ite_true, and_self]
   · intro w hw
     by_cases hT : w ∈ Tw
-    · simpa only [hT, if_true] using h3 w hT
-    · simp only [hT, if_false]
+    · simpa only [hT, ite_true] using h3 w hT
+    · simp only [hT, ite_false]
       have e : ∑ j, (2 * F w j + (I w j + Ic w j) / D) = (∑ j, (I w j + Ic w j)) / D := by
         rw [Finset.sum_div]
         exact Finset.sum_congr rfl (fun j _ => by rw [hF w hw hT j]; ring)
@@ -614,20 +608,19 @@ theorem untwisted_choice : UntwistedChoice := by
       linarith
   · intro w hw j
     by_cases hT : w ∈ Tw
-    · simpa only [hT, if_true] using h4 w hT j
-    · simp only [hT, if_false]
+    · simpa only [hT, ite_true] using h4 w hT j
+    · simp only [hT, ite_false]
       rw [div_mul_cancel₀ _ hD'.ne', add_zero]
   · intro j
     rw [← Finset.sum_subset hTS (fun w hw hT => by
-      simp only [hT, if_false]
+      simp only [hT, ite_false]
       rw [← add_div, hA w hw hT j, zero_div, mul_zero])]
-    exact Finset.sum_congr rfl (fun w hw => by simp only [hw, if_true])
+    exact Finset.sum_congr rfl (fun w hw => by simp only [hw, ite_true])
   · intro j
     rw [← Finset.sum_subset hTS (fun w hw hT => by
-      simp only [hT, if_false, mul_zero, zero_div])]
-    exact Finset.sum_congr rfl (fun w hw => by simp only [hw, if_true])
-  · intro j
-    exact (Finset.sum_subset hTS (fun w hw hT => by rw [hF w hw hT j, mul_zero])).symm
+      simp only [hT, ite_false, mul_zero, zero_div])]
+    exact Finset.sum_congr rfl (fun w hw => by simp only [hw, ite_true])
+  · exact fun j => (Finset.sum_subset hTS (fun w hw hT => by rw [hF w hw hT j, mul_zero])).symm
 
 namespace W5
 

@@ -85,8 +85,7 @@ theorem contAt_of_sphere {X : Type} [TopologicalSpace X] {g : ℂ → X → ℂ}
       (fun z hz => ?_) (subset_closure hy.1)).trans_lt (half_lt_self hε)
     rw [frontier_ball _ hρ.ne'] at hz
     exact (hy.2 ⟨z, hz⟩ trivial).le
-  have h2 := this.add (c0.tendsto.comp continuous_fst.continuousAt)
-  simpa [ContinuousAt] using h2
+  simpa [ContinuousAt] using this.add (c0.tendsto.comp continuous_fst.continuousAt)
 
 theorem IsEisCont.update {f : ℂ → G2 σ Y → ℂ} {U : Set ℂ} {Ê : ℂ → G2 σ Y → ℂ} (h : IsEisCont f U Ê) {s₀ : ℂ} {k : ℕ}
     (hr : IsRegAt Ê s₀ k) {val : G2 σ Y → ℂ} (hv : EisValueAt f s₀ val) :
@@ -137,8 +136,7 @@ theorem IsEisCont.update {f : ℂ → G2 σ Y → ℂ} {U : Set ℂ} {Ê : ℂ �
       have b := (hρ (Metric.sphere_subset_closedBall hw)).2
       have := hC w b x
       rw [hH w b (sp w hw), norm_mul, norm_pow, mem_sphere_iff_norm.1 hw] at this
-      rw [Function.update_of_ne (sp w hw), div_mul_eq_mul_div, le_div_iff₀' (pow_pos ρ0 k)]
-      exact this
+      rwa [Function.update_of_ne (sp w hw), div_mul_eq_mul_div, le_div_iff₀' (pow_pos ρ0 k)]
     · obtain ⟨ε, C', N', ε0, hb⟩ := h.grow s (hs.resolve_left e0)
       obtain ⟨δ, δ0, hδ⟩ := Metric.mem_nhds_iff.1 (inter_mem (ev s e0) (Metric.ball_mem_nhds s ε0))
       exact ⟨δ, C', N', δ0, fun z hz x => by rw [(hδ hz).1]; exact hb z (hδ hz).2 x⟩

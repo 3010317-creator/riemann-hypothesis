@@ -158,15 +158,14 @@ theorem ann_core {K : Type} [CommRing K] [TopologicalSpace K] [T2Space K] [Measu
     by_cases h : ∀ s ∈ U, p (s * y) = 1
     · rw [integral_indicator_mul_char_of_trivial μ p U hUm y h,
         Set.indicator_of_mem (show y ∈ (A : Set K) from (hA y).mpr h)]
-    · push_neg at h
+    · push Not at h
       rw [integral_indicator_mul_char_eq_zero μ p hadd U y h,
         Set.indicator_of_notMem (show y ∉ (A : Set K) from fun h' => by
           obtain ⟨s, hs, hps⟩ := h
           exact hps ((hA y).mp h' s hs))]
   have hint : Integrable (fun y => ∫ x, (U : Set K).indicator (fun _ => (1 : ℂ)) x *
       (fun s t => p (s * t)) x y ∂μ) μ := by
-    simp only [hFT]
-    exact (integrable_indicator_iff hAm).mpr (integrableOn_const hAf)
+    simpa only [hFT] using (integrable_indicator_iff hAm).mpr (integrableOn_const hAf)
   have key : ∀ z, ((μ (U : Set K)).toReal : ℂ) *
       ∫ y, (A : Set K).indicator (fun _ => (1 : ℂ)) y * p (y * z) ∂μ =
       (U : Set K).indicator (fun _ => (1 : ℂ)) (-z) := by
@@ -197,8 +196,7 @@ theorem ann_core {K : Type} [CommRing K] [TopologicalSpace K] [T2Space K] [Measu
     rw [Set.indicator_of_notMem (show -z ∉ (U : Set K) from fun h' => hzU (by simpa using U.neg_mem h'))] at hz
     exact one_ne_zero hz
   · intro hzU
-    by_contra h
-    push_neg at h
+    by_contra! h
     rw [integral_indicator_mul_char_eq_zero μ p hadd A z h, mul_zero,
       Set.indicator_of_mem (show -z ∈ (U : Set K) from U.neg_mem hzU)] at hz
     exact zero_ne_one hz
@@ -362,9 +360,7 @@ theorem prodM : ∀ (F : Type) [Field F] [NumberField F] (db : Measure (AF F)), 
   rw [Measure.map_apply (pairE F).measurable hs]
   have e1 : (pairE F) ⁻¹' s = s := rfl
   rw [e1, ← prod_congr_inf hI l laminf hl lf s, ← hμ s]
-  have e2 := congrArg (fun ν => ν s) h3
-  have e3 := congrArg (fun ν => ν s) h2
-  exact e2.trans e3.symm
+  exact (congrArg (fun ν => ν s) h3).trans (congrArg (fun ν => ν s) h2).symm
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.ProdM
 end -- clump:auto
@@ -639,8 +635,7 @@ theorem exists_bumps_inf : (∀ (P : Type) [Fintype P] (a : P → ℝ), (∀ w, 
     have h1 : e y ∈ tsupport (g k) := tsupport_comp_subset_preimage (g k) he hy
     have h3 : e y ∈ E.symm ⁻¹' U := hεV (Metric.closedBall_subset_closedBall hk (hg2 k h1))
     have h5 : E.symm (e y) = y := E.symm_apply_apply y
-    rw [Set.mem_preimage, h5] at h3
-    exact h3
+    rwa [Set.mem_preimage, h5] at h3
   · have hfou : ∀ t, fouInf ψ laminf (fun y => g k (e y)) t = (c : ℝ) • ∫ x, (g k x : ℂ) *
         Complex.exp (2 * Real.pi * Complex.I * ((∑ w, a w * (x w * e t w) : ℝ) : ℂ)) := by
       intro t
@@ -719,8 +714,7 @@ theorem annF_boxA : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F
     refine ⟨fun v hv s hs => key v s (fun _ => hs) (fun h => absurd hv h), fun v hv => ?_⟩
     have hmem : b v ∈ annV ψ v (v.adicCompletionIntegers F : Set (Fv F v)) :=
       fun s hs => key v s (fun h => absurd h hv) (fun _ => hs)
-    rw [hS v hv] at hmem
-    exact hmem
+    rwa [hS v hv] at hmem
   · rintro ⟨hb1, hb2⟩ y ⟨hy1, hy2⟩
     obtain ⟨T, hT⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.psiF_eq_one_of_int_of_vanish F ψ hψ
     set c := y * b with hc
@@ -738,7 +732,7 @@ theorem annF_boxA : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F
         · rw [sub_self]; exact zero_mem _
         · rw [sub_zero]
           exact hcint w (fun hw => h (Finset.mem_union_right _ hw))
-      · rw [happ, if_pos (Finset.mem_union_left _ hw), sub_self]
+      · rw [happ, ite_eq_left (Finset.mem_union_left _ hw), sub_self]
     have hsum : psiF ψ e = 1 := by
       rw [he]
       refine Finset.sum_induction _ (fun x => psiF ψ x = 1) (fun a b ha hb => by rw [psiF_add, ha, hb, one_mul])
@@ -1000,8 +994,7 @@ theorem condS_of : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
     refine hT _ (fun w => ?_) (fun w hw => ?_)
     · by_cases h : w = v
       · subst h
-        rw [hs1]
-        exact hx
+        rwa [hs1]
       · rw [hs2 w h]
         exact zero_mem _
     · exact hs2 w fun h => hvT (h ▸ hw)
@@ -1147,8 +1140,7 @@ theorem exists_test_approx : ∀ (F : Type) [Field F] [NumberField F], NumberFie
     intro k b
     have h := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.integral_pure_indicator_char F ψ hψ db laminf lf hinf.1 hlfH e he hep (fun x => (ρ k x : ℂ)) (B k)
       (hBm k).1 (hBm k).2.1 b
-    rw [hB k] at h
-    exact h
+    rwa [hB k] at h
   have hint : ∀ k, ∫ y, Coef.testT (ρ k) S (fun v => (Ub k v : Set (Fv F v))) y ∂db =
       ((∫ y, ρ k y ∂laminf : ℝ) : ℂ) * (((lf (B k : Set (Af F))).toReal : ℝ) : ℂ) := by
     intro k
@@ -1169,8 +1161,7 @@ theorem exists_test_approx : ∀ (F : Type) [Field F] [NumberField F], NumberFie
       rw [(hBm k).2.2, (hBm' k).2.2, ← Finset.prod_pow, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
       refine Finset.prod_eq_one fun v _ => ?_
       have := (hdual k v).2.2.2
-      rw [← mul_assoc]
-      exact this
+      rwa [← mul_assoc]
     have hcp : (cinf : ℝ) * ∏ v ∈ S, (c v : ℝ) = 1 := by
       have h2 : ∏ᶠ v, c v = ∏ v ∈ S, c v := finprod_eq_prod_of_mulSupport_subset _ (fun v hv => by
         by_contra h

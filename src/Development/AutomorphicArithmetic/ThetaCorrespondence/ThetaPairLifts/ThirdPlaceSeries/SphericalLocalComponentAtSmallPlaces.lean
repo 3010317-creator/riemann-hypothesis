@@ -220,8 +220,7 @@ private theorem mem_KO_of_integral_entries' {F : Type} [Field F] [NumberField F]
     simp only [Q, f, Matrix.map_apply, Matrix.of_apply, Algebra.algebraMap_ofSubsemiring_apply]
   have inj : ∀ X Y : Matrix (Fin n) (Fin n) (valuation (v.adicCompletion F)).integer,
       X.map f = Y.map f → X = Y := by
-    intro X Y h
-    exact Matrix.ext fun i j => Subtype.ext (congrFun (congrFun h i) j)
+    exact fun X Y h => Matrix.ext fun i j => Subtype.ext (congrFun (congrFun h i) j)
   have hPQ : P * Q = 1 := inj _ _ (by
     rw [Matrix.map_mul, Matrix.map_one f (map_zero f) (map_one f), hP, hQ]
     exact A.mul_inv)
@@ -314,8 +313,7 @@ theorem frame_mat_le_one : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (EAf D
     exact sub_left_inj.1 hYsub
   have hM : ∀ i j, Valued.v (cpt (GlobalTheory.IdemSupport.cP Q)
       ((Formalism.UG.cT (sg D) (β⁻¹ * (finE V g)⁻¹ * β).val) i j)) ≤ 1 := by
-    intro i j
-    exact (cpt_cjA_le_iff Q _).2 (h j i)
+    exact fun i j => (cpt_cjA_le_iff Q _).2 (h j i)
   have hint : ∀ x ∈ GlobalTheory.StdFrames.OA D, Valued.v (cpt (GlobalTheory.IdemSupport.cP Q) x) ≤ 1 :=
     fun x hx => (mem_OA x).1 hx (GlobalTheory.IdemSupport.cP Q)
 
@@ -371,8 +369,7 @@ theorem valued_le_one_of_map {F E : Type} [Field F] [NumberField F] [Field E] [N
     {v : HeightOneSpectrum (𝓞 F)} {w : HeightOneSpectrum (𝓞 E)}
     (c : v.adicCompletion F ≃+* w.adicCompletion E) (hc : Continuous c) (y : v.adicCompletion F)
     (hy : Valued.v y ≤ 1) : Valued.v (c y) ≤ 1 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hy0 : y ≠ 0 := by
     rintro rfl
     rw [map_zero, map_zero] at hne
@@ -586,8 +583,7 @@ theorem fixed_kO_ne_bot : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
   let T : t → σ'.IntertwiningMap ρ' := fun j =>
     LinearMap.intertwiningMap_of_isIntertwiningMap σ' ρ' j.1.1 fun g v => j.1.2.2 g.1 g.2 v
   have hf' : f ∈ ⨆ j, LinearMap.range (T j).toLinearMap := by
-    rw [iSup_subtype'] at ht
-    exact ht
+    rwa [iSup_subtype'] at ht
   let K : Subgroup H := (GlobalTheory.SplitWeil.KO (s.w.adicCompletion L) (Fin n)).comap φ
   have hfixK : ∀ k ∈ K, ρ' k f = f := fun k hk =>
     hfix k.1 k.2 (_root_.GlobalTheory.IntegralPullback.mem_KO_of_map c hc _ hk)
@@ -682,8 +678,7 @@ theorem exists_fixed_of_level (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 
   obtain ⟨b, hb⟩ := principalLevelFrame.rowRepR_occ R.θ (Y.eFT σ)
   set π := principalLevelFrame.rowRepR R.θ (Y.eFT σ) with hπ
   obtain ⟨y, hy, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hb
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hfixY : ∀ κ ∈ U, actM Y.PY (R.MY 0) κ y = y := by
     intro κ hκ
     obtain ⟨hJ, hχ⟩ := hU b κ hκ

@@ -282,9 +282,9 @@ theorem exists_block_solution {g : ℕ} (S : Finset (Fin g)) (A : Matrix (Fin g)
       have h1 := hT b k
       rw [hb] at h1
       by_cases hk : k ∈ S
-      · simp only [hk, if_true, Pi.zero_apply] at h1
+      · simp only [hk, ite_true, Pi.zero_apply] at h1
         simp [← h1]
-      · simp only [hk, if_false, Pi.zero_apply] at h1
+      · simp only [hk, ite_false, Pi.zero_apply] at h1
         simp [← h1]
     exact hpos.ne' this
   obtain ⟨b, hb⟩ := LinearMap.surjective_of_injective hinj
@@ -372,8 +372,7 @@ theorem mem_span_periods : ∀ (g n : ℕ) (S : Finset (Fin g)) (h τ : Matrix (
     · rw [Complex.coe_smul]; exact R.smul_mem _ (heR k)
   have hzr : z = r + ∑ k, (((c k).im : ℂ) * Complex.I) • e k := by
     rw [hr, add_assoc, ← Finset.sum_add_distrib]
-    simp only [← add_smul, Complex.re_add_im]
-    exact hzeq
+    simpa only [← add_smul, Complex.re_add_im] using hzeq
   have him : ∀ k, (c k).im = 0 := by
     intro k
     by_cases hk : k ∈ S
@@ -445,8 +444,7 @@ theorem valR_of_corr_one {A : Type} [CommRing A] {X Y : Scheme.{0}} {L : LB X} {
   have e1 : res (inf_le_left : LB.wchart L φ j ⊓ LB.wchart L (PEmpty.elim : PEmpty → (Y ⟶ X)) PEmpty.elim ≤ _)
       (t.s j) = 1 := e.trans (map_one _)
   refine (HolHom.valR_res x inf_le_left _ hx').symm.trans ?_
-  refine (congrArg (fun q => valR x _ q.val) e1).trans ?_
-  exact (HolHom.valR_eq x _ hx' _).trans (map_one _)
+  exact (congrArg (fun q => valR x _ q.val) e1).trans ((HolHom.valR_eq x _ hx' _).trans (map_one _))
 
 theorem isZero_of_isAdd {R : Type} [CommRing R] [IsDomain R] {D : Out.DegPre R} {T : Over (Sp R)}
     {g : Out.GtPt D T} (hb : g.b = 1) (h : Out.GtPt.IsAdd g g g) (χ : D.X) :
@@ -492,8 +490,7 @@ theorem ratio_eq_torus_coord [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ
   have h2 := valR_of_isPull (A := ℂ) (p := (Out.TF (R := ℂ) ℂ).hom) hp x j
   have h3 := valR_of_corr_one (isZero_of_isAdd ((hb _ _).trans (one_pow n)) ha x) (𝟙 (Sp ℂ)) j
     (by rw [hs]; exact hj) (by rw [hs]; exact hc)
-  have h4 := h2.symm.trans h3
-  exact ((congrArg (u x z * ·) h4).trans (_root_.mul_one _)).symm.trans h1.symm
+  exact ((congrArg (u x z * ·) (h2.symm.trans h3)).trans (_root_.mul_one _)).symm.trans h1.symm
 
 end GlobalTheory.AbelianLetters.TorusRatio
 end -- clump:auto

@@ -458,7 +458,7 @@ theorem single_mem {n : ℕ} (i : Fin n) {M : Submodule (𝓞 D.host.E) D.host.E
     (Pi.single i u : Fin n → D.host.E) j ∈ M := by
   by_cases hj : j = i
   · subst hj; simpa using hu
-  · simp only [Pi.single_apply, hj, if_false]; exact zero_mem _
+  · simp only [Pi.single_apply, hj, ite_false]; exact zero_mem _
 
 theorem sd_scaleLat (hs : IsScale D ⊤ r) (n : ℕ) : SD D (scaleLat D r n) := by
   have hr := scale_ne hs
@@ -800,13 +800,7 @@ variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D}
 
 theorem heisO_comm (x y : WO S T) (f : WO S T → ℂ) :
     heisO ψ S T x (heisO ψ S T y f) = ψ (symplO S T x y) • heisO ψ S T y (heisO ψ S T x f) := by
-  have e : symplO S T x y + symplOH S T y x = symplOH S T x y := by
-    have h2 : algebraMap D.host.F (AF D.host.F) (1 / 2) * 2 = 1 := by
-      rw [← map_ofNat (algebraMap D.host.F (AF D.host.F)) 2, ← map_mul]; norm_num
-    unfold symplOH
-    rw [GlobalTheory.OrientedHeis.symplO_skew x y]
-    linear_combination (-symplO S T x y) * h2
-  rw [GlobalTheory.OrientedHeis.heisO_heisO, GlobalTheory.OrientedHeis.heisO_heisO, smul_smul, ← AddChar.map_add_eq_mul, e, add_comm]
+  exact GlobalTheory.ThetaStalk.heisO_comm x y f
 
 theorem ip_heisO_eq_zero {ΛS : Lat S} {ΛT : Lat T} (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT)
     {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) (hv : IsLatVac (heisO ψ S T) (latO S T ΛS ΛT fun _ => True) f)
@@ -821,7 +815,7 @@ theorem ip_heisO_eq_zero {ΛS : Lat S} {ΛT : Lat T} (hψ : IsStdChar D ψ (-1))
     show infPart D (u i j - u' i j) = 0
     rw [RingHom.map_sub, a, b, sub_self]
   rw [h1 _ h0] at hn
-  push_neg at hn
+  push Not at hn
   obtain ⟨l, hl, hne⟩ := hn
   obtain ⟨ε, hε, hεf⟩ := h3 f hv l hl
   have t1 := GlobalTheory.FinTranslate.isThetaFunO_heisO hψ.1.1 hψ.1.2.1 hf hu

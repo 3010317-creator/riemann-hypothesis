@@ -57,8 +57,7 @@ theorem UpperTheory.V.KT.cntconj :
       ∀ x : 𝓞 L, a - b = (2 * R + 1) • x → a = b := by
     intro a ha b hb x hab
     by_cases hx : x = 0
-    · rw [hx, smul_zero, sub_eq_zero] at hab
-      exact hab
+    · rwa [hx, smul_zero, sub_eq_zero] at hab
     exfalso
     have key : ∀ w : InfinitePlace L, w (x : L) < 1 := by
       intro w
@@ -71,8 +70,7 @@ theorem UpperTheory.V.KT.cntconj :
       have hn : ‖embO w x‖ = w (x : L) := InfinitePlace.norm_embedding_eq w (x : L)
       rw [hn] at h1
       push_cast at h1
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       have : (2 * (R : ℝ) + 1) * 1 ≤ (2 * (R : ℝ) + 1) * w (x : L) :=
         mul_le_mul_of_nonneg_left hc (by positivity)
       linarith

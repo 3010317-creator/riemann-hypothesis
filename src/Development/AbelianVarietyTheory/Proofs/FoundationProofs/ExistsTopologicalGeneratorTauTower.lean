@@ -264,8 +264,7 @@ theorem exists_not_prime_pow_dvd_completedLaurent (p : ℕ) [Fact p.Prime] (x : 
     ← map_natCast (Ideal.Quotient.mk (pI p ^ a)), ← map_pow] at h1
   have h2 : Ideal.Quotient.mk (pI p ^ a) ((p : Lau p) ^ a) = 0 := by
     rw [Ideal.Quotient.eq_zero_iff_mem, mem_pI_pow]
-  rw [h2, zero_mul, Ideal.Quotient.eq_zero_iff_mem, mem_pI_pow] at h1
-  exact h1
+  rwa [h2, zero_mul, Ideal.Quotient.eq_zero_iff_mem, mem_pI_pow] at h1
 
 theorem exists_eq_prime_pow_mul_not_dvd_completedLaurent : ∀ (p : ℕ) [Fact p.Prime], ∀ x : O0 p, x ≠ 0 →
     ∃ (k : ℕ) (y : O0 p), x = (p : O0 p) ^ k * y ∧ ¬ (p : O0 p) ∣ y := by
@@ -649,8 +648,7 @@ theorem q_not_pow : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra
     linear_combination -(φ g * φ g) * hEb
   have hc' := (Fintype.linearIndependent_iff.1 hli) c hc
   have : ∃ i, f i ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     apply hb0
     have : φ g * b = 0 := by rw [hrep]; simp [hall]
     rcases mul_eq_zero.1 this with h0 | h0

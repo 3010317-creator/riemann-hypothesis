@@ -76,10 +76,8 @@ theorem latBack_seam_lat : ∀ {D : Formalism.BasicNotions.D7} {X : Formalism.L2
         simp [Algebra.smul_def, RingOfIntegers.mapRingEquiv_symm_apply]
     obtain ⟨x, hx, hxy⟩ := key _ hy
     have hxe : x = y := funext fun l => s.iE.injective (congrFun hxy l)
-    rw [← hxe]
-    exact hx
-  · intro hy
-    exact Submodule.subset_span ⟨y, hy, rfl⟩
+    rwa [← hxe]
+  · exact fun hy => Submodule.subset_span ⟨y, hy, rfl⟩
 
 end GlobalTheory.LatticeBackSeam
 end -- clump:auto

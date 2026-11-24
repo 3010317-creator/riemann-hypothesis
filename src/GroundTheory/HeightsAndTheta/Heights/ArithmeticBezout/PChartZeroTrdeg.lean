@@ -33,8 +33,7 @@ theorem aeval_homogAt {L : Type} [Field L] [Algebra F L] (p : MvPolynomial (Fin 
   have hk := (le_totalDegree hα).trans hN
   simp only [map_mul, aeval_monomial, map_pow, aeval_X, mul_pow, Finsupp.prod_mul]
   have hc : (α.prod fun a => HPow.hPow (z j)⁻¹) = (z j)⁻¹ ^ (α.sum fun _ e => e) := by
-    simp only [Finsupp.prod, Finsupp.sum]
-    exact Finset.prod_pow_eq_pow_sum _ _ _
+    simpa only [Finsupp.prod, Finsupp.sum] using Finset.prod_pow_eq_pow_sum _ _ _
   rw [hc]
   have : z j ^ N = z j ^ (N - α.sum fun _ e => e) * z j ^ (α.sum fun _ e => e) := by
     rw [← pow_add, Nat.sub_add_cancel hk]
@@ -75,8 +74,7 @@ theorem ChartZeroTrdeg.proof (hA : AffineChartTrdeg.Statement) : ChartZeroTrdeg.
   rw [Algebra.adjoin_range_eq_range_aeval] at hAξ ⊢
   let e := Ideal.quotientKerAlgEquivOfSurjective gξ.rangeRestrict_surjective
   let φ := Ideal.Quotient.liftₐ (RingHom.ker gξ.rangeRestrict) gy.rangeRestrict fun p hp => by
-    apply Subtype.ext
-    exact hker p (congrArg Subtype.val hp)
+    exact Subtype.ext (hker p (congrArg Subtype.val hp))
   have hφ : Function.Surjective φ := by
     intro b
     obtain ⟨p, hp⟩ := gy.rangeRestrict_surjective b

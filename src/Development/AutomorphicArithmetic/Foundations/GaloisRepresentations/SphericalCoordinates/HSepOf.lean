@@ -65,8 +65,7 @@ private theorem exists_separable_aeval_eq_zero_ringOfIntegers {F : Type} [Field 
     have hm := hsep.map (f := algebraMap ℚ ℂ)
     rw [hq, Polynomial.map_map, RingOfIntegers.minpoly_coe] at hm
     have e : (algebraMap ℚ ℂ).comp (algebraMap ℤ ℚ) = Int.castRingHom ℂ := RingHom.ext_int _ _
-    rw [e] at hm
-    exact hm
+    rwa [e] at hm
   · rw [aeval_def, eval₂_map]
     have e : (algebraMap ℂ R).comp (Int.castRingHom ℂ) = f.comp (algebraMap ℤ (𝓞 F)) :=
       RingHom.ext_int _ _
@@ -188,8 +187,7 @@ private theorem isSemisimple_of_commute_of_integral_bezout {R : Type} [CommRing 
     rfl
   have hxr' : x = r := (huniq x ⟨by simp, hx0⟩).trans (huniq r ⟨hxr, hr0⟩).symm
   have hhs : h = s := congrArg Subtype.val hxr'
-  rw [hhs]
-  exact hss
+  rwa [hhs]
 
 theorem UpperTheory.Gal.W2.hSep_of :
     UpperTheory.Gal.W2.HSep := by

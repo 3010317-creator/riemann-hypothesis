@@ -69,15 +69,13 @@ theorem mem_bottomPairFinitePlacesBelow_of_mem_exceptional {D : D7} {T : Type} {
     unfold locPl GlobalTheory.ChiGrid.Places.W0
     exact Finset.mem_union_left _ (Finset.mem_image_of_mem _ hv)
   unfold sfB
-  simp only [Finset.mem_image]
-  exact ⟨_, hw, G.pl.under_w hv⟩
+  simpa only [Finset.mem_image] using ⟨_, hw, G.pl.under_w hv⟩
 
 theorem under_mem_sfB {D : D7} {T : Type} {Lc : LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} (G : GridData Lc sc) (t : T)
     {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ locPl G t) : w.under (𝓞 D.host.F) ∈ sfB G t := by
   classical
   unfold sfB
-  simp only [Finset.mem_image]
-  exact ⟨w, hw, rfl⟩
+  simpa only [Finset.mem_image] using ⟨w, hw, rfl⟩
 
 theorem unrOff_betaB_div_alphaB {D : D7} {T : Type} {Lc : LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} (G : GridData Lc sc)
     {μ₀ : T} (hL : Lc.Is μ₀) (i j : Fin D.R.m) (t : T) :
@@ -96,8 +94,7 @@ theorem unrOff_betaB_div_alphaB {D : D7} {T : Type} {Lc : LevCh D T} {sc : Globa
     refine (GlobalTheory.LFun.unrAt_iff_of_chrEq (hL.mu0 j) w).2 ((Lc.C.isMu0 j).unr w fun k hk => hv ?_)
     have hk' : ((D.host.g k : ℕ) : 𝓞 D.host.F) ∈ (w.under (𝓞 D.host.F)).asIdeal := by
       change algebraMap (𝓞 D.host.F) (𝓞 D.host.E) _ ∈ w.asIdeal
-      rw [map_natCast]
-      exact hk
+      rwa [map_natCast]
     refine G.pl.mem_S0_of_sum_eq.2 (Or.inr ((S1_mem_OmF D).2 ?_))
     fin_cases k
     · exact Or.inl hk'

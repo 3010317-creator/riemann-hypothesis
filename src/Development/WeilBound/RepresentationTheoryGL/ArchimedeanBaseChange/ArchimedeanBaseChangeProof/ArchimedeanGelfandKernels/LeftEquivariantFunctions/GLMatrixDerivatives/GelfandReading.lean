@@ -88,12 +88,10 @@ theorem eq_of_mul_conj {Z : Type} {F : Mat n → Z}
       simp only [conjTranspose_mul, Matrix.mul_assoc]
     rw [e1, h, e2, Matrix.nonsing_inv_mul b hd, conjTranspose_one, Matrix.one_mul]
   have hmem : b⁻¹ * a ∈ Matrix.unitaryGroup (Fin n) ℂ := by
-    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose]
-    exact hkk
+    rwa [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose]
   have key := hFk b hb' ⟨_, hmem⟩
   simp only at key
-  rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv b hd, Matrix.one_mul] at key
-  exact key
+  rwa [← Matrix.mul_assoc, Matrix.mul_nonsing_inv b hd, Matrix.one_mul] at key
 
 theorem cone_mem_GLs {σ : (Fin n × Fin n → ℝ) → Mat n} (hσ2 : ∀ v ∈ cone n, σ v * (σ v)ᴴ = hOf v) {v}
     (hv : v ∈ cone n) : σ v ∈ GLs n := by

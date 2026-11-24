@@ -100,25 +100,24 @@ theorem exp_genW (w : Fin (k + 1) → ℝ) (t : ℝ) :
   by_cases hij : i = j
   · subst hij
     by_cases h : r ≤ i.val ∧ i.val ≤ r + k
-    · rw [dif_pos ⟨h, h⟩, Matrix.diagonal_apply_eq, Matrix.diagonal_apply_eq]
-      simp only [Pi.coe_exp, Pi.smul_apply, dif_pos h, smul_eq_mul]
+    · rw [dite_eq_left ⟨h, h⟩, Matrix.diagonal_apply_eq, Matrix.diagonal_apply_eq]
+      simp only [Pi.coe_exp, Pi.smul_apply, dite_eq_left h, smul_eq_mul]
       rw [← Complex.exp_eq_exp_ℂ]
       congr 1
       push_cast
       ring
-    · rw [dif_neg (fun h' => h h'.1), if_pos ⟨rfl, h⟩, Matrix.diagonal_apply_eq]
-      simp only [Pi.coe_exp, Pi.smul_apply, dif_neg h, smul_zero]
-      exact NormedSpace.exp_zero
+    · rw [dite_eq_right (fun h' => h h'.1), ite_eq_left ⟨rfl, h⟩, Matrix.diagonal_apply_eq]
+      simpa only [Pi.coe_exp, Pi.smul_apply, dite_eq_right h, smul_zero] using NormedSpace.exp_zero
   · rw [Matrix.diagonal_apply_ne _ hij]
     by_cases h1 : (r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k)
-    · rw [dif_pos h1, Matrix.diagonal_apply_ne]
+    · rw [dite_eq_left h1, Matrix.diagonal_apply_ne]
       intro he
       apply hij
       ext
       have := congrArg Fin.val he
       simp only at this
       omega
-    · rw [dif_neg h1, if_neg (fun h2 => hij h2.1)]
+    · rw [dite_eq_right h1, ite_eq_right (fun h2 => hij h2.1)]
 
 theorem dW_uh (w : Fin (k + 1) → ℝ) (t : ℝ) : dW k w t ∈ UH (Hb k) := by
   show Matrix.conjTranspose (dW k w t) * Hb k * dW k w t = Hb k
@@ -165,18 +164,18 @@ theorem hpk_col (p i : Fin (2 * r + k + 1)) (hp : r ≤ p.val ∧ p.val ≤ r + 
   unfold Hpk
   by_cases hip : i = p
   · subst hip
-    rw [if_neg (by omega), if_neg (by omega), if_pos ⟨hp.1, hp.2, rfl⟩, if_pos rfl]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left ⟨hp.1, hp.2, rfl⟩, ite_eq_left rfl]
   · have hv : i.val ≠ p.val := fun h => hip (Fin.ext h)
-    rw [if_neg (by omega), if_neg (by omega), if_neg (fun h => hip h.2.2), if_neg hip]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (fun h => hip h.2.2), ite_eq_right hip]
 
 theorem hpk_row (p j : Fin (2 * r + k + 1)) (hp : r ≤ p.val ∧ p.val ≤ r + k) :
     Hpk k r p j = if j = p then (if p.val = r + k then -1 else 1) else 0 := by
   unfold Hpk
   by_cases hip : j = p
   · subst hip
-    rw [if_neg (by omega), if_neg (by omega), if_pos ⟨hp.1, hp.2, rfl⟩, if_pos rfl]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left ⟨hp.1, hp.2, rfl⟩, ite_eq_left rfl]
   · have hv : j.val ≠ p.val := fun h => hip (Fin.ext h)
-    rw [if_neg (by omega), if_neg (by omega), if_neg (fun h => hip h.2.2.symm), if_neg hip]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (fun h => hip h.2.2.symm), ite_eq_right hip]
 
 theorem hs_apply (p i m : Fin (2 * r + k + 1)) :
     (Hpk k r * Matrix.single p p (1 : ℂ)) i m = if m = p then Hpk k r i p else 0 := by
@@ -192,14 +191,14 @@ theorem hpk_single (p : Fin (2 * r + k + 1)) (hp : r ≤ p.val ∧ p.val ≤ r +
   rw [Qx2.hpk_inv, Matrix.conjTranspose_single, star_one]
   ext i j
   rw [Matrix.mul_apply, Finset.sum_eq_single p]
-  · rw [hs_apply, if_pos rfl, hpk_col p i hp, hpk_row p j hp, Matrix.single_apply]
+  · rw [hs_apply, ite_eq_left rfl, hpk_col p i hp, hpk_row p j hp, Matrix.single_apply]
     by_cases hi : i = p <;> by_cases hj : j = p
-    · subst hi; subst hj; simp only [if_true, and_self]; split_ifs <;> norm_num
+    · subst hi; subst hj; simp only [ite_true, and_self]; split_ifs <;> norm_num
     · simp [hi, hj, Ne.symm hj]
     · simp [hi, hj, Ne.symm hi]
     · simp [hi, hj, Ne.symm hi]
   · intro m _ hm
-    rw [hs_apply, if_neg hm, zero_mul]
+    rw [hs_apply, ite_eq_right hm, zero_mul]
   · intro h; exact absurd (Finset.mem_univ p) h
 
 theorem hpart1_single (p : Fin (2 * r + k + 1)) (hp : r ≤ p.val ∧ p.val ≤ r + k) :
@@ -218,23 +217,23 @@ theorem hpart2_single (n : ℕ) (p : Fin (2 * r + k + 1)) (hpn : p.val = r + n) 
   have hI : Complex.I ≠ 0 := Complex.I_ne_zero
   by_cases hil : i = l
   · subst hil
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     by_cases hi : i = p
     · subst hi
-      rw [if_pos ⟨rfl, rfl⟩, dif_pos hp]
+      rw [ite_eq_left ⟨rfl, rfl⟩, dite_eq_left hp]
       dsimp only
-      rw [if_pos (by omega)]
+      rw [ite_eq_left (by omega)]
       field_simp
       push_cast
       ring_nf
       rw [Complex.I_sq]
       ring
-    · rw [if_neg (fun h => hi h.1.symm)]
+    · rw [ite_eq_right (fun h => hi h.1.symm)]
       dsimp only
       split_ifs with h1 h2
       · exfalso; apply hi; apply Fin.ext; omega
       all_goals simp
-  · rw [if_neg (fun h => hil (h.1.symm.trans h.2)), if_neg hil]
+  · rw [ite_eq_right (fun h => hil (h.1.symm.trans h.2)), ite_eq_right hil]
     simp
 
 theorem rdV_zero' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] (f : Q.Mx k r → E) (g : Q.Mx k r) :
@@ -250,18 +249,18 @@ theorem genW_sum : ∑ a : Fin (Q.mdim k r (Fin.last r)),
   simp only [Matrix.diagonal_apply]
   by_cases hil : i = l
   · subst hil
-    simp only [if_true]
+    simp only [ite_true]
     by_cases h : r ≤ i.val ∧ i.val ≤ r + k
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       have hm : i.val - r < Q.mdim k r (Fin.last r) := by unfold Q.mdim; simp; omega
       rw [Finset.sum_eq_single ⟨i.val - r, hm⟩]
       · simp
       · intro b _ hb
-        rw [if_neg]
+        rw [ite_eq_right]
         · simp
         · intro hh; apply hb; ext; simp only at hh ⊢; omega
       · intro hh; exact absurd (Finset.mem_univ _) hh
-    · simp [dif_neg h]
+    · simp [dite_eq_right h]
   · simp [hil]
 
 theorem zc_eq (φ : ℝ) : zc k r φ = NormedSpace.exp ((φ : ℂ) • genW k r (fun _ => 1)) := by
@@ -343,8 +342,7 @@ namespace RRFin
 
 theorem hasDerivAt_rotExp (m : ℂ) :
     HasDerivAt (fun φ : ℝ => Complex.exp (m * (φ : ℂ) * Complex.I)) (m * Complex.I) 0 := by
-  have h := (((hasDerivAt_id (0 : ℝ)).ofReal_comp.const_mul m).mul_const Complex.I).cexp
-  simpa using h
+  simpa using (((hasDerivAt_id (0 : ℝ)).ofReal_comp.const_mul m).mul_const Complex.I).cexp
 
 end RRFin
 
@@ -382,9 +380,7 @@ theorem rotation_finite_from_matrix : GTRRFinFrom := by
     have hm := _root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedMem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hB Φ.1 Φ.2
     have hx : ((q.1.1, q.1.2 * Complex.exp ((φ : ℂ) * Complex.I)) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' :=
       ⟨hcq, by rw [normSq_rot]; exact ann_tz P Bs hpl hζq⟩
-    have h2 := hm.2.1 _ hx
-    simp only [NF.radR, Set.indicator_of_mem hx] at h2
-    exact h2
+    simpa only [NF.radR, Set.indicator_of_mem hx] using hm.2.1 _ hx
   have hGy : ∀ φ : ℝ, inner ℂ (B.hsVec (E ρ)) (B.hsVec ((Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) q.1.1
         (NF.muZ P.k P.r Bs.μsec q.1.2 * zc P.k P.r φ))) =
       Complex.exp ((n ρ : ℂ) * (φ : ℂ) * Complex.I) * inner ℂ (B.hsVec (E ρ)) (B.hsVec
@@ -398,7 +394,7 @@ theorem rotation_finite_from_matrix : GTRRFinFrom := by
     rw [rot_eqv hS P Bs hpl hsec Φ q.1.1 hcq q.1.2 hζq φ]
     conv_lhs => rw [hexp]
     rw [rotA_sum, SSTr.hsVec_sum, inner_sum]
-    simp only [VLem.hsV_smul, inner_smul_right, hM, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [VLem.hsV_smul, inner_smul_right, hM, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     ring
 
   have hD : ((q.1.1, NF.muZ P.k P.r Bs.μsec q.1.2) : (Fin P.r → ℂ) × Q.Mx P.k P.r) ∈ Q.DomR P.k P.r Bs.z Bs.z' :=
@@ -464,15 +460,13 @@ theorem rotation_ode_holds : GTRRODE := by
       rw [Finset.sum_eq_single i]
       · intro k _ hk
         rw [hoff i k (Ne.symm hk), zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     rw [hsum] at hg0
     have h2 := HasDerivAt.comp_sub_const φ φ (by rw [sub_self]; exact hg0)
     have e : (fun x => Mf x i j) = fun x : ℝ => ∑ k, Mf (x - φ) i k * Mf φ k j := by
       funext x
       rw [← Matrix.mul_apply, ← hadd, sub_add_cancel]
-    rw [e]
-    exact h2
+    rwa [e]
   have hsol : ∀ (i j : ι) (x : ℝ), Mf x i j = Complex.exp (Bm i i * x) * (if i = j then 1 else 0) := by
     intro i j x
     have hf : ∀ y : ℝ, HasDerivAt (fun y : ℝ => Complex.exp (-Bm i i * y) * Mf y i j) 0 y := by
@@ -482,8 +476,7 @@ theorem rotation_ode_holds : GTRRODE := by
       have hm := he.mul (hderiv y i j)
       have h3 : Complex.exp (-Bm i i * ↑y) * (-Bm i i * 1) * Mf y i j + Complex.exp (-Bm i i * ↑y) * (Bm i i * Mf y i j) = 0 := by
         ring
-      rw [h3] at hm
-      exact hm
+      rwa [h3] at hm
     have hc := is_const_of_deriv_eq_zero (fun y => (hf y).differentiableAt) (fun y => (hf y).deriv) x 0
     simp only [Complex.ofReal_zero, mul_zero, Complex.exp_zero, one_mul, h0, Matrix.one_apply] at hc
     rw [← hc, ← mul_assoc, ← Complex.exp_add]
@@ -492,7 +485,7 @@ theorem rotation_ode_holds : GTRRODE := by
     intro i
     have h1 := hsol i i (2 * Real.pi)
     rw [hper] at h1
-    simp only [Matrix.one_apply_eq, if_true, mul_one] at h1
+    simp only [Matrix.one_apply_eq, ite_true, mul_one] at h1
     obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.1 h1.symm
     refine ⟨n, ?_⟩
     have hpi : (2 * (Real.pi : ℂ)) ≠ 0 := by
@@ -538,12 +531,7 @@ theorem phase_star_mul (φ : ℝ) :
     ← Complex.exp_conj, ← Complex.exp_add]
   simp [Complex.conj_ofReal]
 
-theorem Hb_mul_self : Hb k * Hb k = 1 := by
-  unfold Hb
-  rw [diagonal_mul_diagonal, ← diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> norm_num
+theorem Hb_mul_self : Hb k * Hb k = 1 := Formalism.FourierDecayAlt.P.TwoByOneBlock.Hb_sq
 
 theorem inv_of_UH {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hb k)) :
     g⁻¹ * g = 1 ∧ g * g⁻¹ = 1 := by
@@ -555,13 +543,7 @@ theorem inv_of_UH {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (H
   exact ⟨hl, mul_eq_one_comm.1 hl⟩
 
 theorem UH_mul {g h : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hb k)) (hh : h ∈ UH (Hb k)) :
-    g * h ∈ UH (Hb k) := by
-  have e1 : gᴴ * Hb k * g = Hb k := hg
-  have e2 : hᴴ * Hb k * h = Hb k := hh
-  show (g * h)ᴴ * Hb k * (g * h) = Hb k
-  rw [conjTranspose_mul]
-  calc hᴴ * gᴴ * Hb k * (g * h) = hᴴ * (gᴴ * Hb k * g) * h := by simp only [Matrix.mul_assoc]
-    _ = Hb k := by rw [e1, e2]
+    g * h ∈ UH (Hb k) := Formalism.FourierDecayAlt.P.TwoByOneBlock.UHb_mul hg hh
 
 theorem UH_inv {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hb k)) : g⁻¹ ∈ UH (Hb k) := by
   have hg' : gᴴ * Hb k * g = Hb k := hg
@@ -888,8 +870,7 @@ theorem rotation_wirtinger_holds : GTRRWirt := by
       (Complex.exp ((((0 : ℝ) : ℂ)) * Complex.I) * (1 * Complex.I)) 0 :=
     ((hasDerivAt_id (0 : ℝ)).ofReal_comp.mul_const Complex.I).cexp
   have h2 : HasDerivAt (fun φ : ℝ => x.2 * Complex.exp ((φ : ℂ) * Complex.I)) (x.2 * Complex.I) 0 := by
-    have h3 := h1.const_mul x.2
-    simpa using h3
+    simpa using h1.const_mul x.2
   have hγ : HasDerivAt (fun φ : ℝ => ((x.1, x.2 * Complex.exp ((φ : ℂ) * Complex.I)) : MA.E r))
       ((0 : Fin r → ℂ), x.2 * Complex.I) 0 := by
     first
@@ -917,8 +898,7 @@ theorem rotation_wirtinger_holds : GTRRWirt := by
     rw [hv, map_add (f := _), map_smul, map_smul, Complex.real_smul, Complex.real_smul]
     push_cast
     ring
-  rw [key]
-  exact hc
+  rwa [key]
 
 end Formalism.FourierDecayAlt.P.CutMP.Gauge.GC
 end -- clump:auto

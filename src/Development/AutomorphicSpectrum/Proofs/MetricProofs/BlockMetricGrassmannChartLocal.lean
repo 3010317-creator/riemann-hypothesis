@@ -60,11 +60,11 @@ theorem stepCols_ne_empty {N j : ℕ} (hj : j ≤ N) (i : Fin N) : stepCols N j 
   have hi' := i.2
   by_cases hi : (i : ℕ) + 1 ≤ j
   · have hm : (⟨N - j, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_pos hi]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_left hi]
       constructor <;> simp
     simp [h] at hm
   · have hm : (⟨0, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_neg hi]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right hi]
       show 0 < (i : ℕ) + 1 - j
       omega
     simp [h] at hm
@@ -105,22 +105,21 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     have e : mCoordIdeal zb = mCoordIdeal (BM.Rb.lift x₀ x₀) := by
       rw [hc₀e]
       exact (GlobalTheory.CompanionTheory.Ar.PB.StepW.TorusAct.main _ _ _ M.x (BM.Rb.lift x₀ x₀) c₀ hc₀).1
-    rw [e]
-    exact hG₀
+    rwa [e]
   have hne : ∀ k : NonPluckerBlocks M.blk, zb ⟨k, F.c k⟩ ≠ 0 := fun k h0 => hG.1 k (by
     show mConeMap zb (X ⟨k, F.c k⟩) = 0
     rw [mConeMap, aeval_X, h0, map_zero, zero_mul])
   let c : K → ℂ := fun k =>
     if h : ∀ p', M.blk p' ≠ some k then (zb ⟨⟨k, h⟩, F.c ⟨k, h⟩⟩)⁻¹ else 1
-  have hck : ∀ k : NonPluckerBlocks M.blk, c k.1 = (zb ⟨k, F.c k⟩)⁻¹ := fun k => dif_pos k.2
+  have hck : ∀ k : NonPluckerBlocks M.blk, c k.1 = (zb ⟨k, F.c k⟩)⁻¹ := fun k => dite_eq_left k.2
   have hc : ∀ k, c k ≠ 0 := fun k => by
     by_cases h : ∀ p', M.blk p' ≠ some k
     · rw [hck ⟨k, h⟩]
       exact inv_ne_zero (hne ⟨k, h⟩)
-    · have : c k = 1 := dif_neg h
+    · have : c k = 1 := dite_eq_right h
       rw [this]
       exact one_ne_zero
-  have hck₀ : c k₀ = 1 := dif_neg fun h => h p hblk
+  have hck₀ : c k₀ = 1 := dite_eq_right fun h => h p hblk
   let z₁ : (Σ k, ι k) → ℂ := fun q => c q.1 * z q
   have hz₁ : z₁ ∈ mcPts (mCoordIdeal y) := ((GlobalTheory.CompanionTheory.Ar.PB.StepW.TorusAct.main K ι Φ y z c hc).2 hz).1
   let cb : NonPluckerBlocks M.blk → ℂ := fun k => c k.1
@@ -131,8 +130,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     GlobalTheory.CompanionTheory.Ar.PB.StepW.TorusAct.main (NonPluckerBlocks M.blk) (baseIdx ι M.blk) M.Ω M.x zb cb fun k => hc k.1
   obtain ⟨-, hval⟩ := hT2 hzbm
   have hG₁ : M.GoodAt F (mCoordIdeal (basePart M.blk z₁)) := by
-    rw [hb₁, hT1]
-    exact hG
+    rwa [hb₁, hT1]
   have hnorm : ∀ k, basePart M.blk z₁ ⟨k, F.c k⟩ = 1 := fun k => by
     rw [hb₁]
     show c k.1 * zb ⟨k, F.c k⟩ = 1
@@ -172,13 +170,12 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   have hsum : ∑ I', (∑ m : ι k₀, valAt M.x (F.u' I ⟨k₀, m⟩) zb * valAt M.x (F.u ⟨k₀, m⟩ I') zb) *
       minorIJ (hh p.1) I' (stepCols N j p.2) = minorIJ (hh p.1) I (stepCols N j p.2) := by
     rw [Finset.sum_eq_single I]
-    · rw [hδ I hI, if_pos rfl, one_mul]
+    · rw [hδ I hI, ite_eq_left rfl, one_mul]
     · intro I' _ hne'
       by_cases hs : IsStepRows N j p.2 I'
-      · rw [hδ I' hs, if_neg (Ne.symm hne'), zero_mul]
+      · rw [hδ I' hs, ite_eq_right (Ne.symm hne'), zero_mul]
       · rw [hmin I' hs, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ I) h
+    · exact fun h => absurd (Finset.mem_univ I) h
   have hplk : plk M F k₀ z I = ∑ m : ι k₀, valAt M.x (F.u' I ⟨k₀, m⟩) zb * z ⟨k₀, m⟩ := by
     rw [hzbe]
     rfl

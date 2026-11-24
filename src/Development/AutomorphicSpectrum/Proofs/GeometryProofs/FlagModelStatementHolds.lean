@@ -296,8 +296,7 @@ theorem isFlagVBOn_inter_of_steps : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] 
   have hV : Submodule.span Ω (Set.range b₀) = flagStep Ω b₀ r := (FlagVB.flagStep_last b₀).symm
   have hframe : (L.inter (Submodule.span Ω (Set.range b₀))).IsFrameAt b p := by
     refine ⟨hlib, ?_⟩
-    rw [hV, hrange]
-    exact h2
+    rwa [hV, hrange]
   have hcoh : (L.inter (Submodule.span Ω (Set.range b₀))).IsCohOn T := by
     have hvb := (hv r).1
     rw [← hV] at hvb
@@ -357,9 +356,7 @@ theorem pull_vb {L : Lat ξ E} {g : ℕ} {W : Submodule Ω E} (hL : L.IsVB g W) 
     | zero => exact Submodule.zero_mem _
     | add u v _ _ hu hv => exact Submodule.add_mem _ hu hv
     | smul c u _ hu => exact Submodule.smul_mem _ (⟨c.1, hreg c.1 c.2⟩ : regAt ξ' q') hu
-  · refine Submodule.span_mono ?_
-    intro e he
-    exact ⟨hq, e, hsp ▸ Submodule.subset_span he, rfl⟩
+  · exact Submodule.span_mono (fun e he => ⟨hq, e, hsp ▸ Submodule.subset_span he, rfl⟩)
 
 theorem coh_map {L : Lat ξ E} {g : ℕ} {W : Submodule Ω E} (hL : L.IsVB g W) (φ : E →ₗ[Ω] E') :
     (L.map φ).IsCohOn Set.univ := by

@@ -108,8 +108,7 @@ theorem UpperTheory.V.Ws.X1.coefEx :
   let co : κ → A → ResidueField Λ := fun u x => if h : x ∈ K then residue Λ ((hex x h).choose u) else 0
   have hco : ∀ x (h : x ∈ K) (a : κ → Λ), x = ∑ u, a u • ε u → ∀ u, co u x = residue Λ (a u) := by
     intro x h a hx u
-    simp only [co, dif_pos h]
-    exact huniq _ _ ((hex x h).choose_spec.symm.trans hx) u
+    simpa only [co, dite_eq_left h] using huniq _ _ ((hex x h).choose_spec.symm.trans hx) u
   refine ⟨co, ?_, ?_, ?_⟩
   · intro u x hx y hy
     obtain ⟨a, ha⟩ := hex x hx
@@ -185,8 +184,7 @@ private theorem rb_lc {Λ : Type} [CommRing Λ] [IsLocalRing Λ] {Γ : Type} [To
   have : ∀ a b, ∀ᶠ t in nhds s, rb t a b = rb s a b := fun a b => by
     filter_upwards [(hc a b 1).eventually_eq s] with t ht
     rw [Ideal.Quotient.eq, pow_one, ← res_eq_zero_iff Λ, map_sub, sub_eq_zero] at ht
-    rw [← hr, ← hr]
-    exact ht
+    rwa [← hr, ← hr]
   filter_upwards [Filter.eventually_all.2 fun a => Filter.eventually_all.2 (this a)] with t ht
   ext a b
   exact ht a b
@@ -233,8 +231,7 @@ theorem UpperTheory.V.Ws.X1.obCor :
   set f : Γ → M4 A := fun s => D.rt s - T ((h s).1 * rb s) with hf
   have fH : ∀ s, IsGSp (algebraMap Λ A (ν s)) (f s) := fun s => by
     have := pert _ _ _ (D.rt_mult s) (-h s).2
-    rw [rtres, Submodule.coe_neg, neg_mul, map_neg, ← sub_eq_add_neg] at this
-    exact this
+    rwa [rtres, Submodule.coe_neg, neg_mul, map_neg, ← sub_eq_add_neg] at this
   have fmul : ∀ s t, f (s * t) = f s * f t := fun s t => by
     have e := x1 s t
     rw [b3, sub_eq_iff_eq_add] at e
@@ -275,8 +272,7 @@ theorem UpperTheory.V.Ws.X1.obCor :
       rw [← ntres, ← aA]
       have := congrArg (fun X : M4 A => X.map (res Λ A : A →+* ResidueField Λ)) n1
       simp only [Matrix.map_mul] at this
-      rw [Matrix.map_one _ (map_zero _) (map_one _)] at this
-      exact this
+      rwa [Matrix.map_one _ (map_zero _) (map_one _)] at this
     have n3 : nb v * adj (nb v) = 1 := mul_eq_one_comm.1 n2
     have u1 : IsUp (adj (nb v) * rb (loc v s) * nb v) := fun i j hij => by
       rw [← hn, ← hr, ← aR, ← mR, ← mR, Matrix.map_apply, hW.flag v s i j hij, map_zero]
@@ -511,8 +507,7 @@ theorem UpperTheory.V.Ws.X1.obCoc :
   have mD : ∀ x : Γ × Γ, (D.om x.1 x.2).map co * rb (x.1 * x.2)⁻¹ ∈ sp4 (ResidueField Λ) := by
     rintro ⟨s, t⟩
     refine key _ _ _ ?_ (D.rt_mult _) (t4 s t) (D.rt_map _)
-    simp only [map_mul, Units.val_mul]
-    exact hgs _ _ _ _ (D.rt_mult s) (D.rt_mult t)
+    simpa only [map_mul, Units.val_mul] using hgs _ _ _ _ (D.rt_mult s) (D.rt_mult t)
   have lD : IsLocallyConstant fun x : Γ × Γ => (⟨_, mD x⟩ : sp4 (ResidueField Λ)) := by
     refine IsLocallyConstant.desc _ Subtype.val ?_ Subtype.val_injective
     have l1 : IsLocallyConstant fun x : Γ × Γ => D.om x.1 x.2 := by
@@ -557,8 +552,7 @@ theorem UpperTheory.V.Ws.X1.obCoc :
     have n1 : (t * u)⁻¹ * s⁻¹ = (s * (t * u))⁻¹ := by group
     have n2 : u * (s * (t * u))⁻¹ = (s * t)⁻¹ := by group
     rw [n2] at e2
-    rw [n1]
-    exact e2
+    rwa [n1]
   · have k6 : ∀ a b, (D.t v s * D.t v t - D.t v (s * t)) a b ∈ RingHom.ker p := by
       refine hker ?_
       rw [map_mul_alg, D.t_map, D.t_map, D.t_map, map_mul, map_mul]
@@ -678,8 +672,7 @@ theorem UpperTheory.V.Ws.X1.obWeak :
       rw [← hc, ← Submodule.mkQ_apply, map_sum]
       rfl
 
-    rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, map_sum] at h1
-    exact h1
+    rwa [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, map_sum] at h1
   obtain ⟨μ, m1, m2⟩ := ex_mu (O := O) η hη
   have pp : ∀ x, p'' (p' x) = p x := fun x => DFunLike.congr_fun hpp x
   have key : ∀ x, p x = 0 → p' x = μ (∑ u, residue O (c u) * co u x) := fun x hx => by

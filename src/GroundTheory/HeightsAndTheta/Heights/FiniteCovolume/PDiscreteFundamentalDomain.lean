@@ -30,8 +30,7 @@ theorem DiscreteFundamentalDomain.proof (G : Type*) [Group G] [TopologicalSpace 
     intro u hu w hw γ hγ
     have h : (γ : G) ∈ t := hγ ▸ hVV u hu.1 w⁻¹ hw.2
     have h' : γ ∈ ((↑) : Γ → G) ⁻¹' t := h
-    rw [hteq] at h'
-    exact h'
+    rwa [hteq] at h'
 
   obtain ⟨T, hTc, hTU⟩ := TopologicalSpace.isOpen_iUnion_countable
     (fun g : G => (fun x => x * g⁻¹) ⁻¹' U) (fun g => hUo.preimage (continuous_mul_const _))
@@ -82,7 +81,6 @@ theorem DiscreteFundamentalDomain.proof (G : Type*) [Group G] [TopologicalSpace 
     simpa [mul_assoc] using hδ
   refine ⟨γ, by simpa [Subgroup.smul_def] using hγFD, fun δ hδ => ?_⟩
   have hδ' : (δ : G) * x ∈ FD := by simpa [Subgroup.smul_def] using hδ
-  have h1 := uniq _ (δ * γ⁻¹) hγFD (by simpa [mul_assoc] using hδ')
-  simpa [mul_inv_eq_one] using h1
+  simpa [mul_inv_eq_one] using uniq _ (δ * γ⁻¹) hγFD (by simpa [mul_assoc] using hδ')
 
 end GroundTheory.Heights₂.Heights.FiniteCovolume

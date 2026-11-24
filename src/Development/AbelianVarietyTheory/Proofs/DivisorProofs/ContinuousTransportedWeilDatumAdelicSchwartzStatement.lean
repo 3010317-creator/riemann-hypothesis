@@ -205,16 +205,14 @@ theorem continuous_transport_apply : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
   let f : _ → Fin m → SchwartzMap (κ → mixedEmbedding.mixedSpace D.host.F) ℂ :=
     fun p => if h : p ∈ N then Classical.choose (hf p h) else 0
   have hfe : ∀ p ∈ N, om p Φ = ∑ i, GlobalTheory.WeilM.pureA D.host.F (f p i) (g i) := fun p hp => by
-    simp only [f, dif_pos hp]
-    exact Classical.choose_spec (hf p hp)
+    simpa only [f, dite_eq_left hp] using Classical.choose_spec (hf p hp)
   have hslice : ∀ p ∈ N, ∀ i v, f p i v = om p Φ (GlobalTheory.WeilCont.adeleJoin D.host.F v (y i)) := by
     intro p hp i v
     rw [hfe p hp, Finset.sum_apply, Finset.sum_eq_single i]
-    · rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, if_pos rfl, mul_one]
+    · rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, ite_eq_left rfl, mul_one]
     · intro j _ hji
-      rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, if_neg hji, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+      rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, ite_eq_right hji, mul_zero]
+    · exact fun h => absurd (Finset.mem_univ i) h
   have hbd : ∀ k : ℕ, ∃ C : ℝ, ∀ᶠ p in nhds p0, ∀ i v, ‖v‖ ^ k * ‖f p i v‖ ≤ C := by
     intro k
     choose C hC using fun i =>
@@ -249,8 +247,7 @@ theorem continuous_transport_apply : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
     obtain ⟨i, hi⟩ := Function.ne_iff.1 ha
     obtain ⟨x0, hx0⟩ := hψ.1.2.2.2
     refine ⟨Pi.single i (algebraMap D.host.F (AF D.host.F) (a i)⁻¹ * x0), ?_⟩
-    rw [he, dotProduct_single, ← mul_assoc, ← map_mul, mul_inv_cancel₀ hi, map_one, one_mul]
-    exact hx0
+    rwa [he, dotProduct_single, ← mul_assoc, ← map_mul, mul_inv_cancel₀ hi, map_one, one_mul]
   have hψinv : ∀ t : AF D.host.F, ψ (-t) * ψ t = 1 := fun t => by
     simpa using (AddChar.map_add_eq_mul ψ (-t) t).symm
   have hc : ∀ y', ContinuousAt (fun p => ∑' a, e a y' * om p Φ (fun j => algebraMap D.host.F (AF D.host.F) (a j) + z j)) p0 := by

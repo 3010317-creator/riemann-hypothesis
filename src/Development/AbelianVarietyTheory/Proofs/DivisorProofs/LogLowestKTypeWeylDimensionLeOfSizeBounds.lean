@@ -54,8 +54,7 @@ namespace GlobalTheory.OneMeasDim
 theorem two_mul_card_pairs_le (p : ℕ) :
     2 * ∑ i : Fin p, (Finset.univ.filter (fun j : Fin p => i < j)).card ≤ p ^ 2 := by
   have e : ∑ i : Fin p, (Finset.univ.filter (fun j : Fin p => i < j)).card = ∑ i ∈ Finset.range p, i := by
-    rw [← Finset.sum_range_reflect]
-    rw [Fin.sum_univ_eq_sum_range (fun i => p - 1 - i) p |>.symm]
+    rw [← Finset.sum_range_reflect, Fin.sum_univ_eq_sum_range (fun i => p - 1 - i) p |>.symm]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Finset.filter_lt_eq_Ioi, Fin.card_Ioi]
   rw [e, mul_comm, Finset.sum_range_id_mul_two]
@@ -137,7 +136,7 @@ theorem log_dimAt_le : ∀ (D : D7) (i : Fin D.R.m) (L : ℝ) (hL : GlobalTheory
       exact_mod_cast this
     linarith
   have hL0 : 0 ≤ L := by
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     have := Real.exp_lt_exp.2 h; rw [Real.exp_zero] at this; linarith
   set b := Real.exp L with hbdef
   set B := b ^ 2

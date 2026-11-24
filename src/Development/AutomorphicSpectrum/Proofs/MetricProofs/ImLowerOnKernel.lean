@@ -54,8 +54,7 @@ namespace GlobalTheory.CompanionTheory.ChartBlockLower
 
 private theorem dotProduct_sum' {g a : ℕ} (v : Fin g → ℝ) (w : Fin a → Fin g → ℝ) :
     v ⬝ᵥ (∑ j, w j) = ∑ j, v ⬝ᵥ w j := by
-  simp only [dotProduct, Finset.sum_apply, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [dotProduct, Finset.sum_apply, Finset.mul_sum] using Finset.sum_comm
 
 theorem quad_im_add_sum {a g : ℕ} (τ : Matrix (Fin g) (Fin g) ℂ)
     (B : Fin a → Matrix (Fin g) (Fin g) ℤ) (s : Fin a → ℂ) (v : Fin g → ℝ) :

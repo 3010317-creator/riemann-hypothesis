@@ -82,9 +82,7 @@ theorem CutDimLower.proof : CutDimLower.Statement.{u, w} := by
 
   have hvan : ∀ {F : Poly k N} {e : ℕ}, F.IsHomogeneous e → aeval x F = 0 → F ∈ pp := fun hF h0 =>
     hW.le ((mem_primeOf_of_isHomogeneous x hF).mpr h0)
-  have hxj : x j ≠ 0 := by
-    intro h0
-    exact hj (hppq (hvan (isHomogeneous_X k j) (by rw [aeval_X, h0])))
+  have hxj : x j ≠ 0 := fun h0 => hj (hppq (hvan (isHomogeneous_X k j) (by rw [aeval_X, h0])))
   set J : Chart x := singleChart hxj with hJdef
   have hjJ : j ∈ J.1 := Finset.mem_singleton_self j
   have hmono : ∀ {t : Poly k N}, t ∈ monos (S := k) J.1 → t ∉ qq := fun ht =>

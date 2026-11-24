@@ -96,8 +96,7 @@ lemma sF_smul (g : GL (Fin 2) ℝ) : ∃ K : ℝ, 0 ≤ K ∧ ∀ z : ℍ, sF (g
 
 lemma denom_inv (g : GL (Fin 2) ℝ) : ∃ K : ℝ, 0 ≤ K ∧ ∀ z : ℍ, ‖denom g z‖⁻¹ ≤ K * sF z := by
   have hq : 0 < (g 1 0) ^ 2 + (g 1 1) ^ 2 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h10 : g 1 0 = 0 := by nlinarith [sq_nonneg (g 1 0), sq_nonneg (g 1 1)]
     have h11 : g 1 1 = 0 := by nlinarith [sq_nonneg (g 1 0), sq_nonneg (g 1 1)]
     have hdet := g.det.ne_zero
@@ -196,8 +195,7 @@ lemma gr_act (h : GL (Fin 2) (InfinitePlace F → ℝ)) {f : Hn F → ℂ} (hf :
     unfold sP
     rw [← Finset.prod_mul_distrib]
     apply Finset.prod_le_prod₀
-    · intro v _
-      exact sF_nonneg _
+    · exact fun v _ => sF_nonneg _
     · intro v _
       rw [act.eq_1]
       exact hK v (z v)
@@ -220,8 +218,7 @@ lemma gr_denom (k : ℕ) (h : GL (Fin 2) (InfinitePlace F → ℝ)) :
     apply Finset.prod_le_prod₀
     · intro v _
       positivity
-    · intro v _
-      exact hK v (z v)
+    · exact fun v _ => hK v (z v)
   rw [norm_pow, ← mul_pow]
   exact pow_le_pow_left₀ (norm_nonneg _) hb k
 

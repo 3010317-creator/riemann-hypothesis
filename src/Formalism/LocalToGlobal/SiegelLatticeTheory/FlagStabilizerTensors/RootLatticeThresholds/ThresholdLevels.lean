@@ -68,7 +68,7 @@ theorem qfac_ne (hOk : c.Ok) (hb1 : 40 * (c.m : ℝ) * c.k * c.Del ≤ c.b 1) {d
     have hl0 : 0 ≤ 4 * c.Del * (l : ℝ) := by positivity
     rw [hu]; apply ne_of_gt; linarith
   · by_cases hk : i = c.k
-    · have hu : c.u de i = c.ulast := by rw [Formalism.FourierDecayAlt.Sz.Cfg.u, if_neg h1, if_pos hk]
+    · have hu : c.u de i = c.ulast := by rw [Formalism.FourierDecayAlt.Sz.Cfg.u, ite_eq_right h1, ite_eq_left hk]
       rw [hu]
       cases ht : c.top
       · have hul : c.ulast = c.vlast - 1 / 2 := by simp [Formalism.FourierDecayAlt.Sz.Cfg.ulast, ht]
@@ -89,7 +89,7 @@ theorem qfac_ne (hOk : c.Ok) (hb1 : 40 * (c.m : ℝ) * c.k * c.Del ≤ c.b 1) {d
         rw [hul]
         have hbp := (hOk.htop ht).1
         apply ne_of_lt; linarith
-    · have hu : c.u de i = c.v (i - 1) - 1 / 2 - de (i - 1) * c.Del := by rw [Formalism.FourierDecayAlt.Sz.Cfg.u, if_neg h1, if_neg hk]
+    · have hu : c.u de i = c.v (i - 1) - 1 / 2 - de (i - 1) * c.Del := by rw [Formalism.FourierDecayAlt.Sz.Cfg.u, ite_eq_right h1, ite_eq_right hk]
       rw [hu]
       obtain ⟨j, rfl⟩ : ∃ j, i = j + 1 := ⟨i - 1, by omega⟩
       simp only [Nat.add_sub_cancel]
@@ -174,9 +174,7 @@ private theorem continuousOn_mul_be_of_window (hOk : c.Ok) (hb1 : 40 * (c.m : �
     {T T' : ℝ} (hT : T ≠ 0) (hT' : T' ≠ 0) (ka gm : ℝ) {S : Set ℝ}
     (hS : ∀ Y ∈ S, 5 / 2 ≤ c.v l + Y ∧ c.v l + Y ≤ c.Del / 2) :
     ContinuousOn (fun Y => gm * c.be ka de de' T T' Y) S := by
-  have hP : Continuous c.P := by
-    show Continuous (fun Y : ℝ => ∏ s ∈ Icc 1 (c.k + c.m - 1), (Y + c.lam s))
-    exact continuous_finsetProd _ (fun s _ => continuous_add_const _)
+  have hP : Continuous c.P := continuous_finsetProd _ (fun s _ => continuous_add_const _)
   have hq : Continuous (fun Y => c.q de de' T T' Y) := by
     show Continuous (fun Y : ℝ =>
       -(T * T') * ∏ i ∈ Icc 1 c.k, ((Y + 1 / 2 + c.u de i) * (Y + 1 / 2 + c.u de' i)))
@@ -445,8 +443,7 @@ theorem thrSet_finite (C : ℝ) (de de' : ℕ → ℝ) (T T' : ℝ) (l : ℕ) : 
     · exact ⟨i, by omega, 0, by omega, Or.inr (Or.inr (Or.inr rfl))⟩
   refine Set.Finite.subset ?_ key
   refine Set.Finite.biUnion (Finset.range _).finite_toSet fun i _ => ?_
-  refine Set.Finite.biUnion (Finset.range _).finite_toSet fun s _ => ?_
-  exact Set.toFinite _
+  exact Set.Finite.biUnion (Finset.range _).finite_toSet fun s _ => Set.toFinite _
 
 theorem thrSet_nonempty (C : ℝ) (de de' : ℕ → ℝ) (T T' : ℝ) (l : ℕ) : (G.thrSet C de de' T T' l).Nonempty :=
   ⟨_, 1, le_rfl, by omega, Or.inl ⟨rfl, rfl⟩⟩

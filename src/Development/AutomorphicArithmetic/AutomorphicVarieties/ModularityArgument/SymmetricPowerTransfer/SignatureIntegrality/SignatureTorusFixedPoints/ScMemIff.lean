@@ -99,8 +99,7 @@ private theorem H_of_mem (V : Lev k) (hn : 0 < n) {d : Fin n → kˣ} (hd : SDom
   have h1 : dg ((fun _ => z) * t * d) ∈ V.DC d := ⟨_, mul_mem (inv_mem hj) ha, _, mul_mem hb hj, e3⟩
   have h2 := (diagDC k V n d _ (dom_of d hd)).1 h1 ⟨0, hn⟩
   have h3 : z * t ⟨0, hn⟩ * d ⟨0, hn⟩ / d ⟨0, hn⟩ ∈ V.H := h2
-  have h4 := div_mem h3 (ht ⟨0, hn⟩ trivial)
-  simpa using h4
+  simpa using div_mem h3 (ht ⟨0, hn⟩ trivial)
 
 private theorem mem_ZJ (V : Lev k) (u : GL (Fin n) k) :
     u ∈ V.ZJ n ↔ ∃ z : kˣ, ∃ j ∈ V.J n, u = GeneralLinearGroup.scalar (Fin n) z * j := by
@@ -165,12 +164,10 @@ theorem UpperTheory.V.Z.Sym.Sig.eqZ :
     refine wd _ _ _ _ (hJ (u * v)) (mul_mem (hJ u) (hJ v)) ?_
     rw [← eZ (u * v), Subgroup.coe_mul, eZ u, eZ v, map_mul, mul_assoc, mul_assoc,
       ← mul_assoc (Jf u), ← sc_comm, mul_assoc]
-  · intro z j u hj e
-    exact wd _ _ _ _ (hJ u) hj ((eZ u).symm.trans e)
+  · exact fun z j u hj e => wd _ _ _ _ (hJ u) hj ((eZ u).symm.trans e)
   · intro d hd
     refine ⟨?_, ?_, ?_, ?_⟩
-    · intro z g hg
-      exact fZ_eq V ω hω hn hd (by rwa [inv_mul_cancel_left])
+    · exact fun z g hg => fZ_eq V ω hω hn hd (by rwa [inv_mul_cancel_left])
     · intro z g
       by_cases h : ∃ c : kˣ, (GeneralLinearGroup.scalar (Fin n) c)⁻¹ * g ∈ V.DC d
       · obtain ⟨c, hc⟩ := h
@@ -178,9 +175,9 @@ theorem UpperTheory.V.Z.Sym.Sig.eqZ :
           convert hc using 1
           rw [map_mul]
           group), map_mul, mul_inv, Units.val_mul]
-      · have h0 : V.fZ ω d g = 0 := dif_neg h
+      · have h0 : V.fZ ω d g = 0 := dite_eq_right h
         have h1 : V.fZ ω d (GeneralLinearGroup.scalar (Fin n) z * g) = 0 :=
-          dif_neg (fun ⟨c, hc⟩ => h ⟨z⁻¹ * c, by
+          dite_eq_right (fun ⟨c, hc⟩ => h ⟨z⁻¹ * c, by
             convert hc using 1
             rw [map_mul, map_inv]
             group⟩)
@@ -189,8 +186,8 @@ theorem UpperTheory.V.Z.Sym.Sig.eqZ :
       by_cases h : ∃ c : kˣ, (GeneralLinearGroup.scalar (Fin n) c)⁻¹ * g ∈ V.DC d
       · obtain ⟨c, hc⟩ := h
         rw [fZ_eq V ω hω hn hd hc, fZ_eq V ω hω hn hd (dc_tr V hu hu' hc)]
-      · have h0 : V.fZ ω d g = 0 := dif_neg h
-        have h1 : V.fZ ω d (u * g * u') = 0 := dif_neg (fun ⟨c, hc⟩ => h ⟨c, by
+      · have h0 : V.fZ ω d g = 0 := dite_eq_right h
+        have h1 : V.fZ ω d (u * g * u') = 0 := dite_eq_right (fun ⟨c, hc⟩ => h ⟨c, by
           have h2 := dc_tr V (inv_mem hu) (inv_mem hu') hc
           have e : u⁻¹ * (u * g * u') * u'⁻¹ = g := by group
           rwa [e] at h2⟩)
@@ -201,7 +198,7 @@ theorem UpperTheory.V.Z.Sym.Sig.eqZ :
       intro y hy
       have hex : ∃ c : kˣ, (GeneralLinearGroup.scalar (Fin n) c)⁻¹ * y.out ∈ V.DC d := by
         by_contra h
-        exact hy (dif_neg h)
+        exact hy (dite_eq_right h)
       obtain ⟨c, a, ha, b, hb, e⟩ := hex
       obtain ⟨j, hj⟩ := QuotientGroup.mk_out_eq_mul (V.J n) (a * dg d)
       refine ⟨((a * dg d : GL (Fin n) k) : GL (Fin n) k ⧸ V.J n), ⟨⟨a, ha⟩, rfl⟩, ?_⟩

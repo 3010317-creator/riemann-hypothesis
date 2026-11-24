@@ -154,11 +154,11 @@ theorem exists_bound_of_coeff_ne_zero (hσ : IsSmooth σ) (hc : IsCuspidal σ) (
         exact ⟨μ k, Finset.mem_image_of_mem _ (by simp [hk])⟩) else 0
     have hcb_le : ∀ k, cb (β k) ≤ μ k := by
       intro k
-      simp only [cb, dif_pos (⟨k, rfl⟩ : ∃ j, β j = β k)]
+      simp only [cb, dite_eq_left (⟨k, rfl⟩ : ∃ j, β j = β k)]
       exact Finset.min'_le _ _ (Finset.mem_image_of_mem _ (by simp))
     have hcb_mem : ∀ j, ∃ k, β k = β j ∧ cb (β j) = μ k := by
       intro j
-      simp only [cb, dif_pos (⟨j, rfl⟩ : ∃ k, β k = β j)]
+      simp only [cb, dite_eq_left (⟨j, rfl⟩ : ∃ k, β k = β j)]
       obtain ⟨k, hk, hkeq⟩ := Finset.mem_image.1
         (Finset.min'_mem ((Finset.univ.filter fun k => β k = β j).image μ) _)
       exact ⟨k, (Finset.mem_filter.1 hk).2, hkeq.symm⟩
@@ -209,8 +209,7 @@ theorem det_mem_integer_of_fintype {ι : Type*} [Fintype ι] [DecidableEq ι] {A
   exact Subring.zsmul_mem _ (Subring.prod_mem _ fun i _ => h _ _) _
 
 theorem ord_nonneg_of_mem {x : F} (hx : x ≠ 0) (h : x ∈ 𝒪[F]) : 0 ≤ LocalField.ord x := by
-  rw [← LocalField.mem_valBall_iff_le_ord hx, LocalField.mem_valBall_zero_iff]
-  exact h
+  rwa [← LocalField.mem_valBall_iff_le_ord hx, LocalField.mem_valBall_zero_iff]
 
 theorem ord_eq_zero_of_mul_eq_one {x y : F} (hxy : x * y = 1) (hx : x ∈ 𝒪[F]) (hy : y ∈ 𝒪[F]) :
     LocalField.ord x = 0 := by
@@ -353,7 +352,7 @@ theorem blockOrd_diagPow (b : Set.range β) (μ : Fin n → ℤ) :
     simp only [blocks, Cartan.coe_diagPow, Matrix.diagonal_apply]
     by_cases h : i = j
     · subst h; simp
-    · rw [if_neg (fun e => h (Subtype.ext e)), if_neg h]
+    · rw [ite_eq_right (fun e => h (Subtype.ext e)), ite_eq_right h]
   rw [blockOrd, hmat, Matrix.det_diagonal,
     ord_prod _ fun i _ => zpow_ne_zero _ (Cartan.uniformizer_ne_zero F)]
   exact Finset.sum_congr rfl fun i _ => ord_zpow_uniformizer (μ i.1)
@@ -708,8 +707,7 @@ theorem map_eq_one_of_mem_unipotentRadical (θ : levi F n β →* NNReal) (hθ :
     have : θ t * θ t⁻¹ = 1 := by rw [← map_mul, mul_inv_cancel, map_one]
     rw [h0, zero_mul] at this
     exact zero_ne_one this
-  rw [map_mul, map_mul, map_inv, mul_comm (θ t), mul_assoc, mul_inv_cancel₀ ht0, mul_one] at h
-  exact h
+  rwa [map_mul, map_mul, map_inv, mul_comm (θ t), mul_assoc, mul_inv_cancel₀ ht0, mul_one] at h
 
 theorem blockOrd_of_mem_unipotentRadical (b : Set.range β) {γ : Fin n → ℕ} {u : levi F n β}
     (hu : (u : GL (Fin n) F) ∈ unipotentRadical F n γ) : blockOrd F b u = 0 := by
@@ -739,16 +737,14 @@ theorem map_mul_right_eq_self_of_mem_unipotentRadical [MeasurableSpace (levi F n
       simp only [V, SetLike.mem_coe, Subgroup.mem_comap, MulEquiv.coe_toMonoidHom,
         MulAut.conj_apply, Set.mem_image]
       constructor
-      · intro hx
-        exact ⟨_, hx, by group⟩
+      · exact fun hx => ⟨_, hx, by group⟩
       · rintro ⟨y, hy, rfl⟩
         convert hy using 1
         group
     rw [this]
     exact isCompact_leviIntegral.image ((continuous_const.mul continuous_id).mul continuous_const)
   have huV : u ∈ V := by
-    simp only [V, Subgroup.mem_comap, MulEquiv.coe_toMonoidHom, MulAut.conj_apply]
-    exact ht
+    simpa only [V, Subgroup.mem_comap, MulEquiv.coe_toMonoidHom, MulAut.conj_apply] using ht
   have hmeas : Measurable (· * u : levi F n β → levi F n β) := measurable_mul_const u
   have hpre : (· * u) ⁻¹' (V : Set (levi F n β)) = V := by
     ext x

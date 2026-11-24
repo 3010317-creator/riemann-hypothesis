@@ -110,8 +110,7 @@ theorem evenNorms_of_unit_nonsquare {K : Type} [Field K] (w : Valuation K ℤᵐ
         field_simp; ring
       have hs : IsSquare (δ * (b / a) ^ 2) := by
         apply hsq
-        rw [e, Valuation.map_neg, map_div₀, ha2, div_lt_one₀ (pow_pos (zero_lt_iff.2 ha0) 2)]
-        exact hlt
+        rwa [e, Valuation.map_neg, map_div₀, ha2, div_lt_one₀ (pow_pos (zero_lt_iff.2 ha0) 2)]
       obtain ⟨r, hr⟩ := hs
       refine ⟨r * a / b, ?_⟩
       have : δ = (δ * (b / a) ^ 2) * (a / b) ^ 2 := by field_simp
@@ -132,8 +131,7 @@ theorem evenNorms_of_odd_place : ∀ (F : Type) [Field F] [NumberField F]
   refine evenNorms_of_unit_nonsquare _ (fun x hx => ?_) δ hδ hn
   apply GlobalTheory.LocalQuad.isSquare_of_valued_sub_one_lt F v x
   have : (4 : v.adicCompletion F) = 2 * 2 := by norm_num
-  rw [this, map_mul, h2, one_mul]
-  exact hx
+  rwa [this, map_mul, h2, one_mul]
 
 end GlobalTheory.QNorm
 end -- clump:auto
@@ -238,8 +236,7 @@ theorem mem_sUnits_sup_of_local_orders {F : Type} [Field F] [NumberField F]
       by_cases hwT : w ∈ T
       · rw [Finset.prod_eq_single w]
         · exact hnv w hw
-        · intro v hv hne
-          exact hnw v (Finset.mem_sdiff.1 hv).2 w hw hne.symm
+        · exact fun v hv hne => hnw v (Finset.mem_sdiff.1 hv).2 w hw hne.symm
         · intro h'; exact absurd hwT h'
       · have h1 : w.valuation F (t : F) = 1 := by
           by_contra hc

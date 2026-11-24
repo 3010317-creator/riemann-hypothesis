@@ -58,8 +58,7 @@ private theorem cyc_ine {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
   haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans ℚ F Ω⟩
   have hval : A.valuation (l : Ω) < 1 := by
-    have h1 := (hA (l : 𝓞 F)).2 hl
-    simpa only [map_natCast] using h1
+    simpa only [map_natCast] using (hA (l : 𝓞 F)).2 hl
   obtain ⟨u, hu⟩ := GlobalTheory.CycDec.exists_unit_infinite_order l
   obtain ⟨σ, hσI, hσu⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l A hval u
   let f : ℕ → (F →ₐ[ℚ] Ω) := fun k =>
@@ -97,8 +96,7 @@ private theorem cyc_ine {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     apply hinj
     rw [map_zpow, map_one]
     have : cycBar F Ω l g = Units.map (((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom : ℤ_[l] →+* Qbar l) : ℤ_[l] →* Qbar l) (cycZ F Ω l g) := rfl
-    rw [← hz, ← this]
-    exact heq
+    rwa [← hz, ← this]
   rw [← zpow_natCast, ← zpow_mul] at h1
   exact hu _ (mul_ne_zero (by exact_mod_cast hk0.ne') hn) h1
 

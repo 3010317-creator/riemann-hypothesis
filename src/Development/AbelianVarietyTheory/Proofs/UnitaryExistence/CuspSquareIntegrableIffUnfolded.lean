@@ -228,8 +228,7 @@ theorem _root_.GlobalTheory.PeterssonFrameChange.frame_change : ∀ (E : Type) [
       (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat y' (τ' τ)).map (starRingEnd ℂ) = J := by
     intro τ
     have := hy0' (τ' τ)
-    rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.gram_eq, ← hp] at this
-    exact this
+    rwa [_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.gram_eq, ← hp] at this
   have hMdet : ∀ τ : X.Ψ, (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat y τ).det ≠ 0 := fun τ => det_ne_zero_of_form_eq hJdet (hM τ)
   have hM'det : ∀ τ : X.Ψ, (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat y' (τ' τ)).det ≠ 0 := fun τ => det_ne_zero_of_form_eq hJdet (hM' τ)
   set B : X.Ψ → Matrix (Fin r) (Fin r) ℂ := fun τ =>
@@ -375,8 +374,7 @@ theorem map_restrict_subgroup_eq_smul_haar (G : Type) [Group G] [MeasurableSpace
     refine ⟨interior W, interior_mem_nhds.2 hW, ?_⟩
     rw [happ _ isOpen_interior.measurableSet]
     refine lt_of_le_of_lt (measure_mono ?_) (lt_top_iff_ne_top.2 hW')
-    intro g hg
-    exact ⟨hg.2, interior_subset (s := W) hg.1⟩
+    exact fun g hg => ⟨hg.2, interior_subset (s := W) hg.1⟩
   have h0 : m ≠ 0 := by
     intro h
     have := happ Set.univ MeasurableSet.univ
@@ -422,8 +420,7 @@ theorem map_restrict_subgroup_eq_common_smul_haar : ∀ (G : Type) [Group G] [Me
         map_mul_left_eq_self, map_mul_right_eq_self]
     have h4 : κ k' • (ν k).map α = κ k • ν k := by
       have := congrArg (Measure.map α) h2
-      rw [Measure.map_smul _ hα.aemeasurable, Measure.map_smul _ hα.aemeasurable, h3] at this
-      exact this
+      rwa [Measure.map_smul _ hα.aemeasurable, Measure.map_smul _ hα.aemeasurable, h3] at this
     have h5 : (κ k' * κ k') • ν k = (κ k * κ k) • ν k := by
       rw [mul_smul, h2, smul_comm, h4, mul_smul]
     obtain ⟨K⟩ : Nonempty (TopologicalSpace.PositiveCompacts (R k)) := inferInstance
@@ -500,8 +497,7 @@ theorem unfold_lintegral :
       rw [inv_mul_eq_iff_eq_mul, ← mul_assoc, hx, mul_inv_cancel_right]
     refine ⟨γ, hγ, k, ?_, ?_⟩
     · rw [h2]; exact H.mul_mem hh (H.inv_mem (hKH hz))
-    · rw [h2, map_mul, map_inv, hK k z hz, inv_one, mul_one, he, mul_inv_cancel_left]
-      exact hw
+    · rwa [h2, map_mul, map_inv, hK k z hz, inv_one, mul_one, he, mul_inv_cancel_left]
   have uniq : ∀ k k' y, ∀ δ ∈ Γ, y ∈ E k → δ * y ∈ E k' → k = k' ∧ δ = 1 := by
     intro k k' y δ hδ hy hy'
     obtain rfl : k = k' := hsep _ _ _ _ (inj1 k k' y δ hδ hy.1 hy'.1)
@@ -712,8 +708,7 @@ theorem form_eq_smul_of_const_on_orbit (A B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ
           smul_eq_mul, Complex.conj_ofReal]
         fun_prop
       have hpos : 0 < (fun t : ℝ => a * (B (x₀ + (t : ℂ) • y) (x₀ + (t : ℂ) • y)).re) 0 := by
-        simp only [Complex.ofReal_zero, zero_smul, add_zero]
-        exact mul_self_pos.mpr ha0
+        simpa only [Complex.ofReal_zero, zero_smul, add_zero] using mul_self_pos.mpr ha0
       have hev := hcont.continuousAt.eventually (lt_mem_nhds hpos)
       obtain ⟨ε, hε, hball⟩ := Metric.eventually_nhds_iff.mp hev
       have h1 := reach3 _ (hball (y := ε / 2) (by
@@ -790,8 +785,7 @@ theorem hermitian_eq_smul_of_const_on_unitary_orbit :
   obtain ⟨t, ht, hAB⟩ := form_eq_smul_of_const_on_orbit (matForm A) (matForm B)
     (matForm_symm hA) (matForm_symm hB) (Pi.single i 1) e he
     (by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       apply hdet
       refine Matrix.det_eq_zero_of_row_eq_zero i fun j => ?_
       rw [← matForm_single B i j, hcon])
@@ -917,8 +911,7 @@ theorem rigid : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ)
       rw [har, Function.update_self, Matrix.mul_assoc (mat (x0 k) τ), Matrix.nonsing_inv_mul_cancel_left _ _ hd.isUnit,
         Matrix.nonsing_inv_mul_cancel_right _ _ hd.isUnit]
     dsimp only at h1
-    rw [e, FrameDegreeData.gram_mul] at h1
-    exact h1
+    rwa [e, FrameDegreeData.gram_mul] at h1
   refine ⟨fun k τ => ?_, fun g τ => ?_⟩
   · obtain ⟨g, hg⟩ := (hx0 k).2
     obtain ⟨t, ht, h⟩ := key g k _ hg τ
@@ -978,8 +971,7 @@ theorem exists_real_of_orth (X : Data E r) {y z : Frame X.Ψ r} (hy : y ∈ Orth
     have e : mat z τ = mat y τ * ((mat y τ)⁻¹ * mat z τ) := (Matrix.mul_nonsing_inv_cancel_left _ _ hb.isUnit).symm
     refine ⟨⟨Matrix.GeneralLinearGroup.mkOfDetNeZero _ hd, ?_⟩, e⟩
     have h1 := hz τ
-    rw [e, FrameDegreeData.gram_mul, hy τ] at h1
-    exact h1
+    rwa [e, FrameDegreeData.gram_mul, hy τ] at h1
   choose s hs using key
   exact ⟨s, hs⟩
 
@@ -1001,8 +993,7 @@ theorem exists_hom_real (X : Data E r) {y : Frame X.Ψ r} (hy : y ∈ OrthFr X) 
       rw [← hy τ, FrameDegreeData.gram_eq, FrameDegreeData.gram_eq, Matrix.transpose_mul, Matrix.map_mul]
       conv_rhs => rw [← ha τ g]
       simp only [Matrix.mul_assoc]
-    rw [← hφ, FrameDegreeData.gram_mul, hy τ] at h1
-    exact h1
+    rwa [← hφ, FrameDegreeData.gram_mul, hy τ] at h1
   refine ⟨MonoidHom.pi fun τ => (φ τ).codRestrict _ (hm τ), continuous_pi fun τ => Continuous.subtype_mk ?_ _, hφ⟩
   have : Continuous (ar τ).toHomUnits :=
     Units.continuous_iff.2 ⟨hc τ, ((hc τ).comp continuous_inv).congr fun g => by simp [← map_inv]⟩

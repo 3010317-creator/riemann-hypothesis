@@ -196,8 +196,7 @@ theorem lamAt_b' {Rk : Ranks} (h : HCParam Rk) (j : Fin Rk.m) :
   have hc : ∀ (x y : ℕ) (hx : x < Rk.m) (hy : y < Rk.m), x = y → h.b ⟨x, hx⟩ = h.b ⟨y, hy⟩ := by
     rintro x _ _ _ rfl; rfl
   unfold Formalism.L2.NTheta.lamAt
-  rw [dite_eq_right (by omega), dite_eq_left (by omega)]
-  rw [hc _ _ _ j.2 (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_left (by omega), hc _ _ _ j.2 (by omega)]
 
 theorem lamAt_v' {Rk : Ranks} (h : HCParam Rk) (j : Fin (Rk.k - 1)) :
     Formalism.L2.NTheta.lamAt h j = h.v j := by
@@ -229,7 +228,7 @@ theorem parA_fst (D : D7) (ρ : D.what₂.Tau) {n : ℕ} (hn : n = D.R.r) :
       rw [hc]
       by_cases h2 : (c : ℕ) = 0 ∨ Even (c : ℕ)
       · exact Or.inr (Or.inr ⟨c, rfl, h2⟩)
-      · push_neg at h2
+      · push Not at h2
         exact Or.inl ⟨c, rfl, h2.1, h2.2⟩
 
 theorem tauE_inj {D : D7} {τ ρ : D.what₂.Tau} (h : tauE D τ = tauE D ρ) : τ = ρ :=
@@ -243,7 +242,7 @@ theorem tauE_ne_conj' {D : D7} (τ ρ : D.what₂.Tau) : tauE D τ ≠ (starRing
   have e1 : (D.eTau τ).1.1.2 = ((D.eTau ρ).1 * D.R.cc).1.2 :=
     congrArg (fun g : D.R.GG => g.1.2) (Formalism.IndefR.Conj.emb_injective h)
   have hc := Formalism.IndefR.Conj.snd_side (D := D) false
-  simp only [Bool.false_eq_true, if_false] at hc
+  simp only [Bool.false_eq_true, ite_false] at hc
   rw [show ((D.eTau ρ).1 * D.R.cc).1.2 = (D.eTau ρ).1.1.2 * (D.R.cc).1.2 from rfl] at e1
   rw [(Formalism.HC.Frame.mem_Psi_iff _).1 (D.eTau τ).2, (Formalism.HC.Frame.mem_Psi_iff _).1 (D.eTau ρ).2, one_mul, hc] at e1
   exact absurd e1 (by decide)
@@ -275,7 +274,7 @@ theorem parAt_fst {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : 
     have hi := i.2
     rw [D.sp.W_sigval _ (Nat.le_add_left _ _) i.2]
     simp only [Ranks.sigW, Ranks.r]; omega
-  rw [parAt, if_pos (by rw [h1]; exact h2), kapAt, h1]
+  rw [parAt, ite_eq_left (by rw [h1]; exact h2), kapAt, h1]
   generalize ((Wc D i).sig (tauE D ρ)).1 = p at hpq ⊢
   generalize ((Wc D i).sig (tauE D ρ)).2 = q at hpq ⊢
   have ho : Odd (p + q) := hpq ▸ Formalism.L2.NTheta.odd_r D.R
@@ -945,15 +944,15 @@ theorem exists_reps_through : ∀ (G : Type) [Group G] [TopologicalSpace G] (m :
   have hf : ∀ i, R (f i) i := by
     intro i
     by_cases h : R i i₀
-    · simp only [f, if_pos h]; exact hsymm h
-    · simp only [f, if_neg h]; exact Quotient.mk_out (s := S) i
+    · simp only [f, ite_eq_left h]; exact hsymm h
+    · simp only [f, ite_eq_right h]; exact Quotient.mk_out (s := S) i
   have hfc : ∀ i j, R i j → f i = f j := by
     intro i j hij
     by_cases h : R i i₀
     · have h' : R j i₀ := htrans (hsymm hij) h
-      simp only [f, if_pos h, if_pos h']
+      simp only [f, ite_eq_left h, ite_eq_left h']
     · have h' : ¬ R j i₀ := fun h' => h (htrans hij h')
-      simp only [f, if_neg h, if_neg h']
+      simp only [f, ite_eq_right h, ite_eq_right h']
       rw [Quotient.sound (s := S) hij]
   let T : Finset (Fin m) := Finset.univ.image f
   let e : T ≃ Fin T.card := T.equivFin
@@ -968,7 +967,7 @@ theorem exists_reps_through : ∀ (G : Type) [Group G] [TopologicalSpace G] (m :
       exact htrans (hsymm (hf x)) (htrans h1 (hf y))
     have : (e.symm k).1 = (e.symm l).1 := by rw [← hx, ← hy]; exact hfc x y hxy
     exact e.symm.injective (Subtype.ext this)
-  · have hmem : i₀ ∈ T := Finset.mem_image.2 ⟨i₀, Finset.mem_univ _, by simp only [f, if_pos (hrefl i₀)]⟩
+  · have hmem : i₀ ∈ T := Finset.mem_image.2 ⟨i₀, Finset.mem_univ _, by simp only [f, ite_eq_left (hrefl i₀)]⟩
     exact ⟨e ⟨i₀, hmem⟩, by simp⟩
   · intro i
     have hmem : f i ∈ T := Finset.mem_image_of_mem f (Finset.mem_univ i)
@@ -1125,8 +1124,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem exists_levelOff_subset [Submodule.IsFullLattice E L] (N : Set (GAd σ J)) (hN : IsOpen N)
     (h1 : (1 : GAd σ J) ∈ N) : ∃ S, (levelOff σ J L S : Set (GAd σ J)) ⊆ N := by
   classical
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨g, hg⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
     (fun S : Finset (HeightOneSpectrum (𝓞 F)) => (levelOff σ J L S : Set (GAd σ J)) \ N)
     (fun S S' => ⟨S ∪ S', Set.diff_subset_diff_left (levelOff_anti σ J L Finset.subset_union_left),
@@ -1180,8 +1178,7 @@ theorem dense_locFin (D : D7) (V : HSp D) :
   refine ⟨y, ?_, hy⟩
   show (y : GA D V) ∈ U
   have : (y : GA D V) = x := hye
-  rw [this, ← hxe]
-  exact hp
+  rwa [this, ← hxe]
 
 theorem finLoc_transport {D : D7} {V V' : HSp D}
     (j : ∀ v, GLoc D.sp.cm.sig V.gram v ≃ₜ* GLoc D.sp.cm.sig V'.gram v) (Φ : GfC V ≃ₜ* GfC V')
@@ -1666,8 +1663,7 @@ theorem geomExpansionX_of_parts : GlobalTheory.TrMult.EllTraceX → GlobalTheory
       fun P => GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots.term V lam μf ff P (dta P) (dtf P) (dt P) := funext heq
   refine ⟨fun P => (hOK P).1, hfun ▸ hfin, ?_⟩
   have h1 := hE D V lam S M T U μa μf μ fa ff hT
-  rw [hint, hfun] at h1
-  exact h1
+  rwa [hint, hfun] at h1
 
 theorem traceEqX_of_geomExpansionX : GeomExpansionX → TraceEqX := by
   intro hG D V lam S M T U μa μf μ _ _ fa ff hTD hO V' hr S' M' hlam' j hj μa' μ' _ _ fa' hR' hA' hO'
@@ -1678,8 +1674,7 @@ theorem traceEqX_of_geomExpansionX : GeomExpansionX → TraceEqX := by
   have hTD' : GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots.IsTestDataX V' lam' M' T' U' μa' (fun v => (μf v).map (j v)) μ' fa' (transfer j ff) := by
     refine ⟨hr ▸ hodd, ?_, hlam', hNF hnf, hR', hA', hTF μf ff hTFin⟩
     intro ρ i k hik
-    have h := hgap ρ (i.cast hr) (k.cast hr) (by simpa using hik)
-    simpa [hr, lam'] using h
+    simpa [hr, lam'] using hgap ρ (i.cast hr) (k.cast hr) (by simpa using hik)
   choose dta dtf dt hdt using fun (r : ℕ) (P : PPol D.sp.cm.sig r) => GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots.exists_isTorusMeas P
   obtain ⟨hFin, -, hTr⟩ := hG D V lam S M T U μa μf μ fa ff ⟨hodd, hgap, hMl, hnf, hRP, hTA, hTFin⟩ hO
     (dta _) (dtf _) (dt _) (hdt _)

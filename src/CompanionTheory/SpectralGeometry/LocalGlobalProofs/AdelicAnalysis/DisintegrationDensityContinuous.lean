@@ -110,8 +110,7 @@ theorem BumpFamily.measurable_open [LocallyCompactSpace V] [SecondCountableTopol
   refine measurable_of_tendsto_metrizable hmeas (tendsto_pi_nhds.mpr fun b => ?_)
   have hlow : Filter.Tendsto (fun n => fib b (K n)) Filter.atTop (𝓝 (fib b O)) := by
     have h2 := tendsto_measure_iUnion_atTop (μ := fib b) hKmono
-    rw [hKU] at h2
-    exact h2
+    rwa [hKU] at h2
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le hlow tendsto_const_nhds
     (fun n => le_lintegral_bump (fib b) (hKc n) (hφ0 n) (hφK n))
     (fun n => lintegral_bump_le (fib b) hO (hφ1 n) (hφs n))
@@ -153,8 +152,7 @@ theorem BumpFamily.measurable_apply [LocallyCompactSpace V] [SecondCountableTopo
     intro b
     have hmono : Monotone fun n => A ∩ W n := fun m n hmn => Set.inter_subset_inter_right _ (hWmono hmn)
     have h2 := tendsto_measure_iUnion_atTop (μ := fib b) hmono
-    rw [← Set.inter_iUnion, hWU, measure_inter_conull (hc b)] at h2
-    exact h2
+    rwa [← Set.inter_iUnion, hWU, measure_inter_conull (hc b)] at h2
   exact measurable_of_tendsto_metrizable hWn (tendsto_pi_nhds.mpr hlim)
 
 end Meas
@@ -178,8 +176,7 @@ theorem fibre_family_basic : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCom
   have hmemι : ∀ b w, w ∈ f ⁻¹' {ι b} → g w = b := by
     intro b w hw
     apply hι
-    rw [← hfv w]
-    exact hw
+    rwa [← hfv w]
   have hfibB : ∀ b, b ∉ B → fib b = 0 := by
     intro b hb
     have hempty : f ⁻¹' {ι b} ∩ g ⁻¹' B = ∅ := by
@@ -196,8 +193,7 @@ theorem fibre_family_basic : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCom
     by_cases hb : b ∈ B
     · by_cases hgv : g v = b
       · have hvU : v ∈ g ⁻¹' B := by
-          rw [Set.mem_preimage, hgv]
-          exact hb
+          rwa [Set.mem_preimage, hgv]
         obtain ⟨K, hKn, hKU, hKc⟩ := local_compact_nhds (hU.mem_nhds hvU)
         exact ⟨K, hKn, hBF.lt_top hU hKc hKU b⟩
       · refine ⟨g ⁻¹' {b}ᶜ, (isClosed_singleton.preimage hg).isOpen_compl.mem_nhds hgv, ?_⟩
@@ -224,8 +220,7 @@ theorem fibre_family_basic : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCom
           refine measure_mono (show C ∩ (f ⁻¹' {ι b} ∩ g ⁻¹' B) ⊆ C ∩ g ⁻¹' D from
             fun w hw => ⟨hw.1, ?_⟩)
           show g w ∈ D
-          rw [hmemι b w hw.2.1]
-          exact hb
+          rwa [hmemι b w hw.2.1]
       _ ≤ ∫⁻ v, ENNReal.ofReal (φ v) ∂(fib b) := le_lintegral_bump (fib b) hC' h0 h1
       _ = ENNReal.ofReal (∫ v, φ v ∂(fib b)) :=
           (ofReal_integral_eq_lintegral_ofReal (hint b (hDB hb)) (ae_of_all _ h0)).symm

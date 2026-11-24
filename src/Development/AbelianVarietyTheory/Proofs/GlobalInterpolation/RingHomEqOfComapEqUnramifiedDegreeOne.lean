@@ -84,8 +84,7 @@ theorem ringHom_eq_of_comap_eq_unramified_degree_one
     · refine lt_of_le_of_ne le_sup_right fun h => hsq ?_
       have h' : ((p : ℕ) : 𝓞 E) ∈ Ideal.span {((p : ℕ) : 𝓞 E)} ⊔ Q.asIdeal ^ 2 :=
         Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)
-      rw [← h] at h'
-      exact h'
+      rwa [← h] at h'
     · rw [pow_one]
       exact sup_le ((Ideal.span_singleton_le_iff_mem _).2 hpQ) (Ideal.pow_le_self two_ne_zero)
   have h3 : ∀ n : ℕ, Q.asIdeal ≤ Ideal.span {((p : ℕ) : 𝓞 E)} ⊔ Q.asIdeal ^ n := by
@@ -105,8 +104,7 @@ theorem ringHom_eq_of_comap_eq_unramified_degree_one
     intro k hk n z hz
     have h := Ideal.mem_map_of_mem k hz
     rw [Ideal.map_pow] at h
-    refine Ideal.pow_right_mono ?_ n h
-    exact Ideal.map_le_iff_le_comap.2 fun r hr => (hk r).1 hr
+    exact Ideal.pow_right_mono (Ideal.map_le_iff_le_comap.2 fun r hr => (hk r).1 hr) n h
   have hpw : ((p : ℕ) : 𝓞 K) ∈ w.asIdeal := by
     simpa using (hφ _).1 hpQ
   have h4 : ∀ (n : ℕ) (x : 𝓞 E), f x - g x ∈ w.asIdeal ^ n := by
@@ -131,7 +129,6 @@ theorem ringHom_eq_of_comap_eq_unramified_degree_one
     have : f x - g x ∈ (⊥ : Ideal (𝓞 K)) := by
       rw [← hb]; exact Ideal.mem_iInf.2 fun n => h4 n x
     exact sub_eq_zero.1 (Ideal.mem_bot.1 this)
-  refine IsFractionRing.ringHom_ext (A := 𝓞 E) fun x => ?_
-  exact congrArg (algebraMap (𝓞 K) K) (h5 x)
+  exact IsFractionRing.ringHom_ext (A := 𝓞 E) fun x => congrArg (algebraMap (𝓞 K) K) (h5 x)
 
 end GlobalTheory

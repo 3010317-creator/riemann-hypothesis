@@ -229,13 +229,11 @@ theorem liftred_exists : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOne
       rw [PadicInt.ker_toZMod, IsLocalRing.mem_maximalIdeal, PadicInt.mem_nonunits]
       rw [PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast]
       exact hent a b
-    rw [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_eq_zero] at hm
-    exact hm
+    rwa [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_eq_zero] at hm
   have hdet : IsUnit Mx.det := by
     by_contra hnu
     have hm : Mx.det ∈ RingHom.ker (PadicInt.toZMod (p := g)) := by
-      rw [PadicInt.ker_toZMod, IsLocalRing.mem_maximalIdeal]
-      exact hnu
+      rwa [PadicInt.ker_toZMod, IsLocalRing.mem_maximalIdeal]
     rw [RingHom.mem_ker, RingHom.map_det,
       show (PadicInt.toZMod (p := g)).mapMatrix Mx = (γ : Matrix (Fin n) (Fin n) (ZMod g)) from hred] at hm
     have hu : IsUnit (γ : Matrix (Fin n) (Fin n) (ZMod g)).det :=
@@ -376,8 +374,7 @@ theorem GLp.inc_map_sub_one_valued_lt_one : ∀ (F : Type) [Field F] [NumberFiel
       Matrix (Fin n) (Fin n) (v.adicCompletion F)) a b - (c : v.adicCompletion F)) =
       (((k : Matrix (Fin n) (Fin n) ℤ_[g]) a b - (c : ℤ_[g]) : ℤ_[g]) : ℚ_[g]) := by
     simp [GlobalTheory.GLp.inc, Matrix.GeneralLinearGroup.map]
-  rw [he, PadicInt.padic_norm_e_of_padicInt]
-  exact hnorm
+  rwa [he, PadicInt.padic_norm_e_of_padicInt]
 
 end GlobalTheory
 end -- clump:auto

@@ -384,7 +384,7 @@ theorem evX_monomial (e : Fin m × Fin n × Bool →₀ ℕ) (c : ℂ) (v : Fin 
   rw [Fintype.prod_prod_type]
   refine Finset.prod_congr rfl fun j _ => ?_
   rw [Fintype.prod_bool]
-  simp only [if_true, Bool.false_eq_true, if_false]
+  simp only [ite_true, Bool.false_eq_true, ite_false]
   ring
 
 theorem gZ_diag (sg : ℤˣ) (w : Fin n → ℂ) (v : Fin m → Fin n → ℂ) :
@@ -645,8 +645,7 @@ theorem im_neg_inv {sg : ℤˣ} {w : ℂ} (hw : 0 < ((sg : ℤ) : ℝ) * w.im) :
 theorem diag_add_one (w : Fin n → ℂ) : Matrix.diagonal w + 1 = Matrix.diagonal fun j => w j + 1 := by
   rw [← Matrix.diagonal_one, Matrix.diagonal_add]
 
-theorem inG_nbLc {c : Matrix (Fin n) (Fin n) ℂ} (hc : cᴴ = c) : InG (nbLc c) := by
-  exact inG_nb hc
+theorem inG_nbLc {c : Matrix (Fin n) (Fin n) ℂ} (hc : cᴴ = c) : InG (nbLc c) := inG_nb hc
 
 def nbH (c : Matrix (Fin n) (Fin n) ℂ) : GR n := if h : cᴴ = c then toGR _ (inG_nbLc h) else 1
 
@@ -700,8 +699,7 @@ theorem pg_jG_diag (h : LocHyp sg L) {d : ℕ} {z : Fin n → ℂ} (hz : ∀ j, 
   have p3 : IsPG sg d (Matrix.diagonal fun j => -(z j + 1)⁻¹ + 1)
       (chp ((sg : ℤ) : ℂ) (η • (-1 : Matrix (Fin n) (Fin n) ℂ)) (lFT C s (L (nG 1) f))) := by
     have := pg_chp (η • (-1 : Matrix (Fin n) (Fin n) ℂ)) p2
-    rw [e1] at this
-    exact this
+    rwa [e1] at this
   have hz2 : ∀ j, 0 < ((sg : ℤ) : ℝ) * (-(z j + 1)⁻¹ + 1).im := fun j => by
     rw [Complex.add_im, Complex.one_im, add_zero]
     exact im_neg_inv (hz1' j)
@@ -716,8 +714,7 @@ theorem pg_jG_diag (h : LocHyp sg L) {d : ℕ} {z : Fin n → ℂ} (hz : ∀ j, 
   rw [mR_nG h1, mob_nU, diag_add_one] at p8
   have e : (fun j => (-z j)⁻¹) = fun j => -(-(-(-(z j + 1)⁻¹ + 1)⁻¹)⁻¹)⁻¹ + 1 :=
     funext fun j => alg1 _ (hz0 j) (hz1 j)
-  rw [e]
-  exact p8
+  rwa [e]
 
 theorem unit_det_of_unitary {U : Matrix (Fin n) (Fin n) ℂ} (hU : Uᴴ * U = 1) : IsUnit U.det :=
   Matrix.isUnit_det_of_left_inverse hU
@@ -984,10 +981,8 @@ theorem pth_cont (i0 : Fin n) : Continuous (pth i0) := by
     unfold dT
     refine Continuous.matrix_diagonal (continuous_pi fun i => ?_)
     by_cases h : i = i0
-    · simp only [h, if_true]
-      exact Complex.continuous_ofReal
-    · simp only [h, if_false]
-      exact continuous_const
+    · simpa only [h, ite_true] using Complex.continuous_ofReal
+    · simpa only [h, ite_false] using continuous_const
   have hnb : ∀ f : ℝ → Matrix (Fin n) (Fin n) ℂ, Continuous f → Continuous fun t => nbM (f t) := by
     intro f hf
     unfold nbM
@@ -996,11 +991,9 @@ theorem pth_cont (i0 : Fin n) : Continuous (pth i0) := by
   apply Continuous.subtype_mk
   rw [Units.continuous_iff]
   refine ⟨?_, ?_⟩
-  · show Continuous fun t => nbM (-dT i0 t)
-    exact hnb _ hdT.neg
+  · exact hnb _ hdT.neg
   · show Continuous fun t => (nbM (-dT i0 t))⁻¹
-    simp only [nbM_inv, neg_neg]
-    exact hnb _ hdT
+    simpa only [nbM_inv, neg_neg] using hnb _ hdT
 
 theorem weight_factor_ne_zero (p q : ℕ) (e : ℤ) (g : GR n) : F0 p q e g ≠ 0 := by
   unfold F0 f0
@@ -1121,17 +1114,12 @@ theorem even_im_hermitian_sub (h : LocHyp sg L) (hn : 0 < n) {k : ℤ}
   have hpos' : ∀ j : ℕ, (0 : ℝ) < 1 / ((j : ℝ) + 1) := fun j => by positivity
   have e1 : L (pth i0 0) (fP 1) 0 * κ = F0 (pOf sg m) (qOf sg m) 0 (pth i0 0) * C := by
     have A := (hφ.tendsto 0).comp hs
-    have B := (hψ.tendsto 0).comp hs
-    refine tendsto_nhds_unique A ?_
-    refine B.congr (fun j => ?_)
-    exact (hpos _ (hpos' j)).symm
+    exact tendsto_nhds_unique A (((hψ.tendsto 0).comp hs).congr (fun j => (hpos _ (hpos' j)).symm))
   have e2 : L (pth i0 0) (fP 1) 0 * κ =
       (-1) ^ k * (-1) ^ m * (F0 (pOf sg m) (qOf sg m) 0 (pth i0 0) * C) := by
     have A := (hφ.tendsto 0).comp hs'
     have B := ((hψ.tendsto 0).comp hs').const_mul ((-1 : ℂ) ^ k * (-1) ^ m)
-    refine tendsto_nhds_unique A ?_
-    refine B.congr (fun j => ?_)
-    exact (hneg _ (neg_neg_of_pos (hpos' j))).symm
+    exact tendsto_nhds_unique A (B.congr (fun j => (hneg _ (neg_neg_of_pos (hpos' j))).symm))
   have hψ0 : F0 (pOf sg m) (qOf sg m) 0 (pth i0 0) * C ≠ 0 := mul_ne_zero (weight_factor_ne_zero _ _ _ _) hC0
   have hε : ((-1 : ℂ)) ^ k * (-1) ^ m = 1 := by
     rw [e1] at e2
@@ -1235,8 +1223,7 @@ def rhoFun (h : LocHyp sg L) (k : GR n) (P : PX m n) : PX m n :=
 open scoped Classical in
 theorem rhoFun_spec (h : LocHyp sg L) {k : GR n} (hk : InK (mR k)) (P : PX m n) :
     (rhoFun h k P).totalDegree ≤ P.totalDegree ∧ L k (fP P) = fP (rhoFun h k P) := by
-  simp only [rhoFun, dif_pos hk]
-  exact Classical.choose_spec (k_poly h k hk P)
+  simpa only [rhoFun, dite_eq_left hk] using Classical.choose_spec (k_poly h k hk P)
 
 
 open scoped Classical in
@@ -1252,7 +1239,7 @@ def rhoOf (h : LocHyp sg L) (k : GR n) : PX m n →ₗ[ℂ] PX m n where
       have e2 := fP_add_smul (1 : ℂ) (rhoFun h k P) (rhoFun h k Q)
       simp only [one_smul] at e2
       rw [e2]
-    · simp [rhoFun, dif_neg hk]
+    · simp [rhoFun, dite_eq_right hk]
   map_smul' a P := by
     by_cases hk : InK (mR k)
     · apply fP_injective
@@ -1263,7 +1250,7 @@ def rhoOf (h : LocHyp sg L) (k : GR n) : PX m n →ₗ[ℂ] PX m n where
       have e2 := fP_add_smul a (rhoFun h k P) 0
       simp only [add_zero, fP_zero] at e2
       simp [e2]
-    · simp [rhoFun, dif_neg hk]
+    · simp [rhoFun, dite_eq_right hk]
 
 theorem cnt_true : cnt (fun _ : Fin m => true) true = m := by
   simp [cnt]

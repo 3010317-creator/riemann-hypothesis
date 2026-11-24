@@ -56,8 +56,7 @@ theorem wh_smulO {O : Type} [CommRing O] [IsDomain O] {σ : Type} {ω : σ → �
   rw [MvPolynomial.coeff_smul, h0, smul_zero]
 
 theorem wh_congr {K : Type} [CommRing K] {σ : Type} {ω : σ → ℕ} {x : MvPolynomial σ K} {n n' : ℕ}
-    (h : IsWeightedHomogeneous ω x n) (e : n = n') : IsWeightedHomogeneous ω x n' := by
-  exact e ▸ h
+    (h : IsWeightedHomogeneous ω x n) (e : n = n') : IsWeightedHomogeneous ω x n' := e ▸ h
 
 theorem wh_chain {K : Type} [CommRing K] {N r t : ℕ} (ω : BVar N r t → ℕ) (ωL : Fin (N + 1) → ℕ)
     (h1 : ∀ a c, ω (Sum.inl (a, c)) = ωL a) (deg : Fin N → ℕ) (y : MvPolynomial (Fin N × Fin r) K)
@@ -127,10 +126,10 @@ theorem deg_split (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ)
   have ha := a.2
   by_cases h2 : a.val = 2 * s
   · have q : a.val / 2 = s := by omega
-    rw [if_pos h2, q, jE_top, chain_deg_U p S aTop b a h2]
+    rw [ite_eq_left h2, q, jE_top, chain_deg_U p S aTop b a h2]
     have := hb.2
     omega
-  · rw [if_neg h2]
+  · rw [ite_eq_right h2]
     have hi : a.val / 2 < s := by omega
     by_cases hs : a.val / 2 < S.sigma
     · rw [jE_S S jl hs]
@@ -138,10 +137,10 @@ theorem deg_split (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ)
     · have hb1 : jE S jl (a.val / 2) ≤ b.o ⟨a.val / 2, hi⟩ ∧ jE S jl (a.val / 2) ≤ coarseC p S aTop b ⟨a.val / 2, hi⟩ :=
         hb.1 ⟨a.val / 2, hi⟩ (by show S.sigma ≤ a.val / 2; omega)
       by_cases hpar : a.val % 2 = 0
-      · rw [segment_chain_degree_even p S aTop b a ⟨a.val / 2, hi⟩ (by show a.val = 2 * (a.val / 2); omega), if_neg hs]
+      · rw [segment_chain_degree_even p S aTop b a ⟨a.val / 2, hi⟩ (by show a.val = 2 * (a.val / 2); omega), ite_eq_right hs]
         have := hb1.1
         omega
-      · rw [chain_deg_E p S aTop b a ⟨a.val / 2, hi⟩ (by show a.val = 2 * (a.val / 2) + 1; omega), if_neg hs]
+      · rw [chain_deg_E p S aTop b a ⟨a.val / 2, hi⟩ (by show a.val = 2 * (a.val / 2) + 1; omega), ite_eq_right hs]
         have := hb1.2
         omega
 
@@ -219,8 +218,7 @@ theorem ssz_wh (O : Type) [CommRing O] [IsDomain O] [NeZero r] (p : ℕ) (S : Se
         exact (isWeightedHomogeneous_X _ ω _).mul (isWeightedHomogeneous_X _ ω _)
       · have := (isWeightedHomogeneous_X (KK O) ω (Sum.inl (finPos (2 * s + 1) (2 * (uTop S l : ℕ)), c))).mul
           (isWeightedHomogeneous_X (KK O) ω (Sum.inl (finPos (2 * s + 1) (2 * (uTop S l : ℕ) + 1), c)))
-        rw [h1, h1] at this
-        exact this
+        rwa [h1, h1] at this
     have hEp : IsWeightedHomogeneous ω ((blockData p S aTop aPlus mm b).Eplus O (r := r))
         (ωL (Fin.castSucc ⟨2 * s, by omega⟩) + ωL (Fin.last _)) := by
       refine IsWeightedHomogeneous.add ?_ (IsWeightedHomogeneous.sum _ _ _ fun c _ => ?_)
@@ -228,8 +226,7 @@ theorem ssz_wh (O : Type) [CommRing O] [IsDomain O] [NeZero r] (p : ℕ) (S : Se
         exact (isWeightedHomogeneous_X _ ω _).mul (isWeightedHomogeneous_X _ ω _)
       · have := (isWeightedHomogeneous_X (KK O) ω (Sum.inl (Fin.castSucc (⟨2 * s, by omega⟩ : Fin (2 * s + 1)), c))).mul
           (isWeightedHomogeneous_X (KK O) ω (Sum.inl (Fin.last (2 * s + 1), c)))
-        rw [h1, h1] at this
-        exact this
+        rwa [h1, h1] at this
     have hA := IsWeightedHomogeneous.prod Finset.univ
       (fun l : Fin S.t => (blockData p S aTop aPlus mm b).Ehat O (r := r) l ^ jl l) _ (fun l _ => (hE l).pow (jl l))
     have hB := hEp.pow jp
@@ -250,9 +247,9 @@ theorem ssz_wh (O : Type) [CommRing O] [IsDomain O] [NeZero r] (p : ℕ) (S : Se
       have e3 : jp * ωL (Fin.castSucc ⟨2 * s, by omega⟩) =
           ∑ a : Fin (2 * s + 1), (if a.val = 2 * s then jp else 0) * ωL (Fin.castSucc a) := by
         rw [Finset.sum_eq_single (⟨2 * s, by omega⟩ : Fin (2 * s + 1))]
-        · rw [if_pos rfl]
+        · rw [ite_eq_left rfl]
         · intro c _ hc
-          rw [if_neg (fun h => hc (Fin.ext h)), zero_mul]
+          rw [ite_eq_right (fun h => hc (Fin.ext h)), zero_mul]
         · intro h; exact absurd (Finset.mem_univ _) h
       rw [e3, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
       refine Finset.sum_congr rfl fun a _ => ?_
@@ -273,9 +270,7 @@ theorem ssz_wh (O : Type) [CommRing O] [IsDomain O] [NeZero r] (p : ℕ) (S : Se
         (S.bPlus - jp) * ωL (Fin.last _)
     ring
   · exact isWeightedHomogeneous_zero _ _ _
-  · intro x y _ _ hx hy
-    exact hx.add hy
-  · intro c x _ hx
-    exact wh_smulO c hx
+  · exact fun x y _ _ hx hy => hx.add hy
+  · exact fun c x _ hx => wh_smulO c hx
 
 end Formalism.MainNotions.ColumnSystems.Pf

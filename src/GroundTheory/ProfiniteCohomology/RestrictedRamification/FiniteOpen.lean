@@ -27,8 +27,7 @@ theorem placesOver_finite {S : Set (HeightOneSpectrum (𝓞 F))} (hS : S.Finite)
     have h := IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 L)
     refine (h.preimage (f := fun w : HeightOneSpectrum (𝓞 L) => w.asIdeal)
       fun a _ b _ hab => HeightOneSpectrum.ext hab).subset ?_
-    intro w hw
-    exact ⟨w.isPrime, hw⟩
+    exact fun w hw => ⟨w.isPrime, hw⟩
   refine (hS.biUnion hfin).subset ?_
   rintro w ⟨v, hv, hwv⟩
   exact Set.mem_biUnion hv hwv
@@ -40,8 +39,7 @@ theorem mem_placesOver_of_natCast_mem {S : Set (HeightOneSpectrum (𝓞 F))} {n 
     {w : HeightOneSpectrum (𝓞 L)} (hw : ((n : ℕ) : 𝓞 L) ∈ w.asIdeal) : w ∈ placesOver S := by
   refine (mem_placesOver_iff (F := F) (L := L)).2 (hn _ ?_)
   change ((n : ℕ) : 𝓞 F) ∈ Ideal.comap (algebraMap (𝓞 F) (𝓞 L)) w.asIdeal
-  rw [Ideal.mem_comap, map_natCast (algebraMap (𝓞 F) (𝓞 L))]
-  exact hw
+  rwa [Ideal.mem_comap, map_natCast (algebraMap (𝓞 F) (𝓞 L))]
 
 
 omit [NumberField F] [NumberField L] in
@@ -68,8 +66,7 @@ theorem mem_gsOpenSubgroup_iff_of_image {L : FiniteSubfield} [Fact (K ≤ L)]
   · intro h y hy
     obtain ⟨x, rfl⟩ := hT' y hy
     exact h x
-  · intro h x
-    exact h _ (hT x)
+  · exact fun h x => h _ (hT x)
 
 theorem exists_gsOpenSubgroup_eq (V : OpenSubgroup (galUnramifiedOutside K.1 ℚ̄ S)) :
     ∃ (L : FiniteSubfield) (_ : Fact (K ≤ L))
@@ -111,10 +108,8 @@ theorem exists_gsOpenSubgroup_eq (V : OpenSubgroup (galUnramifiedOutside K.1 ℚ
     obtain ⟨y, hy, hyx⟩ := (x.2 : (x : ℚ̄) ∈ E')
     have hy' : y ∈ (E : Set KS) := hy
     convert hy' using 1
-    apply Subtype.ext
-    exact hyx.symm
-  · intro y hy
-    exact ⟨⟨(y : ℚ̄), ⟨y, hy, rfl⟩⟩, Subtype.ext rfl⟩
+    exact Subtype.ext hyx.symm
+  · exact fun y hy => ⟨⟨(y : ℚ̄), ⟨y, hy, rfl⟩⟩, Subtype.ext rfl⟩
 
 end OpenSubgroups
 

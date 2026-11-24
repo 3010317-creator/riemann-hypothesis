@@ -201,8 +201,7 @@ theorem dvd_of_inv_eq_laurent_div {P P' : ℂ[X]} (hP' : P'.eval 0 ≠ 0) {L : R
     field_simp at h
     linear_combination h
   have hXP' : ¬ Polynomial.X ∣ P' := by
-    rw [Polynomial.X_dvd_iff, Polynomial.coeff_zero_eq_eval_zero]
-    exact hP'
+    rwa [Polynomial.X_dvd_iff, Polynomial.coeff_zero_eq_eval_zero]
   have hcop : IsCoprime P' (Polynomial.X ^ k) :=
     Irreducible.coprime_pow_of_not_dvd k Polynomial.irreducible_X hXP'
   exact hcop.dvd_of_dvd_mul_right ⟨Q, by rw [heq, mul_comm]⟩
@@ -252,8 +251,7 @@ theorem existsUnique_eq_laurent_div (I : Submodule ℂ (RatFunc ℂ))
         simp only [Set.mem_ofPred_eq, map_add (f := _), add_div] at ha hb ⊢
         exact I.add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_ofPred_eq, map_zero, zero_div]
-        exact I.zero_mem
+        simpa only [Set.mem_ofPred_eq, map_zero, zero_div] using I.zero_mem
       smul_mem' := fun c {Q} hQ => by
         simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, mul_div_assoc] at hQ ⊢
         exact algebraMap_mul_mem hX c hQ }
@@ -263,8 +261,7 @@ theorem existsUnique_eq_laurent_div (I : Submodule ℂ (RatFunc ℂ))
   have hGJ : G ∈ J := Submodule.IsPrincipal.generator_mem J
   have hdvd : ∀ Q, Q ∈ J ↔ G ∣ Q := fun Q => Submodule.IsPrincipal.mem_iff_generator_dvd J
   have hDJ : D ∈ J := by
-    rw [hJ, div_self hφD]
-    exact h1
+    rwa [hJ, div_self hφD]
   have hG0 : G ≠ 0 := by
     intro h
     have := (hdvd D).1 hDJ
@@ -336,8 +333,7 @@ theorem existsUnique_eq_laurent_div (I : Submodule ℂ (RatFunc ℂ))
   have hc : E₁.eval 0 ≠ 0 := by
     intro h
     apply hE₁X
-    rw [Polynomial.X_dvd_iff, Polynomial.coeff_zero_eq_eval_zero]
-    exact h
+    rwa [Polynomial.X_dvd_iff, Polynomial.coeff_zero_eq_eval_zero]
   set c := E₁.eval 0 with hcdef
   have hE₁0 : E₁ ≠ 0 := by
     rintro rfl

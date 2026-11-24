@@ -109,8 +109,7 @@ private theorem Uc_fwd (h : IsoOk i) (c : ℕ) (a : kˣ) (ha : a ∈ UpperTheory
     Units.map (i : k →* k') a ∈ UpperTheory.V.Hi.Uc k' c := by
   obtain ⟨u, hu, rfl⟩ := ha
   have hu1 : (u : 𝒪[k]) - 1 ∈ IsLocalRing.maximalIdeal 𝒪[k] ^ c := by
-    have e := congrArg Units.val (MonoidHom.mem_ker.1 hu)
-    exact Ideal.Quotient.eq.1 (by simpa using e)
+    exact Ideal.Quotient.eq.1 (by simpa using (congrArg Units.val (MonoidHom.mem_ker.1 hu)))
   refine ⟨Units.map (intIso h : 𝒪[k] →* 𝒪[k']) u, ?_, ?_⟩
   · refine MonoidHom.mem_ker.2 (Units.ext ?_)
     have e := intIso_pow h c _ hu1

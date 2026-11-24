@@ -75,8 +75,7 @@ theorem exists_finset_box_reps : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
   have hf : ∀ a ∈ box n R, f (π a) ∈ box n R ∧ π (f (π a)) = π a := by
     intro a ha
     have h : ∃ b ∈ box n R, π b = π a := ⟨a, ha, rfl⟩
-    simp only [f, dif_pos h]
-    exact Classical.choose_spec h
+    simpa only [f, dite_eq_left h] using Classical.choose_spec h
   refine ⟨(hTfin.toFinset.image π).image f, ?_, ?_⟩
   · intro b hb
     simp only [Finset.mem_image, Set.Finite.mem_toFinset] at hb
@@ -86,8 +85,7 @@ theorem exists_finset_box_reps : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
     obtain ⟨t, ht, hat⟩ := Set.mem_iUnion₂.mp (hcov ha)
     have hat' : π a = π t := (hq a t).mpr hat
     refine ⟨f (π a), ⟨?_, ?_⟩, ?_⟩
-    · simp only [Finset.mem_image, Set.Finite.mem_toFinset]
-      exact ⟨π t, ⟨t, ht, rfl⟩, by rw [hat']⟩
+    · simpa only [Finset.mem_image, Set.Finite.mem_toFinset] using ⟨π t, ⟨t, ht, rfl⟩, by rw [hat']⟩
     · exact (hq a _).mp (hf a ha).2.symm
     · rintro b ⟨hb, hab⟩
       simp only [Finset.mem_image, Set.Finite.mem_toFinset] at hb

@@ -84,20 +84,20 @@ theorem coeff_sum_C_mul_X_pow_sub {R : Type*} [CommRing R] (n : ℕ) (b : ℕ �
   simp only [Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
   split_ifs with hk
   · rw [Finset.sum_eq_single (n - k)]
-    · rw [if_pos (by omega), mul_one]
+    · rw [ite_eq_left (by omega), mul_one]
     · intro i hi hne
-      rw [if_neg (by simp at hi; omega), mul_zero]
+      rw [ite_eq_right (by simp at hi; omega), mul_zero]
     · intro h; simp only [Finset.mem_range, not_lt] at h; omega
   · refine Finset.sum_eq_zero fun i hi => ?_
-    rw [if_neg (by simp at hi; omega), mul_zero]
+    rw [ite_eq_right (by simp at hi; omega), mul_zero]
 
 theorem natDegree_sum_C_mul_X_pow_sub {R : Type*} [CommRing R] [Nontrivial R] (n : ℕ) (b : ℕ → R) (hb : b 0 = 1) :
     (∑ i ∈ Finset.range (n + 1), Polynomial.C (b i) * Polynomial.X ^ (n - i)).natDegree = n := by
   refine Polynomial.natDegree_eq_of_le_of_coeff_ne_zero ?_ ?_
   · rw [Polynomial.natDegree_le_iff_coeff_eq_zero]
     intro N hN
-    rw [coeff_sum_C_mul_X_pow_sub, if_neg (by exact_mod_cast not_le.2 hN)]
-  · rw [coeff_sum_C_mul_X_pow_sub, if_pos le_rfl, Nat.sub_self, hb]
+    rw [coeff_sum_C_mul_X_pow_sub, ite_eq_right (by exact_mod_cast not_le.2 hN)]
+  · rw [coeff_sum_C_mul_X_pow_sub, ite_eq_left le_rfl, Nat.sub_self, hb]
     exact one_ne_zero
 
 theorem scaleRoots_sum_C_mul_X_pow_sub {R : Type*} [CommRing R] [Nontrivial R] (n : ℕ) (b : ℕ → R) (hb : b 0 = 1)
@@ -172,8 +172,7 @@ theorem algebraicIndependent_ratios {D : ℕ} {Ω : Type} [Field Ω] [CharZero �
   have hyz : ((fun k => y k / y a) ∘ Subtype.val) = z := by
     funext k; simp [y, hy, k.2]
   rw [hyz] at h1
-  rw [map_zero, ← MvPolynomial.coe_aeval_eq_eval]
-  exact h1
+  rwa [map_zero, ← MvPolynomial.coe_aeval_eq_eval]
 
 theorem adjoin_ratios_eq {D : ℕ} {Ω : Type} [Field Ω] [CharZero Ω] {l : Fin (D + 1) → Ω} {a : Fin (D + 1)} (ha : l a ≠ 0) :
     Algebra.adjoin ℚ (Set.range fun k : {k // k ≠ a} => l k.1 / l a) =
@@ -198,8 +197,7 @@ theorem exists_ratio_equiv {D : ℕ} {Ω : Type} [Field Ω] [CharZero Ω] {l : F
     fun k => ?_⟩
   simp only [AlgEquiv.trans_apply, Subalgebra.equivOfEq_apply]
   have := hind.algebraMap_aevalEquiv (X k)
-  rw [aeval_X] at this
-  exact this
+  rwa [aeval_X] at this
 
 theorem isIntegrallyClosed_adjoin_ratios {D : ℕ} {Ω : Type} [Field Ω] [CharZero Ω] {l : Fin (D + 1) → Ω}
     (hgen : ∀ (d : ℕ) (F : MvPolynomial (Fin (D + 1)) ℚ), F.IsHomogeneous d → aeval l F = 0 → F = 0)

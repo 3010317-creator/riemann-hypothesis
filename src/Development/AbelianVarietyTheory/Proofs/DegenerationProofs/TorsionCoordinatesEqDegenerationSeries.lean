@@ -131,12 +131,10 @@ theorem hasSum_graded_of_mul_degree :
       refine ⟨e', ?_, ?_⟩
       · have h2 : (j + 1) * k + k = (j + 1 + 1) * k := by ring
         have h3 : c ^ j * d * c = c ^ (j + 1) * d := by ring
-        rw [h2, h3] at he'
-        exact he'
+        rwa [h2, h3] at he'
       · have h4 := hasSum_conv_of_ultrametric heT hS hconv
         have h5 : S ^ j * T * S = S ^ (j + 1) * T := by ring
-        rw [h5] at h4
-        exact h4
+        rwa [h5] at h4
   have eqn : ∀ a c S, Rel k a c → HasSum a S → ∀ b d T, Rel k b d → HasSum b T →
       S ^ m * T = κ * (c ^ m * d) := by
     intro a c S hac hS b d T hbd hT
@@ -559,8 +557,7 @@ theorem value_at_level (hL : LL) (hB : AdmBase R I) (hG : IsSemiAbelian G) (U : 
     ⟨hw₁.1, fun _ _ _ => (pow_one _).symm⟩ ⟨hω, fun _ _ _ => (pow_one _).symm⟩ s s' (hΦ t t' s s' hts hs' ht')
   have h₄ := h₂.mul_left d
   simp only [Function.comp_apply, Equiv.coe_addRight, h₃, ← hdc] at h₄
-  rw [_root_.mul_assoc]
-  exact h₄
+  rwa [_root_.mul_assoc]
 
 
 attribute [local instance] TorusExt.gtGroup in

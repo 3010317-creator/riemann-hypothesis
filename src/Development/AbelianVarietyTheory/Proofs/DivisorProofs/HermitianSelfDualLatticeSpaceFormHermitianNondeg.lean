@@ -76,8 +76,7 @@ theorem det_ne_zero_of_hasSig {n r s : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h 
   rw [Matrix.det_submatrix_equiv_self, Matrix.det_fromBlocks_zero₂₁, Matrix.det_one, Matrix.det_neg,
     Matrix.det_one, Matrix.det_mul, Matrix.det_mul] at hd
   intro h0
-  rw [h0, mul_zero, zero_mul] at hd
-  rw [Fintype.card_fin, one_mul, mul_one] at hd
+  rw [h0, mul_zero, zero_mul, Fintype.card_fin, one_mul, mul_one] at hd
   exact pow_ne_zero s (neg_ne_zero.mpr one_ne_zero) hd.symm
 
 variable (D : D7) (B : Base D.host.F D.host.E) {n : ℕ} (X : Spc D.host.F D.host.E n) {r s : ℕ}
@@ -95,8 +94,7 @@ theorem mem_one_iff (z : D.host.E) : z ∈ (1 : Submodule (𝓞 D.host.E) D.host
   constructor
   · rintro ⟨o, rfl⟩
     exact o.isIntegral_coe
-  · intro h
-    exact ⟨⟨z, h⟩, rfl⟩
+  · exact fun h => ⟨⟨z, h⟩, rfl⟩
 
 theorem herm_nondeg_unimod (hX : X.IsHerm D.sp.cm.sig B r s) :
     (GlobalTheory.WeilSchrodinger.sesq D X.Jᵀ).IsSymm ∧ (GlobalTheory.WeilSchrodinger.sesq D X.Jᵀ).Nondegenerate ∧

@@ -167,8 +167,7 @@ theorem isCompact_box_inter_preimage [∀ i, IsTopologicalAddGroup (G i)] [∀ i
       rw [hW] at hx
       change ∀ i ∈ S, x i ∈ C i
       exact hx.2
-    rw [inter_eq_left.2 hsubset]
-    exact hWc
+    rwa [inter_eq_left.2 hsubset]
   have heq : (box C T : Set (Πʳ i, [G i, (C i : Set (G i))])) ∩ proj C T ⁻¹' E =
       RestrictedProduct.inclusion G (fun i ↦ (C i : Set (G i))) hS '' Z := by
     ext x
@@ -227,8 +226,7 @@ theorem isHaarMeasure_projMeasure (hCo : ∀ i, IsOpen (C i : Set (G i)))
     refine ((isOpen_box C hCo T).inter (hU.preimage (continuous_proj C T))).measure_ne_zero μ
       ⟨sec C T a, sec_mem_box C T a, ?_⟩
     show proj C T (sec C T a) ∈ U
-    rw [proj_sec]
-    exact ha
+    rwa [proj_sec]
 
 theorem setOf_forall_mem_eq :
     {x : Πʳ i, [G i, (C i : Set (G i))] | ∀ i, x i ∈ C i} =
@@ -286,8 +284,7 @@ theorem projMeasure_eq (hCo : ∀ i, IsOpen (C i : Set (G i))) (hCc : ∀ i, IsC
       by_cases hi : i ∈ T
       · exact h2 ⟨i, hi⟩
       · exact h1 i hi
-    · intro h
-      exact ⟨fun i _ ↦ h i, fun i ↦ h i⟩
+    · exact fun h => ⟨fun i _ ↦ h i, fun i ↦ h i⟩
   have hc : ((projMeasure C μ T).addHaarScalarFactor (Measure.pi fun i : T ↦ ν i) : ℝ≥0∞) =
       μ {x : Πʳ i, [G i, (C i : Set (G i))] | ∀ i, x i ∈ C i} := by
     have := congrArg (fun m : Measure ((i : T) → G i) ↦ m B) h
@@ -359,16 +356,14 @@ theorem integralIndicator_comp_symm {F : Type*} [Field F] [ValuativeRel F] [Topo
     · refine (Finset.prod_eq_one fun p _ ↦ ?_).symm
       rw [Set.indicator_of_mem (by rw [coe_valBall_zero]; exact h p)]
     · rw [mem_integralMatrixSet]
-      intro i j
-      exact h (i, j)
+      exact fun i j => h (i, j)
   · push Not at h
     obtain ⟨p, hp⟩ := h
     rw [integralIndicator, Set.indicator_of_notMem]
     · refine (Finset.prod_eq_zero (Finset.mem_univ p) ?_).symm
       rw [Set.indicator_of_notMem (by rw [coe_valBall_zero]; exact hp)]
     · rw [mem_integralMatrixSet]
-      intro hall
-      exact hp (hall p.1 p.2)
+      exact fun hall => hp (hall p.1 p.2)
 
 theorem localMatrixFourier_integralIndicator_of_conductor {F : Type*} [Field F] [ValuativeRel F]
     [TopologicalSpace F] [IsNonarchimedeanLocalField F] [MeasurableSpace F] [BorelSpace F]

@@ -136,8 +136,7 @@ theorem c_one_h2_units_subsingleton : ∀ (K L : Type) [Field K] [Field L] [Alge
     rw [Units.coe_prod]
     have h := Algebra.norm_eq_prod_automorphisms (fixedField S) x
     rw [hx] at h
-    refine Eq.trans ?_ h.symm
-    exact Fintype.prod_equiv (subgroupEquivAlgEquiv S).toEquiv _ _ (fun s => rfl)
+    exact Eq.trans (Fintype.prod_equiv (subgroupEquivAlgEquiv S).toEquiv _ _ (fun s => rfl)) h.symm
   have h1 : ∀ (S : Subgroup (L ≃ₐ[K] L)) [Fintype S],
       IsZero (tateCohomology (Rep.res S.subtype A) (0 + 1)) := by
     intro S _
@@ -217,8 +216,7 @@ private theorem isHomogeneous_of_map_of_injective {R S : Type} [CommRing R] [Com
   intro ν hν
   apply hp
   rw [MvPolynomial.coeff_map]
-  intro h
-  exact hν (hφ (h.trans (map_zero φ).symm))
+  exact fun h => hν (hφ (h.trans (map_zero φ).symm))
 
 open Polynomial in
 private theorem mvPolynomial_eval_map_comp {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) {n : ℕ}
@@ -242,8 +240,7 @@ private theorem exists_ne_zero_homogeneous_zero_of_forall_subfield {F K : Type} 
     (fun x _ => Algebra.IsIntegral.isIntegral x)
   obtain ⟨fE, hfE⟩ : f ∈ Set.range (MvPolynomial.map (algebraMap E K)) := by
     rw [MvPolynomial.mem_range_map_iff_coeffs_subset]
-    intro a ha
-    exact ⟨⟨a, IntermediateField.subset_adjoin F _ ha⟩, rfl⟩
+    exact fun a ha => ⟨⟨a, IntermediateField.subset_adjoin F _ ha⟩, rfl⟩
   have hfEh : fE.IsHomogeneous d :=
     isHomogeneous_of_map_of_injective (algebraMap E K).injective (hfE ▸ hf)
   obtain ⟨x, hx0, hx⟩ := _root_.GlobalTheory.c_one_of_finite_extension F E hF n d fE hfEh hd hdn
@@ -325,8 +322,7 @@ private theorem exists_ne_zero_common_zero_of_lt {k : Type} [Field k] [IsAlgClos
     omega
   have hex : ∃ J : Ideal (MvPolynomial (Fin m) k), J.IsMaximal ∧ Q ≤ J ∧
       J ≠ MvPolynomial.vanishingIdeal k {(0 : Fin m → k)} := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hjac : Q.jacobson = Q := isJacobsonRing_iff_prime_eq.1 inferInstance Q hQprime
     have hle : MvPolynomial.vanishingIdeal k {(0 : Fin m → k)} ≤ Q.jacobson := by
       rw [Ideal.jacobson]
@@ -388,8 +384,7 @@ private theorem exists_ne_zero_polynomial_zero_of_homogeneous {k : Type} [Field 
       exact MvPolynomial.isHomogeneous_C _ _
     have h2 := coeffHom_prod Finset.univ (fun i => ν i * 1) (fun i => y i ^ ν i)
       (fun i _ => coeffHom_pow (hy i) (ν i))
-    have h3 := coeffHom_mul h1 h2
-    simpa [hdeg] using h3
+    simpa [hdeg] using coeffHom_mul h1 h2
   have hΦdeg : Φ.natDegree ≤ D + d * s := by
     simp only [Φ, MvPolynomial.eval₂_eq']
     refine Polynomial.natDegree_sum_le_of_forall_le _ _ fun ν hν => ?_
@@ -442,8 +437,7 @@ private theorem exists_ne_zero_polynomial_zero_of_homogeneous {k : Type} [Field 
     rfl
   refine ⟨x, ?_, hΦx ▸ hmapΦ⟩
   obtain ⟨t, ht⟩ : ∃ t, a t ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact ha0 (funext hcon)
   obtain ⟨⟨i, j⟩, rfl⟩ := e.surjective t
   intro hx
@@ -455,9 +449,8 @@ private theorem exists_ne_zero_polynomial_zero_of_homogeneous {k : Type} [Field 
     rw [Finset.sum_eq_single j]
     · simp
     · intro b _ hb
-      rw [if_neg]
-      intro h
-      exact hb (Fin.ext h.symm)
+      rw [ite_eq_right]
+      exact fun h => hb (Fin.ext h.symm)
     · simp
   exact ht (hc.symm.trans hxi)
 
@@ -570,8 +563,7 @@ open Polynomial
 theorem exists_zmod_cast_eq_of_pow_sub_self {p : ℕ} [hp : Fact p.Prime] {Ω : Type} [Field Ω] [CharP Ω p]
     (y : Ω) (hy : y ^ p - y = 0) : ∃ a : ZMod p, ZMod.castHom (dvd_refl p) Ω a = y := by
   classical
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   set f := ZMod.castHom (dvd_refl p) Ω
   set P : Polynomial Ω := X ^ p - X
   have hP : P ≠ 0 := Polynomial.X_pow_sub_X_ne_zero hp.out.one_lt

@@ -112,8 +112,7 @@ private theorem volFun_val_eq_volume_image (hU : IsOpen U) (A : Set U) (hA : Mea
         ext z
         simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false,
           iff_false, not_and]
-        intro hz hzy
-        exact hy ⟨z, hz, hzy⟩
+        exact fun hz hzy => hy ⟨z, hz, hzy⟩
       rw [hs, Set.encard_empty]
       simp [Set.indicator, hy]
   rw [volFun, lintegral_congr key, lintegral_indicator_one (hU.measurableSet.subtype_image hA)]
@@ -176,8 +175,7 @@ theorem hormander_open (hU : IsOpen U) (e : V n → ℝ) (he : ContDiffOn ℝ �
   have e2 : ∫⁻ y in U, h y * ENNReal.ofReal (Real.exp (-φ y)) =
       ∫⁻ x, h x.1 * ENNReal.ofReal (Real.exp (-φ x.1)) ∂vol n (Subtype.val : U → V n) :=
     (lintegral_val hU _).symm
-  rw [e1, e2]
-  exact hFi
+  rwa [e1, e2]
 
 end
 

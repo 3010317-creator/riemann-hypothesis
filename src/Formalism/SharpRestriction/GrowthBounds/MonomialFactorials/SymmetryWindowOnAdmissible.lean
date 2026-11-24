@@ -110,18 +110,16 @@ theorem mem_xiMons_of (n : ℕ) (m : Formalism.GM.M.BVar N r G.T.t →₀ ℕ)
     rw [Finset.sum_eq_single c]
     · simp
     · intro d _ hd
-      rw [Finsupp.single_apply, if_neg]
-      intro h
-      exact hd (xiVar_inj G h)
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun h => hd (xiVar_inj G h)
     · intro h; exact absurd (Finset.mem_univ c) h
   · have h0 : m v = 0 := by
       by_contra hne
       exact hv (hsupp v (Finsupp.mem_support_iff.2 hne))
     rw [h0]
     refine Finset.sum_eq_zero fun c _ => ?_
-    rw [Finsupp.single_apply, if_neg]
-    intro h
-    exact hv ⟨c, h.symm⟩
+    rw [Finsupp.single_apply, ite_eq_right]
+    exact fun h => hv ⟨c, h.symm⟩
 
 theorem xi_mem_spanZ (n : ℕ) (g : MvPolynomial (Formalism.GM.M.BVar N r G.T.t) ℚ_[p])
     (hg : g ∈ Formalism.GM.M.XiPolZ p N r G.T.t n) :
@@ -272,7 +270,7 @@ theorem decode_gen (M : Finset (σ →₀ ℕ)) (hM : ∀ β ∈ M, ∀ x, β (e
   by_cases h : γ = β
   · subst h
     simp
-  · rw [if_neg h, if_neg (fun h' => h (Subtype.ext h'.symm))]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h (Subtype.ext h'.symm))]
     exact zero_smul K y
 
 include he in
@@ -375,8 +373,7 @@ theorem lvlDim_gen (j : Fin G.T.t → ℕ) (jp : ℕ) (hpre : preF (p := p) (r :
   simp only [Fintype.card_fin, Finset.sum_const, Finset.card_univ, smul_eq_mul, Fintype.card_coe] at hcard
   rw [card_xiMons_eq] at hcard
   unfold dimY
-  rw [mul_comm]
-  exact hcard
+  rwa [mul_comm]
 
 end Gen
 
@@ -409,7 +406,7 @@ theorem preF_ne_zero (j : Fin G.T.t → ℕ) (jp : ℕ) : preF (p := p) (r := r)
     intro h0
     rw [h0, zero_sub] at hs2
     have hmem : s ∈ (-(monomial s (1 : ℚ_[p]))).support := by
-      rw [support_neg, support_monomial, if_neg one_ne_zero]
+      rw [support_neg, support_monomial, ite_eq_right one_ne_zero]
       exact Finset.mem_singleton_self s
     exact (hs2 s hmem).2 hs1
   have e : preF (p := p) (r := r) G j jp =
@@ -440,16 +437,7 @@ theorem xiMons_free (n : ℕ) : ∀ β ∈ xiMons (r := r) G n, ∀ x, β (Forma
   exact Fin.castSucc_ne_last _ hc.1
 
 theorem xiMons_mem (n : ℕ) : ∀ β ∈ xiMons (r := r) G n, (monomial β (1 : ℚ_[p])) ∈ Formalism.GM.M.XiPolZ p N r G.T.t n := by
-  classical
-  intro β hβ
-  obtain ⟨h1, h2, -⟩ := xiMons_spec G n β hβ
-  refine ⟨?_, Formalism.GM.M.intPol_monomial' β⟩
-  show monomial β (1 : ℚ_[p]) ∈ MvPolynomial.restrictSupport ℚ_[p] _
-  rw [MvPolynomial.mem_restrictSupport_iff, support_monomial, if_neg one_ne_zero]
-  intro m hm
-  rw [Finset.coe_singleton, Set.mem_singleton_iff] at hm
-  subst hm
-  exact ⟨h1, h2⟩
+  apply Formalism.MainNotions.G.SymmetricFormBlocks.mono_mem_xiPolZ
 
 end Gen
 

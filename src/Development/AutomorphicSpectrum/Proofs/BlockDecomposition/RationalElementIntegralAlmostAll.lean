@@ -54,8 +54,7 @@ theorem eventually_val_le_one (E : Type) [Field E] [NumberField E] (x : E) :
   rw [Filter.eventually_cofinite]
   refine h.subset fun w hw => ?_
   have hw' : ¬ Valued.v ((x : E) : w.adicCompletion E) ≤ 1 := hw
-  rw [HeightOneSpectrum.valuedAdicCompletion_eq_valuation', not_le] at hw'
-  exact hw'
+  rwa [HeightOneSpectrum.valuedAdicCompletion_eq_valuation', not_le] at hw'
 
 theorem ratW_mem_KGL_eventually (E : Type) [Field E] [NumberField E] (n : ℕ) (δ : GL (Fin n) E) :
     ∀ᶠ w : Pl E in cofinite, ratW n w δ ∈ GlobalTheory.LFun.KGL w (n := n) := by
@@ -65,8 +64,7 @@ theorem ratW_mem_KGL_eventually (E : Type) [Field E] [NumberField E] (n : ℕ) (
     rw [Filter.eventually_all]
     intro i
     rw [Filter.eventually_all]
-    intro j
-    exact eventually_val_le_one E _
+    exact fun j => eventually_val_le_one E _
   filter_upwards [hall δ, hall δ⁻¹] with w h1 h2
   rw [GlobalTheory.BCT.GlobLev.mem_KGL_iff_val]
   refine ⟨fun i j => h1 i j, fun i j => ?_⟩

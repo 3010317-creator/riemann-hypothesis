@@ -180,14 +180,11 @@ theorem frame_reduction : FrameStep := by
   obtain ⟨cf, hcf⟩ := dualFamilyExists E S.V (r + 1) _ hind
   have hcfe : ∀ b a, cf (Fin.castSucc b) (F0.e a) = if b = a then 1 else 0 := by
     intro b a
-    have h := hcf (Fin.castSucc b) (Fin.castSucc a)
-    simp only [Fin.snoc_castSucc, Fin.castSucc_inj] at h
-    exact h
+    simpa only [Fin.snoc_castSucc, Fin.castSucc_inj] using hcf (Fin.castSucc b) (Fin.castSucc a)
   have hcfz : ∀ b, cf (Fin.castSucc b) F0.z = 0 := by
     intro b
     have h := hcf (Fin.castSucc b) (Fin.last r)
-    simp only [Fin.snoc_last, Fin.castSucc_ne_last, if_false] at h
-    exact h
+    simpa only [Fin.snoc_last, Fin.castSucc_ne_last, ite_false] using h
   have hcfN : ∀ b, ∀ n ∈ N, cf (Fin.castSucc b) n ∈ aa b := by
     intro b n hn
     obtain ⟨n1, hn1, n2, hn2, rfl⟩ := Submodule.mem_sup.1 hn

@@ -147,8 +147,7 @@ theorem UpperTheory.ConvolutionTheory.R2.H.whTorus :
   rw [Finset.sum_congr rfl t1, hconst, one_mul] at h1
   have t2 : W (dL 1 ϖ) = 0 := by
     have := hcen (dL ϖ⁻¹ 1)
-    rw [dL_mul, inv_mul_cancel, one_mul, hz, mul_zero] at this
-    exact this
+    rwa [dL_mul, inv_mul_cancel, one_mul, hz, mul_zero] at this
   rw [t2, add_zero] at h1
 
   have h2 := hsum (dL ϖ 1)
@@ -162,13 +161,11 @@ theorem UpperTheory.ConvolutionTheory.R2.H.whTorus :
   have t4 : W (dL ϖ 1 * dL 1 ϖ) = (α : ℂ) * β * W 1 := by
     have := hcen 1
     rw [one_mul] at this
-    rw [dL_mul, mul_one, one_mul]
-    exact this
+    rwa [dL_mul, mul_one, one_mul]
   have t5 : W (dL ϖ 1 * dL ϖ 1) = (α : ℂ) * β * W (dL ϖ ϖ⁻¹) := by
     have := hcen (dL ϖ ϖ⁻¹)
     rw [dL_mul, inv_mul_cancel] at this
-    rw [dL_mul, mul_one]
-    exact this
+    rwa [dL_mul, mul_one]
   rw [t4, t5] at h2
   refine ⟨h1.symm, ?_⟩
   have h3 : s * W (dL ϖ 1) = ((α : ℂ) + β) * W 1 := by

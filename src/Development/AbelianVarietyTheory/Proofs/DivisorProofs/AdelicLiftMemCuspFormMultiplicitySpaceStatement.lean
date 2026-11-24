@@ -185,8 +185,7 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
     have := hbres (oToS D.host.F D.host.E (rep κ) + oToS D.host.F D.host.E (rep κ')) (κ + κ') (by
       rw [map_add (f := _), Formalism.L2.DIV.resS_oToS, Formalism.L2.DIV.resS_oToS, hrep, hrep])
     rw [AddMemClass.coe_add, RingHom.map_add (f := _)] at this
-    rw [← Valuation.map_neg, show -(b (κ + κ') - b κ - b κ') = b κ + b κ' - b (κ + κ') by ring]
-    exact this
+    rwa [← Valuation.map_neg, show -(b (κ + κ') - b κ - b κ') = b κ + b κ' - b (κ + κ') by ring]
   have he1 : π e = 1 := by
     have := (hπ.2.1 (1 - e)).2 (by rw [mul_sub, mul_one, hv.1, sub_self])
     rwa [map_sub, map_one, sub_eq_zero, eq_comm] at this
@@ -200,8 +199,7 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
     have h2 : φ s = π a := by
       change φ (toEAf D (e * a)) = π a
       rw [hφ, map_mul, he1, one_mul]
-    rw [← Valuation.map_neg, neg_sub, ← h2]
-    exact h1
+    rwa [← Valuation.map_neg, neg_sub, ← h2]
 
   let s : Fv D.host.F v := -(x / (π (incA D D.host.xi0) * d j))
   choose l₀ hl₀ using fun (κ : Fin T.rank → kP PP) (a : Fin S.rank) =>
@@ -296,17 +294,17 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
     intro h
     have h1 : χ (Pi.single i₁ κ₀ : Fin T.rank → kP PP) = 1 := by rw [h, AddChar.one_apply]
     have e3 : ∑ i, b ((Pi.single i₁ κ₀ : Fin T.rank → kP PP) i) * z i = d j + ∑ i, (b ((Pi.single i₁ κ₀ : Fin T.rank → kP PP) i) * z i - if i = i₁ then d j else 0) := by
-      rw [Finset.sum_sub_distrib, Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+      rw [Finset.sum_sub_distrib, Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _)]
       ring
     have hw : Valued.v (∑ i, (b ((Pi.single i₁ κ₀ : Fin T.rank → kP PP) i) * z i - if i = i₁ then d j else 0)) < Valued.v (d j) := by
       refine Valuation.map_sum_lt _ hdj fun i _ => ?_
       by_cases hi : i = i₁
       · subst hi
-        rw [if_pos rfl, Pi.single_eq_same]
+        rw [ite_eq_left rfl, Pi.single_eq_same]
         have : b κ₀ * z i - d j = (b κ₀ - d j / z i) * z i := by field_simp
         rw [this, Valuation.map_mul, ← hzi]
         exact mul_lt_of_lt_one_left (zero_lt_iff.2 (hzi ▸ hdj)) hκ₀
-      · rw [if_neg hi, sub_zero, Pi.single_eq_of_ne hi]
+      · rw [ite_eq_right hi, sub_zero, Pi.single_eq_of_ne hi]
         exact hterm _ i hb0
     change psiV D.host.F ψ v (x / d j * ∑ i, b ((Pi.single i₁ κ₀ : Fin T.rank → kP PP) i) * z i) = 1 at h1
     rw [e3, mul_add, div_mul_cancel₀ x hj0, psiV_add ψ hv, hsmall _ hw, mul_one] at h1
@@ -481,7 +479,7 @@ theorem parAt_overK {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A 
     fun τ => D.sp.W_sigval _ (Nat.le_add_left _ _) i.2 _
   have hl := ((GlobalTheory.GalLift.labels_overK σ).1 hK).2 ρ
   unfold parAt kapAt
-  rw [if_pos hl, hs, GlobalTheory.ThetaFiresProbe.lab_fixed, if_pos (GlobalTheory.ThetaFiresProbe.labE_fixed _), hsig ρ, hsig (lab σ ρ)]
+  rw [ite_eq_left hl, hs, GlobalTheory.ThetaFiresProbe.lab_fixed, ite_eq_left (GlobalTheory.ThetaFiresProbe.labE_fixed _), hsig ρ, hsig (lab σ ρ)]
 
 theorem model_overK {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
     {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (i : Fin D.R.m)
@@ -500,12 +498,10 @@ theorem holShape_overK : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : 
   have hm := model_overK R i σ hK
   refine ⟨fun ρ => ?_, fun ρ c => w0 (lab σ ρ) c, fun ρ c => ?_⟩
   · have h := hH (lab σ ρ)
-    rw [← (hm ρ).1, ← (hm ρ).2] at h
-    exact h
+    rwa [← (hm ρ).1, ← (hm ρ).2] at h
   · have h := hw0 (lab σ ρ) c
     unfold extWt at h ⊢
-    rw [← (hm ρ).1, ← (hm ρ).2] at h
-    exact h
+    rwa [← (hm ρ).1, ← (hm ρ).2] at h
 
 end GlobalTheory.LowRow
 end -- clump:auto
@@ -581,7 +577,7 @@ theorem exists_coef_any {BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank)
     · norm_num
   have hom1 : ∀ W a c b d, omDir S T τ (W * unitMap (BS τ) (BT τ) a c) τ (unitMap (BS τ) (BT τ) b d) =
       if c = d then o W b a else 0 := fun W a c b d => by
-    rw [omDir, if_pos rfl, trace_unitMap (hB τ)]
+    rw [omDir, ite_eq_left rfl, trace_unitMap (hB τ)]
     split_ifs <;> simp [o]
   have hJ : ∀ (W : Matrix (Fin T.rank) (Fin T.rank) ℂ) (u : Matrix (Fin T.rank) (Fin S.rank) ℂ),
       cplxO 1 (cart M τ) (W * u) = Complex.I • (cart M τ * W) * u := fun W u => by
@@ -596,14 +592,14 @@ theorem exists_coef_any {BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank)
     simp only [o, Matrix.neg_mul, Matrix.neg_apply, mul_neg, Complex.neg_re]
   clear_value o
   refine ⟨fun a b => if p ≤ (a : ℕ) ∧ (b : ℕ) < p then
-    2 * (o X a b + Complex.I * o (Complex.I • (cart M τ * X)) a b) else 0, fun a b h => if_neg h, ?_⟩
+    2 * (o X a b + Complex.I * o (Complex.I • (cart M τ * X)) a b) else 0, fun a b h => ite_eq_right h, ?_⟩
   rintro a c b d _ rfl _ rfl
   rw [hJ', hJ, hJ, hJ'', hom1, hom1, hom1, oneg]
   by_cases e3 : c = d
   swap
   · simp [e3, Ne.symm e3]
   subst e3
-  simp only [if_true]
+  simp only [ite_true]
   have z1 := ozero _ ha
   have z2 := ozero _ (anti_I ha)
   have s1 := osym _ lX a b
@@ -618,8 +614,8 @@ theorem exists_coef_any {BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank)
   rw [e]
   by_cases ha' : (a : ℕ) < p <;> by_cases hb' : (b : ℕ) < p
   · simp [z1 b a (by simp [ha', hb']), z2 b a (by simp [ha', hb'])]
-  · rw [if_neg (by omega), if_pos (by omega), zero_add]
-  · rw [if_pos (by omega), if_neg (by omega), add_zero]
+  · rw [ite_eq_right (by omega), ite_eq_left (by omega), zero_add]
+  · rw [ite_eq_left (by omega), ite_eq_right (by omega), add_zero]
   · simp [z1 b a (by simp [ha', hb']), z2 b a (by simp [ha', hb'])]
 
 theorem gen_kill_any (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ}
@@ -665,25 +661,25 @@ theorem gen_kill_any (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {BS : D.wha
     refine congrArg₂ (· + ·) rfl (congrArg (· • g) ?_)
     by_cases e1 : τ₁ = τ
     swap
-    · simp only [if_neg e1, ite_self, mul_zero, zero_mul, add_zero]
+    · simp only [ite_eq_right e1, ite_self, mul_zero, zero_mul, add_zero]
     by_cases e2 : τ₂ = τ
     swap
     · simp [e2, omDir, Ne.symm e2]
     subst e1
     subst e2
     have := hν a c b d _ rfl _ rfl
-    simp only [if_true]
+    simp only [ite_true]
     by_cases e3 : c = d
-    · simp only [if_pos e3, if_pos e3.symm] at this ⊢
+    · simp only [ite_eq_left e3, ite_eq_left e3.symm] at this ⊢
       linear_combination ((fockScale D τ₂ : ℂ)⁻¹ * (fockScale D τ₂ : ℂ)⁻¹ * (-(4 * π * Complex.I))) * this
-    · simp only [if_neg e3, if_neg (Ne.symm e3)] at this ⊢
+    · simp only [ite_eq_right e3, ite_eq_right (Ne.symm e3)] at this ⊢
       linear_combination ((fockScale D τ₂ : ℂ)⁻¹ * (fockScale D τ₂ : ℂ)⁻¹ * (-(4 * π * Complex.I))) * this
   · exact fun i _ h => gen_aPlus hψ hθ hX hY _ _ _ h
   · intro i
     rw [hv, hv, smul_zero, add_zero, smul_zero]
   · refine (congrArg _ ?_).trans (map_zero _)
     simp only [Fintype.sum_prod_type, ite_smul, zero_smul, Finset.sum_ite_irrel, Finset.sum_const_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     refine Finset.sum_eq_zero fun a _ => ?_
     rw [Finset.sum_comm]
     refine Finset.sum_eq_zero fun b _ => ?_
@@ -730,8 +726,7 @@ theorem rderC_theta_eq_zero_any : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) 
   have a3 := congrFun (congrArg (om (h, g)) key) 0
   rw [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, map_zero] at a3
   simp only [Pi.add_apply, Pi.smul_apply, Rder, thetaKO]
-  rw [a1, a2]
-  exact a3
+  rwa [a1, a2]
 
 theorem rderC_ptAt_delta_eq_zero : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), ∀ i t σ s P cμ cη m om BW f₀ f c io, IsLiftDataC R F i t σ s P cμ cη m om BW f₀ f c io → ∀ τ, ∀ Z ∈ GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicParabolicSmoothFunctions.pMinus (R.MW i σ) τ, ∀ h, RderC R.θ (Wc D i) τ Z (fun g => thetaKO om h g (GlobalTheory.IndefiniteRowSideFullHecke.TwistedLevelValues.ptAt R i σ BW f (deltaAtEmb D i σ))) = 0 := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F i t σ s P cμ cη m om BW f₀ f c io hL τ Z hZ h

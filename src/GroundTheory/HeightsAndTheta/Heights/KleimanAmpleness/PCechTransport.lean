@@ -44,8 +44,7 @@ theorem Transport.proof : Transport.Statement.{u, v, w} := by
       obtain ⟨w', hw', hd⟩ := Submodule.mem_map.mp h
       obtain ⟨w, hw, rfl⟩ := lift i w' hw'
       refine Submodule.mem_map.mpr ⟨w, hw, minj (i + 1) ?_⟩
-      rw [mapC_d φ hφ]
-      exact hd
+      rwa [mapC_d φ hφ]
   constructor
   · rw [injective_iff_map_eq_zero]
     intro x hx

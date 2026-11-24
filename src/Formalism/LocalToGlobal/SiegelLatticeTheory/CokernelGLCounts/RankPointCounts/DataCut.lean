@@ -323,7 +323,7 @@ theorem rowLabelExists_of (hG : Corank.ScalarEquivG) (hR : ∀ u u' : D.what₂.
   obtain ⟨enc, henc⟩ := exists_injective_nat (Quotient s)
   refine ⟨fun t => if h : t.G ≠ 0 then enc (Quotient.mk s ⟨t, h⟩) else 0, ?_⟩
   intro t t' ht ht'
-  simp only [dif_pos ht.2, dif_pos ht'.2, henc.eq_iff, Quotient.eq]
+  simp only [dite_eq_left ht.2, dite_eq_left ht'.2, henc.eq_iff, Quotient.eq]
   exact Iff.rfl
 
 end Label
@@ -352,8 +352,7 @@ theorem psdOn_of_full {α : Type} (Y : Finset α) (K : α → α → ℂ) (c : �
     exact hρ ((Set.Finite.mem_toFinset _).2 (Set.mem_iUnion₂.2 ⟨x, hx, h⟩))
   have hts : ∀ x ∈ Y, ∀ y ∈ Y, ∑' ρ, c ρ x * (starRingEnd ℂ) (c ρ y) =
       ∑ ρ ∈ F, c ρ x * (starRingEnd ℂ) (c ρ y) := by
-    intro x hx y hy
-    exact tsum_eq_sum (fun ρ hρ => by simp [hmem x hx ρ hρ])
+    exact fun x hx y hy => tsum_eq_sum (fun ρ hρ => by simp [hmem x hx ρ hρ])
   have hR : ∀ x ∈ Y, ∀ y ∈ Y, ∑ ρ ∈ R, c ρ x * (starRingEnd ℂ) (c ρ y) =
       ∑ ρ ∈ F ∩ R, c ρ x * (starRingEnd ℂ) (c ρ y) := by
     intro x hx y hy
@@ -415,7 +414,7 @@ theorem kind_ptOfList_join {D : Formalism.BasicNotions.D7} (h : TB.Pt D.host.E) 
     apply hdet
     rw [Formalism.L2.SG.Pf.dmin_snoc w _ t hb hs, h0, zero_mul]
   unfold kind
-  rw [if_neg h0, Formalism.L2.SG.Pf.zeta_snoc w h0 _ t hb hs]
+  rw [ite_eq_right h0, Formalism.L2.SG.Pf.zeta_snoc w h0 _ t hb hs]
 
 theorem localModelT_holds (D : Formalism.BasicNotions.D7) : LocalModelT D := by
   intro Wp Wq _ _ _ _ S δ M hA u u' hC
@@ -424,7 +423,7 @@ theorem localModelT_holds (D : Formalism.BasicNotions.D7) : LocalModelT D := by
   rw [hr] at hh hh' ⊢
   show KrOf δ M (D.mem u).A.T (D.mem u').A.T (D.R.rS + 1) (TB.join h 1 t) (TB.join h' 1 t') = 0
   unfold KrOf
-  rw [if_neg (Nat.succ_ne_zero _), if_neg (lt_irrefl _)]
+  rw [ite_eq_right (Nat.succ_ne_zero _), ite_eq_right (lt_irrefl _)]
   rcases ha : ptOfList (D.R.rS + 1) (TB.join h 1 t) with _ | a
   · rfl
   rcases hb : ptOfList (D.R.rS + 1) (TB.join h' 1 t') with _ | b
@@ -432,9 +431,9 @@ theorem localModelT_holds (D : Formalism.BasicNotions.D7) : LocalModelT D := by
   have e1 := kind_ptOfList_join h t hh a ha
   have e2 := kind_ptOfList_join h' t' hh' b hb
   show Kglob δ M (D.mem u).A.T (D.mem u').A.T (D.R.rS + 1) a b / _ = 0
-  rw [Kglob, dif_pos rfl]
+  rw [Kglob, dite_eq_left rfl]
   unfold KtopG
-  rw [e1, e2, if_neg (by simpa using htt)]
+  rw [e1, e2, ite_eq_right (by simpa using htt)]
   simp
 
 end LMT
@@ -559,9 +558,9 @@ theorem density_gram_matrix_sub_posSemidef {ι Θ : Type*} [Fintype ι] [Fintype
   simp only [Matrix.of_apply, Matrix.add_apply, Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,
     Finset.mul_sum]
   by_cases hP : 0 < n x ∧ 0 < n y
-  · rw [if_pos hP, Finset.sum_div, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+  · rw [ite_eq_left hP, Finset.sum_div, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun θ _ => ?_
-    simp only [if_pos hP.1, if_pos hP.2, star_zero, mul_zero, add_zero]
+    simp only [ite_eq_left hP.1, ite_eq_left hP.2, star_zero, mul_zero, add_zero]
     by_cases hvx : v θ x = 0
     · simp [hvx]
     by_cases hvy : v θ y = 0
@@ -572,25 +571,23 @@ theorem density_gram_matrix_sub_posSemidef {ι Θ : Type*} [Fintype ι] [Fintype
     field_simp
     push_cast
     ring
-  · rw [if_neg hP, sub_zero, ← Finset.sum_add_distrib]
+  · rw [ite_eq_right hP, sub_zero, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun θ _ => ?_
     by_cases hx : 0 < n x <;> by_cases hy : 0 < n y
     · exact absurd ⟨hx, hy⟩ hP
-    · simp only [if_pos hx, if_neg hy, star_zero, mul_zero, zero_mul, add_zero]
+    · simp only [ite_eq_left hx, ite_eq_right hy, star_zero, mul_zero, zero_mul, add_zero]
       by_cases hvx : v θ x = 0
       · simp [hvx]
       by_cases hvy : v θ y = 0
       · simp [hvy]
-      have hxy := hsupp θ x y hvx hvy
-      exact absurd (hxy ▸ hx) hy
-    · simp only [if_neg hx, if_pos hy, star_zero, mul_zero, zero_mul, zero_add]
+      exact absurd ((hsupp θ x y hvx hvy) ▸ hx) hy
+    · simp only [ite_eq_right hx, ite_eq_left hy, star_zero, mul_zero, zero_mul, zero_add]
       by_cases hvx : v θ x = 0
       · simp [hvx]
       by_cases hvy : v θ y = 0
       · simp [hvy]
-      have hxy := hsupp θ x y hvx hvy
-      exact absurd (hxy ▸ hy) hx
-    · simp only [if_neg hx, if_neg hy, star_zero, mul_zero, zero_add]
+      exact absurd ((hsupp θ x y hvx hvy) ▸ hy) hx
+    · simp only [ite_eq_right hx, ite_eq_right hy, star_zero, mul_zero, zero_add]
       push_cast
       ring
 
@@ -691,8 +688,7 @@ theorem rows_pair {δ : ∀ p : PlF D, (D.s.atP p).Fp} {M : ∀ p : PlF D, Loc.M
     intro ρ hρ
     have : Γx.filter (fun t => κ t = ρ) = ∅ := by
       rw [Finset.filter_eq_empty_iff]
-      intro t ht hκt
-      exact hρ (Finset.mem_image.2 ⟨t, ht, hκt⟩)
+      exact fun t ht hκt => hρ (Finset.mem_image.2 ⟨t, ht, hκt⟩)
     simp [Sx, this]
   rw [tsum_eq_sum (s := Γx.image κ) hz, ← Finset.sum_div]
   congr 1
@@ -847,8 +843,7 @@ theorem dom_points (hN : SupportG.NormProd D) {δ : ∀ p : PlF D, (D.s.atP p).F
       rw [hsum]
       ring
     · have h0 : n x = 0 ∨ n y = 0 := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         exact hxy ⟨lt_of_le_of_ne (hn0 x) (Ne.symm h.1), lt_of_le_of_ne (hn0 y) (Ne.symm h.2)⟩
       rcases h0 with h0 | h0
       · have hc : ∀ ρ, chat vR κ nc ρ (w x) = 0 := fun ρ => by

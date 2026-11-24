@@ -30,8 +30,7 @@ theorem SiuZB.proof (hK : KodairaGeneric.Statement) (hZ : SectionsDimZero.Statem
   have hG : IsProjVarF (KH.genIdeal y) D := isProjVarF_map_of_isArithVar hV
   have hdeg : 0 < genDeg (mCoordIdeal y) D α := by
     have h := hagree _ D (fun _ => α) hG
-    rw [h] at hPos
-    exact hPos
+    rwa [h] at hPos
 
   obtain ⟨k, e, hk, he, hmem⟩ :
       ∃ (k : ℕ) (e : Ω), 1 ≤ k ∧ e ≠ 0 ∧ e ∈ chartLatQ y ((k : ℤ) • α - 1) 1 := by
@@ -48,8 +47,7 @@ theorem SiuZB.proof (hK : KodairaGeneric.Statement) (hZ : SectionsDimZero.Statem
         exact_mod_cast this
       have := Module.nontrivial_of_finrank_pos hpos
       obtain ⟨⟨e, he⟩, hne⟩ := exists_ne (0 : chartLatQ y ((1 : ℕ) • α - 1) 1)
-      refine ⟨1, e, le_rfl, fun h => hne ?_, by simpa using he⟩
-      exact Subtype.ext h
+      exact ⟨1, e, le_rfl, fun h => hne (Subtype.ext h), by simpa using he⟩
     · have hnef : NefOnGenericDeg (mCoordIdeal y) α := by
         intro W hW hPW
         have hWq : IsProjVarF (W.map (MvPolynomial.map (Int.castRingHom ℚ))) 1 :=
@@ -69,8 +67,7 @@ theorem SiuZB.proof (hK : KodairaGeneric.Statement) (hZ : SectionsDimZero.Statem
   have hfun : (fun κ => (k : ℤ) * α κ - 1) = (k : ℤ) • α - 1 := by
     funext κ
     simp
-  rw [hfun]
-  exact hns
+  rwa [hfun]
 
 theorem SiuZB.of_kodaira (hK : KodairaGeneric.Statement) : KH.SiuZStatement :=
   SiuZB.proof hK SectionsDimZero.proof

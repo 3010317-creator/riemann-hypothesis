@@ -765,9 +765,7 @@ theorem henselian_of_artinian (C : Type) [CommRing C] [IsLocalRing C] [IsArtinia
       · have e := SModEq.sub_mem.1 (hf h)
         rw [hz n le_rfl, Submodule.bot_smul, Submodule.mem_bot, sub_eq_zero] at e
         rw [e]
-  refine { is_henselian := ?_ }
-  intro f hf a₀ h₁ h₂
-  exact HenselianRing.is_henselian f hf a₀ h₁ (h₂.map _)
+  exact { is_henselian := (fun f hf a₀ h₁ h₂ => HenselianRing.is_henselian f hf a₀ h₁ (h₂.map _)) }
 
 instance isArtinianRing_dualNumber (k : Type) [Field k] : IsArtinianRing (DualNumber k) := by
   haveI : Module.Finite k (DualNumber k) := inferInstanceAs (Module.Finite k (k × k))
@@ -1047,8 +1045,7 @@ theorem GlobalTheory.HTUniv.main : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheor
       ∀ x ∈ Fil o₀.A, IsFilLift m''.cart x (∑ j, c (Pi.single j 1) • f j x) := by
     intro s' o'' m'' c n x hx
     have h := _root_.GlobalTheory.HTUniv.Nat.main p D R b N hN hNp k t o₀ _ _ o m c s' o'' m'' n x _ (hm x hx)
-    rw [GlobalTheory.HTUniv.comp_pi] at h
-    exact h
+    rwa [GlobalTheory.HTUniv.comp_pi] at h
   obtain ⟨c₀, hc₀, hc₀u⟩ := huniq o' m'
   let c : (Fin (D.a * (D.n - 1)) → k) →ₗ[k] k := ∑ j, c₀ j • LinearMap.proj j
   have hcj : ∀ j, c (Pi.single j 1) = c₀ j := fun j => GlobalTheory.HTUniv.sum_proj_single c₀ j

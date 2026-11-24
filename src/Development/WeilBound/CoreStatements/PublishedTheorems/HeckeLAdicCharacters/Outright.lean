@@ -186,8 +186,7 @@ theorem norm_bounds_of_rec {F : Type*} [NormedField F] [IsUltrametricDist F] (w 
       exact absurd h2 (not_le.mpr (max_lt h4 h3))
   have hrec1 : w 1 ^ (k + 2) + p * w 1 = 0 := by
     have := hr 0
-    rw [h0] at this
-    exact this
+    rwa [h0] at this
   have hpw : w 1 ^ (k + 1) = -p := by
     have e : w 1 * (w 1 ^ (k + 1) + p) = 0 := by linear_combination hrec1
     rcases mul_eq_zero.mp e with h | h
@@ -355,8 +354,7 @@ theorem galdiv : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (π : ↥(OL K)) (z
   have hk2 : 2 ≤ k := by omega
   have hzk : ‖omC (z k)‖ ≤ 1 := (hz1 k).le
   have hnorm : ‖omC (z k)‖ ≤ ‖u k‖ := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have e : omC (z k) = sh (u k) - (sh (u k) - omC (z k)) := by ring
     have h3 : ‖omC (z k)‖ ≤ max ‖sh (u k)‖ ρ := by
       conv_lhs => rw [e, sub_eq_add_neg]
@@ -437,8 +435,7 @@ theorem eq_of_pow_eq_self_of_thB_eq {l : ℕ} [Fact l.Prime] {q : ℕ} (hq : 2 �
         exact mul_right_cancel₀ h0 e
       rw [h1, mul_one, sub_ne_zero]
       exact_mod_cast (by omega : q ≠ 1)
-  have hu := isUnit_BdRp_of_thB hne
-  exact sub_eq_zero.1 ((hu.mul_left_eq_zero).1 hkey)
+  exact sub_eq_zero.1 (((isUnit_BdRp_of_thB hne).mul_left_eq_zero).1 hkey)
 
 theorem tch_eq_rB_of_sh_eq : ∀ {l : ℕ} [Fact l.Prime] (q : ℕ), 2 ≤ q → l ∣ q → ∀ (x : Tl l) (y : Om l),
     x ^ q = x → y ^ q = y → sh x = omC y → tch l x = rB l y := by
@@ -714,8 +711,7 @@ theorem isClosed_range_finExt (K : FinExt l) :
   have e : (Set.range fun y : ↥K.1 => omC (l := l) (y : Om l)) = (LinearMap.range L : Set ℂ_[l]) := by
     ext z
     rfl
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem exists_int_of_norm_le (K : FinExt l) (y : ↥K.1) (hy : ‖(y : Om l)‖ ≤ 1) :
     ∃ c : ↥(OL K), (c : ↥K.1) = y :=
@@ -762,8 +758,7 @@ theorem sh_root_near_integer : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (π :
     have : ‖sh x - oc K c‖ = ‖((y - (c : ↥K.1) : ↥K.1) : Om l)‖ := by
       rw [← hy, hcK, ← map_sub, norm_omC]
       rfl
-    rw [← this, ← norm_omC, ← hπK]
-    exact hc
+    rwa [← this, ← norm_omC, ← hπK]
   have hq : ‖(((y - (c : ↥K.1)) / (π : ↥K.1) : ↥K.1) : Om l)‖ ≤ 1 := by
     have e : (((y - (c : ↥K.1)) / (π : ↥K.1) : ↥K.1) : Om l)
         = ((y - (c : ↥K.1) : ↥K.1) : Om l) / ((π : ↥K.1) : Om l) := rfl
@@ -854,8 +849,7 @@ theorem resfield_of_irreducible : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (�
     have hm : ((l : ℕ) : ↥(OL K)) ∈ IsLocalRing.maximalIdeal ↥(OL K) := hl
     rwa [hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at hm
   have hle : Ideal.span {((l : ℕ) : ↥(OL K)) ^ 1} ≤ Ideal.span {π} := by
-    rw [pow_one, Ideal.span_singleton_le_iff_mem, Ideal.mem_span_singleton]
-    exact hdvd
+    rwa [pow_one, Ideal.span_singleton_le_iff_mem, Ideal.mem_span_singleton]
   have hmax : (Ideal.span {π}).IsMaximal := by
     rw [← hπ.maximalIdeal_eq]
     exact IsLocalRing.maximalIdeal.isMaximal _
@@ -907,8 +901,7 @@ theorem fix_ringHom {l : ℕ} [Fact l.Prime] (K : FinExt l) (π : ↥(OL K)) (f 
     apply fixed_unique hf (hF1 A) hx
     refine lt_of_le_of_lt (norm_sub_le_of_near hl ?_) h1
     have e : sh (F A) - sh x = (sh (F A) - oc K A) - (sh x - oc K A) := by ring
-    rw [e]
-    rw [sub_eq_add_neg]
+    rw [e, sub_eq_add_neg]
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hF2 A) (by rw [norm_neg]; exact hA))
   refine ⟨{ toFun := F, map_one' := ?_, map_mul' := ?_, map_zero' := ?_, map_add' := ?_ }, hF1, hF2⟩
   · exact huniq 1 1 (one_pow _) (by rw [map_one, sh_one, sub_self, norm_zero]; exact norm_nonneg _)
@@ -981,8 +974,7 @@ theorem gal_clause {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] (g : GQ l) (
   have e2 : actT g (x ^ l ^ i) = actT g x ^ l ^ i := map_pow _ _ _
   have e3 : ∀ j, ((iterateFrobenius (Tl l) l i).comp r₀) (c j) = r₀ (c j) ^ l ^ i := fun j => by
     rw [RingHom.comp_apply, iterateFrobenius_def]
-  simp only [e1, e2, e3]
-  exact h
+  simpa only [e1, e2, e3] using h
 
 end GlobalTheory.CompanionTheory.LTPer.Tilt
 
@@ -1209,9 +1201,7 @@ theorem eq_one_of_tpow_mul_unit_eigen {l : ℕ} [Fact l.Prime] (L : Intermediate
   · refine hfin.subset ?_
     rintro _ ⟨_, ⟨_, ⟨σ, hσ, rfl⟩, rfl⟩, rfl⟩
     exact ⟨σ, hσ, (hψ σ hσ).symm⟩
-  · intro w _
-    refine (finite_units_zpow_eq hd w).subset fun z hz => ?_
-    exact hz.2
+  · exact fun w _ => (finite_units_zpow_eq hd w).subset fun z hz => hz.2
 
 end GlobalTheory.CompanionTheory.LTPer
 end -- clump:auto
@@ -1327,8 +1317,7 @@ theorem cycloChar_inertia_image_infinite : ∀ {l : ℕ} [Fact l.Prime],
     have h1 : (⟨GroundTheory.PAdicHodge.cycloChar L σ, hmem⟩ : M) ^ n = 1 := by
       rw [hnM]
       exact pow_card_eq_one'
-    have h2 := congrArg Subtype.val h1
-    simpa using h2
+    simpa using congrArg Subtype.val h1
   have hroots : ∀ σ : Gal(Om l/↥L), GroundTheory.LocalField.unramifiedDegree ↥L (Om l) σ = 1 → σ ∈ H := by
     intro σ hσ
     have hfix := (GroundTheory.LocalField.unramifiedDegree_eq_one_iff σ).mp hσ
@@ -1346,9 +1335,7 @@ theorem cycloChar_inertia_image_infinite : ∀ {l : ℕ} [Fact l.Prime],
     have hσ' : (σ.restrictScalars ℚ_[l]) ∈
         (IntermediateField.adjoin ℚ_[l] (GroundTheory.PAdicHodge.primeToPRoots l)).fixingSubgroup :=
       GroundTheory.LocalField.mem_fixingSubgroup_adjoin_iff.mpr (fun y hy => hS y hy)
-    show ∀ w ∈ GroundTheory.PAdicHodge.unramifiedClosure l, σ w = w
-    intro w hw
-    exact (IntermediateField.mem_fixingSubgroup_iff _ _).mp hσ' w hw
+    exact fun w hw => (IntermediateField.mem_fixingSubgroup_iff _ _).mp hσ' w hw
   let ψ : Gal(Om l/↥L) →* ℤ_[l]ˣ := (powMonoidHom n).comp (GroundTheory.PAdicHodge.cycloChar L)
   have hψc : Continuous ψ := (GroundTheory.PAdicHodge.continuous_cycloChar L).pow n
   have hψu : ∀ σ, GroundTheory.LocalField.unramifiedDegree ↥L (Om l) σ = 1 → ψ σ = 1 := by
@@ -1440,8 +1427,7 @@ theorem exists_pow_eigenvector_of_unramified_units {l : ℕ} [Fact l.Prime]
   have hχeq : ∀ σ, ((χ σ : ℚ_[l]ˣ) : ℚ_[l]) = (z σ : ℚ_[l]) := fun σ =>
     eq_of_mul_eq hxc ((hχ σ).symm.trans (hxcσ σ))
   have hψne : ∀ σ, ((((ψ σ : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l])) ≠ 0 := fun σ => by
-    intro h
-    exact (ψ σ).ne_zero (Subtype.ext (h.trans PadicInt.coe_zero.symm))
+    exact fun h => (ψ σ).ne_zero (Subtype.ext (h.trans PadicInt.coe_zero.symm))
   let ρC : Gal(PadicAlgCl l/E) →* ℂ_[l] :=
     { toFun := fun σ => algebraMap ℚ_[l] ℂ_[l]
         ((((ψ σ : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l]) ^ f * ((χ σ⁻¹ : ℚ_[l]ˣ) : ℚ_[l]))

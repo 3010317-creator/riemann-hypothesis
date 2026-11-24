@@ -145,8 +145,7 @@ theorem eta_inv_lat : ∀ {D : D7} (V : HSp D) (n : ℕ) [NeZero n] (h : n = V.r
       Formalism.L2.Herm.intAf D.host.F D.host.E := by
     have h1 := not_not.mp ((hI.2 Ut.π Ut.hπ0).not.mp Ut.hπP)
     have h2 := (GlobalTheory.IdemSupport.mem_intAE_iff _).1 h1
-    rw [map_mul, map_mul] at h2
-    exact h2
+    rwa [map_mul, map_mul] at h2
   have hstar : star (algebraMap (𝓞 D.host.E) D.host.E Ut.π) =
       algebraMap (𝓞 D.host.E) D.host.E (Formalism.L2.Col.cO D.host.E Ut.π) := rfl
   have hCC := (Formalism.L2.Col.rll_mem_St_iff _ C).1 hC
@@ -159,8 +158,7 @@ theorem eta_inv_lat : ∀ {D : D7} (V : HSp D) (n : ℕ) [NeZero n] (h : n = V.r
     intro i j
     have := congrArg (fun g : GL (Fin V.rank) (D.host.E ⊗[D.host.F] HeightOneSpectrum.adicCompletion D.host.F v) => (Units.val g) i j) (Formalism.L2.Col.rll_put_self (F := D.host.F) (E := D.host.E) V.rank v
       ((Formalism.UG.bc (Formalism.UG.prV v)) ((Formalism.UG.bc (Formalism.L2.Col.iA D.host.F D.host.E)) (Formalism.L2.Col.mhlD V.rank Ut.hπ0 d))))
-    rw [hη]
-    exact this
+    rwa [hη]
   have hV' : ∀ a b : Formalism.IndefR.Lev.EAf D, Formalism.UG.prV v a = Formalism.UG.prV v b →
       swapAE D (finPart D e) * a = swapAE D (finPart D e) * b := by
     intro a b hab
@@ -183,8 +181,7 @@ theorem eta_inv_lat : ∀ {D : D7} (V : HSp D) (n : ℕ) [NeZero n] (h : n = V.r
       split_ifs
       · rw [Formalism.L2.Col.mhlA, _root_.mul_inv_rev, inv_inv, map_mul, mul_left_comm]
         exact Subring.mul_mem _ (hstar ▸ hiA _) hπinv
-      · rw [inv_one, map_one, mul_one]
-        exact hεI
+      · rwa [inv_one, map_one, mul_one]
     · rw [map_zero, mul_zero]
       exact Subring.zero_mem _
   have hN2 : ∀ i j, (swapAE D (finPart D e) * Formalism.L2.Col.iA D.host.F D.host.E (star (algebraMap (𝓞 D.host.E) D.host.E Ut.π))) *

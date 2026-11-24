@@ -84,8 +84,7 @@ theorem linear_firstIsoComponent (θ : DG g Zh₁ T T' ≃ₗ[M.L.O] DG g Zh₂ 
   rw [firstCoeff_diagonal, secondCoeff_diagonal, smul_zero] at hav
   have hθv : splitH hs h₂ (θ v) = ((l₂ : DD1 hs Z₂ TT), ((0 : Fin (r + 1) → M.R) : DD1 hs Zσ₂ TT)) := by
     refine Prod.ext ?_ ?_
-    · rw [← key]
-      exact hl
+    · rwa [← key]
     · rw [lin_split1 hs h₁ h₂ θ (mk1 hs Z₁ TT l)]
       rfl
   have h2 := splitH_smul hs h₂ (dgO g c) (θ v) l₂ 0 hθv
@@ -108,8 +107,7 @@ theorem linear_secondIsoComponent (θ : DG g Zh₁ T T' ≃ₗ[M.L.O] DG g Zh₂
     refine Prod.ext ?_ ?_
     · rw [lin_split2 hs h₁ h₂ θ (mk1 hs Zσ₁ TT l)]
       rfl
-    · rw [← key]
-      exact hl
+    · rwa [← key]
   have h2 := splitH_smul hs h₂ (dgO g c) (θ v) 0 l₂ hθv
   rw [firstCoeff_diagonal, secondCoeff_diagonal, smul_zero] at h2
   have hs1 : (splitH hs h₁).symm (0, mk1 hs Zσ₁ TT (dgR hs c • l)) = dgO g c • v := by
@@ -221,7 +219,7 @@ theorem secondProj_uniformizer_mul (x : M.R) : p2 g ((q2 hs * x : M.R) : E) = (g
 
 theorem dl_cast (a : Fin r) : dl (F := F) r a.castSucc = 0 := by
   unfold dl
-  rw [if_neg (Fin.castSucc_lt_last a).ne]
+  rw [ite_eq_right (Fin.castSucc_lt_last a).ne]
 
 theorem gamSup_holds : GamSupP := by
   intro F _ _ _ E _ _ _ _ M g hs r T T' TT Zh Z Zσ h

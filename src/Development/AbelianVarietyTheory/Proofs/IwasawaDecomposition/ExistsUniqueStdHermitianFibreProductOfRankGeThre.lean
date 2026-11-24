@@ -106,8 +106,8 @@ theorem tail_split {ι : Type} [DecidableEq ι] (c : ι → ℝ) (hs : Summable 
     by_cases hi : i ∈ S <;> simp [hi]
   have hf : HasProd (fun i => if i ∈ S \ T then c i else 1) (∏ i ∈ S \ T, c i) := by
     have := hasProd_prod_of_ne_finset_one (f := fun i => if i ∈ S \ T then c i else 1)
-      (s := S \ T) (L := SummationFilter.unconditional ι) (fun b hb => if_neg hb)
-    rwa [Finset.prod_congr rfl (fun i hi => if_pos hi)] at this
+      (s := S \ T) (L := SummationFilter.unconditional ι) (fun b hb => ite_eq_right hb)
+    rwa [Finset.prod_congr rfl (fun i hi => ite_eq_left hi)] at this
   rw [key, key, ← hf.tprod_eq, ← hf.multipliable.tprod_mul hm]
   refine tprod_congr fun i => ?_
   by_cases hT : i ∈ T
@@ -144,7 +144,7 @@ theorem exists_piece {ι : Type} {V : ι → Type} [∀ i, MeasurableSpace (V i)
     by_cases hi : i ∈ T
     · refine ⟨(a i).toFinite, (a i).rnDeriv (a i).toFinite, inferInstance,
         Measure.measurable_rnDeriv _ _, fun h => (h hi).elim, fun f hf => ?_⟩
-      rw [if_pos hi, one_mul]
+      rw [ite_eq_left hi, one_mul]
       conv_lhs => rw [← Measure.withDensity_rnDeriv_eq (a i) (a i).toFinite
         (absolutelyContinuous_toFinite _)]
       rw [lintegral_withDensity_eq_lintegral_mul _ (Measure.measurable_rnDeriv _ _) hf]
@@ -152,7 +152,7 @@ theorem exists_piece {ι : Type} {V : ι → Type} [∀ i, MeasurableSpace (V i)
     · haveI : IsFiniteMeasure (a i) := ⟨by rw [ha i hi]; exact ENNReal.ofReal_lt_top⟩
       refine ⟨(a i Set.univ)⁻¹ • a i, fun _ => 1, inferInstance, measurable_const,
         fun _ _ => rfl, fun f _ => ?_⟩
-      rw [if_neg hi, ← ha i hi, lintegral_smul_measure, smul_eq_mul, ← mul_assoc,
+      rw [ite_eq_right hi, ← ha i hi, lintegral_smul_measure, smul_eq_mul, ← mul_assoc,
         ENNReal.mul_inv_cancel (by simpa using h0 i) (measure_ne_top _ _)]
       simp
   choose P g hP hg hg1 hint using hP
@@ -181,8 +181,8 @@ theorem exists_piece {ι : Type} {V : ι → Type} [∀ i, MeasurableSpace (V i)
   have h2 : ∏ i ∈ S, (if i ∈ T then 1 else ENNReal.ofReal (c i)) =
       ∏ i ∈ S \ T, ENNReal.ofReal (c i) := by
     rw [← Finset.prod_subset (Finset.sdiff_subset (s := S) (t := T))
-      (fun i hi hi' => if_pos (by simpa [hi] using hi'))]
-    exact Finset.prod_congr rfl fun i hi => if_neg (Finset.mem_sdiff.1 hi).2
+      (fun i hi hi' => ite_eq_left (by simpa [hi] using hi'))]
+    exact Finset.prod_congr rfl fun i hi => ite_eq_right (Finset.mem_sdiff.1 hi).2
   rw [h2]
   ring
 
@@ -317,8 +317,7 @@ theorem exists_isProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     exact Measure.restrict_eq_self_of_ae_mem hν0
   refine ⟨ν.comap e, ⟨hi, hv, hs⟩, fun S fi fv hfi hfv => ?_⟩
   have h := hν S fi fv hfi hfv
-  rw [← hmap, hemb.restrict_map, hemb.lintegral_map] at h
-  exact h
+  rwa [← hmap, hemb.restrict_map, hemb.lintegral_map] at h
 
 end GlobalTheory.GaugeEx
 end -- clump:auto
@@ -368,8 +367,7 @@ theorem existsUnique_isStdX : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       (tupMeas (s.lamV v) 1 M) (isAddHaarMeasure_tupMeas_of_lc _ (s.haar_lamV v) 1 M) (s.nuV v)
       (s.haar_nuV v)
     refine ⟨_, fib, ?_, rfl⟩
-    simp only [isUnit_iff_ne_zero]
-    exact hfib
+    simpa only [isUnit_iff_ne_zero] using hfib
   choose mv hmv using hex
   have hconv : Conv b mi mv := by
     refine ⟨(bI mi hmi).2.1, fun v => (bV v _ (hmv v)).2.1, ?_⟩

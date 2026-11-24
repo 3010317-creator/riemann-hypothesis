@@ -86,12 +86,10 @@ private theorem unram_adjoin {R S : Type} [CommRing R] [CommRing S] [Algebra R S
     | algebraMap r => exact D.map_algebraMap r
     | add x y hx hy h1 h2 =>
       have := D.map_add ⟨x, hx⟩ ⟨y, hy⟩
-      rw [h1, h2, add_zero] at this
-      exact this
+      rwa [h1, h2, add_zero] at this
     | mul x y hx hy h1 h2 =>
       have := D.leibniz ⟨x, hx⟩ ⟨y, hy⟩
-      rw [h1, h2, smul_zero, smul_zero, add_zero] at this
-      exact this
+      rwa [h1, h2, smul_zero, smul_zero, add_zero] at this
   refine ⟨⟨fun a b => ?_⟩⟩
   have h := KaehlerDifferential.span_range_derivation R (Algebra.adjoin R {ζ})
   have h0 : (⊤ : Submodule (Algebra.adjoin R {ζ}) Ω[Algebra.adjoin R {ζ}⁄R]) ≤ ⊥ := by

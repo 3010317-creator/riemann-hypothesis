@@ -160,8 +160,7 @@ lemma gen_key {M G : Type} [Fintype M] [DecidableEq M] [Fintype G] [DecidableEq 
   have hn : n ≤ Fintype.card G := by
     have h1 := Module.finrank_eq_card_basis snf.bN
     have h2 := LinearMap.finrank_range_le (Matrix.mulVecLin A)
-    rw [h1, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at h2
-    exact h2
+    rwa [h1, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at h2
   let e : Fin n ↪ G := (Fin.castLEEmb hn).trans (Fintype.equivFin G).symm.toEmbedding
   refine ⟨n, U, snf.f, e, ?_, ?_⟩
   · refine ⟨Matrix.of fun i l => ∑ p, if e p = i then W (snf.f p) l else 0, ?_⟩
@@ -169,7 +168,7 @@ lemma gen_key {M G : Type} [Fintype M] [DecidableEq M] [Fintype G] [DecidableEq 
         ((Matrix.of fun i l => ∑ p, if e p = i then W (snf.f p) l else 0) * U) (e p) (snf.f q)) = 1 := by
       ext p q
       simp only [Matrix.of_apply, Matrix.mul_apply, e.injective.eq_iff, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       rw [← Matrix.mul_apply, hWU]
       simp [Matrix.one_apply, snf.f.injective.eq_iff]
     rw [hZ, Matrix.det_one]
@@ -255,10 +254,8 @@ lemma genfin_det_totalDegree {ι K n : Type*} [CommRing K] [Fintype n] [Decidabl
     calc ∑ i, (A (σ i) i).totalDegree ≤ ∑ _i : n, 1 := Finset.sum_le_sum fun i _ => h _ _
       _ = Fintype.card n := by simp
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with hs | hs
-  · rw [hs, one_smul]
-    exact hprod
-  · rw [hs, Units.neg_smul, one_smul, MvPolynomial.totalDegree_neg]
-    exact hprod
+  · rwa [hs, one_smul]
+  · rwa [hs, Units.neg_smul, one_smul, MvPolynomial.totalDegree_neg]
 
 theorem genericFin : StatGenericFin := by
   intro R O _ _ _ _ _ m g s _ _ _ _ d _ _ hcard ρ hρ P
@@ -294,8 +291,7 @@ theorem genericFin : StatGenericFin := by
     funext p q
 
     simp only [bigRect, Matrix.sum_apply, Matrix.smul_apply, map_sum, map_smul]
-    rw [Fintype.sum_sigma]
-    rw [Fintype.sum_eq_single w (fun x hx => by simp [Pi.single_eq_of_ne hx])]
+    rw [Fintype.sum_sigma, Fintype.sum_eq_single w (fun x hx => by simp [Pi.single_eq_of_ne hx])]
     simp only [Pi.single_eq_same]
     rw [Fintype.sum_eq_single (p.1, q.1, p.2, q.2)]
     · simp [c, r, Function.surjInv_eq (hρ w)]
@@ -303,7 +299,7 @@ theorem genericFin : StatGenericFin := by
       simp only [c, r, Matrix.single_apply]
       split_ifs with h1
       · obtain ⟨rfl, rfl⟩ := h1
-        rw [Function.surjInv_eq (hρ w), Matrix.single_apply, if_neg, smul_zero]
+        rw [Function.surjInv_eq (hρ w), Matrix.single_apply, ite_eq_right, smul_zero]
         rintro ⟨rfl, rfl⟩
         exact hy rfl
       · simp
@@ -344,8 +340,7 @@ theorem genericFin : StatGenericFin := by
     · cases nonempty_fintype (IsLocalRing.ResidueField O)
       refine ⟨Finset.univ, ?_⟩
       rw [Finset.card_univ]
-      rw [Cardinal.mk_fintype, Nat.cast_lt] at hcard
-      exact hcard
+      rwa [Cardinal.mk_fintype, Nat.cast_lt] at hcard
     · obtain ⟨S, hS⟩ := Infinite.exists_subset_card_eq (IsLocalRing.ResidueField O) (D + 1)
       exact ⟨S, by omega⟩
 

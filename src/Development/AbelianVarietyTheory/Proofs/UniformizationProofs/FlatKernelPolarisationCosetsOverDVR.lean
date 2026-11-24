@@ -106,8 +106,7 @@ theorem loc_triv_iff {R : Type} [CommRing R] [IsLocalRing R] {Y : Scheme.{0}} (q
     obtain rfl : U = ⊤ := (IsLocalRing.closedPoint_mem_iff U).1 hU
     have : IsIso (q ⁻¹ᵁ ⊤).ι := inferInstanceAs (IsIso Y.topIso.hom)
     exact (pull_iso_eq_zero _ _).1 ((key _).1 ht)
-  · intro h p
-    exact ⟨⊤, trivial, (key _).2 (by rw [h, map_zero])⟩
+  · exact fun h p => ⟨⊤, trivial, (key _).2 (by rw [h, map_zero])⟩
 
 section Classes
 
@@ -186,8 +185,7 @@ theorem exists_family (hL : L.IsLB) (hO : O.IsLB) (hΘ : ∃ t : LB.Gen (Theta B
       rw [← Category.assoc]
       exact congrArg (· ≫ a.left) (Over.w u).symm) rfl
   have z := dcl_primitive hL hO hΘ hu x (ρ (fst B' B')) (ρ (snd B' B'))
-  rw [← map_mul ρ, ← map_one ρ, ← k, ← k, ← k, ← k] at z
-  exact z
+  rwa [← map_mul ρ, ← map_one ρ, ← k, ← k, ← k, ← k] at z
 
 end Family
 
@@ -292,8 +290,7 @@ theorem flat_of_isFinite : GlobalFnsSt → ∀ (V : Type) [CommRing V] [IsDomain
       rw [← Over.w j, Scheme.Hom.comp_apply, e, ← Scheme.Hom.comp_apply, hσ]
       refine PrimeSpectrum.ext (Eq.symm ((IsLocalRing.maximalIdeal.isMaximal V).eq_of_le
         (PrimeSpectrum.isPrime _).ne_top ?_))
-      rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_le_iff_mem]
-      exact hp
+      rwa [hϖ.maximalIdeal_eq, Ideal.span_singleton_le_iff_mem]
     have := j.left.isClosedEmbedding.isClosedMap _ (isClosed_of_isFinite H.hom z hz)
     rwa [Set.image_singleton] at this
   obtain ⟨h₀, h₁, h₂, h₃⟩ := stalk_of_smooth V ϖ hϖ B.left B.hom g hg (j.left h)

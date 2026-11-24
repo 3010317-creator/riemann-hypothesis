@@ -409,12 +409,11 @@ theorem gLsing_core (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) (hCD :
       · rw [hψ₀F β'' hβh (hβdet hdet), mul_zero]
       · rw [show PositivityTheory.PfSWUS.fc ψ lam 𝓖 nb F β g' = 0 from
           hΛ _ ⟨nb, lam, 𝓖, β, g', ⟨hnb, hlam, hfd, hvol⟩, hdet, rfl⟩, zero_mul]
-    intro g'
-    exact congrFun (hFZ D n ψ hψ nb lam 𝓖 ⟨hnb, hlam, hfd, hvol⟩ h hhc hinv hcoef) g'
+    exact fun g' => congrFun (hFZ D n ψ hψ nb lam 𝓖 ⟨hnb, hlam, hfd, hvol⟩ h hhc hinv hcoef) g'
 
   have hmRc : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtype_val
   let Fam : G D n → M2 n → ℂ := fun h M => if hM : InG M then F (ι (toGR M hM) * h) else 0
-  have hFam : ∀ h M (hM : InG M), Fam h M = F (ι (toGR M hM) * h) := fun h M hM => dif_pos hM
+  have hFam : ∀ h M (hM : InG M), Fam h M = F (ι (toGR M hM) * h) := fun h M hM => dite_eq_left hM
   let Γ : Set (M2 n) := {M | ∃ hM : InG M, ∃ γ ∈ GF D n, ∃ x : G D n, γ = x * ι (toGR M hM) ∧
     ∀ y'' : GR n, x * ι y'' = ι y'' * x}
   have hFamc : ∀ h, ContinuousOn (Fam h) {M | InG M} := by
@@ -440,8 +439,7 @@ theorem gLsing_core (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) (hCD :
     obtain ⟨γ, hγ, y', hy'O, x, hγx, hxc⟩ :=
       hD D n θ τ ι hθ hι (toGR M hM) {y | mR y ∈ U} (hU.preimage hmRc) hMU
     refine ⟨mR y', hy'O, y'.2, γ, hγ, x, ?_, hxc⟩
-    rw [toGR_mR]
-    exact hγx
+    rwa [toGR_mR]
   have hΓ3 : ∀ γM ∈ Γ, ∀ h, ∃ h', ∀ M, InG M → Fam h (γM * M) = Fam h' M := by
     rintro γM ⟨hγM, γ, hγ, x, hγx, hxc⟩ h
     refine ⟨x⁻¹ * h, fun M hM => ?_⟩
@@ -643,8 +641,7 @@ theorem nb_rat {nb : hermA D n → G D n} (h : IsNMap nb) {γ : hermA D n} (hγ 
   have hu : adj (mat (nb γ)) * JR (AF D.host.F) (Jst D n) * mat (nb γ) = JR (AF D.host.F) (Jst D n) := (nb γ).2
   change Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) u.1 * Jst D n * u.1 = Jst D n
   apply rat_injective
-  rw [rat_mul, rat_mul, cT_sig, rat_conjTranspose, hm]
-  exact hu
+  rwa [rat_mul, rat_mul, cT_sig, rat_conjTranspose, hm]
 
 theorem nb_facts : ∀ (D : D7) (n : ℕ) (nb : PositivityTheory.GramSchwartzFunctions.BC.hermA D n → GlobalTheory.StdUnn.G D n), PositivityTheory.PfSWUS.IsNMap nb →
     Continuous nb ∧ (∀ b c, nb (b + c) = nb b * nb c) ∧ ∀ γ ∈ PositivityTheory.GramSchwartzFunctions.BC.ratHerm D n, nb γ ∈ GlobalTheory.StdUnn.GF D n :=
@@ -734,22 +731,7 @@ theorem nb_neg {nb : hermA D n → G D n} (h : PositivityTheory.PfSWUS.IsNMap nb
 
 
 theorem nb_continuous {nb : hermA D n → G D n} (h : PositivityTheory.PfSWUS.IsNMap nb) : Continuous nb := by
-  obtain ⟨i1, -⟩ := lattice_Mx D n n
-  haveI : IsTopologicalAddGroup (Mx D n n) := i1
-  have he := GlobalTheory.AdelicU.isEmbedding_matHom (AF D.host.F) D.sp.cm.sig (Jst D n)
-  rw [he.continuous_iff, Units.continuous_iff]
-  have hc : Continuous fun b : hermA D n => blk4 (1 : Mx D n n) b.1 0 1 := by
-    unfold blk4
-    exact (continuous_const.matrix_fromBlocks continuous_subtype_val continuous_const continuous_const).matrix_submatrix _ _
-  refine ⟨?_, ?_⟩
-  · convert hc using 1
-    funext b
-    exact h b
-  · convert hc.comp continuous_neg using 1
-    funext b
-    simp only [Function.comp_apply]
-    rw [← map_inv, nb_neg h]
-    exact h (-b)
+  exact GlobalTheory.CompanionTheory.SiegelUnip.nb_continuous h
 
 end FZNH
 

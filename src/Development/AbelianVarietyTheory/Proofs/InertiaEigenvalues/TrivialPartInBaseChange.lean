@@ -56,8 +56,7 @@ theorem placesOver_finite (D : D7) (k : Fin 2) : (placesOver D.host.E (D.host.g 
   have hne : Ideal.span {((D.host.g k : ℕ) : 𝓞 D.host.E)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast (D.host.g_prime k).ne_zero
-  refine (Ideal.finite_factors hne).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.mpr hv
+  exact (Ideal.finite_factors hne).subset fun v hv => Ideal.dvd_span_singleton.mpr hv
 
 theorem mem_isoInf (D : D7) (Pa : List (Part D.naut.CG)) (p : Part D.naut.CG) (hp : p ∈ Pa) (hd : 1 ≤ p.d)
     (τ : D.host.E →+* ℂ) :
@@ -65,8 +64,7 @@ theorem mem_isoInf (D : D7) (Pa : List (Part D.naut.CG)) (p : Part D.naut.CG) (h
   unfold isoInf
   refine le_trans ?_ (List.single_le_sum (by intro x _; exact Multiset.zero_le x) _ (List.mem_map.2 ⟨p, hp, rfl⟩))
   refine List.single_le_sum (by intro x _; exact Multiset.zero_le x) _ (List.mem_map.2 ⟨(0 : ℂ), ?_, rfl⟩)
-  simp
-  exact ⟨0, hd, by simp⟩
+  simpa using ⟨0, hd, by simp⟩
 
 theorem mu_ralg (D : D7) (Rw : RowSide D) (j : ℕ) (σ : D.what₂.FT) (π : D.nbc.AU j) (μ : D.naut.CG 1)
     (hA : LiftAt D Rw j σ π μ) : D.naut.ralg μ := by

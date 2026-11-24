@@ -86,8 +86,7 @@ theorem two_pow_card_le_index_iInf :
       have h2 : (∏ i ∈ A.erase j, x i) ∈ K j :=
         Subgroup.prod_mem _ fun i hi => hx' i j (Finset.ne_of_mem_erase hi).symm
       exact hx j ((Subgroup.mul_mem_cancel_right _ h2).1 hm)
-    · intro hj
-      exact Subgroup.prod_mem _ fun i hi => hx' i j (fun e => hj (e ▸ hi))
+    · exact fun hj => Subgroup.prod_mem _ fun i hi => hx' i j (fun e => hj (e ▸ hi))
   haveI : Finite (G ⧸ ⨅ i, K i) := Nat.finite_of_card_ne_zero hidx
   have inj : Function.Injective
       (fun A : Finset ι => ((∏ i ∈ A, x i : G) : G ⧸ ⨅ i, K i)) := by
@@ -97,10 +96,8 @@ theorem two_pow_card_le_index_iInf :
     have hj : (∏ i ∈ A, x i)⁻¹ * (∏ i ∈ B, x i) ∈ K j := (Subgroup.mem_iInf.1 hm) j
     have hiff : (∏ i ∈ A, x i) ∈ K j ↔ (∏ i ∈ B, x i) ∈ K j := by
       constructor
-      · intro ha
-        exact (Subgroup.mul_mem_cancel_left _ (inv_mem ha)).1 hj
-      · intro hb
-        exact inv_mem_iff.1 ((Subgroup.mul_mem_cancel_right _ hb).1 hj)
+      · exact fun ha => (Subgroup.mul_mem_cancel_left _ (inv_mem ha)).1 hj
+      · exact fun hb => inv_mem_iff.1 ((Subgroup.mul_mem_cancel_right _ hb).1 hj)
     rw [key, key] at hiff
     exact not_iff_not.1 hiff
   have := Nat.card_le_card_of_injective _ inj
@@ -199,7 +196,7 @@ theorem two_pow_le_index_locNorm :
     · rintro ⟨a, b, hab⟩
       have h1 := hxσ σ.1
       have h2 : σ.1 δ < 0 := σ.2
-      simp only [if_true] at h1
+      simp only [ite_true] at h1
       have h3 : σ.1 x = a ^ 2 - σ.1 δ * b ^ 2 := hab
       nlinarith [sq_nonneg a, mul_nonneg (neg_nonneg.2 h2.le) (sq_nonneg b)]
     · rintro (w | τ) hj

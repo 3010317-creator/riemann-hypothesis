@@ -295,17 +295,7 @@ lemma btOrder_le_ext [Finite T] [Module.Flat R R'] (Γ : QFGroup R T) (Γ' : QFG
     (κ : FractionRing R →+* FractionRing R')
     (hκ : κ.comp (algebraMap R _) = (algebraMap R' _).comp (algebraMap R R')) :
     Γ'.btOrder ⊤ ≤ extOrder (algebraMap R R') (Γ.btOrder ⊤) := by
-  intro g hg
-  rw [_root_.GlobalTheory.CompanionTheory.Ar.BT.ExtSpan.extOrder_eq_span]
-  refine alg_core κ hκ (secFn Γ) (Subalgebra.toSubmodule (Γ.btOrder ⊤)) (fun f => mem_btOrder_iff Γ f) g ?_
-  intro t
-  obtain ⟨x, hx⟩ := (mem_btOrder_iff Γ' g).1 hg t
-  have e : (fun h => algebraMap R' (FractionRing R') (g (t * h))) =
-      fun h => valAt (Γ'.pt h).left ⊤ (top_le_pre _) x := by
-    funext h
-    exact (hx h _).symm
-  rw [e]
-  exact val_mem_span Γ Γ' F hbc κ hκ x
+  exact PositivityTheory.HtPt.Htat.ValuationInjectivePi.btOrder_le_ext Γ Γ' F hbc κ hκ
 
 lemma ext_le_btOrder [Finite T] (Γ : QFGroup R T) (Γ' : QFGroup R' T) (F : Γ'.G.left ⟶ Γ.G.left)
     (hbc : Γ'.IsBaseChange Γ (algebraMap R R') F)

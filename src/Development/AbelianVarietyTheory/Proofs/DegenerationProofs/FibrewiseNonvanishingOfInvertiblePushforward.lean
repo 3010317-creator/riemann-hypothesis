@@ -112,8 +112,7 @@ theorem exists_sec_pull {L : LB X} {L' : LB Y} (hL : L.IsLB) (hL' : L'.IsLB) (F 
     rw [resG_resG, resG_resG, coord_rel t i j _ _ le_rfl, resG_self]
   obtain ⟨k, hk⟩ := nonvanishing_of_iso hL' hP w hw s' y (fun _ => i) (by
     change y ∈ Y.basicOpen (coord (e.hom.app _ s') _)
-    rw [hs]
-    rw [hcoord (fun _ => i)]
+    rw [hs, hcoord (fun _ => i)]
     exact (mem_basicOpen_appLE F (pull_inf_le F O (fun _ => i)) (θ i) y).2
       ⟨⟨(X.basicOpen_le _ hy).1, mem_pull.2 (X.basicOpen_le _ hy).2⟩, hy⟩)
   refine ⟨k, ?_⟩

@@ -81,11 +81,9 @@ lemma sumElim_inj {u g u' g' : Fin k →₀ ℕ} :
   · intro h
     constructor
     · ext i
-      have h1 := congrArg (fun f => f (Sum.inl i)) h
-      simpa using h1
+      simpa using congrArg (fun f => f (Sum.inl i)) h
     · ext i
-      have h1 := congrArg (fun f => f (Sum.inr i)) h
-      simpa using h1
+      simpa using congrArg (fun f => f (Sum.inr i)) h
   · rintro ⟨rfl, rfl⟩
     rfl
 
@@ -168,7 +166,7 @@ lemma eq_sum_mono (F : ↥(homogeneousSubmodule (Fin k) K d)) :
   rw [Submodule.coe_sum]
   conv_lhs => rw [(F : MvPolynomial (Fin k) K).as_sum]
   refine Finset.sum_congr rfl fun g hg => ?_
-  rw [Submodule.coe_smul, mono_val, if_pos (degree_of_coeff_ne F (MvPolynomial.mem_support_iff.1 hg)),
+  rw [Submodule.coe_smul, mono_val, ite_eq_left (degree_of_coeff_ne F (MvPolynomial.mem_support_iff.1 hg)),
     smul_monomial, smul_eq_mul, mul_one]
 
 lemma prodFact_fintype (g : Fin k →₀ ℕ) :
@@ -390,8 +388,7 @@ private theorem coeff_sumElim_tt_pow (K : Type) [Field K] (k d : ℕ) (m g : Fin
     apply h
     refine ⟨h1.symm.trans h2, ?_⟩
     rw [← h2, Finsupp.degree_eq_sum]
-    have h3 := (Finset.mem_piAntidiag.1 hf).1
-    simpa using h3
+    simpa using (Finset.mem_piAntidiag.1 hf).1
 
 theorem symbolMapOne : KappaId := by
   intro K _ _ k d

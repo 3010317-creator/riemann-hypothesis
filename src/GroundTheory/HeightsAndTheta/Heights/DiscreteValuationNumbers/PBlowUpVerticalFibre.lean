@@ -47,15 +47,13 @@ theorem contractPrime_specialIdeal {O : Type*} [CommRing O] [IsDomain O] [IsDisc
     MvPolynomial.map_surjective _ hres
   have hker' : RingHom.ker (MvPolynomial.map (IsLocalRing.residue O) :
       MRing (extIdx ι J) O →+* MRing (extIdx ι J) (IsLocalRing.ResidueField O)) ≤ W' := by
-    rw [ker_map_residue_eq_span hϖ, Ideal.span_le, Set.singleton_subset_iff]
-    exact hϖW
+    rwa [ker_map_residue_eq_span hϖ, Ideal.span_le, Set.singleton_subset_iff]
   have hker : RingHom.ker (MvPolynomial.map (IsLocalRing.residue O) :
       MRing ι O →+* MRing ι (IsLocalRing.ResidueField O)) ≤
         W'.comap (liftForm (ι := ι) (J := J) (R := O)) := by
     rw [ker_map_residue_eq_span hϖ, Ideal.span_le, Set.singleton_subset_iff]
     change liftForm (J := J) (C ϖ : MRing ι O) ∈ W'
-    rw [liftForm_C]
-    exact hϖW
+    rwa [liftForm_C]
   ext y
   obtain ⟨z, rfl⟩ := hs y
   have e : rename (FieldNumbers.blockIncl Function.Embedding.some (extIdx ι J))
@@ -131,8 +129,7 @@ theorem BlowUpVerticalFibre.proof (hmodel : BlowUpModel.Statement.{u})
     intro W' hW' hcomap
     obtain ⟨hWp, hWrel, -, hWh⟩ := divCycle_ne_zero_facts hB.multiProj.multiHomog hxl hW'
     have hϖ' : (C ϖ : MRing (extIdx ι J) O) ∈ W' := by
-      rw [← hcomap, Ideal.mem_comap, liftForm_C] at hϖW
-      exact hϖW
+      rwa [← hcomap, Ideal.mem_comap, liftForm_C] at hϖW
     obtain ⟨hsp, -, hrel, -⟩ :=
       SpecialIdealCorresp.proof O ϖ hϖ (Option K) (extIdx ι J) (blowUpOf P u) W' hWp hϖ'
     refine ⟨⟨hsp, SpecialIdealMultiHomog.proof O (Option K) (extIdx ι J) W' hWh, hrel.mp hWrel⟩, ?_, ?_⟩

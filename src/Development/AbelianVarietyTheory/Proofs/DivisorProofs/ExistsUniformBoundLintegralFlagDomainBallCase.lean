@@ -99,18 +99,18 @@ theorem blkW_upper {r : ℕ} (p0 : ℕ) (w : Low r → ℂ) (i j : Fin (r - 1)) 
   unfold blkW
   split_ifs
   · unfold lowMat
-    rw [dite_eq_right (by rw [Fin.lt_def]; simp only; omega), if_neg (by rw [Fin.ext_iff]; simp only; omega)]
+    rw [dite_eq_right (by rw [Fin.lt_def]; simp only; omega), ite_eq_right (by rw [Fin.ext_iff]; simp only; omega)]
   · unfold lowMat
-    rw [dite_eq_right (by rw [Fin.lt_def]; simp only; omega), if_neg (by rw [Fin.ext_iff]; simp only; omega)]
+    rw [dite_eq_right (by rw [Fin.lt_def]; simp only; omega), ite_eq_right (by rw [Fin.ext_iff]; simp only; omega)]
 
 theorem blkW_diag {r : ℕ} (p0 : ℕ) (w : Low r → ℂ) (i : Fin (r - 1)) :
     blkW p0 w i i = 1 := by
   unfold blkW
   split_ifs
   · unfold lowMat
-    rw [dite_eq_right (lt_irrefl _), if_pos rfl]
+    rw [dite_eq_right (lt_irrefl _), ite_eq_left rfl]
   · unfold lowMat
-    rw [dite_eq_right (lt_irrefl _), if_pos rfl]
+    rw [dite_eq_right (lt_irrefl _), ite_eq_left rfl]
 
 theorem lowerTri_det_one {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
     (hu : ∀ i j, i < j → T i j = 0) (hd : ∀ i, T i i = 1) : T.det = 1 := by
@@ -130,8 +130,7 @@ theorem colGram_blkW_pos : ∀ (r p0 : ℕ) (w : Low r → ℂ) (k : Fin (r - 1 
     apply lowerTri_det_one
     · intro i j hij
       exact blkW_upper p0 w _ _ (by rw [Fin.lt_def] at hij ⊢; simpa using hij)
-    · intro i
-      exact blkW_diag p0 w _
+    · exact fun i => blkW_diag p0 w _
   have hinj : Function.Injective N.mulVec := by
     intro u v huv
     have h0 : N *ᵥ (u - v) = 0 := by rw [Matrix.mulVec_sub, huv, sub_self]
@@ -415,8 +414,7 @@ theorem lintegral_update_sub_shear {ι : Type} [Fintype ι] [DecidableEq ι] (i 
   have hmp : MeasurePreserving (e.symm ∘ S ∘ e) :=
     he_mp.symm.comp (hS_mp.comp he_mp)
   have h := hmp.lintegral_comp hF
-  rw [← hT] at h
-  exact h
+  rwa [← hT] at h
 
 end GlobalTheory
 end -- clump:auto
@@ -484,8 +482,8 @@ theorem lintegral_hB_lt_top_of_pos (p0 : ℕ) (pa pb pc : Low 4) (hab : pa ≠ p
     if p ∈ S then ENNReal.ofReal (pw x) else (Metric.closedBall (0 : ℂ) 1).indicator 1 x
   have hf : ∀ p, Measurable (f p) := by
     intro p; by_cases hp : p ∈ S
-    · simp only [f, hp, if_true]; exact measurable_pw
-    · simp only [f, hp, if_false]; exact measurable_one.indicator measurableSet_closedBall
+    · simp only [f, hp, ite_true]; exact measurable_pw
+    · simp only [f, hp, ite_false]; exact measurable_one.indicator measurableSet_closedBall
   let U : (Low 4 → ℂ) → ℝ≥0∞ := fun w => ∏ p, f p (w p)
   have hU : Measurable U := Finset.measurable_prod _ fun p _ => (hf p).comp (measurable_pi_apply p)
   have hUfin : ∫⁻ w, U w < ⊤ := by
@@ -494,8 +492,8 @@ theorem lintegral_hB_lt_top_of_pos (p0 : ℕ) (pa pb pc : Low 4) (hab : pa ≠ p
     rw [volume_pi, this]
     refine ENNReal.prod_lt_top fun p _ => ?_
     by_cases hp : p ∈ S
-    · simp only [f, hp, if_true]; exact lintegral_pw_lt_top
-    · simp only [f, hp, if_false]
+    · simp only [f, hp, ite_true]; exact lintegral_pw_lt_top
+    · simp only [f, hp, ite_false]
       rw [lintegral_indicator measurableSet_closedBall]
       simpa using (measure_closedBall_lt_top (μ := (volume : Measure ℂ)) (x := 0) (r := 1))
   have hUeq : ∀ w : Low 4 → ℂ, (∀ p, p ∉ S → ‖w p‖ ≤ 1) →
@@ -677,8 +675,7 @@ theorem lintegral_hB_one_two_lt_top : ∫⁻ w : Low 2 → ℂ, hB 1 w < ⊤ := 
       have h1 : (p.1.2 : ℕ) < p.1.1 := hp
       have h2 : (p.1.1 : ℕ) < 2 := p.1.1.isLt
       exact h p (by omega) (by omega)
-    · intro h p _ _
-      exact h p
+    · exact fun h p _ _ => h p
   have hfun : hB 1 = Set.indicator (Metric.closedBall (0 : Low 2 → ℂ) 1) (fun _ => (1 : ℝ≥0∞)) := by
     funext w
     simp only [hB, hset, hg, ENNReal.ofReal_one]
@@ -748,8 +745,7 @@ theorem measurePreserving_of_triangular {n : ℕ} (F : V n → V n) (hF : Differ
       have : ρ i ≤ Finset.univ.sup ρ := Finset.le_sup (Finset.mem_univ i)
       simpa using hpow _ h i (by omega)
     have := det_one_add_of_isNilpotent hnil
-    rw [hK, add_sub_cancel] at this
-    exact this
+    rwa [hK, add_sub_cancel] at this
   refine ⟨hF.continuous.measurable, ?_⟩
   have := map_withDensity_abs_det_fderiv_eq_addHaar (volume : Measure (V n)) (s := Set.univ)
     (f := F) (f' := fderiv ℝ F) MeasurableSet.univ.nullMeasurableSet
@@ -825,7 +821,7 @@ theorem nmat_apply_idx (z : V (nd X)) (i : Fin (nd X)) :
     nmat X z ((Fintype.equivFin (Ent X)).symm i).1 ((Fintype.equivFin (Ent X)).symm i).2.1.1
       ((Fintype.equivFin (Ent X)).symm i).2.1.2 = z i := by
   have h := ((Fintype.equivFin (Ent X)).symm i).2.2
-  simp only [nmat, dif_pos h]
+  simp only [nmat, dite_eq_left h]
   exact congrArg (fun j => z j) ((Fintype.equivFin (Ent X)).apply_symm_apply i)
 
 theorem coordOf_nmat (z : V (nd X)) : coordOf X (nmat X z) = z := by
@@ -840,14 +836,14 @@ theorem nFrame_apply (z : V (nd X)) (τ : X.Ψ) (a b : Fin r) :
   simp only [zFrame, leviFrame]
   by_cases ha : X.p0 ≤ (a : ℕ)
   · by_cases hb : (b : ℕ) < X.p0
-    · rw [if_pos ⟨ha, hb⟩]
+    · rw [ite_eq_left ⟨ha, hb⟩]
       refine Finset.sum_congr rfl fun c _ => ?_
       by_cases hc : (c : ℕ) < X.p0
       · have : ¬ X.p0 ≤ (c : ℕ) := by omega
         simp [ha, hb, hc, this]
       · have : X.p0 ≤ (c : ℕ) := by omega
         simp [ha, hb, hc, this]
-    · rw [if_neg (fun h => hb h.2), Finset.sum_eq_single a]
+    · rw [ite_eq_right (fun h => hb h.2), Finset.sum_eq_single a]
       · have : ¬ (a : ℕ) < X.p0 := by omega
         simp [hb, this]
       · intro c _ hca
@@ -857,7 +853,7 @@ theorem nFrame_apply (z : V (nd X)) (τ : X.Ψ) (a b : Fin r) :
           simp [hb, h2]
         · simp [hc, hca.symm]
       · simp
-  · rw [if_neg (fun h => ha h.1), Finset.sum_eq_single a]
+  · rw [ite_eq_right (fun h => ha h.1), Finset.sum_eq_single a]
     · simp [ha]
     · intro c _ hca
       simp [ha, hca.symm]
@@ -875,12 +871,12 @@ theorem nmat_toEntries (z : V (nd X)) : nmat X (toEntries X z) = nFrame X z := b
   by_cases h : b < a
   · exact nmat_coordOf_of_lt X _ τ h
   · have : ¬ (X.p0 ≤ (a : ℕ) ∧ (b : ℕ) < X.p0) := fun h' => h (Fin.lt_def.2 (by omega))
-    rw [nFrame_apply, if_neg this]
+    rw [nFrame_apply, ite_eq_right this]
     exact nmat_of_not_lt X _ _ τ h
 
 theorem nmat_toEntries_of_not (z : V (nd X)) (τ : X.Ψ) {a b : Fin r}
     (h : ¬ (X.p0 ≤ (a : ℕ) ∧ (b : ℕ) < X.p0)) : nmat X (toEntries X z) τ a b = nmat X z τ a b := by
-  rw [nmat_toEntries, nFrame_apply, if_neg h]
+  rw [nmat_toEntries, nFrame_apply, ite_eq_right h]
 
 theorem nmat_ofEntries_of_not (w : V (nd X)) (τ : X.Ψ) {a b : Fin r}
     (h : ¬ (X.p0 ≤ (a : ℕ) ∧ (b : ℕ) < X.p0)) : nmat X (ofEntries X w) τ a b = nmat X w τ a b := by
@@ -904,12 +900,12 @@ theorem Wm_toEntries (z : V (nd X)) (τ : X.Ψ) :
   show nmat X (toEntries X z) τ (ExF.qI X m) (Fin.castLE X.p0_le b) = _
   have h : X.p0 ≤ ((ExF.qI X m : Fin r) : ℕ) ∧ ((Fin.castLE X.p0_le b : Fin r) : ℕ) < X.p0 :=
     ⟨Nat.le_add_right _ _, b.isLt⟩
-  rw [nmat_toEntries, nFrame_apply, if_pos h, ExF.sum_split X, Matrix.mul_apply]
+  rw [nmat_toEntries, nFrame_apply, ite_eq_left h, ExF.sum_split X, Matrix.mul_apply]
   have h2 : ∀ k : Fin (r - X.p0), ¬ ((ExF.qI X k : Fin r) : ℕ) < X.p0 := fun k =>
     not_lt.2 (Nat.le_add_right _ _)
-  simp only [h2, if_false, Finset.sum_const_zero, add_zero]
+  simp only [h2, ite_false, Finset.sum_const_zero, add_zero]
   refine Finset.sum_congr rfl fun c _ => ?_
-  rw [if_pos (show ((Fin.castLE X.p0_le c : Fin r) : ℕ) < X.p0 from c.isLt)]
+  rw [ite_eq_left (show ((Fin.castLE X.p0_le c : Fin r) : ℕ) < X.p0 from c.isLt)]
   rfl
 
 theorem Wm_ofEntries (w : V (nd X)) (τ : X.Ψ) :
@@ -918,7 +914,7 @@ theorem Wm_ofEntries (w : V (nd X)) (τ : X.Ψ) :
   show nmat X (ofEntries X w) τ (ExF.qI X m) (Fin.castLE X.p0_le b) = _
   have h : X.p0 ≤ ((ExF.qI X m : Fin r) : ℕ) ∧ ((Fin.castLE X.p0_le b : Fin r) : ℕ) < X.p0 :=
     ⟨Nat.le_add_right _ _, b.isLt⟩
-  rw [ofEntries, nmat_coordOf_of_lt X _ τ (Fin.lt_def.2 (by omega)), dif_pos h]
+  rw [ofEntries, nmat_coordOf_of_lt X _ τ (Fin.lt_def.2 (by omega)), dite_eq_left h]
   have : (⟨(ExF.qI X m : ℕ) - X.p0, by have := (ExF.qI X m).isLt; omega⟩ : Fin (r - X.p0)) = m :=
     Fin.ext (by simp [ExF.qI])
   rw [this]
@@ -955,8 +951,7 @@ def coordEquiv : V (nd X) ≃ V (nd X) where
 theorem contDiff_coordOf {f : V (nd X) → Frame X.Ψ r}
     (hf : ∀ τ a b, ContDiff ℂ ∞ fun z => f z τ a b) : ContDiff ℂ ∞ fun z => coordOf X (f z) := by
   rw [contDiff_piLp]
-  intro i
-  exact hf _ _ _
+  exact fun i => hf _ _ _
 
 theorem contDiff_toEntries : ContDiff ℂ ∞ (toEntries X) := by
   refine contDiff_coordOf X fun τ a b => ?_
@@ -988,7 +983,7 @@ theorem measurePreserving_toEntries : MeasurePreserving (toEntries X) volume vol
   have h' : ∀ c d : Fin r, (c : ℕ) - d < (a : ℕ) - b → nmat X z τ c d = nmat X w τ c d := by
     intro c d hcd
     by_cases hl : d < c
-    · simp only [nmat, dif_pos hl]
+    · simp only [nmat, dite_eq_left hl]
       apply h
       simpa using hcd
     · exact nmat_of_not_lt X _ _ τ hl
@@ -998,7 +993,7 @@ theorem measurePreserving_toEntries : MeasurePreserving (toEntries X) volume vol
         - nmat X y τ a b = ∑ c ∈ Finset.univ.erase b,
           if (c : ℕ) < X.p0 then nmat X y τ a c * nmat X y τ c b else 0 := by
       intro y
-      rw [← Finset.add_sum_erase _ _ (Finset.mem_univ b), if_pos hW.2,
+      rw [← Finset.add_sum_erase _ _ (Finset.mem_univ b), ite_eq_left hW.2,
         show nmat X y τ b b = 1 from ExF.nM_diag X y τ b]
       ring
     rw [hs, hs]
@@ -1049,8 +1044,7 @@ theorem toEntries_mem_OmF_iff (x0 : Base X) (z : V (nd X)) :
   constructor
   · intro h
     simpa using h.transpose.submatrix (e := (lowEquiv X).symm) (lowEquiv X).symm.injective
-  · intro h
-    exact (h.submatrix (lowEquiv X).injective).transpose
+  · exact fun h => (h.submatrix (lowEquiv X).injective).transpose
 
 theorem rhF_toEntries (x0 : Base X) {z : V (nd X)} (hz : z ∈ Om X) :
     rhF X x0.1 (toEntries X z) = rho X z := by
@@ -1156,10 +1150,8 @@ theorem measurable_hB : ∀ (r p0 : ℕ), Measurable (hB (r := r) p0) := by
     have hent : ∀ a b : Fin r, Continuous (fun w : Low r → ℂ => lowMat w a b) := fun a b =>
       (continuous_apply b).comp ((continuous_apply a).comp hlow)
     by_cases h : p0 = 1
-    · simp only [blkW, h, if_true]
-      exact hent _ _
-    · simp only [blkW, h, if_false]
-      exact hent _ _
+    · simpa only [blkW, h, ite_true] using hent _ _
+    · simpa only [blkW, h, ite_false] using hent _ _
   have hcg : ∀ k, Continuous (fun w : Low r → ℂ => colGram (blkW p0 w) k) := by
     intro k
     simp only [colGram, lminor]
@@ -1168,8 +1160,7 @@ theorem measurable_hB : ∀ (r p0 : ℕ), Measurable (hB (r := r) p0) := by
     have hz : ∀ x : ℝ, x ^ (-2 : ℤ) = (x ^ 2)⁻¹ := fun x => by
       rw [zpow_neg]; norm_cast
     simp only [gB, hz]
-    refine Finset.measurable_prod _ fun k _ => ?_
-    exact ((hcg k.castSucc).measurable.pow_const 2).inv
+    exact Finset.measurable_prod _ fun k _ => ((hcg k.castSucc).measurable.pow_const 2).inv
   have hS : IsClosed {w : Low r → ℂ | ∀ p : Low r, (p.1.2 : ℕ) < p0 → p0 ≤ (p.1.1 : ℕ) → ‖w p‖ ≤ 1} := by
     simp only [Set.setOf_forall]
     exact isClosed_iInter fun p => isClosed_iInter fun _ => isClosed_iInter fun _ =>
@@ -1512,7 +1503,7 @@ theorem zDet_mul_colGram_le_norm_dmin : ∀ (E : Type) [Field E] [NumberField E]
     rw [Matrix.submatrix_mul _ _ _ id _ Function.bijective_id, ← Matrix.conjTranspose_submatrix]
     have hN : (blkW X.p0 (zOf X z τ)).submatrix id (Fin.castLE (Nat.le_of_lt_succ (Fin.castSucc k).isLt)) = Nm := by
       ext i j
-      simp only [Matrix.submatrix_apply, blkW, hp, if_true, hNm, hA, hL, id]
+      simp only [Matrix.submatrix_apply, blkW, hp, ite_true, hNm, hA, hL, id]
       congr 1
       · exact Fin.ext (by simp; omega)
       · exact Fin.ext (by simp [hf]; omega)
@@ -1557,8 +1548,7 @@ theorem det_sub_bound {p m : ℕ} (N : Matrix (Fin p) (Fin m) ℂ) (q : Fin p �
     rw [Matrix.det_unique]
     simp [Matrix.mul_apply, replicateRow, replicateCol, dotProduct, mulVec, sub_eq_add_neg,
       Finset.mul_sum]
-    simp only [Finset.sum_mul, mul_assoc]
-    exact Finset.sum_comm
+    simpa only [Finset.sum_mul, mul_assoc] using Finset.sum_comm
   set P := N * A⁻¹ * Nᴴ with hPdef
   have hs : u ⬝ᵥ A⁻¹ *ᵥ star u = q ⬝ᵥ P *ᵥ star q := by
     rw [hu, Matrix.star_vecMul, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec,
@@ -1635,10 +1625,9 @@ theorem n_top (hp : X.p0 = p) (z : V (nd X)) (τ : X.Ψ) (i a : Fin p) :
   rw [Fin.sum_univ_castSucc]
   have hl : zFrame X z τ i.castSucc (Fin.last p) = 0 := by
     simp [zFrame, hp, Fin.ext_iff]; omega
-  rw [hl, zero_mul, add_zero]
-  rw [Finset.sum_eq_single i]
+  rw [hl, zero_mul, add_zero, Finset.sum_eq_single i]
   · simp [zFrame, leviFrame, hp, nmat_eq]
-    rw [if_neg (by omega), if_neg (by omega)]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega)]
   · intro b _ hb
     have : i.castSucc ≠ b.castSucc := fun h => hb (Fin.castSucc_injective _ h).symm
     simp [zFrame, hp, this]
@@ -1650,7 +1639,7 @@ theorem n_last (hp : X.p0 = p) (z : V (nd X)) (τ : X.Ψ) (a : Fin p) :
   show (∑ c, zFrame X z τ (Fin.last p) c * leviFrame X z τ c a.castSucc) = _
   simp [zFrame, leviFrame, hp, nmat_eq, Fin.sum_univ_castSucc]
   refine Finset.sum_congr rfl fun x _ => ?_
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 end GlobalTheory.IntBall.MinorLast
 
@@ -1716,8 +1705,8 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (X : Data E (p + 1)) (hp : X.p0 = p)
     have hc : ∀ a : Fin ((k : ℕ) + 1), (Fin.castLE (by omega) a : Fin (p + 1)) =
         Fin.castSucc (⟨a, by omega⟩ : Fin p) := fun a => Fin.ext rfl
     rw [Matrix.submatrix_apply, hc, hc, entry_tdm, Fin.sum_univ_castSucc]
-    simp only [n_top X hp, n_last X hp, Fin.val_castSucc, Fin.val_last, sgn, hp, Fin.is_lt, if_true,
-      lt_irrefl, if_false, Matrix.transpose_apply, Matrix.sub_apply, Matrix.vecMulVec_apply, Matrix.vecMul, dotProduct, Pi.star_apply, N, q, ← hw]
+    simp only [n_top X hp, n_last X hp, Fin.val_castSucc, Fin.val_last, sgn, hp, Fin.is_lt, ite_true,
+      lt_irrefl, ite_false, Matrix.transpose_apply, Matrix.sub_apply, Matrix.vecMulVec_apply, Matrix.vecMul, dotProduct, Pi.star_apply, N, q, ← hw]
     simp only [Complex.ofReal_one, Complex.ofReal_neg,
       mul_one, Complex.star_def]
     rw [sub_eq_add_neg]
@@ -1786,8 +1775,7 @@ theorem norm_dmin_zero (X : Data E r) (x : Frame X.Ψ r) (τ : X.Ψ) (h : 0 < r 
 
 theorem ball_cases {X : Data E r} (h1 : 0 < X.p0) (h2 : X.p0 < r) (h3 : X.p0 * (r - X.p0) ≤ 3) :
     X.p0 = 1 ∨ X.p0 + 1 = r := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have ha : 2 ≤ X.p0 := by omega
   have hb : 2 ≤ r - X.p0 := by omega
   have := Nat.mul_le_mul ha hb

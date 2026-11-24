@@ -206,8 +206,7 @@ theorem map_ρ_of_equivariant (M : h.GKModule K V) {F : Submodule ℂ V}
     exact e ⟨_, _⟩
   rw [e2] at h1
   have := h1.unique h2
-  rw [← e ⟨_, hv⟩]
-  exact this
+  rwa [← e ⟨_, hv⟩]
 
 def toSub (M : h.GKModule K V) (m : Submodule (MonoidAlgebra ℂ K) M.σ.asModule) :
     Submodule ℂ V where
@@ -408,8 +407,7 @@ theorem exists_aeval_eq_zero_of_mem_isotypic (M : h.GKModule K V) {ι : Type*} [
   intro v hv
   have hv' : M.σ.asModuleEquiv.symm v ∈ ⨆ m : {m : Submodule (MonoidAlgebra ℂ K) M.σ.asModule |
       Nonempty (m ≃ₗ[MonoidAlgebra ℂ K] S)}, m.1 := by
-    rw [← sSup_eq_iSup']
-    exact hv
+    rwa [← sSup_eq_iSup']
   have key := Submodule.iSup_induction _ (motive := fun x =>
     Polynomial.aeval (∑ i, M.ρ (Z i) * M.ρ (Z i)) A.charpoly (M.σ.asModuleEquiv x) = 0) hv'
     (fun m x hx => aeval_eq_zero_of_equiv M Z hZ m.2.some A.charpoly hvanF hx)

@@ -101,8 +101,7 @@ theorem PrimitiveFormSheetedIffRootFull.proof : PrimitiveFormSheetedIffRootFull.
         ((hUA s hs.2.1).2.2.1 i j).mul ((hr s hs.1).pow _)).div (hUA s hs.2.1).2.1 hs.2.2
     have hHz : H (A z) = z := by
       have e := hrep z hzX hzS hδz
-      rw [← hrz] at e
-      exact e
+      rwa [← hrz] at e
     obtain ⟨ε, hε, hiso⟩ := monic_simpleRoot_isolated a (A z) (ℓ z)
       (fun j => ((hUA (A z) hzS.2).1 j).continuousAt) ((hUA (A z) hzS.2).2.2.2 hδz) ((hUX z hzS.1).1 hzX)
     set B : Set (σ → ℂ) := S ∩ ℓ ⁻¹' Metric.ball (ℓ z) ε ∩ A ⁻¹' Metric.ball (A z) ε with hBdef
@@ -127,8 +126,7 @@ theorem PrimitiveFormSheetedIffRootFull.proof : PrimitiveFormSheetedIffRootFull.
       have hℓx : ℓ x = r (A x) := hiso (A x) hxB.2 (ℓ x) (r (A x)) hxB.1.2
         (by rw [← hs.2.2]; exact hHB.1.2) ((hUX x hxB.1.1.1).1 hxX) hroot
       have e := hrep x hxX hxB.1.1 hxO.1.2.2
-      rw [hℓx] at e
-      exact e
+      rwa [hℓx] at e
     · rintro ⟨s, hs, rfl⟩
       exact ⟨(hfull' s hs.1.1).1.1, hs.2, by rw [Set.mem_preimage, (hfull' s hs.1.1).2.1]; exact hs⟩
 

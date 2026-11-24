@@ -108,8 +108,7 @@ theorem orbit_sub_le {m : ℕ} {ε : Fin m → Bool} {H : Type} [NormedAddCommGr
         congr 2; ring
       simp only [f, he, hπ.1.2 _ (expS_mem_UJset hX t) _ (expS_mem_UJset hX (s - t))]
       rfl
-    rw [hfun]
-    exact h2
+    rwa [hfun]
   have hb := norm_image_sub_le_of_norm_deriv_le_segment_01' (f := f)
     (f' := fun t => π (NormedSpace.exp (t • X)) (dR π X v)) (C := ‖dR π X v‖)
     (fun t _ => (hder t).hasDerivWithinAt) (fun t _ => le_of_eq (hπ.2.1 _ (expS_mem_UJset hX t) _))
@@ -206,8 +205,7 @@ theorem degUpper_of (hlog : LogNear) (hlie : LieBound) (_hvol : VolBall) : DegUp
     calc ENNReal.ofReal (1 / 4) * muG ε (nbh ε δ)
         ≤ ENNReal.ofReal (1 / 4) * muG ε {g | ENNReal.ofReal (1 / 4) ≤ ENNReal.ofReal (‖coefOn π v₀ v₀ g‖ ^ 2)} := by
           gcongr
-          intro g hg
-          exact ENNReal.ofReal_le_ofReal (key g hg)
+          exact fun g hg => ENNReal.ofReal_le_ofReal (key g hg)
       _ ≤ ∫⁻ g, ENNReal.ofReal (‖coefOn π v₀ v₀ g‖ ^ 2) ∂muG ε :=
           mul_meas_ge_le_lintegral₀ hint'.aestronglyMeasurable.aemeasurable.ennreal_ofReal _
       _ = ENNReal.ofReal (1 / d) := by

@@ -241,8 +241,7 @@ theorem cleaned_product_order_family_eq (g' : Matrix (Fin (X.m + 1)) (Fin (X.m +
     rw [sum_split_constant, ← order_sum_eq_order_family S hS hD h2 Cs hG0 j0 Std hStd stdEq]
     simp only [mul_one, add_zero]
     ring
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 end Ctx
 
@@ -491,7 +490,7 @@ theorem level_degree_covector_zero (j : Fin (numSeg X.TT)) (i : Fin (BDk C0 CE1 
 
 theorem monomial_mem_support (M : MonH X) : M ∈ (monomial M (1 : KK O) : RHH O X).support := by
   classical
-  rw [support_monomial, if_neg one_ne_zero]
+  rw [support_monomial, ite_eq_right one_ne_zero]
   exact Finset.mem_singleton_self _
 
 def lemmaRData (S : UniformizedDVR X.p O) (hS : S.SqP) (hD : D1num X) (h2 : 2 ≤ numSeg X.TT) (hGle : ∀ j, segG X.TT j ≤ X.G')
@@ -576,8 +575,7 @@ theorem preAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hroom : RoomAt C0 CYb C
       ((X.seg C0 CE1 CE2 j).Qj X.p * (Cs j).a0) + zPart C0 CE1 CE2 X β j) :=
     Finset.sum_congr rfl fun j _ => (Cs j).plSum
   refine ⟨lemmaRData S hS hD h2 hGle hβ Cs hG0 ⟨0, by omega⟩ Std hStd ?_⟩
-  rw [hplsum, sum_aMk]
-  exact hstd
+  rwa [hplsum, sum_aMk]
 
 theorem restPre : RestPre := TransportedAlt.mono (fun _ _ _ _ _ _ _ _ _ _ h => preAt_of h) restRoom
 

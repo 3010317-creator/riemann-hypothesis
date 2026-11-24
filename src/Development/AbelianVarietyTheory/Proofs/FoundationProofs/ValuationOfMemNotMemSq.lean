@@ -86,8 +86,7 @@ theorem comp_finComp : Comp (finComp F E) := by
   · rw [mem_intAE_iff]
     refine ⟨fun h => ?_, fun h => GlobalTheory.AdeleBaseChange.mem_int_of_map hι ?_⟩
     · have := GlobalTheory.AdeleBaseChange.map_mem_int hι h
-      rw [hs] at this
-      exact this
+      rwa [hs] at this
     · rw [hs]; exact h
   · change toFinAd F E (a.2 ⊗ₜ[F] (1 : E)) Q = _
     rw [toFinAd_tmul, map_one, mul_one]
@@ -225,7 +224,7 @@ theorem chiAt_eq_val (hσ : IsCMExt F E σ) {χ : (AE F E)ˣ →* Circle} {P : H
 
 theorem chiAt_eq_zero (hσ : IsCMExt F E σ) {χ : (AE F E)ˣ →* Circle} {P : HeightOneSpectrum (𝓞 E)}
     (h : ¬ UnrAt χ P) : chiAt σ χ P = 0 :=
-  dif_neg fun hc => h ((isUnramAt_iff_unrAt hσ χ P).1 hc.1)
+  dite_eq_right fun hc => h ((isUnramAt_iff_unrAt hσ χ P).1 hc.1)
 
 theorem lfac_eq_locL (hσ : IsCMExt F E σ) (χ : (AE F E)ˣ →* Circle) (P : HeightOneSpectrum (𝓞 E)) (s : ℂ) :
     lfac σ χ P s = locL (charFam χ) P s := by

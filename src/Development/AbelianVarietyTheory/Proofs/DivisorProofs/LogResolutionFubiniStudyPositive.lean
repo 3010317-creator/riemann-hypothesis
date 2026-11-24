@@ -100,9 +100,7 @@ open GlobalTheory.HermitianMajorantIdentities in
 theorem exists_posDef_majorant_of_sigPosH_eq_one : ∀ {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (hH : H.IsHermitian), H.det ≠ 0 → sigPosH hH = 1 → ∀ z : Fin n → ℂ, 0 < (star z ⬝ᵥ H *ᵥ z).re → ∃ P : Matrix (Fin n) (Fin n) ℂ, P.IsHermitian ∧ (∀ x : Fin n → ℂ, x ≠ 0 → 0 < (star x ⬝ᵥ P *ᵥ x).re) ∧ ∀ (Y : Matrix (Fin n) (Fin n) ℂ) (s : ℝ) (c : ℂ), 0 < s → Yᴴ * H * Y = (s : ℂ) • H → Y *ᵥ z = c • z → Yᴴ * P * Y = (s : ℂ) • P := by
   intro n H hH hdet hsig z hz
   set a : ℝ := (star z ⬝ᵥ H *ᵥ z).re with ha
-  have hzz : star z ⬝ᵥ H *ᵥ z = (a : ℂ) := by
-    have h := herm_swap hH z z
-    exact (Complex.conj_eq_iff_re.mp h.symm).symm
+  have hzz : star z ⬝ᵥ H *ᵥ z = (a : ℂ) := (Complex.conj_eq_iff_re.mp (herm_swap hH z z).symm).symm
   set u : Fin n → ℂ := H *ᵥ z with hu
   have hux : ∀ x, star u ⬝ᵥ x = star z ⬝ᵥ H *ᵥ x := by
     intro x; rw [hu, star_mulVec, hH.eq, ← dotProduct_mulVec]
@@ -190,8 +188,7 @@ theorem exists_posDef_majorant_of_sigPosH_eq_one : ∀ {n : ℕ} (H : Matrix (Fi
       simpa [dotProduct_single] using h1
     have hcolv : Yᴴ *ᵥ u = star c • u := by
       have h1 := congrArg star hrowv
-      rw [star_vecMul, star_star, star_smul, star_star] at h1
-      exact h1
+      rwa [star_vecMul, star_star, star_smul, star_star] at h1
     rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_smul, Matrix.smul_mul, mul_vecMulVec_mul', hcolv,
       hrowv, hY]
     ext i j
@@ -313,25 +310,7 @@ namespace GlobalTheory.SylvesterInertia
 theorem re_quad_eq_sum {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) (hM : M.IsHermitian) (u : Fin n → ℂ) :
     (star u ⬝ᵥ M *ᵥ u).re = ∑ i, hM.eigenvalues i * Complex.normSq
       ((star (hM.eigenvectorUnitary : Matrix (Fin n) (Fin n) ℂ) *ᵥ u) i) := by
-  set U : Matrix (Fin n) (Fin n) ℂ := (hM.eigenvectorUnitary : Matrix (Fin n) (Fin n) ℂ) with hU
-  have hD : star U * M * U = diagonal (RCLike.ofReal ∘ hM.eigenvalues) := by
-    have := hM.conjStarAlgAut_star_eigenvectorUnitary
-    simpa [Unitary.conjStarAlgAut_apply, hU] using this
-  set y := star U *ᵥ u with hy
-  have hu : u = U *ᵥ y := by
-    rw [hy, mulVec_mulVec, hU, Matrix.mem_unitaryGroup_iff.mp hM.eigenvectorUnitary.2, one_mulVec]
-  have h1 : star u ⬝ᵥ M *ᵥ u = star y ⬝ᵥ (star U * M * U) *ᵥ y := by
-    conv_lhs => rw [hu]
-    rw [star_mulVec, ← dotProduct_mulVec, mulVec_mulVec, mulVec_mulVec, star_eq_conjTranspose, Matrix.mul_assoc]
-  rw [h1, hD, dotProduct, Complex.re_sum]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [mulVec_diagonal]
-  simp only [Pi.star_apply, Function.comp_apply, Complex.star_def, Complex.normSq_apply, Complex.mul_re,
-    Complex.conj_re, Complex.conj_im, Complex.mul_im]
-  have e1 : ((RCLike.ofReal (hM.eigenvalues i) : ℂ)).re = hM.eigenvalues i := by simp
-  have e2 : ((RCLike.ofReal (hM.eigenvalues i) : ℂ)).im = 0 := by simp
-  simp only [e1, e2]
-  ring
+  exact GlobalTheory.SignatureOneForms.form_re_eq_sum hM u
 
 theorem finrank_le_card_of_vanish {n : ℕ} (U : Matrix (Fin n) (Fin n) ℂ) (P : Submodule ℂ (Fin n → ℂ))
     (s : Fin n → Prop) [DecidablePred s]
@@ -473,8 +452,7 @@ theorem card_pos_le_of_conj {n : ℕ} (A B X : Matrix (Fin n) (Fin n) ℂ) (hA :
     rintro u ⟨w, rfl⟩ hu
     exact hq w (fun h0 => hu (by rw [h0, map_zero]))
   have h1 := GlobalTheory.SimSign.finrank_le_pos A hA _ hS
-  rw [LinearMap.finrank_range_of_inj hinj, Module.finrank_fintype_fun_eq_card] at h1
-  exact h1
+  rwa [LinearMap.finrank_range_of_inj hinj, Module.finrank_fintype_fun_eq_card] at h1
 
 theorem sigPosH_congr : ∀ {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (hA : A.IsHermitian), A.det ≠ 0 →
     ∀ (Z : GL (Fin n) ℂ) (B : Matrix (Fin n) (Fin n) ℂ) (hB : B.IsHermitian),

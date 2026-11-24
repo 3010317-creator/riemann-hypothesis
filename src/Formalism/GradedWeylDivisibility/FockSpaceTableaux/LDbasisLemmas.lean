@@ -78,8 +78,7 @@ theorem ldbasis_linearIndependent {σ R ι : Type*} [CommRing R] (o : MonomialOr
       have hlt : o.toSyn (o.degree (v k)) < o.toSyn (o.degree (v j)) :=
         lt_of_le_of_ne hle (fun h => hne (o.toSyn.injective h))
       rw [o.coeff_eq_zero_of_lt hlt, smul_zero]
-  · intro hj'
-    exact absurd (Finset.mem_filter.mp hj).1 hj'
+  · exact fun hj' => absurd (Finset.mem_filter.mp hj).1 hj'
 
 theorem ldbasis_sum_single_perm {r s : ℕ} (I : Fin s → Fin r) (σ : Equiv.Perm (Fin s)) :
     (∑ q : Fin s, (Pi.single (I (σ q)) 1 : Fin r → ℕ)) = ∑ p : Fin s, Pi.single (I p) 1 := by

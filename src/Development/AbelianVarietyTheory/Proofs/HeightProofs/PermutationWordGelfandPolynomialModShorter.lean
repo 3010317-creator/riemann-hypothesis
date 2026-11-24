@@ -232,8 +232,7 @@ theorem symb_sub {E : Fin n → Fin n → A} (hE : Formalism.REAL.GlRel E) {d : 
   induction hx using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨l, rfl, rfl⟩ := hx
-    simp only [order_wd]
-    exact perm_sub_mem hE (Multiset.coe_eq_coe.1 (Multiset.coe_toList _).symm)
+    simpa only [order_wd] using perm_sub_mem hE (Multiset.coe_eq_coe.1 (Multiset.coe_toList _).symm)
   | zero => simp
   | add x y _ _ hx hy =>
     convert add_mem hx hy using 1
@@ -259,7 +258,7 @@ theorem wordMap_permMat {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n
   refine Finset.sum_congr rfl fun K _ => ?_
   rw [Finset.sum_eq_single (K ∘ π)]
   · simp
-  · intro I _ hI; rw [if_neg hI, zero_smul]
+  · intro I _ hI; rw [ite_eq_right hI, zero_smul]
   · simp
 
 theorem exists_symb {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n → Fin n → A) (d : ℕ)
@@ -278,8 +277,7 @@ theorem exists_symb {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n →
     d π (fun _ => 0)
   simp only [zero_add, pow_one, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one,
     Matrix.of_apply] at key
-  simp only [List.prod_ofFn]
-  exact key
+  simpa only [List.prod_ofFn] using key
 
 theorem permWord : ∀ (A : Type) [Ring A] [Algebra ℂ A] (n : ℕ) (E : Fin n → Fin n → A), Formalism.REAL.GlRel E → ∀ (d : ℕ) (π : Equiv.Perm (Fin d)), ∃ c ∈ Algebra.adjoin ℂ (Set.range (gelfA E)), wordMap E d (permMat n d π) - c ∈ filt E d := by
   intro A _ _ n E hE d π
@@ -289,8 +287,7 @@ theorem permWord : ∀ (A : Type) [Ring A] [Algebra ℂ A] (n : ℕ) (E : Fin n 
   have h1 := symb_sub hE h
   have h3 := sub_mem h2 h1
   rw [sub_sub_sub_cancel_right] at h3
-  rw [wordMap_permMat]
-  exact h3
+  rwa [wordMap_permMat]
 
 end GlobalTheory.SmoothForms.PermWord
 

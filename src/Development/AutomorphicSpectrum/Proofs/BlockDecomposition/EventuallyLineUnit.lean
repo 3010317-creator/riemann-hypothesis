@@ -110,10 +110,8 @@ theorem hasDerivAt_line {lam : Fin n → ℤ} (hD : HolRm lam) (B : Mat n) (i j 
     HasDerivAt (fun t : ℂ => Rm lam (1 + t • B) i j) (XA lam B i j) 0 := by
   have h1 : HasDerivAt (fun t : ℂ => (1 : Mat n) + t • B) B 0 := by
     have h := ((hasDerivAt_id (0 : ℂ)).smul_const B).const_add (1 : Mat n)
-    rw [one_smul] at h
-    exact h
-  have h2 := (hD i j 1 one_mem_GLs).hasFDerivAt
-  exact h2.comp_hasDerivAt_of_eq (0 : ℂ) h1 (by simp)
+    rwa [one_smul] at h
+  exact ((hD i j 1 one_mem_GLs).hasFDerivAt).comp_hasDerivAt_of_eq (0 : ℂ) h1 (by simp)
 
 theorem eventually_line_unit (B : Mat n) : ∀ᶠ t : ℂ in 𝓝 0, IsUnit ((1 : Mat n) + t • B).det := by
   have hc : Continuous fun t : ℂ => (1 : Mat n) + t • B := continuous_const.add (continuous_id.smul continuous_const)
@@ -145,8 +143,7 @@ theorem fderiv_Rm {lam : Fin n → ℤ} (hD : HolRm lam) {g : Mat n} (hg : g ∈
   have hu := isUnit_det_of_mem hg
   have hline : HasDerivAt (fun t : ℂ => g + t • (g * B)) (g * B) 0 := by
     have h := ((hasDerivAt_id (0 : ℂ)).smul_const (g * B)).const_add g
-    rw [one_smul] at h
-    exact h
+    rwa [one_smul] at h
   have h1 : HasDerivAt (fun t : ℂ => Rm lam (g + t • (g * B)) i j)
       (fderiv ℂ (fun x : Mat n => Rm lam x i j) g (g * B)) 0 :=
     (hD i j g hg).hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℂ) hline (by simp)

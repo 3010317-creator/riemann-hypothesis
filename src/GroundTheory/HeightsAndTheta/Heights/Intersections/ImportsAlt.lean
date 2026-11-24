@@ -59,15 +59,13 @@ theorem ArithmeticIntersectionVertical.proof
     have hsW : IsSectionOn (imageZ v P') (HermLine.sqMetric (ι := ι) α) s := ⟨α, fun _ => rfl, hs, hsP⟩
     have hWvert : ¬ IsHorizontal (imageZ v W') := fun h => by
       have h2 : ((p : ℕ) : ℤ) ∈ (imageZ v W').comap (C : ℤ →+* MRing ι) := by
-        rw [Ideal.mem_comap, map_natCast]
-        exact hpW
+        rwa [Ideal.mem_comap, map_natCast]
       rw [h, Ideal.mem_bot] at h2
       exact hpr.ne_zero (by exact_mod_cast h2)
     obtain ⟨-, -, hWd⟩ := (divSuppArith K ι (imageZ v P') n _ _ _ hP hsW hmem).2 hWvert
     have hWp : IsProjVarF ((imageZ v W').map (red p)) n := ⟨hVm, by rw [ringKrullDim_red p hpW, hWd]⟩
     have hVi : IsProjVarF (imageVar (ZMod p) v (W'.map (red p))) n := by
-      rw [imageVar_red p v hpW']
-      exact hWp
+      rwa [imageVar_red p v hpW']
     obtain ⟨i', hi'⟩ : ∃ i' : ∀ k', ι' k', IsChart (W'.map (red p)) i' :=
       ⟨fun k => (hW'p.1.2.2 k).choose, fun k => (hW'p.1.2.2 k).choose_spec⟩
     rw [hgeo', hPD (ZMod p) K ι K' ι' I I' hI hI' κ v _ n a i' hv hW'p hVi hi', imageVar_red p v hpW',

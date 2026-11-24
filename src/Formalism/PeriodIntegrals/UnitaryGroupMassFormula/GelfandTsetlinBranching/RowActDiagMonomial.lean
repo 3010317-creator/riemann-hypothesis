@@ -178,11 +178,9 @@ theorem sep_mem_B {ι T V : Type*} [DecidableEq ι] [AddCommGroup V] [Module ℂ
     by_cases hall : ∀ i ∈ F, i = i0
     · have hF : F = {i0} := by
         ext i
-        simp only [Finset.mem_singleton]
-        exact ⟨hall i, fun e => e ▸ hi0⟩
-      rw [hF, Finset.sum_singleton] at hs
-      exact hs
-    push_neg at hall
+        simpa only [Finset.mem_singleton] using ⟨hall i, fun e => e ▸ hi0⟩
+      rwa [hF, Finset.sum_singleton] at hs
+    push Not at hall
     obtain ⟨i1, hi1, hne⟩ := hall
     obtain ⟨t, ht⟩ := hsep i1 i0 hne
     let y' : ι → V := fun i => (p i t - p i1 t) • y i
@@ -234,12 +232,12 @@ theorem embGL_diag_B {n N : ℕ} (h : n + 1 = N) (t : Fin n → ℂˣ) :
     · have hne : (⟨a.1, ha⟩ : Fin n) ≠ ⟨b.1, hb⟩ := fun e => hab (Fin.ext (Fin.mk.inj_iff.mp e))
       simp [hab, hne]
   · have hab : a ≠ b := fun e => hb (e ▸ ha)
-    rw [dite_eq_left ha, dite_eq_right hb, if_neg hab]
+    rw [dite_eq_left ha, dite_eq_right hb, ite_eq_right hab]
   · have hab : a ≠ b := fun e => ha (e ▸ hb)
-    rw [dite_eq_right ha, if_pos hb, if_neg hab]
+    rw [dite_eq_right ha, ite_eq_left hb, ite_eq_right hab]
   · have hab : a = b := Fin.ext (by omega)
     subst hab
-    rw [dite_eq_right ha, if_neg hb, if_pos rfl]
+    rw [dite_eq_right ha, ite_eq_right hb, ite_eq_left rfl]
     simp [dB, ha]
 
 theorem torus_mem_B {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (W : Submodule ℂ (MvPolynomial (Fin N × Fin N) ℂ))
@@ -284,11 +282,9 @@ theorem graded_B {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (W : Submodule 
       exact rowAct_diag_homog _ _ _ (weightedHomogeneousComponent_isWeightedHomogeneous _ _)
     · rw [comp_sum_B]
       · exact hf
-      · intro e he
-        exact Finset.mem_image_of_mem _ he
+      · exact fun e he => Finset.mem_image_of_mem _ he
   · rw [comp_zero_B]
     · exact W.zero_mem
-    · intro e he hw
-      exact hm (hw ▸ Finset.mem_image_of_mem _ he)
+    · exact fun e he hw => hm (hw ▸ Finset.mem_image_of_mem _ he)
 
 end PI.WGB

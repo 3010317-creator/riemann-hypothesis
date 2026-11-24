@@ -57,16 +57,13 @@ def eN {n : ℕ} (x : Fin n → ℂ) : ℝ := ‖(WithLp.toLp 2 x : EuclideanSpa
 theorem eN_nonneg {n : ℕ} (x : Fin n → ℂ) : 0 ≤ eN x := norm_nonneg _
 
 theorem eN_add {n : ℕ} (x y : Fin n → ℂ) : eN (x + y) ≤ eN x + eN y := by
-  simp only [eN, WithLp.toLp_add]
-  exact norm_add_le _ _
+  simpa only [eN, WithLp.toLp_add] using norm_add_le _ _
 
 theorem eN_sub {n : ℕ} (x y : Fin n → ℂ) : eN (x - y) ≤ eN x + eN y := by
-  simp only [eN, WithLp.toLp_sub]
-  exact norm_sub_le _ _
+  simpa only [eN, WithLp.toLp_sub] using norm_sub_le _ _
 
 theorem eN_smul {n : ℕ} (c : ℂ) (x : Fin n → ℂ) : eN (c • x) = ‖c‖ * eN x := by
-  simp only [eN, WithLp.toLp_smul]
-  exact norm_smul _ _
+  simpa only [eN, WithLp.toLp_smul] using norm_smul _ _
 
 theorem eN_sum {n : ℕ} {ι : Type} (s : Finset ι) (f : ι → Fin n → ℂ) :
     eN (∑ i ∈ s, f i) ≤ ∑ i ∈ s, eN (f i) := by

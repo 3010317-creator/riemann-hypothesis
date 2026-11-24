@@ -110,12 +110,10 @@ theorem main : ∀ (F : Type) [Field F] [Finite F], ∀ (a : ℕ) (α : GL (Fin 
   refine ⟨funext fun x => ?_, funext fun x => ?_⟩
   · simp only [hc, hcTw]
     rw [card_infinitePlace_eq_f inPar_zero]
-    simp only [gal_id, inPar_zero, ↓reduceIte, brG_zero, one_mul]
-    exact mean_class hα x
+    simpa only [gal_id, inPar_zero, ↓reduceIte, brG_zero, one_mul] using mean_class hα x
   · simp only [hc, hcTw]
     rw [card_infinitePlace_eq_f inPar_self]
-    simp only [gal_id, inPar_self, ↓reduceIte, tlG_self, mul_one]
-    exact mean_class hα x
+    simpa only [gal_id, inPar_self, ↓reduceIte, tlG_self, mul_one] using mean_class hα x
 
 end GlobalTheory.Shin.HcUnit
 

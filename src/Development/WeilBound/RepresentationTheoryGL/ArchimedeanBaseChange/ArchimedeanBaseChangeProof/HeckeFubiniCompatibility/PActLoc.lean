@@ -82,8 +82,8 @@ theorem contDiffOn_Epow (s : Bool) (m : ℕ) : ∀ (a b : Fin n) {f : Mat n → 
     intro a b f hf
     show ContDiffOn ℝ ∞ (if a = b then f else 0) (GLs n)
     by_cases h : a = b
-    · rw [if_pos h]; exact hf
-    · rw [if_neg h]; exact (contDiffOn_const : ContDiffOn ℝ ∞ (fun _ : Mat n => (0 : V)) (GLs n))
+    · rw [ite_eq_left h]; exact hf
+    · rw [ite_eq_right h]; exact (contDiffOn_const : ContDiffOn ℝ ∞ (fun _ : Mat n => (0 : V)) (GLs n))
   | succ m ih =>
     intro a b f hf
     have e : Epow s (m + 1) a b f = fun x => ∑ c, Eu s a c (Epow s m c b f) x := by
@@ -133,8 +133,7 @@ theorem Epow_sum {ι : Type} [Fintype ι] (s : Bool) (φ : ι → Mat n → ℂ)
       rw [Eu_congr s a d (ih d c) hx]
       exact Eu_sum s a d _ b fun j =>
         ((contDiffOn_Epow s m d c (hφ j)).contDiffAt (isOpen_GLs.mem_nhds hx)).differentiableAt (by simp)
-    simp only [e, Finset.sum_smul]
-    exact Finset.sum_comm
+    simpa only [e, Finset.sum_smul] using Finset.sum_comm
 
 theorem gel_sum {ι : Type} [Fintype ι] (s : Bool) (m : ℕ) (φ : ι → Mat n → ℂ) (b : ι → V)
     (hφ : ∀ j, ContDiffOn ℝ ∞ (φ j) (GLs n)) {g : Mat n} (hg : g ∈ GLs n) :
@@ -163,8 +162,8 @@ theorem atW_val (v : InfinitePlace E) (t : G n) : atW v t.val = toL (infU n (Pi.
   funext i j w
   show (if w = v then t.val i j else (1 : Mat n) i j) = (((Pi.mulSingle v t : InfinitePlace E → G n) w : G n) : Mat n) i j
   by_cases hw : w = v
-  · subst hw; rw [if_pos rfl, Pi.mulSingle_eq_same]
-  · rw [if_neg hw, Pi.mulSingle_eq_of_ne hw, Units.val_one]
+  · subst hw; rw [ite_eq_left rfl, Pi.mulSingle_eq_same]
+  · rw [ite_eq_right hw, Pi.mulSingle_eq_of_ne hw, Units.val_one]
 
 theorem along_val (v : InfinitePlace E) (g : GA E n) (φ : GA E n → ℂ) (t : G n) :
     along v g φ t.val = φ (g * infP n (Pi.mulSingle v t)) := by
@@ -291,8 +290,7 @@ theorem loc_act (hMA : MultAlg) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ :
     rw [e6]
     have e7 : φ l 1 = Φ l g₀ := by
       have := along_val v g₀ (Φ l) (1 : G n)
-      simp only [Units.val_one, Pi.mulSingle_one, infinitePart_one, mul_one] at this
-      exact this
+      simpa only [Units.val_one, Pi.mulSingle_one, infinitePart_one, mul_one] using this
     rw [e7]
   · refine ((mult_ent hk l j).1.mul (loc_cont (hsm j) g₀ v)).integrable_of_hasCompactSupport ?_
     exact (mult_ent hk l j).2.mul_right

@@ -117,14 +117,7 @@ theorem finite_mid [IsNoetherianRing R] {M₁ M₂ M₃ : Type 1} [AddCommGroup 
   exact Module.Finite.of_submodule_quotient (LinearMap.ker g)
 
 theorem H_subsingleton (F : C ⥤ ModuleCat.{0} R) (h : ∀ T, Subsingleton (F.obj T)) (n : ℕ) :
-    Subsingleton (CH.H F n) := by
-  have hX : Subsingleton ((CH.cx F).X n) := ⟨fun a b => funext fun s => (h _).elim _ _⟩
-  refine ⟨fun x y => ?_⟩
-  obtain ⟨a, ha, rfl⟩ := (CrystallineSemistableComparison.P.cls_surj (CH.cx F) n).1 x
-  obtain ⟨b, hb, rfl⟩ := (CrystallineSemistableComparison.P.cls_surj (CH.cx F) n).1 y
-  have e : a = b := hX.elim _ _
-  subst e
-  rfl
+    Subsingleton (CH.H F n) := GlobalTheory.CompanionTheory.KFin.H_subsingleton F h n
 
 theorem sqM_rep (a b : IdF A) (T : C) (x : sqM a b T) :
     ∃ (y : A.obj T) (hy : y ∈ a.S T), x = sqMk a b y hy := by
@@ -133,22 +126,13 @@ theorem sqM_rep (a b : IdF A) (T : C) (x : sqM a b T) :
   exact ⟨y, hy, rfl⟩
 
 theorem sq_self_subsingleton (a : IdF A) (T : C) : Subsingleton ((sq a a).obj T) := by
-  refine ⟨fun x y => ?_⟩
-  obtain ⟨x', hx, rfl⟩ := sqM_rep a a T x
-  obtain ⟨y', hy, rfl⟩ := sqM_rep a a T y
-  refine Subtype.ext ?_
-  change Ideal.Quotient.mk _ x' = Ideal.Quotient.mk _ y'
-  rw [Ideal.Quotient.eq_zero_iff_mem.2 hx, Ideal.Quotient.eq_zero_iff_mem.2 hy]
+  exact GlobalTheory.CompanionTheory.KFin.sq_self_subsingleton a T
 
 variable {a b c : IdF A}
 
 theorem sq_inj (hba : ∀ T, b.S T ≤ a.S T) (T : C) :
     Function.Injective ((sqLe (a := b) (b := c) (a' := a) (b' := c) hba fun _ => le_rfl).τ T) := by
-  intro x y h
-  obtain ⟨x', hx, rfl⟩ := sqM_rep b c T x
-  obtain ⟨y', hy, rfl⟩ := sqM_rep b c T y
-  have h' := congrArg (fun z : sqM a c T => z.1) h
-  exact Subtype.ext h'
+  exact GlobalTheory.CompanionTheory.KFin.sq_inj hba T
 
 theorem sq_exact (hba : ∀ T, b.S T ≤ a.S T) (hcb : ∀ T, c.S T ≤ b.S T) (T : C) :
     Function.Exact ((sqLe (a := b) (b := c) (a' := a) (b' := c) hba fun _ => le_rfl).τ T)
@@ -379,17 +363,7 @@ theorem cochain_exact (a b : IdF A) (ha : ∀ T, a.S T = ⊤) :
 theorem pull_toSq_bijective (a b : IdF A) (ha : ∀ T, a.S T = ⊤) :
     (∀ j, Subsingleton (CH.H (sq b (IdF.bot A)) j)) →
       ∀ j, Function.Bijective ((toSq a b ha).pull j) := by
-  intro hv j
-  obtain ⟨hf, hfg, hg⟩ := cochain_exact a b ha
-  obtain ⟨δ, -, -, hex, hex2, -⟩ := CrystallineSemistableComparison.P.les _ _ hf hfg hg
-  constructor
-  · rw [injective_iff_map_eq_zero]
-    intro x hx
-    obtain ⟨y, rfl⟩ := (hex j x).1 hx
-    rw [(hv j).elim y 0, map_zero]
-  · intro y
-    obtain ⟨x, hx⟩ := (hex2 j y).1 ((hv (j + 1)).elim _ _)
-    exact ⟨x, hx⟩
+  exact GlobalTheory.CompanionTheory.KIso.toSq_bij a b ha
 
 end GlobalTheory.CompanionTheory.LengthOneCochainExactness
 end -- clump:auto

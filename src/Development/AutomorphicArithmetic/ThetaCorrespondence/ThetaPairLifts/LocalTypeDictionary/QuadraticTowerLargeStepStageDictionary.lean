@@ -863,8 +863,7 @@ theorem quadratic_tower_large_step_stage_dictionary : _root_.GlobalTheory.FunPr.
     apply hJ s
     rw [map_smul, map_smul, mul_smul, ← hI, ← hI' s P' (hi' s)]
     funext h
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact H s hs' om om' Rf c m kc h
+    simpa only [Pi.smul_apply, smul_eq_mul] using H s hs' om om' Rf c m kc h
   have e1 := key t (Or.inl rfl) om om' Rf c m1 k1
   have e0 := key μ₀ (Or.inr rfl) om₀ om₀' Rf₀ c₀ m0 k0
   have e2 : ((((GlobalTheory.SqStep.chs G i j μ₀).ν k : ℂ) * lam μ₀) * c) • pp' P' =

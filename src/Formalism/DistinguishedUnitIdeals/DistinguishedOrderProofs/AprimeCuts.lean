@@ -141,8 +141,7 @@ lemma greedyStep_spec (hFA : ∀ y, F y → A y) (hn : 0 < n) (hF0 : F 0)
   unfold greedyStep
   split_ifs with hC
   · refine ⟨le_rfl, by omega, hC.1, ?_, ?_⟩
-    · intro i hi1 hi2 hFi
-      exact hC.2 (j + i) (by omega) (by omega) (by simpa [add_assoc] using hFi)
+    · exact fun i hi1 hi2 hFi => hC.2 (j + i) (by omega) (by omega) (by simpa [add_assoc] using hFi)
     · intro y hy hxy
       by_contra hlt
       push Not at hlt
@@ -172,8 +171,8 @@ lemma greedyStep_add (hn : 0 < n) (hF0 : F 0) (hFper : ∀ y, F (y + n) ↔ F y)
     have e2 : x + n + i = (x + i) + n := by ring
     rw [e2, hFper]
   by_cases h : A (x + j) ∧ ∀ i, j < i → i < 2 * j → ¬ F (x + i)
-  · rw [if_pos (hC.mpr h), if_pos h]; ring
-  · rw [if_neg (mt hC.mp h), if_neg h]
+  · rw [ite_eq_left (hC.mpr h), ite_eq_left h]; ring
+  · rw [ite_eq_right (mt hC.mp h), ite_eq_right h]
     apply le_antisymm
     · obtain ⟨h1, h2⟩ := Nat.sInf_mem (exists_gt_of_periodic hn hF0 hFper x)
       exact Nat.sInf_le ⟨by omega, (hFper _).mpr h2⟩
@@ -491,8 +490,7 @@ theorem exists_cut_set (hj : 1 ≤ j) (hn : j + 1 ≤ n)
       obtain ⟨m, hm⟩ := hhit (e - b).val ⟨by rw [hval]; exact he, by
         intro k h1 h2; rw [hval]; exact hg k h1 h2⟩
       exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, m, by rw [hm, hval]⟩
-    · intro c hc
-      exact pred_of_seq hj b _ hx0 hstep M hM _ (fun c => by simp) c hc
+    · exact fun c hc => pred_of_seq hj b _ hx0 hstep M hM _ (fun c => by simp) c hc
   · push Not at hex
     let A : ℕ → Prop := fun _ => True
     let F : ℕ → Prop := fun y => n ∣ y
@@ -518,8 +516,7 @@ theorem exists_cut_set (hj : 1 ≤ j) (hn : j + 1 ≤ n)
       ⟨0, Finset.mem_filter.mpr ⟨Finset.mem_univ _, 0, by simp [hx0]⟩⟩, ?_, ?_, ?_⟩
     · intro c _ k _ _; exact hex _
     · intro e he; exact absurd he (hex e)
-    · intro c hc
-      exact pred_of_seq hj 0 _ hx0 hstep M hM _ (fun c => by simp) c hc
+    · exact fun c hc => pred_of_seq hj 0 _ hx0 hstep M hM _ (fun c => by simp) c hc
 
 end Assembly
 

@@ -52,12 +52,10 @@ theorem ker_toSub {I W : Ideal (MvPolynomial (Fin n) F)} (h : I ≤ W) (t : Fin 
     have hb' : Ideal.Quotient.mk (chartIncIdeal I t e) b ∈ W.map (chartX I t e) := by
       have hle : W.map (rename Sum.inl) ≤ (W.map (chartX I t e)).comap (Ideal.Quotient.mk (chartIncIdeal I t e)) := by
         rw [Ideal.map_le_iff_le_comap]
-        intro w hw
-        exact Ideal.mem_map_of_mem (chartX I t e) hw
+        exact fun w hw => Ideal.mem_map_of_mem (chartX I t e) hw
       exact hle hb
     have ha' : Ideal.Quotient.mk (chartIncIdeal I t e) a = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr ha
-    rw [map_add (f := _), ha', zero_add]
-    exact hb'
+    rwa [map_add (f := _), ha', zero_add]
   · rw [Ideal.map_le_iff_le_comap]
     intro w hw
     rw [Ideal.mem_comap, RingHom.mem_ker]
@@ -180,16 +178,14 @@ theorem ChartMaxIdeals.proof (h₁ : ConeDimOfChowForm.Statement) (h₂ : ConeDi
   refine ⟨?_, ?_, ?_⟩
   · intro W hW
     obtain ⟨hWp, ht, hIW, huW, hinc⟩ := hmem W hW
-    refine ⟨(key W hWp ht hIW hinc).1, ?_⟩
-    exact Ideal.mem_map_of_mem _ (Ideal.mem_map_of_mem _ huW)
+    exact ⟨(key W hWp ht hIW hinc).1, Ideal.mem_map_of_mem _ (Ideal.mem_map_of_mem _ huW)⟩
   · intro W₁ hW₁ W₂ hW₂ heq
     obtain ⟨hp₁, ht₁, hI₁, -, hinc₁⟩ := hmem W₁ hW₁
     obtain ⟨hp₂, ht₂, hI₂, -, hinc₂⟩ := hmem W₂ hW₂
     obtain ⟨-, hc₁, hx₁⟩ := key W₁ hp₁ ht₁ hI₁ hinc₁
     obtain ⟨-, hc₂, hx₂⟩ := key W₂ hp₂ ht₂ hI₂ hinc₂
     have h12 : W₁ ⊔ Ideal.span {linForm t - 1} = W₂ ⊔ Ideal.span {linForm t - 1} := by
-      rw [← hx₁, ← hx₂, ← hc₁, ← hc₂]
-      rw [heq]
+      rw [← hx₁, ← hx₂, ← hc₁, ← hc₂, heq]
     exact le_antisymm (le_of_sup_le hD hp₁.isHomog hp₂.isPrime hp₂.isHomog ht₂ h12.le)
       (le_of_sup_le hD hp₂.isHomog hp₁.isPrime hp₁.isHomog ht₁ h12.ge)
   · rintro 𝔓 ⟨hmax, hθ⟩
@@ -246,8 +242,7 @@ theorem ChartMaxIdeals.proof (h₁ : ConeDimOfChowForm.Statement) (h₂ : ConeDi
     refine ⟨W, ⟨(hsupp W).mpr ⟨hrel, hmult⟩, hinc.symm⟩, ?_⟩
     have hmaxW := (key W hWp ht hIW (hinc.trans hp.symm)).1
     have hle : chartIdeal I t e p W ≤ 𝔓 := by
-      rw [chartIdeal, Ideal.map_le_iff_le_comap]
-      exact hPW
+      rwa [chartIdeal, Ideal.map_le_iff_le_comap]
     exact hmaxW.eq_of_le hmax.ne_top hle
 
 end

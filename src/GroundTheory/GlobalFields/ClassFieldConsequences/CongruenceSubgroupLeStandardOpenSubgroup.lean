@@ -96,8 +96,7 @@ theorem finite_support_exponent : (support 𝔪.exponent).Finite := by
       v.asIdeal ^ multiplicity v.asIdeal 𝔪.ideal := by
     simpa only [HeightOneSpectrum.maxPowDividing_eq_pow_multiplicity 𝔪.ideal_ne_bot] using
       Ideal.hasFiniteMulSupport 𝔪.ideal_ne_bot
-  rw [← mulSupport_asIdeal_pow]
-  exact hm
+  rwa [← mulSupport_asIdeal_pow]
 
 def congruenceSubgroup : Subgroup (IdeleGroup K) :=
   (idealLevel 𝔪.ideal).comap (toFinite K) ⊓ positiveAt 𝔪.real

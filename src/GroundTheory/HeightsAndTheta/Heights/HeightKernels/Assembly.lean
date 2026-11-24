@@ -341,8 +341,7 @@ theorem exists_point (b : Module.Basis T ℤ (dualLattice F)) {L : Type} [Field 
       show z ⟨(), t⟩ / z ⟨(), t0⟩ = z ⟨(), t⟩
       rw [hz, div_one]
     show eval₂ (Rat.castHom L) z g = 0
-    rw [← e]
-    exact h
+    rwa [← e]
   let ψ : ev.range →+* L :=
     (Ideal.Quotient.lift (RingHom.ker ev) ev2 hker).comp ev.quotientKerEquivRange.symm.toRingHom
   have hψ : ∀ g, ψ ⟨ev g, g, rfl⟩ = ev2 g := fun g => by
@@ -410,8 +409,7 @@ theorem exists_numberField_coords {T : Type} [Fintype T] (W : Ideal (MRing (fun 
     charZero_of_injective_algebraMap (algebraMap ℚ _).injective
   refine ⟨CoordinateConeArithVar.ratioField (IndefiniteRowSideFullHecke.Inter.genPt W) fun _ => t0, inferInstance, ⟨⟩,
     CoordinateConeArithVar.ratioPtL (IndefiniteRowSideFullHecke.Inter.genPt W) fun _ => t0, t0, ?_, ?_⟩
-  · apply Subtype.ext
-    exact div_self (hc ())
+  · exact Subtype.ext (div_self (hc ()))
   · rw [CoordinateConeArithVar.mCoordIdeal_ratioPtL _ _ hc, hy]
 
 end DualCurvePointAlt
@@ -683,9 +681,8 @@ theorem isMultiHomog_X {T : Type} [Fintype T] (t : T) :
   rw [Finset.sum_eq_single t]
   · simp
   · intro c _ hc
-    rw [Finsupp.single_apply, if_neg]
-    intro h
-    exact hc (sigma_mk_injective h).symm
+    rw [Finsupp.single_apply, ite_eq_right]
+    exact fun h => hc (sigma_mk_injective h).symm
   · simp
 
 variable {K : Type} [Field K] [NumberField K] {i : ℕ} {F : HermLattice K i} {T : Type} {K' : Type} [Field K'] [NumberField K'] [Algebra K K']
@@ -1113,8 +1110,7 @@ theorem GrassHeightBound.proof (hArith : GrassArithVar.Statement) (hRoot : RootA
   refine hZ2 (Fin f) (plBlocks f j m) (grassIdeal f j m) ⊥ (f * j * m) (fsMulti (plBlocks f j m))
     (grassConst f j m) (rootFamily f j m) II hII (hArith f j m hf) bot_le (hSemi _ _ _)
     (hNef _ _ _ _ fun _ => ?_) (hConj _ _) ?_ (hDense f j m)
-  · show (0 : ℤ) ≤ 1
-    exact zero_le_one
+  · exact zero_le_one
   · rintro W ⟨ζ, hζ, rfl⟩
     exact ⟨hRoot f j m ζ hf hζ, hLe f j m ζ, hHt f j m ζ hf hζ II hII⟩
 
@@ -1467,8 +1463,7 @@ theorem RootArithVar.proof (h : CoordConeArithVar.Statement) : RootArithVar.Stat
   · simpa [rootPointIdeal] using this
   · rintro r ⟨p, rfl⟩
     have h1 : IsIntegral ℚ (rootCoord ζ p / rootCoord ζ ⟨p.1, plAnchor j m⟩) := by
-      simp only [rootCoord, anchor_minor, div_one]
-      exact (isIntegral_rootCoord ζ hζ p).tower_top
+      simpa only [rootCoord, anchor_minor, div_one] using (isIntegral_rootCoord ζ hζ p).tower_top
     exact (h1.tower_top (A := IntermediateField.adjoin ℚ (Set.range (Fin.elim0 : Fin 0 → ℂ)))).isAlgebraic
 
 end
@@ -1549,8 +1544,7 @@ theorem RootDense.proof (h₁ : MultiHomogMemCoord.Statement) (h₂ : RootsOfUni
   show g ∉ mCoordIdeal _
   rw [h₁ (Fin f) (plBlocks f j m) ℂ _ g a ha]
   refine fun h => hzQ ?_
-  rw [eval_rename, eval_map, ← aeval_def, ← RootDenseAlt.aeval_rootCoord]
-  exact h
+  rwa [eval_rename, eval_map, ← aeval_def, ← RootDenseAlt.aeval_rootCoord]
 
 end
 
@@ -1731,8 +1725,7 @@ theorem entry_eq_minor {j m : ℕ} (a : Fin j) (b : Fin m) :
       of_apply, colAB]
     split_ifs <;> simp [Fin.append_left, Fin.append_right]
   have := Matrix.det_permute' e (colsOf (onePipe Z) I)
-  rw [hsub, ← cramer_apply, cramer_one] at this
-  exact this
+  rwa [hsub, ← cramer_apply, cramer_one] at this
 
 theorem map_minor {R S : Type*} [CommRing R] [CommRing S] (φ : R →+* S) {j m : ℕ}
     (Z : Matrix (Fin j) (Fin m) R) (I : PlIdx j m) :
@@ -1844,17 +1837,7 @@ theorem isIntegral_of_pow_eq_one {x : ℂ} {k : ℕ} (hk : 0 < k) (hx : x ^ k = 
 
 theorem rootCoord_isIntegral {f j m : ℕ} (ζ : Fin f → Matrix (Fin j) (Fin m) ℂ) (hζ : IsRootMatrix ζ)
     (p : Σ _ : Fin f, PlIdx j m) : IsIntegral ℤ (rootCoord ζ p) := by
-  refine IsIntegral.det fun a b => ?_
-  simp only [colsOf, Matrix.submatrix_apply, id, onePipe, Matrix.of_apply]
-  generalize (p.2.1.orderEmbOfFin p.2.2) b = c
-  refine Fin.addCases (fun c => ?_) (fun c => ?_) c
-  · rw [Fin.append_left, Matrix.one_apply]
-    split_ifs
-    · exact isIntegral_one
-    · exact isIntegral_zero
-  · rw [Fin.append_right]
-    obtain ⟨k, hk, hx⟩ := hζ p.1 a c
-    exact isIntegral_of_pow_eq_one hk hx
+  exact GroundTheory.Heights₂.Heights.RootArithmeticVariety.isIntegral_rootCoord ζ hζ p
 
 end RootPointsFiniteAlt
 

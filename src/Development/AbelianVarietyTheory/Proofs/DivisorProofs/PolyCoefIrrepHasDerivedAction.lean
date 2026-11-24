@@ -136,8 +136,7 @@ lemma conj (g : KG ε) {Y : Matrix (Fin n) (Fin n) ℂ} (hY : inK ε Y) :
     rw [map_mul, map_mul, map_inv]
     rfl
   rw [hf] at h1
-  have h3 := h2.unique (by simpa [Function.comp_def, mul_assoc] using h1)
-  simpa [mul_assoc] using h3
+  simpa [mul_assoc] using h2.unique (by simpa [Function.comp_def, mul_assoc] using h1)
 
 
 include hder in
@@ -266,8 +265,7 @@ theorem polyCoefIrrep_hasDerivedAction :
   · intro S hS
     refine hK.2.2.1 S le_top (fun g hg v hv => ?_)
     have h := hS (torepK ε hg) v hv
-    rw [← hσ] at h
-    exact h
+    rwa [← hσ] at h
   · show LinearMap.trace ℂ W ((((τ k : unitary (W →L[ℂ] W)) : W →L[ℂ] W)) : W →ₗ[ℂ] W) = trK T (toMK k)
     rw [← hσ]
     rfl

@@ -481,8 +481,7 @@ variable {k G : Type u} [CommRing k] [Group G] [Fintype G]
 theorem tateCores_app_tateRes_app_apply (S : Subgroup G) [Fintype S] (A : Rep.{u} k G) (n : ℤ)
     (x : tateCohomology A n) :
     ((tateCores S n).app A).hom (((tateRes S n).app A).hom x) = S.index • x := by
-  have h := congrArg (fun f => f.hom x) (tateRes_app_comp_tateCores_app S A n)
-  simpa using h
+  simpa using congrArg (fun f => f.hom x) (tateRes_app_comp_tateCores_app S A n)
 
 end GroundTheory.GroupCoh
 end -- clump:auto
@@ -608,8 +607,7 @@ theorem natCard_groupCohomology_two_ideleClassRep_dvd :
         (groupCohomologyResIdeleClassIso (P ⟨p, hp⟩ : Subgroup Gal(L/K)) 2).toLinearEquiv :=
       LinearEquiv.injective _
     apply hinj
-    rw [map_zero]
-    exact hxp
+    rwa [map_zero]
 
   have hdvd : ∀ p : n.primeFactors,
       Nat.card (groupCohomology (ideleClassRep (fixedField (P p : Subgroup Gal(L/K))) L) 2) ∣

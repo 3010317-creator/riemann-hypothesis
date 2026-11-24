@@ -266,8 +266,7 @@ theorem exists_close_of_hasseDeriv (x : PadicAlgCl p) {ρ : ℝ}
     rw [mem_roots_map hQ0] at hb
     rwa [aeval_def]
   have := natDegree_le_of_dvd (minpoly.dvd K b hbQ) hQ0
-  rw [hQ, natDegree_hasseDeriv] at this
-  exact this
+  rwa [hQ, natDegree_hasseDeriv] at this
 
 theorem norm_gal_apply_sub_le (x b : PadicAlgCl p) {ρ : ℝ}
     (hρ : ∀ σ : Gal(PadicAlgCl p/K), ‖σ x - x‖ ≤ ρ) (σ : Gal(PadicAlgCl p/K)) :
@@ -398,8 +397,7 @@ theorem ax_lemma_of_natDegree (d : ℕ) : ∀ x : PadicAlgCl p, (minpoly K x).na
       have h2 : (p : ℝ)⁻¹ * ‖x - b‖ ^ m ≤ ρ ^ m :=
         (mul_le_mul_of_nonneg_right hchoose (pow_nonneg (norm_nonneg _) _)).trans hb
       have h3 : ‖x - b‖ ^ m ≤ p * ρ ^ m := by
-        rw [inv_mul_le_iff₀ (by linarith)] at h2
-        exact h2
+        rwa [inv_mul_le_iff₀ (by linarith)] at h2
       linarith
     have hρc : ρ ≤ c * ρ := le_mul_of_one_le_left hρ0 hc1
     have hbρ : ∀ σ : Gal(PadicAlgCl p/K), ‖σ b - b‖ ≤ c * ρ := fun σ =>
@@ -563,8 +561,7 @@ theorem ax_lemma_closedSubgroup (H : Subgroup Gal(PadicAlgCl p/K))
             (IntermediateField.algebraMap_mem _ k)⟩ }
     have hσ : σ ∈ H := by
       rw [← hfix, IntermediateField.mem_fixingSubgroup_iff]
-      intro m hm
-      exact τ.commutes ⟨m, (IntermediateField.mem_restrictScalars _).2 hm⟩
+      exact fun m hm => τ.commutes ⟨m, (IntermediateField.mem_restrictScalars _).2 hm⟩
     exact hz σ hσ
   obtain ⟨y, hy, hle⟩ := ax_lemma z hτ
   exact ⟨y, (IntermediateField.mem_restrictScalars _).1 hy, hle⟩

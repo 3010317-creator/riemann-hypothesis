@@ -93,8 +93,7 @@ private theorem exists_mem_basicOpen_of_sum_mul_eq_one {X : Scheme.{u}} {V : X.O
       ∈ IsLocalRing.maximalIdeal ↥(X.presheaf.stalk w) := by
     intro i
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact hcon i ((X.mem_basicOpen (d i) w hw).mpr hu)
+    exact fun hu => hcon i ((X.mem_basicOpen (d i) w hw).mpr hu)
   have h1 : (1 : ↥(X.presheaf.stalk w)) ∈ IsLocalRing.maximalIdeal ↥(X.presheaf.stalk w) := by
     have hone : (X.presheaf.germ V w hw).hom (1 : ↥Γ(X, V)) = 1 := map_one _
 
@@ -241,7 +240,6 @@ theorem isBlowupAlongIdealSheaf_affineBlowup_toSpec {R : Type u} [CommRing R] (I
   obtain ⟨h, hh⟩ := exists_lift_toSpec_of_isLocallyGeneratedByNonZeroDivisor I g hg
   refine ⟨h, hh, fun h' hh' => ?_⟩
   refine affineBlowup_hom_ext h' h (by rw [hh', hh]) ?_
-  rw [hh']
-  exact hg
+  rwa [hh']
 
 end FunctorialResolution.Blowup

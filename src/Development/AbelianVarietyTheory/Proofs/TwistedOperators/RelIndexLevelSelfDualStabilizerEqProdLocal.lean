@@ -95,8 +95,7 @@ theorem blkForm_toBlocks₂₁ {g : GL (Fin (r + t)) κ} (hg : g ∈ blockTri (b
   apply hg
   have hj : (Fin.castAdd t j).val < r := j.2
   have hi : ¬ (Fin.natAdd r i).val < r := by simp
-  simp only [blk2, hj, hi, if_true, if_false]
-  exact Nat.zero_lt_one
+  simpa only [blk2, hj, hi, ite_true, ite_false] using Nat.zero_lt_one
 
 theorem blkForm_eq {g : GL (Fin (r + t)) κ} (hg : g ∈ blockTri (blk2 r)) :
     blkForm g = fromBlocks (blkForm g).toBlocks₁₁ (blkForm g).toBlocks₁₂ 0 (blkForm g).toBlocks₂₂ := by
@@ -224,8 +223,7 @@ theorem conj_apply_mem {B : Type} [CommRing B] {n : ℕ} (S : Subring B) (β : G
     · subst h; simp
     · simp [h]
   have := hX _ hw i
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at this
-  exact this
+  rwa [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at this
 
 theorem exists_integral_conj {B : Type} [CommRing B] {n : ℕ} (S : Subring B) (β x : GL (Fin n) B)
     (h1 : ∀ i j, ((β⁻¹).val * x.val * β.val) i j ∈ S) (h2 : ∀ i j, ((β⁻¹).val * (x⁻¹).val * β.val) i j ∈ S) :
@@ -238,8 +236,7 @@ theorem exists_integral_conj {B : Type} [CommRing B] {n : ℕ} (S : Subring B) (
     intro P Q h
     apply Matrix.map_injective Subtype.val_injective
     have e := Matrix.map_mul (f := S.subtype) (L := P) (M := Q)
-    have e1 := Matrix.map_one S.subtype (map_zero _) (map_one _) (n := Fin n)
-    exact e.trans (h.trans e1.symm)
+    exact e.trans (h.trans (Matrix.map_one S.subtype (map_zero _) (map_one _) (n := Fin n)).symm)
   have hu : ∀ a b : GL (Fin n) B, a * b = 1 → ((β⁻¹).val * a.val * β.val) * ((β⁻¹).val * b.val * β.val) = 1 := by
     intro a b hab
     have : β⁻¹ * a * β * (β⁻¹ * b * β) = 1 := by
@@ -472,9 +469,7 @@ noncomputable section
 namespace GlobalTheory.ParIndex
 
 theorem gram_herm (D : D7) (V : HSp D) : Formalism.UG.IsHerm (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram := by
-  refine Matrix.ext fun i j => ?_
-  show (D.sp.cm.sig : D.host.E →+* D.host.E) (V.gram j i) = V.gram i j
-  exact V.herm.eq (V.frame j) (V.frame i)
+  exact Matrix.ext fun i j => V.herm.eq (V.frame j) (V.frame i)
 
 theorem gram_det_ne (D : D7) (V : HSp D) : V.gram.det ≠ 0 :=
   ((GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm).2 V).2
@@ -491,8 +486,7 @@ theorem hermitianSpace_standard_lattice_span_eq_top (D : D7) (V : HSp D) :
       rwa [V.frame.sum_equivFun]
     · intro hv
       refine ⟨V.frame.equivFun.symm v, ?_, V.frame.equivFun.apply_symm_apply v⟩
-      rw [Module.Basis.equivFun_symm_apply]
-      exact hv
+      rwa [Module.Basis.equivFun_symm_apply]
   rw [← hL, eq_top_iff]
   intro v _
   obtain ⟨x, rfl⟩ := V.frame.equivFun.surjective v
@@ -528,8 +522,7 @@ theorem hermitianSpace_standard_lattice_span_eq_top (D : D7) (V : HSp D) :
     change x ∈ W
     rw [hW]; trivial
   have := Submodule.mem_map_of_mem (f := f) hx
-  rw [Submodule.map_span] at this
-  exact this
+  rwa [Submodule.map_span] at this
 
 theorem relIndex_levV_latLev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) (i : Fin D.R.m) (t : T) (P : LevelP R.Pg D.R.r ℂ) (m : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ) (Hl : ∀ PP : ↥R.Pg, Subgroup (GL (Fin D.R.r) (kP PP.1))) (cl : ∀ PP : ↥R.Pg, Hl PP →* ℂˣ), GlobalTheory.Hk3.Core R F → P = LevelP.ofLocal Hl cl → (((GlobalTheory.AdelicScalar.levV R i t P m).relIndex (GlobalTheory.Mass.Levels.latLev (Vc D i)) : ℕ) : ℝ) = (∏ PP ∈ R.Pg.attach, (Nat.card (GL (Fin (Vc D i).rank) (kP PP.1)) : ℝ) / ((Nat.card (Hl PP) : ℝ) * (Nat.card (GL (Fin D.R.t) (kP PP.1)) : ℝ) * (Nat.card (kP PP.1) : ℝ) ^ (D.R.r * D.R.t))) * ∏ PP ∈ R.Q t, (Nat.card (GL (Fin (Vc D i).rank) (kP PP)) : ℝ) / ((Nat.card (GL (Fin D.R.r) (kP PP)) : ℝ) * (Nat.card (GL (Fin D.R.t) (kP PP)) : ℝ) * (Nat.card (kP PP) : ℝ) ^ (D.R.r * D.R.t)) := by
   classical
@@ -565,8 +558,8 @@ theorem relIndex_levV_latLev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl
     exact ⟨⟨x, by rw [hK]; exact hx⟩, funext hred⟩
   let Bl : ∀ PP : ↥Ts, Subgroup (GL (Fin (Vc D i).rank) (kP PP.1)) := fun PP =>
     if h : PP.1 ∈ R.Pg then parSub (r_le_V i) (Hl ⟨PP.1, h⟩) else blockTri (blk2 D.R.r)
-  have hBp : ∀ (PP : ↥Ts) (h : PP.1 ∈ R.Pg), Bl PP = parSub (r_le_V i) (Hl ⟨PP.1, h⟩) := fun PP h => dif_pos h
-  have hBn : ∀ (PP : ↥Ts), PP.1 ∉ R.Pg → Bl PP = blockTri (blk2 D.R.r) := fun PP h => dif_neg h
+  have hBp : ∀ (PP : ↥Ts) (h : PP.1 ∈ R.Pg), Bl PP = parSub (r_le_V i) (Hl ⟨PP.1, h⟩) := fun PP h => dite_eq_left h
+  have hBn : ∀ (PP : ↥Ts), PP.1 ∉ R.Pg → Bl PP = blockTri (blk2 D.R.r) := fun PP h => dite_eq_right h
   have hcomap : (GlobalTheory.AdelicScalar.levV R i t P m).subgroupOf (GlobalTheory.Mass.Levels.latLev (Vc D i)) =
       (Subgroup.pi Set.univ Bl).comap φ := by
     ext x
@@ -604,8 +597,7 @@ theorem relIndex_levV_latLev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl
         by_cases h : PP ∈ R.Pg
         · rw [hBp ⟨PP, Finset.mem_union_right _ hPP⟩ h] at this
           exact this.1
-        · rw [hBn ⟨PP, Finset.mem_union_right _ hPP⟩ h] at this
-          exact this
+        · rwa [hBn ⟨PP, Finset.mem_union_right _ hPP⟩ h] at this
       · intro PP _
         have := hx1 PP.1 (Finset.mem_union_left _ PP.2)
         rw [hBp ⟨PP.1, Finset.mem_union_left _ PP.2⟩ PP.2] at this
@@ -632,24 +624,24 @@ theorem relIndex_levV_latLev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl
     rw [e1]
     by_cases h : PP.1 ∈ R.Pg
     · have e2 : Bl PP = parSub (r_le_V i) (Hl ⟨PP.1, h⟩) := hBp PP h
-      simp only [g, dif_pos h]
+      simp only [g, dite_eq_left h]
       rw [e2, _root_.GlobalTheory.ParIndex.card_parSub (kP PP.1) _ _ _ (r_le_V i) hn]
       push_cast; ring
     · have e2 : Bl PP = parSub (r_le_V i) ⊤ := by
         rw [hBn PP h]
         ext x
         simp [mem_parSub]
-      simp only [g, dif_neg h]
+      simp only [g, dite_eq_right h]
       rw [e2, _root_.GlobalTheory.ParIndex.card_parSub (kP PP.1) _ _ _ (r_le_V i) hn, Subgroup.card_top]
       push_cast; ring
   rw [hidx, Finset.prod_congr rfl (fun PP _ => hloc PP), Finset.prod_coe_sort Ts g, hTs, Finset.prod_union hdis]
   congr 1
   · rw [← Finset.prod_attach R.Pg g]
     refine Finset.prod_congr rfl fun PP _ => ?_
-    simp only [g, dif_pos PP.2]
+    simp only [g, dite_eq_left PP.2]
   · refine Finset.prod_congr rfl fun PP hPP => ?_
     have h : PP ∉ R.Pg := Finset.disjoint_right.1 hdis hPP
-    simp only [g, dif_neg h]
+    simp only [g, dite_eq_right h]
 
 end GlobalTheory.ParIndex
 

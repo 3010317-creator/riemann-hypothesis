@@ -136,8 +136,7 @@ theorem normV_eq_of_split {E : Type} [Field E] [NumberField E] {p : ℕ} (hp : p
   have h3 : Ideal.absNorm w.asIdeal * (M'.map Ideal.absNorm).prod = p * p ^ M'.card := by
     rw [← pow_succ', ← Multiset.card_cons w.asIdeal, ← hM', hc, ← hN, ← hprod, hM', Multiset.prod_cons, map_mul,
       map_multiset_prod]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hpos : 0 < p ^ M'.card := pow_pos hp.pos _
   nlinarith
 
@@ -196,8 +195,7 @@ theorem cong_of_valuation_eq [IsAlgClosure E Ω] {t : G E Ω} (ht : t ∈ Ine (F
   have hty : t y ≠ 0 := (map_ne_zero t).2 hy
   have e : t z / z - t y / y = (t (z / y) - z / y) * (t y / z) := by
     rw [map_div₀]; field_simp
-  rw [e, map_mul, map_div₀ A.valuation, valuation_apply_of_mem_Dec ht.1, h, div_self hy0, mul_one]
-  exact h1
+  rwa [e, map_mul, map_div₀ A.valuation, valuation_apply_of_mem_Dec ht.1, h, div_self hy0, mul_one]
 
 theorem cong_pow [IsAlgClosure E Ω] {t : G E Ω} (ht : t ∈ Ine (F := E) A) {y : Ω} (hy : y ≠ 0) (n : ℕ) :
     A.valuation ((t ^ n) y / y - (t y / y) ^ n) < 1 := by
@@ -249,8 +247,7 @@ theorem wild_of_frob [IsAlgClosure E Ω] {t φ : G E Ω} {q : ℕ} (ht : t ∈ I
     rw [map_sub, map_div₀, map_one, AlgEquiv.mul_apply, mul_inv_apply]
     show φ (t z) / _ - 1 = _
     field_simp
-  rw [e, map_mul, map_div₀ A.valuation, valuation_apply_of_mem_Dec htq, div_self hy0, mul_one]
-  exact h3
+  rwa [e, map_mul, map_div₀ A.valuation, valuation_apply_of_mem_Dec htq, div_self hy0, mul_one]
 
 end Tame
 

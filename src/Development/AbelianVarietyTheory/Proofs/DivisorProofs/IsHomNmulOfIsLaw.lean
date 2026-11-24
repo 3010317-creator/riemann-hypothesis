@@ -94,8 +94,7 @@ theorem op_comm {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R} (hμ : IsLaw 
       MvPowerSeries (Fin d ⊕ Fin d) R)) (fun j => X (Sum.inl j)) s)) = Sum.elim b a := by
     funext s
     rcases s with s | s <;> simp [subst_X hab]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem op_assoc {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R} (hμ : IsLaw μ) {τ : Type}
     {a b c : Fin d → MvPowerSeries τ R} (ha : ∀ i, constantCoeff (a i) = 0)
@@ -194,7 +193,6 @@ theorem isHom_nmul : ∀ (R : Type) [CommRing R] (d : ℕ) (μ : Fin d → MvPow
     show subst _ (μ i) = μ i
     rw [e, subst_self]; rfl
   have h := congrFun (subst_nmul_op hμ k hL hR) j
-  rw [hxy] at h
-  exact h
+  rwa [hxy] at h
 
 end GlobalTheory.NMulEndo

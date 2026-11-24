@@ -110,9 +110,9 @@ theorem eq_sum_cosets {φ : V → ℂ} (hφ : HasCompactSupport φ) (L : AddSubg
     intro q
     by_cases hq : q = (x : V ⧸ L)
     · subst hq
-      rw [if_pos rfl, Set.indicator_of_mem (show x ∈ {y | y - ((x : V ⧸ L)).out ∈ L} from (key _).2 rfl),
+      rw [ite_eq_left rfl, Set.indicator_of_mem (show x ∈ {y | y - ((x : V ⧸ L)).out ∈ L} from (key _).2 rfl),
         hval, mul_one]
-    · rw [if_neg hq, Set.indicator_of_notMem (show x ∉ {y | y - q.out ∈ L} from fun hx => hq ((key _).1 hx)),
+    · rw [ite_eq_right hq, Set.indicator_of_notMem (show x ∉ {y | y - q.out ∈ L} from fun hx => hq ((key _).1 hx)),
         mul_zero]
   simp only [hterm, Finset.sum_ite_eq']
   split_ifs with hx
@@ -122,8 +122,7 @@ theorem eq_sum_cosets {φ : V → ℂ} (hφ : HasCompactSupport φ) (L : AddSubg
     obtain ⟨a, ha, hxa⟩ := Set.mem_iUnion₂.1 (ht hmem)
     apply hx
     refine Finset.mem_image.2 ⟨a, ha, ?_⟩
-    rw [QuotientAddGroup.eq, neg_add_eq_sub]
-    exact hxa
+    rwa [QuotientAddGroup.eq, neg_add_eq_sub]
 
 end Group
 
@@ -176,15 +175,15 @@ theorem exists_box_subset {W : Set (Af F)} (hW : W ∈ 𝓝 (0 : Af F)) :
       intro v
       by_cases hv : v ∈ I
       · have := hy v
-        simp only [hv, if_true] at this
+        simp only [hv, ite_true] at this
         exact hQ1 v this
       · have := hy v
-        simp only [hv, if_false] at this
+        simp only [hv, ite_false] at this
         exact this
     have : (fun v => (⟨y v, hint v⟩ : A v)) ∈ (RestrictedProduct.structureMap R A Filter.cofinite) ⁻¹' W := by
       refine hsub fun v hv => hQ2 v _ ?_
       have := hy v
-      simp only [hv, if_true] at this
+      simp only [hv, ite_true] at this
       exact this
     exact this
 

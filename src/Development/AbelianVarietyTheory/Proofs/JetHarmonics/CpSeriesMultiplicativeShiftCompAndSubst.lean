@@ -122,8 +122,7 @@ theorem Hom.comp {Φ Ψ : ℂ_[q]⟦X⟧ → ℂ_[q]⟦X⟧} (h : Hom Φ) (h' : 
     rw [h'.add f g hf hg, h.add _ _ (hf.imp fun B hB => h'.bd _ _ hB) (hg.imp fun B hB => h'.bd _ _ hB)]
   · intro f g hf hg
     rw [h'.mul f g hf hg, h.mul _ _ (hf.imp fun B hB => h'.bd _ _ hB) (hg.imp fun B hB => h'.bd _ _ hB)]
-  · intro c
-    exact (congrArg Φ (h'.const c)).trans (h.const c)
+  · exact fun c => (congrArg Φ (h'.const c)).trans (h.const c)
 
 theorem Hom.ext {Φ Ψ : ℂ_[q]⟦X⟧ → ℂ_[q]⟦X⟧} (h : Hom Φ) (h' : Hom Ψ) (hX : Φ X = Ψ X)
     (h0 : ‖coeff 0 (Ψ X)‖ < 1) (f : ℂ_[q]⟦X⟧) (hf : Bdd f) : Φ f = Ψ f := by
@@ -190,8 +189,7 @@ theorem shift_shift (ζ ξ : ℂ_[q]) (f : ℂ_[q]⟦X⟧) (hζ : ‖ζ - 1‖ <
     simpa using hm
 
 theorem norm_zc (a : ℤ_[q]) : ‖zc a‖ = ‖a‖ := by
-  have h := PadicComplex.norm_extends' q (a : ℚ_[q])
-  simpa [zc] using h
+  simpa [zc] using PadicComplex.norm_extends' q (a : ℚ_[q])
 
 theorem zc_natCast (m : ℕ) : zc (m : ℤ_[q]) = (m : ℂ_[q]) := by simp [zc]
 
@@ -322,8 +320,7 @@ theorem shift_subst (ζ : ℂ_[q]) (n k : ℕ) (a : ℤ_[q]) (f : ℂ_[q]⟦X⟧
   have e : (shiftS (ζ ^ k) X).subst (mulS a : ℂ_[q]⟦X⟧) = C (ζ ^ k) * (1 + mulS a) - 1 := by
     rw [shift_X hk]
     have := (hom_subst a).lin (ζ ^ k)
-    rw [hX] at this
-    exact this
+    rwa [hX] at this
   refine ((hom_shift hζ).comp (hom_subst a)).ext ((hom_subst a).comp (hom_shift hk)) ?_ ?_ f hf
   · show shiftS ζ ((X : ℂ_[q]⟦X⟧).subst (mulS a : ℂ_[q]⟦X⟧)) = (shiftS (ζ ^ k) X).subst (mulS a : ℂ_[q]⟦X⟧)
     rw [hX, e, shift_mulS h ha]

@@ -145,8 +145,7 @@ theorem VarWirtinger.proof (hDSC : DiscriminantSheetCover.Statement) (hMF : Mass
     · intro y₁ h₁ y₂ h₂ h12
       have h' : s k j (WithLp.ofLp y₁) = s k j (WithLp.ofLp y₂) := WithLp.toLp_injective 2 h12
       have e₁ := (hsec k j _ (hE'U k j y₁ h₁)).1
-      have e₂ := (hsec k j _ (hE'U k j y₂ h₂)).1
-      exact WithLp.ofLp_injective 2 (by rw [← e₁, ← e₂, h'])
+      exact WithLp.ofLp_injective 2 (by rw [← e₁, ← ((hsec k j _ (hE'U k j y₂ h₂)).1), h'])
 
   have hArea : ∀ k j, μH[((2 * (d + 1) : ℕ) : ℝ)] (S k j) =
       ∫⁻ y in E' k j, ENNReal.ofReal (sheetJac (s k j) (WithLp.ofLp y)) ∂(μH[((2 * (d + 1) : ℕ) : ℝ)]) :=
@@ -216,16 +215,14 @@ theorem VarWirtinger.proof (hDSC : DiscriminantSheetCover.Statement) (hMF : Mass
       replace hj : s k j (A *ᵥ WithLp.ofLp z) = WithLp.ofLp z := hj
       refine ⟨k, j, WithLp.toLp 2 (A *ᵥ WithLp.ofLp z), ⟨hk, ?_⟩, ?_⟩
       · show WithLp.toLp 2 (s k j (A *ᵥ WithLp.ofLp z)) ∈ B
-        rw [hj]
-        exact hzB
+        rwa [hj]
       · show WithLp.toLp 2 (s k j (A *ᵥ WithLp.ofLp z)) = z
         rw [hj]
     · rintro ⟨k, j, y, ⟨hyD, hyB⟩, rfl⟩
       obtain ⟨e₁, e₂⟩ := hsec k j _ ((hUD k).2.2.1 hyD)
       refine ⟨⟨fun q hq => e₂ q hq, hyB⟩, k, ?_⟩
       show A *ᵥ s k j (WithLp.ofLp y) ∈ Dk k
-      rw [e₁]
-      exact hyD
+      rwa [e₁]
   have hdisjS : ∀ k, Pairwise (Function.onFun Disjoint (S k)) := by
     intro k j j' hjj'
     rw [Function.onFun, Set.disjoint_left]

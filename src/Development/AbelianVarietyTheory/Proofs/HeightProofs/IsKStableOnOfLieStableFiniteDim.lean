@@ -73,8 +73,7 @@ theorem flow_mem_map {V H : Type*} [AddCommGroup V] [Module ℂ V] [NormedAddCom
       have := hadd s (r - s)
       rw [add_sub_cancel] at this
       simp [this]
-    rw [h3]
-    exact h2
+    rwa [h3]
   rintro _ ⟨w, hw, rfl⟩
   rw [← (W.map ι).orthogonal_orthogonal, Submodule.mem_orthogonal]
   intro y hy
@@ -102,8 +101,7 @@ theorem flow_mem_map {V H : Type*} [AddCommGroup V] [Module ℂ V] [NormedAddCom
     have h4 : L (f s) i = ∑ j, b.repr ⟨a (b i), hW _ (b i).2⟩ j * f s j := by
       simp only [L, LinearMap.coe_toContinuousLinearMap', Matrix.toLin'_apply]
       rfl
-    rw [h4, ← this]
-    exact h2
+    rwa [h4, ← this]
   have hf0 : f 0 = 0 := by
     ext i
     simp only [f, h0]
@@ -126,8 +124,7 @@ theorem isKStableOn_of_kStable : ∀ (p q n : ℕ) (e : Ix p q ≃ Fin n) (ε : 
     apply (Matrix.reindex e e).injective
     simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv] at h1
     simp only [Matrix.reindex_apply]
-    rw [Matrix.submatrix_add]
-    exact h1
+    rwa [Matrix.submatrix_add]
   have hKC : IsKC X := by
     intro a b hab
     rw [hb.sameBlock_iff] at hab
@@ -136,9 +133,9 @@ theorem isKStableOn_of_kStable : ∀ (p q n : ℕ) (e : Ix p q ≃ Fin n) (ε : 
       Equiv.symm_apply_apply] at h2
     cases h3 : ε (e a) <;> cases h4 : ε (e b) <;> rw [h3, h4] at hab h2
     · exact (hab rfl).elim
-    · simp only [if_true, Bool.false_eq_true, if_false] at h2
+    · simp only [ite_true, Bool.false_eq_true, ite_false] at h2
       linear_combination (1/2 : ℂ) * h2
-    · simp only [if_true, Bool.false_eq_true, if_false] at h2
+    · simp only [ite_true, Bool.false_eq_true, ite_false] at h2
       linear_combination (-1/2 : ℂ) * h2
     · exact (hab rfl).elim
   have hk' : σ k = R.U.π (T.expt ((1 : ℝ) • X)) := by

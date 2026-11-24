@@ -237,8 +237,7 @@ theorem mel_conj (h : χ * χ = 1) (s : ℂ) :
     exact Real.pi_ne_zero.symm
   have h1 : (t : ℂ) ^ (-(starRingEnd ℂ) s - 1) = (starRingEnd ℂ) ((t : ℂ) ^ (-s - 1)) := by
     have := cpow_conj (t : ℂ) (-s - 1) harg
-    rw [conj_ofReal, map_sub, map_neg, map_one] at this
-    exact this
+    rwa [conj_ofReal, map_sub, map_neg, map_one] at this
 
   simp only [map_mul, map_sub, map_sum, conj_aChi 𝓕 χ h, conj_res, conj_ofReal, h1]
 

@@ -197,8 +197,7 @@ theorem sd_facts (hψ : IsCharAF F ψ) (hfin : Module.finrank F E = 2) (hann : A
     have := PI.UnitaryGroupMassFormula.LocJacTyp.Sd.trace_inclR (E := E) v 1
     simp only [map_one] at this
     rw [this, show (1 : E) = algebraMap F E 1 from (map_one _).symm, Algebra.trace_algebraMap, hfin]
-    simp
-    exact map_ofNat _ 2
+    simpa using map_ofNat _ 2
   have hOK : PI.UnitaryGroupMassFormula.LocJacTyp.Sd.OpenKer v ψ := by
     refine PI.UnitaryGroupMassFormula.LocJacTyp.Sd.openKer_of v ψ 2 two_ne_zero ?_
     intro c hc
@@ -314,8 +313,7 @@ theorem volTLocPres_of (hψ : IsCharAF F ψ) (hfin : Module.finrank F E = 2) (ha
     refine forall_congr' fun i => ?_
     apply Formalism.L2.SG.Pf.NcVal.VolTU.unit_mul_mem_iff
     rw [map_mul, Formalism.L2.SG.Pf.NcVal.VolTU.val_alp v hunit, Formalism.L2.SG.Pf.NcVal.VolTU.val_alp v hunit, one_mul]
-  rw [hset, hV, one_mul] at key
-  exact key
+  rwa [hset, hV, one_mul] at key
 
 theorem volTO_meas (ι : Type) [Fintype ι] : MeasurableSet (VolTO (E := E) v ι) := by
   rw [volTO_eq]

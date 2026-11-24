@@ -205,8 +205,7 @@ theorem ontoParts_of {θ : A →ₗ[ℂ] B} {op : I → Module.End ℂ A} {opB :
   have hy10 : y1 = 0 := hInj c x y1 hxe (by rw [hθx]; exact hw0) ⟨hy1e, hPr y hy.2⟩ (LinearMap.mem_ker.mp hy1K)
   rw [← LinearMap.orthogonal_ker]
   have : y = y - y1 := by rw [hy10, sub_zero]
-  rw [this]
-  exact hy2
+  rwa [this]
 
 end GlobalTheory.OntoLinAlg
 end -- clump:auto
@@ -449,8 +448,7 @@ theorem adjoint_apply_of_eigen {H : Type} [NormedAddCommGroup H] [InnerProductSp
         rw [← Module.End.mul_apply, hc.eq, Module.End.mul_apply]
       rw [this, hBv, map_zero, inner_zero_right]
     exact inner_self_eq_zero.1 e
-  rw [hBadj, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero] at h0
-  exact h0
+  rwa [hBadj, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero] at h0
 
 theorem adjoin_scalar {M : Type} [AddCommGroup M] [Module ℂ M] (S : Set (Module.End ℂ M)) (X : Set M)
     (hS : ∀ b ∈ S, ∃ μ : ℂ, ∀ u ∈ X, b u = μ • u) : ∀ b ∈ Algebra.adjoin ℂ S, ∃ μ : ℂ, ∀ u ∈ X, b u = μ • u := by
@@ -537,8 +535,7 @@ theorem label_scalar_split : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 
     have hn' : IsBaseFrame (Vc D j) (R.βV j) (R.ΛV j) 1 := (one_pow n : (1 : ℕ) ^ n = 1) ▸ hn
     refine GlobalTheory.DefiniteOps.fixed_of_mem (Vc D j) (R.βV j) (R.ΛV j) (R.datVt j A3.A.fam.μ0) hn' (R.pl P0) hP (R.cV j).coef.ρ _ ?_
     have hm := LinearMap.mem_range_self (R.HV j A3.A.fam.μ0).e (Tw.out (s := twAt D.what₂.embLL A3.A.v0) x)
-    rw [(hM.HV j A3.A.fam.μ0).2.1] at hm
-    exact hm
+    rwa [(hM.HV j A3.A.fam.μ0).2.1] at hm
   exact (hh _ hP _ _).trans ((GlobalTheory.DefiniteOps.hkF_eq _ _ _ _).trans ((hae _ hfix).symm.trans
     ((hμ _ ⟨x, hx, rfl⟩).trans (map_smul _ _ _).symm)))
 

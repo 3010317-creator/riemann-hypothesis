@@ -38,8 +38,7 @@ theorem pairMeas_bad (L : LocBessel k r) : pairMeas L {x | ¬ Good L x} = 0 := b
         Set.univ ×ˢ ({x | Matrix.of x ∉ UWset k r L.z'} ×ˢ Set.univ)) := by
     intro x hx
     simp only [Set.mem_union, Set.mem_prod, Set.mem_univ, Set.mem_setOf_eq, true_and, and_true]
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hx (by unfold Good; exact ⟨hc.1.1, hc.1.2, hc.2.1, hc.2.2⟩)
   refine measure_mono_null hsub ?_
   unfold pairMeas
@@ -56,8 +55,7 @@ theorem nu_bad (L : LocBessel k r) {γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * 
       μR Set.univ * {x : PairSp k r | ¬ Good L x}.indicator 1 x := by
     intro x
     have hst : ∀ᵐ a ∂μR, Matrix.of a ∈ RStab k r γ := by
-      rw [ae_iff]
-      exact hRc
+      rwa [ae_iff]
     have hae : ∀ᵐ a ∂μR, {x : PairSp k r | ¬ Good L x}.indicator (1 : PairSp k r → ℝ≥0∞)
         (stabAct γ (Matrix.of a) x) = {x : PairSp k r | ¬ Good L x}.indicator 1 x := by
       filter_upwards [hst] with a ha

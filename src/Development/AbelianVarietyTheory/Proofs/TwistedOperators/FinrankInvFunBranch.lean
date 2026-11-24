@@ -700,7 +700,7 @@ namespace GlobalTheory.OneFunctional
 
 private lemma detShift_eq_add_of_weight_shift (n : ℕ) (c : ℤ) (lam lam' : DomWeight n) (h : ∀ i, lam'.w i = lam.w i + c)
     (hn : 0 < n) : lam'.detShift = lam.detShift + c := by
-  simp only [DomWeight.detShift, dif_pos hn, h]
+  simp only [DomWeight.detShift, dite_eq_left hn, h]
 
 private lemma natW_eq_of_weight_shift (n : ℕ) (c : ℤ) (lam lam' : DomWeight n) (h : ∀ i, lam'.w i = lam.w i + c) :
     lam'.natW = lam.natW := by
@@ -832,8 +832,7 @@ theorem span_orbit_outer {ι G : Type} [Fintype ι] [Monoid G] {V : ι → Type}
       intro f hf
       choose g hg using fun τ => hf τ (by simp)
       refine Submodule.subset_span ⟨g, ?_⟩
-      simp only [outer_apply, PiTensorProduct.map_tprod]
-      exact congrArg _ (funext hg)
+      simpa only [outer_apply, PiTensorProduct.map_tprod] using congrArg _ (funext hg)
     | insert a s ha ih =>
       intro f hf
       have hle : Submodule.span ℂ (Set.range fun g : G => ρ a g (v a)) ≤
@@ -1023,8 +1022,7 @@ theorem outer_irr_iso_weylRep (ι : Type) [Fintype ι] [DecidableEq ι] (n : ℕ
     choose r hr using hl
     have hm : PiTensorProduct.map r ∘ₗ (PiTensorProduct.map fun τ => (nablaSq ℂ n (μ τ)).subtype) = LinearMap.id := by
       rw [← PiTensorProduct.map_comp]
-      simp only [hr]
-      exact PiTensorProduct.map_id
+      simpa only [hr] using PiTensorProduct.map_id
     intro x y hxy
     have h1 : PiTensorProduct.map (fun τ => (nablaSq ℂ n (μ τ)).subtype) x =
         PiTensorProduct.map (fun τ => (nablaSq ℂ n (μ τ)).subtype) y := e.injective hxy
@@ -1492,8 +1490,7 @@ theorem Contracts.outer {ι H G : Type} [Fintype ι] [DecidableEq ι] [Monoid H]
         rw [outer_apply, outer₂_apply, PiTensorProduct.map_tprod, PiTensorProduct.map_tprod] at h3
         simp only [LinearMap.compMultilinearMap_apply, LinearMap.compr₂ₛₗ_apply, TensorProduct.mk_apply, LinearMap.comp_apply,
           LinearEquiv.coe_coe, hE, PiTensorProduct.map_tprod, T, TensorProduct.map_tmul]
-        rw [← hE, ← hE, e.symm_apply_apply, e.symm_apply_apply]
-        exact h3
+        rwa [← hE, ← hE, e.symm_apply_apply, e.symm_apply_apply]
       have h4 := LinearMap.congr_fun hT (PiTensorProduct.tprod ℂ (Function.update y τ (f ⊗ₜ v)))
       rw [LinearMap.comp_apply, PiTensorProduct.map_tprod] at h4
       refine Eq.trans (congrArg m (funext fun ρ => ?_)) h4
@@ -1735,8 +1732,7 @@ theorem oneLine : OneLine := by
     refine ⟨fun h g z => ?_, fun h g z => h (r g) z⟩
     have := h (1, Function.update 1 (Fin.last _) g) z
     have e : r (1, Function.update 1 (Fin.last _) g) = g := Function.update_self _ _ _
-    rw [← e]
-    exact this
+    rwa [← e]
   rw [h1, h2, h3]
   exact finrank_invFun_outer _ _ fun τ => finrank_invFun_branch S.nC_succ (nC_pos S _) _ _
     (interlace_weights S (P τ) (hP τ) _ _ (hl1 τ) (hk1 τ))

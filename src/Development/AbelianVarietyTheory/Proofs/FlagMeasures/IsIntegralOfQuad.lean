@@ -136,8 +136,7 @@ theorem exists_trace_norm (A : Places F E sig) (x : E) :
     rcases eq_bot_or_eq_top (AlgHom.equalizer sig (AlgHom.id F E)) with h | h
     · intro y hy
       have : y ∈ AlgHom.equalizer sig (AlgHom.id F E) := hy
-      rw [h, Algebra.mem_bot] at this
-      exact this
+      rwa [h, Algebra.mem_bot] at this
     · exfalso
       have h1 : ∀ y, sig y = y := fun y => by
         have : y ∈ AlgHom.equalizer sig (AlgHom.id F E) := by rw [h]; trivial
@@ -217,7 +216,6 @@ theorem integers_local : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
     refine ((HeightOneSpectrum.Support.finite (𝓞 F) t).union
       (HeightOneSpectrum.Support.finite (𝓞 F) n)).subset fun p hp => ?_
     have hp' : ¬ ((A.loc p).ιE x ∈ (A.L p).O) := hp
-    rw [mem_O_iff A p x t n ht hn, not_and_or, not_le, not_le] at hp'
-    exact hp'
+    rwa [mem_O_iff A p x t n ht hn, not_and_or, not_le, not_le] at hp'
 
 end GlobalTheory.HL.PlacesInt

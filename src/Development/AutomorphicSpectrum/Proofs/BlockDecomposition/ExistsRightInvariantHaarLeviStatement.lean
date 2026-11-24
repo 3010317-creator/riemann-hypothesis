@@ -260,8 +260,7 @@ theorem smul_eq_of_map_eq {π : A →+* B} {e : A} (hk : ∀ x, π x = 0 → e *
   simp only [Matrix.map_apply] at this
   have h2 := hk (X i j - Y i j) (by rw [map_sub, this, sub_self])
   simp only [Matrix.smul_apply, smul_eq_mul]
-  rw [mul_sub, sub_eq_zero] at h2
-  exact h2
+  rwa [mul_sub, sub_eq_zero] at h2
 
 def secGL (π : A →+* B) (hs : Function.Surjective π) (e : A) (he : e * e = e)
     (hk : ∀ x, π x = 0 → e * x = 0) : GL n B →* GL n A :=
@@ -297,8 +296,7 @@ theorem exists_char_eq_cut (π : A →+* B) (hs : Function.Surjective π) (e : A
     ∃ k : GL n A, k.val - 1 = (1 - e) • (g.val - 1) ∧ k⁻¹.val - 1 = (1 - e) • (g⁻¹.val - 1) ∧ χ g = χ k := by
   have he : e * e = e := by
     have := hk (e - 1) (by rw [map_sub, h1, map_one, sub_self])
-    rw [mul_sub, mul_one, sub_eq_zero] at this
-    exact this
+    rwa [mul_sub, mul_one, sub_eq_zero] at this
   let s : GL n B →* GL n A := secGL π hs e he hk
   let m : GL n A →* GL n B := Matrix.GeneralLinearGroup.map π
   have hsv : ∀ h : GL n B, ∀ X : Matrix n n A, X.map π = h.val → (s h).val = cut e X := fun h X hX => by
@@ -357,8 +355,7 @@ theorem isCompact_congGL [TopologicalSpace A] [IsTopologicalRing A] [T2Space A] 
     have e : {X : n → n → A | ∀ i j, X i j ∈ C} = Set.univ.pi fun _ : n => Set.univ.pi fun _ : n => (C : Set A) := by
       ext X
       simp [Set.mem_pi]
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
   have h2 : IsCompact {X : Matrix n n A | ∀ i j, (X - 1) i j ∈ C} :=
     (Homeomorph.subRight (1 : Matrix n n A)).isCompact_preimage.2 h1
   have h3 := (MulOpposite.opHomeomorph (M := Matrix n n A)).symm.isCompact_preimage.2 h2

@@ -193,26 +193,17 @@ theorem ker_fontaineThetaInvertP {ξ : 𝕎R♭} (hξ : RingHom.ker (fontaineThe
     obtain ⟨⟨_, k, rfl⟩, hk⟩ :=
       (IsLocalization.map_eq_zero_iff (Submonoid.powers (p : R)) _ _).mp h1
     have h2 : (p : 𝕎R♭) ^ k * w ∈ span {ξ} := by
-      rw [← hξ, RingHom.mem_ker, map_mul, map_pow, map_natCast]
-      exact hk
+      rwa [← hξ, RingHom.mem_ker, map_mul, map_pow, map_natCast]
     obtain ⟨c, hc⟩ := mem_span_singleton'.mp h2
     have hu : IsUnit (algebraMap 𝕎R♭ 𝔸 ((p : 𝕎R♭) ^ k * (p : 𝕎R♭) ^ n)) :=
-      IsLocalization.map_units 𝔸 (⟨_, mul_mem (pow_mem (Submonoid.mem_powers _) k)
-        (pow_mem (Submonoid.mem_powers _) n)⟩ : Submonoid.powers (p : 𝕎R♭))
+      IsLocalization.map_units 𝔸 (⟨_, k + n, pow_add _ _ _⟩ : Submonoid.powers (p : 𝕎R♭))
     rw [mem_span_singleton, ← hu.dvd_mul_right]
     refine ⟨algebraMap 𝕎R♭ 𝔸 c, ?_⟩
-    calc IsLocalization.mk' 𝔸 w (⟨(p : 𝕎R♭) ^ n, n, rfl⟩ : Submonoid.powers (p : 𝕎R♭)) *
-          algebraMap 𝕎R♭ 𝔸 ((p : 𝕎R♭) ^ k * (p : 𝕎R♭) ^ n)
-        = algebraMap 𝕎R♭ 𝔸 ((p : 𝕎R♭) ^ k) *
-          (IsLocalization.mk' 𝔸 w (⟨(p : 𝕎R♭) ^ n, n, rfl⟩ : Submonoid.powers (p : 𝕎R♭)) *
-            algebraMap 𝕎R♭ 𝔸 ((p : 𝕎R♭) ^ n)) := by rw [map_mul]; ring
-      _ = algebraMap 𝕎R♭ 𝔸 ((p : 𝕎R♭) ^ k * w) := by rw [IsLocalization.mk'_spec, map_mul]
-      _ = algebraMap 𝕎R♭ 𝔸 ξ * algebraMap 𝕎R♭ 𝔸 c := by rw [← hc, map_mul, mul_comm]
+    rw [map_mul, mul_left_comm, IsLocalization.mk'_spec, ← map_mul, ← hc, map_mul, mul_comm]
   · rw [span_le, Set.singleton_subset_iff, SetLike.mem_coe, RingHom.mem_ker,
       fontaineThetaInvertP_algebraMap]
     have : ξ ∈ RingHom.ker (fontaineTheta R p) := hξ ▸ mem_span_singleton_self ξ
-    rw [RingHom.mem_ker] at this
-    rw [this, map_zero]
+    rw [RingHom.mem_ker.1 this, map_zero]
 
 theorem fg_ker_fontaineThetaInvertP {ξ : 𝕎R♭} (hξ : RingHom.ker (fontaineTheta R p) = span {ξ}) :
     (RingHom.ker (fontaineThetaInvertP R p)).FG :=
@@ -245,8 +236,7 @@ theorem isAdicComplete_bDeRhamPlus {ξ : 𝕎R♭} (hξ : RingHom.ker (fontaineT
       (RingHom.ker (fontaineThetaInvertP R p)).map (toBDeRhamPlus R p) := by
     rw [ker_fontaineThetaInvertP hξ, Ideal.map_span, Set.image_singleton]
     rfl
-  rw [h']
-  exact h
+  rwa [h']
 
 theorem toBDeRhamPlus_mem_span_pow_iff {ξ : 𝕎R♭}
     (hξ : RingHom.ker (fontaineTheta R p) = span {ξ}) (a : 𝔸) (n : ℕ) :

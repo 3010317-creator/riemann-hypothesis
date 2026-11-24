@@ -236,8 +236,7 @@ theorem isIso_of_points [IsReduced S] (A : Over S) [GrpObj A] (h : IsAbelianSche
       have := congrArg (·.left) h1
       simpa [Hom.one_def, e, eSec] using this
     have h3 : y default = a := by
-      simp only [y, Scheme.Hom.comp_apply]
-      exact Scheme.fromSpecResidueField_apply _ _
+      simpa only [y, Scheme.Hom.comp_apply] using Scheme.fromSpecResidueField_apply _ _
     exact ⟨(y ≫ A.hom) default, by rw [← Scheme.Hom.comp_apply, ← h2, h3]⟩⟩
   haveI : IsIso e := isIso_of_isClosedImmersion_of_surjective e
   haveI : IsIso (e ≫ A.hom) := by rw [he]; infer_instance

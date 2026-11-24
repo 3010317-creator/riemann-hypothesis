@@ -166,12 +166,8 @@ theorem levChi_ne_zero (L' : Formalism.L2.DIV.LevDat D.host.E ℂ V.rank) (κ : 
 theorem levFn_flag_mul {x y : GL (Fin V.rank) (EAf D)} (hx : x ∈ Formalism.L2.DIV.parLev D.sp.cm V.gram β L)
     (hy : y ∈ Formalism.L2.DIV.parLev D.sp.cm V.gram β L) :
     Formalism.L2.DIV.levFn β (flagL L) (x * y) = Formalism.L2.DIV.levFn β (flagL L) x * Formalism.L2.DIV.levFn β (flagL L) y := by
-  have hx' : x ∈ Formalism.L2.DIV.lev D.sp.cm V.gram β (flagL L) := by
-    show x ∈ Formalism.L2.DIV.parLev D.sp.cm V.gram β (flagL L) ∧ Formalism.L2.DIV.rTup β (flagL L) x ∈ (flagL L).P.H
-    exact ⟨hx, Subgroup.mem_top _⟩
-  have hy' : y ∈ Formalism.L2.DIV.lev D.sp.cm V.gram β (flagL L) := by
-    show y ∈ Formalism.L2.DIV.parLev D.sp.cm V.gram β (flagL L) ∧ Formalism.L2.DIV.rTup β (flagL L) y ∈ (flagL L).P.H
-    exact ⟨hy, Subgroup.mem_top _⟩
+  have hx' : x ∈ Formalism.L2.DIV.lev D.sp.cm V.gram β (flagL L) := ⟨hx, Subgroup.mem_top _⟩
+  have hy' : y ∈ Formalism.L2.DIV.lev D.sp.cm V.gram β (flagL L) := ⟨hy, Subgroup.mem_top _⟩
   simpa [Formalism.L2.DIV.levChar] using
     map_mul (Formalism.L2.DIV.levChar D.sp.cm V.gram β (flagL L)) ⟨x, hx'⟩ ⟨y, hy'⟩
 
@@ -193,7 +189,7 @@ theorem level_action_spec {g0 : Formalism.L2.DIV.G0 L.Pg L.r} {F : GA D V → �
     (hex : ∃ κ, IsLevelLift V β L g0 κ) : IsLevelActionImage V β L g0 F (actG0 V β L g0 F) := by
   unfold IsLevelActionImage actG0
   intro κ hκ h
-  simp only [dif_pos hex]
+  simp only [dite_eq_left hex]
   have hκ0 : IsLevelLift V β L g0 hex.choose := hex.choose_spec
   have hd := lift_div_mem hκ0 hκ
   have hF1 := hF _ hd (h * hex.choose)
@@ -236,7 +232,7 @@ theorem IsPLevel.hasType {P : Formalism.L2.DIV.LevelP L.Pg L.r ℂ} {F : GA D V 
   have n := levChi_ne_zero (V := V) (β := β) (flagL L) κ
   have hc : levChi V β (withP L P) κ = ((P.chi ⟨_, hl'.2⟩ : ℂˣ) : ℂ) * levChi V β (flagL L) κ := by
     have he : Formalism.L2.DIV.ext1 P.H P.chi (Formalism.L2.DIV.rTup β L (finE V κ)) = P.chi ⟨_, hl'.2⟩ :=
-      dif_pos hl'.2
+      dite_eq_left hl'.2
     unfold levChi
     rw [levFn_withP, Units.val_mul, he]
   have key : F (h * κ) = levChi V β (flagL L) κ * (((P.chi ⟨_, hl'.2⟩ : ℂˣ) : ℂ) * F h) := by
@@ -260,9 +256,7 @@ theorem finE_eq (V : HSp D) (h : GA D V) : finE V h = Formalism.UG.bc (swapAE D)
 theorem levCharAfE_flag (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (L : Formalism.L2.DIV.LevDat D.host.E ℂ V.rank)
     (x : GL (Fin V.rank) (Af D.host.F ⊗[D.host.F] D.host.E)) (h1 : x ∈ toAfE V (Formalism.L2.DIV.lev D.sp.cm V.gram β (flag1L L)))
     (h2 : x ∈ toAfE V (Formalism.L2.DIV.lev D.sp.cm V.gram β (flagL L))) :
-    levCharAfE V β (flag1L L) ⟨x, h1⟩ = levCharAfE V β (flagL L) ⟨x, h2⟩ := by
-  show Formalism.L2.DIV.levFn β (flag1L L) (Formalism.UG.bc (swapAE D) x) = Formalism.L2.DIV.levFn β (flagL L) (Formalism.UG.bc (swapAE D) x)
-  exact levFn_flag1 _
+    levCharAfE V β (flag1L L) ⟨x, h1⟩ = levCharAfE V β (flagL L) ⟨x, h2⟩ := levFn_flag1 _
 
 def LiftsExist (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (L : Formalism.L2.DIV.LevDat D.host.E ℂ V.rank) : Prop :=
   ∀ g0 : Formalism.L2.DIV.G0 L.Pg L.r, ∃ κ, IsLevelLift V β L g0 κ

@@ -86,8 +86,7 @@ theorem mx_le_one {k r : ℕ} {X : B.Mat k r} (h : B.unitLie k r X) : mx X ≤ 1
   rw [pi_norm_le_iff_of_nonneg zero_le_one]
   intro i
   rw [pi_norm_le_iff_of_nonneg zero_le_one]
-  intro j
-  exact h.2 i j
+  exact fun j => h.2 i j
 
 theorem dw_dj (h1 : DjCurve) (k j ρ : ℕ) : ∀ w : List (Bool × B.Mat k (j + ρ)),
     (∀ x ∈ w, inLieP k j ρ x.2 ∧ mx x.2 ≤ 1) →
@@ -213,8 +212,7 @@ variable {k j ρ : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 theorem cC_c_nonneg {r : ℕ} {A : ℝ} {m : ℕ} {f : B.Mat k r → E} {c : ℝ} (hf : B.CCle A m f c) : 0 ≤ c := by
   have h1 := Formalism.QuantumDeterminants.WeylGroupFacts.uh_one (k := k) (r := r)
   have h := hf.2 [] [] (by simp) (by simp) (by simp) 1 h1
-  have hpos := gN_pos h1
-  exact le_trans (mul_nonneg (Real.rpow_nonneg hpos.le _) (norm_nonneg _)) h
+  exact le_trans (mul_nonneg (Real.rpow_nonneg (gN_pos h1).le _) (norm_nonneg _)) h
 
 theorem cC_smul_ck {r : ℕ} {m : ℕ∞} {φ : B.Mat k r → ℂ} (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ)
     {f : B.Mat k r → E} (hf : B.CkOn m (B.GV k r) f) : B.CkOn m (B.GV k r) (fun g => φ g • f g) := by
@@ -301,8 +299,7 @@ theorem cC_bound {d Q o mm₀ : ℕ} {A₀ : ℝ} {φ : B.Mat k (j + ρ) → ℂ
     have h := hWB [] [] (by simp) (by simp) (by simp) 1 h1
     have hX := Real.rpow_pos_of_pos (gN_pos h1)
       ((0 : ℝ) + ((([] ++ [] : List (B.Mat k (j + ρ))).map (fun X => costP k j ρ X + d)).sum : ℕ))
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     have := mul_neg_of_neg_of_pos hneg hX
     linarith [norm_nonneg (B.dLR [] [] φ 1)]
   have hw'lie : ∀ X ∈ w.map nrm, B.unitLie k (j + ρ) X := by
@@ -508,8 +505,7 @@ theorem cD_delta {χ : ℂ → ℂ} (hχ : IsCutC χ) : ∃ δ : ℝ, 0 < δ ∧
   have ho : IsOpen (tsupport χ)ᶜ := (isClosed_tsupport χ).isOpen_compl
   obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp ho 0 h0
   refine ⟨ε, hε, fun z hz => ?_⟩
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   exact hball (by simpa [Metric.mem_ball, dist_zero_right] using hlt) hz
 
 end cDsec

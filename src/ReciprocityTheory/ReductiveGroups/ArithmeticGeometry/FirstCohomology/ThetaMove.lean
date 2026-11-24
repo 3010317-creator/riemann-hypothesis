@@ -101,7 +101,6 @@ theorem cancel_cg {M : Type*} [CommGroup M] (P X Y Z a b c d C : M)
 theorem val_constGen {S : Scheme.{0}} {A : Over S} [GrpObj A] (L : LB A.left) {T : Over S} (c : Γ(T.left, ⊤)ˣ)
     {Z : Scheme.{0}} (r : Z ⟶ (T ⊗ A).left) (z : Z) (J : (Z ⟶ A.left) → L.ι) :
     val (constGen A L c) r z J = gm (r ≫ (fst T A).left) z ⊤ c := by
-  show gm r z _ (res le_top (pullU (fst T A).left ⊤ c)) = _
   exact (gm_res r z _ (Set.mem_iInter.2 fun k => k.elim) _).trans (gm_pull r _ z ⊤ trivial c)
 
 section Comm
@@ -198,7 +197,6 @@ theorem commIsOf_unique {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left}
   have hJ' : Good L z J := hJ
   have e := (val_mul hJ' _ _ s).symm.trans ((val_corr hJ' h s).symm.trans ((val_corr hJ' h' s).trans (val_mul hJ' _ _ s)))
   have e' := mul_left_cancel e
-  rw [val_constGen, val_constGen, hs] at e'
-  exact e'
+  rwa [val_constGen, val_constGen, hs] at e'
 
 end ReciprocityTheory.ChartRestriction.G.H1

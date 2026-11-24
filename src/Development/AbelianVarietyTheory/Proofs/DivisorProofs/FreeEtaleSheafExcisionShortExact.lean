@@ -226,13 +226,7 @@ noncomputable section
 namespace GlobalTheory.EtC.MVLeft
 
 theorem mono_freePresheaf_map (R : Type) [CommRing R] {P Q : PSh} (f : P ⟶ Q) [Mono f] : Mono ((freeP R).map f) := by
-  rw [NatTrans.mono_iff_mono_app]
-  intro U
-  rw [ModuleCat.mono_iff_injective]
-  have hf : Function.Injective (f.app U) := (mono_iff_injective (f.app U)).1 inferInstance
-  have hu : Function.Injective (uliftFunctor.{1}.map (f.app U)) := by
-    intro a b h; cases a; cases b; exact congrArg ULift.up (hf (congrArg ULift.down h))
-  exact Finsupp.mapDomain_injective hu
+  exact GlobalTheory.EtC.FreeMonoEpi.freeP_map_mono R f
 
 theorem free_mono (R : Type) [CommRing R] {P Q : PSh} (f : P ⟶ Q) [Mono f] : Mono ((free R).map f) := by
   haveI := mono_freePresheaf_map R f

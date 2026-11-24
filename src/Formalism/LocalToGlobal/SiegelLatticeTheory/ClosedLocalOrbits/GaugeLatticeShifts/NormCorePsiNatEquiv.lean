@@ -34,8 +34,7 @@ theorem IsUTm.mul {A B : Matrix (Fin k) (Fin k) F} (hA : IsUTm A) (hB : IsUTm B)
       rcases lt_or_gt_of_ne hl with h | h
       · rw [hA0 i l h, zero_mul]
       · rw [hB0 l i h, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
   · rw [Matrix.mul_apply]
     refine Finset.sum_eq_zero fun l _ => ?_
     rcases lt_or_ge l i with h | h
@@ -63,10 +62,8 @@ theorem superdiag_mul {A B : Matrix (Fin k) (Fin k) F} (hA : IsUTm A) (hB : IsUT
           rw [Fin.lt_iff_val_lt_val]
           omega
         rw [hB0 c j h', mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
-    · intro h
-      exact absurd (Finset.mem_univ j) h
+    · exact fun h => absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ j) h
   simp only [superdiag]
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -81,9 +78,7 @@ theorem IsUTm.inv_val (u : GL (Fin k) F) (h : IsUTm (u : Matrix (Fin k) (Fin k) 
   have htri : ∀ i j : Fin k, j < i → ((u⁻¹ : GL (Fin k) F) : Matrix (Fin k) (Fin k) F) i j = 0 := by
     intro i j hij
     letI : Invertible (u : Matrix (Fin k) (Fin k) F) := u.invertible
-    have hb : (u : Matrix (Fin k) (Fin k) F).BlockTriangular id := by
-      intro a b hab
-      exact h.2 a b hab
+    have hb : (u : Matrix (Fin k) (Fin k) F).BlockTriangular id := fun a b hab => h.2 a b hab
     rw [Matrix.coe_units_inv u]
     exact Matrix.blockTriangular_inv_of_blockTriangular hb hij
   refine ⟨fun i => ?_, htri⟩
@@ -96,14 +91,12 @@ theorem IsUTm.inv_val (u : GL (Fin k) F) (h : IsUTm (u : Matrix (Fin k) (Fin k) 
     rcases lt_or_gt_of_ne hl with hl' | hl'
     · rw [h.2 i l hl', zero_mul]
     · rw [htri l i hl', mul_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 theorem isUni_mul {x y : GL (Fin k) F} (hx : IsUni k x) (hy : IsUni k y) : IsUni k (x * y) := by
   have h := IsUTm.mul (A := (x : Matrix (Fin k) (Fin k) F)) (B := (y : Matrix (Fin k) (Fin k) F)) hx hy
   show IsUTm ((x * y : GL (Fin k) F) : Matrix (Fin k) (Fin k) F)
-  rw [Units.val_mul]
-  exact h
+  rwa [Units.val_mul]
 
 theorem isUni_inv {x : GL (Fin k) F} (hx : IsUni k x) : IsUni k x⁻¹ := IsUTm.inv_val x hx
 
@@ -132,7 +125,7 @@ theorem Formalism.L2.SG.NormCut.psi_natural_equiv_holds : Formalism.L2.SG.NormCu
   refine ⟨?_, ?_, ?_⟩
   · by_cases hx : IsUni k x
     · unfold psiNat
-      rw [if_pos (isUni_mul hx hw), if_pos hx, if_pos hw]
+      rw [ite_eq_left (isUni_mul hx hw), ite_eq_left hx, ite_eq_left hw]
       exact psiU_mul ψ₀ hx hw
     · have hxw : ¬ IsUni k (x * w) := by
         intro h
@@ -140,10 +133,10 @@ theorem Formalism.L2.SG.NormCut.psi_natural_equiv_holds : Formalism.L2.SG.NormCu
         rw [mul_inv_cancel_right] at h'
         exact hx h'
       unfold psiNat
-      rw [if_neg hxw, if_neg hx, zero_mul]
+      rw [ite_eq_right hxw, ite_eq_right hx, zero_mul]
   · by_cases hx : IsUni k x
     · unfold psiNat
-      rw [if_pos (isUni_mul hw hx), if_pos hx, if_pos hw]
+      rw [ite_eq_left (isUni_mul hw hx), ite_eq_left hx, ite_eq_left hw]
       exact psiU_mul ψ₀ hw hx
     · have hwx : ¬ IsUni k (w * x) := by
         intro h
@@ -151,8 +144,8 @@ theorem Formalism.L2.SG.NormCut.psi_natural_equiv_holds : Formalism.L2.SG.NormCu
         rw [inv_mul_cancel_left] at h'
         exact hx h'
       unfold psiNat
-      rw [if_neg hwx, if_neg hx, mul_zero]
+      rw [ite_eq_right hwx, ite_eq_right hx, mul_zero]
   · unfold psiNat psiU
-    rw [if_pos hw]
+    rw [ite_eq_left hw]
     first
       | (rw [Complex.conj_mul', norm_addChar]; simp)

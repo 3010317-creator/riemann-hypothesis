@@ -93,7 +93,7 @@ private theorem submatrix_castLE_transpose_mul_mul_map_conj_of_upper {i : ℕ} (
   have hout : ∀ d : Fin r, d ∉ Set.range (Fin.castLE h) → i ≤ (d : ℕ) := by
     intro d hd
     by_contra hlt
-    push_neg at hlt
+    push Not at hlt
     exact hd (Set.mem_range.2 ⟨⟨d, hlt⟩, Fin.ext rfl⟩)
   ext a c
   simp only [Matrix.submatrix_apply, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply]
@@ -240,13 +240,11 @@ theorem ind_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) {M : Type*} [One M] [Zero M
     constructor
     · intro h
       have h' : D.zOf (cpt X x0 z) ∈ FF := h.2.2
-      rw [hzz] at h'
-      exact h'
+      rwa [hzz] at h'
     · intro h
       show _ ∧ _ ∧ _
       refine ⟨hz, hΔ, ?_⟩
-      rw [hzz]
-      exact h
+      rwa [hzz]
   by_cases hF : z ∈ FF
   · rw [Set.indicator_of_mem (hiff.2 hF), Set.indicator_of_mem hF]
     rfl
@@ -315,8 +313,7 @@ private theorem muF_lact_upper_bounds {γ : GL (Fin r) E} (hγ : γ ∈ X.Γ) (y
     · intro h
       have h2 := lact_mem_dom' (X.Γ.inv_mem hγ) h
       rwa [lact_inv_apply_lact] at h2
-    · intro h
-      exact lact_mem_dom' hγ h
+    · exact fun h => lact_mem_dom' hγ h
   have hd : ∀ z, ReciprocityTheory.ChartRestriction.G.AR.Up.densF X (lact γ y0) z = ReciprocityTheory.ChartRestriction.G.AR.Up.densF X y0 z := by
     intro z
     unfold ReciprocityTheory.ChartRestriction.G.AR.Up.densF
@@ -443,8 +440,7 @@ theorem lunfold (hM : MeasInvStatement (E := E)) (hx0 : IsOrth X x0) (hFF : IsFu
     (hB : ∀ x ∈ X.dom, ∀ b ∈ Bor X.Ψ r, φ (rmul x b) = φ x) :
     ∑' γ : X.Γ, ∫⁻ z in FF, φ (lact γ.1 (cpt X x0 z)) ∂muF X x0 = ∫⁻ z, φ (cpt X x0 z) ∂muF X x0 := by
   classical
-  rw [tsum_congr fun γ : X.Γ => lunfold_one D FF hM hx0 hFF φ hφ hB γ.2]
-  rw [← lintegral_tsum]
+  rw [tsum_congr fun γ : X.Γ => lunfold_one D FF hM hx0 hFF φ hφ hB γ.2, ← lintegral_tsum]
   swap
   · intro γ
     exact (((measurable_one.indicator (_root_.ReciprocityTheory.ChartRestriction.G.AR.Up.PairUnfoldPf.T_meas D FF hFF.1)).comp
@@ -460,8 +456,7 @@ theorem lunfold (hM : MeasInvStatement (E := E)) (hx0 : IsOrth X x0) (hFF : IsFu
     rw [hx']
     show _ ∧ _ ∧ _
     refine ⟨rmul_mem_dom_of_mem_dom hb0 hz'O, hΔ', ?_⟩
-    rw [hzz']
-    exact hz'F
+    rwa [hzz']
   have hsum : ∑' γ : X.Γ, (T D FF).indicator (1 : Frame X.Ψ r → ℝ≥0∞) (lact γ.1⁻¹ (cpt X x0 z)) = 1 := by
     rw [tsum_eq_single ⟨γ0, hγ0⟩]
     · exact Set.indicator_of_mem hxT 1

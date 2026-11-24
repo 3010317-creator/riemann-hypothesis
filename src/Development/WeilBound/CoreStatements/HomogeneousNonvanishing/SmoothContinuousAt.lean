@@ -94,8 +94,7 @@ theorem analyticAt_update_right (i : Fin e) (z : Fin e → ℂ) (t : ℂ) :
   refine analyticAt_pi_iff.mpr fun j => ?_
   by_cases h : j = i
   · subst h; simp only [Function.update_self]; exact analyticAt_id
-  · simp only [Function.update_of_ne h]
-    exact analyticAt_const
+  · simpa only [Function.update_of_ne h] using analyticAt_const
 
 theorem norm_sub_update (z : Fin e → ℂ) (i : Fin e) : ‖z - Function.update z i 0‖ ≤ ‖z i‖ := by
   rw [pi_norm_le_iff_of_nonneg (norm_nonneg _)]
@@ -140,8 +139,7 @@ theorem divide {G : (Fin e → ℂ) → ℂ} {r : ℝ} (i : Fin e) (hG : Analyti
         rintro _ ⟨z, ⟨⟨h1, -⟩, h2⟩, rfl⟩
         have h3 : 0 < ‖z i‖ := norm_pos_iff.mpr h2
         simp only [mem_closedBall, dist_zero_right, norm_div]
-        rw [div_le_iff₀ h3]
-        exact h1
+        rwa [div_le_iff₀ h3]
       · have hc : ContinuousAt (fun z => G z / z i) τ :=
           (hG τ hτ).continuousAt.div hi.continuous.continuousAt hτi
         refine ⟨_, hc (ball_mem_nhds _ one_pos), (isBounded_ball (x := G τ / τ i) (r := 1)).subset ?_⟩
@@ -199,8 +197,7 @@ theorem spread {G : (Fin e → ℂ) → ℂ} {r : ℝ} (S : Finset (Fin e)) (i :
     have : ContinuousAt (fun w => G (Function.update w i 0)) b :=
       ContinuousAt.comp (by rw [hbb]; exact (hG b hb).continuousAt) hU.continuousAt
     refine this.norm.eventually (gt_mem_nhds ?_)
-    simp only [hbb, hb0, norm_zero]
-    exact hδ0
+    simpa only [hbb, hb0, norm_zero] using hδ0
   have hSev : ∀ᶠ w in 𝓝 b, ∀ j ∈ S, j ≠ i → w j ≠ 0 := by
     refine (S.eventually_all).mpr fun j hj => ?_
     by_cases hji : j = i
@@ -546,8 +543,7 @@ theorem Loc.order_eq (hL : IsPotential A L) (hs : IsSection A L s) {x x' : X}
   have t2 : ∀ᶠ t in 𝓝[≠] (0 : ℂ), ∀ j, ψ y j + t ≠ 0 := eventually_all.mpr fun j => by
     by_cases hj : ψ y j = 0
     · filter_upwards [self_mem_nhdsWithin] with t ht
-      rw [hj, zero_add]
-      exact ht
+      rwa [hj, zero_add]
     · exact nhdsWithin_le_nhds (ContinuousAt.eventually_ne (g := fun t : ℂ => ψ y j + t) (by fun_prop)
         (by simpa using hj))
   obtain ⟨t, h1, h2, h3⟩ := (t2.and ((t1.eventually (ψ.open_target.mem_nhds (ψ.map_source hy))).and
@@ -577,9 +573,8 @@ theorem prod_opt {σ : Fin n → Option (Fin e)} (hσ : ∀ k k' i, σ k = some 
   by_cases hi : f i = 1
   · simp [hi]
   · obtain ⟨k, hk⟩ := hf i hi
-    rw [Finset.prod_eq_single k, if_pos hk]
-    · intro k' _ hne
-      exact if_neg fun h => hne (hσ k' k i h hk)
+    rw [Finset.prod_eq_single k, ite_eq_left hk]
+    · exact fun k' _ hne => ite_eq_right fun h => hne (hσ k' k i h hk)
     · simp
 
 theorem snc_of_loc [CompactSpace X] (hL : IsPotential A L) (hs : IsSection A L s)
@@ -591,8 +586,7 @@ theorem snc_of_loc [CompactSpace X] (hL : IsPotential A L) (hs : IsSection A L s
   have hord : ∀ x y k i, y ∈ (ψ x).source → y ∈ W k → σ x k = some i → ord k y = mm x i := by
     intro x y k i hy hW hk
     obtain ⟨j, hj, -⟩ := ((h y).mem_iff (h y).2.1 k).mp hW
-    simp only [ord, hj, Option.elim_some]
-    exact (h y).order_eq hL hs (h x) (h y).2.1 hy hj hk hW
+    simpa only [ord, hj, Option.elim_some] using (h y).order_eq hL hs (h x) (h y).2.1 hy hj hk hW
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ y i, mm y i < N := by
     obtain ⟨T, hT⟩ := isCompact_univ.elim_finite_subcover (fun x => (ψ x).source) (fun x => (ψ x).open_source)
       fun x _ => mem_iUnion.mpr ⟨x, (h x).2.1⟩

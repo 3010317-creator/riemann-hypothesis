@@ -169,8 +169,7 @@ theorem LiftsAtT.letter (hb : IsHor W T₂ (c - ((A.len c : ℕ) : ZMod n)) b so
       have := TypesD.φDpow_letter W (TypesD.horTr_letter W hb (hH k)) (A.len c)
       rwa [sub_add_cancel] at this
     beta_reduce
-    rw [hs]
-    exact hR
+    rwa [hs]
 
 namespace TypesD
 
@@ -213,8 +212,7 @@ theorem cmpD_smul_letter {T : LocLat G Qp LL O} {i : ZMod n} (a : LetA O n) {y :
   have hry : r • y ∈ W.N T := (W.N T).smul_mem r hyN
   have he : (⟨a • y, hay⟩ : W.N T) = c₀ • (⟨y, hyN⟩ : W.N T) + (letπ : LetA O n) • (⟨r • y, hry⟩ : W.N T) := by
     apply Subtype.ext
-    simp only [Submodule.coe_add, Submodule.coe_smul_of_tower]
-    exact hid
+    simpa only [Submodule.coe_add, Submodule.coe_smul_of_tower] using hid
   rw [cmpD, dite_eq_left hay, he, map_add (f := _), W.cmp_smul, W.cmp_π, add_zero, cmpD, dite_eq_left hyN]
 
 end TypesD
@@ -252,7 +250,6 @@ theorem constants_pre (hA : A.OK) (hc : c ∈ A.cuts) (hcase : Formalism.MainNot
     unfold dv
     rw [Finset.sum_eq_single k₀ (fun m _ hm => by simp [hm]) (fun h => absurd (Finset.mem_univ _) h)]
     simp
-  rw [hdv1, hdv2]
-  exact hmap
+  rwa [hdv1, hdv2]
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries

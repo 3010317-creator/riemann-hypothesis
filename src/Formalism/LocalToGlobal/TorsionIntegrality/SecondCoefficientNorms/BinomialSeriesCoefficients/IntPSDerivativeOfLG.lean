@@ -92,8 +92,7 @@ theorem jet_eq {l linv : PowerSeries K} (h : IsLogPair l linv) (g : PowerSeries 
 variable {R : Subring K}
 
 theorem intPS_of_intMv {f : PowerSeries K} (h : IntMv R (f : MvPowerSeries Unit K)) : IntPS R f := by
-  intro n
-  exact h (Finsupp.single () n)
+  exact fun n => h (Finsupp.single () n)
 
 theorem intPS_mul {f g : PowerSeries K} (hf : IntPS R f) (hg : IntPS R g) : IntPS R (f * g) := by
   intro n
@@ -252,8 +251,7 @@ section Adj
 variable {K : Type} [Field K] {σ : Type}
 
 theorem hsM {a : MvPowerSeries σ K} (h : MvPowerSeries.constantCoeff a = 0) :
-    PowerSeries.HasSubst a := by
-  exact PowerSeries.HasSubst.of_constantCoeff_zero h
+    PowerSeries.HasSubst a := PowerSeries.HasSubst.of_constantCoeff_zero h
 
 theorem cc_subst_zero {a : MvPowerSeries σ K} (ha : MvPowerSeries.constantCoeff a = 0)
     {g : PowerSeries K} (hg : PowerSeries.constantCoeff g = 0) :
@@ -434,8 +432,7 @@ theorem jet_exp {l linv F : PowerSeries K} (h : IsLogPair l linv)
     jet l (mvExp F : PowerSeries K) i ∈ R := by
   have hi := hs1 h.2.2.1
   have hF0' : PowerSeries.constantCoeff (PowerSeries.subst linv F : PowerSeries K) = 0 := by
-    rw [cc_subst1 h.2.2.1]
-    exact hF0
+    rwa [cc_subst1 h.2.2.1]
   have e : PowerSeries.subst linv (mvExp F : PowerSeries K) =
       (mvExp (PowerSeries.subst linv F : PowerSeries K) : PowerSeries K) := by
     unfold mvExp
@@ -483,9 +480,9 @@ theorem jetExpShape' : JetExpShape := by
     · subst h2
       have e : (2 : K) * (jet l ph 2 / 2) = jet l ph 2 := by
         field_simp
-      rw [if_pos rfl, e, sub_self, neg_zero]
+      rw [ite_eq_left rfl, e, sub_self, neg_zero]
       exact zero_mem R
-    · rw [if_neg h2, sub_zero]
+    · rw [ite_eq_right h2, sub_zero]
       exact neg_mem (hj j hj1 h2)
   · have e : -ph = -(PowerSeries.C (jet l ph 2 / 2) * l ^ 2) + -(ph - PowerSeries.C (jet l ph 2 / 2) * l ^ 2) := by
       ring

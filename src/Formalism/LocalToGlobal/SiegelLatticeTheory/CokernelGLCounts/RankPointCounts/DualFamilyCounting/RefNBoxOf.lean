@@ -219,8 +219,7 @@ theorem refNBox_of (hF : FrameRow) : RefNBox := by
   have key : ∀ (s : X.B.I.Ginf) v i, LsNc5.kapV X w v s i =
       L v (kapL (X.B.I.ε v) (eV X v) (ProductExactness.pV X v) (X.wfr u v) (ProductExactness.zV X u v) (s v)) i := fun s v i => by
     have h1 := congrFun (hL v s) i
-    rw [kapV_eq (X := X) u v s] at h1
-    exact h1
+    rwa [kapV_eq (X := X) u v s] at h1
   have hbox : LsNc5.boxN X w = X.NinfU w ∩ Set.univ.pi (fun v =>
       (fun g => L v (kapL (X.B.I.ε v) (eV X v) (ProductExactness.pV X v) (X.wfr u v) (ProductExactness.zV X u v) g)) ⁻¹' Set.univ.pi (fun _ => Set.Ico (0 : ℝ) 1)) := by
     rw [LsNc5.boxN_eq]

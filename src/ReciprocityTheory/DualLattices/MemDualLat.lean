@@ -189,8 +189,7 @@ private theorem mem_dualLat_span_lemma_2 {C R : Type} [Field C] [CommRing R] [Al
         simp only [Pi.smul_apply, Algebra.smul_def]
         ring }
   have hle : Submodule.span R S ≤ Q := Submodule.span_le.2 (fun f hf => h f hf)
-  refine (mem_dualLat _ _).2 fun f hf => ?_
-  exact hle hf
+  exact (mem_dualLat _ _).2 fun f hf => hle hf
 
 private theorem dualLat_cols_lemma_3 {C R : Type} [Field C] [CommRing R] [Algebra R C]
     {X : Type} [Fintype X] [DecidableEq X] (B : Matrix X X C) (hB : IsUnit B.det) :
@@ -205,8 +204,7 @@ private theorem dualLat_cols_lemma_3 {C R : Type} [Field C] [CommRing R] [Algebr
     have hinv : ∀ a x, ∑ j, B a j * B⁻¹ j x = if a = x then 1 else 0 := by
       intro a x
       have h := congrFun (congrFun (Matrix.mul_nonsing_inv B hB) a) x
-      rw [Matrix.mul_apply, Matrix.one_apply] at h
-      exact h
+      rwa [Matrix.mul_apply, Matrix.one_apply] at h
     have hu' : u = ∑ j, r j • (fun x => B⁻¹ j x) := by
       funext x
       simp only [Finset.sum_apply, Pi.smul_apply]
@@ -264,8 +262,7 @@ private theorem isLat_map_lemma_5 {C R : Type} [Field C] [CommRing R] [Algebra R
   have hinv : ∀ x k, ∑ j, B x j * B⁻¹ j k = if x = k then 1 else 0 := by
     intro x k
     have h := congrFun (congrFun (Matrix.mul_nonsing_inv B hB) x) k
-    rw [Matrix.mul_apply, Matrix.one_apply] at h
-    exact h
+    rwa [Matrix.mul_apply, Matrix.one_apply] at h
   have hf : f = ∑ j, (∑ k, B⁻¹ j k * f k) • (fun x => B x j) := by
     funext x
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
@@ -279,9 +276,7 @@ private theorem isLat_map_lemma_5 {C R : Type} [Field C] [CommRing R] [Algebra R
   rw [hf, map_sum]
   refine Submodule.sum_mem _ fun j _ => ?_
   rw [map_smul]
-  refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, ?_⟩)
-  show T' (fun x => B x j) = T (fun x => B x j)
-  exact hTT _
+  exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, hTT _⟩)
 
 private theorem tensor_pair_lemma_6 {C R : Type} [Field C] [CommRing R] [Algebra R C]
     {X : Type} [Fintype X] (L : Submodule R (X → C)) (x y : X → C)
@@ -386,8 +381,7 @@ theorem h2 (C R : Type) [Field C] [CommRing R] [Algebra R C] :
       exact hu _ (Submodule.mem_map_of_mem hf)
     · rintro hu _ ⟨f, hf, rfl⟩
       have h := hu f hf
-      rw [sum_extK (R := R) K u f] at h
-      exact h
+      rwa [sum_extK (R := R) K u f] at h
   have hres_surj : Function.Surjective (resK (R := C) (C := C) K) := by
     intro u
     refine ⟨extK (R := C) (C := C) K u, ?_⟩
@@ -406,11 +400,10 @@ theorem h2 (C R : Type) [Field C] [CommRing R] [Algebra R C] :
     show ∑ a ∈ Finset.univ.filter (fun a : N => (a : N ⧸ K) = c),
       (if a = s (a : N ⧸ K) then t (a : N ⧸ K) else 0) = t c
     rw [Finset.sum_eq_single (s c)]
-    · rw [hs c, if_pos rfl]
+    · rw [hs c, ite_eq_left rfl]
     · intro b hb hne
-      rw [(Finset.mem_filter.1 hb).2, if_neg hne]
-    · intro h
-      exact (h (Finset.mem_filter.2 ⟨Finset.mem_univ _, hs c⟩)).elim
+      rw [(Finset.mem_filter.1 hb).2, ite_eq_right hne]
+    · exact fun h => (h (Finset.mem_filter.2 ⟨Finset.mem_univ _, hs c⟩)).elim
   have hP_lat : IsLat R ((dualLat AA.carrier).map (pushQ (R := R) K)) :=
     isLat_map_lemma_5 v hv (dualLat AA.carrier) hdual.1 (pushQ (R := C) (C := C) K) hpush_surj
       (pushQ (R := R) K) (fun _ => rfl)
@@ -455,8 +448,7 @@ theorem h2 (C R : Type) [Field C] [CommRing R] [Algebra R C] :
     have hmem := Submodule.mem_map_of_mem
       (f := LinearMap.funLeft R C (Prod.map (fun k : K => (k : N)) (fun k : K => (k : N))))
       (AA.comul f hf)
-    rw [hm] at hmem
-    exact hmem
+    rwa [hm] at hmem
   · rintro _ ⟨f, hf, rfl⟩
     exact ⟨fun y => f (-y), AA.antipode f hf, rfl⟩
   · intro g hg q
@@ -466,10 +458,8 @@ theorem h2 (C R : Type) [Field C] [CommRing R] [Algebra R C] :
     rw [hr]
     show g ((s q : N) : N ⧸ K) = g q
     rw [hs q]
-  · show pullQ (R := R) K 1 ∈ AA.carrier
-    exact AA.one_mem
-  · intro f g hf hg
-    exact AA.mul_mem (pullQ (R := R) K f) (pullQ (R := R) K g) hf hg
+  · exact AA.one_mem
+  · exact fun f g hf hg => AA.mul_mem (pullQ (R := R) K f) (pullQ (R := R) K g) hf hg
   · intro g hg
     have hg' : pullQ (R := R) K g ∈ AA.carrier := hg
     rw [eQ]
@@ -506,8 +496,7 @@ theorem h2 (C R : Type) [Field C] [CommRing R] [Algebra R C] :
       funext x
       show g ((-x : N) : N ⧸ K) = g (-((x : N ⧸ K)))
       rw [QuotientAddGroup.mk_neg]
-    rw [e] at h
-    exact h
+    rwa [e] at h
   · rw [eQ]
     exact hPd.2
 

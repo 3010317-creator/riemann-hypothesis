@@ -48,7 +48,6 @@ theorem schA_riesz (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVf : FiniteDimens
     induction k with
     | zero => exact le_rfl
     | succ k ih =>
-      show V ≤ layer ε E V k ⊔ ⨆ (a : Fin n) (b : Fin n) (_ : ε a ≠ ε b), (layer ε E V k).map (E a b)
       exact ih.trans le_sup_left
   set F : Submodule ℂ M := T ⊓ layer ε E V m with hF
   haveI : FiniteDimensional ℂ (layer ε E V m) := finiteDimensional_layer hVf m
@@ -60,13 +59,12 @@ theorem schA_riesz (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVf : FiniteDimens
   have hrep : ∀ y ∈ F, inner ℂ (u' : M) y = f y := by
     intro y hy
     have h1 := InnerProductSpace.toDual_symm_apply (𝕜 := ℂ) (E := F) (x := ⟨y, hy⟩) (y := ℓ)
-    rw [← hu'] at h1
-    exact h1
+    rwa [← hu'] at h1
   have hzero : ∀ z ∈ F, (∀ y ∈ F, inner ℂ z y = 0) → z = 0 := fun z hz h =>
     inner_self_eq_zero.mp (h z hz)
   refine ⟨u', u'.2.1, ⟨?_, ?_⟩, hrep y₀ ⟨hy₀, hm⟩, fun v hv => hrep v ⟨hv.1, hVle m hv.2⟩⟩
   · intro a
-    have hsa : adjSign ε a a = 1 := if_pos rfl
+    have hsa : adjSign ε a a = 1 := ite_eq_left rfl
     have hmem : E a a u' - (μ a : ℂ) • (u' : M) ∈ F :=
       F.sub_mem (hFk a a rfl _ u'.2) (F.smul_mem _ u'.2)
     have h0 := hzero _ hmem (fun y hy => by

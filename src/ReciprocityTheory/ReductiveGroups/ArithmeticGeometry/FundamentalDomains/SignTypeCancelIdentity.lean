@@ -25,8 +25,7 @@ noncomputable section
 lemma dot_self {n : ℕ} (y : Fin n → ℂ) : star y ⬝ᵥ y = ((nsq y : ℝ) : ℂ) := by
   simp only [nsq, dotProduct, Pi.star_apply]
   push_cast
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact Complex.conj_mul' (y i)
+  exact Finset.sum_congr rfl fun i _ => Complex.conj_mul' (y i)
 
 lemma quad_AtA {n q : ℕ} (A : Matrix (Fin q) (Fin n) ℂ) (y : Fin n → ℂ) :
     star y ⬝ᵥ ((Aᵀ * A.map (starRingEnd ℂ)) *ᵥ y) = ((nsq (A.map (starRingEnd ℂ) *ᵥ y) : ℝ) : ℂ) := by
@@ -98,8 +97,7 @@ lemma bound_castLE {n : ℕ} (h : n ≤ X.p0) (Z : X.Coord) (τ : X.Ψ) (y : Fin
     intro c hc
     simp only [hz]
     rw [dite_eq_right]
-    intro hcn
-    exact hc ⟨⟨c, hcn⟩, Fin.ext rfl⟩
+    exact fun hcn => hc ⟨⟨c, hcn⟩, Fin.ext rfl⟩
   have hvec : ((Matrix.of fun (m : Fin (r - X.p0)) (b : Fin n) => Z τ m (Fin.castLE h b)).map (starRingEnd ℂ) *ᵥ y) =
       (Matrix.of (Z τ)).map (starRingEnd ℂ) *ᵥ z := by
     funext m
@@ -144,13 +142,13 @@ lemma det_lowBlock (Z : X.Coord) (τ : X.Ψ) : (X.lowBlock Z τ).det = 1 := by
   rw [Matrix.det_of_lowerTriangular]
   · apply Finset.prod_eq_one
     intro a _
-    simp only [Data.lowBlock, Matrix.of_apply, if_true]
+    simp only [Data.lowBlock, Matrix.of_apply, ite_true]
     rw [dite_eq_right (by omega)]
     simp
   · intro a b hab
     have hab' : a < b := hab
     simp only [Data.lowBlock, Matrix.of_apply]
-    rw [if_neg (ne_of_lt hab'), dite_eq_right]
+    rw [ite_eq_right (ne_of_lt hab'), dite_eq_right]
     · simp
     · intro hh
       have : (a : ℕ) < b := hab'
@@ -160,7 +158,7 @@ lemma psgn_add (p0 k : ℕ) : psgn p0 (p0 + k) = (-1) ^ k := by
   induction k with
   | zero => simp [psgn_eq_one le_rfl]
   | succ k ih =>
-    rw [← add_assoc, psgn_succ, ih, sgn, if_neg (by omega), pow_succ]
+    rw [← add_assoc, psgn_succ, ih, sgn, ite_eq_right (by omega), pow_succ]
 
 lemma signType_cancel_identity (k : ℕ) (D : ℂ) (hD : 0 < D.re) : 0 < (-1 : ℝ) ^ k * (((-1 : ℂ) ^ k) * D).re := by
   have h1 : ((-1 : ℂ) ^ k) = (((-1 : ℝ) ^ k : ℝ) : ℂ) := by push_cast; rfl

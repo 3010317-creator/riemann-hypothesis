@@ -32,8 +32,7 @@ theorem sum_castLE {R : Type} [AddCommMonoid R] {i n : ℕ} (h : i ≤ n) (f : F
     (hf : ∀ c : Fin n, i ≤ (c : ℕ) → f c = 0) : ∑ c, f c = ∑ c : Fin i, f (Fin.castLE h c) := by
   refine (Fintype.sum_of_injective (Fin.castLE h) (Fin.castLE_injective h)
     (fun c => f (Fin.castLE h c)) f (fun c hc => hf c ?_) (fun _ => rfl)).symm
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   exact hc ⟨⟨c, hlt⟩, rfl⟩
 
 theorem sub_mul_tri {i : ℕ} (h : i ≤ r) (Q A : Matrix (Fin r) (Fin r) ℂ) (hQ : Q.IsUpperTriangular) :
@@ -76,13 +75,10 @@ theorem det_sub_tri_ne {i : ℕ} (h : i ≤ r) (Q : Matrix (Fin r) (Fin r) ℂ) 
   rw [Matrix.det_of_upperTriangular hsub]
   rw [Matrix.det_of_upperTriangular hQ] at hd
   rw [Finset.prod_ne_zero_iff] at hd ⊢
-  intro c _
-  exact hd _ (Finset.mem_univ _)
+  exact fun c _ => hd _ (Finset.mem_univ _)
 
 theorem bor_upper {Ψ : Finset (E →+* ℂ)} {b : Frame Ψ r} (hb : b ∈ Bor Ψ r) (τ : Ψ) :
-    (mat b τ).IsUpperTriangular := by
-  intro a c hac
-  exact (hb τ).2 a c hac
+    (mat b τ).IsUpperTriangular := fun a c hac => (hb τ).2 a c hac
 
 theorem dom_rmul (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
     rmul x b ∈ X.dom := by
@@ -136,8 +132,7 @@ theorem dom_lact (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) {γ : GL (
   have hc : ((γ : Matrix (Fin r) (Fin r) E).map cc).map τ.1 =
       ((γ : Matrix (Fin r) (Fin r) E).map τ.1).map (starRingEnd ℂ) := by
     ext a b
-    simp only [Matrix.map_apply]
-    exact hcc _ _
+    simpa only [Matrix.map_apply] using hcc _ _
   have key : ((γ : Matrix (Fin r) (Fin r) E).map τ.1)ᵀ * X.Gm.map τ.1 *
       ((γ : Matrix (Fin r) (Fin r) E).map τ.1).map (starRingEnd ℂ) = X.Gm.map τ.1 := by
     rw [← hc, ← Matrix.transpose_map, ← Matrix.map_mul, ← Matrix.map_mul, hU]
@@ -154,7 +149,6 @@ theorem dom_lact (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) {γ : GL (
     exact (map_ne_zero τ.1).mpr ((Matrix.isUnit_iff_isUnit_det _).mp (Units.isUnit γ)).ne_zero
   · have hi := hpos i
     simp only [dmin] at hi ⊢
-    rw [hgr]
-    exact hi
+    rwa [hgr]
 
 end Formalism.L2.Pj

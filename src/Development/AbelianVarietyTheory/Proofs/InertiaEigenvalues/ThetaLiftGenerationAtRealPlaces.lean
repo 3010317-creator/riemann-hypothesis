@@ -289,8 +289,7 @@ theorem GlobalTheory.VacDensity.proj : ∀ (D : D7) (ψ : AddChar (AF D.host.F) 
     · rw [GlobalTheory.LatVac.symplO_add_right, AddChar.map_add_eq_mul, hA u hu h0, hA' u hu h0, one_mul]
   obtain ⟨ℓ, hℓ⟩ : ∃ ℓ : Module.Dual ℂ (WO S T → ℂ), ℓ v = 1 := by
     obtain ⟨f, hf⟩ : ∃ f : Module.Dual ℂ (WO S T → ℂ), f v ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hv0 ((Module.forall_dual_apply_eq_zero_iff ℂ v).1 h)
     exact ⟨(f v)⁻¹ • f, by rw [LinearMap.smul_apply, smul_eq_mul, inv_mul_cancel₀ hf]⟩
   let P : (WO S T → ℂ) →ₗ[ℂ] (WO S T → ℂ) := ℓ.smulRight v
@@ -314,7 +313,7 @@ theorem GlobalTheory.VacDensity.proj : ∀ (D : D7) (ψ : AddChar (AF D.host.F) 
       fun w hw => ?_).resolve_right hg0
     by_cases hA : ∀ u ∈ U', u.map (infPart D) = 0 → ψ (symplO S T u w) = 1
     · exact hfo _ (hWst ⟨w, hw, hA⟩ g hgW)
-    · push_neg at hA
+    · push Not at hA
       obtain ⟨u, hu, h0, hne1⟩ := hA
       have hwg : IsThetaFunO ψ S T (heisO ψ S T w g) := laws.1 w g hgT
       have e1 : GlobalTheory.RawLift.thetaIP vol.μ vol.𝓕 f (heisO ψ S T w g) =
@@ -398,8 +397,7 @@ theorem sobO_heisO_eq {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} 
         wordAct_rel (R := fun g g' => g = heisO ψ S T u g') l
           (fun a _ _ _ e => e ▸ GlobalTheory.FinTranslate.dRho_heisO hθ hu a.1 _ _) rfl
       rw [e, one_mul, l2O_heisO_eq hψ hθ hμ (theta_word hψ hθ l hh) u]
-  rw [one_mul] at this
-  exact this
+  rwa [one_mul] at this
 
 end GlobalTheory.HeisTranslateBound
 
@@ -510,8 +508,7 @@ theorem closure : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (
     obtain ⟨P, hP⟩ := himg g hg
     refine ⟨P, lt_of_le_of_lt ?_ hδ⟩
     have hb := GlobalTheory.HeisTranslateBound.sobO_finsupp_sum_le D R.ψ R.θ (Vc D i) (Wc D i) hψ hθ μ 𝓕 hμ c hc0 (f - g) (sub_mem hfU hgU).1 d
-    rw [← hCdef, hC0, zero_mul, ← hPf, map_sub, hfix, ← hP, ← hLp] at hb
-    exact hb
+    rwa [← hCdef, hC0, zero_mul, ← hPf, map_sub, hfix, ← hP, ← hLp] at hb
   · obtain ⟨g, hg, hgU, hgd⟩ := hdense d (δ / C) (ENNReal.div_pos hδ.ne' hCt)
     obtain ⟨P, hP⟩ := himg g hg
     refine ⟨P, ?_⟩

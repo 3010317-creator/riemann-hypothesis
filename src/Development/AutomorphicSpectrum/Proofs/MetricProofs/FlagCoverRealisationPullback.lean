@@ -253,11 +253,11 @@ theorem lognorm_orbit {τ : Ψ} {a : Fin N} {k₀ : K} {g h : MRing fun o : Opti
     rw [e2, ← Finset.sum_sub_distrib, Finset.mul_sum]
     simp only [← sub_mul, hd]
     rw [Fintype.sum_option, add_assoc, ← Finset.sum_add_distrib, Finset.sum_eq_single k₀]
-    · simp only [Option.elim, hxi, κ₁_self, if_true]
+    · simp only [Option.elim, hxi, κ₁_self, ite_true]
       push_cast
       ring
     · intro k _ hk
-      simp only [Option.elim, κ₁_ne hk, if_neg (Ne.symm hk)]
+      simp only [Option.elim, κ₁_ne hk, ite_eq_right (Ne.symm hk)]
       push_cast
       ring
     · simp
@@ -289,7 +289,7 @@ theorem log_A (M : FlagModel y Ψ N j) {F : FrameData ι Ψ N M.Ω M.blk} {z : (
     obtain ⟨h1, h2, h3⟩ := hG.2.2 _ hn
     have h4 := val_ne_zero hz h1 h2 h3
     have h5 := mfac_ne a i hh hd
-    simp only [if_neg hp, FlagModel.upsLog, hn, Option.elim, norm_mul]
+    simp only [ite_eq_right hp, FlagModel.upsLog, hn, Option.elim, norm_mul]
     exact ⟨mul_ne_zero h4 h5, Real.log_mul (norm_ne_zero_iff.2 h4) (norm_ne_zero_iff.2 h5)⟩
 
 variable {K' : Type} [Fintype K'] {ι' : K' → Type} [∀ k, Fintype (ι' k)] {Φ' : Type} [Field Φ'] {y' : (Σ k, ι' k) → Φ'}
@@ -701,7 +701,7 @@ def mkAlg (M : FlagModel y Ψ N j) {d : ℕ} {τ : Ψ} {a b : Fin N} {k₀ : K} 
       simp only [Option.elim, hk, Option.some.injEq]
       by_cases e : k = k₀
       · subst e; simp [hxi]
-      · rw [if_neg e, if_neg (Ne.symm e)]; ring
+      · rw [ite_eq_right e, ite_eq_right (Ne.symm e)]; ring
   div_eq := hdiv
 
 end PositivityTheory.Xgp.c_algsq
@@ -737,18 +737,17 @@ theorem PositivityTheory.Xgp.t_c_swap : ∀ (K : Type) [Fintype K] (ι : K → T
     by_cases hp : p = (τ, a)
     · subst hp
       simp [hk₀]
-    · rw [if_neg hp, if_neg]
-      intro h
-      exact hp (M.blk_inj p (τ, a) k₀ h hk₀)
+    · rw [ite_eq_right hp, ite_eq_right]
+      exact fun h => hp (M.blk_inj p (τ, a) k₀ h hk₀)
   have hlast : lastCol N j a < N ∧ lastCol N j a + 1 < N ∧
       (lastCol N j a < N - j ↔ lastCol N j a + 1 < N - j) := by
     unfold lastCol
     split_ifs with h <;> omega
   refine ⟨k₀, ⟨lastCol N j a, hlast.1⟩, ⟨lastCol N j a + 1, hlast.2.1⟩, hk₀, rfl, rfl, hlast.2.2, ?_, ?_⟩
-  · simp only [hdy, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  · simp only [hdy, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp [xiCoef]
   · intro p hp
-    rw [hdy p, if_neg hp]
+    rw [hdy p, ite_eq_right hp]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PluriharmonicCharts.XCSwap =====
@@ -811,17 +810,17 @@ theorem div_eq_of_local {P Δ : Ideal (MRing ι)} (hPp : P.IsPrime) (hΔp : Δ.I
   rw [mul_comm h g] at hch
   rw [Finsupp.add_apply, hcg, hch, Finsupp.single_apply]
   by_cases hW : W ∈ divSupp P (g * h)
-  · rw [if_pos hW, if_pos hW]
+  · rw [ite_eq_left hW, ite_eq_left hW]
     have hWp : W.IsPrime := hW.1.1.1
     by_cases hWΔ : Δ = W
-    · rw [if_pos hWΔ, ← hWΔ, hone, DiagonalOrder.multAt_eq_zero_of_not_le hΔp
+    · rw [ite_eq_left hWΔ, ← hWΔ, hone, DiagonalOrder.multAt_eq_zero_of_not_le hΔp
         (fun hle => hhΔ (hle (Ideal.mem_sup_right (Ideal.mem_span_singleton_self h))))]
-    · rw [if_neg hWΔ, add_zero]
+    · rw [ite_eq_right hWΔ, add_zero]
       have hPW : P ≤ W := le_sup_left.trans hW.1.1.2
       have hΔW : ¬ Δ ≤ W := fun hle => hWΔ (le_antisymm hle (hW.1.2 ⟨hΔp, hJΔ⟩ hle))
       obtain ⟨u, v, hu, hv, hm⟩ := key W hWp hW.2 hPW hΔW
       exact DiagonalOrder.multAt_sup_span_eq hWp hPW hu hv hm
-  · rw [if_neg hW, if_neg hW, if_neg (fun h' : Δ = W => hW (h' ▸ hΔ)), add_zero]
+  · rw [ite_eq_right hW, ite_eq_right hW, ite_eq_right (fun h' : Δ = W => hW (h' ▸ hΔ)), add_zero]
 
 theorem exists_point (W : Ideal (MRing ι)) (hW : W.IsPrime) :
     ∃ (E : Type) (_ : Field E) (z : (Σ k, ι k) → E), ∀ f : MRing ι, aeval z f = 0 ↔ f ∈ W := by
@@ -851,8 +850,7 @@ theorem isMultiHomog_monoX (c : ∀ k, ι k) (d : K → ℕ) : IsMultiHomog (mon
   have e : ∑ k, d k • NumbersDVR.blockWeight ι ⟨k, c k⟩ = d := by
     funext k
     simp [NumbersDVR.blockWeight, Finset.sum_apply, Pi.single_apply]
-  rw [e] at this
-  exact this
+  rwa [e] at this
 
 theorem aeval_monoX (z : (Σ k, ι k) → L) (c : ∀ k, ι k) (d : K → ℕ) :
     aeval z (monoX c d) = ∏ k, z ⟨k, c k⟩ ^ d k := by
@@ -1012,7 +1010,7 @@ theorem local_data {z : (Σ o : Option K, ι (o.getD k₀)) → L}
           split_ifs with h
           · subst h; rw [zpow_one]
           · rw [zpow_zero]
-        simp only [this, Finset.prod_mul_distrib, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+        simp only [this, Finset.prod_mul_distrib, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
     have h1 : φ (chartMono y (fun k => c (some k)) e) ≠ 0 := (map_ne_zero φ).2 (chartMono_ne hcy e)
     have h2 : φ (y ⟨k₀, c (some k₀)⟩) ≠ 0 := (map_ne_zero φ).2 (hcy k₀)
     rw [e1]
@@ -1257,8 +1255,7 @@ theorem PositivityTheory.Xgp.t_c_w_sec : ∀ (K : Type) [Fintype K] (ι : K → 
           (PositivityTheory.Xgp.W.penCo y k₀ (fun m => y ⟨k₀, m⟩) (PositivityTheory.Xgp.W.vecB M τ a k₀ ca cb) RatFunc.X) f := by
       intro f
       rw [hI]
-    rw [key g, key h] at haev
-    exact haev
+    rwa [key g, key h] at haev
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PluriharmonicCharts.XCWSec =====
@@ -1324,8 +1321,7 @@ theorem pot_pull (CR : CovReal FA Cv) (hy : IsArithVar (mCoordIdeal y) (d + 2))
   have L2 : LocRe FA.Re.R.A (g₀ x) fun u => Real.log ((fsHerm ι (M.dy p)).h (FA.Re.R.lift (g₀ x) u)) -
       (FA.S.th (some p)).φ (FA.Re.π (g₀ x)) (FA.Re.π u) := by
     have := FA.Re.ref_pot (some p) (g₀ x) trivial
-    rw [FA.ref_some] at this
-    exact this
+    rwa [FA.ref_some] at this
   exact (L1.add (L2.comp hg₀)).congr isOpen_univ trivial fun u _ => by ring
 
 theorem log_comb {σ : Type} [Fintype σ] (A : σ → HermLine ι) (ε : σ → ℤ) {z : (Σ k, ι k) → ℂ}
@@ -1412,14 +1408,12 @@ theorem PositivityTheory.Xgp.t_c_sqsys : Inputs → ∀ (K : Type) [Fintype K] (
           have L2 := LocRe.comp hπ (show LocRe Q.SW.A ((e ∘ γ) x) _ from Q.th1 _ trivial)
           simp only [hg₁] at L1
           exact (L1.sub L2).congr isOpen_univ trivial fun u _ => by
-            show _ - _ = _ - _ - (_ - _)
             exact (sub_sub_sub_cancel_right _ _ _).symm
         | some p =>
           have L1 := pot_pull CR hy hy' R' hv₀ (fun z hz => fst_mem hz) g₀ i₀ p x
           have L2 := LocRe.comp hπ (show LocRe Q.SW.A ((e ∘ γ) x) _ from Q.th0 p _ trivial)
           simp only [hg₀] at L1
           exact (L1.sub L2).congr isOpen_univ trivial fun u _ => by
-            show _ - _ = _ - _ - (_ - _)
             exact (sub_sub_sub_cancel_right _ _ _).symm
       line := fun o t => o.elim (pullHerm hv₁ (CR.Re.line (τ, a) t)) fun p => pullHerm hv₀ (CR.Re.line p t)
       line_deg := fun o t => by
@@ -1439,8 +1433,7 @@ theorem PositivityTheory.Xgp.t_c_sqsys : Inputs → ∀ (K : Type) [Fintype K] (
         | none =>
           have := CR.line_pt (τ, a) t h0 (h1.trans Q.t₀_le) _ (m₁ x)
           rw [w₁] at this
-          rw [Q.phase_none_eq_comp_second_projection]
-          exact this
+          rwa [Q.phase_none_eq_comp_second_projection]
         | some p =>
           have := CR.line_pt p t h0 (h1.trans Q.t₀_le) _ (m₀ x)
           rw [w₀] at this

@@ -39,11 +39,10 @@ theorem lineCoeff' : LineCoeff := by
         = PowerSeries.coeff k (PowerSeries.C (∏ i, v i ^ d i) * PowerSeries.X ^ (∑ i, d i) : PowerSeries K) := rfl
     rw [this, PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow]
     split_ifs <;> simp
-  rw [finsum_congr key]
-  rw [finsum_eq_sum_of_support_subset (s := Finset.finsuppAntidiag Finset.univ k)]
+  rw [finsum_congr key, finsum_eq_sum_of_support_subset (s := Finset.finsuppAntidiag Finset.univ k)]
   · refine Finset.sum_congr rfl fun d hd => ?_
     rw [Finset.mem_finsuppAntidiag] at hd
-    rw [if_pos hd.1.symm]
+    rw [ite_eq_left hd.1.symm]
   · intro d hd
     simp only [Function.mem_support, ne_eq, ite_eq_right_iff, not_forall] at hd
     obtain ⟨h, -⟩ := hd
@@ -65,15 +64,14 @@ theorem LineUnique_of (h : LineCoeff) : LineUnique := by
     rw [hv v, h2] at h1
 
     simp only [p, q, map_sum, MvPolynomial.eval_monomial]
-    simp only [Finsupp.prod_fintype _ _ (fun i => pow_zero _)]
-    exact h1.symm
+    simpa only [Finsupp.prod_fintype _ _ (fun i => pow_zero _)] using h1.symm
   have hν : ν ∈ Finset.finsuppAntidiag Finset.univ k := by simp [Finset.mem_finsuppAntidiag, hk]
   have hc : ∀ S : MvPowerSeries n K, AddMonoidAlgebra.coeff (∑ μ ∈ Finset.finsuppAntidiag Finset.univ k,
       MvPolynomial.monomial μ (MvPowerSeries.coeff μ S)) ν = MvPowerSeries.coeff ν S := by
     intro S
     rw [MvPolynomial.coeff_sum]
     simp only [MvPolynomial.coeff_monomial]
-    rw [Finset.sum_ite_eq' _ ν, if_pos hν]
+    rw [Finset.sum_ite_eq' _ ν, ite_eq_left hν]
   rw [← hc T, ← hc T']
   exact congrArg (fun R => AddMonoidAlgebra.coeff R ν) hpq
 

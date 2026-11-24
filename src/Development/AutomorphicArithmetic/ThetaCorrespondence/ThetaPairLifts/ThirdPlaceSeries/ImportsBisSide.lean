@@ -94,8 +94,7 @@ theorem main_alt_alt : GlobalTheory.Published.HarishChandraFinite → GlobalTheo
     (PiTensorProduct.lift : Mult.MMap (X.R.MW j (sg0 D X.A)) ≃ₗ[ℂ] _).symm.toLinearMap ∘ₗ
       (Submodule.subtype ((toLiftReal X.R X.F X.tupT X.hm X.hTop X.hinj).Wc j)) ∘ₗ (X.IL.jMj j).toLinearMap
   have hφ : ∀ y, PiTensorProduct.lift (φ y) = (X.IL.jMj j y).1 := by
-    intro y
-    exact LinearEquiv.apply_symm_apply _ _
+    exact fun y => LinearEquiv.apply_symm_apply _ _
   have hgood : ∀ y, φ y ∈ Mult.goodPart X.R.θ (X.R.MW j (sg0 D X.A)) (levS _ (X.R.βW j) (X.R.datWp j (X.R.levL X.F false (sg0 D X.A))))
       (levChi _ (X.R.βW j) (X.R.datWp j (X.R.levL X.F false (sg0 D X.A)))) (X.R.eWf j (sg0 D X.A)) := by
     intro y
@@ -104,8 +103,7 @@ theorem main_alt_alt : GlobalTheory.Published.HarishChandraFinite → GlobalTheo
       show PiTensorProduct.lift.symm (X.IL.jMj j y).1 = a
       rw [← hay]
       exact LinearEquiv.symm_apply_apply _ _
-    rw [this]
-    exact ha
+    rwa [this]
   have hmem : ∀ y, φ y ∈ principalLevelFrame.Minf X.R.θ (X.PW j) (X.R.MW j (sg0 D X.A)) := fun y =>
     principalLevelFrame.mult_le_Minf hLev (Mult.goodPart_le _ _ _ _ _ (hgood y))
   refine ⟨{ A := Mult.MMap (X.R.MW j (sg0 D X.A))

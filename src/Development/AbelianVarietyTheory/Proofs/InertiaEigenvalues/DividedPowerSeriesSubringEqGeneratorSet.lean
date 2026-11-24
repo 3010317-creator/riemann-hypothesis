@@ -66,7 +66,7 @@ theorem sdSet_zero : (0 : ZMod a → K⟦X⟧) ∈ SdSet t K e :=
 
 theorem sdSet_one : (1 : ZMod a → K⟦X⟧) ∈ SdSet t K e := by
   refine ⟨fun n => if n = 0 then 1 else 0, lTo0_atTop.2 fun r => ⟨1, fun n hn => ?_⟩, fun τ n => ?_⟩
-  · rw [if_neg (by omega)]; exact dvd_zero _
+  · rw [ite_eq_right (by omega)]; exact dvd_zero _
   · rw [Pi.one_apply, coeff_one]
     by_cases hn : n = 0
     · subst hn; simp
@@ -125,13 +125,11 @@ theorem sd_sub_sdSet : ∀ F ∈ Sd t K e, F ∈ SdSet t K e := by
       add_mem' := fun hF hG => sdSet_add t e hF hG
       mul_mem' := fun hF hG => sdSet_mul t e hF hG
       neg_mem' := fun hF => sdSet_neg t e hF }
-  intro F hF
-  exact (Subring.closure_le.2 (fun x hx => hx) : Sd t K e ≤ S) hF
+  exact fun F hF => (Subring.closure_le.2 (fun x hx => hx) : Sd t K e ≤ S) hF
 
 end SdClosed
 
 theorem sdSet_closed : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), ∀ F ∈ Sd t K e, F ∈ SdSet t K e := by
-  intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t
-  exact sd_sub_sdSet t e
+  exact fun l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t => sd_sub_sdSet t e
 
 end GlobalTheory.CrysPrism

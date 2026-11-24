@@ -85,8 +85,7 @@ theorem mem_dual_iff (L : Lat ξ E) (p : Cpt ξ) {r : ℕ} (b : Fin r → E)
   show (∀ e ∈ L p, w e ∈ regAt ξ p) ↔ _
   rw [h]
   constructor
-  · intro hw i
-    exact hw _ (Submodule.subset_span ⟨i, rfl⟩)
+  · exact fun hw i => hw _ (Submodule.subset_span ⟨i, rfl⟩)
   · intro hw
     let N : Submodule (regAt ξ p) E :=
       { carrier := {x | w x ∈ regAt ξ p}
@@ -105,8 +104,7 @@ theorem mem_dual_iff (L : Lat ξ E) (p : Cpt ξ) {r : ℕ} (b : Fin r → E)
       rw [Submodule.span_le]
       rintro _ ⟨i, rfl⟩
       exact hw i
-    intro e he
-    exact hle he
+    exact fun e he => hle he
 
 theorem dual_eq_span (L : Lat ξ E) (p : Cpt ξ) {r : ℕ} (B : Module.Basis (Fin r) Ω E)
     (h : L p = Submodule.span (regAt ξ p) (Set.range B)) :
@@ -142,8 +140,7 @@ theorem Lat.isVBOn_dual_and_bidual :
       ⟨Module.Basis.mk hli hspan.ge, Module.Basis.coe_mk hli _⟩
     have hLp : L p = Submodule.span (regAt ξ p) (Set.range B) := by rw [hB]; exact hLp0
     constructor
-    · intro he w hw
-      exact hw e he
+    · exact fun he w hw => hw e he
     · intro h
       rw [hLp, LatDual.mem_span_basis_iff p B e]
       intro i

@@ -89,8 +89,7 @@ theorem hT_self_of_on {E : Type} [Field E] [NumberField E] [StarRing E] (S : HSp
 
   simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, map_smul, hb,
   smul_eq_mul, starRingEnd_apply]
-  simp [mul_ite]
-  exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
+  simpa [mul_ite] using Finset.sum_congr rfl fun _ _ => mul_comm _ _
 
 theorem posFrame_of_std (D : D7) (h : Formalism.L2.Herm.IsStd (D.sp.X 0)) : PosFrame D := by
   obtain ⟨b, hb, -⟩ := h
@@ -182,8 +181,7 @@ theorem normTie_at (v : InfinitePlace D.what₂.LL) (x : ((D.fm u).lat 0).V)
     (o : Frames (gramC (gramN D 0 (Nat.zero_le _)) (embS D v.embedding))) (ho : o.IsON) :
     (Formalism.HermitianLatticesTheory.majAt ((D.fm u).lat 0).b ((D.fm u).lat 0).X v x x).re = ∑ c, termN T v x c o := by
   have h := T.norm0 v.embedding x (co0 T x) (fun c z => pol_spec T x c z) o ho
-  rw [InfinitePlace.mk_embedding] at h
-  exact h
+  rwa [InfinitePlace.mk_embedding] at h
 
 
 open Classical in
@@ -284,8 +282,7 @@ def FinCo {D : D7} {u : D.what₂.Word} (T : Formalism.L2.Forms.Forms0 D u) (B :
 
 theorem colRest_of_fin {D : D7} (F : Formalism.L2.Forms.ColsTiedSym D) (h3 : flipTwoThree.adm3 D) (u : D.what₂.Word) (B : ColBase D u)
     (hB : B.rho = rhoC D) (hfin : FinCo (F.forms u).to0 B) : ColRest B := by
-  have hst : ∀ c, Subsingleton ((D.mem u).C.stab 0 c) := by
-    exact h3 u
+  have hst : ∀ c, Subsingleton ((D.mem u).C.stab 0 c) := h3 u
   have hne : Nonempty ((D.mem u).C.cls 0) := classes_level_zero_nonempty F u
   exact ⟨coT (F.forms u).to0 (gC B), coT_injective (T := (F.forms u).to0) _, coT_range (T := (F.forms u).to0) hst _,
     hfin, inf_coT (T := (F.forms u).to0) (B := B) hB hst hne⟩
@@ -356,7 +353,7 @@ theorem den_of_isLocBasis {L : Submodule (𝓞 K) (Fin n → K)} (hfg : L.FG) {Y
   let t : (Fin n → K) → ℕ := fun g => if h : g ∈ S then (ht g h).choose else 1
   have htS : ∀ g ∈ S, ¬ l ∣ t g ∧ ∀ a, (t g : K) * ((((Y⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) *ᵥ g) a) ∈
       (algebraMap (𝓞 K) K).range := fun g hg => by
-    simp only [t, dif_pos hg]; exact (ht g hg).choose_spec
+    simp only [t, dite_eq_left hg]; exact (ht g hg).choose_spec
   refine ⟨∏ g ∈ S, t g, ?_, fun x hx => ?_⟩
   · rw [Prime.dvd_finsetProd_iff hl.out.prime]
     rintro ⟨g, hg, hdvd⟩
@@ -499,8 +496,7 @@ theorem change_mem (w : D.what₂.places.Pl) (τ : D.what₂.Tau) {n : ℕ} {L :
       ((B₂⁻¹ * B : GL (Fin n) D.host.E) : Matrix (Fin n) (Fin n) D.host.E) a b := by
     rw [Units.val_mul]; rfl
   have h2 := embT_mem_Ow D w τ _ s' hs' (h a)
-  rw [e] at h2
-  exact h2
+  rwa [e] at h2
 
 theorem basis_change (w : D.what₂.places.Pl) {n : ℕ} (lam : D.what₂.Tau → Formalism.BasicNotions.DomWeight n)
     (G : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ) (s : D.what₂.Tau → ℤ) {L : Set (Fin n → D.host.E)}
@@ -567,8 +563,7 @@ theorem mem_clsCrd_iff {u : D.what₂.Word} (c : (D.mem u).C.cls 0) (z : Fin (D.
   · rintro ⟨y, hy, rfl⟩
     convert hy using 1
     exact (eqv D).symm_apply_apply y
-  · intro h
-    exact ⟨_, h, (eqv D).apply_symm_apply z⟩
+  · exact fun h => ⟨_, h, (eqv D).apply_symm_apply z⟩
 
 def vcol (Y : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) (a : Fin (D.R.N 0)) : (D.sp.X 0).V :=
   (eqv D).symm fun r => Y r a
@@ -675,8 +670,7 @@ theorem locBasis_gamma (hB : B.rho = rhoC D) (w : D.what₂.places.Pl) (c : (D.m
         (Set.range fun a => B.bc c τ (vcol (Y : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) a))) ?_ ?_ ?_ ?_ hx
       · rintro _ ⟨y, hy, rfl⟩
         have hz : eqv D y ∈ Formalism.L2.Forms.clsCrd D u 0 (Nat.zero_le _) c := by
-          rw [mem_clsCrd_iff, LinearEquiv.symm_apply_apply]
-          exact hy
+          rwa [mem_clsCrd_iff, LinearEquiv.symm_apply_apply]
         obtain ⟨s, hs, hint⟩ := (hY (eqv D y)).1 ⟨1, hp1, by rw [Nat.cast_one, one_smul]; exact hz⟩
         have h1 : (Y : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) *ᵥ
             ((((Y⁻¹ : GL (Fin (D.R.N 0)) D.host.E)) : Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) *ᵥ eqv D y) =
@@ -694,8 +688,7 @@ theorem locBasis_gamma (hB : B.rho = rhoC D) (w : D.what₂.places.Pl) (c : (D.m
         rw [B.bc_smul, hB, hsmul _ (rhoC_mem_intW w τ _ s hs (hint a))]
         exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
       · exact zero_mem _
-      · intro x y _ _ hx hy
-        exact add_mem hx hy
+      · exact fun x y _ _ hx hy => add_mem hx hy
       · intro r x _ hx
         have hr : r • x = (⟨_, Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.bwG_int_mem D w r⟩ : intW D.what₂.places w) • x := by
           rw [Subring.smul_def]
@@ -762,7 +755,6 @@ variable {D : D7}
 theorem embT_sigD (τ : D.what₂.Tau) (a : D.host.E) :
     Formalism.L2.Forms.embT D τ (Formalism.L2.Forms.sigD D a) = starRingEnd ℂ (Formalism.L2.Forms.embT D τ a) := by
   haveI := D.host.isCMField_hostE
-  show D.host.emb (D.eTau τ : D.R.GG) (Formalism.L2.Forms.sigD D a) = starRingEnd ℂ (D.host.emb (D.eTau τ : D.R.GG) a)
   exact NumberField.IsCMField.complexEmbedding_complexConj D.host.E _ a
 
 theorem embLL_rhoC (τ : D.what₂.Tau) (a : D.host.E) :
@@ -895,8 +887,7 @@ theorem clause_iff (T0 : Formalism.L2.Forms.Forms0 D u) (hB : B.rho = rhoC D) (w
       obtain ⟨z, rfl⟩ := T0.val0.eY.surjective y
       rw [hfn, ← hemb, hPz]
     have := Formalism.L2.Col.fnOf_injective Gf s0 N0 (isUnit_base_inverse_infinity Y) (Formalism.MainNotions.Ext.Lw.frOne Gf) hPe
-    rw [← this]
-    exact hP
+    rwa [← this]
   · intro hQ Bb hBb
     obtain ⟨Q₂, hQ₂, hQe⟩ := basis_change D w lam Gf s0 hB0 hBb _ hQ
     rw [hN0'] at hQe

@@ -64,8 +64,7 @@ theorem top_le_spMap_comp_iff {X : Scheme.{0}} (σ : ℂ →+* ℂ) (x : Sp ℂ 
   · intro h p _
     have hq : x.base ((spMap σ).base p) ∈ U := h (show p ∈ (⊤ : (Sp ℂ).Opens) from trivial)
     rwa [hsub ((spMap σ).base p) p] at hq
-  · intro h p _
-    exact h (show (spMap σ).base p ∈ (⊤ : (Sp ℂ).Opens) from trivial)
+  · exact fun h p _ => h (show (spMap σ).base p ∈ (⊤ : (Sp ℂ).Opens) from trivial)
 
 private theorem gammaSpecIso_appLE_spMap_apply (z : Γ(Sp ℂ, ⊤)) (σ : ℂ →+* ℂ)
     (e : (⊤ : (Sp ℂ).Opens) ≤ (spMap σ) ⁻¹ᵁ ⊤) :
@@ -119,7 +118,6 @@ theorem isHolTo_conj (X : Scheme.{0}) (m : ℕ) (B : Set (Fin m → ℂ)) (y : (
   rw [hset]
   refine ⟨ho.preimage continuous_star, ?_⟩
   refine (differentiableOn_conj_comp_star hd).congr ?_
-  intro b _
-  exact valAt'_spMap_comp (starRingEnd ℂ) (y (star b)) U f
+  exact fun b _ => valAt'_spMap_comp (starRingEnd ℂ) (y (star b)) U f
 
 end GlobalTheory.CompanionTheory.Ar.Cusp.FamEx

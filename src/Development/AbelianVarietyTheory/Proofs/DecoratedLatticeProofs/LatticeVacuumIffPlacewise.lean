@@ -155,12 +155,7 @@ theorem pairA_zero_smul_tmul (F E : Type) [Field F] [NumberField F] [Field E] [A
   rw [TensorProduct.smul_tmul', smul_eq_mul, pairA_zero_mul_pairA_zero]
 
 theorem infPart_pairA_zero_tmul (D : D7) (b : Af D.host.F) (e : D.host.E) :
-    infPart D (pairA D.host.F 0 b ⊗ₜ[D.host.F] e) = 0 := by
-  show Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E)
-    (pairA D.host.F 0 b ⊗ₜ[D.host.F] e) = 0
-  rw [Algebra.TensorProduct.map_tmul]
-  have : fstA D.host.F (pairA D.host.F 0 b) = 0 := rfl
-  rw [this, TensorProduct.zero_tmul]
+    infPart D (pairA D.host.F 0 b ⊗ₜ[D.host.F] e) = 0 := GlobalTheory.FinPlLoc.infPart_pair b e
 
 theorem latO_algebra : ∀ (D : D7) (S T : HSp D) (LS : Set (Fin S.rank → D.host.E)) (LT : Set (Fin T.rank → D.host.E)) (P : Pl D → Prop) (u : WO S T), u ∈ latO S T LS LT P → (∀ γ ∈ intAf D.host.F, pairA D.host.F 0 γ • u ∈ latO S T LS LT (fun v => P v ∧ evalV D.host.F v γ ≠ 0)) ∧ pairA D.host.F 0 1 • u = u ∧ u.map (infPart D) = 0 ∧ ((∀ v, ¬ P v) → u = 0) := by
   intro D S T LS LT P u hu
@@ -183,8 +178,7 @@ theorem latO_algebra : ∀ (D : D7) (S T : HSp D) (LS : Set (Fin S.rank → D.ho
         exact pairA_zero_smul_tmul _ _ _ _ _
     · ext i j
       have := pairA_zero_smul_tmul D.host.F D.host.E 1 α (a * t i * ∑ k, star (s k) * S.gram k j)
-      rw [one_mul] at this
-      exact this
+      rwa [one_mul] at this
     · ext i j
       exact infPart_pairA_zero_tmul D α _
     · have h0 : α = 0 := by

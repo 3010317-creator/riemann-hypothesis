@@ -473,7 +473,7 @@ theorem mem_stdLat_iff (y : Fin n → E) :
   · intro h
     refine ⟨fun i => (h i).choose, funext fun j => ?_⟩
     simp only [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, Algebra.smul_def, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact (h j).choose_spec
 
 end Standard
@@ -855,8 +855,7 @@ theorem proof : LineIdealDual.Statement := by
   classical
   have hdual : ∀ ψ ∈ Submodule.span ℤ (Set.range φ), ψ ∈ latticeDual F.lattice := by
     intro ψ hψ
-    rw [hφ.span_eq] at hψ
-    exact hψ
+    rwa [hφ.span_eq] at hψ
   constructor
   · intro hv b
     let Φ : (Fin (r + 1) → K') →ₗ[𝓞 K'] K' :=
@@ -874,8 +873,7 @@ theorem proof : LineIdealDual.Statement := by
       rw [latticeValue_algebraMap, ← hy, Submodule.mem_one]
       exact algebraMap_mem_range_ringOfIntegers y
     have h1 : latticeValue φ (a • v) b ∈ (1 : Submodule (𝓞 K') K') := hle hv
-    rw [latticeValue_smul, Submodule.mem_one] at h1
-    exact h1
+    rwa [latticeValue_smul, Submodule.mem_one] at h1
   · intro h
     obtain ⟨n, f, σ, hfF, hσF, hid⟩ :=
       GroundTheory.Heights₂.Theta.UnitaryReduction.DualHomPf.exists_dualBasis F.lattice F.fg
@@ -916,7 +914,7 @@ theorem proof : LineIdealDual.Statement := by
         rw [← hKid j k, map_sum, Finset.mul_sum]
         exact Finset.sum_congr rfl fun i _ ↦ by rw [map_mul]; ring
       simp only [e, apply_ite (algebraMap K K'), map_one, map_zero, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     choose y hy using h
     rw [hid' (a • v)]
     refine Submodule.sum_mem _ fun i _ ↦ ?_
@@ -966,9 +964,7 @@ theorem genIndex_span_eq_finprod {L : Type*} [Field L] [NumberField L] {ι : Typ
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have hbL : (b : L) ≠ 0 := by rwa [Ne, RingOfIntegers.coe_eq_zero_iff]
   have hzy : ∀ i, ((z i : 𝓞 L) : L) = (b : L) * y i := fun i ↦ by
-    have h := hz i
-    simp only [Algebra.smul_def] at h
-    exact h
+    simpa only [Algebra.smul_def] using hz i
   let g : 𝓞 L →ₗ[𝓞 L] L :=
     (LinearMap.mulLeft (𝓞 L) ((b : L)⁻¹)).comp (Algebra.linearMap (𝓞 L) L)
   have hg : ∀ t, g t = (b : L)⁻¹ * t := fun t ↦ rfl
@@ -999,8 +995,7 @@ theorem genIndex_span_eq_finprod {L : Type*} [Field L] [NumberField L] {ι : Typ
     exact (mul_eq_zero.mp (by rw [← this]; rfl)).resolve_left hbL
   have hJ0 : J ≠ ⊥ := by
     obtain ⟨i0, hi0⟩ := Function.ne_iff.mp hz0
-    intro h
-    exact hi0 ((Ideal.span_eq_bot.mp h) _ ⟨i0, rfl⟩)
+    exact fun h => hi0 ((Ideal.span_eq_bot.mp h) _ ⟨i0, rfl⟩)
   have hB0 : Ideal.span {b} ≠ ⊥ := by rw [Ne, Ideal.span_singleton_eq_bot]; exact hb0
   rw [hS, h1, hmap, hmap, genIndex, AddSubgroup.relIndex_map_map_of_injective _ _ hginj,
     AddSubgroup.relIndex_map_map_of_injective _ _ hginj, ← genIndex,
@@ -1048,7 +1043,7 @@ theorem dualPointCoord_ne_zero {K : Type} [Field K] [NumberField K] {i : ℕ} (F
   simp only [Λ, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.zero_apply,
     zsmul_eq_mul, Pi.mul_apply, Pi.intCast_apply, Pi.single_apply, mul_ite, mul_one, mul_zero,
     apply_ite (algebraMap K K'), map_intCast, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at this
+    Finset.mem_univ, ite_true] at this
   rcases mul_eq_zero.mp this with h | h
   · apply hD
     have h' : algebraMap K K' (D : K) = 0 := by rw [map_intCast]; exact h
@@ -1094,8 +1089,7 @@ theorem DualLineIndex.proof : DualLineIndex.Statement := by
     · rintro h ⟨⟨⟩, t⟩
       have := h (e t)
       simpa [φ, latticeValue, hy, dualPointCoord] using this
-    · intro h k
-      exact h ⟨(), e.symm k⟩
+    · exact fun h k => h ⟨(), e.symm k⟩
 
   let f : K' →+ (Fin (r + 1) → K') :=
     { toFun := fun a ↦ a • v, map_zero' := zero_smul _ _, map_add' := fun a a' ↦ add_smul a a' v }

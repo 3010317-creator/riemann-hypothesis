@@ -330,10 +330,7 @@ theorem fst_comp (he : IsField W e) : spMap (TrivSqZeroExt.fstHom S S S).toRingH
     rw [← Category.assoc, fst_comp_proj, Category.id_comp]
   refine Eq.trans (comp_eq_of_app _ _ (proj S ≫ g₀) (epsPoint_base g₀ hg he) fun U => ?_) hb
   erw [eqToHom_refl, op_id, CategoryTheory.Functor.map_id, Category.comp_id]
-  apply CommRingCat.hom_ext
-  apply RingHom.ext
-  intro a
-  exact fst_app_psi g₀ hg he U a
+  exact CommRingCat.hom_ext (RingHom.ext (fun a => fst_app_psi g₀ hg he U a))
 
 end GlobalTheory.EpsPoint
 
@@ -456,7 +453,7 @@ theorem vert_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   let F : ∀ (S : Type) [CommRing S], (Sp S ⟶ t.G.left) → Fin n → S := fun S _ g =>
     if h : ⊤ ≤ g ⁻¹ᵁ W then (hE S g h).choose else 0
   have hF : ∀ (S : Type) [CommRing S] (g : Sp S ⟶ t.G.left) (h : ⊤ ≤ g ⁻¹ᵁ W), F S g = (hE S g h).choose :=
-    fun S _ g h => dif_pos h
+    fun S _ g h => dite_eq_left h
   have hrel : ∀ (S : Type) [CommRing S] (g : Sp S ⟶ t.G.left) (hg : ⊤ ≤ g ⁻¹ᵁ W) (φ : Γ(X, U.1) →+* S)
       (wt : Fin n → (Sp (DualNumber S) ⟶ t.G.left)), g ≫ t.G.hom = spMap φ ≫ chart U →
       (∀ a, IsTranslate t φ g (v a) (wt a)) → ∀ (O : t.G.left.Opens), O ≤ W → ⊤ ≤ g ⁻¹ᵁ O →
@@ -751,7 +748,7 @@ theorem exists_isKS : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     rw [hlift i hW r, hhv i hW r, sub_zero]
   · have e := hks i i' O hO f S φ g₀ w hg hO' hw
     have hv' : ∀ a b : Γ(t.G.left, O), valR g₀ O (a - b) = valR g₀ O a - valR g₀ O b := fun a b => by
-      simp only [valR, dif_pos hO', map_sub]
+      simp only [valR, dite_eq_left hO', map_sub]
     show valR g₀ O ((d i O f - h i O f) - (d i' O f - h i' O f)) = _
     rw [show (d i O f - h i O f) - (d i' O f - h i' O f) = (d i O f - d i' O f) - (h i O f - h i' O f) by ring,
       hv', e]

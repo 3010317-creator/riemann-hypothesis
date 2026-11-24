@@ -125,9 +125,8 @@ theorem coeff_single_X [DecidableEq τ] (q p : τ) :
   rw [coeff_X]
   by_cases h : q = p
   · simp [h]
-  · rw [if_neg, if_neg h]
-    intro h'
-    exact h (Finsupp.single_left_injective one_ne_zero h')
+  · rw [ite_eq_right, ite_eq_right h]
+    exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
 
 theorem const_hom [Fintype σ] (ψ : MvPowerSeries σ V →ₐ[V] MvPowerSeries τ V)
     (h : ∀ j, constantCoeff (ψ (X j)) = 0) (f : MvPowerSeries σ V) : constantCoeff (ψ f) = constantCoeff f := by
@@ -188,7 +187,7 @@ theorem addV_lin (G : FGLaw V d) (x y : Pt V m d) (hx : ∀ i, constantCoeff (x 
   refine ⟨(const_evC _ ha _).trans (G.const i), fun q => (coeff_evC _ ha _ q).trans ?_⟩
   rw [Fintype.sum_prod_type, Fin.sum_univ_two]
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, PullbackSections.Pf.EigA.formal_group_coeff_first_linear, PullbackSections.Pf.EigA.formal_group_coeff_second_linear, ite_mul, _root_.one_mul,
-    zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem fold_lin (G : FGLaw V d) (l : List (Pt V m d)) (hl : ∀ x ∈ l, ∀ i, constantCoeff (x i) = 0) :
     (∀ i, constantCoeff (l.foldr (addV G.F) 0 i) = 0) ∧ ∀ i q, coeff (Finsupp.single q 1) (l.foldr (addV G.F) 0 i) =
@@ -266,7 +265,7 @@ theorem det_blocks {K O L : Type} [CommRing K] [CommRing O] [Fintype L] {d n : �
     simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul] at this
     simp only [Matrix.mul_apply, Fintype.sum_prod_type, Matrix.kroneckerMap_apply, Matrix.of_apply, Matrix.one_apply, U,
       Matrix.blockDiagonal_apply, ite_mul, mul_ite, zero_mul, mul_zero, _root_.one_mul, Finset.sum_ite_irrel,
-      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [this, _root_.mul_comm]
     rfl
   have h4 : (Matrix.of fun x q : Fin n × Fin d => M (p x.1 q.1) x.2 q.2) =
@@ -843,8 +842,7 @@ theorem exp_iota (hh : B.IsCanonGauge K h) {jo : PS V 1 d} (hj : IsIota B K h w0
     · have e : mp K (uP B (0 : Fin 1)).val = pt K d 0 := mp_pt K 0
       have e' : ((-1 : O) • uP B (0 : Fin 1)).val = B.A.act (-1) :=
         (val_smul_gp _ (p 0)).trans (gt_comp1_pt_right _)
-      rw [lg, lg, e, e', gt_ev_pt_self]
-      exact hj
+      rwa [lg, lg, e, e', gt_ev_pt_self]
   have ha : ∀ j, GP (![x] j).val := by intro j; fin_cases j; exact hx
   have := base.ev ![x] ha
   simp only [map_sub, map_smul, evK_lg _ _ ha (p _), evK_lg _ _ ha (gp_smul _ (p _)), sL_uP] at this
@@ -864,8 +862,7 @@ theorem exp_kappa (hh : B.IsCanonGauge K h) {n : ℕ} {mu : Matrix (Fin n) (Fin 
       have e' : ∀ b, (mv mu (uP B) b).val = matV B mu (fun j => pt V (n := n) d j) b :=
         fun b => (congrFun (matV_val B mu (uP B)) b).symm
       simp only [lg, e, e']
-      rw [← Nat.cast_smul_eq_nsmul K]
-      exact hκ
+      rwa [← Nat.cast_smul_eq_nsmul K]
   have := base.ev x hx
 
   simp only [map_sub, map_nsmul, map_sum, evK_lg _ _ hx (p _), evK_lg _ _ hx (gp_mv mu p _), sL_uP, sL_mv] at this
@@ -950,7 +947,7 @@ theorem GlobalTheory.PlaceInt.prod_trUnit_mul_shift_kappa : ∀ (V : Type) [Comm
     have e : ∑ i, star (mu i j) • mv mu a i = 0 := by simp only [hk0, smul_zero, Finset.sum_const_zero]
     simp only [mv, Finset.smul_sum, smul_smul] at e
     rw [Finset.sum_comm] at e
-    simp only [← Finset.sum_smul, hmu, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true] at e
+    simp only [← Finset.sum_smul, hmu, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at e
     exact e
   have hneg : ∀ j, (-1 : O) • a j + a j = 0 := fun j => by
     nth_rewrite 2 [← one_smul O (a j)]
@@ -1089,8 +1086,7 @@ theorem copy_shift {α : Fin n → Fin d → V} (hα : ∀ b, Small (α b)) (b :
   subst hj
   have eL := evV_addV B.G.F h1 (sm_pt (V := V) (d := d) (n := 1) 0) (sm_cpt (n := 1) (hα b))
   rw [evV_pt h1, evV_cpt h1] at eL
-  refine eL.trans ?_
-  exact (evV_pt h3 b).symm
+  exact eL.trans (evV_pt h3 b).symm
 
 theorem box_shift {α : Fin n → Fin d → V} (hα : ∀ b, Small (α b)) (u f : Fin n → PS V 1 d) :
     ∏ b, evV (n := n) ![pt V d b] (u b * shift B.G.F (fun _ => α b) (f b)) =

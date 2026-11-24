@@ -138,14 +138,12 @@ theorem vX_vp_pos_iff (x : X.C) : 0 < vX_vp X x ↔ X.v x < 1 := by
     rw [map_natCast] at h
     refine lt_of_le_of_ne h fun h1 => hpO ?_
     apply X.ints.isUnit_of_one'
-    rw [map_natCast]
-    exact h1
+    rwa [map_natCast]
   have hp0 : (0 : NNReal) < X.v (p : X.C) := by
     rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
     exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hx0 : (0 : NNReal) < X.v x := by
-    rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
-    exact hx
+    rwa [pos_iff_ne_zero, Valuation.ne_zero_iff]
   have hlp : Real.log (X.v (p : X.C) : ℝ) < 0 :=
     Real.log_neg (by exact_mod_cast hp0) (by exact_mod_cast hp1)
   have hi : (Real.log (X.v (p : X.C) : ℝ))⁻¹ < 0 := inv_lt_zero.mpr hlp

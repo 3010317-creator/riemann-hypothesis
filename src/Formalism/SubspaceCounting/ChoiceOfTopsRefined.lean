@@ -223,7 +223,7 @@ theorem lp_single (y : Fin V → Module.End R X) (v : Fin V) (l : List (Fin V)) 
 theorem lp_finRange_single (y : Fin V → Module.End R X) (v : Fin V) :
     lp y (List.finRange V) (fun u => if u = v then 1 else 0) = y v := by
 
-  rw [lp_single y v _ (List.nodup_finRange V), if_pos (List.mem_finRange v)]
+  rw [lp_single y v _ (List.nodup_finRange V), ite_eq_left (List.mem_finRange v)]
 
 theorem lp_mem (y : Fin V → Module.End R X) (M : Submodule R X) (hM : ∀ u, ∀ x ∈ M, y u x ∈ M)
     (l : List (Fin V)) (e : Fin V → ℕ) : ∀ x ∈ M, lp y l e x ∈ M := by
@@ -414,8 +414,8 @@ theorem card_idx {V : ℕ} (m : ℕ) (B : Finset (Fin V)) : (idx m B).card = m ^
         refine Finset.prod_congr rfl fun u _ => ?_
         split_ifs <;> simp
     _ = ∏ u ∈ B, (if u ∈ B then m else 1) :=
-        (Finset.prod_subset (Finset.subset_univ B) fun u _ hu => if_neg hu).symm
-    _ = ∏ u ∈ B, m := Finset.prod_congr rfl fun u hu => if_pos hu
+        (Finset.prod_subset (Finset.subset_univ B) fun u _ hu => ite_eq_right hu).symm
+    _ = ∏ u ∈ B, m := Finset.prod_congr rfl fun u hu => ite_eq_left hu
     _ = m ^ B.card := Finset.prod_const m
 
 theorem expo_step {V : ℕ} (m : ℕ) {B : Finset (Fin V)} (i : Fin V → ℕ) {v : Fin V}
@@ -508,9 +508,9 @@ theorem walkCostTerm_add_le {V : ℕ} (a b c : Fin V → ℕ) (m c₀ : ℕ) {B 
     have e1 : i u * c u ≤ (m - 1) * c u := Nat.mul_le_mul_right _ (by omega)
     have e2 : (i u + 1) * c₀ ≤ m * c₀ := Nat.mul_le_mul_right _ (by omega)
     rw [Nat.add_mul, one_mul] at e2
-    rw [h, if_pos rfl, Nat.mul_add]
+    rw [h, ite_eq_left rfl, Nat.mul_add]
     omega
-  · rw [if_neg hut, add_zero]
+  · rw [ite_eq_right hut, add_zero]
     exact accT_le a b c m c₀ hi u
 
 theorem accT_stop_le {V : ℕ} (a b c : Fin V → ℕ) (m c₀ : ℕ) {B : Finset (Fin V)}
@@ -522,12 +522,12 @@ theorem accT_stop_le {V : ℕ} (a b c : Fin V → ℕ) (m c₀ : ℕ) {B : Finse
   by_cases huv : u = v
   · subst v
     have h : accT a b c m c₀ B i u = b u + i u * (c u + c₀) := by simp [accT, hv]
-    rw [h, if_pos rfl]
+    rw [h, ite_eq_left rfl]
     subst m
     rw [Nat.add_sub_cancel]
     apply le_of_eq
     ring
-  · rw [if_neg huv, add_zero]
+  · rw [ite_eq_right huv, add_zero]
     exact accT_le a b c m c₀ hi u
 
 theorem sum_add_ite {V : ℕ} (f : Fin V → ℕ) (t : Fin V) (K : ℕ) :
@@ -552,11 +552,9 @@ theorem main : WalkSharp := by
   have hyM : ∀ u, ∀ x ∈ L (fun _ => Slot.base), y u x ∈ L (fun _ => Slot.base) := by
     intro u x hx
     have h1 : x ∈ L (Function.update (fun _ => Slot.base) u Slot.base) := by
-      rw [hupd]
-      exact hx
+      rwa [hupd]
     have h2 := hdb _ u (hy _ u x (hbb _ u h1))
-    rw [hupd] at h2
-    exact h2
+    rwa [hupd] at h2
   have hPmem : ∀ (e : Fin V → Bool), ∀ x ∈ L (fun _ => Slot.base),
       monoOp π y m Sv e x ∈ prodIdealMap π y m Sv (L fun _ => Slot.base) := by
     intro e x hx
@@ -670,9 +668,8 @@ theorem main : WalkSharp := by
             by_cases huv : u = v
             · subst u
               refine ⟨fun _ => ?_, fun h => absurd hv h⟩
-              rw [Function.update_apply, if_pos rfl]
-              exact hlt
-            · rw [Function.update_apply, if_neg huv]
+              rwa [Function.update_apply, ite_eq_left rfl]
+            · rw [Function.update_apply, ite_eq_right huv]
               exact mem_idx.mp hi u
           have hz2 : π ^ c v • zv ∈ L (vertexLabel B) := by
             have := hcb _ v zv hzv
@@ -689,8 +686,7 @@ theorem main : WalkSharp := by
           have IH := ih B _ hB hi2 (by omega) _ hz2
           rw [hYy _ (fun u => expo_step m i hv u), map_smul, smul_smul, ← pow_add] at IH
           have hk2 : E - acc a b c m c₀ B (Function.update i v (i v + 1)) + c v = k := by omega
-          rw [hk2] at IH
-          exact IH
+          rwa [hk2] at IH
         have hiv : i v + 1 = m := by
           have := hi' v hv
           omega
@@ -702,16 +698,16 @@ theorem main : WalkSharp := by
           have hwB2 : w ∉ B.erase v := fun h => hwB (Finset.mem_of_mem_erase h)
           have hiw : i w = 0 := (mem_idx.mp hi w).2 hwB
           have hB2 : (insert w (B.erase v)).card = β + 1 := by
-            rw [Finset.card_insert_eq_ite, if_neg hwB2, Finset.card_erase_of_mem hv, hB]
+            rw [Finset.card_insert_eq_ite, ite_eq_right hwB2, Finset.card_erase_of_mem hv, hB]
             omega
           have hi2 : Function.update i v 0 ∈ idx m (insert w (B.erase v)) := by
             rw [mem_idx]
             intro u
             by_cases huv : u = v
             · subst u
-              rw [Function.update_apply, if_pos rfl]
+              rw [Function.update_apply, ite_eq_left rfl]
               exact ⟨fun _ => by omega, fun _ => rfl⟩
-            · rw [Function.update_apply, if_neg huv]
+            · rw [Function.update_apply, ite_eq_right huv]
               constructor
               · intro h
                 rcases Finset.mem_insert.mp h with h | h
@@ -726,8 +722,7 @@ theorem main : WalkSharp := by
             have h1 := ha _ v zv hzv
             rw [update_positionAt_base] at h1
             have h2 : π ^ a v • zv ∈ L (Function.update (vertexLabel (B.erase v)) w Slot.base) := by
-              rw [update_positionAt_base_self hwB2]
-              exact h1
+              rwa [update_positionAt_base_self hwB2]
             have h3 := hb _ w _ h2
             rwa [update_positionAt_dual] at h3
           have hmu : ∑ u, expo m (insert w (B.erase v)) (Function.update i v 0) u =
@@ -745,8 +740,7 @@ theorem main : WalkSharp := by
             ← pow_add, ← pow_add] at IH
           have hk2 : E - acc a b c m c₀ (insert w (B.erase v)) (Function.update i v 0) + b w + a v = k := by
             omega
-          rw [hk2] at IH
-          exact IH
+          rwa [hk2] at IH
         · have hD : ∀ u, (if decide (u ∉ B.erase v) = true then m else 0) +
               (if u ∈ B.erase v then i u else 0) = expo m B i u + if u = v then 1 else 0 := by
             intro u
@@ -787,10 +781,10 @@ theorem main : WalkSharp := by
               calc ∑ u ∈ B.erase v, Sv u =
                     ∑ u ∈ B.erase v, (if decide (u ∉ B.erase v) = true then 0 else Sv u) :=
                     Finset.sum_congr rfl fun u hu =>
-                      (if_neg (by rw [decide_eq_true_eq, not_not]; exact hu)).symm
+                      (ite_eq_right (by rw [decide_eq_true_eq, not_not]; exact hu)).symm
                 _ = ∑ u, (if decide (u ∉ B.erase v) = true then 0 else Sv u) :=
                     Finset.sum_subset (Finset.subset_univ _) fun u _ hu =>
-                      if_pos (by rw [decide_eq_true_eq]; exact hu)
+                      ite_eq_left (by rw [decide_eq_true_eq]; exact hu)
             rw [h1]
             calc ∑ u ∈ B.erase v, Sv u ≤ (B.erase v).card • S :=
                   Finset.sum_le_card_nsmul _ _ _ fun u _ => hS u
@@ -800,8 +794,7 @@ theorem main : WalkSharp := by
             have h2 : ∑ u, (accT a b c m c₀ B i u + if u = v then a v + c₀ else 0) ≤
                 ∑ u, (a u + b u + (m - 1) * c u + m * c₀) :=
               Finset.sum_le_sum fun u _ => accT_stop_le a b c m c₀ hi' hv hiv u
-            rw [sum_add_ite] at h2
-            exact h2
+            rwa [sum_add_ite] at h2
           obtain ⟨r, hr⟩ : ∃ r, k = r + ((∑ u, if decide (u ∉ B.erase v) = true then 0 else Sv u) + a v) :=
             ⟨k - ((∑ u, if decide (u ∉ B.erase v) = true then 0 else Sv u) + a v), by omega⟩
           rw [hr, pow_add, mul_smul]
@@ -823,8 +816,7 @@ theorem main : WalkSharp := by
           exact Submodule.smul_mem _ _
             (Submodule.mem_sup_right (Submodule.subset_span (hstateC B hB i hi x hx)))
       have h := hle (hdec z hz)
-      rw [Submodule.mem_comap, LinearMap.smul_apply, map_smul, smul_smul, ← pow_add, ← hk] at h
-      exact h
+      rwa [Submodule.mem_comap, LinearMap.smul_apply, map_smul, smul_smul, ← pow_add, ← hk] at h
   intro x hx
   obtain ⟨B₀, hB₀card, hB₀⟩ : ∃ B₀ : Finset (Fin V), B₀.card = β + 1 ∧
       ∀ u : Fin V, u ∈ B₀ ↔ (u : ℕ) < β + 1 := by
@@ -833,8 +825,7 @@ theorem main : WalkSharp := by
     constructor
     · rintro ⟨p, rfl⟩
       exact p.isLt
-    · intro h
-      exact ⟨⟨u, h⟩, Fin.ext rfl⟩
+    · exact fun h => ⟨⟨u, h⟩, Fin.ext rfl⟩
   have hB₀top : top B₀ ≤ β := by
     apply Finset.sup_le
     intro u hu
@@ -843,8 +834,7 @@ theorem main : WalkSharp := by
     omega
   have hi0 : (fun _ => 0) ∈ idx m B₀ := by
     rw [mem_idx]
-    intro u
-    exact ⟨fun _ => show 0 < m by omega, fun _ => rfl⟩
+    exact fun u => ⟨fun _ => show 0 < m by omega, fun _ => rfl⟩
   have hexpo0 : expo m B₀ (fun _ => 0) = fun _ => 0 := by
     funext u
     by_cases hu : u ∈ B₀
@@ -864,9 +854,9 @@ theorem main : WalkSharp := by
     rw [Finset.sum_congr rfl fun u _ => h1 u]
     symm
     calc ∑ u ∈ B₀, b u = ∑ u ∈ B₀, (if u ∈ B₀ then b u else 0) :=
-          Finset.sum_congr rfl fun u hu => (if_pos hu).symm
+          Finset.sum_congr rfl fun u hu => (ite_eq_left hu).symm
       _ = ∑ u, (if u ∈ B₀ then b u else 0) :=
-          Finset.sum_subset (Finset.subset_univ B₀) fun u _ hu => if_neg hu
+          Finset.sum_subset (Finset.subset_univ B₀) fun u _ hu => ite_eq_right hu
   have hle0 : ∑ u ∈ B₀, b u ≤ E := by
     rw [← hacc0, hE]
     have := hbnd B₀ (fun _ => 0) (fun u _ => show 0 < m by omega)
@@ -874,8 +864,7 @@ theorem main : WalkSharp := by
   have hz0 := enter_positionAt L π b hb B₀ x hx
   have hmain := claim (m * V + 1) B₀ (fun _ => 0) hB₀card hi0 (by omega) _ hz0
   have hone : ∀ w : X, (1 : Module.End R X) w = w := fun _ => rfl
-  rw [hexpo0, lp_zero, hacc0, hone, smul_smul, ← pow_add, Nat.sub_add_cancel hle0] at hmain
-  exact hmain
+  rwa [hexpo0, lp_zero, hacc0, hone, smul_smul, ← pow_add, Nat.sub_add_cancel hle0] at hmain
 
 end WalkSharpP
 

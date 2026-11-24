@@ -118,8 +118,7 @@ theorem bound [DecidableEq A] (a : A → ℂ) (N : ℕ) (δ : ℝ) (hδ0 : 0 ≤
   have h2 : (j : ℝ) * ‖ev a j‖ ≤ j * δ := by
     have h3 := congrArg norm (newton a j)
     rw [norm_mul, norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul, Complex.norm_natCast] at h3
-    rw [h3]
-    exact hsum
+    rwa [h3]
   have hjpos : (0 : ℝ) < j := by exact_mod_cast hj1
   exact le_of_mul_le_mul_left h2 hjpos
 
@@ -132,12 +131,10 @@ theorem newton_identities_low_degree : NewtonLow := by
   intro N hN
   refine ⟨1 / 4, by norm_num, fun A _ a hA hprod => ?_⟩
   classical
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hp : ∀ k, 1 ≤ k → k ≤ N → ‖∑ i, a i ^ k‖ ≤ 1 / 2 := by
     intro k hk1 hkN
-    by_contra hk
-    push_neg at hk
+    by_contra! hk
     have hle : ‖∑ i, a i ^ k‖ ^ 2 ≤ ∑ m ∈ range N, ‖∑ i, a i ^ (m + 1)‖ ^ 2 := by
       have hmem : k - 1 ∈ range N := by
         rw [Finset.mem_range]

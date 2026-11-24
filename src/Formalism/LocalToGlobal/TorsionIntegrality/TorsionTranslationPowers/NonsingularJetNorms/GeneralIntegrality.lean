@@ -73,13 +73,12 @@ theorem coeff_tensor4 (f : MvPowerSeries n K) (ν : n →₀ ℕ) :
       ext i
       have := DFunLike.congr_fun hL.1 (b, i)
       simp only [Finsupp.coe_finsetSum, Finset.sum_apply, hμ, blk_apply, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true] at this
+        Finset.mem_univ, ite_true] at this
       exact this
     ext1 a
     rw [hμ, hμν]
     rfl
-  · intro h
-    exact absurd (by simp [Finset.mem_finsuppAntidiag]) h
+  · exact fun h => absurd (by simp [Finset.mem_finsuppAntidiag]) h
 
 end Field
 
@@ -129,8 +128,7 @@ theorem matCoord_one [DecidableEq m] (h : IsLogPair l linv) (τ : O →+* K) (w 
     exact Formalism.L2.Th1.C.Pts.subst_linv_l h (MvPowerSeries.constantCoeff_X w)
   · intro j _ hj
     rw [Matrix.one_apply_ne hj.symm, map_zero, map_zero, zero_mul]
-  · intro hw
-    exact absurd (Finset.mem_univ w) hw
+  · exact fun hw => absurd (Finset.mem_univ w) hw
 
 end Lin
 
@@ -182,8 +180,7 @@ theorem GeneralIntOf_of (hF : FourthPower) (hU : Formalism.L2.Th1.C.UnitaryInv) 
   obtain ⟨hlp, hFG, hph⟩ := hFr
   have hγδ : γ * γ.conjTranspose = 1 := mul_eq_one_comm.1 hγ
   have hδ : γ.conjTranspose.conjTranspose * γ.conjTranspose = 1 := by
-    rw [Matrix.conjTranspose_conjTranspose]
-    exact hγδ
+    rwa [Matrix.conjTranspose_conjTranspose]
   have hpt : ∀ w, IsPt R (matCoord l linv τ γ.conjTranspose w) := fun w =>
     Formalism.L2.Th1.C.Pts.isPt_flin hlp hFG (fun _ => hEnd _) fun _ => isPt_X _
   obtain ⟨h1, h2⟩ := hP K κ (Fin 4 × n) ph r V hph hr hV

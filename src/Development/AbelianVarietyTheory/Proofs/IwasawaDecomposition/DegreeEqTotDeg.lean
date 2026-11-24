@@ -823,8 +823,7 @@ theorem exists_unitary_mul_integral :
     have h1 := (FinitePlace.norm_lt_one_iff_mem K 𝔭 α).2 hα
     have h2 := (FinitePlace.norm_eq_one_iff_notMem K 𝔭 β).2 hβ
     erw [h2]
-    rw [div_one]
-    exact h1
+    rwa [div_one]
   obtain ⟨u, hu, h1, h2⟩ := exists_near _ (div_ne_zero hα0 hβ0) hq hw g hg
   obtain ⟨s, hs, hsb⟩ := GlobalTheory.UnApprox.exists_denom (J := (n × n) ⊕ (n × n)) 𝔭.ne_bot
     (Sum.elim (fun p => (g⁻¹ * u - 1) p.1 p.2) (fun p => (u⁻¹ * g - 1) p.1 p.2)) (by
@@ -936,9 +935,9 @@ theorem nonempty_isoKG : ∀ (K E : Type) [Field K] [CharZero K] [Field E] [Alge
       simp only [this]
       split_ifs <;> simp
     · have : w ≠ w' := fun t => hi (by rw [t])
-      rw [if_neg this, ho _ _ (fun t => hi (e.injective t)), mul_zero]
+      rw [ite_eq_right this, ho _ _ (fun t => hi (e.injective t)), mul_zero]
   have hbl : LinearIndependent K b :=
-    linearIndependent_of_orthogonal H b (fun i => by rw [hb]; simp) (fun i j hij => by rw [hb, if_neg hij])
+    linearIndependent_of_orthogonal H b (fun i => by rw [hb]; simp) (fun i j hij => by rw [hb, ite_eq_right hij])
   have : Nonempty ι := by
     rw [← Fintype.card_pos_iff, hcard]; exact Module.finrank_pos
   have hc : Fintype.card (Fin 4 × ι) = Module.finrank K (Fin 4 → E) := by
@@ -1010,8 +1009,7 @@ theorem selfDual_standard_at_rational_prime : ∀ (K : Type) [Field K] [NumberFi
   have haK : (a : K) = β * t + α * t' := by simp [ha]
   have hβt : β * t ∉ 𝔭.asIdeal := fun h => (𝔭.isPrime.mem_or_mem h).elim hβ ht
   have ha𝔭 : a ∉ 𝔭.asIdeal := by
-    intro h
-    exact hβt (by simpa [ha] using 𝔭.asIdeal.sub_mem h (𝔭.asIdeal.mul_mem_right t' hα))
+    exact fun h => hβt (by simpa [ha] using 𝔭.asIdeal.sub_mem h (𝔭.asIdeal.mul_mem_right t' hα))
   have hσa : σ a = a := by
     rw [haK, map_add (f := _), map_mul, map_mul, hβα, ht'', hσ, hσ]
     ring
@@ -1179,8 +1177,7 @@ theorem exists_int_mul_mem_invHalfDifferent (x : H.E) : ∃ N : ℤ, N ≠ 0 ∧
     change (N • (x / a)) * a = _
     rw [zsmul_eq_mul]
     field_simp
-  rw [← e]
-  exact h
+  rwa [← e]
 
 def lat4 : Submodule (𝓞 H.K) (Fin 4 → H.E) :=
   Submodule.pi Set.univ fun _ => (H.AA0 : Submodule (𝓞 H.E) H.E).restrictScalars (𝓞 H.K)
@@ -1279,8 +1276,7 @@ theorem ellE_fg (τ : Tau R) : (ellE H τ).FG := by
       rw [hb, Algebra.smul_def, map_mul]
       change g d * g a * (g d)⁻¹ = g a
       field_simp
-    have h2 := h1 hs
-    simpa using h2
+    simpa using h1 hs
   exact Submodule.FG.of_le (Submodule.fg_span_singleton _) hle
 
 theorem exists_dgen : ∃ cD, Th.IsDgen H (embT H) cD := by
@@ -1290,7 +1286,7 @@ theorem exists_dgen : ∃ cD, Th.IsDgen H (embT H) cD := by
   letI : Algebra H.E M := (H.φ₀.codRestrict M hφ).toAlgebra
   have hal : ∀ x : H.E, ((algebraMap H.E M x : M) : ℂ) = H.φ₀ x := fun _ => rfl
   refine ⟨fun τ => s τ, M, inferInstance, fun τ x => hφ _, fun τ => ⟨s τ, rfl, ?_⟩⟩
-  have hl : ∀ x : H.E, TaylorLogMetric.liftM M (H.φ₀ x) = algebraMap H.E M x := fun x => dif_pos (hφ x)
+  have hl : ∀ x : H.E, TaylorLogMetric.liftM M (H.φ₀ x) = algebraMap H.E M x := fun x => dite_eq_left (hφ x)
   have h1 : Th.mmM H (embT H) M =
       Submodule.span (𝓞 M) ((fun (v : Tau R → H.E) (i : Tau R) => algebraMap H.E M (v i)) '' conjVec H) := by
     unfold Th.mmM

@@ -66,8 +66,7 @@ theorem isStepRows_stepCols {N j : ℕ} (i : Fin N) : IsStepRows N j i (stepCols
   have hi := i.2
   simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and] at ha
   split_ifs at ha ⊢ with h
-  · simp only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and]
-    exact ha.1
+  · simpa only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and] using ha.1
   · simp only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and]
     omega
 
@@ -76,11 +75,11 @@ theorem stepCols_ne_empty {N j : ℕ} (i : Fin N) : stepCols N j i ≠ ∅ := by
   have hi := i.2
   by_cases h : (i : ℕ) + 1 ≤ j
   · have : (⟨N - j, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_pos h]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_left h]
       omega
     simp [e] at this
   · have : (⟨0, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_neg h]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right h]
       omega
     simp [e] at this
 
@@ -89,13 +88,11 @@ theorem minorIJ_one_ne {N : ℕ} {I J : Finset (Fin N)} (h : I ≠ J) :
   unfold minorIJ
   split_ifs with e
   · obtain ⟨a, ha, hb⟩ : ∃ a ∈ I, a ∉ J := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact h (Finset.eq_of_subset_of_card_le hc e.ge)
     obtain ⟨r, hr⟩ : ∃ r, I.orderEmbOfFin e r = a := by
       have h2 : a ∈ Set.range (I.orderEmbOfFin e) := by
-        rw [Finset.range_orderEmbOfFin]
-        exact ha
+        rwa [Finset.range_orderEmbOfFin]
       exact h2
     refine Matrix.det_eq_zero_of_row_eq_zero r fun c => ?_
     rw [Matrix.submatrix_apply, hr]
@@ -135,8 +132,7 @@ theorem coef_ne_zero {N j : ℕ} (hj : j ≤ N) (i : Fin N) {μ : Type} [Fintype
   intro hc
   have h0 : ∀ m, a₁ m (stepCols N j i) = 0 := fun m => by
     have e1 := sum_minor_mul hj i a₁ a₂ S c hS S' hd m
-    rw [hSS, hc, zero_mul, sum_minor_one (a₁ m)] at e1
-    exact e1
+    rwa [hSS, hc, zero_mul, sum_minor_one (a₁ m)] at e1
   simp [h0] at hb
 
 theorem map_inv_eq {Ω Ω₂ : Type} [Field Ω] [Field Ω₂] (φ : Ω →+* Ω₂) {N : ℕ} (T : Matrix (Fin N) (Fin N) Ω)
@@ -219,7 +215,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   have hinv : ∀ F : FrameData ι Ψ N M.Ω M.blk, M.IsFrame F →
       ∑ m : ι k, φ (F.u' (stepCols N j p.2) ⟨k, m⟩) * φ (F.u ⟨k, m⟩ (stepCols N j p.2)) = 1 := fun F hF => by
     have e := hF.2.2.1 p k hp _ _ hstep hstep
-    rw [if_pos rfl] at e
+    rw [ite_eq_left rfl] at e
 
     rw [← map_one φ, ← e, map_sum]
     exact Finset.sum_congr rfl fun m _ => (map_mul φ _ _).symm

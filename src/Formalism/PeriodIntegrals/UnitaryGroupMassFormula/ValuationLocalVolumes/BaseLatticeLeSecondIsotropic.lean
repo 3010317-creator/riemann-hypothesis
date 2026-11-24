@@ -95,15 +95,14 @@ theorem base_lattice_le_first_isotropic (hD : OmVDdLoc X) (v : PlX X) (a : Fin D
   · refine Submodule.span_le.2 ?_
     rintro _ ⟨b, x, _, rfl⟩
     exact pm_zero X v _ _ _ (by rw [hT_smul_right, X.ee, mul_zero])
-  · intro y hy
-    exact pm_zero X v _ _ _ (X.Lb_perp y hy a).1
+  · exact fun y hy => pm_zero X v _ _ _ (X.Lb_perp y hy a).1
   · refine Submodule.span_le.2 ?_
     rintro _ ⟨b, x, hx, rfl⟩
     refine (pm_iff X v _ _ _).2 ?_
     rw [hT_smul_right, X.ef]
     by_cases hab : a = b
-    · subst hab; rw [if_pos rfl, mul_one]; exact (hD v a).1 x hx
-    · rw [if_neg hab, mul_zero, map_zero, map_zero, mul_zero]; exact Submodule.zero_mem _
+    · subst hab; rw [ite_eq_left rfl, mul_one]; exact (hD v a).1 x hx
+    · rw [ite_eq_right hab, mul_zero, map_zero, map_zero, mul_zero]; exact Submodule.zero_mem _
 
 theorem base_lattice_le_second_isotropic (hD : OmVDdLoc X) (v : PlX X) (a : Fin D.R.rS) :
     (VS D).L0 ≤ Pm X v (alp v D.R.rS a.castSucc)⁻¹ (X.fY a) := by
@@ -114,10 +113,9 @@ theorem base_lattice_le_second_isotropic (hD : OmVDdLoc X) (v : PlX X) (a : Fin 
     refine (pm_iff X v _ _ _).2 ?_
     rw [hT_smul_right, ← (VS D).herm.eq (X.eX b) (X.fY a), X.ef]
     by_cases hab : b = a
-    · subst hab; rw [if_pos rfl, map_one, mul_one]; exact (hD v b).2 x hx
-    · rw [if_neg hab, map_zero, mul_zero, map_zero, map_zero, mul_zero]; exact Submodule.zero_mem _
-  · intro y hy
-    exact pm_zero X v _ _ _ (X.Lb_perp y hy a).2
+    · subst hab; rw [ite_eq_left rfl, map_one, mul_one]; exact (hD v b).2 x hx
+    · rw [ite_eq_right hab, map_zero, mul_zero, map_zero, map_zero, mul_zero]; exact Submodule.zero_mem _
+  · exact fun y hy => pm_zero X v _ _ _ (X.Lb_perp y hy a).2
   · refine Submodule.span_le.2 ?_
     rintro _ ⟨b, x, _, rfl⟩
     exact pm_zero X v _ _ _ (by rw [hT_smul_right, X.ff, mul_zero])

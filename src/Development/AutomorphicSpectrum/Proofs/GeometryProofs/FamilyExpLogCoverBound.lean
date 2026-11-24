@@ -98,8 +98,7 @@ theorem ex_pow_eq (e : FamExp G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) (z : 
 theorem ex_inv_smul_pow (e : FamExp G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) {s : Fin g → ℂ} (hs : s ∈ e.per b)
     {N : ℕ} (hN : 0 < N) : e.ex b ((N : ℂ)⁻¹ • s) ^ N = 1 := by
   have hN' : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hN.ne'
-  rw [ex_pow_eq e hb, smul_smul, mul_inv_cancel₀ hN', one_smul]
-  exact hs
+  rwa [ex_pow_eq e hb, smul_smul, mul_inv_cancel₀ hN', one_smul]
 
 theorem hol_ex_comp (e : FamExp G M B ψ) {B' : Set (Fin n → ℂ)} (hB' : IsOpen B') (hsub : B' ⊆ B)
     {s : (Fin n → ℂ) → (Fin g → ℂ)} (hs : DifferentiableOn ℂ s B') :
@@ -123,7 +122,7 @@ theorem period_of_tendsto (e : FamExp G M B ψ) (hsep : IsSeparated G.hom) (hhol
     classical
     let s : (Fin n → ℂ) → (Fin g → ℂ) := fun b =>
       if h : b ≠ b₀ ∧ ∃ m, bs m = b then q (Nat.find h.2) else p
-    have hs₀ : s b₀ = p := dif_neg (fun h => h.1 rfl)
+    have hs₀ : s b₀ = p := dite_eq_right (fun h => h.1 rfl)
     have hcont : ContinuousAt s b₀ := by
       rw [ContinuousAt, hs₀]
       intro U hU
@@ -138,7 +137,7 @@ theorem period_of_tendsto (e : FamExp G M B ψ) (hsep : IsSeparated G.hom) (hhol
       filter_upwards [hV] with b hbV
       show s b ∈ U
       by_cases h : b ≠ b₀ ∧ ∃ m, bs m = b
-      · have hsb : s b = q (Nat.find h.2) := dif_pos h
+      · have hsb : s b = q (Nat.find h.2) := dite_eq_left h
         rw [hsb]
         have hspec : bs (Nat.find h.2) = b := Nat.find_spec h.2
         refine hK _ ?_
@@ -146,7 +145,7 @@ theorem period_of_tendsto (e : FamExp G M B ψ) (hsep : IsSeparated G.hom) (hhol
         refine hbV _ (Finset.mem_range.mpr (not_le.mp hlt)) ?_ hspec.symm
         rw [hspec]
         exact h.1
-      · have hsb : s b = p := dif_neg h
+      · have hsb : s b = p := dite_eq_right h
         rw [hsb]
         exact mem_of_mem_nhds hU
     have hfr : ∃ᶠ b in 𝓝 b₀, b ∈ B ∧ s b ∈ e.per b := by
@@ -154,7 +153,7 @@ theorem period_of_tendsto (e : FamExp G M B ψ) (hsep : IsSeparated G.hom) (hhol
       filter_upwards [hne, hb (hhol.1.mem_nhds hb₀)] with m hm hmB
       refine ⟨hmB, ?_⟩
       have h : bs m ≠ b₀ ∧ ∃ k, bs k = bs m := ⟨hm, m, rfl⟩
-      obtain ⟨k, hk, hsk⟩ : ∃ k, bs k = bs m ∧ s (bs m) = q k := ⟨Nat.find h.2, Nat.find_spec h.2, dif_pos h⟩
+      obtain ⟨k, hk, hsk⟩ : ∃ k, bs k = bs m ∧ s (bs m) = q k := ⟨Nat.find h.2, Nat.find_spec h.2, dite_eq_left h⟩
       rw [hsk, ← hk]
       exact hper k
     have := _root_.GlobalTheory.CompanionTheory.Ar.Flat.mem_per_of_frequently R G g n M B ψ e hsep hhol b₀ hb₀ s hcont hfr
@@ -271,11 +270,9 @@ theorem limit_core {R : Type} [CommRing R] (t : SAB H (Sp R)) {g n : ℕ} {M : L
     have e2 : s' (bs m) = P m x' := by rw [← hy' m (hr hm), hym']
     have hc : GlobalTheory.UU.CubWeil t.cub N (e.ex (bs m) ((N : ℂ)⁻¹ • P m x)) (e.ex (bs m) ((N : ℂ)⁻¹ • P m x'))
         (unitOn ζ₁) := by
-      rw [← e1, ← e2]
-      exact hm1
+      rwa [← e1, ← e2]
     have hζ₁ : ζ₁ = ζ := Units.ext (((hlink m).2 N ζ₁ x x' hN hc).trans hζ.symm)
-    rw [← hζ₁, ← hs₀, ← hs₀']
-    exact hu
+    rwa [← hζ₁, ← hs₀, ← hs₀']
 
 end Core
 

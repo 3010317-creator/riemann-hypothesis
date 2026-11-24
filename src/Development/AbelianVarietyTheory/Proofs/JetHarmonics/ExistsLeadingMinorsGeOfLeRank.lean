@@ -80,8 +80,7 @@ theorem exists_leading_minors_ge_of_le_rank {C : Type} [Field C] (v : Valuation 
         v (algebraMap O C (Matrix.of fun a i : Fin m => t i (Fin.castLE hm a)).det) := by
   have hvc : v (algebraMap O C c) ≠ 0 := by
     rw [Ne, v.zero_iff]
-    intro h
-    exact hc (hv.hom_inj (by rw [h, map_zero]))
+    exact fun h => hc (hv.hom_inj (by rw [h, map_zero]))
   intro n
   induction n with
   | zero =>
@@ -124,8 +123,7 @@ theorem exists_leading_minors_ge_of_le_rank {C : Type} [Field C] (v : Valuation 
         rfl
       · intro b _ hb
         rw [Pi.single_eq_of_ne (fun h => hb (Fin.castLE_injective hn h)), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     have hlow : v (algebraMap O C c) ^ (n + 1) ≤
         v (algebraMap O C (φ (c • Pi.single (Fin.castLE hn (Fin.last n)) 1))) := by
       rw [hval, map_mul, map_mul, pow_succ']
@@ -137,8 +135,7 @@ theorem exists_leading_minors_ge_of_le_rank {C : Type} [Field C] (v : Valuation 
       rcases Nat.lt_succ_iff_lt_or_eq.mp hi with h | rfl
       · rw [Function.update_of_ne (Nat.ne_of_lt h)]
         exact htA i h
-      · rw [Function.update_self]
-        exact haA
+      · rwa [Function.update_self]
     · intro m hm hmn
       rcases Nat.lt_or_eq_of_le hmn with h | rfl
       · have h' : m ≤ n := Nat.lt_succ_iff.mp h

@@ -203,6 +203,13 @@ theorem exists_unramified (hn : 2 ≤ n) (μ : Measure (Reduction.normOneGL (K :
   refine ⟨max σp σd, fun s hs ↦ ?_⟩
   obtain ⟨hpi, hpm⟩ := hp s (lt_of_le_of_lt (le_max_left _ _) hs)
   obtain ⟨hdi, hdm⟩ := hd s (lt_of_le_of_lt (le_max_right _ _) hs)
+  have hK : ∀ v ∉ S, fixedVectors (π v) (integralGL (v.adicCompletion K) n) ≠ ⊥ := by
+    intro v hv h
+    have hmem := (hsph v hv).1
+    rw [h, Submodule.mem_bot] at hmem
+    have := (hsph v hv).2
+    rw [hmem, map_zero] at this
+    exact zero_ne_one this
   have hZp : ∀ v ∉ S, zetaIntegral (localHaar n v) (integralIndicator (v.adicCompletion K) n)
       (Parabolic.matrixCoeff (F := v.adicCompletion K) (π v) (ξ v) (ℓ v)) s =
         LFunction (F := v.adicCompletion K) (π v) s := by
@@ -210,15 +217,8 @@ theorem exists_unramified (hn : 2 ≤ n) (μ : Measure (Reduction.normOneGL (K :
     have := hirr v hv
     obtain ⟨-, heq⟩ := zetaIntegral_sphericalCoeff_of_integrable (localHaar n v) (hz v hv)
       (hsph v hv).1 (hsph v hv).2 (hpi v hv)
-    have hK : fixedVectors (π v) (integralGL (v.adicCompletion K) n) ≠ ⊥ := by
-      intro h
-      have hmem := (hsph v hv).1
-      rw [h, Submodule.mem_bot] at hmem
-      have := (hsph v hv).2
-      rw [hmem, map_zero] at this
-      exact zero_ne_one this
     rw [heq, measureReal_def, localHaar_integralGL, ENNReal.toReal_one, Complex.ofReal_one, one_mul,
-      LFunction_eq_prod_of_isSatakeParameter (hadm v hv) hK (localHaar n v) (hz v hv) s]
+      LFunction_eq_prod_of_isSatakeParameter (hadm v hv) (hK v hv) (localHaar n v) (hz v hv) s]
   have hZd : ∀ v ∉ S, zetaIntegral (localHaar n v) (integralIndicator (v.adicCompletion K) n)
       (fun g ↦ Parabolic.matrixCoeff (F := v.adicCompletion K) (π v) (ξ v) (ℓ v) g⁻¹) s =
         LFunction (F := v.adicCompletion K) (contragredient (π v)) s := by
@@ -227,49 +227,17 @@ theorem exists_unramified (hn : 2 ≤ n) (μ : Measure (Reduction.normOneGL (K :
     rw [zetaIntegral_inv_sphericalCoeff_of_integrable (π v) (hadm v hv) (localHaar n v) (hℓK v hv)
       (hsph v hv).2 (hdi v hv), measureReal_def, localHaar_integralGL, ENNReal.toReal_one,
       Complex.ofReal_one, one_mul]
-  have hbp : ∀ v ∉ S, (∀ i, ‖(z v i : ℂ) * qs (v.adicCompletion K) s‖ < 1) ∧
-      ∀ t : ℂ, LFunction (F := v.adicCompletion K) (π v) t =
-        ∏ i, (1 - (z v i : ℂ) * qs (v.adicCompletion K) t)⁻¹ := by
-    intro v hv
-    have := hirr v hv
+  refine ⟨hZp, (hpm.congr fun v ↦ hZp v.1 v.2).hasProd, hZd,
+    (hdm.congr fun v ↦ hZd v.1 v.2).hasProd, fun v hv ↦ ?_, fun v hv ↦ ?_⟩
+  · have := hirr v hv
     obtain ⟨hw, -⟩ := zetaIntegral_sphericalCoeff_of_integrable (localHaar n v) (hz v hv)
       (hsph v hv).1 (hsph v hv).2 (hpi v hv)
-    have hK : fixedVectors (π v) (integralGL (v.adicCompletion K) n) ≠ ⊥ := by
-      intro h
-      have hmem := (hsph v hv).1
-      rw [h, Submodule.mem_bot] at hmem
-      have := (hsph v hv).2
-      rw [hmem, map_zero] at this
-      exact zero_ne_one this
-    exact ⟨hw, fun t ↦ LFunction_eq_prod_of_isSatakeParameter (hadm v hv) hK (localHaar n v) (hz v hv) t⟩
-  have hbd : ∀ v ∉ S, ∃ z' : Fin n → ℂˣ, (∀ i, ‖(z' i : ℂ) * qs (v.adicCompletion K) s‖ < 1) ∧
-      ∀ t : ℂ, LFunction (F := v.adicCompletion K) (contragredient (π v)) t =
-        ∏ i, (1 - (z' i : ℂ) * qs (v.adicCompletion K) t)⁻¹ := by
-    intro v hv
-    have := hirr v hv
+    exact ⟨hw, fun t ↦
+      LFunction_eq_prod_of_isSatakeParameter (hadm v hv) (hK v hv) (localHaar n v) (hz v hv) t⟩
+  · have := hirr v hv
     obtain ⟨z', -, hw, hL, -⟩ := zetaIntegral_inv_sphericalCoeff_of_integrable' (π v) (hadm v hv)
       (localHaar n v) (hℓK v hv) (hsph v hv).2 (hdi v hv)
     exact ⟨z', hw, hL⟩
-  refine ⟨hZp, ?_, hZd, ?_, hbp, hbd⟩
-  · have h := hpm.hasProd
-    have heq : (fun v : {v : HeightOneSpectrum (𝓞 K) // v ∉ S} ↦ zetaIntegral (localHaar n (v : HeightOneSpectrum (𝓞 K)))
-        (integralIndicator ((v : HeightOneSpectrum (𝓞 K)).adicCompletion K) n)
-        (Parabolic.matrixCoeff (F := (v : HeightOneSpectrum (𝓞 K)).adicCompletion K) (π v) (ξ v) (ℓ v)) s) =
-        fun v : {v : HeightOneSpectrum (𝓞 K) // v ∉ S} ↦
-          LFunction (F := (v : HeightOneSpectrum (𝓞 K)).adicCompletion K) (π v) s :=
-      funext fun v ↦ hZp v.1 v.2
-    rw [heq] at h
-    exact h
-  · have h := hdm.hasProd
-    have heq : (fun v : {v : HeightOneSpectrum (𝓞 K) // v ∉ S} ↦ zetaIntegral (localHaar n (v : HeightOneSpectrum (𝓞 K)))
-        (integralIndicator ((v : HeightOneSpectrum (𝓞 K)).adicCompletion K) n)
-        (Parabolic.matrixCoeff (F := (v : HeightOneSpectrum (𝓞 K)).adicCompletion K)
-          (Representation.dual (π v)) (ℓ v) (Module.Dual.eval ℂ (V v) (ξ v))) s) =
-        fun v : {v : HeightOneSpectrum (𝓞 K) // v ∉ S} ↦
-          LFunction (F := (v : HeightOneSpectrum (𝓞 K)).adicCompletion K) (contragredient (π v)) s :=
-      funext fun v ↦ hZd v.1 v.2
-    rw [heq] at h
-    exact h
 
 end Unramified
 

@@ -47,8 +47,7 @@ open UpperTheory.ConvolutionTheory.R2
 private theorem mem_bor_iff {F : Type} [Field F] [NumberField F] (g : G1 F) :
     g ∈ M.Bor F ↔ g 1 0 = 0 := by
   constructor
-  · intro h
-    exact h (show (id (0 : Fin 2)) < id (1 : Fin 2) by decide)
+  · exact fun h => h (show (id (0 : Fin 2)) < id (1 : Fin 2) by decide)
   · intro h i j hij
     have hij' : j < i := hij
     have hi : i = 1 := by omega
@@ -67,8 +66,7 @@ private theorem upperTriangular_diagonal_product {F : Type} [Field F] [NumberFie
   have hd := g.det_coe
   rw [Matrix.det_fin_two] at hd
   have h' : g.1 1 0 = 0 := h
-  rw [h', mul_zero, sub_zero] at hd
-  exact hd
+  rwa [h', mul_zero, sub_zero] at hd
 
 private def dg {F : Type} [Field F] [NumberField F] (g : M.Bor F) : IdeleGroup F :=
   ⟨g.1 0 0, g.1 1 1, upperTriangular_diagonal_product g.1 ((mem_bor_iff g.1).1 g.2),

@@ -36,13 +36,11 @@ theorem paMono_rot (α : ι →₀ ℕ) (j : ι) (u : Circle) (z : EuclideanSpac
   · simp
   · intro b _ hb
     simp [hb]
-  · intro hj
-    exact absurd (Finset.mem_univ j) hj
+  · exact fun hj => absurd (Finset.mem_univ j) hj
 
 theorem gaussianInner_monomial_orthogonal (q : ℕ) {α β : ι →₀ ℕ} (h : α ≠ β) : paIP q (paMono α) (paMono β) = 0 := by
   obtain ⟨j, hj⟩ : ∃ j, α j ≠ β j := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact h (Finsupp.ext hc)
   have hab : ((α j : ℝ) - β j) ≠ 0 := sub_ne_zero.mpr (by exact_mod_cast hj)
   obtain ⟨θ, hθ⟩ : ∃ θ : ℝ, ((α j : ℝ) - β j) * θ = Real.pi :=
@@ -141,8 +139,7 @@ theorem paPoly_coord (i : ι) : (fun v : EuclideanSpace ℂ ι => v i) ∈ paPol
     · simp
     · intro b _ hb
       simp [hb]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
+    · exact fun hi => absurd (Finset.mem_univ i) hi
   rw [h1]
   exact paMono_mem_paPoly_of_degree_le (le_of_eq (by rw [finsupp_degree_eq_sum]; simp [Finsupp.single_apply]))
 
@@ -195,8 +192,7 @@ theorem paPoly_Hf (a : EuclideanSpace ℂ ι) : (fun v : EuclideanSpace ℂ ι =
       ∑ i, (starRingEnd ℂ) (a i) • (fun v : EuclideanSpace ℂ ι => v i) := by
     funext v
     rw [Finset.sum_apply]
-    simp only [Hf, Pi.smul_apply, smul_eq_mul]
-    exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+    simpa only [Hf, Pi.smul_apply, smul_eq_mul] using Finset.sum_congr rfl fun i _ => mul_comm _ _
   rw [h1]
   exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (paPoly_coord i)
 

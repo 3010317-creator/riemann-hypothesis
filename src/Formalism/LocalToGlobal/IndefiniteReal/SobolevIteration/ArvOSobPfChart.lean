@@ -322,8 +322,7 @@ theorem sobChart_holds : SobChart := by
     refine Filter.inter_mem ?_ ?_
     · refine hk.preimage_mem_nhds ?_
       show _ ∈ 𝓝 (Q (cay 1))
-      rw [hcay1, map_zero]
-      exact hfB
+      rwa [hcay1, map_zero]
     · have hc : ContinuousAt (fun g : Matrix (Fin n) (Fin n) ℂ => g + 1) 1 :=
         continuousAt_id.add continuousAt_const
       exact hc.preimage_mem_nhds (Units.isOpen.mem_nhds isUnit_two)

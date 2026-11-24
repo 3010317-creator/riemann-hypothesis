@@ -127,8 +127,7 @@ theorem betaUniq_of_global (hglob : GlobalFnsSt) : BetaUniqSt := by
   congr 1
   funext j
   have hj := hu j
-  rw [hu1, map_one, one_mul] at hj
-  exact hj
+  rwa [hu1, map_one, one_mul] at hj
 
 end Formalism.MainNotions.ModuliIntegralCharts.H1
 end -- clump:auto
@@ -216,8 +215,7 @@ theorem hunit_chi (c : Coeff l) (S : Type) [CommRing S] [Algebra c.F S] (σ τ :
     ∃ a, IsUnit (chi c S σ a - chi c S τ a) := by
   classical
   have hex : ∃ a : 𝓞 E, σ (a : E) ≠ τ (a : E) := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     apply h
     ext x
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 E) x
@@ -226,11 +224,8 @@ theorem hunit_chi (c : Coeff l) (S : Type) [CommRing S] [Algebra c.F S] (σ τ :
   obtain ⟨a, ha⟩ := hex
   refine ⟨a, ?_⟩
   have hne : embK c σ a - embK c τ a ≠ 0 := by
-    intro h0
-    apply ha
-    exact congrArg (fun z : c.F => (z : ℂ)) (sub_eq_zero.mp h0)
-  have hu := (hne.isUnit).map (algebraMap c.F S)
-  simpa [chi, map_sub] using hu
+    exact fun h0 => ha (congrArg (fun z : c.F => (z : ℂ)) (sub_eq_zero.mp h0))
+  simpa [chi, map_sub] using (hne.isUnit).map (algebraMap c.F S)
 
 def nu (Dw : Datum H) : Lt1 Dw ≃ Fin 1 × Fin (dL Dw) where
   toFun ℓ := ((0 : Fin 1), ltIdx Dw ℓ)
@@ -377,8 +372,7 @@ theorem gam_pull {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (x : Γ(
 
 theorem gam_pullUnit {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (u : Γ(Sp A, ⊤)ˣ) :
     gam B (pullUnit (spMap f) u : Γ(Sp B, ⊤)) = f (gam A u) := by
-  simp only [pullUnit, pullU, Units.coe_map, MonoidHom.coe_coe]
-  exact gam_pull f (u : Γ(Sp A, ⊤))
+  simpa only [pullUnit, pullU, Units.coe_map, MonoidHom.coe_coe] using gam_pull f (u : Γ(Sp A, ⊤))
 
 theorem scaled_genPow {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H}
     {l : Level H} {Xo : Moduli Dw l} {Y : Scheme.{0}} {K : Type} [Fintype K]

@@ -61,8 +61,7 @@ private theorem finSupp {K : Type} [Field K] [NumberField K] {G : Type} [CommGro
 private theorem mk_radCl {K : Type} [Field K] [NumberField K] (S : Set (HeightOneSpectrum (𝓞 K))) (n : ℕ) (a : Kˣ) :
     (QuotientGroup.mk (radCl n a) : ClS S) =
       ∏ᶠ v : HeightOneSpectrum (𝓞 K), (QuotientGroup.mk (primeCl v) : ClS S) ^ (ordv v a / n) := by
-  have h := (QuotientGroup.mk' (clSub S)).map_finprod (finSupp primeCl (n : ℤ) a)
-  simpa [radCl] using h
+  simpa [radCl] using (QuotientGroup.mk' (clSub S)).map_finprod (finSupp primeCl (n : ℤ) a)
 
 private theorem mk_primeCl {K : Type} [Field K] [NumberField K] {S : Set (HeightOneSpectrum (𝓞 K))}
     {v : HeightOneSpectrum (𝓞 K)} (hv : v ∈ S) : (QuotientGroup.mk (primeCl v) : ClS S) = 1 :=
@@ -108,8 +107,7 @@ theorem UpperTheory.V.Kum.radClMul :
     have e := h1 b
     simp only [radCl, Nat.cast_one, Int.ediv_one] at e
     have hb1 : Function.HasFiniteMulSupport fun v : HeightOneSpectrum (𝓞 K) => primeCl v ^ ordv v b := by
-      have h := finSupp (primeCl (K := K)) 1 b
-      simpa only [Int.ediv_one] using h
+      simpa only [Int.ediv_one] using finSupp (primeCl (K := K)) 1 b
     simp only [radCl]
     rw [finprod_congr (fun v => show primeCl v ^ (ordv v (a * b ^ n) / (n : ℤ)) =
         primeCl v ^ (ordv v a / (n : ℤ)) * primeCl v ^ ordv v b by

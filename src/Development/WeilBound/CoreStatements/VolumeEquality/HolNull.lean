@@ -90,8 +90,7 @@ theorem zero_set_null {n : ℕ} (V : Set (Fin n → ℂ)) (hV : IsOpen V) (hc : 
       conv_rhs => rw [this]
       simp only [smul_add, add_smul, smul_assoc]
       abel
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hg : AnalyticOnNhd ℂ (fun s : ℂ => f (p + s • x)) ((fun s : ℂ => p + s • x) ⁻¹' V) := by
     refine DifferentiableOn.analyticOnNhd ?_ (hV.preimage (by fun_prop))
     exact hf.comp (by fun_prop) fun s hs => hs
@@ -110,8 +109,7 @@ theorem zero_set_null {n : ℕ} (V : Set (Fin n → ℂ)) (hV : IsOpen V) (hc : 
 theorem top_le_iff_pt {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (U : X.Opens) (q : Sp ℂ) : ⊤ ≤ x ⁻¹ᵁ U ↔ x q ∈ U := by
   refine ⟨fun h => h (x := q) trivial, fun h q' _ => ?_⟩
   have : q' = q := Subsingleton.elim (α := PrimeSpectrum ℂ) q' q
-  rw [this]
-  exact h
+  rwa [this]
 
 theorem local_null {X : Scheme.{0}} {n : ℕ} {B : Set (Fin n → ℂ)} {y : (Fin n → ℂ) → (Sp ℂ ⟶ X)} (U : X.Opens)
     (hy : IsHolTo B y) {b : Fin n → ℂ} (hb : b ∈ B) :

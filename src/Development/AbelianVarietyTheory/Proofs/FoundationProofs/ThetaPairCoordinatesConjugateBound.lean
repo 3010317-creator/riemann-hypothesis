@@ -93,11 +93,7 @@ theorem cj_coe (ρ : Qbar →ₐ[ℚ] ℂ) (w : Qbar) : cj Qbar ρ (w : ℂ) = �
 
 theorem differentiable_U {D : D7} {T : Tor D} {N N' : ℕ} (x : VC D N N') {G : VC D N N' → ℂ}
     (hG : Differentiable ℂ G) : Differentiable ℂ (U D T x G) := by
-  have h : Differentiable ℂ (fun z : VC D N N' => Hf D T z x) := by
-    unfold Hf
-    fun_prop
-  unfold U
-  fun_prop
+  exact GlobalTheory.ConjJet.U_diff D T x G hG
 
 theorem differentiable_Iop {D : D7} {T : Tor D} {N N' : ℕ} (A B : AddSubgroup (VC D N N')) {G : VC D N N' → ℂ}
     (hG : Differentiable ℂ G) : Differentiable ℂ (Iop D T A B G) := by

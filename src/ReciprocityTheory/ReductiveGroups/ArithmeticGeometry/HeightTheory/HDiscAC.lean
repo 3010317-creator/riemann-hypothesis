@@ -69,7 +69,7 @@ theorem addv_mem (v : HeightOneSpectrum (integralClosure O L)) : addv L v ∈ Pl
       addv L v y = ((-WithZero.log (v.valuation L y) : ℤ) : WithTop ℤ) := by
     intro y hy
     unfold addv
-    rw [AddValuation.of_apply, if_neg hy]
+    rw [AddValuation.of_apply, ite_eq_right hy]
   have hP : v.asIdeal.comap (algebraMap O (integralClosure O L)) = IsLocalRing.maximalIdeal O := by
     haveI := v.isMaximal
     apply IsLocalRing.eq_maximalIdeal
@@ -95,8 +95,7 @@ theorem addv_mem (v : HeightOneSpectrum (integralClosure O L)) : addv L v ∈ Pl
     · have hx00 : x = 0 := by
         have h1 : algebraMap O F x = 0 := by
           apply (algebraMap F L).injective
-          rw [← IsScalarTower.algebraMap_apply, map_zero]
-          exact hx0
+          rwa [← IsScalarTower.algebraMap_apply, map_zero]
         exact IsFractionRing.injective O F (by rw [h1, map_zero])
       subst hx00
       simp
@@ -138,7 +137,7 @@ theorem addv_nonneg_iff (v : HeightOneSpectrum (integralClosure O L)) {y : L} (h
   have hv : v.valuation L y ≠ 0 := by simpa using hy
   have hval : addv L v y = ((-WithZero.log (v.valuation L y) : ℤ) : WithTop ℤ) := by
     unfold addv
-    rw [AddValuation.of_apply, if_neg hy]
+    rw [AddValuation.of_apply, ite_eq_right hy]
   rw [hval]
   have h2 := WithZero.log_le_log hv one_ne_zero
   rw [WithZero.log_one] at h2
@@ -216,8 +215,7 @@ theorem exists_val_eq (n : AddValuation L (WithTop ℤ) → ℤ) :
   haveI : Finite (HeightOneSpectrum (integralClosure O L)) := by
     refine Finite.of_injective (fun v => (⟨v.asIdeal, v.isMaximal⟩ :
       {I : Ideal (integralClosure O L) | I.IsMaximal})) ?_
-    intro v v' h
-    exact HeightOneSpectrum.ext (congrArg Subtype.val h)
+    exact fun v v' h => HeightOneSpectrum.ext (congrArg Subtype.val h)
   letI := Fintype.ofFinite (HeightOneSpectrum (integralClosure O L))
   let π : HeightOneSpectrum (integralClosure O L) → integralClosure O L := fun v =>
     Submodule.IsPrincipal.generator v.asIdeal
@@ -238,8 +236,7 @@ theorem exists_val_eq (n : AddValuation L (WithTop ℤ) → ℤ) :
       intro hmem
       apply h
       have hle : v.asIdeal ≤ v'.asIdeal := by
-        rw [hπ v, Ideal.span_singleton_le_iff_mem]
-        exact hmem
+        rwa [hπ v, Ideal.span_singleton_le_iff_mem]
       exact HeightOneSpectrum.ext (v.isMaximal.eq_of_le v'.isPrime.ne_top hle).symm
   let g : L := ∏ v, (algebraMap _ L (π v)) ^ (n (addv L v))
   have hg0 : g ≠ 0 := Finset.prod_ne_zero_iff.mpr fun v _ => zpow_ne_zero _ (hπL v)
@@ -247,9 +244,9 @@ theorem exists_val_eq (n : AddValuation L (WithTop ℤ) → ℤ) :
     intro v'
     simp only [g, map_prod, map_zpow₀, hval]
     rw [Finset.prod_eq_single v']
-    · rw [if_pos rfl, ← exp_zsmul, smul_eq_mul, mul_neg_one]
+    · rw [ite_eq_left rfl, ← exp_zsmul, smul_eq_mul, mul_neg_one]
     · intro v _ hv
-      rw [if_neg (Ne.symm hv), one_zpow]
+      rw [ite_eq_right (Ne.symm hv), one_zpow]
     · simp
   refine ⟨g, hg0, fun w hw => ?_⟩
   obtain ⟨v, rfl⟩ := addv_eq_of_mem O F hw

@@ -289,8 +289,7 @@ theorem norm_eq_heightOne (y : L) (hy : y ≠ 0) {ϖ : O} (hϖ : Irreducible ϖ)
         · exact h
       exact UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors (Multiset.count_pos.1 h2)
     have hspan : Ideal.span {b} ≠ 0 := by
-      rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-      exact hb
+      rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     have hfin := Ideal.finite_factors hspan
     have huniv : {v : HeightOneSpectrum (integralClosure O L) | v.asIdeal ∣ Ideal.span {b}} = Set.univ :=
       Set.eq_univ_of_forall hdvd
@@ -404,8 +403,7 @@ theorem placesOver_finite : (PlacesOver O L).Finite := by
       · exact h
     exact UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors (Multiset.count_pos.1 h2)
   have hspan : Ideal.span {b} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hb
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   have hfin := Ideal.finite_factors hspan
   have hfin' : Finite (HeightOneSpectrum (integralClosure O L)) := by
     have huniv : {v : HeightOneSpectrum (integralClosure O L) | v.asIdeal ∣ Ideal.span {b}} =

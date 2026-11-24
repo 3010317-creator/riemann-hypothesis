@@ -181,8 +181,7 @@ theorem heckeAct_eq_sum {f : G → ℂ} {v : V} (hfin : (range fun g => f g • 
   apply hw
   have : {g | f g • ρ g v = w} = ∅ := by
     ext g
-    simp only [mem_setOf_eq, mem_empty_iff_false, iff_false]
-    exact fun hg => h ⟨g, hg⟩
+    simpa only [mem_setOf_eq, mem_empty_iff_false, iff_false] using fun hg => h ⟨g, hg⟩
   simp [this]
 
 
@@ -200,10 +199,8 @@ theorem dual_heckeAct [IsFiniteMeasureOnCompacts μ] {f : G → ℂ}
     rw [Finset.sum_eq_single (f g • ρ g v)]
     · rw [Set.indicator_of_mem (show g ∈ {x | f x • ρ x v = f g • ρ g v} from rfl), map_smul,
         smul_eq_mul]
-    · intro b _ hb
-      exact Set.indicator_of_notMem (by simpa [Set.mem_setOf_eq, eq_comm] using hb) _
-    · intro h
-      exact absurd ((Set.Finite.mem_toFinset hfin).2 (Set.mem_range_self g)) h
+    · exact fun b _ hb => Set.indicator_of_notMem (by simpa [Set.mem_setOf_eq, eq_comm] using hb) _
+    · exact fun h => absurd ((Set.Finite.mem_toFinset hfin).2 (Set.mem_range_self g)) h
   have hmeas : ∀ w, MeasurableSet {x | f x • ρ x v = w} := fun w =>
     (hF.1.isOpen_fiber w).measurableSet
 
@@ -441,9 +438,7 @@ theorem isSmooth_leftReg : IsSmooth (leftReg (μ := μ)) := by
 
 theorem heckeAct_leftReg [IsFiniteMeasureOnCompacts μ] (f φ : HeckeAlgebra μ) :
     heckeAct μ (leftReg (μ := μ)) f φ = f * φ := by
-  apply HeckeAlgebra.ext
-  intro x
-  exact dual_heckeAct (μ := μ) f.mem (isSmooth_leftReg φ) (evalₗ μ x)
+  exact HeckeAlgebra.ext (fun x => dual_heckeAct (μ := μ) f.mem (isSmooth_leftReg φ) (evalₗ μ x))
 
 variable [μ.IsHaarMeasure]
 

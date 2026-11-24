@@ -100,8 +100,7 @@ theorem cLoc_mem_UL (w : Pl E) (x : UA E n) : cLoc w x ∈ UL n w := by
       Matrix.ext fun i j => conjLoc_eq_cj hw _
     rw [e] at h
     change ((cLoc w x).val.map (cj w))ᵀ * 1 * (cLoc w x).val = 1
-    rw [Matrix.mul_one]
-    exact h
+    rwa [Matrix.mul_one]
 
 theorem val_inv_entry (x : UA E n) (u : Pl E) (i j : Fin n) :
     Valued.v (((cLoc u x)⁻¹).val i j) = Valued.v ((cLoc (conjSrc (conjE E) u) x).val j i) := by
@@ -197,8 +196,7 @@ theorem globLev_isOpen_isCompact_isLevel : ∀ (E : Type) [Field E] [NumberField
   · refine IsCompact.of_isClosed_subset (isClosedEmbedding_finU.isCompact_preimage
       ((AdelicGLn.isCompact_integralFiniteGL E n).image continuous_finGL_ad))
       (Subgroup.isClosed_of_isOpen _ hO) fun x hx => ⟨finPart E n x, ?_, ?_⟩
-    · rw [globLev_KL_eq hS] at hx
-      exact hx
+    · rwa [globLev_KL_eq hS] at hx
     · have h1 : GeneralLinearGroup.map (pInf E) ((x : UA E n) : GA E n) = 1 := x.2
       exact ga_ext (by rw [pInf_finGL, h1]) (by rw [pFin_finGL]; rfl)
   · have hfin : {w | w ∈ S ∧ K' w ≠ KL n w}.Finite := (Filter.eventually_cofinite.1 hK.2).subset fun w hw => hw.2

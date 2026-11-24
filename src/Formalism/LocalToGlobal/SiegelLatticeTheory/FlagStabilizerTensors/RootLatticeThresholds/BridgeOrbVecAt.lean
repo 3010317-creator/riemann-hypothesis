@@ -97,8 +97,7 @@ theorem orbVec_vecV (sc : ℝ) (hsc : 0 < sc) (i0 i0' : ∀ _ : InfinitePlace X.
   have hfix : ∀ (w : D.what₂.Word) (s : X.B.I.Ginf), s ∈ HsetU X w →
       (∀ a, Formalism.MainNotions.S.uMat (s v) *ᵥ (PtRepPf.frU X w v).e a = (PtRepPf.frU X w v).e a) ∧
       Formalism.MainNotions.S.uMat (s v) *ᵥ (PtRepPf.frU X w v).z = (PtRepPf.frU X w v).z := by
-    intro w s hs
-    exact ⟨fun a => hs v _ (Or.inl (Or.inl ⟨a, rfl⟩)), hs v _ (Or.inr rfl)⟩
+    exact fun w s hs => ⟨fun a => hs v _ (Or.inl (Or.inl ⟨a, rfl⟩)), hs v _ (Or.inr rfl)⟩
   obtain ⟨hHe, hHz⟩ := hfix u h hD.1
   obtain ⟨hH'e, hH'z⟩ := hfix u' h' hD.2.1
   set γ := gamW X u u' w
@@ -189,8 +188,7 @@ theorem orbVec_vecV (sc : ℝ) (hsc : 0 < sc) (i0 i0' : ∀ _ : InfinitePlace X.
     have hGd := Bridge.G_diag D.R.rS (ZX X u u' 1 γ v) (Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE)
       (Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE) (Tw (D := D) u * Tw (D := D) u') (by rw [hcl]; simp)
     rw [Formalism.L2.SG.Pf.CarrierTop.zx_sc, hGd] at hGX
-    by_contra hle
-    push_neg at hle
+    by_contra! hle
     have : (‖∏ i : Fin D.R.rS, Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE (Fin.castLE (Nat.le_succ D.R.rS) i)‖ *
         ‖∏ i : Fin D.R.rS, Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE (Fin.castLE (Nat.le_succ D.R.rS) i)‖) ^ 2 *
         (‖RealObj.Dl (ZX X u u' 1 γ v) (D.R.rS + 1)‖ ^ 2 -
@@ -280,8 +278,7 @@ theorem orbVec_data (sc : ℝ) (hsc : 0 < sc) (i0 i0' : ∀ _ : InfinitePlace X.
   have hfix : ∀ (w : D.what₂.Word) (s : X.B.I.Ginf), s ∈ HsetU X w →
       (∀ a, Formalism.MainNotions.S.uMat (s v) *ᵥ (PtRepPf.frU X w v).e a = (PtRepPf.frU X w v).e a) ∧
       Formalism.MainNotions.S.uMat (s v) *ᵥ (PtRepPf.frU X w v).z = (PtRepPf.frU X w v).z := by
-    intro w s hs
-    exact ⟨fun a => hs v _ (Or.inl (Or.inl ⟨a, rfl⟩)), hs v _ (Or.inr rfl)⟩
+    exact fun w s hs => ⟨fun a => hs v _ (Or.inl (Or.inl ⟨a, rfl⟩)), hs v _ (Or.inr rfl)⟩
   obtain ⟨hHe, hHz⟩ := hfix u h hD.1
   obtain ⟨hH'e, hH'z⟩ := hfix u' h' hD.2.1
   set γ := gamW X u u' w
@@ -372,8 +369,7 @@ theorem orbVec_data (sc : ℝ) (hsc : 0 < sc) (i0 i0' : ∀ _ : InfinitePlace X.
     have hGd := Bridge.G_diag D.R.rS (ZX X u u' 1 γ v) (Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE)
       (Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE) (Tw (D := D) u * Tw (D := D) u') (by rw [hcl]; simp)
     rw [Formalism.L2.SG.Pf.CarrierTop.zx_sc, hGd] at hGX
-    by_contra hle
-    push_neg at hle
+    by_contra! hle
     have : (‖∏ i : Fin D.R.rS, Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE (Fin.castLE (Nat.le_succ D.R.rS) i)‖ *
         ‖∏ i : Fin D.R.rS, Formalism.L2.SG.Pf.CarrierTop.cS D.R.rS D.host.rdE (Fin.castLE (Nat.le_succ D.R.rS) i)‖) ^ 2 *
         (‖RealObj.Dl (ZX X u u' 1 γ v) (D.R.rS + 1)‖ ^ 2 -

@@ -32,8 +32,7 @@ lemma isPsh_scale {U : Set (Fin D → ℂ)} {φ : (Fin D → ℂ) → ℝ} (h : 
     have := h.2 (c • z) (c • w) fun ζ hζ => by
       rw [← e]
       exact hzw ζ hζ
-    simp only [e]
-    exact this
+    simpa only [e] using this
 
 lemma exists_far_point (z : Fin D → ℂ) {s : ℝ} (hs : 0 < s) :
     ∃ x ∈ closedBall z s, (∀ i, s ≤ ‖x i‖) ∧ ‖x‖ ≤ ‖z‖ + s := by
@@ -43,21 +42,20 @@ lemma exists_far_point (z : Fin D → ℂ) {s : ℝ} (hs : 0 < s) :
     intro i
     by_cases h : z i = 0
     · simp [u, h]
-    · simp only [u, if_neg h, norm_div, Complex.norm_real, norm_norm]
+    · simp only [u, ite_eq_right h, norm_div, Complex.norm_real, norm_norm]
       exact div_self (norm_ne_zero_iff.mpr h)
   let w : Fin D → ℂ := fun i => (s : ℂ) * u i
   have hw : ‖w‖ ≤ s := by
     refine (pi_norm_le_iff_of_nonneg hs.le).mpr fun i => ?_
     simp [w, hu, abs_of_pos hs]
   refine ⟨z + w, ?_, fun i => ?_, (norm_add_le _ _).trans (by linarith)⟩
-  · rw [mem_closedBall, dist_eq_norm, add_sub_cancel_left]
-    exact hw
+  · rwa [mem_closedBall, dist_eq_norm, add_sub_cancel_left]
   · by_cases h : z i = 0
     · simp [w, u, h, abs_of_pos hs]
     · have hzi : 0 < ‖z i‖ := norm_pos_iff.mpr h
       have hc : (‖z i‖ : ℂ) ≠ 0 := by exact_mod_cast hzi.ne'
       have e : (z + w) i = ((‖z i‖ + s) / ‖z i‖ : ℝ) * z i := by
-        simp only [Pi.add_apply, w, u, if_neg h]
+        simp only [Pi.add_apply, w, u, ite_eq_right h]
         push_cast
         field_simp
       rw [e, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by positivity),
@@ -125,74 +123,58 @@ lemma ext_exists (S : Finset (Fin D)) {R : ℝ} (hR : 0 < R) {u : (Fin D → ℂ
       ∀ x ∈ ball (0 : Fin D → ℂ) R, ∀ δ > 0, ∃ y ∈ ball (0 : Fin D → ℂ) R \ coordDiv S,
         dist y x < δ ∧ w x ≤ max (u y) (-κ) + δ := by
   classical
-  set v : (Fin D → ℂ) → ℝ := fun y => u (R • y) with hv
-  have hmemR : ∀ y : Fin D → ℂ, R • y ∈ ball (0 : Fin D → ℂ) R \ coordDiv S ↔
-      y ∈ ball (0 : Fin D → ℂ) 1 \ coordDiv S := by
-    intro y
+  set v : (Fin D → ℂ) → ℝ := fun y => u (R • y)
+  have hmemR : ∀ y : Fin D → ℂ, R • y ∈ ball 0 R \ coordDiv S ↔
+      y ∈ ball 0 1 \ coordDiv S := fun y => by
     rw [Set.mem_diff, Set.mem_diff, mem_ball_smul_iff hR, smul_mem_coordDiv_iff hR.ne']
-  have hset : {y : Fin D → ℂ | R • y ∈ ball (0 : Fin D → ℂ) R \ coordDiv S} =
-      ball (0 : Fin D → ℂ) 1 \ coordDiv S := by
-    ext y
-    exact hmemR y
-  have hvc : ContinuousOn v (ball (0 : Fin D → ℂ) 1 \ coordDiv S) :=
+  have hset : {y : Fin D → ℂ | R • y ∈ ball 0 R \ coordDiv S} = ball 0 1 \ coordDiv S :=
+    Set.ext hmemR
+  have hvc : ContinuousOn v (ball 0 1 \ coordDiv S) :=
     hc.comp (continuous_const_smul R).continuousOn fun y hy => (hmemR y).mpr hy
-  have hvp : IsPsh (ball (0 : Fin D → ℂ) 1 \ coordDiv S) v := by
+  have hvp : IsPsh (ball 0 1 \ coordDiv S) v := by
     have := isPsh_scale hp R
     rwa [hset] at this
-  have hvb : ∀ z ∈ ball (0 : Fin D → ℂ) 1 \ coordDiv S,
+  have hvb : ∀ z ∈ ball 0 1 \ coordDiv S,
       v z ≤ B * Real.log (Real.exp 1 + ∑ i ∈ S, Real.log ‖z i‖⁻¹) := by
     intro z hz
     have h1 : v z ≤ B := hub _ ((hmemR z).mpr hz)
     have hsum : 0 ≤ ∑ i ∈ S, Real.log ‖z i‖⁻¹ := by
-      refine Finset.sum_nonneg fun i hi => ?_
+      refine Finset.sum_nonneg fun i hi => Real.log_nonneg ?_
       have hzi : z i ≠ 0 := fun h0 => hz.2 ⟨i, hi, h0⟩
-      have hlt : ‖z i‖ ≤ 1 := by
-        have h3 := norm_le_pi_norm z i
-        have h2 : ‖z‖ < 1 := by simpa using hz.1
-        linarith
-      apply Real.log_nonneg
       rw [one_le_inv₀ (norm_pos_iff.mpr hzi)]
-      exact hlt
-    have hlog : 1 ≤ Real.log (Real.exp 1 + ∑ i ∈ S, Real.log ‖z i‖⁻¹) := by
-      rw [Real.le_log_iff_exp_le (by positivity)]
-      linarith
+      exact (norm_le_pi_norm z i).trans (mem_ball_zero_iff.1 hz.1).le
+    have hlog : 1 ≤ Real.log (Real.exp 1 + ∑ i ∈ S, Real.log ‖z i‖⁻¹) :=
+      (Real.le_log_iff_exp_le (by positivity)).2 (by linarith)
     nlinarith [mul_le_mul_of_nonneg_left hlog hB]
   have hext := (ReciprocityTheory.AnForm.A.pshExtension_thm D S (ball 0 1) v B
     isOpen_ball subset_rfl hvc hvp hvb).2 κ
-  refine ⟨extT S R u κ, rfl, ?_, ?_, ?_⟩
+  have hw2 : ∀ x ∈ ball 0 R \ coordDiv S, extT S R u κ x = max (u x) (-κ) := by
+    rintro x ⟨-, hx⟩
+    have hx' : R⁻¹ • x ∉ coordDiv S := by rwa [smul_mem_coordDiv_iff (inv_ne_zero hR.ne')]
+    simp only [extT, limsupExt, ite_eq_right hx', smul_inv_smul₀ hR.ne']
+  refine ⟨extT S R u κ, rfl, ?_, hw2, ?_⟩
   · have h4 := isPsh_scale hext R⁻¹
-    have hset2 : {x : Fin D → ℂ | R⁻¹ • x ∈ ball (0 : Fin D → ℂ) 1} = ball 0 R := by
-      ext x
-      simp only [Set.mem_setOf_eq]
-      rw [← mem_ball_smul_iff hR, smul_inv_smul₀ hR.ne']
-    rw [hset2] at h4
-    exact h4
-  · intro x hx
-    have hx' : R⁻¹ • x ∉ coordDiv S := by
-      rw [smul_mem_coordDiv_iff (inv_ne_zero hR.ne')]
-      exact hx.2
-    simp only [extT, limsupExt, if_neg hx', smul_inv_smul₀ hR.ne']
+    have hset2 : {x : Fin D → ℂ | R⁻¹ • x ∈ ball 0 1} = ball 0 R := Set.ext fun x => by
+      rw [Set.mem_setOf_eq, ← mem_ball_smul_iff hR, smul_inv_smul₀ hR.ne']
+    rwa [hset2] at h4
   · intro x hx δ hδ
     by_cases hxA : x ∈ coordDiv S
     · set x' := R⁻¹ • x with hx'
       have hxeq : R • x' = x := by rw [hx', smul_inv_smul₀ hR.ne']
-      have hx'A : x' ∈ coordDiv S := (smul_mem_coordDiv_iff (inv_ne_zero hR.ne') x).mpr hxA
-      have hx'U : x' ∈ ball (0 : Fin D → ℂ) 1 := by
-        rw [← mem_ball_smul_iff hR, hxeq]
-        exact hx
-      set F : (Fin D → ℂ) → ℝ := fun y => max (u (R • y)) (-κ) with hF
-      have hw : extT S R u κ x = limsup F (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x') := by
+      have hx'U : x' ∈ ball 0 1 := by rwa [← mem_ball_smul_iff hR, hxeq]
+      set F : (Fin D → ℂ) → ℝ := fun y => max (u (R • y)) (-κ)
+      have hw : extT S R u κ x = limsup F (𝓝[ball 0 1 \ coordDiv S] x') := by
         simp only [extT, limsupExt]
-        rw [if_pos ((smul_mem_coordDiv_iff (inv_ne_zero hR.ne') x).mpr hxA)]
-      haveI : (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x').NeBot :=
+        rw [ite_eq_left ((smul_mem_coordDiv_iff (inv_ne_zero hR.ne') x).mpr hxA)]
+      haveI : (𝓝[ball 0 1 \ coordDiv S] x').NeBot :=
         mem_closure_iff_nhdsWithin_neBot.mp (mem_closure_off S hx'U)
-      have hcob : IsCoboundedUnder (· ≤ ·) (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x') F :=
+      have hcob : IsCoboundedUnder (· ≤ ·) (𝓝[ball 0 1 \ coordDiv S] x') F :=
         isCoboundedUnder_le_of_le _ (fun y => le_max_right _ _)
       have hfreq := frequently_lt_of_lt_limsup hcob
-        (show limsup F (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x') - δ <
-          limsup F (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x') by linarith)
-      have hev : ∀ᶠ y in 𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x',
-          y ∈ ball (0 : Fin D → ℂ) 1 \ coordDiv S ∧ dist y x' < δ / R :=
+        (show limsup F (𝓝[ball 0 1 \ coordDiv S] x') - δ <
+          limsup F (𝓝[ball 0 1 \ coordDiv S] x') by linarith)
+      have hev : ∀ᶠ y in 𝓝[ball 0 1 \ coordDiv S] x',
+          y ∈ ball 0 1 \ coordDiv S ∧ dist y x' < δ / R :=
         Filter.Eventually.and eventually_mem_nhdsWithin
           (mem_nhdsWithin_of_mem_nhds (ball_mem_nhds x' (div_pos hδ hR)))
       obtain ⟨y, hy1, hy2, hy3⟩ := (hfreq.and_eventually hev).exists
@@ -201,14 +183,8 @@ lemma ext_exists (S : Finset (Fin D)) {R : ℝ} (hR : 0 < R) {u : (Fin D → ℂ
         calc R * dist y x' < R * (δ / R) := mul_lt_mul_of_pos_left hy3 hR
           _ = δ := by field_simp
       · have hFy : F y = max (u (R • y)) (-κ) := rfl
-        rw [hw]
-        linarith
-    · have hx' : R⁻¹ • x ∉ coordDiv S := by
-        rw [smul_mem_coordDiv_iff (inv_ne_zero hR.ne')]
-        exact hxA
-      have hwx : extT S R u κ x = max (u x) (-κ) := by
-        simp only [extT, limsupExt, if_neg hx', smul_inv_smul₀ hR.ne']
-      exact ⟨x, ⟨hx, hxA⟩, by simp [hδ], by linarith⟩
+        linarith [hw]
+    · exact ⟨x, ⟨hx, hxA⟩, by simp [hδ], by linarith [hw2 x ⟨hx, hxA⟩]⟩
 
 end
 

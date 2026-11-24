@@ -165,8 +165,7 @@ theorem pairEquiv_realAll : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
       funext ρ
       by_cases h : ρ = τ
       · subst h
-        simp only [Function.update_self]
-        exact GlobalTheory.CoefPairTens.sigma_comp_inv hp ρ v
+        simpa only [Function.update_self] using GlobalTheory.CoefPairTens.sigma_comp_inv hp ρ v
       · simp only [Function.update_of_ne h, LinearMap.id_comp]
     rw [this, PiTensorProduct.map_id, LinearMap.id_apply, LinearEquiv.symm_apply_apply]
   have one : ∀ τ (v : Matrix.unitaryGroup (Fin V.rank) ℂ) w,
@@ -191,20 +190,20 @@ theorem pairEquiv_realAll : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
       intro w
       have h0 : (fun ρ => unfr M ρ (us ∅ ρ)) = 1 := by
         funext ρ
-        have : us ∅ ρ = 1 := if_neg (Finset.notMem_empty ρ)
+        have : us ∅ ρ = 1 := ite_eq_right (Finset.notMem_empty ρ)
         rw [this, OneMemClass.coe_one, Pi.one_apply]
         exact GlobalTheory.CoefPairTens.unfr_one M ρ
       have h1 : (fun ρ => F ρ (us ∅ ρ)⁻¹) = fun ρ => LinearMap.id := by
         funext ρ
-        have : us ∅ ρ = 1 := if_neg (Finset.notMem_empty ρ)
+        have : us ∅ ρ = 1 := ite_eq_right (Finset.notMem_empty ρ)
         show ((M.σ ρ ((us ∅ ρ)⁻¹ : Matrix.unitaryGroup (Fin V.rank) ℂ) : M.H ρ →L[ℂ] M.H ρ) : M.H ρ →ₗ[ℂ] M.H ρ) = _
         rw [this, inv_one, OneMemClass.coe_one, GlobalTheory.CoefPairTens.sigma_one]
         rfl
       rw [h0, realAll_one hθ, map_one, Module.End.one_apply, h1, PiTensorProduct.map_id, LinearMap.comp_id]
     | insert τ s hτ ih =>
       intro w
-      have hs : us s τ = 1 := if_neg hτ
-      have h3 : us (insert τ s) τ = u τ := if_pos (Finset.mem_insert_self τ s)
+      have hs : us s τ = 1 := ite_eq_right hτ
+      have h3 : us (insert τ s) τ = u τ := ite_eq_left (Finset.mem_insert_self τ s)
       have h4 : ∀ ρ, ρ ≠ τ → us (insert τ s) ρ = us s ρ := fun ρ h => by
         simp only [us, Finset.mem_insert, h, false_or]
       rw [realAll_eq_atTau_mul hθ (hM (insert τ s)) τ]
@@ -224,10 +223,9 @@ theorem pairEquiv_realAll : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
         rw [inv_one, OneMemClass.coe_one, GlobalTheory.CoefPairTens.sigma_one]
         rfl
       · rw [Function.update_of_ne h, h4 ρ h, LinearMap.comp_id]
-  have huniv : us Finset.univ = u := funext fun ρ => if_pos (Finset.mem_univ ρ)
+  have huniv : us Finset.univ = u := funext fun ρ => ite_eq_left (Finset.mem_univ ρ)
   have := ind Finset.univ w
-  rw [huniv] at this
-  exact this
+  rwa [huniv] at this
 
 end GlobalTheory.CoefPairTens
 
@@ -291,11 +289,11 @@ theorem base_mem_Dpar (D : D7) (C : ℝ) (τ : D.what₂.Tau) :
   rcases hx with ⟨i, rfl⟩ | ⟨j, h | h⟩
   · refine ⟨true, Finset.mem_image.2 ⟨((Ptw D).v τ i, true), ?_, ?_⟩⟩
     · exact Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_image_of_mem _ (Finset.mem_univ i)))
-    · simp only [hodd, if_false, add_zero]
+    · simp only [hodd, ite_false, add_zero]
       exact Prod.ext (hv i) rfl
   · refine ⟨decide ((j : ℕ) ≤ D.R.m ∨ Even ((j : ℕ) - D.R.m)), Finset.mem_image.2 ⟨(-(Ptw D).b τ j, decide ((j : ℕ) ≤ D.R.m ∨ Even ((j : ℕ) - D.R.m))), ?_, ?_⟩⟩
     · exact Finset.mem_union_left _ (Finset.mem_union_right _ (Finset.mem_image_of_mem _ (Finset.mem_univ j)))
-    · simp only [hodd, if_false, add_zero]
+    · simp only [hodd, ite_false, add_zero]
       refine Prod.ext ?_ rfl
       rw [h]
       show -(D.hc τ).b j = _
@@ -307,9 +305,8 @@ theorem base_mem_Dpar (D : D7) (C : ℝ) (τ : D.what₂.Tau) :
       have : (-(Ptw D).e τ j) = -(((rowEntries D C τ).e j : ℤ) : ℚ) := by
         show -(D.hc τ).e j = _
         rw [he j]; rfl
-      rw [this]
-      exact hx'
-    · simp only [hodd, if_false, add_zero]
+      rwa [this]
+    · simp only [hodd, ite_false, add_zero]
 
 end GlobalTheory.RowReal.BaseWeights
 
@@ -349,8 +346,7 @@ theorem hw_basePar_eq_neg_lowK : ∀ (D : D7) (C : ℝ)
     rw [h3, neg_neg]
   let g : Fin D.sp.X'.rank → ℚ := fun j => -q j.rev
   have hg : StrictAnti g := fun a b hab => by
-    simp only [g, neg_lt_neg_iff]
-    exact hqa (Fin.rev_lt_rev.2 hab)
+    simpa only [g, neg_lt_neg_iff] using hqa (Fin.rev_lt_rev.2 hab)
   have hgm : ∀ j, g j ∈ Finset.univ.image fun a => -q a := fun j => Finset.mem_image.2 ⟨j.rev, Finset.mem_univ _, rfl⟩
   have hfg : f = g := (GlobalTheory.SignedHC.descEnum_unique hE hf hfm).symm.trans (GlobalTheory.SignedHC.descEnum_unique hE hg hgm)
   have hi : (i : ℕ) < (rowEntries D C τ).basePar.length := by rw [hlen]; exact i.2
@@ -1100,8 +1096,7 @@ theorem liftA_datum_add {a : Arrow T} {f f' f'' : Sch G a} {F : Fn G a.src}
     (h1 : LiftConv W M a f F) (h2 : LiftConv W M a f' F) :
     liftA W M a f'' F = liftA W M a f F + liftA W M a f' F := by
   funext x
-  simp only [liftA_apply, Pi.add_apply, hk, add_mul]
-  exact integral_add (h1 x) (h2 x)
+  simpa only [liftA_apply, Pi.add_apply, hk, add_mul] using integral_add (h1 x) (h2 x)
 
 theorem liftA_datum_smul {a : Arrow T} {f f'' : Sch G a} {F : Fn G a.src} (c : ℂ)
     (hk : ∀ g h, W.kerA a f'' g h = c * W.kerA a f g h) :
@@ -1377,8 +1372,7 @@ theorem genPer_col_add [DecidableEq (Fin D.R.m)] (hc : ∀ Q ξ η, GenConv ch t
   rw [genPer_eq, genPer_eq, genPer_eq]
   dsimp only
   rw [e]
-  simp only [Pi.add_apply, add_mul]
-  exact integral_add i1 i2
+  simpa only [Pi.add_apply, add_mul] using integral_add i1 i2
 
 theorem genPer_col_smul [DecidableEq (Fin D.R.m)] (Q1 : PolCol ch.G) (Q2 : PolRow ch.G) (i : Fin D.R.m) (c : ℂ)
     (x : PolF D (ch.G.V (.top ((i : ℕ) + 1))).rank (ch.G.V (.top i)).rank) ξ η :
@@ -1401,8 +1395,7 @@ theorem genPer_row_add [DecidableEq (Fin D.R.m)] (hc : ∀ Q ξ η, GenConv ch t
   rw [genPer_eq, genPer_eq, genPer_eq]
   dsimp only
   rw [e]
-  simp only [Pi.add_apply, mul_add]
-  exact integral_add i1 i2
+  simpa only [Pi.add_apply, mul_add] using integral_add i1 i2
 
 theorem genPer_row_smul [DecidableEq (Fin D.R.m)] (Q1 : PolCol ch.G) (Q2 : PolRow ch.G) (i : Fin D.R.m) (c : ℂ)
     (x : PolF D (ch.G.V (.grid i D.R.m)).rank (ch.G.V (.grid ((i : ℕ) + 1) D.R.m)).rank) ξ η :
@@ -1417,8 +1410,7 @@ theorem genPer_xi_add (hc : ∀ Q ξ η, GenConv ch t a M d y Q ξ η) (Q : PolC
   have i1 := genConv_int ch t a M d y (hc Q ξ η)
   have i2 := genConv_int ch t a M d y (hc Q ξ' η)
   rw [genPer_eq, genPer_eq, genPer_eq, colLift_xi_add ch t a M d Q.1 ξ ξ' (hc Q ξ η).1 (hc Q ξ' η).1]
-  simp only [Pi.add_apply, add_mul]
-  exact integral_add i1 i2
+  simpa only [Pi.add_apply, add_mul] using integral_add i1 i2
 
 theorem genPer_xi_smul (Q : PolCol ch.G × PolRow ch.G) (c : ℂ) ξ η :
     genPer ch t a M d y Q (c • ξ) η = c * genPer ch t a M d y Q ξ η := by
@@ -1430,8 +1422,7 @@ theorem genPer_eta_add (hc : ∀ Q ξ η, GenConv ch t a M d y Q ξ η) (Q : Pol
   have i1 := genConv_int ch t a M d y (hc Q ξ η)
   have i2 := genConv_int ch t a M d y (hc Q ξ η')
   rw [genPer_eq, genPer_eq, genPer_eq, rowLift_eta_add ch t M d y Q.2 η η' (hc Q ξ η).2.1 (hc Q ξ η').2.1]
-  simp only [Pi.add_apply, mul_add]
-  exact integral_add i1 i2
+  simpa only [Pi.add_apply, mul_add] using integral_add i1 i2
 
 theorem genPer_eta_smul (Q : PolCol ch.G × PolRow ch.G) (c : ℂ) ξ η :
     genPer ch t a M d y Q ξ (c • η) = c * genPer ch t a M d y Q ξ η := by
@@ -1717,8 +1708,7 @@ theorem invLine_of_iso [DecidableEq D.what₂.Tau] (ch : Choice R) {μ0 : T} (hL
         fun i => (tr i).symm (colFock (rowEntries D ch.sc.cGap) i g (y₁ i)))
       (fun j => by simpa using h1 j (d.1 j) (hv.1 j) ((tc j).symm (x₁ j)))
       (fun i => by simpa using h2 i (d.2 i) (hv.2 i) ((tr i).symm (y₁ i))) (Aψ v₁) (Bf φ₁)
-    rw [e1, e2] at key
-    exact key
+    rwa [e1, e2] at key
   obtain ⟨l, hl, hle⟩ := GlobalTheory.RowReal.invFun_of_multilinear (rowEntries D ch.sc.cGap) Φ hinv
   refine ⟨l, hl, fun Q => ?_⟩
   rw [hle]

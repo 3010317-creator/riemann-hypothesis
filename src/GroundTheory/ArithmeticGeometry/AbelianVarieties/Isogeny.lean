@@ -115,8 +115,7 @@ theorem ratEmb_div (p q : F[X]) :
 omit [E.IsElliptic] in
 theorem ratEmb_X : ratEmb E RatFunc.X = genX E := by
   have := ratEmb_div E X 1
-  rw [map_one, div_one, map_one, div_one, aeval_X, RatFunc.algebraMap_X] at this
-  exact this
+  rwa [map_one, div_one, map_one, div_one, aeval_X, RatFunc.algebraMap_X] at this
 
 theorem map_top_eq_fieldRange {K L : Type*} [Field K] [Field L] [Algebra F K] [Algebra F L]
     (f : K →ₐ[F] L) : (⊤ : IntermediateField F K).map f = f.fieldRange := by
@@ -290,8 +289,7 @@ theorem isSeparable_of_quadratic {L K : Type*} [Field L] [Field K] [Algebra L K]
           simp only [map_mul, map_neg, map_ofNat]; ring
       _ = 1 := by rw [e, ← C_mul, inv_mul_cancel₀ hD, C_1]
   have hq : aeval y (X ^ 2 + C b * X - C c : L[X]) = 0 := by
-    simp only [map_sub, map_add (f := _), map_mul, map_pow, aeval_X, aeval_C]
-    exact hy
+    simpa only [map_sub, map_add (f := _), map_mul, map_pow, aeval_X, aeval_C] using hy
   exact hsep.of_dvd (minpoly.dvd L y hq)
 
 variable (E : WeierstrassCurve F) [E.IsElliptic]

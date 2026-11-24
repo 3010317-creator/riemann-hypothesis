@@ -112,8 +112,7 @@ theorem polCoef_eq_zero {D : ℕ} (r : Fin D → Fin D) (h : ¬ Function.Surject
     · have h2 : (t S).card ≤ D := by simpa using Finset.card_le_univ (t S)
       have hc : (t S).card = S.card + 1 := by simp [t, hS]
       rw [hc] at h2
-      rw [hc]
-      rw [show D - S.card = (D - (S.card + 1)) + 1 by omega, pow_succ]
+      rw [hc, show D - S.card = (D - (S.card + 1)) + 1 by omega, pow_succ]
       ring
   have hsum : ∑ S, f S = ∑ S, f (ht.toPerm t S) := (Equiv.sum_comp (ht.toPerm t) f).symm
   simp only [Function.Involutive.coe_toPerm, key, Finset.sum_neg_distrib] at hsum
@@ -259,8 +258,7 @@ variable {n : ℕ}
 
 theorem mdisc_cons_eq_sum (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ)
     (B : Fin n → Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) :
-    mdisc (Fin.cons A B) = ∑ j, ∑ k, A j k * mixedCof B j k := by
-  exact mdisc_cons_eq_sum' A B
+    mdisc (Fin.cons A B) = ∑ j, ∑ k, A j k * mixedCof B j k := mdisc_cons_eq_sum' A B
 
 def IntegralDzStatement : Prop :=
   ∀ (D : ℕ) (j : Fin D) (g : (Fin D → ℂ) → ℂ), ContDiff ℝ 1 g → HasCompactSupport g →
@@ -315,8 +313,7 @@ def MaDensCofStatement : Prop :=
 
 theorem mixedCof_diag (B : Fin n → Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) (j : Fin (n + 1)) :
     mixedCof B j j = (1 / ((n + 1 : ℕ) : ℂ)) *
-      mdisc (fun i => (B i).submatrix j.succAbove j.succAbove) := by
-  exact mixedCof_diag' B j
+      mdisc (fun i => (B i).submatrix j.succAbove j.succAbove) := mixedCof_diag' B j
 
 def HessCRestrictStatement : Prop :=
   ∀ (n : ℕ) (φ : (Fin (n + 1) → ℂ) → ℝ) (U : Set (Fin (n + 1) → ℂ)) (j : Fin (n + 1)),

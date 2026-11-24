@@ -400,8 +400,7 @@ theorem twSub_iSup {C : Type} (S : C → Prop) (V : C → Submodule ℂ E) :
   rw [← twSub_map, Submodule.map_iSup]
   refine iSup_congr fun c => ?_
   rw [Submodule.map_iSup]
-  refine iSup_congr fun _ => ?_
-  exact twSub_map s (V c)
+  exact iSup_congr fun _ => twSub_map s (V c)
 
 theorem twSub_finrank (V : Submodule ℂ E) : Module.finrank ℂ (Tw.sub s V) = Module.finrank ℂ V := by
   unfold Module.finrank
@@ -507,22 +506,22 @@ theorem dimParts_of_schur {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : 
   have hEle : ∀ c c', lab c = lab c' → EEc R.toRealDat R.SF c ≤ EEc R.toRealDat R.SF c' := by
     intro c c' hcc x hx
     refine hEchar c' x fun P d hP hd => ?_
-    rw [hEev c P hP _ x hx, evC_single, if_pos hd]
+    rw [hEev c P hP _ x hx, evC_single, ite_eq_left hd]
     have hl : IsLab (Wc D j) P (dualLab d) := (hlab P (dualLab d) hP).2 (by rwa [_root_.GlobalTheory.SphLabelOps.dualLab_dualLab])
     exact congrArg (· • x) (congrFun hcc ⟨(P, dualLab d), hP, hl⟩)
   have hWcle : ∀ c c', lab c = lab c' → Wcc R.toRealDat R.SF j c ≤ Wcc R.toRealDat R.SF j c' := by
     intro c c' hcc x hx
     refine hWchar c' x (hWfix c x hx) fun P d hP hd => ?_
-    rw [hWev c P hP _ x hx, evC_single, if_pos hd]
+    rw [hWev c P hP _ x hx, evC_single, ite_eq_left hd]
     exact congrArg (· • x) (congrFun hcc ⟨(P, d), hP, hd⟩)
   symm
   refine GlobalTheory.finrank_iSup_joint_eigen_eq (I := I)
     (fun i => hE i.1.1 (Finsupp.single (dualLab i.1.2) 1)) (fun i => hWo i.1.1 (Finsupp.single i.1.2 1))
     (fun c => EEc R.toRealDat R.SF c ⊓ LevE) (fun c => Wcc R.toRealDat R.SF j c ⊓ LevW) lab ?_ ?_ ?_ ?_ (R.Carries p)
   · rintro c x hx ⟨⟨P, d⟩, hP, hd⟩
-    rw [hEev c P hP _ x hx.1, evC_single, if_pos ((hlab P d hP).1 hd), _root_.GlobalTheory.SphLabelOps.dualLab_dualLab]
+    rw [hEev c P hP _ x hx.1, evC_single, ite_eq_left ((hlab P d hP).1 hd), _root_.GlobalTheory.SphLabelOps.dualLab_dualLab]
   · rintro c x hx ⟨⟨P, d⟩, hP, hd⟩
-    rw [hWev c P hP _ x hx.1, evC_single, if_pos hd]
+    rw [hWev c P hP _ x hx.1, evC_single, ite_eq_left hd]
   · intro c c' hcc
     rw [le_antisymm (hEle c c' hcc) (hEle c' c hcc.symm), le_antisymm (hWcle c c' hcc) (hWcle c' c hcc.symm)]
     exact ⟨rfl, rfl⟩
@@ -830,8 +829,7 @@ theorem jX_injective_of_models {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T 
 
 theorem exists_rowPart_ne_bot_positiveDimension : GlobalTheory.Hk3.HoweUnram → GlobalTheory.Published.CuspRapidDecay → ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ}, A3.fam3.Ok3 s → R.WeakCharacterisation F → R.toRealDat.ExAt → ((∀ t (k : A3.okI t × List ℕ), A3.heckeRI t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.R t).n y ∧ A3.heckeRI t k = A3.heckeRI t (k.1, y)) ∧ ∀ j t (k : A3.okI t × List ℕ), A3.heckeLI j t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.L j t).n y ∧ A3.heckeLI j t k = A3.heckeLI j t (k.1, y)) → R.PGEquiv F → (∀ b, (lv (F.fc (R.toCx3 F).zs) b).Pos) → ∃ p, R.EEp3 p ≠ ⊥ := by
   intro hH hP D G _ _ Pl0 I0 T A3 Ks _ _ _ R F s hOk hC hEx hIn hGE hPos
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hcar := GlobalTheory.Hk3.carries_of_rows_top hP hH R F (GlobalTheory.Chain.LiftConv.liftInteg_of_cuspRapidDecay hP D) hOk hC hEx hIn hGE hPos
   have hc0 : ∀ c, R.EEc c = ⊥ := by
     intro c
@@ -948,8 +946,7 @@ theorem theta_Z_mem_range_iC {K : Type} [Field K] [NumberField K] [StarRing K] {
   obtain ⟨x, hx⟩ := GlobalTheory.PrincipalRows.mem_range_toF_full (A3.A.fam.R t) A3.A.fam.X (X.zs.Z t) z hz h1.2
   refine ⟨cpt A3.A.v0.embedding x, ?_⟩
   have h3 := GlobalTheory.OneForm.iC_cpt X (crdOf3 A3 ⊥ 1 P1 ψ1 Dc Sp Zsc) false t x
-  refine h3.trans ?_
-  exact congrArg (fun y => X.Θ t (X.jR t y)) hx
+  exact h3.trans (congrArg (fun y => X.Θ t (X.jR t y)) hx)
 
 
 
@@ -963,8 +960,7 @@ theorem iC_range_eq_top : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 
   have hinj : Function.Injective (LinearMap.adjoint ((R.toCx3 F).Θ t)) := by
     show Function.Injective (LinearMap.adjoint (Tw.map (twAt D.what₂.embLL A3.A.v0) (R.Th t)))
     rw [Tw.adjoint_map]
-    intro x y hxy
-    exact hUp t hxy
+    exact fun x y hxy => hUp t hxy
   have hinj2 : Function.Injective ((R.toCx3 F).Θ t ∘ₗ LinearMap.adjoint ((R.toCx3 F).Θ t)) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro e he
@@ -1206,8 +1202,7 @@ theorem atDat_holds_alt (hP : _root_.GlobalTheory.PrimIn.PublishedThetaCondition
   generalize DatCopy.copy Z' s z = y at hEx' hU' hI' hM' hR' ⊢
   have hch := y.pins.char
   have hT : TypesTrue (w.st Z').toD7.ntypes y.R.C.P y.R.C.W := by
-    rw [y.lev.C, w.C_eq]
-    exact g1'
+    rwa [y.lev.C, w.C_eq]
   have hIo : IoExt y.R.toRealDat := GlobalTheory.T.ioExt_of_weakCharacterisation_of_orthonormal_frames _ _ _ _ _ _ _ y.R y.F hch hEx' hV
   have hOM : ∀ i, OneMapRowR y.core y.R.toRealDat y.geo.κ y.geo.v₀ y.geo.O (fun _ => 1) i := fun i =>
     GlobalTheory.OneMapRow3.oneFormMapRow_threeLevel_of_characterisation _ _ _ _ _ _ y.core y.R y.F y.geo.κ y.geo.v₀ y.geo.O (fun _ => 1) hn hch hEx' ⟨y.geo.fw⟩ hIo i

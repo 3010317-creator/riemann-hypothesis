@@ -29,8 +29,7 @@ variable {L L' : PeriodPair}
 
 lemma wZeta_eq (h : L.lattice = L'.lattice) : wZeta L = wZeta L' := by
   funext z
-  simp only [wZeta]
-  exact tsum_sub h (fun w => 1 / (z - w) + 1 / w + z / w ^ 2)
+  simpa only [wZeta] using tsum_sub h (fun w => 1 / (z - w) + 1 / w + z / w ^ 2)
 
 lemma wSigma_eq (h : L.lattice = L'.lattice) : wSigma L = wSigma L' := by
   funext z
@@ -39,12 +38,10 @@ lemma wSigma_eq (h : L.lattice = L'.lattice) : wSigma L = wSigma L' := by
 
 lemma wp_eq (h : L.lattice = L'.lattice) : L.weierstrassP = L'.weierstrassP := by
   funext z
-  simp only [PeriodPair.weierstrassP]
-  exact tsum_sub h (fun w => 1 / (z - w) ^ 2 - 1 / w ^ 2)
+  simpa only [PeriodPair.weierstrassP] using tsum_sub h (fun w => 1 / (z - w) ^ 2 - 1 / w ^ 2)
 
 lemma G_eq (h : L.lattice = L'.lattice) (n : ℕ) : L.G n = L'.G n := by
-  simp only [PeriodPair.G]
-  exact tsum_sub h (fun w => (w ^ n)⁻¹)
+  simpa only [PeriodPair.G] using tsum_sub h (fun w => (w ^ n)⁻¹)
 
 lemma wEta_eq_on (h : L.lattice = L'.lattice) {ω : ℂ} (hω : ω ∈ L.lattice) :
     wEta L ω = wEta L' ω := by

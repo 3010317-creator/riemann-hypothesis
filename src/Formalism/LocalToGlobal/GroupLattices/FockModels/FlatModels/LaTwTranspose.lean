@@ -41,8 +41,7 @@ theorem kapR_alg (h : HidaSetting p n' W Qq O Kf ι σ j w) (x : O) :
   exact (kap h).commutes x
 
 theorem kapR_inj (h : HidaSetting p n' W Qq O Kf ι σ j w) : Function.Injective (kapR h) := by
-  intro a b hab
-  exact (kap h).injective hab
+  exact fun a b hab => (kap h).injective hab
 
 theorem coeffs_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (a : O) (P : MvPolynomial τ (KK O)) :
     (∀ m, ∃ c : O, P.coeff m = algebraMap O (KK O) (a * c)) ↔
@@ -56,12 +55,11 @@ theorem coeffs_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (a : O
     rw [coeff_map, MvPolynomial.coeff_smul, coeff_map, smul_eq_mul]
     have e : (∑ x ∈ P.support, monomial x (c x)).coeff m = if m ∈ P.support then c m else 0 := by
       rw [coeff_sum]
-      simp only [coeff_monomial]
-      exact Finset.sum_ite_eq' _ _ _
+      simpa only [coeff_monomial] using Finset.sum_ite_eq' _ _ _
     rw [e]
     by_cases hm : m ∈ P.support
-    · rw [if_pos hm, hc m, kapR_alg, map_mul]
-    · rw [if_neg hm, map_zero, mul_zero]
+    · rw [ite_eq_left hm, hc m, kapR_alg, map_mul]
+    · rw [ite_eq_right hm, map_zero, mul_zero]
       rw [MvPolynomial.mem_support_iff, not_not] at hm
       rw [hm, map_zero]
   · rintro ⟨P0, hP0⟩ m
@@ -73,17 +71,14 @@ theorem coeffs_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (a : O
 theorem inA_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (P : MvPolynomial τ (KK O)) :
     InA (O := O) P ↔ ∃ P0 : MvPolynomial τ O, map (kapR h) P = map (algebraMap O Kf) P0 := by
   unfold InA
-  have e := coeffs_iff h (1 : O) P
-  simp only [one_mul, map_one, one_smul] at e
-  exact e
+  simpa only [one_mul, map_one, one_smul] using coeffs_iff h (1 : O) P
 
 theorem inWj_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (P : MvPolynomial τ (KK O)) (i : ℕ) :
     InWj w P i ↔
       ∃ P0 : MvPolynomial τ O, map (kapR h) P = algebraMap O Kf w ^ i • map (algebraMap O Kf) P0 := by
   unfold InWj
   have e := coeffs_iff h (w ^ i) P
-  rw [map_pow] at e
-  exact e
+  rwa [map_pow] at e
 
 theorem pol_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {S : Type} (k : ℕ) (d : S → ℕ)
     (P : MvPolynomial (S × Fin k) (KK O)) : P ∈ Formalism.MainNotions.G.Pol (KK O) k d ↔ map (kapR h) P ∈ Formalism.MainNotions.G.Pol Kf k d := by
@@ -189,11 +184,11 @@ theorem lift_eq {S : Type} [Fintype S] [DecidableEq S] (h : HidaSetting p n' W Q
       obtain ⟨x, c⟩ := v
       simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, liftSubst, aeval_X, map_X, Lin]
       by_cases hv : LL.vec x
-      · simp only [hv, if_true, Bm, map_sum, map_mul]
+      · simp only [hv, ite_true, Bm, map_sum, map_mul]
         refine Finset.sum_congr rfl fun b _ => ?_
         rw [map_C, hinv]
         split_ifs <;> simp [map_C, map_X, kapR_alg] <;> ring
-      · simp only [hv, Bool.false_eq_true, if_false, Bm, map_sum, map_mul]
+      · simp only [hv, Bool.false_eq_true, ite_false, Bm, map_sum, map_mul]
         refine Finset.sum_congr rfl fun b _ => ?_
         rw [map_C, hmat]
         split_ifs <;> simp [map_C, map_X, kapR_alg] <;> ring
@@ -318,8 +313,7 @@ theorem gen_A (h : HidaSetting p n' W Qq O Kf ι σ j w) (m : ℕ) (hm : 1 ≤ m
   · rintro ⟨P0, hP0⟩
     obtain ⟨y, hy, hxy⟩ := key.2 ⟨P0, pol_of_map h P0 (hP0 ▸ hF'), hP0⟩
     unfold thF
-    rw [hxy]
-    exact hy
+    rwa [hxy]
   · intro hx
     obtain ⟨G, -, hG⟩ := key.1 ⟨_, hx, rfl⟩
     exact ⟨G, hG⟩

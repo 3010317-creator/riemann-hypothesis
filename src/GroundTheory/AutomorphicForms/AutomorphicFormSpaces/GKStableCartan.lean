@@ -266,15 +266,13 @@ theorem exists_archCartanBasis :
   obtain ⟨bk, hbk⟩ := exists_signed_basis ((archTraceForm K n).restrict (archSkew K n))
     (fun x y => archTraceForm_symm (x : (isExpLieAlgebra K n).lieSubalgebra) y) (s := -1)
     (by norm_num) (fun v hv => by
-      have h0 : (v : (isExpLieAlgebra K n).lieSubalgebra) ≠ 0 := fun e => hv (Subtype.ext e)
-      have := archTraceForm_neg_of_mem_archSkew v.2 h0
+      have := archTraceForm_neg_of_mem_archSkew v.2 fun e => hv (Subtype.ext e)
       change 0 < _ * archTraceForm K n (v : (isExpLieAlgebra K n).lieSubalgebra) v
       linarith)
   obtain ⟨bp, hbp⟩ := exists_signed_basis ((archTraceForm K n).restrict (archHerm K n))
     (fun x y => archTraceForm_symm (x : (isExpLieAlgebra K n).lieSubalgebra) y) (s := 1)
     (by norm_num) (fun v hv => by
-      have h0 : (v : (isExpLieAlgebra K n).lieSubalgebra) ≠ 0 := fun e => hv (Subtype.ext e)
-      have := archTraceForm_pos_of_mem_archHerm v.2 h0
+      have := archTraceForm_pos_of_mem_archHerm v.2 fun e => hv (Subtype.ext e)
       change 0 < _ * archTraceForm K n (v : (isExpLieAlgebra K n).lieSubalgebra) v
       linarith)
   set e := Submodule.prodEquivOfIsCompl (archSkew K n) (archHerm K n) hc
@@ -284,28 +282,20 @@ theorem exists_archCartanBasis :
     Sum.elim (fun i => (bk i : (isExpLieAlgebra K n).lieSubalgebra))
       (fun j => (bp j : (isExpLieAlgebra K n).lieSubalgebra))
   have hb0 : ∀ x, b0 x = f x := by
-    rintro (i | j)
-    · simp [b0, e, f, Submodule.coe_prodEquivOfIsCompl']
-    · simp [b0, e, f, Submodule.coe_prodEquivOfIsCompl']
+    rintro (i | j) <;> simp [b0, e, f, Submodule.coe_prodEquivOfIsCompl']
   set ε0 : Fin (Module.finrank ℝ (archSkew K n)) ⊕ Fin (Module.finrank ℝ (archHerm K n)) → ℝ :=
     Sum.elim (fun _ => -1) (fun _ => 1)
   have horth : ∀ x y, archTraceForm K n (b0 x) (b0 y) = if x = y then ε0 x else 0 := by
     intro x y
     rw [hb0, hb0]
-    rcases x with i | i <;> rcases y with j | j
-    · have := hbk i j
-      change archTraceForm K n _ _ = _ at this
-      simp only [f, ε0, Sum.elim_inl, Sum.inl.injEq]
-      exact this
-    · simp only [f, ε0, Sum.elim_inl, Sum.elim_inr, reduceCtorEq, ite_false]
-      exact archTraceForm_eq_zero_of_skew_herm (bk i).2 (bp j).2
-    · simp only [f, ε0, Sum.elim_inl, Sum.elim_inr, reduceCtorEq, ite_false]
-      rw [archTraceForm_symm]
+    rcases x with i | i <;> rcases y with j | j <;>
+      simp only [f, ε0, Sum.elim_inl, Sum.elim_inr, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq,
+        ite_false]
+    · exact hbk i j
+    · exact archTraceForm_eq_zero_of_skew_herm (bk i).2 (bp j).2
+    · rw [archTraceForm_symm]
       exact archTraceForm_eq_zero_of_skew_herm (bk j).2 (bp i).2
-    · have := hbp i j
-      change archTraceForm K n _ _ = _ at this
-      simp only [f, ε0, Sum.elim_inr, Sum.inr.injEq]
-      exact this
+    · exact hbp i j
   set σ := finSumFinEquiv (m := Module.finrank ℝ (archSkew K n))
     (n := Module.finrank ℝ (archHerm K n))
   refine ⟨_, b0.reindex σ, ε0 ∘ σ.symm, fun i => ?_, fun i j => ?_, fun i hi => ?_⟩
@@ -313,13 +303,9 @@ theorem exists_archCartanBasis :
   · rw [Module.Basis.reindex_apply, Module.Basis.reindex_apply, horth]
     simp only [Function.comp_apply, σ.symm.injective.eq_iff]
   · rw [Module.Basis.reindex_apply, hb0]
-    simp only [Function.comp_apply] at hi
     rcases hx : σ.symm i with k | k
-    · simp only [f, Sum.elim_inl]
-      exact (bk k).2
-    · rw [hx] at hi
-      simp [ε0] at hi
-      norm_num at hi
+    · simpa only [f, Sum.elim_inl] using (bk k).2
+    · norm_num [ε0, hx] at hi
 
 def matHom : ArchMatrix K n →+* Matrix (Fin n) (Fin n) (mixedSpace K) where
   toFun := mat
@@ -389,8 +375,7 @@ theorem realCompM_exp (v : {w : InfinitePlace K // IsReal w}) (Y : ArchMatrix K 
       fun k : ℕ => ((k.factorial : ℝ))⁻¹ • realCompM v Y ^ k := by
     funext k
     simp only [Function.comp_apply, realCompM_smul, map_pow]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem complexCompM_exp (v : {w : InfinitePlace K // IsComplex w}) (Y : ArchMatrix K n) :
     complexCompM v (NormedSpace.exp Y) = NormedSpace.exp (complexCompM v Y) := by
@@ -402,8 +387,7 @@ theorem complexCompM_exp (v : {w : InfinitePlace K // IsComplex w}) (Y : ArchMat
       fun k : ℕ => ((k.factorial : ℝ))⁻¹ • complexCompM v Y ^ k := by
     funext k
     simp only [Function.comp_apply, complexCompM_smul, map_pow]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem realCompM_exp_mem_unitaryGroup {Y : ArchMatrix K n} (hY : (mat Y)ᴴ = -mat Y)
     (v : {w : InfinitePlace K // IsReal w}) :

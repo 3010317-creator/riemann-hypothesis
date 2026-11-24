@@ -58,7 +58,7 @@ theorem tele_one_homog {K : Type*} [Fintype K] {ι : K → Type*} [∀ k, Fintyp
   intro m hm k
   have h0 : m = 0 := by
     by_contra hne
-    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, if_neg (Ne.symm hne)] at hm
+    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, ite_eq_right (Ne.symm hne)] at hm
     exact hm rfl
   subst h0
   simp
@@ -106,8 +106,7 @@ theorem tele_herm_ext {K : Type*} [Fintype K] {ι : K → Type*} [∀ k, Fintype
   rfl
 
 theorem tele_rho_zero (m : ConeMetric (C := ℂ) (ι := Ix κ)) : m.ρ 0 = 0 := by
-  have h := m.smul 0 0
-  simpa using h
+  simpa using m.smul 0 0
 
 theorem tele_ofCone_tensor (m₀ m₁ : ConeMetric (C := ℂ) (ι := Ix κ)) :
     HermLine.ofCone m₁ = (HermLine.ofCone m₀).tensor (ratioLine m₀ m₁) := by
@@ -135,7 +134,6 @@ theorem tele_smooth_ratio {m₀ m₁ : ConeMetric (C := ℂ) (ι := Ix κ)} (h�
     intro z hz h0
     obtain ⟨i, hi⟩ := hz ()
     exact hi (congrFun h0 _)
-  show ContDiffOn ℝ _ (fun z => m₁.ρ z / m₀.ρ z) _
   exact (h₁.mono hsub).div (h₀.mono hsub) fun z hz => (m₀.pos z (hsub hz)).ne'
 
 def tele_perm {n : ℕ} (i : Fin (n + 1)) : Equiv.Perm (Fin (n + 1)) :=

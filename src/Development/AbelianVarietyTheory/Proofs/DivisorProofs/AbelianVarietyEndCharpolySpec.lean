@@ -186,8 +186,7 @@ theorem int_of_charpoly_rat_of_monic_annihilator : ∀ (k V : Type) [Field k] [A
     rw [Polynomial.map_pow]; exact hd
   obtain ⟨P₀, hP₀⟩ := IsIntegrallyClosed.eq_map_mul_C_of_dvd ℚ (hQ.pow _) hd'
   refine ⟨P₀, ?_⟩
-  rw [hPm.leadingCoeff, Polynomial.C_1, _root_.mul_one] at hP₀
-  exact hP₀
+  rwa [hPm.leadingCoeff, Polynomial.C_1, _root_.mul_one] at hP₀
 
 end GlobalTheory.AV.AbVar
 end -- clump:auto
@@ -256,14 +255,12 @@ theorem exists_isCharpoly {K : Type} [Field K] (A : AbVar K) (f : End A) : ∃ P
     have h := congrArg (vendRing l A) hQ
     rw [Polynomial.hom_eval₂, map_zero,
       Subsingleton.elim ((vendRing l A).comp (algebraMap ℤ (End A))) (algebraMap ℤ _)] at h
-    rw [Polynomial.aeval_def, ← vendRing_apply]
-    exact h
+    rwa [Polynomial.aeval_def, ← vendRing_apply]
   obtain ⟨P₀, hP₀⟩ := GlobalTheory.T.integral_charpoly_of_monic_integral_annihilator ℚ_[l] (Vl l A) (vmap l f.asHom) P Q hQm hQV hcp
   have hinj : Function.Injective (algebraMap ℤ ℚ) := (algebraMap ℤ ℚ).injective_int
   refine ⟨P₀, ?_, ?_, ?_⟩
   · have h := hPm
-    rw [← hP₀] at h
-    rw [Polynomial.Monic, Polynomial.leadingCoeff_map_of_injective hinj] at h
+    rw [← hP₀, Polynomial.Monic, Polynomial.leadingCoeff_map_of_injective hinj] at h
     exact hinj (by simpa using h)
   · rw [← Polynomial.natDegree_map_eq_of_injective hinj, hP₀, hPd]
   · intro n

@@ -44,8 +44,7 @@ theorem pt_coe {a e : ℕ} (ha : 0 < a) (he : 0 < e) (b : ℕ) (τ : ℍ) :
   unfold pt
   rw [UpperHalfPlane.ofComplex_apply_of_im_pos hz]
 
-theorem DD_ne_zero (τ : ℍ) : DD τ ≠ 0 := by
-  exact ModularForm.discriminant_ne_zero τ
+theorem DD_ne_zero (τ : ℍ) : DD τ ≠ 0 := ModularForm.discriminant_ne_zero τ
 
 theorem smul_of_form {k : ℤ} (g : ModularForm 𝒮ℒ k) (γ : SL(2, ℤ)) (τ : ℍ) :
     g (γ • τ) = denom γ τ ^ k * g τ := by
@@ -70,11 +69,9 @@ theorem IsMF.smul_eq {k : ℤ} {f : ℍ → ℂ} (h : IsMF k f) (γ : SL(2, ℤ)
   rw [← hg, ← hg]
   exact smul_of_form g γ τ
 
-theorem AA_smul (γ : SL(2, ℤ)) (τ : ℍ) : AA (γ • τ) = denom γ τ ^ 12 * AA τ := by
-  exact isMF_AA.smul_eq γ τ
+theorem AA_smul (γ : SL(2, ℤ)) (τ : ℍ) : AA (γ • τ) = denom γ τ ^ 12 * AA τ := isMF_AA.smul_eq γ τ
 
-theorem DD_smul (γ : SL(2, ℤ)) (τ : ℍ) : DD (γ • τ) = denom γ τ ^ 12 * DD τ := by
-  exact isMF_DD.smul_eq γ τ
+theorem DD_smul (γ : SL(2, ℤ)) (τ : ℍ) : DD (γ • τ) = denom γ τ ^ 12 * DD τ := isMF_DD.smul_eq γ τ
 
 theorem jT_smul (γ : SL(2, ℤ)) (τ : ℍ) : jT (γ • τ) = jT τ := by
   unfold jT
@@ -120,8 +117,7 @@ theorem zetaC_pow_self {m : ℕ} (hm : 0 < m) : zetaC m ^ m = 1 := by
   have : (m : ℂ) * (2 * Real.pi * Complex.I / m) = 2 * Real.pi * Complex.I := by field_simp
   rw [this, Complex.exp_two_pi_mul_I]
 
-theorem zetaC_mem (m : ℕ) : zetaC m ∈ Rm m := by
-  exact Subring.subset_closure (Set.mem_singleton _)
+theorem zetaC_mem (m : ℕ) : zetaC m ∈ Rm m := Subring.subset_closure (Set.mem_singleton _)
 
 theorem Rm_isIntegral {m : ℕ} (hm : 0 < m) {x : ℂ} (hx : x ∈ Rm m) : IsIntegral ℤ x := by
   have hζ : IsIntegral ℤ (zetaC m) :=

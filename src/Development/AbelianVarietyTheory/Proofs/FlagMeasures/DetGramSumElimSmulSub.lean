@@ -93,7 +93,7 @@ theorem det_gram_sumElim_frames {r : ℕ} (P : LocNG.FPair H r) :
       · subst ha
         simp [Fr.h_zz]
       · simp [ha, Fr.h_iso a a (Or.inl ha)]
-    · rw [if_neg hab, Fr.h_iso b a ?_]
+    · rw [ite_eq_right hab, Fr.h_iso b a ?_]
       by_contra hc
       simp only [not_or, not_not] at hc
       exact hab (hc.2.trans hc.1.symm)
@@ -112,8 +112,8 @@ theorem det_gram_sumElim_frames {r : ℕ} (P : LocNG.FPair H r) :
       = ((H.Zhat P.A.f P.B.f).submatrix Fin.castSucc Fin.castSucc).transpose.map M.L.cj := rfl
   rw [hsub, det_transpose_map_cj]
   congr 1
-  simp only [LocNG.FPair.Gv, HermSp.Gdet, HermSp.normE, HermSp.Dl, dif_pos le_rfl,
-    dif_pos (Nat.le_succ r), Fin.castLE_rfl, Matrix.submatrix_id_id, castLE_succ_eq_castSucc, map_mul]
+  simp only [LocNG.FPair.Gv, HermSp.Gdet, HermSp.normE, HermSp.Dl, dite_eq_left le_rfl,
+    dite_eq_left (Nat.le_succ r), Fin.castLE_rfl, Matrix.submatrix_id_id, castLE_succ_eq_castSucc, map_mul]
 
 theorem det_gram_sumElim_smul_sub {n : ℕ} (f f' : Fin n → V) (c : F) :
     (H.gram (Sum.elim f fun a => algebraMap F E c • (f' a - f a))).det
@@ -142,15 +142,12 @@ theorem det_gram_frame_generators :
   unfold LocNG.FPair.MMgen HermSp.MMfam LocNG.theta
   cases hs : M.split with
   | none =>
-    simp only [map_one, one_pow, mul_one]
-    exact det_gram_sumElim_frames H P
+    simpa only [map_one, one_pow, mul_one] using det_gram_sumElim_frames H P
   | some g =>
     simp only
     rw [det_gram_sumElim_smul_sub H, det_gram_sumElim_frames H P, mul_comm _ (algebraMap F E _ ^ _),
       ← mul_assoc, ← mul_pow, ← map_mul]
-    have hq : ((g.q : 𝒪[F]) : F) ≠ 0 := by
-      intro h0
-      exact g.q_irr.ne_zero (Subtype.ext h0)
+    have hq : ((g.q : 𝒪[F]) : F) ≠ 0 := fun h0 => g.q_irr.ne_zero (Subtype.ext h0)
     rw [mul_inv_cancel₀ hq, map_one, one_pow, one_mul]
 
 end GlobalTheory

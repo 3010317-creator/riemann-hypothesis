@@ -175,8 +175,7 @@ theorem idV_mul_modulBar_inv : ∀ {D : D7} {T : Type} {L : LevCh D T} (P : Plac
   have h2 := (GlobalTheory.ChiGrid.StairConj.mem_coe_iff D _ _).1 h1
   have h3 : D.host.conj (algebraMap D.host.F D.host.E (t : D.host.F)) = algebraMap D.host.F D.host.E (t : D.host.F) :=
     (D.host.conjE_mem_hostF_iff _).1 (t : D.host.F).2
-  rw [h3] at h2
-  exact h2
+  rwa [h3] at h2
 
 end GlobalTheory.ModBarOff
 end -- clump:auto
@@ -331,8 +330,7 @@ theorem GlobalTheory.AscFin.primAt_jac_std : OnStd fun {D} _ _ {sc} {G} W F => �
     unfold Places.modulBar
     intro h0
     apply G.pl.modul_ne_bot sc
-    have h1 := congrArg (fun I : Ideal (𝓞 D.host.E) => D.host.conj⁻¹ • I) h0
-    simpa using h1
+    simpa using congrArg (fun I : Ideal (𝓞 D.host.E) => D.host.conj⁻¹ • I) h0
   have hA : G.pl.stA sc ≠ 0 := mul_ne_zero (GlobalTheory.CuspCharLattice.host_AA_ne_zero _) (inv_ne_zero hN')
   have hB : G.pl.stAbar sc ≠ 0 := mul_ne_zero (GlobalTheory.Member.LatSelfDual.AAbar_ne_zero D) (inv_ne_zero hN)
   have hne : ∀ p, 𝔟 p ≠ 0 := fun p => mul_ne_zero
@@ -455,8 +453,7 @@ theorem goodAt_stdAt_fb : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ 
   · exact (G.sp.V_is (2 * σ + 3) 0 (by omega) (by omega) (by omega)).sd
   · exact (G.sp.P_is (2 * σ + 3) (by omega)).sd
   · exact (G.sp.V_is (2 * σ + 2) 0 (by omega) (by omega) (by omega)).sd
-  · intro a ha
-    exact r1 _ (_root_.GlobalTheory.AscFinWit.mxAt_mul' ha _)
+  · exact fun a ha => r1 _ (_root_.GlobalTheory.AscFinWit.mxAt_mul' ha _)
   · intro a ha
     obtain ⟨⟨ε, hεε, -, hεi, -, hεoff⟩, -⟩ := GlobalTheory.FinPl.localComponents D (· = v)
     refine ⟨ε • a, fun i j => ?_, ?_⟩
@@ -467,8 +464,7 @@ theorem goodAt_stdAt_fb : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ 
       have e : (F.dJ (σ + 1) h).extX (G.V (.grid (2 * σ + 2) 0)) (ε • a) =
           ε • (F.dJ (σ + 1) h).extX (G.V (.grid (2 * σ + 2) 0)) a := by
         rw [HypDec.extX_apply, HypDec.extX_apply, Matrix.smul_mul]
-      rw [e]
-      exact this
+      rwa [e]
   · intro ξ hξ
     exact r3 _ (_root_.GlobalTheory.AscFinWit.mxAt_mul' (_root_.GlobalTheory.AscFinWit.mxAt_mul _ hξ) _)
 

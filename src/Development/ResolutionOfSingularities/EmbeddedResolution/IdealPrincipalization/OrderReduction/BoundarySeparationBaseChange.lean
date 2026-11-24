@@ -112,7 +112,7 @@ private theorem appendObjIso_hom_of_le {X : Scheme.{u}} (s : BlowupSequenceData 
     (appendSchemeAtIso s t₁ t₂ e i hi).hom =
       eqToHom ((append_schemeAt_of_le_length s t₁ h).trans (append_schemeAt_of_le_length s t₂ h).symm) := by
   unfold appendSchemeAtIso
-  simp only [dif_pos h, eqToIso.hom]
+  simp only [dite_eq_left h, eqToIso.hom]
 
 private theorem appendObjIso_eq_right_of_pos {X : Scheme.{u}} (s : BlowupSequenceData X)
     (t₁ t₂ : BlowupSequenceData (s.obj s.length))
@@ -195,8 +195,7 @@ theorem append_isomorphic_of_isomorphic {X : Scheme.{u}} (s : BlowupSequenceData
   have hl1 : t₁.toSequenceOfBlowups.length = t₁.length := toSequenceOfBlowups_length t₁
   have hl2 : t₂.toSequenceOfBlowups.length = t₂.length := toSequenceOfBlowups_length t₂
   refine append_isomorphic_of_iso s t₁ t₂ (by omega) (fun i hi => e i (by omega)) ?_ ?_ ?_
-  · rw [← toSequenceOfBlowups_isoObjZero t₂, ← toSequenceOfBlowups_isoObjZero t₁]
-    exact hzero
+  · rwa [← toSequenceOfBlowups_isoObjZero t₂, ← toSequenceOfBlowups_isoObjZero t₁]
   · intro i hi
     rw [← toSequenceOfBlowups_blowupMorphism t₂ i, ← toSequenceOfBlowups_blowupMorphism t₁ i]
     exact hmap i (by omega)
@@ -327,8 +326,7 @@ theorem orderAtLeastLocus_inter_support_eq_empty_of_boundarySeparated (S : Marke
   intro D hD
   obtain ⟨i, hi, hin, hget⟩ := exists_index_of_mem_take (s.boundary s.length) n D hD
   have key := h i hin hi
-  rw [hget] at key
-  exact key
+  rwa [hget] at key
 
 theorem lt_length_nil_append_boundary_drop_zero (S : MarkedIdealWithBoundary.{u})
     (s : MarkedBlowupSequenceData S.structMap S.ideal S.mult S.boundary) (j : ℕ)
@@ -389,10 +387,8 @@ theorem separateBoundaryInvariant_separateBoundaryOfFamily (hstar : MaxContactCo
         Eq.trans (congrArg (fun d : BlowupSequenceData S.scheme => d.length) h1)
           (BlowupSequenceData.empty_length S.scheme)
       refine And.intro ?_ (And.intro ?_ ?_)
-      · intro i hi
-        exact absurd hi (Nat.not_lt_zero i)
-      · intro i hi
-        exact absurd hi (by omega)
+      · exact fun i hi => absurd hi (Nat.not_lt_zero i)
+      · exact fun i hi => absurd hi (by omega)
       · exact BoundarySeparationByMaxContact.inStrictNormalCrossingPosition_iteratedStrictTransform_zero S (separateBoundaryOfFamily hinv T A S 0) H hH
   | succ n ih =>
       intro hj
@@ -407,8 +403,7 @@ theorem separateBoundaryInvariant_separateBoundaryOfFamily (hstar : MaxContactCo
           = MaxContactReduction.appendLowerDimReduction hinv T (fun S' _ i => A i S') S
               (separateBoundaryOfFamily hinv T A S n) [] 0 n :=
         MaxContactCoverData.separateBoundary_succ hinv T (fun S' _ i => A i S') S n
-      rw [hstep]
-      exact key
+      rwa [hstep]
 
 private theorem length_separateBoundaryOfFamily_zero (hinv : ComapIsoInvariance.{u}) (T : MarkedIdealWithBoundary.{u})
     (A : ℕ → PrincipalizationAssignment.{u}) (S : MarkedIdealWithBoundary.{u}) :
@@ -434,8 +429,7 @@ private theorem dim_derivedTriple_le_dim (hstar : MaxContactCoverProperties.{u})
     hstar.schemeDim_level_le S hV s.toMarkedSequenceOfBlowups s.length
       (s.le_toSequenceOfBlowups_length (le_refl s.length))
   show krullDimSucc (MaxContactCoverData.derivedTriple S s hft added nDrop).scheme ≤ S.krullDimSucc
-  rw [MaxContactCoverData.derivedTriple_scheme]
-  exact h
+  rwa [MaxContactCoverData.derivedTriple_scheme]
 
 private theorem boundary_length_pullbackTriple (S : MarkedIdealWithBoundary.{u}) {X' : Scheme.{u}}
     (g : X' ⟶ S.scheme) : (LowerDimReductionPullback.pullbackTriple S g).boundary.length = S.boundary.length := by

@@ -78,8 +78,7 @@ private theorem map_mem_nonZeroDivisors_of_flat {R S : Type u} [CommRing R] [Com
       rw [h3, hsmul, TensorProduct.tmul_zero]
     have e0 : ((LinearMap.mulLeft R s).rTensor S) (TensorProduct.tmul R (1 : R) t)
         = ((LinearMap.mulLeft R s).rTensor S) 0 := by
-      rw [LinearMap.rTensor_tmul, map_zero, LinearMap.mulLeft_apply, mul_one]
-      exact e1
+      rwa [LinearMap.rTensor_tmul, map_zero, LinearMap.mulLeft_apply, mul_one]
     have h1 : TensorProduct.tmul R (1 : R) t = (0 : TensorProduct R R S) := hinj e0
     have h2 : (TensorProduct.lid R S) (TensorProduct.tmul R (1 : R) t)
         = (TensorProduct.lid R S) 0 := by rw [h1]
@@ -123,8 +122,7 @@ theorem _root_.FunctorialResolution.Blowup.IsBlowupAlongIdealSheaf.pullback_snd_
     exact h.1.comap_of_flat (pullback.fst π g)
   · intro W m hm
     have hm' : FunctorialResolution.Blowup.IsLocallyGeneratedByNonZeroDivisor (J.comap (m ≫ g)) := by
-      rw [Scheme.IdealSheafData.comap_comp]
-      exact hm
+      rwa [Scheme.IdealSheafData.comap_comp]
     obtain ⟨b, hb, hbuniq⟩ := h.2 W (m ≫ g) hm'
     refine ⟨pullback.lift b m hb, ?_, ?_⟩
     · exact pullback.lift_snd b m hb

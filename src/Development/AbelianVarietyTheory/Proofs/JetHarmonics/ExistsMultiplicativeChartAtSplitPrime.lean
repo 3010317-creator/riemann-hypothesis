@@ -442,8 +442,7 @@ theorem exists_law [IsDomain R] (W : WeierstrassCurve R) :
   have hsl : w 0 - w 1 = l * (X 0 - X 1) := by
     have := eqn_sub (hwe 0) (hwe 1)
     rw [← hl] at this
-    refine mul_left_cancel₀ ?_ (this.trans (mul_assoc _ _ _))
-    exact ne_zero_of_cc (by simp [hw0])
+    exact mul_left_cancel₀ (ne_zero_of_cc (by simp [hw0])) (this.trans (mul_assoc _ _ _))
   set n := w 1 - l * X 1 with hn
   have hn0 : constantCoeff n = 0 := by simp [hn, hw0]
   have e : ∀ i, w i = l * X i + n := by
@@ -572,8 +571,7 @@ theorem log_deriv {W : WeierstrassCurve k} {U V ℓ : PowerSeries k} {c : k}
   have d2 := congrArg (PowerSeries.subst s) d1
   rw [PowerSeries.subst_mul Hs, psubst_psubst hs hℓ, hd, PowerSeries.subst_mul Hg, e2,
     PowerSeries.subst_C, ← PowerSeries.coe_substAlgHom Hs, map_one, PowerSeries.coe_substAlgHom] at d2
-  rw [mul_comm]
-  exact d2
+  rwa [mul_comm]
 
 theorem log_law [IsAddTorsionFree k] {W : WeierstrassCurve k} {U V ℓ : PowerSeries k} {c : k}
     (hV : PowerSeries.constantCoeff V = 0)
@@ -670,8 +668,7 @@ theorem exists_formalGroup {R k : Type} [CommRing R] [IsDomain R] [Field k] [Cha
     rw [map_subst (HasSubst.cons_subst_zero_left (0 : Fin 3) 1 2 hF),
       map_subst (HasSubst.cons_subst_zero_right (0 : Fin 3) 1 2 hF), e, e,
       map_subst HasSubst.X_X, map_subst HasSubst.X_X, e, e]
-    simp only [map_X]
-    exact assoc_of_log hU hℓ hUℓ hℓU hF' hlog
+    simpa only [map_X] using assoc_of_log hU hℓ hUℓ hℓU hF' hlog
   · have c0 : ∀ i, constantCoeff (PowerSeries.subst (X i : MvPowerSeries (Fin 2) k) U) = 0 := fun i =>
       PowerSeries.constantCoeff_subst_eq_zero (constantCoeff_X i) _ hU
     have c1 : ∀ i, PowerSeries.subst (PowerSeries.subst (X i : MvPowerSeries (Fin 2) k) U) ℓ =
@@ -853,8 +850,7 @@ theorem thue_pigeon {q : ℕ} [Fact q.Prime] (a : ℤ_[q]) (k : ℕ) :
     refine le_trans ?_ hm2
     apply sq_le_sq' <;> omega
   refine ⟨((x.1 : ℕ) : ℤ) - ((y.1 : ℕ) : ℤ), ((x.2 : ℕ) : ℤ) - ((y.2 : ℕ) : ℤ), ?_, hb _ _, hb _ _, ?_⟩
-  · by_contra h
-    push_neg at h
+  · by_contra! h
     apply hxy
     ext
     · have := h.1; omega
@@ -893,8 +889,7 @@ theorem exists_small_in_prime_pow : ∀ (d q : ℕ) [Fact q.Prime] (ι : ℂ ≃
   · have : ι ((u : ℂ) + (v : ℂ) * wK d) = zc ((u : ℤ_[q]) + (v : ℤ_[q]) * a) := by
       rw [map_add (f := _), map_mul, ha]
       simp [zc]
-    rw [this, thue_norm_zc]
-    exact hn
+    rwa [this, thue_norm_zc]
   · rw [Complex.mul_conj, hN, hNe]
     simp
   · have h5 : (e : ℤ) * v ^ 2 ≤ d * (q : ℤ) ^ k :=
@@ -952,8 +947,7 @@ theorem relIndex_mul (L : PeriodPair) (β : ℂ) (N : ℕ) (hβ : β ≠ 0) (hL 
     (by rw [L.lattice_eq_span_range_basis]) (by rintro _ ⟨l, hl, rfl⟩; exact hL l hl)
   · have h2 : L.basis.det (L.basis.map f) = Complex.normSq β := by
       have := L.basis.det_comp (Algebra.lmul ℝ ℂ β) L.basis
-      rw [Basis.det_self, mul_one, ← Algebra.norm_apply, Algebra.norm_complex_apply] at this
-      exact this
+      rwa [Basis.det_self, mul_one, ← Algebra.norm_apply, Algebra.norm_complex_apply] at this
     rw [h2, abs_of_nonneg (Complex.normSq_nonneg β)] at h
     rw [Complex.mul_conj] at hN
     have h3 : (N : ℝ) = Complex.normSq β := by exact_mod_cast hN
@@ -1171,7 +1165,7 @@ theorem norm_le_of_bdT (xs : ℂ_[q]⟦X⟧) (k : ℕ) (c : ℕ → ℂ_[q]) (B 
     have h1 := hB (2 * n) (by omega)
 
     rw [← Finset.add_sum_erase _ _ (Finset.mem_range.mpr (Nat.lt_succ_of_le hj)), map_add (f := _), map_sum, mul_assoc,
-    coeff_C_mul, coeff_X_pow_mul', if_pos (by omega), hn, Nat.sub_self, coeff_zero_eq_constantCoeff] at h1
+    coeff_C_mul, coeff_X_pow_mul', ite_eq_left (by omega), hn, Nat.sub_self, coeff_zero_eq_constantCoeff] at h1
     have h2 : ‖∑ l ∈ (Finset.range (k + 1)).erase j, coeff (2 * n) (C (c l) * X ^ (2 * (k - l)) * xs ^ l)‖ ≤ B := by
       refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg hB0 ?_
       intro l hl
@@ -1629,7 +1623,7 @@ theorem padic_multiplications : ∀ (q : ℕ) [Fact q.Prime] (F : FormalGroup �
       rw [hW]
       linear_combination hT + ((d⁄dX U).subst ℓ : ℂ_[q]⟦X⟧) * hh'
     have := hbd (m + N)
-    rw [e, map_add (f := _), map_add (f := _), coeff_X_pow_mul, coeff_X, if_neg (by omega), coeff_X_pow_mul', if_neg (by omega)] at this
+    rw [e, map_add (f := _), map_add (f := _), coeff_X_pow_mul, coeff_X, ite_eq_right (by omega), coeff_X_pow_mul', ite_eq_right (by omega)] at this
     simpa using this
   have hq1 : ‖(q : ℂ_[q])‖ < 1 := by
     rw [← zc_natCast, norm_zc, PadicInt.norm_p]
@@ -1728,8 +1722,7 @@ theorem height_one_of_split : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (F : Fo
     have ar := okArith d q M.ι hd hd16 hs
     obtain ⟨a, ha⟩ := (ar.2.1 β hβ).1
     have hanorm : ‖a‖ ≤ (q : ℝ) ^ (-(k : ℤ)) := by
-      rw [← _root_.GlobalTheory.MomOne.FormalMul.norm_zc, ← ha]
-      exact hβn
+      rwa [← _root_.GlobalTheory.MomOne.FormalMul.norm_zc, ← ha]
     have hlat : ∀ l ∈ M.L.lattice, β * l ∈ M.L.lattice := by
       intro l hl
       rw [hOK] at hl ⊢
@@ -1964,8 +1957,7 @@ theorem exists_scale {R K : Type} [CommRing R] [Field K] [CharZero K] (φ : R �
   have h7 : PowerSeries.subst f' (PowerSeries.map φ (f.substInvOfIsUnit f1)) = (X : K⟦X⟧) :=
     h6.trans (PowerSeries.map_X φ)
   have h8 := psubst_psubst (σ := Unit) u0 f0' (PowerSeries.map φ (f.substInvOfIsUnit f1))
-  rw [h7, h5, X_subst, PowerSeries.subst_X (PowerSeries.HasSubst.of_constantCoeff_zero' u0)] at h8
-  exact h8
+  rwa [h7, h5, X_subst, PowerSeries.subst_X (PowerSeries.HasSubst.of_constantCoeff_zero' u0)] at h8
 
 end Algebra
 

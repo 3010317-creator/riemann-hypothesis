@@ -154,8 +154,7 @@ theorem Rep.mul (hp : ∀ W ∈ 𝒲, W.IsPrime) {z z' : L} {F G F' G' : MRing �
   obtain ⟨b', hF', hG'⟩ := h'.hom
   refine ⟨⟨b + b', IsWeightedHomogeneous.mul hF hF', IsWeightedHomogeneous.mul hG hG'⟩, ?_, ?_, ?_⟩
   · rw [map_mul]; exact mul_ne_zero h.ne h'.ne
-  · intro W hW hm
-    exact ((hp W hW).mem_or_mem hm).elim (h.avoid W hW) (h'.avoid W hW)
+  · exact fun W hW hm => ((hp W hW).mem_or_mem hm).elim (h.avoid W hW) (h'.avoid W hW)
   · rw [h.eq, h'.eq, map_mul, map_mul, div_mul_div_comm]
 
 omit [Fintype K] [∀ k, Fintype (ι k)] in
@@ -709,8 +708,7 @@ theorem Setup.exists_centre (S : Setup φ P 𝒲) (V : ValuationSubring L) (hV :
       apply Subtype.ext
       rw [hχ, dehom, eval₂Hom_X']
       exact div_self (hc k)
-    simp only [ρ, RingHom.comp_apply, h1, map_one]
-    exact one_ne_zero
+    simpa only [ρ, RingHom.comp_apply, h1, map_one] using one_ne_zero
   · refine le_of_forms S.mp.multiHomog fun F b hF h => (hyform F b hF).mpr ?_
     have h0 : χ F = 0 := by
       apply Subtype.ext
@@ -733,8 +731,7 @@ theorem Setup.exists_centre (S : Setup φ P 𝒲) (V : ValuationSubring L) (hV :
     refine ⟨Subtype.mem _, ?_⟩
     have hu : IsLocalRing.residue V (↑hgu.unit⁻¹ : V) ≠ 0 :=
       (IsLocalRing.residue_ne_zero_iff_isUnit _).mpr (Units.isUnit _)
-    simp only [ρ, RingHom.comp_apply, mul_eq_zero]
-    exact ⟨Or.inl, fun h => h.resolve_right hu⟩
+    simpa only [ρ, RingHom.comp_apply, mul_eq_zero] using ⟨Or.inl, fun h => h.resolve_right hu⟩
 
 omit [∀ k, Fintype (ι k)] in
 theorem Setup.frac (S : Setup φ P 𝒲) {W : Ideal (MRing ι R)} (hW : W ∈ 𝒲)
@@ -1226,8 +1223,7 @@ theorem mem_special (hϖ : Irreducible ϖ) {K₁ : Type} [Fintype K₁] [Decidab
     {W : Ideal (MRing ι O)} (hW : (C ϖ : MRing ι O) ∈ W) (F : MRing ι O) :
     MvPolynomial.map (IsLocalRing.residue O) F ∈ specialIdeal W ↔ F ∈ W := by
   refine mem_map_iff_of_ker_le (MvPolynomial.map_surjective _ IsLocalRing.residue_surjective) ?_ F
-  rw [ker_map_residue_eq_span hϖ, Ideal.span_le, Set.singleton_subset_iff]
-  exact hW
+  rwa [ker_map_residue_eq_span hϖ, Ideal.span_le, Set.singleton_subset_iff]
 
 omit [Fintype K] [Fintype K'] [∀ k, Fintype (ι' k)] [IsDomain O] [IsDiscreteValuationRing O] in
 theorem C_mem_comap (W : Ideal (MRing ι' O)) :
@@ -1493,7 +1489,7 @@ theorem fibre_degree (hϖ : Irreducible ϖ) (hP' : IsModelOver P' d)
   rw [← key4, finsum_eq_sum_of_support_subset _ (s := 𝒲.toFinset),
     Finset.sum_set_coe 𝒲 (f := fun W' => divCycle P' (rr j ι' O f) W' * (srd j W' : ℤ))]
   · refine Finset.sum_congr rfl fun W' h => ?_
-    rw [if_pos (Set.mem_toFinset.mp h).2.2]
+    rw [ite_eq_left (Set.mem_toFinset.mp h).2.2]
   · intro W' h
     rw [Function.mem_support] at h
     rw [Set.coe_toFinset]
@@ -1606,26 +1602,26 @@ theorem push (hϖ : Irreducible ϖ) (hP' : IsModelOver P' d)
           (if (C ϖ : MRing (fun k => ι' (j k)) O) ∈ W then vNum W a else 0)) := by
     intro W
     by_cases hW : (C ϖ : MRing (fun k => ι' (j k)) O) ∈ W
-    · rw [if_pos hW, hδ, ← fibre_num hϖ hP' hP hf hfP hW φ hφ a,
+    · rw [ite_eq_left hW, hδ, ← fibre_num hϖ hP' hP hf hfP hW φ hφ a,
         finsum_eq_sum_of_support_subset _ (s := hZ.toFinset), Finset.sum_filter]
       · refine Finset.sum_congr rfl fun W' _ => ?_
         by_cases h1 : W'.comap (rr j ι' O) = W
-        · rw [if_pos h1, if_pos h1, hg_def]
+        · rw [ite_eq_left h1, ite_eq_left h1, hg_def]
           dsimp only
-          rw [if_pos ((C_mem_comap j ι' W').mp (by rw [h1]; exact hW))]
-        · rw [if_neg h1, if_neg h1]
+          rw [ite_eq_left ((C_mem_comap j ι' W').mp (by rw [h1]; exact hW))]
+        · rw [ite_eq_right h1, ite_eq_right h1]
       · intro W' hW'
         refine hZ.mem_toFinset.mpr ?_
         rw [Function.mem_support] at hW' ⊢
         intro h0
         apply hW'
         simp [h0]
-    · rw [if_neg hW, mul_zero, mul_zero]
+    · rw [ite_eq_right hW, mul_zero, mul_zero]
       refine Finset.sum_eq_zero fun W' hW' => ?_
       have h1 := (Finset.mem_filter.mp hW').2
       rw [hg_def]
       dsimp only
-      rw [if_neg (fun h => hW (h1 ▸ (C_mem_comap j ι' W').mpr h)), mul_zero]
+      rw [ite_eq_right (fun h => hW (h1 ▸ (C_mem_comap j ι' W').mpr h)), mul_zero]
   unfold cycEval
   rw [mul_finsum]
   calc (∑ᶠ W', g W') = ∑ W' ∈ hZ.toFinset, g W' := finsum_eq_sum_of_support_subset g hg

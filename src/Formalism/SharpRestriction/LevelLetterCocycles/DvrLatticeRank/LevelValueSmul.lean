@@ -98,15 +98,14 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 theorem lev_letE_mul (c : ZMod n) (ζ : LL) (a : LetA O n) :
     W.lev c ζ ((letE c : LetA O n) * a) = W.lev c ζ a := by
   have h := W.lev_letter c ζ ((letE c : LetA O n) * a - a) (by simp [letE])
-  rw [map_sub, sub_eq_zero] at h
-  exact h
+  rwa [map_sub, sub_eq_zero] at h
 
 theorem levN_smul_alg (i : ZMod n) (ζ : LL) (o : O) (x : ↥(W.N T)) (k : ℤ) :
     W.levN T i ζ ((algebraMap O (LetA O n) o) • x) k = algebraMap O LL o • W.levN T i ζ x k := by
   rw [W.levN_smul, AlgHom.commutes, Algebra.algebraMap_eq_smul_one (A := PowerSeries LL) o]
   try simp only [serMul]
   rw [finsum_eq_single _ 0 (fun j hj => by
-    rw [PowerSeries.coeff_smul, PowerSeries.coeff_one, if_neg hj, smul_zero, zero_smul])]
+    rw [PowerSeries.coeff_smul, PowerSeries.coeff_one, ite_eq_right hj, smul_zero, zero_smul])]
   rw [PowerSeries.coeff_smul, PowerSeries.coeff_zero_one, Nat.cast_zero, sub_zero,
     Algebra.smul_def o (1 : LL), mul_one]
 
@@ -181,9 +180,7 @@ theorem valL_ker {c : ZMod n} {ζ : LL} (hP : PtHyp (W := W) T c ζ) (π' : LetA
   change valAt W T c ζ (x : W.DD T) = 0
   rw [valAt_eq Ct T hP ⟨x, hxN⟩]
   have hzx' : (π' ^ 1) • z = (x : W.DD T) := hzx
-  have hxe : (⟨x, hxN⟩ : ↥(W.N T)) = (π' ^ 1) • ⟨z, hz⟩ := by
-    apply Subtype.ext
-    exact hzx'.symm
+  have hxe : (⟨x, hxN⟩ : ↥(W.N T)) = (π' ^ 1) • ⟨z, hz⟩ := Subtype.ext hzx'.symm
   have hneg := hP.2.2.2.2.2.1
   have h0 : Ct.levB T (c - 1) 1 ⟨x, hxN⟩ 0 = 0 := by
     apply framepf_ιV_inj (PD := PD) T

@@ -94,8 +94,7 @@ theorem complexHadamard : ComplexHadamard := by
   refine ⟨?_, ?_⟩
   · refine (pow_le_pow_iff_left₀ (norm_nonneg _)
       (Finset.prod_nonneg fun j _ => Real.sqrt_nonneg _) two_ne_zero).1 ?_
-    rw [hprod]
-    exact h1
+    rwa [hprod]
   · have h2 := Formalism.HadamardInequality.P.hadamard_maximum_holds n M A hA
     rcases Nat.eq_zero_or_pos n with rfl | hn
     · simp
@@ -103,8 +102,7 @@ theorem complexHadamard : ComplexHadamard := by
     have h3 : ((Real.sqrt n * A) ^ n) ^ 2 = ((n : ℝ) * A ^ 2) ^ n := by
       rw [← pow_mul, mul_comm n 2, pow_mul, mul_pow, Real.sq_sqrt (Nat.cast_nonneg _)]
     refine (pow_le_pow_iff_left₀ (norm_nonneg _) (by positivity) two_ne_zero).1 ?_
-    rw [h3]
-    exact h2
+    rwa [h3]
 
 end Formalism.LatticeBaseChangeAlt
 end -- clump:auto

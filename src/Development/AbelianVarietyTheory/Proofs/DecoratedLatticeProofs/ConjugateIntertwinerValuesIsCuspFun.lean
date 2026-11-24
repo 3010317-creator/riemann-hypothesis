@@ -187,8 +187,7 @@ theorem mem_NI_iff_iota : ∀ (D : D7) {r : ℕ} (C : Matrix (Fin (D.sp.Y 0).ran
     · have hb := (Formalism.IndefR.RationalEmbedding.iota_symm_isBridge D (T h)).2
       have h2 := hb.trans (congrArg (Formalism.L2.SG.AdBridge.ofHAFin I) hs)
       unfold Formalism.L2.SG.AdBridge.ofHAFin at h2
-      rw [Formalism.L2.SG.EvalTIota.tauF_eq_i] at h2
-      exact h2
+      rwa [Formalism.L2.SG.EvalTIota.tauF_eq_i] at h2
     · obtain ⟨ρ, rfl⟩ := (Formalism.L2.Host.tauPl D).surjective v
       have hb := Formalism.L2.SG.EvalTIota.infMat_brg_i (T h) ρ
       rw [hs] at hb
@@ -232,7 +231,7 @@ theorem isCuspFn_of_contRep {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSettin
     intro y
     have h := hfund.2.1 y
     have e : X.B.I.rep X.B.fund y = h.choose * y := by
-      unfold Formalism.MainNotions.S.AutInst.rep; exact dif_pos h
+      unfold Formalism.MainNotions.S.AutInst.rep; exact dite_eq_left h
     have hm : h.choose ∈ (Γ : Set X.B.I.GA) := by
       have k := h.choose_spec.1
       generalize h.choose = z at k ⊢
@@ -267,8 +266,7 @@ theorem conjMap_isCuspFun : GlobalTheory.Published.DiscreteSeriesClassification 
   show ∫ n in 𝓕, star (ψ (iotaX X h ((n : GA D (D.sp.Y 0)) * g * t⁻¹))) ∂μ = 0
   simp only [mul_assoc]
   have := congrArg (starRingEnd ℂ) hz
-  rw [← integral_conj, map_zero] at this
-  exact this
+  rwa [← integral_conj, map_zero] at this
 
 end GlobalTheory.ConjRowMultCusp
 

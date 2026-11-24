@@ -132,8 +132,7 @@ theorem corr_scaled (hL : L.IsLB) {K K' : Type} [Fintype K] [Fintype K'] (φ : K
     have E' := c' j j' hj hj' hjj
     rw [h₁' j, h₂' j'] at E'
     erw [key, key, res_res, res_res, E] at E'
-    have E2 := mul_right_cancel E'
-    exact ⟨_, hyW, congrArg Units.val E2⟩
+    exact ⟨_, hyW, congrArg Units.val (mul_right_cancel E')⟩
   choose W hyW hW using hcov
   exact TopCat.Sheaf.eq_of_locally_eq' Y.sheaf W ⊤ (fun y => homOfLE le_top)
     (fun y _ => TopologicalSpace.Opens.mem_iSup.2 ⟨y, hyW y⟩) _ _ hW

@@ -108,12 +108,10 @@ theorem UpperTheory.V.AlgebraTools.hkInv :
       constructor
       · rintro ⟨p, hp, rfl⟩
         rwa [hff]
-      · intro hq
-        exact ⟨_, hq, hff q⟩
+      · exact fun hq => ⟨_, hq, hff q⟩
     have hnot : (a, c) ∉ (invSet w).image (fun p => (swap a c p.1, swap a c p.2)) := by
       rw [hmemimg, mem_invSet]
-      simp only [swap_apply_left, swap_apply_right]
-      exact fun h => absurd h.1 (lt_asymm hlt)
+      simpa only [swap_apply_left, swap_apply_right] using fun h => absurd h.1 (lt_asymm hlt)
     have heq : invSet (swap a c * w) = insert (a, c) ((invSet w).image (fun p => (swap a c p.1, swap a c p.2))) := by
       ext ⟨x, y⟩
       rw [Finset.mem_insert, hmemimg, mem_invSet, mem_invSet]
@@ -142,11 +140,9 @@ theorem UpperTheory.V.AlgebraTools.hkInv :
     rw [heq, Finset.card_insert_of_notMem hnot, Finset.card_image_of_injective]
     intro p q hpq
     have := congrArg (fun r : Fin n × Fin n => (swap a c r.1, swap a c r.2)) hpq
-    simp only [hff] at this
-    exact this
+    simpa only [hff] using this
   · intro w hw
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hw
     have hadj : ∀ a c : Fin n, a.val + 1 = c.val → w⁻¹ a < w⁻¹ c := by
       intro a c h
@@ -159,8 +155,7 @@ theorem UpperTheory.V.AlgebraTools.hkInv :
       intro k
       induction k with
       | zero =>
-        intro i j h
-        exact hadj i j (by omega)
+        exact fun i j h => hadj i j (by omega)
       | succ k ih =>
         intro i j h
         have hj := j.isLt
@@ -192,8 +187,7 @@ theorem UpperTheory.V.AlgebraTools.hkInv :
       exact ((mem_invSet w _).mp hm).2
     have hsm : StrictMono ⇑(w⁻¹ * (Fin.revPerm : Perm (Fin n))) := by
       intro i j hij
-      simp only [Perm.mul_apply, Fin.revPerm_apply]
-      exact hall _ _ (Fin.rev_lt_rev.mpr hij)
+      simpa only [Perm.mul_apply, Fin.revPerm_apply] using hall _ _ (Fin.rev_lt_rev.mpr hij)
     have h1 := eq_one_of_strictMono _ hsm
     rw [mul_eq_one_iff_eq_inv] at h1
     exact inv_inj.mp h1

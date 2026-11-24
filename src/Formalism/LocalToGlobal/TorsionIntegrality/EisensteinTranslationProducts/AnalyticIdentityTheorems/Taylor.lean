@@ -82,8 +82,7 @@ theorem iteratedDeriv_comp_mul (a : ℂ) (n : ℕ) : ∀ f : ℂ → ℂ, Analyt
       have h2 : HasDerivAt (fun z : ℂ => a * z) a z := by
         simpa using (hasDerivAt_id z).const_mul a
       have := (h1.comp z h2).deriv
-      rw [mul_comm] at this
-      exact this
+      rwa [mul_comm] at this
     rw [iteratedDeriv_succ', he.iteratedDeriv_eq, iteratedDeriv_const_mul_field, ih _ hf.deriv,
       iteratedDeriv_succ', pow_succ]
     ring
@@ -107,8 +106,7 @@ theorem taylor0_inj {f g : ℂ → ℂ} (hf : AnalyticAt ℂ f 0) (hg : Analytic
     rw [iteratedDeriv_fun_sub hf.contDiffAt hg.contDiffAt, h2, sub_self]
   have ht : analyticOrderAt (fun z => f z - g z) 0 = ⊤ := by
     rw [ENat.eq_top_iff_forall_ge]
-    intro n
-    exact (natCast_le_analyticOrderAt_iff_iteratedDeriv_eq_zero hd).mpr fun i _ => h0 i
+    exact fun n => (natCast_le_analyticOrderAt_iff_iteratedDeriv_eq_zero hd).mpr fun i _ => h0 i
   rw [analyticOrderAt_eq_top] at ht
   filter_upwards [ht] with z hz
   exact sub_eq_zero.mp hz
@@ -146,8 +144,7 @@ theorem taylor0_exp {f : ℂ → ℂ} (hf : AnalyticAt ℂ f 0) (h0 : f 0 = 0) :
   have he : deriv (fun z => Complex.exp (f z)) =ᶠ[nhds 0] fun z => deriv f z * Complex.exp (f z) := by
     filter_upwards [hf.eventually_analyticAt] with z hz
     have := (hz.differentiableAt.hasDerivAt.cexp).deriv
-    rw [mul_comm] at this
-    exact this
+    rwa [mul_comm] at this
   have h1 : derivative (taylor0 fun z => Complex.exp (f z))
       = derivative (taylor0 f) * taylor0 fun z => Complex.exp (f z) := by
     rw [← taylor0_deriv, taylor0_congr he, taylor0_mul hf.deriv hE, taylor0_deriv]

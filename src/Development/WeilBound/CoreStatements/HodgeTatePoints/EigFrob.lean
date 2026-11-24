@@ -85,9 +85,7 @@ theorem eig_frob : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.Prime] [CharP K p]
       have h1 := congrFun (hy a) r
       simp only [Matrix.toLin'_apply, Matrix.mulVec, dotProduct, Matrix.map_apply, Pi.smul_apply,
         smul_eq_mul] at h1
-      have h2 := congrArg (fun u => (β.repr u ι : K)) h1
-      simp only [hsum, hrepr] at h2
-      exact h2
+      simpa only [hsum, hrepr] using congrArg (fun u => (β.repr u ι : K)) h1
     have hex : ∀ ι j, ∃ x : K, x ^ p = z ι j := by
       intro ι j
       obtain ⟨x, hx⟩ := RingHom.mem_fieldRange.1 (β.repr (y j) ι).2
@@ -101,8 +99,7 @@ theorem eig_frob : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.Prime] [CharP K p]
       simp only [Matrix.toLin'_apply, Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul]
       apply frobenius_inj K p
       rw [frobenius_def, frobenius_def, sum_pow_char, mul_pow]
-      simp only [mul_pow, hx]
-      exact hz ι a r
+      simpa only [mul_pow, hx] using hz ι a r
     let T := Finset.univ.biUnion fun j => (β.repr (y j)).support
     have hT : y = ∑ ι ∈ T, β ι • frobVec p (x ι) := by
       funext j
@@ -163,7 +160,7 @@ theorem eig_dual : ∀ (K : Type) [Field K] (C : ACurve K) (d : ℕ) (L : C.I �
 
     simp only [LinearMap.smul_apply, Matrix.toLin'_apply, hy, smul_smul, ← map_mul,
     ← Finset.sum_smul, ← map_sum]
-    rw [hc s, if_pos rfl, map_one, one_smul]
+    rw [hc s, ite_eq_left rfl, map_one, one_smul]
   have hETW : ∀ z, E.transpose.mulVec z ∈ W' := by
     intro z
     rw [hW', mem_eig]
@@ -172,8 +169,7 @@ theorem eig_dual : ∀ (K : Type) [Field K] (C : ACurve K) (d : ℕ) (L : C.I �
       refine Matrix.toLin'.injective (LinearMap.ext fun w => ?_)
       rw [map_smul, LinearMap.smul_apply, Matrix.toLin'_apply, Matrix.toLin'_apply,
         ← Matrix.mulVec_mulVec]
-      have h1 := (mem_eig.1 (hEW w)) a
-      simpa only [Matrix.toLin'_apply] using h1
+      simpa only [Matrix.toLin'_apply] using (mem_eig.1 (hEW w)) a
     have h2 : (ρ a).transpose * E.transpose = algebraMap k K (χ s a) • E.transpose := by
       have hcm : E * ρ a = ρ a * E := by
         rw [hE, Finset.sum_mul, Finset.mul_sum]
@@ -231,10 +227,8 @@ theorem eig_dual : ∀ (K : Type) [Field K] (C : ACurve K) (d : ℕ) (L : C.I �
         rw [← hadj, hETid _ y.2]
       rw [hxy]
       exact h _ (hEL i x hx)
-    · intro h x hx
-      exact h x hx
+    · exact fun h x hx => h x hx
   show deg C (sub C (dotDual C L) W') = -deg C (sub C L W)
-  rw [← hident]
-  exact hdeg
+  rwa [← hident]
 
 end PositivityTheory.HtPt.Ci

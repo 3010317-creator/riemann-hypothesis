@@ -1405,14 +1405,7 @@ theorem ξ_mul_ratio (X Y : Data E r) : Y.ξ0 * ratio X Y = X.ξ0 ∨ Y.ξ0 * ra
   · right; field_simp
   · left; field_simp
 
-theorem re_κ (X : Data E r) (τ : E →+* ℂ) : (τ X.κ0).re = 0 := by
-  have h := IsCMField.complexEmbedding_complexConj E τ X.κ0
-  have h' := cc_κ X
-  unfold cc at h'
-  rw [h', map_neg] at h
-  have := congrArg Complex.re h
-  simp at this
-  linarith
+theorem re_κ (X : Data E r) (τ : E →+* ℂ) : (τ X.κ0).re = 0 := GlobalTheory.SW.DblPoint.re_kappa X τ
 
 theorem exists_sq (X Y : Data E r) (hΨ : X.Ψ = Y.Ψ) {τ : E →+* ℂ} (hτ : τ ∈ X.Ψ) :
     ∃ t : ℝ, t ≠ 0 ∧ (t : ℂ) * t * τ (ratio X Y) = 1 := by
@@ -1581,7 +1574,7 @@ theorem transv_conj (ξ : Fin r → E) (α : E) :
     intro G ξ x α
     funext a
     simp only [transvMat, herm, Matrix.mulVec, dotProduct, Matrix.of_apply, add_mul, Finset.sum_add_distrib,
-      ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.add_apply, Pi.smul_apply,
+      ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.add_apply, Pi.smul_apply,
       smul_eq_mul, Finset.mul_sum, Finset.sum_mul]
     congr 1
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring

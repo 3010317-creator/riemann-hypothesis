@@ -173,7 +173,7 @@ theorem dpbP_E {ε : Fin n → Bool} (w : PCoord ε → ℂ) : dpbP ε (dpbE ε 
   funext ab
   obtain ⟨⟨a, b⟩, hab, hne⟩ := ab
   have h1 : ¬ (a < b ∧ ε b ≠ ε a) := fun h => absurd h.1 (not_lt.mpr hab.le)
-  simp only [dpbP, dpbE, LinearMap.coe_mk, AddHom.coe_mk, pmat, dif_pos (And.intro hab hne), dif_neg h1,
+  simp only [dpbP, dpbE, LinearMap.coe_mk, AddHom.coe_mk, pmat, dite_eq_left (And.intro hab hne), dite_eq_right h1,
     star_star]
   rw [Complex.real_smul]
   push_cast
@@ -192,18 +192,18 @@ theorem dpbE_P {ε : Fin n → Bool} (W : Matrix (Fin n) (Fin n) ℂ) :
   by_cases hε : ε a = ε b
   · have h1 : ¬ (b < a ∧ ε a ≠ ε b) := fun h => h.2 hε
     have h2 : ¬ (a < b ∧ ε b ≠ ε a) := fun h => h.2 hε.symm
-    rw [dif_neg h1, dif_neg h2, if_pos hε, if_pos hε.symm]
+    rw [dite_eq_right h1, dite_eq_right h2, ite_eq_left hε, ite_eq_left hε.symm]
     simp
-  · rw [if_neg hε, if_neg (Ne.symm hε)]
+  · rw [ite_eq_right hε, ite_eq_right (Ne.symm hε)]
     rcases lt_trichotomy a b with h | h | h
     · have h1 : ¬ (b < a ∧ ε a ≠ ε b) := fun h' => absurd h'.1 (not_lt.mpr h.le)
-      rw [dif_neg h1, dif_pos (And.intro h (Ne.symm hε))]
+      rw [dite_eq_right h1, dite_eq_left (And.intro h (Ne.symm hε))]
       simp only [Complex.real_smul]
       push_cast
       simp only [star_add, star_mul', star_star, star_div₀, star_one, star_ofNat, star_neg]
       ring
     · exact absurd (h ▸ rfl) hε
-    · rw [dif_pos (And.intro h hε)]
+    · rw [dite_eq_left (And.intro h hε)]
       simp only [star_neg, Complex.real_smul]
       push_cast
       ring
@@ -220,14 +220,14 @@ theorem dpb_shc_neg (u : ℝ) : shc (-u) = shc u := by
   unfold shc
   by_cases h : u = 0
   · simp [h]
-  · rw [if_neg (neg_ne_zero.mpr h), if_neg h, Real.sinh_neg, neg_div_neg_eq]
+  · rw [ite_eq_right (neg_ne_zero.mpr h), ite_eq_right h, Real.sinh_neg, neg_div_neg_eq]
 
 theorem dpb_shc_fac : (fun u : ℝ => u * ((shc u - 1) / u)) = fun u => shc u - 1 := by
   funext u
   unfold shc
   by_cases h : u = 0
   · simp [h]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     field_simp
 
 theorem dpb_theta_ad {J Y : Matrix (Fin n) (Fin n) ℂ} (hJ : J * J = 1) (hY : J * Y * J = -Y)
@@ -280,18 +280,12 @@ theorem dpb_det {ε : Fin n → Bool} {U : Matrix (Fin n) (Fin n) ℂ} {x : Fin 
   · intro v
     show Jm ε * (Jm ε * v * Jm ε) * Jm ε = v
     simp only [Matrix.mul_assoc, hJJ, Matrix.mul_one, hJJv]
-  · intro v
-    show (vᴴ)ᴴ = v
-    exact Matrix.conjTranspose_conjTranspose v
+  · exact fun v => Matrix.conjTranspose_conjTranspose v
   · intro v
     show Jm ε * vᴴ * Jm ε = (Jm ε * v * Jm ε)ᴴ
     simp only [Matrix.conjTranspose_mul, hJh, Matrix.mul_assoc]
-  · intro v
-    show Jm ε * dpbH U x shc v * Jm ε = dpbH U x shc (Jm ε * v * Jm ε)
-    exact dpbH_theta hU hU' hJJ hJh hY shc dpb_shc_neg v
-  · intro v
-    show (dpbH U x shc v)ᴴ = dpbH U x shc vᴴ
-    exact dpbH_conjTranspose U x shc dpb_shc_neg v
+  · exact fun v => dpbH_theta hU hU' hJJ hJh hY shc dpb_shc_neg v
+  · exact fun v => dpbH_conjTranspose U x shc dpb_shc_neg v
   · intro v
     show (U * dpbD x * Uᴴ) * dpbH U x (fun u => (shc u - 1) / u) v -
       dpbH U x (fun u => (shc u - 1) / u) v * (U * dpbD x * Uᴴ) = dpbH U x shc v - v
@@ -307,19 +301,15 @@ theorem dpb_det {ε : Fin n → Bool} {U : Matrix (Fin n) (Fin n) ℂ} {x : Fin 
   · intro v
     show Complex.I • (Complex.I • v) = -v
     rw [smul_smul, Complex.I_mul_I, neg_one_smul]
-  · intro v
-    show Complex.I • dpbH U x shc v = dpbH U x shc (Complex.I • v)
-    exact (dpbH_smul U x shc Complex.I v).symm
+  · exact fun v => (dpbH_smul U x shc Complex.I v).symm
   · intro v
     show Jm ε * (Complex.I • v) * Jm ε = Complex.I • (Jm ε * v * Jm ε)
     rw [Matrix.mul_smul, Matrix.smul_mul]
   · intro v
     show (Complex.I • v)ᴴ = -(Complex.I • vᴴ)
     rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_I, neg_smul]
-  · intro v
-    exact dpbE_P v
-  · intro w
-    exact dpbP_E w
+  · exact fun v => dpbE_P v
+  · exact fun w => dpbP_E w
 
 end ReciprocityTheory.ChartRestriction.DS
 end -- clump:auto
@@ -393,8 +383,7 @@ theorem det_pos_of_posForm {V : Type*} [AddCommGroup V] [Module ℝ V] [FiniteDi
     (T : V →ₗ[ℝ] V) (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (hBs : ∀ v w, B v w = B w v)
     (hB : ∀ v, v ≠ 0 → 0 < B v v) (hT : ∀ v w, B v (T w) = B (T v) w)
     (hTp : ∀ v, v ≠ 0 → 0 < B v (T v)) : 0 < LinearMap.det T := by
-  by_contra hneg
-  push_neg at hneg
+  by_contra! hneg
   set f : ℝ → ℝ := fun t => LinearMap.det (t • T + (1 - t) • LinearMap.id) with hf
   have hcont : Continuous f := by
     let b := Module.finBasis ℝ V
@@ -448,19 +437,13 @@ theorem trace_conj_mul_right (U S Z : Matrix (Fin n) (Fin n) ℂ) :
     _ = trace ((Sᴴ * Uᴴ * Z) * U) := Matrix.trace_mul_comm _ _
     _ = trace (Sᴴ * (Uᴴ * Z * U)) := by simp only [Matrix.mul_assoc]
 
-theorem shc_pos (u : ℝ) : 0 < shc u := by
-  unfold shc
-  split_ifs with h
-  · exact one_pos
-  · rcases lt_or_gt_of_ne h with hu | hu
-    · exact div_pos_of_neg_of_neg (Real.sinh_neg_iff.2 hu) hu
-    · exact div_pos (Real.sinh_pos_iff.2 hu) hu
+theorem shc_pos (u : ℝ) : 0 < shc u := ReciprocityTheory.ChartRestriction.DS.pb_shc_pos u
 
 theorem shc_neg (u : ℝ) : shc (-u) = shc u := by
   unfold shc
   by_cases h : u = 0
   · simp [h]
-  · rw [if_neg (neg_ne_zero.2 h), if_neg h, Real.sinh_neg, neg_div_neg_eq]
+  · rw [ite_eq_right (neg_ne_zero.2 h), ite_eq_right h, Real.sinh_neg, neg_div_neg_eq]
 
 section U
 variable {ε : Fin n → Bool} (y : PCoord ε → ℂ)
@@ -508,8 +491,7 @@ theorem trF_shcAd_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF 
             Matrix.mul_assoc, Uy_mul_star, Matrix.mul_one]
       _ = 0 := by rw [h, Matrix.mul_zero, Matrix.zero_mul]
   obtain ⟨i0, j0, hij⟩ : ∃ i j, W i j ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hW0 (Matrix.ext fun i j => h i j)
   have hterm : ∀ i j, (((shc (pev y i - pev y j) : ℝ) : ℂ) * (star (W i j) * W i j)).re =
       shc (pev y i - pev y j) * Complex.normSq (W i j) := by
@@ -523,8 +505,7 @@ theorem trF_shcAd_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF 
     exact Finset.sum_nonneg fun j _ => mul_nonneg (shc_pos _).le (Complex.normSq_nonneg _)
   · refine ⟨i0, Finset.mem_univ _, ?_⟩
     apply Finset.sum_pos'
-    · intro j _
-      exact mul_nonneg (shc_pos _).le (Complex.normSq_nonneg _)
+    · exact fun j _ => mul_nonneg (shc_pos _).le (Complex.normSq_nonneg _)
     · exact ⟨j0, Finset.mem_univ _, mul_pos (shc_pos _) (Complex.normSq_pos.2 hij)⟩
 
 end U
@@ -562,8 +543,7 @@ theorem trF_smul_right (c : ℝ) (X Z : Matrix (Fin n) (Fin n) ℂ) : trF X (c �
 theorem trF_self_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF X X := by
   unfold trF
   obtain ⟨i0, j0, hij⟩ : ∃ i j, X i j ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hX (Matrix.ext fun i j => h i j)
   have hterm : ∀ i j, (star (X i j) * X i j).re = Complex.normSq (X i j) := by
     intro i j
@@ -572,12 +552,10 @@ theorem trF_self_pos (X : Matrix (Fin n) (Fin n) ℂ) (hX : X ≠ 0) : 0 < trF X
     rw [h, Complex.ofReal_re]
   simp only [Complex.re_sum, hterm]
   apply Finset.sum_pos'
-  · intro i _
-    exact Finset.sum_nonneg fun j _ => Complex.normSq_nonneg _
+  · exact fun i _ => Finset.sum_nonneg fun j _ => Complex.normSq_nonneg _
   · refine ⟨i0, Finset.mem_univ _, ?_⟩
     apply Finset.sum_pos'
-    · intro j _
-      exact Complex.normSq_nonneg _
+    · exact fun j _ => Complex.normSq_nonneg _
     · exact ⟨j0, Finset.mem_univ _, Complex.normSq_pos.2 hij⟩
 
 section P
@@ -596,7 +574,7 @@ theorem pmat_smul' (c : ℝ) (v : PCoord ε → ℂ) : pmat (c • v) = c • pm
 
 theorem pmat_apply_coord (v : PCoord ε → ℂ) (ab : PCoord ε) : pmat v ab.1.1 ab.1.2 = v ab := by
   obtain ⟨⟨a, b⟩, h⟩ := ab
-  simp only [pmat, dif_pos h]
+  simp only [pmat, dite_eq_left h]
 
 theorem pmat_ne_zero (v : PCoord ε → ℂ) (hv : v ≠ 0) : pmat v ≠ 0 := by
   intro h
@@ -785,17 +763,14 @@ def Bp (ε : Fin n → Bool) : (PCoord ε → ℂ) →ₗ[ℝ] (PCoord ε → �
 theorem det_shcAdCL_pos (y : PCoord ε → ℂ) : 0 < LinearMap.det (shcAdCL y) := by
   apply det_pos_of_posForm (shcAdCL y) (Bp ε)
   · intro v w
-    simp only [Bp, LinearMap.mk₂_apply]
-    exact trF_comm _ _
+    simpa only [Bp, LinearMap.mk₂_apply] using trF_comm _ _
   · intro v hv
-    simp only [Bp, LinearMap.mk₂_apply]
-    exact trF_self_pos _ (pmat_ne_zero v hv)
+    simpa only [Bp, LinearMap.mk₂_apply] using trF_self_pos _ (pmat_ne_zero v hv)
   · intro v w
     simp only [Bp, LinearMap.mk₂_apply, pmat_shcAdCL]
     rw [trF_shcAd_right, trF_shcAd_left]
   · intro v hv
-    simp only [Bp, LinearMap.mk₂_apply, pmat_shcAdCL]
-    exact trF_shcAd_pos y _ (pmat_ne_zero v hv)
+    simpa only [Bp, LinearMap.mk₂_apply, pmat_shcAdCL] using trF_shcAd_pos y _ (pmat_ne_zero v hv)
 
 end P
 
@@ -1148,8 +1123,7 @@ theorem fderiv_exp_two {ε : Fin n → Bool} (y : PCoord ε → ℂ) (W : Matrix
       fun s : ℝ => NormedSpace.exp ((2 : ℝ) • pmat y + s • W) := by
     funext s
     rw [two_smul, two_smul, Complex.coe_smul]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem conj_cancel {A B X : Matrix (Fin n) (Fin n) ℂ}
     (h : NormedSpace.exp X * A * NormedSpace.exp X = NormedSpace.exp X * B * NormedSpace.exp X) :

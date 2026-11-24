@@ -244,8 +244,7 @@ private theorem sk_comp {O : Type} [CommRing O] {R R₀ T T₀ : Type} [CommRing
       rw [e1, e2, h.1, hD]
       rfl
     · have e := h.2 v i
-      rw [← hψ] at e
-      exact e
+      rwa [← hψ] at e
   exact DFunLike.congr_fun e t
 
 theorem UpperTheory.V.Hi.levelUR2SmulKey_alt :

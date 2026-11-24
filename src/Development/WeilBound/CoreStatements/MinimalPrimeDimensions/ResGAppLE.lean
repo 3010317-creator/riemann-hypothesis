@@ -114,8 +114,7 @@ theorem stPull : StPull := by
           (i.appLE _ _ hV.le).hom.comp (eval₂Hom (algX p (nonzeroLocus (s k))) t) := by
         apply MvPolynomial.ringHom_ext
         · intro a
-          simp only [RingHom.comp_apply, MvPolynomial.eval₂Hom_C]
-          exact algX_comp i p hV.le a
+          simpa only [RingHom.comp_apply, MvPolynomial.eval₂Hom_C] using algX_comp i p hV.le a
         · intro j
           simp only [RingHom.comp_apply, MvPolynomial.eval₂Hom_X']
       rw [hcomp]
@@ -123,12 +122,10 @@ theorem stPull : StPull := by
     · intro j J
       have hle : nonzeroLocus (GlobalTheory.secPull (s k) i) ⊓ (B.pull i).U J ≤
           i ⁻¹ᵁ (nonzeroLocus (s k) ⊓ B.U (J PUnit.unit)) := by
-        intro y hy
-        exact ⟨hV.le hy.1, (GlobalTheory.LB.pull_U i J).le hy.2⟩
+        exact fun y hy => ⟨hV.le hy.1, (GlobalTheory.LB.pull_U i J).le hy.2⟩
       have key := congrArg (i.appLE _ _ hle).hom (hrel j (J PUnit.unit))
       simp only [map_mul, hAR] at key
-      simp only [hf, resG_appLE]
-      exact key
+      simpa only [hf, resG_appLE] using key
   · intro y
     have hker : ∀ (J : (B.pull i).ι) (h : y ∈ (B.pull i).U J),
         RingHom.ker (coneHom (i ≫ p) (fun k => GlobalTheory.secPull (s k) i) y J h) =

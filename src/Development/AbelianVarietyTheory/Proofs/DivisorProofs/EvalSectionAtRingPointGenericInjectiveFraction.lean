@@ -66,8 +66,7 @@ theorem exists_fraction_genericStalk_germ_affineOpen (C : Scheme.{0}) [IsIntegra
   obtain ⟨⟨a, b⟩, hab⟩ := IsLocalization.mk'_surjective (S := C.functionField) (nonZeroDivisors Γ(C, V)) s
   refine ⟨a, b, nonZeroDivisors.ne_zero b.2, ?_⟩
   have := IsLocalization.mk'_spec (S := C.functionField) a b
-  rw [← hab]
-  exact this
+  rwa [← hab]
 
 theorem germ_appLE_eq_stalkMap_germ_specField {K : Type} [Field K] (C : Scheme.{0}) (x : Sp K ⟶ C) (V : C.Opens) (h : ⊤ ≤ x ⁻¹ᵁ V)
     (p : Sp K) (hp : x p ∈ V) (c : Γ(C, V)) :
@@ -105,8 +104,7 @@ theorem isGen_evAt_frac : ∀ (K : Type) [Field K] (C : Scheme.{0}) [IsIntegral 
   have h : ⊤ ≤ x ⁻¹ᵁ V := by
     intro p _
     show x p ∈ V
-    rw [hgen p]
-    exact hmem
+    rwa [hgen p]
   obtain ⟨p⟩ : Nonempty (Sp K) := ⟨(⊥ : PrimeSpectrum K)⟩
   have hp : x p ∈ V := by rw [hgen p]; exact hmem
   refine ⟨h, ?_, ?_⟩
@@ -128,7 +126,6 @@ theorem isGen_evAt_frac : ∀ (K : Type) [Field K] (C : Scheme.{0}) [IsIntegral 
     have e := congrArg (x.stalkMap p).hom hab
     rw [map_mul, hs, ← germ_appLE_eq_stalkMap_germ_specField C x V h p hp, ← germ_appLE_eq_stalkMap_germ_specField C x V h p hp, ← map_mul] at e
     have e2 := germ_injective_of_isIntegral (X := Sp K) p (by simp) e
-    have e3 := congrArg (Scheme.ΓSpecIso (.of K)).hom.hom e2
-    simpa [evAt] using e3
+    simpa [evAt] using congrArg (Scheme.ΓSpecIso (.of K)).hom.hom e2
 
 end GlobalTheory.Nef

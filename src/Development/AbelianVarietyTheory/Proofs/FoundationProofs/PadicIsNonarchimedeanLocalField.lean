@@ -156,11 +156,7 @@ variable [MeasurableSpace k] [BorelSpace k]
 
 variable (k) in
 theorem exists_isUnitVol : ∃ ν : Measure k, IsUnitVol ν := by
-  let K : TopologicalSpace.PositiveCompacts k :=
-    ⟨⟨𝒪[k], isCompact_int k⟩, by
-      simp only [(isOpen_int k).interior_eq]
-      exact ⟨0, zero_mem _⟩⟩
-  exact ⟨Measure.addHaarMeasure K, inferInstance, Measure.addHaarMeasure_self⟩
+  exact GlobalTheory.SplitWeil.Model.exists_isUnitVol
 
 theorem measure_cball (ν : Measure k) [ν.IsAddHaarMeasure] (s : kˣ) :
     ν (cball s) = distribHaarChar k s * ν (𝒪[k] : Set k) := by

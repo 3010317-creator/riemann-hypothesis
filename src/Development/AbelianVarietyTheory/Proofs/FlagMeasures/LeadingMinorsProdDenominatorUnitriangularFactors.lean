@@ -115,16 +115,14 @@ theorem det_low {n l : ℕ} (h : l ≤ n) (A : Matrix (Fin n) (Fin n) E)
     (A.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
   rw [Matrix.det_of_isLowerTriangular]
   · simp [hA1]
-  · intro i j hij
-    exact hA _ _ hij
+  · exact fun i j hij => hA _ _ hij
 
 theorem det_up {n l : ℕ} (h : l ≤ n) (B : Matrix (Fin n) (Fin n) E)
     (hB : ∀ a k : Fin n, k < a → B a k = 0) (hB1 : ∀ a, B a a = 1) :
     (B.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
   rw [Matrix.det_of_isUpperTriangular]
   · simp [hB1]
-  · intro i j hij
-    exact hB _ _ hij
+  · exact fun i j hij => hB _ _ hij
 
 theorem sub_three {n l : ℕ} (h : l ≤ n) (A W B : Matrix (Fin n) (Fin n) E)
     (hA : ∀ a k : Fin n, a < k → A a k = 0) (hB : ∀ a k : Fin n, k < a → B a k = 0) :
@@ -152,8 +150,7 @@ theorem unit_cut {n l : ℕ} (h : l ≤ n) (W : Matrix (Fin n) (Fin n) E) (hW : 
       invFun := fun a => ⟨a.1, a.2⟩
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
-  rw [← Matrix.det_submatrix_equiv_self e] at h1
-  exact h1
+  rwa [← Matrix.det_submatrix_equiv_self e] at h1
 
 theorem col_lemma (O : Subring E) {n l : ℕ} (h : l ≤ n) (A W B : Matrix (Fin n) (Fin n) E)
     (hA : ∀ a k : Fin n, a < k → A a k = 0) (hA1 : ∀ a, A a a = 1)
@@ -231,8 +228,8 @@ theorem schur_mem (O : Subring E) {n l' l : ℕ} (h' : l' ≤ n) (A W B : Matrix
       exact O.sum_mem fun k _ => O.mul_mem (hG _ _) (hZ' _ _)
     have h4 : ∑ k : Fin n, (if l' ≤ (k : ℕ) then 0 else A a k * C k j) =
         ∑ k : Fin l', A a (Fin.castLE h' k) * C (Fin.castLE h' k) j := by
-      rw [sum_castLE h' _ (fun k hk => if_pos hk)]
-      refine Finset.sum_congr rfl fun k _ => if_neg ?_
+      rw [sum_castLE h' _ (fun k hk => ite_eq_left hk)]
+      refine Finset.sum_congr rfl fun k _ => ite_eq_right ?_
       have := k.2
       simp only [Fin.val_castLE]; omega
     have h5 := O.sub_mem (O.mul_mem hDO (hZ' a j)) h2
@@ -243,7 +240,7 @@ theorem schur_mem (O : Subring E) {n l' l : ℕ} (h' : l' ≤ n) (A W B : Matrix
   | ind a ih =>
     intro ha' ha
     have h1 := key a
-    rw [← Finset.add_sum_erase _ _ (Finset.mem_univ a), if_pos ha', hA1, one_mul] at h1
+    rw [← Finset.add_sum_erase _ _ (Finset.mem_univ a), ite_eq_left ha', hA1, one_mul] at h1
     refine (O.add_mem_cancel_right ?_).1 h1
     refine O.sum_mem fun k hk => ?_
     have hka : k ≠ a := (Finset.mem_erase.1 hk).1
@@ -282,14 +279,14 @@ theorem scal_dvd (O : Subring E) {n l' l : ℕ} (h : l ≤ n) (hl : l' < l)
   rw [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one, Matrix.mul_apply,
     Finset.sum_eq_single p, Matrix.submatrix_apply, hB1, one_mul, Matrix.mul_apply,
     Finset.sum_eq_single q, Matrix.submatrix_apply,
-    hcol _ _ (by simp [f, p]; omega) (by simp [f, p]; omega), if_pos (by simp [f, p, q]; omega)] at h5
+    hcol _ _ (by simp [f, p]; omega) (by simp [f, p]; omega), ite_eq_left (by simp [f, p, q]; omega)] at h5
   · refine ⟨Y p q * ε (f p), O.mul_mem ?_ (hε _), by rw [← h5]; ring⟩
     rw [hY, Matrix.mul_apply]
     exact O.sum_mem fun k _ => O.mul_mem (adj_mem O _ (fun _ _ => hZ _ _) _ _) (hAO _ _ k.2 le_rfl)
   · intro b _ hb
     have : (b : ℕ) ≠ l' := fun e => hb (Fin.ext e)
     rw [Matrix.submatrix_apply, hcol _ _ (by simp [f, p]; omega) (by simp [f, p]; omega),
-      if_neg (by simp [f, p]; omega), zero_mul, mul_zero]
+      ite_eq_right (by simp [f, p]; omega), zero_mul, mul_zero]
   · simp
   · intro b _ hb
     have : (b : ℕ) ≠ l - 1 := fun e => hb (Fin.ext e)
@@ -318,14 +315,14 @@ theorem up_mem (O : Subring E) {n l' l : ℕ} (h : l ≤ n) (h' : l' ≤ n)
   have ha : (a : ℕ) < l := by simp only [a]; omega
   have h1 := schur_mem O h' A W B hA hA1 hB hB1 hZ hW hc hAO j a ha' ha
   rw [Matrix.mul_apply, Finset.sum_eq_single i, hrow _ _ ha' ha,
-    if_pos (by simp only [a]; omega)] at h1
+    ite_eq_left (by simp only [a]; omega)] at h1
   · have h2 := O.mul_mem (O.mul_mem hy (hε i)) h1
     rw [hD]
     convert h2 using 1
     linear_combination (-(y * t * (W.submatrix (Fin.castLE h') (Fin.castLE h')).det * B i j)) * hε2 i
   · intro b _ hb
     have : (b : ℕ) ≠ i := fun e => hb (Fin.ext e)
-    rw [hrow _ _ ha' ha, if_neg (by simp only [a]; omega), zero_mul, zero_mul]
+    rw [hrow _ _ ha' ha, ite_eq_right (by simp only [a]; omega), zero_mul, zero_mul]
   · simp
 
 theorem entry_symm : ∀ (bs : List (Eˣ × ℕ+)) (a b : ℕ), ptEntryL bs a b = ptEntryL bs b a
@@ -477,9 +474,9 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     let p : Fin (r + 2) := ⟨l, by omega⟩
     let p' : Fin (r + 2) := ⟨l', by omega⟩
     have hp : x p = (S.Zh.submatrix (Fin.castLE e3) (Fin.castLE e3)).det :=
-      if_pos (unit_cut e3 _ hW' hc).ne_zero
+      ite_eq_left (unit_cut e3 _ hW' hc).ne_zero
     have hp' : x p' = (S.Zh.submatrix (Fin.castLE e3') (Fin.castLE e3')).det :=
-      if_pos (unit_cut e3' _ hW' hc').ne_zero
+      ite_eq_left (unit_cut e3' _ hW' hc').ne_zero
     have hne : p' ≠ p := fun e => by
       have := congrArg Fin.val e
       simp only [p, p'] at this

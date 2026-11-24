@@ -362,8 +362,7 @@ theorem local_unit {A B : Type} [CommRing A] [CommRing B] [Algebra A B] [Module.
         simp
     have := hc _ _ _ _ (hf α β) (hf β γ)
     rw [L1, L1, L1, ← map_mul] at this
-    have h2 := congr((Scheme.ΓSpecIso (.of C)).hom $this)
-    simpa using h2
+    simpa using congr((Scheme.ΓSpecIso (.of C)).hom $this)
   obtain ⟨n, hnx, hn⟩ := exists_invariant uB w hw hcB x.asIdeal x.isPrime.ne_top
   let l : B →+* Localization.Away n := algebraMap B (Localization.Away n)
   let sn := Spec.map (CommRingCat.ofHom l)
@@ -372,8 +371,7 @@ theorem local_unit {A B : Type} [CommRing A] [CommRing B] [Algebra A B] [Module.
   have ht : sn.appTop ((Scheme.ΓSpecIso (.of B)).inv n) = t₀ := spec_appTop l n
   refine ⟨_, sn ≫ i, inferInstance, t₀, ?_, ?_, ?_⟩
   · have hp : x ∈ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away n))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away n) n]
-      exact hnx
+      rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away n) n]
     obtain ⟨z, hz⟩ := hp
     refine ⟨z, ?_⟩
     have hz' : sn z = x := hz
@@ -421,8 +419,7 @@ theorem h90 : CompanionTheory.ObstructionTrivialLocus.H90 := by
     rwa [this] at hx
   let U : Y.Opens := ⟨Set.range (e ≫ f), (e ≫ f).isOpenMap.isOpen_range⟩
   obtain ⟨z, rfl⟩ := hx'
-  refine ⟨U, ⟨z, by simp⟩, ?_⟩
-  exact extend f u (f ⁻¹ᵁ U).ι e (fun z => z.2) hu hc t₀ ht₀ P
+  exact ⟨U, ⟨z, by simp⟩, extend f u (f ⁻¹ᵁ U).ι e (fun z => z.2) hu hc t₀ ht₀ P⟩
 
 end GlobalTheory.CompanionTheory.FlatHilbert90
 end -- clump:auto
@@ -651,8 +648,7 @@ theorem gm_gen_pull {Y X : Scheme.{0}} {L : LB X} {F : Y ⟶ X} {t : LB.Gen (L.p
   have m₂ : (𝟙 Y : Y ⟶ Y) x ∈ (L.pull F).U (fun _ => i') := mem_pull.2 hi'
   have hm : (𝟙 Y : Y ⟶ Y) x ∈ (L.pull F).U (fun _ => i) ⊓ (L.pull F).U (fun _ => i') := ⟨m₁, m₂⟩
   have e := congrArg (gm (𝟙 Y) x _) (ht (fun _ => i) (fun _ => i'))
-  rw [map_mul, gm_res (𝟙 Y) x _ hm, gm_res (𝟙 Y) x _ hm, gm_pull_g L F (𝟙 Y) x _ _ m₁ m₂] at e
-  exact e
+  rwa [map_mul, gm_res (𝟙 Y) x _ hm, gm_res (𝟙 Y) x _ hm, gm_pull_g L F (𝟙 Y) x _ _ m₁ m₂] at e
 
 theorem gm_pull_div_g {Z P Q : Scheme.{0}} (g : Z ⟶ P) (f : P ⟶ Q) (M : LB P) (N : LB Q) (x : Z) (i i' : N.ι) (k k' : M.ι)
     (hi : f (g x) ∈ N.U i) (hi' : f (g x) ∈ N.U i') (hk : g x ∈ M.U k) (hk' : g x ∈ M.U k') :
@@ -862,12 +858,10 @@ theorem exists_gen_of_chart {Y P : Scheme.{0}} {M : LB P} (hM : M.IsLB) (f : Y �
   let pullToU := Units.map (f.appLE V U hUV).hom.toMonoidHom
   have pull_res {A : P.Opens} (h : V ≤ A) (a : Γ(P, A)ˣ) :
       pullToU (res h a) = Units.map (f.appLE A U (hUV.trans (f.preimage_mono h))).hom.toMonoidHom a := by
-    apply Units.ext
-    exact congrArg (fun q => q.hom a.val) (f.map_appLE hUV (homOfLE h).op)
+    exact Units.ext (congrArg (fun q => q.hom a.val) (f.map_appLE hUV (homOfLE h).op))
   have res_pull {A : P.Opens} {B : Y.Opens} (h : B ≤ f ⁻¹ᵁ A) (h' : U ≤ B) (a : Γ(P, A)ˣ) :
       res h' (Units.map (f.appLE A B h).hom.toMonoidHom a) = Units.map (f.appLE A U (h'.trans h)).hom.toMonoidHom a := by
-    apply Units.ext
-    exact congrArg (fun q => q.hom a.val) (f.appLE_map h (homOfLE h').op)
+    exact Units.ext (congrArg (fun q => q.hom a.val) (f.appLE_map h (homOfLE h').op))
   have transition : (M.pull f).g J J' = pullToU (res inf_le_left (M.g j k)) := by
     show (∏ _ : PUnit, (res _ (pullU f _ (M.g j k))) ^ (1 : ℤ)) = _
     rw [Fintype.prod_unique, zpow_one, pull_res]
@@ -958,9 +952,7 @@ theorem exists_flat_cover_triv : ∀ {P : Scheme.{0}} (M : LB P), M.IsLB → ∃
           simp only [map_mul, map_one]
           exact (congrArg₂ (· * ·) (hu s) (hv s)).trans (b s).val_inv
         refine ⟨⟨u, v, huv, (mul_comm v u).trans huv⟩, funext fun s => ?_⟩
-        apply Units.ext
-        apply (e s).commRingCatIsoToRingEquiv.injective
-        exact (restrict u s).trans (hu s)
+        exact Units.ext ((e s).commRingCatIsoToRingEquiv.injective ((restrict u s).trans (hu s)))
     let L := M.pull g
     let Ls (s : M.ι) := M.pull (σ s ≫ g)
     have localGen (s : M.ι) : ∃ t : LB.Gen (Ls s), t.IsGen := by
@@ -1086,8 +1078,7 @@ theorem val_lift_eq_of_comp_eq (hA : IsAbelianScheme A) (q : X ⟶ Y) {N : LB (A
     rw [← Over.comp_left]
     congr 1
     ext <;> simp
-  rw [val_pull hJ, val_pull hJ, hl, hl] at key
-  exact key
+  rwa [val_pull hJ, val_pull hJ, hl, hl] at key
 
 end GlobalTheory.CompanionTheory.RigDesc
 
@@ -1111,19 +1102,16 @@ theorem triv_of_triv_of_flat_cover : ∀ (S : Scheme.{0}) (A X Y : Over S) [GrpO
   refine GlobalTheory.T.line_bundle_trivial_of_descended_generator _ f₁ f₂ f₃ N hN t ht ?_
   intro W a b hab w i hi
   have hw : a ≫ (A ⊗ X).hom = b ≫ (A ⊗ X).hom := by
-    have e := congrArg (· ≫ (A ⊗ Y).hom) hab
-    simpa only [Category.assoc, Over.w] using e
+    simpa only [Category.assoc, Over.w] using congrArg (· ≫ (A ⊗ Y).hom) hab
   let T : Over S := Over.mk (a ≫ (A ⊗ X).hom)
   let a' : T ⟶ A ⊗ X := Over.homMk a rfl
   let b' : T ⟶ A ⊗ X := Over.homMk b hw.symm
   have hab' : a' ≫ lift (fst A X) (snd A X ≫ q) = b' ≫ lift (fst A X) (snd A X ≫ q) := by
     exact Over.OverMorphism.ext hab
   have h₁ : a' ≫ fst A X = b' ≫ fst A X := by
-    have e := congrArg (· ≫ fst A Y) hab'
-    simpa using e
+    simpa using congrArg (· ≫ fst A Y) hab'
   have h₂ : (a' ≫ snd A X) ≫ q = (b' ≫ snd A X) ≫ q := by
-    have e := congrArg (· ≫ snd A Y) hab'
-    simpa using e
+    simpa using congrArg (· ≫ snd A Y) hab'
   obtain ⟨J, hJ, hJi⟩ := exists_good N hN w (K := PUnit.{1}) (fun _ => a ≫ (lift (fst A X) (snd A X ≫ q)).left)
     (fun _ => i) (fun _ _ _ => rfl) (fun _ => hi)
   have hJi' : J (a ≫ (lift (fst A X) (snd A X ≫ q)).left) = i := hJi PUnit.unit

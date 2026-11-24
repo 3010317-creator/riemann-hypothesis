@@ -58,8 +58,7 @@ private theorem coord_eq {l : ℕ} [Fact l.Prime] {c : Coef l} (β : Bas c) {n :
     simp only [map_sub, map_natCast, map_mul, map_pow, ZMod.natCast_zmod_val] at h2
     have hl : ((l : ZMod (l ^ n))) ^ n = 0 := by
       rw [← Nat.cast_pow, ZMod.natCast_self]
-    rw [hl, zero_mul, sub_eq_zero] at h2
-    exact h2
+    rwa [hl, zero_mul, sub_eq_zero] at h2
   · unfold Cg at h h' ⊢
     simp only [map_sub, map_natCast, mul_sub, Finset.sum_sub_distrib, sub_zero]
     have key := (IsUltrametricDist.norm_add_le_max (z - ∑ i, β.val i * ((k' i).val : Qbar l))
@@ -67,8 +66,7 @@ private theorem coord_eq {l : ℕ} [Fact l.Prime] {c : Coef l} (β : Bas c) {n :
     have e : (∑ x, β.val x * ((k x).val : Qbar l)) - ∑ x, β.val x * ((k' x).val : Qbar l)
         = (z - ∑ i, β.val i * ((k' i).val : Qbar l)) + -(z - ∑ i, β.val i * ((k i).val : Qbar l)) := by
       ring
-    rw [e]
-    exact key
+    rwa [e]
 
 private theorem ser_rel {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] [Algebra ℚ Ω] {A : ValuationSubring Ω}
     {j : Ω →+* Qbar l} (Φ : Fr l A j) (P P' Q : Polynomial (R0 A)) (N : ℕ) :
@@ -102,8 +100,7 @@ theorem UpperTheory.Kd.C7.pPresDl :
     have hKA := pKumAlg l hl2 Ω A hA ζ hζ m n hnm s hs
     have hinv := (hKA.1 _ _ _ _ (hk' i) (hk' i)).2.1
     have hmul := (hKA.1 _ _ _ _ (hk i) hinv).1
-    rw [hkk, add_neg_cancel] at hmul
-    exact hmul
+    rwa [hkk, add_neg_cancel] at hmul
   obtain ⟨v, hv, hvfix⟩ := pKumTriv l hl2 Ω A hA ζ hζ m n hnm _ (mul_ne_zero hu0 (inv_ne_zero hu'0)) hKum
   have hvA : v ∈ A := _root_.GlobalTheory.Ex.ArcLift.mem_of_pow_mem A hlN (by rw [hv]; exact mul_mem huA hu'iA)
   have hv0 : v ≠ 0 := by

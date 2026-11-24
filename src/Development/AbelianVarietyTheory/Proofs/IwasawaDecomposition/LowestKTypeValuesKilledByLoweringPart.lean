@@ -67,9 +67,9 @@ theorem entry_eq_zero {n : ℕ} {ε : Fin n → Bool} {κ : Matrix (Fin n) (Fin 
   have e := congrFun (congrFun h a) b
   simp only [Formalism.REAL.Jm, mul_diagonal, diagonal_mul] at e
   cases ha : ε a <;> cases hb : ε b <;> simp only [ha, hb, ne_eq, not_true_eq_false] at hab e
-  · simp only [Bool.false_eq_true, if_false, if_true] at e
+  · simp only [Bool.false_eq_true, ite_false, ite_true] at e
     linear_combination (1 / 2 : ℂ) * e
-  · simp only [Bool.false_eq_true, if_false, if_true] at e
+  · simp only [Bool.false_eq_true, ite_false, ite_true] at e
     linear_combination (-1 / 2 : ℂ) * e
 
 theorem block_conj {n : ℕ} {ε : Fin n → Bool} {κ κ' Y : Matrix (Fin n) (Fin n) ℂ}
@@ -136,8 +136,7 @@ theorem adAt_mem_pMinus {θ : InfFam D} (hθ : IsInfFam θ) (M : DSModel T Sp) (
     exact block_conj hκ.2 hJ hZ a b hab
   · rw [hs.2.2 τ c] at hi ⊢
     rw [Matrix.one_mul] at hi
-    rw [hi, Matrix.one_mul, Matrix.mul_one]
-    exact hZ
+    rwa [hi, Matrix.one_mul, Matrix.mul_one]
 
 variable {ψ : AddChar (AF D.host.F) ℂ} {S : HSp D} {χS χT : (AE D)ˣ →* Circle}
   {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} {θ : InfFam D}
@@ -207,8 +206,7 @@ theorem values_killed : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp
         w ∈ N.comap (io (PiTensorProduct.tprod ℂ v₀)))
       have hm : w₀ ∈ N.comap (io (PiTensorProduct.tprod ℂ v₀)) := by
         show io (PiTensorProduct.tprod ℂ v₀) w₀ ∈ N
-        rw [e₀]
-        exact hΔ
+        rwa [e₀]
       rw [h0, Submodule.mem_bot] at hm
       rw [hm, norm_zero] at hw₀
       exact zero_ne_one hw₀

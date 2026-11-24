@@ -92,7 +92,7 @@ theorem exp_neg_one_le (h : BasePi ST π) {w : Pl E} (hw : w ∈ ST) : WithZero.
   have haw : a ∉ w.asIdeal := by
     intro haw
     have h1 := ha w hw
-    rw [if_pos rfl] at h1
+    rw [ite_eq_left rfl] at h1
     exact w.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 (by simpa using Ideal.sub_mem _ haw h1))
   have hbw : b ∈ w.asIdeal := (w.intValuation_lt_one_iff_mem b).1 (by rw [hb, ← WithZero.exp_zero, WithZero.exp_lt_exp]; norm_num)
   have hab : ∀ P ∈ ST, a * b ∈ P.asIdeal := by
@@ -100,7 +100,7 @@ theorem exp_neg_one_le (h : BasePi ST π) {w : Pl E} (hw : w ∈ ST) : WithZero.
     by_cases hPw : P = w
     · subst hPw; exact Ideal.mul_mem_left _ _ hbw
     · have h1 := ha P hP
-      rw [if_neg hPw, sub_zero] at h1
+      rw [ite_eq_right hPw, sub_zero] at h1
       exact Ideal.mul_mem_right _ _ h1
   obtain ⟨c, hc⟩ := (h.dvd _).1 hab
   have hv : w.intValuation (a * b) = WithZero.exp (-1) := by
@@ -133,8 +133,7 @@ theorem GlobalTheory.Mem.Col2.prV_eq_pi_mul : ∀ {F E : Type} [Field F] [Number
     have hve : w.valuation E e = w.intValuation π := HeightOneSpectrum.valuation_of_algebraMap w π
     by_cases hw : w ∈ ST
     · exact (le_exp_neg_one_of_lt_one (hP w hw)).trans (hve ▸ exp_neg_one_le hπ hw)
-    · rw [hve, HeightOneSpectrum.intValuation_eq_one_iff.2 (notMem_of_notMem hπ hw)]
-      exact hz1
+    · rwa [hve, HeightOneSpectrum.intValuation_eq_one_iff.2 (notMem_of_notMem hπ hw)]
   · rw [map_mul, prV_inclE, ← mul_assoc, ← map_mul, mul_inv_cancel₀ he, map_one, one_mul]
 end -- clump:auto
 end -- clump:auto
@@ -289,8 +288,7 @@ theorem row_small_of_mul_eq_one {P : HeightOneSpectrum (𝓞 E)} {n : ℕ} (l : 
       exact lt_of_le_of_lt (mul_le_of_le_one_right' (hN i j)) (hM i (Finset.ne_of_mem_erase hi))
   have h4 := congrArg Valued.v e2
   rw [Valuation.map_neg, map_mul, hl, one_mul] at h4
-  rw [h4]
-  exact h3
+  rwa [h4]
 
 theorem val_eq_one_of_hasRes {P : HeightOneSpectrum (𝓞 E)} {z : P.adicCompletion E} {c : 𝓞 E ⧸ P.asIdeal} (h : HasRes P z c)
     (hc : c ≠ 0) : Valued.v z = 1 := by
@@ -409,10 +407,10 @@ theorem basePt_facts : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Num
       ((k : Matrix (Fin n) (Fin n) (AfE F E)).map (adAt F P)) ?_ (fun i j => hvI P _ (hK i j)) (fun j' hj' => ?_) ?_ j hj
     · rw [← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
     · have := hr j'
-      rw [if_neg hj'] at this
+      rw [ite_eq_right hj'] at this
       exact DilPt.hasRes_lt_one this
     · have h5 := hr (lastIdx n)
-      rw [if_pos rfl] at h5
+      rw [ite_eq_left rfl] at h5
       have := P.isPrime
       exact val_eq_one_of_hasRes h5 (Units.ne_zero _)
   have hloc : ∀ v : HeightOneSpectrum (𝓞 F),
@@ -425,7 +423,7 @@ theorem basePt_facts : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Num
     rw [← map_inv]
     refine ⟨fun i j => Formalism.UG.P.afsplit_prV_int v _ (hInv i j), fun j hj => _root_.GlobalTheory.Mem.Col2.prV_eq_pi_mul hB v _ (hInv _ j) (fun P hP => ?_)⟩
     have := hrow ⟨P, hP⟩ (lastIdx n) j hl
-    rw [if_neg hj] at this
+    rw [ite_eq_right hj] at this
     exact DilPt.hasRes_lt_one this
   refine ⟨hU, fun v => ⟨bc_prV_mem_UPts hc v hU, (hloc v).1⟩, fun x => ?_,
     fun v _ => map_conj_levStab hc n ST v _ (bc_prV_mem_UPts hc v hU) (hloc v).1 (hloc v).2.1 (hloc v).2.2⟩

@@ -175,8 +175,7 @@ private theorem sep (I : Ideal A) [IsAdicComplete I A] {σ : Type} {p q : MvPoly
   refine sub_eq_zero.1 (IsHausdorff.haus (I := I) inferInstance _ fun N => ?_)
   have := congrArg (AddMonoidAlgebra.coeff · m) (h N)
   rw [MvPolynomial.coeff_map, MvPolynomial.coeff_map, Ideal.Quotient.eq] at this
-  rw [SModEq.zero, smul_eq_mul, Ideal.mul_top]
-  exact this
+  rwa [SModEq.zero, smul_eq_mul, Ideal.mul_top]
 
 private theorem lim0 (I : Ideal A) [IsAdicComplete I A] (c : ∀ N : ℕ, A ⧸ I ^ N)
     (h : ∀ (N M : ℕ) (h : M ≤ N), Ideal.Quotient.factor (Ideal.pow_le_pow_right h) (c N) = c M) :
@@ -204,8 +203,7 @@ private theorem lim1 (I : Ideal A) [IsAdicComplete I A] {σ : Type} [Finite σ]
   split_ifs with hm
   · exact ha m N
   · rw [map_zero, (hc N).coeff_eq_zero]
-    intro hd
-    exact hm (by simp [hd])
+    exact fun hd => hm (by simp [hd])
 
 private theorem lift_ex {S : Type} [CommRing S] [Algebra A S] (y : MonoidAlgebra S G) :
     ∃ y' : MonoidAlgebra (MvPolynomial S A) G, y'.coeff.support ⊆ y.coeff.support ∧
@@ -343,8 +341,7 @@ private theorem frat (l : ℕ) [Fact l.Prime] {G : Type} [Group G] [TopologicalS
   by_contra hne
   have hne' : Multiplicative.toAdd (ψ v) ≠ 0 := fun h0 => hne (by simpa using congrArg Multiplicative.ofAdd h0)
   have hf : ∃ f : M →ₗ[ZMod l] ZMod l, f (Multiplicative.toAdd (ψ v)) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne' (dual_zero (ZMod l) M _ hc)
   obtain ⟨f, hf⟩ := hf
   let φ : H →* Multiplicative (ZMod l) := (AddMonoidHom.toMultiplicative f.toAddMonoidHom).comp ψ
@@ -387,7 +384,7 @@ private theorem lev_open {k G : Type} [CommRing k] [Group G] [TopologicalSpace G
       intro N
       rw [TwoSidedIdeal.mem_iInf]
       exact hall N
-    push_neg at hx1
+    push Not at hx1
     obtain ⟨N, H, hN⟩ := hx1
     refine ⟨(N, H), fun x hx hxmem => hN ?_⟩
     have hd : x - x0 ∈ closureIdeal I S := (mk_eq _ _).1 (by rw [map_sub, hx, sub_self])
@@ -431,8 +428,7 @@ private theorem lift_span {R R' : Type} [Ring R] [Ring R'] (f : R →+* R') (hf 
       obtain ⟨r', rfl⟩ := hf r
       exact ⟨a * r', K.mul_mem_right a r' ha, map_mul f a r'⟩)
   have hle : TwoSidedIdeal.span S ≤ T := TwoSidedIdeal.span_le.2 (fun w hw => by simpa [T] using hS w hw)
-  have h' := hle hz
-  simpa [T] using h'
+  simpa [T] using hle hz
 
 private theorem ker_sq {k G : Type} [Field k] [Group G] (x y : MonoidAlgebra (DualNumber k) G)
     (hx : MonoidAlgebra.mapRingHom G (TrivSqZeroExt.fstHom k k k : DualNumber k →+* k) x = 0)
@@ -479,8 +475,7 @@ private theorem kills_of_bot {n : ℕ} {A G : Type} [CommRing A] [Group G] (D : 
   rw [show (MonoidAlgebra.mapRingHom G (algebraMap A B)) (MonoidAlgebra.single g 1 - 1) =
     MonoidAlgebra.single g 1 - 1 by simp]
   change (@GDet.D n A G _ _ D B _ ((φ.comp (Ideal.Quotient.mk ⊥)).toAlgebra)) (1 + x * (MonoidAlgebra.single g 1 - 1)) = 1 at h1
-  rw [e] at h1
-  exact h1
+  rwa [e] at h1
 
 theorem UpperTheory.V.CA.u_tan :
     ∀ (l : ℕ) [Fact l.Prime] {n : ℕ} {k G : Type} [Field k] [Finite k] [CharP k l] [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] (Dbar : GDet n k G), PhiCond (Γ := G) l → Dbar.IsCont (maximalIdeal k) → Module.Finite k (Dbar.CHQuot ∅) → ∃ U : OpenNormalSubgroup G, ∀ D : GDet n (DualNumber k) G, D.IsCont (maximalIdeal (DualNumber k)) → D.map (TrivSqZeroExt.fstHom k k k : DualNumber k →+* k) = Dbar → ∀ u ∈ U, D.Kills (MonoidAlgebra.single u 1 - 1) := by
@@ -572,8 +567,7 @@ theorem UpperTheory.V.CA.u_tan :
       rw [← map_natCast (algebraMap k (MonoidAlgebra (DualNumber k) G)) l, CharP.cast_eq_zero, map_zero]
     rw [hl0, zero_mul, map_zero]
   have hfin1 := hu2 D.toDet.ker.ringCon.Quotient hl ψ hψker
-  rw [← hK, ← mk_eq]
-  exact hfin1
+  rwa [← hK, ← mk_eq]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.ClosureIdeal =====
@@ -709,8 +703,7 @@ theorem exists_comap_level [TopologicalSpace G] [IsTopologicalGroup G] [CompactS
   obtain ⟨H, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hUo hU1
   have hcoeff (i : ℕ) (hi : i ≤ n) (h : G) (hh : h ∈ H) (g : G) :
       D.lam i (MonoidAlgebra.single (g * h) 1) = D.lam i (MonoidAlgebra.single g 1) := by
-    have heq := hU (hH hh) i hi g
-    exact sub_eq_zero.mp (by simpa [hN] using Ideal.Quotient.eq.1 heq)
+    exact sub_eq_zero.mp (by simpa [hN] using Ideal.Quotient.eq.1 (hU (hH hh) i hi g))
   have hlam (i : ℕ) (y : MonoidAlgebra A G) : D.toDet.lam i y = D.lam i y := by
     suffices hchi : D.toDet.chi y = D.chi y by simp only [Det.lam, GDet.lam, hchi]
     change D.D A[X] (ofT A G A[X] (X ⊗ₜ 1 - 1 ⊗ₜ y)) =
@@ -826,8 +819,7 @@ private theorem map_pow_max (f : A →ₐ[O] A') (hf : Function.Surjective f) (N
   congr 1
   apply le_antisymm
   · rw [Ideal.map_le_iff_le_comap]
-    intro x hx
-    exact (mem_max_map f).2 hx
+    exact fun x hx => (mem_max_map f).2 hx
   · intro y hy
     obtain ⟨x, rfl⟩ := hf y
     exact Ideal.mem_map_of_mem _ ((mem_max_map f).1 hy)
@@ -935,8 +927,7 @@ private theorem pair [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] [F
     refine coord_ext fun t => ?_
     obtain ⟨i, q⟩ := t
     obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective q
-    have e := congrArg (fun Z => coord Z (i, g)) hXY
-    simpa [coord_comap] using e
+    simpa [coord_comap] using congrArg (fun Z => coord Z (i, g)) hXY
   have cm : ∀ {C C' : Type} [CommRing C] [CommRing C'] (X : GDet n C (G ⧸ K)) (ψ : C →+* C'),
       (X.map ψ).comap (QuotientGroup.mk' K) = (X.comap (QuotientGroup.mk' K)).map ψ := by
     intro C C' _ _ X ψ
@@ -991,8 +982,7 @@ private theorem pair [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] [F
       rintro ⟨i, q⟩
       obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective q
       have e := hf12 (i, g)
-      rw [hEc] at e
-      exact e
+      rwa [hEc] at e
     have hd1 := isDef_map hU.isDef (f1.comp (Ideal.Quotient.mkₐ O I))
     have heq : DU.map (f2.comp (Ideal.Quotient.mkₐ O I) : R →+* DualNumber (ResidueField O)) =
         DU.map (f1.comp (Ideal.Quotient.mkₐ O I) : R →+* DualNumber (ResidueField O)) :=
@@ -1407,8 +1397,7 @@ theorem UpperTheory.V.CA.univDet :
       rw [h0] at hu'
       exact not_isUnit_zero hu'
     have h1 := (res_eq_zero_iff O _ _).2 hm
-    rw [map_sub, AlgHom.commutes, cst_spec, sub_eq_zero] at h1
-    exact h1
+    rwa [map_sub, AlgHom.commutes, cst_spec, sub_eq_zero] at h1
   have hred : ∀ D : GDet n (DualNumber (ResidueField O)) G, IsDef O Dbar D →
       D.map ↑(TrivSqZeroExt.fstHom (ResidueField O) (ResidueField O) (ResidueField O)) = Dbar := by
     intro D hD

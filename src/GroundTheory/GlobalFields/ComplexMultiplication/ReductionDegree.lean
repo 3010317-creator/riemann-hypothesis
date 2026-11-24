@@ -82,8 +82,7 @@ theorem exists_gaussResidue_eq (z : (W.map (residue 𝒪)).toAffine.FunctionFiel
   simp only [map_mul, gaussResidue_residue] at this
   have hne : algebraMap _ (W.map (residue 𝒪)).toAffine.FunctionField (coordReduce W s') ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 (nonZeroDivisors.ne_zero hs)
-  rw [eq_div_iff hne]
-  exact this
+  rwa [eq_div_iff hne]
 
 end SlopeTestRemainingChoices
 
@@ -100,8 +99,7 @@ theorem exists_isogeny_coords : ∃ (x y : gaussRing W)
     intro h0
     apply reduceFF_isogeny_ne_zero K W W' φ
     simp only [reduceFF, AddMonoidHom.comp_apply, AddEquiv.coe_toAddMonoidHom, reductionHom_apply]
-    rw [pointCongr_eq_zero_iff, pointMapRing_eq_zero_iff]
-    exact h0
+    rwa [pointCongr_eq_zero_iff, pointMapRing_eq_zero_iff]
   obtain ⟨x, y, h, e⟩ := exists_integral_of_reducePoint_ne_zero _ _ hne
   have e' : φ.1 = pointCongr (gaussCurve_map_functionField K W W') (Point.some _ _ h) := by
     rw [← e, pointCongr_pointCongr]; rfl
@@ -268,8 +266,7 @@ theorem degree_reduceIsogeny : (reduceIsogeny K W W' φ).degree = φ.degree := b
   have hpos := φ.degree_pos
   have hpos' := (reduceIsogeny K W W' φ).degree_pos
   apply le_antisymm h1
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have : (reduceIsogeny K W' W (dualOver φ)).degree * (reduceIsogeny K W W' φ).degree <
       φ.degree ^ 2 := by
     calc (reduceIsogeny K W' W (dualOver φ)).degree * (reduceIsogeny K W W' φ).degree

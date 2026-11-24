@@ -136,8 +136,7 @@ theorem _root_.GlobalTheory.ClassFin.exists_reynolds_of_completelyReducible (V :
     intro v hvF hvW
     have hZS : ∀ s ∈ S, ∀ x ∈ Fix ⊓ W, (s : V → V) x ∈ Fix ⊓ W := by
       intro s hs x hx
-      rw [hx.1 s hs]
-      exact hx
+      rwa [hx.1 s hs]
     obtain ⟨Z', hZ'S, hZZ'⟩ := hS (Fix ⊓ W) hZS
     let Q := (Fix ⊓ W).projection Z' hZZ'
     have hQS : ∀ s ∈ S, ∀ x, Q (s x) = s (Q x) := fun s hs x =>
@@ -173,8 +172,7 @@ theorem _root_.GlobalTheory.ClassFin.exists_reynolds_of_completelyReducible (V :
     hPT, fun U hU v hv => ?_⟩
   · have h0 : P ((s : V → V) v - v) = 0 :=
       (Submodule.IsCompl.projection_apply_eq_zero_iff _).mpr (hWgen s hs v)
-    rw [map_sub, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, sub_eq_zero] at h0
   · obtain ⟨U', hU'S, hUU'⟩ := hS U hU
     let Q := U.projection U' hUU'
     have hQ : ∀ s ∈ S, ∀ x, Q (s x) = s (Q x) := fun s hs x =>

@@ -120,8 +120,7 @@ theorem normV_under_eq : ∀ (K L : Type) [Field K] [NumberField K] [Field L] [N
   rw [h, pow_one] at e1
   rw [hQ1, pow_one] at e2
   change Nat.card (𝓞 K ⧸ Q) = Nat.card (𝓞 L ⧸ P)
-  rw [← Ideal.absNorm_eq_natCard Q, ← Ideal.absNorm_eq_natCard P]
-  rw [← e1, ← e2]
+  rw [← Ideal.absNorm_eq_natCard Q, ← Ideal.absNorm_eq_natCard P, ← e1, ← e2]
 
 end GlobalTheory.NormDegOne
 end -- clump:auto
@@ -454,9 +453,7 @@ theorem loc_eq_one_of_compNorm_eq_one : ∀ (E : Type) [Field E] [NumberField E]
         rw [hx]
         exact GlobalTheory.LFun.mem_normGroup_of_isSplit h2 hv x
       · have h1 : GlobalTheory.IdeleNormChar.finComp (Neutral.B1.localIdele (maximalRealSubfield E) v x) w = 1 := by
-          apply Units.ext
-          show (Neutral.B1.finiteSingle (maximalRealSubfield E) v (x : v.adicCompletion _)) w = 1
-          exact GlobalTheory.LFun.finSingle_ne hw _
+          exact Units.ext (GlobalTheory.LFun.finSingle_ne hw _)
         rw [h1]
         exact one_mem _
     · have h1 : GlobalTheory.IdeleNormChar.infComp (Neutral.B1.localIdele (maximalRealSubfield E) v x) w = 1 :=
@@ -475,8 +472,7 @@ theorem loc_eq_one_of_compNorm_eq_one : ∀ (E : Type) [Field E] [NumberField E]
     exact congrArg Units.val hz
   have key : (GlobalTheory.GalOfCusp.compNorm E ε).1 y = (1 : Formalism.L2.Host.HChar E).1 y :=
     congrArg (fun χ : Formalism.L2.Host.HChar E => χ.1 y) hε
-  rw [GlobalTheory.GalOfCusp.compNorm_apply, hy] at key
-  exact key
+  rwa [GlobalTheory.GalOfCusp.compNorm_apply, hy] at key
 
 end GlobalTheory.NormKill
 end -- clump:auto

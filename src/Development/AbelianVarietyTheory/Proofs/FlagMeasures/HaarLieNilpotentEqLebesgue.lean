@@ -265,8 +265,7 @@ theorem lieOf_eq : lieOf (Nset k r) = TN k r := by
   constructor
   · intro h
     exact tangent_mem (γ := fun t : ℝ => NormedSpace.exp ((t : ℂ) • X)) h (by simp) (deriv_exp X)
-  · intro h t
-    exact exp_mem ((TN k r).smul_mem t h)
+  · exact fun h t => exp_mem ((TN k r).smul_mem t h)
 
 def rl (m : ℕ) : Matrix (Fin m) (Fin m) ℂ →ₗ[ℝ] EuclideanSpace ℝ (Fin m × Fin m × Bool) where
   toFun X := WithLp.toLp 2 (realifyFun X)

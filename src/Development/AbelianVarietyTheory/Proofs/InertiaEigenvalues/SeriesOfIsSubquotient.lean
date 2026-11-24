@@ -91,7 +91,7 @@ theorem label_exists (L : LabelDatum g) (hA : AllLab L) {n : ℕ} (χ : Gn g n �
     obtain ⟨c, hc, rfl⟩ := List.mem_map.1 hp
     have h4 := hA c.1 c.2 (hC c hc)
     show IsCuspOf L (Label.lab L c) c.2
-    rw [Label.lab, dif_pos h4]; exact h4.choose_spec
+    rw [Label.lab, dite_eq_left h4]; exact h4.choose_spec
   · rw [hs]; exact hd
   · rw [hs]; exact hi
 
@@ -122,23 +122,21 @@ theorem eSerC_laws (L : LabelDatum g) (hg : 5 ≤ g) (hA : AllLab L) (n : ℕ) :
     rw [Finset.sum_eq_single_of_mem χ hχ]
     · simp
     · intro b _ hb
-      rw [if_neg (Ne.symm hb)]
+      rw [ite_eq_right (Ne.symm hb)]
   · intro f a
     rw [eSerC_eq_sum L n hfin, Finset.sum_mul, Finset.mul_sum]
-    refine Finset.sum_congr rfl fun χ hχ => ?_
-    exact (horth χ χ ((hmem f χ).1 hχ).1 ((hmem f χ).1 hχ).1).2.1 a
+    exact Finset.sum_congr rfl fun χ hχ => (horth χ χ ((hmem f χ).1 hχ).1 ((hmem f χ).1 hχ).1).2.1 a
   · intro f f' hne
     rw [eSerC_eq_sum L n hfin, eSerC_eq_sum L n hfin, Finset.sum_mul_sum]
     refine Finset.sum_eq_zero fun χ hχ => Finset.sum_eq_zero fun χ' hχ' => ?_
     obtain ⟨h1, h2⟩ := (hmem f χ).1 hχ
     obtain ⟨h3, h4⟩ := (hmem f' χ').1 hχ'
-    rw [(horth χ χ' h1 h3).1, if_neg]
+    rw [(horth χ χ' h1 h3).1, ite_eq_right]
     rintro rfl
     exact hne ((huniq χ h1).unique h2 h4)
   · intro f hf
     rw [eSerC_eq_sum L n hfin]
-    refine Finset.sum_eq_zero fun χ hχ => ?_
-    exact absurd (hmon χ f ((hmem f χ).1 hχ).2) hf
+    exact Finset.sum_eq_zero fun χ hχ => absurd (hmon χ f ((hmem f χ).1 hχ).2) hf
   · have hS : {f : (ZMod g)[X] | f.Monic ∧ f.natDegree = n ∧ f.coeff 0 ≠ 0}.Finite :=
       (finite_natDegree_eq n).subset fun f hf => hf.2.1
     refine ⟨hS.toFinset, ?_⟩
@@ -150,9 +148,8 @@ theorem eSerC_laws (L : LabelDatum g) (hg : 5 ≤ g) (hA : AllLab L) (n : ℕ) :
     refine Finset.sum_congr rfl fun χ hχ => ?_
     have hirr : IsIrr χ := by simpa using hχ
     obtain ⟨f, hf, hu⟩ := huniq χ hirr
-    rw [Finset.sum_eq_single_of_mem f (by simpa using hmon χ f hf), if_pos hf]
-    intro b _ hb
-    exact if_neg fun h => hb (hu b h)
+    rw [Finset.sum_eq_single_of_mem f (by simpa using hmon χ f hf), ite_eq_left hf]
+    exact fun b _ hb => ite_eq_right fun h => hb (hu b h)
 
 theorem ser_vanish (L : LabelDatum g) (h5 : 5 ≤ g) {k l n : ℕ} (σ : Fin k ⊕ Fin l ≃ Fin n)
     (f f₁ f₂ : (ZMod g)[X]) (hf : f ≠ f₁ * f₂) :
@@ -244,7 +241,7 @@ theorem eSerC_mul_zOf (L : LabelDatum g) {n : ℕ} {χ : Gn g n → ℂ} {f : (Z
   · simpa using (_root_.GlobalTheory.GLq.ZOrth.zorth _ χ χ hχ hχ).1
   · intro b hb hne
     have hb' : IsIrr b := by simpa using (Finset.mem_filter.1 hb).1
-    rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ b χ hb' hχ).1, if_neg hne]
+    rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ b χ hb' hχ).1, ite_eq_right hne]
 
 end Finite
 
@@ -371,8 +368,7 @@ theorem series_prod₂ (S : Sys g) {a b : ℕ} {W W' : Type} [AddCommGroup W] [M
   · refine Subtype.ext (Subtype.ext (funext fun x => ?_))
     have := hv x
     change v.1.1 (1 * x) = 0 at this
-    rw [one_mul] at this
-    exact this
+    rwa [one_mul] at this
   · intro p x y h0 hx hy v
     have hp : p ∈ parab ℚ_[g] (two (stdSum h)) := by
       rw [mem_parab_iff]
@@ -394,7 +390,7 @@ theorem series_prod₂ (S : Sys g) {a b : ℕ} {W W' : Type} [AddCommGroup W] [M
         have hi : (i : ℕ) < a + b := by omega
         have hj : (j : ℕ) < a + b := by omega
         rw [hx]
-        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dif_pos]
+        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dite_eq_left]
         rfl
       · refine Units.ext (Matrix.ext fun i j => ?_)
         rw [leviProj_apply]
@@ -402,7 +398,7 @@ theorem series_prod₂ (S : Sys g) {a b : ℕ} {W W' : Type} [AddCommGroup W] [M
         have hi : a + (i : ℕ) < a + b := by omega
         have hj : a + (j : ℕ) < a + b := by omega
         rw [hy]
-        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dif_pos]
+        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dite_eq_left]
         rfl
     have key := parInd_law _ _ v ⟨p, hp⟩ 1
     rw [hl, deltaHalf_two] at key

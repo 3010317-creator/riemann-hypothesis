@@ -155,8 +155,7 @@ theorem isTwVal_move {T T₀ : Over S} {T' : Over S'} {σ : T'.left ⟶ T.left} 
   rw [Fin.prod_univ_one, zpow_one, Category.id_comp, Category.id_comp] at c₂
   have E₂ : gs σ z ⊤ v * (val α₀ (σ ≫ (ptSecT P.A h).left) z J * val τ g z J).val =
       VVRank.sv P.A s₀' (σ ≫ (ptSecT P.A h).left) z J := by
-    rw [← hβ, a₀, ← _root_.mul_assoc, ← Units.val_mul]
-    exact E'
+    rwa [← hβ, a₀, ← _root_.mul_assoc, ← Units.val_mul]
   rw [c₀, b₀, c₁, c₂] at E₂
   refine (Units.mul_right_inj _).1 (Eq.trans ?_ E₂)
   rw [mul_left_comm, ← Units.val_mul]
@@ -239,8 +238,7 @@ theorem isValueAt_act {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : 
   simp only [fun l => ThetaCompare.sval_valueAt (ρ.ev_val l h) hJ, hgs, ← _root_.mul_assoc, ← Finset.sum_mul] at b₂
 
   rw [Category.id_comp, hgs, map_sum]
-  simp only [map_mul]
-  exact b₂
+  simpa only [map_mul] using b₂
 
 theorem exists_generic_data {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : ThetaSys o Ω} (ρ : S.Real)
     {P₀ : PolAV (Sp Ω)} {a : P₀.A.left ⟶ ρ.P.A.left} (hp : IsGrpPullback P₀.A ρ.P.A (spMap S.R.val.toRingHom) a)
@@ -276,8 +274,7 @@ theorem exists_generic_data {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
   refine ⟨rig, τ, θ, α, hα, hτ, fun b => ?_, ThetaGeom.norm_move hp g hg hL₀ hL₁ vrig vα ρ.α_norm,
     fun t U hU h z J hJ => ?_⟩
   · have q := isValueAt_move hp g hg hL₀ hL₁ (hX b).symm (vτ b) hθ (ρ.th_val b)
-    rw [spMap_appTop_fn] at q
-    exact q
+    rwa [spMap_appTop_fn] at q
   · have hN : X (S.r • t) ^ S.N = 1 := by
       rw [hpow, ← pow_mul]
       exact (hτ t).1
@@ -298,8 +295,7 @@ theorem exists_generic_data {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
     rw [Category.id_comp, ThetaGeom.val_powFrame, zpow_natCast, b₀] at q'
     have u : tval U (ptSecT P₀.A (X h)).left z J = tval U₂ (ptSecT P₀.A (X h)).left z J :=
       val_corr hJ (SymLiftOdd.symLift_unique GlobalTheory.abelianSchemeLaws_all.1.globalFns P₀.isAb hL₁ hodd U U₂ hU hU₂) _
-    rw [u]
-    exact q'
+    rwa [u]
 
 theorem twVal_eq_root_mul : ∀ {o Ω o' Ω' : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] [CommRing o'] [Field Ω'] [Algebra o' Ω'] [ArithBase o' Ω'] {S : ThetaSys o Ω} {S' : ThetaSys o' Ω'} (ρ : S.Real) (ρ' : S'.Real) (lab : S.Gam → S'.Gam) (φ : Ω →+* Ω') (P₀ : PolAV (Sp Ω')) (a : P₀.A.left ⟶ ρ.P.A.left) (a' : P₀.A.left ⟶ ρ'.P.A.left) (x : S'.Gam → (genPt (φ.comp S.R.val.toRingHom) ⟶ ρ.P.A)), IsGenLab ρ ρ' lab φ P₀ a a' x → ∀ (m : ℕ), S'.N = m ^ 2 → ∀ (κ x₀ : S.Gam) (h : S'.Gam), m • h = lab κ → ∃ ξ : Ω', (∃ k : ℕ, 0 < k ∧ ξ ^ k = 1) ∧ ∀ (t : S'.Gam) (v : Ω'), IsTwVal ρ.P S'.N m ρ.th₁ (ρ.fr κ) (genTo _) (x (S'.r • t)) (x h) ((Scheme.ΓSpecIso (CommRingCat.of Ω')).inv.hom v) → v * S'.th (lab x₀) = ξ * φ (S.th x₀) * ∑ j, algebraMap o' Ω' (S'.ρ t j ρ'.i₀) * S'.ev h j := by
   intro o Ω o' Ω' _ _ _ _ _ _ _ _ S S' ρ ρ' lab φ P₀ a a' x hgen m hm κ x₀ h hκ

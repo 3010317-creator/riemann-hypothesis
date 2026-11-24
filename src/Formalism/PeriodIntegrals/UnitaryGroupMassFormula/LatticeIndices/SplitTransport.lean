@@ -73,8 +73,7 @@ theorem val_natCast_of (g : ℕ) (hg1 : (g : 𝓞 F) ∈ v.asIdeal) (hg2 : (g : 
     (v.intValuation_le_pow_iff_mem _ 1).2 (by simpa using hg1)
   have h2 : ¬ v.intValuation (g : 𝓞 F) ≤ WithZero.exp (-((2 : ℕ) : ℤ)) :=
     fun h => hg2 ((v.intValuation_le_pow_iff_mem _ 2).1 h)
-  have hne : v.intValuation (g : 𝓞 F) ≠ 0 := by
-    exact v.intValuation_ne_zero _ h0
+  have hne : v.intValuation (g : 𝓞 F) ≠ 0 := v.intValuation_ne_zero _ h0
   rw [← WithZero.exp_log hne] at h1 h2 ⊢
   rw [WithZero.exp_le_exp] at h1 h2
   congr 1
@@ -191,8 +190,7 @@ theorem split_transport {K L : Type} [Field K] [NumberField K] [Field L] [Number
     have h1 := congrArg HeightOneSpectrum.asIdeal hab
     apply HeightOneSpectrum.ext
     ext x
-    have h2 := SetLike.ext_iff.mp h1 (g x)
-    simpa [Ideal.mem_comap] using h2
+    simpa [Ideal.mem_comap] using SetLike.ext_iff.mp h1 (g x)
   · intro w hw
     refine ⟨⟨w.asIdeal.comap (g : 𝓞 K →+* 𝓞 L), (by haveI := w.isPrime; infer_instance),
       comap_ringEquiv_ne_bot g w.asIdeal w.ne_bot⟩, ?_, ?_⟩

@@ -133,8 +133,6 @@ theorem PowRealises.proof (hG : ModelGenerated.Statement) (hS : SpanSecs.Stateme
   obtain ⟨c₀, hc₀⟩ := Kleiman.Generated.full F Ω N x Q
   obtain ⟨c₁, hc₁⟩ := hG F K ι Ω y k₀ hmod β
   obtain ⟨c, hc0, hc1⟩ : ∃ c, c₀ ≤ c ∧ c₁ ≤ c := ⟨max c₀ c₁, le_max_left _ _, le_max_right _ _⟩
-  have hgenQ := hc₀ c hc0
-  have hgenY := hc₁ c hc1
   obtain ⟨d, rfl⟩ : ∃ d, ct = (p : ℤ) * c + d := ⟨ct - (p : ℤ) * c, by ring⟩
   have hchart : ∀ I : Kleiman.Chart x, (Kleiman.twistMul Q.toSubSystem p ((p : ℤ) * c + d)).sub I =
       Submodule.span (Kleiman.chartRing F x I)
@@ -142,23 +140,20 @@ theorem PowRealises.proof (hG : ModelGenerated.Statement) (hS : SpanSecs.Stateme
     intro I
     have h1 : (Q.toSubSystem.twist (Kleiman.twistSys F x c)).sub I =
         Submodule.span (Kleiman.chartRing F x I) (secOver F y (β + c • IndefiniteRowSideFullHecke.Kleiman2.baseDeg k₀) : Set Ω) := by
-      rw [← hgenQ I, hQ c]
+      rw [← hc₀ c hc0 I, hQ c]
     rw [PowRealises.twist_sub, PowRealises.twistSys_sub] at h1
     show ((Q.toSubSystem.pow p).twist (Kleiman.twistSys F x ((p : ℤ) * c + d))).sub I = _
     rw [PowRealises.twist_sub, PowRealises.twistSys_sub, PowRealises.pow_sub, ← PowRealises.twistMod_mul,
       PowRealises.twistMod_nat_mul, ← Submodule.span_pow, ← h1, mul_pow]
     ring
-  have hsecs : (Kleiman.twistMul Q.toSubSystem p ((p : ℤ) * c + d)).secs = ⨅ I : Kleiman.Chart x,
-      (Submodule.span (Kleiman.chartRing F x I)
-          ((secOver F y (β + c • IndefiniteRowSideFullHecke.Kleiman2.baseDeg k₀) : Set Ω) ^ p) *
-        Kleiman.twistMod F x d I).restrictScalars F := by
-    simp only [Kleiman.SubSystem.secs, hchart]
+  simp only [Kleiman.SubSystem.secs, hchart]
   ext s
-  rw [hsecs, hS F K ι Ω y k₀ N e x hx hmod _ d s, PowRealises.mem_secOver]
+  rw [hS F K ι Ω y k₀ N e x hx hmod _ d s, PowRealises.mem_secOver]
   refine forall_congr' fun cc => forall_congr' fun hc => ?_
   have hu : (∏ k, y ⟨k, cc k⟩ ^ (-(β + c • IndefiniteRowSideFullHecke.Kleiman2.baseDeg k₀) k)) ≠ 0 :=
     Finset.prod_ne_zero_iff.mpr fun k _ => zpow_ne_zero _ (hc k)
-  rw [← Submodule.span_pow, PowRealises.span_secOver_eq y _ hgenY cc hc, Submodule.span_pow, Set.singleton_pow,
-    inv_pow, PowRealises.mem_span_inv_iff _ (pow_ne_zero _ hu), mul_assoc, PowRealises.prod_exp y k₀ β p c d cc hc]
+  rw [← Submodule.span_pow, PowRealises.span_secOver_eq y _ (hc₁ c hc1) cc hc, Submodule.span_pow,
+    Set.singleton_pow, inv_pow, PowRealises.mem_span_inv_iff _ (pow_ne_zero _ hu), mul_assoc,
+    PowRealises.prod_exp y k₀ β p c d cc hc]
 
 end GroundTheory.Heights₂.Heights.Kleiman.SectionsOverLocalization

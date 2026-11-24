@@ -112,8 +112,7 @@ lemma qa_of_cum {n : ℕ} (m m' : Fin n × Fin n →₀ ℕ) (h : ∀ a p, qa_S 
     unfold qa_S
     have : (univ.filter fun b : Fin n => b ≤ a) = insert a (univ.filter fun b : Fin n => b < a) := by
       ext b
-      simp only [mem_filter, mem_univ, true_and, mem_insert]
-      exact le_iff_eq_or_lt
+      simpa only [mem_filter, mem_univ, true_and, mem_insert] using le_iff_eq_or_lt
     rw [this, Finset.sum_insert (by simp)]
   have h1 := h a p
   rw [hsplit m, hsplit m'] at h1
@@ -260,8 +259,7 @@ lemma qa_fill_cnt {n : ℕ} [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) 
       have := (qa_lt_colH hmu c p).mp hp
       omega
   constructor
-  · intro h
-    exact (key (h.trans_le (qa_cnt_le I c a))).mp h
+  · exact fun h => (key (h.trans_le (qa_cnt_le I c a))).mp h
   · intro h
     have h1 := qa_S_le m a p
     rw [hcol] at h1
@@ -358,14 +356,12 @@ private theorem lt_colH_iff_le {n : ℕ} {mu : Fin n → ℤ} (hmu : Antitone mu
   unfold colH
   constructor
   · intro h
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have hsub : (Finset.univ.filter fun m : Fin n => c ≤ mu m) ⊆ Finset.Iio t := by
       intro m hm
       simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hm
       rw [Finset.mem_Iio]
-      by_contra hmt
-      push_neg at hmt
+      by_contra! hmt
       have := hmu hmt
       omega
     exact absurd (lt_of_lt_of_le h ((Finset.card_le_card hsub).trans (Fin.card_Iio t).le)) (lt_irrefl _)
@@ -373,8 +369,7 @@ private theorem lt_colH_iff_le {n : ℕ} {mu : Fin n → ℤ} (hmu : Antitone mu
     have hsub : Finset.Iic t ⊆ (Finset.univ.filter fun m : Fin n => c ≤ mu m) := by
       intro m hm
       rw [Finset.mem_Iic] at hm
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact h.trans (hmu hm)
+      simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using h.trans (hmu hm)
     exact Nat.lt_of_lt_of_le (Nat.lt_succ_self _) ((Fin.card_Iic t).symm.le.trans (Finset.card_le_card hsub))
 
 lemma qa_shape {n : ℕ} [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) :
@@ -413,8 +408,7 @@ theorem dualWeyl_eq_span_standard_tableauBideterminant (B : Type) [CommRing B] [
   · suffices key : ∀ d : (colLex n n).syn, ∀ f ∈ dualWeyl B n n (qa_nu mu),
         (colLex n n).toSyn ((colLex n n).degree f) = d →
           f ∈ Submodule.span B (Set.range fun I : {I : TIdx mu // StdT I} => qa_P B I.1) by
-      intro f hf
-      exact key _ f hf rfl
+      exact fun f hf => key _ f hf rfl
     intro d
     induction d using WellFoundedLT.induction with
     | _ d ih =>

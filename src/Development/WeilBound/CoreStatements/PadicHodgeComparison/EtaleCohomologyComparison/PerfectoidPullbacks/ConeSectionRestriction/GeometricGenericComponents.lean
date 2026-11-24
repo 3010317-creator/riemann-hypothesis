@@ -212,15 +212,14 @@ theorem exists_homogeneous_relation {K σ ι : Type*} [Field K] (I : Ideal (MvPo
     (h : ¬ AlgebraicIndependent K fun i => Ideal.Quotient.mk I (l i)) :
     ∃ (d : ℕ) (F : MvPolynomial ι K), F ≠ 0 ∧ F.IsHomogeneous d ∧ aeval l F ∈ I := by
   rw [algebraicIndependent_iff] at h
-  push_neg at h
+  push Not at h
   obtain ⟨F, hF, hF0⟩ := h
   have hmem : aeval l F ∈ I := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, ← hF]
     have := comp_aeval_apply (R := K) (f := l) (Ideal.Quotient.mkₐ K I) F
     simpa using this
   obtain ⟨n, hn⟩ : ∃ n, homogeneousComponent n F ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hF0 (by rw [← sum_homogeneousComponent F]; simp [hc])
   exact ⟨n, _, hn, homogeneousComponent_isHomogeneous n F, by
     rw [← homogeneousComponent_aeval l hl]; exact hI _ hmem n⟩
@@ -285,8 +284,7 @@ theorem exists_linear_of_integral {K σ : Type} [Field K] [Infinite K]
     have hGd : (X j * F).IsHomogeneous (1 + d) := (isHomogeneous_X K j).mul hFd
     have hG0 : (X j * F : MvPolynomial ι K) ≠ 0 := mul_ne_zero (X_ne_zero j) hF0
     obtain ⟨a, ha⟩ : ∃ a : ι → K, eval a (X j * F) ≠ 0 := by
-      by_contra hc'
-      push_neg at hc'
+      by_contra! hc'
       exact hG0 (MvPolynomial.funext fun x => by simpa using hc' x)
     have haj : a j ≠ 0 := fun h0 => ha (by simp [h0])
     have hGI : aeval l (X j * F) ∈ I := by
@@ -545,9 +543,7 @@ theorem exists_etale_away_pf {K A : Type} [Field K] [CharZero K] [CommRing A] [I
   have : IsScalarTower K (MvPolynomial (Fin d) K) A := IsScalarTower.of_algebraMap_eq fun x => by
     rw [hRA, MvPolynomial.algebraMap_eq]
     simp
-  have hinj : Function.Injective (algebraMap (MvPolynomial (Fin d) K) A) := by
-    intro a b h
-    exact hs h
+  have hinj : Function.Injective (algebraMap (MvPolynomial (Fin d) K) A) := fun a b h => hs h
   have : FaithfulSMul (MvPolynomial (Fin d) K) A :=
     (faithfulSMul_iff_algebraMap_injective (MvPolynomial (Fin d) K) A).2 hinj
   have : Algebra.FiniteType (MvPolynomial (Fin d) K) A :=
@@ -804,8 +800,7 @@ theorem exists_integral_nbhd {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Sp
   obtain ⟨r, hr, hdom⟩ := hE Γ(X, V) (hV.primeIdealOf ⟨x, hxV⟩).asIdeal
   have hxW : x ∈ X.basicOpen r := by
     have hr' : hV.primeIdealOf ⟨x, hxV⟩ ∈ hV.fromSpec ⁻¹ᵁ X.basicOpen r := by
-      rw [hV.fromSpec_preimage_basicOpen]
-      exact hr
+      rwa [hV.fromSpec_preimage_basicOpen]
     have hfx : hV.fromSpec (hV.primeIdealOf ⟨x, hxV⟩) = x := hV.fromSpec_primeIdealOf ⟨x, hxV⟩
     exact hfx ▸ (hr' : hV.fromSpec (hV.primeIdealOf ⟨x, hxV⟩) ∈ X.basicOpen r)
   refine ⟨X.basicOpen r, hxW, ?_⟩
@@ -932,8 +927,7 @@ theorem exists_frac_basicOpen {X : Scheme.{0}} {W : X.Opens} (hW : IsAffineOpen 
   refine ⟨resO (X.basicOpen_le g) a, ⟨a, rfl⟩, resO (X.basicOpen_le g) (g ^ k), ⟨g ^ k, rfl⟩, ?_, ?_⟩
   · rw [map_pow]
     exact ((IsLocalization.Away.algebraMap_isUnit (S := Γ(X, X.basicOpen g)) g).pow k).ne_zero
-  · rw [map_pow]
-    exact hk
+  · rwa [map_pow]
 
 end CrystallineSemistableComparison.Pb
 end -- clump:auto
@@ -1299,8 +1293,7 @@ theorem preimage_basicOpen_nonempty_of_mk_ne_zero {K : Type} [Field K] {X : Sche
     simp only [evV, Scheme.Hom.appLE_eq_app]
     rfl
   rw [h2, hb, eq_bot_iff]
-  intro x hx
-  exact hE ⟨x, hx.2⟩
+  exact fun x hx => hE ⟨x, hx.2⟩
 
 end GlobalTheory.CompanionTheory.Geo
 end -- clump:auto
@@ -1356,8 +1349,7 @@ theorem irrelevant_le_spanX (K : Type) [Field K] (N : ℕ) :
   have h0 := (HomogeneousIdeal.mem_irrelevant_iff _ _).1 hx
   rw [GradedRing.proj_apply] at h0
   have h1 : MvPolynomial.homogeneousComponent 0 x = 0 := by
-    rw [← MvPolynomial.decomposition.decompose'_apply]
-    exact h0
+    rwa [← MvPolynomial.decomposition.decompose'_apply]
   rw [MvPolynomial.homogeneousComponent_zero, MvPolynomial.C_eq_zero] at h1
   rw [← Set.image_univ, MvPolynomial.mem_ideal_span_X_image]
   intro m hm
@@ -1392,7 +1384,7 @@ theorem constantCoeff_gen {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (i : X
   rw [MvPolynomial.homogeneousComponent_zero] at hc
   rw [MvPolynomial.constantCoeff_eq]
   by_cases hd : 0 = d • 1
-  · rw [if_pos hd] at hc
+  · rw [ite_eq_left hd] at hc
     have hd0 : d = 0 := by simpa using hd.symm
     subst hd0
     obtain ⟨c, rfl⟩ : ∃ c, f = MvPolynomial.C c := ⟨_, hc.symm⟩
@@ -1407,8 +1399,7 @@ theorem constantCoeff_gen {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (i : X
     have e := congrArg (evV i (MvPolynomial.X j) _ le_rfl) (mk_C_mul_inv j c hne hf hb)
     rw [map_mul, map_one, h0 j, zero_mul] at e
     exact zero_ne_one e
-  · rw [if_neg hd, MvPolynomial.C_eq_zero] at hc
-    exact hc
+  · rwa [ite_eq_right hd, MvPolynomial.C_eq_zero] at hc
 
 theorem homIdeal_ne_top : ∀ {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (i : X ⟶ PSpace K N),
     Nonempty X → homIdeal i ≠ ⊤ := by

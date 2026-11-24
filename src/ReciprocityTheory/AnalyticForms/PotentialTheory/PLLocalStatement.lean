@@ -141,8 +141,7 @@ theorem pl_chart (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ
     intro y hy hp
     exact locDens_cons_ofFun_eq_zero (A := A') v Φ j0 (by rw [hj0]; exact hy) (by rw [hj0]; exact hp)
   have hDK : ∀ y ∈ ψ.target, y ∉ ψ '' tsupport v → locDens A' Φv j0 y = 0 := by
-    intro y hy hyK
-    exact hD0 y hy fun hp => hyK ⟨_, hp, ψ.right_inv hy⟩
+    exact fun y hy hyK => hD0 y hy fun hp => hyK ⟨_, hp, ψ.right_inv hy⟩
 
   have hb : mInt A' Φv ℓ = mInt A' Φv (fun p => ρ p * ℓ p) := by
     apply mInt_congr
@@ -416,16 +415,14 @@ theorem mInt_sum_cont {e' : ℕ} {Y : Type} [TopologicalSpace Y] [T2Space Y] [Co
   classical
   induction s using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty]
-    exact mInt_zero_fun A Φ (fun _ => rfl)
+    simpa only [Finset.sum_empty] using mInt_zero_fun A Φ (fun _ => rfl)
   | insert j s hj ih =>
     have hcont : Continuous (fun p => ∑ j ∈ s, f j p) := continuous_finsetSum _ fun j _ => hf j
     have h := mIntLinear A Φ hΦ 1 (f j) (fun p => ∑ j ∈ s, f j p)
       (mIntegrableCont A Φ hΦ _ (hf j)) (mIntegrableCont A Φ hΦ _ hcont)
     simp only [one_mul] at h
     simp_rw [Finset.sum_insert hj]
-    rw [← ih]
-    exact h
+    rwa [← ih]
 
 theorem lhs_sum (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
     (hℓ : ∀ Φ' : Fin (e + 1) → LocPot X, (∀ i, IsPotential A (Φ' i)) →
@@ -488,7 +485,6 @@ theorem lhs_sum (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
         funext w
         simp [Finset.sum_insert hj]
       have hsum : ContDiffAt ℝ 2 ((fun p => ∑ i ∈ t, f i p) ∘ (A.chart j').symm) y := by
-        show ContDiffAt ℝ 2 (fun w => ∑ i ∈ t, (f i ∘ (A.chart j').symm) w) y
         exact ContDiffAt.sum fun i _ => hsmooth i
       rw [e2, key _ _ (hsmooth j) hsum]
   have hint : ∀ j, MIntegrable A (Fin.cons (LocPot.ofFun (f j)) Φ) (logNormSec L s) := fun j =>
@@ -545,7 +541,7 @@ theorem pl_good (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
   congr 1
   cases hσ : σ k with
   | none =>
-    simp only [reduceCtorEq, if_false, Finset.sum_const_zero]
+    simp only [reduceCtorEq, ite_false, Finset.sum_const_zero]
     have hv0 (p : W k) : v p.1 = 0 := by
       by_contra hne
       have hp : p.1 ∈ tsupport v := subset_tsupport _ hne
@@ -557,7 +553,7 @@ theorem pl_good (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
       exact absurd hi (by simp)
     exact (mInt_zero_fun (B k) _ (g := v ∘ Subtype.val) hv0).symm
   | some i =>
-    simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     haveI : CompactSpace (W k) :=
       isCompact_iff_compactSpace.1 (SimpleNormalCrossingSliceCharts.isClosed_divisorComponent A L s m W hSNC k).isCompact
     have hWψ' : W k ∩ ψ.source = {p ∈ ψ.source | ψ p i = 0} := by
@@ -595,15 +591,7 @@ theorem restrOpen_source' (ψ : OpenPartialHomeomorph X (Fin e → ℂ)) {V : Se
 omit [T2Space X] [CompactSpace X] in
 theorem isCompatChart_restrOpen {A : FinHolAtlas e X} {ψ : OpenPartialHomeomorph X (Fin e → ℂ)}
     (hψ : IsCompatChart A ψ) {V : Set X} (hV : IsOpen V) : IsCompatChart A (ψ.restrOpen V hV) := by
-  intro j
-  obtain ⟨h1, h2⟩ := hψ j
-  refine ⟨h1.mono ?_, h2.mono ?_⟩
-  · rintro y ⟨hy1, hy2⟩
-    have h' : (A.chart j).symm y ∈ ψ.source ∩ V := hy2
-    exact ⟨hy1, h'.1⟩
-  · rintro y ⟨hy1, hy2⟩
-    have h' : y ∈ ψ.target ∩ ψ.symm ⁻¹' V := hy1
-    exact ⟨h'.1, hy2⟩
+  exact ReciprocityTheory.AnForm.M.pa_compat_restr A ψ hψ V hV
 
 theorem pl_exists_chart (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ) {r : ℕ}
     (m : Fin r → ℕ) (W : Fin r → Set X) (B : ∀ k, FinHolAtlas e (W k)) (hL : IsPotential A L)
@@ -649,7 +637,7 @@ theorem pl_exists_chart (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X 
     intro hp hpW
     rw [hVdef] at hp
     have := Set.mem_iInter.1 hp.2 k
-    rw [if_neg hk] at this
+    rw [ite_eq_right hk] at this
     exact this hpW
 
 theorem pl_global : PoincareLelongStatement := by

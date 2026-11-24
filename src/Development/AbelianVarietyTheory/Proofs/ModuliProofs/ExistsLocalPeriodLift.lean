@@ -170,8 +170,7 @@ theorem holomorphic_diagonalisation :
   have key := congrArg (fun x => complexExtend (F b) x i j) (he (ty j) a)
   simp only [map_mul, map_smul, complexExtend_tmul, one_smul, Matrix.smul_apply,
     smul_eq_mul] at key
-  rw [Matrix.mul_diagonal, mul_comm]
-  exact key
+  rwa [Matrix.mul_diagonal, mul_comm]
 
 end GlobalTheory
 end -- clump:auto

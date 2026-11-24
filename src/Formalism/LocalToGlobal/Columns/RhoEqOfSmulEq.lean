@@ -62,8 +62,7 @@ theorem cls_eq_iff (d e : S.D) : S.cls d = S.cls e ↔ ∃ g : S.G, g • e = d 
   unfold cls
   rw [Quotient.eq, MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
 
-theorem cls_smul (g : S.G) (d : S.D) : S.cls (g • d) = S.cls d := by
-  exact (S.cls_eq_iff _ _).2 ⟨g, rfl⟩
+theorem cls_smul (g : S.G) (d : S.D) : S.cls (g • d) = S.cls d := (S.cls_eq_iff _ _).2 ⟨g, rfl⟩
 
 variable {S} in
 theorem Sec.exists_mv (s : S.Sec) (d : S.D) : ∃ g : S.G, g • s.rep (S.cls d) = d := by
@@ -124,11 +123,9 @@ def intNab : Submodule (𝓞 K) S.EqFun := S.intOf S.Nab
 
 def intDel : Submodule (𝓞 K) S.EqFun := S.intOf S.Del
 
-theorem mem_intNab (φ : S.EqFun) : φ ∈ S.intNab ↔ ∀ d, (φ : S.D → S.V) d ∈ S.Nab d := by
-  exact Iff.rfl
+theorem mem_intNab (φ : S.EqFun) : φ ∈ S.intNab ↔ ∀ d, (φ : S.D → S.V) d ∈ S.Nab d := Iff.rfl
 
-theorem mem_intDel (φ : S.EqFun) : φ ∈ S.intDel ↔ ∀ d, (φ : S.D → S.V) d ∈ S.Del d := by
-  exact Iff.rfl
+theorem mem_intDel (φ : S.EqFun) : φ ∈ S.intDel ↔ ∀ d, (φ : S.D → S.V) d ∈ S.Del d := Iff.rfl
 
 @[reducible] def toCSDOf (h : S.Ok) (s : S.Sec) : CSD K where
   Cl := S.Cl
@@ -269,8 +266,7 @@ theorem ker_smul (g : S'.G) (d' : S'.D) :
   have h := A.equiv g d' ((MulAction.toPerm (A.tr g)).symm d)
   have hd : A.tr g • (MulAction.toPerm (A.tr g)).symm d = d :=
     (MulAction.toPerm (A.tr g)).apply_symm_apply d
-  rw [hd] at h
-  exact h
+  rwa [hd] at h
 
 theorem app_mem (φ : S.EqFun) : A.app φ ∈ S'.EqFun := by
   rw [GSD.mem_EqFun]
@@ -315,8 +311,8 @@ def ofMap (tr : S'.G →* S.G) (p : S'.D → S.D) (T : S.V →ₗ[K] S'.V)
       rw [← hT, ← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
     rw [hp, Finsupp.single_apply, Finsupp.single_apply]
     by_cases e : p d' = d
-    · rw [if_pos e, if_pos (by rw [e]), hc]
-    · rw [if_neg e, if_neg (fun e' => e (MulAction.injective (tr g) e'))]
+    · rw [ite_eq_left e, ite_eq_left (by rw [e]), hc]
+    · rw [ite_eq_right e, ite_eq_right (fun e' => e (MulAction.injective (tr g) e'))]
       simp
 
 theorem ofMap_op_apply (tr : S'.G →* S.G) (p : S'.D → S.D) (T : S.V →ₗ[K] S'.V)

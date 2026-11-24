@@ -64,13 +64,11 @@ theorem _root_.GlobalTheory.AdLat.Model.integral_iff (x : F) :
     apply HeightOneSpectrum.mem_integers_of_valuation_le_one
     intro v
     have hv := (HeightOneSpectrum.mem_adicCompletionIntegers _ _ v).mp (h v)
-    rw [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-    exact hv
+    rwa [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
   · rintro ⟨r, rfl⟩ v
     rw [HeightOneSpectrum.mem_adicCompletionIntegers]
     have hv := HeightOneSpectrum.valuation_le_one (K := F) v r
-    rw [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation] at hv
-    exact hv
+    rwa [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation] at hv
 
 open NumberField IsDedekindDomain in
 open scoped TensorProduct in

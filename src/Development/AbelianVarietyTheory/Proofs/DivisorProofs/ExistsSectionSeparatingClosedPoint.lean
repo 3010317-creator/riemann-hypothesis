@@ -105,13 +105,11 @@ theorem exists_germ_eq_zero_of_isolated {F : X.Modules} {y : X} (hy : IsClosed (
   · have hyVU : y ∈ V ⊓ U := ⟨hyV, hyU⟩
     have := congrArg (F.presheaf.germ (V ⊓ U) y hyVU) (hg true)
     dsimp only at this
-    rw [germ_resM, germ_resM] at this
-    exact this
+    rwa [germ_resM, germ_resM] at this
   · have hzW : z ∈ W := hz
     have := congrArg (F.presheaf.germ W z hzW) (hg false)
     dsimp only at this
-    rw [germ_resM, map_zero] at this
-    exact this
+    rwa [germ_resM, map_zero] at this
 end IsolatedSecZero
 
 theorem exists_sec_mem_nonzeroLocus_of_isolated_zero_else : ∀ (k : Type) [Field k] (X : Scheme.{0})

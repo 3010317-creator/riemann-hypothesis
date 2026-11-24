@@ -75,8 +75,7 @@ variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.w
 
 theorem liftV_exists_core (hC : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (t : T) (g : G) : ∃ κ, IsLiftV R i t g κ := by
   obtain ⟨κ, hκ⟩ := (R.B.L i t).act_tie.red_surj g
-  have e := hC.grp.red_L i t κ
-  exact ⟨κ, e.symm.trans (congrArg R.eG hκ)⟩
+  exact ⟨κ, (hC.grp.red_L i t κ).symm.trans (congrArg R.eG hκ)⟩
 
 theorem exists_act_core (hC : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (t : T) (g : G) (κ : (levV R i t).Q)
     (hκ : IsLiftV R i t g κ) (x : (R.HV i t).H) :
@@ -148,8 +147,7 @@ theorem levJ_le_Q (D : D7) (X : RealSide D) (E : IntegralHeckeForms.XD D) (Y : S
   rw [hB.βS] at h1
   refine ⟨?_, ?_⟩
   · refine (parLev_congr _ _ _ _ _ ?_ ?_ ?_ ?_).le h1
-    · show (Wc D j).rank = D.R.r
-      exact hrW
+    · exact hrW
     · show (Vc D j).rank - (Wc D j).rank = D.R.t
       omega
     · exact hB.Pg
@@ -172,8 +170,7 @@ theorem flagLevelTwistedTranslation_finsetSum {G W ι : Type} [Group G] [NormedA
 theorem flagLevelTwistedTranslation_smul {G W : Type} [Group G] [NormedAddCommGroup W] [InnerProductSpace ℂ W] {Q : Subgroup G} (ch : Q →* ℂˣ)
     (q : Q) (a : ℂ) (f : G → W) : Bridge.g0Act ch q (a • f) = a • Bridge.g0Act ch q f := by
   funext h
-  simp only [Bridge.g0Act, Pi.smul_apply]
-  exact smul_comm _ _ _
+  simpa only [Bridge.g0Act, Pi.smul_apply] using smul_comm _ _ _
 
 theorem twistedTranslation_classCombination_eigen {H W G : Type} [Group H] [NormedAddCommGroup W] [InnerProductSpace ℂ W] [Group G] [Fintype G]
     {Q : Subgroup H} (ch : Q →* ℂˣ) (red : Q →* G) (f : H → W)

@@ -170,12 +170,10 @@ private theorem weight_components_mem_of_sum_mem {n : ℕ} {K V : Type*} [Field 
         rw [Finsupp.sum, Finset.sum_subset hone (fun x _ hx => by simpa using hx), Finset.sum_singleton]
       rw [← hsum]; exact hs
     obtain ⟨nu, hnu, hne⟩ : ∃ nu ∈ f.support, nu ≠ mu := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hone fun x hx => Finset.mem_singleton.2 (hc x hx)
     obtain ⟨a, ha⟩ : ∃ a, mu a ≠ nu a := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hne (funext fun a => (hc a).symm)
     let g : (Fin n → ℤ) →₀ V := Finsupp.onFinset f.support
       (fun mu' => (((mu' a : ℤ) : K) - ((nu a : ℤ) : K)) • f mu')
@@ -358,12 +356,8 @@ theorem subrep_restriction_of_reducibility (hCR : CompleteReducibilityIsotypic) 
     rw [LinearMap.smul_apply, LinearMap.smul_apply, Submodule.coe_smul, restrictStableOperators_list_prod_sub_apply_coe]
   · intro lam e he
     refine ⟨e.restrict (hstab lam e he), ⟨fun x hx => ?_, fun mu hm x hx => ?_⟩, fun x => rfl⟩
-    · apply Subtype.ext
-      show e (x : V) = x
-      exact he.1 _ (coe_mem_isoSub_of_mem_isoSub_restrict E W h _ x hx)
-    · apply Subtype.ext
-      show e (x : V) = 0
-      exact he.2 mu hm _ (coe_mem_isoSub_of_mem_isoSub_restrict E W h _ x hx)
+    · exact Subtype.ext (he.1 _ (coe_mem_isoSub_of_mem_isoSub_restrict E W h _ x hx))
+    · exact Subtype.ext (he.2 mu hm _ (coe_mem_isoSub_of_mem_isoSub_restrict E W h _ x hx))
   · intro lam e he hno x hx
     have hx' : (⟨x, hx⟩ : W) ∈ ⨆ mu : Fin n → ℤ, isoSub (restrictStableOperators E W h) mu := by rw [hcr]; trivial
     have key : (⨆ mu : Fin n → ℤ, isoSub (restrictStableOperators E W h) mu) ≤ (LinearMap.ker e).comap W.subtype := by

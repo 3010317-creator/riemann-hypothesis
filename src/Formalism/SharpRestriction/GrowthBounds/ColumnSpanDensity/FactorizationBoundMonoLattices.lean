@@ -71,19 +71,19 @@ theorem flattened_weight_dominant {n' : ℕ} (m : ℕ) {TT : Finset (Fin n')} (a
   · simp only [hs, dite_true]
     by_cases hi : i = 0
     · subst hi
-      simp only [if_true]
+      simp only [ite_true]
       split_ifs <;> omega
     · have hj : j ≠ 0 := by
         intro h
         subst h
         exact hi (Fin.le_zero_iff.1 hij)
-      simp only [hi, hj, if_false]
+      simp only [hi, hj, ite_false]
       by_cases hil : i = Fin.last m
       · have hjl : j = Fin.last m := by
           subst hil
           exact le_antisymm (Fin.le_last j) hij
         simp [hil, hjl]
-      · simp only [hil, if_false]
+      · simp only [hil, ite_false]
         split_ifs <;> omega
   · simp [hs]
 
@@ -170,12 +170,9 @@ theorem initial_level_shift_bound (X : Dat) (hS : 2 ≤ numSeg X.TT) (K : Cst) (
         (ex (fun s => A s - j s) (segStart X.TT jj) : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i) + X.J0 K := by
       have h4 : (X.Jn K : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i) ≤ X.Jn K :=
         div_le_self (Nat.cast_nonneg _) hP
-      calc (ex A (segStart X.TT jj) : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i)
-          ≤ ((ex (fun s => A s - j s) (segStart X.TT jj) : ℝ) + X.Jn K) / (X.p : ℝ) ^ ((segDists X.TT jj).get i) :=
-            div_le_div_of_nonneg_right h2 hP0.le
-        _ = (ex (fun s => A s - j s) (segStart X.TT jj) : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i) +
-            (X.Jn K : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i) := add_div _ _ _
-        _ ≤ _ := by linarith
+      have h5 := div_le_div_of_nonneg_right h2 hP0.le
+      rw [add_div] at h5
+      linarith
     rw [← min_add_add_right]
     exact min_le_min (by linarith) h3
   have hsum : ∑ jj : Fin (numSeg X.TT), ∑ i : Fin (segS X.TT jj),
@@ -184,21 +181,13 @@ theorem initial_level_shift_bound (X : Dat) (hS : 2 ≤ numSeg X.TT) (K : Cst) (
         min (ex (fun s => B s - j s) (segPos X.TT jj i) : ℝ)
           ((ex (fun s => A s - j s) (segStart X.TT jj) : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i))) +
         X.N * X.J0 K := by
-    have h1 : ∑ jj : Fin (numSeg X.TT), ∑ i : Fin (segS X.TT jj),
-        min (ex B (segPos X.TT jj i) : ℝ) ((ex A (segStart X.TT jj) : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i)) ≤
-        ∑ jj : Fin (numSeg X.TT), ∑ i : Fin (segS X.TT jj),
-          (min (ex (fun s => B s - j s) (segPos X.TT jj i) : ℝ)
-            ((ex (fun s => A s - j s) (segStart X.TT jj) : ℝ) / (X.p : ℝ) ^ ((segDists X.TT jj).get i)) + X.J0 K) :=
-      Finset.sum_le_sum fun jj _ => Finset.sum_le_sum fun i _ => hterm jj i
-    refine le_trans h1 ?_
+    refine le_trans (Finset.sum_le_sum fun jj _ => Finset.sum_le_sum fun i _ => hterm jj i) ?_
     simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
     have h2 : ∑ jj : Fin (numSeg X.TT), (segS X.TT jj : ℝ) * X.J0 K ≤ X.N * X.J0 K := by
       rw [← Finset.sum_mul]
       refine mul_le_mul_of_nonneg_right ?_ hJ
-      have h3 := sg_count X.TT hS
-      have h4 : ∑ jj : Fin (numSeg X.TT), segS X.TT jj ≤ ∑ jj : Fin (numSeg X.TT), (segS X.TT jj + 1) :=
-        Finset.sum_le_sum fun jj _ => Nat.le_succ _
-      have h5 : ∑ jj : Fin (numSeg X.TT), segS X.TT jj ≤ X.TT.card := le_trans h4 h3
+      have h5 : ∑ jj : Fin (numSeg X.TT), segS X.TT jj ≤ X.TT.card :=
+        le_trans (Finset.sum_le_sum fun jj _ => Nat.le_succ _) (sg_count X.TT hS)
       unfold Dat.N
       exact_mod_cast h5
     linarith
@@ -309,10 +298,10 @@ theorem keyIneq_of (D : Formalism.BasicNotions.D7) (K : Cst) (hA : K.admitted D)
         dL R (flatW X.m (fun s => A s - j s) (fun s => B s - j s)) else 0)) := by
     refine Finset.sum_le_sum fun j hj => ?_
     by_cases hj' : j ∈ S'
-    · simp only [hj', if_true]
+    · simp only [hj', ite_true]
       have := hle2 j (hmemS' j hj')
       linarith
-    · simp only [hj', if_false, sub_zero]
+    · simp only [hj', ite_false, sub_zero]
       exact hle j (hmemS j hj)
   rw [Finset.sum_sub_distrib, Finset.sum_ite_mem, Finset.inter_eq_right.2 hsub,
     sum_dimensions_flattened_weights hD R X.m (le_trans (by norm_num) hF.m2) X.TT A B] at hsum

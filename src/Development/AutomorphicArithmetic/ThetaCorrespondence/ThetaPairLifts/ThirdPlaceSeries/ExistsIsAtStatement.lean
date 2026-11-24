@@ -371,13 +371,7 @@ theorem Z_int {t : RA} (ht : ZMod' X.B.I X.B.g t) : t ∈ IntAf X.B.I.F X.B.I.E 
 
 theorem hA_ef (a b : Fin D.R.rS) :
     hA X.B.I (incl X.B.I (X.eR a)) (incl X.B.I (X.fR b)) = if a = b then 1 else 0 := by
-  rw [hA_incl]
-  have h := GlobalTheory.St.hform_crd_setting X (X.eX a) (X.fY b)
-  rw [X.ef] at h
-  have h' : Formalism.UG.hform (starRingEnd X.B.I.E) X.B.I.J (X.eR a) (X.fR b) = if a = b then 1 else 0 := by
-    apply X.ιE.injective
-    refine h.trans ?_; split_ifs <;> simp
-  rw [h']; split_ifs <;> simp
+  exact Formalism.L2.SG.Pf.Level.hA_e_f X a b
 
 theorem hA_fe (a b : Fin D.R.rS) :
     hA X.B.I (incl X.B.I (X.fR b)) (incl X.B.I (X.eR a)) = if a = b then 1 else 0 := by
@@ -424,13 +418,13 @@ theorem core (u : D.what₂.Word) (m : X.B.I.Gf) (hmK : m ∈ X.B.I.Kset) (hmN :
   set W' := W - ∑ b, t b • incl X.B.I (X.fR b) with hW'def
   have hperp : ∀ a, hA X.B.I (incl X.B.I (X.eR a)) W' = 0 := fun a => by
     rw [hW'def, hA_sub_right, hA_sum_right]
-    simp only [hA_smul_right, hA_ef, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hA_smul_right, hA_ef, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [htdef]; exact sub_self _
   have hv := hmN.2.2 W' hperp
   obtain ⟨lam, hlam⟩ := (Submodule.mem_span_range_iff_exists_fun RA).1 hv
   have hlam_eq : ∀ a, hA X.B.I (incl X.B.I (X.fR a)) ((X.B.I.fmat m - 1) *ᵥ W') = lam a := fun a => by
     rw [← hlam, hA_sum_right]
-    simp only [hA_smul_right, hA_fe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hA_smul_right, hA_fe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
   have hcW' : (c : RA) • W' ∈ X.B.I.Lf := by
     rw [hW'def, smul_sub, Finset.smul_sum]
@@ -555,21 +549,7 @@ variable {D : D7}
 
 theorem hA_fR_nxt_zero (X : HidaSetting D) (u : D.what₂.Word) (a : Fin D.R.rS) :
     hA X.B.I (incl X.B.I (X.fR a)) (incl X.B.I (nxt X.eR (X.zR u) a)) = 0 := by
-  rw [Formalism.L2.SG.Pf.unitaryCongruence.hA_incl]
-  have e1 : nxt X.eR (X.zR u) a = X.crd (nxt X.eX (X.zu u) a) := by
-    unfold nxt; split_ifs <;> rfl
-  have e2 : Formalism.UG.hform (starRingEnd X.B.I.E) X.B.I.J (X.fR a) (X.crd (nxt X.eX (X.zu u) a)) = 0 := by
-    apply X.ιE.injective
-    rw [show X.fR a = X.crd (X.fY a) from rfl, GlobalTheory.St.hform_crd_setting, map_zero]
-    unfold nxt
-    split_ifs with hh
-    · apply GlobalTheory.St.hT_symm_zero
-      rw [X.ef, if_neg]
-      intro h'
-      have := congrArg Fin.val h'
-      simp at this
-    · exact (X.zu_orth u a).2
-  rw [e1, e2, map_zero]
+  exact Formalism.L2.SG.Pf.Level.hA_f_nxt a
 
 theorem smul_fact {R : Type} [CommRing R] {k : ℕ} (M : Matrix (Fin k) (Fin k) R) (ε : R)
     (h : ∀ i j, M i j = ε * M i j) (v : Fin k → R) : M *ᵥ v = ε • (M *ᵥ v) := by
@@ -917,7 +897,7 @@ theorem edge_sum_typeFrame {K : Type} [Field K] (κ τ s N r p : ℕ) (hr : r �
     intro x
     rw [Finset.sum_eq_zero, Finset.sum_eq_zero, add_zero]
     · intro x_1 _
-      rw [if_neg]
+      rw [ite_eq_right]
       omega
     · intro x_1 _
       split_ifs with h
@@ -939,13 +919,13 @@ theorem edge_sum_typeFrame {K : Type} [Field K] (κ τ s N r p : ℕ) (hr : r �
     rw [Finset.sum_eq_zero, zero_add, Finset.mul_sum]
     · refine Finset.sum_congr rfl fun x_1 _ => ?_
       by_cases h : (x_1 : ℕ) = x + 1
-      · rw [if_pos ⟨by omega, by omega⟩, if_pos h, h]
+      · rw [ite_eq_left ⟨by omega, by omega⟩, ite_eq_left h, h]
         have hϖ : (ϖ : K) ≠ 0 := ϖ.ne_zero
         field_simp
         ring
-      · rw [if_neg (by omega), if_neg h, mul_zero]
+      · rw [ite_eq_right (by omega), ite_eq_right h, mul_zero]
     · intro x_1 _
-      rw [if_neg]
+      rw [ite_eq_right]
       have := x_1.2
       omega
   simp only [A, B, Finset.sum_const_zero, zero_add, ← Finset.mul_sum]

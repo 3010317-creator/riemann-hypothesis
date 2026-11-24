@@ -61,11 +61,9 @@ theorem stpTop_groupClasses : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (u 
   have hY : ∀ p : PtAt (Pr := B.primes X) B.R I.sel (I.tup a) (I.cst a) u B.R.m, p.1.2 = ∅ := by
     intro p
     have h := p.2
-    rw [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) hne] at h
-    exact h
+    rwa [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) hne] at h
   have hpt : ∀ p q : PtAt (Pr := B.primes X) B.R I.sel (I.tup a) (I.cst a) u B.R.m, p.1.1 = q.1.1 → p = q := by
-    intro p q h
-    exact Subtype.ext (Prod.ext h ((hY p).trans (hY q).symm))
+    exact fun p q h => Subtype.ext (Prod.ext h ((hY p).trans (hY q).symm))
   have hcos : ∀ p q : PtAt (Pr := B.primes X) B.R I.sel (I.tup a) (I.cst a) u B.R.m, cosetIn p = cosetIn q := by
     intro p q
     funext P

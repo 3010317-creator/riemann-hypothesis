@@ -105,8 +105,7 @@ theorem phi_mem_tgr {p : Poly (Sy S r) N} {d : ℕ} (hp : p.IsHomogeneous d) :
     refine SetLike.prod_mem_graded _ _ _ fun i _ => ?_
     simpa using SetLike.pow_mem_graded (μ i) (single_mem_tgr 1 0 (x i))
   have h3 := SetLike.mul_mem_graded h1 h2
-  rw [zero_add, ← Nat.cast_sum, hdeg] at h3
-  exact h3
+  rwa [zero_add, ← Nat.cast_sum, hdeg] at h3
 
 def kapT : Polynomial Ω →ₐ[Ω] LA Ω := Polynomial.aeval (single ((1 : ℤ), (0 : ℤ)) 1)
 
@@ -211,14 +210,12 @@ theorem projT_mul_of_mem {a : LA Ω} {d : ℤ} (ha : a ∈ tgr d) (b : LA Ω) (c
   have := DirectSum.coe_decompose_mul_add_of_left_mem
     (gradeBy Ω (AddMonoidHom.fst ℤ ℤ) : ℤ → Submodule Ω (LA Ω)) (j := c - d) ha (b := b)
   rw [add_sub_cancel] at this
-  rw [projT_apply, projT_apply]
-  exact this
+  rwa [projT_apply, projT_apply]
 
 theorem exists_sum_projT (a : LA Ω) : ∃ F : Finset ℤ, ∑ c ∈ F, projT c a = a := by
   classical
   refine ⟨(DirectSum.decompose (gradeBy Ω (AddMonoidHom.fst ℤ ℤ) : ℤ → Submodule Ω (LA Ω)) a).support, ?_⟩
-  simp only [projT_apply]
-  exact DirectSum.sum_support_decompose _ a
+  simpa only [projT_apply] using DirectSum.sum_support_decompose _ a
 
 variable (n0 : ℕ) (d0 : Fin n0 → ℤ) (g0 : Fin n0 → Ω)
 
@@ -413,8 +410,7 @@ theorem phi_mul_locL_mk (I : Finset (Fin (N + 1))) (hI : ∀ i ∈ I, x i ≠ 0)
       (((e⁻¹ : (Module.End (Poly (Sy S r) N) (Amb x η))ˣ) : Module.End (Poly (Sy S r) N) (Amb x η))
         (m : Amb x η)) = (m : Amb x η) := by
     rw [← Module.End.mul_apply, Units.mul_inv, Module.End.one_apply]
-  rw [hspec, Module.algebraMap_end_apply] at h1
-  exact h1
+  rwa [hspec, Module.algebraMap_end_apply] at h1
 
 theorem locL_mk_eq (I : Finset (Fin (N + 1))) (hI : ∀ i ∈ I, x i ≠ 0) (m : TMod x η S n0 d0 g0)
     (s : monos (S := Sy S r) I) (a : Amb x η) (ha : phi x η S s * toA x η a = toA x η m) :
@@ -482,8 +478,7 @@ def idx0 (i : Fin (N + 1)) : Cech.Idx (Finset.univ : Finset (Fin (N + 1))) 0 :=
 
 theorem mem_chartCell_ne_zero {i0 : Fin (N + 1)} (hi0 : x i0 ≠ 0) : ∀ i ∈ (idx0 i0).1.1, x i ≠ 0 := by
   intro i hi
-  rw [Finset.mem_singleton.mp hi]
-  exact hi0
+  rwa [Finset.mem_singleton.mp hi]
 
 def evalIdx (i0 : Fin (N + 1)) (hi0 : x i0 ≠ 0) :
     Cech.cocyDeg (locSys (Sy S r) N (TMod x η S n0 d0 g0)) (degLoc (tgraded x η S n0 d0 g0) 0) locResS 0
@@ -521,7 +516,7 @@ theorem mem_range_readChartH0 (i0 : Fin (N + 1)) (hi0 : x i0 ≠ 0) (t : Amb x �
       apply locL_injective x η S n0 d0 g0 J.1 hJ
       change locL x η S n0 d0 g0 J.1 hJ (locRes h (v I)) = locL x η S n0 d0 g0 J.1 hJ (v J)
       rw [locL_locRes]
-      simp only [v, dif_pos hI, dif_pos hJ]
+      simp only [v, dite_eq_left hI, dite_eq_left hJ]
       rw [(ht I hI).choose_spec.2, (ht J hJ).choose_spec.2]
     · push Not at hJ
       obtain ⟨i, hi, hx⟩ := hJ
@@ -532,12 +527,12 @@ theorem mem_range_readChartH0 (i0 : Fin (N + 1)) (hi0 : x i0 ≠ 0) (t : Amb x �
         locResS 0 := by
     refine ⟨Cech.d_zero_of_compat v hv, fun I _ => ?_⟩
     by_cases hI : ∀ i ∈ I.1.1, x i ≠ 0
-    · simp only [v, dif_pos hI]; exact (ht I.1 hI).choose_spec.1
-    · simp only [v, dif_neg hI]; exact zero_mem _
+    · simp only [v, dite_eq_left hI]; exact (ht I.1 hI).choose_spec.1
+    · simp only [v, dite_eq_right hI]; exact zero_mem _
   refine ⟨Submodule.Quotient.mk ⟨_, hcoc⟩, ?_⟩
   change evalIdx x η S n0 d0 g0 i0 hi0 ⟨_, hcoc⟩ = t
   change locL x η S n0 d0 g0 (idx0 i0).1.1 (mem_chartCell_ne_zero x hi0) (v (idx0 i0).1) = t
-  simp only [v, dif_pos (mem_chartCell_ne_zero x hi0)]
+  simp only [v, dite_eq_left (mem_chartCell_ne_zero x hi0)]
   exact (ht _ (mem_chartCell_ne_zero x hi0)).choose_spec.2
 
 end TwistFin
@@ -763,8 +758,8 @@ theorem coeff_psi_mul_single (c : Sy S r) (b' b : ℕ) (s' : Ω) :
   rw [psi_of_isHomogeneous η S (homogeneousComponent_isHomogeneous d c), single_mul_single, coeff_single,
     Finsupp.single_apply]
   by_cases hdb : d + b' = b
-  · rw [if_pos hdb, if_pos (by ext <;> simp; omega)]
-  · rw [if_neg hdb, if_neg (by intro h; apply hdb; have := congrArg Prod.snd h; simp at this; omega)]
+  · rw [ite_eq_left hdb, ite_eq_left (by ext <;> simp; omega)]
+  · rw [ite_eq_right hdb, ite_eq_right (by intro h; apply hdb; have := congrArg Prod.snd h; simp at this; omega)]
 
 end TwistFin
 
@@ -816,8 +811,7 @@ theorem TwistFinite.proof (hE : Extension.Statement.{u, w, w}) (hSF : SerreFinit
   obtain ⟨T, hTΓ, htT⟩ := Submodule.subset_span_finite_of_subset_span
     (R := Sy S r) (s := Γ) (t := t) (by rw [← ht]; exact Submodule.subset_span)
   have hle : Submodule.span (Sy S r) Γ ≤ Submodule.span (Sy S r) (T : Set (Amb x η)) := by
-    rw [← ht, Submodule.span_le]
-    exact htT
+    rwa [← ht, Submodule.span_le]
   have hT : ∀ γ : T, ∃ (b : ℕ) (s : Ω), s ∈ (G.twist (B.pow b)).secs ∧
       (γ : Amb x η) = (toA x η).symm (single ((0 : ℤ), (b : ℤ)) s) := fun γ => hTΓ γ.2
   choose bT sT hsT hγT using hT
@@ -842,8 +836,7 @@ theorem TwistFinite.proof (hE : Extension.Statement.{u, w, w}) (hSF : SerreFinit
   split_ifs with hdb
   · refine Submodule.subset_span ⟨e ⟨γ, hγ⟩, homogeneousComponent d (c γ), d,
       homogeneousComponent_isHomogeneous _ _, ?_, ?_⟩
-    · simp only [Equiv.symm_apply_apply]
-      exact hdb
+    · simpa only [Equiv.symm_apply_apply] using hdb
     · simp only [Equiv.symm_apply_apply]
   · exact zero_mem _
 

@@ -63,8 +63,7 @@ def SmMat (M : E → Matrix (Fin N) (Fin N) ℂ) (w : E) : Prop :=
 theorem SmMat.mul {M M' : E → Matrix (Fin N) (Fin N) ℂ} {w : E} (h : SmMat M w) (h' : SmMat M' w) :
     SmMat (fun u => M u * M' u) w := by
   intro a b
-  simp only [Matrix.mul_apply]
-  exact ContDiffAt.sum fun c _ => (h a c).mul (h' c b)
+  simpa only [Matrix.mul_apply] using ContDiffAt.sum fun c _ => (h a c).mul (h' c b)
 
 theorem SmMat.conjTranspose {M : E → Matrix (Fin N) (Fin N) ℂ} {w : E} (h : SmMat M w) :
     SmMat (fun u => (M u)ᴴ) w := by
@@ -76,11 +75,9 @@ theorem SmMat.minor {M : E → Matrix (Fin N) (Fin N) ℂ} {w : E} (h : SmMat M 
     ContDiffAt ℝ ∞ (fun u => minorIJ (M u) I J) w := by
   unfold minorIJ
   by_cases e : I.card = J.card
-  · simp only [dif_pos e, Matrix.det_apply']
-    refine ContDiffAt.sum fun σ _ => contDiffAt_const.mul ?_
-    exact contDiffAt_prod fun i _ => h _ _
-  · simp only [dif_neg e]
-    exact contDiffAt_const
+  · simp only [dite_eq_left e, Matrix.det_apply']
+    exact ContDiffAt.sum fun σ _ => contDiffAt_const.mul (contDiffAt_prod fun i _ => h _ _)
+  · simpa only [dite_eq_right e] using contDiffAt_const
 
 theorem contDiffAt_blockPot (j : ℕ) (i : Fin N) {G h : E → Matrix (Fin N) (Fin N) ℂ} {w : E}
     (hG : SmMat G w) (hh : SmMat h w) (hpos : (G w).PosDef) (hdet : (h w).det ≠ 0) :
@@ -92,11 +89,11 @@ theorem contDiffAt_blockPot (j : ℕ) (i : Fin N) {G h : E → Matrix (Fin N) (F
     unfold detFac
     refine ContDiffAt.mul ?_ ?_
     · by_cases c : j ≤ (i : ℕ) + 1
-      · simpa only [if_pos c] using hG.minor _ _
-      · simpa only [if_neg c] using contDiffAt_const
+      · simpa only [ite_eq_left c] using hG.minor _ _
+      · simpa only [ite_eq_right c] using contDiffAt_const
     · by_cases c : (i : ℕ) + 1 = N
-      · simpa only [if_pos c] using hG.minor _ _
-      · simpa only [if_neg c] using contDiffAt_const
+      · simpa only [ite_eq_left c] using hG.minor _ _
+      · simpa only [ite_eq_right c] using contDiffAt_const
   have hfac0 : 0 < detFac j i (G w) := by
     unfold detFac
     refine mul_pos ?_ ?_
@@ -109,13 +106,12 @@ theorem contDiffAt_blockPot (j : ℕ) (i : Fin N) {G h : E → Matrix (Fin N) (F
   unfold blockPot
   refine (contDiffAt_const.mul (hre hfac hfac0)).add ?_
   by_cases c : IsProperStep N j i
-  · simp only [if_pos c]
+  · simp only [ite_eq_left c]
     refine contDiffAt_const.mul (hre ((hh.conjTranspose.mul hG).mul hh |>.minor _ _) ?_)
     have hu : IsUnit (h w) := (Matrix.isUnit_iff_isUnit_det _).2 hdet.isUnit
     exact GramPot.minor_pos
       (hpos.conjTranspose_mul_mul_same (Matrix.mulVec_injective_of_isUnit hu)) _
-  · simp only [if_neg c]
-    exact contDiffAt_const
+  · simpa only [ite_eq_right c] using contDiffAt_const
 
 end Calc
 

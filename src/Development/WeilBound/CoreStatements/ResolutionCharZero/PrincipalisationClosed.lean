@@ -234,10 +234,10 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂.CentreOver
 theorem cartAt_of_notMem_support {X : Scheme.{0}} (J : X.IdealSheafData) (x : X) (hx : x ∉ J.support) :
     CartAt J x := by
   rw [Scheme.IdealSheafData.mem_support_iff] at hx
-  push_neg at hx
+  push Not at hx
   obtain ⟨U, hU⟩ := hx
   rw [Scheme.mem_zeroLocus_iff] at hU
-  push_neg at hU
+  push Not at hU
   obtain ⟨f, hf, hxf⟩ := hU
   refine ⟨X.affineBasicOpen f, 1, hxf, Submonoid.one_mem _, ?_⟩
   rw [Ideal.span_singleton_one, ← J.map_ideal_basicOpen U f]
@@ -340,10 +340,8 @@ theorem effCartier_comap_opens_iff : ∀ {X : Scheme.{0}} (J : X.IdealSheafData)
   intro X J O
   rw [effCartier_iff_forall_cartAt]
   constructor
-  · intro h x hx
-    exact cartAt_of_cartAt_comap J O.ι ⟨x, hx⟩ (h ⟨x, hx⟩)
-  · intro h x
-    exact cartAt_comap_of_cartAt J O.ι x (h x.1 x.2)
+  · exact fun h x hx => cartAt_of_cartAt_comap J O.ι ⟨x, hx⟩ (h ⟨x, hx⟩)
+  · exact fun h x => cartAt_comap_of_cartAt J O.ι x (h x.1 x.2)
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.CentreOver
 end -- clump:auto
@@ -368,8 +366,7 @@ theorem cartAt_of_locPrincipal : ∀ {X : Scheme.{0}} [IsIntegral X] (Z : X.Idea
   obtain ⟨t, f, ht, hfI, hf0, hg⟩ := h
   have hx : U.2.fromSpec q ∈ X.basicOpen t := by
     have h1 : q ∈ U.2.fromSpec ⁻¹ᵁ X.basicOpen t := by
-      rw [U.2.fromSpec_preimage_basicOpen]
-      exact ht
+      rwa [U.2.fromSpec_preimage_basicOpen]
     exact h1
   have hxU : U.2.fromSpec q ∈ U.1 := X.basicOpen_le t hx
   have inst := U.2.isLocalization_basicOpen t
@@ -694,8 +691,7 @@ theorem locPrincipal_of_cartAt : ∀ {X : Scheme.{0}} [IsIntegral X] (Z : X.Idea
   obtain ⟨V, h, hxV, hh, hZV⟩ := hC
   have hxU : U.2.fromSpec q ∈ (U.1 : X.Opens) := by
     have hr : U.2.fromSpec q ∈ Set.range U.2.fromSpec := ⟨q, rfl⟩
-    rw [U.2.range_fromSpec] at hr
-    exact hr
+    rwa [U.2.range_fromSpec] at hr
   obtain ⟨f, g, hfg, hxf⟩ :=
     exists_basicOpen_le_affine_inter U.2 V.2 (U.2.fromSpec q) ⟨hxU, hxV⟩
   have hWU : X.basicOpen f ≤ U.1 := X.basicOpen_le f
@@ -717,8 +713,7 @@ theorem locPrincipal_of_cartAt : ∀ {X : Scheme.{0}} [IsIntegral X] (Z : X.Idea
     intro h0
     apply nonZeroDivisors.ne_zero hh
     apply map_injective_of_isIntegral X (homOfLE hWV)
-    rw [map_zero]
-    exact h0
+    rwa [map_zero]
   have hI : (Z.ideal U).map (algebraMap Γ(X, U.1) Γ(X, X.basicOpen f)) =
       Ideal.span {(X.presheaf.map (homOfLE hWV).op).hom h} := by
     rw [← hZW]
@@ -907,8 +902,7 @@ theorem locPrincipal_locally_const {k A : Type} [Field k] [CommRing A] [IsDomain
       ∃ Q : PrimeSpectrum (A ⧸ I), PrimeSpectrum.comap (Ideal.Quotient.mk I) Q = q := by
     intro q hq
     have : q ∈ Set.range (PrimeSpectrum.comap (Ideal.Quotient.mk I)) := by
-      rw [_root_.range_comap_of_surjective _ _ hsurj, Ideal.mk_ker]
-      exact hq
+      rwa [_root_.range_comap_of_surjective _ _ hsurj, Ideal.mk_ker]
     exact this
   obtain ⟨P0, hP0⟩ := hrange p hp
   have hlc : IsLocallyConstant (Module.rankAtStalk (R := A ⧸ I) I.Cotangent) :=
@@ -925,8 +919,7 @@ theorem locPrincipal_locally_const {k A : Type} [Field k] [CommRing A] [IsDomain
   have hQO : Module.rankAtStalk (R := A ⧸ I) I.Cotangent Q = Module.rankAtStalk (R := A ⧸ I) I.Cotangent P0 := by
     have : Q ∈ PrimeSpectrum.comap (Ideal.Quotient.mk I) ⁻¹' W := by
       rw [Set.mem_preimage, hQ]; exact hsW hs
-    rw [hWO] at this
-    exact this
+    rwa [hWO] at this
   have e : ∀ R : PrimeSpectrum (A ⧸ I), LocPrincipal I (PrimeSpectrum.comap (Ideal.Quotient.mk I) R).asIdeal ↔ Module.rankAtStalk (R := A ⧸ I) I.Cotangent R = 1 :=
     fun R => ⟨_root_.GlobalTheory.CompanionTheory.Hypotheses₂.CentreOver.rankAtStalk_cotangent_eq_one I R, _root_.GlobalTheory.CompanionTheory.Hypotheses₂.CentreOver.locPrincipal_of_rankAtStalk_eq_one I R⟩
   rw [← hQ, ← hP0, e, e, hQO]
@@ -1114,8 +1107,7 @@ theorem isIso_restrict_of_isIso_restrict_comp_blowup : ∀ {X X₁ X₂ : Scheme
     IsIso ((π ≫ s) ∣_ V) → IsIso (s ∣_ V) ∧ IsIso (π ∣_ (s ⁻¹ᵁ V)) := by
   intro X X₁ X₂ s π Z V hX hs hB hne he
   have he' : IsIso (π ∣_ (s ⁻¹ᵁ V) ≫ s ∣_ V) := by
-    rw [← morphismRestrict_comp]
-    exact he
+    rwa [← morphismRestrict_comp]
   exact isIso_of_isIso_comp_of_dense_range (π ∣_ (s ⁻¹ᵁ V)) (s ∣_ V) (dense_range_restrict_of_blowup hB _)
 
 end GlobalTheory.CompanionTheory.Principalise

@@ -118,8 +118,7 @@ theorem latt_free_sub_full_rank {E : Type} [Field E] [NumberField E] (X : Type) 
     have hax : g 0 • x ∈ LinearMap.range f := by
       refine ⟨fun j => - g j.succ, ?_⟩
       rw [hfv']
-      simp only [neg_smul, Finset.sum_neg_distrib]
-      exact (neg_eq_of_add_eq_zero_left hg)
+      simpa only [neg_smul, Finset.sum_neg_distrib] using (neg_eq_of_add_eq_zero_left hg)
     have hI : Ideal.span {g 0} ≠ ⊥ := by simpa using ha
     have hN : Ideal.absNorm (Ideal.span {g 0}) ≠ 0 := by
       rwa [Ne, Ideal.absNorm_eq_zero_iff]
@@ -206,8 +205,7 @@ theorem finrank_balBil_eq_of_finiteIndex {O : Type} [CommRing O] (bar : O → O)
   have hfg : ∀ x, f (g x) = m • x := by
     intro x
     have h1 : e (g x) = c x := by simp [g]
-    have h2 := congrArg Subtype.val h1
-    simpa [e, c] using h2
+    simpa [e, c] using congrArg Subtype.val h1
   have hgf : ∀ y, g (f y) = m • y := by
     intro y; apply hf; rw [hfg, map_nsmul]
   apply le_antisymm
@@ -584,8 +582,7 @@ theorem ringKrullDim_add_trdeg_of_isComplAt : ∀ (F W R : Type) [Field F] [Comm
     rw [hq, Ideal.mem_comap, mem_maximalIdeal, mem_nonunits_iff]
   have hu : ∀ s : q.primeCompl, IsUnit (ψ s) := fun s => by
     have h := s.2
-    rw [Ideal.mem_primeCompl_iff, hmemq, not_not] at h
-    exact h
+    rwa [Ideal.mem_primeCompl_iff, hmemq, not_not] at h
   let ψA : Localization.AtPrime q →+* R := IsLocalization.lift hu
   have hψA' : ∀ x, ψA (algebraMap _ (Localization.AtPrime q) x) = ψ x := fun x => IsLocalization.lift_eq hu x
   have hψA : ψA.comp (algebraMap _ (Localization.AtPrime q)) = ψ := RingHom.ext hψA'

@@ -165,8 +165,7 @@ theorem cpt_sg_mem {Q : Pl D.host.E} {z : Ef D}
   have h4 : cpt (cP Q) (sg D e) = 1 := by
     rw [map_sub, map_one, map_sub, map_one, sub_eq_zero] at h3
     exact h3.symm
-  rw [map_mul, map_mul, h4, one_mul] at h2
-  exact h2
+  rwa [map_mul, map_mul, h4, one_mul] at h2
 
 theorem int_mul {Q : Pl D.host.E} {n : ℕ} {A B : Matrix (Fin n) (Fin n) (Ef D)}
     (hA : ∀ i j, cpt Q (A i j) ∈ HeightOneSpectrum.adicCompletionIntegers D.host.E Q)
@@ -422,8 +421,7 @@ theorem frMapAdj_mul_frame_eq (D : D7) (V W : HSp D) (βV : GL (Fin V.rank) (For
   (HMul.hMul (frMapAdj V W βV βW x') (HMul.hMul (HMul.hMul ((βW)⁻¹).val ((Formalism.L2.Theta.mt W k).map (toEAf D))) (βW).val : Matrix (Fin (W).rank) (Fin (W).rank) (Formalism.IndefR.Datum.EAf D)) : Matrix (Fin V.rank) (Fin W.rank) (Formalism.IndefR.Datum.EAf D)) = toEAf D f • (HMul.hMul (frMapAdj V W βV βW x) (HMul.hMul (HMul.hMul ((βW)⁻¹).val ((Formalism.L2.Theta.mt W k).map (toEAf D))) (βW).val : Matrix (Fin (W).rank) (Fin (W).rank) (Formalism.IndefR.Datum.EAf D)) : Matrix (Fin V.rank) (Fin W.rank) (Formalism.IndefR.Datum.EAf D)) + (1 - toEAf D f) • frMapAdj V W βV βW x' := by
   have hfx : f • x = f • x' := by
     ext a b
-    simp only [Matrix.smul_apply, smul_eq_mul]
-    exact hxx a b
+    simpa only [Matrix.smul_apply, smul_eq_mul] using hxx a b
   have hx : toEAf D f • frMapAdj V W βV βW x = toEAf D f • frMapAdj V W βV βW x' := by
     rw [← frMapAdj_smul_of_fix D V W βV βW f hf, ← frMapAdj_smul_of_fix D V W βV βW f hf, hfx]
   exact split_mul (toEAf D f) _ _ _ hx (conj_smul_eq _ βW _ (suppF_entry D W f k hk))
@@ -648,8 +646,7 @@ theorem solve_integral {K : Type*} [Field K] {Γ : Type*} [LinearOrderedCommGrou
     rw [map_mul]
     exact mul_le_one' (hadj a k) (hB k b)
   · have h := congrArg v (congrArg Matrix.det hAB)
-    rw [Matrix.det_mul, map_mul, hdA, one_mul, hdB] at h
-    exact h
+    rwa [Matrix.det_mul, map_mul, hdA, one_mul, hdB] at h
   · intro hA1 hB1 a b
     have h := congrFun (congrFun key' a) b
     rw [Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply] at h
@@ -699,8 +696,7 @@ theorem topAt_facts {D : D7} (P : Pl D.host.E) {m n : ℕ} (hmn : n ≤ m)
   · apply le_antisymm ((adj_det_integral Valued.v _ hint).2)
     have h1 : resS (↥D.host.F) P A'.det ≠ 0 := by
       rw [RingHom.map_det, RingHom.mapMatrix_apply, hred]; exact hdU.ne_zero
-    rw [Ne, hφ, not_lt, RingHom.map_det, RingHom.mapMatrix_apply, hA] at h1
-    exact h1
+    rwa [Ne, hφ, not_lt, RingHom.map_det, RingHom.mapMatrix_apply, hA] at h1
   · intro h1 i j
     have hm : (resS (↥D.host.F) P).mapMatrix (A' - 1) = 0 := by
       rw [map_sub, map_one, RingHom.mapMatrix_apply, hred, h1, sub_self]
@@ -725,7 +721,7 @@ theorem kappa_integral_at : ∀ (D : D7) (P : Pl D.host.E) (m n : ℕ) (U Y : Ma
   by_cases hmn : n ≤ m
   swap
   · exfalso
-    push_neg at hmn
+    push Not at hmn
     have h0 : (topL n (redM P U)).det = 0 := by
       apply Matrix.det_eq_zero_of_row_eq_zero ⟨m, hmn⟩
       intro j
@@ -746,10 +742,8 @@ theorem kappa_integral_at : ∀ (D : D7) (P : Pl D.host.E) (m n : ℕ) (U Y : Ma
     exact h
   obtain ⟨k1, k2, k3⟩ := solve_integral Valued.v _ _ _ hAB hAi hBi hAd hBd
   refine ⟨?_, ?_, ?_⟩
-  · intro a b
-    exact (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 (k1 a b)
-  · rw [RingHom.map_det, RingHom.mapMatrix_apply]
-    exact k2
+  · exact fun a b => (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 (k1 a b)
+  · rwa [RingHom.map_det, RingHom.mapMatrix_apply]
   · intro h1 h2 a b
     have e : cp.mapMatrix (κ - 1) = κ.map cp - 1 := by
       rw [map_sub, map_one, RingHom.mapMatrix_apply]
@@ -1071,12 +1065,7 @@ theorem actO_one_inv_half {D : D7} {S T : HSp D} {e f : AE D} (hef : e * f = e) 
     _ = y := by rw [Matrix.smul_mul, Matrix.one_mul, hy']
 
 theorem pureTensorL_one {ι X : Type} (A : ι → (X → ℂ) → (X → ℂ)) (f : X → ℂ) : pureTensorL A f 1 = f := by
-  have e : (1 : MvPolynomial ι ℂ) = MvPolynomial.basisMonomials ι ℂ 0 := by
-    rw [MvPolynomial.coe_basisMonomials]; rfl
-  rw [e]
-  unfold pureTensorL
-  rw [Module.Basis.constr_basis]
-  simp [opPow]
+  exact GlobalTheory.AdTh.VecFock.pureTensorL_one A f
 
 
 
@@ -1177,8 +1166,7 @@ theorem actO_one_of_trivAt {D : D7} {S T : HSp D} {LS : Set (Fin S.rank → D.ho
     rw [← hu', Matrix.mul_smul, ← Matrix.smul_mul, hz, Matrix.zero_mul]
   unfold actO
   rw [inv_one, _root_.GlobalTheory.BesselCompare.mt_one, Matrix.mul_one]
-  rw [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h0
-  exact h0
+  rwa [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h0
 
 theorem vacFin_om_trivAt {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}
     {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} (hW : IsWeilDatumO ψ S T χS χT om)

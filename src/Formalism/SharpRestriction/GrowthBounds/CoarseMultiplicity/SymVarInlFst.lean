@@ -117,7 +117,7 @@ private theorem sum_deg_sub_mul_add_eq_sum_deg_mul {s t : ℕ} (u : Fin t → Fi
         rw [Finset.sum_eq_single i]
         · simp [hi]
         · intro i' _ hne
-          rw [if_neg]
+          rw [ite_eq_right]
           intro h'
           apply hne
           apply hu
@@ -126,8 +126,8 @@ private theorem sum_deg_sub_mul_add_eq_sum_deg_mul {s t : ℕ} (u : Fin t → Fi
         · simp
       have hlt := (u i).isLt
       refine ⟨by rw [hsum]; exact hj i a hi, fun h2 => by omega⟩
-    · push_neg at hex
-      have h0 : corr a = 0 := Finset.sum_eq_zero fun i _ => if_neg (by have := hex i; omega)
+    · push Not at hex
+      have h0 : corr a = 0 := Finset.sum_eq_zero fun i _ => ite_eq_right (by have := hex i; omega)
       exact ⟨by rw [h0]; exact Nat.zero_le _, fun _ => h0⟩
   have hsplit : ∀ a, deg a = ((deg a - corr a) - if a = ⟨2 * s, by omega⟩ then jp else 0) + corr a +
       (if a = ⟨2 * s, by omega⟩ then jp else 0) := by
@@ -148,7 +148,7 @@ private theorem sum_deg_sub_mul_add_eq_sum_deg_mul {s t : ℕ} (u : Fin t → Fi
     have hz : ∀ a : Fin (2 * s + 1), a ≠ ⟨2 * u i, by omega⟩ ∧ a ≠ ⟨2 * u i + 1, by omega⟩ →
         (if (a : ℕ) = 2 * u i ∨ (a : ℕ) = 2 * u i + 1 then jj i else 0) * f a.castSucc = 0 := by
       rintro a ⟨ha1, ha2⟩
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       rw [Ne, Fin.ext_iff] at ha1 ha2
       simp only at ha1 ha2
       omega
@@ -192,8 +192,7 @@ theorem homAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : HomAt C0 CYb Cde Ck CD Cb
           (Sum.inl (finPos (2 * segS X.TT j + 1) (2 * ↑(uTop (X.seg C0 CE1 CE2 j) i)), c))).mul
           (isWeightedHomogeneous_X (KK O) ω
           (Sum.inl (finPos (2 * segS X.TT j + 1) (2 * ↑(uTop (X.seg C0 CE1 CE2 j) i) + 1), c)))
-        rw [h1, h1] at hX
-        exact hX
+        rwa [h1, h1] at hX
     have hEp : IsWeightedHomogeneous ω (BlockData.Eplus (r := X.m) O (bD C0 CE1 CE2 X j mm b))
         (ωL (⟨2 * segS X.TT j, by omega⟩ : Fin (2 * segS X.TT j + 1)).castSucc +
           ωL (Fin.last (2 * segS X.TT j + 1))) := by
@@ -204,8 +203,7 @@ theorem homAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : HomAt C0 CYb Cde Ck CD Cb
         have hX := (isWeightedHomogeneous_X (KK O) ω
           (Sum.inl ((⟨2 * segS X.TT j, by omega⟩ : Fin (2 * segS X.TT j + 1)).castSucc, c))).mul
           (isWeightedHomogeneous_X (KK O) ω (Sum.inl (Fin.last (2 * segS X.TT j + 1), c)))
-        rw [h1, h1] at hX
-        exact hX
+        rwa [h1, h1] at hX
     have hyP : y ∈ Pol (KK O) X.m ((bD C0 CE1 CE2 X j mm b).lettersAt jj jp).deg :=
       (Submodule.mem_inf.1 (Submodule.mem_inf.1 hy).1).1
     have hY := isWeightedHomogeneous_rename_chainEmb_of_mem_Pol ω ωL h1 _ y hyP
@@ -236,13 +234,11 @@ theorem homAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : HomAt C0 CYb Cde Ck CD Cb
       rcases ha with ha | ha
       · have e : (bD C0 CE1 CE2 X j mm b).letterAt ((bD C0 CE1 CE2 X j mm b).T.pos i) = a :=
           Fin.ext (show min (2 * (uTop (X.seg C0 CE1 CE2 j) i : ℕ)) (2 * segS X.TT j + 1 - 1) = (a : ℕ) by omega)
-        rw [e] at k1
-        exact k1
+        rwa [e] at k1
       · have e : (bD C0 CE1 CE2 X j mm b).letterAt ((bD C0 CE1 CE2 X j mm b).T.pos i + 1) = a :=
           Fin.ext (show min (2 * (uTop (X.seg C0 CE1 CE2 j) i : ℕ) + 1) (2 * segS X.TT j + 1 - 1) = (a : ℕ) by
             omega)
-        rw [e] at k2
-        exact k2
+        rwa [e] at k2
     have hjp : ∀ a : Fin (2 * segS X.TT j + 1), (a : ℕ) = 2 * segS X.TT j →
         jp ≤ (segChain X.p (X.seg C0 CE1 CE2 j) (segATop X.TT X.aT j) b).deg a := by
       intro a ha
@@ -295,7 +291,7 @@ theorem letterOf_eq_odd_letter_true_of_val_eq_two_mul (X : Loc) (j : Fin (numSeg
     (h : a.val = 2 * i.val) : letterOf X j a = (topOdd X j i, true) := by
   have hi := i.isLt
   have ha : a.val < 2 * segS X.TT j := by omega
-  simp only [letterOf, dif_pos ha]
+  simp only [letterOf, dite_eq_left ha]
   refine Prod.ext ?_ ?_
   · show topOdd X j _ = topOdd X j i
     congr 1
@@ -307,7 +303,7 @@ theorem letterOf_E (X : Loc) (j : Fin (numSeg X.TT)) (a : Fin (2 * segS X.TT j +
     (h : a.val = 2 * i.val + 1) : letterOf X j a = (topOdd X j i, false) := by
   have hi := i.isLt
   have ha : a.val < 2 * segS X.TT j := by omega
-  simp only [letterOf, dif_pos ha]
+  simp only [letterOf, dite_eq_left ha]
   refine Prod.ext ?_ ?_
   · show topOdd X j _ = topOdd X j i
     congr 1

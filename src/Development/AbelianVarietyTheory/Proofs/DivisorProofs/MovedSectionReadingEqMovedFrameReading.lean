@@ -355,9 +355,9 @@ theorem exists_const_rdU_of_moveMatch : ∀ (E : Type) [Field E] [NumberField E]
       (∀ y y' : FrPt Xo c (CAt σ), FrMove ρ ν y y' → evR Xo c f' y = evR Xo c f y') → ∀ x : (U.X k).dom,
       Formalism.L2.PjFree.rdU U f' k x.1 = Formalism.L2.PjFree.toC (t₀ x : CAt σ) ^ n *
         Formalism.L2.PjFree.rdU U' f k' (lact δ (castFr h.psi x.1)) := fun w hD f hf f' hf' hv x => by
-    have v1 : Formalism.L2.PjFree.rdU U f' k x.1 = Formalism.L2.PjFree.toC (evR Xo c f' (U.un k x)) := dif_pos x.2
+    have v1 : Formalism.L2.PjFree.rdU U f' k x.1 = Formalism.L2.PjFree.toC (evR Xo c f' (U.un k x)) := dite_eq_left x.2
     have v2 : Formalism.L2.PjFree.rdU U' f k' (lact δ (castFr h.psi x.1)) =
-      Formalism.L2.PjFree.toC (evR Xo c f (U'.un k' ⟨_, h.mem_dom x.2⟩)) := dif_pos (h.mem_dom x.2)
+      Formalism.L2.PjFree.toC (evR Xo c f (U'.un k' ⟨_, h.mem_dom x.2⟩)) := dite_eq_left (h.mem_dom x.2)
     have v3 := (GlobalTheory.Frames.algebraic_laws GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c).2.2.2.2.2.2 (CAt σ)
         (inferInstanceAs (IsReduced ℂ)) w n f hf _ _ (y' x) (hb x)
     have v4 : Formalism.L2.PjFree.toC (wchar (ex Dw w n) (fun i => Option.elim i (t₀ x) (fun _ => 1)) : CAt σ) =
@@ -383,7 +383,7 @@ theorem exists_const_rdU_of_moveMatch : ∀ (E : Type) [Field E] [NumberField E]
     (fun i => (hU'.2.2.2.2.1 _ n i.2.1 _ i.2.2.1 k').1.comp ((GlobalTheory.Dict.Extend.differentiable_lact δ).comp
       (GlobalTheory.Dict.Pull.cast_diff h.psi)).differentiableOn fun x hx => h.mem_dom hx)
     (fun i x hx => by
-      rw [dif_pos hx]
+      rw [dite_eq_left hx]
       exact key _ i.2.1 _ i.2.2.1 _ i.2.2.2.1 i.2.2.2.2 ⟨x, hx⟩)
     (fun ⟨⟨w, f, f'⟩, hD, hf, hf', hv⟩ x hx => by
       obtain ⟨x₀, hx₀, ⟨b₀, hb₀, e₀⟩, -⟩ := hun1 k ⟨x, hx⟩
@@ -533,8 +533,7 @@ private theorem descend_mod {F Ω : Type*} [Field F] [CharZero F] [Field Ω] [Al
       rw [map_div₀, map_sub, map_one, map_natCast, h]
       field_simp
       ring
-    rw [← isIntegral_algebraMap_iff (B := Ω), hmap]
-    exact hz
+    rwa [← isIntegral_algebraMap_iff (B := Ω), hmap]
 
 theorem UpperTheory.dvd_norm_sub_one_of_idempotent_interpolation_relNorm_one :
     ∀ (E : Type) [Field E] [NumberField E] (K : IntermediateField ℚ E) (n : ℕ) (e t δ y : 𝓞 E), (e : E) ∈ K → e * e - e = n * t →
@@ -548,14 +547,11 @@ theorem UpperTheory.dvd_norm_sub_one_of_idempotent_interpolation_relNorm_one :
   have hσe : ∀ σ : E →ₐ[K] Ω, σ (e : E) = algebraMap E Ω e := by
     intro σ
     have h := σ.commutes (⟨e, heK⟩ : K)
-    rw [IsScalarTower.algebraMap_apply K E Ω] at h
-    exact h
+    rwa [IsScalarTower.algebraMap_apply K E Ω] at h
   have heE : ((e : E) * e - e) = n * (t : E) := by
-    have h := congrArg (fun u : 𝓞 E => (u : E)) he
-    simpa using h
+    simpa using congrArg (fun u : 𝓞 E => (u : E)) he
   have heΩ : algebraMap E Ω e * algebraMap E Ω e - algebraMap E Ω e = n * algebraMap E Ω t := by
-    have h := congrArg (algebraMap E Ω) heE
-    simpa using h
+    simpa using congrArg (algebraMap E Ω) heE
   obtain ⟨z, hz, hprod⟩ := prod_interp_mod n (algebraMap E Ω e) (algebraMap E Ω t) heΩ
     ((hint e).map (IsScalarTower.toAlgHom ℤ E Ω)) ((hint t).map (IsScalarTower.toAlgHom ℤ E Ω))
     (fun σ : E →ₐ[K] Ω => σ δ) (fun σ => σ y) (fun σ => hintΩ δ σ) (fun σ => hintΩ y σ) Finset.univ
@@ -742,8 +738,7 @@ private lemma two_nsq (k : ℚ⟮s⟯) : k ^ 2 ≠ 2 := by
   have h1 : (k : E) ^ 2 = algebraMap ℚ E 2 := by
     have := congrArg (algebraMap ℚ⟮s⟯ E) h
     rw [map_pow, map_ofNat] at this
-    rw [map_ofNat]
-    exact this
+    rwa [map_ofNat]
   have hd' : (3 : ℚ) < d := by exact_mod_cast h3
   rcases sq_cases s _ (hs' s d hs) (d_nsq s d h3 hs) k k.2 _ h1 with ⟨a, ha⟩ | ⟨b, hb⟩
   · refine rat_nsq 2 1 Nat.prime_two one_pos one_lt_two (a / 2) ?_
@@ -812,8 +807,7 @@ private lemma two_pow_norm (h4 : 4 ∣ Module.finrank ℚ E) (y : E) (a : ℕ) (
     have hx' : ((w - w ^ 3 : K⟮i⟯) : E) ^ 2 = algebraMap K E 2 := by
       have := congrArg (algebraMap K⟮i⟯ E) hx
       rw [map_pow, map_ofNat] at this
-      rw [map_ofNat]
-      exact this
+      rwa [map_ofNat]
     rcases sq_cases i _ hi2 hn _ (w - w ^ 3).2 _ hx' with ⟨b, hb⟩ | ⟨b, hb⟩
     · exact two_nsq s d hd h3 hs b hb.symm
     · apply neg_nsq s d hd h3 hs 2 two_pos (by norm_num) b
@@ -1032,8 +1026,7 @@ theorem blocks_det_mod_four : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       obtain ⟨e, h⟩ := hl j
       have h1 := he (gam (bas (Pi.single (Sum.inl j) 1))) (Sum.inr i)
       rw [← map_smul, h, map_add (f := _), map_nsmul, map_add (f := _), h8, add_zero] at h1
-      rw [hN']
-      exact h1
+      rwa [hN']
   · let b : Module.Basis (Fin g ⊕ Fin g) ℤ D.La := (Pi.basisFun ℤ _).map bas
     let T : D.La →ₗ[𝓞 E] D.La :=
       H.w0 ^ 4 • gam.toLinearMap + (LinearMap.id - H.w0 ^ 4 • LinearMap.id)
@@ -1397,8 +1390,7 @@ theorem exists_isMatch_of_models (D : Datum H) {X X' : Data E r} (φ : D.La ≃�
     constructor
     · rintro ⟨a, rfl⟩
       exact (ψ a).2
-    · intro hv
-      exact ⟨ψ.symm ⟨v, hv⟩, congrArg Subtype.val (ψ.apply_symm_apply _)⟩
+    · exact fun hv => ⟨ψ.symm ⟨v, hv⟩, congrArg Subtype.val (ψ.apply_symm_apply _)⟩
   have hc : cc (-X.ξ0) = -(-X.ξ0) := by
     have := X.ξ0_im
     unfold cc at this ⊢
@@ -1483,8 +1475,7 @@ theorem rdU_move_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     ((δ₀ * δ * δ₀⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) ?_ (fun a => ?_) ν hρ ?_ (fun τ i => ?_) hw hf hff
   · have : ((δ₀ * δ * δ₀⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E).det = (δ : Matrix (Fin r) (Fin r) E).det := by
       rw [Units.val_mul, Units.val_mul, Matrix.det_units_conj]
-    rw [this]
-    exact hdet
+    rwa [this]
   · obtain ⟨a', ha'⟩ := (φ k).surjective ⟨_, (h.lat _).1 (φ k a).2⟩
     have ha : (φ k a' : Fin r → E) = (δ : Matrix (Fin r) (Fin r) E) *ᵥ (φ k a : Fin r → E) := congrArg Subtype.val ha'
     refine ⟨a', ?_, funext fun j => ?_⟩

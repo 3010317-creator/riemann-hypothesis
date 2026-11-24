@@ -172,13 +172,13 @@ theorem plPt_row (u : ∀ s, Matrix (Fin (r s)) (Fin (r s)) Ω) (h1 : ∀ s m, u
   unfold plPt
   rw [Matrix.det_of_isLowerTriangular]
   · rw [Fin.prod_univ_castSucc, Finset.prod_eq_one, one_mul]
-    · simp only [Matrix.of_apply, rowIx, if_true]
+    · simp only [Matrix.of_apply, rowIx, ite_true]
       rfl
     · intro a _
-      simp only [Matrix.of_apply, rowIx, if_neg (Fin.castSucc_lt_last a).ne, h1]
+      simp only [Matrix.of_apply, rowIx, ite_eq_right (Fin.castSucc_lt_last a).ne, h1]
   · intro a b hab
     have hab' : a < b := hab
-    simp only [Matrix.of_apply, rowIx, if_neg (hab'.trans_le (Fin.le_last b)).ne]
+    simp only [Matrix.of_apply, rowIx, ite_eq_right (hab'.trans_le (Fin.le_last b)).ne]
     exact h0 _ _ _ hab'
 
 theorem plPt_ne (u : ∀ s, Matrix (Fin (r s)) (Fin (r s)) Ω) (h1 : ∀ s m, u s m m = 1)
@@ -359,8 +359,7 @@ private theorem sup_valuation_ne_zero_of_exists_ne_zero {L : Type} [Field L] {J 
     (Finset.univ.sup fun i : κ b => O.valuation (z ⟨b, i⟩)) ≠ 0 := by
   obtain ⟨i, hi⟩ := hz b
   have hv : O.valuation (z ⟨b, i⟩) ≠ 0 := by
-    rw [Valuation.ne_zero_iff]
-    exact hi
+    rwa [Valuation.ne_zero_iff]
   intro h0
   have hle : O.valuation (z ⟨b, i⟩) ≤ Finset.univ.sup fun i : κ b => O.valuation (z ⟨b, i⟩) :=
     Finset.le_sup (f := fun i : κ b => O.valuation (z ⟨b, i⟩)) (Finset.mem_univ i)
@@ -380,8 +379,7 @@ private theorem vdeg_ne_zero' {L : Type} [Field L] {J : Type} [Fintype J] {κ : 
     vdeg O z a ≠ 0 := by
   unfold vdeg
   rw [Finset.prod_ne_zero_iff]
-  intro b _
-  exact zpow_ne_zero _ (sup_valuation_ne_zero_of_exists_ne_zero O z hz b)
+  exact fun b _ => zpow_ne_zero _ (sup_valuation_ne_zero_of_exists_ne_zero O z hz b)
 
 theorem valEq_dif (hy : ∀ b, ∃ i, y ⟨b, i⟩ ≠ 0) (hy' : ∀ b, ∃ i, y' ⟨b, i⟩ ≠ 0) {n : ℕ} {st : Fin n → K → ℤ}
     {st' : Fin n → K' → ℤ} (h : ∀ m, ValEq k y (st m) y' (st' m)) (m : Fin n) : ValEq k y (dif st m) y' (dif st' m) := by
@@ -392,8 +390,7 @@ theorem valEq_dif (hy : ∀ b, ∃ i, y ⟨b, i⟩ ≠ 0) (hy' : ∀ b, ∃ i, y
     refine ⟨ρ₁ / ρ₂, div_ne_zero hρ₁ hρ₂, fun O hO => ?_⟩
     rw [vdeg_sub' O y hy, vdeg_sub' O y' hy', h₁ O hO, h₂ O hO, map_div₀]
     have hv : O.valuation ρ₂ ≠ 0 := by
-      rw [Valuation.ne_zero_iff]
-      exact hρ₂
+      rwa [Valuation.ne_zero_iff]
     have hw := vdeg_ne_zero' O y' hy' (st' ⟨(m : ℕ) - 1, by omega⟩)
     field_simp
   · simpa using h m
@@ -431,8 +428,7 @@ private theorem valEq_sub {k : Type} [Field k] {Ω : Type} [Field Ω] [Algebra k
   refine ⟨ρ₁ / ρ₂, div_ne_zero hρ₁ hρ₂, fun O hO => ?_⟩
   rw [vdeg_sub' O y hy, vdeg_sub' O y' hy', h₁ O hO, h₂ O hO, map_div₀]
   have hv : O.valuation ρ₂ ≠ 0 := by
-    rw [Valuation.ne_zero_iff]
-    exact hρ₂
+    rwa [Valuation.ne_zero_iff]
   have hw := vdeg_ne_zero' O y' hy' c'
   field_simp
 
@@ -534,8 +530,7 @@ theorem isGenU_reU {k : Type} [Field k] [Field Ω] [Algebra k Ω] (ε : Ψ' ≃ 
         rcases s with τ | τ
         · exact ⟨⟨Sum.inl (ε.symm τ), l, m⟩, congrArg (fun X => u (Sum.inl X) l m) (ε.apply_symm_apply τ)⟩
         · exact ⟨⟨Sum.inr (ε.symm τ), l, m⟩, congrArg (fun X => u (Sum.inr X) l m) (ε.apply_symm_apply τ)⟩
-    rw [e]
-    exact h5
+    rwa [e]
 
 end Fib
 

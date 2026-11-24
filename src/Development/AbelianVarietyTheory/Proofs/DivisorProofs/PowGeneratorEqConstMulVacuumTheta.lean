@@ -503,8 +503,7 @@ theorem mem_smul_iff (X : Data E r) {L : Lt E r} (hL : SelfD X L) {𝔪 : Ideal 
         obtain ⟨t, ht⟩ := Ideal.mem_span_singleton'.1 (h𝔪 ▸ Ideal.mul_mem_mul ha hb')
         have ht' : (t : E) * M = a * cc (b : E) := by
           have h5 := congrArg (algebraMap (𝓞 E) E) ht
-          rw [map_mul, map_mul, map_natCast] at h5
-          exact h5
+          rwa [map_mul, map_mul, map_natCast] at h5
         obtain ⟨k, hk⟩ := (hL.2 _).1 (L.smul_mem t hu) v hv
         refine ⟨k, ?_⟩
         rw [← hk, ← EF_inv_smul]
@@ -533,8 +532,7 @@ theorem mem_smul_iff (X : Data E r) {L : Lt E r} (hL : SelfD X L) {𝔪 : Ideal 
         obtain ⟨k, hk⟩ := h _ (Submodule.smul_mem_smul ha hu)
         refine ⟨k, ?_⟩
         change EF X ((b : E) • (M : E)⁻¹ • x) u = k
-        rw [hb, TensLat.EF_smul, hcc, EF_inv_smul]
-        exact hk
+        rwa [hb, TensLat.EF_smul, hcc, EF_inv_smul]
       | zero => simp
       | add a b _ _ ha hb => rw [add_smul]; exact L.add_mem ha hb
       | smul t a _ ha => rw [smul_eq_mul, mul_smul]; exact L.smul_mem t ha
@@ -564,8 +562,7 @@ theorem span_smul (X : Data E r) {L : Lt E r} (hL : SelfD X L) {𝔪 : Ideal (�
       one_smul]
   have h2 : (M : 𝓞 E) • u ∈ 𝔪 • L := Submodule.smul_mem_smul hMm hu
   have h3 := Submodule.smul_mem _ (M : E)⁻¹ (Submodule.subset_span (R := E) h2)
-  rw [h1] at h3
-  exact h3
+  rwa [h1] at h3
 
 theorem exists_ne_zero_of_scaled {V : Type} [AddCommGroup V] [Module ℚ V] [FiniteDimensional ℚ V]
     {g : ℕ} (B : LinearMap.BilinForm ℚ V) (p : V →ₗ[ℤ] (Fin g → ℂ)) (hp : Function.Injective p)
@@ -807,7 +804,7 @@ theorem one_mem_harmA (c : Coeff l) (n : ℕ) : (1 : MvPolynomial (LtN Dw n) c.F
   · simp [harmK, lap]
   · have : m = 0 := by
       by_contra h0
-      rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, if_neg (Ne.symm h0)] at hm
+      rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, ite_eq_right (Ne.symm h0)] at hm
       exact hm rfl
     subst this
     simp
@@ -925,7 +922,7 @@ theorem exists_const_fib (hC : Formalism.MainNotions.ModuliIntegralCharts.H1.Cha
         exact ⟨⟨a', ha', (Submodule.Quotient.eq _).1
           (hq.trans (Classical.choose_spec (Submodule.Quotient.mk_surjective _ (q b))).symm), hy⟩, hj⟩) 0 1 hP _
       (ThRead.thValAt_evR hC Xo c nab hnab _ hP hf ℂ (unC U k ⟨x', hx'⟩))
-    exact Eq.trans (dif_pos hx') this
+    exact Eq.trans (dite_eq_left hx') this
   have h1 := hCe _ _ hS.1 hhol.1 (fun x hx b hb => ⟨hS.2.1 x hx b hb, hhol.2.1 x hx b hb⟩) hval x.1 x.2
   have h2 := (fock_laws E r _ _ bas Dc.idx n hs hn x.1 x.2 1 ϑ).2.2.2.2 (fun _ => ϑ) _ v hv.1 hprod (Y q) 0
   have h3 : thA (U.X k) bas Dc.idx (heisG (U.X k) bas (Y q) v) x.1 0 ≠ 0 := by

@@ -74,9 +74,7 @@ theorem UpperTheory.V.Pa.Det.extFree :
   have hsm : ∀ (a : PowerSeries K) (y : PowerSeries K'), j a * y = a • y := fun a y => rfl
   have hX : ∃ (e : ℕ) (u : (PowerSeries K')ˣ), 0 < e ∧
       j PowerSeries.X = (u : PowerSeries K') * (PowerSeries.X : PowerSeries K') ^ e := by
-    have h0 : j PowerSeries.X ≠ 0 := by
-      intro h
-      exact PowerSeries.X_ne_zero (hi (h.trans (map_zero j).symm))
+    have h0 : j PowerSeries.X ≠ 0 := fun h => PowerSeries.X_ne_zero (hi (h.trans (map_zero j).symm))
     obtain ⟨e, v, hv⟩ := IsDiscreteValuationRing.associated_pow_irreducible h0 (PowerSeries.X_irreducible (R := K'))
     refine ⟨e, v⁻¹, ?_, ?_⟩
     · rcases Nat.eq_zero_or_pos e with h | h

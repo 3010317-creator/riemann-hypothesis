@@ -80,8 +80,7 @@ theorem torsion_exact_bound {R A B C : Type*} [CommRing R] [AddCommGroup A] [Add
   have hs : ∀ b : TB, h (s (h b)) = h b := by
     intro b
     have hc : ∃ b', h b' = h b := ⟨b, rfl⟩
-    simp only [s, dif_pos hc]
-    exact hc.choose_spec
+    simpa only [s, dite_eq_left hc] using hc.choose_spec
   have hk : ∀ b : TB, ∃ a, f a = b.1 - (s (h b)).1 := by
     intro b
     apply hfg
@@ -153,24 +152,17 @@ theorem rank_one (𝔠 : Submodule (𝓞 K) K) (hfg : 𝔠.FG) (h0 : 𝔠 ≠ �
     { carrier := {o | ∀ a ∈ 𝔞, a • (algebraMap (𝓞 K) K o / algebraMap (𝓞 K) K e) ∈ 𝔠}
       add_mem' := by
         intro x y hx hy a ha
-        have := 𝔠.add_mem (hx a ha) (hy a ha)
         rw [map_add (f := _), add_div, smul_add]
-        exact this
+        exact 𝔠.add_mem (hx a ha) (hy a ha)
       zero_mem' := by
         intro a _
         simp
       smul_mem' := by
         intro c x hx a ha
-        have := 𝔠.smul_mem c (hx a ha)
-        have e1 : a • (algebraMap (𝓞 K) K (c • x) / algebraMap (𝓞 K) K e) =
-            c • a • (algebraMap (𝓞 K) K x / algebraMap (𝓞 K) K e) := by
-          rw [smul_eq_mul]
-          simp only [Algebra.smul_def, map_mul]
-          ring
-        rw [e1]
-        exact this }
-  have hJmem : ∀ o, o ∈ J ↔ ∀ a ∈ 𝔞, a • (algebraMap (𝓞 K) K o / algebraMap (𝓞 K) K e) ∈ 𝔠 :=
-    fun _ => Iff.rfl
+        convert 𝔠.smul_mem c (hx a ha) using 1
+        rw [smul_eq_mul]
+        simp only [Algebra.smul_def, map_mul]
+        ring }
   have hJ0 : J ≠ ⊥ := by
     obtain ⟨o, ho⟩ := hdi c₀ hc₀
     have ho' : algebraMap (𝓞 K) K o = algebraMap (𝓞 K) K d * c₀ := by
@@ -183,33 +175,28 @@ theorem rank_one (𝔠 : Submodule (𝓞 K) K) (hfg : 𝔠.FG) (h0 : 𝔠 ≠ �
     intro hbot
     have hmem : e * o ∈ J := by
       intro a _
-      have e1 : a • (algebraMap (𝓞 K) K (e * o) / algebraMap (𝓞 K) K e) = (a * d) • c₀ := by
-        rw [map_mul, mul_div_cancel_left₀ _ heK, ho', Algebra.smul_def, Algebra.smul_def, map_mul]
-        ring
-      rw [e1]
-      exact 𝔠.smul_mem _ hc₀
+      convert 𝔠.smul_mem (a * d) hc₀ using 1
+      rw [map_mul, mul_div_cancel_left₀ _ heK, ho', Algebra.smul_def, Algebra.smul_def, map_mul]
+      ring
     rw [hbot, Ideal.mem_bot] at hmem
     exact mul_ne_zero he0 ho0 hmem
   have hmulmem : ∀ z ∈ 𝔞 * J, algebraMap (𝓞 K) K z / algebraMap (𝓞 K) K e ∈ 𝔠 := by
     intro z hz
     refine Submodule.mul_induction_on hz ?_ ?_
     · intro a ha j hj
-      have := hj a ha
-      rw [Algebra.smul_def] at this
       rw [map_mul, mul_div_assoc]
-      exact this
+      simpa only [Algebra.smul_def] using hj a ha
     · intro x y hx hy
       rw [map_add (f := _), add_div]
       exact 𝔠.add_mem hx hy
 
-  have hle : (𝔞 * J) ≤ J := Ideal.mul_le_right
-  have hleA : (𝔞 * J).toAddSubgroup ≤ J.toAddSubgroup := hle
   have hNJ : Ideal.absNorm J ≠ 0 := by
     simpa [Ideal.absNorm_eq_zero_iff] using hJ0
   have hN𝔞 : Ideal.absNorm 𝔞 ≠ 0 := by
     simpa [Ideal.absNorm_eq_zero_iff] using h𝔞
   have hidx : (𝔞 * J).toAddSubgroup.relIndex J.toAddSubgroup = Ideal.absNorm 𝔞 := by
-    have h1 := AddSubgroup.relIndex_mul_index hleA
+    have h1 := AddSubgroup.relIndex_mul_index
+      (show (𝔞 * J).toAddSubgroup ≤ J.toAddSubgroup from Ideal.mul_le_right)
     have h2 : ∀ I : Ideal (𝓞 K), I.toAddSubgroup.index = Ideal.absNorm I := by
       intro I
       rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
@@ -217,12 +204,8 @@ theorem rank_one (𝔠 : Submodule (𝓞 K) K) (hfg : 𝔠.FG) (h0 : 𝔠 ≠ �
     rw [h2, h2, map_mul] at h1
     exact Nat.eq_of_mul_eq_mul_right (Nat.pos_of_ne_zero hNJ) h1
   let Q := ↥J.toAddSubgroup ⧸ (𝔞 * J).toAddSubgroup.addSubgroupOf J.toAddSubgroup
-  have hQfin : Finite Q := by
-    apply Nat.finite_of_card_ne_zero
-    have : Nat.card Q = Ideal.absNorm 𝔞 := hidx
-    rw [this]
-    exact hN𝔞
   have hQcard : Nat.card Q = Ideal.absNorm 𝔞 := hidx
+  have hQfin : Finite Q := Nat.finite_of_card_ne_zero (by rwa [hQcard])
 
   have hrep : ∀ t : {x : K ⧸ 𝔠 // ∀ a ∈ 𝔞, a • x = 0}, ∃ o : ↥J.toAddSubgroup,
       Submodule.Quotient.mk (algebraMap (𝓞 K) K o.1 / algebraMap (𝓞 K) K e) = t.1 := by
@@ -234,11 +217,8 @@ theorem rank_one (𝔠 : Submodule (𝓞 K) K) (hfg : 𝔠.FG) (h0 : 𝔠 ≠ �
       rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at this
     obtain ⟨o, ho⟩ := hdi _ (hx a₀ ha₀)
     have ho' : algebraMap (𝓞 K) K o / algebraMap (𝓞 K) K e = x := by
-      have hda : algebraMap (𝓞 K) K d * algebraMap (𝓞 K) K a₀ ≠ 0 := by
-        rw [← map_mul]
-        exact heK
       rw [ho, he, Algebra.smul_def, Algebra.smul_def, map_mul, ← mul_assoc]
-      exact mul_div_cancel_left₀ x hda
+      exact mul_div_cancel_left₀ x (by rwa [← map_mul])
     refine ⟨⟨o, ?_⟩, by simp only [ho']⟩
     intro a ha
     rw [ho']
@@ -247,19 +227,13 @@ theorem rank_one (𝔠 : Submodule (𝓞 K) K) (hfg : 𝔠.FG) (h0 : 𝔠 ≠ �
   let ψ : {x : K ⧸ 𝔠 // ∀ a ∈ 𝔞, a • x = 0} → Q := fun t => QuotientAddGroup.mk (r t)
   have hψ : Function.Injective ψ := by
     intro t t' h
-    have h1 := QuotientAddGroup.eq.mp h
-    rw [AddSubgroup.mem_addSubgroupOf] at h1
-    have h2 := hmulmem _ h1
+    have h2 := hmulmem _ (AddSubgroup.mem_addSubgroupOf.1 (QuotientAddGroup.eq.mp h))
     apply Subtype.ext
-    rw [← hr t, ← hr t']
-    rw [Submodule.Quotient.eq]
-    have h3 := 𝔠.neg_mem h2
-    convert h3 using 1
+    rw [← hr t, ← hr t', Submodule.Quotient.eq]
+    convert 𝔠.neg_mem h2 using 1
     simp
     ring
-  refine ⟨Finite.of_injective ψ hψ, ?_⟩
-  calc _ ≤ Nat.card Q := Nat.card_le_card_of_injective ψ hψ
-    _ = _ := hQcard
+  exact ⟨Finite.of_injective ψ hψ, (Nat.card_le_card_of_injective ψ hψ).trans_eq hQcard⟩
 
 def ins (K : Type) [Field K] [NumberField K] (m : ℕ) :
     (Fin m → K) →ₗ[𝓞 K] (Fin (m + 1) → K) where
@@ -289,8 +263,7 @@ theorem isLat_comap_ins {m : ℕ} {L : Submodule (𝓞 K) (Fin (m + 1) → K)} (
     intro v _
     obtain ⟨t, ht, htv⟩ := exists_smul_mem hL (ins K m v)
     have hmem : t • v ∈ L.comap (ins K m) := by
-      rw [Submodule.mem_comap, map_smul]
-      exact htv
+      rwa [Submodule.mem_comap, map_smul]
     have htK : algebraMap (𝓞 K) K t ≠ 0 := by simpa using ht
     have e : v = (algebraMap (𝓞 K) K t)⁻¹ • (t • v) := by
       ext i
@@ -309,8 +282,7 @@ theorem map_hd_ne_bot {m : ℕ} {L : Submodule (𝓞 K) (Fin (m + 1) → K)} (hL
   have h2 : algebraMap (𝓞 K) K t = 0 := by
     have h3 : hd K m (t • Pi.single 0 1) = t • (1 : K) := by
       simp [hd]
-    rw [h3, Algebra.smul_def, mul_one] at h1
-    exact h1
+    rwa [h3, Algebra.smul_def, mul_one] at h1
   exact ht (by simpa using h2)
 
 theorem torsion_card_le_by_rank (𝔞 : Ideal (𝓞 K)) (h𝔞 : 𝔞 ≠ ⊥) (m : ℕ) :

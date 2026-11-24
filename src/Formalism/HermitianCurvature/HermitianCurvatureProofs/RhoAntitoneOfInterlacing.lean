@@ -112,10 +112,10 @@ theorem sign_prod_of_split_at_index (s : Finset ℕ) (g : ℕ → ℝ) (m : ℕ)
       (fun j hj => hneg j (Finset.mem_insert_of_mem hj))
     rw [Finset.prod_insert ha, Finset.filter_insert]
     by_cases hma : m ≤ a
-    · rw [if_pos hma, Finset.card_insert_of_notMem (fun h => ha (Finset.mem_filter.1 h).1), pow_succ]
+    · rw [ite_eq_left hma, Finset.card_insert_of_notMem (fun h => ha (Finset.mem_filter.1 h).1), pow_succ]
       have := hneg a (Finset.mem_insert_self a s) hma
       nlinarith
-    · rw [if_neg hma]
+    · rw [ite_eq_right hma]
       have := hpos a (Finset.mem_insert_self a s) (by omega)
       nlinarith
 
@@ -131,17 +131,17 @@ theorem polynomial_sign : C7.PSign := by
         (fun j => if h : j < k + 2 * r + 1 then Y + lam ⟨j, h⟩ else 1) j := by
       rw [← Fin.prod_univ_eq_prod_range]
       refine Finset.prod_congr rfl fun s _ => ?_
-      simp only [dif_pos s.isLt, Fin.eta]
+      simp only [dite_eq_left s.isLt, Fin.eta]
     have key := sign_prod_of_split_at_index (Finset.range (k + 2 * r + 1))
       (fun j => if h : j < k + 2 * r + 1 then Y + lam ⟨j, h⟩ else 1) (l - 1)
       (fun j hj hjm => by
         have hj' : j < k + 2 * r + 1 := Finset.mem_range.1 hj
-        simp only [dif_pos hj']
+        simp only [dite_eq_left hj']
         have := (hside ⟨j, hj'⟩).2 (show j + 1 < l by omega)
         linarith [hB'.2])
       (fun j hj hjm => by
         have hj' : j < k + 2 * r + 1 := Finset.mem_range.1 hj
-        simp only [dif_pos hj']
+        simp only [dite_eq_left hj']
         have := (hside ⟨j, hj'⟩).1 (show l ≤ j + 1 by omega)
         linarith [hB'.1])
     have hcard : ((Finset.range (k + 2 * r + 1)).filter (l - 1 ≤ ·)).card = (k - l) + 2 * (r + 1) := by
@@ -149,8 +149,7 @@ theorem polynomial_sign : C7.PSign := by
         ext j; simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Ico]; omega), Nat.card_Ico]
       omega
     rw [hcard, pow_add, pow_mul, neg_one_sq, one_pow, mul_one] at key
-    rw [hprod]
-    exact key
+    rwa [hprod]
   have hB2 : 0 < (-1 : ℝ) ^ (k - l) * I.xpoly k ρ Y := by
     unfold I.xpoly
     have key := sign_prod_of_split_at_index (Finset.Icc 1 (k - 1)) (fun i => Y + ρ i) l
@@ -160,12 +159,10 @@ theorem polynomial_sign : C7.PSign := by
       rw [(show (Finset.Icc 1 (k - 1)).filter (l ≤ ·) = Finset.Icc l (k - 1) by
         ext j; simp only [Finset.mem_filter, Finset.mem_Icc]; omega), Nat.card_Icc]
       omega
-    rw [hcard] at key
-    exact key
+    rwa [hcard] at key
   refine ⟨hA, hB2, ?_⟩
   have h := abs_of_pos hA
-  rw [abs_mul, abs_pow, abs_neg, abs_one, one_pow, one_mul] at h
-  exact h
+  rwa [abs_mul, abs_pow, abs_neg, abs_one, one_pow, one_mul] at h
 
 theorem roots_outside_jointly : C7.RootsOutJoint := by
   unfold C7.RootsOutJoint LE.Sys.RootsOut

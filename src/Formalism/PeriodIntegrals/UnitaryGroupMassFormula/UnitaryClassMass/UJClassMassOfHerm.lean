@@ -132,8 +132,7 @@ theorem gLoc_mem (g : HA (AF F) σ J) (v : HeightOneSpectrum (𝓞 F)) :
     intro X; ext i j; simp [PI.UJClassFin.cT, PI.UnitaryApproxDefs.cT, Psi_sigR]
   have hJ : (JR (Af F) J).map (Psi (E := E) v) = J.map (PI.UnitaryApproxDefs.inclE (F := F) (Fv F v)) := by
     ext i j; simp [JR, Psi_inclR]
-  rw [hcT, hJ] at hU
-  exact hU
+  rwa [hcT, hJ] at hU
 
 theorem approxT (hσσ : ∀ e, σ (σ e) = e) (hθ : ∃ θ, σ θ ≠ θ) (hH : PI.UnitaryApproxDefs.IsHerm (σ : E →+* E) J)
     (hdet : IsUnit J.det) (g : HA (AF F) σ J) (T : Finset (HeightOneSpectrum (𝓞 F))) (N0 : ℕ)
@@ -370,8 +369,7 @@ theorem lsLoc : LSLoc := by
     simp only [PI.UnitaryApproxDefs.cT, Matrix.transpose_apply, Matrix.map_apply, gramOf]
     have := hs.eq (b j) (b i)
     rw [starRingEnd_apply] at this
-    rw [show (σ : E →+* E) (h (b j) (b i)) = σ (h (b j) (b i)) from rfl, hσ]
-    exact this
+    rwa [show (σ : E →+* E) (h (b j) (b i)) = σ (h (b j) (b i)) from rfl, hσ]
   have hJdet : J.det ≠ 0 := by
     intro h0
     obtain ⟨τ⟩ := (inferInstance : Nonempty (E →+* ℂ))
@@ -446,14 +444,12 @@ theorem lsLoc : LSLoc := by
     obtain ⟨m2, hm2, hmx⟩ := locCmpT σ J L hk hk' T p hpr.ne_zero hpr.one_lt.ne' hpT g (emb σ J γ)
       condB hsx
     refine ⟨s * (m2 : 𝓞 E), Submonoid.mul_mem _ hs (hgen m2 hm2), ?_⟩
-    rw [map_mul, map_natCast, mul_comm, mul_smul]
-    exact hmx
+    rwa [map_mul, map_natCast, mul_comm, mul_smul]
   · rintro ⟨s, hs, hsx⟩
     obtain ⟨m2, hm2, hmx⟩ := locCmpT σ J L hk hk' T p hpr.ne_zero hpr.one_lt.ne' hpT (emb σ J γ) g
       (fun y hy => by simpa using condA y hy) hsx
     refine ⟨s * (m2 : 𝓞 E), Submonoid.mul_mem _ hs (hgen m2 hm2), ?_⟩
-    rw [map_mul, map_natCast, mul_comm, mul_smul]
-    exact hmx
+    rwa [map_mul, map_natCast, mul_comm, mul_smul]
 
 end PI.UnitaryGroupMassFormula.UJClassMass
 end -- clump:auto
@@ -547,8 +543,7 @@ theorem lsLat : LSLat := by
     · rintro ⟨x, hx, rfl⟩
       show b.equivFun (b.equivFun.symm x) ∈ abelian₂ σ (gramOf h b) L g
       rw [LinearEquiv.apply_symm_apply]; exact hx
-    · intro hv
-      exact ⟨b.equivFun v, hv, by simp [f]⟩
+    · exact fun hv => ⟨b.equivFun v, hv, by simp [f]⟩
   have hNfull : Submodule.IsFullLattice E N := by
     refine { toIsLattice := Submodule.IsLattice.of_fg E (hCfg.map f), span_eq_top := ?_ }
     rw [eq_top_iff, ← b.span_eq, Submodule.span_le]
@@ -748,21 +743,14 @@ theorem latHat_split (L : Set (Fin M → E)) (hL : ∀ e : E, IsIntegral ℤ e �
       simp_rw [smul_smul, hf j, ite_smul, zero_smul]
       simp
     rwa [e] at h1
-  · intro h
-    exact AddSubgroup.sum_mem _ (fun i _ => h i)
+  · exact fun h => AddSubgroup.sum_mem _ (fun i _ => h i)
 
 end Split
 
 theorem crd_int_smul {E : Type} [Field E] [NumberField E] {V : Type} [AddCommGroup V] [Module E V]
     [Module (𝓞 E) V] [IsScalarTower (𝓞 E) E V] {M : ℕ} (b : Module.Basis (Fin M) E V)
     (L0 : Submodule (𝓞 E) V) : ∀ e : E, IsIntegral ℤ e → ∀ x ∈ crdOf b L0, e • x ∈ crdOf b L0 := by
-  intro e he x hx
-  show ∑ i, (e • x) i • b i ∈ L0
-  have : ∑ i, (e • x) i • b i = e • ∑ i, x i • b i := by
-    rw [Finset.smul_sum]
-    simp [smul_smul]
-  rw [this]
-  exact int_smul_mem L0 he hx
+  apply PI.UnitaryGroupMassFormula.UJClassMass.crd_smul
 
 theorem equivFun_toLin {E : Type} [Field E] {V : Type} [AddCommGroup V] [Module E V] {M : ℕ}
     (b : Module.Basis (Fin M) E V) (A : Matrix (Fin M) (Fin M) E) (v : V) :
@@ -810,21 +798,19 @@ theorem algebraMap_int_intAf (t : 𝓞 F) : algebraMap F (Af F) (algebraMap (�
 
 theorem finElt (m : 𝓞 F) (hm : m ≠ 0) : {w : HeightOneSpectrum (𝓞 F) | m ∈ w.asIdeal}.Finite := by
   have hI : Ideal.span {m} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hm
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   apply (Ideal.finite_factors hI).subset
   intro w hw
   show w.asIdeal ∣ Ideal.span {m}
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hw
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem evT_compl (X : Set (HeightOneSpectrum (𝓞 F))) : 1 - evT Xᶜ = evT X := by
   apply af_ext
   intro u
   rw [af_sub_apply, af_one_apply, evT_apply, evT_apply]
   by_cases h : u ∈ X
-  · rw [if_neg (fun h' => h' h), if_pos h, sub_zero]
-  · rw [if_pos (show u ∈ Xᶜ from h), if_neg h, sub_self]
+  · rw [ite_eq_right (fun h' => h' h), ite_eq_left h, sub_zero]
+  · rw [ite_eq_left (show u ∈ Xᶜ from h), ite_eq_right h, sub_self]
 
 theorem evT_inv_int (X : Set (HeightOneSpectrum (𝓞 F))) (t : 𝓞 F) (ht : ∀ u ∈ X, t ∉ u.asIdeal) :
     evT X * algebraMap F (Af F) ((algebraMap (𝓞 F) F t)⁻¹) ∈ intAf F := by
@@ -836,18 +822,18 @@ theorem evT_mul_of_subset {X Y : Set (HeightOneSpectrum (𝓞 F))} (hXY : X ⊆ 
   intro u
   rw [af_mul_apply, evT_apply, evT_apply]
   by_cases h : u ∈ X
-  · rw [if_pos h, if_pos (hXY h), mul_one]
-  · rw [if_neg h, zero_mul]
+  · rw [ite_eq_left h, ite_eq_left (hXY h), mul_one]
+  · rw [ite_eq_right h, zero_mul]
 
 theorem evT_split {B S : Set (HeightOneSpectrum (𝓞 F))} (hBS : B ⊆ S) : evT S = evT B + evT (S \ B) := by
   apply af_ext
   intro u
   rw [af_add_apply, evT_apply, evT_apply, evT_apply]
   by_cases h1 : u ∈ B
-  · rw [if_pos (hBS h1), if_pos h1, if_neg (fun h => h.2 h1), add_zero]
+  · rw [ite_eq_left (hBS h1), ite_eq_left h1, ite_eq_right (fun h => h.2 h1), add_zero]
   · by_cases h2 : u ∈ S
-    · rw [if_pos h2, if_neg h1, if_pos ⟨h2, h1⟩, zero_add]
-    · rw [if_neg h2, if_neg h1, if_neg (fun h => h2 h.1), add_zero]
+    · rw [ite_eq_left h2, ite_eq_right h1, ite_eq_left ⟨h2, h1⟩, zero_add]
+    · rw [ite_eq_right h2, ite_eq_right h1, ite_eq_right (fun h => h2 h.1), add_zero]
 
 theorem t_lemma (v : HeightOneSpectrum (𝓞 F)) (m : 𝓞 F) (hm : m ≠ 0) :
     ∃ t : 𝓞 F, t ∉ v.asIdeal ∧
@@ -855,8 +841,7 @@ theorem t_lemma (v : HeightOneSpectrum (𝓞 F)) (m : 𝓞 F) (hm : m ≠ 0) :
   classical
   have hn : ∀ w : HeightOneSpectrum (𝓞 F), ∃ n : ℕ, m ∉ w.asIdeal ^ n := by
     intro w
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hmem : m ∈ ⨅ i, w.asIdeal ^ i := (Submodule.mem_iInf _).2 h
     rw [Ideal.iInf_pow_eq_bot_of_isDomain w.asIdeal w.isPrime.ne_top, Ideal.mem_bot] at hmem
     exact hm hmem
@@ -890,12 +875,11 @@ theorem t_lemma (v : HeightOneSpectrum (𝓞 F)) (m : 𝓞 F) (hm : m ≠ 0) :
       by_cases hmw : m ∈ w.asIdeal
       · have hws : w ∈ s := Finset.mem_insert_of_mem ((Set.Finite.mem_toFinset _).2 hmw)
         have h1 := ht w hws
-        simp only [if_neg hw', sub_zero] at h1
+        simp only [ite_eq_right hw', sub_zero] at h1
         have hle := (HeightOneSpectrum.intValuation_le_pow_iff_mem w t (n w)).2 h1
         have hnot : ¬ w.intValuation m ≤ WithZero.exp (-((n w : ℕ) : ℤ)) :=
           fun h => hn w ((HeightOneSpectrum.intValuation_le_pow_iff_mem w m (n w)).1 h)
-        have hlt := lt_of_le_of_lt hle (not_le.1 hnot)
-        exact (div_le_one₀ hpos).2 hlt.le
+        exact (div_le_one₀ hpos).2 (lt_of_le_of_lt hle (not_le.1 hnot)).le
       · rw [(HeightOneSpectrum.intValuation_eq_one_iff_mem_primeCompl w m).2 hmw, div_one]
         exact HeightOneSpectrum.intValuation_le_one w t
 
@@ -973,7 +957,6 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 def adT (T : Set (HeightOneSpectrum (𝓞 F))) : AF F := (show Ainf F × Af F from ((0 : Ainf F), evT T))
 
 theorem adT_idem (T : Set (HeightOneSpectrum (𝓞 F))) : adT T * adT T = adT T := by
-  show ((0 : Ainf F), evT T) * ((0 : Ainf F), evT T) = ((0 : Ainf F), evT T)
   exact Prod.ext (mul_zero _) (evT_mul_of_subset (subset_refl T))
 
 
@@ -1088,8 +1071,7 @@ private theorem mem_span_of_cut_mem_latHat (b : Module.Basis (Fin M) E V)
         exact map_neg eval (y i)
       simpa only [pull, hneg, map_neg] using Submodule.neg_mem _ hy
   rw [evT_smul_vinc] at hw
-  have h := hpull hw
-  simpa [hpure, hf] using h
+  simpa [hpure, hf] using hpull hw
 
 private theorem flocHat_of_denominator (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V)
     (hsat : ∀ y : Fin M → E, vinc (F := F) y ∈ latHat F E (crdOf b L0) → y ∈ crdOf b L0)

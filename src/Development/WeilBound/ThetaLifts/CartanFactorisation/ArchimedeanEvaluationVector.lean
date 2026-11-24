@@ -86,11 +86,11 @@ theorem trace_nondeg {a : mixedEmbedding.mixedSpace F} (ha : a ≠ 0) :
         if u = w then Complex.normSq (a.2 w) else 0 := fun u => by
       by_cases hu : u = w
       · subst hu
-        rw [Pi.single_eq_same, Complex.mul_conj, Complex.ofReal_re, if_pos rfl]
-      · rw [Pi.single_eq_of_ne hu, mul_zero, Complex.zero_re, if_neg hu]
+        rw [Pi.single_eq_same, Complex.mul_conj, Complex.ofReal_re, ite_eq_left rfl]
+      · rw [Pi.single_eq_of_ne hu, mul_zero, Complex.zero_re, ite_eq_right hu]
     rw [ht]
     simp only [Prod.fst_mul, mul_zero, Pi.zero_apply, Finset.sum_const_zero, zero_add, Prod.snd_mul, Pi.mul_apply, e, mul_ite,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     exact mul_ne_zero two_ne_zero (Complex.normSq_pos.2 hw).ne'
   · obtain ⟨w, hw⟩ := Function.ne_iff.1 h1
     refine ⟨(Pi.single w 1, 0), ?_⟩
@@ -409,8 +409,7 @@ theorem eInf_smul_of_at {u : Matrix (Fin n) (Fin d) (AE F E)} (hu : At (evI F) u
 
 theorem archimedean_evaluation_vector (M : Model σ X W) {u} (hu : At (evI F) u) : mixedSpaceVecPairAsAdeles F (vec M u) = M.co.e u := by
   have := mixedSpaceVecPair_archimedeanPart_idempotent_smul (M.co.e u)
-  rw [← map_smul, eInf_smul_of_at hu] at this
-  exact this
+  rwa [← map_smul, eInf_smul_of_at hu] at this
 
 theorem phL_vec (M : Model σ X W) (x) {u} (hu : At (evI F) u) : phL M x (vec M u) = vec M (actAB (cA σ) x u) := by
   rw [phL_eq, archimedean_evaluation_vector M hu, phB_e, vec]
@@ -468,8 +467,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (hP : IsPair B M χX
   obtain ⟨u, hu⟩ := M.co.e.surjective (finE2 F m)
   have := hs.impl (g, h) u Φ hΦ
   simp only [Darboux.rho] at this
-  rw [← phB_e, hu, phB_fin M hg hh] at this
-  exact this
+  rwa [← phB_e, hu, phB_fin M hg hh] at this
 
 theorem surj_of (hP : IsPair B M χX χW om r s r' s') {g h} (hg : g ∈ UAt σ X (evI F)) (hh : h ∈ UAt σ W (evI F))
     {T : SInf F (Fin n × Fin d) →ₗ[ℂ] SInf F (Fin n × Fin d)}

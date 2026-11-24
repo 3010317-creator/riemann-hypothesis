@@ -102,8 +102,7 @@ theorem coordE_mem_fil {a : ℤ} {x : V ⊗[Qp] BdR} (hx : x ∈ FilV PD (LL := 
     rw [TensorProduct.AlgebraTensorModule.map_tmul, LinearMap.id_apply, coordE_tmul]
     exact Submodule.smul_of_tower_mem _ _ f.2
   | add y z hy hz =>
-    simp only [map_add (f := _), Finsupp.add_apply]
-    exact add_mem hy hz
+    simpa only [map_add (f := _), Finsupp.add_apply] using add_mem hy hz
 
 theorem mem_DdR_iff (ρ : Representation LL G V) {x : V ⊗[Qp] BdR} :
     x ∈ DdR PD ρ ↔ ∀ g, actVdR PD ρ g x = x := by
@@ -118,8 +117,7 @@ theorem coordE_fixed (ρ : Representation LL G V) (hρ : ∀ g x, ρ g x = x) {x
 theorem DdR_le_filV (ρ : Representation LL G V) (hρ : ∀ g x, ρ g x = x) {a : ℤ} (ha : a ≤ 0)
     {x : V ⊗[Qp] BdR} (hx : x ∈ DdR PD ρ) : x ∈ FilV PD (LL := LL) (V := V) a := by
   have hx' : x = (coordE (BdR := BdR) V).symm (coordE V x) := (LinearEquiv.symm_apply_apply _ x).symm
-  rw [hx', TensorProduct.equivFinsuppOfBasisLeft_symm_apply]
-  rw [Finsupp.sum]
+  rw [hx', TensorProduct.equivFinsuppOfBasisLeft_symm_apply, Finsupp.sum]
   refine Submodule.sum_mem _ fun i _ => ?_
   obtain ⟨c, hc⟩ := coordE_fixed PD ρ hρ hx i
   have hmem : coordE V x i ∈ PD.Fil a := by

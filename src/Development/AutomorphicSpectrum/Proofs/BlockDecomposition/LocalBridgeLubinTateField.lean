@@ -112,8 +112,7 @@ theorem natCast_residue_eq_zero {l : ℕ} [Fact l.Prime] {F : Type} [Field F] [V
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff,
       (Valuation.integer.integers (valuation F)).isUnit_iff_valuation_eq_one]
     exact ne_of_lt hlt
-  rw [← map_natCast (IsLocalRing.residue 𝒪[F]), IsLocalRing.residue_eq_zero_iff]
-  exact hmem
+  rwa [← map_natCast (IsLocalRing.residue 𝒪[F]), IsLocalRing.residue_eq_zero_iff]
 
 theorem unramifiedDegree_eq_one_of_mem_inertia : ∀ {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
     {A : ValuationSubring Ω} {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O]
@@ -172,8 +171,7 @@ theorem unramifiedDegree_eq_one_of_mem_inertia : ∀ {l : ℕ} [Fact l.Prime] {E
   have hone : s z / z = 1 := by
     refine eq_one_of_pow_eq_one_of_valuation_sub_lt A.valuation hmv hsz ?_
     have e : s z / z - 1 = (s z - z) / z := by field_simp
-    rw [e, map_div₀, hzunit, div_one]
-    exact hlt
+    rwa [e, map_div₀, hzunit, div_one]
   rw [hgz, (div_eq_one_iff_eq hz0).mp hone, hz]
 
 end GlobalTheory.CompanionTheory.LTLink

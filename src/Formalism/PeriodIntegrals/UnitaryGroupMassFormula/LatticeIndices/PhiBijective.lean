@@ -63,9 +63,7 @@ theorem phi_tmul (σ : E →ₐ[F] E) (ι : E →ₐ[F] K) (x : K) (e : E) :
 
 theorem phi_bijective (σ : E →ₐ[F] E) (ι : E →ₐ[F] K) (h2 : Module.finrank F E = 2) (a : E) (ha : σ a ≠ a) :
     Function.Bijective (phi σ ι) := by
-  have hne : ι a - ι (σ a) ≠ 0 := by
-    intro h
-    exact ha (ι.injective (sub_eq_zero.mp h)).symm
+  have hne : ι a - ι (σ a) ≠ 0 := fun h => ha (ι.injective (sub_eq_zero.mp h)).symm
   have hsurj : Function.Surjective (phi σ ι) := by
     rintro ⟨u, v⟩
     refine ⟨((u - v) / (ι a - ι (σ a))) ⊗ₜ[F] a + (u - (u - v) / (ι a - ι (σ a)) * ι a) ⊗ₜ[F] (1 : E), ?_⟩
@@ -108,8 +106,7 @@ theorem splitTheta_of {D : Formalism.BasicNotions.D7} (X : HidaSetting D) (p : T
   have hσ : ∀ x, X.B.I.cm.sig (X.B.I.cm.sig x) = x := fun x => star_star x
   have h2 : Module.finrank X.B.I.F X.B.I.E = 2 := X.B.I.cm.deg2
   have hex : ∃ a, X.B.I.cm.sig a ≠ a := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have htop : (⊥ : Subalgebra X.B.I.F X.B.I.E) = ⊤ := by
       refine eq_top_iff.mpr fun x _ => Algebra.mem_bot.mpr ?_
       obtain ⟨y, hy⟩ := (X.B.I.cm.fixed x).1 (hne x)

@@ -141,7 +141,7 @@ theorem thr_lift (hCc : 28 * Real.exp 1 ≤ Cc) (hB : KB.IsLeadingFormSetting Cb
   rw [hdec] at h
   refine ⟨lamLift_nonneg hB b s v, ?_⟩
   show lamLift S b s v ≤ (if b + s ≤ S.G.r + 1 then _ else _)
-  rw [if_pos hbs]
+  rw [ite_eq_left hbs]
   unfold lamLift
   exact h
 
@@ -323,14 +323,12 @@ theorem blockK_liftC (hA : P5.ThmPActualCpt) (hDL : KB.DegLift) (hSS : KB.SizeSt
       have h1 := hsp
       rw [sizeAt_plusW, prod_ofFn_map'] at h1
       have h2 := (pos_of_mul_pos_left h1 hsa.le).ne'
-      intro c hc0'
-      exact h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
+      exact fun c hc0' => h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
     have hPm : ∀ c, S.P v (grid c (n c) + 1) ≠ 0 := by
       have h1 := hsm
       rw [sizeAt_minusW, prod_ofFn_map'] at h1
       have h2 := (pos_of_mul_pos_left h1 hsa.le).ne'
-      intro c hc0'
-      exact h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
+      exact fun c hc0' => h2 (Finset.prod_eq_zero (Finset.mem_univ c) (by rw [hc0', abs_zero]))
     have hrb := ratio_bound (fun c => grid c (n c)) (S.P v) qv Λ T (ΓS S j) (S.sizeAt v a)
       (Real.exp 1 * J.supA S.G S.de S.de' S.T S.T' S.l false (S.pl v)) Xc hΓ hsa
       (fun c => hqpos _ (List.mem_ofFn.2 ⟨c, rfl⟩)) hPp hPm
@@ -342,8 +340,7 @@ theorem blockK_liftC (hA : P5.ThmPActualCpt) (hDL : KB.DegLift) (hSS : KB.SizeSt
       rw [hcp, sizeAt_plusW, prod_ofFn_map']
     have ecm : cm = 1 / (ΓS S j * ((∏ c, |S.P v (grid c (n c) + 1)|) * S.sizeAt v a)) := by
       rw [hcm, sizeAt_minusW, prod_ofFn_map']
-    rw [hκn, eQ, ecp, ecm]
-    exact hrb
+    rwa [hκn, eQ, ecp, ecm]
   have hblock := block_of_choices Y
     (fun n p' q' => KB.gN S' v ε j (KB.plusW (ys n) a) (p' ++ [(s, t)]) (q' ++ [(s, t)]))
     (fun n p' q' => KB.gN S' v ε j (KB.minusW (ys n) a) (p' ++ [(s, t')]) (q' ++ [(s, t')])) Pn θ (Xc ^ K) (Xc ^ K)
@@ -506,9 +503,8 @@ theorem supA_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f
   refine lt_of_lt_of_le hcore (PBL.core_le_supA hB v one y ?_)
   cases one
   · simpa using hyI
-  · simp only [if_true]
-    rw [← PBL.ntop_eq_N']
-    exact hy1
+  · simp only [ite_true]
+    rwa [← PBL.ntop_eq_N']
 
 theorem glob_pos' (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) : 0 < S.G.g := by
   obtain ⟨hg1, hg2, -⟩ := hB
@@ -840,11 +836,7 @@ theorem glob_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) : 0 < S.G.g 
   unfold Sz.Glob.ka; rw [S.hv]; have := PBD.rd_pos' E; positivity
 
 theorem lenI_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f) : 0 < S.G.lenI := by
-  have hGo := hB.2.2.2.2.2.2.2.2.2.2.1
-  have h := (hGo v).1
-  rw [len_eq] at h
-  have : (0 : ℝ) < 6 * (S.Ntop : ℝ) ^ 3 + 6 * S.Ntop := by have := PBD.ntop_ge S; positivity
-  linarith
+  exact Formalism.FourierDecayAlt.P.LiftDegreeLemmas.lenI_pos' hB v
 
 theorem xw_nonneg (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (i : ℕ) (v : Fin S.f) : 0 ≤ Xw S i v := by
   obtain ⟨hg, hk⟩ := glob_pos hB
@@ -976,8 +968,7 @@ theorem Formalism.FourierDecayAlt.P.wave_local_compact_support_route : Formalism
     fun ε hε l Y hY => ⟨?_, Complex.I ^ C.Kst, by simp, ?_⟩⟩
   · have hY' : ∀ h ∈ Y, D.ptSize h = j := fun h hh => by have := hY h hh; omega
     have h0 := block0C hA hPSC hVI hFP hB F hF v ε hε j hj a hwa l Y hY'
-    rw [Nat.add_sub_cancel]
-    exact h0
+    rwa [Nat.add_sub_cancel]
   · have hY' : ∀ h ∈ Y, D.ptSize h = j := fun h hh => by have := hY h hh; omega
     have hK := blockK_waveC hA hPSC hDW hSS hVI hFP hB F hF v ε hε j hj a ha' haN hwa C.Kst grid hinj hnodes
       (Xw S (j + 1) v) (xw_nonneg hB _ v) (xw_K hB v j C.Kst grid hl1) l Y hY'
@@ -1026,15 +1017,14 @@ theorem liftLocB_of_cpt (hDL : KB.DegLift) : P5.ThmPActualCpt → LiftLocB := by
   · intro b s v
     beta_reduce
     by_cases h : 1 ≤ b ∧ 1 ≤ s ∧ b + s ≤ S.G.r + 1
-    · rw [if_pos h]; exact (hΛ0 b s h.1 h.2.1 h.2.2 v).1
-    · rw [if_neg h]
+    · rw [ite_eq_left h]; exact (hΛ0 b s h.1 h.2.1 h.2.2 v).1
+    · rw [ite_eq_right h]
   · intro b s hb hs hbs v
     beta_reduce
-    rw [if_pos ⟨hb, hs, hbs⟩]; exact (hΛ0 b s hb hs hbs v).2
+    rw [ite_eq_left ⟨hb, hs, hbs⟩]; exact (hΛ0 b s hb hs hbs v).2
   · intro F hF v b s hb hs hbs
-    have h : (if 1 ≤ b ∧ 1 ≤ s ∧ b + s ≤ S.G.r + 1 then Λ0 b s v else 0) = Λ0 b s v := if_pos ⟨hb, hs, hbs⟩
-    simp only [h]
-    exact hl F hF v b s hb hs hbs
+    have h : (if 1 ≤ b ∧ 1 ≤ s ∧ b + s ≤ S.G.r + 1 then Λ0 b s v else 0) = Λ0 b s v := ite_eq_left ⟨hb, hs, hbs⟩
+    simpa only [h] using hl F hF v b s hb hs hbs
 
 end
 

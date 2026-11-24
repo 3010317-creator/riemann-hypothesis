@@ -294,7 +294,7 @@ theorem evaluation_at_one : EvalOne := by
     rw [Finset.sum_subset hsub (fun d _ hd => by rw [mem_support_iff, not_not] at hd; simp [hd])]
     refine Finset.sum_congr rfl fun d hd => ?_
     by_cases hw : Finsupp.weight (Formalism.GradedWeylDivisibility.rowW N N) d = ν
-    · rw [hP, coeff_weightedHomogeneousComponent, if_pos hw]
+    · rw [hP, coeff_weightedHomogeneousComponent, ite_eq_left hw]
     · have hcol : Finsupp.weight (Formalism.GradedWeylDivisibility.colW N N) d = ν := hscol (mem_support_iff.mp hd)
       have hz : (∏ v ∈ d.support, ((1 : Matrix (Fin N) (Fin N) ℂ) v.1 v.2) ^ d v) = 0 := by
         by_contra hne
@@ -305,7 +305,7 @@ theorem evaluation_at_one : EvalOne := by
     rw [evA_fock_right s, evA_fock_right P]
     refine Finset.sum_congr rfl fun m hm => ?_
     have hw : Finsupp.weight (Formalism.GradedWeylDivisibility.rowW N N) m = ν := heRow (mem_support_iff.mp hm)
-    rw [hP, coeff_weightedHomogeneousComponent, if_pos hw]
+    rw [hP, coeff_weightedHomogeneousComponent, ite_eq_left hw]
   have hfce : ∀ e : MvPolynomial (Fin N × Fin N) ℂ,
       Formalism.REAL.fockF (c • e) e = c * Formalism.REAL.fockF e e := by
     intro e
@@ -428,19 +428,7 @@ private theorem entry_le_lemma {N : ℕ} {x : Matrix (Fin N) (Fin N) ℂ} (hx : 
   nlinarith [norm_nonneg (x i j)]
 
 theorem ci_compact (N : ℕ) : IsCompact (unitaryGroup (Fin N) ℂ : Set (Matrix (Fin N) (Fin N) ℂ)) := by
-  have hset : (unitaryGroup (Fin N) ℂ : Set (Matrix (Fin N) (Fin N) ℂ)) = {x | x * star x = 1} := by
-    ext x
-    exact Matrix.mem_unitaryGroup_iff
-  have hclosed : IsClosed (unitaryGroup (Fin N) ℂ : Set (Matrix (Fin N) (Fin N) ℂ)) := by
-    rw [hset]
-    exact isClosed_eq (continuous_id.matrix_mul continuous_star) continuous_const
-  have hbound : (unitaryGroup (Fin N) ℂ : Set (Matrix (Fin N) (Fin N) ℂ)) ⊆
-      Set.pi Set.univ fun _ => Set.pi Set.univ fun _ => Metric.closedBall (0 : ℂ) 1 := by
-    intro x hx
-    exact Set.mem_univ_pi.mpr fun i => Set.mem_univ_pi.mpr fun j =>
-      mem_closedBall_zero_iff.mpr (entry_le_lemma hx i j)
-  exact (isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_closedBall 0 1).of_isClosed_subset
-    hclosed hbound
+  exact PI.WSF.isCompact_unitaryGroup N
 
 theorem ci_cont {N : ℕ} (p : MvPolynomial (Fin N × Fin N) ℂ) :
     Continuous fun x : Matrix (Fin N) (Fin N) ℂ => evalM x p := by
@@ -564,13 +552,7 @@ theorem cf_eq_sum_of_subset {σ : Type} (f g : MvPolynomial σ ℂ) (S : Finset 
 
 theorem cf_add_left {σ : Type} [DecidableEq σ] (f f' g : MvPolynomial σ ℂ) :
     Formalism.REAL.fockF (f + f') g = Formalism.REAL.fockF f g + Formalism.REAL.fockF f' g := by
-  classical
-  rw [cf_eq_sum_of_subset (f + f') g (f.support ∪ f'.support) MvPolynomial.support_add,
-    cf_eq_sum_of_subset f g (f.support ∪ f'.support) Finset.subset_union_left,
-    cf_eq_sum_of_subset f' g (f.support ∪ f'.support) Finset.subset_union_right, ← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  rw [MvPolynomial.coeff_add]
-  ring
+  exact PI.WGB.fockF_add_left_B f f' g
 
 theorem cf_smul_left {σ : Type} (c : ℂ) (f g : MvPolynomial σ ℂ) :
     Formalism.REAL.fockF (c • f) g = c * Formalism.REAL.fockF f g := by
@@ -604,14 +586,7 @@ theorem cf_Blin_apply {N : ℕ} (lam : DomWeight N) (p q : MvPolynomial (Fin N �
     Blin lam q p = normFock lam p q := rfl
 
 theorem cf_herm {N : ℕ} (lam : DomWeight N) (p q : MvPolynomial (Fin N × Fin N) ℂ) :
-    normFock lam q p = star (normFock lam p q) := by
-  unfold normFock
-  rw [Formalism.GradedWeylDivisibility.fockHerm, star_div₀]
-  congr 1
-  have h := (cf_F lam).1
-  apply Complex.ext
-  · simp
-  · simp [h]
+    normFock lam q p = star (normFock lam p q) := PI.WGL.Adj.nf_herm lam p q
 
 theorem normFock_self_ne_zero {N : ℕ} (lam : DomWeight N) (p : MvPolynomial (Fin N × Fin N) ℂ) (hp : p ≠ 0) :
     normFock lam p p ≠ 0 := by

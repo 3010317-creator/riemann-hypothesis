@@ -71,15 +71,13 @@ private theorem one_le_of_mem {d : 𝓞 ℚ} (hd0 : d ≠ 0) {e : ℚ} (he : e �
       integralFiniteAdeles (𝓞 ℚ) ℚ) :
     1 ≤ |((algebraMap (𝓞 ℚ) ℚ d : ℚ) : ℝ)| * |(e : ℝ)| := by
   have h2 : algebraMap (𝓞 ℚ) ℚ d * e ∈ ((1 : (FractionalIdeal (𝓞 ℚ)⁰ ℚ)ˣ) : FractionalIdeal (𝓞 ℚ)⁰ ℚ) := by
-    rw [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
-    exact h
+    rwa [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
   rw [Units.val_one] at h2
   obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp h2
   obtain ⟨n, hn⟩ := IsIntegrallyClosed.isIntegral_iff.mp (RingOfIntegers.isIntegral_coe r)
   have hdK : algebraMap (𝓞 ℚ) ℚ d ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 ℚ) ℚ)).mpr hd0
   have hnq : (n : ℚ) = algebraMap (𝓞 ℚ) ℚ d * e := by
-    rw [← hr]
-    exact hn
+    rwa [← hr]
   have hn0 : n ≠ 0 := by
     rintro rfl
     have : algebraMap (𝓞 ℚ) ℚ d * e ≠ 0 := mul_ne_zero hdK he
@@ -142,8 +140,7 @@ private theorem idele_le {K1 : Set (FiniteAdeleRing (𝓞 ℚ) ℚ)} (hK : IsCom
     have := congrArg Prod.snd hux
     rw [Units.val_mul] at this
     change (((u⁻¹ : IdeleGroup ℚ) : A ℚ)).2 * (x : A ℚ).2 = (rt ((t : ℚ)⁻¹) : A ℚ).2 * (((p : IdeleGroup ℚ) : A ℚ)).2 at this
-    rw [hp2, mul_one] at this
-    exact this
+    rwa [hp2, mul_one] at this
   have hint : 1 ≤ D * |(((t : ℚ)⁻¹ : ℚ) : ℝ)| := by
     refine one_le_of_mem hd0 (inv_ne_zero t.ne_zero) ?_
     rw [map_mul]
@@ -445,7 +442,7 @@ private theorem wt_decay {K : Set (Fin 4 → FiniteAdeleRing (𝓞 ℚ) ℚ)} (N
     wt K (N + s) v ≤ (L * T⁻¹) ^ s * wt K N v := by
   unfold wt
   by_cases hv : finPartPi v ∈ K
-  · rw [if_pos hv, if_pos hv]
+  · rw [ite_eq_left hv, ite_eq_left hv]
     have hp : 0 < 1 + ‖infPartPi v‖ := by linarith [norm_nonneg (infPartPi v)]
     have h1 : (1 + ‖infPartPi v‖)⁻¹ ≤ L * T⁻¹ := by
       rw [inv_le_iff_one_le_mul₀ hp]
@@ -455,7 +452,7 @@ private theorem wt_decay {K : Set (Fin 4 → FiniteAdeleRing (𝓞 ℚ) ℚ)} (N
         _ = L * T⁻¹ * (1 + ‖infPartPi v‖) := by ring
     rw [pow_add, mul_inv, mul_comm, ← inv_pow (1 + ‖infPartPi v‖) s]
     exact mul_le_mul_of_nonneg_right (pow_le_pow_left₀ (by positivity) h1 s) (by positivity)
-  · rw [if_neg hv, if_neg hv, mul_zero]
+  · rw [ite_eq_right hv, ite_eq_right hv, mul_zero]
 
 private theorem rt_injective : Function.Injective (rt : ℚ → A ℚ) := by
   haveI : Nontrivial (A ℚ) := ⟨⟨0, 1, fun h => by

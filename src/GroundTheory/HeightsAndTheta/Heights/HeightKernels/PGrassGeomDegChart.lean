@@ -29,8 +29,7 @@ theorem eq_single1 (I : PlIdx 1 n) : I = single1 (I.1.orderEmbOfFin I.2 0) := by
   obtain ⟨c, hc⟩ := Finset.card_eq_one.mp I.2
   have h2 : ∀ x ∈ I.1, x = c := fun x hx => by rw [hc] at hx; exact Finset.mem_singleton.mp hx
   apply Subtype.ext
-  rw [h2 _ (Finset.orderEmbOfFin_mem I.1 I.2 0)]
-  exact hc
+  rwa [h2 _ (Finset.orderEmbOfFin_mem I.1 I.2 0)]
 
 theorem fin_one_fun_eq_const {α : Type*} (i : Fin 1 → α) : (fun _ => i 0) = i :=
   funext fun k => congrArg i (Subsingleton.elim 0 k)
@@ -53,8 +52,7 @@ theorem rootCoord_mul (z : (Σ _ : Fin 1, PlIdx 1 n) → ℂ) (ht : z a0 ≠ 0) 
     simp only [Fin.append_left]
     rw [show (default : Fin 1) = 0 from rfl, Matrix.one_apply_eq, one_mul]
     rfl
-  · simp only [Fin.append_right, chartPt]
-    exact div_mul_cancel₀ _ ht
+  · simpa only [Fin.append_right, chartPt] using div_mul_cancel₀ _ ht
 
 theorem eval_eq_zero {g : MRing (plBlocks 1 1 n)} (hg : g ∈ grassIdeal 1 1 n) (z : (Σ _ : Fin 1, PlIdx 1 n) → ℂ) :
     MvPolynomial.eval z (MvPolynomial.map (Int.castRingHom ℂ) g) = 0 := by
@@ -166,10 +164,8 @@ theorem ptsIntegralAt_eq {Ψ : (((k : Fin 1) → plBlocks 1 1 n k) → ℂ) →�
     rw [differentiable_pi]
     intro c
     refine Fin.cases ?_ (fun i => ?_) c
-    · simp only [Fin.cons_zero]
-      exact differentiable_const _
-    · simp only [Fin.cons_succ]
-      exact differentiable_apply i
+    · simpa only [Fin.cons_zero] using differentiable_const _
+    · simpa only [Fin.cons_succ] using differentiable_apply i
   set γ0 : (Fin n → ℂ) → (Σ _ : Fin 1, PlIdx 1 n) → ℂ := fun y' => blockLift (M (Fin.cons 1 y')) with hγ0
   have hγ0d : ∀ y', DifferentiableAt ℂ γ0 y' := by
     intro y'
@@ -230,8 +226,7 @@ theorem GrassGeomDegChart.proof : GrassGeomDegChart.Statement := by
   obtain ⟨B, hB, hval⟩ := ptsIntegralAt_eq hex.choose_spec
   refine ⟨B, hB, ?_⟩
   unfold geomDeg ptsIntegral
-  rw [dite_eq_left hex]
-  exact hval
+  rwa [dite_eq_left hex]
 
 end
 

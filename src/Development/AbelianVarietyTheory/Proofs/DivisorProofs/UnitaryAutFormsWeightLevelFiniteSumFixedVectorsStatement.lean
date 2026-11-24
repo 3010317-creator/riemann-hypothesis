@@ -105,8 +105,7 @@ theorem mem_Y {W : GlobalTheory.DefU.Wt E n} {ψ : UA E n → ℂ} :
 theorem le_Y (π : GlobalTheory.DefU.AutSub E n) (W : GlobalTheory.DefU.Wt E n) (hW : π.finPart W ≠ ⊥) : π.V ≤ Y W := by
   obtain ⟨f, hf, hf0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW
   obtain ⟨v, hv⟩ : ∃ v, f.1 v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hf0 (Subtype.ext (LinearMap.ext h))
   have hvπ : f.1 v ∈ π.V := GlobalTheory.DefU.AutSub.mem_finPart.1 hf v
   have hvY : f.1 v ∈ Y W := mem_Y.2 fun g =>
@@ -266,8 +265,7 @@ theorem fixed_decomposition : ∀ {G V : Type} [Group G] [AddCommGroup V] [Modul
   have hmax : ∀ s', good s' → s'.card ≤ s.card := by
     intro s' hs'
     rw [hsN]
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     exact Nat.findGreatest_is_greatest hlt (bound s' hs') ⟨s', hs', rfl⟩
   have hQ : ∀ g, ∀ v ∈ ⨆ P : s, (P : Submodule ℂ V), ρ g v ∈ ⨆ P : s, (P : Submodule ℂ V) := by
     intro g v hv
@@ -325,8 +323,7 @@ theorem fixed_decomposition : ∀ {G V : Type} [Group G] [AddCommGroup V] [Modul
     obtain ⟨hne, hst, hirr⟩ := h𝒜 P hP
     have hPQ := hcover P hP hPF
     have hex : ∃ i, ∀ v ∈ P, T i v = 0 → v = 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have hall : ∀ i, ∀ v ∈ P, T i v = 0 := by
         intro i
         obtain ⟨w, hwP, hw0, hwne⟩ := hcon i

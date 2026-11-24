@@ -56,14 +56,14 @@ lemma contDiff_lead (i : ℕ) : ContDiff ℂ 1 (fun z : 𝕄 => lead i z) := by
         ∑ σ : Equiv.Perm (Fin i), ((Equiv.Perm.sign σ : ℤ) : ℂ) *
           ∏ j, z (Fin.castLE h (σ j)) (Fin.castLE h j) := by
       funext z
-      simp only [lead, dif_pos h, Matrix.det_apply']
+      simp only [lead, dite_eq_left h, Matrix.det_apply']
       rfl
     rw [e]
     exact ContDiff.sum fun σ _ => contDiff_const.mul
       (contDiff_prod fun j _ => contDiff_apply_apply ℂ _ _)
   · have e : (fun z : 𝕄 => lead i z) = fun _ => 0 := by
       funext z
-      simp only [lead, dif_neg h]
+      simp only [lead, dite_eq_right h]
     rw [e]
     exact contDiff_const
 
@@ -190,8 +190,7 @@ lemma continuousOn_GintD (T : KType ε Λ) (μ : Fin n → ℤ) :
       (continuous_toMK'.comp continuous_snd)
   refine ((hA.clm_apply hB.continuousOn).smul
     ((continuous_P T).comp continuous_snd).continuousOn).congr ?_
-  intro p hp
-  exact GintD_apply T μ p.2 (hp.1 p.2) H
+  exact fun p hp => GintD_apply T μ p.2 (hp.1 p.2) H
 
 lemma continuous_Gint (T : KType ε Λ) (μ : Fin n → ℤ) {x : Matrix (Fin n) (Fin n) ℂ}
     (hx : x ∈ Uset ε) : Continuous (Gint T μ x) := by

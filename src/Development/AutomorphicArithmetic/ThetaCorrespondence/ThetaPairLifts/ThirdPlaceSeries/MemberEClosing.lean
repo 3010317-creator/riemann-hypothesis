@@ -254,14 +254,7 @@ variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
 theorem j_eq_sum {σ : K →+* ℂ} {W : Type} [AddCommGroup W] [Module ℂ W] {n : ℕ}
     (j : (Fin n → K) →ₛₗ[σ] W) (x : Fin n → K) :
-    j x = ∑ i, σ (x i) • j (Pi.single i 1) := by
-  conv_lhs => rw [← Finset.univ_sum_single x]
-
-  rw [map_sum]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  have : (Pi.single i (x i) : Fin n → K) = x i • Pi.single i 1 := by
-    rw [← Pi.single_smul, smul_eq_mul, mul_one]
-  rw [this, LinearMap.map_smulₛₗ]
+    j x = ∑ i, σ (x i) • j (Pi.single i 1) := by apply GlobalTheory.Mem.LiftTheta.semi_expand
 
 theorem j_ne_zero {σ : K →+* ℂ} {W : Type} [AddCommGroup W] [Module ℂ W] {n : ℕ}
     (j : (Fin n → K) →ₛₗ[σ] W) (hli : LinearIndependent ℂ fun i => j (Pi.single i 1))
@@ -403,8 +396,7 @@ theorem tie_level (D : D7) {EE : Type} [NormedAddCommGroup EE] [InnerProductSpac
       jAmb_basis := fun μ _ => by
         show LinearIndependent ℂ (fun i => j μ (Pi.basisFun D.what₂.LL _ i)) ∧
           Submodule.span ℂ (Set.range (fun i => j μ (Pi.basisFun D.what₂.LL _ i))) = ⊤
-        simp only [Pi.basisFun_apply]
-        exact ⟨(hF μ).li, (hF μ).span⟩
+        simpa only [Pi.basisFun_apply] using ⟨(hF μ).li, (hF μ).span⟩
       jAmb_lat := fun μ _ x => (hL μ).2 x
       jAmb_gen := fun μ _ => (hL μ).1
       jAmb_norm := fun μ _ x => _root_.GlobalTheory.AmbNormTie.normAt_frm_mk D.what₂.embLL D.starLL_cx (j μ) _ _ _ (hF μ) x }
@@ -670,8 +662,7 @@ theorem transport_J_bijective_onto :
     have h2 := Tr.J_isom c ξ ξ
     have h3 := Tr.J_isom c η ξ
     have h4 := Tr.J_isom c η η
-    rw [h] at h1 h2 h3
-    rw [h4] at h1 h2 h3
+    rw [h, h4] at h1 h2 h3
     have h0 : ⟪ξ - η, ξ - η⟫_ℂ = 0 := by
       rw [inner_sub_left, inner_sub_right, inner_sub_right, ← h1, ← h2, ← h3]
       ring
@@ -889,8 +880,7 @@ theorem sum_inner_classReps_indep : ∀ (Γ Gi Gf : Type) [Group Γ] [Group Gi] 
   refine Fintype.sum_bijective g hbij _ _ (fun c => ?_)
   obtain ⟨γ, κ, h⟩ := hg c
   have := hf γ (s' (g c)) κ
-  rw [← h] at this
-  exact this
+  rwa [← h] at this
 
 end GlobalTheory
 end -- clump:auto
@@ -1185,8 +1175,7 @@ theorem exists_late_level_of_gap {hL : _root_.UpperTheory.Zero.LLC.RecTExists} (
   have col₁ : ColumnDataSplitPrimes K w b := col'
   obtain ⟨s⟩ := sat_col a col₀ (pkOf l.what₂) Zs H _ _ col₁.toColT
   have s' : SX K B f T w b l'.Wt l'.p0 l'.what₂ col₁.toColT := by
-    rw [sx_eq l'.what₂ col₁.toColT, e]
-    exact s
+    rwa [sx_eq l'.what₂ col₁.toColT, e]
   have x : p.S K B f T w b l'.Wt l'.p0 l'.what₂ col₁.toColT s' := by
     rw [hS]
     exact PUnit.unit

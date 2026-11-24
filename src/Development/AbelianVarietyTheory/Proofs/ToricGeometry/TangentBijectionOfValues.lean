@@ -162,8 +162,7 @@ theorem spMap_fst_surjective : Function.Surjective (spMap fstC) := by
 theorem top_le_preimage_iff (x : Sp (DualNumber ℂ) ⟶ X) (W : X.Opens) :
     ⊤ ≤ x ⁻¹ᵁ W ↔ ⊤ ≤ (spMap fstC ≫ x) ⁻¹ᵁ W := by
   constructor
-  · intro h p _
-    exact h (Set.mem_univ (spMap fstC p))
+  · exact fun h p _ => h (Set.mem_univ (spMap fstC p))
   · intro h p _
     obtain ⟨q, rfl⟩ := spMap_fst_surjective p
     exact h (Set.mem_univ q)
@@ -332,8 +331,7 @@ theorem isDiff_iff {v : epsR ℂ ⟶ A} (hv : IsTangent v) {U : A.left.Opens} (h
       ⟨(u.ex 0).left pt, hW0 (Set.mem_univ pt)⟩ (h0 (Set.mem_univ pt))
     have hB0 : ⊤ ≤ (u.ex 0).left ⁻¹ᵁ A.left.basicOpen s := by
       intro q _
-      rw [hsub q]
-      exact hs
+      rwa [hsub q]
     have hB := (tangent_mem_iff (u := u) hv _).2 hB0
     have := hU.isLocalization_basicOpen s
     have heq : evalPt (R := DualNumber ℂ) v.left _ hB = jet u w _ hB0 := by

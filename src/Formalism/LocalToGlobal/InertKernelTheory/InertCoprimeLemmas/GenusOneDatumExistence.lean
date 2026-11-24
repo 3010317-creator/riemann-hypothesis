@@ -44,8 +44,7 @@ theorem mem_Wp_of_kur {x : ℂ_[p]} (hx : x ∈ Formalism.L2.Th1.CM.MaximalUnram
     · rintro ⟨n, h0, hn, h⟩
       exact ⟨n, h0, (Nat.Prime.coprime_iff_not_dvd hp).mp (Nat.coprime_comm.mp hn), h⟩
   unfold Formalism.L2.Th1.D.ringB Formalism.L2.Th1.D.ringA at hB
-  rw [hS] at hB
-  exact hB
+  rwa [hS] at hB
 
 theorem logF_eq : logF p = Formalism.L2.Th1.CM.ltLog ℂ_[p] p := by
   have hp : p.Prime := Fact.out
@@ -60,11 +59,10 @@ theorem logF_eq : logF p = Formalism.L2.Th1.CM.ltLog ℂ_[p] p := by
     set j0 := Nat.find h
     have hn : n = p ^ (2 * j0) := by rw [hj, ← pow_mul]
     rw [Finset.sum_eq_single j0]
-    · rw [if_pos hn]
+    · rw [ite_eq_left hn]
     · intro j _ hne
-      rw [if_neg]
-      intro h'
-      exact hne (hinj (h'.symm.trans hn))
+      rw [ite_eq_right]
+      exact fun h' => hne (hinj (h'.symm.trans hn))
     · intro hj0
       exfalso
       apply hj0
@@ -74,9 +72,8 @@ theorem logF_eq : logF p = Formalism.L2.Th1.CM.ltLog ℂ_[p] p := by
       omega
   · apply Finset.sum_eq_zero
     intro j _
-    rw [if_neg]
-    intro h'
-    exact h ⟨j, by rw [h', pow_mul]⟩
+    rw [ite_eq_right]
+    exact fun h' => h ⟨j, by rw [h', pow_mul]⟩
 
 theorem isWq_wU (W : WeierstrassCurve ℂ_[p]) : Formalism.MainNotions.TaylorLogMetric.IsWq W (Formalism.L2.Th1.A.wU W) := by
   have hF := (Formalism.L2.Th1.A.CurveSer.wSer_fixed W).2
@@ -87,13 +84,7 @@ theorem isWq_wU (W : WeierstrassCurve ℂ_[p]) : Formalism.MainNotions.TaylorLog
   linear_combination hF
 
 theorem norm_four (h5 : 5 ≤ p) : ‖(4 : ℂ_[p])‖ = 1 := by
-  have hp : p.Prime := Fact.out
-  have h := Formalism.DworkPowerSeriesWeights.norm_natCast_eq_one_of_not_dvd (K := ℂ_[p]) (m := 4) hp
-    (Formalism.L2.Th1.D.UnramifiedCompletion.normL_lt_one p) (by
-      intro hd
-      have := Nat.le_of_dvd (by norm_num) hd
-      omega)
-  exact_mod_cast h
+  exact Formalism.L2.Th1.E.ScaledModelNorms.norm_four p h5
 
 theorem datum_of_short (h5 : 5 ≤ p) (lam : Formalism.MainNotions.TaylorLogMetric.Qbar →+* ℂ_[p]) (Λ : AddSubgroup ℂ)
     (C : WeierstrassCurve.VariableChange ℂ_[p]) (g2 g3 : ℂ_[p])
@@ -129,8 +120,7 @@ theorem datum_of_short (h5 : 5 ≤ p) (lam : Formalism.MainNotions.TaylorLogMetr
   have hOk : g.Ok := by
     refine ⟨hU, hWq, hx0, ?_⟩
     show PowerSeries.subst (Formalism.L2.Th1.A.expSer S) (Formalism.MainNotions.TaylorLogMetric.flog g.W (Formalism.L2.Th1.A.wU S)) = PowerSeries.X
-    rw [hgW, hfl]
-    exact hLE
+    rwa [hgW, hfl]
   have hM : ModelOverW lam Λ C := by
     show (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₁ ∈ Wp p ∧ (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₂ ∈ Wp p ∧
       (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₃ ∈ Wp p ∧ (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ).a₄ ∈ Wp p ∧
@@ -138,10 +128,8 @@ theorem datum_of_short (h5 : 5 ≤ p) (lam : Formalism.MainNotions.TaylorLogMetr
     rw [hW]
     refine ⟨by simp [hS, Formalism.L2.Th1.A.shortW], by simp [hS, Formalism.L2.Th1.A.shortW],
       by simp [hS, Formalism.L2.Th1.A.shortW], mem_Wp_of_kur ?_ na4, mem_Wp_of_kur ?_ na6⟩
-    · simp only [hS, Formalism.L2.Th1.A.shortW]
-      exact div_mem (neg_mem k2) (ofNat_mem _ 4)
-    · simp only [hS, Formalism.L2.Th1.A.shortW]
-      exact div_mem (neg_mem k3) (ofNat_mem _ 4)
+    · simpa only [hS, Formalism.L2.Th1.A.shortW] using div_mem (neg_mem k2) (ofNat_mem _ 4)
+    · simpa only [hS, Formalism.L2.Th1.A.shortW] using div_mem (neg_mem k3) (ofNat_mem _ 4)
   have hpt : (g.pt (MvPowerSeries.C ε * logF p) : MvPowerSeries Unit ℂ_[p]) =
       (Formalism.L2.Th1.CM.uSer g2 g3).subst (PowerSeries.C ε * Formalism.L2.Th1.CM.ltLog ℂ_[p] p) := by
     show PowerSeries.subst (MvPowerSeries.C ε * logF p) (Formalism.L2.Th1.A.expSer S) = _

@@ -162,9 +162,7 @@ theorem corrIso_holds (M : Model F E) (r n : ℕ) : CorrIso M r n := by
       ⟨ψf b, mem_perp_isotropicSpan_of_mem_framePerp H (ψf b).2⟩ (hψf a).1 (hψf b).1
   · constructor
     · rintro ⟨h₁, h₂, c1, -⟩
-      refine ⟨h₁, ?_⟩
-      show ((ψf ⟨n₁, h₁⟩ : ↥(H.W0 f₂ f₂')) : V) = n₂
-      exact huniq _ _ (ψf ⟨n₁, h₁⟩).2 h₂ ((hψf ⟨n₁, h₁⟩).1.symm.trans c1)
+      exact ⟨h₁, (huniq _ _ (ψf ⟨n₁, h₁⟩).2 h₂ ((hψf ⟨n₁, h₁⟩).1.symm.trans c1))⟩
     · rintro ⟨h₁, rfl⟩
       exact ⟨h₁, (ψf ⟨n₁, h₁⟩).2, (hψf ⟨n₁, h₁⟩).1, (hψf ⟨n₁, h₁⟩).2⟩
 

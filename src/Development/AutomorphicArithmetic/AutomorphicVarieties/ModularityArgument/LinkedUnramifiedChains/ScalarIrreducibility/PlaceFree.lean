@@ -449,8 +449,7 @@ theorem multiplicity_differentIdeal_eq_of_quotient {A B A' B' : Type*}
     · intro H x hx
       rw [key]
       apply H
-      rw [← he, ← Ideal.mem_comap, hg']
-      exact hx
+      rwa [← he, ← Ideal.mem_comap, hg']
 
 end KStar.Ram
 end -- clump:auto
@@ -490,8 +489,7 @@ private theorem cy_precomplete_pi {R ι : Type*} [CommRing R] (a : R)
   have hy : ∀ i, ∃ y : R, a ^ n • y = f n i - L i := by
     intro i
     have hi := hL i n
-    rw [SModEq.sub_mem, cy_mem_span_smul] at hi
-    exact hi
+    rwa [SModEq.sub_mem, cy_mem_span_smul] at hi
   choose y hy using hy
   exact ⟨y, funext fun i => by simpa using hy i⟩
 
@@ -549,8 +547,7 @@ private theorem cy_l_mem : (l : w.adicCompletionIntegers E) ∈
   have h : (maximalIdeal (w.adicCompletionIntegers E)).comap (algebraMap (𝓞 E) _) = w.asIdeal :=
     cy_emb w
   have := cy_l_mem' w l
-  rw [← h, Ideal.mem_comap, map_natCast] at this
-  exact this
+  rwa [← h, Ideal.mem_comap, map_natCast] at this
 
 omit [w.asIdeal.LiesOver (Ideal.span {(l : ℤ)})] in
 private theorem cy_max_pow (n : ℕ) : maximalIdeal (w.adicCompletionIntegers E) ^
@@ -571,8 +568,7 @@ private theorem cy_approx (n : ℕ) (y : w.adicCompletionIntegers E) :
 private theorem cy_tf [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
     Module.IsTorsionFree ℤ_[l] (w.adicCompletionIntegers E) := by
   obtain ⟨f, F, h1, -, -, h2, -⟩ := existsUnique_padic_hom w l
-  rw [Module.isTorsionFree_iff_algebraMap_injective, h2 (algebraMap _ _)]
-  exact h1
+  rwa [Module.isTorsionFree_iff_algebraMap_injective, h2 (algebraMap _ _)]
 
 private theorem cy_fin [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
     Module.Finite ℤ_[l] (w.adicCompletionIntegers E) := by
@@ -602,8 +598,7 @@ private theorem cy_fin [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
     have hbot := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal (w.adicCompletionIntegers E))
       (maximalIdeal.isMaximal _).ne_top
     rw [← Ideal.mem_bot, ← hbot, Ideal.mem_iInf]
-    intro k
-    exact Ideal.pow_le_pow_right (Nat.le_mul_of_pos_left k he) (hmem k)
+    exact fun k => Ideal.pow_le_pow_right (Nat.le_mul_of_pos_left k he) (hmem k)
   let b := NumberField.RingOfIntegers.basis E
   let φ := Fintype.linearCombination ℤ_[l]
     (fun i => algebraMap (𝓞 E) (w.adicCompletionIntegers E) (b i))
@@ -665,8 +660,7 @@ private theorem cy_efd [Algebra ℤ_[l] (w.adicCompletionIntegers E)]
   · intro n y
     obtain ⟨x, hx⟩ := (complIntegers_quotient w n).2.2 y
     exact ⟨x, hx⟩
-  · intro n
-    exact (complIntegers_quotient w n).2.1
+  · exact fun n => (complIntegers_quotient w n).2.1
 
 theorem finrank_complIntegers [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
     Module.IsTorsionFree ℤ_[l] (w.adicCompletionIntegers E) ∧
@@ -694,8 +688,7 @@ theorem finrank_complIntegers [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
         apply Subtype.ext
         have : q.IsMaximal := by
           apply Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := ℤ_[l])
-          rw [← hq2.over]
-          exact hmax
+          rwa [← hq2.over]
         exact IsLocalRing.eq_maximalIdeal this }
   haveI : Fintype ((Ideal.span {(l : ℤ_[l])}).primesOver (w.adicCompletionIntegers E)) :=
     Fintype.ofFinite _
@@ -719,8 +712,7 @@ private theorem ramificationIdx_mul_inertiaDeg_eq_one_of_splitsIn (hs : SplitsIn
   have hsum := Ideal.sum_ramification_inertia_eq_finrank (Ideal.span {(l : ℤ)}) (𝓞 E)
   rw [NumberField.RingOfIntegers.rank] at hsum
   have hcard : Fintype.card ((Ideal.span {(l : ℤ)}).primesOver (𝓞 E)) = Module.finrank ℚ E := by
-    rw [← Nat.card_eq_fintype_card, Nat.card_coe_set_eq]
-    exact hs
+    rwa [← Nat.card_eq_fintype_card, Nat.card_coe_set_eq]
   have hge : ∀ q : (Ideal.span {(l : ℤ)}).primesOver (𝓞 E),
       1 ≤ q.1.ramificationIdx ℤ * q.1.inertiaDeg ℤ := by
     intro q
@@ -903,8 +895,7 @@ theorem emb_lt_iff (j : Emb l w) (x : 𝓞 F) :
           gcongr
           exact norm_int_le_one c y
       _ < 1 := by
-          rw [one_mul]
-          exact h
+          rwa [one_mul]
   have h2 : ‖c (i : F)‖ < 1 := emb_lt j hi
   have e' : c ((y : F) * (x : F)) + c (i : F) = 1 := by
     rw [← map_add (f := _), ← map_one c]
@@ -1067,8 +1058,7 @@ theorem exists_sep [Normal ℚ L] {A : ValuationSubring Ω} {w : Plc L} (h : IsP
   let g' : L ≃ₐ[ℚ] L := g.restrictNormal L
   have hg' : ∀ y : L, algebraMap L Ω (g' y) = g (algebraMap L Ω y) := fun y => g.restrictNormal_commutes L y
   obtain ⟨b, hb⟩ : ∃ b : 𝓞 L, g' (b : L) ≠ (b : L) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨a, c, hc, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 L) (K := L) x
     apply hx
     have e1 : g' (algebraMap (𝓞 L) L a) = algebraMap (𝓞 L) L a := hcon a
@@ -1152,13 +1142,13 @@ private theorem prod_wt {l : ℕ} [Fact l.Prime] {F : Type} [Field F] [NumberFie
       (if τ = τ₀ then τ₀.1 (y : w.adicCompletion F) ^ (-j) else 1) := fun τ => by
     by_cases hτ : τ = τ₀
     · subst hτ
-      rw [if_pos rfl, h0, ← zpow_add₀ (hy τ)]
+      rw [ite_eq_left rfl, h0, ← zpow_add₀ (hy τ)]
       congr 1
       ring
-    · rw [if_neg hτ, h1 τ hτ, mul_one]
+    · rw [ite_eq_right hτ, h1 τ hτ, mul_one]
   rw [finprod_eq_prod_of_fintype] at hP ⊢
   simp only [e]
-  rw [Finset.prod_mul_distrib, Finset.prod_zpow, hP, one_zpow, one_mul, Finset.prod_ite_eq', if_pos (Finset.mem_univ _)]
+  rw [Finset.prod_mul_distrib, Finset.prod_zpow, hP, one_zpow, one_mul, Finset.prod_ite_eq', ite_eq_left (Finset.mem_univ _)]
 
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField in
 private theorem art_elt (hG : GlobalTheory.Published.GlobalArtinReciprocity) {L Ω : Type} [Field L] [NumberField L] [Field Ω]
@@ -1196,8 +1186,7 @@ private theorem place_free (hG : GlobalTheory.Published.GlobalArtinReciprocity) 
     (fun i => ph i σ) (Units.mk0 _ hz)
   · intro m hm h1
     apply hyT τ₀ m hm
-    have h2 := congrArg Units.val h1
-    simpa using h2
+    simpa using congrArg Units.val h1
   · intro i
     haveI := Subgroup.quotient_finite_of_isOpen _ (hp i).1
     refine ⟨(ph i).ker.index, Nat.pos_of_ne_zero Subgroup.index_ne_zero_of_finite, ?_⟩
@@ -1224,8 +1213,7 @@ private theorem mem_G' {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberF
     (algebraMap ℚ_[l] (Qbar l)).injective.comp Subtype.val_injective
   apply Units.ext
   apply hinj
-  rw [Units.val_one, map_one]
-  exact hv
+  rwa [Units.val_one, map_one]
 
 end SlopeTestRemainingChoices
 
@@ -1244,26 +1232,22 @@ theorem UpperTheory.V.J.wtEx :
     haveI := k.ab
     have hlw : ((l : ℕ) : 𝓞 L) ∈ (R.s.w v.1).asIdeal := by
       apply (R.s.hw v.1 _).1
-      have hA := (R.s.hA v.1 _).2 v.2
-      simpa only [map_natCast] using hA
+      simpa only [map_natCast] using (R.s.hA v.1 _).2 v.2
     have hbig : 5 < Φ.dv (R.K.e v) := R.big.2 (R.K.e v)
     rw [k.dv (R.K.e v)] at hbig
     obtain ⟨g, hgD, hgU⟩ : ∃ g ∈ Dec (F := ℚ) (k.pl (R.K.e v)), g ∉ upl Ω L := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have h1 := Subgroup.relIndex_eq_one.2 hcon
       omega
     have hgD' : g ∈ Dec (F := ℚ) (R.s.A v.1) := by
-      rw [R.A_pl v]
-      exact hgD
+      rwa [R.A_pl v]
     obtain ⟨y, -, hgy⟩ : ∃ y ∈ maximalRealSubfield L, g (algebraMap L Ω y) ≠ algebraMap L Ω y := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hgU hcon
     obtain ⟨b, τ₁, τ₂, hne⟩ := UpperTheory.V.J.Wu.exists_sep (R.s.hw v.1) hlw g hgD' y hgy
     obtain ⟨g', hc, hfree⟩ := place_free hG (R.s.hw v.1) hlw (Classical.choice ⟨τ₁⟩) b τ₁ τ₂ hne (x.psi v) ph
       (fun j τ => if τ = Classical.choice ⟨τ⟩ then 2 * ((j : ℕ) : ℤ) else ((j : ℕ) : ℤ))
-      (fun j => if_pos rfl) (fun j τ hτ => if_neg hτ) hp
+      (fun j => ite_eq_left rfl) (fun j τ hτ => ite_eq_right hτ) hp
     exact ⟨g', mem_G' R.V v g' hc, hfree⟩
 end -- clump:auto
 end -- clump:auto

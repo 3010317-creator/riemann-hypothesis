@@ -125,8 +125,7 @@ theorem exists_symm_matrix_mod_subspace :
     have hq : B.mkQ (θ b - ∑ a, β b (θ a) • φ a) ≠ 0 :=
       fun h0 => hx ((Submodule.Quotient.mk_eq_zero B).mp h0)
     obtain ⟨f, hf⟩ : ∃ f : Module.Dual K (V ⧸ B), f (B.mkQ (θ b - ∑ a, β b (θ a) • φ a)) ≠ 0 := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       exact hq ((Module.forall_dual_apply_eq_zero_iff K _).mp hall)
     apply hf
     have hα : B ≤ LinearMap.ker (f.comp B.mkQ) := fun x hx =>
@@ -323,8 +322,7 @@ theorem functional_cob {K : Type} [Field K] {Y : Scheme.{0}} {I : Type} [Fintype
       rw [Pi.single_eq_of_ne hi, hz, Pi.single_zero, Pi.single_zero, map_zero]
     · intro hj; exact absurd (Finset.mem_univ j) hj
   rw [e2] at hcob
-  simp only [e1] at hcob
-  exact hcob
+  simpa only [e1] using hcob
 
 theorem pair_symm {K : Type} [Field K] {Y Z : Scheme.{0}} {q : Y ⟶ Sp K} {p₁ p₂ : Z ⟶ Y} {I : Type} [Finite I]
     {U : I → Y.Opens} {g : ℕ} (θ φ : Fin g → C1 U) (hq : IsSeparated q) (H : IsPullback p₁ p₂ q q)
@@ -380,11 +378,9 @@ theorem pair_symm {K : Type} [Field K] {Y Z : Scheme.{0}} {q : Y ⟶ Sp K} {p₁
         ∑ j', (F i i' j' j (rsT w _) - F i i' j j' (rsT w _)) = 0 := by
       intro j
       have hle1 : ∀ j', (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j' ⊓ U j)) ≤ p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ U j := fun j' => by
-        intro x hx
-        exact ⟨hx.1, hx.2.2⟩
+        exact fun x hx => ⟨hx.1, hx.2.2⟩
       have hle2 : ∀ j', (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) ≤ p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ U j := fun j' => by
-        intro x hx
-        exact ⟨hx.1, hx.2.1⟩
+        exact fun x hx => ⟨hx.1, hx.2.1⟩
       let G : Γ(Z, p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ U j) →+ K :=
         ∑ j', ((F i i' j' j).comp (resG Z (hle1 j')).toAddMonoidHom -
           (F i i' j j').comp (resG Z (hle2 j')).toAddMonoidHom)
@@ -426,11 +422,9 @@ theorem pair_symm {K : Type} [Field K] {Y Z : Scheme.{0}} {q : Y ⟶ Sp K} {p₁
         ∑ i', (F i' i j j' (rsT w _) - F i i' j j' (rsT w _)) = 0 := by
       intro i
       have hle1 : ∀ i', (p₁ ⁻¹ᵁ (U i' ⊓ U i) ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) ≤ p₁ ⁻¹ᵁ U i ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j') := fun i' => by
-        intro x hx
-        exact ⟨hx.1.2, hx.2⟩
+        exact fun x hx => ⟨hx.1.2, hx.2⟩
       have hle2 : ∀ i', (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) ≤ p₁ ⁻¹ᵁ U i ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j') := fun i' => by
-        intro x hx
-        exact ⟨hx.1.1, hx.2⟩
+        exact fun x hx => ⟨hx.1.1, hx.2⟩
       let G : Γ(Z, p₁ ⁻¹ᵁ U i ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) →+ K :=
         ∑ i', ((F i' i j j').comp (resG Z (hle1 i')).toAddMonoidHom -
           (F i i' j j').comp (resG Z (hle2 i')).toAddMonoidHom)
@@ -560,8 +554,7 @@ theorem kunneth_symm : ∀ (K : Type) [Field K] (Y Z : Scheme.{0}) (q : Y ⟶ Sp
   have hind' : ∀ c : Fin g → K, ∑ a, c a • φ a ∈ B → c = 0 := by
     intro c hc
     apply hind c
-    rw [hlc]
-    exact hc
+    rwa [hlc]
   obtain ⟨Θ, hΘ, hmem⟩ := exists_symm_matrix_mod_subspace K (C1 U) B g θ φ hind'
     (fun α β hα hβ => pair_symm θ φ hq H hU u u' hu α.toAddMonoidHom β.toAddMonoidHom
       (fun c x => by
@@ -658,8 +651,7 @@ theorem ext_cover (hV : ⨆ α, V α = ⊤) {W : Z.Opens} (s t : Γ(Z, W))
   refine TopCat.Sheaf.eq_of_locally_eq' (F := Z.sheaf) (U := fun α => W ⊓ V α) (V := W)
     (iUV := fun α => homOfLE inf_le_left) (iSup_inf_eq hV W).ge s t fun α => ?_
   have hα := h α
-  rw [rsT_eq inf_le_left, rsT_eq inf_le_left] at hα
-  exact hα
+  rwa [rsT_eq inf_le_left, rsT_eq inf_le_left] at hα
 
 theorem exists_glue (hV : ⨆ α, V α = ⊤) (W : Z.Opens) (F : J → ∀ O : Z.Opens, Γ(Z, O))
     (h₁ : ∀ α O, O ≤ W ⊓ V α → rsT (F α (W ⊓ V α)) O = F α O)
@@ -693,8 +685,7 @@ theorem exists_split (hV : ⨆ α, V α = ⊤) {W : Z.Opens} (hW : IsAffineOpen 
     ∃ c : ∀ α, Γ(Z, W ⊓ V α), ∀ α β O, O ≤ W ⊓ V α ⊓ V β →
       rsT (k α β) O = rsT (c β) O - rsT (c α) O := by
   have hW' : IsAffineOpen (⨆ α, W ⊓ V α) := by
-    rw [iSup_inf_eq hV W]
-    exact hW
+    rwa [iSup_inf_eq hV W]
   obtain ⟨b, hb⟩ := isCob_of_isAffineOpen Z J (fun α => W ⊓ V α) k hW' hk
   refine ⟨b, fun α β O hO => ?_⟩
   have hO' : O ≤ (W ⊓ V α) ⊓ (W ⊓ V β) :=

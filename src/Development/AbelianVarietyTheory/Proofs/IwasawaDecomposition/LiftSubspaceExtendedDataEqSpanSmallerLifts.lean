@@ -114,8 +114,7 @@ theorem linInd_comp {ι' : Type} [Fintype ι'] (b' : Basis ι' K' V') (hb : Line
   have he := linearIndependent_image_basis_of_linearIndependent j' b' hb (Basis.extend hs)
   let g : κ → hs.extend (Set.subset_univ _) := fun k => ⟨x k, Basis.subset_extend hs ⟨k, rfl⟩⟩
   have hg : Function.Injective g := fun a b h => hx.injective (congrArg Subtype.val h)
-  have h2 := he.comp g hg
-  simpa [g, Function.comp_def, Basis.coe_extend] using h2
+  simpa [g, Function.comp_def, Basis.coe_extend] using he.comp g hg
 
 end Lin
 
@@ -139,8 +138,7 @@ theorem finrank_span_image (j' : V' →ₛₗ[σ'] W) {ι' : Type} [Fintype ι']
       have hvx : v ∈ Submodule.span K' (Set.range x) := by
         have h1 : (⟨v, hv⟩ : X) ∈ Submodule.span K' (Set.range e) := by rw [e.span_eq]; trivial
         have h2 := Submodule.mem_map_of_mem (f := X.subtype) h1
-        rw [Submodule.map_span, ← Set.range_comp] at h2
-        exact h2
+        rwa [Submodule.map_span, ← Set.range_comp] at h2
       exact span_range_le_comap_span_image j' x hvx
     · apply Submodule.span_mono
       rintro _ ⟨i, rfl⟩
@@ -156,8 +154,7 @@ theorem comap_eq_span (j : V →ₛₗ[σ] W) (j' : V' →ₛₗ[σ'] W) (ι : V
     rw [Submodule.span_le]
     rintro _ ⟨v, hv, rfl⟩
     show j' (ι v) ∈ U
-    rw [hj]
-    exact hv
+    rwa [hj]
   symm
   apply Submodule.eq_of_le_of_finrank_le hle
   rw [← finrank_span_image j' b' hb, ← finrank_span_image j' b' hb]

@@ -311,8 +311,7 @@ theorem decay {π : C} (hπ : ‖π‖ < 1) {b : ℝ} {G : PowerSeries C} (hb : 
       · rw [norm_neg, norm_mul]
         refine (mul_le_mul_of_nonneg_left (ih (m + 1)) (norm_nonneg _)).trans ?_
         rw [← mul_assoc, ← pow_succ']
-        refine mul_le_mul_of_nonneg_right ?_ hb0
-        exact pow_le_pow_of_le_one (norm_nonneg _) hπ.le (by omega)
+        exact mul_le_mul_of_nonneg_right (pow_le_pow_of_le_one (norm_nonneg _) hπ.le (by omega)) hb0
 
 theorem eq_zero_of_forall_dvd {π : C} (hπ : ‖π‖ < 1) (Φ : bdd C) (h : ∀ n, lin π ^ n ∣ Φ) :
     Φ = 0 := by
@@ -325,8 +324,7 @@ theorem eq_zero_of_forall_dvd {π : C} (hπ : ‖π‖ < 1) (Φ : bdd C) (h : �
     have h1 := bound_of_lin_pow_mul hπ (n + m) G (by rw [← hG]; exact hb)
     have h2 := decay hπ h1 (n + m) m
     rw [Nat.add_sub_cancel] at h2
-    rw [hG]
-    exact h2
+    rwa [hG]
   have ht : Tendsto (fun k : ℕ => ‖π‖ ^ k * b) atTop (𝓝 (0 * b)) :=
     (tendsto_pow_atTop_nhds_zero_of_lt_one (norm_nonneg _) hπ).mul_const b
   rw [zero_mul] at ht
@@ -343,8 +341,7 @@ theorem main (C : Type) [NontriviallyNormedField C] [IsUltrametricDist C] [Compl
     fun Φ => ⟨lin_dvd hπ Φ, ?_⟩, fun Φ hΦ => ?_⟩
   · rintro ⟨G, rfl⟩
     rw [map_mul, ev_lin, zero_mul]
-  · by_contra hc
-    push_neg at hc
+  · by_contra! hc
     exact hΦ (eq_zero_of_forall_dvd hπ Φ hc)
 
 end GlobalTheory.SummableSeriesBounds
@@ -483,8 +480,7 @@ theorem isPrincipalIdealRing_comap : IsPrincipalIdealRing ((intRing R).comap φ)
 theorem mem_of_prime {q : Ideal ((intRing R).comap φ)} (hq : q.IsPrime) (hq0 : q ≠ ⊥)
     (a : (intRing R).comap φ) : a ∈ q ↔ ¬ IsUnit (res R φ a) := by
   constructor
-  · intro ha hu
-    exact hq.ne_top (Ideal.eq_top_of_isUnit_mem q ha (isUnit_of_isUnit_res R φ hu))
+  · exact fun ha hu => hq.ne_top (Ideal.eq_top_of_isUnit_mem q ha (isUnit_of_isUnit_res R φ hu))
   · intro hna
     obtain ⟨y, hyq, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq0
     have hry : res R φ y ≠ 0 := fun h => hy0 (res_injective R φ (by rw [h, map_zero]))
@@ -527,8 +523,7 @@ theorem map_ker_eq_span (hker : ∀ b, ev b = 0 ↔ t ∣ b) :
   have h := congrArg (Ideal.map (algebraMap B (Localization.AtPrime (RingHom.ker ev))))
     (ker_eq_span ev t hker)
   rw [Ideal.map_span, Set.image_singleton] at h
-  rw [← IsLocalization.AtPrime.map_eq_maximalIdeal (RingHom.ker ev)]
-  exact h
+  rwa [← IsLocalization.AtPrime.map_eq_maximalIdeal (RingHom.ker ev)]
 
 theorem isDVR (ht : t ≠ 0) (hker : ∀ b, ev b = 0 ↔ t ∣ b)
     (hfin : ∀ b : B, b ≠ 0 → ∃ n : ℕ, ¬ t ^ n ∣ b) :
@@ -610,8 +605,7 @@ theorem exists_of_dvr (A B C Ω : Type) [CommRing A] [IsDomain A] [CommRing B] [
   · ext a
     simp only [RingHom.comp_apply]
     rw [hres, hev]
-  · intro a ha
-    exact isUnit_of_isUnit_res R φ (not_not.1 fun h => ha ((hzero _).2 h))
+  · exact fun a ha => isUnit_of_isUnit_res R φ (not_not.1 fun h => ha ((hzero _).2 h))
   · intro q hq
     by_cases hq0 : q = ⊥
     · left; rw [hq0, (RingHom.injective_iff_ker_eq_bot _).1 hi₀]
@@ -692,9 +686,7 @@ theorem exists_forall_ne_zero_of_countable_analytic :
       obtain ⟨x, hxU, hx⟩ := hnz i
       exact hx (hall hxU)
     · obtain ⟨z, hzV⟩ := hVne
-      refine ⟨z, hzV, Or.inr ?_⟩
-      intro hz
-      exact hVU (mem_closure_iff.1 hz V hV hzV)
+      exact ⟨z, hzV, Or.inr (fun hz => hVU (mem_closure_iff.1 hz V hV hzV))⟩
   have hD : Dense (⋂ i, S i) := dense_iInter_of_isOpen hopen hdense
   obtain ⟨x, hxU, hx⟩ := hD.inter_open_nonempty U hU hne
   refine ⟨x, hxU, fun i => ?_⟩
@@ -867,8 +859,7 @@ theorem GlobalTheory.exists_injective_evalAt_closure : ∀ (ε : ℝ) (S : Set (
   by_contra hne
   apply hx (some ⟨Φ, hne⟩)
   show (p (Φ : PowerSeries ℂ)).sum u = 0
-  rw [hsum]
-  exact hΦ
+  rwa [hsum]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPuncturedDiscInjectiveEvalAtPoint =====
@@ -1286,8 +1277,7 @@ theorem isGenSec_of_fibres (hS : SecBaseChangeAnySt) [IsAffine T.left] {th : LB.
     · rw [smul_sub, sub_eq_zero, ← mul_smul, ← mul_smul] at hN
       exact hN.symm
     · rw [Scheme.mem_basicOpen_top] at hp hu ⊢
-      simp only [map_mul, map_pow]
-      exact (hp.pow _).mul (hu.mul (hp.pow _))
+      simpa only [map_mul, map_pow] using (hp.pow _).mul (hu.mul (hp.pow _))
   have hI : Ideal.span (I : Set Γ(T.left, ⊤)) = ⊤ :=
     (isAffineOpen_top T.left).self_le_iSup_basicOpen_iff.1 fun p _ => by
       obtain ⟨f, hf, hp⟩ := key p

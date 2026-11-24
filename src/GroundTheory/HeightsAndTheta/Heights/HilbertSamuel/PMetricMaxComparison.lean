@@ -44,11 +44,9 @@ theorem MetricMaxComparison.proof : MetricMaxComparison.Statement := by
     exact norm_pos_iff.mpr fun h0 => hi (congrFun h0 i)
   let c : K → ℂ := fun k => ((‖blk k z‖⁻¹ : ℝ) : ℂ)
   have hc0 : ∀ k, c k ≠ 0 := fun k => by
-    simp only [c, ne_eq, Complex.ofReal_eq_zero, inv_eq_zero]
-    exact (hn k).ne'
+    simpa only [c, ne_eq, Complex.ofReal_eq_zero, inv_eq_zero] using (hn k).ne'
   have hcn : ∀ k, ‖c k‖ = ‖blk k z‖⁻¹ := fun k => by
-    simp only [c, Complex.norm_real, Real.norm_eq_abs]
-    exact abs_of_pos (inv_pos.mpr (hn k))
+    simpa only [c, Complex.norm_real, Real.norm_eq_abs] using abs_of_pos (inv_pos.mpr (hn k))
   have hwS : (fun p : Σ k, ι k => c p.1 * z p) ∈ S := fun k => by
     have h1 : blk k (fun p : Σ k, ι k => c p.1 * z p) = c k • blk k z := rfl
     rw [h1, norm_smul, hcn, inv_mul_cancel₀ (hn k).ne']

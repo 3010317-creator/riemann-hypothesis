@@ -333,8 +333,7 @@ theorem map_inv_mat {E K : Type} [Field E] [Field K] (f : E →+* K) {n : ℕ} (
   have h1 : ((Matrix.GeneralLinearGroup.map f γE : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) = (γE : Matrix (Fin n) (Fin n) E).map f := rfl
   have h2 : ((Matrix.GeneralLinearGroup.map f γE⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) = ((γE⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).map f := rfl
   simp only [Matrix.coe_units_inv] at h h2
-  rw [h1] at h
-  rw [h2] at h
+  rw [h1, h2] at h
   exact h.symm
 
 theorem isAlgWeight_of_equiv {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {W W' : Type}
@@ -482,8 +481,8 @@ theorem gen_off_level : ∀ (D : D7) (cf : CharFrame D) (l : ℕ) (Q : Finset (P
   apply hu
   refine HChar.UnrAt.mul ((cf.isMu0 j).unr w fun k hk => hg' w hw k hk) (HChar.UnrAt.mul ?_ ?_)
   · split_ifs with hlp
-    · exact cf.isDel'.unr w fun hp => hvS ⟨Or.inr (Or.inr (by rw [if_pos hlp]; exact hoff w hw _ hp)), hvl⟩
-    · exact cf.isDel.unr w fun hp => hvS ⟨Or.inr (Or.inr (by rw [if_neg hlp]; exact hoff w hw _ hp)), hvl⟩
+    · exact cf.isDel'.unr w fun hp => hvS ⟨Or.inr (Or.inr (by rw [ite_eq_left hlp]; exact hoff w hw _ hp)), hvl⟩
+    · exact cf.isDel.unr w fun hp => hvS ⟨Or.inr (Or.inr (by rw [ite_eq_right hlp]; exact hoff w hw _ hp)), hvl⟩
   · rcases GlobalTheory.SplitPlaceOver.eq_or_isConjPl D s w hw with e | e
     · rw [← e, eq_plMap_of_conj D hc]
       exact (GlobalTheory.CMVal.InvConj.unrAt_inv_iff ψ hT v).1 (HChar.UnrAt.inv (hψ v hvQ))
@@ -559,13 +558,13 @@ theorem GlobalTheory.MtIn.levChi_integral : ∀ (X : Stages) (px : PreX X.B.toPr
     intro PP hPP c d
     haveI := hfin PP
     have e : (if Frm.A = Frm.B then (fun _ : ℕ => L.chi ((i : ℕ) + 1)) else fun (_ : ℕ) (PP : Pl X.toD7.host.E) => (L.chi ((i : ℕ) + 1) PP)⁻¹) =
-        fun (_ : ℕ) (PP : Pl X.toD7.host.E) => (L.chi ((i : ℕ) + 1) PP)⁻¹ := if_neg (by decide)
+        fun (_ : ℕ) (PP : Pl X.toD7.host.E) => (L.chi ((i : ℕ) + 1) PP)⁻¹ := ite_eq_right (by decide)
     rw [e]
     exact exists_int_of_finite X.toD7.what₂.embLL (L.chi ((i : ℕ) + 1) PP)⁻¹ d (hchi PP hPP d)
   have gxi : ∀ PP ∈ L.Q t, ∀ d : (kP PP)ˣ, Pr ((if Frm.A = Frm.B then (fun PP => (L.xiR t PP)⁻¹) else L.xiR t) PP d) := by
     intro PP hPP d
     haveI := hfin PP
-    have e : (if Frm.A = Frm.B then (fun PP => (L.xiR t PP)⁻¹) else L.xiR t) = L.xiR t := if_neg (by decide)
+    have e : (if Frm.A = Frm.B then (fun PP => (L.xiR t PP)⁻¹) else L.xiR t) = L.xiR t := ite_eq_right (by decide)
     rw [e]
     exact exists_int_of_finite X.toD7.what₂.embLL (L.xiR t PP) d (hxi PP hPP d)
   show Pr (Formalism.L2.DIV.levFn (L.βV i) (flag1L (L.datVt i t)) _)
@@ -706,30 +705,7 @@ theorem mem_glint_of_entries {K : Type} [inst : Field K] {n : ℕ} (O : Subring 
     (g : GL (Fin n) K)
     (h : ∀ (i j : Fin n), (↑g : Matrix (Fin n) (Fin n) K) i j ∈ O)
     (h' : ∀ (i j : Fin n), (↑g⁻¹ : Matrix (Fin n) (Fin n) K) i j ∈ O) :
-    g ∈ Formalism.UG.GLint (Fin n) O := by
-  let A : Matrix (Fin n) (Fin n) O := Matrix.of fun i j => ⟨_, h i j⟩
-  let B : Matrix (Fin n) (Fin n) O := Matrix.of fun i j => ⟨_, h' i j⟩
-  have hA : O.subtype.mapMatrix A = (↑g : Matrix (Fin n) (Fin n) K) := by
-    ext i j; rfl
-  have hB : O.subtype.mapMatrix B = (↑g⁻¹ : Matrix (Fin n) (Fin n) K) := by
-    ext i j; rfl
-  have hinj : Function.Injective
-      (O.subtype.mapMatrix : Matrix (Fin n) (Fin n) O → Matrix (Fin n) (Fin n) K) := by
-    intro X Y hXY
-    ext i j
-    exact congrFun (congrFun hXY i) j
-  have hAB : A * B = 1 := by
-    apply hinj
-    rw [map_mul, map_one, hA, hB]
-    exact Units.mul_inv g
-  have hBA : B * A = 1 := by
-    apply hinj
-    rw [map_mul, map_one, hA, hB]
-    exact Units.inv_mul g
-  refine ⟨⟨A, B, hAB, hBA⟩, ?_⟩
-  apply Units.ext
-  ext i j
-  rfl
+    g ∈ Formalism.UG.GLint (Fin n) O := GlobalTheory.TypeBlockFix.mem_GLint_of_entries O g h h'
 
 end GlobalTheory.MemGlintOfEntries
 end -- clump:auto
@@ -909,27 +885,27 @@ theorem sum_supEdge_castLE {R : Type} [AddCommMonoid R] {n r : ℕ} (hr : r ≤ 
   refine Fintype.sum_of_injective (Fin.castLE hr) (Fin.castLE_injective hr) _ _ ?_ ?_
   · intro a ha
     refine Finset.sum_eq_zero fun b _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨h1, h2⟩
     exact ha ⟨⟨a.val, by omega⟩, Fin.ext rfl⟩
   · intro i
     refine Fintype.sum_of_injective (Fin.castLE hr) (Fin.castLE_injective hr) _ _ ?_ ?_
     · intro b hb
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨h1, h2⟩
       exact hb ⟨⟨b.val, h2⟩, Fin.ext rfl⟩
     · intro j
       by_cases hh : supEdge i j
       · have h' : j.val = i.val + 1 := hh
-        rw [if_pos hh, if_pos (by simp only [Fin.val_castLE]; exact ⟨h'.symm, j.2⟩)]
+        rw [ite_eq_left hh, ite_eq_left (by simp only [Fin.val_castLE]; exact ⟨h'.symm, j.2⟩)]
       · have h' : ¬ j.val = i.val + 1 := hh
-        rw [if_neg hh, if_neg (by simp only [Fin.val_castLE]; exact fun e => h' e.1.symm)]
+        rw [ite_eq_right hh, ite_eq_right (by simp only [Fin.val_castLE]; exact fun e => h' e.1.symm)]
 
 theorem blkOf_eq_one_iff {n r t : ℕ} (a : Fin n) (ha : a.val < r + t) : blkOf r t a = 1 ↔ r ≤ a.val := by
   unfold blkOf
   by_cases h : a.val < r
-  · simp only [h, if_true]; omega
-  · simp only [h, if_false]
+  · simp only [h, ite_true]; omega
+  · simp only [h, ite_false]
     rw [Nat.div_eq_of_lt (by omega)]
     omega
 
@@ -1096,9 +1072,9 @@ namespace GlobalTheory.TypeLevelUni
 @[reducible] def unitsDiv : DivisibleBy (Additive ℂˣ) ℤ where
   div a n := if n = 0 then 0 else
     Additive.ofMul (Units.mk0 (Complex.exp (Complex.log ((Additive.toMul a : ℂˣ) : ℂ) / n)) (Complex.exp_ne_zero _))
-  div_zero a := if_pos rfl
+  div_zero a := ite_eq_left rfl
   div_cancel {n} a hn := by
-    rw [if_neg hn]
+    rw [ite_eq_right hn]
     apply Additive.toMul.injective
     rw [toMul_zsmul, toMul_ofMul]
     ext
@@ -1127,8 +1103,7 @@ theorem addChar_extend {K : Type} [Ring K] (S : Subring K) (ψ : AddChar S ℂ) 
   refine ⟨{ toFun := fun x => ((Additive.toMul (h x) : ℂˣ) : ℂ)
             map_zero_eq_one' := by simp
             map_add_eq_mul' := fun x y => by simp [map_add (f := _)] }, fun x => ?_⟩
-  have e := congrArg (fun φ => ((Additive.toMul (φ x) : ℂˣ) : ℂ)) hh
-  simpa [f, g, charUnit] using e
+  simpa [f, g, charUnit] using congrArg (fun φ => ((Additive.toMul (φ x) : ℂˣ) : ℂ)) hh
 
 theorem exists_localAddChar_lifting_residueChar : ∀ (D : D7) (s : ReciprocityTheory.Aut.SplitPlace D.host.E) (φ : s.v.adicCompletionIntegers (maximalRealSubfield D.host.E) →+* kP s.w), Function.Surjective φ → (∀ x, φ x = 0 ↔ Valued.v (x : s.v.adicCompletion (maximalRealSubfield D.host.E)) < 1) → ∀ ψ' : AddChar (kP s.w) ℂ, ψ' ≠ 1 → ∃ ψ₀ : AddChar (s.v.adicCompletion (maximalRealSubfield D.host.E)) ℂ, NG.IsPsi0 s ψ₀ ∧ ∀ x : s.v.adicCompletionIntegers (maximalRealSubfield D.host.E), ψ₀ (x : s.v.adicCompletion (maximalRealSubfield D.host.E)) = ψ' (φ x) := by
   intro D s φ hφs hφ0 ψ' hne
@@ -1144,8 +1119,7 @@ theorem exists_localAddChar_lifting_residueChar : ∀ (D : D7) (s : ReciprocityT
     show ψ' (φ ⟨x, hx1⟩) = 1
     rw [e2, AddChar.map_zero_eq_one]
   · obtain ⟨y, hy⟩ : ∃ y, ψ' y ≠ 1 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       apply hne
       ext y
       rw [hc y, AddChar.one_apply]
@@ -1184,8 +1158,7 @@ theorem levelUni_typePlace : ∀ (D : D7) (T : Type) (L : LevCh D T) (μ0 : T), 
       exact GlobalTheory.ChainOnto.TameRes.valuation_eq_one_of_not_mem s.w a ha
     have h2 : (L.xiH t).locK s.w k = 1 := hunr _ hunit
     have e : (L.C.mu0 i * L.xiH t).locK s.w k = (L.C.mu0 i).locK s.w k * (L.xiH t).locK s.w k := rfl
-    rw [e, h2, mul_one]
-    exact h1
+    rwa [e, h2, mul_one]
   obtain ⟨ξ, hξc, hξr⟩ := GlobalTheory.T.exists_splitPlaceComponent_heckeChar_residue D s φ hφs hφ0 hφa _ _ hres
   refine ⟨ψ₀, ξ, hP0, hξc, ⟨GlobalTheory.T.split_place_residue_map_unit_character D hr L.Pg (L.Q t) ψ (L.chi ((i : ℕ) + 1)) (L.xiR t) s φ hφ0 hφk hs hoffG hoffQ, ?_⟩⟩
   intro κ h hκ u hu
@@ -1594,13 +1567,7 @@ theorem side_read {V : HSp D} {n : ℕ} (hn : V.rank = n) {β : GL (Fin V.rank) 
 theorem rank_V (i : Fin D.R.m) : (Vc D i).rank = D.R.nV := D.sp.V_rank _ (Nat.le_add_left _ _) i.2
 
 theorem eq_resChar (w : D.what₂.places.Pl) {p : ℕ} (hp : p.Prime) (h : (p : 𝓞 D.what₂.LL) ∈ (D.plEq w).asIdeal) :
-    p = D.what₂.places.resChar w := by
-  by_contra hne
-  have hc := (Nat.coprime_primes hp (D.what₂.places.resChar_prime w)).2 hne
-  obtain ⟨a, b, hab⟩ := (Nat.isCoprime_iff_coprime.2 hc).map (Int.castRingHom (𝓞 D.what₂.LL))
-  refine (D.plEq w).isPrime.ne_top ((Ideal.eq_top_iff_one _).2 ?_)
-  rw [← hab]
-  exact add_mem (Ideal.mul_mem_left _ _ (by simpa using h)) (Ideal.mul_mem_left _ _ (by simpa using Formalism.BasicNotions.resChar_mem D w))
+    p = D.what₂.places.resChar w := (Formalism.MainNotions.Inhab.eq_resChar_of_mem D w p hp h).symm
 
 theorem tup_read {μ : D.what₂.Tup} {i : Fin D.R.m} {c : CoefA (Vc D i)} {T : Type} {L : LevCh D T} {μ0 : T} (hL : L.Is μ0)
     (hPg : ∀ PP, PP ∈ L.Pg ↔ ∃ k v, PP = D.naut.plGw k v) (hβ : L.βV i = 1) {t : T}
@@ -1636,8 +1603,7 @@ theorem tup_read {μ : D.what₂.Tup} {i : Fin D.R.m} {c : CoefA (Vc D i)} {T : 
       obtain ⟨x', hx', -⟩ := hk' s ϖ k h1 h2 h3 h4 x
       refine ⟨τ.e x', ?_⟩
       change r _ = NG.tN _ s ϖ k (r _)
-      rw [hrj, hrj]
-      exact hx'
+      rwa [hrj, hrj]
     · obtain ⟨x, rfl⟩ := τ.lat.1 y hy
       have hx : x ∈ τ.u.nab := by
         classical
@@ -1645,7 +1611,7 @@ theorem tup_read {μ : D.what₂.Tup} {i : Fin D.R.m} {c : CoefA (Vc D i)} {T : 
         rw [Finset.sum_eq_single_of_mem _ hy]
         · simp
         · intro v _ hv
-          simp only [if_neg hv]
+          simp only [ite_eq_right hv]
           simp
       obtain ⟨x', hx', hd⟩ := hk' s ϖ k h1 h2 h3 h4 x
       obtain ⟨d, hd, hdx⟩ := hd (D.plEq w) (fun p hp ha hm => h0 (eq_resChar w hp hm ▸ ha)) hx
@@ -1775,8 +1741,7 @@ theorem rat_castFr {V : HSp D} {n : ℕ} (hn : V.rank = n) (hg : V.gram = 1) {P 
   subst hn
   obtain ⟨hbij, e, he⟩ := GlobalTheory.MtInRat.toGf_bij_ratIso D V P hg hP
   constructor
-  · intro h
-    exact ⟨(e ⟨g, h⟩).1, (e ⟨g, h⟩).2, congrArg Subtype.val (he ⟨g, h⟩).1⟩
+  · exact fun h => ⟨(e ⟨g, h⟩).1, (e ⟨g, h⟩).2, congrArg Subtype.val (he ⟨g, h⟩).1⟩
   · rintro ⟨γ, hγ, h⟩
     obtain ⟨g', hg'⟩ := e.surjective ⟨γ, hγ⟩
     have h1 : toGf P g'.1 = toGf P g := (he g').1.symm.trans (by rw [hg']; exact Subtype.ext h)
@@ -1864,8 +1829,7 @@ theorem all_read (hX : X.B.fields.Ok) (hI : I.Ok) (hV : ValsIn I) (hg : GrpAt X 
     eG (lev0 I) (chr0 I) hlev (s _).pres (s _).act_tie (hs _).1 (c0 i) _ _ (hmap i) (hs _).2.1
     (GlobalTheory.MtIn.levChi_integral X px I _ L hI hL i _) e li span lat
   refine ⟨m, ?_⟩
-  rw [hL.C, hL.xiH, ixOf_eq I (t := Top.Bl.tAll I a) rfl] at h1
-  exact h1
+  rwa [hL.C, hL.xiH, ixOf_eq I (t := Top.Bl.tAll I a) rfl] at h1
 
 end Cols
 
@@ -1883,13 +1847,11 @@ theorem selHalf_of (p : ColPin w) : SelHalf w.I := by
   have hab : ∀ v, (w.I.sel v).under (𝓞 B.host.F) = v := fun v => by
     have h := p.above v
     unfold Formalism.L2.Host.aboveF at h
-    rw [Set.Finite.mem_toFinset] at h
-    exact h
+    rwa [Set.Finite.mem_toFinset] at h
   have hmem : ∀ v, ((q : 𝓞 B.host.E) ∈ (w.I.sel v).asIdeal) → (q : 𝓞 B.host.F) ∈ v.asIdeal := fun v h => by
     rw [← hab v]
     show (q : 𝓞 B.host.F) ∈ (w.I.sel v).asIdeal.comap (algebraMap _ _)
-    rw [Ideal.mem_comap, map_natCast]
-    exact h
+    rwa [Ideal.mem_comap, map_natCast]
   have := p.half v v' q hq (hmem v hqP) (hmem v' hqP')
   exact congrArg HeightOneSpectrum.asIdeal this
 
@@ -1925,8 +1887,7 @@ theorem real_state (pin : ColPin w) {Fm : ∀ i, principalLevelFrame.RowPsi (Vc 
     have e1 : x.m.z.R.C = cfOf x := x.m.z.lev.C
     have e2 : x.m.z.R.xiH t = w.I.xi (x.r.Y.tup t) :=
       (x.m.z.lev.xiH t).trans (congrArg w.I.xi ((congrFun x.r.tup t).trans (x.m.tup t)).symm)
-    rw [e1, e2] at h1
-    exact h1
+    rwa [e1, e2] at h1
   · obtain ⟨L, hL⟩ := GlobalTheory.MtIn.LevAll.exists_levOf_all (w.st x.o.Z) w.px w.I w.ok (selHalf_of pin) _ _ x.m.z.lev Set.univ
     have hm : P.q.p.mL μ ((i : ℕ) + 1) = lMat (D := Dof x) (famR (w.st x.o.Z) w.I P.hX Set.univ P.z.Xg P.z.tr).A (lev0 w.I) (chr0 w.I) i
         (tAll w.I μ) := by
@@ -1953,8 +1914,7 @@ theorem inMt_state (pin : ColPin w) :
 theorem sMt : SMt := by
   unfold SMt
   apply StepW.of_all
-  intro K B f T w hK hF hs P x
-  exact hs.1.elim fun pin => (inMt_state x pin).elim fun m _ => ⟨m⟩
+  exact fun K B f T w hK hF hs P x => hs.1.elim fun pin => (inMt_state x pin).elim fun m _ => ⟨m⟩
 
 end State
 

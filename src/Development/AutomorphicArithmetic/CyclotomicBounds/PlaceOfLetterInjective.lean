@@ -76,15 +76,10 @@ theorem placeOf_cc_mul (g : φ.GG) : Frame.placeOf (φ.cc * g) = Frame.placeOf g
     simp [c0]
   unfold Frame.placeOf
   rcases Int.units_eq_one_or g.1.2 with h | h
-  · rw [if_neg (by rw [hc, h]; decide), if_pos h, ← mul_assoc, cc_mul_cc, one_mul]
-  · rw [if_pos (by rw [hc, h]; decide), if_neg (by rw [h]; decide)]
+  · rw [ite_eq_right (by rw [hc, h]; decide), ite_eq_left h, ← mul_assoc, cc_mul_cc, one_mul]
+  · rw [ite_eq_left (by rw [hc, h]; decide), ite_eq_right (by rw [h]; decide)]
 
-theorem placeOf_snd (g : φ.GG) : (Frame.placeOf g).2 = g.2 := by
-  unfold Frame.placeOf
-  split_ifs
-  · rfl
-  · show (((c0, (1 : φ.MA)) : G0 × φ.MA) * g).2 = g.2
-    simp
+theorem placeOf_snd (g : φ.GG) : (Frame.placeOf g).2 = g.2 := Formalism.HC.Frame.placeOf_snd φ g
 
 theorem placeOf_eq_iff (x y : φ.GG) : Frame.placeOf x = Frame.placeOf y ↔ x = y ∨ x = φ.cc * y := by
   constructor

@@ -109,12 +109,10 @@ theorem weil_formula_FJ : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
         GlobalTheory.RootEx.VolN.co (ρ + 1) '' K := by
       ext e
       constructor
-      · intro he
-        exact ⟨_, he, GlobalTheory.RootEx.VolN.co_mkNel _ e⟩
+      · exact fun he => ⟨_, he, GlobalTheory.RootEx.VolN.co_mkNel _ e⟩
       · rintro ⟨g, hg, rfl⟩
         show GlobalTheory.RootEx.Model.mkNel _ (GlobalTheory.RootEx.VolN.co _ g) ∈ K
-        rw [GlobalTheory.RootEx.VolN.mkNel_co]
-        exact hg
+        rwa [GlobalTheory.RootEx.VolN.mkNel_co]
     rw [hpre]
     exact (hK.image (GlobalTheory.RootEx.VolN.continuous_co _)).measure_lt_top
 

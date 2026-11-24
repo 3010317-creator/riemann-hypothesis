@@ -153,8 +153,7 @@ theorem labIn_selfDual_iff : ∀ (n : ℕ) (d : List ℤ), (d.length = n ∧ d.P
         rw [hZ]
         congr 1
         omega
-      rw [label_list_eq_signed, hcast, List.length_map, hneg, ← hZ']
-      exact hsplit
+      rwa [label_list_eq_signed, hcast, List.length_map, hneg, ← hZ']
   · rintro ⟨s, hs, hsort, hpos, rfl⟩
     rw [label_list_eq_signed]
     refine ⟨?_, ?_, ?_⟩
@@ -181,8 +180,7 @@ theorem labIn_selfDual_iff : ∀ (n : ℕ) (d : List ℤ), (d.length = n ∧ d.P
         · obtain ⟨x, _, rfl⟩ := List.mem_map.mp ha
           have : (0 : ℤ) ≤ x := by exact_mod_cast Nat.zero_le x
           omega
-        · rw [List.eq_of_mem_replicate ha]
-          exact hb0
+        · rwa [List.eq_of_mem_replicate ha]
     · simp [dualLab, List.map_append, List.reverse_append, List.map_reverse, List.map_map,
         Function.comp_def, List.map_replicate, List.reverse_replicate]
 

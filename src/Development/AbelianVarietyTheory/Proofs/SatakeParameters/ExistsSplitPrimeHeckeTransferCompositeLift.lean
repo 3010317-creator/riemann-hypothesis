@@ -105,8 +105,8 @@ theorem step_poly (q n t : ℕ) (ν s : ℂ) (a : ℕ → ℂ) :
     heckePolyOf (n + t) q (fun l => ∑ i ∈ Finset.range (n + 1), stepMat q n t ν s l i * a i) =
       (heckePolyOf n q a).comp (C s * X) * blockPoly (ν * (q : ℂ) ^ n) q t := by
   have h := GlobalTheory.KerRangeCount.card_ker_and_heckePolyOf_conv.2 ℂ q n t (fun j => if j ≤ n then a j else 0) ν s
-    (fun j hj => if_neg (by omega))
-  rw [heckePolyOf_congr (b := a) (fun k hk => if_pos hk)] at h
+    (fun j hj => ite_eq_right (by omega))
+  rw [heckePolyOf_congr (b := a) (fun k hk => ite_eq_left hk)] at h
   rw [← h]
   refine heckePolyOf_congr fun l _ => ?_
   have e1 : ∀ (f : ℕ → ℂ) (u v : ℕ), ∑ i ∈ Finset.range (u + 1), (if i ≤ v then f i else 0) =
@@ -117,8 +117,7 @@ theorem step_poly (q n t : ℕ) (ν s : ℂ) (a : ℕ → ℂ) :
     ext i
     simp only [Finset.mem_filter, Finset.mem_range]
     omega
-  simp only [stepMat, ite_mul, zero_mul, mul_ite, mul_zero]
-  exact e1 _ _ _
+  simpa only [stepMat, ite_mul, zero_mul, mul_ite, mul_zero] using e1 _ _ _
 
 theorem blockPoly_comp (ν s : ℂ) (q t : ℕ) : (blockPoly ν q t).comp (C s * X) = blockPoly (ν * s) q t := by
   unfold blockPoly
@@ -157,7 +156,7 @@ theorem chain_poly (q t m : ℕ) (n : ℕ → ℕ) (hn : ∀ j, n (j + 1) = n j 
     simp only [Finset.Ico_self, Finset.prod_empty, C_1, one_mul, comp_X, mul_one]
     refine heckePolyOf_congr fun k hk => ?_
     simp only [h0, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_range]
-    exact if_pos (by omega)
+    exact ite_eq_left (by omega)
   | succ d ih =>
     intro j hj a
     have hjm : j < m := by omega
@@ -165,8 +164,7 @@ theorem chain_poly (q t m : ℕ) (n : ℕ → ℕ) (hn : ∀ j, n (j + 1) = n j 
         ∑ l ∈ Finset.range (n (j + 1) + 1), W (j + 1) k l *
           ∑ i ∈ Finset.range (n j + 1), stepMat q (n j) t (ν j) (s j) l i * a i := by
       intro k
-      simp only [h1 j hjm, Finset.sum_mul, Finset.mul_sum, mul_assoc]
-      exact Finset.sum_comm
+      simpa only [h1 j hjm, Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
     simp only [e]
     rw [ih (j + 1) (by omega), hn j, step_poly, mul_comp, blockPoly_comp, comp_assoc,
       Finset.prod_eq_prod_Ico_succ_bot hjm, Finset.prod_eq_prod_Ico_succ_bot hjm, mul_assoc]
@@ -183,10 +181,10 @@ theorem prod_alt (h σ : ℂ) (hh : h ≠ 0) (m : ℕ) (hm : Even m) (d : ℕ) :
     intro j hj
     rw [Finset.prod_eq_prod_Ico_succ_bot (by omega : j < m), ih (j + 1) (by omega)]
     rcases Nat.even_or_odd j with h1 | h1
-    · rw [if_pos h1.add_one, if_pos h1.add_one, if_neg (Nat.not_odd_iff_even.2 h1)]
+    · rw [ite_eq_left h1.add_one, ite_eq_left h1.add_one, ite_eq_right (Nat.not_odd_iff_even.2 h1)]
       field_simp
       ring
-    · rw [if_neg (Nat.not_odd_iff_even.2 h1.add_one), if_neg (Nat.not_odd_iff_even.2 h1.add_one), if_pos h1]
+    · rw [ite_eq_right (Nat.not_odd_iff_even.2 h1.add_one), ite_eq_right (Nat.not_odd_iff_even.2 h1.add_one), ite_eq_left h1]
       ring
 
 variable {D : D7}
@@ -349,7 +347,7 @@ theorem constants (q r t m : ℕ) (hq : q ≠ 0) (hr : Odd r) (ht : Odd t) (hm :
     split_ifs <;> field_simp <;> ring
   simp only [e]
   refine ⟨?_, fun i hi => ?_⟩
-  · rw [prod_alt h _ hh m hm m 0 (zero_add m), if_neg (by simp), one_mul, h2, ← pow_mul, ← pow_mul]
+  · rw [prod_alt h _ hh m hm m 0 (zero_add m), ite_eq_right (by simp), one_mul, h2, ← pow_mul, ← pow_mul]
     congr 1
     obtain ⟨c, rfl⟩ := hm
     rw [show (c + c) / 2 = c by omega]
@@ -413,13 +411,11 @@ theorem exists_transfer : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
       have h4 := funext (w1 (D.R.m - 1) (by omega) k)
       simp only [hmm] at h4
       rw [funext (w0 k), ← hX] at h4
-      simp only [h4]
-      exact h3
+      simpa only [h4] using h3
     · have h3 := step_match (ν := ν j) (s := s j) (hC.chain.ωY t j hj) hP (unrPl_step (u2 (j + 1) (by omega) hj.le) u1)
         (unrPl_step (v2 (j + 1) (by omega) hj.le) v1) he h1 h2 hx (hY _ (by omega)) (hY _ hj.le)
         (hn j) hq rfl rfl (W (j + 1) k)
-      simp only [funext (w1 j (by omega) k)]
-      exact h3
+      simpa only [funext (w1 j (by omega) k)] using h3
   · have hq0 : A.q P ≠ 0 := by
       rw [hq]
       exact fun h => (R.pl P).ne_bot (Ideal.absNorm_eq_zero_iff.1 h)

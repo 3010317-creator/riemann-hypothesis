@@ -187,8 +187,7 @@ theorem qm_injective : Function.Injective (qm I) := by
     Function.eval, LinearMap.coe_restrictScalars, Matrix.toLin'_apply] at h0
   have hu : IsUnit (I.P v).det := (Matrix.isUnit_iff_isUnit_det _).1 (I.P_unit v)
   have h2 := congrArg (fun w => I.P v *ᵥ w) h0
-  simp only [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hu, Matrix.one_mulVec] at h2
-  exact h2
+  simpa only [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hu, Matrix.one_mulVec] using h2
 
 theorem sw_injective : Function.Injective (sw I) := by
   intro x y h
@@ -225,8 +224,7 @@ theorem det_gm_one_ne : (gm I (rho I) 1 (eB I)).det ≠ 0 := by
       simp only [Matrix.transpose_apply, gm, Matrix.of_apply, Function.comp_apply, LinearMap.coe_comp,
         LinearEquiv.coe_coe]
       rw [eB, vec_one_bQ]
-    rw [heq]
-    exact h
+    rwa [heq]
   exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 hli)).ne_zero
 
 end GlobalTheory.RealCoordCusp

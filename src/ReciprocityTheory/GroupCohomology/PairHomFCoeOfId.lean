@@ -78,9 +78,7 @@ theorem limRep_holds : LimRepStatement.{u} := by
     show (0 : (A m).V) = (π m).u 0
     rw [map_zero]
   · have hy' : ∀ g m, (τ m).u ((y (m + 1)).1 g) = (y m).1 g := fun g m => by
-      have hg := congrArg (fun z => z.1 g) (hy m)
-      simp only [cτ] at hg
-      exact hg
+      simpa only [cτ] using congrArg (fun z => z.1 g) (hy m)
     choose x hx using fun g => hlift (fun m => (y m).1 g) (hy' g)
     have hxc : Continuous x := by
       rw [hemb.continuous_iff]

@@ -42,8 +42,7 @@ theorem stdB_core {E : Type} [Field E] [NumberField E] {V : Type} [AddCommGroup 
       show M' *ᵥ x = b'.repr x
       have h3 := Module.Basis.toMatrix_mulVec_repr (Pi.basisFun E (Fin n)) b' x
       have h4 : ((Pi.basisFun E (Fin n)).repr x : Fin n → E) = x := funext fun i => Pi.basisFun_repr E (Fin n) x i
-      rw [h4] at h3
-      exact h3
+      rwa [h4] at h3
     rw [e2]
     rfl
 
@@ -70,10 +69,8 @@ theorem exists_stdB (D : D7) (h : Formalism.L2.Herm.IsStd (D.sp.X 0)) : ∃ B : 
       simp)
     (D.sp.X 0).L0 (by rw [hL, Module.Basis.range_reindex])
   refine ⟨(reGL (rank_eq_first_level D.R) D.host.E).symm B, ?_, ?_⟩
-  · rw [MulEquiv.apply_symm_apply]
-    exact h1
-  · rw [MulEquiv.apply_symm_apply]
-    exact h2
+  · rwa [MulEquiv.apply_symm_apply]
+  · rwa [MulEquiv.apply_symm_apply]
 
 theorem exists_stdB_of_tied (D : D7) (h : Formalism.L2.Herm.StdTied D) : ∃ B : GL (Fin D.R.k) D.host.E, Cmp.StdB D B :=
   exists_stdB D (h.1 0 (Nat.zero_le _))

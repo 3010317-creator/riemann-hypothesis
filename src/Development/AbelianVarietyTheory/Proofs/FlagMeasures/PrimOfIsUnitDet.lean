@@ -97,15 +97,13 @@ theorem ip_smul_right (a : A) (x y : Fin n → A) : ip c x (a • y) = c a * ip 
 theorem ip_sum_left {ι : Type} (s : Finset ι) (x : ι → Fin n → A) (y : Fin n → A) :
     ip c (∑ a ∈ s, x a) y = ∑ a ∈ s, ip c (x a) y := by
   unfold ip
-  simp only [Finset.sum_apply, Finset.sum_mul]
-  exact Finset.sum_comm
+  simpa only [Finset.sum_apply, Finset.sum_mul] using Finset.sum_comm
 
 theorem ip_sum_right {ι : Type} (s : Finset ι) (x : Fin n → A) (y : ι → Fin n → A) :
     ip c x (∑ a ∈ s, y a) = ∑ a ∈ s, ip c x (y a) := by
   unfold ip
 
-  simp only [Finset.sum_apply, map_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [Finset.sum_apply, map_sum, Finset.mul_sum] using Finset.sum_comm
 
 theorem cj_ip (hc : ∀ u, c (c u) = u) (x y : Fin n → A) : c (ip c x y) = ip c y x := by
   unfold ip

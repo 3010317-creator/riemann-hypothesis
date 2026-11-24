@@ -400,7 +400,7 @@ theorem isInteger_of_maximalIdeal_smul_isInteger (S : Type) [CommRing S] [IsRegu
       rw [hy', Algebra.smul_def, mul_comm]
     exact (IsIntegrallyClosed.isIntegral_iff).1 hint
   · exfalso
-    push_neg at hA
+    push Not at hA
     obtain ⟨a, ha, hy⟩ := hA
     obtain ⟨y, hy'⟩ := hc a ha
     have hyu : y ∉ maximalIdeal S := fun h => hy y h hy'
@@ -583,8 +583,7 @@ theorem modDepthGE_two_of_isSMulRegular_of_quotSMulTop :
       ReciprocityTheory.CA.ModDepthGE S M 2 := by
   intro S _ _ _ M _ _ _ _ x hxm hreg hsoc
   obtain ⟨y, hym, hyreg⟩ : ∃ y ∈ maximalIdeal S, IsSMulRegular (QuotSMulTop x M) y := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have hfin := associatedPrimes.finite S (QuotSMulTop x M)
     have hsub : (maximalIdeal S : Set S) ⊆
         ⋃ p ∈ associatedPrimes S (QuotSMulTop x M), (p : Set S) := by
@@ -944,8 +943,7 @@ theorem exists_smul_mem_range_of_surjective_localization_map
       rw [Algebra.TensorProduct.map_tmul]
       simp only [g, LinearMap.lTensor_tmul]
       have : π (ψ y) = 0 := by
-        simp only [π, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-        exact ⟨y, rfl⟩
+        simpa only [π, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] using ⟨y, rfl⟩
       rw [this, TensorProduct.tmul_zero]
     | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy, add_zero]
   have h0 : (TensorProduct.mk R L (B ⧸ N) 1) (π b) = 0 := by
@@ -993,8 +991,7 @@ theorem localization_map_injective_coker_killed (R A B : Type) [CommRing R] [IsD
       simp
     have : Function.Injective (LinearMap.lTensor L ψ.toLinearMap) :=
       Module.Flat.lTensor_preserves_injective_linearMap _ hψ
-    rw [← heq] at this
-    exact this
+    rwa [← heq] at this
   · intro h0
     apply hs
     have hinj : Function.Injective (algebraMap R L) :=

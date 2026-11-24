@@ -57,11 +57,7 @@ def Bnd (r : WithZero (Multiplicative ℤ)) (X : Matrix (Fin N) (Fin N) (P.adicC
   ∀ i j, Valued.v (X i j) ≤ r
 
 theorem v_natCast_le_one (m : ℕ) : Valued.v ((m : P.adicCompletion E)) ≤ 1 := by
-  induction m with
-  | zero => simp
-  | succ k ih =>
-    rw [Nat.cast_succ]
-    exact (Valuation.map_add _ _ _).trans (max_le ih (by simp))
+  exact GlobalTheory.AdLat.valued_natCast_le_one P m
 
 variable {r s : WithZero (Multiplicative ℤ)} {X Y : Matrix (Fin N) (Fin N) (P.adicCompletion E)}
 

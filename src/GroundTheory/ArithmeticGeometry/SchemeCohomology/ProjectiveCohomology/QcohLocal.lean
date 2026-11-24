@@ -134,8 +134,7 @@ theorem qcoh_exists_pow_smul_eq_zero (F : X.Modules) [F.IsQuasicoherent] {V : X.
   have he' : (show Γ(F, hV.fromSpec ''ᵁ ⊤) from (f ^ e) • x) = 0 := he
   rw [smul_restrict_fromSpec] at he'
   have h2 := congrArg (resF F (fromSpec_image_top hV).ge) he'
-  rw [resF_smul, resF_resF, resF_self, resO_resO, resO_self, map_zero] at h2
-  exact h2
+  rwa [resF_smul, resF_resF, resF_self, resO_resO, resO_self, map_zero] at h2
 
 lemma isIso_hom_of_modulesIso {M N : X.Modules} (e : M ≅ N) :
     @IsIso (SheafOfModules X.ringCatSheaf) _ M N e.hom :=
@@ -186,8 +185,7 @@ lemma isLocalizing_restrict_of {V : X.Opens} (hV : IsAffineOpen V)
     rw [resF_smul, resF_resF, resF_self, map_zero] at h2
     have key : (show Γ(F, hV.fromSpec ''ᵁ ⊤) from
         (f ^ e) • (show Γ(F.restrict hV.fromSpec, ⊤) from x)) = 0 := by
-      rw [smul_restrict_fromSpec]
-      exact h2
+      rwa [smul_restrict_fromSpec]
     exact key
 
 noncomputable def presentationOverOfRestrict (U : X.Opens) (P : (F.restrict U.ι).Presentation) :
@@ -355,13 +353,11 @@ theorem isCoherent_of_affineCover (F : X.Modules) [F.IsQuasicoherent] {ι : Type
     obtain ⟨i, hi⟩ := Opens.mem_iSup.mp hx
     obtain ⟨f, g, hfg, hxf⟩ := exists_basicOpen_le_affine_inter hU (hV i) x.1 ⟨x.2, hi⟩
     have := hfin i
-    have hg := finite_basicOpen F (hV i) g
-    exact ⟨f, hxf, hfg ▸ hg⟩
+    exact ⟨f, hxf, hfg ▸ (finite_basicOpen F (hV i) g)⟩
   choose f hxf hfinf using key
   have hspan : Ideal.span (Set.range f) = ⊤ := by
     rw [← hU.self_le_iSup_basicOpen_iff]
-    intro x hx
-    exact Opens.mem_iSup.mpr ⟨⟨f ⟨x, hx⟩, ⟨x, hx⟩, rfl⟩, hxf ⟨x, hx⟩⟩
+    exact fun x hx => Opens.mem_iSup.mpr ⟨⟨f ⟨x, hx⟩, ⟨x, hx⟩, rfl⟩, hxf ⟨x, hx⟩⟩
   obtain ⟨s, hs, h1⟩ := Submodule.mem_span_finite_of_mem_span
     (hspan ▸ Submodule.mem_top : (1 : Γ(X, U)) ∈ Ideal.span (Set.range f))
   refine finite_of_finite_basicOpen F hU s ((Ideal.eq_top_iff_one _).mpr h1) fun g hg => ?_

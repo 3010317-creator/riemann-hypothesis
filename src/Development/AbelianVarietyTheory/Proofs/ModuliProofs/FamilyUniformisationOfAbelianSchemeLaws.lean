@@ -729,8 +729,7 @@ theorem Uniformises.comp_equiv {Xo : Moduli D l} {σ : KA l →+* ℂ} {g : ℕ}
       k.toContinuousLinearEquiv.differentiable.differentiableOn
     have := isHolTo_comp h5 isOpen_univ hd (Set.mapsTo_univ _ _)
     exact this
-  · simp only [isDerivAt0_comp_equiv (fun z => (e z).left) k]
-    exact h6 _
+  · simpa only [isDerivAt0_comp_equiv (fun z => (e z).left) k] using h6 _
   · simp only [isDerivAt0_comp_equiv (fun z => (e z).left) k]
     obtain ⟨w, hw, hu⟩ := h7 v (by simpa only [map_zero] using hv)
     refine ⟨k.symm w, by simpa only [LinearEquiv.apply_symm_apply] using hw, fun w' hw' => ?_⟩
@@ -741,12 +740,9 @@ theorem Uniformises.comp_equiv {Xo : Moduli D l} {σ : KA l →+* ℂ} {g : ℕ}
       exact ⟨a, k.injective (by rw [← hk, ha])⟩
     · rintro ⟨a, rfl⟩
       exact ⟨a, hk a⟩
-  · simp only [map_smul, ← hk]
-    exact h10 n a a₂ c hn hc
-  · simp only [map_smul, ← hk]
-    exact h11 a ha
-  · simp only [map_smul, ← hk]
-    exact h12 a
+  · simpa only [map_smul, ← hk] using h10 n a a₂ c hn hc
+  · simpa only [map_smul, ← hk] using h11 a ha
+  · simpa only [map_smul, ← hk] using h12 a
 
 end Pointwise
 

@@ -161,8 +161,7 @@ theorem halfPeriod_value : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) 
       (by unfold Formalism.MainNotions.StandardLatticesGL3.cj Formalism.MainNotions.TaylorLogMetric.liftM; rw [dite_eq_left hg3]; rfl)
   have ht0 : Formalism.MainNotions.GL3Theta.IsTwoTorsionPointUnkilled D (lamOf D cc δ) (t M.val) := by
     have := ht M.val
-    rw [hself] at this
-    exact this
+    rwa [hself] at this
   have he : wpF (lamOf D cc δ) (t M.val) ∈ M := by
     obtain ⟨y, hy⟩ := GlobalTheory.GaloisDescent.complex_mem_range_of_forall_algEquiv (K := M)
       (wpF (lamOf D cc δ) (t M.val)) (fun σ => by
@@ -207,8 +206,7 @@ theorem halfPeriod_value : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) 
     GlobalTheory.ThetaConj.lamConj_congr (hcj _ hg2) (hcj _ hg3)
   have ht' : Formalism.MainNotions.GL3Theta.IsTwoTorsionPointUnkilled D (lamConj ⊤ (GlobalTheory.ThetaConj.topHom σ.toRingHom) (lamOf D cc δ)) (t ρ) := by
     have := ht ρ
-    rw [hL] at this
-    exact this
+    rwa [hL] at this
   obtain ⟨hn, hw⟩ := key_top h (GlobalTheory.ThetaConj.topHom σ.toRingHom) ht0 ht'
   refine ⟨?_, hspec.1, hL ▸ hn, ?_⟩
   · unfold Formalism.MainNotions.TaylorLogMetric.discr

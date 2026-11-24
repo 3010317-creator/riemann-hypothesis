@@ -30,8 +30,7 @@ theorem GeneratedNefGeneric.isProjVarF_map {K : Type} [Fintype K] {ι : K → Ty
   have hchar : ∀ m : ℤ, (C m : MvPolynomial (Σ k, ι k) ℤ) ∈ W → m = 0 := by
     intro m hm
     have h1 : m ∈ W.comap (C : ℤ →+* MRing ι) := hm
-    rw [show W.comap (C : ℤ →+* MRing ι) = ⊥ from hhor, Ideal.mem_bot] at h1
-    exact h1
+    rwa [show W.comap (C : ℤ →+* MRing ι) = ⊥ from hhor, Ideal.mem_bot] at h1
   obtain ⟨hqp, hcomap, hform⟩ := ReciprocityTheory.AnForm.R.extQ_spec W hchar
   have hq : ReciprocityTheory.AnForm.R.extQ W = W.map (MvPolynomial.map (Int.castRingHom ℚ)) := rfl
   rw [← hq]
@@ -45,8 +44,7 @@ theorem GeneratedNefGeneric.isProjVarF_map {K : Type} [Fintype K] {ι : K → Ty
   · intro k
     obtain ⟨i, hi⟩ := hrel k
     refine ⟨i, fun hX => hi ?_⟩
-    rw [← hcomap, Ideal.mem_comap, map_X]
-    exact hX
+    rwa [← hcomap, Ideal.mem_comap, map_X]
   · refine GeneratedNefGeneric.eq_natCast_of_add_one_eq (d + Fintype.card K) _ ?_
     rw [hform, hdim, show d + 1 + Fintype.card K = (d + Fintype.card K) + 1 by omega]
     push_cast

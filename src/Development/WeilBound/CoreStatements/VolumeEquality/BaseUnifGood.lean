@@ -293,8 +293,7 @@ theorem lat_of_herm [Module.Free ℤ Λ] [Module.Finite ℤ Λ] (hr : Module.fin
       rw [← h1]; simp [hermForm]
     simpa using h2
   · have hd : DiscreteTopology (Submodule.span ℤ (Set.range c)) := inferInstance
-    rw [← hrange] at hd
-    exact hd
+    rwa [← hrange] at hd
   · rw [eq_top_iff, ← hspan]
     refine Submodule.span_mono ?_
     rintro _ ⟨i, rfl⟩
@@ -482,8 +481,7 @@ theorem act_diff (R : (Fin n → ℂ) → RiemLat E g Λ) (U : Set (Fin n → �
   refine DifferentiableOn.congr ?_ key
   refine DifferentiableOn.fun_sum fun j _ => ?_
   have hc : DifferentiableOn ℂ (fun t => ((M t)⁻¹ *ᵥ u) j) U := by
-    simp only [mulVec, dotProduct]
-    exact DifferentiableOn.fun_sum fun k _ => (hinv j k).mul_const _
+    simpa only [mulVec, dotProduct] using DifferentiableOn.fun_sum fun k _ => (hinv j k).mul_const _
   exact hc.smul (hP _)
 
 theorem proj_diff (R : (Fin n → ℂ) → RiemLat E g Λ) (U : Set (Fin n → ℂ)) (x : Fin g → Λ)
@@ -576,8 +574,7 @@ theorem period_of_riem : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     simp only [hPf, mulVec, dotProduct]
     exact DifferentiableOn.fun_sum fun b _ => (hhd a b).mul
       (differentiableOn_pi.1 ((hPd1 y).mono Set.inter_subset_left) b)
-  · intro t ht
-    exact ⟨(Matrix.isUnit_nonsing_inv_det_iff).2 (hU t ht), fun y => rfl⟩
+  · exact fun t ht => ⟨(Matrix.isUnit_nonsing_inv_det_iff).2 (hU t ht), fun y => rfl⟩
 
 end GlobalTheory.CompanionTheory.Ar.Cusp
 end -- clump:auto
@@ -659,7 +656,7 @@ theorem hasRk_iff (κ : c.F →+* ℂ) (ρ : c.F) (hρ : (ρ : ℂ) = H.rt0) (h�
     have e := hv ρ hρ
     have e' := hv' ρ hρ
     simp only [Sum.elim_inl, Sum.elim_inr, hκ] at e e'
-    rw [hs, hs', h s, h s', if_pos e, if_neg (by rw [e']; exact hne)]
+    rw [hs, hs', h s, h s', ite_eq_left e, ite_eq_right (by rw [e']; exact hne)]
     exact ⟨rfl, rfl⟩
   · intro h s
     obtain ⟨lab, hl⟩ := (label_bij (c := c) κ).2 (s.comp (algebraMap (𝓞 E) E))
@@ -669,10 +666,8 @@ theorem hasRk_iff (κ : c.F →+* ℂ) (ρ : c.F) (hρ : (ρ : ℂ) = H.rt0) (h�
     have e2 : s (H.rt : E) = s' (H.rt : E) := RingHom.congr_fun (hl'.symm.trans hs') H.rt
     rw [← hl', e2, e]
     rcases lab with τ | τ
-    · simp only [Sum.elim_inl, hκ, if_true]
-      exact (h τ).1
-    · simp only [Sum.elim_inr, hκ, if_neg hne]
-      exact (h τ).2
+    · simpa only [Sum.elim_inl, hκ, ite_true] using (h τ).1
+    · simpa only [Sum.elim_inr, hκ, ite_eq_right hne] using (h τ).2
 
 theorem hasSig_iff (κ : c.F →+* ℂ) (ρ : c.F) (hρ : (ρ : ℂ) = H.rt0) (hκ : κ ρ = H.rt0) (p q : ℕ)
     (sm : CMType H → CMType H ⊕ CMType H) (j j' : ℕ)
@@ -791,8 +786,7 @@ theorem kUnif_good (hV : VecOfPeriods) (Y : Model Xo c (algebraMap (𝓞 c.F) c.
   classical
   let ι : Type := {i : Fin FU.n // ∃ P, IsPeriod (FU.Di i) ty P}
   have htyi : ∀ i, IsTypeFn H (FU.Di i).p (FU.Di i).q ty := fun i => by
-    rw [(FU.sig i).1, (FU.sig i).2]
-    exact hty
+    rwa [(FU.sig i).1, (FU.sig i).2]
   have hsig : ∀ {Λ : Type} [AddCommGroup Λ] [Module (𝓞 E) Λ] (R : RiemLat E g Λ),
       R.HasSig (fun τ => κ.comp (labelEmb c (sm τ))) j j' ↔ HasRk H D.p D.q R :=
     fun R => hasSig_iff κ ρ hρ hκ D.p D.q sm j j' hs R

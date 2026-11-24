@@ -153,8 +153,7 @@ theorem galois_sec_isLocallyConstant : ∀ (R : Type) [CommRing R] (F : Shv R), 
   filter_upwards [hopen.mem_nhds (by simp [one_mem])] with τ hτ
   have hs : Set.EqOn (τ : Ω →+* Ω) (τ₀ : Ω →+* Ω) (s : Set Ω) := fun b hb => by
     have h1 := (IntermediateField.mem_fixingSubgroup_iff _ _).1 hτ b (IntermediateField.subset_adjoin K _ hb)
-    have h2 := congrArg τ₀ h1
-    simpa [AlgEquiv.mul_apply] using h2
+    simpa [AlgEquiv.mul_apply] using congrArg τ₀ h1
   have hc : (τ : Ω →+* Ω).comp (sr Ω s).subtype = (τ₀ : Ω →+* Ω).comp (sr Ω s).subtype := by
     ext a
     exact RingHom.eqOn_set_closure hs a.2

@@ -69,8 +69,7 @@ theorem famExt_basis (e : Fin 2 → HermLine ι) (t : Fin n → Fin 2) :
       push Not at h
       exact hs (funext h)
     rw [Finset.prod_eq_zero (Finset.mem_univ j) (by simp [hj]), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ t) h
+  · exact fun h => absurd (Finset.mem_univ t) h
 
 theorem famExt_symm (hI : IsIntersectionFamily I) (hP : IsArithVar P n) (e : Fin 2 → HermLine ι)
     (he : ∀ i, IsSmoothHerm (e i)) : IsSymmForm (famExt I P n e) := by
@@ -97,8 +96,7 @@ theorem fam_snoc_zpow_nat (hI : IsIntersectionFamily I) (hP : IsArithVar P (n + 
     I P (n + 1) (Fin.snoc L (hermZpow X k)) = k * I P (n + 1) (Fin.snoc L X) := by
   induction k with
   | zero =>
-    simp only [Nat.cast_zero, zero_mul]
-    exact fam_snoc_zpow_zero hI hP L hL hX
+    simpa only [Nat.cast_zero, zero_mul] using fam_snoc_zpow_zero hI hP L hL hX
   | succ k ih =>
     have e : hermZpow X ((k + 1 : ℕ) : ℤ) = (hermZpow X k).tensor X :=
       hermLine_eq_of (by simp [HermLine.tensor, hermZpow, add_smul])

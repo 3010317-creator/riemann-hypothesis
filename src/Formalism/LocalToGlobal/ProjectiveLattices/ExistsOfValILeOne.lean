@@ -116,8 +116,7 @@ theorem upper_inv {m : ℕ} (U : Matrix (Fin m) (Fin m) F) (hU : U.BlockTriangul
     rcases lt_or_gt_of_ne hki with hlt | hgt
     · rw [hinv hlt, zero_mul]
     · rw [hU hgt, mul_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 theorem iwasawa' {n : ℕ} (A : Matrix (Fin n) (Fin n) F) (hA : A.det ≠ 0) :
     ∃ (k : Matrix (Fin n) (Fin n) V) (N : Matrix (Fin n) (Fin n) F), IsUnit k.det ∧ N.BlockTriangular id ∧

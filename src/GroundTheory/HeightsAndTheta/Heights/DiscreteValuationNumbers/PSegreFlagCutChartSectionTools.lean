@@ -79,8 +79,7 @@ theorem bind₁_isMultiHomog_of (Λ : (K₁ → ℕ) →+ (K₂ → ℕ)) (g : (
 
     rw [← hmd, Finsupp.weight_apply, Finsupp.sum, map_sum]
     simp only [map_nsmul]
-  rw [hΛ]
-  exact this
+  rwa [hΛ]
 
 theorem bind₁_scale_of (o₀ : K₁) (u : MRing ι₂ O) (h : (Σ k, ι₁ k) → MRing ι₂ O) {q : MRing ι₁ O}
     {d : K₁ → ℕ} (hq : IsMultiHomog q d) :
@@ -154,9 +153,8 @@ theorem saturate (j : K₁ ↪ K₂) (o₀ : K₁) (pt : (Σ k, ι₂ k) → Φ)
     intro v
     rw [hΛ]
     by_cases hv : v.1 = o₀
-    · simp only [Λ₁, if_pos hv]
-      exact (hg₂ v hv).1
-    · simp only [Λ₁, if_neg hv]
+    · simpa only [Λ₁, ite_eq_left hv] using (hg₂ v hv).1
+    · simp only [Λ₁, ite_eq_right hv]
       rw [hg₁ v hv]
       exact isWeightedHomogeneous_X O (blockWeight ι₂) (FieldNumbers.blockIncl j ι₂ v)
   have hform : ∀ (d : K₁ → ℕ) (q : MRing (fun k => ι₂ (j k)) O), IsMultiHomog q d → q ∈ I →

@@ -30,10 +30,10 @@ theorem pmat_herm_apply {ε : Fin n → Bool} (y : PCoord ε → ℂ) (a b : Fin
   simp only [pmat]
   by_cases h1 : a < b ∧ ε b ≠ ε a
   · have h2 : ¬ (b < a ∧ ε a ≠ ε b) := fun h => lt_asymm h.1 h1.1
-    simp only [dif_pos h1, dif_neg h2, star_star]
+    simp only [dite_eq_left h1, dite_eq_right h2, star_star]
   · by_cases h2 : b < a ∧ ε a ≠ ε b
-    · simp only [dif_neg h1, dif_pos h2]
-    · simp only [dif_neg h1, dif_neg h2, star_zero]
+    · simp only [dite_eq_right h1, dite_eq_left h2]
+    · simp only [dite_eq_right h1, dite_eq_right h2, star_zero]
 
 theorem sum_pairs_pmat_fp {ε : Fin n → Bool} (w : Fin n → Fin n → ℝ) (z : PCoord ε → ℂ) :
     ∑ x : Fin n × Fin n, (if x.2 < x.1 then w x.1 x.2 * ‖pmat z x.1 x.2‖ ^ 2 else 0) =
@@ -44,26 +44,25 @@ theorem sum_pairs_pmat_fp {ε : Fin n → Bool} (w : Fin n → Fin n → ℝ) (z
     rintro ⟨a, b⟩
     dsimp only
     by_cases h : b < a ∧ ε a ≠ ε b
-    · rw [dif_pos h, if_pos h.1]
+    · rw [dite_eq_left h, ite_eq_left h.1]
       have hp : pmat z a b = z ⟨(a, b), h⟩ := by
-        simp only [pmat, dif_pos h]
+        simp only [pmat, dite_eq_left h]
       rw [hp]
-    · rw [dif_neg h]
+    · rw [dite_eq_right h]
       split_ifs with hab
       · have h2 : ¬ (a < b ∧ ε b ≠ ε a) := fun h' => lt_asymm hab h'.1
         have hp : pmat z a b = 0 := by
-          simp only [pmat, dif_neg h, dif_neg h2]
+          simp only [pmat, dite_eq_right h, dite_eq_right h2]
         rw [hp]; simp
       · rfl
   rw [Finset.sum_congr rfl (fun x _ => key x)]
   rw [← Finset.sum_filter_of_ne (p := fun x : Fin n × Fin n => x.2 < x.1 ∧ ε x.1 ≠ ε x.2)
     (fun x _ hx => by
       by_contra h
-      exact hx (dif_neg h))]
+      exact hx (dite_eq_right h))]
   rw [Finset.sum_subtype (p := fun x : Fin n × Fin n => x.2 < x.1 ∧ ε x.1 ≠ ε x.2) _
     (fun x => by simp)]
-  refine Finset.sum_congr rfl fun ab _ => ?_
-  exact dif_pos ab.2
+  exact Finset.sum_congr rfl fun ab _ => dite_eq_left ab.2
 
 theorem qForm_term {ε : Fin n → Bool} (y : PCoord ε → ℂ) (a b : Fin n) :
     -((((Dvec n a : ℝ) : ℂ) - ((Dvec n b : ℝ) : ℂ)) * (pmat y a b * Lap.Base.partNM ε (Dvec n) (pmat y) b a)) =
@@ -73,8 +72,8 @@ theorem qForm_term {ε : Fin n → Bool} (y : PCoord ε → ℂ) (a b : Fin n) :
   by_cases h : b < a ∧ ε a ≠ ε b
   · have hin : Lap.Base.InNM ε (Dvec n) b a := Or.inr h
     have hN : Lap.Base.partNM ε (Dvec n) (pmat y) b a = pmat y b a := by
-      rw [Lap.Base.partNM, Matrix.of_apply, if_pos hin]
-    rw [hN, if_pos h.1, hD, pmat_herm_apply y a b, Complex.star_def, Complex.mul_conj,
+      rw [Lap.Base.partNM, Matrix.of_apply, ite_eq_left hin]
+    rw [hN, ite_eq_left h.1, hD, pmat_herm_apply y a b, Complex.star_def, Complex.mul_conj,
       Complex.normSq_eq_norm_sq]
     push_cast; ring
   · have h0 : pmat y a b * Lap.Base.partNM ε (Dvec n) (pmat y) b a = 0 := by
@@ -145,8 +144,7 @@ theorem matrix_coefficient_pointwise_limit (hB3 : Lap.Base.TangentPairingStateme
     nlinarith [sq_nonneg (S7.hs (pmat y) + 1 / 2)]
   have hsq : Filter.Tendsto (fun t : ℕ => Real.sqrt (t : ℝ)) Filter.atTop Filter.atTop := by
     refine Filter.tendsto_atTop_atTop.mpr fun b => ⟨⌈b ^ 2⌉₊, fun a ha => ?_⟩
-    refine (le_abs_self b).trans (Real.abs_le_sqrt ?_)
-    exact (Nat.le_ceil _).trans (by exact_mod_cast ha)
+    exact (le_abs_self b).trans (Real.abs_le_sqrt ((Nat.le_ceil _).trans (by exact_mod_cast ha)))
   have hC0 : Filter.Tendsto (fun t : ℕ => C / Real.sqrt (t : ℝ)) Filter.atTop (nhds 0) :=
     tendsto_const_nhds.div_atTop hsq
   rw [tendsto_iff_norm_sub_tendsto_zero]
@@ -167,7 +165,6 @@ theorem matrix_coefficient_pointwise_limit (hB3 : Lap.Base.TangentPairingStateme
   have hL : (((Real.exp (-(Qf (0 : Fin n → ℝ) y / 2)) : ℝ) : ℂ)) =
       Complex.exp (-((Qf (0 : Fin n → ℝ) y : ℝ) : ℂ) / 2) := by
     rw [Complex.ofReal_exp]; push_cast; ring_nf
-  rw [← heq, hy, adKAux_pmat_smul, hL]
-  exact hb
+  rwa [← heq, hy, adKAux_pmat_smul, hL]
 
 end ReciprocityTheory.ChartRestriction.DS

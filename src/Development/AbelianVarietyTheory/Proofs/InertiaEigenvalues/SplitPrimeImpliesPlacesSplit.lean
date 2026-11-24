@@ -79,8 +79,7 @@ namespace GlobalTheory.SplitPlaces
 
 variable {R : Ranks} (H : Host R)
 
-theorem sqrt_sq : (H.sqd) ^ 2 = -(H.d : H.E) := by
-  exact H.sqd_sq
+theorem sqrt_sq : (H.sqd) ^ 2 = -(H.d : H.E) := H.sqd_sq
 
 alias conj_sqrt := _root_.UpperTheory.Reformulated.B.Rc9.conj_sqrt
 
@@ -89,8 +88,7 @@ theorem exists_conjPl (l : ℕ) (w : HeightOneSpectrum (𝓞 H.E)) (hw : w ∈ p
   let c : 𝓞 H.E ≃+* 𝓞 H.E := RingOfIntegers.mapRingEquiv H.conj.toRingEquiv
   refine ⟨HeightOneSpectrum.comap (c.symm : 𝓞 H.E →+* 𝓞 H.E) c.symm.surjective w, ?_, ?_⟩
   · show (c.symm : 𝓞 H.E →+* 𝓞 H.E) (l : 𝓞 H.E) ∈ w.asIdeal
-    rw [map_natCast]
-    exact hw
+    rwa [map_natCast]
   · intro x y hxy
     have : y = c x := by
       apply RingOfIntegers.ext
@@ -118,8 +116,7 @@ theorem not_isConjPl_self {l : ℕ} (hl : l.Prime) (hl2 : l ≠ 2) (hld : l ≠ 
   have hb : b ^ 2 = -(H.d : 𝓞 H.E) := by
     apply RingOfIntegers.ext
     have e : ((b : 𝓞 H.E) : H.E) = H.sqd := rfl
-    simp only [map_neg, map_pow, map_natCast, e]
-    exact sqrt_sq H
+    simpa only [map_neg, map_pow, map_natCast, e] using sqrt_sq H
   have hiff : b - n ∈ w.asIdeal ↔ b + n ∈ w.asIdeal := by
     rw [h (b - n) (-(b + n)) ?_, neg_mem_iff]
     have e : ((b : 𝓞 H.E) : H.E) = H.sqd := rfl

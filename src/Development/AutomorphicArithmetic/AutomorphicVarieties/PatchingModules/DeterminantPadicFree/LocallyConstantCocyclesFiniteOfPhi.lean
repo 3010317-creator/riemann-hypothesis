@@ -59,8 +59,7 @@ open Matrix IsLocalRing UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Pa
 private theorem eq_zero_of_forall_hom_zmod_eq_zero_of_module_zmod {l : ℕ} [Fact l.Prime] {M : Type} [AddCommGroup M] [Module (ZMod l) M] (v : M)
     (hv : ∀ f : M →+ ZMod l, f v = 0) : v = 0 := by
   rw [← Module.forall_dual_apply_eq_zero_iff (ZMod l)]
-  intro f
-  exact hv (LinearMap.toAddMonoidHom f)
+  exact fun f => hv (LinearMap.toAddMonoidHom f)
 
 theorem UpperTheory.V.Pa.Det.locallyConstant_cocycles_finite_of_phi :
     ∀ (l : ℕ) [Fact l.Prime] {G M : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] [AddCommGroup M] [Finite M] (ρ : G →* AddMonoid.End M), PhiCond G l → (∀ m : M, l • m = 0) → (∀ m, IsLocallyConstant fun g => ρ g m) → {z : G → M | IsLocallyConstant z ∧ ∀ g h, z (g * h) = z g + ρ g (z h)}.Finite := by
@@ -89,8 +88,7 @@ theorem UpperTheory.V.Pa.Det.locallyConstant_cocycles_finite_of_phi :
     intro z hz
     have h11 : z 1 = z 1 + z 1 := by
       have := hz.2 1 1
-      rw [one_mul, map_one] at this
-      exact this
+      rwa [one_mul, map_one] at this
     exact add_left_cancel (h11.symm.trans (add_zero _).symm)
   have hH : ∀ z ∈ S, ∀ a b : G, a ∈ ρ.ker → z (a * b) = z a + z b := by
     intro z hz a b ha

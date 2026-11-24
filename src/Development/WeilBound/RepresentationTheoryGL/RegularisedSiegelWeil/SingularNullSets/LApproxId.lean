@@ -272,19 +272,16 @@ theorem kdata (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) {S S' : Finset (He
   have hτR : Integrable (fun h : fixE ε => tR ρ S' U h.1) ν := by
     have := hτHI.norm
     refine this.congr (Filter.Eventually.of_forall fun h => ?_)
-    simp only [hτH, Complex.norm_real, Real.norm_eq_abs]
-    exact abs_of_nonneg (tR_nonneg hρ0 S' U _)
+    simpa only [hτH, Complex.norm_real, Real.norm_eq_abs] using abs_of_nonneg (tR_nonneg hρ0 S' U _)
   set IHr := ∫ h, tR ρ S' U h.1 ∂ν with hIHr
   have hIHc : IH = (IHr : ℂ) := integral_ofReal
   have hIHr0 : 0 < IHr := by
     refine lt_of_le_of_ne (integral_nonneg fun h => tR_nonneg hρ0 S' U _) fun h0 => hIH0 ?_
     rw [hIHc, ← h0, Complex.ofReal_zero]
   have hA0 : A 0 = IH := by
-    simp only [hA, mul_zero, AddChar.map_zero_eq_one, mul_one]
-    exact hIH.symm
+    simpa only [hA, mul_zero, AddChar.map_zero_eq_one, mul_one] using hIH.symm
   have hB0 : Bf 0 = IY := by
-    simp only [hBf, mul_zero, AddChar.map_zero_eq_one, mul_one]
-    exact hIY.symm
+    simpa only [hBf, mul_zero, AddChar.map_zero_eq_one, mul_one] using hIY.symm
   have hψn : ∀ x, ‖ψ x‖ = 1 := hψ.2.1
 
   have hAc : Continuous A := by
@@ -314,8 +311,7 @@ theorem kdata (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) {S S' : Finset (He
     ring
 
   obtain ⟨h₀, hh₀⟩ : ∃ h₀ : fixE ε, tR ρ S' U h₀.1 ≠ 0 := by
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     apply hIHr0.ne'
     rw [hIHr]
     simp [hn]
@@ -470,7 +466,7 @@ theorem top1 {F : Type} [Field F] [NumberField F] (S : Finset (HeightOneSpectrum
   · exact h2 v hv (haU v hv)
   · have h3 : sndA F a = sndA F ε * sndA F a := by rw [← map_mul, hεa]
     have h4 : (sndA F a) v = (sndA F ε) v * (sndA F a) v := congrArg (fun z : Af F => z v) h3
-    rw [hε.2 v, if_neg hv, zero_mul] at h4
+    rw [hε.2 v, ite_eq_right hv, zero_mul] at h4
     rw [h4]
     exact mem_of_mem_nhds (hV v)
 
@@ -547,8 +543,7 @@ theorem oneD : OneD := by
       rw [snd_eq, fix_snd hε (memH h) (fun h' => hv (Finset.mem_union_left _ h'))]
       exact zero_mem _
     rw [Set.indicator_of_mem hm] at hl
-    simp only [hgeq]
-    exact hl
+    simpa only [hgeq] using hl
   · have ht : tR (ρ k) (S ∪ S₁) (U k) (-(ε * s)) ≠ 0 := fun h0 => hs (by simp only [h0, mul_zero])
     unfold tR at ht
     have hρne : ρ k (fstA F (-(ε * s))) ≠ 0 := fun h0 => ht (by rw [h0, zero_mul])
@@ -738,21 +733,21 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
     rw [norm_prod]
     exact Finset.prod_le_one₀ (fun _ _ => norm_nonneg _) (fun i _ => (hg k).2.1 _)
   · beta_reduce
-    rw [if_pos hT]
+    rw [ite_eq_left hT]
     exact mul_nonneg c.2 (Finset.prod_nonneg fun i _ => ((hg k).2.2 _).1)
   · beta_reduce
     have hpt : ∀ x : hermS D t e, pch ψ x.1.1 T = ∏ i, ψ ((Θ x i).1 * sT T i) := by
       intro x
       rw [pch_eq D t ψ x.1.1 T x.1.2 hT, hpair, dotProduct, char_sum]
       refine Finset.prod_congr rfl fun i _ => ?_
-      simp only [sT, dif_pos hT, hΘ, heA]
+      simp only [sT, dite_eq_left hT, hΘ, heA]
     calc ∫ x, (∏ i, g1 k (Θ x i)) * pch ψ x.1.1 T ∂lam
         = ∫ x, ∏ i, (fun i h => g1 k h * ψ (h.1 * sT T i)) i (Θ x i) ∂lam := by
           congr 1; funext x; rw [hpt, ← Finset.prod_mul_distrib]
       _ = (c : ℂ) * ∏ i, ∫ h, g1 k h * ψ (h.1 * sT T i) ∂(Measure.addHaar : Measure (fixE ε)) :=
           (hTr (fun i h => g1 k h * ψ (h.1 * sT T i))).1
       _ = _ := by
-          rw [if_pos hT]
+          rw [ite_eq_left hT]
           push_cast
           congr 1
           exact Finset.prod_congr rfl fun i _ => ((hg k).2.2 _).2
@@ -769,19 +764,18 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
     have hU : IsOpen {M : Mx D t t | -M ∉ C} := hC.isOpen_compl.preimage continuous_neg
     have h0 : R 0 ∈ {M : Mx D t t | -M ∉ C} := by
       have : R 0 = 0 := by simp [R, Matrix.mulVec_zero]
-      simp only [Set.mem_ofPred_eq, this, neg_zero]
-      exact fun h => (hCT 0 h).2.2 rfl
+      simpa only [Set.mem_ofPred_eq, this, neg_zero] using fun h => (hCT 0 h).2.2 rfl
     filter_upwards [small_eventually R hRc _ hU h0 Sp hSp] with k hk T hTC
     obtain ⟨hTA, heT, -⟩ := hCT T hTC
     by_contra hlt
     have hpos := lt_trans hε' (not_le.mp hlt)
     beta_reduce at hpos
-    rw [if_pos hTA] at hpos
+    rw [ite_eq_left hTA] at hpos
     have hprod : ∀ i, G1 k (sT T i) ≠ 0 := fun i =>
       Finset.prod_ne_zero_iff.mp (right_ne_zero_of_mul hpos.ne') i (Finset.mem_univ i)
     have hfixT : ∀ i, ε * sT T i = sT T i := by
       intro i
-      simp only [sT, dif_pos hTA, Matrix.mulVec, dotProduct, Finset.mul_sum]
+      simp only [sT, dite_eq_left hTA, Matrix.mulVec, dotProduct, Finset.mul_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [mul_left_comm, coord_fix D t e ε heS b _ heT j]
     have hw : ∀ i, -(sT T i) ∈ Sp k := fun i => by
@@ -790,7 +784,7 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
     have hmem := hk (fun i => -(sT T i)) hw
     have hR : R (fun i => -(sT T i)) = -T := by
       have h2 : (fun i => -(sT T i)) = -(Bm *ᵥ hCo (AF D.host.F) D.sp.cm.sig b ⟨T, (memHA D t T).1 hTA⟩) := by
-        funext i; simp only [sT, dif_pos hTA, Pi.neg_apply]
+        funext i; simp only [sT, dite_eq_left hTA, Pi.neg_apply]
       simp only [R, h2, Matrix.mulVec_neg, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hunit, Matrix.one_mulVec,
         map_neg, ← heA, eA.symm_apply_apply]
       rfl

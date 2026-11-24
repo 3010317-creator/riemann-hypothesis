@@ -131,8 +131,7 @@ theorem UpperTheory.V.Br.potMove :
     have e : Bw'.repE LL' (r'.comp φ.toMonoidHom) = Bw.repE LL' r' := by
       refine MonoidHom.ext fun t => ?_
       simp [LocBridge.repE, Bw']
-    rw [e]
-    exact hcr
+    rwa [e]
   refine h1.of_iso ⟨(r g)⁻¹, fun s => ?_⟩
   simp [mul_assoc]
 end -- clump:auto
@@ -214,11 +213,9 @@ private theorem filt_std {n : ℕ} (ρ : Representation E Γ (Fin n → E)) (S :
   refine ⟨n, U, ?_, ?_, fun i hi => ⟨fun x hx j hj => hx j (Nat.le_of_succ_le hj), ψ ⟨i, hi⟩, hψ _,
     Pi.single ⟨i, hi⟩ 1, ?_, fun g => ?_⟩⟩
   · rw [eq_bot_iff]
-    intro x hx
-    exact funext fun j => hx j (Nat.zero_le _)
+    exact fun x hx => funext fun j => hx j (Nat.zero_le _)
   · rw [eq_top_iff]
-    intro x _ j hj
-    exact absurd j.2 (not_lt.2 hj)
+    exact fun x _ j hj => absurd j.2 (not_lt.2 hj)
   · refine le_antisymm (fun x hx => ?_) (sup_le (fun x hx j hj => hx j (Nat.le_of_succ_le hj)) ?_)
     · have e : x = (x - x ⟨i, hi⟩ • Pi.single ⟨i, hi⟩ (1 : E)) + x ⟨i, hi⟩ • Pi.single ⟨i, hi⟩ (1 : E) := by simp
       rw [e]
@@ -328,8 +325,7 @@ private theorem key (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {Γ :
       · intro g x y
         simp [chRep, twist, smul_smul, mul_comm]
       · rw [eq_top_iff]
-        intro x _
-        exact Submodule.subset_span ⟨(1, x), by simp⟩
+        exact fun x _ => Submodule.subset_span ⟨(1, x), by simp⟩
     have hdr : IsDr φ (twist k⁻¹ (mrep M0)) :=
       ((isCrys_isDR_restrict_openSubgroup φ hφ _ htw).2 H hH).2.2 ((isCrys_isDR_restrict_openSubgroup _ hφH _ htwH).1 htwcr)
     let ψ : Fin n → Γ →* Eˣ := fun i => k⁻¹ * κ i.castSucc
@@ -489,8 +485,7 @@ private theorem cr_descend (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime
       rw [hI i g hg hg', Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val, map_zpow₀]
       rfl)))
     (fun i j _ => by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hne i j (MonoidHom.ext fun g => Units.ext (congrArg Subtype.val (hcon g))))
   have hφH : IsOpenEmbedding (φ.comp H.subtype) := hφ.comp hH.isOpenEmbedding_subtypeVal
   have hsc : Continuous fun g => (s g : Matrix (Fin n) (Fin n) ↥L.1) := continuous_matrix fun a b =>
@@ -616,8 +611,7 @@ private theorem graded_match {H k : Type} [Field k] (T : H → Matrix (Fin 3) (F
     (tri : ∀ g, (Q.val * T g * (Q⁻¹).val).BlockTriangular id)
     (dg : ∀ g i, (Q.val * T g * (Q⁻¹).val) i i = D i g)
     (ord : ∀ g, Fr.ordProd T ψ g = 0) (b : Fin 3) : ∃ a, ∀ g, D b g = ψ a g := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   choose g hg using hne
   let U : Fin 3 → Matrix (Fin 3) (Fin 3) k := fun a => Q.val * (T (g a) - ψ a (g a) • 1) * (Q⁻¹).val
   have hQ : (Q⁻¹).val * Q.val = 1 := Units.inv_mul Q
@@ -907,8 +901,7 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
     rfl
   have hv0 : ((l : ℕ) : 𝓞 K) ∈ (w.under (𝓞 K)).asIdeal := by
     change algebraMap (𝓞 K) (𝓞 L) _ ∈ w.asIdeal
-    rw [map_natCast]
-    exact hw
+    rwa [map_natCast]
   have hQK : IsPlaceOver Q (w.under (𝓞 K)) := fun x => by
     rw [IsScalarTower.algebraMap_apply K L Ω]
     exact hQ (algebraMap (𝓞 K) (𝓞 L) x)
@@ -1115,8 +1108,7 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
       rw [ht]
     have e3 := DFunLike.congr_fun hij ⟨t, htd⟩
     change κ i (dm ⟨t, htd⟩) = κ j (dm ⟨t, htd⟩) * cycBar L Ω l t at e3
-    rw [e1, e2] at e3
-    exact e3
+    rwa [e1, e2] at e3
   obtain ⟨pot, κ', ⟨Q', fl⟩, i', j', hl'⟩ := KatoThreePlus.move_link ρ (UnitaryThreeInertia.push A.val r) hρ' hK
     (by rw [← hker]; exact η.normal_ker) (galOf ℚ L Ω) u hTu Q (k.pl v) hAv κ hf hpotQ i j hlink
   haveI hpir : IsPrincipalIdealRing A := IsDiscreteValuationRing.toIsPrincipalIdealRing
@@ -1128,7 +1120,7 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
     rfl
   have n5 : ∀ v i, ∀ g ∈ Φ.Iv v, (ν.ψ v i g).val =
       algebraMap c.O A (Chr.Psi l e (Chr.dirG ℚ Ω ψ) (k.j v g) ^ Fr.w 3 i).val := fun v i g hg => by
-    rw [n3 v i g hg, Fr.w, if_pos rfl]
+    rw [n3 v i g hg, Fr.w, ite_eq_left rfl]
     rfl
   have irr : ∀ U : Subgroup (G L Ω), IsOpen (U : Set (G L Ω)) → Af.IsIrr ((ρ.comp (galEmb K L Ω)).comp U.subtype) := by
     intro U hUo
@@ -1158,8 +1150,7 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
     Subtype.ext ((k.j_loc v g).trans (congrArg k.p (Subtype.ext (ht g).symm)))
   have hdm : ∀ g, galEmb K L Ω (t g) ∈ Dec (F := K) (k.pl v) := fun g => by
     have := hdec g
-    rw [← ht] at this
-    exact this
+    rwa [← ht] at this
   let d : Φ.Gv v → ↥(Dec (F := K) (k.pl v)) := fun g => ⟨galEmb K L Ω (t g), hdm g⟩
   let f : A →+* Qbar l := (A.val : A →+* PadicAlgCl l)
   have hT : ∀ g, f.mapMatrix (ν.r (Φ.loc0 v g)) = (ρ (d g).1).val := fun g => by
@@ -1184,8 +1175,7 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
     rw [← ht]
     rfl
   simp only [Units.val_mul] at e1
-  rw [ha, hb, e2] at e1
-  exact e1
+  rwa [ha, hb, e2] at e1
 
 end
 

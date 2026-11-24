@@ -115,12 +115,7 @@ theorem ev_spMap {T : Scheme.{0}} {A B : Type} [CommRing A] [CommRing B] (θ : A
   rfl
 
 theorem fromSpecStalk_top' {X : Scheme.{0}} (x : X) (U : X.Opens) (hx : x ∈ U) :
-    ⊤ ≤ X.fromSpecStalk x ⁻¹ᵁ U := by
-  intro z _
-  have hz : X.fromSpecStalk x z ⤳ x := by
-    have : X.fromSpecStalk x z ∈ Set.range (X.fromSpecStalk x) := ⟨z, rfl⟩
-    rwa [Scheme.range_fromSpecStalk] at this
-  exact hz.mem_open U.2 hx
+    ⊤ ≤ X.fromSpecStalk x ⁻¹ᵁ U := GlobalTheory.SS.WtRat.top_le_fromSpecStalk_preimage x hx
 
 theorem fromSpecStalk_appLE' {X : Scheme.{0}} (x : X) (U : X.Opens) (hx : x ∈ U) :
     (X.fromSpecStalk x).appLE U ⊤ (fromSpecStalk_top' x U hx) =

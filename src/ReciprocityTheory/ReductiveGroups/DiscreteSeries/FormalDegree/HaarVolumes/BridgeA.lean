@@ -52,26 +52,16 @@ theorem skMat_low_om (x : UCo N) (l : {ab : Fin N × Fin N // ab.2 < ab.1}) :
     skMat x l.1.1 l.1.2 = x.2 l := by
   obtain ⟨⟨a, b⟩, h⟩ := l
   show skMat x a b = x.2 ⟨(a, b), h⟩
-  simp only [skMat, if_neg (ne_of_gt h), dif_pos h]
+  simp only [skMat, ite_eq_right (ne_of_gt h), dite_eq_left h]
 
 theorem skMat_up_om (x : UCo N) (l : {ab : Fin N × Fin N // ab.2 < ab.1}) :
     skMat x l.1.2 l.1.1 = -star (x.2 l) := by
   obtain ⟨⟨a, b⟩, h⟩ := l
   show skMat x b a = -star (x.2 ⟨(a, b), h⟩)
-  simp only [skMat, if_neg (ne_of_lt h), dif_neg (not_lt.2 h.le), dif_pos h]
+  simp only [skMat, ite_eq_right (ne_of_lt h), dite_eq_right (not_lt.2 h.le), dite_eq_left h]
 
 theorem skMat_conjTranspose_om (x : UCo N) : (skMat x)ᴴ = -skMat x := by
-  ext a b
-  rw [Matrix.conjTranspose_apply, Matrix.neg_apply]
-  rcases lt_trichotomy a b with h | rfl | h
-  · have h1 : skMat x b a = x.2 ⟨(b, a), h⟩ := skMat_low_om x ⟨(b, a), h⟩
-    have h2 : skMat x a b = -star (x.2 ⟨(b, a), h⟩) := skMat_up_om x ⟨(b, a), h⟩
-    rw [h1, h2, neg_neg]
-  · rw [skMat_diag_om]
-    simp [Complex.conj_ofReal]
-  · have h1 : skMat x a b = x.2 ⟨(a, b), h⟩ := skMat_low_om x ⟨(a, b), h⟩
-    have h2 : skMat x b a = -star (x.2 ⟨(a, b), h⟩) := skMat_up_om x ⟨(a, b), h⟩
-    rw [h1, h2, star_neg, star_star]
+  exact ReciprocityTheory.ChartRestriction.DS.volU_skMat_conjTranspose x
 
 theorem skMat_add_om (x y : UCo N) : skMat (x + y) = skMat x + skMat y := by
   ext a b
@@ -110,8 +100,7 @@ theorem complexifyLie_bijective : Function.Bijective (complexifyLie (N := N)) :=
       have e := congrArg Matrix.conjTranspose h0
       rw [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, hA', hB', Matrix.conjTranspose_zero] at e
       have hI : star Complex.I = -Complex.I := Complex.conj_I
-      rw [hI, neg_smul_neg] at e
-      exact e
+      rwa [hI, neg_smul_neg] at e
     have hA0 : A = 0 := by
       have e : (2 : ℂ) • A = 0 := by
         rw [two_smul]
@@ -120,8 +109,7 @@ theorem complexifyLie_bijective : Function.Bijective (complexifyLie (N := N)) :=
       exact (smul_eq_zero.1 e).resolve_left two_ne_zero
     have hB0 : B = 0 := by
       have e : Complex.I • B = 0 := by
-        rw [hA0, zero_add] at h0
-        exact h0
+        rwa [hA0, zero_add] at h0
       exact (smul_eq_zero.1 e).resolve_left Complex.I_ne_zero
     exact Prod.ext (Subtype.ext hA0) (Subtype.ext hB0)
   · intro Z
@@ -316,8 +304,7 @@ theorem uToLieMat_mem (x : UCo N) : uToLieMat x ∈ Formalism.BasicNotions.lieU 
   have h := congrFun (congrFun (skMat_conjTranspose_om x) (Equiv.sumEmpty (Fin N) (Fin 0) i))
     (Equiv.sumEmpty (Fin N) (Fin 0) j)
   simp only [Matrix.conjTranspose_apply, Matrix.neg_apply] at h ⊢
-  rw [uToLieMat_apply, uToLieMat_apply]
-  exact h
+  rwa [uToLieMat_apply, uToLieMat_apply]
 
 def uToLie (x : UCo N) : Formalism.BasicNotions.lieU N 0 := ⟨uToLieMat x, uToLieMat_mem x⟩
 
@@ -489,12 +476,7 @@ variable {N : ℕ}
 abbrev eN (N : ℕ) : Fin N ⊕ Fin 0 ≃ Fin N := Equiv.sumEmpty (Fin N) (Fin 0)
 
 lemma Jpq_zero (N : ℕ) : Formalism.UG.Jpq N 0 = 1 := by
-  ext i j
-  rcases i with i | i
-  · rcases j with j | j
-    · simp [Formalism.UG.Jpq, Matrix.one_apply]
-    · exact j.elim0
-  · exact i.elim0
+  exact ReciprocityTheory.ChartRestriction.DS.jpq_N_zero_om
 
 lemma cT_eq {m : Type} [Fintype m] (M : Matrix m m ℂ) : Formalism.UG.cT (starRingEnd ℂ) M = Mᴴ := by
   ext i j
@@ -660,8 +642,7 @@ lemma toM_preimage_exp_ball_eq_upqT_exp_ball (N : ℕ) (r : ℝ) :
     rfl
   · rintro ⟨X, hX, hXe⟩
     refine ⟨coords (reindex (eN N) (eN N) (X : Matrix (Fin N ⊕ Fin 0) (Fin N ⊕ Fin 0) ℂ)), ?_, ?_⟩
-    · rw [uToLie_coords]
-      exact hX
+    · rwa [uToLie_coords]
     · rw [hXe, reindex_exp, skMat_coords]
       rw [Matrix.conjTranspose_reindex, lie_skew X]
       rfl
@@ -669,24 +650,9 @@ lemma toM_preimage_exp_ball_eq_upqT_exp_ball (N : ℕ) (r : ℝ) :
 alias volU_pos := _root_.ReciprocityTheory.ChartRestriction.DS.volU_pos'
 
 lemma continuous_skMat (N : ℕ) : Continuous (skMat : UCo N → Matrix (Fin N) (Fin N) ℂ) := by
-  refine continuous_pi fun a => continuous_pi fun b => ?_
-  simp only [skMat]
-  by_cases h1 : a = b
-  · simp only [ite_eq_left h1]
-    exact continuous_const.mul (Complex.continuous_ofReal.comp ((continuous_apply a).comp continuous_fst))
-  · simp only [ite_eq_right h1]
-    by_cases h2 : b < a
-    · simp only [dite_eq_left h2]
-      exact (continuous_apply _).comp continuous_snd
-    · simp only [dite_eq_right h2]
-      by_cases h3 : a < b
-      · simp only [dite_eq_left h3]
-        exact ((continuous_apply _).comp continuous_snd).star.neg
-      · simp only [dite_eq_right h3]
-        exact continuous_const
+  exact ReciprocityTheory.ChartRestriction.DS.volU_continuous_skMat
 
 lemma continuous_uToLie (N : ℕ) : Continuous (uToLie (N := N)) := by
-  show Continuous fun x : UCo N => (⟨uToLieMat x, uToLieMat_mem x⟩ : Formalism.BasicNotions.lieU N 0)
   exact Continuous.subtype_mk ((continuous_skMat N).matrix_reindex _ _) _
 
 lemma isOpen_ballU (N : ℕ) (r : ℝ) : IsOpen (Formalism.BasicNotions.ballU N 0 r) := by
@@ -715,13 +681,11 @@ lemma norm_skMat_lt (x : UCo N) (r : ℝ) (hx : uToLie x ∈ Formalism.BasicNoti
 lemma norm_lt_of_mem (x : UCo N) (r : ℝ) (hr : 0 < r) (hx : uToLie x ∈ Formalism.BasicNotions.ballU N 0 r) : ‖x‖ < r := by
   have h1 : ‖x.1‖ < r := by
     refine (pi_norm_lt_iff hr).2 fun a => ?_
-    have h5 := norm_skMat_lt x r hx a a
-    simpa [skMat] using h5
+    simpa [skMat] using norm_skMat_lt x r hx a a
   have h2 : ‖x.2‖ < r := by
     refine (pi_norm_lt_iff hr).2 ?_
     rintro ⟨⟨a, b⟩, hab⟩
-    have h5 := norm_skMat_lt x r hx a b
-    simpa [skMat, ne_of_gt hab, hab] using h5
+    simpa [skMat, ne_of_gt hab, hab] using norm_skMat_lt x r hx a b
   rw [Prod.norm_def]
   exact max_lt h1 h2
 

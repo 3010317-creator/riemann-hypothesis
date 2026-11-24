@@ -27,8 +27,7 @@ open NumberField IsDedekindDomain Formalism.L2.Th1.CM Neutral.HilbertClassField
 namespace ReciprocityTheory.ChartRestriction.L1
 
 theorem fixJ_nonunits_add {Ω : Type*} [Field Ω] (A : ValuationSubring Ω) {a b : Ω} (ha : a ∈ A.nonunits)
-    (hb : b ∈ A.nonunits) : a + b ∈ A.nonunits := by
-  exact add_mem ha hb
+    (hb : b ∈ A.nonunits) : a + b ∈ A.nonunits := add_mem ha hb
 
 def fixJRoots {Ω : Type*} [Field Ω] (P : Polynomial ℤ) : Finset Ω := (P.map (Int.castRingHom Ω)).roots.toFinset
 
@@ -83,7 +82,6 @@ theorem fixJStab_isOpen {E Ω : Type*} [Field E] [Field Ω] [Algebra E Ω] [Alge
   refine Subgroup.isOpen_mono (H₁ := K.fixingSubgroup) ?_ (IntermediateField.fixingSubgroup_isOpen K)
   intro g hg
   rw [mem_fixJStab]
-  intro r hr
-  exact hg ⟨r, IntermediateField.subset_adjoin E _ hr⟩
+  exact fun r hr => hg ⟨r, IntermediateField.subset_adjoin E _ hr⟩
 
 end ReciprocityTheory.ChartRestriction.L1

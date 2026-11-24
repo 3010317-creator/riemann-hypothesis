@@ -349,8 +349,7 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
     rw [Set.mem_singleton_iff.1 hx]
     exact hm.symm
   have memR' : ∀ m ∈ R, m * A₀ = A₀ * m := by
-    intro m hm
-    exact ((Subring.mem_centralizer_iff.1 hm) A₀ rfl).symm
+    exact fun m hm => ((Subring.mem_centralizer_iff.1 hm) A₀ rfl).symm
   letI : CommRing R := { (inferInstance : Ring R) with
     mul_comm := fun a b => Subtype.ext (hcomm a.1 b.1 (memR' _ a.2) (memR' _ b.2)) }
   let V : Submodule E (Matrix (Fin r) (Fin r) E) :=
@@ -440,8 +439,7 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
         linear_combination (-(xT * xTp)) * heR
       have h2 := congrArg Subtype.val this
       show mm * e = T * e * star (T * e)
-      rw [star_mul, hes, ← hm]
-      exact h2
+      rwa [star_mul, hes, ← hm]
   · refine ⟨(Ti * e, mi), ⟨⟨⟨?_, ?_⟩, ?_⟩, ⟨m, hmM, rfl⟩⟩, hX₁.symm⟩
     · exact memR' _ (xTi * (1 - xf - xg)).2
     · have : xTi * (1 - xf - xg) * (1 - xf - xg) = xTi * (1 - xf - xg) := by linear_combination xTi * heR
@@ -453,8 +451,7 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
         linear_combination (-(xTi * xTip)) * heR - (1 - xf - xg) * hTT
       have h2 := congrArg Subtype.val this
       show mi * e = Ti * e * star (Ti * e)
-      rw [star_mul, hes]
-      exact h2
+      rwa [star_mul, hes]
   · exact memR' _ X₀.2
   · have : X₀ * ((1 - xg - xf) * xTp + xg * (xT * xTp) + xf) = xT * xTp := by
       linear_combination xT * xTp * heR + xT ^ 2 * xTp * hegR + xT * hefR + xT * xTp ^ 2 * hefR +
@@ -465,8 +462,7 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
       rw [hg]
       simp only [star_add, star_mul, star_sub, star_one, star_star]
     show X₀.1 * star X₀.1 = T * star T
-    rw [hst]
-    exact h2
+    rwa [hst]
 
 end GlobalTheory.NormSec
 end -- clump:auto
@@ -646,8 +642,7 @@ theorem gl_orbit_cpt (A₀ : Matrix (Fin r) (Fin r) k) (hs : A₀.charpoly.Separ
   have hδ : 0 < δ := div_pos (hψpos x0 hx0) (by positivity)
   have hpiece : ∀ X ∈ K, ∃ g ∈ s, δ ≤ ‖D X (cj g.1)‖ := by
     intro X hX
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h1 : ψ X ≤ ∑ g ∈ s, δ := by rw [hψdef]; exact Finset.sum_le_sum fun g hg => (hcon g hg).le
     rw [Finset.sum_const, nsmul_eq_mul] at h1
     have h2 : ψ x0 ≤ ψ X := hmin hX

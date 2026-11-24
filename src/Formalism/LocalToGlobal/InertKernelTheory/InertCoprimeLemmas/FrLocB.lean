@@ -338,8 +338,7 @@ theorem homL_le_intS (N N' : ℕ) : homL D (Formalism.MainNotions.StandardLattic
       exact isInt_one
     · rw [Pi.single_eq_of_ne h]
       exact Submodule.zero_mem _
-  have h2 := (mem_stdL _).mp (hA _ h1) a
-  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h2
+  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using (mem_stdL _).mp (hA _ h1) a
 
 theorem mem_one_by_one_lattice_iff (x : Matrix (Fin 1) (Fin 1) D.host.E) :
     x ∈ YYl D (Formalism.MainNotions.StandardLatticesGL3.stdL D 1) (Formalism.MainNotions.StandardLatticesGL3.stdL D 1) ↔ x 0 0 ∈ AAs D := by
@@ -408,8 +407,7 @@ theorem okK_smul_mem (c : 𝓞 D.host.K) {y : D.host.E} (hy : y ∈ AAs D) : ((c
 theorem aa_fg (D : D7) : (AAs D).toAddSubgroup.FG := by
   haveI := FractionalIdeal.isNoetherian D.host.AA0
   have h1 : (AAs D).FG := (Submodule.fg_top _).1 (IsNoetherian.noetherian ⊤)
-  have h2 := h1.restrictScalars (R := ℤ)
-  exact (Submodule.fg_iff_addSubgroup_fg _).1 h2
+  exact (Submodule.fg_iff_addSubgroup_fg _).1 (h1.restrictScalars (R := ℤ))
 
 theorem nat_mult (z : D.host.E) : ∃ k : ℕ, 0 < k ∧ IsIntegral ℤ ((k : D.host.E) * z) := by
   have hz : IsAlgebraic ℚ z := Algebra.IsAlgebraic.isAlgebraic z
@@ -582,11 +580,10 @@ theorem local_orthonormal_basis : LocBasisMM := by
       rw [hK_smul_left, ← cK_nat D S]
       have e2 : G0.cK D (S : D.host.K) * G0.hK D (w n) y = G0.hK D (w n) ((S : D.host.K) • y) := by
         rw [_root_.Formalism.L2.KerInert.FrLocB.hK_smul_right']
-      rw [e2, hc, hK_sum_smul_right]
-      rw [Finset.sum_eq_single n]
-      · rw [hK_symm, hw, if_pos rfl, map_one, mul_one]
+      rw [e2, hc, hK_sum_smul_right, Finset.sum_eq_single n]
+      · rw [hK_symm, hw, ite_eq_left rfl, map_one, mul_one]
       · intro i _ hi
-        rw [hK_symm, hw, if_neg hi, map_zero, mul_zero]
+        rw [hK_symm, hw, ite_eq_right hi, map_zero, mul_zero]
       · intro h; exact absurd (Finset.mem_univ n) h
     show G0.hK D ((S : D.host.K) • w n) y ∈ _
     rw [e1]
@@ -644,8 +641,7 @@ theorem local_orthonormal_basis : LocBasisMM := by
       congr 3
       unfold hYY G0.hK
       simp [bm]
-    rw [e, ← RingHom.map_det]
-    exact hn1
+    rwa [e, ← RingHom.map_det]
   ·
     let e := Fintype.equivFin D.what₂.Tau
     let N : Matrix D.what₂.Tau D.what₂.Tau ℂ := Matrix.of fun τ τ' => embT D τ (b (e τ'))

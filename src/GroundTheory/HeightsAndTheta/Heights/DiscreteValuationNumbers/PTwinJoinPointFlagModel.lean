@@ -89,8 +89,7 @@ theorem isPull_pullBundle (y : (Σ k, ι k) → Ω) (B : ChartBundle O (mseg y) 
   intro s _
   rw [pullBundle_lat]
   apply le_antisymm
-  · intro v hv
-    exact AddSubgroup.subset_closure ⟨1, one_mem _, v, hv, (one_smul _ _).symm⟩
+  · exact fun v hv => AddSubgroup.subset_closure ⟨1, one_mem _, v, hv, (one_smul _ _).symm⟩
   · rw [AddSubgroup.closure_le]
     rintro _ ⟨a, ha, e, he, rfl⟩
     exact B.stable _ a ((mem_chartRing_join O y s a).mp ha) e he
@@ -108,13 +107,11 @@ theorem isGradedFrame_pull (y : (Σ k, ι k) → Ω) {B : ChartBundle O (mseg y)
   obtain ⟨b, hli, hspan, hiff, hw⟩ := hl l
   refine ⟨b, hli, hspan, fun e => ?_, fun i => ?_⟩
   · rw [pullBundle_lat]
-    simp only [mem_chartRing_join]
-    exact hiff e
+    simpa only [mem_chartRing_join] using hiff e
   · obtain ⟨w, ⟨hw0, ⟨n₁, hn₁⟩, ⟨n₂, hn₂⟩⟩, hmem⟩ := hw i
     refine ⟨w, ⟨hw0, ⟨n₁, (mem_chartRing_join O y s _).mpr hn₁⟩,
       ⟨n₂, (mem_chartRing_join O y s _).mpr hn₂⟩⟩, ?_⟩
-    rw [chartMon_join]
-    exact hmem
+    rwa [chartMon_join]
 
 end Bundles
 

@@ -76,8 +76,7 @@ theorem _root_.GlobalTheory.BI.commute_all : ∀ (G : Type) [Group G] [Finite G]
   have hAZ : A ≤ Z := fun a ha => (hZ a).2 (hyp A hAn (fun x hx y hy => by
     rw [← map_mul, ← map_mul, hAc x hx y hy]) a ha)
   suffices hZtop : Z = ⊤ by
-    intro a b
-    exact (hZ a).1 (hZtop ▸ Subgroup.mem_top a) b
+    exact fun a b => (hZ a).1 (hZtop ▸ Subgroup.mem_top a) b
   by_contra hne
   have hP : IsPGroup p (G ⧸ Z) := by
     intro q
@@ -97,8 +96,7 @@ theorem _root_.GlobalTheory.BI.commute_all : ∀ (G : Type) [Group G] [Finite G]
     intro c hc
     obtain ⟨i, hi⟩ := Subgroup.mem_zpowers_iff.mp hc
     refine ⟨i, (g ^ i)⁻¹ * c, ?_, by group⟩
-    rw [← QuotientGroup.eq, QuotientGroup.mk_zpow, hg]
-    exact hi
+    rwa [← QuotientGroup.eq, QuotientGroup.mk_zpow, hg]
   have hCn : C.Normal := ⟨fun c hc h => by
     obtain ⟨i, hi⟩ := Subgroup.mem_zpowers_iff.mp hc
     refine Subgroup.mem_zpowers_iff.mpr ⟨i, ?_⟩

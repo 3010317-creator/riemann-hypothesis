@@ -201,8 +201,7 @@ theorem generatedHighestWeight_holds : GeneratedHW := by
     intro y hy
     have : lowSpan T κ ≤ LinearMap.ker (B v) := by
       rw [lowSpan, Submodule.span_le]
-      intro x hx
-      exact LinearMap.mem_ker.2 (horth x hx)
+      exact fun x hx => LinearMap.mem_ker.2 (horth x hx)
     exact LinearMap.mem_ker.1 (this hy)
   have h0 : B v v = 0 := hall v (by rw [htop]; exact Submodule.mem_top)
   exact absurd (hF.pos v hv) (by rw [h0]; exact lt_irrefl _)
@@ -231,7 +230,7 @@ theorem highestWeightDominant_holds : HWDominant := by
   intro K N q _ _ _ _ _ T B hU v μ hv0 hv a b hab
   obtain ⟨hr, hd⟩ := hv
   have h2 := LinearMap.congr_fun (hU.gl a b b a) v
-  rw [if_pos rfl, if_pos rfl] at h2
+  rw [ite_eq_left rfl, ite_eq_left rfl] at h2
   simp only [LinearMap.sub_apply, Module.End.mul_apply, hr a b hab, map_zero, sub_zero, hd a, hd b] at h2
   have hnn := lpa_nonneg hU (T b a v)
   rw [hU.adj b a v (T b a v), h2, map_sub, map_smul, map_smul, smul_eq_mul, smul_eq_mul, ← sub_mul] at hnn
@@ -285,8 +284,7 @@ private theorem weighted_sum_add_single_sub_single {K : Type*} [Field K] {q : �
     · simp
     · intro c _ hcd
       rw [Pi.single_eq_of_ne hcd, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ d) h
+    · exact fun h => absurd (Finset.mem_univ d) h
   simp only [Pi.add_apply, Pi.sub_apply, mul_add, mul_sub, Finset.sum_add_distrib, Finset.sum_sub_distrib, hs]
   ring
 
@@ -299,7 +297,7 @@ theorem existsHighestWeight_holds : ExistsHW := by
     · subst hab
       exact Commute.refl _
     · have h := hT a a b b
-      rw [if_neg hab, if_neg (Ne.symm hab), sub_zero] at h
+      rw [ite_eq_right hab, ite_eq_right (Ne.symm hab), sub_zero] at h
       exact sub_eq_zero.mp h
   obtain ⟨C', hC'C, hC'ne, _, μ0, hμ0⟩ :=
     lpa_joint (fun a => T a a) (fun a b => hcomm a b) hdiag Finset.univ C
@@ -332,17 +330,17 @@ theorem existsHighestWeight_holds : ExistsHW := by
     have h3 := sub_eq_iff_eq_add.mp h2
     by_cases hca : c = a
     · rw [hca] at h3 ⊢
-      rw [if_pos rfl, if_neg hba, LinearMap.zero_apply, sub_zero] at h3
+      rw [ite_eq_left rfl, ite_eq_right hba, LinearMap.zero_apply, sub_zero] at h3
       rw [h3]
       simp only [Pi.add_apply, Pi.sub_apply, Pi.single_eq_same, Pi.single_eq_of_ne hab.ne, sub_zero]
       module
     · by_cases hcb : c = b
       · rw [hcb] at h3 ⊢
-        rw [if_neg hba, if_pos rfl, LinearMap.zero_apply, zero_sub] at h3
+        rw [ite_eq_right hba, ite_eq_left rfl, LinearMap.zero_apply, zero_sub] at h3
         rw [h3]
         simp only [Pi.add_apply, Pi.sub_apply, Pi.single_eq_same, Pi.single_eq_of_ne hba, add_zero]
         module
-      · rw [if_neg hca, if_neg (fun h => hcb h.symm), LinearMap.zero_apply, sub_zero, zero_add] at h3
+      · rw [ite_eq_right hca, ite_eq_right (fun h => hcb h.symm), LinearMap.zero_apply, sub_zero, zero_add] at h3
         rw [h3]
         simp only [Pi.add_apply, Pi.sub_apply, Pi.single_eq_of_ne hca, Pi.single_eq_of_ne hcb,
           add_zero, sub_zero]
@@ -350,16 +348,13 @@ theorem existsHighestWeight_holds : ExistsHW := by
   have hle : ∑ c : Fin q, -((c : ℕ) : K) * (μ + Pi.single a (1 : K) - Pi.single b (1 : K) : Fin q → K) c ≤
       ∑ c : Fin q, -((c : ℕ) : K) * μ c := hmax _ hνW
   rw [weighted_sum_add_single_sub_single] at hle
-  have hlt : ((a : ℕ) : K) < ((b : ℕ) : K) := by
-    exact Nat.cast_lt.mpr hab
+  have hlt : ((a : ℕ) : K) < ((b : ℕ) : K) := Nat.cast_lt.mpr hab
   linarith
 
 theorem completeReducibility_holds : CompleteRed := by
   intro K N q _ _ _ _ _ _ T B hU S S' hS hS' hhw
   classical
-  have hrefl : B.IsRefl := by
-    intro x y h
-    exact (hU.symm y x).trans h
+  have hrefl : B.IsRefl := fun x y h => (hU.symm y x).trans h
   have hRst : Stab T (S ⊓ S') := fun a b x hx =>
     Submodule.mem_inf.mpr ⟨hS a b x (Submodule.mem_inf.mp hx).1, hS' a b x (Submodule.mem_inf.mp hx).2⟩
   have hUst : Stab T (S ⊓ B.orthogonal (S ⊓ S')) := by
@@ -458,8 +453,7 @@ theorem highest_weight_successive : StepHW := by
   intro K N q _ _ _ T ε hmul hone hcomm z μ hz hw
   classical
   have hex : ∃ b, ε b b z ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hz
     calc z = (∑ a, ε a a) z := by rw [hone]; rfl
       _ = ∑ a, ε a a z := LinearMap.sum_apply _ _ _
@@ -486,7 +480,7 @@ theorem highest_weight_successive : StepHW := by
     rw [hcm, h1, map_neg, hprod]
     split_ifs with hba
     · subst hba
-      have h3 : ε b c z = ε b c (ε c c z) := by rw [hprod, if_pos rfl]
+      have h3 : ε b c z = ε b c (ε c c z) := by rw [hprod, ite_eq_left rfl]
       rw [h3, hzero c hac, map_zero, neg_zero]
     · rw [neg_zero]
   · intro a
@@ -499,7 +493,7 @@ theorem highest_weight_successive : StepHW := by
     by_cases hab : a = b
     · subst hab
       simp [sub_smul]
-    · rw [if_neg (Ne.symm hab)]
+    · rw [ite_eq_right (Ne.symm hab)]
       simp [hab]
 
 section Tower
@@ -539,7 +533,7 @@ theorem lp_casVal_step (κ : Fin q → ℕ) (ρ : Fin q) :
       ring
     · simp
   rw [Finset.sum_congr rfl (fun b _ => key b), Finset.sum_add_distrib, Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   ring
 
 theorem lp_content_inj (κ : Fin q → ℕ) (hκ : Antitone κ) (b ρ : Fin q)
@@ -575,21 +569,21 @@ theorem lp_hw_cas (hDom : HWDominant) {T : Fin q → Fin q → Module.End K N} {
       rw [hc]
       rcases lt_trichotomy b b' with h | h | h
       · have hgl' := hgl b b' b' b
-        rw [if_pos rfl, if_pos rfl] at hgl'
+        rw [ite_eq_left rfl, ite_eq_left rfl] at hgl'
         have hA : T b b' * T b' b = T b' b * T b b' + (T b b - T b' b') := by rw [← hgl']; abel
         rw [hA, LinearMap.add_apply, Module.End.mul_apply, hup b b' h, map_zero, zero_add,
-          LinearMap.sub_apply, hdiag', hdiag', ← sub_smul, if_neg (ne_of_lt h), if_pos h, if_pos h]
+          LinearMap.sub_apply, hdiag', hdiag', ← sub_smul, ite_eq_right (ne_of_lt h), ite_eq_left h, ite_eq_left h]
         congr 1
         push_cast
         ring
       · subst h
-        rw [Module.End.mul_apply, hdiag', map_smul, hdiag', smul_smul, if_pos rfl,
-          if_neg (lt_irrefl _)]
+        rw [Module.End.mul_apply, hdiag', map_smul, hdiag', smul_smul, ite_eq_left rfl,
+          ite_eq_right (lt_irrefl _)]
         congr 1
         push_cast
         ring
-      · rw [Module.End.mul_apply, hup b' b h, map_zero, if_neg (ne_of_gt h),
-          if_neg (not_lt.mpr h.le), if_neg (not_lt.mpr h.le)]
+      · rw [Module.End.mul_apply, hup b' b h, map_zero, ite_eq_right (ne_of_gt h),
+          ite_eq_right (not_lt.mpr h.le), ite_eq_right (not_lt.mpr h.le)]
         simp
     have hIoi : ∀ b : Fin q, (∑ b' : Fin q, if b < b' then (1 : ℤ) else 0) = (q : ℤ) - 1 - (b.val : ℤ) := by
       intro b
@@ -662,8 +656,7 @@ theorem lp_key (hDom : HWDominant) (H : Tower n D ε B) (j : ℕ) (hj : j < n) (
     have e : (fun a b => D j a b + ε j a b) = D (j + 1) := by
       funext a b
       exact (H.step j hj a b).symm
-    rw [e]
-    exact hw
+    rwa [e]
   obtain ⟨b, hbz, hhw⟩ := highest_weight_successive K N q (D j) (ε j) (H.unit_mul j hj) (H.unit_one j hj)
     (fun a b c d => H.comm j j le_rfl hj a b c d) z μ hz0 hw'
   have hmem : ε j b b z ∈ Eig D j κ :=
@@ -677,8 +670,7 @@ theorem lp_key (hDom : HWDominant) (H : Tower n D ε B) (j : ℕ) (hj : j < n) (
     rw [Pi.single_apply] at h1 ⊢
     split_ifs at h1 ⊢ <;> push_cast <;> linarith
   have hw2 : IsHW (D (j + 1)) (fun a => ((κ j + Pi.single b 1 : Fin q → ℕ) a : K)) z := by
-    rw [← hμ']
-    exact hw
+    rwa [← hμ']
   obtain ⟨hanti, hcas⟩ := lp_hw_cas hDom (H.form (j + 1) (by omega)) (κ j + Pi.single b 1) z hz0 hw2
   exact ⟨b, hμ', hanti, hcas⟩
 
@@ -742,8 +734,8 @@ theorem lp_claim [FiniteDimensional K N] (hCR : CompleteRed) (hDom : HWDominant)
       obtain ⟨b, hμ, hanti, hcas⟩ := lp_key hDom H j (by omega) κ (ihuniq κ hκ) v hv hv0 μ hvw
       obtain ⟨κ', hκ'⟩ : ∃ κ' : ℕ → Fin q → ℕ,
           ∀ i, κ' i = if i = j + 1 then κ j + Pi.single b 1 else κ i := ⟨_, fun _ => rfl⟩
-      have hκ'le : ∀ i ≤ j, κ' i = κ i := fun i hi => by rw [hκ', if_neg (by omega)]
-      have hκ'top : κ' (j + 1) = κ j + Pi.single b 1 := by rw [hκ', if_pos rfl]
+      have hκ'le : ∀ i ≤ j, κ' i = κ i := fun i hi => by rw [hκ', ite_eq_right (by omega)]
+      have hκ'top : κ' (j + 1) = κ j + Pi.single b 1 := by rw [hκ', ite_eq_left rfl]
       have hpath : PathTo lam2 (j + 1) κ' := by
         refine ⟨by rw [hκ'le 0 (Nat.zero_le _)]; exact hκ.1, ?_, ?_⟩
         · intro i hi
@@ -755,8 +747,7 @@ theorem lp_claim [FiniteDimensional K N] (hCR : CompleteRed) (hDom : HWDominant)
         · intro i hi
           by_cases hij : i = j + 1
           · subst hij
-            rw [hκ'top]
-            exact hanti
+            rwa [hκ'top]
           · rw [hκ'le i (by omega)]
             exact hκ.2.2 i (by omega)
       have hvE : v ∈ Eig D (j + 1) κ' := by
@@ -764,8 +755,7 @@ theorem lp_claim [FiniteDimensional K N] (hCR : CompleteRed) (hDom : HWDominant)
         intro i hi
         by_cases hij : i = j + 1
         · subst hij
-          rw [hκ'top]
-          exact hcas
+          rwa [hκ'top]
         · rw [hκ'le i (by omega)]
           exact (lp_mem_Eig D j κ v).mp hv i (by omega)
       exact Submodule.mem_iSup_of_mem κ' (Submodule.mem_iSup_of_mem hpath hvE)
@@ -869,22 +859,19 @@ theorem lpc_Dpart_succ (EM : R → R → Module.End K M) (j : ℕ) (a b : R) :
   · rw [Finset.sum_eq_single (⟨j, h⟩ : Fin n)]
     · simp
     · intro s _ hs
-      rw [if_neg]
-      intro e
-      exact hs (Fin.ext e)
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+      rw [ite_eq_right]
+      exact fun e => hs (Fin.ext e)
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · apply Finset.sum_eq_zero
     intro s _
-    rw [if_neg]
+    rw [ite_eq_right]
     have := s.2
     omega
 
 theorem lpc_eps_mul (j : ℕ) (a b c d : R) :
     (epsY K n j a b * epsY K n j c d : Module.End K (Tens R P M n)) = if b = c then epsY K n j a d else 0 := by
   by_cases hj : j < n
-  · simp only [epsY, dif_pos hj]
-    exact unitSecond_mul_unitSecond K _ a b c d
+  · simpa only [epsY, dite_eq_left hj] using unitSecond_mul_unitSecond K _ a b c d
   · simp [epsY, hj]
 
 theorem lpc_eps_glrel (j : ℕ) : GlRel (epsY K n j : R → R → Module.End K (Tens R P M n)) := by
@@ -934,7 +921,7 @@ theorem lpc_unitY_diag (s : Fin n) (a : R) (z : Tens R P M n) (g : Fin n → R �
 theorem lpc_eps_one [Fintype R] (j : ℕ) (hj : j < n) :
     (∑ a, epsY K n j a a : Module.End K (Tens R P M n)) = 1 := by
   refine LinearMap.ext fun z => funext fun g => ?_
-  simp only [epsY, dif_pos hj, LinearMap.sum_apply, Finset.sum_apply, lpc_unitY_diag, Module.End.one_apply]
+  simp only [epsY, dite_eq_left hj, LinearMap.sum_apply, Finset.sum_apply, lpc_unitY_diag, Module.End.one_apply]
   simp
 
 def lpc_cnt (j : ℕ) (a : R) (g : Fin n → R × P) : ℕ :=
@@ -1173,8 +1160,7 @@ theorem diagonal_transfer : DiagTransfer := by
   choose w hw using fun μ : {μ // μ ∈ c.support} => LinearMap.mem_range.mp (hin μ.1 μ.2)
   let W : K → M := fun μ => if h : μ ∈ c.support then w ⟨μ, h⟩ else 0
   have hW : ∀ μ ∈ c.support, i (W μ) = c μ := fun μ h => by
-    simp only [W, dif_pos h]
-    exact hw ⟨μ, h⟩
+    simpa only [W, dite_eq_left h] using hw ⟨μ, h⟩
   have hxsum : x = ∑ μ ∈ c.support, W μ := by
     apply hi
 
@@ -1300,10 +1286,8 @@ theorem real_form_modular : RealFormMod := by
     show 0 < formB p q w lam2 x x
     rw [formB_apply]
     refine div_pos ((fockQPos _ ((x : VQ p q w lam2) : MvPolynomial (Fin (p + q) × Fin (p + q)) ℚ) ((x : VQ p q w lam2) : MvPolynomial (Fin (p + q) × Fin (p + q)) ℚ)).2 ?_) (hw_norm_pos _)
-    intro h0
-    exact hx (Subtype.ext (Subtype.ext h0))
-  · intro a b x y
-    exact real_contragredient p q w lam2 (Sum.inr a) (Sum.inr b) x y
+    exact fun h0 => hx (Subtype.ext (Subtype.ext h0))
+  · exact fun a b x y => real_contragredient p q w lam2 (Sum.inr a) (Sum.inr b) x y
   · intro a
     refine diagonal_transfer ℚ _ _
       ((dualWeyl ℚ (p + q) (p + q) (LD.blockWt p q w lam2)).subtype ∘ₗ (rationalBlockModuleSetting p q w lam2).W.subtype)

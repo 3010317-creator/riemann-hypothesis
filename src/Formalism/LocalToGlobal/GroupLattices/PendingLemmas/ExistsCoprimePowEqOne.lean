@@ -135,8 +135,7 @@ theorem range_wToC : Set.range (wToC p) = (Formalism.MainNotions.GL3Theta.Wp p :
   constructor
   · rintro ⟨x, rfl⟩
     exact wToC_mem_Wp p x
-  · intro hy
-    exact Wp_le_range p hy
+  · exact fun hy => Wp_le_range p hy
 
 theorem mem_Wp_iff (y : ℂ_[p]) : y ∈ Formalism.MainNotions.GL3Theta.Wp p ↔ ∃ x : WW p, wToC p x = y := by
   have := Set.ext_iff.1 (range_wToC p) y
@@ -252,7 +251,7 @@ theorem cc_logF : PowerSeries.constantCoeff (Formalism.MainNotions.GL3Theta.logF
   unfold Formalism.MainNotions.GL3Theta.logF
   rw [PowerSeries.coeff_mk]
   refine Finset.sum_eq_zero fun j _ => ?_
-  rw [if_neg]
+  rw [ite_eq_right]
   exact (pow_pos hp.out.pos _).ne
 
 theorem lg_pt (g : G1 p) (hex : PowerSeries.constantCoeff g.ex = 0) (hinv : PowerSeries.subst g.ex g.l = PowerSeries.X)
@@ -285,8 +284,7 @@ theorem ltIso_of (g : G1 p) (hOk : g.Ok) {c : ℂ_[p]} (hc : c ∈ Wp p) (hc1 : 
       ← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_map]
   have hΘ01 : IsUnit (PowerSeries.coeff 1 Θ0) := by
     apply isUnit_of_norm_eq_one
-    rw [← PowerSeries.coeff_map, hΘ0']
-    exact hΘ1
+    rwa [← PowerSeries.coeff_map, hΘ0']
   refine ⟨hu0.unit⁻¹, Θ0.substInvOfIsUnit hΘ01,
     PowerSeries.constantCoeff_substInvOfIsUnit _ _, ?_, ?_⟩
   · rw [PowerSeries.coeff_one_substInvOfIsUnit]
@@ -306,8 +304,7 @@ theorem ltIso_of (g : G1 p) (hOk : g.Ok) {c : ℂ_[p]} (hc : c ∈ Wp p) (hc1 : 
       have h3' : PowerSeries.map (wToC p) (PowerSeries.subst th Θ0) =
           PowerSeries.subst (PowerSeries.map (wToC p) th) (PowerSeries.map (wToC p) Θ0) :=
         PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' hth0) Θ0
-      rw [h3', hΘ0', PowerSeries.map_X] at h3
-      exact h3
+      rwa [h3', hΘ0', PowerSeries.map_X] at h3
 
     have h4 := lg_pt g hex hinv hA0
     have h5 := congrArg (PowerSeries.subst (PowerSeries.map (wToC p) th)) h4
@@ -341,15 +338,15 @@ theorem coeff_one_subst {R : Type*} [CommRing R] (a f : PowerSeries R) (ha : Pow
   rcases Nat.lt_or_gt_of_ne hd with h | h
   · have : d = 0 := by omega
     subst this
-    rw [pow_zero, PowerSeries.coeff_one, if_neg one_ne_zero, smul_zero]
-  · rw [ha', mul_pow, PowerSeries.coeff_X_pow_mul', if_neg (by omega), smul_zero]
+    rw [pow_zero, PowerSeries.coeff_one, ite_eq_right one_ne_zero, smul_zero]
+  · rw [ha', mul_pow, PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega), smul_zero]
 
 theorem coeff_one_logF : PowerSeries.coeff 1 (Formalism.MainNotions.GL3Theta.logF p) = 1 := by
   unfold Formalism.MainNotions.GL3Theta.logF
   rw [PowerSeries.coeff_mk, Finset.sum_eq_single 0]
   · simp
   · intro j _ hj
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     have h2 : 1 < p ^ (2 * j) := Nat.one_lt_pow (by omega) hp.out.one_lt
     omega
@@ -361,7 +358,7 @@ theorem coeff_one_l (g : G1 p) (hW : IsWq g.W g.wq) : PowerSeries.coeff 1 g.l = 
     have := congrArg PowerSeries.constantCoeff hW
     simpa using this
   unfold G1.l flog
-  rw [PowerSeries.coeff_mk, if_neg one_ne_zero, Nat.sub_self, PowerSeries.coeff_zero_eq_constantCoeff_apply]
+  rw [PowerSeries.coeff_mk, ite_eq_right one_ne_zero, Nat.sub_self, PowerSeries.coeff_zero_eq_constantCoeff_apply]
   unfold omegaW
   simp only [map_mul, map_sub, map_add (f := _), map_neg, map_pow, PowerSeries.constantCoeff_inv, PowerSeries.constantCoeff_X, h0]
   simp
@@ -458,7 +455,7 @@ theorem wq_mem_ratSub {W : WeierstrassCurve ℂ_[p]} {wq : PowerSeries ℂ_[p]} 
     have hd : (PowerSeries.X : PowerSeries ℂ_[p]) ^ n ∣ wq - wn := by
       rw [PowerSeries.X_pow_dvd_iff]
       intro m hm
-      rw [map_sub, hwn_def, PowerSeries.coeff_mk, if_pos hm, sub_self]
+      rw [map_sub, hwn_def, PowerSeries.coeff_mk, ite_eq_left hm, sub_self]
     obtain ⟨r, hr⟩ := hd
     let c := algebraMap ℂ_[p] (PowerSeries ℂ_[p])
     let Φ : PowerSeries ℂ_[p] → PowerSeries ℂ_[p] := fun w =>
@@ -475,7 +472,7 @@ theorem wq_mem_ratSub {W : WeierstrassCurve ℂ_[p]} {wq : PowerSeries ℂ_[p]} 
       have : ∀ Q : PowerSeries ℂ_[p], PowerSeries.X * (PowerSeries.X ^ n * r) * Q = PowerSeries.X ^ (n + 1) * (r * Q) := by
         intro Q
         ring
-      rw [this, PowerSeries.coeff_X_pow_mul', if_neg (by omega)]
+      rw [this, PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega)]
     have e3 : PowerSeries.coeff n wq = PowerSeries.coeff n (Φ wn) := by
       rw [map_sub, sub_eq_zero] at e2
       rw [← e2, ← hΦ]

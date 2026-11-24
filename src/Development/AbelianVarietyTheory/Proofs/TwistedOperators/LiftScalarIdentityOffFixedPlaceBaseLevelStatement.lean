@@ -348,8 +348,7 @@ theorem adForms_spherical (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submodule (�
       exact hFl.1 h' k
     have key := hkG_right (P := P) (finHom V).rangeRestrict (MonoidHom.rangeRestrict_surjective _) hP
       (J := levG V β (flag1L L)) hJf c F hinv hk₁ s₁ s₂ _ hz h
-    rw [show (finHom V).rangeRestrict (k₁ * k₂) = (k : Bridge.Gf V) from hg] at key
-    exact key
+    rwa [show (finHom V).rangeRestrict (k₁ * k₂) = (k : Bridge.Gf V) from hg] at key
   · exact hkG_left (P := P) (finHom V).rangeRestrict c F (Bridge.ratF V γ) (ρ γ) (hFl.2 γ) h
 
 
@@ -374,8 +373,7 @@ theorem conjForms_spherical : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0
       rw [hrange] at h0
       exact h0) cV
   have k1 : ∀ k ∈ GlobalTheory.Hk3.hyp (Vc D i) P, ∀ h, H.e y (h * (finHom (Vc D i)).rangeRestrict k) = H.e y h := by
-    intro k hk h
-    exact key.1 k hk h
+    exact fun k hk h => key.1 k hk h
   refine ⟨fun k hk h => Eq.trans ?_ (k1 k hk h), ?_⟩
   · congr! 2
   have h3 : GlobalTheory.Hk3.hkF (Vc D i) P cV (H.e y) ∈ Bridge.AdForms (Bridge.ratF (Vc D i)) c.coef.ρ (levJ R i A.μ0) χ' := key.2
@@ -681,8 +679,8 @@ theorem hkF_evC (V : HSp D) {W : Type} [AddCommGroup W] [Module ℂ W] (P : Pl D
     · have := congrFun (h d hd) g
       unfold hkF at this
       rw [Finsupp.sum_single_index (by simp), one_smul] at this
-      rw [if_pos hd, this]; rfl
-    · rw [if_neg hd, rep_of_not hd, Finset.sum_empty, zero_smul]
+      rw [ite_eq_left hd, this]; rfl
+    · rw [ite_eq_right hd, rep_of_not hd, Finset.sum_empty, zero_smul]
   simp only [hkF, evC, Finsupp.sum, Pi.smul_apply, Finset.sum_smul, e, smul_smul]
   refine Finset.sum_congr rfl fun d _ => ?_
   split_ifs <;> simp
@@ -710,9 +708,9 @@ theorem tri_solve' {X : Type} [AddCommGroup X] [Module ℂ X] (n : ℕ) (z : ℕ
   refine (Finset.sum_congr rfl fun j hj => ?_).trans
     (Finset.sum_subset (Finset.range_subset_range.2 (by omega)) fun j hj hj' => ?_)
   · rw [Finset.mem_range] at hj
-    rw [if_pos (by omega)]
+    rw [ite_eq_left (by omega)]
   · rw [Finset.mem_range] at hj hj'
-    rw [if_neg (by omega), zero_smul]
+    rw [ite_eq_right (by omega), zero_smul]
 
 theorem exists_split_data {P : Pl D.host.E} (hc : Formalism.DivisionValues.conjPl P ≠ P) : ∃ (e : AE D) (ϖ : 𝓞 D.host.E) (x : (AE D)ˣ),
     Formalism.L2.NTheta.IsIdemAt e P ∧ ϖ ∈ P.asIdeal ∧ ϖ ∉ P.asIdeal ^ 2 ∧ (x : AE D) = e * incA D (ϖ : D.host.E) + (1 - e) := by
@@ -807,8 +805,7 @@ theorem loc_split (hW : IsWeilDatumO R.ψ (Vc D i) (Wc D i) μ' (μ' * η'⁻¹)
       hkF (Vc D i) P (Finsupp.single (splitLab (Vc D i).rank k') 1) (H.e u) := by
     rw [map_smul, hu P _ hP (Or.inl ⟨hc, k', by omega, rfl⟩)]
   have := step _ _ (hms k' (by omega)) u _ hy
-  rw [map_smul, map_smul, hk_splitC, postOn_sum] at this
-  exact this
+  rwa [map_smul, map_smul, hk_splitC, postOn_sum] at this
 
 end Loc
 
@@ -840,8 +837,7 @@ theorem lift_eig_mem_part : GlobalTheory.Hk3.HoweUnram → ∀ {D : D7} {G : Typ
     if h : Good R A.μ0 P ∧ RelLab (Wc D i) P d then (loc P h.1 d h.2).choose else 0
   obtain ⟨ev, hev⟩ := GlobalTheory.T.thetaForm_eigen_mem_single_part R hC.lev hC.models.HW i σ b
   refine ⟨ev, fun u hu => hev (th u) fun P d hP hd => ?_⟩
-  simp only [b, dif_pos (And.intro hP hd)]
-  exact (loc P hP d hd).choose_spec u hu
+  simpa only [b, dite_eq_left (And.intro hP hd)] using (loc P hP d hd).choose_spec u hu
 
 end GlobalTheory.ConjScalar.LiftPart
 end -- clump:auto
@@ -1018,8 +1014,7 @@ theorem hkF_transfer {D : D7} (V : HSp D) {K U W W' : Type} [Field K] [AddCommGr
     apply inj
 
     rw [map_sum, map_smulₛₗ]
-    simp only [← fun x => (hv x).1]
-    exact e'
+    simpa only [← fun x => (hv x).1] using e'
   simp only [fun x => (hv x).2]
 
   rw [← map_smulₛₗ, ← key, map_sum]
@@ -1030,8 +1025,7 @@ theorem eigF_conj : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type
     (Formalism.IndefR.Bridge.FamTie.mapL hT i).2.1
   have inj : Function.Injective (c0L i) := semilinear_injective_of_indep (bVV D.what₂.LL (lamV D i)) (c0L i) hind
   intro P d hG hL
-  have e := hx P d hG hL
-  exact hkF_transfer (Vc D i) (c0L i) c₁ inj _ _ (hc.base x) P d (a P d) e
+  exact hkF_transfer (Vc D i) (c0L i) c₁ inj _ _ (hc.base x) P d (a P d) (hx P d hG hL)
 
 end GlobalTheory.ConjScalar
 end -- clump:auto
@@ -1127,8 +1121,7 @@ theorem heckePolyOf_coeff {L : Type} [Field L] (n q : ℕ) (a : ℕ → L) {k : 
     (Formalism.L2.Col.heckePolyOf n q a).coeff k = (-1) ^ k * (q : L) ^ (k * (k - 1) / 2) * a k := by
   classical
   simp only [Formalism.L2.Col.heckePolyOf, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow]
-  rw [Finset.sum_ite_eq]
-  rw [if_pos (Finset.mem_range.2 (Nat.lt_succ_of_le hk))]
+  rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_range.2 (Nat.lt_succ_of_le hk))]
 
 theorem heckePolyOf_val_eq {L : Type} [Field L] [CharZero L] (n q : ℕ) (hq : q ≠ 0) (a b : ℕ → L)
     (h : Formalism.L2.Col.heckePolyOf n q a = Formalism.L2.Col.heckePolyOf n q b) {k : ℕ} (hk : k ≤ n) : a k = b k := by

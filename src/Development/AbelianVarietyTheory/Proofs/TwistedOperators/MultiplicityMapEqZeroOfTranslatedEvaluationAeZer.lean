@@ -137,24 +137,20 @@ theorem eq_zero_of_ae_fund (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure
     refine measure_mono_null (Set.preimage_mono hAt) ?_
     have hf : AEMeasurable (fun z => γ * z) (I.muA μf) :=
       (continuous_const_mul γ).measurable.aemeasurable
-    rw [← Measure.map_apply_of_aemeasurable hf ht, hl γ]
-    exact ht0
+    rwa [← Measure.map_apply_of_aemeasurable hf ht, hl γ]
   have hopen : IsOpen {z | φ z ≠ 0} := isOpen_ne_fun hc continuous_const
 
   have hnull : I.muA μf ({z | φ z ≠ 0} ∩ fund) = 0 := by
     have h1 : ∀ᵐ z ∂(I.muA μf), z ∈ fund → φ z = 0 := (ae_restrict_iff' hfund.1).1 h0
     rw [ae_iff] at h1
-    refine measure_mono_null ?_ h1
-    intro z hz
-    exact fun h => hz.1 (h hz.2)
+    exact measure_mono_null (fun z hz => fun h => hz.1 (h hz.2)) h1
 
   have hcov : {z | φ z ≠ 0} ⊆ ⋃ γ ∈ I.GFset, (fun z => γ * z) ⁻¹' ({z | φ z ≠ 0} ∩ fund) := by
     intro z hz
     obtain ⟨γ, hγ, hγz⟩ := hfund.2.1 z
     refine Set.mem_biUnion hγ ⟨?_, hγz⟩
     show φ (γ * z) ≠ 0
-    rw [hinv γ hγ z]
-    exact hz
+    rwa [hinv γ hγ z]
   have hall : I.muA μf {z | φ z ≠ 0} = 0 := by
     refine measure_mono_null hcov ((measure_biUnion_null_iff (gfset_countable I)).2 fun γ _ => ?_)
     exact hpre γ _ hnull
@@ -188,8 +184,7 @@ theorem eq_zero_of_value {T : MMap M} (hT : IsMultMap θ M J χ T) (v₀ : M.Vec
       rw [hT.equiv τ g hg u ⟨_, hmem⟩ rfl, hu] at h1
       simpa [rTr] using h1
     have h2 := GlobalTheory.SmoothCyclic.eq_zero_of_orbit D V S M τ ℓ hℓ (u τ) (u τ).2 hne horb w w.2
-    rw [hval w] at h2
-    exact h2
+    rwa [hval w] at h2
 
   have key : ∀ s : Finset D.what₂.Tau, ∀ w : M.Vec, T (fun τ => if τ ∈ s then w τ else v₀ τ) = 0 := by
     intro s
@@ -198,8 +193,7 @@ theorem eq_zero_of_value {T : MMap M} (hT : IsMultMap θ M J χ T) (v₀ : M.Vec
       simpa using h0
     · intro a s ha ih w
       have hne : ((if a ∈ s then w a else v₀ a : M.sm a) : M.H a) ≠ 0 := by
-        simp only [ha, if_false]
-        exact hv₀ a
+        simpa only [ha, ite_false] using hv₀ a
       have h3 := step _ a (ih w) hne (w a)
       convert h3 using 2
       funext τ
@@ -257,8 +251,7 @@ theorem GlobalTheory.TranslatedEvalInj.eq_zero : ∀ {D : D7} {G : Type} [Group 
     have h1 := GlobalTheory.TranslatedEvalInj.castGA_symm_mem h.symm γ hγ
     rw [Formalism.IndefR.RationalEmbedding.iota_rat]
     change Formalism.IndefR.RationalEmbedding.iota D ((Formalism.IndefR.RationalEmbedding.iota D).symm ((castGA h.symm).symm γ)) ∈ _
-    rw [ContinuousMulEquiv.apply_symm_apply]
-    exact h1
+    rwa [ContinuousMulEquiv.apply_symm_apply]
 
   have hfun : ∀ y : X.B.I.GA, S' v₀ ((iotaX X h).symm (y * iotaX X h t)) =
       ev (MP R) v₀ S' (@HMul.hMul (GA D (Yc D 0)) (GA D (Yc D 0)) (GA D (Yc D 0)) _ ((iotaX X h).symm y) t) := by
@@ -277,8 +270,7 @@ theorem GlobalTheory.TranslatedEvalInj.eq_zero : ∀ {D : D7} {G : Type} [Group 
       have e : (fun y : X.B.I.GA => S' v₀ ((iotaX X h).symm (y * iotaX X h t))) =
           fun x => ev (MP R) v₀ S' (@HMul.hMul (GA D (Yc D 0)) (GA D (Yc D 0)) (GA D (Yc D 0)) _ ((iotaX X h).symm x) t) :=
         funext hfun
-      rw [e]
-      exact hae
+      rwa [e]
     exact GlobalTheory.TranslatedEvalInj.eq_zero_of_ae_fund X.B.I X.B.μf X.B.fund_spec hc hinv hae'
   have h0 : S' v₀ = 0 := by
     funext g
@@ -288,8 +280,7 @@ theorem GlobalTheory.TranslatedEvalInj.eq_zero : ∀ {D : D7} {G : Type} [Group 
         ((iotaX X h).symm_apply_apply _)).trans ?_
       first
         | exact inv_mul_cancel_right g t
-    rw [e] at h2
-    exact h2
+    rwa [e] at h2
   exact GlobalTheory.TranslatedEvalInj.eq_zero_of_value hT v₀ hv₀ h0
 
 end

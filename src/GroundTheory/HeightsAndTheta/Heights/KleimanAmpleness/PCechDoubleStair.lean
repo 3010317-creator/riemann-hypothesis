@@ -188,8 +188,7 @@ theorem Rel.smul : ∀ (n : ℕ) (X : DblData R) (r : R) {x : X.A n} {y : X.C n}
   intro n
   induction n with
   | zero =>
-    intro X r x y h₁
-    exact rel_zero.mpr (by rw [map_smul, map_smul, rel_zero.mp h₁])
+    exact fun X r x y h₁ => rel_zero.mpr (by rw [map_smul, map_smul, rel_zero.mp h₁])
   | succ n ih =>
     intro X r x y h₁
     obtain ⟨z, e, r₁⟩ := rel_succ.mp h₁
@@ -233,8 +232,7 @@ theorem exA : ∀ (n : ℕ) (X : DblData R), X.Good → ∀ x, X.dA n x = 0 → 
     have hc := (cocycle n X.shift hX.shift x (X.up n z) hw).2
     have h1 : X.h 1 n (X.v 0 n z) = 0 := by
       have := congrArg (X.shift.c (n + 1)) hc
-      rw [map_zero] at this
-      exact this
+      rwa [map_zero] at this
     have h2 : X.v 0 (n + 1) (X.h 0 n z) = 0 := by rw [X.comm_apply]; exact h1
     obtain ⟨y, hy⟩ := hX.ex_c (n + 1) h2
     exact ⟨y, rel_succ.mpr ⟨z, hy.symm, hw⟩⟩
@@ -264,8 +262,7 @@ theorem bdA : ∀ (n : ℕ) (X : DblData R), X.Good → ∀ x₀ : X.A n, Rel (n
   induction n with
   | zero =>
     intro X hX x₀
-    refine rel_succ.mpr ⟨X.a 0 x₀, by rw [hX.ha0, map_zero], rel_zero.mpr ?_⟩
-    exact hX.a_d 0 x₀
+    exact rel_succ.mpr ⟨X.a 0 x₀, by rw [hX.ha0, map_zero], rel_zero.mpr (hX.a_d 0 x₀)⟩
   | succ n ih =>
     intro X hX x₀
     refine rel_succ.mpr ⟨0, by rw [map_zero, map_zero], ?_⟩
@@ -298,8 +295,7 @@ theorem kerC : ∀ (n : ℕ) (X : DblData R), X.Good → ∀ y, Rel n X 0 y → 
     · have hb0 : X.up 0 z = 0 := (Submodule.mem_bot R).mp hb
       have hv : X.v 0 0 z = 0 := by
         have := congrArg (X.shift.c 0) hb0
-        rw [map_zero] at this
-        exact this
+        rwa [map_zero] at this
       obtain ⟨y₀, hy₀⟩ := hX.ex_c 0 hv
       refine LinearMap.mem_range.mpr ⟨y₀, hX.c_injective 1 ?_⟩
       rw [hX.c_d, hy₀, hz]
@@ -344,8 +340,7 @@ theorem kerA : ∀ (n : ℕ) (X : DblData R), X.Good → ∀ x, Rel n X x 0 → 
         have h2 : ((0 : X.shift.A (m + 1)), X.shift.dC m (X.up m z')) ∈ relSub (m + 1) X.shift := h0
         have h3 : Rel (m + 1) X.shift (x - (0 : X.A (m + 1 + 1))) (X.shift.dC m (X.up m z') - X.shift.dC m (X.up m z')) :=
           (relSub (m + 1) X.shift).sub_mem h1 h2
-        rw [sub_zero, sub_self] at h3
-        exact h3
+        rwa [sub_zero, sub_self] at h3
       exact ih X.shift hX.shift x hs
 
 end DblData
@@ -373,8 +368,7 @@ theorem graph_equiv {M N M' N' : Type*} [AddCommGroup M] [Module R M] [AddCommGr
     rw [Submodule.mem_comap]
     apply hKN
     have := G.sub_mem (hf x) hxy
-    rw [Prod.mk_sub_mk, sub_self] at this
-    exact this
+    rwa [Prod.mk_sub_mk, sub_self] at this
   let F : LinearMap.ker dM →ₗ[R] LinearMap.ker dN ⧸ BN.comap (LinearMap.ker dN).subtype :=
     { toFun := g
       map_add' := fun x₁ x₂ => by
@@ -402,14 +396,12 @@ theorem graph_equiv {M N M' N' : Type*} [AddCommGroup M] [Module R M] [AddCommGr
     rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap]
     apply hKM
     have := G.sub_mem (hf x) (hBN _ hq')
-    rw [Prod.mk_sub_mk, sub_zero, sub_self] at this
-    exact this
+    rwa [Prod.mk_sub_mk, sub_zero, sub_self] at this
   have surj : Function.Surjective Φ := by
     intro q
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
     obtain ⟨x, hx⟩ := hN y.1 (LinearMap.mem_ker.mp y.2)
-    refine ⟨Submodule.Quotient.mk ⟨x, LinearMap.mem_ker.mpr (hZ _ _ hx).1⟩, ?_⟩
-    exact key _ y hx
+    exact ⟨Submodule.Quotient.mk ⟨x, LinearMap.mem_ker.mpr (hZ _ _ hx).1⟩, key _ y hx⟩
   exact ⟨LinearEquiv.ofBijective Φ ⟨inj, surj⟩⟩
 
 namespace DblData

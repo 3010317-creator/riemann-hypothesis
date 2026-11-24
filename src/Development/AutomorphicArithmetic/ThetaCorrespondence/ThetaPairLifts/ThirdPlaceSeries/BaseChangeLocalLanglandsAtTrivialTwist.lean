@@ -366,8 +366,7 @@ theorem thetaPair_of_hasThetaAt (hBZ : GlobalTheory.Published.BernsteinZelevinsk
       congr 1
       exact Subtype.ext hc0
     show Λ (ι Φ0) (T' a0) (T'' c0) ≠ 0
-    rw [e1, e2]
-    exact hℓg2
+    rwa [e1, e2]
   refine GlobalTheory.ThetaRiesz.thetaPair_of_invariant_form _ D.R.r (D.R.r + D.R.t) _ _ (μ.loc s.w) τ.ρ
     (GlobalTheory.SmGL.twist π.ρ (GlobalTheory.SmGL.detChar (Fin (D.R.r + D.R.t)) (η.loc s.w)))
     ((hBZ _).1 (Fin D.R.r) _ _ τ.smooth τ.irr) hU (GlobalTheory.HeckeComp.smooth_loc μ s.w) b
@@ -394,8 +393,7 @@ theorem thetaPair_of_hasThetaAt (hBZ : GlobalTheory.Published.BernsteinZelevinsk
   show Λ (ι Φ') (T' (GlobalTheory.SmGL.twist π.ρ (GlobalTheory.SmGL.detChar (Fin (D.R.r + D.R.t)) (η.loc s.w)) _ a)) (T'' (τ.ρ _ c')) =
     Λ (ι Φ) (T' a) (T'' c')
   rw [twist_apply, detChar_apply, map_smul, LinearMap.map_smul, LinearMap.smul_apply]
-  rw [LinearMap.map_smul, LinearMap.smul_apply, LinearMap.smul_apply] at key
-  exact key
+  rwa [LinearMap.map_smul, LinearMap.smul_apply, LinearMap.smul_apply] at key
 
 end GlobalTheory.RefPair
 
@@ -616,8 +614,7 @@ theorem main : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Publi
     (PiTensorProduct.lift : Mult.MMap (R.MW j (sg0 D A3.A)) ≃ₗ[ℂ] _).symm.toLinearMap ∘ₗ
       (Submodule.subtype ((toLiftReal R.toRealDat F.lv2 Y.tupT Y.hm Y.hTop Y.hinj).Wc j)) ∘ₗ (Y.IL.jMj j).toLinearMap
   have hφ : ∀ y, PiTensorProduct.lift (φ y) = (Y.IL.jMj j y).1 := by
-    intro y
-    exact LinearEquiv.apply_symm_apply _ _
+    exact fun y => LinearEquiv.apply_symm_apply _ _
   have hgood : ∀ y, φ y ∈ Mult.goodPart R.θ (R.MW j (sg0 D A3.A)) (levS _ (R.βW j) (R.datWp j (R.levL F.lv2 false (sg0 D A3.A))))
       (levChi _ (R.βW j) (R.datWp j (R.levL F.lv2 false (sg0 D A3.A)))) (R.eWf j (sg0 D A3.A)) := by
     intro y
@@ -626,8 +623,7 @@ theorem main : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Publi
       show PiTensorProduct.lift.symm (Y.IL.jMj j y).1 = a
       rw [← hay]
       exact LinearEquiv.symm_apply_apply _ _
-    rw [this]
-    exact ha
+    rwa [this]
   have hmem : ∀ y, φ y ∈ principalLevelFrame.Minf R.θ (Y.PW j) (R.MW j (sg0 D A3.A)) := fun y =>
     principalLevelFrame.mult_le_Minf hLev (Mult.goodPart_le _ _ _ _ _ (hgood y))
   refine ⟨{ A := Mult.MMap (R.MW j (sg0 D A3.A))
@@ -745,8 +741,7 @@ theorem fFin_rat (Ad : GlobalTheory.HeightCounting.MtAd Y M) (i : Fin D.R.m)
     rw [GlobalTheory.ThetaFormV.preF_mul, ← hxdef]
   have hF := Fm.2.1 ⟨x, hrat⟩ (preF (Ad.PV i) k)
   unfold fFin
-  rw [e1]
-  rw [← Ad.wt D.what₂.mu0 (reference_tuple_used D) i ⟨x, hrat⟩ γ hγ hx]
+  rw [e1, ← Ad.wt D.what₂.mu0 (reference_tuple_used D) i ⟨x, hrat⟩ γ hγ hx]
   exact congrArg _ hF
 
 theorem fV_invariant (Ad : GlobalTheory.HeightCounting.MtAd Y M) (i : Fin D.R.m)
@@ -996,31 +991,7 @@ theorem fV_rat (Ad : GlobalTheory.HeightCounting.MtAd Y M) (i : Fin D.R.m)
     (Fm : ↥(NG.AFall D.host.E D.R.nV (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.ρ))
     (γ : Formalism.L2.Theta.GA D (Vc D i)) (hγ : γ ∈ Formalism.L2.Theta.GQ (Vc D i)) (x : Formalism.L2.Theta.GA D (Vc D i)) :
     RefTheta.fV Ad i Fm (γ * x) = RefTheta.fV Ad i Fm x := by
-  obtain ⟨y, hy⟩ := fin_frame_surj (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict γ)
-  obtain ⟨z, hz⟩ := fin_frame_surj (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x)
-  have he : Formalism.L2.Theta.finHom (Vc D i) γ = Formalism.L2.Theta.finHom (Vc D i) ((Ad.PV i).ψ y) :=
-    (congrArg Subtype.val hy).symm
-  have hh' : y ∈ ReciprocityTheory.Aut.GQ D.host.E D.R.nV := (Ad.rat i _).2 ⟨γ, hγ, he⟩
-  show (R.cV i).ρ (γ * x)⁻¹ (Ad.eW D.what₂.mu0 (reference_tuple_used D) i ((Fm : Formalism.AUTREP.GAf D.host.E D.R.nV → (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.W)
-      (preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict (γ * x))))) =
-    (R.cV i).ρ x⁻¹ (Ad.eW D.what₂.mu0 (reference_tuple_used D) i ((Fm : Formalism.AUTREP.GAf D.host.E D.R.nV → (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.W)
-      (preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x))))
-  have hprod : (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict γ * (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x =
-      (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict ((Ad.PV i).ψ (y * z)) :=
-    (congrArg₂ (· * ·) hy.symm hz.symm).trans
-      ((map_mul (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict _ _).symm.trans
-        (congrArg (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict (map_mul (Ad.PV i).ψ y z).symm))
-  have key : preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict (γ * x)) = y * z :=
-    (congrArg (preF (Ad.PV i)) ((map_mul (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict γ x).trans hprod)).trans (preF_frame _ _)
-  have hz' : preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x) = z :=
-    (congrArg (preF (Ad.PV i)) hz.symm).trans (preF_frame _ _)
-  rw [key, hz']
-  have e1 := Fm.2.1 ⟨y, hh'⟩ z
-  have e2 := Ad.wt D.what₂.mu0 (reference_tuple_used D) i ⟨y, hh'⟩ γ hγ he
-    ((Fm : Formalism.AUTREP.GAf D.host.E D.R.nV → (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.W) z)
-  rw [e1, e2, _root_.mul_inv_rev,
-    map_mul, Module.End.mul_apply, ← Module.End.mul_apply ((R.cV i).ρ γ⁻¹), ← map_mul, inv_mul_cancel, map_one,
-    Module.End.one_apply]
+  exact GlobalTheory.RefTheta.fV_invariant Ad i Fm γ hγ x
 
 theorem yv_apply {rep : D.what₂.FT → NG.FinTyp D.host.E D.R.r} {i : Fin D.R.m} {j : ℕ} {hj : i.1 + 1 = j}
     {X : GlobalTheory.NPin.RowMod D rep j} (hc : IsCanonR Y i hj X) (y : ↥X.C) (x : Formalism.L2.Theta.GA D (Wc D i)) :
@@ -1202,8 +1173,7 @@ theorem GlobalTheory.RefTheta.locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTh
   have hC : z.R.C = TC.cf w.I w.l Z := z.lev.C
   obtain ⟨X, hX⟩ := GlobalTheory.RefTheta.datum_real hN.hc hN.decay _ _ _ _ _ _ _ z.R z.F z.cG p0 Y z.pins hH hEx M hMA i
   refine ⟨X, ?_⟩
-  rw [← hC]
-  exact hX
+  rwa [← hC]
 end
 end
 end -- clump:auto
@@ -1319,8 +1289,7 @@ theorem localComponent_matches_of_howeDuality_alt (hBZ : GlobalTheory.Published.
     rw [GlobalTheory.SplitPairLift.twist_twist_inv]
     exact ⟨.refl _⟩)
   have hμi : IsComp (a.chr.e1 μ).1 s.w (χ.loc s.w) := by
-    rw [hμ]
-    exact hμc
+    rwa [hμ]
   have eμ : a.T.e s.w (D.naut.locG μ s.w) = GlobalTheory.NPin.weilDeligneOfLocalIrrep hL D s.w 1 cμ :=
     GlobalTheory.LiftSplitLoc.locG_rankOne_alt a.T a.cg a.chr μ s.w (χ.loc s.w) hμi
   have eη : a.T.e s.w (D.naut.locG D.naut.etaTinv s.w) = GlobalTheory.NPin.weilDeligneOfLocalIrrep hL D s.w 1 cη :=

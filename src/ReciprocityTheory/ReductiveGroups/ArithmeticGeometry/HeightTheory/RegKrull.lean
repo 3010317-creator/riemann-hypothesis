@@ -64,8 +64,7 @@ theorem exists_prime_colon [IsNoetherianRing R] (s a : R) (ha : a ∉ Ideal.span
     rw [heq, mem_colonI]
     have h' := mem_colonI.1 h
     have e : q2 * (q1 * b) = q1 * q2 * b := by ring
-    rw [e]
-    exact h'
+    rwa [e]
 
 end KrullColonIdeal
 
@@ -114,7 +113,7 @@ theorem mem_of_mem_heightOne_localizations {R K : Type*} [CommRing R] [IsDomain 
 
   have key : ∃ q0 ∈ colonI b c, ∃ u : R, u ∉ colonI b c ∧ u * b = q0 * c := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     apply hc
     have hint : IsIntegral R (algebraMap R K c / algebraMap R K b) := by
       refine isIntegral_of_smul_mem_submodule

@@ -198,8 +198,7 @@ theorem sumLPres_holds : SumLPres := by
     apply Subtype.ext
     show (L₀ (L₀.symm ⟨a, ha⟩) : EuclideanSpace ℝ (Fin n × Fin n × Bool)) +
       (L₁ (L₁.symm ⟨b, hb⟩) : EuclideanSpace ℝ (Fin n × Fin n × Bool)) = x
-    rw [L₀.apply_symm_apply, L₁.apply_symm_apply]
-    exact hab
+    rwa [L₀.apply_symm_apply, L₁.apply_symm_apply]
   let ψ : EuclideanSpace ℝ (ι ⊕ η) ≃ₗᵢ[ℝ] gLie ε := LinearIsometryEquiv.ofSurjective ψi hsurj
   have hψ : MeasurePreserving ψ := ψ.measurePreserving
   let T : (EuclideanSpace ℝ ι × EuclideanSpace ℝ η) ≃ᵐ gLie ε :=

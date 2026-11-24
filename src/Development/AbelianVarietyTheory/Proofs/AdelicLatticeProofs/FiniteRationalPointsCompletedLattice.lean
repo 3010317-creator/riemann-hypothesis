@@ -111,8 +111,7 @@ theorem norm_emb_le (D : D7) {x : D.host.E} {R : ℝ} (h : ∀ τ, ‖tauE D τ 
   obtain ⟨τ, hτ⟩ := (GlobalTheory.CMTypePlaces.mk_tauE_bijective D).2 (InfinitePlace.mk φ)
   have := h τ
   rw [← InfinitePlace.apply] at this ⊢
-  rw [← hτ]
-  exact this
+  rwa [← hτ]
 
 theorem finite_rational_points : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), IsSelfDualC S ΛS → IsSelfDualC T ΛT → ∀ R : ℝ, {g : Matrix (Fin T.rank) (Fin S.rank) D.host.E | (∃ l ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True), ((ratW T S g : WO S T) - l).map (finPart D) = 0) ∧ ∀ τ i j, ‖tauE D τ (g i j)‖ ≤ R}.Finite := by
   classical
@@ -133,8 +132,7 @@ theorem finite_rational_points : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (�
     intro a ha s hs t ht i j
     have e : d * (a * t i * ∑ k, star (s k) * S.gram k j) =
         ((dA : D.host.E) * a) * (dT * t i) * ∑ k, star (dS * s k) * ((y : D.host.E) * S.gram k j) := by
-      simp only [hdd, Finset.mul_sum, star_mul]
-      exact Finset.sum_congr rfl fun k _ => by ring
+      simpa only [hdd, Finset.mul_sum, star_mul] using Finset.sum_congr rfl fun k _ => by ring
     rw [e]
     refine IsIntegral.mul (IsIntegral.mul ?_ (hT' t ht i)) (IsIntegral.sum _ fun k _ =>
       (isIntegral_star D (hS' s hs k)).mul ?_)

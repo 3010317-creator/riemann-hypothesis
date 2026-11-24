@@ -60,8 +60,7 @@ private theorem plus_eq {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
     (RingEquiv.toRatAlgEquiv e).toLinearEquiv.finrank_eq
   have hsup : Module.finrank ℚ T.L ≤ Module.finrank ℚ T.F * 2 := by
     have h1 := IntermediateField.finrank_sup_le T.F T.K
-    rw [T.degK, ← T.hL] at h1
-    exact h1
+    rwa [T.degK, ← T.hL] at h1
   have hM : Module.finrank ℚ (maximalRealSubfield T.L) * 2 = Module.finrank ℚ T.L := by
     rw [← Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield T.L) T.L]
     exact (letI : Module.Free (maximalRealSubfield T.L) T.L := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank ℚ (maximalRealSubfield T.L) T.L)
@@ -98,8 +97,7 @@ private theorem fix_L {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
     {D : Raw Ω c} (T : Tower D) (τ : G T.F Ω) : τ ∈ T.GalL ↔ ∀ x : T.L, τ (x : Ω) = x := by
   have hF : resQ T.F τ ∈ T.F.fixingSubgroup := by
     rw [IntermediateField.fixingSubgroup, mem_fixingSubgroup_iff]
-    intro y hy
-    exact τ.commutes ⟨y, hy⟩
+    exact fun y hy => τ.commutes ⟨y, hy⟩
   unfold Tower.GalL
   rw [Subgroup.mem_comap]
   constructor
@@ -111,8 +109,7 @@ private theorem fix_L {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
     exact hsup x x.2
   · intro h
     rw [IntermediateField.fixingSubgroup, mem_fixingSubgroup_iff]
-    intro y hy
-    exact h ⟨y, Lk.K_le T hy⟩
+    exact fun y hy => h ⟨y, Lk.K_le T hy⟩
 
 theorem UpperTheory.V.Ws.Lk.galEq :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c} (T : Tower D), (∀ x : Ω, x ∈ T.F ↔ ∃ y : W.Lp T.L, algebraMap (W.Lp T.L) Ω y = x) ∧ (∃ φ : G (W.Lp T.L) Ω ≃* G T.F Ω, (∀ σ x, φ σ x = σ x) ∧ ∀ σ, φ σ ∈ T.GalL ↔ σ ∈ (W.resP T.L Ω).range) ∧ ∀ τ : G T.F Ω, τ ∈ T.GalL ↔ τ ∈ (resLe T.F_le).range := by

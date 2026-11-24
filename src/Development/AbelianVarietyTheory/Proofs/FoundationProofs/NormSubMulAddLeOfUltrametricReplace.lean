@@ -152,17 +152,7 @@ theorem UpperTheory.Reformulated.B.Rc8.norm_le_one_of_mem :
     x ∈ c.O →
       ‖x‖ ≤
         (1 :
-          ℝ) := by
-  intro l _ c x hx
-  have hi : IsIntegral ℤ_[l] x :=
-    (Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val
-  have hm : minpoly ℚ_[l] x = (minpoly ℤ_[l] x).map (algebraMap ℤ_[l] ℚ_[l]) :=
-    minpoly.isIntegrallyClosed_eq_field_fractions' ℚ_[l] hi
-  rw [← PadicAlgCl.spectralNorm_eq, spectralNorm, hm,
-    spectralValue_le_one_iff ((minpoly.monic hi).map _)]
-  intro n
-  rw [Polynomial.coeff_map]
-  exact PadicInt.norm_le_one _
+          ℝ) := GlobalTheory.Ord2.FirstDer.norm_le_one_of_mem
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsFurtherTail =====
@@ -211,12 +201,7 @@ open scoped Matrix
 namespace GlobalTheory.LimCoc
 
 theorem norm_l_lt_one (l : ℕ) [Fact l.Prime] : ‖((l : ℕ) : Qbar l)‖ < 1 := by
-  have h : ((l : ℕ) : Qbar l) = algebraMap ℚ_[l] (PadicAlgCl l) (l : ℚ_[l]) := by
-    rw [map_natCast]
-  rw [h]
-  have := PadicAlgCl.norm_extends l (l : ℚ_[l])
-  rw [this, Padic.norm_p]
-  exact inv_lt_one_of_one_lt₀ (by exact_mod_cast (Fact.out : l.Prime).one_lt)
+  exact GlobalTheory.norm_natCast_prime_qbar l
 
 theorem ultra3 {K : Type*} [NormedField K] [IsUltrametricDist K] (a b c e : K) (ε : ℝ)
     (ha : ‖a‖ ≤ ε) (hb : ‖b‖ ≤ ε) (hc : ‖c‖ ≤ ε) (he : ‖e‖ ≤ ε) :
@@ -339,8 +324,7 @@ theorem coefO_dvd_pow_l {l : ℕ} [Fact l.Prime] (c : Coef l) {x : Qbar l} (hx :
   have h2 : x' * ((-(aeval x' r)) * algebraMap ℤ_[l] c.O ((w⁻¹ : ℤ_[l]ˣ) : ℤ_[l]))
       = algebraMap ℤ_[l] c.O ((l : ℤ_[l]) ^ a.valuation) := by
     rw [← mul_assoc, ← hrel, ← map_mul, haw]
-  have h3 := congrArg Subtype.val h2
-  simpa using h3
+  simpa using congrArg Subtype.val h2
 
 end GlobalTheory
 
@@ -386,7 +370,7 @@ theorem rat_unram_to_int_unram : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
         exact mul_mem hu (sub_mem (mul_mem (hAO _ _ _) hQ) (mul_mem (hAO _ _ _) hP))
     · intro s₀ hs₀
       rw [hYv s₀ hs₀, smul_sub, Matrix.mulVec_smul]
-  · push_neg at h2
+  · push Not at h2
     by_cases h1 : ∃ s ∈ Ine (F := ℚ) B, ∃ i j, A s i j ≠ 0
     · obtain ⟨s, hs, i, j, hα⟩ := h1
       obtain ⟨k, u, hu, hαu⟩ := coefO_dvd_pow_l c (hAO s i j) hα
@@ -407,7 +391,7 @@ theorem rat_unram_to_int_unram : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
         · simp only [Fin.mk_one, Fin.isValue] at hαu ⊢
           simp
           linear_combination (-(A s' i' 0 * v 0 + A s' i' 1 * v 1)) * hαu - u * v 0 * hdet
-    · push_neg at h1
+    · push Not at h1
       refine ⟨0, fun Y v _ hYv => ⟨0, fun _ => zero_mem _, fun s hs => ?_⟩⟩
       ext i
       rw [Pi.smul_apply, hYv s hs, hmv, hmv]
@@ -556,17 +540,7 @@ namespace GlobalTheory.KA.TameLim
 variable {l : ℕ} [Fact l.Prime]
 
 theorem norm_le_one_of_mem (c : Coef l) {x : Qbar l} (hx : x ∈ c.O) : ‖x‖ ≤ 1 := by
-  haveI : Module.Finite ℤ_[l] c.O := c.fin
-  have hi : IsIntegral ℤ_[l] x := by
-    have h := (isIntegral_algHom_iff (c.O.val.restrictScalars ℤ_[l]) Subtype.val_injective).2
-      (Algebra.IsIntegral.isIntegral (⟨x, hx⟩ : c.O))
-    simpa using h
-  have hq : IsIntegral ℚ_[l] x := Algebra.IsIntegral.isIntegral x
-  change spectralValue (minpoly ℚ_[l] x) ≤ 1
-  rw [spectralValue_le_one_iff (minpoly.monic hq)]
-  intro k
-  rw [minpoly.isIntegrallyClosed_eq_field_fractions' ℚ_[l] hi, Polynomial.coeff_map]
-  exact PadicInt.norm_le_one _
+  exact GlobalTheory.Ord2.FirstDer.norm_le_one_of_mem c hx
 
 theorem inv_pow_mem (c : Coef l) (e k : ℕ) (h : k = 0 ∨ ¬ l ∣ k) : (((k : ℕ) : Qbar l) ^ e)⁻¹ ∈ c.O := by
   rcases h with rfl | h
@@ -953,8 +927,7 @@ theorem exists_pow_fix {K C : Type} [Field K] [AddCommGroup C] [Module K C] [Fin
   have h1 : LinearMap.eqLocus (T ^ E) LinearMap.id ≤ LinearMap.eqLocus (T ^ (E * d)) LinearMap.id := fun x hx => hm E d x hx
   have h2 := eq_of_le_of_not_lt h1 (hmax _ ⟨E * d, mul_pos hE hd, rfl⟩)
   have h3 : c ∈ LinearMap.eqLocus (T ^ (E * d)) LinearMap.id := by rw [mul_comm]; exact hm d E c hc
-  rw [← h2] at h3
-  exact h3
+  rwa [← h2] at h3
 
 theorem isClosed_submodule {l : ℕ} [Fact l.Prime] (U : Submodule (Qbar l) (Fin 2 → Qbar l)) :
     IsClosed (U : Set (Fin 2 → Qbar l)) := by
@@ -1064,8 +1037,7 @@ theorem exists_conj_norm : ∀ (Γ : Type) [Group Γ] (K : Type) [Field K] (X : 
     exact sub_eq_zero.1 this
   · have := key γ (e ▸ I.mul_mem (I.pow_mem hγ N) (hJI hj₁))
     rw [e, hzc _ (I.pow_mem hγ N), hz0 _ hj₁, Matrix.mulVec_zero, add_zero, hzp] at this
-    rw [← Matrix.mulVec_mulVec]
-    exact this
+    rwa [← Matrix.mulVec_mulVec]
 
 theorem frob_mulVec_cob : ∀ (Γ : Type) [Group Γ] (K : Type) [Field K] (ρ : Γ →* GL (Fin 2) K) (J : Subgroup Γ) (γ φ : Γ) (N : ℕ), (∃ j ∈ J, φ * γ * φ⁻¹ = γ ^ N * j) → ∀ u : Fin 2 → K, (∀ j ∈ J, ((ρ j : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u = u) → (((ρ φ⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) * ∑ i ∈ Finset.range N, ((ρ γ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) ^ i) *ᵥ (((ρ γ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u - u) = ((ρ γ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ (((ρ φ⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u) - ((ρ φ⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) *ᵥ u := by
   intro Γ _ K _ ρ J γ φ N ⟨j, hj, e⟩ u hu
@@ -1208,8 +1180,7 @@ theorem mem_of_fibre_sums {l : ℕ} [Fact l.Prime] {X : ℕ → Type} [∀ r, Gr
     exact lt_of_mul_lt_mul_left (this.trans_lt hk) hE0.le
   refine ⟨b - o • y, ?_, ?_⟩
   · have h3' : Wo.mkQ (∑ x, a' r x) = Wo.mkQ (o • y) := by
-      rw [map_nsmul, hy, map_sum, map_sum]
-      exact h3
+      rwa [map_nsmul, hy, map_sum, map_sum]
     have := Wo.add_mem (hb r) ((Submodule.Quotient.eq Wo).1 h3')
     rwa [sub_add_sub_cancel] at this
   · rw [dist_eq_norm, sub_sub_cancel, ← Nat.cast_smul_eq_nsmul (Qbar l), norm_smul]
@@ -1490,8 +1461,7 @@ theorem glob_of_shapiro_system_noLayer (l : ℕ) [Fact l.Prime] (Ω : Type) [Fie
     have h := spec_approx_cocycle l r ρ (cycMod ℚ Ω l r)⁻¹ (Y r) (η r) (fun s => (θ s : Qbar l)) (hY r)
       (fun s i j => norm_le_one_of_mem c (hρO s i j)) (hYn r) (hηn r)
       (fun s x => by simpa only [MonoidHom.inv_apply, inv_inv] using hcong r s x) s t i
-    rw [hWθ s, Matrix.smul_mulVec]
-    exact h
+    rwa [hWθ s, Matrix.smul_mulVec]
   have hcoc : ∀ s t, y (s * t) = y s + mat W s *ᵥ y t :=
     _root_.GlobalTheory.LimCoc.limit_cocycle l (mat W) a y (fun s i j => norm_le_one_of_mem c (hWO s i j)) haN happ
       (fun r s i => hyA s i r)
@@ -1540,9 +1510,7 @@ theorem iwSys2_of_shCoc (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra
     simp only [Pi.add_apply, Matrix.mulVec, dotProduct, Fin.sum_univ_two, (hρ s hs).1, (hρ s hs).2, zero_mul,
       zero_add, MonoidHom.inv_apply] at h
     exact h
-  · have h := congrFun (congrFun (hN r s) x) 1
-    simp only [push, Finset.sum_apply] at h
-    exact h
+  · simpa only [push, Finset.sum_apply] using congrFun (congrFun (hN r s) x) 1
 
 end GlobalTheory.KZ
 

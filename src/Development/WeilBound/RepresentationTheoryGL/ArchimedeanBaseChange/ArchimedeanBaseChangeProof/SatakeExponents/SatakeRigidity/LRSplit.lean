@@ -161,8 +161,7 @@ theorem hasSatGL_of_isSubquotient {w : HeightOneSpectrum (𝓞 E)} {V W : Type} 
     exact Subtype.ext_iff
   refine ⟨hsph, fun x hx hx0 => ?_⟩
   have hx' : x ∈ (fixed S.toRepresentation (GlobalTheory.LFun.KGL w (n := n))).map q.toLinearMap := by
-    rw [GlobalTheory.LocGL.map_fixed_of_surjective hSs hKc (f := q) hq]
-    exact hx
+    rwa [GlobalTheory.LocGL.map_fixed_of_surjective hSs hKc (f := q) hq]
   obtain ⟨u, hu, hux⟩ := Submodule.mem_map.1 hx'
   have hu0 : u ≠ 0 := fun e => hx0 (by rw [← hux, e, map_zero])
   have huK : u.1 ∈ fixed ρ (GlobalTheory.LFun.KGL w (n := n)) :=
@@ -173,8 +172,7 @@ theorem hasSatGL_of_isSubquotient {w : HeightOneSpectrum (𝓞 E)} {V W : Type} 
   have hu3 : GlobalTheory.LFun.IsSatVecGL w σ (q.toLinearMap u) B :=
     hu2.map (ρ' := σ) q.toLinearMap (fun g y => Representation.IntertwiningMap.isIntertwining _ _ q g y)
       (by rw [hux]; exact hx0)
-  rw [hux] at hu3
-  exact hu3
+  rwa [hux] at hu3
 
 theorem eventually_sat (X : Pre E n) :
     ∀ᶠ w : HeightOneSpectrum (𝓞 E) in cofinite, ∃ S : Fin X.c → Multiset ℂˣ,
@@ -190,8 +188,7 @@ theorem eventually_sat (X : Pre E n) :
   obtain ⟨S', hS', hfS'⟩ := GlobalTheory.SatInd.exists_sat_multiProd X.h (π := fun i => (X.σ i w).ρ)
     (fun i => (X.σ i w).smooth) (fun i => (X.σ i w).irred) hf' hf'0
   have e : S' = S := funext fun a => (hS' a).unique (hS a)
-  rw [← e]
-  exact hfS'
+  rwa [← e]
 
 theorem splitSatPre : SplitSatPre := by
   intro E _ _ _ n π hπ D D' hD hD'

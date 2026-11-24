@@ -78,8 +78,7 @@ private theorem adicCont_neg_of_adicCont {R G : Type} [CommRing R] [TopologicalS
 private theorem adicCont_comp_inv_of_isTopologicalGroup {R G : Type} [CommRing R] [TopologicalSpace G] [Group G] [IsTopologicalGroup G]
     {I : Ideal R} {φ : G → R} (hφ : AdicCont I φ) : AdicCont I (fun g => φ g⁻¹) := by
   unfold AdicCont at *
-  intro N
-  exact (hφ N).comp_continuous continuous_inv
+  exact fun N => (hφ N).comp_continuous continuous_inv
 
 theorem UpperTheory.V.Pa.bndOps :
     ∀ (K G : Type) [Field K] [TopologicalSpace G] [Group G] [IsTopologicalGroup G], (∀ c : FractionRing (PowerSeries K), BndF (PowerSeries.X : PowerSeries K) fun _ : G => c) ∧ (∀ φ ψ : G → FractionRing (PowerSeries K), BndF (PowerSeries.X : PowerSeries K) φ → BndF (PowerSeries.X : PowerSeries K) ψ → (BndF (PowerSeries.X : PowerSeries K) fun g => φ g + ψ g) ∧ (BndF (PowerSeries.X : PowerSeries K) fun g => φ g * ψ g) ∧ (BndF (PowerSeries.X : PowerSeries K) fun g => -φ g) ∧ BndF (PowerSeries.X : PowerSeries K) fun g => φ g⁻¹) ∧ (∀ (ι : Type) (s : Finset ι) (φ : ι → G → FractionRing (PowerSeries K)), (∀ i ∈ s, BndF (PowerSeries.X : PowerSeries K) (φ i)) → BndF (PowerSeries.X : PowerSeries K) fun g => ∑ i ∈ s, φ i g) ∧ (∀ φ : G → PowerSeries K, AdicCont (Ideal.span {(PowerSeries.X : PowerSeries K)}) φ → BndF (PowerSeries.X : PowerSeries K) fun g => algebraMap (PowerSeries K) (FractionRing (PowerSeries K)) (φ g)) ∧ ∀ (φ : G → FractionRing (PowerSeries K)), BndF (PowerSeries.X : PowerSeries K) φ → ∃ s₀ : ℕ, ∀ s, s₀ ≤ s → ∃ φ' : G → PowerSeries K, AdicCont (Ideal.span {(PowerSeries.X : PowerSeries K)}) φ' ∧ ∀ g, algebraMap (PowerSeries K) (FractionRing (PowerSeries K)) (φ' g) = algebraMap (PowerSeries K) (FractionRing (PowerSeries K)) PowerSeries.X ^ s * φ g := by
@@ -134,8 +133,7 @@ theorem UpperTheory.V.Pa.bndOps :
     · intro a t hat ih hall
       have h1 := hall a (Finset.mem_insert_self a t)
       have h2 := ih (fun i hi => hall i (Finset.mem_insert_of_mem hi))
-      simp only [Finset.sum_insert hat]
-      exact (hops _ _ h1 h2).1
+      simpa only [Finset.sum_insert hat] using (hops _ _ h1 h2).1
   · intro φ hφ
     unfold BndF
     exact ⟨0, φ, hφ, fun g => by simp⟩

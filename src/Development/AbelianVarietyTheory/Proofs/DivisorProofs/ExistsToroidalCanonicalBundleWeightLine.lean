@@ -396,8 +396,7 @@ theorem exists_frac_germ {X : Scheme.{0}} (B : X.Opens) (y : B.toScheme) (U : X.
     change (e.inv ≫ e.hom).hom a = a
     rw [Iso.inv_hom_id]
     rfl
-  rw [h3] at h2
-  exact h2
+  rwa [h3] at h2
 
 end GlobalTheory.LogKSDiv.LocalExt
 
@@ -570,8 +569,7 @@ theorem span_eq_top {k R A : Type} [Field k] [CommRing R] [CommRing A] [Algebra 
     have := congrArg (fun L : Ω[R⁄k] →ₗ[R] A => L (KaehlerDifferential.D k R r)) hs
     simp only [LinearMap.coe_comp, Function.comp_apply, Algebra.linearMap_apply, LinearMap.smul_apply,
       Derivation.liftKaehlerDifferential_comp_D] at this
-    rw [Submonoid.smul_def, Algebra.smul_def] at this
-    exact this
+    rwa [Submonoid.smul_def, Algebra.smul_def] at this
   obtain ⟨cf, hcf⟩ := (Submodule.mem_span_range_iff_exists_fun R).1 (hlog D')
   have hsu : IsUnit (φ s) := IsLocalization.map_units A s
   have hu : IsUnit (φ a * φ s) := ha.mul hsu
@@ -588,8 +586,7 @@ theorem span_eq_top {k R A : Type} [Field k] [CommRing R] [CommRing A] [Algebra 
     rw [key]
     exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
   have hmem' : ((hu.unit : Aˣ) : A) • d ∈ Submodule.span A (Set.range δ) := by
-    rw [hu.unit_spec]
-    exact hmem
+    rwa [hu.unit_spec]
   have := Submodule.smul_mem _ ((hu.unit⁻¹ : Aˣ) : A) hmem'
   rwa [smul_smul, Units.inv_mul, one_smul] at this
 
@@ -747,8 +744,7 @@ theorem isUnit_det_of_span_eq_top (k A : Type) [CommRing k] [CommRing A] [Algebr
     have h2 : (∑ j, a i j • δ j) (g l) = ∑ j, a i j * δ j (g l) := by
       have := map_sum (FunLike.coeAddMonoidHom (Derivation k A A) A A) (fun j => a i j • δ j) Finset.univ
       have h3 := congrFun this (g l)
-      rw [Finset.sum_apply] at h3
-      exact h3
+      rwa [Finset.sum_apply] at h3
     rw [h2] at h1
     simp only [Matrix.of_apply, mul_comm (δ _ _)]
     rw [h1]
@@ -978,8 +974,7 @@ theorem spread_exact {R L : Type} [CommRing R] [CommRing L] [Algebra R L] (M : S
   · funext i
     have := k₃ S ψ w₃ (j, i)
     simp only at this
-    rw [RingHom.map_mulVec] at this
-    exact this
+    rwa [RingHom.map_mulVec] at this
   · simp only [hs, eb]
     refine ⟨(↑w⁻¹ : S) • (A' *ᵥ v), can ?_, fun a ha => can ?_⟩
     · rw [Matrix.mulVec_smul, Matrix.mulVec_mulVec, q₁, Matrix.smul_mulVec, Matrix.one_mulVec, smul_smul,
@@ -1126,7 +1121,7 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
         by_cases h : τ' = τ
         · subst h; rwa [Pi.single_eq_same]
         · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-      rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+      rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
     have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (ψ ∘ cc) = ψ ∘ rho hx a cc :=
       fun a cc => vec_inj hx' (by
         show vec TF.Y.t _ xc' (tmap hx' _ _) = vec TF.Y.t _ xc' (_ ∘ tmap hx _ _)
@@ -1609,19 +1604,18 @@ theorem exOf_kapBase {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Rec
   · rfl
   · by_cases h' : τ (H.rt : E) = H.rt0
     · have hi : (i : ℕ) < Dw.p := by
-        have := i.2; simp only [Datum.mult, if_pos h'] at this; exact this
-      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, if_pos h', dif_pos h', dif_pos hi, kapBase, sub_zero,
-        if_pos hi]
+        have := i.2; simp only [Datum.mult, ite_eq_left h'] at this; exact this
+      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, ite_eq_left h', dite_eq_left h', dite_eq_left hi, kapBase, sub_zero,
+        ite_eq_left hi]
     · have hi : (i : ℕ) < Dw.q := by
-        have := i.2; simp only [Datum.mult, if_neg h'] at this; exact this
+        have := i.2; simp only [Datum.mult, ite_eq_right h'] at this; exact this
       have hc : conjEmb τ (H.rt : E) = H.rt0 := by
         have := (ReciprocityTheory.ChartRestriction.G.PullbackSections.CVA.inPsi_or H τ).resolve_left h'
         unfold InPsi at this
-        rw [ComplexEmbedding.conjugate_coe_eq] at this
-        exact this
+        rwa [ComplexEmbedding.conjugate_coe_eq] at this
       have hn : ¬ (Dw.p + (Dw.q - 1 - (i : ℕ)) < Dw.p) := by omega
-      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, if_neg h', dif_neg h', dif_pos hc, dif_pos hi, kapBase,
-        if_neg hn, neg_neg, sub_zero]
+      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, ite_eq_right h', dite_eq_right h', dite_eq_left hc, dite_eq_left hi, kapBase,
+        ite_eq_right hn, neg_neg, sub_zero]
 
 theorem exists_kap_theta : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), 1 ≤ Dw.p + Dw.q → FnAlgClosed (Xo := Xo) (c := c) → ∀ [SmoothOfRelativeDimension Dw.dim (s₀ TF.Y Z)] (K : CanonLB (s₀ TF.Y Z) Dw.dim), ∃ (κ : LB (X₀ TF.Y Z)) (hκ : κ.IsLB), CechPic.pull (π₀ TF.X Z) (cls κ hκ) = cls (L₀ TF.X Z (kapBase Dw)) (isLB_L₀ TF.X Z _) ∧ ∃ θ : (LB.div κ K.bundle).Sec, nonzeroLocus θ = (j₀ TF.Y Z).opensRange := by
   intro E hE hNumber hCM H Dw l Xo c TF Z hpq hF hSmooth K
@@ -1630,8 +1624,7 @@ theorem exists_kap_theta : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   obtain ⟨φ₀, f₀, hgen, hdiv⟩ := _root_.GlobalTheory.EigDiv.exists_detDiv E H Dw l Xo c TF Z
   obtain ⟨D, hpull, hD⟩ := hdiv fun τ => if τ (H.rt : E) = H.rt0 then (Dw.q : ℤ) else Dw.p
   refine ⟨toLB D, isLB_toLB D, ?_, ?_⟩
-  · rw [exOf_kapBase Dw] at hpull
-    exact hpull
+  · rwa [exOf_kapBase Dw] at hpull
   · obtain ⟨i₀, hi₀⟩ := exists_chart K.isLB (genericPoint (X₀ TF.Y Z))
     have hP := presents_ofLB K.isLB i₀ hi₀
     have hKS := @_root_.GlobalTheory.LogKSDiv.exists_logKS_div

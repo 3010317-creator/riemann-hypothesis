@@ -29,8 +29,7 @@ theorem finite_hits (Γ : Subgroup H) [DiscreteTopology Γ] {K : Set H} (hK : Is
     hK'.compl_mem_cocompact
   refine (Filter.mem_cofinite.1 h1).subset ?_
   intro γ hγ
-  simp only [Set.mem_compl_iff, Set.mem_preimage, not_not]
-  exact ⟨(γ : H) * x, hγ, by simp⟩
+  simpa only [Set.mem_compl_iff, Set.mem_preimage, not_not] using ⟨(γ : H) * x, hγ, by simp⟩
 
 theorem lcount_ne_top (Γ : Subgroup H) [DiscreteTopology Γ] {K : Set H} (hK : IsCompact K) (x : H) :
     lcount Γ K x ≠ ∞ := by
@@ -79,22 +78,18 @@ theorem lintegral_eq_of_tsum (μ : Measure H) [μ.IsMulLeftInvariant] (Γ : Subg
     {f g : H → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g)
     (hf1 : ∀ x, ∑' γ : Γ, f ((γ : H) * x) = 1) (hg1 : ∀ x, ∑' γ : Γ, g ((γ : H) * x) = 1) :
     ∫⁻ x, f x ∂μ = ∫⁻ x, g x ∂μ := by
-  calc ∫⁻ x, f x ∂μ = ∫⁻ x, ∑' γ : Γ, f x * g ((γ : H) * x) ∂μ := by
-        congr 1; funext x; rw [ENNReal.tsum_mul_left, hg1, mul_one]
+  calc ∫⁻ x, f x ∂μ = ∫⁻ x, ∑' γ : Γ, f x * g ((γ : H) * x) ∂μ :=
+        lintegral_congr fun x => by rw [ENNReal.tsum_mul_left, hg1, mul_one]
     _ = ∑' γ : Γ, ∫⁻ x, f x * g ((γ : H) * x) ∂μ :=
         lintegral_tsum fun γ => (hf.mul (hg.comp (measurable_const_mul _))).aemeasurable
-    _ = ∑' γ : Γ, ∫⁻ y, f ((γ : H)⁻¹ * y) * g y ∂μ := by
-        congr 1; funext γ
-        have := lintegral_mul_left_eq_self (μ := μ) (fun y => f ((γ : H)⁻¹ * y) * g y) (γ : H)
-        simpa only [inv_mul_cancel_left] using this
+    _ = ∑' γ : Γ, ∫⁻ y, f ((γ : H)⁻¹ * y) * g y ∂μ := tsum_congr fun γ => by
+        simpa only [inv_mul_cancel_left] using
+          lintegral_mul_left_eq_self (μ := μ) (fun y => f ((γ : H)⁻¹ * y) * g y) (γ : H)
     _ = ∫⁻ y, ∑' γ : Γ, f ((γ : H)⁻¹ * y) * g y ∂μ :=
         (lintegral_tsum fun γ => ((hf.comp (measurable_const_mul _)).mul hg).aemeasurable).symm
-    _ = ∫⁻ y, g y ∂μ := by
-        congr 1; funext y
-        rw [ENNReal.tsum_mul_right]
-        have := (Equiv.inv Γ).tsum_eq (fun γ : Γ => f ((γ : H) * y))
-        simp only [Equiv.inv_apply, Subgroup.coe_inv] at this
-        rw [this, hf1, one_mul]
+    _ = ∫⁻ y, g y ∂μ := lintegral_congr fun y => by
+        rw [ENNReal.tsum_mul_right, show ∑' γ : Γ, f ((γ : H)⁻¹ * y) = 1 from
+          ((Equiv.inv Γ).tsum_eq fun γ : Γ => f ((γ : H) * y)).trans (hf1 y), one_mul]
 
 theorem map_mul_right_eq_modular (μ : Measure H) [IsHaarMeasure μ] (g : H) :
     μ.map (· * g) = ((modularCharacterFun g : ℝ≥0) : ℝ≥0∞) • μ := by
@@ -161,8 +156,7 @@ theorem haar_map_mul_right_of_lattice (μ : Measure H) [IsHaarMeasure μ] (Γ : 
     exact ENNReal.coe_le_coe.1 (h2.trans_eq (ENNReal.coe_toNNReal hne).symm)
   have hle : ∀ r : H, modularCharacterFun r ≤ 1 := by
     intro r
-    by_contra h
-    push_neg at h
+    by_contra! h
     obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt b h
     have := hbd (r ^ n)
     have e : modularCharacterFun (r ^ n) = modularCharacterFun r ^ n :=
@@ -234,8 +228,7 @@ theorem one_le_of_iterate_bounded (μ : Measure H) [IsHaarMeasure μ] {f : H →
     rw [e]
     gcongr
     exact hb n
-  by_contra h
-  push_neg at h
+  by_contra! h
   have ht : Tendsto (fun n : ℕ => c ^ n * μ L) atTop (𝓝 0) := by
     simpa using ENNReal.Tendsto.mul_const (ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one h) (Or.inr hLtop)
   obtain ⟨n, hn⟩ := (ht.eventually (gt_mem_nhds hVpos)).exists

@@ -110,15 +110,13 @@ theorem UpperTheory.V.Ws.Pt.ptUnr :
     unfold lab
     split
     · decide
-    · intro j
-      exact ⟨j, rfl⟩
+    · exact fun j => ⟨j, rfl⟩
   obtain ⟨i3, hi3⟩ := hi3
   have hκr : residue c'.O (K.κ g : c'.O) = 1 := by
     have h3 := hres i3
     have hc : (chi D T.pr i3) (resQ T.L g) = 1 := by
       simp [chi, hi3, Raw.ps]
-    rw [hc, Units.val_one, map_one, mul_one] at h3
-    exact h3
+    rwa [hc, Units.val_one, map_one, mul_one] at h3
   have hκ : K.κ g = 1 := by
     apply Units.ext
     rw [Units.val_one]
@@ -130,8 +128,7 @@ theorem UpperTheory.V.Ws.Pt.ptUnr :
     apply res_one_of_map (inc h)
     have h4 := hres i
     rw [map_mul, hκr, one_mul] at h4
-    rw [← hi]
-    exact h4
+    rwa [← hi]
   have hrbar : D.rbar (resQ T.L g) = 1 := by
     unfold Raw.rbar Raw.r0
     ext a b

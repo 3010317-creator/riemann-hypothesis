@@ -125,7 +125,7 @@ theorem lhwline_rowGen_eq (a b : Fin r) (g : MvPolynomial (Fin r × Fin n) K)
     rw [h0, Polynomial.coeff_C_zero]
   · have h1 := h k hk
     simp only [rowDiv] at h1
-    rw [h1, Polynomial.coeff_C, if_neg (by omega)]
+    rw [h1, Polynomial.coeff_C, ite_eq_right (by omega)]
 
 def lhwline_RInv (φ : (Fin r × Fin n → K) → K) : Prop :=
   ∀ (x : Fin r × Fin n → K) (a b : Fin r) (t : K), a < b → φ (lhwline_rowOp a b t x) = φ x
@@ -232,7 +232,7 @@ theorem lhwline_step_apply (p : Fin r) (q : Fin n) (x : Fin r × Fin n → K) (a
       (if q < j then -(x (p, j) / x (p, q)) *
         (if p < a then x (a, q) + -(x (a, q) / x (p, q)) * x (p, q) else x (a, q)) else 0) := by
   simp only [highestWeightLineUpdate, lhwline_mcol, lhwline_mrow, Finset.mem_filter, Finset.mem_univ,
-    true_and, lt_self_iff_false, if_false]
+    true_and, lt_self_iff_false, ite_false]
   split_ifs <;> ring
 
 end LHwlineElim
@@ -258,11 +258,11 @@ theorem lhwline_step_cleared (k : ℕ) (hr : k < r) (hn : k < n) (y : Fin r × F
     rcases lt_or_gt_of_ne (Ne.symm haj) with hj | hj
     · have h1 : y (⟨k, hr⟩, j) = 0 := hy _ j (by simp only [Fin.val_mk]; omega) (Or.inr hj)
       simp [h1, show ¬ k < j.val by omega]
-    · simp only [lt_self_iff_false, if_false, if_pos hj]
+    · simp only [lt_self_iff_false, ite_false, ite_eq_left hj]
       field_simp
       ring
   · have hj : j.val ≤ k := by omega
-    simp only [if_pos ha, if_neg (show ¬ k < j.val by omega), add_zero]
+    simp only [ite_eq_left ha, ite_eq_right (show ¬ k < j.val by omega), add_zero]
     rcases lt_or_eq_of_le hj with hj | hj
     · have h1 : y (a, j) = 0 := hy a j haj (Or.inr hj)
       have h2 : y (⟨k, hr⟩, j) = 0 := hy _ j (by simp only [Fin.val_mk]; omega) (Or.inr hj)
@@ -284,8 +284,7 @@ theorem lhwline_pivot_ne (k : ℕ) (hr : k + 1 ≤ r) (hn : k + 1 ≤ n) (y : Fi
   · subst hi
     have e1 : Fin.castLE hr (Fin.last k) = ⟨k, hr⟩ := Fin.ext (by simp)
     have e2 : Fin.castLE hn (Fin.last k) = ⟨k, hn⟩ := Fin.ext (by simp)
-    rw [e1, e2]
-    exact h0
+    rwa [e1, e2]
   · have hik : i.val < k := Fin.val_lt_last hi
     exact hy _ _ (by rw [Fin.coe_castLE, Fin.coe_castLE, Fin.val_last]; omega)
       (Or.inl (by rw [Fin.coe_castLE]; exact hik))
@@ -391,8 +390,7 @@ theorem lhwline_elim_cleared [Infinite K] (x : Fin r × Fin n → K)
     apply lhwline_pivot_ne k hr hn _ hy
     have hinv := lhwline_elim_inv (fun z : Fin r × Fin n → K => eval z (lpMinor K (k + 1) hr hn))
       (lhwline_minor_RInv _ _ _) (lhwline_minor_CInv _ _ _) k x
-    intro h0
-    exact hx k hr hn (hinv.symm.trans h0)
+    exact fun h0 => hx k hr hn (hinv.symm.trans h0)
 
 end LHwlineClear
 
@@ -488,9 +486,8 @@ theorem lhwline_mnu_apply (hn : n ≤ r) (ν : Fin n → ℕ) (a : Fin r) (j : F
         rw [← (Prod.mk.inj h').1, Fin.coe_castLE]
       simp [this, h]
   · intro b _ hb
-    rw [if_neg]
-    intro h'
-    exact hb (Prod.mk.inj h').2
+    rw [ite_eq_right]
+    exact fun h' => hb (Prod.mk.inj h').2
   · simp
 
 theorem lhwline_mono_zero (hn : n ≤ r) (ν : Fin n → ℕ)

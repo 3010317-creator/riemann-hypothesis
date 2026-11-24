@@ -64,7 +64,6 @@ theorem stdHom_map_splitIdem : ∀ (D : D7) (S T : HSp D) (a : AE D), IsSplitIde
   intro D S T a ha u hu
   have h := Formalism.IndefR.Fin.latO_map_splitIdem S T (intVecSub D S.rank) (intVecSub D T.rank) ha
     (u := u) (by rw [coe_intVecSub, coe_intVecSub]; exact hu)
-  rw [coe_intVecSub, coe_intVecSub] at h
-  exact h
+  rwa [coe_intVecSub, coe_intVecSub] at h
 
 end GlobalTheory.AdForm

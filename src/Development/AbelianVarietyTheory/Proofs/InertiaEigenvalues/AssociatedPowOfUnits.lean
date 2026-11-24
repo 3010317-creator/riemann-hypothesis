@@ -65,16 +65,14 @@ theorem irreducible_of_units [IsDomain R] {x : R} (hx0 : x ≠ 0) (hxu : ¬ IsUn
   · right
     obtain ⟨c, rfl⟩ := ha
     have h1 : x * 1 = x * (c * b) := by rw [mul_one, ← mul_assoc]; exact hab
-    have h2 := mul_left_cancel₀ hx0 h1
-    exact IsUnit.of_mul_eq_one_right c h2.symm
+    exact IsUnit.of_mul_eq_one_right c (mul_left_cancel₀ hx0 h1).symm
   · exact Or.inl (hu a ha)
 
 theorem associated_pow_of_units {x : R} (hu : ∀ y : R, ¬ x ∣ y → IsUnit y)
     [IsHausdorff (Ideal.span {x}) R] {y : R} (hy : y ≠ 0) : ∃ n : ℕ, Associated (x ^ n) y := by
   classical
   have hex : ∃ n : ℕ, ¬ x ^ n ∣ y := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hy
     refine IsHausdorff.haus (I := Ideal.span {x}) inferInstance y fun n => ?_
     rw [SModEq.zero, smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
@@ -129,8 +127,7 @@ theorem core_dvr (l : ℕ) [Fact l.Prime] (C : Core l) : C.DVR := by
   · rw [hmax]
     ext y
     rw [Ideal.mem_span_singleton, RingHom.mem_ker, hθ]
-  · rw [hmax]
-    exact hcomp
+  · rwa [hmax]
   · ext y
     rw [hfil, Ideal.mem_span_singleton]
     exact (hassoc.pow_pow (n := n)).dvd_iff_dvd_left

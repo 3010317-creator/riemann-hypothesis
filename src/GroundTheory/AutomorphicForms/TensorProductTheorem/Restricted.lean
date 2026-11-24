@@ -70,8 +70,7 @@ theorem mulSupport_weight_subset (ξ : ∀ v, V v) (T : Finset ι) (l : ∀ v, D
     by_cases hx : x v = ξ v
     · right
       show l v (ξ v) ≠ 1
-      rw [← hx]
-      exact hv
+      rwa [← hx]
     · exact Or.inl hx
 
 theorem finite_mulSupport_weight {ξ x : ∀ v, V v} (hx : IsRestricted ξ x) (T : Finset ι)

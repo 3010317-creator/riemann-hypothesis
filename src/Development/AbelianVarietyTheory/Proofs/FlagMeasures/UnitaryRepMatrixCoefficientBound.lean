@@ -122,8 +122,7 @@ private theorem integrable_and_integral_eq_of_lintegral_weight_one {G : Type} [G
     have h2 : ∀ y, ∫⁻ m, β y * ‖g (m * y)‖ₑ ∂ν = β y * ∫⁻ m, ‖g (m * y)‖ₑ ∂ν := fun y =>
       lintegral_const_mul _ (hg.enorm.comp (measurable_mul_const y))
     simp only [h2]
-    rw [← hkey _ hg.enorm]
-    exact hgl
+    rwa [← hkey _ hg.enorm]
   have heq : ∀ y, ∫ m, ((β y).toReal : ℂ) * g (m * y) ∂ν = ((β y).toReal : ℂ) * ∫ m, g (m * y) ∂ν :=
     fun y => integral_const_mul _ _
   have hint0 : Integrable (fun y => ∫ m, ((β y).toReal : ℂ) * g (m * y) ∂ν) μ :=
@@ -143,8 +142,7 @@ private theorem integrable_and_integral_eq_of_lintegral_weight_one {G : Type} [G
       intro y
       have hb : Measurable (fun m => β (m⁻¹ * y)) := hβ.comp (measurable_inv.mul_const y)
       rw [lintegral_mul_const _ hb, hone, one_mul]
-    simp only [h3]
-    exact hgl
+    simpa only [h3] using hgl
   have hβone : ∀ y, ∫ m, ((β (m⁻¹ * y)).toReal : ℂ) ∂ν = 1 := by
     intro y
     have hb : Measurable (fun m => β (m⁻¹ * y)) := hβ.comp (measurable_inv.mul_const y)
@@ -155,8 +153,7 @@ private theorem integrable_and_integral_eq_of_lintegral_weight_one {G : Type} [G
         show g y = (∫ m, ((β (m⁻¹ * y)).toReal : ℂ) ∂ν) * g y
         rw [hβone y, one_mul]
     _ = ∫ y, ∫ m, ((β (m⁻¹ * y)).toReal : ℂ) * g y ∂ν ∂μ := by
-        refine integral_congr_ae (ae_of_all _ fun y => ?_)
-        exact (integral_mul_const _ _).symm
+        exact integral_congr_ae (ae_of_all _ fun y => (integral_mul_const _ _).symm)
     _ = ∫ m, ∫ y, ((β (m⁻¹ * y)).toReal : ℂ) * g y ∂μ ∂ν :=
         (integral_prod_symm _ hKi).symm.trans (integral_prod _ hKi)
     _ = ∫ m, ∫ y, ((β y).toReal : ℂ) * g (m * y) ∂μ ∂ν := by
@@ -312,8 +309,7 @@ private theorem inner_mul_eq_inner_inv_of_isURepOn {n : ℕ} {ε : Fin n → Boo
     have h4 := congrArg (fun T : H →L[ℂ] H => T w) h3
     simpa using h4.symm
   have hmy : σ (umat (m * y)) u = σ (umat m) (σ (umat y) u) := by
-    have h3 := hmul (umat m) m.2 (umat y) y.2
-    exact congrArg (fun T : H →L[ℂ] H => T u) h3
+    exact congrArg (fun T : H →L[ℂ] H => T u) (hmul (umat m) m.2 (umat y) y.2)
   let T : H →ₗᵢ[ℂ] H := ⟨(σ (umat m) : H →ₗ[ℂ] H), fun x => hiso (umat m) m.2 x⟩
   rw [hmy]
   conv_lhs => rw [← hv]

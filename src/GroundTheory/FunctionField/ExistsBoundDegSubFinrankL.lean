@@ -49,8 +49,7 @@ theorem finiteDimensional_map_mkQ_trans {S T U : Submodule R M} (hST : S ≤ T) 
       show Submodule.factor hST (Submodule.Quotient.mk m) = Submodule.Quotient.mk m from rfl,
       Submodule.Quotient.mk_eq_zero]
     constructor
-    · intro hm
-      exact Submodule.mem_map_of_mem hm
+    · exact fun hm => Submodule.mem_map_of_mem hm
     · intro hm
       obtain ⟨m', hm', he⟩ := Submodule.mem_map.1 hm
       have : m' - m ∈ S := (Submodule.Quotient.eq S).1 he
@@ -268,8 +267,7 @@ theorem residueMap_surjective (D : Divisor k K) (P : Place k K) {t : K}
     by_contra hvP
     apply hv
     rw [Set.mem_singleton_iff] at hvP
-    simp only [f, Pi.single_apply, hvP, ite_false]
-    exact v.ring.zero_mem
+    simpa only [f, Pi.single_apply, hvP, ite_false] using v.ring.zero_mem
   let a : Repartition k K := Repartition.mk f hf
   have haA : a ∈ A (D + Finsupp.single P 1) := by
     intro w
@@ -280,8 +278,7 @@ theorem residueMap_surjective (D : Divisor k K) (P : Place k K) {t : K}
       rw [map_mul, map_inv₀, ht, add_single_apply_self, ← WithZero.exp_neg, neg_neg]
       exact mul_le_of_le_one_right' ((w.valuation_le_one_iff _).2 y.2)
     · change w.valuation (f w) ≤ _
-      simp only [f, Pi.single_apply, hw, ite_false, map_zero]
-      exact zero_le
+      simpa only [f, Pi.single_apply, hw, ite_false, map_zero] using zero_le
   refine ⟨⟨a, haA⟩, ?_⟩
   rw [residueMap_apply]
   congr 1
@@ -330,8 +327,7 @@ theorem relSpace_add_single (D : Divisor k K) (P : Place k K) :
     have h0 : σ (ρ a) - a ∈ LinearMap.ker ρ := by
       rw [LinearMap.mem_ker, map_sub, ← LinearMap.comp_apply, hσ, LinearMap.id_apply, sub_self]
     have h1 := hker h0
-    rw [LinearMap.mem_ker, map_sub, sub_eq_zero] at h1
-    exact h1
+    rwa [LinearMap.mem_ker, map_sub, sub_eq_zero] at h1
   have hGrange : LinearMap.range G = LinearMap.range F := by
     ext y
     constructor
@@ -525,8 +521,7 @@ theorem exists_bound_deg_sub_finrank_L :
             fun i : Fin (l + 1) => x ^ (i : ℕ) := by
           funext i
           simp
-        rw [heq]
-        exact h
+        rwa [heq]
       convert linearIndependent_smul hb' b.linearIndependent using 1
       funext p
       simp [G, Algebra.smul_def]
@@ -562,8 +557,7 @@ theorem exists_bound_deg_sub_finrank_L :
   have hD₁El : D₁ ≤ El := by
     rw [hD₁, divisor_inv, ← sub_eq_add_neg, ← sub_nonneg]
     have : El - (A₁ - divisor (z : K)) = divisor (z : K) + (El - A₁) := by abel
-    rw [this]
-    exact hzL
+    rwa [this]
   have hlD₁ : finrank k (L D₁) = finrank k (L A₁) := finrank_L_add_divisor A₁ (inv_ne_zero hz0)
   have hdegD₁ : deg D₁ = deg A₁ := by rw [hD₁, map_add (f := _), deg_divisor, add_zero]
   have h3 := deg_sub_finrank_L_mono hD₁El
@@ -660,8 +654,7 @@ theorem sup_principal_eq_top {E : Divisor k K}
   have haE₁ : a ∈ A (E ⊔ Da) := A_mono le_sup_right ha
   have hmem : (A E ⊔ principal k K).mkQ a ∈ relSpace E (E ⊔ Da) :=
     Submodule.mem_map_of_mem (Submodule.mem_sup_left haE₁)
-  rw [hbot, Submodule.mem_bot, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hmem
-  exact hmem
+  rwa [hbot, Submodule.mem_bot, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hmem
 
 theorem relSpace_sup_eq_top (D : Divisor k K) {E : Divisor k K}
     (hE : deg E + 1 - (finrank k (L E) : ℤ) = genusInt k K) : relSpace D (D ⊔ E) = ⊤ := by

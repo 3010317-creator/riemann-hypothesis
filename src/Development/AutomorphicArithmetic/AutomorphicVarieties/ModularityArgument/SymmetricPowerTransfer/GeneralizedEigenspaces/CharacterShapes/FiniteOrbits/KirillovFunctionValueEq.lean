@@ -134,8 +134,7 @@ private theorem gl_uniq (V : Lev k) (d : Fin 2 → kˣ) (hd : Dom d) {Y u : GL (
   obtain ⟨p, hp, q, hq, e⟩ := hYu
   have hcomm : ∀ g : GL (Fin 2) k, g * dg (fun _ => z) = dg (fun _ => z) * g := fun g => by
     rw [← scalar_eq]
-    apply Units.ext
-    exact (Matrix.scalar_commute _ (fun r => Commute.all _ r) _).eq.symm
+    exact Units.ext (Matrix.scalar_commute _ (fun r => Commute.all _ r) _).eq.symm
   have h1 : dg (d * fun _ => z) ∈ V.DC d := by
     refine ⟨a⁻¹ * p, mul_mem (inv_mem ha) hp, q * j⁻¹ * b⁻¹, mul_mem (mul_mem hq (inv_mem hj)) (inv_mem hb), ?_⟩
     have : dg (d * fun _ => z) = a⁻¹ * (a * dg d * b * u) * j⁻¹ * b⁻¹ := by
@@ -193,7 +192,7 @@ private theorem kirillov_function_support (V : Lev k) (χ : kˣ →* ℂˣ) {t :
     ∃ z : kˣ, (Matrix.GeneralLinearGroup.scalar (Fin 2) z)⁻¹ * Y ∈ V.DC ![t, 1] := by
   by_contra h
   apply hY
-  rw [Lev.twistedCentralTestFunction, Lev.fZ, dif_neg h, mul_zero]
+  rw [Lev.twistedCentralTestFunction, Lev.fZ, dite_eq_right h, mul_zero]
 
 end Loc2
 
@@ -211,23 +210,23 @@ private theorem scal_comm' {K : Type} [Field K] {Δ : K} {z : Kˣ} {s : DX Δ} (
   rw [h]
   exact (Matrix.scalar_commute _ (fun r => Commute.all _ r) _).eq
 
-private theorem dat_S (v : Pl F) (h : v ∈ A.Sg) : A.dat.S v = (A.V v).data (A.hs v h) (A.Ry v) (A.χ v) := dif_pos h
+private theorem dat_S (v : Pl F) (h : v ∈ A.Sg) : A.dat.S v = (A.V v).data (A.hs v h) (A.Ry v) (A.χ v) := dite_eq_left h
 
 private theorem level_two_at_sigma (v : Pl F) (h : v ∈ A.Sg) : A.dat.J2v v = ((A.V v).J 2).comap (eD (A.hs v h)) := by
   have h' : v ∈ A.dat.Sg := h
-  rw [Dat.J2v, if_pos h', dat_S A v h]
+  rw [Dat.J2v, ite_eq_left h', dat_S A v h]
   rfl
 
-private theorem level_two_outside_sigma (v : Pl F) (h : v ∉ A.Sg) : A.dat.J2v v = KD _ (Ov v) := if_neg h
+private theorem level_two_outside_sigma (v : Pl F) (h : v ∉ A.Sg) : A.dat.J2v v = KD _ (Ov v) := ite_eq_right h
 
 private theorem fK_sig (t : Dat.Par F) (v : Pl F) (h : v ∈ A.Sg) (x : DX (cv v Δ)) :
     A.dat.fKv t v x = (A.V v).twistedCentralTestFunction (A.χ v) (t v) (eD (A.hs v h) x) := by
   have h' : v ∈ A.dat.Sg := h
-  rw [Dat.fKv, if_pos h', dat_S A v h]
+  rw [Dat.fKv, ite_eq_left h', dat_S A v h]
   rfl
 
 private theorem fK_off (t : Dat.Par F) (v : Pl F) (h : v ∉ A.Sg) (x : DX (cv v Δ)) :
-    A.dat.fKv t v x = fZD (Ov v) (A.χ v) x := if_neg h
+    A.dat.fKv t v x = fZD (Ov v) (A.χ v) x := ite_eq_right h
 
 variable {A}
 
@@ -304,7 +303,7 @@ private theorem fk_supp (hA : A.Ok) {t : Dat.Par F} {g : DA Δ} (hg : A.IsElD g 
       rw [fK_off A t v hv] at h0
       have : ∃ (z : (Kv v)ˣ) (s : DX (cv v Δ)), IsScal z s ∧ s⁻¹ * y.1 v ∈ KD _ (Ov v) := by
         by_contra hh
-        exact h0 (dif_neg hh)
+        exact h0 (dite_eq_right hh)
       obtain ⟨z, s, hs, hk⟩ := this
       exact ⟨z, s, hs, fun h => (hv h).elim, fun _ => hk⟩
   choose z s hs hS hO using hloc
@@ -338,8 +337,7 @@ private theorem fk_uniq (hA : A.Ok) {t : Dat.Par F} (ht : A.Cone t) {g : DA Δ} 
     obtain ⟨z, j, hj, e⟩ := (hm _).1 huv
     have hb := b v hv
     have hbb : eD (A.hs v hv) (y.1 v) * eD (A.hs v hv) (u.1 v) ∈ (A.V v).DC ![t v, 1] := by
-      rw [← map_mul]
-      exact hb
+      rwa [← map_mul]
     exact gl_uniq _ _ (dom_of (val_lt _ (ht v hv))) (a v hv) hbb z j hj e
   · rw [level_two_outside_sigma A v hv]
     exact (mul_mem_cancel_left (a' v hv)).1 (b' v hv)
@@ -364,8 +362,7 @@ theorem UpperTheory.V.Z.Sym.So.kOps :
         have h0 : u.1 v ∈ A.dat.J2v v := Subgroup.mem_comap.1 (Subgroup.mem_iInf.1 hu v)
         simpa using h0⟩
     simp only [map_one, Units.val_one, finprod_one] at h2
-    rw [h2, one_smul] at h1
-    exact h1
+    rwa [h2, one_smul] at h1
   refine ⟨fun t g ht hg φ => ?_, hinv, fun φ hφ z s hs g => ?_⟩
   · have ht' : A.dat.Cone t := (hCone t).2 ht
     have htest := finK_test F Δ A.dat hOk V ch B hB t ht'
@@ -384,12 +381,12 @@ theorem UpperTheory.V.Z.Sym.So.kOps :
       by_cases hv : v ∈ A.Sg
       · obtain ⟨h1, h2, h3, -⟩ := hl v hv
         obtain ⟨-, -, -, hscal, -⟩ := eD_facts (Kv v) (Ov v) h1 h2 _ _ (A.hs v hv) h3
-        have hz : z' v = z v := if_pos hv
+        have hz : z' v = z v := ite_eq_left hv
         rw [hz, hscal, hs.1 v hv, scalar_eq]
         congr 1
         funext i
         fin_cases i <;> rfl
-      · have hz : z' v = 1 := if_neg hv
+      · have hz : z' v = 1 := ite_eq_right hv
         rw [hz, hs.2 v hv]
         exact scal_one'
     have hsU : s ∈ B.U := by
@@ -400,17 +397,16 @@ theorem UpperTheory.V.Z.Sym.So.kOps :
     have h3 : (∏ᶠ v, (A.dat.χ v (z' v) : ℂ)) = ∏ v ∈ A.Sg, (A.χ v (z v) : ℂ) := by
       rw [finprod_eq_prod_of_mulSupport_subset (s := A.Sg)]
       · refine Finset.prod_congr rfl fun v hv => ?_
-        have hz : z' v = z v := if_pos hv
+        have hz : z' v = z v := ite_eq_left hv
         rw [hz]
         rfl
       · intro v hv
         by_contra h
-        have hz : z' v = 1 := if_neg h
+        have hz : z' v = 1 := ite_eq_right h
         exact hv (by
           change ((A.dat.χ v (z' v) : ℂˣ) : ℂ) = 1
           rw [hz]
           simp)
-    rw [h2, h3] at h1
-    exact h1
+    rwa [h2, h3] at h1
 
 end

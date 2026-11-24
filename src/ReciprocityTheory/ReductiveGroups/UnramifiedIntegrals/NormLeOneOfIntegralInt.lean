@@ -119,8 +119,7 @@ theorem frob_fix_of_integral {K : Type*} [NormedField K] [IsUltrametricDist K] (
   have hl0 : ((l : ℕ) : A ⧸ I) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk I) l, Ideal.Quotient.eq_zero_iff_mem, hImem]
     have h2 : (((l : ℕ) : A) : K) = (l : K) := map_natCast A.val l
-    rw [h2]
-    exact hl
+    rwa [h2]
   have htors : Module.IsTorsion ℤ (A ⧸ I) := fun {x} =>
     ⟨⟨(l : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hlp.ne_zero)⟩, by
       change (l : ℤ) • x = 0
@@ -130,8 +129,7 @@ theorem frob_fix_of_integral {K : Type*} [NormedField K] [IsUltrametricDist K] (
   refine ⟨f, hf, ?_⟩
   let d : A := ⟨δ, Algebra.self_mem_adjoin_singleton ℤ δ⟩
   have h3 := h (Ideal.Quotient.mk I d)
-  rw [← map_pow, ← sub_eq_zero, ← map_sub, Ideal.Quotient.eq_zero_iff_mem, hImem] at h3
-  exact h3
+  rwa [← map_pow, ← sub_eq_zero, ← map_sub, Ideal.Quotient.eq_zero_iff_mem, hImem] at h3
 
 variable (l : ℕ) [Fact l.Prime]
 

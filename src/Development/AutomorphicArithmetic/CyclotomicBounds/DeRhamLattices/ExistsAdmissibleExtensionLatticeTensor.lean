@@ -135,8 +135,7 @@ theorem kerExt_kill (lam : O) (a : ℕ) (hX : ∀ x : X, lam ^ a • x = 0)
   · show _ ∈ (⊥ : Submodule O (↥L.T ⊗[O] X))
     rw [Submodule.mem_bot]
     exact hT p.1
-  · show _ ∈ Ideal.span {lam ^ a}
-    exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)
+  · exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)
 
 end Ext
 end GlobalTheory.UseLoc.Cases.AdmW
@@ -233,8 +232,7 @@ theorem _root_.UpperTheory.KN.exists_linearEquiv_quotient_of_lattice_sum :
     ext a
     rw [LinearMap.mem_ker, LinearMap.mem_ker, ← Submodule.Quotient.mk_zero, key]
     constructor
-    · intro ha
-      exact ⟨0, by simp [ha], 0, B.zero_mem, by simp⟩
+    · exact fun ha => ⟨0, by simp [ha], 0, B.zero_mem, by simp⟩
     · rintro ⟨a', ha', b, hb, hy⟩
       rw [← ha']
       apply hB
@@ -549,8 +547,7 @@ theorem _root_.UpperTheory.KN.exists_admissible_extension_latticeTensor :
       apply Subtype.ext
       funext k
       have h3 : (y : Fin a → Fin n → LL) k + s • E k = 0 := congrFun h (Sum.inl k)
-      rw [hs, zero_smul, add_zero] at h3
-      exact h3
+      rwa [hs, zero_smul, add_zero] at h3
     rw [hs, ht, hy]
     rfl
   · rintro g ⟨y, t, s⟩

@@ -280,7 +280,7 @@ theorem values_eq_coef : ∀ {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F ⊗
     else 0
   have rt_apply {h : Mx V.rank} (hh : h ∈ UJset ε) (F : Bd (Unit × UJset ε)) (i : Unit × UJset ε) :
       rt h F i = (wt N (i.2.1 * h) : ℂ) / wt N i.2.1 * F (i.1, ⟨i.2.1 * h, mul_mem_UJ i.2.2 hh⟩) := by
-    simp only [rt, dif_pos hh]
+    simp only [rt, dite_eq_left hh]
     rfl
   have modRep_rt : ModRep ε rt := by
     refine ⟨?_, fun a ha b hb => ?_, 1, N, fun g hg => ?_⟩
@@ -292,7 +292,7 @@ theorem values_eq_coef : ∀ {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F ⊗
       simp only [mul_assoc]
       have := wt_ne N (i.2.1 * a)
       field_simp
-    · simp only [rt, dif_pos hg, one_mul]
+    · simp only [rt, dite_eq_left hg, one_mul]
       dsimp only [wcomp]
       exact LinearMap.mkContinuous_norm_le _ (wt_pos N g).le _
   have key : ∀ (w : H) (hw : IsKFin ε σ w), ∀ y ∈ UJset ε, ∀ i : Unit × UJset ε,
@@ -406,8 +406,7 @@ theorem Dw_comb (hσ : IsURepOn (UJset ε) σ) {l : List (Mx n)} (hl : ∀ X ∈
   induction L with
   | nil =>
     refine ⟨(smooth (Jm ε) σ).zero_mem, ?_⟩
-    have h := Dw_smul hσ hl (0 : ℂ) hv
-    simpa using h
+    simpa using Dw_smul hσ hl (0 : ℂ) hv
   | cons u L ih =>
     have hu : Sm ε σ (Dw σ u.2 v) := hv.word hσ (hL u List.mem_cons_self)
     obtain ⟨ih1, ih2⟩ := ih fun w hw => hL w (List.mem_cons_of_mem _ hw)
@@ -581,13 +580,7 @@ theorem sobCont_add_form {ℓ ℓ' : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet 
     _ ≤ _ := by nlinarith
 
 theorem sobCont_smul_form (c : ℂ) {ℓ : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet ε) σ ℓ) :
-    Sobolev₂ (lieSet ε) σ (c • ℓ) := by
-  obtain ⟨S, C, hS, hC⟩ := h
-  refine ⟨S, ‖c‖ * C, hS, fun w hw => ?_⟩
-  have b : ‖ℓ w‖ ≤ C * sobNorm σ S w := hC w hw
-  show ‖c • ℓ w‖ ≤ ‖c‖ * C * sobNorm σ S w
-  rw [norm_smul, mul_assoc]
-  exact mul_le_mul_of_nonneg_left b (norm_nonneg c)
+    Sobolev₂ (lieSet ε) σ (c • ℓ) := GlobalTheory.TypeSum.CoefLow.sob_smul c h
 
 theorem sobCont_sum_form {ι : Type} (s : Finset ι) (f : ι → H →ₗ[ℂ] ℂ) (h : ∀ i, Sobolev₂ (lieSet ε) σ (f i)) :
     Sobolev₂ (lieSet ε) σ (∑ i ∈ s, f i) := by
@@ -965,8 +958,7 @@ theorem exists_rewrite : GlobalTheory.Published.HarishChandraModules → GlobalT
       conv_lhs => rw [hexp j]
 
       simp only [map_sum, map_smul, smul_eq_mul]
-    simp only [h1, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
-    exact Finset.sum_comm
+    simpa only [h1, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] using Finset.sum_comm
 
 end GlobalTheory.TypeSum.CoefRep
 
@@ -1054,10 +1046,10 @@ def pad {α : Type} [Zero α] (q : ℕ → ℕ) (a : (i : ℕ) → Fin (q i) →
   fun p => if h : p.2 < q p.1 then a p.1 ⟨p.2, h⟩ else 0
 
 theorem pad_of_lt {α : Type} [Zero α] (q : ℕ → ℕ) (a : (i : ℕ) → Fin (q i) → α) {i r : ℕ} (h : r < q i) :
-    pad q a (i, r) = a i ⟨r, h⟩ := dif_pos h
+    pad q a (i, r) = a i ⟨r, h⟩ := dite_eq_left h
 
 theorem pad_of_ge {α : Type} [Zero α] (q : ℕ → ℕ) (a : (i : ℕ) → Fin (q i) → α) {i r : ℕ} (h : ¬ r < q i) :
-    pad q a (i, r) = 0 := dif_neg h
+    pad q a (i, r) = 0 := dite_eq_right h
 
 theorem pad_hasSum_fiber {α : Type} [AddCommMonoid α] [TopologicalSpace α] (q : ℕ → ℕ)
     (a : (i : ℕ) → Fin (q i) → α) (i : ℕ) : HasSum (fun r => pad q a (i, r)) (∑ r, a i r) := by
@@ -1126,8 +1118,7 @@ theorem hasTypeAll_of_kTypes : GlobalTheory.Published.HarishChandraModules → G
     rw [e1]
     refine pad_summable q _ (fun i r => mul_nonneg (mul_nonneg hA₀ (hc i r)) (sobNorm_nonneg _ _ _))
       (fun i => A₀ * A S' * B i (m S')) ((hBs (m S')).mul_left (A₀ * A S')) fun i => ?_
-    simp only [mul_assoc, ← Finset.mul_sum]
-    exact mul_le_mul_of_nonneg_left (hsumS i S' hS') hA₀
+    simpa only [mul_assoc, ← Finset.mul_sum] using mul_le_mul_of_nonneg_left (hsumS i S' hS') hA₀
   have hnorm : ∀ g ∈ UJset ε, ∀ a, ‖pad q (fun i r => ℓ' i r (σ g (x' i r))) a‖ ≤
       Bc g * (pad q (fun i r => A₀ * c i r) a * sobNorm σ S₁ (pad q x' a)) := by
     intro g hg a
@@ -1221,33 +1212,10 @@ variable {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [Inne
 theorem sobCont_zero' : Sobolev₂ (lieSet ε) σ (0 : H →ₗ[ℂ] ℂ) := ⟨[], 0, by simp, fun w _ => by simp⟩
 
 theorem sobCont_add' {ℓ ℓ' : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet ε) σ ℓ) (h' : Sobolev₂ (lieSet ε) σ ℓ') :
-    Sobolev₂ (lieSet ε) σ (ℓ + ℓ') := by
-  obtain ⟨S, C, hS, hC⟩ := h
-  obtain ⟨S', C', hS', hC'⟩ := h'
-  refine ⟨S ++ S', max (max C C') 0, words_append hS hS', fun w hw => ?_⟩
-  have e1 := hC w hw
-  have e2 := hC' w hw
-  have s1 : 0 ≤ sobNorm σ S w := sobNorm_nonneg σ S w
-  have s2 : 0 ≤ sobNorm σ S' w := sobNorm_nonneg σ S' w
-  have h3 : sobNorm σ (S ++ S') w = sobNorm σ S w + sobNorm σ S' w := sobNorm_append σ S S' w
-  change ‖ℓ w + ℓ' w‖ ≤ max (max C C') 0 * sobNorm σ (S ++ S') w
-  change ‖ℓ w‖ ≤ C * sobNorm σ S w at e1
-  change ‖ℓ' w‖ ≤ C' * sobNorm σ S' w at e2
-  rw [h3]
-  have a1 : C * sobNorm σ S w ≤ max (max C C') 0 * sobNorm σ S w :=
-    mul_le_mul_of_nonneg_right (le_max_of_le_left (le_max_left _ _)) s1
-  have a2 : C' * sobNorm σ S' w ≤ max (max C C') 0 * sobNorm σ S' w :=
-    mul_le_mul_of_nonneg_right (le_max_of_le_left (le_max_right _ _)) s2
-  calc ‖ℓ w + ℓ' w‖ ≤ ‖ℓ w‖ + ‖ℓ' w‖ := norm_add_le _ _
-    _ ≤ _ := by nlinarith
+    Sobolev₂ (lieSet ε) σ (ℓ + ℓ') := GlobalTheory.TypeSum.sobCont_add_form h h'
 
 theorem sobCont_smul' (c : ℂ) {ℓ : H →ₗ[ℂ] ℂ} (h : Sobolev₂ (lieSet ε) σ ℓ) : Sobolev₂ (lieSet ε) σ (c • ℓ) := by
-  obtain ⟨S, C, hS, hC⟩ := h
-  refine ⟨S, ‖c‖ * C, hS, fun w hw => ?_⟩
-  have e1 := hC w hw
-  change ‖c * ℓ w‖ ≤ ‖c‖ * C * (S.map fun l => ‖l.foldr (dRep σ) w‖).sum
-  rw [norm_mul, mul_assoc]
-  exact mul_le_mul_of_nonneg_left e1 (norm_nonneg c)
+  exact GlobalTheory.TypeSum.sobCont_smul_form c h
 
 theorem sobCont_sum {ι : Type} (s : Finset ι) (ℓ : ι → (H →ₗ[ℂ] ℂ)) (h : ∀ i, Sobolev₂ (lieSet ε) σ (ℓ i)) :
     Sobolev₂ (lieSet ε) σ (∑ i ∈ s, ℓ i) :=
@@ -1521,8 +1489,7 @@ private theorem deriv_continuousLinearMap_comp_zero {E E' : Type} [NormedAddComm
       have heq : f = (B.restrictScalars ℝ) ∘ fun t => A (f t) := by
         funext t
         simp [hBA]
-      rw [heq]
-      exact h2
+      rwa [heq]
     rw [deriv_zero_of_not_differentiableAt hf, deriv_zero_of_not_differentiableAt hg, map_zero]
 
 theorem dRep_map (U : H' ≃ₗᵢ[ℂ] H) (hU : ∀ g ∈ UJset ε, ∀ w, U (σ' g w) = σ g (U w)) {X : Mx n}
@@ -1562,8 +1529,7 @@ theorem sobCont_map (U : H' ≃ₗᵢ[ℂ] H) (hU : ∀ g ∈ UJset ε, ∀ w, U
   have e := sobNorm_map U hU hS (U.symm w)
   rw [LinearIsometryEquiv.apply_symm_apply] at e
   show ‖ℓ (U.symm w)‖ ≤ _
-  rw [e]
-  exact h1
+  rwa [e]
 
 private theorem mul_inv_mem_UJset_of_conjTranspose_Jm_eq {P P' G : Matrix (Fin n) (Fin n) ℂ} (hP : IsUnit P)
     (hG : Pᴴ * Formalism.REAL.Jm ε * P = G) (hG' : P'ᴴ * Formalism.REAL.Jm ε * P' = G) : P' * P⁻¹ ∈ UJset ε := by
@@ -1696,8 +1662,7 @@ private theorem sobCont_comp_translate_of_sobCont (hσ : IsURepOn (UJset ε) σ)
       simp only [Function.comp_apply]
       rw [foldr_dRep_translate_eq_translate_foldr_conj hσ hQ hR hQR hRQ l (hS l hl), hσ.2.1 Q hQ]
     show ‖ℓ (σ Q w)‖ ≤ _
-    rw [← e]
-    exact h1
+    rwa [← e]
 
 theorem coef_frame_change : GlobalTheory.Published.DiscreteSeriesUpqUnique → ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ),
     Formalism.QuantumDeterminants.IsHCParam lam →
@@ -1816,8 +1781,7 @@ alias isClosed_UJset := _root_.GlobalTheory.AvgCont.isClosed_UJset
 theorem continuous_mul_left_GA {D : D7} (V : HSp D) (x : GA D V) : Continuous fun y : GA D V => x * y := by
   haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   haveI : IsTopologicalRing (AE D) := inferInstance
-  refine continuous_induced_rng.2 ?_
-  exact (continuous_const_mul _).comp continuous_induced_dom
+  exact continuous_induced_rng.2 ((continuous_const_mul _).comp continuous_induced_dom)
 
 theorem closure_to_series : ∀ {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (V : HSp D)
     (τ : D.what₂.Tau) (S : SPar) (φ : GA D V → ℂ),
@@ -1865,8 +1829,7 @@ theorem closure_to_series : ∀ {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F 
     refine (continuous_mul_left_GA V x).comp_continuousOn ?_
     refine (GlobalTheory.PointAtPlaceHom.continuousOn_atTau hθ V τ).comp
       ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const).continuousOn ?_
-    intro y hy
-    exact GlobalTheory.LowTypeDetermined.conj_inv_mem hPu hPG hy
+    exact fun y hy => GlobalTheory.LowTypeDetermined.conj_inv_mem hPu hPG hy
   have hfc : ContinuousOn f (UJset ε₀) := hφ.cont.comp_continuousOn hcont
   have hB := closure_model hHC hCW _ ε₀ lam₀ hP₀ H σ hσ f hfc
     (GlobalTheory.TypeSum.GrowthAtPlace.umg_atTau D θ hθ V τ φ hφ ε₀ P hPu hPG x) (by

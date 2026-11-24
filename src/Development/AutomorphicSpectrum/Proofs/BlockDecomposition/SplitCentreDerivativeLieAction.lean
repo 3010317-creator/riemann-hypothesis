@@ -92,8 +92,7 @@ theorem hasDerivAt_splitCentre : ∀ (E : Type) [Field E] [NumberField E] [_root
     unfold GlobalTheory.CuspRep.invSet
     have hdet : Continuous fun x : GlobalTheory.CuspRep.Lie E a => (Matrix.of x).det :=
       (continuous_id.comp continuous_id).matrix_det
-    have h3 := Units.isOpen.preimage hdet
-    simpa [Matrix.isUnit_iff_isUnit_det] using h3
+    simpa [Matrix.isUnit_iff_isUnit_det] using Units.isOpen.preimage hdet
   have hmem : GlobalTheory.CuspRep.oneL E a ∈ GlobalTheory.CuspRep.invSet E a := by
     unfold GlobalTheory.CuspRep.invSet GlobalTheory.CuspRep.oneL GlobalTheory.CuspRep.toL
     change IsUnit (1 : Matrix (Fin a) (Fin a) (Cinf E))
@@ -137,15 +136,13 @@ theorem hasDerivAt_splitCentre : ∀ (E : Type) [Field E] [NumberField E] [_root
     rw [sub_self]
     have h5 : (GlobalTheory.CuspRep.chart (↑φ) (g * GlobalTheory.UnitaryBC.splitCentre E a s) ∘ fun t => GlobalTheory.CuspRep.toL (cExp E a t).val) =
         fun t : ℝ => (φ : GlobalTheory.CuspRep.GA E a → ℂ) (g * GlobalTheory.UnitaryBC.splitCentre E a (s + t)) := funext hval
-    rw [← h5]
-    exact hcomp
+    rwa [← h5]
   have hF2 := HasDerivAt.comp_sub_const s s hF
   have h6 : (fun x : ℝ => (φ : GlobalTheory.CuspRep.GA E a → ℂ) (g * GlobalTheory.UnitaryBC.splitCentre E a (s + (x - s)))) =
       fun x : ℝ => (φ : GlobalTheory.CuspRep.GA E a → ℂ) (g * GlobalTheory.UnitaryBC.splitCentre E a x) := by
     funext x
     rw [show s + (x - s) = x by ring]
-  rw [h6] at hF2
-  exact hF2
+  rwa [h6] at hF2
 
 end GlobalTheory.CompanionTheory.CuspFinDeriv
 

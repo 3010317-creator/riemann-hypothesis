@@ -186,9 +186,7 @@ theorem nearAt_conj_ratA {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     group
   rw [key]
   refine congAt_mul n (congAt_mul n (congAt_mul n hei ?_) ?_) hg
-  · have h := congAt_conj n hκ (B := k) hk hki
-    simpa only [inv_inv] using h
-  · have h := congAt_conj n he (B := m) hm hmi
-    exact h
+  · simpa only [inv_inv] using congAt_conj n hκ (B := k) hk hki
+  · exact congAt_conj n he (B := m) hm hmi
 
 end GlobalTheory.CongMove

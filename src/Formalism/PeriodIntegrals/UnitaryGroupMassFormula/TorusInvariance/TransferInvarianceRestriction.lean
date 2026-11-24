@@ -116,8 +116,7 @@ lemma H_esI (a : Fin r) (w : Fin (2 * r + k + 1) → ℂ) : (Hpk k r *ᵥ w) (es
       simp only [Hpk, esI, Fin.ext_iff]
       split_ifs <;> first | rfl | (exfalso; omega)
     rw [h0, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma H_eI (a : Fin r) (w : Fin (2 * r + k + 1) → ℂ) : (Hpk k r *ᵥ w) (eI k r a) = w (esI k r a) := by
   have ha := a.isLt
@@ -133,8 +132,7 @@ lemma H_eI (a : Fin r) (w : Fin (2 * r + k + 1) → ℂ) : (Hpk k r *ᵥ w) (eI 
       simp only [Hpk, eI, Fin.ext_iff]
       split_ifs <;> first | rfl | (exfalso; omega)
     rw [h0, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma coord {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (c d : Fin (2 * r + k + 1))
     (hcd : ∀ w, (Hpk k r *ᵥ w) c = w d) (hfix : g *ᵥ bvec c = bvec c) (v : Fin (2 * r + k + 1) → ℂ) :
@@ -153,8 +151,7 @@ lemma coord {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (c d : Fin (2 * r + k + 1))
     · intro l _ hl
       rw [conjTranspose_apply, hcol]
       simp [bvec, hl]
-    · intro h
-      exact absurd (Finset.mem_univ c) h
+    · exact fun h => absurd (Finset.mem_univ c) h
   have key : (Hpk k r *ᵥ (g *ᵥ v)) c = (Hpk k r *ᵥ v) c := by
     rw [Matrix.mulVec_mulVec]
     simp only [Matrix.mulVec, dotProduct, hrow]
@@ -238,10 +235,9 @@ lemma n_fix {z : Fin (2 * r + k + 1) → ℂ} {i : Fin (r + 1)} (hz : inWb k r z
         · rw [hz x (Or.inr (by omega)), mul_zero]
       · intro j _ hj
         by_cases hjm : r ≤ j.val ∧ j.val ≤ r + k
-        · rw [hmid x j hjm.1 hjm.2 hx, if_neg (Ne.symm hj), zero_mul]
+        · rw [hmid x j hjm.1 hjm.2 hx, ite_eq_right (Ne.symm hj), zero_mul]
         · rw [hz j (by omega), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · have hout : ∀ c, x ≠ posL k r i c := fun c h => hx (by
         have h2 := congrArg Fin.val h
         simp only [posL] at h2
@@ -315,7 +311,7 @@ theorem transfer_invariance_vector : StepVec := by
     simp only [blk, Matrix.one_apply]
     by_cases h : a = b
     · simp [h]
-    · rw [if_neg (fun e => h (posL_inj e)), if_neg h]
+    · rw [ite_eq_right (fun e => h (posL_inj e)), ite_eq_right h]
   have mv_blk : ∀ s ∈ Glev k r i, ∀ v : Fin (2 * r + k + 1) → ℂ,
       (blk i s *ᵥ fun j => v (posL k r i j)) = fun j => (s *ᵥ v) (posL k r i j) := by
     intro s hs v

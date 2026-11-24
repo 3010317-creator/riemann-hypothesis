@@ -326,8 +326,7 @@ theorem biInv_scalar : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
         (fun γ hγ => conv.2 ((hRb b).1 γ hγ)) x (fun κ h1 h2 => hx.2 κ ⟨h1, h2⟩)
   refine ⟨c, fun f hf hfix => ?_⟩
   have e := hc f ⟨hf, fun κ hκ => hfix κ hκ⟩
-  rw [hT] at e
-  exact e
+  rwa [hT] at e
 
 end GlobalTheory.BiInvScalar
 
@@ -436,8 +435,7 @@ theorem rtSum_finset_sum {ρ : Representation ℂ (GQ L n) W} {S : Submodule ℂ
             exact add_comm _ _
           rw [h4]
           exact Submodule.sub_mem _ hz (hMst κ z hz)
-        rw [h0, Submodule.mem_bot, sub_eq_zero] at hd
-        exact hd
+        rwa [h0, Submodule.mem_bot, sub_eq_zero] at hd
       have hzfix : ∀ κ ∈ K, NG.rt L n κ z = z := by
         intro κ hκ
         have e := hfix κ hκ
@@ -543,8 +541,7 @@ theorem le_iSup_range (ρ : Representation ℂ (GQ L n) W) (S : Submodule ℂ (G
     have hmem : T0 u ∈ Wd := Submodule.mem_iSup_of_mem (⟨T0, hT0⟩ : {T // Good T}) ⟨u, rfl⟩
     rw [h0, Submodule.mem_bot] at hmem
     exact hu (hT0inj (hmem.trans (map_zero T0).symm))
-  · rw [← h0]
-    exact hWdle
+  · rwa [← h0]
 
 theorem isoTyp_le (ρ : Representation ℂ (GQ L n) W) (S : Submodule ℂ (GAf L n → W))
     (s : SplitPlace L) (τ : GlobalTheory.SmGL.IrrRep (GL (Fin n) (s.w.adicCompletion L)))
@@ -559,8 +556,7 @@ theorem isoTyp_le (ρ : Representation ℂ (GQ L n) W) (S : Submodule ℂ (GAf L
     apply hT0inj
     have := E.injective (Subtype.ext hab)
     exact congrArg Subtype.val this
-  · intro x hx a
-    exact hE x ⟨T0 a, hT0S a⟩ ⟨_, hT0S _⟩ (hT0eq x hx a)
+  · exact fun x hx a => hE x ⟨T0 a, hT0S a⟩ ⟨_, hT0S _⟩ (hT0eq x hx a)
 
 end GlobalTheory.IsoTypFixLoc
 
@@ -606,15 +602,13 @@ theorem GlobalTheory.IsoTypFixLoc.main : ∀ (L : Type) [Field L] [NumberField L
   let T : t → σ'.IntertwiningMap ρ' := fun j =>
     ⟨j.1.1, fun g => LinearMap.ext fun a => j.1.2 g.1 g.2 a⟩
   have hf' : f ∈ ⨆ j, LinearMap.range (T j).toLinearMap := by
-    rw [iSup_subtype'] at ht
-    exact ht
+    rwa [iSup_subtype'] at ht
   let K : Subgroup H := (GlobalTheory.HeckeScalarSph.locK n s.v).comap H.subtype
   have hfixK : ∀ k ∈ K, ρ' k f = f := fun k hk => hfix k.1 hk
   have hne := GlobalTheory.UnrLoc.fixed_ne_bot_of_mem_iSup_range hσ' T K hf' hf0 hfixK
   rw [Submodule.ne_bot_iff] at hne
   obtain ⟨y, hy, hy0⟩ := hne
-  refine ⟨y, hy0, fun κ hκ => ?_⟩
-  exact (GlobalTheory.Parabolic.mem_fixed.1 hy) ⟨κ, hκ.2⟩ hκ
+  exact ⟨y, hy0, fun κ hκ => ((GlobalTheory.Parabolic.mem_fixed.1 hy) ⟨κ, hκ.2⟩ hκ)⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitLocalComponentHasFixedVectorOfIsotypic =====
@@ -667,7 +661,7 @@ theorem main_alt_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (
     rintro _ ⟨x, hx, rfl⟩
     have hc : ∃ y ∈ Ds, (y : GAf D.host.E D.R.nV ⧸ (P.M.loc i).J) = (x : GAf D.host.E D.R.nV ⧸ (P.M.loc i).J) := ⟨x, hx, rfl⟩
     refine ⟨(x : GAf D.host.E D.R.nV ⧸ (P.M.loc i).J), ⟨x, hx, rfl⟩, ?_⟩
-    simp only [φ, dif_pos hc]
+    simp only [φ, dite_eq_left hc]
     have h1 := hc.choose_spec.2
     rw [QuotientGroup.eq] at h1
     exact QuotientGroup.eq.2 ((hJU _ hc.choose_spec.1 _ hx).1 h1)
@@ -814,8 +808,7 @@ theorem is_split_of_hk3_good_transport_label : GlobalTheory.Published.Automorphi
   funext g
   refine (d4 _ ((P.M.loc i).real (hj ▸ φ)) (fun x κ hκ hκ' => ?_) g).trans (key _ hj _ _ g)
   have h := congrFun (hty.2 ⟨κ, hκ⟩) x
-  rw [(hJ κ hκ').2 hκ, Units.val_one, one_smul] at h
-  exact h
+  rwa [(hJ κ hκ').2 hκ, Units.val_one, one_smul] at h
 end GlobalTheory.LabelTransport
 end
 end -- clump:auto
@@ -954,8 +947,7 @@ theorem good_not_mem_S_Q_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL �
     refine (hψ.ram w).1 ?_ hQ
     intro x hx
     have h1 : δ.loc w x * ψ.loc w x = 1 := (hmul x).symm.trans (hunr x hx)
-    rw [hd.unr w hnp x hx, one_mul] at h1
-    exact h1
+    rwa [hd.unr w hnp x hx, one_mul] at h1
 end GlobalTheory.GoodOffLoc
 end
 end -- clump:auto
@@ -1014,20 +1006,17 @@ theorem sumRt_iso {ρ : Representation ℂ (GQ L n) W} {S S' : Submodule ℂ (Fo
     simp only [σ, Submodule.coe_sum]
   have hTσ : ((T σ : S') : Formalism.AUTREP.GAf L n → W) = ∑ γ ∈ R, Formalism.L2.NG.rt L n (r γ) f' := by
 
-    simp only [σ, map_sum, Submodule.coe_sum]
-    exact Finset.sum_congr rfl fun γ _ => hrt _
+    simpa only [σ, map_sum, Submodule.coe_sum] using Finset.sum_congr rfl fun γ _ => hrt _
   have key : σ = c • f := Subtype.ext (by rw [hσ, Submodule.coe_smul]; exact hcf)
   have h3 := congrArg (fun y => ((T y : S') : Formalism.AUTREP.GAf L n → W)) key
-  simp only [map_smul, Submodule.coe_smul, hTσ, hTf] at h3
-  exact h3
+  simpa only [map_smul, Submodule.coe_smul, hTσ, hTf] using h3
 
 theorem iSup_finset_stable (t : Finset (Submodule ℂ (Formalism.AUTREP.GAf L n → W)))
     (ht : ∀ i ∈ t, ∀ h, ∀ f ∈ i, Formalism.L2.NG.rt L n h f ∈ i) (h : Formalism.AUTREP.GAf L n) :
     ∀ f ∈ (⨆ i ∈ t, i), Formalism.L2.NG.rt L n h f ∈ (⨆ i ∈ t, i) := by
   have hle : (⨆ i ∈ t, i) ≤ (⨆ i ∈ t, i).comap (Formalism.L2.NG.rt L n h) := by
     refine iSup₂_le fun i hi => ?_
-    intro f hf
-    exact (le_iSup₂ (f := fun i (_ : i ∈ t) => i) i hi) (ht i hi h f hf)
+    exact fun f hf => (le_iSup₂ (f := fun i (_ : i ∈ t) => i) i hi) (ht i hi h f hf)
   exact fun f hf => hle hf
 
 theorem sumRt_finset_sum {ρ : Representation ℂ (GQ L n) W} {S : Submodule ℂ (Formalism.AUTREP.GAf L n → W)}
@@ -1069,8 +1058,7 @@ theorem sumRt_finset_sum {ρ : Representation ℂ (GQ L n) W} {S : Submodule ℂ
             exact add_comm _ _
           rw [h4]
           exact Submodule.sub_mem _ hz (hMst κ z hz)
-        rw [h0, Submodule.mem_bot, sub_eq_zero] at hd
-        exact hd
+        rwa [h0, Submodule.mem_bot, sub_eq_zero] at hd
       have hzfix : ∀ κ ∈ Umax L n, TrivOutside {v} κ → Formalism.L2.NG.rt L n κ z = z := by
         intro κ hκ hκt
         have e := hfix κ hκ hκt
@@ -1424,8 +1412,7 @@ theorem good_not_mem_badPl_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExist
     refine (hψ.ram w).1 ?_ hQ
     intro x hx
     have h1 : δ.loc w x * ψ.loc w x = 1 := (hmul x).symm.trans (hunr x hx)
-    rw [hd.unr w hnp x hx, one_mul] at h1
-    exact h1
+    rwa [hd.unr w hnp x hx, one_mul] at h1
   have hnp' : w ∉ placesOver D.host.E p := hnp
   rintro ⟨w', hover, hw'⟩
   rcases GlobalTheory.SplitConjPlace.eq_or_eq_conjPlE w w' (hover.trans hov.symm) with e | e
@@ -1476,8 +1463,7 @@ theorem main_alt_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (
   refine ⟨c, fun f' hf' g => ?_⟩
   have hFI : (P.M.loc i).real (hj ▸ f') ∈ Formalism.L2.NG.isoTyp (P.M.loc i).wt.ρ (P.H.av.S i Q) := by
     have h := hf'
-    rw [P.H.av.typeV i Q] at h
-    exact h
+    rwa [P.H.av.typeV i Q] at h
   have hFT : (P.M.loc i).real (hj ▸ f') ∈ Formalism.L2.NG.TypeSp (P.M.loc i).wt.ρ (P.M.loc i).J (P.M.loc i).χ := by
     rw [← (P.M.loc i).real_range]
     exact ⟨_, rfl⟩

@@ -87,8 +87,7 @@ private theorem vanish_zmod (hTD : LocalTateDuality) (hEC : LocalEulerChar) (F �
       rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] at h3
       show φ (rho γ m - m) = 0
       exact (LinearMap.map_sub (φ : Module.Dual (ZMod (l ^ 1)) M) (rho γ m) m).trans (sub_eq_zero.mpr h3.symm)
-    refine ⟨fun a b => ?_⟩
-    exact Subtype.ext ((key a.1 a.2).trans (key b.1 b.2).symm)
+    exact ⟨fun a b => (Subtype.ext ((key a.1 a.2).trans (key b.1 b.2).symm))⟩
   have hTD' := hTD F Ω l 1 M A rho v Nat.one_pos hA hrho
   have hinj := hTD'.2.2.2.2.1
   have h2 : Subsingleton (H2 rho) := by
@@ -161,7 +160,7 @@ private theorem gRep_bij {k D : Type} [Field k] [Finite k] [Group D] (η : D →
     show m.val a b = 0
     by_cases hab : wt a b = j
     · have e := congrArg (fun X : Gb (k := k) j => X.val a b) hm
-      simp only [gRep_val, adRep_baseLift_apply, hη, if_true] at e
+      simp only [gRep_val, adRep_baseLift_apply, hη, ite_true] at e
       have hne : (Ψ x ^ wt a b : kˣ) ≠ 1 := by
         have h0 : wt a b ≠ 0 := hab ▸ hj
         have hw : wt a b = 1 ∨ wt a b = 2 ∨ wt a b = -1 ∨ wt a b = -2 := by
@@ -180,8 +179,7 @@ private theorem gRep_bij {k D : Type} [Field k] [Finite k] [Group D] (η : D →
   intro m m' h
   have h' : gRep η Ψ j x m - m = gRep η Ψ j x m' - m' := h
   refine sub_eq_zero.1 (hker _ ?_)
-  rw [map_sub, sub_eq_sub_iff_sub_eq_sub]
-  exact h'
+  rwa [map_sub, sub_eq_sub_iff_sub_eq_sub]
 
 private theorem gRep_cont {k D D' : Type} [CommRing k] [Group D] [TopologicalSpace D] [Group D']
     [TopologicalSpace D'] (η : D →* ℤˣ) (Ψ : D →* kˣ) (j : ℤ) (hη : IsLocallyConstant η) (hΨ : IsLocallyConstant Ψ)
@@ -214,8 +212,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.hostFrame_locVan :
   haveI : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
-    intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact fun hu => PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
   have hΨ : IsLocallyConstant F.Ψbar := by
     have h1 := (hok.Ψ_cont 1)
     rw [IsLocallyConstant.iff_eventually_eq] at h1 ⊢

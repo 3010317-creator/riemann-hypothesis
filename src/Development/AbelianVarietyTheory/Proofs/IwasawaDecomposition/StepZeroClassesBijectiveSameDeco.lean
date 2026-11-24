@@ -93,8 +93,7 @@ theorem orb_iff (y : Ys X n) (Λ' : LevFam X.E X.K n SG) (hΛ : Λ' = Λ) (Θ : 
     obtain ⟨γ₂, k₂, h₂⟩ := canon_spec Λ' p'.1.1.deco
     have e : p'.1.1.deco = (((γ₂⁻¹ * γ₁ : UF X.E n), ((k₂⁻¹ * k₁ : Λ'.grp).1 : GLG (E := X.E) (n := n) (SG := SG))) : UF X.E n × GLG (E := X.E) (n := n) (SG := SG)) • p.1.1.deco := by
       have := h₂.symm.trans (h.trans h₁)
-      rw [← eq_inv_smul_iff, ← mul_smul] at this
-      exact this
+      rwa [← eq_inv_smul_iff, ← mul_smul] at this
     generalize γ₂⁻¹ * γ₁ = γ at e
     generalize k₂⁻¹ * k₁ = k at e
     let q : DecoF X.E n ST SG Q := ((γ, k.1, 1) : UF X.E n × GLG (E := X.E) (n := n) (SG := SG) × GLQ X.E n Q) • p.1.1
@@ -151,7 +150,7 @@ theorem chartIndexLevelTwistPrimes_stepZero_eq_top (h : I.Ok) (a : I.ι) (b : Id
   · exact (h.idx_ok a).zero_Q b
 
 theorem ys0 (a : I.ι) : ysAt B.R I.sel (I.tup a) (I.cst a) 0 = Ys.triv _ _ :=
-  if_neg (by have := B.R.two_le_m; omega)
+  ite_eq_right (by have := B.R.two_le_m; omega)
 
 theorem stepZero_chartIndex_subsingleton (h : I.Ok) (a : I.ι) (b b' : Idx I.sel (I.tup a) (I.idx a) 0) : b = b' := by
   have hm : 0 < B.R.m := by have := B.R.two_le_m; omega
@@ -172,10 +171,8 @@ theorem cl_eq_iff (h : I.Ok) (u : B.Word) (a : I.ι) (b b' : Idx I.sel (I.tup a)
   obtain rfl := stepZero_chartIndex_subsingleton h a b b'
   rw [← orb_iff (colLev I.Ch 0) _ _ (levelTypePrimes_stepZero_eq_colLev h a b) _ (chartIndexLevelTwistPrimes_stepZero_eq_top h a b) (ys0 a) p' p]
   constructor
-  · intro e
-    exact Quotient.exact (eq_of_heq (Sigma.mk.inj e).2)
-  · intro e
-    exact congrArg (Sigma.mk b) (Quotient.sound e)
+  · exact fun e => Quotient.exact (eq_of_heq (Sigma.mk.inj e).2)
+  · exact fun e => congrArg (Sigma.mk b) (Quotient.sound e)
 
 theorem cl_rep {E K : Type} [Field E] [NumberField E] [Field K] {n : ℕ} (S : GStep E K n) (c : S.Cl) : S.cl c.1 (S.rep c) = c :=
   congrArg (Sigma.mk c.1) (S.rp_spec c.1 c.2)
@@ -190,8 +187,7 @@ theorem bij0 (h : I.Ok) (u : B.Word) (a : I.ι) (b) : Function.Bijective (I.cl0 
     obtain ⟨b0⟩ := stepZero_chartIndex_nonempty h I.mu0
     refine ⟨(I.stp u I.mu0 0).cl b0 (I.pt0 u a I.mu0 ((I.stp u a 0).rep c)), ?_⟩
     have e := (cl_eq_iff h u I.mu0 _ _ _ _).1 (cl_rep _ ((I.stp u I.mu0 0).cl b0 (I.pt0 u a I.mu0 ((I.stp u a 0).rep c))))
-    refine Eq.trans ?_ (cl_rep _ c)
-    exact (cl_eq_iff h u a _ _ _ _).2 e
+    exact Eq.trans ((cl_eq_iff h u a _ _ _ _).2 e) (cl_rep _ c)
 
 theorem stepZero_preferred_iff_canonicalRep (h : I.Ok) (u : B.Word) (a : I.ι) (b : Idx I.sel (I.tup a) (I.idx a) 0)
     (p : PtAt B.R I.sel (I.tup a) (I.cst a) u 0) :
@@ -200,8 +196,7 @@ theorem stepZero_preferred_iff_canonicalRep (h : I.Ok) (u : B.Word) (a : I.ι) (
   have e := eps_eq (ST := (B.primes X).vT u) (colLev I.Ch 0) _ _ (levelTypePrimes_stepZero_eq_colLev h a b)
     (levQAt I.sel (I.tup a) (I.idx a) (I.Tp a) 0 b) p
   constructor
-  · intro hp
-    exact Eq.trans (hp.1 rfl) e
+  · exact fun hp => Eq.trans (hp.1 rfl) e
   · intro hp
     exact ⟨fun _ => hp.trans e.symm, fun e' => absurd e' (by omega),
       topLev_pref_ne I.Ch I.sel (I.tup a) (I.cst a) I.Ps u (by omega) _⟩
@@ -224,8 +219,7 @@ theorem stepZero_representative_deco_eq_canonical (h : I.Ok) (u : B.Word) (a : I
     ((stepZero_preferred_iff_canonicalRep h u a b p').2 (by rw [e', canon_idem]))
   have hq : q = Quotient.mk _ p' := (eq_of_heq (Sigma.mk.inj hc).2).symm
   refine (stepZero_preferred_iff_canonicalRep h u a b _).1 ?_
-  rw [hq]
-  exact hp
+  rwa [hq]
 
 theorem stepZero_corresponding_representatives_same_deco (h : I.Ok) (u : B.Word) (a : I.ι) (b) (c : (I.stp u I.mu0 0).Cl) :
     ((I.stp u a 0).rep (I.cl0 u a b c)).1.1.deco = ((I.stp u I.mu0 0).rep c).1.1.deco := by

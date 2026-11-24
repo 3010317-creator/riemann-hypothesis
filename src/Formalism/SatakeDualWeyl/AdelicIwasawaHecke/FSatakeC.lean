@@ -131,17 +131,17 @@ theorem fSatake_tMat_exists {ϖ : L} {q m : ℕ} (hU : IsUnramInv ϖ σ q) (hm :
     rw [Matrix.mul_diagonal, Matrix.one_apply]
     by_cases h : i = j
     · subst h
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact mul_inv_cancel₀ (hne i)
-    · rw [if_neg h, tMat, Matrix.diagonal_apply_ne _ h, zero_mul]
+    · rw [ite_eq_right h, tMat, Matrix.diagonal_apply_ne _ h, zero_mul]
   have hinv2 : Matrix.diagonal (fun i => (tMat ϖ n m a i i)⁻¹) * tMat ϖ n m a = 1 := by
     ext i j
     rw [Matrix.diagonal_mul, Matrix.one_apply]
     by_cases h : i = j
     · subst h
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact inv_mul_cancel₀ (hne i)
-    · rw [if_neg h, tMat, Matrix.diagonal_apply_ne _ h, mul_zero]
+    · rw [ite_eq_right h, tMat, Matrix.diagonal_apply_ne _ h, mul_zero]
   refine ⟨⟨⟨tMat ϖ n m a, Matrix.diagonal (fun i => (tMat ϖ n m a i i)⁻¹), hinv1, hinv2⟩, ?_⟩, rfl⟩
   show cT σ (tMat ϖ n m a) * antiJ L n * tMat ϖ n m a = antiJ L n
   rw [hdiag, cT, Matrix.diagonal_map (map_zero σ), Matrix.diagonal_transpose]
@@ -201,13 +201,12 @@ private lemma isBorelU_sigma_diag_mul_opposite_diag {b : GU σ n} (hb : IsBorelU
   have hG : cT σ ⟪b⟫ * antiJ L n * ⟪b⟫ = antiJ L n := b.2
   have hG' := congrFun (congrFun hG i) j
   simp only [Matrix.mul_apply, cT, Matrix.transpose_apply, Matrix.map_apply, antiJ] at hG'
-  rw [if_pos hij, Finset.sum_eq_single j] at hG'
-  · rw [Finset.sum_eq_single i, if_pos hij, mul_one] at hG'
+  rw [ite_eq_left hij, Finset.sum_eq_single j] at hG'
+  · rw [Finset.sum_eq_single i, ite_eq_left hij, mul_one] at hG'
     · exact hG'
     · intro p _ hp
-      rw [if_neg (fun h => hp (Fin.ext (by omega))), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      rw [ite_eq_right (fun h => hp (Fin.ext (by omega))), mul_zero]
+    · exact fun h => absurd (Finset.mem_univ _) h
   · intro q _ hq
     rcases lt_or_gt_of_ne hq with hlt | hgt
     · have hlt' := Fin.lt_iff_val_lt_val.mp hlt
@@ -215,10 +214,9 @@ private lemma isBorelU_sigma_diag_mul_opposite_diag {b : GU σ n} (hb : IsBorelU
       intro p _
       by_cases hp : (p : ℕ) + q + 1 = n
       · rw [hB p i (Fin.lt_iff_val_lt_val.mpr (by omega)), map_zero, zero_mul]
-      · rw [if_neg hp, mul_zero]
+      · rw [ite_eq_right hp, mul_zero]
     · rw [hB q j hgt, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private lemma tMat_diag_mul_opposite_diag {ϖ : L} (hϖ0 : ϖ ≠ 0) {m : ℕ} (hm : 2 * m ≤ n) (a : Fin m → ℤ)
     (i j : Fin n) (hij : (i : ℕ) + j + 1 = n) : tMat ϖ n m a i i * tMat ϖ n m a j j = 1 := by
@@ -301,8 +299,7 @@ theorem fSatake_cell_exists {ϖ : L} {q m : ℕ} (hU : IsUnramInv ϖ σ q) (hm :
     intro i hi
     have hT : tMat ϖ n m a i i = ϖ ^ (ordL (⟪b⟫ i i)) := by
       have h1 := fSatake_tMat_apply_lt ϖ a ⟨i, hi⟩ i.isLt
-      rw [ha ⟨i, hi⟩ i.isLt] at h1
-      exact h1
+      rwa [ha ⟨i, hi⟩ i.isLt] at h1
     rw [he, map_mul, map_inv₀, hT, valuation_zpow_uniformizer hϖ, _root_.Formalism.UG.P.fSatake_v_eq (hbne i)]
     exact mul_inv_cancel₀ WithZero.coe_ne_zero
   have hve : ∀ i, Valued.v (e i) = 1 := by
@@ -315,8 +312,7 @@ theorem fSatake_cell_exists {ϖ : L} {q m : ℕ} (hU : IsUnramInv ϖ σ q) (hm :
       have h1 := congrArg Valued.v (hrel i j hij)
       rw [map_mul, hσv, map_one] at h1
       by_cases hj : (j : ℕ) < m
-      · rw [hlow j hj, mul_one] at h1
-        exact h1
+      · rwa [hlow j hj, mul_one] at h1
       · have hji : j = i := Fin.ext (by omega)
         rw [hji] at h1
         exact withZero_eq_one_of_mul_self_eq_one h1
@@ -378,8 +374,7 @@ theorem fSatake_cell_unique {ϖ : L} {q m : ℕ} (hU : IsUnramInv ϖ σ q) (hm :
   have htb' := fSatake_borel_tMat ht'
   have hx : t * u * k = t' * u' * k' := by
     apply Subtype.ext; apply Units.ext
-    simp only [Subgroup.coe_mul, Units.val_mul, ht, ht']
-    exact h
+    simpa only [Subgroup.coe_mul, Units.val_mul, ht, ht'] using h
   have hwk : (t' * u')⁻¹ * (t * u) = k' * k⁻¹ := by
     calc (t' * u')⁻¹ * (t * u) = (t' * u')⁻¹ * (t * u * k) * k⁻¹ := by group
       _ = (t' * u')⁻¹ * (t' * u' * k') * k⁻¹ := by rw [hx]
@@ -465,17 +460,14 @@ theorem fSatake_vanish (hSph : SphericalExistsU) [CompleteSpace L] {ϖ : L} {q m
     intro b g k hb hk
     by_cases hg : ∃ b' k' : GU σ n, IsBorelU b' ∧ k' ∈ KU σ n ∧ g = b' * k'
     · have h1 := (hP b g k hb hk).2 hg
-      simp only [ψ, if_pos h1, if_pos hg]
-      exact hφ b g k hb hk
+      simpa only [ψ, ite_eq_left h1, ite_eq_left hg] using hφ b g k hb hk
     · have h1 : ¬ ∃ b' k' : GU σ n, IsBorelU b' ∧ k' ∈ KU σ n ∧ b * g * k = b' * k' :=
         fun h => hg ((hP b g k hb hk).1 h)
-      simp only [ψ, if_neg h1, if_neg hg, mul_zero]
+      simp only [ψ, ite_eq_right h1, ite_eq_right hg, mul_zero]
   have hψ1 : ψ 1 = φ 1 := by
-    simp only [ψ]
-    exact if_pos ⟨1, 1, fSatake_borel_one, (KU σ n).one_mem, by simp⟩
+    simpa only [ψ] using ite_eq_left ⟨1, 1, fSatake_borel_one, (KU σ n).one_mem, by simp⟩
   have hψx : ψ x = 0 := by
-    simp only [ψ]
-    exact if_neg hx
+    simpa only [ψ] using ite_eq_right hx
   have e1 : ψ x = ψ 1 * φ0 x := congrFun (huniq ψ hψ) x
   have e2 : φ x = φ 1 * φ0 x := congrFun (huniq φ hφ) x
   rw [e2, ← hψ1, ← e1, hψx]

@@ -191,8 +191,7 @@ theorem fd_Wf (hW : FiniteDimensional ℂ W) (n : ℕ) : FiniteDimensional ℂ (
       · have e : topW n W n = W := by
           unfold topW
           rw [dite_eq_left rfl]
-        rw [e]
-        exact hW
+        rwa [e]
       · have e : topW N W n = ⊥ := by
           unfold topW
           rw [dite_eq_right hn]
@@ -232,8 +231,7 @@ theorem w_levK_zero {r : ℕ} (k : Kinf E r) : Slice1.levK E r 0 k = k := by
   refine Matrix.ext fun i j => ?_
   have := InducedTensorMap.B.lev_cc (R := Cinf E) (s := 0) (Unitary.toUnits k, 1) i j
   have e : ∀ i : Fin r, Fin.castAdd 0 i = i := fun i => Fin.ext rfl
-  rw [e, e] at this
-  exact this
+  rwa [e, e] at this
 
 def w_castK {a b : ℕ} (h : a = b) (k : Kinf E a) : Kinf E b := h ▸ k
 

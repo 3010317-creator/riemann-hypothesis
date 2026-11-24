@@ -43,8 +43,7 @@ theorem countable_unitaryGroup (h : HermitianForm F E W) (v : Basis ι E W) :
   have : Countable (Matrix ι ι E) := inferInstanceAs (Countable (ι → ι → E))
   refine Function.Injective.countable (f := fun γ : h.unitaryGroup =>
     ((unitaryGroupEquivMatrix h v γ : GL ι E) : Matrix ι ι E)) ?_
-  intro a b hab
-  exact (unitaryGroupEquivMatrix h v).injective (Subtype.ext (Units.ext hab))
+  exact fun a b hab => (unitaryGroupEquivMatrix h v).injective (Subtype.ext (Units.ext hab))
 
 theorem AdelicCovolumeFinite.proof (h : HermitianForm F E W) (v : Basis ι E W)
     [FiniteDimensional E W] (h₁ : LatticeOrbitsFinite.Statement h)
@@ -79,8 +78,7 @@ theorem AdelicCovolumeFinite.proof (h : HermitianForm F E W) (v : Basis ι E W)
   let r : AddSubgroup W → unitaryPoints F E (gram h.toSesq v) (FiniteAdeleRing (𝓞 F) F) := fun L₀ => if hL : ∃ y, L y = L₀ then hL.choose else 1
   have hr : ∀ y, L (r (L y)) = L y := fun y => by
     have hL : ∃ y', L y' = L y := ⟨y, rfl⟩
-    simp only [r, dif_pos hL]
-    exact hL.choose_spec
+    simpa only [r, dite_eq_left hL] using hL.choose_spec
 
   have hstab : ∀ (γ : h.unitaryGroup) (s : unitaryPoints F E (gram h.toSesq v) (FiniteAdeleRing (𝓞 F) F)),
       γ ∈ latticeStab h (L s) ↔ s⁻¹ * (Φ (hermitianDiagonal h v γ)).2 * s ∈ K := by

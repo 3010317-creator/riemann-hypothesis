@@ -149,8 +149,7 @@ theorem exists_reps {G : Type} [AddCommGroup G] (H K : AddSubgroup G) (hKH : K �
       obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hv
       congr 2
       rw [← QuotientAddGroup.out_eq' q]
-      refine (hmk _ _).2 ?_
-      exact hwv
+      exact (hmk _ _).2 hwv
   · rw [Finset.card_image_of_injective _ hout, Finset.card_univ]
     set c := Fintype.card (H ⧸ K')
     have hc : c ≠ 0 := Fintype.card_ne_zero
@@ -192,14 +191,12 @@ theorem int_at {D : D7} (P : Pl D.host.E) (ep : AE D) (hep : Formalism.L2.NTheta
     by_contra hc
     exact hb ((hep.2 _ hb0).2 hc)
   have hq : (N : D.host.E) * (ϖ : D.host.E)⁻¹ = (a : D.host.E) * ((b : 𝓞 D.host.E) : D.host.E)⁻¹ := by
-    rw [eq_mul_inv_iff_mul_eq₀ hb1]
-    exact hab
+    rwa [eq_mul_inv_iff_mul_eq₀ hb1]
   have ha : finPart D (incA D (a : D.host.E)) ∈ intAE D :=
     AddSubgroup.subset_closure ⟨1, fun v => one_mem _, a, rfl⟩
   have := mul_mem_intAE ha hi
   rw [← RingHom.map_mul, mul_left_comm, ← RingHom.map_mul] at this
-  rw [hq]
-  exact this
+  rwa [hq]
 
 theorem int_sum {D : D7} (Q : Finset (Pl D.host.E)) (e : AE D) (he : IsIdemSum e Q) (N : ℕ)
     (hN : ∀ PP ∈ Q, (N : 𝓞 D.host.E) ∈ PP.asIdeal) (ϖ : 𝓞 D.host.E)

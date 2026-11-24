@@ -148,8 +148,7 @@ theorem ptSecT_whisker {T T' : Over S0} (h : T' ⟶ T) (z : T ⟶ A) :
     (ptSecT A (h ≫ z)).left ≫ (h ▷ A).left = h.left ≫ (ptSecT A z).left := by
   have e : ptSecT A (h ≫ z) ≫ (h ▷ A) = h ≫ ptSecT A z := by
     apply CartesianMonoidalCategory.hom_ext <;> simp [ptSecT]
-  have e2 := congrArg (fun f => f.left) e
-  simpa using e2
+  simpa using congrArg (fun f => f.left) e
 
 end Pull
 
@@ -185,8 +184,7 @@ theorem isValueAt_pullScale (hL : Xo.univ.t.PP.L.IsLB) (a : ℤ) {T T' : Over Xo
       (s.f j))
   have e1 : gs (𝟙 T'.left) y ⊤ ((h.left.appTop).hom v) = gs h.left y ⊤ v := by
     have := gs_pull (𝟙 T'.left) h.left y ⊤ trivial v
-    rw [Category.id_comp] at this
-    exact this
+    rwa [Category.id_comp] at this
   have lhs : gs (𝟙 T'.left) y (LB.wchart Xo.univ.t.PP.L (fun _ : Fin 1 => (h ≫ z).left) j)
       ((T'.left.presheaf.map (homOfLE (val_le Xo.univ.t.G Xo.univ.t.PP.L (h ≫ z) j)).op).hom
         (((ptSecT Xo.univ.t.G (h ≫ z)).left.app _).hom (s'.f j))) =

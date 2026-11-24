@@ -72,7 +72,7 @@ theorem tendsto_af {ι : Type} {l : Filter ι} (x : Af E) (z : ι → Af E)
     filter_upwards [h1 w] with t ht
     have h0 : z t w - x w ∈ w.adicCompletionIntegers E := by
       rw [ht, sub_self]; exact zero_mem _
-    simp only [u, dif_pos h0]
+    simp only [u, dite_eq_left h0]
     apply Subtype.ext
     change (0 : w.adicCompletion E) = z t w - x w
     rw [ht, sub_self]
@@ -87,15 +87,14 @@ theorem tendsto_af {ι : Type} {l : Filter ι} (x : Af E) (z : ι → Af E)
     apply Subtype.ext
     funext w
     change (u t w : w.adicCompletion E) = z t w - x w
-    simp only [u, dif_pos (ht w)]
+    simp only [u, dite_eq_left (ht w)]
   have := (tendsto_const_nhds (x := x)).add hv'
   simpa using this
 
 theorem tendsto_ad {ι : Type} {l : Filter ι} (y : Ad E) (z : ι → Ad E) (h1 : ∀ t, (z t).1 = y.1)
     (h2 : Tendsto (fun t => (z t).2) l (𝓝 y.2)) : Tendsto z l (𝓝 y) := by
   refine (Prod.tendsto_iff _ _).2 ⟨?_, h2⟩
-  simp only [h1]
-  exact tendsto_const_nhds
+  simpa only [h1] using tendsto_const_nhds
 
 theorem tendsto_gl {ι : Type} {l : Filter ι} (x : GA E a) (z : ι → GA E a)
     (h1 : ∀ i j, Tendsto (fun t => (z t).val i j) l (𝓝 (x.val i j)))
@@ -114,8 +113,7 @@ theorem tendsto_entry (S : Finset (Pl E)) (x : GA E a) (z : Finset (Pl E) → GA
     Tendsto (fun T => (z T).val i j) atTop (𝓝 (x.val i j)) := by
   classical
   refine tendsto_ad _ _ (fun T => ?_) (tendsto_af _ _ (fun w => ?_) ?_)
-  · have h := congrArg (fun m : GL (Fin a) (Cinf E) => m.val i j) (hinf T)
-    exact (infEq E).symm.injective h
+  · exact (infEq E).symm.injective (congrArg (fun m : GL (Fin a) (Cinf E) => m.val i j) (hinf T))
   · filter_upwards [eventually_ge_atTop {w}] with T hT
     exact congrArg (fun m : GL (Fin a) (w.adicCompletion E) => m.val i j)
       (hloc T w (Or.inr (hT (Finset.mem_singleton_self w))))

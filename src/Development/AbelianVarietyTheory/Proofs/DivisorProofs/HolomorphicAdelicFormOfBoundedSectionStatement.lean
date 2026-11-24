@@ -116,11 +116,7 @@ theorem archM_of_fin (V : HSp D) (θ : Ainf D.host.F ⊗[D.host.F] D.host.E →+
   rw [archM, hk', Units.val_one, Matrix.map_one _ (map_zero _) (map_one _)]
 
 theorem topGroup (V : HSp D) : IsTopologicalGroup (GA D V) := by
-  have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
-    IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  exact inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  exact GlobalTheory.AutFunCounterexample.topGroup_GA D V
 
 theorem continuous_of_holAd {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {S : D.what₂.Tau → SPar} {M : DSModel V S}
     (hM : HolShape M) {w : D.what₂.Tau → Fin V.rank → ℤ} {φ : GA D V → ℂ} (hφ : HolAd θ M w φ)
@@ -148,8 +144,7 @@ theorem continuous_of_holAd {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {S :
       funext τ
       show archM V (θ τ) (h⁻¹ * g) = _
       rw [e, archM_mul, archM_of_fin V _ ha, one_mul]
-    rw [e1, hLa u hu, e, hcomm a ha u hu, inv_mul_cancel_left]
-    exact ha
+    rwa [e1, hLa u hu, e, hcomm a ha u hu, inv_mul_cancel_left]
   have hah : (L (A h))⁻¹ * (h⁻¹ * h) ∈ U := by
     have e1 : A h = fun τ => archM V (θ τ) 1 := by
       funext τ
@@ -270,8 +265,7 @@ theorem holForm_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.T
         (fun τ => (u τ * Matrix.of (x τ) : Mt V.rank)) ∈ frDoms (gramAt D V) (fun τ => nNeg (M.ε τ)) := by
       intro u hu x hx
       have := hst u hu (fun _ => 1) (fun _ => ⟨by simp, fun a c hac => Matrix.one_apply_ne hac.ne'⟩) _ hx
-      simp only [Matrix.mul_one] at this
-      exact this
+      simpa only [Matrix.mul_one] using this
     obtain ⟨m, hmu, hw⟩ := G.wt
     intro h
     obtain ⟨γ, -, -, hγ⟩ := G.base.2.2 h
@@ -285,8 +279,7 @@ theorem holForm_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.T
           fun τ => (archM V (θ τ) (γ * h) * Matrix.of (x τ) : Mt V.rank) := by
         funext ρ a b
         simp only [trFr, Equiv.symm_apply_apply, Fin.cast_eq_self]
-      rw [h2]
-      exact h1
+      rwa [h2]
     have hs := holSec_of_isSec (X (dict h).1) (la _) (P _) (hsec _) e (gramAt D V) (fun τ => nNeg (M.ε τ))
       (fun ρ => archM V (θ ρ) (γ * h)) hA m w (fun ρ a => hw _ ρ (e ρ) (he ρ) a)
       (c (dict h).1 * mu h * (∏ ρ, (x0Mat M ρ).det ^ m ρ)⁻¹)

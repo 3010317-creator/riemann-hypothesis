@@ -70,8 +70,7 @@ theorem le_locF (𝔭 : Ideal (𝓞 F)) [𝔭.IsPrime] (L : Submodule (𝓞 K) V
 
 theorem ι_mem_pow {𝔭 : Ideal (𝓞 F)} {k : ℕ} {a : 𝓞 F} (ha : a ∈ 𝔭 ^ k) : ι a ∈ extP K 𝔭 ^ k := by
   have ha' := Ideal.mem_map_of_mem ι ha
-  rw [extP, ← Ideal.map_pow]
-  exact ha'
+  rwa [extP, ← Ideal.map_pow]
 
 theorem exists_approx {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (L : Submodule (𝓞 K) V) (k : ℕ) {w : V}
     (hw : w ∈ locF 𝔭 L) : ∃ c : 𝓞 F, c - 1 ∈ 𝔭 ^ k ∧ ι c • w ∈ L := by
@@ -275,12 +274,10 @@ theorem vd_locF (hF : IsFixF K F) (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submod
       have : (Matrix.of fun i j => h (ι t • x i) (ι t • x j)) =
           algebraMap (𝓞 K) K (ι (t * t)) • (Matrix.of fun i j => h (x i) (x j)) := by
         ext i j
-        simp only [Matrix.of_apply, Matrix.smul_apply, smul_eq_mul]
-        exact form_smul hF h t t _ _
+        simpa only [Matrix.of_apply, Matrix.smul_apply, smul_eq_mul] using form_smul hF h t t _ _
       rw [this, Matrix.det_smul, Fintype.card_fin, map_mul, ez, map_pow, map_pow]
     have h2 : (t * t) ^ finrank K V ∉ 𝔭 := by
-      intro hm
-      exact (h𝔭.isPrime.mem_or_mem (h𝔭.isPrime.mem_of_pow_mem _ hm)).elim ht ht
+      exact fun hm => (h𝔭.isPrime.mem_or_mem (h𝔭.isPrime.mem_of_pow_mem _ hm)).elim ht ht
     obtain ⟨u, hu⟩ := MeanA.exists_mul_sub_one_mem_pow h𝔭 h2 e
     have hmul : ι u * (ι ((t * t) ^ finrank K V) * z) ∈ extP K 𝔭 ^ e :=
       Ideal.mul_mem_left _ _ (hle h1)

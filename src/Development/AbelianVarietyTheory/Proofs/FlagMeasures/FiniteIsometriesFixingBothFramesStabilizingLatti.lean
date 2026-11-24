@@ -129,8 +129,7 @@ theorem finite_of_fix (hT : V →ₗ⋆[E] V →ₗ[E] E) (U : Submodule E V)
     refine ⟨⟨h ((n : W) : V), hpres h hiso hfix _ (n : W).2⟩, ⟨?_, ?_⟩, rfl⟩
     · have hm : ((h : V →ₗ[E] V).restrictScalars (𝓞 E)) ((n : W) : V) ∈ Formalism.HermitianLatticesTheory.gmap h Λ₀ :=
         Submodule.mem_map_of_mem (hNL n n.2)
-      rw [hlat] at hm
-      exact hm
+      rwa [hlat] at hm
     · show Algebra.trace ℚ E (hT (h ((n : W) : V)) (h ((n : W) : V))) ≤
         Algebra.trace ℚ E (hT ((n : W) : V) ((n : W) : V))
       rw [hiso]
@@ -182,7 +181,6 @@ theorem stab_finite : ∀ (D : D7) {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.r
       simp [hz]
   intro u hu
   have := (sup_le (key F hF) (key F' hF')) hu
-  rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
-  exact this
+  rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
 
 end GlobalTheory.StabFin

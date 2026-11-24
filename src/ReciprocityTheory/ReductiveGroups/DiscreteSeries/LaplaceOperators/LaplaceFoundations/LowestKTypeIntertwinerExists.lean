@@ -28,12 +28,11 @@ def rhoS (h : Matrix (Fin k) (Fin k) ℂ) : spanW (k := k) (r := r) T →L[ℂ] 
 
 theorem rhoS_apply {h : Matrix (Fin k) (Fin k) ℂ} (hh : h ∈ Matrix.unitaryGroup (Fin k) ℂ)
     (v : spanW (k := k) (r := r) T) : (rhoS T h v : T.V) = rhoK (k := k) (r := r) T h v := by
-  simp only [rhoS, dif_pos hh]
+  simp only [rhoS, dite_eq_left hh]
   rfl
 
 theorem uj_unit {h : Matrix (Fin k) (Fin k) ℂ} (hh : h ∈ Formalism.MainNotions.S.UJset (Formalism.MainNotions.S.allPos k)) :
-    h ∈ Matrix.unitaryGroup (Fin k) ℂ := by
-  exact (HW.uqU_mem_Kset hh).1
+    h ∈ Matrix.unitaryGroup (Fin k) ℂ := (HW.uqU_mem_Kset hh).1
 
 theorem unit_ks {h : Matrix (Fin k) (Fin k) ℂ} (hh : h ∈ Matrix.unitaryGroup (Fin k) ℂ) :
     h ∈ Formalism.REAL.Kset (Formalism.MainNotions.S.allPos k) := by
@@ -53,8 +52,7 @@ theorem wtS_iff {μ : Fin k → ℝ} {v : spanW (k := k) (r := r) T} :
   constructor
   · intro h t ht
     have := congrArg Subtype.val (h t ht)
-    rw [rhoS_apply T ht.1] at this
-    exact this
+    rwa [rhoS_apply T ht.1] at this
   · intro h t ht
     apply Subtype.ext
     rw [rhoS_apply T ht.1]
@@ -82,8 +80,7 @@ theorem rhoS_hc (hε : ∀ a : Fin (2 * r + k + 1), a.val < k → ε a = true) {
     have hc : ContinuousOn (fun g => rhoK (k := k) (r := r) T g v) (Formalism.MainNotions.S.UJset (Formalism.MainNotions.S.allPos k)) :=
       ((HW.torep_isURepOn T).2.2 v).comp kE_cont.continuousOn
         (fun g hg => kE_mem_Kset hε (uj_unit hg))
-    refine hc.congr fun g hg => ?_
-    exact rhoS_apply T (uj_unit hg) v
+    exact hc.congr fun g hg => rhoS_apply T (uj_unit hg) v
   · intro S' _ hS'
     let S'' : Submodule ℂ T.V := S'.map (spanW (k := k) (r := r) T).subtype
     have hle : S'' ≤ spanW (k := k) (r := r) T := by
@@ -91,8 +88,7 @@ theorem rhoS_hc (hε : ∀ a : Fin (2 * r + k + 1), a.val < k → ε a = true) {
       exact v.2
     have hst : ∀ h ∈ Matrix.unitaryGroup (Fin k) ℂ, ∀ v ∈ S'', rhoK (k := k) (r := r) T h v ∈ S'' := by
       rintro h hh _ ⟨v, hv, rfl⟩
-      refine ⟨rhoS T h v, hS' h (unit_ks hh) v hv, ?_⟩
-      exact rhoS_apply T hh v
+      exact ⟨rhoS T h v, hS' h (unit_ks hh) v hv, rhoS_apply T hh v⟩
     rcases spanW_irred T hε S'' hle hst with h | h
     · left
       rw [Submodule.eq_bot_iff]

@@ -120,14 +120,12 @@ theorem span_inf_iSup_externalProduct (D : Formalism.BasicNotions.D7) (H : Exter
       {x : PIdx r K LL B | ∀ i, x.1.1.1 i ∈ pi' i ∧ x.1.2.1 i ∈ pi'' i} := by
     ext x
     constructor
-    · intro h i
-      exact ⟨h (.inl i), h (.inr i)⟩
+    · exact fun h i => ⟨h (.inl i), h (.inr i)⟩
     · intro h s
       match s with
       | .inl i => exact (h i).1
       | .inr i => exact (h i).2
-  rw [(H.p16 F N r K LL B).2, ← hsup, ← hset]
-  exact key
+  rwa [(H.p16 F N r K LL B).2, ← hsup, ← hset]
 
 theorem map_externalProduct_vector {O Kf : Type} [CommRing O] [CommRing Kf] (φ : O →+* Kf) {N : ℕ} (r K : ℕ) (LL : Letters (Fin N))
     (B : Fin N → ℕ) (x : PIdx r K LL B) : MvPolynomial.map φ (pvec O r K LL B x) = pvec Kf r K LL B x := by
@@ -205,8 +203,7 @@ theorem linearIndependent_words_all_degrees (R : Type) [CommRing R] (N n : ℕ) 
     intro x hx
     rw [Pol, MvPolynomial.mem_restrictSupport_iff] at hx
     rw [MvPolynomial.mem_restrictSupport_iff]
-    intro m hm
-    exact ⟨i, hi, hx hm⟩
+    exact fun m hm => ⟨i, hi, hx hm⟩
   refine Disjoint.mono (h1 b) h2 (disjoint_restrictSupport_of_disjoint ?_)
   rw [Set.disjoint_left]
   rintro m hm ⟨i, hi, hmi⟩
@@ -214,8 +211,7 @@ theorem linearIndependent_words_all_degrees (R : Type) [CommRing R] (N n : ℕ) 
   have : b = i := by
     funext j
     rw [← hm j, hmi j]
-  rw [this]
-  exact hi
+  rwa [this]
 
 section Theta
 
@@ -321,8 +317,7 @@ theorem linearIndependent_productBasis (R : Type) [CommRing R] (N r K : ℕ) (LL
     rw [MvPolynomial.smul_eq_C_mul, map_mul, towerToPolynomialHom_C_eq_rename_tan, ← map_Psi' (MvPolynomial.C : R →+* _), towerToPolynomialHom_map_C_eq_rename_pl]
     unfold pvec PsiPl PsiTan
     rw [mul_comm]
-  rw [← h2]
-  exact h1
+  rwa [← h2]
 
 end Formalism.MainNotions.G.ColumnFamilies
 end -- clump:auto
@@ -370,10 +365,10 @@ theorem glOperatorDerivation_lie_relation (he : Function.Injective e) (a b c d :
   simp only [glOperatorDerivation_apply]
   by_cases hl : l ∈ S
   · by_cases hv : LL.vec l = true
-    · simp only [glOpsE_X, hl, hv, if_true, eq_comm (a := b) (b := c), eq_comm (a := d) (b := a)]
+    · simp only [glOpsE_X, hl, hv, ite_true, eq_comm (a := b) (b := c), eq_comm (a := d) (b := a)]
       by_cases h1 : x = e d <;> by_cases h2 : x = e b <;> by_cases h3 : c = b <;> by_cases h4 : a = d <;>
         simp_all [glOpsE_X, he.eq_iff]
-    · simp only [glOpsE_X, hl, hv, if_true, if_false, Bool.false_eq_true]
+    · simp only [glOpsE_X, hl, hv, ite_true, ite_false, Bool.false_eq_true]
       by_cases h1 : x = e c <;> by_cases h2 : x = e a <;> by_cases h3 : b = c <;> by_cases h4 : d = a <;>
         simp_all [glOpsE_X, he.eq_iff]
   · simp [glOpsE_X, hl]
@@ -405,9 +400,9 @@ theorem glOperatorDerivation_lie_eq_zero_of_disjoint (hd : (∀ l, l ∈ S → l
   rcases hd with hd | hd
   · by_cases hS : l ∈ S
     · have hT := hd l hS
-      simp only [glOpsE_X, hS, hT, if_true, if_false, map_zero]
+      simp only [glOpsE_X, hS, hT, ite_true, ite_false, map_zero]
       split_ifs <;> simp [glOpsE_X, hT]
-    · simp only [glOpsE_X, hS, if_false, map_zero]
+    · simp only [glOpsE_X, hS, ite_false, map_zero]
       split_ifs <;> simp [glOpsE_X, hS]
   · have hd' : ∀ a a', e' a' ≠ e a := fun a a' h => hd a a' h.symm
     simp only [glOpsE_X]
@@ -451,17 +446,17 @@ theorem multidegreeProj_glOperatorsEmbedded_comm (d : Fin N → ℕ) (a b : Fin 
 
     rw [polProj_monomial, glOperatorsEmbedded_apply, map_sum]
     by_cases h : ∀ i, multideg mm i = d i
-    · rw [if_pos h, glOperatorsEmbedded_apply]
+    · rw [ite_eq_left h, glOperatorsEmbedded_apply]
       refine Finset.sum_congr rfl fun l _ => ?_
       split_ifs
-      · rw [polProj_step, if_pos h]
-      · rw [map_neg, polProj_step, if_pos h]
+      · rw [polProj_step, ite_eq_left h]
+      · rw [map_neg, polProj_step, ite_eq_left h]
       · rw [map_zero]
-    · rw [if_neg h, map_zero]
+    · rw [ite_eq_right h, map_zero]
       refine Finset.sum_eq_zero fun l _ => ?_
       split_ifs
-      · rw [polProj_step, if_neg h]
-      · rw [map_neg, polProj_step, if_neg h, neg_zero]
+      · rw [polProj_step, ite_eq_right h]
+      · rw [map_neg, polProj_step, ite_eq_right h, neg_zero]
       · rw [map_zero]
   | add p q hp hq => rw [map_add (f := _), map_add (f := _), map_add (f := _), map_add (f := _), hp, hq]
 
@@ -685,16 +680,16 @@ theorem coeff_multidegreeProj_of_multidegree_eq (d : ι → ℕ) (H : MvPolynomi
   rw [map_sum, MvPolynomial.coeff_sum]
   simp only [polProj_monomial]
   rw [Finset.sum_eq_single m]
-  · rw [if_pos h]
-    erw [MvPolynomial.coeff_monomial, if_pos rfl]
+  · rw [ite_eq_left h]
+    erw [MvPolynomial.coeff_monomial, ite_eq_left rfl]
   · intro b _ hbm
     split_ifs
-    · erw [MvPolynomial.coeff_monomial, if_neg hbm]
+    · erw [MvPolynomial.coeff_monomial, ite_eq_right hbm]
     · simp
   · intro hm
     rw [MvPolynomial.mem_support_iff, not_not] at hm
-    rw [if_pos h, hm]
-    erw [MvPolynomial.coeff_monomial, if_pos rfl]
+    rw [ite_eq_left h, hm]
+    erw [MvPolynomial.coeff_monomial, ite_eq_left rfl]
 
 theorem eq_zero_of_multidegreeProj_eq_zero (H : MvPolynomial (ι × Fin r) K) (h : ∀ d, polProj K d H = 0) : H = 0 := by
   ext m
@@ -812,8 +807,7 @@ theorem linearIndependent_standardWords_by_weight (hE4 : TypeSumsByEvaluation) {
     rw [ht]
     refine Submodule.smul_mem _ _ ?_
     have := standardWord_mem_isotypicSumInitialLetters D F LL i pi hpi P (J x) (by rw [hP]; exact hst x) (by rw [hP]; exact hx)
-    rw [hP] at this
-    exact this
+    rwa [hP] at this
   apply le_antisymm
   · rintro G ⟨hG, hGT⟩
     have hsplit : Set.range v = v '' {x | lab x i ∈ pi} ∪ v '' {x | lab x i ∉ pi} := by
@@ -844,8 +838,7 @@ theorem linearIndependent_standardWords_by_weight (hE4 : TypeSumsByEvaluation) {
             ⟨b, P, J x, by rw [hP]; exact hst x, by rw [hP]; exact hx, by rw [hP]⟩)
         exact hle h2
       · exact (hE4 F N m k LL _ e dcd hd1 hd2 pi G2).1 hG2T y
-    rw [hz, add_zero]
-    exact h1
+    rwa [hz, add_zero]
   · exact le_inf (Submodule.span_mono (Set.image_subset_range _ _)) hin
 
 end main
@@ -1111,8 +1104,7 @@ theorem span_productBasis_eq_multihomogeneous (R : Type) [CommRing R] (N r K : �
       (b'' := fun i => multideg m2 i) ?_ (monomial_mem_multihomogeneous_multideg R m1) (monomial_mem_multihomogeneous_multideg R m2))
     intro i
     have := hB i
-    rw [hs, multideg_add_apply, multideg_mapDomain_headVar, multideg_mapDomain_tailVar] at this
-    exact this
+    rwa [hs, multideg_add_apply, multideg_mapDomain_headVar, multideg_mapDomain_tailVar] at this
 
 end Formalism.MainNotions.G.ColumnFamilies
 end -- clump:auto

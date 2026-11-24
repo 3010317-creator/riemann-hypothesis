@@ -67,8 +67,7 @@ theorem exists_coord {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
   classical
 
   have hσ : ∀ x : D.host.E, (D.sp.cm.sig : D.host.E →+* D.host.E) ((D.sp.cm.sig : D.host.E →+* D.host.E) x) = x := by
-    intro x
-    exact star_star x
+    exact fun x => star_star x
   have hG : Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) B.gram = B.gram := by
     ext i j
     exact B.herm.eq (B.frame j) (B.frame i)
@@ -91,8 +90,7 @@ theorem exists_coord {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
     simp [Formalism.UG.cT]
   refine ⟨fun k => (Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) d.a * B.gram) p.rev k, fun i => ?_, fun q => ?_⟩
   · have h := congrFun (congrFun hperp p.rev) i
-    rw [Matrix.mul_apply, Matrix.zero_apply] at h
-    exact h
+    rwa [Matrix.mul_apply, Matrix.zero_apply] at h
   · have h := congrFun (congrFun d.gram p.rev) q
     rw [Matrix.mul_apply] at h
     refine h.trans ?_
@@ -103,7 +101,7 @@ theorem exists_coord {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
         rw [Fin.val_rev]
         have := p.isLt
         omega
-      rw [if_pos hc, if_neg hp, if_pos rfl]
+      rw [ite_eq_left hc, ite_eq_right hp, ite_eq_left rfl]
     · have hne : ¬ (p.rev.1 + q.1 + 1 = c) := by
         intro hs
         apply hq
@@ -112,7 +110,7 @@ theorem exists_coord {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
         have := p.isLt
         have := q.isLt
         omega
-      rw [if_neg hne, if_neg hq]
+      rw [ite_eq_right hne, ite_eq_right hq]
 
 theorem coord_apply {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthogonalExtensionData A B c ε) (p : Fin c) (l : Fin B.rank → D.host.E)
     (h0 : ∀ i, ∑ k, l k * frameMat B A d.ι k i = 0) (h1 : ∀ q, ∑ k, l k * d.a k q = if q = p then 1 else 0)
@@ -127,11 +125,11 @@ theorem coord_apply {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthog
     refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun k _ => ?_
     ring
   simp only [Pi.add_apply, mul_add, Finset.sum_add_distrib, swap, h0, h1, zero_mul,
-    Finset.sum_const_zero, zero_add, ite_mul, one_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_const_zero, zero_add, ite_mul, one_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem mulVec_single_apply {m n : ℕ} (M : Matrix (Fin m) (Fin n) D.host.E) (p : Fin n) (w : D.host.E) (k : Fin m) :
     (M *ᵥ Pi.single p w) k = M k p * w := by
-  simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem incA_mul_tmul (e : D.host.E) (x : AF D.host.F) (b : D.host.E) :
     incA D e * (x ⊗ₜ[D.host.F] b) = x ⊗ₜ[D.host.F] (e * b) := by
@@ -167,7 +165,7 @@ theorem col_mem_imp {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthog
 
   have hread : ∑ k, incA D (l k) * (t * incA D (d.a k p)) = t := by
     have hl := h1 p
-    rw [if_pos rfl] at hl
+    rw [ite_eq_left rfl] at hl
     calc ∑ k, incA D (l k) * (t * incA D (d.a k p)) = t * incA D (∑ k, l k * d.a k p) := by
 
           rw [map_sum, Finset.mul_sum]
@@ -206,8 +204,7 @@ theorem col_mem_of {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthogo
         refine ⟨0, Λ.zero_mem, Pi.single p ((o : D.host.E) * y), fun q => ?_, ?_⟩
         · by_cases hq : q = p
           · subst hq
-            rw [Pi.single_eq_same]
-            exact hoy
+            rwa [Pi.single_eq_same]
           · rw [Pi.single_eq_of_ne hq]
             exact (𝔟 q).zero_mem
         · rw [Matrix.mulVec_zero, zero_add]
@@ -277,8 +274,7 @@ theorem exists_mem_modulBar {T : Type} {L : LevCh D T} (P : Places L) (sc : Cons
   have hsep : ∀ u ∈ P.S0, ∃ c : 𝓞 D.host.F, c ∈ u.asIdeal ∧ c ∉ v.asIdeal := by
     intro u hu
     have hne : u ≠ v := fun h => hv (h ▸ hu)
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hne
     have hle : u.asIdeal ≤ v.asIdeal := fun c hc => hcon c hc
     exact HeightOneSpectrum.ext (u.isMaximal.eq_of_le v.isPrime.ne_top hle)
@@ -312,8 +308,7 @@ theorem exists_mem_modulBar {T : Type} {L : LevCh D T} (P : Places L) (sc : Cons
       show D.host.conj ((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x : 𝓞 D.host.E) : D.host.E) = _
       rw [hcoe x]
       exact GlobalTheory.IdeleAA.conj_F x
-    rw [hfix] at hsm
-    exact hsm
+    rwa [hfix] at hsm
 
 theorem wittDecompositionColumns_auxiliaryVectors {A B B₀ : HSp D} {c ρ : ℕ} {a : HermitianOrthogonalExtensionData A B c (-1)} {d : HypDec B B₀ ρ} (h : IsAuxiliaryVectorWittDec a d) (i : Fin ρ) :
     ∃ p : Fin c, p.1 = i.1 ∧ p.rev ≠ p ∧

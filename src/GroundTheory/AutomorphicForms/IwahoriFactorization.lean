@@ -61,8 +61,8 @@ theorem elimCol_mul_elimCol (h : Matrix (Fin n) (Fin n) F) (a : Fin n) :
   refine Finset.sum_eq_zero fun k _ => ?_
   by_cases hk : k = a
   · subst hk
-    rw [elimCol_apply h k k l, if_neg (fun h => lt_irrefl _ h.2), mul_zero]
-  · rw [elimCol_apply, if_neg (fun h => hk h.1), zero_mul]
+    rw [elimCol_apply h k k l, ite_eq_right (fun h => lt_irrefl _ h.2), mul_zero]
+  · rw [elimCol_apply, ite_eq_right (fun h => hk h.1), zero_mul]
 
 theorem elimCol_mul_apply (h : Matrix (Fin n) (Fin n) F) (a i l : Fin n) :
     (elimCol β h a * h) i l = if elimKey β a < elimKey β i then h i a / h a a * h a l else 0 := by
@@ -70,13 +70,12 @@ theorem elimCol_mul_apply (h : Matrix (Fin n) (Fin n) F) (a i l : Fin n) :
   simp only [elimCol_apply]
   split_ifs with hi
   · rw [Finset.sum_eq_single a]
-    · rw [if_pos ⟨rfl, hi⟩]
+    · rw [ite_eq_left ⟨rfl, hi⟩]
     · intro k _ hk
-      rw [if_neg (fun h => hk h.1), zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+      rw [ite_eq_right (fun h => hk h.1), zero_mul]
+    · exact fun h => absurd (Finset.mem_univ a) h
   · refine Finset.sum_eq_zero fun k _ => ?_
-    rw [if_neg (fun h => hi h.2), zero_mul]
+    rw [ite_eq_right (fun h => hi h.2), zero_mul]
 
 variable (β)
 
@@ -107,7 +106,7 @@ theorem elimGL_mem_blockUpper_dual (h : Matrix (Fin n) (Fin n) F) (a : Fin n) :
   intro i k hik
   have hik' : β i < β k := hik
   show (1 : Matrix (Fin n) (Fin n) F) i k - elimCol β h a i k = 0
-  rw [one_apply_ne (fun e => hik'.ne (by rw [e])), elimCol_apply, if_neg, sub_zero]
+  rw [one_apply_ne (fun e => hik'.ne (by rw [e])), elimCol_apply, ite_eq_right, sub_zero]
   rintro ⟨rfl, hk⟩
   exact (le_of_elimKey_lt hk).not_gt hik'
 
@@ -142,17 +141,15 @@ theorem exists_mul_mem_blockUpper (K : Subgroup (GL (Fin n) F))
           Matrix (Fin n) (Fin n) F) i j = 0
       rw [hentry, elimCol_mul_apply]
       rcases Finset.mem_insert.1 hj with rfl | hjs
-      · rw [if_pos hji, div_mul_cancel₀ _ (hdiag h hK j), sub_self]
+      · rw [ite_eq_left hji, div_mul_cancel₀ _ (hdiag h hK j), sub_self]
       · have hja : elimKey β j < elimKey β a :=
           elimKey_lt_of_le (hmax j hjs) (fun e => ha (e ▸ hjs))
         have h1 : (h : GL (Fin n) F) i j = 0 := hz j hjs i hji
         have h2 : (h : GL (Fin n) F) a j = 0 := hz j hjs a hja
         change (h : Matrix (Fin n) (Fin n) F) i j - _ = 0 at *
         split_ifs
-        · rw [show (h : Matrix (Fin n) (Fin n) F) a j = 0 from h2, mul_zero, sub_zero]
-          exact h1
-        · rw [sub_zero]
-          exact h1
+        · rwa [show (h : Matrix (Fin n) (Fin n) F) a j = 0 from h2, mul_zero, sub_zero]
+        · rwa [sub_zero]
   obtain ⟨q, hq, hz⟩ := key Finset.univ
   refine ⟨q, hq, ?_⟩
   rw [mem_blockUpper]
@@ -257,8 +254,7 @@ theorem valuation_elimCol_le {m : ℕ} (hm : 1 ≤ m) {h : GL (Fin n) F}
     rw [one_apply_ne hia, sub_zero] at h1
     have hdiag := ((mem_iwahori_iff F n).1
       (congruenceSubgroup_one_le_iwahori F n (congruenceSubgroup_antitone F n hm hh))).2.2 a
-    rw [map_div₀, hdiag, div_one]
-    exact h1
+    rwa [map_div₀, hdiag, div_one]
   · rw [map_zero]
     exact zero_le
 
@@ -308,7 +304,7 @@ theorem leviProj_mem_iwahori {p : GL (Fin n) F} (hp : p ∈ blockUpper F n β)
     · exact h2 i j hij
     · rw [map_zero]
       exact zero_lt_one
-  · rw [leviProj_apply, if_pos rfl]
+  · rw [leviProj_apply, ite_eq_left rfl]
     exact h3 i
 
 theorem valuation_elimCol_lt_one (hβ : Monotone β) {h : GL (Fin n) F} (hh : h ∈ iwahori F n)

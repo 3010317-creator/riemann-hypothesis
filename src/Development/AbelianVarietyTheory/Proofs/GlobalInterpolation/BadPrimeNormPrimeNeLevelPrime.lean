@@ -75,17 +75,7 @@ theorem awayAt_of_fnModAt {N : Submodule (𝓞 E) (Sp E a)} {N' : Submodule (�
   exact nsmul_mem hz _
 
 theorem exists_place (K : Type) [Field K] [NumberField K] {T : ℕ} (hT : T.Prime) :
-    ∃ w : HeightOneSpectrum (𝓞 K), (T : 𝓞 K) ∈ w.asIdeal := by
-  have h1 : Ideal.span {(T : 𝓞 K)} ≠ ⊤ := by
-    rw [Ne, Ideal.span_singleton_eq_top]
-    intro h
-    have h2 := Formalism.L2.Col.Primes.natCast_dvd_intCast (E := K) (c := T) (n := 1) (by simpa using h.dvd)
-    exact hT.one_lt.ne' (Nat.dvd_one.1 (by exact_mod_cast h2))
-  obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ h1
-  have h3 : (T : 𝓞 K) ∈ M := hle (Ideal.mem_span_singleton_self _)
-  refine ⟨⟨M, hM.isPrime, fun h => ?_⟩, h3⟩
-  rw [h, Ideal.mem_bot] at h3
-  exact hT.ne_zero (by exact_mod_cast h3)
+    ∃ w : HeightOneSpectrum (𝓞 K), (T : 𝓞 K) ∈ w.asIdeal := GlobalTheory.CharVal.exists_over K hT
 
 end Generic
 
@@ -162,7 +152,7 @@ theorem awayAt_locTop (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hS : Pr.T 
       exact TopTwist.pow_smul_repY sel mu cst hY P hP
     refine ⟨fun x => ?_, fun x z hz => ?_⟩
     · unfold TopStep.locTop PhiTop
-      rw [if_neg hP, map_mul]
+      rw [ite_eq_right hP, map_mul]
       exact mul_le_one' (TopTwist.valuation_PhiQ w _ _ _ _ _ _ _ _ _) (TopTwist.valuation_ftY sel mu cst hc P hP hD w hqw hy _)
     · have hz' := fun y hy => (key _).1 (hz P.1 (Finset.mem_singleton_self _) y hy)
       have h1 : R.r ≤ R.N (m2 + 1) + cOf R (m2 + 1) := by
@@ -176,7 +166,7 @@ theorem awayAt_locTop (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hS : Pr.T 
       obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le' hc.B_pos
       unfold TopStep.locTop PhiTop
       dsimp only
-      rw [if_neg hP]
+      rw [ite_eq_right hP]
       congr 1
       · have e : prXp X.E R ∘ₗ (x + ((qOf P.1 : X.E) ^ cst.B) • z) ∘ₗ
               LinearMap.funLeft X.E X.E (Fin.castAdd (cOf R (m2 + 1))) =
@@ -266,7 +256,7 @@ theorem kerIsTerm_of_muqUnit (W : Wts X Pr.Word R) (hX : X.Ok) (hPr : Pr.Ok) (hs
         (inFr (frsF sel mu p.1.1 P) (frsF sel mu p'.1.1 P) x) else 0,
     ⟨fun x hx => ?_, fun x y hy => ?_⟩, fun w hw x => ?_, isFrames_frsF p.1.1, isFrames_frsF p'.1.1, fun q q' hq hq' => ?_⟩
   · by_contra h
-    exact hx (if_neg h)
+    exact hx (ite_eq_right h)
   · obtain ⟨w, hw⟩ := exists_place X.K (hPr.T_prime u)
     have hy' : y ∈ divLat (cAof sel mu cst) (homAt (rowSG Pr sel mu) p.1.1.deco.1.N p'.1.1.deco.1.N) := by
       obtain ⟨z, hz, rfl⟩ := hy
@@ -293,7 +283,7 @@ theorem kerIsTerm_of_muqUnit (W : Wts X Pr.Word R) (hX : X.Ok) (hPr : Pr.Ok) (hs
       rw [localization_eq hX hPr hsel hS hq'.1 ⟨P, hP⟩]
       exact hx P (Finset.mem_union_right _ hP) y hy
     dsimp only
-    rw [if_pos hx', (hΦ q q').1, frsF_eq hX hPr hsel hS hq, frsF_eq hX hPr hsel hS hq', ← hq.2.2.2, ← hq'.2.2.2]
+    rw [ite_eq_left hx', (hΦ q q').1, frsF_eq hX hPr hsel hS hq, frsF_eq hX hPr hsel hS hq', ← hq.2.2.2, ← hq'.2.2.2]
 
 end Chain
 

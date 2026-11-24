@@ -113,8 +113,7 @@ private theorem ot_pair {l : ℕ} [Fact l.Prime] {L : Loc} {G G' : Glob l L} (k 
       exact ⟨x, hx, Subtype.ext (k.φu u x).symm⟩
     · refine Subgroup.mem_iInf.2 fun i => ?_
       have := Subgroup.mem_iInf.1 hg.2 i
-      rw [hc.1 i] at this
-      exact this
+      rwa [hc.1 i] at this
   obtain ⟨p', h1, h2⟩ := exists_determinantPair_pullback l G'.frame G.frame f O n r' r hf (fun h0 => (p.isEmpty_of_zero h0).1) R p
   exact ⟨p', h1, funext fun v => funext fun i => h2 v i⟩
 
@@ -148,10 +147,8 @@ theorem UpperTheory.V.Th.opTransportX :
             a := A.a, le_a := A.le_a, ρ := A.ρ, ρ_gen := A.ρ_gen, proj := A.proj, tr := A.tr, tr_surj := A.tr_surj,
             tr_ker := A.tr_ker, tr_u := A.tr_u }, ?_, fun j i => ?_⟩
   · have := hA.two
-    simp only [hh0]
-    exact this
+    simpa only [hh0] using this
   · have := hA.rel2 j i
     change A.act1 (fEl Nq (uV A.R) ^ ex * (p'.D.map (MvPolynomial.C : A.R →+* PUY A.R q n)).tr
       (twoPowerModulus ex (e.p₀ (ph j)) (e.p₀ (ta j)) (uV A.R j) i (yV A.R j i))) = 0
-    rw [hm, ot_tr_comap, mapDomain_partial_charpoly_element, hk0, hk0]
-    exact this
+    rwa [hm, ot_tr_comap, mapDomain_partial_charpoly_element, hk0, hk0]

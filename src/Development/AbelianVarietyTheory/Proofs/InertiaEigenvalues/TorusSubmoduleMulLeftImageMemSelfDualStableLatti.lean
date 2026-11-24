@@ -62,8 +62,7 @@ theorem mem_mulLat_unit (u : B.Aˣ) (L : Submodule K.O B.A) (y : B.A) :
   constructor
   · rintro ⟨w, hw, rfl⟩
     rwa [← mul_assoc, Units.inv_mul, one_mul]
-  · intro h
-    exact ⟨_, h, by rw [← mul_assoc, Units.mul_inv, one_mul]⟩
+  · exact fun h => ⟨_, h, by rw [← mul_assoc, Units.mul_inv, one_mul]⟩
 
 theorem sigma_eq_inv (t : B.Aˣ) (ht : t ∈ B.T) : B.σ (t : B.A) = ((t⁻¹ : B.Aˣ) : B.A) := by
   have h : (t : B.A) * B.σ (t : B.A) = 1 := ht
@@ -78,8 +77,7 @@ theorem isLat_mulLat (u : B.Aˣ) (L : Submodule K.O B.A) (hL : IsLat K.O K.E L) 
       (LinearMap.mulLeft K.E (u : B.A)) '' (L : Set B.A) := by
     unfold mulLat; rw [Submodule.map_coe]; rfl
   rw [hc, Submodule.span_image, hL.2, Submodule.map_top, LinearMap.range_eq_top]
-  intro y
-  exact ⟨((u⁻¹ : B.Aˣ) : B.A) * y, by simp [← mul_assoc]⟩
+  exact fun y => ⟨((u⁻¹ : B.Aˣ) : B.A) * y, by simp [← mul_assoc]⟩
 
 theorem torus_mem_X (K : UQ) (B : InvAlg K) (x : B.A) :
     ∀ t ∈ B.T, ∀ L ∈ B.X x, mulLat K.O (t : B.A) L ∈ B.X x := by

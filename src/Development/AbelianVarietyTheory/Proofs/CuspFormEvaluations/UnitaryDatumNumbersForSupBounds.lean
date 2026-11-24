@@ -109,8 +109,7 @@ theorem record_dictionary : ∀ (D : D7) (T : Top D) (_h : LawsP T) (j : ℕ) (_
         exact _root_.ReciprocityTheory.ChartRestriction.G.PullbackSections.PfTies1.sum_extendByZero_le_sum _ _
       · intro τ _ hτ
         simp [hτ]
-      · intro hn
-        exact absurd (Finset.mem_univ _) hn
+      · exact fun hn => absurd (Finset.mem_univ _) hn
     · rw [Finset.sum_congr rfl (fun τ _ => Finset.sum_comm), Finset.sum_comm]
       refine Finset.sum_le_sum (fun t _ => ?_)
       rw [Finset.sum_eq_single (conjEmb (DV.tauEmb D t))]
@@ -118,8 +117,7 @@ theorem record_dictionary : ∀ (D : D7) (T : Top D) (_h : LawsP T) (j : ℕ) (_
         exact _root_.ReciprocityTheory.ChartRestriction.G.PullbackSections.PfTies1.sum_extendByZero_le_sum _ _
       · intro τ _ hτ
         simp [hτ]
-      · intro hn
-        exact absurd (Finset.mem_univ _) hn
+      · exact fun hn => absurd (Finset.mem_univ _) hn
   · unfold absA WeightAlgebra.DF WeightAlgebra.degP
     push_cast
     rfl

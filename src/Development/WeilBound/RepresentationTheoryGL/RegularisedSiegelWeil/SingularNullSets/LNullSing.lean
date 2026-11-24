@@ -191,8 +191,7 @@ theorem map_mul_eq_absE_inv_smul : ∀ (F E : Type) [Field F] [NumberField F] [F
   haveI : SecondCountableTopology (AE F E) := e.secondCountableTopology
   haveI : T2Space (AE F E) := e.isEmbedding.t2Space
   have h := map_smul_eq_inv_smul ν t
-  rw [distribHaarChar_eq_absE] at h
-  exact h
+  rwa [distribHaarChar_eq_absE] at h
 
 end GlobalTheory.AdeleUnitModule
 end -- clump:auto
@@ -290,8 +289,7 @@ theorem isFieldDec_section (hcs : ∀ y, c (s y) = y) (hmul : ∀ y z, s y * z =
   have hss : ∀ y y', s y * s y' = s (y * y') := fun y y' => by rw [hmul, hcs]
   refine ⟨fun i => ⟨?_, ?_, ?_⟩, ?_, ?_⟩
   · rw [hss, (hg.field i).idem]
-  · intro h
-    exact (hg.field i).ne (by rw [← hcs (g i), h, map_zero])
+  · exact fun h => (hg.field i).ne (by rw [← hcs (g i), h, map_zero])
   · intro x hx
     have hx0 : g i * c x ≠ 0 := fun h => hx (by rw [hmul, h, map_zero])
     obtain ⟨y, hy⟩ := (hg.field i).inv (c x) hx0
@@ -337,8 +335,7 @@ def infJ (w : InfinitePlace F) : w.Completion →ₗ[F] AF F :=
 
 theorem infJ_mul (w : InfinitePlace F) (a b : w.Completion) : infJ w (a * b) = infJ w a * infJ w b := by
   classical
-  refine Prod.ext ?_ (mul_zero _).symm
-  exact Pi.single_mul w a b
+  exact Prod.ext (Pi.single_mul w a b) (mul_zero _).symm
 
 open Classical in
 theorem evInf_infJ_self (w : InfinitePlace F) (a : w.Completion) : evInf F w (infJ w a) = a :=
@@ -486,7 +483,7 @@ end Places
 
 theorem exists_isFieldDec (D : D7) (S : Finset (Pl D)) (e : AE D) (h : IsIdem S e) :
     ∃ (ι : Type) (_ : Fintype ι) (f : ι → AE D), IsFieldDec e f ∧ ∀ j, NonDiscreteAt (f j) :=
-  exists_dec_adeles S h.1 (fun v hv => (h.2 v).trans (if_pos hv)) fun v hv => (h.2 v).trans (if_neg hv)
+  exists_dec_adeles S h.1 (fun v hv => (h.2 v).trans (ite_eq_left hv)) fun v hv => (h.2 v).trans (ite_eq_right hv)
 
 end GlobalTheory.CompanionTheory.NullFr.FieldDec
 end -- clump:auto
@@ -588,10 +585,10 @@ theorem alt_of_field {K : Type} [Field K] (π : A →+* K) (hs : Function.Surjec
             intro k
             by_cases h : k = i
             · subst h
-              simp only [hb, if_true]
+              simp only [hb, ite_true]
               field_simp
               ring
-            · simp only [hb, if_neg h]
+            · simp only [hb, ite_eq_right h]
               field_simp
               ring
           rw [Finset.sum_congr rfl fun k _ => hsplit k, Finset.sum_add_distrib,
@@ -623,8 +620,7 @@ theorem exists_dependent_column {A : Type} [CommRing A] {ι : Type} [Fintype ι]
       have : f j - 1 = (-1 : A) * (1 - f j) := by ring
       rw [this]
       exact Ideal.mul_mem_left _ _ (Ideal.subset_span rfl)
-    · intro x hx
-      exact mul_eq_zero_of_mem hj.idem (Ideal.Quotient.eq_zero_iff_mem.1 hx)
+    · exact fun x hx => mul_eq_zero_of_mem hj.idem (Ideal.Quotient.eq_zero_iff_mem.1 hx)
   by_contra hno
   have hall : ∀ j, ∃ M : Fx A t a, f j • (M * v) = f j • (1 : Fx A t t) := fun j =>
     (key j).resolve_right fun ⟨i, c, h⟩ => hno ⟨j, i, c, h⟩
@@ -677,8 +673,7 @@ theorem exists_frame_leftInv_gram {A : Type} [CommRing A] {a r t : ℕ} (e : A) 
   have hP : B' * (C * H) * x = e • (1 : Fx A r r) := by
     rw [Matrix.mul_assoc, Matrix.mul_assoc, hg, Matrix.mul_smul, hB]
   have hM' : M * (v - x * (B' * (C * H) * v)) = e • (1 : Fx A t t) := by
-    rw [Matrix.mul_assoc B', Matrix.mul_assoc C]
-    exact hM
+    rwa [Matrix.mul_assoc B', Matrix.mul_assoc C]
   exact exists_frame_leftInv e x v (B' * (C * H)) M hx hv hP hM'
 
 theorem free_of_leftInv_orth {D : D7} {r t : ℕ} (V : HSp D) (b₀ : HermE D r) (hb : b₀.1.det ≠ 0) (e : AE D)
@@ -890,8 +885,7 @@ theorem exists_unit_small_module {A : Type} [CommRing A] [TopologicalSpace A] [I
   have hu : (u : A) = 1 - f + x := rfl
   refine ⟨u, ?_, ?_, ?_⟩
   · rw [hu, mul_add, hzz, hxz, add_zero]
-  · rw [hu, mul_add, hz, zero_add, hfx]
-    exact hxV
+  · rwa [hu, mul_add, hz, zero_add, hfx]
   · have hmap := hmd h inferInstance u⁻¹
     have hWm : MeasurableSet W := hWc.isClosed.measurableSet
     have hg : Measurable (fun z : A => ((u⁻¹ : Aˣ) : A) * z) := (by fun_prop : Continuous _).measurable
@@ -1053,8 +1047,7 @@ theorem net : ∀ {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRin
     have h2 : (((P.card : ℝ≥0) * md u : ℝ≥0) : ℝ≥0∞) ≤ μ L / μ K := by
       rw [ENNReal.le_div_iff_mul_le (Or.inl hKpos.ne') (Or.inl hKfin.ne)]
       push_cast
-      rw [mul_assoc]
-      exact hc
+      rwa [mul_assoc]
     calc (P.card : ℝ≥0) * md u = ((((P.card : ℝ≥0) * md u : ℝ≥0) : ℝ≥0∞)).toNNReal := by
           rw [ENNReal.toNNReal_coe]
       _ ≤ (μ L / μ K).toNNReal :=
@@ -1064,8 +1057,7 @@ theorem net : ∀ {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRin
     · exact ⟨c, hcP, 0, mem_of_mem_nhds hU, by simp, by simp⟩
     · obtain ⟨p, hp, hpc⟩ : ∃ p ∈ P, ¬ Disjoint ((fun x : A => p + (u : A) * x) '' K)
           ((fun x : A => c + (u : A) * x) '' K) := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         have hQ : (∀ p ∈ insert c P, f * p = p ∧ p ∈ C) ∧ ∀ p ∈ insert c P, ∀ q ∈ insert c P,
             p ≠ q → Disjoint ((fun x : A => p + (u : A) * x) '' K)
               ((fun x : A => q + (u : A) * x) '' K) := by
@@ -1116,8 +1108,7 @@ theorem entries_isCompact {A : Type} [TopologicalSpace A] {m n : ℕ} {C : Set A
       Set.pi Set.univ (fun _ : Fin m => Set.pi Set.univ (fun _ : Fin n => C)) := by
     ext M
     exact ⟨fun h p _ q _ => h p q, fun h p q => h p (Set.mem_univ p) q (Set.mem_univ q)⟩
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem exists_compact_comb {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A] (n : ℕ)
     {C₁ C₂ C₃ : Set A} (h₁ : IsCompact C₁) (h₂ : IsCompact C₂) (h₃ : IsCompact C₃) :
@@ -1213,12 +1204,12 @@ theorem mul_gU_apply' {m : ℕ} (M : Fx A m t) (i : Fin t) (d : Fin t → A) (p 
   rw [GlobalTheory.CompanionTheory.NullFr.gU, Matrix.mul_add, Matrix.mul_one, Matrix.add_apply, Matrix.mul_apply]
   congr 1
   by_cases h : j = i
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     refine Finset.sum_congr rfl fun k _ => ?_
-    rw [Matrix.of_apply, if_pos h, mul_comm]
-  · rw [if_neg h]
+    rw [Matrix.of_apply, ite_eq_left h, mul_comm]
+  · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun k _ => ?_
-    rw [Matrix.of_apply, if_neg h, mul_zero]
+    rw [Matrix.of_apply, ite_eq_right h, mul_zero]
 
 theorem mul_gD_apply' {m : ℕ} (M : Fx A m t) (i : Fin t) (u : A) (p : Fin m) (j : Fin t) :
     (M * gD i u) p j = if j = i then u * M p i else M p j := by
@@ -1234,9 +1225,9 @@ theorem mul_gU_gD_apply {m : ℕ} (M : Fx A m t) (i : Fin t) (c : Fin t → A) (
       if j = i then u' * (M p i - ∑ k, c k * M p k) else M p j := by
   rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gD_apply', GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_apply', GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_apply']
   by_cases h : j = i
-  · rw [if_pos h, if_pos h, if_pos rfl]
+  · rw [ite_eq_left h, ite_eq_left h, ite_eq_left rfl]
     simp only [Pi.neg_apply, neg_mul, Finset.sum_neg_distrib, sub_eq_add_neg]
-  · simp only [if_neg h, add_zero]
+  · simp only [ite_eq_right h, add_zero]
 
 theorem gU_neg_mul (i : Fin t) (c : Fin t → A) (hc : c i = 0) : gU i (-c) * gU i c = 1 := by
   refine Matrix.ext fun p j => ?_
@@ -1330,7 +1321,7 @@ theorem point_eq_translate : ∀ {A : Type} [CommRing A] {a r t : ℕ} (e f : A)
     · intro l k
       rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply]
       by_cases hk : k = i
-      · rw [if_pos hk, hsum l, Matrix.sub_apply, hY₀i l]
+      · rw [ite_eq_left hk, hsum l, Matrix.sub_apply, hY₀i l]
         refine ⟨?_, ?_⟩
         · rw [mul_left_comm, key l, ← mul_assoc, Units.inv_mul, one_mul]
           exact (hy₁ l).2
@@ -1339,13 +1330,13 @@ theorem point_eq_translate : ∀ {A : Type} [CommRing A] {a r t : ℕ} (e f : A)
       · have hE : (GlobalTheory.CompanionTheory.NullFr.yc P z - GlobalTheory.CompanionTheory.NullFr.yU i y₀) l k =
             GlobalTheory.CompanionTheory.NullFr.yc P z l k := by
           simp [GlobalTheory.CompanionTheory.NullFr.yU, hk]
-        rw [if_neg hk, hE]
+        rw [ite_eq_right hk, hE]
         exact hY l k
     · intro p k hk
-      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, if_neg hk]
+      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, ite_eq_right hk]
       exact hKo p k hk
     · intro p
-      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, if_pos rfl, ← mul_assoc, hu', mul_sub,
+      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, ite_eq_left rfl, ← mul_assoc, hu', mul_sub,
         Finset.mul_sum]
       simp_rw [← mul_assoc, h1fc₀, zero_mul, Finset.sum_const_zero, sub_zero]
       exact hKi p
@@ -1356,13 +1347,13 @@ theorem point_eq_translate : ∀ {A : Type} [CommRing A] {a r t : ℕ} (e f : A)
         rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply]
         by_cases hk : k = i
         · simp [hk, hc₁i]
-        · rw [if_neg hk]
+        · rw [ite_eq_right hk]
       have hL : f * (GlobalTheory.CompanionTheory.NullFr.vc P z p i - ∑ k, c₀ k * GlobalTheory.CompanionTheory.NullFr.vc P z p k) =
           (u : A) * ∑ k, c₁ k * GlobalTheory.CompanionTheory.NullFr.vc P z p k := by
         rw [mul_sub, hfK p, Finset.mul_sum, Finset.mul_sum, ← Finset.sum_sub_distrib]
         refine Finset.sum_congr rfl fun k _ => ?_
         rw [← mul_assoc, hfc₀, ← sub_mul, hc k, add_sub_cancel_left, mul_assoc]
-      rw [hR, GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, if_pos rfl, mul_left_comm, hL,
+      rw [hR, GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, ite_eq_left rfl, mul_left_comm, hL,
         ← mul_assoc, Units.inv_mul, one_mul]
   · refine Prod.ext rfl ?_
     dsimp only
@@ -1391,8 +1382,7 @@ theorem scale_image {Z : Type} [TopologicalSpace Z] [MeasurableSpace Z] [BorelSp
     have h2 := φ.toMeasurableEquiv.map_apply (μ := ν) (φ '' B)
     have h3 : (φ.toMeasurableEquiv : Z → Z) ⁻¹' (φ '' B) = B := by
       ext x; simp
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   rw [h] at h1
   rw [← h1, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
 
@@ -1444,8 +1434,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (md : Aˣ →* ℝ�
     split_ifs <;> simp [hye]
   have c1 : ν.map (colH (a := a) (r := r) g) = ν := by
     have := cov g h1
-    rw [hdet, map_one, inv_one, one_pow, one_smul] at this
-    exact this
+    rwa [hdet, map_one, inv_one, one_pow, one_smul] at this
   have c2 : ν.map (shH (a := a) (yU i y₀ : Fx A r t)) = ν := invS _ h2
   refine ⟨(colH g).trans (shH (yU i y₀)), ?_, fun w => ?_⟩
   · have m1 : Measurable (colH (a := a) (r := r) g) := (colH g).continuous.measurable
@@ -1529,8 +1518,7 @@ theorem piece_null (md : Aˣ →* ℝ≥0) (hmd : IsHaarMod md) (e f : A) (he : 
   let Dh : (Fx A a r × Fx A a t) ≃ₜ (Fx A a r × Fx A a t) := colH gd
   have hmapD : ν.map Dh = ((md u)⁻¹ ^ (r + t) : ℝ≥0) • ν := by
     have := cov gd hgde
-    rw [hdetd] at this
-    exact this
+    rwa [hdetd] at this
   have hDB := scale_image ν Dh _ hmapD B
   have hcover : B ⊆ ⋃ q ∈ Q, T q '' (Dh '' B) := by
     rintro z ⟨hadm, hx, hy, hv, hv', c, hci, hc, hcv⟩
@@ -1731,8 +1719,7 @@ theorem nullSing_of_idemEx : IdemEx → NullSing := by
   · right
     rintro ⟨M, hM⟩
     refine hz (GlobalTheory.CompanionTheory.NullFr.free_of_leftInv_orth V b₀ hb e z hg.1 hg.2.1 hg.2.2.1 M ?_)
-    rw [← hyv]
-    exact hM
+    rwa [← hyv]
   · exact Or.inl hg
 
 end GlobalTheory.CompanionTheory.NullFr

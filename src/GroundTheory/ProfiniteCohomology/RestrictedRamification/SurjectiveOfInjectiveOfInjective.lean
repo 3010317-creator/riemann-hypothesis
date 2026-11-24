@@ -330,15 +330,13 @@ theorem eq_zero_of_h3_sUnits_of_frob (ιs : LocalEmbeddings K)
       refine ⟨fun a b h => ?_, fun y => ?_⟩
       · apply Subtype.ext
         apply Additive.toMul.injective
-        apply Units.ext
-        exact congrArg (fun u : Additive Eˣ => ((Additive.toMul u).val : ℚ̄)) h
+        exact Units.ext (congrArg (fun u : Additive Eˣ => ((Additive.toMul u).val : ℚ̄)) h)
       · refine ⟨⟨Additive.ofMul (Units.map E.val.toRingHom.toMonoidHom (Additive.toMul y)), fun σ => ?_⟩, ?_⟩
         · apply Additive.toMul.injective
           apply Units.ext
           have hσ : gsRestrict K S σ.1 = 1 := MonoidHom.mem_ker.mp σ.2
           have hy := congrArg (fun τ : galUnramifiedOutside K.1 ℚ̄ S => (τ (Additive.toMul y).val : ℚ̄)) hσ
-          rw [gsRestrict_apply] at hy
-          exact hy
+          rwa [gsRestrict_apply] at hy
         · exact Additive.toMul.injective (Units.ext (Subtype.ext rfl))
     let B := uliftIntToIntRep (galUnits K.1 E)
     let F : Rep.res e.toMonoidHom ((unitsLimitRep K).quotientToInvariants (gsKernel K S)) ⟶ B :=
@@ -379,8 +377,7 @@ theorem eq_zero_of_h3_sUnits_of_frob (ιs : LocalEmbeddings K)
   refine (exists_sUnitsQuotDiv_gsQuotMor_eq K S ℓ hℓ hS ιs hF _ j hd).elim fun x hx => ?_
   have hx2 : ℓ ^ j • gsDivH2 K S ιs x = 0 := by
     change ℓ ^ j • (cohomologyMap (sUnitsQuotDiv K S ιs) 2).hom ((cohomologyMap (gsQuotMor K S) 2).hom x) = 0
-    rw [hx]
-    exact hd
+    rwa [hx]
   refine (exists_primary_map_eq (gsDivH2 K S ιs) hℓ (isTorsion_cohomology _ (by norm_num) x) hx2).elim
     fun x' hx' => ?_
   refine hx'.1.elim fun i hi => ?_

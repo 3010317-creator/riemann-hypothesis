@@ -51,17 +51,16 @@ theorem pow_torsionExponent (x : (ZMod (ℓ ^ unitsLevel ℓ))ˣ) : x ^ torsionE
   · subst h
     have key : ∀ y : ZMod 8, (∃ z : ZMod 8, y * z = 1) → y ^ 2 = 1 := by decide
     have h8 : (2 : ℕ) ^ unitsLevel 2 = 8 := by simp [unitsLevel]
-    rw [torsionExponent, if_pos rfl]
+    rw [torsionExponent, ite_eq_left rfl]
     refine Units.ext ?_
     rw [Units.val_pow_eq_pow_val, Units.val_one]
     revert x
     rw [h8]
-    intro x
-    exact key _ ⟨_, x.mul_inv⟩
+    exact fun x => key _ ⟨_, x.mul_inv⟩
   · have : NeZero ℓ := ⟨hℓ.out.ne_zero⟩
     have hc : Fintype.card (ZMod (ℓ ^ unitsLevel ℓ))ˣ = ℓ - 1 := by
-      rw [ZMod.card_units_eq_totient, unitsLevel, if_neg h, pow_one, Nat.totient_prime hℓ.out]
-    rw [torsionExponent, if_neg h, ← hc, pow_card_eq_one]
+      rw [ZMod.card_units_eq_totient, unitsLevel, ite_eq_right h, pow_one, Nat.totient_prime hℓ.out]
+    rw [torsionExponent, ite_eq_right h, ← hc, pow_card_eq_one]
 
 def unitsKer (n : ℕ) : Subgroup (ZMod (ℓ ^ (n + unitsLevel ℓ)))ˣ :=
   (ZMod.unitsMap (pow_dvd_pow ℓ (Nat.le_add_left (unitsLevel ℓ) n))).ker
@@ -81,8 +80,7 @@ theorem card_unitsKer (n : ℕ) : Nat.card (unitsKer ℓ n) = ℓ ^ n := by
     Nat.mul_pos (pow_pos hℓ.out.pos _) (by have := hℓ.out.two_le; omega)
   have h2 : Nat.card (unitsKer ℓ n) * (ℓ ^ (unitsLevel ℓ - 1) * (ℓ - 1)) =
       ℓ ^ n * (ℓ ^ (unitsLevel ℓ - 1) * (ℓ - 1)) := by
-    rw [← mul_assoc (ℓ ^ n), ← pow_add, ← hr]
-    exact h1
+    rwa [← mul_assoc (ℓ ^ n), ← pow_add, ← hr]
   exact Nat.eq_of_mul_eq_mul_right hpos h2
 
 theorem coprime_one_add_pow (k : ℕ) : Nat.Coprime (1 + ℓ ^ unitsLevel ℓ) (ℓ ^ k) := by
@@ -123,8 +121,7 @@ theorem zpowers_genUnit (n : ℕ) : Subgroup.zpowers (genUnit ℓ n) = unitsKer 
 
 theorem genUnit_pow_val_eq (n : ℕ) {a b : ℕ} (h : a ≡ b [MOD ℓ ^ n]) :
     genUnit ℓ n ^ a = genUnit ℓ n ^ b := by
-  rw [pow_eq_pow_iff_modEq, orderOf_genUnit]
-  exact h
+  rwa [pow_eq_pow_iff_modEq, orderOf_genUnit]
 
 def expHom (n : ℕ) : Multiplicative (ZMod (ℓ ^ n)) →* (ZMod (ℓ ^ (n + unitsLevel ℓ)))ˣ where
   toFun a := genUnit ℓ n ^ (Multiplicative.toAdd a).val
@@ -146,8 +143,7 @@ theorem expHom_injective (n : ℕ) : Function.Injective (expHom ℓ n) := by
     have := orderOf_dvd_of_pow_eq_one ha
     rwa [orderOf_genUnit] at this
   have h2 := Nat.eq_zero_of_dvd_of_lt h1 (ZMod.val_lt _)
-  rw [ZMod.val_eq_zero] at h2
-  exact h2
+  rwa [ZMod.val_eq_zero] at h2
 
 theorem range_expHom (n : ℕ) : (expHom ℓ n).range = unitsKer ℓ n := by
   apply Subgroup.eq_of_le_of_card_ge
@@ -174,8 +170,7 @@ noncomputable def logMod (n : ℕ) : (ZMod (ℓ ^ (n + unitsLevel ℓ)))ˣ →* 
 theorem expHom_logMod (n : ℕ) (x : (ZMod (ℓ ^ (n + unitsLevel ℓ)))ˣ) :
     expHom ℓ n (logMod ℓ n x) = x ^ torsionExponent ℓ := by
   have := congrArg Subtype.val ((expEquiv ℓ n).apply_symm_apply (powKer ℓ n x))
-  rw [coe_expEquiv] at this
-  exact this
+  rwa [coe_expEquiv] at this
 
 theorem logMod_eq_iff (n : ℕ) (x : (ZMod (ℓ ^ (n + unitsLevel ℓ)))ˣ)
     (a : Multiplicative (ZMod (ℓ ^ n))) :
@@ -304,8 +299,7 @@ theorem coprime_genNat : Nat.Coprime ℓ (genNat ℓ) := by
   unfold genNat
   split_ifs with h
   · subst h; norm_num
-  · intro hd
-    exact hℓ.out.not_dvd_one ((Nat.dvd_add_right (dvd_refl ℓ)).1 hd)
+  · exact fun hd => hℓ.out.not_dvd_one ((Nat.dvd_add_right (dvd_refl ℓ)).1 hd)
 
 theorem coprime_genLog : Nat.Coprime ℓ (genLog ℓ) := by
   rw [Nat.Prime.coprime_iff_not_dvd hℓ.out]
@@ -387,8 +381,7 @@ theorem ker_padicUnitsLog : (padicUnitsLog ℓ).ker = CommGroup.torsion ℤ_[ℓ
   ext u
   rw [MonoidHom.mem_ker, CommGroup.mem_torsion, isOfFinOrder_iff_pow_eq_one]
   constructor
-  · intro h
-    exact ⟨_, torsionExponent_pos ℓ, (padicUnitsLog_eq_one_iff ℓ u).1 h⟩
+  · exact fun h => ⟨_, torsionExponent_pos ℓ, (padicUnitsLog_eq_one_iff ℓ u).1 h⟩
   · rintro ⟨k, hk, h⟩
     exact padicUnitsLog_eq_one_of_pow_eq_one ℓ hk h
 
@@ -398,7 +391,7 @@ theorem mem_torsion_iff (u : ℤ_[ℓ]ˣ) :
 
 theorem mem_torsion_two_iff (u : ℤ_[2]ˣ) :
     u ∈ CommGroup.torsion ℤ_[2]ˣ ↔ u = 1 ∨ u = -1 := by
-  rw [mem_torsion_iff, torsionExponent, if_pos rfl]
+  rw [mem_torsion_iff, torsionExponent, ite_eq_left rfl]
   constructor
   · intro h
     have h1 := congrArg Units.val h

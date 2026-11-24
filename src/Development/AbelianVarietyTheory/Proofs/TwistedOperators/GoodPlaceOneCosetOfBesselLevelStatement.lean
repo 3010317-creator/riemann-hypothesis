@@ -225,16 +225,15 @@ theorem upSum_single {ρ : ℕ} {i j : Fin ρ} (hj : j.1 = i.1 + 1) (c : AE D) :
     upSum (Matrix.single i j c : Mx D ρ ρ) = c := by
   unfold upSum
   rw [Finset.sum_eq_single i, Finset.sum_eq_single j]
-  · rw [if_pos hj, Matrix.single_apply, if_pos ⟨rfl, rfl⟩]
+  · rw [ite_eq_left hj, Matrix.single_apply, ite_eq_left ⟨rfl, rfl⟩]
   · intro b _ hb
-    rw [if_neg]
-    intro h
-    exact hb (Fin.ext (by omega))
+    rw [ite_eq_right]
+    exact fun h => hb (Fin.ext (by omega))
   · intro h; exact absurd (Finset.mem_univ _) h
   · intro b _ hb
     refine Finset.sum_eq_zero fun k _ => ?_
     split_ifs with h
-    · rw [Matrix.single_apply, if_neg]
+    · rw [Matrix.single_apply, ite_eq_right]
       rintro ⟨rfl, -⟩
       exact hb rfl
     · rfl
@@ -297,12 +296,11 @@ theorem shift_int : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
       exact fun a b => GlobalTheory.FinPl.InvStep.mat_mem_idAt (xZero dW) _ dV.pX (mxAt_single i j hro) a b
     · have h2 := (hG.cols i _ (Ideal.mul_mem_right _ _ hro)).1 (hRo _ (((hG.monoV y).1 hy).1 j))
       rw [← mul_single_mulVec, Matrix.mulVec_mulVec] at h2
-      rw [HypDec.extX_apply]
-      exact h2
+      rwa [HypDec.extX_apply]
   have h3 := hsh (Matrix.single i j (r * t.1 i i * o))
     (mxAt_single i j (Ideal.mul_mem_right _ _ (Ideal.mul_mem_right _ _ hr)))
     (fun a b hab => by
-      rw [Matrix.single_apply, if_neg]
+      rw [Matrix.single_apply, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact absurd hlt (not_lt.2 hab))
     (by rw [hmove]; exact hA)
@@ -438,9 +436,9 @@ theorem ell_mul {ρ : ℕ} (u : GL (Fin ρ) (AE D)) (hu : u ∈ UX D ρ) (j : Fi
   have hm : m.1 + 1 = ρ := by rw [hmdef]; simp only; omega
   have hne : ∀ b : Fin ρ, b ≠ m → ¬ (b.1 + 1 = ρ) := fun b hb h => hb (Fin.ext (by rw [hmdef]; simp only; omega))
   rw [Finset.sum_eq_single m]
-  · rw [show ell D ρ m = 1 from if_pos hm, one_mul]
+  · rw [show ell D ρ m = 1 from ite_eq_left hm, one_mul]
     by_cases hj : j = m
-    · rw [hj, (hu' m m).2, show ell D ρ m = 1 from if_pos hm]
+    · rw [hj, (hu' m m).2, show ell D ρ m = 1 from ite_eq_left hm]
     · have hlt : j < m := by
         rw [Fin.lt_iff_val_lt_val]
         have h1 := j.2
@@ -448,18 +446,13 @@ theorem ell_mul {ρ : ℕ} (u : GL (Fin ρ) (AE D)) (hu : u ∈ UX D ρ) (j : Fi
         rw [hmdef] at h2 ⊢
         simp only at h2 ⊢
         omega
-      rw [(hu' m j).1 hlt, show ell D ρ j = 0 from if_neg (hne j hj)]
+      rw [(hu' m j).1 hlt, show ell D ρ j = 0 from ite_eq_right (hne j hj)]
   · intro b _ hb
-    rw [show ell D ρ b = 0 from if_neg (hne b hb), zero_mul]
+    rw [show ell D ρ b = 0 from ite_eq_right (hne b hb), zero_mul]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem yZero_mul {V₀ : HSp D} {ρ : ℕ} (z : Fin V₀.rank → D.host.E) (u : GL (Fin ρ) (AE D)) (hu : u ∈ UX D ρ) :
-    yZero V₀ ρ z ⬝ u.1 = yZero V₀ ρ z := by
-  ext k j
-  simp only [yZero, zEll, Matrix.neg_apply, Matrix.mul_apply, vecMulVec_apply, neg_mul,
-    Finset.sum_neg_distrib, neg_inj]
-  simp_rw [mul_assoc]
-  rw [← Finset.mul_sum, ell_mul u hu j]
+    yZero V₀ ρ z ⬝ u.1 = yZero V₀ ρ z := GlobalTheory.MixPer.yZero_mul V₀ z hu
 
 
 
@@ -478,8 +471,7 @@ theorem cond_red : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V₀ W W₀ : 
   · intro N hN hup hmem
     have hU := mem_UX.1 (inv_mem hu')
     have h1 : MxAt P ((u'⁻¹).1 ⬝ N) := fun i j => by
-      simp only [Matrix.mul_apply]
-      exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (hN k j)
+      simpa only [Matrix.mul_apply] using Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (hN k j)
     have h2 : ∀ i j, j ≤ i → ((u'⁻¹).1 ⬝ N) i j = 0 := by
       intro i j hij
       simp only [Matrix.mul_apply]

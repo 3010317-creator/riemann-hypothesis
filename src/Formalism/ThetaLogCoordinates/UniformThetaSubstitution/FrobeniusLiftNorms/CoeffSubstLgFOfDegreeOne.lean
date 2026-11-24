@@ -93,7 +93,6 @@ theorem frobenius_lift_padic_square : Formalism.FG.FrobLiftPadicSq := by
   let y : ℤ_[l] := ⟨a, ha⟩
   have h := PadicFrobeniusSquare.padicInt_norm_le_p (y - y ^ l ^ 2) (by rw [map_sub, map_pow, hz, sub_self])
   rw [PadicInt.norm_def, PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_pow, PadicInt.coe_natCast] at h
-  show ‖a - a ^ l ^ 2‖ ≤ ‖(l : ℚ_[l])‖
   exact h
 
 end Formalism.FG
@@ -191,9 +190,8 @@ private theorem coeff_lgF_pow_sq_pow_eq_inv_pow (p : ℕ) (hp : 2 ≤ p) (j : �
   rw [lgF, PowerSeries.coeff_mk, Finset.sum_eq_single j]
   · simp
   · intro i _ hij
-    rw [if_neg]
-    intro h
-    exact hij (Nat.pow_right_injective hq h).symm
+    rw [ite_eq_right]
+    exact fun h => hij (Nat.pow_right_injective hq h).symm
   · intro hj
     exfalso
     apply hj
@@ -204,7 +202,7 @@ private theorem coeff_lgF_pow_sq_pow_eq_inv_pow (p : ℕ) (hp : 2 ≤ p) (j : �
 private theorem coeff_lgF_eq_zero_of_ne_pow_sq_pow (p n : ℕ) (h : ∀ j, n ≠ (p ^ 2) ^ j) :
     PowerSeries.coeff n (lgF K p) = 0 := by
   rw [lgF, PowerSeries.coeff_mk]
-  exact Finset.sum_eq_zero (fun i _ => if_neg (h i))
+  exact Finset.sum_eq_zero (fun i _ => ite_eq_right (h i))
 
 theorem lgF_funEq (p : ℕ) (hp : 2 ≤ p) (hpK : (p : K) ≠ 0) :
     lgF K p - (p : K)⁻¹ • PowerSeries.subst ((PowerSeries.X : PowerSeries K) ^ (p ^ 2)) (lgF K p) =
@@ -219,19 +217,19 @@ theorem lgF_funEq (p : ℕ) (hp : 2 ≤ p) (hpK : (p : K) ≠ 0) :
     | zero =>
       have hnd : ¬ p ^ 2 ∣ 1 := fun h => by have := Nat.le_of_dvd one_pos h; omega
       simp only [pow_zero]
-      rw [if_neg hnd, coeff_one_lgF p hp]
+      rw [ite_eq_right hnd, coeff_one_lgF p hp]
       simp
     | succ j =>
       have hd : p ^ 2 ∣ (p ^ 2) ^ (j + 1) := dvd_pow_self _ (Nat.succ_ne_zero j)
       have hdiv : (p ^ 2) ^ (j + 1) / p ^ 2 = (p ^ 2) ^ j := by
         rw [pow_succ, Nat.mul_div_cancel _ (by positivity)]
       have hne1 : (p ^ 2) ^ (j + 1) ≠ 1 := ne_of_gt (Nat.one_lt_pow (Nat.succ_ne_zero j) (by omega))
-      rw [if_pos hd, hdiv, coeff_lgF_pow_sq_pow_eq_inv_pow p hp, coeff_lgF_pow_sq_pow_eq_inv_pow p hp, if_neg hne1]
+      rw [ite_eq_left hd, hdiv, coeff_lgF_pow_sq_pow_eq_inv_pow p hp, coeff_lgF_pow_sq_pow_eq_inv_pow p hp, ite_eq_right hne1]
       simp [pow_succ, mul_comm]
-  · push_neg at hn
+  · push Not at hn
     rw [coeff_lgF_eq_zero_of_ne_pow_sq_pow p n hn]
     have hn1 : n ≠ 1 := fun h => hn 0 (by simp [h])
-    rw [if_neg hn1]
+    rw [ite_eq_right hn1]
     split_ifs with hd
     · have hn' : ∀ j, n / p ^ 2 ≠ (p ^ 2) ^ j := by
         intro j hj
@@ -268,7 +266,7 @@ theorem rescale_lgF {ζ : K} {p : ℕ} (hζ : ζ ^ (p ^ 2 - 1) = 1) (hp : 2 ≤ 
   by_cases hn : ∃ j, n = (p ^ 2) ^ j
   · obtain ⟨j, rfl⟩ := hn
     rw [zeta_pow hζ hp j]
-  · push_neg at hn
+  · push Not at hn
     rw [coeff_lgF_eq_zero_of_ne_pow_sq_pow p n hn]
     simp
 
@@ -331,8 +329,7 @@ theorem norm_ratCast_le_one {K : Type} [NormedField K] [IsUltrametricDist K] {p 
       have h1' := congrArg (Int.cast : ℤ → K) hab
       push_cast at h1'
       exact h1'.symm
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have hm := IsUltrametricDist.norm_add_le_max ((r.den : K) * ((Nat.gcdA r.den p : ℤ) : K))
       ((p : K) * ((Nat.gcdB r.den p : ℤ) : K))
     rw [← h1, norm_one, norm_mul, norm_mul] at hm
@@ -391,8 +388,7 @@ theorem law_integral {K : Type} [NormedField K] [IsUltrametricDist K] [CharZero 
     exact inv_lt_one_of_one_lt₀ (by exact_mod_cast hp.one_lt)
   intro n
   rw [← hEqK, MvPowerSeries.coeff_map]
-  have h2 := norm_ratCast_le_one hp hnp' (MvPowerSeries.coeff n FQ) (not_dvd_den _ (hQp n))
-  simpa using h2
+  simpa using norm_ratCast_le_one hp hnp' (MvPowerSeries.coeff n FQ) (not_dvd_den _ (hQp n))
 
 end FormalGroupLaws
 
@@ -437,8 +433,7 @@ theorem formal_law_symmetric : LawSymm := by
       coeff_subst_lgF_of_degree_one p hp2 (MvPowerSeries.X (1 : Fin 2)) (by simp) n hn]
     have hsum : n 0 + n 1 = 1 := by
       have h1 := hn
-      rw [Finsupp.degree_eq_sum, Fin.sum_univ_two] at h1
-      exact h1
+      rwa [Finsupp.degree_eq_sum, Fin.sum_univ_two] at h1
     have hne : Finsupp.single (1 : Fin 2) 1 ≠ Finsupp.single 0 1 := by
       rw [Ne, Finsupp.single_left_inj one_ne_zero]
       decide
@@ -446,11 +441,11 @@ theorem formal_law_symmetric : LawSymm := by
     · have hn' : n = Finsupp.single 1 1 := by
         ext i
         fin_cases i <;> simp [h0] <;> omega
-      rw [hn', MvPowerSeries.coeff_X, MvPowerSeries.coeff_X, if_neg hne, if_pos rfl, zero_add]
+      rw [hn', MvPowerSeries.coeff_X, MvPowerSeries.coeff_X, ite_eq_right hne, ite_eq_left rfl, zero_add]
     · have hn' : n = Finsupp.single 0 1 := by
         ext i
         fin_cases i <;> simp <;> omega
-      rw [hn', MvPowerSeries.coeff_X, MvPowerSeries.coeff_X, if_pos rfl, if_neg hne.symm, add_zero]
+      rw [hn', MvPowerSeries.coeff_X, MvPowerSeries.coeff_X, ite_eq_left rfl, ite_eq_right hne.symm, add_zero]
   · have hb : MvPowerSeries.HasSubst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K), 0] :=
       Formalism.G.LogP.hs2 (by simp) (by simp)
     have hz : PowerSeries.subst (0 : MvPowerSeries (Fin 2) K) (lgF K p) = 0 := by

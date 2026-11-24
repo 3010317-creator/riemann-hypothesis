@@ -183,8 +183,7 @@ variable {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] (p : ℕ
 theorem ker_red_le {W : Ideal (MRing J)} (hpW : (C (p : ℤ) : MRing J) ∈ W) :
     RingHom.ker (Bridge.GeoNum.red (ι := J) p) ≤ W := by
   classical
-  rw [Bridge.GeoNum.ker_red, Ideal.span_le, Set.singleton_subset_iff]
-  exact hpW
+  rwa [Bridge.GeoNum.ker_red, Ideal.span_le, Set.singleton_subset_iff]
 
 theorem map_red_prime [DecidableEq K] {W : Ideal (MRing J)} (hW : IsMultiProjPrime W)
     (hpW : (C (p : ℤ) : MRing J) ∈ W) : NumbersDVR.IsMultiProjPrime (W.map (Bridge.GeoNum.red p)) := by
@@ -305,8 +304,7 @@ theorem LevelTowerAlt.nef_fibres_block_embedding : PB.Inputs → ∀ (Ω Ω' : T
   obtain ⟨L, _, _, w, c, hL, hc, hw⟩ := LevelTowerAlt.exists_curve_point p hW hpW hdim
   have hle' : mCoordIdeal (fun x : Σ k, J k => y' ⟨bk x.1, bx x.1 x.2⟩) ≤ mCoordIdeal w := by
     simp only [hy]
-    rw [hw, CoordinateConeArithVar.mCoordIdeal_comp i y]
-    exact hle
+    rwa [hw, CoordinateConeArithVar.mCoordIdeal_comp i y]
   obtain ⟨k₀, L₁, _, _, σ, _, _, w₀, w', h1, h2, h3, h4⟩ := LevelTowerAlt.exists_lift_blk y' bk bx hbk hy' w c hc hle'
   have : CharP L p := charP_of_injective_algebraMap (algebraMap (ZMod p) L).injective p
   have : CharP k₀ p := σ.charP σ.injective p
@@ -340,8 +338,7 @@ theorem LevelTowerAlt.nef_fibres_block_embedding : PB.Inputs → ∀ (Ω Ω' : T
     rw [hcm']
     rfl
   have hQd : ringKrullDim (MRingOver (ZMod p) J ⧸ Q) = ((1 + Fintype.card K : ℕ) : WithBot ℕ∞) := by
-    rw [← ringKrullDim_eq_of_ringEquiv (Bridge.GeoNum.quotEquiv p Q), hcm]
-    exact hdim
+    rwa [← ringKrullDim_eq_of_ringEquiv (Bridge.GeoNum.quotEquiv p Q), hcm]
   have hcd : FieldNumbers.relDim (FieldNumbers.contractPrime (Targets.ProjContract.emb hv) Q') =
       ((1 : ℕ) : WithBot (WithTop ℤ)) := by
     rw [FieldNumbers.CutRegular.relDim_eq_natCast_iff, ← Targets.ProjContract.ringKrullDim_imageVar hv, hiv]
@@ -359,8 +356,7 @@ theorem LevelTowerAlt.nef_fibres_block_embedding : PB.Inputs → ∀ (Ω Ω' : T
   subst hm'
   have hQ'd := (FieldNumbers.CutRegular.relDim_eq_natCast_iff Q' 1).2 hmd
   have hdim' : ringKrullDim (MRing J' ⧸ mCoordIdeal w') = ((1 + Fintype.card K' : ℕ) : WithBot ℕ∞) := by
-    rw [← hcm', ringKrullDim_eq_of_ringEquiv (Bridge.GeoNum.quotEquiv p Q')]
-    exact hmd
+    rwa [← hcm', ringKrullDim_eq_of_ringEquiv (Bridge.GeoNum.quotEquiv p Q')]
   have h6 := hnef _ hW' h4 (ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.charOf_ne_zero_of_mem hp.ne_zero (by simpa using hpW')) hdim'
   rw [← Bridge.intNum_map_eq_geoNum p 1 _ hW' hpW' hdim'] at h6
   rw [← Bridge.intNum_map_eq_geoNum p 1 _ hW hpW hdim]
@@ -384,8 +380,7 @@ theorem LevelTowerAlt.nef_fibres_block_embedding : PB.Inputs → ∀ (Ω Ω' : T
     (FieldNumbers.contractPrime (Targets.ProjContract.emb hv) Q') 1 fun _ => a
   have h11 : NumbersDVR.intNum (ZMod p) Q (fun _ : Fin 1 => a) =
       NumbersDVR.intNum (ZMod p) (FieldNumbers.contractPrime (Targets.ProjContract.emb hv) Q') (fun _ : Fin 1 => a) := by
-    rw [← hiv, Targets.ProjContract.imageVar_eq hv]
-    exact h10
+    rwa [← hiv, Targets.ProjContract.imageVar_eq hv]
   rw [h9, ← h11] at h7
   change 0 ≤ NumbersDVR.intNum (ZMod p) Q' (fun _ : Fin 1 => a') at h6
   rw [h7] at h6
@@ -608,8 +603,7 @@ theorem linearIndependent_cols {K M : Type*} [Field K] [AddCommGroup M] [Module 
     exact Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => by rw [mul_comm]
   have hm : u.mulVec g = 0 := funext hz
   have hg0 := Matrix.eq_zero_of_mulVec_eq_zero (by rw [det_eq_one u h1 h0]; exact one_ne_zero) hm
-  intro i
-  exact congrFun hg0 i
+  exact fun i => congrFun hg0 i
 
 theorem span_cols {K M : Type*} [Field K] [AddCommGroup M] [Module K M] {n : ℕ}
     (u : Matrix (Fin n) (Fin n) K) (h1 : ∀ k, u k k = 1) (h0 : ∀ l k, l < k → u l k = 0)
@@ -652,7 +646,7 @@ theorem genU_gen (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) (q : GenIx r)
     genU Ω r q.1 q.2.1.1 q.2.1.2 =
       algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r) (MvPolynomial.X q) := by
   obtain ⟨s, ⟨⟨l, k⟩, h⟩⟩ := q
-  exact dif_pos h
+  exact dite_eq_left h
 
 theorem algebraicIndependent_gen (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) :
     AlgebraicIndependent Ω (fun q : GenIx r =>
@@ -708,10 +702,8 @@ theorem isGenericFlag_columns : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] (
         genU Ω r q.1 q.2.1.1 q.2.1.2) = fun q : GenIx r =>
         algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r) (MvPolynomial.X q) :=
       funext (genU_gen Ω r)
-    rw [he]
-    exact h
-  · rw [adjoin_entries fn r]
-    exact hdeg
+    rwa [he]
+  · rwa [adjoin_entries fn r]
 
 end GlobalTheory.CompanionTheory.Ar.FlagBun.GenericColumns
 end -- clump:auto
@@ -801,8 +793,7 @@ theorem exists_genericFlag : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
     rw [h, show algebraMap Ω' Ω' = RingHom.id Ω' from rfl, CommRingCat.ofHom_id, Spec.map_id, Category.id_comp]
   have hdh : GlobalTheory.CompanionTheory.Ar.Dominates M₃.ξ A.ξ (f₃ ≫ f₂) i := by
     show M₃.ξ ≫ f₃ ≫ f₂ = _
-    rw [← Category.assoc, hd₃']
-    exact hd₂
+    rwa [← Category.assoc, hd₃']
   have hnormal : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M₃.X := (_root_.GlobalTheory.CompanionTheory.Ar.XR.component_whole_isIntegral_and_normal _ Ω' M₃.ξ M₃.tie.gen M₃.all).2.1 hN
 
   obtain ⟨A', e, j₁, m, he, hf, hm, hcst, hR, hext, hpt, hHT', hV⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HcptPull.hodgeCpt_pull E H D l Xo c _ _ Y S Ω Ω' i K Unit
@@ -810,8 +801,7 @@ theorem exists_genericFlag : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
     (by convert htie using 1 <;> first | exact Subsingleton.elim _ _) hnormal hdh
   have hd' : GlobalTheory.CompanionTheory.Ar.Dominates A'.ξ A.ξ (e.hom ≫ f₃ ≫ f₂) i := by
     show A'.ξ ≫ e.hom ≫ f₃ ≫ f₂ = _
-    rw [← Category.assoc, he]
-    exact hdh
+    rwa [← Category.assoc, he]
   have hf' : A'.f = (e.hom ≫ f₃ ≫ f₂) ≫ A.f := hf.trans (Category.assoc _ _ _).symm
   have hfn : GlobalTheory.CompanionTheory.Ar.Dominates A'.ξ A.ξ₀ A'.f (i.comp A.fn) := by
     have h : A.ξ ≫ A.f = Spec.map (CommRingCat.ofHom A.fn) ≫ A.ξ₀ := A.fn_over
@@ -882,8 +872,7 @@ theorem exists_join {X X' : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω'] {
       obtain ⟨c, hc⟩ := hT.cover ⟨g p.1, hsp⟩
       refine ⟨c k, (map_ne_zero i).2 (TiePrimes.ne_of_seg hc.1 k), fun a => ?_⟩
       have := hreg _ (TiePrimes.ratio_mem hc ⟨k, a⟩)
-      rw [map_div₀] at this
-      exact this
+      rwa [map_div₀] at this
     · refine ⟨(), one_ne_zero, fun a => ?_⟩
       show (1 : Ω') / 1 ∈ _
       rw [div_one]; exact one_mem _)
@@ -1099,8 +1088,7 @@ theorem exists_pull (A : HodgeCpt Y S y) (B : HodgeCpt Y S y') (h : B.X ⟶ A.X)
       have hdisc : (((NumberField.discr E : ℤ) : Ω))⁻¹ ∈ regAt A.ξ ⟨h p'.1, hsp p'⟩ := by
         have hn0 : (NumberField.discr E).natAbs ≠ 0 := Int.natAbs_ne_zero.2 (NumberField.discr_ne_zero E)
         obtain ⟨-, -, hu⟩ := unitAt_natCast (ξ := A.ξ) ⟨h p'.1, hsp p'⟩ _ hn0 fun p hpp hd => by
-          have hin := hS p hpp (Int.natCast_dvd.2 hd)
-          exact not_not.1 (hc'' p hin)
+          exact not_not.1 (hc'' p (hS p hpp (Int.natCast_dvd.2 hd)))
         rcases Int.natAbs_eq (NumberField.discr E) with e | e
         · rw [e]; simpa using hu
         · rw [e]
@@ -1182,8 +1170,7 @@ theorem exists_flagged (hW : Out.WeilSt) (A : HodgeCpt Y S y) (x : Sp Ω ⟶ Xo.
         unfold GlobalTheory.CompanionTheory.Ar.Dominates at h
         rw [h, CommRingCat.ofHom_id, Spec.map_id, Category.id_comp]
       show C.ξ ≫ g₃ ≫ g₂ = _
-      rw [← Category.assoc, h3]
-      exact hg₂
+      rwa [← Category.assoc, h3]
     · rw [Category.assoc, ← hBf]; exact hCf
 
 end
@@ -1247,14 +1234,12 @@ theorem length_localizedModule_quot_eq {R : Type*} [CommRing R] (W : Ideal R) [W
     intro A B h y hy
     obtain ⟨m, hm, s, rfl⟩ := hy
     obtain ⟨t, ht, htm⟩ := h m hm
-    refine ⟨t * m, htm, ⟨t, ht⟩ * s, ?_⟩
-    exact IsLocalizedModule.mk'_cancel_left _ _ _ _
+    exact ⟨t * m, htm, ⟨t, ht⟩ * s, IsLocalizedModule.mk'_cancel_left _ _ _ _⟩
   have heq : Submodule.localized W.primeCompl (M := R) J₁ = Submodule.localized W.primeCompl (M := R) J₂ :=
     le_antisymm (key h₁) (key h₂)
   have e₁ := (localizedQuotientEquiv W.primeCompl (M := R) J₁).length_eq
   have e₂ := (localizedQuotientEquiv W.primeCompl (M := R) J₂).length_eq
-  have e₃ := (Submodule.quotEquivOfEq _ _ heq).length_eq
-  exact e₁.symm.trans (e₃.trans e₂)
+  exact e₁.symm.trans (((Submodule.quotEquivOfEq _ _ heq).length_eq).trans e₂)
 
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 

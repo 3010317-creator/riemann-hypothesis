@@ -280,33 +280,31 @@ theorem zz_scale (Zh : Matrix (Fin (r + 1)) (Fin (r + 1)) E) (T T' : F)
   ext a b
   have hZab : ((Z a b : M.R) : E) = HermSp.ZZplusOf M Zh T T' a b := by
     rw [← hZ]; rfl
-  have hq : ((g.q : F)) ≠ 0 := by
-    intro h
-    exact g.q_irr.ne_zero (Subtype.ext h)
+  have hq : ((g.q : F)) ≠ 0 := fun h => g.q_irr.ne_zero (Subtype.ext h)
   simp only [HermSp.ZZplusOf, hs, Matrix.of_apply] at hZab
   simp only [HermSp.ZZplusOf, hs, Matrix.map_apply, Matrix.of_apply, dlast, Matrix.diagonal_mul,
     Matrix.mul_diagonal, Matrix.add_apply, Subring.coe_subtype]
   apply g.e.injective
   by_cases ha : a = Fin.last r <;> by_cases hb : b = Fin.last r
   · subst ha; subst hb
-    simp only [and_self, if_true] at hZab ⊢
+    simp only [and_self, ite_true] at hZab ⊢
     push_cast
     rw [map_sub, map_mul, map_add (f := _), map_mul, hZab]
     simp only [map_sub, AlgEquiv.apply_symm_apply, he1, he2, hcc, hα, map_mul]
     ext <;> simp <;> field_simp <;> ring
-  · simp only [ha, hb, and_false, if_false, if_true] at hZab ⊢
+  · simp only [ha, hb, and_false, ite_false, ite_true] at hZab ⊢
     push_cast
     simp only [sub_zero, add_zero] at hZab ⊢
     rw [map_mul, map_mul, hZab]
     simp only [AlgEquiv.apply_symm_apply, he2, hα, map_mul]
     ext <;> simp <;> field_simp
-  · simp only [ha, hb, false_and, if_false, if_true] at hZab ⊢
+  · simp only [ha, hb, false_and, ite_false, ite_true] at hZab ⊢
     push_cast
     simp only [sub_zero, add_zero, one_mul] at hZab ⊢
     rw [map_mul, hZab]
     simp only [AlgEquiv.apply_symm_apply, he1, hα, map_mul]
     ext <;> simp <;> field_simp
-  · simp only [ha, hb, and_false, if_false] at hZab ⊢
+  · simp only [ha, hb, and_false, ite_false] at hZab ⊢
     push_cast
     simp only [sub_zero, add_zero, one_mul, mul_one] at hZab ⊢
     rw [hZab]
@@ -343,9 +341,7 @@ theorem nz2 {F : Type} [Field F] {B b t u : F} (hB : B ≠ 0) (ht : t ≠ 0) (hu
   · apply h
     rw [eq_div_iff (mul_ne_zero ht hb)]
     have h1 : B + t * b * u = 0 := by
-      have h2 := congrArg (· * u) h0
-      simp only [add_mul, inv_mul_cancel_right₀ hu, zero_mul] at h2
-      exact h2
+      simpa only [add_mul, inv_mul_cancel_right₀ hu, zero_mul] using congrArg (· * u) h0
     linear_combination h1
 
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -379,8 +375,7 @@ theorem scaleChoice_holds : ScaleChoiceP := by
     have := pow_injective_of_not_isUnit g.q_irr.not_isUnit g.q_irr.ne_zero (add_left_cancel h')
     simpa using this
   obtain ⟨k, -, hk⟩ : ∃ k ∈ Finset.range 9, f k ∉ L.toFinset := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hsub : (Finset.range 9).image f ⊆ L.toFinset := fun x hx => by
       obtain ⟨k, hk, rfl⟩ := Finset.mem_image.1 hx; exact hcon k hk
     have h1 := Finset.card_le_card hsub
@@ -575,7 +570,7 @@ theorem scC_apply_inr_inr (α β : E) (a b : Fin (r + 1)) :
 theorem scC_left_inl (α β : E) (G : Matrix (Ix r) (Ix r) E) (a : Fin (r + 1)) (j : Ix r) :
     ((scC r α β).transpose * G) (Sum.inl a) j = G (Sum.inl a) j := by
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Fintype.sum_sum_type, scC_apply_inl_inl, scC_apply_inr_inl,
-    zero_mul, Finset.sum_const_zero, add_zero, ite_mul, one_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    zero_mul, Finset.sum_const_zero, add_zero, ite_mul, one_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem scC_left_inr (α β : E) (G : Matrix (Ix r) (Ix r) E) (a : Fin (r + 1)) (j : Ix r) :
     ((scC r α β).transpose * G) (Sum.inr a) j =
@@ -591,7 +586,7 @@ theorem scC_right_inl (α β : E) (X : Matrix (Ix r) (Ix r) E) (i : Ix r) (b : F
     (X * (scC r α β).map cj) i (Sum.inl b) = X i (Sum.inl b) := by
   simp only [Matrix.mul_apply, Matrix.map_apply, Fintype.sum_sum_type, scC_apply_inl_inl, scC_apply_inr_inl, map_zero,
     mul_zero, Finset.sum_const_zero, add_zero, apply_ite cj, map_one, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true]
+    ite_true]
 
 theorem scC_right_inr (α β : E) (X : Matrix (Ix r) (Ix r) E) (i : Ix r) (b : Fin (r + 1)) :
     (X * (scC r α β).map cj) i (Sum.inr b) =
@@ -826,8 +821,7 @@ theorem relG_map (h : ScHyp O cj qi T T' α) (Zh : Matrix (Fin (r + 1)) (Fin (r 
       (Zh * dlast r α)
     rw [Matrix.mul_assoc, dlast_mul_cj h, Matrix.mul_one] at this
     have hb : (cj α - 1) * qi = -((α - 1) * qi * cj α) := by linear_combination qi * h.αn
-    rw [hb] at this
-    exact this
+    rwa [hb] at this
   apply le_antisymm
   · rintro _ ⟨Y, hY, rfl⟩
     exact relC_fwd O cj _ _ _ _ h.C_mul hG (scA h) (by ext i j; rfl)
@@ -855,8 +849,7 @@ theorem formG_scale (h : ScHyp O cj qi T T' α) (Zh : Matrix (Fin (r + 1)) (Fin 
     (gramG_scale cj qi h.cjcj α T T' h.αn h.qic h.Tc h.T'c Zh) (by rw [scC_det]; exact hu)
     (by rw [show ((scC r α ((α - 1) * qi)).map cj).det = cj (scC r α ((α - 1) * qi)).det from
       (RingHom.map_det cj _).symm, scC_det]; exact hcu) (fun i => (Y i : E)) (fun i => (W i : E))
-  rw [← e1, ← e1] at this
-  exact this
+  rwa [← e1, ← e1] at this
 
 theorem inv_scale (h : ScHyp O cj qi T T' α) (Zh : Matrix (Fin (r + 1)) (Fin (r + 1)) E) :
     (Zh * dlast r α)⁻¹ = dlast r (cj α) * Zh⁻¹ := by
@@ -877,7 +870,7 @@ theorem lamStarC_scale (h : ScHyp O cj qi T T' α) (Zh : Matrix (Fin (r + 1)) (F
   rw [dlast, Matrix.diagonal_mul]
   by_cases hb : b = Fin.last r
   · subst hb
-    simp only [if_true, map_mul, h.cjcj]
+    simp only [ite_true, map_mul, h.cjcj]
     linear_combination (cj (Zh⁻¹ (Fin.last r) (Fin.last r)) * y (Fin.last r)) * h.αn
   · simp [hb]
 
@@ -919,7 +912,7 @@ theorem phi_comb (h : ScHyp O cj qi T T' α) (q : E) (hq : q * qi = 1) (Y : Ix r
   rw [phi_inl, phi_inr]
   by_cases hb : b = Fin.last r
   · subst hb
-    simp only [if_true, map_mul, map_sub, map_one, h.qic]
+    simp only [ite_true, map_mul, map_sub, map_one, h.qic]
     linear_combination ((Y (Sum.inl (Fin.last r)) : E) * (cj α - 1)) * hq
   · simp [hb]
 
@@ -975,7 +968,7 @@ theorem gamCon_iff (h : ScHyp O cj qi T T' α) (hqO : q ∈ O) (Y Y' Y'' : Ix r 
       apply Subtype.ext
       rw [← phi_inl h, hy]
   · refine forall_congr' fun a => ?_
-    rw [phi_inl, phi_inr, if_neg (hne a), if_neg (hne a), map_one, mul_one, add_zero]
+    rw [phi_inl, phi_inr, ite_eq_right (hne a), ite_eq_right (hne a), map_one, mul_one, add_zero]
   · rw [coe_sub_eq_mul_iff_sub_eq_smul q hqO, coe_sub_eq_mul_iff_sub_eq_smul q hqO, ← map_sub, ← map_smul, (scPhi h).injective.eq_iff]
 
 end ScaleA6
@@ -1017,7 +1010,7 @@ theorem gamTup_scale (h : ScHyp O cj qi T T' α) (hq : q * qi = 1) (Zh : Matrix 
     funext (phi_comb h q hq Y)
   have hl : (fun a => ((scPhi h Y' (Sum.inl a) : O) : E)) = fun a => (Y' (Sum.inl a) : E) := funext (phi_inl h Y')
   have hz := phi_comb h q hq Y' (Fin.last r)
-  simp only [if_true] at hz
+  simp only [ite_true] at hz
   simp only [scTr, scBar_mk, psiD, Prod.mk.injEq]
   refine ⟨trivial, trivial, ⟨phi_inl h Y _, ?_⟩, ?_, hz⟩
   · rw [hc, lamStarC_scale h Zh]
@@ -1180,8 +1173,7 @@ theorem algGAllT_holds : AlgGAllT := by
     e₁' e₂' (by rw [hdet]; exact u₁.mul hαu) (by rw [hdet]; exact u₂.mul hαu)
     (by rw [hdet, hdet, head_dlast, head_dlast]; linear_combination α * hrel)
     (by rw [hN, head_dlast]; exact hG₁) (by rw [hN, head_dlast]; exact hG₂) hT0 d₁ d₂ s₁ s₂
-  rw [card_thetaGC_scale _ hH hqq hqO, hcard] at key
-  exact key
+  rwa [card_thetaGC_scale _ hH hqq hqO, hcard] at key
 
 end Formalism.L2.SG.LocalCountModules.ThetaMbe0GWork
 end -- clump:auto

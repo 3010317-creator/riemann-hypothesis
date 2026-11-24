@@ -140,8 +140,7 @@ theorem LeafIntClosureLoc_of (h : LeafIntShift) : LeafIntClosureLoc := by
   intro Ω L _ _ _ u hu _
   have hu0 := ne_zero_of_transcendental hu
   apply le_antisymm (adjoin_le_of_shift hu0 (h Ω L u hu0))
-  have h' := adjoin_le_of_shift (inv_ne_zero hu0) (by simpa using h Ω L u⁻¹ (inv_ne_zero hu0))
-  simpa using h'
+  simpa using adjoin_le_of_shift (inv_ne_zero hu0) (by simpa using h Ω L u⁻¹ (inv_ne_zero hu0))
 
 theorem shift_mem {Ω L : Type} [Field Ω] [Field L] [Algebra Ω L] {u : L} (hu : u ≠ 0) (c : L)
     (hc : c ∈ Algebra.adjoin Ω {u}) : ∃ N : ℕ, ∀ m, N ≤ m → c * u⁻¹ ^ m ∈ Algebra.adjoin Ω {u⁻¹} := by
@@ -188,8 +187,7 @@ theorem integral_closure_polynomial_elem_mul_inv_pow_mem_inv_closure : LeafIntSh
     have h0 : p'.eval₂ (RingHom.id L) x = 0 := by
       rw [hp', Polynomial.eval₂_map]; exact hpx
     have h := Polynomial.scaleRoots_eval₂_mul (p := p') (RingHom.id L) x r
-    rw [h0, mul_zero] at h
-    exact h
+    rwa [h0, mul_zero] at h
   have hmon : (p'.scaleRoots r).Monic := (Polynomial.monic_scaleRoots_iff r).2 hpm'
   have hlift : p'.scaleRoots r ∈ Polynomial.lifts (algebraMap (Algebra.adjoin Ω {u⁻¹}) L) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
@@ -211,8 +209,7 @@ theorem integral_closure_polynomial_elem_mul_inv_pow_mem_inv_closure : LeafIntSh
       · rw [Polynomial.coeff_eq_zero_of_natDegree_lt h, map_zero]; exact ⟨0, map_zero _⟩
   obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hlift hmon
   refine ⟨q, hqm, ?_⟩
-  rw [← Polynomial.eval_map, hq, mul_comm]
-  exact hroot
+  rwa [← Polynomial.eval_map, hq, mul_comm]
 
 theorem LeafNormalModel_of (hA : LeafIntClosureAlg) (hC : LeafGlueProper) :
     LateralTheory.E.LeafModelCurveCut.ExistsNormalProperCurveModel := by

@@ -205,8 +205,7 @@ theorem chi_continuous : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok �
       ext v; simp [Vs]
     rw [e]
     refine Set.finite_iUnion fun P => Set.Subsingleton.finite ?_
-    intro v hv w hw
-    exact HeightOneSpectrum.ext (hv.trans hw.symm)
+    exact fun v hv w hw => HeightOneSpectrum.ext (hv.trans hw.symm)
   have hbad : ∀ v ∈ A.bad i, v ∈ Vs := fun v hv => GlobalTheory.T.exists_badPrime_over_chart_bad_place I hI hP l Z a v (hA.bad_le i hi v hv)
   have hker := GlobalTheory.T.levelCharacter_trivial_near_one_of_local_bad_places (F := (I.rec7 l Z).host.F) (E := (I.rec7 l Z).host.E) (sigD (I.rec7 l Z)) (gramN (I.rec7 l Z) i hi)
     (B.T u) (I.rec7 l Z).R.f (A.bad i) (A.K i hi β).lev Vs hVs hbad (by
@@ -230,8 +229,7 @@ theorem chi_continuous : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok �
     rw [hA.chi i hi β g κ hκ]
     exact (hg κ (Units.ext (hκ.trans rfl))).symm
   have hχ : Continuous (A.chi i β) := by
-    refine continuous_of_continuousAt_one (A.chi i β) ?_
-    exact continuousAt_const.congr hev
+    exact continuous_of_continuousAt_one (A.chi i β) (continuousAt_const.congr hev)
   exact Units.continuous_val.comp hχ
 
 end GlobalTheory.AdForm.ChiCont

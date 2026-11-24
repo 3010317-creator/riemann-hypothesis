@@ -311,8 +311,7 @@ theorem cls_pw {L : LB X} (hL : L.IsLB) (d : ℤ) : cls (AbLaw.pw L d) (isLB_pw 
 theorem cls_tw {M H : LB X} (hM : M.IsLB) (hH : H.IsLB) (t : ℤ) :
     cls (tw M H t) (isLB_tw hM hH t) = cls M hM + t • cls H hH := by
   have e := cls_div hM (isLB_pw hH (-t)) (isLB_tw hM hH t)
-  rw [cls_pw hH, neg_smul, sub_neg_eq_add] at e
-  exact e
+  rwa [cls_pw hH, neg_smul, sub_neg_eq_add] at e
 
 def Eff (c : Pic X) : Prop := ∃ (L : LB X) (hL : L.IsLB), cls L hL = c ∧ ∃ σ : SecOn L ⊤, σ ≠ 0
 
@@ -353,8 +352,7 @@ theorem eff_of_sec {L : LB X} (hL : L.IsLB) (σ : LB.Sec L) (i : L.ι) (h : σ.f
 theorem eff_zero [IsIntegral X] : Eff (0 : Pic X) := by
   have e : cls _ (Inh.trivLB_isLB X) = 0 := (cls_eq_zero_iff _).2 (triv_trivLB X)
   rw [← e]
-  refine eff_of_sec _ (oneSec X) PUnit.unit ?_
-  exact one_ne_zero (α := Γ(X, ⊤))
+  exact eff_of_sec _ (oneSec X) PUnit.unit (one_ne_zero (α := Γ(X, ⊤)))
 
 theorem Eff.nsmul [IsIntegral X] {a : Pic X} (ha : Eff a) (n : ℕ) : Eff (n • a) := by
   induction n with
@@ -545,8 +543,7 @@ theorem finrank_act {E : Type} [Field E] [NumberField E] (hB : IsAbelianScheme B
   have hq : ∀ a b, q (a + b) + q (a - b) = 2 • q a + 2 • q b := fun a b => by
     have e : ρ.act (a - b) = ρ.act a * (ρ.act b)⁻¹ := by
       rw [eq_mul_inv_iff_mul_eq, ← ρ.add, sub_add_cancel]
-    simp only [q, ρ.add, e]
-    exact pull_par B hH hΘ hsym _ _
+    simpa only [q, ρ.add, e] using pull_par B hH hΘ hsym _ _
   have hw : ∀ a, (ρ.act a).left ≫ B.hom = B.hom := fun a => Over.w _
   have hiso : ∀ n : ℕ, LBIso (AbLaw.pw H ((n ^ 2 : ℕ) : ℤ)) (H.pull (ρ.act n).left) := fun n => by
     refine (cls_eq_iff (isLB_pw hH _) (pull_isLB hH _)).1 ?_

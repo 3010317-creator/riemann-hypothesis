@@ -32,8 +32,7 @@ theorem cupCochain_pairing_left (h₁₂ : (S.f ⊗ₘ 𝟙 T.X₂) ≫ μ₂ = 
       μ₁.hom (cupCochain h a (fun τ => T.g.hom (b τ)) σ) := by
   have e := congrArg (fun φ : S.X₁ ⊗ T.X₂ ⟶ C => φ.hom (cupCochain h a b σ)) h₁₂
   simp only [Rep.hom_comp, Representation.IntertwiningMap.comp_apply] at e
-  rw [tensorHom_cupCochain, tensorHom_cupCochain] at e
-  exact e
+  rwa [tensorHom_cupCochain, tensorHom_cupCochain] at e
 
 
 omit [TopologicalSpace G] [IsTopologicalGroup G] [IsDiscreteRep S.X₁] [IsDiscreteRep S.X₂] [IsDiscreteRep S.X₃] [IsDiscreteRep T.X₁]
@@ -45,8 +44,7 @@ theorem cupCochain_pairing_right (h₂₃ : (𝟙 S.X₂ ⊗ₘ T.f) ≫ μ₂ =
       μ₃.hom (cupCochain h (fun τ => S.g.hom (a τ)) b σ) := by
   have e := congrArg (fun φ : S.X₂ ⊗ T.X₁ ⟶ C => φ.hom (cupCochain h a b σ)) h₂₃
   simp only [Rep.hom_comp, Representation.IntertwiningMap.comp_apply] at e
-  rw [tensorHom_cupCochain, tensorHom_cupCochain] at e
-  exact e
+  rwa [tensorHom_cupCochain, tensorHom_cupCochain] at e
 
 theorem cupPairing_δ_add_cupPairing_δ (h₁₂ : (S.f ⊗ₘ 𝟙 T.X₂) ≫ μ₂ = (𝟙 S.X₁ ⊗ₘ T.g) ≫ μ₁)
     (h₂₃ : (𝟙 S.X₂ ⊗ₘ T.f) ≫ μ₂ = (S.g ⊗ₘ 𝟙 T.X₁) ≫ μ₃) (hS : S.ShortExact) (hT : T.ShortExact)

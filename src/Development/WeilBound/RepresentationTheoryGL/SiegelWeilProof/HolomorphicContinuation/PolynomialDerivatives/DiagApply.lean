@@ -130,8 +130,7 @@ theorem orbit [FiniteDimensional ℂ V] (h : PosH φ) {ι : Type} (T : ι → Mo
   have hxv : x v = P (x v) := by
     rw [← Module.End.mul_apply, ← hxP, Module.End.mul_apply, hPv]
   have hmem : P (x v) ∈ M := by
-    simp only [P, LinearMap.comp_apply, Submodule.subtype_apply]
-    exact Submodule.coe_mem _
+    simpa only [P, LinearMap.comp_apply, Submodule.subtype_apply] using Submodule.coe_mem _
   obtain ⟨s, hs, hsv⟩ := (hM _).1 hmem
   exact ⟨s, hs, by rw [hxv, ← hsv]⟩
 
@@ -204,8 +203,7 @@ theorem bicomm : Bicomm := by
     refine LinearMap.ext fun w => funext fun k => ?_
 
     simp only [Module.End.mul_apply, diag_apply, hsum, map_sum]
-    refine Finset.sum_congr rfl fun l _ => ?_
-    exact LinearMap.congr_fun (htt k l) (w l)
+    exact Finset.sum_congr rfl fun l _ => LinearMap.congr_fun (htt k l) (w l)
   obtain ⟨s', hs', hs'E⟩ := orbit (amp_posH h d) T' hT' (diag d x) hx' (fun k => e k)
   have hmap : Algebra.adjoin ℂ (Set.range T') = (Algebra.adjoin ℂ (Set.range T)).map (diag d) := by
     rw [AlgHom.map_adjoin, ← Set.range_comp]
@@ -216,7 +214,6 @@ theorem bicomm : Bicomm := by
     refine e.ext fun k => ?_
     have := congrFun hs'E k
     simpa [diag_apply] using this
-  rw [hxs]
-  exact hs
+  rwa [hxs]
 
 end PositivityTheory.Rg.Sw.LC

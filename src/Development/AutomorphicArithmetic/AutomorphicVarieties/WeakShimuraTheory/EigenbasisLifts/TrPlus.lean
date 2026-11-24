@@ -115,8 +115,7 @@ theorem UpperTheory.V.Ws.Eb.trPlus :
       have hchi : (W.GDet.ofRep (W.mat ρ)).chi y = (W.GDet.repAlg (W.mat ρ) A y).charpoly := by
         unfold W.GDet.chi
         change (W.GDet.repAlg (W.mat ρ) A[X] _).det = _
-        rw [← Polynomial.algebraMap_eq, map_sub, hsingle, hmap, map_one]
-        rw [Matrix.charpoly]
+        rw [← Polynomial.algebraMap_eq, map_sub, hsingle, hmap, map_one, Matrix.charpoly]
         congr 1
         ext i j
         by_cases h : i = j <;> simp [h]
@@ -153,8 +152,7 @@ theorem UpperTheory.V.Ws.Eb.trPlus :
         exact hx.const_smul a
     have hm : Continuous fun g => W.mat ρ g := by
       apply continuous_matrix
-      intro i j
-      exact (key (Matrix.single j i 1)).congr (fun g => (entry_eq _ i j).symm)
+      exact fun i j => (key (Matrix.single j i 1)).congr (fun g => (entry_eq _ i j).symm)
     rw [Units.continuous_iff]
     refine ⟨hm, ?_⟩
     refine (hm.comp continuous_inv).congr fun x => ?_

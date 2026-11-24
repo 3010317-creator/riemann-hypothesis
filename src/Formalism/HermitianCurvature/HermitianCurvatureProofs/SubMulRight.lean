@@ -141,10 +141,10 @@ theorem utLeft : UTLeft := by
     have hq := q.2
     by_cases hki : k = q.1.1
     · subst hki
-      rw [if_pos rfl, if_pos rfl, upper_apply, upper_apply, Matrix.one_apply_ne (ne_of_lt q.2), dite_eq_left hq,
+      rw [ite_eq_left rfl, ite_eq_left rfl, upper_apply, upper_apply, Matrix.one_apply_ne (ne_of_lt q.2), dite_eq_left hq,
         dite_eq_left hq, zero_add, zero_add, ha.2]
       simp
-    · rw [if_neg hki, if_neg hki, sub_zero, sub_zero]
+    · rw [ite_eq_right hki, ite_eq_right hki, sub_zero, sub_zero]
       rcases lt_or_gt_of_ne hki with hk | hk
       · rw [ha.1 q.1.1 k hk, zero_mul, zero_mul]
       · rw [upper_apply, upper_apply]
@@ -163,11 +163,9 @@ theorem lowOf_coord {m : ℕ} (p : Fin m × Fin m → Prop) [DecidablePred p] (h
   rw [Finset.sum_eq_single q]
   · simp
   · intro b _ hb
-    rw [if_neg]
-    intro h
-    exact hb (Subtype.ext h)
-  · intro h
-    exact absurd (Finset.mem_univ q) h
+    rw [ite_eq_right]
+    exact fun h => hb (Subtype.ext h)
+  · exact fun h => absurd (Finset.mem_univ q) h
 
 def swUT {m : ℕ} : G.UT m ≃ C2.Lidx m where
   toFun q := ⟨(q.1.2, q.1.1), q.2⟩
@@ -189,18 +187,15 @@ private theorem lowP_apply' {m : ℕ} (w : Equiv.Perm (Fin m)) (y : C2.LPidx w �
   · rw [Finset.sum_eq_single ⟨(i, j), h⟩]
     · simp
     · intro b _ hb
-      rw [if_neg]
-      intro hh
-      exact hb (Subtype.ext hh)
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+      rw [ite_eq_right]
+      exact fun hh => hb (Subtype.ext hh)
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   · refine Finset.sum_eq_zero fun q _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hq
     apply h
     have := q.2
-    rw [hq] at this
-    exact this
+    rwa [hq] at this
 
 theorem lowerUnipotent_mem {m : ℕ} (w : Equiv.Perm (Fin m)) (y : C2.LPidx w → ℂ) :
     lowP w y ∈ C2.LPg (C2.monoP w fun _ => (1 : ℂ)) := by
@@ -224,8 +219,7 @@ theorem lowerUnipotent_mem {m : ℕ} (w : Equiv.Perm (Fin m)) (y : C2.LPidx w �
     · rw [hent, lowP_apply', Matrix.one_apply_eq, dite_eq_right (fun hh => lt_irrefl _ hh.1), add_zero]
 
 theorem lowS_mem {m : ℕ} (w : Equiv.Perm (Fin m)) (x : C2.Lstidx w → ℂ) :
-    lowS w x ∈ C2.Lstg (C2.monoP w fun _ => (1 : ℂ)) := by
-  exact Dx2.Rad.low_mem w (fun _ => 1) one_ne x
+    lowS w x ∈ C2.Lstg (C2.monoP w fun _ => (1 : ℂ)) := Dx2.Rad.low_mem w (fun _ => 1) one_ne x
 
 theorem prod_UT {m : ℕ} (w : Equiv.Perm (Fin m)) (p : (C2.Lstidx w → ℂ) × (C2.LPidx w → ℂ)) :
     (lowS w p.1)ᴴ * (lowP w p.2)ᴴ ∈ C2.UTset m :=
@@ -327,18 +321,15 @@ theorem lowerUnipotent_symm_apply (y : C2.LPidx σ.symm → ℂ) (i j : Fin m) :
   · rw [Finset.sum_eq_single ⟨(i, j), h⟩]
     · simp
     · intro b _ hb
-      rw [if_neg]
-      intro hh
-      exact hb (Subtype.ext hh)
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+      rw [ite_eq_right]
+      exact fun hh => hb (Subtype.ext hh)
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   · refine Finset.sum_eq_zero fun q _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hq
     apply h
     have := q.2
-    rw [hq] at this
-    exact this
+    rwa [hq] at this
 
 theorem permutationMatrix_mul_lowerUnipotent (y : C2.LPidx σ.symm → ℂ) :
     U.wP σ * U.lowW σ (fun l => y ((iota σ).symm l)) = lowP σ.symm y * U.wP σ := by
@@ -392,13 +383,13 @@ theorem phiTopCoords : PhiTopCoords := by
   have hcol : ∀ a, w a = σ.symm a ∧ d' a = d a := by
     intro a
     have e := congrFun (congrFun hM (w a)) a
-    simp only [C2.monoP, Matrix.of_apply, if_true] at e
+    simp only [C2.monoP, Matrix.of_apply, ite_true] at e
     rw [U.hMat, _root_.Formalism.FourierDecayAlt.P.Ux2.permutationMatrix_mul_apply, Matrix.diagonal_apply] at e
     by_cases h : σ (w a) = a
     · refine ⟨?_, ?_⟩
       · rw [Equiv.eq_symm_apply]; exact h
-      · rw [h, if_pos rfl] at e; exact e.symm
-    · rw [if_neg h] at e; exact absurd e.symm (hd' a)
+      · rw [h, ite_eq_left rfl] at e; exact e.symm
+    · rw [ite_eq_right h] at e; exact absurd e.symm (hd' a)
   have hw : w = σ.symm := Equiv.ext fun a => (hcol a).1
   have hdd : d' = d := funext fun a => (hcol a).2
   subst hw hdd

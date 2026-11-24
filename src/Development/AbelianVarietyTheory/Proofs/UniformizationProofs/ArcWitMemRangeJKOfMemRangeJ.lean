@@ -123,8 +123,7 @@ theorem arcWit_mem_range_jK_of_mem_range_j : ∀ (E : Type) [Field E] [NumberFie
     obtain ⟨p, hp⟩ := hx
     have hz : Y.jQ p ∈ pullback.fst Y.s (spMap β) ⁻¹' abLocus Y.t.G := by
       rw [Y.ab_gen]; exact ⟨_, rfl⟩
-    rw [← hp]
-    exact hz
+    rwa [← hp]
   have h₂ : x ∈ abLocus W.t.G := (abLocus_pullback abLocusOne Y.t.semi W.m.cart.1 x).1 h₁
   have hmax : (Ideal.span {(PowerSeries.X : PowerSeries k)} ^ (0 + 1)).IsMaximal := by
     rw [zero_add, pow_one, ← PowerSeries.maximalIdeal_eq_span_X]; infer_instance
@@ -134,8 +133,7 @@ theorem arcWit_mem_range_jK_of_mem_range_j : ∀ (E : Type) [Field E] [NumberFie
     rw [zero_add, pow_one, Ideal.span_le, Set.singleton_subset_iff]; exact hX
   obtain ⟨p, hp⟩ : x ∈ Set.range (PrimeSpectrum.comap
       (Ideal.Quotient.mk (Ideal.span {(PowerSeries.X : PowerSeries k)} ^ (0 + 1)))) := by
-    rw [range_comap_of_surjective _ _ Ideal.Quotient.mk_surjective, Ideal.mk_ker]
-    exact hle
+    rwa [range_comap_of_surjective _ _ Ideal.Quotient.mk_surjective, Ideal.mk_ker]
   let g := W.P.U.gt 0
   have m : Mono g.i := ⟨fun a b h => g.isKernel.hom_ext h (toUnit_unique _ _)⟩
   have hp' : thick (PowerSeries k) (Ideal.span {PowerSeries.X}) 0 p ∈ abLocus W.t.G := by

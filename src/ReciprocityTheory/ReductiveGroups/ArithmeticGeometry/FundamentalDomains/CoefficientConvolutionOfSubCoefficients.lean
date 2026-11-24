@@ -253,22 +253,19 @@ theorem omc_li (la la' : Wt X.Ψ r) : LinearIndependent ℝ (omc X la la') := by
 
 theorem scaledPeriod_mem_left (la la' : Wt X.Ψ r) (j : Fin (Fintype.card X.Ψ)) : omc X la la' j ∈ X.periods la := by
   show ((X.chiOrd la' * X.chiOrd (la + la') : ℕ) : ℝ) • om1 X la j ∈ X.periods la
-  simp only [Nat.cast_smul_eq_nsmul]
-  exact AddSubgroup.nsmul_mem _ (basicPeriod_mem X la j) _
+  simpa only [Nat.cast_smul_eq_nsmul] using AddSubgroup.nsmul_mem _ (basicPeriod_mem X la j) _
 
 theorem scaledPeriod_mem_right (la la' : Wt X.Ψ r) (j : Fin (Fintype.card X.Ψ)) : omc X la la' j ∈ X.periods la' := by
-  show ((X.chiOrd la' * X.chiOrd (la + la') : ℕ) : ℝ) • om1 X la j ∈ X.periods la'
   exact scale_mem X la la' _ (X.chiOrd la * X.chiOrd (la + la')) (by ring) (basicPeriod_mem X la j)
 
 theorem scaledPeriod_mem_sum (la la' : Wt X.Ψ r) (j : Fin (Fintype.card X.Ψ)) :
     omc X la la' j ∈ X.periods (la + la') := by
-  show ((X.chiOrd la' * X.chiOrd (la + la') : ℕ) : ℝ) • om1 X la j ∈ X.periods (la + la')
   exact scale_mem X la (la + la') _ (X.chiOrd la * X.chiOrd la') (by ring) (basicPeriod_mem X la j)
 
 theorem fj_eq_zero_of_not_freq (la : Wt X.Ψ r) (ξ : Fin r → E) (ν : X.Ψ → ℝ) (P : Frame X.Ψ r → ℂ)
     (x : Frame X.Ψ r) (h : ¬ ∀ p ∈ X.periods la, ∃ k : ℤ, 2 * ∑ τ, ν τ * p τ = k) :
     X.fj la ξ ν P x = 0 := by
-  rw [Data.fj, if_neg h]
+  rw [Data.fj, ite_eq_right h]
 
 private lemma diag_ne_lemma {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ : X.Ψ) (i : Fin r) :
     b τ i i ≠ 0 := by
@@ -439,7 +436,7 @@ private lemma flowmv_lemma_28 (ξ : Fin r → E) (τ : X.Ψ) (s : ℂ) (p : Fin 
   funext a
   simp only [Matrix.mulVec, dotProduct, Data.flowMat, Matrix.of_apply, sub_mul,
     Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, hermC, Data.emb]
+    ite_true, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, hermC, Data.emb]
   congr 1
   simp only [Finset.mul_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun k _ => ?_
@@ -498,8 +495,7 @@ theorem flow_mem_of_tube {ξ : Fin r → E} (hξ : herm X.Gm ξ ξ = 0) {x : Fra
     have h2 := h1 τ i
     have him : (∑ j, s j * (ω j τ : ℂ)).im = ∑ j, (s j).im * ω j τ := by
       simp [Complex.im_sum]
-    rw [gramflow_lemma_29 hξ τ, him]
-    exact h2
+    rwa [gramflow_lemma_29 hξ τ, him]
 
 theorem zero_mem_Om {ξ : Fin r → E} (hξ : herm X.Gm ξ ξ = 0) {x : Frame X.Ψ r} (hx : x ∈ X.dom)
     (ω : Fin (Fintype.card X.Ψ) → X.Ψ → ℝ) : (0 : Fin (Fintype.card X.Ψ) → ℝ) ∈ Om ξ x ω := by

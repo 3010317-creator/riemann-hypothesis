@@ -262,10 +262,8 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_smul_of_orbits : ∀ (E : Type) [
   have hupd : Continuous upd := by
     refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun c => ?_
     by_cases h : τ = τ0 ∧ c = i0
-    · simp only [upd, h, and_self, if_true]
-      exact continuous_apply a
-    · simp only [upd, h, if_false]
-      exact continuous_const
+    · simpa only [upd, h, and_self, ite_true] using continuous_apply a
+    · simpa only [upd, h, ite_false] using continuous_const
   have hupdx : upd (col x τ0) = x := by
     funext τ a c
     by_cases h : τ = τ0 ∧ c = i0
@@ -290,16 +288,14 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_smul_of_orbits : ∀ (E : Type) [
     rwa [hcolupd] at this
   have hent : ∀ a b, (τ0 : E →+* ℂ) ((γ : Matrix (Fin r) (Fin r) E) a b) =
       c * (τ0 : E →+* ℂ) (((g : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) a b) := fun a b => by
-    have h := congrFun (congrFun hc a) b
-    simpa [Matrix.map_apply] using h
+    simpa [Matrix.map_apply] using congrFun (congrFun hc a) b
   haveI : Nonempty (Fin r) := ⟨i0⟩
   have hne0 : ∀ δ : GL (Fin r) E, (δ : Matrix (Fin r) (Fin r) E) ≠ 0 := fun δ h0 => by
     have h := (Matrix.isUnit_iff_isUnit_det _).mp δ.isUnit
     rw [h0, Matrix.det_zero] at h
     exact not_isUnit_zero h
   obtain ⟨k, l, hkl⟩ : ∃ k l, ((g : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) k l ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hne0 g (Matrix.ext hcon)
   set u0 : E := (γ : Matrix (Fin r) (Fin r) E) k l /
     ((g : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) k l with hu0def

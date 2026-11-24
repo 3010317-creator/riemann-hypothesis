@@ -497,8 +497,7 @@ theorem mem_span_range_comp {R W ι : Type} [Semiring R] [AddCommGroup W] [Modul
   · rintro ⟨y, hy, hyw⟩
     have : y = w := e.injective hyw
     exact this ▸ hy
-  · intro h
-    exact ⟨w, h, rfl⟩
+  · exact fun h => ⟨w, h, rfl⟩
 
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
@@ -661,8 +660,7 @@ theorem generic_iff_locU {D : D7} (X : HidaSetting D) (Y : Full X) (u u' : D.wha
         Formalism.L2.SG.Saturated.BBneP t₀.lam (gS D) (lf D (X.Fu u)) y.1 P)
       (fun a b hab => propext (hBF (X.Fu u) t₀.lam hL P a b hab)) hm
     exact e ▸ hbb
-  · intro h
-    exact ⟨t₀.frame, ⟨t₀.rep.2.2.2.2, rfl⟩, h⟩
+  · exact fun h => ⟨t₀.frame, ⟨t₀.rep.2.2.2.2, rfl⟩, h⟩
 
 theorem generic_iff_gen : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), Formalism.MainNotions.S.Cnt.Stand D u u' → 4 * D.R.rS + 7 ≤ D.R.k → ∀ (w : Point D.host.E (D.R.rS + 1)) (F00 : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F'0 : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (FP : ∀ p : PlF D, LocNG.FPair (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS), ZhatOM (ZhatL F00 F'0) = ptMat w → Gval F00 F'0 ≠ 0 → (∀ p, AtBase (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p F00 F'0 (Tu D u) (Tu D u') (FP p) ∧ (FP p).RelG (LocNG.theta (Y.M p))) → ∀ (G : GFrames (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)) D.R.rS D.R.k) (c : GCoord (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) F00 F'0 FP G), ∀ (t₀ : TauC Y u u') (ρ : ((VS D).V ≃ₗ[D.host.E] (VS D).V)) (U U' : Formalism.L2.SG.PairVal.MatR D), MovesTo F00 F'0 (lf D (X.Fu u)) t₀.frame ρ U U' → (t₀.generic ↔ G.Gen (G.datOf (c.lat ρ t₀.lam)) (c.lat ρ t₀.lam)) := by
   intro D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv
@@ -819,7 +817,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
       (n ∈ NRat (lf D (X.Fu u)) ∧ m ∈ NRat (lf D (X.Fu u')) ∧ (τ o).lin = n⁻¹ * t₀.lin * m) ∧
       o.out = c.lat (ρ * n) (τ o).lam := by
     intro o h
-    have e : τ o = (hsurj o.out h).choose := dif_pos h
+    have e : τ o = (hsurj o.out h).choose := dite_eq_left h
     rw [e]
     exact (hsurj o.out h).choose_spec
   let Cf : Finset (Quot G.LRel) := hfin.toFinset.filter (fun o => Q (¬ G.Gen d₀ o.out))
@@ -836,8 +834,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     have hg := hgen (τ o) n m hr h
     rw [← he] at hg
     have : (¬ (τ o).generic) = (¬ G.Gen d₀ o.out) := propext (not_congr hg)
-    rw [this]
-    exact hPo
+    rwa [this]
   have hτinj : Set.InjOn τ Cf := by
     intro o ho o' ho' e
     obtain ⟨hT, -⟩ := (hmemC o).1 ho
@@ -864,8 +861,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     have hg := hgen (τ o) n' m' hr' h'
     rw [← he', heq] at hg
     have : (¬ G.Gen d₀ o.out) = (¬ t.generic) := propext (not_congr hg.symm)
-    rw [this]
-    exact hq
+    rwa [this]
   obtain ⟨T, hTn, hamp⟩ :=
     GlobalTheory.T.rowTerm_amplitude_eq_mass_mul_phase D X Y u u' hSt hk w F00 F'0 FP hZ hGv hAt G c ν hν t₀ ρ U U' hMv hrelv hpt
   set K : ℝ := ((X.B.g : ℝ) ^ (D.R.f * Fintype.card (Formalism.L2.SG.RealObj.FreeE w)))⁻¹ with hK
@@ -897,7 +893,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     rw [PiLp.norm_sq_eq_of_L2]
     have : ∀ q, ‖(if q = q₀ then x else 0 : Formalism.L2.SG.PackageTie.HS (X.Vpi u') (X.Vpi u))‖ ^ 2 =
         if q = q₀ then ‖x‖ ^ 2 else 0 := fun q => by by_cases h : q = q₀ <;> simp [h]
-    simp only [this, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [this, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have hvec : ∀ o ∈ Cf, (Y.tO u u').vec (τ o) = V (((Formalism.L2.SG.TermOp.wt t₀ : ℝ) : ℂ) •
       Formalism.L2.SG.PackageTie.hsEmb ((((K * G.mu o.out : ℝ) : ℂ) * G.om d₀ o.out) • T)) := by
     intro o ho
@@ -924,9 +920,8 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
   have hampeq : G.amp d₀ (fun Γ => Q (¬ G.Gen d₀ Γ)) = ∑ o ∈ Cf, (G.mu o.out : ℂ) * G.om d₀ o.out := by
     unfold GFrames.amp
     rw [tsum_eq_sum (s := Cf)]
-    · exact Finset.sum_congr rfl fun o ho => if_pos ((hmemC o).1 ho)
-    · intro o ho
-      exact if_neg fun h => ho ((hmemC o).2 h)
+    · exact Finset.sum_congr rfl fun o ho => ite_eq_left ((hmemC o).1 ho)
+    · exact fun o ho => ite_eq_right fun h => ho ((hmemC o).2 h)
   rw [tsum_eq_sum hzero, Finset.sum_image hτinj]
   rw [Finset.sum_congr rfl fun o ho => by rw [Set.indicator_of_mem (hτS o ho), hvec o ho], hVsum, hVn]
   have hsum : ∑ o ∈ Cf, ((Formalism.L2.SG.TermOp.wt t₀ : ℝ) : ℂ) •

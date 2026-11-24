@@ -117,8 +117,7 @@ private theorem kappa_ne_zero {F : Type} [Field F] [NumberField F] [IsTotallyRea
   have hnull : ∀ c ∈ KK F, M.κ ((fun x => c * x) ⁻¹' U) = 0 := by
     intro c hc
     have hm : Measurable (fun x : G1 F => c * x) := (continuous_const.mul continuous_id).measurable
-    rw [← Measure.map_apply hm hU.measurableSet, M.κ_left c hc]
-    exact h0
+    rwa [← Measure.map_apply hm hU.measurableSet, M.κ_left c hc]
   obtain ⟨t, ht, hcov⟩ := hC.elim_nhds_subcover (fun x => (fun y => (k * x⁻¹) * y) ⁻¹' U) (by
     intro x hx
     refine ((continuous_const.mul continuous_id).isOpen_preimage _ hU).mem_nhds ?_
@@ -147,12 +146,9 @@ theorem UpperTheory.ConvolutionTheory.R2.G.aeZero :
   obtain ⟨V, hVt, hVo, haV⟩ := ht₁
   obtain ⟨U, hUo, hkU, hUt⟩ := mem_nhdsWithin.1 ht₂
   have hnull : M.ν (V ×ˢ (U ∩ KK F)) = 0 := by
-    refine measure_mono_null ?_ (ae_iff.1 h)
-    intro p hp
-    exact hsub ⟨hVt hp.1, hUt hp.2⟩
+    exact measure_mono_null (fun p hp => hsub ⟨hVt hp.1, hUt hp.2⟩) (ae_iff.1 h)
   have hprod : ideleMeasure F V * M.κ (U ∩ KK F) = 0 := by
-    rw [← Measure.prod_prod]
-    exact hnull
+    rwa [← Measure.prod_prod]
   have hV : ideleMeasure F V ≠ 0 := hVo.measure_ne_zero _ ⟨a, haV⟩
   have hU : M.κ (U ∩ KK F) ≠ 0 := by
     intro h0
@@ -327,8 +323,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.fockGauss :
           mul_le_mul_of_nonneg_left h1 (Real.exp_pos _).le
       _ = _ := by ring
   | zero =>
-    intro R N
-    exact ⟨0, 1, le_rfl, fun v => by simp⟩
+    exact fun R N => ⟨0, 1, le_rfl, fun v => by simp⟩
   | add f g _ _ hf hg =>
     intro R N
     obtain ⟨B₁, L₁, h₁, hb₁⟩ := hf R N
@@ -464,8 +459,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.expInt :
   have hT : ∀ i, Integrable (T i) (ideleMeasure F) := fun i => term_int (L i) (hN (L i))
   let G : IdeleGroup F × G1 F → ℝ := fun p => ∑ i, Bf * |Bc| * Bg i * T i p.1
   have hG : Integrable G M.ν := by
-    refine integrable_finsetSum _ fun i _ => ?_
-    exact ((hT i).comp_fst M.κ).const_mul (Bf * |Bc| * Bg i)
+    exact integrable_finsetSum _ fun i _ => ((hT i).comp_fst M.κ).const_mul (Bf * |Bc| * Bg i)
   have hexp : Continuous fun p : IdeleGroup F × G1 F => ((Real.exp (R * sz (row (mD p.1 * p.2))) : ℝ) : ℂ) := by
     refine Complex.continuous_ofReal.comp (Real.continuous_exp.comp (continuous_const.mul ?_))
     exact continuous_sz.comp ((UpperTheory.ConvolutionTheory.R2.continuous_mD.comp continuous_fst).mul continuous_snd)
@@ -576,14 +570,13 @@ theorem UpperTheory.ConvolutionTheory.R2.G.factor :
   have hh : ∀ x, h (r x) = H x := by
     intro x
     have hy : ∃ x', r x' = r x := ⟨x, rfl⟩
-    simp only [h, dif_pos hy]
-    exact hf _ _ hy.choose_spec
+    simpa only [h, dite_eq_left hy] using hf _ _ hy.choose_spec
   refine ⟨h, measurable_of_isClosed fun C hC => ?_, hh⟩
   have himg : MeasurableSet (r '' (H ⁻¹' C)) := key _ (hC.preimage hH)
   have hout : ∀ y, y ∉ Set.range r → h y = 0 := by
     intro y hy
     have hy' : ¬ ∃ x, r x = y := hy
-    simp only [h, dif_neg hy']
+    simp only [h, dite_eq_right hy']
   by_cases h0 : (0 : ℂ) ∈ C
   · have e : h ⁻¹' C = r '' (H ⁻¹' C) ∪ (Set.range r)ᶜ := by
       ext y
@@ -593,16 +586,13 @@ theorem UpperTheory.ConvolutionTheory.R2.G.factor :
         · obtain ⟨x, rfl⟩ := hyr
           refine Or.inl ⟨x, ?_, rfl⟩
           have : h (r x) ∈ C := hy
-          rw [hh] at this
-          exact this
+          rwa [hh] at this
         · exact Or.inr hyr
       · rintro (⟨x, hx, rfl⟩ | hy)
         · show h (r x) ∈ C
-          rw [hh]
-          exact hx
+          rwa [hh]
         · show h y ∈ C
-          rw [hout y hy]
-          exact h0
+          rwa [hout y hy]
     rw [e]
     exact himg.union hrange.compl
   · have e : h ⁻¹' C = r '' (H ⁻¹' C) := by
@@ -613,17 +603,14 @@ theorem UpperTheory.ConvolutionTheory.R2.G.factor :
         · obtain ⟨x, rfl⟩ := hyr
           refine ⟨x, ?_, rfl⟩
           have : h (r x) ∈ C := hy
-          rw [hh] at this
-          exact this
+          rwa [hh] at this
         · have : h y ∈ C := hy
           rw [hout y hyr] at this
           exact absurd this h0
       · rintro ⟨x, hx, rfl⟩
         show h (r x) ∈ C
-        rw [hh]
-        exact hx
-    rw [e]
-    exact himg
+        rwa [hh]
+    rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianProducts.Factor =====
@@ -650,8 +637,7 @@ private theorem td_adic {F : Type} [Field F] [NumberField F] (v : HeightOneSpect
   have h0 : (0 : v.adicCompletion F) ∈
       {y | (Valued.v : Valuation (v.adicCompletion F) _).restrict y <
         (Valued.v : Valuation (v.adicCompletion F) _).restrict x} := by
-    simp only [Set.mem_ofPred_eq, map_zero]
-    exact pos_iff_ne_zero.mpr hr
+    simpa only [Set.mem_ofPred_eq, map_zero] using pos_iff_ne_zero.mpr hr
   have h1 := hc.connectedComponent_subset h0 hx
   exact (lt_irrefl ((Valued.v : Valuation (v.adicCompletion F) _).restrict x)) h1
 
@@ -707,8 +693,7 @@ private theorem cont_ec : Continuous (ec F) := by
 
 private theorem ec_xc (v : Fin 2 → A F) : ec F (xc F v, finPartPi v) = v := by
   funext i
-  refine TR.ad_ext ?_ rfl
-  exact (TR.infEq F).symm_apply_apply _
+  exact TR.ad_ext ((TR.infEq F).symm_apply_apply _) rfl
 
 private theorem poly_mem (t : Fin 2 × InfinitePlace F → ℝ) (n : ℕ) :
     (fun v : Fin 2 → A F => ((∑ p, t p * xc F v p : ℝ) : ℂ) ^ n) ∈ polyOn F (Fin 2) := by
@@ -953,8 +938,7 @@ private theorem exists_q {F : Type} [Field F] [NumberField F] [IsTotallyReal F]
       (f := fun x : IdeleGroup F × KK F => ((x.1, x.2.1) : IdeleGroup F × G1 F)) hc hι hmem
     simpa only [Function.comp_def] using h
   have hR : Continuous fun x : IdeleGroup F × KK F => UpperTheory.ConvolutionTheory.R2.G.row (mD x.1 * x.2.1) := by
-    have h := hr.comp hι
-    simpa only [Function.comp_def] using h
+    simpa only [Function.comp_def] using hr.comp hι
   obtain ⟨h, hm, hh⟩ := UpperTheory.ConvolutionTheory.R2.G.factor (IdeleGroup F × KK F) (Fin 2 → A F)
     (fun x => UpperTheory.ConvolutionTheory.R2.G.row (mD x.1 * x.2.1)) (fun x => u (mD x.1 * x.2.1))
     hR hH (fun x x' e => hrow _ _ e)
@@ -982,8 +966,7 @@ private theorem core {F : Type} [Field F] [NumberField F] [IsTotallyReal F] (M :
       fun p => ((‖iw u p‖ : ℝ) : ℂ) := by
     filter_upwards [ae_KK M] with p hp
     have e' : h (UpperTheory.ConvolutionTheory.R2.G.row (mD p.1 * p.2)) = u (mD p.1 * p.2) := hh p.1 p.2 hp
-    simp only [q, e', iw]
-    exact conj_div_mul _ (by positivity) _
+    simpa only [q, e', iw] using conj_div_mul _ (by positivity) _
   have hz : ∫ p, ‖iw u p‖ ∂M.ν = 0 := by
     have h1 : ∫ p, ((‖iw u p‖ : ℝ) : ℂ) ∂M.ν = 0 := by
       rw [← integral_congr_ae hae]
@@ -1060,8 +1043,7 @@ private theorem real_dec {ι : Type} (X : GL (Fin 2) (ι → ℝ)) :
     ext i j : 1
     fin_cases i <;> fin_cases j <;> simp [K]
   have hKmem : K ∈ Matrix.unitaryGroup (Fin 2) (ι → ℝ) := by
-    rw [Matrix.mem_unitaryGroup_iff, hKs]
-    exact hKK
+    rwa [Matrix.mem_unitaryGroup_iff, hKs]
   let k : Matrix.unitaryGroup (Fin 2) (ι → ℝ) := ⟨K, hKmem⟩
   have hk : (Unitary.toUnits k) * (Unitary.toUnits k) = 1 := Units.ext hKK
   have hdetk : (Matrix.GeneralLinearGroup.det (Unitary.toUnits k) : ι → ℝ) = e := by
@@ -1117,11 +1099,10 @@ theorem UpperTheory.ConvolutionTheory.R2.Pp.infDec :
     have h := congrArg (fun h : GL (Fin 2) (Af F) => h.val i j) (TR.pFin_infGL (E := F) g)
     have h1 : ((1 : Matrix (Fin 2) (Fin 2) (A F)) i j).2 = (1 : GL (Fin 2) (Af F)).val i j := by
       by_cases e : i = j
-      · simp only [Matrix.one_apply, e, if_true, Units.val_one]
+      · simp only [Matrix.one_apply, e, ite_true, Units.val_one]
         rfl
       · simp [e]
-    rw [h1]
-    exact h
+    rwa [h1]
   · rw [hsc, hG]
     conv_lhs => rw [← TR.infGL_mul_finGL x, hx]
     simp only [map_mul, mul_assoc]

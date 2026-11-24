@@ -114,8 +114,7 @@ private theorem atEx (V : Submodule ℂ (LL μ)) (hV : IsSummand μ V) : ∃ Λ 
     (SatakeParameterExistence.cx UpperTheory.V.Af.formsFiniteGL n π).mono fun w ⟨B, hB⟩ => ⟨_, (sSatIff K n μ π V hπ w _).2 ⟨B, rfl, hB⟩⟩
   refine ⟨Λ, fun w => if h : ∃ B, SSat μ V w B then h.choose else 0, _, h, hΛ, fun w hw => ?_⟩
   have hw' : ∃ B, SSat μ V w B := not_not.1 hw
-  simp only [dif_pos hw']
-  exact hw'.choose_spec
+  simpa only [dite_eq_left hw'] using hw'.choose_spec
 
 private theorem satOf {π : CuspSub K n} {V : Submodule ℂ (LL μ)} {Λ t} (h : Carries μ π V) (H : AtAE μ V Λ t) :
     ∀ᶠ w : Pl K in cofinite, ∃ B : Multiset ℂˣ, t w = B.map (fun b : ℂˣ => (b : ℂ)) ∧ (CG.mk π).HasSat w B := by
@@ -141,13 +140,11 @@ private theorem conj_iff (P : CuspSub K n) (g : K ≃+* K) :
     cases P' with
     | cx π' =>
       obtain rfl : π' = P := (isoEq K n π' P).1 hiso
-      rw [hs s h1] at hsp
-      exact hsp
+      rwa [hs s h1] at hsp
     | re π' => exact hiso.elim
   · intro h s h1
     refine ⟨.cx P, ?_, (isoEq K n P P).2 rfl⟩
-    rw [hs s h1]
-    exact h
+    rwa [hs s h1]
 
 omit [_root_.NumberField.IsTotallyComplex K] in
 private theorem pull_refl : pull n (RingEquiv.refl K) = id := by

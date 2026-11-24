@@ -104,8 +104,7 @@ theorem fg_and_invertible_of_frame (L : Submodule A Ω) (b : Fin k → Ω)
       intro s
       obtain ⟨a, ⟨m, hm⟩, hgs⟩ := hloc l (g s) (hn s)
       refine ⟨m, ?_⟩
-      rw [hgs, mul_div_assoc, div_self (hb l), mul_one]
-      exact hm
+      rwa [hgs, mul_div_assoc, div_self (hb l), mul_one]
     choose M hM using hbd
     set K := Finset.univ.sup M with hK
     have hy : f l ^ K / b l ∈ 1 / L := by
@@ -293,8 +292,7 @@ theorem subOf_mem_iff (I J : Kleiman.Chart x) (h : I.1 ⊆ J.1) (y : Ω) :
     have hay' := subOf_mono Q' I J h _ hay
     have hinv : ((↑u⁻¹ : Kleiman.chartRing S x J) : Ω) * (a : Ω) = 1 := by
       have := congrArg Subtype.val (Units.inv_mul u)
-      rw [hu] at this
-      exact this
+      rwa [hu] at this
     have hy' : y = (↑u⁻¹ : Kleiman.chartRing S x J) • ((a : Ω) • y) := by
       rw [Subalgebra.smul_def, ← mul_smul, hinv, one_smul]
     rw [hy']
@@ -337,8 +335,7 @@ theorem subOf_invertible (I : Kleiman.Chart x) :
   have key := mul_span_eq_one_of_le (B := Kleiman.chartRing S x I) hle hL'
   rw [coe_latSub] at key
   refine ⟨Submodule.span (Kleiman.chartRing S x I) (L' : Set Ω), ?_⟩
-  rw [subOf_eq Q' hi]
-  exact key
+  rwa [subOf_eq Q' hi]
 
 def ofSecond : Kleiman.LineBundle S x where
   sub := subOf Q'
@@ -514,8 +511,7 @@ theorem chartRingOver_oneBlock_base (i : Fin (N + 1)) :
   · refine Algebra.adjoin_le ?_
     rintro _ ⟨⟨⟨⟩, a⟩, rfl⟩
     have h := ReciprocityTheory.ChartRestriction.G.Geo.div_mem_chartRing (o := S) (baseVec y k₀ e) i (e a)
-    rw [baseVec_apply, baseVec_apply, Equiv.symm_apply_apply] at h
-    exact h
+    rwa [baseVec_apply, baseVec_apply, Equiv.symm_apply_apply] at h
   · refine Algebra.adjoin_le ?_
     rintro _ ⟨j, rfl⟩
     have h : IndefiniteRowSideFullHecke.Kleiman2.oneBlock (IndefiniteRowSideFullHecke.Kleiman2.blockVec y k₀) ⟨(), e.symm j⟩ /
@@ -535,8 +531,7 @@ theorem model_pt_of_prime (hy : IndefiniteRowSideFullHecke.Kleiman2.IsModelWithB
   have hmem : IndefiniteRowSideFullHecke.Kleiman2.locIn _ p' ∈
       IndefiniteRowSideFullHecke.Kleiman2.modelPts S (IndefiniteRowSideFullHecke.Kleiman2.oneBlock (IndefiniteRowSideFullHecke.Kleiman2.blockVec y k₀)) :=
     ⟨fun _ => e.symm i, hc0, p', hp', rfl⟩
-  rw [← hy.2] at hmem
-  exact hmem
+  rwa [← hy.2] at hmem
 
 theorem exists_chart_of_prime (hy : IndefiniteRowSideFullHecke.Kleiman2.IsModelWithBase S y k₀) {i : Fin (N + 1)}
     (hi : baseVec y k₀ e i ≠ 0) (p : Ideal (ReciprocityTheory.ChartRestriction.G.Geo.chartRing S (baseVec y k₀ e) i))
@@ -732,8 +727,7 @@ theorem BundleOfDeg.full : BundleOfDeg.Statement := by
     · rintro ⟨u, hu, rfl⟩
       have : x i ^ (-c) * x i ^ c • u = u := by
         rw [smul_eq_mul, zpow_neg, ← mul_assoc, inv_mul_cancel₀ (zpow_ne_zero c hi), one_mul]
-      rw [this]
-      exact hu
+      rwa [this]
     · intro h
       refine ⟨_, h, ?_⟩
       rw [smul_eq_mul, zpow_neg, ← mul_assoc, mul_inv_cancel₀ (zpow_ne_zero c hi), one_mul]

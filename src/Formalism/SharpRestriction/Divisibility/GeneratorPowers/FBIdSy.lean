@@ -87,14 +87,12 @@ private theorem mem_degLE_lemma_6 {τ : Type} [Fintype τ] [DecidableEq τ] (m :
   rw [Finset.mem_filter, Finset.mem_image]
   constructor
   · rintro ⟨_, h⟩
-    rw [degree_eq_sum_lemma_2]
-    exact h
+    rwa [degree_eq_sum_lemma_2]
   · intro h
     refine ⟨⟨fun i => ⟨e i, by have := le_degree_lemma_4 e i; omega⟩, Finset.mem_univ _, ?_⟩, ?_⟩
     · ext i
       simp
-    · rw [degree_eq_sum_lemma_2] at h
-      exact h
+    · rwa [degree_eq_sum_lemma_2] at h
 
 private theorem coeff_psTrunc_lemma_7 {τ : Type} [Fintype τ] [DecidableEq τ] (m : ℕ)
     (f : MvPowerSeries τ S) (e : τ →₀ ℕ) :
@@ -118,7 +116,7 @@ theorem mk_psTrunc_X {τ : Type} [Fintype τ] [DecidableEq τ] (m : ℕ) (q : τ
       · simp [h3]
     · have h4 : AddMonoidAlgebra.coeff (X q : MvPolynomial τ S) e = 0 := by
         rw [MvPolynomial.coeff_X']
-        exact if_neg (Ne.symm h2)
+        exact ite_eq_right (Ne.symm h2)
       split_ifs <;> simp [h4]
   rw [Ideal.Quotient.eq, hs]
   split_ifs with h

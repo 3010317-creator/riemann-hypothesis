@@ -201,8 +201,7 @@ theorem cell_triv (hmul : ∀ x y, σ (x * y) = σ y * σ x) (h1 : σ 1 = 1) (hu
   have haa' : e * x * e * (e * w * e) = e := by
     have h := congrArg (fun z => e * z * e) huw
     simp only [add_mul, mul_add, mul_assoc, hef2, add_zero, mul_one, hee] at h
-    simp only [mul_assoc, he2]
-    exact h
+    simpa only [mul_assoc, he2] using h
   have hσ3 : ∀ a b d : R, σ (a * b * d) = σ d * σ b * σ a := by
     intro a b d
     rw [hmul (a * b) d, hmul a b, ← mul_assoc]
@@ -335,8 +334,7 @@ theorem triv_of_cell {F : Type} [Field F] [Infinite F] {E : Type} [CommRing E] [
       {t : F | ¬ IsUnit (A + algebraMap F E t • B)}.Finite := by
     intro A B τ h
     have h' : IsUnit (A + τ • B + (τ * τ) • (0 : Matrix β β E)) := by rwa [smul_zero, add_zero]
-    have hfin := finite_nonunit_matrix (F := F) A B 0 τ h'
-    simpa only [smul_zero, add_zero] using hfin
+    simpa only [smul_zero, add_zero] using finite_nonunit_matrix (F := F) A B 0 τ h'
   have finE : ∀ (a b : E) (τ : E), IsUnit (a + b * τ) →
       {t : F | ¬ IsUnit (a + b * algebraMap F E t)}.Finite := by
     intro a b τ h
@@ -567,8 +565,7 @@ theorem char_trivial : ∀ (F : Type) [Field F] [CharZero F] [Invertible (2 : F)
       Matrix.mul_zero]
   have hefc : Cy.map c * Mt.map c + Cx.map c * Mb.map c = 1 := by
     have h := congrArg cm hPM'
-    rw [map_add (f := _), map_one, hcm, hcm, Matrix.map_mul, Matrix.map_mul] at h
-    exact h
+    rwa [map_add (f := _), map_one, hcm, hcm, Matrix.map_mul, Matrix.map_mul] at h
   have heft : Mtᵀ * Cyᵀ + Mbᵀ * Cxᵀ = 1 := by
     have h := congrArg Matrix.transpose hPM'
     rwa [Matrix.transpose_add, Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_one] at h
@@ -625,8 +622,7 @@ theorem char_trivial : ∀ (F : Type) [Field F] [CharZero F] [Invertible (2 : F)
     have htt' : Mt * x * Cy * (Mt * xi * Cy) = 1 := mul_eq_one_comm.mp ht't
     apply hpar g ⟨Mt * x * Cy, Mt * xi * Cy, htt', ht't⟩
     show φ g * Cy = Cy * (Mt * x * Cy)
-    rw [← hx]
-    exact hxCy
+    rwa [← hx]
   have hi2 : (2 : E) * algebraMap F E (⅟2) = 1 := by
     rw [← map_ofNat (algebraMap F E) 2, ← map_mul, mul_invOf_self, map_one]
   have h3F : (3 : F) ≠ 0 := three_ne_zero

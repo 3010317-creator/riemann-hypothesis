@@ -57,8 +57,7 @@ theorem crdOf_mem {y : (VS D).V} (hy : y ∈ (VS D).L0) : crdOf X.B.I X.ιE X.ba
   show crdOf X.B.I X.ιE X.bas y ∈ X.B.I.L
   rw [X.L_eq]
   simp only [crdOf, RingEquiv.apply_symm_apply]
-  rw [X.bas.sum_repr]
-  exact hy
+  rwa [X.bas.sum_repr]
 
 theorem frame_vector_mem_base_lattice : X.zu u' ∈ (VS D).L0 := by
   rw [X.Lam_split]
@@ -75,8 +74,7 @@ theorem yTup_z_mem (v : PlX X) : yTup X u' v (zi (D := D)) ∈ latLoc (E := X.B.
     rfl
   rw [h1, tupH_eq]
   refine Submodule.subset_span ⟨_, crdOf_mem X ?_, rfl⟩
-  simp only [hv, zi, Fin.append_left, Fin.snoc_last]
-  exact frame_vector_mem_base_lattice X u'
+  simpa only [hv, zi, Fin.append_left, Fin.snoc_last] using frame_vector_mem_base_lattice X u'
 
 def OmVMemEF : Prop :=
   ∀ (v : PlX X) (i : Fin (D.R.rS + 1 + D.R.rS)), i ≠ zi (D := D) → yTup X u' v i ∈ latLoc (E := X.B.I.E) v (abelian₂ X)

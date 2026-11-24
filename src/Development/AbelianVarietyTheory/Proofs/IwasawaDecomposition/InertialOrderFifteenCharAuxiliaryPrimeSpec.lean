@@ -203,8 +203,7 @@ theorem away_ae (l : ℕ) (hl : l ≠ 0) : ∀ᶠ v : HeightOneSpectrum (𝓞 E)
   have h0 : Ideal.span {((l : ℕ) : 𝓞 E)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hl
-  refine (Ideal.finite_factors h0).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.mpr (not_not.1 hv)
+  exact (Ideal.finite_factors h0).subset fun v hv => Ideal.dvd_span_singleton.mpr (not_not.1 hv)
 
 theorem almostIn_of_valuesIn {K : Type} [Field K] {ε : K →+* ℂ} {χ : HChar E} (h : χ.ValuesIn 0 ε) : AlmostIn ε χ := by
   filter_upwards [unr_ae χ] with v hv
@@ -314,8 +313,7 @@ theorem IsGal.ramExactly (ha : IsGlobalArtin art) (h : IsGal art κ ι χ 0 r) {
 theorem IsGal.pow_eq_one (ha : IsGlobalArtin art) (h : IsGal art κ ι χ 0 r) {m : ℕ} (hm : χ.OrderDvd m) (g : G E Ω) :
     r g ^ m = 1 := by
   have := DFunLike.congr_fun (h.2.2.pow_eq_one ha.quot.surjective hm) g
-  rw [MonoidHom.pow_apply, ← map_pow, MonoidHom.one_apply, inQ_eq_one, map_pow] at this
-  exact this
+  rwa [MonoidHom.pow_apply, ← map_pow, MonoidHom.one_apply, inQ_eq_one, map_pow] at this
 
 
 omit [TopologicalSpace O] in
@@ -330,7 +328,7 @@ theorem IsGal.side (h : IsGal art κ ι χ 0 r) {m : ℕ} (hm0 : 0 < m) (hm : χ
       rw [← Units.val_pow_eq_pow_val]
       exact congrArg (fun ξ : HChar E => ((ξ.loc v x : ℂˣ) : ℂ)) hm
     have h2 := Complex.norm_eq_one_of_pow_eq_one h1 hm0.ne'
-    rw [sideIso_false, if_neg (by simp), map_units_inv, map_inv₀, e, map_inv₀, ← Complex.inv_eq_conj h2, inv_inv]
+    rw [sideIso_false, ite_eq_right (by simp), map_units_inv, map_inv₀, e, map_inv₀, ← Complex.inv_eq_conj h2, inv_inv]
   · exact e
 
 section Coef
@@ -575,7 +573,7 @@ theorem sideIso_read {l : ℕ} [Fact l.Prime] {L K : Type} [Field L] [Field K] {
     {ε : K →+* ℂ} {f f' : K →+* L} (hf : ∀ x, ι (κ (f x)) = ε x) (hf' : ∀ x, ι (κ (f' x)) = starRingEnd ℂ (ε x))
     (b : Bool) (x : K) : sideIso ι b (κ ((if b then f else f') x)) = ε x := by
   cases b
-  · rw [sideIso_false, if_neg (by simp), hf', Complex.conj_conj]
+  · rw [sideIso_false, ite_eq_right (by simp), hf', Complex.conj_conj]
   · exact hf x
 
 variable {R : Ranks} {H : Formalism.BasicNotions.Host R} {Ω : Type} [Field Ω] [Algebra H.E Ω] {cc : Ω ≃+* Ω}

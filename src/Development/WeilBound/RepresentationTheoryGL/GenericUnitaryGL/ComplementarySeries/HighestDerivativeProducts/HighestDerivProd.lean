@@ -199,8 +199,8 @@ theorem bumpF_fix (p m : GL (Fin n) k) (v a : Fin n → k) (h1 : IntM m) (h2 : I
       rw [ofAdd_add]
       exact mul_mem (h2.mulVec_mem h) ha
   by_cases hv : Multiplicative.ofAdd v ∈ polyBall (k := k) n s
-  · rw [if_pos hv, if_pos (hiff.2 hv)]
-  · rw [if_neg hv, if_neg (fun c => hv (hiff.1 c))]
+  · rw [ite_eq_left hv, ite_eq_left (hiff.2 hv)]
+  · rw [ite_eq_right hv, ite_eq_right (fun c => hv (hiff.1 c))]
 
 def nbhd : Set (Mir k n) :=
   {x | IntM (mirabolicProjection k n x) ∧ IntM (mirabolicProjection k n x)⁻¹ ∧ ρ (lv k n (mirabolicProjection k n x)) e = e ∧
@@ -249,7 +249,7 @@ theorem bumpF_support : ∃ C : Set (Mir k n), IsCompact C ∧ ∀ g, bumpF ρ s
     (isCompact_polyBall n s).image (continuous_unipIn n), fun g hg => ?_⟩
   have hL : Multiplicative.ofAdd (mvec g) ∈ polyBall (k := k) n s := by
     by_contra hc
-    exact hg (if_neg hc)
+    exact hg (ite_eq_right hc)
   exact ⟨levi k n (mirabolicProjection k n g), ⟨_, rfl⟩, uv n (mvec g), ⟨_, hL, rfl⟩, decomp g⟩
 
 theorem exists_bump_restr : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
@@ -317,8 +317,8 @@ theorem exists_finset_eq_sum_polyBall_translates :
   rw [Finset.sum_image (fun a _ b _ h => hf h)]
   by_cases hv : q (Multiplicative.ofAdd v) ∈ T.image q
   · rw [Finset.sum_eq_single_of_mem _ hv
-      (fun b _ hb => if_neg (fun h => hb ((hmem v b).1 h).symm)),
-      if_pos ((hmem v _).2 rfl), hval]
+      (fun b _ hb => ite_eq_right (fun h => hb ((hmem v b).1 h).symm)),
+      ite_eq_left ((hmem v _).2 rfl), hval]
   · have h0 : φ v = 0 := by
       by_contra hne
       obtain ⟨x, hx, y, hy, hxy⟩ := Set.mem_iUnion₂.1 (hT (hsupp v hne))
@@ -328,7 +328,7 @@ theorem exists_finset_eq_sum_polyBall_translates :
         simpa using hy
       exact QuotientGroup.eq.2 hxv
     rw [h0]
-    refine (Finset.sum_eq_zero fun b hb => if_neg fun h => hv ?_).symm
+    refine (Finset.sum_eq_zero fun b hb => ite_eq_right fun h => hv ?_).symm
     rw [(hmem v b).1 h]
     exact hb
 
@@ -513,11 +513,11 @@ theorem exists_twisted_integral : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
         by_cases hv : Multiplicative.ofAdd v ∈ polyBall (k := k) (N + 1) s
         · have h1 : ψ (v (Fin.last N)) = 1 := hs v hv
           simp only [tw]
-          rw [hb v, if_pos hv, Set.indicator_of_mem (show v ∈ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
+          rw [hb v, ite_eq_left hv, Set.indicator_of_mem (show v ∈ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
             AddChar.map_neg_eq_inv, h1]
           simp
         · simp only [tw]
-          rw [hb v, if_neg hv, Set.indicator_of_notMem (show v ∉ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
+          rw [hb v, ite_eq_right hv, Set.indicator_of_notMem (show v ∉ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
             smul_zero]
       rw [hT, e', smInt_indicator]
 
@@ -568,27 +568,7 @@ theorem restr_periodic (ρ : Representation ℂ (LH k n) E) (f : cIndSpace (LH k
   exact congrFun (congrArg Subtype.val h1) (uv n v)
 
 theorem continuous_mvec (n : ℕ) : Continuous (mvec (k := k) (n := n)) := by
-  have hval : Continuous fun g : Mir k n =>
-      ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
-    Units.continuous_val.comp continuous_subtype_val
-  have hblock : Continuous fun g : Mir k n =>
-      ((mirabolicProjection k n g : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
-    refine continuous_pi fun i => continuous_pi fun j => ?_
-    exact (continuous_apply (Fin.castSucc j)).comp ((continuous_apply (Fin.castSucc i)).comp hval)
-  have h1 : Continuous fun g : Mir k n =>
-      (((mirabolicProjection k n g)⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
-    have hinv : Continuous fun g : Mir k n => g⁻¹ := continuous_inv
-    have heq : (fun g : Mir k n =>
-        (((mirabolicProjection k n g)⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)) =
-        fun g => ((mirabolicProjection k n g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
-      funext g
-      rw [map_inv]
-    rw [heq]
-    exact hblock.comp hinv
-  have h2 : Continuous (colv (k := k) (n := n)) := by
-    refine continuous_pi fun i => ?_
-    exact hval.matrix_elem _ _
-  exact h1.matrix_mulVec h2
+  exact GlobalTheory.CompanionTheory.MirLevi.Bump.continuous_mvec
 
 theorem exists_compact_polyBall (n : ℕ) {C : Set (Fin n → k)} (hC : IsCompact C) :
     ∃ S : kˣ, ∀ v ∈ C, Multiplicative.ofAdd v ∈ polyBall (k := k) n S := by
@@ -837,13 +817,7 @@ theorem smooth_gp {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] 
   isSmooth_comp (isSmooth_extTensor ha hb) _ (GlobalTheory.CompanionTheory.BZMir.continuous_gpProj k m j)
 
 theorem continuous_pgProj (i t : ℕ) : Continuous (pgProj k i t) := by
-  have hincl : Continuous (hpgIncl k i t) :=
-    Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
-  have hlevi : Continuous fun h : HPG k i t => leviProj k (ePG i t) (hpgIncl k i t h) :=
-    (GlobalTheory.SmGL.LeviInt.levi_integral_facts k Bool (Fin (i + t + 1)) (Two (Fin (i + 1)) (Fin t))
-      (ePG i t)).2.2.2.2.2.1.comp hincl
-  exact Continuous.prodMk (Continuous.subtype_mk ((continuous_apply false).comp hlevi) _)
-    ((continuous_apply true).comp hlevi)
+  exact GlobalTheory.CompanionTheory.BZPhiPG.Onto.continuous_pgProj k i t
 
 theorem smooth_pg {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W] (i t : ℕ)
     (a : Representation ℂ (Mir k i) V) (b : Representation ℂ (GL (Fin t) k) W) (ha : IsSmooth a) (hb : IsSmooth b) :

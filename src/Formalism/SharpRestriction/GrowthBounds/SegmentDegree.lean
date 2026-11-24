@@ -271,8 +271,7 @@ theorem beta_ratio_bound : BetaRatioBound 1088 := by
   have hP2 : 128 * ((r + K : ℕ) : ℝ) ^ 2 * (X.Ns : ℝ) * X.Y ^ 2 ≤ (p : ℝ) ^ (X.L₁ - 1) := by
     have h := hX.P2
     have e : ((X.L₁ : ℤ) - 1) = ((X.L₁ - 1 : ℕ) : ℤ) := by omega
-    rw [e, zpow_natCast] at h
-    exact h
+    rwa [e, zpow_natCast] at h
   set D1 := X.F.dist j (X.F.fr j 0) with hD1
   set s := (X.F.letters j).filter (· < X.F.fr j 0) with hs
   have hfr0 : X.F.fr j 0 ∈ X.F.letters j := k_fr_mem_letters X.F hV j hr
@@ -452,8 +451,7 @@ theorem restLamA_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) : RestLamA :
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (bs i).2
   have h2 : ∑ i, c i • bs i = ϖ • (⟨z, hzM⟩ : X.Mj p K O j b) := by
     apply Subtype.ext
-    simp only [Submodule.coe_sum, Submodule.coe_smul]
-    exact hz
+    simpa only [Submodule.coe_sum, Submodule.coe_smul] using hz
   have h3 := congrArg (fun v => bs.repr v i) h2
   simp only [Module.Basis.repr_sum_self, map_smul, Finsupp.smul_apply, smul_eq_mul] at h3
   rw [← hc i, h3, map_mul]
@@ -512,8 +510,7 @@ theorem mem_degAt_det {R : Type} [CommRing R] {n : ℕ} (y : Fin n → ℤ) (t :
   have h2 := degAt_prod (R := R) (x := t) Finset.univ
     (fun i : Fin n => (MvPolynomial.X (y (σ i), i) : MvPolynomial (ℤ × Fin n) R))
     (fun i => if y (σ i) = t then 1 else 0) (fun i _ => degAt_X (x := t) (y (σ i), i))
-  rw [Equiv.sum_comp σ (fun a => if y a = t then 1 else 0)] at h2
-  exact h2
+  rwa [Equiv.sum_comp σ (fun a => if y a = t then 1 else 0)] at h2
 
 namespace Dat
 
@@ -590,8 +587,7 @@ theorem mem_degAt_segRen_off {R : Type} [CommRing R] (j : ℤ) {n : ℕ} (A : Mv
   · refine mem_supported.mpr fun v hv => ?_
     obtain ⟨u, _, rfl⟩ := mem_vars_rename _ _ (Finset.mem_coe.mp hv)
     exact segE_mem X.F j u.1
-  · intro v hv h
-    exact hx (h ▸ hv)
+  · exact fun v hv h => hx (h ▸ hv)
 
 end Deg
 
@@ -618,11 +614,9 @@ theorem restMemB_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) (C₀ : ℝ)
     unfold Dat.memA
     refine degAt_mul (degAt_mul ?_ ?_) (degAt_segRen X.F j u1 i)
     · refine degAt_of_supported {v : ℤ × Fin r | Even v.1} (disc_power_monomial_mem_supported O j b _ fun a _ => hevW a) ?_
-      intro v hv h
-      exact ho (h ▸ hv)
+      exact fun v hv h => ho (h ▸ hv)
     · refine degAt_of_supported {v : ℤ × Fin r | Even v.1} (mem_Mu_supported O j _ _ fun a _ => hevT a) ?_
-      intro v hv h
-      exact ho (h ▸ hv)
+      exact fun v hv h => ho (h ▸ hv)
   have hG : Even (segE X.F j i) → DegAt (segE X.F j i) (b'' i) (X.memG K O j q.1) := fun _ =>
     degAt_segRen X.F j u2 i
   rw [ordDeg_prod hA hG mm hmm]
@@ -694,7 +688,7 @@ theorem m0_le_Bw_of_isW (hX : X.Hyp p K) (hLa : 1088 ≤ X.CLa) (hk : 1088 ≤ X
   have hpos : (0 : ℝ) < (X.Bdeg p K j (X.restr j b) x : ℝ) := by linarith
   have hpos' : 0 < X.Bdeg p K j (X.restr j b) x := by exact_mod_cast hpos
   unfold Dat.Bdeg at hpos'
-  rw [if_pos hW] at hpos'
+  rw [ite_eq_left hW] at hpos'
   omega
 
 theorem mem_degAt_ext {R : Type} [CommRing R] (j : ℤ) {n : ℕ} {bb : Fin (segN X.F j) → ℕ}
@@ -756,15 +750,14 @@ theorem restMemC_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) : RestMemC 1
         have hlt : segE X.F j i < X.F.fr j 0 := by omega
         have hdd := hPATH.degs i hlt
         unfold Dat.Bdeg at hdd
-        rw [if_pos hW] at hdd
+        rw [ite_eq_left hW] at hdd
         have hm0 := m0_le_Bw_of_isW hX hLa hk j b hb.2.2 _ hx hW
         have hBw := hb.2.1 _ hx hW
         have e1 : X.discPowerMonomialDegree p K j b (segE X.F j i) = X.m0 K +
             ((b (segE X.F j i) : ℤ) - X.Bw p K j (segE X.F j i)).toNat := by
           have := disc_power_monomial_degree_at_w hX j b (⟨i.val, hi1⟩ : Fin r)
           simp only [] at this
-          rw [← hxW] at this
-          exact this
+          rwa [← hxW] at this
         have e2 : X.memdMu j q.1.2.2 (segE X.F j i) = 0 := mem_dMu_off j _ _ fun a => by
           have := kfr_le X.F hV j (Nat.zero_le a.val) a.isLt
           omega
@@ -780,7 +773,7 @@ theorem restMemC_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) : RestMemC 1
         · have hlt := (segE_lt_fr_iff X.F hV hr j i).mpr hi2
           have hdd := hPATH.degs i hlt
           unfold Dat.Bdeg at hdd
-          rw [if_neg hnW, mem_restr_late j b _ hlate] at hdd
+          rw [ite_eq_right hnW, mem_restr_late j b _ hlate] at hdd
           have e2 : X.memdMu j q.1.2.2 (segE X.F j i) = 0 := mem_dMu_off j _ _ fun a => by
             have := kfr_le X.F hV j (Nat.zero_le a.val) a.isLt
             omega
@@ -803,8 +796,7 @@ theorem restMemC_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) : RestMemC 1
         disc_power_monomial_degree_off j b x fun a h => hx (h ▸ TE.frp_mem hV j a.val a.isLt),
         mem_dMu_off j _ x fun a h => hx (h ▸ k_fr_mem_letters X.F hV j a.isLt)]
       rfl
-  rw [heq] at hprod
-  exact hprod
+  rwa [heq] at hprod
 
 theorem restMemD_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) (C₀ : ℝ) : RestMemD C₀ := by
   intro p n' r K _ _ _ X O _ _ _ S hX hLa hk j b hb q
@@ -951,10 +943,10 @@ theorem bfam_at_w_letter_eq {L₁ N₁ : ℕ} (hV : X.F.Valid L₁ N₁) (la : F
     exact ⟨⟨hle0, by linarith⟩, (hV.2.2.2.2.1 (j - 1) i hi).1⟩
   have hW : X.F.IsW j (X.F.fr (j - 1) i) := hleR
   unfold Dat.bfam
-  rw [if_pos hmem, if_pos hW, Finset.sum_eq_single ⟨i, hi⟩]
+  rw [ite_eq_left hmem, ite_eq_left hW, Finset.sum_eq_single ⟨i, hi⟩]
   · simp
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hb
     ext
@@ -1042,9 +1034,8 @@ theorem restLamDeg : RestLamDeg 1088 := by
         rw [Finset.sum_comm]
         refine Finset.sum_congr rfl fun x _ => ?_
         by_cases h : posOf n' x = posOf n' x0
-        · simp only [h, if_true]
-          exact hdeg j x
-        · simp only [h, if_false, Finset.sum_const_zero]
+        · simpa only [h, ite_true] using hdeg j x
+        · simp only [h, ite_false, Finset.sum_const_zero]
       rw [hWs]
       obtain ⟨hl1, hl2, hl3, hl4⟩ := sum_late_mem hx0
       obtain ⟨hs1, hs2⟩ := hlaS (posOf n' x0)
@@ -1086,20 +1077,17 @@ theorem restLamDeg : RestLamDeg 1088 := by
               X.bfam p K la e (j1.val : ℤ) (X.F.fr ((j1.val : ℤ) - 1) i0) := by
             rw [Finset.sum_eq_single j1]
             · rw [Finset.sum_eq_single (X.F.fr ((j1.val : ℤ) - 1) i0)]
-              · rw [if_pos hx1p]
+              · rw [ite_eq_left hx1p]
               · intro x hx hne
                 obtain ⟨hxl, hxW⟩ := Finset.mem_filter.mp hx
-                rw [if_neg]
-                intro h
-                exact hne (hG.U2 j1 j1 x hxl hxW _ hx1l hx1W (h.trans hx1p.symm)).2
-              · intro h
-                exact absurd (Finset.mem_filter.mpr ⟨hx1l, hx1W⟩) h
+                rw [ite_eq_right]
+                exact fun h => hne (hG.U2 j1 j1 x hxl hxW _ hx1l hx1W (h.trans hx1p.symm)).2
+              · exact fun h => absurd (Finset.mem_filter.mpr ⟨hx1l, hx1W⟩) h
             · intro j _ hne
               refine Finset.sum_eq_zero fun x hx => ?_
               obtain ⟨hxl, hxW⟩ := Finset.mem_filter.mp hx
-              rw [if_neg]
-              intro h
-              exact hne (hG.U2 j j1 x hxl hxW _ hx1l hx1W (h.trans hx1p.symm)).1
+              rw [ite_eq_right]
+              exact fun h => hne (hG.U2 j j1 x hxl hxW _ hx1l hx1W (h.trans hx1p.symm)).1
             · intro h; exact absurd (Finset.mem_univ _) h
           rw [hsum, hval, restLamTau p n' r K X hX la e j0 ⟨i0, hi0⟩]
           have hEE := (Finset.mem_filter.mp
@@ -1126,18 +1114,18 @@ theorem restLamDeg : RestLamDeg 1088 := by
               if posOf n' x = posOf n' x0 then X.bfam p K la e (j.val : ℤ) x else 0) = 0 := by
             refine Finset.sum_eq_zero fun j _ => Finset.sum_eq_zero fun x hx => ?_
             obtain ⟨hxl, hxW⟩ := Finset.mem_filter.mp hx
-            rw [if_neg]
+            rw [ite_eq_right]
             intro h
             obtain ⟨⟨i, hi, hxi⟩, -⟩ := hG.LK j j0 x hxl hxW x0 hx0 h
             exact h0 (hxi ▸ fr_zero_le hV (j0.val : ℤ) i hi)
           rw [hz, mul_zero, add_zero]
           unfold Dat.bfam
-          rw [if_pos hl1, if_neg hl2, if_neg h0]
+          rw [ite_eq_left hl1, ite_eq_right hl2, ite_eq_right h0]
       rw [hkey, hPnz]
       omega
     · have ha : X.a' p K t = 0 := by
         unfold Dat.a' Dat.d
-        rw [if_neg ht]
+        rw [ite_eq_right ht]
         omega
       have h1 : ∑ c, la t c = 0 := by
         have := (hlaS t).1
@@ -1148,9 +1136,8 @@ theorem restLamDeg : RestLamDeg 1088 := by
         refine Finset.sum_eq_zero fun j _ => ?_
         rw [lam_img_apply X p K j (m j) (hok j) t c]
         refine Finset.sum_eq_zero fun x hx => ?_
-        rw [if_neg]
-        intro h
-        exact ht (h ▸ (mem_letters_bounds hx).2.2)
+        rw [ite_eq_right]
+        exact fun h => ht (h ▸ (mem_letters_bounds hx).2.2)
       rw [h1, h2, ha]
 
 end Formalism.MainNotions.SelectionLemmas.Pf

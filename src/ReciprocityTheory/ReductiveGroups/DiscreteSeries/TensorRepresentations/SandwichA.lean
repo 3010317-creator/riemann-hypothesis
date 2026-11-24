@@ -121,12 +121,10 @@ theorem swC_gap_shift {ε : Fin n → Bool} {μ : Fin n → ℝ} {h : ℝ} (hμ 
     intro t ht a b hab
     by_cases ha : a = s
     · subst ha
-      rw [Pi.single_eq_same, Pi.single_eq_of_ne (Ne.symm hab), sub_zero]
-      exact ht
+      rwa [Pi.single_eq_same, Pi.single_eq_of_ne (Ne.symm hab), sub_zero]
     · by_cases hb : b = s
       · subst hb
-        rw [Pi.single_eq_same, Pi.single_eq_of_ne ha, zero_sub, abs_neg]
-        exact ht
+        rwa [Pi.single_eq_same, Pi.single_eq_of_ne ha, zero_sub, abs_neg]
       · rw [Pi.single_eq_of_ne ha, Pi.single_eq_of_ne hb]
         simp
   cases dual

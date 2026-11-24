@@ -58,9 +58,8 @@ theorem cosetInd_valBall_mem (N : ℤ) (a : F) : cosetInd (valBall F N) a ∈ sc
       AddSubgroup.add_mem_cancel_right _ hh]
   · refine HasCompactSupport.intro ((isCompact_valBall N).image (continuous_const_add a))
       fun x hx ↦ ?_
-    rw [cosetInd_apply, if_neg]
-    intro hxa
-    exact hx ⟨x - a, hxa, add_sub_cancel a x⟩
+    rw [cosetInd_apply, ite_eq_right]
+    exact fun hxa => hx ⟨x - a, hxa, add_sub_cancel a x⟩
 
 theorem localSchwartzBruhatPi_eq_span :
     localSchwartzBruhatPi F (ι := ι) = Submodule.span ℂ (Set.range fun p : ℤ × (ι → F) ↦
@@ -104,8 +103,7 @@ theorem integrable_of_mem_localSchwartzBruhatPi {f : (ι → F) → ℂ}
 theorem localFourierPi_smul (c : ℂ) (f : (ι → F) → ℂ) :
     localFourierPi ψ (c • f) = c • localFourierPi ψ f := by
   funext y
-  simp only [localFourierPi, Pi.smul_apply, smul_eq_mul, mul_assoc]
-  exact integral_const_mul c _
+  simpa only [localFourierPi, Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul c _
 
 theorem localFourierPi_zero : localFourierPi ψ (0 : (ι → F) → ℂ) = 0 := by
   funext y

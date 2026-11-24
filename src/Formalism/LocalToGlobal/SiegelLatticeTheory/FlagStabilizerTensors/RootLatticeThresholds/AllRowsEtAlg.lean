@@ -30,8 +30,7 @@ theorem Ehat_idem : Ehat hS * Ehat hS = Ehat hS := by
   apply MonoidAlgebra.ext
   ext γ
   rw [coeff_mul_fin]
-  simp only [Ehat_coeff hS]
-  exact hat_e_idem hS γ
+  simpa only [Ehat_coeff hS] using hat_e_idem hS γ
 
 theorem hat_inv {f : X.B.I.Gf → ℂ} (hf : BiInv X f) (hsa : ∀ x, f x⁻¹ = star (f x)) (γ : G0g D.nd) :
     hat hS f γ⁻¹ = star (hat hS f γ) := by
@@ -109,8 +108,7 @@ theorem posType_of (I : AutInst) (μ : Measure I.Gf) [μ.IsMulLeftInvariant] [Is
       intro z hz
       have h0 : f (z⁻¹ * x j) = 0 := by
         by_contra h
-        apply hz
-        exact ⟨z⁻¹ * x j, hsupp _ h, by group⟩
+        exact hz ⟨z⁻¹ * x j, hsupp _ h, by group⟩
       rw [h0, mul_zero]
   have hF : ∀ z, ((Complex.normSq (∑ j, c j * f (z⁻¹ * x j)) : ℝ) : ℂ) =
       ∑ i, ∑ j, star (c i) * c j * (star (f (z⁻¹ * x i)) * f (z⁻¹ * x j)) := by

@@ -117,8 +117,7 @@ theorem conj_diag_scale (hε : ε * ε = ε) (h2 : ε • (C * B) = ε • (1 : 
 theorem det_congr (hε : ε * ε = ε) (h : ε • A = ε • B) : ε * A.det = ε * B.det := by
   have h1 : ε * ε ^ Fintype.card (Fin n) = ε := by
     rw [← pow_succ']; exact IsIdempotentElem.pow_succ_eq _ hε
-  have h2 := congrArg (fun M => ε * Matrix.det M) h
-  simpa only [Matrix.det_smul, ← mul_assoc, h1] using h2
+  simpa only [Matrix.det_smul, ← mul_assoc, h1] using congrArg (fun M => ε * Matrix.det M) h
 
 theorem conj_diag_det (hε : ε * ε = ε) (h1 : ε • (B * C) = ε • (1 : Matrix (Fin n) (Fin n) R)) (d : Fin n → R)
     (hA : ε • A = ε • (B * Matrix.diagonal d * C)) : ε * A.det = ε * ∏ i, d i := by
@@ -212,11 +211,9 @@ theorem exists_model {D : D7} (V : HSp D) (P : HeightOneSpectrum (𝓞 D.host.E)
   · rw [List.length_append, List.length_replicate, List.length_replicate]; omega
   · obtain ⟨z, hz, h⟩ := hB2 y hy
     refine ⟨z, hz, ?_⟩
-    simp only [hdc]
-    exact conj_diag_mulVec hC2 d hα h
+    simpa only [hdc] using conj_diag_mulVec hC2 d hα h
   · refine ⟨_, hB1 z hz, ?_⟩
-    simp only [hdc]
-    exact conj_diag_mulVec hC2 d hα (idem _)
+    simpa only [hdc] using conj_diag_mulVec hC2 d hα (idem _)
 
 theorem divAt_inv_of_isHeckeElt : ∀ {D : D7} (V : HSp D) (P : HeightOneSpectrum (𝓞 D.host.E)) (e : Formalism.L2.Theta.AE D) (ϖ : 𝓞 D.host.E) (k : ℕ) (α : GA D V), IsIdemAt e P → ϖ ∈ P.asIdeal → ϖ ∉ P.asIdeal ^ 2 → k ≤ V.rank → IsHeckeElt V e (ϖ : D.host.E) k α → DivAt V e (ϖ : D.host.E) (splitLab V.rank k) α⁻¹ := by
   intro D V P e ϖ k α he h1 h2 hk hα

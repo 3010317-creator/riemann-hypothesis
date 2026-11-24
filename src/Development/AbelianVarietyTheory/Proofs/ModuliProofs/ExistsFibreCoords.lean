@@ -117,8 +117,7 @@ theorem fderiv_fn_resG {g : ℕ} {A₀ : Over (Sp ℂ)} [GrpObj A₀] {L₀ : LB
     congr 1
     rw [← Scheme.Hom.map_appLE y hy (homOfLE h).op]
     rfl
-  have hopen : IsOpen (dom u m W') := by
-    exact (u.hol (m ⁻¹ᵁ W') 0).1
+  have hopen : IsOpen (dom u m W') := (u.hol (m ⁻¹ᵁ W') 0).1
   apply Filter.EventuallyEq.fderiv_eq
   filter_upwards [hopen.mem_nhds hz] with z' hz'
   exact key _ hz'
@@ -147,7 +146,6 @@ theorem exists_fibre_coords : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.
     simp only [Matrix.of_apply]
     rw [fderiv_fn_resG u m (Finset.inf_le (Finset.mem_univ b)) (c b).1.2 hzW]
     rfl
-  rw [hE]
-  exact hc
+  rwa [hE]
 
 end GlobalTheory.KS

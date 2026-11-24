@@ -97,8 +97,7 @@ theorem exists_rational_support_subset (s : G → L →+* L)
     have hi' : b.repr w' i = 1 := by rw [hrep, inv_mul_cancel₀ hi]
     have hsub : (b.repr w').support ⊆ (b.repr w).support := fun j hj => by
       rw [Finsupp.mem_support_iff] at hj ⊢
-      intro hj0
-      exact hj (by rw [hrep, hj0, mul_zero])
+      exact fun hj0 => hj (by rw [hrep, hj0, mul_zero])
     by_cases hfix : ∀ g, φ g w' = w'
     · refine ⟨w', hw'W, fun j => hs _ fun g => ?_, hsub, i, hi'⟩
       rw [← repr_apply_of_semilinear (s g) b (φ g) (hφ g), hfix]
@@ -111,8 +110,7 @@ theorem exists_rational_support_subset (s : G → L →+* L)
         constructor
         · rintro rfl
           exact hj (by rw [hi', map_one, sub_self])
-        · intro hj0
-          exact hj (by rw [hrep, hj0, mul_zero, map_zero, sub_self])
+        · exact fun hj0 => hj (by rw [hrep, hj0, mul_zero, map_zero, sub_self])
       have hlt : (b.repr (φ g w' - w')).support.card < n := by
         rw [← h]
         exact (Finset.card_le_card hd).trans_lt
@@ -257,8 +255,7 @@ theorem comap_span_image (hf : IsBaseChange L f) (N : Submodule K V) :
 theorem span_image_iInf (hf : IsBaseChange L f) {J : Sort*} (N : J → Submodule K V) :
     Submodule.span L (f '' (⨅ j, N j : Submodule K V)) = ⨅ j, Submodule.span L (f '' N j) := by
   ext x
-  simp only [mem_span_image_iff hf, Submodule.mem_iInf]
-  exact forall_comm
+  simpa only [mem_span_image_iff hf, Submodule.mem_iInf] using forall_comm
 
 section Maps
 

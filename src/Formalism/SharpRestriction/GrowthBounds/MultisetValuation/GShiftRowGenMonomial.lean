@@ -161,7 +161,7 @@ theorem gShift_gen {R : Type*} [CommRing R] {n : ℕ} (a b : Fin r) (v : Fin r �
         simp only [htW]
         rw [hb]
         ring
-      · rw [if_neg hk0, if_neg hk1, add_zero]
+      · rw [ite_eq_right hk0, ite_eq_right hk1, add_zero]
         exact h0 _
   · rw [Polynomial.coeff_add, Polynomial.coeff_C, Polynomial.coeff_zero, add_zero]
     split_ifs with hk0
@@ -205,8 +205,7 @@ theorem g_weight {n : ℕ} (d : Fin r × Fin n →₀ ℕ) :
       try ring
     · intro b _ hb
       simp [rowW, hb]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem g_of_rowW {R : Type*} [CommRing R] {n : ℕ} {f : MvPolynomial (Fin r × Fin n) R} {μ : Fin r → ℕ}
     (hf : IsWeightedHomogeneous (rowW r n) f μ) :
@@ -243,8 +242,7 @@ theorem dom_dualWeyl (R : Type) [CommRing R] [IsDomain R] (r n : ℕ) (ν : Fin 
     · exact hx d h
     · exact hy d h
   | smul a x _ hx =>
-    intro d hd
-    exact hx d (support_smul hd)
+    exact fun d hd => hx d (support_smul hd)
 
 section Diag
 
@@ -408,8 +406,7 @@ theorem dl_indep (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O K
   have hst : rowAct O U f ∈ weyl O (m + 1) (m + 1) le_rfl (nuOf lam) := by
     have := _root_.Formalism.UG.P.wlocal_global O (m + 1) (m + 1) le_rfl (nuOf lam) UU⁻¹ f hf
     unfold Formalism.UG.dwAct at this
-    rw [inv_inv] at this
-    exact this
+    rwa [inv_inv] at this
   refine ⟨(algebraMap O Kf U.det) ^ e • F0,
     mem_deltaL.2 ⟨((u ^ e : Oˣ) : O) • rowAct O U f, Submodule.smul_mem _ _ hst, ?_⟩, ?_⟩
   · have h4 : rowAct Kf (U.map (algebraMap O Kf)) (rowAct Kf g F0) = rowAct Kf h F0 := by
@@ -431,12 +428,12 @@ theorem dl_pos (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O Kf]
     rw [Matrix.det_mul]; exact hg.mul (lb_D_det _ _ _ hw)
   unfold Dl0 at hF ⊢
   by_cases hlam : Antitone lam
-  · rw [if_pos hlam] at hF ⊢
+  · rw [ite_eq_left hlam] at hF ⊢
     have h1 : F ∈ deltaLTw O Kf m lam g := (iInf₂_le g ⟨hg, rfl⟩ : _ ≤ deltaLTw O Kf m lam g) hF
     have h2 := dl_P O Kf m r lam hlam w hw g F h1
     exact (le_iInf₂ fun h hh => dl_indep O Kf hinj m lam _ h hgD hh.2 :
       deltaLTw O Kf m lam (g * lb_D (m + 1) r (algebraMap O Kf w)) ≤ _) h2
-  · rw [if_neg hlam] at hF ⊢
+  · rw [ite_eq_right hlam] at hF ⊢
     rw [Submodule.mem_bot] at hF ⊢
     rw [hF, smul_zero]
 

@@ -144,7 +144,7 @@ theorem cmbPiA : UpperTheory.V.Z.Mult.PiTermA → TwTrSum → CmbPiA := by
     intro w hw
     have h := ((locAlg E n 0 Z L w).2.2.2.1 (φ w) (hφ w hw)).1
     funext g
-    simp only [seen, if_pos (hZ w hw).2]
+    simp only [seen, ite_eq_left (hZ w hw).2]
     exact congrFun h (g, 1)
   have hX : (∏ w ∈ Z, trc (τ w).ρ (KGL w (n := n)) fun g => seen φ L.ln w (g, 1)) =
       ∏ w ∈ Z, trc (τ w).ρ (KGL w (n := n)) fun g => φ w (g, 1) :=
@@ -210,8 +210,7 @@ theorem cmbPiA : UpperTheory.V.Z.Mult.PiTermA → TwTrSum → CmbPiA := by
           funext y
           simp only [Pi.smul_apply, smul_eq_mul]
           rw [inv_mul_cancel_left₀ h0]
-        rw [e]
-        exact h1
+        rwa [e]
       have key : ∀ (s : ℂ) (P : H E n 0 → ℂ) (x : ℂ), IsTestH P → IsTwTr D.μ π P x → IsTwTr D.μ π (s • P) (s * x) := by
         intro s P x h1 h2
         have h := hSum E n D π Unit {()} (fun _ => s) (fun _ => P) (fun _ => x) (fun _ _ => ⟨h1, h2⟩)
@@ -224,7 +223,6 @@ theorem cmbPiA : UpperTheory.V.Z.Mult.PiTermA → TwTrSum → CmbPiA := by
         val T e₁ e₂ B 0) := by
     rw [Cmb.val, Finset.mul_sum, Finset.sum_mul, Finset.sum_mul]
     exact Finset.sum_congr rfl fun j _ => by ring
-  rw [e1, e2]
-  exact hS'
+  rwa [e1, e2]
 
 end UpperTheory.Zero.ConvolutionTheory.EB

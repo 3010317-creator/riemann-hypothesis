@@ -67,8 +67,7 @@ theorem map_cO_map_cO (I : Ideal (𝓞 K)) : (I.map (cO K)).map (cO K) = I := by
   constructor
   · rintro ⟨z, ⟨x, hx, rfl⟩, rfl⟩
     rwa [cO_cO]
-  · intro hy
-    exact ⟨cO K y, ⟨y, hy, rfl⟩, cO_cO y⟩
+  · exact fun hy => ⟨cO K y, ⟨y, hy, rfl⟩, cO_cO y⟩
 
 theorem conjPl_conjPl (w : HeightOneSpectrum (𝓞 K)) : conjPl (conjPl w) = w := HeightOneSpectrum.ext (map_cO_map_cO w.asIdeal)
 
@@ -77,8 +76,7 @@ theorem map_cO_le_iff (I J : Ideal (𝓞 K)) : I.map (cO K) ≤ J.map (cO K) ↔
   · intro h
     have h2 := Ideal.map_mono (f := cO K) h
     rwa [map_cO_map_cO, map_cO_map_cO] at h2
-  · intro h
-    exact Ideal.map_mono (f := cO K) h
+  · exact fun h => Ideal.map_mono (f := cO K) h
 
 theorem dvd_map_iff (v : HeightOneSpectrum (𝓞 K)) (J : Ideal (𝓞 K)) (n : ℕ) :
     (v.asIdeal.map (cO K)) ^ n ∣ J.map (cO K) ↔ v.asIdeal ^ n ∣ J := by
@@ -215,7 +213,6 @@ theorem gram_matrix_change : GramChange := by
   ring
 
 theorem finite_sum_conjugation : FinsumConj := by
-  intro K _ _ _ f
-  exact finsum_comp_equiv (Function.Involutive.toPerm _ (fun w => conjPl_conjPl w))
+  exact fun K _ _ _ f => finsum_comp_equiv (Function.Involutive.toPerm _ (fun w => conjPl_conjPl w))
 
 end Formalism.DivisionValues

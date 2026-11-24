@@ -116,9 +116,7 @@ private lemma eisG_lat2_eq_inv_pow_mul_tsum (a z : ℂ) (ha : a ≠ 0) (hz : 0 <
       mul_ne_zero ha (fun h => v.2 (hinj (by simpa using h)))⟩
   have hf : Function.Bijective f := by
     constructor
-    · intro v w h
-      have h1 := congrArg Subtype.val h
-      exact Subtype.ext (hinj (mul_left_cancel₀ ha h1))
+    · exact fun v w h => Subtype.ext (hinj (mul_left_cancel₀ ha (congrArg Subtype.val h)))
     · rintro ⟨w, hw, hw0⟩
       obtain ⟨v, rfl⟩ := (mem_closure_pair_iff_exists_int a z w).mp hw
       refine ⟨⟨v, fun hv => hw0 (by simp [hv])⟩, rfl⟩
@@ -130,8 +128,7 @@ private lemma eisG_lat2_eq_inv_pow_mul_tsum (a z : ℂ) (ha : a ≠ 0) (hz : 0 <
     simp only [Set.mem_setOf_eq, not_not] at hv0
     apply hv
     subst hv0
-    simp [EisensteinSeries.eisSummand]
-    exact zero_zpow _ (by omega)
+    simpa [EisensteinSeries.eisSummand] using zero_zpow _ (by omega)
   rw [← tsum_subtype_eq_of_support_subset hsupp, ← tsum_mul_left]
   refine tsum_congr fun v => ?_
   simp only [Equiv.ofBijective_apply, f, EisensteinSeries.eisSummand]

@@ -78,7 +78,7 @@ private lemma homogeneousComponent_add_X_pow_mul {K : Type} [Field K] {N : ℕ} 
   rw [Finset.sum_eq_single n]
   · simp [add_comm]
   · intro i _ hi
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   · intro hn
     rw [Finset.mem_range, not_lt] at hn
     rw [homogeneousComponent_eq_zero n g (by omega), mul_zero, ite_self]
@@ -115,14 +115,14 @@ private lemma homogeneousComponent_mem_of_isPrime_of_X_pow_saturation {K : Type}
       rw [mem_support_iff, coeff_homogeneousComponent] at he
       have hdeg : e.degree = n := by
         by_contra hne
-        exact he (if_neg hne)
+        exact he (ite_eq_right hne)
       have he0 : e ≠ 0 := by
         rintro rfl
         simp at hdeg
         omega
       obtain ⟨i, hi⟩ := Finsupp.ne_iff.mp he0
       exact ⟨i, Set.mem_univ _, hi⟩
-  · push_neg at hX
+  · push Not at hX
     obtain ⟨j, hj⟩ := hX
     intro g hg n
     obtain ⟨m, hm⟩ := hs g hg j
@@ -150,8 +150,7 @@ private lemma exists_homogeneous_mem_of_X_pow_mul_mem_of_homogeneous {K : Type} 
     intro g hgG e he a
     have hgQ : g ∈ Q := hG ▸ Submodule.subset_span hgG
     have hj : ∃ j, M ≤ e j := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       have hsum : (e.sum fun _ k => k) ≤ N * M := by
         rw [Finsupp.sum_fintype _ _ (fun _ => rfl)]
         calc ∑ j, e j ≤ ∑ _j : Fin N, M := Finset.sum_le_sum fun j _ => (hne j).le
@@ -162,8 +161,7 @@ private lemma exists_homogeneous_mem_of_X_pow_mul_mem_of_homogeneous {K : Type} 
       le_trans (le_trans (Finset.le_sup (f := mexp g) (Finset.mem_univ j))
         (Finset.le_sup (f := fun g => Finset.univ.sup (mexp g)) hgG)) hjM
     have hsingle : Finsupp.single j (mexp g j) ≤ e := by
-      rw [Finsupp.single_le_iff]
-      exact hle
+      rwa [Finsupp.single_le_iff]
     have hsplit : monomial e a =
         monomial (e - Finsupp.single j (mexp g j)) a * X j ^ mexp g j := by
       rw [X_pow_eq_monomial, monomial_mul, mul_one, tsub_add_cancel_of_le hsingle]
@@ -171,7 +169,7 @@ private lemma exists_homogeneous_mem_of_X_pow_mul_mem_of_homogeneous {K : Type} 
     exact I.mul_mem_left _ (hmexp g hgQ j)
   refine ⟨B + D, fun n hn h hQ hh => ?_⟩
   have hhn : h = homogeneousComponent n h := by
-    rw [homogeneousComponent_of_mem hh, if_pos rfl]
+    rw [homogeneousComponent_of_mem hh, ite_eq_left rfl]
   rw [← hG] at hQ
   obtain ⟨f, -, hf⟩ := Submodule.mem_span_finset.mp hQ
 
@@ -200,8 +198,7 @@ private lemma coe_decompose_homogeneousSubmodule_eq_homogeneousComponent {K : Ty
   rw [DirectSum.decompose_sum, DFinsupp.finsetSum_apply, AddSubmonoidClass.coe_finsetSum,
     Finset.sum_eq_single n]
   · exact DirectSum.decompose_of_mem_same _ (homogeneousComponent_mem n g)
-  · intro i _ hi
-    exact DirectSum.decompose_of_mem_ne _ (homogeneousComponent_mem i g) hi
+  · exact fun i _ hi => DirectSum.decompose_of_mem_ne _ (homogeneousComponent_mem i g) hi
   · intro hn
     rw [Finset.mem_range, not_lt] at hn
     rw [DirectSum.decompose_of_mem_same _ (homogeneousComponent_mem n g),

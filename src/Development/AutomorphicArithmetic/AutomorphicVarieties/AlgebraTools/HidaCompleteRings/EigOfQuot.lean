@@ -66,7 +66,7 @@ private theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.common_ker_
   by_cases hall : ∀ i, ∀ y ∈ V, T i y = 0
   · obtain ⟨y, hyV, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hV
     exact ⟨y, hy0, fun i => hall i y hyV⟩
-  push_neg at hall
+  push Not at hall
   obtain ⟨i, z, hzV, hz⟩ := hall
   have hpowmem : ∀ k : ℕ, (T i ^ k) z ∈ V := by
     intro k
@@ -97,8 +97,7 @@ private theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.common_ker_
     have hmin : (T i ^ m) z ≠ 0 := Nat.find_min hex (by omega)
     rw [Submodule.ne_bot_iff]
     refine ⟨(T i ^ m) z, Submodule.mem_inf.mpr ⟨hpowmem m, ?_⟩, hmin⟩
-    rw [LinearMap.mem_ker, ← Module.End.mul_apply, ← pow_succ']
-    exact hspec
+    rwa [LinearMap.mem_ker, ← Module.End.mul_apply, ← pow_succ']
   have hWinv : ∀ j, ∀ y ∈ W, T j y ∈ W := by
     intro j y hy
     obtain ⟨hyV, hyk⟩ := Submodule.mem_inf.mp hy
@@ -128,7 +127,7 @@ private theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.common_ker_
     exact ⟨u, huV, fun h0 => hu (by rw [h0, map_zero])⟩
   by_cases hall : ∀ i, ∀ y ∈ V, ∃ n : ℕ, (T i ^ n) y = 0
   · exact UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.common_ker_of_nilpotent T hc V hVne hinv hall
-  push_neg at hall
+  push Not at hall
   obtain ⟨i, z, hzV, hz⟩ := hall
   let f : Module.End K V := (T i).restrict (hinv i)
   obtain ⟨n, hn⟩ := Filter.eventually_atTop.mp (LinearMap.eventually_codisjoint_ker_pow_range_pow f)
@@ -153,11 +152,9 @@ private theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.common_ker_
   have hφa : φ (a : Y) ≠ 0 := by
     have h2 := congrArg φ hab'
     rw [map_add (f := _), hφb, add_zero] at h2
-    rw [h2]
-    exact hu
+    rwa [h2]
   have haker : (T i ^ (n + 1)) (a : Y) = 0 := by
-    rw [← hfpow]
-    rw [LinearMap.mem_ker.mp ha]
+    rw [← hfpow, LinearMap.mem_ker.mp ha]
     rfl
   let W : Submodule K Y := V ⊓ LinearMap.ker (T i ^ (n + 1))
   have hWle : W ≤ V := inf_le_left
@@ -193,12 +190,10 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.eigOfQuot :
     intro i y
     rw [hT, map_sub, map_smul, hφ, sub_self]
   have hu : ∃ u ∈ (⊤ : Submodule K Y), φ u ≠ 0 := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     exact hφ0 (LinearMap.ext fun y => by simpa using hno y Submodule.mem_top)
   obtain ⟨y, hy0, hy⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.common_ker_of_quot T hc φ hφT ⊤ hu
     (fun _ _ _ => Submodule.mem_top)
   refine ⟨y, hy0, fun i => ?_⟩
   have := hy i
-  rw [hT, sub_eq_zero] at this
-  exact this
+  rwa [hT, sub_eq_zero] at this

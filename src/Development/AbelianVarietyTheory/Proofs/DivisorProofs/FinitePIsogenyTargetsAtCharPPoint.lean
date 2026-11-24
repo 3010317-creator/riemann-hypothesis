@@ -263,8 +263,7 @@ theorem local_step {A B B' : Over (Sp k)} [GrpObj A] [GrpObj B] [GrpObj B'] (π 
   have hCY : C ≫ Y = C ≫ Ta := by
     apply Over.OverMorphism.ext
     simp only [Over.comp_left, Ta, toUnit_left, Over.homMk_left, C, Y, T', Over.mk_hom]
-    rw [← Category.assoc c, ← Category.assoc c]
-    exact hu'
+    rwa [← Category.assoc c, ← Category.assoc c]
   have hCD : C ≫ D = 1 := by
     simp only [D]; rw [GrpObj.comp_div, hCY, div_self']
   have hD0 : c ≫ D.left = ((c ≫ y) ≫ A.hom) ≫ (η[A]).left := by
@@ -446,8 +445,7 @@ theorem pair_dependent
       (ψ₂ : S →+* DualNumber k) = (epsScaleR c).comp (ψ₁ : S →+* DualNumber k))
     {a b : S} (ha : a ∈ maximalIdeal S) (hb : b ∈ maximalIdeal S) :
     ∃ c : k, a - c • b ∈ maximalIdeal S ^ 2 ∨ b - c • a ∈ maximalIdeal S ^ 2 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   choose π hπ using h1
   obtain ⟨f₁, h11, h12, h13, h14⟩ := exists_form ha hb (fun c => (hne c).1)
   obtain ⟨f₂, h21, h22, h23, h24⟩ := exists_form hb ha (fun c => (hne c).2)
@@ -695,8 +693,7 @@ theorem exists_ideal_factor_iff {X Y Z : Scheme.{0}} (i : Z ⟶ Y) [IsClosedImme
     set w' := w ≫ e.hom
     have h3 : CommRingCat.ofHom (Ideal.Quotient.mk I) ≫ Spec.preimage w' = CommRingCat.ofHom ψ := by
       apply Spec.map_injective
-      rw [Spec.map_comp, Spec.map_preimage]
-      exact hw
+      rwa [Spec.map_comp, Spec.map_preimage]
     intro a ha
     rw [RingHom.mem_ker]
     have h4 := congrArg (fun u : _ ⟶ CommRingCat.of R' => u.hom a) h3
@@ -1078,8 +1075,7 @@ theorem finite_ideals {k : Type} [Field k] [IsAlgClosed k] {A B₁ : Over (Sp k)
   · refine (Set.finite_singleton ⊤).subset ?_
     intro I hI
     simp only [Set.mem_setOf_eq] at hI
-    rw [htop, top_le_iff] at hI
-    exact hI
+    rwa [htop, top_le_iff] at hI
   haveI : Nontrivial (A.left.presheaf.stalk x₀ ⧸ JG) := Ideal.Quotient.nontrivial_iff.2 htop
   haveI : IsLocalRing (A.left.presheaf.stalk x₀ ⧸ JG) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk JG) Ideal.Quotient.mk_surjective
@@ -1165,8 +1161,7 @@ theorem finite_ideals {k : Type} [Field k] [IsAlgClosed k] {A B₁ : Over (Sp k)
           (χ : (A.left.presheaf.stalk x₀ ⧸ JG) →+* DualNumber k) = (epsScaleR c).comp (χ' : (A.left.presheaf.stalk x₀ ⧸ JG) →+* DualNumber k) := by
         intro χ χ' h
         apply Ideal.Quotient.ringHom_ext
-        rw [RingHom.comp_assoc]
-        exact h
+        rwa [RingHom.comp_assoc]
       rcases hc with hc | hc
       · left
         refine hdesc _ _ (hinjT _ _ (hcomp χ₁) (hscale _ (hcomp χ₂)) ?_)
@@ -1243,8 +1238,7 @@ theorem finite_subgroups {k : Type} [Field k] [IsAlgClosed k] {A B₁ : Over (Sp
         rw [comp_lift_eq_one, comp_lift_eq_one] at h
         have e₂ := congrFun (congrFun (congrFun (congrArg Prod.snd e) R') i) φ
         exact (KerDet.comp_eq_one_iff _ (pt R' i φ)).1 (e₂.mp h).2.2
-      · rw [← KerDet.comp_eq_one_iff, comp_lift_eq_one, comp_lift_eq_one]
-        exact hx
+      · rwa [← KerDet.comp_eq_one_iff, comp_lift_eq_one, comp_lift_eq_one]
     rintro _ ⟨B, _, ψ, hB, hψ, rfl⟩ _ ⟨B', _, ψ', hB', hψ', rfl⟩ e
     funext T x
     exact propext ⟨fun h => ⟨h.1, h.2.1, key B ψ B' ψ' hB e T x h⟩,
@@ -1283,7 +1277,7 @@ theorem exists_local_idempotents {B : Type} [CommRing B] (c : B) [Finite (B ⧸ 
     refine hz _ fun J => ?_
     have := Ideal.sum_mem (J.asIdeal ^ (n + 1)) (t := Finset.univ) fun I _ => he I J
 
-    rw [Finset.sum_sub_distrib, Finset.sum_ite_eq, if_pos (Finset.mem_univ _), ← map_sum] at this
+    rw [Finset.sum_sub_distrib, Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _), ← map_sum] at this
     simpa using this
   · rw [← Ideal.Quotient.eq_zero_iff_mem]
     refine hz _ fun J => ?_
@@ -1306,7 +1300,7 @@ theorem exists_local_idempotents {B : Type} [CommRing B] (c : B) [Finite (B ⧸ 
       by_cases hJ : J = I
       · rw [← hJ]; exact hcm.symm
       · have := he I J
-        rw [if_neg hJ, sub_zero] at this
+        rw [ite_eq_right hJ, sub_zero] at this
         exact (h (hcm ▸ (Ideal.pow_le_self (Nat.succ_ne_zero n) this : π (e I) ∈ P.map π))).elim
     rw [key P hP hc h, key P' hP' hc' h']
 
@@ -1356,8 +1350,7 @@ theorem tangent_line {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing
         (1 : Over.mk (spMap (RingHom.id k)) ⟶ o.A).left := by
       rw [one_left', cvl]
       change _ = spMap (RingHom.id k) ≫ η[o.A].left
-      rw [hid, Category.id_comp]
-      exact hv
+      rwa [hid, Category.id_comp]
     obtain ⟨c, hc⟩ := (Trng (cv v)).1 h1
     exact ⟨c, hc.symm⟩
   have kill : ∀ (v : epsR k ⟶ o.A) (c : Fin n → k) (a : D.O), cv v = T c → v ≫ o.act.act a = 1 →
@@ -1604,8 +1597,7 @@ theorem GlobalTheory.UPel.HT.ES.KerFin.finite_kernels : ∀ (p : ℕ) [Fact p.Pr
     have h0 : ((∑ i, e i) - 1) * u' ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := by
       rw [mem_transp, kill_of_dvd h₁ x hx _ ((hQn.trans hsum).mul_right _), MonObj.one_comp]
     have := Ideal.sub_mem _ (Ideal.sum_mem _ (t := Finset.univ) fun i _ => hi i) h0
-    rw [← Finset.sum_mul, ← sub_mul, sub_sub_cancel, _root_.one_mul] at this
-    exact this
+    rwa [← Finset.sum_mul, ← sub_mul, sub_sub_cancel, _root_.one_mul] at this
   have key : ∀ (o₁ o₂ : Obj b N (spMap β)) (ψ₁ : o.A ⟶ o₁.A) (ψ₂ : o.A ⟶ o₂.A), IsPIsog (p ^ n) o o₁ ψ₁ →
       IsPIsog (p ^ n) o o₂ ψ₂ → f (fun T x => x ≫ ψ₁ = 1) = f (fun T x => x ≫ ψ₂ = 1) →
       ∀ (T : Over (Sp k)) (x : T ⟶ o.A), x ≫ ψ₁ = 1 → x ≫ ψ₂ = 1 := by
@@ -1614,8 +1606,7 @@ theorem GlobalTheory.UPel.HT.ES.KerFin.finite_kernels : ∀ (p : ℕ) [Fact p.Pr
     have a₁ : u' ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := step o₁ o₂ ψ₁ ψ₂ h₁ h₂ heq T x hx
     have a₂ : (-u) ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := by
       have := star_ker_le h₁ h₂ _ (step o₂ o₁ ψ₂ ψ₁ h₂ h₁ heq.symm) T x hx
-      rw [D.star_F, MulOpposite.unop_op, map_pow, hbar] at this
-      exact this
+      rwa [D.star_F, MulOpposite.unop_op, map_pow, hbar] at this
     have a₃ : (p : 𝓞 D.F) ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := by
       rw [mem_transp, kill_of_dvd h₁ x hx _ dvd_rfl, MonObj.one_comp]
     have htop : transp ψ₂ h₂.2.1 h₂.2.2.1 x = ⊤ := by
@@ -1694,8 +1685,7 @@ theorem isGrpPullback_id_iff {B B' : Over S} [GrpObj B] [GrpObj B'] (β : B.left
     · have h2 := key (𝟙_ (Over S)) 1 1
       rw [_root_.one_mul] at h2
       have h3 : (1 : 𝟙_ (Over S) ⟶ B) ≫ e.hom = 1 := _root_.mul_left_cancel (h2.symm.trans (_root_.mul_one _).symm)
-      rw [hone, hone] at h3
-      exact h3
+      rwa [hone, hone] at h3
     · have h3 := key _ (fst B B) (snd B B)
       rw [Hom.mul_def, Hom.mul_def, lift_fst_snd, Category.id_comp] at h3
       rw [h3]
@@ -1708,8 +1698,7 @@ theorem isGrpPullback_id_iff {B B' : Over S} [GrpObj B] [GrpObj B'] (β : B.left
     simp only [IsMonHom.monoidHom_apply] at hm
     have h4 := congrArg Over.Hom.left hm
     simp only [Hom.mul_def, Over.comp_left, Over.lift_left, Category.assoc] at h4 ⊢
-    simp only [hx, hy]
-    exact h4.symm
+    simpa only [hx, hy] using h4.symm
 
 end Clauses
 

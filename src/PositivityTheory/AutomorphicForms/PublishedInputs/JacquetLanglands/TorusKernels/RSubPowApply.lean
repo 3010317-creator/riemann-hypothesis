@@ -38,8 +38,7 @@ lemma mapsTo_E (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T j * T i
     (i : J) : Set.MapsTo (T i) (E T s) (E T s) := by
   intro x hx
   simp only [E, SetLike.mem_coe, Submodule.mem_iInf] at hx ⊢
-  intro j
-  exact Module.End.mapsTo_maxGenEigenspace_of_comm (hT j i) (s j) (hx j)
+  exact fun j => Module.End.mapsTo_maxGenEigenspace_of_comm (hT j i) (s j) (hx j)
 
 lemma mapsTo_prod (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T j * T i) (s : J → ℂ)
     (W : List J) : Set.MapsTo (W.map T).prod (E T s) (E T s) := by
@@ -47,8 +46,7 @@ lemma mapsTo_prod (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T j * 
   | nil => intro x hx; simpa using hx
   | cons a W ih =>
     intro x hx
-    simp only [List.map_cons, List.prod_cons, Module.End.mul_apply]
-    exact mapsTo_E T hT s a (ih hx)
+    simpa only [List.map_cons, List.prod_cons, Module.End.mul_apply] using mapsTo_E T hT s a (ih hx)
 
 noncomputable def R (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T j * T i) (s : J → ℂ)
     (j : J) : Module.End ℂ (E T s) :=
@@ -61,8 +59,7 @@ lemma R_comm (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T j * T i) 
     (i j : J) : Commute (R T hT s i) (R T hT s j) := by
   show R T hT s i * R T hT s j = R T hT s j * R T hT s i
   refine LinearMap.ext fun x => Subtype.ext ?_
-  simp only [Module.End.mul_apply, R_apply]
-  exact LinearMap.congr_fun (hT i j) x
+  simpa only [Module.End.mul_apply, R_apply] using LinearMap.congr_fun (hT i j) x
 
 lemma R_prod_apply (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T j * T i) (s : J → ℂ)
     (W : List J) (x : E T s) : (((W.map (R T hT s)).prod x : E T s) : V) = (W.map T).prod x := by
@@ -76,8 +73,7 @@ lemma R_sub_pow_apply (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T 
   induction n with
   | zero => simp
   | succ n ih =>
-    rw [pow_succ', pow_succ', Module.End.mul_apply, Module.End.mul_apply]
-    rw [← ih]
+    rw [pow_succ', pow_succ', Module.End.mul_apply, Module.End.mul_apply, ← ih]
     simp [R_apply, Algebra.algebraMap_eq_smul_one]
 
 lemma R_nil (T : J → Module.End ℂ V) (hT : ∀ i j, T i * T j = T j * T i) (s : J → ℂ) (j : J) :
@@ -202,8 +198,7 @@ theorem UpperTheory.Esk.pf_Sys : UpperTheory.Esk.Sys := by
       have hfE : f ∈ E T s := by
         simp only [E, Submodule.mem_iInf]
         intro j
-        apply Module.End.eigenspace_le_maxGenEigenspace
-        exact (Module.End.mem_eigenspace_iff).mpr (hf j)
+        exact Module.End.eigenspace_le_maxGenEigenspace ((Module.End.mem_eigenspace_iff).mpr (hf j))
       rw [hbot, Submodule.mem_bot] at hfE
       exact hf0 hfE
   · intro s hs

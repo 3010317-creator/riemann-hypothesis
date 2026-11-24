@@ -94,8 +94,7 @@ theorem H0 (nu : ℕ → ℤ) (ka : Fin (N + 1) → Fin K → ℤ) (c : ℤ) :
     colH (muP nu ka 0) c = (if c ≤ nu 0 then 1 else 0) + (if c ≤ 0 then K else 0) := by
   rw [colH_muP, Fin.val_zero]
   congr 1
-  simp only [kaS, Fin.cons_zero]
-  exact colH_zero c
+  simpa only [kaS, Fin.cons_zero] using colH_zero c
 
 theorem HS (nu : ℕ → ℤ) (ka : Fin (N + 1) → Fin K → ℤ) (i : Fin (N + 1)) (c : ℤ) :
     colH (muP nu ka i.succ) c = (if c ≤ nu (i.val + 1) then 1 else 0) + colH (ka i) c := by
@@ -122,7 +121,7 @@ theorem PH.ka_le (h : PH vecc B ka nu) : ∀ (i : Fin (N + 1)) (b : Fin K), ka i
     · have h1 : ka j.succ b ≤ nu (j.val + 1) := h.C j hv b
       have h2 : nu (j.val + 1) ≤ nu (j.val + 1 + 1) := h.numono _
       exact h1.trans h2
-    · rw [if_neg hv] at hs
+    · rw [ite_eq_right hv] at hs
       have h1 : ka j.succ b ≤ ka j.castSucc b := hs.1 b
       have h2 : ka j.castSucc b ≤ nu (j.val + 1) := ih b
       have h3 : nu (j.val + 1) ≤ nu (j.val + 1 + 1) := h.numono _
@@ -182,7 +181,7 @@ theorem PH.stepV (h : PH vecc B ka nu) (i : Fin N) (hv : vecc i = true) (c : ℤ
     colH (ka i.castSucc) c ≤ colH (ka i.succ) c ∧ colH (ka i.succ) c ≤ colH (ka i.castSucc) c + 1 ∧
       (colH (ka i.castSucc) c < colH (ka i.succ) c → c ≤ nu (i.val + 1)) := by
   have hs := h.kastep i
-  rw [if_pos hv] at hs
+  rw [ite_eq_left hv] at hs
   obtain ⟨s1, s2⟩ := colH_le_le_add_one_of_HStrip hs c
   refine ⟨s1, s2, fun hlt => ?_⟩
   obtain ⟨b, hb⟩ := pos_of_colH (c := c) (mu := ka i.succ) (by omega)
@@ -191,13 +190,13 @@ theorem PH.stepV (h : PH vecc B ka nu) (i : Fin N) (hv : vecc i = true) (c : ℤ
 theorem PH.stepC (h : PH vecc B ka nu) (i : Fin N) (hv : vecc i = false) (c : ℤ) :
     colH (ka i.succ) c ≤ colH (ka i.castSucc) c ∧ colH (ka i.castSucc) c ≤ colH (ka i.succ) c + 1 := by
   have hs := h.kastep i
-  rw [if_neg (by simp [hv])] at hs
+  rw [ite_eq_right (by simp [hv])] at hs
   exact colH_le_le_add_one_of_HStrip hs c
 
 theorem PH.dualLow (h : PH vecc B ka nu) {c : ℤ} (hc : c ≤ 0) : ∀ i : Fin (N + 1), K ≤ colH (ka i) c + i.val := by
   intro i
   induction i using Fin.induction with
-  | zero => rw [h.ka0, colH_zero, if_pos hc]; simp
+  | zero => rw [h.ka0, colH_zero, ite_eq_left hc]; simp
   | succ i ih =>
     simp only [Fin.val_succ, Fin.val_castSucc] at ih ⊢
     by_cases hv : vecc i = true
@@ -264,7 +263,7 @@ theorem PH.oc_eq (h : PH vecc B ka nu) (om : Fin (N + 1) → ℕ) (c : ℤ) :
     oc om (muP nu ka) c = ∑ i : Fin N, if colH (ka i.castSucc) c < colH (ka i.succ) c then om i.succ else 0 := by
   classical
   unfold oc
-  rw [Fin.sum_univ_succ, if_neg (h.not_costly_zero c), zero_add]
+  rw [Fin.sum_univ_succ, ite_eq_right (h.not_costly_zero c), zero_add]
   exact Finset.sum_congr rfl fun i _ => if_congr (h.costly_succ i c) rfl rfl
 
 theorem PH.dom (h : PH vecc B ka nu) (t : Fin (N + 1 + 1)) : Dominant (muP nu ka t) := by

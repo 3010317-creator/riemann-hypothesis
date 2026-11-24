@@ -154,8 +154,7 @@ theorem good_of_finrank_eq [Module.Finite K V] (n : ℕ) :
         omega
       refine good_step S₁ S₁ _ _ (x 0) (x 1) φ ψ a1 a3 b3 b1 (hx 1) (Or.inl (hx 0)) ?_ ?_
         (ih _ hlt _ _ rfl rfl)
-      · intro y h1 h2 h3
-        exact ⟨⟨h1, h2⟩, h3⟩
+      · exact fun y h1 h2 h3 => ⟨⟨h1, h2⟩, h3⟩
       · rintro y ⟨⟨h1, h2⟩, h3⟩
         exact ⟨h1, h2, h3⟩
     · exact ⟨0, fun _ => rfl, fun x h1 _ h2 => hx ⟨x, h1, h2⟩⟩
@@ -170,8 +169,7 @@ theorem good_of_finrank_eq [Module.Finite K V] (n : ℕ) :
     have c2 := finrank_inf_ker S₂ ψ v hv2 b1
     refine good_step S₁ S₂ (S₁ ⊓ LinearMap.ker φ) (S₂ ⊓ LinearMap.ker ψ) u v φ ψ a1 (a2 _ hv2)
       (b2 _ hu1) b1 hv2 (Or.inr b2) ?_ ?_ (ih (n - 1) (by omega) _ _ (by omega) (by omega))
-    · intro y h1 h2 _
-      exact ⟨h1, h2⟩
+    · exact fun y h1 h2 _ => ⟨h1, h2⟩
     · rintro y ⟨h1, h2⟩
       exact ⟨h1, a2 _ h1, h2⟩
 
@@ -622,7 +620,7 @@ theorem single_field (hK : IsRes i K) {ρ : GE N →* GL (Fin D.R.r) (X.O0 i)} (
   have hεc : ∀ g, algebraMap (X.O0 i) K ((eps0 X i (cConj X g) : (X.O0 i)ˣ) : X.O0 i) =
       algebraMap (X.O0 i) K ((eps0 X i g : (X.O0 i)ˣ) : X.O0 i) := fun g => by rw [eps_cj]
   by_cases hl : ResIso i s K
-  · rw [if_neg (nu_pos_of_resIso i s K hsd hl).ne']
+  · rw [ite_eq_right (nu_pos_of_resIso i s K hsd hl).ne']
     obtain ⟨A₁, hu, hA⟩ := hl
     obtain ⟨A, rfl⟩ := hu
     obtain ⟨R₀, hR⟩ := abs_two (ρ := red i K (Tgl i s)) (ρ' := red i K ρ) (cConj X) continuous_cj _ (pairing i s K hρ) hεc
@@ -699,8 +697,7 @@ theorem not_indep_mapC (f : K →ₐ[X.O0 i] K') {ρ : GE N →* GL (Fin D.R.r) 
     simp [mapC, map_sum]
   have e3 : (Submodule.mkQ _ (∑ a, f (c a) • mapC f (x a)) : H1 (red i K' ρ)) = 0 := (Submodule.Quotient.mk_eq_zero _).2 e2
 
-  rw [map_sum] at e3
-  exact e3
+  rwa [map_sum] at e3
 
 theorem body_transfer (e : K ≃ₐ[X.O0 i] K') {ρ ρ' : GE N →* GL (Fin D.R.r) (X.O0 i)} {R n : ℕ} {φ : Fin R → GE N}
     (h : Body (cConj X) (selOn bkP i ρ (1 : GE N →* Kˣ) K ∅) (selOn bkP i ρ' (1 : GE N →* Kˣ) K ∅) φ n) :
@@ -760,8 +757,7 @@ theorem chooseH : GlobalFiniteness → ∀ (D : Formalism.BasicNotions.D7) (N : 
   choose h U a1 a2 a3 a4 using fun s : T => hR s z hz L (hL s.1 s.2)
   refine ⟨fun a => h (e.symm a).1 (e.symm a).2, L ⊓ ⨅ s, U s, fun a => a1 _ _, ?_, ?_, inf_le_left,
     fun φ φ' hφ s hs => a4 ⟨s, hs⟩ _ φ φ' (fun b => (hφ b).1) fun a => ?_⟩
-  · simp only [Subgroup.coe_inf, Subgroup.coe_iInf]
-    exact ho.inter (isOpen_iInter_of_finite a2)
+  · simpa only [Subgroup.coe_inf, Subgroup.coe_iInf] using ho.inter (isOpen_iInter_of_finite a2)
   · refine ⟨fun u hu g => ?_⟩
     simp only [Subgroup.mem_inf, Subgroup.mem_iInf] at hu ⊢
     exact ⟨hn.conj_mem u hu.1 g, fun s => (a3 s).conj_mem u (hu.2 s) g⟩

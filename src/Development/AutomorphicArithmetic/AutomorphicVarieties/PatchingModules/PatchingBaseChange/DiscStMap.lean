@@ -51,8 +51,7 @@ private theorem tr_map {n : ℕ} {R R' G : Type} [CommRing R] [CommRing R'] [Gro
     (f : R →+* R') (x : G) :
     (D.map f).tr (MonoidAlgebra.single x 1) = f (D.tr (MonoidAlgebra.single x 1)) := by
   have h := ((UpperTheory.V.CA.d_gmap D).2.2.1 f (MonoidAlgebra.single x 1)).2 1
-  rw [MonoidAlgebra.mapRingHom_single, map_one] at h
-  exact h
+  rwa [MonoidAlgebra.mapRingHom_single, map_one] at h
 
 private theorem tr_comap {n : ℕ} {R G G' : Type} [CommRing R] [Group G] [Group G'] (D : GDet n R G)
     (p : G' →* G) (x : G') :
@@ -96,7 +95,6 @@ theorem UpperTheory.V.Pa.BC.discSt_map :
       exact ⟨fun i => p (a i), fun j => p (b j), by simpa only [key] using h⟩
     · rintro ⟨a, b, h⟩
       refine ⟨fun i => Function.surjInv hp (a i), fun j => Function.surjInv hp (b j), ?_⟩
-      simp only [key, Function.surjInv_eq hp]
-      exact h
+      simpa only [key, Function.surjInv_eq hp] using h
   · obtain ⟨a, b, h⟩ := hD
     exact ⟨a, b, fun hq => h (hQ hq)⟩

@@ -111,7 +111,7 @@ theorem expSet_subset (n i N : ℕ) (B : ℕ → ℕ) :
     have hij : i ≤ j := by
       by_contra hlt
       have h0 := hβ' j
-      rw [if_neg (fun h => hlt h.1)] at h0
+      rw [ite_eq_right (fun h => hlt h.1)] at h0
       exact hpa ((Finset.sum_eq_zero_iff.mp h0) a (Finset.mem_univ a))
     exact ⟨(j - i, a), Prod.ext (show i + (j - i) = j by omega) rfl⟩
   refine ⟨Finsupp.comapDomain _ β (fun _ _ _ _ h => shift_inj n i h), ?_, ?_⟩
@@ -120,8 +120,8 @@ theorem expSet_subset (n i N : ℕ) (B : ℕ → ℕ) :
     show ∑ a, β (i + j, a) = _
     rw [hβ' (i + j)]
     by_cases h : j < N - i
-    · rw [if_pos ⟨by omega, by omega⟩, if_pos h]
-    · rw [if_neg (by omega), if_neg h]
+    · rw [ite_eq_left ⟨by omega, by omega⟩, ite_eq_left h]
+    · rw [ite_eq_right (by omega), ite_eq_right h]
   · apply Finsupp.mapDomain_comapDomain
     · exact shift_inj n i
     · exact hsupp
@@ -149,8 +149,7 @@ theorem expSet_card (hR : PolBRank) (n i N : ℕ) (B : ℕ → ℕ) :
 theorem psiFam_mem (k : Type) [Field k] (N : ℕ) (isVec : ℕ → Bool) (B : ℕ → ℕ) (x : PathIdx n N isVec B) :
     psiFam k n N isVec B x ∈ polB k n N B := by
   rw [polB, Submodule.mem_iInf]
-  intro j
-  exact (pathProductDegrees k n N isVec B x.1.1 x.1.2 x.2.1 x.2.2.2.1).2 j
+  exact fun j => (pathProductDegrees k n N isVec B x.1.1 x.1.2 x.2.1 x.2.2.2.1).2 j
 
 end ExponentSetCounting
 
@@ -347,8 +346,7 @@ theorem restOne_of (hW : RestWord) (hT : RestTop) (hF : RestSplit) : RestOne := 
     exact Nat.mul_le_mul_left _ (by rw [Nat.card_coe_set_eq]; exact ExponentSetCounting.expSet_card hR n i N B))
   have hGW : G ∈ W := mem_span_wordMonomialProducts hT hF k hi isVec B pi hpi G hG hg
   rw [← hEq, hU] at hGW
-  rw [Set.image_eq_range]
-  exact hGW
+  rwa [Set.image_eq_range]
 
 theorem partialAction_X {L : Type*} [CommRing L] (isVec : ℕ → Bool) (i : ℕ) (g gi : Matrix (Fin n) (Fin n) L)
     (x : ℕ × Fin n) :
@@ -366,7 +364,7 @@ theorem partialAction_eq_fullAction_of_vars_lt {L : Type*} [CommRing L] (isVec :
       simp
     · rintro ⟨j, a⟩ hx -
       simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe]
-      rw [partialAction_X, DominanceOrderLemmas.actAll_X, if_pos (hv _ hx)]
+      rw [partialAction_X, DominanceOrderLemmas.actAll_X, ite_eq_left (hv _ hx)]
   exact h
 
 theorem partialAction_monomial_later_letters {L : Type*} [CommRing L] (isVec : ℕ → Bool) (i : ℕ) (g gi : Matrix (Fin n) (Fin n) L)
@@ -377,7 +375,7 @@ theorem partialAction_monomial_later_letters {L : Type*} [CommRing L] (isVec : �
   congr 1
   refine Finsupp.prod_congr fun x hx => ?_
   have : ¬ x.1 < i := fun h => (Finsupp.mem_support_iff.1 hx) (hβ x h)
-  rw [if_neg this]
+  rw [ite_eq_right this]
 
 theorem restSplit : RestSplit := by
   classical
@@ -388,7 +386,7 @@ theorem restSplit : RestSplit := by
   have hlow : ∀ β ∈ T, ∀ x : ℕ × Fin n, x.1 < i → β x = 0 := by
     intro β hβ x hx
     have h0 := h1 β hβ x.1
-    rw [if_neg (by omega)] at h0
+    rw [ite_eq_right (by omega)] at h0
     exact (Finset.sum_eq_zero_iff.1 h0) x.2 (Finset.mem_univ _)
   have hexp : actI isVec i (Formalism.InvariantFactorPaths.GelfandTsetlinBases.genMat k n) (Formalism.InvariantFactorPaths.GelfandTsetlinBases.genMat k n)⁻¹
         (map (algebraMap k (GenField k n)) G) =
@@ -431,8 +429,7 @@ theorem restSplit : RestSplit := by
           simp only [Finsupp.coe_tsub, Finsupp.coe_add, Pi.sub_apply, Pi.add_apply] at a1 a2
           omega
       · rfl
-    · intro h
-      exact absurd hβ₀ h
+    · exact fun h => absurd hβ₀ h
   have hmem : e + β₀ ∈ (actI isVec i (Formalism.InvariantFactorPaths.GelfandTsetlinBases.genMat k n) (Formalism.InvariantFactorPaths.GelfandTsetlinBases.genMat k n)⁻¹
         (map (algebraMap k (GenField k n)) G)).support := by
     rw [mem_support_iff, hcoef]
@@ -490,9 +487,9 @@ theorem trunc (R : Type*) [CommRing R] (n i : ℕ) (isVec : ℕ → Bool) (μ : 
   | succ N hN ih =>
     intro I
     by_cases hch : colHeight (μ (N + 1)) c = colHeight (μ N) c
-    · rw [pathWord, if_pos hch]
+    · rw [pathWord, ite_eq_left hch]
       exact ih I
-    · rw [pathWord, if_neg hch]
+    · rw [pathWord, ite_eq_right hch]
       choose Q hQ1 hQ2 using ih
       have hX : ∀ m : Fin n, (X (N, m) : MvPolynomial (ℕ × Fin n) R) ∈
           supported R {x : ℕ × Fin n | i ≤ x.1} := fun m => by
@@ -543,24 +540,24 @@ theorem pathWord_card {R : Type*} [CommRing R] {n N : ℕ} {isVec : ℕ → Bool
     intro _ J hJ
     have h0 : J = ∅ := by
       by_contra hne
-      exact hJ (if_neg hne)
+      exact hJ (ite_eq_right hne)
     rw [h0, hp.1, Paths.colHeight_zero]
     split_ifs <;> simp
   | succ j ih =>
     intro hj J hJ
     have ih' := ih (by omega)
     by_cases hch : colHeight (μ (j + 1)) c = colHeight (μ j) c
-    · rw [pathWord, if_pos hch] at hJ
+    · rw [pathWord, ite_eq_left hch] at hJ
       rw [hch]
       exact ih' J hJ
-    · rw [pathWord, if_neg hch] at hJ
+    · rw [pathWord, ite_eq_right hch] at hJ
       have hh := Paths.path_height hp (show j < N by omega) c
       have hle := Paths.colHeight_le (μ j) c
       have hle' := Paths.colHeight_le (μ (j + 1)) c
       unfold stepF at hJ
       cases hup : (isVec j == decide (1 ≤ c))
       · rw [hup] at hJ
-        simp only [Bool.false_eq_true, if_false] at hJ
+        simp only [Bool.false_eq_true, ite_false] at hJ
         unfold contrF at hJ
         obtain ⟨m, hm, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero hJ
         have e := ih' _ (right_ne_zero_of_mul hne)
@@ -568,16 +565,16 @@ theorem pathWord_card {R : Type*} [CommRing R] {n N : ℕ} {isVec : ℕ → Bool
         by_cases h1 : 1 ≤ c
         · have hv : isVec j = false := by simpa [h1] using hup
           rw [hv] at hh
-          simp only [Bool.false_eq_true, if_false] at hh
-          rw [if_pos h1] at e ⊢
+          simp only [Bool.false_eq_true, ite_false] at hh
+          rw [ite_eq_left h1] at e ⊢
           omega
         · have hv : isVec j = true := by simpa [h1] using hup
           rw [hv] at hh
-          simp only [if_true] at hh
-          rw [if_neg h1] at e ⊢
+          simp only [ite_true] at hh
+          rw [ite_eq_right h1] at e ⊢
           omega
       · rw [hup] at hJ
-        simp only [if_true] at hJ
+        simp only [ite_true] at hJ
         unfold wedgeF at hJ
         obtain ⟨m, hm, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero hJ
         have e := ih' _ (right_ne_zero_of_mul (left_ne_zero_of_mul hne))
@@ -586,13 +583,13 @@ theorem pathWord_card {R : Type*} [CommRing R] {n N : ℕ} {isVec : ℕ → Bool
         by_cases h1 : 1 ≤ c
         · have hv : isVec j = true := by simpa [h1] using hup
           rw [hv] at hh
-          simp only [if_true] at hh
-          rw [if_pos h1] at e ⊢
+          simp only [ite_true] at hh
+          rw [ite_eq_left h1] at e ⊢
           omega
         · have hv : isVec j = false := by simpa [h1] using hup
           rw [hv] at hh
-          simp only [Bool.false_eq_true, if_false] at hh
-          rw [if_neg h1] at e ⊢
+          simp only [Bool.false_eq_true, ite_false] at hh
+          rw [ite_eq_right h1] at e ⊢
           omega
 
 section Gen
@@ -647,7 +644,7 @@ theorem partialAct_eq_fullAct_of_vars_lt (isVec : ℕ → Bool) (i : ℕ) (g gi 
     simp
   · intro x hx _
     have hxi := hv x hx
-    simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, actI, actAll, MvPolynomial.aeval_X, if_pos hxi]
+    simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, actI, actAll, MvPolynomial.aeval_X, ite_eq_left hxi]
     split_ifs
     · simp [Matrix.vecMul, dotProduct]
     · simp [Matrix.vecMul, dotProduct]
@@ -685,7 +682,7 @@ theorem fullAct_pathWord_support_dominated (isVec : ℕ → Bool) (B : ℕ → �
   refine (Top.factEV L n i isVec B μ I' g hp hI).1 _ ?_
   intro h0
   have h1 := congrArg (AddMonoidAlgebra.coeff · e) h0
-  rw [coeff_weightedHomogeneousComponent, if_pos rfl] at h1
+  rw [coeff_weightedHomogeneousComponent, ite_eq_left rfl] at h1
   exact (mem_support_iff.1 he) (by simpa using h1)
 
 end basic
@@ -727,8 +724,7 @@ theorem restWord : RestWord := by
     have hv1 : ∀ x ∈ (psiPath L isVec μ i I').vars, x.1 < i := by
       refine DominanceOrderLemmas.vars_of_polB (N := i) (B := B) ?_
       rw [polB, Submodule.mem_iInf]
-      intro j
-      exact (pathProductDegrees L n i isVec B μ I' hpi hidx).2 j
+      exact fun j => (pathProductDegrees L n i isVec B μ I' hpi hidx).2 j
     have hv2 : ∀ x ∈ (∏ c ∈ F, Q c (I' c)).vars, i ≤ x.1 := by
       intro x hx
       obtain ⟨c, -, hc⟩ := Finset.mem_biUnion.1 (vars_prod _ hx)
@@ -749,11 +745,10 @@ theorem restWord : RestWord := by
       have hcF : c ∈ F := by
         by_contra hn
         apply hc
-        have h1 : I' c = ∅ := by rw [hI']; exact dif_neg hn
+        have h1 : I' c = ∅ := by rw [hI']; exact dite_eq_right hn
         have h2 := A1hw.isIndex_can (μ i) c
         rw [(hFi c hn).2 _ (A1hw.isIndex_can (μ i))] at h2
-        rw [h1]
-        exact h2
+        rwa [h1]
       refine Finset.prod_eq_zero hcF ?_
       by_contra hne
       exact hc (A0.pathWord_card hpi c _ i le_rfl _ hne)
@@ -806,8 +801,7 @@ theorem restTop : RestTop := by
   intro k _ n N isVec B pi G hpi hG hgood
   have hG' : G ∈ Submodule.span k
       (Set.range fun x : PathIdx n N isVec B => psiPath k isVec x.1.1 N x.1.2) := by
-    rw [(Top.psiPath_basis n N isVec B k).2]
-    exact hG
+    rwa [(Top.psiPath_basis n N isVec B k).2]
   obtain ⟨c, hc⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 hG'
   have key : ∀ x ∈ c.support, x.1.1 N ∈ pi := by
     intro x hx

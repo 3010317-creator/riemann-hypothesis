@@ -66,8 +66,7 @@ theorem UpperTheory.V.Z.Sym.Loc.vMax : UpperTheory.V.Z.Sym.Loc.VMax := by
   have hg : PK.Gen1 O x := ⟨htr, hnm, hdisc⟩
   letI := mulAct τ
   have hsm : ∀ (t : (Etau K τ)ˣ) (S : Set (Etau K τ)), t • cls τ S = cls τ (PS.ml t S) := by
-    intro t S
-    exact PS.cls_ml t S
+    exact fun t S => PS.cls_ml t S
   have hone : ∀ S : Set (Etau K τ), PS.ml 1 S = S := by
     intro S
     ext w
@@ -137,8 +136,7 @@ private theorem vcount_one_add {O K : Type} [CommRing O] [Field K] [Algebra O K]
       intro y hy
       have h1 := hst y hy
       rw [SetLike.mem_coe] at h1 hy ⊢
-      have h2 := (Submodule.span O (s : Set (Etau K τ))).sub_mem h1 hy
-      simpa [add_mul] using h2
+      simpa [add_mul] using (Submodule.span O (s : Set (Etau K τ))).sub_mem h1 hy
     · rintro ⟨hL, hst, hX⟩
       refine ⟨hL, ?_, hX⟩
       obtain ⟨s, rfl⟩ := hL.fg

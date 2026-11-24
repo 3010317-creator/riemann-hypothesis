@@ -879,8 +879,7 @@ private theorem finite_quotient_of_power_maximal_ideal_le (Λ R X : Type) [CommR
       refine Submodule.smul_mem_smul (hK ?_) Submodule.mem_top
       rw [← Ideal.map_pow]
       exact Ideal.mem_map_of_mem _ ha
-    · intro a b ha hb
-      exact Submodule.add_mem _ ha hb
+    · exact fun a b ha hb => Submodule.add_mem _ ha hb
   let g : (X ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ X)) → (X ⧸ (K • ⊤ : Submodule R X)) := fun q =>
     Quotient.liftOn' q (fun x => Submodule.Quotient.mk x)
       (fun a b h => (Submodule.Quotient.eq _).2 (hle _ ((Submodule.quotientRel_def _).1 h)))
@@ -953,9 +952,7 @@ theorem UpperTheory.V.AlgebraTools.ULim.const_bijective :
     refine ⟨L, ?_⟩
     show ULim.mk _ _ _ _ = _
     rw [← sub_eq_zero, ← map_sub, ULim.mk_eq_zero]
-    intro j
-    refine (hz j).mono fun i hi => ?_
-    exact SModEq.sub_mem.1 (hi.trans (hL j)).symm
+    exact fun j => (hz j).mono fun i hi => SModEq.sub_mem.1 (hi.trans (hL j)).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.ULimConst =====
@@ -1159,8 +1156,7 @@ theorem UpperTheory.V.Pa.Core.exists_ultraLimit_pair_of_eventual_quotient_maps :
     rw [Submodule.sup_smul, h0, bot_sup_eq]
   let e := LinearEquiv.ofBijective _ (const_bij U m I hc hf hI)
   refine ⟨Φ ∘ₗ e.toLinearMap, e.symm.toLinearMap ∘ₗ Ψ, fun z => ?_, fun z => ?_⟩
-  · simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply]
-    exact h2 z
+  · simpa only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] using h2 z
   · simp only [LinearMap.comp_apply, LinearEquiv.coe_coe]
     rw [h1, map_smul, LinearEquiv.symm_apply_apply]
 end -- clump:auto
@@ -1450,9 +1446,8 @@ theorem UpperTheory.V.AlgebraTools.qRegAt_mvPowerSeries :
     · rw [monoVal_X_eq, smul_eq_mul, MvPowerSeries.coeff_monomial_mul]
       simp
     · intro β _ hβ
-      rw [monoVal_X_eq, smul_eq_mul, MvPowerSeries.coeff_monomial_mul, if_neg]
-      intro hle
-      exact hβ (Subtype.ext (eq_of_le_of_degree_eq hle (β.2.trans α.2.symm)))
+      rw [monoVal_X_eq, smul_eq_mul, MvPowerSeries.coeff_monomial_mul, ite_eq_right]
+      exact fun hle => hβ (Subtype.ext (eq_of_le_of_degree_eq hle (β.2.trans α.2.symm)))
     · simp
   have h2 : MvPowerSeries.constantCoeff (c α) ∈ I := by
     rw [← h1, map_add (f := _), h0, zero_add]
@@ -1521,8 +1516,7 @@ theorem UpperTheory.V.Pa.Core.quotientRegularAt_of_quotient_free_over_powerSerie
     rw [← sub_add_cancel (c α) (∑ i, s (t α i) • m i)]
     refine add_mem (Submodule.smul_mono_left (Ideal.map_mono hle) h4) (Submodule.sum_mem _ fun i _ => ?_)
     exact Submodule.smul_mem_smul (Ideal.mem_map_of_mem _ (hL i)) Submodule.mem_top
-  rw [kjMap, pow_one] at h5
-  exact h5
+  rwa [kjMap, pow_one] at h5
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.AnnihilatorBaseChange.QuotientRegularAtOfQuotientFreeOverPowerSeries =====
@@ -1610,8 +1604,7 @@ private theorem loc_of_pair {R X Y Z : Type} [CommRing R] [AddCommGroup X] [Modu
     refine ⟨c * ⟨f, hf⟩, ?_⟩
     have hc' := congrArg Φ hc
     simp only [Submonoid.smul_def, LinearMap.map_smul, h1] at hc'
-    simp only [Submonoid.smul_def, mul_smul]
-    exact hc'
+    simpa only [Submonoid.smul_def, mul_smul] using hc'
 
 theorem UpperTheory.V.Pa.Core.pmodEx :
     ∀ (Λ R σ : Type) [CommRing Λ] [IsLocalRing Λ] [CommRing R] [Fintype σ] (s : MvPowerSeries σ Λ →+* R) [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] [IsLocalRing R] [IsNoetherianRing R] (U : Ultrafilter ℕ) (f : R) (ii : Ideal R) (M : ℕ → Type) [∀ N, AddCommGroup (M N)] [∀ N, Module R (M N)] (X : Type) [AddCommGroup X] [Module R X] [Module Λ X] [Module.Finite Λ X], (U : Filter ℕ) ≤ atTop → (∀ (a : Λ) (x : X), a • x = s (MvPowerSeries.C a) • x) → (∀ a (x : X), s (MvPowerSeries.X a) • x = 0) → (∀ k j, ∀ᶠ N in (U : Filter ℕ), ∃ (r : ℕ) (e : (M N ⧸ ((kjIdeal Λ σ k j).map s • ⊤ : Submodule R (M N))) ≃+ (Fin r → MvPowerSeries σ Λ ⧸ kjIdeal Λ σ k j)), ∀ a m, e (s a • m) = a • e m) → (∀ j, ∀ᶠ N in (U : Filter ℕ), ∃ (φ : (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X)) →ₗ[R] (M N ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R (M N)))) (ψ : (M N ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R (M N))) →ₗ[R] (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X))), (∀ z, φ (ψ z) = f • z) ∧ ∀ z, ψ (φ z) = f • z) → (∃ (e : ℕ) (Gs : Set R), Ideal.span Gs = ii ∧ ∀ r ∈ Gs, ∀ j, ∀ᶠ N in (U : Filter ℕ), ∃ a : R, (f * r) ^ e - a ∈ maximalIdeal R ^ j ∧ ∀ m : M N, a • m = 0) → Nonempty (PMod (fun a => s (MvPowerSeries.X a)) f ii X) := by
@@ -1665,8 +1658,7 @@ theorem UpperTheory.V.Pa.Core.pmodEx :
       have hmem := hN _ ha x
       have heq : (f ^ k * (f * r) ^ e) • x = (f ^ k * ((f * r) ^ e - a)) • x := by
         rw [mul_sub, sub_smul, mul_smul (f ^ k) a, ha0, smul_zero, sub_zero]
-      rw [heq]
-      exact hmem
+      rwa [heq]
     rw [SetLike.mem_coe, Ideal.mem_comap]
     refine ⟨e, ?_⟩
     rw [Module.mem_annihilator]

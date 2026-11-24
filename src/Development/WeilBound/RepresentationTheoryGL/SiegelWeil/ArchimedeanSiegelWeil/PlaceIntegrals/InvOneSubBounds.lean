@@ -183,8 +183,7 @@ theorem mass_scalT : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   simp only [Fintype.card_fin, pow_one] at hk2
   let g : Matrix (Fin 1) (Fin 1) (Fv F v ⊗[F] E) := Matrix.of fun _ _ => c
   have hg : IsUnit g.det := by
-    rw [Matrix.det_fin_one]
-    exact hcu
+    rwa [Matrix.det_fin_one]
   have hrm : (fun X : Fin 1 → Fin M → Fv F v ⊗[F] E => rmul (Fv F v) X g) =
       fun X p i => f (X p i) := by
     funext X p i
@@ -587,8 +586,7 @@ theorem exists_hyperbolic_partner (hτ : ∀ y, τ (τ y) = y) (h2 : IsUnit (2 :
     have h1 : τ (↑h2.unit⁻¹ : A) * 2 = 1 := by
       have h := congrArg τ ht2
       rw [map_mul, map_one, map_ofNat] at h
-      rw [mul_comm]
-      exact h
+      rwa [mul_comm]
     calc τ (↑h2.unit⁻¹ : A) = τ (↑h2.unit⁻¹ : A) * (2 * ↑h2.unit⁻¹) := by rw [ht2, mul_one]
       _ = (τ (↑h2.unit⁻¹ : A) * 2) * ↑h2.unit⁻¹ := by ring
       _ = ↑h2.unit⁻¹ := by rw [h1, one_mul]
@@ -650,11 +648,9 @@ theorem exists_unitary_carry_primitive :
     have hy : (y + y₁) + (y - y₁) = (2 : A) • y := by
       rw [two_smul]
       abel
-    rw [he, Matrix.mulVec_smul, hy] at h
-    exact h
+    rwa [he, Matrix.mulVec_smul, hy] at h
   have h3 := congrArg (fun z => (↑h2.unit⁻¹ : A) • z) key
-  simp only [smul_smul, h2.val_inv_mul, one_smul] at h3
-  exact h3
+  simpa only [smul_smul, h2.val_inv_mul, one_smul] using h3
 
 end GlobalTheory.CompanionTheory.WeilSiegel.PrimCarry
 end -- clump:auto
@@ -761,8 +757,7 @@ theorem quad_ring : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     apply τ.injective
     rw [h.2.2.2, h.2.2.2, star_star]
   have hne : ∃ x, σ x ≠ x := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     obtain ⟨w⟩ := (inferInstance : Nonempty (NumberField.InfinitePlace E))
     have hreal : w.IsReal := by
       rw [← NumberField.InfinitePlace.mk_embedding w, NumberField.InfinitePlace.isReal_mk_iff,
@@ -828,8 +823,7 @@ theorem isPrincipalIdealRing_of_sq_eq_sq :
   let φ : R × R →+* O :=
     { toFun := fun x => ι x.1 * ε₁ + ι x.2 * ε₂
       map_one' := by
-        simp only [Prod.fst_one, Prod.snd_one, map_one, one_mul]
-        exact hsum
+        simpa only [Prod.fst_one, Prod.snd_one, map_one, one_mul] using hsum
       map_mul' := fun x y => by
         simp only [Prod.fst_mul, Prod.snd_mul, map_mul]
         linear_combination (-(ι x.1 * ι y.1)) * h11 + (-(ι x.2 * ι y.2)) * h22 +
@@ -995,8 +989,7 @@ theorem exists_content {T : Type} [CommRing T] [IsArtinianRing T] (O : Subring T
     rw [← this, mul_comm]
   have hnz : (x : T) ∈ nonZeroDivisors T := by
     rw [mem_nonZeroDivisors_iff_right]
-    intro c hc
-    exact hfree c fun k => by rw [hyk, ← mul_assoc, hc, zero_mul]
+    exact fun c hc => hfree c fun k => by rw [hyk, ← mul_assoc, hc, zero_mul]
   have hu : IsUnit (x : T) := (IsArtinianRing.isUnit_iff_mem_nonZeroDivisors).2 hnz
   refine ⟨x, x.2, hu, fun k => t k, fun k => a k, fun k => (t k).2, fun k => (a k).2, hyk, ?_⟩
   have h1 : (x : T) * ∑ k, (a k : T) * (t k : T) = x * 1 := by
@@ -1179,8 +1172,7 @@ theorem eventually_primV_decomposition : ∀ (F E : Type) [Field F] [NumberField
   have hmul : JR (Fv F v) (hypOne J) * Hi = 1 := by
     have h1 : hypOne J * (hypOne J)⁻¹ = 1 := Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.2 hND.2)
     have h3 := congrArg (RingHom.mapMatrix (inclR (F := F) (E := E) (Fv F v))) h1
-    rw [map_mul, map_one] at h3
-    exact h3
+    rwa [map_mul, map_one] at h3
   have hJR : ∀ i j, sigR (Fv F v) σ (JR (Fv F v) (hypOne J) j i) = JR (Fv F v) (hypOne J) i j := by
     intro i j
     show sigR (Fv F v) σ (inclR (Fv F v) (hypOne J j i)) = inclR (Fv F v) (hypOne J i j)
@@ -1343,8 +1335,7 @@ theorem stageInt_zero {F E : Type} [Field F] [NumberField F] [Field E] [Algebra 
     intro p i k
     have h := hmem 0 i k
     have e : actW (Fv F v) σ (hypOne J) g (e0 _ M) p = actW (Fv F v) σ (hypOne J) g (consA a Y) 0 := rfl
-    rw [e]
-    exact h
+    rwa [e]
   simp [stageInt, hz]
 
 theorem good_local (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
@@ -1411,8 +1402,7 @@ theorem good_local (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
     constructor
     · rintro ⟨y₀, hy₀, rfl⟩
       show scalT (u i) (scalT (c i) y₀) ∈ P
-      rw [hscal, hu, hone]
-      exact hy₀
+      rwa [hscal, hu, hone]
     · intro hy
       refine ⟨scalT (u i) y, hy, ?_⟩
       rw [hscal, mul_comm, hu, hone]
@@ -1470,8 +1460,7 @@ theorem good_local (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
         have : scalT (u i) (scalT (c i) y) = scalT (u i) (scalT (c i) y₀) := by rw [he]
         rw [hscal, hscal, hu, hone, hone] at this
         exact this ▸ hy₀
-      · intro hy
-        exact ⟨y, hy, rfl⟩
+      · exact fun hy => ⟨y, hy, rfl⟩
     rw [hset] at hs
     have hpos : (0 : ℝ) < ((qv v ^ w i : ℝ≥0) : ℝ) := by exact_mod_cast pos_iff_ne_zero.2 ha
     have hN : M + 2 - 1 = M + 1 := by omega
@@ -1604,8 +1593,7 @@ theorem mass_isotropic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hq2 := qv_ge_two v
   have he : 4 * (1 / (qv v : ℝ) ^ 2) ≤ 1 := by
     have h4 : (4 : ℝ) ≤ (qv v : ℝ) ^ 2 := by nlinarith
-    rw [mul_one_div, div_le_one (by positivity)]
-    exact h4
+    rwa [mul_one_div, div_le_one (by positivity)]
   rw [Real.norm_eq_abs, abs_abs, g1, ENNReal.toReal_mul, ENNReal.toReal_mul,
     ENNReal.toReal_ofReal (by linarith)]
   refine real_bound ?_ ENNReal.toReal_nonneg z1 z1' z2 z2' he hs.le

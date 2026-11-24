@@ -144,8 +144,7 @@ private theorem fx_odd [IsAlgClosed Ω] [CharZero Ω] (h : ∀ ζ : Ω, ζ ^ M =
     intro h0
     simp at h0
   | one =>
-    intro _ _
-    exact ⟨1, rfl, rfl, fx_one⟩
+    exact fun _ _ => ⟨1, rfl, rfl, fx_one⟩
   | prime p hp =>
     intro hodd hpM
     haveI := Fact.mk hp

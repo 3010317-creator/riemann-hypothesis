@@ -60,8 +60,7 @@ theorem UpperTheory.V.Ws.Lk.ochOf :
     have h1 := Q.β_t hg
     rw [MonoidHom.mem_ker] at h1 ⊢
     apply hUinj
-    rw [hUβ, map_one]
-    exact h1
+    rwa [hUβ, map_one]
   · intro σ hσ g g' hg
     obtain ⟨e1, e2, e3⟩ := Q.conj σ hσ g g' hg
     refine ⟨?_, ?_, e3⟩
@@ -74,14 +73,12 @@ theorem UpperTheory.V.Ws.Lk.ochOf :
       simp only [MulMemClass.coe_mul, SubmonoidClass.coe_pow, OneMemClass.coe_one, k1, k2, k3, hUth]
       exact e1'
     · apply hUinj
-      rw [map_mul, hUβ, hUβ, map_one]
-      exact e2
+      rwa [map_mul, hUβ, hUβ, map_one]
   · intro A hA g hg
     have h1 := Q.unr A hA hg
     rw [MonoidHom.mem_ker] at h1 ⊢
     apply hUinj
-    rw [hUκ, map_one]
-    exact h1
+    rwa [hUκ, map_one]
   · obtain ⟨m, hm, hmA⟩ := Q.tame
     refine ⟨m, hm, fun A hA g hg => hUinj ?_⟩
     rw [map_pow, hUκ, map_one]

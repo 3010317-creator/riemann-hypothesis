@@ -83,14 +83,14 @@ theorem act_list {D : D7} (θ : InfFam D) {V : HSp D} {S : D.what₂.Tau → SPa
     rw [List.map_cons, List.prod_cons]
     by_cases e : p.1 = τ
     · subst e
-      rw [Function.update_self, if_pos rfl, rep_mul M _ (hl p (by simp)), ContinuousLinearMap.mul_apply]
+      rw [Function.update_self, ite_eq_left rfl, rep_mul M _ (hl p (by simp)), ContinuousLinearMap.mul_apply]
       apply GlobalTheory.SmoothMultilinear.prod_mem
       intro g hg
       obtain ⟨q, hq, rfl⟩ := List.mem_map.1 hg
       split_ifs with e
       · exact e ▸ hl' q hq
       · exact GlobalTheory.SmoothMultilinear.prod_mem _ [] (by simp)
-    · rw [Function.update_of_ne (Ne.symm e), if_neg e, one_mul]
+    · rw [Function.update_of_ne (Ne.symm e), ite_eq_right e, one_mul]
 
 theorem smooth_of_contDiff {D : D7} (θ : InfFam D) {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S)
     {K : Type} [NormedAddCommGroup K] [InnerProductSpace ℂ K] (ρ : GA D V →* (K →L[ℂ] K))
@@ -157,8 +157,7 @@ theorem exists_contRep : GlobalTheory.Published.DiscreteSeriesClassification →
       ContinuousLinearMap.comp_assoc]
   have hlev : ∀ k ∈ X.B.I.Kg g, ∀ w, X.B.R (1, k) (Φ w) = Φ w := by
     obtain ⟨A, -, rfl⟩ := hΦ
-    intro k hk w
-    exact congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
+    exact fun k hk w => congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
   obtain ⟨m, hm, -⟩ := GlobalTheory.exists_continuousMultilinearMap_of_inner_prod (H := X.B.H) X.B.tens
     X.B.tens_spec.1 X.B.tens_spec.2.2
   let C : (∀ τ, M.H τ) → ∀ v, X.B.H v := fun y => Equiv.piCongrLeft X.B.H X.pl.symm (fun τ => c τ (y τ))

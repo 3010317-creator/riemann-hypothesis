@@ -149,8 +149,7 @@ private lemma eq_one_of_hom_eq_one_on_basis {X U : Type} [AddCommGroup X] [CommG
       map_zero' := by simp [h0]
       map_add' := fun x x' => by simp [hf] }
   have hg : g.toIntLinearMap = 0 := e.ext fun i => by simp [g, he]
-  have hx := LinearMap.congr_fun hg x
-  simpa [g] using hx
+  simpa [g] using LinearMap.congr_fun hg x
 
 theorem symm_pairing_eq_one_of_odd_of_diag :
     ∀ (X U : Type) [AddCommGroup X] [CommGroup U] (d k : ℕ) (e : Module.Basis (Fin d) ℤ X) (b : ℤ), Odd k → (k : ℤ) ∣ 2 * b - 1 → ∀ δ : X → X → U, (∀ x x' y, δ (x + x') y = δ x y * δ x' y) → (∀ x y, δ x y = δ y x) → (∀ x y, δ x y ^ k = 1) → (∀ i, δ (e i) (e i) ^ b = 1) → (∀ i j, δ (e i + e j) (e i + e j) ^ b = 1) → ∀ x y, δ x y = 1 := by
@@ -296,10 +295,8 @@ theorem r_of_tr_zero (hB : μ.B J.e) (hG : μ.OnG J) {j : ℕ} {p : N.QT (n ^ j)
     (hp : p.1.1 = 1) (ha : TR J p a) : μ.r (n ^ j) p a := by
   obtain ⟨p', h1, h2⟩ := exists_norm μ J hB j p
   have h3 : p'.1.1 = 1 := by
-    rw [hp, toAdd_one, map_zero] at h2
-    exact h2
-  rw [tr_unique J ha ⟨h2, hG j p p' h1 hp h3⟩]
-  exact h1
+    rwa [hp, toAdd_one, map_zero] at h2
+  rwa [tr_unique J ha ⟨h2, hG j p p' h1 hp h3⟩]
 
 theorem exists_pre_zero (hA : μ.A) (hG : μ.OnG J) {j : ℕ} {a : N'.QT (n ^ j)} (ha : a.1.1 = 1) :
     ∃ p, μ.r (n ^ j) p a ∧ TR J p a := by
@@ -332,8 +329,7 @@ theorem exists_defect [IsAlgClosed C] {g g' : ℕ} (hn : (n : C) ≠ 0) (hT : N.
       have w1 := μ.wp _ _ _ _ _ h1 r1
       rw [e, wp_mul_left, tr_wp J ha₀ r2] at w1
       exact mul_eq_left.1 w1
-    rw [eq_of_qEq hn0 q1 (hd.trans q2.symm)]
-    exact q3
+    rwa [eq_of_qEq hn0 q1 (hd.trans q2.symm)]
   · obtain ⟨u, hu⟩ := tr_exists J (p / p₀)
     have h3 : (p / p₀).1.1 = 1 := by
       change p.1.1.toAdd - p₀.1.1.toAdd = 0
@@ -341,8 +337,7 @@ theorem exists_defect [IsAlgClosed C] {g g' : ℕ} (hn : (n : C) ≠ 0) (hT : N.
     have h4 := μ.mul _ _ _ _ _ h1 (r_of_tr_zero μ J hB hG h3 hu)
     have h5 := tr_mul J ha₀ hu
     rw [mul_div_cancel] at h4 h5
-    rw [tr_unique J ha h5, mul_right_comm, ← e]
-    exact h4
+    rwa [tr_unique J ha h5, mul_right_comm, ← e]
 
 theorem defect_add {k : ℕ} (hk : k ≠ 0) {x x' : N.X} (p p' : N.QT k) (hp : p.1.1.toAdd = x)
     (hp' : p'.1.1.toAdd = x') {d d' d'' : N'.QT k}
@@ -709,8 +704,7 @@ theorem tendsto_tsum_pow_classes :
     simp only [add_right_inj] at h
     have hne : ((n ^ j : ℕ) : ℤ) ≠ 0 := by exact_mod_cast pow_ne_zero j (by omega : n ≠ 0)
     have h' : ((n ^ j : ℕ) : ℤ) • μ = ((n ^ j : ℕ) : ℤ) • ν := by
-      rw [natCast_zsmul, natCast_zsmul]
-      exact h
+      rwa [natCast_zsmul, natCast_zsmul]
     exact smul_right_injective X hne h'
   have hsum : ∀ τ : X → K, Tendsto τ cofinite (𝓝 0) → ∀ j, Summable (fun μ => τ (α j + n ^ j • μ)) :=
     fun τ hτ j => NonarchimedeanAddGroup.summable_of_tendsto_cofinite_zero (hτ.comp (hinj j).tendsto_cofinite)
@@ -1189,8 +1183,7 @@ namespace GlobalTheory.MatchParts
 section Gen
 variable {C : Type} [NormedField C] {N N' : NumD C} {n : ℕ}
 
-theorem qrefl {k : ℕ} (p : N.QT k) : N.QEq p p := by
-  exact ⟨0, by simp, by simp⟩
+theorem qrefl {k : ℕ} (p : N.QT k) : N.QEq p p := ⟨0, by simp, by simp⟩
 
 theorem r_right (μ : Match N N' n) {k : ℕ} {p : N.QT k} {p' q' : N'.QT k} (h : μ.r k p p') :
     μ.r k p q' ↔ N'.QEq p' q' := μ.eqv k p p p' q' h (qrefl p)
@@ -1254,11 +1247,7 @@ theorem pow_eq_one_of {k : ℕ} (p : N.QT k) (h : p.1.1 = 1) : p.1.2 ^ k = 1 := 
   rw [this, h]; exact N.io_zero
 
 theorem exists_rep {k : ℕ} {p : N.QT k} (h : N.InG p) : ∃ q, N.QEq p q ∧ q.1.1 = 1 := by
-  obtain ⟨z, hz⟩ := h
-  refine ⟨p * N.qTriv k (-z), (N.qEq_iff _ _).2 ⟨_, rfl⟩, ?_⟩
-  apply Multiplicative.toAdd.injective
-  change p.1.1.toAdd + k • (-z) = 0
-  rw [hz, smul_neg, add_neg_cancel]
+  exact GlobalTheory.MatchTerm.exists_one_of_inG h
 
 theorem y_pow {k : ℕ} (p : N.QT k) (a : ℕ) : (p ^ a).1.1.toAdd = a • p.1.1.toAdd := by simp
 
@@ -1398,8 +1387,7 @@ theorem tors_le (μ : Match N N' n) (hn : 1 < n) {k a a' : ℕ} (hk : k = n ^ 1)
     refine ⟨⟨q'.1.2, pow_eq_one_of q' h0⟩, ?_⟩
     have : ofG q'.1.2 (pow_eq_one_of q' h0) = q' := Subtype.ext (Prod.ext h0.symm rfl)
     have h' := (r_right μ h).2 e
-    rw [← this] at h'
-    exact h'
+    rwa [← this] at h'
   · intro x y b h h'
     obtain ⟨z, hz, hz'⟩ := μ.inj k _ _ _ h h'
     have : z = 0 := nsmul_cancel (a := k) (by omega) (by simpa [ofG] using hz.symm)

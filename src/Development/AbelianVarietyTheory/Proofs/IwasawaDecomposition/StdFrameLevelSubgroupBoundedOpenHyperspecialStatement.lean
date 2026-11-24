@@ -69,8 +69,7 @@ theorem cong_entry {N : ℕ} {κ : Formalism.AUTREP.GAf D.host.E n} (hκ : NG.Co
     induction N with
     | zero => simp
     | succ k ih => simp
-  rw [h1, h2]
-  exact e
+  rwa [h1, h2]
 
 
 theorem redFn_eq_one_of_cong {N : ℕ} {PP : Pl D.host.E} (hN : ((N : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal)
@@ -91,8 +90,7 @@ theorem redFn_eq_one_of_cong {N : ℕ} {PP : Pl D.host.E} (hN : ((N : ℕ) : �
       (N : Herm.intAf D.host.F D.host.E) * ⟨w, hw'⟩ := by
     apply Subtype.ext
     simp only [AddSubgroupClass.coe_sub, MulMemClass.coe_mul, SubringClass.coe_natCast]
-    rw [hyij, h1]
-    exact e
+    rwa [hyij, h1]
   have hN' : (N : kP PP) = 0 := by
     have := (Ideal.Quotient.eq_zero_iff_mem (I := PP.asIdeal)).2 hN
     simpa using this
@@ -160,8 +158,7 @@ theorem stdJ_open : ∀ (D : D7) (n : ℕ) (Ld : Formalism.L2.DIV.LevDat D.host.
       intro hU PP hP
       have hov : NG.OverPl PP (PP.under (𝓞 (maximalRealSubfield D.host.E))) := by
         simp [NG.OverPl, HeightOneSpectrum.under_asIdeal, Ideal.under_def]
-      refine R.2.2.1 κ hU Bᶜ _ PP hκ hov ?_
-      exact fun hc => hc <| hB PP (Finset.mem_union.1 hP) _ hov
+      exact R.2.2.1 κ hU Bᶜ _ PP hκ hov (fun hc => hc <| hB PP (Finset.mem_union.1 hP) _ hov)
     exact ⟨⟨fun h => hle h, fun hU => mem_stdJ_of (R.1 κ) ((R.2.1 κ).2 hU) (hr hU)⟩,
       fun h => stdX_eq_one_of h (hr (hle h))⟩
 

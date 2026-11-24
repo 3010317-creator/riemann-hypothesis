@@ -227,8 +227,7 @@ theorem arc_length_three_inFP_smul_phi_lambda [NeZero n] [Fintype (K →ₐ[Qp] 
       rw [map_pow, ← DFD.dfd_ps_succ]
     rw [e1, e2]
     have := congrArg W.φE hs
-    rw [map_mul, W.φE_ext, W.φE_ext] at this
-    exact this
+    rwa [map_mul, W.φE_ext, W.φE_ext] at this
   have hsU : IsUnit s := by
     have h := (hp1U.pow (size (c - 2) + S))
     rw [← map_pow, ← hs] at h
@@ -278,8 +277,7 @@ theorem arc_length_three_inFP_smul_phi_lambda [NeZero n] [Fintype (K →ₐ[Qp] 
       W.φA (W.φA (Formalism.MainNotions.LiftingTheory.JJ W 1 (2 * A.G₀) (A.M PD.p))) • W.φD T₂ y₀ := by
     have := congrArg (W.φD T₂) he
     simp only [DYB.φD_smulA, map_sub, DFD.dfd_φA_lA] at this
-    rw [DFD.dfd_φD_three]
-    exact this
+    rwa [DFD.dfd_φD_three]
   have hB' : size c + S ≤ (PD.p - 1) * A.M PD.p := by
     have hty : (A.ty c).thick = true ∧ (A.ty c).size = size c := by
       rw [hA]; unfold arcOf; dsimp only; split <;> exact ⟨rfl, rfl⟩
@@ -287,8 +285,7 @@ theorem arc_length_three_inFP_smul_phi_lambda [NeZero n] [Fintype (K →ₐ[Qp] 
     have hth := hOK.2.2.2.2.2.2.2.1 c hty.1
     rw [hty.2, hS] at hth
     have hq1 : 0 < PD.p - 1 := by omega
-    have key := Nat.lt_mul_div_succ (2 * A.h) hq1
-    exact (lt_of_le_of_lt (by omega : size c + S ≤ 2 * A.h) key).le
+    exact (lt_of_le_of_lt (by omega : size c + S ≤ 2 * A.h) (Nat.lt_mul_div_succ (2 * A.h) hq1)).le
   obtain ⟨r, hr, hJJ⟩ : ∃ r ∈ W.AΔ, W.φA (W.φA (Formalism.MainNotions.LiftingTheory.JJ W 1 (2 * A.G₀) (A.M PD.p))) =
       qA W ^ (size c + S) * r := by
     obtain ⟨uT, huT, -, -, -, hTr2⟩ := (hTr hcase).2.1 2 (A.M PD.p)
@@ -581,13 +578,13 @@ theorem arc_length_three_representation_of [NeZero n] [Fintype (K →ₐ[Qp] LL)
   have h0 : ∀ s, s < 2 → A.Hs c 3 s = A.h := by
     intro s hs
     unfold ArcP.Hs
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro (h | h)
     · exact hth _ h
     · omega
   have h2 : A.Hs c 3 2 = A.G₀ := by
     unfold ArcP.Hs
-    rw [if_pos (Or.inr (by omega))]
+    rw [ite_eq_left (Or.inr (by omega))]
   have hLam : abelian₂ W A c 3 = ps W 0 ^ A.h * ps W 1 ^ A.h * ps W 2 ^ A.G₀ := by
     unfold abelian₂
     rw [Finset.prod_range_succ, Finset.prod_range_succ, Finset.prod_range_one, h0 0 (by norm_num),
@@ -602,8 +599,7 @@ theorem arc_length_three_representation_of [NeZero n] [Fintype (K →ₐ[Qp] LL)
         else Formalism.MainNotions.LocalTheoryWindows.LT.down (size (c - 1))).size = size (c - 1)
       split <;> rfl
     have h8 := hOK.2.2.2.2.2.2.2.1 (c - 1) hthk
-    rw [hsz] at h8
-    exact h8
+    rwa [hsz] at h8
   have hp2 : 2 ≤ PD.p := PD.hp.two_le
   have hM2 : 2 * A.h < (PD.p - 1) * A.M PD.p := by
     show 2 * A.h < (PD.p - 1) * (2 * A.h / (PD.p - 1) + 1)
@@ -649,8 +645,7 @@ theorem arc_length_three_representation_of [NeZero n] [Fintype (K →ₐ[Qp] LL)
   have hφ : lA W ^ κ' • (lA W ^ κ • W.φD T₂ lam - lA W ^ A.σ PD.p • ((W.φD T₂) ^ 3) Hh) =
       W.φA (W.φA (Formalism.MainNotions.LiftingTheory.JJ W 1 (2 * A.G₀) (A.M PD.p))) • W.φD T₂ y₂ := by
     have h := congrArg (W.φD T₂) hy₂e
-    rw [DFE.φD_lsmul, map_sub, DFE.φD_lsmul, DFE.φD_lsmul, e3, DYB.φD_smulA] at h
-    exact h
+    rwa [DFE.φD_lsmul, map_sub, DFE.φD_lsmul, DFE.φD_lsmul, e3, DYB.φD_smulA] at h
   obtain ⟨t, ht⟩ : ∃ t : ℕ, ∀ (k : Fin d) (r : Fin (A.M PD.p)) (mm : Fin d),
       0 ≤ v ((PD.p : LL) ^ (κ + t) * sol k r mm) := by
     choose tf htf using fun (q : Fin d × Fin (A.M PD.p) × Fin d) =>
@@ -662,8 +657,7 @@ theorem arc_length_three_representation_of [NeZero n] [Fintype (K →ₐ[Qp] LL)
   let Y : Fin d → ℕ → Fin d → O := fun k r mm => if h : r < A.M PD.p then yy k ⟨r, h⟩ mm else 0
   have hY : ∀ k, ∀ r < A.M PD.p, ∀ mm, algebraMap O LL (Y k r mm) = (PD.p : LL) ^ (κ + t) * sol k r mm := by
     intro k r hr mm
-    simp only [Y, dif_pos hr]
-    exact hyy k ⟨r, hr⟩ mm
+    simpa only [Y, dite_eq_left hr] using hyy k ⟨r, hr⟩ mm
   let Hh' : Fin d → W.DD T₂ := fun k =>
     ∑ r ∈ Finset.range (A.M PD.p), W.π₀ ^ r • Formalism.MainNotions.LiftingTheory.vecB W T₂ bb (Y k r)
   have hHh' : ∀ k, IsHorTr W T₂ bb sol (A.M PD.p) (κ + t) k (Hh' k) := fun k => ⟨Y k, hY k, rfl⟩
@@ -694,10 +688,10 @@ theorem arc_length_three_representation_of [NeZero n] [Fintype (K →ₐ[Qp] LL)
       aa = fun k => if k = k₀ then lA W ^ A.σ PD.p * a₀ else 0 := ⟨_, rfl⟩
   have hsum : ∑ k, aa k • ((W.φD T₂) ^ 3) (Hh' k) =
       (lA W ^ A.σ PD.p * a₀) • ((W.φD T₂) ^ 3) (lA W ^ t • Hh) := by
-    rw [Finset.sum_eq_single k₀ (fun k _ hk => by rw [haa]; dsimp only; rw [if_neg hk, zero_smul])
+    rw [Finset.sum_eq_single k₀ (fun k _ hk => by rw [haa]; dsimp only; rw [ite_eq_right hk, zero_smul])
       (fun h => absurd (Finset.mem_univ k₀) h), haa]
     dsimp only
-    rw [if_pos rfl, hk₀']
+    rw [ite_eq_left rfl, hk₀']
   have hΛx : abelian₂ W A c 3 • (f₂ • W.φD T₂ lam) = a₀ • W.φD T₂ lam := by
     rw [← algebraMap_smul W.EE (abelian₂ W A c 3), smul_smul, hΛf, algebraMap_smul]
   have hφy : W.φD T₂ y₂ ∈ Pp W T₂ c' 3 := DFE.Pp_φ W T₂ c' 2 y₂ hy₂P
@@ -820,8 +814,7 @@ theorem inFNc_of_inFP_of_arc_sigma_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] [Is
       (hP5 T₂ (fun i => size i + S) (fun i => size i + S) hcr hJ).1 c z hz.2
     rw [hQ, hq] at h5
     have h6 := Submodule.smul_mem (W.N T₂) ((↑(u⁻¹) : LetA O n) ^ (size c + S)) h5
-    rw [smul_smul, ← mul_pow, ← mul_assoc, Units.inv_mul, one_mul] at h6
-    exact h6
+    rwa [smul_smul, ← mul_pow, ← mul_assoc, Units.inv_mul, one_mul] at h6
   · have hH := DYB.Pp_le_HLD (W := W) T₂ (c - 1) hy
     obtain ⟨h, -⟩ := hH
     rw [sub_add_cancel] at h
@@ -925,8 +918,7 @@ theorem level_poly_decomposition (P : PhiData O l) (s : ℕ) (hs : 1 ≤ s) :
     refine ⟨P.φ e + a' * P.φ h, b' * P.φ h, ?_, ?_⟩
     · rw [Function.iterate_succ_apply', he, map_add (f := _), map_mul, map_mul, hCa, map_pow, hφX, hab]
       ring
-    · rw [map_add (f := _), map_mul, hka, zero_mul, add_zero, residueConst_phi_eq]
-      exact hk
+    · rwa [map_add (f := _), map_mul, hka, zero_mul, add_zero, residueConst_phi_eq]
 
 theorem isUnit_of_residueConst_ne_zero {e : O⟦X⟧} (hκ : residueConst e ≠ 0) : IsUnit e := by
   rw [PowerSeries.isUnit_iff_constantCoeff]
@@ -1040,8 +1032,7 @@ theorem q_pow_mem_of_generator [IsDomain O] [IsDiscreteValuationRing O] [IsAdicC
   obtain ⟨k, z, hz, hkz⟩ := hgx
   have hx1 : x ∈ Pp W T i 1 := by
     obtain ⟨y, hy, hxy⟩ := hx
-    rw [hxy, one_smul]
-    exact hy
+    rwa [hxy, one_smul]
   have hlx : lA W ^ k • x ∈ Pp W T i 1 := by
     rw [show lA W ^ k = ((PD.p ^ k : ℕ) : LetA O n) by simp [lA], Nat.cast_smul_eq_nsmul]
     exact nsmul_mem hx1 _
@@ -1050,8 +1041,7 @@ theorem q_pow_mem_of_generator [IsDomain O] [IsDiscreteValuationRing O] [IsAdicC
     unfold PiPs
     exact Submonoid.subset_closure (Set.mem_insert_of_mem _ ⟨0, by simp [ps]⟩)
   have h1 : InFP W T i 1 1 ((1 : LetA O n) • x) := by
-    rw [one_smul]
-    exact hx
+    rwa [one_smul]
 
   have key : lA W ^ (k + N) • x = qA W ^ Bq • (a • z + b • (lA W ^ k • x)) := by
     calc lA W ^ (k + N) • x = (a * g + b * qA W ^ Bq) • (lA W ^ k • x) := by
@@ -1178,7 +1168,7 @@ theorem arc_length_three_final_bound [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
     rwa [e1] at h
   have hhB : Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size = b + η + S := by
     unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB
-    rw [if_pos ⟨c - 1, ht1⟩]
+    rw [ite_eq_left ⟨c - 1, ht1⟩]
   have hSgEq : Formalism.MainNotions.N.Ln17.Sg PD.p b w S η size = Formalism.MainNotions.N.FrobeniusPowerSeries.Sg PD.p (b + η + S) w S η := by
     unfold Formalism.MainNotions.N.Ln17.Sg Formalism.MainNotions.N.FrobeniusPowerSeries.Sg
     rw [hhB]

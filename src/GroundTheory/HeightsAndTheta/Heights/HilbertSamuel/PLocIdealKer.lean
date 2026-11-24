@@ -62,15 +62,13 @@ theorem exists_near (h𝓜 : KH.IsMGraded S ι 𝓜) {P : Ideal (MRingOver S ι)
       have hgn := h𝓜.2 b j g n hb hn
       by_cases hj : (j + fun k => (b k : ℤ)) = D
       · refine ⟨g • n, Submodule.subset_span ⟨g, b, n, hgP, hb, ?_, rfl⟩, ?_⟩
-        · rw [← hj, add_sub_cancel_right]
-          exact hn
+        · rwa [← hj, add_sub_cancel_right]
         · rw [sub_self]
           exact zero_mem _
       · refine ⟨0, zero_mem _, ?_⟩
         rw [sub_zero]
         exact Submodule.mem_iSup_of_mem _ (Submodule.mem_iSup_of_mem hj hgn)
-    · rw [smul_zero]
-      exact hzero
+    · rwa [smul_zero]
     · intro n₁ n₂ h₁ h₂
       rw [smul_add]
       exact hadd _ _ h₁ h₂
@@ -83,8 +81,7 @@ theorem exists_near (h𝓜 : KH.IsMGraded S ι 𝓜) {P : Ideal (MRingOver S ι)
     | mem g hg => exact hgen g hg
     | zero =>
       intro n
-      rw [zero_smul]
-      exact hzero
+      rwa [zero_smul]
     | add p q _ _ hp hq =>
       intro n
       rw [add_smul]
@@ -102,8 +99,7 @@ theorem mem_span_degProducts (h𝓜 : KH.IsMGraded S ι 𝓜) {P : Ideal (MRingO
   have hc : x - y ∈ 𝓜 D := sub_mem hxD (span_degProducts_le h𝓜 P D hy)
   have h0 : x - y = 0 := Submodule.disjoint_def.mp (h𝓜.1.submodule_iSupIndep D) _ hc hd
   rw [sub_eq_zero] at h0
-  rw [h0]
-  exact hy
+  rwa [h0]
 
 theorem proof : LocIdealKer.Statement := by
   intro S _ K _ ι _ M _ _ _ _ 𝓜 P T d h𝓜 hP hT w hw
@@ -159,8 +155,7 @@ theorem proof : LocIdealKer.Statement := by
         funext k
         simp only [hD, Pi.add_apply, Pi.sub_apply, Nat.cast_add]
         ring
-      rw [edeg]
-      exact hn
+      rwa [edeg]
     | zero =>
       rw [LocalizedModule.zero_mk]
       exact zero_mem _

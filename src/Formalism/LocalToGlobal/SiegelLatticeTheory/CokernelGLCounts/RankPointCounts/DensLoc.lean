@@ -51,10 +51,8 @@ theorem hr_add (x y z : S.V) : S.hT z (x + y) = S.hT z x + S.hT z y := by
 theorem hr_smul (c : E) (x z : S.V) : S.hT z (c • x) = c * S.hT z x := by
   simp
 theorem hr_sum {ι : Type} (s : Finset ι) (x : ι → S.V) (z : S.V) :
-    S.hT z (∑ i ∈ s, x i) = ∑ i ∈ s, S.hT z (x i) := by
-  exact map_sum (S.hT z) x s
-theorem h_swap (x y : S.V) : S.hT y x = star (S.hT x y) := by
-  exact (S.herm.eq x y).symm
+    S.hT z (∑ i ∈ s, x i) = ∑ i ∈ s, S.hT z (x i) := map_sum (S.hT z) x s
+theorem h_swap (x y : S.V) : S.hT y x = star (S.hT x y) := (S.herm.eq x y).symm
 theorem h_zero_swap {x y : S.V} (h : S.hT x y = 0) : S.hT y x = 0 := by
   rw [h_swap, h, star_zero]
 
@@ -112,11 +110,9 @@ theorem h_ed_ed (a b : Fin r) : S.hT (ed F F' a) (ed F F' b) = 0 := by
 theorem h_ed_zp (a : Fin r) : S.hT (ed F F' a) F'.z = 0 := by
   simp [ed, F'.z_orth]
 
-theorem h_zp_ed (a : Fin r) : S.hT F'.z (ed F F' a) = 0 := by
-  exact h_zero_swap _ (h_ed_zp F F' a)
+theorem h_zp_ed (a : Fin r) : S.hT F'.z (ed F F' a) = 0 := h_zero_swap _ (h_ed_zp F F' a)
 
-theorem h_z_e (a : Fin r) : S.hT F.z (F.e a) = 0 := by
-  exact h_zero_swap _ (F.z_orth a)
+theorem h_z_e (a : Fin r) : S.hT F.z (F.e a) = 0 := h_zero_swap _ (F.z_orth a)
 
 theorem h_v_v (hP : (Pm F F').det ≠ 0) (a b : Fin r) :
     S.hT (vv F F' a) (vv F F' b) = if a = b then -2 else 0 := by
@@ -254,8 +250,8 @@ theorem fvec_eq (F : FlagG S r (T : E)) (F' : FlagG S r (T' : E)) (b : Fin (r + 
     rw [zp_eq F F', add_comm]
     simp [kk]
   | cast b =>
-    simp only [Um, Matrix.of_apply, FlagG.fvec, Fin.snoc_castSucc, if_neg (Fin.castSucc_ne_last b),
-      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, gv]
+    simp only [Um, Matrix.of_apply, FlagG.fvec, Fin.snoc_castSucc, ite_eq_right (Fin.castSucc_ne_last b),
+      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, gv]
 
 theorem zhat_eq_mul (F : FlagG S r (T : E)) (F' : FlagG S r (T' : E)) :
     Zhat F F' = (Matrix.of fun a b => S.hT (F.fvec a) (gv F F' b)) * Um F F' := by
@@ -330,8 +326,7 @@ theorem gflag_pos (F : FlagG S r (T : E)) (F' : FlagG S r (T' : E)) (τ : E →+
     exact absurd hlt (not_lt.2 (Complex.normSq_nonneg _))
   · have hD1e : D1 = beta F F' * D0 := by rw [hD1, leadingMinor_full_eq_prod F F' hP, hD0, lead_r]
     have hD0ne : τ D0 ≠ 0 := by
-      rw [hD0, lead_r, map_ne_zero]
-      exact hP
+      rwa [hD0, lead_r, map_ne_zero]
     have hpos0 : 0 < Complex.normSq (τ D0) := Complex.normSq_pos.2 hD0ne
     set nb := Complex.normSq (τ (beta F F')) with hnb
     have hRe : R = Complex.normSq (τ D0) * (nb - (T : ℝ) * T') := by
@@ -358,7 +353,7 @@ theorem gflag_pos (F : FlagG S r (T : E)) (F' : FlagG S r (T' : E)) (τ : E →+
       intro i j hij
       rcases i with a | bi <;> rcases j with b | bj
       · have hab : a ≠ b := fun h => hij (by rw [h])
-        simp only [w, Sum.elim_inl, h_v_v F F' hP, if_neg hab]
+        simp only [w, Sum.elim_inl, h_v_v F F' hP, ite_eq_right hab]
       · cases bj
         · simp only [w, Sum.elim_inl, Sum.elim_inr]; exact h_v_zt F F' hP a
         · simp only [w, Sum.elim_inl, Sum.elim_inr]; exact hermForm_vector_orth_second F F' hP a
@@ -459,8 +454,7 @@ theorem prod_lower_third {x : ℝ} (hx0 : 0 ≤ x) (hx : x ≤ 1 / 3) {η : ℝ}
   have hlow : ∀ i ∈ Finset.Icc a b, 1 - x ^ i ≤ 1 - η ^ i * x ^ i := fun i _ => by
     have : η ^ i * x ^ i ≤ x ^ i := by
       have h1 := le_abs_self (η ^ i * x ^ i)
-      rw [abs_mul, habs, one_mul, abs_of_nonneg (pow_nonneg hx0 _)] at h1
-      exact h1
+      rwa [abs_mul, habs, one_mul, abs_of_nonneg (pow_nonneg hx0 _)] at h1
     linarith
   have hS : ∑ i ∈ Finset.Icc a b, x ^ i ≤ 3 / 2 * x ^ a := by
     have hI : Finset.Icc a b = Finset.Ico a (b + 1) := by
@@ -574,8 +568,7 @@ theorem densLocBound_at {D : Formalism.BasicNotions.D7} (h5 : DensAllAt D) : Den
   have hGl := (hiff Λ).1 ⟨hR.1 Λ hΛ, hF'⟩
   have hI : Formalism.HermitianLatticesTheory.IsIntegralLat (VS D).hT (Cnt.MMof D F0 F') := by
     by_contra hI
-    rw [Asm.glueSet_eq_empty hI] at hGl
-    exact hGl
+    rwa [Asm.glueSet_eq_empty hI] at hGl
   obtain ⟨h5i, -⟩ := h5 δ M hA L u u' hT F0 what₂ hR ϖ hϖ Z F' hzt hZ hP
   obtain ⟨hd, -⟩ := h5i hI
   obtain ⟨-, -, hUr, -⟩ := Cnt.perpendicular_definition_holds D u u' hT F0 what₂ hR Z F' hzt hZ hP
@@ -618,8 +611,7 @@ theorem densLocBound_at {D : Formalism.BasicNotions.D7} (h5 : DensAllAt D) : Den
       _ ≤ Real.exp (4 * y) * alpD u u' p := mul_le_mul_of_nonneg_left hαl (Real.exp_pos _).le
   · refine (qP_lt_three_finite D).subset fun p hp => ?_
     simp only [Set.mem_setOf_eq] at hp ⊢
-    by_contra h3
-    push_neg at h3
+    by_contra! h3
     obtain ⟨-, -, hlo⟩ := key p
     obtain ⟨hαl, hαu⟩ := hα p
     have hαpos : 0 < alpD u u' p := lt_of_lt_of_le (Real.exp_pos _) hαl

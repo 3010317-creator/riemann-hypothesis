@@ -75,8 +75,7 @@ theorem exists_isDetOf_uPts (D : D7) (i : ℕ) (hi : i ≤ D.R.m)
     ext a b
     fin_cases a; fin_cases b
     simp [cT, Matrix.mul_apply, Matrix.scalar_apply, inclE]
-    rw [← Algebra.TensorProduct.one_def, mul_one, mul_comm]
-    exact hd'
+    rwa [← Algebra.TensorProduct.one_def, mul_one, mul_comm]
   · ext
     simp [Matrix.GeneralLinearGroup.det]
 

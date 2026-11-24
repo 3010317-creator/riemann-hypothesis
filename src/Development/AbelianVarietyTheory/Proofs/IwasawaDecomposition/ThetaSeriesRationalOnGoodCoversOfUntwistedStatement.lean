@@ -242,8 +242,7 @@ theorem exists_adele_unit_congr_one : ∀ (D : D7) (m : ℕ), Odd m → ∀ (z y
       (val_le_one (GlobalTheory.SplitHeckeLabel.trace_mem_intAf hyiI v))
       (val_le_one (GlobalTheory.SplitHeckeLabel.trace_mem_intAf hrI v)) ?_
     have := congrArg (evalV D.host.F v) R1
-    simp only [map_add (f := _), map_mul, map_natCast, map_ofNat] at this
-    exact this
+    simpa only [map_add (f := _), map_mul, map_natCast, map_ofNat] using this
   have hMone : ∀ v, ¬ P v → Valued.v ((M : v.adicCompletion D.host.F)) = 1 := fun v hv =>
     le_antisymm (_root_.GlobalTheory.AdLat.valued_natCast_le_one v M) (not_lt.1 hv)
   have hMne : ∀ v, ¬ P v → (M : v.adicCompletion D.host.F) ≠ 0 := fun v hv h => by
@@ -256,17 +255,17 @@ theorem exists_adele_unit_congr_one : ∀ (D : D7) (m : ℕ), Odd m → ∀ (z y
   let dg : ∀ v : HeightOneSpectrum (𝓞 D.host.F), v.adicCompletion D.host.F :=
     fun v => if P v then (-(k : v.adicCompletion D.host.F) * evalV D.host.F v (T yv))⁻¹ else 1
   have heg : ∀ v, eg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [eg, hv, if_true, if_false] <;> [exact one_mem _; exact zero_mem _]
+    by_cases hv : P v <;> simp only [eg, hv, ite_true, ite_false] <;> [exact one_mem _; exact zero_mem _]
   have hfg : ∀ v, fg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [fg, hv, if_true, if_false]
+    by_cases hv : P v <;> simp only [fg, hv, ite_true, ite_false]
     · exact zero_mem _
     · exact mem_of_val (by rw [map_inv₀, hMone v hv, inv_one])
   have hcg : ∀ v, cg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [cg, hv, if_true, if_false]
+    by_cases hv : P v <;> simp only [cg, hv, ite_true, ite_false]
     · exact mem_of_val (hunit v hv).le
     · exact one_mem _
   have hdg : ∀ v, dg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [dg, hv, if_true, if_false]
+    by_cases hv : P v <;> simp only [dg, hv, ite_true, ite_false]
     · exact mem_of_val (by rw [map_inv₀, hunit v hv, inv_one])
     · exact one_mem _
   set e := mkAf eg heg
@@ -275,16 +274,16 @@ theorem exists_adele_unit_congr_one : ∀ (D : D7) (m : ℕ), Odd m → ∀ (z y
   set d := mkAf dg hdg
   have hcd : c * d = 1 := GlobalTheory.SplitHeckeLabel.af_ext fun v => by
     rw [map_mul, map_one, evalV_mkAf, evalV_mkAf]
-    by_cases hv : P v <;> simp only [cg, dg, hv, if_true, if_false, mul_one]
+    by_cases hv : P v <;> simp only [cg, dg, hv, ite_true, ite_false, mul_one]
     refine mul_inv_cancel₀ fun h0 => ?_
     have := hunit v hv; rw [h0, map_zero] at this; exact zero_ne_one this
   have hef : e + (M : Af D.host.F) * f = 1 := GlobalTheory.SplitHeckeLabel.af_ext fun v => by
     rw [map_add (f := _), map_mul, map_one, map_natCast, evalV_mkAf, evalV_mkAf]
-    by_cases hv : P v <;> simp only [eg, fg, hv, if_true, if_false, mul_zero, add_zero, zero_add]
+    by_cases hv : P v <;> simp only [eg, fg, hv, ite_true, ite_false, mul_zero, add_zero, zero_add]
     exact mul_inv_cancel₀ (hMne v hv)
   have hce : c = e * (-(k : Af D.host.F) * T yv) + (M : Af D.host.F) * f := GlobalTheory.SplitHeckeLabel.af_ext fun v => by
     rw [map_add (f := _), map_mul, map_mul, map_mul, map_neg, map_natCast, map_natCast, evalV_mkAf, evalV_mkAf, evalV_mkAf]
-    by_cases hv : P v <;> simp only [eg, fg, cg, hv, if_true, if_false, mul_zero, add_zero, zero_add, one_mul, zero_mul]
+    by_cases hv : P v <;> simp only [eg, fg, cg, hv, ite_true, ite_false, mul_zero, add_zero, zero_add, one_mul, zero_mul]
     exact (mul_inv_cancel₀ (hMne v hv)).symm
   have E1 : ι e + (M : Af D.host.F ⊗[D.host.F] D.host.E) * ι f = 1 := by
     have := congrArg ι hef; rwa [map_add, map_mul, map_natCast, map_one] at this
@@ -421,8 +420,7 @@ theorem exists_int_unit_root : ∀ (D : D7) (z : (Af D.host.F ⊗[D.host.F] D.ho
     have h := congrArg (fun u : (Formalism.L2.DIV.AfE D.host.F D.host.E)ˣ =>
       ((u * Formalism.L2.DIV.conjId D.sp.cm.sig x : (Formalism.L2.DIV.AfE D.host.F D.host.E)ˣ) : Formalism.L2.DIV.AfE D.host.F D.host.E)) hxz
     simp only [Formalism.L2.DIV.h90, MonoidHom.div_apply, MonoidHom.id_apply, div_mul_cancel] at h
-    rw [Units.val_mul, hconj] at h
-    exact h
+    rwa [Units.val_mul, hconj] at h
   refine ⟨Units.map (swapEquiv D).symm.toRingHom.toMonoidHom x, ?_, ?_, ?_⟩
   · rw [GlobalTheory.IdemSupport.mem_intAE_iff, ← swapEquiv_apply]
     change swapEquiv D ((swapEquiv D).symm (x : Formalism.L2.DIV.AfE D.host.F D.host.E)) ∈ _
@@ -515,8 +513,6 @@ theorem finPart_jI (a : Ainf D.host.F ⊗[D.host.F] D.host.E) : finPart D (jI D 
   induction a using TensorProduct.induction_on with
   | zero => simp
   | tmul p q =>
-    show (sndA D.host.F (iI D.host.F p)) ⊗ₜ[D.host.F] q = 0
-    show (0 : Af D.host.F) ⊗ₜ[D.host.F] q = 0
     exact TensorProduct.zero_tmul _ _
   | add p q hp hq => rw [LinearMap.map_add (f := _), RingHom.map_add (f := _), hp, hq, add_zero]
 
@@ -524,8 +520,6 @@ theorem infPart_jF (b : Af D.host.F ⊗[D.host.F] D.host.E) : infPart D (jF D b)
   induction b using TensorProduct.induction_on with
   | zero => simp
   | tmul p q =>
-    show (fstA D.host.F (iF D.host.F p)) ⊗ₜ[D.host.F] q = 0
-    show (0 : Ainf D.host.F) ⊗ₜ[D.host.F] q = 0
     exact TensorProduct.zero_tmul _ _
   | add p q hp hq => rw [LinearMap.map_add (f := _), RingHom.map_add (f := _), hp, hq, add_zero]
 
@@ -1023,8 +1017,7 @@ theorem exists_principal_root {D : D7} (V : HSp D) (γ : GA D V) (hγ : γ ∈ G
   have hn : star d * d = 1 := by
     have := det_conj_mul V γ
     apply GlobalTheory.DetRootRows.inclR_injective (F := D.host.F) (AF D.host.F)
-    rw [map_mul, map_one, ← hc, ← hdet]
-    exact this
+    rwa [map_mul, map_one, ← hc, ← hdet]
   obtain ⟨e, he0, he⟩ : ∃ e : D.host.E, e ≠ 0 ∧ e = d * star e := by
     by_cases hd : d = -1
     · obtain ⟨a, ha⟩ := GlobalTheory.RecDict.cmData_sig_ne_id D.sp.cm
@@ -1115,8 +1108,7 @@ theorem isRat_twist : GlobalTheory.Published.RayClassFieldSt → ∀ (D : D7) (G
     (fun u hu1 hu2 h => hinj _ _ (_root_.GlobalTheory.TwistRat.Right.dd_mul_right D _ T.Q.l.M C.d.pd _ C.σ₂ δ δc hAux hTw dd' hdd2 u hu1 (hlev ▸ hu2) h))
     (wtA (κ i)) (κ i).n).1 φ' hφ'
   refine ⟨_, key, ?_⟩
-  simp only [hw]
-  exact castDict_mul hV dd φ'
+  simpa only [hw] using castDict_mul hV dd φ'
 
 end GlobalTheory.TwistRat
 end -- clump:auto

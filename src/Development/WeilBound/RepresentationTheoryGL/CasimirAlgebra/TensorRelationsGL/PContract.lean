@@ -105,8 +105,7 @@ theorem anti_span (f : TV n M (Fin n))
     refine ⟨((Equiv.Perm.sign (Equiv.ofBijective J hb) : ℤ) : ℂ), ?_⟩
     have h1 := congrFun (hf (Equiv.ofBijective J hb)) id
     have h3 : pm (Equiv.ofBijective J hb) f id = f J := rfl
-    rw [h3, Pi.smul_apply] at h1
-    exact h1
+    rwa [h3, Pi.smul_apply] at h1
   · exact ⟨0, by rw [antisymmetric_eq_zero_of_not_injective f hf J hJ, zero_smul]⟩
 
 theorem actT_anti_id {ι Γ : Type} (τ : ι) (κ : ι → Γ → Matrix (Fin n) (Fin n) ℂ) (ρ : Γ → Module.End ℂ M) (γ : Γ)
@@ -120,8 +119,7 @@ theorem actT_anti_id {ι Γ : Type} (τ : ι) (κ : ι → Γ → Matrix (Fin n)
   have hperm : ∀ σ : Equiv.Perm (Fin n), f ⇑σ = ((Equiv.Perm.sign σ : ℤ) : ℂ) • f id := by
     intro σ
     have h1 := congrFun (hf σ) id
-    rw [Pi.smul_apply] at h1
-    exact h1
+    rwa [Pi.smul_apply] at h1
   have hsub : ∑ J ∈ Finset.univ.image (fun σ : Equiv.Perm (Fin n) => (⇑σ : Fin n → Fin n)),
         (∏ p, A p (J p)) • ρ γ (f J)
       = ∑ J : Fin n → Fin n, (∏ p, A p (J p)) • ρ γ (f J) := by
@@ -220,8 +218,7 @@ private theorem Om_apply_eq_sum_update {m : ℕ} (E : Fin n → Fin n → Module
   · simp
   · intro b _ hb
     simp [Ne.symm hb]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private theorem actT_const_apply_eq_sum_prod_smul {ι Γ : Type} {m : ℕ} (τ : ι) (κ : ι → Γ → Matrix (Fin n) (Fin n) ℂ)
     (ρ : Γ → Module.End ℂ M) (γ : Γ) (g : TV n M (Fin m)) (I : Fin m → Fin n) :
@@ -478,8 +475,7 @@ theorem core (hQ : QdetFacts) (hW : WallAlg) (hT : TensorGK) (hL : LieInv)
     exact Submodule.sum_mem _ (fun σ _ => Submodule.smul_mem _ _ (hpmY σ y hy))
   have hanti : ∀ τ ∈ firstG m n, pm τ ζ' = ((Equiv.Perm.sign τ : ℤ) : ℂ) • ζ' := fun τ hτ => pm_alt_firstG τ hτ y
   have hnz : ∃ I, q (ζ' I) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hξalt
     rw [← hQalt]
     funext I
@@ -492,8 +488,7 @@ theorem core (hQ : QdetFacts) (hW : WallAlg) (hT : TensorGK) (hL : LieInv)
   refine ⟨m - n, by omega, F id, fun γ => ?_, ?_⟩
   · have h1 : actT (fun _ : Fin (m - n) ⊕ Fin n => τ0) κ ρ γ g = χ γ • g := by
       have h0 := actT_reIx e (fun _ : Fin m => τ0) κ ρ γ ζ'
-      rw [(hY ζ').1 hζ'Y γ, reIx_smul] at h0
-      exact h0
+      rwa [(hY ζ').1 hζ'Y γ, reIx_smul] at h0
     have h2 : (fun _ : Fin (m - n) ⊕ Fin n => τ0) = Sum.elim (fun _ : Fin (m - n) => τ0) (fun _ : Fin n => τ0) := by
       funext x
       cases x <;> rfl
@@ -592,9 +587,7 @@ theorem contract_of : TensorGl → QdetFacts → WallAlg → TensorGK → LieInv
     show N.mkQ (tE (fib labO τ) (E τ) a b f I0) = F τ a b (N.mkQ (f I0))
     rw [tE_apply, h, Finset.sum_empty, add_zero]
     exact LinearMap.congr_fun (hFE τ a b) (f I0)
-  have hξN : ξ I ∉ N := by
-    intro h
-    exact hφw ((hN _).1 h w hw)
+  have hξN : ξ I ∉ N := fun h => hφw ((hN _).1 h w hw)
   have hz : q (ζ (I ∘ e.symm ∘ Sum.inr)) ≠ 0 := by
     have h3 : Sum.elim (I ∘ e.symm ∘ Sum.inl) (I ∘ e.symm ∘ Sum.inr) = I ∘ e.symm :=
       Sum.elim_comp_inl_inr (I ∘ e.symm)
@@ -604,8 +597,7 @@ theorem contract_of : TensorGl → QdetFacts → WallAlg → TensorGK → LieInv
       funext x
       simp
     show N.mkQ (ζ (I ∘ e.symm ∘ Sum.inr) I0) ≠ 0
-    rw [h4, Submodule.mkQ_apply, Ne, Submodule.Quotient.mk_eq_zero]
-    exact hξN
+    rwa [h4, Submodule.mkQ_apply, Ne, Submodule.Quotient.mk_eq_zero]
   obtain ⟨m2, hm2, ζ2, hζ2, I2, hI2⟩ := core hQ hW hT hL hK hGO τ0 q (F τ0) (F (bar τ0)) s (hFgl _) (hFgl _)
     (hFc _ _ (Ne.symm (hK.ne τ0))) (hFch τ0) (hFch (bar τ0)) (hq τ0 hf0) (hq _ hf1) hn _ hm1 c ζ hζS
     ⟨_, hz⟩
@@ -637,7 +629,7 @@ theorem contract_of : TensorGl → QdetFacts → WallAlg → TensorGK → LieInv
       have h5 : N.mkQ (ζ2 I2 I0) ≠ 0 := hI2
       rwa [Submodule.mkQ_apply, Ne, Submodule.Quotient.mk_eq_zero] at h5
     rw [hN] at hnot
-    push_neg at hnot
+    push Not at hnot
     obtain ⟨w', hw', hφ'⟩ := hnot
     exact ⟨_, w', hw', by rwa [hv]⟩
 

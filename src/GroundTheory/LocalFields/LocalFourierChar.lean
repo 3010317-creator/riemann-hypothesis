@@ -28,8 +28,7 @@ theorem hasBasis_nhds_zero_valBall :
   have h' : ∀ n : ℤ, ¬ (valBall (K := K) n : Set K) ⊆ t := fun n hn => h ⟨n, trivial, hn⟩
   have hex : ∀ k : ℕ, ∃ x : K, x ∈ valBall (K := K) k ∧ x ∉ t := fun k => by
     have := h' k
-    rw [Set.not_subset] at this
-    exact this
+    rwa [Set.not_subset] at this
   choose x hx hxt using hex
   have hlim : Tendsto x atTop (𝓝 0) := by
     rw [tendsto_zero_iff_valBall]
@@ -115,8 +114,7 @@ theorem isTrivialOn_mulShift_iff {a : K} (ha : a ≠ 0) (n : ℤ) :
   constructor
   · intro h y hy
     have hy' : y ∈ a • (valBall (K := K) n : Set K) := by
-      rw [smul_valBall ha]
-      exact hy
+      rwa [smul_valBall ha]
     obtain ⟨x, hx, rfl⟩ := hy'
     have := h x hx
     rwa [AddChar.mulShift_apply] at this
@@ -124,8 +122,7 @@ theorem isTrivialOn_mulShift_iff {a : K} (ha : a ≠ 0) (n : ℤ) :
     rw [AddChar.mulShift_apply]
     apply h
     have : a • x ∈ a • (valBall (K := K) n : Set K) := Set.smul_mem_smul_set hx
-    rw [smul_valBall ha] at this
-    exact this
+    rwa [smul_valBall ha] at this
 
 theorem isTrivialOn_mulShift_iff_mem (a : K) (n : ℤ) :
     IsTrivialOn (ψ.mulShift a) n ↔ a ∈ valBall (K := K) (addCharConductor ψ - n) := by

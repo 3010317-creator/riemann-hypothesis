@@ -159,8 +159,7 @@ theorem pf_mem_SB (μ : Measure (n → k)) [μ.IsAddRightInvariant] (h : HasCond
     · have h0 : ∀ x, f (t, x) = 0 := fun x =>
         image_eq_zero_of_notMem_tsupport fun hx => ht ⟨_, hx, rfl⟩
       simp [pf, h0]
-    · show ∫ x, f (t, x) * (ψ (x ⬝ᵥ y) : ℂ) ∂μ = 0
-      exact fourier_eq_zero_pi μ h (f := fun x => f (t, x)) (fun u hu x => hs u hu (t, x)) hy
+    · exact fourier_eq_zero_pi μ h (f := fun x => f (t, x)) (fun u hu x => hs u hu (t, x)) hy
 
 theorem inversion_const (m : Measure k) [m.IsAddHaarMeasure] (h : HasConductor ψ c)
     {f : (n → k) → ℂ} (hf : f ∈ SB (n → k)) :
@@ -223,8 +222,7 @@ theorem pf_bijOn (m : Measure k) [m.IsAddHaarMeasure] (h : HasConductor ψ c) :
   have hsmul : ∀ (a : ℂ) (g : T × (n → k) → ℂ), pf ψ (Measure.pi fun _ : n => m) (a • g) = a • pf ψ (Measure.pi fun _ : n => m) g := by
     intro a g
     funext z
-    simp only [pf, Pi.smul_apply, smul_eq_mul, mul_assoc]
-    exact integral_const_mul a _
+    simpa only [pf, Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul a _
   have hpp : ∀ g ∈ SB (T × (n → k)), ∀ z, pf ψ (Measure.pi fun _ : n => m) (pf ψ (Measure.pi fun _ : n => m) g) z = C * g (z.1, -z.2) :=
     fun g hg z => pf_pf m h hg z
   refine ⟨fun g hg => pf_mem_SB (Measure.pi fun _ : n => m) h hg, fun g hg g' hg' hgg => ?_, fun g hg => ?_⟩

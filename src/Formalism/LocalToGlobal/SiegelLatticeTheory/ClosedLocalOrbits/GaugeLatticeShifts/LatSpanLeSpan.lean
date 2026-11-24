@@ -262,7 +262,6 @@ theorem latSpan_le_span (aa : Fin r → FractionalIdeal (nonZeroDivisors (𝓞 E
   have : latSpan aa v ≤ (Submodule.span E (Set.range v)).restrictScalars (𝓞 E) := by
     rw [latSpan, Submodule.span_le]
     rintro _ ⟨a, c, -, rfl⟩
-    show c • v a ∈ Submodule.span E (Set.range v)
     exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_range_self a))
   exact this hx
 
@@ -342,13 +341,12 @@ theorem gram_fvec {T : E} (F : FlagG S r T) (i j : Fin (r + 1)) :
   · have h := F.z_orth b
     rw [← S.herm.eq] at h
     simp only [FlagG.fvec, Fin.snoc_last, Fin.snoc_castSucc]
-    rw [if_neg (fun h' => (Fin.castSucc_lt_last b).ne h'.2)]
-    have h2 := congrArg (starRingEnd E) h
-    simpa using h2
+    rw [ite_eq_right (fun h' => (Fin.castSucc_lt_last b).ne h'.2)]
+    simpa using congrArg (starRingEnd E) h
   · simp only [FlagG.fvec, Fin.snoc_last, Fin.snoc_castSucc]
-    rw [if_neg (fun h' => (Fin.castSucc_lt_last a).ne h'.1), F.z_orth a]
+    rw [ite_eq_right (fun h' => (Fin.castSucc_lt_last a).ne h'.1), F.z_orth a]
   · simp only [FlagG.fvec, Fin.snoc_castSucc]
-    rw [if_neg (fun h' => (Fin.castSucc_lt_last a).ne h'.1), F.e_iso a b]
+    rw [ite_eq_right (fun h' => (Fin.castSucc_lt_last a).ne h'.1), F.e_iso a b]
 
 theorem fvec_li {T : E} (hT : T ≠ 0) (F : FlagG S r T) : LinearIndependent E F.fvec := by
   unfold FlagG.fvec
@@ -473,8 +471,7 @@ theorem liftOnto (hLI : ∀ (β : (VS D).V ≃ₗ[D.host.E] (VS D).V), β ∈ Fo
   have hXs : ∀ x ∈ Submodule.span D.host.E (Set.range (X.Fu u').e),
       δ.symm x ∈ Submodule.span D.host.E (Set.range (X.Fu u').e) := fun x hx => by
     change x ∈ (X.Fu u').X at hx
-    rw [← hXX, Submodule.mem_map_equiv] at hx
-    exact hx
+    rwa [← hXX, Submodule.mem_map_equiv] at hx
   have hlatΛ' : latSpan (aaS D) (X.Fu u').e ≤ Λ' := by
     rw [hsplit]; exact le_sup_left.trans le_sup_left
 
@@ -517,8 +514,7 @@ theorem liftOnto (hLI : ∀ (β : (VS D).V ≃ₗ[D.host.E] (VS D).V), β ∈ Fo
   have h1 := mk_eq_of_eqv hTR (Quot.eqvGen_exact (Quot.out_eq (Quot.mk (GRel X u u' (X.Fu u) (X.Fu u') Λ Λ') p)))
   show TermDef.Term.mk Λ hΛ _ = TermDef.Term.mk Λ hΛ _
   congr 1
-  refine h1.trans ?_
-  exact congrArg (Quot.mk _) (Subtype.ext hmap)
+  exact h1.trans (congrArg (Quot.mk _) (Subtype.ext hmap))
 
 end Lift
 

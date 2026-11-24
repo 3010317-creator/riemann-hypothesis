@@ -140,7 +140,6 @@ theorem hasDerivAt_detLine (X : Mat n) : HasDerivAt (fun t : ℝ => (1 + t • X
   have hd : HasDerivAt (fun y : ℝ => p.eval (y : ℂ)) (p.derivative.eval ((0:ℝ) : ℂ)) 0 :=
     (p.hasDerivAt ((0:ℝ) : ℂ)).comp_ofReal
   rw [Complex.ofReal_zero, hp, Matrix.derivative_det_one_add_X_smul] at hd
-  rw [show (fun t : ℝ => (1 + t • X).det) = fun y : ℝ => p.eval (y : ℂ) from funext hev]
-  exact hd
+  rwa [show (fun t : ℝ => (1 + t • X).det) = fun y : ℝ => p.eval (y : ℂ) from funext hev]
 
 end PositivityTheory.RgBcC.LfSt.Kchain.KbCurve

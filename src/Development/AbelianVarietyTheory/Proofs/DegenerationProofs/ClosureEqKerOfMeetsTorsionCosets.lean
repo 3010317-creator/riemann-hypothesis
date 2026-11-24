@@ -68,8 +68,7 @@ theorem zmod_pow_exists_eq_nsmul_of_nsmul_eq_zero (n J : ℕ) (hn : n ≠ 0) (hJ
     (t : ZMod (n ^ J)) (ht : n • t = 0) : ∃ s : ZMod (n ^ J), t = n • s := by
   have : NeZero (n ^ J) := ⟨pow_ne_zero _ hn⟩
   have hv : n ^ J ∣ n * t.val := by
-    rw [← ZMod.natCast_eq_zero_iff, Nat.cast_mul, ZMod.natCast_zmod_val, ← nsmul_eq_mul]
-    exact ht
+    rwa [← ZMod.natCast_eq_zero_iff, Nat.cast_mul, ZMod.natCast_zmod_val, ← nsmul_eq_mul]
   obtain ⟨k, hk⟩ := hv
   have h1 : t.val = n * (n ^ (J - 2) * k) := by
     apply Nat.eq_of_mul_eq_mul_left (Nat.pos_of_ne_zero hn)
@@ -92,8 +91,7 @@ theorem closure_eq_ker_of_meets_torsion_cosets :
     have hbc : b = n • c := funext fun i => by simpa using hc i
     obtain ⟨x, hx⟩ := QuotientAddGroup.mk_surjective (yy c)
     have hnx : n • x ∈ (nsmulAddMonoidHom (n ^ J) : X →+ X).range := by
-      rw [← QuotientAddGroup.eq_zero_iff, QuotientAddGroup.mk_nsmul, hx, ← map_nsmul, ← hbc]
-      exact hbk
+      rwa [← QuotientAddGroup.eq_zero_iff, QuotientAddGroup.mk_nsmul, hx, ← map_nsmul, ← hbc]
     obtain ⟨x', hx'⟩ := hnx
     have hx'' : (n ^ J) • x' = n • x := hx'
     have hxx : x = n ^ (J - 1) • x' := by

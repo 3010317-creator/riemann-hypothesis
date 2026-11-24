@@ -207,13 +207,11 @@ theorem localModel_rankZeroWitt_source_isModel : ∀ (D : D7) (k : Type) [Field 
   haveI := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := Z) (n' := n ⊕ Fin 0)
   have hc1 : Continuous fun x : Matrix Z (n ⊕ Fin 0) k => x.toCols₁ :=
     continuous_pi fun i => continuous_pi fun j => by
-      show Continuous fun a : Matrix Z (n ⊕ Fin 0) k => a i (Sum.inl j)
       exact (continuous_apply (Sum.inl j)).comp (continuous_apply i)
   have hc2 : Continuous fun x : Matrix Z n k => (fromCols x 0 : Matrix Z (n ⊕ Fin 0) k) :=
     continuous_pi fun i => continuous_pi fun j => by
       rcases j with j | j
-      · show Continuous fun a : Matrix Z n k => a i j
-        exact (continuous_apply j).comp (continuous_apply i)
+      · exact (continuous_apply j).comp (continuous_apply i)
       · exact j.elim0
   let R : SB (Matrix Z n k) → SB (Matrix Z (n ⊕ Fin 0) k) := fun Ψ =>
     ⟨fun x => Ψ.1 x.toCols₁, GlobalTheory.FinPl.Comm.comp_mem_SB Ψ.2 hc1 hc2 fromCols_toCols₁⟩
@@ -517,8 +515,7 @@ theorem first_step_flat : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 
       rw [hO]
       show _ = GlobalTheory.LocFlat.flCol (psiAt ch.W w) (unitVol w) (0 + 1) (Set.indicator _ _)
       rw [hun.1, ite_eq_right (by omega)]
-    refine (hT₀e Ob O e).symm.trans ?_
-    exact congrArg _ (hTmO Ob hOb)
+    exact (hT₀e Ob O e).symm.trans (congrArg _ (hTmO Ob hOb))
   · show GlobalTheory.LocFlat.flCol _ _ _ Φ.1 = _
     congr 1
     funext z

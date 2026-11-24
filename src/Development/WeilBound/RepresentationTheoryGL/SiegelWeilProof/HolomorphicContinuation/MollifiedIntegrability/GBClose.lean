@@ -214,8 +214,7 @@ theorem clsGainB_of (hC : CauchyW) (hI : Invar) (hB : PBound) (hL : Link) (hT : 
   intro n s hs p q N R
   obtain ⟨hUo, hFc, -⟩ := hB n s hs p q R
   have hH : ContDiff ℝ (⊤ : ℕ∞) (cls s 0 p q R) := by
-    rw [cls_zero]
-    rw [contDiff_iff_contDiffAt]
+    rw [cls_zero, contDiff_iff_contDiffAt]
     intro y
     have h1 : ContDiffAt ℝ (⊤ : ℕ∞) (Fr s p q R) (herm y) :=
       ((hFc.restrict_scalars ℝ).contDiffAt (hUo.mem_nhds (herm_mem_Ugood s hs y)))
@@ -352,8 +351,7 @@ theorem pb_norm_one_sub (a : ℂ) (ha : a = Complex.I ∨ a = -Complex.I) (l : �
     rw [Complex.sq_norm]
     rcases ha with rfl | rfl <;> simp [Complex.normSq_apply] <;> ring
   have h2 : ((1 + |l|) / Real.sqrt 2) ^ 2 ≤ ‖1 - a * (l : ℂ)‖ ^ 2 := by
-    rw [hsq, div_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2)]
-    rw [div_le_iff₀ (by norm_num : (0:ℝ) < 2)]
+    rw [hsq, div_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2), div_le_iff₀ (by norm_num : (0:ℝ) < 2)]
     nlinarith [sq_abs l, sq_nonneg (1 - |l|), abs_nonneg l]
   exact (pow_le_pow_iff_left₀ (by positivity) (norm_nonneg _) two_ne_zero).1 h2
 
@@ -388,7 +386,7 @@ theorem pb_dom (a : ℂ) (ha : a = Complex.I ∨ a = -Complex.I) (lam : Fin n �
     have e1 : ((1 - a • b) *ᵥ x) i0 = x i0 - a * ∑ j, b i0 j * x j := by
       simp only [Matrix.mulVec, dotProduct, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, sub_mul,
         Finset.sum_sub_distrib, Finset.mul_sum, Matrix.one_apply, ite_mul, one_mul, zero_mul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_assoc]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true, mul_assoc]
     rw [e1]; simp only [sub_mul, Finset.sum_sub_distrib, hD]; ring
   have hsum : ‖∑ j, (b i0 j - Matrix.diagonal (fun i => (lam i : ℂ)) i0 j) * x j‖ ≤ (n : ℝ) * (c₀ * pbwt lam i0 * m) := by
     calc ‖∑ j, (b i0 j - Matrix.diagonal (fun i => (lam i : ℂ)) i0 j) * x j‖ ≤ ∑ j, ‖(b i0 j - Matrix.diagonal (fun i => (lam i : ℂ)) i0 j) * x j‖ := norm_sum_le _ _
@@ -621,8 +619,8 @@ theorem pBound : PBound := by
     apply hCR
     rintro ⟨t, i, j⟩
     cases t
-    · simp only [Bool.false_eq_true, if_false]; rw [i1]; exact hent _ hY1 i j
-    · simp only [if_true]; rw [i2]; exact hent _ hY2 i j
+    · simp only [Bool.false_eq_true, ite_false]; rw [i1]; exact hent _ hY1 i j
+    · simp only [ite_true]; rw [i2]; exact hent _ hY2 i j
   have hrp : P ^ (-((p + q : ℕ) : ℝ)) = (P ^ (p + q))⁻¹ := by
     rw [Real.rpow_neg hP.le, Real.rpow_natCast]
   show ‖(1 - (Complex.I * s) • (k * b * kᴴ))⁻¹.det ^ p * (1 + (Complex.I * s) • (k * b * kᴴ))⁻¹.det ^ q *
@@ -658,13 +656,7 @@ variable {n : ℕ}
 
 theorem contDiffOn_cpart {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U)
     (hF : ContDiffOn ℂ (⊤ : ℕ∞) F U) (i j : Fin n) : ContDiffOn ℂ (⊤ : ℕ∞) (cpart i j F) U := by
-  letI : NormedAddCommGroup (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedAddCommGroup
-  letI : NormedSpace ℂ (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedSpace
-  have hle : ((⊤ : ℕ∞) : WithTop ℕ∞) + 1 ≤ ((⊤ : ℕ∞) : WithTop ℕ∞) := by
-    rw [← WithTop.coe_one, ← WithTop.coe_add, top_add]
-  have h1 : ContDiffOn ℂ (⊤ : ℕ∞) (fun b => fderiv ℂ F b) U :=
-    hF.fderiv_of_isOpen (m := ((⊤ : ℕ∞) : WithTop ℕ∞)) hU hle
-  exact h1.clm_apply contDiffOn_const
+  apply PositivityTheory.Rg.Sw.WR.K.GB.cpart_contDiffOn <;> assumption
 
 theorem contDiffOn_word {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U)
     (hF : ContDiffOn ℂ (⊤ : ℕ∞) F U) : ∀ L : List (Fin n × Fin n), ContDiffOn ℂ (⊤ : ℕ∞) (word L F) U
@@ -673,8 +665,7 @@ theorem contDiffOn_word {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U)
 
 theorem mem_pdisc_self (b : Mc n) {r : Fin n → Fin n → ℝ} (hr : ∀ i j, 0 < r i j) : b ∈ pdisc b r := by
   intro i j
-  simp only [sub_self, norm_zero]
-  exact (hr i j).le
+  simpa only [sub_self, norm_zero] using (hr i j).le
 
 theorem shift_apply (b : Mc n) (w : ℂ) (i j a c : Fin n) :
     (b + w • Matrix.single i j (1 : ℂ)) a c - b a c = if i = a ∧ j = c then w else 0 := by
@@ -682,7 +673,7 @@ theorem shift_apply (b : Mc n) (w : ℂ) (i j a c : Fin n) :
   by_cases h : i = a ∧ j = c
   · obtain ⟨rfl, rfl⟩ := h
     simp
-  · rw [Matrix.single_apply_of_ne _ _ _ _ _ h, if_neg h, mul_zero]
+  · rw [Matrix.single_apply_of_ne _ _ _ _ _ h, ite_eq_right h, mul_zero]
 
 theorem shift_mem (b : Mc n) {r : Fin n → Fin n → ℝ} (hr : ∀ i j, 0 < r i j) (i j : Fin n) {w : ℂ}
     (hw : ‖w‖ ≤ r i j) : b + w • Matrix.single i j (1 : ℂ) ∈ pdisc b r := by
@@ -738,8 +729,7 @@ theorem cauchy_gen {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : Con
     have hφ : ∀ w : ℂ, HasDerivAt (fun w : ℂ => b + w • E) E w := by
       intro w
       have h := ((hasDerivAt_id w).smul_const E).const_add b
-      rw [one_smul] at h
-      exact h
+      rwa [one_smul] at h
     have hin : ∀ w : ℂ, ‖w‖ ≤ δ → b + w • E ∈ U := fun w hw =>
       hsub (shift_mem b hr ij.1 ij.2 (hw.trans hδr))
     have hdiffG : ∀ x ∈ U, DifferentiableAt ℂ G x := fun x hx =>
@@ -775,8 +765,7 @@ theorem cauchy_gen {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : Con
           intro x _
           simp only [hr']
           field_simp
-        rw [heq] at this
-        exact this
+        rwa [heq] at this
     have hc := Complex.norm_deriv_le_of_forall_mem_sphere_norm_le hδ
       (hfd.diffContOnCl_ball subset_rfl) hsphere
     rw [hderiv] at hc
@@ -920,13 +909,7 @@ theorem herm_isHermitian (y : E n) : (herm y).IsHermitian := by
   simp only [conjTranspose_apply, herm]
   apply Complex.ext <;> simp <;> ring
 
-theorem dP_pos (y : E n) : 0 < dP y := by
-  have hH := herm_isHermitian y
-  have h1 : (1 + herm y * herm y).PosDef := by
-    have := (Matrix.PosDef.one (n := Fin n) (R := ℂ)).add_posSemidef
-      (posSemidef_conjTranspose_mul_self (herm y))
-    rwa [hH.eq] at this
-  exact (Complex.pos_iff.1 h1.det_pos).1
+theorem dP_pos (y : E n) : 0 < dP y := PositivityTheory.Rg.Sw.WR.K.GB.dP_pos y
 
 theorem contDiff_coord (a b : Fin n) : ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => y a b) :=
   (contDiff_apply ℝ (fun _ => ℝ) b).comp (contDiff_apply ℝ (fun _ => (Fin n → ℝ)) a)
@@ -936,8 +919,7 @@ theorem contDiff_herm_entry (i j : Fin n) : ContDiff ℝ (⊤ : ℕ∞) (fun y :
     Complex.ofRealCLM.contDiff.comp ((contDiff_coord i j).add (contDiff_coord j i))
   have h2 : ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => ((y i j - y j i : ℝ) : ℂ)) :=
     Complex.ofRealCLM.contDiff.comp ((contDiff_coord i j).sub (contDiff_coord j i))
-  simp only [herm]
-  exact (h1.div_const 2).add ((contDiff_const.mul h2).div_const 2)
+  simpa only [herm] using (h1.div_const 2).add ((contDiff_const.mul h2).div_const 2)
 
 theorem contDiff_dPc : ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => (1 + herm y * herm y).det) := by
   have hM : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => (1 + herm y * herm y) i j) := by
@@ -1105,11 +1087,11 @@ theorem twist : Twist := by
   have hc0 : ∀ j, ContDiff ℝ (⊤ : ℕ∞) (c0 j) := by
     intro j
     by_cases h : j = 0
-    · simp only [c0, h, if_true]; exact hH
-    · simp only [c0, h, if_false]; exact contDiff_const
+    · simp only [c0, h, ite_true]; exact hH
+    · simp only [c0, h, ite_false]; exact contDiff_const
   have hc0s : ∀ j, 1 ≤ j → c0 j = 0 := by
     intro j hj
-    simp only [c0, show j ≠ 0 by omega, if_false]
+    simp only [c0, show j ≠ 0 by omega, ite_false]
   refine ⟨TDelta^[N] c0, iter_smooth N hc0, ?_⟩
   intro z y
   have h0 : (fun y => ((dP y : ℝ) : ℂ) ^ (-z) * H y) =

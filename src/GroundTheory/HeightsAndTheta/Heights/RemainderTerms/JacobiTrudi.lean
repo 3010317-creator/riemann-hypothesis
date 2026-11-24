@@ -43,8 +43,7 @@ theorem hsymm_eq_sum_finsuppAntidiag (n : ℕ) :
   · intro l _
     simp
   · intro s _
-    rw [Finset.prod_multiset_map_count]
-    rw [Finset.prod_subset (subset_univ _)]
+    rw [Finset.prod_multiset_map_count, Finset.prod_subset (subset_univ _)]
     · simp [Multiset.toFinsupp_apply]
     · intro i _ hi
       rw [Multiset.mem_toFinset] at hi
@@ -132,8 +131,7 @@ theorem sum_hsymm_mul_coeff_omitProduct (j : σ) (α : ℕ) :
     split_ifs with h
     · rfl
     · rw [coeff_omitProduct_eq_zero j c (by omega), zero_mul]
-  rw [hbig, hbig (range (α + 1))]
-  rw [sum_filter, sum_filter]
+  rw [hbig, hbig (range (α + 1)), sum_filter, sum_filter]
   have e1 : ∑ c ∈ range (Fintype.card σ), (if c < Fintype.card σ then
       PowerSeries.coeff c (omitProduct j) * (if c ≤ α then hsymm σ ℚ (α - c) else 0) else 0) =
       ∑ c ∈ range (α + 1 + Fintype.card σ), (if c < Fintype.card σ then
@@ -200,10 +198,10 @@ theorem det_hMatrix_staircase :
     intro i _
     have := i.isLt
     simp only [hMatrix, Matrix.of_apply, completeSymmetric_natSub]
-    rw [if_pos (by omega), show m - 1 - (i : ℕ) - (m - 1 - (i : ℕ)) = 0 by omega, hsymm_zero]
+    rw [ite_eq_left (by omega), show m - 1 - (i : ℕ) - (m - 1 - (i : ℕ)) = 0 by omega, hsymm_zero]
   · intro i c hci
     simp only [hMatrix, Matrix.of_apply, completeSymmetric_natSub]
-    rw [if_neg]
+    rw [ite_eq_right]
     have := c.isLt
     have : (c : ℕ) < i := hci
     omega
@@ -272,8 +270,7 @@ def padPartition {r : ℕ} (n : ℕ) (lam : Fin r → ℕ) : Fin n → ℕ :=
 theorem schur_eq_of_last_eq_zero {n : ℕ} (lam : Fin (n + 1) → ℕ) (h : lam (Fin.last n) = 0) :
     schur σ lam = schur σ (fun i : Fin n => lam i.castSucc) := by
   unfold schur
-  rw [Matrix.det_succ_row _ (Fin.last n)]
-  rw [Fintype.sum_eq_single (Fin.last n)]
+  rw [Matrix.det_succ_row _ (Fin.last n), Fintype.sum_eq_single (Fin.last n)]
   · simp only [Matrix.of_apply, h, Fin.val_last, Fin.succAbove_last]
     rw [show ((0 : ℕ) : ℤ) - (n : ℤ) + (n : ℤ) = 0 by ring]
     simp [completeSymmetric, ← two_mul]
@@ -285,7 +282,7 @@ theorem schur_eq_of_last_eq_zero {n : ℕ} (lam : Fin (n + 1) → ℕ) (h : lam 
       omega
     simp only [Matrix.of_apply, h, Fin.val_last]
     rw [show completeSymmetric σ (((0 : ℕ) : ℤ) - (n : ℤ) + ((j : ℕ) : ℤ)) = 0 by
-      unfold completeSymmetric; rw [if_neg (by omega)]]
+      unfold completeSymmetric; rw [ite_eq_right (by omega)]]
     simp
 
 theorem schur_padPartition {r : ℕ} (lam : Fin r → ℕ) :

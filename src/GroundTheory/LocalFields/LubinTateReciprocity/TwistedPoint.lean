@@ -179,7 +179,7 @@ theorem twistStep_eq_self_iff {ℓ : MvPowerSeries ι B} (hℓ : constantCoeff �
     have hlin : ∀ e : ι →₀ ℕ, e.degree ≤ 1 → coeff e φ = coeff e ℓ := by
       intro e he
       have := congrArg (coeff e) hs
-      rw [coeff_twistStep, if_pos he] at this
+      rw [coeff_twistStep, ite_eq_left he] at this
       exact this.symm
     have hφ0 : constantCoeff φ = 0 := by
       rw [← coeff_zero_eq_constantCoeff_apply, hlin 0 (by simp),
@@ -204,7 +204,7 @@ theorem twistStep_eq_self_iff {ℓ : MvPowerSeries ι B} (hℓ : constantCoeff �
           rw [hd0, sub_zero, coeff_dropConst _ he0, h, pow_one, hlin e (by omega), hℓ1 e h,
             sub_self]
       · have := congrArg (coeff e) hs
-        rw [coeff_twistStep, if_neg he] at this
+        rw [coeff_twistStep, ite_eq_right he] at this
         have hT' := hT e.degree (by omega)
         have h2 := congrArg (twistOp σ u π e.degree) this
         rw [Function.invFun_eq (hT'.2 _)] at h2
@@ -214,8 +214,7 @@ theorem twistStep_eq_self_iff {ℓ : MvPowerSeries ι B} (hℓ : constantCoeff �
     have h2 : ((2 : ℕ) : ℕ∞) ≤ order (φ - ℓ) :=
       nat_le_order fun e he => by rw [map_sub, hlin e (by omega), sub_self]
     refine ⟨by exact_mod_cast h2, ?_⟩
-    rw [twistedDefect, dropConst_of_constantCoeff_eq_zero hφ0, sub_eq_zero] at hdef
-    exact hdef
+    rwa [twistedDefect, dropConst_of_constantCoeff_eq_zero hφ0, sub_eq_zero] at hdef
   · rintro ⟨h2, heq⟩
     have hlin : ∀ e : ι →₀ ℕ, e.degree ≤ 1 → coeff e φ = coeff e ℓ :=
       fun e he => eq_coeff_of_two_le_order_sub h2 he
@@ -635,8 +634,7 @@ theorem exists_isTwistedLift {ε : B} (hε : σ ε = algebraMap A B u * ε) :
       rw [coeff_one_C_mul_X, hε]
       ring)
   have h2' : (2 : ℕ∞) ≤ order ((PowerSeries.C ε * PowerSeries.X : MvPowerSeries Unit B) - θ) := by
-    rw [← neg_sub, order_neg]
-    exact h2
+    rwa [← neg_sub, order_neg]
   exact ⟨θ, constantCoeff_eq_zero_of_two_le_order_sub h2' hℓ0, h2, he⟩
 
 theorem exists_iso_lubinTateFormalGroup :
@@ -935,8 +933,7 @@ theorem isDistinguishedAt_ltEisB (m : ℕ) : (ltEisB π B m).IsDistinguishedAt (
 
 include hπ hunr in
 theorem algebraMap_uniformizer_mul_eq_zero {c : B} (h : algebraMap 𝒪[K] B π * c = 0) : c = 0 := by
-  have hπB := irreducible_algebraMap hunr hπ
-  exact (mul_eq_zero.mp h).resolve_left hπB.ne_zero
+  exact (mul_eq_zero.mp h).resolve_left (irreducible_algebraMap hunr hπ).ne_zero
 
 end Root
 
@@ -960,7 +957,7 @@ theorem repr_ringHom_eq (T : AdjoinRoot P →+* AdjoinRoot P) (ψ : B → B)
   rw [hTz, map_sum]
   simp only [map_smul, Module.Basis.repr_self, Finsupp.coe_finsetSum, Finset.sum_apply,
     Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 end Coordinates
 

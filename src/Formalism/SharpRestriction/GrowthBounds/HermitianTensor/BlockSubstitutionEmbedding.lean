@@ -195,8 +195,7 @@ theorem sc_prod {k : ℕ} (t0 : Fin k) (c : K) (m : Fin k × Fin k →₀ ℕ) :
   · simp
   · intro t _ ht
     simp [ht]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem scCol_coeff {k : ℕ} (t0 : Fin k) (c : K) (f : MvPolynomial (Fin k × Fin k) K) (m : Fin k × Fin k →₀ ℕ) :
     AddMonoidAlgebra.coeff (scCol K k t0 c f) m = AddMonoidAlgebra.coeff f m * c ^ (Finsupp.weight (colW k k) m t0) := by
@@ -242,9 +241,8 @@ theorem colAdd_trivial {k : ℕ} (l j : Fin k) (c : K) (f : MvPolynomial (Fin k 
     have h1 := Finset.sum_eq_zero_iff.1 h0 w.1 (Finset.mem_univ _)
     have e2 : w = (w.1, j) := Prod.ext rfl h
     apply Finsupp.mem_support_iff.1 hw
-    rw [e2]
-    exact h1
-  rw [if_neg hwj]
+    rwa [e2]
+  rw [ite_eq_right hwj]
 
 end Scale
 

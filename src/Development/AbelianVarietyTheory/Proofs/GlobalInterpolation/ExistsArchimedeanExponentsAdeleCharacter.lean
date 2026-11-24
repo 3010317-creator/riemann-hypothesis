@@ -53,8 +53,7 @@ namespace GlobalTheory.SWQ.LamExists
 theorem re_mul_of_isReal {F : Type} [Field F] [NumberField F] (hF : IsTotallyReal F) (a : F) (x : Ainf F)
     (w : InfinitePlace F) : re (algebraMap F (Ainf F) a * x) w = re (algebraMap F (Ainf F) a) w * re x w := by
   have hr : (InfinitePlace.Completion.extensionEmbedding w (algebraMap F (Ainf F) a w)).im = 0 := by
-    rw [InfiniteAdeleRing.algebraMap_apply]
-    rw [InfinitePlace.Completion.extensionEmbedding_coe]
+    rw [InfiniteAdeleRing.algebraMap_apply, InfinitePlace.Completion.extensionEmbedding_coe]
     have := InfinitePlace.isReal_iff.1 (hF.isReal w)
     exact Complex.conj_eq_iff_im.1 (RingHom.congr_fun this a)
   show (InfinitePlace.Completion.extensionEmbedding w (algebraMap F (Ainf F) a w * x w)).re = _
@@ -64,8 +63,7 @@ theorem re_mul_of_isReal {F : Type} [Field F] [NumberField F] (hF : IsTotallyRea
 theorem re_ne_zero {F : Type} [Field F] [NumberField F] (a : F) (ha : a ≠ 0) (w : InfinitePlace F)
     (hF : IsTotallyReal F) : re (algebraMap F (Ainf F) a) w ≠ 0 := by
   have hr : (InfinitePlace.Completion.extensionEmbedding w (algebraMap F (Ainf F) a w)).im = 0 := by
-    rw [InfiniteAdeleRing.algebraMap_apply]
-    rw [InfinitePlace.Completion.extensionEmbedding_coe]
+    rw [InfiniteAdeleRing.algebraMap_apply, InfinitePlace.Completion.extensionEmbedding_coe]
     have := InfinitePlace.isReal_iff.1 (hF.isReal w)
     exact Complex.conj_eq_iff_im.1 (RingHom.congr_fun this a)
   intro h0

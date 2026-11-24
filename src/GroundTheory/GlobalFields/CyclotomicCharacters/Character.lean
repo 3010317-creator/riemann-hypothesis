@@ -61,8 +61,7 @@ theorem maxCyclotomic_eq_iSup : maxCyclotomic = ⨆ n : ℕ+, rootsOfUnityField 
   refine le_antisymm (adjoin_le_iff.mpr ?_) (iSup_le fun n => adjoin_le_iff.mpr ?_)
   · rintro x ⟨n, hn, hx⟩
     exact le_iSup (fun n : ℕ+ => rootsOfUnityField n) ⟨n, hn⟩ (subset_adjoin ℚ _ hx)
-  · intro x hx
-    exact subset_adjoin ℚ _ ⟨n, n.pos, hx⟩
+  · exact fun x hx => subset_adjoin ℚ _ ⟨n, n.pos, hx⟩
 
 theorem rootsOfUnityField_eq_adjoin {n : ℕ} [NeZero n] {ζ : (AlgebraicClosure ℚ)} (hζ : IsPrimitiveRoot ζ n) :
     rootsOfUnityField n = ℚ⟮ζ⟯ := by
@@ -175,8 +174,7 @@ theorem exists_modCharacter_eq (n : ℕ) [NeZero n] (a : (ZMod n)ˣ) :
   rw [MulEquiv.apply_symm_apply] at hτ
   refine ⟨τ.liftNormal (AlgebraicClosure ℚ), Units.ext (modCharacter_eq_of_apply hζ ?_)⟩
   have := AlgEquiv.liftNormal_commutes τ (AlgebraicClosure ℚ) ζ'
-  rw [hτ, map_pow] at this
-  exact this
+  rwa [hτ, map_pow] at this
 
 end Modular
 
@@ -211,8 +209,7 @@ theorem eq_character (σ : Gal((AlgebraicClosure ℚ)/ℚ)) (u : ℤ̂)
   rw [proj_character, modCharacter_unique σ (hu n)]
 
 theorem continuous_character_val : Continuous fun σ : Gal((AlgebraicClosure ℚ)/ℚ) => (character σ : ℤ̂) := by
-  refine continuous_induced_rng.2 (continuous_pi fun n => ?_)
-  exact continuous_modCharacter n
+  exact continuous_induced_rng.2 (continuous_pi fun n => (continuous_modCharacter n))
 
 theorem continuous_character : Continuous character := by
   rw [Units.continuous_iff]
@@ -257,8 +254,7 @@ theorem character_eq_one_iff (σ : Gal((AlgebraicClosure ℚ)/ℚ)) :
   · rintro h x ⟨n, hn, hx⟩
     obtain ⟨N, rfl⟩ : ∃ N : ℕ+, (N : ℕ) = n := ⟨⟨n, hn⟩, rfl⟩
     have := character_spec σ N hx
-    rw [h, Units.val_one, map_one, pow_val_one hx] at this
-    exact this
+    rwa [h, Units.val_one, map_one, pow_val_one hx] at this
   · intro h
     refine Units.ext (eq_character σ 1 fun n t ht => ?_).symm
     rw [map_one, pow_val_one ht]
@@ -292,8 +288,7 @@ theorem isArithFrobAt_restrictNormal_iff (hm : ¬ p ∣ m) (σ : Gal((AlgebraicC
     have := congrArg (algebraMap (rootsOfUnityField m) (AlgebraicClosure ℚ)) (h ζ' hζ')
     rw [AlgEquiv.restrictNormal_commutes, map_pow] at this
     refine modCharacter_eq_of_apply hζ ?_
-    rw [pow_val_natCast hζ.pow_eq_one]
-    exact this
+    rwa [pow_val_natCast hζ.pow_eq_one]
   · intro h x hx
     have hx' : (algebraMap (rootsOfUnityField m) (AlgebraicClosure ℚ) x) ^ m = 1 := by
       rw [← map_pow, hx, map_one]

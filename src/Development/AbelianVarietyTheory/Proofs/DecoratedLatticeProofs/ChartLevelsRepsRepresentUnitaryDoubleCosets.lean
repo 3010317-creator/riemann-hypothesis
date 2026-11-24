@@ -236,8 +236,7 @@ theorem reps_of_chart (hy : Function.Bijective (fun c => (Quotient.mk'' (y c) : 
       refine ⟨(r.symm ⟨δ, hδ⟩).1, (r.symm ⟨δ, hδ⟩).2, ?_⟩
       apply Units.ext
       have h1 := hr (r.symm ⟨δ, hδ⟩)
-      rw [MulEquiv.apply_symm_apply] at h1
-      exact h1
+      rwa [MulEquiv.apply_symm_apply] at h1
     refine ⟨γ, hγ, c, (h c)⁻¹ * γ⁻¹ * g * κ⁻¹, ?_, κ, hκU, by group⟩
     rw [← finHomN_eq_one V hn]
     have e1 : finHomN V hn g = finHomN V hn p.2.1 := by

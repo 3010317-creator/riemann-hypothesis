@@ -96,13 +96,12 @@ theorem mem_spanR_iff {m : ℕ} (Y D : Fin m → Fin n → E)
       symm
       unfold projD
       rw [Finset.sum_eq_single a0]
-      · rw [if_pos ha0, covR_ratV, hD, if_pos rfl, map_one, one_smul]
+      · rw [ite_eq_left ha0, covR_ratV, hD, ite_eq_left rfl, map_one, one_smul]
       · intro a _ hne
         split_ifs
-        · rw [covR_ratV, hD, if_neg (Ne.symm hne), map_zero, zero_smul]
+        · rw [covR_ratV, hD, ite_eq_right (Ne.symm hne), map_zero, zero_smul]
         · exact zero_smul _ _
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     | zero => rw [projD_zero]
     | add x y _ _ hx hy => rw [projD_add, ← hx, ← hy]
     | smul c x _ hx => rw [projD_smul, ← hx]
@@ -136,11 +135,11 @@ theorem dual_frame_pairing (hJ : IsHermND σ J) (hinv : ∀ x, σ (σ x) = x) {r
   | last =>
     induction a' using Fin.lastCases with
     | last =>
-      simp only [dualFrameAlt, F0, Fin.snoc_last, hE_smul_left, hc, if_true]
+      simp only [dualFrameAlt, F0, Fin.snoc_last, hE_smul_left, hc, ite_true]
       rw [hP.2.2.2.2.2.1, ← map_mul, inv_mul_cancel₀ (neg_ne_zero.2 hP.2.2.2.2.2.2), map_one]
     | cast j =>
       simp only [dualFrameAlt, F0, Fin.snoc_last, Fin.snoc_castSucc, hP.2.2.2.2.1 j]
-      rw [if_neg (fun h => Fin.castSucc_ne_last j h.symm)]
+      rw [ite_eq_right (fun h => Fin.castSucc_ne_last j h.symm)]
   | cast i =>
     induction a' using Fin.lastCases with
     | last =>
@@ -215,8 +214,7 @@ theorem isClosed_stabT {a : ℕ} (X : Fin a → Fin n → E) :
   have h : (stabT (Af F) σ J X : Set (HA (Af F) σ J)) =
       ⋂ b, {g | lin (Af F) σ J g (ratV (F := F) (Af F) (X b)) = ratV (F := F) (Af F) (X b)} := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
-    exact mem_stabT (Af F) σ J X g
+    simpa only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe] using mem_stabT (Af F) σ J X g
   rw [h]
   exact isClosed_iInter fun b => isClosed_eq (continuous_lin _) continuous_const
 

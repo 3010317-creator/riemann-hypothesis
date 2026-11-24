@@ -71,8 +71,7 @@ private theorem exists_index_eq_fr_of_between {n' r : ℕ} [NeZero n'] (F : Fram
   intro k
   induction k with
   | zero =>
-    intro _ h1 h2
-    exact ⟨0, le_refl _, le_antisymm h2 h1⟩
+    exact fun _ h1 h2 => ⟨0, le_refl _, le_antisymm h2 h1⟩
   | succ k ih =>
     intro hk h1 h2
     rcases le_or_gt x (F.fr j k) with h | h
@@ -101,8 +100,7 @@ theorem lam_W_late {n' r : ℕ} [NeZero n'] [NeZero r] (X : Dat n' r) {L₁ N₁
   simp only [Finset.mem_filter]
   refine ⟨?_, ?_⟩
   · unfold Frames.letters
-    simp only [Finset.mem_filter, Finset.mem_Icc]
-    exact ⟨⟨by omega, hmi⟩, hxT⟩
+    simpa only [Finset.mem_filter, Finset.mem_Icc] using ⟨⟨by omega, hmi⟩, hxT⟩
   · unfold Frames.IsW
     omega
 
@@ -165,8 +163,7 @@ private theorem mem_late_of_mem_Ioc_of_posOf_mem {n' r : ℕ} [NeZero n'] [NeZer
   simp only [Finset.mem_filter]
   refine ⟨?_, ?_⟩
   · unfold Frames.letters
-    simp only [Finset.mem_filter, Finset.mem_Icc]
-    exact ⟨⟨by omega, h2⟩, h3⟩
+    simpa only [Finset.mem_filter, Finset.mem_Icc] using ⟨⟨by omega, h2⟩, h3⟩
   · unfold Frames.IsW
     omega
 
@@ -287,8 +284,7 @@ theorem restLamGeo (C₀ : ℝ) : RestLamGeo C₀ := by
     · obtain ⟨e1, e2⟩ := eq_of_mod_eq_of_mem_Ioc_fr_last X.F hV 0 (((j : ℕ) : ℤ) - 1) ((j' : ℕ) : ℤ) x x'
         (by omega) (by omega) (by omega) (by omega) a1 a2 b1 b2 (emod_eq_of_posOf_eq' hp)
       refine ⟨⟨i, hi, ?_⟩, ?_⟩
-      · rw [← e1, ← e2]
-        exact hxi
+      · rwa [← e1, ← e2]
       · rw [← e1, ← e2]
         refine Pz_eq_Pz_mul_Qc X p K _ (((j : ℕ) : ℤ) - 1) x x 0 (by rw [add_zero]) (by rw [add_zero])
           ?_ ?_ (by rw [add_zero]) a2 hTT hA hB hC
@@ -350,24 +346,21 @@ theorem restLamTau : RestLamTau := by
   have hT := (hV.2.2.2.2.1 ((j : ℕ) : ℤ) i hi).1
   have hmem : X.F.fr ((j : ℕ) : ℤ) i ∈ X.F.letters ((j : ℕ) : ℤ) := by
     unfold Frames.letters
-    simp only [Finset.mem_filter, Finset.mem_Icc]
-    exact ⟨⟨by omega, hle⟩, hT⟩
+    simpa only [Finset.mem_filter, Finset.mem_Icc] using ⟨⟨by omega, hle⟩, hT⟩
   have hnW : ¬ X.F.IsW ((j : ℕ) : ℤ) (X.F.fr ((j : ℕ) : ℤ) i) := by
     unfold Frames.IsW
     omega
   unfold Dat.bfam
-  rw [if_pos hmem, if_neg hnW, if_pos h0i]
-  rw [Finset.sum_eq_single i]
-  · rw [if_pos rfl]
+  rw [ite_eq_left hmem, ite_eq_right hnW, ite_eq_left h0i, Finset.sum_eq_single i]
+  · rw [ite_eq_left rfl]
     unfold Dat.eZ
     rw [dite_eq_left (by omega)]
     congr 1
     ext
     have hm : ((j : ℕ) : ℤ) % (X.F.J : ℤ) = ((j : ℕ) : ℤ) := Int.emod_eq_of_lt (by omega) (by omega)
-    simp only [hm, Int.toNat_natCast]
-    exact Nat.mod_eq_of_lt hj
+    simpa only [hm, Int.toNat_natCast] using Nat.mod_eq_of_lt hj
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hb
     have hbl := b.isLt
@@ -379,8 +372,7 @@ theorem restLamTau : RestLamTau := by
     · have h1 := hV.2.2.1 ((j : ℕ) : ℤ) i (by omega)
       have h2 := fr_le_fr_of_index_le X.F hV ((j : ℕ) : ℤ) b hbl ((i : ℕ) + 1) (by omega)
       omega
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem restLamInj (C₀ : ℝ) : RestLamInj C₀ := restLamInj_of C₀ (restLamGeo C₀) restLamTau
 

@@ -229,8 +229,7 @@ theorem leviTau : LeviTau := by
     rw [hM, adelicConjTranspose_blockMatrixTwoByTwoFin, GlobalTheory.StdUnn.Frame.submatrix_fromBlocks_mul, GlobalTheory.StdUnn.Frame.submatrix_fromBlocks_mul] at hU
     have e := congrArg bB hU
     rw [upper_right_of_block_matrix, upper_right_of_block_matrix] at e
-    simp only [mul_zero, zero_mul, add_zero, zero_add, mul_one] at e
-    exact e
+    simpa only [mul_zero, zero_mul, add_zero, zero_add, mul_one] using e
   have hD : bD M = adj (bA M') := by
     have e : adj (bA M') * adj (bA M) = 1 := by rw [← LeviH.adj_mul, hAA', LeviH.adj_one]
     calc bD M = 1 * bD M := (one_mul _).symm
@@ -304,7 +303,7 @@ theorem awayNZ : AwayNZ := by
     simp [compAt]
   have hg0 : g (fun i j => finPart D ((0 : Mx D V.rank n) i j)) = 1 := by
     simp only [g]
-    rw [if_pos]
+    rw [ite_eq_left]
     simp only [Matrix.zero_apply, map_zero]
     exact (QuotientAddGroup.eq_zero_iff (N := W) (0 : Matrix (Fin V.rank) (Fin n) _)).2 W.zero_mem
   show evalPoly _ _ * gAway V l s τ _ * g _ ≠ 0
@@ -401,7 +400,7 @@ theorem hasCLM_n (hU : UnipTau) (hC : Cx D n V ψ χ θ μ ω H l s ν τ ε fr 
     | mul_X p k hp =>
       have hk : (fun u : (Fin V.rank → Fin n → ℂ) => if k.2.2 then star (u k.1 k.2.1) else u k.1 k.2.1).HasTemperateGrowth := by
         by_cases h : k.2.2
-        · simp only [h, if_true]
+        · simp only [h, ite_true]
           exact ((Complex.conjCLE.toContinuousLinearMap.restrictScalars ℝ).comp (coordL k.1 k.2.1)).hasTemperateGrowth
         · simp only [h]
           exact (coordL k.1 k.2.1).hasTemperateGrowth
@@ -536,7 +535,7 @@ theorem hasCLM_nbar (hU : UnipTau) (hW : WEx) (hS : SchOps) (hF : FTfact) (hl0 :
     | mul_X p k hp =>
       have hk : (fun u : (Fin V.rank → Fin n → ℂ) => if k.2.2 then star (u k.1 k.2.1) else u k.1 k.2.1).HasTemperateGrowth := by
         by_cases h : k.2.2
-        · simp only [h, if_true]
+        · simp only [h, ite_true]
           exact ((Complex.conjCLE.toContinuousLinearMap.restrictScalars ℝ).comp (coordL k.1 k.2.1)).hasTemperateGrowth
         · simp only [h]
           exact (coordL k.1 k.2.1).hasTemperateGrowth

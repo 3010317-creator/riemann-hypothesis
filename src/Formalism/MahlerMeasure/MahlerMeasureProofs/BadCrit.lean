@@ -152,7 +152,7 @@ theorem badCrit_goodCount_bdd (be : Vs →ₗ[ℚ_[p]] Vs →ₗ[ℚ_[p]] ℚ_[p
 
     simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, LinearMap.sum_apply,
     Submodule.coe_zero, map_zero, LinearMap.zero_apply] at h1
-    simp only [badCrit_be_smul_left, hxy, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
+    simp only [badCrit_be_smul_left, hxy, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h1
     have hp : (p : ℚ_[p]) ^ D ≠ 0 := zpow_ne_zero _ (by exact_mod_cast (Fact.out : p.Prime).ne_zero)
     exact PadicInt.ext (((mul_eq_zero.1 h1).resolve_right hp).trans PadicInt.coe_zero.symm)
   simpa using hli.fintype_card_le_finrank
@@ -200,9 +200,7 @@ theorem badCrit_pairs (be : Vs →ₗ[ℚ_[p]] Vs →ₗ[ℚ_[p]] ℚ_[p]) (L L�
   have hCE : C ≤ (p : ℝ) ^ ((E : ℤ) - D) := by
     rw [zpow_sub₀ hp0.ne', zpow_natCast, le_div_iff₀ (zpow_pos hp0 _)]
     exact hE.le
-  have hnp : ∀ z : ℤ, ‖(p : ℚ_[p]) ^ z‖ = (p : ℝ) ^ (-z) := by
-    intro z
-    exact Padic.norm_p_zpow z
+  have hnp : ∀ z : ℤ, ‖(p : ℚ_[p]) ^ z‖ = (p : ℝ) ^ (-z) := fun z => Padic.norm_p_zpow z
   have hint : ∀ w ∈ L, ∀ a, ‖(p : ℚ_[p]) ^ ((E : ℤ) - D) * be (u a) w‖ ≤ 1 := by
     intro w hw a
     rw [norm_mul, hnp]

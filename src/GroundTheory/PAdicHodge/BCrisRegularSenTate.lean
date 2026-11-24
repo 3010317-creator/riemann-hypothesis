@@ -514,15 +514,13 @@ theorem restrictNormalHom_mem_lowerRamificationGroup_zero (M : IntermediateField
   intro x hx
   have hx1 : nrm K ((⟨x, hx⟩ : 𝒪[M]) : PadicAlgCl p) ≤ 1 := (mem_integer_iff_nrm_le_one M x).1 hx
   have hxn : ‖((x : M) : PadicAlgCl p)‖ ≤ 1 := by
-    rw [← norm_one (α := PadicAlgCl p), ← nrm_le_nrm_iff_norm_le' (K := K), nrm_one]
-    exact hx1
+    rwa [← norm_one (α := PadicAlgCl p), ← nrm_le_nrm_iff_norm_le' (K := K), nrm_one]
   have h1 := (mem_inertiaGal.1 hτ) _ hxn
   set z : M := AlgEquiv.restrictNormalHom M τ x - x
   have hz : ((z : M) : PadicAlgCl p) = τ (x : PadicAlgCl p) - (x : PadicAlgCl p) := by
     simp only [z, AddSubgroupClass.coe_sub, AlgEquiv.restrictNormalHom_apply]
   have hzlt : nrm K ((z : M) : PadicAlgCl p) < 1 := by
-    rw [← nrm_one (K := K) (Ω := PadicAlgCl p), nrm_lt_nrm_iff_norm_lt', norm_one, hz]
-    exact h1
+    rwa [← nrm_one (K := K) (Ω := PadicAlgCl p), nrm_lt_nrm_iff_norm_lt', norm_one, hz]
   have key : nrm K ((z : M) : PadicAlgCl p) ≤ unifNrm M ^ (1 : ℤ) := by
     rcases eq_or_ne z 0 with h0 | h0
     · rw [h0, IntermediateField.coe_zero, nrm_zero]
@@ -822,8 +820,7 @@ theorem eq_zero_of_mem_inertiaGal (hη : Continuous η) {τ : Gal(PadicAlgCl p/K
       rw [nrm_zpow, ← Real.rpow_intCast]
       push_cast
       rfl
-    rw [e, ← nrm_mul, nrm_le_nrm_iff_norm_le', norm_mul] at h
-    exact h
+    rwa [e, ← nrm_mul, nrm_le_nrm_iff_norm_le', norm_mul] at h
   refine eq_zero_of_tower K η (charTower η) (charTower_mono η)
     (fun σ k y hy => map_mem_charTower hη σ hy) (fun σ hσ => ?_) C (max (artinLevel K η n₀) b)
     hbound (fun n hn => ?_) hx
@@ -833,11 +830,9 @@ theorem eq_zero_of_mem_inertiaGal (hη : Continuous η) {τ : Gal(PadicAlgCl p/K
   · obtain ⟨h1, h1'⟩ := pow_prime_pow_mem_not_mem hb2 hb hb' (n - b)
     rw [Nat.add_sub_cancel' (le_of_max_le_right hn)] at h1 h1'
     refine ⟨τ ^ p ^ (n - b), ?_, ?_⟩
-    · rw [fixingSubgroup_charTower hη, mem_charTowerGal, map_pow]
-      exact h1
+    · rwa [fixingSubgroup_charTower hη, mem_charTowerGal, map_pow]
     · rw [map_pow]
-      intro h
-      exact h1' (h ▸ one_mem _)
+      exact fun h => h1' (h ▸ one_mem _)
 
 end SenTateChar
 
@@ -913,8 +908,7 @@ theorem mem_inertiaGal_of_forall_unramifiedClosure {K : IntermediateField ℚ_[p
       ring
     rw [e]
     refine (norm_sub_le_max_of_ultrametric _ _).trans (max_le ?_ hd)
-    rw [norm_gal_apply]
-    exact hd
+    rwa [norm_gal_apply]
   have hσy : ‖σ y‖ ≤ 1 := by rwa [norm_gal_apply]
   have hdiff : ‖σ y - y‖ ≤ 1 := (norm_sub_le_max_of_ultrametric _ _).trans (max_le hσy hy)
   let a : normInteger (PadicAlgCl p) := ⟨σ y - y, mem_normInteger.2 hdiff⟩
@@ -932,8 +926,7 @@ theorem mem_inertiaGal_of_forall_unramifiedClosure {K : IntermediateField ℚ_[p
     refine (norm_sub_le_max_of_ultrametric (σ y ^ n - y ^ n)
       ((p : PadicAlgCl p) * (σ y - y) * y * r)).trans_lt (max_lt (hσn.trans_lt
       norm_natCast_p_algCl_lt_one) ?_)
-    rw [norm_mul, norm_mul, norm_mul]
-    rw [mul_assoc, mul_assoc]
+    rw [norm_mul, norm_mul, norm_mul, mul_assoc, mul_assoc]
     refine lt_of_le_of_lt (mul_le_of_le_one_right (norm_nonneg (p : PadicAlgCl p)) ?_)
       (norm_natCast_p_algCl_lt_one (p := p))
     exact mul_le_one₀ hdiff (by positivity) (mul_le_one₀ hy (norm_nonneg _) hr1)

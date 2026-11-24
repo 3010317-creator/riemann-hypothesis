@@ -60,16 +60,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 variable (F) in
 theorem nonarch_finAdeles : NonarchimedeanAddGroup (FiniteAdeleRing (𝓞 F) F) := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
-    _root_.GlobalTheory.HeisSchA.nonarch_of_isInducing (v.adicCompletionIntegers F).subtype.toAddMonoidHom Topology.IsInducing.subtypeVal
-  haveI := _root_.GlobalTheory.HeisSchA.nonarch_pi (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
-  let f : (∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F) →+ FiniteAdeleRing (𝓞 F) F :=
-    { toFun := RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
-        (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite
-      map_zero' := rfl
-      map_add' := fun _ _ => rfl }
-  exact NonarchimedeanAddGroup.nonarchimedean_of_emb f
-    (RestrictedProduct.isOpenEmbedding_structureMap (fun v => Valued.isOpen_integer _))
+  exact GlobalTheory.HeisSchA.nonarch_finiteAdeleRing
 
 def transFix {M : Type} [AddCommGroup M] (Φ : M → ℂ) : AddSubgroup M where
   carrier := {u | ∀ x, Φ (x + u) = Φ x}
@@ -104,9 +95,7 @@ theorem isOpen_transFix {M : Type} [AddCommGroup M] [TopologicalSpace M] [IsTopo
 
 theorem adeleJoin_zero {κ : Type} (y : κ → FiniteAdeleRing (𝓞 F) F) (i : κ) :
     GlobalTheory.WeilCont.adeleJoin F 0 y i = ((0 : InfiniteAdeleRing F), y i) := by
-  refine Prod.ext ?_ rfl
-  show (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm 0 = 0
-  exact map_zero _
+  exact Prod.ext (map_zero _) rfl
 
 theorem dot_adeleJoin_zero {κ : Type} [Fintype κ] (v : κ → AdeleRing (𝓞 F) F) (y : κ → FiniteAdeleRing (𝓞 F) F) :
     v ⬝ᵥ GlobalTheory.WeilCont.adeleJoin F 0 y = ((0 : InfiniteAdeleRing F), (fun i => (v i).2) ⬝ᵥ y) := by

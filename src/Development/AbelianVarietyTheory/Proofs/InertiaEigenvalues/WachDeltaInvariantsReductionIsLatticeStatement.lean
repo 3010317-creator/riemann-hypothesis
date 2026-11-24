@@ -68,21 +68,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 theorem one_mem_del : (1 : W.Gam) ∈ W.DelF := (_root_.GlobalTheory.WachTie.mem_DelF_iff W 1).2 IsOfFinOrder.one
 
 theorem prod_del {M : Type} [CommMonoid M] (f : W.Gam → M) {d : W.Gam} (hd : d ∈ W.DelF) :
-    ∏ δ ∈ W.DelF, f (d * δ) = ∏ δ ∈ W.DelF, f δ := by
-  rw [_root_.GlobalTheory.WachTie.mem_DelF_iff] at hd
-  refine Finset.prod_nbij' (fun δ => d * δ) (fun δ => d⁻¹ * δ) ?_ ?_ ?_ ?_ ?_
-  · intro a ha
-    rw [_root_.GlobalTheory.WachTie.mem_DelF_iff] at ha ⊢
-    exact hd.mul ha
-  · intro a ha
-    rw [_root_.GlobalTheory.WachTie.mem_DelF_iff] at ha ⊢
-    exact hd.inv.mul ha
-  · intro a _
-    simp
-  · intro a _
-    simp
-  · intro a _
-    rfl
+    ∏ δ ∈ W.DelF, f (d * δ) = ∏ δ ∈ W.DelF, f δ := GlobalTheory.WachTie.prod_DelF_mul W f d hd
 
 theorem sum_del {M : Type} [AddCommMonoid M] (f : W.Gam → M) {d : W.Gam} (hd : d ∈ W.DelF) :
     ∑ δ ∈ W.DelF, f (d * δ) = ∑ δ ∈ W.DelF, f δ :=
@@ -108,8 +94,7 @@ theorem smul_mem_DΔ (T : LocLat G Qp LL O) {a : LetA O n₀} (ha : ∀ i, ∀ �
 theorem approx (T : LocLat G Qp LL O) (hT : IsCrys PD T.ρ) (x : W.DD T) :
     ∃ (m : ℕ) (y z : W.DD T), y ∈ W.N T ∧ ((letπ : LetA O n₀) ^ m) • x = y + PD.p • z := by
   refine (W.N_base T hT).inductionOn x ?_ ?_ ?_
-  · intro y
-    exact ⟨0, y, 0, y.2, by simp⟩
+  · exact fun y => ⟨0, y, 0, y.2, by simp⟩
   · rintro e x ⟨m, y, z, hy, h⟩
     obtain ⟨a, m', ha⟩ := W.EE_dense e 1
     rw [pow_one, Ideal.mem_span_singleton'] at ha
@@ -268,8 +253,7 @@ theorem card_ne_zero {l : ℕ} [Fact l.Prime] [CharP k l]
       simp only [Finset.mem_coe, Multiset.mem_toFinset]
       rw [Polynomial.mem_nthRoots (by omega)]
       exact (e δ).2
-    · intro a _ b _ h
-      exact e.injective (Subtype.ext h)
+    · exact fun a _ b _ h => e.injective (Subtype.ext h)
   rw [Ne, CharP.cast_eq_zero_iff k l]
   intro h
   have := Nat.le_of_dvd hpos h

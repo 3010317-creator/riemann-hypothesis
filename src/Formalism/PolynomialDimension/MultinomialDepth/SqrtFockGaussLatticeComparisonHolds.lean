@@ -181,7 +181,7 @@ theorem xFactorial_add_diagExponent (m : XY k →₀ ℕ) (i : Fin k) (n : ℕ) 
     have : i ≠ j := (Finset.ne_of_mem_erase hj).symm
     simp [diagExponent_inl, this]
   rw [h1]
-  simp only [Finsupp.add_apply, diagExponent_inl, if_true]
+  simp only [Finsupp.add_apply, diagExponent_inl, ite_true]
   rw [factorial_add_eq_descFactorial_mul, mul_assoc]
 
 def h3e (K : Type) [Field K] {k : ℕ} (i : Fin k) : Module.End K (PolXY K k) :=
@@ -495,8 +495,7 @@ theorem pow_log_smul_isotypicProj_mem (R : Subring K) (p : ℕ) (hp : p.Prime) (
     congr 1
     rw [two_mul, pow_add]
     ring
-  rw [this]
-  exact h3
+  rwa [this]
 
 end Proj
 
@@ -609,7 +608,7 @@ theorem glAct_hXY {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) : glAct g (h
         rw [map_sum, Finset.sum_mul]
         exact Finset.sum_congr rfl fun i _ => by rw [map_mul]; ring
     _ = ∑ i : Fin k, X (Sum.inl i) * X (Sum.inr i) := by
-        simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : PolXY K k) :
     glAct g⁻¹ (glAct g f) = f := by
@@ -632,7 +631,7 @@ theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : P
             simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
             rw [Finset.sum_comm]
         _ = X (Sum.inl i) := by
-          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     · set_option synthInstance.maxHeartbeats 100000 in
         simp only [AlgHom.comp_apply, AlgHom.id_apply, glAct_X_inr, map_sum, map_mul,
         MvPolynomial.algHom_C, MvPolynomial.algebraMap_eq, inv_inv]
@@ -656,7 +655,7 @@ theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : P
             simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
             rw [Finset.sum_comm]
         _ = X (Sum.inr i) := by
-          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   have h2 := congrArg (fun φ => φ f) key
   simpa using h2
 
@@ -669,8 +668,7 @@ theorem mem_latOf_iff {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (S : Set
   constructor
   · rintro ⟨h, hS, rfl⟩
     rwa [glAct_inv_glAct]
-  · intro hf
-    exact ⟨glAct g⁻¹ f, hf, glAct_glAct_inv g f⟩
+  · exact fun hf => ⟨glAct g⁻¹ f, hf, glAct_glAct_inv g f⟩
 
 def wXY (k : ℕ) : XY k → ℕ × ℕ := Sum.elim (fun _ => (1, 0)) (fun _ => (0, 1))
 
@@ -752,7 +750,7 @@ theorem multinomial_factorization_le (p : ℕ) {ι : Type} [DecidableEq ι] (s :
     rcases s.eq_empty_or_nonempty with hs | hs
     · subst hs
       simp [Nat.multinomial_singleton]
-    · rw [Nat.multinomial_insert ha, Finset.sum_insert ha, Finset.card_insert_eq_ite, if_neg ha]
+    · rw [Nat.multinomial_insert ha, Finset.sum_insert ha, Finset.card_insert_eq_ite, ite_eq_right ha]
       have hc : (f a + ∑ i ∈ s, f i).choose (f a) ≠ 0 := (Nat.choose_pos (Nat.le_add_right _ _)).ne'
       have hm : Nat.multinomial s f ≠ 0 := (Nat.multinomial_pos _ _).ne'
       rw [Nat.factorization_mul hc hm, Finsupp.add_apply]
@@ -773,12 +771,10 @@ def xMul {k : ℕ} (m : XY k →₀ ℕ) : ℕ := Nat.multinomial Finset.univ (f
 def yMul {k : ℕ} (m : XY k →₀ ℕ) : ℕ := Nat.multinomial Finset.univ (fun i : Fin k => m (Sum.inr i))
 
 theorem xFact_mul_xMul {k : ℕ} (m : XY k →₀ ℕ) : xFact m * xMul m = (xDeg m).factorial := by
-  simp only [xFact, xMul, xDeg]
-  exact Nat.multinomial_spec _ _
+  simpa only [xFact, xMul, xDeg] using Nat.multinomial_spec _ _
 
 theorem yFact_mul_yMul {k : ℕ} (m : XY k →₀ ℕ) : yFact m * yMul m = (yDeg m).factorial := by
-  simp only [yFact, yMul, yDeg]
-  exact Nat.multinomial_spec _ _
+  simpa only [yFact, yMul, yDeg] using Nat.multinomial_spec _ _
 
 theorem xMul_ne_zero {k : ℕ} (m : XY k →₀ ℕ) : xMul m ≠ 0 :=
   (Nat.multinomial_pos _ _).ne'
@@ -963,7 +959,7 @@ private theorem coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth (v : XY k
     by_cases hs : s = m + Finsupp.single v 1
     · subst hs
       simp
-    · rw [if_neg hs, zero_mul]
+    · rw [ite_eq_right hs, zero_mul]
       split_ifs with h
       · have hsv : s v = 0 := by
           by_contra hne
@@ -989,7 +985,7 @@ theorem coeff_ctrF (f : PolXY K k) (m : XY k →₀ ℕ) :
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [LinearMap.comp_apply]
   show AddMonoidAlgebra.coeff (pderiv (R := K) (Sum.inl i : XY k) (pderiv (R := K) (Sum.inr i : XY k) f)) m = _
-  rw [coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, Finsupp.add_apply, Finsupp.single_apply, if_neg Sum.inl_ne_inr,
+  rw [coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, Finsupp.add_apply, Finsupp.single_apply, ite_eq_right Sum.inl_ne_inr,
     add_zero]
 
 theorem hXY_mem_PolAB : hXY K k ∈ PolAB K k 1 1 := by
@@ -1149,12 +1145,12 @@ theorem h_mul_eq_zero_of_deg {K : Type} [Field K] {k A B : ℕ} (hAB : A = 0 ∨
     · have hle : m (Sum.inl i) ≤ xDeg m :=
         Finset.single_le_sum (f := fun j => m (Sum.inl j)) (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)
       have hmi : m (Sum.inl i) = 0 := by omega
-      rw [mul_assoc, MvPolynomial.coeff_X_mul', if_neg (by simpa [Finsupp.mem_support_iff] using hmi)]
+      rw [mul_assoc, MvPolynomial.coeff_X_mul', ite_eq_right (by simpa [Finsupp.mem_support_iff] using hmi)]
     · have hle : m (Sum.inr i) ≤ yDeg m :=
         Finset.single_le_sum (f := fun j => m (Sum.inr j)) (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)
       have hmi : m (Sum.inr i) = 0 := by omega
       rw [mul_comm (X (Sum.inl i)) (X (Sum.inr i)), mul_assoc, MvPolynomial.coeff_X_mul',
-        if_neg (by simpa [Finsupp.mem_support_iff] using hmi)]
+        ite_eq_right (by simpa [Finsupp.mem_support_iff] using hmi)]
 
 theorem harQuot_of (H1 : HarProj) (H2 : GaussProj) : HarQuot := by
   intro K _ _ k A B p O g hk hp hR
@@ -1167,8 +1163,7 @@ theorem harQuot_of (H1 : HarProj) (H2 : GaussProj) : HarQuot := by
       have e1 := H1b w hw
       have e2 := H1c hAB.1 hAB.2 G' hG'
       rw [← hwG'] at e2
-      rw [← e1]
-      exact e2
+      rwa [← e1]
     · exact h_mul_eq_zero_of_deg (by omega) hwP hwG
   · obtain ⟨hhar, g', hg', hdiff⟩ := H1a f hf
     have hEO : (p : K) ^ ((k + 1) * Nat.log p (A + B + k)) ∈ O.toSubring :=

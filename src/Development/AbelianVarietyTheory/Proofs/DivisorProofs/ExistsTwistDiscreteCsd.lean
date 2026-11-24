@@ -92,8 +92,7 @@ theorem isSqInt_mulChi {χ : HChar E} (hu : χ.IsUnitary) (hs : ∀ t, chiDet a 
       have h2 : ‖((chiDet a χ g : ℂˣ) : ℂ)‖ₑ = 1 := by
         rw [← ofReal_norm_eq_enorm, show ‖((chiDet a χ g : ℂˣ) : ℂ)‖ = 1 from hu _, ENNReal.ofReal_one]
       rw [mulChi_apply, enorm_mul, h2, mul_one]
-    simp only [e]
-    exact hI
+    simpa only [e] using hI
 
 theorem isDiscrete_map {χ : HChar E} (hu : χ.IsUnitary) (hs : ∀ t, chiDet a χ (splitCentre E a t) = 1)
     {V : Submodule ℂ (Sm E a)} (hV : IsDiscrete V) : IsDiscrete (V.map (mulChi a χ).toLinearMap) := by
@@ -133,8 +132,7 @@ theorem isDiscrete_map {χ : HChar E} (hu : χ.IsUnitary) (hs : ∀ t, chiDet a 
     exact isSqInt_mulChi hu hs (hV.sqInt φ hφ)
   · rintro o _ ⟨φ, hφ, rfl⟩
     exact ⟨_, add_mem (V.smul_mem _ (hV.stable o φ hφ)) (V.smul_mem _ hφ), (act_mulChi χ o φ).symm⟩
-  · intro h
-    exact hV.ne_bot ((Submodule.map_eq_bot_iff (e := mulChi a χ)).1 h)
+  · exact fun h => hV.ne_bot ((Submodule.map_eq_bot_iff (e := mulChi a χ)).1 h)
   · intro W hW hW'
     have h := hV.irred (W.comap (mulChi a χ).toLinearMap) (fun φ hφ => by
       obtain ⟨ψ, h1, h2⟩ := hW hφ

@@ -130,12 +130,7 @@ theorem map_mul_entry {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R')
 variable {D : D7} {n : ℕ}
 
 theorem map_cancel {R : Type} [CommRing R] (φ : AE D →+* R) (V : HSp D) (g : GA D V) :
-    (mt V g).map φ * (mt V g⁻¹).map φ = 1 := by
-  have h : mt V g * mt V g⁻¹ = 1 := by
-    unfold Formalism.L2.Theta.mt
-    rw [map_inv]
-    exact Units.mul_inv _
-  rw [← Matrix.map_mul, h, Matrix.map_one _ (map_zero φ) (map_one φ)]
+    (mt V g).map φ * (mt V g⁻¹).map φ = 1 := GlobalTheory.CompactAvgSchwartz.map_cancel φ V g
 
 theorem comp_mem (θ : InfFam D) (V : HSp D) (h : GA D V) {Φ : Mx D V.rank n → ℂ} (hΦ : Φ ∈ schwartzA θ V.rank n) :
     (fun x : Mx D V.rank n => Φ (mt V h ⬝ x)) ∈ schwartzA θ V.rank n := by

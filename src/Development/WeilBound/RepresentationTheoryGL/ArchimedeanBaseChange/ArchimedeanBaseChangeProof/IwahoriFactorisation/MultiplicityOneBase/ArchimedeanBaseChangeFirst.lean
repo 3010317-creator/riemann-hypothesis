@@ -161,14 +161,7 @@ namespace GlobalTheory.InertUnitOrb
 theorem stdH_mulVec_eq_of_unitary {K : UQ} {n : ℕ} (u : Matrix (Fin n) (Fin n) K.E)
     (hu : (u.map K.c)ᵀ * u = 1) (a b : Fin n → K.E) :
     stdH K n (u *ᵥ a) (u *ᵥ b) = stdH K n a b := by
-  have hu' : uᵀ * u.map K.c = 1 := by
-    have := congrArg Matrix.transpose hu
-    rwa [transpose_mul, transpose_transpose, transpose_one] at this
-  have hS : ∀ y z : Fin n → K.E, stdH K n y z = y ⬝ᵥ (fun k => K.c (z k)) := fun _ _ => rfl
-  have hc : (fun k => K.c ((u *ᵥ b) k)) = u.map K.c *ᵥ (fun k => K.c (b k)) := by
-    funext k
-    exact RingHom.map_mulVec (K.c : K.E →+* K.E) u b k
-  rw [hS, hS, hc, dotProduct_mulVec, ← vecMul_transpose, vecMul_vecMul, hu', vecMul_one]
+  exact GlobalTheory.InertUnitOrb.stdH_mulVec_of_unitary K n u hu a b
 
 theorem class_eq_of_conj :
     ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.UnitLemma.InvAlg K) (n : ℕ) (γ γ' u : Matrix (Fin n) (Fin n) K.E)
@@ -338,7 +331,7 @@ theorem ker_transport {F L : Type} [Field F] [Field L] (e : F ≃+* L) {n : ℕ}
 
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, GlobalTheory.UnitLemma.val K.O x = ordL (e x)) → ∀ (n : ℕ) (Q₁ : (w.adicCompletion E)[X]) (B₁ B₂ : GlobalTheory.UnitLemma.InvAlg K), (B₁.P * B₂.P).Separable → B₁.P = Q₁.map e.symm.toRingHom → ∀ (γ : GLw n w) (x : (B₁.prod B₂).Aˣ) (ψ : (B₁.prod B₂).A ≃ₗ[K.E] (Fin n → K.E)), GlobalTheory.InertUnitOrb.IsModel (B₁.prod B₂) (γ.val.map e.symm) x ψ → kapSign n w Q₁ γ = ((K.eta (B₁.gramDet (x : (B₁.prod B₂).A).1) : ℚ) : ℂ) := by
   intro E _ _ _ _ w hw K e he hval n Q₁ B₁ B₂ hs hP γ x ψ hm
-  simp only [kapSign, if_neg hw]
+  simp only [kapSign, ite_eq_right hw]
   have hA : aeval (γ.val.map e.symm) B₁.P = (aeval γ.val Q₁).map e.symm := by
     rw [hP]; exact aeval_map_matrix e.symm.toRingHom _ _
   have hmemW : ∀ y : Fin n → K.E, y ∈ LinearMap.ker (Matrix.toLin' (aeval (γ.val.map e.symm) B₁.P)) ↔
@@ -582,16 +575,14 @@ theorem finsum_match {α β : Type*} (F : α → ℂ) (G : β → ℚ) (Φ : α 
     · intro a ha
       simp only [Function.mem_support] at ha ⊢
       rwa [hF a (hP a ha)] at ha
-    · intro a ha a' ha' h
-      exact hinj a a' (hP a ha) (hP a' ha') h
+    · exact fun a ha a' ha' h => hinj a a' (hP a ha) (hP a' ha') h
     · intro b hb
       simp only [Function.mem_support, ne_eq, Rat.cast_eq_zero] at hb
       obtain ⟨a, ha, rfl⟩ := hsurj b hb
       refine ⟨a, ?_, rfl⟩
       simp only [Function.mem_support, hF a ha]
       exact_mod_cast hb
-  · intro a ha
-    exact hF a (hP a ha)
+  · exact fun a ha => hF a (hP a ha)
 
 end GlobalTheory.InertUnitOrb
 
@@ -601,7 +592,7 @@ open GlobalTheory.UnitLemma
 theorem ul_mem_iff {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} {w : Pl E} (hw : ¬ IsSplitAt w)
     (g : GLw n w) : g ∈ UL n w ↔ (g.val.map (cj w))ᵀ * g.val = 1 := by
   unfold UL
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
   change cT (cj w) g.val * 1 * g.val = 1 ↔ _
   rw [Matrix.mul_one]
   rfl
@@ -685,13 +676,12 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     else Quot.mk _ ⟨1, by simp⟩
   unfold kapOrb clSum InvAlg.kapSum
   refine finsum_match _ _ Φ P ?_ ?_ ?_ ?_
-  · intro c hc
-    exact if_neg hc
+  · exact fun c hc => ite_eq_right hc
   · intro c hc
     have hc' : c.rep ∈ {γ : UL n w | γ.1.val.charpoly = Q₁ * Q₂} := hc
-    rw [if_pos hc']
+    rw [ite_eq_left hc']
     obtain ⟨ψ, hψ⟩ := (hmod c.rep hc).choose_spec
-    have hΦ : Φ c = Quot.mk _ ⟨(hmod c.rep hc).choose, hψ.1⟩ := dif_pos hc
+    have hΦ : Φ c = Quot.mk _ ⟨(hmod c.rep hc).choose, hψ.1⟩ := dite_eq_left hc
     rw [hΦ]
     change _ = ((Fv (Quot.out (Quot.mk _ _ : B.Cl)) : ℚ) : ℂ)
     rw [Fv_out]
@@ -704,8 +694,8 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   · intro c c' hc hc' h
     obtain ⟨ψ, hψ⟩ := (hmod c.rep hc).choose_spec
     obtain ⟨ψ', hψ'⟩ := (hmod c'.rep hc').choose_spec
-    have hΦ : Φ c = Quot.mk _ ⟨(hmod c.rep hc).choose, hψ.1⟩ := dif_pos hc
-    have hΦ' : Φ c' = Quot.mk _ ⟨(hmod c'.rep hc').choose, hψ'.1⟩ := dif_pos hc'
+    have hΦ : Φ c = Quot.mk _ ⟨(hmod c.rep hc).choose, hψ.1⟩ := dite_eq_left hc
+    have hΦ' : Φ c' = Quot.mk _ ⟨(hmod c'.rep hc').choose, hψ'.1⟩ := dite_eq_left hc'
     rw [hΦ, hΦ'] at h
     obtain ⟨v, hv⟩ := clEq.eqvGen_iff.1 (Quot.eqvGen_exact h)
     obtain ⟨u, hu, hγu⟩ := _root_.GlobalTheory.InertUnitOrb.conj_of_norm_class K B n _ _ _ _ v ψ ψ' hψ hψ' hv
@@ -713,8 +703,7 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     have hcomm : c.rep * g = g * c'.rep := by
       apply Subtype.ext
       apply trinj
-      rw [Subgroup.coe_mul, Subgroup.coe_mul, trmul, trmul]
-      exact hγu
+      rwa [Subgroup.coe_mul, Subgroup.coe_mul, trmul, trmul]
     rw [← Quot.out_eq c, ← Quot.out_eq c']
     refine Quot.sound ⟨g, ?_⟩
     change c'.rep = g⁻¹ * c.rep * g
@@ -744,7 +733,7 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       exact Matrix.charpoly_units_conj (g.1) γ.1.val
     refine ⟨c, hPc, ?_⟩
     obtain ⟨ψc, hψc⟩ := (hmod c.rep hPc).choose_spec
-    have hΦ : Φ c = Quot.mk _ ⟨(hmod c.rep hPc).choose, hψc.1⟩ := dif_pos hPc
+    have hΦ : Φ c = Quot.mk _ ⟨(hmod c.rep hPc).choose, hψc.1⟩ := dite_eq_left hPc
     rw [hΦ]
     have hgu : γ * g⁻¹ = g⁻¹ * c.rep := by rw [hcr]; group
     obtain ⟨v, hv⟩ := _root_.GlobalTheory.InertUnitOrb.class_eq_of_conj K B n γm (tr c.rep.1) (tr (g⁻¹).1) a.1 _ ψ ψc hψ hψc (trU g⁻¹)
@@ -1039,8 +1028,7 @@ theorem isometry_unit : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.Un
     rw [LinearEquiv.apply_symm_apply] at this
     exact ⟨⟨φ 1, φ.symm 1, by rw [mul_comm]; exact this.symm, this.symm⟩, rfl⟩
   refine ⟨ht.unit, ?_⟩
-  rw [IsUnit.unit_spec]
-  rw [← sub_eq_zero]
+  rw [IsUnit.unit_spec, ← sub_eq_zero]
   apply nd
   intro y
   have h1 := hφ y 1
@@ -1096,8 +1084,7 @@ theorem antidiag_twisted_norm : ∀ (E : Type) [Field E] (c : E ≃+* E), (∀ x
     simp only [Matrix.transpose_apply, Matrix.of_apply, Matrix.smul_apply, smul_eq_mul]
     by_cases h : j = i.rev
     · subst h
-      simp only [Fin.rev_rev, if_true]
-      exact hsign i
+      simpa only [Fin.rev_rev, ite_true] using hsign i
     · have h' : ¬ i = j.rev := by
         intro h2; apply h; rw [h2, Fin.rev_rev]
       simp [h, h']
@@ -1108,7 +1095,7 @@ theorem antidiag_twisted_norm : ∀ (E : Type) [Field E] (c : E ≃+* E), (∀ x
     rw [Finset.sum_eq_single i.rev]
     · by_cases h : k = i
       · subst h
-        simp only [Fin.rev_rev, if_true, hsign]
+        simp only [Fin.rev_rev, ite_true, hsign]
         rw [mul_one, mul_left_comm, hpm, mul_one]
       · have : ¬ k = i.rev.rev := by rwa [Fin.rev_rev]
         simp [h, Ne.symm h]
@@ -1268,14 +1255,12 @@ theorem exists_trace_form : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheor
   set Y := ((δ.val * GlobalTheory.Tw.Phi a L)ᵀ).map f with hY
   have hSY : S * Y = 1 := by
     have h0 := congrArg f.mapMatrix (gram_mul_transpose a L δ)
-    rw [map_mul, map_one] at h0
-    exact h0
+    rwa [map_mul, map_one] at h0
   have hsep : (LinearMap.mulLeft K.E B.g).charpoly.Separable := by
     show B.P.Separable
     rw [hBP]; exact hQs.map
   have hchar : (LinearMap.mulLeft K.E B.g).charpoly = (Matrix.toLin' N').charpoly := by
-    rw [Matrix.charpoly_toLin', hN', Matrix.charpoly_map, hδ]
-    exact hBP
+    rwa [Matrix.charpoly_toLin', hN', Matrix.charpoly_map, hδ]
   obtain ⟨ψ, hψ⟩ := GlobalTheory.UnitLemma.PairClass.exists_intertwine K.E B.A (Fin a → K.E)
     (LinearMap.mulLeft K.E B.g) (Matrix.toLin' N') hsep hchar
   have hψ' : ∀ y, ψ (B.g * y) = N' *ᵥ ψ y := fun y => by simpa using hψ y
@@ -1298,8 +1283,7 @@ theorem exists_trace_form : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheor
       funext j
       have h1 := hy (ψ.symm (Pi.single j 1))
       simp only [s, LinearEquiv.apply_symm_apply] at h1
-      rw [hc1 j, Matrix.dotProduct_mulVec, dotProduct_single, mul_one] at h1
-      exact h1
+      rwa [hc1 j, Matrix.dotProduct_mulVec, dotProduct_single, mul_one] at h1
     have h2 : ψ y = 0 := by
       rw [← Matrix.vecMul_one (ψ y), ← hSY, ← Matrix.vecMul_vecMul, hv, Matrix.zero_vecMul]
     exact ψ.injective (by rw [h2, map_zero])
@@ -1402,8 +1386,7 @@ theorem twConj_gram (L : Type) [Field L] (c : L →+* L) (a : ℕ) (δ q : GL (F
     intro X; rw [← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
   have hY : (q⁻¹ * δ * thetaGL a c q).val * GlobalTheory.Tw.Phi a L *
       ((q.val.map c)ᵀ * (GlobalTheory.Tw.Phi a L)ᵀ * (δ⁻¹).val * q.val) = 1 := by
-    simp only [Units.val_mul, hθ, Matrix.mul_assoc, k1, k2, k3, k4]
-    exact Units.inv_mul q
+    simpa only [Units.val_mul, hθ, Matrix.mul_assoc, k1, k2, k3, k4] using Units.inv_mul q
   rw [Matrix.inv_eq_right_inv hY, Matrix.mul_inv_rev, hinv, ← Matrix.coe_units_inv]
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
 
@@ -1446,8 +1429,8 @@ theorem herm_norm_basis (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.UnitLe
 
 theorem twCl_equiv_cl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → ∀ (a : ℕ) (Q : (w.adicCompletion E)[X]), Q.Monic → Q.natDegree = a → Q.Separable → ∀ (B : GlobalTheory.UnitLemma.InvAlg K), B.g * B.σ B.g = 1 → B.P = Q.map e.symm.toRingHom → ∀ β₀ : B.Aˣ, B.σ (β₀ : B.A) = β₀ * ((-1) ^ (a - 1) * B.g) → ∃ F : B.Cl ≃ {c : TwCl (thL a w) // (nrmL a w c.rep).val.charpoly = Q}, ∀ k : B.Cl, ∃ b : Module.Basis (Fin a) K.E B.A, ∀ i j, (((F k).1.rep.val * GlobalTheory.Tw.Phi a (w.adicCompletion E))⁻¹)ᵀ i j = e (B.herm ((β₀ : B.A) * k.rep) (b i) (b j)) := by
   intro E _ _ _ hE w hw K e he hO a Q hQm hQd hQs B hg hP β₀ hβ₀
-  have hthL : thL a w = thetaGL a (cj w) := by rw [thL, if_neg hw]
-  have hnrm : ∀ y, nrmL a w y = y * thetaGL a (cj w) y := by intro y; rw [nrmL, if_neg hw]
+  have hthL : thL a w = thetaGL a (cj w) := by rw [thL, ite_eq_right hw]
+  have hnrm : ∀ y, nrmL a w y = y * thetaGL a (cj w) y := by intro y; rw [nrmL, ite_eq_right hw]
   have hcc : ∀ x, cj w (cj w x) = x := by
     intro x; obtain ⟨y, rfl⟩ := e.surjective x; rw [← he, ← he, K.c_c]
   have hPsep : B.P.Separable := by rw [hP]; exact hQs.map
@@ -1567,8 +1550,7 @@ theorem twCl_equiv_cl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], 
   obtain ⟨b, hb⟩ := hrep k _ (Quot.eqvGen_exact (Quot.out_eq (Quot.mk _ (δk k) : TwCl (thL a w)))).symm
   refine ⟨b, fun i j => ?_⟩
   have := congrFun (congrFun hb i) j
-  rw [Matrix.of_apply, Units.val_mul] at this
-  exact this
+  rwa [Matrix.of_apply, Units.val_mul] at this
 
 end GlobalTheory.TwClassForms
 end -- clump:auto
@@ -1707,8 +1689,7 @@ namespace GlobalTheory.BCT.UnitProd
 private theorem equivalence_twisted_conj {G : Type} [Group G] (θ : G →* G) :
     Equivalence (fun x y : G => ∃ g, y = g⁻¹ * x * θ g) := by
   constructor
-  · intro x
-    exact ⟨1, by simp⟩
+  · exact fun x => ⟨1, by simp⟩
   · rintro x y ⟨g, rfl⟩
     exact ⟨g⁻¹, by rw [map_inv]; group⟩
   · rintro x y z ⟨g, rfl⟩ ⟨h, rfl⟩
@@ -1792,7 +1773,7 @@ theorem clSum_prod {G G' : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     rintro q ⟨k, hk, hne⟩
     by_contra hq
     apply hne
-    rw [Set.indicator_apply, if_neg]
+    rw [Set.indicator_apply, ite_eq_right]
     rw [SetLike.mem_coe, ind_conj φ L hL _ _ k hk]
     exact hq
   have hprod : ∀ p : TwCl θ × TwCl θ',
@@ -1811,13 +1792,13 @@ theorem clSum_prod {G G' : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     rw [e, GlobalTheory.TwOrbConj.twOrb_twConj (G × G') (θ.prodMap θ') (K.prod K') (p.1.rep, p.2.rep) g _
       (fun x => index_ne (θ.prodMap θ') (K.prod K') hKK _ x)]
     by_cases h1 : p.1.rep ∈ S <;> by_cases h2 : p.2.rep ∈ S'
-    · simp only [hmem, h1, h2, and_self, if_true]
+    · simp only [hmem, h1, h2, and_self, ite_true]
       rw [hind]
       exact _root_.GlobalTheory.BCT.OrbProd.twOrb_prod G G' θ θ' K K' _ _ _ _ (fun x => index_ne θ K hK _ x) (fun x => index_ne θ' K' hK' _ x)
         (hfin θ K hK S hd _ h1) (hfin θ' K' hK' S' hd' _ h2)
-    · rw [if_neg fun h => h2 (hmem.mp h).2, if_neg h2, mul_zero]
-    · rw [if_neg fun h => h1 (hmem.mp h).1, if_neg h1, zero_mul]
-    · rw [if_neg fun h => h1 (hmem.mp h).1, if_neg h1, zero_mul]
+    · rw [ite_eq_right fun h => h2 (hmem.mp h).2, ite_eq_right h2, mul_zero]
+    · rw [ite_eq_right fun h => h1 (hmem.mp h).1, ite_eq_right h1, zero_mul]
+    · rw [ite_eq_right fun h => h1 (hmem.mp h).1, ite_eq_right h1, zero_mul]
   have hs1 : (Function.support fun c : TwCl θ =>
       if c.rep ∈ S then twOrb θ K c.rep ((K : Set G).indicator 1) else 0).Finite := by
     refine hf.subset fun c hc => ?_
@@ -1920,7 +1901,7 @@ theorem PositivityTheory.Rg.Bc.ArchbcB.B.archimedean_base_change_first : Positiv
   congr 1
   rw [hv]
   unfold delta absHalf
-  rw [if_neg hw, he4]
+  rw [ite_eq_right hw, he4]
   set v := ordL (resultant Q₁ Q₂)
   have hq : Real.sqrt (((K.q ^ 2 : ℕ) : ℝ) ^ (-v)) = (K.q : ℝ) ^ (-v) := by
     rw [Nat.cast_pow, ← zpow_natCast, ← _root_.zpow_mul, mul_comm, _root_.zpow_mul, zpow_natCast]

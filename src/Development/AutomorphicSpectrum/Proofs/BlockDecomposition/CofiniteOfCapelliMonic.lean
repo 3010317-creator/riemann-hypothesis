@@ -98,8 +98,7 @@ theorem exists_finiteDimensional_sub_mem {C : Type*} [CommRing C] [Algebra ℂ C
     rw [← aeval_def, aeval_algHom_apply]
     exact Ideal.Quotient.eq_zero_iff_mem.2 hqI
   have htop : Algebra.adjoin ℂ (π '' s) = ⊤ := by
-    rw [← AlgHom.map_adjoin, hgen, Algebra.map_top, AlgHom.range_eq_top]
-    exact hπ
+    rwa [← AlgHom.map_adjoin, hgen, Algebra.map_top, AlgHom.range_eq_top]
   have hfg := fg_adjoin_of_finite (hs.image π) hint
   rw [htop, Algebra.top_toSubmodule] at hfg
   obtain ⟨t, ht⟩ := hfg
@@ -159,8 +158,7 @@ theorem cofin_of_algHom {C : Type} [CommRing C] [Algebra ℂ C] (ι : C →ₐ[�
     Cofin J := by
   have hZ : ∀ c : C, ι c ∈ Zalg E n := fun c => hr ▸ AlgHom.mem_range_self ι c
   have hZ' : ∀ z ∈ Zalg E n, ∃ c : C, ι c = z := fun z hz => by
-    rw [← hr] at hz
-    exact hz
+    rwa [← hr] at hz
   obtain ⟨b, hbfin, hbT, hspan⟩ := exists_finite_subset_span_cap (E := E) (n := n)
   have hbZ : b ⊆ Zalg E n := fun x hx => Algebra.subset_adjoin (hbT hx)
   let s : Set C := ι ⁻¹' b
@@ -190,8 +188,7 @@ theorem cofin_of_algHom {C : Type} [CommRing C] [Algebra ℂ C] (ι : C →ₐ[�
     obtain ⟨q, hm, hqJ⟩ := hq τ u
     refine ⟨q, hm, Ideal.subset_span ?_⟩
     change ι (aeval x q) ∈ J
-    rw [← aeval_algHom_apply, hτ]
-    exact hqJ
+    rwa [← aeval_algHom_apply, hτ]
   obtain ⟨V, hV, hz⟩ := exists_finiteDimensional_sub_mem I hs hgen hrel
   refine ⟨hJ, V.map ι.toLinearMap, inferInstance, fun z hzZ => ?_⟩
   obtain ⟨c, rfl⟩ := hZ' z hzZ

@@ -148,8 +148,7 @@ private lemma idem_fix {O E : Type} [CommRing O] {g m : ℕ} (ρ : E → Matrix 
   have h3 : (∑ j, ε j) *ᵥ y = y := by rw [hsum]; simp
   rw [Matrix.sum_mulVec, Finset.sum_eq_single i] at h3
   · exact h3
-  · intro b _ hb
-    exact hz b hb.symm
+  · exact fun b _ hb => hz b hb.symm
   · simp
 
 theorem cokE_surj_res_quot : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] (OE : Type) [CommRing OE] [IsDedekindDomain OE] [CharZero OE] [Module.Free ℤ OE] [Module.Finite ℤ OE] [StarRing OE] (cp : O), HodgeTateSetting p v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp → ∀ (g : ℕ) (H : HodgeTateDatum p g v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp) (d r m : ℕ) (A : Matrix (Fin d) (Fin r) O) (B : Matrix (Fin g) (Fin d) O) (ρG : OE →+* Matrix (Fin d) (Fin d) O) (N : OE →+* Matrix (Fin r) (Fin r) ℤ) (s : Fin m → Fin d → O), LinDat H A B ρG N s → ∀ (U : UnramData p g v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp H) (i : Fin U.m) (τ : OE →+* O), (∀ x, U.sg i x = tauExt τ x) → ∀ (n : ℕ) (W : Fin n → Fin d → O), EigB ρG τ W → ∃ f : cokE H.Ht U.εT U.εL i (U.cj i) →ₗ[O] ((Fin n → O) ⧸ Submodule.span O (Set.range fun k => Pdiv.ChartF.res W (s k))), Function.Surjective f := by
@@ -356,8 +355,7 @@ theorem exists_splitting_idempotents_frobenius : ∀ (p : ℕ) [Fact p.Prime] (C
     simp only [Equiv.trans_apply, Equiv.apply_symm_apply, Equiv.ofBijective_apply, φ]
     apply Ideal.Quotient.eq.1
     change r _ = r _
-    rw [map_pow]
-    exact h1
+    rwa [map_pow]
 
 end GlobalTheory.SplittingIdempotents
 end -- clump:auto
@@ -451,7 +449,7 @@ private theorem exists_eigB {O OE : Type} [CommRing O] [IsLocalRing O] [CommRing
   set N := LinearMap.range (Matrix.mulVecLin (e i)) with hN
   have hid : ∀ w ∈ N, e i *ᵥ w = w := by
     rintro _ ⟨u, rfl⟩
-    rw [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec, h1, if_pos rfl]
+    rw [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec, h1, ite_eq_left rfl]
   haveI : Module.Projective O N :=
     Module.Projective.of_split N.subtype (Matrix.mulVecLin (e i)).rangeRestrict
       (by ext1 w; exact Subtype.ext (hid w w.2))
@@ -465,9 +463,9 @@ private theorem exists_eigB {O OE : Type} [CommRing O] [IsLocalRing O] [CommRing
         exact Finset.sum_congr rfl fun k _ => by rw [h3, mul_smul_comm]
       _ = t j a • e j := by
         rw [Finset.sum_eq_single j]
-        · rw [h1, if_pos rfl]
+        · rw [h1, ite_eq_left rfl]
         · intro k _ hk
-          rw [h1, if_neg (Ne.symm hk), smul_zero]
+          rw [h1, ite_eq_right (Ne.symm hk), smul_zero]
         · simp
   refine ⟨_, fun k => (b k : Fin g → O), ⟨fun k a => ?_, fun w hw => ?_⟩, ⟨b.equivFun⟩⟩
   · have := hid _ (b k).2
@@ -519,9 +517,7 @@ theorem exists_unramData : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [Is
     ext a
     simp [cj, st]
   have hlt : ∀ x : O, x ∈ IsLocalRing.maximalIdeal O → v (algebraMap O C x) < 1 := by
-    intro x hx
-    refine lt_of_le_of_ne (hv.map_le_one x) fun h => hx ?_
-    exact hv.isUnit_of_one' h
+    exact fun x hx => lt_of_le_of_ne (hv.map_le_one x) fun h => hx (hv.isUnit_of_one' h)
   have hone : ∀ (s : OE →+* O) (a : OE), tauExt (p := p) s (1 ⊗ₜ[ℤ] a) = s a := by
     intro s a
     simp [tauExt]
@@ -554,8 +550,7 @@ theorem exists_unramData : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [Is
     exact hv.one_of_isUnit ha
   · obtain ⟨n, W, hW, hn⟩ := exists_eigB (fun i => t i) hd (fun a : OE => H.ρL (1 ⊗ₜ[ℤ] a)) eL hL1 hL2 hL3 i
     have := (eigB_res_surjective C v O hv OE g n _ (t i) W hW).2.2
-    rw [← this] at hn
-    exact hn
+    rwa [← this] at hn
   · exact t.apply_symm_apply _
   · by_contra hne
     obtain ⟨a, ha⟩ := hd (φ i) j hne
@@ -750,8 +745,7 @@ theorem unramified_companion_chart_characters : ∀ (p : ℕ) [Fact p.Prime], Up
   obtain ⟨xs, hxs, hle⟩ := _root_.GlobalTheory.ChF.linDat_unram_bound p C v O hv OE cp hset _ H d rk m _ B ρ N _ hdat hp2 hdisc w t hfrob r W
     (fun τ => by rw [hρ']; exact (isEigBasis_iff _ _ _).1 (hW τ)) j
   refine ⟨xs, ⟨m, u, ?_, hxs⟩, hle⟩
-  rw [← hF']
-  exact hu
+  rwa [← hF']
 
 end GlobalTheory.ChF
 end -- clump:auto

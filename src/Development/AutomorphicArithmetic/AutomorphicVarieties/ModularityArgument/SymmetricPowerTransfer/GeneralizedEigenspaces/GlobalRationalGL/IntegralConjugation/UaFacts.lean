@@ -77,8 +77,7 @@ private theorem inf_of_cLoc {k : UA L n} (h : ∀ u : Plc L, cLoc u k = 1) : k �
   refine Units.ext (matAf_ext fun u => ?_)
   have := congrArg Units.val (h u)
   rw [Units.val_one] at this ⊢
-  rw [map_one]
-  exact this
+  rwa [map_one]
 
 private noncomputable def fp (x : UA L n) : UA L n :=
   ⟨finGL L n (GeneralLinearGroup.map (pFin L) x.1), finGL_mem_UA _ fun u => comp_eq x u⟩
@@ -118,16 +117,16 @@ private theorem cut (w : Plc L) (x : UA L n) (hx : x ∈ finU (E := L) (n := n))
     refine finGL_mem_UA _ fun u => ?_
     rw [GlobalTheory.EulerTwKU.pLoc_prjG, GlobalTheory.EulerTwKU.pLoc_prjG]
     by_cases hu : u ∈ T
-    · rw [if_pos hu, if_pos ((memC u).2 hu)]
+    · rw [ite_eq_left hu, ite_eq_left ((memC u).2 hu)]
       exact comp_eq x u
-    · rw [if_neg hu, if_neg (fun h => hu ((memC u).1 h))]
+    · rw [ite_eq_right hu, ite_eq_right (fun h => hu ((memC u).1 h))]
       simp
   have hc : ∀ u, cLoc u (⟨_, hU⟩ : UA L n) = if u ∈ T then cLoc u x else 1 := fun u => by
     rw [cLoc_finGL, GlobalTheory.EulerTwKU.pLoc_prjG, cLoc_eq]
   refine ⟨⟨_, hU⟩, Subgroup.mem_inf.2 ⟨pInf_finGL _, Subgroup.mem_iInf.2 fun u =>
     Subgroup.mem_iInf.2 fun hu => MonoidHom.mem_ker.2 ?_⟩, fun u hu => ?_⟩
-  · rw [hc, if_neg (fun h => hu ((memT u).1 h))]
-  · rw [hc, if_pos ((memT u).2 hu)]
+  · rw [hc, ite_eq_right (fun h => hu ((memT u).1 h))]
+  · rw [hc, ite_eq_left ((memT u).2 hu)]
 
 private theorem K_conj (x : UA L n) (u : Plc L) (h : cLoc (conjSrc (conjE L) u) x ∈ GlobalTheory.LFun.KGL (conjSrc (conjE L) u) (n := n)) :
     cLoc u x ∈ GlobalTheory.LFun.KGL u (n := n) := by
@@ -186,5 +185,4 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.uaFacts :
   · rcases (under_iff w u).1 hu with rfl | rfl
     · exact hK
     · refine K_conj x _ ?_
-      rw [GlobalTheory.SplitPts.conjSrc_conjSrc_cm]
-      exact hK
+      rwa [GlobalTheory.SplitPts.conjSrc_conjSrc_cm]

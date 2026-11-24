@@ -140,25 +140,24 @@ theorem exists_conj (r t : ℕ) : ∃ m : GL (Fin (r + t)) k, ∀ h : GL (Fin (r
   have hlt : ∀ a b : Fin (r + t), a.val < r → ¬ b.val < r → valuation k ((m * h * m⁻¹).val a b) < 1 := by
     intro a b ha hb
     rw [key]
-    simp only [e, ha, hb, if_true, if_false, inv_one, mul_one, map_mul]
+    simp only [e, ha, hb, ite_true, ite_false, inv_one, mul_one, map_mul]
     exact lt_of_le_of_lt (mul_le_of_le_one_right' (h1 a b)) hγ1
   refine ⟨fun a b => ?_, fun a b ha => ?_, fun i j => ?_⟩
   · by_cases ha : a.val < r <;> by_cases hb : b.val < r
     · rw [key]
-      simp only [e, ha, hb, if_true]
+      simp only [e, ha, hb, ite_true]
       rw [mul_right_comm, mul_inv_cancel₀ h0', one_mul]
       exact h1 a b
     · exact (hlt a b ha hb).le
     · rw [key]
-      simp only [e, ha, hb, if_true, if_false, one_mul, map_mul, map_inv₀]
+      simp only [e, ha, hb, ite_true, ite_false, one_mul, map_mul, map_inv₀]
       rw [mul_inv_le_iff₀ (zero_lt_iff.2 h0), one_mul]
       have := h2 ⟨a.val - r, by omega⟩ ⟨b.val, hb⟩
       have ea : Fin.natAdd r (⟨a.val - r, by omega⟩ : Fin t) = a := by ext; simp; omega
       rw [ea] at this
       exact hγ _ this
     · rw [key]
-      simp only [e, ha, hb, if_false, one_mul, inv_one, mul_one]
-      exact h1 a b
+      simpa only [e, ha, hb, ite_false, one_mul, inv_one, mul_one] using h1 a b
   · by_cases hb : b.val < r
     · exact Or.inr hb
     · exact Or.inl (hlt a b ha hb)
@@ -259,14 +258,12 @@ theorem exists_parahoricVec : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
     have h2 : μ (Units.map c.toRingHom.toMonoidHom (y' * d⁻¹)) = 1 := by
       refine htame _ ?_
       have := hlt' _ (hy.trans_le (by rw [← WithZero.exp_zero, WithZero.exp_le_exp]; omega))
-      rw [map_sub, map_one, ← hy', ← Units.val_mul] at this
-      exact this
+      rwa [map_sub, map_one, ← hy', ← Units.val_mul] at this
     have h3 := hglob k₀
     rw [hcy] at h3
     rw [map_mul, map_inv, mul_inv_eq_one] at h1
     rw [map_mul, map_mul, map_inv, map_inv, mul_inv_eq_one] at h2
-    rw [← h1, ← h2]
-    exact h3
+    rwa [← h1, ← h2]
   obtain ⟨m, hm⟩ := exists_conj (k := s.w.adicCompletion L) r t
   refine ⟨π m⁻¹ u, fun h0 => hu ?_, fun h hK hlow x hx => ?_⟩
   · have := congrArg (π m) h0
@@ -299,8 +296,7 @@ theorem exists_parahoricVec : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
     rw [NG.detDD, ← Matrix.det_submatrix_equiv_self (lowerEquiv r t), he, ← Matrix.det_transpose]
     refine (RingHom.map_det c.symm.toRingHom _).trans ?_
     congr 1
-    refine Matrix.ext fun i j => ?_
-    exact congrArg c.symm (b3 j i).symm
+    exact Matrix.ext fun i j => congrArg c.symm (b3 j i).symm
   have key := hvec g p' hpara rfl (Units.map c.symm.toRingHom.toMonoidHom (Units.mk0 e he0)) hDD
   have hpp : Matrix.GeneralLinearGroup.map c.toRingHom p' = p := by
     exact Units.ext (Matrix.ext fun a b => c.apply_symm_apply _)

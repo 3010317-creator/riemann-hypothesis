@@ -89,8 +89,7 @@ theorem xg_hom (g : Matrix (Fin k) (Fin k) (WF p n')) (a : ℤ) (b : Fin k) :
     unfold letterWeight
     simp only [Pi.single_apply]
     congr
-  rw [e] at this
-  exact this
+  rwa [e] at this
 
 def eDel (j : ℤ) : Fin n' → ℕ :=
   ∑ l : Fin r, p ^ (zF F j - F.fr j l.val).toNat • (Pi.single (posOf n' (F.fr j l.val)) 1 : Fin n' → ℕ)
@@ -112,8 +111,7 @@ theorem Dtop_hom (hrk : r ≤ k) (g : Matrix (Fin k) (Fin k) (WF p n')) (s : ℤ
     Dtop p n' O F hrk g s ∈ Pol (KK O) k (eD p n' F s) := by
   unfold Dtop
   refine pol_det _ _ fun l b => ?_
-  simp only [Matrix.of_apply]
-  exact dv_pol_pow _ _ (xg_hom p n' O g _ _) _
+  simpa only [Matrix.of_apply] using dv_pol_pow _ _ (xg_hom p n' O g _ _) _
 
 def eSP (k c' Q : ℕ) : Fin n' → ℕ :=
   c' • (∑ j ∈ Finset.range F.J, alpha p F k (j : ℤ) • eDel p n' F (j : ℤ)) +

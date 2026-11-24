@@ -129,8 +129,7 @@ theorem algebraicIndependent (hH : MChartHomog.Statement.{u}) (hP : IsMultiHomog
     · intro m' hm' hne
       exact IsWeightedHomogeneous.weightedHomogeneousComponent_ne (N + ⇑m) (hhomt m' hm')
         fun e => hne (DFunLike.coe_injective (add_left_cancel e)).symm
-    · intro hms
-      exact absurd hm hms
+    · exact fun hms => absurd hm hms
 
   have hzero : ∀ m ∈ s, p.coeff m = 0 := by
     intro m hm

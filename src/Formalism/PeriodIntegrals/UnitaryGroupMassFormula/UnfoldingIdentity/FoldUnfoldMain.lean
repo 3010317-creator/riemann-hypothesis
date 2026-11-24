@@ -102,9 +102,7 @@ theorem foldUnfold_main : PI.FoldUnfold.FoldUnfold := by
       · rintro ⟨s, δ⟩ ⟨s', δ'⟩ h
         have hγ : ((s : G) * δ) ∈ Γ := Γ.mul_mem (hSΓ s.2) (hD.1 δ.2)
         obtain ⟨q, _, hq⟩ := hD.2 _ hγ
-        have h1 := hq (s, δ) rfl
-        have h2 := hq (s', δ') (congrArg Subtype.val h).symm
-        exact h1.trans h2.symm
+        exact (hq (s, δ) rfl).trans (hq (s', δ') (congrArg Subtype.val h).symm).symm
       · intro γ
         obtain ⟨q, hq, _⟩ := hD.2 γ γ.2
         exact ⟨q, Subtype.ext hq⟩

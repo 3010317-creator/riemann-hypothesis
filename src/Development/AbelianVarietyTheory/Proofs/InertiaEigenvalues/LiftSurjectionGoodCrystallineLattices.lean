@@ -552,28 +552,13 @@ variable {l : ℕ} [hl : Fact l.Prime] {a : ℕ} [NeZero a] {e : ℕ} [NeZero e]
 
 theorem actB_smul {G : Type} [Group G] [TopologicalSpace G] (s : G →* GQ l)
     (T : LocLat G ℚ_[l] K O) (g : G) (β : OB l O) (v : TW (OB l O) T) :
-    actB s T g (β • v) = galOB O (s g) β • actB s T g v := by
-  induction v using TensorProduct.induction_on with
-  | zero => simp
-  | tmul x y =>
-    simp only [actB, TWact, TensorProduct.smul_tmul', TensorProduct.map_tmul, AlgHom.toLinearMap_apply,
-      smul_eq_mul, map_mul]
-  | add x y hx hy => rw [smul_add, map_add (f := _), hx, hy, map_add (f := _), smul_add]
+    actB s T g (β • v) = galOB O (s g) β • actB s T g v := GlobalTheory.HorizXi.actB_smul s T g β v
 
 theorem taylor_iC (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (g : ↥(GK (ϖ.field a))) (f : ZMod a → S O K e)
     (r : ℕ) : ∃ M₀, ∀ M ≥ M₀, (l : OCr l O) ^ r ∣ galOCr O g (ϖ.iC t K f) -
       ∑ i ∈ Finset.range M, ϖ.muDiv a O g i *
         ϖ.iC t K (fun τ => ⟨descN K i (f τ), descN_mem_S e i (f τ).2⟩) := by
-  choose N hN using fun τ => ϖ.taylor_S a O K g (f τ) r
-  refine ⟨Finset.univ.sup N, fun M hM => ?_⟩
-  choose z hz using fun τ => hN τ M ((Finset.le_sup (Finset.mem_univ τ)).trans hM)
-  refine ⟨∑ τ, idem (constC t) τ * z τ, ?_⟩
-
-  simp only [PiSys.iC, glue_apply, map_sum, map_mul, galOCr_idem, Finset.mul_sum]
-  rw [Finset.sum_comm, ← Finset.sum_sub_distrib]
-  refine Finset.sum_congr rfl fun τ _ => ?_
-  rw [mul_left_comm, ← hz τ, mul_sub, Finset.mul_sum]
-  simp only [mul_left_comm (idem (constC t) τ)]
+  exact GlobalTheory.TaylorBasis.galOCr_iC_taylor t ϖ g f r
 
 theorem toBcris_of_mem (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (P : PhiMod O K l e a ι) {m : Vec K a ι}
     (h : m ∈ P.MM) (h' : m ∈ P.MMl) (k : ι) :
@@ -904,13 +889,7 @@ variable {l : ℕ} [hl : Fact l.Prime] {O K : Type} [CommRing O] [Algebra ℤ_[l
   [NormedAlgebra ℚ_[l] K]
 
 theorem galOB_mul (g h : GQ l) (r : OB l O) :
-    galOB O (g * h) r = galOB O g (galOB O h r) := by
-  induction r using TensorProduct.induction_on with
-  | zero => simp
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
-  | tmul o w =>
-    simp only [galOB, Algebra.TensorProduct.map_tmul, AlgHom.id_apply]
-    exact congrArg (fun z => o ⊗ₜ[ℤ_[l]] z) ((GlobalTheory.MemLoc.ActLaws.act_laws l).1 g h w)
+    galOB O (g * h) r = galOB O g (galOB O h r) := by apply GlobalTheory.CobCont.galOB_mul'
 
 theorem actB_mul (T : LocLat (Gl l) ℚ_[l] K O) (g h : Gl l) (x : TW (OB l O) T) :
     actB (sQ l) T (g * h) x = actB (sQ l) T g (actB (sQ l) T h x) := by
@@ -996,8 +975,7 @@ theorem GlobalTheory.BKGal.classOf_of_mon_eq_zero : GlobalTheory.Published.Fonta
   have hZ1f : κ ∈ finiteCocycles (Pl.PD (Formalism.MainNotions.ElementDenominator.qlExt l)) T.ρ := (hf κ hZ1c).2 ⟨b, hcob⟩
   refine ⟨(l : ↥LL.1) ^ c • κ, ?_, (_root_.GlobalTheory.GalPot.potential_class l a e _ _ (thetaW a LL) ϖ ι η H D T R).2.2.1 y κ c hcl⟩
   refine ⟨⟨(continuousCocycles T.ρ).smul_mem _ hZ1c, ?_⟩, (finiteCocycles (Pl.PD (Formalism.MainNotions.ElementDenominator.qlExt l)) T.ρ).smul_mem _ hZ1f⟩
-  intro g _
-  exact hT g
+  exact fun g _ => hT g
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisClassOfMonodromyEqZero =====
@@ -1055,8 +1033,7 @@ theorem isGood_of_injective (hF : GlobalTheory.Published.FontaineBcris) {l : ℕ
       | zero => simp
       | tmul v b => simp [GlobalTheory.IndefiniteRowSideFullHecke.CrystallineSubrepresentation.tensorB, actVB, he]
       | add y z hy hz => simp only [map_add (f := _), hy, hz]
-    apply hFi
-    exact (map_aeval _ _ _ hc _ x).trans (h1.trans (map_zero _).symm)
+    exact hFi ((map_aeval _ _ _ hc _ x).trans (h1.trans (map_zero _).symm))
   · intro τ b hb
     exact hT.jumps τ b (GlobalTheory.HTW.isJumpV_of_injective _ _ T₁.ρ f hf he τ b hb)
 
@@ -1067,8 +1044,7 @@ theorem main : GlobalTheory.Published.FontaineBcris → ∀ (l : ℕ) [Fact l.Pr
     intro c
     obtain ⟨⟨x, s⟩, hxs⟩ := IsLocalization.surj (nonZeroDivisors ↥(OL LL)) c
     refine ⟨s, IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2, x, ?_⟩
-    rw [mul_comm]
-    exact hxs
+    rwa [mul_comm]
   have hinj : Function.Injective (Formalism.MainNotions.LiftingTheory.lker_ι g hg hden).f := fun x y h => Subtype.ext h
   refine ⟨Formalism.MainNotions.LiftingTheory.lker_T₀ g hg hden, Formalism.MainNotions.LiftingTheory.lker_ι g hg hden, ?_,
     isGood_of_injective hF hs _ hinj (Formalism.MainNotions.LiftingTheory.lker_ι g hg hden).equiv hT⟩
@@ -1170,8 +1146,7 @@ theorem padicValNat_factorial_le_sub (l i j : ℕ) [hp : Fact l.Prime] (hji : j 
     · exfalso
       have hne : l.digits i ≠ [] := Nat.digits_ne_nil_iff_ne_zero.mpr hi.ne'
       have h1 := Nat.getLast_digit_ne_zero l hi.ne'
-      have h2 := List.sum_eq_zero_iff.1 h0 _ (List.getLast_mem hne)
-      exact h1 h2
+      exact h1 (List.sum_eq_zero_iff.1 h0 _ (List.getLast_mem hne))
     · exact h0
   have hsum : (l.digits i).sum ≤ i := Nat.digit_sum_le l i
   have hl2 := hp.out.two_le

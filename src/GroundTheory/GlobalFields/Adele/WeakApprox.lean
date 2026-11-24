@@ -46,8 +46,7 @@ theorem not_isEquiv_adicAbv_infinitePlace (v : HeightOneSpectrum (𝓞 K)) (w : 
   rw [he.le_one_iff] at h1
   have h2 : w.1 (2 : K) = 2 := by
     have h := w.map_natCast 2
-    rw [Nat.cast_ofNat, Nat.cast_ofNat] at h
-    exact h
+    rwa [Nat.cast_ofNat, Nat.cast_ofNat] at h
   linarith
 
 end AbsoluteValues

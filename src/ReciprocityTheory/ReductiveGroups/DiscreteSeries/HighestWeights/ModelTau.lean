@@ -204,8 +204,7 @@ theorem hasDerivAt_of_mem_Vsp (ε : Fin n → Bool) (m : Fin n → ℤ) {f : KG 
         (@PseudoMetricSpace.toUniformSpace _ (@MetricSpace.toPseudoMetricSpace _ (@NormedRing.toMetricSpace _ iR))) := by
       exact FiniteDimensional.complete ℂ _
     have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
-    rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-    exact h
+    rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
   let L : Matrix (Fin n) (Fin n) ℂ →L[ℝ] Matrix (Fin n) (Fin n) ℂ :=
     LinearMap.toContinuousLinearMap (LinearMap.mulLeft ℝ (toMK x))
   have hin : HasDerivAt (fun t : ℝ => L (toMK (kcurve ε X t))) (L X) 0 :=
@@ -225,8 +224,7 @@ theorem hasDerivAt_of_mem_Vsp (ε : Fin n → Bool) (m : Fin n → ℤ) {f : KG 
     rw [hfF, toMK_mul']
     rfl
   rw [hfun]
-  rw [hLx] at hcomp
-  exact hcomp
+  rwa [hLx] at hcomp
 
 end ReciprocityTheory.ChartRestriction.DS.HW
 end -- clump:auto
@@ -301,8 +299,7 @@ theorem mvInner_conj {ε : Fin n → Bool} {m : Fin n → ℤ} (f g : MV ε m) :
   rw [← integral_conj]
   congr 1
   funext x
-  simp only [map_mul, starRingEnd_apply, star_star]
-  exact mul_comm _ _
+  simpa only [map_mul, starRingEnd_apply, star_star] using mul_comm _ _
 
 theorem mvInner_re_nonneg {ε : Fin n → Bool} {m : Fin n → ℤ} (f : MV ε m) : 0 ≤ (mvInner f f).re := by
   rw [mvInner_self_eq, Complex.ofReal_re]
@@ -444,8 +441,7 @@ theorem pre_op_curve {X : Matrix (Fin n) (Fin n) ℂ} (hX : inK ε X) (γ : ℝ 
     show F 0 * NormedSpace.exp ((0 : ℝ) • (-A)) = 1
     rw [hF0, zero_smul, NormedSpace.exp_zero, one_mul]
   show F t = _
-  have hs : ((t : ℂ) • A) = t • A := by
-    exact Complex.coe_smul t A
+  have hs : ((t : ℂ) • A) = t • A := Complex.coe_smul t A
   rw [hs]
   have hc : Commute (t • (-A)) (t • A) := (((Commute.refl A).neg_left).smul_left t).smul_right t
   calc F t = F t * E t * NormedSpace.exp (t • A) := by
@@ -478,8 +474,7 @@ theorem pre_star_dτ {X : Matrix (Fin n) (Fin n) ℂ} (hX : inK ε X) : star (d�
     intro t
     have h1 := pre_op_curve τ dτ hder hX γ hγ t
     have h2 : star (preOp τ (γ t)) * preOp τ (γ t) = 1 := Unitary.coe_star_mul_self _
-    rw [h1, NormedSpace.star_exp, star_smul, Complex.star_def, Complex.conj_ofReal] at h2
-    exact h2
+    rwa [h1, NormedSpace.star_exp, star_smul, Complex.star_def, Complex.conj_ofReal] at h2
   have hd0 := (hasDerivAt_exp_smul_const (star A) ((0 : ℝ) : ℂ)).mul
     (hasDerivAt_exp_smul_const A ((0 : ℝ) : ℂ))
   have hd2 := hasDerivAt_real_of_complex' hd0
@@ -719,8 +714,7 @@ theorem pre_kSpan_stable (x : V) (k : KG ε) :
     intro a b hab y hy
     unfold Formalism.REAL.kSpan at hy ⊢
     rw [Submodule.mem_sInf] at hy ⊢
-    intro S hS
-    exact hS.2 a b hab y (hy S hS)
+    exact fun S hS => hS.2 a b hab y (hy S hS)
   obtain ⟨Y, hY, he⟩ := pre_op_eq_exp' τ dτ hder k
   rw [show ((τ k : unitary (V →L[ℂ] V)) : V →L[ℂ] V) = NormedSpace.exp (dτ Y) from he]
   exact exp_mem_of_stable _ _ (pre_dτ_stable_of_kStable dτ _ hS Y hY)
@@ -738,8 +732,7 @@ theorem irred_of_gen {Λ : Fin n → ℝ} (w : V)
   have hx : w ∈ Formalism.REAL.kSpan ε (preUnits dτ) w := by
     unfold Formalism.REAL.kSpan
     rw [Submodule.mem_sInf]
-    intro S hS
-    exact hS.1
+    exact fun S hS => hS.1
   have htop : Formalism.REAL.kSpan ε (preUnits dτ) w = ⊤ :=
     hgen _ (pre_kSpan_stable τ hcont dτ hder w) hx
   have hhi : Formalism.REAL.KHighest ε (preUnits dτ) Λ w :=
@@ -1014,8 +1007,7 @@ theorem gen_wN (ε : Fin n → Bool) (m : Fin n → ℤ) (W : Submodule ℂ (MV 
   rw [eq_top_iff]
   intro x _
   obtain ⟨y, hy, hyx⟩ := hle x.mem
-  rw [← mvFnL_injective ε m hyx]
-  exact hy
+  rwa [← mvFnL_injective ε m hyx]
 
 def modelKType (ε : Fin n → Bool) {m : Fin n → ℤ} (hm : NonnegDom ε m) : KType ε (fun a => (m a : ℝ)) :=
   kTypeOfGen (MV ε m) (tauM ε m) (continuous_tauM ε m) (dTau ε m) (hasDeriv_dTau ε m) (wN ε m) (norm_wN ε m)

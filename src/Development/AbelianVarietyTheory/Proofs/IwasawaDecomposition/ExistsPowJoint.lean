@@ -116,9 +116,7 @@ theorem exists_pow_joint : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω
     simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hτ ⊢
     rwa [map_mul, (MonoidHom.mem_ker).1 hg, mul_one]
   let T : Set (Formalism.ConjugateSelfDual.G E Ω) := ⋃ a ∈ Finset.range L, {τ | φ τ = φ γ ^ a ∧ τ π = ζ ^ a * π}
-  have hTc : IsClosed T := by
-    refine isClosed_biUnion_finset fun a _ => ?_
-    exact (hfib _).inter (hloc _)
+  have hTc : IsClosed T := isClosed_biUnion_finset fun a _ => (hfib _).inter (hloc _)
   let Q : Formalism.ConjugateSelfDual.G E Ω → Prop := fun τ =>
     τ ∈ ReciprocityTheory.Gal.Ine (F := E) A ∧ ∃ a : ℕ, φ τ = φ γ ^ a ∧ τ π = ζ ^ a * π
   have hQ : ∀ τ ∈ Subgroup.closure (insert γ
@@ -151,8 +149,7 @@ theorem exists_pow_joint : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω
           rw [← AlgEquiv.mul_apply, inv_mul_cancel]; rfl
         have h1 : π = ζ ^ a * (x⁻¹ : Formalism.ConjugateSelfDual.G E Ω) π := by
           have h2 := congrArg (fun y => (x⁻¹ : Formalism.ConjugateSelfDual.G E Ω) y) haπ
-          rw [hxx, map_mul, map_pow, hfixζ _ hiI] at h2
-          exact h2
+          rwa [hxx, map_mul, map_pow, hfixζ _ hiI] at h2
         calc (x⁻¹ : Formalism.ConjugateSelfDual.G E Ω) π = ζ ^ (a * (L - 1) + a) * (x⁻¹ : Formalism.ConjugateSelfDual.G E Ω) π := by
               rw [hex, pow_mul', hζn, one_pow, one_mul]
           _ = ζ ^ (a * (L - 1)) * (ζ ^ a * (x⁻¹ : Formalism.ConjugateSelfDual.G E Ω) π) := by ring

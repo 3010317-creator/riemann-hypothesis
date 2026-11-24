@@ -149,8 +149,7 @@ theorem equivStep : EquivStep := by
       rwa [LinearEquiv.apply_symm_apply]
     · apply b.equivFun.injective
       change b.equivFun (linOf b _ _) = _
-      rw [equivFun_linOf, LinearEquiv.apply_symm_apply]
-      exact hxv
+      rwa [equivFun_linOf, LinearEquiv.apply_symm_apply]
   · rintro ⟨w, hw, rfl⟩
     refine ⟨b.equivFun w, hw, ?_⟩
     change _ = b.equivFun (linOf b _ _)

@@ -125,11 +125,8 @@ theorem mackey_product : MackeyProd := by
     exact (hψ v).2.1 _ (hu1 v (Set.mem_univ v)) _ (hu2 v (Set.mem_univ v))
   · intro h hh
     have hex : ∃ v0, h v0 ∉ U v0 := by
-      by_contra hc
-      push_neg at hc
-      apply hh
-      show ∀ v ∈ (Set.univ : Set ι), h v ∈ U v
-      exact fun v _ => hc v
+      by_contra! hc
+      exact hh (fun v _ => hc v)
     obtain ⟨v0, hv0⟩ := hex
     obtain ⟨u0, hu0, hc, hne⟩ := (hψ v0).2.2 (h v0) hv0
     refine ⟨Pi.mulSingle v0 u0, ?_, ?_, ?_⟩

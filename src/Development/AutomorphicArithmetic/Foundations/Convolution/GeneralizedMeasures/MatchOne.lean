@@ -68,8 +68,7 @@ private theorem haar_uniq {G : Type*} [Group G] [TopologicalSpace G] [IsTopologi
   have e2 : m K = (Measure.haarScalarFactor m m' • m') K := by rw [← e]
   rw [h, Measure.smul_apply, h', ENNReal.smul_def, smul_eq_mul, mul_one] at e2
   have e3 : Measure.haarScalarFactor m m' = 1 := by exact_mod_cast e2.symm
-  rw [e3, one_smul] at e
-  exact e
+  rwa [e3, one_smul] at e
 
 private theorem gl_top (R : Type*) [CommRing R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R]
     [LocallyCompactSpace R] [SecondCountableTopology R] (n : ℕ) :
@@ -91,8 +90,7 @@ private theorem gl_int {R : Type*} [CommRing R] [TopologicalSpace R] [IsTopologi
     constructor
     · rintro ⟨B, rfl⟩ i j
       exact (B i j).2
-    · intro h
-      exact ⟨Matrix.of fun i j => ⟨A i j, h i j⟩, rfl⟩
+    · exact fun h => ⟨Matrix.of fun i j => ⟨A i j, h i j⟩, rfl⟩
   constructor
   · have e : {g : GL (Fin n) R | (∀ i j, g i j ∈ O) ∧ ∀ i j, (g⁻¹ : GL (Fin n) R) i j ∈ O} =
         (S.toSubmonoid.units : Set (GL (Fin n) R)) := by

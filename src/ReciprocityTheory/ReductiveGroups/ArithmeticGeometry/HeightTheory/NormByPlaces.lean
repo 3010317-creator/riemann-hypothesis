@@ -49,7 +49,7 @@ theorem gen_span {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) : p = Ideal.sp
       (Ideal.height_le_iff (n := 1)).mp (by rw [hh]; norm_num) _ hsq (lt_of_le_of_ne hle hne2)
     have h2 : ¬ (Ideal.span {q}).height ≤ ((0 : ℕ) : ℕ∞) := by
       rw [Ideal.height_le_iff]
-      push_neg
+      push Not
       exact ⟨⊥, Ideal.isPrime_bot, hqb, by simp⟩
     apply h2
     have h1' : (Ideal.span {q}).height < 1 := by simpa using h1
@@ -87,8 +87,7 @@ private lemma span_singleton_mem_htOne_of_prime {π : KTp K d.D d.N} (hπ : Prim
           conv_rhs => rw [ht, hr]
           ring
         exact hπ.not_unit (isUnit_iff_exists_inv.mpr ⟨r, mul_left_cancel₀ hπ'.ne_zero e⟩)
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have h0 : (Ideal.span {π}).height ≤ ((0 : ℕ) : ℕ∞) := by
       simpa using ENat.lt_one_iff_eq_zero.mp hlt
     rw [Ideal.height_le_iff] at h0
@@ -177,7 +176,7 @@ private lemma prod_gen_zpow_split_at {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.H
     by_cases hqp : q = p
     · subst hqp
       refine ⟨A, B, hA, hB, ?_⟩
-      rw [if_pos (Finset.mem_insert_self _ _), mul_assoc, hAB, if_neg hqT, zpow_zero, one_mul]
+      rw [ite_eq_left (Finset.mem_insert_self _ _), mul_assoc, hAB, ite_eq_right hqT, zpow_zero, one_mul]
     · have hgq : d.gen q ∉ p := gen_notMem_of_ne d hp hqH hqp
       have hgq0 : d.gen q ≠ 0 := by
         intro h0
@@ -187,8 +186,7 @@ private lemma prod_gen_zpow_split_at {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.H
         rw [hq, Ideal.height_bot] at h2
         exact zero_ne_one h2
       have hg0 : algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ≠ 0 := by
-        rw [Ne, IsFractionRing.to_map_eq_zero_iff]
-        exact hgq0
+        rwa [Ne, IsFractionRing.to_map_eq_zero_iff]
       have hnot : ∀ (X : KTp K d.D d.N) (k : ℕ), X ∉ p → X * d.gen q ^ k ∉ p := fun X k hX h =>
         (hp.1.mem_or_mem h).elim hX (fun h' => hgq (hp.1.mem_of_pow_mem _ h'))
       have hif : (if p ∈ insert q T then E p else 0) = (if p ∈ T then E p else 0) := by
@@ -218,8 +216,7 @@ private lemma overP_finite (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (p : Ideal (KTp
   haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
   have hmap : ∀ x : KTp K d.D d.N, algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)
       (algebraMap (KTp K d.D d.N) (KTf K d.D d.N) x) = d.sH c x := by
-    intro x
-    exact IsFractionRing.lift_algebraMap (h c) x
+    exact fun x => IsFractionRing.lift_algebraMap (h c) x
   have hOver : d.OverP c p = HNm.OverR (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) p := by
     ext w
     simp only [Data.OverP, HNm.OverR, Set.mem_setOf_eq, hmap]

@@ -67,10 +67,8 @@ theorem mem_latPi (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] 
   rw [Module.Basis.mem_span_iff_repr_mem]
   intro ji
   rw [Pi.basis_repr]
-  have h1 : mixedEmbedding F (y ji.1) ∈ mixedEmbedding.integerLattice F := by
-    exact ⟨⟨y ji.1, hy ji.1⟩, rfl⟩
-  have h2 := (mem_span_latticeBasis F).mpr h1
-  exact (Module.Basis.mem_span_iff_repr_mem ℤ _ _).mp h2 ji.2
+  have h1 : mixedEmbedding F (y ji.1) ∈ mixedEmbedding.integerLattice F := ⟨⟨y ji.1, hy ji.1⟩, rfl⟩
+  exact (Module.Basis.mem_span_iff_repr_mem ℤ _ _).mp ((mem_span_latticeBasis F).mpr h1) ji.2
 
 theorem summable_inv_one_add_pow (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] :
     Summable fun z : latPi F κ =>
@@ -87,7 +85,7 @@ theorem summable_inv_one_add_pow (F : Type) [Field F] [NumberField F] (κ : Type
   by_cases hz : z = 0
   · subst hz
     simp
-  · simp only [hz, if_false, add_zero]
+  · simp only [hz, ite_false, add_zero]
     have hpos : 0 < ‖z‖ := norm_pos_iff.mpr hz
     rw [Real.rpow_neg hpos.le, Real.rpow_natCast]
     have : ‖z‖ = ‖(z : κ → mixedSpace F)‖ := rfl

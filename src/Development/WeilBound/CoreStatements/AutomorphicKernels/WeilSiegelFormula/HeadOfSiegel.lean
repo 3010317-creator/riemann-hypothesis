@@ -371,8 +371,7 @@ theorem term_of_covariance : PositivityTheory.GramSchwartzFunctions.EC.HeisSch �
   have hv : HMul.hMul (HMul.hMul (zy y) (mat γ)) (mat γ⁻¹) = zy y := by
     rw [Matrix.mul_assoc, hinv, Matrix.mul_one]
   rw [hv] at h1
-  rw [h1] at h2
-  exact h2
+  rwa [h1] at h2
 
 end GlobalTheory.CompanionTheory.EisCells
 end -- clump:auto
@@ -470,8 +469,7 @@ theorem rat_form {n : ℕ} (g : Matrix (Fin (n + n)) (Fin (n + n)) D.host.E)
     ∃ a b d : Matrix (Fin n) (Fin n) D.host.E, g = blk4 a b 0 d ∧ aᴴ * d = 1 ∧ dᴴ * a = 1 := by
   have hg := block_matrix_eta g
   set M := g.submatrix finSumFinEquiv finSumFinEquiv
-  have hc : M.toBlocks₂₁ = 0 := by
-    exact Matrix.ext fun i j => hP i j
+  have hc : M.toBlocks₂₁ = 0 := Matrix.ext fun i j => hP i j
   rw [hc] at hg
   refine ⟨M.toBlocks₁₁, M.toBlocks₁₂, M.toBlocks₂₂, hg, ?_⟩
   rw [hg, jst_eq, block_matrix_conj_transpose, block_matrix_mul_comm_ring, block_matrix_mul_comm_ring] at hu
@@ -527,8 +525,7 @@ theorem rat_of_mem {n : ℕ} (p : G D n) (hp : p ∈ P D n ⊓ GF D n) :
     have := congrFun key i
     simp only [LinearMap.funLeft_apply, Pi.zero_apply, Matrix.mulVec_single_one] at this
     change (mat p)ᵀ _ _ = 0 at this
-    rw [hmat] at this
-    exact this
+    rwa [hmat] at this
   · rw [upperHalf, LinearMap.mem_ker]
     funext k
     simp only [LinearMap.funLeft_apply, Pi.zero_apply, finSumFinEquiv_apply_left, finSumFinEquiv_apply_right]
@@ -697,19 +694,7 @@ theorem _root_.GlobalTheory.T.theta_sum_invariant_unipotent_translate : ∀ (D :
   ∀ Φ : schwartzA θ V.rank n,
     ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, (ω g Φ).1 (ξ.map (incA D)) =
       ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, Φ.1 (ξ.map (incA D)) := by
-  intro D n V ψ χ θ μ ω hS g b hg Φ
-  obtain ⟨-, -, hψ, -, -, -, -, hW⟩ := hS
-  refine tsum_congr fun ξ => ?_
-  have hmul : (b.map (incA D) * inner V (ξ.map (incA D)) (ξ.map (incA D)) : Mx D n n) =
-      (b * (ξᴴ * (V.gram * ξ))).map (incA D) := by
-    change rat b * (adj (rat ξ) * (gA V * rat ξ)) = rat (b * (ξᴴ * (V.gram * ξ)))
-    rw [rat_mul, rat_mul, rat_mul, rat_conjTranspose, gA]
-  have htrace (M : Matrix (Fin n) (Fin n) D.host.E) :
-      Matrix.trace (M.map (incA D)) = incA D (Matrix.trace M) := by
-
-    simp only [Matrix.trace, Matrix.diag, Matrix.map_apply, map_sum]
-  rw [hW.unip g (b.map (incA D)) hg Φ (ξ.map (incA D)), hmul, htrace,
-    GlobalTheory.CompanionTheory.ThetaInv.halfTr_incA, hψ.2.2.1, one_mul]
+  exact GlobalTheory.CompanionTheory.ThetaInv.theta_unip
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaSumInvariantUnipotentTranslateStatement =====
@@ -830,26 +815,7 @@ namespace GlobalTheory.CompanionTheory.SiegelAssembly
 
 theorem two_mul_finrank_isotropic_le {E : Type} [Field E] [NumberField E] [StarRing E] (B : HSpace E)
     (W : Submodule E B.V) (hW : ∀ x ∈ W, ∀ y ∈ W, B.hT x y = 0) : 2 * Module.finrank E W ≤ B.rank := by
-  let b := Module.finBasis E W
-  have hl : LinearIndependent E fun i => B.hT (b i) := by
-    refine Fintype.linearIndependent_iff.2 fun c hc i => ?_
-    have h1 : B.hT ((∑ i, star (c i) • b i : W) : B.V) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hc]; simp [map_sum, LinearMap.map_smulₛₗ, starRingEnd_apply]
-    have h2 : (∑ i, star (c i) • b i : W) = 0 := Subtype.ext (B.nondeg.1 _ fun y => by rw [h1]; rfl)
-    simpa using Fintype.linearIndependent_iff.1 b.linearIndependent _ h2 i
-  have h3 := Subspace.finrank_add_finrank_dualCoannihilator_eq (Submodule.span E (Set.range fun i => B.hT (b i)))
-  rw [finrank_span_eq_card hl, Fintype.card_fin, B.rank_eq] at h3
-  have h4 : W ≤ (Submodule.span E (Set.range fun i => B.hT (b i))).dualCoannihilator := fun y hy => by
-    rw [Submodule.mem_dualCoannihilator]
-    intro φ hφ
-    induction hφ using Submodule.span_induction with
-    | mem _ h => obtain ⟨i, rfl⟩ := h; exact hW _ (b i).2 _ hy
-    | zero => rfl
-    | add _ _ _ _ h h' => rw [LinearMap.add_apply, h, h', add_zero]
-    | smul _ _ _ h => rw [LinearMap.smul_apply, h, smul_zero]
-  have := Submodule.finrank_mono h4
-  omega
+  exact GlobalTheory.SiegelFormula.Model.two_mul_finrank_le B W hW
 
 theorem bddAbove_isotropic_dims {E : Type} [Field E] [NumberField E] [StarRing E] (B : HSpace E) :
     BddAbove {k | ∃ W : Submodule E B.V, Module.finrank E W = k ∧ ∀ x ∈ W, ∀ y ∈ W, B.hT x y = 0} :=
@@ -1217,8 +1183,7 @@ theorem hermitian_unfolding_integral (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.h
       (GlobalTheory.T.theta_integral_locally_summable_bound D r V ψ θ μ _ hr hψ hθ hμ hφ)).1
   obtain ⟨c, hc⟩ := starN_hermE V (r := r) ψ μ hμ.choose_spec.1 dx hdx
   refine integrable_of_hermE lam h𝓖.1 db hdb _ ?_
-  simp only [hc]
-  exact hJ.const_mul c
+  simpa only [hc] using hJ.const_mul c
 
 end PositivityTheory.PfWsf.Hand.TupleUntupling
 end -- clump:auto
@@ -1330,8 +1295,8 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
     let A' : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fin n → Fin M → Fv F v ⊗[F] E) := fun v =>
       if v ∈ S then A v ∩ {X | hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ U k v} else A v
     have hA'S : ∀ v ∈ S, A' v = A v ∩ {X | hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ U k v} :=
-      fun v hv => if_pos hv
-    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (if_neg hv).trans (hAl v hv)
+      fun v hv => ite_eq_left hv
+    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (ite_eq_right hv).trans (hAl v hv)
     have hmem : ∀ x : Fin n → Fin M → AF F ⊗[F] E,
         (projFin x ∈ boxFN A ∧ hermFin σ (hermOf (AF F) σ T hT - gramH hCM hJ (AF F) x) ∈ boxH σ b n S (U k)) ↔
           projFin x ∈ boxFN A' := by
@@ -1344,7 +1309,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
           show _ ∈ U k v
           rw [← h3 x v]
           exact h'.1 v hv
-        · rw [show A' v = A v from if_neg hv]
+        · rw [show A' v = A v from ite_eq_right hv]
           exact h v
       · intro h
         refine ⟨fun v => ?_, fun v hv => ?_, fun v hv => ?_⟩
@@ -1353,7 +1318,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
             rw [hA'S v hv] at this
             exact this.1
           · have := h v
-            rwa [show A' v = A v from if_neg hv] at this
+            rwa [show A' v = A v from ite_eq_right hv] at this
         · have := h v
           rw [hA'S v hv] at this
           rw [h3 x v]
@@ -1383,7 +1348,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
       intro v
       by_cases hv : v ∈ S
       · rw [hA'S v hv]; exact ((hV v).1 k).1
-      · rw [show A' v = A v from if_neg hv]
+      · rw [show A' v = A v from ite_eq_right hv]
         exact (_root_.GlobalTheory.CompanionTheory.SiegelND.Coef.finV_compactOpenN F E σ hCM M J hJ n h2n d b v (lam v) (hlam v) (m v) (hm v) _ (hu _) (A v) (hA v).1 (hA v).2).1
     have hfinA' : ∀ v, GlobalTheory.CompanionTheory.SW.coordW (Fv F v) b (lam v) n M (A' v) ≠ ⊤ := by
       intro v
@@ -1423,8 +1388,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
       rw [norm_mul, norm_mul, show ‖chiT σ ψ T bb‖ = 1 from hψ.2.1 _, mul_one, norm_div]
       exact mul_le_of_le_one_left (norm_nonneg _)
         ((div_le_one (norm_pos_iff.2 (hck k))).2 (hbd k bb))
-    · refine Filter.Eventually.of_forall fun bb => ?_
-      exact (hlim bb).mul_const _
+    · exact Filter.Eventually.of_forall fun bb => (hlim bb).mul_const _
   have lim2 := hInf.2.mul (tendsto_finsetProd S fun v _ =>
     (Complex.continuous_ofReal.tendsto _).comp (hV v).2)
   exact tendsto_nhds_unique lim1 (lim2.congr fun k => by simpa using (key k).symm)
@@ -1512,8 +1476,7 @@ theorem coefN_sum (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Mat
       (Filter.Eventually.of_forall fun y => le_of_eq (hψ.2.1 _))
   show ∫ y, GlobalTheory.CompanionTheory.SiegelND.starN σ J ψ dx (fun X => ∑ i, Φ i X) y * chiT σ ψ T y ∂db =
     ∑ i, ∫ y, GlobalTheory.CompanionTheory.SiegelND.starN σ J ψ dx (Φ i) y * chiT σ ψ T y ∂db
-  simp only [hstar, Finset.sum_mul]
-  exact integral_finsetSum _ fun i _ => hi i
+  simpa only [hstar, Finset.sum_mul] using integral_finsetSum _ fun i _ => hi i
 
 end Pure
 
@@ -1562,8 +1525,7 @@ theorem PositivityTheory.PfWsf.Hand.CoreH.coreH : ∀ (F E : Type) [Field F] [Nu
     T hT hdet hEu S (φ i) (hφ i) (A i) (hA i) (hAl i)
   have e1 : ∫ X, Φ X ∂(GlobalTheory.CompanionTheory.SW.thetaMeas σ J μ 𝓕 {X | HeckeCharacterZeroLocus.SiegelWeilU.gramE σ J X = T}) =
       ∑ i, ∫ X, Coef.pureN (φ i) (A i) X ∂(GlobalTheory.CompanionTheory.SW.thetaMeas σ J μ 𝓕 {X | HeckeCharacterZeroLocus.SiegelWeilU.gramE σ J X = T}) := by
-    simp only [hsum]
-    exact integral_finsetSum _ fun i _ => (hP i).1
+    simpa only [hsum] using integral_finsetSum _ fun i _ => (hP i).1
   rw [e1, hΦe, PositivityTheory.PfWsf.Hand.CoreH.coefN_sum σ hCM J hJ h2n ψ hψ dx hdx db hdb hInt T N _ hSB]
   exact Finset.sum_congr rfl fun i _ => (hP i).2
 

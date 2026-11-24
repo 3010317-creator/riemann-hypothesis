@@ -78,8 +78,7 @@ theorem bru_lo_mul {A B : Matrix (Fin n) (Fin n) K} (hA : IsLoUni A) (hB : IsLoU
       rcases lt_or_gt_of_ne hk with h | h
       · rw [(hB k i).1 h, mul_zero]
       · rw [(hA i k).1 h, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
 
 def bruL (u : Fin n → K) (p : Fin n) : Matrix (Fin n) (Fin n) K :=
   fun a k => (if a = k then 1 else 0) + u a * (if k = p then 1 else 0)
@@ -139,9 +138,7 @@ theorem bru_step {m : ℕ} (hm : m < n) (M : Matrix (Fin n) (Fin n) K) (hdet : M
     intro b hb e
     rw [← e, hq] at hb
     exact lt_irrefl _ hb
-  have hpσ : ∀ b : Fin n, b.val < m → p ≠ σ b := by
-    intro b hb e
-    exact hp (e ▸ h4 b hb q (hqb b hb))
+  have hpσ : ∀ b : Fin n, b.val < m → p ≠ σ b := fun b hb e => hp (e ▸ h4 b hb q (hqb b hb))
   have hrow : ∀ c : Fin n, c.val < m → M p c = 0 := fun c hc => h3 c hc p (hpσ c hc)
   have hcase : ∀ b : Fin n, b.val < m + 1 → b = q ∨ b.val < m := by
     intro b hb
@@ -157,28 +154,28 @@ theorem bru_step {m : ℕ} (hm : m < n) (M : Matrix (Fin n) (Fin n) K) (hdet : M
   refine ⟨bruL u p, bruU w q, M', Function.update σ q p, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro i j
     refine ⟨fun hij => ?_, fun hij => ?_⟩
-    · rw [bruL_apply, if_neg (ne_of_lt hij), zero_add]
+    · rw [bruL_apply, ite_eq_right (ne_of_lt hij), zero_add]
       by_cases hj : j = p
       · subst hj
-        rw [hu, if_neg (ne_of_lt hij), hmin i hij, zero_div, zero_mul]
-      · rw [if_neg hj, mul_zero]
+        rw [hu, ite_eq_right (ne_of_lt hij), hmin i hij, zero_div, zero_mul]
+      · rw [ite_eq_right hj, mul_zero]
     · subst hij
-      rw [bruL_apply, if_pos rfl, hu]
+      rw [bruL_apply, ite_eq_left rfl, hu]
       by_cases hi : i = p
-      · rw [if_pos hi, zero_mul, add_zero]
-      · rw [if_neg hi, if_neg hi, mul_zero, add_zero]
+      · rw [ite_eq_left hi, zero_mul, add_zero]
+      · rw [ite_eq_right hi, ite_eq_right hi, mul_zero, add_zero]
   · intro i j
     refine ⟨fun hij => ?_, fun hij => ?_⟩
-    · rw [bruU_apply, if_neg (ne_of_gt hij), zero_add]
+    · rw [bruU_apply, ite_eq_right (ne_of_gt hij), zero_add]
       by_cases hi : i = q
       · subst hi
-        rw [hw, if_neg (ne_of_lt hij), hrow j (by rw [← hq]; exact hij), zero_div, mul_zero]
-      · rw [if_neg hi, zero_mul]
+        rw [hw, ite_eq_right (ne_of_lt hij), hrow j (by rw [← hq]; exact hij), zero_div, mul_zero]
+      · rw [ite_eq_right hi, zero_mul]
     · subst hij
-      rw [bruU_apply, if_pos rfl, hw]
+      rw [bruU_apply, ite_eq_left rfl, hw]
       by_cases hi : i = q
-      · rw [if_pos hi, if_pos hi, mul_zero, add_zero]
-      · rw [if_neg hi, zero_mul, add_zero]
+      · rw [ite_eq_left hi, ite_eq_left hi, mul_zero, add_zero]
+      · rw [ite_eq_right hi, zero_mul, add_zero]
   · ext a c
     rw [bru_right, bru_left, bru_left, hu, hw, hM', hM', hM', hM']
     by_cases ha : a = p
@@ -186,15 +183,15 @@ theorem bru_step {m : ℕ} (hm : m < n) (M : Matrix (Fin n) (Fin n) K) (hdet : M
       by_cases hc : c = q
       · subst hc
         simp
-      · simp only [if_true, if_neg hc]
+      · simp only [ite_true, ite_eq_right hc]
         field_simp
         ring
     · by_cases hc : c = q
       · subst hc
-        simp only [if_true, if_neg ha]
+        simp only [ite_true, ite_eq_right ha]
         field_simp
         ring
-      · simp only [if_true, if_neg ha, if_neg hc]
+      · simp only [ite_true, ite_eq_right ha, ite_eq_right hc]
         field_simp
         ring
   · intro b b' hb hb' e
@@ -210,24 +207,23 @@ theorem bru_step {m : ℕ} (hm : m < n) (M : Matrix (Fin n) (Fin n) K) (hdet : M
         exact h1 b b' hb1 hb1' e
   · intro b hb
     rcases hcase b hb with rfl | hb1
-    · rw [Function.update_self, hM', if_pos rfl, if_pos rfl]
-      exact hp
-    · rw [Function.update_of_ne (hqb b hb1).symm, hM', if_neg (hpσ b hb1).symm,
+    · rwa [Function.update_self, hM', ite_eq_left rfl, ite_eq_left rfl]
+    · rw [Function.update_of_ne (hqb b hb1).symm, hM', ite_eq_right (hpσ b hb1).symm,
         h4 b hb1 q (hqb b hb1), zero_div, zero_mul, sub_zero]
       exact h2 b hb1
   · intro b hb a ha
     rcases hcase b hb with rfl | hb1
     · rw [Function.update_self] at ha
-      rw [hM', if_neg ha, div_mul_cancel₀ _ hp, sub_self]
+      rw [hM', ite_eq_right ha, div_mul_cancel₀ _ hp, sub_self]
     · rw [Function.update_of_ne (hqb b hb1).symm] at ha
       rw [hM']
       by_cases hap : a = p
-      · rw [if_pos hap, if_neg (hqb b hb1).symm]
-      · rw [if_neg hap, h3 b hb1 a ha, hrow b hb1, mul_zero, sub_zero]
+      · rw [ite_eq_left hap, ite_eq_right (hqb b hb1).symm]
+      · rw [ite_eq_right hap, h3 b hb1 a ha, hrow b hb1, mul_zero, sub_zero]
   · intro b hb c hc
     rcases hcase b hb with rfl | hb1
-    · rw [Function.update_self, hM', if_pos rfl, if_neg hc]
-    · rw [Function.update_of_ne (hqb b hb1).symm, hM', if_neg (hpσ b hb1).symm,
+    · rw [Function.update_self, hM', ite_eq_left rfl, ite_eq_right hc]
+    · rw [Function.update_of_ne (hqb b hb1).symm, hM', ite_eq_right (hpσ b hb1).symm,
         h4 b hb1 c hc, h4 b hb1 q (hqb b hb1), zero_div, zero_mul, sub_zero]
 
 theorem bru_all (Z : Matrix (Fin n) (Fin n) K) (hdet : Z.det ≠ 0) : ∀ m : ℕ, m ≤ n →
@@ -262,10 +258,9 @@ theorem cell_bruhat : BruhatDecomposition := by
     ext a b
     unfold mono
     by_cases hab : a = σ b
-    · rw [if_pos hab, hab]
-    · rw [if_neg hab, h3 b b.isLt a hab]
-  rw [← hMm]
-  exact hZ
+    · rw [ite_eq_left hab, hab]
+    · rw [ite_eq_right hab, h3 b b.isLt a hab]
+  rwa [← hMm]
 
 end Formalism.MainNotions.BridgeLemma
 

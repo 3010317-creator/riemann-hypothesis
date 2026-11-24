@@ -69,7 +69,7 @@ theorem kIrrHW_int' (ε : Fin n → Bool) {M : Type*} [AddCommGroup M] [Module �
     | zero => rw [hv0, hwt a]; simp
     | succ k ih =>
       have c := compactRelations_apply_comm hF (a := a) (b := a) (c := b) (d := a) rfl hε.symm (v k)
-      simp only [hne, if_false, if_true, add_zero] at c
+      simp only [hne, ite_false, ite_true, add_zero] at c
       rw [hvs, c, ih, map_smul]
       push_cast
       module
@@ -80,7 +80,7 @@ theorem kIrrHW_int' (ε : Fin n → Bool) {M : Type*} [AddCommGroup M] [Module �
     | zero => rw [hv0, hwt b]; simp
     | succ k ih =>
       have c := compactRelations_apply_comm hF (a := b) (b := b) (c := b) (d := a) rfl hε.symm (v k)
-      simp only [hne, if_false, if_true, sub_zero] at c
+      simp only [hne, ite_false, ite_true, sub_zero] at c
       rw [hvs, c, ih, map_smul]
       push_cast
       module
@@ -90,13 +90,13 @@ theorem kIrrHW_int' (ε : Fin n → Bool) {M : Type*} [AddCommGroup M] [Module �
     induction k with
     | zero =>
       have c := compactRelations_apply_comm hF (a := a) (b := b) (c := b) (d := a) hε hε.symm w
-      simp only [if_true] at c
+      simp only [ite_true] at c
       rw [hvs 0, hv0, c, hwh a b hab hε, map_zero, hwt a, hwt b]
       push_cast
       module
     | succ k ih =>
       have c := compactRelations_apply_comm hF (a := a) (b := b) (c := b) (d := a) hε hε.symm (v (k + 1))
-      simp only [if_true] at c
+      simp only [ite_true] at c
       rw [hvs (k + 1), c, ih, map_smul, ← hvs k, hA (k + 1), hB (k + 1)]
       push_cast
       module
@@ -207,8 +207,7 @@ theorem highest_weight_graph_submodule {E : Fin n → Fin n → Module.End ℂ P
       exact Submodule.mem_map.2 ⟨prodEndomorphismFamily E F a b y, hΓ0st a b hab y hy, rfl⟩
     obtain ⟨y, hy, hyz⟩ := Submodule.mem_map.1 (hle hz)
     refine ⟨y.2, ?_⟩
-    rw [← hyz]
-    exact hy
+    rwa [← hyz]
   have hN : ∀ v, ((0 : P), v) ∈ Γ0 → v = 0 := by
     set N := Γ0.comap (LinearMap.inr ℂ P M) with hNdef
     have hNV : N ≤ V := fun v hv => (Submodule.mem_prod.1 (hΓ0 hv)).2
@@ -228,8 +227,7 @@ theorem highest_weight_graph_submodule {E : Fin n → Fin n → Module.End ℂ P
         ⟨fun a => Prod.ext (hx0.1 a) (hw.1 a), fun a b hab he => Prod.ext (hx0.2 a b hab he) (hw.2 a b hab he)⟩
       have hwt : IsWeight (prodEndomorphismFamily E F) Λ ((0 : P), w) := fun a => Prod.ext (by simp [product_action_apply]) (hw.1 a)
       have hmem : ((0 : P), w) ∈ lowSpan ε (prodEndomorphismFamily E F) (x0, w) := by
-        rw [← compact_span_eq_lowering hQ hkh]
-        exact hwN
+        rwa [← compact_span_eq_lowering hQ hkh]
       obtain ⟨c, hc⟩ := lowering_span_weight_scalar hQ hkh hmem hwt
       have h1 : c • x0 = 0 := (congrArg Prod.fst hc).symm
       have hc0 : c = 0 := (smul_eq_zero.1 h1).resolve_right hx00
@@ -272,8 +270,7 @@ theorem highest_weight_graph_submodule {E : Fin n → Fin n → Module.End ℂ P
       exact (Submodule.mem_bot ℂ).1 this
     have hγ' : ((0 : P), γ.2) ∈ Γ0 := by
       have : ((0 : P), γ.2) = γ := Prod.ext hγ0.symm rfl
-      rw [this]
-      exact hγ
+      rwa [this]
     rw [← h2, hN _ hγ', hζ2, add_zero]
   · intro y hy
     have hle : Γ0 ⊔ Zᗮ.prod ⊥ ≤ (⊤ : Submodule ℂ P).prod V :=

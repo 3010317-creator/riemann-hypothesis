@@ -17,9 +17,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 namespace Uniformizer₂
 
 lemma algebraMap_ne_zero {w : 𝒪[k]} (hw : w ≠ 0) : algebraMap 𝒪[k] k w ≠ 0 := by
-  intro h
-  apply hw
-  exact Subtype.ext (by simpa using h)
+  exact fun h => hw (Subtype.ext (by simpa using h))
 
 end Uniformizer₂
 

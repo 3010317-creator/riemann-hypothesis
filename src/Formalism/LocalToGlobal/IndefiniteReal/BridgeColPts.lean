@@ -40,8 +40,7 @@ theorem mem_principal_congruence_iff (m : Col.J0 hc n ST) : Col.ToUnitaryAdelic 
     have e : m' = m := Subtype.ext he
     rw [← e]
     exact MonoidHom.mem_ker.1 hm'
-  · intro h
-    exact Col.mem_principal_congruence_of hc n ST SG h
+  · exact fun h => Col.mem_principal_congruence_of hc n ST SG h
 
 theorem principal_congruence_le_level_subgroup : principalCongruenceSubgroup hc n ST SG ≤ colJ hc n ST SG H := by
   intro a ha
@@ -96,8 +95,7 @@ theorem colQ_fib (x x' : Col.UAd hc n) :
   unfold colQ
   rw [o.eD.injective.eq_iff, (Col.decoPt_injective' hc n ST SG).eq_iff, QuotientGroup.eq]
   constructor
-  · intro h
-    exact ⟨_, h, by rw [mul_inv_cancel_left]⟩
+  · exact fun h => ⟨_, h, by rw [mul_inv_cancel_left]⟩
   · rintro ⟨k1, hk1, rfl⟩
     rwa [inv_mul_cancel_left]
 

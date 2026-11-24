@@ -494,8 +494,7 @@ theorem lattice_sum_dilate_haar :
     have : ((q l : L) : V) = e l := rfl
     simp [this]
   rw [hi, hsum] at h
-  rw [integral_div_covolume_eq_of_haar μ ν L f]
-  exact h
+  rwa [integral_div_covolume_eq_of_haar μ ν L f]
 
 end GlobalTheory
 end -- clump:auto
@@ -574,8 +573,7 @@ theorem finite_support_dilate (K : Type) [Field K] [NumberField K] (f : mixedSpa
   refine (hfin.preimage hinj.injOn).subset fun α hα => ⟨?_, ?_⟩
   · have := hr (subset_tsupport f hα)
     rw [mem_closedBall_zero_iff, _root_.norm_smul, Real.norm_of_nonneg ht.le] at this
-    rw [mem_closedBall_zero_iff, le_div_iff₀ ht, mul_comm]
-    exact this
+    rwa [mem_closedBall_zero_iff, le_div_iff₀ ht, mul_comm]
   · refine (mem_idealLattice K I).2 ⟨(α : K), ?_, rfl⟩
     simp [I]
 
@@ -652,8 +650,7 @@ theorem ideal_sum_periodic_dilate : ∀ (K : Type) [Field K] [NumberField K] (m 
       mixedEmbedding K ((β : 𝓞 K) : K) + mixedEmbedding K (s r : K) := fun β => by
     rw [← map_add (f := _)]
     rfl
-  simp only [hβ]
-  exact h
+  simpa only [hβ] using h
 
 end GlobalTheory.IdealSum
 end -- clump:auto
@@ -710,7 +707,7 @@ private theorem exists_periodic_mod_ideal_eq_character_div_infinity_type {K : Ty
     by_cases ha : a = 0
     · simp [ψ, ha, hm]
     · have h1 : Ideal.span {a} ⊔ m = ⊤ := by rw [hm, sup_top_eq]
-      simp only [ψ, h1, ne_eq, ha, not_false_eq_true, and_self, if_true]
+      simp only [ψ, h1, ne_eq, ha, not_false_eq_true, and_self, ite_true]
       rw [hXφ a ha (by rw [hm]; exact Submodule.mem_top)]
       exact mul_inv_cancel₀ (hφne a ha)
   refine ⟨ψ, ?_, ?_⟩
@@ -734,8 +731,7 @@ private theorem exists_periodic_mod_ideal_eq_character_div_infinity_type {K : Ty
     have hnz : ∀ c : 𝓞 K, Ideal.span {c} ⊔ m = ⊤ → c ≠ 0 := by
       intro c hc h0
       apply hm
-      rw [h0, Ideal.span_singleton_eq_bot.2 rfl, bot_sup_eq] at hc
-      exact hc
+      rwa [h0, Ideal.span_singleton_eq_bot.2 rfl, bot_sup_eq] at hc
     by_cases ha : Ideal.span {a} ⊔ m = ⊤
     · have hb : Ideal.span {b} ⊔ m = ⊤ := hsup ▸ ha
       have ha0 := hnz a ha
@@ -755,7 +751,7 @@ private theorem exists_periodic_mod_ideal_eq_character_div_infinity_type {K : Ty
         rw [h0, zero_mul] at eA
         exact mul_ne_zero (hφne r (fun h => by simp [h] at hr; exact hm ((Ideal.eq_top_iff_one _).2
           (by simpa using m.neg_mem hr)))) (hφne a ha0) eA.symm
-      simp only [ψ, ha, hb, ne_eq, ha0, hb0, not_false_eq_true, and_self, if_true]
+      simp only [ψ, ha, hb, ne_eq, ha0, hb0, not_false_eq_true, and_self, ite_true]
       have hφa := hφne a ha0
       have hφb := hφne b hb0
       rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_eq_div_iff hφa hφb]
@@ -765,7 +761,7 @@ private theorem exists_periodic_mod_ideal_eq_character_div_infinity_type {K : Ty
       simp [ψ, ha, hb, hm]
   · intro β hβ
     by_cases hc : Ideal.span {β} ⊔ m = ⊤
-    · simp only [ψ, hc, ne_eq, hβ, not_false_eq_true, and_self, if_true]
+    · simp only [ψ, hc, ne_eq, hβ, not_false_eq_true, and_self, ite_true]
       rw [mul_assoc, inv_mul_cancel₀ (hφne β hβ), mul_one]
     · have hm : m ≠ ⊤ := fun hm => hc (by rw [hm, sup_top_eq])
       simp [ψ, hc, hm, hXcop _ hc]
@@ -852,8 +848,7 @@ private theorem finite_setOf_ringOfIntegers_mixedEmbedding_mem_compact {K : Type
     hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hC
   have hfin2 := hc.finite_of_discrete.image Subtype.val
   refine (hfin2.preimage (f := fun β : 𝓞 K => mixedEmbedding K (β : K)) ?_).subset ?_
-  · intro x _ y _ hxy
-    exact RingOfIntegers.ext ((mixedEmbedding_injective K) hxy)
+  · exact fun x _ y _ hxy => RingOfIntegers.ext ((mixedEmbedding_injective K) hxy)
   · intro β hβ
     exact ⟨⟨mixedEmbedding K (β : K), ⟨β, rfl⟩⟩, hβ, rfl⟩
 
@@ -944,8 +939,7 @@ private theorem tsum_principal_le_eq_tsum_mul_cutoff_span {K : Type} [Field K] [
       rw [unitSMul_smul, Ideal.span_singleton_mul_left_unit u.isUnit, hgen J]
       push_cast
       rw [map_mul]
-    rw [hfun]
-    exact h1
+    rwa [hfun]
   have hsumm : Summable fun p => g (e p) :=
     (Equiv.ofBijective e he).summable_iff.2 (hgsum.subtype _)
   exact ((hsumm.tsum_sigma' (fun J => (hfiber J).summable)).trans
@@ -1095,8 +1089,7 @@ theorem _root_.GlobalTheory.smoothedSum_main_term_representatives : ∀ (K : Typ
       field_simp [(by linarith [hN c] : (Ideal.absNorm (B c : Ideal (𝓞 K)) : ℝ) ≠ 0)]
     rw [hsd c, e]
     ring
-  rw [hmain, ← Finset.sum_sub_distrib]
-  rw [Finset.sum_mul]
+  rw [hmain, ← Finset.sum_sub_distrib, Finset.sum_mul]
   refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun c _ => ?_)
   rw [← mul_sub, norm_mul, norm_inv, hXnorm _ (hBne c) (hBm c), inv_one, one_mul]
   have hC' := hCc c (s c) (hs0 c) (hs1 c)
@@ -1238,8 +1231,7 @@ private theorem exists_weight_mellin_ne_zero (s₀ : ℂ) :
   · intro y hy
     have hψy : ψ y ≠ 0 := fun h => hy (by simp [h])
     have hmem : y ∈ Metric.ball (2 : ℝ) 1 := by
-      rw [← ψ.support_eq]
-      exact hψy
+      rwa [← ψ.support_eq]
     rw [Real.ball_eq_Ioo] at hmem
     constructor <;> linarith [hmem.1, hmem.2]
   · have hint : ∫ y in Ioi (0 : ℝ), (y : ℂ) ^ (s₀ - 1) •

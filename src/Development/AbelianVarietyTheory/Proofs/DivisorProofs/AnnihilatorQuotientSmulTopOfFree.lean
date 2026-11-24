@@ -73,8 +73,7 @@ theorem exists_isSMulRegular_notMem_sq {B M : Type} [CommRing B] [IsLocalRing B]
     [IsNoetherianRing B] [AddCommGroup M] [Module B M] [Module.Finite B M]
     (hass : maximalIdeal B ∉ associatedPrimes B M) (hsq : ¬ maximalIdeal B ≤ maximalIdeal B ^ 2) :
     ∃ x ∈ maximalIdeal B, x ∉ maximalIdeal B ^ 2 ∧ IsSMulRegular M x := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hsub : ((maximalIdeal B : Ideal B) : Set B) ⊆
       ⋃ p ∈ insert (maximalIdeal B ^ 2) (associatedPrimes B M), (id p : Set B) := by
     intro z hz
@@ -127,8 +126,7 @@ theorem free_of_free_quotient {B M : Type} [CommRing B] [IsLocalRing B] [IsNoeth
     choose c' hc' using fun i => Ideal.Quotient.mk_surjective (b.repr (Submodule.Quotient.mk m) i)
     have h1 : (Submodule.Quotient.mk (φ c') : M ⧸ P) = Submodule.Quotient.mk m := by
       rw [hmk]
-      simp only [hc']
-      exact b.sum_repr _
+      simpa only [hc'] using b.sum_repr _
     rw [Submodule.Quotient.eq] at h1
     have h2 : m = φ c' - (φ c' - m) := by abel
     rw [h2]

@@ -117,10 +117,8 @@ theorem _root_.GlobalTheory.TorsionHolomorphic.differentiableOn_matrix_inv {n : 
     intro i j
     by_cases hi : i = q
     · subst hi
-      simp only [Matrix.updateRow_self]
-      exact differentiableOn_const _
-    · simp only [Matrix.updateRow_ne hi]
-      exact hA i j
+      simpa only [Matrix.updateRow_self] using differentiableOn_const _
+    · simpa only [Matrix.updateRow_ne hi] using hA i j
   exact _root_.GlobalTheory.TorsionHolomorphic.differentiableOn_det (fun e => (A e).updateRow q (Pi.single p 1))
     W hentry
 
@@ -136,24 +134,23 @@ private theorem degree_part_homotopy_of_anticommutator_eq_one {Ix : Type} [Finty
     intro r
     by_cases hr : deg r = deg p + 1
     · by_cases hpq : deg p = deg q
-      · rw [if_pos (by omega), if_pos hpq]
-      · rw [if_neg (by omega), if_neg hpq, mul_zero]
+      · rw [ite_eq_left (by omega), ite_eq_left hpq]
+      · rw [ite_eq_right (by omega), ite_eq_right hpq, mul_zero]
     · rw [hD p r hr, zero_mul, zero_mul, ite_self]
   have h2 : ∀ r, (if deg p = deg r + 1 then h p r else 0) * D r q =
       if deg p = deg q then h p r * D r q else 0 := by
     intro r
     by_cases hr : deg q = deg r + 1
     · by_cases hpq : deg p = deg q
-      · rw [if_pos (by omega), if_pos hpq]
-      · rw [if_neg (by omega), if_neg hpq, zero_mul]
+      · rw [ite_eq_left (by omega), ite_eq_left hpq]
+      · rw [ite_eq_right (by omega), ite_eq_right hpq, zero_mul]
     · rw [hD r q hr, mul_zero, mul_zero, ite_self]
   have hpq' := congrFun (congrFun hh p) q
   simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.of_apply] at hpq' ⊢
   simp only [h1, h2]
   by_cases hpq : deg p = deg q
-  · simp only [if_pos hpq]
-    exact hpq'
-  · simp only [if_neg hpq, Finset.sum_const_zero, add_zero]
+  · simpa only [ite_eq_left hpq] using hpq'
+  · simp only [ite_eq_right hpq, Finset.sum_const_zero, add_zero]
     have hne : p ≠ q := fun h => hpq (h ▸ rfl)
     rw [Matrix.one_apply_ne hne]
 
@@ -204,12 +201,11 @@ theorem _root_.GlobalTheory.TorsionHolomorphic.exists_differentiableOn_torsSq :
     intro p q
     simp only [hhdef, Matrix.of_apply]
     by_cases hpq : deg p = deg q + 1
-    · simp only [if_pos hpq]
+    · simp only [ite_eq_left hpq]
       exact _root_.GlobalTheory.TorsionHolomorphic.differentiableOn_matrix_mul (fun _ => h₀) (fun e => (A e)⁻¹) W'
         (fun _ _ => differentiableOn_const _)
         (_root_.GlobalTheory.TorsionHolomorphic.differentiableOn_matrix_inv A W' (fun i j => (hA i j).mono hsub) hdetW') p q
-    · simp only [if_neg hpq]
-      exact differentiableOn_const _
+    · simpa only [ite_eq_right hpq] using differentiableOn_const _
   refine ⟨W', fun e => ((D e + hh e).submatrix (fun p : {p // Even (deg p)} => (p : Ix))
     (fun p : {p // Even (deg p)} => ((σ p : {p // ¬Even (deg p)}) : Ix))).det ^ 2,
     hW'open, he₀', hsub, ?_, ?_⟩
@@ -222,7 +218,7 @@ theorem _root_.GlobalTheory.TorsionHolomorphic.exists_differentiableOn_torsSq :
   · intro e he
     refine ⟨hh e, ?_, ?_, σ, rfl⟩
     · intro p q hpq
-      simp only [hhdef, Matrix.of_apply, if_neg hpq]
+      simp only [hhdef, Matrix.of_apply, ite_eq_right hpq]
     · exact degree_part_homotopy_of_anticommutator_eq_one deg (D e) (h₀ * (A e)⁻¹) (hcx e (hsub he)).1
         (contracting_homotopy_of_det_anticommutator_ne_zero (D e) h₀ (hcx e (hsub he)).2 (hdetW' e he))
 

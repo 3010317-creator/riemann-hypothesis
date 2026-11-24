@@ -97,7 +97,7 @@ theorem isOpen_detKer (m : ℕ) (w : Pl E) (μ : (w.adicCompletion E)ˣ →* ℂ
   hμ.preimage (continuous_det_GLw m w)
 
 theorem thL_split (m : ℕ) (w : Pl E) (hw : IsSplitAt w) : thL m w = MonoidHom.id _ := by
-  rw [thL, if_pos hw]
+  rw [thL, ite_eq_left hw]
 
 end GlobalTheory.BCT.CtLevel
 
@@ -111,11 +111,9 @@ theorem GlobalTheory.BCT.CtLevel.isLevel_lev_split : ∀ (E : Type) [Field E] [N
       (hN.preimage (continuous_dgM_inl h w))).inter (isOpen_detKer a w μ hμ))
   · exact inf_le_left.trans inf_le_left
   · intro k hk
-    rw [thL_split a w hw]
-    exact hk
+    rwa [thL_split a w hw]
   · exact (((GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w b).1.inter
       (hN.preimage (continuous_dgM_inr h w))).inter (isOpen_detKer b w μ hμ))
   · exact inf_le_left.trans inf_le_left
   · intro k hk
-    rw [thL_split b w hw]
-    exact hk
+    rwa [thL_split b w hw]

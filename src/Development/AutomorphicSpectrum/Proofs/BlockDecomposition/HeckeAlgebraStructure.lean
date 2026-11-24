@@ -122,8 +122,7 @@ theorem integral_eq_sum (μ : Measure G) [μ.IsMulLeftInvariant] (K : Subgroup G
   have hint : ∀ q ∈ S, Integrable (((QuotientGroup.mk : G → G ⧸ K) ⁻¹' {q}).indicator (fun _ => φ q.out)) μ := by
     intro q _
     refine (integrable_indicator_iff (hmeas q)).2 (integrableOn_const ?_)
-    rw [measure_coset]
-    exact hfin
+    rwa [measure_coset]
   rw [finsum_eq_sum_of_support_subset (s := S) _ (fun q hq => hF.mem_toFinset.2 hq)]
   conv_lhs => rw [hsum]
   rw [MeasureTheory.integral_finsetSum S hint, Finset.smul_sum]
@@ -169,8 +168,7 @@ theorem adjoint_of_inv (μ : Measure G) [μ.IsHaarMeasure] [μ.IsInvInvariant] (
     have := AddMonoidHom.map_finsum (AddMonoidHom.mk' (fun x => B v x) (by simp)) hs₂
     simpa [hφ₂] using this
   have hI : ∫ g, φ₂ g ∂μ = ∫ g, φ₁ g ∂μ := by
-    simp only [hinv]
-    exact integral_inv_eq_self φ₁ μ
+    simpa only [hinv] using integral_inv_eq_self φ₁ μ
   rw [integral_eq_sum μ K hKo hfin hc₁ hr₁, integral_eq_sum μ K hKo hfin hc₂ hr₂] at hI
   rw [l₁, l₂]
   exact (smul_right_injective ℂ hpos hI).symm

@@ -115,9 +115,7 @@ theorem forall_norm_finComp_le_one_iff' (x : Fin n → 𝔸[K]) :
     have hv := (pi_norm_le_iff_of_nonneg zero_le_one).1 (h v) i
     exact (HeightOneSpectrum.mem_adicCompletionIntegers (R := 𝓞 K) K v).2
       ((Valued.toNormedField.norm_le_one_iff).1 hv)
-  · intro h v
-    refine (pi_norm_le_iff_of_nonneg zero_le_one).2 fun i => ?_
-    exact norm_le_one_of_mem v (h i v)
+  · exact fun h v => (pi_norm_le_iff_of_nonneg zero_le_one).2 fun i => norm_le_one_of_mem v (h i v)
 
 theorem unitBall_eq :
     (unitBall : Set (Fin n → 𝔸[K])) =
@@ -159,13 +157,11 @@ theorem isCompact_unitBall : IsCompact (unitBall : Set (Fin n → 𝔸[K])) := b
         exact ⟨fun w _ => mem_closedBall_zero_iff.mpr (h1 w), h2⟩
       · rintro ⟨h1, h2⟩
         exact ⟨fun w => mem_closedBall_zero_iff.mp (h1 w (Set.mem_univ w)), h2⟩
-    rw [hCeq]
-    exact h
+    rwa [hCeq]
   refine (isCompact_univ_pi fun _ : Fin n => hC).of_isClosed_subset isClosed_unitBall ?_
   intro x hx i _
   rw [unitBall_eq] at hx
-  refine ⟨fun w => ?_, hx.2 i⟩
-  exact (norm_le_euclidNorm (infComp w x) i).trans (hx.1 w)
+  exact ⟨fun w => ((norm_le_euclidNorm (infComp w x) i).trans (hx.1 w)), hx.2 i⟩
 
 theorem measurableSet_unitBall : MeasurableSet (unitBall : Set (Fin n → 𝔸[K])) :=
   isClosed_unitBall.measurableSet
@@ -243,8 +239,7 @@ theorem map_vecMul_maxCompact' {k : GL (Fin n) 𝔸[K]}
         1 * adeleMeasurePi K (unitBall : Set (Fin n → 𝔸[K])) := by
       rw [one_mul]; exact hS
     exact (ENNReal.mul_left_inj adeleMeasurePi_unitBall_ne_zero adeleMeasurePi_unitBall_ne_top).1 h1
-  rw [h]
-  rw [show c = 1 from by exact_mod_cast hc, one_smul]
+  rw [h, show c = 1 from by exact_mod_cast hc, one_smul]
 
 theorem ideleModule_det_of_mem_maxCompact' {k : GL (Fin n) 𝔸[K]}
     (hk : k ∈ (maxCompact : Subgroup (AdelicGLn.AdelicGL K n))) :

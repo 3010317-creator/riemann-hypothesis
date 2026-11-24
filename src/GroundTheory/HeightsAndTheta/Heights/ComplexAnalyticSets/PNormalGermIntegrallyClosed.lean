@@ -95,8 +95,7 @@ theorem exists_eq_mul_of_integral_relation {S : Type*} [CommRing S] [IsDomain S]
       algebraMap S K g ^ (d - (j : ℕ)) = 0 := by
     have h2 := congrArg (algebraMap S K) hrel
 
-    simp only [map_add (f := _), map_sum, map_mul, map_pow, map_zero] at h2
-    exact h2
+    simpa only [map_add (f := _), map_sum, map_mul, map_pow, map_zero] using h2
   have hg0 : algebraMap S K g ≠ 0 := fun h0 => hg (hinj (by rw [h0, map_zero]))
   generalize hfK : algebraMap S K f = fK at hrelK
   generalize hgK : algebraMap S K g = gK at hrelK hg0
@@ -157,9 +156,7 @@ theorem proof (hRueckert : RueckertNullstellensatz.Statement)
     intro z
     simp [PA, FA, GA, aA, Finset.sum_apply]
 
-  have hGS : π GA ≠ 0 := by
-    intro h
-    exact hGnz (eventually_nhdsWithin_iff.1 (hπ0 GA h))
+  have hGS : π GA ≠ 0 := fun h => hGnz (eventually_nhdsWithin_iff.1 (hπ0 GA h))
 
   have hvan : ∀ᶠ z in 𝓝 w, (∀ i, eval z (p i) = 0) → (PA : (σ → ℂ) → ℂ) z * G z = 0 := by
     filter_upwards [hN.mem_nhds hwN] with z hzN hz

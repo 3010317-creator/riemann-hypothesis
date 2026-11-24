@@ -98,18 +98,15 @@ theorem isCompact_box (C : ∀ u : HeightOneSpectrum (𝓞 F), Set (Fv F u)) (hC
     constructor
     · rintro ⟨y, hy, rfl⟩ u -
       exact hy u
-    · intro hx
-      exact ⟨⟨x, fun u hu => hu (hx u trivial)⟩, fun u => hx u trivial, rfl⟩
+    · exact fun hx => ⟨⟨x, fun u hu => hu (hx u trivial)⟩, fun u => hx u trivial, rfl⟩
   have h2 := h1.image (RestrictedProduct.continuous_inclusion hS)
   have e : {a : Af F | ∀ u, evalV F u a ∈ C u} = RestrictedProduct.inclusion _ _ hS '' {x : P | ∀ u, x u ∈ C u} := by
     ext a
     constructor
-    · intro ha
-      exact ⟨⟨a.1, fun u hu => hu (ha u)⟩, ha, rfl⟩
+    · exact fun ha => ⟨⟨a.1, fun u hu => hu (ha u)⟩, ha, rfl⟩
     · rintro ⟨y, hy, rfl⟩
       exact hy
-  rw [e]
-  exact h2
+  rwa [e]
 
 theorem pf_eq_prod {φ : ∀ u : HeightOneSpectrum (𝓞 F), (κ → Fv F u) → ℂ} (S : Finset (HeightOneSpectrum (𝓞 F)))
     (y : κ → Af F) (h : ∀ u ∉ S, φ u = stdF κ u ∧ ∀ i, evalV F u (y i) ∈ u.adicCompletionIntegers F) :

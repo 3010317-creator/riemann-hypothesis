@@ -32,7 +32,7 @@ theorem relevantSet_zeroG_not_identity {Y : Full X} {u : D.what₂.Word} {t : GT
   have h : Gt t = 0 := hG
   unfold Gt at h
   by_contra hne
-  rw [if_neg hne] at h
+  rw [ite_eq_right hne] at h
   exact one_ne_zero h
 
 theorem exists_nfFull_of_relevant_of_G_eq_zero (Y : Full X) {u : D.what₂.Word} (t : GTu Y u) (hr : t.relevant) (hG : t.G = 0) :
@@ -46,8 +46,7 @@ theorem exists_nfFull_of_relevant_of_G_eq_zero (Y : Full X) {u : D.what₂.Word}
   refine _root_.Formalism.HermitianLatticeCounting.P.existsNormalForm D.host.E (hS D).V σ (nfH (hS D)) D.R.rS _ _ (fun x => p_starConj D σ x)
     hpos hpos (nf_pos _ _ (p_posX D _ (tie_Tu_pos D u) _) σ) (nf_pos _ _ (p_posX D _ (tie_Tu_pos D u) _) σ)
     (nf_rel D.host.F (tie_trace D.sp.cm) _ _ _ _ hrel) ?_
-  rw [nf_G (lf D (X.Fu u)).fl (frq X t.rep).fl (fixedFlag_level_ne_zero D u) (nf_T_ne D u)]
-  exact hG0
+  rwa [nf_G (lf D (X.Fu u)).fl (frq X t.rep).fl (fixedFlag_level_ne_zero D u) (nf_T_ne D u)]
 
 theorem index_eq_normalForm {Y : Full X} {u : D.what₂.Word} (t : GTu Y u) {j : ℕ} {hj : j ≤ D.R.rS} {c : D.host.E}
     (hN : Formalism.HermitianLatticeCounting.S6.NFFull (nfF (lf D (X.Fu u)).fl (fixedFlag_level_ne_zero D u)) (nfF (frq X t.rep).fl (nf_T_ne D u)) j hj c) :
@@ -73,7 +72,7 @@ theorem delta_pos_le_height_sq (hPF : PFHost D) (large₂ : SizeData₂ D) {CH C
   have hD : Dl (lf D (X.Fu u)).fl (frq X t.rep).fl j ≠ 0 := (nf_gen _ _ _ _ j hj c hN).2.2.2.1
   have hlab : labT t (jT t) = Dl (lf D (X.Fu u)).fl (frq X t.rep).fl j := by
     unfold labT
-    rw [if_pos le_rfl, hjT]
+    rw [ite_eq_left le_rfl, hjT]
   have hdel : k2Del D (jT t) (labT t) =
       ∏ τ : D.what₂.Tau, absReal D.host.rdE (embS D τ) D.R.rS (jT t) (labT t (jT t)) ^ 2 := by
     unfold k2Del
@@ -106,8 +105,7 @@ theorem delta_pos_le_height_sq (hPF : PFHost D) (large₂ : SizeData₂ D) {CH C
       rw [h1]
       have h2 : (1 : ℝ) ≤ (2 * H1C large₂ CH) ^ (2 * D.R.rS) := one_le_pow₀ (by linarith)
       have h3 : (1 : ℝ) / (2 * H1C large₂ CH) ^ (2 * D.R.rS) ≤ 1 := by
-        rw [div_le_one (by positivity)]
-        exact h2
+        rwa [div_le_one (by positivity)]
       exact h3.trans ((Finset.le_fold_max _).2 (Or.inl le_rfl))
     · have hmem : jT t ∈ k2ends D (jT t) (labT t) := by
         unfold k2ends

@@ -71,8 +71,7 @@ theorem spMap_surjective {A B : Type} [CommRing A] [CommRing B] (q : A →+* B)
   apply PrimeSpectrum.ext
   change Ideal.comap q (Ideal.map q p.asIdeal) = p.asIdeal
   rw [Ideal.comap_map_of_surjective _ hq, sup_eq_left]
-  intro x hx
-  exact hker (by simpa [RingHom.mem_ker] using hx)
+  exact fun x hx => hker (by simpa [RingHom.mem_ker] using hx)
 
 theorem exists_affine {X₀ : Scheme.{0}} {x : X₀} {U : X₀.Opens} (hx : x ∈ U) :
     ∃ W : X₀.affineOpens, x ∈ W.1 ∧ W.1 ≤ U := by

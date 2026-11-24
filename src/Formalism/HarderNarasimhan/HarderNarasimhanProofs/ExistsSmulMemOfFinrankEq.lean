@@ -65,8 +65,7 @@ theorem exists_smul_mem_of_finrank_eq {E : Type*} [AddCommGroup E] (S N : Submod
   have h0 : finrank ℤ (S ⧸ P) = 0 := by omega
   obtain ⟨a, ha, hax⟩ := (Module.finrank_eq_zero_iff.1 h0) (Submodule.Quotient.mk ⟨x, hx⟩)
   refine ⟨a, ha, ?_⟩
-  rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hax
-  exact hax
+  rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hax
 
 theorem satR_mem_zl {R V E : Type*} [Ring R] [AddCommGroup V] [Module R V] [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (ρ : V →+ E) (N : Submodule R V) (y : E) :
@@ -120,10 +119,8 @@ theorem real_saturation_property : SatR := by
     have ha' : (a : ℝ) ≠ 0 := by exact_mod_cast ha
     have h4 := (span ℝ ((zl ρ N : Submodule ℤ E) : Set E)).smul_mem (a : ℝ)⁻¹ h3
     rwa [smul_smul, inv_mul_cancel₀ ha', one_smul] at h4
-  · intro x hx
-    exact ⟨hNL hx, hNS ((satR_mem_zl ρ N _).2 ⟨x, hx, rfl⟩)⟩
-  · intro x hx
-    exact hx.1
+  · exact fun x hx => ⟨hNL hx, hNS ((satR_mem_zl ρ N _).2 ⟨x, hx, rfl⟩)⟩
+  · exact fun x hx => hx.1
   · ext y
     rw [satR_mem_zl]
     constructor

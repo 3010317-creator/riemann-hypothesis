@@ -148,8 +148,7 @@ theorem moved_locally_constant : ∀ {F : Type} [Field F] [ValuativeRel F] [Topo
       (Λ.neg_mem ha) (Λ.neg_mem hb) (L.O.neg_mem ht) hv
     simp only [smul_neg, mul_neg, add_neg_cancel_right] at h
     exact h
-  · intro hv
-    exact mem_of_close L S.herm.1 hΛ hp hpc hx hu hs hxΛ huΛ hsO ha hb ht hv
+  · exact fun hv => mem_of_close L S.herm.1 hΛ hp hpc hx hu hs hxΛ huΛ hsO ha hb ht hv
 
 end GlobalTheory.HL.EichlerLocal
 end -- clump:auto
@@ -194,8 +193,7 @@ theorem relIndex_scl_ne_zero {E W : Type} [CommRing E] [AddCommGroup W] [Module 
     refine mem_scl.2 ⟨(⟨y, hy⟩ : O) • (n : W), P.smul_mem _ n.2, ?_⟩
     show (x : E) • (n : W) = c • y • (n : W)
     rw [e, mul_smul]
-  · intro x y hx hy
-    exact AddSubgroup.add_mem _ hx hy
+  · exact fun x y hx hy => AddSubgroup.add_mem _ hx hy
 
 theorem finite_image_mk {W : Type} [AddCommGroup W] (B G : AddSubgroup W) (h : B.relIndex G ≠ 0)
     (s : Set W) (hs : s ⊆ G) : ((fun w => (QuotientAddGroup.mk w : W ⧸ B)) '' s).Finite := by
@@ -267,7 +265,7 @@ theorem pair_int (g : Fin (r + 1) → S.V) (gs : Fin r → S.V)
       refine h_span_zero S _ {gs j} ?_ _ h1 _ (Submodule.subset_span rfl)
       rintro _ ⟨a, ha, rfl⟩ _ rfl
       have ha' : (a : ℕ) < i := ha
-      rw [hd, if_neg]
+      rw [hd, ite_eq_right]
       rintro rfl
       simp at ha'; omega
     have h3 : n (g i) = (n (g i) - g i) + g i := by abel
@@ -439,8 +437,7 @@ theorem noLeak_add (Λ : Submodule L.O S.V) (hΛ : IsSD L S.Hm Λ) (u b : S.V) (
   obtain ⟨y, hy, hy', e⟩ := h
   obtain ⟨c, hc, e'⟩ := one_add_unit S ((hΛ.2 y).2 hy b hb)
   refine ⟨L.cj c • y, smul_memO S (cjO S hc) hy, S.W0.smul_mem _ hy', ?_⟩
-  rw [h_smul_r, L.cj_cj, h_add_l, h_smul_l, e]
-  exact e'
+  rwa [h_smul_r, L.cj_cj, h_add_l, h_smul_l, e]
 
 theorem half_int : ∃ v : ℕ, algebraMap F E S.ϖ ^ v * algebraMap F E 2⁻¹ ∈ L.O := by
   have h2 : (2 : 𝒪[F]) ≠ 0 := by
@@ -671,7 +668,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     refine finite_image_mk B G (hidx G inf_le_left fun w hw => hw.2) _ fun w hw => ?_
     have hw' : S.Mv (j + 1) d Λ w := by
       by_contra h
-      exact hw (if_neg h)
+      exact hw (ite_eq_right h)
     refine ⟨Mv_lin S hw', hbd w (Mv_lin S hw') hw'.2.2.1 hw'.2.2.2.2.1 ?_⟩
     obtain ⟨-, -, -, -, hu, -, ⟨c, hc, e⟩, -⟩ := hw'
     have : algebraMap F E S.ϖ ^ v * w.2.2 = algebraMap F E S.ϖ ^ v * (algebraMap F E S.ϖ ^ A * c) -

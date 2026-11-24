@@ -65,8 +65,7 @@ theorem orbit_sum_stabilizer (b0 : A) (B : Finset A) (f : A → K) (T : Finset �
   · exact fun h => h.2
   · intro h
     refine ⟨(hT γ).2 ?_, h⟩
-    rw [h]
-    exact hbB
+    rwa [h]
 
 theorem sum_orb (S : A → Prop) (Rp : Finset A) (hex : ∀ a, S a → ∃! a0, a0 ∈ Rp ∧ ∃ γ, a = sm γ a0) (B : Finset A)
     (hB : ∀ b ∈ B, S b) (f : A → K) :
@@ -76,13 +75,11 @@ theorem sum_orb (S : A → Prop) (Rp : Finset A) (hex : ∀ a, S a → ∃! a0, 
   refine Finset.sum_congr rfl (fun b hb => ?_)
   obtain ⟨a0, ⟨h0, hγ⟩, huniq⟩ := hex b (hB b hb)
   rw [Finset.sum_eq_single a0]
-  · rw [if_pos hγ]
+  · rw [ite_eq_left hγ]
   · intro c hc hne
-    rw [if_neg]
-    intro h
-    exact hne (huniq c ⟨hc, h⟩)
-  · intro h
-    exact absurd h0 h
+    rw [ite_eq_right]
+    exact fun h => hne (huniq c ⟨hc, h⟩)
+  · exact fun h => absurd h0 h
 
 def TT (b0 : A) (hfin : Finite {γ : Γ // sm γ b0 = b0}) (B : Finset A) : Finset Γ :=
   (T_finite sm h1 hm b0 hfin B).toFinset
@@ -197,9 +194,7 @@ theorem mem_upS (L L1 : P.Tup) : L1 ∈ upS v i L ↔ Rel v i L L1 := by
   constructor
   · rintro ⟨A, hA, rfl⟩
     exact ⟨by simpa [upd_self] using (mem_UP P).1 hA, fun u hu => (upd_ne v L A hu).symm⟩
-  · intro h
-    refine ⟨L1 v, (mem_UP P).2 h.1, ?_⟩
-    exact Function.update_eq_iff.mpr ⟨rfl, h.2⟩
+  · exact fun h => ⟨L1 v, (mem_UP P).2 h.1, (Function.update_eq_iff.mpr ⟨rfl, h.2⟩)⟩
 
 theorem mem_dnS (L L1 : P.Tup) : L ∈ dnS v i L1 ↔ Rel v i L L1 := by
   unfold dnS
@@ -256,8 +251,7 @@ theorem up_down_adjoint (D : Formalism.BasicNotions.D7) (X : Sys p) (Y : Pend X)
       cases h2
       cases h3
       exact h1
-    · intro h
-      exact ⟨(c, L), ⟨h, rfl⟩, rfl⟩
+    · exact fun h => ⟨(c, L), ⟨h, rfl⟩, rfl⟩
   have split : ∀ F : X.Lt j → Y.Kc, ∑ La ∈ Y.Rep j, F La =
       ∑ c ∈ (Y.Rep j).image Prod.fst, ∑ L ∈ Rc c, F (c, L) := by
     intro F

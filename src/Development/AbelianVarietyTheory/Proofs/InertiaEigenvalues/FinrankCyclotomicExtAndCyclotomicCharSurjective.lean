@@ -143,11 +143,9 @@ theorem minpoly_unramifiedSubfield_eq_cyclotomic (K : FinExt l) (j : ℕ) (hj : 
   apply eq_of_monic_of_dvd_of_natDegree_le (minpoly.monic hint) (cyclotomic.monic _ _)
     (minpoly.dvd _ _ hroot)
   rw [natDegree_cyclotomic]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   refine aeval_ne_zero_of_norm_eq K _ (ζ - 1) hnorm (taylor 1 (minpoly ↥(K0 K) ζ)) ?_ ?_ ?_
-  · intro h
-    exact minpoly.ne_zero hint (taylor_injective 1 (by rw [h, map_zero]))
+  · exact fun h => minpoly.ne_zero hint (taylor_injective 1 (by rw [h, map_zero]))
   · rwa [natDegree_taylor]
   · rw [taylor_apply, aeval_comp]
     simp
@@ -192,8 +190,7 @@ theorem exists_chi_approx (K : FinExt l) (χ : GQ l →* ℚ_[l]ˣ) (hχ : IsCyc
   set a := z.appr j with ha
   have hza : ‖u - (a : ℚ_[l])‖ ≤ (l : ℝ) ^ (-(j : ℤ)) := by
     have := (PadicInt.norm_le_pow_iff_mem_span_pow _ j).2 (PadicInt.appr_spec j z)
-    rw [PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast] at this
-    exact this
+    rwa [PadicInt.norm_def, PadicInt.coe_sub, PadicInt.coe_natCast] at this
   have hlt : (l : ℝ) ^ (-(j : ℤ)) < 1 := zpow_lt_one_of_neg₀ hl1 (by omega)
   have hna : ‖(a : ℚ_[l])‖ = 1 := by
     have h1 : (a : ℚ_[l]) = u + -(u - a) := by ring

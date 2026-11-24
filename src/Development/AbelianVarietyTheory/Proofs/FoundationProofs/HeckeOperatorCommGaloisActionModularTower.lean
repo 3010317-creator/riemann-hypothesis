@@ -405,11 +405,7 @@ namespace GlobalTheory.KZ.HeckeGal
 theorem B_inv {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) (N l w : ℕ) [Fact l.Prime]
     (b : X.Fn l) (hb : b ∈ X.B N l w) (γ : SL(2, ℤ)) (hγ : γ ∈ Gam N l) :
     X.act l (γ : Matrix (Fin 2) (Fin 2) ℤ) b = b := by
-  induction hb using Submodule.span_induction with
-  | mem x hx => exact hx.2 γ hγ
-  | zero => exact map_zero _
-  | add x y _ _ hx hy => rw [map_add (f := _), hx, hy]
-  | smul a x _ hx => rw [map_smul, hx]
+  exact GlobalTheory.KZ.GammaZeroComm.act_eq_self_of_mem_B X N l w hb hγ
 
 def trSL (t : ℤ) : SL(2, ℤ) := ⟨!![1, t; 0, 1], by simp [Matrix.det_fin_two_of]⟩
 

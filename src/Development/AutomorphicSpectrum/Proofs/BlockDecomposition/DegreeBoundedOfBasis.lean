@@ -181,8 +181,7 @@ theorem neg_log_fin (hF : MulF) (x : GA E n) (w : HeightOneSpectrum (𝓞 E)) (A
     -Real.log (nF (A.map (cW w))) ≤ n * Real.posLog (sz (x.val.map (cW w))) := by
   have h1 : (x.val.map (cW w)).submatrix s id * A.map (cW w) = 1 := by
     have h : ((x.val.submatrix s id) * A).map (cW w) = (1 : Matrix (Fin k) (Fin k) (Ad E)).map (cW w) := by rw [hY]
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)] at h
-    exact h
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)] at h
   have h2 := one_le_fin hF _ _ h1
   have h3 : sz ((x.val.map (cW w)).submatrix s id) ^ k ≤ sz (x.val.map (cW w)) ^ k :=
     pow_le_pow_left₀ (sz_nonneg _) (sz_rows_le _ s) k
@@ -198,8 +197,7 @@ theorem neg_log_inf (hI : MulI) (hW : WedgeI) (x : GA E n) (v : InfinitePlace E)
       n * (Real.posLog ((n : ℝ) * n) + Real.posLog (⨆ p : Fin n × Fin n, ‖cV v (x.val p.1 p.2)‖ ^ 2)) := by
   have h1 : (x.val.map (cV v)).submatrix s id * A.map (cV v) = 1 := by
     have h : ((x.val.submatrix s id) * A).map (cV v) = (1 : Matrix (Fin k) (Fin k) (Ad E)).map (cV v) := by rw [hY]
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)] at h
-    exact h
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)] at h
   have hkn : (k : ℝ) ≤ n := by exact_mod_cast hk
   have hT : 0 ≤ ⨆ p : Fin n × Fin n, ‖cV v (x.val p.1 p.2)‖ ^ 2 := Real.iSup_nonneg fun _ => by positivity
   have h2 := one_le_inf hI _ _ h1
@@ -296,8 +294,7 @@ theorem one_mem_intGA : (1 : GA E n) ∈ intGA E n := by
     rw [Matrix.one_apply]
     split_ifs <;> simp
   refine ⟨h, ?_⟩
-  rw [inv_one]
-  exact h
+  rwa [inv_one]
 
 theorem nF_mul_le (hF : MulF) (w : HeightOneSpectrum (𝓞 E)) (g : Matrix (Fin n) (Fin n) (Ad E))
     (hg : ∀ i j, g i j ∈ intAd E) (B : Matrix (Fin n) (Fin k) (Ad E)) :

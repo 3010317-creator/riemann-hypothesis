@@ -417,8 +417,7 @@ theorem GlobalTheory.gen_type_core : ∀ (O K : Type) [CommRing O] [IsDomain O] 
     intro u hu i
     have h1 := hb u hu
     rw [Matrix.sub_mulVec, Matrix.one_mulVec, Pi.sub_apply, map_sub, sub_eq_zero]
-    rw [RingHom.map_mulVec, hq₀, Matrix.fromBlocks_map]
-    rw [Matrix.fromBlocks_mulVec]
+    rw [RingHom.map_mulVec, hq₀, Matrix.fromBlocks_map, Matrix.fromBlocks_mulVec]
     rcases i with i | i
     · have := congrFun h1 i
       simp only [Sum.elim_inl, Pi.add_apply] at this ⊢
@@ -488,8 +487,7 @@ theorem parahoric_schwartz_vanish_off_translates : ∀ (O K : Type) [CommRing O]
     congr 1
     have e1 := congrArg (fun m : Matrix (Fin r ⊕ Fin t) (Fin r) O => m.map (algebraMap O K)) hh3
     simp only [Matrix.map_mul] at e1
-    rw [← hz] at e1
-    rw [Matrix.mul_smul, Matrix.mul_smul] at e1
+    rw [← hz, Matrix.mul_smul, Matrix.mul_smul] at e1
     exact smul_right_injective _ hc0 e1
   rw [finsum_mem_congr rfl hfix] at hs
   have hGfin : G.Finite := Set.toFinite G
@@ -519,7 +517,7 @@ theorem parahoric_schwartz_mem_span_translates : ∀ (O K : Type) [CommRing O] [
     if h : Φ y ≠ 0 then (hΩ y h).choose else 1
   have hgs : ∀ y, Φ y ≠ 0 → y ∈ S (gs y) := by
     intro y hy
-    simp only [gs, dif_pos hy]
+    simp only [gs, dite_eq_left hy]
     exact (hΩ y hy).choose_spec
   let F : Finset (Set (Matrix (Fin r ⊕ Fin t) (Fin r) K)) :=
     (T.filter (fun y => Φ y ≠ 0)).image (fun y => S (gs y))
@@ -540,7 +538,7 @@ theorem parahoric_schwartz_mem_span_translates : ∀ (O K : Type) [CommRing O] [
     intro A hA x hx
     obtain ⟨g, rfl⟩ := hF A hA
     have hne : (S g).Nonempty := ⟨x, hx⟩
-    simp only [c, dif_pos hne]
+    simp only [c, dite_eq_left hne]
     exact hconst g _ _ hne.some_mem hx
   have heq : Φ = ∑ A ∈ F, c A • A.indicator (fun _ => (1 : ℂ)) := by
     funext x
@@ -555,9 +553,9 @@ theorem parahoric_schwartz_mem_span_translates : ∀ (O K : Type) [CommRing O] [
       · rfl
     · obtain ⟨A, hA, hxA⟩ := hcover x hx
       rw [Finset.sum_eq_single A]
-      · rw [if_pos hxA, hc A hA x hxA]
+      · rw [ite_eq_left hxA, hc A hA x hxA]
       · intro B hB hBA
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hxB
         obtain ⟨g, rfl⟩ := hF A hA
         obtain ⟨g', rfl⟩ := hF B hB

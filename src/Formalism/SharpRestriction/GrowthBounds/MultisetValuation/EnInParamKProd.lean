@@ -106,8 +106,7 @@ theorem X_mem {π : σ → Pl} {v : Pl} {x : σ} (h : π x = v) : (MvPowerSeries
   split_ifs at hm with hmx
   · subst hmx
     rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hy
-    rw [hy]
-    exact h
+    rwa [hy]
   · exact absurd rfl hm
 
 theorem C_mem {π : σ → Pl} {v : Pl} (c : R) : (MvPowerSeries.C c : MvPowerSeries σ R) ∈ SuppOn π v := by
@@ -168,7 +167,7 @@ theorem eq_atP {R Pl : Type} [CommRing R] {ι : Pl → Type} [Fintype Pl] [Decid
     · obtain ⟨m, rfl⟩ := h
       rw [coeff_atP_single, coeff_resP, ← h2]
       exact hn.symm
-    · push_neg at h
+    · push Not at h
       exact (coeff_atP_eq_zero v _ n h).symm
   · have hsupp := (mem_SuppOn.mp hf) n hn
     have hn' : n = eqv.symm (Pi.single v (eqv n v)) := by
@@ -270,7 +269,7 @@ theorem en_logF_one : PowerSeries.coeff 1 (logF p) = 1 := by
   have h1 : (1 : ℕ) ≠ p ^ (2 * 1) := by
     have : 1 < p ^ (2 * 1) := Nat.one_lt_pow (by norm_num) hp
     omega
-  rw [if_neg h1]
+  rw [ite_eq_right h1]
   simp
 
 theorem en_L_zero : PowerSeries.constantCoeff (en_L p K1) = 0 := by

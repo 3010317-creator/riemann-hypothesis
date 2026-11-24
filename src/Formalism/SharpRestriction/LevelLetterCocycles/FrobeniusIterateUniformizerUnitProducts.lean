@@ -117,8 +117,7 @@ theorem wach_cocycle_class_mem_latticeFiniteCohomology (hs : W.s = 1) (hp : PD.p
     simp [Formalism.MainNotions.DeltaInvariantLattices.Eat]
   have hmem : (x : W.DD T × W.DD T) ∈ W.divisibleCocycles T := by
     have h1 := (Submodule.mem_inf.mp x.2).1
-    rw [hg] at h1
-    exact h1
+    rwa [hg] at h1
   rw [h2b T hT, restriction_eq_restriction_H1, hres T x ⟨_, hmem⟩ rfl]
   obtain ⟨u, J, rfl⟩ := hΛ
   obtain ⟨z', hz', hzz⟩ := hz
@@ -149,8 +148,7 @@ section F2Rows
 theorem caseA_of_le_Kur_of_ne_two {l : ℕ} [Fact l.Prime] (P : LocPrime l) (H : LocHW l P) {K LL : FinExt l} (h : Good K 1 LL)
     (hK : K.1 ≤ MaximalUnramifiedExtension l) (hl : l ≠ 2) : Formalism.MainNotions.LiftingTheory.CaseA (H.W K 1 LL h) := by
   refine ⟨⟨(algebraMap ↥(K0 K) ↥K.1).injective, fun x => ⟨⟨x, x.2, hK x.2⟩, rfl⟩⟩, H.W_s K 1 LL h, ?_⟩
-  rw [P.PD_p]
-  exact hl
+  rwa [P.PD_p]
 
 theorem finrank_of_caseA {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K]
     [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K]

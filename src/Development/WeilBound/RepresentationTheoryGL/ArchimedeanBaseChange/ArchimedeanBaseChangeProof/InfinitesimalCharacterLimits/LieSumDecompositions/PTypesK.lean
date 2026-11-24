@@ -203,8 +203,7 @@ theorem k_castGL_castGL {R : Type} [CommRing R] {a b : ℕ} (h : a = b) (g : GL 
 
 omit [Field E] [NumberField E] [IsCMField E] in
 theorem levi_embed_left_zero {R : Type} [CommRing R] {r : ℕ} (g : GL (Fin r) R) : lev R r 0 (g, 1) = g := by
-  refine Matrix.GeneralLinearGroup.ext fun i j => ?_
-  exact InducedTensorMap.B.lev_cc (s := 0) (g, 1) i j
+  exact Matrix.GeneralLinearGroup.ext fun i j => InducedTensorMap.B.lev_cc (s := 0) (g, 1) i j
 
 omit [Field E] [NumberField E] [IsCMField E] in
 theorem k_lev_0s {R : Type} [CommRing R] {s : ℕ} (u : GL (Fin s) R) :
@@ -244,7 +243,7 @@ theorem Tset_spec {r s : ℕ} {L : Subgroup (GL (Fin (r + s)) (Af E))} (hL : IsO
       (k : Kinf E (r + s)) (l : GL (Fin (r + s)) (Af E)), t ∈ Tset r s L ∧ l ∈ L ∧
       g = unip x * lev (Ad E) r s m * finGL E (r + s) t * infGL E (r + s) (Unitary.toUnits k) * finGL E (r + s) l := by
   by_cases hr : r = 0 ∨ s = 0
-  · have hT : Tset r s L = {1} := by rw [Tset, if_pos hr]
+  · have hT : Tset r s L = {1} := by rw [Tset, ite_eq_left hr]
     rcases hr with rfl | rfl
     · refine ⟨0, (1, k_castGL (Nat.zero_add s) g), 1, 1, 1, by rw [hT]; exact Finset.mem_singleton_self _, L.one_mem, ?_⟩
       rw [InducedTensorMap.unip_zero, k_lev_0s, k_castGL_castGL, map_one, map_one, map_one]
@@ -253,7 +252,7 @@ theorem Tset_spec {r s : ℕ} {L : Subgroup (GL (Fin (r + s)) (Af E))} (hL : IsO
       rw [InducedTensorMap.unip_zero, levi_embed_left_zero, map_one, map_one, map_one]
       simp
   · have hT : Tset r s L = Classical.choose (IwaAd.iwasawa_finite_cosets E r s L hL) := by
-      rw [Tset, if_neg hr, dite_eq_left hL]
+      rw [Tset, ite_eq_right hr, dite_eq_left hL]
     rw [hT]
     exact Classical.choose_spec (IwaAd.iwasawa_finite_cosets E r s L hL) g
 
@@ -294,17 +293,15 @@ theorem Kf_top : Kf N K N ≤ K := by
   rw [Kf] at hu
   have h := hu.1.1.1
   unfold topK at h
-  rw [dite_eq_left rfl] at h
-  exact h
+  rwa [dite_eq_left rfl] at h
 
 theorem Kf_left {r s : ℕ} (hN : r + s ≤ N) {t : GL (Fin (r + s)) (Af E)} (ht : t ∈ Tset r s (Kf N K (r + s)))
     {u : GL (Fin r) (Af E)} (hu : u ∈ Kf N K r) : t⁻¹ * lev (Af E) r s (u, 1) * t ∈ Kf N K (r + s) := by
   rcases Nat.eq_zero_or_pos s with rfl | hs
-  · have hT : Tset r 0 (Kf N K (r + 0)) = {1} := by rw [Tset, if_pos (Or.inr rfl)]
+  · have hT : Tset r 0 (Kf N K (r + 0)) = {1} := by rw [Tset, ite_eq_left (Or.inr rfl)]
     rw [hT, Finset.mem_singleton] at ht
     subst ht
-    rw [inv_one, one_mul, mul_one, levi_embed_left_zero]
-    exact hu
+    rwa [inv_one, one_mul, mul_one, levi_embed_left_zero]
   · rw [Kf] at hu
     have h := (Subgroup.mem_inf.1 (Subgroup.mem_inf.1 hu).1).2
     rw [Subgroup.mem_iInf] at h
@@ -317,7 +314,7 @@ theorem Kf_left {r s : ℕ} (hN : r + s ≤ N) {t : GL (Fin (r + s)) (Af E)} (ht
 theorem Kf_right {r s : ℕ} (hN : r + s ≤ N) {t : GL (Fin (r + s)) (Af E)} (ht : t ∈ Tset r s (Kf N K (r + s)))
     {u : GL (Fin s) (Af E)} (hu : u ∈ Kf N K s) : t⁻¹ * lev (Af E) r s (1, u) * t ∈ Kf N K (r + s) := by
   rcases Nat.eq_zero_or_pos r with rfl | hr
-  · have hT : Tset 0 s (Kf N K (0 + s)) = {1} := by rw [Tset, if_pos (Or.inl rfl)]
+  · have hT : Tset 0 s (Kf N K (0 + s)) = {1} := by rw [Tset, ite_eq_left (Or.inl rfl)]
     rw [hT, Finset.mem_singleton] at ht
     subst ht
     rw [inv_one, one_mul, mul_one, k_lev_0s]
@@ -329,8 +326,7 @@ theorem Kf_right {r s : ℕ} (hN : r + s ≤ N) {t : GL (Fin (r + s)) (Af E)} (h
     rw [Subgroup.mem_iInf] at h2
     have h3 := h2 ⟨hr, hN⟩
     rw [Subgroup.mem_iInf] at h3
-    have h4 := h3 ⟨t, ht⟩
-    simpa [Slice2.L₂, Slice2.lev2, MulAut.conj_apply] using h4
+    simpa [Slice2.L₂, Slice2.lev2, MulAut.conj_apply] using h3 ⟨t, ht⟩
 
 end PositivityTheory.Rg.BcB.SpectralAccumulation.Cz.KTypeSlices
 

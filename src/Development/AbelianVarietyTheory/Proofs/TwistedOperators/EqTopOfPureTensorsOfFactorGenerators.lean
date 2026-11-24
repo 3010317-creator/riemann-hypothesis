@@ -166,13 +166,11 @@ theorem _root_.GlobalTheory.TensHead.eq_top_of_pure_generators :
         simpa using this
       · intro x hx
         rw [hS]
-        intro b z _
-        exact hRel i x hx b z
+        exact fun b z _ => hRel i x hx b z
       · unfold _root_.GlobalTheory.TensHead.Stab
         intro g hg x hx
         rw [hS] at hx ⊢
-        intro b z hz
-        exact tmul_tprod_update_apply_mem_of_stab hN i hg (hx b z hz)
+        exact fun b z hz => tmul_tprod_update_apply_mem_of_stab hN i hg (hx b z hz)
       · intro x hx
         rw [SetLike.mem_coe, hS]
         intro b z hz

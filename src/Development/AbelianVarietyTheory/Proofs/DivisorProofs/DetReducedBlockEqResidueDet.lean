@@ -251,14 +251,7 @@ theorem char_finUnit {c : (AE D)ˣ →* Circle} {χ : HChar D.host.E} (hc : ChrE
     · rw [← (loc P hP).2 1 1 rfl h, map_one, Units.val_one]
 
 theorem swap_int {z : Af D.host.F ⊗[D.host.F] D.host.E} (hz : z ∈ intAE D) :
-    swapAE D z ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := by
-  induction hz using AddSubgroup.closure_induction with
-  | mem z hz =>
-    obtain ⟨a, ha, x, rfl⟩ := hz
-    exact GlobalTheory.PlaceDatum.tmul_mem_int ⟨x, rfl⟩ ha
-  | zero => rw [RingHom.map_zero]; exact zero_mem _
-  | add a b _ _ ha hb => rw [RingHom.map_add (f := _)]; exact add_mem ha hb
-  | neg a _ ha => rw [RingHom.map_neg]; exact neg_mem ha
+    swapAE D z ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := GlobalTheory.LevSplit.swapAE_int hz
 
 theorem det_frGL {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
     (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (y : GL (Fin n) (Formalism.L2.Herm.intAf F E)) :

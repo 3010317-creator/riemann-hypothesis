@@ -30,7 +30,7 @@ private lemma eq_sum_smul_gs {E : Type*} [NormedAddCommGroup E] [InnerProductSpa
     · subst h1; simp
     · by_cases h2 : b < a <;> simp [h1, h2]
   rw [Finset.sum_congr rfl (fun b _ => hterm b), Finset.sum_add_distrib]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← Finset.sum_filter]
   have hf : Finset.univ.filter (fun b => b < a) = Finset.Iio a := by ext; simp
   rw [hf]
@@ -129,8 +129,7 @@ lemma TB_injective (A B : Matrix (Fin d) (Fin d) ℝ) (hA : A.PosDef) (hAB : A =
   have h' : B *ᵥ WithLp.ofLp u = B *ᵥ WithLp.ofLp w := by
     have := congrArg WithLp.ofLp h
     simpa [TB] using this
-  have h'' := congrArg (WithLp.toLp 2) (hinj h')
-  simpa using h''
+  simpa using congrArg (WithLp.toLp 2) (hinj h')
 
 lemma li_basis (A B : Matrix (Fin d) (Fin d) ℝ) (hA : A.PosDef) (hAB : A = Bᴴ * B)
     (e : Module.Basis (Fin d) ℤ (Fin d → ℤ)) :
@@ -152,14 +151,12 @@ lemma li_basis (A B : Matrix (Fin d) (Fin d) ℝ) (hA : A.PosDef) (hAB : A = B�
   have hfun : (fun i => fB B (e i)) = (TB B) ∘ (fun i => fB 1 (e i)) := by
     funext i
     exact fB_eq_TB B (e i)
-  rw [hfun]
-  exact h2
+  rwa [hfun]
 
 private lemma sub_gs_mem_span_Iio {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (f : Fin d → E) (j : Fin d) :
     f j - gs f j ∈ Submodule.span ℝ (f '' Set.Iio j) := by
-  rw [← span_gramSchmidt_Iio ℝ f j]
-  rw [sub_eq_iff_eq_add'.2 (gramSchmidt_def'' ℝ f j)]
+  rw [← span_gramSchmidt_Iio ℝ f j, sub_eq_iff_eq_add'.2 (gramSchmidt_def'' ℝ f j)]
   exact Submodule.sum_mem _ fun i hi =>
     Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, by simpa using hi, rfl⟩)
 

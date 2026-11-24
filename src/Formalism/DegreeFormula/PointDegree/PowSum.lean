@@ -63,8 +63,7 @@ theorem degFl_add {ι : Type} [Fintype ι] [DecidableEq ι] {N : ℕ} (P Q : MvP
 
 theorem degFl_C_mul {ι : Type} [Fintype ι] [DecidableEq ι] {N : ℕ} (c : ℝ) (P : MvPolynomial (ι × Fin N) ℝ) :
     degFl ι N (C c * P) = c * degFl ι N P := by
-  simp only [degFl, coeff_C_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun σ _ => by ring
+  simpa only [degFl, coeff_C_mul, Finset.mul_sum] using Finset.sum_congr rfl fun σ _ => by ring
 
 theorem degFl_zero {ι : Type} [Fintype ι] [DecidableEq ι] {N : ℕ} :
     degFl ι N (0 : MvPolynomial (ι × Fin N) ℝ) = 0 := by
@@ -108,8 +107,8 @@ theorem coeff_Xpow_mul {ι : Type} [Fintype ι] {N : ℕ} (x : ι × Fin N) (k :
     (X x ^ k * P).coeff m = if k ≤ m x then P.coeff (m - Finsupp.single x k) else 0 := by
   rw [X_pow_eq_monomial, coeff_monomial_mul', one_mul]
   by_cases h : k ≤ m x
-  · rw [if_pos (Finsupp.single_le_iff.mpr h), if_pos h]
-  · rw [if_neg (fun h' => h (Finsupp.single_le_iff.mp h')), if_neg h]
+  · rw [ite_eq_left (Finsupp.single_le_iff.mpr h), ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h (Finsupp.single_le_iff.mp h')), ite_eq_right h]
 
 def sgnP {ι : Type} [Fintype ι] {N : ℕ} (σ : ι → Equiv.Perm (Fin N)) : ℝ :=
   ∏ t, ((Equiv.Perm.sign (σ t) : ℤ) : ℝ)
@@ -179,13 +178,13 @@ theorem slice {ι : Type} [Fintype ι] [DecidableEq ι] {N : ℕ} (τ : ι) (k :
         Equiv.apply_symm_apply, Equiv.swap_apply_right]
     have hc : permExp (Pi.mulSingle τ (Equiv.swap j ⟨(j : ℕ) + k, hjk⟩) * σ)
         (τ, (σ τ).symm ⟨(j : ℕ) + k, hjk⟩) = permExp σ (τ, (σ τ).symm j) := by
-      simp only [permExp_apply, mulSingle_mul_apply, if_true, Equiv.apply_symm_apply,
+      simp only [permExp_apply, mulSingle_mul_apply, ite_true, Equiv.apply_symm_apply,
         Equiv.swap_apply_right]
     rw [hsymm, permSign_mulSingle_swap_mul τ _ _ hne, coeff_Xpow_mul, coeff_Xpow_mul, hc,
       rem_eq σ τ k j _ rfl hne]
     ring
   · refine Finset.sum_eq_zero fun σ _ => ?_
-    rw [coeff_Xpow_mul, if_neg, mul_zero]
+    rw [coeff_Xpow_mul, ite_eq_right, mul_zero]
     simp only [permExp_apply, Equiv.apply_symm_apply]
     omega
 
@@ -222,8 +221,7 @@ theorem degFlEsymm : DegFlEsymm := by
       degFl ι N (rename (fun i : Fin N => (τ, i)) (psum (Fin N) ℝ n) * P) = 0 := by
     intro n hn P
 
-    simp only [psum, map_sum, map_pow, rename_X]
-    exact degFlPowerSum ι N τ n P hn
+    simpa only [psum, map_sum, map_pow, rename_X] using degFlPowerSum ι N τ n P hn
   have hZ : ∀ P : MvPolynomial (ι × Fin N) ℝ, degFl ι N (rename (fun i : Fin N => (τ, i))
       ((k : MvPolynomial (Fin N) ℝ) * esymm (Fin N) ℝ k) * P) = 0 := by
     rw [mul_esymm_eq_sum, map_mul]

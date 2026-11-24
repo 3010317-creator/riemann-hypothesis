@@ -119,14 +119,14 @@ theorem liftAll_deg_reg : ∀ (q l : ℕ) (L : List (ℕ × ℕ)), 2 ≤ q → l
     by_cases h : l ∣ p.1
     · obtain ⟨h1, h2⟩ := _root_.GlobalTheory.Shin.liftL_deg_reg q l [p] hq hl.pos (by
         intro x hx; rw [List.mem_singleton] at hx; subst hx; exact ⟨hp.1, h, hp.2⟩)
-      rw [if_pos h]
+      rw [ite_eq_left h]
       have hs : deg [p] = p.1 := by simp [deg]
       refine ⟨by rw [h1, hs, ih'.1], ?_⟩
       intro x hx
       rcases List.mem_append.1 hx with hx | hx
       · exact h2 x hx
       · exact ih'.2 x hx
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       have hr := (_root_.GlobalTheory.Shin.reg_norm_frob q l p.1 p.2 hq hl hp.1 h hp.2).1
       have hs : deg [(p.1, p.2 * ∑ i ∈ Finset.range l, q ^ (p.1 * i))] = p.1 := by simp [deg]
       refine ⟨by rw [hs, ih'.1], ?_⟩
@@ -433,8 +433,7 @@ theorem count_one_mod : ∀ q l m k : ℕ, 2 ≤ q → l.Prime → 0 < m → ¬ 
   have hfp : Fintype.card (Function.fixedPoints σ) = 1 := by
     rw [Fintype.card_eq_one_iff]
     refine ⟨⟨⟨gs, hgsP⟩, ?_⟩, ?_⟩
-    · show σ ⟨gs, hgsP⟩ = ⟨gs, hgsP⟩
-      exact Subtype.ext (funext hgs_fix)
+    · exact Subtype.ext (funext hgs_fix)
     · rintro ⟨⟨g, hg⟩, hfx⟩
       have hfx' : σ ⟨g, hg⟩ = ⟨g, hg⟩ := hfx
       have hfix : ∀ r, g (r - m) + m = g r := fun r => congrFun (congrArg Subtype.val hfx') r
@@ -642,17 +641,7 @@ theorem torusPair_finite_torus {F : Type} [Field F] [Finite F] (n : ℕ) (hn : 0
 
 theorem torusPair_mangoldt_pow {F : Type} [Field F] (s : F[X] → ℂ) (f : F[X]) (hf : f.Monic)
     (hirr : Irreducible f) (r : ℕ) (hr : 0 < r) : mangoldt s (f ^ r) = s f := by
-  have hset : {g : F[X] | g.Monic ∧ Irreducible g ∧ ∃ r' : ℕ, 0 < r' ∧ f ^ r = g ^ r'} = {f} := by
-    ext g
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
-    constructor
-    · rintro ⟨hg, hgi, r', hr', he⟩
-      have h1 : g ∣ f ^ r := he ▸ dvd_pow_self g hr'.ne'
-      have h2 : g ∣ f := hgi.prime.dvd_of_dvd_pow h1
-      exact eq_of_monic_of_associated hg hf (hgi.associated_of_dvd hirr h2)
-    · rintro rfl
-      exact ⟨hf, hirr, r, hr, rfl⟩
-  rw [mangoldt, hset, finsum_mem_singleton]
+  apply GlobalTheory.CuspGL.mangoldt_pow <;> assumption
 
 theorem torusPair_mangoldt_sum (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ) (n k : ℕ)
     (S : F[X] → ℂ) (hn : 0 < n) :
@@ -855,8 +844,7 @@ theorem psiG_rootSum_pair_prod_rootSum : ∀ (F : Type) [Field F] [Finite F] (θ
   have hTfin : T.Finite := by
     apply (Polynomial.nthRoots N (1 : AlgebraicClosure F)).toFinset.finite_toSet.subset
     intro α hα
-    simp only [Finset.mem_coe, Multiset.mem_toFinset]
-    exact (Polynomial.mem_nthRoots hN0).2 hα
+    simpa only [Finset.mem_coe, Multiset.mem_toFinset] using (Polynomial.mem_nthRoots hN0).2 hα
   have key : ∀ α ∈ T, θ α ^ k * star (∏ j, rootSum θ (e j) (minpoly F α ^ (m / (minpoly F α).natDegree)))
       = ∑ a : Fin l → Fin m, θ α ^ k * star (θ α ^ (∑ j, e j * q ^ (a j : ℕ))) := by
     intro α hα
@@ -1015,8 +1003,7 @@ theorem isUnit_add_iff {a n : ℕ} (M H : Matrix (Fin n) (Fin n) F)
     have := injective_add (headSub a n) (Matrix.toLin' M + Matrix.toLin' H) (-Matrix.toLin' H)
       (by rw [← map_add (f := _)]; exact mapsTo_headSub _ hM') (neg_mem_nilRad hH) h
     simpa using this
-  · intro h
-    exact injective_add (headSub a n) _ _ (mapsTo_headSub M hM) hH h
+  · exact fun h => injective_add (headSub a n) _ _ (mapsTo_headSub M hM) hH h
 
 theorem unitPar_add_iff {a n : ℕ} (M H : Matrix (Fin n) (Fin n) F)
     (hH : Matrix.toLin' H ∈ nilRad (headSub a n)) :
@@ -1080,7 +1067,7 @@ theorem sum_inPar_psiG {F : Type} [Field F] [Finite F] (R : F[X] → ℂ) (hR : 
         intro h hh
         have hh' : Matrix.toLin' h ∈ nilRad (headSub (F := F) a n) := (Finset.mem_filter.1 hh).2
         have hu : IsUnit (M + h) ∧ InParM a (M + h) := (unitPar_add_iff M h hh').2 hM
-        simp only [G, if_pos hu, β, tl_add M h hh']
+        simp only [G, ite_eq_left hu, β, tl_add M h hh']
       have hprim := GlobalTheory.CuspGL.isPrimitive_psi F (Fin n → F) R hR (headSub a n) hA0 hAtop
         (Matrix.toLin' M) (mapsTo_headSub M hM.2)
       rw [← Set.image_preimage_eq (nilRad (headSub (F := F) a n)) Matrix.toLin'.surjective,
@@ -1093,7 +1080,7 @@ theorem sum_inPar_psiG {F : Type} [Field F] [Finite F] (R : F[X] → ℂ) (hR : 
     · refine Finset.sum_eq_zero fun h hh => ?_
       have hh' : Matrix.toLin' h ∈ nilRad (headSub (F := F) a n) := (Finset.mem_filter.1 hh).2
       simp only [G]
-      rw [if_neg]
+      rw [ite_eq_right]
       rwa [unitPar_add_iff M h hh']
   have hshift : ∀ h, ∑ M, G (M + h) = ∑ M, G M := fun h =>
     Fintype.sum_equiv (Equiv.addRight h) _ _ (fun M => rfl)
@@ -1335,8 +1322,7 @@ theorem shLift_cusp_kills_of_not_dvd : ∀ (F F' : Type) [Field F] [Field F'] [A
     exact zero_ne_one h1
   have key := _root_.GlobalTheory.Shin.kills_of_norm_one_of_pairing_prime (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s (hΓ ▸ hl) hs X hX hnorm (cusp θ n K)
     hYchar hYs (cnt : ℤ) hz hndvd
-  rw [hfun] at key
-  exact key
+  rwa [hfun] at key
 
 end GlobalTheory.Shin
 end -- clump:auto
@@ -1448,16 +1434,15 @@ theorem kills_liftAll : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
     have hKA : Kills (shLift s (cusp (pullθ ι θ) p.1 p.2)) (J θ A p.1) := by
       by_cases h : l ∣ p.1
       · have := _root_.GlobalTheory.Shin.shLift_cusp_kills_J F F' s hl hs ι θ hθ p.1 p.2 hp.1 h hp.2
-        rw [hAdef, if_pos h]
+        rw [hAdef, ite_eq_left h]
         simpa only [Prod.mk.eta] using this
-      · rw [hAdef, if_neg h]
+      · rw [hAdef, ite_eq_right h]
         have hu := _root_.GlobalTheory.Shin.shLift_cusp_kills_of_not_dvd F F' s hl hs ι θ hθ p.1 p.2 hp.1 h hp.2
         have hJ : J θ [(p.1, p.2 * ∑ i ∈ Finset.range l, q ^ (p.1 * i))] p.1 =
             cusp θ p.1 (p.2 * ∑ i ∈ Finset.range l, q ^ (p.1 * i)) := by
           rw [J_cons]
           exact (_root_.GlobalTheory.Shin.HcUnit.main F' p.1 _ (isCl_cusp F' θ _ _)).2
-        rw [hJ]
-        exact hu
+        rwa [hJ]
     have hRA' : ∀ x ∈ A, 0 < x.1 ∧ Reg (Nat.card F') x.1 x.2 := by rw [hcard']; exact hRA
     have hRB' : ∀ x ∈ liftAll q l L, 0 < x.1 ∧ Reg (Nat.card F') x.1 x.2 := by rw [hcard']; exact hRB
     have hcharA := _root_.GlobalTheory.Shin.isChar_J_of_reg F' θ hθ A hRA' p.1 hdA'.symm

@@ -75,8 +75,7 @@ theorem exists_nat_mem_mul_integral {E : Type} [Field E] [NumberField E]
   have ha0 : a ≠ 0 := nonZeroDivisors.ne_zero ha
   have hbot : (I : Submodule (𝓞 E) E) ≠ ⊥ := by
     intro h
-    apply hI
-    exact FractionalIdeal.coeToSubmodule_injective (h.trans FractionalIdeal.coe_zero.symm)
+    exact hI (FractionalIdeal.coeToSubmodule_injective (h.trans FractionalIdeal.coe_zero.symm))
   obtain ⟨x, hxI, hx0⟩ := (Submodule.ne_bot_iff _).1 hbot
   obtain ⟨j, hj⟩ := hint x hxI
   have hj' : (j : E) = (a : E) * x := by
@@ -235,8 +234,7 @@ theorem fracIdeal_locGen : ∀ (D : D7) (I : FractionalIdeal (nonZeroDivisors (�
     refine ⟨o, ?_⟩
     have h2 : ((c : D.host.F) : D.host.E) * (j : D.host.E) = (y : D.host.E) * (o : D.host.E) := by
       have h3 := congrArg (algebraMap (𝓞 D.host.E) D.host.E) ho
-      rw [map_mul, map_mul] at h3
-      exact h3
+      rwa [map_mul, map_mul] at h3
     calc ((c : D.host.F) : D.host.E) * (((d : 𝓞 D.host.E) : D.host.E)⁻¹ * (j : D.host.E))
         = (d : D.host.E)⁻¹ * (((c : D.host.F) : D.host.E) * (j : D.host.E)) := by ring
       _ = (d : D.host.E)⁻¹ * ((y : D.host.E) * (o : D.host.E)) := by rw [h2]
@@ -361,7 +359,7 @@ theorem gam_int (x : Pl D) (c : 𝓞 D.host.F) (hc : c ∉ x.asIdeal) : gam x c 
 
 theorem gam_supp (x : Pl D) (c : 𝓞 D.host.F) : ∀ w, ¬ (w = x) → evalV D.host.F w (gam x c) = 0 := by
   intro w hw
-  rw [gam, map_mul, evalV_indP, if_neg hw, mul_zero]
+  rw [gam, map_mul, evalV_indP, ite_eq_right hw, mul_zero]
 
 theorem coe_ne_zero (x : Pl D) (c : 𝓞 D.host.F) (hc : c ∉ x.asIdeal) : ((c : D.host.F) : D.host.E) ≠ 0 := by
   intro h
@@ -378,8 +376,7 @@ theorem ex_scale (x : Pl D) (c : 𝓞 D.host.F) (e : D.host.E) :
   rw [h1, TensorProduct.tmul_smul, TensorProduct.smul_tmul']
   congr 1
   refine Prod.ext ?_ ?_
-  · show ((c : D.host.F))⁻¹ • (0 : Ainf D.host.F) = 0
-    exact smul_zero _
+  · exact smul_zero _
   · show ((c : D.host.F))⁻¹ • indP (D := D) (· = x) = gam x c
     rw [gam, Algebra.smul_def]
 
@@ -424,8 +421,7 @@ theorem pair_scale (x : Pl D) (c : 𝓞 D.host.F) (γ : Af D.host.F) (hγ : ∀ 
   rw [h1, TensorProduct.tmul_smul, TensorProduct.smul_tmul']
   congr 1
   refine Prod.ext ?_ ?_
-  · show ((c : D.host.F))⁻¹ • (0 : Ainf D.host.F) = 0
-    exact smul_zero _
+  · exact smul_zero _
   · show ((c : D.host.F))⁻¹ • γ = gam x c * γ
     rw [gam, mul_assoc, indicatorAdele_mul_eq_self x γ hγ, Algebra.smul_def]
 
@@ -715,10 +711,7 @@ theorem cond_iff {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (S
     have hB := mul_of_ex _ x _ (B_mul_ex S a ha x) hs
     rw [hB]
     refine ⟨Ideal.mul_mem_left _ _ hs, ?_⟩
-    rw [(finPart D).map_mul]
-    rw [finPart_ex x (c * c) hC0]
-    rw [coeC]
-    rw [e]
+    rw [(finPart D).map_mul, finPart_ex x (c * c) hC0, coeC, e]
     rw [mul_one] at ho1
     exact mem_of_split x (c * c) hC _ x0 hu o1 o2 ho1 ho2
   · intro hBs o ho
@@ -740,8 +733,8 @@ theorem exists_idele_AA : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
   have hloc := _root_.GlobalTheory.fracIdeal_locGen D D.host.AA hAA
   obtain ⟨S, hS⟩ := _root_.GlobalTheory.IdeleGen.aeGen D D.host.AA hAA
   let a : Pl D → D.host.E := fun v => if v ∈ S then (hloc v).choose else 1
-  have hpos : ∀ v ∈ S, a v = (hloc v).choose := fun v hv => if_pos hv
-  have ha : ∀ v ∉ S, a v = 1 := fun v hv => if_neg hv
+  have hpos : ∀ v ∈ S, a v = (hloc v).choose := fun v hv => ite_eq_left hv
+  have ha : ∀ v ∉ S, a v = 1 := fun v hv => ite_eq_right hv
   have h0 : ∀ v, a v ≠ 0 := fun v => by
     by_cases hv : v ∈ S
     · rw [hpos v hv]; exact (hloc v).choose_spec.1

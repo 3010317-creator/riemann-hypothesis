@@ -254,13 +254,7 @@ theorem aeval_chart (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) {g : MRing ι} {
   rw [zpow_neg, zpow_natCast]
 
 theorem aeval_eq_zero_of_mem (y : (Σ k, ι k) → Ω) {f : MRing ι} (hf : f ∈ mCoordIdeal y) : aeval y f = 0 := by
-  have h : (aeval (fun p : Σ k, ι k => C (y p) * X p.1) f : MvPolynomial K Ω) = 0 := RingHom.mem_ker.mp hf
-  have e := map_aeval_int (eval fun _ : K => (1 : Ω)) (fun p : Σ k, ι k => (C (y p) * X p.1 : MvPolynomial K Ω)) f
-  have e' : (fun p : Σ k, ι k => eval (fun _ : K => (1 : Ω)) (C (y p) * X p.1 : MvPolynomial K Ω)) = y := by
-    funext p
-    simp
-  rw [e', h, map_zero] at e
-  exact e.symm
+  exact GlobalTheory.CompanionTheory.Ar.JoinPts.aeval_eq_zero_of_mem y hf
 
 theorem coord_ne_zero (y : (Σ k, ι k) → Ω) {p : Σ k, ι k} (h : (X p : MRing ι) ∉ mCoordIdeal y) : y p ≠ 0 := by
   intro hy
@@ -269,14 +263,7 @@ theorem coord_ne_zero (y : (Σ k, ι k) → Ω) {p : Σ k, ι k} (h : (X p : MRi
   simp [mConeMap, hy]
 
 theorem charZero_of_horizontal (y : (Σ k, ι k) → Ω) (h : IsHorizontal (mCoordIdeal y)) : CharZero Ω := by
-  refine charZero_of_inj_zero fun n hn => ?_
-  have hm : (n : ℤ) ∈ (mCoordIdeal y).comap (C : ℤ →+* MRing ι) := by
-    rw [Ideal.mem_comap]
-    refine RingHom.mem_ker.mpr ?_
-    have e : ((n : MvPolynomial K Ω)) = C (n : Ω) := (map_natCast C n).symm
-    simp [mConeMap, e, hn]
-  rw [show (mCoordIdeal y).comap (C : ℤ →+* MRing ι) = ⊥ from h] at hm
-  simpa using hm
+  apply GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.charZero_of <;> assumption
 
 theorem ne_zero_of_genUnit {y : (Σ k, ι k) → Ω} {d : ℕ} (hA : IsArithVar (mCoordIdeal y) d) {a : K → ℤ} {u : Ω}
     (H : GenUnit y a u) : u ≠ 0 := by
@@ -316,8 +303,7 @@ theorem exists_ratio (y : (Σ k, ι k) → Ω) (hS : IsMultiHomogIdeal (mCoordId
       rw [← map_aeval_int π w f, h0, map_zero]
   obtain ⟨v, hv0, dg, dh, g, h, hg, hh, hd, hgy, hhz, hgz⟩ := H L z hz
   refine ⟨aeval w h, aeval w g, ?_, ?_, ?_⟩
-  · rw [map_aeval_int]
-    exact hhz
+  · rwa [map_aeval_int]
   · rw [map_aeval_int]
     show aeval z g ≠ 0
     rw [hgz]
@@ -350,8 +336,7 @@ theorem chart_mem (y : (Σ k, ι k) → Ω) (hS : IsMultiHomogIdeal (mCoordIdeal
       by_contra h0
       apply natCast_notMem S M hM n h0
       have h1 : Ideal.Quotient.mk M (n : satQ S) = 0 := by
-        rw [map_natCast]
-        exact hn
+        rwa [map_natCast]
       exact Ideal.Quotient.eq_zero_iff_mem.mp h1
     obtain ⟨b, e, hb, he, hbe⟩ := exists_ratio y hS H c hc hx (satQ S ⧸ M) (Ideal.Quotient.mk M)
     exact ⟨b, e, fun h => hb (Ideal.Quotient.eq_zero_iff_mem.mpr h),
@@ -863,8 +848,7 @@ theorem aeval_aff_ne_zero {y : (Σ k, ι k) → Ω} {c : ∀ k, ι k} (hc : ∀ 
   refine GlobalTheory.CompanionTheory.Ar.LocVal.mem_mCoordIdeal_of_aeval_eq_zero y ha ?_
   have e : (fun p : Σ k, ι k => y ⟨p.1, c p.1⟩ * aff y c p) = y := funext fun p => mul_div_cancel₀ _ (hc p.1)
   have h1 := aeval_scale ha (fun k => y ⟨k, c k⟩) (aff y c)
-  rw [e, h0, mul_zero] at h1
-  exact h1
+  rwa [e, h0, mul_zero] at h1
 
 theorem exists_eval {y : (Σ k, ι k) → Ω} {c : ∀ k, ι k} {L : Type} [Field L] {w : (Σ k, ι k) → L}
     (hw : w ∈ ptsOver L (mCoordIdeal y)) (hwc : ∀ k, w ⟨k, c k⟩ ≠ 0) :
@@ -1068,7 +1052,7 @@ theorem multAt_map (e : ∀ k, ι k ≃ Fin (n k + 1)) (J V : Ideal (MRing ι)) 
   unfold multAt
   by_cases hV : V.IsPrime
   · have hV' : (V.map (ren e)).IsPrime := (isPrime_map_ringEquiv_iff (ren e) V).2 hV
-    rw [dif_pos hV, dif_pos hV']
+    rw [dite_eq_left hV, dite_eq_left hV']
     exact congrArg ENat.toNat (length_localizedModule_quotient_map (ren e) J V)
   · have hV' : ¬ (V.map (ren e)).IsPrime := fun h' => hV ((isPrime_map_ringEquiv_iff (ren e) V).1 h')
     rw [dite_eq_right hV, dite_eq_right hV']
@@ -1096,7 +1080,7 @@ theorem geoNum_map (e : ∀ k, ι k ≃ Fin (n k + 1)) (V : Ideal (MRing ι)) (h
     (b : Fin 0 → K → ℤ) (b' : Fin 0 → K → ℤ) :
     geoNum (ι := blockIdx n) 0 (V.map (ren e)) b' = geoNum 0 V b := by
   have hV' := (isRelevant_map_iff e V).2 hV
-  simp only [geoNum, dif_pos hV, dif_pos hV']
+  simp only [geoNum, dite_eq_left hV, dite_eq_left hV']
   have hc : ∀ k, (X ⟨k, e k (hV k).choose⟩ : MRing (blockIdx n)) ∉ V.map (ren e) := fun k hm => by
     rw [← ren_X] at hm
     exact (hV k).choose_spec ((mem_map_ringEquiv_iff (ren e) V _).1 hm)
@@ -1147,8 +1131,7 @@ theorem rel_iff (e : ∀ k, ι k ≃ Fin (n k + 1)) (P : Ideal (MRing ι)) (z z'
     have := congrFun h (sig e p)
     have h1 : ∀ y : mcPts P, ((ptsEquiv e P y : mcPts (P.map (ren e))) : Coord n → ℂ) (sig e p) = y.1 p :=
       fun y => congrArg y.1 ((sig e).symm_apply_apply p)
-    rw [h1, h1] at this
-    exact this
+    rwa [h1, h1] at this
 
 def projEquiv (e : ∀ k, ι k ≃ Fin (n k + 1)) (P : Ideal (MRing ι)) :
     projPts P ≃ projPts (P.map (ren e)) :=
@@ -1340,29 +1323,13 @@ theorem recR_map (e : ∀ k, ι k ≃ Fin (n k + 1)) {x : Cone n (AlgebraicClosu
     exact ⟨V, hV, rfl⟩
   have hnh := hver _ hV'
   have hnh' : ¬ IsHorizontal V := fun h => hnh ((isHorizontal_map_iff e V).2 h)
-  rw [if_neg hnh, if_neg hnh', hsup, multAt_map, charOf_map,
+  rw [ite_eq_right hnh, ite_eq_right hnh', hsup, multAt_map, charOf_map,
     geoNum_map e V hV.2 (fun c c' h1 h2 => (hdeh _ hV' c c' h1 h2).2)]
 
 end Recursion
 
 theorem heightRecR : GroundTheory.Heights₂.Heights.HeightRecR.Statement := by
-  open GroundTheory.Heights₂.Heights in
-  have hM : OrbitChartMax.Statement := OrbitChartMax.proof
-  open GroundTheory.Heights₂.Heights in
-  have hQ : OrbitChartQuot.Statement := OrbitChartQuot.proof
-  open GroundTheory.Heights₂.Heights in
-  have hIff : OrbitCenterMemIff.Statement := OrbitCenterMemIff.proof
-  open GroundTheory.Heights₂.Heights in
-  exact HeightRecR.proof OrbitDivVertical.proof
-    (OrbitFiniteSum.proof OrbitDegreeRatio.proof
-      (OrbitLocalSum.proof OrbitChartRing.proof hM (OrbitChartResidue.proof hM hQ (OrbitChartDehom.proof hM hQ))
-        OrbitChartMult.proof
-        (LocalLengthPlaces.proof LocalQuotCard.proof CentredPlacesFinite.proof
-          (LocalQuotCentred.proof CentredRingNormal.proof LocalNormalIndex.proof) PlacesRingQuot.proof)
-        OrbitCenterChart.proof PlaceCentredSum.proof OrbitChartTerm.proof)
-      (OrbitCenterZero.proof OrbitCenterLe.proof hIff
-        (OrbitCenterDivSupp.proof hIff (OrbitCenterPrime.proof hIff) SubringPrimeMaximal.proof)))
-    (OrbitArchSum.of_conjSum OrbitConjSum.proof)
+  exact CoverDenseAlt.heightRecR_full
 
 theorem mem_mCoordIdeal_iff {Ω : Type} [Field Ω] (w : (Σ k, ι k) → Ω) (f : MRing ι) (a : K → ℕ)
     (hf : IsMultiHomog f a) : f ∈ mCoordIdeal w ↔ aeval w f = 0 := by
@@ -1526,8 +1493,7 @@ theorem proj_inl_mem {K₁ K₂ : Type} [Fintype K₁] [Fintype K₂] {ι₁ : K
     change mConeMap (joinVec y₁ y₂) (rename (joinInl ι₁ ι₂) f) = 0
     rw [key, hf', map_zero]
   have h := hz.2 _ hmem
-  rw [aeval_rename] at h
-  exact h
+  rwa [aeval_rename] at h
 
 variable {Ψ : Type} [Fintype Ψ] {N : ℕ}
 
@@ -1554,8 +1520,7 @@ theorem rootHt_le (R : RootModel Ψ N) (t : ℝ) (mu : Wt Ψ N) (s D : ℝ) (L :
   refine add_le_add (le_of_eq ?_) ?_
   · simp [RootModel.coef, l1, Fintype.sum_prod_type]
   · have hk : (1 : ℝ) ≤ R.kA := by exact_mod_cast R.kA_pos
-    simp only [RootModel.coef, abs_div, Nat.abs_cast]
-    exact div_le_self (abs_nonneg _) hk
+    simpa only [RootModel.coef, abs_div, Nat.abs_cast] using div_le_self (abs_nonneg _) hk
 
 theorem line_smooth (R : RootModel Ψ N) (t : ℝ) : ∀ j, IsSmoothHerm (R.line t j)
   | some r => R.x_smooth t r
@@ -1693,11 +1658,7 @@ variable {X : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω']
 
 theorem spMap_genMap (ξ : Spec (CommRingCat.of Ω) ⟶ X) (p : Cpt ξ) :
     Spec.map (CommRingCat.ofHom (genMap ξ p)) ≫ X.fromSpecStalk p.1 = ξ := by
-  have h1 := Spec.map_comp (X.presheaf.stalkSpecializes p.2) (Scheme.stalkClosedPointTo ξ)
-  have h2 := Scheme.SpecMap_stalkSpecializes_fromSpecStalk (X := X) p.2
-  exact (congrArg (· ≫ X.fromSpecStalk p.1) h1).trans <| (Category.assoc _ _ _).trans <|
-    (congrArg (Spec.map (Scheme.stalkClosedPointTo ξ) ≫ ·) h2).trans
-      (Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ)
+  exact GlobalTheory.CompanionTheory.Ar.LieTangent.spec_genMap ξ p
 
 theorem eq_of_specializes_genPt {ξ : Spec (CommRingCat.of Ω) ⟶ X}
     (hb : Function.Bijective (Scheme.stalkClosedPointTo ξ).hom) (x' : X) (h : x' ⤳ genPt ξ) : x' = genPt ξ := by

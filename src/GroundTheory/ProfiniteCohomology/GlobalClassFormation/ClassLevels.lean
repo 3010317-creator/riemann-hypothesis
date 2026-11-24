@@ -32,8 +32,7 @@ theorem classSmul_of_restrictHom (g : K.1.fixingSubgroup) (c : IdeleClassGroup F
     (g : ℚ̄ ≃ₐ[ℚ] ℚ̄) • IdeleClassLimit.of F c = IdeleClassLimit.of F (restrictHom (E := F) g • c) := by
   obtain ⟨x, rfl⟩ := IdeleClassGroup.mk_surjective F.1 c
   have hx := congrArg IdeleLimit.toClassLimit (smul_of_restrictHom g x)
-  rw [IdeleLimit.toClassLimit_smul, IdeleLimit.toClassLimit_of, IdeleLimit.toClassLimit_of] at hx
-  exact hx
+  rwa [IdeleLimit.toClassLimit_smul, IdeleLimit.toClassLimit_of, IdeleLimit.toClassLimit_of] at hx
 
 
 variable (K F) in
@@ -113,12 +112,10 @@ theorem exists_classLevelCochains_eq (m : ℕ) (x : (cochainsComplex (classLimit
   have hker : ∀ g : K.1.fixingSubgroup, restrictHom (E := p.1) g = 1 → g ∈ U := by
     intro g hg
     have hg' : g ∈ p.1.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup := by
-      rw [← ker_restrictHom, MonoidHom.mem_ker]
-      exact hg
+      rwa [← ker_restrictHom, MonoidHom.mem_ker]
     rw [Subgroup.mem_subgroupOf] at hg'
     have : g ∈ Subtype.val ⁻¹' t := hE₀ (IntermediateField.fixingSubgroup_le hpE₀ hg')
-    rw [htU] at this
-    exact this
+    rwa [htU] at this
   have hval : ∀ g, ∃ z : IdeleClassGroup p.1.1, IdeleClassLimit.of p.1 z = Additive.toMul (f g) := by
     intro g
     have hmem : f g ∈ hfin.toFinset := by simp

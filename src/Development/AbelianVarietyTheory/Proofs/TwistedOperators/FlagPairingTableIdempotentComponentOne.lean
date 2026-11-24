@@ -61,13 +61,11 @@ theorem smallAt_natCast_mul {D : D7} {PP : Pl D.host.E} {N : ℕ} (hN : (N : �
     have := (PP.valuation_lt_one_iff_mem (K := D.host.E) (N : 𝓞 D.host.E)).2 hN
     rw [← Formalism.UG.P.levelaf_valued_algebraMap] at this
     simpa using this
-  have ht' := (GlobalTheory.AdIsom.mem_OA t).1 ht PP
-  exact lt_of_le_of_lt (mul_le_of_le_one_right' ht') hv
+  exact lt_of_le_of_lt (mul_le_of_le_one_right' ((GlobalTheory.AdIsom.mem_OA t).1 ht PP)) hv
 
 theorem sg_hY {D : D7} (x y : Fin (Yc D 0).rank → EAf D) : GlobalTheory.StdFrames.sg D (hY D x y) = hY D y x := by
   have := GlobalTheory.AdIsom.cjA_hA (Yc D 0) y x
-  rw [GlobalTheory.AdIsom.hA_eq, GlobalTheory.AdIsom.hA_eq] at this
-  exact this
+  rwa [GlobalTheory.AdIsom.hA_eq, GlobalTheory.AdIsom.hA_eq] at this
 
 theorem smallAt_of_mul {D : D7} {PP : Pl D.host.E} {N : ℕ} (hN : (N : 𝓞 D.host.E) ∈ PP.asIdeal) {c : EAf D}
     (h : ∃ t ∈ GlobalTheory.StdFrames.OA D, c = (N : EAf D) * t) : SmallAt PP c := by

@@ -141,8 +141,7 @@ theorem relIndex_mulVec : ∀ (E : Type) [Field E] [NumberField E] (ι : Type) [
     exact hdet hNd.symm
   have hinj : Function.Injective (Matrix.toLin' N) := by
     rw [← LinearMap.ker_eq_bot, Matrix.ker_toLin'_eq_bot_iff]
-    intro v hv
-    exact Matrix.eq_zero_of_mulVec_eq_zero hne hv
+    exact fun v hv => Matrix.eq_zero_of_mulVec_eq_zero hne hv
   obtain ⟨m, ⟨v, hv⟩, hc⟩ := _root_.GlobalTheory.CardQuotientPow.main (Pi.basisFun (locRing P) ι) hp _ hinj
   rw [LinearMap.det_toLin'] at hv
   have hord : ordE P M.det = m := by
@@ -168,8 +167,7 @@ theorem relIndex_mulVec : ∀ (E : Type) [Field E] [NumberField E] (ι : Type) [
     ext x
     rw [h0]
     constructor
-    · intro hx
-      exact ⟨fun i => ⟨_, (intAt_iff_mem P _).1 (hx i)⟩, trivial, rfl⟩
+    · exact fun hx => ⟨fun i => ⟨_, (intAt_iff_mem P _).1 (hx i)⟩, trivial, rfl⟩
     · rintro ⟨y, -, rfl⟩ i
       exact (intAt_iff_mem P _).2 (y i).2
   have hcomm : ∀ y, M.mulVec (e y) = e (Matrix.toLin' N y) := by

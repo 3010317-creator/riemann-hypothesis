@@ -102,8 +102,7 @@ theorem contDiff_det_one_add (M : Matrix ι ι ℂ) {k : WithTop ℕ∞} :
 theorem contDiffAt_det_zpow (M : Matrix ι ι ℂ) (t : ℤ) {k : WithTop ℕ∞} :
     ContDiffAt ℂ k (fun S : Matrix ι ι ℂ => (1 + M * S).det ^ t) 0 := by
   obtain ⟨m, rfl | rfl⟩ := Int.eq_nat_or_neg t
-  · simp only [zpow_natCast]
-    exact ((contDiff_det_one_add M).pow m).contDiffAt
+  · simpa only [zpow_natCast] using ((contDiff_det_one_add M).pow m).contDiffAt
   · simp only [_root_.zpow_neg, zpow_natCast]
     refine (((contDiff_det_one_add M).pow m).contDiffAt).inv ?_
     simp
@@ -125,12 +124,11 @@ theorem incl_mul_apply {m : Type} [Fintype m] (s : Finset (Fin n)) (X : Matrix s
   · rw [Finset.sum_eq_single ⟨a, h⟩]
     · simp
     · intro c _ hc
-      rw [if_neg]
-      intro hac
-      exact hc (Subtype.ext hac.symm)
+      rw [ite_eq_right]
+      exact fun hac => hc (Subtype.ext hac.symm)
     · simp
   · refine Finset.sum_eq_zero fun c _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     exact h c.2
 
@@ -141,12 +139,11 @@ theorem mul_proj_apply {m : Type} [Fintype m] (s : Finset (Fin n)) (X : Matrix m
   · rw [Finset.sum_eq_single ⟨b, h⟩]
     · simp
     · intro c _ hc
-      rw [if_neg]
-      intro hcb
-      exact hc (Subtype.ext hcb)
+      rw [ite_eq_right]
+      exact fun hcb => hc (Subtype.ext hcb)
     · simp
   · refine Finset.sum_eq_zero fun c _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     exact h c.2
 
@@ -164,7 +161,7 @@ theorem proj_mul_mul_incl (s : Finset (Fin n)) (M : Matrix (Fin n) (Fin n) ℂ) 
     proj s * M * dp_incl s = M.submatrix (fun i : s => (i : Fin n)) (fun i : s => (i : Fin n)) := by
   ext c d
   simp only [proj, dp_incl, Matrix.mul_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.submatrix_apply]
+    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Matrix.submatrix_apply]
 
 theorem dp_det_one_add_mul_embOn (M : Matrix (Fin n) (Fin n) ℂ) (s : Finset (Fin n)) (T : Matrix s s ℂ) :
     (1 + M * embOn s T).det =
@@ -445,8 +442,7 @@ theorem dpDual (hC : Cayley) (hU : UAct) : DpDual := by
     rw [wM, Matrix.mul_assoc, u_mul_u_conj hx, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hu2, Matrix.one_mul]
   have hub : ub1 x = (u1 x)ᴴ := by
     have := inverse_first_block_unipotent_formula hx 0 0 (by simp) (by simp)
-    rw [mX_one, Matrix.mul_one, Matrix.zero_mul, add_zero] at this
-    exact this
+    rwa [mX_one, Matrix.mul_one, Matrix.zero_mul, add_zero] at this
   have key : ∀ (T : Matrix (blkA (n := n) j) (blkA j) ℂ) (S : Matrix (blkB (n := n) j) (blkB j) ℂ),
       (1 + wM x * embOn (blkB j) S).det ≠ 0 →
       fV p q (x * mX 1 (embOn (blkB j) S) (embOn (blkA j) T) 1) =

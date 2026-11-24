@@ -55,8 +55,7 @@ theorem InvertibleIndexCharP.proof : InvertibleIndexCharP.Statement := by
         have := hX b' b'.2 _ hb₀X
         rwa [← mul_assoc, hb', one_mul] at this
       have := hX y hy _ hfX
-      rw [mul_comm] at this
-      exact this
+      rwa [mul_comm] at this
   set A := B.toAddSubgroup with hA
   have hAfin : Finite A := hfin
   have hXfin' : (X : Set Ω).Finite := by
@@ -65,8 +64,7 @@ theorem InvertibleIndexCharP.proof : InvertibleIndexCharP.Statement := by
 
   have hcard : Nat.card X = Nat.card A := by
     have h := Nat.card_image_of_injective (mul_right_injective₀ (hf i)) (B : Set Ω)
-    rw [← hXeq] at h
-    exact h
+    rwa [← hXeq] at h
   have hc : Nat.card (A.addSubgroupOf X) = Nat.card (X.addSubgroupOf A) :=
     Nat.card_congr
       { toFun := fun x => ⟨⟨x.1.1, AddSubgroup.mem_addSubgroupOf.1 x.2⟩,

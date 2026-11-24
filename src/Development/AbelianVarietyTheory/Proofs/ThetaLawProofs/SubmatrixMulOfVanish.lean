@@ -157,8 +157,7 @@ private lemma det_one_add_sub_mul_degree_submatrix_eq_one (deg : Ix → ℕ) (D 
     have hinv : (1 - ψ).det * (1 + ψ).det = 1 := by
       rw [← Matrix.det_mul, sub_mul, one_mul, mul_add, mul_one, hsq]; simp
     rw [hsplit, Matrix.det_one_add_mul_comm, hswap, ← sub_eq_add_neg]
-    rw [ih, mul_one] at hinv
-    exact hinv
+    rwa [ih, mul_one] at hinv
 
 variable {R Ix : Type} [CommRing R] [Fintype Ix] [DecidableEq Ix] in
 private lemma det_even_submatrix_homotopy_product_eq_one (deg : Ix → ℕ) (D h₁ h₂ : Matrix Ix Ix R)
@@ -184,9 +183,7 @@ private lemma det_even_submatrix_homotopy_product_eq_one (deg : Ix → ℕ) (D h
     rw [hG, Matrix.add_apply (1 + _), hhd p q (by omega), add_zero]
   set M := ((D + h₂) * (D + h₁)).submatrix (Subtype.val : {p // Even (deg p)} → Ix)
     Subtype.val
-  have htri : Matrix.BlockTriangular M.transpose (fun i => deg i.1) := by
-    intro i j hij
-    exact hlow _ _ hij
+  have htri : Matrix.BlockTriangular M.transpose (fun i => deg i.1) := fun i j hij => hlow _ _ hij
   rw [← Matrix.det_transpose, htri.det]
   refine Finset.prod_eq_one fun d _ => ?_
   by_cases hd : Even d

@@ -55,8 +55,7 @@ variable {O : Type} [CommRing O] [IsLocalRing O]
 private theorem res_eq_one (l : ℕ) [hl : Fact l.Prime] (h : ¬ IsUnit (l : O)) (x : O) (s : ℕ) (hx : x ^ l ^ s = 1) :
     IsLocalRing.residue O x = 1 := by
   have h0 : (l : IsLocalRing.ResidueField O) = 0 := by
-    rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
-    exact h
+    rwa [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
   haveI : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 h0
   have h1 : (IsLocalRing.residue O x - 1) ^ l ^ s = 0 := by
     rw [sub_pow_char_pow, ← map_pow, hx, map_one, one_pow, sub_self]

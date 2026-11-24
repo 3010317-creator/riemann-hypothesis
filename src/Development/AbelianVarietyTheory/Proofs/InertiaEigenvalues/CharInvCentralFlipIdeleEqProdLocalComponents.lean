@@ -131,9 +131,7 @@ theorem comp_of_isIdemAt (ι : Af ↥D.host.F ⊗[↥D.host.F] D.host.E ≃+* Fi
     · exact h
     · exfalso
       have hnle : ¬ Q.asIdeal ≤ PP.asIdeal := by
-        intro hle
-        apply hQ
-        exact HeightOneSpectrum.ext (Q.isMaximal.eq_of_le PP.isPrime.ne_top hle)
+        exact fun hle => hQ (HeightOneSpectrum.ext (Q.isMaximal.eq_of_le PP.isPrime.ne_top hle))
       obtain ⟨x, hxQ, hxP⟩ := Set.not_subset.mp hnle
       have hx0 : x ≠ 0 := by rintro rfl; exact hxP PP.asIdeal.zero_mem
       exact hxP ((key x hx0).mpr ⟨Q, h, hxQ⟩)
@@ -165,8 +163,7 @@ theorem infPart_of_isIdemAt {e : AE D} {PP : HeightOneSpectrum (𝓞 D.host.E)}
   rw [map_mul] at hi
   have hc : infPart D (cA D e) = - infPart D e :=
     eq_neg_iff_add_eq_zero.mpr (by rw [add_comm]; exact hs)
-  rw [hc, mul_neg, hi, neg_eq_zero] at hm
-  exact hm
+  rwa [hc, mul_neg, hi, neg_eq_zero] at hm
 
 
 
@@ -200,20 +197,18 @@ theorem char_inv_eq_prod_locK_of_flip : ∀ (D : D7) (V : HSp D) (χW : (AE D)ˣ
         + (1 - ∑ PP ∈ T, es PP)))) P = ι (finPart D 1) P := by
       rw [Nat.cast_pow, hx]
     simp only [map_mul, map_add (f := _), map_sub, map_one, map_natCast] at h0
-    rw [fa_mul, fa_add, fa_mul, fa_sub, fa_one, fa_natCast, heT] at h0
-    exact h0
+    rwa [fa_mul, fa_add, fa_mul, fa_sub, fa_one, fa_natCast, heT] at h0
   let k : HeightOneSpectrum (𝓞 D.host.E) → D.host.Eˣ := fun P => if P ∈ T then (u⁻¹) ^ V.rank else 1
   have hxk : ∀ P, ι (finPart D (x : AE D)) P =
       algebraMap D.host.E (HeightOneSpectrum.adicCompletion D.host.E P) (k P : D.host.E) := by
     intro P
     have hc := hcomp P
     by_cases hP : P ∈ T
-    · rw [if_pos hP, one_mul, sub_self, add_zero] at hc
-      rw [show k P = (u⁻¹) ^ V.rank from if_pos hP, Units.val_pow_eq_pow_val, Units.val_inv_eq_inv_val, hu,
+    · rw [ite_eq_left hP, one_mul, sub_self, add_zero] at hc
+      rw [show k P = (u⁻¹) ^ V.rank from ite_eq_left hP, Units.val_pow_eq_pow_val, Units.val_inv_eq_inv_val, hu,
         map_pow, map_inv₀, map_natCast, eq_inv_of_mul_eq_one_left hc, Nat.cast_pow, inv_pow]
-    · rw [if_neg hP, zero_mul, sub_zero, zero_add, mul_one] at hc
-      rw [show k P = 1 from if_neg hP, Units.val_one, map_one]
-      exact hc
+    · rw [ite_eq_right hP, zero_mul, sub_zero, zero_add, mul_one] at hc
+      rwa [show k P = 1 from ite_eq_right hP, Units.val_one, map_one]
   have hI : Ideal.span {((N : ℕ) : 𝓞 D.host.E)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hN.ne'
@@ -224,16 +219,16 @@ theorem char_inv_eq_prod_locK_of_flip : ∀ (D : D7) (V : HSp D) (χW : (AE D)ˣ
     (fun P hP => by
       have hPT : P ∉ T := fun h => hP (Finset.mem_union_left _ h)
       refine ⟨?_, ?_⟩
-      · rw [hxk P, show k P = 1 from if_neg hPT, Units.val_one, map_one, map_one]
+      · rw [hxk P, show k P = 1 from ite_eq_right hPT, Units.val_one, map_one, map_one]
       · intro hNP
         apply hP
         apply Finset.mem_union_right
         rw [Set.Finite.mem_toFinset]
         exact Ideal.dvd_span_singleton.mpr hNP)
   rw [key, ← Finset.prod_subset (Finset.subset_union_left)
-    (fun P _ hPT => by rw [show k P = 1 from if_neg hPT, map_one, Units.val_one])]
+    (fun P _ hPT => by rw [show k P = 1 from ite_eq_right hPT, map_one, Units.val_one])]
   rw [Finset.prod_congr rfl (fun P hP => by
-    rw [show k P = (u⁻¹) ^ V.rank from if_pos hP, map_pow, map_inv, Units.val_pow_eq_pow_val,
+    rw [show k P = (u⁻¹) ^ V.rank from ite_eq_left hP, map_pow, map_inv, Units.val_pow_eq_pow_val,
       Units.val_inv_eq_inv_val, inv_pow])]
   rw [Finset.prod_inv_distrib, inv_inv]
 

@@ -178,11 +178,11 @@ theorem coe_parabolicCoord_symm_single (t : ParabolicIndex n β) :
   · obtain ⟨h1, h2⟩ := hij
     have ht : (⟨(i, j), h1 ▸ h2 ▸ t.2⟩ : ParabolicIndex n β) = t := by
       ext <;> simp [← h1, ← h2]
-    rw [dite_eq_left (h1 ▸ h2 ▸ t.2), if_pos ⟨h1, h2⟩, ht, Pi.single_eq_same]
-  · rw [if_neg hij]
+    rw [dite_eq_left (h1 ▸ h2 ▸ t.2), ite_eq_left ⟨h1, h2⟩, ht, Pi.single_eq_same]
+  · rw [ite_eq_right hij]
     split_ifs with h
     · rfl
-    · rw [Pi.single_apply, if_neg]
+    · rw [Pi.single_apply, ite_eq_right]
       rintro rfl
       exact hij ⟨rfl, rfl⟩
 
@@ -269,8 +269,7 @@ theorem modularCharacter_blockUpper_of_mem_borel' (p : blockUpper F n β)
   have hdisj : Disjoint (Finset.univ.filter fun ij : Fin n × Fin n => β ij.1 < β ij.2)
       (Finset.univ.filter fun ij : Fin n × Fin n => β ij.1 = β ij.2) := by
     rw [Finset.disjoint_filter]
-    intro ij _ h1 h2
-    exact h1.ne h2
+    exact fun ij _ h1 h2 => h1.ne h2
   rw [hsplit, Finset.prod_union hdisj]
   set S := Finset.univ.filter fun ij : Fin n × Fin n => β ij.1 = β ij.2
   have hswap : ∏ ij ∈ S, f ij.2 = ∏ ij ∈ S, f ij.1 := by

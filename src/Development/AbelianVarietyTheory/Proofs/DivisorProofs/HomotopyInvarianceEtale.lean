@@ -188,19 +188,7 @@ alias spMap_id := _root_.GlobalTheory.EtAlgCD.spMap_id
 
 theorem pull_bijective_of_ringEquiv {R : Type} [CommRing R] {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B)
     (F : Shv R) (n : ℤ) : Function.Bijective (pull R (spMap (e : A →+* B)) F n) := by
-  have h1 : spMap (e.symm : B →+* A) ≫ spMap (e : A →+* B) = 𝟙 _ := by
-    rw [← spMap_comp, ← spMap_id]
-    congr 1
-    ext x
-    simp
-  have h2 : spMap (e : A →+* B) ≫ spMap (e.symm : B →+* A) = 𝟙 _ := by
-    rw [← spMap_comp, ← spMap_id]
-    congr 1
-    ext x
-    simp
-  refine Function.bijective_iff_has_inverse.2 ⟨pull R (spMap (e.symm : B →+* A)) F n, fun x => ?_, fun x => ?_⟩
-  · rw [← pull_comp, h1, pull_id]
-  · rw [← pull_comp, h2, pull_id]
+  exact GlobalTheory.EtC.HInvIso.pull_spMap_bij e F n
 
 theorem bijective_of_subsingleton {M N : Type*} [AddCommGroup M] [AddCommGroup N] [Subsingleton M] [Subsingleton N]
     (f : M →+ N) : Function.Bijective f :=
@@ -709,7 +697,7 @@ theorem exists_ne_zero_isNilpotent_mul {D E : Type} [CommRing D] [IsDomain D] [C
     (hy : ∀ Q : Ideal E, Q.IsPrime → Q.comap (algebraMap D E) = ⊥ → y ∈ Q) :
     ∃ t : D, t ≠ 0 ∧ IsNilpotent (algebraMap D E t * y) := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   let M : Submonoid E :=
     { carrier := {z | ∃ t : D, t ≠ 0 ∧ ∃ n : ℕ, z = algebraMap D E t * y ^ n}
       mul_mem' := by
@@ -1570,12 +1558,7 @@ theorem eqv_iso (R : Type) [CommRing R] {E E' : Spc} (f : E ⟶ E') [IsIso f] (F
   · rw [← pull_comp, IsIso.hom_inv_id, pull_id]
 
 theorem eqv_comp (R : Type) [CommRing R] {E E' E'' : Spc} (f : E ⟶ E') (g : E' ⟶ E'') (F : Shv R)
-    (hf : Eqv R f F) (hg : Eqv R g F) : Eqv R (f ≫ g) F := by
-  intro n
-
-  have e : ⇑(pull R (f ≫ g) F n) = pull R f F n ∘ pull R g F n := funext (pull_comp R f g F n)
-  rw [e]
-  exact (hf n).comp (hg n)
+    (hf : Eqv R f F) (hg : Eqv R g F) : Eqv R (f ≫ g) F := GlobalTheory.HInvAic.eqv_comp f g F hf hg
 
 theorem isPushout_poly {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) :
     IsPushout (CommRingCat.ofHom (Polynomial.C : A →+* Polynomial A)) (CommRingCat.ofHom φ)

@@ -88,8 +88,7 @@ theorem onB_expand (D : D7) {N N' r : ℕ} (b : Fin r → Matrix (Fin N') (Fin N
       split_ifs <;> simp
     simp only [h2]
     simp
-  simp only [h1]
-  exact hc.symm
+  simpa only [h1] using hc.symm
 
 theorem onB_parseval (D : D7) (h : TraceMapNormalisation D) {N N' r : ℕ} (b : Fin r → Matrix (Fin N') (Fin N) D.host.E)
     (hb : OnB D b) (x y : Matrix (Fin N') (Fin N) D.host.E) :
@@ -130,7 +129,6 @@ theorem det_onB_mul_conj : ∀ (D : D7), admG1 D → ∀ (N N' r : ℕ) (b₀ b 
   have hdet := congrArg Matrix.det hA
   rw [Matrix.det_mul, Matrix.det_transpose, ← RingHom.map_det (starRingEnd ℂ), ← RingHom.map_det ψ, Matrix.det_one] at hdet
   apply D.host.φ₀.injective
-  rw [map_mul, hc, map_one]
-  exact hdet
+  rwa [map_mul, hc, map_one]
 
 end GlobalTheory.NormSum

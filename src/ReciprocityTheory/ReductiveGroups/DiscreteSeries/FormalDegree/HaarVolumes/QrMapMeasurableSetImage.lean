@@ -32,12 +32,12 @@ lemma qrA_unitary (k : UNgrp N) : (toM k)ᴴ * toM k = 1 := by
 lemma qrA_upMat_continuous : Continuous (upMat (N := N)) := by
   refine continuous_pi fun a => continuous_pi fun b => ?_
   by_cases hab : a = b
-  · simp only [upMat, if_pos hab]
+  · simp only [upMat, ite_eq_left hab]
     exact Complex.continuous_ofReal.comp ((continuous_apply a).comp continuous_fst)
   · by_cases h : a < b
-    · simp only [upMat, if_neg hab, dif_pos h]
+    · simp only [upMat, ite_eq_right hab, dite_eq_left h]
       exact (continuous_apply _).comp continuous_snd
-    · simp only [upMat, if_neg hab, dif_neg h]
+    · simp only [upMat, ite_eq_right hab, dite_eq_right h]
       exact continuous_const
 
 theorem qrMap_continuous : Continuous (qrMap (N := N)) := by
@@ -49,7 +49,7 @@ lemma qrA_upMat_tri (t : TriCo N) : (upMat t).IsUpperTriangular := by
   intro i j hij
   have h1 : i ≠ j := ne_of_gt hij
   have h2 : ¬ i < j := not_lt.2 (le_of_lt hij)
-  simp only [upMat, if_neg h1, dif_neg h2]
+  simp only [upMat, ite_eq_right h1, dite_eq_right h2]
 
 lemma qrA_upMat_diag (t : TriCo N) (i : Fin N) : upMat t i i = ((t.1 i : ℝ) : ℂ) := by
   simp [upMat]
@@ -65,7 +65,7 @@ lemma qrA_upMat_det_ne (t : TriCo N) (ht : t ∈ triPos N) : (upMat t).det ≠ 0
 lemma qrA_triCoOf_upMat (t : TriCo N) : triCoOf (upMat t) = t := by
   refine Prod.ext (funext fun j => ?_) (funext fun ab => ?_)
   · simp [triCoOf, upMat]
-  · simp only [triCoOf, upMat, if_neg (ne_of_lt ab.2), dif_pos ab.2]
+  · simp only [triCoOf, upMat, ite_eq_right (ne_of_lt ab.2), dite_eq_left ab.2]
 
 lemma qrA_mul_diag {A B : Matrix (Fin N) (Fin N) ℂ} (hA : A.IsUpperTriangular)
     (hB : B.IsUpperTriangular) (i : Fin N) : (A * B) i i = A i i * B i i := by
@@ -74,8 +74,7 @@ lemma qrA_mul_diag {A B : Matrix (Fin N) (Fin N) ℂ} (hA : A.IsUpperTriangular)
     rcases lt_or_gt_of_ne hb with h | h
     · rw [hA h, zero_mul]
     · rw [hB h, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 lemma qrA_inv_tri {R : Matrix (Fin N) (Fin N) ℂ} (hR : R.IsUpperTriangular) (hd : R.det ≠ 0) :
     (R⁻¹).IsUpperTriangular := by
@@ -248,11 +247,11 @@ lemma qrA_exists (Z : Matrix (Fin N) (Fin N) ℂ) (hZ : Z.det ≠ 0) :
     ext a c
     by_cases hac : a = c
     · subst hac
-      simp only [upMat, triCoOf, if_true]
+      simp only [upMat, triCoOf, ite_true]
       rw [hdiag a, Complex.ofReal_re]
     · by_cases h : a < c
-      · simp only [upMat, triCoOf, if_neg hac, dif_pos h]
-      · simp only [upMat, if_neg hac, dif_neg h]
+      · simp only [upMat, triCoOf, ite_eq_right hac, dite_eq_left h]
+      · simp only [upMat, ite_eq_right hac, dite_eq_right h]
         exact (hRup (lt_of_le_of_ne (not_lt.1 h) (Ne.symm hac))).symm
   have hQ : Qᴴ * Q = 1 := by
     ext i j
@@ -291,8 +290,7 @@ theorem qrMap_image :
     obtain ⟨Q, t, hQ, ht, hQt⟩ := qrA_exists (Matrix.of Z) hZ
     refine ⟨(⟨⟨Q, Qᴴ, mul_eq_one_comm.1 hQ, hQ⟩, ?_⟩, t), ⟨Set.mem_univ _, ht⟩, ?_⟩
     · show Qᴴ * Jm (fun _ : Fin N => true) * Q = Jm (fun _ : Fin N => true)
-      rw [qrA_Jm_one, Matrix.mul_one]
-      exact hQ
+      rwa [qrA_Jm_one, Matrix.mul_one]
     · show Matrix.of.symm (Q * upMat t) = Z
       rw [hQt]
       rfl

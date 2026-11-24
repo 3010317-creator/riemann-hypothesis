@@ -60,8 +60,7 @@ theorem mem_vG_iff (hPr : Pr.Ok) (a : Fin 2) (P : HeightOneSpectrum (𝓞 X.E)) 
 
 theorem g_mem_of_isOver {a : Fin 2} {v : HeightOneSpectrum (𝓞 X.F)} {P : HeightOneSpectrum (𝓞 X.E)}
     (hv : IsOver v P) (h : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal) : ((Pr.g a : ℕ) : 𝓞 X.E) ∈ P.asIdeal := by
-  rw [hv, Ideal.mem_comap, map_natCast] at h
-  exact h
+  rwa [hv, Ideal.mem_comap, map_natCast] at h
 
 theorem eq_of_isOver (hc : Formalism.BasicNotions.CMData X.F X.E) (hPr : Pr.Ok) {a : Fin 2} {v : HeightOneSpectrum (𝓞 X.F)}
     (h : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal) {P Q : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.vGs) (hQ : Q ∈ Pr.vGs)
@@ -139,8 +138,7 @@ theorem primes_over_places : ∀ (X : Fields) (Pr : Primes X) (hc : Formalism.Ba
   have h1 : ∀ a v h (w : {w // w ∈ Pr.vGs}), IsOver v w.1 ↔ w = wOf a v h := by
     intro a v h w
     constructor
-    · intro hw
-      exact Subtype.ext (eq_of_isOver hc hPr h (wOf a v h).2 w.2 (hspec a v h) hw)
+    · exact fun hw => Subtype.ext (eq_of_isOver hc hPr h (wOf a v h).2 w.2 (hspec a v h) hw)
     · rintro rfl
       exact hspec a v h
   have hin : ∀ a v h, (wOf a v h).1 ∈ Pr.vG a := fun a v h =>
@@ -154,19 +152,18 @@ theorem primes_over_places : ∀ (X : Fields) (Pr : Primes X) (hc : Formalism.Ba
     have hL : ∏ w, φ w = ∏ w ∈ Pr.vGs, φ' w := by
       rw [← Finset.prod_coe_sort Pr.vGs φ']
       refine Finset.prod_congr rfl fun w _ => ?_
-      simp only [φ', dif_pos w.2]
+      simp only [φ', dite_eq_left w.2]
     have hA : ∀ a : Fin 2, ∏ᶠ (v : HeightOneSpectrum (𝓞 X.F)) (h : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal), φ (wOf a v h) =
         ∏ w ∈ Pr.vG a, φ' w := by
       intro a
       let f : HeightOneSpectrum (𝓞 X.F) → ℂ := fun v => if h : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal then φ (wOf a v h) else 1
       have e1 : (∏ᶠ (v : HeightOneSpectrum (𝓞 X.F)) (h : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal), φ (wOf a v h)) = ∏ᶠ v, f v := by
-        refine finprod_congr fun v => ?_
-        exact finprod_eq_dif _
+        exact finprod_congr fun v => finprod_eq_dif _
       have hsupp : Function.mulSupport f ⊆ ((Pr.vG a).image fun w => w.under (𝓞 X.F) : Finset _) := by
         intro v hv
         have h' : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal := by
           by_contra hn
-          exact hv (by simp only [f, dif_neg hn])
+          exact hv (by simp only [f, dite_eq_right hn])
         rw [Finset.coe_image]
         exact ⟨(wOf a v h').1, hin a v h', under_of_isOver (hspec a v h')⟩
       rw [e1, finprod_eq_prod_of_mulSupport_subset f hsupp, Finset.prod_image]
@@ -178,7 +175,7 @@ theorem primes_over_places : ∀ (X : Fields) (Pr : Primes X) (hc : Formalism.Ba
         have hw' : w ∈ Pr.vGs := mem_vGs hw
         have e2 : wOf a (w.under (𝓞 X.F)) hg = ⟨w, hw'⟩ :=
           ((h1 a _ hg ⟨w, hw'⟩).1 (isOver_of_under rfl)).symm
-        simp only [f, φ', dif_pos hg, dif_pos hw', e2]
+        simp only [f, φ', dite_eq_left hg, dite_eq_left hw', e2]
       · intro w hw w' hw' he
         have hg : (Pr.g a : 𝓞 X.F) ∈ (w.under (𝓞 X.F)).asIdeal := by
           show (Pr.g a : 𝓞 X.F) ∈ Ideal.comap (algebraMap (𝓞 X.F) (𝓞 X.E)) w.asIdeal

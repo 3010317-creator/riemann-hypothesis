@@ -38,7 +38,7 @@ theorem toL_coeff_nat (f : R⟦X⟧) (n : ℕ) : (toL f).coeff (n : ℤ) = coeff
 
 theorem toL_coeff_neg (f : R⟦X⟧) {n : ℤ} (hn : n < 0) : (toL f).coeff n = 0 := by
   first
-    | (rw [PowerSeries.coeff_coe, if_pos hn])
+    | (rw [PowerSeries.coeff_coe, ite_eq_left hn])
 
 theorem uPow_zero : (uPow 0 : LaurentSeries R) = 1 := rfl
 
@@ -132,8 +132,7 @@ theorem dL_uPow (n : ℤ) :
     have h := dL_toL (R := R) 1
     rwa [map_one, Derivation.map_one_eq_zero, map_zero] at h
   have h := dL_uPow_mul n (1 : LaurentSeries R)
-  rw [mul_one, mul_one, h1, mul_zero, zero_add] at h
-  exact h
+  rwa [mul_one, mul_one, h1, mul_zero, zero_add] at h
 
 theorem dL_C (r : R) : dL (HahnSeries.C r : LaurentSeries R) = 0 := by
   rw [← toL_C, dL_toL]

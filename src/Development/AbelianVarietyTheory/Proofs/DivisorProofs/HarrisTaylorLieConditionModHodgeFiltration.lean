@@ -87,16 +87,14 @@ lemma isLieImage_eq {A : Over (Sp R)} [GrpObj A] (H : LieExact A) {h h' : HdR A}
 lemma tan_of {A : Over (Sp R)} [GrpObj A] {v : epsR R ⟶ A} (hv : IsTangent v) :
     spMap (TrivSqZeroExt.fstHom R R R).toRingHom ≫ (epsIso.inv ≫ v).left =
       (1 : Over.mk (𝟙 (Sp R)) ⟶ A).left := by
-  rw [one_left, Category.id_comp, Over.comp_left, epsIso_inv_left, Category.id_comp]
-  exact hv
+  rwa [one_left, Category.id_comp, Over.comp_left, epsIso_inv_left, Category.id_comp]
 
 lemma tan_to {A : Over (Sp R)} [GrpObj A] {w : GlobalTheory.UPel.HT.epsPtR (𝟙 (Sp R)) ⟶ A}
     (hw : spMap (TrivSqZeroExt.fstHom R R R).toRingHom ≫ w.left = (1 : Over.mk (𝟙 (Sp R)) ⟶ A).left) :
     IsTangent (epsIso.hom ≫ w) := by
   rw [one_left, Category.id_comp] at hw
   show _ ≫ (epsIso.hom ≫ w).left = _
-  rw [Over.comp_left, epsIso_hom_left, Category.id_comp]
-  exact hw
+  rwa [Over.comp_left, epsIso_hom_left, Category.id_comp]
 
 end GlobalTheory.HTSummand.LieMod
 

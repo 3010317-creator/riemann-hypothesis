@@ -88,9 +88,7 @@ theorem place (hLoc : Formalism.L2.SG.NGPin.LocRootHaar) (hrep : Formalism.L2.SG
   have hemb := cMr_measEmb C γ τ
   set μ := Measure.comap (cMr C γ τ) μ₀ with hμ
   have hconc : μ₀ (Set.range (cMr C γ τ))ᶜ = 0 := by
-    refine measure_mono_null (fun x hx => ?_) hHaar.2.2.1
-    intro hR
-    exact hx (rset_range C γ τ x hR)
+    exact measure_mono_null (fun x hx => (fun hR => hx (rset_range C γ τ x hR))) hHaar.2.2.1
   have hres : μ₀.restrict (Set.range (cMr C γ τ)) = μ₀ := Measure.restrict_eq_self_of_ae_mem (ae_iff.2 hconc)
   have hmapc : μ.map (cMr C γ τ) = μ₀ := by rw [hμ, hemb.map_comap, hres]
   have : SigmaFinite μ₀ := hHaar.1
@@ -121,8 +119,7 @@ theorem place (hLoc : Formalism.L2.SG.NGPin.LocRootHaar) (hrep : Formalism.L2.SG
     have hmeas_l : Measurable (Formalism.QuantumDeterminants.lmulM (k := D.R.k) (r := D.R.rS) (cMr C γ τ s)) := by
       refine Continuous.measurable ?_
       unfold Formalism.QuantumDeterminants.lmulM
-      refine Continuous.matrix_mul continuous_const ?_
-      exact continuous_id
+      exact Continuous.matrix_mul continuous_const continuous_id
     have key : (μ.map (fun x => s * x)).map (cMr C γ τ) = μ.map (cMr C γ τ) := by
       rw [Measure.map_map hemb.measurable hmeas_s, hfun, ← Measure.map_map hmeas_l hemb.measurable, hmapc]
       exact hHaar.2.2.2 _ hs0

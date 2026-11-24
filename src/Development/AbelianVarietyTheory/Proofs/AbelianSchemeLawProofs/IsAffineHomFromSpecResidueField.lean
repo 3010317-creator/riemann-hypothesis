@@ -75,8 +75,7 @@ theorem exists_pow_mul_eq_zero {k R : Type} [CommRing k] [CommRing R] (hk : IsFi
   refine ⟨p.rootMultiplicity 0, φ (q.coeff 0), q.divX.eval₂ φ a, (Ne.isUnit hnd).map φ, ?_⟩
   rw [hq, ← X_mul_divX_add q, eval₂_mul, eval₂_pow, eval₂_X, eval₂_add, eval₂_mul, eval₂_X,
     eval₂_C] at h0
-  rw [add_comm]
-  exact h0
+  rwa [add_comm]
 
 theorem isClosed_basicOpen {Z : Scheme.{0}} {K : Type} [Field K] (f : Z ⟶ Spec (.of K))
     [UniversallyClosed f] (a : Γ(Z, ⊤)) : IsClosed (Z.basicOpen a : Set Z) := by
@@ -91,8 +90,7 @@ theorem isClosed_basicOpen {Z : Scheme.{0}} {K : Type} [Field K] (f : Z ⟶ Spec
     change IsUnit (G a) ↔ ¬ IsUnit (G (c + a * b))
     have e' : G a ^ m * G (c + a * b) = 0 := by rw [← map_pow, ← map_mul, e, map_zero]
     constructor
-    · intro h1 h2
-      exact ((h1.pow m).mul h2).ne_zero e'
+    · exact fun h1 h2 => ((h1.pow m).mul h2).ne_zero e'
     · intro h2
       have hc' : IsUnit (G (c + a * b) + (- (G a * G b))) := by
         have := hc.map G

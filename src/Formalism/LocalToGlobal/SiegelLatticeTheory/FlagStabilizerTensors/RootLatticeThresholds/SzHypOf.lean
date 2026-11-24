@@ -37,18 +37,18 @@ theorem deOf_eq (h5 : ∀ (u : D.what₂.Word) τ, ¬ IsTop D τ → uOne D u τ
   have hk := Formalism.MainNotions.BridgeLemma.five_le_k D
   unfold Formalism.L2.SG.SpectralTiesReal.deOf
   by_cases hl : 1 ≤ l ∧ l + 2 ≤ D.R.k
-  · rw [if_pos hl]
+  · rw [ite_eq_left hl]
     have hu := Formalism.MainNotions.BridgeLemma.cfg_u D u τ (h5 u τ) (l + 1) (by omega) (by omega)
     have hv := Formalism.MainNotions.BridgeLemma.cfg_v D τ l hl.1 (by omega)
     have hne1 : l + 1 ≠ 1 := by omega
     have hnek : l + 1 ≠ (Formalism.MainNotions.BridgeLemma.cfgOf D τ).k := by show l + 1 ≠ D.R.k; omega
     unfold Sz.Cfg.u at hu
-    rw [if_neg hne1, if_neg hnek, Nat.add_sub_cancel, hv] at hu
+    rw [ite_eq_right hne1, ite_eq_right hnek, Nat.add_sub_cancel, hv] at hu
     have hD : (Formalism.MainNotions.BridgeLemma.cfgOf D τ).Del = (D.s.Del : ℝ) := rfl
     rw [hD] at hu
     field_simp
     linarith
-  · rw [if_neg hl]
+  · rw [ite_eq_right hl]
     unfold Formalism.MainNotions.BridgeLemma.deOf
     rw [dite_eq_right (by omega)]
 
@@ -97,8 +97,7 @@ theorem massRatios_of (de : ℕ → ℝ) (T : ℕ) (du : ℝ) (u : D.what₂.Wor
   have hf2 : (Formalism.MainNotions.BridgeLemma.szaData D u).f = D.R.f := Formalism.MainNotions.BridgeLemma.szaData_f D u
   unfold Sz.SizeData.MassRatios at h ⊢
   rw [hf1]
-  rw [hf2] at h
-  exact h
+  rwa [hf2] at h
 
 theorem lBound_of (de : ℕ → ℝ) (T : ℕ) (du : ℝ) (u : D.what₂.Word) :
     ((Formalism.L2.SG.SpectralTiesReal.gOf D e).size de T du).LBound := by
@@ -107,8 +106,7 @@ theorem lBound_of (de : ℕ → ℝ) (T : ℕ) (du : ℝ) (u : D.what₂.Word) :
   have hf2 : (Formalism.MainNotions.BridgeLemma.szaData D u).f = D.R.f := Formalism.MainNotions.BridgeLemma.szaData_f D u
   unfold Sz.SizeData.LBound at h ⊢
   rw [hf1]
-  rw [hf2] at h
-  exact h
+  rwa [hf2] at h
 
 theorem prod_dimPi (h5 : ∀ (u : D.what₂.Word) τ, ¬ IsTop D τ → uOne D u τ D.R.k = vOne D τ (D.R.k - 1) - 1 / 2)
     (hDel : (D.s.Del : ℝ) ≠ 0) (τ0 : D.what₂.Tau) (u : D.what₂.Word) (T : ℕ) (du : ℝ) :
@@ -131,8 +129,7 @@ theorem columnCount_of (h5 : ∀ (u : D.what₂.Word) τ, ¬ IsTop D τ → uOne
   have hp := prod_dimPi (e := e) h5 hDel τ0 u (D.mem u).A.T (D.duS u)
   unfold Sz.SizeData.ColumnCount Sz.SizeData.idxCol at h ⊢
   rw [hp, hf1]
-  rw [hf2] at h
-  exact h
+  rwa [hf2] at h
 
 theorem dstar_eq (de : ℕ → ℝ) (T : ℕ) (du : ℝ) (u : D.what₂.Word) :
     ((Formalism.L2.SG.SpectralTiesReal.gOf D e).size de T du).Dstar = (Formalism.MainNotions.BridgeLemma.szaData D u).Dstar := by
@@ -235,12 +232,11 @@ theorem sizesAt_of {large₂ : SizeData₂ D} {C0 C' Cl Cg cb Cu CT CA Cn : ℝ}
     unfold VV at h
     unfold Sz.SizeData.VV Sz.SizeData.n Sz.SizeData.m
     show _ ≤ D.dsig (e w) * ((Sz.sfac (D.R.k + (2 * D.R.rS + 2) - 1) : ℕ) : ℝ)
-    rw [hn, Sz.sfac, Nat.cast_prod]
-    exact h
+    rwa [hn, Sz.sfac, Nat.cast_prod]
   have hex := exists_continuousLinearMap_tens_update d5 d8 huu τ0
   have hlOf : Formalism.L2.SG.SpectralTiesReal.lOf D (Formalism.MainNotions.BridgeLemma.deOf D u) (Formalism.MainNotions.BridgeLemma.deOf D u') = Nat.find hex := by
     unfold Formalism.L2.SG.SpectralTiesReal.lOf
-    exact dif_pos hex
+    exact dite_eq_left hex
   have hsl := Nat.find_spec hex
   obtain ⟨Th, hTh, hG⟩ := hThr
   refine ⟨e, τ0, C', Th, 256, fun x => Formalism.L2.SG.Pf.CarrierTop.placeTie_ePl T.X x, hk0, ?_, ?_, ?_, ?_, ?_, hDs u _ _ _, ?_⟩
@@ -278,8 +274,7 @@ theorem sizesAt_of {large₂ : SizeData₂ D} {C0 C' Cl Cg cb Cu CT CA Cn : ℝ}
     exact_mod_cast h2
   · have hSN := Formalism.L2.SG.ThmSOwn.size_numbers_of_hypotheses hH (by linarith) h70 hCn
     show Formalism.FourierDecayAlt.PB.SizeNumbers D.R.k D.R.rS (Fintype.card _) large₂.sc.b (D.host.g 0) (D.host.g 1) (1 / 3) Cn
-    rw [card_places D e]
-    exact hSN
+    rwa [card_places D e]
   · have e1 : (D.mem u).A.T ≡ (D.mem u').A.T [MOD (D.host.g 0 * D.host.g 1) ^ 2] :=
       ((d9 u).2 : _ ≡ 1 [MOD _]).trans ((d9 u').2 : _ ≡ 1 [MOD _]).symm
     exact e1

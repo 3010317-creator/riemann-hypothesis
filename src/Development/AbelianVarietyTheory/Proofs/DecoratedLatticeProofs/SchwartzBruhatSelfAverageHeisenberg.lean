@@ -92,8 +92,7 @@ theorem avg_self_and_props : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
       congr 1
       have := _root_.GlobalTheory.RootEx.RowSign.opE_om_rowE k n n' c p hp1 hpc ψ hψ ν μ (omR μ (1, h) Φ) u x₀
       rw [← omR_val, omR_mul, one_mul, mul_one] at this
-      rw [omR_mul, one_mul, mul_one]
-      exact this
+      rwa [omR_mul, one_mul, mul_one]
     · rw [hw L]
       congr 1; funext u
       simp only [T, map_smul, smul_eq_mul]
@@ -106,8 +105,7 @@ theorem avg_self_and_props : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
     obtain ⟨Φ₀, h0⟩ := hF.2 g
     refine ⟨Φ₀, funext fun x => ?_⟩
     rw [GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage.avg, h0, GlobalTheory.RootEx.FourierJacobi.integral_mul_of_support (z := Φ.1 x) a, a1, one_mul]
-    intro u hu
-    exact congrArg (fun t : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) => t.1 x) hu
+    exact fun u hu => congrArg (fun t : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) => t.1 x) hu
   · obtain ⟨w, e1, e2, e3⟩ := main Φ₀
     refine ⟨e1 ▸ w.2, fun h => e1 ▸ e2 h, fun ρ' hρ' L => ?_⟩
     rw [e1, GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage.app_coe, e3 L]

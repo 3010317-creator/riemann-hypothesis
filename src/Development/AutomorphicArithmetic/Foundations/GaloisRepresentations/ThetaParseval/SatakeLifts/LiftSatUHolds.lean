@@ -137,8 +137,7 @@ theorem UpperTheory.Gal.TP.Loc.compUnit :
     exact lt_of_le_of_ne (hp _) (Ne.symm (by simpa using hre))
   · intro g v u
     obtain ⟨x, hx⟩ := heq g
-    simp only [LinearMap.mk₂'ₛₗ_apply, hx]
-    exact hi x _ _
+    simpa only [LinearMap.mk₂'ₛₗ_apply, hx] using hi x _ _
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.SatakeLifts.CompUnitPf =====
@@ -179,8 +178,7 @@ theorem UpperTheory.Gal.TP.Loc.contraUnit :
     rw [hw w] at h1
     simp at h1
   obtain ⟨w0, hw0⟩ : ∃ w : V, w ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     haveI : IsSimpleOrder (Subrepresentation ρ) := hirr
     apply (bot_ne_top : (⊥ : Subrepresentation ρ) ≠ ⊤)
     generalize (⊥ : Subrepresentation ρ) = a
@@ -206,15 +204,13 @@ theorem UpperTheory.Gal.TP.Loc.contraUnit :
     refine Subtype.ext (LinearMap.ext fun a => ?_)
     rw [contra_apply, hSapply, hSapply]
     have h := hinv g (ρ g⁻¹ a) w
-    rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply] at h
-    exact h
+    rwa [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply] at h
   have hbij : Function.Bijective S := by
     have hi : Function.Injective S := by
       rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
       intro w hw
       refine hnd w fun v => ?_
-      have h := congrArg (fun l : smoothPart ρ.dual => (l : Module.Dual ℂ V) v) hw
-      simpa [hSapply] using h
+      simpa [hSapply] using congrArg (fun l : smoothPart ρ.dual => (l : Module.Dual ℂ V) v) hw
     refine ⟨hi, ?_⟩
     let R : Subrepresentation (contra ρ) :=
       { toSubmodule := LinearMap.range S
@@ -248,11 +244,9 @@ theorem UpperTheory.Gal.TP.Loc.contraUnit :
   · intro c f f'
     simp [LinearMap.map_smulₛₗ]
   · intro f f'
-    simp only [LinearMap.mk₂'ₛₗ_apply]
-    exact hherm (T f') (T f)
+    simpa only [LinearMap.mk₂'ₛₗ_apply] using hherm (T f') (T f)
   · intro f hf
-    simp only [LinearMap.mk₂'ₛₗ_apply]
-    exact hpos _ (fun h => hf (by rw [← hST f, h, map_zero]))
+    simpa only [LinearMap.mk₂'ₛₗ_apply] using hpos _ (fun h => hf (by rw [← hST f, h, map_zero]))
   · intro g f f'
     simp only [LinearMap.mk₂'ₛₗ_apply]
     rw [hTg, hTg]
@@ -537,8 +531,7 @@ theorem UpperTheory.Gal.TP.Loc.pairOfLift :
         rw [GlobalTheory.SplitFlip.invT_val, inv_inv]
       have hY := hg Y.transpose
       simp only at hY
-      simp only [tr, hval, Matrix.transpose_mul, Matrix.transpose_transpose] at hY
-      exact hY
+      simpa only [tr, hval, Matrix.transpose_mul, Matrix.transpose_transpose] using hY
     have hK0 : (KO k (Fin n) : Set (GL (Fin n) k)) ∈ nhds 1 :=
       GlobalTheory.SplitFlip.isOpen_KO.mem_nhds (one_mem _)
     have hker : ((detChar (Fin n) b).ker : Set (GL (Fin n) k)) ∈ nhds 1 :=
@@ -558,8 +551,7 @@ theorem UpperTheory.Gal.TP.Loc.pairOfLift :
     rw [Representation.dual_apply]
     simp only [Module.Dual.transpose_apply, LinearMap.coe_comp, Function.comp_apply]
     congr 1
-    have hk := lift_key hK hD hβ g⁻¹ 1 (tr Ψ) (tr Ψ) Ψ Ψ (fun _ => rfl) (fun _ => rfl) hg.symm v
-    simpa using hk
+    simpa using lift_key hK hD hβ g⁻¹ 1 (tr Ψ) (tr Ψ) Ψ Ψ (fun _ => rfl) (fun _ => rfl) hg.symm v
   let B : SB (Matrix (Fin d) (Fin n) k) →ₗ[ℂ] smoothPart π.dual →ₗ[ℂ] smoothPart (src (ν * b) σ).dual :=
     LinearMap.mk₂ ℂ (fun Ψ F => ⟨(F : Module.Dual ℂ W) ∘ₗ β (tr Ψ), hsm Ψ F⟩)
       (fun Ψ₁ Ψ₂ F => by ext v; simp [tr_add])
@@ -569,12 +561,10 @@ theorem UpperTheory.Gal.TP.Loc.pairOfLift :
   refine ⟨B, ?_, ?_⟩
   · intro hB
     obtain ⟨Φ0, hΦ0⟩ : ∃ Φ0, β Φ0 ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hβ0 (LinearMap.ext hc)
     obtain ⟨v, hv⟩ : ∃ v, β Φ0 v ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hΦ0 (LinearMap.ext hc)
     obtain ⟨l, hl⟩ := hS k d W π hπ _ hv
     let Ψ0 : SB (Matrix (Fin d) (Fin n) k) :=
@@ -702,8 +692,7 @@ theorem UpperTheory.Gal.TP.Loc.pairSat :
     intro χ hχ
     refine hχ.locChar_eq_val ?_
     change Valued.v (complMap hw ϖ₀) = _
-    rw [← h1, hv]
-    exact hϖ₀
+    rwa [← h1, hv]
   have key := hLift _ v n d _ _ _ _ (contra σ₀) π hnd uW' nW uX nX (isSmooth_contra _) c2 c1 b1 b2 hL ϖ hϖ₀ _ hB₁
   have e1 : (B.map (·⁻¹)).map (fun x => x⁻¹ * ((chrW χW t)⁻¹ ϖ * chrW χX t ϖ)) =
       B.map (· * (val χX (splitPrime t) * (val χW (splitPrime t))⁻¹)) := by
@@ -782,8 +771,7 @@ theorem UpperTheory.Gal.TP.Loc.satContra :
     have h2 : b x x = 0 := hx
     rw [h2] at h1
     simp at h1
-  · intro g x y
-    exact hinv g y x
+  · exact fun g x y => hinv g y x
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.SatakeLifts.SatContra =====
@@ -828,8 +816,7 @@ theorem UpperTheory.Gal.TP.Loc.satDet :
     congr 1
     push_cast
     ring
-  rw [hm]
-  exact h
+  rwa [hm]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.SatakeLifts.SatDet =====
@@ -868,8 +855,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem tprod_ne_zero' {ι : Type} [Fintype ι] {X : ι → Type} [∀ i, AddCommGroup (X i)] [∀ i, Module ℂ (X i)]
     (x : ∀ i, X i) (hx : ∀ i, x i ≠ 0) : PiTensorProduct.tprod ℂ x ≠ 0 := by
   have hl : ∀ i, ∃ l : Module.Dual ℂ (X i), l (x i) ≠ 0 := fun i => by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hx i ((Module.forall_dual_apply_eq_zero_iff ℂ (x i)).1 hc)
   choose l hl using hl
   intro h
@@ -906,8 +892,7 @@ private theorem hasSat_pair {K : Type} [Field K] [NumberField K] (w : HeightOneS
   · intro f hf h0
     obtain ⟨T, hT, hv⟩ := GlobalTheory.SatInd.exists_sat_multiProd (Fin.sum_univ_two d) hs hi hf h0
     have hTS : ∀ a, T a = S a := fun a => (hT a).unique (hS a)
-    rw [Fin.sum_univ_two, hTS, hTS] at hv
-    exact hv
+    rwa [Fin.sum_univ_two, hTS, hTS] at hv
 
 private structure Bun (k : Type) [Field k] [TopologicalSpace k] where
   n : ℕ
@@ -1026,8 +1011,7 @@ private theorem range_val_map_rev (t : ℕ) :
   constructor
   · rintro ⟨i, hi, rfl⟩
     omega
-  · intro hy
-    exact ⟨t - 1 - y, by omega, by omega⟩
+  · exact fun hy => ⟨t - 1 - y, by omega, by omega⟩
 
 private theorem npowU_neg {K : Type} [Field K] [NumberField K]
     (w : HeightOneSpectrum (𝓞 K)) (z : ℂ) :
@@ -1087,21 +1071,7 @@ variable {G H V W Y : Type} [Group G] [Group H] [AddCommGroup V] [Module ℂ V] 
 
 theorem isIrreducible_comp {ρ : Representation ℂ G V} (h : ρ.IsIrreducible) (φ : H →* G)
     (hφ : Function.Surjective φ) : Representation.IsIrreducible (ρ.comp φ) := by
-  haveI hV : Nontrivial V := by
-    by_contra hV
-    rw [not_nontrivial_iff_subsingleton] at hV
-    exact (bot_ne_top (α := Subrepresentation ρ))
-      (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
-  refine { toNontrivial := ⟨⟨⊥, ⊤, fun e => ?_⟩⟩, eq_bot_or_eq_top := fun S => ?_ }
-  · exact bot_ne_top (α := Submodule ℂ V) (congrArg Subrepresentation.toSubmodule e)
-  · let S' : Subrepresentation ρ := ⟨S.toSubmodule, fun g v hv => by
-      obtain ⟨x, rfl⟩ := hφ g
-      exact S.apply_mem_toSubmodule x hv⟩
-    rcases h.eq_bot_or_eq_top S' with e | e
-    · exact Or.inl (Subrepresentation.toSubmodule_injective
-        (congrArg (Subrepresentation.toSubmodule (ρ := ρ)) e :))
-    · exact Or.inr (Subrepresentation.toSubmodule_injective
-        (congrArg (Subrepresentation.toSubmodule (ρ := ρ)) e :))
+  exact GlobalTheory.CuspRep.ParLaws.isIrreducible_comp h φ hφ
 
 end General
 
@@ -1125,10 +1095,8 @@ theorem UpperTheory.Gal.TP.Loc.srcGood :
   have hcont : Continuous (GlobalTheory.SplitFlip.invT : GL (Fin n) k →* GL (Fin n) k) := by
     rw [Units.continuous_iff]
     refine ⟨?_, ?_⟩
-    · show Continuous fun h : GL (Fin n) k => ((h⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).transpose
-      exact Units.continuous_coe_inv.matrix_transpose
-    · show Continuous fun h : GL (Fin n) k => (h : Matrix (Fin n) (Fin n) k).transpose
-      exact Units.continuous_val.matrix_transpose
+    · exact Units.continuous_coe_inv.matrix_transpose
+    · exact Units.continuous_val.matrix_transpose
   refine ⟨?_, ?_, ?_⟩
   · exact isSmooth_twist (isSmooth_comp hs _ hcont) hc.detChar
   · have ht {G W : Type} [Group G] [AddCommGroup W] [Module ℂ W]

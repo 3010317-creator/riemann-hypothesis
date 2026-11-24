@@ -186,14 +186,14 @@ theorem kernel_traceForm (hfin : ∀ x, Finite (stab ι J x)) {θ : Hf → P →
     intro γ hγ
     rw [Set.Finite.coe_toFinset]
     by_contra hn
-    exact hγ (if_neg hn)
+    exact hγ (ite_eq_right hn)
   have hc : hL.toFinset.card = Nat.card (stab ι J x) := by
     rw [Nat.card_congr (linkEquiv ι J h0), Nat.card_coe_set_eq, Set.ncard_eq_toFinset_card _ hL]
   unfold traceForm
   rw [map_finsum (θ x) hf]
   simp only [hterm]
   rw [finsum_eq_sum_of_support_subset _ hsub,
-    Finset.sum_congr rfl (fun γ hγ => if_pos ((Set.Finite.mem_toFinset hL).1 hγ)),
+    Finset.sum_congr rfl (fun γ hγ => ite_eq_left ((Set.Finite.mem_toFinset hL).1 hγ)),
     Finset.sum_const, hc, Nat.cast_smul_eq_nsmul]
 
 theorem classSum_traceForm [CharZero C] (hfin : ∀ x, Finite (stab ι J x)) {θ : Hf → P →ₛₗ[e] W}
@@ -222,8 +222,7 @@ theorem classSum_traceForm [CharZero C] (hfin : ∀ x, Finite (stab ι J x)) {θ
       simp only [map_inv, Subgroup.coe_inv]
       group
     rw [traceForm_eq_zero ι J lam ρ h p hx, map_zero, smul_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i₀) hi
+  · exact fun hi => absurd (Finset.mem_univ i₀) hi
 
 theorem finite_stab_of_reps {I : Type} {y : I → Hf} (hy : IsReps ι J y) (hfin : ∀ i, Finite (stab ι J (y i)))
     (x : Hf) : Finite (stab ι J x) := by
@@ -303,8 +302,7 @@ theorem eq_of_finPt (V : HSp D) {a b : GA D V} (ha : a ∈ GfC V) (hb : b ∈ Gf
     show finHom V (a⁻¹ * b) = 1
     rw [map_mul, map_inv, h1, inv_mul_cancel]
   have h3 := (GlobalTheory.UnitarySplit.real_finite_split D V).2.2.1 _ h2 ((GfC V).mul_mem ((GfC V).inv_mem ha) hb)
-  rw [inv_mul_eq_one] at h3
-  exact h3
+  rwa [inv_mul_eq_one] at h3
 
 theorem lift_finPt (V : HSp D) {a : GA D V} (ha : a ∈ GfC V) : lift V (finPt V a) = a :=
   eq_of_finPt V (lift_mem V _) ha (finPt_lift V _)

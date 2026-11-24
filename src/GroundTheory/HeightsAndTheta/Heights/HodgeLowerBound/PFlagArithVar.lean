@@ -93,8 +93,7 @@ theorem trdeg_int_eq_rat {L : Type} [Field L] (I : Algebra ℚ L) :
 theorem trdeg_closure_of_rat {E : Type} [Field E] {iQ : Algebra ℚ E} (s : Set E) {c : Cardinal}
     (h : @Algebra.trdeg ℚ (IntermediateField.adjoin ℚ s) _ _ (IntermediateField.adjoin ℚ s).algebra' = c) :
     Algebra.trdeg ℤ (Subfield.closure s) = c := by
-  rw [← trdeg_int_adjoin, trdeg_int_eq_rat (IntermediateField.adjoin ℚ s).algebra']
-  exact h
+  rwa [← trdeg_int_adjoin, trdeg_int_eq_rat (IntermediateField.adjoin ℚ s).algebra']
 
 end FlagArithVar
 
@@ -115,8 +114,7 @@ theorem FlagArithVar.proof : FlagArithVar.Statement := by
     (by rw [mCoordIdeal_ratioPtL (yFl Ψ N) _ hc]; exact hhor)
   have hL : Algebra.trdeg ℤ (ratioField (yFl Ψ N) (leadIdx Ψ N)) = ((dimFl Ψ N : ℕ) : Cardinal) := by
     have h := trdeg_closure_of_rat _ (FlagRatioTrdeg.full ℚ Ψ N)
-    rw [ratioField, coneRatios_eq, trdeg_int_adjoin]
-    exact h
+    rwa [ratioField, coneRatios_eq, trdeg_int_adjoin]
   rw [mCoordIdeal_ratioPtL (yFl Ψ N) _ hc, hL] at htr
   have : (PFl Ψ N).IsPrime := RingHom.ker_isPrime _
   have hA := IntDomainDim.full (MRing (FlIdx Ψ N) ⧸ PFl Ψ N) (algebraMap_injective _ hhor)

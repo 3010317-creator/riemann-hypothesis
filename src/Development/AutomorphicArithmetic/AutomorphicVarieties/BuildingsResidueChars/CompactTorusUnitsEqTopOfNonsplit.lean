@@ -60,8 +60,7 @@ private theorem int_of_norm_one {O K : Type} [CommRing O] [IsDomain O] [IsDiscre
   haveI := h.frac
   have hN : e.re * e.re + τ * e.re * e.im - (-1) * e.im * e.im = 1 := by
     have h' := hn
-    rw [QuadraticAlgebra.norm_def] at h'
-    exact h'
+    rwa [QuadraticAlgebra.norm_def] at h'
   by_cases hq : e.im = 0
   · have hp : (e.re - 1) * (e.re + 1) = 0 := by
       rw [hq] at hN
@@ -92,8 +91,7 @@ private theorem int_of_norm_one {O K : Type} [CommRing O] [IsDomain O] [IsDiscre
       field_simp
       linear_combination (-4) * hxy
     obtain ⟨t, ht⟩ : ∃ t : O, algebraMap O K t = QuadraticAlgebra.trace e := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       have hTd : QuadraticAlgebra.trace e = 2 * e.re + τ * e.im := QuadraticAlgebra.trace_def e
       set T := QuadraticAlgebra.trace e with hTdef
       have hT0 : T ≠ 0 := fun h0 => hne 0 (by rw [map_zero, h0])
@@ -127,5 +125,4 @@ theorem UpperTheory.compactTorusUnits_eq_top_of_nonsplit :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → ¬ IsSquare (τ ^ 2 - 4) → Cint O τ = ⊤ := by
   intro O K _ _ _ _ _ Δ τ h _ hτ
   rw [eq_top_iff]
-  intro z _
-  exact ⟨int_of_norm_one h hτ _ (norm_quo z), int_of_norm_one h hτ _ (norm_quo z⁻¹)⟩
+  exact fun z _ => ⟨int_of_norm_one h hτ _ (norm_quo z), int_of_norm_one h hτ _ (norm_quo z⁻¹)⟩

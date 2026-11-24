@@ -107,8 +107,7 @@ theorem clopenCond_injective_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
         refine (H _ _).2 ?_
         rintro _ ⟨q, rfl⟩
         have haq : a q = t := (ha ▸ Set.mem_range_self q : a q ∈ ({t} : Set T'.left))
-        simp only [Over.comp_left, Over.homMk_left, Scheme.Hom.comp_apply, haq]
-        exact ht
+        simpa only [Over.comp_left, Over.homMk_left, Scheme.Hom.comp_apply, haq] using ht
       · rw [← Category.assoc] at hx
         have hr := (H _ _).1 hx
         obtain ⟨q⟩ : Nonempty (Sp k) := inferInstance
@@ -163,8 +162,7 @@ theorem range_sp_subset_iff {k : Type} [Field k] {X : Scheme.{0}} (f : Sp k ⟶ 
     Set.range f ⊆ U ↔ ∃ t, f t ∈ U := by
   haveI : Unique (Sp k) := inferInstanceAs (Unique (PrimeSpectrum k))
   constructor
-  · intro h
-    exact ⟨default, h ⟨default, rfl⟩⟩
+  · exact fun h => ⟨default, h ⟨default, rfl⟩⟩
   · rintro ⟨t, ht⟩ _ ⟨t', rfl⟩
     rwa [Subsingleton.elim t' t]
 
@@ -176,8 +174,7 @@ theorem range_sp_subset_compl {k : Type} [Field k] {X : Scheme.{0}} (f : Sp k �
   · rintro ⟨t, ht⟩ ⟨t', ht'⟩
     rw [Subsingleton.elim t' t] at ht'
     exact ht ht'
-  · intro h
-    exact ⟨default, fun h' => h ⟨default, h'⟩⟩
+  · exact fun h => ⟨default, fun h' => h ⟨default, h'⟩⟩
 
 end GlobalTheory.UPel.HT.EtLev.Onto
 
@@ -234,8 +231,7 @@ theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
     rw [range_sp_subset_compl, hI k x z]
     constructor
     · intro hno g hg
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       obtain ⟨y, hy, -⟩ := hrep _ g hg
       apply hno
       have hmem : Set.range (lift z y).left ⊆ C := by
@@ -258,8 +254,7 @@ theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
       have h1 := ((hU (lam a)).2 _ _).1 hs
       have h2 : Set.range (w ≫ i).left ⊆ C := (hV _ _).2 ⟨w, rfl⟩
       haveI : Unique (Over.mk x).left := inferInstanceAs (Unique (PrimeSpectrum k))
-      have h3 := h2 ⟨default, rfl⟩
-      exact Set.mem_iInter₂.1 h3 (lam a) ⟨a, rfl⟩ (h1 ⟨default, rfl⟩)
+      exact Set.mem_iInter₂.1 (h2 ⟨default, rfl⟩) (lam a) ⟨a, rfl⟩ (h1 ⟨default, rfl⟩)
   refine ⟨⟨(I : Set Z.left)ᶜ, hIc.isOpen_compl⟩, I.isOpen.isClosed_compl, fun T' h => ?_⟩
   constructor
   · intro H
@@ -514,8 +509,7 @@ theorem exists_rep_pow_of_le : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
         ∀ c : s0, x ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1 := by
     intro T x
     constructor
-    · intro h c
-      exact h c (hs0 ▸ Submodule.subset_span c.2)
+    · exact fun h c => h c (hs0 ▸ Submodule.subset_span c.2)
     · intro h c hc
       have hle : Submodule.span (𝓞 D.F) (s0 : Set (𝓞 D.F)) ≤ kil T x :=
         Submodule.span_le.2 fun c hc => h ⟨c, hc⟩
@@ -541,12 +535,10 @@ theorem exists_rep_pow_of_le : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
     refine forall_congr' fun c => ⟨fun e1 => ?_, fun e1 => ?_⟩
     · have e2 := congrArg (· ≫ i) e1
       simp only [Category.assoc, hf, he, comp_one] at e2
-      rw [Category.assoc]
-      exact e2
+      rwa [Category.assoc]
     · apply hmono
       simp only [Category.assoc, hf, he, comp_one]
-      rw [← Category.assoc]
-      exact e1
+      rwa [← Category.assoc]
   obtain ⟨U, hUc, hU⟩ := GlobalTheory.LevCover.ClopenCond.forall_finite (T := H)
     (P := fun (c : s0) (T' : Over S) (h : T' ⟶ H) => h ≫ f c = h ≫ toUnit H ≫ e)
     fun c => GlobalTheory.LevCover.clopenCond_eq (f c) (toUnit H ≫ e)
@@ -612,8 +604,7 @@ theorem exists_finite_flat_wPow : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
     unfold Ideal.map
     rw [GlobalTheory.IwLevel.killedBy_span]
     constructor
-    · intro h c hc
-      exact h _ ⟨c, hc, rfl⟩
+    · exact fun h c hc => h _ ⟨c, hc, rfl⟩
     · rintro h _ ⟨c, hc, rfl⟩
       exact h c hc
   refine ⟨r, le_rfl, K, i, hfin, hflat, (key _ i).1 ((hK _ i).1 ⟨𝟙 _, Category.id_comp _⟩), fun T x hx => ?_⟩
@@ -693,9 +684,7 @@ theorem etale_of_killed_tangent_trivial : ∀ (p : ℕ) [Fact p.Prime] (D : Datu
       intro c hc
       rw [Category.assoc, hkill c hc, comp_one]
     obtain ⟨y, -, hy⟩ := hrep _ (W ≫ i) hk
-    have hW := hy W rfl
-    have hU := hy U hWU.symm
-    exact congrArg (fun q => q.left) (hW.trans hU.symm)
+    exact congrArg (fun q => q.left) ((hy W rfl).trans (hy U hWU.symm).symm)
   exact Etale.of_formallyUnramified_of_flat H.hom
 
 end GlobalTheory.UPel.HT.EtLev

@@ -60,10 +60,8 @@ theorem UpperTheory.Zero.LLC.goodSeg :
     unfold UpperTheory.Zero.LLC.Good
     constructor
     · rintro ⟨t, ht, hy⟩
-      rw [huniq x s t hs ht]
-      exact hy
-    · intro hy
-      exact ⟨s, hs, hy⟩
+      rwa [huniq x s t hs ht]
+    · exact fun hy => ⟨s, hs, hy⟩
   have htw : ∀ (y : IrrGL (k := k)) (a : ℂ),
       UpperTheory.Zero.LLC.GoodCusp (y.nu a) ↔ UpperTheory.Zero.LLC.GoodCusp y := by
     intro y a
@@ -77,8 +75,7 @@ theorem UpperTheory.Zero.LLC.goodSeg :
     · intro h Δ hΔ
       have hmem : Δ.first.nu ((0 : ℕ) : ℂ) ∈ Δ.ms :=
         Segment.mem_ms.mpr (Segment.mem_carrier.mpr ⟨0, Δ.len_pos, rfl⟩)
-      have hc := h _ (Multiset.mem_bind.mpr ⟨Δ, Multiset.mem_coe.mpr hΔ, hmem⟩)
-      exact (htw _ _).mp hc
+      exact (htw _ _).mp (h _ (Multiset.mem_bind.mpr ⟨Δ, Multiset.mem_coe.mpr hΔ, hmem⟩))
     · intro h y hy
       obtain ⟨Δ, hΔ, hy⟩ := Multiset.mem_bind.mp hy
       obtain ⟨a, _, rfl⟩ := Segment.mem_carrier.mp (Segment.mem_ms.mp hy)

@@ -156,8 +156,7 @@ private theorem exists_mem_col_fiber_eq_of_isTab_of_le (col : X → C) (b : X �
     ∃ x, col x = c ∧ b x = j := by
   have hinj := injOn_col_fiber_of_isTab col b hT c
   unfold IsTab at hT
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hsub : (Finset.univ.filter (fun y => col y = c)).image b ⊆ Finset.Ioi j := by
     intro i hi
     obtain ⟨x, hx, rfl⟩ := Finset.mem_image.mp hi
@@ -177,20 +176,17 @@ theorem exists_perm (col : X → C) (b : X → Fin n) (hT : IsTab col b) (ζ : E
     (hJ : ColInj col (b ∘ ζ)) : ∃ π ∈ colG col, b ∘ π = b ∘ ζ := by
   unfold ColInj at hJ
   have key : ∀ p, ∃ q, col q = col p ∧ b q = b (ζ p) := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨p0, hp0⟩ := hne
     have hsmall : (Finset.univ.filter (fun y => col y = col p0)).card < n - (b (ζ p0) : ℕ) := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       obtain ⟨q, hq, hbq⟩ := exists_mem_col_fiber_eq_of_isTab_of_le col b hT (col p0) (b (ζ p0)) (by omega)
       exact hp0 q hq hbq
     have hfib : ∀ s : Finset X,
         s.card = ∑ c ∈ Finset.univ.image col, (s.filter (fun a => col a = c)).card := by
       intro s
       apply Finset.card_eq_sum_card_fiberwise
-      intro x _
-      exact Finset.mem_coe.mpr (Finset.mem_image_of_mem col (Finset.mem_univ x))
+      exact fun x _ => Finset.mem_coe.mpr (Finset.mem_image_of_mem col (Finset.mem_univ x))
     have heq : (Finset.univ.filter (fun x => b (ζ p0) < b (ζ x))).card =
         (Finset.univ.filter (fun x => b (ζ p0) < b x)).card := by
       apply Finset.card_nbij' ζ ζ.symm
@@ -227,7 +223,7 @@ theorem exists_perm (col : X → C) (b : X → Fin n) (hT : IsTab col b) (ζ : E
               simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hx ⊢
               exact hx.2
           _ ≤ _ := hsubR c hA
-      · push_neg at hA
+      · push Not at hA
         calc _ ≤ (Finset.Ioi (b (ζ p0))).card := by
               apply Finset.card_le_card_of_injOn (fun x => b (ζ x))
               · intro x hx
@@ -245,8 +241,7 @@ theorem exists_perm (col : X → C) (b : X → Fin n) (hT : IsTab col b) (ζ : E
               refine Finset.mem_image.mpr ⟨x, ?_, hbx⟩
               simp only [Finset.mem_filter, Finset.mem_univ, true_and]
               refine ⟨?_, hx⟩
-              rw [hbx]
-              exact hj
+              rwa [hbx]
           _ ≤ _ := Finset.card_image_le
     have hlt : ((Finset.univ.filter (fun x => b (ζ p0) < b (ζ x))).filter (fun a => col a = col p0)).card <
         ((Finset.univ.filter (fun x => b (ζ p0) < b x)).filter (fun a => col a = col p0)).card := by
@@ -272,8 +267,7 @@ theorem exists_perm (col : X → C) (b : X → Fin n) (hT : IsTab col b) (ζ : E
       rw [← hf2 p, ← hf2 p', h]
   refine ⟨Equiv.ofBijective f hinj.bijective_of_finite, ?_, ?_⟩
   · rw [mem_colG]
-    intro p
-    exact hf1 p
+    exact fun p => hf1 p
   · funext p
     exact hf2 p
 
@@ -286,7 +280,7 @@ theorem sg_perm (col : X → C) (b : X → Fin n) (hI : ColInj col b) (π : Equi
   rw [Finset.sum_eq_single π]
   · simp
   · intro σ hσ hne
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hne
     ext p
@@ -300,7 +294,7 @@ theorem sg_zero (col : X → C) (b : X → Fin n) (v : X → Fin n) (h : ¬ ∃ 
     sg col b v = 0 := by
   unfold sg
   refine Finset.sum_eq_zero fun π hπ => ?_
-  rw [if_neg]
+  rw [ite_eq_right]
   exact fun h' => h ⟨π, hπ, h'⟩
 
 theorem isTab_comp {Y : Type} (col : X → C) (b : X → Fin n) (hT : IsTab col b) (e : Y → X)
@@ -364,10 +358,8 @@ private theorem sum_closed_eq_sum_left_mul {Γ : Type} [Group Γ] [DecidableEq �
     (hCm : ∀ x ∈ C, ∀ y ∈ C, x * y ∈ C) (hCi : ∀ x ∈ C, x⁻¹ ∈ C) {a : Γ} (ha : a ∈ C)
     (F : Γ → ℤ) : ∑ x ∈ C, F x = ∑ u ∈ C, F (a * u) := by
   apply Finset.sum_nbij' (fun x => a⁻¹ * x) (fun u => a * u)
-  · intro x hx
-    exact hCm _ (hCi _ ha) _ hx
-  · intro u hu
-    exact hCm _ ha _ hu
+  · exact fun x hx => hCm _ (hCi _ ha) _ hx
+  · exact fun u hu => hCm _ ha _ hu
   · intro x _
     simp
   · intro u _
@@ -379,10 +371,8 @@ private theorem sum_closed_eq_sum_mul_right {Γ : Type} [Group Γ] [DecidableEq 
     (hCm : ∀ x ∈ C, ∀ y ∈ C, x * y ∈ C) (hCi : ∀ x ∈ C, x⁻¹ ∈ C) {a : Γ} (ha : a ∈ C)
     (F : Γ → ℤ) : ∑ x ∈ C, F x = ∑ v ∈ C, F (v * a) := by
   apply Finset.sum_nbij' (fun x => x * a⁻¹) (fun v => v * a)
-  · intro x hx
-    exact hCm _ hx _ (hCi _ ha)
-  · intro u hu
-    exact hCm _ hu _ ha
+  · exact fun x hx => hCm _ hx _ (hCi _ ha)
+  · exact fun u hu => hCm _ hu _ ha
   · intro x _
     simp
   · intro u _
@@ -426,17 +416,16 @@ private theorem sum_ite_mul_mul_eq_pos_of_subgroup_transversal {Γ : Type} [Grou
     · rw [Finset.sum_eq_single a⁻¹]
       · simp [he]
       · intro b _ hb
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         apply hb
         rw [mul_one] at h
         exact eq_inv_of_mul_eq_one_right h
-      · intro h
-        exact absurd (hCi a ha) h
+      · exact fun h => absurd (hCi a ha) h
     · intro b hb hb1
       apply Finset.sum_eq_zero
       intro a' ha'
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       apply hb1
       apply hRC b hb
@@ -444,16 +433,14 @@ private theorem sum_ite_mul_mul_eq_pos_of_subgroup_transversal {Γ : Type} [Grou
       rw [h, mul_one] at hb'
       rw [hb']
       exact hCm _ (hCi _ ha) _ (hCi _ ha')
-    · intro h
-      exact absurd hR1 h
+    · exact fun h => absurd hR1 h
   have h3 : f 1 * f 1 ≤ ∑ g, f g * f g :=
     Finset.single_le_sum (f := fun g => f g * f g) (fun g _ => mul_self_nonneg (f g))
       (Finset.mem_univ 1)
   have hc : (0 : ℤ) < C.card := by exact_mod_cast Finset.card_pos.2 ⟨1, hC1⟩
   have hcc : (0 : ℤ) < (C.card : ℤ) * C.card := mul_pos hc hc
   rw [h1, h2] at h3
-  by_contra hK0
-  push_neg at hK0
+  by_contra! hK0
   have := mul_nonpos_of_nonneg_of_nonpos hcc.le hK0
   linarith
 
@@ -464,8 +451,7 @@ private theorem sum_ite_mul_inv_mem_eq_sum_mul {Γ : Type} [Group Γ] [Decidable
   apply Finset.sum_nbij' (fun σ => σ * p⁻¹) (fun b => b * p)
   · intro σ hσ
     exact (Finset.mem_filter.1 hσ).2
-  · intro b hb
-    exact Finset.mem_filter.2 ⟨hp b hb, by simpa using hb⟩
+  · exact fun b hb => Finset.mem_filter.2 ⟨hp b hb, by simpa using hb⟩
   · intro σ _
     simp
   · intro b _
@@ -485,8 +471,7 @@ private theorem sum_e_mul_prod_sums_eq_four_sum {Γ : Type} [Group Γ] [Decidabl
     intro b1 b2 v
     have h : ∀ u, (u * b2 * v = b1) ↔ (u = b1 * (b2 * v)⁻¹) := fun u => by
       rw [eq_mul_inv_iff_mul_eq, mul_assoc]
-    simp only [h]
-    exact Finset.sum_ite_eq' _ _ _
+    simpa only [h] using Finset.sum_ite_eq' _ _ _
   have hinv : ∀ x : Γ, x ∈ C ↔ x⁻¹ ∈ C := fun x => ⟨hCi x, fun h => by simpa using hCi _ h⟩
   calc ∑ σ ∈ G, e σ * ((∑ π ∈ C, if σ * π⁻¹ ∈ R then e π else 0) *
         (∑ ρ ∈ R, if σ * ρ⁻¹ ∈ C then e ρ else 0))
@@ -516,9 +501,9 @@ private theorem sum_e_mul_prod_sums_eq_four_sum {Γ : Type} [Group Γ] [Decidabl
           rw [hinv (b2 * π * ρ⁻¹)]
           simp [_root_.mul_inv_rev, mul_assoc]
         by_cases h : ρ * (b2 * π)⁻¹ ∈ C
-        · rw [if_pos (hc.2 h), if_pos h, hem]
+        · rw [ite_eq_left (hc.2 h), ite_eq_left h, hem]
           linear_combination (e b2 * e ρ) * hee π
-        · rw [if_neg (fun h' => h (hc.1 h')), if_neg h]
+        · rw [ite_eq_right (fun h' => h (hc.1 h')), ite_eq_right h]
     _ = ∑ v ∈ C, ∑ b1 ∈ R, ∑ b2 ∈ R, if b1 * (b2 * v)⁻¹ ∈ C then e b1 * e b2 else 0 := rfl
     _ = ∑ b1 ∈ R, ∑ v ∈ C, ∑ b2 ∈ R, if b1 * (b2 * v)⁻¹ ∈ C then e b1 * e b2 else 0 :=
         Finset.sum_comm
@@ -589,8 +574,7 @@ theorem kap_pos (tl : Fin N → ι) (colF colS : Fin N → C) (r c : Fin N → F
     refine Equiv.Perm.ext fun k => ?_
     rw [Equiv.Perm.one_apply]
     have h1 := (hS _ _).1 ((mem_colG colS x).1 hxS k)
-    have h2 := (hF _ _).1 ((mem_colG colF x).1 hxF k)
-    exact hinj _ _ h1.1 h1.2 h2.2
+    exact hinj _ _ h1.1 h1.2 ((hF _ _).1 ((mem_colG colF x).1 hxF k)).2
   rw [key]
   refine lt_of_lt_of_eq (sum_ite_mul_mul_eq_pos_of_subgroup_transversal (colG colF) (colG colS) (fun g => (Equiv.Perm.sign g : ℤ))
     ((mem_colG _ _).2 fun p => rfl) (fun x hx y hy => colG_mul' colF hx hy)

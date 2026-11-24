@@ -85,7 +85,7 @@ theorem top_coord (g : Fin (r + 1) → S.V) (gs : Fin r → S.V)
     refine Submodule.span_le.2 ?_
     rintro _ ⟨i, hi, rfl⟩
     change hf L S.Hm (g i) (gs j) = 0
-    rw [hd, if_neg]
+    rw [hd, ite_eq_right]
     rintro rfl
     simp at hi
   have h2 := LinearMap.mem_ker.1 (hK hB)
@@ -97,7 +97,7 @@ theorem top_coord (g : Fin (r + 1) → S.V) (gs : Fin r → S.V)
     change al i * hf L S.Hm (g i) (gs j) = _
     rw [hd]
     split_ifs <;> simp
-  simp only [h3, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+  simp only [h3, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
   exact h2
 
 theorem psi'_eq_one (n : S.GLV) (hn : ∀ v ∈ perp L S.Hm S.X', n v = v) : S.psi' n = 1 := by
@@ -106,10 +106,10 @@ theorem psi'_eq_one (n : S.GLV) (hn : ∀ v ∈ perp L S.Hm S.X', n v = v) : S.p
     have hp : S.f' j.succ ∈ perp L S.Hm S.X' := by
       refine FramePsi.hf_span_right L S.Hm _ _ ?_
       rintro _ ⟨i, hi, rfl⟩
-      rw [S.gram', if_neg]
+      rw [S.gram', ite_eq_right]
       rintro ⟨-, rfl⟩
       simp at hi
-    rw [Frames.coef, hn _ hp, Frames.h, S.dual', if_neg]
+    rw [Frames.coef, hn _ hp, Frames.h, S.dual', ite_eq_right]
     intro h
     have := congrArg Fin.val h
     simp at this
@@ -137,8 +137,7 @@ theorem move_term : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace 
     fun al al' ex ex' => ?_⟩
   · ext v
     change eich L S.Hm x (-u) (L.cj s) v ∈ (n₀⁻¹ • Λ : Submodule L.O S.V) ↔ v ∈ Λ
-    rw [hmem, ← e₀, ← e₀i]
-    rw [show n₀ (n₀⁻¹ v) = v from n₀.apply_symm_apply v]
+    rw [hmem, ← e₀, ← e₀i, show n₀ (n₀⁻¹ v) = v from n₀.apply_symm_apply v]
   · obtain ⟨y, hy, e⟩ := hth
     refine ⟨y, (hY y ?_).1 hy, e⟩
     have : y = algebraMap F E S.th⁻¹ • (x + x') := by
@@ -155,8 +154,7 @@ theorem move_term : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace 
     rw [this]
     exact Λ.add_mem (Λ.add_mem hu t1) t2
   · exact ⟨L.cj c, cj_mem_O hc, by rw [hsc, map_mul, AlgEquiv.commutes]⟩
-  · rw [L.cj_cj, Frames.h, hf_neg_l, hf_neg_r, neg_neg, add_comm]
-    exact hs
+  · rwa [L.cj_cj, Frames.h, hf_neg_l, hf_neg_r, neg_neg, add_comm]
   · have K := (TermBasic.term_basic L r k S d Λ hT).2.1
     have hw := K.2.2.1
     have hw' := K.2.2.2.1

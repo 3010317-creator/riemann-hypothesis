@@ -122,8 +122,7 @@ private theorem UpperTheory.Reformulated.B.Gr38.aut_translate {E : Type} [Field 
   · exact hc.comp (continuous_mul_const (k : ↥(GlobalTheory.UnitaryBC.UA E n)))
   · intro γ hγ g
     have := hr γ hγ (g * k)
-    rw [← mul_assoc] at this
-    exact this
+    rwa [← mul_assoc] at this
   · have hs : {k' : ↥(GlobalTheory.UnitaryBC.finU (E := E) (n := n)) |
         GlobalTheory.UnitaryBC.RU E n (k' : ↥(GlobalTheory.UnitaryBC.UA E n))
           (GlobalTheory.UnitaryBC.RU E n (k : ↥(GlobalTheory.UnitaryBC.UA E n)) φ) =
@@ -317,9 +316,7 @@ theorem UpperTheory.Reformulated.B.Gr38.eqRep_adm :
       constructor
       · intro h v
         exact LinearMap.congr_fun (congrArg Subtype.val (show UpperTheory.Reformulated.B.Gr38.eqRep ρ k w = w from h)) v
-      · intro h
-        show UpperTheory.Reformulated.B.Gr38.eqRep ρ k w = w
-        exact Subtype.ext (LinearMap.ext h)
+      · exact fun h => Subtype.ext (LinearMap.ext h)
     rw [hs]
     exact UpperTheory.Reformulated.B.Gr38.stab_open w.1 w.2.1
   let K : Subgroup ↥(GlobalTheory.UnitaryBC.finU (E := E) (n := n)) :=
@@ -406,8 +403,7 @@ theorem UpperTheory.admissible_equivariantForms_representation :
     obtain ⟨l, hl⟩ := Module.Projective.exists_dual_eq_one ℂ hv
     refine Subtype.ext (LinearMap.ext fun w => ?_)
     have h2 := h1 (LinearMap.smulRight l w) (hsp ▸ Submodule.mem_top)
-    rw [LinearMap.smulRight_apply, hl, one_smul] at h2
-    exact h2
+    rwa [LinearMap.smulRight_apply, hl, one_smul] at h2
   have hdef : ∀ u, B' u u = 0 → u = 0 := fun u hu => hev u (hdefB _ (u.2.1 v) hu)
   have hinv' : ∀ g u w, B' (eqRep ρ g u) (eqRep ρ g w) = B' u w := fun g u w =>
     hinv g _ _ (u.2.1 _) (w.2.1 _)

@@ -46,8 +46,7 @@ theorem support_coeff_tmul_one_mul (a : A) (x : A ⊗[K] B) :
   intro i hi
   rw [Finsupp.mem_support_iff, coeff_tmul_one_mul] at hi
   rw [Finsupp.mem_support_iff]
-  intro h
-  exact hi (by rw [h, mul_zero])
+  exact fun h => hi (by rw [h, mul_zero])
 
 theorem support_coeff_mul_tmul_one (a : A) (x : A ⊗[K] B) :
     (TensorProduct.equivFinsuppOfBasisRight 𝒞 (x * (a ⊗ₜ[K] (1 : B)))).support ⊆
@@ -55,8 +54,7 @@ theorem support_coeff_mul_tmul_one (a : A) (x : A ⊗[K] B) :
   intro i hi
   rw [Finsupp.mem_support_iff, coeff_mul_tmul_one] at hi
   rw [Finsupp.mem_support_iff]
-  intro h
-  exact hi (by rw [h, zero_mul])
+  exact fun h => hi (by rw [h, zero_mul])
 
 end Coefficients
 
@@ -182,8 +180,7 @@ theorem exists_one_tmul_mem_of_ne_bot [Algebra.IsCentral K A] [IsSimpleRing A]
       · rintro rfl
         exact hi (by rw [hy1, mul_one, one_mul, sub_self])
       · rw [Finsupp.mem_support_iff]
-        intro h
-        exact hi (by rw [h, mul_zero, zero_mul, sub_zero])
+        exact fun h => hi (by rw [h, mul_zero, zero_mul, sub_zero])
     have hi₀y : i₀ ∈ (φ y).support := hyeq ▸ hi₀
     have := (hmin _ hzI hz0).trans (Finset.card_le_card hsub)
     rw [Finset.card_erase_of_mem hi₀y, hyeq, hxn] at this

@@ -55,9 +55,7 @@ theorem v_ge_of_hyp {D : D7} {large₂ : SizeData₂ D} {C' Cl Cg cb Cu cT CT : 
   dsimp only [StandingHypotheses] at hH
   exact hH.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
 
-theorem ka_pos_of {D : D7} (hv : 1 ≤ D.host.v) : 0 < D.host.ka := by
-  show 0 < Real.pi / D.host.v
-  exact div_pos Real.pi_pos (by linarith)
+theorem ka_pos_of {D : D7} (hv : 1 ≤ D.host.v) : 0 < D.host.ka := div_pos Real.pi_pos (by linarith)
 
 theorem gg_pos (D : D7) : 0 < gg D := by
   unfold gg
@@ -172,8 +170,7 @@ theorem critical_level_lower_bound {D : D7} {large₂ : SizeData₂ D} {C0 C' Cl
   obtain ⟨hG1, hG2⟩ := hG τ
   have hVVpos := VV_pos D τ
   have hvpos : 0 < vand (lamSH D.R (D.hc τ)) := by
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     have h3 : Real.exp (CV * D.R.k * D.R.m * large₂.sc.L) * vand (lamSH D.R (D.hc τ)) ≤ 0 :=
       mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le hneg
     linarith

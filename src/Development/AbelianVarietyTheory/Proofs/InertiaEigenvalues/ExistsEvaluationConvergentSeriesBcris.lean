@@ -193,8 +193,7 @@ theorem root_pow {P : LocPrime l} (AI : LocAinf l P) (s : ℕ) : AI.εroot s ^ l
   induction s with
   | zero => simp [LocAinf.εroot]
   | succ s ih =>
-    rw [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
-    exact ih
+    rwa [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
 
 theorem dvd_sub_pow {R : Type} [CommRing R] (x : R) (s : ℕ) :
     (l : R) ∣ (x - 1) ^ l ^ s - (x ^ l ^ s - 1) := by
@@ -237,8 +236,7 @@ theorem bounded_OL (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (LL 
     exact add_mem hx hy
   | smul z x _ hx =>
     have := qB_mul_mem_Lat AI T z hx
-    rw [Subalgebra.coe_smul, ← algebraMap_smul ℚ_[l] z, map_smul, Algebra.smul_def, mul_left_comm]
-    exact this
+    rwa [Subalgebra.coe_smul, ← algebraMap_smul ℚ_[l] z, map_smul, Algebra.smul_def, mul_left_comm]
 
 
 set_option synthInstance.maxHeartbeats 200000 in
@@ -382,8 +380,7 @@ theorem _root_.GlobalTheory.AwayNorm.exists_normed_away : ∀ (p : ℕ) (R : Typ
       intro x hx
       apply ih
       apply htf
-      rw [← mul_assoc, ← pow_succ']
-      exact hx
+      rwa [← mul_assoc, ← pow_succ']
   have hinj : Function.Injective (algebraMap R L) := by
     refine IsLocalization.injective L (M := Submonoid.powers (p : R)) ?_
     rintro _ ⟨n, rfl⟩
@@ -489,8 +486,7 @@ theorem _root_.GlobalTheory.AwayNorm.exists_normed_away : ∀ (p : ℕ) (R : Typ
     linarith
   have hnz : nrm 0 = 0 := by
     refine le_antisymm ?_ (hnn 0)
-    by_contra h
-    push_neg at h
+    by_contra! h
     obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one h hp1
     have := hle1 0 n (hzero n)
     rw [zpow_natCast] at this
@@ -532,8 +528,7 @@ theorem _root_.GlobalTheory.AwayNorm.exists_normed_away : ∀ (p : ℕ) (R : Typ
     · obtain ⟨s, hs⟩ := hex y
       have := h1 s hs
       rw [← h0, zero_mul] at this
-      rw [← h0, zero_mul]
-      exact this
+      rwa [← h0, zero_mul]
     · rw [← div_le_iff₀' h0]
       exact hge1 y _ fun s hs => by rw [div_le_iff₀' h0]; exact h1 s hs
   have hnpos : ∀ x, nrm x = 0 → x = 0 := fun x h =>
@@ -902,7 +897,7 @@ theorem trunc_mul_sub_mem (φ : R →+* P.R.BdR) (hφ : ∀ x, φ x ∈ FilB P 0
   have hd : Polynomial.X ^ m ∣ f.trunc m * g.trunc m - (f * g).trunc m := by
     rw [Polynomial.X_pow_dvd_iff]
     intro d hd
-    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, if_pos hd,
+    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, ite_eq_left hd,
       PowerSeries.coeff_mul_eq_coeff_trunc_mul_trunc f g hd, ← Polynomial.coe_mul,
       Polynomial.coeff_coe, sub_self]
   obtain ⟨q, hq⟩ := hd
@@ -948,8 +943,7 @@ theorem poly_taylor : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
   have hv : P.ιB (AI.ιA (WittVector.teichmuller l (AI.εroot s) - 1)) ∈ FilB P 0 := io_mem AI _
   have key := eval₂_sub_trunc_mem (ι : ↥LL.1 →+* P.R.BdR) hφ hτ m
     (PowerSeries.C ζ * PowerSeries.exp ↥LL.1 - 1) hv ?_ p
-  · rw [PowerSeries.eval₂_trunc_eq_sum_range] at key
-    exact key
+  · rwa [PowerSeries.eval₂_trunc_eq_sum_range] at key
   rcases m with _ | m
   · exact sub_mem hv (eval₂_mem_zero _ hφ (FilB_anti zero_le_one hτ) _)
   have h := _root_.GlobalTheory.ExpImage.epsT_pow_taylor l P AI T s 1 (m + 1)
@@ -961,8 +955,7 @@ theorem poly_taylor : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
       (PowerSeries.coeff k (PowerSeries.C ζ * PowerSeries.exp ↥LL.1)) *
         ((((l : ℚ_[l]) ^ s)⁻¹) • P.ιB P.tB) ^ k = ∑ k ∈ Finset.range (m + 1), oB P (P.ζQ s) *
           (qB P ((((1 : ℕ) : ℚ_[l]) / (l : ℚ_[l]) ^ s) ^ k / (k.factorial : ℚ_[l])) * tD P ^ k) by
-    rw [hs]
-    exact h
+    rwa [hs]
   refine Finset.sum_congr rfl fun k _ => ?_
   have hk : ι (algebraMap ℚ ↥LL.1 (1 / (k.factorial : ℚ))) = qB P (1 / (k.factorial : ℚ_[l])) := by
     rw [← ι.commutes]
@@ -1048,8 +1041,7 @@ theorem component_const : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Lo
   rintro a ⟨c, m, hm, hl, hc, ha⟩
   obtain ⟨xb, hxb⟩ := GlobalTheory.MemLoc.exists_isTiltOf (c : Om l) m hm hl hc
   have h1 := component_teich hβ ι c m hm hl hc xb hxb
-  rw [← hI c m hm hl hc xb hxb a ha, ← hι, ← ha] at h1
-  exact h1
+  rwa [← hI c m hm hl hc xb hxb a ha, ← hι, ← ha] at h1
 
 end GlobalTheory.EvalIdem
 end -- clump:auto

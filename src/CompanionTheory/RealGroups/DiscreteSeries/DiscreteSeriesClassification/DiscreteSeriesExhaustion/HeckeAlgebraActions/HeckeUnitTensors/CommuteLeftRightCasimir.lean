@@ -37,8 +37,7 @@ private theorem continuous_apply_list_prod_ofFn_add_smul : ∀ (m : ℕ) (ℓ : 
   induction m with
   | zero =>
     intro ℓ A B f
-    simp only [List.ofFn_zero, List.prod_nil]
-    exact continuous_const
+    simpa only [List.ofFn_zero, List.prod_nil] using continuous_const
   | succ m ih =>
     intro ℓ A B f
     have h : (fun u : ℂ => ℓ ((List.ofFn fun k => A k + u • B k).prod f)) =
@@ -53,8 +52,7 @@ private theorem continuous_apply_list_prod_ofFn_add_smul : ∀ (m : ℕ) (ℓ : 
 
 theorem cont_ofFn_prod (ℓ : Module.Dual ℂ W) : ∀ (m : ℕ) (A B : Fin m → Module.End ℂ W) (f : W),
     Continuous (fun u : ℂ => ℓ ((List.ofFn fun k => A k + u • B k).prod f)) := by
-  intro m A B f
-  exact continuous_apply_list_prod_ofFn_add_smul m ℓ A B f
+  exact fun m A B f => continuous_apply_list_prod_ofFn_add_smul m ℓ A B f
 
 theorem Tm_affine {n : ℕ} (E : Fin n → Fin n → Module.End ℂ W) (u : ℂ) (k : ℂ) (a b : Fin n) :
     Tm E (u - k) a b = ((if a = b then algebraMap ℂ (Module.End ℂ W) (-k) else 0) + E a b) +
@@ -198,7 +196,7 @@ theorem colDet_sub {m : ℕ} (E : Fin (m + 1) → Fin (m + 1) → A) (c c' : Fin
     · rw [prod_ofFn_sub m _ (fun j => capEntry E (c' j) (σ j) j) d]
       · intro j hj
         simp only [h j hj]
-      · simp only [capEntry, hσ, if_true, hd, map_add (f := _), map_one]
+      · simp only [capEntry, hσ, ite_true, hd, map_add (f := _), map_one]
         abel
     · have : (fun j => capEntry E (c j) (σ j) j) = fun j => capEntry E (c' j) (σ j) j := by
         funext j
@@ -241,21 +239,21 @@ theorem hyb_step {m : ℕ} (E : Fin (m + 1) → Fin (m + 1) → A) (x : ℂ) (d 
     · have e : ((d.succAbove i : Fin (m + 1)) : ℕ) = i := by
         rw [Fin.succAbove_of_castSucc_lt _ _ (by simpa [Fin.lt_def] using hi)]
         simp
-      rw [e, if_pos hi]
+      rw [e, ite_eq_left hi]
     · have e : ((d.succAbove i : Fin (m + 1)) : ℕ) = i + 1 := by
         rw [Fin.succAbove_of_le_castSucc _ _ (by simpa [Fin.le_def] using hi)]
         simp
-      rw [e, if_neg (by omega)]
+      rw [e, ite_eq_right (by omega)]
       push_cast
       ring
   · intro j hj
     have : (j : ℕ) ≠ d := fun hh => hj (Fin.ext hh)
     unfold hyb
     by_cases h1 : (j : ℕ) < d
-    · rw [if_pos h1, if_pos (by omega)]
-    · rw [if_neg h1, if_neg (by omega)]
+    · rw [ite_eq_left h1, ite_eq_left (by omega)]
+    · rw [ite_eq_right h1, ite_eq_right (by omega)]
   · unfold hyb
-    rw [if_neg (lt_irrefl _), if_pos (Nat.lt_succ_self _)]
+    rw [ite_eq_right (lt_irrefl _), ite_eq_left (Nat.lt_succ_self _)]
     ring
 
 theorem sum_principal {m : ℕ} (E : Fin (m + 1) → Fin (m + 1) → A) (x : ℂ) :
@@ -497,8 +495,7 @@ theorem commute_left_right_casimir : Commute (y1 X) (y2 X) := by
 
   simp only [Module.End.mul_apply, left_casimir_apply, right_casimir_apply, map_neg, map_sum]
   congr 1
-  refine Finset.sum_congr rfl fun c _ => ?_
-  exact (LinearMap.congr_fun (commute_om X a c).eq (H c)).symm
+  exact Finset.sum_congr rfl fun c _ => (LinearMap.congr_fun (commute_om X a c).eq (H c)).symm
 
 theorem sum_tensE_single (v : X.V) (a : Fin (m + 1)) :
     ∑ c, tensE X a c (Pi.single c v) = om X (Pi.single a v) + ((m + 1 : ℕ) : ℂ) • (Pi.single a v : Fin (m + 1) → X.V) := by
@@ -515,7 +512,7 @@ theorem sum_tensE_single (v : X.V) (a : Fin (m + 1)) :
     · intro h; exact absurd (mem_univ d) h
   · by_cases h : d = a
     · subst h
-      simp only [Pi.single_eq_same, if_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
+      simp only [Pi.single_eq_same, ite_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
       rw [← Nat.cast_smul_eq_nsmul ℂ]
     · simp [h]
 

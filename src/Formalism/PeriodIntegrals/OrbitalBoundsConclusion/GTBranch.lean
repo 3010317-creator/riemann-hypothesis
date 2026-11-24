@@ -139,7 +139,7 @@ theorem stepA_apply (p q : Fin (n + 1)) (x : Fin (n + 1) × Fin (n + 1) → ℂ)
       (if q < j then -(x (p, j) / x (p, q)) *
         (if p < a ∧ a.val < n then x (a, q) + -(x (a, q) / x (p, q)) * x (p, q) else x (a, q)) else 0) := by
   simp only [stepA, lhwline_mcol, lhwline_mrow, Finset.mem_filter, Finset.mem_univ, true_and,
-    lt_irrefl, false_and, if_false]
+    lt_irrefl, false_and, ite_false]
   split_ifs <;> ring
 
 theorem stepA_cleared (k : ℕ) (hk : k < n) (y : Fin (n + 1) × Fin (n + 1) → ℂ)
@@ -151,18 +151,18 @@ theorem stepA_cleared (k : ℕ) (hk : k < n) (y : Fin (n + 1) × Fin (n + 1) →
   rcases lt_trichotomy j.val k with hj | hj | hj
   · have h1 : y (⟨k, by omega⟩, j) = 0 := hy _ _ (by show k < n; omega) (by show k ≠ j.val; omega) (Or.inr hj)
     have h2 : y (a, j) = 0 := hy _ _ ha hne (Or.inr hj)
-    rw [if_neg (show ¬ k < j.val by omega)]
+    rw [ite_eq_right (show ¬ k < j.val by omega)]
     split_ifs <;> simp [h1, h2]
   · have hjq : j = ⟨k, by omega⟩ := Fin.ext hj
     rw [hjq]
-    simp only [lt_irrefl, if_false, add_zero]
+    simp only [lt_irrefl, ite_false, add_zero]
     split_ifs with ha'
     · rw [neg_mul, div_mul_cancel₀ _ hp, add_neg_cancel]
     · rw [← hjq]
       exact hy _ _ ha hne (Or.inl (by omega))
   · have ha2 : a.val ≤ k := by omega
     have hka : ¬ (k < a.val ∧ a.val < n) := by omega
-    simp only [if_neg hka, if_pos hj]
+    simp only [ite_eq_right hka, ite_eq_left hj]
     rcases lt_or_eq_of_le ha2 with ha2 | ha2
     · have h1 : y (a, j) = 0 := hy _ _ ha hne (Or.inl ha2)
       have h2 : y (a, ⟨k, by omega⟩) = 0 := hy _ _ ha (by show a.val ≠ k; omega) (Or.inl ha2)
@@ -214,7 +214,7 @@ theorem elimA_cleared (x : Fin (n + 1) × Fin (n + 1) → ℂ)
     intro hk
     have hkn : k < n := by omega
     have hc := ih (by omega)
-    simp only [elimA, dif_pos hkn]
+    simp only [elimA, dite_eq_left hkn]
     apply stepA_cleared k hkn _ hc
     apply pivotA_ne k hkn _ hc
     have hk1 : k + 1 ≤ n + 1 := by omega
@@ -312,8 +312,7 @@ theorem mono_eq_A (kap : Fin n → ℕ) (ν : Fin (n + 1) → ℕ) (g : MvPolyno
   have hdiag : ∀ a : Fin n, m (Fin.castSucc a, Fin.castSucc a) = kap a := by
     intro a
     rw [← hrow m hm a, Finset.sum_eq_single (Fin.castSucc a)]
-    · intro s _ hs
-      exact htop a s hs
+    · exact fun s _ hs => htop a s hs
     · simp
   have hcolsum : ∀ j, ∑ ρ, m (ρ, j) = ν j := by
     intro j
@@ -333,8 +332,7 @@ theorem mono_eq_A (kap : Fin n → ℕ) (ν : Fin (n + 1) → ℕ) (g : MvPolyno
       · rw [hdiag] at h
         rw [mStarA_lc]
         omega
-      · intro b _ hb
-        exact htop b _ (fun e => hb (Fin.castSucc_injective _ e).symm)
+      · exact fun b _ hb => htop b _ (fun e => hb (Fin.castSucc_injective _ e).symm)
       · simp
   | cast a =>
     induction s using Fin.lastCases with
@@ -360,8 +358,7 @@ theorem eval_D_A (kap : Fin n → ℕ) (ν : Fin (n + 1) → ℕ) (g : MvPolynom
       by_contra hz
       have hprod : ∏ v, x v ^ m v ≠ 0 := fun h0 => hz (by rw [h0, mul_zero])
       exact hne (mono_eq_A kap ν g hcol hrow x hx m hm hprod)
-    · intro h
-      exact absurd hs h
+    · exact fun h => absurd hs h
   · have hc : AddMonoidAlgebra.coeff g (mStarA kap ν) = 0 := by
       by_contra h
       exact hs (MvPolynomial.mem_support_iff.mpr h)
@@ -402,7 +399,7 @@ theorem mkPtA_D (dv : Fin n → ℂ) (z : Fin (n + 1) → ℂ) : IsDPtA (mkPtA d
   | last => simp [mkPtA]
   | cast k =>
     simp only [mkPtA, Fin.lastCases_castSucc]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     exact hne rfl
 
@@ -478,7 +475,7 @@ theorem eps_A (kap : Fin n → ℕ) (ν : Fin (n + 1) → ℕ) (f : MvPolynomial
         simp [Y, lhwline_rowOp, lhwline_colOp, mkPtA, zz, (Fin.castSucc_lt_last i').ne']
       | cast k =>
         simp only [Y, lhwline_rowOp, lhwline_colOp, mkPtA, zz, Fin.lastCases_castSucc, Fin.lastCases_last,
-          Fin.castSucc_inj, (Fin.castSucc_lt_last i').ne', if_false]
+          Fin.castSucc_inj, (Fin.castSucc_lt_last i').ne', ite_false]
         by_cases hk : k = i'
         · subst hk
           simp [hne]
@@ -541,7 +538,7 @@ theorem eps_A (kap : Fin n → ℕ) (ν : Fin (n + 1) → ℕ) (f : MvPolynomial
             simp [dv, h1]
           · simp [dv, h1, h2]
       rw [Finset.prod_congr rfl (fun a _ => this a), Finset.prod_mul_distrib, Finset.prod_ite_eq',
-        Finset.prod_ite_eq', if_pos (Finset.mem_univ _), if_pos (Finset.mem_univ _)]
+        Finset.prod_ite_eq', ite_eq_left (Finset.mem_univ _), ite_eq_left (Finset.mem_univ _)]
     have h2 : ∏ k : Fin n, zz e (Fin.castSucc k) ^ (ν (Fin.castSucc k) - kap k) = (-1 / e) ^ (νp - kap i') := by
       have : ∀ k : Fin n, zz e (Fin.castSucc k) ^ (ν (Fin.castSucc k) - kap k) =
           if k = i' then (-1 / e) ^ (νp - kap i') else 1 := by
@@ -550,7 +547,7 @@ theorem eps_A (kap : Fin n → ℕ) (ν : Fin (n + 1) → ℕ) (f : MvPolynomial
         · subst hk
           simp [zz, hνp]
         · simp [zz, hk]
-      rw [Finset.prod_congr rfl (fun k _ => this k), Finset.prod_ite_eq', if_pos (Finset.mem_univ _)]
+      rw [Finset.prod_congr rfl (fun k _ => this k), Finset.prod_ite_eq', ite_eq_left (Finset.mem_univ _)]
     have h3 : zz e (Fin.last n) = 1 := by
       simp [zz, (Fin.castSucc_lt_last i').ne']
     rw [h1, h2, h3, one_pow, mul_one, mul_assoc, ← pow_add, Nat.add_sub_cancel' hle]
@@ -568,7 +565,7 @@ theorem eps_A (kap : Fin n → ℕ) (ν : Fin (n + 1) → ℕ) (f : MvPolynomial
     field_simp
     ring
   have hco := congrArg (fun r : Polynomial ℂ => r.coeff (kap i)) hq0
-  simp only [hq, Polynomial.coeff_sub, Polynomial.coeff_mul_X_pow', if_neg (not_le.mpr hlt), Polynomial.coeff_zero, zero_sub, neg_eq_zero] at hco
+  simp only [hq, Polynomial.coeff_sub, Polynomial.coeff_mul_X_pow', ite_eq_right (not_le.mpr hlt), Polynomial.coeff_zero, zero_sub, neg_eq_zero] at hco
   simp at hco
   rcases hco with h | h
   · exact hc h
@@ -613,8 +610,7 @@ theorem fixedLine_proof_A : FixedLine := by
       have hsum : ∑ s, mStarA (kapA lam mu) lam.natW (Fin.castSucc a, s) = kapA lam mu a := by
         rw [Fin.sum_univ_castSucc]
         simp
-      rw [hsum] at hrd
-      exact hrd
+      rwa [hsum] at hrd
     have hleA : ∀ a : Fin n, kapA lam mu a ≤ lam.natW (Fin.castSucc a) := by
       intro a
       have hcs : ∑ ρ, mStarA (kapA lam mu) lam.natW (ρ, Fin.castSucc a) = lam.natW (Fin.castSucc a) := by
@@ -794,8 +790,7 @@ theorem GoodB_X_tri {n N : ℕ} (M : Matrix (Fin N) (Fin N) ℂ) (hd : ∀ a, M 
   · rw [h0, map_zero, zero_mul]
     exact Submodule.zero_mem _
   · rw [← smul_eq_C_mul]
-    refine Submodule.smul_mem _ _ (FiltB_mono _ ?_ (X_mem_FiltB _ (b, v.2)))
-    exact ho v.1 b (Ne.symm hb') h0
+    exact Submodule.smul_mem _ _ (FiltB_mono _ (ho v.1 b (Ne.symm hb') h0) (X_mem_FiltB _ (b, v.2)))
 
 theorem homog_psi_B {n N : ℕ} (g : MvPolynomial (Fin N × Fin N) ℂ) (m : Fin n → ℕ)
     (hg : IsWeightedHomogeneous (wnB n N) g m) : IsWeightedHomogeneous (psiB n N) g (PsiB n m) := by
@@ -851,7 +846,7 @@ theorem embGL_unitri_B {n N : ℕ} (h : n + 1 = N) (u : GL (Fin n) ℂ) (hl : �
   · rw [embGL_apply_B]
     by_cases ha : a.1 < n
     · rw [dite_eq_left ha, dite_eq_left ha]; exact hd _
-    · rw [dite_eq_right ha, if_neg ha]
+    · rw [dite_eq_right ha, ite_eq_right ha]
   · have ha2 := a.2
     have hb2 := b.2
     rw [embGL_apply_B] at hne
@@ -860,10 +855,10 @@ theorem embGL_unitri_B {n N : ℕ} (h : n + 1 = N) (u : GL (Fin n) ℂ) (hl : �
       have hba : ¬ (a.1 < b.1) := fun hlt => hne (hl _ _ (Fin.mk_lt_mk.mpr hlt))
       have hne' : a.1 ≠ b.1 := fun e => hab (Fin.ext e)
       unfold prowB
-      rw [if_pos ha, if_pos hb]
+      rw [ite_eq_left ha, ite_eq_left hb]
       omega
     · rw [dite_eq_left hb, dite_eq_right ha] at hne; exact absurd rfl hne
-    · rw [dite_eq_right hb, if_pos ha] at hne; exact absurd rfl hne
+    · rw [dite_eq_right hb, ite_eq_left ha] at hne; exact absurd rfl hne
     · exact absurd (Fin.ext (by omega)) hab
   · have ha2 := a.2
     have hb2 := b.2
@@ -872,7 +867,7 @@ theorem embGL_unitri_B {n N : ℕ} (h : n + 1 = N) (u : GL (Fin n) ℂ) (hl : �
     · rw [dite_eq_left hb, dite_eq_left ha]
       exact hl _ _ (Fin.mk_lt_mk.mpr (Fin.lt_def.mp hab))
     · exact absurd (lt_trans (Fin.lt_def.mp hab) hb) ha
-    · rw [dite_eq_right hb, if_pos ha]
+    · rw [dite_eq_right hb, ite_eq_left ha]
     · have := Fin.lt_def.mp hab
       omega
 
@@ -915,7 +910,7 @@ theorem swapM_sq {n : ℕ} (σ : Equiv.Perm (Fin n)) (hσ : ∀ j, σ (σ j) = j
   rw [Finset.sum_eq_single (σ i)]
   · simp [hσ]
   · intro b _ hb
-    rw [if_neg (Ne.symm hb), zero_mul]
+    rw [ite_eq_right (Ne.symm hb), zero_mul]
   · simp
 
 def swapGL {n : ℕ} (σ : Equiv.Perm (Fin n)) (hσ : ∀ j, σ (σ j) = j) : GL (Fin n) ℂ :=
@@ -926,11 +921,11 @@ def tauB {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (a : Fin N) : Fin
 
 theorem tauB_val {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (a : Fin N) (ha : a.1 < n) :
     (tauB h σ a).1 = (σ ⟨a.1, ha⟩).1 := by
-  unfold tauB; rw [dif_pos ha]
+  unfold tauB; rw [dite_eq_left ha]
 
 theorem tauB_of_not {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (a : Fin N) (ha : ¬ a.1 < n) :
     tauB h σ a = a := by
-  unfold tauB; rw [dif_neg ha]
+  unfold tauB; rw [dite_eq_right ha]
 
 theorem tauB_invol {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ : ∀ j, σ (σ j) = j) (a : Fin N) :
     tauB h σ (tauB h σ a) = a := by
@@ -949,7 +944,7 @@ theorem swap_entry_B {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ 
   have hb2 := b.2
   rw [embGL_apply_B]
   by_cases hb : b.1 < n <;> by_cases ha : a.1 < n
-  · rw [dif_pos hb, dif_pos ha]
+  · rw [dite_eq_left hb, dite_eq_left ha]
     show swapM σ ⟨b.1, hb⟩ ⟨a.1, ha⟩ = _
     simp only [swapM, Matrix.of_apply]
     have key : σ ⟨b.1, hb⟩ = ⟨a.1, ha⟩ ↔ b = tauB h σ a := by
@@ -963,17 +958,17 @@ theorem swap_entry_B {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ 
           rw [← tauB_val h σ a ha, e])
         rw [e2, hσ]
     by_cases hk : b = tauB h σ a
-    · rw [if_pos hk, if_pos (key.mpr hk)]
-    · rw [if_neg hk, if_neg (fun e => hk (key.mp e))]
-  · rw [dif_pos hb, dif_neg ha, tauB_of_not h σ a ha, if_neg (fun e : b = a => ha (e ▸ hb))]
+    · rw [ite_eq_left hk, ite_eq_left (key.mpr hk)]
+    · rw [ite_eq_right hk, ite_eq_right (fun e => hk (key.mp e))]
+  · rw [dite_eq_left hb, dite_eq_right ha, tauB_of_not h σ a ha, ite_eq_right (fun e : b = a => ha (e ▸ hb))]
   · have hne : b ≠ tauB h σ a := by
       intro e
       apply hb
       rw [e, tauB_val h σ a ha]
       exact (σ _).isLt
-    rw [dif_neg hb, if_pos ha, if_neg hne]
+    rw [dite_eq_right hb, ite_eq_left ha, ite_eq_right hne]
   · have hab : b = a := Fin.ext (by omega)
-    rw [dif_neg hb, if_neg ha, tauB_of_not h σ a ha, if_pos hab]
+    rw [dite_eq_right hb, ite_eq_right ha, tauB_of_not h σ a ha, ite_eq_left hab]
 
 theorem rowAct_swap_B {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ : ∀ j, σ (σ j) = j) :
     Formalism.GradedWeylDivisibility.rowAct ℂ (n := N)
@@ -981,11 +976,10 @@ theorem rowAct_swap_B {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ
       rename (fun v : Fin N × Fin N => (tauB h σ v.1, v.2)) := by
   apply MvPolynomial.algHom_ext
   intro v
-  rw [rowAct_X_B, rename_X]
-  rw [Finset.sum_eq_single (tauB h σ v.1)]
-  · rw [Matrix.transpose_apply, swap_entry_B, if_pos rfl, map_one, one_mul]
+  rw [rowAct_X_B, rename_X, Finset.sum_eq_single (tauB h σ v.1)]
+  · rw [Matrix.transpose_apply, swap_entry_B, ite_eq_left rfl, map_one, one_mul]
   · intro b _ hb
-    rw [Matrix.transpose_apply, swap_entry_B, if_neg hb, map_zero, zero_mul]
+    rw [Matrix.transpose_apply, swap_entry_B, ite_eq_right hb, map_zero, zero_mul]
   · simp
 
 theorem wnB_tau {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ : ∀ j, σ (σ j) = j)
@@ -994,15 +988,15 @@ theorem wnB_tau {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ : ∀
   by_cases ha : v.1.1 < n
   · have h2 : (tauB h σ v.1).1 < n := by rw [tauB_val h σ _ ha]; exact (σ _).isLt
     dsimp only [wnB]
-    rw [dif_pos h2, dif_pos ha]
+    rw [dite_eq_left h2, dite_eq_left ha]
     have e : (⟨(tauB h σ v.1).1, h2⟩ : Fin n) = σ ⟨v.1.1, ha⟩ := Fin.ext (tauB_val h σ _ ha)
     rw [e, Pi.single_apply, Pi.single_apply]
     by_cases hj : σ j = ⟨v.1.1, ha⟩
-    · rw [if_pos hj, if_pos (by rw [← hj, hσ])]
-    · rw [if_neg hj, if_neg (fun e => hj (by rw [e, hσ]))]
+    · rw [ite_eq_left hj, ite_eq_left (by rw [← hj, hσ])]
+    · rw [ite_eq_right hj, ite_eq_right (fun e => hj (by rw [e, hσ]))]
   · have h2 : ¬ (tauB h σ v.1).1 < n := by rw [tauB_of_not h σ _ ha]; exact ha
     dsimp only [wnB]
-    rw [dif_neg h2, dif_neg ha]
+    rw [dite_eq_right h2, dite_eq_right ha]
     rfl
 
 theorem weight_tau_B {n N : ℕ} (h : n + 1 = N) (σ : Equiv.Perm (Fin n)) (hσ : ∀ j, σ (σ j) = j)
@@ -1077,14 +1071,11 @@ theorem antitone_of_succ_B {n : ℕ} (m : Fin n → ℕ)
   have hM : Antitone M := by
     refine antitone_nat_of_succ_le fun k => ?_
     by_cases hk1 : k + 1 < n
-    · simp only [M, dif_pos hk1, dif_pos (show k < n by omega)]
-      exact hdom k hk1
-    · simp only [M, dif_neg hk1]
-      exact Nat.zero_le _
+    · simpa only [M, dite_eq_left hk1, dite_eq_left (show k < n by omega)] using hdom k hk1
+    · simpa only [M, dite_eq_right hk1] using Nat.zero_le _
   intro a b hab
   have := hM (Fin.le_def.mp hab)
-  simp only [M, dif_pos a.2, dif_pos b.2] at this
-  exact this
+  simpa only [M, dite_eq_left a.2, dite_eq_left b.2] using this
 
 theorem torus_fix_B {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (g : MvPolynomial (Fin N × Fin N) ℂ)
     (m : Fin n → ℕ) (hm : IsWeightedHomogeneous (wnB n N) g m) (t : Fin n → ℂˣ) :
@@ -1115,8 +1106,7 @@ theorem highestVec_B : HighestVec := by
     ∃ g ∈ W, g ≠ 0 ∧ ∃ m, IsWeightedHomogeneous (wnB n N) g m ∧ PsiB n m = k
   have hex : ∃ k, Pk k := by
     obtain ⟨f, hfW, hf0⟩ := (Submodule.ne_bot_iff W).mp hne
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     apply hf0
     rw [← comp_sum_B (wnB n N) f (f.support.image (Finsupp.weight (wnB n N)))
       (fun e he => Finset.mem_image_of_mem _ he)]
@@ -1157,8 +1147,7 @@ theorem highestVec_B : HighestVec := by
     exact sub_eq_zero.mp hR
   have hdom : ∀ (i : ℕ) (hi : i + 1 < n), m ⟨i + 1, hi⟩ ≤ m ⟨i, by omega⟩ := by
     intro i hi
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     let σ := Equiv.swap (⟨i, by omega⟩ : Fin n) ⟨i + 1, hi⟩
     have hσ : ∀ j, σ (σ j) = j := fun j => Equiv.swap_apply_self _ _ j
     have hgt := PsiB_swap_B m i hi hlt
@@ -1365,7 +1354,7 @@ theorem realize_C (h : PI.HwIrred) (he : ExtremalFacts) (ha : FixedLine) (n : �
     have e1 : ∀ j : Fin (n + 1), j.val = n → lam.w j = lam.w ⟨n + 1 - 1, by omega⟩ :=
       fun j hj => congrArg lam.w (Fin.ext (by simp only; omega))
     rw [e1 _ (by simp only; omega)] at h1
-    simp only [DomWeight.detShift, dif_pos hn, dif_pos (Nat.succ_pos n)]
+    simp only [DomWeight.detShift, dite_eq_left hn, dite_eq_left (Nat.succ_pos n)]
     omega
   obtain ⟨d, hd⟩ : ∃ d : ℕ, d = (mu.detShift - lam.detShift).toNat := ⟨_, rfl⟩
   have hκ'e : ∀ i, (mu.natW i : ℤ) + mu.detShift = mu.w i := by
@@ -1373,7 +1362,7 @@ theorem realize_C (h : PI.HwIrred) (he : ExtremalFacts) (ha : FixedLine) (n : �
     have hn : 0 < n := lt_of_le_of_lt (Nat.zero_le _) i.isLt
     have hle : mu.w ⟨n - 1, by omega⟩ ≤ mu.w i :=
       mu.anti (Fin.le_iff_val_le_val.mpr (by simp only; omega))
-    simp only [DomWeight.natW, DomWeight.detShift, dif_pos hn] at hle ⊢
+    simp only [DomWeight.natW, DomWeight.detShift, dite_eq_left hn] at hle ⊢
     rw [Int.toNat_of_nonneg (by omega)]
     omega
   have hcE : 0 < n → mu.detShift = lam.detShift + (d : ℤ) := by
@@ -1578,8 +1567,7 @@ namespace PI.WGB
 open Formalism.BasicNotions MvPolynomial
 
 theorem natW_anti_D {N : ℕ} (lam : DomWeight N) : Antitone lam.natW := by
-  intro i j hij
-  exact Int.toNat_le_toNat (sub_le_sub_right (lam.anti hij) _)
+  exact fun i j hij => Int.toNat_le_toNat (sub_le_sub_right (lam.anti hij) _)
 
 theorem extremal_mem_D (n : ℕ) (mu : DomWeight n) : extremal ℂ n mu ∈ nablaSq ℂ n mu :=
   Formalism.GradedWeylDivisibility.hwMem ℂ n n le_rfl mu.natW (natW_anti_D mu)
@@ -1625,8 +1613,7 @@ theorem eq_on_of_extremal_D (hI : PI.HwIrred) (he : ExtremalFacts) {n N : ℕ} (
     rintro g f ⟨hf1, hf2⟩
     refine ⟨(he n mu).2.2 g f hf1, ?_⟩
     have hf2' : φ f = ψ f := by
-      rw [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at hf2
-      exact hf2
+      rwa [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at hf2
     show sqAct ℂ n mu g f ∈ LinearMap.ker (φ - ψ)
     rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero, hφ.2 g f hf1, hψ.2 g f hf1, hf2']
   rcases (hI n mu).2.1 U hU hstab with hbot | htop
@@ -1640,8 +1627,7 @@ theorem eq_on_of_extremal_D (hI : PI.HwIrred) (he : ExtremalFacts) {n N : ℕ} (
   · intro s hs
     have hsU : s ∈ U := by rw [htop]; exact hs
     have h2 : s ∈ LinearMap.ker (φ - ψ) := hsU.2
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at h2
-    exact h2
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at h2
 
 theorem fixed_of_eqv_D (he : ExtremalFacts) {n N : ℕ} (h : n + 1 = N) {mu : DomWeight n} {lam : DomWeight N}
     {φ : MvPolynomial (Fin n × Fin n) ℂ →ₗ[ℂ] MvPolynomial (Fin N × Fin N) ℂ} (hφ : IsEqv h mu lam φ) :
@@ -1691,8 +1677,7 @@ theorem branching_rule_decomposition (he : ExtremalFacts) (ha : FixedLine) (hb :
       rintro _ ⟨s, hs, rfl⟩
       rw [Submodule.mem_comap, sqLinD_apply, ← hφ.2 g s hs]
       exact hmemS mu hint φ hφ ⟨_, (he n mu).2.2 g s hs, rfl⟩
-    intro f hf
-    exact key hf
+    exact fun f hf => key hf
   obtain ⟨W', hW'le, hW'st, hsup, hinf⟩ := hb n N h lam (brSupD h lam) hle hstab
   by_cases hW' : W' = ⊥
   · rw [hW', sup_bot_eq] at hsup

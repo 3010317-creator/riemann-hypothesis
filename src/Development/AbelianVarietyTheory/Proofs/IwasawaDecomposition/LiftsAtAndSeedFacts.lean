@@ -91,13 +91,7 @@ theorem resEta_even (hL : L.Is μ0) (t : T) (j : Fin D.R.m) {n : ℕ} (hn : Even
     ResEta D (L.mu t ((j : ℕ) + 1)) n :=
   resEta_parity (resEta_mu hL t j) (by obtain ⟨c, rfl⟩ := hn; omega)
 
-theorem odd_r : Odd D.R.r := by
-  obtain ⟨a, ha⟩ := D.R.k_even
-  obtain ⟨b, hb⟩ := D.R.m_even
-  have := D.R.two_le_m
-  refine ⟨a + b - 1, ?_⟩
-  unfold Ranks.r
-  omega
+theorem odd_r : Odd D.R.r := Formalism.L2.Theta.r_odd D
 
 theorem even_rankY (j : ℕ) : Even (D.R.rankY j) ↔ ¬ Even j := by
   have h1 : ¬ Even D.R.r := Nat.not_even_iff_odd.2 odd_r
@@ -116,10 +110,10 @@ theorem step_facts (hL : L.Is μ0) (t : T) (j : Fin D.R.m) {a b : ℕ} (ha : Eve
       ResEta D (Lift.chrStep (L.mu t) L.eta ((j : ℕ) + 1)).1 a ∧ ResEta D (Lift.chrStep (L.mu t) L.eta ((j : ℕ) + 1)).2 b := by
   unfold Lift.chrStep
   by_cases h : Even (j : ℕ)
-  · rw [if_pos h.add_one]
+  · rw [ite_eq_left h.add_one]
     exact ⟨isHecke_quot hL t j, isHecke_mu hL t j,
       resEta_quot hL t j (Nat.not_even_iff_odd.1 fun e => ha.1 e h), resEta_even hL t j (hb.2 h)⟩
-  · rw [if_neg (fun e => h (by simpa [Nat.odd_add_one] using e))]
+  · rw [ite_eq_right (fun e => h (by simpa [Nat.odd_add_one] using e))]
     exact ⟨isHecke_mu hL t j, isHecke_quot hL t j, resEta_even hL t j (ha.2 h),
       resEta_quot hL t j (Nat.not_even_iff_odd.1 fun e => h (hb.1 e))⟩
 

@@ -171,41 +171,14 @@ theorem st_nonpos_piece (hP : PartsStatement) (v θ : X → ℝ) (hv : A.Smooth 
     ((A.chart j).target.indicator (θ ∘ (A.chart j).symm)) ((fun x => 1 / 2 * (v x * v x)) ∘ (A.chart j).symm)
     ((A.chart j).target ∩ (A.chart j).symm ⁻¹' G)
     (st_partsHyp_piece A Φ hΦ j G hGo hG x0 hGU (fun x => 1 / 2 * (v x * v x)) θ hv2 hθ hθG)
-  have e1 : mInt A (Fin.cons (LocPot.ofFun v) Φ) (fun x => θ x * v x) =
-      -gradInt (fun i => (Φ i).φ (x0 i) ∘ (A.chart j).symm)
-        ((A.chart j).target.indicator ((fun x => θ x * v x) ∘ (A.chart j).symm)) (v ∘ (A.chart j).symm)
-        ((A.chart j).target ∩ (A.chart j).symm ⁻¹' G) := hL.trans P1.2.2.2.1
-  have e2 : mInt A (Fin.cons (LocPot.ofFun fun x => 1 / 2 * (v x * v x)) Φ) θ =
-      -gradInt (fun i => (Φ i).φ (x0 i) ∘ (A.chart j).symm)
-        ((A.chart j).target.indicator (θ ∘ (A.chart j).symm))
-        ((fun x => 1 / 2 * (v x * v x)) ∘ (A.chart j).symm)
-        ((A.chart j).target ∩ (A.chart j).symm ⁻¹' G) := hR.trans P2.2.2.2.1
+  have e1 := hL.trans P1.2.2.2.1
+  have e2 := hR.trans P2.2.2.2.1
   have hdiff : ∀ (f : X → ℝ), A.Smooth f → ∀ y ∈ (A.chart j).target,
       DifferentiableAt ℝ (f ∘ (A.chart j).symm) y := by
     intro f hf y hy
     have hm : (A.chart j).target ∩ (A.chart j).symm ⁻¹' Set.univ ∈ 𝓝 y :=
       Filter.inter_mem ((A.chart j).open_target.mem_nhds hy) (by simp)
     exact ((hf j).contDiffAt hm).differentiableAt (by simp)
-  have hlb : ∀ y ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' G,
-      gradDens (fun i => (Φ i).φ (x0 i) ∘ (A.chart j).symm)
-        ((A.chart j).target.indicator ((fun x => θ x * v x) ∘ (A.chart j).symm)) (v ∘ (A.chart j).symm) y =
-      (A.chart j).target.indicator (θ ∘ (A.chart j).symm) y *
-          gradDens (fun i => (Φ i).φ (x0 i) ∘ (A.chart j).symm) (v ∘ (A.chart j).symm)
-            (v ∘ (A.chart j).symm) y +
-        gradDens (fun i => (Φ i).φ (x0 i) ∘ (A.chart j).symm)
-          ((A.chart j).target.indicator (θ ∘ (A.chart j).symm))
-          ((fun x => 1 / 2 * (v x * v x)) ∘ (A.chart j).symm) y := by
-    intro y hy
-    have hnt : (A.chart j).target ∈ 𝓝 y := (A.chart j).open_target.mem_nhds hy.1
-    have ha : DifferentiableAt ℝ ((A.chart j).target.indicator (θ ∘ (A.chart j).symm)) y := by
-      refine (hdiff θ hθ y hy.1).congr_of_eventuallyEq ?_
-      filter_upwards [hnt] with z hz
-      exact Set.indicator_of_mem hz _
-    have hc : (A.chart j).target.indicator ((fun x => θ x * v x) ∘ (A.chart j).symm) =ᶠ[𝓝 y]
-        fun z => (A.chart j).target.indicator (θ ∘ (A.chart j).symm) z * (v ∘ (A.chart j).symm) z := by
-      filter_upwards [hnt] with z hz
-      simp [Set.indicator_of_mem hz]
-    exact st_gradDens_leibniz _ _ _ _ y ha (hdiff v hv y hy.1) hc
   have hT1 : ∫ y in (A.chart j).target ∩ (A.chart j).symm ⁻¹' G,
         (A.chart j).target.indicator (θ ∘ (A.chart j).symm) y *
           gradDens (fun i => (Φ i).φ (x0 i) ∘ (A.chart j).symm) (v ∘ (A.chart j).symm)
@@ -219,8 +192,18 @@ theorem st_nonpos_piece (hP : PartsStatement) (v θ : X → ℝ) (hv : A.Smooth 
           ((A.chart j).target ∩ (A.chart j).symm ⁻¹' G) := by
     rw [gradInt, gradInt, ← integral_sub P1.2.2.1 P2.2.2.1]
     refine setIntegral_congr_fun hUm fun y hy => ?_
-    rw [hlb y hy]
-    ring
+    have hnt : (A.chart j).target ∈ 𝓝 y := (A.chart j).open_target.mem_nhds hy.1
+    have ha : DifferentiableAt ℝ ((A.chart j).target.indicator (θ ∘ (A.chart j).symm)) y := by
+      refine (hdiff θ hθ y hy.1).congr_of_eventuallyEq ?_
+      filter_upwards [hnt] with z hz
+      exact Set.indicator_of_mem hz _
+    have hc : (A.chart j).target.indicator ((fun x => θ x * v x) ∘ (A.chart j).symm) =ᶠ[𝓝 y]
+        fun z => (A.chart j).target.indicator (θ ∘ (A.chart j).symm) z * (v ∘ (A.chart j).symm) z := by
+      filter_upwards [hnt] with z hz
+      simp [Set.indicator_of_mem hz]
+    rw [st_gradDens_leibniz (fun i => (Φ i).φ (x0 i) ∘ (A.chart j).symm) _ _ _ y ha
+      (hdiff v hv y hy.1) hc]
+    exact (add_sub_cancel_right _ _).symm
   rw [e1, e2, hT1]
   ring
 
@@ -403,7 +386,7 @@ theorem st_massIndep_of (hP : PartsStatement) : MassIndepStatement := by
           · simp [hi, Finset.mem_insert]
         have hstep := st_mass_step hP A (fun i => if i ∈ s then Φ i + LocPot.ofFun (u i) else Φ i)
           hpot a (u a) (hu a)
-        simp only [ha, if_false] at hstep
+        simp only [ha, ite_false] at hstep
         rw [hupd, hstep, ih]
     simpa using key Finset.univ
 

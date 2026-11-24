@@ -592,8 +592,7 @@ theorem graph_sub {p q : ℕ} {A : Type} [NormedAddCommGroup A] [InnerProductSpa
         linear_combination c * hn m hm }
   have hRS : R ≤ S := by
     apply hR_ind
-    · intro m hm
-      exact hRQ hm
+    · exact fun m hm => hRQ hm
     · intro i j n hn m hm
       have key := hn (P (Eab (.inr j) (.inl i)) m) (hall _ m hm)
       rw [hP] at key
@@ -633,12 +632,10 @@ theorem graph_map {p q : ℕ} {A : Type} [NormedAddCommGroup A] [InnerProductSpa
   have huniq : ∀ (u : A) (b b' : B), (u, b) ∈ N → (u, b') ∈ N → b = b' := by
     intro u b b' h h'
     have hd : ((0 : A), b - b') ∈ N := by
-      have h2 := N.sub_mem h h'
-      simpa using h2
+      simpa using N.sub_mem h h'
     exact sub_eq_zero.1 (hN0 _ hd)
   have hGinv : ∀ W, ∀ u ∈ genG ρA (Submodule.span ℂ {x}), ρA W u ∈ genG ρA (Submodule.span ℂ {x}) := by
-    intro W u hu
-    exact Submodule.mem_sInf.2 fun M hM => hM.2 W u (Submodule.mem_sInf.1 hu M hM)
+    exact fun W u hu => Submodule.mem_sInf.2 fun M hM => hM.2 W u (Submodule.mem_sInf.1 hu M hM)
   have hxG : x ∈ genG ρA (Submodule.span ℂ {x}) :=
     Submodule.mem_sInf.2 fun M hM => hM.1 (Submodule.mem_span_singleton_self x)
   have hGdom : genG ρA (Submodule.span ℂ {x}) ≤ N.map (LinearMap.fst ℂ A B) := by
@@ -723,13 +720,13 @@ theorem unit_homog {p q r : ℕ} (a b : Ix p q) (i : ℕ) (P : Pol p q r 0) (hP 
   · refine ⟨1 + (1 + i), Submodule.sum_mem _ fun c _ => ?_⟩
     rcases c with c | c
     · rw [PI.FHS.omE_apply_of_ne (by simp)]
-      simp only [raiB, lowB, linePos, if_true, Bool.false_eq_true, if_false, LinearMap.mulLeft_apply]
+      simp only [raiB, lowB, linePos, ite_true, Bool.false_eq_true, ite_false, LinearMap.mulLeft_apply]
       exact (isHomogeneous_X ℂ _).mul ((isHomogeneous_X ℂ _).mul hP')
     · exact c.elim0
   · refine ⟨i - 1 - 1, Submodule.sum_mem _ fun c _ => ?_⟩
     rcases c with c | c
     · rw [PI.FHS.omE_apply_of_ne (by simp)]
-      simp only [raiB, lowB, linePos, if_true, Bool.false_eq_true, if_false, LinearMap.neg_apply]
+      simp only [raiB, lowB, linePos, ite_true, Bool.false_eq_true, ite_false, LinearMap.neg_apply]
       exact Submodule.neg_mem _ (hP'.pderiv.pderiv)
     · exact c.elim0
   · exact absurd trivial hab
@@ -780,8 +777,7 @@ theorem proj_gen {p q r : ℕ} (x : FV p q r 0) (dx : ℕ) (hx : (x : Pol p q r 
   have h1 : y' ∈ genG (fvAct1 p q r 0) (Submodule.span ℂ {x}) := hy
   have h2 : u - y' ∈ (genG (fvAct1 p q r 0) (Submodule.span ℂ {x}))ᗮ := by
     rw [Submodule.mem_orthogonal]
-    intro z hz
-    exact h z hz
+    exact fun z hz => h z hz
   have := Submodule.add_mem_sup h1 h2
   rwa [add_sub_cancel] at this
 
@@ -967,7 +963,7 @@ theorem nontrivial_of_pair {p q r s : ℕ} (c : ℂ) (c0 : ℚ) (hc : c = c0) (h
   have hlam : ∀ a, (starRingEnd ℂ) (lam a) = lam a := by
     intro a
     have h1 := fock_inner_adjoint_first a a x x
-    rw [hxw a a (hsb a), if_pos rfl, epsB_self, one_mul, PI.FHS.fockInner_smul_left,
+    rw [hxw a a (hsb a), ite_eq_left rfl, epsB_self, one_mul, PI.FHS.fockInner_smul_left,
       PI.FHS.fockInner_smul_right] at h1
     have hne : fockInner x x ≠ 0 := fun h0 => hx0 (PI.FHS.fockInner_self_eq_zero h0)
     exact mul_right_cancel₀ hne h1
@@ -982,10 +978,10 @@ theorem nontrivial_of_pair {p q r s : ℕ} (c : ℂ) (c0 : ℚ) (hc : c = c0) (h
     rw [← conj_first_action_comm, hyw b a (hsym a b hab)]
     by_cases hab' : a = b
     · subst hab'
-      rw [if_pos rfl, if_pos rfl, if_pos rfl, cjP_smul, epsB_self, one_smul, map_sub, hlam, map_ratCast,
+      rw [ite_eq_left rfl, ite_eq_left rfl, ite_eq_left rfl, cjP_smul, epsB_self, one_smul, map_sub, hlam, map_ratCast,
         sub_smul]
       abel
-    · rw [if_neg hab', if_neg hab', if_neg (Ne.symm hab'), zero_smul, zero_smul]
+    · rw [ite_eq_right hab', ite_eq_right hab', ite_eq_right (Ne.symm hab'), zero_smul, zero_smul]
       simp [cjP]
   have hyl' : ∀ (i : Fin p) (j : Fin q), ρB (Eab (Sum.inr j) (Sum.inl i)) (cjP y : FV p q 0 s) = 0 := by
     intro i j
@@ -993,7 +989,7 @@ theorem nontrivial_of_pair {p q r s : ℕ} (c : ℂ) (c0 : ℚ) (hc : c = c0) (h
     refine (dualAct_Eab (fvAct1 p q 0 s) (c0 : ℂ) _ _ (cjP y)).trans ?_
     change (if (Sum.inr j : Ix p q) = Sum.inl i then (c0 : ℂ) else 0) • cjP y -
       epsB (Sum.inr j) (Sum.inl i) • fockAct1 p q 0 s (Eab (Sum.inl i) (Sum.inr j)) (cjP y) = 0
-    rw [← conj_first_action_comm, hyl i j, if_neg (by simp)]
+    rw [← conj_first_action_comm, hyl i j, ite_eq_right (by simp)]
     simp [cjP]
   obtain ⟨Φ, hΦ, hΦx⟩ := graph_map (fvAct1 p q r 0) ρB (lie1 p q r 0) (dualAct_lie (lie1 p q 0 s) _)
     (adj1 p q r 0) (dualAct_adj (adj1 p q 0 s) c0) lam x (cjP y) hx0 hxw hyw' hxl hyl' (proj_gen x dx hxh)
@@ -1002,8 +998,7 @@ theorem nontrivial_of_pair {p q r s : ℕ} (c : ℂ) (c0 : ℚ) (hc : c = c0) (h
       Ψ x = cjP y := by
     refine ⟨Φ, fun Z u => ?_, hΦx⟩
     have h1 := hΦ Z u
-    rw [hρB, dualAct_eq, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply] at h1
-    exact h1
+    rwa [hρB, dualAct_eq, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply] at h1
   let b : Pol p q r 0 →ₗ[ℂ] Pol p q 0 s →ₗ[ℂ] ℂ :=
     LinearMap.mk₂ ℂ (fun u v => fockInner (cjP (Ψ u)) v)
       (by

@@ -271,8 +271,7 @@ lemma comm_casimirK (T : Module.End ℂ V) (hT : ∀ a b, E a b * T = T * E a b)
   rw [mul_assoc, hT b a, ← mul_assoc, hT a b, mul_assoc]
 
 lemma exists_eig_ne (h : Mod ε E) [Nontrivial V] : ∃ μ : ℝ, ∃ v : V, v ≠ 0 ∧ Eig ε E μ v := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have hb : Submodule.span ℂ {v | ∃ μ : ℝ, Eig ε E μ v} = ⊥ := by
     rw [Submodule.span_eq_bot]
     rintro v ⟨μ, hv⟩
@@ -290,9 +289,7 @@ theorem casimir_eigen_exists : A3 := by
   obtain ⟨μ, v, hv0, hv⟩ := CasimirEigenvector.exists_eig_ne h
   set W := Module.End.eigenspace (casimirK ε E) (μ : ℂ) with hWdef
   have hWle : W ≤ Submodule.span ℂ {v | ∃ ν : ℝ, ν ≤ μ ∧ Eig ε E ν v} := by
-    intro x hx
-    apply Submodule.subset_span
-    exact ⟨μ, le_rfl, Module.End.mem_eigenspace_iff.mp hx⟩
+    exact fun x hx => Submodule.subset_span ⟨μ, le_rfl, Module.End.mem_eigenspace_iff.mp hx⟩
   have := h.fin μ
   have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWle
   have hvW : v ∈ W := Module.End.mem_eigenspace_iff.mpr hv
@@ -402,8 +399,7 @@ lemma act_single (A : Matrix (Fin n) (Fin n) (Module.End ℂ V)) (e a : Fin n) (
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ e) h
+  · exact fun h => absurd (Finset.mem_univ e) h
 
 lemma inner_single (e : Fin n) (v : V) (w : PiLp 2 fun _ : Fin n => V) :
     inner ℂ (PiLp.single 2 e v) w = inner ℂ v (w e) := by
@@ -441,8 +437,7 @@ theorem column_moments_of_symmetric : A7 → ColumnOperatorMoments := by
     rw [hq, Complex.ofReal_re]
   have key := h7 (PiLp 2 (fun _ : Fin n => V)) (act (Md ε E * Mm E)) hsa
     (PiLp.single 2 e v) hxn (by rw [hre]; positivity) j
-  rw [hre, ← act_pow, inner_single, act_single] at key
-  exact key
+  rwa [hre, ← act_pow, inner_single, act_single] at key
 
 end PositivityTheory.CW
 
@@ -545,9 +540,7 @@ theorem second_derivatives_of_growth : B1 → UnitaryGroupFacts → SumSquaresSe
       (F (actM E (Xp p.1 p.2) (b i)) (g * NormedSpace.exp (t • Xp p.1 p.2)))), ?_, ?_⟩
     · intro t
       beta_reduce
-      apply HasDerivAt.fun_sum
-      intro i _
-      exact ((hd p hp (b i) t).norm_sq).const_mul (a i)
+      exact HasDerivAt.fun_sum (fun i _ => ((hd p hp (b i) t).norm_sq).const_mul (a i))
     · beta_reduce
       apply HasDerivAt.fun_sum
       intro i _
@@ -610,8 +603,7 @@ theorem mem_Es {μ : ℝ} {v : V} : v ∈ Es ε E μ ↔ Eig ε E μ v :=
 theorem fd (h : Mod ε E) (μ : ℝ) : FiniteDimensional ℂ (Es ε E μ) := by
   haveI := h.fin μ
   refine Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ {v : V | ∃ μ' ≤ μ, Eig ε E μ' v}) ?_
-  intro v hv
-  exact Submodule.subset_span ⟨μ, le_rfl, mem_Es.mp hv⟩
+  exact fun v hv => Submodule.subset_span ⟨μ, le_rfl, mem_Es.mp hv⟩
 
 end EigenspaceDecomposition
 
@@ -832,7 +824,7 @@ theorem comm_pow (E : Fin n → Fin n → Module.End ℂ V) (hE : IsGlRep E) (c 
     rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
     simp only [key, ih, hE c d]
     simp only [sub_mul, mul_sub, ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_add_distrib,
-      Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     by_cases h1 : d = a <;> by_cases h2 : b = c <;> simp [h1, h2] <;> abel
 
 end CasimirPowerCommute
@@ -842,7 +834,7 @@ theorem gelfand_central_holds : A2 := by
   have hc := CasimirPowerCommute.comm_pow E h.gl c d k
   rw [← sub_eq_zero, Matrix.trace, Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
   simp only [Matrix.diag_apply, hc, Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, sub_self]
+    Finset.mem_univ, ite_true, sub_self]
 
 end PositivityTheory.CW
 
@@ -867,13 +859,7 @@ namespace CompactGroupFacts
 variable {n : ℕ}
 
 theorem mul_mem (ε : Fin n → Bool) {g h : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ UJset ε) (hh : h ∈ UJset ε) :
-    g * h ∈ UJset ε := by
-  have hg' : gᴴ * Jm ε * g = Jm ε := hg
-  have hh' : hᴴ * Jm ε * h = Jm ε := hh
-  show (g * h)ᴴ * Jm ε * (g * h) = Jm ε
-  rw [Matrix.conjTranspose_mul]
-  calc hᴴ * gᴴ * Jm ε * (g * h) = hᴴ * (gᴴ * Jm ε * g) * h := by simp only [Matrix.mul_assoc]
-    _ = Jm ε := by rw [hg', hh']
+    g * h ∈ UJset ε := ReciprocityTheory.ChartRestriction.DS.rq_UJ_mul hg hh
 
 theorem hilbert_schmidt_continuous : Continuous (hs2 : Matrix (Fin n) (Fin n) ℂ → ℝ) := by
   unfold hs2
@@ -915,9 +901,9 @@ theorem Xp_inP (ε : Fin n → Bool) (p : Fin n × Fin n) (hp : p ∈ nc ε) : i
       Matrix.single_apply]
     by_cases h1 : a = i ∧ b = j <;> by_cases h3 : b = i ∧ a = j
     · exact absurd (h1.1.trans h3.1.symm) hne
-    · obtain ⟨rfl, rfl⟩ := h1; simp only [if_neg h3, hσ]; ring
-    · obtain ⟨rfl, rfl⟩ := h3; simp only [if_neg h1, hσ]; ring
-    · simp only [if_neg h1, if_neg h3]; ring
+    · obtain ⟨rfl, rfl⟩ := h1; simp only [ite_eq_right h3, hσ]; ring
+    · obtain ⟨rfl, rfl⟩ := h3; simp only [ite_eq_right h1, hσ]; ring
+    · simp only [ite_eq_right h1, ite_eq_right h3]; ring
   have hh : (Xp a b)ᴴ = Xp a b := by
     ext i j
     simp only [Xp, Matrix.conjTranspose_apply, Matrix.add_apply, Matrix.single_apply]
@@ -1137,7 +1123,7 @@ theorem a9_of_a0_a1_eigenbasis_a6 : A0 → A1 → CasimirIsRealScalar → A6 →
       rw [LinearMap.sum_apply, inner_sum, ← Finset.sum_neg_distrib]
       refine Finset.sum_congr rfl fun p hp => ?_
       have hne : ε p.1 ≠ ε p.2 := (Finset.mem_filter.mp hp).2
-      rw [hM.uni, adjSign, if_neg hne]
+      rw [hM.uni, adjSign, ite_eq_right hne]
       simp
     have hv0 := norm_nonneg v
     have hTv0 := norm_nonneg ((∑ p ∈ nc ε, E p.2 p.1 * Z ε E p.1 p.2) v)
@@ -1214,9 +1200,9 @@ theorem Z_eq (ε : Fin n → Bool) {E : Fin n → Fin n → Module.End ℂ V} (h
   simp_rw [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_sub_distrib, ite_mul_sub_mul_ite, mul_mul_sub_mul_mul_eq_add, hE]
   simp only [sub_mul, mul_sub, ite_mul, mul_ite, zero_mul, mul_zero]
   simp only [ite_sub_add_sub_eq, ← ite_and, Finset.sum_add_distrib, Finset.sum_sub_distrib]
-  simp only [and_comm (b := _ = a), and_comm (b := b = _), Finset.sum_ite_eq', Finset.sum_ite_eq, ite_and, Finset.mem_univ, if_true]
+  simp only [and_comm (b := _ = a), and_comm (b := b = _), Finset.sum_ite_eq', Finset.sum_ite_eq, ite_and, Finset.mem_univ, ite_true]
   simp only [Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq', Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   simp only [@eq_comm _ (ε a), @eq_comm _ (ε b), ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
   apply Finset.sum_eq_zero
   intro x _
@@ -1372,8 +1358,7 @@ theorem wsum_le {ι : Type} (μ : ι → ℝ) (hnn : ∀ i, 0 ≤ μ i) (hfin : 
       (fun R : ℝ => ∑ i ∈ T, ((1 + μ i) ^ s)⁻¹ * a i - ((1 + R) ^ s)⁻¹ * ∑ i ∈ T, a i) Filter.atTop
       (nhds (∑ i ∈ T, ((1 + μ i) ^ s)⁻¹ * a i - 0 * ∑ i ∈ T, a i)) :=
     tendsto_const_nhds.sub ((tendsto_inv_atTop_zero.comp hpow).mul_const _)
-  have hlim := le_of_tendsto ht (Filter.eventually_atTop.mpr ⟨R0, key⟩)
-  simpa using hlim
+  simpa using le_of_tendsto ht (Filter.eventually_atTop.mpr ⟨R0, key⟩)
 
 end WeightedEigenSum
 
@@ -1461,8 +1446,7 @@ theorem coeff_succ {R : Type} [CommRing R] {n : ℕ} (N : Matrix (Fin n) (Fin n)
     exact Polynomial.coe_eq_zero_iff.mp hc
   have hm := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p m) hd
   simp only [Polynomial.coeff_derivative, Polynomial.coeff_zero] at hm
-  rw [mul_comm]
-  exact hm
+  rwa [mul_comm]
 
 theorem coeff_succ_zero {R : Type} [CommRing R] [Algebra ℚ R] {n : ℕ} (N : Matrix (Fin n) (Fin n) R)
     (h : ∀ k, (N ^ (k + 1)).trace = 0) (m : ℕ) : N.charpolyRev.coeff (m + 1) = 0 := by
@@ -1482,17 +1466,16 @@ theorem charpoly_eq {R : Type} [CommRing R] [Algebra ℚ R] [Nontrivial R] {n : 
   ext j
   rw [Polynomial.coeff_X_pow]
   rcases lt_trichotomy j n with hj | hj | hj
-  · rw [if_neg hj.ne]
+  · rw [ite_eq_right hj.ne]
     have hz := hRev (n - j) (by omega)
     rw [← Matrix.reverse_charpoly, Polynomial.coeff_reverse, hdeg,
       Polynomial.revAt_le (by omega)] at hz
     rwa [show n - (n - j) = j by omega] at hz
-  · rw [if_pos hj]
+  · rw [ite_eq_left hj]
     have hl := (Matrix.charpoly_monic N).leadingCoeff
     rw [Polynomial.leadingCoeff, hdeg] at hl
-    rw [hj]
-    exact hl
-  · rw [if_neg hj.ne']
+    rwa [hj]
+  · rw [ite_eq_right hj.ne']
     exact Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)
 
 end CharpolyPowerTraces
@@ -1503,8 +1486,7 @@ theorem nilpotent_of_power_traces : A4 := by
   rcases subsingleton_or_nontrivial R with hR | hR
   · exact Subsingleton.elim _ _
   have hc := Matrix.aeval_self_charpoly N
-  rw [CharpolyPowerTraces.charpoly_eq N h, Polynomial.aeval_X_pow] at hc
-  exact hc
+  rwa [CharpolyPowerTraces.charpoly_eq N h, Polynomial.aeval_X_pow] at hc
 
 end PositivityTheory.CW
 
@@ -1768,8 +1750,7 @@ theorem basis_sum_of_orthogonality : A0 → FunctionalCalculusLaws → Eigenspac
     rw [← hfib, beta_sum (v := fun ν => ∑ j ∈ T with μ j = ν, starRingEnd ℂ (f (b j)) • b j)]
     refine Finset.sum_congr rfl fun l hl => ?_
     rw [Finset.sum_eq_single_of_mem l hl]
-    intro k _ hk
-    exact h11c n ε V E hM ι b μ hB φ k l _ _ hk (heig k) (heig l)
+    exact fun k _ hk => h11c n ε V E hM ι b μ hB φ k l _ _ hk (heig k) (heig l)
   rw [← Complex.re_sum, hdiag]
   have hterm : ∀ p ∈ nc ε, ∀ i ∈ S, ‖b.repr (E p.1 p.2 H) i‖ = ‖f (E p.2 p.1 (b i))‖ := by
     intro p hp i hi

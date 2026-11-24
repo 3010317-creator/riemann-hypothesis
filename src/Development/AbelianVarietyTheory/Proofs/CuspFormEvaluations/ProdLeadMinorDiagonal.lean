@@ -148,7 +148,7 @@ theorem exists_clear_col (n : Fin p) (M : Matrix (Fin p) (Fin p) K) (hn : M n n 
       if b ∈ Finset.Ioi n then (- M b n / M n n) * M n k else 0, fun f hf => ?_, ?_, ?_, ?_⟩
   · exact hf.what₂ n (fun b => - M b n / M n n) M _ (by simp)
   · intro b hb
-    simp only [of_apply, Finset.mem_Ioi, hb, if_true]
+    simp only [of_apply, Finset.mem_Ioi, hb, ite_true]
     field_simp
     ring
   · intro b k hb
@@ -187,8 +187,7 @@ theorem exists_cleared (M : Matrix (Fin p) (Fin p) K) (hM : ∀ i, leadMinor i M
           exact Fin.val_lt_last hj
     obtain ⟨M₁, h₁, a₁, b₁, c₁⟩ := exists_clear_col N M₀ hpiv
     have hpiv₁ : M₁ᵀ N N ≠ 0 := by
-      rw [transpose_apply, b₁ N N le_rfl]
-      exact hpiv
+      rwa [transpose_apply, b₁ N N le_rfl]
     obtain ⟨M₂, h₂, a₂, b₂, c₂⟩ := exists_clear_col N M₁ᵀ hpiv₁
     have hz₁ : ∀ i j : Fin p, i ≠ j → (i.val < n ∨ j.val < n) → M₁ i j = 0 := by
       intro i j hij h
@@ -252,8 +251,7 @@ theorem leadMinor_diagonal (i : Fin p) (d : Fin p → K) :
   · intro a _
     simp only [Finset.mem_Iic, Fin.le_def, Fin.val_castLE]
     omega
-  · intro a _ b _ h
-    exact Fin.castLE_injective _ h
+  · exact fun a _ b _ h => Fin.castLE_injective _ h
   · intro b hb
     simp only [Finset.mem_Iic, Fin.le_def] at hb
     exact ⟨⟨b.val, by omega⟩, Finset.mem_univ _, rfl⟩
@@ -426,7 +424,7 @@ theorem eq_mul_prod_minors {K σ : Type*} [Field K] [CharZero K] [DecidableEq σ
       have := (biInvariant_eval hz P hr hc x).eq_mul_prod c
         (eval_setBlock_diagonal hz P _ hrow x) _ h
       simpa only [hx] using this
-    · push_neg at h
+    · push Not at h
       obtain ⟨i, hi⟩ := h
       rw [Finset.prod_eq_zero (Finset.mem_univ i) hi, zero_mul, zero_mul]
 

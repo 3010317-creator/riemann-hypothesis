@@ -208,8 +208,7 @@ theorem exists_smul_mem (Λ : Submodule (𝓞 E) (Fin n → E)) (hΛ : Λ.FG) (x
     funext i
     exact (A.loc p).ιE.injective (by simpa [Places.bc] using congrFun h2 i)
   have hxs : x = ∑ i, Φ i x • b i := by
-    rw [hPr, sub_eq_zero] at hx0
-    exact hx0
+    rwa [hPr, sub_eq_zero] at hx0
   let N : Submodule (A.L p).O (Fin m → (A.loc p).Ep) :=
     Submodule.pi Set.univ fun _ => (LinearMap.range (Algebra.linearMap (A.L p).O (A.loc p).Ep))
   have hC := lat_transfer A p Λ (LinearMap.pi Φ) N (fun y hy' i _ => by
@@ -296,8 +295,7 @@ theorem exists_base_smul_mem (Λ : Submodule (𝓞 E) (Fin n → E)) (x : Fin n 
   have ha : algebraMap (𝓞 F) (𝓞 E) a = s * σ s := by
     apply RingOfIntegers.ext
     change algebraMap (𝓞 E) E _ = algebraMap (𝓞 E) E _
-    rw [← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply (𝓞 F) F E]
-    exact hk
+    rwa [← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply (𝓞 F) F E]
   refine ⟨a, fun hap => ?_, ?_⟩
   · have h2 : s * σ s ∈ q := ha ▸ Ideal.mem_map_of_mem _ hap
     have hs' : s = 1 - t := eq_sub_of_add_eq hst
@@ -350,8 +348,7 @@ theorem mem_lat_iff_mem_locP : ∀ {F E : Type} [Field F] [NumberField F] [Field
     obtain ⟨s, hs, hsx⟩ := exists_smul_mem A p Λ hΛ x hx
     haveI := P.isPrime
     refine ⟨algebraMap (𝓞 F) (𝓞 E) s, fun h => hs ?_, hsx⟩
-    rw [← hP]
-    exact h
+    rwa [← hP]
   · intro h
     obtain ⟨a, ha, hax⟩ := exists_base_smul_mem A p Λ x fun P hP => by
       haveI := P.isPrime
@@ -475,8 +472,7 @@ theorem loc_cong_approx : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
         refine ⟨0, zero_mem _, ?_⟩
         simp [ξ, hdiag]
       · refine ⟨o a b, ho a b, ?_⟩
-        simp only [ξ, h1, h2, if_false]
-        exact hξ0 a b
+        simpa only [ξ, h1, h2, ite_false] using hξ0 a b
   have hFG : (Ideal.span {(g : 𝓞 E)} • Λ).FG := Submodule.FG.smul (Submodule.fg_span_singleton _) hΛ
   have hmem : ∀ b, A.bc p (x b - ∑ a, ((ξ a b : 𝓞 E) : E) • y a) ∈
       A.lat p (Ideal.span {(g : 𝓞 E)} • Λ) := by
@@ -494,8 +490,7 @@ theorem loc_cong_approx : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     have h1 : (⟨o', ho'⟩ : (A.L p).O) • A.bc p (y a) ∈ A.lat p Λ := Submodule.smul_mem _ _ (hy a)
     have h2 := lat_smul A p Λ (g : 𝓞 E) _ h1
     have e2 : (((g : 𝓞 E) : E)) = (g : E) := by simp
-    rw [e2] at h2
-    exact h2
+    rwa [e2] at h2
   refine ⟨ξ, fun a b h => by simp [ξ, h], fun a => by simp [ξ], fun P hP b => ?_⟩
   exact (LocDict.mem_lat_iff_mem_locP A N _ hFG p _).1 (hmem b) P hP
 

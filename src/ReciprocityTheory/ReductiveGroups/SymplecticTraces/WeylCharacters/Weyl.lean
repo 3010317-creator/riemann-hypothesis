@@ -100,7 +100,7 @@ theorem bp_wden {K : Type*} [Field K] {n : ℕ} (ε : Fin n → Bool) (t : Fin n
   have hother : ∀ (b b' : Bool), b ≠ b' → ∀ (r : Fin (cnt ε b)) (s : Fin (cnt ε b')),
       (if blk ε b r < blk ε b' s ∧ ε (blk ε b r) = ε (blk ε b' s) then t (blk ε b r) - t (blk ε b' s) else 1) = 1 := by
     intro b b' hbb r s
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨_, h⟩
     rw [hmem b r, hmem b' s] at h
     exact hbb h
@@ -108,12 +108,10 @@ theorem bp_wden {K : Type*} [Field K] {n : ℕ} (ε : Fin n → Bool) (t : Fin n
   rw [bp_split ε]
   congr 1
   · refine Finset.prod_congr rfl fun r _ => ?_
-    rw [bp_split ε]
-    rw [Finset.prod_eq_one (fun s _ => hother true false (by decide) r s), mul_one]
+    rw [bp_split ε, Finset.prod_eq_one (fun s _ => hother true false (by decide) r s), mul_one]
     exact Finset.prod_congr rfl fun r' _ => hsame true r r'
   · refine Finset.prod_congr rfl fun r _ => ?_
-    rw [bp_split ε]
-    rw [Finset.prod_eq_one (fun s _ => hother false true (by decide) r s), one_mul]
+    rw [bp_split ε, Finset.prod_eq_one (fun s _ => hother false true (by decide) r s), one_mul]
     exact Finset.prod_congr rfl fun r' _ => hsame false r r'
 
 theorem bp_rho {n : ℕ} (ε : Fin n → Bool) (b : Bool) : rhoK ε ∘ blk ε b = delta (cnt ε b) := by
@@ -197,8 +195,7 @@ theorem bp_num {K : Type*} [Field K] {n : ℕ} (ε : Fin n → Bool) (a : Fin n 
     rcases x with r | r
     · rw [bp_e_inl, bp_phi_inl, hmem, hmem]
     · rw [bp_e_inr, bp_phi_inr, hmem, hmem]
-  · intro p _ q _ h
-    exact Equiv.Perm.sumCongrHom_injective ((Equiv.permCongr (bp_e ε)).injective h)
+  · exact fun p _ q _ h => Equiv.Perm.sumCongrHom_injective ((Equiv.permCongr (bp_e ε)).injective h)
   · intro σ hσ
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hσ
     have hmaps : Set.MapsTo ((bp_e ε).symm.permCongr σ) (Set.range Sum.inl) (Set.range Sum.inl) := by
@@ -248,8 +245,7 @@ def sp_sub (ε : Fin n → Bool) (c : Bool) (M : Matrix (Fin n) (Fin n) ℂ) :
   M.submatrix (blk ε c) (blk ε c)
 
 theorem sp_blk_inj (ε : Fin n → Bool) (c : Bool) : Function.Injective (blk ε c) := by
-  intro a b h
-  exact ((univ.filter fun i : Fin n => ε i = c).orderEmbOfFin rfl).injective h
+  exact fun a b h => ((univ.filter fun i : Fin n => ε i = c).orderEmbOfFin rfl).injective h
 
 theorem sp_blk_surj (ε : Fin n → Bool) (a : Fin n) : ∃ r, blk ε (ε a) r = a := by
   have ha : a ∈ ((univ.filter fun i : Fin n => ε i = ε a : Finset (Fin n)) : Set (Fin n)) := by
@@ -363,8 +359,7 @@ def sp_proj (ε : Fin n → Bool) (c : Bool) : KG ε →* KG (fun _ : Fin (cnt �
     exact sp_sub_mul c k.2.2 _)
 
 theorem sp_toMK_proj (ε : Fin n → Bool) (c : Bool) (k : KG ε) :
-    toMK (sp_proj ε c k) = sp_sub ε c (toMK k) := by
-  exact toMK_torepK _ _
+    toMK (sp_proj ε c k) = sp_sub ε c (toMK k) := toMK_torepK _ _
 
 theorem sp_proj_cont (ε : Fin n → Bool) (c : Bool) : Continuous (sp_proj ε c) := by
   have hA : Continuous fun k : KG ε =>
@@ -507,8 +502,7 @@ theorem sp_mapL_hasDeriv {a : ℝ → E →L[ℂ] E} {b : ℝ → F →L[ℂ] F}
     ha0, hb0, sp_mapL_one, mul_one, one_mul] at h
   have e : (fun t => mapL (a t) (b t)) = fun t => mapL (a t) (1 : F →L[ℂ] F) * mapL (1 : E →L[ℂ] E) (b t) :=
     funext fun t => sp_mapL_split _ _
-  rw [e]
-  exact h
+  rwa [e]
 
 end Tens
 
@@ -890,8 +884,7 @@ theorem highest_weight_model_equiv (N : ℕ) (Λ : Fin N → ℝ) (H : Type) [No
   obtain ⟨ν, F, hν, hFmem, hF0, hFint⟩ := hM N S P w0 μ K hP hw0ne hT'' hL'
   have hanti : Antitone ν := by
     intro l j hlj
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     rcases eq_or_lt_of_le hlj with h | h
     · subst h; exact lt_irrefl _ hlt
     · have hbot := dualWeylNonDom ℂ N N ν ⟨l, j, h, hlt⟩
@@ -914,7 +907,7 @@ theorem highest_weight_model_equiv (N : ℕ) (Λ : Fin N → ℝ) (H : Type) [No
     have h2 := hν ⟨N - 1, by omega⟩
     have h3 : ν ⟨N - 1, by omega⟩ ≤ ν a := hanti (by rw [Fin.le_def]; simp; omega)
     have h3' : (ν ⟨N - 1, by omega⟩ : ℤ) ≤ ν a := by exact_mod_cast h3
-    simp only [DomWeight.natW, DomWeight.detShift, c, dif_pos hN, lam]
+    simp only [DomWeight.natW, DomWeight.detShift, c, dite_eq_left hN, lam]
     omega
   have hlast : ∀ h : 0 < N, lam.natW ⟨N - 1, by omega⟩ = 0 := by
     intro h; simp [DomWeight.natW, DomWeight.detShift, h, lam]
@@ -1030,7 +1023,7 @@ theorem highest_weight_model_equiv (N : ℕ) (Λ : Fin N → ℝ) (H : Type) [No
     by_cases hN : 0 < N
     · have hds : lam.detShift = (c : ℤ) - K := by
         have h1 := hν ⟨N - 1, by omega⟩
-        simp only [DomWeight.detShift, c, dif_pos hN, lam]
+        simp only [DomWeight.detShift, c, dite_eq_left hN, lam]
         omega
       rw [detPow, hds, _root_.zpow_sub, zpow_natCast, zpow_natCast, Units.val_mul, Units.val_inv_eq_inv_val,
         Units.val_pow_eq_pow_val, Units.val_pow_eq_pow_val, hu, mul_assoc, inv_mul_cancel₀ hdK, mul_one]

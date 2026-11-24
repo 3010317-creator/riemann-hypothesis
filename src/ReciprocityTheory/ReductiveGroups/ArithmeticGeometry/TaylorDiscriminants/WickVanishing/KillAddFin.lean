@@ -57,14 +57,14 @@ private theorem sum_quadratic_column_indicator_eq_dotProduct_mulVec {k : Type} [
       if b = b' then dotProduct u (β.mulVec v) + dotProduct v (β.mulVec u) else 0 := by
   by_cases hb : b = b'
   · subst hb
-    simp only [Prod.mk.injEq, ite_and, mul_ite, mul_one, mul_zero, Finset.sum_add_distrib, if_true]
+    simp only [Prod.mk.injEq, ite_and, mul_ite, mul_one, mul_zero, Finset.sum_add_distrib, ite_true]
     simp [Finset.sum_ite_eq', Finset.sum_ite_irrel]
     simp only [dotProduct, Matrix.mulVec, Finset.mul_sum]
     congr 1
     · exact Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => by ring
     · rw [Finset.sum_comm]
       exact Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => by ring
-  · rw [if_neg hb]
+  · rw [ite_eq_right hb]
     refine Finset.sum_eq_zero fun x _ => Finset.sum_eq_zero fun y _ =>
       Finset.sum_eq_zero fun c _ => Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun l _ => ?_
     by_cases hc : c = b
@@ -230,12 +230,10 @@ def lamW (P : MvPolynomial ι k) : k :=
   (AddMonoidAlgebra.coeff P).sum (fun n a => a * ψ (word (Finset.univ : Finset ι).toList n))
 
 theorem lamW_add (P Q : MvPolynomial ι k) : lamW ψ (P + Q) = lamW ψ P + lamW ψ Q := by
-  show (AddMonoidAlgebra.coeff P + AddMonoidAlgebra.coeff Q).sum _ = _
   exact Finsupp.sum_add_index' (fun _ => zero_mul _) (fun _ _ _ => add_mul _ _ _)
 
 theorem lamW_monomial (n : ι →₀ ℕ) (a : k) :
     lamW ψ (MvPolynomial.monomial n a) = a * ψ (word (Finset.univ : Finset ι).toList n) := by
-  show (Finsupp.single n a).sum _ = _
   exact Finsupp.sum_single_index (zero_mul _)
 
 theorem lamW_sum (s : Finset ι) (f : ι → MvPolynomial ι k) :
@@ -367,8 +365,7 @@ theorem kill_gen [Algebra ℚ k] [Fintype ι]
     simp only [PolG, foldr_iterate_eq_TG]
     rw [← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun n _ => ?_
-    rw [TG_add, mul_add]
-    exact hadd
+    rwa [TG_add, mul_add]
   rw [hsplit, hlin, map_add (f := _), half_gen D κ hadd hC hmul e he c q hc hq0 hq1 hq2 P (G * Y), hP]
   simp [PolG]
 
@@ -442,13 +439,12 @@ theorem killAdd_of (hQ : QuadColDerivSt) : KillAddSt := by
     (quadCol (n := n) β)
     (fun l l' => by
       by_cases h : l.2 = l'.2
-      · rw [if_pos h, if_pos h.symm, add_comm]
-      · rw [if_neg h, if_neg (Ne.symm h)])
+      · rw [ite_eq_left h, ite_eq_left h.symm, add_comm]
+      · rw [ite_eq_right h, ite_eq_right (Ne.symm h)])
     h0 (fun l => h1 (u l.1) l.2) (fun l l' => h2 (u l.1) (u l'.1) l.2 l'.2) P hP g (m • Y)
   have e : FB.expS k (m • quadCol (n := n) β) * g = g * (1 + quadCol (n := n) β * (m • Y)) := by
     rw [FB.expS, hY, mul_comm, smul_mul_assoc, mul_smul_comm]
-  rw [e]
-  exact key
+  rwa [e]
 
 end ReciprocityTheory.ChartRestriction.G.TB
 end -- clump:auto

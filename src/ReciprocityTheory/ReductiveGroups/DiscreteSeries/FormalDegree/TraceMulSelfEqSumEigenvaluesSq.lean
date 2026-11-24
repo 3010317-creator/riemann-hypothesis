@@ -48,8 +48,7 @@ theorem pmat_coords {ε : Fin n → Bool} (X : Matrix (Fin n) (Fin n) ℂ) (hX :
   unfold inG at hG
   have hent : ∀ a b, X a b * (if ε b then 1 else -1) = -((if ε a then 1 else -1) * X a b) := by
     intro a b
-    have h := congrFun (congrFun hJ a) b
-    simpa [Jm, Matrix.mul_diagonal, Matrix.diagonal_mul] using h
+    simpa [Jm, Matrix.mul_diagonal, Matrix.diagonal_mul] using congrFun (congrFun hJ a) b
   have hzero : ∀ a b, ε a = ε b → X a b = 0 := by
     intro a b hab
     have h := hent a b
@@ -77,8 +76,7 @@ theorem pmat_coords {ε : Fin n → Bool} (X : Matrix (Fin n) (Fin n) ℂ) (hX :
   split_ifs with h h'
   · rfl
   · have h3 := congrFun (congrFun hH a) b
-    rw [Matrix.conjTranspose_apply] at h3
-    exact h3
+    rwa [Matrix.conjTranspose_apply] at h3
   · apply (hzero a b ?_).symm
     rcases lt_trichotomy a b with hab | hab | hab
     · by_contra hne
@@ -96,10 +94,10 @@ lemma norm_pmat_sq {ε : Fin n → Bool} (z : PCoord ε → ℂ) (a b : Fin n) :
   dsimp only
   by_cases h1 : b < a ∧ ε a ≠ ε b
   · have h2 : ¬ (a < b ∧ ε b ≠ ε a) := fun h => lt_asymm h1.1 h.1
-    simp only [dif_pos h1, dif_neg h2, add_zero]
+    simp only [dite_eq_left h1, dite_eq_right h2, add_zero]
   · by_cases h2 : a < b ∧ ε b ≠ ε a
-    · simp only [dif_neg h1, dif_pos h2, norm_star, zero_add]
-    · simp only [dif_neg h1, dif_neg h2, norm_zero, add_zero]
+    · simp only [dite_eq_right h1, dite_eq_left h2, norm_star, zero_add]
+    · simp only [dite_eq_right h1, dite_eq_right h2, norm_zero, add_zero]
       norm_num
 
 lemma sum_pmatHalfSq {ε : Fin n → Bool} (z : PCoord ε → ℂ) :
@@ -112,12 +110,12 @@ lemma sum_pmatHalfSq {ε : Fin n → Bool} (z : PCoord ε → ℂ) :
     split_ifs with h
     · rfl
     · unfold pmatHalfSq
-      rw [dif_neg h]
+      rw [dite_eq_right h]
   rw [e1, Finset.sum_subtype (p := fun ab : Fin n × Fin n => ab.2 < ab.1 ∧ ε ab.1 ≠ ε ab.2) _
     (fun ab => by simp) (pmatHalfSq z)]
   refine Finset.sum_congr rfl fun ab _ => ?_
   unfold pmatHalfSq
-  rw [dif_pos ab.2]
+  rw [dite_eq_left ab.2]
 
 theorem hs_pmat {ε : Fin n → Bool} (z : PCoord ε → ℂ) : hs (pmat z) = 2 * ∑ ab, ‖z ab‖ ^ 2 := by
   unfold S7.hs
@@ -148,45 +146,27 @@ theorem card_PCoord (ε : Fin n → Bool) : Fintype.card (PCoord ε) = pOf ε * 
   rw [Fintype.card_subtype, pOf, qOf, ← Finset.card_product]
   refine Finset.card_nbij' (fun ab => if ε ab.1 then ab else (ab.2, ab.1))
     (fun xy => (max xy.1 xy.2, min xy.1 xy.2)) ?_ ?_ ?_ ?_
-  · rintro ⟨a, b⟩ h
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at h
-    obtain ⟨hba, hne⟩ := h
-    cases ha : ε a <;> cases hb : ε b <;> simp_all
-  · rintro ⟨x, y⟩ h
-    simp only [Finset.coe_product, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_prod,
-      Set.mem_setOf_eq] at h
-    obtain ⟨hx, hy⟩ := h
-    have hxy : x ≠ y := by
-      intro e
-      rw [e, hy] at hx
-      exact Bool.false_ne_true hx
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
-    rcases lt_or_gt_of_ne hxy with h | h
+  all_goals rintro ⟨u, v⟩ h
+  all_goals simp only [Finset.coe_product, Finset.coe_filter, Finset.mem_univ, true_and,
+    Set.mem_prod, Set.mem_setOf_eq] at h
+  all_goals obtain ⟨h1, h2⟩ := h
+  · cases ha : ε u <;> cases hb : ε v <;> simp_all
+  · simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+    rcases lt_or_gt_of_ne (fun e : u = v => by simp [e, h2] at h1) with h | h
     · rw [max_eq_right h.le, min_eq_left h.le]
-      exact ⟨h, by rw [hx, hy]; decide⟩
+      exact ⟨h, by rw [h1, h2]; decide⟩
     · rw [max_eq_left h.le, min_eq_right h.le]
-      exact ⟨h, by rw [hx, hy]; decide⟩
-  · rintro ⟨a, b⟩ h
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at h
-    obtain ⟨hba, hne⟩ := h
-    cases ha : ε a
-    · simp only [ha, Bool.false_eq_true, if_false]
-      rw [max_eq_right hba.le, min_eq_left hba.le]
-    · simp only [ha, if_true]
-      rw [max_eq_left hba.le, min_eq_right hba.le]
-  · rintro ⟨x, y⟩ h
-    simp only [Finset.coe_product, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_prod,
-      Set.mem_setOf_eq] at h
-    obtain ⟨hx, hy⟩ := h
-    have hxy : x ≠ y := by
-      intro e
-      rw [e, hy] at hx
-      exact Bool.false_ne_true hx
-    dsimp only
-    rcases lt_or_gt_of_ne hxy with h | h
+      exact ⟨h, by rw [h1, h2]; decide⟩
+  · cases ha : ε u
+    · simp only [ha, Bool.false_eq_true, ite_false]
+      rw [max_eq_right h1.le, min_eq_left h1.le]
+    · simp only [ha, ite_true]
+      rw [max_eq_left h1.le, min_eq_right h1.le]
+  · dsimp only
+    rcases lt_or_gt_of_ne (fun e : u = v => by simp [e, h2] at h1) with h | h
     · rw [max_eq_right h.le, min_eq_left h.le]
-      simp [hy]
+      simp [h2]
     · rw [max_eq_left h.le, min_eq_right h.le]
-      simp [hx]
+      simp [h1]
 
 end ReciprocityTheory.ChartRestriction.DS

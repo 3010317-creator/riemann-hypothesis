@@ -62,8 +62,7 @@ private theorem cpl_of_nil {R : Type} [CommRing R] (I : Ideal R) (N : ℕ) (h : 
       _ = ⊥ := by rw [h, Submodule.bot_smul]
   refine { haus' := fun x hx => ?_, prec' := fun f hf => ⟨f N, fun n => ?_⟩ }
   · have hxN := hx N
-    rw [hle N le_rfl, SModEq.bot] at hxN
-    exact hxN
+    rwa [hle N le_rfl, SModEq.bot] at hxN
   · rcases le_total n N with hn | hn
     · exact hf hn
     · have hfn := hf hn
@@ -206,8 +205,7 @@ private theorem cpl_of_univ {O D R : Type} [CommRing O] [IsLocalRing O] [CommRin
     refine ⟨d, ?_⟩
     rw [← Ideal.Quotient.eq]
     have h3 : Ideal.Quotient.mkₐ O (maximalIdeal R ^ n) r = (hbar.comp g) r := by rw [e1, e2]
-    rw [AlgHom.comp_apply, ← hd, hbar_mk, Ideal.Quotient.mkₐ_eq_mk] at h3
-    exact h3
+    rwa [AlgHom.comp_apply, ← hd, hbar_mk, Ideal.Quotient.mkₐ_eq_mk] at h3
 
 theorem UpperTheory.V.Fr.loc_cpl :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (x : Ideal S.A) (L : S.Loc x), ∀ ι' : TensorProduct O L.O' S.A →ₐ[L.O'] L.R, (∀ a, ι' (1 ⊗ₜ a) = L.ι a) → @UpperTheory.V.CA.IsCplAt _ _ ((maximalIdeal L.R).comap ι'.toRingHom) L.R _ ι'.toRingHom.toAlgebra _ := by

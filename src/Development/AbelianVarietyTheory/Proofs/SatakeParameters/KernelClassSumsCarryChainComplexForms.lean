@@ -204,8 +204,7 @@ theorem xiTop_stab_law : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Char
   have e0 : phiT X.K p.deco.1 p'.deco.1 (a.1.1.toLinearMap ∘ₗ x) = phiT X.K p.deco.1 p'.deco.1 x := by
     have h := phiT_smul X.K p.deco p'.deco 1 1 a.1 (a.2.1 : GLG (E := X.E) (n := R.N (m2 + 1 + 1)) (SG := Pr.vGs)) x
     have hd : (a • p').deco = (a.1, (a.2.1 : GLG (E := X.E) (n := R.N (m2 + 1 + 1)) (SG := Pr.vGs))) • p'.deco := rfl
-    rw [← hd, hfix, ← Prod.one_eq_mk, one_smul] at h
-    exact h
+    rwa [← hd, hfix, ← Prod.one_eq_mk, one_smul] at h
 
   rw [XiTop_eq, XiTop_eq, e0]
 
@@ -222,8 +221,7 @@ theorem xiTop_stab_law : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Char
     intro w
     apply LinearMap.ext
     intro v
-    simp only [inFr, LinearMap.comp_apply, LinearEquiv.coe_coe]
-    exact hsym w _
+    simpa only [inFr, LinearMap.comp_apply, LinearEquiv.coe_coe] using hsym w _
 
   have hdet : ∀ w, ((LinearEquiv.det a.1.1 : X.Eˣ) : X.E) = ((LinearEquiv.det ((κ' w)⁻¹).1 : X.Eˣ) : X.E) := by
     intro w
@@ -288,8 +286,7 @@ theorem xiTop_stab_law : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Char
     have hFst : ∀ z, z ∈ localization₂ w.1.asIdeal p.deco.1.N → (frsF sel mu p w).symm z ∈ stdAt X.E (R.N (m2 + 1)) w.1 := by
       intro z hz
       apply (frsF_isFr sel mu p w _).1
-      rw [LinearEquiv.apply_symm_apply]
-      exact hz
+      rwa [LinearEquiv.apply_symm_apply]
     by_cases hw : w.1 ∈ Pr.vGs
     · rw [dite_eq_left hw]
       obtain ⟨hne, -, hqm⟩ := ybSet_props2 sel mu cst hY w hw
@@ -302,8 +299,7 @@ theorem xiTop_stab_law : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Char
         (inFr (frsF sel mu p w) (frsF sel mu p' w) x) ((frsF sel mu p w).symm (repY Y)) ((frsF sel mu p w).symm (repY Y)) (by simp) hq
       have h1 : rhoS Ch sel mu (m2 + 1) w ((LinearEquiv.det ((1 : ↥(GLint X.E (R.N (m2 + 1)) w.1)) : Sp X.E (R.N (m2 + 1)) ≃ₗ[X.E] Sp X.E (R.N (m2 + 1))) : X.Eˣ) : X.E) = 1 := by
         simp [rhoS, LocE.unitV, redP_one]
-      rw [h1, one_mul, map_one, inv_one, Units.val_one, mul_one] at key
-      exact key
+      rwa [h1, one_mul, map_one, inv_one, Units.val_one, mul_one] at key
     · rw [dite_eq_right hw]
       obtain ⟨hne, hqm⟩ := coupling_index_scaled_mem_local sel mu cst hY w hw
       have hr0 := representative_mem hne
@@ -319,8 +315,7 @@ theorem xiTop_stab_law : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Char
       have e4 : (⟨(κ' w)⁻¹, hc'⟩ : ↥(twTt (R := R) sel mu (m2 + 1 + 1) ⟨w.1, hQw⟩).H) =
           ⟨(a.2.2 : GLQ X.E (R.N (m2 + 1 + 1)) (QE sel (mu : Chr X.F X.E X.K))) ⟨w.1, hQw⟩, a.2.2.2 _ (Set.mem_univ _)⟩ :=
         Subtype.ext (by show (κ' w)⁻¹ = _; rw [hκQ' w hw, inv_inv])
-      rw [e4] at key
-      exact key
+      rwa [e4] at key
   rw [hchr]
   have := prod_mul_eq_of_forall_cross_mul_eq _ _ _ _ (phiT X.K p.deco.1 p'.deco.1 x) hper
   linear_combination this
@@ -404,8 +399,7 @@ theorem ramificationIdxIn_eq_one : ∀ (D : D7) (X : Fields) (s : Seam D X), X.O
   have hun := hX.unram_of_inertia (conj_notMem_inertia D X s hs) P
   have hcomap : Q.comap (algebraMap (𝓞 X.F) (𝓞 X.E)) = v.asIdeal := (Ideal.over_def Q v.asIdeal).symm
   have hun' : ¬ v.asIdeal.map (algebraMap (𝓞 X.F) (𝓞 X.E)) ≤ Q ^ 2 := by
-    rw [← hcomap]
-    exact hun
+    rwa [← hcomap]
   have h1 : v.asIdeal.map (algebraMap (𝓞 X.F) (𝓞 X.E)) ≤ Q ^ 1 := by
     rw [pow_one, Ideal.map_le_iff_le_comap, hcomap]
   have he : v.asIdeal.ramificationIdx' Q = 1 := Ideal.ramificationIdx_spec h1 hun'
@@ -459,8 +453,7 @@ theorem isIntegral_det_of_stable {R E : Type} [CommRing R] [IsNoetherianRing R] 
       refine MultilinearMap.ext_of_span_eq_top (g := fun _ (x : L) => (x : Fin n → E)) (fun _ => ?_) fun w => ?_
       · rw [← hsp]; congr 1; exact Subtype.range_coe
       · have : (Matrix.of fun i => (w i : Fin n → E)).det ∈ N := Submodule.subset_span ⟨w, rfl⟩
-        rw [h] at this
-        exact this
+        rwa [h] at this
     have h1 := congrArg (fun f => f (1 : Matrix (Fin n) (Fin n) E)) h0
     have h2 : (1 : Matrix (Fin n) (Fin n) E).det = 0 := h1
     simp at h2
@@ -586,8 +579,7 @@ theorem det_of_stab : ∀ (D : D7) (X : Fields) (s : Seam D X) (χ : TaylorLogMe
     rw [← h1, ← Matrix.det_mul, hMM.2, Matrix.det_one]
   refine ⟨?_, ?_, ?_⟩
   · apply s.iE.injective
-    rw [map_mul, hok.2, hd, map_one]
-    exact hdet
+    rwa [map_mul, hok.2, hd, map_one]
   · have i1 := GlobalTheory.DetStab.isIntegral_det_of_stable (s.lat N') hfg hsp M fun v hv => (hs v).1 hv
     have i2 : IsIntegral ℤ M.det := isIntegral_trans (R := ℤ) _ i1
     have i3 := map_isIntegral_int s.iE.symm.toRingHom i2
@@ -707,8 +699,7 @@ theorem termLaw_of_xi : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : 
       intro l hl hlp hlP
       have hc : IsCoprime ((p : ℕ) : 𝓞 t.X.E) ((l : ℕ) : 𝓞 t.X.E) := by
         have h1 := (Nat.coprime_primes hp hl).2 (Ne.symm hlp)
-        have h2 := (Nat.isCoprime_iff_coprime.2 h1).map (Int.castRingHom (𝓞 t.X.E))
-        simpa using h2
+        simpa using (Nat.isCoprime_iff_coprime.2 h1).map (Int.castRingHom (𝓞 t.X.E))
       obtain ⟨a, b, hab⟩ := hc
       exact P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2
         (hab ▸ add_mem (P.asIdeal.mul_mem_left a hpP) (P.asIdeal.mul_mem_left b hlP)))
@@ -798,8 +789,7 @@ theorem xiCpl1_stab : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X
   rw [hfix] at hκ'
   have hdet : ∀ P, (LinearEquiv.det a.1.1 : X.Eˣ) = LinearEquiv.det (κ' P).1 := fun P => by
     have h := congrArg LinearEquiv.det (hκ' P)
-    rw [map_mul, map_mul, InvMemClass.coe_inv, map_inv] at h
-    rw [mul_left_comm] at h
+    rw [map_mul, map_mul, InvMemClass.coe_inv, map_inv, mul_left_comm] at h
     exact mul_inv_eq_one.mp (mul_left_cancel (h.symm.trans (mul_one _).symm))
   have hprod : ∀ P, muAt Ch sel mu cst m2 P ((LinearEquiv.det a.1.1 : X.Eˣ) : X.E) =
       rhoS Ch sel mu m2 P ((LinearEquiv.det ((1 : GLQ X.E (R.N m2) (rowSG Pr sel mu)) P).1 : X.Eˣ) : X.E) *
@@ -809,8 +799,7 @@ theorem xiCpl1_stab : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X
   have e : x ∘ₗ ((1 : UF X.E (R.N m2)) : Sp X.E (R.N m2) ≃ₗ[X.E] Sp X.E (R.N m2)).symm.toLinearMap = x :=
     LinearMap.ext fun v => rfl
   rw [e, Finset.prod_const_one, inv_one, inv_one, mul_one, ea'] at law
-  rw [Finset.prod_congr rfl fun P _ => hprod P]
-  exact law
+  rwa [Finset.prod_congr rfl fun P _ => hprod P]
 
 end GlobalTheory.StabLaw
 end -- clump:auto
@@ -848,10 +837,8 @@ theorem xiEntry_stab : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars 
     simpa using h
   have h2 : LinearEquiv.det (κ' P).1 = LinearEquiv.det a.1.1 := by
     have h := congrArg LinearEquiv.det (hκ' P)
-    rw [ha, map_mul, map_mul, Subgroup.coe_inv, map_inv] at h
-    rw [mul_left_comm] at h
-    have h' := mul_left_cancel (h.symm.trans (mul_one _).symm)
-    exact (mul_inv_eq_one.1 h').symm
+    rw [ha, map_mul, map_mul, Subgroup.coe_inv, map_inv, mul_left_comm] at h
+    exact (mul_inv_eq_one.1 (mul_left_cancel (h.symm.trans (mul_one _).symm))).symm
   rw [Pi.inv_apply, Pi.inv_apply, h1, map_one, Units.val_one, rhoT_inv, ← muAt_det, h2]
   unfold rhoS
   rw [GlobalTheory.Mem.Col2.IdxEx.Cong.unitV_one, one_mul]

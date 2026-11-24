@@ -145,8 +145,7 @@ private theorem real_eq {μ : Measure X} [μ.IsMulLeftInvariant] [SFinite μ] {�
       rw [abs_of_nonneg (le_max_right _ _)]
       exact max_le (neg_le_abs _) (abs_nonneg _))
   have hfin' : ∫⁻ x, ‖g x‖ₑ * ρ' x ∂μ < ⊤ := by
-    rw [← lint_eq hi hg.enorm (fun t x => by rw [hgi]) hρ hρ1 hρ' hρ'1]
-    exact hfin
+    rwa [← lint_eq hi hg.enorm (fun t x => by rw [hgi]) hρ hρ1 hρ' hρ'1]
   have split : ∀ r : X → ℝ≥0∞, Measurable r → ∫⁻ x, ‖g x‖ₑ * r x ∂μ < ⊤ →
       ∫ x, g x * (r x).toReal ∂μ =
         (∫⁻ x, ‖max (g x) 0‖ₑ * r x ∂μ).toReal - (∫⁻ x, ‖max (-g x) 0‖ₑ * r x ∂μ).toReal := by
@@ -179,8 +178,7 @@ private theorem cpx_eq {μ : Measure X} [μ.IsMulLeftInvariant] [SFinite μ] {ν
     (hρ'1 : ∀ x, ∫⁻ t, ρ' (i t * x) ∂ν = 1) (hfin : ∫⁻ x, ‖Φ x‖ₑ * ρ x ∂μ < ⊤) :
     ∫ x, Φ x * ((ρ x).toReal : ℂ) ∂μ = ∫ x, Φ x * ((ρ' x).toReal : ℂ) ∂μ := by
   have hfin' : ∫⁻ x, ‖Φ x‖ₑ * ρ' x ∂μ < ⊤ := by
-    rw [← lint_eq hi hΦ.enorm (fun t x => by rw [hΦi]) hρ hρ1 hρ' hρ'1]
-    exact hfin
+    rwa [← lint_eq hi hΦ.enorm (fun t x => by rw [hΦi]) hρ hρ1 hρ' hρ'1]
   have h1 := cpx_int hΦ hρ hfin
   have h2 := cpx_int hΦ hρ' hfin'
   have bre : ∫⁻ x, ‖(Φ x).re‖ₑ * ρ x ∂μ < ⊤ :=

@@ -103,8 +103,7 @@ theorem exists_rel_colon_prime (J₁ J : Ideal (MRing ι)) (hJ₁ : IsMultiHomog
       by_contra hne'
       exact hmax _ hin (lt_of_le_of_ne hle' hne')
     rw [heq, Submodule.mem_colon_singleton, smul_eq_mul, show y * (x * f) = x * y * f by ring]
-    rw [hmem] at hxy
-    exact hxy
+    rwa [hmem] at hxy
   exact ⟨f, c, hfc, hfJ₁, hfJ, hprime, (isHomogeneous_lex_iff e _).mp hIh⟩
 
 theorem exists_relFiltration (J₁ : Ideal (MRing ι)) (hJ₁ : IsMultiHomogIdeal J₁) (J : Ideal (MRing ι))
@@ -134,8 +133,7 @@ theorem exists_relFiltration (J₁ : Ideal (MRing ι)) (hJ₁ : IsMultiHomogIdea
       refine ⟨hfc, hfJ₁, h0, hq, hqh, fun g => ?_⟩
       rw [Submodule.mem_colon_singleton, smul_eq_mul]
     | succ j =>
-      simp only [Fin.cons_succ, ← Fin.succ_castSucc]
-      exact hj j
+      simpa only [Fin.cons_succ, ← Fin.succ_castSucc] using hj j
 
 end Filtration
 
@@ -206,8 +204,7 @@ theorem relIndex_piece_step {F q : Ideal (MRing ι)} (hF : IsMultiHomogIdeal F) 
     show (A.comap B.subtype).mkQ (χ' g) = 0 ↔ _
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, Submodule.coe_subtype]
     constructor
-    · intro h
-      exact (Submodule.restrictScalars_mem ℤ _ _).mp (Submodule.mem_inf.mp h).1
+    · exact fun h => (Submodule.restrictScalars_mem ℤ _ _).mp (Submodule.mem_inf.mp h).1
     · intro h
       exact Submodule.mem_inf.mpr ⟨(Submodule.restrictScalars_mem ℤ _ _).mpr h,
         (Submodule.mem_inf.mp (hmul g)).2⟩
@@ -352,8 +349,7 @@ theorem not_horizontal_of_mem {W : Ideal (MRing ι)} {N : ℕ} (hN : N ≠ 0) (h
     ¬ IsHorizontal W := by
   intro h
   have : (N : ℤ) ∈ W.comap (C : ℤ →+* MRing ι) := by
-    rw [Ideal.mem_comap, map_natCast]
-    exact hNW
+    rwa [Ideal.mem_comap, map_natCast]
   rw [IsHorizontal] at h
   rw [h, Ideal.mem_bot] at this
   exact hN (by exact_mod_cast this)
@@ -381,8 +377,7 @@ theorem geoNum_cut_X [DecidableEq K] : ∀ (n : ℕ) (V : Ideal (MRing ι)) (a :
     · subst hk
       simp
     · simp [hk]
-  rw [e, Fin.snoc_init_self] at h
-  exact h
+  rwa [e, Fin.snoc_init_self] at h
 
 theorem geoNum_symm [DecidableEq K] : ∀ (n : ℕ) (V : Ideal (MRing ι)) (a : Fin n → K → ℤ)
     (σ : Equiv.Perm (Fin n)), IsMultiProjPrime V → charOf V ≠ 0 →
@@ -495,7 +490,7 @@ theorem factor_est [DecidableEq K] {J₂ q : Ideal (MRing ι)} {N d : ℕ} (hN :
     have hpos : 0 < (a + s - c) k := by
       have := (hcle a 1 (fun k' => by have := ha k'; omega) k).2
       omega
-    rw [if_neg hnot, lg, card_mPiece_irrel hk hpos]
+    rw [ite_eq_right hnot, lg, card_mPiece_irrel hk hpos]
     simp
   have hv : ¬ IsHorizontal q := not_horizontal_of_mem hN.ne' hNq
   have hp : (charOf q).Prime := charOf_prime hq hv
@@ -510,7 +505,7 @@ theorem factor_est [DecidableEq K] {J₂ q : Ideal (MRing ι)} {N d : ℕ} (hN :
     obtain ⟨K2, hK2, hs2⟩ := appr_shift (Real.log (charOf q)) d q hS s
     refine ⟨a₀' + tdeg c, (C' + K1 + K2) * ((tdeg s : ℝ) + 1) ^ (d - 1), by positivity,
       fun a ha => ?_⟩
-    rw [if_pos htop]
+    rw [ite_eq_left htop]
     have hx := hcle a a₀' ha
     have h1 := hH (a + s - c) fun k => (hx k).2
     have h2 := hs1 (a + s) fun k => by have := (hx k).1; simp only [Pi.add_apply]; omega
@@ -544,7 +539,7 @@ theorem factor_est [DecidableEq K] {J₂ q : Ideal (MRing ι)} {N d : ℕ} (hN :
     have hB := coefB_nonneg d' q
     refine ⟨a₀' + tdeg c, (C' * d' + Real.log (charOf q) * coefB d' q) * ((tdeg s : ℝ) + 1) ^ (d - 1),
       by positivity, fun a ha => ?_⟩
-    rw [if_neg htop, sub_zero]
+    rw [ite_eq_right htop, sub_zero]
     have hx := hcle a a₀' ha
     set b := a + s - c with hbdef
     have h1 := hH b fun k => (hx k).2

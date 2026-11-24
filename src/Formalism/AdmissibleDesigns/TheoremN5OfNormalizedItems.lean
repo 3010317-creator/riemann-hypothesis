@@ -107,8 +107,7 @@ theorem rhoCont_of (hd : TruncatedSeriesCountingIdentities.SemisimpleDecompositi
       Matrix.smul_mul, smul_smul, mul_comm (toK D.nd i b1), ← map_mul]
     exact algebraMap_smul (KK D.nd i) (b2 * b1) _
   have hcont : Continuous fun g => (b1 * b2) • rO D.nd i (rN i r ρ π) π g := by
-    simp only [hid]
-    exact (continuous_const.matrix_mul (hc π)).matrix_mul continuous_const
+    simpa only [hid] using (continuous_const.matrix_mul (hc π)).matrix_mul continuous_const
   have hne : b1 * b2 ≠ 0 := mul_ne_zero hb1 hb2
   unfold RhoCont
   refine continuous_pi fun a => continuous_pi fun b => ?_

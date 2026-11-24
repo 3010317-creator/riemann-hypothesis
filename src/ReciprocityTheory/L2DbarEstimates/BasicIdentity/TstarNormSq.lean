@@ -20,21 +20,12 @@ theorem tStarIbp (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] : TStarIbpStatement n M := by
   intro z hz ph₁ ph₂ g f _hph₁ hph₂ hg hf
   have hE := ck_expNeg n z 1 ph₂ hph₂
-  have hF : ∀ j, Ck n z 1 (fun y => (Real.exp (-ph₂ y) : ℂ) * f y j) :=
-    fun j => Ck.mul n z 1 _ _ hE (hf j).1
+  have hF := fun j => Ck.mul n z 1 _ _ hE (hf j).1
   have hFc : ∀ j, HasCompactSupport (fun y => (Real.exp (-ph₂ y) : ℂ) * f y j) :=
     fun j => (hf j).2.mul_left
-  have hG : ∀ j, Ck n z 1 (fun y => conj ((Real.exp (-ph₂ y) : ℂ) * f y j)) :=
-    fun j => Ck.conj n z 1 _ (hF j)
+  have hG := fun j => Ck.conj n z 1 _ (hF j)
   have hGc : ∀ j, HasCompactSupport (fun y => conj ((Real.exp (-ph₂ y) : ℂ) * f y j)) :=
     fun j => (hFc j).comp_left (map_zero (starRingEnd ℂ))
-  have hj : ∀ j, ∫ x, db n z j g x * conj ((Real.exp (-ph₂ x) : ℂ) * f x j) ∂vol n z =
-      -∫ x, g x * conj (d n z j (fun y => (Real.exp (-ph₂ y) : ℂ) * f y j) x) ∂vol n z := by
-    intro j
-    rw [integral_db_mul n z hz j g _ hg (hG j) (hGc j)]
-    congr 2
-    funext x
-    rw [db_conj]
   have hint1 : ∀ j ∈ (Finset.univ : Finset (Fin n)), Integrable
       (fun x => db n z j g x * conj ((Real.exp (-ph₂ x) : ℂ) * f x j)) (vol n z) := by
     intro j _
@@ -49,30 +40,32 @@ theorem tStarIbp (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     · exact (Ck.continuous n z hz 1 _ hg).mul
         (Ck.continuous n z hz 0 _ (Ck.conj n z 0 _ (Ck.d n z 0 j _ (hF j))))
     · exact ((hasCompactSupport_d n z j _ (hFc j)).comp_left (map_zero (starRingEnd ℂ))).mul_left
-  have lhs : ∫ x, (∑ j, db n z j g x * conj (f x j)) * (Real.exp (-ph₂ x) : ℂ) ∂vol n z =
-      ∑ j, ∫ x, db n z j g x * conj ((Real.exp (-ph₂ x) : ℂ) * f x j) ∂vol n z := by
-    rw [← integral_finsetSum _ hint1]
-    congr 1
-    funext x
-    rw [Finset.sum_mul]
-    refine Finset.sum_congr rfl (fun j _ => ?_)
-    simp only [map_mul, Complex.conj_ofReal]
-    ring
-  have rhs : ∫ x, g x * conj (tstar n z ph₁ ph₂ f x) * (Real.exp (-ph₁ x) : ℂ) ∂vol n z =
-      ∑ j, -∫ x, g x * conj (d n z j (fun y => (Real.exp (-ph₂ y) : ℂ) * f y j) x) ∂vol n z := by
-    rw [Finset.sum_neg_distrib, ← integral_finsetSum _ hint2, ← integral_neg]
-    congr 1
-    funext x
-    have he : (Real.exp (ph₁ x) : ℂ) * (Real.exp (-ph₁ x) : ℂ) = 1 := by
-      rw [← Complex.ofReal_mul, ← Real.exp_add, add_neg_cancel, Real.exp_zero, Complex.ofReal_one]
-    unfold tstar
-    rw [← Finset.mul_sum]
-
-    simp only [map_neg, map_mul, map_sum, Complex.conj_ofReal]
-    generalize (∑ j : Fin n, conj (d n z j (fun y => (Real.exp (-ph₂ y) : ℂ) * f y j) x)) = S
-    linear_combination (-(g x * S)) * he
-  rw [lhs, rhs]
-  exact Finset.sum_congr rfl (fun j _ => hj j)
+  calc _ = ∑ j, ∫ x, db n z j g x * conj ((Real.exp (-ph₂ x) : ℂ) * f x j) ∂vol n z := by
+        rw [← integral_finsetSum _ hint1]
+        congr 1
+        funext x
+        rw [Finset.sum_mul]
+        refine Finset.sum_congr rfl (fun j _ => ?_)
+        simp only [map_mul, Complex.conj_ofReal]
+        ring
+    _ = ∑ j, -∫ x, g x * conj (d n z j (fun y => (Real.exp (-ph₂ y) : ℂ) * f y j) x) ∂vol n z := by
+        refine Finset.sum_congr rfl fun j _ => ?_
+        rw [integral_db_mul n z hz j g _ hg (hG j) (hGc j)]
+        congr 2
+        funext x
+        rw [db_conj]
+    _ = _ := by
+        rw [Finset.sum_neg_distrib, ← integral_finsetSum _ hint2, ← integral_neg]
+        congr 1
+        funext x
+        have he : (Real.exp (ph₁ x) : ℂ) * (Real.exp (-ph₁ x) : ℂ) = 1 := by
+          rw [← Complex.ofReal_mul, ← Real.exp_add, add_neg_cancel, Real.exp_zero,
+            Complex.ofReal_one]
+        unfold tstar
+        rw [← Finset.mul_sum]
+        simp only [map_neg, map_mul, map_sum, Complex.conj_ofReal]
+        generalize (∑ j : Fin n, conj (d n z j (fun y => (Real.exp (-ph₂ y) : ℂ) * f y j) x)) = S
+        linear_combination (g x * S) * he
 
 private theorem d_sub_of_ck_one (n : ℕ) {M : Type*} [TopologicalSpace M] (z : M → V n) (f g : M → ℂ)
     (hf : Ck n z 1 f) (hg : Ck n z 1 g) (j : Fin n) (x : M) :

@@ -217,8 +217,7 @@ theorem firstPart_mem {P : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin d → MvPo
     show graphSubst p (rename (Fin.castAdd d) q) ∈ P
     rw [graphSubst_rename]
     exact hq)
-  rw [eval_rename] at h
-  exact h
+  rwa [eval_rename] at h
 
 theorem natAdd_of_mem {P : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin d → MvPolynomial (Fin n) ℂ}
     {z : Fin (n + d) → ℂ} (hz : z ∈ IndefiniteRowSideFullHecke.ComplexSets.zeroLocus (graphIdeal P p)) (i : Fin d) :
@@ -227,8 +226,7 @@ theorem natAdd_of_mem {P : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin d → MvPo
     show graphSubst p (X (Fin.natAdd n i) - rename (Fin.castAdd d) (p i)) ∈ P
     rw [map_sub, graphSubst_rename, graphSubst, aeval_X, Fin.append_right, sub_self]
     exact P.zero_mem)
-  rw [map_sub, eval_X, eval_rename, sub_eq_zero] at h
-  exact h
+  rwa [map_sub, eval_X, eval_rename, sub_eq_zero] at h
 
 theorem eq_graphPt_of_mem {P : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin d → MvPolynomial (Fin n) ℂ}
     {z : Fin (n + d) → ℂ} (hz : z ∈ IndefiniteRowSideFullHecke.ComplexSets.zeroLocus (graphIdeal P p)) :
@@ -256,8 +254,7 @@ theorem proof (hOpen : IndefiniteRowSideFullHecke.ComplexSets.IsolatedFibreOpen.
       have h := congrFun hAz i
       rw [lastRows_mulVec, lastRows_mulVec] at h
       simp only at h
-      rw [natAdd_of_mem hz, graphPt_natAdd] at h
-      exact h
+      rwa [natAdd_of_mem hz, graphPt_natAdd] at h
     rw [eq_graphPt_of_mem hz, hfz]
   have h := hOpen (n + d) d (graphIdeal P p) (lastRows n d) (graphPt p x) hV (graphPt_mem p hx)
     ⟨firstPart ⁻¹' W, hN W hW, hisoG⟩ (firstPart ⁻¹' W') (hN W' hW')
@@ -347,8 +344,7 @@ theorem IsolatedPointsCountPrime.exists_eval_ne_zero {d : ℕ} {Δ : MvPolynomia
     (fun i => infinite_of_mem_nhds (w i) (Metric.ball_mem_nhds (w i) hε)) (fun y hy => ?_)
   rw [map_zero]
   refine h y (hball ?_)
-  rw [ball_pi w hε]
-  exact hy
+  rwa [ball_pi w hε]
 
 theorem IsolatedPointsCountPrime.proof (hOpen : IsolatedFibreOpenPoly.Statement)
     (hDom : DominantFibreBound.Statement) (hDim : ImageDimLe.Statement) :

@@ -90,8 +90,7 @@ theorem mem_span_cw (i : E ≃+* E') {n : ℕ} (N : Submodule (𝓞 E) (Sp E n))
       rw [this]; exact N.add_mem ha hb
     | smul r a _ ha =>
       rw [cwInv_smul]; exact N.smul_mem _ ha
-  · intro h
-    exact Submodule.subset_span ⟨cwInv i y, h, cw_cwInv i y⟩
+  · exact fun h => Submodule.subset_span ⟨cwInv i y, h, cw_cwInv i y⟩
 
 theorem isSdLat_of_transport (i : E ≃+* E') (hst : ∀ x, i (star x) = star (i x)) {n : ℕ} (N : Submodule (𝓞 E) (Sp E n))
     (h : IsSDLat E' n (Submodule.span (𝓞 E') ((fun (x : Sp E n) (k : Fin n) => i (x k)) '' (N : Set (Sp E n))))) :
@@ -129,8 +128,7 @@ theorem isSdLat_of_transport (i : E ≃+* E') (hst : ∀ x, i (star x) = star (i
       have := key _ hy
       rwa [cwInv_cw] at this
   ·
-    intro s hs hli
-    exact (LinearIndependent.iff_fractionRing (𝓞 E) E).mp hli
+    exact fun s hs hli => (LinearIndependent.iff_fractionRing (𝓞 E) E).mp hli
   ·
     have hform : ∀ x y : Sp E n, stdH E' n (cw i x) (cw i y) = i (hStd E n x y) := by
       intro x y

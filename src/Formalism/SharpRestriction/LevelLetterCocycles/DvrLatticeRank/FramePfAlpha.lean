@@ -63,8 +63,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 
 theorem framepf_φD_smul (a : LetA O n) (x : W.DD T) : W.φD T (a • x) = W.φA a • W.φD T x := by
   have := W.φD_smul T (algebraMap (LetA O n) W.EE a) x
-  rw [algebraMap_smul, W.φE_ext, algebraMap_smul] at this
-  exact this
+  rwa [algebraMap_smul, W.φE_ext, algebraMap_smul] at this
 
 theorem framepf_smulLA_tmul (π' : LetA O n) (c : ZMod n) (a : LetA O n) (e : W.EE)
     (ℓ : LcQ W T π' c) : smulLA W T π' c a (e ⊗ₜ ℓ) = (algebraMap (LetA O n) W.EE a * e) ⊗ₜ ℓ := rfl
@@ -87,8 +86,7 @@ theorem framepf_ι_Δ (i : ZMod n) (g : PowerSeries O) (δ : W.Gam) (hδ : δ �
   have h := framepf_ι_letγ π' i (hπ0 i) (W.γ₀ δ) (γ0 δ hδ) PowerSeries.X (by simp)
     (by rw [PowerSeries.subst_X (PowerSeries.HasSubst.of_constantCoeff_zero' (hπ0 i))];
         exact congrFun (hΔπ δ hδ) i) g
-  rw [PowerSeries.X_subst] at h
-  exact h
+  rwa [PowerSeries.X_subst] at h
 
 include hπ0 hΔπ γ0 in
 theorem framepf_vec_mem (H : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (k : Fin Bs.r) :

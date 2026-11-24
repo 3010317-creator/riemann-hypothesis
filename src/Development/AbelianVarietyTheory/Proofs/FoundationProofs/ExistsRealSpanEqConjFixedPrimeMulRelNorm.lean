@@ -142,8 +142,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     hS₀.mono (Finset.subset_insert _ _)
   have hδS : δ ∈ _root_.GlobalTheory.QNorm.sUnits F S := by
     rw [_root_.GlobalTheory.QNorm.mem_sUnits] at hδS₀ ⊢
-    intro v hv
-    exact hδS₀ v fun h => hv (Finset.mem_insert_of_mem h)
+    exact fun v hv => hδS₀ v fun h => hv (Finset.mem_insert_of_mem h)
   obtain ⟨T, hST, hcard, hTsq, hpat⟩ :=
     _root_.GlobalTheory.QNorm.exists_auxiliary_places F δ S hS hδS hδ
   have htop := _root_.GlobalTheory.QNorm.sUnits_union_sup_finSq_eq_top F S T hS hST hpat
@@ -187,8 +186,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
       omega
     have h : 2 ^ (S.card + T.card + Fintype.card (InfinitePlace F)) * (U ⊔ M).index ≤
         2 ^ (S.card + T.card + Fintype.card (InfinitePlace F)) * 2 := by
-      rw [← hidx, ← h4]
-      exact hMle
+      rwa [← hidx, ← h4]
     exact Nat.le_of_mul_le_mul_left h (by positivity)
   obtain ⟨xs, hxs0, hxsS, hxsσ⟩ := _root_.GlobalTheory.QNorm.exists_approx_mod_squares F S (fun _ => 1)
     (fun σ => if σ = σ₀ then -1 else 1) (fun _ => one_ne_zero)
@@ -196,11 +194,11 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
   simp only [mul_one] at hxsS
   have hxsσ₀ : σ₀ xs < 0 := by
     have h := hxsσ σ₀
-    rw [if_pos rfl] at h
+    rw [ite_eq_left rfl] at h
     linarith
   have hxsσ' : ∀ σ, σ ≠ σ₀ → 0 < σ xs := fun σ hσ => by
     have h := hxsσ σ
-    rwa [if_neg hσ, mul_one] at h
+    rwa [ite_eq_right hσ, mul_one] at h
   set X : Fˣ := Units.mk0 xs hxs0 with hX
   have hXnot : X ∉ U ⊔ M := by
     intro hXmem
@@ -223,8 +221,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     linarith
   have hidx2 : (U ⊔ M).index = 2 := by
     have hne1 : (U ⊔ M).index ≠ 1 := by
-      intro h1
-      exact hXnot (Subgroup.index_eq_one.mp h1 ▸ Subgroup.mem_top X)
+      exact fun h1 => hXnot (Subgroup.index_eq_one.mp h1 ▸ Subgroup.mem_top X)
     omega
   obtain ⟨ϖ, hϖ⟩ := HeightOneSpectrum.valuation_exists_uniformizer F v₀
   have hϖ0 : ϖ ≠ 0 := by
@@ -240,7 +237,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     (fun _ => one_ne_zero)
   have hav₀ : ∃ n : ℤ, v₀.valuation F xa = WithZero.exp (2 * n + 1) := by
     have h := hxaS v₀ hv₀S
-    rw [if_pos rfl, ← map_mul] at h
+    rw [ite_eq_left rfl, ← map_mul] at h
     obtain ⟨n, hn⟩ :=
       exists_valuation_eq_exp_two_mul_of_isSquare_completion F v₀ (xa * ϖ) (mul_ne_zero hxa0 hϖ0) h
     have hva : v₀.valuation F xa ≠ 0 := (Valuation.ne_zero_iff _).mpr hxa0
@@ -252,7 +249,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     omega
   have haS : ∀ v ∈ S, v ≠ v₀ → IsSquare (algebraMap F (v.adicCompletion F) xa) := fun v hv hne => by
     have h := hxaS v hv
-    rwa [if_neg hne, mul_one] at h
+    rwa [ite_eq_right hne, mul_one] at h
   set A : Fˣ := Units.mk0 xa hxa0 with hA
   obtain ⟨B, hBmem, hBv₀, hBS⟩ : ∃ B : Fˣ, B ∈ U ⊔ M ∧
       (∃ n : ℤ, v₀.valuation F (B : F) = WithZero.exp (2 * n + 1)) ∧
@@ -364,9 +361,9 @@ theorem exists_eq_mul_map {R : Type} [CommRing R] [IsDedekindDomain R] (s : R �
         Multiset.count_singleton, Multiset.count_singleton] at this
       by_cases h : P = Q
       · subst h
-        rw [if_pos rfl, if_pos hPf.symm] at this
+        rw [ite_eq_left rfl, ite_eq_left hPf.symm] at this
         exact (Nat.even_add.1 this).1 (by decide)
-      · rw [if_neg h, if_neg (fun h' => h (by rw [← hPf, h', hss]))] at this
+      · rw [ite_eq_right h, ite_eq_right (fun h' => h (by rw [← hPf, h', hss]))] at this
         simpa using this)
   exact ⟨Q * B, by rw [Ideal.map_mul, hB]; ring⟩
 
@@ -394,10 +391,10 @@ theorem exists_eq_prime_mul_mul_map {R : Type} [CommRing R] [IsDedekindDomain R]
     exact mul_left_cancel₀ hP0 hfix) (fun Q hQ hQ0 hQf => by
     by_cases h : Q = P
     · subst h
-      rw [hc, if_pos rfl] at hodd
+      rw [hc, ite_eq_left rfl] at hodd
       exact (Nat.odd_add.1 hodd).1 (by decide)
     · have := hev Q hQ hQ0 hQf h
-      rw [hc, if_neg h] at this
+      rw [hc, ite_eq_right h] at this
       simpa using this)
   exact ⟨B, by rw [hB, mul_assoc]⟩
 

@@ -87,14 +87,12 @@ theorem oF_coe (t : 𝓞 D.host.F) :
   first
   | rfl
 
-theorem hO : (Zd.M p).L.O = (D.s.atP p).O := by
-  exact (Zd.agree p).2.2.2.1
+theorem hO : (Zd.M p).L.O = (D.s.atP p).O := (Zd.agree p).2.2.2.1
 
 theorem smul_mem_localLattice {Λ : Submodule (𝓞 D.host.E) (VS D).V} {a : (D.s.atP p).Ep} (ha : a ∈ (D.s.atP p).O)
     {v : Vp D p} (hv : v ∈ lattice₂ D Zd.M p Λ) : a • v ∈ lattice₂ D Zd.M p Λ := by
   have ha' : a ∈ (Zd.M p).L.O := by
-    rw [hO]
-    exact ha
+    rwa [hO]
   exact (lattice₂ D Zd.M p Λ).smul_mem ⟨a, ha'⟩ hv
 
 theorem coord_int {b : Module.Basis (Fin (Module.finrank D.host.E (VS D).V)) D.host.E (VS D).V} (i : Fin _)

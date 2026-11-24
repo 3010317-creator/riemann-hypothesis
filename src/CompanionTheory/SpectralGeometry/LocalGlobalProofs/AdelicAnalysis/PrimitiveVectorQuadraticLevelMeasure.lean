@@ -249,8 +249,7 @@ theorem GlobalTheory.CompanionTheory.SW.QuadIso.measure_quad_Fv : ∀ (F : Type)
   have hfin : lam {s : Fv F v | Valued.v s < 1} ≠ ⊤ := by
     refine ne_top_of_le_ne_top (b := 1) ENNReal.one_ne_top ?_
     rw [← h1]
-    refine measure_mono fun s hs => ?_
-    exact (Valuation.mem_integer_iff _ _).2 (le_of_lt hs)
+    exact measure_mono fun s hs => (Valuation.mem_integer_iff _ _).2 (le_of_lt hs)
   exact GlobalTheory.CompanionTheory.SW.QuadIso.measure_quad lam hfin ha hc hA
 end -- clump:auto
 end -- clump:auto
@@ -312,8 +311,7 @@ theorem dot_close {B : Matrix ι ι (Fv F v)} (hB : ∀ i j, Valued.v (B i j) �
 theorem exists_unit_coord {B : Matrix ι ι (Fv F v)} (hB : ∀ i j, Valued.v (B i j) ≤ 1)
     (hdet : Valued.v B.det = 1) {x : ι → Fv F v} (hx : ∀ i, Valued.v (x i) ≤ 1)
     (hp : ∃ i, Valued.v (x i) = 1) : ∃ i, Valued.v ((B *ᵥ x) i) = 1 := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hlt : ∀ i, Valued.v ((B *ᵥ x) i) < 1 := fun i =>
     lt_of_le_of_ne (mulVec_le hB hx i) (hcon i)
   obtain ⟨i, hi⟩ := hp
@@ -535,8 +533,7 @@ theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : He
     simp only [hEdef, Set.setOf_forall]
     exact MeasurableSet.iInter fun j => MeasurableSet.iInter fun _ => hsec j
   have hD : MeasurableSet {y : ι → Fv F v | ∀ j, Valued.v (y j - x₀ j) < 1} := by
-    simp only [Set.setOf_forall]
-    exact MeasurableSet.iInter hsec
+    simpa only [Set.setOf_forall] using MeasurableSet.iInter hsec
   have hform : ∀ A' : Set (Fv F v), MeasurableSet A' →
       (Measure.pi fun _ : ι => lam) {y : ι → Fv F v | (∀ j, Valued.v (y j - x₀ j) < 1) ∧
           (2 : Fv F v)⁻¹ * (y ⬝ᵥ (B *ᵥ y)) ∈ A'} =
@@ -550,8 +547,7 @@ theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : He
     · refine ne_top_of_le_ne_top hNt ?_
       rw [← hball ((2 : Fv F v)⁻¹ * (x₀ ⬝ᵥ (B *ᵥ x₀)))]
       exact measure_mono Set.inter_subset_right
-    · intro x hx
-      exact slice_form hstd h2 hs hB' hx₀' hi hA' hx
+    · exact fun x hx => slice_form hstd h2 hs hB' hx₀' hi hA' hx
     · intro x hx
       simp only [hEdef, Set.mem_setOf_eq, not_forall] at hx
       obtain ⟨j, hj, hjx⟩ := hx
@@ -559,8 +555,7 @@ theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : He
           (2 : Fv F v)⁻¹ * (y ⬝ᵥ (B *ᵥ y)) ∈ A'}} = ∅ := by
         ext t
         simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
-        intro h
-        exact absurd (by simpa [Function.update_of_ne hj] using h j) hjx
+        exact fun h => absurd (by simpa [Function.update_of_ne hj] using h j) hjx
       rw [this, measure_empty]
   have hpi : (Measure.pi fun _ : ι => lam) {y : ι → Fv F v | (∀ j, Valued.v (y j - x₀ j) < 1) ∧
       (2 : Fv F v)⁻¹ * (y ⬝ᵥ (B *ᵥ y)) ∈ Set.univ} = Nn ^ Fintype.card ι := by

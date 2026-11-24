@@ -113,8 +113,7 @@ theorem finite_places_int (d : ℤ) (hd : d ≠ 0) :
     exact_mod_cast hd
   refine (Ideal.finite_factors h0).subset fun v hv => ?_
   show v.asIdeal ∣ _
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem pairA_tmul_int_gen {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] (d : ℤ) (hd : d ≠ 0)
     (α : Af F) (e : E) :
@@ -147,8 +146,7 @@ theorem latV_le_of_int_smul (S : HSp D) (L M : Lat S) (d : ℤ) (hd : d ≠ 0)
     · subst hw
       have hαw := hα w
       rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hαw ⊢
-      rw [Algebra.smul_def, map_mul, map_inv₀, map_inv₀, hval, inv_one, one_mul]
-      exact hαw
+      rwa [Algebra.smul_def, map_mul, map_inv₀, map_inv₀, hval, inv_one, one_mul]
     · rw [hsupp w hw, smul_zero]
       exact zero_mem _
   · intro w hw

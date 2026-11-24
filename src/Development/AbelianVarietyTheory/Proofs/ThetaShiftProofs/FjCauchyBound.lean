@@ -218,8 +218,7 @@ theorem _root_.GlobalTheory.FjCauchy.fj_flow {la : _root_.ReciprocityTheory.Char
     exact Complex.re_add_im (s τ)
   have hIW : I ∈ W := by
     rw [hWdef, Set.mem_setOf_eq]
-    simp only [hline]
-    exact hs
+    simpa only [hline] using hs
   obtain ⟨g, hg⟩ : ∃ g : ℂ → ℂ, g = fun t ↦
       X.fj la ξ ν P (X.flow ξ (fun τ ↦ ((s τ).re : ℂ) + t * (s τ).im) x) -
         cexp (4 * Real.pi * I * ∑ τ, (ν τ : ℂ) * (((s τ).re : ℂ) + t * (s τ).im)) *
@@ -230,8 +229,7 @@ theorem _root_.GlobalTheory.FjCauchy.fj_flow {la : _root_.ReciprocityTheory.Char
     · refine (_root_.ReciprocityTheory.ChartRestriction.G.FD.CuspCoefficientFlow.fj_diffOn X la P hP hξ ν).comp
         (differentiable_flow_affine_line X ξ x _ _).differentiableOn ?_
       intro t ht
-      rw [hWdef] at ht
-      exact ht
+      rwa [hWdef] at ht
     · apply DifferentiableOn.mul_const
       apply Differentiable.differentiableOn
       fun_prop
@@ -252,8 +250,7 @@ theorem _root_.GlobalTheory.FjCauchy.fj_flow {la : _root_.ReciprocityTheory.Char
   have hgI := (hgd.analyticOnNhd hWo).eqOn_zero_of_preconnected_of_frequently_eq_zero
     hWc h0W hfreq hIW
   rw [hg] at hgI
-  simp only [hline, Pi.zero_apply, sub_eq_zero] at hgI
-  exact hgI
+  simpa only [hline, Pi.zero_apply, sub_eq_zero] using hgI
 
 end GlobalTheory.FjCauchy
 

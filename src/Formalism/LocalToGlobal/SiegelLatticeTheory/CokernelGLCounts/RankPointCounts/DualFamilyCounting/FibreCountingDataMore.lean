@@ -82,8 +82,7 @@ theorem crd_sum (c : Fin m → K) (k : Fin m) : crd h b a (∑ i, c i • b i) k
     rw [LinearMap.map_smul, hdiag k, smul_eq_mul, ← e k, mul_div_assoc, div_self hne, mul_one]
   · intro i _ hik
     rw [LinearMap.map_smul, horth k i (Ne.symm hik), smul_zero]
-  · intro hk
-    exact absurd (Finset.mem_univ k) hk
+  · exact fun hk => absurd (Finset.mem_univ k) hk
 
 theorem crd_gmap (Y : Matrix (Fin m) (Fin m) (𝓞 K)) (x : V) (k : Fin m) :
     crd h b a (gmap h b a Y x) k = ∑ j, jK (Y k j) * crd h b a x j := by
@@ -126,8 +125,7 @@ theorem h_expand (h𝔭 : 𝔭.IsPrime) (hL : IsLatIn ⊤ L) (x y : V) :
     · rw [LinearMap.map_smulₛₗ, LinearMap.smul_apply, hdiag j, smul_eq_mul, starRingEnd_apply, ← e j]
     · intro i _ hij
       rw [LinearMap.map_smulₛₗ, LinearMap.smul_apply, horth i j hij, smul_zero]
-    · intro hj
-      exact absurd (Finset.mem_univ j) hj
+    · exact fun hj => absurd (Finset.mem_univ j) hj
   have hy := coordsT horth hdiag ha hbX hloc h𝔭 hL y
   conv_lhs => rw [hy]
 

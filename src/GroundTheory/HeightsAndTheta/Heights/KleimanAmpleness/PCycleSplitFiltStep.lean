@@ -26,9 +26,7 @@ theorem length_ne_top_of_smul_eq_zero {S : Type u} [CommRing S] {T : Type w} [Ad
     [Module.Finite S T] (𝔪 : Ideal S) [𝔪.IsMaximal] (h : ∀ a ∈ 𝔪, ∀ t : T, a • t = 0) :
     Module.length S T ≠ ⊤ := by
   let := Ideal.Quotient.field 𝔪
-  have hT : Module.IsTorsionBySet S T 𝔪 := by
-    intro t a
-    exact h a a.2 t
+  have hT : Module.IsTorsionBySet S T 𝔪 := fun t a => h a a.2 t
   let : Module (S ⧸ 𝔪) T := hT.module
   have : IsScalarTower S (S ⧸ 𝔪) T := hT.isScalarTower
   have : Module.Finite (S ⧸ 𝔪) T := Module.Finite.of_restrictScalars_finite S (S ⧸ 𝔪) T

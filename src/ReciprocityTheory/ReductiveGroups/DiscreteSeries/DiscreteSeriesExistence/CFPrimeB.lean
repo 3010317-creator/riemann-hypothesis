@@ -111,8 +111,7 @@ theorem sg_raise_wt (ε : Fin n → Bool) {a b : Fin n} (hab : a ≠ b) (hε : �
   have h1 : sgE ε cpFock cmFock c c (sgE ε cpFock cmFock a b f) -
       sgE ε cpFock cmFock a b (sgE ε cpFock cmFock c c f) =
         ((root a b c : ℝ) : ℂ) • sgE ε cpFock cmFock a b f := by
-    have h2 := congrArg (fun T : Module.End ℂ (Fock n) => T f) key
-    simpa using h2
+    simpa using congrArg (fun T : Module.End ℂ (Fock n) => T f) key
   rw [hf c, map_smul, sub_eq_iff_eq_add] at h1
   rw [h1, Pi.add_apply, Complex.ofReal_add, add_smul]
   abel
@@ -125,8 +124,7 @@ theorem khw_extract (ε : Fin n → Bool) {lam : Fin n → ℝ} (hlam : StrictAn
       IsKHWVec ε E (μ - fockWt ε s) (tcoef ((fockBasis n).coord s) y) := by
   classical
   have hne : ∃ s, tcoef ((fockBasis n).coord s) y ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hy0
     rw [tcoef_expand y]
     simp [hcon]
@@ -176,8 +174,7 @@ theorem khw_extract (ε : Fin n → Bool) {lam : Fin n → ℝ} (hlam : StrictAn
             linarith
           exact absurd (hmin t hyt) (not_le.2 hlt)
         rw [hco, zero_smul]
-    rw [h2, add_zero] at h1
-    exact h1
+    rwa [h2, add_zero] at h1
 
 def zPlus (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ M) : Module.End ℂ M :=
   ∑ c ∈ plusIdx ε, E c c
@@ -244,8 +241,7 @@ theorem tens_ker_nontrivial (T : Module.End ℂ M) {V : Submodule ℂ M} {x : Te
     (hx : x ∈ LinearMap.range (TensorProduct.map V.subtype (LinearMap.id : Fock n →ₗ[ℂ] Fock n)))
     (hx0 : x ≠ 0) (hTx : TensorProduct.map T LinearMap.id x = 0) : ∃ v ∈ V, v ≠ 0 ∧ T v = 0 := by
   have hex : ∃ s, tcoef ((fockBasis n).coord s) x ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hx0
     rw [tcoef_expand x]
     simp [hcon]

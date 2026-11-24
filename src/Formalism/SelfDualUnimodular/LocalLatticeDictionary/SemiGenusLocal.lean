@@ -233,8 +233,7 @@ theorem selfDual_map {h : V →ₗ⋆[K] V →ₗ[K] K} {M : AddSubgroup V} (hM 
     apply hM.dual
     intro m hm
     have := hx (g m) (by change g.symm (g m) ∈ M; rwa [LinearEquiv.symm_apply_apply])
-    rw [← hg m (g.symm x), LinearEquiv.apply_symm_apply]
-    exact this
+    rwa [← hg m (g.symm x), LinearEquiv.apply_symm_apply]
   · intro x
     obtain ⟨t, ht, htx⟩ := hM.span (g.symm x)
     exact ⟨t, ht, by change g.symm (t • x) ∈ M; rwa [map_smul]⟩
@@ -332,8 +331,7 @@ theorem core {p : Ideal (𝓞 K)} (hK : Formalism.HermitianLatticesTheory.IsCMUn
       rwa [map_smul]
   have hXN : X ∈ M₁.comap (τ.symm : V →ₗ[K] V).toAddMonoidHom := by
     change τ.symm X ∈ M₁
-    rw [← hτe, LinearEquiv.symm_apply_apply]
-    exact heM
+    rwa [← hτe, LinearEquiv.symm_apply_apply]
   have hdim : finrank K (LinearMap.ker (h X)) < n := by
     have h1' := LinearMap.finrank_range_add_finrank_ker (h X)
     have hpos : 0 < finrank K (LinearMap.range (h X)) := by
@@ -348,8 +346,7 @@ theorem core {p : Ideal (𝓞 K)} (hK : Formalism.HermitianLatticesTheory.IsCMUn
       change ((a • m : LinearMap.ker (h X)) : V) ∈ M
       rw [Submodule.coe_smul]
       exact hM.smul_mem a ha _ hm
-    · intro x hx y hy
-      exact hM.int x hx y hy
+    · exact fun x hx y hy => hM.int x hx y hy
     · intro x hx
       change (x : V) ∈ M
       apply hM.dual

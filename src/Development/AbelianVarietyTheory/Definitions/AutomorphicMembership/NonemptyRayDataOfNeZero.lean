@@ -189,8 +189,7 @@ theorem exists_inv {M : ℕ} (q : (rayCon K M).Quotient) : IsUnit q := by
 theorem ne_bot_of_cop {M : ℕ} (hM : 2 ≤ M) {I : Ideal (𝓞 K)} (h : IsCoprime I (Ideal.span {(M : 𝓞 K)})) : I ≠ ⊥ := by
   rintro rfl
   have htop : Ideal.span {(M : 𝓞 K)} = ⊤ := by
-    rw [Ideal.isCoprime_iff_add, Ideal.add_eq_sup, bot_sup_eq, Ideal.one_eq_top] at h
-    exact h
+    rwa [Ideal.isCoprime_iff_add, Ideal.add_eq_sup, bot_sup_eq, Ideal.one_eq_top] at h
   have h1 := congrArg Ideal.absNorm htop
   rw [Ideal.absNorm_span_singleton, Ideal.absNorm_top, ← map_natCast (algebraMap ℤ (𝓞 K)) M,
     Algebra.norm_algebraMap, Int.natAbs_pow, Int.natAbs_natCast] at h1

@@ -62,12 +62,10 @@ theorem UpperTheory.V.Hi.levelUR2BaseAct :
         map_zero' := rfl
         map_add' := fun _ _ => Subsingleton.elim _ _ }
     refine ⟨μ, ?_, ?_, Or.inl h0⟩
-    · intro b y
-      exact Subsingleton.elim _ _
+    · exact fun b y => Subsingleton.elim _ _
     · rw [hJ]
       ext t
-      simp only [RingHom.mem_ker, Submodule.mem_top, iff_true]
-      exact Subsingleton.elim _ _
+      simpa only [RingHom.mem_ker, Submodule.mem_top, iff_true] using Subsingleton.elim _ _
   · refine ⟨(UpperTheory.V.Hi.heckeAlg (H.MK θ a K) (H.op A)).val.toRingHom.comp f.toRingHom, ?_, ?_, Or.inr ⟨x, x1, f, hmap, fun t => rfl⟩⟩
     · intro b y
       have h := hlam b
@@ -78,8 +76,7 @@ theorem UpperTheory.V.Hi.levelUR2BaseAct :
       ext t
       simp only [RingHom.mem_ker, RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe]
       constructor
-      · intro ht
-        exact Subtype.ext ht
+      · exact fun ht => Subtype.ext ht
       · intro ht
         rw [ht]
         rfl

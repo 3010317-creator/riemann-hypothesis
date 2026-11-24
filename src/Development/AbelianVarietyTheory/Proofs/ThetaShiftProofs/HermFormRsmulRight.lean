@@ -107,10 +107,10 @@ theorem hermForm_block {g : ℕ} {ι : Type} (ty : Fin g → ι) (Hm : Matrix (F
   rw [hermForm_eq_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : p (ty i)
-  · simp only [hi, if_true]
+  · simp only [hi, ite_true]
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases hj : p (ty j)
-    · simp only [hj, if_true]
+    · simp only [hj, ite_true]
     · have : ty i ≠ ty j := fun h => hj (h ▸ hi)
       simp [hb i j this]
   · simp [hi]
@@ -186,8 +186,7 @@ theorem block_le {g : ℕ} (Ψ : Finset (E →+* ℂ))
     · subst h1; simp [π, τ'.2]
     · subst h1
       have := (hΨ τ'.1).1 τ'.2
-      simp only [π, this, dif_neg, not_false_eq_true]
-      exact Subtype.ext (cc2 _)
+      simpa only [π, this, dite_eq_right, not_false_eq_true] using Subtype.ext (cc2 _)
   set q : Fin g → ℂ := fun i => ∑ j, z i * Hm i j * (starRingEnd ℂ) (z j) with hq
   have key : m = fun τ => ∑ i, if π (ty i) = τ then (q i).re else 0 := by
     refine coeff_eq Ψ hΨ _ _ fun a => ?_
@@ -202,7 +201,7 @@ theorem block_le {g : ℕ} (Ψ : Finset (E →+* ℂ))
     simp only [e1, Complex.re_sum, Complex.re_ofReal_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, hπ]
+    simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, hπ]
   have h1 := hermForm_block ty Hm hb (fun φ => φ = ρ) z
   have h2 := hermForm_block ty Hm hb (fun φ => π φ = τ' ∧ φ ≠ ρ) z
   have h3 := hnn (fun j => if π (ty j) = τ' ∧ ty j ≠ ρ then z j else 0)
@@ -213,8 +212,7 @@ theorem block_le {g : ℕ} (Ψ : Finset (E →+* ℂ))
     · simp [hi, hπρ]
     · by_cases hi' : π (ty i) = τ' <;> simp [hi, hi']
   have h5 : (∑ i, if π (ty i) = τ' ∧ ty i ≠ ρ then q i else 0).re ≥ 0 := by
-    rw [h2] at h3
-    exact h3
+    rwa [h2] at h3
   have h6 : hermForm Hm (fun j => if ty j = ρ then z j else 0) (fun j => if ty j = ρ then z j else 0) =
       ∑ i, if ty i = ρ then q i else 0 := by convert h1
   rw [h6, h4]; linarith
@@ -248,7 +246,7 @@ theorem block_of_adjoint {g : ℕ} (ty : Fin g → (E →+* ℂ)) (Hm : Matrix (
   have key : ∀ s : ℂ, (s * (ty i (a : E) * Hm i j)).im = (s * (ty j (a : E) * Hm i j)).im := fun s => by
     have := h a (Pi.single i s) (Pi.single j 1)
     simp only [hermForm_eq_sum, Pi.single_apply, mul_ite, ite_mul, mul_zero, zero_mul, apply_ite (starRingEnd ℂ),
-      map_zero, map_one, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true, _root_.ReciprocityTheory.ChartRestriction.G.FD.emb_cc, Complex.conj_conj] at this
+      map_zero, map_one, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true, _root_.ReciprocityTheory.ChartRestriction.G.FD.emb_cc, Complex.conj_conj] at this
     convert this using 2 <;> ring
   have : ty i (a : E) * Hm i j = ty j (a : E) * Hm i j := by
     apply Complex.ext
@@ -290,7 +288,7 @@ theorem period_flow (U : Unf Xo c σ r) (Uw : UnfWit U) (k : U.Comp) (ξ' : Fin 
       hm (((hU.2.1 k).2 _).2 (relab_rt hσ _ h))
     have hlt : ((Uw.e j).2 : ℕ) < (U.X k).p0 := by
       have h1 := (Uw.e j).2.2
-      have h2 : Dw.mult (Uw.e j).1 = Dw.q := if_neg hne
+      have h2 : Dw.mult (Uw.e j).1 = Dw.q := ite_eq_right hne
       rw [(hU.2.1 k).1, ← h2]; exact h1
     have := (hf ⟨_, hm'⟩ (Uw.e j).2).2 hlt
     simpa [hv, hcc] using this
@@ -349,7 +347,6 @@ theorem lengths_along_flow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
           exact map_mul τ.1 (a : E) _
         rw [e2, maj_smul]; ring) (relab c σ τ) τ' hτ
     simp only [(relab_inj c σ).eq_iff] at key
-    rw [Data.tt, one_div, inv_inv]
-    exact key
+    rwa [Data.tt, one_div, inv_inv]
 
 end GlobalTheory.ArchLen

@@ -66,14 +66,12 @@ theorem ra_cond {D : D7} (L : SizeData₂ D) (S : SizesAt L) (hx : 3 ≤ L.sc.x)
   simp only [SizeQD] at hQD
   obtain ⟨hq1, -, -, hd1, -, -, hr1, hr2⟩ := hQD
   have hq : (1 : ℝ) ≤ D.host.q := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h6 : Real.log (D.host.q : ℝ) ≤ 0 := Real.log_nonpos (Nat.cast_nonneg _) hc.le
     have h7 : 0 < L.sc.x ^ (L.sc.ez / 6) := Real.rpow_pos_of_pos hx0 _
     linarith
   have hd : (1 : ℝ) ≤ D.host.d := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h6 : Real.log (D.host.d : ℝ) ≤ 0 := Real.log_nonpos (Nat.cast_nonneg _) hc.le
     have h7 : 0 < L.sc.x ^ (L.sc.ez / 5 - L.sc.ez / 100) := Real.rpow_pos_of_pos hx0 _
     linarith
@@ -92,9 +90,7 @@ theorem ra_cond {D : D7} (L : SizeData₂ D) (S : SizesAt L) (hx : 3 ≤ L.sc.x)
     rw [mul_assoc]; exact one_le_mul_of_one_le_of_one_le hQS hqd
   have hc36 : (D.host.QS : ℝ) * D.host.q * D.host.d ≤ ((D.host.QS : ℝ) * D.host.q * D.host.d) ^ 36 :=
     le_self_pow₀ hc1 (by norm_num)
-  have hL : 0 < L.sc.L := by
-    show 0 < L.sc.x ^ L.sc.eps
-    exact Real.rpow_pos_of_pos hx0 _
+  have hL : 0 < L.sc.L := Real.rpow_pos_of_pos hx0 _
   have hb : 1 ≤ L.sc.b := by
     have h8 := Real.add_one_le_exp L.sc.L
     simp only [Formalism.BasicNotions.Scale.b]
@@ -245,8 +241,7 @@ theorem ra_Sc {D : D7} (L : SizeData₂ D) (P : ParameterChoice' D L) (S : Sizes
   · simp only [Formalism.BasicNotions.Scale.b', Formalism.BasicNotions.Scale.a, Formalism.BasicNotions.Scale.X']
     rw [div_le_iff₀ (Real.exp_pos _)]
     linarith [mul_le_mul_of_nonneg_right hxe hb0.le, mul_comm L.sc.b (Real.exp (L.sc.x ^ (L.sc.eps / 3)))]
-  · simp only [Formalism.BasicNotions.Scale.a]
-    exact mul_le_mul_of_nonneg_right hx100 hb0.le
+  · simpa only [Formalism.BasicNotions.Scale.a] using mul_le_mul_of_nonneg_right hx100 hb0.le
 
 theorem rowsA_of' {D : D7} (L : SizeData₂ D) (P : ParameterChoice' D L) (S : SizesAt L) (hx : (44 : ℝ) ^ 4 ≤ L.sc.x) (CY : ℝ)
     (hg : ∀ i : Fin 2, Real.log (D.host.g i : ℝ) ≤ CY * L.sc.L) :

@@ -104,8 +104,7 @@ variable {G H Y : Type} [Group G] [Group H] [MulAction H Y]
 theorem ev_fadd1 (ρ : G →* H) {m : ℕ} (F F' : (Fin (m + 1) → Y) → ℝ) (y : Y) (z : Chn G m) :
     ev ρ (F + F') y z = ev ρ F y z + ev ρ F' y z := by
   unfold ev
-  simp only [Pi.add_apply, mul_add]
-  exact Finsupp.sum_add
+  simpa only [Pi.add_apply, mul_add] using Finsupp.sum_add
 
 theorem ev_fsmul (ρ : G →* H) {m : ℕ} (F : (Fin (m + 1) → Y) → ℝ) (c : ℝ) (y : Y) (z : Chn G m) :
     ev ρ (c • F) y z = c * ev ρ F y z := by
@@ -159,8 +158,7 @@ private theorem eq_zero_of_mem_all_maximalIdeal_pow {G : Type} [Group G] {k : �
   have h1 : z' ∈ LinearMap.ker E :=
     (Submodule.span_le (p := LinearMap.ker E)).2 (fun w hw => h0 w hw) hz'
   have h2 := hbd _ hb
-  rw [map_sub, LinearMap.mem_ker.1 h1, sub_zero] at h2
-  exact h2
+  rwa [map_sub, LinearMap.mem_ker.1 h1, sub_zero] at h2
 
 private theorem ev_resF_eq_ev_cmap_stab (L : Type) [Field L] [NumberField L] (n r k : ℕ)
     (hc : ∀ c : Gm L n, toK L (n + r) (stab (𝓞 L) n (n + r) (Nat.le_add_right n r) c) =
@@ -282,8 +280,7 @@ theorem assemble (hCh : SChain) (hEv : SEv) (hSt : SStab) (hFin : SFin) (hAff : 
       simp only [resF, smul_eq_mul, map_mul] at h1 ⊢
       exact h1
     · funext y
-      have h1 := congrFun hGc (fun j => stab L n (n + r) (Nat.le_add_right n r) (y j))
-      simpa [dC, resF] using h1
+      simpa [dC, resF] using congrFun hGc (fun j => stab L n (n + r) (Nat.le_add_right n r) (y j))
   let x : ℕ → (↥s → ℝ) := fun j z₀ => ev (toK L (n + r)) (TN^[j] F) 1
     (cmap (stab (𝓞 L) n (n + r) (Nat.le_add_right n r)) (k + 1) z₀.1)
   have hstep : ∀ j, (4 / 5 : ℝ) * ‖x j‖ ≤ ‖x (j + 1)‖ := by
@@ -345,8 +342,7 @@ theorem assemble (hCh : SChain) (hEv : SEv) (hSt : SStab) (hFin : SFin) (hAff : 
     exact le_antisymm (ge_of_tendsto' ht hb) (norm_nonneg _)
   have hx0' : ∀ z₀ ∈ s, ev (toK L (n + r)) F 1
       (cmap (stab (𝓞 L) n (n + r) (Nat.le_add_right n r)) (k + 1) z₀) = 0 := by
-    intro z₀ hz₀
-    exact congrFun (norm_eq_zero.1 hx0) ⟨z₀, hz₀⟩
+    exact fun z₀ hz₀ => congrFun (norm_eq_zero.1 hx0) ⟨z₀, hz₀⟩
   obtain ⟨E, hE⟩ := exists_linearMap_eq_ev (toK L (n + r)) F (1 : GK L (n + r))
   have hall := eq_zero_of_mem_all_maximalIdeal_pow (E.comp (cmap (stab (𝓞 L) n (n + r) (Nat.le_add_right n r)) (k + 1))) s hs2
     (fun w hw => by
@@ -523,8 +519,7 @@ theorem pHeckeKer (hT : PTransfer) (hE : PEvDC) : PHeckeKer := by
       have h1 : actQ (Gq ρ q) c h = c := h.2
       have h3 : (Quotient.mk'' (c.out * (h : G)) : Quotient (QuotientGroup.rightRel (Gq ρ q))) =
           Quotient.mk'' c.out := by
-        rw [Quotient.out_eq']
-        exact h1
+        rwa [Quotient.out_eq']
       have h2 : c.out * (c.out * (h : G))⁻¹ ∈ Gq ρ q := QuotientGroup.rightRel_apply.mp (Quotient.exact' h3)
       obtain ⟨γ, hγ⟩ := mem_Gq.mp h2
       refine ⟨γ⁻¹, ?_⟩
@@ -657,7 +652,7 @@ theorem aff_conj {K : Type} [Field K] (n r : ℕ) (i : Fin r) (h : GL (Fin n) K)
     simp only [vecMul, dotProduct, vecMulVec_apply, Pi.zero_apply]
     rw [Finset.sum_eq_single (Fin.natAdd n i)]
     · rw [h2]; ring
-    · intro c _ hc; rw [he, Pi.single_apply, if_neg hc]; ring
+    · intro c _ hc; rw [he, Pi.single_apply, ite_eq_right hc]; ring
     · simp
   have h4 : S *ᵥ e = e := by
     funext a
@@ -811,7 +806,7 @@ theorem aff_blk_top {K : Type} [Field K] (n r : ℕ) (i : Fin r) (h : GL (Fin n)
     have := congrArg Fin.val hh
     simp only [Fin.val_castAdd, Fin.val_natAdd] at this
     omega
-  rw [Matrix.add_apply, vecMulVec_apply, Pi.single_apply, if_neg hne, mul_zero, add_zero, aff_stab_top]
+  rw [Matrix.add_apply, vecMulVec_apply, Pi.single_apply, ite_eq_right hne, mul_zero, add_zero, aff_stab_top]
 
 theorem aff_blk_low {K : Type} [Field K] (n r : ℕ) (i : Fin r) (h : GL (Fin n) K) (y : Fin (n + r) → K)
     (a : Fin r) (b : Fin (n + r)) :
@@ -872,7 +867,7 @@ theorem pStabVan : PStabVan := by
         finSumFinEquiv_symm_apply_castAdd, finSumFinEquiv_symm_apply_natAdd]
       show (f x : Matrix (Fin (n + r)) (Fin (n + r)) (𝓞 L)) (Fin.natAdd n a) (Fin.castAdd r b) = 0
       apply aff_alg_inj
-      rw [map_zero, ← aff_toK_val, hM, aff_blk_low, Matrix.one_apply, if_neg]
+      rw [map_zero, ← aff_toK_val, hM, aff_blk_low, Matrix.one_apply, ite_eq_right]
       intro hh
       have := congrArg Fin.val hh
       simp only [Fin.val_castAdd, Fin.val_natAdd] at this
@@ -885,7 +880,7 @@ theorem pStabVan : PStabVan := by
       rw [← aff_toK_val, hM, aff_blk_low, Matrix.one_apply, Matrix.one_apply]
       by_cases hab : a = b
       · subst hab; simp
-      · rw [if_neg hab, if_neg (fun hh => hab (Fin.ext (by
+      · rw [ite_eq_right hab, ite_eq_right (fun hh => hab (Fin.ext (by
         have := congrArg Fin.val hh; simp only [Fin.val_natAdd] at this; omega))), map_zero]
   have key : ∀ h : H, q * toK L (n + r) (c * stab (𝓞 L) n (n + r) (Nat.le_add_right n r) ((h : Gm L n) * 1)) =
       toK L (n + r) γ • ((toK L (n + r)).comp f h • G⁻¹) := by
@@ -974,8 +969,7 @@ private theorem ev_sub_hecke_double_cosets {G H Y : Type} [Group G] [Group H] [M
     (f g : (Fin (m + 1) → Y) → ℝ) (y : Y) (w : Chn G m) :
     ev ρ (fun t => f t - g t) y w = ev ρ f y w - ev ρ g y w := by
   unfold ev
-  simp only [mul_sub]
-  exact Finsupp.sum_sub
+  simpa only [mul_sub] using Finsupp.sum_sub
 
 private theorem coset_lemma_4 {G K : Type} [Group G] [Group K] (ρ : G →* K) (q : K) {m : ℕ}
     (F : (Fin (m + 2) → K) → ℝ) (hF : Inv ρ F) {c c' : G} (h : c' * c⁻¹ ∈ Gq ρ q)
@@ -1087,8 +1081,7 @@ theorem keyGen (hT : PTransfer) (hcomm : ∀ c, ρN (sO c) = sL (ρn c)) (hq : q
     have hx : ∀ c' : Γn, x.1.out * (sO c')⁻¹ ∉ Gq ρN q := by
       intro c' hc
       apply x.2 c'
-      rw [← Quotient.out_eq x.1, quotient_mk_rightRel_eq_iff_mul_inv_mem]
-      exact hc
+      rwa [← Quotient.out_eq x.1, quotient_mk_rightRel_eq_iff_mul_inv_mem]
     have hst : ∀ h ∈ stabR act h1 hm x, x.1.out * sO h * x.1.out⁻¹ ∈ Gq ρN q := by
       intro h hh
       have hh' : act x h = x := hh
@@ -1208,8 +1201,7 @@ theorem pKey (hT : PTransfer) : PKey := by
   intro c hc H hH w hw
   have hlow : ∃ i : Fin r, ((c⁻¹ : Gm L (n + r)) : Matrix (Fin (n + r)) (Fin (n + r)) (𝓞 L))
       (Fin.natAdd n i) ⟨0, by omega⟩ ∉ Ideal.span {π} := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨c', hc'⟩ := pLow L π hπ n r hn1 c hne
     exact hc c' hc'
   have h := pStabVan hCh hEv hAff L hC k hk π hπ n r hn1 hr1 c hlow F hFinv hFcoc H hH w hw
@@ -1447,8 +1439,7 @@ theorem pCobSub : PCobSub := by
     have e2 : (fun j => (⟨v (H.subtype g • y j), hvH _⟩ : H))
         = fun j => MonoidHom.id H g • (⟨v (y j), hvH (y j)⟩ : H) := by
       funext j
-      apply Subtype.ext
-      exact hv g (y j)
+      exact Subtype.ext (hv g (y j))
     rw [e1, e2]
     congr 1
     exact hEi g _
@@ -1535,8 +1526,7 @@ theorem pTransfer (hC : PCobSub) (hE : PEvDC) : PTransfer := by
     have hx : ∀ x, Φ x y = dC (fun y' : Fin (m + 1) → Γ => Ψ (rep x) fun j => gs x * y' j) y := by
       intro x
       rw [dC_translate (Ψ (rep x)) (gs x) y, hΨd (rep x), ← hΦ (rep x) (gs x) y, hgs x]
-    simp only [hx, dC, Finset.mul_sum]
-    exact Finset.sum_comm
+    simpa only [hx, dC, Finset.mul_sum] using Finset.sum_comm
   have key := hE Γ Γ Γ (MonoidHom.id Γ) m
     (fun y : Fin (m + 1) → Γ => ∑ x, Ψ (rep x) fun j => gs x * y j) hEinv 1 z
   rw [hdE] at key

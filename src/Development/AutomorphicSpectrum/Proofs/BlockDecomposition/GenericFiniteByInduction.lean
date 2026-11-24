@@ -264,8 +264,7 @@ theorem genFin_step (hC : CuspFin E a) (hT : ∀ r, 0 < r → r < a → CTFin E 
   have hfin : FiniteDimensional ℂ (genSub L ρ J) := by
     have : Module.Finite ℂ (genSub L ρ J ⧸ LinearMap.ker Φ) := Module.Finite.equiv Φ.quotKerEquivRange.symm
     exact Module.Finite.of_submodule_quotient (LinearMap.ker Φ)
-  rw [show Submodule.span ℂ (genSpace L ρ J) = genSub L ρ J from Submodule.span_eq (genSub L ρ J)]
-  exact hfin
+  rwa [show Submodule.span ℂ (genSpace L ρ J) = genSub L ρ J from Submodule.span_eq (genSub L ρ J)]
 
 theorem genFin_of_chapters :
     (∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ), CuspFin E a) →

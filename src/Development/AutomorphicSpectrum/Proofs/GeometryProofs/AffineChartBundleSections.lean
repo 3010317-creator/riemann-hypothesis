@@ -164,8 +164,7 @@ theorem hodgeGram_det_log_bounds : ∀ (E : Type) [Field E] [NumberField E] [IsC
   obtain ⟨hz1, hz2⟩ := hz
   have hw1 : (ρ : ℂ)⁻¹ • z ∈ Metric.ball (0 : Fin n → ℂ) ρ' := by
     rw [mem_ball_zero_iff] at hz1 ⊢
-    rw [norm_smul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hρ.le, inv_mul_lt_iff₀ hρ]
-    exact hz1
+    rwa [norm_smul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hρ.le, inv_mul_lt_iff₀ hρ]
   have hw2 : ∀ i : Fin n, i.val < a → ((ρ : ℂ)⁻¹ • z) i ≠ 0 := fun i hi =>
     mul_ne_zero (inv_ne_zero hρc) (hz2 i hi)
   have hwz : (ρ : ℂ) • (ρ : ℂ)⁻¹ • z = z := smul_inv_smul₀ hρc z
@@ -311,8 +310,7 @@ theorem exists_eq_coord_mul_of_vanishing {f : (ι → ℂ) → ℂ}
     have h2 : HasFDerivAt f (fderiv ℂ f (L s z)) (z + ((s : ℂ) - 1) • z i • e) :=
       (hf.differentiableAt (hU.mem_nhds (hLU s hs hz))).hasFDerivAt
     have h3 := (h2.comp_hasDerivAt (s : ℂ) h1).comp_ofReal
-    rw [map_smul, smul_eq_mul] at h3
-    exact h3
+    rwa [map_smul, smul_eq_mul] at h3
   · exact ContinuousOn.intervalIntegrable_of_Icc zero_le_one (continuousOn_const.mul hc)
 
 end
@@ -461,8 +459,8 @@ theorem HasLogGrowth.eq_zero_of_eq_coord_mul (hU : IsOpen U) {f h : (ι → ℂ)
     have hs : ∑ j ∈ S, |Real.log ‖γ t j‖| ≤ ∑ j ∈ S, (|Real.log ‖p j‖| + |Real.log ‖t‖|) :=
       Finset.sum_le_sum fun j _ => by
         by_cases hj : p j = 0
-        · simp only [hγdef, hj, if_true, norm_zero, Real.log_zero, abs_zero, zero_add, le_refl]
-        · simp only [hγdef, hj, if_false]
+        · simp only [hγdef, hj, ite_true, norm_zero, Real.log_zero, abs_zero, zero_add, le_refl]
+        · simp only [hγdef, hj, ite_false]
           linarith [abs_nonneg (Real.log ‖t‖)]
     rw [Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul] at hs
     have hL := abs_nonneg (Real.log ‖t‖)
@@ -478,7 +476,7 @@ theorem HasLogGrowth.eq_zero_of_eq_coord_mul (hU : IsOpen U) {f h : (ι → ℂ)
     filter_upwards [hγ (mem_interior_iff_mem_nhds.mp hpK), self_mem_nhdsWithin] with t htK ht0
     have hB : γ t ∉ coordDivisor S id := ite_eq_zero_notMem_coordDivisor S p ht0
     rw [he (γ t) (hKU htK) hB]
-    have hk' : γ t k = t := by simp only [hγdef, hk, if_true]
+    have hk' : γ t k = t := by simp only [hγdef, hk, ite_true]
     rw [hk', norm_mul]
     have hW0 : 0 ≤ GlobalTheory.lwP₂ S (id (γ t)) := (logWeight_pos _ _).le
     have hL := abs_nonneg (Real.log ‖t‖)
@@ -536,7 +534,7 @@ theorem exists_eq_coord_mul_of_isOpen (hU : IsOpen U) {f : (ι → ℂ) → ℂ}
     obtain ⟨ε, hε, G, -, hG, hfG⟩ := loc a ha hai
     refine ⟨ε, hε, G, hG, fun z hz => ?_⟩
     by_cases hzi : z i = 0
-    · simp only [g, hzi, if_true]
+    · simp only [g, hzi, ite_true]
       have hGz : DifferentiableAt ℂ G z := hG.differentiableAt (Metric.isOpen_ball.mem_nhds hz)
       have hu : HasDerivAt (update z i) (Pi.single i (1 : ℂ)) 0 := hasDerivAt_update z i 0
       have hz0 : update z i 0 = z := by rw [← hzi]; exact update_eq_self i z
@@ -555,7 +553,7 @@ theorem exists_eq_coord_mul_of_isOpen (hU : IsOpen U) {f : (ι → ℂ) → ℂ}
         simp
       rw [hev.deriv_eq, hprod.deriv]
       simp [hz0]
-    · simp only [g, hzi, if_false]
+    · simp only [g, hzi, ite_false]
       rw [hfG z hz]
       field_simp
   refine ⟨g, ?_, ?_⟩
@@ -570,12 +568,12 @@ theorem exists_eq_coord_mul_of_isOpen (hU : IsOpen U) {f : (ι → ℂ) → ℂ}
       have hci : DifferentiableAt ℂ (fun z : ι → ℂ => z i) a := by fun_prop
       have hq : DifferentiableAt ℂ (fun z => f z * (z i)⁻¹) a := hfa.mul (hci.inv hai)
       have hev : g =ᶠ[𝓝 a] fun z => f z * (z i)⁻¹ := hne.mono fun z hz => by
-        simp only [g, hz, if_false, div_eq_mul_inv]
+        simp only [g, hz, ite_false, div_eq_mul_inv]
       exact (hq.congr_of_eventuallyEq hev).differentiableWithinAt
   · intro z hz
     by_cases hzi : z i = 0
     · rw [h0 z hz hzi, hzi, zero_mul]
-    · simp only [g, hzi, if_false]
+    · simp only [g, hzi, ite_false]
       field_simp
 
 theorem HasLogGrowth.exists_extension_of_prod_mul (hU : IsOpen U) {f : (ι → ℂ) → ℂ}
@@ -705,9 +703,9 @@ theorem exists_unit_extension_of_log_growth :
     rw [hw_def]
     refine continuous_pi fun i => ?_
     by_cases h : z i = 0
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       exact continuous_ofReal
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       exact continuous_const
   have hw0 : w 0 = z := funext fun i => by by_cases h : z i = 0 <;> simp [hw_def, h]
   have hlim : Filter.Tendsto w (nhdsWithin 0 {0}ᶜ) (nhds z) := by
@@ -720,9 +718,9 @@ theorem exists_unit_extension_of_log_growth :
     have hS : ∀ i ∈ S, w ε i ≠ 0 := by
       intro i _
       by_cases h : z i = 0
-      · simp only [hw_def, h, if_true]
+      · simp only [hw_def, h, ite_true]
         exact Complex.ofReal_ne_zero.2 hε0
-      · simp only [hw_def, h, if_false]
+      · simp only [hw_def, h, ite_false]
         exact h
     rw [hψe _ hε hS, hχe _ hε hS]
     exact mul_inv_cancel₀ (hb _ hε hS).1
@@ -818,7 +816,7 @@ theorem exists_away_family {R : Type} [CommRing R] {n : ℕ} (ψ : (Fin n → �
   have hc : ∀ b ∈ B, (ψ' b).comp (algebraMap R (Localization.Away r)) = ψ b := by
     intro b hb
     ext x
-    simp only [ψ', dif_pos hb, RingHom.comp_apply]
+    simp only [ψ', dite_eq_left hb, RingHom.comp_apply]
     exact IsLocalization.Away.lift_eq r (hu b hb) x
   refine ⟨ψ', hc, fun x => ?_⟩
   obtain ⟨k, a, hx⟩ := IsLocalization.Away.surj r x
@@ -933,8 +931,7 @@ theorem isFramed_congr {U : Set (Xo.XF c)} {τ : E →+* ℂ} {F : Type} [Field 
   subst h
   have e₁ : v = v' := funext fun i => Over.OverMorphism.ext (hv i)
   have e₂ : w = w' := funext fun i => Over.OverMorphism.ext (hw i)
-  rw [← e₁, ← e₂]
-  exact hf
+  rwa [← e₁, ← e₂]
 
 theorem cfn_congr (Φ : CFn Xo c) {y y' : Sp ℂ ⟶ Xo.XF c} (h : y = y') {v : Vecs y D.p} {w : Vecs y D.q}
     {v' : Vecs y' D.p} {w' : Vecs y' D.q}
@@ -1022,8 +1019,7 @@ theorem exists_unit_extension_of_bdryChart : ∀ (E : Type) [Field E] [NumberFie
   have hρ : (σ.comp (IntermediateField.inclusion c.le).toRingHom) (baseKA l).ρ = H.rt0 := by
     have e : (IntermediateField.inclusion c.le).toRingHom (baseKA l).ρ = tauIn c τ H.rt :=
       Subtype.ext hτ.symm
-    rw [RingHom.comp_apply, e]
-    exact hσ
+    rwa [RingHom.comp_apply, e]
   obtain ⟨ρ₁, K₁, N₁, hρ₁, hρ₁', b₁⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.hodgeGram_det_log_bounds E H D l Xo _ n a C hpq hρ D.p u₁ h1
   obtain ⟨ρ₂, K₂, N₂, hρ₂, hρ₂', b₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.hodgeGram_det_log_bounds E H D l Xo _ n a C hpq hρ D.q u₂ h2
   have hρ0 : 0 < min ρ₁ ρ₂ := lt_min hρ₁ hρ₂
@@ -1152,8 +1148,7 @@ theorem exists_tied_chart {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
   let ψ : (Fin n → ℂ) → (Γ(Z, U) →+* ℂ) := fun z =>
     if h : ⊤ ≤ y ((ρ : ℂ) • z) ⁻¹ᵁ U then evalHom _ U h else evalHom _ U h0
   have hψ : ∀ z ∈ Metric.ball (0 : Fin n → ℂ) 1, spMap (ψ z) ≫ hU.fromSpec = y ((ρ : ℂ) • z) := fun z hz => by
-    simp only [ψ, dif_pos (hB (hin z hz)).2]
-    exact spMap_evalHom _ _ _ _
+    simpa only [ψ, dite_eq_left (hB (hin z hz)).2] using spMap_evalHom _ _ _ _
   obtain ⟨tV, ⟨q⟩⟩ := exists_sab (pullback.snd hU.fromSpec j₀) To
   obtain ⟨m₂, e₂⟩ := GlobalTheory.ObjMaps.exists_sab_comp n₂ q
   obtain ⟨q₁, e₁⟩ : ∃ q₁ : SABMap tV T (pullback.fst hU.fromSpec j₀ ≫ hU.fromSpec), q₁.φ = q.φ ≫ n₁.φ := by
@@ -1176,7 +1171,7 @@ theorem exists_tied_chart {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
     hU.fromSpec, pullback.snd _ _, m, q, hρ, hρ1, pullback.condition.symm, rfl, hψ, e₂, e₃.symm.trans e₁⟩
   refine (((hy U r).2.comp (f := fun z => (ρ : ℂ) • z) (by fun_prop) (fun z hz => hB (hin z hz)))).congr
     fun z hz => ?_
-  simp only [ψ, Function.comp, valAt', dif_pos (hB (hin z hz)).2]
+  simp only [ψ, Function.comp, valAt', dite_eq_left (hB (hin z hz)).2]
   rfl
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}
@@ -1189,8 +1184,7 @@ theorem exists_lift_of_centre_mem {X : Scheme.{0}} (W : X.Opens) (w : Sp ℂ ⟶
   have hr : Set.range w ⊆ Set.range W.ι := by
     rintro _ ⟨p, rfl⟩
     have e : p = IsLocalRing.closedPoint ℂ := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
-    rw [Scheme.Opens.range_ι, e]
-    exact h
+    rwa [Scheme.Opens.range_ι, e]
   exact ⟨IsOpenImmersion.lift W.ι w hr, IsOpenImmersion.lift_fac _ _ _⟩
 
 theorem exists_model_chart (Y : Model Xo c β) (σ : c.F →+* ℂ) {X' : Scheme.{0}} (π : X' ⟶ Y.X) (s' : X' ⟶ Sp c.F)
@@ -1296,8 +1290,7 @@ theorem indep_of_frame {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G]
       rw [hv']
       exact (hcomb _ _ _ _).2 (by simp [Pi.single_apply, add_smul, Finset.sum_add_distrib, hc])
     obtain ⟨c0, -, hun⟩ := (hv.2 (v i) (hv.1 i))
-    have e := congrFun ((hun _ c1).trans (hun _ c2).symm) i
-    simpa using e
+    simpa using congrFun ((hun _ c1).trans (hun _ c2).symm) i
   have hbas := (hb hs g (Pi.basisFun R (Fin g))).1
   let L : (Fin g → ℂ) →ₗ[ℂ] E' := Fintype.linearCombination ℂ (fun k => j (Pi.basisFun R (Fin g) k))
   have hL : ∀ x : Fin g → R, L (fun k => ψ (x k)) = j x := by
@@ -1309,8 +1302,7 @@ theorem indep_of_frame {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G]
     rfl
   refine LinearIndependent.of_comp L ?_
   have : L ∘ (fun i b => ψ (u i b)) = fun i => j (u i) := funext fun i => hL (u i)
-  rw [this]
-  exact hind
+  rwa [this]
 
 theorem exists_vec (Y : Model Xo c β) {σ' : KA l →+* ℂ} {n a : ℕ} (C : BdryChart Xo σ' n a) (k' : C.V ⟶ Xo.XF c)
     (φ₀ : C.tV.G.left ⟶ Y.oF.t.G.left) {f : Sp C.R ⟶ Y.X} (mR : SABMap C.t Y.t f)
@@ -1439,7 +1431,7 @@ theorem chart_unit (Y : Model Xo c β) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (
   choose v w v₀ w₀ hF hS₁ hS₂ hc₁ hc₂ hl₁ hl₂ using key
   let φ : (Fin d → ℂ) → ℂ := fun z => if hz : z ∈ punct d a 1 then Φ (C.pt z ≫ k') (v z hz) (w z hz) else 0
   obtain ⟨ρ', h₀, hρ', hρ1, hd, hne, hφ⟩ := GlobalTheory.T.boundary_chart_frame_growth E H D l Xo c τ σ Φ d a C k' u₁ u₂ φ h1 hr2 hr1 hU hk ind₁ ind₂
-    (fun z hz => ⟨v z hz, w z hz, hF z hz, hl₁ z hz, hl₂ z hz, by simp only [φ, dif_pos hz]⟩)
+    (fun z hz => ⟨v z hz, w z hz, hF z hz, hl₁ z hz, hl₂ z hz, by simp only [φ, dite_eq_left hz]⟩)
   refine ⟨ρ', h₀, hρ', hρ1, hd, hne, ?_⟩
   intro z hz vv ww vv₀ ww₀ s1 s2 t1 t2
   have hz1 : z ∈ punct d a 1 := ⟨ball_subset_ball hρ1 hz.1, hz.2⟩
@@ -1448,7 +1440,7 @@ theorem chart_unit (Y : Model Xo c β) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (
   have e₁' : vv = v z hz1 := funext fun i => SameVec.unique_left (s1 i) (by rw [e₀]; exact hS₁ z hz1 i)
   have f₁ : ww = w z hz1 := funext fun j => SameVec.unique_left (s2 j) (by rw [f₀]; exact hS₂ z hz1 j)
   rw [hφ z hz]
-  simp only [φ, dif_pos hz1, e₁', f₁]
+  simp only [φ, dite_eq_left hz1, e₁', f₁]
 
 end GlobalTheory.CompanionTheory.Ar.Flat.ChartFamily
 

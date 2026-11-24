@@ -286,8 +286,7 @@ theorem perO_scale : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (a b 
       have h3 := h1 _ (hy _ (h2 v hv))
       have e : ((w * w) • y) v = w • y (w • v) := by
         rw [LinearMap.smul_apply, mul_smul, LinearMap.map_smul_of_tower]
-      rw [e]
-      exact h3
+      rwa [e]
     · rw [smul_comm]
   | zero => rw [smul_zero]; exact zero_mem _
   | add _ _ _ _ ha hb => rw [smul_add]; exact add_mem ha hb
@@ -300,20 +299,7 @@ theorem tau_nonempty (D : D7) : Nonempty D.what₂.Tau := ⟨D.eTau.symm (Classi
 theorem unimod_iff {D : D7} {n : ℕ} (L : Submodule (𝓞 D.host.E) (Formalism.L2.Col.Sp D.host.E n)) :
     Formalism.HermitianLatticesTheory.IsUnimodular (Formalism.L2.Col.hStd D.host.E n) L ↔
       ∀ y, y ∈ L ↔ ∀ x ∈ L, Formalism.BasicNotions.stdH D.host.E n x y ∈ (algebraMap (𝓞 D.host.E) D.host.E).range := by
-  have hm : ∀ y, y ∈ Formalism.HermitianLatticesTheory.dual (Formalism.L2.Col.hStd D.host.E n) L ↔
-      ∀ x ∈ L, Formalism.BasicNotions.stdH D.host.E n x y ∈ (algebraMap (𝓞 D.host.E) D.host.E).range := by
-    intro y
-    simp only [Formalism.HermitianLatticesTheory.dual, Formalism.E.hdual, Submodule.mem_iInf, Submodule.mem_comap, LinearMap.coe_restrictScalars,
-      Submodule.mem_one, RingHom.mem_range]
-    rfl
-  unfold Formalism.HermitianLatticesTheory.IsUnimodular
-  constructor
-  · intro h y
-    rw [← hm y, h]
-  · intro h
-    ext y
-    rw [hm y]
-    exact (h y).symm
+  exact GlobalTheory.TwU.KerMove.unimod_iff L
 
 theorem admissible_pair_twist {D : D7} {a b : ℕ} (cl : ℕ) (N : Submodule (𝓞 D.host.E) (Fin a → D.host.E)) (N' : Submodule (𝓞 D.host.E) (Fin b → D.host.E))
     (hA : TaylorLogMetric.admitted D a b N N') (hcl : 0 < cl) (ex : HeightOneSpectrum (𝓞 D.host.E) → ℤ)
@@ -378,8 +364,7 @@ theorem eNat_fixed_of_vec {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : 
     rw [KS.Lat.al_eq_La B hcc hδ hA x hx']
     unfold alK alV
     rw [HV_eq_formV]
-  rw [hal]
-  exact h1
+  rwa [hal]
 
 theorem locP_eq_of_scale {E : Type} [Field E] [NumberField E] {W : Type} [AddCommGroup W] [Module (𝓞 E) W]
     (M M₀ : Submodule (𝓞 E) W) (g : 𝓞 E) (Q : HeightOneSpectrum (𝓞 E)) (hg : g ∉ Q.asIdeal)

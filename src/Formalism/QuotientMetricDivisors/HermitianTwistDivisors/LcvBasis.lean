@@ -144,8 +144,7 @@ theorem len_on {N : Submodule (𝓞 K) V} {a : V} (q : Ideal (𝓞 K)) [hq : q.I
       obtain ⟨t, htq, htr⟩ := (mem_locP' q N _).mp h
       have : (t * r) • a ∈ N := by rw [mul_smul]; exact htr
       exact ((hq.mem_or_mem ((hp _).mpr this)).resolve_left htq)
-    · intro h
-      exact locBasic_le_locS _ N ((hp r).mp h)
+    · exact fun h => locBasic_le_locS _ N ((hp r).mp h)
   have e : (↥(localization₂ q M) ⧸ Q) ≃ₗ[𝓞 K] (𝓞 K ⧸ q) :=
     (f.quotKerEquivOfSurjective hsurj).symm.trans (Submodule.quotEquivOfEq _ _ hker)
   have : IsSimpleModule (𝓞 K) (𝓞 K ⧸ q) := isSimpleModule_iff_isCoatom.mpr hqmax.out
@@ -194,8 +193,7 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
   have hlt : N < A := lt_of_le_of_ne hNA hEq
   have hfin : Finite (↥A ⧸ N.comap A.subtype) := by
     apply Nat.finite_of_card_ne_zero
-    rw [← hn] at hn0
-    exact hn0
+    rwa [← hn] at hn0
 
   set S : Set (Submodule (𝓞 K) V) := {M | N < M ∧ M ≤ A} with hS
   have hSfin : S.Finite := by
@@ -229,9 +227,7 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
     obtain ⟨m, hm, z, hz, hmz⟩ := Submodule.mem_sup.mp ha'
     obtain ⟨s, rfl⟩ := Submodule.mem_span_singleton.mp hz
     have h1 : (1 - s * x) ∈ p := by
-      rw [hp, sub_smul, one_smul, mul_smul]
-      rw [sub_eq_iff_eq_add.mpr hmz.symm]
-      exact hm
+      rwa [hp, sub_smul, one_smul, mul_smul, sub_eq_iff_eq_add.mpr hmz.symm]
     have h2 : s * x ∈ J := J.mul_mem_left s hxJ
     have := J.add_mem (hpJ h1) h2
     simpa using this
@@ -283,10 +279,10 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
     rw [hM0eq]
     by_cases hw : w = w0
     · have hwp : w.asIdeal = p := by rw [hw]
-      rw [if_pos hw]
+      rw [ite_eq_left hw]
       have := len_on (N := N) (a := a) w.asIdeal (hwp ▸ hpmax) (fun r => by rw [hwp]; exact hp r)
       rw [this]; rfl
-    · rw [if_neg hw]
+    · rw [ite_eq_right hw]
       have hwp : w.asIdeal ≠ p := fun h => hw (HeightOneSpectrum.ext h)
       have := len_off (N := N) (a := a) hpmax hp w.asIdeal w.isMaximal.ne_top hwp
       rw [this]; rfl
@@ -311,8 +307,7 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
     by_cases h : w = w0
     · exact Or.inr h
     · left
-      rw [if_neg h, zero_add] at hw
-      exact hw
+      rwa [ite_eq_right h, zero_add] at hw
   · have hsum : (fun w : HeightOneSpectrum (𝓞 K) =>
         Real.log (Ideal.absNorm w.asIdeal : ℝ) * (locLen w.asIdeal A N : ℝ)) =
         fun w => Real.log (Ideal.absNorm w.asIdeal : ℝ) * ((if w = w0 then 1 else 0 : ℕ) : ℝ) +
@@ -320,7 +315,7 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
       funext w
       rw [hlen w]; push_cast; ring
     rw [hsum, finsum_add_distrib, ← ihlog, finsum_eq_single _ w0]
-    · rw [if_pos rfl, ← hprod]
+    · rw [ite_eq_left rfl, ← hprod]
       push_cast
       rw [Real.log_mul (by exact_mod_cast hN0) (by exact_mod_cast hm0)]
       simp [w0]

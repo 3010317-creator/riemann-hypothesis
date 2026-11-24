@@ -423,13 +423,7 @@ open MvPolynomial Filter Topology NumberField
 namespace ChowFormHeightComparison₂.GenericDenseBound
 
 theorem ratPrimeDense : GroundTheory.Heights₂.Heights.HilbertSamuel.RatPrimeDense.Statement :=
-  GroundTheory.Heights₂.Heights.HilbertSamuel.RatPrimeDense.proof
-    (GroundTheory.Heights₂.Heights.HilbertSamuel.FiniteSeparatingModel.proof
-      GroundTheory.Heights₂.Heights.HilbertSamuel.NoetherProjection.proof
-      GroundTheory.Heights₂.Heights.HilbertSamuel.RootsLiftToZeros.proof)
-    GroundTheory.Heights₂.Heights.HilbertSamuel.RootsNear.proof
-    GroundTheory.Heights₂.Heights.HilbertSamuel.RootsBounded.proof
-    GroundTheory.Heights₂.Heights.HilbertSamuel.PolyNonvanishDense.proof
+  GroundTheory.Heights₂.Heights.HilbertSamuel.RatPrimeDense.full
 
 theorem generic_dense {n : ℕ} (P : Ideal (MvPolynomial (Fin n) ℚ)) (hP : P.IsPrime) {z₀ : Fin n → ℂ}
     (hz₀ : ∀ g ∈ P, aeval z₀ g = 0) :
@@ -789,22 +783,12 @@ namespace GlobalTheory.CompanionTheory.Ar.Rec
 
 theorem cls_nsmul_common {Y : Scheme.{0}} {Λ : Type} [AddCommGroup Λ] {B : Λ → LB Y} (C : Common B) (n : ℕ)
     (a : Λ) : cls (B (n • a)) (C.isLB (n • a)) = n • cls (B a) (C.isLB a) := by
-  induction n with
-  | zero =>
-    have h := GlobalTheory.HSApp.cls_common_add C 0 0
-    simp only [add_zero] at h
-    simp only [zero_nsmul]
-    exact left_eq_add.1 h
-  | succ n ih => rw [succ_nsmul, GlobalTheory.HSApp.cls_common_add C, ih, succ_nsmul]
+  exact GlobalTheory.HSApp.AmpleTwist.cls_nsmul_of_common C n a
 
 theorem val_ne_zero {F : Type} [Field F] {X : Scheme.{0}} (p : X ⟶ Sp F) {B : LB X} (θ : B.Sec) (z : Sp ℂ ⟶ X)
     (k : B.ι) (hk : ⊤ ≤ z ⁻¹ᵁ B.U k) (hz : ∀ s, z s ∈ nonzeroLocus θ) :
     H0.val z k le_top hk (H0.ofSec p ⊤ θ) ≠ 0 := by
-  refine (H0.val_ofSec z k le_top hk θ).trans_ne ?_
-  have h : ⊤ ≤ z ⁻¹ᵁ X.basicOpen (θ.f k) := fun s hs =>
-    (X.mem_basicOpen _ _ (hk hs)).2 ((isUnit_ger_iff θ (hk hs)).2 (hz s))
-  rw [← TangentOrigin.evalPt_res z (X.basicOpen_le _) hk h]
-  exact ((X.toRingedSpace.isUnit_res_basicOpen (θ.f k)).map _).ne_zero
+  exact GlobalTheory.OrbitSep.val_ofSec_ne_zero p θ z k hk hz
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {σ : c.F →+* ℂ}

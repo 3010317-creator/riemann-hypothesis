@@ -98,9 +98,7 @@ theorem prod_isAddFundamentalDomain (Γ₁ : AddSubgroup V) (Γ : AddSubgroup (V
     show μ.prod μ ((g +ᵥ (𝓕₁ ×ˢ 𝓕₁)) ∩ (g' +ᵥ (𝓕₁ ×ˢ 𝓕₁))) = 0
     rw [hset g, hset g', Set.prod_inter_prod, Measure.prod_prod]
     by_cases h1 : (g : V × V).1 = (g' : V × V).1
-    · have h2 : (g : V × V).2 ≠ (g' : V × V).2 := by
-        intro h2
-        exact hne (Subtype.ext (Prod.ext h1 h2))
+    · have h2 : (g : V × V).2 ≠ (g' : V × V).2 := fun h2 => hne (Subtype.ext (Prod.ext h1 h2))
       have := h.aedisjoint (i := ⟨(g : V × V).2, ((hΓ _).1 g.2).2⟩)
         (j := ⟨(g' : V × V).2, ((hΓ _).1 g'.2).2⟩) (fun h' => h2 (congrArg Subtype.val h'))
       rw [show μ _ = 0 from this, mul_zero]

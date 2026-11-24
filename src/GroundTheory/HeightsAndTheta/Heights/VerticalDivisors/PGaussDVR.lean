@@ -46,8 +46,7 @@ theorem exists_C_mul_eq_C_pow_mul {a : A} (ha : v.intValuation a = exp (-1 : ℤ
     have h1 : C t * p ∈ Ideal.map (C : A →+* MvPolynomial σ A) (J ^ j) *
         Ideal.map (C : A →+* MvPolynomial σ A) (v.asIdeal ^ j) :=
       Ideal.mul_mem_mul (Ideal.mem_map_of_mem _ htJ) hp
-    rw [← Ideal.map_mul, hid, Ideal.map_span, Set.image_singleton, map_pow] at h1
-    exact h1
+    rwa [← Ideal.map_mul, hid, Ideal.map_span, Set.image_singleton, map_pow] at h1
   obtain ⟨h, hh⟩ := Ideal.mem_span_singleton'.mp hmem
   exact ⟨t, htv, h, by rw [← hh, mul_comm]⟩
 
@@ -102,8 +101,7 @@ theorem irreducible_algebraMap_C (e n : ℕ) (v : HeightOneSpectrum (𝓞 K))
   obtain ⟨t, ht, h, hth⟩ := exists_C_mul_eq_C_pow_mul v ha 1 hx
   have htu : IsUnit (φ (C t)) := by
     rw [IsLocalization.AtPrime.isUnit_to_map_iff (ParDVR e n v) (parPrime e n v)]
-    intro htP
-    exact ht (by simpa using (MvPolynomial.mem_map_C_iff (I := v.asIdeal)).mp htP 0)
+    exact fun htP => ht (by simpa using (MvPolynomial.mem_map_C_iff (I := v.asIdeal)).mp htP 0)
   have hx2 : φ x = φ (C a) * (↑htu.unit⁻¹ * φ h) := by
     have h2 := congrArg φ hth
     rw [map_mul, map_mul, pow_one] at h2
@@ -161,12 +159,10 @@ theorem GaussDVR.proof (h1 : ParDVRIsDVR.Statement) : GaussDVR.Statement := by
     omega
   have htu : IsUnit (φ (C t)) := by
     rw [IsLocalization.AtPrime.isUnit_to_map_iff (ParDVR e n v) (parPrime e n v)]
-    intro htP
-    exact ht (by simpa using (MvPolynomial.mem_map_C_iff (I := v.asIdeal)).mp htP 0)
+    exact fun htP => ht (by simpa using (MvPolynomial.mem_map_C_iff (I := v.asIdeal)).mp htP 0)
   have hhu : IsUnit (φ h) := by
     rw [IsLocalization.AtPrime.isUnit_to_map_iff (ParDVR e n v) (parPrime e n v)]
-    intro hP
-    exact hh ((MvPolynomial.mem_map_C_iff (I := v.asIdeal)).mp hP d0)
+    exact fun hP => hh ((MvPolynomial.mem_map_C_iff (I := v.asIdeal)).mp hP d0)
   have hord : Ring.ord (ParDVR e n v) (φ g) = m := by
     rw [Ring.ord_eq_addVal]
     have h0 := congrArg φ hth

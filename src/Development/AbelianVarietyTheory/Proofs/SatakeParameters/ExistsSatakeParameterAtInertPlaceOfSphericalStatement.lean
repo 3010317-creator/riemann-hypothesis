@@ -225,18 +225,18 @@ theorem heckeFunI_mem : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
     · rw [Finset.sum_apply]
       refine Finset.sum_congr rfl fun c _ => ?_
       by_cases hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = c ∧ TrivOutside {v} x
-      · simp only [dif_pos hc]
+      · simp only [dite_eq_left hc]
         rfl
-      · simp only [dif_neg hc, zero_smul]
+      · simp only [dite_eq_right hc, zero_smul]
         rfl
     · intro c hc0
       rw [Function.mem_support] at hc0
       by_cases hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = c ∧ TrivOutside {v} x
-      · rw [dif_pos hc] at hc0
+      · rw [dite_eq_left hc] at hc0
         rw [Set.Finite.coe_toFinset]
         refine ⟨hc.choose, hc.choose_spec.1, hc.choose_spec.2, fun h0 => hc0 ?_⟩
         rw [h0, zero_smul]
-      · exact absurd (dif_neg hc) hc0
+      · exact absurd (dite_eq_right hc) hc0
   rw [key]
   exact Submodule.sum_mem _ fun c _ => Submodule.smul_mem _ _ (hS _ f hf)
 
@@ -303,37 +303,7 @@ theorem compAt_mem_tensInt {z : AL L} (hz : z ∈ ALint L) :
   exact key hz
 
 theorem loc_mem_GU (Dv : InertDatum L n v w) (x : GAf L n) : Dv.loc x ∈ GU Dv.σw n := by
-  set φ : AL L →+* w.adicCompletion L := (Dv.e : _ →+* _).comp (compAt L v) with hφdef
-  have hφ : ∀ z, φ (conjAL L z) = Dv.σw (φ z) := fun z => by
-    simp only [φ, RingHom.comp_apply, compAt_conjAL]
-    exact Dv.comm _
-  have hX : ((x.1 : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) *
-      conjT (conjAL L) ((x.1 : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) = 1 := x.2
-  have hX' := mul_eq_one_comm.mp hX
-  set A : Matrix (Fin n) (Fin n) (w.adicCompletion L) :=
-    ((x.1 : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)).map φ with hAdef
-  have hA : cT Dv.σw A * A = 1 := by
-    have : cT Dv.σw A = (conjT (conjAL L) ((x.1 : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L))).map φ := by
-      ext i j; simp [cT, conjT, A, hφ]
-    rw [this, ← Matrix.map_mul, hX', Matrix.map_one _ (map_zero _) (map_one _)]
-  have hloc : ((Dv.loc x : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) =
-      ((Dv.P⁻¹ : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) * A *
-        (Dv.P : Matrix (Fin n) (Fin n) (w.adicCompletion L)) := rfl
-  have hPP : cT Dv.σw ((Dv.P⁻¹ : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) *
-      cT Dv.σw (Dv.P : Matrix (Fin n) (Fin n) (w.adicCompletion L)) = 1 := by
-    rw [← cT_mul, Units.mul_inv, cT_one]
-  have hPP' : (Dv.P : Matrix (Fin n) (Fin n) (w.adicCompletion L)) *
-      ((Dv.P⁻¹ : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) = 1 :=
-    Units.mul_inv _
-  show cT Dv.σw ((Dv.loc x : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) *
-      antiJ (w.adicCompletion L) n *
-      ((Dv.loc x : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) =
-      antiJ (w.adicCompletion L) n
-  rw [← Dv.Panti, hloc, cT_mul, cT_mul]
-  simp only [Matrix.mul_assoc]
-  rw [← Matrix.mul_assoc (cT Dv.σw _) (cT Dv.σw (Dv.P : Matrix (Fin n) (Fin n) (w.adicCompletion L))), hPP,
-    Matrix.one_mul, ← Matrix.mul_assoc (Dv.P : Matrix (Fin n) (Fin n) (w.adicCompletion L)), hPP',
-    Matrix.one_mul, ← Matrix.mul_assoc (cT Dv.σw A) A, hA, Matrix.one_mul]
+  exact GlobalTheory.T.inertLocal_mem_localUnitaryGroup L n v w Dv x
 
 theorem mem_range_of_int {K : Type} [Field K] (S : Subring K) (g : GL (Fin n) K)
     (h1 : ∀ i j, (g : Matrix (Fin n) (Fin n) K) i j ∈ S)
@@ -349,19 +319,12 @@ theorem mem_range_of_int {K : Type} [Field K] (S : Subring K) (g : GL (Fin n) K)
     simp only [Matrix.map_mul, hM, hN, Units.mul_inv, Matrix.map_one _ (map_zero _) (map_one _)])
   have hNM : N * M = 1 := inj (by
     simp only [Matrix.map_mul, hM, hN, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)])
-  refine ⟨⟨M, N, hMN, hNM⟩, Units.ext ?_⟩
-  exact hM
+  exact ⟨⟨M, N, hMN, hNM⟩, Units.ext hM⟩
 
 theorem loc_entries_int (Dv : InertDatum L n v w) {x : GAf L n} (hx : x ∈ Umax L n) (i j : Fin n) :
     ((Dv.loc x : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) i j ∈
       intL (w.adicCompletion L) := by
-  have hP := GlobalTheory.InertUmax.entries_mem_of_range _ _ Dv.Pint
-  have hP' := GlobalTheory.InertUmax.entries_mem_of_range _ _ (inv_mem Dv.Pint)
-  have hA : ∀ k l, Dv.e (compAt L v (((x.1 : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) k l)) ∈
-      intL (w.adicCompletion L) := fun k l => (Dv.integ _).1 (compAt_mem_tensInt (hx k l))
-  simp only [InertDatum.loc, Units.val_mul, Matrix.mul_apply]
-  exact Subring.sum_mem _ fun k _ => Subring.mul_mem _
-    (Subring.sum_mem _ fun l _ => Subring.mul_mem _ (hP' i l) (hA l k)) (hP k j)
+  exact GlobalTheory.T.inertLocal_integral_of_mem_latticeStabilizer L n v w Dv x hx i j
 
 theorem loc_mem_KU (Dv : InertDatum L n v w) {x : GAf L n} (hx : x ∈ Umax L n) :
     (⟨Dv.loc x, loc_mem_GU Dv x⟩ : GU Dv.σw n) ∈ KU Dv.σw n := by
@@ -378,10 +341,7 @@ theorem GlobalTheory.OneAct.heckeFunI_unit : ∀ (L : Type) [Field L] [NumberFie
   intro L _ _ _ n v w Dv U hU W _ _ f hf
   funext g
   unfold heckeFunI
-  have hone : TrivOutside {v} (1 : GAf L n) := by
-    intro u _
-    show ((1 : Matrix (Fin n) (Fin n) (AL L))).map (compAt L u) = 1
-    exact Matrix.map_one _ (map_zero _) (map_one _)
+  have hone : TrivOutside {v} (1 : GAf L n) := fun u _ => Matrix.map_one _ (map_zero _) (map_one _)
   have hdK : ∀ y : GU Dv.σw n, y ∈ (DoubleCoset.doubleCoset (1 : GU Dv.σw n) (KU Dv.σw n : Set (GU Dv.σw n))
       (KU Dv.σw n : Set (GU Dv.σw n))) ↔ y ∈ KU Dv.σw n := by
     intro y
@@ -389,8 +349,7 @@ theorem GlobalTheory.OneAct.heckeFunI_unit : ∀ (L : Type) [Field L] [NumberFie
     constructor
     · rintro ⟨a, ha, b, hb, rfl⟩
       simpa using (KU Dv.σw n).mul_mem ha hb
-    · intro hy
-      exact ⟨y, hy, 1, (KU Dv.σw n).one_mem, by simp⟩
+    · exact fun hy => ⟨y, hy, 1, (KU Dv.σw n).one_mem, by simp⟩
   rw [finsum_eq_single _ ((1 : GAf L n) : GAf L n ⧸ U)]
   · have hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = ((1 : GAf L n) : GAf L n ⧸ U) ∧ TrivOutside {v} x :=
       ⟨1, rfl, hone⟩

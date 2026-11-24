@@ -227,7 +227,7 @@ theorem gram_up (m : SABMap t' t f) (hξ : IsCptGen ξ) (hξ' : IsCptGen ξ') (h
     ⟨hq, eA.symm a, congrArg Subtype.val (eA.apply_symm_apply a), rfl⟩
   refine ⟨φ, hφ, fun r b Γ b' P ⟨v, hv, hI⟩ hP => ?_⟩
   let val : Li' → Vz := fun e => if he : e ∈ M'.lat p' then ev ⟨e, he⟩ else 0
-  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dif_pos he
+  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dite_eq_left he
   have h0 : val 0 = 0 := by
     rw [hval 0 (zero_mem _)]
     exact map_zero ev
@@ -283,8 +283,7 @@ theorem det_tri {b₀ c : Fin r → V} (hb₀ : LinearIndependent Ω b₀) {t : 
   have h1 : Q.BlockTriangular id := fun l k hlk => by
     have h := congrFun (key k) l
     have hlk' : k < l := hlk
-    rw [hd0 k l hlk'.le, Pi.single_eq_of_ne hlk'.ne', add_zero] at h
-    exact h
+    rwa [hd0 k l hlk'.le, Pi.single_eq_of_ne hlk'.ne', add_zero] at h
   rw [Matrix.det_of_upperTriangular h1]
   refine Finset.prod_congr rfl fun k _ => ?_
   have h := congrFun (key k) k
@@ -752,8 +751,7 @@ theorem pull_on {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset ℕ} {�
     (p6.2 n b hb).map' φ.toLinearMap φ.ker⟩
   have hd' : GlobalTheory.CompanionTheory.Ar.Dominates A'.ξ B.ξ (e.hom ≫ g) i := by
     show A'.ξ ≫ e.hom ≫ g = _
-    rw [← Category.assoc, p1]
-    exact hd
+    rwa [← Category.assoc, p1]
   refine ⟨j, k, hj, fun a => B.m.cart.1.hom_ext ?_ ?_, fun s => ?_⟩
   · show ((A.M.pt (φ (j' a))).left ≫ k.φ) ≫ B.m.φ = _
     rw [Category.assoc, ← hk, φt, p3, ← Category.assoc, p7]
@@ -774,8 +772,7 @@ theorem pull_on {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset ℕ} {�
     have hq' : genPt B.ξ ⤳ (e.hom ≫ g) (e.symm.hom q.1) := e1 ▸ hq
     have hb2 : (B.V s).IsFrameAt b ⟨(e.hom ≫ g) (e.symm.hom q.1), hq'⟩ := by
       have : (⟨(e.hom ≫ g) (e.symm.hom q.1), hq'⟩ : Cpt B.ξ) = ⟨g q.1, hq⟩ := Subtype.ext e1
-      rw [this]
-      exact hb1
+      rwa [this]
     have hb3 := FlagPull.pull_isFrameAt hd' p6 ⟨e.symm.hom q.1, h'⟩ hq' hb2
     rw [← p9] at hb3
     have hb4 : (A.V s).IsFrameAt (fun k => φ (j' (b k))) q :=
@@ -892,8 +889,8 @@ theorem prod_last {M : Type} [CommMonoid M] (F : CMType H × Fin (D.p + D.q) →
   refine Finset.prod_congr rfl fun τ _ => ?_
   rw [Fin.prod_univ_add]
   simp only [Fin.val_castAdd, Fin.val_natAdd]
-  rw [Finset.prod_eq_one (fun i _ => if_neg (by omega)), one_mul]
-  simp only [le_add_iff_nonneg_right, zero_le, if_true]
+  rw [Finset.prod_eq_one (fun i _ => ite_eq_right (by omega)), one_mul]
+  simp only [le_add_iff_nonneg_right, zero_le, ite_true]
   exact (Fintype.prod_equiv Fin.revPerm (fun a => F (lastRoot D (τ, a))) (fun j => F (τ, Fin.natAdd D.p j))
     (fun a => rfl)).symm
 
@@ -903,8 +900,8 @@ theorem sum_last {M : Type} [AddCommMonoid M] (F : CMType H × Fin (D.p + D.q) �
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [Fin.sum_univ_add]
   simp only [Fin.val_castAdd, Fin.val_natAdd]
-  rw [Finset.sum_eq_zero (fun i _ => if_neg (by omega)), zero_add]
-  simp only [le_add_iff_nonneg_right, zero_le, if_true]
+  rw [Finset.sum_eq_zero (fun i _ => ite_eq_right (by omega)), zero_add]
+  simp only [le_add_iff_nonneg_right, zero_le, ite_true]
   exact (Fintype.sum_equiv Fin.revPerm (fun a => F (lastRoot D (τ, a))) (fun j => F (τ, Fin.natAdd D.p j))
     (fun a => rfl)).symm
 
@@ -968,12 +965,10 @@ theorem common (h₁ : LevelFree) (h₂ : MuHodge) : Common := by
       (fun p hp s => (hvR p hp).2 s) hall htie hnorm hd₁
   have hdom₁ : GlobalTheory.CompanionTheory.Ar.Dominates 𝔐.ξ oR.𝔐.ξ (a.hom ≫ g₁) i₁ := by
     show 𝔐.ξ ≫ a.hom ≫ g₁ = _
-    rw [← Category.assoc, q1]
-    exact hd₁
+    rwa [← Category.assoc, q1]
   have hdom₂ : GlobalTheory.CompanionTheory.Ar.Dominates 𝔐.ξ Or.𝔐.ξ (a.hom ≫ g₂) i₂ := by
     show 𝔐.ξ ≫ a.hom ≫ g₂ = _
-    rw [← Category.assoc, q1]
-    exact hd₂
+    rwa [← Category.assoc, q1]
   have hf𝔐 : 𝔐.f = (a.hom ≫ g₁) ≫ oR.𝔐.f := by rw [q2, Category.assoc]
   obtain ⟨Fl, hbF, -, -, hlF⟩ := FlagPull.flag_pull E H D l (Xo l) c _ _ Y _ RM.Ω Ω₃ i₁ RM.K K₃ RM.ι ρ RM.y y oR.𝔐 𝔐
     (a.hom ≫ g₁) j₁ m₁ κ₁ v₁ oR.Fl bm₁ hy₁ hdom₁ hf𝔐 q3 q4 q6 q7 q9 fd₁

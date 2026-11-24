@@ -109,8 +109,7 @@ theorem exists_eigen_of_sum {M : Type} [AddCommGroup M] [Module ℂ M]
       simp only [F, map_smul, ← Finset.smul_sum, hf, smul_smul]
       rw [inv_mul_cancel₀ (Units.ne_zero _), one_smul]
     simp only [this, Finset.sum_const, Finset.card_univ, Nat.cast_smul_eq_nsmul]
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hz : ∀ i ∈ s, e (u i) = 0 := by
     intro i hi
     by_contra h0
@@ -132,8 +131,7 @@ theorem finiteIndex_of_isOpen {G : Type} [Group G] [TopologicalSpace G] [IsTopol
   obtain ⟨W, hWo, hWH⟩ := isOpen_induced_iff.1 hH
   have h1 : (1 : G) ∈ W := by
     have : (1 : K) ∈ (H : Set K) := H.one_mem
-    rw [← hWH] at this
-    exact this
+    rwa [← hWH] at this
   obtain ⟨V, hV, hVW⟩ := exists_nhds_split_inv (hWo.mem_nhds h1)
   have hV' : V⁻¹ ∈ nhds (1 : G) := inv_mem_nhds_one G hV
   have hint : (interior V⁻¹).Nonempty := ⟨1, mem_interior_iff_mem_nhds.2 hV'⟩
@@ -149,8 +147,7 @@ theorem finiteIndex_of_isOpen {G : Type} [Group G] [TopologicalSpace G] [IsTopol
       simp only [Subgroup.coe_mul, Subgroup.coe_inv, div_eq_mul_inv, inv_inv, mul_inv_rev]
       group
     have : (k⁻¹ * k' : K) ∈ Subtype.val ⁻¹' W := hmem
-    rw [hWH] at this
-    exact this
+    rwa [hWH] at this
   have hfin : (Set.univ : Set (K ⧸ H)).Finite := by
     refine (t.finite_toSet.biUnion fun g _ => (key g).finite).subset ?_
     rintro q -
@@ -189,8 +186,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
       rw [hπ, ← hu i]
       exact i.2.2 κ hκ (u i)
 
-    rw [Finset.sum_congr rfl this, ← map_sum, ← hrt κ hκ hg]
-    rw [← hsum]
+    rw [Finset.sum_congr rfl this, ← map_sum, ← hrt κ hκ hg, ← hsum]
     rfl
   let H : Subgroup K := θ.ker ⊓ ⨅ i ∈ φ.support, stabSub π (u i)
   have hHo : IsOpen (H : Set K) := by

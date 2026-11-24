@@ -811,8 +811,7 @@ theorem exists_isHomogeneous_secZ_genFix : ∀ (E : Type) [Field E] [NumberField
       rw [← Finset.prod_mul_distrib]
       refine Finset.prod_congr rfl fun b _ => ?_
       rw [← Finset.prod_mul_distrib]
-      refine Finset.prod_congr rfl fun i _ => ?_
-      exact key b i
+      exact Finset.prod_congr rfl fun i _ => key b i
     rw [hw, ← _root_.mul_assoc, hc]
 
   have hP'tr : ∀ (X : ∀ b : E →+* ℂ, Matrix (Fin (Dw.mult b)) (Fin (Dw.mult b)) K) (b : E →+* ℂ)
@@ -1103,8 +1102,7 @@ theorem exists_good_cmPt_frame_ne_zero {D : D7} {T : Core D} {j : ℕ} (Y : Deep
     intro h0
     apply hne
     change (if h : x ∈ ((Y.U _).X k).dom then toC (evR Y.d.Xo₂ Y.d.c₂ F ((Y.U _).un k ⟨x, h⟩)) else 0) = 0
-    rw [dite_eq_left hx]
-    exact h0
+    rwa [dite_eq_left hx]
   obtain ⟨y, hy, hyne⟩ := _root_.GlobalTheory.FrameDenseZ.exists_frame_evR_ne_zero_of_complex _ _ _ _ _ _ z.K z.y _ F hFm.1 _ σ₁ _ hzx hev
   exact ⟨z, La, y, hz, hy.trans hz.2.2.2.1, hyne⟩
 
@@ -1283,8 +1281,7 @@ theorem span_weight_lattice_of_weights : _root_.GlobalTheory.CovTop.PublishedHod
   have key := span_latW_add hG.unf (wtOf (T.Q.Dw j) la 0) (wtOf (T.Q.Dw j) 0 (m : ℤ)) (even_wtOf _ _) hs h0
   have hGG : wtOf (T.Q.Dw j) la 0 + wtOf (T.Q.Dw j) 0 (m : ℤ) = wtOf (T.Q.Dw j) la (m : ℤ) := by
     rw [← wtOf_add, add_zero, zero_add]
-  rw [hGG] at key
-  exact key
+  rwa [hGG] at key
 end GlobalTheory.GenShift
 end
 end
@@ -1320,8 +1317,7 @@ theorem covering_goodAt_shift : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
     intro k
     refine (_root_.GlobalTheory.CovTop.GoodDom.covering_regular_at_domain hP D T hT j hp hq hf hj Y e o hY _ (fun τ => ?_) (fun τ => ?_)).1
     · intro x y hxy
-      simp only [Pi.smul_apply]
-      exact nsmul_le_nsmul_right (hA τ hxy) _
+      simpa only [Pi.smul_apply] using nsmul_le_nsmul_right (hA τ hxy) _
     · have := hg τ
       simp only [Pi.smul_apply]
       unfold gap at this ⊢

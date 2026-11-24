@@ -61,8 +61,7 @@ theorem shfSep : ShfSep := by
     ext
     simp [e₁]
     exact hP _ _ I.hf)
-  have h1 := congrArg (fun f => f.hom 1) this
-  simpa [e₁] using h1
+  simpa [e₁] using congrArg (fun f => f.hom 1) this
 
 def TwLocGen : Prop := ∀ (q : ℕ) [NeZero q] (U : Scheme.{0}) (y : Sec (tw q 1) U),
   Loc U fun V g => Sec.res g y = 0 ∨ ∃ (ζ : Prim q Γ(V, ⊤)) (c : ℕ), Sec.res g y = c • twGen 1 ζ
@@ -96,8 +95,7 @@ theorem kerGen_of (hG : GmSep) (hA : CycPow) (hE : EmptySec) : KerGen := by
         first | rfl
       erw [ex]
       exact map_nsmul _ _ _
-    rw [e]
-    exact h2
+    rwa [e]
   rcases hc c (hG V _ h3) with ⟨k, rfl⟩ | hs
   · rw [mul_comm, mul_nsmul]
     have : ∀ x : Sec (tw q 1) V, q • x = 0 := fun x => by
@@ -122,8 +120,7 @@ theorem LeafKumMuInj_of (hL : TwLocGen) (hG : GmSep) (hA : CycPow) (hE : EmptySe
       have := congrArg (fun f => f.hom y) (κ.hom.naturality g.op)
       simp only [ModuleCat.hom_comp, LinearMap.coe_comp, Function.comp_apply] at this
       change (κ.hom.app (op V)).hom (((restr (Int.castRingHom (ZMod q))).obj (tw q 1)).obj.map g.op |>.hom y) = 0
-      rw [this]
-      rw [hy, map_zero]
+      rw [this, hy, map_zero]
     change Sec.res (F := tw q 1) g y = 0
     change Sec.map κ (U := V) (Sec.res (F := tw q 1) g y) = 0 at hn
     rw [h] at hn ⊢

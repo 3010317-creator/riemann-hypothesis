@@ -84,9 +84,7 @@ theorem bessel_integral_convergence_of_growth (hGS : Formalism.FourierDecayAlt.T
     intro v0 hv0
     obtain ⟨C, Ws, hWs, hb⟩ := hIn.2.1 k r ε lam h H σ hHC hσ hgap hOK v0 hv0
     refine ⟨C, Ws, hWs, fun w hw x hx => ?_⟩
-    have e := hb w hw x hx
-    simp only [dsigW_eq_bessel_integrability] at e
-    exact e
+    simpa only [dsigW_eq_bessel_integrability] using hb w hw x hx
   have hB := PI.WBL.Cv.BeC.beConv_of_low z c π μW μN σ a (PI.WBL.Cv.grpAll k r z)
     (PI.WBL.Cv.sigAll k r ε lam H σ hσ') (PI.WBL.Cv.piAll k r z u Wp π hz hT hπ) (PI.WBL.Cv.psiAll k r z c hz) hM
     (fun w => Formalism.MainNotions.LeviCoordinates.discrete_series_continuousOn hσ' w) ha hgr hDI hw0'
@@ -107,8 +105,7 @@ theorem bessel_integral_convergence_of_growth (hGS : Formalism.FourierDecayAlt.T
   refine ⟨fun x hx v hv => h1 x hx v hv, fun v hv g hg m hm x hx => ?_, fun x hx v hv => h6 x hx v hv,
     fun x hx v hv => ⟨h1 v (hAs v hv) x (Or.inl hx), h5 x (Or.inl hx) v (hAs v hv)⟩⟩
   have e := h3 g hg m hm x hx v hv
-  rw [ContinuousLinearMap.smul_comp] at e
-  exact e
+  rwa [ContinuousLinearMap.smul_comp] at e
 
 end G
 
@@ -139,8 +136,7 @@ theorem bessel_nonvanishing_from_L2 : CompanionTheory.D.Upq.BesselFunctionalCons
   classical
   intro hSch hNI hGS hGG hDD hBC hInp _ k r ε lam h H _ _ _ σ w0 Wp _ _ _ _ z c u π μW μN μG νq hS W hWc hWeq
     hRe hpos hfin
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨hlam, hσ, hgap, hGapOK, hw0, hz, hT, hc, hπ, hWh, hNh, hGh, hq⟩ := hS
   have hS' : Side k r ε lam h σ w0 z c u π μW μN μG νq :=
     ⟨hlam, hσ, hgap, hGapOK, hw0, hz, hT, hc, hπ, hWh, hNh, hGh, hq⟩
@@ -196,7 +192,7 @@ theorem bessel_nonvanishing_from_L2 : CompanionTheory.D.Upq.BesselFunctionalCons
       filter_upwards [hGae] with g hg
       have hxg : x0 * Matrix.of g ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) := DDSmoothness.uh_mul hx0 hg
       have hmem : Formalism.QuantumDeterminants.lmulM x0 g ∈ U := hxg
-      simp only [Function.comp, Φ', Set.piecewise, hmem, if_true, Φ]
+      simp only [Function.comp, Φ', Set.piecewise, hmem, ite_true, Φ]
       show _ = ⟪η, PI.BesselPeriodGGP.eFun μG σ w0 (x0⁻¹ * (x0 * Matrix.of g)) • W (x0 * Matrix.of g)⟫_ℂ
       rw [← Matrix.mul_assoc, hxx', Matrix.one_mul]
     have hmapEq : μG.map (Formalism.QuantumDeterminants.lmulM x0) = μG := hGh.2.2.2 x0 hx0
@@ -205,8 +201,7 @@ theorem bessel_nonvanishing_from_L2 : CompanionTheory.D.Upq.BesselFunctionalCons
           ⟪η, PI.BesselPeriodGGP.eFun μG σ w0 (Matrix.of g) • W (x0 * Matrix.of g)⟫_ℂ) μG :=
         (innerSL ℂ η).integrable_comp hI
       have h2 : Integrable (Φ' ∘ Formalism.QuantumDeterminants.lmulM x0) μG := h1.congr htrans
-      rw [← integrable_map_measure hΦm.aestronglyMeasurable hlm.aemeasurable, hmapEq] at h2
-      exact h2
+      rwa [← integrable_map_measure hΦm.aestronglyMeasurable hlm.aemeasurable, hmapEq] at h2
     rw [integral_congr_ae htrans]
     show ∫ a, Φ' (Formalism.QuantumDeterminants.lmulM x0 a) ∂μG = 0
     rw [← integral_map hlm.aemeasurable hΦm.aestronglyMeasurable, hmapEq]
@@ -236,7 +231,7 @@ theorem bessel_nonvanishing_from_L2 : CompanionTheory.D.Upq.BesselFunctionalCons
       have hsx : Matrix.of p.1 * Matrix.of p.2 * Matrix.of x ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) :=
         DDSmoothness.uh_mul hs hx
       have hmem : mulMt (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j) x ∈ U := hsx
-      simp only [Φ', Set.piecewise, hmem, if_true, Φ]
+      simp only [Φ', Set.piecewise, hmem, ite_true, Φ]
       show ⟪η, PI.BesselPeriodGGP.eFun μG σ w0 (x0⁻¹ * (Matrix.of p.1 * Matrix.of p.2 * Matrix.of x)) •
           W (Matrix.of p.1 * Matrix.of p.2 * Matrix.of x)⟫_ℂ = _
       rw [hWeq _ hp.1 _ hp.2 _ hx]

@@ -94,8 +94,7 @@ theorem valPart_mem : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, MetE
     have h1 := ha _ hBV P d R hR
     rw [hconjH] at h1
     funext g
-    have h2 := congrArg (starRingEnd ℂ) (congrFun h1 g)
-    simpa [map_mul] using h2
+    simpa [map_mul] using congrArg (starRingEnd ℂ) (congrFun h1 g)
   have hops := GlobalTheory.SphericalOps.spherical_ops s.V c.θ s.M s.J (1 : GA D s.V → ℂ) c.S
     GlobalTheory.ChainOntoSph.exists_unif_of_F hc.inf (fun _ _ _ _ => by simp) hs.split
   have hw0 : w ≠ 0 := by
@@ -113,8 +112,7 @@ theorem valPart_mem : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, MetE
     Submodule.sub_mem _ (hkeep T hT) (Submodule.smul_mem _ _ hT)
   have hmem : PiTensorProduct.lift (heckeOn s.M R T - conj (a P d) • T) ∈ s.CC c := by
     show _ ∈ MultT c.θ s.M _ _
-    rw [mem_multT, LinearEquiv.symm_apply_apply]
-    exact hT'
+    rwa [mem_multT, LinearEquiv.symm_apply_apply]
   let x : s.CC c := ⟨_, hmem⟩
   have hlift : PiTensorProduct.lift (heckeOn s.M R T - conj (a P d) • T) =
       heckeLin s.V R ∘ₗ (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) - conj (a P d) • (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) := by
@@ -185,7 +183,7 @@ theorem cc_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7,
   obtain ⟨hLU, -, hH⟩ := hops
   by_cases hsm : ∀ τ, s.M.sm τ ≠ ⊥
   swap
-  · push_neg at hsm
+  · push Not at hsm
     obtain ⟨τ, hτ⟩ := hsm
     refine Submodule.eq_top_iff'.2 fun u => ?_
     have h0 : PiTensorProduct.lift.symm (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = 0 := by
@@ -221,8 +219,7 @@ theorem cc_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7,
   let op : I → Module.End ℂ (Mult c.θ s.M (s.J : Set (GA D s.V)) (1 : GA D s.V → ℂ)) := fun t =>
     (heckeOn s.M t.1.2.2).restrict fun T hT => (hH _ _ _ t.2).1 T hT
   have hcomm : ∀ i j, Commute (op i) (op j) := fun i j => by
-    refine LinearMap.ext fun T => Subtype.ext ?_
-    exact (hH _ _ _ i.2).2.1 _ _ _ j.2 T T.2
+    exact LinearMap.ext fun T => Subtype.ext ((hH _ _ _ i.2).2.1 _ _ _ j.2 T T.2)
   have hadj : ∀ i, ∃ i', ∀ x y : Mult c.θ s.M (s.J : Set (GA D s.V)) (1 : GA D s.V → ℂ),
       ipM s.M s.ν s.fd (op i x : MMap s.M) y = ipM s.M s.ν s.fd x (op i' y : MMap s.M) := fun i => by
     obtain ⟨R', h', hip⟩ := (hH _ _ _ i.2).2.2
@@ -263,8 +260,7 @@ theorem cc_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7,
     obtain ⟨e, he⟩ := hsub x T hT
     refine Submodule.subset_span ⟨e, ?_⟩
     have : ((φ T : s.CC c) : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = PiTensorProduct.lift (T : MMap s.M) := rfl
-    rw [this, LinearEquiv.symm_apply_apply]
-    exact he
+    rwa [this, LinearEquiv.symm_apply_apply]
   · rw [φ.map_zero]; exact zero_mem _
   · intro a b ha hb; rw [φ.map_add]; exact add_mem ha hb
 
@@ -353,8 +349,7 @@ theorem partPar : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, ForStage
   refine ⟨fun hu0 => ?_, second⟩
   have hu1 : (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) ≠ 0 := fun h => hu0 (Subtype.ext h)
   obtain ⟨v, hv⟩ : ∃ v, PiLocalization₂.val u v ≠ 0 := by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     exact hu1 (LinearMap.ext hh)
   obtain ⟨C, hC⟩ := (hval u v).2.1
   have hbdd : (fun g => conj (PiLocalization₂.val u v g)) ∈ GlobalTheory.FinZeta.bddAut s.V := by
@@ -408,8 +403,7 @@ theorem parIndep_even : ∀ D : D7, ParIndep D := by
   intro t a hsum i₀ hi₀
   obtain ⟨hne0, _⟩ := hpar i₀
   obtain ⟨v, hv⟩ : ∃ v, PiLocalization₂.val (x i₀) v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hne0
     apply Subtype.ext
     apply LinearMap.ext
@@ -424,10 +418,8 @@ theorem parIndep_even : ∀ D : D7, ParIndep D := by
       funext g
       have := congrFun h0 g
       simpa [f] using this
-    · intro i
-      exact (hpar i.1).2 v i.2
-    · intro i i' hii'
-      exact hB i.1 i'.1 (fun h => hii' (Subtype.ext h))
+    · exact fun i => (hpar i.1).2 v i.2
+    · exact fun i i' hii' => hB i.1 i'.1 (fun h => hii' (Subtype.ext h))
   rw [linearIndependent_iff'] at hli
   have hsum' : ∀ g, ∑ i ∈ t, a i * PiLocalization₂.val (x i) v g = 0 := by
     intro g

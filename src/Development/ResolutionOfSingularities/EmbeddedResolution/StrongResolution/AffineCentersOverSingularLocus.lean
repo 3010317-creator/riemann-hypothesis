@@ -154,8 +154,7 @@ theorem smooth_comp_of_iso_hom_eq {A B V W Sc : Scheme.{u}} (e : A ≅ B)
   refine smooth_of_smooth_iso_hom_comp e (g ≫ q) ?_
   have key : e.hom ≫ g ≫ q = ι₀ ≫ a ≫ q := by
     rw [← Category.assoc, he, Category.assoc]
-  rw [key]
-  exact h
+  rwa [key]
 
 theorem radical_ker_eq_ker {W Z : Scheme.{u}} [AlgebraicGeometry.IsReduced W]
     (f : W ⟶ Z) :
@@ -171,8 +170,7 @@ theorem radical_ker_eq_ker {W Z : Scheme.{u}} [AlgebraicGeometry.IsReduced W]
     have h1 : (AlgebraicGeometry.Scheme.Hom.ker f).ideal U ≤
         RingHom.ker (CommRingCat.Hom.hom (AlgebraicGeometry.Scheme.Hom.app f U.1)) :=
       AlgebraicGeometry.Scheme.IdealSheafData.ideal_ofIdeals_le _ U
-    refine le_trans (Ideal.radical_mono h1) ?_
-    exact Ideal.isRadical_bot.comap _
+    exact le_trans (Ideal.radical_mono h1) (Ideal.isRadical_bot.comap _)
   exact le_antisymm hle (AlgebraicGeometry.Scheme.IdealSheafData.le_radical _)
 
 theorem nonzeroOnComponents_ideal {k : Type u} [Field k] {X : Scheme.{u}}
@@ -194,8 +192,7 @@ theorem nonzeroOnComponents_ideal {k : Type u} [Field k] {X : Scheme.{u}}
         = (s.ideal i).comap (s.toSequenceOfBlowups.transitionMapSucc i) := by
       have h2 := s.ideal_succ i hi'
       rw [FunctorialResolution.Blowup.exceptionalIdeal_eq_comap] at h2
-      rw [pow_one]
-      exact h2
+      rwa [pow_one]
     exact FunctorialResolution.EmbeddedResolution.nonzeroOnComponents_of_pow_mul_eq_comap FunctorialResolution.EmbeddedResolution.effectiveCartierSupportContainsNoComponent
       (s.toSequenceOfBlowups.transitionMapSucc i) (s.toSequenceOfBlowups.center i)
       (s.toSequenceOfBlowups.isBlowupAlongIdealSheaf_blowupMorphism i hi') 1 (s.ideal i) (s.ideal (i + 1)) htr
@@ -221,8 +218,7 @@ theorem false_of_mem_support_center {k : Type u} [Field k] [CharZero k] {W : Sch
   refine false_of_smoothOrderOneCentersIsolated_opens idealSheafGeometryHypotheses_vanishingIdealAssignment smoothVanishingHypotheses_vanishingIdealAssignment p I Z 1 Mem
     ⟨T, ξ, x, hTcl, hTirr, hξ, hx⟩ ⊤ ?_ hIso hp rfl ?_ hcomp hxi hdisj ?_ hpt
   · simp
-  · rw [vanishingIdealAssignment_apply]
-    exact hsmT
+  · rwa [vanishingIdealAssignment_apply]
   · intro z hz
     rw [vanishingIdealAssignment_apply]
     exact hagree z hz
@@ -369,8 +365,7 @@ private theorem smooth_strictTransformι_comp_schemeAtToSpec_succ {k : Type u} [
     (hrange1.trans hrange2.symm)
   have ihsub : AlgebraicGeometry.Smooth
       ((S.strictTransformIdeal i).subschemeι ≫ S.schemeAtToSpec i) := by
-    rw [← EmbeddedBlowupSequence.strictTransformι_eq_subschemeι]
-    exact ih'
+    rwa [← EmbeddedBlowupSequence.strictTransformι_eq_subschemeι]
   have hsm2 := smooth_comap_subschemeι_of_isOpenImmersion
     (U.ι ≫ S.blowdown i) (S.strictTransformIdeal i) (S.schemeAtToSpec i) ihsub
   rw [hKvan] at hsm2
@@ -450,8 +445,7 @@ private theorem agreeNear_vanishingIdeal_image_of_avoidsCenters_le_of_disjoint_z
           rw [hBaddef]
           refine Set.mem_biUnion ⟨irreducibleComponent_mem_irreducibleComponents w, ?_⟩
             ⟨w, mem_irreducibleComponent, rfl⟩
-          intro h
-          exact hw (h ▸ mem_irreducibleComponent)
+          exact fun h => hw (h ▸ mem_irreducibleComponent)
       · rintro ⟨⟨w, hwC, rfl⟩, hz⟩
         exact ⟨⟨w, rfl⟩, hz⟩
     rw [hid0]
@@ -496,13 +490,11 @@ private theorem agreeNear_vanishingIdeal_image_of_avoidsCenters_le_of_disjoint_z
           (((D.toEmbeddedBlowupSequence A).ambientCenterSupportCompl i : ((D.toEmbeddedBlowupSequence A).schemeAt i).Opens) :
             Set ↥((D.toEmbeddedBlowupSequence A).schemeAt i)) := by
       rw [hUdef]
-      intro z hz
-      exact hz.2
+      exact fun z hz => hz.2
     have hmemU : ∀ z : ↥U, ((D.toEmbeddedBlowupSequence A).blowdown i).base (U.ι.base z) ∉
         (((D.toEmbeddedBlowupSequence A).ambientCenter i).support :
           Set ↥((D.toEmbeddedBlowupSequence A).schemeAt i)) := by
-      intro z
-      exact hUsub z.2
+      exact fun z => hUsub z.2
     have hxU : x ∈ U := by
       rw [hUdef]
       exact ⟨hxV', ((D.toEmbeddedBlowupSequence A).mem_ambientCenterSupportCompl i _).mpr hnot⟩
@@ -523,8 +515,7 @@ private theorem agreeNear_vanishingIdeal_image_of_avoidsCenters_le_of_disjoint_z
     have hle : U ≤ (TopologicalSpace.Opens.map
         ((D.toEmbeddedBlowupSequence A).blowdown i).base).obj V' := by
       rw [hUdef]
-      intro z hz
-      exact hz.1
+      exact fun z hz => hz.1
     have hcomapφ : ((principalizationOfEmbedding k Y pY D A).ideal i).comap
           (U.ι ≫ (D.toEmbeddedBlowupSequence A).blowdown i)
         = (Scheme.IdealSheafData.vanishingIdeal
@@ -1077,8 +1068,7 @@ private theorem centersLieOver_embeddedResolutionRuleOfPrincipalization
     have h3 : D.emb z ∈ D.ambient.basicOpen r := hz
     rw [hr] at h3
     have h5 : z ∈ ⇑D.emb ⁻¹' W := hU'le h3
-    rw [hW] at h5
-    exact h5
+    rwa [hW] at h5
   have hVaff : AlgebraicGeometry.IsAffine (D.emb ⁻¹ᵁ D.ambient.basicOpen r).toScheme :=
     ((AlgebraicGeometry.isAffineOpen_top D.ambient).basicOpen r).preimage D.emb
   have hsmV : AlgebraicGeometry.Smooth ((D.emb ⁻¹ᵁ D.ambient.basicOpen r).ι ≫ pY) :=
@@ -1100,8 +1090,7 @@ private theorem centersLieOver_embeddedResolutionRuleOfPrincipalization
   have hmemrange :
       (embeddedResolutionRuleOfPrincipalization (canonicalPrincipalization hres hrad) hw k Y pY D).projectionToBase i x ∈
         Set.range ⇑(D.emb ⁻¹ᵁ D.ambient.basicOpen r).ι := by
-    rw [AlgebraicGeometry.Scheme.Opens.range_ι]
-    exact hyV
+    rwa [AlgebraicGeometry.Scheme.Opens.range_ι]
   obtain ⟨x', hx'eq⟩ := hmemrange
   obtain ⟨z, hz1, hz2⟩ :=
     AlgebraicGeometry.Scheme.Pullback.exists_preimage_pullback
@@ -1124,8 +1113,7 @@ private theorem centersLieOver_embeddedResolutionRuleOfPrincipalization
           ((embeddedResolutionRuleOfPrincipalization (canonicalPrincipalization hres hrad) hw k Y pY D).projectionToBase i)) z
           ∈ (↑((embeddedResolutionRuleOfPrincipalization (canonicalPrincipalization hres hrad) hw k Y pY D).center
                 i).support : Set _)
-      rw [hz2]
-      exact hx
+      rwa [hz2]
     exact hmem
   obtain ⟨j, hj, -⟩ := (h4 i hi).mp hex
   rw [hlen0] at hj
@@ -1147,8 +1135,7 @@ theorem toEmbeddedBlowupSequence_centersLieOver_smoothLocusComplement
       (↑(smoothLocusComplement pY) : Set ↥Y) := by
   apply centersLieOver_of_withoutIsoBlowups
   have h := centersLieOver_embeddedResolutionRuleOfPrincipalization hres hB hrad hA hw hsnc D
-  rw [embeddedResolutionRuleOfPrincipalization_apply] at h
-  exact h
+  rwa [embeddedResolutionRuleOfPrincipalization_apply] at h
 
 theorem affineCentersLieOverSingularLocus_principalizationWithRadicalCenters :
     AffineCentersLieOverSingularLocus.{u} principalizationWithRadicalCenters affineEmbedsIntoAffineSpace

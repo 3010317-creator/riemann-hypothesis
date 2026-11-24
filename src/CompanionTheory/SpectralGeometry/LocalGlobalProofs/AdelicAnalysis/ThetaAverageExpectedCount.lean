@@ -42,18 +42,18 @@ lemma exists_dyadic {c u : ℝ} (hc : 0 < c) (hu : 0 ≤ u) :
     exact ⟨j, hj.le⟩
   refine ⟨Nat.find hex, Nat.find_spec hex, ?_⟩
   rcases hj : Nat.find hex with _ | k
-  · simp only [wt, if_true]
+  · simp only [wt, ite_true]
     rw [Real.exp_le_one_iff]
     have : 0 ≤ c * u ^ 2 := by positivity
     linarith
   · have hlt : ¬ u ≤ 2 ^ k := Nat.find_min hex (by omega)
-    push_neg at hlt
+    push Not at hlt
     have hsq : (4 : ℝ) ^ k ≤ u ^ 2 := by
       have h1 : ((2 : ℝ) ^ k) ^ 2 ≤ u ^ 2 := pow_le_pow_left₀ (by positivity) hlt.le 2
       have h2 : ((2 : ℝ) ^ k) ^ 2 = 4 ^ k := by
         rw [← pow_mul, mul_comm, pow_mul]; norm_num
       linarith
-    simp only [wt, Nat.succ_ne_zero, if_false]
+    simp only [wt, Nat.succ_ne_zero, ite_false]
     apply Real.exp_le_exp.mpr
     have h3 : c * 4 ^ (k + 1) / 4 = c * 4 ^ k := by rw [pow_succ]; ring
     rw [h3]
@@ -71,14 +71,13 @@ lemma summable_wt {c : ℝ} (hc : 0 < c) (n : ℕ) :
   rcases Nat.eq_zero_or_pos j with rfl | hj
   · simp [wt]; linarith
   · have hj0 : j ≠ 0 := by omega
-    simp only [wt, hj0, if_false]
+    simp only [wt, hj0, ite_false]
     set y : ℝ := 4 ^ j with hy
     have hy0 : 0 < y := by positivity
     have hx0 : 0 ≤ c * y / 4 := by positivity
     have hb := Real.pow_div_factorial_le_exp (c * y / 4) hx0 (n + 1)
     have hexp : Real.exp (-(c * y / 4)) ≤ ((n + 1).factorial : ℝ) / (c * y / 4) ^ (n + 1) := by
-      rw [Real.exp_neg, inv_le_comm₀ (Real.exp_pos _) (by positivity), inv_div]
-      exact hb
+      rwa [Real.exp_neg, inv_le_comm₀ (Real.exp_pos _) (by positivity), inv_div]
     have hswap : ((4 : ℝ) ^ n) ^ j = y ^ n := by rw [hy, ← pow_mul, ← pow_mul, mul_comm]
     rw [hswap]
     calc Real.exp (-(c * y / 4)) * y ^ n
@@ -409,8 +408,7 @@ theorem add_le_mul_pow_of_sq_le_of_le_mul {w T κ C₀ C' : ℝ} {n : ℕ} (hT :
     rw [div_eq_mul_inv, Real.sqrt_mul hT.le]
   have hsT : 0 < Real.sqrt T ^ n := pow_pos (Real.sqrt_pos.mpr hT) n
   have h1 : w * (Real.sqrt T ^ n)⁻¹ ≤ Real.sqrt κ⁻¹ ^ n := by
-    rw [← div_eq_mul_inv, div_le_iff₀ hsT, mul_comm (Real.sqrt κ⁻¹ ^ n), ← mul_pow, ← hs]
-    exact hw
+    rwa [← div_eq_mul_inv, div_le_iff₀ hsT, mul_comm (Real.sqrt κ⁻¹ ^ n), ← mul_pow, ← hs]
   have h2 : 0 ≤ w * (Real.sqrt T ^ n)⁻¹ := by positivity
   calc w * (C₀ * (C' * (Real.sqrt T ^ n)⁻¹)) = C₀ * C' * (w * (Real.sqrt T ^ n)⁻¹) := by ring
     _ ≤ C₀ * |C'| * (w * (Real.sqrt T ^ n)⁻¹) :=

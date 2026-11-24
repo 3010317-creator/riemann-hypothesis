@@ -50,16 +50,16 @@ theorem bigCell_one_apply (k r : ℕ) (c : Fin r → ℂ) (i j : Fin (2 * r + k 
   unfold bigCell rhoB tv esI
   rcases lt_or_ge j.val r with h1 | h1
   · have ho : j.val < r ∨ r + k < j.val := Or.inl h1
-    rw [dite_eq_left h1, if_pos ho, dite_eq_left h1]
+    rw [dite_eq_left h1, ite_eq_left ho, dite_eq_left h1]
   · rcases le_or_gt j.val (r + k) with h2 | h2
     · have ho : ¬ (j.val < r ∨ r + k < j.val) := by omega
-      rw [dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_left h2, if_neg ho, dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_left h2]
+      rw [dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_left h2, ite_eq_right ho, dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_left h2]
       by_cases hij : i = j
       · subst hij
-        rw [dite_eq_left ⟨h1, h2⟩, if_pos rfl, Matrix.one_apply, if_pos rfl]
-      · rw [if_neg hij]
+        rw [dite_eq_left ⟨h1, h2⟩, ite_eq_left rfl, Matrix.one_apply, ite_eq_left rfl]
+      · rw [ite_eq_right hij]
         split_ifs with hi
-        · rw [Matrix.one_apply, if_neg]
+        · rw [Matrix.one_apply, ite_eq_right]
           intro h
           apply hij
           apply Fin.ext
@@ -68,11 +68,11 @@ theorem bigCell_one_apply (k r : ℕ) (c : Fin r → ℂ) (i j : Fin (2 * r + k 
           omega
         · rfl
     · have ho : j.val < r ∨ r + k < j.val := Or.inr h2
-      rw [dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_right (show ¬ (j.val ≤ r + k) by omega), if_pos ho,
+      rw [dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_right (show ¬ (j.val ≤ r + k) by omega), ite_eq_left ho,
         dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_right (show ¬ (j.val ≤ r + k) by omega)]
       by_cases hi : i.val = 2 * r + k - j.val
-      · rw [if_pos hi, if_pos (Fin.ext hi)]
-      · rw [if_neg hi, if_neg (fun h => hi (congrArg Fin.val h))]
+      · rw [ite_eq_left hi, ite_eq_left (Fin.ext hi)]
+      · rw [ite_eq_right hi, ite_eq_right (fun h => hi (congrArg Fin.val h))]
 
 theorem Hpk_rhoB (k r : ℕ) (i j : Fin (2 * r + k + 1)) :
     Hpk k r (rhoB k r i) (rhoB k r j) = Hpk k r i j := by
@@ -96,7 +96,7 @@ theorem tv_Hpk_tv (k r : ℕ) (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) (i j :
     unfold Hpk at hz
     split_ifs at hz <;> first | tauto
   rcases key with ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2, rfl⟩
-  · have hH : Hpk k r i j = 1 := by unfold Hpk; rw [if_pos ⟨h1, h2⟩]
+  · have hH : Hpk k r i j = 1 := by unfold Hpk; rw [ite_eq_left ⟨h1, h2⟩]
     have hti : tv k r c i = c ⟨i.val, h1⟩ := by unfold tv; rw [dite_eq_left h1]
     have htj : tv k r c j = (star (c ⟨i.val, h1⟩))⁻¹ := by
       have e : (⟨2 * r + k - j.val, by omega⟩ : Fin r) = ⟨i.val, h1⟩ :=
@@ -104,7 +104,7 @@ theorem tv_Hpk_tv (k r : ℕ) (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) (i j :
       unfold tv
       rw [dite_eq_right (show ¬ (j.val < r) by omega), dite_eq_right (show ¬ (j.val ≤ r + k) by omega), e]
     rw [hti, htj, hH, mul_one, mul_inv_cancel₀ (star_ne_zero.mpr (hc _))]
-  · have hH : Hpk k r i j = 1 := by unfold Hpk; rw [if_neg (by omega), if_pos ⟨h1, h2⟩]
+  · have hH : Hpk k r i j = 1 := by unfold Hpk; rw [ite_eq_right (by omega), ite_eq_left ⟨h1, h2⟩]
     have htj : tv k r c j = c ⟨j.val, h1⟩ := by unfold tv; rw [dite_eq_left h1]
     have hti : tv k r c i = (star (c ⟨j.val, h1⟩))⁻¹ := by
       have e : (⟨2 * r + k - i.val, by omega⟩ : Fin r) = ⟨j.val, h1⟩ :=
@@ -274,7 +274,7 @@ theorem UWb_col {m : Mat k r} (hm : m ∈ UWb k r) (x y : Fin (2 * r + k + 1)) (
       by_contra h2
       apply hy
       unfold lv
-      rw [if_neg h1, if_pos (show y.val ≤ r + k by omega)]
+      rw [ite_eq_right h1, ite_eq_left (show y.val ≤ r + k by omega)]
     have hyl := y.isLt
     have hlt : 2 * r + k - y.val < r := by omega
     have e : PI.SwBig.esI k r ⟨2 * r + k - y.val, hlt⟩ = y :=
@@ -394,8 +394,7 @@ private theorem inv_apply_eq_one_apply_of_lv_le_bound {g : PI.SwBig.Mat k r} (hg
     ∀ x y, lv k r y ≤ L → lv k r y ≤ lv k r x → g⁻¹ x y = (1 : PI.SwBig.Mat k r) x y := by
   suffices H : ∀ n, ∀ x y, lv k r y = n → n ≤ L → n ≤ lv k r x →
       g⁻¹ x y = (1 : PI.SwBig.Mat k r) x y by
-    intro x y h1 h2
-    exact H _ x y rfl h1 h2
+    exact fun x y h1 h2 => H _ x y rfl h1 h2
   intro n
   induction n using Nat.strong_induction_on with
   | _ n ih =>
@@ -411,8 +410,7 @@ private theorem inv_apply_eq_one_apply_of_lv_le_bound {g : PI.SwBig.Mat k r} (hg
           rintro rfl
           omega
         rw [ih (lv k r j) hlt x j rfl (by omega) (by omega), Matrix.one_apply_ne hxj, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ y) h
+    · exact fun h => absurd (Finset.mem_univ y) h
 
 private theorem apply_eq_one_apply_of_mem_Nset_of_lv_le {g : PI.SwBig.Mat k r} (hg : g ∈ PI.SwBig.Nset k r) :
     ∀ x y, lv k r y ≤ lv k r x → g x y = (1 : PI.SwBig.Mat k r) x y := by
@@ -543,8 +541,7 @@ private theorem eq_one_of_mul_M_mul_eq {f : Fin (2 * r + k + 1) → ℂ} (hf : �
     {n m : PI.SwBig.Mat k r} (hm : m * m⁻¹ = 1) (h : n * (M k r f * m) = M k r f * m) : n = 1 := by
   have h' : n * M k r f = M k r f := by
     have := congrArg (· * m⁻¹) h
-    simp only [Matrix.mul_assoc, hm, Matrix.mul_one] at this
-    exact this
+    simpa only [Matrix.mul_assoc, hm, Matrix.mul_one] using this
   ext x y
   have e := congrFun (congrFun h' x) (sg k r y)
   rw [mul_M_apply, sg_sg] at e
@@ -566,8 +563,7 @@ theorem gaussUniq_main : GaussUniq := by
   have key : (n₂⁻¹ * n₁) * (M k r f₁ * m₁) = (M k r f₂ * m₂) * (u₂⁻¹ * u₁) := by
     have := congrArg (fun X => n₂⁻¹ * X * u₁) h
     simp only [Matrix.mul_assoc] at this ⊢
-    rw [hu₁l, Matrix.mul_one, ← Matrix.mul_assoc n₂⁻¹ n₂, hn₂l, Matrix.one_mul] at this
-    exact this
+    rwa [hu₁l, Matrix.mul_one, ← Matrix.mul_assoc n₂⁻¹ n₂, hn₂l, Matrix.one_mul] at this
   obtain ⟨heq, hnW⟩ := W_eq_and_mul_W_eq_of_mul_eq_mul_of_lv_sum
     (mul_apply_eq_one_apply_of_lv_le (inv_apply_eq_one_apply_of_mem_UH_of_lv_le hn₂.1 (apply_eq_one_apply_of_mem_Nset_of_lv_le hn₂)) (apply_eq_one_apply_of_mem_Nset_of_lv_le hn₁))
     (mul_apply_eq_one_apply_of_lv_le (inv_apply_eq_one_apply_of_mem_UH_of_lv_le hu₂.1 (apply_eq_one_apply_of_mem_Nset_of_lv_le hu₂)) (apply_eq_one_apply_of_mem_Nset_of_lv_le hu₁))
@@ -584,7 +580,7 @@ theorem gaussUniq_main : GaussUniq := by
     have hl : lv k r (PI.SwBig.eI k r a) ≠ r := by
       have e4 : lv k r (PI.SwBig.eI k r a) = a.val := by
         unfold lv
-        rw [if_pos (show (PI.SwBig.eI k r a).val < r from a.isLt)]
+        rw [ite_eq_left (show (PI.SwBig.eI k r a).val < r from a.isLt)]
         rfl
       omega
     rw [M_mul_apply, M_mul_apply, hs, UWb_col hm₁ _ _ hl, UWb_col hm₂ _ _ hl, hf₁, hf₂,
@@ -601,9 +597,7 @@ theorem gaussUniq_main : GaussUniq := by
       rw [Matrix.mul_one, ← key, hnW]
     simp only [Matrix.mul_assoc] at e
     have e2 := eq_of_M_mul_eq_M_mul_of_ne_zero hfnz e
-    have e3 := congrArg (m₁⁻¹ * ·) e2
-    simp only [← Matrix.mul_assoc, hm₁l, Matrix.one_mul] at e3
-    exact e3
+    simpa only [← Matrix.mul_assoc, hm₁l, Matrix.one_mul] using congrArg (m₁⁻¹ * ·) e2
   refine ⟨?_, hc12, hm, ?_⟩
   · calc n₁ = n₂ * (n₂⁻¹ * n₁) := by rw [← Matrix.mul_assoc, hn₂r, Matrix.one_mul]
       _ = n₂ := by rw [hn, Matrix.mul_one]
@@ -674,8 +668,7 @@ theorem tv_deriv : HasStrictFDerivAt (fun x : Fin r → ℂ => tv k r (1 + x)) (
   · simp only [h, ↓reduceDIte, Pi.add_apply, Pi.one_apply]
     exact (hasStrictFDerivAt_apply (𝕜 := ℝ) (i := (⟨i.val, h⟩ : Fin r)) (f := (0 : Fin r → ℂ))).const_add 1
   · by_cases h2 : i.val ≤ r + k
-    · simp only [h, h2, ↓reduceDIte]
-      exact hasStrictFDerivAt_const _ _
+    · simpa only [h, h2, ↓reduceDIte] using hasStrictFDerivAt_const _ _
     · simp only [h, h2, ↓reduceDIte, Pi.add_apply, Pi.one_apply]
       have ha := hasStrictFDerivAt_apply (𝕜 := ℝ)
         (i := (⟨2 * r + k - i.val, by have := i.isLt; omega⟩ : Fin r)) (f := (0 : Fin r → ℂ))
@@ -1043,8 +1036,7 @@ theorem sideA : SideA := by
     ext i j
     have h := congrFun (congrFun hxeq i) j
     simp only [Psi] at h
-    rw [← hYx, SideA_unrealify_RL] at h
-    exact h
+    rwa [← hYx, SideA_unrealify_RL] at h
   obtain ⟨v, hv, hPhi, hvη, hLm⟩ := hCBδ Y hY (hYn.trans hρδ)
   have hv' := hv
   rw [Vs, Submodule.mem_prod, Submodule.mem_prod, Submodule.mem_prod] at hv'
@@ -1057,8 +1049,7 @@ theorem sideA : SideA := by
     have h2 : w0B k r * (w0B k r * (Matrix.of n * bigCell k r c 1 * Matrix.of m * (Matrix.of n')⁻¹)) =
         w0B k r * (w0B k r * (NormedSpace.exp v.1 * bigCell k r (1 + v.2.1) 1 *
           NormedSpace.exp v.2.2.1 * (NormedSpace.exp v.2.2.2)⁻¹)) := by rw [h]
-    simp only [← Matrix.mul_assoc, hW0 k r, Matrix.one_mul] at h2
-    exact h2
+    simpa only [← Matrix.mul_assoc, hW0 k r, Matrix.one_mul] using h2
   have hc2 : ∀ a, (1 + v.2.1) a ≠ 0 := by
     intro a h0
     have hxa : ‖v.2.1 a‖ < 1 := by
@@ -1337,19 +1328,7 @@ theorem Log_sgI_val (i : Fin (2 * r + k + 1)) : ((sgI k r i).val = r + k ↔ i.v
   unfold sgI
   split_ifs <;> simp_all <;> omega
 
-theorem hpk_sq : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [Matrix.mul_apply, Finset.sum_eq_single (sgI k r i)]
-  · rw [Log_Hpk_eq, Log_Hpk_eq, if_pos rfl, Log_sgI_sgI, Matrix.one_apply]
-    have hv := (Log_sgI_val (k := k) (r := r) i)
-    by_cases h : j = i
-    · subst h
-      by_cases h2 : j.val = r + k
-      · rw [if_pos h2, if_pos rfl, if_pos (hv.2 h2), if_pos rfl]; norm_num
-      · rw [if_neg h2, if_pos rfl, if_neg (fun h' => h2 (hv.1 h')), if_pos rfl]; norm_num
-    · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
-  · intro l _ hl; rw [Log_Hpk_eq, if_neg hl, zero_mul]
-  · simp
+theorem hpk_sq : Hpk k r * Hpk k r = 1 := PI.SwBig.GU.Hpk_sq
 
 theorem logG : LogG := by
   intro k r
@@ -1382,8 +1361,7 @@ theorem logG : LogG := by
     have hG' : (NormedSpace.exp L)ᴴ * H * NormedSpace.exp L = H := hG
     have h1 : NormedSpace.exp (adjH L) = H * (NormedSpace.exp L)ᴴ * H := by
       have := Matrix.exp_conj H Lᴴ hHu
-      rw [hHi, Matrix.exp_conjTranspose] at this
-      exact this
+      rwa [hHi, Matrix.exp_conjTranspose] at this
     have h2 : (H * (NormedSpace.exp L)ᴴ * H) * NormedSpace.exp L = 1 := by
       rw [Matrix.mul_assoc (H * _), show H * (NormedSpace.exp L)ᴴ * (H * NormedSpace.exp L)
         = H * ((NormedSpace.exp L)ᴴ * H * NormedSpace.exp L) by simp only [Matrix.mul_assoc], hG', hHH]

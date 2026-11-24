@@ -76,13 +76,13 @@ theorem evX_substP {m : ℕ} (τ : D.what₂.Tau) (fr : Matrix (Fin m) (Fin m) �
   obtain ⟨τ', a, j, b⟩ := v
   by_cases hτ : τ' = τ
   · subst hτ
-    rw [if_pos rfl, dirAt_self]
+    rw [ite_eq_left rfl, dirAt_self]
     cases b
 
     · simp only [Bool.false_eq_true, ↓reduceIte, map_sum, map_mul, eval_C, eval_X, Matrix.mul_apply]
 
     · simp only [↓reduceIte, map_sum, map_mul, eval_C, eval_X, Matrix.mul_apply, map_sum, Complex.star_def]
-  · rw [if_neg hτ, dirAt_ne hτ]
+  · rw [ite_eq_right hτ, dirAt_ne hτ]
     cases b <;> simp
 
 theorem slice {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what₂.Tau}
@@ -128,10 +128,8 @@ theorem tens_slice {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what�
   have hp : psi0 θ V n l s τ (xL θ τ (fr * u)) = 1 := by
     unfold psi0
     rw [compAt_xL hθ, gAway_dirAt, finPart_xL hθ]
-    simp only [one_mul]
-    exact gaussian_at_zero_eq_one D V.rank n
+    simpa only [one_mul] using gaussian_at_zero_eq_one D V.rank n
   simp only [tens] at h
-  rw [hc, hinv, hp, mul_one] at h
-  exact h
+  rwa [hc, hinv, hp, mul_one] at h
 
 end PositivityTheory.Rg.Sw.Glob.RhoH

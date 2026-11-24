@@ -158,17 +158,7 @@ variable {k r : ℕ}
 private theorem gN_nonneg_lemma_2 (g : B.Mat k r) : 0 ≤ B.gN g := Real.sqrt_nonneg _
 
 theorem entry_le_gN (g : B.Mat k r) (i j : Fin (2 * r + k + 1)) : ‖g i j‖ ≤ B.gN g := by
-  have h1 : Complex.normSq (g i j) ≤ ∑ j', Complex.normSq (g i j') :=
-    Finset.single_le_sum (f := fun j' => Complex.normSq (g i j')) (fun j' _ => Complex.normSq_nonneg _)
-      (Finset.mem_univ j)
-  have h2 : ∑ j', Complex.normSq (g i j') ≤ ∑ i', ∑ j', Complex.normSq (g i' j') :=
-    Finset.single_le_sum (f := fun i' => ∑ j', Complex.normSq (g i' j'))
-      (fun i' _ => Finset.sum_nonneg fun j' _ => Complex.normSq_nonneg _) (Finset.mem_univ i)
-  have h3 : ‖g i j‖ ^ 2 ≤ ∑ i', ∑ j', Complex.normSq (g i' j') := by
-    rw [← Complex.normSq_eq_norm_sq]; exact h1.trans h2
-  unfold B.gN
-  rw [← abs_of_nonneg (norm_nonneg (g i j))]
-  exact Real.abs_le_sqrt h3
+  exact PI.PolynomialProperness.GN.entry_le_gN g i j
 
 theorem a_mv_le {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) (u : Fin m → ℂ) (i : Fin m) :
     ‖(M *ᵥ u) i‖ ≤ ∑ j, ‖M i j‖ * ‖u j‖ := by
@@ -204,12 +194,12 @@ theorem uMap_entry_le_matrix_norm (z : Fin (2 * r + k + 1) → ℂ) (a b : Fin (
   by_cases h : a.val < r
   · refine ⟨∑ i, ‖bvec (esI k r ⟨a.val, h⟩) i‖ * ∑ j, ‖Hpk k r i j‖ * ∑ l, ‖fvec k r z b l‖,
       by positivity, fun g => ?_⟩
-    simp only [C2.uMap, dif_pos h]
+    simp only [C2.uMap, dite_eq_left h]
     rw [mul_comm _ (B.gN g)]
     exact a_herm_le _ g _ _
   · refine ⟨(∑ i, ‖z i‖ * ∑ j, ‖Hpk k r i j‖ * ∑ l, ‖fvec k r z b l‖) / ‖herm (Hpk k r) z z‖,
       by positivity, fun g => ?_⟩
-    simp only [C2.uMap, dif_neg h]
+    simp only [C2.uMap, dite_eq_right h]
     rw [norm_div, div_mul_eq_mul_div, mul_comm _ (B.gN g)]
     gcongr
     exact a_herm_le _ g _ _
@@ -250,8 +240,7 @@ theorem integrable_unipotent_norm_rpow_neg {μN : Measure (Mt k r)} (hN : B.IsHa
   rcases Nat.eq_zero_or_pos r with hr | hr
   · subst hr
     have hsub : (Nset k 0 : Set (B.Mat k 0)) ⊆ {(1 : B.Mat k 0)} := by
-      intro x hx
-      exact P.SliceLastLevel.sz_N_zero hx
+      exact fun x hx => P.SliceLastLevel.sz_N_zero hx
     have hfin : IsFiniteMeasure μN := by
       refine ⟨?_⟩
       calc μN Set.univ ≤ μN (Nset k 0) + μN (Nset k 0)ᶜ := measure_univ_le_add_compl _
@@ -593,8 +582,7 @@ theorem geom (D : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : γ ∈ B.GV
     calc B.gN n' = B.gN (γ⁻¹ * ρ * γ * s'') := by rw [← hn'e]
       _ ≤ B.gN γ⁻¹ * B.gN ρ * B.gN γ * B.gN s'' := by
         refine (P.B6.gN_mul_le _ _).trans (mul_le_mul_of_nonneg_right ?_ h0s'')
-        refine (P.B6.gN_mul_le _ _).trans (mul_le_mul_of_nonneg_right ?_ h0')
-        exact P.B6.gN_mul_le _ _
+        exact (P.B6.gN_mul_le _ _).trans (mul_le_mul_of_nonneg_right (P.B6.gN_mul_le _ _) h0')
       _ ≤ B.gN γ⁻¹ * (B.gN n * B.gN σ) * B.gN γ * B.gN s'' := by
         have := mul_le_mul_of_nonneg_left hgρ h0
         have := mul_le_mul_of_nonneg_right this h0'
@@ -745,8 +733,7 @@ theorem d_orbJConv : Formalism.FourierDecayAlt.D.OrbJConv := by
     (le_max_right _ _) hCP0 hK10 hKγ0 hM hbN0 hA4
   rw [norm_smul, Real.norm_of_nonneg hθ0]
   unfold Formalism.FourierDecayAlt.D.orbIntegrand
-  rw [norm_smul, P.B7.norm_xi, one_mul]
-  exact hkey
+  rwa [norm_smul, P.B7.norm_xi, one_mul]
 
 end Formalism.FourierDecayAlt.P.Dx3
 

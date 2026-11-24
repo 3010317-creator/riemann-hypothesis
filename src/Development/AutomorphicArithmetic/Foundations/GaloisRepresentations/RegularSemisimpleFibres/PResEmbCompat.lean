@@ -92,8 +92,7 @@ private theorem exists_equiv_of_fin {k k' R : Type} [Field k] [Field k'] [Finite
   let ψ := RingEquiv.ofBijective e'.rangeRestrict
     ⟨fun a b hab => e'.injective (congrArg Subtype.val hab), e'.rangeRestrict_surjective⟩
   refine ⟨φ.trans ((RingEquiv.subringCongr hr).trans ψ.symm), fun x => ?_⟩
-  have hq := ψ.apply_symm_apply ((RingEquiv.subringCongr hr) (φ x))
-  exact congrArg Subtype.val hq
+  exact congrArg Subtype.val (ψ.apply_symm_apply ((RingEquiv.subringCongr hr) (φ x)))
 
 private theorem val_le_one_iff {k : Type} [Field k] [ValuativeRel k] {Γ : Type} [LinearOrderedCommGroupWithZero Γ]
     (u : Valuation k Γ) (hu : (valuation k).IsEquiv u) (x : k) : x ∈ 𝒪[k] ↔ u x ≤ 1 := hu.le_one_iff_le_one

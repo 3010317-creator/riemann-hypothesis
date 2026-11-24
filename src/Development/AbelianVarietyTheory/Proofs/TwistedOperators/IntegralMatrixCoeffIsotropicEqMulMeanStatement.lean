@@ -286,8 +286,7 @@ theorem GlobalTheory.PerfectCompl.exists_dual_complement : ∀ (D : D7) (V W : H
   · rintro γ ⟨g, rfl⟩ h
     by_contra hne
     have hex : ∃ i j, g i j ≠ 0 := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       apply hne
       ext i j
       show incA D (g i j) = 0
@@ -313,8 +312,7 @@ theorem GlobalTheory.PerfectCompl.exists_dual_complement : ∀ (D : D7) (V W : H
       rw [Algebra.trace_algebraMap, D.sp.cm.deg2] at this
       refine this.trans ?_
       norm_num
-    rw [e3, map_smul, t, smul_eq_mul, mul_one] at h1
-    exact h1
+    rwa [e3, map_smul, t, smul_eq_mul, mul_one] at h1
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -462,15 +460,7 @@ namespace GlobalTheory.IsoMeanSmear
 
 theorem exists_bound {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {V W : HSp D}
     {G : WO V W → ℂ} (hG : IsThetaFunO ψ V W G) : ∃ C, ∀ u, ‖G u‖ ≤ C := by
-  obtain ⟨-, -, -, -, -, K, hK, hcov⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V.rank
-  obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hG.cont.continuousOn
-  refine ⟨C, fun u => ?_⟩
-  obtain ⟨γ, hγm, hγ⟩ := hcov u
-  obtain ⟨γ0, rfl⟩ := hγm
-  have e : ((incA D).toAddMonoidHom.mapMatrix (m := Fin W.rank) (n := Fin V.rank)) γ0 = ratW W V γ0 := rfl
-  have h1 := hC _ hγ
-  rw [e, hG.quasi, norm_mul, hψ.1.2.1, one_mul] at h1
-  exact h1
+  apply GlobalTheory.OrientedHeis.theta_bounded <;> assumption
 
 theorem continuous_emb {D : D7} (V W : HSp D) {a b : ℕ} (P : Matrix (Fin W.rank) (Fin a) D.host.E)
     (Q : Matrix (Fin b) (Fin V.rank) D.host.E) : Continuous (GlobalTheory.IsoMean.emb V W P Q) := by
@@ -546,8 +536,7 @@ theorem smear : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.rank) 
               mul_le_mul (hφ1 _) (hbd _) (norm_nonneg _) zero_le_one
           _ = C * C' := one_mul _
     refine (integral_integral_swap hint).trans ?_
-    refine integral_congr_ae (Filter.Eventually.of_forall fun u => ?_)
-    exact integral_const_mul _ _
+    exact integral_congr_ae (Filter.Eventually.of_forall fun u => (integral_const_mul _ _))
 
 end GlobalTheory.IsoMeanSmear
 end -- clump:auto
@@ -692,8 +681,7 @@ theorem integral_coef_eq_mul_meanX : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P :
           ∫ ξ in 𝓨, (∫ u in 𝓕, heisO ψ V W (emb V W P Q (γ +ᵥ ξ)) G u * star (G' u) ∂ν) ∂μ :=
       fun γ => (MeasureTheory.measurePreserving_add_left μ (γ : Mx D a b)).setIntegral_image_emb
         (measurableEmbedding_const_vadd (γ : Mx D a b)) _ 𝓨
-    simp only [e] at h1
-    exact h1
+    simpa only [e] using h1
 
   have hterm : ∀ γ : ↥(GlobalTheory.MixModel.ratMx D a b),
       ∫ ξ in 𝓨, (∫ u in 𝓕, heisO ψ V W (emb V W P Q (γ +ᵥ ξ)) G u * star (G' u) ∂ν) ∂μ =

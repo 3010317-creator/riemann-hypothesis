@@ -66,14 +66,11 @@ theorem GlobalTheory.LowRow.baseLinks_of_prims : ∀ {D : D7} {G : Type} [Group 
   have hR := complex_data_conditions_base_level_of_primitive_links hOk hsep hC hP
   refine ⟨⟨c.lev, c.grp, c.fam, c.models, c.chain, c.thP⟩, hOk.ok2, ?_, ?_, ?_⟩
   · have h := hR.lifts0.1
-    rw [GlobalTheory.CharRealise.toCx3_eq_one R F hph] at h
-    exact h
+    rwa [GlobalTheory.CharRealise.toCx3_eq_one R F hph] at h
   · have h := hR.ratTh
-    rw [GlobalTheory.CharRealise.toCx3_eq_one R F hph] at h
-    exact h
+    rwa [GlobalTheory.CharRealise.toCx3_eq_one R F hph] at h
   · have h := hR.proviso0
-    rw [GlobalTheory.CharRealise.toCx3_eq_one R F hph] at h
-    exact h
+    rwa [GlobalTheory.CharRealise.toCx3_eq_one R F hph] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPartBaseLinksOfPrimitiveRows =====

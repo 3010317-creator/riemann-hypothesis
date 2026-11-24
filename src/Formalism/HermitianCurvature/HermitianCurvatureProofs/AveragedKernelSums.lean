@@ -165,8 +165,7 @@ theorem thx_psd (hG : ∀ F' : Finset (Point K × Kˣ), (∀ p ∈ F', ∀ p' �
     unfold thx
     push_cast
     rfl
-  rw [e]
-  exact h2
+  rwa [e]
 
 end Basic
 
@@ -220,8 +219,7 @@ theorem supportModule_of (hSup : NsSupport) (K : Type) [CommRing K] [Topological
         rw [← mul_assoc, ← mul_pow, Units.inv_mul, one_pow, one_mul]
       · rintro ⟨y, hy, rfl⟩
         show (ϖ : K) ^ N * (((ϖ⁻¹ : Kˣ) : K) ^ N * y) ∈ R
-        rw [← mul_assoc, ← mul_pow, Units.mul_inv, one_pow, one_mul]
-        exact hy
+        rwa [← mul_assoc, ← mul_pow, Units.mul_inv, one_pow, one_mul]
     rw [this]
     exact hL.isCompact.image (continuous_const_mul _)
   · intro t ht h hh h' _
@@ -281,8 +279,7 @@ theorem card_alt {P : AddSubgroup K} (hRP : R.toAddSubgroup ≤ P) :
       ((P.map (QuotientAddGroup.mk' R.toAddSubgroup) : AddSubgroup _) : Set _) := by
     ext x
     constructor
-    · intro hx
-      exact ⟨Quotient.out x, hx, QuotientAddGroup.out_eq' x⟩
+    · exact fun hx => ⟨Quotient.out x, hx, QuotientAddGroup.out_eq' x⟩
     · rintro ⟨z, hz, rfl⟩
       exact (mem_out hRP z).2 hz
   rw [this]
@@ -305,8 +302,7 @@ theorem reps_card (L M : AddSubgroup K) (S : Finset K) (h : IsReps S L M) :
       obtain ⟨b, ⟨hb1, hb2⟩, _⟩ := h.2 l hl
       refine ⟨⟨b, hb1⟩, Subtype.ext ?_⟩
       show ((b : K) : K ⧸ M) = ((l : K) : K ⧸ M)
-      rw [QuotientAddGroup.eq, ← sub_eq_neg_add]
-      exact hb2
+      rwa [QuotientAddGroup.eq, ← sub_eq_neg_add]
   rw [← Nat.card_congr (Equiv.ofBijective f hf), Nat.card_eq_fintype_card, Fintype.card_coe]
 
 theorem orth (hψ : ∀ r ∈ R, ψ r = 1) {P : AddSubgroup K} (hRP : R.toAddSubgroup ≤ P)
@@ -408,9 +404,9 @@ theorem thxSum_core (hL : LocalDatum K R ψ) {L₁ : AddSubgroup K} (hle : L₁ 
     simp only [e]
     by_cases hbb : b = b'
     · subst hbb
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       simp [hTcard]
-    · rw [if_neg hbb]
+    · rw [ite_eq_right hbb]
       have hc : b' - b ∈ R := R.sub_mem (hB.1 b' hb') (hB.1 b hb)
       have hnot : b' - b ∉ perp ψ (perp ψ L₁) := by
         rw [hpp]
@@ -431,11 +427,11 @@ theorem thxSum_core (hL : LocalDatum K R ψ) {L₁ : AddSubgroup K} (hle : L₁ 
       ∑ x ∈ Tf, thx R ψ m cr A B τ (Quotient.out x) h h' := by
     rw [finsum_eq_sum_of_support_subset (s := Tf)]
     · refine Finset.sum_congr rfl fun x hx => ?_
-      rw [if_pos ((hTf x).mp hx)]
+      rw [ite_eq_left ((hTf x).mp hx)]
     · intro x hx
       rw [Finset.mem_coe, hTf]
       by_contra hcon
-      exact hx (if_neg hcon)
+      exact hx (ite_eq_right hcon)
   rw [hS]
   unfold thx
   rw [← Finset.mul_sum, Finset.sum_comm, mul_inv, mul_assoc, Finset.mul_sum (a := (B.card : ℂ)⁻¹)]
@@ -456,7 +452,7 @@ theorem thxSum_core (hL : LocalDatum K R ψ) {L₁ : AddSubgroup K} (hle : L₁ 
       intro b' hb'
       rw [← Finset.sum_mul, hO b hb b' hb']
       split_ifs <;> simp
-    rw [Finset.sum_congr rfl h2, Finset.sum_ite_eq, if_pos hb]
+    rw [Finset.sum_congr rfl h2, Finset.sum_ite_eq, ite_eq_left hb]
   rw [Finset.sum_congr rfl h1, ← Finset.mul_sum, ← mul_assoc]
   congr 1
   field_simp

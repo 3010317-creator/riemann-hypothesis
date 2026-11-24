@@ -125,8 +125,7 @@ theorem cong_on_adjoin : ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteVal
     have e : O.valuation (algebraMap W F (u : W)) * O.valuation (algebraMap W F ((u⁻¹ : Wˣ) : W)) = 1 := by
       rw [← map_mul, ← map_mul, Units.mul_inv, map_one, map_one]
     refine le_antisymm a1 ?_
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have := mul_lt_one_of_lt_of_le hc a2
     rw [e] at this
     exact lt_irrefl _ this
@@ -377,11 +376,9 @@ theorem exists_integral_quotient :
   have hMpos : 0 < M := zero_lt_iff.mpr hM0
   set c : ℕ → F := fun i => b i / b j with hc
   have hcle : ∀ i, v (c i) ≤ 1 := fun i => by
-    simp only [c, map_div₀, hjM]
-    exact (div_le_one₀ hMpos).mpr (hle i)
+    simpa only [c, map_div₀, hjM] using (div_le_one₀ hMpos).mpr (hle i)
   have hclt : ∀ i, j < i → v (c i) < 1 := fun i hi => by
-    simp only [c, map_div₀, hjM]
-    exact (div_lt_one₀ hMpos).mpr (hlt i hi)
+    simpa only [c, map_div₀, hjM] using (div_lt_one₀ hMpos).mpr (hlt i hi)
   have hcW : ∀ i, ∃ w : W, algebraMap W F w = c i := fun i => by
     have hci : c i = algebraMap (FractionRing W) F (p.coeff i / p.coeff j) := by
       simp [c, b, map_div₀]

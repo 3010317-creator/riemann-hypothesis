@@ -49,9 +49,7 @@ theorem exists_lower (A : HermLine ι) (hA : ContinuousOn A.h {z | ∀ k, ∃ i,
   have hwpos : 0 < A.h w := A.pos w (hsub hwS)
   have h1 : 1 ≤ |M| * A.h w := by
     have := (hM w hwS).trans (le_abs_self M)
-    rw [Real.norm_eq_abs, abs_inv, abs_of_pos hwpos] at this
-    rw [inv_le_iff_one_le_mul₀ hwpos] at this
-    exact this
+    rwa [Real.norm_eq_abs, abs_inv, abs_of_pos hwpos, inv_le_iff_one_le_mul₀ hwpos] at this
   have hAw : A.h w = (∏ k, ‖z ⟨k, c k⟩‖ ^ A.a k)⁻¹ * A.h z := by
     rw [hw, A.smul s z hs0, ← Finset.prod_inv_distrib]
     congr 1
@@ -110,7 +108,7 @@ theorem SectionSupBound.proof : SectionSupBound.Statement := by
         split_ifs with hc'
         · exact mul_nonneg (hB0 c' hc') (pow_nonneg (hM0 c') τ)
         · exact le_rfl) (Finset.mem_univ c)
-    simp only [dif_pos hyc] at this
+    simp only [dite_eq_left hyc] at this
     linarith
   have hAh : 0 ≤ A.h z ^ τ := pow_nonneg (A.pos z hz.1).le τ
   calc ‖eval z (map (Int.castRingHom ℂ) g)‖

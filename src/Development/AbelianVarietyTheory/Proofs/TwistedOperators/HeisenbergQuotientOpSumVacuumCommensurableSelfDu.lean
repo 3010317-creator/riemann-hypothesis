@@ -141,7 +141,7 @@ theorem vacuum_unique_of_selfDual {R X M : Type} [CommRing R] [AddCommGroup X] [
       have e1 : (Submodule.Quotient.mk (Quotient.out q) : X ⧸ Λ) = q := Quotient.out_eq q
       rw [← e1]; exact (Submodule.Quotient.mk_eq_zero Λ).2 hm)
     rw [hΛ] at hn
-    push_neg at hn
+    push Not at hn
     obtain ⟨a, ha, hne⟩ := hn
     have hne' : γ a (Quotient.out q) ≠ 1 := fun e => hne (h.swap_eq_one e)
     have e := hcoord a ha q v
@@ -152,7 +152,7 @@ theorem vacuum_unique_of_selfDual {R X M : Type} [CommRing R] [AddCommGroup X] [
   rw [map_smul, ← hb0, b.repr_self, Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul]
   by_cases hq : (0 : X ⧸ Λ) = q
   · subst hq; simp
-  · rw [if_neg hq, mul_zero, hvan q (Ne.symm hq)]
+  · rw [ite_eq_right hq, mul_zero, hvan q (Ne.symm hq)]
 
 end GlobalTheory.SphTheta
 
@@ -186,16 +186,14 @@ theorem form_translate_vacuum {R X M : Type} [CommRing R] [AddCommGroup X] [Modu
   split_ifs with hx
   · rw [hs x hx]
   · obtain ⟨a, ha, hne⟩ : ∃ a ∈ Λ, γ x a ≠ 1 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hx ((hΛ x).2 hc)
     have h1 : e (W x s) = γ a x * e (W x s) := by
       conv_lhs => rw [← he a ha (W x s)]
       rw [h.comm a x s, hs a ha, map_smul, smul_eq_mul]
     have h2 : γ a x ≠ 1 := by
       rw [h.swap x a]
-      intro h3
-      exact hne (inv_eq_one.1 h3)
+      exact fun h3 => hne (inv_eq_one.1 h3)
     have h3 : (1 - γ a x) * e (W x s) = 0 := by rw [sub_mul, one_mul, ← h1, sub_self]
     exact (mul_eq_zero.1 h3).resolve_left (sub_ne_zero.2 (Ne.symm h2))
 
@@ -234,11 +232,10 @@ theorem sumOp_vacuum_lift : ∀ {R X M : Type} [CommRing R] [AddCommGroup X] [Mo
     simp only [form_translate_vacuum h hΛ hs e he, he1]
     obtain ⟨i0, hi0, huniq⟩ := ht 0 Λ'.zero_mem
     rw [Finset.sum_eq_single i0]
-    · rw [if_pos (by simpa using hi0)]
+    · rw [ite_eq_left (by simpa using hi0)]
     · intro j _ hj
-      rw [if_neg]
-      intro hjΛ
-      exact hj (huniq j (by simpa using hjΛ))
+      rw [ite_eq_right]
+      exact fun hjΛ => hj (huniq j (by simpa using hjΛ))
     · simp
   rw [map_smul, hes', smul_eq_mul, mul_one]
 

@@ -183,28 +183,7 @@ theorem sep_iff {S : Scheme.{0}} (G : Over S) : IsSeparated G.hom ↔ IsClosedIm
 
 theorem ext_of_schemeDominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSeparated s] (h : f ≫ s = g ≫ s)
     (d : W ⟶ X) [IsSchemeTheoreticallyDominant d] (hU : d ≫ f = d ≫ g) : f = g := by
-  let X' : Over Z := Over.mk (f ≫ s)
-  let Y' : Over Z := Over.mk s
-  let f' : X' ⟶ Y' := Over.homMk f
-  let g' : X' ⟶ Y' := Over.homMk g h.symm
-  haveI : IsSeparated Y'.hom := ‹IsSeparated s›
-  let U' : Over Z := Over.mk (d ≫ f ≫ s)
-  let d' : U' ⟶ X' := Over.homMk d
-  have e : d' ≫ f' = d' ≫ g' := by
-    ext1
-    exact hU
-  let l := equalizer.lift d' e
-  have hd : d = l.left ≫ (equalizer.ι f' g').left := by
-    rw [← Over.comp_left, equalizer.lift_ι]; rfl
-  have hker : (equalizer.ι f' g').left.ker = ⊥ := by
-    apply le_bot_iff.1
-    calc _ ≤ (l.left ≫ (equalizer.ι f' g').left).ker := Scheme.Hom.le_ker_comp _ _
-      _ = ⊥ := by rw [← hd]; exact d.ker_eq_bot
-  haveI : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
-  have h0 : IsIso ((Over.forget Z).map (equalizer.ι f' g')) := (inferInstance : IsIso (equalizer.ι f' g').left)
-  have : IsIso (equalizer.ι f' g') := isIso_of_reflects_iso _ (Over.forget Z)
-  have hfg : f' = g' := (cancel_epi (equalizer.ι f' g')).1 (equalizer.condition f' g')
-  exact congrArg CommaMorphism.left hfg
+  exact GlobalTheory.SS.SectionTranslation.ext_of_schDom s h d hU
 
 theorem exists_sup {S : Scheme.{0}} {N W₁ W₂ : Over S} (p₁ : W₁ ⟶ N) (p₂ : W₂ ⟶ N) [IsOpenImmersion p₁.left]
     [IsOpenImmersion p₂.left] : ∃ (X : Over S) (p : X ⟶ N) (a₁ : W₁ ⟶ X) (a₂ : W₂ ⟶ X), IsOpenImmersion p.left ∧
@@ -234,12 +213,7 @@ theorem exists_sup {S : Scheme.{0}} {N W₁ W₂ : Over S} (p₁ : W₁ ⟶ N) (
 variable {R K : Type} [CommRing R] [Field K] [Algebra R K] {A : Over (Sp K)}
 
 theorem j_isPullback (M : Model R A) : IsPullback M.j A.hom M.Y.hom (spMap (algebraMap R K)) := by
-  have : IsIso M.e.inv.left := inferInstanceAs (IsIso ((Over.forget _).map M.e.inv))
-  have h : M.e.inv.left ≫ pullback.snd M.Y.hom (spMap (algebraMap R K)) = A.hom ≫ 𝟙 _ := by
-    rw [Category.comp_id]; exact Over.w M.e.inv
-  have := (IsPullback.of_horiz_isIso ⟨h⟩).paste_horiz (IsPullback.of_hasPullback M.Y.hom (spMap (algebraMap R K)))
-  rw [Category.id_comp] at this
-  exact this
+  exact GlobalTheory.SS.Model.isPullback_j M
 
 noncomputable def ofSquare (Y : Over (Sp R)) (h₁ : Smooth Y.hom) (h₂ : IsSeparated Y.hom) (h₃ : QuasiCompact Y.hom)
     {j : A.left ⟶ Y.left} (h : IsPullback j A.hom Y.hom (spMap (algebraMap R K))) : Model R A :=
@@ -632,8 +606,7 @@ theorem exists_fibre {M : Model R A} {W Y : Over (Sp R)} {l : M.Y ⟶ W} {p : W 
   refine ⟨u, ?_, h1⟩
   have e := Over.w (toUnit M.Y)
   show M.Y.hom u = _
-  rw [← e, Scheme.Hom.comp_apply]
-  exact h2
+  rwa [← e, Scheme.Hom.comp_apply]
 
 theorem exists_section_general [IsDomain R] (hR : SH R K) {M : Model R A} (hi : M.Irr) {f : A ⟶ A}
     (hf : GenIso M M f) {V₁ V₂ : Set M.Y.left} (o₁ : IsOpen V₁) (o₂ : IsOpen V₂) (n₁ : (M.sp ∩ V₁).Nonempty)
@@ -677,8 +650,7 @@ theorem lawdef_section [IsDomain R] (hR : SH R K) (A : Over (Sp K)) [GrpObj A] [
     refine (ha' (sp0 Y) false ?_).defAt
     have e : s ≫ lift (𝟙 M.Y) (toUnit M.Y ≫ Y) = Y ≫ lift (toUnit M.Y ≫ s) (𝟙 M.Y) := by
       ext1 <;> simp [reassoc_of% u1]
-    rw [map_modelSectionSpecialPoint_comp, ← e, ← map_modelSectionSpecialPoint_comp]
-    exact hs
+    rwa [map_modelSectionSpecialPoint_comp, ← e, ← map_modelSectionSpecialPoint_comp]
   have d2 : DefAt (M.prod M) (M.prod M) (shear A true) (sp0 (lift X t)) := by
     have e : t ≫ lift (toUnit M.Y ≫ X) (𝟙 M.Y) = lift X t := by
       ext1 <;> simp [reassoc_of% u1]
@@ -805,8 +777,7 @@ theorem mem_range_j [IsDomain R] [IsDiscreteValuationRing R] [IsFractionRing R K
         ((M.Y.hom y : PrimeSpectrum R).isPrime.isMaximal hb)))
     show Disjoint _ _
     rw [hb, Set.disjoint_left]
-    intro a ha ha'
-    exact nonZeroDivisors.ne_zero ha ha'
+    exact fun a ha ha' => nonZeroDivisors.ne_zero ha ha'
   obtain ⟨t, ht⟩ := h1
   obtain ⟨a, ha, -⟩ := Scheme.exists_preimage_of_isPullback (isPullback_j M) y t ht.symm
   exact ⟨a, ha⟩
@@ -882,8 +853,7 @@ theorem compat_of_isoAt_closure : ∀ (R K : Type) [CommRing R] [IsDomain R] [Is
       have ds : IsDominant s := IsDominant.of_comp (M.j ∣_ U) s
       have op : IsOpenImmersion (s ≫ p) := by rw [sp]; infer_instance
       refine ⟨_, s, ds, op, by rw [sq]; exact hg, (section_open p s).2 x ?_⟩
-      rw [sp, Scheme.Opens.range_ι]
-      exact hU
+      rwa [sp, Scheme.Opens.range_ι]
     · have op : IsOpenImmersion (δ.toImage ≫ p) := by rw [hp]; exact jM
       refine ⟨_, δ.toImage, inferInstance, op, by rw [hq]; exact jN, (section_open p _).2 x ?_⟩
       rw [hp]
@@ -964,8 +934,7 @@ theorem val_eq {T X X₁ X₂ O₁ O₂ Y S : Scheme.{0}} (d : T ⟶ X) {z : X} 
     exact ⟨(equalizer.lift t ht).left x, congr(($(equalizer.lift_ι t ht)).left x)⟩
   obtain ⟨e, he⟩ := hc.closure_subset_iff.2 hs ho
   have := congr(($(equalizer.condition P Q)).left e)
-  rw [← f₁, ← f₂, ← he]
-  exact this
+  rwa [← f₁, ← f₂, ← he]
 
 variable {R : Type} [CommRing R] {K : Type} [Field K] [Algebra R K] {A A' A'' : Over (Sp K)}
 
@@ -1102,13 +1071,7 @@ theorem exists_section_open [IsDomain R] [IsLocalRing R] (hR : SH R K) (M : Mode
 
 theorem j_comm (M : Model R A) (N : Model R A') (f : A ⟶ A') (g : M.Y ⟶ N.Y)
     (h : M.e.inv ≫ (Over.pullback (spMap (algebraMap R K))).map g = f ≫ N.e.inv) : M.j ≫ g.left = f.left ≫ N.j := by
-  have h2 := congrArg (fun q => q.left ≫ pullback.fst N.Y.hom (spMap (algebraMap R K))) h
-  have h4 : ((Over.pullback (spMap (algebraMap R K))).map g).left ≫ pullback.fst N.Y.hom (spMap (algebraMap R K))
-      = pullback.fst M.Y.hom (spMap (algebraMap R K)) ≫ g.left := pullback.lift_fst _ _ _
-  simp only [Over.comp_left, Category.assoc] at h2
-  unfold Model.j
-  rw [Category.assoc]
-  exact (congrArg (fun q => M.e.inv.left ≫ q) h4).symm.trans h2
+  exact GlobalTheory.SS.LawDef.j_comm M N f g h
 
 def pj (M : Model R A) (N : Model R A') : (A ⊗ A').left ⟶ (M.Y ⊗ N.Y).left := (M.prod N).j
 
@@ -1192,8 +1155,7 @@ theorem left_shear (a : 𝟙_ (Over (Sp K)) ⟶ A) :
 
 theorem right_shear (a : 𝟙_ (Over (Sp K)) ⟶ A) :
     lift (𝟙 A) (toUnit A ≫ a) ≫ shear A true ≫ snd A A = (transl a).hom := by
-  simp only [shear, transl, MonObj.comp_mul, lift_snd, lift_fst]
-  exact mul_comm _ _
+  simpa only [shear, transl, MonObj.comp_mul, lift_snd, lift_fst] using mul_comm _ _
 
 theorem exists_shear_at [IsLocalRing R] {M : Model R A} (hM : Strict M) (s : 𝟙_ (Over (Sp R)) ⟶ M.Y) :
     ∃ (X : Scheme.{0}) (I G : X ⟶ (M.Y ⊗ M.Y).left) (o : X) (w : M.Y.left), IsOpenImmersion I ∧ IsOpenImmersion G ∧

@@ -627,8 +627,7 @@ theorem main : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (r : �
     have key := cBnum_le (D.nd.l i) D.R.t D.R.n D.R.r large₂.sc.b (l_ge_three D i hl) ht1 hn1 hr1 hb1 hLb
     have hnV : D.R.nV = D.R.r + D.R.t := rfl
     have hf : D.R.f = 2 * D.R.n := rfl
-    rw [hnV, hf]
-    exact key
+    rwa [hnV, hf]
 
 end GlobalTheory.TheoremBTB
 end -- clump:auto
@@ -793,8 +792,7 @@ theorem sub_one_le_two_mul_finrank (E : Type) [Field E] [NumberField E] (l : ℕ
     rw [hl'] at this
     have hn : NumberField.RingOfIntegers.norm E (algebraMap (𝓞 E) (𝓞 L) (l : 𝓞 E)) = (l : 𝓞 E) ^ k := by
       simpa only [hk] using (NumberField.RingOfIntegers.norm_algebraMap (L := L) E (l : 𝓞 E))
-    rw [hn] at this
-    exact this
+    rwa [hn] at this
   have hI : (Ideal.span {n}) ^ (l - 1) = (Ideal.span {(l : 𝓞 E)}) ^ k := by
     rw [Ideal.span_singleton_pow, Ideal.span_singleton_pow]
     exact Ideal.span_singleton_eq_span_singleton.2 hB
@@ -922,7 +920,7 @@ theorem jump_windows (η Sc b : ℝ) (t : ℕ) (hη : 0 < η) (hS : 0 < Sc) (ht 
       refine ⟨p, key _ _ hS.le ?_⟩
       push_cast at q ⊢; linarith
     refine ⟨false, (s + 1).toNat, by omega, fun a ha => ?_, fun a ha hj => ?_⟩
-    · simp only [ElementDenominator.deep, Bool.false_eq_true, if_false, Set.mem_union, Set.mem_Icc]
+    · simp only [ElementDenominator.deep, Bool.false_eq_true, ite_false, Set.mem_union, Set.mem_Icc]
       rcases ha with ha | ha | ha
       · have := hc' a ha
         omega
@@ -938,7 +936,7 @@ theorem jump_windows (η Sc b : ℝ) (t : ℕ) (hη : 0 < η) (hS : 0 < Sc) (ht 
       refine ⟨q, key _ _ hS.le ?_⟩
       push_cast at p ⊢; linarith
     refine ⟨true, (s - 1).toNat, by omega, fun a ha => ?_, fun a ha hj => ?_⟩
-    · simp only [ElementDenominator.deep, if_true, Set.mem_union, Set.mem_Icc]
+    · simp only [ElementDenominator.deep, ite_true, Set.mem_union, Set.mem_Icc]
       rcases ha with ha | ha | ha
       · have := hc' a ha
         omega
@@ -1016,8 +1014,7 @@ theorem rowAt_of_thmA {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL : FinExt l
   have hr : finrank ↥LL.1 V2 = r := by simpa using e.finrank_eq
   have hs2 : ∀ τ, ∑ a ∈ Finset.Icc (-(η : ℤ)) η, multV (P.PD K) ρ2 τ a ≤ m := by
     intro τ
-    simp only [GlobalTheory.HTW.Rec.multV_eq_of_equiv _ e he']
-    exact hsum τ
+    simpa only [GlobalTheory.HTW.Rec.multV_eq_of_equiv _ e he'] using hsum τ
   obtain ⟨mm, k, hm, hk, hle⟩ := hT { V := V1, ρ := ρ1, cont := hc1, L := T1 }
     { V := V2, ρ := ρ2, cont := hc2, L := T2 } F r S η m h up b c1
     (GlobalTheory.HTW.Rec.isCrys_of_equiv _ e he' h2) hFo hr
@@ -1184,8 +1181,7 @@ theorem placesOver_finite (E : Type) [Field E] [NumberField E] (p : ℕ) (hp : p
     exact_mod_cast hp
   refine (Ideal.finite_factors h0).subset fun v hv => ?_
   show v.asIdeal ∣ _
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem declNoColumns : ∀ (D : D7) (i : D.nd.Loc), (D.nd.l i = D.host.q ∨ D.nd.l i = D.host.d) → ∃ dc : TruncatedSeriesCountingIdentities.Decl D i, dc.col = ∅ := by
   intro D i _
@@ -1469,10 +1465,10 @@ theorem mem_JJ (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) (a : ℤ) : (a : ℚ) 
     (a : ℚ) ∈ cloudT D up j ρ ∨ (a : ℚ) ∈ lowT D up j ρ ∨ (0 ≤ a ∧ a < D.R.t) := by
   cases up
   · rw [← mem_reflS_blockJ]
-    simp only [JJ, cloudT, lowT, Bool.false_eq_true, if_false, Jm, Jp, reflS, Set.mem_setOf_eq, Set.mem_union]
+    simp only [JJ, cloudT, lowT, Bool.false_eq_true, ite_false, Jm, Jp, reflS, Set.mem_setOf_eq, Set.mem_union]
     tauto
   · rw [← _root_.GlobalTheory.JumpSets.block_mem_iff]
-    simp only [JJ, cloudT, lowT, if_true, Jp, Set.mem_union]
+    simp only [JJ, cloudT, lowT, ite_true, Jp, Set.mem_union]
     tauto
 
 theorem sz_bounds (L : SizeData₂ D) (P : ParameterChoice' D L) (hP : AdmPar L) (j : ℕ) (hj1 : 1 ≤ j) (hj2 : j ≤ D.R.m)
@@ -1549,7 +1545,7 @@ theorem typeU_of_emb (i : D.nd.Loc) {w : HeightOneSpectrum (𝓞 D.host.E)}
   have hgg : g = g' := (factEmb D.R D.host).1.1 (RingHom.ext hemb)
   subst hgg
   cases e
-  · simp only [EmbeddingTypeJumps.EmbTypeUe, Bool.false_eq_true, if_false] at h0
+  · simp only [EmbeddingTypeJumps.EmbTypeUe, Bool.false_eq_true, ite_false] at h0
     obtain ⟨-, φ, hφ, hφr⟩ := h0
     show (g ∈ D.R.Psi ↔ false = true)
     simp only [Bool.false_eq_true, iff_false]
@@ -1569,10 +1565,9 @@ theorem typeU_of_emb (i : D.nd.Loc) {w : HeightOneSpectrum (𝓞 D.host.E)}
     have him := congrArg Complex.im hv
     simp at him
     linarith
-  · simp only [EmbeddingTypeJumps.EmbTypeUe, if_true] at h0
+  · simp only [EmbeddingTypeJumps.EmbTypeUe, ite_true] at h0
     show (g ∈ D.R.Psi ↔ true = true)
-    simp only [iff_true]
-    exact hU.1 h0
+    simpa only [iff_true] using hU.1 h0
 
 theorem jumpBlockCentreOffset_coe_real : ((c0 D : ℚ) : ℝ) = ((D.R.t : ℝ) - 1) / 2 := by
   unfold c0
@@ -1734,8 +1729,7 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
     · right; exact hneg (by simp [ht])
   · intro hu; exact hpos (by simp [hUp hu])
   · intro hd; exact hneg (by simp [hDn hd])
-  · intro x a
-    exact ((hjx x a).1).trans (hJJ a)
+  · exact fun x a => ((hjx x a).1).trans (hJJ a)
 end GlobalTheory.HostJumpWin
 end
 end

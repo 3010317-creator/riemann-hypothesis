@@ -198,14 +198,7 @@ open GlobalTheory.ChainFr
 theorem gBig_two {P Q S : GP} (hP : GBig P) (hQ : GBig Q)
     (h : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G : GridData Lc sc) (μ₀ : T) (C x b : ℝ),
       P G μ₀ C x b → Q G μ₀ C x b → S G μ₀ C x b) : GBig S := by
-  obtain ⟨CF1, h1⟩ := hP
-  obtain ⟨CF2, h2⟩ := hQ
-  refine ⟨max CF1 CF2, fun ε CF hCF => ?_⟩
-  obtain ⟨C1, x1, g1⟩ := h1 ε CF (le_of_max_le_left hCF)
-  obtain ⟨C2, x2, g2⟩ := h2 ε CF (le_of_max_le_right hCF)
-  exact ⟨max C1 C2, max x1 x2, fun C hC D large₂ he hx hr T Lc μ₀ hμ G => h G μ₀ _ _ _
-    (g1 C (le_of_max_le_left hC) D large₂ he (le_of_max_le_left hx) hr T Lc μ₀ hμ G)
-    (g2 C (le_of_max_le_right hC) D large₂ he (le_of_max_le_right hx) hr T Lc μ₀ hμ G)⟩
+  exact GlobalTheory.StageFinMatch.gBig_two' hP hQ h
 
 theorem dictionary_at_stage : GBig fun {D} {T} {Lc} {sc} G _ _ _ _ => ∀ (W : G.Weil) (i j : Fin D.R.m) (p q : ℕ) (A A' WW : HSp D)
     (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p q X →

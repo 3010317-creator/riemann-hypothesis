@@ -84,9 +84,7 @@ theorem comm_off : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     rw [h0, Matrix.zero_mul, sub_eq_zero] at h1
     simp only [GlobalTheory.WeilM.actAB]
     simpa [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat] using h1
-  have h2 := hW.impl (x, 1) (u • w) Φ hΦ
-  simp only [GlobalTheory.WeilM.Darboux.rho, he, hact] at h2
-  exact h2
+  simpa only [GlobalTheory.WeilM.Darboux.rho, he, hact] using hW.impl (x, 1) (u • w) Φ hΦ
 
 theorem liftV_one_mul {F : Type} [Field F] [NumberField F] (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) (b : AF F) :
     GlobalTheory.LatVac.liftV v 1 * b = GlobalTheory.LatVac.liftV v (evFin F v b) := by
@@ -125,8 +123,7 @@ theorem locality : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
       ∀ Φ ∈ GlobalTheory.WeilM.schA F (Fin a' × Fin (a + a')), T (fun y => Φ (y + u • p)) = fun y => T Φ (y + u • p) := by
     intro u hu p Φ hΦ
     have h := hcomm u hu p 0 Φ hΦ
-    rw [smul_zero, schr_trans, schr_trans] at h
-    exact h
+    rwa [smul_zero, schr_trans, schr_trans] at h
   obtain ⟨R, hR0, hR⟩ := GlobalTheory.T.exists_complementary_adelicSchwartz_restFunction (Fin a' × Fin (a + a')) v
   refine ⟨fun φ t => (R 0)⁻¹ * T (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (evFin F v) φ R) (fun i => GlobalTheory.LatVac.liftV v (t i)),
     fun φ hφ => ⟨?_, ?_⟩⟩

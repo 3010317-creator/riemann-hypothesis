@@ -140,8 +140,7 @@ theorem PositivityTheory.Xgn.t_pt_seq_lin : ∀ {o C : Type} [CommRing o] [Field
       refine AddSubgroup.mem_map.2 ⟨(b, ht b), AddSubgroup.mem_inf.2 ⟨?_, AddSubgroup.mem_prod.2 ⟨hb1, AddSubgroup.mem_top _⟩⟩, rfl⟩
       rw [hDel]
       refine ⟨hm b hb1, ?_⟩
-      simp only [sub_self]
-      exact zero_mem _
+      simpa only [sub_self] using zero_mem _
   · ext a
     rw [← hlie]
     constructor
@@ -156,10 +155,8 @@ theorem PositivityTheory.Xgn.t_pt_seq_lin : ∀ {o C : Type} [CommRing o] [Field
       rw [AddSubgroup.mem_comap] at ha
       refine AddSubgroup.mem_map.2 ⟨(a, hb a), AddSubgroup.mem_inf.2 ⟨(hGam _ _).2 ⟨?_, ?_⟩, AddSubgroup.mem_prod.2 ⟨AddSubgroup.mem_top _, ha⟩⟩, rfl⟩
       · rw [← hW, AddSubgroup.mem_comap]
-        simp only [LinearMap.toAddMonoidHom_coe, map_smul]
-        exact hm _ ha
-      · simp only [sub_self]
-        exact zero_mem _
+        simpa only [LinearMap.toAddMonoidHom_coe, map_smul] using hm _ ha
+      · simpa only [sub_self] using zero_mem _
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XPtSeqLin =====
@@ -205,8 +202,7 @@ theorem UpperTheory.Reformulated.B.Qi34.mem_flagSub_iff :
   · intro h j hj
     by_contra hx
     have hmem : j ∈ ((Pi.basisFun F (Fin n)).repr x).support := by
-      rw [Finsupp.mem_support_iff, Pi.basisFun_repr]
-      exact hx
+      rwa [Finsupp.mem_support_iff, Pi.basisFun_repr]
     have hlt : (j : ℕ) < i := h (Finset.mem_coe.mpr hmem)
     omega
   · intro h j hj
@@ -1037,8 +1033,7 @@ theorem onto_of_mod (hv : ∀ c, c ∈ RC ↔ v c ≤ 1) {w : C} (hw : v w < 1) 
     obtain ⟨b, hb, z', hz', rfl⟩ := h z hz
     exact Submodule.add_mem_sup ⟨b, hb, rfl⟩
       (Submodule.smul_mem_smul (Ideal.mem_span_singleton_self w₀) hz')
-  intro z hz
-  exact hle hz
+  exact fun z hz => hle hz
 
 theorem exists_lift (hv : ∀ c, c ∈ RC ↔ v c ≤ 1) {w : C} (hw : v w < 1) (hw0 : w ≠ 0) {r s n : ℕ}
     (hrs : r + s = n) {W : AddSubgroup (Fin r → C)} {om : AddSubgroup (Fin s → C)}
@@ -1131,8 +1126,7 @@ theorem exists_lift (hv : ∀ c, c ∈ RC ↔ v c ≤ 1) {w : C} (hw : v w < 1) 
   · apply le_antisymm
     · rintro _ ⟨x, hx, rfl⟩
       exact hq x hx
-    · intro z hz
-      exact honto z hz
+    · exact fun z hz => honto z hz
   · ext a
     refine ⟨hcm a, fun ha => ?_⟩
     change i a - w • β a ∈ stdLat RC (Fin n)
@@ -1275,8 +1269,7 @@ theorem af_le_stdLat {o C : Type} [CommRing o] [Field C] [Algebra o C] (RC : Sub
     · intro j _ hj
       simp [Pi.single_eq_of_ne hj, h0]
     · simp
-  rw [h5] at h4
-  exact h4
+  rwa [h5] at h4
 
 
 theorem testFacts (hF : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate) (hQ : GlobalTheory.CompanionTheory.Ar.GR.QuotientByFiniteFlatStatement) (hZ : GlobalTheory.CompanionTheory.Ar.GR.ZarhinStatement) (hH : GlobalTheory.CompanionTheory.Ar.GR.HodgeTateDatumStatement) (hOC : GlobalTheory.CompanionTheory.Ar.GR.OrdinaryCurveStatement) : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → 0 < D.p + D.q → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → HT.HTFree 𝔐 p → p ≠ 2 → ¬ (p : ℤ) ∣ NumberField.discr E → ∀ (b : ∀ t, Fin (labelRk D t) → 𝔐.Li), (∀ t, LinearIndependent Ω (b t) ∧ Submodule.span Ω (Set.range (b t)) = 𝔐.Vgen t) → ∀ φ : Equiv.Perm (CMType H ⊕ CMType H), IsFrobLabels c p φ → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], ∀ (t₀ : CMType H ⊕ CMType H) (Sg : Type) [Fintype Sg] (e : Sg → CMType H ⊕ CMType H) (φ' : Equiv.Perm Sg) (F : Type) [Field F] [Fintype F] [CharP F p] (pq : (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) →+* F) (sc : F →+ (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)})) (w : O) (σ : Sg → F →+* IsLocalRing.ResidueField O), IsOrbit O 𝔐 p φ t₀ e φ' pq w σ → IsSec pq sc → ∀ (G : GenTors 𝔐 p) (c' : ∀ k, J k), mseg y c' ≠ 0 → ∀ (P : ChartPack G O c') (i : ∀ τ, (Fin (labelRk D (e τ)) → Ω) →ₗ[Ω] (Fin (D.p + D.q) → Ω)), (∀ τ : Sg, SeqHyp (CR O y c') (algebraMap O Ω w) (coordLat O y (𝔐.HT p (e τ)) (b (e τ)) c') (dotDual (CR O y c') (coordLat O y (𝔐.HT p (e τ).swap) (b (e τ).swap) c')) (i τ) (qMap P (b (e τ).swap)) ∧ ∀ σE : E →+* Ω, (∀ a : 𝓞 E, σE (a : E) = 𝔐.emb (e τ) a) → DualSeq P σE (𝔐.R p - 2) (coordLat O y (𝔐.HT p (e τ)) (b (e τ)) c') (b (e τ)) (i τ)) → (chartD e b pq sc w P i).Base (CR O y c') p (algebraMap O Ω w) → ∀ (C : Type) [Field C] [Algebra O C] [Algebra Ω C] [IsScalarTower O Ω C] (RC : Subalgebra O C), IsTestPt p (CR O y c') RC → ∀ χ : Sg → F →*₀ C, (∀ τ a (o : O), IsLocalRing.residue O o = σ τ a → χ τ a - algebraMap O C o ∈ RC ∧ ∀ u ∈ RC, u * (χ τ a - algebraMap O C o) ≠ 1) →  ((chartD e b pq sc w P i).bc RC).Facts RC p (algebraMap O C w) (fun τ a => χ τ a) φ' := by
@@ -1312,8 +1305,8 @@ theorem testFacts (hF : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate) (hQ
       simpa [map_mul] using this
     · show (if a = 0 then (0 : Ω) else 1) ∈ CR O y c'
       by_cases ha : a = 0
-      · simp only [ha, if_true]; exact zero_mem _
-      · simp only [ha, if_false]; exact one_mem _
+      · simp only [ha, ite_true]; exact zero_mem _
+      · simp only [ha, ite_false]; exact one_mem _
   have hBase' : ((chartD e b pq sc w P i).bc RC).Base RC p (algebraMap O C w) := by
     rw [hw]
     exact (_root_.GlobalTheory.CompanionTheory.Ar.Num.lattice_base_change_larger_ring (chartD e b pq sc w P i) (CR O y c') p (algebraMap O Ω w) _ hcd hBase C RC hRC).2
@@ -1341,12 +1334,10 @@ theorem testFacts (hF : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate) (hQ
       (by rw [hAA]; exact hAb) (by rw [hAA]; exact hTi) F (Fin (D.p + D.q) → F) (TestPt.toNAdd sc) (TestPt.fromNAdd pq)
       hsec hstab (by rw [hAA]; rw [hAW] at hFS; exact hFS) (D.p + D.q) (Pi.basisFun F (Fin (D.p + D.q))) σ' hfund
     rw [hAW]
-    rw [hAA] at h1
-    exact h1
+    rwa [hAA] at h1
   have hTh := _root_.GlobalTheory.CompanionTheory.Relay.chartD_th_sqIdeal_mem_and_smul_mem_and_eig_mem_sqIdeal E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ σ' ee hχσ
   have hTh' : ∀ τ, (∀ g ∈ ReciprocityTheory.PGsh.Up.sqIdeal (ReciprocityTheory.PGsh.L2.augIdeal AW.carrier), (g, 0) ∈ ((chartD e b pq sc w P i).bc RC).Th τ) ∧ (∀ (a : F) g m, (g, m) ∈ ((chartD e b pq sc w P i).bc RC).Th τ → ((fun x => g (a • x)), (fun (τ : Sg) (a : F) => χ τ a) τ a • m) ∈ ((chartD e b pq sc w P i).bc RC).Th τ) ∧ ∀ g ∈ GlobalTheory.CompanionTheory.Ar.GR.eig AW.carrier (σ' ^ p ^ ee τ), (g, 0) ∈ ((chartD e b pq sc w P i).bc RC).Th τ → g ∈ ReciprocityTheory.PGsh.Up.sqIdeal (ReciprocityTheory.PGsh.L2.augIdeal AW.carrier) := by
-    rw [hAW]
-    exact hTh
+    rwa [hAW]
   have hleaf := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.TestPt.w_mul_forms_le_af hZ hH E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ v hv hvp hAb
   have haf : ∀ τ, ((chartD e b pq sc w P i).bc RC).af RC p (fun a => χ τ a) ≤ stdLat RC _ := fun τ =>
     af_le_stdLat RC h01 _ p hBase'.M_le _ (map_zero (χ τ)) (map_one (χ τ))

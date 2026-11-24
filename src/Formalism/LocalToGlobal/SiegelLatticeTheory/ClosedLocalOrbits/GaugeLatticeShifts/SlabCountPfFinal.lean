@@ -164,13 +164,13 @@ theorem countC_of_leviFin (hL : LeviFinC) : CountC := by
             i0.1.1.mem'
     · intro i hi
       have hei : e i = (i.1.1.lam', (hex i hi).choose) := by
-        simp only [e, dif_pos (hex i hi)]
+        simp only [e, dite_eq_left (hex i hi)]
       refine ⟨?_, ?_⟩
       · rw [hei]
         exact Finset.mem_biUnion.2 ⟨i.1.1.lam', i.1.1.mem', Finset.mem_image.2 ⟨_, (hex i hi).choose_spec.1, rfl⟩⟩
       intro j hj hij
       have hej : e j = (j.1.1.lam', (hex j hj).choose) := by
-        simp only [e, dif_pos (hex j hj)]
+        simp only [e, dite_eq_left (hex j hj)]
       rw [hei, hej] at hij
       have hl' : i.1.1.lam' = j.1.1.lam' := congrArg Prod.fst hij
       have hf : (hex i hi).choose = (hex j hj).choose := congrArg Prod.snd hij
@@ -350,8 +350,7 @@ theorem xs_le_usp : XS X ≤ Usp X u' :=
 theorem W_le_orth : Wsp X u' ≤ orth (VS D) (XS X) := by
   intro w hw
   rw [mem_orth']
-  intro y hy
-  exact (mem_orth'.1 hw) y (xs_le_usp X u' hy)
+  exact fun y hy => (mem_orth'.1 hw) y (xs_le_usp X u' hy)
 
 theorem xs_le_orth : XS X ≤ orth (VS D) (XS X) := by
   refine Submodule.span_le.2 ?_
@@ -513,8 +512,7 @@ variable {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} {u' : D.what�
 
 theorem psiE_iso {σ : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hσ : Gd X u' σ) (hσ' : Gd X u' σ⁻¹) :
     psiE σ hσ hσ' ∈ Formalism.HermitianLatticesTheory.isom (hW X u') := by
-  intro w w'
-  exact psiL_iso hσ hσ' w w'
+  exact fun w w' => psiL_iso hσ hσ' w w'
 
 theorem mem_LW {Λ : Submodule (𝓞 D.host.E) (VS D).V} {y : Wsp X u'} :
     y ∈ LW X u' Λ ↔ ∃ x, x ∈ Λ ∧ x ∈ orth (VS D) (XS X) ∧ piWL X u' x = y := by
@@ -583,13 +581,13 @@ theorem leviStabFinC_of (hWF : LeviWFinC) (hZ : SratZC) : LeviStabFinC := by
   · intro τ hτ
     obtain ⟨g, hg, rfl⟩ := Finset.mem_image.1 hτ
     have hg' : ∃ σ : G, Φ σ = g := hfin.mem_toFinset.1 hg
-    simp only [ch, dif_pos hg']
+    simp only [ch, dite_eq_left hg']
     exact hg'.choose.2
   · intro σ s hs hσ hS hgσ
     have hσG : σ ∈ G := ⟨hσ, hgσ, s, hs, hS⟩
     have hg' : ∃ ρ : G, Φ ρ = Φ ⟨σ, hσG⟩ := ⟨_, rfl⟩
     refine ⟨ch (Φ ⟨σ, hσG⟩), Finset.mem_image.2 ⟨_, hfin.mem_toFinset.2 ⟨_, rfl⟩, rfl⟩, ?_⟩
-    simp only [ch, dif_pos hg']
+    simp only [ch, dite_eq_left hg']
     have hτ := hg'.choose_spec
     intro x hx
     rw [LeviAlg.xsp_eq] at hx ⊢
@@ -648,8 +646,7 @@ theorem wu_pos (ι : X.B.I.F →+* ℝ) (x : Fin X.B.I.n → X.B.I.E) (hx0 : x �
     rw [← phi_hform, ← ha, X.B.I.φ_over v a, hemb]; rfl
   have hre : ι a = (hJ (X.B.I.ε v) (rv X.B.I v x) (rv X.B.I v x)).re := by rw [← hval]; simp
   rw [hre]
-  by_contra hle
-  push_neg at hle
+  by_contra! hle
 
   let nv : Fin (D.R.rS + 1) → Fin X.B.I.n → ℂ := fun j =>
     if h : j.1 < D.R.rS then rv X.B.I v (X.eR ⟨j.1, h⟩) - rv X.B.I v (X.fR ⟨j.1, h⟩) else rv X.B.I v (X.zR u)
@@ -681,7 +678,7 @@ theorem wu_pos (ι : X.B.I.F →+* ℝ) (x : Fin X.B.I.n → X.B.I.E) (hx0 : x �
     simp only [nv]
     split_ifs with hj
     · rw [hJ_sub_left, hJ_sub_right, hJ_sub_right]
-      simp only [HidaSetting.eR, HidaSetting.fR, hJ_crd, X.ee, X.ff, X.ef, hT_f_e, if_true, map_zero, map_one]
+      simp only [HidaSetting.eR, HidaSetting.fR, hJ_crd, X.ee, X.ff, X.ef, hT_f_e, ite_true, map_zero, map_one]
       norm_num
     · simp only [HidaSetting.zR, hJ_crd, X.zu_norm, map_neg, map_natCast]
       simp only [Complex.neg_re, Complex.natCast_re, Left.neg_neg_iff]
@@ -829,8 +826,7 @@ theorem lw_isLattice (Λ : Submodule (𝓞 D.host.E) (VS D).V) (hΛ : Submodule.
     exact Submodule.fg_of_fg_map_injective ((Wsp X u').subtype.restrictScalars (𝓞 D.host.E)) Subtype.val_injective
       ((isNoetherian_submodule.1 this) _ hle)
   ·
-    intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 
 theorem lw_isFullLattice (Λ : Submodule (𝓞 D.host.E) (VS D).V)
     (hΛ : Submodule.IsFullLattice D.host.E Λ) :
@@ -866,8 +862,7 @@ theorem leviWFinC_of (hP : LeviPosC) : LeviWFinC := by
   have hlat : Submodule.IsFullLattice D.host.E Λ := (((Y.rowsOK u').1 Λ hΛ).1).1
   refine Formalism.HermitianLatticesTheory.autFinite D.host.E (Wsp X u') (hW X u') (hW_symm X u') ?_ (LW X u' Λ)
     (lw_isFullLattice X u' Λ hlat)
-  intro x hx
-  exact hP D X u' x x.2 (fun h => hx (Subtype.ext h))
+  exact fun x hx => hP D X u' x x.2 (fun h => hx (Subtype.ext h))
 
 end Formalism.L2.SG.Pf.SlabCount
 end -- clump:auto
@@ -921,8 +916,7 @@ theorem rational_z_condition_holds : SratZC := by
     rw [Set.image_univ]
     show Submodule.span D.host.E (Set.range (X.Fu u').e) = _
     rw [X.Fu_e]
-  rw [hXs]
-  exact ht
+  rwa [hXs]
 
 end Formalism.L2.SG.Pf.SlabCount
 end -- clump:auto

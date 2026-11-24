@@ -61,13 +61,10 @@ def nc_Size (D : Formalism.BasicNotions.D7) (L : SizeData₂ D) (Y : Formalism.M
 theorem nc_a_ge : (1 : ℝ) ≤ L.sc.a := by
   have hx : 1 < L.sc.x := L.sc.one_lt_alt
   have hL : 0 ≤ L.sc.L := by
-    simp only [Formalism.BasicNotions.Scale.L]
-    exact Real.rpow_nonneg (by linarith) _
+    simpa only [Formalism.BasicNotions.Scale.L] using Real.rpow_nonneg (by linarith) _
   have hb : 1 ≤ L.sc.b := by
-    simp only [Formalism.BasicNotions.Scale.b]
-    exact Real.one_le_exp hL
-  simp only [Formalism.BasicNotions.Scale.a]
-  exact one_le_mul_of_one_le_of_one_le hx.le hb
+    simpa only [Formalism.BasicNotions.Scale.b] using Real.one_le_exp hL
+  simpa only [Formalism.BasicNotions.Scale.a] using one_le_mul_of_one_le_of_one_le hx.le hb
 
 theorem nc_de (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotions.G.LatInst D) (K : Formalism.MainNotions.G.Consts) (hT : GatTies D)
     (hL : Formalism.MainNotions.G.LatTied hT X Y) (u : D.what₂.Word) (w : D.what₂.places.Pl)
@@ -100,7 +97,7 @@ theorem nc_de (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotions.
     rw [nc_topsOn X Y hT hL u w hg t0 ht0, Finset.card_image_of_injective _ hinj]
   have hnP : (Formalism.MainNotions.G.nP D (D.what₂.places.resChar w) : ℝ) = ((D.gat u w hg).P.n' (Y.vOf u w hg t0) : ℕ) := by
     unfold Formalism.MainNotions.G.nP
-    rw [if_neg (nc_notSg hg), nc_n_eq X Y hT hL u w hg t0 ht0]
+    rw [ite_eq_right (nc_notSg hg), nc_n_eq X Y hT hL u w hg t0 ht0]
   unfold nc_De Formalism.MainNotions.G.dl Formalism.MainNotions.G.Nm
   rw [hNv, hnP]
   have hl0 : 0 ≤ Real.logb (D.what₂.places.resChar w) (2 * L.sc.a) := by linarith

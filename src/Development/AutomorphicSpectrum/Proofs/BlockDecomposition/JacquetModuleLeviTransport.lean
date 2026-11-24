@@ -133,8 +133,7 @@ theorem det_adLie_pairs (e : (Σ i, m i) ≃ Fin N) (β : Fin N → ℕ)
   have hP : P = (leviEmb k e g : Matrix (Fin N) (Fin N) k) := by rw [hPdef, hp]
   have hQ : Q = (leviEmb k e g⁻¹ : Matrix (Fin N) (Fin N) k) := by rw [hQdef, hp, map_inv]
   let A : (ParabolicIndex N β → k) →ₗ[k] (ParabolicIndex N β → k) :=
-    (((parabolicCoord k N β).symm.trans ((adLie k N β p).trans (parabolicCoord k N β))) :
-      (ParabolicIndex N β → k) →ₗ[k] (ParabolicIndex N β → k))
+    (parabolicCoord k N β).symm.trans ((adLie k N β p).trans (parabolicCoord k N β))
   have hdet : (LinearEquiv.det (adLie k N β p) : k) = LinearMap.det A := by
     rw [← LinearEquiv.det_conj (adLie k N β p) (parabolicCoord k N β), LinearEquiv.coe_det]
     rfl
@@ -145,74 +144,58 @@ theorem det_adLie_pairs (e : (Σ i, m i) ≃ Fin N) (β : Fin N → ℕ)
       Matrix (Fin N) (Fin N) k) s.1.1 s.1.2 = _
     rw [coe_adLie, coe_parabolicCoord_symm_single, mul_single_mul_apply]
   let κ : ParabolicIndex N β → α ×ₗ α := fun s => toLex (blk e s.1.1, blk e s.1.2)
-  have hzero : ∀ s t, κ s ≠ κ t → LinearMap.toMatrix' A s t = 0 := by
+  have hBT : (LinearMap.toMatrix' A).BlockTriangular κ := by
     intro s t hst
     rw [hM]
     by_cases h1 : blk e s.1.1 = blk e t.1.1
-    · have h2 : blk e t.1.2 ≠ blk e s.1.2 := by
-        intro h2
-        exact hst (by simp only [κ, h1, h2])
-      rw [hQ, leviEmb_eq_zero e _ h2, mul_zero]
+    · rw [hQ, leviEmb_eq_zero e _ (fun h2 => hst.ne' (by simp only [κ, h1, h2])), mul_zero]
     · rw [hP, leviEmb_eq_zero e _ h1, zero_mul]
-  have hBT : (LinearMap.toMatrix' A).BlockTriangular κ := fun s t hts => hzero s t hts.ne'
-  have hblock : ∀ a b : α, ((LinearMap.toMatrix' A).toSquareBlock κ (toLex (a, b))).det =
-      if a ≤ b then
-        ((g a : GL (m a) k) : Matrix (m a) (m a) k).det ^ Fintype.card (m b) *
-          ((((g b)⁻¹ : GL (m b) k)) : Matrix (m b) (m b) k).det ^ Fintype.card (m a)
-      else 1 := by
-    intro a b
-    by_cases hab : a ≤ b
-    · rw [if_pos hab]
-      have hmem : ∀ (i : m a) (j : m b), ¬ β (e ⟨b, j⟩) < β (e ⟨a, i⟩) := by
-        intro i j
-        rw [hβ]
-        simpa using hab
-      let f : m a × m b → {t : ParabolicIndex N β // κ t = toLex (a, b)} := fun x =>
-        ⟨⟨(e ⟨a, x.1⟩, e ⟨b, x.2⟩), hmem x.1 x.2⟩, by simp [κ]⟩
-      have hf : Function.Bijective f := by
-        constructor
-        · rintro ⟨i, j⟩ ⟨i', j'⟩ h
-          have h1 := congrArg (fun t => t.1.1.1) h
-          have h2 := congrArg (fun t => t.1.1.2) h
-          simp only [f] at h1 h2
-          have h1' := e.injective h1
-          have h2' := e.injective h2
-          simp only [Sigma.mk.injEq, heq_eq_eq, true_and] at h1' h2'
-          rw [h1', h2']
-        · rintro ⟨⟨⟨i, j⟩, hij⟩, hκ⟩
-          obtain ⟨⟨a', i⟩, rfl⟩ := e.surjective i
-          obtain ⟨⟨b', j⟩, rfl⟩ := e.surjective j
-          have h3 : a' = a ∧ b' = b := by simpa [κ] using hκ
-          obtain ⟨rfl, rfl⟩ := h3
-          exact ⟨(i, j), rfl⟩
-      rw [← Matrix.det_submatrix_equiv_self (Equiv.ofBijective f hf)]
-      have hk : ((LinearMap.toMatrix' A).toSquareBlock κ (toLex (a, b))).submatrix
-          (Equiv.ofBijective f hf) (Equiv.ofBijective f hf) =
-          Matrix.kroneckerMap (· * ·) ((g a : GL (m a) k) : Matrix (m a) (m a) k)
-            ((((g b)⁻¹ : GL (m b) k)) : Matrix (m b) (m b) k).transpose := by
-        ext ⟨i, j⟩ ⟨i', j'⟩
-        show LinearMap.toMatrix' A (f (i, j)).1 (f (i', j')).1 = _
-        rw [hM, hP, hQ]
-        show (leviEmb k e g : Matrix (Fin N) (Fin N) k) (e ⟨a, i⟩) (e ⟨a, i'⟩) *
-          (leviEmb k e g⁻¹ : Matrix (Fin N) (Fin N) k) (e ⟨b, j'⟩) (e ⟨b, j⟩) = _
-        rw [leviEmb_apply_same, leviEmb_apply_same]
-        rfl
-      rw [hk, Matrix.det_kronecker, Matrix.det_transpose]
-    · rw [if_neg hab]
-      have : IsEmpty {t : ParabolicIndex N β // κ t = toLex (a, b)} := by
-        refine ⟨fun t => hab ?_⟩
-        have h3 : blk e t.1.1.1 = a ∧ blk e t.1.1.2 = b := by simpa [κ] using t.2
-        have h4 := t.1.2
-        rw [hβ, h3.1, h3.2] at h4
-        exact not_lt.1 h4
-      exact Matrix.det_isEmpty
-  rw [hdet, ← LinearMap.det_toMatrix', hBT.det]
-  rw [Finset.prod_subset (Finset.subset_univ _) (fun c _ hc => by
-    have : IsEmpty {t : ParabolicIndex N β // κ t = c} :=
-      ⟨fun t => hc (Finset.mem_image.2 ⟨t.1, Finset.mem_univ _, t.2⟩)⟩
-    exact Matrix.det_isEmpty)]
-  rw [← Equiv.prod_comp toLex]
-  exact Finset.prod_congr rfl fun c _ => hblock c.1 c.2
+  rw [hdet, ← LinearMap.det_toMatrix', hBT.det,
+    Finset.prod_subset (Finset.subset_univ _) (fun c _ hc => by
+      have : IsEmpty {t : ParabolicIndex N β // κ t = c} :=
+        ⟨fun t => hc (Finset.mem_image.2 ⟨t.1, Finset.mem_univ _, t.2⟩)⟩
+      exact Matrix.det_isEmpty),
+    ← Equiv.prod_comp toLex]
+  refine Finset.prod_congr rfl ?_
+  rintro ⟨a, b⟩ -
+  by_cases hab : a ≤ b
+  · rw [ite_eq_left hab]
+    have hmem : ∀ (i : m a) (j : m b), ¬ β (e ⟨b, j⟩) < β (e ⟨a, i⟩) := by
+      intro i j
+      rw [hβ]
+      simpa using hab
+    let f : m a × m b → {t : ParabolicIndex N β // κ t = toLex (a, b)} := fun x =>
+      ⟨⟨(e ⟨a, x.1⟩, e ⟨b, x.2⟩), hmem x.1 x.2⟩, by simp [κ]⟩
+    have hf : Function.Bijective f := by
+      constructor
+      · rintro ⟨i, j⟩ ⟨i', j'⟩ h
+        simpa [f] using h
+      · rintro ⟨⟨⟨i, j⟩, hij⟩, hκ⟩
+        obtain ⟨⟨a', i⟩, rfl⟩ := e.surjective i
+        obtain ⟨⟨b', j⟩, rfl⟩ := e.surjective j
+        obtain ⟨rfl, rfl⟩ : a' = a ∧ b' = b := by simpa [κ] using hκ
+        exact ⟨(i, j), rfl⟩
+    rw [← Matrix.det_submatrix_equiv_self (Equiv.ofBijective f hf)]
+    have hk : ((LinearMap.toMatrix' A).toSquareBlock κ (toLex (a, b))).submatrix
+        (Equiv.ofBijective f hf) (Equiv.ofBijective f hf) =
+        Matrix.kroneckerMap (· * ·) ((g a : GL (m a) k) : Matrix (m a) (m a) k)
+          ((((g b)⁻¹ : GL (m b) k)) : Matrix (m b) (m b) k).transpose := by
+      ext ⟨i, j⟩ ⟨i', j'⟩
+      show LinearMap.toMatrix' A (f (i, j)).1 (f (i', j')).1 = _
+      rw [hM, hP, hQ]
+      show (leviEmb k e g : Matrix (Fin N) (Fin N) k) (e ⟨a, i⟩) (e ⟨a, i'⟩) *
+        (leviEmb k e g⁻¹ : Matrix (Fin N) (Fin N) k) (e ⟨b, j'⟩) (e ⟨b, j⟩) = _
+      rw [leviEmb_apply_same, leviEmb_apply_same]
+      rfl
+    rw [hk, Matrix.det_kronecker, Matrix.det_transpose]
+  · rw [ite_eq_right hab]
+    have : IsEmpty {t : ParabolicIndex N β // κ t = toLex (a, b)} := by
+      refine ⟨fun t => hab ?_⟩
+      have h3 : blk e t.1.1.1 = a ∧ blk e t.1.1.2 = b := by simpa [κ] using t.2
+      have h4 := t.1.2
+      rw [hβ, h3.1, h3.2] at h4
+      exact not_lt.1 h4
+    exact Matrix.det_isEmpty
 
 theorem det_adLie_levi (e : (Σ i, m i) ≃ Fin N) (β : Fin N → ℕ)
     (hβ : ∀ x y, β x < β y ↔ blk e x < blk e y) (p : blockUpper k N β) (g : Levi k m)
@@ -311,8 +294,7 @@ theorem leviProj_found_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     constructor
     · intro h
       have h3 := (hβ x y).not.1 (by omega)
-      have h4 := (hβ y x).not.1 (by omega)
-      exact le_antisymm (not_lt.1 h4) (not_lt.1 h3)
+      exact le_antisymm (not_lt.1 ((hβ y x).not.1 (by omega))) (not_lt.1 h3)
     · intro h
       have h3 := (hβ x y).not.2 (by rw [h]; exact lt_irrefl _)
       have h4 := (hβ y x).not.2 (by rw [h]; exact lt_irrefl _)
@@ -327,10 +309,10 @@ theorem leviProj_found_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   obtain ⟨⟨b, j⟩, rfl⟩ := e.surjective y
   by_cases hab : a = b
   · subst hab
-    rw [if_pos ((hblk _ _).2 (by simp))]
+    rw [ite_eq_left ((hblk _ _).2 (by simp))]
     have := leviEmb_apply_same k e (leviProj k e ⟨p, h1⟩) a i j
     rw [this, leviProj_apply]
-  · rw [if_neg (fun h => hab (by simpa using (hblk _ _).1 h))]
+  · rw [ite_eq_right (fun h => hab (by simpa using (hblk _ _).1 h))]
     exact leviEmb_apply_ne k e _ hab i j
 
 end GlobalTheory.CompanionTheory.SmGLBridge

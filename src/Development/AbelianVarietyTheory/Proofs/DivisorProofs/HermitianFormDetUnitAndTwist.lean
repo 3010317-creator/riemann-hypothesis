@@ -111,12 +111,7 @@ theorem sigBasis_repr {n : ℕ} (b : Module.Basis (Fin n) K.E B.A) (z : B.A) (k 
   rw [hz, Module.Basis.repr_sum_self]
 
 theorem trace_sig (y : B.A) : Algebra.trace K.E B.A (B.σ y) = K.c (Algebra.trace K.E B.A y) := by
-  let b := Module.finBasis K.E B.A
-  rw [Algebra.trace_eq_matrix_trace (sigBasis B b), Algebra.trace_eq_matrix_trace b]
-
-  simp only [Matrix.trace, Matrix.diag, Algebra.leftMulMatrix_eq_repr_mul, map_sum]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [sigBasis_apply, ← map_mul, sigBasis_repr]
+  exact GlobalTheory.UnitLemma.PairClass.trace_σ K B y
 
 theorem core (a : ℕ) (β : B.A) (hβ : B.σ β = β * ((-1 : B.A) ^ (a - 1) * B.g))
     (b : Module.Basis (Fin a) K.E B.A) (i j : Fin a) :
@@ -178,24 +173,21 @@ theorem UpperTheory.Reformulated.B.Yzd3.phi_mul_self :
   rw [Finset.sum_eq_single (⟨a - 1 - (i : ℕ), hj⟩ : Fin a)]
   · have h1 : (i : ℕ) + (a - 1 - (i : ℕ)) + 1 = a := by omega
     dsimp only
-    rw [if_pos h1]
+    rw [ite_eq_left h1]
     by_cases hik : i = k
     · subst hik
       have h2 : (a - 1 - (i : ℕ)) + (i : ℕ) + 1 = a := by omega
-      rw [if_pos h2, if_pos rfl, mul_one, ← pow_add]
+      rw [ite_eq_left h2, ite_eq_left rfl, mul_one, ← pow_add]
       congr 1
       omega
-    · have h2 : ¬ ((a - 1 - (i : ℕ)) + (k : ℕ) + 1 = a) := by
-        intro h
-        exact hik (Fin.ext (by omega))
-      rw [if_neg h2, if_neg hik, mul_zero, mul_zero]
+    · have h2 : ¬ ((a - 1 - (i : ℕ)) + (k : ℕ) + 1 = a) := fun h => hik (Fin.ext (by omega))
+      rw [ite_eq_right h2, ite_eq_right hik, mul_zero, mul_zero]
   · intro j _ hne
     have h1 : ¬ ((i : ℕ) + (j : ℕ) + 1 = a) := by
       intro h
       exact hne (Fin.ext (by simp only []; omega))
-    rw [if_neg h1, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    rw [ite_eq_right h1, zero_mul]
+  · exact fun h => absurd (Finset.mem_univ _) h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PhiMulSelf =====
@@ -225,7 +217,7 @@ theorem UpperTheory.Reformulated.B.Yzd2.phi_mul_transpose :
     have hk : (k : ℕ) = a - 1 - (i : ℕ) := rfl
     rw [Finset.sum_eq_single k]
     · have h1 : (i : ℕ) + (k : ℕ) + 1 = a := by omega
-      rw [if_pos h1, if_pos rfl, ← mul_pow]
+      rw [ite_eq_left h1, ite_eq_left rfl, ← mul_pow]
       simp
     · intro b _ hb
       have h1 : ¬ ((i : ℕ) + (b : ℕ) + 1 = a) := by
@@ -234,9 +226,8 @@ theorem UpperTheory.Reformulated.B.Yzd2.phi_mul_transpose :
         ext
         omega
       simp [h1]
-    · intro hk'
-      exact absurd (Finset.mem_univ k) hk'
-  · rw [if_neg h]
+    · exact fun hk' => absurd (Finset.mem_univ k) hk'
+  · rw [ite_eq_right h]
     apply Finset.sum_eq_zero
     intro k _
     by_cases h1 : (i : ℕ) + (k : ℕ) + 1 = a
@@ -309,8 +300,7 @@ theorem gram_det_ne_zero {K : UQ} (B : InvAlg K) (hsep : B.P.Separable) (β : B.
     intro j
     have := congrFun hv j
     simp only [Matrix.vecMul, dotProduct, Matrix.of_apply, Pi.zero_apply] at this
-    rw [hy, herm_sum_left]
-    exact this
+    rwa [hy, herm_sum_left]
   have hyz : ∀ z, B.herm β y z = 0 := by
     intro z
     rw [← b.sum_repr z, herm_sum_right]
@@ -319,8 +309,7 @@ theorem gram_det_ne_zero {K : UQ} (B : InvAlg K) (hsep : B.P.Separable) (β : B.
     apply GlobalTheory.UnitLemma.PairClass.trace_nondeg K.E B.A B.g hsep
     intro w
     have := hyz (B.σ w)
-    simp only [InvAlg.herm, B.σ_σ] at this
-    exact this
+    simpa only [InvAlg.herm, B.σ_σ] using this
   exact hy0 ((Units.mul_right_eq_zero β).1 hβy)
 
 theorem gram_twisted_norm_charpoly : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.UnitLemma.InvAlg K) (L : Type) [Field L] (e : K.E ≃+* L) (c : L →+* L), (∀ x, e (K.c x) = c (e x)) → (∀ x, c (c x) = x) → ∀ (a : ℕ) (Q : L[X]), B.P = Q.map e.symm.toRingHom → Q.Separable → Q.natDegree = a → ∀ β : B.Aˣ, B.σ (β : B.A) = β * ((-1) ^ (a - 1) * B.g) → ∀ b : Module.Basis (Fin a) K.E B.A, IsUnit (Matrix.of fun i j => e (B.herm β (b i) (b j))).det ∧ ∀ δ : GL (Fin a) L, ((δ.val * GlobalTheory.Tw.Phi a L)⁻¹)ᵀ = (Matrix.of fun i j => e (B.herm β (b i) (b j))) → (δ * thetaGL a c δ).val.charpoly = Q := by

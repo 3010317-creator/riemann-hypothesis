@@ -103,14 +103,7 @@ variable {D : D7}
 
 theorem hT_eq_coords (S : HSp D) (x y : S.V) :
     S.hT x y = ∑ i, ∑ j, star (S.frame.repr x i) * S.gram i j * S.frame.repr y j := by
-  conv_lhs => rw [← S.frame.sum_repr x, ← S.frame.sum_repr y]
-
-  simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
-  starRingEnd_apply, Finset.mul_sum, RingHom.id_apply]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  simp only [Formalism.BasicNotions.HSpace.gram]
-  ring
+  exact GlobalTheory.AutFunCounterexample.hT_coord S x y
 
 theorem hT_cols (S : HSp D) {k l : ℕ} (a : Matrix (Fin S.rank) (Fin k) D.host.E) (b : Matrix (Fin S.rank) (Fin l) D.host.E)
     (q : Fin k) (p : Fin l) :
@@ -177,8 +170,7 @@ theorem exists_orthogonalSum_testGrid_of_levelChoiceGrid {D : D7} (A B : GlobalT
       · show A.V.frame.equivFun (A.V.frame.equivFun.symm z) ∈ A.Λ
         rwa [LinearEquiv.apply_symm_apply]
       · apply B.V.frame.equivFun.injective
-        rw [key, LinearEquiv.apply_symm_apply]
-        exact hy
+        rwa [key, LinearEquiv.apply_symm_apply]
     · rintro ⟨x, hx, t, ht, rfl⟩
       exact ⟨A.V.frame.equivFun x, hx, t, ht, key x t⟩
 
@@ -298,10 +290,8 @@ theorem heckeCharacterGrid_isAuxiliaryCharacter_testGrid_alt : ∀ {D : D7} {Γ 
   · intro w hw
     rw [hS0] at hw
     exact G'.ch.unr i hi1 hi2 w hw
-  · intro w hw
-    exact G'.ch.lev1 i hi1 hi2 w (hS1 w hw)
-  · intro w hw x hx
-    exact G'.ch.wild i hi1 hi2 w (hwd w hw) x hx
+  · exact fun w hw => G'.ch.lev1 i hi1 hi2 w (hS1 w hw)
+  · exact fun w hw x hx => G'.ch.wild i hi1 hi2 w (hwd w hw) x hx
   · have hu : Z.w0.under (𝓞 D.host.F) = G'.pl.v0 := by
       rw [hw0]; exact G'.pl.under_w (G'.pl.mem_S0_of_sum_eq.2 (Or.inl rfl))
     exact G'.ch.lev0 i hi1 hi2 Z.w0 hu
@@ -414,22 +404,7 @@ namespace GlobalTheory.GridHC
 open GlobalTheory.SignedHC Finset
 
 theorem inCoset_weightX (D : D7) (τ : D.what₂.Tau) (j : ℕ) : InCoset (1 / 2) ((GlobalTheory.Grid.grid D τ).weightX j) := by
-  induction j with
-  | zero => exact GlobalTheory.ChiGrid.inCoset_weightX_zero (GlobalTheory.ChiGrid.odd_sLen D)
-  | succ j ih =>
-    rw [(GlobalTheory.Grid.grid D τ).weightX_succ]
-    intro x hx
-    rcases mem_union.1 hx with h | h
-    · exact ih x h
-    · obtain ⟨a, -, rfl⟩ := GlobalTheory.SignedHC.mem_block.1 h
-      obtain ⟨u, hu⟩ := D.R.t_odd
-      have e : ((GlobalTheory.Grid.grid D τ).t : ℚ) = 2 * u + 1 := by
-        have : ((GlobalTheory.Grid.grid D τ).t : ℚ) = D.R.t := rfl
-        rw [this, hu]; push_cast; ring
-      refine ⟨-(GlobalTheory.Grid.grid D τ).e (j + 1) + u - a, ?_⟩
-      push_cast
-      rw [e]
-      ring
+  exact GlobalTheory.ColParam.inCoset_weightX D τ j
 
 theorem even_rkX (D : D7) (j : ℕ) : Even (GlobalTheory.Grid.rkX D j) := GlobalTheory.ChiGrid.even_rankX D j
 
@@ -576,18 +551,17 @@ theorem placeDat_of_grid : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0
     have hv0' : P.v0 ∈ P.S0 := P.mem_S0_of_sum_eq.2 (Or.inl rfl)
     simp only [GlobalTheory.Grid.PlaceDat.depth, Z]
     by_cases h : v = P.v0
-    · rw [h, if_pos rfl]
-    · rw [if_neg (fun h' => h (hinj v hv _ hv0' h'))]
+    · rw [h, ite_eq_left rfl]
+    · rw [ite_eq_right (fun h' => h (hinj v hv _ hv0' h'))]
       unfold Places.depth
-      rw [if_neg h]
+      rw [ite_eq_right h]
   have hS0eq : Z.S0 R.Pg = P.S0 := by
     ext v
     simp only [GlobalTheory.Grid.PlaceDat.S0, hW, Places.W0, Finset.mem_image]
     constructor
     · rintro ⟨_, ⟨v', hv', rfl⟩, rfl⟩
       rwa [P.under_w hv']
-    · intro hv
-      exact ⟨_, ⟨v, hv, rfl⟩, P.under_w hv⟩
+    · exact fun hv => ⟨_, ⟨v, hv, rfl⟩, P.under_w hv⟩
 
   have hWdS1 : ∀ w ∈ Wd, w.under (𝓞 D.host.F) ∈ S1 D := by
     intro w hw
@@ -794,7 +768,7 @@ theorem exists_gridPre_spaces : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ]
   choose β hβ using hFr
   let mk : ∀ X, good X → GlobalTheory.Grid.Node D := fun X h => ⟨G'.V X, Sx X, M X h, G'.Λ X, β X h⟩
   let node : GlobalTheory.ChiGrid.Node → GlobalTheory.Grid.Node D := fun X => if h : good X then mk X h else GlobalTheory.Grid.row0 R 0
-  have node_pos : ∀ X (h : good X), node X = mk X h := fun X h => dif_pos h
+  have node_pos : ∀ X (h : good X), node X = mk X h := fun X h => dite_eq_left h
   have mk_is : ∀ X (h : good X), (mk X h).Is (X.rank D) (X.neg D.R.m) (Sx X) := fun X h => by
     have hv := G'.isV (hgood X h).1 (hgood X h).2
     exact ⟨hv.rank, hv.sigOK, hv.sig, rfl, hβ X h⟩
@@ -875,24 +849,20 @@ theorem exists_gridPre_spaces : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ]
       rw [node_pos (.top (j + 1)) (gX (j + 1) (by omega) hj)]
       exact mk_is _ _
     · dsimp only [G]
-      rw [gridDecompositionCast_is_iff, ← joinGram_one]
-      exact hdP
+      rwa [gridDecompositionCast_is_iff, ← joinGram_one]
     · intro i hi1 hi2
       dsimp only [G]
-      rw [dif_pos ⟨hi1, hi2⟩, gridDecompositionCast_is_iff]
+      rw [dite_eq_left ⟨hi1, hi2⟩, gridDecompositionCast_is_iff]
       have hl' : Z.ideal R.Pg = G'.pl.modul sc := hlvl
       have := hdV i ⟨hi1, hi2⟩
-      rw [joinGram_neg, joinStair, ← hl'] at this
-      exact this
+      rwa [joinGram_neg, joinStair, ← hl'] at this
     · intro j hj
       dsimp only [G]
-      rw [dif_pos hj, gridDecompositionCast_is_iff]
+      rw [dite_eq_left hj, gridDecompositionCast_is_iff]
       have := hdX j hj
-      rw [joinGram_neg, joinStair_top] at this
-      exact this
+      rwa [joinGram_neg, joinStair_top] at this
     · dsimp only [G]
-      rw [gridDecompositionCast_is_iff, ← joinGram_one]
-      exact hdZ
+      rwa [gridDecompositionCast_is_iff, ← joinGram_one]
   · exact ⟨hZ, fun i h1 h2 => GlobalTheory.T.heckeCharacterGrid_isAuxiliaryCharacter_testGrid (GlobalTheory.T.gridMinimalGap_eq_chiGridGapGamma_one D) hsc Z hS0 hS1 hZ.Wd_over hw0 i h1 h2, fun i h1 h2 => G'.ch.chi_eq i h1 h2⟩
   · refine ⟨?_, ?_, ?_, hq0, hw0, he0, hWZ, hlvl, fun _ _ _ => rfl, fun _ _ _ => rfl⟩
     · intro i j hi hj
@@ -1018,7 +988,7 @@ theorem exists_measDat (N : GlobalTheory.Grid.Node D) (hs : N.V.SigOK) (df : Pro
   have hc := princ_isCompact N hI
   by_cases h : df
   · obtain ⟨μ, 𝓕, e⟩ := GlobalTheory.FunObj.exists_meas N.V hs (hdf h) (N.princ I) ⟨ho, hc⟩
-    rw [if_pos rfl] at e
+    rw [ite_eq_left rfl] at e
     exact ⟨⟨μ, 𝓕⟩, by unfold GlobalTheory.Grid.Node.MeasDat.Is; exact ⟨fun _ => e, fun hn => absurd h hn⟩⟩
   · obtain ⟨μ, 𝓕, e⟩ := exists_isMeasFD N.V hs _ ho hc
     exact ⟨⟨μ, 𝓕⟩, by unfold GlobalTheory.Grid.Node.MeasDat.Is; exact ⟨fun h' => absurd h' h, fun _ => e⟩⟩
@@ -1041,8 +1011,8 @@ theorem exists_isMeas (G : GlobalTheory.Grid.GridPre R) (hS : G.IsSpaces) :
           rw [hN.sig τ]
           show (D.R.m - j) / 2 = 0
           by_cases hj : j = 0
-          · rw [if_pos hj] at hd; exact hd.elim
-          · rw [if_neg hj] at hd; omega)
+          · rw [ite_eq_left hj] at hd; exact hd.elim
+          · rw [ite_eq_right hj] at hd; omega)
         (I := if j = 0 then G.lvl R else ⊤) (by split_ifs; exacts [hlvl, htop])
       exact ⟨m, fun _ _ => hm⟩
     · exact ⟨⟨0, ∅⟩, fun h1 h2 => absurd ⟨h1, h2⟩ h⟩
@@ -1074,11 +1044,9 @@ theorem exists_isMeas (G : GlobalTheory.Grid.GridPre R) (hS : G.IsSpaces) :
     | zero => exact h00
     | succ i =>
       have := hmV i 0 hi (Nat.zero_le _)
-      rw [if_pos rfl, if_pos rfl] at this
-      exact this
+      rwa [ite_eq_left rfl, ite_eq_left rfl] at this
   · have := hmV i (j + 1) hi hj
-    rw [if_neg (Nat.succ_ne_zero j), if_neg (Nat.succ_ne_zero j)] at this
-    exact this
+    rwa [ite_eq_right (Nat.succ_ne_zero j), ite_eq_right (Nat.succ_ne_zero j)] at this
 
 end GlobalTheory.GridJoin
 end -- clump:auto
@@ -1165,8 +1133,7 @@ theorem auxiliaryPrime_splitsCompletely {L : LevCh D T} (P : Places L) : Formali
   have hq : ((q0 D : ℕ) : 𝓞 D.host.E) ∈ (P.w P.v0).asIdeal := by
     have h := P.basePlace_over_qZero
     rw [← P.under_w (P.mem_S0_of_sum_eq.2 (Or.inl rfl))] at h
-    rw [← map_natCast (algebraMap (𝓞 D.host.F) (𝓞 D.host.E))]
-    exact h
+    rwa [← map_natCast (algebraMap (𝓞 D.host.F) (𝓞 D.host.E))]
   obtain rfl : p = q0 D := GlobalTheory.GridPlaces.prime_eq_of_mem _ hp h1 hpv hq
   exact (GlobalTheory.SplitChoice.splitsCompletely_of_modEq_one D h1 hm).2
 

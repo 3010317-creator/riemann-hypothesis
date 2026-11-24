@@ -198,8 +198,7 @@ variable (hstar : ∀ x : E, IsIntegral ℤ x → IsIntegral ℤ (star x))
 theorem stdSpace_gram_apply (N : ℕ) (neg : Fin N → Bool) (p q : ℕ) (i j : Fin N) :
     (stdSpace hstar N neg p q).gram i j = if i = j then (sgn (neg i) : E) else 0 := by
   show diagForm N neg ((Pi.basisFun E (Fin N)) i) ((Pi.basisFun E (Fin N)) j) = _
-  simp only [Pi.basisFun_apply]
-  exact diagForm_single N neg i j
+  simpa only [Pi.basisFun_apply] using diagForm_single N neg i j
 
 def posSpace (N : ℕ) : HSpace E := stdSpace hstar N (fun _ => false) N 0
 
@@ -214,14 +213,12 @@ theorem posSpace_sigOK (N : ℕ) : (posSpace hstar N).SigOK := by
   rw [hg]
   show Formalism.UG.HasSignature _ N 0
   have h := Formalism.UG.P.stdform_sig_one (n := Fin N)
-  rw [Fintype.card_fin] at h
-  exact h
+  rwa [Fintype.card_fin] at h
 
 def negLast : Fin (8 + 1) → Bool := fun i => decide ((i : ℕ) = 8)
 
 theorem negLast_castAdd (i : Fin 8) : negLast (Fin.castAdd 1 i) = false := by
-  simp only [negLast, decide_eq_false_iff_not, Fin.val_castAdd]
-  exact i.isLt.ne
+  simpa only [negLast, decide_eq_false_iff_not, Fin.val_castAdd] using i.isLt.ne
 
 theorem castAdd_ne_natAdd' (i : Fin 8) (j : Fin 1) : Fin.castAdd 1 i ≠ Fin.natAdd 8 j := by
   intro h
@@ -245,11 +242,11 @@ theorem lorentzDiagonal_hasSignature : Formalism.UG.HasSignature
   · simp only [Formalism.UG.Jpq, Matrix.reindex_apply, Matrix.submatrix_apply, Equiv.symm_symm,
       finSumFinEquiv_apply_left, finSumFinEquiv_apply_right, Matrix.fromBlocks_apply₁₂,
       Matrix.diagonal_apply, Matrix.zero_apply]
-    rw [if_neg (castAdd_ne_natAdd' i j)]
+    rw [ite_eq_right (castAdd_ne_natAdd' i j)]
   · simp only [Formalism.UG.Jpq, Matrix.reindex_apply, Matrix.submatrix_apply, Equiv.symm_symm,
       finSumFinEquiv_apply_left, finSumFinEquiv_apply_right, Matrix.fromBlocks_apply₂₁,
       Matrix.diagonal_apply, Matrix.zero_apply]
-    rw [if_neg (castAdd_ne_natAdd' j i).symm]
+    rw [ite_eq_right (castAdd_ne_natAdd' j i).symm]
   · simp only [Formalism.UG.Jpq, Matrix.reindex_apply, Matrix.submatrix_apply, Equiv.symm_symm,
       finSumFinEquiv_apply_right, Matrix.fromBlocks_apply₂₂, Matrix.diagonal_apply,
       Matrix.neg_apply, Matrix.one_apply, negLast_natAdd, (Fin.natAdd_injective 1 8).eq_iff]
@@ -352,7 +349,7 @@ theorem lorentz_last_vector_norm (T : ℕ) (pz : E) (hpz : star pz * pz = T) :
     diagForm (8 + 1) negLast (Pi.single (Fin.last 8) pz) (Pi.single (Fin.last 8) pz) = -(T : E) := by
   rw [diagForm_single_left]
   have hn : negLast (Fin.last 8) = true := rfl
-  simp only [Pi.single_eq_same, hn, sgn, if_true]
+  simp only [Pi.single_eq_same, hn, sgn, ite_true]
   rw [← hpz]
   ring
 
@@ -445,16 +442,16 @@ theorem example_baseSpace_isometric_graded : ∀ j, 1 ≤ j → j ≤ R0.m → �
     rw [e2]
     by_cases hij : i = j
     · subst hij
-      rw [if_pos (show @Eq (Fin (8 + 1)) i i from rfl), if_pos rfl]
+      rw [ite_eq_left (show @Eq (Fin (8 + 1)) i i from rfl), ite_eq_left rfl]
       by_cases hi : (i : ℕ) = 8
       · have hn : negLast i = true := by simp [negLast, hi]
         rw [hn]
-        simp only [if_pos hi, sgn, if_true, Bool.false_eq_true, if_false, map_neg, map_one]
+        simp only [ite_eq_left hi, sgn, ite_true, Bool.false_eq_true, ite_false, map_neg, map_one]
         rw [mul_neg_one, neg_mul, hy, neg_neg]
       · have hn : negLast i = false := by simp [negLast, hi]
         rw [hn]
         simp [hi, sgn]
-    · rw [if_neg (show ¬ @Eq (Fin (8 + 1)) i j from hij), if_neg hij]
+    · rw [ite_eq_right (show ¬ @Eq (Fin (8 + 1)) i j from hij), ite_eq_right hij]
       simp
 
 end Examples₂

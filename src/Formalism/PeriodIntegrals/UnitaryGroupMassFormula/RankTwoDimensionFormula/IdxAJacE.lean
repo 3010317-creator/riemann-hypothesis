@@ -60,8 +60,7 @@ theorem jaR_apply (a : Af F) : jaR F E a = (1 : E) ⊗ₜ[F] a := by
   rfl
 
 theorem ja_genR (a : Af F) (ha : a ∈ Formalism.UG.intAd F) : jaR F E a ∈ IntAf F E := by
-  apply Subring.subset_closure
-  exact Set.mem_union_right _ (Set.mem_range.2 ⟨⟨a, ha⟩, rfl⟩)
+  exact Subring.subset_closure (Set.mem_union_right _ (Set.mem_range.2 ⟨⟨a, ha⟩, rfl⟩))
 
 theorem ja_genL (z : 𝓞 E) : ((z : E) ⊗ₜ[F] (1 : Af F)) ∈ IntAf F E := by
   apply Subring.subset_closure
@@ -88,12 +87,10 @@ theorem ja_integral (m : IntAf F E) : IsIntegral (jaT F E) m := by
         first
           | exact Algebra.IsIntegral.isIntegral o
       have h1 : IsIntegral ℤ (jaL F E o) := h0.map (jaL F E).toIntAlgHom
-      show jaL F E o ∈ integralClosure (jaT F E) (IntAf F E)
       exact h1.tower_top
     · have hw : (⟨(1 : E) ⊗ₜ[F] y, ja_genR F E y hy⟩ : IntAf F E) ∈ jaT F E :=
         Subring.mem_comap.2 (Subring.mem_map.2 ⟨y, hy, rfl⟩)
       refine Subring.mem_map.2 ⟨⟨(1 : E) ⊗ₜ[F] y, ja_genR F E y hy⟩, ?_, rfl⟩
-      show _ ∈ integralClosure (jaT F E) (IntAf F E)
       exact isIntegral_algebraMap (x := (⟨_, hw⟩ : jaT F E))
   obtain ⟨x, hx, hxm⟩ := Subring.mem_map.1 (hle m.2)
   have hxm' : x = m := Subtype.ext hxm

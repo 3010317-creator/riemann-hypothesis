@@ -179,8 +179,7 @@ theorem w_coker {R V : Type} [CommRing R] [IsDomain R] [AddCommGroup V] [Module 
         exact ⟨y, hy, hyy.symm⟩)
       ((ϖ ^ a) x) ⟨(ϖ ^ a) x, hin x hx, by simp⟩
     rw [Finset.range_eq_Ico]
-    rw [zero_add] at this
-    exact this
+    rwa [zero_add] at this
   have h2 : Polynomial.aeval γ (∏ i ∈ Finset.Ico a (2 * a), (Polynomial.X - Polynomial.C (c ^ i)))
       ((ϖ ^ a) x) ∈ W := by
     have := Formalism.IrreducibleCountingLemmas.WindowSums.filtered_product R V γ (fun i => V₂.map (ϖ ^ i)) (fun i => c ^ i) a a
@@ -215,8 +214,7 @@ theorem w_coker {R V : Type} [CommRing R] [IsDomain R] [AddCommGroup V] [Module 
   rw [← map_smul] at hxx
   have hinja : Function.Injective (ϖ ^ a) := by
     rw [Module.End.coe_pow]; exact hinj.iterate a
-  rw [← hinja hxx]
-  exact hx'
+  rwa [← hinja hxx]
 
 section WLocal
 
@@ -403,8 +401,7 @@ theorem w_pf : Formalism.MainNotions.N.Ln34.WStep := by
     exact ⟨fun h => ⟨⟨y, h⟩, rfl⟩, fun ⟨a, ha⟩ => ha ▸ a.2⟩
   have hlv : (D.loc l).v LL (l : ↥LL.1) = 1 := (D.loc l).v_l LL
   have hlO : (D.loc l).v LL (algebraMap ↥(OL LL) ↥LL.1 (l : ↥(OL LL))) = 1 := by
-    rw [map_natCast]
-    exact hlv
+    rwa [map_natCast]
   have hxU : IsUnit x := by
     have h1 := gradNPf_unit_one_add ((D.loc l).v LL) (algebraMap ↥(OL LL) ↥LL.1) hι hRv
       (l : ↥(OL LL)) u hlO

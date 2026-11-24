@@ -112,9 +112,8 @@ theorem comp_comm2 (G₁ : GlW K U n) (G₂ : GlW K V n) (θ : U →ₗ[K] V)
   rw [map_sum, map_sum, Finset.sum_eq_single μ]
   · exact (hw μ).symm
   · intro ν _ hne
-    rw [← hw ν, G₂.idem, if_neg (Ne.symm hne)]
-  · intro h
-    exact absurd (Finset.mem_insert_self μ S) h
+    rw [← hw ν, G₂.idem, ite_eq_right (Ne.symm hne)]
+  · exact fun h => absurd (Finset.mem_insert_self μ S) h
 
 theorem weightZeroProj_comp (G₁ : GlW K U n) (G₂ : GlW K V n) (S : Finset (Fin n → ℤ)) (θ : U →ₗ[K] V)
     (hθ : ∀ μ x, θ (G₁.comp μ x) = G₂.comp μ (θ x)) (φ : U →ₗ[K] U) :
@@ -346,8 +345,7 @@ theorem exists_transport (G : GlW K V n) {W : Submodule K V} (hW : G.Stable W) (
   · have hind : iSupIndep (fun i : Bool => if i then G.gS {h'} else G.gS {h}) := by
       rw [iSupIndep_pair (i := true) (j := false) (by decide) (fun k => by cases k <;> simp), disjoint_iff]
       show G.gS {h'} ⊓ G.gS {h} = ⊥
-      rw [inf_comm]
-      exact hdis
+      rwa [inf_comm]
     have hRW : ∀ i : Bool, (if i then G.gS {h'} else G.gS {h}) ≤ G.gS {h} ⊔ G.gS {h'} := by
       intro i
       cases i <;> simp
@@ -379,7 +377,6 @@ theorem exists_transport (G : GlW K V n) {W : Submodule K V} (hW : G.Stable W) (
       (Submodule.mem_sup_left (G.subset_gS _ (Set.mem_singleton h))) h0' h0 (π true) (π false)
       (hπ1 true) (hπ2 true) (hEq true) (hπ1 false) (hπ2 false) (hEq false)
     refine ⟨θ₁' ∘ₗ (G.gS {h}).subtype, fun a b x => ?_, fun m hm => ⟨⟨θ₁ m, hθ1 m⟩, hinv m hm⟩⟩
-    show θ₁' (G.E a b (x : V)) = G.E a b (θ₁' (x : V))
     exact hθE' _ (Submodule.mem_sup_left x.2) a b
   · have hI : G.Stable (G.gS {h} ⊓ G.gS {h'}) := by
       intro a b x hx
@@ -500,7 +497,7 @@ theorem typeInt_of (hNat : InvNat) (hHom : HomInv) (hSchur : SchurTrace) : TypeI
         show (((res G (G.gS {h}) (G.gS_stable {h})).comp μ x : G.gS {h}) : V) ∈ M
         rw [res_comp_coe]
         exact hD.graded μ _ hx
-  · push_neg at hex
+  · push Not at hex
     refine ⟨0, ?_, fun _ _ _ _ => rfl, fun m _ _ => by simp⟩
     intro x hx
     have hle : (⨆ v : {v : V // G.IsHW la v ∧ v ∈ W}, G.gS {(v : V)}) ≤ ⊥ := by

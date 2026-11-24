@@ -109,12 +109,10 @@ theorem isIntegral_algebraMap_iff (w : HeightOneSpectrum (𝓞 E)) (e : E) :
     have h := y.2
     rw [HeightOneSpectrum.mem_adicCompletionIntegers] at h
     change Valued.v (y : K) ≤ 1 at h
-    rw [show (y : K) = algebraMap E K e from hy, hv] at h
-    exact h
+    rwa [show (y : K) = algebraMap E K e from hy, hv] at h
   · intro h
     refine ⟨⟨algebraMap E K e, ?_⟩, rfl⟩
-    rw [HeightOneSpectrum.mem_adicCompletionIntegers, hv]
-    exact h
+    rwa [HeightOneSpectrum.mem_adicCompletionIntegers, hv]
 
 theorem valuation_lt_one_iff_of_mem_iff {Ω : Type} [Field Ω] [Algebra E Ω] (B : ValuationSubring Ω)
     (w : HeightOneSpectrum (𝓞 E)) (hB : ∀ e : E, algebraMap E Ω e ∈ B ↔ w.valuation E e ≤ 1) (e : E) :

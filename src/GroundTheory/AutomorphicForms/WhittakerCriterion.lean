@@ -259,8 +259,7 @@ theorem compHomeoL_convS [LocallyCompactSpace G] [T2Space G] [TotallyDisconnecte
       ← integral_mul_left_eq_self (fun y => (f₁ : G → ℂ) y * (f₂ : G → ℂ) (y⁻¹ * σ x)) (σ x)]
     congr 1
     funext y
-    simp only [mul_inv_rev, inv_mul_cancel_right, inv_inv]
-    exact mul_comm _ _
+    simpa only [mul_inv_rev, inv_mul_cancel_right, inv_inv] using mul_comm _ _
   rw [eL, eR]
 
 end Sigma
@@ -343,8 +342,7 @@ theorem exists_ne_zero_contragredient (h : IsAdmissible ρ) {v : V} (hv : v ≠ 
     (mt (Module.forall_dual_apply_eq_zero_iff ℂ (⟨v, hvK⟩ : fixedVectors ρ K)).1 hv')
   obtain ⟨ξ, hξ⟩ := (restrictFixed_bijective h.1 hKc hKo).2 φ
   refine ⟨(ξ : smoothVectors (Representation.dual ρ)), fun e => hφ ?_⟩
-  rw [← hξ, restrictFixed_apply]
-  exact e
+  rwa [← hξ, restrictFixed_apply]
 
 
 omit [IsTopologicalGroup G] [LocallyCompactSpace G] [T2Space G] [TotallyDisconnectedSpace G] in
@@ -387,8 +385,7 @@ theorem forall_mem_apply_eq_zero {W : Subrepresentation (contragredient ρ)} {K 
       (((fixedProj (contragredient ρ) hsm hKc hKo ζ : fixedVectors _ K) :
         smoothVectors (Representation.dual ρ)) : Module.Dual ℂ V) u := by
     have := coinvariantsKer_le_ker_of_invariant hE (sub_fixedProj_mem hsm hKc hKo ζ)
-    rw [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
   rw [e1]
   exact hW _ (fixedProj_mem_subrep hsm W hKc hKo hζ) (fixedProj (contragredient ρ) hsm hKc hKo ζ).2
 
@@ -423,8 +420,7 @@ theorem eq_top_of_annihilator_eq_bot (h : IsAdmissible ρ) {W : Subrepresentatio
   obtain ⟨η, hη, hηξ⟩ := Submodule.mem_map.1 hmem
   have e := (restrictFixed_bijective h.1 hKc hKo).1 hηξ
   have : (η : smoothVectors (Representation.dual ρ)) = ξ := congrArg Subtype.val e
-  rw [← this]
-  exact hη
+  rwa [← this]
 
 theorem isIrreducible_contragredient (h : IsAdmissible ρ) [ρ.IsIrreducible] :
     (contragredient ρ).IsIrreducible := by

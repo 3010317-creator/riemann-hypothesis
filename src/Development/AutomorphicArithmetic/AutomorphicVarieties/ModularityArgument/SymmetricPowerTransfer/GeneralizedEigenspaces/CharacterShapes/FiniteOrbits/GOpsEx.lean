@@ -104,8 +104,7 @@ private lemma conv_eq (s₁ : B.Tw) {f₁ : G → ℂ} (f₂ : G → ℂ) (h₁ 
     s₁.conv f₁ f₂ y = ∑ x ∈ h₁.fin.toFinset, f₁ (s₁.θ x.out) * f₂ (x.out⁻¹ * s₁.θ.symm y) := by
   refine finsum_eq_sum_of_support_subset _ ?_
   intro x hx
-  simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-  exact left_ne_zero_of_mul hx
+  simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using left_ne_zero_of_mul hx
 
 private lemma conv_test (s₁ s₂ : B.Tw) {f₁ f₂ : G → ℂ} (h₁ : s₁.IsTest f₁) (h₂ : s₂.IsTest f₂) :
     (s₁.mul s₂).IsTest (s₁.conv f₁ f₂) := by
@@ -183,14 +182,10 @@ private lemma opF_comp (s₁ s₂ : B.Tw) {f₁ f₂ : G → ℂ} (h₁ : s₁.I
         simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
         exact right_ne_zero_of_mul (left_ne_zero_of_smul hz)
       · intro z hz
-        simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-        exact left_ne_zero_of_smul hz
+        simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using left_ne_zero_of_smul hz
     · intro x hx
-      simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-      exact left_ne_zero_of_smul hx
-  · intro x _
-    refine (hfin x.out).subset fun z hz => ?_
-    exact right_ne_zero_of_mul (left_ne_zero_of_smul hz)
+      simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using left_ne_zero_of_smul hx
+  · exact fun x _ => (hfin x.out).subset fun z hz => right_ne_zero_of_mul (left_ne_zero_of_smul hz)
 
 end UpperTheory.V.Z.Sym.Tf
 
@@ -226,9 +221,9 @@ section Abs
 
 private theorem one_congr {p q : Prop} (h : p ↔ q) : one p = one q := by rw [propext h]
 
-private theorem one_pos {p : Prop} (h : p) : one p = 1 := if_pos h
+private theorem one_pos {p : Prop} (h : p) : one p = 1 := ite_eq_left h
 
-private theorem one_neg {p : Prop} (h : ¬ p) : one p = 0 := if_neg h
+private theorem one_neg {p : Prop} (h : ¬ p) : one p = 0 := ite_eq_right h
 
 variable {G : Type} [Group G]
 
@@ -254,8 +249,7 @@ private theorem dc_one {U : Subgroup G} {y : G} : y ∈ DC U (1 : G) ↔ y ∈ U
   constructor
   · rintro ⟨p, hp, q, hq, rfl⟩
     simpa using U.mul_mem hp hq
-  · intro h
-    exact ⟨y, h, 1, U.one_mem, by simp⟩
+  · exact fun h => ⟨y, h, 1, U.one_mem, by simp⟩
 
 private theorem dc_sig {U : Subgroup G} (σ : G →* G) (h : ∀ u ∈ U, σ u ∈ U) (hi : ∀ g, σ (σ g) = g) (a y : G) :
     σ y ∈ DC U (σ a) ↔ y ∈ DC U a := by
@@ -363,8 +357,7 @@ private theorem conv_right (h : TwOk s w) (a : G) :
       rwa [sgm_key h] at this
     · intro hm
       have := sgm_mem h hm
-      rw [← sgm_key h, sgm_sgm h] at this
-      exact this
+      rwa [← sgm_key h, sgm_sgm h] at this
   have hz : ∀ x : G ⧸ B.U, x ≠ ((w⁻¹ : G) : G ⧸ B.U) →
       fw B.U w 1 (s.θ x.out) * one (x.out⁻¹ * s.θ y ∈ DC B.U a) = 0 := by
     intro x hx
@@ -419,16 +412,13 @@ private theorem fp_one {I : Type} (p : I → Prop) (h : ∀ᶠ v in Filter.cofin
   by_cases hall : ∀ v, p v
   · rw [one_pos hall]
     have : ∀ v, one (p v) = 1 := fun v => one_pos (hall v)
-    simp only [this]
-    exact finprod_one
+    simpa only [this] using finprod_one
   · rw [one_neg hall]
     obtain ⟨v, hv⟩ := not_forall.1 hall
     rw [finprod_eq_prod_of_mulSupport_subset (s := hfin.toFinset) _ ?_]
     · exact Finset.prod_eq_zero (hfin.mem_toFinset.2 hv) (one_neg hv)
     · intro x hx
-      simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-      intro hp
-      exact hx (one_pos hp)
+      simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using fun hp => hx (one_pos hp)
 
 open Classical in
 private theorem split_prod {I : Type} {f c : I → ℂ} (S T : Finset I) (hST : S ⊆ T) (hc : ∀ v ∉ T, c v = 1)
@@ -455,12 +445,12 @@ private theorem theta_KU {K O : Type} [Field K] [CommRing O] [Algebra O K] {Δ :
 variable {F : Type} [Field F] [NumberField F] {Δ : F} (A : SD Δ)
 
 private theorem jv_pos {v : Pl F} (h : v ∈ A.Sg) : A.dat.Jv v = ((A.V v).J 3).comap (eU (A.hs v h)) := by
-  have e : A.dat.S v = (A.V v).data (A.hs v h) (A.Ry v) (A.χ v) := dif_pos h
+  have e : A.dat.S v = (A.V v).data (A.hs v h) (A.Ry v) (A.χ v) := dite_eq_left h
   unfold Dat.Jv
-  rw [if_pos (show v ∈ A.dat.Sg from h), e]
+  rw [ite_eq_left (show v ∈ A.dat.Sg from h), e]
   rfl
 
-private theorem jv_neg {v : Pl F} (h : v ∉ A.Sg) : A.dat.Jv v = KU (Ov v) _ := if_neg h
+private theorem jv_neg {v : Pl F} (h : v ∉ A.Sg) : A.dat.Jv v = KU (Ov v) _ := ite_eq_right h
 
 private structure LocOk : Prop where
   bij : ∀ v (h : v ∈ A.Sg), Function.Bijective (eU (A.hs v h))
@@ -478,8 +468,7 @@ private theorem dc_loc (L : LocOk A) {v : Pl F} (h : v ∈ A.Sg) (x a : U3 (cv v
     (ha : eU (A.hs v h) a = dg e) : x ∈ DC (A.dat.Jv v) a ↔ eU (A.hs v h) x ∈ (A.V v).DC e := by
   rw [jv_pos A h]
   have := (dcMap _ _ ℂ (eU (A.hs v h)) (L.bij v h) ((A.V v).J 3) a a).1 x
-  rw [ha] at this
-  exact this
+  rwa [ha] at this
 
 private theorem exW (L : LocOk A) : ∃ w : GA Δ, (∀ v (h : v ∈ A.Sg), eU (A.hs v h) (w.1 v) = Phi (Kv v)) ∧
     ∀ v ∉ A.Sg, w.1 v = 1 := by
@@ -489,13 +478,13 @@ private theorem exW (L : LocOk A) : ∃ w : GA Δ, (∀ v (h : v ∈ A.Sg), eU (
     show ∀ᶠ v in Filter.cofinite, (if h : v ∈ A.Sg then f v h else 1) ∈ KU (Ov v) (cv v Δ)
     refine ((Finset.finite_toSet A.Sg).eventually_cofinite_notMem).mono fun v h => ?_
     have h' : v ∉ A.Sg := h
-    rw [dif_neg h']
+    rw [dite_eq_right h']
     exact one_mem _
   refine ⟨⟨_, hm⟩, fun v h => ?_, fun v h => ?_⟩
   · show eU (A.hs v h) (if h : v ∈ A.Sg then f v h else 1) = _
-    rw [dif_pos h, hf]
+    rw [dite_eq_left h, hf]
   · show (if h : v ∈ A.Sg then f v h else 1) = 1
-    rw [dif_neg h]
+    rw [dite_eq_right h]
 
 open Classical in
 private theorem orbital_function_eq_weighted (L : LocOk A) {a w : GA Δ} {d : ParN F 3}
@@ -511,7 +500,7 @@ private theorem orbital_function_eq_weighted (L : LocOk A) {a w : GA Δ} {d : Pa
       one (P v) := by
     intro v
     by_cases h : v ∈ A.Sg
-    · rw [dif_pos h]
+    · rw [dite_eq_left h]
       show one _ = _
       refine one_congr ?_
       have e1 : eU (A.hs v h) ((y * w⁻¹).1 v) = eU (A.hs v h) (y.1 v) * (Phi (Kv v))⁻¹ := by
@@ -519,7 +508,7 @@ private theorem orbital_function_eq_weighted (L : LocOk A) {a w : GA Δ} {d : Pa
         rw [map_mul, map_inv, hw v h]
       rw [← e1, ← dc_loc L h _ _ (ha.1 v h)]
       exact ⟨fun q => ⟨fun _ => q, fun hn => absurd h hn⟩, fun q => q.1 h⟩
-    · rw [dif_neg h]
+    · rw [dite_eq_right h]
       refine one_congr ?_
       have e1 : (y * w⁻¹).1 v = y.1 v := by
         show y.1 v * (w.1 v)⁻¹ = _
@@ -573,8 +562,7 @@ private theorem twOk (hok : A.Ok) (L : LocOk A) (hB : A.dat.IsBG ch B s) {w : GA
     refine ⟨fun v h => ?_, fun v h => ?_⟩
     · have := (thFacts (Kv v) (A.V v)).2.1 _ (hu.1 v h)
       show eU _ (w.1 v * (s.θ u).1 v * (w.1 v)⁻¹) ∈ _
-      rw [hB.θ, map_mul, map_mul, map_inv, hw v h, L.th v h]
-      exact this
+      rwa [hB.θ, map_mul, map_mul, map_inv, hw v h, L.th v h]
     · show w.1 v * (s.θ u).1 v * (w.1 v)⁻¹ ∈ _
       rw [hB.θ, hw' v h]
       simpa using theta_KU (hu.2 v h)
@@ -587,8 +575,7 @@ private theorem el_sg (L : LocOk A) (hB : A.dat.IsBG ch B s) {w : GA Δ}
     rw [hB.θ, map_mul, map_mul, map_inv, hw v h, L.th v h, ha.1 v h]
     have e : d v = ![d v 0, d v 1, d v 2] := funext fun i => by fin_cases i <;> rfl
     have := (thFacts (Kv v) (A.V v)).2.2.1 (d v 0) (d v 1) (d v 2)
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
   · show w.1 v * (s.θ a).1 v * (w.1 v)⁻¹ = 1
     rw [hB.θ, hw' v h, ha.2 v h]
     simp
@@ -608,28 +595,28 @@ private theorem FG_eq (t : Dat.Par F) (g : GA Δ) : A.dat.FG t g = ∑ y ∈ A.Y
     exact hv (Finset.mem_union_right _ (hfin.mem_toFinset.2 hn)))
   have hST : A.Sg ⊆ T := Finset.subset_union_left
   have e1 : A.dat.FG t g = (∏ v ∈ A.Sg, A.dat.fGv t v (g.1 v)) * ∏ v ∈ T \ A.Sg, c v := by
-    exact split_prod (f := fun v => A.dat.fGv t v (g.1 v)) (c := c) _ _ hST hc fun v h => if_neg h
+    exact split_prod (f := fun v => A.dat.fGv t v (g.1 v)) (c := c) _ _ hST hc fun v h => ite_eq_right h
   have e2 : ∀ y, A.F0 (A.dG t y) g = (∏ v ∈ A.Sg, if h : v ∈ A.Sg then (A.V v).unitaryDoubleCosetIndicator (A.dG t y v) (eU (A.hs v h) (g.1 v))
       else one (g.1 v ∈ KU (Ov v) _)) * ∏ v ∈ T \ A.Sg, c v := fun y => by
     exact split_prod (f := fun v => if h : v ∈ A.Sg then (A.V v).unitaryDoubleCosetIndicator (A.dG t y v) (eU (A.hs v h) (g.1 v))
-      else one (g.1 v ∈ KU (Ov v) _)) (c := c) _ _ hST hc fun v h => dif_neg h
+      else one (g.1 v ∈ KU (Ov v) _)) (c := c) _ _ hST hc fun v h => dite_eq_right h
   let b : ∀ v : A.Sg, (Kv v.1)ˣ → ℂ := fun v r =>
     (A.V v.1).unitaryDoubleCosetIndicator ![t v.1 * (unif (Kv v.1))⁻¹, r, (unif (Kv v.1))⁻¹] (eU (A.hs v.1 v.2) (g.1 v.1))
   have l1 : ∏ v ∈ A.Sg, A.dat.fGv t v (g.1 v) = ∏ v : A.Sg, ∑ r ∈ A.Ry v.1, b v r := by
     rw [← Finset.prod_coe_sort A.Sg]
     refine Finset.prod_congr rfl fun v _ => ?_
-    have e : A.dat.S v.1 = (A.V v.1).data (A.hs v.1 v.2) (A.Ry v.1) (A.χ v.1) := dif_pos v.2
+    have e : A.dat.S v.1 = (A.V v.1).data (A.hs v.1 v.2) (A.Ry v.1) (A.χ v.1) := dite_eq_left v.2
     unfold Dat.fGv
-    rw [if_pos (show v.1 ∈ A.dat.Sg from v.2), e]
+    rw [ite_eq_left (show v.1 ∈ A.dat.Sg from v.2), e]
     rfl
   have l2 : ∀ y, (∏ v ∈ A.Sg, if h : v ∈ A.Sg then (A.V v).unitaryDoubleCosetIndicator (A.dG t y v) (eU (A.hs v h) (g.1 v))
       else one (g.1 v ∈ KU (Ov v) _)) = ∏ v : A.Sg, b v (y v) := fun y => by
     rw [← Finset.prod_coe_sort A.Sg]
     refine Finset.prod_congr rfl fun v _ => ?_
-    rw [dif_pos v.2]
+    rw [dite_eq_left v.2]
     have e : A.dG t y v.1 = ![t v.1 * (unif (Kv v.1))⁻¹, y v, (unif (Kv v.1))⁻¹] := by
       unfold SD.dG
-      rw [dif_pos v.2]
+      rw [dite_eq_left v.2]
     rw [e]
   rw [e1, l1]
   simp only [e2, l2]
@@ -740,8 +727,7 @@ private theorem uf_dg (V : Lev k) (d d' : Fin 3 → kˣ) (hd : Dom d) (hd' : Dom
   exact h
 
 private theorem dg_mem (V : Lev k) (d : Fin 3 → kˣ) (hd : ∀ i, d i ∈ V.H) : dg d ∈ V.J 3 := by
-  refine Subgroup.mem_sup_left (Subgroup.mem_sup_right ?_)
-  exact ⟨d, by simpa [Subgroup.mem_pi] using hd, rfl⟩
+  exact Subgroup.mem_sup_left (Subgroup.mem_sup_right ⟨d, by simpa [Subgroup.mem_pi] using hd, rfl⟩)
 
 end Local
 
@@ -751,7 +737,7 @@ private theorem jv_in (A : SD Δ) {v : Pl F} (h : v ∈ A.Sg) :
     A.dat.Jv v = ((A.V v).J 3).comap (eU (A.hs v h)) := by
   simp [Dat.Jv, SD.dat, h, Lev.data]
 
-private theorem jv_off (A : SD Δ) {v : Pl F} (h : v ∉ A.Sg) : A.dat.Jv v = KU (Ov v) _ := if_neg h
+private theorem jv_off (A : SD Δ) {v : Pl F} (h : v ∉ A.Sg) : A.dat.Jv v = KU (Ov v) _ := ite_eq_right h
 
 private theorem eU_bij (A : SD Δ) (hA : A.Ok) {v : Pl F} (h : v ∈ A.Sg) :
     Function.Bijective (eU (A.hs v h)) := by
@@ -851,9 +837,7 @@ theorem UpperTheory.V.Z.Sym.So.gOpsEx :
     rw [hop, (dcBasic _ V A.dat.UG (gd d) (hfin d) (φ : GA Δ → V) (hinv φ)).2.2.2.1 hmem]
     rfl
   · intro d hd
-    have f1 := ((hF.1 (SD.sg d) (gd (SD.sg d)) (hgd _))).2.1
-    have f2 := ((hF.1 d (gd d) (hgd d))).2.2
-    exact f2.symm.trans f1
+    exact (((hF.1 d (gd d) (hgd d))).2.2).symm.trans (((hF.1 (SD.sg d) (gd (SD.sg d)) (hgd _))).2.1)
   · intro t ht
     rw [hF.2 t ht]
     have hl := Tf.rLin _ _ _ B s _ A.Ys (fun _ => 1) (fun y => A.F0 (A.dG t y))

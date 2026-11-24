@@ -112,10 +112,10 @@ theorem eq_sum_of_vanish {K : Type} [CommRing K] {P : K⟦X⟧} {N : ℕ}
   by_cases hm : m < N
   · rw [Finset.sum_eq_single ⟨m, hm⟩]
     · simp
-    · intro b _ hb; rw [if_neg]; intro h; exact hb (Fin.ext h.symm)
+    · intro b _ hb; rw [ite_eq_right]; intro h; exact hb (Fin.ext h.symm)
     · simp
   · rw [hP m (by omega), Finset.sum_eq_zero]
-    intro b _; rw [if_neg]; omega
+    intro b _; rw [ite_eq_right]; omega
 
 variable {O K : Type} [CommRing O] [NormedField K] [IsUltrametricDist K] [CompleteSpace K]
   [Algebra O K] [IsUnitBall O K] (l : ℕ) [Fact l.Prime] [NormedAlgebra ℚ_[l] K] (e : ℕ) [NeZero e]
@@ -145,7 +145,7 @@ theorem coeff_E_pow_vanish (n : ℕ) : ∀ k, e * n < k → coeff k (E K l e ^ n
     rw [pow_succ]
     refine coeff_vanish_mul ih (b := e) (fun j hj => ?_) k (by rw [Nat.mul_succ] at hk; exact hk)
     rw [E, map_add (f := _), coeff_X_pow, ← map_natCast (C : K →+* K⟦X⟧), coeff_C]
-    rw [if_neg (by omega), if_neg (by omega), add_zero]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), add_zero]
 
 theorem div_E_pow (n : ℕ) {f : K⟦X⟧} (hf : f ∈ A O K) : ∃ P g, P ∈ A O K ∧
     (∀ k, e * n ≤ k → coeff k P = 0) ∧ g ∈ A O K ∧ f = P + E K l e ^ n * g := by
@@ -258,7 +258,7 @@ theorem sum_gen_apply (η : ℕ) (c : ZMod a × ι × Fin (e * η) → O) (τ : 
   simp only [Pi.single_apply, ite_apply, Pi.zero_apply, smul_ite, smul_zero]
   rw [Fintype.sum_eq_single τ (fun x hx => by simp [Ne.symm hx]), Fintype.sum_eq_single i
     (fun x hx => by simp [Ne.symm hx])]
-  simp only [if_true]
+  simp only [ite_true]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [← algebraMap_smul K⟦X⟧ (c (τ, i, k)), algebraMap_eq_C, smul_eq_mul, mul_left_comm]
 
@@ -464,8 +464,7 @@ theorem map_mem_pow_smul_top {O M N : Type} [CommRing O] [AddCommGroup M] [Modul
   have hle : I ^ n • (⊤ : Submodule O M) ≤ (I ^ n • (⊤ : Submodule O N)).comap f := by
     rw [Submodule.smul_le]
     intro r hr y _
-    simp only [Submodule.mem_comap, map_smul]
-    exact Submodule.smul_mem_smul hr Submodule.mem_top
+    simpa only [Submodule.mem_comap, map_smul] using Submodule.smul_mem_smul hr Submodule.mem_top
   exact hle hx
 
 theorem successive_approximation : ∀ {O Y Z : Type} [CommRing O] [AddCommGroup Y] [Module O Y]
@@ -486,8 +485,7 @@ theorem successive_approximation : ∀ {O Y Z : Type} [CommRing O] [AddCommGroup
   have hPW : ∀ y, P y ∈ W := by
     intro y
     apply hsatn k
-    have h := W.sub_mem (hW y).2 (hW y).1
-    simpa [LinearMap.add_apply, LinearMap.smul_apply] using h
+    simpa [LinearMap.add_apply, LinearMap.smul_apply] using W.sub_mem (hW y).2 (hW y).1
   have hg : ∀ v, ∃ u, Lc u = l ^ c • P v := fun v => by
     obtain ⟨u, hu⟩ := hrange _ (hPW v)
     exact ⟨u, hu⟩
@@ -646,8 +644,7 @@ theorem exists_Mon_eq_Lc_cls : ∀ (O K : Type) [CommRing O] [NormedField K] [Is
   obtain ⟨y₁, hy₁⟩ := GlobalTheory.successive_approximation (l : O) Lc' P W (η + (N + 1) * η) k hc h1 h2 h3 ⟨y, hy⟩
   refine ⟨y₁, y₁.2, ?_⟩
   have := congrArg Subtype.val hy₁
-  rw [hsum] at this
-  exact this
+  rwa [hsum] at this
 
 end GlobalTheory.Proof.exists_monodromy_eq_leadingCoeff_breuilKisinDescent
 end -- clump:auto
@@ -732,7 +729,7 @@ theorem mem_Y'_iff_coeff {v : Vec K a ι} : v ∈ D.Y' ↔ E K l e ^ η • v �
     have h2 := (Descent.mem_invOf _).1 (Descent.Y'_le_Y _ η hv)
     refine ⟨mem_divE.1 h2.1, h2.2, fun τ i k hk => ?_⟩
     show coeff k ((X : K⟦X⟧) ^ e * y τ i) = 0
-    rw [coeff_X_pow_mul', if_neg (by omega)]
+    rw [coeff_X_pow_mul', ite_eq_right (by omega)]
   · rintro ⟨h1, h2, h3⟩
     have hd : ∀ τ i, (X : K⟦X⟧) ^ e ∣ v τ i := fun τ i => X_pow_dvd_iff.2 fun k hk => h3 τ i k hk
     choose y hy using hd
@@ -902,8 +899,7 @@ theorem eq_zero_of_mem_pow {O K : Type} [CommRing O] [NormedField K] [Algebra O 
 theorem isHausdorff_ring {O K : Type} [CommRing O] [NormedField K] [Algebra O K]
     [IsUnitBall O K] {l : ℕ} (hl : ‖(l : K)‖ < 1) : IsHausdorff (Ideal.span {(l : O)}) O := by
   refine ⟨fun x hx => eq_zero_of_mem_pow (K := K) hl fun n => ?_⟩
-  have h := SModEq.sub_mem.1 (hx n)
-  simpa [smul_eq_mul, Ideal.mul_top] using h
+  simpa [smul_eq_mul, Ideal.mul_top] using SModEq.sub_mem.1 (hx n)
 
 theorem isHausdorff_of_free {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Free R M] (I : Ideal R) [h : IsHausdorff I R] : IsHausdorff I M := by

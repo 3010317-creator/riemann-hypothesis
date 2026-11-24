@@ -132,8 +132,7 @@ theorem herm_cplxD_pos [Fintype ι] (c : ∀ w : ι, Matrix (Ix (P w) (Q w)) (Ix
     rcases lineSign_cases a b with h | h <;> simp [cplxD_apply, h, Complex.normSq_apply]
   simp only [Complex.im_sum, h, Finset.sum_neg_distrib]
   obtain ⟨w, a, b, hw⟩ : ∃ w a b, c w a b ≠ 0 := by
-    by_contra h0
-    push_neg at h0
+    by_contra! h0
     exact hc (by ext w a b; exact h0 w a b)
   have : 0 < ∑ w, ∑ a, ∑ b, Complex.normSq (c w a b) :=
     Finset.sum_pos' (fun _ _ => Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _)
@@ -380,7 +379,7 @@ theorem ccrM_comm [Fintype W] (H : (∀ w : W, Matrix (Ix (P w) (Q w)) (Ix (R w)
   rw [sum_unitAtS] at h11 h1i hi1 hii
   by_cases hjk : j = k
   · rw [hjk]
-  · simp only [if_neg hjk, Complex.zero_im, Complex.ofReal_zero, mul_zero, zero_smul, sub_eq_zero] at h11 h1i hi1 hii
+  · simp only [ite_eq_right hjk, Complex.zero_im, Complex.ofReal_zero, mul_zero, zero_smul, sub_eq_zero] at h11 h1i hi1 hii
     unfold ccrM
     have c : Commute (H (unitAtS j 1) - (lineSign j.2.1 j.2.2 * Complex.I) • H (unitAtS j Complex.I))
         (H (unitAtS k 1) - (lineSign k.2.1 k.2.2 * Complex.I) • H (unitAtS k Complex.I)) :=
@@ -399,7 +398,7 @@ theorem ccrD_ccrM_comm [Fintype W] (H : (∀ w : W, Matrix (Ix (P w) (Q w)) (Ix 
   have hpi : (Real.pi : ℂ) ≠ 0 := by exact_mod_cast Real.pi_ne_zero
   by_cases h : j = k
   · subst h
-    simp only [if_true, smul_smul, ← sub_smul, ← add_smul, ← neg_smul]
+    simp only [ite_true, smul_smul, ← sub_smul, ← add_smul, ← neg_smul]
     conv_rhs => rw [← one_smul ℂ (1 : Module.End ℂ V)]
     congr 1
     rcases lineSign_cases j.2.1 j.2.2 with h | h
@@ -504,8 +503,7 @@ theorem polMapD_index_injective (W : Type) [Fintype W] (Λ : W → Type) :
       apply Finsupp.mapDomain_notin_range
       rintro ⟨x, hx⟩
       exact hv (congrArg Sigma.fst hx)
-    · intro h
-      exact absurd (Finset.mem_univ w) h
+    · exact fun h => absurd (Finset.mem_univ w) h
   intro f g h
   funext w
   ext l
@@ -529,8 +527,7 @@ theorem polMapD_injective (W : Type) [Fintype W] [DecidableEq W] (Λ : W → Typ
       funext f
       simp only [Function.comp, B, Basis.piTensorProduct_apply, coe_basisMonomials]
       exact polMapD_tprod_monomial W Λ f
-    rw [e]
-    exact h
+    rwa [e]
   have h1 : polMapD W Λ ∘ₗ Finsupp.linearCombination ℂ B =
       Finsupp.linearCombination ℂ (polMapD W Λ ∘ B) := by
     ext f
@@ -1047,8 +1044,7 @@ theorem exists_bridgeD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     refine Prod.ext (funext fun w => ?_) ?_
     · show (if ε w = -1 then (1 : w.Completion) else 0) * (if ε w = -1 then 1 else 0) = if ε w = -1 then 1 else 0
       split_ifs <;> simp
-    · show (0 : IsDedekindDomain.FiniteAdeleRing (𝓞 F) F) * 0 = 0
-      exact mul_zero _
+    · exact mul_zero _
   have htt : evI F tm * evI F tm = evI F tm := by rw [← evI_mul, htm]
   have hext : ∀ w, InfinitePlace.Completion.extensionEmbedding w (tm.1 w) = if ε w = -1 then 1 else 0 := by
     intro w
@@ -1093,9 +1089,9 @@ theorem exists_bridgeD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       congr 2
       generalize Ψl y w = X
       rcases Int.units_eq_one_or (ε w) with h1 | h1
-      · rw [h1, if_neg (by decide)]
+      · rw [h1, ite_eq_right (by decide)]
         simp
-      · rw [h1, if_pos rfl, one_smul, two_smul, sub_add_cancel_left]
+      · rw [h1, ite_eq_left rfl, one_smul, two_smul, sub_add_cancel_left]
         simp [Matrix.mul_neg, Matrix.neg_mul]
     · rw [← hΨl, hΨJ]
       rfl
@@ -1185,8 +1181,7 @@ theorem vacLineD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     have key := hyp u u' hu hu' c hc hc' (D u f₀) (D u' f₀) (hDu u hu f₀).1 (hDu u' hu' f₀).1
     have := congrArg (fun g : SInf F κ => g x) key
     simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
-    rw [hDx u hu, hDx u' hu', h0, h'] at this
-    exact this
+    rwa [hDx u hu, hDx u' hu', h0, h'] at this
   set g₀ := Φ (PiTensorProduct.tprod ℂ fun _ => 1) with hg₀
   have hg0 : g₀ ≠ 0 := fun h => vacD_ne_zero (hΦ.1 (h.trans (map_zero Φ).symm))
   have hg : ∀ y x, fderiv ℝ g₀ x (J y).1 - 2 * Real.pi * Complex.I * (trPair F κ x (J y).2 : ℝ) * g₀ x =
@@ -1198,8 +1193,7 @@ theorem vacLineD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     rw [_root_.GlobalTheory.FockVacD.sumPl_heisOp_vacuum_dep, map_smul, ← e0] at e1
     have := congrArg (fun g : SInf F κ => g x) e1
     simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
-    rw [hDx u hu, hDx u₁ hu₁, h0, h1] at this
-    exact this
+    rwa [hDx u hu, hDx u₁ hu₁, h0, h1] at this
   obtain ⟨z, hz⟩ := _root_.GlobalTheory.VacCore.schwartz_vacuum_eq_smul (trPair F κ) (fun y h => _root_.GlobalTheory.VacLn.trPair_nondeg y h) J e e' hJ he hJe he1 he2 f₀ g₀ hg0 hg hf
   exact ⟨z, hz⟩
 
@@ -1520,14 +1514,7 @@ variable {ι : Type} [Fintype ι] [DecidableEq ι] {V : ι → Type} [∀ i, Add
 
 theorem coinv_atPl_tprod (w : ι) (L : Module.End ℂ (V w)) (f : ∀ i, V i) :
     atPl w L (PiTensorProduct.tprod ℂ f) = PiTensorProduct.tprod ℂ (Function.update f w (L (f w))) := by
-  unfold atPl
-  rw [PiTensorProduct.map_tprod]
-  congr 1
-  funext i
-  by_cases h : i = w
-  · subst h
-    simp
-  · simp [Function.update_of_ne h]
+  exact GlobalTheory.RealLift.atPl_tprod w L f
 
 theorem coinv_sumPl_tprod (w : ι) (L : ∀ i, Module.End ℂ (V i)) (hL : ∀ i, i ≠ w → L i = 0) (f : ∀ i, V i) :
     sumPl L (PiTensorProduct.tprod ℂ f) = PiTensorProduct.tprod ℂ (Function.update f w (L w (f w))) := by
@@ -1535,8 +1522,7 @@ theorem coinv_sumPl_tprod (w : ι) (L : ∀ i, Module.End ℂ (V i)) (hL : ∀ i
   rw [LinearMap.sum_apply, Finset.sum_eq_single w, coinv_atPl_tprod]
   · intro i _ hi
     rw [coinv_atPl_tprod, hL i hi, LinearMap.zero_apply, MultilinearMap.map_update_zero]
-  · intro h
-    exact absurd (Finset.mem_univ w) h
+  · exact fun h => absurd (Finset.mem_univ w) h
 
 end Tensor
 
@@ -1573,8 +1559,7 @@ theorem tensAny_coinv_le_comap : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     simp only [map_add (f := _), map_smul, Matrix.trace_add, Matrix.trace_smul, LinearMap.add_apply, LinearMap.smul_apply, smul_eq_mul]
     module
   have h := hle hw
-  rw [Submodule.mem_comap, he, Function.update_eq_self] at h
-  exact h
+  rwa [Submodule.mem_comap, he, Function.update_eq_self] at h
 
 end GlobalTheory.HoweD
 

@@ -78,7 +78,7 @@ theorem EwT_Ew : (Ew k r)ᵀ * Ew k r = 1 := by
   · simp only [Matrix.transpose_apply, Ew, Matrix.one_apply]
     by_cases h : c = d
     · subst h; simp
-    · rw [if_neg (fun h' => h (pW_inj h').symm), if_neg h]; simp
+    · rw [ite_eq_right (fun h' => h (pW_inj h').symm), ite_eq_right h]; simp
   · intro i _ hi; simp [Ew, hi]
   · intro h; exact absurd (Finset.mem_univ _) h
 
@@ -115,16 +115,15 @@ theorem tau_pW (c : Fin k) : HU.tau k r (pW k r c) = pW k r c := by
   apply Fin.ext; simp [HU.tau, pW]
 
 theorem sgn_pW (c : Fin k) : HU.sgn k r (pW k r c) = 1 := by
-  unfold HU.sgn; rw [if_neg (show (pW k r c).val ≠ r + k by show r + c.val ≠ r + k; omega)]
+  unfold HU.sgn; rw [ite_eq_right (show (pW k r c).val ≠ r + k by show r + c.val ≠ r + k; omega)]
 
 theorem hpk_mul_apply' {X : Type*} (A : Matrix (Fin (2 * r + k + 1)) X ℂ) (i : Fin (2 * r + k + 1)) (j : X) :
     (Hpk k r * A) i j = HU.sgn k r i * A (HU.tau k r i) j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (HU.tau k r i)]
-  · rw [HU.hpk_row, if_pos rfl]
+  · rw [HU.hpk_row, ite_eq_left rfl]
   · intro m _ hm
-    rw [HU.hpk_row, if_neg hm, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    rw [HU.hpk_row, ite_eq_right hm, zero_mul]
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem hpk_Ew : Hpk k r * Ew k r = Ew k r := by
   ext i c
@@ -132,15 +131,15 @@ theorem hpk_Ew : Hpk k r * Ew k r = Ew k r := by
   simp only [Ew]
   by_cases h : HU.tau k r i = pW k r c
   · have hi : i = pW k r c := by rw [← HU.tau_tau i, h, tau_pW]
-    rw [if_pos h, if_pos hi, hi, sgn_pW, mul_one]
+    rw [ite_eq_left h, ite_eq_left hi, hi, sgn_pW, mul_one]
   · have hi : i ≠ pW k r c := fun hi => h (by rw [hi, tau_pW])
-    rw [if_neg h, if_neg hi, mul_zero]
+    rw [ite_eq_right h, ite_eq_right hi, mul_zero]
 
 theorem EwT_hpk : (Ew k r)ᵀ * Hpk k r = (Ew k r)ᵀ := by
   ext c j
   rw [Matrix.mul_apply, Finset.sum_eq_single (pW k r c)]
-  · rw [Matrix.transpose_apply, Matrix.transpose_apply, Ew, if_pos rfl, one_mul, HU.hpk_row, tau_pW, sgn_pW, Ew]
-  · intro b _ hb; rw [Matrix.transpose_apply, Ew, if_neg hb, zero_mul]
+  · rw [Matrix.transpose_apply, Matrix.transpose_apply, Ew, ite_eq_left rfl, one_mul, HU.hpk_row, tau_pW, sgn_pW, Ew]
+  · intro b _ hb; rw [Matrix.transpose_apply, Ew, ite_eq_right hb, zero_mul]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem EwT_bvec (j : Fin (2 * r + k + 1)) (hj : ∀ c, j ≠ pW k r c) : (Ew k r)ᵀ *ᵥ bvec j = 0 := by
@@ -231,19 +230,19 @@ theorem row_nonW {g : Mat k r} (hg : g ∈ SW k r) (i j : Fin (2 * r + k + 1)) (
   have hU : gᴴ * (Hpk k r * g) = Hpk k r := by rw [← Matrix.mul_assoc]; exact hg.1
   have e := congrFun (congrFun hU (HU.tau k r i)) j
   rw [Matrix.mul_apply, Finset.sum_eq_single (HU.tau k r i)] at e
-  · rw [Matrix.conjTranspose_apply, col_nonW hg _ _ hmW, if_pos rfl, star_one, one_mul, HU.hpk_mul_apply,
+  · rw [Matrix.conjTranspose_apply, col_nonW hg _ _ hmW, ite_eq_left rfl, star_one, one_mul, HU.hpk_mul_apply,
       HU.tau_tau, HU.hpk_row, HU.tau_tau] at e
     have hs : HU.sgn k r (HU.tau k r i) ≠ 0 := by unfold HU.sgn; split_ifs <;> norm_num
     by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl] at e
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl] at e
+      rw [ite_eq_left rfl]
       exact mul_left_cancel₀ hs (e.trans (mul_one _).symm)
-    · rw [if_neg (Ne.symm hij)] at e
-      rw [if_neg hij]
+    · rw [ite_eq_right (Ne.symm hij)] at e
+      rw [ite_eq_right hij]
       exact (mul_eq_zero.1 e).resolve_left hs
   · intro l _ hl
-    rw [Matrix.conjTranspose_apply, col_nonW hg _ _ hmW, if_neg hl, star_zero, zero_mul]
+    rw [Matrix.conjTranspose_apply, col_nonW hg _ _ hmW, ite_eq_right hl, star_zero, zero_mul]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem isMatGroup_SW : PI.IsMatGroup (SW k r) := by
@@ -291,17 +290,17 @@ variable {k r : ℕ}
 theorem Ew_pW (c b : Fin k) : Ew k r (pW k r c) b = if c = b then 1 else 0 := by
   unfold Ew
   by_cases h : c = b
-  · rw [if_pos (by rw [h]), if_pos h]
-  · rw [if_neg (fun e => h (pW_inj e)), if_neg h]
+  · rw [ite_eq_left (by rw [h]), ite_eq_left h]
+  · rw [ite_eq_right (fun e => h (pW_inj e)), ite_eq_right h]
 
 theorem wEmbeddingConj_apply_wPositions (M : Matrix (Fin k) (Fin k) ℂ) (c d : Fin k) :
     (Ew k r * M * (Ew k r)ᵀ) (pW k r c) (pW k r d) = M c d := by
   rw [Matrix.mul_apply, Finset.sum_eq_single d]
-  · rw [Matrix.transpose_apply, Ew_pW, if_pos rfl, mul_one, Matrix.mul_apply, Finset.sum_eq_single c]
-    · rw [Ew_pW, if_pos rfl, one_mul]
-    · intro b _ hb; rw [Ew_pW, if_neg (Ne.symm hb), zero_mul]
+  · rw [Matrix.transpose_apply, Ew_pW, ite_eq_left rfl, mul_one, Matrix.mul_apply, Finset.sum_eq_single c]
+    · rw [Ew_pW, ite_eq_left rfl, one_mul]
+    · intro b _ hb; rw [Ew_pW, ite_eq_right (Ne.symm hb), zero_mul]
     · intro h; exact absurd (Finset.mem_univ _) h
-  · intro b _ hb; rw [Matrix.transpose_apply, Ew_pW, if_neg (Ne.symm hb), mul_zero]
+  · intro b _ hb; rw [Matrix.transpose_apply, Ew_pW, ite_eq_right (Ne.symm hb), mul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem EMET_out_row (M : Matrix (Fin k) (Fin k) ℂ) (i j : Fin (2 * r + k + 1)) (hi : ∀ c, i ≠ pW k r c) :
@@ -324,7 +323,7 @@ theorem unitaryBlockEmbeddingAtWPositions_apply_wPositions (A : Matrix (Fin k) (
   rw [Matrix.add_apply, Matrix.sub_apply, h1, wEmbeddingConj_apply_wPositions, Matrix.one_apply, Matrix.one_apply]
   by_cases h : c = d
   · subst h; simp
-  · rw [if_neg (fun e => h (pW_inj e)), if_neg h]; ring
+  · rw [ite_eq_right (fun e => h (pW_inj e)), ite_eq_right h]; ring
 
 theorem iota_apply_out (A : Matrix (Fin k) (Fin k) ℂ) (i j : Fin (2 * r + k + 1))
     (h : (∀ c, i ≠ pW k r c) ∨ (∀ c, j ≠ pW k r c)) : iota (r := r) A i j = if i = j then 1 else 0 := by
@@ -367,9 +366,9 @@ theorem eq_iota_blk {g : Mat k r}
     by_cases hj : ∃ d, j = pW k r d
     · obtain ⟨d, rfl⟩ := hj
       rw [unitaryBlockEmbeddingAtWPositions_apply_wPositions, blk_apply]
-    · push_neg at hj
+    · push Not at hj
       rw [iota_apply_out _ _ _ (Or.inr hj), h _ _ (Or.inr hj)]
-  · push_neg at hi
+  · push Not at hi
     rw [iota_apply_out _ _ _ (Or.inl hi), h _ _ (Or.inl hi)]
 
 theorem out_SW {g : Mat k r} (hg : g ∈ SW k r) (i j : Fin (2 * r + k + 1))
@@ -390,8 +389,7 @@ theorem blk_unitary {g : Mat k r} (hg : g ∈ SW k r) : blk g ∈ U1 k := by
       Matrix.mul_assoc (Ew k r * A), hE, Matrix.mul_one, sub_self, zero_add]
   have hEI : (Ew k r)ᵀ * (iota (r := r) A)ᴴ = Aᴴ * (Ew k r)ᵀ := by
     have := congrArg Matrix.conjTranspose hIE
-    rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, Ew_conjT] at this
-    exact this
+    rwa [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, Ew_conjT] at this
   have key : (Ew k r)ᵀ * ((iota (r := r) A)ᴴ * Hpk k r * iota (r := r) A) * Ew k r = Aᴴ * A := by
     calc (Ew k r)ᵀ * ((iota (r := r) A)ᴴ * Hpk k r * iota (r := r) A) * Ew k r
         = ((Ew k r)ᵀ * (iota (r := r) A)ᴴ) * Hpk k r * (iota (r := r) A * Ew k r) := by
@@ -418,7 +416,7 @@ theorem cE_pow (Y : Matrix (Fin k) (Fin k) ℂ) (m : ℕ) :
   induction m with
   | zero => simp
   | succ m ih =>
-    rw [pow_succ, ih, if_neg (Nat.succ_ne_zero m), add_zero, cE_apply, Matrix.add_mul]
+    rw [pow_succ, ih, ite_eq_right (Nat.succ_ne_zero m), add_zero, cE_apply, Matrix.add_mul]
     have e1 : Ew k r * Y ^ m * (Ew k r)ᵀ * (Ew k r * Y * (Ew k r)ᵀ) = Ew k r * Y ^ (m + 1) * (Ew k r)ᵀ := by
       rw [Matrix.mul_assoc (Ew k r * Y ^ m), ← Matrix.mul_assoc (Ew k r)ᵀ, ← Matrix.mul_assoc (Ew k r)ᵀ, h,
         Matrix.one_mul, pow_succ]
@@ -455,12 +453,12 @@ theorem exp_cE (Y : Matrix (Fin k) (Fin k) ℂ) : NormedSpace.exp (cE k r Y) = i
   have hs2 : Summable fun m : ℕ => ((m.factorial : ℂ)⁻¹) • (if m = 0 then Q else 0) := by
     refine summable_of_ne_finset_zero (s := {0}) fun m hm => ?_
     rw [Finset.mem_singleton] at hm
-    rw [if_neg hm, smul_zero]
+    rw [ite_eq_right hm, smul_zero]
   rw [hs1.tsum_add hs2]
   have t2 : ∑' m : ℕ, ((m.factorial : ℂ)⁻¹) • (if m = 0 then Q else 0) = Q := by
     rw [tsum_eq_single 0]
     · simp
-    · intro m hm; rw [if_neg hm, smul_zero]
+    · intro m hm; rw [ite_eq_right hm, smul_zero]
   have t1 : ∑' m : ℕ, ((m.factorial : ℂ)⁻¹) • (Ew k r * Y ^ m * (Ew k r)ᵀ) =
       Ew k r * (∑' m : ℕ, ((m.factorial : ℂ)⁻¹) • Y ^ m) * (Ew k r)ᵀ := by
     rw [← hL, L.map_tsum hs]
@@ -506,9 +504,9 @@ theorem lieOf_SW : lieOf (SW k r) = cE k r '' lieOf (U1 k) := by
         by_cases hj : ∃ d, j = pW k r d
         · obtain ⟨d, rfl⟩ := hj
           rw [wEmbeddingConj_apply_wPositions, blk_apply]
-        · push_neg at hj
+        · push Not at hj
           rw [EMET_out_col _ _ _ hj, hout _ _ (Or.inr hj)]
-      · push_neg at hi
+      · push Not at hi
         rw [EMET_out_row _ _ _ hi, hout _ _ (Or.inl hi)]
     refine ⟨blk Z, fun t => ?_, hZY⟩
     have h1 := blk_unitary (hZ t)
@@ -637,7 +635,6 @@ theorem continuous_iM : Continuous (iM k r) := by
   exact continuous_const.add ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const)
 
 theorem continuous_bM : Continuous (bM k r) := by
-  show Continuous fun y : Mt k r => (((Ew k r)ᵀ * Matrix.of y * Ew k r : Matrix (Fin k) (Fin k) ℂ))
   exact (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
 
 theorem iM_memb : MeasurableEmbedding (iM k r) :=

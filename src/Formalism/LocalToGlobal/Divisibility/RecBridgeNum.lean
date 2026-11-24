@@ -201,8 +201,7 @@ theorem hookProd_mul_prod (n : ℕ) (a : ℕ → ℕ) (h1 : ∀ i < n, 1 ≤ a i
     rw [List.pairwise_iff_getElem]
     intro i j hi hj hij
     simp only [List.length_map, List.length_range] at hi hj
-    simp only [List.getElem_map, List.getElem_range]
-    exact hmono i j hij hj
+    simpa only [List.getElem_map, List.getElem_range] using hmono i j hij hj
   rw [hookProd_eq_E n a _ List.sortedGE_insertionSort hsorted]
   exact E_mul_D n a hmono
 
@@ -267,9 +266,7 @@ theorem sigPar_succ (τ : D.what₂.Tau) (i : ℕ) (hi : i + 1 < D.R.k - 1 + D.R
     unfold DV.sigPar
     by_cases h1 : i + 1 < D.R.k - 1
     · rw [dite_eq_left h1, dite_eq_left (by omega : i < D.R.k - 1)]
-      have a := (D.hc τ).v_gt_u ⟨i, by omega⟩
-      have b := (D.hc τ).u_gt_v ⟨i + 1, h1⟩
-      exact lt_trans b a
+      exact lt_trans ((D.hc τ).u_gt_v ⟨i + 1, h1⟩) ((D.hc τ).v_gt_u ⟨i, by omega⟩)
     · by_cases h2 : i + 1 = D.R.k - 1
       · rw [dite_eq_right h1, dite_eq_left (by omega : i < D.R.k - 1)]
         have hb : i + 1 - (D.R.k - 1) < D.R.m := by omega

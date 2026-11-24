@@ -72,8 +72,7 @@ theorem locK_eq_of_congr {L : Type} [Field L] [NumberField L] (χ : Formalism.L2
     rw [sub_mul, ← map_mul, ← map_mul, mul_inv_cancel₀ b.ne_zero, map_one, Units.val_mul, Units.val_inv_eq_inv_val]
   have h1 : Valued.v (((Formalism.L2.Host.atFin P (k * b⁻¹) : (P.adicCompletion L)ˣ) : P.adicCompletion L) - 1) ≤
       WithZero.exp (-1 : ℤ) := by
-    rw [e, map_mul, val_algebraMap, map_inv₀, hb, inv_one, mul_one]
-    exact h
+    rwa [e, map_mul, val_algebraMap, map_inv₀, hb, inv_one, mul_one]
   have h2 : χ.locK P (k * b⁻¹) = 1 := by
     refine ht _ ?_ h1
     show Valued.v _ = 1
@@ -190,9 +189,8 @@ theorem char_eq_prod_res : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formali
       Valued.v (CharLocProd.evalAt R (ι (finPart D x)) - _) ≤ _
     rw [← hev]
     by_cases hR : R ∈ P
-    · simp only [if_pos hR]
-      exact ⟨(hk R).1, (hk R).2.1⟩
-    · simp only [if_neg hR]
+    · simpa only [ite_eq_left hR] using ⟨(hk R).1, (hk R).2.1⟩
+    · simp only [ite_eq_right hR]
       rw [hxP' R hR, Units.val_one, map_one, map_one, map_one, sub_self, map_zero]
       exact ⟨rfl, zero_le⟩
   · intro R hR
@@ -201,9 +199,9 @@ theorem char_eq_prod_res : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formali
     rw [← hev, hxP' R hR.1, map_one]
     exact ⟨rfl, fun h => hR.2 (hfin.mem_toFinset.2 (Ideal.dvd_span_singleton.2 h))⟩
   rw [key, ← Finset.prod_subset Finset.subset_union_left
-    (fun R _ hR => by rw [if_neg hR, map_one, Units.val_one])]
+    (fun R _ hR => by rw [ite_eq_right hR, map_one, Units.val_one])]
   refine Finset.prod_congr rfl fun R hR => ?_
-  rw [if_pos hR]
+  rw [ite_eq_left hR]
   obtain ⟨b, hb⟩ := Ideal.Quotient.mk_surjective (u R : kP R)
   have := R.isPrime
   have hbR : b ∉ R.asIdeal := fun h => (u R).ne_zero (hb ▸ Ideal.Quotient.eq_zero_iff_mem.2 h)

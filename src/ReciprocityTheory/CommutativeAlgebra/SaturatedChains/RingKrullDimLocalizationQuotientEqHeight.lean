@@ -34,9 +34,7 @@ private theorem height_le_height_Iic_lemma_2 {α β : Type*} [PartialOrder α] [
       { length := s.length
         toFun := fun i => f ⟨s i, (hmono s (Fin.le_last i)).trans hs⟩
         step := fun i => hf (Subtype.mk_lt_mk.mpr (s.step i)) }
-    have ht : t.last ≤ f ⟨a, le_rfl⟩ := by
-      show f ⟨s (Fin.last s.length), _⟩ ≤ f ⟨a, le_rfl⟩
-      exact hf.monotone (show s (Fin.last s.length) ≤ a from hs)
+    have ht : t.last ≤ f ⟨a, le_rfl⟩ := hf.monotone (show s (Fin.last s.length) ≤ a from hs)
     exact Order.length_le_height ht
   first
   | exact Order.height_le fun s hs => H s hs.le
@@ -92,9 +90,7 @@ theorem ringKrullDim_localization_quotient_eq_height {P : Type*} [CommRing P] (p
       rw [IsLocalization.map_under (M := q.primeCompl) (S := Localization.AtPrime q),
         IsLocalization.map_under (M := q.primeCompl) (S := Localization.AtPrime q)] at e2
       exact PrimeSpectrum.ext (Ideal.comap_injective_of_surjective _ Ideal.Quotient.mk_surjective e2)
-    · intro x
-      show _ ≤ q.map (Ideal.Quotient.mk p)
-      exact Ideal.map_mono (hAq x)
+    · exact fun x => Ideal.map_mono (hAq x)
   · have hpB : ∀ x : PrimeSpectrum (P ⧸ p), p ≤ Ideal.comap (Ideal.Quotient.mk p) x.asIdeal := by
       intro x z hz
       rw [Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.mpr hz]

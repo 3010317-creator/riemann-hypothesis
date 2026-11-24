@@ -289,8 +289,7 @@ private theorem hi_perm (N l p : ℕ) (hl : l.Prime) (hN : 0 < N) (hp : p.Prime)
   set σ' := sgD (N * l) l p with hσ'
   have hdia : GlobalTheory.Hk.IsDia N l p σ' := by
     refine ⟨CongruenceSubgroup.Gamma0_mem.1 hD'.1.1, ?_⟩
-    have h2 := congrArg (ZMod.castHom (dvd_mul_right N l) (ZMod N)) hD'.2
-    simpa [GlobalTheory.KZ.en] using h2
+    simpa [GlobalTheory.KZ.en] using congrArg (ZMod.castHom (dvd_mul_right N l) (ZMod N)) hD'.2
   have hδ : σ * σ'⁻¹ ∈ Gam N l := by
     refine ⟨?_, Subgroup.mul_mem _ hD.1.2 (Subgroup.inv_mem _ hD'.1.2)⟩
     have h0 := CongruenceSubgroup.Gamma0_mem.1 hD.1.1
@@ -299,8 +298,7 @@ private theorem hi_perm (N l p : ℕ) (hl : l.Prime) (hN : 0 < N) (hp : p.Prime)
       have := congrArg (ZMod.castHom (dvd_mul_right N l) (ZMod N)) (CongruenceSubgroup.Gamma0_mem.1 hD'.1.1)
       simpa using this
     have h1' : (((σ' : Matrix (Fin 2) (Fin 2) ℤ) 1 1 : ℤ) : ZMod N) = p := by
-      have h2 := congrArg (ZMod.castHom (dvd_mul_right N l) (ZMod N)) hD'.2
-      simpa [GlobalTheory.KZ.en] using h2
+      simpa [GlobalTheory.KZ.en] using congrArg (ZMod.castHom (dvd_mul_right N l) (ZMod N)) hD'.2
     simp only [GlobalTheory.KZ.en] at h1
     have hdet := σ.det_coe
     have hdet' := σ'.det_coe
@@ -505,8 +503,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sCohApi :
     simp only [map_smul, smul_add, smul_sub, mul_right_comm y t]
   · rintro z z' ⟨b, hb, hz⟩
     exact ⟨b, fun y => isucc _ (hb y), fun s y => hsucc _ _ (hz s y)⟩
-  · intro z z'
-    exact ⟨fun _ => 0, fun _ => iz _, fun s y => h0 _ _⟩
+  · exact fun z z' => ⟨fun _ => 0, fun _ => iz _, fun s y => h0 _ _⟩
   · rintro A' _ _ _ π z z' ⟨b, hb, hz⟩
     refine ⟨fun t => ∑ y ∈ Finset.univ.filter (fun y => π y = t), b y, fun t => isum _ _ _ fun y _ => hb y, fun s t => ?_⟩
     refine cast (hsum _ _ _ _ fun y _ => hz s y) ?_

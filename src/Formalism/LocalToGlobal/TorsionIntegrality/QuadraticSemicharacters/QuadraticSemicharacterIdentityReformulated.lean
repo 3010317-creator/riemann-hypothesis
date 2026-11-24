@@ -203,14 +203,11 @@ theorem stepC : StepC := by
     first
       | exact Module.End.hasEigenvector_iff.2 ⟨Module.End.mem_eigenspace_iff.2 hgx, hx0⟩
   · unfold relIdx
-    rw [himg]
-    exact hi1
+    rwa [himg]
   · unfold relIdx
-    rw [himg]
-    exact hdvd
+    rwa [himg]
   · unfold relIdx
-    rw [himg]
-    exact hi2
+    rwa [himg]
 
 end PI.UnitaryGroupMassFormula.UnimodLocStd
 end -- clump:auto
@@ -318,8 +315,7 @@ lemma sat_std_of_all (hok : CmOK a b c d) {l : ℕ} (hl : l.Prime) (x y : ℤ)
       exact hNl j hj
   · intro v hv
     have hvd : v ∈ dualLat (stdH (cmL a b d ha hd lam hlam) m) Λ := by
-      rw [hsd]
-      exact hv
+      rwa [hsd]
     rw [mem_dualLat_iff] at hvd
     rw [mem_stdLat_iff]
     intro i
@@ -397,9 +393,7 @@ def qequiv (z : V) {c : ℂ} (hc0 : c ≠ 0) (hc : c + conj c = H z z) : V ≃�
     (LinearMap.ext fun w => qmap_qmap' H hc0 hc w) (LinearMap.ext fun w => qmap_qmap H hc0 hc w)
 
 lemma qequiv_apply (z : V) {c : ℂ} (hc0 : c ≠ 0) (hc : c + conj c = H z z) (w : V) :
-    qequiv H z hc0 hc w = w - (c⁻¹ * H w z) • z := by
-  show qmap H z c⁻¹ w = _
-  exact qmap_apply H z c⁻¹ w
+    qequiv H z hc0 hc w = w - (c⁻¹ * H w z) • z := qmap_apply H z c⁻¹ w
 
 lemma qequiv_isom (hsym : ∀ x y, H y x = conj (H x y)) (z : V) {c : ℂ} (hc0 : c ≠ 0)
     (hc : c + conj c = H z z) : IsIsom H H (qequiv H z hc0 hc : V →ₗ[ℂ] V) := by
@@ -617,8 +611,7 @@ lemma exists_isometry_memLocalizedAt_single (hkey : KeyRep) (hok : CmOK a b c d)
       have hb : IsK b d ((x * a : ℂ) + y * cmTheta b d) :=
         ⟨x * a, y, 1, one_ne_zero, by push_cast; ring⟩
       rcases hs with rfl | rfl
-      · rw [one_mul, hαK]
-        exact hb
+      · rwa [one_mul, hαK]
       · rw [neg_one_mul, neg_div, hαK]
         exact isK_neg hb
     have hee : stdH (cmL a b d ha hd lam hlam) m (Pi.single i₀ (lam * ((x * a : ℂ) + y * cmTheta b d)))
@@ -922,8 +915,7 @@ theorem keyStartRam_of_unit (hU : UnitVecRam) : KeyStartRam := by
     have h' : stdH L m g g = 0 := by rw [h]; simp
     rw [hgf, hHs, hHf] at h'
     have : (M : ℂ) * conj (M : ℂ) * (κ * Q) ≠ 0 := by
-      simp only [map_natCast]
-      exact mul_ne_zero (mul_ne_zero hMc hMc) (mul_ne_zero hκ hQ0)
+      simpa only [map_natCast] using mul_ne_zero (mul_ne_zero hMc hMc) (mul_ne_zero hκ hQ0)
     exact this h'
   have hgS : SatMem d Λ g := rep_sat_of_mem d Λ hMf hdp
   have hd1 : ¬ (d : ℤ) ∣ 1 := by
@@ -1137,8 +1129,7 @@ theorem unitVecRam : UnitVecRam := by
   obtain ⟨y, hy, n, c₂, hny, hdn⟩ : ∃ y ∈ Λ, ∃ n c₂ : ℤ,
       stdH (cmL a b d ha hd lam hlam) m (s • xh) y = repKappa a b d ha hd lam hlam * ((n : ℂ) - c₂ * conj (cmTheta b d)) ∧
       ¬ (d : ℤ) ∣ 2 * n - c₂ * b := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hnot
     refine ⟨s, hs, ?_⟩
     rw [smul_comm, ← hΛ]

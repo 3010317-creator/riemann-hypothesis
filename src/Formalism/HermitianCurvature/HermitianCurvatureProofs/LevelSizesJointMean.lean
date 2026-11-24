@@ -77,8 +77,7 @@ theorem t_BoxSumLattice : BoxSumLattice := by
     le_min zero_le_one (pow_nonneg (div_nonneg hz (hwl w l)) K)
   have hnonneg : ∀ l, 0 ≤ prof x K l := by
     intro l
-    simp only [prof]
-    exact Finset.prod_nonneg (fun w _ => hfac x l w (hx w))
+    simpa only [prof] using Finset.prod_nonneg (fun w _ => hfac x l w (hx w))
   have hZpos : 0 < a ^ ((K : ℝ) - 5 / 2) * Θ ^ (-((K : ℝ) - 5 / 2)) := by
     have h1 : 0 < a ^ ((K : ℝ) - 5 / 2) := Real.rpow_pos_of_pos hapos _
     have h2 : 0 < Θ ^ (-((K : ℝ) - 5 / 2)) := Real.rpow_pos_of_pos hΘpos _
@@ -98,16 +97,14 @@ theorem t_BoxSumLattice : BoxSumLattice := by
       apply Finset.prod_eq_zero (Finset.mem_univ w₀)
       rw [hw₀, zero_div, zero_pow (by omega)]
       exact min_eq_right zero_le_one
-    simp only [h0, Finset.sum_const_zero]
-    exact hep
-  push_neg at hz
+    simpa only [h0, Finset.sum_const_zero] using hep
+  push Not at hz
   have hxpos : ∀ w, 0 < x w := fun w => lt_of_le_of_ne (hx w) (hz w).symm
   have hn0 : Fintype.card (InfinitePlace E) ≠ 0 := Fintype.card_ne_zero
   have hPpos : 0 < ∏ w, x w := Finset.prod_pos (fun w _ => hxpos w)
   have haΘ : 0 < (a / Θ) ^ Fintype.card (InfinitePlace E) := pow_pos (div_pos hapos hΘpos) _
   have hNpos : 0 < √(FractionalIdeal.absNorm aa : ℝ) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     nlinarith [haΘ, hPpos, hprod, hcon]
   set n := Fintype.card (InfinitePlace E) with hn
   set P := ∏ w, x w with hP
@@ -235,12 +232,9 @@ theorem t_BlockLattices : BlockLattices := by
   have F1 := hLG E hU g (S6.nuBlock r b 1) 1 hg
   have Fs := hLG E hU g (S6.nuBlock r b s) s hg
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro l hl
-    exact F1.2.2.2.2.1 hl
-  · intro l hl
-    exact Fs.2.2.2.2.1 hl
-  · intro l hl
-    exact Fs.2.2.2.2.2.2.1 hl
+  · exact fun l hl => F1.2.2.2.2.1 hl
+  · exact fun l hl => Fs.2.2.2.2.1 hl
+  · exact fun l hl => Fs.2.2.2.2.2.2.1 hl
   · exact idl_ne_zero hN E g (-1) (-(S6.nuBlock r b s + 1)) hg
   · exact idl_ne_zero hN E g (-1) (-(S6.nuBlock r b s)) hg
   · simp only [S6.liftIdl, S6.dualIdl, S6.nuBlock]
@@ -349,8 +343,7 @@ theorem eLat_eq (L : Submodule ℤ E) (c : ℝ) :
   · rintro ⟨t, ht, rfl⟩
     exact ⟨mixedEmbedding E t, ⟨t, ht, rfl⟩, (ee_semb E c t).symm⟩
   · rintro ⟨u, ⟨t, ht, rfl⟩, h⟩
-    refine ⟨t, ht, (ee E).injective ?_⟩
-    exact (ee_semb E c t).trans h
+    exact ⟨t, ht, (ee E).injective ((ee_semb E c t).trans h)⟩
 
 theorem t_EuclidFrame : EuclidFrame := by
   intro E _ _ _ L c hd hs

@@ -438,7 +438,7 @@ theorem act_inc {e : ℚ_[g] ≃+* F} (he : Continuous e) {ξ : Fˣ →* ℂˣ} 
     ext i j
     have hi : r + (i : ℕ) < r + t := by omega
     have hj : r + (j : ℕ) < r + t := by omega
-    simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj), hred]
+    simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj), hred]
     rfl
   have hdc : PadicInt.toZMod d = c := by rw [hc, hbr, hd, RingHom.map_det]
   have hdu : IsUnit d := by
@@ -459,7 +459,7 @@ theorem act_inc {e : ℚ_[g] ≃+* F} (he : Continuous e) {ξ : Fˣ →* ℂˣ} 
       rw [← h1]
       have hi : (i : ℕ) < r + t := by omega
       have hj : (j : ℕ) < r + t := by omega
-      simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj)]
+      simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj)]
       rfl
     have h2 : PadicInt.toZMod ((k : Matrix (Fin (r + t)) (Fin (r + t)) ℤ_[g]) (Fin.castAdd t i) (Fin.castAdd t j) -
         if i = j then 1 else 0) = 0 := by
@@ -483,16 +483,9 @@ theorem tl_one {r t : ℕ} : tl r (1 : Mt g (r + t)) = 1 := by
   ext i j
   have hi : (i : ℕ) < r + t := by omega
   have hj : (j : ℕ) < r + t := by omega
-  simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
+  simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
 
-theorem br_one {r t : ℕ} : br r t (1 : Mt g (r + t)) = 1 := by
-  ext i j
-  have hi : r + (i : ℕ) < r + t := by omega
-  have hj : r + (j : ℕ) < r + t := by omega
-  simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
-  by_cases h : (i : ℕ) = j
-  · simp [h]
-  · rw [if_neg (by omega), if_neg h]
+theorem br_one {r t : ℕ} : br r t (1 : Mt g (r + t)) = 1 := GlobalTheory.GLq.FrobRecHC.br_one
 
 theorem blk_parts {r t : ℕ} (y : Gn g t) :
     InPar r (blk r t (r + t) 1 y : Mt g (r + t)) ∧ tl r (blk r t (r + t) 1 y : Mt g (r + t)) = 1 ∧
@@ -500,7 +493,7 @@ theorem blk_parts {r t : ℕ} (y : Gn g t) :
   set M : Mt g (r + t) := fun i j : Fin (r + t) =>
     if (i : ℕ) < r ∧ (j : ℕ) < r then Formalism.MainNotions.ArithmeticCylinders.entN ((1 : Gn g r) : Mt g r) i j
     else if r ≤ (i : ℕ) ∧ r ≤ (j : ℕ) then Formalism.MainNotions.ArithmeticCylinders.entN (y : Mt g t) (i - r) (j - r) else 0 with hM
-  have h0 : InPar r M := fun i j hj hi => by rw [hM]; dsimp only; rw [if_neg (by omega), if_neg (by omega)]
+  have h0 : InPar r M := fun i j hj hi => by rw [hM]; dsimp only; rw [ite_eq_right (by omega), ite_eq_right (by omega)]
   have h1 : tl r M = 1 := by
     ext i j
     have hi : (i : ℕ) < r + t := by omega
@@ -514,7 +507,7 @@ theorem blk_parts {r t : ℕ} (y : Gn g t) :
     exact (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit
   have hb : (blk r t (r + t) 1 y : Mt g (r + t)) = M := by
     show ((toG M : Gn g (r + t)) : Mt g (r + t)) = M
-    rw [toG, dif_pos hu]; rfl
+    rw [toG, dite_eq_left hu]; rfl
   rw [hb]; exact ⟨h0, h1, h2⟩
 
 theorem isParVec_of_isBlockVec : ∀ (g : ℕ) [Fact g.Prime] (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -530,13 +523,11 @@ theorem isParVec_of_isBlockVec : ∀ (g : ℕ) [Fact g.Prime] (F : Type) [Field 
     intro k hk
     have := act_inc he hT hu k (by rw [hk, Units.val_one]; exact inPar_one) (by rw [hk, Units.val_one]; exact tl_one) 1
       (by rw [hk, Units.val_one, Units.val_one, br_one, Matrix.det_one])
-    rw [map_one, Units.val_one, one_smul] at this
-    exact this
+    rwa [map_one, Units.val_one, one_smul] at this
   · intro x h0 h1 h2
     have := act_inc he hT hu (Function.invFun (red g (r + t)) x) (by rw [hsurj]; exact h0) (by rw [hsurj]; exact h1) 1
       (by rw [hsurj, h2, Matrix.det_one, Units.val_one])
-    rw [map_one, Units.val_one, one_smul] at this
-    exact this
+    rwa [map_one, Units.val_one, one_smul] at this
   · intro y
     obtain ⟨h0, h1, h2⟩ := blk_parts (r := r) y
     have := act_inc he hT hu (Function.invFun (red g (r + t)) (blk r t (r + t) 1 y)) (by rw [hsurj]; exact h0)
@@ -593,8 +584,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
       rintro _ ⟨v, rfl⟩
       rw [Subsingleton.elim v 0, map_zero]
       exact Submodule.zero_mem _
-    rw [hS, Submodule.mem_bot] at hf
-    exact hf
+    rwa [hS, Submodule.mem_bot] at hf
 
   let A := FreeAlgebra ℂ K
   let rA : A →ₐ[ℂ] Module.End ℂ F := FreeAlgebra.lift ℂ r
@@ -634,7 +624,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
   let s : Set (V →ₗ[ℂ] F) := {T | P T}
   let SA : Submodule A F := ⨆ T ∈ s, p T
   have hpT : ∀ T (hT : T ∈ s), p T = LinearMap.range (mkA T (hP T hT)) :=
-    fun T hT => dif_pos (hP T hT)
+    fun T hT => dite_eq_left (hP T hT)
   have hpSA : ∀ T (hT : T ∈ s), p T ≤ SA := fun T hT =>
     le_iSup₂ (f := fun T (_ : T ∈ s) => p T) T hT
   have memSA : ∀ x : F, x ∈ S ↔ x ∈ SA := by
@@ -681,13 +671,11 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
   have hπf : π f₀ ≠ 0 := by
     intro h0
     have hNk : Submodule.span A {f₀} ≤ LinearMap.ker π := by
-      rw [Submodule.span_le, Set.singleton_subset_iff]
-      exact h0
+      rwa [Submodule.span_le, Set.singleton_subset_iff]
     obtain ⟨y, hy0⟩ := exists_ne (0 : m)
     apply hy0
     have hyk : (y : SA) ∈ LinearMap.ker π := hNk (hmN y.2)
-    rw [LinearMap.mem_ker, hπleft] at hyk
-    exact hyk
+    rwa [LinearMap.mem_ker, hπleft] at hyk
 
   have hmemT : ∀ T (hT : T ∈ s) (v : V), mkA T (hP T hT) v ∈ SA := fun T hT v =>
     hpSA T hT (by rw [hpT T hT]; exact ⟨v, rfl⟩)
@@ -704,8 +692,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
       rw [SetLike.mem_coe, LinearMap.mem_ker, ← LinearMap.comp_apply, hne T hT, LinearMap.zero_apply]
     obtain ⟨y, hy, hyf⟩ := hle f₀.2
     have hyeq : y = f₀ := Subtype.ext hyf
-    rw [← hyeq]
-    exact hy
+    rwa [← hyeq]
   let e : V ≃ₗ[A] m := LinearEquiv.ofBijective _ (LinearMap.bijective_of_ne_zero hg)
   let φ₀ : SA →ₗ[A] V := e.symm.toLinearMap ∘ₗ π
   have hφ₀f : φ₀ f₀ ≠ 0 := by
@@ -729,8 +716,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
   have hφ : ∀ (x : F) (hx : x ∈ S), φ x = φ₀ ⟨x, (memSA x).mp hx⟩ := fun x hx =>
     LinearMap.congr_fun hφext ⟨x, hx⟩
   refine ⟨φ, ?_, ?_⟩
-  · rw [hφ f hf]
-    exact hφ₀f
+  · rwa [hφ f hf]
   · intro k x hx
     have hrk : r k x = (FreeAlgebra.ι ℂ k : A) • x := (hιF k x).symm
     have hmem : r k x ∈ S := by
@@ -817,9 +803,7 @@ theorem rt_mem_isoTyp {L : Type} [Field L] [NumberField L] [IsCMField L] {n : �
     (S : Submodule ℂ (GAf L n → a.W)) (h : GAf L n) {f : GAf L n → a.W}
     (hf : f ∈ NG.isoTyp a.ρ S) : NG.rt L n h f ∈ NG.isoTyp a.ρ S := by
   have : NG.isoTyp a.ρ S ≤ (NG.isoTyp a.ρ S).comap (NG.rt L n h) := by
-    refine sSup_le fun S' hS' => ?_
-    intro y hy
-    exact le_sSup hS' (hS'.1.1.stable h y hy)
+    exact sSup_le fun S' hS' => fun y hy => le_sSup hS' (hS'.1.1.stable h y hy)
   exact this hf
 
 
@@ -1157,48 +1141,11 @@ open GlobalTheory.GLq.Opp
 variable {g : ℕ} [Fact g.Prime] {k l n : ℕ}
 
 theorem blk_eq (x : Gn g k) (y : Gn g l) : blk k l (k + l) x y = par finSumFinEquiv x 0 y := by
-  have h : (fun i j : Fin (k + l) => if (i : ℕ) < k ∧ (j : ℕ) < k then entN (x : Mt g k) i j
-      else if k ≤ (i : ℕ) ∧ k ≤ (j : ℕ) then entN (y : Mt g l) (i - k) (j - k) else 0) =
-      ((par finSumFinEquiv x 0 y : Gn g (k + l)) : Mt g (k + l)) := by
-    funext i j
-    obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
-    obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
-    rw [par_apply]
-    rcases i with i | i <;> rcases j with j | j
-    · simp [entN]
-    · have := i.2
-      simp [entN]
-    · have := j.2
-      simp [entN]
-    · simp [entN]
-  unfold blk
-  rw [h, toG, dite_eq_left (Units.isUnit _), IsUnit.unit_of_val_units]
+  exact GlobalTheory.SerSys.OfLabel.blk_eq_par x y
 
 theorem eq_par (z : Gn g (k + l)) (h0 : InPar k (z : Mt g (k + l))) (h1 : tl k (z : Mt g (k + l)) = 1)
     (h2 : br k l (z : Mt g (k + l)) = 1) : ∃ B, z = par finSumFinEquiv 1 B 1 := by
-  have e1 : ∀ (M : Mt g (k + l)) (i j : Fin k), tl k M i j = M (finSumFinEquiv (.inl i)) (finSumFinEquiv (.inl j)) := by
-    intro M i j
-    have hi := i.2
-    have hj := j.2
-    rw [tl, entN, dite_eq_left ⟨by omega, by omega⟩]
-    rfl
-  have e2 : ∀ (M : Mt g (k + l)) (i j : Fin l), br k l M i j = M (finSumFinEquiv (.inr i)) (finSumFinEquiv (.inr j)) := by
-    intro M i j
-    have hi := i.2
-    have hj := j.2
-    rw [br, entN, dite_eq_left ⟨by omega, by omega⟩]
-    rfl
-  refine ⟨Matrix.of fun i j => (z : Mt g (k + l)) (finSumFinEquiv (.inl i)) (finSumFinEquiv (.inr j)), ?_⟩
-  apply Units.ext
-  ext i j
-  obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
-  obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
-  rw [par_apply]
-  rcases i with i | i <;> rcases j with j | j
-  · rw [← e1 (z : Mt g (k + l)) i j, h1]; simp
-  · simp
-  · rw [h0 _ _ (by simp) (by simp)]; simp
-  · rw [← e2 (z : Mt g (k + l)) i j, h2]; simp
+  exact GlobalTheory.SerSys.Prod.exists_eq_par z h0 h1 h2
 
 end GlobalTheory.SerSys.Opp
 end -- clump:auto
@@ -1314,8 +1261,7 @@ theorem has_mul_of_isParVec : ∀ (g : ℕ) [Fact g.Prime] (S : Sys g) (n : ℕ)
           (commute_AB finSumFinEquiv (S.e a f) (S.e b h)).eq]
       rw [hc, hv1]
   refine ⟨(u : V), u.2, ?_⟩
-  rw [← repK_alg, key, hu]
-  exact hne
+  rwa [← repK_alg, key, hu]
 
 end GlobalTheory.SerSys.ParVec
 end -- clump:auto

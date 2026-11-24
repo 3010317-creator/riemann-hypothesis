@@ -275,8 +275,7 @@ theorem apply_eq_zero (h : NADual V χ μ) {T : (V → ℂ) → (V → ℂ)}
         simp only [Set.mem_setOf_eq, Set.mem_compl_iff, add_sub_cancel] at this
         exact this hs
       have hz : ∃ z ∈ perp χ L, χ z (s - x) ≠ 1 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hsL (hpp fun z hz => hcon z hz)
       obtain ⟨z, hzL, hzne⟩ := hz
       have hzne' : χ (s - x) z ≠ 1 := by rwa [hsymm]
@@ -508,7 +507,6 @@ theorem exists_sb_one : ∃ g ∈ SB (κ → FiniteAdeleRing (𝓞 F) F), g 0 = 
   have hS : IsClopen S := ⟨isClosed_set_pi fun _ _ => hcl, isOpen_set_pi Set.finite_univ fun _ _ => ho⟩
   have hSc : IsCompact S := isCompact_univ_pi fun _ => hc
   have h0 : (0 : κ → FiniteAdeleRing (𝓞 F) F) ∈ S := fun i _ v => by
-    show (0 : _) ∈ _
     exact zero_mem _
   refine ⟨S.indicator 1, ⟨?_, HasCompactSupport.intro hSc fun x hx => Set.indicator_of_notMem hx _⟩, by simp [h0]⟩
   have h1 : IsLocallyConstant (⇑(LocallyConstant.charFn ℂ hS)) := (LocallyConstant.charFn ℂ hS).isLocallyConstant
@@ -784,8 +782,7 @@ theorem line_hl (hψ : IsStd ψ) (hs : IsSplitting (adeleClass F) ψ M.co (actAB
   have e2 : om (1, k) (M.heisLine ψ u t (pureA F f g)) =
       M.heisLine ψ (u * (mat k).transpose) t (om (1, k) (pureA F f g)) := by
     have := hs.impl (1, k) (realAd F t • u) _ hΦ
-    rw [act_one, Matrix.smul_mul] at this
-    exact this
+    rwa [act_one, Matrix.smul_mul] at this
   rw [e1, hA G g hg, hA f g hg, ← tens_rOf, ← tens_rOf, heisLine_tens M hψ (at_mul hu _) (A f) hr t] at e2
   have := congrFun e2 (pt x 0)
   simpa [tens_rOf, pureA_pt, h0] using this
@@ -1043,8 +1040,7 @@ theorem comm_rho (hs : IsSplitting (adeleClass F) ψ M.co (actAB (cA σ)) om) (h
     (p q : Fin n × Fin d → Af F) {Φ : (Fin n × Fin d → AF F) → ℂ} (hΦ : Φ ∈ schA F (Fin n × Fin d)) :
     om (1, k) (M.co.rho ψ (M.co.e.symm (iot p, iot q)) Φ) = M.co.rho ψ (M.co.e.symm (iot p, iot q)) (om (1, k) Φ) := by
   have := hs.impl (1, k) (M.co.e.symm (iot p, iot q)) Φ hΦ
-  rw [act_one, act_fix M hk] at this
-  exact this
+  rwa [act_one, act_fix M hk] at this
 
 theorem rho_iot (M : Model σ Y W) (ψ : AddChar (AF F) ℂ) (p q : Fin n × Fin d → Af F) (Φ : (Fin n × Fin d → AF F) → ℂ)
     (x : Fin n × Fin d → AF F) :

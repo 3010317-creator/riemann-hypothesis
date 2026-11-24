@@ -206,8 +206,7 @@ theorem exists_hom {n : ℕ} (hn : n ≠ 0) {F : Type} [Field F] [CharZero F] {y
   let pb := IntermediateField.adjoin.powerBasis hint
   have hgen : pb.gen = IntermediateField.AdjoinSimple.gen ℚ z := rfl
   have hroot : Polynomial.aeval y (minpoly ℚ pb.gen) = 0 := by
-    have hmp : minpoly ℚ pb.gen = minpoly ℚ z := by
-      exact IntermediateField.minpoly_gen ℚ z
+    have hmp : minpoly ℚ pb.gen = minpoly ℚ z := IntermediateField.minpoly_gen ℚ z
     rw [hmp, ← Polynomial.cyclotomic_eq_minpoly_rat hz hpos, Polynomial.aeval_def,
       Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
     exact hy.isRoot_cyclotomic hpos
@@ -336,11 +335,9 @@ theorem altLagr : ∀ (R : Type) [CommRing R] (I : Ideal R) (D : Type) [AddCommG
     intro a ha y
     refine Submodule.smul_induction_on (p := fun a => φ a y ∈ I) ha ?_ ?_
     · intro r hr m _
-      simp only [map_smul, LinearMap.smul_apply, smul_eq_mul]
-      exact I.mul_mem_right _ hr
+      simpa only [map_smul, LinearMap.smul_apply, smul_eq_mul] using I.mul_mem_right _ hr
     · intro x z hx hz
-      simp only [map_add (f := _), LinearMap.add_apply]
-      exact I.add_mem hx hz
+      simpa only [map_add (f := _), LinearMap.add_apply] using I.add_mem hx hz
   have hφII : ∀ a ∈ I • (⊤ : Submodule R D), ∀ b ∈ I • (⊤ : Submodule R D), φ a b = 0 := by
     intro a ha b hb
     refine Submodule.smul_induction_on (p := fun a => φ a b = 0) ha ?_ ?_
@@ -395,9 +392,9 @@ theorem altLagr : ∀ (R : Type) [CommRing R] (I : Ideal R) (D : Type) [AddCommG
     intro i j
     simp only [M]
     rcases lt_trichotomy i j with h | rfl | h
-    · rw [if_pos h, if_neg (lt_asymm h), sub_zero]
-    · rw [if_neg (lt_irrefl _), sub_zero, hBalt]
-    · rw [if_neg (lt_asymm h), if_pos h, zero_sub, hBskew, neg_neg]
+    · rw [ite_eq_left h, ite_eq_right (lt_asymm h), sub_zero]
+    · rw [ite_eq_right (lt_irrefl _), sub_zero, hBalt]
+    · rw [ite_eq_right (lt_asymm h), ite_eq_left h, zero_sub, hBskew, neg_neg]
   let β : D →ₗ[R] D →ₗ[R] R :=
     ∑ i, ∑ j, M i j • (LinearMap.mul R R).compl₁₂ ((LinearMap.proj i).comp s) ((LinearMap.proj j).comp s)
   have hβ : ∀ x y, β x y = ∑ i, ∑ j, M i j * (s x i * s y j) := by
@@ -593,8 +590,7 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
     intro d d' y hd H c
     rw [H c]
     have := RingHom.mem_ker.1 (apply_mem_of_mem_smul_top (RingHom.ker π) hd c)
-    rw [LinearMap.sub_apply, map_sub, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.sub_apply, map_sub, sub_eq_zero] at this
   have hFE : ∀ y : HdR Y₀, y ∈ Fil Y₀ ↔ ∃ d ∈ E, (crysRedMor κ rfl Y₀).Corr d y := by
     intro y
     constructor
@@ -707,12 +703,10 @@ theorem exists_specializes_of_surjective {R R₀ : Type} [CommRing R] [CommRing 
   obtain ⟨m, hm, hpm⟩ := Ideal.exists_le_maximal p.asIdeal p.2.ne_top
   have hJm : RingHom.ker π ≤ m := hJ.trans (sInf_le ⟨bot_le, hm⟩)
   have : (⟨m, hm.isPrime⟩ : PrimeSpectrum R) ∈ Set.range (PrimeSpectrum.comap π) := by
-    rw [range_comap_of_surjective _ _ hπ]
-    exact hJm
+    rwa [range_comap_of_surjective _ _ hπ]
   obtain ⟨q, hq⟩ := this
   refine ⟨q, ?_⟩
-  rw [hq, ← PrimeSpectrum.le_iff_specializes]
-  exact hpm
+  rwa [hq, ← PrimeSpectrum.le_iff_specializes]
 
 theorem le_jacobson_of_sq_eq_bot {R : Type} [CommRing R] {J : Ideal R} (h : J ^ 2 = ⊥) : J ≤ Ideal.jacobson ⊥ := by
   intro x hx
@@ -983,12 +977,10 @@ theorem exists_specializes {R : Type} [CommRing R] {J : Ideal R} (hJ : J ≤ Ide
   obtain ⟨m, hm, hpm⟩ := Ideal.exists_le_maximal p.asIdeal p.2.ne_top
   have hJm : J ≤ m := hJ.trans (sInf_le ⟨bot_le, hm⟩)
   have : (⟨m, hm.isPrime⟩ : PrimeSpectrum R) ∈ Set.range (PrimeSpectrum.comap (Ideal.Quotient.mk J)) := by
-    rw [range_comap_of_surjective _ _ Ideal.Quotient.mk_surjective, Ideal.mk_ker]
-    exact hJm
+    rwa [range_comap_of_surjective _ _ Ideal.Quotient.mk_surjective, Ideal.mk_ker]
   obtain ⟨q, hq⟩ := this
   refine ⟨q, ?_⟩
-  rw [hq, ← PrimeSpectrum.le_iff_specializes]
-  exact hpm
+  rwa [hq, ← PrimeSpectrum.le_iff_specializes]
 
 theorem kTriv_of_quotient : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (J : Ideal R), J ≤ Ideal.jacobson ⊥ → ∀ (B : Over (Spec (CommRingCat.of R))) [GrpObj B], IsAbelianScheme B → ∀ M : LB B.left, M.IsLB → RelAmple B M → ∀ (Y₀ : Over (Spec (CommRingCat.of (R ⧸ J)))) [GrpObj Y₀] (b : Y₀.left ⟶ B.left), IsGrpPullback Y₀ B (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))) b → ∀ N₀ : LB Y₀.left, N₀.IsLB → LBIso N₀ (M.pull b) → KTriv Y₀ N₀ → KTriv B M := by
   intro R _ _ J hJ B _ hB M hM hA Y₀ _ b hb N₀ hN₀ e hK
@@ -1373,8 +1365,7 @@ theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type
     (GlobalTheory.TorsionCover.natCast_ne_zero hnΓ ((Over.mk x₀).hom ≫ spMap π))
   have hdg : d = g := by
     have e : n ^ (2 * d) = n ^ (2 * g) := by
-      rw [← cardd, show 2 * g = Fintype.card (Fin g ⊕ Fin g) by simp [two_mul]]
-      exact card₀
+      rwa [← cardd, show 2 * g = Fintype.card (Fin g ⊕ Fin g) by simp [two_mul]]
     have := Nat.pow_right_injective (show 2 ≤ n by omega) e
     omega
   subst hdg
@@ -1405,8 +1396,7 @@ theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type
     rw [ht] at H'
     have H'' := GlobalTheory.LevSpread.l3 V AV hAV PV hP n (by omega) hnR (σ a) (σ a') (hσn a) (hσn a') ζR hζR
       (2 * omegaStd a a') (AlgebraicClosure K) (iK.comp π) H' k ρ
-    rw [← map_zpow]
-    exact H''
+    rwa [← map_zpow]
 
 end GlobalTheory.LevLift
 end -- clump:auto
@@ -1479,17 +1469,7 @@ namespace GlobalTheory.SiegelFieldClass
 
 theorem dense_generic {A V : Type} [CommRing A] [CommRing V] [IsDomain V] (β : A →+* V)
     (hβ : Function.Injective β) : Dense {x : Sp V | (spMap β x).asIdeal = ⊥} := by
-  let ξ : Sp V := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum V)
-  have hξ : ξ ∈ {x : Sp V | (spMap β x).asIdeal = ⊥} := by
-    show (PrimeSpectrum.comap (CommRingCat.ofHom β).hom ⟨⊥, Ideal.isPrime_bot⟩).asIdeal = ⊥
-    simp only [PrimeSpectrum.comap_asIdeal, CommRingCat.hom_ofHom]
-    exact (RingHom.injective_iff_ker_eq_bot β).1 hβ
-  have hd : Dense ({ξ} : Set (Sp V)) := by
-    rw [dense_iff_closure_eq]
-    show closure ({(⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum V)} : Set (PrimeSpectrum V)) = Set.univ
-    rw [PrimeSpectrum.closure_singleton]
-    exact PrimeSpectrum.zeroLocus_bot
-  exact hd.mono (Set.singleton_subset_iff.2 hξ)
+  exact GlobalTheory.SiegelFamilyBaseChange.dense_generic β hβ
 
 theorem classifies_algClosed : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F : SFam g n (zetaAway n), ∀ (K : Type) [Field K] [IsAlgClosed K] (β : cycAway n →+* K) (c : SiegPre g n (zetaAway n) (spMap β)), c.Principal → ∃ f : Sp K ⟶ F.X, f ≫ F.s = spMap β ∧ SiegPB c F.univ f := by
   intro g n hg hn hodd F K _ _ β c hc

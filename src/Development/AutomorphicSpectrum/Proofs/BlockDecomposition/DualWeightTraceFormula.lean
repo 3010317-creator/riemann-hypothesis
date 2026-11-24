@@ -208,8 +208,7 @@ theorem diag_act {lam : Fin n → ℤ} (hA : Antitone lam) (a : Fin n) {t : ℂ}
   rw [e]
   apply Subtype.ext
   have hh := (factSqHighestWeight ℂ n (dw lam)).1 u
-  rw [hp] at hh
-  exact hh
+  rwa [hp] at hh
 
 theorem exists_hw (n : ℕ) (lam : Fin n → ℤ) (hD : HolRm lam) (hA : Antitone lam) :
     ∃ v : Formalism.BasicNotions.nablaSq ℂ n (dw lam), v ≠ 0 ∧
@@ -241,8 +240,7 @@ theorem exists_hw (n : ℕ) (lam : Fin n → ℤ) (hD : HolRm lam) (hA : Antiton
       have h0 := hasDerivAt_zpow (lam a) ((1 : ℂ) + 0) (Or.inl (by simp))
       have h3 := h0.comp_const_add 1 0
       have e : (lam a : ℂ) * ((1 : ℂ) + 0) ^ (lam a - 1) = lam a := by simp
-      rw [e] at h3
-      exact h3
+      rwa [e] at h3
     have h2 := (hz.mul_const (((wb lam).repr (hv lam) : Jd n lam → ℂ) i)).congr_of_eventuallyEq hev
     simpa [Xu] using h1.unique h2
 
@@ -567,19 +565,19 @@ theorem xu_glRel : ∀ (n : ℕ) (lam : Fin n → ℤ), HolRm lam → Formalism.
   have hsq : (Matrix.single a b (1:ℂ) : Mat n) * Matrix.single a b 1 =
       (if b = a then (1:ℂ) else 0) • Matrix.single a b 1 := by
     by_cases h : b = a
-    · subst h; rw [if_pos rfl, one_smul, Matrix.single_mul_single_same, one_mul]
-    · rw [if_neg h, zero_smul, Matrix.single_mul_single_of_ne _ _ _ _ h]
+    · subst h; rw [ite_eq_left rfl, one_smul, Matrix.single_mul_single_same, one_mul]
+    · rw [ite_eq_right h, zero_smul, Matrix.single_mul_single_of_ne _ _ _ _ h]
   have key := comm_XA hD (Matrix.single c d (1:ℂ)) hsq
   have hEB : XA lam ((Matrix.single a b (1:ℂ) : Mat n) * Matrix.single c d 1) =
       if b = c then XA lam (Matrix.single a d 1) else 0 := by
     by_cases h : b = c
-    · subst h; rw [if_pos rfl, Matrix.single_mul_single_same, one_mul]
-    · rw [if_neg h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
+    · subst h; rw [ite_eq_left rfl, Matrix.single_mul_single_same, one_mul]
+    · rw [ite_eq_right h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
   have hBE : XA lam ((Matrix.single c d (1:ℂ) : Mat n) * Matrix.single a b 1) =
       if d = a then XA lam (Matrix.single c b 1) else 0 := by
     by_cases h : d = a
-    · subst h; rw [if_pos rfl, Matrix.single_mul_single_same, one_mul]
-    · rw [if_neg h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
+    · subst h; rw [ite_eq_left rfl, Matrix.single_mul_single_same, one_mul]
+    · rw [ite_eq_right h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
   simp only [Xu]
   rw [key, hEB, hBE]
 
@@ -790,18 +788,15 @@ theorem fix_of_killed (ν : Fin n → ℤ) (c : Jd n ν → ℂ) (hc : ∀ a b, 
     rw [← mul_assoc, Matrix.mul_nonsing_inv _ (hGu t), one_mul]
   have hline : ∀ t, HasDerivAt G N t := fun t => by
     have h := ((hasDerivAt_id t).smul_const N).const_add (1 : Mat n)
-    rw [one_smul] at h
-    exact h
+    rwa [one_smul] at h
   have hdi : ∀ i t, HasDerivAt (fun s => (Rm ν (G s) *ᵥ c) i) 0 t := by
     intro i t
     have hij : ∀ j, HasDerivAt (fun s => Rm ν (G s) i j) ((Rm ν (G t) * XA ν (B t)) i j) t := by
       intro j
       have h0 := (holRm n ν i j (G t) (hGm t)).hasFDerivAt.comp_hasDerivAt t (hline t)
-      rw [← fderiv_Rm (holRm n ν) (hGm t) (B t) i j, hGB]
-      exact h0
+      rwa [← fderiv_Rm (holRm n ν) (hGm t) (B t) i j, hGB]
     have hs : HasDerivAt (fun s => (Rm ν (G s) *ᵥ c) i) (∑ j, (Rm ν (G t) * XA ν (B t)) i j * c j) t := by
-      simp only [Matrix.mulVec, dotProduct]
-      exact HasDerivAt.fun_sum fun j _ => (hij j).mul_const _
+      simpa only [Matrix.mulVec, dotProduct] using HasDerivAt.fun_sum fun j _ => (hij j).mul_const _
     have hz : ∑ j, (Rm ν (G t) * XA ν (B t)) i j * c j = 0 := by
       have h3 : (Rm ν (G t) * XA ν (B t)) *ᵥ c = 0 := by
         rw [← Matrix.mulVec_mulVec, strict_kill ν c hc (B t) (hB t), Matrix.mulVec_zero]
@@ -811,8 +806,7 @@ theorem fix_of_killed (ν : Fin n → ℤ) (c : Jd n ν → ℂ) (hc : ∀ a b, 
   have h3 := is_const_of_deriv_eq_zero (fun t => (hdi i t).differentiableAt) (fun t => (hdi i t).deriv) 1 0
   have e1 : G 1 = g := by simp [G, hN]
   have e0 : G 0 = 1 := by simp [G]
-  simp only [e1, e0, GlobalTheory.CompanionTheory.RmHol.Rm_one, Matrix.one_mulVec] at h3
-  exact h3
+  simpa only [e1, e0, GlobalTheory.CompanionTheory.RmHol.Rm_one, Matrix.one_mulVec] using h3
 
 theorem line_of_killed (ν : Fin n → ℤ) (c : Jd n ν → ℂ) (hc : ∀ a b, a < b → Xu ν a b *ᵥ c = 0) :
     ∃ s : ℂ, c = s • ((wb ν).repr (HW.hv ν) : Jd n ν → ℂ) := by
@@ -894,8 +888,7 @@ theorem skew_frame (X : Mat n) (hX : Xᴴ = -X) (x y : Jd n ν → ℂ) :
   rw [hc] at d3
   have h := d3.unique (hasDerivAt_const _ _)
   rw [h0, GlobalTheory.CompanionTheory.RmHol.Rm_one, Matrix.one_mulVec, Matrix.one_mulVec] at h
-  rw [add_comm]
-  exact h
+  rwa [add_comm]
 
 include he in
 theorem herm_frame (a b : Fin n) (x y : Jd n ν → ℂ) :
@@ -1073,8 +1066,7 @@ theorem exists_map_in (H L : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ
     intro x
     have hvm : v ∈ hwOf K μ := hv
     have : φ.smulRight v x ∈ hwOf K μ := by
-      simp only [LinearMap.smulRight_apply]
-      exact Submodule.smul_mem _ _ hvm
+      simpa only [LinearMap.smulRight_apply] using Submodule.smul_mem _ _ hvm
     exact this
   obtain ⟨P, hP, hi⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.ExtHw.kmap_extend H L G K μ hG hK hGs hKs D hD (φ.smulRight v) hf
   exact ⟨P, fun d => by rw [hP d, LinearMap.smulRight_apply], hi⟩
@@ -1184,8 +1176,7 @@ theorem exists_isotypic_projection {n : ℕ} (H : Type) [NormedAddCommGroup H] [
       have e1 : (ρ k : H →ₗ[ℂ] H) ∘ₗ S ∘ₗ (T j ∘ₗ P j) = ((ρ k : H →ₗ[ℂ] H) ∘ₗ S ∘ₗ T j) ∘ₗ P j := rfl
       have e2 : P j ∘ₗ ((ρ k : H →ₗ[ℂ] H) ∘ₗ S ∘ₗ T j) = σ k ∘ₗ (P j ∘ₗ S ∘ₗ T j) := by
         ext w
-        simp only [LinearMap.comp_apply, ContinuousLinearMap.coe_coe]
-        exact hPk j k _
+        simpa only [LinearMap.comp_apply, ContinuousLinearMap.coe_coe] using hPk j k _
       rw [e1, LinearMap.trace_comp_comm', e2, hR, LinearMap.comp_smul, LinearMap.comp_id, map_smul,
         htr k z hk hz, smul_eq_mul]
     have hsum : (ρ k : H →ₗ[ℂ] H) ∘ₗ S ∘ₗ (∑ j, T j ∘ₗ P j) =
@@ -1245,7 +1236,7 @@ theorem expU_two_pi (a : Fin n) (hX : (Matrix.single a a Complex.I)ᴴ = -(Matri
         simp
       · simp [hc, Ne.symm hc]
     · rw [Matrix.diagonal_apply_ne _ hij, Matrix.smul_apply, Matrix.single_apply,
-        if_neg (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
+        ite_eq_right (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
   rw [e, Matrix.exp_diagonal, ← Matrix.diagonal_one]
   congr 1
   funext c
@@ -1273,8 +1264,7 @@ theorem eigen_int (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     have := hd X (expU X hX) hX (fun _ => rfl) v
     have e := sum_single (Kf := G) v a a Complex.I
     rw [← hXdef] at e
-    rw [e, hr, smul_smul] at this
-    exact this
+    rwa [e, hr, smul_smul] at this
   have hstep : ∀ s, HasDerivAt φ ((Complex.I * r) • φ s) s := by
     intro s
     let L : H →L[ℝ] H := (ρ (expU X hX s)).restrictScalars ℝ
@@ -1306,8 +1296,7 @@ theorem eigen_int (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
         (Complex.exp ((s : ℂ) * (-(Complex.I * r))) * -(Complex.I * r)) • φ s = 0 := by
       rw [smul_smul, ← add_smul]
       simp
-    rw [this] at h3
-    exact h3
+    rwa [this] at h3
   have hconst : ψ (2 * Real.pi) = ψ 0 :=
     is_const_of_deriv_eq_zero (fun s => (hψd s).differentiableAt) (fun s => (hψd s).deriv) _ _
   have h0 : φ 0 = v := by
@@ -1408,8 +1397,7 @@ theorem core (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Finite
       · intro j _ hji
         rw [map_smul, hpkill i hia (wtR j) (v j) (fun heq => hji (Subtype.ext (wtR_injective heq)))
           (hvmem j j.2), smul_zero]
-      · intro hi'
-        exact absurd hi hi'
+      · exact fun hi' => absurd hi hi'
     exact Set.finite_coe_iff.mp hli.finite
   have hF : ∀ ν, ν ∈ hfin.toFinset ↔ Antitone ν ∧ hwOf G (wtR ν) ≠ ⊥ := fun ν => by
     rw [Set.Finite.mem_toFinset, hFs]
@@ -1441,8 +1429,7 @@ theorem core (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Finite
     rw [Finset.sum_eq_single ν₀, hpid ν₀ hanti v hmem, sub_self]
     · intro ν hν hne
       exact hpkill ν ((hF ν).1 hν).1 (wtR ν₀) v (fun heq => hne (wtR_injective heq).symm) hK
-    · intro h
-      exact absurd hin h
+    · exact fun h => absurd hin h
   have hsum : ∑ ν ∈ hfin.toFinset, p ν = LinearMap.id :=
     (sub_eq_zero.mp (_root_.GlobalTheory.CompanionTheory.RealCountG.intertwiner_eq_zero_of_highest H H G G hg hh _ hcomm hhigh)).symm
   refine ⟨hfin.toFinset, fun ν hν => ((hF ν).1 hν).1, fun ν hν hνF => ?_, ?_⟩
@@ -1474,8 +1461,7 @@ theorem trOn_transport {M N : Type*} [AddCommGroup M] [Module ℂ M] [AddCommGro
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact (hD x).1 hx
-    · intro hy
-      exact ⟨e.symm y, (hD _).2 (by simpa using hy), by simp⟩
+    · exact fun hy => ⟨e.symm y, (hD _).2 (by simpa using hy), by simp⟩
   delta trOn
   rw [dite_eq_left hf, dite_eq_left hg, ← LinearMap.trace_conj' (f.restrict hf) (e.ofSubmodules D D' hmap)]
   congr 1

@@ -87,7 +87,7 @@ theorem dominanceOrder_add_negative_root {n : ℕ} (ν : Fin n → ℤ) {c d : F
     · omega
     · omega
   · simp only [Pi.add_apply, rootW, Pi.sub_apply, Finset.sum_add_distrib, Finset.sum_sub_distrib, Pi.single_apply,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     omega
 
 theorem lowering_weight_dominated {n : ℕ} {K V : Type*} [Field K] [AddCommGroup V] [Module K V] (E : GLOps n K V) (hR : SatisfiesGLRelations E)
@@ -118,15 +118,13 @@ theorem isotypic_le_restrictSupport_dominated (mu : Fin n → ℤ) :
   intro m hm
   have := (monomials_are_weight_vectors R (Fin N) LL n S).2 ν _ hmem m (by simpa using hm)
   change DomLE (wtS LL S m) mu
-  rw [this]
-  exact hd
+  rwa [this]
 
 theorem dominant_of_isHighestWeightVector (D : Formalism.BasicNotions.D7) (mu : Fin n → ℤ) (v : MvPolynomial (Fin N × Fin n) R)
     (hv : IsHWV (glOps R n LL S) mu v) : Dominant mu := by
   by_cases h0 : n = 0
   · subst h0
-    intro a
-    exact a.elim0
+    exact fun a => a.elim0
   · have : NeZero n := ⟨h0⟩
     exact Formalism.MainNotions.G.PolBridge.hwv_dominant D (weight_condition_from_integral_form D) LL S mu v hv
 
@@ -187,8 +185,7 @@ theorem weights_generated_dominated (D : Formalism.BasicNotions.D7) {e : (Fin n 
     · have hG : e mu G ≠ 0 := fun hz => h0 (hker mu hz)
       have h1 := isotypic_le_restrictSupport_dominated LL S mu (sys.mem mu x)
       rw [MvPolynomial.mem_restrictSupport_iff] at h1 ⊢
-      intro m hm
-      exact ⟨mu, h mu hG, h1 hm⟩
+      exact fun m hm => ⟨mu, h mu hG, h1 hm⟩
   obtain ⟨m, hm⟩ := MvPolynomial.support_nonempty.2 hx0
   have h2 := (MvPolynomial.mem_restrictSupport_iff R).1 hxZ (by simpa using hm : m ∈ (x.support : Set _))
   obtain ⟨lam, hlam, hle⟩ := h2
@@ -227,8 +224,7 @@ theorem standardWord_mem_multihomogeneous (R : Type) [CommRing R] {n N : ℕ} {L
   rw [← h1, ← restPol R n N B] at h2
   obtain ⟨y, hy, hyx⟩ := h2
   have : y = Psi R P.mu I := rename_injective _ (iv_inj N n) hyx
-  rw [← this]
-  exact hy
+  rwa [← this]
 
 theorem lower_set_types_span (D : Formalism.BasicNotions.D7) : LowerSetTypesSpan := by
   intro F _ _ N n LL B i pi hpi
@@ -267,9 +263,9 @@ theorem lie_polarizationDer_eq_zero_of_disjoint (S T : Set (Fin N)) (hd : ∀ l,
   rw [Derivation.commutator_apply]
   by_cases hS : l ∈ S
   · have hT := hd l hS
-    simp only [isoPolDer_X, hS, hT, if_true, if_false, map_zero]
+    simp only [isoPolDer_X, hS, hT, ite_true, ite_false, map_zero]
     split_ifs <;> simp [isoPolDer_X, hT]
-  · simp only [isoPolDer_X, hS, if_false, map_zero]
+  · simp only [isoPolDer_X, hS, ite_false, map_zero]
     split_ifs <;> simp [isoPolDer_X, hS]
 
 theorem glAct_commute_of_disjoint (S T : Set (Fin N)) (hd : ∀ l, l ∈ S → l ∉ T) (a b c d : Fin n)

@@ -33,8 +33,7 @@ theorem exists_unitary_of_gram {k : ℕ} {M : Type*} [AddCommGroup M] [Module �
     intro p hp
     rw [LinearMap.mem_ker] at hp ⊢
     have h2 := hab p p
-    rw [hp, inner_zero_left, eq_comm, inner_self_eq_zero] at h2
-    exact h2
+    rwa [hp, inner_zero_left, eq_comm, inner_self_eq_zero] at h2
   let g : LinearMap.range a →ₗ[ℂ] EuclideanSpace ℂ (Fin k) :=
     (LinearMap.ker a).liftQ b hker ∘ₗ (LinearMap.quotKerEquivRange a).symm.toLinearMap
   have hg : ∀ p, g ⟨a p, LinearMap.mem_range_self a p⟩ = b p := by
@@ -49,8 +48,7 @@ theorem exists_unitary_of_gram {k : ℕ} {M : Type*} [AddCommGroup M] [Module �
   have hF : ∀ p, F (a p) = b p := by
     intro p
     have := LinearIsometry.extend_apply (g.isometryOfInner hgi) ⟨a p, LinearMap.mem_range_self a p⟩
-    rw [LinearMap.coe_isometryOfInner, hg] at this
-    exact this
+    rwa [LinearMap.coe_isometryOfInner, hg] at this
   let ψ : Matrix (Fin k) (Fin k) ℂ :=
     LinearMap.toMatrix' (T.symm.toLinearMap ∘ₗ F.toLinearMap ∘ₗ T.toLinearMap)
   have hψ : ∀ u, ψ *ᵥ u = T.symm (F (T u)) := by
@@ -70,8 +68,7 @@ theorem exists_unitary_of_gram {k : ℕ} {M : Type*} [AddCommGroup M] [Module �
     by_cases hij : i = j
     · subst hij
       simp [Pi.single_apply]
-    · simp [Pi.single_apply, hij]
-      exact Ne.symm hij
+    · simpa [Pi.single_apply, hij] using Ne.symm hij
   · rw [hψ]
     have := hF p
     simp only [a, b, LinearMap.comp_apply, LinearEquiv.coe_coe] at this

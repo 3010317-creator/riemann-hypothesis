@@ -86,8 +86,7 @@ theorem entries_mem_of_mem_stabGL (h : GL n A)
     · exact ⟨0, by simp [hk]⟩
   have h2 := ((hh (Pi.single j 1)).1 hmem)
   rw [mem_stdLat_iff'] at h2
-  have h3 := h2 i
-  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h3
+  simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using h2 i
 
 theorem coe_bc (φ : R →+* A) (u : GL n R) :
     ((bc (n := n) φ u : GL n A) : Matrix n n A) = (u : Matrix n n R).map φ := by
@@ -120,8 +119,7 @@ theorem stabilizer_standard_lattice : Formalism.UG.StabStd := by
       exact Units.inv_mul g
     refine ⟨⟨M, M', h1, h2⟩, ?_⟩
     ext : 1
-    rw [coe_bc]
-    exact hM
+    rwa [coe_bc]
   · rintro ⟨u, rfl⟩
     intro x
     constructor

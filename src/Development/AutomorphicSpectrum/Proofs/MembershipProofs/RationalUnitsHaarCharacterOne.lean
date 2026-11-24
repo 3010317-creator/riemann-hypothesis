@@ -96,8 +96,7 @@ theorem UpperTheory.Reformulated.B.Qo7.eq_zero_of_orth :
   let L0 : C(K, ℂ) →ₗ[ℂ] ℂ :=
     { toFun := fun a => ∫ x, a x * f x ∂μ
       map_add' := fun a b => by
-        simp only [ContinuousMap.add_apply, add_mul]
-        exact integral_add (hint' a) (hint' b)
+        simpa only [ContinuousMap.add_apply, add_mul] using integral_add (hint' a) (hint' b)
       map_smul' := fun c a => by
         simp only [ContinuousMap.smul_apply, smul_eq_mul, mul_assoc, RingHom.id_apply]
         exact integral_const_mul c _ }
@@ -272,8 +271,7 @@ theorem exists_mean {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologi
         refine hpq (QuotientAddGroup.eq.mpr (hsep x y fun a ha => ?_))
         obtain ⟨a', rfl⟩ := hlift a (hS a ha)
         exact hc a' ha
-    · intro a ha
-      exact (hM (a * h)).symm.trans (h0 _ ha)
+    · exact fun a ha => (hM (a * h)).symm.trans (h0 _ ha)
 
 theorem exists_SB_one {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsTopologicalAddGroup X] [T2Space X]
     {h : X → ℂ} (hh : h ∈ SB X) (h0 : h 0 = 1) {K : Set X} (hK : IsCompact K) : ∃ g ∈ SB X, ∀ x ∈ K, g x = 1 := by
@@ -338,8 +336,7 @@ theorem exists_majorant {g : (κ → FiniteAdeleRing (𝓞 F) F) → ℂ} (hg : 
   have hc : g' c = 1 := h1 c ⟨c + d, subset_tsupport _ h0, -d, by simpa using ⟨x, hx, rfl⟩, by simp⟩
   have h2 : (1 + ‖a + b‖) ^ k * ‖f (a + b)‖ ≤ 2 ^ k * p := by
     have := SchwartzMap.one_add_le_sup_seminorm_apply (𝕜 := ℂ) (m := (k, 0)) (k := k) (n := 0) le_rfl le_rfl f (a + b)
-    rw [norm_iteratedFDeriv_zero] at this
-    exact this
+    rwa [norm_iteratedFDeriv_zero] at this
   have h3 : 1 + ‖a‖ ≤ (1 + |R|) * (1 + ‖a + b‖) := by
     have := norm_sub_le (a + b) b
     rw [add_sub_cancel_right] at this
@@ -549,7 +546,7 @@ theorem exists_avg {F : Type} [Field F] {A : Type} [CommRing A] [Algebra F A] {�
       obtain ⟨c, hc'⟩ := hann ((-x + y) i) fun a => by
         have h1 := hxy _ ⟨Pi.single i a, rfl⟩
         simp only [Pi.single_apply, apply_ite (algebraMap F A), map_zero, mul_ite, mul_zero, Finset.sum_ite_eq',
-          Finset.mem_univ, if_true] at h1
+          Finset.mem_univ, ite_true] at h1
         rw [Pi.add_apply, Pi.neg_apply, add_mul, neg_mul, AddChar.map_add_eq_mul, AddChar.map_neg_eq_inv, h1]
         exact inv_mul_cancel₀ (norm_ne_zero_iff.mp (by rw [hψ]; exact one_ne_zero))
       exact ⟨c, hc'.symm⟩

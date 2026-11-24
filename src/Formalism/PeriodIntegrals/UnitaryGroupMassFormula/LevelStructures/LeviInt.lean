@@ -147,13 +147,11 @@ theorem witt_decomposition_unique {r : ℕ} (P : Frame E n r) (hee : ∀ a b, hE
       rw [hermForm_rational_vectors, hee, map_zero, mul_zero]
     have h3 : hR R σ J (ratV (F := F) R (P.e k)) c = d k := by
       rw [hd, hermForm_sum_right_alt, Finset.sum_eq_single k]
-      · rw [hermForm_rational_vectors, hef, if_pos rfl, map_one, mul_one]
+      · rw [hermForm_rational_vectors, hef, ite_eq_left rfl, map_one, mul_one]
       · intro i _ hik
-        rw [hermForm_rational_vectors, hef, if_neg (Ne.symm hik), map_zero, mul_zero]
-      · intro hk
-        exact absurd (Finset.mem_univ k) hk
-    rw [hwb, hermForm_add_right_bis, h2, h3, zero_add] at h1
-    exact h1
+        rw [hermForm_rational_vectors, hef, ite_eq_right (Ne.symm hik), map_zero, mul_zero]
+      · exact fun hk => absurd (Finset.mem_univ k) hk
+    rwa [hwb, hermForm_add_right_bis, h2, h3, zero_add] at h1
   have hc0 : c = 0 := by
     rw [hd]
     exact Finset.sum_eq_zero fun i _ => by rw [hd0 i, zero_smul]
@@ -163,13 +161,11 @@ theorem witt_decomposition_unique {r : ℕ} (P : Frame E n r) (hee : ∀ a b, hE
       rw [hermForm_sub_right, (hw k).2, (hb k).2, sub_self]
     have h3 : hR R σ J (ratV (F := F) R (P.f k)) (a - x) = g k := by
       rw [hg, hermForm_sum_right_alt, Finset.sum_eq_single k]
-      · rw [hermForm_rational_vectors, hfe, if_pos rfl, map_one, mul_one]
+      · rw [hermForm_rational_vectors, hfe, ite_eq_left rfl, map_one, mul_one]
       · intro i _ hik
-        rw [hermForm_rational_vectors, hfe, if_neg (Ne.symm hik), map_zero, mul_zero]
-      · intro hk
-        exact absurd (Finset.mem_univ k) hk
-    rw [hwb, hc0, add_zero, h3] at h1
-    exact h1
+        rw [hermForm_rational_vectors, hfe, ite_eq_right (Ne.symm hik), map_zero, mul_zero]
+      · exact fun hk => absurd (Finset.mem_univ k) hk
+    rwa [hwb, hc0, add_zero, h3] at h1
   have hax0 : a - x = 0 := by
     rw [hg]
     exact Finset.sum_eq_zero fun i _ => by rw [hg0 i, zero_smul]

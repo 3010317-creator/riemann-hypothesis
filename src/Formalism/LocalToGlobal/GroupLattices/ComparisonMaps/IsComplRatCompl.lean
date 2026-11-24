@@ -113,14 +113,13 @@ private theorem li_core_lemma_2 {κ : Type*} (c0 : V0 →ₛₗ[e] W0) (b : Modu
 
   rw [map_sum, map_zero] at h2
   simp only [map_smul, extK_apply] at h2
-  rw [Finset.sum_eq_single k (fun i _ hik => by rw [hφv, if_neg hik]; simp [c1])
-    (fun h => absurd hk h), hφv, if_pos rfl] at h2
+  rw [Finset.sum_eq_single k (fun i _ hik => by rw [hφv, ite_eq_right hik]; simp [c1])
+    (fun h => absurd hk h), hφv, ite_eq_left rfl] at h2
   simpa [c1] using h2
 
 theorem li_basis (c0 : V0 →ₛₗ[e] W0) (b : Module.Basis ι LL V0)
     (hli : LinearIndependent Kf fun i => c0 (b i)) (b' : Module.Basis ι' LL V0) :
-    LinearIndependent Kf fun i => c0 (b' i) := by
-  exact li_core_lemma_2 c0 b hli b' b'.linearIndependent
+    LinearIndependent Kf fun i => c0 (b' i) := li_core_lemma_2 c0 b hli b' b'.linearIndependent
 
 alias li_of_li := _root_.Formalism.L2.G.Cmp.li_core_lemma_2
 

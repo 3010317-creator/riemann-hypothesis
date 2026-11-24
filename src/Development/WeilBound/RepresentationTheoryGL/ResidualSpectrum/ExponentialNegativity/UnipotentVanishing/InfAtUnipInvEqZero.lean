@@ -173,7 +173,7 @@ theorem prod_indicator (n r : ℕ) (hr : r ≤ n) (E : ℝ) :
       = if (i : ℕ) < r then E ^ (n - r) else 1 := by
     intro i
     by_cases hi : (i : ℕ) < r
-    · simp only [hi, true_and, if_true]
+    · simp only [hi, true_and, ite_true]
       rw [Finset.prod_ite, Finset.prod_const, Finset.prod_const_one, mul_one, card_ge n r hr]
     · simp [hi]
   simp only [inner]
@@ -221,14 +221,11 @@ theorem prod_entrywise_le : ∀ (n r d : ℕ), r ≤ n → ∀ (C β t : ℝ), 0
       ≤ ∏ i : Fin n, ∏ j : Fin n, ((C * (1 + β) ^ d) *
           (if (i : ℕ) < r ∧ r ≤ (j : ℕ) then Real.exp ((d : ℝ) * t) else 1)) := by
     apply Finset.prod_le_prod₀
-    · intro i _
-      exact Finset.prod_nonneg (fun j _ => hnn i j)
+    · exact fun i _ => Finset.prod_nonneg (fun j _ => hnn i j)
     · intro i _
       apply Finset.prod_le_prod₀
-      · intro j _
-        exact hnn i j
-      · intro j _
-        exact factor_le d C β t _ hC hβ ht
+      · exact fun j _ => hnn i j
+      · exact fun j _ => factor_le d C β t _ hC hβ ht
   refine step.trans (le_of_eq ?_)
   simp only [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
   rw [prod_indicator n r hr, ← Real.exp_nat_mul, ← pow_mul]
@@ -237,8 +234,7 @@ theorem prod_entrywise_le : ∀ (n r d : ℕ), r ≤ n → ∀ (C β t : ℝ), 0
   have : (((r * (n - r) : ℕ) : ℝ)) * ((d : ℝ) * t) = (d : ℝ) * ((r : ℝ) * ((n : ℝ) - r)) * t := by
     rw [Nat.cast_mul, Nat.cast_sub hr]
     ring
-  rw [this]
-  rw [hp]
+  rw [this, hp]
 
 end GlobalTheory.CompanionTheory.EntrywiseCount
 end -- clump:auto
@@ -441,10 +437,10 @@ theorem exists_inf_bound (r : ℕ) {D : Set (UPos n r → 𝔸[K])} {Q : Set (Ad
       exact hm (infAt_unip_inv_eq_zero w r Y m j h)
     rw [← Real.exp_sub, hLdef]
     by_cases hij : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-    · rw [if_pos hij]
+    · rw [ite_eq_left hij]
       refine Real.exp_le_exp.2 ?_
       split_ifs <;> linarith
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       refine Real.exp_le_one_iff.2 ?_
       rcases hl' with rfl | ⟨h1, h2⟩ <;> rcases hm' with rfl | ⟨h3, h4⟩ <;> split_ifs <;>
         first | linarith | (exfalso; omega)

@@ -103,8 +103,7 @@ theorem exists_cover_point (X : Scheme.{0}) [CompactSpace X] (o : X) (ho : IsClo
         X.isBasis_affineOpens.exists_subset_of_mem_open hx' ho.isOpen_compl
       exact Set.mem_iUnion.2 ⟨⟨W, hW, fun h => hWo h rfl⟩, hxW⟩)
   refine ⟨s.card, Fin.cons V₀ fun j => (s.equivFin.symm j).1.1, fun j => ?_, ?_, hoV, fun j hj => ?_⟩
-  · refine Fin.cases hV₀ (fun j => ?_) j
-    exact (s.equivFin.symm j).1.2.1
+  · exact Fin.cases hV₀ (fun j => (s.equivFin.symm j).1.2.1) j
   · refine top_le_iff.1 fun x _ => TopologicalSpace.Opens.mem_iSup.2 ?_
     by_cases hx : x ∈ V₀
     · exact ⟨0, hx⟩
@@ -116,13 +115,7 @@ theorem exists_cover_point (X : Scheme.{0}) [CompactSpace X] (o : X) (ho : IsClo
 
 theorem isAffineOpen_preimage_inf {X Y : Scheme.{0}} [X.IsSeparated] (g : Y ⟶ X) {D : X.Opens}
     (hD : IsAffineOpen D) {V : Y.Opens} (hV : IsAffineOpen V) : IsAffineOpen (g ⁻¹ᵁ D ⊓ V) := by
-  have : IsAffine V := hV
-  have : IsAffineHom (V.ι ≫ g) :=
-    haveI : IsAffineHom ((V.ι ≫ g) ≫ terminal.from X) := inferInstance
-    IsAffineHom.of_comp _ (terminal.from X)
-  have h := (hD.preimage (V.ι ≫ g)).image_of_isOpenImmersion V.ι
-  rwa [Scheme.Hom.comp_preimage, Scheme.Hom.image_preimage_eq_opensRange_inf,
-    Scheme.Opens.opensRange_ι, inf_comm] at h
+  exact GlobalTheory.AbLaw.isAffineOpen_preimage_inf_of_isSeparated g hD hV
 
 theorem acyclic_cechLB_of_acyclic {R R' : Type} [CommRing R] [CommRing R'] {Y : Scheme.{0}}
     (f : Y ⟶ Spec (CommRingCat.of R)) (f' : Y ⟶ Spec (CommRingCat.of R')) (M : LB Y) {κ : Type}
@@ -140,8 +133,7 @@ theorem acyclic_cechLB_of_acyclic {R R' : Type} [CommRing R] [CommRing R'] {Y : 
   | succ n =>
     have h₀ := (cechComplex_exactAt_succ_iff (secCube f M D) n).1 (h (n + 1))
     refine (cechComplex_exactAt_succ_iff (secCube f' M D) n).2 ?_
-    rw [e, e]
-    exact h₀
+    rwa [e, e]
 
 theorem nonempty_cech_sliceFst_iso {R : Type} [CommRing R] {Y : Scheme.{0}}
     (f : Y ⟶ Spec (CommRingCat.of R)) (M : LB Y) {κ₁ κ₂ : Type} [LinearOrder κ₁] [LinearOrder κ₂]

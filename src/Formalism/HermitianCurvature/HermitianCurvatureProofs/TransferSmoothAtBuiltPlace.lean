@@ -112,19 +112,10 @@ lemma ps_conj : PS TT (fun ζ => conj ζ) := ⟨0, MvPolynomial.X 1, fun ζ _ =>
 lemma ps_sig : PS TT (fun ζ => sig TT ζ) := ⟨0, MvPolynomial.X 2, fun ζ _ => by simp⟩
 
 lemma ps_add {f g : ℂ → ℂ} (hf : PS TT f) (hg : PS TT g) : PS TT (fun ζ => f ζ + g ζ) := by
-  obtain ⟨m, p, hp⟩ := hf
-  obtain ⟨n, q, hq⟩ := hg
-  refine ⟨m + n, (MvPolynomial.X 0 * MvPolynomial.X 1 - MvPolynomial.C (TT : ℂ)) ^ n * p + (MvPolynomial.X 0 * MvPolynomial.X 1 - MvPolynomial.C (TT : ℂ)) ^ m * q, fun ζ hζ => ?_⟩
-  rw [MvPolynomial.eval_add, MvPolynomial.eval_mul, MvPolynomial.eval_mul, MvPolynomial.eval_pow,
-    MvPolynomial.eval_pow, ← gg_eval, ← hp ζ hζ, ← hq ζ hζ]
-  ring
+  exact Formalism.FourierDecayAlt.P.CutMP.JA.SSn.Rep.Core.TC.PR.Asm.PS.add hf hg
 
 lemma ps_mul {f g : ℂ → ℂ} (hf : PS TT f) (hg : PS TT g) : PS TT (fun ζ => f ζ * g ζ) := by
-  obtain ⟨m, p, hp⟩ := hf
-  obtain ⟨n, q, hq⟩ := hg
-  refine ⟨m + n, p * q, fun ζ hζ => ?_⟩
-  rw [MvPolynomial.eval_mul, ← hp ζ hζ, ← hq ζ hζ]
-  ring
+  exact Formalism.FourierDecayAlt.P.CutMP.JA.SSn.Rep.Core.TC.PR.Asm.PS.mul hf hg
 
 lemma sig_sq {ζ : ℂ} (hζ : TT < Complex.normSq ζ) : sig TT ζ * sig TT ζ = gg TT ζ := by
   unfold Formalism.FourierDecayAlt.P.CutMP.JA.SSn.Rep.Core.TC.PR.gg Formalism.FourierDecayAlt.P.CutMP.JA.SSn.Rep.Core.TC.PR.sig
@@ -267,8 +258,8 @@ lemma inL_Su {a b : Fin (k + 1)} (ha : a ≠ Fin.last k) (hb : b ≠ Fin.last k)
   intro i
   unfold Su
   constructor
-  · rw [Matrix.single_apply, if_neg (fun h => hb h.2)]
-  · rw [Matrix.single_apply, if_neg (fun h => ha h.1)]
+  · rw [Matrix.single_apply, ite_eq_right (fun h => hb h.2)]
+  · rw [Matrix.single_apply, ite_eq_right (fun h => ha h.1)]
 
 lemma inL_zero : InL k (0 : Mb k) := fun _ => ⟨rfl, rfl⟩
 
@@ -333,8 +324,7 @@ lemma dec_0l : Dec k T T' (Su k 0 (Fin.last k)) := by
   have e3 : -(sZ T T' ζ / (kap T T')⁻¹) = (-1 : ℂ) * sig (T * T') ζ := by
     rw [sZ_eq T T' hT hT' ζ hζ]; field_simp
   rw [e1, e2, e3, ← nuI_eq, ← nu_eq] at key
-  rw [zero_smul, add_zero]
-  exact key
+  rwa [zero_smul, add_zero]
 
 lemma decomposition_lower_corner_unit : Dec k T T' (Su k (Fin.last k) 0) := by
   refine dec_mk _ (fun ζ => (-2⁻¹ : ℂ) * (ζ * (sig (T * T') ζ)⁻¹)) (fun ζ => (2⁻¹ : ℂ) * (ζ * (sig (T * T') ζ)⁻¹))
@@ -352,8 +342,7 @@ lemma decomposition_lower_corner_unit : Dec k T T' (Su k (Fin.last k) 0) := by
   have e3 : -(sZ T T' ζ / (kap T T')⁻¹) = (-1 : ℂ) * sig (T * T') ζ := by
     rw [sZ_eq T T' hT hT' ζ hζ]; field_simp
   rw [e2, e1, e3, ← nuI_eq, ← nu_eq] at key
-  rw [zero_smul, add_zero]
-  exact key
+  rwa [zero_smul, add_zero]
 
 lemma dec_ll : Dec k T T' (Su k (Fin.last k) (Fin.last k)) := by
   refine dec_mk _ (fun _ => 0) (fun _ => 1) (fun ζ => ζ) (fun ζ => (-1 : ℂ) * conj ζ) (Su k 0 0) (Su k 0 0)
@@ -364,8 +353,7 @@ lemma dec_ll : Dec k T T' (Su k (Fin.last k) (Fin.last k)) := by
   have e1 : -(wZ T T' ζ / (kap T T')⁻¹) = ζ := by rw [wZ_eq]; field_simp
   have e2 : star (wZ T T' ζ) / (kap T T')⁻¹ = (-1 : ℂ) * conj ζ := by rw [wZ_star]; field_simp
   rw [e1, e2, ← nuI_eq, ← nu_eq] at key
-  rw [zero_smul, zero_add, one_smul]
-  exact key
+  rwa [zero_smul, zero_add, one_smul]
 
 lemma dec_unit (a b : Fin (k + 1)) : Dec k T T' (Su k a b) := by
   by_cases ha : a = Fin.last k
@@ -421,12 +409,7 @@ variable {k r : ℕ}
 
 lemma Hpk_inv (k r : ℕ) : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv (Formalism.QuantumDeterminants.GBasic.Hpk_sq k r)
 
-lemma Hb_sq (k : ℕ) : Hb k * Hb k = 1 := by
-  unfold Formalism.QuantumDeterminants.Hb
-  rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> norm_num
+lemma Hb_sq (k : ℕ) : Hb k * Hb k = 1 := Formalism.FourierDecayAlt.P.TwoByOneBlock.Hb_sq
 
 private lemma Em_conjTranspose_eq_transpose : (Em k r)ᴴ = (Em k r)ᵀ := by
   ext i j
@@ -454,7 +437,7 @@ private lemma Hpk_wI_apply_left_eq_ite (j : Fin (2 * r + k + 1)) (m : Fin (k + 1
   have hH : (Hpk k r)ᴴ = Hpk k r := (Formalism.QuantumDeterminants.hpkFacts k r).1
   rw [← hH, Matrix.conjTranspose_apply, Hpk_apply_wI_right_eq_ite]
   by_cases h : j = wI k r m
-  · simp only [h, if_true, Formalism.QuantumDeterminants.Hb, Matrix.diagonal_apply_eq]
+  · simp only [h, ite_true, Formalism.QuantumDeterminants.Hb, Matrix.diagonal_apply_eq]
     split_ifs <;> simp
   · simp [h]
 
@@ -978,21 +961,21 @@ theorem kl_decomp {Z : Q.Mx k r} (h : Kl Z) :
         ⟨fun e => Fin.ext (by have := congrArg Fin.val e; simp [wI] at this; omega), fun e => e ▸ rfl⟩
       simp only [inj]
       rw [Finset.sum_eq_single i (fun x _ hx => by
-        rw [Finset.sum_eq_zero]; intro y _; rw [if_neg]; rintro ⟨h1, _⟩; exact hx h1) (by simp)]
-      rw [Finset.sum_eq_single j (fun y _ hy => by rw [if_neg]; rintro ⟨_, h2⟩; exact hy h2) (by simp)]
+        rw [Finset.sum_eq_zero]; intro y _; rw [ite_eq_right]; rintro ⟨h1, _⟩; exact hx h1) (by simp)]
+      rw [Finset.sum_eq_single j (fun y _ hy => by rw [ite_eq_right]; rintro ⟨_, h2⟩; exact hy h2) (by simp)]
       simp
     · rw [(kl_entry_col h _ c).1]
       refine (Finset.sum_eq_zero fun x _ => Finset.sum_eq_zero fun y _ => ?_).symm
-      rw [if_neg]; rintro ⟨_, h2⟩; exact wI_ne_eI y c h2
+      rw [ite_eq_right]; rintro ⟨_, h2⟩; exact wI_ne_eI y c h2
     · rw [(kl_entry_col h _ c).2]
       refine (Finset.sum_eq_zero fun x _ => Finset.sum_eq_zero fun y _ => ?_).symm
-      rw [if_neg]; rintro ⟨_, h2⟩; exact wI_ne_esI y c h2
+      rw [ite_eq_right]; rintro ⟨_, h2⟩; exact wI_ne_esI y c h2
   · rw [(kl_entry_row h q a).1]
     refine (Finset.sum_eq_zero fun x _ => Finset.sum_eq_zero fun y _ => ?_).symm
-    rw [if_neg]; rintro ⟨h1, _⟩; exact wI_ne_eI x a h1
+    rw [ite_eq_right]; rintro ⟨h1, _⟩; exact wI_ne_eI x a h1
   · rw [(kl_entry_row h q a).2]
     refine (Finset.sum_eq_zero fun x _ => Finset.sum_eq_zero fun y _ => ?_).symm
-    rw [if_neg]; rintro ⟨h1, _⟩; exact wI_ne_esI x a h1
+    rw [ite_eq_right]; rintro ⟨h1, _⟩; exact wI_ne_esI x a h1
 
 end WA
 
@@ -1054,8 +1037,7 @@ theorem rc_smul (hL : RcLin) {D : Set (Q.Mx k r)} (hD : IsOpen D) {f : Q.Mx k r 
     (hf : Q.SmoothLev k r (Fin.last r) D f) {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r) ∩ D)
     (a : ℂ) {Z : Q.Mx k r} (hZ : GLc k r Z) : Rc (a • Z) f g = a • Rc Z f g := by
   have := hL k r E D f hD hf g hg a Z 0 hZ (glc_of_kl kl_zero)
-  rw [add_zero, rc_zeroZ, add_zero] at this
-  exact this
+  rwa [add_zero, rc_zeroZ, add_zero] at this
 
 theorem rc_lincomb (hL : RcLin) {D : Set (Q.Mx k r)} (hD : IsOpen D) {f : Q.Mx k r → E}
     (hf : Q.SmoothLev k r (Fin.last r) D f) {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r) ∩ D)
@@ -1358,8 +1340,7 @@ theorem word_polynomial_vector_holds : WordPSVOfCut := by
       rw [wordR_cons]
       conv_rhs => rw [hZdec]
       rw [rc_lincomb hLin hDo hF hμ _ _ _ fun p _ => glc_of_kl (kl_single p.1 p.2)]
-  intro w hw
-  exact WA.psv_congr (fun ζ _ => by simp only [hmu]) (main _ w rfl hw)
+  exact fun w hw => WA.psv_congr (fun ζ _ => by simp only [hmu]) (main _ w rfl hw)
 
 end
 
@@ -1463,8 +1444,7 @@ theorem finset_sum_list {ι α M : Type*} [AddCommMonoid M] (s : Finset ι) (l :
   | cons a l ih => simp [Finset.sum_add_distrib, ih]
 
 theorem sum_toList_map {ι M : Type*} [AddCommMonoid M] (s : Finset ι) (F : ι → M) :
-    (s.toList.map F).sum = ∑ i ∈ s, F i := by
-  exact Finset.sum_map_toList s F
+    (s.toList.map F).sum = ∑ i ∈ s, F i := Finset.sum_map_toList s F
 
 theorem coeff_listSum {σ' : Type*} {α : Type*} (m : σ' →₀ ℕ) (l : List α) (F : α → MvPolynomial σ' ℂ) :
     AddMonoidAlgebra.coeff ((l.map F).sum) m = (l.map fun a => AddMonoidAlgebra.coeff (F a) m).sum := by
@@ -1485,8 +1465,7 @@ theorem taylor_coeff_top (p : Polynomial ℂ) (c : ℂ) (d : ℕ) (h : p.natDegr
       Polynomial.coeff_eq_zero_of_natDegree_lt (by rwa [Polynomial.natDegree_taylor])]
   · subst h
     have := Polynomial.leadingCoeff_taylor c p
-    rw [Polynomial.leadingCoeff, Polynomial.leadingCoeff, Polynomial.natDegree_taylor] at this
-    exact this
+    rwa [Polynomial.leadingCoeff, Polynomial.leadingCoeff, Polynomial.natDegree_taylor] at this
 
 theorem single_pair_finsupp_eq_iff (d l a b : ℕ) :
     (Finsupp.single (0 : Fin 2) d + Finsupp.single (1 : Fin 2) l =
@@ -1549,7 +1528,7 @@ theorem core_eval (hD : FExpDeg) (hlen : ∀ σ, (G σ).length = t)
   rw [e]
   by_cases hl : tm.2.length ≤ j
   · simp [hl]
-  · simp only [hl, decide_false, Bool.false_eq_true, if_false]
+  · simp only [hl, decide_false, Bool.false_eq_true, ite_false]
     rw [hc, Polynomial.coeff_eq_zero_of_natDegree_lt (by rw [Polynomial.natDegree_taylor]; omega)]
     simp
 

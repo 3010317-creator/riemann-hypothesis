@@ -76,8 +76,7 @@ theorem det_mem_unitsOf {K : Type} [CommRing K] (O : Subring K) {n : ℕ} (g : G
 
 theorem det_bc {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) {n : ℕ} (g : GL (Fin n) A) :
     Matrix.GeneralLinearGroup.det (bc φ g) = Units.map φ.toMonoidHom (Matrix.GeneralLinearGroup.det g) := by
-  apply Units.ext
-  exact (RingHom.map_det φ (g : Matrix (Fin n) (Fin n) A)).symm
+  exact Units.ext (RingHom.map_det φ (g : Matrix (Fin n) (Fin n) A)).symm
 
 theorem quot_calc {Q : Type} [CommGroup Q] (U : Subgroup Q) (Y dB dB' dg dk : Q) (b k : ℕ)
     (h1 : dB'⁻¹ * Y * dB ∈ U) (h2 : dB'⁻¹ * (Y * dk) * dB ∈ U) (h : Y ^ (b + k) = dg * Y ^ b * dk) :
@@ -148,8 +147,7 @@ theorem epsU_ph (S : StepLevel F E σ J T f bad) (A : LocAt F E n G) (hp : p.Pri
   simp only [map_mul, map_pow, bc_ph_incl] at h'
   have := quot_calc _ _ _ _ _ _ b k k1 k2 h'
   rw [det_bc, det_bc, det_bc] at this
-  rw [epsU, map_mul, map_pow, map_mul, map_inv, map_inv]
-  exact this
+  rwa [epsU, map_mul, map_pow, map_mul, map_inv, map_inv]
 
 end Gen
 

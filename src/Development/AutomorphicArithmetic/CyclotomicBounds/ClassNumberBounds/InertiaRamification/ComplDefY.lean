@@ -174,8 +174,7 @@ theorem existsUnique_padic_hom :
     rw [Ideal.map_span, Set.image_singleton, map_natCast]
   have : w.asIdeal.LiesOver u.asIdeal := by
     refine ⟨u.isMaximal.eq_of_le (Ideal.comap_ne_top _ w.isPrime.ne_top) ?_⟩
-    rw [hu, Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
-    exact hl
+    rwa [hu, Ideal.span_singleton_le_iff_mem, Ideal.mem_comap, map_natCast]
   let F : ℚ_[l] →+* w.adicCompletion E :=
     (KStar.Choice.complMap u w).comp (Padic.adicCompletionEquiv (𝓞 ℚ) p).toRingEquiv.toRingHom
   have hF : Continuous F :=
@@ -184,8 +183,7 @@ theorem existsUnique_padic_hom :
     intro x
     refine KStar.Choice.complMap_mem u w ?_
     have := (PadicInt.adicCompletionIntegersEquiv (𝓞 ℚ) p x).2
-    rw [PadicInt.coe_adicCompletionIntegersEquiv_apply] at this
-    exact this
+    rwa [PadicInt.coe_adicCompletionIntegersEquiv_apply] at this
   let f : ℤ_[l] →+* w.adicCompletionIntegers E :=
     (F.comp PadicInt.Coe.ringHom).codRestrict (w.adicCompletionIntegers E) hm
   refine ⟨f, F, fun x y h => ?_, hF, fun x => rfl, fun f' => ?_, fun F' hF' => ?_⟩
@@ -194,8 +192,7 @@ theorem existsUnique_padic_hom :
         maximalIdeal (w.adicCompletionIntegers E) := by
       have h1 := cdy_comap w 1
       rw [pow_one, pow_one] at h1
-      rw [← h1, Ideal.mem_comap, map_natCast] at hl
-      exact hl
+      rwa [← h1, Ideal.mem_comap, map_natCast] at hl
     refine RingHom.ext fun x => ?_
     rw [← sub_eq_zero, ← Ideal.mem_bot,
       ← Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal (w.adicCompletionIntegers E))

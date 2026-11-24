@@ -314,8 +314,7 @@ theorem cyc_apply_le (hc : ∀ i j, i ≠ j → ∀ g h, a i g * a j h = a j h *
   intro v hv
   obtain ⟨β, hβ, rfl⟩ := mem_cyc.1 hv
   rw [Submodule.mem_map]
-  refine ⟨β w, mem_cyc.2 ⟨β, hβ, rfl⟩, ?_⟩
-  exact LinearMap.congr_fun (commute_alg hc hij hα hβ).eq w
+  exact ⟨β w, mem_cyc.2 ⟨β, hβ, rfl⟩, LinearMap.congr_fun (commute_alg hc hij hα hβ).eq w⟩
 
 theorem eq_cyc_of_min [Fintype ι] [FiniteDimensional ℂ W]
     (hc : ∀ i j, i ≠ j → ∀ g h, a i g * a j h = a j h * a i g) {w₀ : W}
@@ -350,8 +349,7 @@ theorem absIrr_of_irr {K : Type} [AddCommGroup K] [Module ℂ K] [FiniteDimensio
     have h2 := congrArg (b g) hx
     simp only [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, LinearMap.comp_apply,
       map_sub, map_smul, map_zero] at hx h h2 ⊢
-    rw [h]
-    exact h2
+    rwa [h]
   rcases hb _ hstab with h | h
   · exfalso
     obtain ⟨v, hv⟩ := hcT.exists_hasEigenvector
@@ -366,8 +364,7 @@ theorem absIrr_of_irr {K : Type} [AddCommGroup K] [Module ℂ K] [FiniteDimensio
     have hx : x ∈ LinearMap.ker (T - c • LinearMap.id) := by
       rw [h]
       exact Submodule.mem_top
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at hx
-    exact hx
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at hx
 
 end Cyclic
 
@@ -398,8 +395,7 @@ theorem prodAt_erase_commute [DecidableEq ι] (x : ∀ i, cyc a i w₀) (i : ι)
     (hα : α ∈ alg a i) : Commute α (prodAt hc s x (Finset.univ.erase i)) := by
   unfold prodAt
   apply Finset.noncommProd_commute
-  intro j hj
-  exact commute_alg hc (Finset.ne_of_mem_erase hj).symm hα (s j (x j)).2
+  exact fun j hj => commute_alg hc (Finset.ne_of_mem_erase hj).symm hα (s j (x j)).2
 
 variable (hs : ∀ i y, (s i y : Module.End ℂ W) w₀ = y)
 include hs
@@ -471,8 +467,7 @@ theorem tensor_decomp : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (W : Type)
     fun i => (ev a i w₀).rangeRestrict.exists_rightInverse_of_surjective (LinearMap.range_rangeRestrict _)
   choose s hs0 using hsec
   have hs : ∀ i y, (s i y : Module.End ℂ W) w₀ = y := by
-    intro i y
-    exact congrArg Subtype.val (LinearMap.congr_fun (hs0 i) y)
+    exact fun i y => congrArg Subtype.val (LinearMap.congr_fun (hs0 i) y)
   have hirr_i : ∀ i, ∀ N : Submodule ℂ (cyc a i w₀), (∀ g, ∀ x ∈ N, res a i w₀ g x ∈ N) → N = ⊥ ∨ N = ⊤ := by
     intro i N hN
     by_cases hN0 : N = ⊥
@@ -589,7 +584,7 @@ theorem coefTensor : CoefTensor := by
   have hone : ∀ τ, atTau θ V τ 1 = 1 := fun τ => GlobalTheory.PointAtPlaceHom.atTau_one hθ V τ
   let π : ∀ τ, Matrix (Fin V.rank) (Fin V.rank) ℂ → Module.End ℂ (X τ) := fun τ g =>
     if hg : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ) then b τ ⟨g, hg⟩ else 1
-  have hπ : ∀ τ g (hg : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)), π τ g = b τ ⟨g, hg⟩ := fun τ g hg => dif_pos hg
+  have hπ : ∀ τ g (hg : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)), π τ g = b τ ⟨g, hg⟩ := fun τ g hg => dite_eq_left hg
   refine ⟨X, i1, i2, i3, π, e, fun τ => ⟨⟨?_, ?_⟩, ?_, ?_⟩, ?_⟩
   ·
     rw [hπ τ 1 (GlobalTheory.PointAtPlaceHom.one_mem_UH _)]
@@ -987,8 +982,7 @@ theorem setIntegral_mul_right {B : HSp D} {ρ : ℕ} {e : Matrix (Fin B.rank) (F
     refine DiscreteTopology.of_continuous_injective
       (f := fun γ : NFlagQ B e => (⟨γ.1.1, γ.2⟩ : GQ B)) ?_ ?_
     · exact Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
-    · intro a b hab
-      exact Subtype.ext (Subtype.ext (congrArg (fun x : GQ B => (x : GA D B)) hab))
+    · exact fun a b hab => Subtype.ext (Subtype.ext (congrArg (fun x : GQ B => (x : GA D B)) hab))
   obtain ⟨K, hK, hcov⟩ := (GlobalTheory.Mem.UnipCocompact.radicals_cocompact D B ρ e he).1
   have hcov' : ∀ x : NFlag B e, ∃ s ∈ NFlagQ B e, s * x ∈ K := fun x => by
     obtain ⟨γ, hγ, k, hk, e⟩ := hcov x

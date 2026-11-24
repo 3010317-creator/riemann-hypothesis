@@ -79,8 +79,7 @@ theorem xiTop_invariant : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Cha
       have h2 := hy₀ P.1 (Finset.mem_union_right _ P.2) _ h1
       have h3 : (frsF sel mu p' P).symm (y₀ (frsF sel mu p P v)) ∈ stdAt X.E _ P.1 := by
         refine (frsF_mem p' P _).1 ?_
-        rw [LinearEquiv.apply_symm_apply]
-        exact h2
+        rwa [LinearEquiv.apply_symm_apply]
       have h4 := (mem_localization_standardLattice _ _).1 h3 l
       obtain ⟨c', hc'⟩ : qOf P.1 ^ cst.B ∣ c :=
         Dvd.dvd.mul_left (pow_dvd_pow_of_dvd (Finset.dvd_prod_of_mem (fun Q : rowSG Pr sel mu => qOf Q.1) (Finset.mem_univ P)) _) _
@@ -100,8 +99,7 @@ theorem xiTop_invariant : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Cha
       have h1 := hz (LinearMap.funLeft X.E X.E (Fin.castAdd (cOf R (m2 + 1))) (Pi.single s 1)) fun l' =>
         GlobalTheory.TopInv.single_int s _
       have h2 := GlobalTheory.TopInv.intAt_div_pow_le hq0 hc.B_pos (h1 (Br.iC (N_m_succ R) l))
-      rw [pow_one] at h2
-      exact h2
+      rwa [pow_one] at h2
     · refine GlobalTheory.TopInv.ftY_add sel mu cst hc P (hD P) _ _ _ (fun s => ?_) ?_
       · exact GlobalTheory.TopInv.atNL_int (R.N R.m - 1) _ _ (hz (Pi.single s 1) (GlobalTheory.TopInv.single_int s))
       · have h1 := GlobalTheory.TopInv.repY_mem sel mu cst _ _ hY P
@@ -111,7 +109,6 @@ theorem xiTop_invariant : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Cha
             exact h1)
         intro l
         have h3 := (mem_localization_standardLattice _ _).1 h2 l
-        rw [map_smul] at h3
-        exact h3
+        rwa [map_smul] at h3
 
 end GlobalTheory.TopXiInv

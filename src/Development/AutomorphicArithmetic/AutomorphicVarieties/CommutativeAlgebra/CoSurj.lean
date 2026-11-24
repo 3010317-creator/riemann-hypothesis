@@ -58,14 +58,12 @@ theorem UpperTheory.V.Alg.co_surj :
   have hle : (maximalIdeal R).map f ≤ maximalIdeal R' := by
     rw [Ideal.map_le_iff_le_comap]
     intro x hx
-    rw [Ideal.mem_comap, ← res_eq_zero_iff O R', res_map, res_eq_zero_iff]
-    exact hx
+    rwa [Ideal.mem_comap, ← res_eq_zero_iff O R', res_map, res_eq_zero_iff]
   have heq : (maximalIdeal R).map (f : R →+* R') = maximalIdeal R' := by
     refine le_antisymm hle ?_
     have hfg : (maximalIdeal R').FG := IsNoetherian.noetherian _
     refine Submodule.le_of_le_smul_of_le_jacobson_bot hfg (maximalIdeal_le_jacobson _) ?_
-    rw [smul_eq_mul, ← pow_two]
-    exact hf
+    rwa [smul_eq_mul, ← pow_two]
   haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   haveI : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := O)
   haveI : IsHausdorff ((maximalIdeal R).map (f : R →+* R')) R' := by

@@ -64,26 +64,17 @@ theorem sum_log_sq_div_sq_primes_dyadic_le (y : ℕ) (hy : 1 ≤ y) :
   have hy0 : (0:ℝ) < y := by linarith
   have hy0' : (y:ℝ) ≠ 0 := ne_of_gt hy0
   have hL0 : 0 ≤ Real.log (2 * y) := Real.log_nonneg (by linarith)
-  have hy2pos : 0 < (y:ℝ) ^ 2 := by positivity
   have hterm : ∀ p ∈ (Ioc y (2 * y)).filter Nat.Prime,
       Real.log p ^ 2 / (p : ℝ) ^ 2 ≤ Real.log (2 * y) / (y:ℝ) ^ 2 * Real.log p := by
     intro p hp
     rw [Finset.mem_filter, Finset.mem_Ioc] at hp
     obtain ⟨⟨h1, h2⟩, hpr⟩ := hp
     have hp1 : (y:ℝ) < p := by exact_mod_cast h1
-    have hp2 : (p:ℝ) ≤ 2 * y := by exact_mod_cast h2
-    have hppos : (0:ℝ) < p := by linarith
-    have hp2pos : 0 < (p:ℝ) ^ 2 := by positivity
     have hlp : 0 ≤ Real.log p := Real.log_nonneg (by exact_mod_cast hpr.one_lt.le)
-    have hlle : Real.log p ≤ Real.log (2 * y) := Real.log_le_log hppos hp2
-    have hyp : (y:ℝ) ^ 2 ≤ (p:ℝ) ^ 2 := by nlinarith
-    have hnum : 0 ≤ Real.log (2 * y) * Real.log p := mul_nonneg hL0 hlp
-    calc Real.log p ^ 2 / (p:ℝ) ^ 2 = Real.log p * Real.log p / (p:ℝ) ^ 2 := by ring
-      _ ≤ Real.log (2 * y) * Real.log p / (p:ℝ) ^ 2 := by
-          gcongr ?_ * _ / _
-      _ ≤ Real.log (2 * y) * Real.log p / (y:ℝ) ^ 2 := by
-          gcongr _ / ?_
-      _ = Real.log (2 * y) / (y:ℝ) ^ 2 * Real.log p := by ring
+    have hlle : Real.log p ≤ Real.log (2 * y) :=
+      Real.log_le_log (by linarith) (by exact_mod_cast h2)
+    rw [sq (Real.log p), div_mul_eq_mul_div]
+    gcongr
   have hsum : ∑ p ∈ (Ioc y (2 * y)).filter Nat.Prime, Real.log p ≤ 2 * y * Real.log 4 := by
     have hsub : (Ioc y (2 * y)).filter Nat.Prime ⊆ (Finset.range (2 * y + 1)).filter Nat.Prime := by
       intro p hp
@@ -96,25 +87,17 @@ theorem sum_log_sq_div_sq_primes_dyadic_le (y : ℕ) (hy : 1 ≤ y) :
       _ = Real.log (primorial (2 * y)) := by
           rw [primorial, Nat.cast_prod, Real.log_prod]
           intro p hp
-          rw [Finset.mem_filter] at hp
-          exact_mod_cast hp.2.ne_zero
-      _ ≤ Real.log (4 ^ (2 * y)) := by
-          apply Real.log_le_log
-          · exact_mod_cast primorial_pos (2 * y)
-          · exact_mod_cast primorial_le_four_pow (2 * y)
+          exact_mod_cast (Finset.mem_filter.1 hp).2.ne_zero
+      _ ≤ Real.log (4 ^ (2 * y)) :=
+          Real.log_le_log (mod_cast primorial_pos (2 * y)) (mod_cast primorial_le_four_pow (2 * y))
       _ = 2 * y * Real.log 4 := by
           rw [Real.log_pow]
           push_cast
           ring
-  calc ∑ p ∈ (Ioc y (2 * y)).filter Nat.Prime, Real.log p ^ 2 / (p : ℝ) ^ 2
-      ≤ ∑ p ∈ (Ioc y (2 * y)).filter Nat.Prime, Real.log (2 * y) / (y:ℝ) ^ 2 * Real.log p :=
-        Finset.sum_le_sum hterm
-    _ = Real.log (2 * y) / (y:ℝ) ^ 2 * ∑ p ∈ (Ioc y (2 * y)).filter Nat.Prime, Real.log p := by
-        rw [Finset.mul_sum]
-    _ ≤ Real.log (2 * y) / (y:ℝ) ^ 2 * (2 * y * Real.log 4) :=
-        mul_le_mul_of_nonneg_left hsum (div_nonneg hL0 (sq_nonneg _))
-    _ = 2 * Real.log 4 * Real.log (2 * y) / y := by
-        field_simp
+  refine (Finset.sum_le_sum hterm).trans ?_
+  rw [← Finset.mul_sum]
+  refine (mul_le_mul_of_nonneg_left hsum (div_nonneg hL0 (sq_nonneg _))).trans_eq ?_
+  field_simp
 
 theorem sum_log_sq_div_sq_primes_tail_le (N : ℕ) : ∀ d y : ℕ, 1 ≤ y → N - y ≤ d →
     ∑ p ∈ (Ioc y N).filter Nat.Prime, Real.log p ^ 2 / (p : ℝ) ^ 2 ≤
@@ -152,7 +135,7 @@ theorem sum_log_sq_div_sq_primes_tail_le (N : ℕ) : ∀ d y : ℕ, 1 ≤ y → 
             gcongr ?_ / _
             rw [hlog2y]
             nlinarith [mul_nonneg hl4 hly, mul_nonneg hl4 hl2]
-    · push_neg at hN
+    · push Not at hN
       have hsplit : (Ioc y N).filter Nat.Prime =
           (Ioc y (2 * y)).filter Nat.Prime ∪ (Ioc (2 * y) N).filter Nat.Prime := by
         rw [← Finset.filter_union, Finset.Ioc_union_Ioc_eq_Ioc (by omega) hN.le]
@@ -203,8 +186,7 @@ theorem sP_cN_le_log_div (x : ℝ) (hx : 0 ≤ x) (N p : ℕ) (hp : p.Prime) :
     subst hpq
     rw [Finset.mem_image]
     refine ⟨k, Finset.mem_Icc.mpr ⟨hk, ?_⟩, rfl⟩
-    have hlt := Nat.lt_pow_self (by omega : 1 < p) (n := k)
-    exact le_of_lt (lt_of_lt_of_le hlt hnN)
+    exact le_of_lt (lt_of_lt_of_le (Nat.lt_pow_self (by omega : 1 < p) (n := k)) hnN)
   have h1 : sP (cN x) N p ≤ ∑ n ∈ (Icc 1 N).filter (fun n => IsPrimePow n ∧ n.minFac = p),
       Real.log p * (x / n) := by
     unfold sP
@@ -212,7 +194,7 @@ theorem sP_cN_le_log_div (x : ℝ) (hx : 0 ≤ x) (N p : ℕ) (hp : p.Prime) :
     intro n hn
     rw [Finset.mem_filter] at hn
     unfold cN
-    rw [ArithmeticFunction.vonMangoldt_apply, if_pos hn.2.1, hn.2.2]
+    rw [ArithmeticFunction.vonMangoldt_apply, ite_eq_left hn.2.1, hn.2.2]
     exact mul_le_mul_of_nonneg_left (min_le_right _ _) hlog
   calc sP (cN x) N p ≤ ∑ n ∈ (Icc 1 N).filter (fun n => IsPrimePow n ∧ n.minFac = p),
         Real.log p * (x / n) := h1
@@ -232,8 +214,7 @@ theorem sP_cN_le_log_div (x : ℝ) (hx : 0 ≤ x) (N p : ℕ) (hp : p.Prime) :
           rw [Finset.mem_Icc] at hk
           rw [Finset.mem_Ico]
           omega
-        · intro k _ _
-          exact mul_nonneg (mul_nonneg hlog hx) (pow_nonneg hr0 k)
+        · exact fun k _ _ => mul_nonneg (mul_nonneg hlog hx) (pow_nonneg hr0 k)
     _ = Real.log p * x * ∑ k ∈ Ico 1 (N + 1), r ^ k := by rw [Finset.mul_sum]
     _ ≤ Real.log p * x * (r ^ 1 / (1 - r)) :=
         mul_le_mul_of_nonneg_left (geom_sum_Ico_le_of_lt_one hr0 hr1) (mul_nonneg hlog hx)

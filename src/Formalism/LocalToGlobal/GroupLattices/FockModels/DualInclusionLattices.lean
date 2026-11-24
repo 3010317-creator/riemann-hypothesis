@@ -78,8 +78,7 @@ theorem bePerfect : BePerfect := by
         have e2 : be p r lam0 (c ^ (-A) • z) G = (c ^ A • G) z := by
           show G (((p : Kf) ^ A) • (c ^ (-A) • z)) = (c ^ A • G) z
           rw [smul_smul, hpA, map_smul, LinearMap.smul_apply]
-        rw [← e2]
-        exact h1
+        rwa [← e2]
       · show c ^ (-A) • (c ^ A • G) = G
         rw [smul_smul, ← zpow_add₀ hw, neg_add_cancel, zpow_zero, one_smul]
   refine ⟨first, fun F => ⟨fun hF G hG => (first G).1 hG F hF, fun hF => ?_⟩⟩
@@ -99,7 +98,6 @@ theorem bePerfect : BePerfect := by
     unfold order
     push_cast
     ring
-  rw [← e2]
-  exact h1
+  rwa [← e2]
 
 end Formalism.L2.G.Model

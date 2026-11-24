@@ -78,8 +78,7 @@ private theorem dcs_eq_of_mem {H : Type} [Group H] {N : Subgroup H} {q : H} (hq 
   constructor
   · rintro ⟨a, ha, b, hb, rfl⟩
     exact N.mul_mem (N.mul_mem ha hq) hb
-  · intro hx
-    exact ⟨x * q⁻¹, N.mul_mem hx (N.inv_mem hq), 1, N.one_mem, by simp⟩
+  · exact fun hx => ⟨x * q⁻¹, N.mul_mem hx (N.inv_mem hq), 1, N.one_mem, by simp⟩
 
 private theorem ind_inv {H : Type} [Group H] {N : Subgroup H} (q : H) {k : H} (hk : k ∈ N) (x : H) :
     (dcs N q).indicator (1 : H → ℂ) (k * x) = (dcs N q).indicator 1 x ∧
@@ -274,12 +273,12 @@ private theorem mem_dcs_of_positions {S : Set (Pl E)} {N : ∀ w : Pl E, Subgrou
     simp only [map_mul, map_inv]
     rw [hc i hi, hd i hi]
     by_cases hiJ : i ∈ hfin.toFinset
-    · rw [if_pos hiJ, if_pos hiJ, (hAB i hi).2.2]
+    · rw [ite_eq_left hiJ, ite_eq_left hiJ, (hAB i hi).2.2]
       simp [mul_assoc, (N i.1).one_mem]
-    · rw [if_neg hiJ, if_neg hiJ]
+    · rw [ite_eq_right hiJ, ite_eq_right hiJ]
       have hn : ¬ (qw n i.1 i.2 x ∉ N i.1 ∨ qw n i.1 i.2 g ∉ N i.1) := fun h =>
         hiJ ((hfin.mem_toFinset).2 ⟨hi, h⟩)
-      push_neg at hn
+      push Not at hn
       simpa using (N i.1).mul_mem ((N i.1).inv_mem hn.2) hn.1
   exact ⟨c, hcL, (g⁻¹ * c⁻¹ * x * d⁻¹) * d, (Lev S N).mul_mem hkL hdL, by simp [mul_assoc]⟩
 
@@ -316,8 +315,7 @@ private theorem pf_eq {Z : Finset (Pl E)} {S : Set (Pl E)} {N : ∀ w : Pl E, Su
     · simp
   · rw [Set.indicator_of_notMem hx]
     obtain ⟨i, hi, hix⟩ : ∃ i : Pl E × Bool, Sl S i ∧ qw n i.1 i.2 x ∉ dcs (N i.1) (qw n i.1 i.2 g) := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       exact hx (mem_dcs_of_positions hqj hsep g x hn (bad_finite hG hbad x g))
     unfold pf
     rw [finprod_mem_def]
@@ -333,7 +331,7 @@ private theorem pf_eq {Z : Finset (Pl E)} {S : Set (Pl E)} {N : ∀ w : Pl E, Su
         have hsp : GlobalTheory.UnitaryBC.IsSplitAt w := hi.2 rfl
         simp only at hix
         simp only
-        rw [if_pos hsp, Set.indicator_of_notMem hix, mul_zero]
+        rw [ite_eq_left hsp, Set.indicator_of_notMem hix, mul_zero]
     · refine ((Z.finite_toSet).union
         (((hbad x).union (hbad g)).image fun i : Pl E × Bool => i.1)).subset ?_
       intro w hw
@@ -387,8 +385,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.genLoc_pf :
         refine ⟨jw n i.1 i.2 a, mem_Lev.2 fun k hk => ?_, hqj _ _ a⟩
         by_cases hki : k = i
         · subst hki
-          rw [hqj]
-          exact ha
+          rwa [hqj]
         · rw [hsep i k hi hk (Ne.symm hki)]
           exact (N k.1).one_mem
       · rintro ⟨k, hk, rfl⟩

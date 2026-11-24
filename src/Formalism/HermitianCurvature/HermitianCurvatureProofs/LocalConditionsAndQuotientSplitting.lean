@@ -68,14 +68,7 @@ open scoped nonZeroDivisors
 
 theorem mem_twLat (E : Type) [Field E] [NumberField E] [IsCMField E] (A B : FI E) (s : ℕ) (t : E) :
     t ∈ twLat E A B s ↔ t ∈ A ∧ t - (-1) ^ s * complexConj E t ∈ B := by
-  unfold twLat
-  rw [Submodule.mem_inf, Submodule.mem_comap]
-  have : ((LinearMap.id : E →ₗ[ℤ] E) - ((-1 : ℤ) ^ s) • conjZ E) t
-      = t - (-1) ^ s * complexConj E t := by
-    rw [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, zsmul_eq_mul]
-    push_cast
-    rfl
-  rw [this]; rfl
+  exact Formalism.FourierDecayAlt.P.S6x1.mem_twLat E A B s t
 
 theorem mem_idl (E : Type) [Field E] [NumberField E] (g : ℕ) (k ν : ℤ) (t : E) (hg : 0 < g) :
     t ∈ idl E g k ν ↔ t / (g : E) ^ k ∈ dd E ^ ν := by
@@ -85,8 +78,7 @@ theorem mem_idl (E : Type) [Field E] [NumberField E] (g : ℕ) (k ν : ℤ) (t :
   constructor
   · rintro ⟨z, hz, rfl⟩
     rwa [mul_div_cancel_left₀ _ hg']
-  · intro h
-    exact ⟨_, h, by field_simp⟩
+  · exact fun h => ⟨_, h, by field_simp⟩
 
 theorem trace_conj (E : Type) [Field E] [NumberField E] [IsCMField E] (x : E) :
     Algebra.trace ℚ E (complexConj E x) = Algebra.trace ℚ E x :=
@@ -94,16 +86,7 @@ theorem trace_conj (E : Type) [Field E] [NumberField E] [IsCMField E] (x : E) :
 
 theorem trace_rel (E : Type) [Field E] [NumberField E] [IsCMField E] (x : E) :
     algebraMap (maximalRealSubfield E) E (Algebra.trace (maximalRealSubfield E) E x)
-      = x + complexConj E x := by
-  classical
-  rw [trace_eq_sum_automorphisms]
-  have hu : (Finset.univ : Finset (E ≃ₐ[maximalRealSubfield E] E)) = {1, complexConj E} := by
-    symm
-    apply Finset.eq_univ_of_card
-    rw [Finset.card_pair (complexConj_ne_one E).symm, ← Nat.card_eq_fintype_card,
-      IsGalois.card_aut_eq_finrank, Algebra.IsQuadraticExtension.finrank_eq_two]
-  rw [hu, Finset.sum_pair (complexConj_ne_one E).symm]
-  rfl
+      = x + complexConj E x := Formalism.FourierDecayAlt.P.S6x3.trace_eq E x
 
 theorem exists_theta (E : Type) [Field E] [NumberField E] [IsCMField E]
     (h1 : differentIdeal (𝓞 (maximalRealSubfield E)) (𝓞 E) = ⊤) :
@@ -135,8 +118,7 @@ theorem exists_theta (E : Type) [Field E] [NumberField E] [IsCMField E]
         ← Algebra.algebraMap_intTrace (A := 𝓞 F)]
       have := ha (algebraMap (𝓞 F) F (Algebra.intTrace (𝓞 F) (𝓞 E) z))
         ((FractionalIdeal.mem_coeIdeal _).2 ⟨_, ⟨z, rfl⟩, rfl⟩)
-      rw [FractionalIdeal.mem_one_iff] at this
-      exact this
+      rwa [FractionalIdeal.mem_one_iff] at this
     rw [hdual, FractionalIdeal.mem_one_iff] at hmem
     obtain ⟨z, hz⟩ := hmem
     have hint : IsIntegral ℤ a := by
@@ -225,8 +207,7 @@ theorem traceDualGe : Formalism.FourierDecayAlt.S6.DualSupset := by
   have e : Algebra.trace ℚ E ((x + complexConj E x) * (θ : E)) = Algebra.trace ℚ E x := by
     rw [add_mul, map_add (f := _), ← trace_conj E (complexConj E x * (θ : E)), map_mul (complexConj E),
       complexConj_apply_apply, ← map_add, ← mul_add, hθ, mul_one]
-  rw [e] at hz
-  exact hz
+  rwa [e] at hz
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto

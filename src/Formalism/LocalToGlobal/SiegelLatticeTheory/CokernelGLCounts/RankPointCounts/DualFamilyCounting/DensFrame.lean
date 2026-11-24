@@ -47,8 +47,7 @@ theorem localLattice_span₂ (hA : ∀ p, Agree δ M p) (L : LocSp D M) (p : PlF
     rintro _ ⟨x, hx, rfl⟩
     refine Submodule.span_induction
       (p := fun x _ => L.bc p x ∈ Submodule.span (M p).L.O (L.bc p '' S)) ?_ ?_ ?_ ?_ hx
-    · intro y hy
-      exact Submodule.subset_span ⟨y, hy, rfl⟩
+    · exact fun y hy => Submodule.subset_span ⟨y, hy, rfl⟩
     · rw [map_zero]
       exact zero_mem _
     · intro y z _ _ hy hz
@@ -149,9 +148,7 @@ theorem inv_unique {R : Type} [CommRing R] {x w n : R} (hx : x * n = 1) (hw : w 
     _ = w := by rw [hx, mul_one]
 
 theorem gS_ne : ((Lat.gS D : ℕ) : D.host.E) ≠ 0 := by
-  refine Nat.cast_ne_zero.2 ?_
-  show D.host.g 0 * D.host.g 1 ≠ 0
-  exact Nat.mul_ne_zero (D.host.g_prime 0).ne_zero (D.host.g_prime 1).ne_zero
+  exact Nat.cast_ne_zero.2 (Nat.mul_ne_zero (D.host.g_prime 0).ne_zero (D.host.g_prime 1).ne_zero)
 
 theorem iE_gS_inv_mul (p : PlF D) :
     (D.s.atP p).ιE (((Lat.gS D : ℕ) : D.host.E))⁻¹ * ((Lat.gS D : ℕ) : (D.s.atP p).Ep) = 1 := by
@@ -164,10 +161,8 @@ theorem gS_inv_mem (hA : ∀ p, Agree δ M p) (p : PlF D) (hs : (M p).split = no
   have hnd : ¬ Loc.resChar p ∣ Lat.gS D := by
     intro hd
     rcases (Nat.Prime.dvd_mul hℓ).1 hd with h | h
-    · have h' := (Nat.prime_dvd_prime_iff_eq hℓ (D.host.g_prime 0)).1 h
-      exact hun (by simp [h'])
-    · have h' := (Nat.prime_dvd_prime_iff_eq hℓ (D.host.g_prime 1)).1 h
-      exact hun (by simp [h'])
+    · exact hun (by simp [((Nat.prime_dvd_prime_iff_eq hℓ (D.host.g_prime 0)).1 h)])
+    · exact hun (by simp [((Nat.prime_dvd_prime_iff_eq hℓ (D.host.g_prime 1)).1 h)])
   obtain ⟨w, hw⟩ := Formalism.L2.SG.Pf.BBTie.bt_natF_unit p (Lat.gS D) hnd
   have e : (D.s.atP p).ιE (((Lat.gS D : ℕ) : D.host.E))⁻¹ =
       algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (w : (D.s.atP p).Fp) :=
@@ -187,17 +182,15 @@ theorem typed_cases (hA : ∀ p, Agree δ M p) (p : PlF D) {g : Loc.SplitG (M p)
   have hne := D.host.g_ne
   rcases hmem with h | h
   · refine ⟨?_, ?_, ?_⟩
-    · simp only [gj, Lat.gS, h]
-      exact Nat.mul_div_cancel' (dvd_mul_right _ _)
+    · simpa only [gj, Lat.gS, h] using Nat.mul_div_cancel' (dvd_mul_right _ _)
     · simp only [gj, Lat.gS, h, Nat.mul_div_cancel_left _ h0.pos]
       exact fun hd => hne ((Nat.prime_dvd_prime_iff_eq h0 h1).1 hd)
-    · simp only [gpart, h, if_true]
+    · simp only [gpart, h, ite_true]
   · refine ⟨?_, ?_, ?_⟩
-    · simp only [gj, Lat.gS, h]
-      exact Nat.mul_div_cancel' (dvd_mul_left _ _)
+    · simpa only [gj, Lat.gS, h] using Nat.mul_div_cancel' (dvd_mul_left _ _)
     · simp only [gj, Lat.gS, h, Nat.mul_div_cancel _ h1.pos]
       exact fun hd => hne ((Nat.prime_dvd_prime_iff_eq h1 h0).1 hd).symm
-    · simp only [gpart, h, if_neg (Ne.symm hne), if_true]
+    · simp only [gpart, h, ite_eq_right (Ne.symm hne), ite_true]
 
 theorem q_gS_inv_mem (hA : ∀ p, Agree δ M p) (p : PlF D) {g : Loc.SplitG (M p).L} (hs : (M p).split = some g) :
     (D.s.atP p).ιE (((Lat.gS D : ℕ) : D.host.E))⁻¹ * algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (g.q : (D.s.atP p).Fp)
@@ -227,13 +220,9 @@ theorem q_gS_inv_mem (hA : ∀ p, Agree δ M p) (p : PlF D) {g : Loc.SplitG (M p
 theorem qinv_gS_mem (hA : ∀ p, Agree δ M p) (p : PlF D) {g : Loc.SplitG (M p).L} (hs : (M p).split = some g) :
     algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹) * (D.s.atP p).ιE ((Lat.gS D : ℕ) : D.host.E)
       ∈ (M p).L.O := by
-  have hq0 : (g.q : (D.s.atP p).Fp) ≠ 0 := by
-    intro h
-    apply g.q_irr.ne_zero
-    exact Subtype.ext h
+  have hq0 : (g.q : (D.s.atP p).Fp) ≠ 0 := fun h => g.q_irr.ne_zero (Subtype.ext h)
   have hℓ : ((Loc.resChar p : ℕ) : (D.s.atP p).Fp) ≠ 0 := by
-    rw [← q_eq_ell hA p hs]
-    exact hq0
+    rwa [← q_eq_ell hA p hs]
   obtain ⟨h1, -, -⟩ := typed_cases hA p hs
   rw [q_eq_ell hA p hs, ← h1, Nat.cast_mul, map_mul, map_natCast, map_natCast,
     ← map_natCast (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep) (Loc.resChar p), ← mul_assoc, ← map_mul,
@@ -304,7 +293,7 @@ theorem amat_inl (p : PlF D) (g : Loc.SplitG (M p).L) {V : Type} [AddCommGroup V
     ∑ d, amat p g d (Sum.inl a) • v d = v (Sum.inl a) := by
   simp only [amat, Fintype.sum_sum_type, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₁,
     Matrix.zero_apply, zero_smul, Finset.sum_const_zero, add_zero, Matrix.one_apply, ite_smul, one_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem amat_inr (p : PlF D) (g : Loc.SplitG (M p).L) {V : Type} [AddCommGroup V] [Module (D.s.atP p).Ep V]
     (v : Fin (D.R.rS + 1) ⊕ Fin (D.R.rS + 1) → V) (a : Fin (D.R.rS + 1)) :
@@ -318,8 +307,7 @@ theorem amat_inr (p : PlF D) (g : Loc.SplitG (M p).L) {V : Type} [AddCommGroup V
     · intro b _ hb
       show ((-algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹)) • (1 : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) (D.s.atP p).Ep)) b a • v (Sum.inl b) = 0
       rw [Matrix.smul_apply, Matrix.one_apply_ne hb, smul_zero, zero_smul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
   have h2 : ∑ x, amat p g (Sum.inr x) (Sum.inr a) • v (Sum.inr x) = algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹) • v (Sum.inr a) := by
     rw [Finset.sum_eq_single a]
     · show (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹) • (1 : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) (D.s.atP p).Ep)) a a • v (Sum.inr a) = _
@@ -327,23 +315,20 @@ theorem amat_inr (p : PlF D) (g : Loc.SplitG (M p).L) {V : Type} [AddCommGroup V
     · intro b _ hb
       show (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹) • (1 : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) (D.s.atP p).Ep)) b a • v (Sum.inr b) = 0
       rw [Matrix.smul_apply, Matrix.one_apply_ne hb, smul_zero, zero_smul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
   rw [h1, h2, smul_sub]
   abel
 
 theorem locFam_some_inl (L : LocSp D M) (p : PlF D) {T T' : D.host.E} (F0 : FlagG (VS D) D.R.rS T)
     (F' : LFlag (D.sp.Y 0) D.R.rS T') {g : Loc.SplitG (M p).L} (hs : (M p).split = some g) (a : Fin (D.R.rS + 1)) :
     locFam L δ p F0 F' (Sum.inl a) = g0 L δ p F0 F' (Sum.inl a) := by
-  simp only [locFam, hs]
-  exact amat_inl p g _ a
+  simpa only [locFam, hs] using amat_inl p g _ a
 
 theorem locFam_some_inr (L : LocSp D M) (p : PlF D) {T T' : D.host.E} (F0 : FlagG (VS D) D.R.rS T)
     (F' : LFlag (D.sp.Y 0) D.R.rS T') {g : Loc.SplitG (M p).L} (hs : (M p).split = some g) (a : Fin (D.R.rS + 1)) :
     locFam L δ p F0 F' (Sum.inr a) = algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹) •
       (g0 L δ p F0 F' (Sum.inr a) - g0 L δ p F0 F' (Sum.inl a)) := by
-  simp only [locFam, hs]
-  exact amat_inr p g _ a
+  simpa only [locFam, hs] using amat_inr p g _ a
 
 end Span
 
@@ -523,10 +508,7 @@ theorem span_le_some (hA : ∀ p, Agree δ M p) (L : LocSp D M) (p : PlF D) {T T
 theorem le_span_some (hA : ∀ p, Agree δ M p) (L : LocSp D M) (p : PlF D) {T T' : D.host.E}
     (F0 : FlagG (VS D) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') {g : Loc.SplitG (M p).L} (hs : (M p).split = some g) :
     NG L p F0 F' ⊔ NX δ L p F0 ⊔ NX δ L p F'.fl ≤ Submodule.span (M p).L.O (Set.range (locFam L δ p F0 F')) := by
-  have hq0 : (g.q : (D.s.atP p).Fp) ≠ 0 := by
-    intro h
-    apply g.q_irr.ne_zero
-    exact Subtype.ext h
+  have hq0 : (g.q : (D.s.atP p).Fp) ≠ 0 := fun h => g.q_irr.ne_zero (Subtype.ext h)
   have hq : algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (g.q : (D.s.atP p).Fp) * algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹) = 1 := by
     rw [← map_mul, mul_inv_cancel₀ hq0, map_one]
   have haq : algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (g.q : (D.s.atP p).Fp) ∈ (M p).L.O := by
@@ -657,12 +639,8 @@ theorem gaPlus_det_unit (hA : ∀ p, Agree δ M p) (p : PlF D) (T T' : D.host.E)
     exact ((prod_unit _ _ fun i => (phi_unit hA p i).map (M p).L.cj).mul ((Ne.isUnit hdet).map _)).mul
       (prod_unit _ _ fun i => phi_unit hA p i)
   rcases h : (M p).split with _ | g
-  · simp only [GaPlus, h]
-    exact hGL
-  · have hq0 : (g.q : (D.s.atP p).Fp) ≠ 0 := by
-      intro hh
-      apply g.q_irr.ne_zero
-      exact Subtype.ext hh
+  · simpa only [GaPlus, h] using hGL
+  · have hq0 : (g.q : (D.s.atP p).Fp) ≠ 0 := fun hh => g.q_irr.ne_zero (Subtype.ext hh)
     have hqi : IsUnit (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((g.q : (D.s.atP p).Fp)⁻¹)) := (inv_ne_zero hq0).isUnit.map _
     simp only [GaPlus, h]
     rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose]

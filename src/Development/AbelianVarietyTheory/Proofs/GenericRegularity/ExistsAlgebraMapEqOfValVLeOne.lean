@@ -79,8 +79,7 @@ theorem valV_algebraMap_lt_one_iff (v : V) :
 
 theorem valV_algebraMap_of_isUnit {v : V} (hv : IsUnit v) : valV V (algebraMap V K' v) = 1 := by
   refine le_antisymm (valV_algebraMap_le_one v) (not_lt.1 fun hlt => ?_)
-  have hm := (valV_algebraMap_lt_one_iff v).1 hlt
-  exact (IsLocalRing.mem_maximalIdeal v).1 hm hv
+  exact (IsLocalRing.mem_maximalIdeal v).1 ((valV_algebraMap_lt_one_iff v).1 hlt) hv
 
 theorem valV_algebraMap_of_irreducible {v : V} (hv : Irreducible v) :
     valV V (algebraMap V K' v) = WithZero.exp (-1 : ℤ) := by
@@ -193,8 +192,7 @@ private theorem valV_ringHom_eq_valuation {V K' : Type} [CommRing V] [IsDomain V
     valV V (j a) = la.valuation K a := by
   rcases ValuationSubring.mem_or_inv_mem (la.valuationSubringAtPrime K) a with h | h
   · have key := valV_algebraMap_eq_valuation la (K' := K') o hπ hoπ ⟨a, h⟩
-    rw [ho] at key
-    exact key
+    rwa [ho] at key
   · have key := valV_algebraMap_eq_valuation la (K' := K') o hπ hoπ ⟨a⁻¹, h⟩
     rw [ho] at key
     change valV V (j a⁻¹) = la.valuation K a⁻¹ at key
@@ -267,8 +265,7 @@ private theorem adicCompletion_eq_unit_mul_pow {A : Type} [CommRing A] [IsDomain
       Ideal.span {algebraMap A (AdicCompletion (IsLocalRing.maximalIdeal A) A) ϖ ^ k} := fun k => by
     rw [maximalIdeal_adicCompletion_eq_span' hϖ, Ideal.span_singleton_pow]
   have hex : ∃ N, x ∉ IsLocalRing.maximalIdeal (AdicCompletion (IsLocalRing.maximalIdeal A) A) ^ N := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hx
     refine IsHausdorff.haus (I := IsLocalRing.maximalIdeal (AdicCompletion (IsLocalRing.maximalIdeal A) A)) inferInstance x fun n => ?_
     simpa [SModEq.zero] using h n
@@ -301,8 +298,7 @@ private theorem isDomain_adicCompletion_of_dvr' {A : Type} [CommRing A] [IsDomai
     exact pow_ne_zero k hϖ.ne_zero (algebraMap_adicCompletion_injective' (by rw [h, map_zero]))
   have hnzd : NoZeroDivisors (AdicCompletion (IsLocalRing.maximalIdeal A) A) := by
     refine ⟨fun {a b} hab => ?_⟩
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨n, u, rfl⟩ := adicCompletion_eq_unit_mul_pow hϖ a hne.1
     obtain ⟨m, v, rfl⟩ := adicCompletion_eq_unit_mul_pow hϖ b hne.2
     apply hp (n + m)

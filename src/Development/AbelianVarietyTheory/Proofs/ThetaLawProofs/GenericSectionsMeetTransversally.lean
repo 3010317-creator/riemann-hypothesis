@@ -194,11 +194,9 @@ theorem det_ne_zero_of_generic_linear_forms_vanish :
         simp [hb T hTe]
       funext q
       exact DFunLike.congr_fun h3 q
-    rw [this]
-    exact hT
+    rwa [this]
   rw [← hΔ T hTe]
-  intro h
-  exact hΔ0 (hχ (by simpa using h))
+  exact fun h => hΔ0 (hχ (by simpa using h))
 
 end GlobalTheory
 end -- clump:auto
@@ -222,7 +220,7 @@ theorem valT_eq_zero_of_notMem {K : Type} [Field K] {X : Scheme.{0}} (w : Sp K �
     (h : ⊤ ≤ w ⁻¹ᵁ U) (f : Γ(X, U)) (p : Sp K) (hp : w p ∉ X.basicOpen f) : valT (T := K) w U f = 0 := by
   by_contra hne
   have h1 : IsUnit ((Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom ((w.appLE U ⊤ h).hom f)) := by
-    have e : valT (T := K) w U f = _ := dif_pos h
+    have e : valT (T := K) w U f = _ := dite_eq_left h
     exact e ▸ Ne.isUnit hne
   have h2 : IsUnit ((w.appLE U ⊤ h).hom f) := by
     have := h1.map (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom
@@ -238,7 +236,7 @@ theorem eq_of_specializes {X : Scheme.{0}} {J : Type} {U : X.Opens} (f : J → �
   by_contra hne
   have hn : ¬ y ⤳ y' := fun h' => hne (h.antisymm h').eq
   rw [specializes_iff_forall_open] at hn
-  push_neg at hn
+  push Not at hn
   obtain ⟨V, hV, hV1, hV2⟩ := hn
   obtain ⟨W, hW, hyW, -⟩ := exists_isAffineOpen_mem_and_subset (X := X) (x := y) (U := ⊤) trivial
   have hyW' : y' ∈ W := h.mem_open W.isOpen hyW
@@ -306,8 +304,7 @@ theorem GlobalTheory.KeyKa.exists_etZ_of_jac_ne_zero : ∀ (K : Type) [Field K] 
     have h1 := (jac_ne_zero_iff_span_eq_maximalIdeal K x n s z c (IsLocalRing.closedPoint K) ht h0).1 (hs z c ht h0)
     have hU : z.left (IsLocalRing.closedPoint K) ∈ x.P.L.U c := ht (x := IsLocalRing.closedPoint K) trivial
     have e := eq_of_specializes (fun i => (s i).f c) ((hz _).symm ▸ hsp) hU h1 (hb y' hy' c)
-    rw [e.trans (hz _)]
-    exact hc
+    rwa [e.trans (hz _)]
   have hfin := finite_of_isClosed_singleton hZ hcl
   obtain ⟨d, ⟨e⟩⟩ := Finite.exists_equiv_fin Z (h := hfin)
   choose z c hz ht h0 using fun y : Z => key y y.2 (hcl y y.2)
@@ -379,8 +376,7 @@ theorem exists_field_of_definition {k K : Type} [Field k] [Field K] [Algebra k K
   · have e : ψ'.comp a.hom = algebraMap k F := RingHom.ext fun r => Subtype.ext (ψ.commutes r)
     rw [Category.assoc, ← e, ← spMap_comp]
     exact congrArg (spMap ψ' ≫ ·) ha
-  · rw [← Category.assoc, spMap_comp]
-    exact h₀
+  · rwa [← Category.assoc, spMap_comp]
 
 theorem valT_cst {R T : Type} [CommRing R] [CommRing T] {X : Scheme.{0}} (f : X ⟶ Sp R) (p : Sp T ⟶ X) (a : R →+* T)
     (hp : p ≫ f = spMap a) (U : X.Opens) (h : ⊤ ≤ p ⁻¹ᵁ U) (c : R) : valT p U (cst f U c) = a c := by

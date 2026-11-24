@@ -56,10 +56,8 @@ theorem ptPsIsInt_iff (f : PowerSeries C) : PsIsInt v f ↔ f ∈ ptIntSer v Uni
       ext
       exact Finsupp.single_eq_same.symm
     have h1 := h (α ())
-    rw [hα]
-    exact h1
-  · intro h n
-    exact h (Finsupp.single () n)
+    rwa [hα]
+  · exact fun h n => h (Finsupp.single () n)
 
 theorem ptIntSer_X {σ : Type*} (s : σ) : (X s : MvPowerSeries σ C) ∈ ptIntSer v σ := by
   intro α
@@ -120,7 +118,7 @@ theorem pt_degree_eq_one {σ : Type*} {α : σ →₀ ℕ} (h : α.degree = 1) :
       Finset.single_le_sum (f := fun i => α i) (fun _ _ => Nat.zero_le _) hs
     omega
   · have hst : s ≠ t := Ne.symm hts
-    simp only [Finsupp.single_apply, hst, if_false]
+    simp only [Finsupp.single_apply, hst, ite_false]
     by_contra hne
     have ht : t ∈ α.support := Finsupp.mem_support_iff.mpr hne
     have hsub : ({s, t} : Finset _) ⊆ α.support := by
@@ -206,8 +204,7 @@ theorem pt_coeff_single_subst {σ τ : Type*} [Fintype σ]
   · refine Finset.sum_congr rfl fun s _ => ?_
     rw [Finsupp.prod_single_index (by simp)]
     simp only [pow_one, smul_eq_mul]
-  · intro s _ t _ hst
-    exact (Finsupp.single_left_inj one_ne_zero).mp hst
+  · exact fun s _ t _ hst => (Finsupp.single_left_inj one_ne_zero).mp hst
 
 theorem pt_coeff_single_X {σ : Type*} (s t : σ) :
     coeff (Finsupp.single s 1) (X t : MvPowerSeries σ R) = if s = t then 1 else 0 := by
@@ -215,9 +212,8 @@ theorem pt_coeff_single_X {σ : Type*} (s t : σ) :
   by_cases h : s = t
   · subst h
     simp
-  · rw [if_neg h, if_neg]
-    intro h'
-    exact h ((Finsupp.single_left_inj one_ne_zero).mp h')
+  · rw [ite_eq_right h, ite_eq_right]
+    exact fun h' => h ((Finsupp.single_left_inj one_ne_zero).mp h')
 
 theorem pt_hK_of_low {σ τ : Type*} {K : MvPowerSeries σ R}
     (hK : ∀ α : σ →₀ ℕ, α.degree ≤ 1 → coeff α K = 0) (A A' : σ → MvPowerSeries τ R) :
@@ -249,7 +245,7 @@ theorem pt_F_lin (G : LogFGL v d) (a : Fin d) (i : Fin d ⊕ Fin d) :
     pt_coeff_single_subst (hX Sum.inl) (fun b => constantCoeff_X _) (G.lg_const a),
     pt_coeff_single_subst (hX Sum.inr) (fun b => constantCoeff_X _) (G.lg_const a)] at key
   simp only [G.lg_lin, pt_coeff_single_X, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true] at key
+    Finset.mem_univ, ite_true] at key
   convert key
 
 end Law

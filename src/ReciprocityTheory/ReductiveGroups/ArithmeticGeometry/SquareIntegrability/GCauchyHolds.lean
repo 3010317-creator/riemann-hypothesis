@@ -1,11 +1,22 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GaussianTailBound
-public import Formalism.FilteredPoleLength.LocalDescentLevels.DetMulEqSumPrincipal
-public import Formalism.FilteredPoleLength.LocalDescentLevels.ExistsSumOfMemSpanImage
-public import Formalism.FilteredPoleLength.LocalDescentLevels.GAdjugateNormBound
-public import Formalism.FilteredPoleLength.LocalDescentLevels.IntegralMulExpNegSq
-public import Formalism.FilteredPoleLength.LocalDescentLevels.MinimumChainBounds
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.Analysis.Matrix.PosDef
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.LinearAlgebra.BilinearMap
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ExistsShortRealSpan
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.EmbComb
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.PrjMemOfSpan
@@ -28,21 +39,20 @@ import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ExistsMinNorm
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ContDiffOfDifferentiableFd
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.LemmaS
+import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExtAllInputs
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ExtProof, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.PrjMemSpanC, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.OneChar, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.InvBuild, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.CharMain, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.Imports, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GCauchyHolds
 
 -- ===== clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ExtProof =====
--- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ExtProof", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GaussianTailBound\npublic import Formalism.FilteredPoleLength.LocalDescentLevels.DetMulEqSumPrincipal\npublic import Formalism.FilteredPoleLength.LocalDescentLevels.ExistsSumOfMemSpanImage\npublic import Formalism.FilteredPoleLength.LocalDescentLevels.GAdjugateNormBound\npublic import Formalism.FilteredPoleLength.LocalDescentLevels.IntegralMulExpNegSq\npublic import Formalism.FilteredPoleLength.LocalDescentLevels.MinimumChainBounds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ExtProof", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GaussianTailBound\npublic import Mathlib.Analysis.InnerProductSpace.PiL2\npublic import Mathlib.Analysis.Complex.ExponentialBounds\npublic import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff\npublic import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric\npublic import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar\npublic import Mathlib.Analysis.Normed.Lp.MeasurableSpace\npublic import Mathlib.MeasureTheory.Measure.Haar.OfBasis\npublic import Mathlib.Analysis.Real.Sqrt\npublic import Mathlib.LinearAlgebra.Matrix.Determinant.Basic\npublic import Mathlib.Analysis.Matrix.PosDef\npublic import Mathlib.Algebra.BigOperators.Field\npublic import Mathlib.Analysis.Complex.Exponential\npublic import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls\npublic import Mathlib.Analysis.SpecialFunctions.Gamma.Basic\npublic import Mathlib.Basic.Real.Basic\npublic import Mathlib.LinearAlgebra.BilinearMap\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
 section -- clump:auto
 @[expose] public section
 
 namespace ReciprocityTheory.ChartRestriction.G.I2.Ext
 
 theorem all : All :=
-  ⟨Formalism.LatticeBaseChangeAlt.packingCount, Formalism.LatticeBaseChangeAlt.gaussian_tail_bound, Formalism.LatticeBaseChangeAlt.ballVolume, Formalism.LatticeBaseChangeAlt.gHadamard,
-    Formalism.LatticeBaseChangeAlt.nearestPlane, Formalism.LatticeBaseChangeAlt.cauchyBinetMax, Formalism.LatticeBaseChangeAlt.detPerturbation,
-    Formalism.LatticeBaseChangeAlt.detPerturbNumeric, Formalism.LatticeBaseChangeAlt.detProductRest⟩
+  GlobalTheory.ext_all_inputs
 
 end ReciprocityTheory.ChartRestriction.G.I2.Ext
 end -- clump:auto
@@ -222,8 +232,7 @@ lemma one_char [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
           Hf (prj σ (Mc σ 1 z)) (prj σ (χ j)) := by
         simp only [Hf, PiLp.inner_apply, RCLike.inner_apply]
       rw [key]; exact hH
-    intro w hw
-    exact Submodule.mem_orthogonal_singleton_iff_inner_left.mp (hsub hw)
+    exact fun w hw => Submodule.mem_orthogonal_singleton_iff_inner_left.mp (hsub hw)
 
   have hpn : 0 < ‖prj σ (Mc σ 1 z)‖ := norm_pos_iff.mpr hp0
   obtain ⟨r, hr⟩ : ∃ r : ℝ, r = T / ‖prj σ (Mc σ 1 z)‖ := ⟨_, rfl⟩
@@ -320,7 +329,7 @@ lemma one_char [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     by_cases huv : ‖v‖ ≤ ‖u‖
     · exact Or.inr huv
     left
-    push_neg at huv
+    push Not at huv
     have huΛ : u ∈ Λ := (hΛ u).2 ⟨hu, Zs_self L I hu huv.le⟩
     have h1 := hclose (χ' + u) (Λ.add_mem hχ'Λ huΛ)
     have h2 := hclose (χ' - u) (Λ.sub_mem hχ'Λ huΛ)
@@ -391,8 +400,7 @@ private lemma inv_step_lemma {dim : (E →+* ℂ) → ℕ} {L I : Submodule ℤ 
   obtain ⟨f, hf⟩ : ∃ f : Vsp dim → Vsp dim, ∀ y ∈ S, f y ∈ t ∧ y ∈ Metric.ball (f y) (1 / 2) := by
     refine ⟨fun y => if h : ∃ x ∈ t, y ∈ Metric.ball x (1 / 2) then h.choose else 0, fun y hy => ?_⟩
     have h := hex y hy
-    simp only [dif_pos h]
-    exact h.choose_spec
+    simpa only [dite_eq_left h] using h.choose_spec
   have hinj : Set.InjOn f S := by
     intro y hy y' hy' hyy
     have h1 := (hf y hy).2
@@ -465,11 +473,10 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
       inner ℂ (w j) (x - ∑ i ∈ Finset.range k, inner ℂ (w i) x • w i) = 0 := by
     intro x j hj
     rw [inner_sub_right, inner_sum, Finset.sum_eq_single j]
-    · rw [inner_smul_right, h3 j hj j hj, if_pos rfl, mul_one, sub_self]
+    · rw [inner_smul_right, h3 j hj j hj, ite_eq_left rfl, mul_one, sub_self]
     · intro i hi hij
-      rw [inner_smul_right, h3 j hj i (Finset.mem_range.mp hi), if_neg (Ne.symm hij), mul_zero]
-    · intro hj'
-      exact absurd (Finset.mem_range.mpr hj) hj'
+      rw [inner_smul_right, h3 j hj i (Finset.mem_range.mp hi), ite_eq_right (Ne.symm hij), mul_zero]
+    · exact fun hj' => absurd (Finset.mem_range.mpr hj) hj'
   obtain ⟨Wp, hWp⟩ : ∃ Wp, Wp = ∑ i ∈ Finset.range k, inner ℂ (w i) e • w i := ⟨_, rfl⟩
   have hWpW : Wp ∈ Wk σ χ k := by
     rw [hWp]
@@ -515,7 +522,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
   have hterm : ∀ i ∈ Finset.range k, (Rk : ℂ) • ((starRingEnd ℂ) (εk i) • w i) = inner ℂ (w i) e • w i := by
     intro i hi
     rw [hεk]
-    simp only [if_pos (Finset.mem_range.mp hi)]
+    simp only [ite_eq_left (Finset.mem_range.mp hi)]
     rw [smul_smul, map_div₀, Complex.conj_conj, Complex.conj_ofReal]
     congr 1
     field_simp
@@ -533,7 +540,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
       rw [Finset.sum_div]
       refine Finset.sum_congr rfl fun i hi => ?_
       rw [hεk]
-      simp only [if_pos (Finset.mem_range.mp hi)]
+      simp only [ite_eq_left (Finset.mem_range.mp hi)]
       rw [norm_div, Complex.norm_real, Real.norm_of_nonneg hRpos.le, RCLike.norm_conj, div_pow]
     rw [hs]
     have hle1 : ∑ i ∈ Finset.range k, ‖inner ℂ (w i) e‖ ^ 2 ≤ (K0 * ‖v‖) ^ 2 :=
@@ -577,18 +584,17 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
         rwa [Function.update_self] at hm
       · have h' : Wk σ (Function.update χ k χn) k = Wk σ χ k := Wk_update σ χ le_rfl χn
         apply Wk_mono σ _ (Nat.le_succ k)
-        rw [h']
-        exact hWpW
+        rwa [h']
   · intro s hs s' hs'
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs <;>
       rcases Nat.lt_succ_iff_lt_or_eq.mp hs' with hs' | hs'
     · rw [Function.update_of_ne (Nat.ne_of_lt hs), Function.update_of_ne (Nat.ne_of_lt hs')]
       exact h3 s hs s' hs'
     · rw [hs', Function.update_of_ne (Nat.ne_of_lt hs), Function.update_self, hwkw s hs,
-        if_neg (Nat.ne_of_lt hs)]
+        ite_eq_right (Nat.ne_of_lt hs)]
     · rw [hs, Function.update_self, Function.update_of_ne (Nat.ne_of_lt hs'),
-        inner_eq_zero_symm.mp (hwkw s' hs'), if_neg (Nat.ne_of_lt hs').symm]
-    · rw [hs, hs', Function.update_self, if_pos rfl, inner_self_eq_norm_sq_to_K, hwkn]
+        inner_eq_zero_symm.mp (hwkw s' hs'), ite_eq_right (Nat.ne_of_lt hs').symm]
+    · rw [hs, hs', Function.update_self, ite_eq_left rfl, inner_self_eq_norm_sq_to_K, hwkn]
       norm_num
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
@@ -598,14 +604,13 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
       exact h4 s hs
     · rw [hs]
       simp only [Function.update_self]
-      rw [hsumw k le_rfl]
-      exact hrep
+      rwa [hsumw k le_rfl]
   · intro s hs i hi
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · rw [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h5 s hs i hi
     · rw [hs, Function.update_self]
       simp only [hεk]
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · rw [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h6 s hs
@@ -614,14 +619,12 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · simp only [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h7 s hs
     · rw [hs]
-      simp only [Function.update_self]
-      exact ⟨hRlow, hχnorm⟩
+      simpa only [Function.update_self] using ⟨hRlow, hχnorm⟩
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · simp only [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h8 s hs
     · rw [hs]
-      simp only [Function.update_self]
-      exact ⟨hμ1, hχu⟩
+      simpa only [Function.update_self] using ⟨hμ1, hχu⟩
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · simp only [Function.update_of_ne (Nat.ne_of_lt hs)]
@@ -774,11 +777,9 @@ theorem char_main (hx : Ext.All) : CharStatement := by
     rw [Hf_eq_inner, hort s' s'.2 s s.2]
     by_cases h : s = s'
     · subst h; simp
-    · rw [if_neg (fun e => h (Fin.ext e).symm), if_neg h]
-  · intro s
-    exact (hχX s s.2).choose_spec
-  · intro s s' h
-    exact hεz s s.2 s' (Fin.lt_def.mp h).le
+    · rw [ite_eq_right (fun e => h (Fin.ext e).symm), ite_eq_right h]
+  · exact fun s => (hχX s s.2).choose_spec
+  · exact fun s s' h => hεz s s.2 s' (Fin.lt_def.mp h).le
   · intro s
     have hsum : ∑ s' : Fin ρ, ‖ε s s'‖ ^ 2 = ∑ i ∈ Finset.range s, ‖ε s i‖ ^ 2 := by
       rw [show (∑ s' : Fin ρ, ‖ε s s'‖ ^ 2) = ∑ i ∈ Finset.range ρ, ‖ε s i‖ ^ 2 from

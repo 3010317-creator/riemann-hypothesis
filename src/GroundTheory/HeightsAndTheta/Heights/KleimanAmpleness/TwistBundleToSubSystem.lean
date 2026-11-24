@@ -162,8 +162,7 @@ theorem exists_sec_not_mem (L : LineBundle S x) (hL : IsVeryAmple L.toSubSystem)
         rw [Submodule.span_le]
         rintro _ ⟨j, rfl⟩
         have := hcon (h j) (hh.mem_secs j) (singleChart hxi)
-        rw [SubSystem.twist_sub_eq_mul_sub] at this
-        exact this
+        rwa [SubSystem.twist_sub_eq_mul_sub] at this
   obtain ⟨P, hP⟩ := L.invertible (singleChart hxi)
   have h1 : (1 : Submodule (chartRing S x (singleChart hxi)) Ω) ≤ idealMod pp (singleChart hxi) := by
     calc (1 : Submodule (chartRing S x (singleChart hxi)) Ω) = L.sub (singleChart hxi) * P := hP.symm
@@ -178,8 +177,7 @@ theorem exists_sec_not_mem (L : LineBundle S x) (hL : IsVeryAmple L.toSubSystem)
     have := pp.sub_mem hg hgs
     rwa [sub_sub_cancel] at this
   refine monos_not_mem (pp := pp) (I := {i}) (fun j hj => ?_) hs hsp
-  rw [Finset.mem_singleton.mp hj]
-  exact hi
+  rwa [Finset.mem_singleton.mp hj]
 
 end Section
 

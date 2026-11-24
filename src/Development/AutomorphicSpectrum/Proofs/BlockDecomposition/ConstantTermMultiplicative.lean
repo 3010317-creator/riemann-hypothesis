@@ -109,8 +109,7 @@ theorem hint_comp_equiv {H H' : Type} [Group H] [Group H'] (e : H ≃* H') (K : 
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact (hK x).1 hx
-    · intro hy
-      exact ⟨e.symm y, (hK _).2 (by simpa using hy), by simp⟩
+    · exact fun hy => ⟨e.symm y, (hK _).2 (by simpa using hy), by simp⟩
   have hSc : S = S'.comap e.toMonoidHom := by
     ext x
     exact hS x
@@ -140,8 +139,7 @@ theorem hint_const_mul {H : Type} [Group H] (K : Subgroup H) (c : ℂ) (hc : c �
   have hr : rStab (fun z => c * u z) = rStab u := by
     ext k
     constructor
-    · intro hk x
-      exact mul_left_cancel₀ hc (hk x)
+    · exact fun hk x => mul_left_cancel₀ hc (hk x)
     · intro hk x
       show c * u (x * k) = c * u x
       rw [hk x]
@@ -213,8 +211,7 @@ theorem isHk_of_isHecke {n : ℕ} {w : Pl E} (hU : UL n w = ⊤) {f : UL n w →
     exact hy ⟨toSub (UL n w) y, subset_tsupport _ h0, val_toSub hU y⟩
   · intro k₁ hk₁ k₂ hk₂ g
     have hm : ∀ k ∈ GlobalTheory.LFun.KGL w (n := n), toSub (UL n w) k ∈ KL n w := fun k hk => by
-      rw [KL, Subgroup.mem_subgroupOf, val_toSub hU]
-      exact hk
+      rwa [KL, Subgroup.mem_subgroupOf, val_toSub hU]
     show f (toSub _ (k₁ * g * k₂)) = f (toSub _ g)
     rw [toSub_mul hU, toSub_mul hU, (hf.2 _ (hm _ hk₂) _).2, (hf.2 _ (hm _ hk₁) _).1]
 
@@ -319,7 +316,7 @@ theorem ct_gconv {n a b : ℕ} (h : a + b = n) (w : Pl E) {f₁ f₂ : GLw n w �
 
 theorem ctMul : CtMul := by
   intro E _ _ _ n a ha w hw μ hμ f g hf hg
-  have hU : UL n w = ⊤ := if_pos hw
+  have hU : UL n w = ⊤ := ite_eq_left hw
   funext m
   set h := Nat.add_sub_cancel' ha with hh
   let c : GLw a w × GLw (n - a) w → ℂ := fun m =>

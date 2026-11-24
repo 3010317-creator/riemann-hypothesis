@@ -60,8 +60,7 @@ theorem exists_nat_mul_mem [NumberField Ω] {y : (Σ k, ι k) → Ω} (hy : Bira
     rw [hgt, inv_div, div_mul_div_comm, mul_comm (∏ k, y ⟨k, c k⟩ ^ d k), mul_assoc,
       mul_div_assoc, div_self (mul_ne_zero hh0 hX), mul_one]
   have := (ratSat (chartRingZ y c)).mul_mem hG hinv
-  rw [← ht] at this
-  exact this
+  rwa [← ht] at this
 
 end ChartLatFull
 
@@ -81,7 +80,7 @@ theorem ChartLatFull.proof : ChartLatFull.Statement := by
   show ∀ c : ∀ k, ι k, (∀ k, y ⟨k, c k⟩ ≠ 0) → _
   intro c hc
   have hN : (N c : Ω) * t c ∈ chartRingZ y c := by
-    simp only [N, dif_pos hc]
+    simp only [N, dite_eq_left hc]
     exact (ChartLatFull.exists_nat_mul_mem hy c hc (t c)).choose_spec.2
   obtain ⟨m, hm⟩ := Finset.dvd_prod_of_mem N (Finset.mem_univ c)
   have : ((∏ c, N c : ℕ) : Ω) * s * ∏ k, y ⟨k, c k⟩ ^ (-((τ : ℤ) * a k)) = (m : Ω) * ((N c : Ω) * t c) := by

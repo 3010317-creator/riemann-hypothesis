@@ -64,12 +64,12 @@ theorem fockSubst_eq_fsub {D : D7} {m n : ℕ} (p : D.what₂.Tau → ℕ) (u : 
   refine MvPolynomial.algHom_ext fun v => ?_
   rw [fockSubst, fsub, MvPolynomial.aeval_X, MvPolynomial.aeval_X]
   by_cases h : v.2.1.val < p v.1
-  · rw [if_pos h, Finset.sum_eq_single v.2.1]
+  · rw [ite_eq_left h, Finset.sum_eq_single v.2.1]
     · simp [sgnOf, h, Matrix.coe_units_inv]
     · intro a _ ha
       simp [sgnOf, h, Matrix.one_apply_ne ha]
     · simp
-  · rw [if_neg h, Finset.sum_eq_single v.2.1]
+  · rw [ite_eq_right h, Finset.sum_eq_single v.2.1]
     · simp [sgnOf, h]
     · intro a _ ha
       simp [sgnOf, h, Matrix.one_apply_ne (Ne.symm ha)]
@@ -432,8 +432,7 @@ theorem ev_det {ι : Type} [Fintype ι] [DecidableEq ι] (X Y : Matrix ι ι ℂ
   have hfin : ({t | Q.IsRoot t} \ {0}).Finite := (Polynomial.finite_setOf_isRoot hQ0).subset Set.diff_subset
   filter_upwards [nhdsWithin_le_nhds (hfin.isClosed.isOpen_compl.mem_nhds (by simp)), self_mem_nhdsWithin] with t h1 h2
   rw [← hQ]
-  intro h3
-  exact h1 ⟨h3, h2⟩
+  exact fun h3 => h1 ⟨h3, h2⟩
 
 theorem eq_zero_of_triangular : ∀ (D : D7) (m n : ℕ) (p : D.what₂.Tau → ℕ) (ξ : PolF D m n →ₗ[ℂ] ℂ) (P : PolF D m n), (∀ u l : GLR D n, (∀ τ (a b : Fin n), b < a → (u τ).val a b = 0) → (∀ τ a, (u τ).val a a = 1) → (∀ τ (a b : Fin n), a < b → (l τ).val a b = 0) → ξ (fockSubst p (u * l) P) = 0) → ∀ g : GLR D n, ξ (fockSubst p g P) = 0 := by
   intro D m n p ξ P H g
@@ -450,8 +449,7 @@ theorem eq_zero_of_triangular : ∀ (D : D7) (m n : ℕ) (p : D.what₂.Tau → 
         (1 - t) • ((g τ).val).submatrix Subtype.val Subtype.val + t • (1 : Matrix {j : Fin n // i < j} {j : Fin n // i < j} ℂ) := fun t => by
       ext a b
       simp [A, Matrix.one_apply, Subtype.ext_iff]
-    simp only [e]
-    exact ev_det _ 1 (by simp)
+    simpa only [e] using ev_det _ 1 (by simp)
   have hAc : ∀ τ, Continuous fun t => A τ t := fun τ =>
     ((continuous_const.sub continuous_id).smul continuous_const).add (continuous_id.smul continuous_const)
   have hA0 : ∀ τ, A τ 0 = (g τ).val := fun τ => by simp [A]
@@ -478,8 +476,7 @@ theorem eq_zero_of_triangular : ∀ (D : D7) (m n : ℕ) (p : D.what₂.Tau → 
     have := H u l hu hu1 hl
     rw [fockSubst_eq_fsub, fsub_eq_lsub] at this
     have e : (fun τ => ((u * l) τ).val) = fun τ => A τ t := funext fun τ => (hA τ).symm
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have h1 : Filter.Tendsto f (nhdsWithin (0 : ℂ) {0}ᶜ) (nhds (f 0)) := hcont.tendsto.mono_left nhdsWithin_le_nhds
   have h2 : Filter.Tendsto f (nhdsWithin (0 : ℂ) {0}ᶜ) (nhds 0) := tendsto_const_nhds.congr' (hz.mono fun _ h => h.symm)
   rw [← hf0]

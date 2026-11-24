@@ -378,7 +378,7 @@ theorem eSerC_mul_zIdem {r : ℕ} (ρ : FDRep ℂ (GL (Fin r) (ZMod g))) (hρ : 
       rw [← h, GlobalTheory.SerOSys.eSerO_eq_sum, Finset.mul_sum]
       refine Finset.sum_eq_zero fun z hz => ?_
       have hz' := (GlobalTheory.SerOSys.Zl_finite O r f).mem_toFinset.1 hz
-      rw [GlobalTheory.SerOSys.mul_of_mem ⟨ρ, hρ, rfl⟩ (GlobalTheory.SerOSys.Zl_sub O r f hz'), if_neg]
+      rw [GlobalTheory.SerOSys.mul_of_mem ⟨ρ, hρ, rfl⟩ (GlobalTheory.SerOSys.Zl_sub O r f hz'), ite_eq_right]
       rintro e
       exact hm (e ▸ hz')
     rw [h0, mul_zero]
@@ -396,18 +396,10 @@ variable {g : ℕ} [Fact g.Prime] {E : Type} [Field E] [NumberField E] {w : Heig
   (hw : ((g : ℕ) : 𝓞 E) ∈ w.asIdeal) (i : ℚ_[g] ≃+* w.adicCompletion E) (hi : Continuous i)
 
 theorem val_lt_iff (y : w.adicCompletion E) : valuation (w.adicCompletion E) y < 1 ↔ ‖y‖ < 1 := by
-  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
-    Valuation.Compatible.ofValuation _
-  have he := isEquiv (valuation (w.adicCompletion E))
-    (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
-  rw [he.lt_one_iff_lt_one, Valued.toNormedField.norm_lt_one_iff]
+  exact GlobalTheory.DepthZeroRankOneLabel.val_lt_iff y
 
 theorem val_le_iff (y : w.adicCompletion E) : valuation (w.adicCompletion E) y ≤ 1 ↔ ‖y‖ ≤ 1 := by
-  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
-    Valuation.Compatible.ofValuation _
-  have he := isEquiv (valuation (w.adicCompletion E))
-    (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
-  rw [he.le_one_iff_le_one, Valued.toNormedField.norm_le_one_iff]
+  exact GlobalTheory.DepthZeroRankOneLabel.val_le_iff y
 
 include hi in
 theorem val_int_le (z : ℤ_[g]) : valuation (w.adicCompletion E) (i (z : ℚ_[g])) ≤ 1 :=
@@ -785,7 +777,6 @@ theorem redThrough_eq_of_val_sub_lt_one {Ω : Type} [Field Ω] (A : ValuationSub
   rw [dite_eq_left ha, dite_eq_left hb]
   congr 1
   rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
-  show (⟨a, ha⟩ - ⟨b, hb⟩ : A) ∈ IsLocalRing.maximalIdeal A
   exact (A.valuation_lt_one_iff _).mpr hab
 
 
@@ -957,8 +948,7 @@ theorem exists_regularChar :
       rw [orderOf_eq_card_of_forall_mem_zpowers hw, Nat.card_eq_fintype_card, Fintype.card_units, hcardK]
     have hιw : orderOf (ι (w : K)) = g ^ n - 1 := by
       have h := orderOf_injective ι.toMonoidHom ι.injective (w : K)
-      rw [orderOf_units, hwo] at h
-      exact h
+      rwa [orderOf_units, hwo] at h
     have hwp : IsPrimitiveRoot (ι (w : K)) (g ^ n - 1) := hιw ▸ IsPrimitiveRoot.orderOf _
     obtain ⟨k, -, hk⟩ := hwp.eq_pow_of_pow_eq_one (hgo ▸ pow_orderOf_eq_one (L.gen n))
     have hu0 : ι ((w ^ k : Kˣ) : K) = L.gen n := by rw [Units.val_pow_eq_pow_val, map_pow, hk]
@@ -1325,8 +1315,7 @@ theorem tame_eq {χ : Fˣ →* ℂˣ} (hχ : IsTame χ) {x y : Fˣ} (hy : valuat
   have h1 : valuation F (((x / y : Fˣ) : F) - 1) < 1 := by
     have : ((x / y : Fˣ) : F) - 1 = ((x : F) - y) / y := by
       rw [Units.val_div_eq_div_val, sub_div, div_self y.ne_zero]
-    rw [this, map_div₀, hy, div_one]
-    exact hxy
+    rwa [this, map_div₀, hy, div_one]
   have := hχ _ h1
   rwa [_root_.map_div, div_eq_one] at this
 
@@ -1385,8 +1374,7 @@ theorem inflates_det {E : Type} [Field E] [NumberField E] {g : ℕ} [Fact g.Prim
   have hk : ‖(((c : ℤ_[g]) - r : ℤ_[g]) : ℚ_[g])‖ < 1 := by
     have : (c : ℤ_[g]) - r ∈ RingHom.ker (PadicInt.toZMod (p := g)) := by
       rw [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_self]
-    rw [PadicInt.ker_toZMod, IsLocalRing.mem_maximalIdeal, PadicInt.mem_nonunits] at this
-    exact this
+    rwa [PadicInt.ker_toZMod, IsLocalRing.mem_maximalIdeal, PadicInt.mem_nonunits] at this
   have h6 := he.lt_one_iff_lt_one.2 (GlobalTheory.Published.DepthZeroTypeModel.v_lt_one i hi hk)
   have h7 : χ (Units.map i.toRingHom.toMonoidHom (Units.map (algebraMap ℤ_[g] ℚ_[g]).toMonoidHom c)) =
       θ (Units.map (PadicInt.toZMod (p := g)).toMonoidHom c) := by
@@ -1590,8 +1578,7 @@ theorem GlobalTheory.DepthZeroRankOneLabel.wild_trivial_m_alt (D : D7) (k : Fin 
   rw [hl.one, WD.lpOfChar, WD.tame_mk] at htame
   intro σ hσ
   have h2 := LinearMap.congr_fun (htame σ hσ) (fun _ => 1)
-  have h3 := congrFun h2 0
-  simpa using h3
+  simpa using congrFun h2 0
 end
 end
 end -- clump:auto

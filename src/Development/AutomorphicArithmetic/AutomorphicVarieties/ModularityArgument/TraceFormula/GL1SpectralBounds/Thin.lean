@@ -176,8 +176,7 @@ lemma key (w : HeightOneSpectrum (𝓞 E)) (hns : ¬ IsSplitAt w)
   set v : HeightOneSpectrum (𝓞 F) := w.under (𝓞 F) with hvdef
   haveI hvw : w.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
   have hpv : (p : 𝓞 F) ∈ v.asIdeal := by
-    rw [Ideal.over_def w.asIdeal v.asIdeal, Ideal.under, Ideal.mem_comap, map_natCast]
-    exact hm
+    rwa [Ideal.over_def w.asIdeal v.asIdeal, Ideal.under, Ideal.mem_comap, map_natCast]
   obtain ⟨f0, hf0, hv⟩ := absNorm_pow v hp hpv
   have hnorm := Ideal.absNorm_pow_inertiaDeg (R := 𝓞 F) v.asIdeal w.asIdeal
   suffices hf : 2 ≤ w.asIdeal.inertiaDeg (𝓞 F) by
@@ -212,15 +211,13 @@ lemma key (w : HeightOneSpectrum (𝓞 E)) (hns : ¬ IsSplitAt w)
       rw [← Ideal.over_def q.1 v.asIdeal, ← Ideal.over_def w.asIdeal v.asIdeal]
   let q0 : v.asIdeal.primesOver (𝓞 E) := ⟨w.asIdeal, w.isPrime, hvw⟩
   rw [Fintype.sum_eq_single q0 (fun q hq => absurd (Subtype.ext (huniq q)) hq), hrank] at hsum
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hfpos := Ideal.inertiaDeg_pos w.asIdeal (𝓞 F)
   have hf1 : w.asIdeal.inertiaDeg (𝓞 F) = 1 := by omega
   have he : w.asIdeal.ramificationIdx (𝓞 F) = 2 := by
     have := hsum
     simp only [q0] at this
-    rw [hf1, mul_one] at this
-    exact this
+    rwa [hf1, mul_one] at this
   have he' : v.asIdeal.ramificationIdx' w.asIdeal = 2 := by
     rw [Ideal.ramificationIdx'_eq_ramificationIdx v.asIdeal w.asIdeal v.ne_bot, he]
   have hdvd : w.asIdeal ^ 2 ∣ v.asIdeal.map (algebraMap (𝓞 F) (𝓞 E)) := by
@@ -260,8 +257,7 @@ theorem inertThin_holds : InertThin := by
       · intro w hw
         rw [Finset.mem_coe, Finset.mem_filter] at hw
         exact hw.2
-      · intro a _ b _ h
-        exact Subtype.ext h
+      · exact fun a _ b _ h => Subtype.ext h
     calc ∑ w ∈ u.filter (fun w => w.1 ∈ Ram), ((Ideal.absNorm w.1.asIdeal : ℝ))⁻¹
         ≤ ∑ w ∈ u.filter (fun w => w.1 ∈ Ram), (1 : ℝ) := by
           apply Finset.sum_le_sum
@@ -277,8 +273,7 @@ theorem inertThin_holds : InertThin := by
       have hnd : ¬ w.1.asIdeal ∣ D := by
         intro h
         apply hnot
-        rw [hRam, Set.Finite.mem_toFinset]
-        exact h
+        rwa [hRam, Set.Finite.mem_toFinset]
       have h2 := key w.1 w.2 hnd (hg w.1).1 (hg w.1).2
       have hgpos : (0 : ℝ) < (g w.1 : ℝ) ^ 2 := by
         have := (hg w.1).1.pos
@@ -302,8 +297,7 @@ theorem inertThin_holds : InertThin := by
           refine ⟨Finset.mem_image_of_mem _ hw.1, ?_⟩
           rw [← hw.2]
           exact (hg w.1).2
-        · intro a _ b _ h
-          exact Subtype.ext h
+        · exact fun a _ b _ h => Subtype.ext h
       exact_mod_cast hle.trans hc
     calc ∑ w ∈ u', ((Ideal.absNorm w.1.asIdeal : ℝ))⁻¹
         ≤ ∑ w ∈ u', 1 / (g w.1 : ℝ) ^ 2 := Finset.sum_le_sum hkey
@@ -318,8 +312,7 @@ theorem inertThin_holds : InertThin := by
           simp
       _ ≤ ∑ k ∈ u'.image (fun w => g w.1), (Module.finrank ℚ E : ℝ) * (1 / (k : ℝ) ^ 2) := by
           apply Finset.sum_le_sum
-          intro k hk
-          exact mul_le_mul_of_nonneg_right (hfib k hk) (by positivity)
+          exact fun k hk => mul_le_mul_of_nonneg_right (hfib k hk) (by positivity)
       _ = (Module.finrank ℚ E : ℝ) * ∑ k ∈ u'.image (fun w => g w.1), 1 / (k : ℝ) ^ 2 := by
           rw [Finset.mul_sum]
       _ ≤ (Module.finrank ℚ E : ℝ) * ∑' k : ℕ, (1 : ℝ) / (k : ℝ) ^ 2 := by

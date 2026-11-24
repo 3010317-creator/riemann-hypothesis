@@ -52,16 +52,7 @@ open Formalism.MainNotions.G Formalism.MainNotions.flipOneThree Formalism.MainNo
 
 theorem dualWeyl_mul (R : Type*) [CommRing R] (r n : ℕ) (ν ν' : Fin n → ℕ) {F G : MvPolynomial (Fin r × Fin n) R}
     (hF : F ∈ dualWeyl R r n ν) (hG : G ∈ dualWeyl R r n ν') : F * G ∈ dualWeyl R r n (ν + ν') := by
-  rw [dualWeyl, Submodule.mem_inf] at hF hG ⊢
-  refine ⟨(mem_weightedHomogeneousSubmodule _ _ _ _).2
-    (((mem_weightedHomogeneousSubmodule _ _ _ _).1 hF.1).mul
-      ((mem_weightedHomogeneousSubmodule _ _ _ _).1 hG.1)), ?_⟩
-  have hF2 := hF.2
-  have hG2 := hG.2
-  simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, AlgHom.toLinearMap_apply,
-    sub_eq_zero] at hF2 hG2 ⊢
-  intro l j hlj
-  rw [map_mul, map_mul, hF2 l j hlj, hG2 l j hlj]
+  exact Formalism.GradedWeylDivisibility.dualWeyl_mul hF hG
 
 theorem one_mem_dualWeyl (R : Type*) [CommRing R] (r n : ℕ) : (1 : MvPolynomial (Fin r × Fin n) R) ∈ dualWeyl R r n 0 := by
   rw [dualWeyl, Submodule.mem_inf]
@@ -96,7 +87,7 @@ theorem Vsp_eq (Kf : Type) [Field Kf] {n' m : ℕ} (lam0 : Fin n' → Fin (m + 1
   unfold Vsp
   congr 1
   funext s
-  rw [if_pos (kp_lamAt_antitone lam0 hdom s)]
+  rw [ite_eq_left (kp_lamAt_antitone lam0 hdom s)]
 
 end Formalism.MainNotions.flipOneThree.Pf
 

@@ -244,8 +244,7 @@ theorem jetLin_monomial (J : (DVar ι a b →₀ ℕ) → K) (m : (ι × Fin b �
       (J (m.comapDomain Sum.inr Sum.inr_injective.injOn)) := by
   have := (basisMonomials ((ι × Fin b × Fin b) ⊕ DVar ι a b) K).constr_basis K (fun m =>
     (monomial (m.comapDomain Sum.inl Sum.inl_injective.injOn) (J (m.comapDomain Sum.inr Sum.inr_injective.injOn)) : Pol K ι b)) m
-  rw [coe_basisMonomials] at this
-  exact this
+  rwa [coe_basisMonomials] at this
 
 theorem subD_scale (w : ι → K) (P : Pol K ι a) :
     scaleVar (Sum.elim (fun _ => 1) fun k => w k.1) (subD K ι a b P) =
@@ -453,7 +452,7 @@ namespace GlobalTheory.JetDescent
 
 theorem coe_lift_of_mem (M : IntermediateField ℚ ℂ) (x : ℂ) (hx : x ∈ M) : Formalism.MainNotions.TaylorLogMetric.liftM M x = ⟨x, hx⟩ := by
   unfold Formalism.MainNotions.TaylorLogMetric.liftM
-  exact dif_pos hx
+  exact dite_eq_left hx
 
 theorem mapVV_rational_form_conj : ∀ {D : D7} {a b : ℕ} (lam : D.what₂.Tau → DomWeight a) (lam' : D.what₂.Tau → DomWeight b) (n : D.what₂.Tau → ℕ)
     (J : (Formalism.L2.Ker.DVar D.what₂.Tau a b →₀ ℕ) → ℂ) (σ : D.what₂.LL →+* ℂ) (ρ' : Qbar →ₐ[ℚ] ℂ)
@@ -483,12 +482,10 @@ theorem mapVV_rational_form_conj : ∀ {D : D7} {a b : ℕ} (lam : D.what₂.Tau
     rfl
   have h1 : Formalism.L2.Ker.jetMap J n (MvPolynomial.map D.what₂.embLL u.1) = MvPolynomial.map D.what₂.embLL (f u).1 := by
     have h := congrArg Subtype.val (hf u)
-    rw [Formalism.L2.Ker.jetOp_coe lam lam' n hV] at h
-    exact h
+    rwa [Formalism.L2.Ker.jetOp_coe lam lam' n hV] at h
   have h2 : Formalism.L2.Ker.jetMap Jq n (MvPolynomial.map e u.1) = MvPolynomial.map e (f u).1 := by
     apply MvPolynomial.map_injective i i.injective
-    rw [Formalism.L2.Ker.map_jetMap, MvPolynomial.map_map, MvPolynomial.map_map, hie, hJi]
-    exact h1
+    rwa [Formalism.L2.Ker.map_jetMap, MvPolynomial.map_map, MvPolynomial.map_map, hie, hJi]
   have h3 := congrArg (MvPolynomial.map r) h2
   rw [Formalism.L2.Ker.map_jetMap, MvPolynomial.map_map, MvPolynomial.map_map, hre, hJr] at h3
   apply Subtype.ext
@@ -517,8 +514,8 @@ theorem applyAt0_mono (D : D7) {N N' : ℕ} (α : Mono D N N') (G : VC D N N' �
       = ((α.prod fun _ n => n.factorial : ℕ) : ℂ) * Formalism.MainNotions.TaylorLogMetric.taylor D G α := by
   classical
   unfold Formalism.MainNotions.GL3Theta.applyAt0
-  rw [MvPolynomial.support_monomial, if_neg one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
-    if_pos rfl, one_mul]
+  rw [MvPolynomial.support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
+    ite_eq_left rfl, one_mul]
   simp [Finsupp.prod]
 
 theorem jet_of_cjF {D : D7} {N N' : ℕ} {ρ : Qbar →ₐ[ℚ] ℂ} {F F' : VC D N N' → ℂ} (h : CjF D Qbar ρ F F')

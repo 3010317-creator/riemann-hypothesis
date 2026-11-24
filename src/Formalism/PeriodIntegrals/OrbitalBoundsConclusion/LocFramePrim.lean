@@ -128,8 +128,7 @@ theorem Assemble_OEv_of_mem (y : Fv F v ⊗[F] E)
   have h : inclR (F := F) (Fv F v) '' Set.range ((↑) : 𝓞 E → E) =
       (fun x : 𝓞 E => inclR (F := F) (Fv F v) (x : E)) '' Set.univ := by
     ext y; simp
-  rw [h] at hy
-  exact hy
+  rwa [h] at hy
 
 theorem Assemble_ratTup_castSucc {r : ℕ} (e : Fin r → Fin n → E) (z : Fin n → E) (a : Fin r) :
     ratTup (F := F) (Fv F v) (Fin.snoc e z : Fin (r + 1) → Fin n → E) (Fin.castSucc a) =
@@ -180,7 +179,7 @@ theorem primitiveOfDualFunctionals : Assemble := by
         rw [SetLike.mem_coe, Submodule.mem_comap, LinearMap.restrictScalars_apply, map_smul, p1,
           smul_eq_mul]
         by_cases hab : a = b
-        · subst hab; rw [if_pos rfl, mul_one]; exact hx
+        · subst hab; rw [ite_eq_left rfl, mul_one]; exact hx
         · simp [hab]
       · intro l hl
         rw [Submodule.mem_comap, LinearMap.restrictScalars_apply, p3 a l hl]
@@ -263,12 +262,11 @@ theorem primitiveOfDualFunctionals : Assemble := by
       have h := Assemble_bc_span v (φ a) (Λ : Set (Fin n → E)) _ (hφΛ a) _ hc
       rw [hsum] at h
       simp only [p1, p3 a z hz, map_zero, mul_zero, add_zero, apply_ite (inclR (F := F) (Fv F v)),
-        map_one, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true] at h
+        map_one, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h
       rw [Assemble_exp] at h
       obtain ⟨p, hp, hcp⟩ := (hD (r - (a : ℕ)) _).1 h
       rw [mul_comm] at hcp
-      rw [(hunit _).mul_left_cancel hcp]
-      exact hp
+      rwa [(hunit _).mul_left_cancel hcp]
 
 end Assemble
 
@@ -791,8 +789,7 @@ theorem dualFunctionalsExist : Dual := by
         have h0 : (⟨a • x, hl⟩ : Lb) = a • ⟨x, hx'⟩ := rfl
         rw [h0, LinearMap.map_smul ρ, Dual_smul_coe, LinearMap.map_smul χ, ihx hx', smul_eq_mul, smul_eq_mul]
         exact (map_mul (algebraMap (𝓞 E) E) _ _).symm
-    intro l hl
-    exact key' l (hS.symm ▸ hl) hl
+    exact fun l hl => key' l (hS.symm ▸ hl) hl
   obtain ⟨φz, hφz⟩ := Dual_ext _ hfam (Sum.elim (fun _ => 0) fun t : B => (ψ ⟨t, hBLb t t.2⟩ : E))
   have hφ : ∀ a : Fin r, ∃ φ : (Fin n → E) →ₗ[E] E, ∀ k, φ (Sum.elim (Fin.append e f)
       ((↑) : B → Fin n → E) k) =

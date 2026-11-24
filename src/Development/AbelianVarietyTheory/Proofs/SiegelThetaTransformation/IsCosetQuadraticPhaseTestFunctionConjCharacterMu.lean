@@ -93,8 +93,7 @@ theorem quad_mul {S : AddSubgroup M} {f g : M → ℂ} (hf : Quad S f) (hg : Qua
 
 theorem quad_conj {S : AddSubgroup M} {f : M → ℂ} (hf : Quad S f) : Quad S (fun x => conj (f x)) := by
   refine ⟨fun x hx => mu_conj (hf.1 x hx), fun x hx y hy z hz => ?_⟩
-  have h1 := congrArg conj (hf.2 x hx y hy z hz)
-  simpa only [map_mul] using h1
+  simpa only [map_mul] using congrArg conj (hf.2 x hx y hy z hz)
 
 theorem quad_mono {S S' : AddSubgroup M} {f : M → ℂ} (h : S' ≤ S) (hf : Quad S f) : Quad S' f :=
   ⟨fun x hx => hf.1 x (h hx), fun x hx y hy z hz => hf.2 x (h hx) y (h hy) z (h hz)⟩
@@ -184,8 +183,7 @@ theorem chr_eq_one {y z : Matrix κ ι ℚ} {N : ℕ} (hy : IntM ((N : ℚ) • 
   obtain ⟨n, hn⟩ := IsIntegrallyClosed.isIntegral_iff.mp h
   unfold chr
   rw [← hn, mul_comm]
-  simp only [eq_intCast, Rat.cast_intCast]
-  exact Complex.exp_int_mul_two_pi_mul_I _
+  simpa only [eq_intCast, Rat.cast_intCast] using Complex.exp_int_mul_two_pi_mul_I _
 
 theorem isSB_mul_chr {φ : Matrix κ ι ℚ → ℂ} (h : IsSB φ) (y : Matrix κ ι ℚ) :
     IsSB (fun x => φ x * chr y x) := by
@@ -238,9 +236,9 @@ theorem shape_mul {φ ψ : Matrix κ ι ℚ → ℂ} (h : Shape φ) (h' : Shape 
     simp only [hφ x, hψ x, sub_add_sub_cancel]
     by_cases p : x - b ∈ S
     · by_cases p' : x - b ∈ S'
-      · rw [if_pos (i1.2 p), if_pos (i2.2 p'), if_pos (AddSubgroup.mem_inf.2 ⟨p, p'⟩)]; ring
-      · rw [if_neg (mt i2.1 p'), mul_zero, if_neg (fun q => p' (AddSubgroup.mem_inf.1 q).2)]
-    · rw [if_neg (mt i1.1 p), zero_mul, if_neg (fun q => p (AddSubgroup.mem_inf.1 q).1)]
+      · rw [ite_eq_left (i1.2 p), ite_eq_left (i2.2 p'), ite_eq_left (AddSubgroup.mem_inf.2 ⟨p, p'⟩)]; ring
+      · rw [ite_eq_right (mt i2.1 p'), mul_zero, ite_eq_right (fun q => p' (AddSubgroup.mem_inf.1 q).2)]
+    · rw [ite_eq_right (mt i1.1 p), zero_mul, ite_eq_right (fun q => p (AddSubgroup.mem_inf.1 q).1)]
   · refine ⟨0, 0, ⊥, fun _ => 1, ph_zero, ⟨fun _ _ => isMu_one, fun _ _ _ _ _ _ => rfl⟩, fun x => ?_⟩
     have : φ x * ψ x = 0 := by
       rw [hφ x, hψ x]

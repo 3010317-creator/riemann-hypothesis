@@ -99,8 +99,7 @@ theorem nr_eventually {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ}
     simp only [Set.mem_setOf_eq, not_not] at h3
     exact h3
   have h4 : ∀ᶠ x in Filter.map (fun x : U => (x : V)) (𝓝 (⟨h, hh⟩ : U)), psi A φ γ x = 0 := h2
-  rw [map_nhds_subtype_val, H.isOpen.nhdsWithin_eq hh] at h4
-  exact h4
+  rwa [map_nhds_subtype_val, H.isOpen.nhdsWithin_eq hh] at h4
 
 theorem nr_fderiv {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ} (H : Hyp U A φ) {h : V}
     (hh : h ∈ U) {γ : Γ} (hγ : ¬ Nr U A φ h γ) : fderiv ℝ (psi A φ γ) h = 0 := by
@@ -114,8 +113,7 @@ theorem nr_mul {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ} {O : S
   obtain ⟨hm1, hc1⟩ := h1
   obtain ⟨hm2, hc2⟩ := h2
   have key : A (γ⁻¹ * γ')⁻¹ (A γ⁻¹ h) = A γ'⁻¹ h := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul]
-    rw [show (γ⁻¹ * γ')⁻¹ * γ⁻¹ = γ'⁻¹ by group]
+    rw [← ContinuousLinearMap.mul_apply, ← map_mul, show (γ⁻¹ * γ')⁻¹ * γ⁻¹ = γ'⁻¹ by group]
   have hm : A (γ⁻¹ * γ')⁻¹ (A γ⁻¹ h) ∈ U := by rw [key]; exact hm2
   refine hOv (γ⁻¹ * γ') ⟨A γ⁻¹ h, hm1⟩ hc1 hm ?_
   convert hc2 using 1
@@ -203,8 +201,7 @@ theorem claim {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ} (hL : P
           + (fderiv ℝ (psi A φ γ) h).smulRight (eta A φ c j (cons γ σ) h)) := by
       rw [hloc.fderiv_eq, fderiv_fun_sum (A := fun γ x => psi A φ γ x • eta A φ c j (cons γ σ) x)
         (fun γ _ => by exact (hdψ γ).smul (hdη γ))]
-      refine Finset.sum_congr rfl fun γ _ => ?_
-      exact fderiv_fun_smul (hdψ γ) (hdη γ)
+      exact Finset.sum_congr rfl fun γ _ => fderiv_fun_smul (hdψ γ) (hdη γ)
     have heta : eta A φ c (j + 1) σ h = ∑ γ ∈ s, ContinuousAlternatingMap.alternatizeUncurryFin
         ((fderiv ℝ (psi A φ γ) h).smulRight (eta A φ c j (cons γ σ) h)) := by
       rw [show eta A φ c (j + 1) σ = extDeriv (Kf A φ (eta A φ c j) σ) from eta.eq_2 A φ c σ j]
@@ -222,10 +219,8 @@ theorem claim {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ} (hL : P
       apply Finset.card_le_card_of_injOn (fun γ => γ0⁻¹ * γ)
       · intro γ hγ
         simp only [Finset.coe_filter, Set.mem_setOf_eq] at hγ
-        simp only [Set.Finite.coe_toFinset]
-        exact nr_mul hOv hγ0 hγ.2
-      · intro a _ b _ hab
-        exact mul_left_cancel hab
+        simpa only [Set.Finite.coe_toFinset] using nr_mul hOv hγ0 hγ.2
+      · exact fun a _ b _ hab => mul_left_cancel hab
     have hB : 0 ≤ ((j : ℝ) + 1) * (M * (Cj * M ^ j)) :=
       mul_nonneg (by positivity) (mul_nonneg hM (mul_nonneg hCj (pow_nonneg hM _)))
     have hterm : ∀ γ ∈ s, ‖ContinuousAlternatingMap.alternatizeUncurryFin
@@ -354,7 +349,7 @@ theorem chain (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : P
   have hK : ∀ i, a + 1 ≤ i → Kf A φ (eta A φ c j) (skip i g) = ω := by
     intro i hi
     rw [hω]
-    exact kf_dep hD c j _ _ (fun n hn => by simp only [skip]; rw [if_pos (by omega)])
+    exact kf_dep hD c j _ _ (fun n hn => by simp only [skip]; rw [ite_eq_left (by omega)])
   have hF2 : ∀ x ∈ U, (∑ i ∈ Finset.range (a + 2),
       ((-1 : ℝ) ^ i) • Kf A φ (eta A φ c j) (skip i g)) x = eta A φ c j g x := by
     intro x hx
@@ -371,8 +366,7 @@ theorem chain (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : P
     simp only [delG, Finset.sum_apply]
   have hWj : Wf A φ c o j g = ∑ i ∈ Finset.range (a + 2),
       (-1 : ℝ) ^ i * intS' (Kf A φ (eta A φ c j) (skip i g)) Z := by
-    rw [← intS'_sum H.convex _ _ _ (fun i _ => hcont _) hZU]
-    rw [intS'_congr H.convex hF2 hZU]
+    rw [← intS'_sum H.convex _ _ _ (fun i _ => hcont _) hZU, intS'_congr H.convex hF2 hZU]
     simp only [Wf, hZ]
     congr 1
     funext l
@@ -383,7 +377,7 @@ theorem chain (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : P
     congr 1
     funext l
     simp only [skip]
-    rw [if_neg (by omega), show a + j - j + ↑l + 1 = a + 1 + ↑l by omega]
+    rw [ite_eq_right (by omega), show a + j - j + ↑l + 1 = a + 1 + ↑l by omega]
   have hBB : ∀ m : Fin (j + 1), Bf A φ c o j (skip (a + 1 + ↑m) g) =
       intS' ω (fun l => Y (m.succ.succAbove l)) := by
     intro m
@@ -398,8 +392,7 @@ theorem chain (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : P
   have hSt := hS j ω (by
     rw [hω]
     exact ((hSm H (a + j) c j g).2).of_le (by exact_mod_cast (le_top : (1 : ℕ∞) ≤ ⊤))) Y hYU
-  rw [hExt] at hSt
-  rw [dC', Fin.sum_univ_succ] at hSt
+  rw [hExt, dC', Fin.sum_univ_succ] at hSt
   have hW1 : Wf A φ c o (j + 1) g = intS' (eta A φ c (j + 1) g) Y := by
     simp only [Wf, hY]
     congr 1
@@ -467,13 +460,11 @@ private theorem simplex_point_mem_of_convex_of_vertices_mem {q : ℕ} (hU : Conv
       simp only [Fin.cons_zero]
       linarith [ht.2]
     | succ i =>
-      simp only [Fin.cons_succ]
-      exact ht.1 i
+      simpa only [Fin.cons_succ] using ht.1 i
   · rw [Fin.sum_univ_succ]
     simp only [Fin.cons_zero, Fin.cons_succ]
     ring
-  · intro i _
-    exact hy i
+  · exact fun i _ => hy i
 
 private theorem intS'_congr_of_eqOn_convex {q : ℕ} (hU : Convex ℝ U) (ω ω' : V → V [⋀^Fin q]→L[ℝ] ℝ)
     (hω : ∀ x ∈ U, ω x = ω' x) (y : Fin (q + 1) → V) (hy : ∀ i, y i ∈ U) :
@@ -538,9 +529,9 @@ private theorem apply_add_succAbove_eq_skip (g : ℕ → Γ) (a : ℕ) {n : ℕ}
     g (a + ↑(i.succAbove l)) = skip (a + ↑i) g (a + ↑l) := by
   simp only [skip]
   rcases lt_or_ge l.val i.val with hl | hl
-  · rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simpa using hl), if_pos (by omega)]
+  · rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simpa using hl), ite_eq_left (by omega)]
     rfl
-  · rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def]; simpa using hl), if_neg (by omega)]
+  · rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def]; simpa using hl), ite_eq_right (by omega)]
     simp only [Fin.val_succ, Nat.add_assoc]
 
 theorem tele (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : PDep A φ)
@@ -552,8 +543,7 @@ theorem tele (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : PD
   intro j
   induction j with
   | zero =>
-    intro _
-    exact ⟨1, Or.inl rfl, fun _ => 0, fun _ _ => rfl, fun _ _ _ => rfl, fun g => by simp⟩
+    exact fun _ => ⟨1, Or.inl rfl, fun _ => 0, fun _ _ => rfl, fun _ _ _ => rfl, fun g => by simp⟩
   | succ j ih =>
     intro hj
     obtain ⟨s, hs, b, hbi, hbd, hb⟩ := ih (by omega)
@@ -952,8 +942,7 @@ theorem hyp_of {Ht : Gp L N → ℝ} (P : PU L N Ht) : Hyp (Pos L N) (actHom L N
     rw [e]
     exact P.locFin
   · intro h hh
-    simp only [actHom_inv]
-    exact P.sum_one h hh
+    simpa only [actHom_inv] using P.sum_one h hh
 
 theorem intS_smul {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] {q : ℕ} (s : ℝ) (ω : Form V q)
     (y : Fin (q + 1) → V) : intS (s • ω) y = s * intS ω y := by

@@ -99,8 +99,7 @@ theorem valuation_smul_of_map_eq (S : OpenSubgroup G) {g : G}
   have htop : (⊤ : Subgroup G).map (MulAut.conj g).toMonoidHom = ⊤ :=
     Subgroup.map_top_of_surjective _ (MulAut.conj g).surjective
   have h := smul_norm_of_map_eq (A := A) g htop hg a
-  refine h.symm.trans ?_
-  exact (norm A ⊤ (S : Subgroup G) a).2 g trivial
+  exact h.symm.trans ((norm A ⊤ (S : Subgroup G) a).2 g trivial)
 
 variable {K L : OpenSubgroup G}
 
@@ -193,14 +192,12 @@ theorem reciprocity_frobenius_of_unramified (hu : (K : Subgroup G) ⊓ D.deg.ker
 
   have he : relRamificationIndex D.deg K (s.field L hLK) = 1 := by
     rw [relRamificationIndex, Subgroup.relIndex_eq_one]
-    intro x hx
-    exact le_frobeniusClosure ⟨hu ⟨hx.2, hx.1⟩, hx.1⟩
+    exact fun x hx => le_frobeniusClosure ⟨hu ⟨hx.2, hx.1⟩, hx.1⟩
   have hrel : ((s.field L hLK : OpenSubgroup G) : Subgroup G).relIndex K = 1 := by
     rw [relIndex_eq_mul (d := D.deg) hSK, he, FrobeniusLift.relInertiaDegree_field hLK s]
     rfl
   have hπ' : D.valuation (s.field L hLK) ⟨π, fixedModule_anti hSK π.2⟩ = Multiplicative.ofAdd 1 := by
-    rw [D.valuation_of_mem hSK π.2, he, pow_one]
-    exact hπ
+    rwa [D.valuation_of_mem hSK π.2, he, pow_one]
   have h := reciprocity_mk_eq_norm hLK hax s hπ'
   refine h.trans ?_
   congr 1
@@ -317,8 +314,7 @@ theorem reciprocity_injective_of_totallyRamified
     have hker : (τ ^ m)⁻¹ * (g * l⁻¹) ∈ D.deg.ker := by
       rw [MonoidHom.mem_ker, map_mul, map_inv, map_pow, hτker, one_pow, inv_one, one_mul, map_mul,
         map_inv, hdl, mul_inv_cancel]
-    have h := (L1 : Subgroup G).mul_mem (hIL (Subgroup.mem_inf.2 ⟨hm, hker⟩)) hl
-    simpa [mul_assoc] using h
+    simpa [mul_assoc] using (L1 : Subgroup G).mul_mem (hIL (Subgroup.mem_inf.2 ⟨hm, hker⟩)) hl
   have hcyc1 : IsCyclic ((K1 : Subgroup G) ⧸ (L1 : Subgroup G).subgroupOf K1) := by
     refine ⟨⟨((⟨τ, hτK1⟩ : (K1 : Subgroup G)) : (K1 : Subgroup G) ⧸ (L1 : Subgroup G).subgroupOf K1),
       fun q => ?_⟩⟩
@@ -395,15 +391,13 @@ theorem reciprocity_injective_of_totallyRamified
       _ = τ • s.elt • x := by rw [hxL1 _ hc, mul_smul]
   have e1 : τ • (s.elt • x) / s.elt • x * τ ^ k • (b : A) = τ • x / x * b := by
     have h := hσπ
-    rw [hπ0x, smul_mul', smul_div', hcomm, hσb] at h
-    exact h
+    rwa [hπ0x, smul_mul', smul_div', hcomm, hσb] at h
 
   obtain ⟨c, hcdef⟩ : ∃ c : A, c = ∏ ν : Fin k, τ ^ (ν : ℕ) • (b : A) := ⟨_, rfl⟩
   obtain ⟨z, hzdef⟩ : ∃ z : A, z = x / s.elt • x := ⟨_, rfl⟩
   have hτc : τ • c / c = τ ^ k • (b : A) / b := by rw [hcdef]; exact smul_prod_pow_div τ (b : A) k
   have hkb : τ ^ k • (b : A) / b = τ • x / x / (τ • (s.elt • x) / s.elt • x) := by
-    rw [div_eq_div_iff_mul_eq_mul, mul_comm (τ ^ k • (b : A))]
-    exact e1
+    rwa [div_eq_div_iff_mul_eq_mul, mul_comm (τ ^ k • (b : A))]
   have hτz : τ • z / z = τ • x / x / (τ • (s.elt • x) / s.elt • x) := by
     rw [hzdef, smul_div', div_div_div_comm]
   have hτw : τ • (c / z) = c / z := by
@@ -434,8 +428,7 @@ theorem reciprocity_injective_of_totallyRamified
     intro y hy
     exact hIL (Subgroup.mem_inf.2 ⟨(Subgroup.mem_inf.1 hy).2, (Subgroup.mem_inf.1 hy).1⟩)
   have hvb1 : D.valuation L1 ⟨(b : A), hbL1⟩ = Multiplicative.ofAdd 1 := by
-    rw [D.valuation_of_mem hL1L b.2, he1L, pow_one]
-    exact hvb
+    rwa [D.valuation_of_mem hL1L b.2, he1L, pow_one]
   have hvτb : ∀ ν : ℕ, D.valuation L1 ⟨τ ^ ν • (b : A), hsmulL1 _ (K.pow_mem hτK ν) _ hbL1⟩ =
       Multiplicative.ofAdd 1 :=
     fun ν => (valuation_smul_of_map_eq L1 (hmapL1 _ (K.pow_mem hτK ν)) ⟨(b : A), hbL1⟩ _).trans hvb1
@@ -459,8 +452,7 @@ theorem reciprocity_injective_of_totallyRamified
       relRamificationIndex D.deg K1 L1 • Multiplicative.toAdd (D.valuation K1 ⟨c / z, hwK1⟩) := by
     have h := congrArg Multiplicative.toAdd hval
     rw [toAdd_ofAdd, toAdd_pow] at h
-    rw [Int.cast_natCast]
-    exact h
+    rwa [Int.cast_natCast]
   have hdvd : relRamificationIndex D.deg K1 L1 ∣ k :=
     Int.natCast_dvd_natCast.1 (dvd_of_intCast_eq_nsmul he1 hk)
 
@@ -472,8 +464,7 @@ theorem reciprocity_injective_of_totallyRamified
     have h := Subgroup.pow_index_mem ((L1 : Subgroup G).subgroupOf (D.deg.ker ⊓ (K1 : Subgroup G)))
       (⟨τ, Subgroup.mem_inf.2 ⟨MonoidHom.mem_ker.2 hτker, hτK1⟩⟩ :
         (D.deg.ker ⊓ (K1 : Subgroup G) : Subgroup G))
-    rw [Subgroup.mem_subgroupOf, SubgroupClass.coe_pow] at h
-    exact h
+    rwa [Subgroup.mem_subgroupOf, SubgroupClass.coe_pow] at h
   obtain ⟨j, hj⟩ := hdvd
   rw [QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf, SubgroupClass.coe_pow, hj, pow_mul]
   exact hL1L (Subgroup.pow_mem _ hτe j)
@@ -518,15 +509,13 @@ theorem reciprocity_surjective_of_isCyclic
         (Subgroup.inclusion (fun x hx => hMK hx)) ?_) ?_
     · intro x hx
       rw [Subgroup.mem_comap, Subgroup.mem_subgroupOf]
-      rw [Subgroup.mem_subgroupOf] at hx
-      exact hx
+      rwa [Subgroup.mem_subgroupOf] at hx
     · rw [injective_iff_map_eq_one]
       intro q hq
       induction q using QuotientGroup.induction_on with
       | H g =>
         rw [QuotientGroup.map_mk, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf] at hq
-        rw [QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf]
-        exact hq
+        rwa [QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf]
   have hbijLM := reciprocity_bijective_of_totallyRamified hLM hax hcycM htotM
 
   obtain ⟨φ0, hφ0K, hdφ0⟩ := D.exists_deg_eq K

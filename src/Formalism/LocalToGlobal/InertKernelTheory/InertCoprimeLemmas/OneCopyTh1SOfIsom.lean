@@ -113,7 +113,7 @@ theorem translate_theta_coordinates (B : Base D cc δ) (s₁ v : D.what₂.Tau �
   have hT : B.tor.abelian₂ = Formalism.MainNotions.TaylorLogMetric.lamOf D cc δ := rfl
   simp only [U, Formalism.MainNotions.TaylorLogMetric.Hf, Base.thZero, tensPow, Formalism.L2.Th1.H.opU, Formalism.L2.Th1.H.matH, LinearMap.mk₂'ₛₗ_apply, hOne,
     Matrix.smul_apply, Matrix.one_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.univ_unique, Finset.sum_singleton,
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.univ_unique, Finset.sum_singleton,
     Finset.prod_singleton, hT, hA]
   congr 1
   have e1 : ∀ w : D.what₂.Tau → ℂ, ∑ x, w x * ((Formalism.L2.Th1.F.area B.L : ℝ) : ℂ)⁻¹ * (starRingEnd ℂ) (s₁ x) =
@@ -129,8 +129,7 @@ theorem u_incl (B : Base D cc δ) (s : VC D 1 1) (v : D.what₂.Tau → ℂ) :
     funext τ i j
     rw [Subsingleton.elim i 0, Subsingleton.elim j 0]
   have h := translate_theta_coordinates B (fun τ => s τ 0 0) v
-  rw [← hs] at h
-  exact h
+  rwa [← hs] at h
 
 def projM (D : D7) : Matrix D.what₂.Tau (D.what₂.Tau × Fin 1 × Fin 1) ℂ :=
   Matrix.of fun τ k => if k = (τ, 0, 0) then 1 else 0
@@ -237,12 +236,7 @@ theorem scaleVC_smul (e : ℂ_[p]ˣ) (g2 g3 : ℂ_[p]) :
       WeierstrassCurve.variableChange_a₆, scaleVC, shortW, inv_inv] <;> ring
 
 theorem norm_four (h5 : 5 ≤ p) : ‖(4 : ℂ_[p])‖ = 1 := by
-  have hp : p.Prime := Fact.out
-  rw [show (4 : ℂ_[p]) = algebraMap ℚ_[p] ℂ_[p] ((4 : ℕ) : ℚ_[p]) by rw [map_natCast]; norm_num,
-    norm_algebraMap', Padic.norm_natCast_eq_one_iff]
-  refine (Nat.Prime.coprime_iff_not_dvd hp).mpr fun hd => ?_
-  have := Nat.le_of_dvd (by norm_num) hd
-  omega
+  exact Formalism.L2.Th1.E.ScaledModelNorms.norm_four p h5
 
 theorem coeffIn_short (h5 : 5 ≤ p) {g2 g3 : ℂ_[p]} (n2 : ‖g2‖ ≤ 1) (n3 : ‖g3‖ ≤ 1) :
     Formalism.L2.Th1.C.CoeffIn (Formalism.L2.KerInert.ModelP.RB p) (shortW g2 g3) := by
@@ -288,8 +282,7 @@ theorem param (h5 : 5 ≤ p) (g2 g3 ε : ℂ_[p]) (hε : ‖ε‖ = 1) (n2 : ‖
     rw [← hsu]
     rfl
   have hCu : ‖(C.u : ℂ_[p])‖ = 1 := by
-    rw [hDu, norm_mul, norm_inv, hε, inv_one, mul_one] at hu
-    exact hu
+    rwa [hDu, norm_mul, norm_inv, hε, inv_one, mul_one] at hu
   have hphiInt : Formalism.L2.Th1.C.IntPS (Formalism.L2.KerInert.ModelP.RB p) (phi (shortW g2 g3) D) :=
     Formalism.L2.KerInert.MC.intPS_phi (shortW g2 g3) hW0int D
       ((Formalism.L2.Th1.C.mem_unitBall_iff _).mpr hu.le) ((Formalism.L2.Th1.C.mem_unitBall_iff _).mpr hr)
@@ -462,7 +455,7 @@ theorem ePartS (h5 : 5 ≤ p) (g2 g3 ε s2 a : ℂ_[p]) (hε0 : ε ≠ 0) (ha0 :
   have hep0 : ep ≠ 0 := Units.ne_zero _
   set fl := Formalism.MainNotions.TaylorLogMetric.flog (C • Formalism.MainNotions.TaylorLogMetric.wModel lam Λ) wq with hfl
   have hfl0 : constantCoeff fl = 0 := by
-    rw [hfl, ← coeff_zero_eq_constantCoeff_apply, Formalism.MainNotions.TaylorLogMetric.flog, coeff_mk, if_pos rfl]
+    rw [hfl, ← coeff_zero_eq_constantCoeff_apply, Formalism.MainNotions.TaylorLogMetric.flog, coeff_mk, ite_eq_left rfl]
   set b : PowerSeries ℂ_[p] := PowerSeries.C ep * fl with hb
   have hb0 : constantCoeff b = 0 := by rw [hb, map_mul, hfl0, mul_zero]
   have hbS : HasSubst b := HasSubst.of_constantCoeff_zero' hb0
@@ -646,8 +639,7 @@ theorem modelTieS_of (hInv : Formalism.L2.KerInert.Sigma.InvAlg) (hS2 : Formalis
     rw [(Formalism.L2.Th1.A.shortInv ℂ_[p] _ _).2.2.2]
     have : ((ε : ℂ_[p]) ^ 4 * (g2 : ℂ_[p])) ^ 3 - 27 * ((ε : ℂ_[p]) ^ 6 * (g3 : ℂ_[p])) ^ 2 =
         (ε : ℂ_[p]) ^ 12 * ((g2 : ℂ_[p]) ^ 3 - 27 * (g3 : ℂ_[p]) ^ 2) := by ring
-    rw [this, norm_mul, norm_pow, show ‖(ε : ℂ_[p])‖ = 1 from hε, one_pow, one_mul]
-    exact nd
+    rwa [this, norm_mul, norm_pow, show ‖(ε : ℂ_[p])‖ = 1 from hε, one_pow, one_mul]
   obtain ⟨hu1, -, -, -, -⟩ := Formalism.L2.KerInert.ModelP.vc_gen h5 _ (by simp [Formalism.L2.Th1.A.shortW])
     (by simp [Formalism.L2.Th1.A.shortW]) (by simp [Formalism.L2.Th1.A.shortW]) hSΔ C₂ i1 i2 i3 hΔ
   have hu2 := uinv_mul_scale C ua
@@ -770,7 +762,7 @@ theorem change_of_parameters_const_scale : ReadChangeS := by
       rw [← subst_inv _ (MvPowerSeries.constantCoeff_X i) (ePhi1 lam Λ C wq), subst_single_var S hSs, hSi,
         ← PowerSeries.subst_comp_subst_apply hh (PowerSeries.HasSubst.X _), hexp]
     unfold ePh
-    rw [if_neg hp2, ← MvPowerSeries.coe_substAlgHom hSs, map_prod]
+    rw [ite_eq_right hp2, ← MvPowerSeries.coe_substAlgHom hSs, map_prod]
     simp only [MvPowerSeries.coe_substAlgHom, hfac]
     rw [Fintype.prod_equiv e.symm
       (fun i => PowerSeries.subst (MvPowerSeries.X (e.symm i) : MvPowerSeries D.what₂.Tau ℂ_[p])
@@ -844,10 +836,8 @@ theorem gcm_mem_map_smul (hc : c ≠ 0) (A : AddSubgroup V) (x : V) :
   rw [AddSubgroup.mem_map]
   constructor
   · rintro ⟨y, hy, rfl⟩
-    rw [DistribSMul.toAddMonoidHom_apply, inv_smul_smul₀ hc]
-    exact hy
-  · intro h
-    exact ⟨c⁻¹ • x, h, by rw [DistribSMul.toAddMonoidHom_apply, smul_inv_smul₀ hc]⟩
+    rwa [DistribSMul.toAddMonoidHom_apply, inv_smul_smul₀ hc]
+  · exact fun h => ⟨c⁻¹ • x, h, by rw [DistribSMul.toAddMonoidHom_apply, smul_inv_smul₀ hc]⟩
 
 theorem gcm_relIdx_map_smul (hc : c ≠ 0) (A B : AddSubgroup V) :
     relIdx (A.map (DistribSMul.toAddMonoidHom V c)) (B.map (DistribSMul.toAddMonoidHom V c)) = relIdx A B :=
@@ -903,8 +893,7 @@ theorem gcm_reps_scale (hc : c ≠ 0) [DecidableEq V] {A B : AddSubgroup V} {R :
     rw [hR.2.1 x' hx' y' hy' hxy]
   · obtain ⟨x, hx, hyx⟩ := hR.2.2 (c⁻¹ • y) ((gcm_mem_map_smul hc B y).1 hy)
     refine ⟨c • x, Finset.mem_image_of_mem _ hx, ?_⟩
-    rw [gcm_mem_map_smul hc, smul_sub, inv_smul_smul₀ hc]
-    exact hyx
+    rwa [gcm_mem_map_smul hc, smul_sub, inv_smul_smul₀ hc]
 
 theorem gcm_dualLat_scale (hc : c ≠ 0) (hH' : ∀ u v, H' u v = H (c⁻¹ • u) (c⁻¹ • v)) (Λ : AddSubgroup V) :
     dualLat H' (Λ.map (DistribSMul.toAddMonoidHom V c)) = (dualLat H Λ).map (DistribSMul.toAddMonoidHom V c) := by
@@ -1095,8 +1084,7 @@ theorem thetaU_smul {K : Type} [Field K] (ι : ℂ →+* K) {lg : PowerSeries K}
     rw [← mul_assoc, ← map_mul]
   · intro j _ hj
     rw [Matrix.map_apply, Matrix.diagonal_apply_ne _ (Ne.symm hj), map_zero, map_zero, zero_mul, map_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 theorem stdData_cm {a₀ : ℕ} {b₀ c₀ : ℤ} {d : ℕ} (ha : 0 < a₀) (hd : 0 < d) {lam : ℂ} (hlam : lam ≠ 0)
     (hcm : CmOK a₀ b₀ c₀ d) {L : PeriodPair} (hL : L.lattice = (cmL a₀ b₀ d ha hd lam hlam).lattice)
@@ -1128,14 +1116,12 @@ theorem scale_integrality : ScaleInt := by
     ReBase.theta_change_of_base D cc δ B hcc
   have i1 : relIdx (stdLat B.L (Fin 4 × D.what₂.Tau))
       (imgLat (g₁ : (Fin 4 × D.what₂.Tau → ℂ) →ₗ[ℂ] (Fin 4 × D.what₂.Tau → ℂ)) (pow4 B.lamM)) ≠ 0 := by
-    intro h0
-    exact hndvd (h0 ▸ dvd_zero p)
+    exact fun h0 => hndvd (h0 ▸ dvd_zero p)
 
   have hLB : B.L.lattice = (cmL a₀ b₀ D.host.d ha hd ((gg : ℂ) * δ) hl).lattice := by
     rw [← hlat, hIs.1]
   have hωB : (B.ω₀ - (gg : ℂ) * δ * a₀) / 2 ∈ (cmL a₀ b₀ D.host.d ha hd ((gg : ℂ) * δ) hl).lattice := by
-    rw [← hIs.2, ← hIs.1, hlat]
-    exact hω
+    rwa [← hIs.2, ← hIs.1, hlat]
   have hsd := Kap.kap_selfDual_lamM B hcc hδ
   have hst := Kap.kap_stable_lamM B b₀ (_root_.Formalism.L2.Th1.Top.HAux.odd_b hcm)
 
@@ -1158,8 +1144,7 @@ theorem scale_integrality : ScaleInt := by
     rw [hcmL, (Formalism.L2.Th1.F.homogeneity _ c hc).1]
     have e1 : c⁻¹ * ((c * B.ω₀ - (gg : ℂ) * δ * c * a₀) / 2) = (B.ω₀ - (gg : ℂ) * δ * a₀) / 2 := by
       field_simp
-    rw [e1]
-    exact hωB
+    rwa [e1]
   have hn2 : c * B.ω₀ / 2 ∉ (Formalism.L2.Th1.F.scalePair B.L c hc).lattice := by
     rw [(Formalism.L2.Th1.F.homogeneity _ c hc).1]
     have e1 : c⁻¹ * (c * B.ω₀ / 2) = B.ω₀ / 2 := by
@@ -1222,8 +1207,7 @@ theorem scale_integrality : ScaleInt := by
     rw [ht0, hten, Pi.smul_apply, Pi.smul_apply, gcm_kernel4_scale _ c hc _ _ B.lamM g₁ S1.betaSemi hF1 i1]
     rfl
   have ht2 : (N : ℂ) • (c • t) ∈ B.lamM.map (DistribSMul.toAddMonoidHom (D.what₂.Tau → ℂ) c) := by
-    rw [gcm_mem_map_smul hc, smul_comm, inv_smul_smul₀ hc]
-    exact ht
+    rwa [gcm_mem_map_smul hc, smul_comm, inv_smul_smul₀ hc]
 
   have hK := Formalism.L2.Th1.Top.local_kappa_shape_holds p h5 _ ι g2 g3 ε s2 hLT hg2 hg3 hdisc hε hth (c * B.ω₀) S2.per S2.half
     D.what₂.Tau _ _ _ _ g₁ S2 (by rw [j1]; exact hndvd) e he _ hmem2 hten2 (c • t) N hN0 hpN ht2 σ γ B' hFr
@@ -1244,8 +1228,7 @@ theorem scale_integrality : ScaleInt := by
     unfold Formalism.L2.Th1.Top.thetaH ReadTh1
     rw [hfun, MMScale.thetaU_smul (ι : ℂ →+* ℂ_[p]) (Formalism.InvariantFactorPaths.G7.FormalGroupLaws.constantCoeff_lgF p (by omega)) B' c⁻¹ _ hGan]
     simp only [RingEquiv.coe_toRingHom, map_inv₀]
-  rw [← hread]
-  exact hInt
+  rwa [← hread]
 
 end Formalism.L2.KerInert
 end -- clump:auto

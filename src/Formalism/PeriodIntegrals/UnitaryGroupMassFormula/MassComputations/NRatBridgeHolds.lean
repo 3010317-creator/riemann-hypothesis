@@ -120,8 +120,7 @@ theorem down_span (hψ : Function.Injective ψ) (e K : Fin r → Fin n → E)
         simp only [map_sum, map_mul] at this
         rw [this]; split_ifs <;> simp
       simp only [h1, ite_smul, one_smul, zero_smul]
-      rw [Finset.sum_ite_eq' T c]
-      rw [if_pos (by simp [hT, hc])]
+      rw [Finset.sum_ite_eq' T c, ite_eq_left (by simp [hT, hc])]
     | zero => simp
     | add x y _ _ hx hy =>
       conv_lhs => rw [hx, hy]
@@ -171,7 +170,7 @@ theorem perp_up (M : Matrix (Fin n) (Fin n) E) (e f K : Fin r → Fin n → E)
         intro b
         rw [← hKf a b, Finset.mul_sum]
         refine Finset.sum_congr rfl fun i _ => by ring
-      simp only [this, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [this, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [h1, h2, sub_self]
   have hy' : y = ∑ j, y j • (fun i => ψ (p j i)) := by
     funext i
@@ -346,8 +345,7 @@ theorem ninf_of_ratN (γ : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) (s : X.B.
       (X.B.I.P v)⁻¹ *ᵥ w ∈ Submodule.span ℂ ((fun b => rv X.B.I v (X.eR b)) '' t) := by
     intro t w hw
     have := Submodule.apply_mem_span_image_of_mem_span (Matrix.mulVecLin (X.B.I.P v)⁻¹) hw
-    rw [Set.image_image] at this
-    exact this
+    rwa [Set.image_image] at this
   have hu : {b : Fin D.R.rS | b.1 < D.R.rS} = Set.univ := Set.eq_univ_of_forall fun b => b.2
   refine ⟨⟨fun a => ?_, ?_⟩, fun y hy => ?_⟩
   · show _ *ᵥ ((X.B.I.P v)⁻¹ *ᵥ fun i => X.B.I.φ v (X.eR a i)) ∈ _
@@ -385,13 +383,11 @@ theorem nsub_of_ratN (γ : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) (h : HAd 
         ratV (F := X.B.I.F) (AF X.B.I.F) ((frameOf X u).e a) =
         fun i => inclR (F := X.B.I.F) (E := X.B.I.E) (AF X.B.I.F) (((γ - 1) *ᵥ X.eR a) i) :=
       map_sub_one_mulVec _ γ (X.eR a)
-    rw [e]
-    exact this
+    rwa [e]
   · rw [hlin]
     have := perp_up (inclR (F := X.B.I.F) (E := X.B.I.E) (AF X.B.I.F)) γ X.eR X.fR (Kf X X.eR) (hKf_f X u) hR.2 y
       (fun a => by have := hy a; rw [hR_ratV_left] at this; exact this)
-    rw [← Set.image_univ] at this
-    exact this
+    rwa [← Set.image_univ] at this
 
 end MassDataMassesW.NRatW
 end -- clump:auto

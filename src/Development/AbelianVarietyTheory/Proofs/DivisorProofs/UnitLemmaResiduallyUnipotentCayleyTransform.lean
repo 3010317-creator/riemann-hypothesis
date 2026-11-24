@@ -179,8 +179,7 @@ theorem identity_of_residually_unipotent_any : UnitLemmaLie → ∀ (K : UQ) (B�
     obtain ⟨w, hw⟩ := K.c_int yi
     have e1 : algebraMap K.O K.E x * algebraMap K.O K.E w = 1 := by
       have := congrArg K.c (congrArg (algebraMap K.O K.E) hyyi)
-      rw [map_mul, map_mul, hyx, hw, map_one, map_one] at this
-      exact this
+      rwa [map_mul, map_mul, hyx, hw, map_one, map_one] at this
     have e2 : algebraMap K.O K.E y * algebraMap K.O K.E yi = 1 := by
       rw [← map_mul, hyyi, map_one]
     rw [hξd, map_mul, map_mul, map_mul, map_mul, hxy, hw]
@@ -268,7 +267,6 @@ theorem identity_of_residually_unipotent_any : UnitLemmaLie → ∀ (K : UQ) (B�
   unfold InvAlg.Identity at hId ⊢
   rw [kapSum_withG B₁ B₂ Y₁ Y₂ stP, stSum_withG B₁ Y₁ st₁, stSum_withG B₂ Y₂ st₂] at hId
   change (-(K.q : ℚ)) ^ (-val K.O (resultant B₁.P B₂.P)) * _ = _
-  rw [hv]
-  exact hId
+  rwa [hv]
 
 end GlobalTheory.UnitLemma.CayleyAny

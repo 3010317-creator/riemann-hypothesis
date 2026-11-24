@@ -185,19 +185,14 @@ private lemma star_eU_eq_eU_swap (a : S) (i j : Fin 2) : star (eU a i j : SlopeT
     by_cases h1 : l a = i ∧ k a = j ∧ ∀ b, b ≠ a → l b = k b
     · have h2 : k a = j ∧ l a = i ∧ ∀ b, b ≠ a → k b = l b :=
         ⟨h1.2.1, h1.1, fun b hb => (h1.2.2 b hb).symm⟩
-      rw [if_pos h1, if_pos h2, star_one]
+      rw [ite_eq_left h1, ite_eq_left h2, star_one]
     · have h2 : ¬ (k a = j ∧ l a = i ∧ ∀ b, b ≠ a → k b = l b) :=
         fun h => h1 ⟨h.2.1, h.1, fun b hb => (h.2.2 b hb).symm⟩
-      rw [if_neg h1, if_neg h2, star_zero]
+      rw [ite_eq_right h1, ite_eq_right h2, star_zero]
   exact Matrix.ext key
 
 lemma free_star {a : S} {x : SlopeTestRemainingChoices S A} (hx : FreeOf a x) : FreeOf a (star x) := by
-  intro i j
-  have e1 : star (eU a j i : SlopeTestRemainingChoices S A) = eU a i j := star_eU_eq_eU_swap a j i
-  first
-  | (have h3 := (hx j i).star_star
-     rw [e1] at h3
-     exact h3)
+  exact Formalism.FourierDecayAlt.P.Fr9.free_star hx
 
 lemma freeOf2_of_four_entries {a : S} {x y z w : SlopeTestRemainingChoices S A} (hx : FreeOf a x) (hy : FreeOf a y) (hz : FreeOf a z)
     (hw : FreeOf a w) : FreeOf2 a !![x, y; z, w] := by
@@ -264,11 +259,7 @@ lemma star_ζbi {L : LevelData A r} (h : IsStarLevel L) : star L.ζbi = L.ζi :=
   rw [← star_ζi h, star_star]
 
 lemma star_GG {L : LevelData A r} (h : IsStarLevel L) : star L.GG = L.GG := by
-  have h' : star L.ζ = L.ζb ∧ star L.nab = L.nabs ∧ star L.TT = L.TT := h
-  have e : star (L.ζ * L.ζb) = L.ζ * L.ζb := by rw [star_mul, star_ζb h, h'.1]
-  rw [L.GG_def, star_sub, e]
-  first
-  | rw [← algebraMap_star_comm, h'.2.2]
+  exact Formalism.FourierDecayAlt.P.Fr9.star_GG h
 
 lemma star_GGi {L : LevelData A r} (h : IsStarLevel L) : star L.GGi = L.GGi := by
   calc star L.GGi = star L.GGi * (L.GG * L.GGi) := by rw [L.GG_GGi, mul_one]
@@ -276,13 +267,7 @@ lemma star_GGi {L : LevelData A r} (h : IsStarLevel L) : star L.GGi = L.GGi := b
     _ = L.GGi := by rw [L.GG_GGi, star_one, one_mul]
 
 lemma star_wt {L : LevelData A r} (h : IsStarLevel L) : star (wt L : SlopeTestRemainingChoices S A) = wt L := by
-  have h' : star L.ζ = L.ζb ∧ star L.nab = L.nabs ∧ star L.TT = L.TT := h
-  have k1 : Commute L.GGi L.ζ := fn_comm L (mem_GGi L) (mem_ζ L)
-  have k2 : Commute L.GGi L.ζb := fn_comm L (mem_GGi L) (mem_ζb L)
-  show star (io (L.ζ * L.ζb * L.GGi) : SlopeTestRemainingChoices S A) = io (L.ζ * L.ζb * L.GGi)
-  rw [io_star, star_mul, star_mul, star_GGi h, star_ζb h, h'.1]
-  congr 1
-  exact (k1.mul_right k2).eq
+  exact Formalism.FourierDecayAlt.P.Fr9.star_wt h
 
 lemma wt_eq (L : LevelData A r) : (wt L : SlopeTestRemainingChoices S A) = io L.ζ * io L.ζb * io L.GGi := by
   show (io (L.ζ * L.ζb * L.GGi) : SlopeTestRemainingChoices S A) = _
@@ -593,21 +578,10 @@ theorem io_one : (io (1 : A) : SlopeTestRemainingChoices S A) = 1 := by
   simp only [Formalism.FourierDecayAlt.Wd.io, map_one]
 
 theorem io_star [StarRing A] (x : A) : star (io x : SlopeTestRemainingChoices S A) = io (star x) := by
-  simp only [Formalism.FourierDecayAlt.Wd.io]
-  refine Matrix.ext fun i j => ?_
-  simp only [Matrix.star_apply, Matrix.scalar_apply, Matrix.diagonal_apply]
-  by_cases hij : i = j
-  · subst hij; simp
-  · simp [hij, Ne.symm hij]
+  exact Formalism.FourierDecayAlt.P.Wd11.io_star x
 
 theorem free_io (c : S) (x : A) : FreeOf c (io x : SlopeTestRemainingChoices S A) := by
-  unfold Formalism.FourierDecayAlt.Wd.FreeOf
-  intro i j
-  show Formalism.FourierDecayAlt.Wd.eU c i j * Formalism.FourierDecayAlt.Wd.io x = Formalism.FourierDecayAlt.Wd.io x * Formalism.FourierDecayAlt.Wd.eU c i j
-  simp only [Formalism.FourierDecayAlt.Wd.io, Matrix.scalar_apply]
-  refine Matrix.ext fun u v => ?_
-  simp only [Matrix.mul_diagonal, Matrix.diagonal_mul, Formalism.FourierDecayAlt.Wd.eU, Matrix.of_apply]
-  split_ifs <;> simp
+  exact Formalism.FourierDecayAlt.P.Wd11.free_io c x
 
 theorem free_one (c : S) : FreeOf c (1 : SlopeTestRemainingChoices S A) := by
   unfold FreeOf
@@ -640,8 +614,8 @@ theorem free_star [StarRing A] {c : S} {b : SlopeTestRemainingChoices S A} (h : 
     refine Matrix.ext fun x y => ?_
     simp only [Matrix.star_apply, Formalism.FourierDecayAlt.Wd.eU, Matrix.of_apply]
     by_cases h1 : y c = j ∧ x c = i ∧ ∀ b, b ≠ c → y b = x b
-    · rw [if_pos h1, if_pos ⟨h1.2.1, h1.1, fun b hb => (h1.2.2 b hb).symm⟩, star_one]
-    · rw [if_neg h1, if_neg (fun h2 => h1 ⟨h2.2.1, h2.1, fun b hb => (h2.2.2 b hb).symm⟩), star_zero]
+    · rw [ite_eq_left h1, ite_eq_left ⟨h1.2.1, h1.1, fun b hb => (h1.2.2 b hb).symm⟩, star_one]
+    · rw [ite_eq_right h1, ite_eq_right (fun h2 => h1 ⟨h2.2.1, h2.1, fun b hb => (h2.2.2 b hb).symm⟩), star_zero]
   have hs := (h j i).star_star
   rwa [key] at hs
 
@@ -1139,11 +1113,7 @@ lemma io_comm {x y : A} (h : x * y = y * x) : Commute (io x : SlopeTestRemaining
   rw [← io_mul, ← io_mul, h]
 
 lemma free_io (c : S) (x : A) : FreeOf c (io x : SlopeTestRemainingChoices S A) := by
-  intro i j
-  show (eU c i j : SlopeTestRemainingChoices S A) * io x = io x * eU c i j
-  ext u v
-  simp only [io, Matrix.scalar_apply, Matrix.mul_diagonal, Matrix.diagonal_mul, eU, Matrix.of_apply]
-  split_ifs <;> simp
+  exact Formalism.FourierDecayAlt.P.Fr5.free_io c x
 
 lemma free_one (c : S) : FreeOf c (1 : SlopeTestRemainingChoices S A) := fun _ _ => Commute.one_right _
 

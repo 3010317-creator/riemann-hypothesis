@@ -409,13 +409,7 @@ theorem mem_closure_AG (hG : GenA) (hDA : DecompAway) {θ : InfFam D} {τ : D.wh
   closure_triv hG hDA hθ hι x hx
 
 theorem exists_w (D : D7) (n : ℕ) : ∃ w : G D n, mat w = blk4 0 1 (-1) 0 := by
-  obtain ⟨g, hg⟩ := GlobalTheory.SiegelCells.exists_wPart (D := D) (n := n) n
-  refine ⟨g, hg.trans ?_⟩
-  have hL : GlobalTheory.SiegelCells.lastDiag (AE D) n n = 1 := by
-    unfold GlobalTheory.SiegelCells.lastDiag
-    rw [← Matrix.diagonal_one]
-    congr 1; funext i; simp
-  rw [GlobalTheory.SiegelCells.wMat, hL, sub_self]
+  exact GlobalTheory.StdUnn.Model.exists_weyl
 
 theorem compAt_b_zero {θ : InfFam D} {τ : D.what₂.Tau} {x : G D n} {b : Mx D n n} (hx : IsTrivAt θ τ x)
     (h : mat x = blk4 1 b 0 1) : compAt θ τ b = 0 := by
@@ -481,8 +475,8 @@ theorem exists_change_tau {θ : InfFam D} {τ : D.what₂.Tau} (hθ : IsInfFam �
     ∃ x1 : Mx D m k, compAt θ τ x1 = compAt θ τ x0 ∧ AgreeAway θ τ x1 xs := by
   obtain ⟨-, hfin, hcomp⟩ := GlobalTheory.WeilVacMove.isLineAt_lineAt (D := D) hθ τ (compAt θ τ x0 - compAt θ τ xs)
   refine ⟨xs + lineAt θ τ (compAt θ τ x0 - compAt θ τ xs) 1, ?_, fun τ' hτ' => ?_, ?_⟩
-  · rw [compAt_add', hcomp 1 τ, if_pos rfl]; simp
-  · rw [compAt_add', hcomp 1 τ', if_neg hτ', add_zero]
+  · rw [compAt_add', hcomp 1 τ, ite_eq_left rfl]; simp
+  · rw [compAt_add', hcomp 1 τ', ite_eq_right hτ', add_zero]
   · rw [Matrix.map_add _ (map_add (finPart D)), hfin 1, add_zero]
 
 theorem levi_blocks (g : G D n) {a d : Mx D n n} (h : mat g = blk4 a 0 0 d) :
@@ -512,7 +506,7 @@ theorem trivAt_conj {θ : InfFam D} {τ : D.what₂.Tau} {x : G D n} (w : G D n)
 theorem exists_compAt {θ : InfFam D} {τ : D.what₂.Tau} (hθ : IsInfFam θ) {m k : ℕ} (M : Matrix (Fin m) (Fin k) ℂ) :
     ∃ x : Mx D m k, compAt θ τ x = M := by
   obtain ⟨-, -, hcomp⟩ := GlobalTheory.WeilVacMove.isLineAt_lineAt (D := D) hθ τ M
-  exact ⟨lineAt θ τ M 1, by rw [hcomp 1 τ, if_pos rfl]; simp⟩
+  exact ⟨lineAt θ τ M 1, by rw [hcomp 1 τ, ite_eq_left rfl]; simp⟩
 
 theorem exists_sch_ne {m k : ℕ} (u0 : Fin m → Fin k → ℂ) : ∃ f : (Fin m → Fin k → ℂ) → ℂ, IsSch f ∧ f u0 ≠ 0 := by
   let b : ContDiffBump u0 := ⟨1, 2, one_pos, one_lt_two⟩

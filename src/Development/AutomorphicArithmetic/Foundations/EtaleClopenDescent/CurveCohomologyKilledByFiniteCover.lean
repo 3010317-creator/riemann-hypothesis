@@ -189,9 +189,7 @@ private theorem ringC_isColimit [Algebra.IsAlgebraic K L] : Nonempty (IsColimit 
     haveI := b.2
     refine ⟨⟨a.1 ⊔ b.1, inferInstance⟩, homOfLE (le_sup_left (a := a.1)),
       homOfLE (le_sup_right (b := b.1)), ?_⟩
-    apply Subtype.ext
-    apply Subtype.ext
-    exact congrArg (fun z : integralClosure A L => (z : L)) h
+    exact Subtype.ext (Subtype.ext (congrArg (fun z : integralClosure A L => (z : L)) h))
 
 omit [Algebra A K] [IsScalarTower A K L] [Field K] [Algebra K L] in
 private theorem aic [IsAlgClosed L] : AIC (integralClosure A L) := by
@@ -204,8 +202,7 @@ private theorem aic [IsAlgClosed L] : AIC (integralClosure A L) := by
   have hA : IsIntegral A a := isIntegral_trans a hint
   refine ⟨⟨a, hA⟩, ?_⟩
   have h2 : algebraMap (integralClosure A L) L (Polynomial.eval ⟨a, hA⟩ p) = 0 := by
-    rw [← Polynomial.eval₂_at_apply, ← Polynomial.eval_map]
-    exact ha
+    rwa [← Polynomial.eval₂_at_apply, ← Polynomial.eval_map]
   exact Subtype.ext h2
 
 end
@@ -445,9 +442,7 @@ private theorem exists_away (Ω R : Type) [Field Ω] [IsAlgClosed Ω] [CommRing 
   have hmbot : m ≠ ⊥ := by
     intro h
     apply hnf
-    rw [Ring.isField_iff_maximal_bot]
-    rw [← h]
-    exact hm
+    rwa [Ring.isField_iff_maximal_bot, ← h]
   let S := Localization.AtPrime m
   have hdvr : IsDiscreteValuationRing S :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R hmbot S
@@ -485,8 +480,7 @@ private theorem locally_of_ringHom (Ω R : Type) [Field Ω] [IsAlgClosed Ω] [Co
     Algebra.algebra_ext _ _ (fun r => (IsScalarTower.algebraMap_apply Ω R _ r).symm)
   show @Algebra.IsStandardSmoothOfRelativeDimension 1 Ω (Localization.Away f) _ _
     ((algebraMap R (Localization.Away f)).comp ψ).toAlgebra
-  rw [heq]
-  exact hsm
+  rwa [heq]
 
 end UpperTheory.LocallyOfRingHomAway
 
@@ -535,11 +529,9 @@ theorem UpperTheory.smooth_of_normal_curve_perfectField :
       have hss : Subsingleton (PrimeSpectrum Γ(C, V)) := inferInstance
       exact hab (congrArg _ (hss.elim pa pb))
   have hgen : ∀ (W : C.Opens) (z : C), z ∈ W → genericPoint C ∈ W := by
-    intro W z hz
-    exact ((genericPoint_spec C).mem_open_set_iff W.isOpen).mpr ⟨z, trivial, hz⟩
+    exact fun W z hz => ((genericPoint_spec C).mem_open_set_iff W.isOpen).mpr ⟨z, trivial, hz⟩
   have hexists : ∃ z : C, z ≠ genericPoint C := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hsub : Subsingleton (TopologicalSpace.IrreducibleCloseds C) := by
       refine ⟨fun s t => ?_⟩
       obtain ⟨p, hp⟩ := s.isIrreducible.nonempty
@@ -586,8 +578,7 @@ private theorem objIso {C : Scheme.{0}} [IsIntegral C] (F : Type) [Field F] [Alg
   have hη : genericPoint C ∈ U :=
     ((genericPoint_spec C).mem_open_set_iff U.isOpen).mpr (by simpa using ‹Nonempty U›)
   have hmem : genericSpecMap C F (IsLocalRing.closedPoint F) ∈ U := by
-    rw [GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model.genericSpecMap_closedPoint]
-    exact hη
+    rwa [GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model.genericSpecMap_closedPoint]
   have key := GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model.genericSpecMap_app_iso C F U hη hmem
   letI : Algebra Γ(C, U) Γ(Spec (CommRingCat.of F), genericSpecMap C F ⁻¹ᵁ U) :=
     ((genericSpecMap C F).app U).hom.toAlgebra
@@ -726,8 +717,7 @@ private theorem surjNorm {C : Scheme.{0}} [IsIntegral C] (F : Type) [Field F]
     exact ⟨_, h⟩
   have hsub : closure ({genericPoint C} : Set C) ⊆ Set.range (genericSpecMap C F).fromNormalization :=
     closure_minimal (Set.singleton_subset_iff.mpr hη) hcl.isClosed_range
-  intro x
-  exact hsub (specializes_iff_mem_closure.mp (genericPoint_specializes x))
+  exact fun x => hsub (specializes_iff_mem_closure.mp (genericPoint_specializes x))
 
 private theorem restrictSquare {X Y : Scheme.{0}} (f : X ⟶ Y) [IsAffineHom f] {U : Y.Opens}
     (hU : IsAffineOpen U) :
@@ -1161,8 +1151,7 @@ theorem UpperTheory.Cb.curve_cohomology_killed_by_finite_cover :
   obtain ⟨k, hk⟩ := UpperTheory.curve_cohomology_killed_by_finite_cover.exists_affU (C := C)
   obtain ⟨C', γ, h1, h2, h3, h4⟩ := UpperTheory.curve_cohomology_killed_by_finite_cover.kill hy hH0 q Ω hq k c hc ⊤ hk m i hm (pl q i (⊤ : C.Opens).ι m x)
   refine ⟨C', γ, h1, h2, ?_⟩
-  rw [← pl_comp] at h4
-  rw [morphismRestrict_ι, pl_comp] at h4
+  rw [← pl_comp, morphismRestrict_ι, pl_comp] at h4
   have hι : ∀ V : C'.Opens, V = ⊤ → IsIso V.ι := by
     rintro _ rfl
     rw [← Scheme.topIso_hom]

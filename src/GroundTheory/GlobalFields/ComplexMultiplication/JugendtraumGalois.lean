@@ -36,10 +36,8 @@ theorem forall_adjoin_apply_eq (σ : ℂ ≃ₐ[K] ℂ) {S : Set ℂ} (h : ∀ x
     intro x hx
     rw [SetLike.mem_coe, mem_fixedField_iff]
     have hst : σ ∈ MulAction.stabilizer (ℂ ≃ₐ[K] ℂ) x := h x hx
-    intro f hf
-    exact (Subgroup.zpowers_le.2 hst) hf
-  intro x hx
-  exact (mem_fixedField_iff _ _).1 (hle hx) σ (Subgroup.mem_zpowers σ)
+    exact fun f hf => (Subgroup.zpowers_le.2 hst) hf
+  exact fun x hx => (mem_fixedField_iff _ _).1 (hle hx) σ (Subgroup.mem_zpowers σ)
 
 theorem le_of_forall_algEquiv {F₁ F₂ : IntermediateField K ℂ}
     (h : ∀ σ : ℂ ≃ₐ[K] ℂ, (∀ x ∈ F₂, σ x = x) → ∀ x ∈ F₁, σ x = x) : F₁ ≤ F₂ := by
@@ -138,8 +136,7 @@ theorem mk_mem_map_standardOpenSubgroup_of_apply_j_eq (σ : ℂ ≃ₐ[K] ℂ) (
   have hfix : ∀ x ∈ (Modulus.one : Modulus K).rayClassField ℂ, σ x = x := by
     intro x hx
     have hx' : x ∈ K⟮E.j⟯ := by
-      rw [adjoin_j_eq_hilbertClassField_of_isAnalyticUniformization hK 𝔞 hf]
-      exact hx
+      rwa [adjoin_j_eq_hilbertClassField_of_isAnalyticUniformization hK 𝔞 hf]
     exact forall_adjoin_apply_eq σ (fun y hy ↦ by rw [Set.mem_singleton_iff.1 hy]; exact hj) x hx'
   rw [← Modulus.congruenceSubgroup_one]
   exact (forall_rayClassField_apply_eq_iff σ s hs Modulus.one).1 hfix

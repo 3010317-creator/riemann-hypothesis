@@ -269,8 +269,7 @@ theorem dense_orbit (D : DSRep T) (u : D.U.H) (hu : u ≠ 0) :
     have h := ext_orbit D u hu (innerSL ℂ w) 0 fun g => by
       refine Submodule.inner_left_of_mem_orthogonal ?_ hw
       exact ⟨Finsupp.single g 1, by simp⟩
-    have h2 := congrArg (fun f : D.U.H →L[ℂ] ℂ => f w) h
-    simpa using h2
+    simpa using congrArg (fun f : D.U.H →L[ℂ] ℂ => f w) h
   exact this
 
 theorem exists_intertwiner (D : DSRep T) (v : D.HK.V) (hv : ‖D.ι v‖ = 1) (πU : URep T) (ξ : πU.H)
@@ -312,8 +311,7 @@ theorem projector_of_integrable_coefficient :
   refine ⟨opE_self D v hi, fun πU => ⟨opE_selfAdjoint D v hi πU, opE_pi_opE D v hi πU, fun ξ hξ => ?_⟩⟩
   refine exists_intertwiner D v hv πU ξ fun g => ?_
   have h1 := opE_selfAdjoint D v hi πU ξ (πU.π g (opE T πU.π (eFun D v) ξ))
-  rw [opE_pi_opE D v hi, hξ, inner_smul_right] at h1
-  exact h1
+  rwa [opE_pi_opE D v hi, hξ, inner_smul_right] at h1
 
 end GlobalTheory.CoefProjector
 end -- clump:auto

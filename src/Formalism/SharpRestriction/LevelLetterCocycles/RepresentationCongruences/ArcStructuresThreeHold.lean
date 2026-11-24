@@ -118,15 +118,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 theorem exists_horizontal_solutions (hH : Formalism.MainNotions.LiftingTheory.coreH W) (hA : Formalism.MainNotions.LiftingTheory.CaseA W) (T : LocLat G Qp LL O)
     (hT : IsCrys PD T.ρ) (i : ZMod n) {d : ℕ} (b : Fin d → W.DD T)
     (hb : Formalism.MainNotions.LiftingTheory.IsFrameΔ W T i b) : ∃ sol, IsHor W T i b sol := by
-  have h3 := (hH hA T hT i).2.2.1 d b hb 0
-    ⟨0, Formalism.MainNotions.UnusedSlot80.Relay2.InNΔi_zero W T i, (smul_zero _).symm⟩
-  choose sol hsol using fun k : Fin d => (h3 (Pi.single k 1)).1
-  refine ⟨sol, hb, fun k => ⟨(hsol k).1, ?_⟩⟩
-  rw [(hsol k).2]
-  funext m
-  by_cases h : m = k
-  · subst h; simp
-  · simp [h]
+  exact Formalism.MainNotions.UnusedSlot80.UnivF.hor_exists W hH hA T hT i b hb
 
 theorem horizontal_frame_structure (hH : Formalism.MainNotions.LiftingTheory.coreH W) (hP9 : Formalism.MainNotions.DeltaInvariantLattices.P9W W) :
     Formalism.MainNotions.N.FrobeniusPowerSeries.HorFrameCore W := by
@@ -462,15 +454,14 @@ theorem exists_partition_of_l_pow_levels (hC : Formalism.MainNotions.UnusedSlot8
     refine ⟨m + m', fun t => if t = a then lA W ^ m * q * P else ε t * r * ps W a ^ N, ?_, ?_, ?_⟩
     · intro t
       by_cases h : t = a
-      · simp only [h, if_true]
-        exact W.AΔ.mul_mem (W.AΔ.mul_mem (l_pow_mem_invariants W m) hq) hPΔ
-      · simp only [h, if_false]
+      · simpa only [h, ite_true] using W.AΔ.mul_mem (W.AΔ.mul_mem (l_pow_mem_invariants W m) hq) hPΔ
+      · simp only [h, ite_false]
         exact W.AΔ.mul_mem (W.AΔ.mul_mem (hεΔ t) hr) (W.AΔ.pow_mem (hps a) N)
     · intro t ht
       by_cases h : t = a
       · subst h
         refine ⟨lA W ^ m * q, W.AΔ.mul_mem (l_pow_mem_invariants W m) hq, ?_⟩
-        simp only [if_true, Finset.erase_insert ha]
+        simp only [ite_true, Finset.erase_insert ha]
         ring
       · have hts : t ∈ s := by
           rcases Finset.mem_insert.1 ht with h' | h'
@@ -479,10 +470,10 @@ theorem exists_partition_of_l_pow_levels (hC : Formalism.MainNotions.UnusedSlot8
         obtain ⟨r₁, hr₁, he₁⟩ := hεd t hts
         refine ⟨r₁ * r, W.AΔ.mul_mem hr₁ hr, ?_⟩
         have hat : a ∉ s.erase t := fun h' => ha (Finset.mem_of_mem_erase h')
-        simp only [h, if_false, Finset.erase_insert_of_ne (Ne.symm h), Finset.prod_insert hat, he₁]
+        simp only [h, ite_false, Finset.erase_insert_of_ne (Ne.symm h), Finset.prod_insert hat, he₁]
         ring
     · rw [Finset.sum_insert ha]
-      simp only [if_true]
+      simp only [ite_true]
       have hs2 : ∑ t ∈ s, (if t = a then lA W ^ m * q * P else ε t * r * ps W a ^ N) =
           ∑ t ∈ s, ε t * r * ps W a ^ N :=
         Finset.sum_congr rfl fun t ht => by
@@ -514,7 +505,7 @@ theorem inId_shift_levels (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP 
   set Pz := ∏ t ∈ (Finset.range e).erase s, ps W t ^ N with hPzDef
   have hδ : ∏ t ∈ Finset.range e, ps W t ^ (if t = s then 0 else N) = Pz := by
     rw [← Finset.mul_prod_erase _ _ (Finset.mem_range.2 hs)]
-    simp only [if_true, pow_zero, one_mul]
+    simp only [ite_true, pow_zero, one_mul]
     exact Finset.prod_congr rfl fun t ht => by simp [Finset.ne_of_mem_erase ht]
   have key : Nm' * D = Nm * Pz * D' := by
     rw [← hδ, hNm', hD, hNm, hD', ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib,
@@ -524,8 +515,8 @@ theorem inId_shift_levels (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP 
     congr 1
     simp only [hα']
     by_cases h : t = s
-    · rw [if_pos h, if_pos h]; omega
-    · rw [if_neg h, if_neg h]
+    · rw [ite_eq_left h, ite_eq_left h]; omega
+    · rw [ite_eq_right h, ite_eq_right h]
       exact toNat_add_neg_identity (α t) N
   have hDU : IsUnit (algebraMap (LetA O n) W.EE D) := by
     rw [hD, map_prod]
@@ -539,8 +530,7 @@ theorem inId_shift_levels (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP 
       (algebraMap (LetA O n) W.EE (Pz * x) * g)) =
       algebraMap (LetA O n) W.EE D' * algebraMap (LetA O n) W.EE (Pz * x) *
         (algebraMap (LetA O n) W.EE D * g) := by ring
-  rw [e1, he]
-  rw [← map_mul, ← map_mul, ← map_mul]
+  rw [e1, he, ← map_mul, ← map_mul, ← map_mul]
   congr 1
   linear_combination (-(letE a * x * u)) * key
 
@@ -623,9 +613,8 @@ theorem section_in_ideal_of_levels (hR : Formalism.MainNotions.UnusedSlot80.Tool
     refine ⟨inId_shift_levels W hR hs ((hsec s hs).1 i).1 hx, fun t ht => ?_⟩
     by_cases hts : t = s
     · subst hts
-      simp only [A', if_true]
-      exact ((hsec t hs).1 i).2
-    · simp only [A', hts, if_false]
+      simpa only [A', ite_true] using ((hsec t hs).1 i).2
+    · simp only [A', hts, ite_false]
       refine hU t ht _ ?_ _
       have h1 : (U t).natAbs + (α s i t).natAbs ≤
           ∑ t' ∈ Finset.range e, ((U t').natAbs + (α s i t').natAbs) :=
@@ -982,7 +971,7 @@ theorem arc_section_map (hinj : Function.Injective (algebraMap O LL))
   let Y : Fin d → ℕ → Fin d → O := fun k r j => if h : r < A.M PD.p then y₂ k ⟨r, h⟩ j else 0
   have hY : ∀ k, ∀ r < A.M PD.p, ∀ j, algebraMap O LL (Y k r j) = (PD.p : LL) ^ (κ + t) * sol k r j := by
     intro k r hr j
-    simp only [Y, dif_pos hr]
+    simp only [Y, dite_eq_left hr]
     exact hy₂ k ⟨r, hr⟩ j
   let Hh : Fin d → W.DD T₂ := fun k =>
     ∑ r ∈ Finset.range (A.M PD.p), W.π₀ ^ r • Formalism.MainNotions.LiftingTheory.vecB W T₂ b (Y k r)

@@ -403,7 +403,7 @@ theorem maDens_log_all {e : ℕ} (p : (Fin (e + 1) → ℂ) → ℝ) (y : Fin (e
   have key := MaDensLogPow.mdisc_expand (a : ℂ) (b : ℂ) H G hG Finset.univ (fun _ => H) (fun _ _ => rfl)
   rw [Finset.sum_congr rfl fun i _ => mdisc_update_const G H i, Finset.sum_const, Finset.card_univ,
     Fintype.card_fin, Nat.add_sub_cancel, nsmul_eq_mul] at key
-  simp only [Finset.mem_univ, if_true] at key
+  simp only [Finset.mem_univ, ite_true] at key
   have hfam3 : (fun i => hessC ((fun _ : Fin e => p) i) y) = fun _ : Fin e => H := rfl
   unfold maDens gradDens
   simp only [hlog]
@@ -449,10 +449,7 @@ theorem sheet_identity_all {e : ℕ} {s : (Fin (e + 1) → ℂ) → Fin n → �
       refine Fin.cases rfl (fun i => rfl) k
     have hm : maDens (Fin.cons (fun w => euclPot (s w - x)) (fun _ : Fin e => euclPot ∘ s)) y =
         maDens (fun _ : Fin (e + 1) => fun w => euclPot (s w - x)) y := by
-      apply RegRadialWeight.maDens_congr
-      intro k
-      refine Fin.cases rfl (fun i => ?_) k
-      exact hE
+      exact RegRadialWeight.maDens_congr (fun k => Fin.cases rfl (fun i => hE) k)
     have hg : gradDens (fun _ : Fin e => euclPot ∘ s) (fun w => euclPot (s w - x))
         (fun w => euclPot (s w - x)) y =
         gradDens (fun _ : Fin e => fun w => euclPot (s w - x))
@@ -471,12 +468,10 @@ theorem sheet_identity_all {e : ℕ} {s : (Fin (e + 1) → ℂ) → Fin n → �
     have hQ' : deriv Q (euclPot (s y - x)) =
         (a (euclPot (s y - x)) * euclPot (s y - x) ^ (e + 1) - b (euclPot (s y - x))) /
           euclPot (s y - x) ^ (e + 1) := by
-      rw [eq_div_iff ht1]
-      exact e1
+      rwa [eq_div_iff ht1]
     have hQ'' : deriv (deriv Q) (euclPot (s y - x)) =
         ((e + 1 : ℕ) : ℝ) * b (euclPot (s y - x)) / euclPot (s y - x) ^ (e + 2) := by
-      rw [eq_div_iff ht2]
-      exact e2
+      rwa [eq_div_iff ht2]
     rw [hQ', hQ'']
     field_simp
     ring
@@ -504,8 +499,7 @@ theorem chartDens_eq_all {e : ℕ} (J : Ideal (MvPolynomial (Fin n) ℂ))
       exact hsx
     have key := sheet_identity_all (CutOffBoundaryBound.analyticAt_of_isSheetAt h.choose_spec) x Q a b hQ
       hQ0 hQ0' hb0 hQt
-    rw [hsx] at key
-    exact key
+    rwa [hsx] at key
   · simp
 
 theorem varRadialWeight {d : ℕ} {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin (d + 1)) (Fin n) ℂ}
@@ -613,8 +607,7 @@ theorem varLelongAnnulus : VarLelongAnnulus.Statement := by
       rw [div_self (pow_pos hs 2).ne', radialTransform_hk_of_one_le d k le_rfl,
         radialTransform_hk_of_one_le d k ((one_le_div hr2).2 hs2), sub_self, mul_zero] at h
       unfold radialTransform at h
-      rw [annWeight_zero_of_le d hr hrs k le_rfl, zero_mul, zero_sub, neg_eq_zero] at h
-      exact h
+      rwa [annWeight_zero_of_le d hr hrs k le_rfl, zero_mul, zero_sub, neg_eq_zero] at h
     have h := varRadialWeight x (annWeight r s d k) (pk k * r ^ 2) (s ^ 2) hJ hdim hAf
       (contDiff_annWeight d k) (mul_pos (pk_pos k) hr2) (fun t ht => annWeight_const d hr hrs k ht)
       (fun t ht => annWeight_zero_of_le d hr hrs k ht) hT
@@ -650,8 +643,7 @@ theorem varLelongAnnulus : VarLelongAnnulus.Statement := by
       simp only [chartDens_sub' hAf]
       rw [integral_sub ((hball s hs le_rfl).const_mul _) ((hball r hr hrs).const_mul _), integral_const_mul,
         integral_const_mul]
-    rw [← hlim]
-    exact h
+    rwa [← hlim]
 
   have hφτ : ∀ k, SmoothNear (zeroSet J)
       ((fun _ => logDistSmooth x hr : Fin (d + 1) → (Fin n → ℂ) → ℝ) k) :=
@@ -716,8 +708,7 @@ theorem varLelongAnnulus : VarLelongAnnulus.Statement := by
             ((euclBall x s \ euclBall x r).indicator fun _ => 1) (fun _ : Fin (d + 1) => logDistSq x) y :=
         fun y => chartDens_const_mul hAf _ _ _ y
       rw [← integral_const_mul]
-      simp only [← hl, hloc', hloc]
-      exact h
+      simpa only [← hl, hloc', hloc] using h
     · have h1 := abs_radialTransform_hk_le d k (div_nonneg (distSq_nonneg x z) (pow_pos hs 2).le)
       have h2 := abs_radialTransform_hk_le d k (div_nonneg (distSq_nonneg x z) hr2.le)
       rw [abs_mul, abs_of_nonneg hc0]
@@ -803,8 +794,7 @@ theorem coordinateGraphNear_of_chart {n : ℕ} {X : Set (Fin n → ℂ)} {x : Fi
     (hV.inter (e.open_source.preimage A.continuous)).inter (e.open_target.preimage (continuous_apply i)),
     ⟨⟨hxV, ?_⟩, ?_⟩, i, e.target, fun t ↦ g (e.symm t), e.open_target, ?_, ?_, ?_⟩
   · show A x ∈ e.source
-    rw [← hgy₀, hAg y₀ hy₀O]
-    exact hy₀e
+    rwa [← hgy₀, hAg y₀ hy₀O]
   · show x i ∈ e.target
     rw [← hgy₀, show g y₀ i = e y₀ from rfl]
     exact e.map_source hy₀e
@@ -814,8 +804,7 @@ theorem coordinateGraphNear_of_chart {n : ℕ} {X : Set (Fin n → ℂ)} {x : Fi
       (hφ _ hyt.1).differentiableAt.hasDerivAt
     exact ((hg _ hyt.1).differentiableAt.comp t
       (e.hasDerivAt_symm ht hyt.2 hder).differentiableAt).differentiableWithinAt
-  · intro t ht
-    exact e.right_inv ht
+  · exact fun t ht => e.right_inv ht
   · rintro z ⟨⟨hzV, hzA⟩, hzi⟩
     constructor
     · intro hzX
@@ -1200,12 +1189,7 @@ namespace PositivityTheory.Tls2.Pl
 open GroundTheory.Heights₂.Heights
 
 theorem stokesOnVariety : GroundTheory.Heights₂.Heights.StokesOnVariety.Statement := by
-  have hDeep : TubeDeepMass.Statement :=
-    TubeDeepMass.proof TubeDeepRankOne.proof
-      (TubeDeepAreaCount.proof AutoClose.IsolatedPointsCount)
-      HilbertSamuel.Closed.TubeDeepWeightMass
-  exact StokesOnVariety.of_open HilbertSamuel.Closed.SheetImageAreaSet
-    (TubeEuclMass.proof HilbertSamuel.Closed.TubeCollarMass hDeep)
+  exact GroundTheory.Heights₂.Heights.AutoClose.StokesOnVariety
 
 theorem lelongLimit (hBr : GroundTheory.Heights₂.Heights.DivisorGeneralPointBranches.Statement)
     (hLim : GroundTheory.Heights₂.Heights.LelongLimitAtBranches.Statement)

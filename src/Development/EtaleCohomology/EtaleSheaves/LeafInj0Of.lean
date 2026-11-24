@@ -64,16 +64,14 @@ theorem cov_of_pts {B : Scheme.{0}} {U : B.Etale} {P : ∀ U' : B.Etale, (U' ⟶
   · have h0 : Sieve.ofArrows U' a ∈ (EtTop B) U := by
       rw [Scheme.ofArrows_mem_smallEtaleTopology_iff]
       ext z
-      simp only [Set.mem_iUnion, Set.mem_range, Set.mem_univ, iff_true]
-      exact ⟨z, y z, hy z⟩
+      simpa only [Set.mem_iUnion, Set.mem_range, Set.mem_univ, iff_true] using ⟨z, y z, hy z⟩
     refine (EtTop B).transitive h0 R ?_
     intro Z f hf
     obtain ⟨W, g, f', hf', rfl⟩ := hf
     cases hf' with
     | mk x =>
       refine (EtTop B).superset_covering ?_ ((EtTop B).pullback_stable g (hT x))
-      intro V c hc
-      exact ⟨x, c ≫ g, hc, by simp⟩
+      exact fun V c hc => ⟨x, c ≫ g, hc, by simp⟩
   · rintro Z g ⟨x, b, hb, rfl⟩
     exact hP x Z b hb
 

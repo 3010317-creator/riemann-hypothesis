@@ -76,7 +76,6 @@ theorem exists_compact_open_addSubgroup_mem :
       add_mem' := fun {a b} ha hb => by
         change valuation k a ≤ γ at ha
         change valuation k b ≤ γ at hb
-        show valuation k (a + b) ≤ γ
         exact (Valuation.map_add _ _ _).trans (max_le ha hb)
       zero_mem' := by
         show valuation k 0 ≤ γ
@@ -93,7 +92,6 @@ theorem exists_compact_open_addSubgroup_mem :
     exact isOpen_set_pi Set.finite_univ fun _ _ => isOpen_valBall γ hγ
   · rw [AddSubgroup.mem_pi]
     intro i _
-    show valuation k (x i) ≤ γ
     exact le_sup_of_le_left (Finset.le_sup (f := fun i => valuation k (x i)) (Finset.mem_univ i))
 
 end GlobalTheory.CompanionTheory.LatticePoint

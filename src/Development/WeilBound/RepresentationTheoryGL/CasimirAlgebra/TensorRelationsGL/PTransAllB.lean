@@ -177,13 +177,11 @@ theorem cA_split {C : Type} [DecidableEq C] (col : P → C) (hq : ∀ p p', col 
     have e0 : σ0 = σ0' := by
       ext x
       have := congrArg (fun σ : Equiv.Perm P => σ x.1) he
-      simp only [Equiv.Perm.subtypeCongr.left_apply _ _ x.2] at this
-      exact this
+      simpa only [Equiv.Perm.subtypeCongr.left_apply _ _ x.2] using this
     have e1 : σ1 = σ1' := by
       ext x
       have := congrArg (fun σ : Equiv.Perm P => σ x.1) he
-      simp only [Equiv.Perm.subtypeCongr.right_apply _ _ x.2] at this
-      exact this
+      simpa only [Equiv.Perm.subtypeCongr.right_apply _ _ x.2] using this
     rw [e0, e1]
   · intro σ hσ
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hσ

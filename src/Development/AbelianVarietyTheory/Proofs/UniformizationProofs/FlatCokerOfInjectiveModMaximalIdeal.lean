@@ -166,8 +166,7 @@ private theorem mem_map_smul_of_maximalIdeal_pow_le {V A N : Type*} [CommRing V]
   intro z hz hzJ
   by_cases htop : J = ⊤
   · subst htop
-    rw [Ideal.map_top, Submodule.top_smul]
-    exact hz
+    rwa [Ideal.map_top, Submodule.top_smul]
   classical
   have hex : ∃ k, IsLocalRing.maximalIdeal V ^ k ≤ J := ⟨p, hJ⟩
   have hk : IsLocalRing.maximalIdeal V ^ Nat.find hex ≤ J := Nat.find_spec hex
@@ -275,8 +274,7 @@ theorem _root_.GlobalTheory.flat_coker_of_injective_mod_maximalIdeal : ∀ (V A 
     obtain ⟨l, hl, w, hw, hlw⟩ := Submodule.mem_sup.1 h1
     have hw' : w ∈ ((IsLocalRing.maximalIdeal V).map (algebraMap V A) ^ p •
         (⊤ : Submodule A K)).map K.subtype := by
-      rw [Submodule.map_smul'', Submodule.map_subtype_top]
-      exact hw
+      rwa [Submodule.map_smul'', Submodule.map_subtype_top]
     obtain ⟨w', hw'', rfl⟩ := hw'
     have heq : Submodule.Quotient.mk (p := P) ⟨z, hz⟩ = Submodule.Quotient.mk w' := by
       rw [Submodule.Quotient.eq]
@@ -295,7 +293,6 @@ theorem _root_.GlobalTheory.flat_coker_of_injective_mod_maximalIdeal : ∀ (V A 
   have hmem : Submodule.Quotient.mk (p := P) ⟨z, hz⟩ ∈
       (⨅ i, (IsLocalRing.maximalIdeal V).map (algebraMap V A) ^ i • ⊤ : Submodule A (K ⧸ P)) :=
     Submodule.mem_iInf _ |>.2 hstep
-  rw [hbot, Submodule.mem_bot, Submodule.Quotient.mk_eq_zero] at hmem
-  exact hmem
+  rwa [hbot, Submodule.mem_bot, Submodule.Quotient.mk_eq_zero] at hmem
 
 end GlobalTheory

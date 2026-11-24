@@ -106,8 +106,7 @@ theorem _root_.GroundTheory.Arith.Abelian.Isogeny.pointMap_conj [IsAlgClosed Ω]
     (ψ.conj g).pointMap (galPointsHom F Ω E g R) = galPointsHom F Ω E' g (ψ.pointMap R) := by
   apply Isogeny.pointMap_eq_of_map_translate
   have h := congrArg (galPt E E' g) (ψ.map_translate R)
-  rw [galPt_map_translate, map_add (f := _), galPt_val, galPt_constMap] at h
-  exact h
+  rwa [galPt_map_translate, map_add (f := _), galPt_val, galPt_constMap] at h
 
 end Conj
 
@@ -125,8 +124,7 @@ theorem isAlgebraic_of_zsmul_eq_zero {n : ℤ} (hn : n ≠ 0) {x y : Ω}
     · exact absurd h0 (Point.some_ne_zero h)
     · have hxx : x = x' := (Point.some.inj he).1
       refine ⟨E.ΨSq n, ΨSq_ne_zero_of_ne_zero E hn, ?_⟩
-      rw [hxx, ← eval_map_algebraMap, ← WeierstrassCurve.map_ΨSq]
-      exact hev
+      rwa [hxx, ← eval_map_algebraMap, ← WeierstrassCurve.map_ΨSq]
   refine ⟨hx, ?_⟩
   have hxi : IsIntegral F x := hx.isIntegral
   set A := integralClosure F Ω
@@ -177,11 +175,7 @@ theorem _root_.GroundTheory.Arith.Abelian.Isogeny.conj_eq_self [IsAlgClosed Ω] 
     (isogHom _ _).sub_mem (ψ.conj g).respectsAdd ψ.respectsAdd
   by_contra hne
   have hχ0 : (⟨χ, hmem⟩ : isogHom (E.baseChange Ω) (E'.baseChange Ω)) ≠ 0 := by
-    intro h0
-    apply hne
-    apply Isogeny.ext'
-    have h0' := congrArg Subtype.val h0
-    exact sub_eq_zero.mp h0'
+    exact fun h0 => hne (Isogeny.ext' (sub_eq_zero.mp (congrArg Subtype.val h0)))
   set φχ := isogOfHom ⟨χ, hmem⟩ hχ0
   have hker : ∀ {n : ℤ}, n ≠ 0 → ∀ R, n • R = 0 → R ∈ φχ.pointHom.ker := by
     intro n hn R hR

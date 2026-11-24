@@ -100,16 +100,14 @@ theorem baseLattice_eq_comap_blockwise_lattice : ∀ (D : D7) (cc : Ideal (𝓞 
     · rintro ⟨y, hy, hxy⟩
       have : y = x := B.gC.injective hxy
       exact this ▸ hy
-    · intro hx
-      exact ⟨x, hx, rfl⟩
+    · exact fun hx => ⟨x, hx, rfl⟩
   ext z
   simp only [AddSubgroup.mem_comap]
   show (∀ i j, (fun τ => z τ i j) ∈ B.lamM) ↔ ∀ k, (fun w => phi B n n' z (k, w)) ∈ _
   have e : ∀ k, (fun w => phi B n n' z (k, w)) = B.gC (blk D k z) := fun k => rfl
   simp only [e, himg]
   constructor
-  · intro h k a
-    exact h (posE n n' (k, a)).1 (posE n n' (k, a)).2
+  · exact fun h k a => h (posE n n' (k, a)).1 (posE n n' (k, a)).2
   · intro h i j
     have := h ((posE n n').symm (i, j)).1 ((posE n n').symm (i, j)).2
     have e2 : slice ((posE n n').symm (i, j)).2 (blk D ((posE n n').symm (i, j)).1 z) = fun τ => z τ i j := by
@@ -155,7 +153,6 @@ theorem phi_isom : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Bas
   intro D cc δ B n n' z z'
   have eR : Formalism.L2.Th1.H.stdH B.L (Ix D n n') (phi B n n' z) (phi B n n' z')
       = (∑ p, phi B n n' z p * conj (phi B n n' z' p)) / ((Formalism.L2.Th1.F.area B.L : ℝ) : ℂ) := by
-    show matH (hOne B.L (Ix D n n')) _ _ = _
     exact matH_hOne _ _ _
   rw [eR]
   have eL : TaylorLogMetric.Hf D (TaylorLogMetric.tor0 D cc δ) z z'
@@ -216,13 +213,13 @@ theorem phi_embV_bas {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base 
   funext p
   rw [phi_apply, bas, blk_embV_putB]
   by_cases h : p.1 = (ixE D n n' j).1
-  · rw [if_pos h, gC_xv]
+  · rw [ite_eq_left h, gC_xv]
     by_cases h2 : p.2 = (ixE D n n' j).2
     · have : p = ixE D n n' j := Prod.ext h h2
       subst this; simp
     · have : p ≠ ixE D n n' j := fun e => h2 (by rw [e])
       simp [h2, this]
-  · rw [if_neg h, B.gC.map_zero]
+  · rw [ite_eq_right h, B.gC.map_zero]
     have : p ≠ ixE D n n' j := fun e => h (by rw [e])
     simp [this]
 
@@ -262,8 +259,7 @@ theorem laB_eq_comap : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B :
     refine AddSubgroup.sum_mem _ fun p _ => AddSubgroup.subset_closure ?_
     refine ⟨phi B n n' x p, ?_, (ixE D n n').symm p, rfl⟩
     have := hx' p
-    rw [B.lat] at this
-    exact this
+    rwa [B.lat] at this
 
 end GlobalTheory.BaseVacuum
 end -- clump:auto
@@ -479,8 +475,7 @@ theorem semiChar_prod (c : ℝ) (Λ : AddSubgroup (m → ℂ)) (h : IsSemiChar (
       (Or.inl rfl) (fun k _ => h.1 _ (hx k))
   · rw [alphaQ_prod, alphaQ_prod, alphaQ_prod, altE_prod, Complex.ofReal_sum, Finset.mul_sum, Complex.exp_sum,
       ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-    refine Finset.prod_congr rfl fun k _ => ?_
-    exact h.2 _ (hx k) _ (hy k)
+    exact Finset.prod_congr rfl fun k _ => h.2 _ (hx k) _ (hy k)
 
 theorem fixed_prod (ω₀ : ℂ) (c' : ℝ)
     (hF : F0 L ω₀ m ∈ fixedBy (stdH L m) (alphaQ c' (stdH L m)) (stdLat L m)) :
@@ -503,8 +498,7 @@ theorem prodReps_isReps {Λ : AddSubgroup (m → ℂ)} {S : Finset (m → ℂ)} 
   · intro y hy
     obtain ⟨f, hf, rfl⟩ := Finset.mem_map.1 hy
     rw [Fintype.mem_piFinset] at hf
-    intro k
-    exact hS.1 _ (hf k)
+    exact fun k => hS.1 _ (hf k)
   · intro x hx y hy hd
     obtain ⟨f, hf, rfl⟩ := Finset.mem_map.1 hx
     obtain ⟨g, hg, rfl⟩ := Finset.mem_map.1 hy
@@ -517,8 +511,7 @@ theorem prodReps_isReps {Λ : AddSubgroup (m → ℂ)} {S : Finset (m → ℂ)} 
     choose f hf hfy using this
     refine ⟨(Equiv.curry ι m ℂ).symm f, Finset.mem_map_of_mem _ (Fintype.mem_piFinset.2 hf), ?_⟩
     rw [mem_stdLat_prod]
-    intro k
-    exact hfy k
+    exact fun k => hfy k
 
 theorem relIdx_eq_card {V : Type} [AddCommGroup V] [Module ℂ V] {Λ₁ Λ₂ : AddSubgroup V} {S : Finset V}
     (hS : IsReps Λ₁ Λ₂ S) : relIdx Λ₁ Λ₂ = S.card := by
@@ -629,7 +622,7 @@ theorem trace_xv (B : Base D cc δ) (w w' : Fin 4 × D.what₂.Tau) :
   by_cases hw : w = w'
   · subst hw
     simp
-  · rw [if_neg hw, map_zero]
+  · rw [ite_eq_right hw, map_zero]
     apply Finset.sum_eq_zero
     intro u _
     by_cases hu : u = w
@@ -642,17 +635,15 @@ theorem orthonormal_bas (B : Base D cc δ) (n n' : ℕ) : TaylorLogMetric.Orthon
   unfold bas
   rw [hYY_putB]
   by_cases hk : (ixE D n n' i).1 = (ixE D n n' j).1
-  · rw [if_pos hk, trace_xv]
+  · rw [ite_eq_left hk, trace_xv]
     congr 1
     apply propext
     constructor
-    · intro h
-      exact (ixE D n n').injective (Prod.ext hk h)
+    · exact fun h => (ixE D n n').injective (Prod.ext hk h)
     · intro h
       rw [h]
-  · rw [if_neg hk, if_neg]
-    intro h
-    exact hk (by rw [h])
+  · rw [ite_eq_right hk, ite_eq_right]
+    exact fun h => hk (by rw [h])
 
 
 
@@ -676,7 +667,7 @@ theorem matrix_eq_sum_putB (B : Base D cc δ) (n n' : ℕ) (M : Matrix (Fin (n' 
   subst hi hj
   simp only [Matrix.sum_apply, Matrix.smul_apply, putB_posE, smul_ite, smul_zero]
   rw [Fintype.sum_eq_single p.1]
-  · simp only [if_true]
+  · simp only [ite_true]
     have := congrFun (sum_g_smul_xv B (fun a => M (posE n n' (p.1, a)).1 (posE n n' (p.1, a)).2)) p.2
     rw [Finset.sum_apply] at this
     simp only [Pi.smul_apply] at this
@@ -684,7 +675,7 @@ theorem matrix_eq_sum_putB (B : Base D cc δ) (n n' : ℕ) (M : Matrix (Fin (n' 
   · intro k hk
     apply Finset.sum_eq_zero
     intro w _
-    rw [if_neg (Ne.symm hk)]
+    rw [ite_eq_right (Ne.symm hk)]
 
 theorem onB_bas : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D cc δ) (n n' : ℕ),
     StandardLatticesGL3.OnB D (bas B n n') := by
@@ -719,8 +710,7 @@ theorem sum_putB_embT (D : D7) {n n' : ℕ} (k : Fin n' × Fin n) (x : Fin 4 →
     (∑ a, ∑ c, z τ a c * (starRingEnd ℂ) (TaylorLogMetric.embT D τ (putB D k x a c)))
       = ∑ b : Fin 4, blk D k z (b, τ) * (starRingEnd ℂ) (emb4 D x (b, τ)) := by
   rw [← Fintype.sum_prod_type' (f := fun a c => z τ a c * (starRingEnd ℂ) (TaylorLogMetric.embT D τ (putB D k x a c)))]
-  rw [← (posE n n').sum_comp]
-  rw [Fintype.sum_prod_type, Finset.sum_eq_single k]
+  rw [← (posE n n').sum_comp, Fintype.sum_prod_type, Finset.sum_eq_single k]
   · refine Finset.sum_congr rfl fun b _ => ?_
     simp [putB, blk, emb4]
   · intro k' _ hk'
@@ -737,8 +727,7 @@ theorem blockVacuum_coordinate_eq_coordinateEquiv_numbering (D : D7) (cc : Ideal
       = ∑ w', blk D k z w' * (starRingEnd ℂ) (emb4 D (xv B w) w') := by
     unfold StandardLatticesGL3.coordB
     rw [Fintype.sum_prod_type_right (f := fun w' : Fin 4 × D.what₂.Tau => blk D k z w' * (starRingEnd ℂ) (emb4 D (xv B w) w'))]
-    refine Finset.sum_congr rfl fun τ _ => ?_
-    exact sum_putB_embT D k (xv B w) τ z
+    exact Finset.sum_congr rfl fun τ _ => sum_putB_embT D k (xv B w) τ z
   have hg : B.gC (emb4 D (xv B w)) = Pi.single w 1 := by
     rw [show B.gC (emb4 D (xv B w)) = _ from B.gC_spec (xv B w)]
     funext w'
@@ -980,8 +969,7 @@ theorem exists_pow_card_eq_span (𝔞 𝔟 : Submodule (𝓞 E) E) (h : 𝔞 * �
   have hIJ : I * J = 1 := by
     apply FractionalIdeal.coeToSubmodule_injective
     show ((I * J : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) = ((1 : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E)
-    rw [FractionalIdeal.coe_mul, FractionalIdeal.coe_one]
-    exact h
+    rwa [FractionalIdeal.coe_mul, FractionalIdeal.coe_one]
   let U : (FractionalIdeal (𝓞 E)⁰ E)ˣ := Units.mkOfMulEqOne I J hIJ
   have h1 := pow_card_eq_one (x := ClassGroup.mk E U)
   rw [← map_pow, ClassGroup.mk_eq_one_iff] at h1

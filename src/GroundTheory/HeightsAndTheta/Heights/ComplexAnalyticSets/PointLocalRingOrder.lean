@@ -25,8 +25,7 @@ theorem pointLocalRing_exists_mul_eq (I : Ideal (MvPolynomial σ ℂ)) (w : σ �
   have h := congrArg (Ideal.Quotient.mk (I.map (algebraMap (MvPolynomial σ ℂ)
     (Localization.AtPrime (RingHom.ker (eval w : MvPolynomial σ ℂ →+* ℂ))))))
     (IsLocalization.mk'_spec (Localization.AtPrime (RingHom.ker (eval w : MvPolynomial σ ℂ →+* ℂ))) a s)
-  rw [map_mul] at h
-  exact h
+  rwa [map_mul] at h
 
 theorem pointLocalRing_exists_mul_mem (I : Ideal (MvPolynomial σ ℂ)) (w : σ → ℂ) (g : MvPolynomial σ ℂ)
     (hg : algebraMap (MvPolynomial σ ℂ) (pointLocalRing I w) g = 0) :
@@ -60,8 +59,7 @@ theorem pointLocalRing_eval_ne_zero_of_isUnit (I : Ideal (MvPolynomial σ ℂ)) 
   obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective v
   have hv' : Ideal.Quotient.mk (I.map (algebraMap (MvPolynomial σ ℂ) (Localization.AtPrime p)))
       (algebraMap (MvPolynomial σ ℂ) (Localization.AtPrime p) u * z) = Ideal.Quotient.mk _ 1 := by
-    rw [map_mul, map_one]
-    exact hv
+    rwa [map_mul, map_one]
   have hd := hle (Ideal.Quotient.eq.1 hv')
   have h1 : (1 : Localization.AtPrime p) ∈ IsLocalRing.maximalIdeal (Localization.AtPrime p) := by
     have := (IsLocalRing.maximalIdeal (Localization.AtPrime p)).sub_mem

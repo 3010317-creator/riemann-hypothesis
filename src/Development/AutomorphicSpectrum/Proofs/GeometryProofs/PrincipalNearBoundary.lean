@@ -164,9 +164,7 @@ theorem abPart_principal_and_bound : ∀ (E : Type) [Field E] [NumberField E] [I
   obtain ⟨z', hz', rfl⟩ : ∃ z' ∈ Metric.ball (0 : Fin n → ℂ) ρ₁, z = (ρ₀ : ℂ) • z' := by
     refine ⟨(ρ₀⁻¹ : ℂ) • z, ?_, ?_⟩
     · rw [mem_ball_zero_iff] at hz ⊢
-      rw [norm_smul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hρ0.le]
-      rw [inv_mul_lt_iff₀ hρ0]
-      exact hz
+      rwa [norm_smul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hρ0.le, inv_mul_lt_iff₀ hρ0]
     · rw [smul_smul, mul_inv_cancel₀ (by exact_mod_cast hρ0.ne'), one_smul]
   have hz1 : z' ∈ Metric.ball (0 : Fin n → ℂ) 1 := Metric.ball_subset_ball h2 hz'
   have hb : (ρ₀ : ℂ) • z' ∈ Metric.ball (0 : Fin n → ℂ) ρ₀ := by

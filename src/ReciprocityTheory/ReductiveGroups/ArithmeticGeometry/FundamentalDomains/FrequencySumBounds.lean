@@ -143,9 +143,7 @@ theorem freq_sum_bound (X : Data E r) (la : Wt X.Ψ r) (a : ℝ) (ha : 0 < a) :
     linarith
   obtain ⟨Z, hZ⟩ : ∃ Z : ℝ, Z = ∑' j : ℤ, w j := ⟨_, rfl⟩
   refine ⟨Z ^ U.card, fun F hF => ?_⟩
-  have hinjF : Set.InjOn g (F : Set (X.Ψ → ℝ)) := by
-    intro x hx y hy h
-    exact hinj x (hF x hx) y (hF y hy) h
+  have hinjF : Set.InjOn g (F : Set (X.Ψ → ℝ)) := fun x hx y hy h => hinj x (hF x hx) y (hF y hy) h
   obtain ⟨I, hIdef⟩ : ∃ I : Finset ℤ, I = (F.image g).biUnion (fun k => Finset.univ.image k) :=
     ⟨_, rfl⟩
   have hsub : F.image g ⊆ Fintype.piFinset (fun _ : U => I) := by

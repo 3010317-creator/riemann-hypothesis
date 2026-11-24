@@ -181,8 +181,7 @@ theorem homOfFrames_app_chartSec (hL : L.IsLB) {F : X.Modules} {σ : ∀ i, Γ(F
     (hσ : IsFrameFamily L σ) (i : L.ι) :
     (homOfFrames hL hσ).app (L.U i) (chartSec hL i) = σ i := by
   have := modRes_frameFun hL hσ (chartSec hL i) i le_rfl le_rfl
-  rw [modRes_self, modRes_self, coord_chartSec, resG_resG, resG_g_self hL, one_smul] at this
-  exact this
+  rwa [modRes_self, modRes_self, coord_chartSec, resG_resG, resG_g_self hL, one_smul] at this
 
 theorem bijective_toPushforward_comp (hL : L.IsLB) (f : Y ⟶ X) (G : Y.Modules) :
     Function.Bijective fun ψ : toMod (L.pull f) ⟶ G =>
@@ -220,8 +219,7 @@ theorem bijective_toPushforward_comp (hL : L.IsLB) (f : Y ⟶ X) (G : Y.Modules)
       have e := resG_pull_g f j i le_rfl
       rw [resG_self] at e
       simp only [σ]
-      rw [modRes_modRes, modRes_modRes, e]
-      exact this
+      rwa [modRes_modRes, modRes_modRes, e]
     refine ⟨homOfFrames hL' hσ, hom_ext_chartSec hL fun i => ?_⟩
     have H (j : (L.pull f).ι) : G.presheaf.map (homOfLE (pull_U f j).ge).op
         ((homOfFrames hL' hσ).app _ (chartSec hL' j)) = τ (j PUnit.unit) := by

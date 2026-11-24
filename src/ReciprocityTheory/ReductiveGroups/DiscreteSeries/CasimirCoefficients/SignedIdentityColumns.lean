@@ -78,8 +78,7 @@ lemma normSq_detVG {ε : Fin n → Bool} {g : Matrix (Fin n) (Fin n) ℂ} (hg : 
       _ = (Jm ε).det := hdet
       _ = 1 * (Jm ε).det := by ring
   have h3 : ((Complex.normSq g.det : ℝ) : ℂ) = 1 := by
-    rw [Complex.normSq_eq_conj_mul_self]
-    exact h2
+    rwa [Complex.normSq_eq_conj_mul_self]
   exact_mod_cast h3
 
 section supnorm
@@ -106,7 +105,7 @@ lemma ballFiniteVG (ε : Fin n → Bool) (ν : Measure (UJ ε)) [ν.IsHaarMeasur
       have h0 := norm_nonneg (M i j)
       by_cases hc : ‖M i j‖ ≤ 1
       · exact le_trans hc (le_max_left _ _)
-      · push_neg at hc
+      · push Not at hc
         have : ‖M i j‖ ≤ ‖M i j‖ ^ 2 := by nlinarith
         exact le_trans (le_trans this h1) (le_max_right _ _)
   let e : UJ ε → Matrix (Fin n) (Fin n) ℂ × (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
@@ -206,8 +205,7 @@ lemma hs_le_colsV {ε : Fin n → Bool} (s : Bool) {g : Matrix (Fin n) (Fin n) �
   have hcols : hsRV (g * signedIdentityColumns ε s) = ∑ i, ∑ j, if ε j = s then ‖g i j‖ ^ 2 else 0 := by
     unfold hsRV
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [mul_P0V_apply]
-    exact sum_SgIxV ε s (fun j => ‖g i j‖ ^ 2)
+    simpa only [mul_P0V_apply] using sum_SgIxV ε s (fun j => ‖g i j‖ ^ 2)
   have hpt : ∀ i j, ‖g i j‖ ^ 2 = (if s then -1 else 1) * (σ j * ‖g i j‖ ^ 2) +
       2 * (if ε j = s then ‖g i j‖ ^ 2 else 0) := by
     intro i j
@@ -322,14 +320,12 @@ lemma smallRV {ε : Fin n → Bool} {s : Bool} {k : Matrix (Fin n) (Fin n) ℂ} 
     linarith
   have hK : ‖k‖ ^ 2 ≤ n + 2 * ‖k * signedIdentityColumns ε s‖ ^ 2 := by
     have h0 := hk'
-    rw [hs_eq_frobVG k, hsRV_eq (k * signedIdentityColumns ε s)] at h0
-    exact h0
+    rwa [hs_eq_frobVG k, hsRV_eq (k * signedIdentityColumns ε s)] at h0
   have hKn := norm_nonneg k
   have han := norm_nonneg (k * signedIdentityColumns ε s)
   have hKw : ‖k‖ * ‖u - signedIdentityColumns ε s‖ ≤ ‖k‖ * (1 / 4) := mul_le_mul_of_nonneg_left hw.le hKn
   have hb : ‖k * signedIdentityColumns ε s‖ ≤ 5 / 2 * Real.sqrt n + 1 / 2 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : ‖k * signedIdentityColumns ε s‖ ≤ Real.sqrt n + 1 / 4 + ‖k‖ / 4 := by linarith
     have h4 : 0 ≤ 4 * (‖k * signedIdentityColumns ε s‖ - (Real.sqrt n + 1 / 4)) := by linarith
     have h5 : 4 * (‖k * signedIdentityColumns ε s‖ - (Real.sqrt n + 1 / 4)) ≤ ‖k‖ := by linarith

@@ -217,8 +217,7 @@ theorem character_mem_lattice_of_comul : ∀ (C : Type) [Field C] (v : Valuation
         exact mul_le_one' (hψ _ (hg i)) (hφ _ (hh i))
       · rw [latConv_sum ψ φ k (fun _ : Fin 1 => k) (fun _ => k) (by simpa using hk)]
         simp [hψk, pow_succ]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt M hlt
   obtain ⟨ψ, hψ, hψk⟩ := hpow n
   have := hM ψ hψ
@@ -288,8 +287,7 @@ private theorem isAdicComplete_of_basis {R M ι : Type} [CommRing R] [AddCommGro
     have hr : b.repr (∑ j, L j • b j) i = L i := by
       have h := congrFun (b.equivFun.apply_symm_apply L) i
       rwa [Module.Basis.equivFun_symm_apply, Module.Basis.equivFun_apply] at h
-    rw [map_sub, Finsupp.sub_apply, hr]
-    exact this
+    rwa [map_sub, Finsupp.sub_apply, hr]
   exact { toIsHausdorff := hH, toIsPrecomplete := hP' }
 
 private theorem exists_pow_mem {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [CommRing O]
@@ -328,8 +326,7 @@ private theorem exists_pow_X_mem {O σ A : Type} [CommRing O] [IsLocalRing O] [C
     intro hu
     rw [MvPowerSeries.isUnit_iff_constantCoeff, MvPowerSeries.constantCoeff_X] at hu
     exact not_isUnit_zero hu
-  rw [← h3] at h4
-  exact h4
+  rwa [← h3] at h4
 
 private theorem pow_mem_map {O A B : Type} [CommRing O] [CommRing A] [CommRing B] [Algebra O A]
     [Algebra O B] (I : Ideal O) (e : A →ₐ[O] B) {x : A}
@@ -338,8 +335,7 @@ private theorem pow_mem_map {O A B : Type} [CommRing O] [CommRing A] [CommRing B
   obtain ⟨M, hM⟩ := h
   refine ⟨M, ?_⟩
   have := Ideal.mem_map_of_mem (e : A →+* B) hM
-  rw [Ideal.map_map, AlgHom.comp_algebraMap, map_pow] at this
-  exact this
+  rwa [Ideal.map_map, AlgHom.comp_algebraMap, map_pow] at this
 
 end SeriesTensor
 
@@ -502,11 +498,7 @@ theorem character_on_torsion_points_eq_series : ∀ (p : ℕ) [Fact p.Prime] (C 
     let e : N → (PS O 1 d →* C) := fun n =>
       ((algebraMap O C).comp (n.1 : PS O 1 d →+* O) : PS O 1 d →+* C).toMonoidHom
     have he : Function.Injective e := by
-      intro a b hab
-      apply Subtype.ext
-      apply AlgHom.ext
-      intro u
-      exact hinj (DFunLike.congr_fun hab u)
+      exact fun a b hab => Subtype.ext (AlgHom.ext (fun u => hinj (DFunLike.congr_fun hab u)))
     have hli : LinearIndependent C (fun n : N => (e n : PS O 1 d → C)) :=
       (linearIndependent_monoidHom (PS O 1 d) C).comp e he
     have htop := span_flip_eq_top_iff_linearIndependent.2 hli
@@ -624,13 +616,13 @@ private theorem exists_curry :
     · rw [map_C]
       exact ((S.comp E₀).commutes t).trans (hc t)
     · change S (E₀ (X q)) = _
-      rw [hX₀, hS, if_pos rfl, hq]
+      rw [hX₀, hS, ite_eq_left rfl, hq]
   have h1 : S.toRingHom.comp E₁.toRingHom = C := by
     refine (mvPowerSeries_eval_of_pow_mem _ K (Fin 1 × Fin d) (fun q => C (X q)) hCK).2
       inferInstance O _ _ (fun t => ?_) (fun q => ?_) (fun q => rfl)
     · exact ((S.comp E₁).commutes t).trans (hc t)
     · change S (E₁ (X q)) = _
-      rw [hX₁, hS, if_neg (by simp), hq]
+      rw [hX₁, hS, ite_eq_right (by simp), hq]
   refine ⟨S, ?_, fun u => ?_, fun u => ?_⟩
   · obtain ⟨T, hTC, hTX⟩ : ∃ T : MvPowerSeries (Fin 1 × Fin d) (PS O 1 d) →+* PS O 2 d,
         (∀ u, T (C u) = E₁ u) ∧ ∀ q, T (X q) = X (0, q.2) :=
@@ -992,8 +984,7 @@ private theorem map_coe_mem_span {O Q : Type} [CommRing O] [CommRing Q] [Algebra
     intro e
     apply Submodule.subset_span
     refine ⟨fun i => ⟨e i % N, Nat.mod_lt _ hN⟩, ?_⟩
-    refine Finset.prod_congr rfl fun i _ => ?_
-    exact (pow_eq_pow_mod (e i) (hy i)).symm
+    exact Finset.prod_congr rfl fun i _ => (pow_eq_pow_mod (e i) (hy i)).symm
   have hmul : ∀ j, ∀ q ∈ S, q * (1 + ψ (MvPowerSeries.X j)) ∈ S := by
     intro j q hq
     induction hq using Submodule.span_induction with
@@ -1112,8 +1103,7 @@ theorem fh_gmF : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
     smul_eq_mul] using this
   have hli : LinearIndependent O m := by
     rw [Fintype.linearIndependent_iff]
-    intro c h0
-    exact hsep c fun φ => by rw [h0, map_zero]
+    exact fun c h0 => hsep c fun φ => by rw [h0, map_zero]
   let B := Module.Basis.mk hli (fun q _ => hspan q)
   refine ⟨Module.Free.of_basis B, Module.Finite.of_basis B, fun q hq => ?_⟩
   obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun O).1 (hspan q)
@@ -1507,8 +1497,7 @@ theorem exists_linDat_of_extSer : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field
       Matrix.one_mul]
   · intro i
     refine ⟨e (Sum.inr i), ?_⟩
-    simp only [Equiv.symm_apply_apply, w, Sum.elim_inr]
-    exact hu2' i
+    simpa only [Equiv.symm_apply_apply, w, Sum.elim_inr] using hu2' i
 
 end GlobalTheory.ChF
 end -- clump:auto

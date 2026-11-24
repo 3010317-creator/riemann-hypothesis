@@ -85,13 +85,11 @@ theorem maps_std_iff (x : Matrix n n' k) :
       split_ifs
       · exact one_mem _
       · exact zero_mem _
-    have h2 := mem_stdLat.1 (H _ h1) i
-    simpa [Matrix.mulVec_single_one] using h2
+    simpa [Matrix.mulVec_single_one] using mem_stdLat.1 (H _ h1) i
   · intro H y hy
     rw [mem_stdLat] at hy ⊢
     intro i
-    simp only [Matrix.mulVec, dotProduct]
-    exact sum_mem fun j _ => mul_mem (H i j) (hy j)
+    simpa only [Matrix.mulVec, dotProduct] using sum_mem fun j _ => mul_mem (H i j) (hy j)
 
 theorem maps_smul_iff (g : GL n' k) (h : GL n k) (S : Submodule 𝒪[k] (n' → k)) (L : Submodule 𝒪[k] (n → k))
     (x : Matrix n n' k) :
@@ -106,8 +104,7 @@ theorem maps_smul_iff (g : GL n' k) (h : GL n k) (S : Submodule 𝒪[k] (n' → 
   · intro H y hy
     rw [mem_smul_iff] at hy ⊢
     have h1 := H _ hy
-    rw [key, smul_inv_smul] at h1
-    exact h1
+    rwa [key, smul_inv_smul] at h1
 
 private lemma isCompact_isOpen_isClosed_integral_matrices : IsCompact {x : Matrix n n' k | ∀ i j, x i j ∈ 𝒪[k]} ∧
     IsOpen {x : Matrix n n' k | ∀ i j, x i j ∈ 𝒪[k]} ∧ IsClosed {x : Matrix n n' k | ∀ i j, x i j ∈ 𝒪[k]} := by
@@ -152,8 +149,8 @@ private lemma phiOne_congr_of_sub_mulVec_mem_ker {P : Pair k n'} {Q : Pair k n} 
       simpa using h1.add hd
   unfold phiOne
   by_cases hx : Maps P Q x
-  · rw [if_pos (key.2 hx), if_pos hx]
-  · rw [if_neg (mt key.1 hx), if_neg hx]
+  · rw [ite_eq_left (key.2 hx), ite_eq_left hx]
+  · rw [ite_eq_right (mt key.1 hx), ite_eq_right hx]
 
 private lemma isClosed_setOf_mulVec_mem (S : Submodule 𝒪[k] (n' → k)) (L : Submodule 𝒪[k] (n → k))
     [S.IsFullLattice k] [L.IsFullLattice k] : IsClosed {x : Matrix n n' k | ∀ y ∈ S, x *ᵥ y ∈ L} := by
@@ -177,7 +174,7 @@ theorem phiOne_mem (P : Pair k n') (Q : Pair k n) : phiOne P Q ∈ SB (Matrix n 
     exact phiOne_congr_of_sub_mulVec_mem_ker hz
   · refine HasCompactSupport.intro' (hom_lat P.lat Q.lat).1 (isClosed_setOf_mulVec_mem P.lat Q.lat) fun x hx => ?_
     unfold phiOne
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨hm, -⟩
     exact hx hm
 
@@ -202,8 +199,7 @@ theorem valuation_det_of_fix (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice 
     refine (maps_std_iff w.val).1 ?_
     intro y hy
     have h1 : w • y ∈ w • stdLat k n := Submodule.smul_mem_pointwise_smul y w _ hy
-    rw [hw] at h1
-    exact h1
+    rwa [hw] at h1
   have h1 := det_mem_of_integral_entries (hint u hfix)
   have h2 := det_mem_of_integral_entries (hint u⁻¹ (by rw [inv_smul_eq_iff, hfix]))
   have hdet : Matrix.GeneralLinearGroup.det u = Matrix.GeneralLinearGroup.det h := by

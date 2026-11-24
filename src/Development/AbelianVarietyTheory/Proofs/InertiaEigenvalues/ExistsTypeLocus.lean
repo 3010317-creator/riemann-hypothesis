@@ -214,8 +214,7 @@ theorem isBCV_perm {i : D.nd.Loc} {P : D.naut.AV i} {Pa Pa' : List (Part D.naut.
   refine ⟨fun p hp' => h1 p (hp.mem_iff.2 hp'), (hp.map _).nodup_iff.1 h2, ?_, fun w hw => ?_,
     fun w hw => ?_, fun τ => ?_⟩
   · unfold rankIso at h3 ⊢
-    rw [← (hp.map _).sum_eq]
-    exact h3
+    rwa [← (hp.map _).sum_eq]
   · rw [← isoLoc_perm hp w]
     exact h4 w hw
   · rw [← isoLoc_perm hp w]
@@ -238,8 +237,7 @@ theorem tw_tw (hT0 : SumRepresentations.tie0 D) (h5 : SumRepresentations.adm5 D)
   have hp := h5.1 [⟨a, D.naut.tw (D.naut.tw π D.naut.etaT) D.naut.etaTinv, 1⟩] [⟨a, π, 1⟩]
     (by simp [ha]) (by simp [ha]) (Filter.Eventually.of_forall fun w => by
       simp only [isoLoc, spehLoc, List.foldr_cons, List.foldr_nil, hloc])
-  have hpp := List.singleton_perm_singleton.1 hp
-  exact eq_of_heq (Formalism.BasicNotions.Part.mk.inj hpp).2.1
+  exact eq_of_heq (Formalism.BasicNotions.Part.mk.inj (List.singleton_perm_singleton.1 hp)).2.1
 
 theorem hasParamX_of_Z (hT0 : SumRepresentations.tie0 D) (h5 : SumRepresentations.adm5 D) {i : D.nd.Loc} {x : D.nd.X i}
     (hx : x ∈ D.nd.Z i) : ∃ Sig, HasParamX D.nd D.naut i x Sig := by
@@ -337,8 +335,7 @@ theorem series_fix (hSer : GlobalTheory.TypeLeaf.SerLoc D) (i : D.nd.Loc) (σ' :
     by_contra hne
     exact hf (hSer i σ' k v f F hF hne)
   by_cases hm : D.ntypes.labPar k σ' v ∈ S
-  · rw [Finset.sum_eq_single_of_mem _ hm (fun f _ hf => hz f hf)] at h1
-    exact h1
+  · rwa [Finset.sum_eq_single_of_mem _ hm (fun f _ hf => hz f hf)] at h1
   · rw [Finset.sum_eq_zero (fun f hf => hz f (fun h => hm (h ▸ hf)))] at h1
     rw [← h1, map_zero]
 

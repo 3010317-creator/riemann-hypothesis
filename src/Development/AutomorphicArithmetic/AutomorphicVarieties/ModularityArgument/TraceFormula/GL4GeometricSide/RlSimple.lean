@@ -87,7 +87,7 @@ private theorem dbl (μ : Measure G) [μ.IsHaarMeasure] (K : Subgroup G) (hKo : 
     ⟨_, hA.mem_toFinset.2 ⟨1, K.one_mem, rfl⟩⟩, fun x hx => (hr x (hA.mem_toFinset.1 hx)).1, ?_, ?_, fun F hF => ?_⟩
   · exact Complex.ofReal_ne_zero.2 (ENNReal.toReal_ne_zero.2 ⟨hpos, hfin⟩)
   · refine HasCompactSupport.intro ((hKc.prod hKc).image
-      (f := fun p : G × G => p.1 * g * p.2) (by fun_prop)) fun y hy => if_neg ?_
+      (f := fun p : G × G => p.1 * g * p.2) (by fun_prop)) fun y hy => ite_eq_right ?_
     rintro ⟨k, hk, e⟩
     exact hy ⟨(k, (k * g)⁻¹ * y), ⟨hk, QuotientGroup.eq.1 e⟩, mul_inv_cancel_left _ _⟩
   · intro k₁ h₁ k₂ h₂ y
@@ -106,12 +106,12 @@ private theorem dbl (μ : Measure G) [μ.IsHaarMeasure] (K : Subgroup G) (hKo : 
         ∑ x ∈ hA.toFinset, (C x).indicator (fun _ => F (r x * g)) y := fun y => by
       by_cases hy : (y : G ⧸ K) ∈ A
       · have hm := (hC _ hy y).2 rfl
-        rw [if_pos hy, one_mul, Finset.sum_eq_single (y : G ⧸ K), Set.indicator_of_mem hm]
+        rw [ite_eq_left hy, one_mul, Finset.sum_eq_single (y : G ⧸ K), Set.indicator_of_mem hm]
         · rw [← hF (r y * g) _ hm, mul_inv_cancel_left]
         · exact fun x hx hne => Set.indicator_of_notMem
             (fun h => hne ((hC x (hA.mem_toFinset.1 hx) y).1 h).symm) _
         · exact fun h => (h (hA.mem_toFinset.2 hy)).elim
-      · rw [if_neg hy, zero_mul]
+      · rw [ite_eq_right hy, zero_mul]
         refine (Finset.sum_eq_zero fun x hx => Set.indicator_of_notMem (fun h => hy ?_) _).symm
         rw [(hC x (hA.mem_toFinset.1 hx) y).1 h]
         exact hA.mem_toFinset.1 hx
@@ -251,8 +251,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.rlSimple :
   · refine Or.inl (eq_bot_iff.2 fun x hx => D.inj (Subtype.ext ?_))
     have : ι x ∈ M := Submodule.subset_span ⟨1, _, ⟨x, hx, rfl⟩, by simp⟩
     rw [h0] at this
-    rw [map_zero]
-    exact this
+    rwa [map_zero]
   right
 
   have key : ∀ φ ∈ M, ∀ hφ : φ ∈ π.V, ∃ x ∈ W, ∀ u, D.H (D.i u) ⟨φ, hφ⟩ = D.H (D.i u) (D.i x) := by
@@ -283,8 +282,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.rlSimple :
         · simp only [Submodule.coe_smul, Submodule.coe_sum, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
           rfl
         · have := congrArg (fun ψ : Sm E n => ψ.1 (z * finGL E n y)) (hfix x k hk)
-          rw [map_mul, ← mul_assoc]
-          exact this
+          rwa [map_mul, ← mul_assoc]
       have e2 : ∀ u, ∀ a ∈ T, D.H (D.i u) (t (r a * g)) = D.H (D.i u) (t g) := fun u a ha =>
         D.pet.2.2.2.1 (finGL E n (r a)) _ _ _ _
           (fun z => (congrArg (fun ψ : Sm E n => ψ.1 z) (hfix u _ (hr a ha))).symm) (fun z => by

@@ -102,8 +102,7 @@ theorem hasDerivAt_bilin {E G : Type*} [AddCommGroup E] [Module ℂ E] [AddCommG
     rfl
   have := HasDerivAt.fun_sum (u := Finset.univ) fun i _ => (hc (B.flip (b i))).mul (hx (b.coord i))
   simp only [e]
-  rw [← Finset.sum_add_distrib]
-  exact this
+  rwa [← Finset.sum_add_distrib]
 
 variable {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar}
 

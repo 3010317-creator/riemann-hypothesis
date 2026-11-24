@@ -468,11 +468,7 @@ end Pull
 
 theorem genericPoint_mem_preimage {M W : Scheme.{0}} [IsIntegral M] [IsIntegral W] (f : M ⟶ W) [IsDominant f]
     {V : W.Opens} {y : W} (hy : y ∈ V) : genericPoint M ∈ f ⁻¹ᵁ V := by
-  show f (genericPoint M) ∈ V
-  have := (genericPoint_spec M).image f.continuous
-  rw [Set.image_univ, f.denseRange.closure_range] at this
-  rw [this.eq (genericPoint_spec W)]
-  exact gen_mem hy
+  apply GlobalTheory.DenominatorExistenceLemmas.gen_mem_preimage <;> assumption
 
 theorem mem_sections_mul_co {M W : Scheme.{0}} [IsIntegral M] [IsIntegral W] (f : M ⟶ W) [IsDominant f]
     {r : ℕ} (co : Fin r → (M.functionField →+ W.functionField))

@@ -55,8 +55,7 @@ theorem eval_cross {y : (Σ k, ι k) → Ω} {a : K → ℤ} {τ : ℕ} {s : Ω}
     show g * h' - g' * h ∈ RingHom.ker (mConeMap y)
     rw [RingHom.mem_ker, ProjLine.mConeMap_eq_of_isMultiHomog y hm, h0, map_zero, zero_mul]
   have := hz.2 _ hmem
-  rw [map_sub, map_sub, map_mul, map_mul, map_mul, map_mul, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, map_sub, map_mul, map_mul, map_mul, map_mul, sub_eq_zero] at this
 
 def IsSectionValue (y : (Σ k, ι k) → Ω) (a : K → ℤ) (τ : ℕ) (s : Ω) (z : (Σ k, ι k) → ℂ) (v : ℂ) : Prop :=
   ∃ (dg dh : K → ℕ) (g h : MRing ι), IsMultiHomog g dg ∧ IsMultiHomog h dh ∧
@@ -81,7 +80,7 @@ theorem sectionValue_eq {y : (Σ k, ι k) → Ω} {a : K → ℤ} {τ : ℕ} {s 
     (hz : z ∈ mcPts (mCoordIdeal y)) (hv : IsSectionValue y a τ s z v) : sectionValue y a τ s z = v := by
   have hex : ∃ v, IsSectionValue y a τ s z v := ⟨v, hv⟩
   unfold sectionValue
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   exact isSectionValue_unique hz hex.choose_spec hv
 
 theorem exists_isSectionValue {y : (Σ k, ι k) → Ω} {a : K → ℤ} {τ : ℕ} {s : Ω} {z : (Σ k, ι k) → ℂ}
@@ -210,7 +209,7 @@ theorem SeparatedSmallCount.proof (hfin : SectionLatticeFinite.Statement) : Sepa
       rw [AddSubgroup.coe_add, map_add (f := _)]))
   let F : chartLat y A.a τ → lp (fun _ : mcPts (mCoordIdeal y) => ℂ) ∞ := fun s =>
     if h : s ∈ W then φ ⟨s, h⟩ else 0
-  have hF : ∀ s (h : s ∈ W), F s = φ ⟨s, h⟩ := fun s h => dif_pos h
+  have hF : ∀ s (h : s ∈ W), F s = φ ⟨s, h⟩ := fun s h => dite_eq_left h
   have hFz : ∀ s (h : s ∈ W) z, F s z = ψ s z := fun s h z => by rw [hF s h]; rfl
   have hnormF : ∀ s : chartLat y A.a τ, IsSmallH (mCoordIdeal y) y A τ (s : Ω) → ‖F s‖ ≤ 1 := by
     intro s hs
@@ -230,8 +229,7 @@ theorem SeparatedSmallCount.proof (hfin : SectionLatticeFinite.Statement) : Sepa
       rw [lp.coeFn_sub, Pi.sub_apply, hFz s (hmemW s hs), hFz t (hmemW t ht)] at this
       rw [map_sub, Pi.sub_apply]
       exact this
-    rw [hψ, div_le_iff₀ (pow_pos (hpos _) τ)] at h1
-    exact h1
+    rwa [hψ, div_le_iff₀ (pow_pos (hpos _) τ)] at h1
 
   have hinj : Set.InjOn F hS.toFinset := by
     intro s hs t ht hst

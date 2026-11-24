@@ -65,8 +65,7 @@ theorem finrank_zp_le {V : Type} [AddCommGroup V] [Module ℚ_[p] V] [Module ℤ
     have h2 : LinearIndependent ℚ_[p] (fun i : s => ((i : M) : V)) :=
       (LinearIndependent.iff_fractionRing ℤ_[p] ℚ_[p]).mp h1
     have h3 : LinearIndependent ℚ_[p] (fun i : s => (⟨((i : M) : V), hMW _ (i : M).2⟩ : W)) := by
-      refine LinearIndependent.of_comp W.subtype ?_
-      exact h2
+      exact LinearIndependent.of_comp W.subtype h2
     have := h3.fintype_card_le_finrank
     simpa using this
   exact Module.finrank_le_of_rank_le hr
@@ -123,18 +122,16 @@ theorem xi_mem_span (n : ℕ) (g : MvPolynomial (Formalism.GM.M.BVar N r G.T.t) 
     rw [Finset.sum_eq_single c]
     · simp
     · intro d _ hd
-      rw [Finsupp.single_apply, if_neg]
-      intro h
-      exact hd (xiVar_inj G h)
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun h => hd (xiVar_inj G h)
     · intro h; exact absurd (Finset.mem_univ c) h
   · have h0 : m v = 0 := by
       by_contra hne
       exact hv (hsupp v (Finsupp.mem_support_iff.2 hne))
     rw [h0]
     refine Finset.sum_eq_zero fun c _ => ?_
-    rw [Finsupp.single_apply, if_neg]
-    intro h
-    exact hv ⟨c, h.symm⟩
+    rw [Finsupp.single_apply, ite_eq_right]
+    exact fun h => hv ⟨c, h.symm⟩
 
 theorem finrank_Ljj_le (j : Fin G.T.t → ℕ) (jp : ℕ) :
     Module.finrank ℤ_[p] (Ljj p (r := r) G j jp) ≤ dimY p (r := r) G j jp * dXi r (G.B - jp) := by
@@ -158,16 +155,14 @@ theorem finrank_Ljj_le (j : Fin G.T.t → ℕ) (jp : ℕ) :
         have h3 : (⟨y, hyY⟩ : Yq) ∈ (⊤ : Submodule ℚ_[p] Yq) := Submodule.mem_top
         rw [← bY.span_eq] at h3
         have h4 := Submodule.mem_map_of_mem (f := Yq.subtype) h3
-        rw [Submodule.map_span, ← Set.range_comp] at h4
-        exact h4
+        rwa [Submodule.map_span, ← Set.range_comp] at h4
       have hg2 := xi_mem_span p G (G.B - jp) g hg
       show rename (Formalism.GM.M.chainEmb N r G.T.t) y * g ∈ W
       have hy3 : rename (Formalism.GM.M.chainEmb N r G.T.t) y ∈ Submodule.span ℚ_[p]
           (Set.range fun a => rename (Formalism.GM.M.chainEmb N r G.T.t) ((bY a : Yq) : MvPolynomial _ ℚ_[p])) := by
         have := Submodule.mem_map_of_mem (f := (rename (Formalism.GM.M.chainEmb N r G.T.t) :
           MvPolynomial _ ℚ_[p] →ₐ[ℚ_[p]] MvPolynomial _ ℚ_[p]).toLinearMap) hy2
-        rw [Submodule.map_span, ← Set.range_comp] at this
-        exact this
+        rwa [Submodule.map_span, ← Set.range_comp] at this
       have hmul := Submodule.mul_mem_mul hy3 hg2
       rw [Submodule.span_mul_span] at hmul
       refine Submodule.span_mono ?_ hmul
@@ -185,8 +180,7 @@ theorem finrank_Ljj_le (j : Fin G.T.t → ℕ) (jp : ℕ) :
 end Level
 
 theorem restRankL_proved (C0 CE1 CE2 : ℝ) (X : flipOneThree.Inst) : RestRankL C0 CE1 CE2 X := by
-  intro dl _ aTop _ x _
-  exact finrank_Ljj_le X.p (gB C0 CE1 CE2 X aTop 0 x.1) x.2.1 x.2.2
+  exact fun dl _ aTop _ x _ => finrank_Ljj_le X.p (gB C0 CE1 CE2 X aTop 0 x.1) x.2.1 x.2.2
 
 end Formalism.MainNotions.G.SymmetricFormBlocks
 

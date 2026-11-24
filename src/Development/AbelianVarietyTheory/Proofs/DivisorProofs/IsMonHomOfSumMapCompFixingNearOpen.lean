@@ -68,8 +68,7 @@ theorem ext_of_open {T : Scheme.{0}} {W X Y : Over T} (j : W ⟶ X) [IsOpenImmer
     have hne : (X.hom ⁻¹' {X.hom x} ∩ (j.left.opensRange : Set X.left)).Nonempty := by
       refine ⟨j.left w, ?_, ⟨w, rfl⟩⟩
       show X.hom (j.left w) = X.hom x
-      rw [← Scheme.Hom.comp_apply, Over.w]
-      exact hw
+      rwa [← Scheme.Hom.comp_apply, Over.w]
     have hsub := subset_closure_inter_of_isPreirreducible_of_isOpen hirr.isPreirreducible
       j.left.opensRange.isOpen hne (show x ∈ X.hom ⁻¹' {X.hom x} from rfl)
     rwa [Set.inter_comm] at hsub
@@ -115,8 +114,7 @@ theorem isMonHom_of_open {T : Scheme.{0}} {W X Y : Over T} [GrpObj X] [GrpObj Y]
     have e1 : ∀ {M : Over T} [MonObj M], (1 : 𝟙_ (Over T) ⟶ M) = η := by
       intro M _
       rw [Hom.one_def, toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
-    rw [← e1, ← e1]
-    exact h2
+    rwa [← e1, ← e1]
   exact ⟨hone, hmul⟩
 
 theorem geometricallyIrreducible_of_semiAbelian {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : IsSemiAbelian G) :
@@ -151,8 +149,7 @@ theorem isPullback_embL (N : Near π G) (p : pullback π π ⟶ S) (hp : p ≫ �
       exact IsPullback.of_hasPullback _ _
     exact IsPullback.of_right outer (by rw [Desc.toS, pullback.lift_snd]) (IsPullback.of_hasPullback _ _)
   refine IsPullback.of_bot ?_ ?_ (IsPullback.of_hasPullback G.hom p)
-  · rw [Desc.embL, pullback.lift_snd, N.u_over]
-    exact hA
+  · rwa [Desc.embL, pullback.lift_snd, N.u_over]
   · rw [Desc.embL, pullback.lift_fst]
 
 theorem isOpenImmersion_emb (N : Near π G) (p : pullback π π ⟶ S) (hp : p ≫ π = pullback.fst π π ≫ π) :

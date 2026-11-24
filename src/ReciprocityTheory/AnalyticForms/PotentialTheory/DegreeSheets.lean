@@ -23,8 +23,7 @@ theorem isClosed_of_isAnalyticSubset' (A : FinHolAtlas e X) {S : Set X}
   intro x hx
   obtain ⟨W, hW, hxW, r, f, hf, hSW⟩ := hS x
   have hne : ∃ i, f i x ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hx
     have hxSW : x ∈ S ∩ W := by
       rw [hSW]
@@ -38,8 +37,7 @@ theorem isClosed_of_isAnalyticSubset' (A : FinHolAtlas e X) {S : Set X}
     have hmem : (A.chart j) x ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' W := by
       refine ⟨(A.chart j).map_source hxj, ?_⟩
       show (A.chart j).symm ((A.chart j) x) ∈ W
-      rw [(A.chart j).left_inv hxj]
-      exact hxW
+      rwa [(A.chart j).left_inv hxj]
     have h1 : ContinuousAt ((f i ∘ (A.chart j).symm) ∘ (A.chart j)) x :=
       ((h j _ hmem).continuousAt).comp ((A.chart j).continuousAt hxj)
     refine h1.congr ?_
@@ -60,8 +58,7 @@ theorem exists_localHomeomorph_of_isDegreeOff {A : FinHolAtlas e X} {B : FinHolA
   have hb : (B.chart j) y ∈ (B.chart j).target ∩ (B.chart j).symm ⁻¹' (h ⁻¹' (A.chart k).source) := by
     refine ⟨(B.chart j).map_source hyj, ?_⟩
     show h ((B.chart j).symm ((B.chart j) y)) ∈ (A.chart k).source
-    rw [(B.chart j).left_inv hyj]
-    exact hk
+    rwa [(B.chart j).left_inv hyj]
   have han := hh.2 j k ((B.chart j) y) hb
   have hdet := hd.2.2.2.2.2 j k ((B.chart j) y) ((B.chart j).map_source hyj)
     (by rw [(B.chart j).left_inv hyj]; exact hy) (by rw [(B.chart j).left_inv hyj]; exact hk)

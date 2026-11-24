@@ -95,9 +95,6 @@ theorem radial_space_smoothness : RadSpSmooth := by
       inner ℂ (B.hsVec (e ρ x.2)) (B.hsVec ((Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) x.1 (NF.muZ P.k P.r Bs.μsec x.2)))) Qs :=
     (Formalism.FourierDecayAlt.P.CutMP.En.hsVec_contDiff.comp_contDiffOn he').inner ℂ
       (Formalism.FourierDecayAlt.P.CutMP.En.hsVec_contDiff.comp_contDiffOn hΦq)
-  have hall := hw.mul hin
-  show ContDiffOn ℝ MA.sm (MA.ext _) Qs
-  refine hall.congr fun x hx => ?_
-  exact dif_pos hx
+  exact (hw.mul hin).congr fun x hx => dite_eq_left hx
 
 end Formalism.FourierDecayAlt.P.CutMP.Gauge.GC

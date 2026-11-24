@@ -89,8 +89,7 @@ theorem UpperTheory.constantTerm_convolution_arch :
     have h3 : ((unipMeasure K n r).restrict (unipFundamentalDomain K n r)).prod μ
         = ((unipMeasure K n r).prod μ).restrict (unipFundamentalDomain K n r ×ˢ Set.univ) := by
       rw [← Measure.prod_restrict, Measure.restrict_univ]
-    rw [h3]
-    exact h2
+    rwa [h3]
   have key := integral_integral_swap (f := fun X y => φ (unipGL X * g * infEmb K n y) * D y) hint
   show ∫ X in unipFundamentalDomain K n r, ψ (unipGL X * g) ∂unipMeasure K n r
     = ∫ y, (∫ X in unipFundamentalDomain K n r, φ (unipGL X * (g * infEmb K n y)) ∂unipMeasure K n r) * D y ∂μ
@@ -136,9 +135,7 @@ theorem UpperTheory.constantTerm_archSmooth :
   have hct := UpperTheory.constantTerm_convolution_arch K n r μ φ.1 φ.1 κ hc hκcont hκc repφ
   have hctc := UpperTheory.continuous_constantTerm K n r φ.1 hc
   have hsliceC : ∀ g, Continuous (archSlice (constantTerm r φ.1) g) := by
-    intro g
-    show Continuous fun x => constantTerm r φ.1 (g * infEmb K n x)
-    exact hctc.comp (continuous_const.mul continuous_infEmb)
+    exact fun g => hctc.comp (continuous_const.mul continuous_infEmb)
   have repct : ∀ g y, archSlice (constantTerm r φ.1) g y
       = ∫ z, archSlice (constantTerm r φ.1) g (y * z) * κ z ∂μ := by
     intro g y

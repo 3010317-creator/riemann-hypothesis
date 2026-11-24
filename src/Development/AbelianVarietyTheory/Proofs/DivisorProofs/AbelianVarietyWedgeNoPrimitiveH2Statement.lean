@@ -254,12 +254,7 @@ namespace GlobalTheory
 theorem isAffineOpen_inf_preimage_of_isPullback {S X Y Z : Scheme.{0}} {p : Z ⟶ X} {q : Z ⟶ Y}
     {iX : X ⟶ S} {iY : Y ⟶ S} (H : IsPullback p q iX iY) [IsAffine S] {U : X.Opens}
     {V : Y.Opens} (hU : IsAffineOpen U) (hV : IsAffineOpen V) :
-    IsAffineOpen (p ⁻¹ᵁ U ⊓ q ⁻¹ᵁ V) := by
-  have : IsAffine _ := isAffineOpen_top S
-  have : IsAffine _ := hU
-  have : IsAffine _ := hV
-  exact .of_isIso (Scheme.Hom.isPullback_resLE H (US := ⊤) (UT := V) (UX := U) le_top le_top
-    rfl).isoPullback.hom
+    IsAffineOpen (p ⁻¹ᵁ U ⊓ q ⁻¹ᵁ V) := GlobalTheory.KuennethOne.isAffineOpen_prod H hU hV
 
 theorem appLE_appLE_of_comp {T X Y : Scheme.{0}} (f : T ⟶ X) (g : X ⟶ Y) (h : T ⟶ Y)
     (e : f ≫ g = h) {W : Y.Opens} {U : X.Opens} {N : T.Opens} (h1 : U ≤ g ⁻¹ᵁ W)
@@ -319,8 +314,7 @@ theorem functions_on_product_of_affine_opens : ∀ (R : Type) [CommRing R] (X Y 
       ext x
       exact (Algebra.TensorProduct.productMap_right_apply i₁ i₂ x).symm
   have hb := ConcreteCategory.bijective_of_isIso e.hom
-  rw [he] at hb
-  exact hb
+  rwa [he] at hb
 
 end GlobalTheory
 end -- clump:auto
@@ -656,14 +650,12 @@ theorem cup_tmul_injective : ∀ (K : Type) [Field K] (X Y : Over (Sp K)), IsSep
     refine (restrict_pullHO1 Ψ B₁ hle₁ (ovw (fst X Y)) a).trans ?_
     refine (CoefMap.pullCohomologyOne_eq_of_natTrans m₁ (rU.comp n₁) (𝟙 B₁) (fun T b ↦ ?_) a).trans
       (CoefMap.pullCohomologyOne_comp rU n₁ a)
-    refine (congrArg ((rU.comp n₁).α T) (mp_id (OAff X.hom) _ b)).trans ?_
-    exact hi1 (T.1.unop, T.2.unop) b
+    exact (congrArg ((rU.comp n₁).α T) (mp_id (OAff X.hom) _ b)).trans (hi1 (T.1.unop, T.2.unop) b)
   have key₂ : ∀ a, rE.pull1 (pO1 (snd X Y) a) = n₂.pull1 (rV.pull1 a) := fun a ↦ by
     refine (restrict_pullHO1 Ψ B₂ hle₂ (ovw (snd X Y)) a).trans ?_
     refine (CoefMap.pullCohomologyOne_eq_of_natTrans m₂ (rV.comp n₂) (𝟙 B₂) (fun T b ↦ ?_) a).trans
       (CoefMap.pullCohomologyOne_comp rV n₂ a)
-    refine (congrArg ((rV.comp n₂).α T) (mp_id (OAff Y.hom) _ b)).trans ?_
-    exact hi2 (T.1.unop, T.2.unop) b
+    exact (congrArg ((rV.comp n₂).α T) (mp_id (OAff Y.hom) _ b)).trans (hi2 (T.1.unop, T.2.unop) b)
   have hbU : Function.Bijective rU.pull1 := GlobalTheory.T.cech_pull_one_bijective_lattice_cover K X.left X.hom J U hU hUi hUc
   have hbV : Function.Bijective rV.pull1 := GlobalTheory.T.cech_pull_one_bijective_lattice_cover K Y.left Y.hom J' V hV hVi hVc
   choose x' hx' using fun i ↦ H1.mk_surjective F (rU.pull1 (x i))
@@ -688,8 +680,7 @@ theorem cup_tmul_injective : ∀ (K : Type) [Field K] (X Y : Over (Sp K)), IsSep
   let eV := LinearEquiv.ofBijective rV.pull1 hbV
   apply (TensorProduct.congr eU eV).injective
 
-  rw [map_sum, map_zero]
-  exact e
+  rwa [map_sum, map_zero]
 
 end GlobalTheory.Kunneth
 end -- clump:auto

@@ -126,8 +126,7 @@ theorem coneTangent {P : Ideal (MRing J)} {e : ℕ}
   have hD := (ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.adens_hasFDerivAt_eval F (τ y)).comp y hτ.hasFDerivAt
   have hD0 : HasFDerivAt (fun y' => MvPolynomial.eval (τ y') F) (0 : (Fin e → ℂ) →L[ℂ] ℂ) y :=
     (hasFDerivAt_const (0 : ℂ) y).congr_of_eventuallyEq h0
-  have h1 := congrArg (fun L => L w) (hD.unique hD0)
-  simpa [smul_eq_mul, mul_comm] using h1
+  simpa [smul_eq_mul, mul_comm] using congrArg (fun L => L w) (hD.unique hD0)
 
 theorem maDensity_one (f : (Fin 1 → ℂ) → ℝ) (y : Fin 1 → ℂ) :
     maDensity (fun _ : Fin 1 => f) y = 2 / Real.pi * levi f y (Pi.single 0 1) := by
@@ -352,8 +351,7 @@ theorem levi_chartFun_gen (P : PotentialCharts M.atlas) (ref : HermLine J) (hth 
   have hcan : ∀ k', AnalyticAt ℂ (fun s' => c s' k') t := fun k' => (hgan _).div (hsan _) (hi k')
   have hden : ∀ᶠ s' in 𝓝 t, ∀ k', s (M.proj (g s')) ⟨k', i k'⟩ ≠ 0 := by
     rw [Filter.eventually_all]
-    intro k'
-    exact (hsan _).continuousAt.eventually_ne (hi k')
+    exact fun k' => (hsan _).continuousAt.eventually_ne (hi k')
   have hslit : ∀ᶠ s' in 𝓝 t, ∀ k', c s' k' / c t k' ∈ Complex.slitPlane := by
     rw [Filter.eventually_all]
     intro k'
@@ -726,16 +724,7 @@ theorem coneTangent_fderiv {K : Type} [Fintype K] {J : K → Type} [∀ k, Finty
     {τ : (Fin e → ℂ) → (Σ k, J k) → ℂ} {y : Fin e → ℂ} (hτ : DifferentiableAt ℂ τ y)
     (hm : ∀ᶠ y' in 𝓝 y, τ y' ∈ mcPts P) (w : Fin e → ℂ) :
     IsConeTangent (Int.castRingHom ℂ) P (τ y) (fderiv ℂ τ y w) := by
-  intro f hf
-  set F := MvPolynomial.map (Int.castRingHom ℂ) f
-  have h0 : (fun y' => MvPolynomial.eval (τ y') F) =ᶠ[𝓝 y] fun _ => (0 : ℂ) := by
-    filter_upwards [hm] with y' hy'
-    exact hy'.2 f hf
-  have hD := (ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.adens_hasFDerivAt_eval F (τ y)).comp y hτ.hasFDerivAt
-  have hD0 : HasFDerivAt (fun y' => MvPolynomial.eval (τ y') F) (0 : (Fin e → ℂ) →L[ℂ] ℂ) y :=
-    (hasFDerivAt_const (0 : ℂ) y).congr_of_eventuallyEq h0
-  have h1 := congrArg (fun L => L w) (hD.unique hD0)
-  simpa [smul_eq_mul, mul_comm] using h1
+  exact LevelTowerAlt.Ample.coneTangent hτ hm w
 
 end LevelTowerAlt
 

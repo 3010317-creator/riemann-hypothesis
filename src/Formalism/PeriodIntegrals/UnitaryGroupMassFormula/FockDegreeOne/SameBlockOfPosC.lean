@@ -135,8 +135,7 @@ theorem key_of (hI : InnerFacts) (hKc : KHc) (hKh : KHarm) (hHc : HcHarm) (hS : 
     V ⊓ LinearMap.ker (homogeneousComponent e : Pol p q r s →ₗ[ℂ] Pol p q r s)
   haveI : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le inf_le_left
   have hVst : ∀ a b : Ix p q, sameBlock a b → ∀ u ∈ V, fockAct1 p q r s (Eab a b) u ∈ V := by
-    intro a b hab u hu
-    exact ⟨hWK _ (isKC_Eab hab) u hu.1, hKh p q r s a b hab u hu.2⟩
+    exact fun a b hab u hu => ⟨hWK _ (isKC_Eab hab) u hu.1, hKh p q r s a b hab u hu.2⟩
   have hNst : ∀ a b : Ix p q, sameBlock a b → ∀ u ∈ N, fockAct1 p q r s (Eab a b) u ∈ N := by
     intro a b hab u hu
     refine ⟨hVst a b hab u hu.1, ?_⟩
@@ -189,9 +188,7 @@ theorem key_of (hI : InnerFacts) (hKc : KHc) (hKh : KHarm) (hHc : HcHarm) (hS : 
   have hraise : ∀ a b : Ix p q, posC a b → fockAct1 p q r s (Eab a b) v = 0 := by
     intro a b hab
     have h1 := (Submodule.mem_iInf _).mp hvhw.2 a
-    have h2 := (Submodule.mem_iInf _).mp h1 b
-    have h3 := (Submodule.mem_iInf _).mp h2 hab
-    exact LinearMap.mem_ker.mp h3
+    exact LinearMap.mem_ker.mp ((Submodule.mem_iInf _).mp ((Submodule.mem_iInf _).mp h1 b) hab)
   have hsame : ∀ a : Ix p q, sameBlock a a := by
     intro a; rcases a with a | a <;> simp [sameBlock]
   have hHW : IsHW (fockAct1 p q r s) ν (homogeneousComponent e v) := by
@@ -212,8 +209,7 @@ theorem reduction_of (hI : InnerFacts) (hKc : KHc) (hKh : KHarm) (hHc : HcHarm) 
   obtain ⟨W, hWfd, hPW, hWK, hWhw⟩ := hOT
   have key := fun e he => key_of hI hKc hKh hHc hS hA hE hT μ W hWK hWhw P hPW hH e he
   obtain ⟨e, he⟩ : ∃ e, homogeneousComponent e P ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hP0 (FockRaiseLowGrade.eq_zero_of_hc P h)
   refine ⟨e, key e he, ?_⟩
   have hother : ∀ e', e' ≠ e → homogeneousComponent e' P = 0 := by
@@ -229,7 +225,7 @@ theorem reduction_of (hI : InnerFacts) (hKc : KHc) (hKh : KHarm) (hHc : HcHarm) 
       rw [map_sub, FockRaiseLowGrade.hc_hc]
       by_cases h : e' = e
       · subst h; simp
-      · rw [if_neg h, hother e' h, sub_zero]
+      · rw [ite_eq_right h, hother e' h, sub_zero]
     exact sub_eq_zero.mp this
   rw [hPe]
   exact (mem_homogeneousSubmodule _ _).mpr (homogeneousComponent_isHomogeneous e P)

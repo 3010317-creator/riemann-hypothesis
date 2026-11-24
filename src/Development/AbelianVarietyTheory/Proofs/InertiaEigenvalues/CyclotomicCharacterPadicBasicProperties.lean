@@ -145,8 +145,7 @@ theorem mem_fixingSubgroup_adjoin_iff (S : Set (Om l)) (g : GQ l) :
     g ∈ (IntermediateField.adjoin ℚ_[l] S).fixingSubgroup ↔ ∀ x ∈ S, g x = x := by
   rw [IntermediateField.mem_fixingSubgroup_iff]
   constructor
-  · intro hg x hx
-    exact hg x (IntermediateField.subset_adjoin _ _ hx)
+  · exact fun hg x hx => hg x (IntermediateField.subset_adjoin _ _ hx)
   · intro hg x hx
     induction hx using IntermediateField.adjoin_induction with
     | mem x hx => exact hg x hx

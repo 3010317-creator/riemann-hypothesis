@@ -293,8 +293,7 @@ theorem r_eq (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf 
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have h' : algebraMap (LetA ↥(OL LL) (finrank ℚ_[l] ↥(K0 K))) W.EE 0 =
         algebraMap (LetA ↥(OL LL) (finrank ℚ_[l] ↥(K0 K))) W.EE 1 := by rw [map_zero, map_one]; exact h
-    have h0 := congrFun (W.EE_inj h') 0
-    exact zero_ne_one h0
+    exact zero_ne_one (congrFun (W.EE_inj h') 0)
   have h2 : r0 = finrank W.EE (W.DD T) := by
     rw [Module.finrank_eq_card_basis bD, Fintype.card_fin]
   have h3 := (W.DD_free T).2
@@ -490,7 +489,7 @@ theorem LV_smulO (K : ℕ) (o : O) (x : W.DD T) (hx : W.Q ^ K • W.φD T x ∈ 
   rw [finsum_eq_single _ 0]
   · simp
   · intro j hj
-    rw [PowerSeries.coeff_C, if_neg hj, zero_smul]
+    rw [PowerSeries.coeff_C, ite_eq_right hj, zero_smul]
 
 variable {Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop}
 
@@ -520,7 +519,7 @@ theorem levN_val (hp4 : Formalism.MainNotions.DeltaInvariantLattices.p4 W Pt T) 
       ring
     have hcoef : PowerSeries.coeff (k - Nat.find hex) ((W.lev c ζ W.Q) ^ (k - Nat.find hex)) =
         PowerSeries.coeff 1 (W.lev c ζ W.Q) ^ (k - Nat.find hex) := by
-      rw [hB', mul_pow, PowerSeries.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
+      rw [hB', mul_pow, PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self,
         PowerSeries.coeff_zero_eq_constantCoeff_apply, map_pow, PowerSeries.coeff_succ_X_mul,
         PowerSeries.coeff_zero_eq_constantCoeff_apply]
     rw [e1, map_pow, hcoef, smul_smul, ← pow_sub₀ _ hc1 hk0]
@@ -528,8 +527,7 @@ theorem levN_val (hp4 : Formalism.MainNotions.DeltaInvariantLattices.p4 W Pt T) 
     rcases lt_or_gt_of_ne hj with h | h
     · rw [map_pow, pow_vanish' _ hc0 _ j h, zero_smul]
     · rw [hv _ (by omega), smul_zero]
-  · intro h
-    exact absurd (Finset.mem_range.2 (by omega)) h
+  · exact fun h => absurd (Finset.mem_range.2 (by omega)) h
 
 end Span
 
@@ -573,8 +571,7 @@ theorem Qpow_mono {x : W.DD T} {k K : ℕ} (hk : W.Q ^ k • W.φD T x ∈ W.N T
 
 theorem LV_zero (K : ℕ) : LV W T c ζ K 0 = 0 := by
   have h0 : W.Q ^ K • W.φD T 0 ∈ W.N T := by rw [map_zero, smul_zero]; exact Submodule.zero_mem _
-  rw [LV_eq W T c ζ K _ h0]
-  rw [show (⟨_, h0⟩ : ↥(W.N T)) = 0 from Subtype.ext (by simp), map_zero]
+  rw [LV_eq W T c ζ K _ h0, show (⟨_, h0⟩ : ↥(W.N T)) = 0 from Subtype.ext (by simp), map_zero]
   rfl
 
 theorem LV_sum {ι : Type} (K : ℕ) (s : Finset ι) (f : ι → W.DD T)
@@ -796,7 +793,7 @@ theorem count (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] {
           rw [Finset.mem_Ico] at ha
           refine hmult0 a (fun h => ?_) (fun h => ?_)
           · rw [hup] at h
-            simp only [deep, if_true, Set.mem_Icc] at h
+            simp only [deep, ite_true, Set.mem_Icc] at h
             omega
           · rw [Set.mem_Icc] at h
             omega
@@ -804,8 +801,7 @@ theorem count (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] {
       exact Submodule.finrank_eq_zero.1 (by omega)
     have h1 : FildR PD ρ τ (-i) ⊔ Oth ≤ Oth :=
       sup_le (le_trans (fr_fildR_anti PD ρ τ (by omega)) (htop ▸ bot_le)) le_rfl
-    have h0 := Submodule.disjoint_def.1 hIO _ ⟨d, rfl⟩ (h1 hd)
-    exact hinj (by rw [h0, map_zero])
+    exact hinj (by rw [(Submodule.disjoint_def.1 hIO _ ⟨d, rfl⟩ (h1 hd)), map_zero])
   · rw [hFC, hcomap]
     have hsum := fr_sum_multV PD ρ τ (min lo (-(η : ℤ))) bτ (by omega)
     have hsub : ∑ a ∈ Finset.Icc (-(η : ℤ)) η, multV PD ρ τ a =
@@ -815,7 +811,7 @@ theorem count (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] {
         rw [Finset.mem_Ico]
         omega
       · rw [hup] at h
-        simp only [deep, if_true, Set.mem_Icc] at h
+        simp only [deep, ite_true, Set.mem_Icc] at h
         rw [Finset.mem_Ico] at ha
         omega
       · exact hna (by rw [Finset.mem_Icc]; exact h)
@@ -830,7 +826,7 @@ theorem count (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] {
         rw [Finset.mem_Ico]
         omega
       · rw [hdn] at h
-        simp only [deep, Bool.false_eq_true, if_false, Set.mem_Icc] at h
+        simp only [deep, Bool.false_eq_true, ite_false, Set.mem_Icc] at h
         rw [Finset.mem_Ico] at ha
         omega
       · exact hna (by rw [Finset.mem_Icc]; exact h)
@@ -963,8 +959,7 @@ theorem comap_count {LL X : Type*} [Field LL] [AddCommGroup X] [Module LL X] {r 
     (Phi : (Fin r → LL) →ₗ[LL] X) (hinj : Function.Injective Phi) (I : Submodule LL X)
     (hre : LinearMap.range Phi = I) (S : Submodule LL X) {k : ℕ} (h : finrank LL ↥(I ⊓ S) = k) :
     finrank LL ↥(S.comap Phi) = k := by
-  rw [comap_finrank Phi hinj, hre]
-  exact h
+  rwa [comap_finrank Phi hinj, hre]
 
 theorem jumps_sub {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K]
     [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K]
@@ -978,7 +973,7 @@ theorem jumps_sub {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀
     JumpsInV PD ρ τ (Set.Icc (-((bτ + S : ℕ) : ℤ)) ((bτ + S : ℕ) : ℤ)) := by
   intro a hJ
   rcases hj a hJ with h | h
-  · simp only [deep, Bool.false_eq_true, if_false, Set.mem_Icc] at h
+  · simp only [deep, Bool.false_eq_true, ite_false, Set.mem_Icc] at h
     rw [Set.mem_Icc]
     push_cast
     omega
@@ -1166,8 +1161,7 @@ theorem universal_lift_points (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA
   refine ⟨?_, ?_, DescentValuation.u3downPf_cc_π' ((HW l).W K 1 LL hG) c ζ hζ π' (sK l K) w0 hw0, ?_⟩
   · rw [he₁]
     simp
-  · rw [he₁, PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_zero_eq_constantCoeff_apply]
-    exact he₁0
+  · rwa [he₁, PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_zero_eq_constantCoeff_apply]
   · intro a
     have hg := ((HW l).W K 1 LL hG).gam_gen
     exact ((Cm l).C K 1 LL hG).tie.lev_Γ _ c ζ ζ 1 1 (by rw [pow_one]; exact hζ)
@@ -1188,8 +1182,7 @@ theorem embeddings_card_le_degree (D : D7) (HW : HWOf D.loc) {l : ℕ} [Fact l.P
   refine ⟨Finset.univ.filter (fun τ => Formalism.MainNotions.DeltaInvariantLattices.OverLetter ((HW l).W K 1 LL hG) τ c),
     fun τ ζ hpt => Finset.mem_filter.2 ⟨Finset.mem_univ _, u3upPf_pt_over D HW hG c ζ τ hpt⟩, ?_⟩
   have h := kapPiPf_card ((HW l).W K 1 LL hG) c
-  rw [Nat.card_eq_fintype_card, Fintype.card_subtype] at h
-  exact h
+  rwa [Nat.card_eq_fintype_card, Fintype.card_subtype] at h
 
 end Formalism.MainNotions.N.Ln34.UniversalLiftFrames
 end -- clump:auto

@@ -215,8 +215,7 @@ theorem exists_basis_comb {ι κ : Type} [Fintype ι] [Fintype κ]
   have hli := linearIndependent_comb hE4 hE10 l x hx hxX f
   have hli' : LinearIndependent (Int0 v)
       (fun s => (⟨_, hmem s⟩ : (preEig a Fil τ).map (comp a N τ))) := by
-    apply LinearIndependent.of_comp ((preEig a Fil τ).map (comp a N τ)).subtype
-    exact hli
+    exact LinearIndependent.of_comp ((preEig a Fil τ).map (comp a N τ)).subtype hli
   refine ⟨Basis.mk hli' ?_, fun s => by rw [Basis.mk_apply]⟩
   intro y _
   rw [Submodule.mem_span_range_iff_exists_fun]
@@ -243,8 +242,7 @@ theorem exists_basis_image {ι : Type} [Fintype ι]
     fun k => Submodule.mem_map_of_mem (h k).2
   have hli' : LinearIndependent (Int0 v)
       (fun k => (⟨_, hmem k⟩ : (eigSub a τ (Fin N → RS a)).map (comp a N τ))) := by
-    apply LinearIndependent.of_comp ((eigSub a τ (Fin N → RS a)).map (comp a N τ)).subtype
-    exact hli
+    exact LinearIndependent.of_comp ((eigSub a τ (Fin N → RS a)).map (comp a N τ)).subtype hli
   refine ⟨Basis.mk hli' ?_, fun k => by rw [Basis.mk_apply]⟩
   rintro ⟨_, z, hz, rfl⟩ _
   rw [Submodule.mem_span_range_iff_exists_fun]
@@ -382,8 +380,7 @@ theorem det_part
   have hbh' : (fun k => (bh k : Fin N → Int0 v)) = fun k => comp a N τ (h k : Fin N → RS a) :=
     funext hbh
   have := det_eq_mul_of_relLen (Submodule.map_mono hE9) hRL (bL0.reindex e.symm) bh
-  rw [hbL, hbh'] at this
-  exact this
+  rwa [hbL, hbh'] at this
 
 theorem detIdentity_of_relLen : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop ℝ)) (S : Type)
     [Fintype S] [DecidableEq S] (a : S → Int0 v), Function.Injective a →
@@ -534,8 +531,7 @@ theorem exists_relLen_of_smul_le (C : Type) [Field C] (v : AddValuation C (WithT
       simp [hw]
     have h4 := hι (this.trans (map_zero ι).symm)
     have h5 := congrArg b'.equivFun h4
-    rw [LinearEquiv.apply_symm_apply, map_zero] at h5
-    exact h5
+    rwa [LinearEquiv.apply_symm_apply, map_zero] at h5
   have hv : v (A.det : C) ≠ ⊤ := by
     rw [Ne, AddValuation.top_iff]
     exact_mod_cast hdet
@@ -599,7 +595,7 @@ theorem relLen_map_lsmul : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop
   unfold GlobalTheory.IndefiniteRowSideFullHecke.MultiplicationKernelIdentity.RelLen
   refine ⟨n, b, b.map e, Matrix.diagonal (fun _ => c), fun k => ?_, ?_⟩
   · simp only [Basis.map_apply, Matrix.diagonal_apply, ite_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rfl
   · rw [Matrix.det_diagonal, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
       Subring.coe_pow, AddValuation.map_pow, hr, ← WithTop.coe_nsmul, nsmul_eq_mul]
@@ -751,8 +747,7 @@ theorem herbrand_lengthIdentities_auxiliary_bound (C : Type) [Field C] (v : AddV
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h
       exact (Submodule.Quotient.mk_eq_zero _).2 (hsat c x hc h)
   have htfF : ∀ (c : Int0 v) (y : Fil), c ≠ 0 → c • y = 0 → y = 0 := by
-    intro c y hc h
-    exact Subtype.ext (htf c y hc (congrArg Subtype.val h))
+    exact fun c y hc h => Subtype.ext (htf c y hc (congrArg Subtype.val h))
   have htfO : ∀ (c : Int0 v) (y : Fin N → Int0 v), c ≠ 0 → c • y = 0 → y = 0 := by
     intro c y hc h; exact (smul_eq_zero.mp h).resolve_left hc
   have fgF : (Fil.restrictScalars (Int0 v)).FG := Module.Finite.iff_fg.mp fF
@@ -1251,8 +1246,7 @@ theorem relLen_lin_filKer : ∀ (C : Type) [Field C] (v : AddValuation C (WithTo
   let g : K →ₗ[Int0 v] (Fin N → RS a) := (mulR a N (lin a τ)).comp K.subtype
   have hg : Function.Injective g := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro x hx
-    exact Subtype.ext (mulR_injOn ha τ x.2 hx)
+    exact fun x hx => Subtype.ext (mulR_injOn ha τ x.2 hx)
   have hrange : LinearMap.range g = K.map (mulR a N (lin a τ)) := by
     simp only [g, LinearMap.range_comp, Submodule.range_subtype]
   let e : K ≃ₗ[Int0 v] K.map (mulR a N (lin a τ)) :=
@@ -1296,8 +1290,7 @@ theorem relLen_lin_filKer : ∀ (C : Type) [Field C] (v : AddValuation C (WithTo
   have hne : ((A.det : Int0 v) : C) ≠ 0 := by
     rw [hdetC]
     refine Finset.prod_ne_zero_iff.mpr fun s _ => pow_ne_zero _ (sub_ne_zero.mpr ?_)
-    intro h
-    exact s.2 (ha (Subtype.ext h))
+    exact fun h => s.2 (ha (Subtype.ext h))
   have hval : v ((A.det : Int0 v) : C) = yExp v a Fil τ := by
     have hprod : ∀ (ι : Type) (s : Finset ι) (f : ι → C), v (∏ i ∈ s, f i) = ∑ i ∈ s, v (f i) := by
       intro ι s f
@@ -1352,16 +1345,12 @@ theorem kerId : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop ℝ)) (S :
     · rintro ⟨hx, hk⟩
       have hx' : lin a τ • x = 0 := hx
       have hxF : x ∈ Fil := (Submodule.Quotient.mk_eq_zero Fil).1 hk
-      refine ⟨⟨x, hxF⟩, ?_, rfl⟩
-      show lin a τ • (⟨x, hxF⟩ : Fil) = 0
-      exact Subtype.ext hx'
+      exact ⟨⟨x, hxF⟩, Subtype.ext hx', rfl⟩
     · rintro ⟨⟨y, hy⟩, hy', rfl⟩
       have hy'' : lin a τ • (⟨y, hy⟩ : Fil) = 0 := hy'
       refine ⟨?_, ?_⟩
-      · show lin a τ • y = 0
-        exact congrArg Subtype.val hy''
-      · show (Submodule.Quotient.mk y : (Fin N → RS a) ⧸ Fil) = 0
-        exact (Submodule.Quotient.mk_eq_zero Fil).2 hy
+      · exact congrArg Subtype.val hy''
+      · exact (Submodule.Quotient.mk_eq_zero Fil).2 hy
 
 theorem core : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop ℝ)) (S : Type) [Fintype S] [DecidableEq S] (a : S → Int0 v), Function.Injective a → ∀ (N : ℕ) (Fil : Submodule (RS a) (Fin N → RS a)), (∀ (c : Int0 v) (x : Fin N → RS a), c ≠ 0 → c • x ∈ Fil → x ∈ Fil) → ∀ τ : S, ∃ r : ℝ, (r : WithTop ℝ) = yExp v a Fil τ ∧ RelLen v ((eigSub a τ (Fin N → RS a)).map (comp a N τ)) ((preEig a Fil τ).map (comp a N τ)) r := by
   intro C _ v S _ _ a ha N Fil hF τ

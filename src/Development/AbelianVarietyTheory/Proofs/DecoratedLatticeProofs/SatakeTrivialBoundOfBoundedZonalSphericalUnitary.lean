@@ -112,8 +112,7 @@ theorem gradedSeries_mul_ne_zero : ∀ (ι : Type) (deg : ι → ℕ) (a : ι �
   have hGX : G X = 0 := heq (by rw [mem_ball_zero_iff]; exact hX)
   intro hPX
   apply hQX
-  simp only [G, hPX, mul_zero, zero_sub, neg_eq_zero] at hGX
-  exact hGX
+  simpa only [G, hPX, mul_zero, zero_sub, neg_eq_zero] using hGX
 
 end GlobalTheory
 end -- clump:auto
@@ -167,16 +166,14 @@ theorem trivialBound_of_ne_zero {q n : ℕ} (hq : 1 ≤ q) (β : Fin (n / 2) →
   have hp : 0 < ‖(β i : ℂ)‖ := norm_pos_iff.2 (β i).ne_zero
   have hb0 : (β i : ℂ) ≠ 0 := (β i).ne_zero
   constructor
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have hX : ‖((q : ℂ) ^ (n - 1) * (β i : ℂ))⁻¹‖ < ((q : ℝ) ^ (2 * (n - 1)))⁻¹ := by
       rw [norm_inv, norm_mul, hcC, hcc]
       exact inv_strictAnti₀ (by positivity) (mul_lt_mul_of_pos_left hlt hc0)
     apply (h i _ hX).1
     field_simp
     ring
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have hX : ‖(β i : ℂ) / (q : ℂ) ^ (n - 1)‖ < ((q : ℝ) ^ (2 * (n - 1)))⁻¹ := by
       rw [norm_div, hcC, hcc, div_lt_iff₀ hc0, mul_inv, mul_assoc, inv_mul_cancel₀ hc0.ne', mul_one]
       exact (lt_inv_comm₀ hp hc0).2 hlt
@@ -192,8 +189,8 @@ def denom (n : ℕ) (c : ℂ) (α : Fin (n / 2) → ℂˣ) (X : ℂ) : ℂ :=
 theorem differentiable_denom (n : ℕ) (c : ℂ) (α : Fin (n / 2) → ℂˣ) : Differentiable ℂ (denom n c α) := by
   unfold denom
   by_cases h : Odd n
-  · simp only [if_pos h]; fun_prop
-  · simp only [if_neg h]; fun_prop
+  · simp only [ite_eq_left h]; fun_prop
+  · simp only [ite_eq_right h]; fun_prop
 
 theorem one_sub_ne_zero {z : ℂ} (h : ‖z‖ < 1) : 1 - z ≠ 0 := fun e => by
   rw [← sub_eq_zero.1 e, norm_one] at h
@@ -268,8 +265,7 @@ theorem exists_deg {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ)
   have hval : ∀ g, ∀ k ∈ KU σ n, Φ (io1 σ n (g * k)) = X ^ (∑ i, max (D g i) 0) := fun g k hk => by
     have h := GlobalTheory.T.sphericalDoublingSection_graph_diagonal_eq L ϖ σ q n hU χ hχ _ Φ hΦ (D g) (t g) (ht g) (k₁ g) (hk₁ g) (k₂ g * k)
       (mul_mem (hk₂ g) hk)
-    rw [hvX, ← mul_assoc, ← e g] at h
-    exact h
+    rwa [hvX, ← mul_assoc, ← e g] at h
   have hval1 : ∀ g, Φ (io1 σ n g) = X ^ (∑ i, max (D g i) 0) := fun g => by
     simpa only [mul_one] using hval g 1 (one_mem _)
   refine ⟨χ, _, Φ, hχ, hΦ, hvX, ?_, fun g k hk => (hval g k hk).trans (hval1 g).symm, fun a => ?_⟩

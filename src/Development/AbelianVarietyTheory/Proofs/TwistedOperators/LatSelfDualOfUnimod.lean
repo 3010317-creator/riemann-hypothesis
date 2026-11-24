@@ -178,8 +178,7 @@ theorem exists_pull (S : Subring A) (σ : A →+* A) {m n : ℕ} (h : m = n) (J 
     change x * (x' * β.val) = _
     rw [← Matrix.mul_assoc, hx, Matrix.one_mul]
   refine ⟨u * β, ?_, by rw [h1, idM_self, Matrix.mul_one]⟩
-  rw [← hJ, ← Matrix.mul_assoc, ← Matrix.mul_assoc, ← cT_mul', Matrix.mul_assoc, h1]
-  exact hU
+  rwa [← hJ, ← Matrix.mul_assoc, ← Matrix.mul_assoc, ← cT_mul', Matrix.mul_assoc, h1]
 
 theorem exists_push {m n : ℕ} (h : m = n) (x : Matrix (Fin m) (Fin n) A) (x' : Matrix (Fin n) (Fin m) A)
     (hx : x * x' = 1) (β : GL (Fin n) A) :
@@ -368,8 +367,8 @@ theorem exists_idem (S : Set (Pl D.host.E)) :
     change toAd D e Q = _
     rw [he]
     rfl
-  refine ⟨e, cpt_ext fun Q => ?_, (mem_OA_iff e).2 fun Q => ?_, fun Q hQ => by rw [h, if_pos hQ],
-    fun Q hQ => by rw [h, if_neg hQ]⟩
+  refine ⟨e, cpt_ext fun Q => ?_, (mem_OA_iff e).2 fun Q => ?_, fun Q hQ => by rw [h, ite_eq_left hQ],
+    fun Q hQ => by rw [h, ite_eq_right hQ]⟩
   · rw [map_mul, h]
     split_ifs <;> simp
   · rw [h]
@@ -408,8 +407,7 @@ theorem cpt_sg_eq_zero {Q : Pl D.host.E} {z : Ef D} (h : cpt (cP Q) z = 0) : cpt
   have h2 := delta_conj (comp_toAd D) hδ
   rw [cP_cP] at h2
   have h3 : cpt Q (sg D (toEAf D δ)) = 1 := by rw [← toEAf_cA]; exact h2.2.1
-  have h4 := congrArg (fun t => cpt Q (sg D t)) h1
-  simpa only [map_mul, map_zero, h3, one_mul] using h4
+  simpa only [map_mul, map_zero, h3, one_mul] using congrArg (fun t => cpt Q (sg D t)) h1
 
 theorem cpt_of_isIdemAt {e : AE D} {P : Pl D.host.E} (h : IsIdemAt e P) :
     cpt P (toEAf D e) = 1 ∧ ∀ Q, Q ≠ P → cpt Q (toEAf D e) = 0 :=
@@ -450,8 +448,7 @@ theorem exists_pow_mul_mem {N : ℕ} (z : Ef D)
       simpa using this
     have h0 : Valued.v (cpt Q z) ≠ 0 := by
       rw [Valuation.ne_zero_iff]
-      intro h0
-      exact hQ (h0 ▸ zero_mem _)
+      exact fun h0 => hQ (h0 ▸ zero_mem _)
     obtain ⟨k, hk⟩ := exists_pow_lt₀ hv (Units.mk0 _ h0)⁻¹
     refine ⟨k, fun _ => ?_⟩
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_pow]
@@ -515,8 +512,7 @@ abbrev gramOf (V : HSp D) (β : GL (Fin V.rank) (Ef D)) : Matrix (Fin V.rank) (F
   Formalism.UG.cT (sg D) β.val * ratM V.gram * β.val
 
 theorem isLattice_crdLat (V : HSp D) {L : Submodule (𝓞 D.host.E) V.V} (h : Submodule.IsLattice D.host.E L) :
-    Submodule.IsLattice D.host.E (crdLat V L) := by
-  exact Submodule.IsLattice.of_fg D.host.E (h.fg.map _)
+    Submodule.IsLattice D.host.E (crdLat V L) := Submodule.IsLattice.of_fg D.host.E (h.fg.map _)
 
 theorem isFullLattice_crdLat (V : HSp D) :
     Submodule.IsFullLattice D.host.E (crdLat V V.L0) := by
@@ -556,16 +552,14 @@ theorem isFullLattice_crdLat (V : HSp D) :
     exact RingOfIntegers.not_isField D.host.E
       (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 D.host.E) D.host.E) (Field.toIsField D.host.E))
   have h := congrArg (Submodule.map (V.frame.equivFun : V.V →ₗ[D.host.E] (Fin V.rank → D.host.E))) hspan
-  rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h
-  exact h
+  rwa [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h
 
 theorem isSD_one {V : HSp D} {β : GL (Fin V.rank) (Ef D)} (h : crdLat V V.L0 = lat β) :
     IsSDFrame V β (crdLat V V.L0) 1 := by
   refine ⟨0, h ▸ isFrame_lat β, GlobalTheory.LevelChoices.dualL_crdLat V, one_pos, fun x hx => ?_, fun x hx => ?_⟩
   · rw [pow_zero, Nat.cast_one, one_smul]
     rwa [← GlobalTheory.LevelChoices.coe_crdLat] at hx
-  · rw [pow_zero, Nat.cast_one, one_smul, ← GlobalTheory.LevelChoices.coe_crdLat]
-    exact hx
+  · rwa [pow_zero, Nat.cast_one, one_smul, ← GlobalTheory.LevelChoices.coe_crdLat]
 
 theorem exists_base (V : HSp D) : ∃ β : GL (Fin V.rank) (Ef D), crdLat V V.L0 = lat β := by
   have hL := isFullLattice_crdLat V
@@ -687,8 +681,7 @@ theorem exists_unitary (V : HSp D) (γ : GL (Fin V.rank) (Ef D)) (hγ : Unimod (
     · intro h y hy
       obtain ⟨y, rfl⟩ := (crd V).surjective y
       have := h y hy
-      rw [hT_crd D.sp.cm] at this
-      exact this
+      rwa [hT_crd D.sp.cm] at this
     · intro h y hy
       rw [hT_crd D.sp.cm]
       exact h _ hy
@@ -698,8 +691,7 @@ theorem exists_unitary (V : HSp D) (γ : GL (Fin V.rank) (Ef D)) (hγ : Unimod (
       finMat D.sp.cm.sig V.gram k *ᵥ y ∈ GlobalTheory.AdLat.hat D.host.F (lat γ : Set (Fin V.rank → D.host.E)) := by
     rw [← hL, GlobalTheory.LevelChoices.coe_crdLat]
     have := GlobalTheory.LevelChoices.coe_crdLat (GlobalTheory.VolRatioCompare.reLat V L h1 h2)
-    rw [← this] at hk
-    exact hk
+    rwa [← this] at hk
   refine (hatL_of_hat _ _ _ hk' x).trans ((isFrame_lat γ _).trans ?_)
   rw [mulVec_mulVec, _root_.mul_inv_rev, inv_inv, Units.val_mul]
   rfl

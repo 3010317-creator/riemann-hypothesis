@@ -77,8 +77,7 @@ theorem constantCoeff_inCol (col : Fin 2) (f : MvPowerSeries (Fin dd) C) (hf : c
   · simp [hf]
   · intro d hd
     obtain ⟨i, hi⟩ : ∃ i, d i ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     have h0 : constantCoeff (d.prod fun s e => (MvPowerSeries.X (col, s) : MvPowerSeries (Fin 2 × Fin dd) C) ^ e) = 0 := by
       rw [Finsupp.prod, map_prod]
@@ -91,22 +90,12 @@ theorem van_hCol (col g : Fin 2) (h : PS C 2 dd)
     Van {w : Fin 2 × (Fin 2 × Fin dd) | w.1 = g} (hCol col h) := by
   unfold hCol
   refine Van.subst {s : Fin 2 × Fin dd | s.1 = g} (fun _ => constantCoeff_X _) ?_ ?_
-  · intro s hs
-    exact van_X hs
-  · intro e he
-    exact hh e he
+  · exact fun s hs => van_X hs
+  · exact fun e he => hh e he
 
 theorem gauge_axes (Y : FBChart C V O dd) (g : Fin 2) :
     ∀ e : Fin 2 × Fin dd →₀ ℕ, (∀ s ∈ e.support, s.1 ≠ g) → coeff e Y.h = 0 := by
-  fin_cases g
-  · refine coeff_of_ev_zero Y.h 0 ![0, pt C dd 0] rfl ?_ Y.gauge.ax0
-    intro g' hg'
-    rw [fin_two_eq_one_sub_of_ne' 0 g' hg']
-    rfl
-  · refine coeff_of_ev_zero Y.h 1 ![pt C dd 0, 0] rfl ?_ Y.gauge.ax1
-    intro g' hg'
-    rw [fin_two_eq_one_sub_of_ne' 1 g' hg']
-    rfl
+  exact Formalism.L2.FormalSeriesBounds.FBChart.axisAll Y g
 
 theorem axesSelf_holds : AxesSelfSt := by
   intro C _ _ V O _ _ dd Y d _ I0 _ p
@@ -117,7 +106,6 @@ theorem axesSelf_holds : AxesSelfSt := by
     rw [constantCoeff_uncurry]
     exact Y.ex_const x.2
   · intro g e he
-    show coeff e (∑ col, hCol col Y.h) = 0
     exact van_sum Finset.univ _ (fun col _ => van_hCol col g Y.h (gauge_axes Y g)) e he
 
 end Formalism.L2.FormalSeriesBounds

@@ -165,9 +165,7 @@ theorem res_heisO_rat_equi : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Mat
   have hrat := GlobalTheory.WeilRat.om_rat_actO D ψ hstd V W χS χT ω hω 1 (one_mem _) γ hγ G hG
   have hQP : Formalism.L2.Theta.mt W γ * Formalism.L2.Theta.mt W γ⁻¹ = 1 := GlobalTheory.MixModel.mt_mul_inv W γ
   have hPQ : Formalism.L2.Theta.mt W γ⁻¹ * Formalism.L2.Theta.mt W γ = 1 := GlobalTheory.MixModel.mt_inv_mul W γ
-  have hmid : midPart V V' W B 0 = 0 := by
-    show HMul.hMul (0 : Matrix (Fin W.rank) (Fin V'.rank) (AE D)) _ = 0
-    exact Matrix.zero_mul _
+  have hmid : midPart V V' W B 0 = 0 := Matrix.zero_mul _
   have hpt : ∀ a, ω (1, γ) G (isoPart V W C a + midPart V V' W B 0) =
       G (isoPart V W C (Formalism.L2.Theta.mt W γ⁻¹ * a) + midPart V V' W B 0) := by
     intro a

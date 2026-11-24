@@ -62,9 +62,7 @@ theorem isZero_groupHomology_succ_of_projective : ∀ (k G : Type) [CommRing k] 
   have hε : Epi ε := by
     rw [Rep.epi_iff_surjective]
     intro x
-    refine ⟨(adj.unit.app B).hom x, ?_⟩
-    have h2 := congrArg (fun f => f.hom x) (adj.right_triangle_components P)
-    exact h2
+    exact ⟨(adj.unit.app B).hom x, congrArg (fun f => f.hom x) (adj.right_triangle_components P)⟩
   let s := Projective.factorThru (𝟙 P) ε
   have hs : s ≫ ε = 𝟙 P := Projective.factorThru_comp _ _
   have hZ : IsZero (groupHomology (Rep.ind S.subtype B) (n + 1)) :=

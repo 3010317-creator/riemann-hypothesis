@@ -47,7 +47,7 @@ theorem mN_succ (i : ℕ) (h : i + 1 ≤ r) : mN τ G x e (i + 1) = mN τ G x e 
   have hp := pv_pyth hG (famN x (i + 1) h) e (unit_of p0 x hsg (i + 1) h)
     (unit_of p0 x hsg i (Nat.le_of_succ_le h))
   rw [famN_succ] at hp
-  simp only [mN, pN, dif_pos h, dif_pos (Nat.le_of_succ_le h)]
+  simp only [mN, pN, dite_eq_left h, dite_eq_left (Nat.le_of_succ_le h)]
   rw [hp, Complex.add_re]
 
 theorem mN_step (i : ℕ) (h : i + 1 ≤ r) : 0 ≤ sgn p0 i * (mN τ G x e (i + 1) - mN τ G x e i) := by
@@ -100,7 +100,7 @@ theorem mN_down (i : ℕ) (hi : p0 ≤ i) (j : ℕ) (hij : i ≤ j) (hj : j ≤ 
 include hx in
 theorem pN_top : pN τ G x e r = e := by
   have hA := unit_of p0 x hsg r le_rfl
-  rw [pN, dif_pos le_rfl]
+  rw [pN, dite_eq_left le_rfl]
   have he' : e = ∑ d, (x⁻¹ *ᵥ e) d • famN x r le_rfl d := by
     have h1 : x *ᵥ (x⁻¹ *ᵥ e) = e := by
       rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hx),
@@ -131,15 +131,13 @@ theorem mN_bounds (i : ℕ) (hi : i ≤ r) : 0 ≤ mN τ G x e i ∧ mN τ G x e
   · constructor
     · have h1 := mN_up (hG := hG) (p0 := p0) (hp0 := hp0) (x := x) (hsg := hsg) (e := e)
         (j := i) (hj := hi0) (i := 0) (hi := Nat.zero_le _)
-      rw [mN_zero] at h1
-      exact h1
+      rwa [mN_zero] at h1
     · exact mN_up (hG := hG) (p0 := p0) (hp0 := hp0) (x := x) (hsg := hsg) (e := e)
         (j := p0) (hj := le_rfl) (i := i) (hi := hi0)
   · constructor
     · have h1 := mN_down (hG := hG) (p0 := p0) (x := x) (hsg := hsg) (e := e)
         (i := i) (hi := hi0) (j := r) (hij := hi) (hj := le_rfl)
-      rw [mN_top (hG := hG) (p0 := p0) (x := x) (hx := hx) (hsg := hsg) (e := e) (he := he)] at h1
-      exact h1
+      rwa [mN_top (hG := hG) (p0 := p0) (x := x) (hx := hx) (hsg := hsg) (e := e) (he := he)] at h1
     · exact mN_down (hG := hG) (p0 := p0) (x := x) (hsg := hsg) (e := e)
         (i := p0) (hi := le_rfl) (j := i) (hij := hi0) (hj := hi)
 
@@ -167,12 +165,11 @@ theorem mN_pos (hne : e ≠ 0) : 0 < mN τ G x e p0 := by
       Complex.normSq_eq_zero.mp ((mul_eq_zero.mp hre.symm).resolve_right hd1)
     have hdv := dv_zero τ G (famN x (i + 1) h) e hA1 hA0 hy
     rw [dv, famN_succ, sub_eq_zero] at hdv
-    simp only [pN, dif_pos h, dif_pos (Nat.le_of_succ_le h)]
-    exact hdv
+    simpa only [pN, dite_eq_left h, dite_eq_left (Nat.le_of_succ_le h)] using hdv
   have hall : ∀ i, i ≤ r → pN τ G x e i = 0 := by
     intro i hi
     induction i with
-    | zero => rw [pN, dif_pos (Nat.zero_le r), pv]; exact Finset.sum_empty
+    | zero => rw [pN, dite_eq_left (Nat.zero_le r), pv]; exact Finset.sum_empty
     | succ i ih => rw [hstep i hi, ih (by omega)]
   exact hne ((pN_top hG p0 x hx hsg e).symm.trans (hall r le_rfl))
 

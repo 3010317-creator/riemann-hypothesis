@@ -318,17 +318,7 @@ theorem exists_cocycle_of_cochain (n : ℕ) (c : (Fin n → G) → A) (hc : IsLo
 theorem cohomologyπ_succ_eq_zero_iff (n : ℕ) (x : cocycles A (n + 1)) :
     cohomologyπ A (n + 1) x = 0 ↔ ∃ w : (Fin n → G) → A, IsLocallyConstant w ∧
       (inhomogeneousCochains.d A n).hom w = cochainOf A (cocycleι A (n + 1) x) := by
-  change ((cochainsComplex A).homologyπ (n + 1)).hom x = 0 ↔ _
-  rw [homologyπ_eq_zero_iff, CochainComplex.prev_nat_succ]
-  constructor
-  · rintro ⟨w, hw⟩
-    refine ⟨cochainOf A w, isLocallyConstant_cochainOf w, ?_⟩
-    rw [← cochainOf_d]
-    exact congrArg (cochainOf A) hw
-  · rintro ⟨w, hw, h⟩
-    refine ⟨mkCochain A w hw, ?_⟩
-    apply cochainOf_injective (A := A)
-    exact (cochainOf_d (A := A) _).trans h
+  exact CompanionTheory.LocalTateOrthogonality.Gcoh.pi_succ_eq_zero_iff A n x
 
 end Coh
 
@@ -453,7 +443,7 @@ theorem exists_cochain_of_lift [IsGalois K Ω] [IsSepClosed Ω] (N : ℕ) [NeZer
   have hF : ∀ g, ζ ^ (F (d g)).val = (d g : Ω) := by
     intro g
     have hs' := Classical.choose_spec (hex g)
-    simp only [F, dif_pos (hex g)]
+    simp only [F, dite_eq_left (hex g)]
     rw [ZMod.val_cast_of_lt hs'.1]
     exact hs'.2
   refine ⟨fun g => F (d g), hdlc.comp F, fun g h => ?_⟩
@@ -1480,7 +1470,7 @@ theorem exists_invFam_normalised : ∀ (F Ω : Type) [Field F] [NumberField F] [
   have h : ∃ v : HeightOneSpectrum (𝓞 F), IsPlaceOver A v := ⟨v, hv⟩
   have e : h.choose = v := eq_of_isPlaceOver h.choose_spec hv
   have spec := Classical.choose_spec (key A h.choose h.choose_spec)
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   generalize Classical.choose (key A h.choose h.choose_spec) = f at spec ⊢
   rw [e] at spec
   exact spec

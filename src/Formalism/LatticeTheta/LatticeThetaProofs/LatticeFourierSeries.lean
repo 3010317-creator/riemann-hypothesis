@@ -158,8 +158,7 @@ theorem boxIoc_ae_eq :
       Set.univ.pi fun i => Ioc ((0 : ι → ℝ) i) ((1 : ι → ℝ) i) := by
     ext x
     simp
-  rw [h1]
-  rw [volume_pi]
+  rw [h1, volume_pi]
   exact Measure.univ_pi_Ioc_ae_eq_Icc.trans Measure.univ_pi_Ico_ae_eq_Icc.symm
 
 theorem mFourierCoeff_torusFunC (e : Module.Basis ι ℝ V) (G : V → ℂ) (hG : Continuous G)
@@ -256,8 +255,7 @@ theorem lattice_fourier_series (V : Type*) [NormedAddCommGroup V] [InnerProductS
     ∫ y in D, G y * Complex.exp (-(2 * Real.pi * Complex.I * (⟪μ, y⟫ : ℝ))) with hc
   have hF : IsAddFundamentalDomain Λ (ZSpan.fundamentalDomain e) volume := by
     have h := ZSpan.isAddFundamentalDomain e volume
-    rw [he] at h
-    exact h
+    rwa [he] at h
   have : MeasurableVAdd Λ V := (inferInstance : MeasurableVAdd Λ.toAddSubgroup V)
   have : VAddInvariantMeasure Λ V volume :=
     (inferInstance : VAddInvariantMeasure Λ.toAddSubgroup V volume)
@@ -268,8 +266,7 @@ theorem lattice_fourier_series (V : Type*) [NormedAddCommGroup V] [InnerProductS
   let g := torusFunC e G hG hper'
   have hmem : ∀ m, dualVec e m ∈ dual Λ := fun m => by
     have h := dualVec_mem e m
-    rw [he] at h
-    exact h
+    rwa [he] at h
   have hcoef : ∀ m, c (dualVec e m) = (ZLattice.covolume Λ : ℂ) * UnitAddTorus.mFourierCoeff g m := by
     intro m
     simp only [hc]

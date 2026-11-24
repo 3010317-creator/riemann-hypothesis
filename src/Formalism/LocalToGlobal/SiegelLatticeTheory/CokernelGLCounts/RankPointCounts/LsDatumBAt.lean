@@ -25,8 +25,7 @@ theorem sum_castLE {N l : ℕ} (h : l ≤ N) (f : Fin N → K) (hf : ∀ k : Fin
   rw [← Finset.sum_subset hsub (fun k _ hk => ?_), Finset.sum_map]
   · rfl
   · apply hf
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     exact hk (Finset.mem_map.2 ⟨⟨k.val, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
 
 theorem submatrix_loUni_mul {N l : ℕ} (h : l ≤ N) (L A U : Matrix (Fin N) (Fin N) K) (hL : IsLoUni L)
@@ -111,8 +110,7 @@ theorem atPtG_holds {D : Formalism.BasicNotions.D7} (u u' : D.what₂.Word) (F0 
     rw [CntLocal.gz_eq]
     unfold CntLocal.GZ Gpt
     rw [N_eq (D.R.rS + 1) le_rfl, N_eq D.R.rS (Nat.le_succ _)]
-  rw [← key]
-  exact hG
+  rwa [← key]
 
 theorem dnInDens_of {D : Formalism.BasicNotions.D7} {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS (CntLocal.Tn u)}
     {what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)} (hN : NormRepElig u u' F0 what₂) (hrows : IsRowReps D F0 what₂) :

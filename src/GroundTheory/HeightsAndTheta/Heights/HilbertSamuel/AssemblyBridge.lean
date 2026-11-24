@@ -97,8 +97,7 @@ theorem BlockResolutionMixedBridge.proof : BlockResolutionMixedBridge.Statement 
       fun x => logNorm B.inv 1 (d.R.lift x x) :=
     funext fun x => congrFun hgl (d.R.lift x x)
   unfold ptsIntegral
-  rw [dite_eq_left hex, hgl, hgr]
-  exact key
+  rwa [dite_eq_left hex, hgl, hgr]
 
 end
 
@@ -142,8 +141,7 @@ theorem ResolutionMixedBridge.proof : ResolutionMixedBridge.Statement := by
   have key := AnResBridge.bridge d.R hex.choose (fun j => HermLine.ofCone (M j)) B.inv 1 d.arith
     hex.choose_spec (fun j => gbamix_smoothHerm_ofCone (hM j)) hBs hsec
   unfold ptsIntegral
-  rw [dite_eq_left hex, hgl]
-  exact key
+  rwa [dite_eq_left hex, hgl]
 
 end
 
@@ -290,8 +288,7 @@ theorem isolated_of_not_pullBad (hv : IsBlockMap κ v)
     refine lt_of_le_of_ne (minorRatio_nonneg _ _) (Ne.symm fun h0 => hx' ?_)
     obtain ⟨μ, hμ, hμeq⟩ := eq_smul_of_minorRatio hb (segre_ne_zero (R.mem x' x' (R.mem_U x')).1) h0
     have hso : SameOrbit (R.lift x' x') (R.lift x x) := sameOrbit_of_segre hz'.1 μ hμ hμeq
-    rw [← R.inj x x' hxB (sameOrbit_comm hso)]
-    exact hxV
+    rwa [← R.inj x x' hxB (sameOrbit_comm hso)]
   obtain ⟨m0, hm0, hm0le⟩ : ∃ m0 : ℝ, 0 < m0 ∧
       ∀ x' ∈ Vᶜ, m0 ≤ minorRatio (segre (R.lift x x)) (segre (R.lift x' x')) := by
     rcases (Vᶜ).eq_empty_or_nonempty with hC | hC
@@ -336,8 +333,7 @@ theorem isolated_of_not_pullBad (hv : IsBlockMap κ v)
   have hq : pullQ R v Ψ x'' = pullQ R v Ψ x := by
     obtain ⟨μ, hμ, hμeq⟩ := segre_of_sameOrbit hso
     funext i
-    simp only [pullQ, hμeq, map_smul, Pi.smul_apply, smul_eq_mul]
-    exact mul_div_mul_left _ _ hμ
+    simpa only [pullQ, hμeq, map_smul, Pi.smul_apply, smul_eq_mul] using mul_div_mul_left _ _ hμ
   have hxx : x'' = x := by
     have h1 : (pullQ R v Ψ ∘ (R.A.chart j).symm) (R.A.chart j x'') =
         (pullQ R v Ψ ∘ (R.A.chart j).symm) (R.A.chart j x) := by

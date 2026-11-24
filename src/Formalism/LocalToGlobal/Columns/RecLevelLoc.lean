@@ -31,11 +31,11 @@ theorem rll_sum_apply (S : Finset (HeightOneSpectrum (𝓞 F))) (w : HeightOneSp
     map_sum (evalV F w) _ _
   rw [h]
   by_cases hw : w ∈ S
-  · rw [if_pos hw, Finset.sum_eq_single w]
+  · rw [ite_eq_left hw, Finset.sum_eq_single w]
     · exact afsplitI_self w 1
     · intro v _ hv; exact afsplitI_ne v w (Ne.symm hv) 1
     · intro h'; exact absurd hw h'
-  · rw [if_neg hw]
+  · rw [ite_eq_right hw]
     refine Finset.sum_eq_zero fun v hv => afsplitI_ne v w ?_ 1
     rintro rfl; exact hw hv
 
@@ -50,8 +50,8 @@ theorem rll_int_of_loc (x : E ⊗[F] Formalism.L2.Herm.Af F)
   let w' : intAd F := Formalism.L2.DIV.mkAd
     (fun v => if v ∈ S then 0 else (algebraMap (𝓞 F) (v.adicCompletion F) D)⁻¹) (fun v => by
       by_cases hv : v ∈ S
-      · simp only [hv, if_true]; exact zero_mem _
-      · simp only [hv, if_false]
+      · simp only [hv, ite_true]; exact zero_mem _
+      · simp only [hv, ite_false]
         rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_inv₀]
         have h1 : 1 ≤ Valued.v (algebraMap (𝓞 F) (v.adicCompletion F) D) :=
           not_lt.1 (fun hlt => hv ((hmem v).2 hlt))
@@ -67,8 +67,7 @@ theorem rll_int_of_loc (x : E ⊗[F] Formalism.L2.Herm.Af F)
     rw [e1, e2, rll_sum_apply]
     by_cases hv : v ∈ S
     · simp [hv]
-    · simp only [hv, if_false, sub_zero]
-      exact mul_inv_cancel₀ (levelaf_algebraMap_ne_zero v D hD)
+    · simpa only [hv, ite_false, sub_zero] using mul_inv_cancel₀ (levelaf_algebraMap_ne_zero v D hD)
   have hx : x = ∑ v ∈ S, afsplitIE v (prV (E := E) v x) +
       ((1 : E) ⊗ₜ[F] (w' : Formalism.L2.Herm.Af F)) * (levelafC E D * x) := by
     have e3 : ((1 : E) ⊗ₜ[F] (w' : Formalism.L2.Herm.Af F)) * (levelafC E D * x) =
@@ -106,8 +105,7 @@ theorem rll_redAt_congr {P : Pl E} {v : HeightOneSpectrum (𝓞 F)} (hv : IsOver
   have h2 := Formalism.L2.DIV.reduction_local F E n 1 P v hv _ (x * y⁻¹).2 h1
   rw [redFn, Formalism.L2.DIV.extendOne_of_mem _ (x * y⁻¹).2] at h2
   have h3 : redAt 1 P (x * y⁻¹) = 1 := h2
-  rw [map_mul, map_inv, mul_inv_eq_one] at h3
-  exact h3
+  rwa [map_mul, map_inv, mul_inv_eq_one] at h3
 
 theorem levRed_eq_one (x : levU hc n ST SG H)
     (h : ∀ v ∈ plUnder F SG, bc (prV (E := E) v) (x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) = 1) :
@@ -189,8 +187,7 @@ theorem levU_eq_prod (Hw : ∀ w : SG, Subgroup (GL (Fin n) (𝓞 E ⧸ w.1.asId
       x ∈ UPts hc.sig (1 : Matrix (Fin n) (Fin n) E) (FiniteAdeleRing (𝓞 F) F) ∧
         ∀ v, bc (prV (E := E) v) x ∈ levLoc hc n ST SG (Subgroup.pi Set.univ Hw) v := by
   constructor
-  · intro hx
-    exact ⟨levU_le_UAd hc n ST SG _ hx, fun v => ⟨x, hx, rfl⟩⟩
+  · exact fun hx => ⟨levU_le_UAd hc n ST SG _ hx, fun v => ⟨x, hx, rfl⟩⟩
   · rintro ⟨hU, hloc⟩
     have hSt : x ∈ St (1 : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) := by
       refine rll_St_of_loc n x fun v => ?_
@@ -231,7 +228,7 @@ theorem rll_mem_baseLb (x : Fin n → E) :
       | mem y hy => exact hy
       | zero =>
         refine ⟨zero_mem _, fun P => ?_⟩
-        simp only [Deco.base, if_pos (le_locP _ _ (zero_mem (stdLat E n))), Pi.zero_apply]
+        simp only [Deco.base, ite_eq_left (le_locP _ _ (zero_mem (stdLat E n))), Pi.zero_apply]
         simpa using (reduction_coe P.1 (0 : 𝓞 E))
       | add y z _ _ hy hz =>
         refine ⟨add_mem hy.1 hz.1, fun P => ?_⟩
@@ -240,20 +237,19 @@ theorem rll_mem_baseLb (x : Fin n → E) :
         have hz' := le_locP P.1 _ hz.1
         have hy0 := hy.2 P
         have hz0 := hz.2 P
-        simp only [Deco.base, if_pos hy'] at hy0
-        simp only [Deco.base, if_pos hz'] at hz0
-        simp only [Deco.base, if_pos hxy, Pi.add_apply]
+        simp only [Deco.base, ite_eq_left hy'] at hy0
+        simp only [Deco.base, ite_eq_left hz'] at hz0
+        simp only [Deco.base, ite_eq_left hxy, Pi.add_apply]
         rw [reduction_add ((mem_localization_standardLattice _ _).1 hy' _) ((mem_localization_standardLattice _ _).1 hz' _), hy0, hz0, add_zero]
       | smul a y _ hy =>
         refine ⟨Submodule.smul_mem _ _ hy.1, fun P => ?_⟩
         have hay := le_locP P.1 _ (Submodule.smul_mem (stdLat E n) a hy.1)
         have hy' := le_locP P.1 _ hy.1
         have hy0 := hy.2 P
-        simp only [Deco.base, if_pos hy'] at hy0
-        simp only [Deco.base, if_pos hay, Pi.smul_apply]
+        simp only [Deco.base, ite_eq_left hy'] at hy0
+        simp only [Deco.base, ite_eq_left hay, Pi.smul_apply]
         rw [redP_osmul a ((mem_localization_standardLattice _ _).1 hy' _), hy0, mul_zero]
-    · intro hx
-      exact Submodule.subset_span hx
+    · exact fun hx => Submodule.subset_span hx
   rw [hmem]
   constructor
   · rintro ⟨hN, hf⟩
@@ -262,14 +258,14 @@ theorem rll_mem_baseLb (x : Fin n → E) :
     refine ⟨r, hr, fun P hP => ?_⟩
     have h := hf ⟨P, hP⟩
     have e : (Deco.base E n ST (∅ : Finset (Pl E))).f ⟨P, hP⟩ x = redP P (x (lastIdx n)) :=
-      if_pos (le_locP _ _ hN')
+      ite_eq_left (le_locP _ _ hN')
     rw [e, ← hr, reduction_coe] at h
     exact Ideal.Quotient.eq_zero_iff_mem.1 h
   · rintro ⟨r, hr, hP⟩
     have hN : x ∈ stdLat E n := (mem_stdLat x).2 fun i => ⟨r i, hr i⟩
     refine ⟨hN, fun P => ?_⟩
     have e : (Deco.base E n ST (∅ : Finset (Pl E))).f P x = redP P.1 (x (lastIdx n)) :=
-      if_pos (le_locP _ _ hN)
+      ite_eq_left (le_locP _ _ hN)
     rw [e, ← hr, reduction_coe]
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hP P.1 P.2)
 
@@ -356,8 +352,7 @@ theorem rll_mem_hat_base (z : Fin n → E ⊗[F] Formalism.L2.Herm.Af F) :
             · simp [h]
           · rw [Pi.single_eq_same]; exact (Submodule.mem_finsetInf.1 ha) P hP
         have := rll_gen_mem (F := F) n hl
-        rw [rll_single_incl] at this
-        exact this
+        rwa [rll_single_incl] at this
       | zero =>
         rw [ZeroMemClass.coe_zero, Pi.single_zero]; exact Submodule.zero_mem _
       | add a b _ _ ha hb =>
@@ -405,15 +400,14 @@ theorem mirabolicLevel_maps_baseLattice {k : GL (Fin n) (E ⊗[F] Formalism.L2.H
   obtain ⟨y, hy, hr⟩ := St_one_int hS
   obtain ⟨u, hu, huP⟩ := (rll_mem_hat_base n ST z).1 hz
   refine (rll_mem_hat_base n ST _).2 ⟨fun i => ∑ j, y i j * u j, fun i => ?_, fun P hP => ?_⟩
-  · rw [mulVec_int_apply hy]
-    rw [AddSubmonoidClass.coe_finsetSum]
+  · rw [mulVec_int_apply hy, AddSubmonoidClass.coe_finsetSum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [← hu j]; rfl
 
   · rw [map_sum, Finset.sum_eq_single (lastIdx n)]
     · rw [map_mul, huP P hP, mul_zero]
     · intro j _ hj
-      rw [map_mul, ← hr P, hm P hP j, if_neg hj, zero_mul]
+      rw [map_mul, ← hr P, hm P hP j, ite_eq_right hj, zero_mul]
     · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem mirabolicLevel_le_stabilizer_base : J0 hc n ST ≤ stabGL (Formalism.L2.Herm.hatL (F := F) (baseLb E n ST)) := fun k hk =>

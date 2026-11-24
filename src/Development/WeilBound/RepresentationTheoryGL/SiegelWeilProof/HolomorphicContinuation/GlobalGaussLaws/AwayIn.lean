@@ -139,7 +139,7 @@ theorem tr_re_nonneg {m n : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A.PosDef
   refine ⟨hsum ▸ Finset.sum_nonneg (fun j _ => hnn j), fun hM => ?_⟩
   obtain ⟨j, hj⟩ : ∃ j, (fun a => M a j) ≠ 0 := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     apply hM
     ext a j
     exact congrFun (hc j) a
@@ -156,14 +156,7 @@ theorem tr_re_symm {m n : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A.IsHermit
 
 theorem tr_im_zero {m n : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A.IsHermitian) (M : Matrix (Fin m) (Fin n) ℂ) :
     trace (Mᴴ * A * M) = ((trace (Mᴴ * A * M)).re : ℂ) := by
-  have h : star (trace (Mᴴ * A * M)) = trace (Mᴴ * A * M) := by
-    rw [← Matrix.trace_conjTranspose]
-    simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, hA.eq, Matrix.mul_assoc]
-  have him : (trace (Mᴴ * A * M)).im = 0 := by
-    have := congrArg Complex.im h
-    simp at this
-    linarith
-  apply Complex.ext <;> simp [him]
+  exact (GlobalTheory.GaussSchwartz.trace_conjTranspose_mul_mul_real hA M).symm
 
 section
 variable {T : Type} [Fintype T] [DecidableEq T] {m n : ℕ} (τ : T)
@@ -220,7 +213,7 @@ theorem Qf_pos (A : T → Matrix (Fin m) (Fin m) ℂ) (hA : ∀ t, t ≠ τ → 
     fun t => mul_nonneg (hw t.1 t.2).le (tr_re_nonneg (hA t.1 t.2) _).1
   obtain ⟨t, ht⟩ : ∃ t, b t ≠ 0 := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     exact hb (funext hc)
   have hof : of (b t) ≠ 0 := by
     intro h0
@@ -324,7 +317,7 @@ theorem gen_sch (θ : InfFam D) (V : HSp D) (l : D.what₂.Tau → ℝ) (s : D.w
   have hpolyz : ∀ z : D.what₂.Tau → Fin V.rank → Fin n → ℂ,
       poly (fun t => z t.1) = evalPoly p (fun t => Matrix.of (z t)) := by
     intro z
-    rw [evalPoly_congr p τ hp (fun t => Matrix.of (z t)) (extF τ (fun t => z t.1)) (fun t ht => by simp only [extF, dif_neg ht]; rfl)]
+    rw [evalPoly_congr p τ hp (fun t => Matrix.of (z t)) (extF τ (fun t => z t.1)) (fun t ht => by simp only [extF, dite_eq_right ht]; rfl)]
     rfl
   have hGz : ∀ z : D.what₂.Tau → Fin V.rank → Fin n → ℂ,
       G (fun t => z t.1) = gAway V l s τ (fun t => Matrix.of (z t)) := by

@@ -83,7 +83,7 @@ private theorem glAct_mem_restrictSupport_wt_le_of_ne [NeZero r] (LL : Letters N
       subst hd
       rfl
     · have hc : c ≠ 0 := hcd.resolve_right hd
-      rw [if_neg hd, if_neg (Ne.symm hc), sub_self] at h
+      rw [ite_eq_right hd, ite_eq_right (Ne.symm hc), sub_self] at h
       exact sub_eq_zero.mp h
 
 theorem isoC_le_ycondC [NeZero r] (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (h0 : (0 : Fin r) ∈ Cs)
@@ -99,8 +99,7 @@ theorem isoC_le_ycondC [NeZero r] (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r
   have hLst : ∀ c ∈ Cs, ∀ d ∈ Cs, (c ≠ 0 ∨ d = 0) → ∀ x ∈ L, glAct p LL j c d x ∈ L := by
     intro c hc d hd hcd x hx
     rw [hLdef, Submodule.mem_sInf] at hx ⊢
-    intro S hS
-    exact hS.2 c hc d hd hcd x (hx S hS)
+    exact fun S hS => hS.2 c hc d hd hcd x (hx S hS)
   have hLB : L ≤ restrictSupport ℚ_[p] {m : Fin N × Fin r →₀ ℕ | ↑(wt LL j 0 m) ≤ Mt} := by
     rw [hLdef]
     exact sInf_le ⟨hB, fun c _ d _ hcd x hx => glAct_mem_restrictSupport_wt_le_of_ne LL j Mt c d hcd x hx⟩
@@ -137,8 +136,7 @@ theorem isoC_le_ycondC [NeZero r] (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r
           · exact L.zero_mem
     have hLL' := sInf_le key
     rw [← hLdef] at hLL'
-    intro x hx e he he0
-    exact ((hmem x).1 (hLL' hx)).2 e he he0
+    exact fun x hx e he he0 => ((hmem x).1 (hLL' hx)).2 e he he0
   have hIL : IsoC p LL j Cs la ≤ L := by
     unfold IsoC
     refine sInf_le ⟨hHL, ?_⟩

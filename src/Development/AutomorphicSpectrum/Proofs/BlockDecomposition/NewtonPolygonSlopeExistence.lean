@@ -53,8 +53,7 @@ theorem exists_dvd_all {S ι : Type} [CommRing S] (T : Finset ι) (hT : T.Nonemp
   classical
   revert hT hc
   refine Finset.induction_on T ?_ ?_
-  · intro hT
-    exact absurd hT Finset.not_nonempty_empty
+  · exact fun hT => absurd hT Finset.not_nonempty_empty
   · intro a s ha ih hT hc
     rcases s.eq_empty_or_nonempty with hs | hs
     · subst hs
@@ -111,8 +110,7 @@ theorem first_slope : ∀ {S : Type} [CommRing S] (ϖ : S), Dich ϖ → Roots ϖ
     have h1 : s j ^ j ∣ q 0 := ⟨q j * ↑u, by rw [hu]; ring⟩
     exact ((dvd_pow_self (s j) (by omega)).trans h1).trans h0
   have hcomp : ∀ i ∈ T, ∀ j ∈ T, s i ∣ s j ∨ s j ∣ s i := by
-    intro i hi j _
-    exact (dich_of_dvd hD (b := s j) (hsdvd i hi)).symm
+    exact fun i hi j _ => (dich_of_dvd hD (b := s j) (hsdvd i hi)).symm
   obtain ⟨i₀, hi₀T, hmax⟩ := exists_dvd_all T ⟨d, hdT⟩ s hcomp
   obtain ⟨⟨hi₀1, hi₀d⟩, hi₀q⟩ := (hmemT i₀).mp hi₀T
   refine ⟨s i₀, ?_, i₀, hi₀1, hi₀d, ?_⟩

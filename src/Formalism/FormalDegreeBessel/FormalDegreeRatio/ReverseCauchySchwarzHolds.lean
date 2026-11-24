@@ -93,42 +93,35 @@ lemma ggDet_keyN (n : ℕ) (Z W : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) (α β
     (fromBlocks Z (α • ggLastU n) (β • ggLastU n) W).det =
       Z.det * W.det - α * β * (Z.submatrix Fin.castSucc Fin.castSucc).det *
         (W.submatrix Fin.castSucc Fin.castSucc).det := by
-  have h1 : fromBlocks Z (α • ggLastU n) (β • ggLastU n) W =
+  obtain ⟨h1, e1, e2, h2, e3, e4, e5⟩ :
+      fromBlocks Z (α • ggLastU n) (β • ggLastU n) W =
+        updateCol (fromBlocks Z (α • ggLastU n) (β • ggLastU n) W) (Sum.inr (Fin.last n))
+          ((Sum.elim (0 : Fin (n + 1) → ℂ) (fun a => W a (Fin.last n))) +
+            α • (Sum.elim (Pi.single (Fin.last n) (1 : ℂ)) (0 : Fin (n + 1) → ℂ))) ∧
       updateCol (fromBlocks Z (α • ggLastU n) (β • ggLastU n) W) (Sum.inr (Fin.last n))
-        ((Sum.elim (0 : Fin (n + 1) → ℂ) (fun a => W a (Fin.last n))) + α • (Sum.elim (Pi.single (Fin.last n) (1 : ℂ)) (0 : Fin (n + 1) → ℂ))) := by
-    ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
-      simp [updateCol_apply, ggLastU, Pi.single_apply, hj]
-  have e1 : updateCol (fromBlocks Z (α • ggLastU n) (β • ggLastU n) W) (Sum.inr (Fin.last n))
-      (Sum.elim (0 : Fin (n + 1) → ℂ) (fun a => W a (Fin.last n))) = fromBlocks Z 0 (β • ggLastU n) W := by
-    ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
-      simp [updateCol_apply, ggLastU, Pi.single_apply, hj]
-  have e2 : updateCol (fromBlocks Z (α • ggLastU n) (β • ggLastU n) W) (Sum.inr (Fin.last n))
-      (Sum.elim (Pi.single (Fin.last n) (1 : ℂ)) (0 : Fin (n + 1) → ℂ)) =
-        fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0) := by
-    ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
-      simp [updateCol_apply, ggLastU, Pi.single_apply, hj]
-  have h2 : fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0) =
+        (Sum.elim (0 : Fin (n + 1) → ℂ) (fun a => W a (Fin.last n))) =
+          fromBlocks Z 0 (β • ggLastU n) W ∧
+      updateCol (fromBlocks Z (α • ggLastU n) (β • ggLastU n) W) (Sum.inr (Fin.last n))
+        (Sum.elim (Pi.single (Fin.last n) (1 : ℂ)) (0 : Fin (n + 1) → ℂ)) =
+          fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0) ∧
+      fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0) =
+        updateCol (fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0))
+          (Sum.inl (Fin.last n))
+          ((Sum.elim (fun a => Z a (Fin.last n)) (0 : Fin (n + 1) → ℂ)) +
+            β • (Sum.elim (0 : Fin (n + 1) → ℂ) (Pi.single (Fin.last n) (1 : ℂ)))) ∧
       updateCol (fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0))
-        (Sum.inl (Fin.last n))
-        ((Sum.elim (fun a => Z a (Fin.last n)) (0 : Fin (n + 1) → ℂ)) + β • (Sum.elim (0 : Fin (n + 1) → ℂ) (Pi.single (Fin.last n) (1 : ℂ)))) := by
-    ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
-      simp [updateCol_apply, ggLastU, Pi.single_apply, hj]
-  have e3 : updateCol (fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0))
         (Sum.inl (Fin.last n)) (Sum.elim (fun a => Z a (Fin.last n)) (0 : Fin (n + 1) → ℂ)) =
-      fromBlocks Z (ggLastU n) 0 (updateCol W (Fin.last n) 0) := by
-    ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
-      simp [updateCol_apply, ggLastU, Pi.single_apply, hj]
-  have e4 : updateCol (fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0))
+          fromBlocks Z (ggLastU n) 0 (updateCol W (Fin.last n) 0) ∧
+      updateCol (fromBlocks Z (ggLastU n) (β • ggLastU n) (updateCol W (Fin.last n) 0))
         (Sum.inl (Fin.last n)) (Sum.elim (0 : Fin (n + 1) → ℂ) (Pi.single (Fin.last n) (1 : ℂ))) =
-      fromBlocks (updateCol Z (Fin.last n) 0) (ggLastU n) (ggLastU n) (updateCol W (Fin.last n) 0) := by
-    ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
-      simp [updateCol_apply, ggLastU, Pi.single_apply, hj]
-  have e5 : (fromBlocks (updateCol Z (Fin.last n) 0) (ggLastU n) (ggLastU n)
+          fromBlocks (updateCol Z (Fin.last n) 0) (ggLastU n) (ggLastU n)
+            (updateCol W (Fin.last n) 0) ∧
+      (fromBlocks (updateCol Z (Fin.last n) 0) (ggLastU n) (ggLastU n)
         (updateCol W (Fin.last n) 0)).submatrix id
-        (Equiv.swap (Sum.inl (Fin.last n)) (Sum.inr (Fin.last n))) =
-      fromBlocks (updateCol Z (Fin.last n) (Pi.single (Fin.last n) 1)) 0 0
-        (updateCol W (Fin.last n) (Pi.single (Fin.last n) 1)) := by
-    ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
+          (Equiv.swap (Sum.inl (Fin.last n)) (Sum.inr (Fin.last n))) =
+        fromBlocks (updateCol Z (Fin.last n) (Pi.single (Fin.last n) 1)) 0 0
+          (updateCol W (Fin.last n) (Pi.single (Fin.last n) 1)) := by
+    refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> ext (i|i) (j|j) <;> by_cases hj : j = Fin.last n <;>
       simp [updateCol_apply, ggLastU, Pi.single_apply, hj, Equiv.swap_apply_def]
   have hW0 : (updateCol W (Fin.last n) 0).det = 0 :=
     det_eq_zero_of_column_eq_zero (Fin.last n) (fun i => by simp)
@@ -163,14 +156,14 @@ lemma ggHpk_mulVec_Wb (k r : ℕ) (v : Fin (2 * r + k + 1) → ℂ) (hv : inWb k
     · simp [hv i h]
     · push Not at h
       simp only [Hpk]
-      rw [if_neg (by omega), if_neg (by omega), if_pos (by first | simp [h.1, h.2])]
+      rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by first | simp [h.1, h.2])]
   · intro j _ hji
     by_cases h : j.val < r ∨ r + k < j.val
     · simp [hv j h]
     · push Not at h
       have : Hpk k r i j = 0 := by
         simp only [Hpk]
-        rw [if_neg (by omega), if_neg (by omega), if_neg (by intro h'; exact hji h'.2.2.symm)]
+        rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by intro h'; exact hji h'.2.2.symm)]
       simp [this]
   · simp
 
@@ -205,9 +198,9 @@ lemma ggHpk_ee (k r : ℕ) (a b : Fin r) : Hpk k r (eI k r a) (eI k r b) = 0 := 
   have ha := a.isLt
   have hb := b.isLt
   unfold Hpk
-  rw [if_neg (fun h => absurd h.2 (by change ¬ (a.val + b.val = 2 * r + k); omega)),
-    if_neg (fun h => absurd h.2 (by change ¬ (a.val + b.val = 2 * r + k); omega)),
-    if_neg (fun h => absurd h.1 (by change ¬ (r ≤ a.val); omega))]
+  rw [ite_eq_right (fun h => absurd h.2 (by change ¬ (a.val + b.val = 2 * r + k); omega)),
+    ite_eq_right (fun h => absurd h.2 (by change ¬ (a.val + b.val = 2 * r + k); omega)),
+    ite_eq_right (fun h => absurd h.1 (by change ¬ (r ≤ a.val); omega))]
 
 lemma ggBlockA (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (a b : Fin (r + 1)) :
     herm (Hpk k r) (fvec k r z b) (fvec k r z a) = (herm (Hpk k r) z z • ggLastU r) a b := by
@@ -217,16 +210,16 @@ lemma ggBlockA (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (
     rw [ggHpk_mulVec_Wb k r z hz, hz _ (Or.inl (by simp [eI])), mul_zero]
   unfold fvec ggLastU
   by_cases ha : a.val < r <;> by_cases hb : b.val < r
-  · rw [dite_eq_left ha, dite_eq_left hb, if_neg (by intro h; have := congrArg Fin.val h.1; simp at this; omega)]
+  · rw [dite_eq_left ha, dite_eq_left hb, ite_eq_right (by intro h; have := congrArg Fin.val h.1; simp at this; omega)]
     simp only [bvec, ggHerm_bvec_right, mulVec_single_one]
     simp [ggHpk_ee]
-  · rw [dite_eq_left ha, dite_eq_right hb, if_neg (by intro h; have := congrArg Fin.val h.1; simp at this; omega)]
+  · rw [dite_eq_left ha, dite_eq_right hb, ite_eq_right (by intro h; have := congrArg Fin.val h.1; simp at this; omega)]
     simp only [bvec, ggHerm_bvec_right, hza, mul_zero]
-  · rw [dite_eq_right ha, dite_eq_left hb, if_neg (by intro h; have := congrArg Fin.val h.2; simp at this; omega)]
+  · rw [dite_eq_right ha, dite_eq_left hb, ite_eq_right (by intro h; have := congrArg Fin.val h.2; simp at this; omega)]
     rw [ggHerm_swap _ (GBasic.Hpk_herm k r), bvec, ggHerm_bvec_right, hza, star_zero, mul_zero]
   · have hal : a = Fin.last r := Fin.ext (by simp; omega)
     have hbl : b = Fin.last r := Fin.ext (by simp; omega)
-    rw [dite_eq_right ha, dite_eq_right hb, if_pos ⟨hal, hbl⟩, mul_one]
+    rw [dite_eq_right ha, dite_eq_right hb, ite_eq_left ⟨hal, hbl⟩, mul_one]
 
 theorem group_gram_holds : GGram := by
   intro k r z z' hz hz' g hg
@@ -269,8 +262,8 @@ lemma ggHerm_Wb (k r : ℕ) (z w : Fin (2 * r + k + 1) → ℂ) (hw : inWb k r w
       star (z i) * ((if i.val = r + k then -1 else 1) * w i) =
       ∑ i ∈ (Finset.univ : Finset (Fin (2 * r + k + 1))).erase ⟨r + k, by omega⟩, star (z i) * w i := by
     refine Finset.sum_congr rfl (fun i hi => ?_)
-    rw [if_neg (fun h => (Finset.ne_of_mem_erase hi) (Fin.ext h)), one_mul]
-  rw [hs, if_pos rfl]
+    rw [ite_eq_right (fun h => (Finset.ne_of_mem_erase hi) (Fin.ext h)), one_mul]
+  rw [hs, ite_eq_left rfl]
   ring
 
 lemma ggRe_star_mul (x : ℂ) : (star x * x).re = ‖x‖ ^ 2 := by

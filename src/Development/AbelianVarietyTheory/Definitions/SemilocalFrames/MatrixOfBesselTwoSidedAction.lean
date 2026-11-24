@@ -178,7 +178,6 @@ def dil (k r : ℕ) (τ : ℝ) : Mat k r := Matrix.diagonal fun i =>
 theorem of_invM (x : Mt k r) : (Matrix.of (invM x) : Mat k r) = (Matrix.of x : Mat k r)⁻¹ := rfl
 
 theorem invM_invM (x : Mt k r) (h : IsUnit (Matrix.of x : Mat k r).det) : invM (invM x) = x := by
-  show ((((Matrix.of x : Mat k r)⁻¹ : Mat k r))⁻¹ : Mat k r) = Matrix.of x
   exact Matrix.nonsing_inv_nonsing_inv _ h
 
 theorem measurable_invM : Measurable (invM : Mt k r → Mt k r) := by
@@ -208,8 +207,7 @@ theorem matrix_of_besselTwoSidedAction (γ : Mat k r) (p : Mt k r × Mt k r) :
 theorem opn_nonneg {n : ℕ} (g : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ opn g := norm_nonneg _
 
 theorem opn_mul_le {n : ℕ} (g h : Matrix (Fin n) (Fin n) ℂ) : opn (g * h) ≤ opn g * opn h := by
-  simp only [opn, map_mul]
-  exact norm_mul_le _ _
+  simpa only [opn, map_mul] using norm_mul_le _ _
 
 theorem opn_one {n : ℕ} : opn (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) = 1 := by
   simp [opn]

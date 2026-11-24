@@ -82,7 +82,7 @@ theorem rTup_datWp_val (x : GL (Fin (Wc D i).rank) (EAf D)) (PP : ↥(R.datWp i 
   have hm : redFn (R.βW i) PP.1 x ∈ blockTri (blk2 (R.datWp i R.triv).r) := by
     refine mem_blockTri.2 fun c d hcd => ?_
     have hc : c.val < (R.datWp i R.triv).r := lt_of_lt_of_eq c.2 rW
-    have e : blk2 (R.datWp i R.triv).r c = 0 := if_pos hc
+    have e : blk2 (R.datWp i R.triv).r c = 0 := ite_eq_left hc
     exact absurd (lt_of_lt_of_eq hcd e) (Nat.not_lt_zero _)
   unfold rTup
   rw [upper_block_val_submatrix _ hm]
@@ -111,8 +111,7 @@ theorem rTup_of_red (hB : BaseOf R i B) (e : G ≃* G0 B.G.Pg (Wc D i).rank)
   refine Units.ext (Matrix.ext fun a c => ?_)
   have h1 := hent g PP.1 hP PP.2 (Fin.cast (rank_Wc i).symm a) (Fin.cast (rank_Wc i).symm c)
   rw [hx ⟨PP.1, hP⟩, hB.βT] at h1
-  rw [rTup_datWp_val]
-  exact h1
+  rwa [rTup_datWp_val]
 
 theorem lifts_of_datWp (hB : BaseOf R i B) (e : G ≃* G0 B.G.Pg (Wc D i).rank)
     (hent : ∀ (g : G) (P : Pl D.host.E) (h : P ∈ B.G.Pg) (h' : P ∈ R.Pg) (a c : Fin (Wc D i).rank),
@@ -173,15 +172,13 @@ theorem traceLevel : GlobalTheory.BaseCmp.TraceLevel := by
   refine Fintype.sum_of_injective (fun p : B.G.P.H => e.symm p) (fun p q hpq => Subtype.ext (e.symm.injective hpq)) _ _
     (fun g hg => ?_) (fun p => ?_)
   · rw [dite_eq_right, zero_mul]
-    intro hgU
-    exact hg ⟨⟨e g, (hU g).2 hgU⟩, e.symm_apply_apply g⟩
+    exact fun hgU => hg ⟨⟨e g, (hU g).2 hgU⟩, e.symm_apply_apply g⟩
   · have hp : e.symm p ∈ U := (hU _).1 (by rw [MulEquiv.apply_symm_apply]; exact p.2)
     have key : ((B.G.P.chi p : ℂˣ) : ℂ) = D.what₂.embLL ((ψ ⟨e.symm p, hp⟩ : D.what₂.LLˣ) : D.what₂.LL) := by
       have hp' : e (e.symm p) ∈ B.G.P.H := by rw [MulEquiv.apply_symm_apply]; exact p.2
       have := hchi ⟨e.symm p, hp⟩ hp'
       have hpe : (⟨e (e.symm p), hp'⟩ : B.G.P.H) = p := Subtype.ext (e.apply_symm_apply p)
-      rw [hpe] at this
-      exact this
+      rwa [hpe] at this
     rw [dite_eq_left hp, Units.val_inv_eq_inv_val, key, Units.val_inv_eq_inv_val, map_inv₀]
 
 end GlobalTheory.TraceLevelPf

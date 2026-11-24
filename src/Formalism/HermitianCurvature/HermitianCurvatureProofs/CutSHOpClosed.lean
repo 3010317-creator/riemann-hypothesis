@@ -207,16 +207,14 @@ theorem jf_hasDerivAt (D : B.RealPlaceData k r Wp Wq) (G G' : ℂ → B.Mat k r 
         = B.JF D (G' t) γ₀ := by
       simp only [Complex.ofReal_zero, zero_mul, add_zero]
       rfl
-    rw [e] at hder
-    exact hder
+    rwa [e] at hder
   · exact Filter.eventually_of_mem (Metric.ball_mem_nhds 0 hεpos) fun s hs =>
       hcm.smul (hdom0 _ (hGcc _ (hball s hs) A₀)).1
   · obtain ⟨-, b, hbi, hbb⟩ := hdom0 (G t) (hGcc t (Metric.mem_closedBall_self hδ.le) A₀)
     simp only [Complex.ofReal_zero, zero_mul, add_zero]
     refine hbi.mono' (hcm.smul (hdom0 _ (hGcc t (Metric.mem_closedBall_self hδ.le) A₀)).1) ?_
     filter_upwards [hbb] with p hp
-    rw [norm_smul, hcn, one_mul]
-    exact hp
+    rwa [norm_smul, hcn, one_mul]
   · simp only [Complex.ofReal_zero, zero_mul, add_zero]
     exact hcm.smul (hdom0 _ (hG'cc A₀)).1
   · filter_upwards [hbΦ, B5.ae_inSS D] with p hp hin s hs
@@ -228,8 +226,7 @@ theorem jf_hasDerivAt (D : B.RealPlaceData k r Wp Wq) (G G' : ℂ → B.Mat k r 
     have hg : B.sgs p γ₀ ∈ B.GV k r := B7.sgs_mem D hin hγ.1
     obtain ⟨L, hL, hLv⟩ := hd _ hg _ (hball s hs)
     have hline : HasDerivAt (fun s : ℝ => t + (s : ℂ) * v) v s := by
-      have h0 := ((hasDerivAt_id s).ofReal_comp.mul_const v).const_add t
-      simpa using h0
+      simpa using ((hasDerivAt_id s).ofReal_comp.mul_const v).const_add t
     have h1 : HasDerivAt (fun s : ℝ => G (t + (s : ℂ) * v) (B.sgs p γ₀))
         (G' (t + (s : ℂ) * v) (B.sgs p γ₀)) s := by
       rw [← hLv]
@@ -367,8 +364,7 @@ theorem family_orbital_derivative : CutSH.FamJFDeriv := by
       · intro γ hγ'
         have hφne : φ γ ≠ 0 := fun h => hγ' (by simp [h])
         have hlt : Metric.infDist γ C₃ < 1 := by
-          by_contra hh
-          push_neg at hh
+          by_contra! hh
           exact hφne (max_eq_left (by linarith))
         obtain ⟨y, hy, hdy⟩ := (Metric.infDist_lt_iff ⟨1, Set.mem_insert _ _⟩).mp hlt
         exact Metric.mem_cthickening_of_dist_le γ y 1 C₃ hy hdy.le
@@ -546,7 +542,7 @@ theorem cutSH_opClosed_of (h2 : FamAlg) (h3 : FamDeriv) (h4 : RepLin) (h5 : FamJ
     change pOp (⟨0, by omega⟩ : Fin (P.r - j)) (fun c' => (Ψ : Fn P.k (P.r - j) (Wq →L[ℂ] Wp)) c' (gi j hj x.2))
       (cc j hj t x.1) = _
     unfold pOp
-    rw [if_pos (hom t ht x hx), opc_cc_zero]
+    rw [ite_eq_left (hom t ht x hx), opc_cc_zero]
     unfold wirt
     rw [hD 1 t ht x hx, hD Complex.I t ht x hx]
     module
@@ -570,7 +566,7 @@ theorem cutSH_opClosed_of (h2 : FamAlg) (h3 : FamDeriv) (h4 : RepLin) (h5 : FamJ
     change pbOp (⟨0, by omega⟩ : Fin (P.r - j)) (fun c' => (Ψ : Fn P.k (P.r - j) (Wq →L[ℂ] Wp)) c' (gi j hj x.2))
       (cc j hj t x.1) = _
     unfold pbOp
-    rw [if_pos (hom t ht x hx), opc_cc_zero]
+    rw [ite_eq_left (hom t ht x hx), opc_cc_zero]
     unfold wirtBar
     rw [hD 1 t ht x hx, hD Complex.I t ht x hx]
     module

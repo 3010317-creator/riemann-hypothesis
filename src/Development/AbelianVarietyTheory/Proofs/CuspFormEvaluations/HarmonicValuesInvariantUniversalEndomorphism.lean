@@ -146,8 +146,7 @@ theorem rig_val (hr : LB.Gen.Maps (LB.linCombIso w (K := PUnit.{1}) (fun _ => eS
   have pm := (maps_iff w _ (fun _ => eSec t.G) _ t'.PP.rig t.PP.rig ν.cm.e _
       (rigPull_le ν.cm.F ν.cm.e ν.cm.e_comm t.PP.L) (fun _ => rfl)).1 hr
   have e := DegPull.pmaps_val (fun _ => ν.cm.e_comm) pm r z hJ hJ'
-  rw [Fintype.prod_unique, zpow_one, ν.base] at e
-  exact e
+  rwa [Fintype.prod_unique, zpow_one, ν.base] at e
 
 theorem cub_val (hc : LB.Gen.Maps (LB.linCombIso w (thφ t'.G (x3 t'.G)) thε) t'.cub.t (ν.cm.thetaPull t.PP.L t.cub.t))
     {Y : Scheme.{0}} {g : Y ⟶ X} {g' : Y ⟶ X'} {a' b' c' : Over.mk g' ⟶ t'.G} {a b c : Over.mk g ⟶ t.G}
@@ -428,8 +427,7 @@ theorem ad_zero (hc : IsChartG t' x0' d F act tg uvec x') {c : 𝓞 E} {wL : AdT
         (r ≫ σ.left) z J' := by
     refine (val_pull hJ' _ _ _).trans (Eq.trans ?_ (val_pull hJ' _ _ _).symm)
     rw [jetSubstP_zero_eq]
-  rw [hpe, mul_eq_right, Category.assoc, ← Over.comp_left, hι] at h1
-  exact h1
+  rwa [hpe, mul_eq_right, Category.assoc, ← Over.comp_left, hι] at h1
 
 theorem alg_three {U : Type} [CommGroup U] {A A' l₁ l₂ l₃ u p₁ p₂ p₃ q₁ q₂ q₃ : U} (k₀ : A = l₁ * l₂⁻¹ * l₃⁻¹ * A')
     (k : A' = u * (q₁ * (q₂⁻¹ * q₃⁻¹))) (k₁ : p₁ = l₁ * q₁) (k₂ : p₂ = l₂ * q₂) (k₃ : p₃ = l₃ * q₃) :
@@ -751,8 +749,7 @@ theorem exists_chart_push (hG : GlobalFnsSt) {ρ : Xo.X ⟶ Xo.X} (ν : SABMap X
   have e₁ : (fun ℓ : Lt1 Dw => y'.u ℓ.1 ℓ.2) = fun ℓ => y.u ℓ.1 ℓ.2 ≫ ν.φ := funext fun ℓ => hu _ _
   refine ⟨fun m => pu ν h0.symm _ (C.x m), e, ?_, ?_, ?_, fun k s s' hs f hf => ?_⟩
   · refine (isChart_iff y' C.d _ _ _ _).2 ?_
-    rw [e₁]
-    exact hc₁
+    rwa [e₁]
   · exact (isFrame_iff y' C.d _ _ _ _ _ _ _ e).2 g₁
   · exact g₂
   · have hf' := (isGerm_iff y C.d _ _ _ _ k s f).1 hf

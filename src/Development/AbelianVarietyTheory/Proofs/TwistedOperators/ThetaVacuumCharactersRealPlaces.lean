@@ -122,12 +122,10 @@ theorem vacChar : ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.RaisingLow
   · intro X hX P z
     have e := hL.1 X hX P z
     rw [GlobalTheory.ChainFr.ptF_ofModel] at e
-    rw [sub_eq_add_neg, ← neg_smul]
-    exact e
+    rwa [sub_eq_add_neg, ← neg_smul]
   · intro Y hY P z
     have e := hL.2 Y hY P z
-    rw [GlobalTheory.ChainFr.ptF_ofModel] at e
-    exact e
+    rwa [GlobalTheory.ChainFr.ptF_ofModel] at e
 
 end GlobalTheory.VacuumCharacter
 

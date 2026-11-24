@@ -227,8 +227,7 @@ lemma wt_int {n : ℕ} (ε : Fin n → Bool) {H : Type} [NormedAddCommGroup H] [
       push_cast
       exact Complex.exp_two_pi_mul_I
     · simp [hb]
-  rw [sum_single] at h1
-  rw [hD, h0] at h1
+  rw [sum_single, hD, h0] at h1
   simp only [Pi.zero_apply, mul_zero, Finset.sum_const_zero, Complex.ofReal_zero, zero_mul,
     Complex.exp_zero, one_smul] at h1
   have h2 : (Complex.exp (((μ a * (2 * Real.pi) : ℝ) : ℂ) * Complex.I) - 1) • v = 0 := by
@@ -304,8 +303,7 @@ theorem finite_weights : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedA
   rintro μ ⟨v, hvS, hv0, hw⟩ a _
   refine ⟨wt_int ε ρ hv0 hw a, v, hvS, hv0, ?_⟩
   have h := hw (Pi.single a (1 : ℝ)) (diag_mem n ε _)
-  rw [sum_single, mul_one] at h
-  exact h
+  rwa [sum_single, mul_one] at h
 
 end GlobalTheory.TorusWtFin
 end -- clump:auto
@@ -367,8 +365,7 @@ theorem charR_eq_exp (χ : ℝ → ℂ) (hc : Continuous χ) (hm : ∀ s t, χ (
       exact this.div_const c
     have hfun : χ = fun t => (F (t + δ) - F t) / c := funext hid
     have h3 : (χ (t + δ) - χ t) / c = χ t * a := by rw [hm, ha]; ring
-    rw [h3, ← hfun] at h1
-    exact h1
+    rwa [h3, ← hfun] at h1
   have hg : ∀ t : ℝ, HasDerivAt (fun t : ℝ => Complex.exp (-(a * t)) * χ t) 0 t := by
     intro t
     have h1 : HasDerivAt (fun t : ℝ => Complex.exp (-(a * t))) (Complex.exp (-(a * t)) * (-a)) t := by
@@ -377,8 +374,7 @@ theorem charR_eq_exp (χ : ℝ → ℂ) (hc : Continuous χ) (hm : ∀ s t, χ (
       exact this.cexp
     have h2 := h1.mul (hd t)
     have h3 : Complex.exp (-(a * t)) * (-a) * χ t + Complex.exp (-(a * t)) * (χ t * a) = 0 := by ring
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   have hconst : ∀ t : ℝ, Complex.exp (-(a * t)) * χ t = 1 := by
     intro t
     have := is_const_of_deriv_eq_zero (fun t => (hg t).differentiableAt) (fun t => (hg t).deriv) t 0

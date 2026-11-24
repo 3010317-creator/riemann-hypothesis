@@ -74,8 +74,7 @@ theorem contDiff_entry {n : ℕ} (i j : Fin n) : ContDiff ℝ ∞ (fun y : Mat n
 theorem contDiff_det {n : ℕ} {M : Mat n → Mat n} (hM : ∀ i j, ContDiff ℝ ∞ (fun y => M y i j)) :
     ContDiff ℝ ∞ (fun y => (M y).det) := by
   simp only [Matrix.det_apply']
-  refine ContDiff.sum fun σ _ => contDiff_const.mul ?_
-  exact contDiff_prod fun i _ => hM _ _
+  exact ContDiff.sum fun σ _ => contDiff_const.mul (contDiff_prod fun i _ => hM _ _)
 
 theorem contDiff_adjugate_entry {n : ℕ} (i j : Fin n) :
     ContDiff ℝ ∞ (fun y : Mat n => y.adjugate i j) := by
@@ -174,8 +173,7 @@ theorem hasDerivAt_conjTranspose {f : ℝ → Mat n} {f' : Mat n} {t : ℝ} (hf 
 theorem hasDerivAt_trace {f : ℝ → Mat n} {f' : Mat n} {t : ℝ} (hf : HasDerivAt f f' t) :
     HasDerivAt (fun s => (f s).trace) f'.trace t := by
   rw [hasDerivAt_entry] at hf
-  simp only [Matrix.trace, Matrix.diag]
-  exact HasDerivAt.fun_sum fun i _ => hf i i
+  simpa only [Matrix.trace, Matrix.diag] using HasDerivAt.fun_sum fun i _ => hf i i
 
 theorem hasDerivAt_re_ofReal {z : ℝ → ℂ} {z' : ℂ} {t : ℝ} (hz : HasDerivAt z z' t) :
     HasDerivAt (fun s => (((z s).re : ℝ) : ℂ)) ((z'.re : ℝ) : ℂ) t := by
@@ -187,8 +185,7 @@ theorem isOpen_GLs : IsOpen (GLs n) :=
 
 theorem hasDerivAt_line (X : Mat n) : HasDerivAt (fun t : ℝ => (1 : Mat n) + t • X) X 0 := by
   have h := ((hasDerivAt_id (0 : ℝ)).smul_const X).const_add (1 : Mat n)
-  rw [one_smul] at h
-  exact h
+  rwa [one_smul] at h
 
 theorem hasDerivAt_inv_line (X : Mat n) : HasDerivAt (fun t : ℝ => ((1 : Mat n) + t • X)⁻¹) (-X) 0 := by
   have h1 : (1 : Mat n) ∈ GLs n := by simp [GLs]
@@ -212,8 +209,7 @@ theorem hasDerivAt_inv_line (X : Mat n) : HasDerivAt (fun t : ℝ => ((1 : Mat n
     (hasDerivAt_const (0 : ℝ) (1 : Mat n)).congr_of_eventuallyEq hev
   have e := hprod.unique hconst
   have : c' = -X := by rw [← sub_eq_zero, sub_neg_eq_add, add_comm]; exact e
-  rw [this] at hc
-  exact hc
+  rwa [this] at hc
 
 theorem hasDerivAt_entry' {ι : Type} [Fintype ι] {f : ℝ → Matrix ι ι ℂ} {f' : Matrix ι ι ℂ} {t : ℝ} :
     HasDerivAt f f' t ↔ ∀ i j, HasDerivAt (fun s => f s i j) (f' i j) t := by
@@ -247,7 +243,7 @@ theorem cf_hbM (m : Md n) : cf n (hbM m) = Pi.single m 1 := by
   rw [cf_apply, (hbOrtho n).1, Pi.single_apply]
   by_cases h : m = m'
   · subst h; simp
-  · rw [if_neg h, if_neg (Ne.symm h)]; simp
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]; simp
 
 end PositivityTheory.RgBcC.Cxa
 

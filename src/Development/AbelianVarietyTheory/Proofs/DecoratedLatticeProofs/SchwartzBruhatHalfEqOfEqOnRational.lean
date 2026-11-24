@@ -77,8 +77,7 @@ theorem coe_stdLat (n : ℕ) :
     obtain ⟨c, hc⟩ := h k
     rw [← hc]
     exact c.isIntegral_coe
-  · intro h k
-    exact ⟨⟨x k, h k⟩, rfl⟩
+  · exact fun h k => ⟨⟨x k, h k⟩, rfl⟩
 
 theorem exists_nsmul_mem_stdHom (S T : HSp D) : ∃ K : ℕ, 0 < K ∧ ∀ t : WO S T, t.map (infPart D) = 0 →
     (∀ i j, toEAf D (t i j) ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) → K • t ∈ stdHom S T := by
@@ -86,8 +85,7 @@ theorem exists_nsmul_mem_stdHom (S T : HSp D) : ∃ K : ℕ, 0 < K ∧ ∀ t : W
     (GlobalTheory.LocM.Unim.isLattice_stdLat S.rank) (GlobalTheory.LocM.Unim.isLattice_stdLat T.rank)
   refine ⟨K, hK, fun t h1 h2 => ?_⟩
   have := h t h1 h2
-  rw [coe_stdLat, coe_stdLat] at this
-  exact this
+  rwa [coe_stdLat, coe_stdLat] at this
 
 theorem mul_eq_zero_of_parts {e z : AE D} (he : infPart D e = 0) (hz : finPart D z = 0) : e * z = 0 := by
   rw [Formalism.IndefR.Eqv.infPart_eq_zero_iff_smul] at he

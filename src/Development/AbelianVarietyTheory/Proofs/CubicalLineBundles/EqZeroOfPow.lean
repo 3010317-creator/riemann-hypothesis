@@ -88,8 +88,7 @@ theorem eq_zero_of_pow {K : Type} [Field K] [CharZero K] {A : Over (Sp K)} [GrpO
     {N : ℕ} (hN : 0 < N) (h : tanExp v c ^ N = 1) : c = 0 := by
   have h₁ : tanExp v (N • c) = tanExp v 0 := by
     change (combHom hv.1 (N • c)).toMul = (combHom hv.1 0).toMul
-    rw [map_nsmul, map_zero, toMul_nsmul]
-    exact h
+    rwa [map_nsmul, map_zero, toMul_nsmul]
   have h₂ := (isLieBasisOver_self hv).1 _ _ h₁
   funext i
   have := congrFun h₂ i
@@ -112,14 +111,12 @@ theorem lamInd : LamIndSt := by
     have := hw (e.symm (.inl (j, i)))
     rw [LamLetters.IsLetter, he] at this
     apply Over.OverMorphism.ext
-    rw [hΦB, Over.comp_left, hΦΨ, Category.assoc]
-    exact this
+    rwa [hΦB, Over.comp_left, hΦΨ, Category.assoc]
   have hwr : ∀ j i, ΦB (w (e.symm (.inr (j, i)))) = Φ' (o.x'.v i) ≫ o.φ' j := fun j i => by
     have := hw (e.symm (.inr (j, i)))
     rw [LamLetters.IsLetter, he] at this
     apply Over.OverMorphism.ext
-    rw [hΦB, Over.comp_left, hΦ', Category.assoc]
-    exact this
+    rwa [hΦB, Over.comp_left, hΦ', Category.assoc]
   have hone : tanExp w c = 1 := by
     obtain rfl : w = fun k => tanExp o.xB.v (L.U k) :=
       funext fun k => (isLieComb_iff_tanExp _ _).1 (hwc k)

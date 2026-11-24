@@ -73,8 +73,7 @@ theorem map_mCoordIdeal (y : (Σ k, ι k) → Ω) :
   have h := IsLocalization.map_under ((nonZeroDivisors ℤ).map (C (σ := Σ k, ι k)))
     (MvPolynomial (Σ k, ι k) ℚ) (RingHom.ker (mConeMapQ y))
   rw [e] at h
-  rw [hker]
-  exact h
+  rwa [hker]
 
 theorem weight_blockWeight_apply (μ : (Σ k, ι k) →₀ ℕ) (k : K) :
     Finsupp.weight (NumbersDVR.blockWeight ι) μ k = ∑ i : ι k, μ ⟨k, i⟩ := by
@@ -121,7 +120,7 @@ theorem hilbFn_eq_finrank (y : (Σ k, ι k) → Ω) (a : K → ℕ) :
     ((φ₁.quotKerEquivRange.symm.trans (Submodule.quotEquivOfEq _ _ hk)).trans φ₂.quotKerEquivRange)
   rw [h₁, h₂] at h
   unfold NumbersDVR.hilbFn
-  rw [if_pos (fun k => Nat.cast_nonneg _)]
+  rw [ite_eq_left (fun k => Nat.cast_nonneg _)]
   show ((Module.finrank ℚ (NumbersDVR.gradedPiece P a) : ℕ) : ℤ) = _
   rw [h]
 
@@ -177,8 +176,7 @@ theorem valSpan_eq {y : (Σ k, ι k) → Ω} {k₀ : K} {M : Matrix (Ix κ) (ι 
         convert (isWeightedHomogeneous_X ℚ (NumbersDVR.blockWeight (GlobalTheory κ)) j).C_mul _ using 1
         funext u
         simp [NumbersDVR.blockWeight]
-      · simp only [backSubst, h, dite_false]
-        exact isWeightedHomogeneous_zero ℚ _ _
+      · simpa only [backSubst, h, dite_false] using isWeightedHomogeneous_zero ℚ _ _
     refine ⟨aeval (backSubst k₀ N) g, ?_, ?_⟩
     · simpa [ψ] using isWeightedHomogeneous_aeval ψ _ hφ hg
     · simp only [AlgHom.toLinearMap_apply]

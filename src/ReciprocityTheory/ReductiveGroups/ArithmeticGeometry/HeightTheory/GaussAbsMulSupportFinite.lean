@@ -52,8 +52,7 @@ theorem finsum_log_eq {α : Type*} (f : α → ℝ) (hpos : ∀ a, 0 < f a)
   have h1 : Function.support (fun a => Real.log (f a)) ⊆ (hf.toFinset : Set α) := by
     intro a ha
     rw [Set.Finite.coe_toFinset, Function.mem_mulSupport]
-    intro h
-    exact (Function.mem_support.mp ha) (by rw [h, Real.log_one])
+    exact fun h => (Function.mem_support.mp ha) (by rw [h, Real.log_one])
   have h2 : Function.mulSupport f ⊆ (hf.toFinset : Set α) := by
     rw [Set.Finite.coe_toFinset]
   rw [finsum_eq_sum_of_support_subset _ h1, finprod_eq_prod_of_mulSupport_subset _ h2]
@@ -167,9 +166,7 @@ theorem hT_C_mul {κ : Type} [Fintype κ] (F : MvPolynomial κ K) (hF : F ≠ 0)
     refine Finset.sum_congr rfl fun σ _ => ?_
     rw [map_mul, MvPolynomial.map_C]
     refine torusMean_C_mul _ ((map_ne_zero σ).mpr hc) _ ?_
-    intro h0
-    apply hF
-    exact MvPolynomial.map_injective σ σ.injective (by rw [h0, map_zero])
+    exact fun h0 => hF (MvPolynomial.map_injective σ σ.injective (by rw [h0, map_zero]))
   rw [hfin, harch, finsum_log_norm c hc, ReciprocityTheory.MultiplicativeHeights.sum_log_norm_embedding_eq c hc]
   ring
 
@@ -226,11 +223,9 @@ theorem absNorm_mul_gauss {κ : Type*} (G₀ : MvPolynomial κ (𝓞 K)) (h : G�
       ∏ᶠ w : FinitePlace K, ReciprocityTheory.MultiplicativeHeights.gaussAbs w (MvPolynomial.map (algebraMap (𝓞 K) K) G₀) = 1 := by
   have hx : (fun s : G₀.support => G₀.coeff s) ≠ 0 := by
     obtain ⟨s, hs⟩ := MvPolynomial.support_nonempty.mpr h
-    intro h0
-    exact MvPolynomial.mem_support_iff.mp hs (congrFun h0 ⟨s, hs⟩)
+    exact fun h0 => MvPolynomial.mem_support_iff.mp hs (congrFun h0 ⟨s, hs⟩)
   have := NumberField.absNorm_mul_finprod_finitePlace_eq_one hx
-  rw [finprod_congr (gaussAbs_eq_iSup G₀ h)]
-  exact this
+  rwa [finprod_congr (gaussAbs_eq_iSup G₀ h)]
 
 theorem mem_inv_of {κ : Type*} (G₀ : MvPolynomial κ (𝓞 K)) (h : G₀ ≠ 0) (x : K)
     (hx : ∀ s, ∃ y : 𝓞 K, (y : K) = x * ((G₀.coeff s : 𝓞 K) : K)) :

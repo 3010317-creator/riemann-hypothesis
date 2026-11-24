@@ -108,8 +108,7 @@ theorem eq_zero_iff_coord (s : SecMod p N) : s = 0 ↔ ∀ j, s.sec.f j = 0 := b
   constructor
   · rintro rfl j
     exact coord_zero j
-  · intro h
-    exact DVR.SecOps.sec_ext fun j => (h j).trans (coord_zero j).symm
+  · exact fun h => DVR.SecOps.sec_ext fun j => (h j).trans (coord_zero j).symm
 
 section Val
 variable {X Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ}
@@ -144,8 +143,7 @@ theorem smul_oneSec_eq_zero_iff (F : Type) [CommRing F] (c : F) : c • oneSec F
     have h1 := congrArg (fun s => (SecMod.sec s).f PUnit.unit) h
     simp only [coord_smul, coord_zero, oneSec, coord_mk, _root_.mul_one] at h1
     simp [resTop, scal] at h1
-    have h2 := congrArg (Scheme.ΓSpecIso (CommRingCat.of F)).hom.hom h1
-    simpa using h2
+    simpa using congrArg (Scheme.ΓSpecIso (CommRingCat.of F)).hom.hom h1
   · rintro rfl
     exact zero_smul F _
 

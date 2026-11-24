@@ -149,8 +149,7 @@ theorem inv_anti {X Y : Matrix m m ℂ} (hX : X.PosDef) (hY : Y.PosDef) (h : (Y 
   have hii : X⁻¹⁻¹ = X := Matrix.nonsing_inv_nonsing_inv X ((Matrix.isUnit_iff_isUnit_det X).1 hX.isUnit)
   have h1 := (Matrix.PosDef.fromBlocks₂₂ Y (1 : Matrix m m ℂ) hXi).2 (by
     simpa [hii] using h)
-  have h2 := (Matrix.PosDef.fromBlocks₁₁ (1 : Matrix m m ℂ) X⁻¹ hY).1 (by simpa using h1)
-  simpa using h2
+  simpa using (Matrix.PosDef.fromBlocks₁₁ (1 : Matrix m m ℂ) X⁻¹ hY).1 (by simpa using h1)
 
 theorem scal_posDef {a : ℝ} (ha : 0 < a) : ((a : ℂ) • (1 : Matrix m m ℂ)).PosDef :=
   Matrix.PosDef.one.smul (by exact_mod_cast ha)
@@ -286,9 +285,7 @@ theorem contDiffAt_det {A : V → Matrix m m ℂ} {w : V}
     (h : ∀ a b, ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun w' => A w' a b) w) :
     ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun w' => (A w').det) w := by
   simp only [Matrix.det_apply]
-  refine ContDiffAt.sum fun σ _ => ?_
-  refine ContDiffAt.const_smul _ ?_
-  exact contDiffAt_prod fun i _ => h _ _
+  exact ContDiffAt.sum fun σ _ => ContDiffAt.const_smul _ (contDiffAt_prod fun i _ => h _ _)
 
 theorem contDiffAt_inv {A : V → Matrix m m ℂ} {w : V}
     (h : ∀ a b, ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun w' => A w' a b) w) (hd : (A w).det ≠ 0) (a b : m) :
@@ -300,10 +297,8 @@ theorem contDiffAt_inv {A : V → Matrix m m ℂ} {w : V}
   refine ContDiffAt.mul ((contDiffAt_det h).inv hd) (contDiffAt_det fun i j => ?_)
   by_cases hi : i = b
   · subst hi
-    simp only [Matrix.updateRow_self]
-    exact contDiffAt_const
-  · simp only [Matrix.updateRow_ne hi]
-    exact h i j
+    simpa only [Matrix.updateRow_self] using contDiffAt_const
+  · simpa only [Matrix.updateRow_ne hi] using h i j
 
 theorem norm_fderiv_inv {A : V → Matrix m m ℂ} {w : V}
     (h : ∀ a b, ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun w' => A w' a b) w) (hd : (A w).det ≠ 0) {β δ : ℝ}
@@ -421,8 +416,7 @@ theorem point (p q : ℕ) {c C : ℝ} (hc : 0 < c) (hC : 0 < C) : ∃ C₀ : ℝ
   have hY : Btw (C * r)⁻¹ c⁻¹ (wBlock (Γ w)) := hB.sub (wEmb p q) hwm
   have hO : Btw (C * r)⁻¹ c⁻¹ (omBlock (Γ w))ᵀ := (hB.sub (omEmb p q) hom).tr
   have hX : Btw c (C * r) ((omBlock (Γ w))ᵀ⁻¹) := by
-    have h1 := hO.inv (inv_pos.mpr hCr) (inv_pos.mpr hc)
-    simpa only [inv_inv] using h1
+    simpa only [inv_inv] using hO.inv (inv_pos.mpr hCr) (inv_pos.mpr hc)
   have hA : ∀ a b, ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun w' => (omBlock (Γ w'))ᵀ a b) w :=
     fun a b => (hd (omEmb p q b) (omEmb p q a)).1
   have hdet : ((omBlock (Γ w))ᵀ).det ≠ 0 := hO.1.det_pos.ne'
@@ -651,8 +645,7 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_period : Given → ∀ (E : Type) [Fi
     (hInt _ _ (hp u hu).2.2).1 (hp u hu).1
   have hb0 : (0 : Fin n → ℂ) ∈ Metric.ball (0 : Fin n → ℂ) 1 := Metric.mem_ball_self one_pos
   have hg0 : M.GoodAt F (ptIdeal 𝔐.ξ M.x ⟨centre (p 0), 𝔐.all _⟩) := by
-    rw [ptIdeal_centre (hp 0 hb0).2.1, smul_zero, add_zero, (Rb.A.chart j).left_inv hj]
-    exact hg
+    rwa [ptIdeal_centre (hp 0 hb0).2.1, smul_zero, add_zero, (Rb.A.chart j).left_inv hj]
   have fin : ∀ (ρ : ℝ) (B : Set (Fin n → ℂ)) (Pi Γ : (Fin n → ℂ) → Matrix (Fin (D.p + D.q)) (Fin (D.p + D.q)) ℂ),
       0 < ρ → ρ ≤ 1 → IsOpen B → 0 ∈ B → B ⊆ Metric.ball 0 1 → HolM B Pi →
       (∀ u ∈ B, 𝔐.M.GramAt 𝔐.t.PP.L (p ((ρ : ℂ) • u)) (gb tie F τ) (Γ u) ∧ IsPeriodGram D.p (Pi u) (blockG (Γ u))) →
@@ -703,8 +696,7 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_period : Given → ∀ (E : Type) [Fi
       have e : (⟨centre (p' 0), 𝔐.all _⟩ : Cpt 𝔐.ξ) = ⟨centre (p 0), 𝔐.all _⟩ := Subtype.ext (by
         show centre (p' 0) = centre (p 0)
         rw [hcen, star_zero])
-      rw [e]
-      exact hg0
+      rwa [e]
     obtain ⟨ρ, B, Pi, Γ, h1, h2, h3, h4, h5, h6, h7, -⟩ :=
       family_period hG.1.2.2.1 tie hpq hF p' _ hs' hhol' hτ' hint' hg0'
     refine fin ρ (star ⁻¹' B) (fun u => (Pi τ (star u)).map (starRingEnd ℂ))
@@ -868,8 +860,7 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_immersion : Given → ∀ (E : Type) 
     filter_upwards [hball, (hwv _).continuousAt.eventually_ne (hne0 q'.1)] with u hu hu'
     obtain ⟨t, ht, e⟩ := ((hp _ (smul_mem_ball' hρ hρ' hu)).2.1.2 q'.1 (pc q'.1) (IsUnit.mk0 _ hu')).2 q'.2
     have e' : wv u q' = t * wv u ⟨q'.1, pc q'.1⟩ := e
-    rw [affCoord, e', mul_div_cancel_right₀ _ hu']
-    exact ht
+    rwa [affCoord, e', mul_div_cancel_right₀ _ hu']
   have hker := Rb.immersion x (htop _) pc (fun k' => (hpc k').ne_zero) k hk
   have hev : (fun t => affCoord pc (Rb.lift x ((Rb.A.chart k).symm t))) =ᶠ[nhds (Rb.A.chart k x)]
       fun t q' => affCoord pc (wv (ψ t)) q' := by
@@ -991,7 +982,7 @@ theorem change_gen {F F' : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) (hF'
     rw [minorIJ_mul]; simp [hh]
   simp only [e3] at e1
   rw [eT, detFac_mul _ bR, Matrix.mul_assoc] at e2
-  simp only [hh, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at e2
+  simp only [hh, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at e2
   linear_combination e2 - detFac j p.2 R * e1
 
 theorem change_base {F F' : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) (hF' : M.IsFrame F') {p : Ψ × Fin N}
@@ -1031,10 +1022,10 @@ theorem left_inv_val {F : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) {w : 
   rw [Finset.sum_comm]
   simp only [← Finset.sum_mul]
   rw [Finset.sum_eq_single I]
-  · rw [rel I hI, if_pos rfl, one_mul]
+  · rw [rel I hI, ite_eq_left rfl, one_mul]
   · intro I' _ hne
     by_cases h : IsStepRows N j p.2 I'
-    · rw [rel I' h, if_neg hne.symm, zero_mul]
+    · rw [rel I' h, ite_eq_right hne.symm, zero_mul]
     · rw [minor_stepCols_eq_zero M.j_le f I' bf h, mul_zero]
   · simp
 
@@ -1181,7 +1172,7 @@ theorem sum_dy (p : Ψ × Fin N) (L : K → ℝ) :
   have e1 : ∑ k' : NonPluckerBlocks M.blk, (M.b p k' : ℝ) * L k'.1 =
       ∑ k, if h : ∀ p', M.blk p' ≠ some k then (M.b p ⟨k, h⟩ : ℝ) * L k else 0 :=
     Fintype.sum_of_injective Subtype.val Subtype.val_injective _ _
-      (fun k hk => dif_neg fun h => hk ⟨⟨k, h⟩, rfl⟩) (fun k => by rw [dif_pos k.2])
+      (fun k hk => dite_eq_right fun h => hk ⟨⟨k, h⟩, rfl⟩) (fun k => by rw [dite_eq_left k.2])
   have e2 : (M.blk p).elim 0 L = ∑ k, if M.blk p = some k then L k else 0 := by
     cases M.blk p with
     | none => simp
@@ -1190,8 +1181,8 @@ theorem sum_dy (p : Ψ × Fin N) (L : K → ℝ) :
   refine Finset.sum_congr rfl fun k _ => ?_
   unfold FlagModel.dy
   by_cases h : ∀ p', M.blk p' ≠ some k
-  · rw [dif_pos h, dif_pos h, if_neg (h p)]; simp
-  · rw [dif_neg h, dif_neg h]; split_ifs <;> simp
+  · rw [dite_eq_left h, dite_eq_left h, ite_eq_right (h p)]; simp
+  · rw [dite_eq_right h, dite_eq_right h]; split_ifs <;> simp
 
 theorem Rel.smul
     (hgood : ∀ F τ w G, Gr F τ w G → M.IsFrame F ∧ w ∈ mcPts (mCoordIdeal M.x) ∧ M.GoodAt F (mCoordIdeal w) ∧
@@ -1262,7 +1253,7 @@ theorem exists_hom
     if h : ∃ r, Rel M Gr p z r then Real.exp h.choose else refNorm (M.dy p) z
   have fr : ∀ z r, Rel M Gr p z r → f z = Real.exp r := fun z r h => by
     have hex : ∃ r, Rel M Gr p z r := ⟨r, h⟩
-    simp only [f, dif_pos hex]
+    simp only [f, dite_eq_left hex]
     rw [Rel.unique hgood hcomp hex.choose_spec h]
   refine ⟨⟨M.dy p, f, fun z hz => ?_, fun c z hc => ?_⟩, rfl, fun F w G hG z hz ho hn h bh dh => ?_, fun z => ?_⟩
   · simp only [f]
@@ -1282,8 +1273,7 @@ theorem exists_hom
           funext q; simp [torusSmul, hc]
         rw [e] at this
         exact h ⟨_, this⟩
-      simp only [f, dif_neg h, dif_neg h']
-      exact refNorm_smul _ _ _
+      simpa only [f, dite_eq_right h, dite_eq_right h'] using refNorm_smul _ _ _
   · obtain ⟨c, hc, e⟩ := ho
     have hG' : Gr F p.1 (basePart M.blk z) G := by
       rw [e]; exact htor _ _ _ _ c hc hG
@@ -1307,7 +1297,7 @@ theorem exists_hom
           funext q; simp [conjVec]
         rw [e] at this
         exact h ⟨_, this⟩
-      simp only [f, dif_neg h, dif_neg h']
+      simp only [f, dite_eq_right h, dite_eq_right h']
       simp [refNorm, conjVec]
 
 end PositivityTheory.Xgp.c_bm_exists_hom
@@ -1517,8 +1507,7 @@ theorem gr_conj (tie : FlagTie M 𝔐) (F τ w G) (h : Gr tie F τ w G) :
         ((congrArg (ptIdeal 𝔐.ξ M.x) (Subtype.ext hcc.1)).trans (ptIdeal_centre hw (𝔐.all _)))
     rwa [e]
   · show centre _ ∈ _
-    rw [hcc.1]
-    exact hi
+    rwa [hcc.1]
   · show (Γᴴᵀ).PosDef
     rw [hp.1.eq]
     exact hp.transpose

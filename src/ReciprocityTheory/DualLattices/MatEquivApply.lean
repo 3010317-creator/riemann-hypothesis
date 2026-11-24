@@ -75,18 +75,15 @@ private theorem block_products_of_transpose_form_eq_smul [IsDomain R] {Ht Bt : M
   rw [Matrix.fromRows_mul_fromCols] at hQ
   have h1 : (cp • (1 : Matrix (Ix g) (Ix g) R)) = Matrix.fromBlocks (cp • 1) 0 0 (cp • 1) := by
     ext (i | i) (j | j) <;> simp [Matrix.one_apply]
-  rw [h1, Matrix.fromBlocks_inj] at hQ
-  exact hQ
+  rwa [h1, Matrix.fromBlocks_inj] at hQ
 
 lemma hb_facts [IsDomain R] {Ht Bt : Matrix (Fin g) (Ix g) R} {E : Matrix (Ix g) (Ix g) R} {cp : R}
     (hcp : cp ≠ 0) (hE : IsUnit E.det) (hform : Btᵀ * Ht - Htᵀ * Bt = cp • E) :
     Ht * ((Eᵀ)⁻¹ * Htᵀ) = 0 ∧ Bt * ((Eᵀ)⁻¹ * Htᵀ) = cp • (1 : Matrix (Fin g) (Fin g) R) := by
   obtain ⟨h11, -, h21, -⟩ := block_products_of_transpose_form_eq_smul hcp hE hform
   refine ⟨?_, ?_⟩
-  · rw [Matrix.neg_mul, neg_eq_zero, Matrix.mul_assoc] at h21
-    exact h21
-  · rw [Matrix.mul_assoc] at h11
-    exact h11
+  · rwa [Matrix.neg_mul, neg_eq_zero, Matrix.mul_assoc] at h21
+  · rwa [Matrix.mul_assoc] at h11
 
 variable {m : ℕ}
 
@@ -254,16 +251,17 @@ theorem lenIdB_of (hPL : DualLenStatement) : LenIdBStatement := by
     c₁ hc₁
   haveI : IsDomain R := Function.Injective.isDomain _ hv.hom_inj
   obtain ⟨φ⟩ := hd
-  have hP : εL i * εL i = εL i := by rw [hLo, if_pos rfl]
-  set U := matU (εL i) φ with hU
-  set V := matV (εL i) φ with hV
+  have hP : εL i * εL i = εL i := by rw [hLo, ite_eq_left rfl]
+  set U := matU (εL i) φ
+  set V := matV (εL i) φ
   have hVU : V * U = 1 := matV_matU (εL i) hP φ
   have hUV : U * V = εL i := matU_matV (εL i) φ
   have hHtT : (εT (π i))ᵀ * Htᵀ = Htᵀ * εL i := by
     have h := congrArg transpose (hHt (π i))
-    rw [hπ i, transpose_mul, transpose_mul, transpose_transpose] at h
-    exact h
-  set A : Matrix (Fin d) (Ix g) R := Uᵀ * Ht * εT (π i) with hA
+    rwa [hπ i, transpose_mul, transpose_mul, transpose_transpose] at h
+  set A := Uᵀ * Ht * εT (π i) with hA
+  have hAt : ∀ t, A *ᵥ t = Uᵀ *ᵥ (Ht *ᵥ (εT (π i) *ᵥ t)) := fun t => by
+    rw [hA, mulVec_mulVec, mulVec_mulVec, Matrix.mul_assoc]
   have hmemT : ∀ w, Vᵀ *ᵥ w ∈ LinearMap.range (Matrix.mulVecLin (εL i)ᵀ) := by
     intro w
     refine ⟨Vᵀ *ᵥ w, ?_⟩
@@ -285,29 +283,16 @@ theorem lenIdB_of (hPL : DualLenStatement) : LenIdBStatement := by
       right_inv := fun y => by
         show Uᵀ *ᵥ (Vᵀ *ᵥ y) = y
         rw [mulVec_mulVec, ← transpose_mul, hVU, transpose_one, one_mulVec] }
-  have hmapC : (((LinearMap.range (Matrix.mulVecLin (εT (π i)))).map (Matrix.mulVecLin Ht)).comap
-      (LinearMap.range (Matrix.mulVecLin (εL i)ᵀ)).subtype).map
-        (ψ : LinearMap.range (Matrix.mulVecLin (εL i)ᵀ) →ₗ[R] (Fin d → R)) =
-      LinearMap.range A.mulVecLin := by
+  have hcA : HasLen v R ((Fin d → R) ⧸ LinearMap.range A.mulVecLin) c₁ := by
+    refine hasLen_of_equiv (Submodule.Quotient.equiv _ _ ψ ?_).symm hc₁
     ext y
     constructor
     · rintro ⟨f, ⟨_, ⟨t, rfl⟩, hft⟩, rfl⟩
-      refine ⟨t, ?_⟩
-      show A *ᵥ t = Uᵀ *ᵥ (f : Fin g → R)
-      have hft' : Ht *ᵥ (εT (π i) *ᵥ t) = (f : Fin g → R) := hft
-      rw [← hft']
-      show A *ᵥ t = Uᵀ *ᵥ (Ht *ᵥ (εT (π i) *ᵥ t))
-      rw [hA, mulVec_mulVec, mulVec_mulVec, Matrix.mul_assoc]
+      exact ⟨t, (hAt t).trans (congrArg (Uᵀ *ᵥ ·) hft)⟩
     · rintro ⟨t, rfl⟩
-      have hmem : Ht *ᵥ (εT (π i) *ᵥ t) ∈ LinearMap.range (Matrix.mulVecLin (εL i)ᵀ) := by
-        refine ⟨Ht *ᵥ t, ?_⟩
-        show (εL i)ᵀ *ᵥ (Ht *ᵥ t) = Ht *ᵥ (εT (π i) *ᵥ t)
-        rw [mulVec_mulVec, mulVec_mulVec, hHt (π i), hπ i]
-      refine ⟨⟨_, hmem⟩, ⟨_, ⟨t, rfl⟩, rfl⟩, ?_⟩
-      show Uᵀ *ᵥ (Ht *ᵥ (εT (π i) *ᵥ t)) = A *ᵥ t
-      rw [hA, mulVec_mulVec, mulVec_mulVec, Matrix.mul_assoc]
-  have hcA : HasLen v R ((Fin d → R) ⧸ LinearMap.range A.mulVecLin) c₁ :=
-    hasLen_of_equiv (Submodule.Quotient.equiv _ _ ψ hmapC).symm hc₁
+      refine ⟨⟨_, Ht *ᵥ t, ?_⟩, ⟨_, ⟨t, rfl⟩, rfl⟩, (hAt t).symm⟩
+      show (εL i)ᵀ *ᵥ (Ht *ᵥ t) = Ht *ᵥ (εT (π i) *ᵥ t)
+      rw [mulVec_mulVec, mulVec_mulVec, hHt (π i), hπ i]
   have hkill : ∀ w : Fin d → R, ∃ t, A *ᵥ t = cp • w := by
     intro w
     obtain ⟨t, ht⟩ := cok_kill hcp hE hform εT εL π i (hπ i) hHt _ (hmemT w)
@@ -315,31 +300,29 @@ theorem lenIdB_of (hPL : DualLenStatement) : LenIdBStatement := by
     rw [hA, ← mulVec_mulVec, ← mulVec_mulVec, ht, mulVec_smul, mulVec_mulVec, ← transpose_mul,
       hVU, transpose_one, one_mulVec]
   obtain ⟨y, hy, hyc⟩ := hPL C v R hv d (Ix g) A cp hcp hkill c₁ hcA
-  have hmapY : ((sxE Ht Bt εT εL π i).comap (inclE εL i (π i))).map
-      (φ : LinearMap.range (Matrix.mulVecLin (εL i)) →ₗ[R] (Fin d → R)) = zSub A cp := by
-    have key : ∀ x : LinearMap.range (Matrix.mulVecLin (εL i)),
-        x ∈ (sxE Ht Bt εT εL π i).comap (inclE εL i (π i)) ↔ φ x ∈ zSub A cp := by
-      intro x
-      have hx : εL i *ᵥ (x : Fin g → R) = x := P_fix (εL i) hP _ x.2
-      have hAx : Aᵀ *ᵥ φ x = Htᵀ *ᵥ (x : Fin g → R) := by
-        have hAT : Aᵀ = (εT (π i))ᵀ * Htᵀ * U := by
-          rw [hA, transpose_mul, transpose_mul, transpose_transpose, ← Matrix.mul_assoc]
-        rw [hAT, hHtT, ← mulVec_mulVec, ← mulVec_mulVec, matU_mulVec, LinearEquiv.symm_apply_apply,
-          hx]
-      rw [Submodule.mem_comap]
-      show (∃ s, s ∈ LinearMap.range (Matrix.mulVecLin (εT i)) ∧
-          fromRows Ht Bt *ᵥ s = Sum.elim (0 : Fin g → R) (x : Fin g → R)) ↔ ∃ z, Aᵀ *ᵥ φ x = cp • z
-      rw [hAx, ← exists_fromRows_mulVec_iff hcp hE hform εT εL π i (hHt i) (hBt i) _ hx]
-      constructor
-      · rintro ⟨_, ⟨t, rfl⟩, h⟩; exact ⟨t, h⟩
-      · rintro ⟨t, h⟩; exact ⟨_, ⟨t, rfl⟩, h⟩
-    ext z
+  refine ⟨y, hasLen_of_equiv (Submodule.Quotient.equiv _ _ φ ?_) hy, hyc⟩
+  have key : ∀ x : LinearMap.range (Matrix.mulVecLin (εL i)),
+      x ∈ (sxE Ht Bt εT εL π i).comap (inclE εL i (π i)) ↔ φ x ∈ zSub A cp := by
+    intro x
+    have hx : εL i *ᵥ (x : Fin g → R) = x := P_fix (εL i) hP _ x.2
+    have hAx : Aᵀ *ᵥ φ x = Htᵀ *ᵥ (x : Fin g → R) := by
+      have hAT : Aᵀ = (εT (π i))ᵀ * Htᵀ * U := by
+        rw [hA, transpose_mul, transpose_mul, transpose_transpose, ← Matrix.mul_assoc]
+      rw [hAT, hHtT, ← mulVec_mulVec, ← mulVec_mulVec, matU_mulVec, LinearEquiv.symm_apply_apply,
+        hx]
+    rw [Submodule.mem_comap]
+    show (∃ s, s ∈ LinearMap.range (Matrix.mulVecLin (εT i)) ∧
+        fromRows Ht Bt *ᵥ s = Sum.elim (0 : Fin g → R) (x : Fin g → R)) ↔ ∃ z, Aᵀ *ᵥ φ x = cp • z
+    rw [hAx, ← exists_fromRows_mulVec_iff hcp hE hform εT εL π i (hHt i) (hBt i) _ hx]
     constructor
-    · rintro ⟨x, hx, rfl⟩; exact (key x).1 hx
-    · intro hz
-      refine ⟨φ.symm z, (key _).2 (by rwa [LinearEquiv.apply_symm_apply]), ?_⟩
-      exact LinearEquiv.apply_symm_apply φ z
-  exact ⟨y, hasLen_of_equiv (Submodule.Quotient.equiv _ _ φ hmapY) hy, hyc⟩
+    · rintro ⟨_, ⟨t, rfl⟩, h⟩; exact ⟨t, h⟩
+    · rintro ⟨t, h⟩; exact ⟨_, ⟨t, rfl⟩, h⟩
+  ext z
+  constructor
+  · rintro ⟨x, hx, rfl⟩; exact (key x).1 hx
+  · intro hz
+    refine ⟨φ.symm z, (key _).2 (by rwa [LinearEquiv.apply_symm_apply]), ?_⟩
+    exact LinearEquiv.apply_symm_apply φ z
 
 end ReciprocityTheory.PGsh.Up
 end -- clump:auto
@@ -374,9 +357,9 @@ lemma matEquiv_apply {d : ℕ} (P : Matrix (Fin d) (Fin d) R) (hP : IsUnit P.det
 lemma sum_val_eq {n : ℕ} (j : ℕ) (f : Fin n → R) :
     ∑ k : Fin n, (if (k : ℕ) = j then f k else 0) = if h : j < n then f ⟨j, h⟩ else 0 := by
   split_ifs with h
-  · rw [Fintype.sum_eq_single ⟨j, h⟩ (fun k hk => if_neg fun h' => hk (Fin.ext h'))]
-    exact if_pos rfl
-  · exact Finset.sum_eq_zero fun k _ => if_neg fun (h' : (k : ℕ) = j) => h (h' ▸ k.isLt)
+  · rw [Fintype.sum_eq_single ⟨j, h⟩ (fun k hk => ite_eq_right fun h' => hk (Fin.ext h'))]
+    exact ite_eq_left rfl
+  · exact Finset.sum_eq_zero fun k _ => ite_eq_right fun (h' : (k : ℕ) = j) => h (h' ▸ k.isLt)
 
 lemma hasLen_pi {C : Type} [Field C] (v : Valuation C NNReal) [Algebra R C] {d : ℕ} (a : Fin d → R) :
     HasLen v R ((Fin d → R) ⧸ Submodule.pi Set.univ (fun j => (Ideal.span {a j} : Submodule R R)))
@@ -402,8 +385,7 @@ theorem dualLen_fin {C : Type} [Field C] {v : Valuation C NNReal} [Algebra R C]
     intro d
     induction d with
     | zero =>
-      intro n A
-      exact ⟨1, 1, Fin.elim0, by simp, by simp, fun j => j.elim0⟩
+      exact fun n A => ⟨1, 1, Fin.elim0, by simp, by simp, fun j => j.elim0⟩
     | succ d ih =>
       intro n A
       cases n with
@@ -493,8 +475,8 @@ theorem dualLen_fin {C : Type} [Field C] {v : Valuation C NNReal} [Algebra R C]
     simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply, hD, ite_mul, zero_mul]
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases h : (k : ℕ) = (j : ℕ)
-    · rw [if_pos h, if_pos h.symm]
-    · rw [if_neg h, if_neg (Ne.symm h)]
+    · rw [ite_eq_left h, ite_eq_left h.symm]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
   have hdiv : ∀ j : Fin d, (j : ℕ) < n ∧ ∃ b, a j * b = c := by
     intro j
     obtain ⟨t, ht⟩ := hkill (P⁻¹ *ᵥ Pi.single j 1)
@@ -624,8 +606,7 @@ theorem dualLen : DualLenStatement := by
     · rintro ⟨z, hz⟩
       refine ⟨z ∘ e, ?_⟩
       funext j
-      have h1 := congrFun hz (e j)
-      simpa using h1
+      simpa using congrFun hz (e j)
     · rintro ⟨z, hz⟩
       refine ⟨z ∘ e.symm, ?_⟩
       rw [hz]

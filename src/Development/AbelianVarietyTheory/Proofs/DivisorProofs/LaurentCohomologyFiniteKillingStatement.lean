@@ -714,8 +714,7 @@ theorem kill_colim : ∀ (q : ℕ) (A S : Type) [CommRing A] [CommRing S] [Algeb
   have hu : IsUnit (q : (diag A S).obj ∅) := by
     have := hq.map ((LaurentPolynomial.C : Algebra.adjoin A ((∅ : Finset S) : Set S) →+* _).comp
       (algebraMap A _))
-    rw [map_natCast] at this
-    exact this
+    rwa [map_natCast] at this
   have e1 : spMap ((cocone A S).ι.app ∅).hom ≫
       spMap (laurentMap (algebraMap A (Algebra.adjoin A ((∅ : Finset S) : Set S)))) =
       spMap (laurentMap (algebraMap A S)) :=
@@ -883,8 +882,7 @@ theorem main : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A] [IsNoetherianRin
   intro p hp
   obtain ⟨k, hk⟩ := σ.surjective ⟨p, hp⟩
   have := hmem k
-  simp only [P, hk] at this
-  exact this
+  simpa only [P, hk] using this
 
 end GlobalTheory.EtC.GmKill
 

@@ -54,8 +54,7 @@ theorem redMatB_one_of {I : AutInst} {m : ℕ} (R : RedB I m) {x : I.Gf}
     · simp [Matrix.one_apply_eq, ZMod.val_one]
     · intro j _ hj
       simp [Matrix.one_apply_ne hj]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
+    · exact fun hi => absurd (Finset.mem_univ i) hi
   rw [hsum]
   exact h i
 
@@ -86,8 +85,7 @@ theorem rhoX_eq_one_iff (x : KSub X.B.I) : rhoX X x = 1 ↔ (x : X.B.I.Gf) ∈ X
     show ((rhoB (redBX X kv) x : GL (Fin D.R.r) (ZMod (redBX X kv).p)) :
         Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (redBX X kv).p)) =
       ((1 : GL (Fin D.R.r) (ZMod (redBX X kv).p)) : Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (redBX X kv).p))
-    rw [Units.val_one]
-    exact h2
+    rwa [Units.val_one]
 
 theorem ES_conj (S : Set (Tup2 D)) (γ P : G0g D.nd) : (ES S).coeff (P⁻¹ * γ * P) = (ES S).coeff γ := by
   unfold ES

@@ -70,12 +70,12 @@ theorem th21 (t0 t1 t2 : TauC Y u u') (h0 : Gt t0 ≠ 0) (h1 : Gt t1 ≠ 0) (h2 
   have hTh1 : Th t0.lam (lf D (X.Fu u)) t0.frame t1.frame (t1.lin * t0.lin⁻¹) = Hp t0.lam (lf D (X.Fu u)) t0.frame := by
     have h : Formalism.L2.SG.TermOp.s0T t0 t1 = 1 := hs01
     unfold Formalism.L2.SG.TermOp.s0T at h
-    rw [if_pos ⟨hl1.symm, hl1'.symm⟩] at h
+    rw [ite_eq_left ⟨hl1.symm, hl1'.symm⟩] at h
     exact (CorankRelation.s0_eq_one_iff_Th_eq_Hp D.R.k hdim t0.lam hlat _ t0.frame t1.frame _ hLF hL0 hG0).1 h
   have hTh2 : Th t0.lam (lf D (X.Fu u)) t0.frame t2.frame (t2.lin * t0.lin⁻¹) = Hp t0.lam (lf D (X.Fu u)) t0.frame := by
     have h : Formalism.L2.SG.TermOp.s0T t0 t2 = 1 := hs02
     unfold Formalism.L2.SG.TermOp.s0T at h
-    rw [if_pos ⟨hl2.symm, hl2'.symm⟩] at h
+    rw [ite_eq_left ⟨hl2.symm, hl2'.symm⟩] at h
     exact (CorankRelation.s0_eq_one_iff_Th_eq_Hp D.R.k hdim t0.lam hlat _ t0.frame t2.frame _ hLF hL0 hG0).1 h
   have hsym1 := CorankRelation.Th_symm D.R.k hdim t0.lam hlat _ t0.frame t1.frame (t1.lin * t0.lin⁻¹) hLF hL0 hL1 hG0 hG1
     (CorankRelation.frame_mem_iff t0 t1) hTh1
@@ -119,18 +119,14 @@ theorem UUE_eq_Asp {D : D7} {T T' : D.host.E} (Λ : Submodule (𝓞 D.host.E) (V
     have key : UU Λ F F' ≤ (Asp F.fl F'.fl).restrictScalars (𝓞 D.host.E) := by
       unfold UU
       refine sup_le (sup_le (sup_le ?_ ?_) ?_) ?_
-      · intro y hy
-        exact X_le_Asp F.fl F'.fl (Submodule.mem_inf.1 hy).2
+      · exact fun y hy => X_le_Asp F.fl F'.fl (Submodule.mem_inf.1 hy).2
       · rw [Submodule.span_le, Set.singleton_subset_iff, hL.2]
         exact z_mem_Asp F.fl F'.fl
-      · intro y hy
-        exact hX' (Submodule.mem_inf.1 hy).2
-      · rw [Submodule.span_le, Set.singleton_subset_iff, hL'.2]
-        exact hz'
+      · exact fun y hy => hX' (Submodule.mem_inf.1 hy).2
+      · rwa [Submodule.span_le, Set.singleton_subset_iff, hL'.2]
     unfold UUE spanE
     rw [Submodule.span_le]
-    intro x hx
-    exact key hx
+    exact fun x hx => key hx
   · rw [Asp, Submodule.span_le]
     rintro _ ⟨i, rfl⟩
     exact PI.PairCorankPos.W.frame_mem_UUE Λ hΛ F F' hL hL' i
@@ -195,15 +191,14 @@ theorem lemmaG3_of_inputs (hT : 3 ≤ Tu D u) (hT' : 3 ≤ Tu D u') (t0 t1 t2 : 
       intro hG
       apply h0
       simp only [Formalism.L2.SG.TermOp.Gt]
-      rw [if_pos]
+      rw [ite_eq_left]
       exact (Formalism.L2.SG.TermDef.Gt_mk (PI.TermAttrConst.UnitaryGroupMassFormula.gFun_all _ _ _) _).trans hG
     have hG12 : Gval (lf D (X.Fu u)) t.frame = Gval (lf D (X.Fu u)) t0.frame := by
       rw [← Formalism.L2.SG.Pf.SatGram.gterm_G Y t, ← Formalism.L2.SG.Pf.SatGram.gterm_G Y t0, hG]
     have hs0' : Lat.s0 t0.lam (lf D (X.Fu u)) t0.frame t.frame (t.lin * t0.lin⁻¹) D.R.k = 1 := by
       have h1 : Formalism.L2.SG.TermOp.s0T t0 t = 1 := hs0
       unfold Formalism.L2.SG.TermOp.s0T at h1
-      rw [if_pos ⟨hlam.symm, hlam'.symm⟩] at h1
-      exact h1
+      rwa [ite_eq_left ⟨hlam.symm, hlam'.symm⟩] at h1
     have hTh := (CorankRelation.s0_eq_one_iff_Th_eq_Hp D.R.k hdim t0.lam
       (by first | exact hlat) _ t0.frame t.frame _ hLF hL1 hG1).1 hs0'
     have hTE : ((Tu D u : ℕ) : D.host.E) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
@@ -322,8 +317,7 @@ theorem lemmaG3_of_inputs (hT : 3 ≤ Tu D u) (hT' : 3 ≤ Tu D u') (t0 t1 t2 : 
         rw [hp1]
         show t1.lin (t2.lin.symm (σ w)) = t1.lin (s'.symm (t1.lin.symm w))
         rw [hsymm]
-      rw [← e]
-      exact hpβ
+      rwa [← e]
 
 end Formalism.L2.SG.NGCut.NormalVectorPairings
 end -- clump:auto
@@ -534,8 +528,7 @@ theorem tau_exists (F : FlagG S r T) (F1 : FlagG S r T') (hG : Gflag F F1 ≠ 0)
   · show ∀ x y, S.hT (LinearEquiv.ofInjectiveEndo τl hinj x) (LinearEquiv.ofInjectiveEndo τl hinj y) =
       S.hT x y
     intro x y
-    simp only [LinearEquiv.coe_ofInjectiveEndo]
-    exact hiso x y
+    simpa only [LinearEquiv.coe_ofInjectiveEndo] using hiso x y
   · intro a ha
     simp only [LinearEquiv.coe_ofInjectiveEndo]
     obtain ⟨a', ha', w, hs, hτa⟩ := hsplit a
@@ -547,8 +540,7 @@ theorem tau_exists (F : FlagG S r T) (F1 : FlagG S r T') (hG : Gflag F F1 ≠ 0)
       have hm : (w : S.V) ∈ Asp F F1 ⊓ Hsp F F1 := ⟨hwA, w.2⟩
       rwa [Asp_inf_Hsp F F1 hG, Submodule.mem_bot] at hm
     have hw : w = 0 := Subtype.ext hw0
-    rw [hτa, hw, hp0, add_zero]
-    rw [hs, hw0, add_zero]
+    rw [hτa, hw, hp0, add_zero, hs, hw0, add_zero]
   · intro y hy
     have hyo : ∀ x ∈ F.X, S.hT x y = 0 := by
       simpa [Lat.orth, Submodule.mem_iInf] using hy
@@ -680,8 +672,7 @@ theorem lemmaG3_of_coefficients (hT : 3 ≤ Tu D u) (hT' : 3 ≤ Tu D u') (t0 t1
       have h := P2 _ hv
       rw [hςx, LinearEquiv.symm_apply_apply, LinearEquiv.symm_apply_apply] at h
       have h' := (mem_frameX Y t1 _).1 h
-      rw [map_sub, LinearEquiv.symm_apply_apply] at h'
-      exact h'
+      rwa [map_sub, LinearEquiv.symm_apply_apply] at h'
   have heq : t2.lin = n * t1.lin * n' := by
     rw [he, hn, hn']
     group
@@ -742,8 +733,7 @@ theorem mem_Xa_mapFlag {E : Type} [Field E] [NumberField E] [StarRing E] {S : HS
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨γ.symm x, h, by simp⟩
+  · exact fun h => ⟨γ.symm x, h, by simp⟩
 
 theorem mem_Xflag_mapLF {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ} {T : E}
     (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (F : LFlag S r T) (j : ℕ) (x : S.V) :
@@ -772,13 +762,10 @@ theorem NLam_transport (t : TauC Y u u') {Λ : Submodule (𝓞 D.host.E) (VS D).
       (mem_Xflag_mapLF t.lin hγ (lf D (X.Fu u')) (j + 1) _).2 (by rw [LinearEquiv.symm_apply_apply]; exact hx)
     have h := hmf j _ hx'
     have h' := (mem_Xflag_mapLF t.lin hγ (lf D (X.Fu u')) j _).1 h
-    rw [map_sub, LinearEquiv.symm_apply_apply] at h'
-    exact h'
+    rwa [map_sub, LinearEquiv.symm_apply_apply] at h'
   · have h2 : m t.frame.fl.z - t.frame.fl.z ∈ t.frame.fl.X := hmz
     have h3 := (mem_frameX Y t _).1 h2
-    rw [map_sub, frame_z_eq_lin_zu, LinearEquiv.symm_apply_apply] at h3
-    show t.lin.symm (m (t.lin (X.Fu u').z)) - (X.Fu u').z ∈ _
-    exact h3
+    rwa [map_sub, frame_z_eq_lin_zu, LinearEquiv.symm_apply_apply] at h3
 
 end Formalism.L2.SG.NGCut.NormalVectorPairings
 end -- clump:auto
@@ -904,9 +891,7 @@ theorem rep_at_pt (t : TauC Y u u') (hG : 1 ≤ NGPt D.host.rdE ((Tu D u : ℕ) 
   refine ⟨n, NLam_SRat hn, t.lin⁻¹ * m * t.lin, NLam_transport Y t hm, fun a => ?_⟩
   have := hfr a
   show F'.fl.fvec a = n (t.lin (t.lin.symm (m (t.lin ((X.Fu u').fvec a)))))
-  rw [LinearEquiv.apply_symm_apply]
-  rw [← frame_fvec Y t a]
-  exact this
+  rwa [LinearEquiv.apply_symm_apply, ← frame_fvec Y t a]
 
 theorem ptdc_core (t1 t2 : TauC Y u u') (hN1 : 1 ≤ NGPt D.host.rdE ((Tu D u : ℕ) * (Tu D u' : ℕ)) (ptPN t1))
     (hp : ptPN t1 = ptPN t2) :

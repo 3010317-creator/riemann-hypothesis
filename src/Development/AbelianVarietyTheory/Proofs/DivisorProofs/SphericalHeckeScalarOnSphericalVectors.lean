@@ -92,8 +92,7 @@ theorem orbit_sum {H X M : Type*} [Group H] [Fintype H] [MulAction H X] [AddComm
     rintro ⟨z, g, rfl⟩
     exact Fintype.sum_equiv (Equiv.mulRight g) _ _ (fun h => by simp [mul_smul])
   have h2 : ∀ h : H, ∑ z : orbit H y, F (h • (z : X)) = ∑ z : orbit H y, F z := by
-    intro h
-    exact Fintype.sum_equiv (MulAction.toPerm h) _ _ (fun z => rfl)
+    exact fun h => Fintype.sum_equiv (MulAction.toPerm h) _ _ (fun z => rfl)
   rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul, ← Finset.card_univ, ← Finset.card_univ,
     ← Finset.sum_const, ← Finset.sum_const]
   calc ∑ _z : orbit H y, ∑ h : H, F (h • y) = ∑ z : orbit H y, ∑ h : H, F (h • (z : X)) :=
@@ -145,8 +144,7 @@ theorem sum_translates_eq_avg : ∀ {G M : Type} [Group G] [AddCommGroup M] [Mod
     rintro q ⟨i, hi, k, rfl⟩
     obtain ⟨γ, ⟨hγ, hγk⟩, -⟩ := (hR i hi).2 (k * a i) ⟨k, k.2, 1, K.one_mem, by simp⟩
     refine Finset.mem_coe.mpr (Finset.mem_biUnion.mpr ⟨i, hi, Finset.mem_image.mpr ⟨γ, hγ, ?_⟩⟩)
-    rw [hsm, QuotientGroup.eq]
-    exact hγk
+    rwa [hsm, QuotientGroup.eq]
   haveI : Finite Y := (Set.Finite.subset (Finset.finite_toSet _) hYsub).to_subtype
   letI : Fintype Y := Fintype.ofFinite Y
   let φ := MulAction.toPermHom K Y
@@ -190,8 +188,7 @@ theorem sum_translates_eq_avg : ∀ {G M : Type} [Group G] [AddCommGroup M] [Mod
         have he' : ((γ : G) : G ⧸ K) = ((γ' : G) : G ⧸ K) :=
           congrArg (fun z : orbit H (y i) => ((z : Y) : G ⧸ K)) he
         rw [QuotientGroup.eq] at he'
-        have hu := (hR i i.2).2 γ' ((hR i i.2).1 γ' hγ')
-        exact Subtype.ext (hu.unique ⟨hγ, he'⟩ ⟨hγ', by simp⟩)
+        exact Subtype.ext (((hR i i.2).2 γ' ((hR i i.2).1 γ' hγ')).unique ⟨hγ, he'⟩ ⟨hγ', by simp⟩)
       · rintro ⟨z, ⟨⟨_, k, rfl⟩, hz⟩⟩
         obtain ⟨γ, ⟨hγ, hγk⟩, -⟩ := (hR i i.2).2 (k * a i) ⟨k, k.2, 1, K.one_mem, by simp⟩
         refine ⟨⟨γ, hγ⟩, Subtype.ext (Subtype.ext ?_)⟩
@@ -444,7 +441,7 @@ def ext0 (Q : principalLevelFrame.RowPsi V n) : (Formalism.AUTREP.GAf D.host.E n
 theorem extendByZeroThroughUnitaryFrame_psi (Q : principalLevelFrame.RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ) (h : Formalism.AUTREP.GAf D.host.E n) :
     ext0 Q x (Q.ψ h) = x h := by
   simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk]
-  rw [if_pos ⟨h, rfl⟩, pre_psi]
+  rw [ite_eq_left ⟨h, rfl⟩, pre_psi]
 
 theorem extendByZeroThroughUnitaryFrame_right_translate (Q : principalLevelFrame.RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ) (h : Formalism.AUTREP.GAf D.host.E n) :
     ext0 Q (Formalism.L2.NG.rt D.host.E n h x) = rtA V (Q.ψ h) (ext0 Q x) := by
@@ -456,7 +453,7 @@ theorem extendByZeroThroughUnitaryFrame_right_translate (Q : principalLevelFrame
       hg ⟨y * h⁻¹, by rw [map_mul, hy, map_inv, mul_inv_cancel_right]⟩
     rw [rtA_apply]
     simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk]
-    rw [if_neg hg, if_neg hg']
+    rw [ite_eq_right hg, ite_eq_right hg']
 
 theorem extendByZeroThroughUnitaryFrame_injective (Q : principalLevelFrame.RowPsi V n) {x x' : Formalism.AUTREP.GAf D.host.E n → ℂ} (H : ext0 Q x = ext0 Q x') :
     x = x' := funext fun h => by
@@ -495,8 +492,7 @@ theorem reps_comap {G H : Type} [Group G] [Group H] [DecidableEq G] (ψ : G →*
     obtain ⟨γ, ⟨hγ, hγK⟩, huniq⟩ := h.2 (ψ k1 * ψ a * ψ k2) ⟨_, hk1, _, hk2, rfl⟩
     obtain ⟨g, rfl⟩ := hR γ hγ
     refine ⟨g, ⟨Finset.mem_image.2 ⟨ψ g, hγ, hpre g⟩, ?_⟩, ?_⟩
-    · rw [Subgroup.mem_comap, map_mul, map_inv, map_mul, map_mul]
-      exact hγK
+    · rwa [Subgroup.mem_comap, map_mul, map_inv, map_mul, map_mul]
     · rintro g' ⟨hg', hg'K⟩
       obtain ⟨γ', hγ', rfl⟩ := Finset.mem_image.1 hg'
       obtain ⟨g'', rfl⟩ := hR γ' hγ'

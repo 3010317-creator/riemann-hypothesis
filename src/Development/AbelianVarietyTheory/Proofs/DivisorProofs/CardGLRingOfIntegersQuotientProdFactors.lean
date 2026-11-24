@@ -66,8 +66,7 @@ theorem card_GL_field_real (κ : Type) [Field κ] [Finite κ] (n : ℕ) :
   have hq0 : (Nat.card κ : ℝ) ≠ 0 := by positivity
   have hIcc : Finset.Icc 1 n = Finset.Ioc 0 n := by
     ext i; simp only [Finset.mem_Icc, Finset.mem_Ioc]; omega
-  rw [glVol, hIcc]
-  rw [Matrix.card_GL_field, Nat.cast_prod, ← Nat.card_eq_fintype_card]
+  rw [glVol, hIcc, Matrix.card_GL_field, Nat.cast_prod, ← Nat.card_eq_fintype_card]
   rw [Fin.prod_univ_eq_prod_range (fun i => ((Nat.card κ ^ n - Nat.card κ ^ i : ℕ) : ℝ)) n]
   rw [← Finset.prod_range_reflect]
   have hIoc : Finset.Ioc 0 n = (Finset.range n).map ⟨(· + 1), add_left_injective 1⟩ := by
@@ -141,8 +140,7 @@ theorem card_GL_of_residue {R k : Type} [CommRing R] [Finite R] [Field k] (π : 
   have h2 : Fintype.card (Matrix (Fin n) (Fin n) R) = Fintype.card (Matrix (Fin n) (Fin n) k) * K := by
     rw [← Finset.card_univ, Finset.card_eq_sum_card_fiberwise (f := φ) (t := Finset.univ)]
     · rw [Finset.sum_congr rfl (g := fun _ => K), Finset.sum_const, smul_eq_mul, Finset.card_univ]
-      intro B _
-      exact hfib B
+      exact fun B _ => hfib B
     · intro A _; exact Finset.mem_coe.2 (Finset.mem_univ _)
   have hcard : ∀ (S : Type) [Fintype S],
       (Fintype.card (Matrix (Fin n) (Fin n) S) : ℝ) = (Nat.card S : ℝ) ^ (n ^ 2) := by

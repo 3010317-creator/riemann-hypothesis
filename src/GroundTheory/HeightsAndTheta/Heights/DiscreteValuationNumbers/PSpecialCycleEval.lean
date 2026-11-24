@@ -22,18 +22,12 @@ theorem SpecialCycleEval.proof (h1 : SpecialIdealCorresp.Statement.{u})
   let t : Set (Ideal (MRing ι (IsLocalRing.ResidueField O))) :=
     {V | V ∈ (specialIdeal P).minimalPrimes ∧ IsRelevant V}
   have hsupp1 : Function.support (fun W => divCycle P (C ϖ) W * n (specialIdeal W)) ⊆ s := by
-    intro W hW
-    by_contra h
-    apply hW
-    show divCycle P (C ϖ) W * n (specialIdeal W) = 0
+    refine Function.support_subset_iff'.2 fun W h => ?_
     have h' : ¬ (W ∈ (P ⊔ Ideal.span {C ϖ}).minimalPrimes ∧ IsRelevant W) := h
     unfold divCycle
     rw [dite_eq_right h', zero_mul]
   have hsupp2 : Function.support (fun V => idealCycle (specialIdeal P) V * n V) ⊆ t := by
-    intro V hV
-    by_contra h
-    apply hV
-    show idealCycle (specialIdeal P) V * n V = 0
+    refine Function.support_subset_iff'.2 fun V h => ?_
     have h' : ¬ (V ∈ (specialIdeal P).minimalPrimes ∧ IsRelevant V) := h
     unfold idealCycle
     rw [dite_eq_right h', zero_mul]
@@ -44,28 +38,21 @@ theorem SpecialCycleEval.proof (h1 : SpecialIdealCorresp.Statement.{u})
     obtain ⟨hp, hc⟩ := hmem W hW
     obtain ⟨-, hmin, hrel, -⟩ := h1 O ϖ hϖ K ι P W hp hc
     exact ⟨hmin.mp hW.1, hrel.mp hW.2⟩
-  have e1 : (∑ᶠ W, divCycle P (C ϖ) W * n (specialIdeal W)) =
-      ∑ᶠ W ∈ s, divCycle P (C ϖ) W * n (specialIdeal W) := by
-    rw [finsum_mem_def, Set.indicator_eq_self.mpr hsupp1]
-  have e2 : (∑ᶠ V, idealCycle (specialIdeal P) V * n V) =
-      ∑ᶠ V ∈ t, idealCycle (specialIdeal P) V * n V := by
-    rw [finsum_mem_def, Set.indicator_eq_self.mpr hsupp2]
   show (∑ᶠ W, divCycle P (C ϖ) W * n (specialIdeal W)) =
     ∑ᶠ V, idealCycle (specialIdeal P) V * n V
-  rw [e1, e2]
+  rw [← Set.indicator_eq_self.2 hsupp1, ← Set.indicator_eq_self.2 hsupp2, ← finsum_mem_def,
+    ← finsum_mem_def]
   refine finsum_mem_eq_of_bijOn specialIdeal ⟨hmaps, ?_, ?_⟩ ?_
   · intro W hW W' hW' heq
     obtain ⟨hp, hc⟩ := hmem W hW
     obtain ⟨hp', hc'⟩ := hmem W' hW'
     exact ((h1 O ϖ hϖ K ι P W hp hc).2.2.2 W' hp' hc' heq.symm).symm
   · intro V hV
-    have hVp : V.IsPrime := hV.1.1.1
-    obtain ⟨W, hWp, hc, rfl⟩ := h2 O ϖ hϖ K ι V hVp
+    obtain ⟨W, hWp, hc, rfl⟩ := h2 O ϖ hϖ K ι V hV.1.1.1
     obtain ⟨-, hmin, hrel, -⟩ := h1 O ϖ hϖ K ι P W hWp hc
     exact ⟨W, ⟨hmin.mpr hV.1, hrel.mpr hV.2⟩, rfl⟩
   · intro W hW
     obtain ⟨hp, hc⟩ := hmem W hW
-    have := hp
     have := (h1 O ϖ hϖ K ι P W hp hc).1
     have hm := h3 O ϖ hϖ K ι P W hc
     congr 1

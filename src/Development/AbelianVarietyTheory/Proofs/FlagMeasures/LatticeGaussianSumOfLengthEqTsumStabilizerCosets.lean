@@ -218,10 +218,8 @@ theorem gaussSum_cosets : ∀ (I : AutInst) (s : Bool) (x : Fin I.n → I.E), st
       simpa [h0] using hd.symm
     have hmU : IsUnit m := (Matrix.isUnit_iff_isUnit_det m).2 hdet
     refine ⟨hmU.unit, (hUJ _).2 ?_, ?_⟩
-    · rw [hmU.unit_spec]
-      exact hm
-    · rw [hmU.unit_spec]
-      exact hmx
+    · rwa [hmU.unit_spec]
+    · rwa [hmU.unit_spec]
   choose δ hδU hδx using hW
   have hR : ∀ y, ∃ a, IsImage I (((δ y)⁻¹ : GL (Fin I.n) I.E) : Matrix (Fin I.n) (Fin I.n) I.E) a :=
     fun y => exists_isImage I _ (inv_mem (hδU y))
@@ -250,8 +248,7 @@ theorem gaussSum_cosets : ∀ (I : AutInst) (s : Bool) (x : Fin I.n → I.E), st
       constructor
       · rintro ⟨-, hx'⟩
         exact afVec_injective I hx'
-      · intro hx'
-        exact ⟨hmemF, by rw [hx']⟩
+      · exact fun hx' => ⟨hmemF, by rw [hx']⟩
     have hd' : ((d⁻¹ : GL (Fin I.n) I.E) : Matrix (Fin I.n) (Fin I.n) I.E)ᴴ * I.J *
         ((d⁻¹ : GL (Fin I.n) I.E) : Matrix (Fin I.n) (Fin I.n) I.E) = I.J := (hUJ _).1 (inv_mem hdU)
     refine ⟨⟨((d⁻¹ : GL (Fin I.n) I.E) : Matrix (Fin I.n) (Fin I.n) I.E) *ᵥ x, by rw [length_mulVec hd', hx]⟩,

@@ -70,8 +70,7 @@ theorem isTranslate_act_V (hr : R.grp_red_L) (hj : R.models_jV) (i : Fin D.R.m) 
 
     have hg : (R.B.L i t).act_tie.red κ = g := by
       apply R.eG.injective
-      rw [hred κ]
-      exact hκ
+      rwa [hred κ]
 
     have key := congrFun ((R.B.L i t).act_tie.act_eq g κ hg x) h
     have e1 := hj i t ((A.fam.L i t).r g x)
@@ -87,7 +86,6 @@ theorem GlobalTheory.RationalFormsAction.act_eq_translate_lift_V : ∀ {D : D7} 
   intro D G _ _ Pl0 T0 A Ks _ _ _ R hr hj i t g x
 
   have htr := GlobalTheory.RationalFormsAction.isTranslate_act_V R hr hj i t g x
-  have hex := GlobalTheory.LiftEquivariance.exists_adelic_lift htr
-  exact hex
+  exact GlobalTheory.LiftEquivariance.exists_adelic_lift htr
 
 end

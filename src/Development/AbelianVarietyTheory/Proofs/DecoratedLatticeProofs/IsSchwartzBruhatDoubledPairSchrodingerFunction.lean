@@ -100,8 +100,7 @@ theorem sch_hasDerivAt_line : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
   have lin := GlobalTheory.StdUnn.sch_linear D ψ hψ A B ν 𝓨 hν
 
   have htr : ∀ t : ℝ, sch ψ A B ν 𝓨 f (x + M t) = sch ψ A B ν 𝓨 (heisO ψ (dblSp A) B (L t) f) x := by
-    intro t
-    exact (congrFun (hS x (M t)) 0).symm
+    exact fun t => (congrFun (hS x (M t)) 0).symm
 
   have key : ∀ t : ℝ, IsThetaFunO ψ (dblSp A) B ((t⁻¹ : ℂ) • (heisO ψ (dblSp A) B (L t) f - f) - f') ∧
       sch ψ A B ν 𝓨 ((t⁻¹ : ℂ) • (heisO ψ (dblSp A) B (L t) f - f) - f') x =
@@ -135,8 +134,7 @@ theorem sch_hasDerivAt_line : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
       (t⁻¹ : ℂ) * (sch ψ A B ν 𝓨 (heisO ψ (dblSp A) B (L t) f) x - sch ψ A B ν 𝓨 f x) := by
     rw [zero_add, htr t, map_zero, add_zero, Complex.real_smul, Complex.ofReal_inv]
   simp only
-  rw [e2, edist_eq_enorm_sub, ← (key t).2]
-  exact hb
+  rwa [e2, edist_eq_enorm_sub, ← (key t).2]
 
 end GlobalTheory.SchLine
 end -- clump:auto
@@ -192,15 +190,7 @@ variable {D : D7}
 def volOf {A B : HSp D} (ν : Measure (WO A B)) (𝓨 : Set (WO A B)) (h : IsCovolOne (ratL B A) ν 𝓨) :
     GlobalTheory.Unf.VolM D B.rank A.rank := ⟨ν, 𝓨, h⟩
 
-theorem continuous_finPart' : Continuous (finPart D) := by
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
-    moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
-  obtain ⟨e, he, hec, -⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
-      (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=
-    GlobalTheory.AdSplit.exists_adele_equiv D.host.F D.host.E
-  have : (finPart D : AE D → _) = fun z => (e z).2 := funext fun z => (he z).2.symm
-  rw [this]
-  exact continuous_snd.comp hec
+theorem continuous_finPart' : Continuous (finPart D) := GlobalTheory.Member.continuous_finPart D
 
 variable {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {A B : HSp D} {ν : Measure (WO A B)}
   {𝓨 : Set (WO A B)} (hν : IsCovolOne (ratL B A) ν 𝓨) {f : WO (dblSp A) B → ℂ} (hf : IsThetaFunO ψ (dblSp A) B f)
@@ -263,8 +253,7 @@ theorem sch_schwartz (k : ℕ) (L : (Fin k → ℝ) →+ Mx D B.rank A.rank) (hL
       simp only [map_add (f := _), add_assoc]
       rfl
     simp only at h ⊢
-    rw [he]
-    exact h
+    rwa [he]
   have hdecay : ∀ φ ∈ V, ∀ N : ℕ, ∃ C : ℝ, ∀ t, ‖t‖ ^ N * ‖φ t‖ ≤ C := by
     rintro φ ⟨f', hf', rfl⟩ N
     obtain ⟨C₁, hC₁⟩ := (GlobalTheory.T.adelicMatrixRealSize_bounds_along_real_parametrisation D θ hθ B.rank A.rank k L hL).2 hinj

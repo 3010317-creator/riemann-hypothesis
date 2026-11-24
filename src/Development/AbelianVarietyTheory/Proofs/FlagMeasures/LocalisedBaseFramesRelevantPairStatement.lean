@@ -128,8 +128,7 @@ theorem GlobalTheory.LocDual.frameD_exists : ∀ {F : Type} [Field F] [Valuative
     rw [inv_mul_cancel₀ hT, map_one, mul_one, add_neg_cancel]
   have hey' : ∀ k j, H.h (e k) (y' j) = if k = j then 1 else 0 := by
     intro k j
-    simp only [y', h_add_right, h_smul_right, hez, mul_zero, add_zero, e]
-    exact hy k j
+    simpa only [y', h_add_right, h_smul_right, hez, mul_zero, add_zero, e] using hy k j
   let half : E := algebraMap F E (1 / 2)
   have hhalf : M.L.cj half = half := M.L.cj.commutes _
   have hhalf2 : half + half = 1 := by
@@ -150,7 +149,7 @@ theorem GlobalTheory.LocDual.frameD_exists : ∀ {F : Type} [Field F] [Valuative
   · intro i j
     rw [hesR]
     simp only [hesL, hey', hy'e, hee, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp only [b, map_mul, hhalf]
     rw [← H.h_herm (y' j) (y' i)]
     linear_combination (-H.h (y' i) (y' j)) * hhalf2
@@ -237,8 +236,7 @@ theorem exists_coord_of_point {F : Type} [Field F] [ValuativeRel F] [Topological
     have h2 : H.Dl P.A.f P.B.f r =
         lead (Matrix.of fun a c => H.h (P.B.f c) (P.A.f a)) (Fin.last r).castSucc := by
       unfold HermSp.Dl; rw [dite_eq_left (Nat.le_succ r)]; rfl
-    rw [← h1, ← h2]
-    exact hG
+    rwa [← h1, ← h2]
   · obtain ⟨g, hg⟩ := Option.isSome_iff_exists.1 h
     obtain ⟨⟨u, v, hu, hv⟩, -⟩ := hgg g hg
     exact ⟨not_field M.L g, unit_of hTo u hu, unit_of hTo' v hv⟩
@@ -274,8 +272,7 @@ theorem relG_of_point : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSp
       (Submodule.disjoint_def.1 hdisj) _ (hmap _ _ c.f_eq x hx.1) (hmap _ _ c.f'_eq x hx.2)
     rw [Submodule.mem_bot]
     exact c.e.map_eq_zero_iff.1 h0
-  · rw [hDm (r + 1) le_rfl]
-    exact hD
+  · rwa [hDm (r + 1) le_rfl]
   · intro l hl
     rw [hDm l hl]
     by_cases h : S.D ⟨l, Nat.lt_succ_of_le hl⟩ = 0
@@ -345,8 +342,7 @@ theorem modBlocks_some {A S : Type} [CommRing S] (f : ℕ → ℕ → A → S) :
   intro l
   induction l with
   | nil =>
-    intro a _ _
-    exact ⟨[], rfl⟩
+    exact fun a _ _ => ⟨[], rfl⟩
   | cons b l ih =>
     obtain ⟨t, s⟩ := b
     intro a h1 h2
@@ -456,9 +452,9 @@ theorem dl_scaled (Z : LocDat D) (p : PlF D) {T T' : D.host.E} (F : LFlag (D.sp.
     simp only [Matrix.submatrix_apply, Matrix.mul_diagonal, Matrix.diagonal_mul]
   have hB : ((Formalism.MainNotions.S.Zhat F.fl F'.fl).map (D.s.atP p).ιE).submatrix (Fin.castLE hl) (Fin.castLE hl) =
       (D.s.atP p).ιE.mapMatrix ((Formalism.MainNotions.S.Zhat F.fl F'.fl).submatrix (Fin.castLE hl) (Fin.castLE hl)) := rfl
-  rw [Formalism.MainNotions.S.Loc.HermSp.Dl, dif_pos hl, hA, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal,
+  rw [Formalism.MainNotions.S.Loc.HermSp.Dl, dite_eq_left hl, hA, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal,
     Matrix.det_diagonal, hB, ← RingHom.map_det, Finset.prod_mul_distrib]
-  simp only [Formalism.MainNotions.S.Dl, Formalism.MainNotions.S.leadMinorE, dif_pos hl]
+  simp only [Formalism.MainNotions.S.Dl, Formalism.MainNotions.S.leadMinorE, dite_eq_left hl]
   ring
 
 theorem gv_ne_of (Z : LocDat D) (p : PlF D) (n n' : ℕ) (F : LFlag (D.sp.Y 0) D.R.rS ((n : ℕ) : D.host.E))
@@ -481,8 +477,7 @@ theorem gv_ne_of (Z : LocDat D) (p : PlF D) (n n' : ℕ) (F : LFlag (D.sp.Y 0) D
     rfl
   have hU : ∀ a, IsUnit (frFac Z.δ p a) := by
     intro a
-    have h := (Formalism.L2.SG.Pf.LocFacts.isUnit_localConstant p Z).pow (D.R.rS - a.val)
-    exact h.ringInverse
+    exact ((Formalism.L2.SG.Pf.LocFacts.isUnit_localConstant p Z).pow (D.R.rS - a.val)).ringInverse
   have hcU : IsUnit (∏ i : Fin D.R.rS, (Z.M p).L.cj (frFac Z.δ p (Fin.castLE hl0 i)) *
       frFac Z.δ p (Fin.castLE hl0 i)) :=
     Finset.prod_induction _ IsUnit (fun a b ha hb => ha.mul hb) isUnit_one
@@ -572,8 +567,7 @@ private theorem exists_Tu_eq_one_add_sq_mul (Z : LocDat D) (p : PlF D) (u : D.wh
         apply hu.mul_left_cancel
         rw [← map_mul, mul_div_cancel₀ _ hℓ2, map_sub, map_natCast, map_one, map_pow, map_natCast, hT]
         ring
-      rw [he]
-      exact hYO
+      rwa [he]
     refine ⟨⟨_, Formalism.L2.SG.Pf.LocFacts.lf_int_of_alg p _ hw0⟩, ?_⟩
     rw [hq]
     field_simp
@@ -665,8 +659,7 @@ private theorem exists_dual_family_of_flag {r : ℕ} {T : D.host.E} (F : FlagG (
     have hx0 := (VS D).nondeg.1 _ hx
     have hc : ∀ i, φ (fun j => if i = j then 1 else 0) = 0 := by
       intro i
-      have h := Fintype.linearIndependent_iff.mp F.e_indep _ hx0 i
-      simpa using h
+      simpa using Fintype.linearIndependent_iff.mp F.e_indep _ hx0 i
     refine LinearMap.ext fun v => ?_
     rw [hsum]
     simp [hc]
@@ -698,12 +691,10 @@ theorem frame_ex (Z : LocDat D) (p : PlF D) (n : ℕ) (_hn : n ≠ 0) (F : LFlag
       simp only [frame, FlagG.fvec, brS]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨a', rfl⟩ | rfl <;>
         rcases Fin.eq_castSucc_or_eq_last b with ⟨b', rfl⟩ | rfl
-      · simp only [Fin.snoc_castSucc]
-        exact F.fl.e_iso b' a'
+      · simpa only [Fin.snoc_castSucc] using F.fl.e_iso b' a'
       · simp only [Fin.snoc_castSucc, Fin.snoc_last]
         rw [hsym, F.fl.z_orth a', star_zero]
-      · simp only [Fin.snoc_castSucc, Fin.snoc_last]
-        exact F.fl.z_orth b'
+      · simpa only [Fin.snoc_castSucc, Fin.snoc_last] using F.fl.z_orth b'
       · simp at hab
     rw [h0, map_zero, mul_zero]
   · simp only [scaled]

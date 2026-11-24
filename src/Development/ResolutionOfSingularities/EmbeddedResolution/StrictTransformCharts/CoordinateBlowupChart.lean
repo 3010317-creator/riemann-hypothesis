@@ -148,19 +148,19 @@ theorem coordBlowupSubst_X (R : Type u) [CommRing R] {σ : Type v} [DecidableEq 
     (S : Finset σ) (s : σ) {i : σ} (hi : i ∈ S) (hne : i ≠ s) :
     coordBlowupSubst R S s (MvPolynomial.X i) =
       (MvPolynomial.X i : MvPolynomial σ R) * MvPolynomial.X s := by
-  rw [coordBlowupSubst_X, if_pos ⟨hi, hne⟩]
+  rw [coordBlowupSubst_X, ite_eq_left ⟨hi, hne⟩]
 
 @[simp] theorem coordBlowupSubst_X_self (R : Type u) [CommRing R] {σ : Type v} [DecidableEq σ]
     (S : Finset σ) (s : σ) :
     coordBlowupSubst R S s (MvPolynomial.X s) = (MvPolynomial.X s : MvPolynomial σ R) := by
-  rw [coordBlowupSubst_X, if_neg]
+  rw [coordBlowupSubst_X, ite_eq_right]
   rintro ⟨-, h⟩
   exact h rfl
 
 @[simp] theorem coordBlowupSubst_X_of_not_mem_erase (R : Type u) [CommRing R] {σ : Type v} [DecidableEq σ]
     (S : Finset σ) (s : σ) {i : σ} (h : ¬ (i ∈ S ∧ i ≠ s)) :
     coordBlowupSubst R S s (MvPolynomial.X i) = (MvPolynomial.X i : MvPolynomial σ R) := by
-  rw [coordBlowupSubst_X, if_neg h]
+  rw [coordBlowupSubst_X, ite_eq_right h]
 
 theorem coordBlowupSubst_C (R : Type u) [CommRing R] {σ : Type v} [DecidableEq σ]
     (S : Finset σ) (s : σ) (r : R) :
@@ -337,8 +337,7 @@ private theorem chartToMvPolynomial_mvPolynomialToChart (R : Type u) [CommRing R
         have h2 := congrArg (coordBlowupChartToMvPolynomial R S s hs) hb
         rw [chartToMvPolynomial_chartRingHom, map_mul, chartToMvPolynomial_chartRingHom,
           coordBlowupSubst_X_of_mem R S s h.1 h.2, coordBlowupSubst_X_self] at h2
-        have hnzd := X_mem_nonZeroDivisors R s
-        exact (mul_cancel_right_mem_nonZeroDivisors hnzd).mp h2.symm
+        exact (mul_cancel_right_mem_nonZeroDivisors (X_mem_nonZeroDivisors R s)).mp h2.symm
       · rw [awayCoordGenEquivMvPolynomial_invFun_X, dite_eq_right h, chartToMvPolynomial_chartRingHom, coordBlowupSubst_X_of_not_mem_erase R S s h]
   exact DFunLike.congr_fun key f
 
@@ -363,8 +362,7 @@ private theorem mvPolynomialToChart_surjective (R : Type u) [CommRing R] {σ : T
   have h2 : coordBlowupChartToMvPolynomial R S s hs z * (MvPolynomial.X s : MvPolynomial σ R) ^ n
       = coordBlowupSubst R S s r := by
     have hcg := congrArg (coordBlowupChartToMvPolynomial R S s hs) hr
-    rw [map_mul, hpL, hLc, chartToMvPolynomial_chartRingHom] at hcg
-    exact hcg
+    rwa [map_mul, hpL, hLc, chartToMvPolynomial_chartRingHom] at hcg
   have hpF : mvPolynomialToCoordBlowupChart R S s hs ((MvPolynomial.X s : MvPolynomial σ R) ^ n)
       = mvPolynomialToCoordBlowupChart R S s hs (MvPolynomial.X s) ^ n :=
     map_pow (mvPolynomialToCoordBlowupChart R S s hs) (MvPolynomial.X s) n
@@ -401,8 +399,7 @@ theorem exists_ringEquiv_away_mvPolynomial (R : Type u) [CommRing R] {σ : Type 
   refine ⟨(RingEquiv.ofBijective (mvPolynomialToCoordBlowupChart R S s hs)
       ⟨hL.injective, mvPolynomialToChart_surjective R S s hs⟩).symm, ?_⟩
   rw [RingEquiv.symm_symm]
-  refine RingHom.ext fun f => ?_
-  exact mvPolynomialToChart_coordBlowupSubst R S s hs f
+  exact RingHom.ext fun f => mvPolynomialToChart_coordBlowupSubst R S s hs f
 
 def awayCoordGenEquivMvPolynomial (R : Type u) [CommRing R] {σ : Type v} [DecidableEq σ] (S : Finset σ) (s : σ)
     (hs : s ∈ S) :

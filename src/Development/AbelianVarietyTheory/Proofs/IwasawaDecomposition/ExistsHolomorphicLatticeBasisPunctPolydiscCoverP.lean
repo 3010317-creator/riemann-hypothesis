@@ -617,8 +617,7 @@ theorem qf_ball {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (Metric.ball 0 1)
   have hg0 : g 0 = 0 := by simp [hg, hcdef]
   have key := Complex.norm_le_norm_of_mapsTo_ball hdg hmaps hg0 hζ
   have key' : ‖f ζ - c‖ ≤ ‖ζ‖ * ‖f ζ - conj c‖ := by
-    rw [hg, norm_div, div_le_iff₀ (norm_pos_iff.mpr (hne ζ hζb))] at key
-    exact key
+    rwa [hg, norm_div, div_le_iff₀ (norm_pos_iff.mpr (hne ζ hζb))] at key
   exact qf_le (hpos ζ hζb) hc (norm_nonneg _) hζ key'
 
 theorem qf_ball_le {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (Metric.ball 0 1))
@@ -671,8 +670,7 @@ theorem cay_bound {z : ℂ} (hz : z.re ≤ -1 / 2) :
     simp; ring
   have hA0 : 0 ≤ A := norm_nonneg _
   have hB0 : 0 < B := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h0 : B = 0 := le_antisymm hc (norm_nonneg _)
     rw [h0] at hAB
     linarith [sq_nonneg A]
@@ -695,8 +693,7 @@ theorem cay_bound {z : ℂ} (hz : z.re ≤ -1 / 2) :
 
 theorem re_le_of_exp {z : ℂ} (h : ‖Complex.exp z‖ ≤ 1 / 2) : z.re ≤ -1 / 2 := by
   rw [Complex.norm_exp] at h
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have h1 := Real.exp_lt_exp.mpr hc
   have h2 := Real.add_one_le_exp (-1 / 2 : ℝ)
   linarith
@@ -746,9 +743,9 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
     simp only [logDom, Set.mem_setOf_eq]
     intro k
     by_cases hk : (k : ℕ) < j
-    · have e : P j k = s k := if_pos hk
+    · have e : P j k = s k := ite_eq_left hk
       rw [e]; exact hs' k
-    · have e : P j k = s₀ k := if_neg hk
+    · have e : P j k = s₀ k := ite_eq_right hk
       rw [e]; exact hs₀' k
   have hco : ∀ k : Fin n, ‖logExp a s k‖ ≤ 1 / 2 := fun k => (norm_le_pi_norm (logExp a s) k).trans hse
   have hsk : ∀ k : Fin n, ‖s k‖ ≤ ‖s‖ := fun k => norm_le_pi_norm s k
@@ -764,7 +761,7 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
         funext k
         by_cases hk : k = i
         · rw [hk, Function.update_self]
-          exact if_pos (show (i : ℕ) < j + 1 by simp [hi])
+          exact ite_eq_left (show (i : ℕ) < j + 1 by simp [hi])
         · rw [Function.update_of_ne hk]
           have hkj : (k : ℕ) ≠ j := fun h => hk (Fin.ext h)
           have e : ((k : ℕ) < j + 1 ↔ (k : ℕ) < j) := by omega
@@ -772,7 +769,7 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
       have hPj : Function.update (P j) i (s₀ i) = P j := by
         rw [Function.update_eq_self_iff]
         have hn : ¬ ((i : ℕ) < j) := by simp [hi]
-        exact (if_neg hn).symm
+        exact (ite_eq_right hn).symm
       by_cases ha : j < a
       · have hai : (i : ℕ) < a := ha
         have hre : (s i).re ≤ -1 / 2 := by
@@ -791,8 +788,7 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
         have e0 : s₀ i = -1 := by simp [hs₀, hai]
         simp only [cay_inv hsi, cay_zero] at key
         rw [← e0, hPj] at key
-        rw [hPi]
-        exact key
+        rwa [hPi]
       · have hai : ¬ (i : ℕ) < a := ha
         have hle : ‖s i‖ ≤ 1 / 2 := by
           have := hco i
@@ -809,8 +805,7 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
           exact (by norm_num : (2 : ℝ) ≤ 4 * (1 / 2)).trans (mul_le_mul hM4 (by linarith) (by norm_num) (by linarith))
         have key := qf_ball_le hdf hposf hζ hMb
         have e0 : s₀ i = 0 := by simp [hs₀, hai]
-        rw [← e0, hPj, ← hPi] at key
-        exact key
+        rwa [← e0, hPj, ← hPi] at key
     · have e : P (j + 1) = P j := by
         funext k
         have e : ((k : ℕ) < j + 1 ↔ (k : ℕ) < j) := by have := k.isLt; omega
@@ -1051,8 +1046,7 @@ theorem growth_bound_of_spanning_combinations : ∀ (n g r : ℕ) (J : Type) [Fi
         have h2 := e m'
         simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] at h2
         rw [← h2]; push_cast; rfl
-      rw [Finset.sum_congr rfl (fun m' _ => hc m')]
-      rw [Finset.sum_eq_single m]
+      rw [Finset.sum_congr rfl (fun m' _ => hc m'), Finset.sum_eq_single m]
       · simp
       · intro b _ hb; simp [hb]
       · intro h; exact absurd (Finset.mem_univ m) h
@@ -1436,8 +1430,7 @@ theorem core : ∀ (n a g r₀ : ℕ) (K : (Fin n → ℂ) → Set (Fin g → �
         hEd.differentiableOn hEm (hlamDi i) (hlamDi j) (fun b hb => ⟨hmem b hb i, hmem b hb j⟩) hs₀ hs h1
       have h3 := hpair N _ _ hN (hmem s hs i) (hmem s hs j)
       have h4 := congrArg Units.val (huniq _ _ _ _ _ _ h3 h2)
-      simp only [Units.val_mk0, hm', hM₀, Complex.ofReal_intCast] at h4
-      exact h4
+      simpa only [Units.val_mk0, hm', hM₀, Complex.ofReal_intCast] using h4
     rw [hm', key]
 
   have hstdK : ∀ j : Fin g, ∀ s ∈ logDom n a, (Pi.single j 1 : Fin g → ℂ) ∈ K (logExp a s) := by

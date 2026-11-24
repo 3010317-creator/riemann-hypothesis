@@ -64,7 +64,7 @@ theorem exists_traceForm {H Γ W : Type} [Group H] [Group Γ] [NormedAddCommGrou
   let T : H → Γ → W := fun z γ => if h : z₀⁻¹ * ι γ * z ∈ J then (χ ⟨_, h⟩ : ℂ) • ρ γ⁻¹ w else 0
   have hS : ∀ z, Function.support (T z) ⊆ {γ | z₀⁻¹ * ι γ * z ∈ J} := fun z γ hγ => by
     by_contra h
-    exact hγ (dif_neg h)
+    exact hγ (dite_eq_right h)
   have hS0 : {γ | z₀⁻¹ * ι γ * z₀ ∈ J} = (Bridge.stab ι J z₀ : Set Γ) := by
     ext γ
     exact (Bridge.mem_stab _).symm
@@ -89,11 +89,11 @@ theorem exists_traceForm {H Γ W : Type} [Group H] [Group Γ] [NormedAddCommGrou
         rw [dite_eq_left h, dite_eq_left h', e2, map_mul, LinearMap.smul_apply, map_smul, e3, smul_smul, Units.val_mul, mul_comm]
       · have h' : z₀⁻¹ * ι γ * (ι δ * z * k) ∉ J := by rw [e, J.mul_mem_cancel_right k.2]; exact h
         simp only [T]
-        rw [dif_neg h, dif_neg h', map_zero]
+        rw [dite_eq_right h, dite_eq_right h', map_zero]
     show ∑ᶠ γ, T (ι δ * z * k) γ = ((χ k : ℂ) • ρ δ) (∑ᶠ γ, T z γ)
     rw [map_finsum _ (hT z), finsum_congr h1]
     exact finsum_comp_equiv (Equiv.mulRight δ) (f := fun γ => ((χ k : ℂ) • ρ δ) (T z γ))
-  · refine finsum_eq_zero_of_forall_eq_zero fun γ => dif_neg fun h => hz ⟨γ⁻¹, ⟨_, h⟩, ?_⟩
+  · refine finsum_eq_zero_of_forall_eq_zero fun γ => dite_eq_right fun h => hz ⟨γ⁻¹, ⟨_, h⟩, ?_⟩
     rw [map_inv]; group
   · show L (∑ᶠ γ, T z₀ γ) = _
 
@@ -134,8 +134,7 @@ theorem exists_isReps_through {H Γ I : Type} [Group H] [Group Γ] (ι : Γ →*
       · rintro ⟨δ, k, h⟩
         exact ⟨δ * γ⁻¹, m⁻¹ * k, by rw [h, map_mul, map_inv, Subgroup.coe_mul, Subgroup.coe_inv]; group⟩
     · rw [Function.update_of_ne hj]
-  simp only [hiff]
-  exact hy g
+  simpa only [hiff] using hy g
 
 theorem exists_form_sum {H Hf W : Type} [Group H] [Group Hf] [NormedAddCommGroup W] [InnerProductSpace ℂ W] (p : H →* Hf)
     (hp : Function.Surjective p) (Γ F R : Subgroup H) (ρ : H →* Module.End ℂ W) (J : Subgroup Hf) (χ : J →* ℂˣ)
@@ -160,10 +159,8 @@ theorem exists_form_sum {H Hf W : Type} [Group H] [Group Hf] [NormedAddCommGroup
   have hr : ∀ k, r k ∈ F ∧ p (r k) = y' k := fun k => by
     by_cases hk : k = c₀
     · subst hk
-      simp only [r, Function.update_self]
-      exact ⟨hh₀, e₀.symm⟩
-    · simp only [r, Function.update_of_ne hk]
-      exact ⟨hσ _, hσ' _⟩
+      simpa only [r, Function.update_self] using ⟨hh₀, e₀.symm⟩
+    · simpa only [r, Function.update_of_ne hk] using ⟨hσ _, hσ' _⟩
   have hr0 : r c₀ = h₀ := Function.update_self _ _ _
   have hyr : (fun k => p (r k)) = y' := funext fun k => (hr k).2
   have hf0 := finite_stab _ _ hy hfin (p h₀)
@@ -205,8 +202,7 @@ theorem exists_form_sum {H Hf W : Type} [Group H] [Group Hf] [NormedAddCommGroup
       obtain ⟨j, -, hu⟩ := hy' (y' k)
       refine hk ((hu k ⟨1, 1, by simp⟩).trans (hu c₀ ?_).symm)
       show ∃ (γ : Γ) (m : J), y' k = (p.comp Γ.subtype) γ * y' c₀ * m
-      rw [e₀, ← (hr k).2]
-      exact hex
+      rwa [e₀, ← (hr k).2]
 
 
 

@@ -360,8 +360,7 @@ theorem exists_units_of_gen_restrict {Z : Scheme.{0}} (L : LB Z) (O : Z.Opens) (
       have e₂ := hc j O.toScheme (𝟙 _) z mj
       rw [Category.id_comp] at e₁ e₂
       rw [e₁, e₂, (isGen_iff_germ t).1 ht z _ _ mi mj, gm_pull_g L O.ι (𝟙 _) z _ _ mi mj, Category.id_comp])
-  rw [map_mul, gm_res (𝟙 Z) (O.ι z) l₁ hW, gm_res (𝟙 Z) (O.ι z) l₂ hW] at key
-  exact key
+  rwa [map_mul, gm_res (𝟙 Z) (O.ι z) l₁ hW, gm_res (𝟙 Z) (O.ι z) l₂ hW] at key
 
 theorem eq_zero_of_pull_eq_zero_of_units_split : ∀ (Z : Scheme.{0}) (O O' : Z.Opens), O ⊔ O' = ⊤ →
     (∀ F : Γ(Z, O ⊓ O')ˣ, ∃ (u : Γ(Z, O)ˣ) (u' : Γ(Z, O')ˣ),
@@ -849,8 +848,7 @@ theorem pull_two_nsmul_eq_zero_of_triples : ∀ (S : Scheme.{0}) [IsIntegral S] 
     rcases h' with h | h
     · right
       show (V.ι ≫ A.hom) (p' z) ∈ U
-      rw [← Scheme.Hom.comp_apply, hpY, ← Over.w x, Scheme.Hom.comp_apply, Scheme.Hom.comp_apply]
-      exact h
+      rwa [← Scheme.Hom.comp_apply, hpY, ← Over.w x, Scheme.Hom.comp_apply, Scheme.Hom.comp_apply]
     · left
       exact h
   have key : ∀ c' : Pic (x.left ⁻¹ᵁ W).toScheme, pull O.ι c' = 0 → pull (p' ⁻¹ᵁ UT).ι c' = 0 →
@@ -1126,9 +1124,7 @@ theorem exists_param : ∀ (S : Scheme.{0}) [IsIntegral S] [IsLocallyNoetherian 
     GlobalTheory.T.exists_translates_surjective_fibrewise_dense_open S A hA V B j (fun b => b.2) hBs hBgi
   let Y : Over S := Over.mk (O.ι ≫ P.hom)
   let i : Y ⟶ P := Over.homMk O.ι
-  have hmem : ∀ (f : P ⟶ A), O ≤ f.left ⁻¹ᵁ V → ∀ y, (i ≫ f).left y ∈ V := by
-    intro f hf y
-    exact hf y.2
+  have hmem : ∀ (f : P ⟶ A), O ≤ f.left ⁻¹ᵁ V → ∀ y, (i ≫ f).left y ∈ V := fun f hf y => hf y.2
 
   let s : B ⟶ P := lift (lift j 1) (𝟙 B)
   have hsX : s ≫ X = j := by simp [s, X]
@@ -1383,8 +1379,7 @@ theorem exists_sec_near : ∀ (B C : Type) [CommRing B] [IsNoetherianRing B] [Co
       refine Eq.trans (Finset.sum_congr rfl fun i _ => _root_.mul_assoc _ _ _) h1.symm
     exact (Units.mul_left_inj _).1 h3
   obtain ⟨i, hi⟩ : ∃ i, e i ∉ y.asIdeal := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     apply y.isPrime.ne_top
     rw [Ideal.eq_top_iff_one, ← hsum]
     exact Ideal.sum_mem _ fun i _ => Ideal.mul_mem_left _ _ (hne i)
@@ -1476,8 +1471,7 @@ theorem factor_locus : ∀ (X T : Scheme.{0}) (W : X.Opens) (c : Pic W.toScheme)
   have hkz : k z = z' := (j ∣_ W).isOpenEmbedding.injective (by
     have e : (j ∣_ W) (k z) = X.homOfLE (inf_le_right : N ⊓ W ≤ W) z := congrArg (fun f => f.base z) hk
     exact e.trans h.symm)
-  rw [hkz]
-  exact hz'V
+  rwa [hkz]
 
 theorem locally_trivial : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X] (q : Y ⟶ X) [Smooth q] [Surjective q], ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme Y → ∀ W : X.Opens, (∀ z : Y, ringKrullDim ((Y).presheaf.stalk z) ≤ 1 → z ∈ q ⁻¹ᵁ W) → ∀ c : Pic W.toScheme, GlobalTheory.CechPic.pull (q ∣_ W) c = 0 → ∀ x : X, ∃ N : X.Opens, x ∈ N ∧ GlobalTheory.CechPic.pull (X.homOfLE (inf_le_right : N ⊓ W ≤ W)) c = 0 := by
   intro X Y _ q _ _ hY W hW c hc x
@@ -1506,8 +1500,7 @@ theorem locally_trivial : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X] (q : Y 
   have hM : M.IsLB := pull_isLB hL _
   have hk : spMap g ⁻¹ᵁ W0 ≤ hA1.fromSpec ⁻¹ᵁ (q ⁻¹ᵁ W) := fun p hp => by
     show q (hA1.fromSpec p) ∈ W
-    rw [← hpt]
-    exact hp
+    rwa [← hpt]
   have hcomp : (spMap g ∣_ W0) ≫ (hA0.fromSpec ∣_ W) = hA1.fromSpec.resLE (q ⁻¹ᵁ W) _ hk ≫ (q ∣_ W) := by
     rw [← cancel_mono W.ι]
     simp only [Category.assoc, morphismRestrict_ι, Scheme.Hom.resLE_comp_ι_assoc]
@@ -1524,8 +1517,7 @@ theorem locally_trivial : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X] (q : Y 
   rintro w ⟨⟨_, ⟨d, hd, rfl⟩, rfl⟩, hwW⟩
   have hdW : d ∈ spMap g ⁻¹ᵁ W0 := by
     show hA0.fromSpec (spMap g d) ∈ W
-    rw [hpt]
-    exact hwW
+    rwa [hpt]
   refine ⟨(spMap g ∣_ W0) ⟨d, hdW⟩, hD ⟨d, hdW⟩ hd, ?_⟩
   have e : W0.ι ((spMap g ∣_ W0) ⟨d, hdW⟩) = spMap g d :=
     congrArg (fun f => f.base ⟨d, hdW⟩) (morphismRestrict_ι (spMap g) W0)

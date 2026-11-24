@@ -94,8 +94,7 @@ theorem coefX_hasDeriv {σ : Mat k r → (H →L[ℂ] H)} {D : Submodule ℂ H}
   have e2 : coefX σ x₀ w ((actM E X m : D) : H) g = (Lm.restrictScalars ℝ) ((actM E X m : D) : H) := by
     simp only [coefX, ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.comp_apply, hLm,
       innerSL_apply_apply]
-  rw [e, e2]
-  exact h2
+  rwa [e, e2]
 
 theorem coefX_Eab {σ : Mat k r → (H →L[ℂ] H)} {D : Submodule ℂ H}
     {E : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → Module.End ℂ D}
@@ -226,8 +225,7 @@ theorem cJd_hasDeriv (x₁ β : Fin (2 * r + k + 1) → ℂ) {g X : Mat k r} (hg
     exact cJd_eq x₁ β (Formalism.REAL.curve_mem_indefinite_unitary hg hX t)
   have e2 : cLclm ε x₁ β (g * X) = -(β ⬝ᵥ (X *ᵥ ((Formalism.REAL.Jm ε * gᴴ * Formalism.REAL.Jm ε) *ᵥ x₁))) := by
     rw [cLclm_apply, cL, jX hX, Matrix.neg_mulVec, dotProduct_neg, Matrix.mulVec_mulVec]
-  rw [e, ← e2]
-  exact h1
+  rwa [e, ← e2]
 
 theorem smooth_left {F : Mat k r → ℂ} (hF : Formalism.REAL.SmoothOnG ε F) {x : Mat k r}
     (hx : Formalism.REAL.inUJ ε x) : Formalism.REAL.SmoothOnG ε (fun y => F (x * y)) := by
@@ -340,7 +338,7 @@ theorem tMapD_Eab {σ : Mat k r → (H →L[ℂ] H)} {D : Submodule ℂ H}
     ring
   rw [Finset.mul_sum, ← Finset.sum_add_distrib, Finset.sum_congr rfl (fun c _ => hL c),
     Finset.sum_sub_distrib, Finset.sum_ite_eq' Finset.univ a]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   unfold tMapD
   have hR : ∀ c, cJd x₁ (Pi.single c 1) g * coefX σ x₀ w ((LemK.tensVd E a b f c : D) : H) g =
       cJd x₁ (Pi.single c 1) g * coefX σ x₀ w ((E a b (f c) : D) : H) g -
@@ -351,7 +349,7 @@ theorem tMapD_Eab {σ : Mat k r → (H →L[ℂ] H)} {D : Submodule ℂ H}
     · subst h; simp [coefX_sub, mul_sub]
     · simp [h]
   rw [Finset.sum_congr rfl (fun c _ => hR c), Finset.sum_sub_distrib, Finset.sum_ite_eq' Finset.univ b]
-  simp only [Finset.mem_univ, if_true, hyb]
+  simp only [Finset.mem_univ, ite_true, hyb]
 
 end TDAux
 end ReciprocityTheory.ChartRestriction.DS.Lap

@@ -54,8 +54,7 @@ private theorem kapConj_alg {M : Type} [CommGroup M] (k k' y b b' o x p E : M) (
     rw [eq_neg_iff_add_eq_zero, ← h0']
     abel
   have hb : Additive.ofMul b' = -Additive.ofMul b := by
-    rw [eq_neg_iff_add_eq_zero, add_comm]
-    exact h2'
+    rwa [eq_neg_iff_add_eq_zero, add_comm]
   rw [hk, hb]
   simp only [smul_add, smul_neg, neg_add, two_smul]
   abel
@@ -68,8 +67,7 @@ theorem UpperTheory.V.Ws.Lk.kapConj :
   have hres : ∀ h : G T.L Ω, resQ T.K (resLe hKL h) = resQ T.L h := fun h => rfl
   have hresF : ∀ h : G T.L Ω, resQ T.F (resLe hFL h) = resQ T.L h := fun h => rfl
   have hss : resQ T.K (resLe hKL g') = σ * resQ T.K (resLe hKL g) * σ⁻¹ := by
-    rw [hres, hres]
-    exact hgg
+    rwa [hres, hres]
   obtain ⟨m, hm, hψ⟩ := hDeep
   have hψg : ∃ m, l.Coprime m ∧ D.ψ (resQ T.K (resLe hKL g)) ^ m = 1 :=
     ⟨m, hm, by rw [hres, ← hresF]; exact hψ _⟩
@@ -96,5 +94,4 @@ theorem UpperTheory.V.Ws.Lk.kapConj :
   have key := kapConj_alg _ _ _ _ _ _ _ _ _ D.e (D.e % 2) h0 h1 hb
   rw [hth, hchi, hcyc]
   simp only [Pre.κ, Pre.βL, MonoidHom.mul_apply, MonoidHom.comp_apply, MonoidHom.pow_apply, MonoidHom.inv_apply]
-  rw [hγ]
-  exact key
+  rwa [hγ]

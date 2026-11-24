@@ -125,8 +125,7 @@ theorem exists_vol (H1 : Out.Laws) (H2 : Out.Laws2) (g : ℕ) (J : Type) (Mat : 
     rw [unitS_spMap] at this
     have e : unitOn ((Units.map β.toMonoidHom b.ζ) ^ Out.stdSymp g a a') =
       unitOn (Units.map β.toMonoidHom b.ζ) ^ Out.stdSymp g a a' := map_zpow (Units.map _) _ _
-    rw [e]
-    exact this
+    rwa [e]
 
 theorem lift_left_eq {S : Scheme.{0}} {A : Over S} [IsIso (snd (Over.mk (𝟙 S)) A).left] (y : Over.mk (𝟙 S) ⟶ A) :
     y.left ≫ inv (snd (Over.mk (𝟙 S)) A).left = (lift (𝟙 (Over.mk (𝟙 S))) y).left := by
@@ -211,8 +210,7 @@ theorem cutBy_graphIdeal : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [
       rw [← Over.comp_left, comp_lift, lift_fst, lift_snd_assoc, hf, pow_comp_graph]
     have := hco K (lift (𝟙 (Over.mk (𝟙 (Sp K)))) (t.lab h ^ n ^ j)).left (p h) (q h)
       (by rw [Category.comp_id]; exact (hpq h).1) (by rw [hy']; exact (hpq h).2)
-    rw [← hy] at this
-    exact this
+    rwa [← hy] at this
 
 end GlobalTheory.GraphCut
 end

@@ -125,8 +125,6 @@ theorem autFinite (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGr
       exact hsR s s.2
   · intro g₁ _ g₂ _ hg
     apply LinearEquiv.toLinearMap_injective
-    apply LinearMap.ext_on hspan
-    intro x hx
-    exact congrFun hg ⟨x, hx⟩
+    exact LinearMap.ext_on hspan (fun x hx => congrFun hg ⟨x, hx⟩)
 
 end Formalism.HermitianLatticesTheory

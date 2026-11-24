@@ -97,8 +97,7 @@ theorem exists_isometry_comp {W V : Type} [AddCommGroup W] [Module ℂ W] [Norme
         rw [hl, h]; rfl }
   refine ⟨L.extend, fun x => ?_⟩
   have := L.extend_apply ⟨a x, LinearMap.mem_range_self a x⟩
-  rw [← hl]
-  exact this
+  rwa [← hl]
 
 theorem exists_unitary_mul_eq {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι]
     (A B : Matrix (Fin n) ι ℂ) (h : Aᴴ * A = Bᴴ * B) :
@@ -296,8 +295,7 @@ theorem exists_isometry_comp {S : Type*} [AddCommGroup S] [Module ℂ S] (f h : 
   have h2 : f (r ⟨f s, LinearMap.mem_range_self f s⟩ - s) = 0 := by
     rw [map_sub, hr', sub_self]
   have h3 := hn (r ⟨f s, LinearMap.mem_range_self f s⟩ - s)
-  rw [h2, norm_zero, eq_comm, norm_eq_zero, map_sub, sub_eq_zero] at h3
-  exact h3
+  rwa [h2, norm_zero, eq_comm, norm_eq_zero, map_sub, sub_eq_zero] at h3
 
 theorem exists_isometry_flag (W W' : ℕ → Submodule ℂ E) (h0 : W 0 = ⊥) (hW : Monotone W) (hW' : Monotone W')
     (hd : ∀ i, Module.finrank ℂ (W i) = Module.finrank ℂ (W' i)) (l : ℕ) :
@@ -437,15 +435,15 @@ theorem exists_diagonal_blocks (P : ℕ → A) (h0 : P 0 = 0) (hl : ∀ i k, i �
   have ht : ∀ x : A, (∑ i ∈ range a, Q i * x * Q i) * P a = ∑ i ∈ range a, Q i * x * Q i := fun x => by
     rw [Finset.sum_mul]
     refine Finset.sum_congr rfl fun i hi => ?_
-    rw [mul_assoc _ (Q i), hQP, if_pos (Finset.mem_range.1 hi)]
+    rw [mul_assoc _ (Q i), hQP, ite_eq_left (Finset.mem_range.1 hi)]
   have hs : ∀ (x : A) k, k < a → (∑ i ∈ range a, Q i * x * Q i) * Q k = Q k * x * Q k := fun x k hk => by
     rw [Finset.sum_mul, Finset.sum_eq_single k]
-    · rw [mul_assoc _ (Q k), hQQ, if_pos rfl]
+    · rw [mul_assoc _ (Q k), hQQ, ite_eq_left rfl]
     · intro i _ hik
-      rw [mul_assoc _ (Q i), hQQ, if_neg hik, mul_zero]
+      rw [mul_assoc _ (Q i), hQQ, ite_eq_right hik, mul_zero]
     · intro h; exact absurd (Finset.mem_range.2 hk) h
   have hz : ∀ x : A, (∀ i, P i * x * P i = x * P i) → ∀ i, Q i * x * P i = 0 := fun x hx i => by
-    rw [mul_assoc, ← hx, ← mul_assoc, ← mul_assoc, hQP, if_neg (lt_irrefl _), zero_mul, zero_mul]
+    rw [mul_assoc, ← hx, ← mul_assoc, ← mul_assoc, hQP, ite_eq_right (lt_irrefl _), zero_mul, zero_mul]
   refine ⟨∑ i ∈ range a, Q i * p * Q i, ∑ i ∈ range a, Q i * q * Q i, ?_, hc p, hc q, ht p, ht q, fun i hi => ?_⟩
   · have := Finset.sum_range_sub P a
     rw [h0, sub_zero] at this
@@ -456,9 +454,9 @@ theorem exists_diagonal_blocks (P : ℕ → A) (h0 : P 0 = 0) (hl : ∀ i k, i �
       conv_lhs => rw [show Q i * q * Q i = Q i * q * P (i + 1) - Q i * q * P i by simp only [Q, mul_sub]]
       rw [hz q hq, sub_zero]
     have e2 : P (i + 1) * p * Q i = p * Q i := by
-      have : Q i = P (i + 1) * Q i := by rw [hPQ, if_pos (Nat.lt_succ_self i)]
+      have : Q i = P (i + 1) * Q i := by rw [hPQ, ite_eq_left (Nat.lt_succ_self i)]
       rw [this, ← mul_assoc, hp, mul_assoc]
-    rw [e1, mul_assoc (Q i * q), mul_assoc (Q i * q), e2, mul_assoc, ← mul_assoc q, hqp, one_mul, hQQ, if_pos rfl]
+    rw [e1, mul_assoc (Q i * q), mul_assoc (Q i * q), e2, mul_assoc, ← mul_assoc q, hqp, one_mul, hQQ, ite_eq_left rfl]
   · have e0 : ∀ x : A, x * P (i + 1) = x * Q i + x * P i := fun x => by simp only [Q, mul_sub, sub_add_cancel]
     have e1 : P i * ((∑ i ∈ range a, Q i * p * Q i) * P (i + 1)) = (∑ i ∈ range a, Q i * p * Q i) * P i := by
       rw [← mul_assoc, hc, mul_assoc, hl _ _ (Nat.le_succ i)]
@@ -600,8 +598,7 @@ theorem proj_mul_eq {W W' : Submodule ℂ (Fin n → ℂ)} {P P' : Matrix (Fin n
     (h2 : ∀ y ∈ W', P' *ᵥ y = y) {g : Matrix (Fin n) (Fin n) ℂ} (hg : ∀ y ∈ W, g *ᵥ y ∈ W') :
     P' * g * P = g * P := by
   refine Matrix.ext_iff_mulVec.2 fun y => ?_
-  simp only [← Matrix.mulVec_mulVec]
-  exact h2 _ (hg _ (h1 y))
+  simpa only [← Matrix.mulVec_mulVec] using h2 _ (hg _ (h1 y))
 
 theorem proj_comm {W : Submodule ℂ (Fin n → ℂ)} {P : Matrix (Fin n) (Fin n) ℂ} (h0 : Pᴴ = P) (h1 : ∀ y, P *ᵥ y ∈ W)
     (h2 : ∀ y ∈ W, P *ᵥ y = y) {g : Matrix (Fin n) (Fin n) ℂ} (hg : ∀ y ∈ W, g *ᵥ y ∈ W)

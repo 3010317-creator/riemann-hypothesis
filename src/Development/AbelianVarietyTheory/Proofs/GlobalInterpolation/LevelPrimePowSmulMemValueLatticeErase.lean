@@ -427,7 +427,7 @@ theorem exists_frame_adapted (hn : 0 < n) (p : LocF.PP Lc n) : ∃ (h : GL (Fin 
         rw [Matrix.mulVec, dotProduct, map_sum, Finset.sum_mul, ← Finset.sum_erase (a := ⟨0, hn⟩) _ (by simp [N₀])]
       refine Finset.sum_congr rfl fun d hd => ?_
       have hd' := Finset.ne_of_mem_erase hd
-      simp only [N₀, Matrix.of_apply, true_and, ne_eq, hd', not_false_eq_true, if_true, map_mul, hb]
+      simp only [N₀, Matrix.of_apply, true_and, ne_eq, hd', not_false_eq_true, ite_true, map_mul, hb]
       field_simp
     · intro a _ ha
       simp [N₀, Matrix.mulVec, dotProduct, ha]
@@ -461,11 +461,11 @@ theorem frame_ker_decomp (hn : 0 < n) (p : LocF.PP Lc n) (h : GL (Fin n) Lc.K)
       intro a
       by_cases ha : a = ⟨0, hn⟩
       · subst ha
-        simp only [hdx, if_true] at hy
+        simp only [hdx, ite_true] at hy
         rw [mul_left_cancel₀ Lc.q_ne hy]
         exact y.2
       · have := hs a
-        rwa [hdx, if_neg ha] at this
+        rwa [hdx, ite_eq_right ha] at this
     · intro h3
       rw [mem_std] at h3
       have hs : ∀ a, (d : Matrix (Fin n) (Fin n) Lc.K).mulVec x a ∈ Lc.O := by
@@ -483,8 +483,7 @@ theorem frame_ker_decomp (hn : 0 < n) (p : LocF.PP Lc n) (h : GL (Fin n) Lc.K)
     intro g g' hg hg' a b
     have h3 := (hg' _).2 (single_std b)
     have h4 : ((g⁻¹ * g' : GL (Fin n) Lc.K) : Matrix (Fin n) (Fin n) Lc.K).mulVec (Pi.single b 1) ∈ Lc.std n := by
-      rw [← hg, Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel_left]
-      exact h3
+      rwa [← hg, Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel_left]
     have := (mem_std _).1 h4 a
     simpa using this
   have k1 := key _ _ h2 hh
@@ -503,8 +502,7 @@ theorem frame_ker_decomp (hn : 0 < n) (p : LocF.PP Lc n) (h : GL (Fin n) Lc.K)
     rw [Matrix.map_mul, eA, eB, ← Units.val_mul, Matrix.map_one _ (map_zero _) (map_one _), mul_assoc,
       mul_inv_cancel_left, inv_mul_cancel, Units.val_one]
   · rw [← mul_assoc, ← inv_mul_eq_iff_eq_mul]
-    apply Units.ext
-    exact eA.symm
+    exact Units.ext eA.symm
 
 end Lattice
 
@@ -574,7 +572,7 @@ theorem pow_smul_mem_valB_erase : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u)
   intro D u X i M Co _ w hw hs V v hv p y hy
   obtain ⟨h, hh, z, hz, hy⟩ := hy
   have hhv := hh v
-  rw [if_neg (fun h' => h'.2 hv)] at hhv
+  rw [ite_eq_right (fun h' => h'.2 hv)] at hhv
   obtain ⟨h₁, k, hf, hdec⟩ := frame_ker_decomp (D.R.N_pos i) (p.2 v) (h v) hhv
   let ψ : (M.Lc v).K →+* ℂ := D.what₂.embLL.comp (Co.j w v)
   let φ : (M.Lc v).O →+* ℂ := ψ.comp (M.Lc v).O.subtype
@@ -582,17 +580,14 @@ theorem pow_smul_mem_valB_erase : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u)
     fun a => ⟨Co.j w v a, (Co.j_int w hw v a).2 a.2, rfl⟩
   have hT : (X.A.T : ℂ) ≠ 0 := by
     have := (M.Lc v).q_ne
-    intro h0
-    apply this
-    exact (congrArg Nat.cast (Nat.cast_eq_zero.1 h0)).trans Nat.cast_zero
+    exact fun h0 => this ((congrArg Nat.cast (Nat.cast_eq_zero.1 h0)).trans Nat.cast_zero)
   have hmv0 : ∀ g : ∀ v, GL (Fin (D.R.N i)) (M.Lc v).K,
       Co.mv w g (X.fm.tauOf w v) = Matrix.GeneralLinearGroup.map ψ (g v) := by
     intro g
     have : ∀ v', v' = v → Matrix.GeneralLinearGroup.map (D.what₂.embLL.comp (Co.j w v')) (g v') =
         Matrix.GeneralLinearGroup.map ψ (g v) := by
       rintro _ rfl; rfl
-    simp only [PtModel.Coord.mv, hs, if_true]
-    exact this _ (Equiv.symm_apply_apply _ _)
+    simpa only [PtModel.Coord.mv, hs, ite_true] using this _ (Equiv.symm_apply_apply _ _)
   have hmv1 : ∀ τ, τ ≠ X.fm.tauOf w v → Co.mv w (Function.update h v h₁) τ = Co.mv w h τ := by
     intro τ hτ
     have hne : (X.fm.tauOf w).symm τ ≠ v := fun e => hτ (by rw [← e, Equiv.apply_symm_apply])
@@ -660,8 +655,7 @@ theorem pow_smul_mem_valB_erase : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u)
   refine ⟨Function.update h v h₁, fun v' => ?_, z', hz', by rw [map_smul, hy, ez]⟩
   by_cases hv' : v' = v
   · subst hv'
-    rw [Function.update_self, if_pos ⟨hs, Finset.notMem_erase _ _⟩]
-    exact hf
+    rwa [Function.update_self, ite_eq_left ⟨hs, Finset.notMem_erase _ _⟩]
   · rw [Function.update_of_ne hv']
     have := hh v'
     simpa only [Finset.mem_erase, ne_eq, hv', not_false_eq_true, true_and] using this

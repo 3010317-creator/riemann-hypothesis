@@ -314,7 +314,6 @@ theorem isOpen_box (n : ℕ) (N : ℤ) :
 
 theorem dotProduct_mem_valBall {n : ℕ} {m p : ℤ} {a x : Fin n → k} (ha : ∀ i, a i ∈ valBall k m)
     (hx : ∀ i, x i ∈ valBall k p) : a ⬝ᵥ x ∈ valBall k (m + p) := by
-  show ∑ i, a i * x i ∈ valBall k (m + p)
   exact AddSubgroup.sum_mem _ fun i _ => mul_mem_valBall (ha i) (hx i)
 
 variable {ψ : AddChar k Circle}
@@ -344,8 +343,7 @@ def ev {n : ℕ} (x : Multiplicative (Fin n → k)) (a : Multiplicative (Fin n �
 
 theorem ev_mul {n : ℕ} (x a b : Multiplicative (Fin n → k)) :
     ev ψ x (a * b) = ev ψ x a * ev ψ x b := by
-  simp [ev, chi, add_dotProduct, AddChar.map_add_eq_mul]
-  exact mul_comm _ _
+  simpa [ev, chi, add_dotProduct, AddChar.map_add_eq_mul] using mul_comm _ _
 
 theorem ev_eq_one {n : ℕ} {x a : Multiplicative (Fin n → k)} (h : chi k ψ a.toAdd x = 1) :
     ev ψ x a = 1 := by
@@ -386,15 +384,13 @@ theorem exists_chi_ne_one (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {n : ℕ} {N :
     ∃ l ∈ box k n (addCharConductor ψ - N), chi k ψ (Multiplicative.toAdd l) x ≠ 1 := by
   classical
   have hx' : ∃ i, x.toAdd i ∉ valBall k N := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hx hcon
   obtain ⟨i, hi⟩ := hx'
   have hnt : ¬ IsTrivialOn (ψ.mulShift (x.toAdd i)) (addCharConductor ψ - N) := by
-    rw [isTrivialOn_mulShift_iff_mem hψ hψ1, sub_sub_cancel]
-    exact hi
+    rwa [isTrivialOn_mulShift_iff_mem hψ hψ1, sub_sub_cancel]
   unfold IsTrivialOn at hnt
-  push_neg at hnt
+  push Not at hnt
   obtain ⟨y, hy, hψy⟩ := hnt
   refine ⟨Multiplicative.ofAdd (Pi.single i y : Fin n → k), ?_, ?_⟩
   · show ∀ j, (Multiplicative.toAdd (Multiplicative.ofAdd (Pi.single i y : Fin n → k))) j ∈
@@ -403,8 +399,7 @@ theorem exists_chi_ne_one (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {n : ℕ} {N :
     rw [toAdd_ofAdd]
     by_cases hj : j = i
     · subst hj
-      rw [Pi.single_eq_same]
-      exact hy
+      rwa [Pi.single_eq_same]
     · rw [Pi.single_eq_of_ne hj]
       exact zero_mem _
   · intro hc
@@ -443,8 +438,7 @@ theorem fourier_finite : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
       (box k n (addCharConductor ψ - J)).subgroupOf (box k n (addCharConductor ψ - N)))
     (fun q => chiOn k ψ (q.out : Multiplicative (Fin n → k)).toAdd (box k n J))
     ((box k n N).subgroupOf (box k n J)) ?_ ?_ ?_ ?_
-  · intro x hx
-    exact hfix x (Subgroup.mem_subgroupOf.mp hx)
+  · exact fun x hx => hfix x (Subgroup.mem_subgroupOf.mp hx)
   · intro q
     exact exists_sum_eq_zero hρ (isCompact_box n J) _ (isOpen_ker_chiOn hψ hψ1 _ _)
       (htw _ (fun i => q.out.2 i))
@@ -712,16 +706,14 @@ theorem exists_derivative_nontrivial (k : Type) [Field k] [ValuativeRel k] [Topo
     refine ⟨0, le_rfl, ?_⟩
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
     apply nontrivial_quot_of_not_mem _ v
-    rw [twKer_eq_bot_of_forall_eq_one τ _ _ (fun n => Subtype.ext (mir_zero_eq_one _))]
-    exact hv
+    rwa [twKer_eq_bot_of_forall_eq_one τ _ _ (fun n => Subtype.ext (mir_zero_eq_one _))]
   | succ m ih =>
     intro V _ _ τ hτ hV
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
     by_cases h1 : v ∈ twKer τ (MirUin k (m + 1)) 1
     · have hex : ∃ g : GL (Fin (m + 1)) k,
           τ (levi k (m + 1) g) v ∉ twKer τ (MirUin k (m + 1)) (mirChar k ψ m) := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hv (_root_.GlobalTheory.CompanionTheory.MirFourier.eq_zero_of_forall_twKer k ψ hψc hψ m V τ hτ v h1 hcon)
       obtain ⟨g, hg⟩ := hex
       haveI := nontrivial_quot_of_not_mem _ _ hg

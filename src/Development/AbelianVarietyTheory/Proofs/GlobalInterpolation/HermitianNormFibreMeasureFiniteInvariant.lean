@@ -96,8 +96,7 @@ theorem map_volume_act (g : UpqT P Q) :
     rw [LinearMap.det_restrictScalars, Algebra.norm_complex_apply, hdetC, normSq_det]
   have hmap := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure (Sp P Q))
     (f := (Matrix.mulVecLin (UpqT.mat g)).restrictScalars ℝ) (by rw [hdet]; exact one_ne_zero)
-  rw [hdet, inv_one, abs_one, ENNReal.ofReal_one, one_smul] at hmap
-  exact hmap
+  rwa [hdet, inv_one, abs_one, ENNReal.ofReal_one, one_smul] at hmap
 
 theorem continuous_act (g : UpqT P Q) : Continuous (act g : Sp P Q → Sp P Q) :=
   continuous_const.matrix_mulVec continuous_id
@@ -171,8 +170,7 @@ theorem isDxDq_map {fib : ℝ → Measure (Sp P Q)} (h : IsDxDq fib) (g : UpqT P
         funext b
         exact integral_map hm.aemeasurable hφc.aestronglyMeasurable
       dsimp only
-      rw [he]
-      exact hcont
+      rwa [he]
 
 theorem fibre_finite_invariant : ∀ (P Q : ℕ) (fib : ℝ → Measure (Sp P Q)) (β : ℝ), IsDxDq fib →
     β ≠ 0 → IsFiniteMeasureOnCompacts (fib β) ∧

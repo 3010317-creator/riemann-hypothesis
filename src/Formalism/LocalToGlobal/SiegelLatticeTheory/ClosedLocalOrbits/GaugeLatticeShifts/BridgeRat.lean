@@ -188,8 +188,7 @@ theorem ratFromAd (A : X.B.I.Gf) {u : D.what₂.Word} {Λ : Submodule (𝓞 D.ho
     have h2 : r ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (XLam Λ (lf D (X.Fu u))) := by
       obtain ⟨cc, -, hc1, hloc⟩ := hFC.1 P
       have hc1' := hc1 hP
-      rw [hloc]
-      rw [hr]
+      rw [hloc, hr]
       refine sum_mem fun a _ => ?_
       have hmem : X.eX a ∈ Submodule.span (𝓞 D.host.E) (Set.range fun b => cc b • (lf D (X.Fu u)).fl.e b) :=
         Submodule.subset_span ⟨a, by simp [hc1' a, hTF a]⟩

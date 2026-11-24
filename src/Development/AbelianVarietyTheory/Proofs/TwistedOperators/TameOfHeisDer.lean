@@ -140,8 +140,7 @@ theorem tame_word {ι : Type} {T : ι → X → X} (h : ∀ i, Tame ψ θ j r (T
     have key := ((h i).comp ih).congr (S' := wordAct T (i :: l)) fun x _ => by rw [wordAct_cons]
     have e : (i :: l).length * r = r + l.length * r := by
       rw [List.length_cons, Nat.succ_mul, Nat.add_comm]
-    rw [e]
-    exact key
+    rwa [e]
 
 theorem tame_of_heisDer (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (a : D.what₂.Tau × Fin W.rank × Fin V.rank × Bool)
     (e : ∀ x, IsThetaFunO ψ V W (j x) → j (S x) = heisDer ψ θ a (j x)) : Tame ψ θ j 1 S := by
@@ -158,7 +157,7 @@ private theorem dH_eq_sum_re_im_single {ι B : Type} [Fintype ι] [DecidableEq �
   have hv : v = ∑ k, ((v k).re • (Pi.single k (1 : ℂ) : ι → ℂ) + (v k).im • (Pi.single k Complex.I : ι → ℂ)) := by
     funext x
     simp only [Finset.sum_apply, Pi.add_apply, Pi.smul_apply, Pi.single_apply, smul_ite, smul_zero,
-      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true, Complex.real_smul, mul_one]
+      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Complex.real_smul, mul_one]
     exact (Complex.re_add_im (v x)).symm
   conv_lhs => rw [hv]
   unfold dH
@@ -235,16 +234,14 @@ private theorem tame_id_of_tame_coeB (hψ : IsStdChar D ψ (-1)) {r : ℕ} {G : 
   · have hf' : IsThetaFunO ψ V W f := hf.1
     have hB : coeB ψ V W (toB hψ f hf') ∈ thetaLevel ψ V W U := by
       show ((toB hψ f hf').1 : WO V W → ℂ) ∈ _
-      rw [coe_toB]
-      exact hf
+      rwa [coe_toB]
     rw [LinearMap.id_apply, e f hf']
     exact hlev U _ hB
   · rw [LinearMap.id_apply] at hf
     have h1 : coeB ψ V W (toB hψ f hf) = f := coe_toB hψ f hf
     have h0 := hc μ 𝓕 d (toB hψ f hf) (by rw [h1]; exact hf)
     rw [h1] at h0
-    rw [LinearMap.id_apply, LinearMap.id_apply, e f hf]
-    exact h0
+    rwa [LinearMap.id_apply, LinearMap.id_apply, e f hf]
 
 variable {χS χT : (AE D)ˣ →* Circle} {ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)}
 

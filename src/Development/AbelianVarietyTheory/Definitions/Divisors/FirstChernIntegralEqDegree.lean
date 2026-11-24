@@ -89,8 +89,7 @@ theorem VInfAt.comp (h : VInfAt f y) {Ψ : F → G} {T : Set F} (hT : IsOpen T) 
   refine ⟨W, ι, inferInstance, g, Ψ ∘ Φ, O ∩ Φ ⁻¹' T, h₁,
     h₄.continuousOn.isOpen_inter_preimage h₂ hT, ⟨h₃, ?_⟩,
     hΨ.comp (h₄.mono inter_subset_left) fun _ hv => hv.2, h₅.fun_comp Ψ⟩
-  rw [mem_preimage, ← h₅.eq_of_nhds]
-  exact hy
+  rwa [mem_preimage, ← h₅.eq_of_nhds]
 
 theorem VInfAt.comp_contDiff (h : VInfAt f y) {Ψ : F → G} (hΨ : ContDiff ℝ ∞ Ψ) :
     VInfAt (fun z => Ψ (f z)) y := h.comp isOpen_univ trivial hΨ.contDiffOn

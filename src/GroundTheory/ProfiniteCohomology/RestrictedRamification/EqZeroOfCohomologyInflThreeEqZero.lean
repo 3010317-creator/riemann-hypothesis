@@ -78,8 +78,7 @@ theorem eq_zero_of_cohomologyInfl_three_eq_zero (A : Rep.{u} k G) [IsDiscreteRep
   have h1' : m • transgression (coindCokernel A) N hN w = 0 := by
     rw [← map_nsmul, hw, map_zero]
   have h2' : ℓ ^ j • transgression (coindCokernel A) N hN w = 0 := by
-    apply injQ
-    exact (map_nsmul _ (ℓ ^ j) _).trans (hj.trans (map_zero _).symm)
+    exact injQ ((map_nsmul _ (ℓ ^ j) _).trans (hj.trans (map_zero _).symm))
   have h0 := eq_zero_of_coprime_nsmul_of_pow_nsmul hm h1' h2'
   exact (congrArg (δ hQ (1 + 1) (1 + 1 + 1) rfl).hom h0).trans (map_zero _)
 

@@ -154,9 +154,9 @@ private theorem sq_exp {C Q : Type} [CommRing C] [CommRing Q] (n : ℕ) (π : C 
   · simp only [SemidirectProduct.mul_left, SemidirectProduct.left_inl, SemidirectProduct.right_inl,
       sgnAct_one, GG.adFun, GG.map_right]
     rcases Int.units_eq_one_or s with rfl | rfl
-    · simp only [sgnAct_one, if_true]
+    · simp only [sgnAct_one, ite_true]
       exact hconj a X
-    · simp only [sgnAct_neg_one, hm, if_false, hth]
+    · simp only [sgnAct_neg_one, hm, ite_false, hth]
       exact hconj a _
   · simp
 
@@ -216,7 +216,7 @@ private theorem box_def {l : ℕ} [Fact l.Prime] {κ : Type} [Field κ] {F : Fra
         ((((B.map π).g v)⁻¹ : GL (Fin n) Q) : Matrix (Fin n) (Fin n) Q)) * B.g v := fun X => by
       have := congrArg SemidirectProduct.left (e4 (GG.ofGL (B.g v)) X)
       simp only [SemidirectProduct.mul_left, SemidirectProduct.left_inl, SemidirectProduct.right_inl,
-        sgnAct_one, GG.adFun, GG.map_right, if_true] at this
+        sgnAct_one, GG.adFun, GG.map_right, ite_true] at this
       exact this
     have a3 : Y v + (z (F.loc v s) + -(B.map π).ad (F.loc v s) (Y v)) =
         ((((B.map π).g v)⁻¹ : GL (Fin n) Q) : Matrix (Fin n) (Fin n) Q) * z' v s *
@@ -516,8 +516,7 @@ private theorem rel_fin {O R : Type} [CommRing O] [CommRing R] [Algebra O R] [Is
     | smul r x hxS hx =>
       have hxk : ξ x = 0 := by
         have h := hxS
-        rw [hS, RingHom.mem_ker] at h
-        exact h
+        rwa [hS, RingHom.mem_ker] at h
       have h1 : r • x = ξ r • x + (r - ξ r • 1) * x := by
         rw [smul_eq_mul, sub_mul, smul_mul_assoc, one_mul]
         abel
@@ -593,8 +592,7 @@ theorem UpperTheory.V.Z.J.rankTwo :
       constructor
       · rintro ⟨φ, rfl⟩
         exact hder φ
-      · intro hδ
-        exact ⟨(rel ξ T).liftQ δ ((rel_le ξ T δ).mpr hδ), Submodule.liftQ_mkQ _ _ _⟩
+      · exact fun hδ => ⟨(rel ξ T).liftQ δ ((rel_le ξ T δ).mpr hδ), Submodule.liftQ_mkQ _ _ _⟩
     have hcard := hX k hk (Set.range Φ) hrange (Set.finite_range Φ)
     rw [Set.ncard_range_of_injective hΦinj] at hcard
     have hbound := hC' (Ideal.span {(l : O) ^ k}) (hOk k)
@@ -652,10 +650,8 @@ private theorem lift_pt (S : Space O F 3) (ξ : S.R →ₐ[O] O) : UpperTheory.V
   refine ⟨⟨fun i j => ?_, fun v i => ?_⟩, ?_, ?_⟩
   · exact adicCont_comp_ringHom_of_map_le _ hm (hc.1 i j)
   · exact adicCont_comp_ringHom_of_map_le _ hm (hc.2 v i)
-  · rw [NRep.map_map, hres]
-    exact hb
-  · rw [NRep.map_map, hres]
-    exact hd
+  · rwa [NRep.map_map, hres]
+  · rwa [NRep.map_map, hres]
 
 private theorem box_pt {C₀ : ℕ} (hF : F.Ok C₀) (S : Space O F 3) (ξ : S.R →ₐ[O] O) :
     ∃ B : Box F 3 O, B.Of (S.ρ.map (ξ : S.R →+* O)) ∧ B.Cont (maximalIdeal O) := by
@@ -688,11 +684,8 @@ private theorem box_unit [Algebra ℤ_[l] O] {ρ : NRep F 3 O} {B₀ : Box F 3 O
           exact hup s
         · rw [Function.update_of_ne hw]
           exact B₀.tri w s }
-  have hBg : B.g v = g := by
-    show Function.update B₀.g v g v = g
-    exact Function.update_self _ _ _
+  have hBg : B.g v = g := Function.update_self _ _ _
   have hBw : ∀ w, w ≠ v → B.g w = B₀.g w := fun w hw => by
-    show Function.update B₀.g v g w = B₀.g w
     exact Function.update_of_ne hw _ _
   have htri : triOf B v = t := by
     ext s : 1
@@ -708,8 +701,7 @@ private theorem box_unit [Algebra ℤ_[l] O] {ρ : NRep F 3 O} {B₀ : Box F 3 O
     · show ((B.g w : Matrix (Fin 3) (Fin 3) O) * ρ.r ((F.loc0 w) s) * ((B.g w)⁻¹ : GL (Fin 3) O)) j j = _
       rw [hBw w hw]
       exact h.psi w j s
-  · rw [htri]
-    exact hstep
+  · rwa [htri]
 
 private theorem zn_ext {C₀ : ℕ} (hF : F.Ok C₀) (B : Box F 3 O) (k : ℕ) {z z' : F.Γ → Matrix (Fin 3) (Fin 3) (Ok l O k)}
     (hz : z ∈ ZN B k) (hz' : z' ∈ ZN B k)
@@ -761,14 +753,13 @@ theorem UpperTheory.V.Z.J.tan :
     let f : (F.Γ → Matrix (Fin 3) (Fin 3) (Ok l O k)) → (S.R →ₗ[O] Ok l O k) := fun z =>
       if hz : z ∈ ZN B k then (hex z hz).choose else 0
     refine Set.ncard_le_ncard_of_injOn f (fun z hz => ?_) (fun z hz z' hz' he => ?_) hXf
-    · simp only [f, dif_pos hz]
-      exact (hex z hz).choose_spec.1
+    · simpa only [f, dite_eq_left hz] using (hex z hz).choose_spec.1
     · apply zn_ext hF B k hz hz'
       intro s
       ext a b
       have h1 := (hex z hz).choose_spec.2 s a b
       have h2 := (hex z' hz').choose_spec.2 s a b
-      simp only [f, dif_pos hz, dif_pos hz'] at he
+      simp only [f, dite_eq_left hz, dite_eq_left hz'] at he
       rw [← h1, ← h2, he])
   exact ⟨δ, ⟨hd, fun w j s hs => hdT _ ⟨w, j, s, hs, rfl⟩⟩, δ', ⟨hd', fun w j s hs => hdT' _ ⟨w, j, s, hs, rfl⟩⟩, hli⟩
 end -- clump:auto
@@ -1003,8 +994,7 @@ private theorem card_cls (h : ContAction ρ) (L : Submodule k (H1 ρ)) :
     ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup (L : Set (H1 ρ)))).trans (Nat.card_prod _ _)
   have e3 : Nat.card ((B1 ρ).comap (Z1 ρ).subtype) = Nat.card (B1 ρ) :=
     Nat.card_congr (Submodule.comapSubtypeEquivOfLe (coboundaries_le_cocycles ρ h)).toEquiv
-  rw [e1, Set.ncard_image_of_injective _ Subtype.val_injective, ← e3]
-  exact e2
+  rwa [e1, Set.ncard_image_of_injective _ Subtype.val_injective, ← e3]
 
 omit [TopologicalSpace G] [TopologicalSpace M] [DiscreteTopology M] in
 private theorem card_coboundaries_mul_card_h0 : Nat.card (B1 ρ) * Nat.card (H0 ρ) = Nat.card M := by
@@ -1039,8 +1029,7 @@ private theorem ex_cls {n : ℕ} {G M : Type} [Group G] [TopologicalSpace G] [Ad
     have e' : y.1 - z ∈ B1 ρ := (Submodule.Quotient.eq ((B1 ρ).comap (Z1 ρ).subtype)).1 e
     have := N.sub_mem hy (h1 _ e')
     simpa using this
-  · intro hz
-    exact ⟨h2 z hz, ⟨z, _⟩, hz, rfl⟩
+  · exact fun hz => ⟨h2 z hz, ⟨z, _⟩, hz, rfl⟩
 
 private theorem core {n : ℕ} {Γ M W : Type} [Group Γ] [TopologicalSpace Γ] [AddCommGroup M] [Module (ZMod n) M]
     [TopologicalSpace M] [DiscreteTopology M] [Finite M] [Fintype W] {D : W → Type} [∀ w, Group (D w)]
@@ -1284,8 +1273,7 @@ theorem UpperTheory.V.Z.J.gwlOf :
       have hg1 : g ∈ (p.comp (toGS Ω _)).ker := by
         rw [h.g.ker]
         refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-        simp only [Set.mem_iUnion]
-        exact ⟨q.1, q.2.2, A' q.1, hA' q.1, hg⟩
+        simpa only [Set.mem_iUnion] using ⟨q.1, q.2.2, A' q.1, hA' q.1, hg⟩
       have := hY ⟨g, Ine_le_Dec _ hg.1⟩ hg.1
       rw [MonoidHom.mem_ker.1 hg1, map_one, one_apply_eq_self, sub_self] at this
       exact this)
@@ -1331,7 +1319,6 @@ private theorem cardZ {k D M : Type} [CommRing k] [Group D] [TopologicalSpace D]
   have hZ : Nat.card (Z1 σ) = Nat.card B * Nat.card (H1 σ) := Submodule.card_eq_card_quotient_mul_card B
   have hBc : Nat.card B = Nat.card (B1 σ) := Nat.card_congr (Submodule.comapSubtypeEquivOfLe hBZ).toEquiv
   haveI : Finite (B1 σ) := by
-    show Finite (LinearMap.range (d0 σ))
     exact Finite.of_surjective (d0 σ).rangeRestrict (LinearMap.surjective_rangeRestrict _)
   have hB1pos : 0 < Nat.card (B1 σ) := Nat.card_pos
   have hH1pos : 0 < Nat.card (H1 σ) := Nat.card_pos
@@ -1469,8 +1456,7 @@ theorem UpperTheory.V.Z.J.leTrans :
     · rintro ⟨hz1, hz2⟩
       refine ⟨z ∘ e.symm, ⟨hz1.comp_continuous (map_continuous e.symm), ?_⟩, ?_⟩
       · intro s t
-        simp only [Function.comp_apply, map_mul, hρ']
-        exact hz2 _ _
+        simpa only [Function.comp_apply, map_mul, hρ'] using hz2 _ _
       · funext s
         simp
     · rintro ⟨w, ⟨hw1, hw2⟩, rfl⟩
@@ -1525,8 +1511,7 @@ theorem UpperTheory.V.Z.J.leOf2 :
   have hfc : Continuous f := (hL.loc.cont v).subtype_mk _
   have hfb : Function.Bijective f := by
     constructor
-    · intro a b hab
-      exact hL.loc.ι_inj v (congrArg Subtype.val hab)
+    · exact fun a b hab => hL.loc.ι_inj v (congrArg Subtype.val hab)
     · rintro ⟨g, hg⟩
       rw [← hrange] at hg
       obtain ⟨s, rfl⟩ := hg

@@ -64,8 +64,7 @@ theorem indep_parts {K : Type} [Field K] {r k m : ℕ}
       Disjoint (Submodule.span K (Set.range b)) (Submodule.span K (Set.range c)) := by
   have h2 := h.comp finSumFinEquiv finSumFinEquiv.injective
   rw [fin_append_comp_equiv] at h2
-  have h3 := linearIndependent_sum.mp h2
-  simpa only [Sum.elim_comp_inl, Sum.elim_comp_inr] using h3
+  simpa only [Sum.elim_comp_inl, Sum.elim_comp_inr] using linearIndependent_sum.mp h2
 
 theorem index_split {K : Type} [Field K] [NumberField K] {r k m : ℕ}
     (L : Submodule (𝓞 K) (Fin r → K)) (b : Fin k → Fin r → K) (c : Fin m → Fin r → K)
@@ -98,17 +97,14 @@ theorem index_split {K : Type} [Field K] [NumberField K] {r k m : ℕ}
       Submodule.span_le_restrictScalars (𝓞 K) K _ hz
     have hxK : y + z ∈ Submodule.span K (Set.range b) := hx2.2
     have hz' : z ∈ Submodule.span K (Set.range b) := by
-      have h := Submodule.sub_mem _ hxK hyK
-      simpa using h
+      simpa using Submodule.sub_mem _ hxK hyK
     have hz0 : z = 0 := Submodule.disjoint_def.mp hdis z hz' hzK
     simpa [hz0] using hy
   have hinf : (Sb ⊔ Sc).toAddSubgroup ⊓ S.toAddSubgroup = Sb.toAddSubgroup := by
     ext x
     constructor
-    · intro h
-      exact hmeet x (AddSubgroup.mem_inf.mp h).1 (AddSubgroup.mem_inf.mp h).2
-    · intro h
-      exact AddSubgroup.mem_inf.mpr ⟨(le_sup_left : Sb ≤ Sb ⊔ Sc) h, hSbS h⟩
+    · exact fun h => hmeet x (AddSubgroup.mem_inf.mp h).1 (AddSubgroup.mem_inf.mp h).2
+    · exact fun h => AddSubgroup.mem_inf.mpr ⟨(le_sup_left : Sb ≤ Sb ⊔ Sc) h, hSbS h⟩
   have key : (Sb ⊔ Sc).toAddSubgroup.relIndex (S ⊔ Sc).toAddSubgroup =
       Sb.toAddSubgroup.relIndex S.toAddSubgroup := by
     have hsup : (S ⊔ Sc).toAddSubgroup = S.toAddSubgroup ⊔ (Sb ⊔ Sc).toAddSubgroup := by

@@ -72,12 +72,7 @@ namespace GlobalTheory.ThetaOntoF
 open Formalism.IndefR.DatumF GlobalTheory.ThetaTransform GlobalTheory.SWQ
 
 theorem algebraMap_half (F : Type) [Field F] [NumberField F] [Invertible (2 : AF F)] :
-    algebraMap F (AF F) (1 / 2) = ⅟2 := by
-  refine (invOf_eq_right_inv ?_).symm
-  have h : (2 : AF F) * algebraMap F (AF F) (1 / 2) = algebraMap F (AF F) (2 * (1 / 2)) := by
-    rw [map_mul, map_ofNat]
-  rw [h]
-  norm_num
+    algebraMap F (AF F) (1 / 2) = ⅟2 := (GlobalTheory.ThetaTransform.invOf_two_eq).symm
 
 theorem heisV_comp_symm {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {σ : E →ₐ[F] E} {nS nT : ℕ} {JS : Matrix (Fin nS) (Fin nS) E} {JT : Matrix (Fin nT) (Fin nT) E} {ξ₀ : E}

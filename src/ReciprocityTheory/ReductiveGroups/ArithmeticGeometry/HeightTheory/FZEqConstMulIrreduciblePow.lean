@@ -59,7 +59,7 @@ theorem height_const_eq_zero {K : Type} [Field K] [NumberField K] {B n : ℕ} (h
     unfold ReciprocityTheory.MultiplicativeHeights.gaussAbs
     by_cases ha : a = 0
     · simp [ha]
-    · rw [MvPolynomial.support_C, if_neg ha, Finset.sup_singleton, MvPolynomial.coeff_C, if_pos rfl,
+    · rw [MvPolynomial.support_C, ite_eq_right ha, Finset.sup_singleton, MvPolynomial.coeff_C, ite_eq_left rfl,
         Real.coe_toNNReal (w a) (by exact w.1.nonneg a)]
   simp_rw [hgauss, hmean]
   by_cases ha : a = 0
@@ -208,8 +208,7 @@ theorem fZ_factor_positive_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F : KTp
     exact hp.1
   have hnotT : ∀ p ∈ d.HtOne, p ∉ hP0fin.toFinset →
       p ∉ {p | p ∈ d.HtOne ∧ ∃ w ∈ d.OverP c p, w (d.rationalBaseRow c) ≠ 0} := by
-    intro p _ hpT hpP
-    exact hpT ((Set.Finite.mem_toFinset hP0fin).mpr hpP)
+    exact fun p _ hpT hpP => hpT ((Set.Finite.mem_toFinset hP0fin).mpr hpP)
   have hgen0 : ∀ p ∈ d.HtOne, algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen p) ≠ 0 := fun p hp =>
     (map_ne_zero_iff _ (IsFractionRing.injective (KTp K d.D d.N) (KTf K d.D d.N))).mpr
       (d.generator_ne_zero_of_height p hp)
@@ -249,8 +248,7 @@ theorem fZ_factor_positive_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F : KTp
   refine ⟨κ, hP0fin.toFinset, fun p => (Nn p).toNat, hκ, hTS,
     IsFractionRing.injective _ _ hF', ?_⟩
   intro p hpT hpos
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hz : Nn p = 0 := by
     rw [hNn]
     refine (finsum_mem_congr rfl fun w hw => ?_).trans (finsum_mem_zero _)
@@ -327,7 +325,7 @@ theorem relation_section_identity (hd : d.AxH 𝒜) (c : ι) (i : Fin (d.D + 1))
         algebraMap (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N)
           (-∑ k, MvPolynomial.X (Sum.inr (i, k)) * MvPolynomial.C (d.x c k)) := by
       rw [hX]
-      simp only [sImg, hS0, if_neg hi]
+      simp only [sImg, hS0, ite_eq_right hi]
     have hB : ∀ k : Fin d.N, d.sH c (MvPolynomial.X (i, (d.jc c).succAbove k)) =
         algebraMap (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N)
           (MvPolynomial.X (Sum.inr (i, k))) := by
@@ -393,10 +391,8 @@ theorem relation_ker_le_valuation_prime (hd : d.AxH 𝒜) (c : ι) (p : Ideal (K
           rw [relation_section_identity d hd c i]
           split_ifs with hi
           · exact hpos
-          · rw [AddValuation.map_zero]
-            exact htop
-        · rw [hΨs, sub_self, AddValuation.map_zero]
-          exact htop
+          · rwa [AddValuation.map_zero]
+        · rwa [hΨs, sub_self, AddValuation.map_zero]
       simp only [map_mul]
       have e : d.sH c P * d.sH c (MvPolynomial.X n) - Ψ (d.relationEliminateColumn c P) * Ψ (d.relationEliminateColumn c (MvPolynomial.X n)) =
           d.sH c P * (d.sH c (MvPolynomial.X n) - Ψ (d.relationEliminateColumn c (MvPolynomial.X n))) +
@@ -432,7 +428,7 @@ theorem ker_relation_map_ne_bot (hd : d.AxH 𝒜) (c : ι) : RingHom.ker (d.rela
     by_cases hj : j = d.jc c
     · subst hj
 
-      simp only [if_true, Fin.insertNth_apply_same, map_neg, map_sum, map_mul, MvPolynomial.rename_X,
+      simp only [ite_true, Fin.insertNth_apply_same, map_neg, map_sum, map_mul, MvPolynomial.rename_X,
       MvPolynomial.rename_C, g]
       congr 1
       have e1 := Finset.add_sum_erase Finset.univ (fun k => (MvPolynomial.X (i, k) :
@@ -443,7 +439,7 @@ theorem ker_relation_map_ne_bot (hd : d.AxH 𝒜) (c : ι) : RingHom.ker (d.rela
         (d.jc c)
       exact add_left_cancel (e1.trans e2)
     · obtain ⟨k', rfl⟩ := Fin.exists_succAbove_eq hj
-      simp only [if_neg hj, Fin.insertNth_apply_succAbove, MvPolynomial.rename_X, g]
+      simp only [ite_eq_right hj, Fin.insertNth_apply_succAbove, MvPolynomial.rename_X, g]
   have hφ : Function.Injective φ := by
     intro a b hab
     apply hinj

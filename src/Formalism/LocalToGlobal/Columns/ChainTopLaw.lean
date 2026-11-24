@@ -121,10 +121,10 @@ theorem entB_zero_eq_atN {k₀ n' n : ℕ} (z : HomE E (n' + 0) (n + 0)) {p p' :
     split_ifs <;> omega
   have h1 : LocE.scE n' (fun i => i + 1) p' = 0 := by
     unfold LocE.scE
-    rw [if_pos hp']
+    rw [ite_eq_left hp']
   have h2 : LocE.scE n (fun i => i + 1) p = 0 := by
     unfold LocE.scE
-    rw [if_pos hp]
+    rw [ite_eq_left hp]
   unfold LocE.entB
   rw [hf, hf, h1, h2, sub_self, zpow_zero, mul_one]
 
@@ -265,7 +265,7 @@ theorem ctl_mem_JGsym (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ)
     by_contra hne
     have h := hpat l l' (fun e => by rw [e] at hl; omega) hne
     unfold slAllowY at h
-    rw [if_pos (by omega)] at h
+    rw [ite_eq_left (by omega)] at h
     exact h.2.2 ⟨hl, hl'⟩
 
 end FinalTheorems
@@ -308,9 +308,7 @@ theorem ctl_TL_mem {N' k r t m rS : ℕ} (h : r ≤ N' + 1) (h' : r ≤ N') {M :
   have hb : ((y : GL (Fin (N' + 1)) κ) : Matrix (Fin (N' + 1)) (Fin (N' + 1)) κ).BlockTriangular fun i => blkIdx (r :: List.replicate m t) i.1 :=
     y.2
   refine Subgroup.mem_map.mpr ⟨⟨ctlTLGL (y : GL (Fin (N' + 1)) κ) hM hM', ?_⟩, ?_, rfl⟩
-  · show (ctlTL ((y : GL (Fin (N' + 1)) κ) : Matrix (Fin (N' + 1)) (Fin (N' + 1)) κ)).BlockTriangular fun i => blkIdx (r :: List.replicate m t) i.1
-    intro p s hlt
-    exact hb (i := Fin.castSucc p) (j := Fin.castSucc s) hlt
+  · exact fun p s hlt => hb (i := Fin.castSucc p) (j := Fin.castSucc s) hlt
   · rw [Subgroup.mem_comap] at hy ⊢
     convert hy using 1
     apply Units.ext
@@ -423,8 +421,7 @@ private theorem exists_intAt_eq_q_mul_of_redP_eq_zero (hq : ((q : ℕ) : 𝓞 E)
   obtain ⟨r, s, hs, h⟩ := hx
   have hr : r ∈ P.asIdeal := by
     have h1 := reduction_spec P hs h
-    rw [h0, mul_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem] at h1
-    exact h1
+    rwa [h0, mul_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem] at h1
   have hdvd : P.asIdeal ∣ Ideal.span {((q : ℕ) : 𝓞 E)} :=
     Ideal.dvd_iff_le.mpr ((Ideal.span_singleton_le_iff_mem _).mpr hq)
   obtain ⟨J, hJ⟩ := hdvd
@@ -446,9 +443,7 @@ private theorem exists_intAt_eq_q_mul_of_redP_eq_zero (hq : ((q : ℕ) : 𝓞 E)
   have hs'E : algebraMap (𝓞 E) E s' ≠ 0 := fun h3 =>
     hs'P (by rw [(map_eq_zero_iff _ hinj).mp h3]; exact P.asIdeal.zero_mem)
   have hcE : algebraMap (𝓞 E) E c * (q : E) = algebraMap (𝓞 E) E r * algebraMap (𝓞 E) E s' := by
-    have h4 := congrArg (algebraMap (𝓞 E) E) hc
-    simp only [map_mul, map_natCast] at h4
-    exact h4
+    simpa only [map_mul, map_natCast] using congrArg (algebraMap (𝓞 E) E) hc
   refine ⟨algebraMap (𝓞 E) E c / (algebraMap (𝓞 E) E s * algebraMap (𝓞 E) E s'), ⟨c, s * s', ?_, ?_⟩, ?_⟩
   · intro hm
     rcases P.isPrime.mem_or_mem hm with h5 | h5
@@ -586,13 +581,13 @@ theorem ctl_lamGBS_lamJ {K k' : Type} [Field K] [Field k'] (e : (𝓞 E ⧸ P.as
     · refine Finset.sum_congr rfl fun i hi => ?_
       rw [Finset.mem_range] at hi
       by_cases hc : i + 1 < r ∧ i + 1 ≠ k₀
-      · rw [if_pos ⟨hc.1, (hS i hc.1).2 hc.2⟩, if_pos hc, dite_eq_left (show i + 1 < n by omega)]
+      · rw [ite_eq_left ⟨hc.1, (hS i hc.1).2 hc.2⟩, ite_eq_left hc, dite_eq_left (show i + 1 < n by omega)]
         unfold ctlE
         rw [dite_eq_left ⟨by omega, by omega⟩]
-      · rw [if_neg hc, if_neg (fun h => hc ⟨h.1, (hS i h.1).1 h.2⟩)]
+      · rw [ite_eq_right hc, ite_eq_right (fun h => hc ⟨h.1, (hS i h.1).1 h.2⟩)]
     · intro i _ hi
       rw [Finset.mem_range] at hi
-      rw [if_neg (fun h => by omega)]
+      rw [ite_eq_right (fun h => by omega)]
   · rw [map_prod]
     refine Finset.prod_congr rfl fun i hi => ?_
     have hi' := Finset.mem_range.1 hi
@@ -630,14 +625,14 @@ theorem ctl_lamJ_TL {k' : Type} [Field k'] (ψ : AddChar k' ℂ) (χ : ℕ → M
       have := y.2
       simp only [Fin.val_last] at h
       omega
-    simp only [hlast, if_false, Finset.sum_const_zero, add_zero]
+    simp only [hlast, ite_false, Finset.sum_const_zero, add_zero]
     refine Finset.sum_congr rfl fun x _ => ?_
     rw [Fin.sum_univ_castSucc]
     have hl2 : ¬ (((Fin.castSucc x : Fin (N' + 1)) : ℕ) + 1 = ((Fin.last N' : Fin (N' + 1)) : ℕ) ∧
         ((Fin.last N' : Fin (N' + 1)) : ℕ) < a ∧ ((Fin.last N' : Fin (N' + 1)) : ℕ) ≠ skip) := by
       simp only [Fin.val_last]
       omega
-    rw [if_neg hl2, add_zero]
+    rw [ite_eq_right hl2, add_zero]
     simp only [Fin.coe_castSucc]
     rfl
   · refine Finset.prod_congr rfl fun i hi => ?_

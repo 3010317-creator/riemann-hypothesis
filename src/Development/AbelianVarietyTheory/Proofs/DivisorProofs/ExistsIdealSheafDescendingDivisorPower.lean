@@ -424,8 +424,7 @@ theorem exists_pow_norm_val_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
         _ ≤ ‖φ₁ a‖ := hxa
   obtain ⟨h, hh, hnorm⟩ := key _ hpow
   refine ⟨h, hh, ?_⟩
-  rw [hφ', hφ₁, ← norm_pow, ← map_pow]
-  exact hnorm
+  rwa [hφ', hφ₁, ← norm_pow, ← map_pow]
 
 end GlobalTheory.UPoinc.ValBound
 end -- clump:auto
@@ -604,13 +603,7 @@ theorem exists_shortest {X : Type} [AddCommGroup X] (q : QuadraticMap ℤ X ℝ)
 
 theorem pos_of_tendsto {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q : QuadraticMap ℤ X ℝ)
     (hq : Filter.Tendsto q Filter.cofinite Filter.atTop) (a : X) (ha : a ≠ 0) : 0 < q a := by
-  by_contra h
-  have h : q a ≤ 0 := not_lt.1 h
-  have hfin : {x | ¬ (0 : ℝ) < q x}.Finite := Filter.eventually_cofinite.1 (hq.eventually_gt_atTop 0)
-  refine Set.infinite_of_injective_forall_mem (f := fun n : ℤ => n • a) (smul_left_injective ℤ ha) (fun n => ?_) hfin
-  simp only [Set.mem_setOf_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
-  push_cast
-  exact mul_nonpos_of_nonneg_of_nonpos (mul_self_nonneg _) h
+  apply GlobalTheory.ZH.ClosedImm.pos_of_tendsto <;> assumption
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H}
   {Xo : Moduli Dw l} {c : Coeff l}
@@ -621,22 +614,7 @@ theorem be_pos (T : UTrait Xo c) (x : T.P.D.toPre.X) (hx : x ≠ 0) : 0 < T.be x
   simpa using hj
 
 theorem sc_pos {C : UCompact Xo c} {X₁ : USetup C} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z} (t : UCTrait X₁ p z₁) :
-    0 < t.sc := by
-  have hϖ0 : algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 t.T.irr.ne_zero
-  have h0 : t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ) ≠ 0 := (map_ne_zero _).2 hϖ0
-  have hlt : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)‖ < 1 := by
-    by_contra hge
-    have hinv : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)⁻¹‖ ≤ 1 := by
-      rw [map_inv₀, norm_inv]
-      exact inv_le_one_of_one_le₀ (not_lt.1 hge)
-    obtain ⟨w, hw⟩ := (t.int _).1 hinv
-    apply t.T.irr.not_isUnit
-    refine isUnit_iff_exists_inv.2 ⟨w, IsFractionRing.injective t.T.V (FractionRing t.T.V) ?_⟩
-    rw [map_mul, hw, map_one, mul_inv_cancel₀ hϖ0]
-  unfold UCTrait.sc
-  have := Real.log_neg (norm_pos_iff.2 h0) hlt
-  linarith
+    0 < t.sc := GlobalTheory.UPoinc.USum.sc_pos t
 
 theorem one_le_of_ne_zero (T : UTrait Xo c) {x : T.P.D.toPre.X} (hx : x ≠ 0) : 1 ≤ Dw.p + Dw.q := by
   haveI : Module.Projective (𝓞 E) T.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _
@@ -1098,7 +1076,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   let wit : ∀ y, (Fin 1 → Φ.X y) → (Fin 1 → Φ.X y) := fun y μ => if h : NS y μ then h.choose else μ
   have hwit : ∀ y μ, NS y μ → Cg y (wit y μ) μ ∧ wit y μ ≠ μ ∧ qv y (wit y μ) ≤ qv y μ := by
     intro y μ h
-    simp only [wit, dif_pos h]
+    simp only [wit, dite_eq_left h]
     exact h.choose_spec
   have hel : ∀ y μ, ∃ e : PadicAlgCl p, ‖e‖ = Real.exp (-(Φ.sc y * qv y μ)) := by
     intro y μ
@@ -1159,7 +1137,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         · rw [norm_zero]; exact (Real.exp_pos _).le
     · by_cases hns : NS y μ
       · refine ⟨Sum.inr ⟨y, μ⟩, ?_⟩
-        simp only [t, Sum.elim_inr, g, if_pos hns]
+        simp only [t, Sum.elim_inr, g, ite_eq_left hns]
         exact hel y μ
       · have hstrict : ∀ μ' : Fin 1 → Φ.X y, (∀ u, CongMod N (μ' u) (μ u)) → μ' ≠ μ →
             qW !![(1 : ℤ)] (Φ.β y) μ < qW !![(1 : ℤ)] (Φ.β y) μ' := by
@@ -1177,7 +1155,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
           simpa using this
         refine ⟨Sum.inl κ, ?_⟩
         simp only [t, Sum.elim_inl, hsel']
-        rw [if_pos trivial, hF, norm_pow, hnorm, ← Real.exp_nat_mul]; congr 1; push_cast; ring
+        rw [ite_eq_left trivial, hF, norm_pow, hnorm, ← Real.exp_nat_mul]; congr 1; push_cast; ring
   · rintro cc cc' (κ | s) h
     · simp only [f, Sum.elim_inl, hcls cc cc' κ h]
     · rfl
@@ -1191,7 +1169,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       have hsum : ∑ μ ∈ S, t y μ (Sum.inl κ) = t y s (Sum.inl κ) := by
         refine Finset.sum_eq_single_of_mem s hmem (fun μ hμ hne => ?_)
         simp only [t, Sum.elim_inl]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         exact hne (h.trans (hselc y μ _ (hS' μ hμ)))
       have hF : F (fun u => (k y).symm (s u)) κ = F cc κ := by
@@ -1200,7 +1178,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         simpa using this
       rw [hsum]
       simp only [t, Sum.elim_inl, hss]
-      rw [if_pos trivial, hF]
+      rw [ite_eq_left trivial, hF]
       simp [f, hε.le]
     · by_cases hy : y = y'
       · subst hy
@@ -1210,7 +1188,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
           simp only [t, Sum.elim_inr, dite_true]
           by_cases hns : NS y μ
           · obtain ⟨hw1, hw2, -⟩ := hwit y μ hns
-            simp only [g, if_pos hns]
+            simp only [g, ite_eq_left hns]
             by_cases hc : Cg y μ (fun u => k y (cc u))
             · have hμS : μ ∈ S := hS₀ μ (by simp) (fun u => by simpa using hc u)
               have hwS : wit y μ ∈ S := hS₀ _ (by simp) (fun u => by simpa using _root_.GlobalTheory.Poinc.GalTrans.cm_trans (hw1 u) (hc u))
@@ -1221,7 +1199,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
                 · subst h1; simp [hw2.symm]
                 · simp [h1]
               rw [Finset.sum_congr rfl (fun ν _ => e ν), Finset.sum_add_distrib, Finset.sum_ite_eq' S μ,
-                Finset.sum_ite_eq' S (wit y μ), if_pos hμS, if_pos hwS, add_neg_cancel]
+                Finset.sum_ite_eq' S (wit y μ), ite_eq_left hμS, ite_eq_left hwS, add_neg_cancel]
             · refine Finset.sum_eq_zero (fun ν hν => ?_)
               have h1 : ν ≠ μ := fun h => hc (h ▸ hS' ν hν)
               have h2 : ν ≠ wit y μ := fun h => hc (fun u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans (_root_.GlobalTheory.Poinc.GalTrans.cm_symm (hw1 u)) (h ▸ hS' ν hν u))
@@ -1628,8 +1606,7 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
     intro h
     apply hy
     change y ∈ Y.Z.basicOpen (D.f j ^ k)
-    rw [Scheme.basicOpen_pow _ _ hk0]
-    exact h
+    rwa [Scheme.basicOpen_pow _ _ hk0]
 
   obtain ⟨W, hWi, hWc⟩ := _root_.GlobalTheory.UPoinc.exists_open_generic_subset_moduli E H Dw l Xo c C
   let U : Y.Z.Opens := (πY ≫ X₁.π) ⁻¹ᵁ W ⊓ ⟨((D.nsmul k).idealSheaf.support : Set Y.Z)ᶜ, (D.nsmul k).idealSheaf.support.isClosed.isOpen_compl⟩
@@ -1643,8 +1620,7 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
     · show (πY ≫ X₁.π) _ ∈ (W : Set C.Z)
       rw [Scheme.Hom.comp_apply]
       exact hWi hr
-    · intro hs
-      exact hsupp _ (hsub _ hs) hr
+    · exact fun hs => hsupp _ (hsub _ hs) hr
   have hDU : ∀ x ∈ (D.nsmul k).idealSheaf.support, x ∉ U := fun x hx hxU => hxU.2 hx
   have hrange : ∀ {q : ℕ} [Fact q.Prime] (y : Sp (OO q) ⟶ Y.Z), Set.range (gPt q ≫ y) ⊆ U →
       Set.range (gPt q ≫ y ≫ πY ≫ X₁.π) ⊆ Set.range C.i := by
@@ -1677,12 +1653,10 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
         rw [hty]
       rcases hfall t with h1 | ⟨h, hh, h2⟩
       · left
-        rw [← hcv, ht f' hf']
-        exact h1
+        rwa [← hcv, ht f' hf']
       · right
         refine ⟨X₁.M.stalkHom z₀ h, ⟨(X₁.M.stalkEquiv z₀ h).2, ?_⟩, ?_⟩
-        · by_contra hne
-          push_neg at hne
+        · by_contra! hne
           apply (IsLocalRing.mem_maximalIdeal _).1 hh
           have hu : IsUnit (X₁.M.stalkEquiv z₀ h) :=
             (RatModel.isUnit_O_iff _).2 ⟨hne.1, hne.2⟩
@@ -1691,10 +1665,8 @@ theorem exists_idealSheaf_comap_uValThru : ∀ (E : Type) [Field E] [NumberField
           exact h2)
   refine ⟨Nat.lcm ι d, J, hL0, ?_, ?_⟩
   · rw [hJ]
-    intro y hy
-    exact hsupp y (hsub y hy)
-  · rw [hJ]
-    exact hord'
+    exact fun y hy => hsupp y (hsub y hy)
+  · rwa [hJ]
 
 end GlobalTheory.UPoinc.DescentPow
 end -- clump:auto

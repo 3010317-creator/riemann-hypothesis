@@ -151,9 +151,8 @@ theorem gen_mem_polys {n : ℕ} (γ : Fin n → ℂ) (M : ℕ) (T : (Fin n → �
       simp
     · intro b _ hb
       obtain ⟨i, hi⟩ := Function.ne_iff.mp hb
-      rw [Finset.prod_eq_zero (Finset.mem_univ i) (if_neg (Ne.symm hi)), mul_zero]
-    · intro h
-      exact absurd (Fintype.mem_piFinset.mpr fun i => Finset.mem_range.mpr (by omega)) h
+      rw [Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right (Ne.symm hi)), mul_zero]
+    · exact fun h => absurd (Fintype.mem_piFinset.mpr fun i => Finset.mem_range.mpr (by omega)) h
   rw [key, Finset.mul_sum]
   refine Subring.sum_mem _ fun b _ => ?_
   rw [mul_left_comm, ← Finset.prod_mul_distrib]
@@ -235,8 +234,7 @@ theorem ord_zpow_eq (u : kˣ) (m : ℤ) : ord k (u ^ m) = m * ord k u := by
   let o : kˣ →* Multiplicative ℤ := MonoidHom.mk' (fun x => .ofAdd (ord k x)) fun x y => by
     rw [ord_mul, ofAdd_add]
   have h := congrArg Multiplicative.toAdd (map_zpow o u m)
-  rw [toAdd_zpow, smul_eq_mul] at h
-  exact h
+  rwa [toAdd_zpow, smul_eq_mul] at h
 
 omit [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem shellSet_eq_cell {n : ℕ} (ϖ : kˣ) (e : Fin n → ℤ) : shellSet ϖ e = _root_.GlobalTheory.GLDoubling.cell k (Fin n) ϖ e := by
@@ -859,8 +857,7 @@ theorem zetaUnr_const_mul (n d : ℕ) (ϖ : kˣ) (ν : kˣ →* ℂˣ) (φ : Mat
     funext m
     rw [add_zero, zCoeff, zCoeff, ← smul_eq_mul c, smul_finsum]
     refine finsum_congr fun a => ?_
-    simp only [shell, smul_eq_mul, mul_assoc]
-    exact integral_const_mul _ _
+    simpa only [shell, smul_eq_mul, mul_assoc] using integral_const_mul _ _
   rw [zetaUnr_eq_conv, zetaUnr_eq_conv, hz, finsum_conv_shift]
 
 theorem zetaUnr_mul_left {ϖ : kˣ} (hϖ : IsUnif ϖ) {ν : kˣ →* ℂˣ} (hν : IsUnram ν) (n d : ℕ)
@@ -908,7 +905,7 @@ theorem zetaUnr_indicator {ϖ : kˣ} (hϖ : IsUnif ϖ) {ν : kˣ →* ℂˣ} (h�
     rcases lt_or_ge m 0 with h | h
     · exact conv_neg hf h
     · obtain ⟨t, rfl⟩ := Int.eq_ofNat_of_zero_le h
-      rw [conv_natCast (natDegree_invL_le n d ϖ ν) hf, key, PowerSeries.coeff_one, if_neg]
+      rw [conv_natCast (natDegree_invL_le n d ϖ ν) hf, key, PowerSeries.coeff_one, ite_eq_right]
       exact fun ht => hm (by rw [ht])
 
 theorem summable_antidiag_of_growth {n : ℕ} (Q : Fin n → ℝ) (hQ : ∀ i, 1 ≤ Q i) {r : ℝ} (hr : 0 ≤ r)
@@ -1557,8 +1554,7 @@ theorem onto_of_irredLt (hI : IndIrredLt) {a a' : ℕ} {α β : kˣ →* ℂˣ} 
     rw [h] at hm
     exact absurd ((Submodule.mem_bot ℂ).1 hm) hne
   · intro F hF
-    rw [← h] at hF
-    exact hF
+    rwa [← h] at hF
 
 end Onto
 

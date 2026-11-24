@@ -107,12 +107,10 @@ theorem exists_basicOpen_between_finset_and_open : ∀ (X : Scheme.{0}) (W : X.O
     rw [Scheme.basicOpen_zero]
     exact bot_le
   set Z : Set (PrimeSpectrum Γ(X, W)) := {p | hW.fromSpec p ∉ V} with hZ
-  have hZc : IsClosed Z := by
-    have h := (hW.fromSpec ⁻¹ᵁ V).isOpen.isClosed_compl
-    exact h
+  have hZc : IsClosed Z := (hW.fromSpec ⁻¹ᵁ V).isOpen.isClosed_compl
   let P : X → Ideal Γ(X, W) := fun x => if h : x ∈ W then (hW.primeIdealOf ⟨x, h⟩).asIdeal else ⊤
   have hPx : ∀ x (h : x ∈ W), P x = (hW.primeIdealOf ⟨x, h⟩).asIdeal := fun x h => by
-    simp only [P, dif_pos h]
+    simp only [P, dite_eq_left h]
   have hP : ∀ i ∈ s, i ≠ x₀ → i ≠ x₀ → (P i).IsPrime := by
     intro x hx _ _
     rw [hPx x (hVW (hs x hx))]
@@ -199,8 +197,7 @@ theorem algebraMap_norm_mem_span_singleton (A B : Type) [CommRing A] [CommRing B
   have h0 : Polynomial.aeval f p = 0 := by
     have h1 : Polynomial.aeval g p = 0 := LinearMap.aeval_self_charpoly g
     rw [hg, Polynomial.aeval_algHom_apply] at h1
-    have h2 := congrArg (fun u : B →ₗ[A] B => u 1) h1
-    simpa using h2
+    simpa using congrArg (fun u : B →ₗ[A] B => u 1) h1
   have h3 := congrArg (Polynomial.aeval f) hq
   simp only [map_sub, Polynomial.aeval_C, map_mul, Polynomial.aeval_X, h0, zero_sub] at h3
   rw [Algebra.norm_apply, LinearMap.det_eq_sign_charpoly_coeff, map_mul,
@@ -354,8 +351,7 @@ theorem exists_norm_basicOpen : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁]
   intro R R₁ _ _ _ _ _ X X₁ p p₁ b H V hVc hVq f
   classical
   rcases subsingleton_or_nontrivial R with hR | hR
-  · refine ⟨0, fun x => ?_⟩
-    exact absurd (Subsingleton.elim _ _ : (p x).asIdeal = ⊤) (p x).isPrime.ne_top
+  · exact ⟨0, fun x => (absurd (Subsingleton.elim _ _ : (p x).asIdeal = ⊤) (p x).isPrime.ne_top)⟩
   let c' := Module.Free.chooseBasis R R₁
   letI a0 : Algebra Γ(Sp R, ⊤) Γ(Sp R₁, ⊤) :=
     ((spMap (algebraMap R R₁)).appLE ⊤ ⊤ le_top).hom.toAlgebra
@@ -724,8 +720,7 @@ theorem isIrreducible_fibre_fst : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) 
     · rintro ⟨z, rfl⟩
       exact ⟨e.inv z, by rw [Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply e.inv e.hom, e.inv_hom_id]; rfl⟩
   show IsIrreducible (p₁ ⁻¹' {x})
-  rw [← Scheme.Hom.range_fiberι p₁ x, ← hrange]
-  exact hr
+  rwa [← Scheme.Hom.range_fiberι p₁ x, ← hrange]
 
 end GlobalTheory.MoverFibre
 end -- clump:auto
@@ -787,9 +782,7 @@ theorem exists_open_mul_mem : ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoe
     rfl
   let Ψ : G ⊗ G ⟶ G ⊗ G := lift (fst G G) ((fst G G)⁻¹ * snd G G)
   have hΨ1 : Ψ ≫ fst G G = fst G G := lift_fst _ _
-  have hΨ2 : Ψ ≫ μ[G] = snd G G := by
-    show fst G G * ((fst G G)⁻¹ * snd G G) = snd G G
-    exact mul_inv_cancel_left _ _
+  have hΨ2 : Ψ ≫ μ[G] = snd G G := mul_inv_cancel_left _ _
   have hmsurj : ∀ x : G.left, G.hom x = closedPoint R → μ[G].left '' ((fst G G).left ⁻¹' {x}) = F := by
     intro x hx
     ext w
@@ -997,8 +990,7 @@ theorem exists_affine_open_of_finset_closedFibre :
     intro x hx
     have h1 : G.hom x ⤳ G.hom (f x) := (hsp x).map G.hom.continuous
     rw [hs x hx] at h1
-    have h2 := specializes_iff_mem_closure.1 h1
-    exact closure_minimal (subset_refl _) hcp h2
+    exact closure_minimal (subset_refl _) hcp (specializes_iff_mem_closure.1 h1)
   classical
   let s' : Finset G.left := s.image f
   have hs' : ∀ y ∈ s', G.hom y = closedPoint R ∧ IsClosed ({y} : Set G.left) := by
@@ -1041,8 +1033,7 @@ theorem exists_affine_open_of_finset_closedFibre :
   have hx : ∀ w, x.left w ∈ s' := by
     intro w
     show (z' ≫ pullback.fst _ _) w ∈ s'
-    rw [Scheme.Hom.comp_apply, hz']
-    exact hz
+    rwa [Scheme.Hom.comp_apply, hz']
   have ha' : ∀ w, a'.left w ∈ O := by
     intro w
     show (z' ≫ pullback.snd _ _ ≫ a) w ∈ O
@@ -1622,8 +1613,7 @@ theorem law_of_isAffineQuotient {Γ : Type} [Group Γ] [Finite Γ] {α : Γ →*
       change (k ≫ pullback.snd π (N.U ⊗ N.U).hom) w ∈ V
       rw [hk, Scheme.Hom.comp_apply]
       exact (pullback.snd π y w).2
-    rw [hV] at this
-    exact this
+    rwa [hV] at this
   let l := IsOpenImmersion.lift N.u (k ≫ z₀) hsub
   have hl : l ≫ N.u = k ≫ z₀ := IsOpenImmersion.lift_fac _ _ _
   have hf : N.Pt (pullback.fst π y) (l ≫ pullback.fst _ _) (k ≫ z₀) :=
@@ -1648,8 +1638,7 @@ theorem law_of_isAffineQuotient {Γ : Type} [Group Γ] [Finite Γ] {α : Γ →*
     rw [pullback.lift_fst, pullback.lift_snd_assoc] at h₂
     have h₃ : Prod N s (v ≫ V.ι) (a * b).left :=
       ⟨a, b, by rw [Category.assoc]; exact ha, by rw [Category.assoc]; exact hb, rfl⟩
-    rw [← hm, pullback.lift_fst, pullback.lift_snd_assoc, prod_unique N h₂ h₃] at h₁
-    exact h₁
+    rwa [← hm, pullback.lift_fst, pullback.lift_snd_assoc, prod_unique N h₂ h₃] at h₁
 
 end
 

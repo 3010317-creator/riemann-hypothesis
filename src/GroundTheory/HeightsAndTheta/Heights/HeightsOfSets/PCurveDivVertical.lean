@@ -40,8 +40,7 @@ theorem weight_eq_zero_iff {σ : Type*} (w : σ → ℕ) (d : σ →₀ ℕ) :
     Finsupp.weight w d = 0 ↔ ∀ p, d p ≠ 0 → w p = 0 := by
   rw [Finsupp.weight_apply, Finsupp.sum, Finset.sum_eq_zero_iff]
   constructor
-  · intro h p hp
-    exact (mul_eq_zero.mp (h p (Finsupp.mem_support_iff.mpr hp))).resolve_left hp
+  · exact fun h p hp => (mul_eq_zero.mp (h p (Finsupp.mem_support_iff.mpr hp))).resolve_left hp
   · intro h p hp
     rw [smul_eq_mul, h p (Finsupp.mem_support_iff.mp hp), mul_zero]
 
@@ -55,19 +54,19 @@ theorem coeff_proj (T : Finset K) (f : MRing ι) (d : (Σ k, ι k) →₀ ℕ) :
     unfold wt
     split_ifs with h <;> simp [h]
   by_cases h : ∀ p, d p ≠ 0 → p.1 ∉ T
-  · rw [if_pos (this.mpr h), if_pos h]
-  · rw [if_neg (mt this.mp h), if_neg h]
+  · rw [ite_eq_left (this.mpr h), ite_eq_left h]
+  · rw [ite_eq_right (mt this.mp h), ite_eq_right h]
 
 theorem proj_empty (f : MRing ι) : proj ∅ f = f := by
   ext d
-  rw [coeff_proj, if_pos (fun _ _ ↦ Finset.notMem_empty _)]
+  rw [coeff_proj, ite_eq_left (fun _ _ ↦ Finset.notMem_empty _)]
 
 theorem proj_proj {S T : Finset K} (hST : S ⊆ T) (f : MRing ι) : proj T (proj S f) = proj T f := by
   ext d
   rw [coeff_proj, coeff_proj, coeff_proj]
   by_cases h : ∀ p, d p ≠ 0 → p.1 ∉ T
-  · rw [if_pos h, if_pos h, if_pos fun p hp hS ↦ h p hp (hST hS)]
-  · rw [if_neg h, if_neg h]
+  · rw [ite_eq_left h, ite_eq_left h, ite_eq_left fun p hp hS ↦ h p hp (hST hS)]
+  · rw [ite_eq_right h, ite_eq_right h]
 
 theorem proj_univ (f : MRing ι) : proj Finset.univ f = C (constantCoeff f) := by
   ext d
@@ -75,7 +74,7 @@ theorem proj_univ (f : MRing ι) : proj Finset.univ f = C (constantCoeff f) := b
   by_cases hd : d = 0
   · subst hd
     simp
-  · rw [if_neg (Ne.symm hd), if_neg]
+  · rw [ite_eq_right (Ne.symm hd), ite_eq_right]
     intro h
     apply hd
     ext p
@@ -118,8 +117,7 @@ theorem isWeightedHomogeneous_of_isMultiHomog (T : Finset K) {f : MRing ι} {a :
   refine Finset.sum_congr rfl fun k _ ↦ ?_
   unfold wt
   by_cases hk : k ∈ T
-  · simp only [hk, if_true, smul_eq_mul, mul_one]
-    exact hmon k
+  · simpa only [hk, ite_true, smul_eq_mul, mul_one] using hmon k
   · simp [hk]
 
 theorem isHomogeneous_sup (T : Finset K) {W : Ideal (MRing ι)} (hW : IsMultiHomogIdeal W)
@@ -200,8 +198,7 @@ theorem CurveDivVertical.full : CurveDivVertical.Statement := by
     refine lt_of_le_of_ne (hWV.trans (hVP ∅)) fun h ↦ hsW ?_
     rw [h]
     change proj ∅ s ∈ V
-    rw [proj_empty]
-    exact hsV
+    rwa [proj_empty]
   have hchain : ∀ T : Finset K, ∃ l : LTSeries Z, l.last = P T ∧ l.length = T.card + 1 := by
     intro T
     induction T using Finset.induction_on with
@@ -218,8 +215,7 @@ theorem CurveDivVertical.full : CurveDivVertical.Statement := by
       Ideal.comap (constantCoeff : MRing ι →+* ℤ) (Ideal.span {(2 : ℤ)}) := by
     have hc : ∀ c : ℤ, C c ∈ V → c = 0 := fun c hc ↦ by
       have : c ∈ V.comap (C : ℤ →+* MRing ι) := hc
-      rw [hhor] at this
-      exact this
+      rwa [hhor] at this
     refine lt_of_le_of_ne (fun f hf ↦ ?_) fun h ↦ ?_
     · change proj _ f ∈ V at hf
       rw [proj_univ] at hf

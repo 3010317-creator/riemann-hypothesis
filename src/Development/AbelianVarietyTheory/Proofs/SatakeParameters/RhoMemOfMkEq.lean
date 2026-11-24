@@ -109,16 +109,16 @@ theorem selE_mul_transpose (a : Fin n' → ℕ) (n : ℕ) :
       have : (i : ℕ) ≠ (b : ℕ) := fun e => hb (Fin.ext e.symm)
       simp [this]
     · intro hn; exact absurd (Finset.mem_univ _) hn
-  · rw [if_neg h, ite_self]
+  · rw [ite_eq_right h, ite_self]
     refine Finset.sum_eq_zero fun p _ => ?_
     have : ¬ ((i : ℕ) = (p : ℕ) ∧ 0 < a i) := fun ⟨e, ha⟩ => h ⟨e ▸ p.isLt, ha⟩
-    rw [if_neg this, zero_mul]
+    rw [ite_eq_right this, zero_mul]
 
 theorem halfSel_add (h2 : (2 : L) ≠ 0) (a : Fin n' → ℕ) (i j : Fin n') :
     halfSel (L := L) a i j + halfSel a j i = 1 := by
   unfold halfSel
   rcases eq_or_ne i j with rfl | hne
-  · simp only [lt_irrefl, false_or, and_false, if_false, if_true]
+  · simp only [lt_irrefl, false_or, and_false, ite_false, ite_true]
     rw [← two_mul, mul_inv_cancel₀ h2]
   have hne' : (i : ℕ) ≠ (j : ℕ) := Fin.val_ne_of_ne hne
   split_ifs <;> first | (exfalso; omega) | simp
@@ -183,7 +183,7 @@ theorem square_diag : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
     · exact (Formalism.UG.intL L).zero_mem
   have hErow : ∀ i : Fin n', ¬ ((i : ℕ) < n ∧ 0 < a i) → ∀ p, E i p = 0 := by
     intro i h p; simp only [E, selE, Matrix.of_apply]
-    rw [if_neg]; rintro ⟨e, ha⟩; exact h ⟨e ▸ p.isLt, ha⟩
+    rw [ite_eq_right]; rintro ⟨e, ha⟩; exact h ⟨e ▸ p.isLt, ha⟩
   set A' : Matrix (Fin n') (Fin n') L := E * A * Eᵀ with hA'def
   have hA'i : ∀ i j, A' i j ∈ Formalism.UG.intL L := fun i j =>
     matMul_int (matMul_int hEi hA) (fun p k => hEi k p) i j
@@ -248,10 +248,10 @@ theorem square_diag : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
         have e1 : (i = l ∧ j = k) ↔ (j = k ∧ i = l) := and_comm
         have e2 : (j = l ∧ i = k) ↔ (i = k ∧ j = l) := and_comm
         by_cases hP : i = k ∧ j = l <;> by_cases hQ : j = k ∧ i = l
-        · rw [if_pos hP, if_pos hQ, if_pos (e1.2 hQ), if_pos (e2.2 hP), map_add (f := _), hσx, hσy]; ring
-        · rw [if_pos hP, if_neg hQ, if_neg (fun h => hQ (e1.1 h)), if_pos (e2.2 hP), map_add (f := _), hσx, map_zero]; ring
-        · rw [if_neg hP, if_pos hQ, if_pos (e1.2 hQ), if_neg (fun h => hP (e2.1 h)), map_add (f := _), hσy, map_zero]; ring
-        · rw [if_neg hP, if_neg hQ, if_neg (fun h => hQ (e1.1 h)), if_neg (fun h => hP (e2.1 h)), map_add (f := _), map_zero]; ring
+        · rw [ite_eq_left hP, ite_eq_left hQ, ite_eq_left (e1.2 hQ), ite_eq_left (e2.2 hP), map_add (f := _), hσx, hσy]; ring
+        · rw [ite_eq_left hP, ite_eq_right hQ, ite_eq_right (fun h => hQ (e1.1 h)), ite_eq_left (e2.2 hP), map_add (f := _), hσx, map_zero]; ring
+        · rw [ite_eq_right hP, ite_eq_left hQ, ite_eq_left (e1.2 hQ), ite_eq_right (fun h => hP (e2.1 h)), map_add (f := _), hσy, map_zero]; ring
+        · rw [ite_eq_right hP, ite_eq_right hQ, ite_eq_right (fun h => hQ (e1.1 h)), ite_eq_right (fun h => hP (e2.1 h)), map_add (f := _), map_zero]; ring
       have hsmall : ∀ k l, Valued.v (C k l) < 1 := by
         intro k l
         simp only [hCdef, Matrix.add_apply, Matrix.single_apply]
@@ -423,8 +423,7 @@ theorem phaseCondition_basisChange : ∀ (L : Type) [Field L] [Valued L (WithZer
     rw [mul_comm]
     refine hlt _ _ (hP k j) ?_
     rw [Matrix.mul_apply]
-    refine Valuation.map_sum_lt _ one_ne_zero fun l _ => ?_
-    exact hlt _ _ (hPσ i l) (hv l k)
+    exact Valuation.map_sum_lt _ one_ne_zero fun l _ => hlt _ _ (hPσ i l) (hv l k)
   · intro i j
     rw [← hCx]
     exact intMul _ _ (intMul _ _ hPσ hint) hQ' i j
@@ -880,18 +879,15 @@ theorem class_fixed_phase : ∀ (L : Type) [Field L] [CharZero L] [Valued L (Wit
     exact hmemV _
   have hwAll : w ∈ ⨆ c, V c := (iSup_le fun k => le_iSup V _) hwO
   obtain ⟨d, hd⟩ : ∃ d, w ∉ P d := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨F, hF⟩ := (Submodule.mem_iSup_iff_exists_finset).1 hwAll
     exact hw0 (eq_zero_of_mem_compl hind F w hF hcon)
   obtain ⟨k, hk⟩ : ∃ k : KInt σ (JT : Matrix (Fin n') (Fin n') L), k • QuotientAddGroup.mk x = d := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hd ((iSup_le fun k => le_iSup₂_of_le (f := fun j (_ : j ≠ d) => V j) (k • QuotientAddGroup.mk x) (hcon k) le_rfl) hwO)
   have hsplit : w ∈ V d ⊔ P d := by
     have e := iSup_split_single V d
-    rw [e] at hwAll
-    exact hwAll
+    rwa [e] at hwAll
   obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.1 hsplit
   have ha0 : a ≠ 0 := by
     rintro rfl
@@ -1173,8 +1169,7 @@ theorem mem_of_orbits (π : G →* Module.End ℂ M) (V : ι → Submodule ℂ M
       exact Set.mem_iUnion₂.mpr ⟨k, hk, orbit_stable k g hjk⟩
     have hB : ∀ (g : G), ∀ j ∈ ((⋃ k ∈ F, orbit G k) \ orbit G i),
         g • j ∈ ((⋃ k ∈ F, orbit G k) \ orbit G i) := by
-      intro g j hj
-      exact ⟨hU g j hj.1, fun h => hj.2 (by simpa using orbit_stable i g⁻¹ h)⟩
+      exact fun g j hj => ⟨hU g j hj.1, fun h => hj.2 (by simpa using orbit_stable i g⁻¹ h)⟩
     have hAB : Disjoint (orbit G i) ((⋃ k ∈ F, orbit G k) \ orbit G i) := Set.disjoint_sdiff_right
     have hafix := fixed_part π V hV hπ hA hB hAB ha hb hu
     have hbfix : ∀ g, π g b = b :=
@@ -1204,8 +1199,7 @@ theorem fixed_mem_of_orbit_height : ∀ {G ι M : Type} [Group G] [MulAction G �
     intro p u hp hgood hu
     obtain ⟨F, hF⟩ := hc4 u
     have hF' : u = ∑ j ∈ F.filter p, c j u := by
-      rw [Finset.sum_filter_of_ne (fun j _ h => by_contra fun hpj => h (hp j hpj))]
-      exact hF
+      rwa [Finset.sum_filter_of_ne (fun j _ h => by_contra fun hpj => h (hp j hpj))]
     refine GradedFixed.mem_of_orbits π V hV hπ S (F.filter p)
       (fun j hj => hgood j (Finset.mem_filter.mp hj).2) u hu ?_
     exact GradedFixed.mem_WA_of_sum V c hc1 hc3
@@ -1319,12 +1313,7 @@ theorem rho_add_int (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω) {s
 theorem rho_mem_of_mk_eq (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω) {s : M} (hs : GlobalTheory.Hk3.LocVac ρ s)
     {x y : Matrix (Fin n') (Fin n) L}
     (hxy : (QuotientAddGroup.mk x : Matrix (Fin n') (Fin n) L ⧸ intMat L n' n) = QuotientAddGroup.mk y) :
-    ρ x s ∈ Submodule.span ℂ {ρ y s} := by
-  have hu : -y + x ∈ intMat L n' n := QuotientAddGroup.eq.1 hxy.symm
-  obtain ⟨c, -, hc⟩ := rho_add_int hP hs y (-y + x) hu
-  rw [add_neg_cancel_left] at hc
-  rw [hc]
-  exact Submodule.smul_mem _ _ (Submodule.subset_span rfl)
+    ρ x s ∈ Submodule.span ℂ {ρ y s} := GlobalTheory.Hk3.HoweFix.rho_mem_span_of_mk_eq hP hs hxy
 
 theorem step (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω) (s : M) (hs0 : s ≠ 0) (hs : GlobalTheory.Hk3.LocVac ρ s)
     (hspan : Submodule.span ℂ (Set.range fun x => ρ x s) = ⊤) (x : Matrix (Fin n') (Fin n) L)
@@ -1457,8 +1446,7 @@ theorem fixed_mem_span (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω)
       refine Submodule.span_le.2 ?_ hu
       rintro _ ⟨y, hy, rfl⟩
       refine Submodule.mem_iSup_of_mem (QuotientAddGroup.mk y) (Submodule.mem_iSup_of_mem ?_ (hmemV y))
-      rw [hμmk, hμmk]
-      exact hy
+      rwa [hμmk, hμmk]
   exact _root_.GlobalTheory.fixed_mem_of_orbit_height π V hind htop hline hπ μ hμ S hS hstep w (fun k => hw k (Subgroup.mem_comap.1 k.2))
 
 end Half

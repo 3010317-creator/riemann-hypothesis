@@ -112,8 +112,7 @@ lemma massTelescope_ortho (n : ℕ) :
     · simp [hij]
   · intro b _ hb
     simp [Pi.single_eq_of_ne hb]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 lemma massTelescope_isLattice (n : ℕ) : Submodule.IsFullLattice K (massTelescope_lat K n) := by
   letI : Submodule.IsLattice K (massTelescope_lat K n) :=
@@ -156,8 +155,7 @@ lemma massTelescope_def (hCM : IsCMUnram K) (n : ℕ) (x : Fin n → K) (hx : x 
 
   rw [massTelescope_form_apply, map_sum]
   obtain ⟨i, hi⟩ : ∃ i, x i ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hx (funext hc)
   exact Finset.sum_pos' (fun j _ => massTelescope_trace_nonneg K hCM (x j))
     ⟨i, Finset.mem_univ _, massTelescope_trace_pos K hCM (x i) hi⟩

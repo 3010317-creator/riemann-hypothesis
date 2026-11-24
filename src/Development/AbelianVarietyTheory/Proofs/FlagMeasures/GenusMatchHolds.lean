@@ -160,8 +160,7 @@ theorem exists_form_of_covBy {O V : Type} [CommRing O] [IsLocalRing O] [AddCommG
     rw [← IsLocalRing.notMem_maximalIdeal]
     intro hx
     have h1 : m.mkQ 1 = 0 := by
-      rw [← hy, ← key, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact hx
+      rwa [← hy, ← key, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h1
     exact (IsLocalRing.maximalIdeal.isMaximal O).ne_top ((Ideal.eq_top_iff_one _).2 h1)
   intro r
@@ -781,8 +780,7 @@ theorem exists_frame {n : ℕ} {L : Submodule (𝓞 E) (Fin n → E)} (hL : IsLa
       have h3 := mul_mem ht (inclE_mem v a)
       have ha' : (a : E) = _ := ha
       rw [ha', map_mul, ← mul_assoc, hts, one_mul, RingHom.map_mulVec] at h3
-      rw [← map_inv]
-      exact h3
+      rwa [← map_inv]
     | zero => simp
     | add x y _ _ hx hy => rw [Matrix.mulVec_add]; exact add_mem hx hy
     | smul a x _ hx =>
@@ -915,8 +913,7 @@ theorem normal_form (hσ : ∀ x, σ (σ x) = x) (hfix : ∀ x, σ x = x → x �
     refine ⟨a, ?_⟩
     have : baseMap E v a = x * w +
         (sigR σ (v.adicCompletion F)).restrict _ _ (sigR_mem v σ) (x * w) := Subtype.ext ha
-    rw [map_mul, hx, ← mul_add, hw, mul_one] at this
-    exact this
+    rwa [map_mul, hx, ← mul_add, hw, mul_one] at this
 
 end Local
 
@@ -1051,8 +1048,7 @@ theorem loc_le_of_zsmul (v : HeightOneSpectrum (𝓞 F)) (L M : Submodule (𝓞 
   suffices heq : (fun i => inclE (F := F) (v.adicCompletion F) (x i)) =
       (⟨(1 : E) ⊗ₜ[F] u, hs⟩ : intV E v) • (fun i => inclE (F := F) (v.adicCompletion F) ((c • x) i)) by
     show (fun i => inclE (F := F) (v.adicCompletion F) (x i)) ∈ loc (F := F) v M
-    rw [heq]
-    exact hm
+    rwa [heq]
   funext i
   have hci : (c • x) i = (c : F) • x i := by
     simp [Int.cast_smul_eq_zsmul]
@@ -1123,20 +1119,19 @@ theorem tlat_one_genus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hkU : ∀ v, k v ∈ UPts cm.sig J (v.adicCompletion F) := by
     intro v
     by_cases hv : loc v L = loc v M
-    · simp only [k, if_pos hv]; exact one_mem _
-    · simp only [k, if_neg hv]; exact hgU v
+    · simp only [k, ite_eq_left hv]; exact one_mem _
+    · simp only [k, ite_eq_right hv]; exact hgU v
   have hfin : {v | k v ≠ 1}.Finite := by
     refine (_root_.GlobalTheory.St.G.loc_eq_almost_all F E n L M hLat hMat).subset ?_
-    intro v hv heq
-    exact hv (by simp only [k, if_pos heq])
+    exact fun v hv heq => hv (by simp only [k, ite_eq_left heq])
   obtain ⟨y, hyU, hy⟩ := _root_.GlobalTheory.St.G.exists_adelic_of_finite_support F E n cm.sig J k hkU hfin
   have hglob : ∀ x, x ∈ hat F L ↔ y.1 *ᵥ x ∈ hat F M := by
     rw [_root_.GlobalTheory.St.G.Carry.carry_iff F E n L M hLat hMat y]
     intro v x
     rw [hy v]
     by_cases hv : loc v L = loc v M
-    · simp only [k, if_pos hv, Units.val_one, Matrix.one_mulVec, hv]
-    · simp only [k, if_neg hv]; exact hg v x
+    · simp only [k, ite_eq_left hv, Units.val_one, Matrix.one_mulVec, hv]
+    · simp only [k, ite_eq_right hv]; exact hg v x
   refine ⟨⟨y, hyU⟩, fun x => ?_⟩
   rw [hglob, Matrix.mulVec_mulVec]
   have hinv : ((⟨y, hyU⟩ : UPts cm.sig J (Ad F))⁻¹).1 = y⁻¹ := rfl

@@ -111,8 +111,7 @@ theorem comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+*
   rfl
 
 theorem inj' {A B : Type} [CommRing A] [CommRing B] {p q : A →+* B} (h : spMap p = spMap q) : p = q := by
-  have h' := Spec.map_injective h
-  exact congrArg CommRingCat.Hom.hom h'
+  exact congrArg CommRingCat.Hom.hom (Spec.map_injective h)
 
 variable {R}
 
@@ -120,8 +119,7 @@ def pre {C : Type} [CommRing C] (z : Sp C ⟶ (G R).left) : R[T;T⁻¹] →+* C 
   (Spec.preimage (R := CommRingCat.of R[T;T⁻¹]) (S := CommRingCat.of C) z).hom
 
 theorem spMap_pre {C : Type} [CommRing C] (z : Sp C ⟶ (G R).left) : spMap (pre z) = z := by
-  simp only [spMap, pre, CommRingCat.ofHom_hom]
-  exact Spec.map_preimage z
+  simpa only [spMap, pre, CommRingCat.ofHom_hom] using Spec.map_preimage z
 
 theorem pre_spMap {C : Type} [CommRing C] (φ : R[T;T⁻¹] →+* C) : pre (R := R) (spMap φ) = φ := by
   simp only [pre, spMap, Spec.preimage_map, CommRingCat.hom_ofHom]

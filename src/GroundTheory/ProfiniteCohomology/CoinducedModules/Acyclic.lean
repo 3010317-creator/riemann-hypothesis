@@ -134,8 +134,7 @@ theorem coindHomotopy_identity (n : ℕ)
   apply Subtype.ext
   funext g
   apply LocallyConstant.ext
-  intro x
-  exact coindHomotopy_identity_apply (k := k) f.1 _ _ (fun _ _ => rfl) (fun _ _ => rfl) g x
+  exact fun x => coindHomotopy_identity_apply (k := k) f.1 _ _ (fun _ _ => rfl) (fun _ _ => rfl) g x
 
 
 variable (k G X) in
@@ -148,15 +147,13 @@ theorem isZero_cohomology_discreteCoind (n : ℕ) :
   let f' : locallyConstantCochains (discreteCoind k G X) (n + 1) := f
   have hf' : (dLocallyConstant (discreteCoind k G X) (n + 1)).hom f' = 0 := by
     change ((cochainsComplex (discreteCoind k G X)).d (n + 1) (n + 2)).hom f = 0 at hf
-    rw [cochainsComplex_d] at hf
-    exact hf
+    rwa [cochainsComplex_d] at hf
   refine ⟨coindHomotopy (k := k) (X := X) n f', ?_⟩
   have := coindHomotopy_identity n f'
   rw [hf', map_zero, add_zero] at this
   change ((cochainsComplex (discreteCoind k G X)).d n (n + 1)).hom
     (coindHomotopy (k := k) (X := X) n f') = f
-  rw [cochainsComplex_d]
-  exact this
+  rwa [cochainsComplex_d]
 
 
 end GroundTheory.ProfCoh

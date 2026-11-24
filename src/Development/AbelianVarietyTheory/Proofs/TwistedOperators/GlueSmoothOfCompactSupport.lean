@@ -71,9 +71,7 @@ theorem glue_smooth_of_compactSupport : ∀ (H : Type) [TopologicalSpace H] (X :
   obtain ⟨χ, hχ⟩ := SmoothPartitionOfUnity.exists_isSubordinate 𝓘(ℝ, X) hs V hVo hcov
   refine ⟨fun y => ∑ᶠ a, χ a y • Φ a y, ?_, ?_⟩
   · rw [contDiff_iff_contDiffAt]
-    intro y
-    refine χ.contDiffAt_finsum fun a hy => ?_
-    exact (hΦ a).contDiffAt ((hVo a).mem_nhds (hχ a hy))
+    exact fun y => χ.contDiffAt_finsum fun a hy => (hΦ a).contDiffAt ((hVo a).mem_nhds (hχ a hy))
   · intro g
     have hterm : ∀ a, χ a (c g) • Φ a (c g) = χ a (c g) • f g := by
       intro a

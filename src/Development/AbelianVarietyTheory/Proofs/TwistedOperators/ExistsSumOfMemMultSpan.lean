@@ -109,10 +109,8 @@ def IsKFinCuspOfType (f : GA D V → ℂ) : Prop :=
 theorem IsGKMult.smul {F : MultilinearMap (RingHom.id ℂ) (fun τ : D.what₂.Tau => GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.kFin (M.ε τ) (M.σ τ))
     (GA D V → ℂ)} (h : IsGKMult θ M F) (c : ℂ) : IsGKMult θ M (c • F) := by
   constructor
-  · intro u
-    exact Formalism.IndefR.Mult.isAutFunSm_smul θ V (h.aut u) c
-  · intro u
-    exact Formalism.IndefR.Mult.isCuspFun_smul V (h.cusp u) c
+  · exact fun u => Formalism.IndefR.Mult.isAutFunSm_smul θ V (h.aut u) c
+  · exact fun u => Formalism.IndefR.Mult.isCuspFun_smul V (h.cusp u) c
   · intro τ g hg hk u w hw
     rw [smul_apply, smul_apply, h.equivK τ g hg hk u w hw]
     rfl

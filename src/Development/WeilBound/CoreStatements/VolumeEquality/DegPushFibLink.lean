@@ -123,9 +123,7 @@ private theorem exists_triangular_of_flags_eq (X Y : Fin r → V) (h : ∀ n, fl
       intro i
       simp
   choose l hl1 hl2 using key
-  refine ⟨Matrix.of fun j k => l k j, ?_, fun k => by simpa using hl2 k⟩
-  intro j k hjk
-  exact hl1 k j hjk
+  exact ⟨Matrix.of fun j k => l k j, fun j k hjk => hl1 k j hjk, fun k => by simpa using hl2 k⟩
 
 private theorem sub_diag_smul_mem_flag_of_triangular (X Y : Fin r → V) (S : Matrix (Fin r) (Fin r) Ω) (hS : S.BlockTriangular id)
     (hX : ∀ k, X k = ∑ j, S j k • Y j) (m : Fin r) : X m - S m m • Y m ∈ flagStep Ω Y m := by
@@ -150,8 +148,7 @@ private theorem prod_Iic_eq_prod_castLE' {M : Type} [CommMonoid M] (m : Fin r) (
       rw [Fin.le_def, Fin.coe_castLE]
       omega
   rw [himg, Finset.prod_image]
-  intro a _ b _ hab
-  exact Fin.castLE_injective _ hab
+  exact fun a _ b _ hab => Fin.castLE_injective _ hab
 
 private theorem det_submatrix_mul_triangular_eq (u W : Matrix (Fin r) (Fin r) Ω) (hW : W.BlockTriangular id) (m : Fin r)
     (I : Fin ((m : ℕ) + 1) → Fin r) :
@@ -180,8 +177,7 @@ private theorem det_submatrix_mul_triangular_eq (u W : Matrix (Fin r) (Fin r) Ω
     simp only [Matrix.of_apply]
     apply hW
     show Fin.castLE m.2 b < Fin.castLE m.2 c
-    rw [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
-    exact hbc
+    rwa [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
 
 private theorem exists_integral_change_of_basis_of_span_eq (fn : Ω₀ →+* Ω) (i : Ω →+* Ω₃) (c bb : Fin r → V) (hc : LinearIndependent Ω c)
     (O : ValuationSubring Ω₃) (R : Subring Ω) (A : Set (Fin r → Ω₀))
@@ -435,13 +431,13 @@ theorem exists_root {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
   rcases s with τ | τ
   · have hm : (m : ℕ) < D.p := m.2
     refine ⟨(τ, ⟨m, by omega⟩), ?_, ?_, fun K x => ?_⟩
-    · simp only [HodgeCpt.rootIdx, hm, dif_pos]
+    · simp only [HodgeCpt.rootIdx, hm, dite_eq_left]
     · simp [HodgeCpt.rootSgn, hm]
     · simp [HodgeCpt.rootSgn, hm, grDeg]
   · have hm : (m : ℕ) < D.q := m.2
     have h : ¬ D.p + D.q - 1 - m < D.p := by omega
     refine ⟨(τ, ⟨D.p + D.q - 1 - m, by omega⟩), ?_, ?_, fun K x => ?_⟩
-    · simp only [HodgeCpt.rootIdx, h, dif_neg, not_false_eq_true]
+    · simp only [HodgeCpt.rootIdx, h, dite_eq_right, not_false_eq_true]
       congr 1
       exact Fin.ext (by show D.p + D.q - 1 - (D.p + D.q - 1 - m) = m; omega)
     · simp [HodgeCpt.rootSgn, h]
@@ -508,8 +504,7 @@ theorem fibLink : ChartVal → Centre → CoordLat → FibLink := by
     exact hz ▸ hO z) hbi hbf (hbs.symm.trans (hA q hch s))
   have hgen : ∀ m', ((𝔐.V s).gr (Fl.b s) m').IsGenAt q (t m') := fun m' => by
     have := gr_span h₀ hbi hbf (regAt 𝔐.ξ q) m' (ht m')
-    rw [← hbs] at this
-    exact this
+    rwa [← hbs] at this
   have hstep : ∀ m', O.valuation (i (∏ a, y' ⟨a, ch a⟩ ^ grDeg x s m' a)) =
       O.valuation (i (t m')) * O.valuation (i (e (ρ m') ^ HodgeCpt.rootSgn D (ρ m'))⁻¹) := fun m' => by
     have h1 := (hRL (ρ m')).2 q trivial ch hc
@@ -528,7 +523,7 @@ theorem fibLink : ChartVal → Centre → CoordLat → FibLink := by
   have hpl : vdeg O (plPt fun s => (u s).map i) (plDeg ⟨s, m⟩) = (Finset.univ.sup fun I : Fin (m + 1) → Fin (labelRk D s) =>
       O.valuation (Matrix.of fun a b : Fin (m + 1) => (u s).map i (I a) (Fin.castLE m.2 b)).det)⁻¹ := by
     rw [vdeg, Finset.prod_eq_single (⟨s, m⟩ : Σ s, Fin (labelRk D s)) (fun z _ hz => by simp [plDeg, hz]) (by simp)]
-    simp only [plDeg, if_pos, zpow_neg, zpow_one]
+    simp only [plDeg, ite_eq_left, zpow_neg, zpow_one]
     rfl
   have h5 := hv m
   have h6 : O.valuation (i (∏ m' ∈ Finset.Iic m, β m')) ≠ 0 :=

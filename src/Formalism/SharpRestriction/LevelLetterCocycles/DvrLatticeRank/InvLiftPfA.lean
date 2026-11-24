@@ -113,8 +113,7 @@ theorem invLiftPf_inj (π' f t : LetA O n) (c₀ : O) (hf : W.γA W.gam π' = π
     intro y
     induction y with
     | zero =>
-      intro _
-      exact (PiNS_iff_lemma_3 W T π' 0 x).mpr ⟨⟨x, hxN, by simp⟩, hxD⟩
+      exact fun _ => (PiNS_iff_lemma_3 W T π' 0 x).mpr ⟨⟨x, hxN, by simp⟩, hxD⟩
     | succ y ih =>
       intro hyM
       rcases Nat.eq_zero_or_pos y with hy0 | hy0
@@ -248,8 +247,7 @@ theorem invLiftPf_lift (π' Eπ : LetA O n) (h' M σ : ℕ) (c : ZMod n)
       convert hk2 using 1
       rw [smul_sub]
       abel
-  · rw [sub_sub_cancel]
-    exact hk1
+  · rwa [sub_sub_cancel]
 
 end Local
 

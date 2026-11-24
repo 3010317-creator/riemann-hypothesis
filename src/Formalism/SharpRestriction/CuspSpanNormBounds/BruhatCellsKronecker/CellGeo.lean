@@ -187,7 +187,6 @@ theorem geo_X_X (F : FlagG S r T) (x y : S.V) (hx : x ∈ F.X) (hy : y ∈ F.X) 
   simp [key]
 
 theorem geo_fvec_perp (F : FlagG S r T) (p : Fin (r + 1)) : F.fvec p ∈ perpS S F.X := by
-  show ∀ x ∈ F.X, S.hT x (F.fvec p) = 0
   exact fun x hx => geo_X_fvec F x hx p
 
 theorem geo_coefX (F : FlagG S r T) (a : Fin r) (c : E) (y : S.V) (hy : y ∈ F.Xa a.val) :
@@ -273,12 +272,12 @@ theorem geo_side (F : FlagG S r T) (A : Matrix (Fin j) (Fin j) E) (hA : StrictUp
     have hg : ∀ i : Fin r, F.coefX (Y (F.fvec i.succ)) i = G i.val := by
       intro i
       by_cases h : i.val + 1 < j
-      · simp only [G, dif_pos h]
+      · simp only [G, dite_eq_left h]
         obtain ⟨y, hy, hyeq⟩ := geo_W_split hj F A hA ⟨i.val + 1, h⟩ i rfl
         have hsucc : F.fvec i.succ = F.fvec (Fin.castLE hj ⟨i.val + 1, h⟩) := rfl
         rw [hsucc, H2, hyeq]
         exact geo_coefX F i _ y hy
-      · simp only [G, dif_neg h]
+      · simp only [G, dite_eq_right h]
         have hjr : j ≤ r := by have := i.isLt; omega
         have hle : j - 1 ≤ i.val := by omega
         have hmem : Y (F.fvec i.succ) ∈ F.Xa i.val :=
@@ -295,7 +294,7 @@ theorem geo_side (F : FlagG S r T) (A : Matrix (Fin j) (Fin j) E) (hA : StrictUp
     rw [e1, e2]
     exact geo_sum_range hj G fun n hn => by
       simp only [G]
-      rw [dif_neg (show ¬ (n + 1 < j) by omega)]
+      rw [dite_eq_right (show ¬ (n + 1 < j) by omega)]
 
 end Flag
 
@@ -332,8 +331,7 @@ theorem GeoDec.symm {F : FlagG S r T} {F' : FlagG S r T'} {hj : j ≤ r + 1} {A 
   exact ⟨β, α, by rw [h1, add_comm], h3, h2⟩
 
 theorem geo_img_mem (F : FlagG S r T) (hj : j ≤ r + 1) (A : Matrix (Fin j) (Fin j) E) (hA : StrictUp A) (a : Fin j) :
-    geoImg F hj A a ∈ F.Xa a.val := by
-  exact geo_W_mem hj F A hA a
+    geoImg F hj A a ∈ F.Xa a.val := geo_W_mem hj F A hA a
 
 theorem geometric_decomposition_maps_perp_into_flag (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (A A' : Matrix (Fin j) (Fin j) E)
     (hA : StrictUp A) (hA' : StrictUp A') (Y : S.V →ₗ[E] S.V) (hdec : GeoDec F F' hj A A' Y) (H1 : Y ∈ LieU S)
@@ -362,8 +360,7 @@ theorem geometric_decomposition_maps_perp_into_flag (F : FlagG S r T) (F' : Flag
         fun c => geo_X_X F _ _ (hFX a) (hFX c)
       rw [hx' _ (hFX a)] at e
       simp only [hz, zero_mul, Finset.sum_const_zero, zero_add] at e
-      simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.zero_apply]
-      exact e.symm
+      simpa only [Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.zero_apply] using e.symm
     subst hβ
     simp only [Pi.zero_apply, zero_smul, Finset.sum_const_zero, add_zero] at hYx
     have hmem : Y x ∈ F.Xa (j - 1) := by
@@ -398,14 +395,12 @@ theorem geometric_decomposition_maps_perp_into_flag (F : FlagG S r T) (F' : Flag
       have hpe : F.fvec p = F.fvec (Fin.castLE hj ⟨p.val, hp⟩) := rfl
       have h1 := H1' (F.fvec p) x
       rw [hpe, H2, hx' _ (geo_Xa_le_X F _ (geo_img_mem F hj A hA _)), zero_add] at h1
-      rw [hpe]
-      exact h1
+      rwa [hpe]
     · have hPP : S.hT P P = 0 := geo_X_X F _ _ hP hP
       have hQQ : S.hT Q Q = 0 := geo_X_X F' _ _ hQ hQ
       have hQP : S.hT Q P = 0 := by
         have h5 := hs1
-        rw [hYx, map_add (f := _), LinearMap.add_apply, hPP, zero_add] at h5
-        exact h5
+        rwa [hYx, map_add (f := _), LinearMap.add_apply, hPP, zero_add] at h5
       have hPQ : S.hT P Q = 0 := by
         rw [← S.herm.eq Q P, hQP, map_zero]
       rw [hYx]
@@ -460,8 +455,7 @@ theorem geo_hsk (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (A A' :
 theorem geo_Z_det (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (h : Dl F F' j ≠ 0) :
     ((Zhat F F').submatrix (Fin.castLE hj) (Fin.castLE hj)).det ≠ 0 := by
   unfold Dl leadMinorE at h
-  rw [dif_pos hj] at h
-  exact h
+  rwa [dite_eq_left hj] at h
 
 theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
     (hcase : (j ≤ r ∧ Dl F F' j ≠ 0) ∨ (j = r + 1 ∧ Gflag F F' ≠ 0)) :
@@ -541,13 +535,13 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
       simp only [hcl]
       rw [Fin.sum_univ_castSucc]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
-      · rw [if_neg (Fin.castSucc_lt_last b).ne]
+      · rw [ite_eq_right (Fin.castSucc_lt_last b).ne]
         have he : ∀ c : Fin r, S.hT (F.fvec b.castSucc) (F.fvec c.castSucc) = 0 := fun c => by
           rw [geo_fvec_cast, geo_fvec_cast]
           exact F.e_iso b c
         simp only [he, zero_mul, Finset.sum_const_zero, zero_add]
         rw [geo_fvec_cast, geo_fvec_last, F.z_orth b, zero_mul]
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
         have hz0 : ∀ c : Fin r, S.hT (F.fvec (Fin.last r)) (F.fvec c.castSucc) = 0 := fun c => by
           rw [geo_fvec_last, geo_fvec_cast, ← S.herm.eq (F.e c) F.z, F.z_orth c, map_zero]
         simp only [hz0, zero_mul, Finset.sum_const_zero, zero_add]
@@ -558,13 +552,13 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
       simp only [hcl]
       rw [Fin.sum_univ_castSucc]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
-      · rw [if_neg (Fin.castSucc_lt_last b).ne]
+      · rw [ite_eq_right (Fin.castSucc_lt_last b).ne]
         have he : ∀ c : Fin r, S.hT (F'.fvec b.castSucc) (F'.fvec c.castSucc) = 0 := fun c => by
           rw [geo_fvec_cast, geo_fvec_cast]
           exact F'.e_iso b c
         simp only [he, zero_mul, Finset.sum_const_zero, zero_add]
         rw [geo_fvec_cast, geo_fvec_last, F'.z_orth b, zero_mul]
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
         have hz0 : ∀ c : Fin r, S.hT (F'.fvec (Fin.last r)) (F'.fvec c.castSucc) = 0 := fun c => by
           rw [geo_fvec_last, geo_fvec_cast, ← S.herm.eq (F'.e c) F'.z, F'.z_orth c, map_zero]
         simp only [hz0, zero_mul, Finset.sum_const_zero, zero_add]
@@ -576,10 +570,10 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
       rw [hPL a] at e
       rw [hmvL a]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
-      · rw [if_neg (Fin.castSucc_lt_last b).ne, zero_add] at e
+      · rw [ite_eq_right (Fin.castSucc_lt_last b).ne, zero_add] at e
         rw [Pi.single_eq_of_ne (Fin.castSucc_lt_last b).ne]
         exact e
-      · rw [if_pos rfl] at e
+      · rw [ite_eq_left rfl] at e
         rw [Pi.single_eq_same]
         linear_combination e
     have hZx : ((Zhat F F').submatrix (Fin.castLE hj) (Fin.castLE hj))ᴴ *ᵥ (fun c => w (Sum.inl c)) =
@@ -589,10 +583,10 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
       rw [hUR a] at e
       rw [hmvR a]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
-      · rw [if_neg (Fin.castSucc_lt_last b).ne, add_zero] at e
+      · rw [ite_eq_right (Fin.castSucc_lt_last b).ne, add_zero] at e
         rw [Pi.single_eq_of_ne (Fin.castSucc_lt_last b).ne]
         exact e
-      · rw [if_pos rfl] at e
+      · rw [ite_eq_left rfl] at e
         rw [Pi.single_eq_same]
         linear_combination e
     have hadj : ∀ (M : Matrix (Fin (r + 1)) (Fin (r + 1)) E) (v : Fin (r + 1) → E) (s : E),
@@ -609,10 +603,10 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
     have hdl : Dl F F' r = (((Zhat F F').submatrix (Fin.castLE hj) (Fin.castLE hj)).submatrix
         Fin.castSucc Fin.castSucc).det := by
       unfold Dl leadMinorE
-      exact dif_pos (Nat.le_succ r)
+      exact dite_eq_left (Nat.le_succ r)
     have hDl : Dl F F' (r + 1) = ((Zhat F F').submatrix (Fin.castLE hj) (Fin.castLE hj)).det := by
       unfold Dl leadMinorE
-      exact dif_pos hj
+      exact dite_eq_left hj
     have hadjll : ((Zhat F F').submatrix (Fin.castLE hj) (Fin.castLE hj)).adjugate (Fin.last r) (Fin.last r) =
         Dl F F' r := by
       rw [Matrix.adjugate_fin_succ_eq_det_submatrix, Fin.succAbove_last, hdl, Fin.val_last,
@@ -664,7 +658,7 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
       · exact lead M v hMv hvl h
     have hor : Dl F F' (r + 1) ≠ 0 ∨ Dl F F' r ≠ 0 := by
       by_contra hc
-      push_neg at hc
+      push Not at hc
       apply hG
       rw [hc.1, hc.2]
       ring
@@ -693,16 +687,13 @@ theorem geo_dec (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1) (A A' :
   intro y
   refine ⟨fun a => geoC (geoV F F' hj) (Sum.inl a) y, fun a => geoC (geoV F F' hj) (Sum.inr a) y, ?_, ?_, ?_⟩
   · have e := geo_Y_apply (geoV F F' hj) (geoW F F' hj A A') y
-    rw [Fintype.sum_sum_type] at e
-    exact e
+    rwa [Fintype.sum_sum_type] at e
   · intro a
     have e := geo_repr (geoV F F' hj) h (Sum.inl a) y
-    rw [Fintype.sum_sum_type] at e
-    exact e
+    rwa [Fintype.sum_sum_type] at e
   · intro a
     have e := geo_repr (geoV F F' hj) h (Sum.inr a) y
-    rw [Fintype.sum_sum_type, add_comm] at e
-    exact e
+    rwa [Fintype.sum_sum_type, add_comm] at e
 
 theorem geo_main (K : Type) [Field K] [Algebra K E] (F : FlagG S r T) (F' : FlagG S r T')
     (han : ∀ y : S.V, (∀ a, S.hT (F.fvec a) y = 0) → S.hT y y = 0 → y ∈ F.X)

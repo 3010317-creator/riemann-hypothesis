@@ -86,8 +86,7 @@ theorem connectedSpace_of_surjective_pow {k : Type} [Field k] [IsAlgClosed k] (G
       one_mem' := mem_connectedComponent
       mul_mem' := fun {x y} hx hy => by
         have := key' y hx
-        rw [_root_.one_mul, ← connectedComponent_eq hy] at this
-        exact this
+        rwa [_root_.one_mul, ← connectedComponent_eq hy] at this
       inv_mem' := fun {x} hx => by
         have := key (𝟙 G)⁻¹ hx
         rwa [GrpObj.comp_inv, GrpObj.comp_inv, Category.comp_id, Category.comp_id, inv_one] at this }
@@ -142,8 +141,7 @@ theorem surjective_pow {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelianS
   have := hA.geomConnected
   let K := AlgebraicClosure (S.residueField (A.hom x))
   let t : Sp K ⟶ S := spMap (algebraMap (S.residueField (A.hom x)) K) ≫ S.fromSpecResidueField (A.hom x)
-  have ht : A.hom x = t (IsLocalRing.closedPoint K) := by
-    exact (Scheme.fromSpecResidueField_apply _ _).symm
+  have ht : A.hom x = t (IsLocalRing.closedPoint K) := (Scheme.fromSpecResidueField_apply _ _).symm
   let B := (Over.pullback t).obj A
   have hB : IsAbelianScheme B :=
     { comm := inferInstance

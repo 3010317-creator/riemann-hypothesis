@@ -244,8 +244,7 @@ variable {K : Type} [Field K] {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → D
 theorem pairK_one_basis [StarRing K] (i j : VVIdx lam) :
     pairK lam (fun _ => (1 : Matrix (Fin n) (Fin n) K)) (bVV K lam i) (bVV K lam j) = gramB K lam i j := by
   have h := pairK_basis (K := K) lam 1 i j
-  rw [map_one] at h
-  exact h
+  rwa [map_one] at h
 
 theorem gramB_posDef (φ : K →+* ℂ) : ((gramB K lam).map φ).PosDef := by
   letI : StarRing K := starRingOfComm

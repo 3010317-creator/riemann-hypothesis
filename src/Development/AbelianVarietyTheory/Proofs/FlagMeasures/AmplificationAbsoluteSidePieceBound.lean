@@ -115,8 +115,7 @@ lemma minor_ne_zero {r l : ℕ} (hl : l ≤ r) (Z : Matrix (Fin r) (Fin r) ℂ) 
   have h1 := left_ne_zero_of_mul hZ
   let e : Fin l ≃ {i : Fin r // i.val < l} :=
     ⟨fun i => ⟨Fin.castLE hl i, i.2⟩, fun i => ⟨i.1.val, i.2⟩, fun _ => rfl, fun _ => rfl⟩
-  rw [← Matrix.det_submatrix_equiv_self e] at h1
-  exact h1
+  rwa [← Matrix.det_submatrix_equiv_self e] at h1
 
 lemma Zr_mul_uEmb {k r : ℕ} (g : Mat k r) (u : Matrix (Fin r) (Fin r) ℂ) (hu : IsUnit u.det) :
     Zr k r (g * uEmb k r u) = Zr k r g * u := by
@@ -167,7 +166,7 @@ theorem offBlock_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (g�
     (fun i j h => Matrix.one_apply_ne h.ne) (fun i => by simp [hU, upperOff, upper])
     (fun i j h => by
       simp only [hU, upperOff, upper]
-      rw [dite_eq_right (not_lt.2 h.le), if_neg h.ne'])
+      rw [dite_eq_right (not_lt.2 h.le), ite_eq_right h.ne'])
     (fun i j hi hj => hZ0 i j ⟨fun _ => not_lt.2 hj, fun _ => hi⟩) ⟨c.val, hcl⟩ b
     (fun c' hc' => by
       by_contra h
@@ -673,14 +672,13 @@ theorem radical_coords_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ
     rw [e, eucl_neg]
     exact (eucl_comp_le (wI k r) (fun j j' h => (Rad.wI_inj j j').1 h) _).trans (hEbd b)
   · have e : q.2.1 p = skewM q.2.1 q.2.2 p.1.1 p.1.2 := by
-      simp only [skewM, dif_pos p.2]
+      simp only [skewM, dite_eq_left p.2]
     rw [e]
     exact hskew _ _
   · have e : skewM q.2.1 q.2.2 b b = (q.2.2 b : ℂ) * Complex.I := by
       simp [skewM]
     have := hskew b b
-    rw [e, norm_mul, Complex.norm_I, mul_one, Complex.norm_real, Real.norm_eq_abs] at this
-    exact this
+    rwa [e, norm_mul, Complex.norm_I, mul_one, Complex.norm_real, Real.norm_eq_abs] at this
 
 end GlobalTheory.Amp.RadBound
 end -- clump:auto
@@ -877,10 +875,10 @@ theorem rS_u (u : Matrix (Fin r) (Fin r) ℂ) (v : Fin (2 * r + k + 1) → ℂ) 
     Fin.ext (by have := b.2; simp only [esI]; omega)
   have h1 : ∀ b, uEmb k r u (esI k r a) (eI k r b) = 0 := fun b => by
     have := b.2
-    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [eI]; omega), if_neg (esI_ne_eI _ _)]
+    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [eI]; omega), ite_eq_right (esI_ne_eI _ _)]
   have h2 : ∀ b, uEmb k r u (esI k r a) (wI k r b) = 0 := fun b => by
     have := b.2
-    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [wI]; omega), if_neg (esI_ne_wI _ _)]
+    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [wI]; omega), ite_eq_right (esI_ne_wI _ _)]
   have h3 : ∀ b, uEmb k r u (esI k r a) (esI k r b) = star (u⁻¹ b a) := fun b => by
     have := b.2
     unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_left (by simp only [esI]; omega)]
@@ -925,13 +923,11 @@ theorem gramProj_mid (P : Submodule ℂ (EuclideanSpace ℂ (Fin (2 * r + k + 1)
     intro x
     apply Submodule.eq_starProjection_of_mem_of_inner_eq_zero
     · rw [hP]; refine ⟨hE _, hS _, ?_⟩
-      simp only [hW]
-      exact Submodule.starProjection_apply_mem _ _
+      simpa only [hW] using Submodule.starProjection_apply_mem _ _
     · intro w hw
       obtain ⟨h1, h2, h3⟩ := (hP w).1 hw
       rw [inner_sub_left, hin _ _ h1 h2, hin _ _ h1 h2, ← inner_sub_left]
-      simp only [hW]
-      exact Submodule.starProjection_inner_eq_zero _ _ h3
+      simpa only [hW] using Submodule.starProjection_inner_eq_zero _ _ h3
   unfold gramProj
   congr 3
   ext a b
@@ -1125,7 +1121,7 @@ theorem mem_pos (p : Fin (2 * r + k + 1) → ℂ) : p ∈ LinearMap.ker (Matrix.
     refine ⟨funext fun a => ?_, ?_⟩
     · have := congrFun h (esI k r a); rwa [GlobalTheory.Amp.NCoord.H_es] at this
     · have := congrFun h (wI k r (Fin.last k)); rw [H_w] at this
-      simp only [sg, if_true] at this
+      simp only [sg, ite_true] at this
       show p _ = 0
       linear_combination (-1 / 2 : ℂ) * this
   · rintro ⟨h1, h2⟩
@@ -1353,8 +1349,7 @@ theorem cut_le {k r : ℕ} {β : Fin r → ℕ} (φ : Mt k r → ℝ≥0∞) (h�
       · exact continuous_const
     exact Continuous.measurable (γ := Mt k r) this
   unfold lebR at h1
-  rw [lintegral_map hl hi] at h1
-  exact h1
+  rwa [lintegral_map hl hi] at h1
 
 theorem lintegral_le {k r : ℕ} {β : Fin r → ℕ} (hβ : Monotone β) (φ : Mt k r → ℝ≥0∞)
     (hφ : SubCut (Nset k r) (lebR k r β) φ) (E : Set (Mt k r)) (hE : MeasurableSet E)

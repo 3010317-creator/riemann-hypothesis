@@ -108,8 +108,7 @@ theorem const_of_connected {Z : Scheme.{0}} (g : Z ⟶ Sp ℂ) [Smooth g] [Conne
       show Spec.map (CommRingCat.ofHom φ) ≫ Spec.map c = 𝟙 _ ↔ _
       rw [← Spec.map_comp, ← Spec.map_id, Spec.map_injective.eq_iff]
       constructor
-      · intro h a
-        exact congrArg (fun f : CommRingCat.of ℂ ⟶ CommRingCat.of ℂ => f.hom a) h
+      · exact fun h a => congrArg (fun f : CommRingCat.of ℂ ⟶ CommRingCat.of ℂ => f.hom a) h
       · intro h
         ext a
         exact h a
@@ -125,8 +124,7 @@ theorem const_of_connected {Z : Scheme.{0}} (g : Z ⟶ Sp ℂ) [Smooth g] [Conne
     have hdisc : IsDiscrete (Set.range fun n : ℕ => (n : ℂ)) :=
       by
         have h0 : Topology.IsEmbedding (fun n : ℕ => (n : ℂ)) := by
-          have h := Complex.isometry_ofReal.isEmbedding.comp Nat.isClosedEmbedding_coe_real.isEmbedding
-          exact h
+          exact Complex.isometry_ofReal.isEmbedding.comp Nat.isClosedEmbedding_coe_real.isEmbedding
         exact h0.isDiscrete_range
     have := isPreconnected_univ.constant_of_mapsTo hdisc hcont.continuousOn (fun s _ => ⟨_, rfl⟩)
       (x := { φ with commutes' := (halg φ).1 hp }) (y := { ψ with commutes' := (halg ψ).1 hq }) trivial trivial
@@ -211,8 +209,7 @@ theorem exists_descent {K L : IntermediateField ℚ ℂ} (hKL : K ≤ L) {X : Sc
     show Spec.map (CommRingCat.ofHom ψ) ≫ Spec.map c = _ ↔ _
     rw [← Spec.map_comp, Spec.map_injective.eq_iff]
     constructor
-    · intro h a
-      exact congrArg (fun f : CommRingCat.of K ⟶ CommRingCat.of F => f.hom a) h
+    · exact fun h a => congrArg (fun f : CommRingCat.of K ⟶ CommRingCat.of F => f.hom a) h
     · intro h
       ext a
       exact h a
@@ -361,7 +358,7 @@ theorem exists_indicator (hA : AllTest Xo c) (U : Set (Xo.XF c)) (hU : IsClopen 
   · funext p y
     exact (hi p y).eq
   · have h := hA S y
-    have e : evR Xo c χ y = h.choose_spec.choose (χ h.choose h.choose_spec.choose_spec.choose) := dif_pos h
+    have e : evR Xo c χ y = h.choose_spec.choose (χ h.choose h.choose_spec.choose_spec.choose) := dite_eq_left h
     rw [e]
     exact ⟨(hi _ _).map _, hmap _ S _ _ y h.choose_spec.choose_spec.choose_spec.1⟩
 
@@ -376,7 +373,7 @@ theorem exists_index {σ : KA l →+* ℂ} {g : ℕ} {ty : Fin g → (E →+* �
     intro i P hP
     have h : ∃ j Q, IsPeriod (F.Di j) ty Q ∧ F.u j Q = F.u i P := ⟨i, P, hP, rfl⟩
     obtain ⟨Q, hQ, e⟩ := h.choose_spec
-    exact (dif_pos h).trans (congrArg _ (F.disj _ _ _ _ hQ hP e))
+    exact (dite_eq_left h).trans (congrArg _ (F.disj _ _ _ _ hQ hP e))
   refine ⟨t, ht, fun m B y hB hs hy b₀ hb₀ => ?_⟩
   obtain ⟨B', i, P, ho, hm, -, hP, hu⟩ := F.lift m B y hB hs hy b₀ hb₀
   have hev : (fun b => t (y b)) =ᶠ[nhds b₀] fun _ => (i : ℕ) :=

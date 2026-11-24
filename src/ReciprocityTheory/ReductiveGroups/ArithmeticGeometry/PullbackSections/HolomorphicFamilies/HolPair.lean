@@ -44,7 +44,7 @@ private theorem valAt'_top_mul_lemma_2 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (f g 
     first
       | exact le_top
   first
-    | simp only [valAt', dif_pos h, valAt, map_mul]
+    | simp only [valAt', dite_eq_left h, valAt, map_mul]
 
 private theorem valAt'_top_add_lemma_3 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (f g : Γ(Y, ⊤)) :
     valAt' x ⊤ (f + g) = valAt' x ⊤ f + valAt' x ⊤ g := by
@@ -52,7 +52,7 @@ private theorem valAt'_top_add_lemma_3 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (f g 
     first
       | exact le_top
   first
-    | simp only [valAt', dif_pos h, valAt, map_add (f := _)]
+    | simp only [valAt', dite_eq_left h, valAt, map_add (f := _)]
 
 theorem isHolTo_pullbackSpec {R S T : Type} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
     {B : Set V} (hB : IsOpen B)
@@ -160,8 +160,7 @@ private theorem top_le_lemma_3 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (W : Y.Opens)
     (h : x q ∈ W) : ⊤ ≤ x ⁻¹ᵁ W := by
   intro q' _
   have hq : q' = q := pt_lemma_2 q' q
-  rw [hq]
-  exact h
+  rwa [hq]
 
 theorem holPair (X Y₁ Y₂ : Scheme.{0}) (p₁ : Y₁ ⟶ X) (p₂ : Y₂ ⟶ X) (n : ℕ) (B : Set (Fin n → ℂ))
     (e₁ : (Fin n → ℂ) → (Sp ℂ ⟶ Y₁)) (e₂ : (Fin n → ℂ) → (Sp ℂ ⟶ Y₂)) (he : ∀ b, e₁ b ≫ p₁ = e₂ b ≫ p₂) :
@@ -216,7 +215,7 @@ theorem holPair (X Y₁ Y₂ : Scheme.{0}) (p₁ : Y₁ ⟶ X) (p₂ : Y₂ ⟶ 
       (Spec.map (CommRingCat.ofHom (algebraMap Γ(X, W) Γ(Y₂, W₂)))) :=
     fun b hb => pullback.lift (l₁ b hb) (l₂ b hb) (hc b hb)
   let w := fun b => if hb : b ∈ N then wN b hb else wN b₀ hb₀N
-  have hw : ∀ b (hb : b ∈ N), w b = wN b hb := fun b hb => dif_pos hb
+  have hw : ∀ b (hb : b ∈ N), w b = wN b hb := fun b hb => dite_eq_left hb
   have hwφ : ∀ b ∈ N, w b ≫ φ = pullback.lift (e₁ b) (e₂ b) (he b) := by
     intro b hb
     rw [hw b hb]

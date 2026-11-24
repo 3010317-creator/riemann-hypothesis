@@ -60,13 +60,11 @@ def dualPick {m : Type} [DecidableEq m] (g : m → k) : m → k := by
 theorem dualPick_dot {m : Type} [Fintype m] [DecidableEq m] (g : m → k) (hg : g ≠ 0) : dualPick g ⬝ᵥ g = 1 := by
   classical
   have h : ∃ i, g i ≠ 0 := by
-    by_contra h'
-    push_neg at h'
+    by_contra! h'
     exact hg (funext h')
   unfold dualPick
   rw [dite_eq_left h]
-  simp only [single_dotProduct]
-  exact inv_mul_cancel₀ h.choose_spec
+  simpa only [single_dotProduct] using inv_mul_cancel₀ h.choose_spec
 
 variable {n : Type} [Fintype n] [DecidableEq n]
 

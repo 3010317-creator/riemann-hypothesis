@@ -87,8 +87,7 @@ theorem onto_of_count {La Q : Type} [AddCommGroup La] [Module.Finite ℤ La] [Gr
       La ⧸ LinearMap.range (m • (LinearMap.id : La →ₗ[ℤ] La))) := by
     intro y y' h
     have h1 := (eq_iff m ev hadd hker _ _).2 h
-    rw [hg, hg, eq_iff m ev' hadd' hker', hs, hs] at h1
-    exact h1
+    rwa [hg, hg, eq_iff m ev' hadd' hker', hs, hs] at h1
   obtain ⟨c, rfl⟩ := (hon x).1 hx
   obtain ⟨y, hy⟩ := Finite.surjective_of_injective hinj (Submodule.Quotient.mk c)
   exact ⟨s y, by rw [← hg, eq_iff m ev hadd hker]; exact hy⟩
@@ -147,8 +146,7 @@ theorem push {S : Scheme.{0}} (t : SAB H S) {k K : Type} [Field k] [Field K] (j 
   have h1 := J.isom n hn a' b'
   rw [ha', hb'] at h1
   have h2 := weilIs_fieldExt t.G t.PP.L t.PP.isLB k K j q _ rfl n _ _ _ _ rfl rfl _ _ (I.isom n hn a b) h1
-  rw [h2, map_zpow] at h1
-  exact h1
+  rwa [h2, map_zpow] at h1
 
 end Lev
 

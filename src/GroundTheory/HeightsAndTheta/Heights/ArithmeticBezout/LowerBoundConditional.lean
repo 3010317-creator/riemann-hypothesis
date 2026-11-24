@@ -124,8 +124,7 @@ theorem isHomogIdeal_iff (I : Ideal (MvPolynomial (Fin n) R)) :
   · intro h i r hr
     have := h r hr i
     rwa [← decomposition.decompose'_apply] at this
-  · intro h f hf d
-    exact homogeneousComponent_mem_of_mem h hf d
+  · exact fun h f hf d => homogeneousComponent_mem_of_mem h hf d
 
 theorem isHomogIdeal_sup_span_linForm {I : Ideal (MvPolynomial (Fin n) R)} (hI : IsHomogIdeal I)
     (u : Fin n → R) : IsHomogIdeal (I ⊔ Ideal.span {linForm u}) := by
@@ -147,7 +146,7 @@ theorem isProjPrime_of_mem_support_fundCycle {J : Ideal (MvPolynomial (Fin n) R)
     by_contra h
     apply hval
     unfold fundCycle
-    rw [Finsupp.onFinset_apply, if_neg h]
+    rw [Finsupp.onFinset_apply, ite_eq_right h]
   obtain ⟨hmin, hW'⟩ := hrel
   have hprime : W.IsPrime := hmin.1.1
   have hJh := (isHomogIdeal_iff J).mp hJ
@@ -159,8 +158,7 @@ theorem isProjPrime_of_mem_support_fundCycle {J : Ideal (MvPolynomial (Fin n) R)
     exact Ideal.homogeneousCore_mono _ hmin.1.2
   have hle : core ≤ W := Ideal.toIdeal_homogeneousCore_le _ _
   have heq : core = W := le_antisymm hle (hmin.2 ⟨hcore_prime, hJcore⟩ hle)
-  rw [Ideal.IsHomogeneous.iff_eq]
-  exact heq
+  rwa [Ideal.IsHomogeneous.iff_eq]
 
 end Components
 

@@ -109,8 +109,7 @@ theorem smoothOn_pull {A : FinHolAtlas e X} {A' : FinHolAtlas e' X'} {h : X' →
     have hcomp : ContDiffAt ℝ ∞ ((f ∘ (A.chart k).symm) ∘ (A.chart k ∘ h ∘ (A'.chart j).symm)) t :=
       hfk.comp t (hF'.restrict_scalars ℝ)
     exact hcomp.congr_of_eventuallyEq (comp_chart_eventuallyEq hh f j k ht hk)
-  intro t ht
-  exact (key t ht).contDiffWithinAt
+  exact fun t ht => (key t ht).contDiffWithinAt
 
 theorem isPsh_pull {A : FinHolAtlas e X} {A' : FinHolAtlas e' X'} {h : X' → X}
     (hh : HoloMap A' A h) {P : LocPot X} (hP : IsPotential A P) (hpsh : IsPsh A P) :

@@ -82,8 +82,7 @@ theorem basis_iff_of_split {S N J : Type} [CommRing S] [AddCommGroup N] [Module 
       have h1 := hu (fun τ => ∑ i, a' (e.symm ⟨τ, i⟩) • b τ i) ⟨fun τ => hmem τ _, ha'.symm⟩
       funext j
       have h2 := hau (e j).1 (fun i => a' (e.symm ⟨(e j).1, i⟩)) (congrFun h1 (e j).1).symm
-      have h3 := congrFun h2 (e j).2
-      simpa using h3
+      simpa using congrFun h2 (e j).2
   · intro h τ n hn
     obtain ⟨a', ha', hu'⟩ := h n
     have hA : ∀ a : Fin (m τ) → S, n = ∑ i, a i • b τ i →
@@ -128,8 +127,7 @@ theorem eigBasis_iff_tanBasis : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     rw [← hρ, ← hsm, hinj.eq_iff]
   have hs : ∀ n : N, ∃! f : (E →+* ℂ) → N, (∀ τ, f τ ∈ M τ) ∧ ∑ τ, f τ = n := by
     intro n
-    simp only [hM]
-    exact _root_.GlobalTheory.Frames.existsUnique_eigen_sum E H l c S N ρ n
+    simpa only [hM] using _root_.GlobalTheory.Frames.existsUnique_eigen_sum E H l c S N ρ n
   have hmain := basis_iff_of_split (fun τ => Dw.mult τ) M hs b (fun τ i => (hE τ _).1 (he τ i)) g e
   have hT : ∀ n, IsTanAt x (v n) := fun n => (htan _).2 ⟨n, rfl⟩
   have hC : ∀ (k : ℕ) (b : Fin k → N) (a : Fin k → S) (n : N),

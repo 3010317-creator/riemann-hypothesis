@@ -96,8 +96,7 @@ theorem formGSD_ok (hX : X.Ok) (hC : C.Eqv) : (formGSD C Λ).Ok := by
     refine Finite.of_injective
       (fun a : MulAction.stabilizer (formGSD C Λ).G d =>
         (⟨FormG.incl Λ a.1, a.2⟩ : MulAction.stabilizer (UF X.E n × GLG (E := X.E) (n := n) (SG := SG)) (d : DecoSet (E := X.E) (n := n) (ST := ST) (SG := SG)))) ?_
-    intro a b hab
-    exact Subtype.ext (FormG.incl_injective Λ (congrArg Subtype.val hab))
+    exact fun a b hab => Subtype.ext (FormG.incl_injective Λ (congrArg Subtype.val hab))
   · intro g d
     obtain ⟨m, hm, hc⟩ := Λ.chr_root g.2
     exact (hC.nab_smul (FormG.incl Λ g) d).trans (map_root_smul _ _ hm hc).symm
@@ -130,7 +129,7 @@ theorem colOk (hX : X.Ok) (u : Pr.Word) (j : ℕ) : (colGSD W Ch u j).Ok :=
 
 theorem colLev_of_lt {j : ℕ} (hj : j < R.m) (w : Pr.vGs) :
     colLev Ch j w = ⟨HX (𝓞 X.E ⧸ w.1.asIdeal) (R.N j) R.k R.t j,
-      lamX (Ch.psi0 w) (extChi fun s => Ch.chi s w) (R.N j) R.k R.m R.t j⟩ := if_pos hj
+      lamX (Ch.psi0 w) (extChi fun s => Ch.chi s w) (R.N j) R.k R.m R.t j⟩ := ite_eq_left hj
 
 end Cols
 

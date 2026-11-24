@@ -46,8 +46,7 @@ lemma continuous_torepK (ε : Fin n → Bool) :
     Continuous (fun x : Kset ε => torepK ε x.2) := by
   unfold torepK
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
-  refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
-  exact continuous_star.comp continuous_subtype_val
+  exact Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_star.comp continuous_subtype_val⟩
 
 
 open Classical in
@@ -113,8 +112,7 @@ lemma torep_isURepOn {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ
     have hc : Continuous fun x : Kset ε => T.op (torepK ε x.2) :=
       (continuous_subtype_val.comp T.cont).comp (continuous_torepK ε)
     have hc2 : Continuous fun x : Kset ε => T.op (torepK ε x.2) v := hc.clm_apply continuous_const
-    refine hc2.congr fun x => ?_
-    exact (congrArg (fun f => f v) (torepSig_of_mem T x.2)).symm
+    exact hc2.congr fun x => (congrArg (fun f => f v) (torepSig_of_mem T x.2)).symm
 
 lemma torep_exp_eigen {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V] [CompleteSpace V]
     (A : V →L[ℂ] V) (v : V) (c : ℂ) (h : A v = c • v) :
@@ -141,7 +139,7 @@ lemma torep_diag_sum (d : Fin n → ℂ) :
     simp [Matrix.single_apply]
   · rw [Matrix.diagonal_apply_ne _ h]
     refine (Finset.sum_eq_zero fun a _ => ?_).symm
-    rw [Matrix.smul_apply, Matrix.single_apply, if_neg (fun h' => h (h'.1.symm.trans h'.2)), smul_zero]
+    rw [Matrix.smul_apply, Matrix.single_apply, ite_eq_right (fun h' => h (h'.1.symm.trans h'.2)), smul_zero]
 
 lemma torep_inK_diag (ε : Fin n → Bool) (d : Fin n → ℂ) (hd : ∀ a, star (d a) = -d a) :
     inK ε (Matrix.diagonal d) := by
@@ -359,7 +357,7 @@ lemma torep_dτ_of_wt {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε �
       · simp [hd, hia]
       · simp [hd, hia, Ne.symm hia]
     · rw [Matrix.diagonal_apply_ne _ hij, Matrix.smul_apply, Matrix.single_apply,
-        if_neg (fun h' => hij (h'.1.symm.trans h'.2)), smul_zero]
+        ite_eq_right (fun h' => hij (h'.1.symm.trans h'.2)), smul_zero]
   let γ : ℝ → KG ε := fun t => torepK ε (hmem t)
   have hγ : ∀ t : ℝ, toMK (γ t) = NormedSpace.exp ((t : ℂ) • Matrix.diagonal d) := fun t => by
     rw [hexp t]
@@ -380,8 +378,7 @@ lemma torep_dτ_of_wt {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε �
       (((μ a : ℂ) * Complex.I) • v) 0 := by
     have h3 : HasDerivAt (fun t : ℝ => Complex.exp ((t : ℂ) * ((μ a : ℂ) * Complex.I)))
         ((μ a : ℂ) * Complex.I) 0 := by
-      have h4 := (((hasDerivAt_id (0 : ℝ)).ofReal_comp).mul_const ((μ a : ℂ) * Complex.I)).cexp
-      simpa using h4
+      simpa using (((hasDerivAt_id (0 : ℝ)).ofReal_comp).mul_const ((μ a : ℂ) * Complex.I)).cexp
     exact h3.smul_const v
   have hF'' := hderiv.congr_of_eventuallyEq (Filter.Eventually.of_forall hval)
   have heq := hF'.unique hF''

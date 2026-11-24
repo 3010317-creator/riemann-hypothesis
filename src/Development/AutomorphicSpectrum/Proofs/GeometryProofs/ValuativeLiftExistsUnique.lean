@@ -222,8 +222,7 @@ theorem exists_of_goodChart {ξ : Spec (CommRingCat.of Ω) ⟶ X} {κ : Type} {x
       exact mem_regAt_of_gm _
     obtain ⟨s, hs, hsV⟩ := hadj _ hreg
     have := gm_inj hT.gen h hs
-    rw [this] at hsV
-    exact hsV
+    rwa [this] at hsV
   let ρ : Γ(X, U) ⟶ CommRingCat.of V := CommRingCat.ofHom (ψ.hom.codRestrict V hψ)
   have hρ : ρ ≫ CommRingCat.ofHom (algebraMap V C) = ψ := by
     ext g
@@ -231,8 +230,7 @@ theorem exists_of_goodChart {ξ : Spec (CommRingCat.of Ω) ⟶ X} {κ : Type} {x
   have hzU : centre (Spec.map ρ ≫ hU.fromSpec) ∈ U := by
     have h1 : centre (Spec.map ρ ≫ hU.fromSpec) ∈ Set.range hU.fromSpec :=
       ⟨Spec.map ρ (IsLocalRing.closedPoint V), rfl⟩
-    rw [hU.range_fromSpec] at h1
-    exact h1
+    rwa [hU.range_fromSpec] at h1
   obtain ⟨hz, hzc⟩ := (hmem _).1 hzU
   refine ⟨Spec.map ρ ≫ hU.fromSpec, hz, ?_, hzc⟩
   rw [← Category.assoc, ← Spec.map_comp, hρ]
@@ -260,8 +258,7 @@ theorem inChart_of_goodChart {ξ : Spec (CommRingCat.of Ω) ⟶ X} {κ : Type} {
   have hvu : val z t * ⟨_, huV⟩ = 1 := by
     apply Subtype.ext
     have := congrArg (val (Spec.map (CommRingCat.ofHom (algebraMap V C)) ≫ z)) hmul
-    rw [map_mul, map_one, hv] at this
-    exact this
+    rwa [map_mul, map_one, hv] at this
   have hunit : IsUnit t := isUnit_of_map_unit (val z) _ (IsUnit.of_mul_eq_one _ hvu)
   obtain ⟨e, rfl⟩ := hunit
   refine ⟨hc, fun j => ?_⟩

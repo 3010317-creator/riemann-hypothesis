@@ -292,7 +292,7 @@ theorem exists_gram [IsCMField E] (hΨ : IsType Ψ) : ∃ G : Matrix (QI E N) (Q
     rw [← h2, ← eq_ratCast (algebraMap ℚ ℂ), h]
     exact (Fintype.sum_equiv (RingHom.equivRatAlgHom (R := E) (S := ℂ)) _ _ fun _ => rfl).symm
   by_cases h : p.1 = q.1
-  · simp only [qm, Matrix.map_apply, Matrix.of_apply, if_pos h, key]
+  · simp only [qm, Matrix.map_apply, Matrix.of_apply, ite_eq_left h, key]
     refine Finset.sum_congr rfl fun τ _ => ?_
     simp [Sm, sw, vecMul, dotProduct, Fintype.sum_sum_type, Matrix.one_apply, h, HAct.emb_cc]
     ring
@@ -356,9 +356,7 @@ theorem GlobalTheory.SW.exists_symplectic_of_unitary : ∀ (E : Type) [Field E] 
   have hb' : ∀ τ : Ψ, _ := fun τ : Ψ => by
     have h := map_mem τ.1 (group_part hγ).2.2.1
     rw [map_ccT, map_blocks τ.1 γ, fromBlocks_conjTranspose] at h
-    have h' := blocks h
-    simp only [conjTranspose_conjTranspose] at h'
-    exact h'
+    simpa only [conjTranspose_conjTranspose] using blocks h
   have one : ∀ {m : Type} [DecidableEq m],
       blockDiagonal (fun _ : Ψ => (1 : Matrix m m ℂ)) = 1 := fun {m} _ => blockDiagonal_one
   have add : ∀ {m : Type} (X Y : Ψ → Matrix m m ℂ),
@@ -624,8 +622,7 @@ theorem unique (hΨ : IsType Ψ) {γ : M2 E N} (hγ : γ ∈ UU E N)
     rw [Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv _ (u1 τ), Matrix.vecMul_one]
   have e := e1.trans e2.symm
   beta_reduce at e
-  rw [a1, a2] at e
-  exact e
+  rwa [a1, a2] at e
 
 theorem ip_ofQ (E : Type) [Field E] [NumberField E] [IsCMField E] (n N : ℕ) :
     ∃ d : ℂ, d ≠ 0 ∧ ∀ φ ψ : Matrix (Fin n) (Fin N) E → ℂ, IsSB φ → IsSB ψ →

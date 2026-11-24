@@ -24,8 +24,7 @@ theorem finitePlace_le_one_of_isIntegral {K : Type*} [Field K] [NumberField K] (
     {x : K} (hx : IsIntegral ℤ x) : v x ≤ 1 := by
   let y : 𝓞 K := ⟨x, hx⟩
   have h := FinitePlace.norm_le_one K v.maximalIdeal y
-  rw [FinitePlace.norm_embedding_eq] at h
-  exact h
+  rwa [FinitePlace.norm_embedding_eq] at h
 
 theorem finsum_log_finitePlace_natCast {K : Type*} [Field K] [NumberField K] {δ : ℕ} (hδ : 0 < δ) :
     ∑ᶠ v : FinitePlace K, Real.log (v (δ : K)) = -(Module.finrank ℚ K * Real.log δ) := by
@@ -110,8 +109,7 @@ theorem height_standard_le (z : Cone n (AlgebraicClosure ℚ)) (hz : BlockNonzer
     calc ∑ v ∈ T, ∑ k, ((HermLine.standard (n := n)).deg k : ℝ) * Real.log (⨆ i, v (coordVec z k i))
         ≤ ∑ v ∈ T, ∑ _k : ι, -Real.log (v (δ : K)) := by
           refine Finset.sum_le_sum fun v _ ↦ Finset.sum_le_sum fun k _ ↦ ?_
-          simp only [HermLine.standard, Int.cast_one, one_mul]
-          exact hloc v k
+          simpa only [HermLine.standard, Int.cast_one, one_mul] using hloc v k
       _ = Fintype.card ι * -(∑ v ∈ T, Real.log (v (δ : K))) := by
           simp [Finset.sum_neg_distrib, Finset.mul_sum]
       _ = Fintype.card ι * (d * Real.log δ) := by rw [h3, neg_neg]

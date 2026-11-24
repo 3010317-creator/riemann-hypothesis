@@ -69,12 +69,10 @@ theorem locSet_eq_single {p : PlF D} {γ : TermDef.Term D u u' F0 what₂}
   constructor
   · intro h2
     have hL : (locH Zd p).Lset (lattice₂ D Zd.M p γ.lam) (tLoc Zd p γ).f = (locH Zd p).Lset Λ₂ (tLoc Zd p γ).f := by
-      have h := h2.2.1
-      exact (Set.image_id _).symm.trans h
+      exact (Set.image_id _).symm.trans h2.2.1
     have hX := Formalism.MainNotions.S.Loc.HermSp.CohU.X_le_MMfam (H := locH Zd p) (t2 Zd p γ F'₂ ⊥)
     exact (Formalism.MainNotions.S.Loc.HermSp.CohU.lat_eq_of_Lset hN hX hmem.1.1.1 h2.1.1.1 hmem.1.2.1 h2.1.2.1 hL).symm
   · intro h
-    rw [h]
-    exact hmem
+    rwa [h]
 
 end Formalism.L2.SG.Pf.FrameGlobalPatching.FStar

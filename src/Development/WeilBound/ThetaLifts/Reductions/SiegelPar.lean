@@ -221,8 +221,7 @@ theorem colK_of_minPar {k : ℕ} (hk : k ≤ r) {R : Type} [CommRing R] {M : Mat
     rw [hz, mul_zero]
 
 theorem exists_omega (h : IsCMExt F E σ) : ∃ ω : E, ω ≠ 0 ∧ σ ω = -ω := by
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hσ := GlobalTheory.SiegelSet.sigma_sigma h
   have hfix : ∀ y, σ y = y := fun y => by
     by_contra hne
@@ -239,11 +238,10 @@ theorem minPar_of_eich {k : ℕ} (hk : k ≤ r) {R : Type} [CommRing R] (A : Mat
   set C := D * A with hCdef
   have hC : ∀ (l m : Fin k), C l (Fin.castLE hk m) = 0 := fun l m => by
     have := congrFun (congrFun hD l) m
-    rw [mul_colK] at this
-    exact this
+    rwa [mul_colK] at this
   refine ⟨1 - Matrix.of fun l m => if hl : l.val < k then C ⟨l.val, hl⟩ m else 0, fun l m hlm => ?_, ?_⟩
   · have hne : l ≠ m := fun e => (lt_irrefl _ (e ▸ hlm))
-    simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.of_apply, if_neg hne]
+    simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.of_apply, ite_eq_right hne]
     split_ifs with hl
     · have hm : m.val < k := lt_trans (Fin.lt_iff_val_lt_val.1 hlm) hl
       have := hC ⟨l.val, hl⟩ ⟨m.val, hm⟩
@@ -402,8 +400,7 @@ theorem char_k (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J 
   have hA := absE_rIdU h.2.2.1 c
   have key' := congrArg (fun x : ℝ≥0 => (x : ℝ)) key
   simp only [NNReal.coe_mul, NNReal.coe_pow] at key'
-  rw [hA] at key'
-  rw [← Real.exp_nat_mul, ← Real.exp_nat_mul] at key'
+  rw [hA, ← Real.exp_nat_mul, ← Real.exp_nat_mul] at key'
   have e2 : (mulEquivHaarChar (conjC b) : ℝ) = Real.exp (((n * k : ℕ) : ℝ) * (2 * Module.finrank ℚ F * c)) /
       Real.exp (((k * k : ℕ) : ℝ) * (2 * Module.finrank ℚ F * c)) := by
     rw [← key']

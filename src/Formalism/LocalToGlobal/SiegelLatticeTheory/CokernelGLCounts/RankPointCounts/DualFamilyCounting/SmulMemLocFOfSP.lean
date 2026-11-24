@@ -24,16 +24,14 @@ variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberFi
 private theorem mem_pow_vF_of_ne_zero {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {a : 𝓞 F} (ha : a ≠ 0) :
     a ∈ 𝔭 ^ vF 𝔭 a ∧ a ∉ 𝔭 ^ (vF 𝔭 a + 1) := by
   have hex : ∃ j, a ∉ 𝔭 ^ j := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hi : a ∈ ⨅ i : ℕ, 𝔭 ^ i := (Submodule.mem_iInf _).mpr h
     rw [Ideal.iInf_pow_eq_bot_of_isDomain 𝔭 h𝔭.ne_top] at hi
     exact ha ((Submodule.mem_bot _).mp hi)
   obtain ⟨j, hj⟩ := hex
   have hbdd : BddAbove {e : ℕ | a ∈ 𝔭 ^ e} := by
     refine ⟨j, fun e he => ?_⟩
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     exact hj (Ideal.pow_le_pow_right hlt.le he)
   refine ⟨Nat.sSup_mem ⟨0, by simp⟩ hbdd, fun h => ?_⟩
   have hc := le_csSup hbdd (show vF 𝔭 a + 1 ∈ {e : ℕ | a ∈ 𝔭 ^ e} from h)
@@ -112,8 +110,7 @@ theorem unit_part_c (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
     rw [hyF, map_mul]
     rfl
   have hy2 : y ∈ 𝔭 ^ (2 * vF 𝔭 a) := by
-    rw [← MeanB.comap_extP_pow (K := K), Ideal.mem_comap, hyz]
-    exact hz
+    rwa [← MeanB.comap_extP_pow (K := K), Ideal.mem_comap, hyz]
   have hy1 : y ∈ 𝔭 ^ (vF 𝔭 a + 1) := Ideal.pow_le_pow_right (by omega) hy2
   obtain ⟨C, hCdef⟩ : ∃ C : 𝓞 F, C = y - t * a := ⟨_, rfl⟩
   have hCF : (C : F) = (t : F) * c := by
@@ -149,8 +146,7 @@ theorem unit_part_c (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
     exact_mod_cast h2
   have hbK : algebraMap F K (b : F) * algebraMap F K (π : F) ^ vF 𝔭 a =
       algebraMap F K (s₀ : F) ^ vF 𝔭 a * (algebraMap F K (t : F) * algebraMap F K c) := by
-    have h4 := congrArg (algebraMap F K) h3
-    simpa [map_mul, map_pow] using h4
+    simpa [map_mul, map_pow] using congrArg (algebraMap F K) h3
   have hc : ((t * s₀ ^ vF 𝔭 a : 𝓞 F) : F) = (t : F) * (s₀ : F) ^ vF 𝔭 a := by simp
   rw [hc, map_mul, map_pow, ← mul_assoc, mul_comm (algebraMap F K (b : F)), mul_assoc, hbK]
   field_simp

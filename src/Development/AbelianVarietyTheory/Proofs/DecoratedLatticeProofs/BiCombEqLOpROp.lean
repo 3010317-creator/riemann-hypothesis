@@ -159,8 +159,7 @@ theorem prodList {ι' : Type} (e₁ : ι' → WO A S →₀ ℂ) (e₂ : ι' →
     · intro w hw
       obtain ⟨x, hx, y, hy, rfl⟩ := hcs w hw
       refine add_mem (AddSubmonoid.subset_closure ?_) (AddSubmonoid.closure_mono ?_ (hs y hy))
-      · simp only [Set.mem_iUnion]
-        exact ⟨i, by simp, hx⟩
+      · simpa only [Set.mem_iUnion] using ⟨i, by simp, hx⟩
       · intro z hz
         simp only [Set.mem_iUnion] at hz ⊢
         obtain ⟨j, hj, hz⟩ := hz
@@ -168,8 +167,7 @@ theorem prodList {ι' : Type} (e₁ : ι' → WO A S →₀ ℂ) (e₂ : ι' →
     · intro w hw
       obtain ⟨x, hx, y, hy, rfl⟩ := hcs' w hw
       refine add_mem (AddSubmonoid.subset_closure ?_) (AddSubmonoid.closure_mono ?_ (hs' y hy))
-      · simp only [Set.mem_iUnion]
-        exact ⟨i, by simp, hx⟩
+      · simpa only [Set.mem_iUnion] using ⟨i, by simp, hx⟩
       · intro z hz
         simp only [Set.mem_iUnion] at hz ⊢
         obtain ⟨j, hj, hz⟩ := hz

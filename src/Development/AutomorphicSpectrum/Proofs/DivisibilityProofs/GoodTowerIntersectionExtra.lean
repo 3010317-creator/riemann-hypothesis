@@ -250,7 +250,7 @@ theorem degPush_of (hEq : NumEq) (hPF : GeoPF) (hFib : FibNum) (hTr : TrdegU) (h
   have hr' : Top.testDeg (Fin (Fintype.card (CMType H))) (D.p + D.q) D.p = Top.testDeg (CMType H) (D.p + D.q) D.p := by
     rw [hr]
   simp only [hr']
-  rw [if_neg (div_ne_zero htd.ne' hU0)]
+  rw [ite_eq_right (div_ne_zero htd.ne' hU0)]
   field_simp
   linear_combination -key
 
@@ -556,8 +556,7 @@ theorem fieldJoin : FieldJoin := by
   have g1 : ∀ s m, (u s).map i m m = 1 := fun s m => by simp [h1]
   have g0 : ∀ s l m, l < m → (u s).map i l m = 0 := fun s l m h => by simp [h0 s l m h]
   refine ⟨Ω, inferInstance, inferInstance, i, d, n, a1, ⟨g1, g0, a2, a3, ?_⟩, a5, a6, a7⟩
-  rw [Join.adjoin_entries Ω₁ (fun s => (u s).map i) g1 g0]
-  exact a4
+  rwa [Join.adjoin_entries Ω₁ (fun s => (u s).map i) g1 g0]
 
 end SheetDecomposition
 end -- clump:auto
@@ -599,8 +598,7 @@ theorem cst_eq (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (hd : GlobalTheory.
     have h3 := h1.symm
     simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp] at h3
     have h4 := Spec.map_injective h3
-    have h5 := congrArg CommRingCat.Hom.hom h4
-    simpa using h5
+    simpa using congrArg CommRingCat.Hom.hom h4
   haveI : FiniteDimensional ℚ c.F := c.fin
   haveI : NumberField c.F := ⟨⟩
   exact (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 c.F)) h2).symm
@@ -629,8 +627,7 @@ theorem lat_core (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (j : Li₀ →+ �
       rintro _ ⟨m, rfl⟩
       have hm : b s m ∈ eigSp ρ₀ (cst₀.comp (labelEmb c s)) := (hb s).2 ▸ Submodule.subset_span ⟨m, rfl⟩
       have h1 := map_mem_eigSp 𝔐.m hact 𝔐.act hj hsemi _ hm
-      rw [← RingHom.comp_assoc, hcst] at h1
-      exact h1
+      rwa [← RingHom.comp_assoc, hcst] at h1
     haveI : Module.Finite Ω₀ Li₀ := (LieProj.lie_finite_projective_baseChange _ _ _ _ _ M₀).1
     haveI : Module.Finite Ω 𝔐.Li := (LieProj.lie_finite_projective_baseChange _ _ _ _ _ 𝔐.M).1
     letI : Algebra Ω₀ Ω := ψ.toAlgebra
@@ -657,7 +654,7 @@ theorem lat_core (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (j : Li₀ →+ �
     rfl
   · have hnot : ¬ ∃ p ∈ S, InFibre 𝔐.ξ p q := fun ⟨p, hp, hf⟩ => hq p (𝔐.S_prime p hp) hf
     have hV : 𝔐.V s q = 𝔐.M.eigLat 𝔐.ρ ((ψ.comp cst₀).comp (labelEmb c s)) q := by
-      simp only [HodgeCpt.V, Lat.patch, if_neg hnot, HodgeCpt.dR, HodgeCpt.emb, hcst]
+      simp only [HodgeCpt.V, Lat.patch, ite_eq_right hnot, HodgeCpt.dR, HodgeCpt.emb, hcst]
     rw [hV, eigLat_eq_pull c 𝔐.m cst₀ hg 𝔐.tie.gen hd hact 𝔐.act (isIntegrallyClosed_regAt Y.normal hg)
       (isIntegrallyClosed_regAt 𝔐.normal 𝔐.tie.gen) hj s q hq]
     simp only [Lat.pull]
@@ -759,8 +756,7 @@ theorem coordLat : CoordLat := by
     have h1 := 𝔐'.cst_over
     rw [← Category.assoc, 𝔐'.fn_over, Category.assoc, hr] at h1
     simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp] at h1
-    have h2 := congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
-    simpa using h2
+    simpa using congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
   have hrinj : Function.Injective r := by
     have h1 : Function.Injective (𝔐'.fn.comp r) := by
       rw [hfr]
@@ -770,8 +766,7 @@ theorem coordLat : CoordLat := by
   have hcst₀ : cst₀.comp (algebraMap (𝓞 c.F) c.F) = r :=
     RingHom.ext fun x => IsFractionRing.lift_algebraMap hrinj x
   have hs : 𝔐'.ξ₀ ≫ Y.s = spMap (cst₀.comp (algebraMap (𝓞 c.F) c.F)) := by
-    rw [hcst₀]
-    exact hr
+    rwa [hcst₀]
   have hcst' : 𝔐'.fn.comp cst₀ = 𝔐'.cst := cst_eq (cst₀ := cst₀) 𝔐' 𝔐'.fn 𝔐'.fn_over hs
   have hsemi : ∀ (a : 𝔐'.Ω₀) (e : Fl.Li₀), Fl.j (a • e) = 𝔐'.fn a • Fl.j e :=
     LiePull.semilin 𝔐'.m.cart Fl.j_pt
@@ -793,8 +788,7 @@ theorem coordLat : CoordLat := by
         𝔐'.ρ a (Fl.j e) - 𝔐'.cst (labelEmb c s a) • Fl.j e := by
       rw [map_sub, hsemi, map_act 𝔐'.m hact 𝔐'.act Fl.j_pt, ← RingHom.comp_apply 𝔐'.fn cst₀, hcst']
     constructor
-    · intro h
-      exact hjinj _ (h1.trans h)
+    · exact fun h => hjinj _ (h1.trans h)
     · intro h
       rw [← h1, h, map_zero]
   have hb₀ : ∀ s, LinearIndependent 𝔐'.Ω₀ (b s) ∧
@@ -1234,7 +1228,6 @@ theorem mu_coord {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω V] (R : Su
         simp [Finset.smul_sum, mul_smul]
       · convert Λ.smul_mem ⟨i a, hi a a.2⟩ hx using 1
         ext m
-        show i (a * x m) = i a * i (x m)
         exact map_mul _ _ _
   obtain ⟨x', e, hx'⟩ := key _ hx
   have : x = x' := funext (Fintype.linearIndependent_iffₛ.1 hc x x' e)
@@ -1435,7 +1428,7 @@ theorem mu_rootLat (τ : CMType H) (m : Fin D.q) : Fl.rootLat (τ, muRev D.p D.q
     rw [dite_eq_right h0]
     congr 1
     exact Fin.ext (by simp only [muRev]; omega)
-  have h2 : HodgeCpt.rootSgn D (τ, muRev D.p D.q m) = -1 := if_neg h0
+  have h2 : HodgeCpt.rootSgn D (τ, muRev D.p D.q m) = -1 := ite_eq_right h0
   unfold HodgeCpt.Flag.rootLat
   rw [h1, h2]
 

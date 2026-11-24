@@ -103,8 +103,7 @@ theorem sc_append_li {K : Type} [Field K] [NumberField K] {r k m : ℕ}
   have hb0 : ∀ i, g (Fin.castAdd m i) = 0 := by
     apply Fintype.linearIndependent_iff.mp hb
     simpa [hc0] using hg
-  intro i
-  exact Fin.addCases (fun i => hb0 i) (fun j => hc0 j) i
+  exact fun i => Fin.addCases (fun i => hb0 i) (fun j => hc0 j) i
 
 theorem sc_rank_pos {K : Type} [Field K] [NumberField K] {r : ℕ}
     (N : Matrix (Fin r) (Fin r) K) (hN : N ≠ 0) : 0 < finrank K (LinearMap.range N.mulVecLin) := by
@@ -162,8 +161,7 @@ theorem sc_index {K : Type} [Field K] [NumberField K] {r k m : ℕ}
     obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.mp hx
     have hy0 : f y = 0 := by
       have h := hspanb hy.2
-      rw [LinearMap.mem_ker] at h
-      exact h
+      rwa [LinearMap.mem_ker] at h
     rw [map_add (f := _), hy0, zero_add]
     exact hspanc hz
 

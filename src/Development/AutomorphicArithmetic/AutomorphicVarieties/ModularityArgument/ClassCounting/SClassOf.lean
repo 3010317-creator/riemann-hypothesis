@@ -164,8 +164,7 @@ theorem UpperTheory.V.ZK.Cl.cBlockVal :
     show bd _ _ (2 * e + 1 + 1) _ = 0
     have s := sPrism (ZMod q) _ ((1 : Cq q), g') (2 * e + 1) (cm (ZMod q) (MonoidHom.inl (Cq q) (∀ b, U b ≃ₗ[k] U b)) (2 * e + 1 + 1) (zc q e))
     have hy' : bd (ZMod q) _ (2 * e + 1) (cm (ZMod q) (MonoidHom.inl (Cq q) (∀ b, U b ≃ₗ[k] U b)) (2 * e + 1 + 1) (zc q e)) = 0 := hy
-    rw [hy', map_zero, add_zero, ← h2, hconj, sub_self] at s
-    exact s
+    rwa [hy', map_zero, add_zero, ← h2, hconj, sub_self] at s
   show θ V (prism (ZMod q) g (2 * e + 1 + 1) (cm (ZMod q) σ (2 * e + 1 + 1) (zc q e))) = _
   rw [← hRg, ← hRσ, h2, ← h3]
   refine (pi_add hθ hZ B U V φ R (blk U χ) hR).trans (Finset.sum_congr rfl fun b _ => ?_)
@@ -267,8 +266,7 @@ theorem UpperTheory.V.ZK.Cl.cMat :
     · have := hρ A.det
       rw [← hdet, RingHom.map_det, ← LinearMap.det_toLin'] at this
       unfold Res
-      rw [LinearEquiv.coe_det]
-      exact this
+      rwa [LinearEquiv.coe_det]
     · let w' : I → locS F b := fun i => ⟨w i, hw i⟩
       have e1 : u = fun i => ρ (w' i) := funext fun i => h1 _ _ _ (hu i) (hρ (w' i))
       have e2 : g w i = (A.mulVec w' i : locS F b) := by
@@ -278,8 +276,7 @@ theorem UpperTheory.V.ZK.Cl.cMat :
         exact (RingHom.map_mulVec (locS F b).subtype A w' i).symm
       have := hρ (A.mulVec w' i)
       rw [← e2, RingHom.map_mulVec] at this
-      rw [e1]
-      exact this
+      rwa [e1]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ClassCounting.LatticeBlockClasses.ExistsRes =====
@@ -337,8 +334,7 @@ theorem UpperTheory.V.ZK.Cl.cVal :
       have h3 : actU σ (actU (s j) (toF ζ ^ ((χ j).val * (Multiplicative.toAdd c).val))) =
           toF ζ ^ (kap σ * x.val * (Multiplicative.toAdd c).val) := by
         rw [pow_mul, map_pow, map_pow (actU (s j)), hs, hj, map_pow, map_pow, hkap, pow_mul, pow_mul]
-      have h4 := congrArg Units.val h3
-      simpa [actU, toF] using h4
+      simpa [actU, toF] using congrArg Units.val h3
     rw [h2]
     have h5 := (q3 _ _ _ _ (q2 ((ζ ^ (kap σ * x.val * (Multiplicative.toAdd c).val) : (𝓞 F)ˣ) : 𝓞 F))
       (hred (σ * s j) (a j))).2
@@ -456,8 +452,7 @@ private theorem sum_eq_sum_range_pow_of_cyclic_generator {G M : Type} [Group G] 
   have hfin : IsOfFinOrder γ := isOfFinOrder_of_finite γ
   symm
   refine Finset.sum_nbij (fun j => γ ^ j) (fun _ _ => Finset.mem_univ _) ?_ ?_ (fun _ _ => rfl)
-  · intro i hi j hj hij
-    exact pow_injOn_Iio_orderOf (by simpa using hi) (by simpa using hj) hij
+  · exact fun i hi j hj hij => pow_injOn_Iio_orderOf (by simpa using hi) (by simpa using hj) hij
   · intro σ _
     have h := hfin.mem_powers_iff_mem_zpowers.mpr (hγ σ)
     rw [hfin.mem_powers_iff_mem_range_orderOf] at h
@@ -693,12 +688,12 @@ theorem UpperTheory.V.ZK.Cl.cJoin : CJoin := by
     intro t
     by_cases ht : t = t₀
     · subst ht
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       refine hGtEq sStein L F (ZMod (l ^ ν) × ZMod (l ^ ν)) l c ν (2 * e + 3) ζ γ hL _ η 𝔡
         (fun i => (pol ((1 + l ^ c : ℕ) : ℤ) (2 * e + 3)).coeff i) β ⟨(1, 0), by simp⟩ ?_ hβ
       rw [hη_eq]
       simp [pol]
-    · rw [if_neg ht]
+    · rw [ite_eq_right ht]
       exact hGtNe sStein L F (ZMod (l ^ ν) × ZMod (l ^ ν)) (l ^ ν) ζ _ η 𝔡 (hη_ne t ht)
   choose gG hgG using hcar
   have hmem : ∀ t, gG t ∈ GLoc F (ZMod (l ^ ν) × ZMod (l ^ ν)) b := by
@@ -751,8 +746,7 @@ theorem UpperTheory.V.ZK.Cl.cJoin : CJoin := by
   have hquot : ∀ t, (gs t)⁻¹ * gs t₀ ∈ Hs := by
     intro t
     rw [hHs, Subgroup.mem_subgroupOf]
-    simp only [Subgroup.coe_mul, Subgroup.coe_inv, gs]
-    exact hstab2 _ _ _ _ (hgG t).1 (hgG t₀).1
+    simpa only [Subgroup.coe_mul, Subgroup.coe_inv, gs] using hstab2 _ _ _ _ (hgG t).1 (hgG t₀).1
   obtain ⟨y, hyc, hyb⟩ := hChain (ZMod (l ^ ν)) (Cq (l ^ ν)) (Cq (l ^ ν) × Cq (l ^ ν)) Gr
     (Fin (2 * e + 4)) (2 * e + 1) Hs ρD (fun t => dt (l ^ ν) (t : ℕ)) n (zc (l ^ ν) e) gs t₀
     (sZc (l ^ ν) e) hrel hcomm hrhoH hconj hquot
@@ -769,9 +763,7 @@ theorem UpperTheory.V.ZK.Cl.cJoin : CJoin := by
   · unfold Cyc at hy'c ⊢
     rw [(sChain (ZMod (l ^ ν))).2.1]
     erw [hy'c, map_zero]
-  · intro h
-    apply hb
-    exact FaithfulSMul.algebraMap_injective (𝓞 L) (𝓞 F) (by rw [h, map_zero])
+  · exact fun h => hb (FaithfulSMul.algebraMap_injective (𝓞 L) (𝓞 F) (by rw [h, map_zero]))
   intro k _ _ r hr hrb hζ v θ hθ hv
   have hrb₀ : r (algebraMap (𝓞 L) (𝓞 F) b₀) ≠ 0 := by
     obtain ⟨c', hc'⟩ := hb₀b
@@ -835,11 +827,11 @@ theorem UpperTheory.V.ZK.Cl.cJoin : CJoin := by
       ∑ σ, ∑ x, ((kap σ : ZMod (l ^ ν)) * x) ^ (e + 1) *
         f (actU σ ((if t = t₀ then (fun x => if x = 1 then β else 1) else fun _ => 1) x)) = 0 := by
     intro t ht
-    simp [if_neg ht, hf1]
+    simp [ite_eq_right ht, hf1]
   have hTt₀ : ∑ σ, ∑ x, ((kap σ : ZMod (l ^ ν)) * x) ^ (e + 1) *
         f (actU σ ((if t₀ = t₀ then (fun x => if x = 1 then β else 1) else fun _ => 1) x)) =
       ∑ σ, (kap σ : ZMod (l ^ ν)) ^ (e + 1) * f (actU σ β) := by
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     refine Finset.sum_congr rfl fun σ _ => ?_
     rw [Finset.sum_eq_single (1 : ZMod (l ^ ν))]
     · simp
@@ -913,16 +905,14 @@ theorem UpperTheory.V.ZK.Cl.cMu :
     refine ⟨fun j => (a j : F), fun j P _ => vInt P (a j), ?_⟩
     intro σ j
     have h := cAM (actO σ (a j))
-    rw [ha j σ] at h
-    exact h
+    rwa [ha j σ] at h
   have Kz : ∀ (g : GLoc F J b) (y : J → F), InLoc b y → RedV L r y 0 → RedV L r ((g : GG L F J) y) 0 := by
     intro g y hy hy0
     let W : Set (J → F) := {z | RedV L r ((g : GG L F J) z) 0}
     have W0 : (0 : J → F) ∈ W := by
       intro σ j
       show ResF r (σ (((g : GG L F J) 0) j)) 0
-      rw [map_zero, Pi.zero_apply, map_zero]
-      exact R0
+      rwa [map_zero, Pi.zero_apply, map_zero]
     have Wadd : ∀ z1 z2, z1 ∈ W → z2 ∈ W → z1 + z2 ∈ W := by
       intro z1 z2 h1 h2 σ j
       have := (cA _ _ _ _ (h1 σ j) (h2 σ j)).1
@@ -950,8 +940,7 @@ theorem UpperTheory.V.ZK.Cl.cMu :
       rw [e, map_smul, Pi.smul_apply, Algebra.smul_def, map_mul, AlgEquiv.commutes]
       obtain ⟨u, hu⟩ := L0 _ (GI g _ hs) σ j'
       have := (cA _ _ _ _ (cAM (algebraMap (𝓞 L) (𝓞 F) m)) hu).2
-      rw [hm, zero_mul] at this
-      exact this
+      rwa [hm, zero_mul] at this
     have Wspan : ∀ a ∈ Ideal.map (algebraMap (𝓞 L) (𝓞 F)) (RingHom.ker (r.comp (algebraMap (𝓞 L) (𝓞 F)))),
         ∀ (j : J) (c : F), (∀ P : HeightOneSpectrum (𝓞 F), algebraMap (𝓞 L) (𝓞 F) b ∉ P.asIdeal →
           HeightOneSpectrum.valuation F P c ≤ 1) → Pi.single j (c * (a : F)) ∈ W := by
@@ -961,8 +950,7 @@ theorem UpperTheory.V.ZK.Cl.cMu :
       induction ha using Submodule.span_induction with
       | mem x hx =>
         obtain ⟨m, hm, rfl⟩ := hx
-        intro j c hc
-        exact Wgen j c hc m (RingHom.mem_ker.1 hm)
+        exact fun j c hc => Wgen j c hc m (RingHom.mem_ker.1 hm)
       | zero =>
         intro j c hc
         simpa using W0
@@ -1003,8 +991,7 @@ theorem UpperTheory.V.ZK.Cl.cMu :
         rw [mul_zero] at h2
         exact cU _ _ _ h1 h2
       have hyj : y j = ((algebraMap (𝓞 F) F (algebraMap (𝓞 L) (𝓞 F) b)) ^ n)⁻¹ * (a : F) := by
-        rw [eq_inv_mul_iff_mul_eq₀ (pow_ne_zero n hβ0)]
-        exact hna
+        rwa [eq_inv_mul_iff_mul_eq₀ (pow_ne_zero n hβ0)]
       have hc : ∀ P : HeightOneSpectrum (𝓞 F), algebraMap (𝓞 L) (𝓞 F) b ∉ P.asIdeal →
           HeightOneSpectrum.valuation F P (((algebraMap (𝓞 F) F (algebraMap (𝓞 L) (𝓞 F) b)) ^ n)⁻¹) ≤ 1 := by
         intro P hP
@@ -1051,8 +1038,7 @@ theorem UpperTheory.V.ZK.Cl.cMu :
     have h2 : RedV L r ((g : GG L F J) (lf v + lf w)) (T g v + T g w) := by
       intro σ j
       have := (cA _ _ _ _ (P1 _ (GI g _ (hlfI v)) σ j) (P1 _ (GI g _ (hlfI w)) σ j)).1
-      rw [map_add (f := _), Pi.add_apply, map_add (f := _)]
-      exact this
+      rwa [map_add (f := _), Pi.add_apply, map_add (f := _)]
     exact Runiq _ _ _ h1 h2
   have Tsmul : ∀ (g : GLoc F J b) (c : k) v, T g (c • v) = c • T g v := by
     intro g c v
@@ -1069,17 +1055,13 @@ theorem UpperTheory.V.ZK.Cl.cMu :
       have := (cA _ _ _ _ (cAM (algebraMap (𝓞 L) (𝓞 F) m)) (P1 _ (GI g _ (hlfI v)) σ j)).2
       rw [hm'] at this
       show ResF r (σ (((g : GG L F J) ((m : L) • lf v)) j)) (c * T g v (σ, j))
-      rw [map_smul, Pi.smul_apply, Algebra.smul_def, map_mul, AlgEquiv.commutes]
-      exact this
+      rwa [map_smul, Pi.smul_apply, Algebra.smul_def, map_mul, AlgEquiv.commutes]
     exact Runiq _ _ _ h1 h2
   have Tmul : ∀ (g h : GLoc F J b) v, T (g * h) v = T g (T h v) := by
     intro g h v
     have h1 := P1 _ (GI (g * h) _ (hlfI v))
-    have h2 := P3 g _ (T h v) (GI h _ (hlfI v)) (P1 _ (GI h _ (hlfI v)))
-    exact Runiq _ _ _ h1 h2
-  have Tone : ∀ v, T 1 v = v := by
-    intro v
-    exact Runiq _ _ _ (P1 _ (GI 1 _ (hlfI v))) (hlfR v)
+    exact Runiq _ _ _ h1 (P3 g _ (T h v) (GI h _ (hlfI v)) (P1 _ (GI h _ (hlfI v))))
+  have Tone : ∀ v, T 1 v = v := fun v => Runiq _ _ _ (P1 _ (GI 1 _ (hlfI v))) (hlfR v)
   let Tl : GLoc F J b → ((Gal(F/L) × J → k) →ₗ[k] (Gal(F/L) × J → k)) := fun g =>
     { toFun := T g
       map_add' := Tadd g
@@ -1093,8 +1075,7 @@ theorem UpperTheory.V.ZK.Cl.cMu :
                 rw [← Tmul, inv_mul_cancel, Tone])
             map_one' := LinearEquiv.ext fun v => Tone v
             map_mul' := fun g h => LinearEquiv.ext fun v => Tmul g h v }, ?_⟩
-  intro g x v hx hv
-  exact P3 g x v hx hv
+  exact fun g x v hx hv => P3 g x v hx hv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ClassCounting.LatticeBlockClasses.CMu =====
@@ -1141,7 +1122,7 @@ private theorem orth {L F : Type} [Field L] [NumberField L] [Field F] [NumberFie
       simp only [trace_eq_sum_automorphisms, map_mul, Finset.sum_mul] at h1
       rw [Finset.sum_comm] at h1
       simp only [Finset.sum_apply, Pi.smul_apply, Function.comp_apply, smul_eq_mul, ite_mul, zero_mul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true, MonoidHom.coe_coe, Finset.sum_mul]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true, MonoidHom.coe_coe, Finset.sum_mul]
       rw [h1]
       exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring) τ
   convert this
@@ -1174,7 +1155,7 @@ theorem UpperTheory.V.ZK.Cl.cSplit :
     rw [Finset.sum_comm]
 
     simp only [mul_assoc, ← Finset.mul_sum, ← map_mul, ← map_sum, ho]
-    simp only [apply_ite r, map_zero, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [apply_ite r, map_zero, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     field_simp
   · let c : Fin n → 𝓞 L := fun i => ⟨Algebra.trace L F (a * f i),
       Algebra.isIntegral_trace (R := ℤ) (a * f i).isIntegral_coe⟩
@@ -1306,7 +1287,7 @@ theorem UpperTheory.V.ZK.Cl.cUnit :
   have fspec : ∀ (x : Fˣ) (u : kˣ), Res r x u → f x = Multiplicative.toAdd (v u) := by
     intro x u hu
     have h : ∃ u, Res r x u := ⟨u, hu⟩
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     rw [uniq x _ _ h.choose_spec hu]
   have resmul : ∀ (x y : Fˣ) (u w : kˣ), Res r x u → Res r y w → Res r (x * y) (u * w) := by
     rintro x y u w ⟨a, c, hc, hxc, hac⟩ ⟨a', c', hc', hxc', hac'⟩
@@ -1319,8 +1300,7 @@ theorem UpperTheory.V.ZK.Cl.cUnit :
   · intro σ x hx P hP
     have hQ : actP σ (actP σ⁻¹ P) = P := by rw [← hmul, mul_inv_cancel, hone]
     have hb' : (algebraMap (𝓞 L) (𝓞 F)) b ∉ (actP σ⁻¹ P).asIdeal := by
-      rw [← hmem σ (actP σ⁻¹ P) b, hQ]
-      exact hP
+      rwa [← hmem σ (actP σ⁻¹ P) b, hQ]
     have := hinv σ (actP σ⁻¹ P) x
     rw [hQ] at this
     rw [this]
@@ -1384,8 +1364,7 @@ theorem UpperTheory.V.ZK.Cl.cInt :
     have h1 : InLat (0 : J → HeightOneSpectrum (𝓞 F) →₀ ℤ) (fun i => (x i : F)) :=
       (hint _).2 (fun i => ⟨x i, rfl⟩)
     have h2 := (hint _).1 ((hg' _).1 h1) j
-    simp only [φ, dif_pos h2]
-    exact h2.choose_spec
+    simpa only [φ, dite_eq_left h2] using h2.choose_spec
   have hφf : ∀ g ∈ StabP L (InLat (0 : J → HeightOneSpectrum (𝓞 F) →₀ ℤ)), ∀ x,
       (fun i => ((φ g x i : 𝓞 F) : F)) = g (fun i => (x i : F)) := fun g hg x => funext (hφ g hg x)
   have hcomp : ∀ g1 ∈ StabP L (InLat (0 : J → HeightOneSpectrum (𝓞 F) →₀ ℤ)),
@@ -1437,9 +1416,7 @@ theorem UpperTheory.V.ZK.Cl.cInt :
       ((J → 𝓞 F) ≃ₗ[𝓞 L] J → 𝓞 F) :=
     { toFun := fun h => E _ (Subgroup.mem_subgroupOf.1 h.2)
       map_one' := by
-        apply LinearEquiv.ext
-        intro x
-        exact hone x
+        exact LinearEquiv.ext (fun x => hone x)
       map_mul' := by
         intro h1 h2
         apply LinearEquiv.ext
@@ -1507,8 +1484,7 @@ theorem UpperTheory.V.ZK.Cl.cInt :
   · intro h x
     funext p
     have hloc : InLoc b (fun i => (x i : F)) := by
-      intro j P _
-      exact HeightOneSpectrum.valuation_le_one (K := F) P (x j)
+      exact fun j P _ => HeightOneSpectrum.valuation_le_one (K := F) P (x j)
     have hred := hμ (h : ↥(GLoc F J b)) (fun i => (x i : F)) (π x) hloc (hR x)
     have hα := hR (α h x)
     have hc : (fun i => ((α h x i : 𝓞 F) : F)) = ((h : ↥(GLoc F J b)) : GG L F J) (fun i => (x i : F)) :=
@@ -1546,8 +1522,7 @@ private theorem gtEq_ord {l c ν : ℕ} [hl : Fact l.Prime] {ζ : (𝓞 F)ˣ} {�
   have hf : IsOfFinOrder (1 + (l : ZMod (l ^ (n + c))) ^ c) := by
     rw [← orderOf_pos_iff, ho]; positivity
   rw [hf.pow_eq_pow_iff_modEq, ho] at e
-  rw [pow_eq_pow_iff_modEq, h.ord, Nat.add_sub_cancel]
-  exact e
+  rwa [pow_eq_pow_iff_modEq, h.ord, Nat.add_sub_cancel]
 
 private theorem gtEq_zeta {l c ν : ℕ} {ζ : (𝓞 F)ˣ} {γ : F ≃ₐ[L] F} (h : Lay l c ν ζ γ) (i : ℕ) :
     (γ ^ i) ((ζ : 𝓞 F) : F) = ((ζ : 𝓞 F) : F) ^ ((1 + l ^ c) ^ i) := by
@@ -1583,14 +1558,13 @@ theorem UpperTheory.V.ZK.Cl.cGtEq :
     refine ⟨fun x => if e : ∃ i, (1 + (l : ZMod (l ^ ν)) ^ c) ^ i = x then γ ^ e.choose else 1,
       fun x => if ∃ i, (1 + (l : ZMod (l ^ ν)) ^ c) ^ i = x then 1 else x, fun i => ?_, fun i => ?_, fun x => ?_⟩
     · have e : ∃ i', (1 + (l : ZMod (l ^ ν)) ^ c) ^ i' = (1 + (l : ZMod (l ^ ν)) ^ c) ^ i := ⟨i, rfl⟩
-      simp only [dif_pos e]
-      exact gtEq_ord h e.choose_spec
-    · exact if_pos ⟨i, rfl⟩
+      simpa only [dite_eq_left e] using gtEq_ord h e.choose_spec
+    · exact ite_eq_left ⟨i, rfl⟩
     · by_cases e : ∃ i, (1 + (l : ZMod (l ^ ν)) ^ c) ^ i = x
-      · simp only [dif_pos e, if_pos e]
+      · simp only [dite_eq_left e, ite_eq_left e]
         have := gtEq_act h e.choose
         rwa [e.choose_spec] at this
-      · simp only [dif_neg e, if_neg e, inv_one]
+      · simp only [dite_eq_right e, ite_eq_right e, inv_one]
         rfl
   obtain ⟨-, hmul, hone, -, -, hadd, -⟩ := cAct L F
   let 𝔠 : J → HeightOneSpectrum (𝓞 F) →₀ ℤ := fun j => η j • Finsupp.equivMapDomain
@@ -1620,7 +1594,7 @@ theorem UpperTheory.V.ZK.Cl.cGtEq :
     · by_cases hx : x = 1
       · obtain ⟨j, hj⟩ := hj
         exact Or.inl ⟨⟨j, by rw [hj, hx]; simpa using hB 0⟩⟩
-      · exact Or.inr (if_neg hx)
+      · exact Or.inr (ite_eq_right hx)
     · simp [hsum]
   choose g' hdet hlat using hex
   obtain ⟨⟨g, hg⟩, hall⟩ := cBlock L F J _ (fun j => (T (χ j))⁻¹) (fun j => B (χ j)) g'
@@ -1758,8 +1732,7 @@ private theorem exists_ibar {R k M V : Type} [CommRing R] [Field k] [AddCommGrou
     rw [wd _ _ e, map_smul]
     funext j
     simp
-  · intro x
-    exact wd _ _ (hpre _)
+  · exact fun x => wd _ _ (hpre _)
 
 private theorem exists_sbar {R k M V : Type} [CommRing R] [Field k] [AddCommGroup M] [Module R M] [AddCommGroup V]
     [Module k V] {N : ℕ} (r : R →+* k) (s : (Fin N → R) →ₗ[R] M) (π : M →+ V)

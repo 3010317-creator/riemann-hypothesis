@@ -259,8 +259,7 @@ theorem iso_one (hCD : CartanDomain) (w : O) (hw : Irreducible w) (m : ℕ) (mu 
     (hprim : ¬ ∃ z' ∈ H0 O m ze Λ, z = w • z') (F : MvPolynomial (Fin (m + 1) × Fin (m + 1)) K)
     (hF : F ∈ dualWeyl K (m + 1) (m + 1) (nuOf mu)) (hzF : z * F ∈ H0 O m (mu + ze) Λ) : F ∈ H0 O m mu Λ := by
   have hwK : algebraMap O K w ≠ 0 := by
-    intro h
-    exact hw.ne_zero ((IsFractionRing.injective O K) (by rw [h, map_zero]))
+    exact fun h => hw.ne_zero ((IsFractionRing.injective O K) (by rw [h, map_zero]))
   have key : ∀ n : ℕ, ∀ F : MvPolynomial (Fin (m + 1) × Fin (m + 1)) K, w ^ n • F ∈ H0 O m mu Λ →
       z * F ∈ H0 O m (mu + ze) Λ → F ∈ H0 O m mu Λ := by
     intro n
@@ -352,8 +351,7 @@ theorem retract_one (hCD : CartanDomain) (hCO : CartanOnto) (w : O) (hw : Irredu
     intro F
     rw [hmem, hmem', hio]
     constructor
-    · intro h
-      exact iso_one hCD w hw m mu ze hmu hze _ hΛ' z hz hprim F F.2 h
+    · exact fun h => iso_one hCD w hw m mu ze hmu hze _ hΛ' z hz hprim F F.2 h
     · intro h
       rw [hCO O K m mu ze _ hΛ' hmu hze]
       exact Submodule.subset_span ⟨F, h, z, hz, mul_comm _ _⟩)

@@ -70,8 +70,7 @@ private theorem mvExp_zero_character_germs {σ : Type} : mvExp (0 : MvPowerSerie
   · simp
   · intro k _ hk
     rw [zero_pow hk, map_zero, zero_div]
-  · intro h
-    exact absurd (Finset.mem_range.mpr (Nat.succ_pos _)) h
+  · exact fun h => absurd (Finset.mem_range.mpr (Nat.succ_pos _)) h
 
 theorem exp_nsmul {σ : Type} {f : MvPowerSeries σ C} (hf : MvPowerSeries.constantCoeff f = 0) (k : ℕ) :
     mvExp ((k : C) • f) = mvExp f ^ k := by

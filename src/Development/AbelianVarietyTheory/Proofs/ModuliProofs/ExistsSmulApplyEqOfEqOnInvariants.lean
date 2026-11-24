@@ -102,8 +102,8 @@ theorem exists_smul_eq_of_eq_on_invariants {G B D : Type*} [Group G] [Finite G] 
   have hcoef : ∀ g, p.coeff (e g) = c g := by
     intro g
     simp only [p, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow]
-    rw [Finset.sum_eq_single g (fun g' _ hg' => if_neg (fun hh => hg' (e.injective (Fin.ext hh)).symm))
-      (by simp), if_pos rfl]
+    rw [Finset.sum_eq_single g (fun g' _ hg' => ite_eq_right (fun hh => hg' (e.injective (Fin.ext hh)).symm))
+      (by simp), ite_eq_left rfl]
   have hyp : ∀ q : Polynomial B, (∀ g : G, g • q = q) →
       Polynomial.mapRingHom x q = Polynomial.mapRingHom y q := by
     intro q hq
@@ -132,8 +132,7 @@ theorem exists_aut_of_comp_eq_of_invariant {G : Type*} [Group G] [Finite G] {X X
       g • s = (ρ g⁻¹).asIso.hom.appLE _ _ (hU g⁻¹) s := fun g s => rfl
   have hy : ⊤ ≤ y ⁻¹ᵁ π ⁻¹ᵁ W := by
     show ⊤ ≤ (y ≫ π) ⁻¹ᵁ W
-    rw [← hxy]
-    exact hx
+    rwa [← hxy]
   have key : ∀ (f f' : T ⟶ X') (_ : f = f') (h1 : ⊤ ≤ f ⁻¹ᵁ W) (h2 : ⊤ ≤ f' ⁻¹ᵁ W),
       f.appLE W ⊤ h1 = f'.appLE W ⊤ h2 := by
     rintro f f' rfl h1 h2
@@ -151,17 +150,13 @@ theorem exists_aut_of_comp_eq_of_invariant {G : Type*} [Group G] [Finite G] {X X
     have e1 := Scheme.Hom.comp_appLE x π W ⊤ hx
     have e2 := Scheme.Hom.comp_appLE y π W ⊤ hy
     have := congrArg (fun φ => φ.hom t) (key _ _ hxy hx hy)
-    rw [e1, e2] at this
-    exact this
+    rwa [e1, e2] at this
   obtain ⟨g, hg⟩ := exists_smul_eq_of_eq_on_invariants (G := G) _ _ hagree
   refine ⟨g⁻¹, ?_⟩
-  have h' : ⊤ ≤ (x ≫ (ρ g⁻¹).asIso.hom) ⁻¹ᵁ π ⁻¹ᵁ W := by
-    show ⊤ ≤ x ⁻¹ᵁ ((ρ g⁻¹).asIso.hom ⁻¹ᵁ π ⁻¹ᵁ W)
-    exact hx.trans (x.preimage_mono (hU g⁻¹))
+  have h' : ⊤ ≤ (x ≫ (ρ g⁻¹).asIso.hom) ⁻¹ᵁ π ⁻¹ᵁ W := hx.trans (x.preimage_mono (hU g⁻¹))
   have heq : y.appLE (π ⁻¹ᵁ W) ⊤ hy = (x ≫ (ρ g⁻¹).asIso.hom).appLE (π ⁻¹ᵁ W) ⊤ h' := by
     ext s
-    rw [← Scheme.Hom.appLE_comp_appLE x (ρ g⁻¹).asIso.hom _ _ _ (hU g⁻¹) hx]
-    rw [hg s, hact]
+    rw [← Scheme.Hom.appLE_comp_appLE x (ρ g⁻¹).asIso.hom _ _ _ (hU g⁻¹) hx, hg s, hact]
     rfl
   have hA : IsAffineOpen (π ⁻¹ᵁ W) := hW.preimage π
   have h1 := IsAffineOpen.SpecMap_appLE_fromSpec y hA (isAffineOpen_top T) hy
@@ -244,12 +239,10 @@ theorem quotient_isIntegral_surjective_orbits :
     let s : Spec ((pullback π π).residueField z) := ⟨⊥, Ideal.isPrime_bot⟩
     have ha : (Scheme.fromSpecResidueField _ z ≫ pullback.fst π π) s = x := by
       show pullback.fst π π (Scheme.fromSpecResidueField _ z s) = x
-      rw [Scheme.fromSpecResidueField_apply]
-      exact hz1
+      rwa [Scheme.fromSpecResidueField_apply]
     have hb : (Scheme.fromSpecResidueField _ z ≫ pullback.snd π π) s = y := by
       show pullback.snd π π (Scheme.fromSpecResidueField _ z s) = y
-      rw [Scheme.fromSpecResidueField_apply]
-      exact hz2
+      rwa [Scheme.fromSpecResidueField_apply]
     rw [← hb, hg, ← ha]
     rfl
   have hsurj : Surjective π := by
@@ -259,8 +252,7 @@ theorem quotient_isIntegral_surjective_orbits :
     have hA : IsAffineOpen (π ⁻¹ᵁ W) := hW.preimage π
     have heq := IsAffineOpen.SpecMap_appLE_fromSpec π hW hA le_rfl
     have hmem' : y ∈ Set.range hW.fromSpec := by
-      rw [hW.range_fromSpec]
-      exact hmem
+      rwa [hW.range_fromSpec]
     obtain ⟨p, rfl⟩ := hmem'
     have hint : (π.appLE W (π ⁻¹ᵁ W) le_rfl).hom.IsIntegral := by
       rw [← Scheme.Hom.app_eq_appLE]
@@ -287,8 +279,7 @@ theorem quotient_isIntegral_surjective_orbits :
       obtain ⟨g, rfl⟩ := hpts x y hxy.symm
       apply hy
       have hx' : x ∈ (ρ g).asIso.hom ⁻¹ᵁ U := by
-        rw [hU g]
-        exact hx
+        rwa [hU g]
       exact hx'
   exact ⟨hInt, hsurj, hpts, hfield, hopen⟩
 

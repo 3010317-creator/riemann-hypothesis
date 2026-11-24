@@ -73,8 +73,7 @@ theorem mem_adjoin_genX_of_negFF {c : E.toAffine.FunctionField} (h : negFF E c =
     have : s * ((2 : E.toAffine.FunctionField) * genY E + algebraMap F _ E.a₁ * genX E +
         algebraMap F _ E.a₃) = 0 := by linear_combination -h
     exact (mul_eq_zero.mp this).resolve_right (_root_.GroundTheory.Global.genDen_ne_zero E)
-  rw [hs0, zero_mul, add_zero]
-  exact hr
+  rwa [hs0, zero_mul, add_zero]
 
 theorem _root_.GroundTheory.Arith.Abelian.Isogeny.negFF_alt (φ : Isogeny E E') : negFF E φ.x = φ.x := by
   have hG : IsGenPt E (genericPoint E) := transcendental_genX E
@@ -82,8 +81,7 @@ theorem _root_.GroundTheory.Arith.Abelian.Isogeny.negFF_alt (φ : Isogeny E E') 
   have e2 : Point.map (genEval E (genericPoint E) hG) φ.1 = φ.1 := φ.app_genericPoint hG
   rw [e2] at e
   have := congrArg (xOf _) e
-  rw [xOf_neg, xOf_map] at this
-  exact this
+  rwa [xOf_neg, xOf_map] at this
 
 theorem _root_.GroundTheory.Arith.Abelian.Isogeny.x_mem_adjoin_genX (φ : Isogeny E E') :
     φ.x ∈ F⟮genX E⟯ :=
@@ -92,8 +90,7 @@ theorem _root_.GroundTheory.Arith.Abelian.Isogeny.x_mem_adjoin_genX (φ : Isogen
 theorem _root_.GroundTheory.Arith.Abelian.Isogeny.exists_ratEmb_eq_x (φ : Isogeny E E') :
     ∃ r : RatFunc F, ratEmb E r = φ.x := by
   have h := φ.x_mem_adjoin_genX
-  rw [← fieldRange_ratEmb] at h
-  exact h
+  rwa [← fieldRange_ratEmb] at h
 
 theorem _root_.GroundTheory.Arith.Abelian.Isogeny.degree_eq_max_natDegree (φ : Isogeny E E')
     {r : RatFunc F} (hr : ratEmb E r = φ.x) :

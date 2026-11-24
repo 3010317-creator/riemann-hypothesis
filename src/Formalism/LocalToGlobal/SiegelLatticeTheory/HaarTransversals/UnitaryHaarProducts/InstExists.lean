@@ -76,8 +76,7 @@ theorem Lv_eq_map : Lv D = (VS D).L0.map ((crdE D).symm.toLinearMap.restrictScal
   ext x
   simp only [Lv, Submodule.mem_comap, Submodule.mem_map, LinearMap.restrictScalars_apply, LinearEquiv.coe_coe]
   constructor
-  · intro h
-    exact ⟨_, h, (crdE D).symm_apply_apply x⟩
+  · exact fun h => ⟨_, h, (crdE D).symm_apply_apply x⟩
   · rintro ⟨y, hy, rfl⟩
     rwa [LinearEquiv.apply_symm_apply]
 
@@ -176,7 +175,7 @@ theorem Jpq_sub (p q : ℕ) {n : Type} [DecidableEq n] (e : n ≃ Fin p ⊕ Fin 
   · subst hab
     have ha := he a
     rcases hea : e a with x | x <;> simp_all
-  · rw [if_neg hab]
+  · rw [ite_eq_right hab]
     have hne : e a ≠ e b := fun h => hab (e.injective h)
     rcases hea : e a with x | x <;> rcases heb : e b with y | y <;> simp_all
 
@@ -184,8 +183,7 @@ theorem exists_P (τ : D.what₂.Tau) : ∃ P : Matrix (Fin (VS D).rank) (Fin (V
     Pᴴ * (Jv D).map (embS D τ) * P = Formalism.REAL.Jm (epsV D) := by
   have hs : Formalism.UG.HasSignature ((VS D).gram.map (embS D τ)) (D.R.k + D.R.rS) (D.R.rS + 1) := by
     have h0 := D.sp.Y_sig 0 (embS D τ)
-    rw [D.sp.baseSpace_signature_eq] at h0
-    exact h0
+    rwa [D.sp.baseSpace_signature_eq] at h0
   obtain ⟨e, P, hP⟩ := hs
   rw [_root_.Formalism.UG.P.cT_conj_eq] at hP
   refine ⟨P.val.submatrix e (eSgn D), ?_, ?_⟩

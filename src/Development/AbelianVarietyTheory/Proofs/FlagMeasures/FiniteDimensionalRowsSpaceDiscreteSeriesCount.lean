@@ -283,8 +283,7 @@ theorem isContRep_sum (B : RowsAut) {ι : Type} (s : Finset ι) (y : ι → B.I.
   refine Finset.induction_on s ?_ ?_
   · unfold GlobalTheory.Dec.IsContRep
     rw [Finset.sum_empty]
-    refine ⟨continuous_const, fun γ _ x => rfl, ?_⟩
-    exact Lp.coeFn_zero _ _ _
+    exact ⟨continuous_const, fun γ _ x => rfl, Lp.coeFn_zero _ _ _⟩
   · intro a s ha ih
     have e1 : (∑ i ∈ insert a s, c i • y i) = (∑ i ∈ s, c i • y i) + c a • y a := by
       rw [Finset.sum_insert ha, add_comm]
@@ -394,8 +393,7 @@ theorem bessel (B : RowsAut) (C : ℝ) (t : B.I.GA → ℝ) (w : B.Hs) (hw : ‖
     rw [← hAn, Real.sqrt_sq (norm_nonneg _)]
   have key : S ≤ C * t x * Real.sqrt S := by
     have h1 := hfb x
-    rw [hfxS, Complex.norm_of_nonneg hS0, hAn'] at h1
-    exact h1
+    rwa [hfxS, Complex.norm_of_nonneg hS0, hAn'] at h1
   have hr := Real.sq_sqrt hS0
   have hr0 := Real.sqrt_nonneg S
   by_cases hS : S = 0
@@ -452,8 +450,7 @@ theorem card_le_of_pointwise (B : RowsAut) (hfin : B.I.muA B.μf B.fund < ⊤) {
 private theorem le_mul_div_of_le_mul_div_of_mul_le (S P Q R Dr V e : ℝ) (hV : 0 < V) (hDr : 0 ≤ Dr)
     (h1 : S ≤ P * Dr * Q / R) (h2 : P * Q / R * V ≤ e) : S ≤ Dr * e / V := by
   have h3 : P * Q / R ≤ e / V := by
-    rw [le_div_iff₀ hV]
-    exact h2
+    rwa [le_div_iff₀ hV]
   calc S ≤ P * Dr * Q / R := h1
     _ = (P * Q / R) * Dr := by ring
     _ ≤ (e / V) * Dr := mul_le_mul_of_nonneg_right h3 hDr
@@ -471,8 +468,7 @@ theorem rows_finiteDimensional : GlobalTheory.DSId.DecGap → GlobalTheory.FlagM
   have hK := GlobalTheory.Dec.countHyp_isKTypeOf_lowKSub B Cg n₀ d p q b hn₀ hH
   have h120' : ∀ v, 120 * (B.I.n : ℝ) * ((rkR (B.I.ε v) : ℕ) : ℝ) ^ ((3 : ℝ) / 2) ≤ h := by
     intro v
-    rw [hrk v]
-    exact h120
+    rwa [hrk v]
   have hLoc := GlobalTheory.Dec.locDec_of_decGap hD B d h hB hgap h120'
   have hE := _root_.GlobalTheory.Dec.CuspAllKType.cusp_all B d h hB hK hg h120' hLoc hbig40
   obtain ⟨hvpos, hvtop⟩ := vol_lt_top hV B p q hs hqn hn8 hrd

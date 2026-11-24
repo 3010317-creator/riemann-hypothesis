@@ -302,9 +302,7 @@ theorem forall_norm_finComp_le_one_iff (x : Fin 2 → 𝔸[K]) :
     have hv := (pi_norm_le_iff_of_nonneg zero_le_one).1 (h v) i
     exact (HeightOneSpectrum.mem_adicCompletionIntegers (R := 𝓞 K) K v).2
       ((Valued.toNormedField.norm_le_one_iff).1 hv)
-  · intro h v
-    refine (pi_norm_le_iff_of_nonneg zero_le_one).2 fun i => ?_
-    exact norm_le_one_of_mem v (h i v)
+  · exact fun h v => (pi_norm_le_iff_of_nonneg zero_le_one).2 fun i => norm_le_one_of_mem v (h i v)
 
 theorem unitBall2_eq :
     (unitBall2 : Set (Fin 2 → 𝔸[K])) =
@@ -346,13 +344,11 @@ theorem isCompact_unitBall2 : IsCompact (unitBall2 : Set (Fin 2 → 𝔸[K])) :=
         exact ⟨fun w _ => mem_closedBall_zero_iff.mpr (h1 w), h2⟩
       · rintro ⟨h1, h2⟩
         exact ⟨fun w => mem_closedBall_zero_iff.mp (h1 w (Set.mem_univ w)), h2⟩
-    rw [hCeq]
-    exact h
+    rwa [hCeq]
   refine (isCompact_univ_pi fun _ : Fin 2 => hC).of_isClosed_subset isClosed_unitBall2 ?_
   intro x hx i _
   rw [unitBall2_eq] at hx
-  refine ⟨fun w => ?_, hx.2 i⟩
-  exact (norm_le_euclidNorm (infComp w x) i).trans (hx.1 w)
+  exact ⟨fun w => ((norm_le_euclidNorm (infComp w x) i).trans (hx.1 w)), hx.2 i⟩
 
 theorem measurableSet_unitBall2 : MeasurableSet (unitBall2 : Set (Fin 2 → 𝔸[K])) :=
   isClosed_unitBall2.measurableSet
@@ -424,8 +420,7 @@ theorem map_vecMul_maxCompact {k : GL (Fin 2) 𝔸[K]}
     have h1 : (c : ℝ≥0∞) * adeleMeasure2 K unitBall2 = 1 * adeleMeasure2 K unitBall2 := by
       rw [one_mul]; exact hS
     exact (ENNReal.mul_left_inj adeleMeasure2_unitBall2_ne_zero adeleMeasure2_unitBall2_ne_top).1 h1
-  rw [h]
-  rw [show c = 1 from by exact_mod_cast hc, one_smul]
+  rw [h, show c = 1 from by exact_mod_cast hc, one_smul]
 
 theorem ideleModule_det_of_mem_maxCompact {k : GL (Fin 2) 𝔸[K]}
     (hk : k ∈ (maxCompact : Subgroup (AdelicGLn.AdelicGL K 2))) :
@@ -651,8 +646,7 @@ theorem adelicFourier2_add {F G : (Fin 2 → 𝔸[K]) → ℂ} (hF : Integrable 
 theorem adelicFourier2_smul (c : ℂ) (F : (Fin 2 → 𝔸[K]) → ℂ) :
     adelicFourier2 K (c • F) = c • adelicFourier2 K F := by
   funext y
-  simp only [adelicFourier2, Pi.smul_apply, smul_eq_mul, mul_assoc]
-  exact integral_const_mul c _
+  simpa only [adelicFourier2, Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul c _
 
 theorem adelicFourier2_zero : adelicFourier2 K (0 : (Fin 2 → 𝔸[K]) → ℂ) = 0 := by
   funext y
@@ -703,14 +697,14 @@ theorem finiteFourier_cosetIndicator_algebraMap {I : (FractionalIdeal (𝓞 K)�
   by_cases hη : η ∈ (traceDualIdeal K I : FractionalIdeal (𝓞 K)⁰ K)
   · have hη' : algebraMap K 𝔸ᶠ[K] η ∈ idealFiniteAdeles (traceDualIdeal K I) :=
       (algebraMap_mem_idealFiniteAdeles_iff _ η).mpr hη
-    rw [if_pos hη, Set.indicator_of_mem (SetLike.mem_coe.mpr hη'), Pi.one_apply, mul_one]
+    rw [ite_eq_left hη, Set.indicator_of_mem (SetLike.mem_coe.mpr hη'), Pi.one_apply, mul_one]
     have hb : b * algebraMap K 𝔸ᶠ[K] η = algebraMap K 𝔸ᶠ[K] c * algebraMap K 𝔸ᶠ[K] η +
         (b - algebraMap K 𝔸ᶠ[K] c) * algebraMap K 𝔸ᶠ[K] η := by ring
     rw [hb, AddChar.map_add_eq_mul, (forall_finiteAdelicChar_mul_eq_one_iff I _).mpr hη' _ hc,
       mul_one, finiteAdelicChar_algebraMap_mul, mixedTraceForm_comm K (mixedEmbedding K c)]
   · have hη' : algebraMap K 𝔸ᶠ[K] η ∉ idealFiniteAdeles (traceDualIdeal K I) :=
       fun h ↦ hη ((algebraMap_mem_idealFiniteAdeles_iff _ η).mp h)
-    rw [if_neg hη, Set.indicator_of_notMem (by simpa using hη'), mul_zero, mul_zero]
+    rw [ite_eq_right hη, Set.indicator_of_notMem (by simpa using hη'), mul_zero, mul_zero]
 
 theorem adelicFourier2_tensor_cosetIndicator_algebraMap (φ : 𝓢(Fin 2 → mixedSpace K, ℂ))
     {I : (FractionalIdeal (𝓞 K)⁰ K)ˣ} {b : Fin 2 → 𝔸ᶠ[K]} {c : Fin 2 → K}
@@ -908,8 +902,7 @@ theorem adelicFourier2_rightTranslate (g : GL (Fin 2) 𝔸[K]) (F : (Fin 2 → �
   have hgA : (g : Matrix (Fin 2) (Fin 2) 𝔸[K]) * A = 1 := by
     simp only [A, Units.mul_inv]
   simp only [vecMul_vecMul, hgA, vecMul_one, sum_vecMul_mul] at h
-  rw [adelicFourier2, adelicFourier2]
-  exact h
+  rwa [adelicFourier2, adelicFourier2]
 
 theorem poisson_rightTranslate {F : (Fin 2 → 𝔸[K]) → ℂ} (hF : F ∈ schwartzBruhat2 K)
     (g : GL (Fin 2) 𝔸[K]) :

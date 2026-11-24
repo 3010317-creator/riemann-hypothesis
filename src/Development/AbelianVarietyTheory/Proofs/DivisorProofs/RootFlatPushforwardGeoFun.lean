@@ -69,24 +69,7 @@ namespace GlobalTheory.CoordP
 variable {p : ℕ} [Fact p.Prime]
 
 theorem not_dvd_den_of_norm_le_one' (c : ℚ) (hc : ‖(c : ℚ_[p])‖ ≤ 1) : ¬ p ∣ c.den := by
-  intro hd
-  have hden : ‖((c.den : ℤ) : ℚ_[p])‖ < 1 :=
-    Padic.norm_intCast_lt_one_iff.2 (Int.natCast_dvd_natCast.2 hd)
-  have hnum : ‖((c.num : ℤ) : ℚ_[p])‖ < 1 := by
-    have h1 : ((c.num : ℤ) : ℚ_[p]) = (c : ℚ_[p]) * ((c.den : ℤ) : ℚ_[p]) := by
-      have : (c.num : ℚ) = c * (c.den : ℤ) := by
-        rw [Int.cast_natCast, Rat.mul_den_eq_num]
-      exact_mod_cast congrArg (fun x : ℚ => (x : ℚ_[p])) this
-    rw [h1, norm_mul]
-    calc ‖(c : ℚ_[p])‖ * ‖((c.den : ℤ) : ℚ_[p])‖ ≤ 1 * ‖((c.den : ℤ) : ℚ_[p])‖ :=
-          mul_le_mul_of_nonneg_right hc (norm_nonneg _)
-      _ < 1 := by rw [one_mul]; exact hden
-  have hpn : (p : ℤ) ∣ c.num := Padic.norm_intCast_lt_one_iff.1 hnum
-  have h2 : p ∣ c.num.natAbs := by
-    rw [← Int.natCast_dvd_natCast, Int.natCast_natAbs]; exact (dvd_abs _ _).2 hpn
-  have h3 := Nat.dvd_gcd h2 hd
-  rw [c.reduced.gcd_eq_one] at h3
-  exact (Fact.out : p.Prime).ne_one (Nat.dvd_one.1 h3)
+  exact GlobalTheory.LocalData.not_dvd_den p hc
 
 def starL (G : HTGroup p) : ℚ_[p] ⊗[ℚ] G.C →ₗ[ℚ_[p]] ℚ_[p] ⊗[ℚ] G.C where
   toFun x := (starT G.star ℚ_[p] x).unop
@@ -205,8 +188,7 @@ theorem sh_linInd (G : HTGroup p) {ι : Type} (e : ι → G.C) (he : LinearIndep
 
     rw [map_sum, map_zero] at h
     simpa only [shA_apply, sh_smul, sh_sh] using h
-  have h := he s _ key l hl
-  simpa using h
+  simpa using he s _ key l hl
 
 theorem inj (G : HTGroup p) (x : ℚ_[p] ⊗[ℚ] G.C) (h1 : ∀ w, G.locW w x = 0)
     (h2 : ∀ w, G.locW w (starT G.star ℚ_[p] x).unop = 0) : x = 0 := by
@@ -330,8 +312,7 @@ theorem coord_bound : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (B : ℝ), �
     positivity
   have hqn : ‖(q : ℚ_[p])‖ ≤ 1 := by
     rw [hq]; push_cast
-    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow]
-    rw [mul_inv_le_iff₀ hp0, one_mul]
+    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow, mul_inv_le_iff₀ hp0, one_mul]
     exact h2.trans he.le
   exact ⟨q.num, q.den, not_dvd_den_of_norm_le_one' q hqn, (Rat.num_div_den q).symm⟩
 

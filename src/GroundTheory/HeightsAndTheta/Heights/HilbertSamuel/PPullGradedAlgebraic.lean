@@ -31,8 +31,7 @@ theorem blockDeg_add (m m' : (Σ k, ι k) →₀ ℕ) (k : K) :
 
 theorem blockDeg_sum {α : Type} (s : Finset α) (f : α → (Σ k, ι k) →₀ ℕ) (k : K) :
     blockDeg (∑ a ∈ s, f a) k = ∑ a ∈ s, blockDeg (f a) k := by
-  simp only [blockDeg, Finsupp.finsetSum_apply]
-  exact Finset.sum_comm
+  simpa only [blockDeg, Finsupp.finsetSum_apply] using Finset.sum_comm
 
 theorem blockDeg_single [DecidableEq K] (s : Σ k, ι k) (a : ℕ) (k' : K) :
     blockDeg (Finsupp.single s a) k' = if k' = s.1 then a else 0 := by
@@ -44,20 +43,18 @@ theorem blockDeg_single [DecidableEq K] (s : Σ k, ι k) (a : ℕ) (k' : K) :
     rw [Finset.sum_eq_single i0]
     · simp
     · intro i _ hi
-      rw [Finsupp.single_apply, if_neg]
-      intro h'
-      exact hi (eq_of_heq (Sigma.mk.inj_iff.mp h').2).symm
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun h' => hi (eq_of_heq (Sigma.mk.inj_iff.mp h').2).symm
     · simp
   · apply Finset.sum_eq_zero
     intro i _
-    rw [Finsupp.single_apply, if_neg]
-    intro h'
-    exact h (congrArg Sigma.fst h').symm
+    rw [Finsupp.single_apply, ite_eq_right]
+    exact fun h' => h (congrArg Sigma.fst h').symm
 
 theorem isMultiHomog_monomial {m : (Σ k, ι k) →₀ ℕ} {b : K → ℕ} (h : ∀ k, blockDeg m k = b k) :
     IsMultiHomog (monomial m (1 : ℚ)) b := by
   intro m' hm' k
-  rw [support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at hm'
+  rw [support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at hm'
   subst hm'
   exact h k
 
@@ -71,9 +68,9 @@ def diagMono [Fintype K] (c : ∀ k, ι k) (b : K → ℕ) : (Σ k, ι k) →₀
 theorem blockDeg_diagMono [Fintype K] (c : ∀ k, ι k) (b : K → ℕ) (k : K) : blockDeg (diagMono c b) k = b k := by
   classical
   rw [diagMono, blockDeg_sum, Finset.sum_eq_single k]
-  · rw [blockDeg_single, if_pos rfl]
+  · rw [blockDeg_single, ite_eq_left rfl]
   · intro k' _ hk'
-    rw [blockDeg_single, if_neg (Ne.symm hk')]
+    rw [blockDeg_single, ite_eq_right (Ne.symm hk')]
   · simp
 
 omit [∀ k, Fintype (ι k)] in

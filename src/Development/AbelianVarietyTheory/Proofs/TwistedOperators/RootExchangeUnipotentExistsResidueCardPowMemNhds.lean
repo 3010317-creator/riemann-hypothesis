@@ -82,10 +82,8 @@ theorem valuation_resCard_lt_one : valuation k (resCard k : k) < 1 := by
     rw [map_natCast, resCard, Nat.card_eq_fintype_card]
     exact FiniteField.cast_card_eq_zero _
   have hnu : ¬ IsUnit (resCard k : 𝒪[k]) := by
-    rw [IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hres
-    exact hres
-  have hlt := (Valuation.Integer.not_isUnit_iff_valuation_lt_one (v := valuation k)).mp hnu
-  simpa using hlt
+    rwa [IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hres
+  simpa using (Valuation.Integer.not_isUnit_iff_valuation_lt_one (v := valuation k)).mp hnu
 
 omit [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem valuation_natCast_le_one (j : ℕ) : valuation k (j : k) ≤ 1 := by
@@ -197,8 +195,7 @@ theorem exists_pow_mem_nhds (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     h2.congr fun m => by rw [← inv_pow, Units.val_pow_eq_pow_val]
   have hT : Filter.Tendsto (fun m : ℕ => u ^ (resCard k ^ m)) Filter.atTop (𝓝 1) := by
     rw [Units.isEmbedding_embedProduct.tendsto_nhds_iff]
-    have hP := hA.prodMk_nhds ((MulOpposite.continuous_op.tendsto _).comp hB)
-    simpa [Function.comp_def] using hP
+    simpa [Function.comp_def] using hA.prodMk_nhds ((MulOpposite.continuous_op.tendsto _).comp hB)
   exact (hT.eventually_mem hU).exists
 
 end GlobalTheory.RootEx.UnipPow

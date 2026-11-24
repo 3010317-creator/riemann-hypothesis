@@ -88,12 +88,11 @@ theorem exists_approx (T : Finset (HeightOneSpectrum (𝓞 E))) {n : ℕ} (g : T
     obtain ⟨a, -, ha, -⟩ := PI.FinOrdValD.WA.weakApprox T
       (fun v => if h : v ∈ T then algebraMap E (v.adicCompletion E) (t ⟨v, h⟩ k) else 0)
       (fun v => if h : v ∈ T then (B ⟨v, h⟩)⁻¹ else 1)
-      (fun v hv => by simp only [dif_pos hv]; exact inv_ne_zero (hB0 _))
+      (fun v hv => by simp only [dite_eq_left hv]; exact inv_ne_zero (hB0 _))
     refine ⟨a, fun P => ?_⟩
     have h := ha P.1 P.2
-    simp only [dif_pos P.2, Subtype.coe_eta] at h
-    rw [← map_sub, PI.FinOrdValD.WA.val_alg] at h
-    exact h
+    simp only [dite_eq_left P.2, Subtype.coe_eta] at h
+    rwa [← map_sub, PI.FinOrdValD.WA.val_alg] at h
   choose a ha using hk
   refine ⟨a, fun P l => ?_⟩
   rw [apply_eq_sum, Finset.mul_sum]
@@ -119,8 +118,7 @@ theorem exists_sameCoset {X : Fields} {Pr : Primes X} (sel : HeightOneSpectrum (
   have h := hd P l
   have e : (f P).symm d - y0 P = (f P).symm (d - f P (y0 P)) := by
     rw [map_sub, LinearEquiv.symm_apply_apply]
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.CosetApprox
 

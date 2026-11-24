@@ -111,8 +111,7 @@ theorem mapM_unitary (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ 
     rw [X.ιE_conj]
     exact (basicNotions_bridge_star _ _ _).symm
   have h := congrArg (mapM X) hM'
-  rw [map_mul, map_mul, hc] at h
-  exact h
+  rwa [map_mul, map_mul, hc] at h
 
 theorem matE_isom (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ (starRingEnd X.B.I.E) X.B.I.J) :
     matE X M ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := by
@@ -243,8 +242,7 @@ theorem column_lattice_representatives (cs : ColSys X u what₂) (hK : X.LevelSu
       constructor
       · rintro ⟨x, hx, rfl⟩
         simpa using hx
-      · intro hy
-        exact ⟨g.symm y, hy, by simp⟩
+      · exact fun hy => ⟨g.symm y, hy, by simp⟩
     rw [hmap, cs.lat_eq ρ, h1, egrp, fmat_mul, ← Matrix.mulVec_mulVec, kset_inv_iff X hk, fmat_mul,
       ← Matrix.mulVec_mulVec, hginv]
   have heq : Formalism.HermitianLatticesTheory.gmap g (cs.lamOf ρ) = q.1 := by

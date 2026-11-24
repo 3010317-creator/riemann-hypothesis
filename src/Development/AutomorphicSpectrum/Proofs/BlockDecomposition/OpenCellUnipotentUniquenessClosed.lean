@@ -139,16 +139,14 @@ theorem inv_conj_mem_unipU {x : GL (Fin N) k} (hx : x ∈ unipRadLower k (stdBlo
       rcases lt_trichotomy (blk (stdBlocks d hd) (wOpen d hd i)) (blk (stdBlocks d hd) (wOpen d hd j))
         with hlt | heq | hgt
       · exact (lower_entries hx _ _).1 hlt
-      · rw [(lower_entries hx _ _).2 heq, Matrix.one_apply, if_neg]
-        intro h
-        exact hji.ne' ((wOpen d hd).injective h)
+      · rw [(lower_entries hx _ _).2 heq, Matrix.one_apply, ite_eq_right]
+        exact fun h => hji.ne' ((wOpen d hd).injective h)
       · exact absurd (lt_of_blk_lt d hd hgt) (not_lt.mpr hji.le)
     · rw [hent, (lower_entries hx _ _).2 rfl]
       simp
   · have he : pm k (wOpen d hd) * ((pm k (wOpen d hd))⁻¹ * x * pm k (wOpen d hd)) *
         (pm k (wOpen d hd))⁻¹ = x := by group
-    rw [he]
-    exact hx
+    rwa [he]
 
 theorem eq_of_mul_eq {p u u' : GL (Fin N) k} (hp : p ∈ parab k (stdBlocks d hd))
     (hu : u ∈ unipU k d hd) (hu' : u' ∈ unipU k d hd)
@@ -198,8 +196,7 @@ theorem isClosed_unipU : IsClosed (unipU k d hd : Set (GL (Fin N) k)) := by
         (fun u : GL (Fin N) k => pm k (wOpen d hd) * u * (pm k (wOpen d hd))⁻¹) ⁻¹'
           (unipRadLower k (stdBlocks d hd) : Set (GL (Fin N) k)) := by
     ext u
-    simp only [Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe]
-    exact mem_unipU_iff
+    simpa only [Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe] using mem_unipU_iff
   rw [hs]
   exact hB.inter (hL.preimage hc)
 

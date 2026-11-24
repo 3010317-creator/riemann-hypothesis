@@ -62,8 +62,7 @@ private theorem gen_exists_nat {t : ℤ_[l]} (ht : IsUnit t) (d : ℤ_[l]) :
     rw [RingHom.mem_ker, map_add (f := _), map_mul, map_natCast, ZMod.natCast_zmod_val]
     field_simp
     ring
-  rw [PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p, Ideal.mem_span_singleton] at hm
-  exact hm
+  rwa [PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p, Ideal.mem_span_singleton] at hm
 
 private theorem gen_emult {a : ℕ} (ha : 1 ≤ a) (ha2 : l = 2 → 2 ≤ a) {u : ℤ_[l]}
     (hu : emultiplicity (l : ℤ_[l]) (u - 1) = a) (n : ℕ) :
@@ -143,8 +142,7 @@ theorem exists_pow_redPow_eq {a : ℕ} (ha : 1 ≤ a) (ha2 : l = 2 → 2 ≤ a) 
   have hkb : (l : ℤ_[l]) ^ b ∣ (u : ℤ_[l]) ^ k - x :=
     (pow_dvd_pow _ (Nat.le_add_left b a)).trans hk
   have hm : (u : ℤ_[l]) ^ k - x ∈ RingHom.ker (PadicInt.toZModPow b : ℤ_[l] →+* ZMod (l ^ b)) := by
-    rw [PadicInt.ker_toZModPow, Ideal.mem_span_singleton]
-    exact hkb
+    rwa [PadicInt.ker_toZModPow, Ideal.mem_span_singleton]
   rw [RingHom.mem_ker, map_sub, sub_eq_zero] at hm
   simpa [redPow] using hm
 

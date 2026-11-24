@@ -82,8 +82,7 @@ theorem proof (hUp : NormalModelDivisorChartGeneric.Statement) : NormalDivisorCh
     refine hB w hw (hwq ▸ hqu) fun hwB => hqI fun f hf => ?_
     have h := hwB _ hf
     rw [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, eval_rename] at h
-    rw [← hwq]
-    exact h
+    rwa [← hwq]
 
 end NormalDivisorChartGeneric
 

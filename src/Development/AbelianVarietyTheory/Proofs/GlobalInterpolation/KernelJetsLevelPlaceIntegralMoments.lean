@@ -211,8 +211,7 @@ theorem apply_mem_locP {AA : Submodule (𝓞 E) E} {N : Submodule (𝓞 E) (Sp E
         smul_smul, smul_smul, map_mul, Algebra.smul_def t r]
       congr 1
       ring
-    rw [e]
-    exact h1
+    rwa [e]
   | zero => exact zero_mem _
   | add x x' _ _ h h' => exact add_mem h h'
   | smul c x _ h => exact Submodule.smul_mem _ c h
@@ -270,8 +269,7 @@ theorem exists_reps_sup_of_finite_quot (E : Type) [Field E] (H : Type) [AddCommG
     exact ⟨s z, (s z).2, rfl⟩
   obtain ⟨R, hR, hinj, him⟩ := Finset.exists_subset_injOn_image_eq_of_surjOn _ _ hsurj
   refine ⟨R, fun x hx => hR hx, ?_, ?_⟩
-  · intro x hx y hy hxy
-    exact hinj hx hy (QuotientAddGroup.eq_iff_sub_mem.2 hxy)
+  · exact fun x hx y hy hxy => hinj hx hy (QuotientAddGroup.eq_iff_sub_mem.2 hxy)
   · intro y hy
     have h1 : (⟨y, hy⟩ : ↥Z₁) - s (Submodule.Quotient.mk ⟨y, hy⟩) ∈ Z₀.comap Z₁.subtype :=
       (Submodule.Quotient.eq _).1 (hs _).symm
@@ -313,8 +311,7 @@ theorem latSum_eq_sum_sum_reps : ∀ (E : Type) [Field E] [NumberField E] [StarR
     have h3 : j = j' := by
       refine hJinj j hj j' hj' ?_
       have : j - j' = x + j - (x + j') := by abel
-      rw [this]
-      exact h1
+      rwa [this]
     rw [h3]
   · intro z _
     obtain ⟨⟨y, hy⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ z
@@ -435,7 +432,7 @@ variable {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p])
 
 theorem lamC_mul {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) :
     TaylorLogMetric.lamC lam (x * y) = TaylorLogMetric.lamC lam x * TaylorLogMetric.lamC lam y := by
-  simp only [TaylorLogMetric.lamC, dif_pos hx, dif_pos hy, dif_pos (mul_mem hx hy)]
+  simp only [TaylorLogMetric.lamC, dite_eq_left hx, dite_eq_left hy, dite_eq_left (mul_mem hx hy)]
   exact map_mul lam ⟨x, hx⟩ ⟨y, hy⟩
 
 theorem lamC_sum {κ : Type} (s : Finset κ) (f : κ → ℂ) (h : ∀ k ∈ s, f k ∈ TaylorLogMetric.Qbar) :
@@ -443,14 +440,14 @@ theorem lamC_sum {κ : Type} (s : Finset κ) (f : κ → ℂ) (h : ∀ k ∈ s, 
   classical
   induction s using Finset.induction_on with
   | empty =>
-    have : TaylorLogMetric.lamC lam 0 = lam 0 := dif_pos (zero_mem _)
+    have : TaylorLogMetric.lamC lam 0 = lam 0 := dite_eq_left (zero_mem _)
     simp only [Finset.sum_empty, this, map_zero]
   | insert k s hk ih =>
     have h1 := h k (Finset.mem_insert_self _ _)
     have h2 : ∀ j ∈ s, f j ∈ TaylorLogMetric.Qbar := fun j hj => h j (Finset.mem_insert_of_mem hj)
     have h3 := sum_mem h2
     rw [Finset.sum_insert hk, Finset.sum_insert hk, ← ih h2]
-    simp only [TaylorLogMetric.lamC, dif_pos h1, dif_pos h3, dif_pos (add_mem h1 h3)]
+    simp only [TaylorLogMetric.lamC, dite_eq_left h1, dite_eq_left h3, dite_eq_left (add_mem h1 h3)]
     exact map_add lam ⟨_, h1⟩ ⟨_, h3⟩
 
 theorem lamC_zero' : TaylorLogMetric.lamC lam 0 = 0 := by simpa using lamC_sum lam (∅ : Finset Unit) (fun _ => 0) (by simp)
@@ -459,7 +456,7 @@ theorem norm_lamC_ratio {n k c : ℕ} (hn : n ≠ 0) (hc : ¬ p ∣ c) (h : n �
     ‖TaylorLogMetric.lamC lam ((n : ℂ)⁻¹ * k)‖ ≤ 1 := by
   have hm : (n : ℂ)⁻¹ * k ∈ TaylorLogMetric.Qbar := mul_mem (inv_mem (natCast_mem _ n)) (natCast_mem _ k)
   have e : TaylorLogMetric.lamC lam ((n : ℂ)⁻¹ * k) = (n : ℂ_[p])⁻¹ * k := by
-    simp only [TaylorLogMetric.lamC, dif_pos hm]
+    simp only [TaylorLogMetric.lamC, dite_eq_left hm]
     have : (⟨_, hm⟩ : TaylorLogMetric.Qbar) = (n : TaylorLogMetric.Qbar)⁻¹ * k := Subtype.ext (by simp)
     rw [this]; simp
   obtain ⟨d, hd⟩ := h
@@ -815,7 +812,7 @@ section abelian₂
 
 variable {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p])
 
-theorem lamC_of_mem {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dif_pos h
+theorem lamC_of_mem {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dite_eq_left h
 
 theorem lamC_zpow {x : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (n : ℤ) : TaylorLogMetric.lamC lam (x ^ n) = TaylorLogMetric.lamC lam x ^ n := by
   rw [lamC_of_mem lam hx, lamC_of_mem lam (zpow_mem hx n), ← map_zpow₀]; rfl
@@ -883,7 +880,7 @@ theorem assemble {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_
     subset_rfl (Set.subset_univ _) fun m hm => ?_
   · by_cases h : Ξ x = 0
     · simpa [h] using clo_zero Sup tab Set.univ
-    · simp only [if_neg h]
+    · simp only [ite_eq_right h]
       refine clo_mul (h3 x (hR x hx) h) _ ?_
       rw [norm_mul, hinv, norm_inv, hχ1, inv_one, mul_one]
       exact h2 x (hR x hx)
@@ -900,7 +897,7 @@ theorem assemble {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_
       intro j hj'
       have := hm (x + j) (add_mem (hR x hx) (hC (hJ.1 j hj'))) (by rw [hj j hj']; exact h)
       unfold Amb.jetK desc
-      rw [dif_pos this]
+      rw [dite_eq_left this]
       exact this.choose_spec
     have e : A.σ₀ (∑ j ∈ J, A.jetK S N N' c (x + j) m) =
         (A.chiF a b N N')⁻¹ * ∑ j ∈ J, jetC A.cD (A.thInd S N N' c (x + j)) m := by
@@ -935,8 +932,8 @@ theorem phiT_add (K : Type) [Field K] {d : Deco E a ST SG} {d' : Deco E b ST SG'
     simpa using this
   unfold phiT
   by_cases hx : x ∈ suppBar d d'
-  · exact (if_pos (h.2 hx)).trans (if_pos hx).symm
-  · exact (if_neg fun h' => hx (h.1 h')).trans (if_neg hx).symm
+  · exact (ite_eq_left (h.2 hx)).trans (ite_eq_left hx).symm
+  · exact (ite_eq_right fun h' => hx (h.1 h')).trans (ite_eq_right hx).symm
 
 theorem ker_of_mulLat {d : Deco E a ST SG} {d' : Deco E b ST SG'} (hd' : d'.Ok) {S : Finset (HeightOneSpectrum (𝓞 E))}
     (hS : ST ⊆ S) {c : ℕ} (hc : ∀ P ∈ ST, (c : 𝓞 E) ∈ P.asIdeal) {y : HomE E a b} (hy : y ∈ mulLat c (homAt S d.N d'.N)) :
@@ -946,8 +943,7 @@ theorem ker_of_mulLat {d : Deco E a ST SG} {d' : Deco E b ST SG'} (hd' : d'.Ok) 
   have h1 : y v ∈ d'.at P.1 := hy P.1 (hS P.2) v hv
   refine ⟨Submodule.smul_mem _ (c : 𝓞 E) h1, ?_⟩
   have := hd'.f_smul P (c : 𝓞 E) _ h1
-  rw [Ideal.Quotient.eq_zero_iff_mem.2 (hc P.1 P.2), zero_mul] at this
-  exact this
+  rwa [Ideal.Quotient.eq_zero_iff_mem.2 (hc P.1 P.2), zero_mul] at this
 
 theorem homAt_mono {S S' : Finset (HeightOneSpectrum (𝓞 E))} (h : S ⊆ S') (N : Submodule (𝓞 E) (Sp E a))
     (N' : Submodule (𝓞 E) (Sp E b)) : homAt S' N N' ≤ homAt S N N' := fun _ hx P hP => hx P (h hP)
@@ -1180,8 +1176,7 @@ theorem companion_gen {E : Type} [Field E] [NumberField E] [StarRing E] {b : ℕ
     rw [← algebraMap_smul E ϖ y] at this
     exact Submodule.mem_sup_left this
   · have := hd.L_le_N (hbar y hy)
-    rw [← algebraMap_smul E (cO E ϖ) y, algebraMap_cO] at this
-    exact this
+    rwa [← algebraMap_smul E (cO E ϖ) y, algebraMap_cO] at this
   · have hn : cO E ϖ ∉ P.1.asIdeal := by
       intro h
       obtain ⟨u, v, huv⟩ := hcop
@@ -1522,8 +1517,7 @@ theorem val_det_ker {P : HeightOneSpectrum (𝓞 E)} {N N'' : Submodule (𝓞 E)
     exact val_det_eq_one (P := P) (LinearMap.equivOfDetNeZero _ h0) fun x => by
       rw [← hf'' x]
       have := key (f.symm (f'' x))
-      rw [LinearEquiv.apply_symm_apply] at this
-      exact this
+      rwa [LinearEquiv.apply_symm_apply] at this
   rw [map_mul, map_div₀ _ _ π, hv, hπ, one_div, inv_mul_eq_one₀ WithZero.exp_ne_zero] at h1
   exact h1.symm
 
@@ -1766,8 +1760,7 @@ theorem jetMoments_of_unitPeriod
       (_root_.GlobalTheory.MomT.PtMoments.ptMom H D.X s cc δ B χ cD _ lam ι Ω (D.Pr.piT u) (D.R.N i) b hD.fields hs hcc hT2 hcop
         (fun k => (hlam k).2) hcQ (hP.piT_Kq u) hn (hP.piT_cop u) (fun τ => (hw _).1 (hseen τ)) ha hb' hla hsm hmom)
       (hP.vT_norm u) N'' hN'' hc (s.σ₀ (k ^ (D.R.N i / 2))) (hlam _).1 ?_ ?_
-    · rw [hcard] at key
-      exact key
+    · rwa [hcard] at key
     · rw [(hlam _).2, map_pow, norm_pow, ← pow_mul, Nat.div_two_mul_two_of_even ha, hcard, pow_mul]
       exact pow_le_pow_left₀ (norm_nonneg _) hkn _
     · intro R hR z

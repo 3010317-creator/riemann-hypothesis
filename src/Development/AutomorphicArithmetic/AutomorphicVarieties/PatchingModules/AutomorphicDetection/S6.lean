@@ -263,8 +263,7 @@ theorem UpperTheory.V.AlgebraTools.vr_hom :
         _ = _ := by simp only [Finset.mul_sum, Finset.sum_mul, mul_assoc]
 
     rw [hs, map_sum]
-    refine Finset.sum_congr rfl fun k _ => ?_
-    exact theta_mul U hpq (ho i) (ho k) (ho j) (hG i k y) (hG k j z)
+    exact Finset.sum_congr rfl fun k _ => theta_mul U hpq (ho i) (ho k) (ho j) (hG i k y) (hG k j z)
   have hone : U.vr p q 1 = 1 := by
     refine Matrix.ext fun i j => ?_
     rw [hvr, mul_one, Matrix.one_apply]
@@ -498,8 +497,7 @@ theorem UpperTheory.V.AlgebraTools.vr_reduction :
       simp [Matrix.smul_apply, Algebra.smul_def]
     · rw [hr w i j hij, ← h7 i j w, h3 _ _ _ hij, map_zero]
   refine ⟨fun y i j => ?_, ?_⟩
-  · show algebraMap B F (T.tr (U.x i * y * T.st (U.x j))) = _
-    exact key y i j
+  · exact key y i j
   · intro hp hq hpq
     refine Ideal.span_le.mpr ?_
     rintro c ⟨b, b', rfl⟩
@@ -590,10 +588,10 @@ theorem UpperTheory.V.Pa.gr_E :
     · exact Or.inr rfl
   have hp : oB n a p = p := by
     unfold oB
-    rw [if_pos (show 0 < a by omega)]
+    rw [ite_eq_left (show 0 < a by omega)]
   have hq : oB n a q = q := by
     unfold oB
-    rw [if_neg (show ¬ (n - 1 < a) by omega)]
+    rw [ite_eq_right (show ¬ (n - 1 < a) by omega)]
   have h0 : ∀ y i j, oB n a i ≠ oB n a j → r y i j = 0 := fun y i j h =>
     (Submodule.mem_bot F).1 ((hev y i j).2 fun h' => h ((oB_eq_iff h1 h2 i j).2 h'))
   obtain ⟨φ, hφ, hφst, -⟩ := vr_hom T (oB n a) U p q hpq ho
@@ -699,8 +697,7 @@ theorem UpperTheory.V.AlgebraTools.units_one_block :
 
           simp only [Finset.mul_sum, Finset.sum_mul, map_sum, mul_assoc]
       _ = _ := by
-          refine Finset.sum_congr rfl fun k _ => ?_
-          exact hpair _ _ (hE' i k y) (hE' k j z)
+          exact Finset.sum_congr rfl fun k _ => hpair _ _ (hE' i k y) (hE' k j z)
   have hfadd : ∀ y z, f (y + z) = f y + f z := by
     intro y z
     ext i j
@@ -737,8 +734,7 @@ theorem UpperTheory.V.AlgebraTools.units_one_block :
     rw [← T.tr_st (U.x j * y * T.st (U.x i)), T.st_mul, T.st_mul, T.st_st, mul_assoc]
   have hftr : ∀ y, (f y).trace = T.tr y := by
     intro y
-    simp only [Matrix.trace, Matrix.diag, f, Matrix.of_apply]
-    exact (hD y).symm
+    simpa only [Matrix.trace, Matrix.diag, f, Matrix.of_apply] using (hD y).symm
   have hcomm : ∀ r : B, f (algebraMap B E r) = algebraMap B (Matrix ι ι B) r := by
     intro r
     rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one, hfsmul, hf1]
@@ -784,8 +780,7 @@ theorem UpperTheory.V.Pa.gr_I :
     · intro _
       intro i j
       refine ⟨fun _ => by rw [hone]; trivial, fun h => absurd ⟨fun _ => j.isLt, fun _ => i.isLt⟩ h⟩
-    · intro _
-      exact φ.surjective Y
+    · exact fun _ => φ.surjective Y
   · intro i
     show φ (U.ep i) = _
     ext i' j'
@@ -888,7 +883,7 @@ private theorem hr_span {A F : Type} [CommRing A] [IsDomain A] [Field F] [Algebr
   refine S.sum_mem fun i _ => S.sum_mem fun j _ => ?_
   by_cases e : ((i : ℕ) < a) ↔ ((j : ℕ) < a)
   · obtain ⟨s, hs⟩ := hT (single i j 1) (fun p q => ⟨fun _ => trivial, fun e' => by
-      rw [Submodule.mem_bot, Matrix.single_apply, if_neg]
+      rw [Submodule.mem_bot, Matrix.single_apply, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact e' e⟩)
     have h2 := S.smul_mem (Z i j * (algebraMap A F (t ^ s))⁻¹) (h1 _ hs)
@@ -975,8 +970,7 @@ theorem UpperTheory.V.Pa.hat_st :
       have hu : Units.map (P.f : B →* x.A) ((G.frame.eps O B) g) =
           (G0.frame.eps ℤ_[l] x.A) (h.p₀ g) := by
         apply Units.ext
-        rw [Units.coe_map]
-        exact he
+        rwa [Units.coe_map]
       rw [← hu, ← map_zpow (Units.map (P.f : B →* x.A)), Units.coe_map]
       rfl
     have hinvM : (mat x.ρ) (h.p₀ (G.frame.conj g)) * (mat x.ρ) (h.p₀ (G.frame.conj g)⁻¹) = 1 := by
@@ -1283,11 +1277,10 @@ theorem UpperTheory.V.AlgebraTools.alghom_of_units :
       simp only [Finset.sum_mul, key]
     rw [this]
     simp only [f, Pi.mul_apply, Matrix.mul_apply, Finset.sum_smul]
-    refine Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun i _ => ?_
-    exact Finset.sum_comm
+    exact Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun i _ => Finset.sum_comm
   have h1 : f 1 = 1 := by
     simp only [f, Pi.one_apply, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact hsum
   let L : (∀ s, Matrix (d s) (d s) K) →ₗ[K] E :=
     { toFun := f, map_add' := hadd, map_smul' := hsmul }
@@ -1302,12 +1295,12 @@ theorem UpperTheory.V.AlgebraTools.alghom_of_units :
     · rw [Finset.sum_eq_single k]
       · simp
       · intro b _ hb
-        rw [if_neg]
+        rw [ite_eq_right]
         exact fun h => hb h.2.symm
       · intro h; exact absurd (Finset.mem_univ _) h
     · intro b _ hb
       refine Finset.sum_eq_zero fun c _ => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hb h.1.symm
     · intro h; exact absurd (Finset.mem_univ _) h
   · intro t _ ht
@@ -1353,7 +1346,7 @@ theorem UpperTheory.V.Pa.gr_ss :
     intro i k l hik hkl
     apply g.φ_inj
     rw [map_mul, he, he, he]
-    simp only [M, if_pos hik, if_pos hkl, if_pos (hik.trans hkl), Matrix.single_mul_single_same,
+    simp only [M, ite_eq_left hik, ite_eq_left hkl, ite_eq_left (hik.trans hkl), Matrix.single_mul_single_same,
       mul_one]
   have hzero : ∀ i k l m : Fin n, k ≠ l → e i k * e l m = 0 := by
     intro i k l m hkl
@@ -1364,12 +1357,12 @@ theorem UpperTheory.V.Pa.gr_ss :
     intro i k hik
     apply g.φ_inj
     rw [he, map_zero]
-    simp only [M, if_neg hik, Matrix.single_zero]
+    simp only [M, ite_eq_right hik, Matrix.single_zero]
   have hsum : ∑ i, e i i = 1 := by
     apply g.φ_inj
 
     rw [map_sum, map_one]
-    simp only [he, M, iff_self, if_true]
+    simp only [he, M, iff_self, ite_true]
     ext p q
     rw [Matrix.sum_apply]
     simp only [Matrix.single_apply]
@@ -1377,7 +1370,7 @@ theorem UpperTheory.V.Pa.gr_ss :
     · subst hpq
       simp
     · rw [Matrix.one_apply_ne hpq]
-      exact Finset.sum_eq_zero (fun x _ => if_neg (fun h => hpq (h.1.symm.trans h.2)))
+      exact Finset.sum_eq_zero (fun x _ => ite_eq_right (fun h => hpq (h.1.symm.trans h.2)))
   have hdec : ∀ y : E, ∃ b : Fin n → Fin n → B, s • y = ∑ i, ∑ k, b i k • e i k := by
     intro y
     have hent : ∀ i k, ∃ c : B, s • g.φ y i k = c • (if ((i : ℕ) < a ↔ (k : ℕ) < a) then 1 else 0) := by
@@ -1386,9 +1379,9 @@ theorem UpperTheory.V.Pa.gr_ss :
       by_cases hik : ((i : ℕ) < a ↔ (k : ℕ) < a)
       · obtain ⟨c, hc⟩ := Submodule.mem_one.mp (h1 hik)
         refine ⟨s * c, ?_⟩
-        rw [if_pos hik, ← hc, Algebra.algebraMap_eq_smul_one, smul_smul]
+        rw [ite_eq_left hik, ← hc, Algebra.algebraMap_eq_smul_one, smul_smul]
       · refine ⟨0, ?_⟩
-        rw [if_neg hik, smul_zero]
+        rw [ite_eq_right hik, smul_zero]
         have := (Module.mem_annihilator.mp hann) ⟨_, h2 hik⟩
         simpa using congrArg Subtype.val this
     choose c hc using hent
@@ -1399,8 +1392,8 @@ theorem UpperTheory.V.Pa.gr_ss :
 
     simp only [map_sum, map_smul, he, M, Matrix.smul_apply, Matrix.sum_apply, Matrix.single_apply]
     rw [hc, Finset.sum_eq_single p (fun i _ hi => Finset.sum_eq_zero (fun k _ => by
-        rw [if_neg (fun h => hi h.1), smul_zero])) (by simp),
-      Finset.sum_eq_single q (fun k _ hk => by rw [if_neg (fun h => hk h.2), smul_zero]) (by simp)]
+        rw [ite_eq_right (fun h => hi h.1), smul_zero])) (by simp),
+      Finset.sum_eq_single q (fun k _ hk => by rw [ite_eq_right (fun h => hk h.2), smul_zero]) (by simp)]
     simp
   let bf : Fin n → Bool := fun i => decide ((i : ℕ) < a)
   let cl : Fin n → Set.range bf := Set.rangeFactorization bf
@@ -1651,8 +1644,7 @@ theorem UpperTheory.V.Pa.urep_of :
     rfl
   · intro γ i j b hb
     have := g.red (H.ι (MonoidAlgebra.single γ 1)) i j b hb
-    rw [H.r_ι, Matrix.map_apply] at this
-    exact this
+    rwa [H.r_ι, Matrix.map_apply] at this
   · intro z hz
     rw [key, (H.ker _).mpr (TwoSidedIdeal.subset_span ⟨z, hz, rfl⟩), map_zero]
   · intro j
@@ -1660,8 +1652,7 @@ theorem UpperTheory.V.Pa.urep_of :
     refine ⟨V, fun γ v hv => ?_⟩
     rw [← Submodule.map_smul'']
     have hm := Submodule.mem_map_of_mem (f := f) (hV γ v hv)
-    rw [map_sub] at hm
-    exact hm
+    rwa [map_sub] at hm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.ClosureConjugation.UrepOf =====
@@ -1710,8 +1701,7 @@ theorem s6 : S6 := by
     · have hn : 1 ≤ n := ha ▸ x.a_pos
       revert U
       rw [ha]
-      intro U hx _
-      exact gr_I H.T H.r U hn hst hx
+      exact fun U hx _ => gr_I H.T H.r U hn hst hx
   obtain ⟨g⟩ := hg
   exact urep_of H g U.coi hrk
 

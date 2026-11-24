@@ -116,11 +116,11 @@ theorem mapDomain_prepend_apply' {V : Type} (τ : List V) (y : List V →₀ ℤ
     Finsupp.mapDomain (fun w => τ ++ w) y l = if τ <+: l then y (l.drop τ.length) else 0 := by
   by_cases h : τ <+: l
   · obtain ⟨u, rfl⟩ := h
-    rw [if_pos (List.prefix_append τ u)]
+    rw [ite_eq_left (List.prefix_append τ u)]
     have hinj : Function.Injective (fun w : List V => τ ++ w) := fun a b hab => List.append_cancel_left hab
     rw [Finsupp.mapDomain_apply_of_injective hinj y u]
     simp
-  · rw [if_neg h, Finsupp.mapDomain_notin_range]
+  · rw [ite_eq_right h, Finsupp.mapDomain_notin_range]
     rintro ⟨u, rfl⟩
     exact h (List.prefix_append τ u)
 
@@ -248,11 +248,11 @@ theorem retract_step : ∀ (V : Type) (F : Set (List V)) (S : Set V), SubClosed 
     by_cases hex' : ∃ τ ∈ P, τ <+: l
     · obtain ⟨τ0, hτ0, hpr⟩ := hex'
       rw [Finset.sum_eq_single τ0
-        (fun τ hτ hne => by rw [if_neg]; exact fun h => hne (huniq τ0 hτ0 τ hτ l hpr h))
-        (fun h => absurd hτ0 h), if_pos hpr, sub_self] at hl
+        (fun τ hτ hne => by rw [ite_eq_right]; exact fun h => hne (huniq τ0 hτ0 τ hτ l hpr h))
+        (fun h => absurd hτ0 h), ite_eq_left hpr, sub_self] at hl
       exact absurd rfl hl
-    · push_neg at hex'
-      rw [Finset.sum_eq_zero (fun τ hτ => if_neg (hex' τ hτ)), sub_zero] at hl
+    · push Not at hex'
+      rw [Finset.sum_eq_zero (fun τ hτ => ite_eq_right (hex' τ hτ)), sub_zero] at hl
       obtain ⟨⟨hlF, _⟩, hlp⟩ := hcs l hl
       simp only [Set.mem_setOf_eq]
       refine ⟨⟨hlF, ?_⟩, hlp⟩
@@ -297,16 +297,12 @@ theorem retract_step : ∀ (V : Type) (F : Set (List V)) (S : Set V), SubClosed 
       refine Submodule.add_mem _ ?_ (Submodule.sum_mem _ fun τ hτ => ?_)
       · refine bd_mem_supported_of_eraseIdx (A := {l | ∀ y ∈ l.drop k, y ∈ S}) ?_
           (Finsupp.supported_mono ?_ hCgmem)
-        · intro l hl i _
-          exact fun y hy => hl y ((drop_eraseIdx_sublist_drop l i k).subset hy)
-        · intro l hl
-          exact hl.1.2
+        · exact fun l hl i _ => fun y hy => hl y ((drop_eraseIdx_sublist_drop l i k).subset hy)
+        · exact fun l hl => hl.1.2
       · refine prepend_part_mem_supported τ (A := {w | ∀ x ∈ w, x ∈ S}) ?_
           (Finsupp.supported_mono ?_ (hysmem τ hτ))
-        · intro w hw i hi
-          exact hGood τ hτ w hw i hi
-        · intro w hw
-          exact hw.1.1
+        · exact fun w hw i hi => hGood τ hτ w hw i hi
+        · exact fun w hw => hw.1.1
     intro τ0 hτ0
     ext w
     have h0 := congrArg (fun f => f (τ0 ++ w)) hdec
@@ -317,17 +313,16 @@ theorem retract_step : ∀ (V : Type) (F : Set (List V)) (S : Set V), SubClosed 
       exact hpre τ0 hτ0 (τ0 ++ w) (List.prefix_append _ _)
         ((Finsupp.mem_supported ℤ g).1 hgmem (Finsupp.mem_support_iff.2 hne))
     rw [hg0, zero_add, Finset.sum_eq_single τ0] at h0
-    · rw [Finsupp.smul_apply, mapDomain_prepend_apply', if_pos (List.prefix_append _ _),
+    · rw [Finsupp.smul_apply, mapDomain_prepend_apply', ite_eq_left (List.prefix_append _ _),
         List.drop_left, smul_eq_mul] at h0
       rw [Finsupp.zero_apply]
       rcases mul_eq_zero.1 h0.symm with h | h
       · exact absurd h (pow_ne_zero _ (by norm_num))
       · exact h
     · intro τ hτ hne
-      rw [Finsupp.smul_apply, mapDomain_prepend_apply', if_neg, smul_zero]
+      rw [Finsupp.smul_apply, mapDomain_prepend_apply', ite_eq_right, smul_zero]
       exact fun h => hne (huniq τ0 hτ0 τ hτ _ (List.prefix_append _ _) h)
-    · intro h
-      exact absurd hτ0 h
+    · exact fun h => absurd hτ0 h
   have hz : ∀ τ ∈ P, ∃ z, z ∈ chains (linkIn F S τ) (p - τ.length + 1) ∧ bd V z = ys τ := by
     intro τ hτ
     obtain ⟨hlen, hτF, hkp, hk, hkS, hlast⟩ := hP τ hτ
@@ -421,8 +416,7 @@ theorem exists_sub_bd_mem_chains_linkIn_nil :
       obtain ⟨b', hb', hcb'⟩ := ih (c - bd V b) hcb
         (by rw [map_sub, h0, _root_.GlobalTheory.SeqCx.bd_bd, sub_zero])
       refine ⟨b + b', Submodule.add_mem _ hb hb', ?_⟩
-      rw [map_add (f := _), ← sub_sub]
-      exact hcb'
+      rwa [map_add (f := _), ← sub_sub]
   intro c hc h0
   have hc' : c ∈ chains {l ∈ F | ∀ y ∈ l.drop p, y ∈ S} p := by
     refine Finsupp.supported_mono ?_ hc

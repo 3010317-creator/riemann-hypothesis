@@ -59,8 +59,7 @@ theorem finite_not_le_one (a : K) : {i | ¬ C.v i a ≤ 1}.Finite := by
   · refine (C.fin a ha).subset ?_
     intro i hi
     simp only [Set.mem_setOf_eq] at hi ⊢
-    intro h
-    exact hi (le_of_eq h)
+    exact fun h => hi (le_of_eq h)
 
 theorem finite_not_mapsTo {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGroup V']
     [Module K V'] {n m : ℕ} (b : Module.Basis (Fin n) K V) (b' : Module.Basis (Fin m) K V')
@@ -72,8 +71,7 @@ theorem finite_not_mapsTo {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGr
   intro i hi
   simp only [Set.mem_setOf_eq] at hi
   simp only [Set.mem_iUnion, Set.mem_setOf_eq]
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hi
   intro x hx q
   have hx' : f x = ∑ r, b.repr x r • f (b r) := by
@@ -103,8 +101,7 @@ theorem isBun_sub_quot : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [Add
       (finite_not_mapsTo C b0 (Module.finBasis K W) g)).subset ?_
     intro i hi
     simp only [Set.mem_union, Set.mem_setOf_eq] at hi ⊢
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨⟨h1, h2⟩, h3⟩ := hcon
     apply hi
     unfold IsLatOf at h1 ⊢
@@ -116,8 +113,7 @@ theorem isBun_sub_quot : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [Add
     · intro hw q
       have hq := h3 (w : V) hw q
       rwa [hgw] at hq
-    · intro hw q
-      exact h2 w hw q
+    · exact fun hw q => h2 w hw q
   · obtain ⟨b, hb⟩ := hloc i
     obtain ⟨bW, bQ, b', -, -, hQ, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Crv.LatAdapted.exists_adapted K C V i _ b (L i) W hb
     exact ⟨bQ, hQ⟩
@@ -125,8 +121,7 @@ theorem isBun_sub_quot : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [Add
       (finite_not_mapsTo C (Module.finBasis K (V ⧸ W)) b0 s)).subset ?_
     intro i hi
     simp only [Set.mem_union, Set.mem_setOf_eq] at hi ⊢
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨⟨h1, h2⟩, h3⟩ := hcon
     apply hi
     unfold IsLatOf at h1 ⊢

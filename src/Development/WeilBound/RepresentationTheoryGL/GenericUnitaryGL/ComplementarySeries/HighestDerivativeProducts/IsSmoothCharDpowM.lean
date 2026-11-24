@@ -232,9 +232,8 @@ theorem exists_bump : ∀ {G Z : Type} [Group G] [AddCommGroup Z] [Module ℂ Z]
     intro h β hβ
     have hp : P ((h : G) * β) := ⟨h, β, hβ, rfl⟩
     obtain ⟨β', hβ', e⟩ := hp.choose_spec
-    simp only [f, dif_pos hp]
-    exact hwell _ _ _ _ hβ' hβ e.symm
-  have hzero : ∀ p, ¬ P p → f p = 0 := fun p hp => by simp only [f, dif_neg hp]
+    simpa only [f, dite_eq_left hp] using hwell _ _ _ _ hβ' hβ e.symm
+  have hzero : ∀ p, ¬ P p → f p = 0 := fun p hp => by simp only [f, dite_eq_right hp]
   have hleft : ∀ (h : H) (g : G), f ((h : G) * g) = ρ h (f g) := by
     intro h g
     by_cases hg : P g
@@ -367,8 +366,7 @@ theorem smInt_zero_fun {X Z : Type} [MeasurableSpace X] [AddCommGroup Z] [Module
   · have hempty : φ ⁻¹' {v} = ∅ := by
       ext x
       simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false]
-      intro hx
-      exact hv (hx.symm.trans (h x))
+      exact fun hx => hv (hx.symm.trans (h x))
     rw [hempty]
     simp
 
@@ -578,8 +576,7 @@ theorem eq_uM_colv_mul_levi (n : ℕ) (p : Mir k n) :
   have hy' : GlobalTheory.CompanionTheory.MirLevi.colv p = y := by
     rw [hp]
     exact GlobalTheory.CompanionTheory.BZPsiPG.FibOnto.colv_uM_mul_levi n y _
-  rw [hy']
-  exact hp
+  rwa [hy']
 
 variable [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -686,8 +683,7 @@ theorem finite_image_of_right_invariant_near_one :
     have hc : Continuous fun y : Γ => k⁻¹ * y := continuous_const.mul continuous_id
     refine hc.continuousAt.preimage_mem_nhds ?_
     show _ ∈ nhds (k⁻¹ * k)
-    rw [inv_mul_cancel]
-    exact hS
+    rwa [inv_mul_cancel]
   obtain ⟨t, -, hcover⟩ := hK.elim_nhds_subcover _ hU
   refine (t.finite_toSet.image Gf).subset ?_
   rintro _ ⟨y, hy, rfl⟩
@@ -1030,13 +1026,7 @@ theorem fibInt_levi (τ : Representation ℂ (Mir k i) V) (σ : Representation �
     [MeasurableSpace (Fin t → k)] (μ : MeasureTheory.Measure (Fin t → k))
     (f : cIndSpace (HPG k i t) (hRep τ σ)) (g' g : GL (Fin (i + t)) k) :
     fibInt μ (prodPG τ σ (levi k (i + t) g') f) g = fibInt μ f (g * g') := by
-  have : fibV (prodPG τ σ (levi k (i + t) g') f) g = fibV f (g * g') := by
-    funext v
-    have e : uM k (i + t) (midV k i t v) * levi k (i + t) (g * g') =
-        uM k (i + t) (midV k i t v) * levi k (i + t) g * levi k (i + t) g' := by
-      rw [map_mul, mul_assoc]
-    exact (congrArg f.1.1.1 e).symm
-  exact congrArg (fun x => clT τ W (smInt μ x)) this
+  exact GlobalTheory.CompanionTheory.BZPsiPG.FibOnto.fibInt_translate k i t τ σ μ f g' g
 
 theorem isOpen_stab_of {G Z : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup Z] [Module ℂ Z]
     (ρ : Representation ℂ G Z) (z : Z) (S : Set G) (hS : IsOpen S) (h1 : (1 : G) ∈ S) (h : ∀ s ∈ S, ρ s z = z) :
@@ -1048,8 +1038,7 @@ theorem isOpen_stab_of {G Z : Type} [Group G] [TopologicalSpace G] [IsTopologica
   have e := h _ hy
   show ρ y z = z
   have : y = g * (g⁻¹ * y) := by group
-  rw [this, map_mul, Module.End.mul_apply, e]
-  exact hg
+  rwa [this, map_mul, Module.End.mul_apply, e]
 
 theorem isOpen_cInd_stab {τ : Representation ℂ (Mir k i) V} {σ : Representation ℂ (GL (Fin t) k) W}
     (f : cIndSpace (HPG k i t) (hRep τ σ)) : IsOpen {p | prodPG τ σ p f = f} := by
@@ -1057,12 +1046,9 @@ theorem isOpen_cInd_stab {τ : Representation ℂ (Mir k i) V} {σ : Representat
   have e : {p | prodPG τ σ p f = f} = {g | ind (HPG k i t) (hRep τ σ) g f.1.1 = f.1.1} := by
     ext p
     constructor
-    · intro e
-      exact congrArg (fun x : cIndSpace (HPG k i t) (hRep τ σ) => x.1.1) e
-    · intro e
-      exact Subtype.ext (Subtype.ext e)
-  rw [e]
-  exact h
+    · exact fun e => congrArg (fun x : cIndSpace (HPG k i t) (hRep τ σ) => x.1.1) e
+    · exact fun e => Subtype.ext (Subtype.ext e)
+  rwa [e]
 
 section Map
 variable (τ : Representation ℂ (Mir k i) V) (σ : Representation ℂ (GL (Fin t) k) W) (hτ : IsSmooth τ) (hσ : IsSmooth σ)

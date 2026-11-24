@@ -153,8 +153,7 @@ theorem measure_le_encard_mul {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ
       show (g : E) - g₀ ∈ T
       rw [hsub]
       exact hST _ hg _ hg₀
-    · intro g _ g' _ h
-      exact Subtype.ext (sub_left_injective h)
+    · exact fun g _ g' _ h => Subtype.ext (sub_left_injective h)
   calc μ S = ∫⁻ z, S.indicator 1 z ∂μ := (lintegral_indicator_one hS).symm
     _ = ∑' g : La, ∫⁻ z in F, S.indicator 1 (g +ᵥ z) ∂μ := fund.lintegral_eq_tsum'' _
     _ = ∫⁻ z in F, ∑' g : La, S.indicator 1 (g +ᵥ z) ∂μ :=
@@ -211,8 +210,7 @@ theorem LatticeImageZLattice.exists_int_mul_integral {F : Type} [Field F] [Numbe
       rw [hc, mul_comm, mul_smul]
       exact (hyint s).zsmul c
     | add a b _ _ ha hb => simpa [smul_add] using ha.add hb
-  intro x hx
-  exact h ⟨x, hx⟩ (hS ▸ AddSubsemigroup.mem_top _)
+  exact fun x hx => h ⟨x, hx⟩ (hS ▸ AddSubsemigroup.mem_top _)
 
 
 
@@ -403,8 +401,7 @@ theorem card_eq {F : Type*} [Field F] [NumberField F] (ρ : (F →+* ℂ) → �
   refine Nat.card_eq_of_bijective (fun x => ⟨mixedEmbedding F x.1,
     (mem_latticeImage _ _).2 ⟨x.1, x.1.2, rfl⟩, (forall_le_iff ρ hρc _).1 x.2⟩) ⟨?_, ?_⟩
   · intro a b h
-    have h' := congrArg Subtype.val h
-    exact Subtype.ext (Subtype.ext (mixedEmbedding_injective F h'))
+    exact Subtype.ext (Subtype.ext (mixedEmbedding_injective F (congrArg Subtype.val h)))
   · rintro ⟨y, hy, hyb⟩
     obtain ⟨x, hx, rfl⟩ := (mem_latticeImage _ _).1 hy
     exact ⟨⟨⟨x, hx⟩, (forall_le_iff ρ hρc x).2 hyb⟩, rfl⟩

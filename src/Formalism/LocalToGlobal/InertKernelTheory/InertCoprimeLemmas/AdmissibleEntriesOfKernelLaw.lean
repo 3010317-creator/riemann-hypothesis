@@ -303,9 +303,9 @@ theorem hecke_coupled_entry : HeckeCEntry := by
       intro c γ L L1
       simp only [φ]
       by_cases h : (X.Pj j).IsLatTup L1
-      · rw [if_pos h, if_pos ((latTup_smul _ _ γ L1).2 h), (Eqv_of_FQ X hF).2 c γ L,
+      · rw [ite_eq_left h, ite_eq_left ((latTup_smul _ _ γ L1).2 h), (Eqv_of_FQ X hF).2 c γ L,
           h5b j hj c L1 La' γ (F c L) (vt_FQ X hF c L) h hLa']
-      · rw [if_neg h, if_neg (fun h' => h ((latTup_smul _ _ γ L1).1 h'))]
+      · rw [ite_eq_right h, ite_eq_right (fun h' => h ((latTup_smul _ _ γ L1).1 h'))]
     have key := h6 j hj.le (X.vJ j v) k φ hφ
     have hs : ∀ (La : X.Lt j) (z : Y.Kc), ((X.stab j La : X.G.Kf))⁻¹ • z = ((X.stab j La : Y.Kc))⁻¹ * z := by
       intro La z
@@ -320,7 +320,7 @@ theorem hecke_coupled_entry : HeckeCEntry := by
       refine Finset.sum_congr rfl fun A1 hA1 => ?_
       have hE := (mem_UP _).1 hA1
       simp only [φ]
-      rw [if_pos (hk_latTup_update _ hlat _ A1 hE.2.1)]
+      rw [ite_eq_left (hk_latTup_update _ hlat _ A1 hE.2.1)]
     · refine Finset.sum_congr rfl fun La hLa => ?_
       have hlat := Y.Rep_lat j La hLa
       rw [MvPolynomial.coeff_smul, hs]
@@ -331,7 +331,7 @@ theorem hecke_coupled_entry : HeckeCEntry := by
       rw [e, ker_sum, MvPolynomial.coeff_sum]
       refine Finset.sum_congr rfl fun L0 _ => ?_
       simp only [φ]
-      rw [if_pos hlat]
+      rw [ite_eq_left hlat]
   have hk := hk0 (D.R.m - 1) hj v i F hF La' hLa'
   have hs : ∀ (n : ℕ) (z : XspC (X.Pj (D.R.m - 1 + 1)) Y.Kc), ((n : X.G.Kf))⁻¹ • z = ((n : Y.Kc))⁻¹ • z := by
     intro n z
@@ -350,17 +350,12 @@ theorem hecke_coupled_entry : HeckeCEntry := by
       have h2 := (hsec x2).2
       have : lp x1 = lp x2 := congrArg Subtype.val he
       rw [← h1, ← h2, this]
-    · intro La
-      refine ⟨KA.cls (D.R.m - 1) La.1.1 La.1.2, ?_⟩
-      apply hb.1
-      show KA.cls (D.R.m - 1) (lp _).1 (lp _).2 = KA.cls (D.R.m - 1) La.1.1 La.1.2
-      exact (hsec _).2
+    · exact fun La => ⟨KA.cls (D.R.m - 1) La.1.1 La.1.2, hb.1 (hsec _).2⟩
   have hw : ∀ x : (D.chTw u μ).cls (D.R.m - 1),
       Nat.card ((D.chTw u μ).stab (D.R.m - 1) x) = (sysAt Ch std vp unif eO eO_spec dG dG_spec om).stab (D.R.m - 1) (lp x) := by
     intro x
     have e := hst (lp x) (hsec x).1
-    rw [(hsec x).2] at e
-    exact e
+    rwa [(hsec x).2] at e
   refine (Fintype.sum_bijective _ hbij _ _ fun x => ?_).trans (hk.trans (Fintype.sum_bijective _ hbij _ _ fun x => ?_).symm)
   · simp only [hw x]
     rfl
@@ -377,8 +372,7 @@ theorem coupled_compatibility_at_place : TiesCOfAt := by
     rw [e]
     exact dG_spec (D.R.m - 1) (by have := KA.fl_m; omega) (lp x).1 (lp x).2 (Y.Rep_lat _ _ (hsec x).1)
   · have e := hDel (lp x) (hsec x).1 y c' L' hL
-    rw [(hsec x).2] at e
-    exact e
+    rwa [(hsec x).2] at e
 
 theorem coupled_section_exists : SecCEx := by
   intro D L hT Gi Gl Kc0 Dx cX ex u μ w h _ Fl Lv Ch KA std vp unif eO eO_spec dG dG_spec om Y hm
@@ -421,16 +415,15 @@ theorem admissible_stabilizer_of_law (D : Formalism.BasicNotions.D7) (ThR : ∀ 
   have hS' : StabLaw X ℂ_[p] hfin ThR' := by
     intro j c L0 La' ε h0 hε
     by_cases hj : j < X.mm ∧ (X.Pj (j + 1)).IsLatTup La'.2
-    · simp only [ThR', if_pos hj]
-      exact hS j hj.1 c L0 La' ε h0 hj.2 hε
-    · simp only [ThR', if_neg hj]
+    · simpa only [ThR', ite_eq_left hj] using hS j hj.1 c L0 La' ε h0 hj.2 hε
+    · simp only [ThR', ite_eq_right hj]
       unfold SA
       rw [← MvPowerSeries.coe_substAlgHom (hasSubst_actS X ℂ_[p] j _), map_zero, mul_zero]
   have hK := kapLaw_of_stabLaw X ℂ_[p] hfin ThR' pC_ne_zero hS'
   intro j hj c L La' γ G hGv hL hLa'
   have hEq : ∀ La, thFN X ℂ_[p] hfin (thGeo X ℂ_[p] hfin ThR') j La La' = thFN X ℂ_[p] hfin (thGeo X ℂ_[p] hfin ThR) j La La' := by
     intro La
-    simp only [thFN, thGeo, ThR', if_pos (And.intro hj hLa')]
+    simp only [thFN, thGeo, ThR', ite_eq_left (And.intro hj hLa')]
   have key : ∀ t : X.G.Kf,
       (eSX X j (c, (X.Lv.lev j c).smul γ L) * t) •
           delF X ℂ_[p] j ((((X.Lv.lev j c).χ γ : X.G.Oˣ) : X.G.O) • (X.Lv.lev j c).actX γ G)

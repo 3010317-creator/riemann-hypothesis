@@ -83,8 +83,7 @@ variable {K : Type} [Field K] {Γ : Type} [LinearOrderedCommGroupWithZero Γ]
 theorem val_le_one (w : Valuation K Γ) {z : K} {n : ℕ} (hn : n ≠ 0) (hz : z ^ n = 1)
     (r : Algebra.adjoin ℤ ({z} : Set K)) : w (r : K) ≤ 1 := by
   have hz1 : w z ≤ 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have h2 : w z ^ n = 1 := by rw [← map_pow, hz, map_one]
     obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
     rw [pow_succ] at h2
@@ -147,8 +146,7 @@ theorem val_sub_one_lt (w : Valuation K Γ) {l k : ℕ} (hl : l.Prime) (hw : w (
     calc w (l : K) * w (z - 1) * w (r : K) ≤ w (l : K) * 1 * 1 :=
           mul_le_mul' (mul_le_mul' le_rfl h₁) h₂
       _ < 1 := by simpa using hw
-  by_contra h
-  push_neg at h
+  by_contra! h
   exact absurd h₃ (not_lt.mpr (one_le_pow₀ h))
 
 theorem sub_one_dvd [CharZero K] {l k : ℕ} [Fact l.Prime] {z : K}
@@ -185,8 +183,7 @@ theorem val_eq_one [CharZero K] (w : Valuation K Γ) {l k : ℕ} [Fact l.Prime] 
     simpa using val_le_one w hn hz.pow_eq_one (a : Algebra.adjoin ℤ ({z} : Set K))
   have hwm : w (m : K) = 1 := by
     refine le_antisymm (hint m) ?_
-    by_contra h
-    push_neg at h
+    by_contra! h
     obtain ⟨a, b, hab⟩ :=
       (Irreducible.coprime_iff_not_dvd (Nat.prime_iff_prime_int.mp hl).irreducible).mpr hm
     have e : ((a * l + b * m : ℤ) : K) = 1 := by rw [hab]; simp
@@ -311,8 +308,7 @@ private theorem inv_lt_one_of_one_lt' {a : Γ} (h : 1 < a) : a⁻¹ < 1 := by
   have ha : a ≠ 0 := by
     rintro rfl
     exact absurd h (not_lt.mpr zero_le)
-  by_contra h'
-  push_neg at h'
+  by_contra! h'
   have h₁ := mul_le_mul' (le_refl a) h'
   rw [mul_one, mul_inv_cancel₀ ha] at h₁
   exact absurd h (not_lt.mpr h₁)
@@ -352,8 +348,7 @@ theorem core [CharZero K] (w : Valuation K Γ) {l k : ℕ} [Fact l.Prime] (hw : 
       rw [he] at hx
       exact not_le_one w hw hz u s' hu hs' hx
   refine ⟨part1, fun x => ⟨fun h => ?_, fun h => ?_⟩⟩
-  · by_contra hx
-    push_neg at hx
+  · by_contra! hx
     have hx0 : x ≠ 0 := by
       rintro rfl
       simp at hx
@@ -364,8 +359,7 @@ theorem core [CharZero K] (w : Valuation K Γ) {l k : ℕ} [Fact l.Prime] (hw : 
       exact (w.map_add _ _).trans_lt (max_lt (part1 _ hy.le) hy)
     rw [map_inv₀, map_inv₀] at hτy
     have hτx0 : w (τ x) ≠ 0 := by
-      rw [Valuation.ne_zero_iff, map_ne_zero]
-      exact hx0
+      rwa [Valuation.ne_zero_iff, map_ne_zero]
     have h₁ := mul_le_mul' h (le_refl (w (τ x))⁻¹)
     rw [mul_inv_cancel₀ hτx0, one_mul] at h₁
     exact absurd hτy (not_lt.mpr h₁)

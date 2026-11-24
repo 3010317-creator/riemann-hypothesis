@@ -54,8 +54,7 @@ theorem exists_mem_unitaryGroupMatrix_iff (s : A →+* A) {H : Matrix ι ι A} (
   constructor
   · rintro ⟨g, hg, rfl⟩
     exact hg
-  · intro hM
-    exact ⟨nonsingInvUnit M (isUnit_det_of_unitary s hH hM), hM, rfl⟩
+  · exact fun hM => ⟨nonsingInvUnit M (isUnit_det_of_unitary s hH hM), hM, rfl⟩
 
 def IsHermitianFor (s : A →+* A) (H : Matrix ι ι A) : Prop := (H.map s)ᵀ = H
 
@@ -122,8 +121,7 @@ omit [Fintype ι] [DecidableEq ι] in
 theorem isHermitianFor_gram (h : HermitianForm F E V) (v : Basis ι E V) :
     IsHermitianFor (conjHom F E) (gram h.toSesq v) := by
   ext i j
-  simp only [transpose_apply, map_apply, gram_apply]
-  exact h.isSymm.eq (v j) (v i)
+  simpa only [transpose_apply, map_apply, gram_apply] using h.isSymm.eq (v j) (v i)
 
 theorem isUnit_det_gram (h : HermitianForm F E V) (v : Basis ι E V) :
     IsUnit (gram h.toSesq v).det := by
@@ -135,7 +133,7 @@ theorem isUnit_det_gram (h : HermitianForm F E V) (v : Basis ι E V) :
   have hxj : h.toSesq x (v j) = w j := by rw [hx, Basis.constr_basis]
   rw [← hxj, sesq_eq_sum h.toSesq v]
   simp only [vecMul, dotProduct, Basis.repr_self, Finsupp.single_apply, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem sesq_apply_map_basis (B : V →ₛₗ[conjHom F E] V →ₗ[E] E) (v : Basis ι E V)
     (g : V →ₗ[E] V) (i j : ι) :

@@ -73,8 +73,7 @@ private theorem exists_invariant_flag_mod_l (hF : FixVec) (l : ℕ) [Fact l.Prim
         rw [hU, Submodule.span_le]
         rintro _ ⟨j, rfl⟩
         have h1 := hmono j (hs h j)
-        have h2 := U.add_mem h1 (hvU j)
-        simpa using h2
+        simpa using U.add_mem h1 (hvU j)
       exact hle hu
     have hne : U ≠ ⊤ := by
       intro htop
@@ -102,8 +101,7 @@ private theorem exists_invariant_flag_mod_l (hF : FixVec) (l : ℕ) [Fact l.Prim
       · have himg : v '' {i | i < j} ⊆ (Fin.snoc v x : Fin (m+1) → V) '' {i | i < j.castSucc} := by
           rintro _ ⟨i, hi, rfl⟩
           exact ⟨i.castSucc, by simpa using hi, by simp⟩
-        simp only [Fin.snoc_castSucc]
-        exact Submodule.span_mono himg (hs h j)
+        simpa only [Fin.snoc_castSucc] using Submodule.span_mono himg (hs h j)
 
 theorem flag_pf : FixVec → Flag := by
   intro hF l _ H _ hH V _ _ _ ρ

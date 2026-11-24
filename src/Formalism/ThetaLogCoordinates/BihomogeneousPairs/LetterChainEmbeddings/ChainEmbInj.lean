@@ -120,14 +120,7 @@ theorem deg_lettersAt_pos_succ (hB : D.BlockOK) (j : Fin D.T.t → ℕ) (jp : �
   apply Formalism.GM.FockB.deg_snd <;> assumption
 
 theorem deg_U (hB : D.BlockOK) (j : Fin D.T.t → ℕ) (jp : ℕ) :
-    (D.lettersAt j jp).deg D.uPos = D.LL.deg D.uPos - jp := by
-  simp only [BlockData.lettersAt]
-  simp only [← List.sum_toFinset _ (List.nodup_finRange _), List.toFinset_finRange]
-  rw [Finset.sum_eq_zero (fun b _ => by
-      rw [if_neg]
-      have := pos_lt_u hB b
-      omega)]
-  simp
+    (D.lettersAt j jp).deg D.uPos = D.LL.deg D.uPos - jp := Formalism.GM.FockB.degU hB j jp
 
 end block
 

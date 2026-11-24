@@ -57,9 +57,7 @@ end
 lemma uq_kRel_map {A B : Type*} [Ring A] [Ring B] (ε : Fin n → Bool) (F : Fin n → Fin n → A) (f : A →+* B)
     (h : KRel ε F) : KRel ε (fun a b => f (F a b)) := by
   intro a b c d hab hcd
-  have h0 := congrArg f (h a b c d hab hcd)
-  simp only [map_sub, map_mul, apply_ite f, map_zero] at h0
-  exact h0
+  simpa only [map_sub, map_mul, apply_ite f, map_zero] using congrArg f (h a b c d hab hcd)
 
 lemma uq_kRel_prod {A B : Type*} [Ring A] [Ring B] (ε : Fin n → Bool) (F : Fin n → Fin n → A)
     (F' : Fin n → Fin n → B) (h : KRel ε F) (h' : KRel ε F') : KRel ε (fun a b => (F a b, F' a b)) := by
@@ -214,8 +212,7 @@ lemma uq_bij {P U : Type} [NormedAddCommGroup P] [InnerProductSpace ℂ P] [Fini
       rw [hNdef, Submodule.mem_inf, LinearMap.mem_ker]
       refine ⟨?_, Submodule.sub_mem _ z₁.2 z₂.2⟩
       rw [map_sub, sub_eq_zero]; simpa using hz
-    have h3 := hzero _ hd (hMo (Submodule.sub_mem _ z₁.2 z₂.2))
-    exact Subtype.ext (sub_eq_zero.1 h3)
+    exact Subtype.ext (sub_eq_zero.1 (hzero _ hd (hMo (Submodule.sub_mem _ z₁.2 z₂.2))))
   · intro u
     have hT' : kSpan ε F (p x) ≤ (kSpan ε G x).map p := by
       refine uq_kSpan_le ε F (Submodule.mem_map_of_mem (uq_mem_kSpan ε G x)) ?_
@@ -293,7 +290,7 @@ private theorem eq_bot_of_KStable_of_highest_not_mem (ε : Fin n → Bool) (F : 
   have hFU : ∀ a b, ε a = ε b → ∀ y, S.mkQ (F a b y) = FU a b (S.mkQ y) := by
     intro a b h y
     rw [hFUdef]
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     rfl
   have hTU : kSpan ε FU (S.mkQ w) = ⊤ := by
     refine eq_top_iff.2 fun z _ => ?_

@@ -57,8 +57,7 @@ theorem dc_tens_kStable {M : Type*} [AddCommGroup M] [Module ℂ M] {E : Fin n �
 theorem dc_genSub_stable' {M : Type*} [AddCommGroup M] [Module ℂ M] {E : Fin n → Fin n → Module.End ℂ M}
     {V : Submodule ℂ M} (a b : Fin n) {v : M} (hv : v ∈ genSub E V) : E a b v ∈ genSub E V := by
   rw [genSub, Submodule.mem_sInf] at hv ⊢
-  intro T hT
-  exact hT.2 a b v (hv T hT)
+  exact fun T hT => hT.2 a b v (hv T hT)
 
 theorem dc_eeF_mem {M : Type*} [AddCommGroup M] [Module ℂ M] {E : Fin n → Fin n → Module.End ℂ M}
     {V : Submodule ℂ M} (dual : Bool) : ∀ f ∈ tensSub (genSub E V), eeF dual E f ∈ tensSub (genSub E V) := by
@@ -132,8 +131,7 @@ theorem dc_core {Xs Ys : Type*} [NormedAddCommGroup Xs] [InnerProductSpace ℂ X
   intro y hy
   have h0 : ψ y = 0 := by
     have : ψ y ∈ S0.map ψ := ⟨y, hy, rfl⟩
-    rw [hR] at this
-    exact this
+    rwa [hR] at this
   rw [hψ, sub_eq_zero] at h0
   rw [h0]
   exact Submodule.starProjection_apply_mem _ _
@@ -175,8 +173,7 @@ theorem dc_layer_map {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H
       intro h
       apply hx0
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe]
-      rw [← (dc_eqv (n := n) (D := ↥D)).map_eq_zero_iff]
-      exact h
+      rwa [← (dc_eqv (n := n) (D := ↥D)).map_eq_zero_iff]
     have hfhw : IsKHWVec ε (tensF dual E) μ f := by
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe] at hhw
       refine ⟨fun a => ?_, fun a b hab he => ?_⟩
@@ -199,8 +196,7 @@ theorem dc_layer_map {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H
     exact hc0 (inner_self_eq_zero.mp h0')) y hy
   simp only [LinearMap.comp_apply, LinearEquiv.coe_coe] at hze
   have : z = T y := (dc_eqv (n := n) (D := ↥D)).symm.injective hze
-  rw [← this]
-  exact hz
+  rwa [← this]
 
 end ReciprocityTheory.ChartRestriction.DS
 

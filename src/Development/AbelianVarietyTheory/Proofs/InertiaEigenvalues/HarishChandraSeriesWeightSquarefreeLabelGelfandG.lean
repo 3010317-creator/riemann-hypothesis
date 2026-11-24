@@ -80,8 +80,7 @@ private theorem card_filter_Gn_eq_card_filter_Mt_of_unipotent {N : ℕ} (P : Mt 
   apply Finset.card_bij (fun (u : Gn g N) _ => u.1)
   · intro u hu
     simpa using hu
-  · intro u _ v _ h
-    exact Units.ext h
+  · exact fun u _ v _ h => Units.ext h
   · intro M hM
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hM
     have hdet : M.det = 1 := by
@@ -103,8 +102,7 @@ private theorem card_filter_unipotent_eq_pow_card_free {N : ℕ} (Q : Fin N × F
         · have h1 : a ≠ b := ne_of_gt hab
           have h2 : (a, b) ∉ s := by
             rw [hmem]
-            intro h
-            exact absurd (lt_trans h.1 hab) (lt_irrefl _)
+            exact fun h => absurd (lt_trans h.1 hab) (lt_irrefl _)
           simp [Matrix.of_apply, h1, h2]
         · simp [Matrix.of_apply, hab]
         · have h1 : p.1 ≠ p.2 := ne_of_lt hp
@@ -121,7 +119,7 @@ private theorem card_filter_unipotent_eq_pow_card_free {N : ℕ} (Q : Fin N × F
           simp [Matrix.of_apply, (hU i i).2 rfl]
         · by_cases hin : (i, j) ∈ s
           · simp [Matrix.of_apply, hij, hin]
-          · simp only [Matrix.of_apply, hij, hin, if_false, dif_neg, not_false_eq_true]
+          · simp only [Matrix.of_apply, hij, hin, ite_false, dite_eq_right, not_false_eq_true]
             rcases lt_or_gt_of_ne hij with hlt | hgt
             · have hq : Q (i, j) := by
                 by_contra hq
@@ -152,10 +150,8 @@ theorem wh_zero (ψ : AddChar (ZMod g) ℂ) : wh ψ (fun _ : Gn g 0 => (1 : ℂ)
   rw [Finset.sum_eq_single (1 : Gn g 0)]
   · rw [eU_coeff_one]
     simp
-  · intro b _ hb
-    exact absurd (Units.ext (Subsingleton.elim _ _)) hb
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun b _ hb => absurd (Units.ext (Subsingleton.elim _ _)) hb
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem isClass_mul_right {G : Type} [Group G] {α : G → ℂ} (h : IsClass α) (c : ℂ) :
     IsClass fun x => α x * c := by
@@ -196,8 +192,7 @@ theorem wh_hcL (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) (L : List (Pc g))
     unfold hc
     rw [GlobalTheory.GLq.WhMul.wh_hcT g ψ hψ p.1 (degL L) (degL (p :: L)) hdeg _
       (fun y => isClass_mul_right hclassp _) (fun x => isClass_mul_left hclassL _)]
-    simp only [wh_mul_left, ihL, mul_one]
-    exact hp.2
+    simpa only [wh_mul_left, ihL, mul_one] using hp.2
 
 alias prod_Icc_ne := _root_.GlobalTheory.GLq.HcDeg.prodIcc_ne
 

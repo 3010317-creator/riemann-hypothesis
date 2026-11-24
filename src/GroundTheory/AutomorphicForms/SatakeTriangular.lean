@@ -40,8 +40,7 @@ theorem DomLE.ell_le {l ν : Fin n → ℤ} (h : DomLE l ν) : ell ν ≤ ell l 
 theorem DomLE.eq_of_ell_eq {l ν : Fin n → ℤ} (h : DomLE l ν) (he : ell l = ell ν) : l = ν := by
   have hall := (Finset.sum_eq_sum_iff_of_le (s := Finset.univ)
     (fun m _ => h.1 _ (Nat.lt_succ_iff.1 m.2))).1 he.symm
-  refine eq_of_tailSum_eq fun m hm => ?_
-  exact (hall ⟨m, Nat.lt_succ_iff.2 hm⟩ (Finset.mem_univ _)).symm
+  exact eq_of_tailSum_eq fun m hm => (hall ⟨m, Nat.lt_succ_iff.2 hm⟩ (Finset.mem_univ _)).symm
 
 theorem domLE_iwasawaExponent {ν : Fin n → ℤ} (hν : Cartan.IsDominant ν) {g : GL (Fin n) F}
     (hg : g ∈ DoubleCoset.doubleCoset (Cartan.diagPow F n ν)
@@ -153,8 +152,7 @@ theorem coeff_satake_ne_zero_of_maximal {h : SphericalHecke μ (F := F) (n := n)
         (h : HeckeAlgebra μ) x.out ≠ 0) := by
     refine Finset.mem_filter.2 ⟨mk_mem_cosetSupport hc, ?_, ?_⟩
     · rw [iwasawaExponent_out, hν]
-    · rw [apply_out]
-      exact hc
+    · rwa [apply_out]
   have hK : (μ.real (integralGL F n : Set (GL (Fin n) F)) : ℂ) ≠ 0 :=
     Complex.ofReal_ne_zero.2
       (measureReal_compactOpen_pos μ (isCompact_integralGL F n) (isOpen_integralGL F n)).ne'
@@ -210,8 +208,7 @@ theorem exists_orbitSum_preimage {ν : Fin n → ℤ} (hν : Cartan.IsDominant �
     exact comp_eq_of_antitone hν σ.symm ha
   refine ⟨h, hh, fun g hg => ?_, ?_⟩
   · obtain ⟨g₁, h1, hd, hmax⟩ := exists_maximal hg
-    rw [← key g₁ h1 hmax]
-    exact hd
+    rwa [← key g₁ h1 hmax]
   · have hne : h ≠ 0 := fun h0 => orbitSum_ne_zero ν (by rw [← hh, h0, map_zero])
     obtain ⟨g, hg⟩ := exists_apply_ne_zero hne
     obtain ⟨g₁, h1, -, hmax⟩ := exists_maximal hg

@@ -37,8 +37,7 @@ theorem mhs_exists_reps (ST SG : Finset (Pl E)) (hov : IsOver v Pb) (hST : ∀ Q
     simp only [Finset.coe_image, Set.mem_image, Set.Finite.coe_toFinset] at hη
     obtain ⟨c, hc', rfl⟩ := hη
     show (QuotientGroup.mk c.out : UAd hc n ⧸ mhlKv hc n v) ∈ mhlCosets hc v U k
-    rw [QuotientGroup.out_eq']
-    exact hc'
+    rwa [QuotientGroup.out_eq']
   · intro η hη η' hη' h
     simp only [Finset.coe_image, Set.mem_image, Set.Finite.coe_toFinset] at hη hη'
     obtain ⟨c, -, rfl⟩ := hη
@@ -47,8 +46,7 @@ theorem mhs_exists_reps (ST SG : Finset (Pl E)) (hov : IsOver v Pb) (hST : ∀ Q
     rw [h']
   · intro c hc'
     refine ⟨c.out, ?_, QuotientGroup.out_eq' c⟩
-    simp only [Finset.coe_image, Set.mem_image, Set.Finite.coe_toFinset]
-    exact ⟨c, hc', rfl⟩
+    simpa only [Finset.coe_image, Set.mem_image, Set.Finite.coe_toFinset] using ⟨c, hc', rfl⟩
 
 theorem mhs_decoOf_out (ST SG : Finset (Pl E)) (hST : ∀ Q ∈ ST, ¬ IsOver v Q) (hSG : ∀ Q ∈ SG, ¬ IsOver v Q)
     (x η : UAd hc n) :

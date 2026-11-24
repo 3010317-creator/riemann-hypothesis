@@ -68,8 +68,7 @@ theorem residue_pr_int_eq_zero_iff : ∀ {D : D7} {k : Type} [Field k] [Valuativ
     have h0 : (⟨_, h⟩ : 𝒪[k]) = 0 := by
       apply Subtype.ext
       simp
-    refine ⟨fun _ => zero_mem _, fun _ hu => ?_⟩
-    exact not_isUnit_zero (h0 ▸ hu)
+    exact ⟨fun _ => zero_mem _, fun _ hu => (not_isUnit_zero (h0 ▸ hu))⟩
   have hc' : (c : D.host.E) ≠ 0 := fun h0 => hc (Subtype.ext h0)
   have hinv : p.pr (incA D (c : D.host.E)) * p.pr (incA D (c : D.host.E)⁻¹) = 1 := by
     rw [← RingHom.map_mul, ← map_mul (incA D), mul_inv_cancel₀ hc', map_one, map_one]
@@ -82,7 +81,6 @@ theorem residue_pr_int_eq_zero_iff : ∀ {D : D7} {k : Type} [Field k] [Valuativ
     have hne : p.pr (incA D (c : D.host.E)) ≠ 0 := left_ne_zero_of_mul_eq_one hinv
     have : p.pr (incA D (c : D.host.E)⁻¹) = y := mul_left_cancel₀ hne (hinv.trans hy'.symm)
     rw [this]; exact y.2
-  · intro hi
-    exact IsUnit.of_mul_eq_one (⟨_, hi⟩ : 𝒪[k]) (Subtype.ext hinv)
+  · exact fun hi => IsUnit.of_mul_eq_one (⟨_, hi⟩ : 𝒪[k]) (Subtype.ext hinv)
 
 end GlobalTheory.PhiOneVal

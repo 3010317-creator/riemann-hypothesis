@@ -56,8 +56,7 @@ theorem eval_idPoint_lpMinor (R : Type*) [CommRing R] {r n : ℕ} (s : ℕ) (hr 
   rw [RingHom.map_det]
   convert Matrix.det_one (R := R) (n := Fin s)
   ext p q
-  simp [RingHom.mapMatrix_apply, idPoint, Matrix.one_apply]
-  exact if_congr Fin.val_inj rfl rfl
+  simpa [RingHom.mapMatrix_apply, idPoint, Matrix.one_apply] using if_congr Fin.val_inj rfl rfl
 
 theorem hwrow_sum_single_castLE {r s : ℕ} (hr : s ≤ r) (σ : Equiv.Perm (Fin s)) :
     (∑ q : Fin s, (Pi.single (Fin.castLE hr (σ q)) 1 : Fin r → ℕ)) =
@@ -71,17 +70,16 @@ theorem hwrow_sum_single_castLE {r s : ℕ} (hr : s ≤ r) (σ : Equiv.Perm (Fin
   simp only [Pi.single_apply]
   split_ifs with h
   · rw [Finset.sum_eq_single ⟨a.val, h⟩]
-    · exact if_pos (Fin.ext rfl)
+    · exact ite_eq_left (Fin.ext rfl)
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hab
       subst hab
       exact hb (Fin.ext rfl)
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   · apply Finset.sum_eq_zero
     intro b _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hab
     subst hab
     exact h b.isLt

@@ -87,17 +87,7 @@ variable {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 
 theorem vNum_vecCons_zero (W : Ideal (MRing ι O)) {d : ℕ} (L : Fin d → K → ℤ) :
     vNum W (Matrix.vecCons (0 : K → ℤ) L) = 0 := by
-  unfold vNum intNum
-  have hm : mixedDiff (Matrix.vecCons (0 : K → ℤ) L) (hilbFn (specialIdeal W)) = fun _ => 0 := by
-    funext m
-    simp [mixedDiff, List.ofFn_succ, diffStep]
-  rw [hm]
-  unfold eventualValue
-  have hex : ∃ c, ∀ᶠ m in Filter.atTop, (fun _ : K → ℤ => (0 : ℤ)) m = c :=
-    ⟨0, Filter.Eventually.of_forall fun _ => rfl⟩
-  rw [dite_eq_left hex]
-  obtain ⟨m, hm'⟩ := hex.choose_spec.exists
-  exact hm'.symm
+  exact GroundTheory.Heights₂.Heights.NumbersDVR.vNum_cons_zero W L
 
 end VNum
 
@@ -149,9 +139,9 @@ theorem ShiftByUniformiser.proof (h₁ : DivCycleMul.Statement.{u})
         else cycEval (fun G => vNum G L) (ratDiv W (C ϖ) 1)) (divCycle P s) := by
     refine cycEval_eq_add_mul_of_fun (n : ℤ) (hfin P s) fun W hW => ?_
     by_cases hϖW : (C ϖ : MRing ι O) ∈ W
-    · simp only [if_pos hϖW, vNum_vecCons_zero]
+    · simp only [ite_eq_left hϖW, vNum_vecCons_zero]
       ring
-    · simp only [if_neg hϖW]
+    · simp only [ite_eq_right hϖW]
       have hV := hH W hW hϖW
       have hWp : W.IsPrime := by
         unfold divCycle at hW

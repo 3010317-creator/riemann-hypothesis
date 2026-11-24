@@ -85,11 +85,9 @@ theorem DFun.map_exact_middle {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact
   have hcomp : F.map B C p i ∘ₗ F.map A B f i = 0 := by
     rw [← F.map_comp A B C f p hA hB hC hf hp i, hpf]
     refine LinearMap.ext fun x => ?_
-    have h := F.map_smul A C 0 0 hA hC h0hom i x
-    simpa using h
+    simpa using F.map_smul A C 0 0 hA hC h0hom i x
   refine exact_of_finrank_add (F.map A B f i) (F.map B C p i) (F.map_inj A B f hA hB hf hi i)
     (F.map_surj B C p hB hC hp hs i) hcomp ?_
-  simp only [Vc, Module.finrank_fin_fun]
-  exact hd
+  simpa only [Vc, Module.finrank_fin_fun] using hd
 
 end GlobalTheory.Models

@@ -94,8 +94,7 @@ private theorem nakGen {A B : Type} [CommRing A] [CommRing B] [Algebra A B] [Mod
     (⊤ : Submodule A (B ⧸ N)) Module.Finite.fg_top hin
   refine ⟨r, hr1, ?_⟩
   have h0 := hr (Submodule.Quotient.mk 1) Submodule.mem_top
-  rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero, Algebra.smul_def, mul_one] at h0
-  exact h0
+  rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero, Algebra.smul_def, mul_one] at h0
 
 private theorem nakHom {A B : Type} [CommRing A] [CommRing B] [Algebra ℂ A] [Algebra ℂ B] [Algebra.FiniteType ℂ B]
     (φ : A →ₐ[ℂ] B) (hint : ∀ b : B, φ.toRingHom.IsIntegralElem b) (I : Ideal A) (𝔟 : Ideal B)
@@ -122,8 +121,7 @@ private theorem val_one (φ : rA ℂ x {0} →ₐ[ℂ] ℂ) (hφ : ∀ j, φ (tA
     rintro _ ⟨j, rfl⟩
     exact hφ j
   have := hle hr
-  rw [RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at this
-  exact this
+  rwa [RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at this
 
 private theorem nak (h : IsFinCover ℂ L x) (𝔟 : Ideal (rB ℂ L x {0}))
     (hb : 𝔟 ⊔ FibFin.coordIdeal ℂ L x = ⊤) :
@@ -136,8 +134,7 @@ private theorem nak (h : IsFinCover ℂ L x) (𝔟 : Ideal (rB ℂ L x {0}))
     refine ⟨p, hpm, ?_⟩
     apply Subtype.ext
     change (rB ℂ L x {0}).val.toRingHom (Polynomial.eval₂ (FibFin.incl ℂ L x).toRingHom b p) = (0 : L)
-    rw [Polynomial.hom_eval₂, hcomp]
-    exact hp
+    rwa [Polynomial.hom_eval₂, hcomp]
   have hJ : FibFin.coordIdeal ℂ L x ≤ (IA x).map (FibFin.incl ℂ L x).toRingHom := by
     rw [FibFin.coordIdeal, Ideal.span_le]
     rintro _ ⟨l, rfl⟩
@@ -177,8 +174,8 @@ private theorem comax (h : IsFinCover ℂ L x)
   have hval : ∀ e : fib ℂ L x, e.1 (∑ e0, c e0 * b e0) = 1 := by
     intro e
 
-    rw [map_sum, Finset.sum_eq_single e (fun e0 _ hne => by rw [map_mul, hc, if_neg (Ne.symm hne), zero_mul])
-    (fun hn => (hn (Finset.mem_univ e)).elim), map_mul, hc, if_pos rfl]
+    rw [map_sum, Finset.sum_eq_single e (fun e0 _ hne => by rw [map_mul, hc, ite_eq_right (Ne.symm hne), zero_mul])
+    (fun hn => (hn (Finset.mem_univ e)).elim), map_mul, hc, ite_eq_left rfl]
     exact inv_mul_cancel₀ (hb0 e)
   have h1 := hsep (1 - ∑ e0, c e0 * b e0) (fun e => by rw [map_sub, map_one, hval, sub_self])
   rw [Ideal.eq_top_iff_one]

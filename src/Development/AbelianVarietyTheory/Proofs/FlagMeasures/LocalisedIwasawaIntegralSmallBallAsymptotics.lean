@@ -189,8 +189,7 @@ theorem exists_le_mul {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Pro
       by_contra hv
       have hmem : ‖v‖⁻¹ • v ∈ Metric.sphere (0 : V) 1 := by
         simp [norm_smul, hv]
-      rw [hS] at hmem
-      exact hmem
+      rwa [hS] at hmem
     subst hv
     simp [hf0, hg0']
   · have hK := isCompact_sphere (0 : V) 1
@@ -411,15 +410,13 @@ theorem integral_squeeze {X : Type} [MeasurableSpace X] (ν : Measure X) (φ : X
     intro x
     by_cases hx : x ∈ A
     · rw [Set.indicator_of_mem hx, hA1 x hx]
-    · simp only [Set.indicator, hx, if_false]
-      exact h0 x
+    · simpa only [Set.indicator, hx, ite_false] using h0 x
   have hi : ∀ x, φ x ≤ B.indicator (fun _ => (1:ℝ)) x := by
     intro x
     by_cases hx : x ∈ B
     · rw [Set.indicator_of_mem hx]
       exact h1 x
-    · simp only [Set.indicator, hx, if_false]
-      exact le_of_eq (hB0 x hx)
+    · simpa only [Set.indicator, hx, ite_false] using le_of_eq (hB0 x hx)
   have iB : Integrable (B.indicator fun _ => (1:ℝ)) ν :=
     (integrable_indicator_iff hB).2 (integrableOn_const hB')
   have iA : Integrable (A.indicator fun _ => (1:ℝ)) ν :=
@@ -491,10 +488,8 @@ theorem exists_cutoff (ρ : V → ℝ) (hc : Continuous ρ) {s t : ℝ} (hst : s
   have hpos : 0 < t - s := sub_pos.2 hst
   refine ⟨fun x => max 0 (min 1 ((t - ρ x) / (t - s))), ?_, ?_, ?_, ?_, ?_⟩
   · exact continuous_const.max (continuous_const.min ((continuous_const.sub hc).div_const _))
-  · intro x
-    exact le_max_left _ _
-  · intro x
-    exact max_le zero_le_one (min_le_left _ _)
+  · exact fun x => le_max_left _ _
+  · exact fun x => max_le zero_le_one (min_le_left _ _)
   · intro x hx
     have h1 : 1 ≤ (t - ρ x) / (t - s) := by
       rw [le_div_iff₀ hpos]
@@ -504,9 +499,8 @@ theorem exists_cutoff (ρ : V → ℝ) (hc : Continuous ρ) {s t : ℝ} (hst : s
   · intro x hx
     have h1 : (t - ρ x) / (t - s) ≤ 0 := by
       rw [div_le_iff₀ hpos]
-      push_neg at hx
+      push Not at hx
       linarith
-    show max 0 (min 1 ((t - ρ x) / (t - s))) = 0
     exact max_eq_left (le_trans (min_le_right _ _) h1)
 
 theorem tendsto_body : ∀ (α V : Type) [MeasurableSpace α] [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] (μ : Measure α) [IsFiniteMeasure μ] (c : α → V) (lam : Measure V) [lam.IsAddHaarMeasure] (d : ℕ) (ρ : V → ℝ), Measurable c → Continuous ρ → (∀ v, 0 ≤ ρ v) → (∀ (s : ℝ), 0 ≤ s → ∀ v, ρ (s • v) = s * ρ v) → (∀ v, ρ v = 0 → v = 0) → Vag μ c lam d → Filter.Tendsto (fun r : ℝ => μ {g | ρ (c g) ≤ r} / ENNReal.ofReal (r ^ d)) (nhdsWithin (0 : ℝ) (Set.Ioi 0)) (nhds (lam {v | ρ v ≤ 1})) := by
@@ -622,13 +616,11 @@ theorem prodFns_separates (V W : Type) [MetricSpace V] [MetricSpace W] :
   · have h2 : p.2 ≠ q.2 := fun h => hpq (Prod.ext h1 h)
     let g : C(V × W, ℝ) := ⟨fun z => dist z.2 q.2, by fun_prop⟩
     have hg : g ∈ (prodFns V W : Set C(V × W, ℝ)) := by
-      show ∃ a : C(V, ℝ), ∃ b : C(W, ℝ), ∀ z, g z = a z.1 * b z.2
       exact ⟨1, ⟨fun y => dist y q.2, by fun_prop⟩, fun z => by simp [g]⟩
     refine ⟨g, ⟨g, Algebra.subset_adjoin hg, rfl⟩, ?_⟩
     simpa [g] using h2
   · let g : C(V × W, ℝ) := ⟨fun z => dist z.1 q.1, by fun_prop⟩
     have hg : g ∈ (prodFns V W : Set C(V × W, ℝ)) := by
-      show ∃ a : C(V, ℝ), ∃ b : C(W, ℝ), ∀ z, g z = a z.1 * b z.2
       exact ⟨⟨fun x => dist x q.1, by fun_prop⟩, 1, fun z => by simp [g]⟩
     refine ⟨g, ⟨g, Algebra.subset_adjoin hg, rfl⟩, ?_⟩
     simpa [g] using h1
@@ -693,8 +685,7 @@ theorem tendsto_integral_of_prod {ι V W : Type} [MetricSpace V] [MetricSpace W]
         (h1c.mul_right (f' := a)) (χ₂.continuous.mul b.continuous) (h2c.mul_right (f' := b))
     | zero =>
       have e : ∀ m : Measure (V × W), ∫ z, χ z * (0 : C(V × W, ℝ)) z ∂m = 0 := fun m => by simp
-      simp only [e]
-      exact tendsto_const_nhds
+      simpa only [e] using tendsto_const_nhds
     | add g g' _ _ hg hg' =>
       have e : ∀ (m : Measure (V × W)) [IsFiniteMeasureOnCompacts m],
           ∫ z, χ z * (g + g') z ∂m = ∫ z, χ z * g z ∂m + ∫ z, χ z * g' z ∂m := by
@@ -824,8 +815,7 @@ theorem local_vag {n d : ℕ} {ε : Fin n → Bool} {S : Set (Formalism.REAL.UJ 
   ·
     refine isFiniteMeasure_restrict.2 (ne_of_lt ?_)
     refine lt_of_le_of_lt (measure_mono ?_) (isCompact_hsBall ε t).measure_lt_top
-    intro g hg
-    exact (show nrm (uMat g - 1) < t from hg).le
+    exact fun g hg => (show nrm (uMat g - 1) < t from hg).le
   ·
     intro φ hφ hsupp
     have hset : {g : Formalism.REAL.UJ ε | nrm (uMat g - 1) < t} =
@@ -1026,8 +1016,7 @@ theorem localised_iwasawa_asymptotics : ∀ (n : ℕ) (ε : Fin n → Bool) (a :
         (⟨lt_of_lt_of_le hk htρ, (le_max_right _ _).trans hσ⟩ :
           nrm (uMat x.2.2 - 1) < ρ ∧ len (crd EL (uMat x.2.2 - 1)) ≤ r)
       rw [Set.indicator_of_mem hmem1, Set.indicator_of_mem hmem2]
-      simp only [Pi.one_apply, mul_one]
-      exact (h₃ x.2.1 hxM (lt_of_lt_of_le hm htt₃)).2
+      simpa only [Pi.one_apply, mul_one] using (h₃ x.2.1 hxM (lt_of_lt_of_le hm htt₃)).2
     · exact bot_le
   ·
     rw [← lintegral_indicator_one (hBmeas _), ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
@@ -1064,7 +1053,7 @@ theorem localised_iwasawa_asymptotics : ∀ (n : ℕ) (ε : Fin n → Bool) (a :
         crd EK (uMat x.2.2 - 1)) ≤ (1 + η) * r :=
       hγη.trans (mul_le_mul_of_nonneg_left hσ hη1.le)
     simp only [Set.indicator_apply, Set.mem_ofPred_eq]
-    rw [if_pos ⟨⟨hu, hm, hk⟩, hγ⟩, Pi.one_apply, mul_one]
+    rw [ite_eq_left ⟨⟨hu, hm, hk⟩, hγ⟩, Pi.one_apply, mul_one]
     exact (h₃ x.2.1 hxM (lt_of_lt_of_le hm htt₃)).1
 
 end GlobalTheory.IwConst

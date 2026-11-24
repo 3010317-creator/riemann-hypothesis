@@ -53,8 +53,7 @@ theorem exists_lieElement_middleBlockPart (c : Coeff l) (la : HeightOneSpectrum 
       rw [h3] at h4
       exact lt_irrefl _ h4
     exact hnon _ hxm
-  · by_contra hv
-    push_neg at hv
+  · by_contra! hv
     have hx0 : x ≠ 0 := by rintro rfl; simp at hv
     have hiV : x⁻¹ ∈ V := by
       rw [hVdef, Valuation.mem_valuationSubring_iff, map_inv₀]
@@ -74,9 +73,7 @@ theorem exists_lieElement_middleBlockPart (c : Coeff l) (la : HeightOneSpectrum 
     have h5 := hnon _ him
     rw [ValuationSubring.mem_nonunits_iff] at h5
     have h6 := (ValuationSubring.valuation_le_one_iff W _).2 hx
-    have h7 : g ⟨x⁻¹, hiV⟩ = ((x : ℂ))⁻¹ := by
-      show ((x⁻¹ : c.F) : ℂ) = _
-      exact map_inv₀ c.F.val x
+    have h7 : g ⟨x⁻¹, hiV⟩ = ((x : ℂ))⁻¹ := map_inv₀ c.F.val x
     rw [h7, map_inv₀] at h5
     have hW0 : W.valuation (x : ℂ) ≠ 0 := by
       rw [Valuation.ne_zero_iff]; exact_mod_cast hx0
@@ -146,17 +143,14 @@ theorem goodAt_of_two_primes {g0 g1 : ℕ} (hM : l.M = g0 * g1) (h0 : g0.Prime) 
   by_cases e0 : p = g0
   · have e : (Finsupp.single g0 1 : ℕ →₀ ℕ) p + (Finsupp.single g1 1 : ℕ →₀ ℕ) p = 1 := by
       simp [e0, hne]
-    rw [e, pow_one, e0, Nat.mul_div_cancel_left g1 h0.pos]
-    exact t1
+    rwa [e, pow_one, e0, Nat.mul_div_cancel_left g1 h0.pos]
   · by_cases e1 : p = g1
     · have e : (Finsupp.single g0 1 : ℕ →₀ ℕ) p + (Finsupp.single g1 1 : ℕ →₀ ℕ) p = 1 := by
         simp [e1, hne.symm]
-      rw [e, pow_one, e1, Nat.mul_div_cancel g0 h1.pos]
-      exact t0
+      rwa [e, pow_one, e1, Nat.mul_div_cancel g0 h1.pos]
     · have e : (Finsupp.single g0 1 : ℕ →₀ ℕ) p + (Finsupp.single g1 1 : ℕ →₀ ℕ) p = 0 := by
         simp [e0, e1]
-      rw [e, pow_zero, Nat.div_one]
-      exact h3
+      rwa [e, pow_zero, Nat.div_one]
 
 theorem partIAt_of (hP : PartI) (hN : N1ab) (Xo : Moduli Dw l) (c : Coeff l) (hpq : 1 ≤ Dw.p + Dw.q) : PartIAt Xo c := by
   classical

@@ -25,8 +25,7 @@ theorem factorPow_evalₐ {m n : ℕ} (hle : m ≤ n) (x : AdicCompletion I A) :
   simp only [Ideal.Quotient.factorPow, Ideal.Quotient.factor_mk]
   rw [Ideal.Quotient.eq]
   have h := AdicCompletion.AdicCauchySequence.mk_eq_mk hle c
-  rw [Submodule.Quotient.eq, smul_eq_mul, Ideal.mul_top] at h
-  exact h
+  rwa [Submodule.Quotient.eq, smul_eq_mul, Ideal.mul_top] at h
 
 end AdicCompletion
 
@@ -65,8 +64,7 @@ theorem ker_evalB (n : ℕ) : RingHom.ker (evalB K p n) = maximalIdeal 𝔹 ^ n 
   have h := ker_adicCompletion_evalₐ (fg_ker_fontaineThetaInvertP
     (ker_fontaineTheta_eq_span_kerThetaGenerator K p)) n
   rw [Ideal.map_pow] at h
-  rw [← map_ker_fontaineThetaInvertP K p]
-  exact h
+  rwa [← map_ker_fontaineThetaInvertP K p]
 
 theorem map_mem_maximalIdeal_pow {F : 𝔹 →+* 𝔹} (hF : ∀ x ∈ maximalIdeal 𝔹, F x ∈ maximalIdeal 𝔹)
     {x : 𝔹} {n : ℕ} (hx : x ∈ maximalIdeal 𝔹 ^ n) : F x ∈ maximalIdeal 𝔹 ^ n := by
@@ -231,8 +229,7 @@ theorem thetaBDeRhamPlus_eq_zero_of_evalB_one_eq_zero {y : 𝔹}
     (hy : IsPerfectoidField.evalB ℂ_[p] p 1 y = 0) : thetaBDeRhamPlus 𝒪 p y = 0 := by
   have hmem : y ∈ maximalIdeal 𝔹 := by
     have h : y ∈ maximalIdeal 𝔹 ^ 1 := by
-      rw [← IsPerfectoidField.ker_evalB (K := ℂ_[p]) (p := p) 1, RingHom.mem_ker]
-      exact hy
+      rwa [← IsPerfectoidField.ker_evalB (K := ℂ_[p]) (p := p) 1, RingHom.mem_ker]
     rwa [pow_one] at h
   rw [IsPerfectoidField.maximalIdeal_bDeRhamPlus, RingHom.mem_ker,
     IsPerfectoidField.thetaBDeRhamPlusField] at hmem
@@ -251,9 +248,7 @@ theorem thetaBDeRhamPlusField_toBDeRhamPlus_galAway (σ : Gal(PadicAlgCl p/K)) (
       σ • IsPerfectoidField.thetaBDeRhamPlusField p (wittToBDeRhamPlus 𝒪 p w)
     rw [IsPerfectoidField.thetaBDeRhamPlusField_wittToBDeRhamPlus,
       IsPerfectoidField.thetaBDeRhamPlusField_wittToBDeRhamPlus, AInf.fontaineTheta_gal_smul]
-  have h' := RingHom.congr_fun h a
-  simp only [RingHom.comp_apply, RingHom.coe_coe, galCp_apply] at h'
-  exact h'
+  simpa only [RingHom.comp_apply, RingHom.coe_coe, galCp_apply] using RingHom.congr_fun h a
 
 theorem thetaBDeRhamPlusField_gal_smul (σ : Gal(PadicAlgCl p/K)) (x : 𝔹) :
     IsPerfectoidField.thetaBDeRhamPlusField p (σ • x) =

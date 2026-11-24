@@ -104,8 +104,7 @@ theorem entD_inv {S : Set ℂ} {f : ℂ → Matrix ι ι ℂ} (hf : EntD S f) (h
 
 theorem trace_diff {S : Set ℂ} {f : ℂ → Matrix ι ι ℂ} (hf : EntD S f) :
     DifferentiableOn ℂ (fun z => (f z).trace) S := by
-  simp only [Matrix.trace, Matrix.diag]
-  exact DifferentiableOn.fun_sum fun i _ => hf i i
+  simpa only [Matrix.trace, Matrix.diag] using DifferentiableOn.fun_sum fun i _ => hf i i
 
 theorem entD_aC (X : Fin n → ℝ) (S : Set ℂ) : EntD S (aC X) := by
   intro i j
@@ -222,8 +221,7 @@ theorem entC_inv {S : Set T} {f : T → Matrix ι ι ℂ} (hf : EntC S f) (h0 : 
 omit [DecidableEq ι] in
 theorem trace_cont {S : Set T} {f : T → Matrix ι ι ℂ} (hf : EntC S f) :
     ContinuousOn (fun z => (f z).trace) S := by
-  simp only [Matrix.trace, Matrix.diag]
-  exact continuousOn_finsetSum _ fun i _ => hf i i
+  simpa only [Matrix.trace, Matrix.diag] using continuousOn_finsetSum _ fun i _ => hf i i
 
 theorem mR_cont : Continuous fun y : GR n => mR y :=
   Units.continuous_val.comp continuous_subtype_val
@@ -318,12 +316,12 @@ theorem trace_gramB {m : ℕ} (Z : Matrix (Fin n) (Fin n) ℂ) (ε : Fin m → B
 
   simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, gramB, evX, Qb, map_sum, map_mul, MvPolynomial.eval_X,
   dotProduct, Matrix.mulVec, rowC, Pi.star_apply, star_star, Finset.mul_sum]
-  simp only [if_true]
+  simp only [ite_true]
   conv_rhs => rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun k _ => Finset.sum_congr rfl (fun a _ => ?_))
-  simp only [Bool.false_eq_true, if_false]
+  simp only [Bool.false_eq_true, ite_false]
   ring
 
 theorem star_dot_conjTranspose (Z : Matrix (Fin n) (Fin n) ℂ) (w : Fin n → ℂ) :
@@ -370,8 +368,7 @@ private theorem exists_pos_mul_sum_sq_le_re_of_posDef (H0 : Matrix (Fin n) (Fin 
   have hspec : H0 = (hA.eigenvectorUnitary : Matrix (Fin n) (Fin n) ℂ) *
       Matrix.diagonal (fun i => ((hA.eigenvalues i : ℝ) : ℂ)) * star (hA.eigenvectorUnitary : Matrix (Fin n) (Fin n) ℂ) := by
     have := hA.spectral_theorem
-    rw [Unitary.conjStarAlgAut_apply] at this
-    exact this
+    rwa [Unitary.conjStarAlgAut_apply] at this
   obtain ⟨c, hc, hcle⟩ : ∃ c > 0, ∀ i, c ≤ hA.eigenvalues i := by
     rcases isEmpty_or_nonempty (Fin n) with hn | hn
     · exact ⟨1, one_pos, fun i => (IsEmpty.false i).elim⟩
@@ -398,8 +395,7 @@ private theorem exists_pos_mul_sum_sq_le_re_of_posDef (H0 : Matrix (Fin n) (Fin 
     norm_cast
   have h2' : ∑ i, ‖(star (hA.eigenvectorUnitary : Matrix (Fin n) (Fin n) ℂ) *ᵥ w) i‖ ^ 2 = ∑ j, ‖w j‖ ^ 2 := by
     have := congrArg Complex.re h2
-    simp only [dotProduct, Pi.star_apply, Complex.re_sum, hre] at this
-    exact this
+    simpa only [dotProduct, Pi.star_apply, Complex.re_sum, hre] using this
   rw [h1, Complex.re_sum, ← h2', Finset.mul_sum]
   refine Finset.sum_le_sum fun i _ => ?_
   rw [Complex.re_ofReal_mul, hre]
@@ -472,8 +468,7 @@ theorem isOpen_stripS (X : Fin n → ℝ) : IsOpen (stripS X) := by
 private theorem entC_mR_mul_aC_univ_prod_stripS (X : Fin n → ℝ) :
     EntC (Set.univ ×ˢ stripS X) (fun p : GR n × ℂ => mR p.1 * aC X p.2) := by
   apply entC_mul
-  · intro i j
-    exact (Continuous.matrix_elem (mR_cont.comp continuous_fst) i j).continuousOn
+  · exact fun i j => (Continuous.matrix_elem (mR_cont.comp continuous_fst) i j).continuousOn
   · intro i j
     apply Continuous.continuousOn
     rcases i with i | i <;> rcases j with j | j <;>

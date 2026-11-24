@@ -140,8 +140,7 @@ theorem exists_ext_frac {A B : Type} [CommRing A] [IsDomain A] [CommRing B] [IsD
   let g := IsAlgClosed.lift (M := ℂ) (R := A) (S := FractionRing B)
   refine ⟨g.toRingHom, fun a => ?_⟩
   have h := g.commutes a
-  rw [IsScalarTower.algebraMap_apply A B (FractionRing B)] at h
-  exact h
+  rwa [IsScalarTower.algebraMap_apply A B (FractionRing B)] at h
 
 variable {D : D7}
 
@@ -267,8 +266,7 @@ theorem adapt_at (p : PtAt ex Csz) (w : D.what₂.places.Pl) (j : Fin D.R.m) (hm
   have hfix : ∀ y : D.LL0, τ (embLL0 D y) = embLL0 D y := fun y => by
     have h := ext_onSmallField ex.nch_tie w hρ g hg y
     have h2 : τ (g (ex.nch.embW w (y : D.what₂.LL))) = D.what₂.embLL y := hτ _
-    rw [h] at h2
-    exact h2
+    rwa [h] at h2
   have hχ : (p.R.C.delAt (D.ntw.l (ex.nch.twI w))).ValuesIn 0 (embLL0 D) := by
     have hv := hm.2.2.small.val
     unfold CharFrame.delAt
@@ -278,7 +276,7 @@ theorem adapt_at (p : PtAt ex Csz) (w : D.what₂.places.Pl) (j : Fin D.R.m) (hm
   refine ⟨withTau ρ (ex.nch.twI w) (ex.nch.sd w) τ, withTau_good hρ _ _ τ hfix hδ, ⟨rfl, rfl, rfl, rfl, rfl⟩, realPin_withTau hpin _ _ τ,
     τ.toRingHom.comp g, fun x => hτ x, fun a => ?_⟩
   show τ (g _) = (withTau ρ (ex.nch.twI w) (ex.nch.sd w) τ).ek (ex.nch.twI w) (ex.nch.sd w) (ex.nch.k' w) _
-  rw [withTau_ek, if_pos ⟨rfl, rfl⟩]
+  rw [withTau_ek, ite_eq_left ⟨rfl, rfl⟩]
   exact congrArg τ (hg a)
 
 end Point
@@ -437,8 +435,7 @@ theorem embW_tmul_eq {D : D7} (S : NX.RatDat D.ntw) (c : NChoice D) (hc : NChTie
     rw [← TensorProduct.tmul_smul]
     congr 1
     rw [← algebraMap_smul (FractionRing (D.ntw.O (c.twI w))) zO, smul_smul, mul_comm, hι, algebraMap_smul]
-  have h2 := (key _).symm.trans (hL.trans (hR.symm.trans (key _)))
-  exact smul_right_injective _ hζ h2
+  exact smul_right_injective _ hζ ((key _).symm.trans (hL.trans (hR.symm.trans (key _))))
 
 end GlobalTheory.BigOn.Exp
 
@@ -545,8 +542,7 @@ theorem canEx_at (p : PtAt ex Csz) (w : D.what₂.places.Pl) (j : Fin D.R.m) :
       · intro h; exact absurd (Finset.mem_univ a) h
     have := li_one_tmul_of_li (K' := FractionRing (ex.nch.Oe w)) hO m hm
     have ht : (fun a => rd (β a)) = t := funext hrb
-    rw [ht]
-    exact this
+    rwa [ht]
 
 end Point
 
@@ -655,8 +651,7 @@ theorem rd_eOp {D : D7} {c : NChoice D} {w : D.what₂.places.Pl} (ht : NChTie D
 
     rw [map_sum, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
-    rw [map_smul, map_smulₛₗ]
-    rw [hrd ⟨b k, hbK k⟩, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
+    rw [map_smul, map_smulₛₗ, hrd ⟨b k, hbK k⟩, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
   obtain ⟨x, rfl⟩ := fi.e.surjective y
   letI : Fintype S.G := Fintype.ofEquiv Gp fi.eG.symm.toEquiv
   letI : Fintype (G0g D.nd) := Fintype.ofEquiv Gp I.toEquiv
@@ -884,8 +879,7 @@ theorem rat_unframe_alt : GlobalTheory.Published.CuspRapidDecay → ∀ {eps : �
     ⟨h.psi, h.inf, h.cartT, h.onbS, h.onbT, h.latS, h.latT, h.frS, h.frT, h.vac, h.Pg, h.grp, h.mu0, h.eta, h.delta, h.deltaPl,
       h.ap, h.am⟩, fun ρ hρ b h => ?_⟩
   have h1 := hY B'.v₀ ρ hρ t j b h
-  rw [hv] at h1
-  exact h1
+  rwa [hv] at h1
 end GlobalTheory.UnframePt
 end
 end

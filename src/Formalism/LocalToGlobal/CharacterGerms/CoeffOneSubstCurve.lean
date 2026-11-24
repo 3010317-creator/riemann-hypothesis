@@ -53,8 +53,8 @@ theorem coeff_l_frob {P : PS C 1 dd} (hP : IntS V P) (hPz : MvPowerSeries.consta
     rw [map_sub, map_sub, map_zero, hD1def, hD3def, map_sum]
     simp only [MvPowerSeries.coeff_monomial]
     by_cases hex : ∃ i, ¬ V.l ∣ μ ((0 : Fin 1), i)
-    · rw [if_pos hex, sub_self, zero_sub, neg_eq_zero]
-      refine Finset.sum_eq_zero fun i _ => if_neg ?_
+    · rw [ite_eq_left hex, sub_self, zero_sub, neg_eq_zero]
+      refine Finset.sum_eq_zero fun i _ => ite_eq_right ?_
       rintro rfl
       obtain ⟨i', hi'⟩ := hex
       apply hi'
@@ -62,27 +62,26 @@ theorem coeff_l_frob {P : PS C 1 dd} (hP : IntS V P) (hPz : MvPowerSeries.consta
       split_ifs
       · exact dvd_refl _
       · exact dvd_zero _
-    · rw [if_neg hex, sub_zero]
+    · rw [ite_eq_right hex, sub_zero]
       push Not at hex
       have hdiv : ∀ s, V.l ∣ μ s := fun s => by rw [hsq s]; exact hex s.2
       rcases FirstVanishing.divisible_small μ hdiv hμ with h0 | ⟨s, hs⟩
       · subst h0
         rw [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hPz, zero_sub, neg_eq_zero]
-        refine Finset.sum_eq_zero fun i _ => if_neg ?_
+        refine Finset.sum_eq_zero fun i _ => ite_eq_right ?_
         intro h
         have := congrArg (fun f : Fin 1 × Fin dd →₀ ℕ => f ((0 : Fin 1), i)) h
         simp only [Finsupp.coe_zero, Pi.zero_apply, Finsupp.single_eq_same] at this
         omega
       · subst hs
-        rw [Finset.sum_eq_single s.2, if_pos (by rw [← hsq s]), ← hsq s, sub_self]
+        rw [Finset.sum_eq_single s.2, ite_eq_left (by rw [← hsq s]), ← hsq s, sub_self]
         · intro i _ hi
-          rw [if_neg]
+          rw [ite_eq_right]
           intro h
           apply hi
           have := (Finsupp.single_left_inj (by omega : V.l ≠ 0)).1 h
           rw [this]
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+        · exact fun h => absurd (Finset.mem_univ _) h
   have hz : MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) (0 : PS C 1 dd) = 0 := by
     rw [← MvPowerSeries.coe_substAlgHom hG, map_zero]
   have hsplit : P = D1 + (P - D1 - D3) + D3 := by ring
@@ -108,11 +107,10 @@ theorem coeff_l_frob {P : PS C 1 dd} (hP : IntS V P) (hPz : MvPowerSeries.consta
   have hfr : ∀ i, V.MM (PowerSeries.coeff V.l (γ i ^ V.l) - (PowerSeries.coeff 1 (γ i)) ^ V.l) := by
     intro i
     have h := mms_pow_frobTw (hγI i) (Finsupp.single () V.l)
-    rw [map_sub, coeff_frobTw, if_pos (fun s => by simp)] at h
+    rw [map_sub, coeff_frobTw, ite_eq_left (fun s => by simp)] at h
     have e : (Finsupp.single () V.l).mapRange (fun n => n / V.l) (Nat.zero_div V.l) = Finsupp.single () 1 := by
       rw [Finsupp.mapRange_single, Nat.div_self (by omega)]
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have eP : MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) P =
       MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) D1 +
         MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) (P - D1 - D3) +
@@ -153,8 +151,8 @@ theorem coeff_lt_frob {P : PS C 1 dd} (hPz : MvPowerSeries.constantCoeff P = 0) 
     intro μ hμ
     rw [map_sub, map_zero, hD1def]
     by_cases hex : ∃ i, ¬ V.l ∣ μ ((0 : Fin 1), i)
-    · rw [if_pos hex, sub_self]
-    · rw [if_neg hex, sub_zero]
+    · rw [ite_eq_left hex, sub_self]
+    · rw [ite_eq_right hex, sub_zero]
       push Not at hex
       have hdiv : ∀ s, V.l ∣ μ s := fun s => by rw [hsq s]; exact hex s.2
       rcases FirstVanishing.divisible_small μ hdiv (by omega) with h0 | ⟨s, hs⟩
@@ -178,8 +176,7 @@ theorem coeff_lt_frob {P : PS C 1 dd} (hPz : MvPowerSeries.constantCoeff P = 0) 
         MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) (P - D1) := by
     conv_lhs => rw [show P = D1 + (P - D1) by ring]
     rw [MvPowerSeries.subst_add hG]
-  rw [eP, map_add (f := _), hA2', add_zero]
-  exact hB1
+  rwa [eP, map_add (f := _), hA2', add_zero]
 
 def LowMM (V : VF C) (f : PowerSeries C) : Prop := ∀ n ≤ V.l, V.MM (PowerSeries.coeff n f)
 
@@ -235,21 +232,20 @@ theorem coeff_one_subst_curve {P : PS C 1 dd} (hPz : MvPowerSeries.constantCoeff
       subst h0
       rw [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hPz]
       symm
-      refine Finset.sum_eq_zero fun i _ => if_neg ?_
+      refine Finset.sum_eq_zero fun i _ => ite_eq_right ?_
       intro h
       have := congrArg (fun f : Fin 1 × Fin dd →₀ ℕ => f ((0 : Fin 1), i)) h
       simp at this
     · obtain ⟨s, hs⟩ := degree_one h1
       subst hs
-      rw [Finset.sum_eq_single s.2, if_pos (by rw [← hsq s]), ← hsq s]
+      rw [Finset.sum_eq_single s.2, ite_eq_left (by rw [← hsq s]), ← hsq s]
       · intro i _ hi
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         apply hi
         have := (Finsupp.single_left_inj (by omega : (1 : ℕ) ≠ 0)).1 h
         rw [this]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
   have hA := (agr_subst_right (a := fun q : Fin 1 × Fin dd => γ q.2) (fun q => hγ0 q.2) hD2)
     (Finsupp.single () 1) (by rw [Finsupp.degree_single]; omega)
   have hA' : PowerSeries.coeff 1 (MvPowerSeries.subst (fun q : Fin 1 × Fin dd => γ q.2) P) =

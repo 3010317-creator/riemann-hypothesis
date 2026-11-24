@@ -136,8 +136,7 @@ theorem exists_scale : Laws → Laws2 → ∀ (o Ω : Type) [CommRing o] [Field 
         (val (powFrame A.A A.L (x a) (e a) ((1 : ℕ) : ℤ)) (𝟙 _) z J).val := fun a z J hJ => by
     have b := congrArg (CoefBasic.cstH (R := V) z sc⁻¹ * ·) (tv a z J hJ)
     simp only [CoefBasic.cst_eq, ← _root_.mul_assoc, ← map_mul, inv_mul_cancel₀ h0, map_one, _root_.one_mul] at b
-    rw [CoefBasic.cst_eq]
-    exact b
+    rwa [CoefBasic.cst_eq]
   have hvs : v sc ≠ ⊤ := v.ne_top_iff.2 h0
   have split : ∀ a, v (y₀ ⟨S.th a, S.th_mem a⟩) = v sc + v (sc⁻¹ * y₀ ⟨S.th a, S.th_mem a⟩) := fun a => by
     rw [← v.map_mul, ← _root_.mul_assoc, mul_inv_cancel₀ h0, _root_.one_mul]
@@ -181,8 +180,7 @@ theorem exists_scale : Laws → Laws2 → ∀ (o Ω : Type) [CommRing o] [Field 
       (nz a').1 (hval _ _ (he a') (tv' a'))⟩
     have b : X ((Multiplicative.ofAdd a' * (Multiplicative.ofAdd a)⁻¹) ^ n) = X 1 := by
       rw [map_pow, map_mul, map_inv, map_one]; exact hpow
-    rw [sub_eq_add_neg]
-    exact b
+    rwa [sub_eq_add_neg]
 
 end GlobalTheory.ThetaDvr.Scale
 end

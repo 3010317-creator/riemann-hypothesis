@@ -309,8 +309,7 @@ theorem contDensityOn_eq_fibre_mass : ∀ (K V : Type) [NormedField K] [ProperSp
       refine measure_mono_null (fun v hv => ?_) (hf1 b)
       simp only [Set.mem_compl_iff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff,
         id, Set.mem_univ, and_true]
-      intro hqv
-      exact hb (hqv ▸ hv.2)
+      exact fun hqv => hb (hqv ▸ hv.2)
   exact sub_eq_zero.1 (eq_zero_of_setIntegral_compact_eq_zero ν hBo (hgc.sub hmcC) key
     (show t ∈ {t : K | t ≠ 0} from ht))
 
@@ -360,8 +359,7 @@ theorem exists_isSqrtOn (K : Type) [NontriviallyNormedField K] [IsUltrametricDis
     rw [mem_closedBall_iff_norm] at ha
     have hlt : ‖a - 1‖ < ‖(1 : K)‖ := by rw [norm_one]; linarith
     have := IsUltrametricDist.norm_add_eq_max_of_norm_ne_norm hlt.ne
-    rw [sub_add_cancel, max_eq_right hlt.le, norm_one] at this
-    exact this
+    rwa [sub_add_cancel, max_eq_right hlt.le, norm_one] at this
   refine ⟨Metric.closedBall 1 r, (Metric.closedBall (1 : K) r).piecewise g (fun _ => 1), hopen,
     isCompact_closedBall _ _, Metric.mem_closedBall_self hr0.le, ?_, ?_, hnorm, ?_, ?_⟩
   · intro a ha b hb
@@ -464,8 +462,7 @@ theorem disintegration (K V : Type) [NontriviallyNormedField K] [IsUltrametricDi
     · intro h
       have := hmulU _ hu _ h
       rwa [← mul_assoc, mul_inv_cancel₀ hu0, one_mul] at this
-    · intro h
-      exact hmulU _ (hinvU _ hu) _ h
+    · exact fun h => hmulU _ (hinvU _ hu) _ h
   have hshift : ∀ t : K, ∀ t' ∈ t • U, t' • U = t • U := by
     intro t t' ht'
     obtain ⟨u, hu, rfl⟩ := ht'
@@ -534,8 +531,7 @@ theorem disintegration (K V : Type) [NontriviallyNormedField K] [IsUltrametricDi
       intro t
       by_cases h : t / q x ∈ U
       · have ht' : t ∈ q x • U := by
-          rw [Set.mem_smul_set_iff_inv_smul_mem₀ hx, smul_eq_mul, ← div_eq_inv_mul]
-          exact h
+          rwa [Set.mem_smul_set_iff_inv_smul_mem₀ hx, smul_eq_mul, ← div_eq_inv_mul]
         rw [Set.indicator_of_mem (show (t, x) ∈ {p : K × V | p.1 / q p.2 ∈ U} from h),
           Set.indicator_of_mem h, hset, hshift (q x) t ht']
       · rw [Set.indicator_of_notMem (show (t, x) ∉ {p : K × V | p.1 / q p.2 ∈ U} from h),
@@ -849,12 +845,10 @@ theorem measure_eq_zero_of_finite_inter_lines
   have hS : MeasurableSet {p : V × K | p.1 + p.2 • y ∈ Z} := hc.measurable hZ
   have h1 : (μ.prod ν) {p : V × K | p.1 + p.2 • y ∈ Z} = 0 := by
     rw [Measure.measure_prod_null hS]
-    refine Filter.Eventually.of_forall fun x => ?_
-    exact (h x).measure_zero ν
+    exact Filter.Eventually.of_forall fun x => (h x).measure_zero ν
   rw [Measure.prod_apply_symm hS] at h1
   have h2 : ∀ t : K, μ ((fun x => (x, t)) ⁻¹' {p : V × K | p.1 + p.2 • y ∈ Z}) = μ Z := by
-    intro t
-    exact measure_preimage_add_right μ (t • y) Z
+    exact fun t => measure_preimage_add_right μ (t • y) Z
   simp only [h2, lintegral_const, mul_eq_zero] at h1
   rcases h1 with h1 | h1
   · exact h1
@@ -1001,13 +995,13 @@ theorem isEtaAt_iff (h2 : Module.finrank F E = 2) (η : ℤ) :
   unfold GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.eta
   constructor
   · rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
-    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inl h), by rw [if_pos (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)]; simp⟩
-    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inr h), by rw [if_neg (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)]; simp⟩
+    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inl h), by rw [ite_eq_left (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)]; simp⟩
+    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inr h), by rw [ite_eq_right (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)]; simp⟩
   · rintro ⟨h, hη⟩
     rcases (_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).1 h with h | h
-    · rw [if_pos (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)] at hη
+    · rw [ite_eq_left (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)] at hη
       exact Or.inl ⟨h, by exact_mod_cast hη⟩
-    · rw [if_neg (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)] at hη
+    · rw [ite_eq_right (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)] at hη
       exact Or.inr ⟨h, by exact_mod_cast hη⟩
 
 theorem exists_eta : ∃ η : ℤ, (η : ℝ) = GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.eta F E v := by

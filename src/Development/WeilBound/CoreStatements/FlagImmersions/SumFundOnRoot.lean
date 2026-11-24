@@ -66,8 +66,7 @@ theorem sum_fundOnRoot {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} {A : 
     simp
   · intro x _ hx
     simp [hx]
-  · intro hx
-    exact absurd (Finset.mem_univ x0) hx
+  · exact fun hx => absurd (Finset.mem_univ x0) hx
 
 theorem log_combLine {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {J : Type} [Fintype J] (ℓ : J → HermLine ι)
     (n : J → ℤ) {z : (Σ k, ι k) → ℂ} (hz : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) :
@@ -85,20 +84,19 @@ theorem sum_root_fund {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} (r : �
   · intro x _ hx
     refine Finset.sum_eq_zero fun j _ => ?_
     simp [rootOnFund, hx]
-  · intro h
-    exact absurd (Finset.mem_univ x0) h
+  · exact fun h => absurd (Finset.mem_univ x0) h
   have hterm : ∀ j : Fin N, rootOnFund (x0, k0) (x0, j) • -∑ k ∈ Finset.Iic j, f (x0, k) =
       (if j = k0 then ∑ k ∈ Finset.Iic j, f (x0, k) else 0) -
         (if (j : ℕ) + 1 = k0 then ∑ k ∈ Finset.Iic j, f (x0, k) else 0) := by
     intro j
-    simp only [rootOnFund, if_true]
+    simp only [rootOnFund, ite_true]
     split_ifs <;> simp
-  simp only [hterm, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [hterm, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rcases k0 with ⟨k, hk⟩
   cases k with
   | zero =>
     have hsum : ∑ j : Fin N, (if (j : ℕ) + 1 = (0 : ℕ) then ∑ k ∈ Finset.Iic j, f (x0, k) else 0) = 0 :=
-      Finset.sum_eq_zero fun j _ => if_neg (by omega)
+      Finset.sum_eq_zero fun j _ => ite_eq_right (by omega)
     have hI : Finset.Iic (⟨0, hk⟩ : Fin N) = {⟨0, hk⟩} := by
       ext j
       simp only [Finset.mem_Iic, Finset.mem_singleton, Fin.le_def, Fin.ext_iff]
@@ -112,14 +110,13 @@ theorem sum_root_fund {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} (r : �
       rw [Finset.sum_eq_single ⟨k', hk'⟩]
       · simp
       · intro j _ hj
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hj'
         apply hj
         ext
         simp only
         omega
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     have hI : Finset.Iic (⟨k' + 1, hk⟩ : Fin N) = insert ⟨k' + 1, hk⟩ (Finset.Iic ⟨k', hk'⟩) := by
       ext j
       simp only [Finset.mem_Iic, Finset.mem_insert, Fin.le_def, Fin.ext_iff]

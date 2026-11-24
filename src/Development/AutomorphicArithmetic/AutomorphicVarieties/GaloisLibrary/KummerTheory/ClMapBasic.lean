@@ -78,8 +78,7 @@ private theorem clMap_refl_apply {K : Type} [Field K] [NumberField K] (c : Class
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact hx
-  · intro hy
-    exact ⟨y, hy, rfl⟩
+  · exact fun hy => ⟨y, hy, rfl⟩
 
 theorem UpperTheory.V.Kum.clMapBasic :
     ∀ (K K' K'' : Type) [Field K] [NumberField K] [Field K'] [NumberField K'] [Field K''] [NumberField K''] (τ : K ≃+* K') (τ' : K' ≃+* K''),
@@ -107,6 +106,5 @@ theorem UpperTheory.V.Kum.clMapBasic :
       exact (hvw x).mp hx
     · intro hy
       refine ⟨(RingOfIntegers.mapRingEquiv τ).symm y, ?_, ?_⟩
-      · rw [hvw, RingEquiv.apply_symm_apply]
-        exact hy
+      · rwa [hvw, RingEquiv.apply_symm_apply]
       · exact RingEquiv.apply_symm_apply _ y

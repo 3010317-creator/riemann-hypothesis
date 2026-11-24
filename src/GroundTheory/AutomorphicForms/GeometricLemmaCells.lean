@@ -53,8 +53,7 @@ theorem exists_mul_mul_eq_one_of_rank (A : Matrix m l K) :
     rw [LinearMap.ker_eq_bot']
     intro c hc
     have h1 : ∑ i, c i • (b i : m → K) = 0 := by
-      rw [← hAR]
-      exact hc
+      rwa [← hAR]
     funext i
     exact Fintype.linearIndependent_iff.1 hli c h1 i
   obtain ⟨h, hh⟩ := LinearMap.exists_leftInverse_of_injective _ hker
@@ -62,8 +61,7 @@ theorem exists_mul_mul_eq_one_of_rank (A : Matrix m l K) :
   have h2 : LinearMap.toMatrix' (h.comp (A * R).mulVecLin) = 1 := by
     rw [hh, LinearMap.toMatrix'_id]
   rw [LinearMap.toMatrix'_comp, ← Matrix.toLin'_apply', LinearMap.toMatrix'_toLin'] at h2
-  rw [Matrix.mul_assoc]
-  exact h2
+  rwa [Matrix.mul_assoc]
 
 variable [TopologicalSpace K] [IsTopologicalRing K] [T1Space K]
 
@@ -203,9 +201,8 @@ theorem cellRank_permGL (w : Equiv.Perm (Fin n)) (a b : ℕ) :
       · have h0 : Xᵀ j = 0 := by
           funext i
           simp only [hX, transpose_apply, submatrix_apply, permGL_apply, Pi.zero_apply]
-          rw [if_neg]
-          intro hi
-          exact h (hi ▸ i.2)
+          rw [ite_eq_right]
+          exact fun hi => h (hi ▸ i.2)
         rw [h0]
         exact zero_mem _
     · rw [Submodule.span_le]
@@ -222,7 +219,7 @@ theorem permGL_mem_blockUpper {u : Equiv.Perm (Fin n)} (hu : ∀ x, β (u x) = �
     permGL F u ∈ blockUpper F n β := by
   intro i j hij
   show ((permGL F u : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) i j = 0
-  rw [permGL_apply, if_neg]
+  rw [permGL_apply, ite_eq_right]
   rintro rfl
   rw [hu] at hij
   exact lt_irrefl _ hij
@@ -364,8 +361,7 @@ theorem mem_doubleCoset_of_cellRank_eq {g x : GL (Fin n) F}
     rw [← cellRank_permGL (F := F), ← cellRank_permGL (F := F), ← cellRank_of_mem_doubleCoset hw,
       ← cellRank_of_mem_doubleCoset hw', h]
   have hww' := permGL_mem_doubleCoset_of_card (F := F) hcnt
-  rw [doubleCoset_eq_of_mem hw, ← doubleCoset_eq_of_mem hww']
-  exact hw'
+  rwa [doubleCoset_eq_of_mem hw, ← doubleCoset_eq_of_mem hww']
 
 end Permutations
 

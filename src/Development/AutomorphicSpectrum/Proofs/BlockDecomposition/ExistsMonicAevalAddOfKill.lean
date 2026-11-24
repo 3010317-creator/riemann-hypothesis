@@ -136,8 +136,7 @@ theorem exists_monic_aeval_add_of_kill {M : Type*} [AddCommGroup M] [Module ℂ 
   have hP0 : Polynomial.aeval (A' + B') P = 0 := by
     rw [← Polynomial.aeval_def] at hP
     have := Polynomial.aeval_algHom_apply (Algebra.adjoin ℂ ({A', B'} : Set (Module.End ℂ N))).val (a' + b') P
-    rw [hP, map_zero] at this
-    exact this
+    rwa [hP, map_zero] at this
   refine ⟨P * Polynomial.X, hPm.mul Polynomial.monic_X, ?_, fun m h1 h2 => ?_⟩
   · rw [hPm.natDegree_mul Polynomial.monic_X, Polynomial.natDegree_X]; omega
   · have hm : m ∈ N := ⟨LinearMap.mem_ker.2 h1, LinearMap.mem_ker.2 h2⟩
@@ -166,8 +165,7 @@ theorem exists_K_curve (Z : (isExpLieAlgebra E a).lieSubalgebra) (hZ : Z ∈ arc
   have hS : S.conjTranspose = -S := by
     ext i j w
     have h := congrFun (congrFun (mem_archSkew.1 hZ) i) j
-    have h2 := congrFun (congrArg Prod.snd h) ⟨w, IsTotallyComplex.isComplex w⟩
-    exact h2
+    exact congrFun (congrArg Prod.snd h) ⟨w, IsTotallyComplex.isComplex w⟩
   obtain ⟨c, h0, hc, hu⟩ := exists_skew_curve S
   refine ⟨fun t => ⟨(c t).val, hu hS t⟩, fun φ g k => ?_⟩
   have hd := hasDerivAt_curve φ (g * infGL E a (Unitary.toUnits k)) c (toL S) h0 hc
@@ -312,8 +310,7 @@ theorem exists_monic_compact_part {W : Type} [AddCommGroup W] [Module ℂ W] [Fi
   rw [LinearMap.aeval_self_charpoly, LinearMap.zero_apply] at e2
   have e3 := congrFun (congrArg Subtype.val e2) 1
   have e4 : evK g ((typeSub ρ).subtype (Polynomial.aeval TS (LinearMap.charpoly T') m)) 1 = 0 := e3
-  rw [evK_one] at e4
-  exact e4
+  rwa [evK_one] at e4
 
 
 variable (E a) in

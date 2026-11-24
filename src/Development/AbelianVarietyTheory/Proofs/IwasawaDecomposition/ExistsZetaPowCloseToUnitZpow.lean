@@ -99,7 +99,6 @@ theorem GlobalTheory.TamePowTeich.exists_zeta_pow_close : ∀ {E Ω : Type} [Fie
   haveI : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot P.asIdeal P.ne_bot
   letI : Fintype (𝓞 E ⧸ P.asIdeal) := Fintype.ofFinite _
   have hcard : Formalism.ConjugateSelfDual.normV P = Fintype.card (𝓞 E ⧸ P.asIdeal) := by
-    show Nat.card _ = _
     exact Nat.card_eq_fintype_card
   have hn : 0 < n := by
     have : 1 < Fintype.card (𝓞 E ⧸ P.asIdeal) := Fintype.one_lt_card
@@ -119,8 +118,7 @@ theorem GlobalTheory.TamePowTeich.exists_zeta_pow_close : ∀ {E Ω : Type} [Fie
   have hU1 : A.valuation U = 1 := by
     apply le_antisymm ((A.valuation_le_one_iff U).2 hUint)
     rw [← not_lt]
-    intro h
-    exact hu ((hA u).1 h)
+    exact fun h => hu ((hA u).1 h)
   have hζ1 : A.valuation ζ = 1 :=
     ReciprocityTheory.Gal.valuation_eq_one_of_pow_eq_one A hn.ne' hζ.pow_eq_one
 
@@ -128,8 +126,7 @@ theorem GlobalTheory.TamePowTeich.exists_zeta_pow_close : ∀ {E Ω : Type} [Fie
     have := congrArg (Polynomial.eval U) (Polynomial.X_pow_sub_one_eq_prod hn hζ)
     simpa [Polynomial.eval_prod] using this
   have hex : ∃ μ ∈ Polynomial.nthRootsFinset n (1 : Ω), A.valuation (U - μ) < 1 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have : 1 ≤ A.valuation (U ^ n - 1) := by
       rw [hprod, map_prod]
       exact Finset.one_le_prod' hcon
@@ -152,5 +149,4 @@ theorem GlobalTheory.TamePowTeich.exists_zeta_pow_close : ∀ {E Ω : Type} [Fie
     rw [h1, ← zpow_natCast ζ b, ← zpow_mul]
     conv_lhs => rw [← Int.emod_add_mul_ediv ((b : ℤ) * e) n]
     rw [zpow_add₀ hζ0, zpow_mul, zpow_natCast, hζ.pow_eq_one, one_zpow, mul_one]
-  rw [← hpow]
-  exact key
+  rwa [← hpow]

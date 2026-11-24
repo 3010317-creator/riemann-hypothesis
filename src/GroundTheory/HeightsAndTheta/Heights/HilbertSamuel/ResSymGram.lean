@@ -120,9 +120,9 @@ theorem measurable_normPt : Measurable (normPt : (J → ℂ) → J → ℂ) := b
   have hG : Measurable G := by
     refine measurable_from_prod_countable_left fun k => ?_
     by_cases hk : k < Fintype.card J
-    · simp only [G, hk, dif_pos]
+    · simp only [G, hk, dite_eq_left]
       exact ((measurable_pi_apply _).inv).smul measurable_id
-    · simp only [G, hk, dif_neg, not_false_eq_true]
+    · simp only [G, hk, dite_eq_right, not_false_eq_true]
       exact measurable_id
   have : (normPt : (J → ℂ) → J → ℂ) = G ∘ fun z => (z, idx z) := by
     funext z
@@ -372,8 +372,7 @@ theorem dV_pos_of_isOpen (d : HSMDatum D Ω κ) {S : Set d.R.X} (hS : IsOpen S) 
   rw [ae_iff] at h0'
   have : volume.restrict T T = 0 := by
     refine measure_mono_null (fun w hw => ?_) h0'
-    simp only [Set.mem_ofPred_eq, ENNReal.ofReal_eq_zero, not_le]
-    exact hνp w hw.1
+    simpa only [Set.mem_ofPred_eq, ENNReal.ofReal_eq_zero, not_le] using hνp w hw.1
   rw [Measure.restrict_apply_self] at this
   exact hvol.ne' this
 
@@ -513,8 +512,7 @@ theorem posDef_gram (d : HSMDatum D Ω κ) {n r : ℕ} {b : Fin r → MvPolynomi
     intro y₀
     by_contra hy₀
     have hO : IsOpen {y | h (resPt d y) ≠ 0} := isOpen_ne_fun hc1 continuous_const
-    have hpos := dV_pos_of_isOpen d hO ⟨y₀, hy₀⟩
-    exact hpos.ne' (ae_iff.mp hae)
+    exact (dV_pos_of_isOpen d hO ⟨y₀, hy₀⟩).ne' (ae_iff.mp hae)
   set F : (Ix κ → ℂ) → ℂ := fun z => ∑ i, c i * secFun (b i) z with hF
   have hFv : ∀ y, F (resPt d y) = 0 := by
     intro y

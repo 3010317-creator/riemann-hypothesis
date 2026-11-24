@@ -79,14 +79,14 @@ theorem exists_multiplicative_ideal_extension :
   have hd : ∀ P : HeightOneSpectrum (𝓞 K), ¬ m ≤ P.asIdeal → d P.asIdeal = c P := by
     intro P hP
     simp only [d]
-    rw [dite_eq_left ⟨P.isPrime, P.ne_bot⟩, if_neg hP]
+    rw [dite_eq_left ⟨P.isPrime, P.ne_bot⟩, ite_eq_right hP]
   have hd0 : ∀ Q, m ≤ Q → d Q = 0 := by
     intro Q hQ
     simp only [d]
     split_ifs <;> rfl
   refine ⟨fun I => if I = ⊥ then 0 else ((normalizedFactors I).map d).prod, by simp, ?_, ?_, ?_, ?_, ?_⟩
   · have : (⊤ : Ideal (𝓞 K)) ≠ ⊥ := top_ne_bot
-    simp only [if_neg this]
+    simp only [ite_eq_right this]
     rw [← Ideal.one_eq_top, normalizedFactors_one]
     simp
   · intro I J
@@ -95,10 +95,10 @@ theorem exists_multiplicative_ideal_extension :
     by_cases hJ : J = ⊥
     · simp [hJ]
     have hIJ : I * J ≠ ⊥ := mul_ne_zero hI hJ
-    simp only [if_neg hI, if_neg hJ, if_neg hIJ]
+    simp only [ite_eq_right hI, ite_eq_right hJ, ite_eq_right hIJ]
     rw [normalizedFactors_mul hI hJ, Multiset.map_add (f := _), Multiset.prod_add]
   · intro I hI hm
-    simp only [if_neg hI]
+    simp only [ite_eq_right hI]
     refine Multiset.prod_induction (fun z : ℂ => ‖z‖ = 1) _ ?_ (by simp) ?_
     · intro a b ha hb
       simp [ha, hb]
@@ -115,13 +115,13 @@ theorem exists_multiplicative_ideal_extension :
   · intro I hm
     by_cases hI : I = ⊥
     · simp [hI]
-    simp only [if_neg hI]
+    simp only [ite_eq_right hI]
     obtain ⟨Q, hQ, hle⟩ := Ideal.exists_le_maximal _ hm
     apply Multiset.prod_eq_zero
     refine Multiset.mem_map.2 ⟨Q, ?_, hd0 Q (le_sup_right.trans hle)⟩
     exact (Ideal.mem_normalizedFactors_iff hI).2 ⟨hQ.isPrime, le_sup_left.trans hle⟩
   · intro P hP
-    simp only [if_neg P.ne_bot]
+    simp only [ite_eq_right P.ne_bot]
     rw [normalizedFactors_irreducible P.irreducible, normalize_eq]
     simp [hd P hP]
 
@@ -160,9 +160,7 @@ theorem exists_ideal_character_of_unitary_hchar : ∀ (K : Type) [Field K] [Numb
         intro T
         induction T using Finset.induction_on with
         | empty =>
-          simp only [Finset.prod_empty]
-          intro hd
-          exact (P.prime.not_dvd_one hd).elim
+          simpa only [Finset.prod_empty] using fun hd => (P.prime.not_dvd_one hd).elim
         | @insert Q T hQT ih =>
           simp only [Finset.prod_insert hQT]
           intro hd
@@ -174,8 +172,7 @@ theorem exists_ideal_character_of_unitary_hchar : ∀ (K : Type) [Field K] [Numb
       have h1 : Q.asIdeal ≤ P.asIdeal := Ideal.le_of_dvd (P.prime.dvd_of_dvd_pow hQP)
       have h2 : Q = P := HeightOneSpectrum.ext (Q.isMaximal.eq_of_le P.isPrime.ne_top h1)
       exact h2 ▸ hQ
-    · intro h
-      exact Ideal.le_of_dvd ((dvd_pow_self _ (Nat.succ_ne_zero _)).trans (hdvd P h))
+    · exact fun h => Ideal.le_of_dvd ((dvd_pow_self _ (Nat.succ_ne_zero _)).trans (hdvd P h))
   have hm0 : m ≠ ⊥ := Finset.prod_ne_zero_iff.2 fun P _ => pow_ne_zero _ P.ne_bot
   obtain ⟨X, h0, h1, hmul, hnorm, hz, hP⟩ := GlobalTheory.exists_multiplicative_ideal_extension K m
     (fun P => ((χ.val P : ℂˣ) : ℂ)) (fun P _ => hχ _)

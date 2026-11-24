@@ -86,7 +86,7 @@ lemma fiSlice_eq {n : ℕ} {Ω : Set (Fin (n + 1) → ℝ)} {h : (Fin (n + 1) �
           (Function.update b i β k : ℂ) * Complex.I) := by
   set base : Fin (n + 1) → ℂ :=
     fun k => ((i.insertNth (0 : ℝ) y : Fin (n + 1) → ℝ) k : ℂ) + (b k : ℂ) * Complex.I
-  set P : ℂ → Fin (n + 1) → ℂ := fun z k => if k = i then z else base k with hPdef
+  set P : ℂ → Fin (n + 1) → ℂ := fun z k => if k = i then z else base k
   have hP : ∀ t c : ℝ, (fun k => ((i.insertNth t y : Fin (n + 1) → ℝ) k : ℂ) +
       (Function.update b i c k : ℂ) * Complex.I) = P (t + c * Complex.I) := by
     intro t c
@@ -96,22 +96,14 @@ lemma fiSlice_eq {n : ℕ} {Ω : Set (Fin (n + 1) → ℝ)} {h : (Fin (n + 1) �
       simp [P]
     · obtain ⟨j, rfl⟩ := Fin.exists_succAbove_eq hk
       simp [P, base, hk]
-  have hb : Function.update b i (b i) = b := Function.update_eq_self i b
   have hPim : ∀ z : ℂ, (fun k => (P z k).im) = Function.update b i z.im := by
     intro z
     funext k
-    by_cases hk : k = i
-    · subst hk
-      simp [P]
-    · simp [P, base, hk]
+    by_cases hk : k = i <;> simp [P, base, hk]
   have hPdiff : Differentiable ℂ P := by
     refine differentiable_pi.2 fun k => ?_
-    by_cases hk : k = i
-    · simp only [P, hk, if_true]
-      exact differentiable_id
-    · simp only [P, hk, if_false]
-      exact differentiable_const _
-  set g : ℂ → ℂ := fun z => fiG h ν (P z) with hgdef
+    by_cases hk : k = i <;> simp [P, hk]
+  set g : ℂ → ℂ := fun z => fiG h ν (P z)
   have hgd : DifferentiableOn ℂ g ([[(0 : ℝ), 1]] ×ℂ [[b i, β]]) := by
     refine (fiG_differentiableOn hh ν).comp hPdiff.differentiableOn ?_
     intro z hz
@@ -136,20 +128,12 @@ lemma fiSlice_eq {n : ℕ} {Ω : Set (Fin (n + 1) → ℝ)} {h : (Fin (n + 1) �
     apply fiG_periodic hper
     show (fun k => (P _ k).im) ∈ Ω
     rw [hPim]
-    have him : ((((0 : ℝ) : ℂ) + t * Complex.I) : ℂ).im = t := by simp
-    rw [him]
-    exact hseg t ht
-  have hh1 : ∫ x in (0 : ℝ)..1, g (x + (b i) * Complex.I) =
-      ∫ x in (0 : ℝ)..1, g (x + β * Complex.I) := by
-    rw [hv, add_sub_cancel_right, sub_eq_zero] at hC
-    exact hC
+    simpa using hseg t ht
   have e1 : ∀ t : ℝ, fiG h ν (fun k => ((i.insertNth t y : Fin (n + 1) → ℝ) k : ℂ) +
       (b k : ℂ) * Complex.I) = g (t + (b i) * Complex.I) := by
     intro t
-    have := hP t (b i)
-    rw [hb] at this
     simp only [g]
-    rw [this]
+    rw [← hP t (b i), Function.update_eq_self]
   have e2 : ∀ t : ℝ, fiG h ν (fun k => ((i.insertNth t y : Fin (n + 1) → ℝ) k : ℂ) +
       (Function.update b i β k : ℂ) * Complex.I) = g (t + β * Complex.I) := by
     intro t
@@ -157,7 +141,7 @@ lemma fiSlice_eq {n : ℕ} {Ω : Set (Fin (n + 1) → ℝ)} {h : (Fin (n + 1) �
     rw [hP]
   simp only [e1, e2]
   rw [← intervalIntegral.integral_of_le zero_le_one, ← intervalIntegral.integral_of_le zero_le_one]
-  exact hh1
+  rwa [hv, add_sub_cancel_right, sub_eq_zero] at hC
 
 lemma fiStep_eq {n : ℕ} {Ω : Set (Fin (n + 1) → ℝ)} {h : (Fin (n + 1) → ℂ) → ℂ}
     (hh : DifferentiableOn ℂ h (tube (n + 1) Ω))
@@ -210,8 +194,7 @@ lemma fiBall_const {n : ℕ} {Ω : Set (Fin (n + 1) → ℝ)} {h : (Fin (n + 1) 
         by_cases hia : i = a
         · subst hia
           simp [c']
-        · simp only [c', Function.update_of_ne hia]
-          exact hc i (by simp [hia, hi])
+        · simpa only [c', Function.update_of_ne hia] using hc i (by simp [hia, hi])
       have hseg : ∀ t ∈ Set.uIcc (c' a) (c a), Function.update c' a t ∈ Ω := by
         intro t ht
         apply hball
@@ -229,8 +212,7 @@ lemma fiBall_const {n : ℕ} {Ω : Set (Fin (n + 1) → ℝ)} {h : (Fin (n + 1) 
         · simp [c', Function.update_of_ne hi, hcb' i]
       have e : Function.update c' a (c a) = c := by simp [c']
       rw [← ih c' hc'b hc'off, fiStep_eq hh hper ν c' a (c a) hseg, e]
-  intro c hc
-  exact key Finset.univ c hc (by simp)
+  exact fun c hc => key Finset.univ c hc (by simp)
 
 theorem four_indep (f : ℕ) : FOURIndepStatement f := by
   intro Ω h hΩ hpre hh hper b hb b' hb' ν

@@ -260,8 +260,7 @@ theorem isOpen_kltLocus_lcLocus : GlobalTheory.Published.Principalisation → �
     intro h
     obtain ⟨x⟩ := (inferInstance : Nonempty X)
     have : x ∈ ((⊤ : Closeds X) : Set X) := trivial
-    rw [← h] at this
-    exact this
+    rwa [← h] at this
   obtain ⟨Y, hY, s, hs, K, B, hres, -⟩ := _root_.GlobalTheory.LogResExist.exists_logRes hP k X p n hp hdim η m G hη.ne_zero ⊥ hZ
   haveI := hres.smooth
   haveI : Smooth (s ≫ p) := hres.smooth.smooth
@@ -582,7 +581,7 @@ theorem logCanonicalCut_lowers_centre_dimension : GlobalTheory.Published.Princip
       Real.rpow_inv_natCast_pow hx0 he0
     have hyc : ((e : ℝ) ^ e * (r : ℝ) ^ e / I) ^ ((e : ℝ)⁻¹) < e / c' := by
       by_contra hcon
-      push_neg at hcon
+      push Not at hcon
       have h1 := pow_le_pow_left₀ (by positivity) hcon e
       rw [hye, div_pow, div_le_div_iff₀ hc'e hIpos] at h1
       nlinarith [mul_lt_mul_of_pos_left hIr hee]
@@ -880,7 +879,7 @@ theorem exists_lcCut_induction : GlobalTheory.Published.Principalisation → ∀
         topologicalKrullDim (closure ({z} : Set X)) ≤ j
     · refine ⟨j, lam, μ, m', D₁, le_rfl, hm', hD₁, hμ, ?_, hnum, hlc, hnk, hall⟩
       rw [hsj]; linarith
-    push_neg at hall
+    push Not at hall
     obtain ⟨z, hzx, hzk, hzd⟩ := hall
     have hq : IsQCart (qWeil D₁ m') := ⟨m', D₁, hm', hD₁, rfl⟩
     obtain ⟨w, hwz, hw⟩ := _root_.GlobalTheory.PairStep.Centre.exists_isNkltCentre X p n hP hn Δ (qWeil D₁ m') z hq (hklt z) hzk

@@ -49,16 +49,13 @@ theorem complex_embedding_cases (I : AutInst) (σ : I.E →+* ℂ) :
     · right
       rw [sub_eq_zero.mp h]
       exact I.cm.cmUnram.2.1 (I.φ v) a
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨h1, h2⟩ := hcon v
   obtain ⟨a, ha⟩ : ∃ a, σ a ≠ I.φ v a := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact h1 (RingHom.ext h)
   obtain ⟨b, hb⟩ : ∃ b, σ b ≠ starRingEnd ℂ (I.φ v b) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact h2 (RingHom.ext h)
   have ha' := (key a).resolve_left ha
   have hb' := (key b).resolve_right hb
@@ -90,15 +87,13 @@ theorem embedding_linear_independent (I : AutInst) :
     obtain ⟨v, hv | hv⟩ := complex_embedding_cases I σ
     · have := congrFun hg v
       simp only [Finset.sum_apply, Pi.smul_apply, Pi.zero_apply, Complex.real_smul] at this
-      rw [hv]
-      exact this
+      rwa [hv]
     · have := congrArg (starRingEnd ℂ) (congrFun hg v)
 
       simp only [Finset.sum_apply, Pi.smul_apply, Pi.zero_apply, Complex.real_smul, map_sum, map_mul,
       Complex.conj_ofReal, map_zero] at this
       rw [hv]
-      simp only [RingHom.coe_comp, Function.comp_apply]
-      exact this
+      simpa only [RingHom.coe_comp, Function.comp_apply] using this
   have hvec : (fun i => (g i : ℂ)) ᵥ* Algebra.embeddingsMatrixReindex ℚ ℂ (integralBasis I.E) e = 0 := by
     funext j
     simp only [Matrix.vecMul, dotProduct, Algebra.embeddingsMatrixReindex, Algebra.embeddingsMatrix,

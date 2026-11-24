@@ -93,14 +93,12 @@ theorem integralInverse_statement : IntegralInverse := by
   have hX'I : ∀ i, Formalism.G.IntegralMv (X' i) := by
     refine Formalism.FG.inverse_integral_vector K σ σ (fun D => ∀ j, Formalism.G.IntegralMv (D j)) f hfId ?_ ?_ ?_ X' hX'0 ?_
     · intro a b ha hb j d
-      rw [Pi.sub_apply, map_sub]
-      rw [sub_eq_add_neg]
+      rw [Pi.sub_apply, map_sub, sub_eq_add_neg]
       exact (IsUltrametricDist.norm_add_le_max _ _).trans
         (max_le (ha j d) (by rw [norm_neg]; exact hb j d))
     · intro P hP0 hPI j
       exact Formalism.FG.IntegralSubstitution.integralSubstV (f j) P (hfI j) hP0 hPI
-    · intro D hD N _ _ j d _
-      exact hD j d
+    · exact fun D hD N _ _ j d _ => hD j d
     · intro j
       show Formalism.G.IntegralMv (MvPowerSeries.subst X' (f j))
       rw [hX' j]
@@ -319,7 +317,7 @@ theorem formal_halving_exists : HalfExists := by
       simp only [Matrix.mul_apply, Finset.univ_unique, Finset.sum_singleton, Matrix.of_apply,
         Matrix.one_apply]
       have : MvPowerSeries.coeff (Finsupp.single (default : Unit) 1) D = 2 := hD1
-      rw [this, mul_inv_cancel₀ two0, if_pos trivial])
+      rw [this, mul_inv_cancel₀ two0, ite_eq_left trivial])
   have hsX : MvPowerSeries.HasSubst X' := MvPowerSeries.hasSubst_of_constantCoeff_zero hX0
   let g : PowerSeries K := X' ()
   have hg0 : PowerSeries.constantCoeff g = 0 := hX0 ()
@@ -328,8 +326,7 @@ theorem formal_halving_exists : HalfExists := by
     rw [subst2_subst F hX hX hsX] at this
     have eg : MvPowerSeries.subst X' (PowerSeries.X : PowerSeries K) = g :=
       MvPowerSeries.subst_X hsX ()
-    rw [eg] at this
-    exact this
+    rwa [eg] at this
   refine ⟨g, hg0, hXi (), ?_⟩
   have e3 := law_subst h g g hg0 hg0
   rw [e1, eX] at e3

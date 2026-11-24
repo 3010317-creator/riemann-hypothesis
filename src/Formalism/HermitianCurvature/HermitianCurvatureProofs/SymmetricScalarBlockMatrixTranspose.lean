@@ -263,8 +263,7 @@ lemma rset_sub_nset : Rset k j ρ ⊆ Nset k (j + ρ) := by
     · have hai' : a.val ≤ i.val := hai
       have := a.isLt
       exact h2 i (eI k (j + ρ) a) (show j ≤ a.val by omega) (show a.val < j + (2 * ρ + k + 1) by omega) (by omega)
-  · intro i b hb1 hb2 hi
-    exact h2 i b (by omega) (by omega) (by omega)
+  · exact fun i b hb1 hb2 hi => h2 i b (by omega) (by omega) (by omega)
 
 lemma skewOf_ct (q : (G.UT j → ℂ) × (Fin j → ℝ)) : (skewOf q)ᴴ = -skewOf q := by
   ext a b
@@ -304,8 +303,7 @@ lemma rn_injective : Function.Injective (Rn k j ρ) := by
     refine Prod.ext ?_ ?_
     · funext p
       have := congrFun (congrFun hs p.1.1) p.1.2
-      rw [skewOf_lt _ p.2, skewOf_lt _ p.2] at this
-      exact this
+      rwa [skewOf_lt _ p.2, skewOf_lt _ p.2] at this
     · funext a
       have := congrArg Complex.im (congrFun (congrFun hs a) a)
       rw [skewOf_diag, skewOf_diag] at this
@@ -357,8 +355,7 @@ lemma rset_sub_range {g : B.Mat k (j + ρ)} (hg : g ∈ Rset k j ρ) : ∃ x, Rn
     · have h1 := congrFun (congrFun (skewOf_ct q) a) b
       simp only [conjTranspose_apply, Matrix.neg_apply] at h1
       rw [skewOf_lt _ h] at h1
-      have h2 := hSe a b
-      exact neg_inj.mp (h1.symm.trans h2)
+      exact neg_inj.mp (h1.symm.trans (hSe a b))
   refine ⟨(Matrix.of.symm (b23 g), q), ?_⟩
   conv_rhs => rw [hgeta]
   unfold Rn

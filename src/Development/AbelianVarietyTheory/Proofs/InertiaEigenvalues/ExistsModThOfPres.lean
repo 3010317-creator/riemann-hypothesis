@@ -161,15 +161,7 @@ theorem γD_smulA (T : LocLat G Qp LL O) (g : W.Gam) (a : LetA O n₀) (x : W.DD
   rw [← algebraMap_smul W.EE a x, W.γD_smul, W.γE_ext, algebraMap_smul]; rfl
 
 theorem sum_Del {M : Type} [AddCommMonoid M] (f : W.Gam → M) {δ : W.Gam} (hδ : δ ∈ W.DelF) :
-    ∑ ε ∈ W.DelF, f (δ * ε) = ∑ ε ∈ W.DelF, f ε := by
-  have hm : ∀ g, g ∈ W.DelF ↔ IsOfFinOrder g := fun g => by
-    rw [W.DelF_def, isOfFinOrder_iff_pow_eq_one]
-  refine Finset.sum_bij' (fun ε _ => δ * ε) (fun ε _ => δ⁻¹ * ε) ?_ ?_ ?_ ?_ ?_
-  · intro a ha; exact (hm _).2 (((hm _).1 hδ).mul ((hm _).1 ha))
-  · intro a ha; exact (hm _).2 (((hm _).1 hδ).inv.mul ((hm _).1 ha))
-  · intro a _; simp
-  · intro a _; simp
-  · intro a _; rfl
+    ∑ ε ∈ W.DelF, f (δ * ε) = ∑ ε ∈ W.DelF, f ε := GlobalTheory.Present.RedLat.sum_del W f hδ
 
 theorem γA_q {δ : W.Gam} (hδ : δ ∈ W.DelF) :
     W.γA δ (W.π₀ + (PD.p : LetA O n₀)) = W.π₀ + (PD.p : LetA O n₀) := by
@@ -197,8 +189,7 @@ theorem card_Del {l : ℕ} (hl : 2 ≤ l) (hk : (PD.p : k) = 0) (ι : k⸨X⸩ �
   have h3 : (PowerSeries.map (algebraMap O k) W.π₀₁ : k⟦X⟧) = (u : k⟦X⟧) * (PowerSeries.X : k⟦X⟧) ^ (l - 1) := by
     apply HahnSeries.ofPowerSeries_injective (Γ := ℤ)
     rw [map_mul, map_pow]
-    rw [h2, vv_eq_coe_X] at hu
-    exact hu
+    rwa [h2, vv_eq_coe_X] at hu
   have h4 := congrArg (PowerSeries.constantCoeff (R := k)) h3
   have h5 : PowerSeries.constantCoeff W.π₀₁ = 1 - (PD.p : O) + W.DelF.card := by
 
@@ -819,11 +810,7 @@ theorem φD_smulA (T : LocLat G Qp LL O) (a : LetA O n₀) (x : W.DD T) :
 theorem γA_apply (g : W.Gam) (a : LetA O n₀) (j : ZMod n₀) : W.γA g a j = W.γ₀ g (a j) := rfl
 
 theorem γA_letE (g : W.Gam) (j : ZMod n₀) : W.γA g (letE j) = letE j := by
-  funext i
-  rw [γA_apply]
-  by_cases h : i = j
-  · subst h; simp [letE]
-  · simp [letE, h]
+  exact GlobalTheory.BaseLatticeE.γA_e W g j
 
 theorem red_Q {l : ℕ} [Fact l.Prime] [CharP k l] (hp : PD.p = l) (hs : W.s = 1) (j : ZMod n₀) :
     PowerSeries.map (algebraMap O k) (W.Q j) = PowerSeries.X ^ (l - 1) := by
@@ -1176,8 +1163,7 @@ theorem sen_eq_rootMultiplicity {m : ℕ} (g : V →ₗ[k] V) (e : Fin m → V) 
       map_smul' := fun c y => by
         funext j
         have : (⟨(c • y).1, (c • y).2⟩ : N) = (PowerSeries.C c : k⟦X⟧) • ⟨y.1, y.2⟩ := by
-          apply Subtype.ext
-          exact (algebraMap_smul k⟦X⟧ c y.1).symm
+          exact Subtype.ext (algebraMap_smul k⟦X⟧ c y.1).symm
         change PowerSeries.constantCoeff (b.repr _ j) = _
         rw [this]; simp }
   have hr : ∀ (y : P) j, r y j = PowerSeries.constantCoeff (b.repr ⟨y.1, y.2⟩ j) := fun _ _ => rfl
@@ -1446,11 +1432,7 @@ theorem sen_gen [IsDomain O] (p : Pres W F ι τ γ) (hp : ((PD.p : ℕ) : k) = 
 omit [TopologicalSpace G] [TopologicalSpace LL] in
 theorem exists_isC (hp : ((PD.p : ℕ) : k) = 0) (u : Oˣ) (hu : (u : O) = 1 + ((PD.p : ℕ) : O)) :
     ∃ c : ℤ → O, GlobalTheory.WachUse.IsC PD LL c ∧ ∀ a : ℤ, algebraMap O k (c a) = -(a : k) := by
-  choose c hc1 hc2 using exists_c (algebraMap O k) ((PD.p : ℕ) : O) (by rw [map_natCast, hp]) _ hu
-  refine ⟨c, fun a => ?_, hc2⟩
-  have h1 := congrArg (algebraMap O LL) (hc1 a)
-  rw [map_mul, map_natCast, RingHom.map_sub, map_one, map_units_zpow, hu, map_add (f := _), map_one, map_natCast] at h1
-  exact h1
+  apply GlobalTheory.BaseLatticeE.exists_c <;> assumption
 
 theorem map_prod_c (c : ℤ → O) (hc : ∀ a : ℤ, algebraMap O k (c a) = -(a : k)) (U : Multiset ℤ) (x : k) :
     (((U.map fun u => Polynomial.X - Polynomial.C (c (-u))).prod).map (algebraMap O k)).rootMultiplicity x =

@@ -20,9 +20,7 @@ variable {D : ℕ}
 
 theorem hessC_const_mul' (c : ℝ) (φ : (Fin D → ℂ) → ℝ) (z : Fin D → ℂ) :
     hessC (fun w => c * φ w) z = (c : ℂ) • hessC φ z := by
-  have h1 : fderiv ℝ (fun w => c * φ w) = c • fderiv ℝ φ := by
-    show fderiv ℝ (c • φ) = _
-    exact fderiv_const_smul_field c
+  have h1 : fderiv ℝ (fun w => c * φ w) = c • fderiv ℝ φ := fderiv_const_smul_field c
   have h2 : fderiv ℝ (fderiv ℝ (fun w => c * φ w)) = c • fderiv ℝ (fderiv ℝ φ) := by
     rw [h1]; exact fderiv_const_smul_field c
   ext i j

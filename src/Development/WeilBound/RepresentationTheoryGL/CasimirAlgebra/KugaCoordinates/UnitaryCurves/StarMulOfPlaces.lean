@@ -219,12 +219,12 @@ theorem exists_curve (τ : E →+* ℂ) (X : Matrix (Fin a) (Fin a) ℂ) (hX : X
       simp only [C, D, Matrix.of_apply, ← hv, ↓reduceIte]
     rw [e]
     by_cases hε : v.embedding = τ
-    · simp only [hε, if_true]
+    · simp only [hε, ite_true]
       have := hUd i j
       simpa [hYd, hε] using this
-    · simp only [hε, if_false]
+    · simp only [hε, ite_false]
       have := (hUd i j).star
-      simp only [hYd, hε, if_false, Matrix.map_apply] at this
+      simp only [hYd, hε, ite_false, Matrix.map_apply] at this
       simpa [Complex.star_def] using this
   · intro τ' h1 h2 t
     have hw : InfinitePlace.mk τ' ≠ v := by
@@ -239,18 +239,17 @@ theorem exists_curve (τ : E →+* ℂ) (X : Matrix (Fin a) (Fin a) ℂ) (hX : X
     ext i j
     show coord τ' (C t i j) = (1 : Matrix (Fin a) (Fin a) ℂ) i j
     rw [PositivityTheory.Rg.Cz.J.coord_eq]
-    simp only [C, D, Matrix.of_apply, if_neg hw, Matrix.one_apply]
+    simp only [C, D, Matrix.of_apply, ite_eq_right hw, Matrix.one_apply]
     split_ifs <;> simp
   · rw [hasDerivAt_pi]; intro i; rw [hasDerivAt_pi]; intro j; rw [hasDerivAt_pi]; intro w
     simp only [atEmb_apply, ← hv]
     show HasDerivAt (fun t => D t w i j) _ 0
     by_cases hw : w = v
-    · simp only [D, hw, if_true]
+    · simp only [D, hw, ite_true]
       have := hUd i j
       rw [hYd] at this
       split_ifs at this ⊢ <;> simpa using this
-    · simp only [D, hw, if_false]
-      exact hasDerivAt_const _ _
+    · simpa only [D, hw, ite_false] using hasDerivAt_const _ _
 
 theorem lieOp_atEmb (π : CuspSub E a) (τ : E →+* ℂ) (X : Matrix (Fin a) (Fin a) ℂ) :
     lieOp π (fun i j => atEmb τ (X i j)) =
@@ -339,8 +338,7 @@ theorem gkData_holds : GKData := by
     have := fin_orbit π y
     have : FiniteDimensional ℂ S := Submodule.finiteDimensional_sup _ _
     obtain ⟨s, cc, hc⟩ := exists_eval S lam
-    rw [← lieOp_atEmb π τ X]
-    rw [hc _ (Submodule.mem_sup_right (Submodule.mem_span_singleton_self _))]
+    rw [← lieOp_atEmb π τ X, hc _ (Submodule.mem_sup_right (Submodule.mem_span_singleton_self _))]
     have e : (fun t => lam (π.op (.cpt (c t)) y)) =
         fun t => ∑ g ∈ s, cc g * y.1.1 (g * infGL E a (Unitary.toUnits (c t))) :=
       funext fun t => hc _ (Submodule.mem_sup_left (Submodule.subset_span ⟨c t, rfl⟩))
@@ -348,8 +346,7 @@ theorem gkData_holds : GKData := by
     have h0' : Unitary.toUnits (c 0) = 1 := by rw [h0, map_one]
     have hs := HasDerivAt.sum (u := s) (x := (0 : ℝ)) fun g (_ : g ∈ s) =>
       (hasDerivAt_curve y.1 g (fun t => Unitary.toUnits (c t)) Zl h0' hZ).const_mul (cc g)
-    rw [Finset.sum_fn] at hs
-    exact hs
+    rwa [Finset.sum_fn] at hs
 
 end PositivityTheory.Rg.Cz.GK
 

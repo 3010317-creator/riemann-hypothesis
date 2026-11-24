@@ -84,8 +84,7 @@ theorem mulR_eq {K : Type} [CommRing K] (R : Subring K) (d e : K) (hd : d ∈ R)
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact R.mul_mem hd hy
-  · intro hz
-    exact ⟨e * z, R.mul_mem he hz, by rw [← mul_assoc, hde, one_mul]⟩
+  · exact fun hz => ⟨e * z, R.mul_mem he hz, by rw [← mul_assoc, hde, one_mul]⟩
 
 theorem modK_eq_one {K : Type} [CommRing K] (R : Subring K) (d e : K) (hd : d ∈ R) (he : e ∈ R)
     (hde : d * e = 1) : modK R d = 1 := by
@@ -165,8 +164,7 @@ theorem first_theta_equality_of_kernel_facts (hPer : SingleBlockPeriodic) (hGram
     funext h h'
     simp only [Θ]
     rw [this]
-  · intro x
-    exact hGram K R ψ hL m F hF (cr x)
+  · exact fun x => hGram K R ψ hL m F hF (cr x)
   · obtain ⟨ϖ, hϖ, hϖx⟩ := hL.unif
     choose M hM using fun h : Point K => hϖx (((pt_det_isUnit h).unit⁻¹ : Kˣ) : K)
     let N := F.sup M
@@ -193,8 +191,7 @@ theorem first_theta_equality_of_kernel_facts (hPer : SingleBlockPeriodic) (hGram
           rw [← mul_assoc, ← mul_pow, Units.inv_mul, one_pow, one_mul]
         · rintro ⟨y, hy, rfl⟩
           show (ϖ : K) ^ N * (((ϖ⁻¹ : Kˣ) : K) ^ N * y) ∈ R
-          rw [← mul_assoc, ← mul_pow, Units.mul_inv, one_pow, one_mul]
-          exact hy
+          rwa [← mul_assoc, ← mul_pow, Units.mul_inv, one_pow, one_mul]
       rw [this]
       exact hL.isCompact.image (continuous_const_mul _)
     · intro x hx h hh h' _
@@ -234,7 +231,7 @@ theorem first_theta_equality_of_kernel_facts (hPer : SingleBlockPeriodic) (hGram
     apply isPSD_zero
     intro h hh h' hh'
     by_cases hx : x ∈ R
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       have P := (hPars K R ψ hL h h' (hFF h hh h' hh') cr hcr).2
       rw [finsum_eq_single _ (0 : K ⧸ R.toAddSubgroup) (fun y hy => by
         by_contra h0; exact hy (hglr h h' (hGL h hh) y h0)),
@@ -243,7 +240,7 @@ theorem first_theta_equality_of_kernel_facts (hPer : SingleBlockPeriodic) (hGram
       simp only [Θ]
       rw [hx0, P]
       simp
-    · rw [if_neg hx, zero_sub, neg_eq_zero]
+    · rw [ite_eq_right hx, zero_sub, neg_eq_zero]
       by_contra h0
       exact hx ((QuotientAddGroup.eq_zero_iff _).mp (hglr h h' (hGL h hh) _ h0))
 
@@ -270,8 +267,7 @@ theorem mem_rangeR (a : K) : a ∈ LinearMap.range (Algebra.linearMap R K) ↔ a
   · intro h
     obtain ⟨r, rfl⟩ := LinearMap.mem_range.mp h
     exact r.2
-  · intro ha
-    exact LinearMap.mem_range.mpr ⟨⟨a, ha⟩, rfl⟩
+  · exact fun ha => LinearMap.mem_range.mpr ⟨⟨a, ha⟩, rfl⟩
 
 theorem psiKR_mk (ψ : AddChar K ℂ) (hψ : ∀ r ∈ R, ψ r = 1) (a : K) :
     psiKR R ψ (Submodule.Quotient.mk a : KR R) = ψ a := by
@@ -360,9 +356,9 @@ theorem finsum_fiber {X Y T : Type} [AddGroup Y] [Fintype T] (κ : X → Y)
     intro τ _
     obtain ⟨x0, hx0⟩ := hκ.2 (-g τ)
     rw [finsum_eq_single _ x0]
-    · rw [if_pos (by rw [hx0, neg_neg])]
+    · rw [ite_eq_left (by rw [hx0, neg_neg])]
     · intro x hx
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       apply hx
       apply hκ.1
@@ -429,11 +425,11 @@ theorem first_kernel_inner_sum {K : Type} [CommRing K] (R : Subring K) (ψ : Add
     rw [← Finset.sum_mul_sum, ← finsum_eq_sum_of_fintype, ← finsum_eq_sum_of_fintype]
     by_cases h1 : eZ R Z - θ.symm (eZ R Z') = 0
     · by_cases h2 : muZ R Z hZ - (muZ R Z' hZ').comp θ.toLinearMap = 0
-      · rw [hOD1 _ h1, hO1 _ h2, if_pos ((mem_isoZZ_iff R Z Z' hZ hZ' θ).mpr ⟨h1, h2⟩),
+      · rw [hOD1 _ h1, hO1 _ h2, ite_eq_left ((mem_isoZZ_iff R Z Z' hZ hZ' θ).mpr ⟨h1, h2⟩),
           ← Nat.card_congr θ.toEquiv]
-      · rw [hO2 _ h2, mul_zero, if_neg]
+      · rw [hO2 _ h2, mul_zero, ite_eq_right]
         intro h; exact h2 ((mem_isoZZ_iff R Z Z' hZ hZ' θ).mp h).2
-    · rw [hOD2 _ h1, zero_mul, if_neg]
+    · rw [hOD2 _ h1, zero_mul, ite_eq_right]
       intro h; exact h1 ((mem_isoZZ_iff R Z Z' hZ hZ' θ).mp h).1
   rw [Finset.sum_congr rfl (fun θ _ => hθ θ), Finset.sum_ite, Finset.sum_const_zero, add_zero,
     Finset.sum_const, nsmul_eq_mul,
@@ -450,8 +446,7 @@ theorem first_kernel_periodic_of_formula (hF : SingleBlockFormula) : SingleBlock
   intro K _ _ _ R ψ hLD h h' c c' hs hc
   rw [hF K R ψ hLD h h' c hs, hF K R ψ hLD h h' c' hs]
   have e : (Submodule.Quotient.mk (c : K) : KR R) = Submodule.Quotient.mk (c' : K) := by
-    rw [Submodule.Quotient.eq, mem_rangeR]
-    exact hc
+    rwa [Submodule.Quotient.eq, mem_rangeR]
   simp only [singleBlockInner]
   rw [e]
 
@@ -489,14 +484,14 @@ theorem first_kernel_parseval_of_formula (hF : SingleBlockFormula) (hI : IntFini
       obtain ⟨hD, hOD⟩ := hCD K R ψ hL _ _ hq.1 hZ
       have hO := hCO K R ψ hL _ _ hq.1 hZ
       have key := first_kernel_inner_sum R ψ hψ _ _ hZ hZ' hC hC' hD
-        (fun x hx => by rw [hOD x, if_pos hx]) (fun x hx => by rw [hOD x, if_neg hx]; simp)
-        (fun μ hμ => by rw [hO μ, if_pos hμ]) (fun μ hμ => by rw [hO μ, if_neg hμ]; simp)
+        (fun x hx => by rw [hOD x, ite_eq_left hx]) (fun x hx => by rw [hOD x, ite_eq_right hx]; simp)
+        (fun μ hμ => by rw [hO μ, ite_eq_left hμ]) (fun μ hμ => by rw [hO μ, ite_eq_right hμ]; simp)
         (fun x : K ⧸ R.toAddSubgroup => ((cr x : Kˣ) : K)) hκ
       have hc : (Nat.card (coker R (orbZ h (rep R q.1))) : ℂ) = ((cSize R h : ℝ) : ℂ) := by
         rw [cSize, ← orbZ_det h (rep R q.1), ← hcard]; simp
       have hc' : (Nat.card (coker R (orbZ h' (rep R q.2))) : ℂ) = ((cSize R h' : ℝ) : ℂ) := by
         rw [cSize, ← orbZ_det h' (rep R q.2), ← hcard']; simp
-      simp only [G, if_pos hq, mul_assoc]
+      simp only [G, ite_eq_left hq, mul_assoc]
       constructor
       · refine key.1.subset ?_
         intro x hx
@@ -504,10 +499,10 @@ theorem first_kernel_parseval_of_formula (hF : SingleBlockFormula) (hI : IntFini
         intro h0; apply hx; rw [h0, zero_mul]
       · rw [← finsum_mul, key.2, hc, hc']
         unfold pairTerm
-        rw [if_pos hq]
+        rw [ite_eq_left hq]
         push_cast
         ring
-    · simp only [G, if_neg hq, pairTerm]
+    · simp only [G, ite_eq_right hq, pairTerm]
       simp
   have hS := (hI K R ψ hL h).prod (hI K R ψ hL h')
   have hNs : ∀ x, Ns R ψ 1 h h' (cr x) (cr x) = ∑ q ∈ hS.toFinset, G x q := by
@@ -519,7 +514,7 @@ theorem first_kernel_parseval_of_formula (hF : SingleBlockFormula) (hI : IntFini
     rw [Set.Finite.coe_toFinset]
     by_contra hcon
     apply hq
-    rw [if_neg (fun hI' => hcon ⟨hI'.1, hI'.2⟩)]
+    rw [ite_eq_right (fun hI' => hcon ⟨hI'.1, hI'.2⟩)]
     simp
   have hKp : N0 R ψ h h' = ∑ q ∈ hS.toFinset, pairTerm R ψ h h' q := by
     unfold N0 Kp
@@ -529,7 +524,7 @@ theorem first_kernel_parseval_of_formula (hF : SingleBlockFormula) (hI : IntFini
     rw [Set.Finite.coe_toFinset]
     by_contra hcon
     apply hq
-    rw [if_neg (fun hI' => hcon ⟨hI'.1, hI'.2⟩)]
+    rw [ite_eq_right (fun hI' => hcon ⟨hI'.1, hI'.2⟩)]
     simp
   simp only [hNs]
   constructor

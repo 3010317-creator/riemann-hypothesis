@@ -136,7 +136,6 @@ theorem chain_zero {F : ℕ → ℝ → ℂ} (hF : ∀ (k : ℕ) (s : ℝ), HasD
     funext s
     have h1 := hF k s
     rw [ih] at h1
-    show F (k + 1) s = 0
     exact h1.unique (hasDerivAt_const s (0 : ℂ))
 
 theorem eq_zero_of_initial {p : Polynomial ℂ} (hp : p.Monic) {F : ℕ → ℝ → ℂ}

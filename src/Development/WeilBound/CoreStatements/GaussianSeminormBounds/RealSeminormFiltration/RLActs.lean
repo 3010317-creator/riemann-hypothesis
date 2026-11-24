@@ -140,11 +140,7 @@ theorem exists_of_rest {f : SInf F κ} (hf : f ≠ 0) {r : (κ → AF F) → ℂ
   rw [← mul_assoc, inv_mul_cancel₀ ha, one_mul]
 
 theorem eval_adm (x : κ → AF F) : (LinearMap.proj x : ((κ → AF F) → ℂ) →ₗ[ℂ] ℂ) ∈ (adeleClass F).adm κ := by
-  intro g _
-  refine ⟨g (fun i => (x i).2) • (BoundedContinuousFunction.evalCLM ℂ (fun i => evI F (x i))).comp
-    (SchwartzMap.toBoundedContinuousFunctionCLM ℂ _ ℂ), fun f => ?_⟩
-  show f (fun i => evI F (x i)) * g (fun i => (x i).2) = g (fun i => (x i).2) * f (fun i => evI F (x i))
-  exact mul_comm _ _
+  exact GlobalTheory.RealLift.eval_mem_adm x
 
 theorem eq_of_pureA {f₁ f₂ : SInf F κ} (h : ∀ g ∈ SB (κ → Af F), ∀ x, pureA F f₁ g x = pureA F f₂ g x) : f₁ = f₂ := by
   obtain ⟨g, hg, y, hy⟩ := exists_SB (F := F) (κ := κ)

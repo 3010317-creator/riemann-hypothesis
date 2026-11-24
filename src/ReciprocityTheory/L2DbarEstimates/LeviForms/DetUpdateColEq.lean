@@ -89,8 +89,7 @@ theorem cdo_det {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] {S : Set 
     (F : Fin n → Fin n → X → ℂ) (hF : ∀ i j, ContDiffOn ℝ m (F i j) S) :
     ContDiffOn ℝ m (fun w => (Matrix.of fun i j => F i j w).det) S := by
   simp only [Matrix.det_apply, Matrix.of_apply, Units.smul_def, zsmul_eq_mul]
-  refine ContDiffOn.sum fun σ _ => contDiffOn_const.mul ?_
-  exact contDiffOn_prod fun i _ => hF _ _
+  exact ContDiffOn.sum fun σ _ => contDiffOn_const.mul (contDiffOn_prod fun i _ => hF _ _)
 
 theorem cdo_adj {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] {S : Set X} {m : WithTop ℕ∞}
     (F : Fin n → Fin n → X → ℂ) (hF : ∀ i j, ContDiffOn ℝ m (F i j) S) (k l : Fin n) :
@@ -99,10 +98,8 @@ theorem cdo_adj {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] {S : Set 
   refine cdo_det (F := fun i j w => ((Matrix.of fun i j => F i j w).updateRow l (Pi.single k 1)) i j)
     fun i j => ?_
   by_cases h : i = l
-  · simp only [Matrix.updateRow_apply, h, ↓reduceIte]
-    exact contDiffOn_const
-  · simp only [Matrix.updateRow_apply, h, ↓reduceIte, Matrix.of_apply]
-    exact hF i j
+  · simpa only [Matrix.updateRow_apply, h, ↓reduceIte] using contDiffOn_const
+  · simpa only [Matrix.updateRow_apply, h, ↓reduceIte, Matrix.of_apply] using hF i j
 
 theorem cont_adj {X : Type*} [TopologicalSpace X] {S : Set X}
     (F : Fin n → Fin n → X → ℂ) (hF : ∀ i j, ContinuousOn (F i j) S) (k l : Fin n) :
@@ -111,10 +108,8 @@ theorem cont_adj {X : Type*} [TopologicalSpace X] {S : Set X}
   refine continuousOn_finsetSum _ fun σ _ => continuousOn_const.mul ?_
   refine continuousOn_finsetProd _ fun i _ => ?_
   by_cases h : σ i = l
-  · simp only [Matrix.updateRow_apply, h, ↓reduceIte]
-    exact continuousOn_const
-  · simp only [Matrix.updateRow_apply, h, ↓reduceIte, Matrix.of_apply]
-    exact hF _ _
+  · simpa only [Matrix.updateRow_apply, h, ↓reduceIte] using continuousOn_const
+  · simpa only [Matrix.updateRow_apply, h, ↓reduceIte, Matrix.of_apply] using hF _ _
 
 theorem adj_sum (M : Matrix (Fin n) (Fin n) ℂ) (k : Fin n) (b : Fin n → ℂ) :
     ∑ j, M.adjugate k j * b j = (M.updateCol k b).det := by
@@ -151,8 +146,7 @@ theorem hasDerivAt_det (A B : Matrix (Fin n) (Fin n) ℂ) (t : ℝ) :
           (((Equiv.Perm.sign σ : ℤ) : ℂ))
         simp only [Finset.prod_apply] at h
         exact h)
-    rw [Finset.sum_fn] at hs
-    exact hs
+    rwa [Finset.sum_fn] at hs
   convert hdet using 1
   simp_rw [adj_sum, det_updateCol_eq, smul_eq_mul]
   rw [Finset.sum_comm]

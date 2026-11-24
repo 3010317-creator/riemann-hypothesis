@@ -61,8 +61,7 @@ namespace GlobalTheory.WeylCell.WeylUnipotentShell.ShellGroup
 section Order
 
 theorem le_max_one_of_mul_self_le {x e : WithZero (Multiplicative ℤ)} (h : x * x ≤ e) : x ≤ max 1 e := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have h1 : 1 ≤ x := le_of_lt (lt_of_le_of_lt (le_max_left _ _) hc)
   have h2 : x ≤ x * x := le_mul_of_one_le_right' h1
   exact absurd (lt_of_lt_of_le (lt_of_le_of_lt (le_max_right _ _) hc) (h2.trans h)) (lt_irrefl _)
@@ -107,8 +106,7 @@ theorem isCompact_ball [CompleteSpace L] {ϖ : L} {σ : L →+* L} {q : ℕ} (h 
   have hc := GlobalTheory.LFun.IntPtsUnitary.isCompact_intL h
   have e : (fun x => ϖ ^ j * x) ⁻¹' (intL L : Set L) = (Homeomorph.mulLeft₀ (ϖ ^ j)
       (zpow_ne_zero j (ne_zero_of_unramInv h))) ⁻¹' (intL L : Set L) := rfl
-  rw [e, Homeomorph.isCompact_preimage]
-  exact hc
+  rwa [e, Homeomorph.isCompact_preimage]
 
 section Block
 
@@ -128,7 +126,7 @@ theorem InBlock.entry (ham : m.val = a.val + 1) (hma : a'.val = m.val + 1) {X : 
   rcases lt_trichotomy i j with h | rfl | h
   · by_cases h1 : i < a ∨ a' < j
     · exact Or.inr (Or.inl (hZ i j h h1))
-    · push_neg at h1
+    · push Not at h1
       simp only [Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val, Fin.ext_iff] at h h1 ⊢
       omega
   · exact Or.inl (hB.2 i)
@@ -150,15 +148,15 @@ theorem InBlock.mul_corner (ham : m.val = a.val + 1) (hma : a'.val = m.val + 1) 
     · subst h1
       have e1 : l ≠ m := fun e => by rw [Fin.ext_iff] at e; omega
       have e2 : l ≠ a' := fun e => by rw [Fin.ext_iff] at e; omega
-      rw [if_pos rfl, if_neg e1, if_neg e2, hXB.2, one_mul, add_zero, add_zero]
+      rw [ite_eq_left rfl, ite_eq_right e1, ite_eq_right e2, hXB.2, one_mul, add_zero, add_zero]
     by_cases h2 : l = m
     · subst h2
       have e2 : l ≠ a' := fun e => by rw [Fin.ext_iff] at e; omega
-      rw [if_neg h1, if_pos rfl, if_neg e2, zero_add, add_zero]
+      rw [ite_eq_right h1, ite_eq_left rfl, ite_eq_right e2, zero_add, add_zero]
     by_cases h3 : l = a'
     · subst h3
-      rw [if_neg h1, if_neg h2, if_pos rfl, hYB.2, mul_one, zero_add, zero_add]
-    rw [if_neg h1, if_neg h2, if_neg h3, add_zero, add_zero]
+      rw [ite_eq_right h1, ite_eq_right h2, ite_eq_left rfl, hYB.2, mul_one, zero_add, zero_add]
+    rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, add_zero, add_zero]
     have hv1 : l.val ≠ a.val := fun e => h1 (Fin.ext e)
     have hv2 : l.val ≠ m.val := fun e => h2 (Fin.ext e)
     have hv3 : l.val ≠ a'.val := fun e => h3 (Fin.ext e)
@@ -168,7 +166,7 @@ theorem InBlock.mul_corner (ham : m.val = a.val + 1) (hma : a'.val = m.val + 1) 
       rw [hYB.1 l a' (Fin.lt_iff_val_lt_val.2 h5), mul_zero]
   rw [Units.val_mul, Matrix.mul_apply, Finset.sum_congr rfl fun l _ => key l, Finset.sum_add_distrib,
     Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.sum_ite_eq', Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   ring
 
 end Block
@@ -304,8 +302,7 @@ theorem shellU_open_compact_subgroup : ∀ (L : Type) [Field L] [Valued L (WithZ
     intro j u hu
     rw [hcorner] at hu ⊢
     show Valued.v ((((((u : GU σ n) : GL (Fin n) L))⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev) ≤ _
-    rw [inv_corner harev ha'rev (hG u), hσv]
-    exact hu
+    rwa [inv_corner harev ha'rev (hG u), hσv]
   have hent : ∀ (j : ℤ) (u : cellU y), u ∈ shellU k y j → ∀ i l,
       Valued.v ((((u : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i l) ≤ max 1 (WithZero.exp j) :=
     fun j u hu i l => entry_le ham hma harev ha'rev hmrev hσv (hG u) (hblk u) (hblki u) hu i l

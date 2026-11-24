@@ -413,8 +413,7 @@ private theorem exists_add_conj_sub_one_mem_extP (hK : Formalism.HermitianLattic
         apply (isIntegral_algebraMap_iff (B := K)).mp
         rw [hf]
         exact RingOfIntegers.isIntegral_coe w
-      refine ⟨⟨f, hfIntegral⟩, RingOfIntegers.ext ?_⟩
-      exact hf
+      exact ⟨⟨f, hfIntegral⟩, RingOfIntegers.ext hf⟩
     obtain ⟨a, ha⟩ := htrace
     have haP : a ∉ 𝔭 := by
       intro haP
@@ -424,14 +423,13 @@ private theorem exists_add_conj_sub_one_mem_extP (hK : Formalism.HermitianLattic
     obtain ⟨b, c, hc, hbc⟩ := h𝔭.exists_inv haP
     refine ⟨algebraMap (𝓞 F) (𝓞 K) b * t0, ?_⟩
     have hb : conjO K (algebraMap (𝓞 F) (𝓞 K) b) = algebraMap (𝓞 F) (𝓞 K) b := by
-      apply RingOfIntegers.ext
-      exact (hF (algebraMap F K (b : F))).mpr ⟨(b : F), rfl⟩
+      exact RingOfIntegers.ext ((hF (algebraMap F K (b : F))).mpr ⟨(b : F), rfl⟩)
     have e1 : algebraMap (𝓞 F) (𝓞 K) b * t0 + conjO K (algebraMap (𝓞 F) (𝓞 K) b * t0) - 1 = algebraMap (𝓞 F) (𝓞 K) (b * a - 1) := by
       rw [map_mul, hb, map_sub, map_mul, map_one, ha]; ring
     have e2 : b * a - 1 = -c := by linear_combination hbc
     rw [e1, e2, map_neg]
     exact (extP K 𝔭).neg_mem (Ideal.mem_map_of_mem _ hc)
-  · push_neg at h
+  · push Not at h
     have h1 : (1 : 𝓞 K) ∈ extP K 𝔭 := by
       apply BallB.mem_of_unram hK
       intro θ
@@ -562,8 +560,7 @@ theorem exists_solve_quot (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {
     have e : (P'ᴴ * Q' - 1).map (reductionMapsOfForms.mkk K 𝔭 k) = (P'.map (reductionMapsOfForms.mkk K 𝔭 k))ᴴ * Q'.map (reductionMapsOfForms.mkk K 𝔭 k) - 1 := by
       rw [reductionMapsOfForms.map_conjTranspose, Matrix.map_sub, Matrix.map_mul, Matrix.map_one] <;> simp
     have := hPQ i j
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
   have hHh' : Ent (extP K 𝔭 ^ k) (H'ᴴ - H') := by
     apply hmap
     rw [Matrix.map_sub, ← reductionMapsOfForms.map_conjTranspose, hHh, sub_self]
@@ -582,7 +579,6 @@ theorem exists_solve_quot (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {
     simp only [← RingHom.mapMatrix_apply, map_add (f := _), map_mul]
   rw [← e]
   ext i j
-  show Ideal.Quotient.mk (extP K 𝔭 ^ k) _ = 0
   exact Ideal.Quotient.eq_zero_iff_mem.2 (hZ' i j)
 
 end Formalism.L2.SG.Pf.discriminantNormShapes
@@ -740,12 +736,10 @@ private theorem mem_pow_vF_not_mem_pow_vF_succ {𝔭 : Ideal (𝓞 F)} (h𝔭 : 
     simp only [Submodule.mem_iInf, not_forall] at h0
     obtain ⟨n, hn⟩ := h0
     refine ⟨n, fun e he => ?_⟩
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     exact hn (Ideal.pow_le_pow_right hlt.le he)
   refine ⟨?_, fun h => ?_⟩
-  · have h1 := Nat.sSup_mem (s := {e : ℕ | x ∈ 𝔭 ^ e}) ⟨0, by simp⟩ hbdd
-    exact h1
+  · exact Nat.sSup_mem (s := {e : ℕ | x ∈ 𝔭 ^ e}) ⟨0, by simp⟩ hbdd
   · have h2 : vF 𝔭 x + 1 ≤ vF 𝔭 x := le_csSup hbdd h
     omega
 
@@ -767,15 +761,13 @@ private theorem mem_extP_pow_sub_of_mul_mem {𝔭 : Ideal (𝓞 F)} (h𝔭 : �
   have hspan : Ideal.span {algebraMap (𝓞 F) (𝓞 K) a} =
       extP K 𝔭 ^ e * J.map (algebraMap (𝓞 F) (𝓞 K)) := by
     have h1 := congrArg (Ideal.map (algebraMap (𝓞 F) (𝓞 K))) hJ
-    rw [Ideal.map_span, Set.image_singleton, Ideal.map_mul, Ideal.map_pow] at h1
-    exact h1
+    rwa [Ideal.map_span, Set.image_singleton, Ideal.map_mul, Ideal.map_pow] at h1
   have hcop : IsCoprime (extP K 𝔭 ^ (k - e)) (J.map (algebraMap (𝓞 F) (𝓞 K))) := by
     apply IsCoprime.pow_left
     rw [Ideal.isCoprime_iff_sup_eq]
     have h1 := congrArg (Ideal.map (algebraMap (𝓞 F) (𝓞 K))) hJP
     rw [Ideal.map_sup, Ideal.map_top] at h1
-    rw [sup_comm]
-    exact h1
+    rwa [sup_comm]
   have hιinj : ∀ x : 𝓞 F, algebraMap (𝓞 F) (𝓞 K) x = 0 → x = 0 := by
     intro x hx
     have h1 : algebraMap F K (algebraMap (𝓞 F) F x) = 0 := by
@@ -866,8 +858,7 @@ theorem isUnit_det_of_witness {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {
   have hunit : IsUnit (Yᴴ.det * P.det) := by
     have h3 := (hnil _ hsum).isUnit_one_add
     have h4 : 1 + (Yᴴ.det * P.det - 1) = Yᴴ.det * P.det := by ring
-    rw [h4] at h3
-    exact h3
+    rwa [h4] at h3
   exact isUnit_of_mul_isUnit_right hunit
 
 theorem eQ_mul_self (𝔭 : Ideal (𝓞 F)) (k : ℕ) (a : Fin m → 𝓞 F) :
@@ -956,7 +947,7 @@ theorem gQ_mul_diagQ {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (k : ℕ) 
   funext j
   by_cases h : a j ∈ 𝔭
   · simp [h]
-  · rw [dite_eq_right h, if_neg h, sub_zero]
+  · rw [dite_eq_right h, ite_eq_right h, sub_zero]
     exact (exists_inv_unit (K := K) h𝔭 h k).choose_spec
 
 theorem diag_comm {R : Type*} [CommRing R] {n : Type*} [Fintype n] [DecidableEq n] (d d' : n → R) :
@@ -996,8 +987,7 @@ theorem norm_shape_holds : NormShape := by
     abel
   have hP1 := hom_shift hPY ZA
   have hW1 := form_shift hPY hW ZA
-  rw [hY1] at hP1 hW1
-  rw [← hHdef] at hP1 hW1
+  rw [hY1, ← hHdef] at hP1 hW1
   set P1 := P + H * ZA with hP1def
   set W1 := W + Pᴴ * ZA + ZAᴴ * P + ZAᴴ * H * ZA with hW1def
   set Y1 := Y0 * E + (1 - E) with hY1def
@@ -1028,8 +1018,7 @@ theorem norm_shape_holds : NormShape := by
     abel
   have hP2 := hom_shift hP1 ZB
   have hW2 := form_shift hP1 hW1 ZB
-  rw [hY2] at hP2 hW2
-  rw [← hHdef] at hP2 hW2
+  rw [hY2, ← hHdef] at hP2 hW2
   set P2 := P1 + H * ZB with hP2def
   set W2 := W1 + P1ᴴ * ZB + ZBᴴ * P1 + ZBᴴ * H * ZB with hW2def
   set Y2 := E * Y0 * E + (1 - E) with hY2def

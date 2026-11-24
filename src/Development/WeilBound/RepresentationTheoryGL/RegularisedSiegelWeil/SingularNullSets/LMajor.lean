@@ -117,8 +117,7 @@ theorem cutSupp (θ : InfFam D) (hθ : IsInfFam θ) {a b : ℕ} (K : Set (Mx D a
   refine Finset.sum_le_sum fun τ _ => Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => ?_
   have h1 := norm_le_pi_norm (fun τ i j => compAt θ τ x i j) τ
   have h2 := norm_le_pi_norm (fun i j => compAt θ τ x i j) i
-  have h3 := norm_le_pi_norm (fun j => compAt θ τ x i j) j
-  exact h3.trans (h2.trans (h1.trans hmem))
+  exact (norm_le_pi_norm (fun j => compAt θ τ x i j) j).trans (h2.trans (h1.trans hmem))
 
 end PositivityTheory.Rg.Rsw.L.LMajor
 
@@ -611,7 +610,7 @@ theorem bumpMaj (hB : BumpEx) (θ : InfFam D) (hθ : IsInfFam θ) {S : Finset (P
   have hCint : ∀ y ∈ (fun k => sF D • (e • k)) '' K, IntOff S y := by
     rintro _ ⟨k, -, rfl⟩ v hv i j
     show cv D v (sF D * (e * k i j)) ∈ _
-    rw [cv_sF, map_mul, he.2 v, if_neg hv, zero_mul]
+    rw [cv_sF, map_mul, he.2 v, ite_eq_right hv, zero_mul]
     exact (GlobalTheory.AdelicU.intLoc _ _ v).zero_mem
   obtain ⟨η, hη⟩ := hB D θ hθ a b S e he _
     (hK.image ((continuous_const_smul (sF D)).comp (continuous_const_smul e))) hCint
@@ -621,18 +620,17 @@ theorem bumpMaj (hB : BumpEx) (θ : InfFam D) (hθ : IsInfFam θ) {S : Finset (P
   choose G hGSB hGeq using hG
   set Ψ : Mx D a b → ℂ := fun x => ∏ i, η i (sF D • row i x) with hΨ
   have hΨG : ∀ x, Ψ x = (fun z => ∏ i, G i fun _ j => z i j) (fun i j => finPart D (x i j)) := by
-    intro x
-    exact Finset.prod_congr rfl fun i _ => hGeq i (row i x)
+    exact fun x => Finset.prod_congr rfl fun i _ => hGeq i (row i x)
   have hΨgood : Good S e Ψ := by
     intro x
     by_cases hx : IntOff S x
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       refine Finset.prod_congr rfl fun i _ => ?_
-      rw [← row_smul, (hη i).2.2.1, if_pos (intOff_row hx i), ← row_smul, ← row_smul, smul_comm e (sF D) x]
-    · rw [if_neg hx]
+      rw [← row_smul, (hη i).2.2.1, ite_eq_left (intOff_row hx i), ← row_smul, ← row_smul, smul_comm e (sF D) x]
+    · rw [ite_eq_right hx]
       obtain ⟨i, hi⟩ := not_intOff_row hx
       refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
-      rw [← row_smul, (hη i).2.2.1, if_neg hi]
+      rw [← row_smul, (hη i).2.2.1, ite_eq_right hi]
   refine ⟨fun x => F₀ (cA θ x) * Ψ x, ?_, good_mul θ he hΨgood (fun z => F₀ z), ?_, ?_⟩
   · apply Submodule.subset_span
     refine ⟨F₀, fun z => ∏ i, G i fun _ j => z i j, prodSB G hGSB, ?_⟩
@@ -650,7 +648,7 @@ theorem bumpMaj (hB : BumpEx) (θ : InfFam D) (hθ : IsInfFam θ) {S : Finset (P
       show F₀ (cA θ x) * Ψ x = F₀ (cA θ x)
       rw [h1, mul_one]
     refine Finset.prod_eq_one fun i _ => ?_
-    rw [← row_smul, (hη i).2.2.1, if_pos (intOff_row hx i), ← row_smul, smul_comm e (sF D) x, row_smul, hGeq i]
+    rw [← row_smul, (hη i).2.2.1, ite_eq_left (intOff_row hx i), ← row_smul, smul_comm e (sF D) x, row_smul, hGeq i]
     have hfun : (fun i' j => finPart D ((row i (e • x)) i' j)) = (fun i' j => finPart D ((row i (e • k)) i' j)) := by
       funext i' j
       show finPart D (e * x i j) = finPart D (e * k i j)
@@ -694,7 +692,7 @@ theorem major : IdemEx → GoodEv → BumpEx → Major := by
     intro x hx
     by_contra hb
     have h := hC0 x
-    rw [GlobalTheory.Unf.maj, if_neg hb, mul_zero] at h
+    rw [GlobalTheory.Unf.maj, ite_eq_right hb, mul_zero] at h
     exact hx (norm_le_zero_iff.mp h)
   obtain ⟨F₀, hF₀, hcut⟩ := schMajor f
   obtain ⟨Φ₀, hΦ₀, hG₀, hpos, heq⟩ := bumpMaj hB θ hθ he K hK F₀ hF₀
@@ -711,15 +709,14 @@ theorem major : IdemEx → GoodEv → BumpEx → Major := by
   have hx : IntOff S x := by
     by_contra hx
     have h := hG x
-    rw [if_neg hx] at h
+    rw [ite_eq_right hx] at h
     exact h0 h
   rw [heq x hx (hbox x h0)]
   have hF : 0 ≤ (F₀ (cA θ x)).re := (hF₀ _).1
   calc ‖1 - c (cA θ x)‖ * ‖Φ x‖ ≤ ‖1 - c (cA θ x)‖ * (M * ∑ i, ‖f i (cA θ x)‖) :=
         mul_le_mul_of_nonneg_left (hdom x) (norm_nonneg _)
     _ = M * ∑ i, ‖f i (cA θ x)‖ * ‖1 - c (cA θ x)‖ := by
-        simp only [Finset.mul_sum]
-        exact Finset.sum_congr rfl fun i _ => by ring
+        simpa only [Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
     _ ≤ M * ∑ _i : Fin k, ε / (M * k + 1) * (F₀ (cA θ x)).re := by
         exact mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun i _ => hcb i _) hM
     _ = (M * k) / (M * k + 1) * (ε * (F₀ (cA θ x)).re) := by

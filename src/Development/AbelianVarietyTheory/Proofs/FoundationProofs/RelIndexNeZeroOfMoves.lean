@@ -110,8 +110,7 @@ theorem exists_int_mul (D : D7) {N : ℕ} (q : ℕ) (k : GA D N) (h : TrivAt D q
     obtain ⟨m, -, hm, s, hs, he⟩ := h i j 0
     refine ⟨m, hm, ?_⟩
     rw [pow_zero, one_mul] at he
-    rw [he]
-    exact hs
+    rwa [he]
   choose m hm hmS using h0
   set s : ℕ := ∏ r : Fin N × Fin N, m r.1 r.2 with hs
   have hint : ∀ i j, (s : AE D) * ((k : GL (Fin N) (AE D)) : Matrix (Fin N) (Fin N) (AE D)) i j ∈ OhE D := by
@@ -141,12 +140,10 @@ theorem agree (D : D7) {n : ℕ} (q : ℕ) (g k : GA D n) (h : TrivAt D q (k : G
   refine ⟨s, hs, fun x hx => ?_, fun x hx => ?_⟩
   · rw [← Nat.cast_smul_eq_nsmul D.host.E]
     refine AdLattice.smul_mem_lat s ?_ hx
-    rw [Subgroup.coe_mul, mul_inv_rev, inv_mul_cancel_right]
-    exact h2
+    rwa [Subgroup.coe_mul, mul_inv_rev, inv_mul_cancel_right]
   · rw [← Nat.cast_smul_eq_nsmul D.host.E]
     refine AdLattice.smul_mem_lat s ?_ hx
-    rw [Subgroup.coe_mul, inv_mul_cancel_left]
-    exact h1
+    rwa [Subgroup.coe_mul, inv_mul_cancel_left]
 
 theorem finite_of_moves {D : D7} {n : ℕ} {g : GL (Fin n) (AE D)} {L : Submodule (𝓞 D.host.E) (Fin n → D.host.E)}
     (h : Moves D g L) : Finite (stdL D n ⧸ Submodule.comap (stdL D n).subtype L) := by

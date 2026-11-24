@@ -237,10 +237,8 @@ theorem exists_pw_h1Zero (R : Type) [CommRing R] [IsNoetherianRing R]
       AbLaw.pw L ((d₀ * (t₀.toNat + 1) : ℕ) : ℤ) := by
     rw [pw_pw, Nat.cast_mul]
   refine ⟨d₀ * (t₀.toNat + 1), Nat.mul_pos hd₀ (Nat.succ_pos _), ?_, ?_⟩
-  · rw [← e, Nat.cast_add, Nat.cast_one]
-    exact h2
-  · rw [← e]
-    exact h3
+  · rwa [← e, Nat.cast_add, Nat.cast_one]
+  · rwa [← e]
 
 end Powers
 
@@ -372,8 +370,7 @@ theorem relAmple_near_fibre : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (
       ⨆ i, nonzeroLocus (s i) = ⊤ ∧ ∀ i, IsAffineOpen (nonzeroLocus (s i)) := by
     rw [← pw_pull]
     refine ⟨fun i => secPull (SecOnR.topEquiv B.hom _ (x i)) _, ?_⟩
-    simp only [nonzeroLocus_secPull]
-    exact hr' _ _ _ (IsPullback.of_hasPullback B.hom j)
+    simpa only [nonzeroLocus_secPull] using hr' _ _ _ (IsPullback.of_hasPullback B.hom j)
   obtain ⟨s, hs, hs'⟩ := hv
   have : IsProper ((Over.pullback j).obj B).hom := inferInstanceAs (IsProper (pullback.snd B.hom j))
   exact relAmple_of_affine_loci ((Over.pullback j).obj B) _ (LB.isLB_pull hL _) hd s hs hs'

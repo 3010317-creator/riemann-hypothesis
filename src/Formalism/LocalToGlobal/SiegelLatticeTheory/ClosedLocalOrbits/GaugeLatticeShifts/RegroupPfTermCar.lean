@@ -129,8 +129,7 @@ theorem termCarC_of (h1 : RatIsoC) (h2 : ModGOfAtC) (h3 : FrameCongC) : TermCarC
       rw [hkdef]; unfold kOf; group
     rw [e, LatDictK.fmatK_mul, ← mulVec_mulVec]
     constructor
-    · intro hw
-      exact unitaryCongruence.K_mv X.B.I hkK' hw
+    · exact fun hw => unitaryCongruence.K_mv X.B.I hkK' hw
     · intro hw
       have := unitaryCongruence.K_mv X.B.I hkK hw
       rwa [mulVec_mulVec, ← LatDictK.fmatK_mul, mul_inv_cancel, show X.B.I.fmat 1 = 1 by
@@ -140,8 +139,7 @@ theorem termCarC_of (h1 : RatIsoC) (h2 : ModGOfAtC) (h3 : FrameCongC) : TermCarC
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact (hTr _).mpr (by simpa using hy)
-    · intro hv
-      exact ⟨σ.symm v, (hTr v).mp hv, by simp⟩
+    · exact fun hv => ⟨σ.symm v, (hTr v).mp hv, by simp⟩
 
   obtain ⟨-, ⟨-, -, hLift, hFC⟩, hXL⟩ := (Y.rowsOK u').1 _ ((Y.cs u').lam_mem ρ')
   refine ⟨⟨(γ, σ), hRL, hiso, hgm, ?_⟩, rfl⟩

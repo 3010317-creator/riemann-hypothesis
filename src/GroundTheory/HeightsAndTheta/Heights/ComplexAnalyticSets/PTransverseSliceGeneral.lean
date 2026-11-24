@@ -84,8 +84,7 @@ theorem exists_mul_mem_of_le_sup_sq (q : Fin n → ℂ) (I : Ideal (MvPolynomial
     rw [h1]
     exact one_ne_zero
   · have h2 := hr _ (Submodule.mem_map_of_mem (f := I.mkQ) (show g ∈ m from hg))
-    rw [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, smul_eq_mul] at h2
-    exact h2
+    rwa [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, smul_eq_mul] at h2
 
 def gradSpace (W : Ideal (MvPolynomial (Fin n) ℂ)) (q : Fin n → ℂ) : Submodule ℂ (Fin n → ℂ) :=
   (Submodule.restrictScalars ℂ W).map (gradAt q)
@@ -241,8 +240,7 @@ theorem isOpen_dense_sup_span_rows (V : Submodule ℂ (Fin n → ℂ)) (hV : n �
       constructor
       · intro htop
         rw [htop, finrank_top, Module.finrank_fin_fun]
-      · intro hr
-        exact Submodule.eq_top_of_finrank_eq (by rw [hr, Module.finrank_fin_fun])
+      · exact fun hr => Submodule.eq_top_of_finrank_eq (by rw [hr, Module.finrank_fin_fun])
     have h3 : LinearIndependent ℂ (Φ L) ↔ N.rank = m := by
       rw [linearIndependent_iff_card_eq_finrank_span, Fintype.card_fin, ← Matrix.rank_transpose N,
         Matrix.rank_eq_finrank_span_row, eq_comm]
@@ -264,8 +262,7 @@ theorem proof : TransverseSliceGeneral.Statement := by
       refine LinearIndependent.of_comp (LinearMap.funLeft ℂ ℂ b) ?_
       have hdet : IsUnit (Matrix.of fun i j => eval q (pderiv (b j) (G (a i)))) := by
         rw [Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero]
-        rw [RingHom.map_det] at hfq
-        exact hfq
+        rwa [RingHom.map_det] at hfq
       have hfun : (⇑(LinearMap.funLeft ℂ ℂ b) ∘ w) =
           fun i => (Matrix.of fun i j => eval q (pderiv (b j) (G (a i)))) i := by
         ext i j

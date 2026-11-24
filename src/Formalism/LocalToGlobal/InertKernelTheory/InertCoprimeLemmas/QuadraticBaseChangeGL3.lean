@@ -27,19 +27,16 @@ theorem coeff_trDY (D : D7) {N N' : ℕ} {ι : ℂ →+* Kc} (e : GL3Theta.Idx D
   rw [MvPolynomial.coeff_sum]
   by_cases hα : α ∈ R.support
   · rw [Finset.sum_eq_single α]
-    · rw [MvPolynomial.coeff_monomial, if_pos rfl]
+    · rw [MvPolynomial.coeff_monomial, ite_eq_left rfl]
     · intro β _ hβ
-      rw [MvPolynomial.coeff_monomial, if_neg]
-      intro h
-      exact hβ (Finsupp.mapDomain_injective he h)
-    · intro h
-      exact absurd hα h
+      rw [MvPolynomial.coeff_monomial, ite_eq_right]
+      exact fun h => hβ (Finsupp.mapDomain_injective he h)
+    · exact fun h => absurd hα h
   · rw [Finset.sum_eq_zero]
     · rw [MvPolynomial.notMem_support_iff.1 hα, map_zero]
     · intro β hβ
-      rw [MvPolynomial.coeff_monomial, if_neg]
-      intro h
-      exact hα (by rwa [← Finsupp.mapDomain_injective he h])
+      rw [MvPolynomial.coeff_monomial, ite_eq_right]
+      exact fun h => hα (by rwa [← Finsupp.mapDomain_injective he h])
 
 theorem support_trDY (D : D7) {N N' : ℕ} {ι : ℂ →+* Kc} (e : GL3Theta.Idx D N N' → X.ZA j)
     (Φ₀ : MvPolynomial (GL3Theta.FrV D N') ℂ →ₛₗ[ι] XspC (X.Pj (j + 1)) Kc)
@@ -51,9 +48,8 @@ theorem support_trDY (D : D7) {N N' : ℕ} {ι : ℂ →+* Kc} (e : GL3Theta.Idx
   unfold trDY
   rw [MvPolynomial.coeff_sum]
   refine Finset.sum_eq_zero fun α hα => ?_
-  rw [MvPolynomial.coeff_monomial, if_neg]
-  intro h
-  exact hni (Finset.mem_image.2 ⟨α, hα, h⟩)
+  rw [MvPolynomial.coeff_monomial, ite_eq_right]
+  exact fun h => hni (Finset.mem_image.2 ⟨α, hα, h⟩)
 
 end Dict
 
@@ -79,7 +75,7 @@ theorem pairing_dictionary : PairDict := by
     exact mul_comm _ _
   rw [hC, LinearMap.map_smulₛₗ, smul_smul]
   unfold Formalism.L2.G.Pend.derAt
-  rw [if_pos (hdeg α hα), hser α hα, prod_fact_mapDomain Kc e he α]
+  rw [ite_eq_left (hdeg α hα), hser α hα, prod_fact_mapDomain Kc e he α]
   congr 1
   simp only [map_mul, Finsupp.prod, map_prod, map_natCast]
   ring

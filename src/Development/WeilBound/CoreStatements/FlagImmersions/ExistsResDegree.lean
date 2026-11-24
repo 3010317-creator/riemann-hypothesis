@@ -322,8 +322,7 @@ theorem interior_preimage {Y Z : Type} [TopologicalSpace Y] [TopologicalSpace Z]
       by_contra hn
       exact h1 ⟨c, hn, hcx⟩
     have h3 : c ∈ h ⁻¹' T := interior_subset this
-    rw [← hcx]
-    exact h3
+    rwa [← hcx]
   have hmem : h z ∈ (h '' (interior (h ⁻¹' T))ᶜ)ᶜ ∩ Nᶜ := by
     refine ⟨?_, hzN⟩
     rintro ⟨w, hw, hwz⟩
@@ -333,8 +332,7 @@ theorem interior_preimage {Y Z : Type} [TopologicalSpace Y] [TopologicalSpace Z]
     rw [hc] at e1 e2
     exact hw ((e1.trans e2.symm) ▸ hzO)
   have := interior_maximal hsub hO hmem
-  rw [hT] at this
-  exact this
+  rwa [hT] at this
 
 theorem degree_comp {e d : ℕ} {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y] [T2Space Y]
     [TopologicalSpace Z] [CompactSpace Z] {A : FinHolAtlas e X} {B : FinHolAtlas e Y} {C : FinHolAtlas e Z}
@@ -355,8 +353,7 @@ theorem degree_comp {e d : ℕ} {X Y Z : Type} [TopologicalSpace X] [Topological
     have : y ∈ interior (π ⁻¹' S) := preimage_interior_subset_interior_preimage hπ.1 (by
       show π y ∈ interior S
       rw [hy']; exact hxO)
-    rw [hSi] at this
-    exact this
+    rwa [hSi] at this
   have hU := analytic_union a1 hS
   refine ⟨hU, interior_union_empty hbrc a2 hSi', CovMap.Deg.isAnalyticSubset_preimage hcomp hU, ?_, ?_, ?_⟩
   · rw [Set.preimage_comp]
@@ -407,8 +404,7 @@ theorem degree_comp {e d : ℕ} {X Y Z : Type} [TopologicalSpace X] [Topological
       rw [hQdef]
       exact (B.chart l).map_source hl
     have hk' : π ((B.chart l).symm (Q y)) ∈ (A.chart k).source := by
-      rw [hu]
-      exact hk
+      rwa [hu]
     have hPa : AnalyticAt ℂ P (Q y) := by
       rw [hPdef]
       exact hπ.2 l k _ ⟨hQt, hk'⟩
@@ -513,7 +509,7 @@ theorem exists_res_degree (hRes : ResExistsStatement) {K₀ K : Type} [Fintype K
   obtain ⟨F₁, hF₁J, hF₁P, a₄, hF₁h⟩ : ∃ F ∈ J', F ∉ mCoordIdeal y ∧ ∃ a, IsMultiHomog F a := by
     obtain ⟨S, hS, rfl⟩ := hJ'h
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     apply hJ'P
     rw [Ideal.span_le]
     intro f hf

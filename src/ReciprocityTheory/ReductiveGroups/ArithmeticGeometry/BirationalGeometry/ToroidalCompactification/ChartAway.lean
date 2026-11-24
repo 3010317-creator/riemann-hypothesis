@@ -79,11 +79,8 @@ theorem exists_cover : ∃ (n : ℕ) (s : Fin n → S), Ideal.span (Set.range s)
       constructor
       · rintro ⟨i, rfl⟩
         exact (T.equivFin.symm i).2
-      · intro hx
-        exact ⟨T.equivFin ⟨x, hx⟩, by simp⟩
-    rw [hr]
-    exact hspan
-  · intro i
-    exact hsub (T.equivFin.symm i).2
+      · exact fun hx => ⟨T.equivFin ⟨x, hx⟩, by simp⟩
+    rwa [hr]
+  · exact fun i => hsub (T.equivFin.symm i).2
 
 end ReciprocityTheory.ChartRestriction.G.Chart

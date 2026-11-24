@@ -121,8 +121,7 @@ theorem bijOn_map (hπ : GlobalTheory.SplitHecke.Chart e v π) (he : e * e = e) 
   refine ⟨Set.mapsTo_univ _ _, fun x hx y hy h => Matrix.ext fun i j => ?_, fun y _ => exists_half hπ he h1 y⟩
   have h0 : π (x i j - y i j) = 0 := by
     rw [RingHom.map_sub, sub_eq_zero]; exact congrFun (congrFun h i) j
-  rw [hπ.2.1, mul_sub, hx i j, hy i j, sub_eq_zero] at h0
-  exact h0
+  rwa [hπ.2.1, mul_sub, hx i j, hy i j, sub_eq_zero] at h0
 
 private theorem selfDual_full {D : D7} (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hΛ : IsSelfDualC V Λ) : Submodule.IsFullLattice D.host.E Λ := by
@@ -160,8 +159,7 @@ theorem isOpen_isCompact_map {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.
       rw [mul_left_comm, (GlobalTheory.PlaceModel.isHalf_iff S T).2 ht' i j]
       exact GlobalTheory.PlaceDatum.finPart_mem_of_toEAf h2
     have h4 := GlobalTheory.SplitHecke.isInt_Ov.1 ((hπ.2.2.2 _).1 h3)
-    rw [RingHom.map_mul, map_natCast] at h4
-    exact h4
+    rwa [RingHom.map_mul, map_natCast] at h4
 
 alias infPart_split := _root_.GlobalTheory.PlaceModelSum.infPart_split
 

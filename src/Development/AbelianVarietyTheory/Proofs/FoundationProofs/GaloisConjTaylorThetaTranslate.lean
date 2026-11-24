@@ -111,8 +111,7 @@ lemma isFieldGraph_graph (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ
 
 variable {S : Subring (ℂ × ℂ)} {f f' g g' h h' : ℂ → ℂ}
 
-lemma pair_natCast (S : Subring (ℂ × ℂ)) (n : ℕ) : ((n : ℂ), (n : ℂ)) ∈ S := by
-  exact natCast_mem S n
+lemma pair_natCast (S : Subring (ℂ × ℂ)) (n : ℕ) : ((n : ℂ), (n : ℂ)) ∈ S := natCast_mem S n
 
 lemma pair_mul {a b c d : ℂ} (h1 : (a, b) ∈ S) (h2 : (c, d) ∈ S) : (a * c, b * d) ∈ S := S.mul_mem h1 h2
 
@@ -288,8 +287,7 @@ lemma JetRel.of_pow (hS : IsFieldGraph S) (hf : AnalyticAt ℂ f 0) (hf' : Analy
     (JetRel.const (pair_natCast S (j + 1))).mul H
   have hnz : ¬ (fun z => ((j + 1 : ℕ) : ℂ) * f z ^ (j + 1)) =ᶠ[𝓝 0] 0 := fun hev =>
     mul_ne_zero (Nat.cast_ne_zero.2 (Nat.succ_ne_zero j)) (pow_ne_zero _ hne) hev.eq_of_nhds
-  have V := JetRel.of_mul hS hv hv' G hnz (H.deriv.congr e1 e1')
-  exact JetRel.of_deriv_eq hf hf' V e2 e2' h0
+  exact JetRel.of_deriv_eq hf hf' (JetRel.of_mul hS hv hv' G hnz (H.deriv.congr e1 e1')) e2 e2' h0
 
 lemma jetRel_of_weierstrass_system {p q p' q' : ℂ → ℂ} {c c' : ℂ} (hc : (c, c') ∈ S)
     (hp : AnalyticAt ℂ p 0) (hp' : AnalyticAt ℂ p' 0) (hq : AnalyticAt ℂ q 0) (hq' : AnalyticAt ℂ q' 0)
@@ -603,7 +601,7 @@ lemma thetaTranslate_canonicalOddTheta_of_half_mem (h : ∀ z, z ∈ Λ ↔ z �
   have : x ∈ Λ := by
     have := Λ.add_mem hx hx
     rwa [add_halves] at this
-  rw [a x this, if_pos hx, one_mul]
+  rw [a x this, ite_eq_left hx, one_mul]
 
 lemma thetaTranslate_natCast_mul {G : ℂ → ℂ} {u z : ℂ} (hz : G (z + u) ≠ 0) (n : ℕ) :
     U1 Λ (n * u) G (n * z) = U1 Λ u G z ^ (n ^ 2) * divQuot G u n z := by
@@ -732,8 +730,7 @@ lemma exists_periodPair_lamConj (h : ∀ z, z ∈ Λ ↔ z ∈ L.lattice) {M : I
   have e : lamConj M ρ Λ = L'.lattice.toAddSubgroup :=
     huniq _ (hs.1.trans (c2.trans b2).symm) (hs.2.trans (c3.trans b3).symm)
   refine ⟨L', fun z => by rw [e]; rfl, ?_⟩
-  rw [← a2, b2]
-  exact m2
+  rwa [← a2, b2]
 
 theorem galois_translate_sgStar : ∀ D : D7, gal1 D := by
   intro D cc δ hc M ρ hK h2 h3 x x' m hm hmx hA hM n

@@ -174,8 +174,7 @@ theorem const_eq_zero {V ι : Type} [Fintype V] (μ : ι → V → ℝ) (B : ι 
     (h : ∀ x, HasSum (fun i => B i * chr (μ i) x) d) : d = 0 := by
   classical
   have hB : Summable B := by
-    have h0 := (h 0).summable
-    simpa [chr_zero] using h0
+    simpa [chr_zero] using (h 0).summable
   have hnB : Summable (fun i => ‖B i‖) := summable_norm_iff.mpr hB
   have key : ∀ ε > 0, ‖d‖ ≤ ε := by
     intro ε hε
@@ -289,24 +288,7 @@ theorem count_span_int (v : HeightOneSpectrum (𝓞 K)) {r : 𝓞 K} (hr : r ≠
 
 theorem count_span (v : HeightOneSpectrum (𝓞 K)) {x : K} (hx : x ≠ 0) :
     FractionalIdeal.count K v (FractionalIdeal.spanSingleton (𝓞 K)⁰ x) = -WithZero.log (v.valuation K x) := by
-  obtain ⟨⟨r, s⟩, rfl⟩ := IsLocalization.mk'_surjective (𝓞 K)⁰ x
-  have hs : (s : 𝓞 K) ≠ 0 := nonZeroDivisors.coe_ne_zero s
-  have hr : r ≠ 0 := by
-    rintro rfl
-    exact hx (by simp)
-  have hs' : algebraMap (𝓞 K) K s ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 K) K)).mpr hs
-  have e : IsLocalization.mk' K r s * algebraMap (𝓞 K) K s = algebraMap (𝓞 K) K r :=
-    IsLocalization.mk'_spec K r s
-  have e2 := congrArg (FractionalIdeal.count K v) (congrArg (FractionalIdeal.spanSingleton (𝓞 K)⁰) e)
-  rw [← FractionalIdeal.spanSingleton_mul_spanSingleton, FractionalIdeal.count_mul K v
-    ((FractionalIdeal.spanSingleton_ne_zero_iff).mpr hx) ((FractionalIdeal.spanSingleton_ne_zero_iff).mpr hs'),
-    count_span_int v hs, count_span_int v hr] at e2
-  have e3 := congrArg (v.valuation K) e
-  rw [map_mul] at e3
-  have hv1 : v.valuation K (algebraMap (𝓞 K) K s) ≠ 0 := (map_ne_zero _).mpr hs'
-  have hv2 : v.valuation K (IsLocalization.mk' K r s) ≠ 0 := (map_ne_zero _).mpr hx
-  rw [← e3, WithZero.log_mul hv2 hv1] at e2
-  linarith
+  exact ReciprocityTheory.Neutral.Bridge.HCFR.count_spanSingleton K v hx
 
 theorem exists_ideal (y : (Af K)ˣ) : ∃ I : FractionalIdeal (𝓞 K)⁰ K, I ≠ 0 ∧
     ∀ w, FractionalIdeal.count K w I = -WithZero.log (Valued.v (pLoc K w (y : Af K))) := by
@@ -387,12 +369,11 @@ theorem genD_eq {y : Af F} {𝔪 𝔫 : Ideal (𝓞 F)} (h : GenD y 𝔪) (h' : 
     rw [WithZero.exp_inj] at this
     omega
   rw [← Ideal.finprod_heightOneSpectrum_factorization h.1, ← Ideal.finprod_heightOneSpectrum_factorization h'.1]
-  refine finprod_congr fun w => ?_
-  exact congrArg (fun n => w.asIdeal ^ n) (hc w)
+  exact finprod_congr fun w => congrArg (fun n => w.asIdeal ^ n) (hc w)
 
 theorem coefAt_of_genD {y : Af F} {𝔪 : Ideal (𝓞 F)} (h : GenD y 𝔪) (a : Ideal (𝓞 F) → ℂ) : coefAt a y = a 𝔪 := by
   have h' : ∃ 𝔪, GenD y 𝔪 := ⟨𝔪, h⟩
-  rw [coefAt, dif_pos h', genD_eq h'.choose_spec h]
+  rw [coefAt, dite_eq_left h', genD_eq h'.choose_spec h]
 
 theorem ordI_eventually {I : Ideal (𝓞 F)} (hI : I ≠ ⊥) :
     ∀ᶠ w : HeightOneSpectrum (𝓞 F) in Filter.cofinite, ordI w I = 0 := by
@@ -509,8 +490,7 @@ theorem coef_rat (hΨ : Sys k Ψ) (ha : ∀ y, HasQ ((((absF y ^ ((k : ℝ) / 2)
     rw [slash_weight_smul, ← hl, smul_smul, key]
   rw [hf] at hq
   have := congrFun (hasQ_unique F _ _ _ hq (ha y)) (ξ : F)
-  rw [div_self ξ.ne_zero, mul_zero, et_zero, mul_one] at this
-  exact this
+  rwa [div_self ξ.ne_zero, mul_zero, et_zero, mul_one] at this
 
 theorem coef_dual (hΨ : Sys k Ψ) (ha : ∀ y, HasQ ((((absF y ^ ((k : ℝ) / 2) : ℝ) : ℂ))⁻¹ • Ψ (aff y 0)) (a y))
     (y : (Af F)ˣ) (ξ : F) (hξ : ξ ≠ 0) (hne : a y ξ ≠ 0) : ∃ 𝔪, GenD (algebraMap F (Af F) ξ * (y : Af F)) 𝔪 := by
@@ -597,7 +577,7 @@ theorem GlobalTheory.HilbertThetaSeries.lift_hasExp : ∀ (F : Type) [Field F] [
   intro F _ _ _ k Ψ φ a hΨ hφ ha
   let c : Ideal (𝓞 F) → ℂ := fun 𝔪 => if h : 𝔪 ≠ ⊥ then a (exists_unit_genD h).choose 1 else 0
   have hc : ∀ 𝔪, 𝔪 ≠ ⊥ → ∃ Y : (Af F)ˣ, GenD (Y : Af F) 𝔪 ∧ c 𝔪 = a Y 1 := fun 𝔪 h =>
-    ⟨_, (exists_unit_genD h).choose_spec, dif_pos h⟩
+    ⟨_, (exists_unit_genD h).choose_spec, dite_eq_left h⟩
   refine ⟨c, fun x y hy yf => ?_, fun 𝔪 h => (hc 𝔪 h).imp fun _ h => h.2⟩
   have hP : 0 < ∏ v, y.val v := Finset.prod_pos fun v _ => hy v
   have hP' : (((∏ v, y.val v) ^ ((k : ℝ) / 2) : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 (Real.rpow_pos_of_pos hP _).ne'
@@ -639,8 +619,7 @@ theorem norm_p (ι : Qbar p ≃+* ℂ) : ‖ι.symm (p : ℂ)‖ = (p : ℝ)⁻�
   rw [map_natCast]
   have h : ‖(algebraMap ℚ_[p] (PadicAlgCl p) (p : ℚ_[p]))‖ = ‖(p : ℚ_[p])‖ :=
     PadicAlgCl.norm_extends p _
-  rw [map_natCast, Padic.norm_p] at h
-  exact h
+  rwa [map_natCast, Padic.norm_p] at h
 
 private theorem hasQ_const (c : ℂ) :
     HasQ (F := F) (fun _ : Hn F => c) (({0} : Set F).indicator fun _ => c) := by
@@ -687,19 +666,15 @@ private theorem hasQ_add {f g : Hn F → ℂ} {a b : F → ℂ} (hf : HasQ f a) 
       have e : ((D * E : ℕ) : F) * ξ = (D : F) * ((E : F) * ξ) := by
         push_cast
         ring
-      rw [e]
-      exact h3
+      rwa [e]
     · obtain ⟨h1, h2⟩ := hDa ξ h0
       refine ⟨h1, ?_⟩
       have h3 := (isIntegral_natCast (R := ℤ) (B := F) E).mul h2
       have e : ((D * E : ℕ) : F) * ξ = (E : F) * ((D : F) * ξ) := by
         push_cast
         ring
-      rw [e]
-      exact h3
-  · have h := (ha z).add (hb z)
-    simp only [Pi.add_apply, add_mul]
-    exact h
+      rwa [e]
+  · simpa only [Pi.add_apply, add_mul] using (ha z).add (hb z)
 
 theorem small_add {r s : ℝ} {f g : Hn F → ℂ} (hf : Small ι r f) (hg : Small ι s g) : Small ι (max r s) (f + g) := by
   obtain ⟨a, ha, ha'⟩ := hf
@@ -792,8 +767,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (p : �
     | zero => simpa using h
     | succ n ih =>
       have h1 := pow_p ih (pow_le_of_le_one hp0 hp1 (Nat.succ_ne_zero n))
-      rw [← pow_mul, ← pow_succ, ← pow_succ] at h1
-      exact h1
+      rwa [← pow_mul, ← pow_succ, ← pow_succ] at h1
   have h2 := pow_sub_one (step N) (pow_le_one₀ hp0 hp1) m
   rwa [← pow_mul] at h2
 
@@ -1103,8 +1077,7 @@ theorem orbit_seed_finite_congr : ∀ (F : Type) [Field F] [NumberField F] [IsTo
     have hN : |((Algebra.norm ℚ γ₁.val.det : ℚ) : ℝ)| = (r : ℝ) ^ 2 :=
       mul_right_cancel₀ (absF_ne_zero y) hnorm
     have hpow : (|((Algebra.norm ℚ γ₁.val.det : ℚ) : ℝ)| ^ (((p - 1 : ℕ) : ℝ) / 2) : ℝ) = (r : ℝ) ^ (p - 1) := by
-      rw [hN, ← Real.rpow_natCast, ← Real.rpow_mul (by positivity)]
-      rw [← Real.rpow_natCast]
+      rw [hN, ← Real.rpow_natCast, ← Real.rpow_mul (by positivity), ← Real.rpow_natCast]
       congr 1; ring
     have hp1 : Pos (toInf γ₁) := hpos γ₁ hG.2.2.2.2.2
     have hp' : Pos (toInf γ') := hpos γ' hγ'.2.2.2.2.2

@@ -129,8 +129,7 @@ theorem trunc_smooth_psh {D : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAt
           fun z => (Om.pot.φ x ∘ (A.chart j).symm) z + κ := by
         filter_upwards [hκ] with z hz
         simp only [Function.comp, hz]
-      rw [levi_congr hcg, levi_add_const]
-      exact h1
+      rwa [levi_congr hcg, levi_add_const]
 
 end
 
@@ -182,8 +181,7 @@ theorem isPsh_of_formNonneg {A : FinHolAtlas D X} {V : Set X} (hV : interior V�
     have h := hnn x j z ⟨(hNsub hz).2.1, hzV, (hNsub hz).2.2⟩ w
     linarith [(hNsub hz).1]
   have hmem : (A.chart j).symm y ∈ interior Vᶜ := interior_maximal hsub himg ⟨y, hyN, rfl⟩
-  rw [hV] at hmem
-  exact hmem
+  rwa [hV] at hmem
 
 end GroundTheory.Heights₂.Heights.AnalyticLimit
 end -- clump:auto
@@ -255,8 +253,7 @@ theorem LemmaETrunc.proof : LemmaETrunc.Statement := by
     have hle : ∀ x, u x ≤ 0 := by
       have hcl : closure Yo ⊆ {x | u x ≤ 0} :=
         closure_minimal hu0 (isClosed_le (st_smooth_continuous A hsm) continuous_const)
-      intro x
-      exact hcl (hd.closure_eq ▸ Set.mem_univ x)
+      exact fun x => hcl (hd.closure_eq ▸ Set.mem_univ x)
     have hpot : IsPotential A (potForm Om.pot u) :=
       isPotentialAdd A _ _ Om.isPot (isPotential_ofFun A u hsm)
     have hint : interior Yoᶜ = ∅ := by
@@ -280,18 +277,17 @@ theorem LemmaETrunc.proof : LemmaETrunc.Statement := by
       refine ⟨N, hN, hpN, c - 1, fun q hq => ?_⟩
       by_cases hqY : q ∈ Yo
       · have hq' : u q ≤ c - 1 := hNs ⟨hq, hqY⟩
-        simp only [v, if_pos hqY]
+        simp only [v, ite_eq_left hqY]
         rw [hfixC _ (by linarith)]
-      · simp only [v, if_neg hqY]
+      · simp only [v, ite_eq_right hqY]
     obtain ⟨hs, hp⟩ := trunc_smooth_psh A Om hYo hu hnn c one_pos v
-      (fun p hp => by simp only [v, if_pos hp]) hvC
+      (fun p hp => by simp only [v, ite_eq_left hp]) hvC
     refine ⟨v, hs, hp, fun x => ?_, -1, fun x hx hxR => ?_⟩
     · by_cases hx : x ∈ Yo
-      · simp only [v, if_pos hx]
-        exact hb _ (hu0 x hx)
-      · simp only [v, if_neg hx]
+      · simpa only [v, ite_eq_left hx] using hb _ (hu0 x hx)
+      · simp only [v, ite_eq_right hx]
         constructor <;> linarith
-    · simp only [v, if_pos hx]
+    · simp only [v, ite_eq_left hx]
       rw [hfixU _ (hnear x hx hxR)]
       ring
 

@@ -79,8 +79,7 @@ private theorem exists_eq_eps_mul_of_flat_of_eps_mul_eq_zero {K : Type} [Field K
   let _ : Algebra (DualNumber K) C := a.toAlgebra
   have _ : Module.Flat (DualNumber K) C := ha
   have hsum : ∑ _i : Unit, (DualNumber.eps : DualNumber K) • c = 0 := by
-    rw [Fintype.sum_unique, Algebra.smul_def, RingHom.algebraMap_toAlgebra]
-    exact hc
+    rwa [Fintype.sum_unique, Algebra.smul_def, RingHom.algebraMap_toAlgebra]
   obtain ⟨k, b, y, hy, hb⟩ := Module.Flat.isTrivialRelation_of_sum_smul_eq_zero (R := DualNumber K) (M := C)
     (f := fun _ : Unit => (DualNumber.eps : DualNumber K)) (x := fun _ => c) hsum
   have hkill : ∀ i, b () i = DualNumber.eps * TrivSqZeroExt.inl (b () i).snd := by
@@ -128,8 +127,7 @@ theorem bijective_of_mod_eps {K : Type} [Field K] {B C D : Type} [CommRing B] [C
     rw [hB, Ideal.mem_span_singleton] at h1
     obtain ⟨b1, rfl⟩ := h1
     have h2 : (φ.comp a) DualNumber.eps * φ b1 = 0 := by
-      rw [RingHom.comp_apply, ← map_mul]
-      exact hb
+      rwa [RingHom.comp_apply, ← map_mul]
     have h3 := mem_span_of_flat (φ.comp a) hfl (φ b1) h2
     rw [Ideal.mem_span_singleton] at h3
     obtain ⟨c', hc'⟩ := h3
@@ -155,8 +153,7 @@ theorem bijective_of_mod_eps {K : Type} [Field K] {B C D : Type} [CommRing B] [C
 
 theorem fst_surjective (K : Type) [Field K] :
     Function.Surjective (TrivSqZeroExt.fstHom K K K).toRingHom := by
-  intro x
-  exact ⟨algebraMap K (DualNumber K) x, by simp⟩
+  exact fun x => ⟨algebraMap K (DualNumber K) x, by simp⟩
 
 theorem isHomeomorph_of_isPullback {K : Type} [Field K] {Y Y' : Scheme.{0}} {q : Y ⟶ Sp K}
     {π : Y' ⟶ Sp (DualNumber K)} {j : Y ⟶ Y'}

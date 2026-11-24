@@ -586,8 +586,7 @@ theorem GlobalTheory.UCanon.pulled_lowObj_grp_ident : ∀ {E : Type} [Field E] [
     · have hcp : (Q.c a).left ≫ hD.e.hom.left ≫ pullback.fst L.D.P.A.hom (specOf iw) =
           specOf iw ≫ (L.D.c (l.M' • e a)).left := by
         have := hD.c_pr a
-        rw [hxe a] at this
-        exact this
+        rwa [hxe a] at this
       simp only [Category.assoc]
       rw [hθ, hc, hcp, ← Category.assoc, hsp]
     · have hq : (Q.c a).left ≫ Q.P.A.hom = 𝟙 _ := Over.w (Q.c a)
@@ -717,8 +716,7 @@ theorem eq_maximalIdeal_of_trdeg_le (F A : Type) [Field F] [CommRing A] [IsDomai
   by_contra hne
   have hle : p ≤ maximalIdeal A := le_maximalIdeal hp.ne_top
   obtain ⟨a, ham, hap⟩ : ∃ a ∈ maximalIdeal A, a ∉ p := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne (le_antisymm hle h)
   haveI := hA
   haveI : Algebra.EssFiniteType F (ResidueField A) :=
@@ -741,13 +739,11 @@ theorem eq_maximalIdeal_of_trdeg_le (F A : Type) [Field F] [CommRing A] [IsDomai
     exact h1.of_comp f
   set b : A ⧸ p := Ideal.Quotient.mk p a with hbdef
   have hb0 : b ≠ 0 := by
-    rw [hbdef, Ne, Ideal.Quotient.eq_zero_iff_mem]
-    exact hap
+    rwa [hbdef, Ne, Ideal.Quotient.eq_zero_iff_mem]
   have hbk : b ∈ RingHom.ker f.toRingHom := by
     rw [RingHom.mem_ker]
     change f (Ideal.Quotient.mk p a) = 0
-    rw [hfmk, IsLocalRing.residue_eq_zero_iff]
-    exact ham
+    rwa [hfmk, IsLocalRing.residue_eq_zero_iff]
   have hinj := algebraicIndependent_iff_injective_aeval.mp hs.1
   have htrans : Transcendental (Algebra.adjoin F (Set.range z)) b := by
     intro halg
@@ -764,8 +760,7 @@ theorem eq_maximalIdeal_of_trdeg_le (F A : Type) [Field F] [CommRing A] [IsDomai
       change MvPolynomial.aeval (fun i => f (z i)) g = 0
       rw [← MvPolynomial.comp_aeval_apply]
       change f ((MvPolynomial.aeval z).toRingHom g) = 0
-      rw [hg]
-      exact hc
+      rwa [hg]
     have hg0 : g = 0 := hinj (by rw [h0, map_zero])
     rw [Ideal.mem_bot]
     apply Subtype.ext
@@ -872,8 +867,7 @@ theorem closed_point_of_values (F A R K : Type) [Field F] [NumberField F] [CommR
       rw [RingHom.mem_ker] at h1
       have h2 := congrArg Subtype.val (j.injective (h1.trans (map_zero j).symm))
       change ev (Φ (algebraMap A L a)) = 0 at h2
-      rw [hΦ] at h2
-      exact h2
+      rwa [hΦ] at h2
     exact fun r hr => this hr
   refine ⟨h0, fun r => ?_⟩
   obtain ⟨a, s, hs, h⟩ := hres r

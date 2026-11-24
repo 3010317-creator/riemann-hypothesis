@@ -30,12 +30,8 @@ private theorem rmul_mem_bor_upper_bounds {Ψ : Finset (E →+* ℂ)} {a b : Fra
   intro τ
   obtain ⟨ha1, ha2⟩ := ha τ
   obtain ⟨hb1, hb2⟩ := hb τ
-  have hA : Matrix.BlockTriangular (mat a τ) id := by
-    intro i j h
-    exact ha2 i j h
-  have hB : Matrix.BlockTriangular (mat b τ) id := by
-    intro i j h
-    exact hb2 i j h
+  have hA : Matrix.BlockTriangular (mat a τ) id := fun i j h => ha2 i j h
+  have hB : Matrix.BlockTriangular (mat b τ) id := fun i j h => hb2 i j h
   refine ⟨?_, fun i j h => hA.mul hB h⟩
   show (mat a τ * mat b τ).det ≠ 0
   rw [Matrix.det_mul]
@@ -46,17 +42,14 @@ private theorem mem_bor_of_mat_eq_inv {Ψ : Finset (E →+* ℂ)} {b c : Frame �
   simp only [Bor, Set.mem_setOf_eq] at hb ⊢
   intro τ
   obtain ⟨hb1, hb2⟩ := hb τ
-  have hB : Matrix.BlockTriangular (mat b τ) id := by
-    intro i j h
-    exact hb2 i j h
+  have hB : Matrix.BlockTriangular (mat b τ) id := fun i j h => hb2 i j h
   haveI : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr hb1)
   have hI : Matrix.BlockTriangular (mat b τ)⁻¹ id := Matrix.blockTriangular_inv_of_blockTriangular hB
   refine ⟨?_, fun i j h => ?_⟩
   · rw [hc τ]
     exact (Matrix.isUnit_nonsing_inv_det _ (isUnit_iff_ne_zero.mpr hb1)).ne_zero
   · have h2 := hI h
-    rw [← hc τ] at h2
-    exact h2
+    rwa [← hc τ] at h2
 
 private theorem rmul_rmul_of_mat_eq_inv {Ψ : Finset (E →+* ℂ)} (x : Frame Ψ r) {b c : Frame Ψ r} (hb : b ∈ Bor Ψ r)
     (hc : ∀ τ, mat c τ = (mat b τ)⁻¹) : rmul (rmul x b) c = x := by
@@ -127,7 +120,7 @@ theorem atMostOnce (X : Data E r) {x0 : Frame X.Ψ r} (ho : IsOrth X x0) {FF : S
       simp
     · intro γ hne
       exact Set.indicator_apply_eq_zero.mpr fun hm => absurd (huniq γ γ0 hm hγ0) hne
-  · push_neg at hex
+  · push Not at hex
     have h0 : ∀ γ : X.Γ, (KU.Sset X x0 FF).indicator (1 : Frame X.Ψ r → ℝ≥0∞) (lact γ.1 y) = 0 :=
       fun γ => Set.indicator_apply_eq_zero.mpr fun hm => absurd hm (hex γ)
     rw [tsum_congr h0, tsum_zero]
@@ -195,8 +188,7 @@ theorem fundSetMeasStatement_of_isCMField {E : Type} [Field E] [NumberField E] [
     refine lintegral_mono_ae (hcov.mono fun z hz => ?_)
     by_cases hS0 : cpt X x0 z ∈ KU.Sset X x0 FF
     · have : ∃ γ : X.Γ, cpt X x0 z ∈ lact γ.1⁻¹ ⁻¹' KU.Sset X x1 CechHodgeFiltration := by
-        by_contra hn
-        push_neg at hn
+        by_contra! hn
         exact hz (Set.mem_iInter.mpr fun γ => hn γ)
       obtain ⟨γ, hγ⟩ := this
       refine le_trans (le_of_eq ?_) (ENNReal.le_tsum γ)
@@ -226,8 +218,7 @@ theorem fundSetMeasStatement_of_isCMField {E : Type} [Field E] [NumberField E] [
     rw [← lintegral_tsum fun γ => (hI γ).aemeasurable, ← lintegral_indicator_one hFF1.1]
     refine lintegral_mono fun z => ?_
     by_cases hz : z ∈ CechHodgeFiltration
-    · simp only [Set.indicator_of_mem hz, Pi.one_apply]
-      exact FSM.atMostOnce X ho hFF _
+    · simpa only [Set.indicator_of_mem hz, Pi.one_apply] using FSM.atMostOnce X ho hFF _
     · simp [Set.indicator_of_notMem hz]
   calc muF X x0 FF = _ := step1
     _ ≤ _ := step2

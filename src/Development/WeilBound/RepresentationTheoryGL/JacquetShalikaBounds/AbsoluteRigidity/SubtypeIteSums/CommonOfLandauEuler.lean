@@ -236,20 +236,17 @@ theorem PositivityTheory.RgJS.common_of_landau_euler : LandauL → EulerLog → 
           (s + (((x p.1).2 + (y p.2).2 : ℝ) : ℂ) - 1) := by
         funext s
         unfold gf
-        rw [if_pos hc]
-      rw [hgf]
-      exact this
+        rw [ite_eq_left hc]
+      rwa [hgf]
     · have hgf : gf F x y p = fun s : ℂ => F p (s + (((x p.1).2 + (y p.2).2 : ℝ) : ℂ)) := by
         funext s
         unfold gf
-        rw [if_neg hc]
-      rw [hgf]
-      exact hF'
+        rw [ite_eq_right hc]
+      rwa [hgf]
   have hGa : ∀ σ : ℝ, 1 - δ < σ → AnalyticAt ℂ (fun s => ∏ p, gf F x y p s) σ := by
     intro σ hσ
     have := Finset.analyticAt_prod (f := fun p => gf F x y p) Finset.univ (fun p _ => hGa' σ hσ p)
-    rw [Finset.prod_fn] at this
-    exact this
+    rwa [Finset.prod_fn] at this
   set σ₁ : ℝ := 2 + ∑ p, |σ0 p| with hσ₁
   have hσ0le : ∀ p, σ0 p ≤ σ₁ - 2 := fun p => by
     have := Finset.single_le_sum (f := fun p => |σ0 p|) (fun p _ => abs_nonneg _) (Finset.mem_univ p)
@@ -286,8 +283,8 @@ theorem PositivityTheory.RgJS.common_of_landau_euler : LandauL → EulerLog → 
           have := congrArg Complex.re h
           simp at this
           linarith [ht p.1, ht' p.2]
-        rw [hFE, if_pos hc, mul_div_cancel_left₀ _ hne1, hEL]
-      · rw [hFE, if_neg hc, one_mul, hEL]
+        rw [hFE, ite_eq_left hc, mul_div_cancel_left₀ _ hne1, hEL]
+      · rw [hFE, ite_eq_right hc, one_mul, hEL]
     show ∏ p, gf F x y p σ = _
     simp only [hg]
     rw [← Complex.exp_sum, ← Summable.tsum_finsetSum (fun p _ => hs' p)]

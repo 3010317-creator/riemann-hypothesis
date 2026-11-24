@@ -75,7 +75,7 @@ theorem comm_Tm (Eu : Fin n → Fin n → A) (hG : GlRel Eu) (p a b : Fin n) (ha
     · exact (Algebra.commutes v (Eu p p)).symm
     · exact Commute.zero_right _
   · have h := hG p p a b
-    rw [if_neg (Ne.symm ha), if_neg hb, sub_zero] at h
+    rw [ite_eq_right (Ne.symm ha), ite_eq_right hb, sub_zero] at h
     exact sub_eq_zero.mp h
 
 theorem comm_qminor (Eu : Fin n → Fin n → A) (hG : GlRel Eu) {t : ℕ} (a b : Fin t → Fin n) (u : ℂ) (p : Fin n)
@@ -117,11 +117,9 @@ theorem comm_AAx (Eu : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → A) (hG : 
       have hdet : (of fun (a l : Fin j) => xi (Fin.castLE (by omega) a) (c l)).det = 0 := by
         apply Matrix.det_eq_zero_of_column_eq_zero l
         intro a
-        simp only [of_apply, hl]
-        exact h0 _ a.isLt
-      simp only [hdet, zero_smul]
-      exact Commute.zero_right _
-    · push_neg at hp
+        simpa only [of_apply, hl] using h0 _ a.isLt
+      simpa only [hdet, zero_smul] using Commute.zero_right _
+    · push Not at hp
       refine Commute.smul_right ?_ _
       refine comm_qminor Eu hG _ _ u _ (fun i => ?_) hp
       have := i.isLt
@@ -141,11 +139,9 @@ theorem comm_AAv (Eu : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → A) (hG : 
       have hdet : (of fun (a l : Fin j) => y (Fin.castLE (by omega) a) (c l)).det = 0 := by
         apply Matrix.det_eq_zero_of_column_eq_zero l
         intro a
-        simp only [of_apply, hl]
-        exact h0 _ a.isLt
-      simp only [hdet, zero_smul]
-      exact Commute.zero_right _
-    · push_neg at hp
+        simpa only [of_apply, hl] using h0 _ a.isLt
+      simpa only [hdet, zero_smul] using Commute.zero_right _
+    · push Not at hp
       refine Commute.smul_right ?_ _
       refine comm_qminor Eu hG _ _ _ _ hp (fun i => ?_)
       have := i.isLt
@@ -221,7 +217,7 @@ private theorem sgn_sig_mul_y0_eq_star_esI_apply_of_mem_GV {k r : ℕ} (g : B.Ma
     split_ifs with h1 h2 h2 <;> simp only at * <;> omega
   have hn : GBasic.sgn k r (eI k r a) = 1 := by
     have := a.isLt
-    rw [GBasic.sgn, if_neg]
+    rw [GBasic.sgn, ite_eq_right]
     simp only [eI, Fin.val_mk]
     omega
   have he : GBasic.sig k r (eI k r a) = esI k r a := by
@@ -234,8 +230,7 @@ private theorem sgn_sig_mul_y0_eq_star_esI_apply_of_mem_GV {k r : ℕ} (g : B.Ma
     calc Hpk k r * g⁻¹ = gᴴ * Hpk k r * g * g⁻¹ := by rw [hg']
       _ = gᴴ * Hpk k r := by rw [Matrix.mul_assoc (gᴴ * Hpk k r), Matrix.mul_nonsing_inv _ hu, Matrix.mul_one]
   have h2 := congrFun (congrFun h1 (GBasic.sig k r p)) (eI k r a)
-  rw [C2x6.Hpk_mul_apply, C2x6.mul_Hpk_apply] at h2
-  rw [hs, he, hn, mul_one, conjTranspose_apply] at h2
+  rw [C2x6.Hpk_mul_apply, C2x6.mul_Hpk_apply, hs, he, hn, mul_one, conjTranspose_apply] at h2
   have hy : PBG.y0 g a p = g⁻¹ p (eI k r a) := by
     simp [PBG.y0, bvec, mulVec, dotProduct, Pi.single_apply]
   rw [hy, h2]
@@ -272,7 +267,7 @@ theorem y0_x0_esI_j_eq_zero_of_det_ne_zero (hj : j + 1 ≤ r) {Z : Matrix (Fin j
   have : j + 1 ≤ r := hj
   have hse : (GBasic.sig k r (esI k r ⟨j, by omega⟩)).val = j := by
     unfold GBasic.sig
-    rw [if_pos (Or.inr (by simp only [esI]; omega))]
+    rw [ite_eq_left (Or.inr (by simp only [esI]; omega))]
     simp only [esI]
     omega
   rw [hse]

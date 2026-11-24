@@ -87,7 +87,7 @@ private lemma col_flowMat_mul (ξ : Fin r → E) (τ : X.Ψ) (s : ℂ) (M : Matr
       (I * X.c τ * s * hermC τ.1 X.Gm (col M a) (fun k => τ.1 (ξ k))) • (fun k => τ.1 (ξ k)) := by
   funext k
   simp only [col, Data.flowMat, Matrix.mul_apply, Matrix.of_apply, sub_mul, Finset.sum_sub_distrib,
-    ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, hermC, Pi.sub_apply,
+    ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, hermC, Pi.sub_apply,
     Pi.smul_apply, smul_eq_mul, Finset.mul_sum, Finset.sum_mul]
   congr 1
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun m _ => ?_
@@ -248,9 +248,7 @@ lemma bchar_add {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (la la' : Wt X.Ψ r) 
   rw [← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
   have hdet := (hb τ).1
-  have htri : (mat b τ).BlockTriangular id := by
-    intro a c h
-    exact (hb τ).2 a c h
+  have htri : (mat b τ).BlockTriangular id := fun a c h => (hb τ).2 a c h
   rw [Matrix.det_of_upperTriangular htri] at hdet
   have hi : b τ i i ≠ 0 := (Finset.prod_ne_zero_iff.mp hdet) i (Finset.mem_univ i)
   rw [Pi.add_apply, Pi.add_apply, zpow_add₀ hi]
@@ -302,8 +300,7 @@ lemma fj_mul_zero (h3d : ModerateCoefficientPositivity (E := E)) (h3e : Coeffici
     apply h1
     apply hvan ν' (sign_of_bdd X h3d hP hξ ν' hx h1)
     intro τ
-    have h3 := sign_of_bdd X h3d hQ hξ (ν - ν') hx h2 τ
-    simpa using h3
+    simpa using sign_of_bdd X h3d hQ hξ (ν - ν') hx h2 τ
   rw [hz] at hs
   exact hs.unique hasSum_zero
 

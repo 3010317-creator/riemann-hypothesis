@@ -182,8 +182,7 @@ variable {L : Type} [Field L] (O : Subring L) {Γ : Type} [LinearOrderedCommGrou
 
 theorem cartan_pigeon {m : ℕ} (σ : Equiv.Perm (Fin m)) (i : Fin m) :
     ∃ j, j ≤ i ∧ i ≤ σ j := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hmaps : Set.MapsTo σ (Finset.Iic i : Set (Fin m)) (Finset.Iio i : Set (Fin m)) := by
     intro j hj
     simp only [Finset.coe_Iic, Finset.coe_Iio, Set.mem_Iic, Set.mem_Iio] at hj ⊢
@@ -200,8 +199,7 @@ theorem cartan_core (val : Valuation L Γ) (hO : ∀ x, x ∈ O ↔ val x ≤ 1)
   have hent : ∀ p q, ϖ ^ a p * (k : Matrix (Fin m) (Fin m) L) p q = k' p q * ϖ ^ b q := by
     intro p q
     have e := congrFun (congrFun h p) q
-    rw [Matrix.diagonal_mul, Matrix.mul_diagonal] at e
-    exact e
+    rwa [Matrix.diagonal_mul, Matrix.mul_diagonal] at e
   have hsmall : ∀ p q, i ≤ p → q ≤ i → val ((k : Matrix (Fin m) (Fin m) L) p q) < 1 := by
     intro p q hp hq
     have hkpq : (k : Matrix (Fin m) (Fin m) L) p q = k' p q * ϖ ^ (b q - a p) := by
@@ -233,10 +231,8 @@ theorem cartan_core (val : Valuation L Γ) (hO : ∀ x, x ∈ O ↔ val x ≤ 1)
             mul_le_mul' le_rfl (Finset.prod_le_one' (fun x _ => hle _ _))
         _ < 1 := by rw [mul_one]; exact hsmall _ _ hσj hj
     rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with hs | hs <;> rw [hs]
-    · rw [one_smul]
-      exact hprod
-    · rw [Units.neg_smul, one_smul, Valuation.map_neg]
-      exact hprod
+    · rwa [one_smul]
+    · rwa [Units.neg_smul, one_smul, Valuation.map_neg]
   exact absurd (cartan_val_det O val hO k hk) (ne_of_lt hdet)
 
 theorem cartan_unique_gen (val : Valuation L Γ) (hO : ∀ x, x ∈ O ↔ val x ≤ 1) (ϖ : L)

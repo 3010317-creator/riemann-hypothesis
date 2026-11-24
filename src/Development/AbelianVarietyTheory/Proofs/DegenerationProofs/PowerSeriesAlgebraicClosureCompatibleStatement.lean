@@ -664,8 +664,7 @@ theorem exists_mdl_ext : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheor
     rw [Model.j_s, Category.assoc, ← Category.assoc y, hy, ← spMap_comp', ← spMap_comp']
     change _ = spMap _ ≫ spMap (algebraMap W (FractionRing W)) ≫ _
     rw [← spMap_comp', ← spMap_comp']
-    refine congrArg spMap (RingHom.ext fun x => ?_)
-    exact (congrArg e (hbF x)).trans (he (b x))
+    exact congrArg spMap (RingHom.ext fun x => ((congrArg e (hbF x)).trans (he (b x))))
   obtain ⟨M, f, -, -, -, hf, -⟩ := GlobalTheory.Ex.UnifModel.exists_mdl h1 h2 h3 h4 h5 h6 h7 E H D l Xo c W₀ Y C W hW hC K₁ gam hg
     (spMap e ≫ y) (φ.comp b) hs o₁' hF
   exact ⟨{ W := M.W, cdv := M.cdv, ext := M.ext, t := M.t, P := M.P, φ := M.φ, cart := M.cart, lb := M.lb, act := M.act },

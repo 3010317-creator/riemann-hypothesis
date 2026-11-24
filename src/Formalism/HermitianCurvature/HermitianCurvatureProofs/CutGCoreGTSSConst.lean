@@ -76,8 +76,7 @@ theorem ann_preconn (P : M.Par) (hTT : 0 < P.TT) : IsPreconnected (Ann P) := by
       refine ⟨(‖ζ‖, Complex.arg ζ), ⟨?_, Set.mem_univ _⟩, Complex.norm_mul_exp_arg_mul_I ζ⟩
       show Real.sqrt P.TT < ‖ζ‖
       rw [Complex.normSq_eq_norm_sq] at h'
-      by_contra hle
-      push_neg at hle
+      by_contra! hle
       nlinarith [norm_nonneg ζ, mul_le_mul hle hle (norm_nonneg ζ) hs]
     · rintro ⟨⟨a, b⟩, ⟨ha, -⟩, rfl⟩
       have ha' : Real.sqrt P.TT < a := ha
@@ -134,7 +133,7 @@ theorem vl_sub (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) [FiniteDimension
   have hv : ∀ Φ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π', vl P Bs e Φ ρ q =
       rawR P Bs.μsec e (Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) ρ q := by
     intro Φ
-    simp only [vl, GC.trR, MA.toSm, dif_pos (hsm Φ ρ)]
+    simp only [vl, GC.trR, MA.toSm, dite_eq_left (hsm Φ ρ)]
   rw [hv, hv, hv]
   simp only [rawR, Submodule.coe_sub, Pi.sub_apply, hsVec_sub, inner_sub_right]
   ring
@@ -312,26 +311,22 @@ theorem second_shift_constant : GTSSConst := by
   have hNs : star d.L.nabs = d.L.nab := by rw [← hS.2.1, star_star]
   have E1 : d.L.nab.1 ((d.SS l).1 U) = (d.SS l).1 (d.L.nab.1 U) - d.L.ζb.1 (d.L.GGi.1 ((d.SS l).1 U)) := by
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) hrel.1
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
   have E2 : d.L.nabs.1 ((d.SS l).1 U) = (d.SS l).1 (d.L.nabs.1 U) - d.L.ζ.1 (d.L.GGi.1 ((d.SS l).1 U)) := by
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) hrel.2
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
   have F1 : (star (d.SS l)).1 (d.L.nabs.1 U) =
       d.L.nabs.1 ((star (d.SS l)).1 U) - (star (d.SS l)).1 (d.L.GGi.1 (d.L.ζ.1 U)) := by
     have h0 := congrArg star hrel.1
     rw [star_mul, star_sub, star_mul, star_mul, star_mul, hS.2.1, hGi, hZb] at h0
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) h0
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
   have F2 : (star (d.SS l)).1 (d.L.nab.1 U) =
       d.L.nab.1 ((star (d.SS l)).1 U) - (star (d.SS l)).1 (d.L.GGi.1 (d.L.ζb.1 U)) := by
     have h0 := congrArg star hrel.2
     rw [star_mul, star_sub, star_mul, star_mul, star_mul, hNs, hGi, hS.1] at h0
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => x.1 U) h0
-    simp only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] at h
-    exact h
+    simpa only [pm, ps, Module.End.mul_apply, LinearMap.sub_apply] using h
 
   have hDs : ∀ q : MA.Qp P.r P.TT, M.Up P l ρ0 ρ' →
       NF.dZ (s l ρ' ρ0) q.1.2 = 0 ∧ NF.dZb (s l ρ' ρ0) q.1.2 = 0 := by
@@ -345,7 +340,7 @@ theorem second_shift_constant : GTSSConst := by
       (hfn (d.L.GGi.1 ((d.SS l).1 U)) ρ' q).2.1, (hfn ((d.SS l).1 U) ρ' q).2.2, (hVd q).1, hVv] at V1
     rw [vl_sub P Bs hpl hk2 e he, (hnb ((d.SS l).1 U) ρ' q).2, (hss (d.L.nabs.1 U) ρ' q).1,
       (hfn (d.L.GGi.1 ((d.SS l).1 U)) ρ' q).1, (hfn ((d.SS l).1 U) ρ' q).2.2, (hVd q).2, hVv] at V2
-    simp only [hNU, hNsU, mul_ite, mul_zero, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true] at V1 V2
+    simp only [hNU, hNsU, mul_ite, mul_zero, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at V1 V2
     constructor
     · linear_combination V1 - (star q.1.2 * ((Complex.normSq q.1.2 : ℂ) - (P.TT : ℂ))⁻¹ * s l ρ' ρ0 q.1.2) * ha
     · linear_combination -V2 + (q.1.2 * ((Complex.normSq q.1.2 : ℂ) - (P.TT : ℂ))⁻¹ * s l ρ' ρ0 q.1.2) * ha
@@ -362,7 +357,7 @@ theorem second_shift_constant : GTSSConst := by
     rw [vl_sub P Bs hpl hk2 e he, (hss (d.L.nab.1 U) ρ' q).2, (hnb ((star (d.SS l)).1 U) ρ' q).1,
       (hss (d.L.GGi.1 (d.L.ζb.1 U)) ρ' q).2, (hWd q).1, hWv] at W2
     simp only [hNU, hNsU, hGZU, hGZbU, mul_ite, mul_zero, mul_one, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true] at W1 W2
+      ite_true] at W1 W2
     constructor
     · linear_combination -W2 + (t l ρ' ρ0 q.1.2 * star q.1.2 * ((Complex.normSq q.1.2 : ℂ) - (P.TT : ℂ))⁻¹) * ha
     · linear_combination W1 - (t l ρ' ρ0 q.1.2 * q.1.2 * ((Complex.normSq q.1.2 : ℂ) - (P.TT : ℂ))⁻¹) * ha
@@ -381,7 +376,7 @@ theorem second_shift_constant : GTSSConst := by
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => vl P Bs e (x.1 U) ρ' q) h0
     simp only [pm, Module.End.mul_apply] at h
     rw [vl_kap P Bs d e hk, hVv, (hss _ ρ' q).1] at h
-    simp only [vl_kap P Bs d e hk, hUv, f, g, hup, if_false, zero_mul] at h
+    simp only [vl_kap P Bs d e hk, hUv, f, g, hup, ite_false, zero_mul] at h
     have hdd : ∀ x : M.Ty P, ((if x = ρ0 then (1 : ℂ) else 0) * if x = ρ0 then (1 : ℂ) else 0) =
         if x = ρ0 then 1 else 0 := by
       intro x; split_ifs <;> simp
@@ -406,8 +401,8 @@ theorem second_shift_constant : GTSSConst := by
     have h := congrArg (fun x : Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') => vl P Bs e (x.1 U) ρ' q) h0
     simp only [pm, Module.End.mul_apply] at h
     rw [vl_kap P Bs d e hk, hWv, (hss _ ρ' q).2] at h
-    simp only [vl_kap P Bs d e hk, hUv, f, g, if_true] at h
-    simp only [mul_ite, mul_zero, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true, one_mul] at h
+    simp only [vl_kap P Bs d e hk, hUv, f, g, ite_true] at h
+    simp only [mul_ite, mul_zero, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true, one_mul] at h
     exact h.symm.trans (by simp [hup])
 
   let qOf : ∀ ζ ∈ Ann P, MA.Qp P.r P.TT := fun ζ hζ => ⟨((fun _ => (1 : ℂ)), ζ), ⟨fun _ => one_ne_zero, hζ⟩⟩

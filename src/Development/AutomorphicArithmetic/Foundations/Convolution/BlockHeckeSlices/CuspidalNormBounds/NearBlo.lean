@@ -219,8 +219,7 @@ theorem UpperTheory.exists_approximate_identity_integrated :
       rw [this]
       simp
   rw [key]
-  rw [integral_mul_const, hk1, one_mul] at hbound
-  exact hbound
+  rwa [integral_mul_const, hk1, one_mul] at hbound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.TwistedTraces.ExistsApproximateIdentityIntegrated =====
@@ -247,8 +246,7 @@ theorem UpperTheory.norm_exp_smul_sub_le_norm_derivOp :
       refine h2.congr_of_eventuallyEq (Filter.Eventually.of_forall fun s => ?_)
       simp only [Function.comp_apply, ContinuousLinearMap.coe_restrictScalars']
       rw [h.expG_add_smul, BanachRep.map_mul_apply]
-    have h4 := h3.comp_sub_const t t
-    simpa only [add_sub_cancel] using h4
+    simpa only [add_sub_cancel] using h3.comp_sub_const t t
   have hm := norm_image_sub_le_of_norm_deriv_le_segment_01'
     (f := fun s : ℝ => π (h.expG (s • X)) v)
     (f' := fun t : ℝ => π (h.expG (t • X)) (h.derivOp π X v)) (C := ‖h.derivOp π X v‖)
@@ -615,8 +613,7 @@ theorem UpperTheory.norm_skewAdjoint_le_of_eigenvalue_bound :
     have h4 : D.HasEigenvalue (-Complex.I * (hT.eigenvalues hn i : ℂ)) :=
       Module.End.hasEigenvalue_of_hasEigenvector
         ⟨Module.End.mem_eigenspace_iff.2 h2, (hT.eigenvectorBasis hn).orthonormal.ne_zero i⟩
-    have h5 := hev _ h4
-    simpa using h5
+    simpa using hev _ h4
   rcases subsingleton_or_nontrivial E with hE | hE
   · have : x = 0 := Subsingleton.elim _ _
     subst this
@@ -664,11 +661,9 @@ theorem UpperTheory.norm_generator_le_of_polynomial_annihilated :
       rw [← Module.End.mul_apply, ← hadd]
       congr 2
       ring
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
   have hinner : ∀ (t : ℝ) (a b : E), inner ℂ (u t a) (u t b) = inner ℂ a b := by
-    intro t a b
-    exact LinearIsometry.inner_map_map (⟨u t, hiso t⟩ : E →ₗᵢ[ℂ] E) a b
+    exact fun t a b => LinearIsometry.inner_map_map (⟨u t, hiso t⟩ : E →ₗᵢ[ℂ] E) a b
   have h0' : ∀ a : E, u 0 a = a := by
     intro a
     rw [h0]
@@ -682,8 +677,7 @@ theorem UpperTheory.norm_generator_le_of_polynomial_annihilated :
     rw [h2] at h1
     have h3 := h1.unique (hasDerivAt_const (0 : ℝ) (inner ℂ a b))
     rw [h0', h0'] at h3
-    rw [add_comm]
-    exact h3
+    rwa [add_comm]
   have hev : ∀ z : ℂ, D.HasEigenvalue z → ‖z‖ ≤ M := by
     intro z hz
     obtain ⟨w, hw⟩ := hz.exists_hasEigenvector
@@ -697,16 +691,14 @@ theorem UpperTheory.norm_generator_le_of_polynomial_annihilated :
           have hl : HasDerivAt (fun s : ℝ => -(z * (s : ℂ))) (-z) t := by
             have h : HasDerivAt (fun s : ℝ => (s : ℂ)) 1 t := by
               simpa using (hasDerivAt_id t).ofReal_comp
-            have h2 := h.const_mul (-z)
-            simpa [neg_mul] using h2
+            simpa [neg_mul] using h.const_mul (-z)
           exact hl.cexp
         have h1 := he.smul (hshift t w)
         have h2 : Complex.exp (-(z * t)) • u t (D w) + (Complex.exp (-(z * t)) * (-z)) • u t w = 0 := by
           rw [hDw, map_smul, smul_smul, ← add_smul]
           have : Complex.exp (-(z * t)) * z + Complex.exp (-(z * t)) * (-z) = 0 := by ring
           rw [this, zero_smul]
-        rw [h2] at h1
-        exact h1
+        rwa [h2] at h1
       intro t
       have hc := is_const_of_deriv_eq_zero (f := fun s : ℝ => Complex.exp (-(z * s)) • u s w)
         (fun s => (hd s).differentiableAt) (fun s => (hd s).deriv) t 0
@@ -783,8 +775,7 @@ theorem UpperTheory.norm_deriv_orbit_le_of_polynomial_annihilated :
     have h2 : (fun t : ℝ => LR (u t w)) = fun t => u t (u s w) := by
       funext t
       exact hcomm s t w
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
   have hder : ∀ w ∈ E, ∃ d, HasDerivAt (fun t : ℝ => u t w) d 0 := by
     intro w hw
     rw [hE] at hw
@@ -809,8 +800,7 @@ theorem UpperTheory.norm_deriv_orbit_le_of_polynomial_annihilated :
   have hd : ∀ w : E, HasDerivAt (fun t : ℝ => u t (w : H)) (deriv (fun t : ℝ => u t (w : H)) 0) 0 := by
     intro w
     obtain ⟨d, hd⟩ := hder w w.2
-    rw [hd.deriv]
-    exact hd
+    rwa [hd.deriv]
   let D : Module.End ℂ E :=
     { toFun := fun w => ⟨deriv (fun t : ℝ => u t (w : H)) 0, hlim _ w.2 _ (hd w)⟩
       map_add' := by
@@ -899,8 +889,7 @@ theorem UpperTheory.norm_deriv_orbit_le_of_polynomial_annihilated :
   have hn : ‖D ⟨v, hvE⟩‖ = ‖y‖ := by
     rw [← hDv]
     rfl
-  rw [hn] at hbound
-  exact hbound
+  rwa [hn] at hbound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.TwistedTraces.NormDerivOrbitLeOfPolynomialAnnihilated =====
@@ -974,8 +963,7 @@ theorem UpperTheory.norm_cuspVecL_gk_action_le_of_aeval_eq_zero :
     exact Submodule.finiteDimensional_of_le hle
   · intro t
     have := aeval_cuspVecL μ (kk t) (p (kk t)) hφ
-    rw [hkill, map_zero] at this
-    exact this
+    rwa [hkill, map_zero] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.TwistedTraces.NormCuspVecLGkActionLeOfAevalEqZero =====
@@ -1022,8 +1010,7 @@ theorem UpperTheory.re_inner_ge_of_span_eigenvectors :
     rw [hv', map_sum, sum_inner]
     refine Finset.sum_congr rfl fun a ha => ?_
     rw [inner_sum, Finset.sum_eq_single_of_mem a ha]
-    intro b _ hb
-    exact horth a b hb.symm
+    exact fun b _ hb => horth a b hb.symm
   have e2 : inner ℂ (j v) (j (T v))
       = ∑ a ∈ f.support, (a : ℂ) * inner ℂ (j (f a)) (j (f a)) := by
 
@@ -1400,7 +1387,7 @@ theorem UpperTheory.ConvolutionTheory.BW.nearBlo :
       rw [h1, b.inf]
     · change hk r w j b.f = (_ * GlobalTheory.LFun.satEig _ r (q.2 w) j) • b.f
       rw [(hkOps E r w j).1, (b.isSat w hw).2.2.2 _ (GlobalTheory.LFun.exists_isUnifV w).choose_spec j (Nat.lt_succ_iff.1 j.2), smul_smul,
-        h2, if_neg hw]
+        h2, ite_eq_right hw]
   have himg : (lam '' P).Finite := by
     have hex : ∀ x : lam '' P, ∃ b : Blo S r, Killed ρ.ρ b.f.1 ∧ (∀ τ i, ‖b.Λ τ i‖ ≤ B) ∧ ∀ i, T i b.f = x.1 i • b.f := by
       rintro ⟨_, q, ⟨b, h1, h2, h3, h4⟩, rfl⟩
@@ -1422,9 +1409,9 @@ theorem UpperTheory.ConvolutionTheory.BW.nearBlo :
     obtain ⟨k, -, hk⟩ := h
     exact ⟨k, (neg_add_eq_zero.1 hk).symm⟩
   · by_cases hw : w ∈ S
-    · rw [h4, h4', if_pos hw, if_pos hw]
-    · have c1 : (q'.2 w).card = r := by rw [h4', if_neg hw]; exact (b'.isSat w hw).2.2.1
-      have c2 : (q.2 w).card = r := by rw [h4, if_neg hw]; exact (b.isSat w hw).2.2.1
+    · rw [h4, h4', ite_eq_left hw, ite_eq_left hw]
+    · have c1 : (q'.2 w).card = r := by rw [h4', ite_eq_right hw]; exact (b'.isSat w hw).2.2.1
+      have c2 : (q.2 w).card = r := by rw [h4, ite_eq_right hw]; exact (b.isSat w hw).2.2.1
       have hq : Formalism.UG.qV E w ≠ 0 := GlobalTheory.LFun.qV_ne_zero w
       refine GlobalTheory.LFun.eq_of_satEig_eq hq c1 c2 fun j hj => ?_
       have h := congrFun he (Sum.inr (⟨w, hw⟩, ⟨j, Nat.lt_succ_iff.2 hj⟩))

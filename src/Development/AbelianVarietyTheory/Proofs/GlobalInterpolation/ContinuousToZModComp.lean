@@ -120,8 +120,7 @@ theorem mem_of_natCast_mem {R : Type*} [CommRing R] (m : ℕ)
         omega
       have hn' : n = Nat.gcd n m * (n / Nat.gcd n m) := (Nat.mul_div_cancel' (Nat.gcd_dvd_left n m)).symm
       have hmul : ((Nat.gcd n m : R) * ((n / Nat.gcd n m : ℕ) : R)) ∈ P := by
-        rw [← Nat.cast_mul, ← hn']
-        exact hnP
+        rwa [← Nat.cast_mul, ← hn']
       rcases hP.mem_or_mem hmul with h1 | h1
       · obtain ⟨c, hc'⟩ := Nat.gcd_dvd_right n m
         have e : (m : R) = (Nat.gcd n m : R) * (c : R) := by
@@ -159,8 +158,7 @@ theorem isPrincipalIdealRing_loc {K : Type} [Field K] [NumberField K] (m : ℕ) 
     have h3 : Ideal.absNorm (P.under (𝓞 K)) ≠ 0 := by
       rwa [Ne, Ideal.absNorm_eq_zero_iff]
     have h4 : ((Ideal.absNorm (P.under (𝓞 K)) : ℕ) : R) ∈ P := by
-      rw [← map_natCast (algebraMap (𝓞 K) R)]
-      exact h2
+      rwa [← map_natCast (algebraMap (𝓞 K) R)]
     have := mem_of_natCast_mem m hu P hP _ (Nat.pos_of_ne_zero h3) h4
     simpa [Ideal.dvd_iff_le] using this
 
@@ -205,8 +203,7 @@ theorem exists_basis_coprime {K V : Type} [Field K] [NumberField K] [AddCommGrou
   have hN : N.FG := by
     obtain ⟨s, hs⟩ := hL
     refine ⟨s, ?_⟩
-    simp only [N, ← hs]
-    exact (Submodule.span_span_of_tower (𝓞 K) R (s : Set V)).symm
+    simpa only [N, ← hs] using (Submodule.span_span_of_tower (𝓞 K) R (s : Set V)).symm
   have : Module.Finite R N := Module.Finite.iff_fg.mpr hN
   have : Module.IsTorsionFree R V := by
     refine Module.IsTorsionFree.of_smul_eq_zero fun r v h => ?_
@@ -354,8 +351,7 @@ theorem resid_mem (r n : ℕ) (x : Fin r → ℤ_[p]) :
     resid r n x ∈ Fintype.piFinset fun _ : Fin r => Finset.range (p ^ n) := by
   haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   rw [Fintype.mem_piFinset]
-  intro j
-  exact Finset.mem_range.2 (ZMod.val_lt _)
+  exact fun j => Finset.mem_range.2 (ZMod.val_lt _)
 
 theorem dist_resid (r n : ℕ) (x : Fin r → ℤ_[p]) :
     dist x (fun j => ((resid r n x j : ℕ) : ℤ_[p])) ≤ (p : ℝ) ^ (-n : ℤ) := by
@@ -392,8 +388,7 @@ theorem riemann_sums : ∀ (p r : ℕ) [Fact p.Prime] (μ : C(Fin r → ℤ_[p],
       tendsto_pow_atTop_nhds_zero_of_lt_one (by positivity) (inv_lt_one_of_one_lt₀ hp1)
     filter_upwards [ht.eventually (gt_mem_nhds hδ)] with n hn x y hxy
     refine h (hxy.trans_lt ?_)
-    rw [zpow_neg, zpow_natCast, ← inv_pow]
-    exact hn
+    rwa [zpow_neg, zpow_natCast, ← inv_pow]
   obtain ⟨n, hn⟩ := ((Filter.eventually_all_finset F).2 fun i _ => hev i).exists
   set S : Finset (Fin r → ℕ) := Fintype.piFinset fun _ : Fin r => Finset.range (p ^ n) with hS
   refine ⟨Finsupp.onFinset S (fun a => if a ∈ S then μ (ind r n a) else 0)
@@ -410,7 +405,7 @@ theorem riemann_sums : ∀ (p r : ℕ) [Fact p.Prime] (μ : C(Fin r → ℤ_[p],
 
       rw [map_sum]
       refine Finset.sum_congr rfl fun a ha => ?_
-      rw [if_pos ha, map_smul, smul_eq_mul, mul_comm]
+      rw [ite_eq_left ha, map_smul, smul_eq_mul, mul_comm]
     beta_reduce
     rw [h1, ← map_sub]
     refine (hμ' _).trans_lt (lt_of_le_of_lt ?_ (half_lt_self hε))
@@ -422,8 +417,7 @@ theorem riemann_sums : ∀ (p r : ℕ) [Fact p.Prime] (μ : C(Fin r → ℤ_[p],
       · simp [ind]
       · intro b _ hb
         simp [ind, Ne.symm hb]
-      · intro h
-        exact absurd (resid_mem r n x) h
+      · exact fun h => absurd (resid_mem r n x) h
     rw [ContinuousMap.sub_apply, h2, ← dist_eq_norm]
     exact (hn i hi _ _ (dist_resid r n x)).le
 
@@ -451,8 +445,7 @@ theorem embT_injective : Function.Injective (TaylorLogMetric.embT D) := by
   intro τ τ' h
   apply D.eTau.injective
   apply (GlobalTheory.InducedType.galK_bijective D.host).1
-  refine AlgEquiv.ext fun x => D.host.φ₀.injective ?_
-  exact congrArg (fun f : D.host.E →+* ℂ => f x) h
+  exact AlgEquiv.ext fun x => D.host.φ₀.injective (congrArg (fun f : D.host.E →+* ℂ => f x) h)
 
 theorem lamC_injOn {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) (h : TaylorLogMetric.lamC lam x = TaylorLogMetric.lamC lam y) : x = y := by
   rw [TaylorLogMetric.lamC, TaylorLogMetric.lamC, dite_eq_left hx, dite_eq_left hy] at h
@@ -683,19 +676,18 @@ theorem exists_cont {r : ℕ} (f : (Fin r → ℕ) → ℂ_[p]) (hf : ∀ a c : 
 
 variable (lam : TaylorLogMetric.Qbar →+* ℂ_[p])
 
-theorem lamC_coe (x : TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam (x : ℂ) = lam x := dif_pos x.2
+theorem lamC_coe (x : TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam (x : ℂ) = lam x := dite_eq_left x.2
 
 theorem lamC_mul {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) :
     TaylorLogMetric.lamC lam (x * y) = TaylorLogMetric.lamC lam x * TaylorLogMetric.lamC lam y := by
   have := lamC_coe lam (⟨x, hx⟩ * ⟨y, hy⟩)
-  rw [map_mul, ← lamC_coe, ← lamC_coe] at this
-  exact this
+  rwa [map_mul, ← lamC_coe, ← lamC_coe] at this
 
 def lamHom {E : Type} [Field E] [NumberField E] (σ : E →+* ℂ) : E →+* ℂ_[p] :=
   lam.comp (σ.codRestrict TaylorLogMetric.Qbar (_root_.GlobalTheory.MonoJet.emb_mem σ))
 
 theorem lamHom_apply {E : Type} [Field E] [NumberField E] (σ : E →+* ℂ) (x : E) :
-    TaylorLogMetric.lamC lam (σ x) = lamHom lam σ x := dif_pos (_root_.GlobalTheory.MonoJet.emb_mem σ x)
+    TaylorLogMetric.lamC lam (σ x) = lamHom lam σ x := dite_eq_left (_root_.GlobalTheory.MonoJet.emb_mem σ x)
 
 theorem norm_int_le {E : Type} [Field E] [NumberField E] (ψ : E →+* ℂ_[p]) (a : 𝓞 E) : ‖ψ (a : E)‖ ≤ 1 := by
   have hx : IsIntegral ℤ (ψ (a : E)) := by convert map_isIntegral_int ψ a.isIntegral_coe using 1; exact Subsingleton.elim _ _
@@ -737,7 +729,7 @@ theorem zc_nat (n : ℕ) : TaylorLogMetric.zc (p := p) (n : ℤ_[p]) = n := by s
 theorem wPh_eq {D : D7} (T : TaylorLogMetric.Tor D) {N N' : ℕ} (hp : p ≠ 2) (x : TaylorLogMetric.VC D N N') (n : ℤ) (hn : TaylorLogMetric.qH D T x = n) :
     TaylorLogMetric.wPh D T p x = Complex.exp ((Real.pi : ℂ) * Complex.I * ((n : ℝ) : ℂ)) := by
   have hodd : Odd p := (Fact.out : p.Prime).odd_of_ne_two hp
-  rw [TaylorLogMetric.wPh, if_neg hp]
+  rw [TaylorLogMetric.wPh, ite_eq_right hp]
   obtain ⟨k, m, h1, h2⟩ := Classical.epsilon_spec (p := fun s : ℂ =>
     ∃ (k : ℕ) (m : ℤ), (p : ℝ) ^ k * TaylorLogMetric.qH D T x = (m : ℝ) ∧ s = (-1 : ℂ) ^ m) ⟨_, 0, n, by simp [hn], rfl⟩
   rw [h2]

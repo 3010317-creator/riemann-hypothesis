@@ -98,8 +98,7 @@ theorem prod_elim_pow {C : Type} [Fintype C] {n : ℕ} {M : Type} [CommMonoid M]
       · intro hn; exact (hn hj₀).elim
   simp_rw [step]
   rw [Finset.prod_comm]
-  refine Finset.prod_congr rfl fun j _ => ?_
-  exact Finset.prod_pow_eq_pow_sum _ _ _
+  exact Finset.prod_congr rfl fun j _ => Finset.prod_pow_eq_pow_sum _ _ _
 
 end GlobalTheory.RoundEqn
 
@@ -112,20 +111,18 @@ theorem GlobalTheory.roundedTwist_isEqn :
   refine ⟨?_, fun i => ?_⟩
   · rw [add_sub_cancel_left]
     refine Finset.sum_induction _ (fun D : CartierDiv X => D.Eff) (fun _ _ h h' => h.add h') eff_zero ?_
-    intro c _
-    exact Eff.nsmul' (eff_of_atlas 𝒜 c) (r c)
+    exact fun c _ => Eff.nsmul' (eff_of_atlas 𝒜 c) (r c)
   · obtain ⟨e, huniq, hJ, heq⟩ := 𝒜.snc i
     refine ⟨fun j => ∑ c, if e c = some j then r c else 0, fun j => ?_, fun y hy t ht => ?_⟩
     · show (∑ c, if e c = some j then r c else 0) < p
       by_cases h : ∃ c, e c = some j
       · obtain ⟨c₀, hc₀⟩ := h
         rw [Finset.sum_eq_single c₀]
-        · rw [if_pos hc₀]; exact hr c₀
-        · intro c _ hc; rw [if_neg]; exact fun h' => hc (huniq c c₀ j h' hc₀)
+        · rw [ite_eq_left hc₀]; exact hr c₀
+        · intro c _ hc; rw [ite_eq_right]; exact fun h' => hc (huniq c c₀ j h' hc₀)
         · intro hn; exact (hn (Finset.mem_univ _)).elim
-      · push_neg at h
-        rw [Finset.sum_eq_zero fun c _ => if_neg (h c)]
+      · push Not at h
+        rw [Finset.sum_eq_zero fun c _ => ite_eq_right (h c)]
         exact hp.out.pos
     · rw [← prod_elim_pow (𝒜.x i) (𝒜.J i) e hJ r]
-      refine (ht.nsmul p).add (isEqn_sum _ _ _ y fun c _ => ?_)
-      exact (heq c y hy).nsmul (r c)
+      exact (ht.nsmul p).add (isEqn_sum _ _ _ y fun c _ => ((heq c y hy).nsmul (r c)))

@@ -146,8 +146,7 @@ theorem irreducibleComponents_not_subset_support_comap (h : Y ⟶ X) (hg : Gener
   have hξ'2' : h.base ξ' = η := hξ'2
   have hξ'D : ξ' ∈ ((D.comap h).support : Set Y) := by
     refine Scheme.IdealSheafData.mem_support_comap.mpr ?_
-    rw [hξ'2']
-    exact hηD
+    rwa [hξ'2']
   have hclos : closure ({ξ'} : Set Y) ⊆ ((D.comap h).support : Set Y) :=
     closure_minimal (Set.singleton_subset_iff.mpr hξ'D) (D.comap h).support.isClosed
   have hCsubξ' : C ⊆ closure ({ξ'} : Set Y) := by
@@ -159,8 +158,7 @@ theorem irreducibleComponents_not_subset_support_comap (h : Y ⟶ X) (hg : Gener
   have hξ'C : ξ' ∈ C := hclosure (subset_closure (Set.mem_singleton _))
   have hspec : ξ ⤳ ξ' := by
     refine specializes_iff_mem_closure.mpr ?_
-    rw [hξ]
-    exact hξ'C
+    rwa [hξ]
   have hspec2 : h.base ξ ⤳ h.base ξ' := hspec.map h.continuous
   have hηclos : η ∈ closure ({h.base ξ} : Set X) := by
     rw [← hξ'2']

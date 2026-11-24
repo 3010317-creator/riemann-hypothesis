@@ -59,8 +59,7 @@ private theorem iw_eq (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F]
     intro i j hij
     rw [residueReduction_apply]
     exact (residue_eq_zero_iff_valuation_lt_one F (u i j)).mpr (hl i j hij)
-  · intro hg
-    exact ⟨iwahori_le_integralGL F n hg, ((mem_iwahori_iff F n).1 hg).2.1⟩
+  · exact fun hg => ⟨iwahori_le_integralGL F n hg, ((mem_iwahori_iff F n).1 hg).2.1⟩
 
 open ValuativeRel in
 private theorem unif (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] :
@@ -70,8 +69,7 @@ private theorem unif (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] 
   have hy : y ∈ IsLocalRing.maximalIdeal 𝒪[F] := by
     rw [← IsLocalRing.residue_eq_zero_iff]
     exact (residue_eq_zero_iff_valuation_lt_one F y).mpr hx
-  have h1 := (mem_maximalIdeal_pow_iff F (m := 1) (y := y)).1 (by rwa [pow_one])
-  simpa using h1
+  simpa using (mem_maximalIdeal_pow_iff F (m := 1) (y := y)).1 (by rwa [pow_one])
 
 open ValuativeRel in
 private theorem diag_mem (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (n : ℕ)

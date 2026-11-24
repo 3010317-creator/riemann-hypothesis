@@ -43,8 +43,7 @@ theorem glChar_transvection (i j : Fin n) (hij : i ≠ j) (c : K) :
     rw [Matrix.transvection_mul_transvection_same i j hij, two_mul]
   have hDT : D * T c = T (2 * c) * D := by
     apply Units.ext
-    simp only [hT, D, Units.val_mul, brpGL_coe]
-    exact brp_diag_transvection K i j hij c
+    simpa only [hT, D, Units.val_mul, brpGL_coe] using brp_diag_transvection K i j hij c
   have e1 := congrArg χ hDT
   rw [map_mul, map_mul, mul_comm (χ (T (2 * c)))] at e1
   have e2 : χ (T c) = χ (T (2 * c)) := mul_left_cancel₀ (glChar_ne_zero K χ D) e1
@@ -169,12 +168,12 @@ theorem trAct_single_scalar (lam : ι → DomWeight n) (τ : ι) (t : Kˣ) (F : 
       rw [(Formalism.GradedWeylDivisibility.blockActTensor K K ι n n _).1 s (G s)]
       by_cases hs : s = τ
       · subst hs
-        rw [if_pos rfl, Pi.mulSingle_eq_same, brpSc_coe, rowAct_scalar]
+        rw [ite_eq_left rfl, Pi.mulSingle_eq_same, brpSc_coe, rowAct_scalar]
         have hW : G s ∈ weightedHomogeneousSubmodule K (Formalism.GradedWeylDivisibility.colW n n) (lam s).natW :=
           (Submodule.mem_inf.1 (hG s)).1
         rw [brp_aeval_scale_whom _ _ hW, map_smul]
-      · rw [if_neg hs, Pi.mulSingle_eq_of_ne hs, Units.val_one, rowAct_one_tr, one_smul]
-    rw [Finset.prod_congr rfl fun s _ => hfac s, Finset.prod_smul, Finset.prod_ite_eq' Finset.univ τ, if_pos (Finset.mem_univ τ)]
+      · rw [ite_eq_right hs, Pi.mulSingle_eq_of_ne hs, Units.val_one, rowAct_one_tr, one_smul]
+    rw [Finset.prod_congr rfl fun s _ => hfac s, Finset.prod_smul, Finset.prod_ite_eq' Finset.univ τ, ite_eq_left (Finset.mem_univ τ)]
   | zero => simp
   | add x y _ _ hx hy => rw [map_add (f := _), hx, hy, smul_add]
   | smul a x _ hx => rw [map_smul, hx, smul_comm]
@@ -224,8 +223,7 @@ theorem detAll_pow [CharZero K] (lam : ι → DomWeight n) (g : ι → GL (Fin n
   have h1 : LinearMap.det (rhoK lam g) = ∏ τ, chiAt K lam τ (g τ) := by
     have h0 := Finset.map_noncommProd Finset.univ (fun i => Pi.mulSingle i (g i))
       (fun i _ j _ _ => Pi.mulSingle_apply_commute g i j) ((LinearMap.det : Module.End K (VV K lam) →* K).comp (rhoK lam))
-    rw [Finset.noncommProd_mulSingle g, Finset.noncommProd_eq_prod] at h0
-    exact h0
+    rwa [Finset.noncommProd_mulSingle g, Finset.noncommProd_eq_prod] at h0
   rw [h1, ← Finset.prod_pow]
   exact Finset.prod_congr rfl fun τ _ => glChar_pow K (chiAt K lam τ) _ (chiAt_scalar K lam τ) (g τ)
 

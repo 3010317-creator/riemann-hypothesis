@@ -93,13 +93,12 @@ theorem untyped (hs : (M p).split = none) :
     | none => rfl
     | some sg => rw [hs, hD] at h6; exact h6.elim
   have := (D.s_split p).not.1 (by rw [hsD]; simp)
-  simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at this
-  exact this
+  simpa only [Finset.mem_insert, Finset.mem_singleton, not_or] using this
 
 theorem unitAt_untyped (hs : (M p).split = none) : (uP p : ℚ) = 1 / (gS D : ℚ) := by
   obtain ⟨h0, h1⟩ := untyped δ M hA p hs
   unfold uP gpart
-  rw [if_neg h0, if_neg h1]
+  rw [ite_eq_right h0, ite_eq_right h1]
   simp
 
 theorem gS_mul_uP (hs : (M p).split = none) :
@@ -187,8 +186,7 @@ theorem intLow_iff_L (hs : (M p).split = none) {a b : MatR D} (ha : IsLoUni a) (
   constructor
   · intro h i j hji
     have := h.2.2 i j
-    rw [hR, hl, lL_low δ M hA p a i j hji] at this
-    exact this
+    rwa [hR, hl, lL_low δ M hA p a i j hji] at this
   · intro h
     refine ⟨StabShape.lOf_diag δ M (hA p) a b ha hb, fun i j hij => ?_, fun i j => ?_⟩
     · rw [hl]; simp [StabShape.lL, (ha i j).1 hij]
@@ -207,8 +205,7 @@ theorem intUp_iff_L (hs : (M p).split = none) {a b : MatR D} (ha : IsLoUni a) (h
   constructor
   · intro h i j hji
     have := h.2.2 j i
-    rw [hR, hr, ρL_up δ M hA p b j i hji] at this
-    exact this
+    rwa [hR, hr, ρL_up δ M hA p b j i hji] at this
   · intro h
     refine ⟨StabShape.ρOf_diag δ M (hA p) a b ha hb, fun i j hji => ?_, fun i j => ?_⟩
     · rw [hr]; simp [StabShape.ρL, (hb i j).1 hji]

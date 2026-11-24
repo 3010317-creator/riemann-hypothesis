@@ -68,15 +68,13 @@ theorem seeEx_joinPin_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (G
     exact hS.conj
   · exact hS.mat
   · show EvalTieT (MP x.R.toRealDat) x.R.toRealDat.ν0 x.R.toRealDat.fd0 (EP x.R.toRealDat x.F.lv2) P.X P.G y.ιS y.tS c
-    rw [hι]
-    exact hE
+    rwa [hι]
   · intro y1 y' h
     obtain rfl := eq_of_heq h
     exact hread y1
   · intro hF
     have hj : _root_.Formalism.L2.SG.JoinSI.spectralRowIsometry (S.toRealSpectralMatching Rc) hF = S.j :=
       _root_.Formalism.L2.SG.JoinSI.isometryOfJoin_eq_of_conj_compat (S.toRealSpectralMatching Rc) hF S.j fun F => S.rowPin F
-    rw [hj]
-    exact hR
+    rwa [hj]
 end GlobalTheory.Mem.JPin
 end

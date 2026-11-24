@@ -126,8 +126,7 @@ theorem reflTF_heisG (hs : IsSympl X bas) (y : Matrix (Fin n) (Fin r) E) (φ : T
     reflTF n g (heisG X bas y φ) = heisG X bas (-y) (reflTF n g φ) := by
   have e : ∀ k, crd X bas ((-y) k) = -crd X bas (y k) := fun k => by
     have := crd_smul hs (-1) (y k)
-    rw [neg_one_smul, neg_one_smul] at this
-    exact this
+    rwa [neg_one_smul, neg_one_smul] at this
   funext x
   change heisS _ _ φ (-x) = φ _ * _
   unfold heisS

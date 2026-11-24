@@ -205,7 +205,7 @@ theorem contDiff_of_func_eq (c : ℝ → ℂ) (E : ℝ → ℝ → ℂ) (U : Set
       have h1 : ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun q : ℝ × ℝ => φr (-q.2)) q :=
         (hφr.comp (contDiff_snd.neg)).contDiffAt
       exact h1.mul h2
-    · push_neg at hq2
+    · push Not at hq2
       have hev : ∀ᶠ q' in 𝓝 q, r/2 < |q'.2| :=
         continuousAt_const.eventually_lt (by fun_prop) (by linarith)
       refine contDiffAt_const (c := (0:ℂ)).congr_of_eventuallyEq ?_
@@ -314,8 +314,7 @@ theorem contDiff_of_func_eq (c : ℝ → ℂ) (E : ℝ → ℝ → ℂ) (U : Set
       hE.comp (f := fun t : ℝ => (t₀, t)) (contDiff_const.prodMk contDiff_id).contDiffOn (fun t ht => ht.1)
     have h5 : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun t => c t₀ * c t * E t₀ t) W :=
       (contDiffOn_const.mul (hcV.mono inter_subset_right)).mul hE'
-    refine h5.congr (fun t ht => ?_)
-    exact hfe (t₀, t) ht.1
+    exact h5.congr (fun t ht => (hfe (t₀, t) ht.1))
   have hF0 : ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun t => c (t₀ + t)) 0 := hFW.contDiffAt (hWo.mem_nhds h0W)
   have hsub : ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x : ℝ => x - t₀) t₀ := (contDiff_id.sub contDiff_const).contDiffAt
   have hF0' : ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun t => c (t₀ + t)) ((fun x : ℝ => x - t₀) t₀) := by
@@ -533,8 +532,7 @@ theorem hasDerivAt_diag_sum_prod_pairing
 
   have hinj : Function.Injective β.flip := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro q hq
-    exact hβ q (fun x => by simpa using LinearMap.congr_fun hq x)
+    exact fun q hq => hβ q (fun x => by simpa using LinearMap.congr_fun hq x)
   have hsurj : Function.Surjective β.flip :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
       (Subspace.dual_finrank_eq (K := ℝ) (V := V)).symm).1 hinj
@@ -563,14 +561,10 @@ theorem hasDerivAt_diag_sum_prod_pairing
   have hd : HasDerivAt (fun t => ∑ i, ∑ j, ((e.repr x i : ℂ) * (e.repr x j : ℂ)) * M t (e i) (e j))
       (∑ i, ∑ j, ((e.repr x i : ℂ) * (e.repr x j : ℂ)) * c (i, j)) 0 := by
     apply HasDerivAt.fun_sum
-    intro i _
-    apply HasDerivAt.fun_sum
-    intro j _
-    exact ((hM (e i) (e j)).hasDerivAt).const_mul _
+    exact fun i _ => HasDerivAt.fun_sum (fun j _ => ((hM (e i) (e j)).hasDerivAt).const_mul _)
   convert hd using 1
   simp only [hqx]
-  rw [← Fintype.sum_prod_type']
-  rw [← (finProdFinEquiv (m := d) (n := d)).symm.sum_comp]
+  rw [← Fintype.sum_prod_type', ← (finProdFinEquiv (m := d) (n := d)).symm.sum_comp]
   refine Finset.sum_congr rfl fun k _ => ?_
   ring
 
@@ -619,8 +613,7 @@ theorem isUnit_blockB_of_solution (β : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (hβ : 
   refine (injective_iff_map_eq_zero (blockB J)).mpr ?_
   intro q hq
   apply hβ q
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨x₀, hx₀⟩ := hne
   have hzero : ∀ x, β x q ≠ 0 → g x = 0 := by
     intro x hx
@@ -675,8 +668,7 @@ theorem schwartz_gaussian_form_re_neg {V : Type} [NormedAddCommGroup V] [NormedS
     apply hg
     ext x
     rw [hform x, h0]; simp
-  by_contra hre
-  push_neg at hre
+  by_contra! hre
   obtain ⟨C, hC, hdec⟩ := g.decay 1 0
   have hgn : 0 < ‖g 0‖ := norm_pos_iff.mpr hg0
   have hvn : 0 < ‖v‖ := norm_pos_iff.mpr hv
@@ -1169,8 +1161,7 @@ theorem seminorm_heisS_sub_le (a : V) (L : V →L[ℝ] ℝ) (c : ℝ) (f : 𝓢(
   have tri : p (M X + (t : ℂ) • Y - ((t : ℂ) ^ 2 * (2 * Real.pi * Complex.I)) • P d + Z) ≤
       p (M X) + p ((t : ℂ) • Y) + p (((t : ℂ) ^ 2 * (2 * Real.pi * Complex.I)) • P d) + p Z := by
     refine (map_add_le_add p _ _).trans (add_le_add ?_ le_rfl)
-    refine (map_sub_le_add p _ _).trans (add_le_add ?_ le_rfl)
-    exact map_add_le_add p _ _
+    exact (map_sub_le_add p _ _).trans (add_le_add (map_add_le_add p _ _) le_rfl)
   rw [t3] at tri
   nlinarith [t1, t2, t4, tri]
 
@@ -1249,8 +1240,7 @@ theorem map_dHeis_of_isometry : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpa
       rw [e1, map_sub]
       refine (norm_sub_le _ _).trans (add_le_add ?_ ?_)
       · have := hK' t hta
-        rw [hℓ, SchwartzMap.toLpCLM_apply]
-        exact this
+        rwa [hℓ, SchwartzMap.toLpCLM_apply]
       · rw [hiso, hgS, hℓ, SchwartzMap.toLpCLM_apply]
         exact hK t hta
     rw [h1] at h2
@@ -1428,8 +1418,7 @@ theorem GlobalTheory.WeilVacuum.smooth_flow : ∀ {V : Type} [NormedAddCommGroup
     intro t h
     apply hz
     have := hadd (-t) t f₀
-    rw [neg_add_cancel, h0, h, map_zero] at this
-    exact this
+    rwa [neg_add_cancel, h0, h, map_zero] at this
   obtain ⟨M, hMs, hMj, hMdec, hMuniq, n, qs, qs', cs, hMder⟩ :=
     _root_.GlobalTheory.FockFamily.fock_vacua_family β hβ J hJsm hJsq (fun t => ⟨T t f₀, hne t, hFock t⟩)
   set cc : ℝ → ℂ := fun t => T t f₀ 0 with hccdef

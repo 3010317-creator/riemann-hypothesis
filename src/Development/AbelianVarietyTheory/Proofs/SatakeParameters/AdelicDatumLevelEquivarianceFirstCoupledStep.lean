@@ -199,10 +199,10 @@ theorem sameCoset_kappa : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dt
     rw [mul_inv_cancel_left]
     rfl
   · by_cases h : P.1 ∈ t.Pr.vGs
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       have := hok.depthG P h
       omega
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       have := hok.depthQ P h
       omega
 
@@ -266,11 +266,7 @@ variable {D : D7} {X : Fields} (s : Seam D X)
 
 theorem det_seamGL {n : ℕ} (g : Sp X.E n ≃ₗ[X.E] Sp X.E n) :
     ((Matrix.GeneralLinearGroup.det (seamGL s g) : D.host.Eˣ) : D.host.E) = s.iE ((LinearEquiv.det g : X.Eˣ) : X.E) := by
-  have h : ((seamGL s g : GL (Fin n) D.host.E) : Matrix (Fin n) (Fin n) D.host.E) =
-      (LinearMap.toMatrix' g.toLinearMap).map (s.iE : X.E →+* D.host.E) := rfl
-  rw [Matrix.GeneralLinearGroup.val_det_apply, h, ← RingHom.mapMatrix_apply, ← RingHom.map_det, LinearMap.det_toMatrix',
-    LinearEquiv.coe_det]
-  rfl
+  exact GlobalTheory.FramesDet.det_seamGL s g
 
 variable {i : ℕ} {SB : Finset (HeightOneSpectrum (𝓞 X.E))} (fb : SB → GL (Fin (D.R.N i)) D.host.E) (dep : SB → ℕ)
 
@@ -279,16 +275,7 @@ theorem det_inFrame {P : SB} {κ : GL (Fin (D.R.N i)) (D.host.E ⊗[D.host.F] Fi
     IntAtA (F := D.host.F) (seamP s P.1) (iA D.host.F D.host.E ((qOf (seamP s P.1) : D.host.E))⁻¹ *
       ((((Matrix.GeneralLinearGroup.det κ)⁻¹ : (AfE D.host.F D.host.E)ˣ) : AfE D.host.F D.host.E) *
         iA D.host.F D.host.E (s.iE ((LinearEquiv.det g : X.Eˣ) : X.E)) - 1)) := by
-  have H := det_congAt hd h
-  have e : ((Matrix.GeneralLinearGroup.det (((ratA D.host.F (fb P))⁻¹ * κ * ratA D.host.F (fb P))⁻¹ *
-      ratA D.host.F (seamGL s g)) : (AfE D.host.F D.host.E)ˣ) : AfE D.host.F D.host.E) =
-      (((Matrix.GeneralLinearGroup.det κ)⁻¹ : (AfE D.host.F D.host.E)ˣ) : AfE D.host.F D.host.E) *
-        iA D.host.F D.host.E (s.iE ((LinearEquiv.det g : X.Eˣ) : X.E)) := by
-    rw [map_mul, map_inv, map_mul, map_mul, map_inv, Units.val_mul, det_ratA, det_seamGL]
-    congr 2
-    rw [mul_comm, mul_inv_cancel_left]
-  rw [← e]
-  exact H
+  exact GlobalTheory.FramesDet.det_inFrame s fb dep hd h
 
 end Frame
 
@@ -378,11 +365,11 @@ theorem levAt_target : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a
   have ex1 : xiPt A t.m2 hi β β' p q' w = XiCpl1 t.Ch t.sel (t.tup μ) (t.cst μ) (t.idx μ) t.m2 (A.ib t.m2 hi β) p q'
       (cosetOf A (t.m2 + 1) hi β' q') w := by
     unfold xiPt
-    rw [dite_eq_right (lt_irrefl _), if_pos rfl]
+    rw [dite_eq_right (lt_irrefl _), ite_eq_left rfl]
   have ex2 : xiPt A t.m2 hi β β' p p' w = XiCpl1 t.Ch t.sel (t.tup μ) (t.cst μ) (t.idx μ) t.m2 (A.ib t.m2 hi β) p p'
       (cosetOf A (t.m2 + 1) hi β' p') w := by
     unfold xiPt
-    rw [dite_eq_right (lt_irrefl _), if_pos rfl]
+    rw [dite_eq_right (lt_irrefl _), ite_eq_left rfl]
   rw [ex1, ex2, hcos, hmu, ← hχ, ← map_mul, ← map_mul, mul_comm (∏ P : SB t μ, _), law]
 
 end GlobalTheory.CplTarget
@@ -646,7 +633,7 @@ theorem levSrc_cpl : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =
     congrFun (hAway β β' x₁ x' x₁ x' q p' p₁ p' hq hp' hp₁ hp' (fun _ _ => ⟨rfl, rfl⟩)) w
   rw [eA]
   unfold xiPt
-  rw [dite_eq_right (lt_irrefl _), if_pos rfl, dite_eq_right (lt_irrefl _), if_pos rfl]
+  rw [dite_eq_right (lt_irrefl _), ite_eq_left rfl, dite_eq_right (lt_irrefl _), ite_eq_left rfl]
   have hsrc := firstCoupledDatum_source_level_law (G := t.glob) (cst := t.cst μ) (Ch := t.Ch) hPins.fields.ok t.pr_ok (t.idx_ok μ) (al := A.ib t.m2 hlt β) p'
     (cosetOf A (t.m2 + 1) hi β' p') hfr hlev hN hf w
   have hprod : ((∏ P, c P : t.X.Kˣ) : t.X.K) * ∏ P, z P = 1 := by

@@ -151,7 +151,7 @@ private theorem logNorm_diag {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (GlobalTheory.Mem.Chr.CharModel.infDiag_parts k).2, GlobalTheory.Mem.Chr.CharModel.logFin_one, sub_zero,
     GlobalTheory.Mem.Chr.CharModel.logInf_principal, ← h, Real.log_prod (fun v _ => pow_ne_zero _ (hp v))]
   refine Finset.sum_congr rfl fun v _ => ?_
-  rw [Real.log_pow, InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex v))]
+  rw [Real.log_pow, InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex v))]
   norm_num
 
 theorem UpperTheory.Gal.TP.Chr.absFacts :
@@ -277,12 +277,10 @@ theorem UpperTheory.Gal.TP.Chr.chrEx :
     · rw [pow_one, neg_one_pow_eq_pow_mod_two, ← hj, ← neg_one_pow_eq_pow_mod_two]
   · have h1 : (psi μ k s).loc w x = 1 := h x hx
     rw [psi, hloc, hpow_loc, ((hAb E emb _).1 w).1 x hx, mul_one] at h1
-    rw [lc_pow, hl]
-    exact h1
+    rwa [lc_pow, hl]
   · have h1 : locChar (χ ^ k) w x = 1 := h x hx
     rw [lc_pow, hl] at h1
-    rw [psi, hloc, hpow_loc, ((hAb E emb _).1 w).1 x hx, mul_one]
-    exact h1
+    rwa [psi, hloc, hpow_loc, ((hAb E emb _).1 w).1 x hx, mul_one]
   · rw [psi, HChar.val_mul, Units.val_mul, hpow_val, Units.val_pow_eq_pow_val, ((hAb E emb _).1 w).2, hval, neg_div]
   · rw [hTP E emb _ _ (x : E), inf_psi hAb emb μ m hμi]
     refine Finset.prod_congr rfl fun w _ => ?_
@@ -690,13 +688,11 @@ private theorem consistent (hU : GlobalTheory.BCT.Unr E) (w₀ : HeightOneSpectr
         Units.map (GlobalTheory.IdeleNormChar.finEval w₀) (diagUnits E t) := Units.ext rfl
     have e2 : conjQuot E w₀ x = Units.map (GlobalTheory.IdeleNormChar.finEval w₀) (x / C x) := rfl
     have e3 : conjQuot E w₀ u = Units.map (GlobalTheory.IdeleNormChar.finEval w₀) (u / C u) := rfl
-    rw [e1, hdt, map_mul, map_inv, ← e2, ← e3, hcqu, inv_one, mul_one]
-    exact hx3
+    rwa [e1, hdt, map_mul, map_inv, ← e2, ← e3, hcqu, inv_one, mul_one]
   have ht1 := hV t htor hmem
   have hck : c k = k := (div_eq_one.1 ht1).symm
   have hkF : (k : E) ∈ maximalRealSubfield E := by
-    refine (IsCMField.complexConj_eq_self_iff E _).1 ?_
-    exact congrArg Units.val hck
+    exact (IsCMField.complexConj_eq_self_iff E _).1 (congrArg Units.val hck)
   set k' : (maximalRealSubfield E)ˣ := Units.mk0 ⟨(k : E), hkF⟩ (fun h => k.ne_zero (congrArg Subtype.val h)) with hk'
   have hdk : diagUnits E k = ideleMap (maximalRealSubfield E) E (diagUnits (maximalRealSubfield E) k') := by
     refine (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap_principalIdele (maximalRealSubfield E) E k').trans ?_ |>.symm
@@ -864,7 +860,7 @@ theorem muEmb : MuEmb := by
   have hmk := mk_emb_eq emb v
   have hor := InfinitePlace.mk_eq_iff.1 (hmk.trans (InfinitePlace.mk_embedding v).symm)
   by_cases h : v.embedding = (emb (v.comap (algebraMap (maximalRealSubfield E) E))).1
-  · simp only [e, if_pos h]
+  · simp only [e, ite_eq_left h]
     rw [← h]
   · have hc : (emb (v.comap (algebraMap (maximalRealSubfield E) E))).1 =
         ComplexEmbedding.conjugate v.embedding := by
@@ -873,7 +869,7 @@ theorem muEmb : MuEmb := by
       · rw [← h']
         exact (star_star _).symm
     have hz : v.embedding (k : E) ≠ 0 := (map_ne_zero _).2 k.ne_zero
-    simp only [e, if_neg h]
+    simp only [e, ite_eq_right h]
     rw [hc, ComplexEmbedding.conjugate_coe_eq, conj_div_norm hz, inv_zpow']
 
 end UpperTheory.Gal.TP.Chr
@@ -936,7 +932,7 @@ private lemma dense_emb (emb : ∀ w : InfinitePlace (maximalRealSubfield E), Em
     refine ⟨fun v => if h : ∃ w, InfinitePlace.mk (emb w).1 = v then h.choose_spec ▸ g h.choose else 0, ?_⟩
     funext w
     have hex : ∃ w', InfinitePlace.mk (emb w').1 = InfinitePlace.mk (emb w).1 := ⟨w, rfl⟩
-    simp only [T, dif_pos hex]
+    simp only [T, dite_eq_left hex]
     rw [hcast w _ hex.choose_spec, hg]
   have hd := hTs.denseRange.comp (InfiniteAdeleRing.denseRange_algebraMap E) hT
   convert hd using 1
@@ -1038,11 +1034,9 @@ theorem UpperTheory.Gal.TP.Chr.readEx :
   · intro z
     rfl
   · have hf : Continuous f := by
-      show Continuous (Units.map (e : AE (↥(maximalRealSubfield E)) E →* AdeleRing (𝓞 E) E))
       exact Continuous.units_map _ (GlobalTheory.UnitaryHeckeBaseChange.continuous_toAdele _ E)
     have hμc : Continuous (μ.1 : Ideles E → ℂˣ) := μ.2.1
-    refine continuous_induced_rng.2 ?_
-    exact Units.continuous_val.comp (hμc.comp hf)
+    exact continuous_induced_rng.2 (Units.continuous_val.comp (hμc.comp hf))
   · intro x
     apply Subtype.ext
     show ((μ.1 (f _) : ℂˣ) : ℂ) = 1
@@ -1405,8 +1399,7 @@ theorem UpperTheory.Gal.TP.Chr.typProd :
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert,
       Finset.mem_singleton]
     constructor
-    · intro h
-      exact eq_or_conj_of_pl_eq (h.trans (pl_emb (emb w)).symm)
+    · exact fun h => eq_or_conj_of_pl_eq (h.trans (pl_emb (emb w)).symm)
     · rintro (rfl | rfl)
       · exact pl_emb _
       · rw [pl_conj, pl_emb]
@@ -1449,10 +1442,10 @@ theorem typVal : TypVal := by
   constructor
   · unfold typ
     rw [h1]
-    exact if_pos rfl
+    exact ite_eq_left rfl
   · unfold typ
     rw [h2]
-    exact if_neg (conj_ne _)
+    exact ite_eq_right (conj_ne _)
 
 end UpperTheory.Gal.TP.Chr
 

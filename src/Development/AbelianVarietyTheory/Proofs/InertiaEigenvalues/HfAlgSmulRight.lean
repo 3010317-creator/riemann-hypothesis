@@ -211,8 +211,7 @@ theorem _root_.GlobalTheory.HermNbr.graph_sum {X : Type} (S : Set X) (i : X → 
       intro L hL C hC hLC hn
       have h0 : ∀ Λ ∈ C, (i L Λ : ℝ) ^ (-s) = 0 := fun Λ hΛ => by
         rw [Nat.le_zero.1 (hn Λ hΛ), Nat.cast_zero, hzero]
-      rw [Finset.sum_eq_zero h0]
-      exact hB
+      rwa [Finset.sum_eq_zero h0]
     | succ n ih =>
       intro L hL C hC hLC hn
       have key : ∀ Λ, ∃ L', Λ ∈ S → L ≠ Λ → i L Λ ≠ 0 →
@@ -249,8 +248,7 @@ theorem _root_.GlobalTheory.HermNbr.graph_sum {X : Type} (S : Set X) (i : X → 
           exact inv_anti₀ (Real.rpow_pos_of_pos h3 _) (Real.rpow_le_rpow h3.le h2 hs.le)
         have hIH : ∑ Λ ∈ Fb.erase L1, (i L1 Λ : ℝ) ^ (-s) ≤ B := by
           refine ih L1 hL1 (Fb.erase L1) ?_ (Finset.notMem_erase L1 Fb) ?_
-          · intro x hx
-            exact hC (hC'C (hFb x (Finset.mem_of_mem_erase hx)).1)
+          · exact fun x hx => hC (hC'C (hFb x (Finset.mem_of_mem_erase hx)).1)
           · intro Λ hΛ
             obtain ⟨hΛC', hfΛ⟩ := hFb Λ (Finset.mem_of_mem_erase hΛ)
             obtain ⟨-, -, hne', hle⟩ := hf' Λ hΛC'

@@ -70,7 +70,7 @@ theorem ellA_self (hδ : δ ≠ 0) : ellA (F := F) δ (inclR (F := F) (AF F) δ)
   have hex : ∃ ℓ : E →ₗ[F] F, δ ≠ 0 → ℓ δ = 1 := by
     obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual F E, φ δ ≠ 0 := by
       by_contra hne
-      push_neg at hne
+      push Not at hne
       exact hδ ((Module.forall_dual_apply_eq_zero_iff F δ).1 hne)
     exact ⟨(φ δ)⁻¹ • φ, fun _ => by simp [hφ]⟩
   have hℓ := Classical.epsilon_spec hex hδ

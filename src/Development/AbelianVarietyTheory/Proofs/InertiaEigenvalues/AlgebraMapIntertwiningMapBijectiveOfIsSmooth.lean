@@ -119,16 +119,14 @@ theorem linearIndependent_resolvent (T : Module.End ℂ V)
   have hq0 : q = 0 := by
     by_contra hne
     have hu := isUnit_aeval T h _ q rfl hne
-    have hinj := ((Module.End.isUnit_iff _).1 hu).1
-    exact hv (hinj (by rw [key, map_zero]))
+    exact hv ((((Module.End.isUnit_iff _).1 hu).1) (by rw [key, map_zero]))
   have h2 : eval i q = g i * ∏ k ∈ s.erase i, (i - k) := by
     rw [hq, eval_finsetSum, Finset.sum_eq_single i]
     · simp [eval_prod]
     · intro j _ hji
       rw [eval_mul, eval_prod, Finset.prod_eq_zero (i := i) (Finset.mem_erase.2 ⟨hji.symm, hi⟩) (by simp),
         mul_zero]
-    · intro h3
-      exact absurd hi h3
+    · exact fun h3 => absurd hi h3
   rw [hq0, eval_zero] at h2
   rcases mul_eq_zero.1 h2.symm with h3 | h3
   · exact h3
@@ -137,8 +135,7 @@ theorem linearIndependent_resolvent (T : Module.End ℂ V)
 
 theorem exists_not_isUnit_sub : ∀ {V : Type} [inst : AddCommGroup V] [inst_1 : Module ℂ V] [Nontrivial V], Module.rank ℂ V ≤ Cardinal.aleph0 → ∀ (T : Module.End ℂ V), ∃ (c : ℂ), ¬IsUnit (T - (Algebra.algebraMap ℂ (Module.End ℂ V) : ℂ → Module.End ℂ V) c) := by
   intro V _ _ _ hrank T
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   let w : ℂ → V := fun c => (((hcon c).unit⁻¹ : (Module.End ℂ V)ˣ) : Module.End ℂ V) v
   have hw : ∀ c, (T - algebraMap ℂ (Module.End ℂ V) c) (w c) = v := fun c => by
@@ -146,8 +143,7 @@ theorem exists_not_isUnit_sub : ∀ {V : Type} [inst : AddCommGroup V] [inst_1 :
       (hcon c).unit.mul_inv
     rw [IsUnit.unit_spec] at h1
     have h2 := congrArg (fun f : Module.End ℂ V => f v) h1
-    simp only [Module.End.mul_apply, Module.End.one_apply] at h2
-    exact h2
+    simpa only [Module.End.mul_apply, Module.End.one_apply] using h2
   have hli := linearIndependent_resolvent T hcon v hv w hw
   have h1 : Cardinal.mk ℂ ≤ Cardinal.aleph0 := hli.cardinal_le_rank.trans hrank
   rw [Cardinal.mk_complex] at h1

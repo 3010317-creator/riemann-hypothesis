@@ -186,16 +186,14 @@ theorem eel_inR' (hG : GoodCongruenceObjects N r ρ π S) : InR' N r S (Eel N S)
             (fun x' => S.X0 (S.p x')) + fun x' => (-S.rr c) x' • S.eB (S.p x') := by
           funext x'
           simp [sub_eq_add_neg, neg_smul]
-        rw [e1]
-        exact this
+        rwa [e1]
       have h2 := inSpan_mul N S.T' (fun x' => rO N i r (S.p x')) h1 (ih fun c' hc' => hL c' (by simp [hc']))
       have e2 : (fun x' => ((c :: L).map fun c => S.X0 (S.p x') - S.rr c x' • S.eB (S.p x')).prod) =
           (fun x' => S.X0 (S.p x') - S.rr c x' • S.eB (S.p x')) *
             fun x' => (L.map fun c => S.X0 (S.p x') - S.rr c x' • S.eB (S.p x')).prod := by
         funext x'
         simp
-      rw [e2]
-      exact h2
+      rwa [e2]
   unfold Eel
   apply key
   intro c hc
@@ -230,8 +228,8 @@ theorem psi_E (hG : GoodCongruenceObjects N r ρ π S) :
     simp only [LinearEquiv.apply_symm_apply, Pi.single_eq_same, mul_one] at h2
     apply IsFractionRing.injective (N.O i) (KK N i)
     split_ifs with hc
-    · rw [h2, if_pos hc]
-    · rw [h2, if_neg hc, map_zero]
+    · rw [h2, ite_eq_left hc]
+    · rw [h2, ite_eq_right hc, map_zero]
 
 theorem psi_scal (hG : GoodCongruenceObjects N r ρ π S) (f : S.X' → N.O i) (hf : f ∈ S.T') :
     S.ψρ (fun x' => f x' • (1 : MatN N i)) = f S.π' • 1 ∧
@@ -425,7 +423,7 @@ theorem congruence_annihilates_character_part (hG : GoodCongruenceObjects N r ρ
   rw [← hE] at hsχ
   have h0 : 0 < R.t := by have := R.rank_add_five_le; omega
   have hsumc : ∑ k, t k S.π' * ((chiU N i ((c : ℕ) + 1) (γ k) : (N.O i)ˣ) : N.O i) = 0 := by
-    rw [← hsχ c, hψχ c, if_neg hc]
+    rw [← hsχ c, hψχ c, ite_eq_right hc]
   have hsum1 : ∑ k, t k S.π' * ((chiU N i 1 (γ k) : (N.O i)ˣ) : N.O i) = del51 N S S.π' := by
     have := hsχ ⟨0, h0⟩
     rw [hψχ ⟨0, h0⟩] at this
@@ -453,7 +451,7 @@ theorem congruence_annihilates_character_part (hG : GoodCongruenceObjects N r ρ
     simp only [hk]
     rw [← Finset.sum_smul, Finset.sum_sub_distrib, hsumc, hsum1, zero_sub]
   have hA : φ (Eel N S * zz N r S m t γ) = 0 := by
-    rw [h1 _ (eel_inR' N r ρ π S hG) _ hY, hψχ c, if_neg hc, zero_smul]
+    rw [h1 _ (eel_inR' N r ρ π S hG) _ hY, hψχ c, ite_eq_right hc, zero_smul]
   have hB : φ ((fun x' => del51 N S x' • (1 : MatN N i)) * zz N r S m t γ) =
       del51 N S S.π' • φ (zz N r S m t γ) := by
     rw [h1 _ (inSpan_scal N S.T' _ _ (congruence_discriminant_mem N r ρ π S hG)) _ hY,

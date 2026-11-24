@@ -162,8 +162,7 @@ theorem idealVal_mul (χ : Chr F E) {𝔟 𝔠 : FractionalIdeal (𝓞 E)⁰ E} 
 
 theorem idealVal_inv (χ : Chr F E) (𝔟 : FractionalIdeal (𝓞 E)⁰ E) : idealVal χ 𝔟⁻¹ = (idealVal χ 𝔟)⁻¹ := by
   unfold idealVal
-  simp only [FractionalIdeal.count_inv, zpow_neg]
-  exact finprod_inv_distrib _
+  simpa only [FractionalIdeal.count_inv, zpow_neg] using finprod_inv_distrib _
 
 section Constants
 
@@ -384,8 +383,7 @@ theorem exists_idealVal_eq {ξ : Chr F E} (hξ : IsHecke F E ξ) (hu : ∀ᶠ w 
     have := congrArg Subtype.val (pow_card_eq_one' (x := (⟨z, hz⟩ : H)))
     rwa [SubmonoidClass.coe_pow] at this
   have h3 : H = rootsOfUnity (Nat.card H) ℂ := by
-    refine Subgroup.eq_of_le_of_card_ge h2 ?_
-    exact card_rootsOfUnity ℂ (Nat.card H)
+    exact Subgroup.eq_of_le_of_card_ge h2 (card_rootsOfUnity ℂ (Nat.card H))
   have h4 : ξ ^ Nat.card H = 1 := by
     refine GlobalTheory.HeckeUnifApprox.eq_one_of_unif_cofinite _ ⟨?_, fun x => ?_⟩ (hu.mono fun w hw ϖ hϖ => ?_)
     · exact hξ.1.pow _
@@ -763,7 +761,7 @@ theorem exists_isotropic_of_negIdx : ∀ (D : D7) (S : HSp D) (k : ℕ), NegIdx 
     by_cases hj : j = i
     · subst hj; simp [hi]
     · simp [hj]
-  push_neg at hz
+  push Not at hz
 
   have hs : ∀ φ : D.host.E →+* ℂ, (∃ i, 0 < (φ (d i)).re) ∧ ∃ j, (φ (d j)).re < 0 := by
     intro φ
@@ -879,8 +877,7 @@ theorem exists_compl : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E) 
     exact ⟨h2, h1⟩
   have hrk : 2 + Module.finrank D.host.E W = S.rank := by
     have := GlobalTheory.WittLow.finrank_orth S.herm S.nondeg ![x, y] hind
-    rw [S.rank_eq] at this
-    exact this
+    rwa [S.rank_eq] at this
 
   have hrad : ∀ v : W, (∀ w : W, S.hT w v = 0) → v = 0 := by
     intro v hv
@@ -923,8 +920,7 @@ theorem exists_compl : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E) 
     have hu := (hW u).1 u.2
     rw [hL0m, hΛ'd]
     constructor
-    · intro h u' hu'
-      exact h _ hu'
+    · exact fun h u' hu' => h _ hu'
     · intro h z hz
       obtain ⟨b, hb⟩ := h ⟨_, hdec z⟩ (hwz z hz)
       refine ⟨b, ?_⟩
@@ -964,8 +960,7 @@ theorem exists_compl : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E) 
     simp only [gram_sum]
     rw [hΛ₁m, hL0d]
     constructor
-    · intro h a ha
-      exact h _ ha
+    · exact fun h a ha => h _ ha
     · intro h u' hu'
       have := h (e₁.symm u') (by rw [hΛ₁m, LinearEquiv.apply_symm_apply]; exact hu')
       obtain ⟨b, hb⟩ := this
@@ -1049,8 +1044,7 @@ theorem sig : ∀ (D : D7) (S S₁ : HSp D) (ι : S₁.V →ₗ[D.host.E] S.V) (
       simpa [gramAt] using hneg ρ
     · subst hσ
       have h1 := GlobalTheory.BottomIsom.hasSignature_map_star (by simpa [gramAt] using hneg ρ)
-      rw [Matrix.map_map] at h1
-      exact h1
+      rwa [Matrix.map_map] at h1
   obtain ⟨⟨a, b⟩, h₁⟩ := GlobalTheory.WittLow.exists_sig S₁ τ
   have c₁ := (Formalism.UG.P.sig_data _ _ _ h₁).1
   have cS := (Formalism.UG.P.sig_data _ _ _ hS).1
@@ -1411,8 +1405,8 @@ theorem IsSum.exists_bases (hCM : IsCMExt F E σ) (B : Base F E) {n₁ : ℕ} {Y
     (parts_eq_zero hxx hyy hxy hyx' horth hinj) (hprim v).1 (hprim v).2 (eL ▸ hb v)
   refine ⟨x, y, 𝔟, fun v => if h : v ∈ B.P then βY ⟨v, h⟩ else 1, ⟨hxx, hyy, hxy, horth, hg, hlow, hsplit, hinj⟩, h𝔟,
     fun v => ?_, fun v i => ?_⟩
-  · simp only [dif_pos v.2]; exact (hβY v).1
-  · simp only [dif_pos v.2]; exact (hβY v).2 i
+  · simp only [dite_eq_left v.2]; exact (hβY v).1
+  · simp only [dite_eq_left v.2]; exact (hβY v).2 i
 
 theorem IsSum.adapt_herm (hCM : IsCMExt F E σ) {B : Base F E} {n n₁ : ℕ} (hn : n = n₁ + 2) {Y : Spc F E n} {Y₁ : Spc F E n₁}
     {x₀ y₀ : Fin n → E} {ι : Matrix (Fin n) (Fin n₁) E} (h : IsSum σ Y Y₁ x₀ y₀ ι) {r s r₁ s₁ : ℕ} (hY : Y.IsHerm σ B r s)

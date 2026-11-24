@@ -80,9 +80,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeModel :
         map_add' := fun a b => by ext i; simp
         map_smul' := fun a b => by ext i; simp }
     have hf : Function.Injective f := by
-      intro a b hab
-      refine Subtype.ext (LinearMap.ext_on_range hs fun i => ?_)
-      exact congrFun hab i
+      exact fun a b hab => Subtype.ext (LinearMap.ext_on_range hs fun i => (congrFun hab i))
     exact Module.Finite.of_injective f hf
   exact ⟨heckeAlg Y op, { (inferInstance : Ring (heckeAlg Y op)) with mul_comm := hc },
     (inferInstance : Algebra A (heckeAlg Y op)), (heckeAlg Y op).val, t, Subtype.val_injective,

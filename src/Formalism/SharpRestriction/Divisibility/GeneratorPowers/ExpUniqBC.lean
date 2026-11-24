@@ -108,8 +108,7 @@ private theorem aug_zero_mem_lemma_5 {κ : Type} (p : Jet R κ (0 + 1)) (h : (je
   have hr0 : r ∈ orig R κ := by simpa [h] using _root_.Formalism.L2.Pj.sub_const_mem_orig r
   have hr : r ∈ Ideal.span (Set.range (X : κ → MvPolynomial κ R)) := hr0
   have h2 := Ideal.mem_map_of_mem (Ideal.Quotient.mk (orig R κ ^ (0 + 1 + 1))) hr
-  rw [Ideal.map_span, ← Set.range_comp] at h2
-  exact h2
+  rwa [Ideal.map_span, ← Set.range_comp] at h2
 
 private theorem ker_aug_sq_lemma_6 {κ : Type} :
     RingHom.ker (jetAug : Jet R κ (0 + 1) →ₐ[R] R) ^ (1 + 1) = ⊥ := by
@@ -141,7 +140,7 @@ theorem eq_zero_of_tan {κ : Type} [Fintype κ] [DecidableEq κ] (p : Jet R κ (
     have h := ht ℓ
 
     simp only [map_sum, map_mul, AlgHom.commutes, jetTan_alt, mul_ite, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at h
+    Finset.mem_univ, ite_true] at h
     first
       | (rw [← Algebra.smul_def] at h; simpa using congrArg TrivSqZeroExt.snd h)
   simp only [ha, map_zero, zero_mul, Finset.sum_const_zero]
@@ -191,8 +190,7 @@ private theorem eq_triv_lemma_9 {A : Type} [CommRing A] [Algebra R A] (aug : A �
     (h1 : aug.comp ψ = ReciprocityTheory.ChartRestriction.G.Chart.jetAug R (Fin n) 1) (h2 : spMap ψ ≫ x 1 = 1) :
     ψ = (Algebra.ofId R A).comp (ReciprocityTheory.ChartRestriction.G.Chart.jetAug R (Fin n) 1) := by
   obtain ⟨_, _, hu⟩ := hx.2.2 A aug 1 hk 1 (comp_one' _)
-  refine (hu ψ ⟨h1, h2.symm⟩).trans (hu _ ⟨?_, one_eq_lemma_8 hx⟩).symm
-  exact AlgHom.ext fun z => by simp
+  exact (hu ψ ⟨h1, h2.symm⟩).trans (hu _ ⟨AlgHom.ext fun z => by simp, one_eq_lemma_8 hx⟩).symm
 
 theorem one_of_tan {κ : Type} [Fintype κ] [DecidableEq κ] (δ : sp (R₀ := R) (Jet R κ (0 + 1)) ⟶ G)
     (hu : spMap (jetAug : Jet R κ (0 + 1) →ₐ[R] R) ≫ δ = 1)
@@ -281,8 +279,7 @@ def br {A : Type} [CommRing A] [Algebra S A] (f : overAt x0 A ⟶ G) : sp (R₀ 
 variable {G x0}
 
 theorem br_injective {A : Type} [CommRing A] [Algebra S A] : Function.Injective (br G x0 (A := A)) := by
-  intro f g h
-  exact ((Over.mapPullbackAdj x0).homEquiv _ _).injective h
+  exact fun f g h => ((Over.mapPullbackAdj x0).homEquiv _ _).injective h
 
 theorem br_mul {A : Type} [CommRing A] [Algebra S A] (f g : overAt x0 A ⟶ G) :
     br G x0 (f * g) = br G x0 f * br G x0 g := by

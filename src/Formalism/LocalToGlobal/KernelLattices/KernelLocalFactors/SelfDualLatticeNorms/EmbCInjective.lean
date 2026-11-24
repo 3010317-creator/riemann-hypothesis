@@ -138,8 +138,7 @@ theorem unmat_mem_hom {A : Matrix (Fin b) (Fin a) D.host.E} (hA : ∀ x ∈ s.la
   have : z = unmat s A y := by
     funext i
     exact s.iE.injective (congrFun hzz i)
-  rw [← this]
-  exact hz
+  rwa [← this]
 
 theorem gen_eq (c : 𝓞 D.host.K) (t : D.host.E) (x : HomE X.E a b) :
     phi s δ (s.iE.symm ((((c : 𝓞 D.host.K) : D.host.K) : D.host.E) * t) • x) =
@@ -249,14 +248,12 @@ theorem embH_iff (hok : s.Ok) (δ : ℂ) {a b : ℕ} (x : HomE X.E a b) (z : DVa
     funext τ i j
     have h1 := congrFun (congrFun (congrFun h (s.iT.symm τ)) i) j
     have h2 : δ * s.σ₀ (X.emb (s.iT.symm τ) (x (Pi.single j 1) i)) = z (s.iT.symm τ, i, j) := h1
-    rw [hok.1, Equiv.apply_symm_apply] at h2
-    exact h2
+    rwa [hok.1, Equiv.apply_symm_apply] at h2
   · intro h
     funext τ i j
     have h1 := congrFun (congrFun (congrFun h (s.iT τ)) i) j
     have h2 : δ * TaylorLogMetric.embT D (s.iT τ) (s.iE (x (Pi.single j 1) i)) = z (s.iT.symm (s.iT τ), i, j) := h1
-    rw [← hok.1, Equiv.symm_apply_apply] at h2
-    exact h2
+    rwa [← hok.1, Equiv.symm_apply_apply] at h2
 
 theorem lamTie : LamTie := by
   intro D X s cc δ B χ cD a b N N' hok
@@ -291,8 +288,8 @@ theorem flatV_vecE (hok : s.Ok) {a b : ℕ} (n : ℕ) (ω : ℂ) (r : X.E) (β :
   show ω * ((n : ℂ) * (if i = β ∧ j = α then s.σ₀ (X.emb (s.iT.symm τ) r) else 0)) =
     ω * TaylorLogMetric.embT D τ (if i = β ∧ j = α then (n : D.host.E) * s.iE r else 0)
   by_cases h : i = β ∧ j = α
-  · rw [if_pos h, if_pos h, hok.1, Equiv.apply_symm_apply, map_mul, map_natCast]
-  · rw [if_neg h, if_neg h, map_zero, mul_zero]
+  · rw [ite_eq_left h, ite_eq_left h, hok.1, Equiv.apply_symm_apply, map_mul, map_natCast]
+  · rw [ite_eq_right h, ite_eq_right h, map_zero, mul_zero]
 
 theorem inMul_std (hok : s.Ok) {a b : ℕ} (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) (Sp X.E b)) (p : ℕ) [hp : Fact p.Prime]
     (hN : s.StdAtP p N) (hN' : s.StdAtP p N') :
@@ -323,23 +320,22 @@ theorem inMul_std (hok : s.Ok) {a b : ℕ} (N : Submodule (𝓞 X.E) (Sp X.E a))
       rw [Submodule.mem_pi]
       intro i _
       by_cases hi : i = β
-      · rw [if_pos hi]
+      · rw [ite_eq_left hi]
         refine Submodule.mem_one.2 ⟨r' * u, ?_⟩
         rw [map_mul, hr', hu]
         rfl
-      · rw [if_neg hi]
+      · rw [ite_eq_right hi]
         exact zero_mem _
     have h3 := h2a _ hv
     have e : (fun i => if i = β then ((s₂ * s₁ : ℕ) : D.host.E) * s.iE (r : X.E) * y α else 0 : Fin b → D.host.E) =
         (s₂ : D.host.E) • (fun i => if i = β then s.iE (r : X.E) * ((s₁ : D.host.E) * y α) else 0 : Fin b → D.host.E) := by
       funext i
       by_cases hi : i = β
-      · simp only [Pi.smul_apply, if_pos hi, smul_eq_mul]
+      · simp only [Pi.smul_apply, ite_eq_left hi, smul_eq_mul]
         push_cast
         ring
-      · simp only [Pi.smul_apply, if_neg hi, smul_zero]
-    rw [e]
-    exact h3
+      · simp only [Pi.smul_apply, ite_eq_right hi, smul_zero]
+    rwa [e]
 
 theorem embC_injective (hok : s.Ok) : Function.Injective (X.embC (ambOf s B χ cD).σ₀) := by
   intro τ τ' h
@@ -349,8 +345,7 @@ theorem embC_injective (hok : s.Ok) : Function.Injective (X.embC (ambOf s B χ c
   intro y
   have h1 := congrArg (fun f : X.E →+* ℂ => f (s.iE.symm y)) h
   have h2 : s.σ₀ (X.emb τ (s.iE.symm y)) = s.σ₀ (X.emb τ' (s.iE.symm y)) := h1
-  rw [hok.1, hok.1, RingEquiv.apply_symm_apply] at h2
-  exact h2
+  rwa [hok.1, hok.1, RingEquiv.apply_symm_apply] at h2
 
 theorem thF_eq {a b : ℕ} (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) (Sp X.E b)) :
     Formalism.L2.AlgTh.thF (ambOf s B χ cD) N N' = fun z => B.eNat χ a b (s.lat N) (s.lat N') (s.flatV a b z) := rfl

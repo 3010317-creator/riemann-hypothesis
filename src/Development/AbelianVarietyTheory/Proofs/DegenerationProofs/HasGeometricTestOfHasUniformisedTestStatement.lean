@@ -177,8 +177,7 @@ theorem eq_zero_of_points {k : Type} [Field k] [IsAlgClosed k] {X : Scheme.{0}} 
   obtain ⟨y, hy, hc⟩ := nonempty_inter_closedPoints hne' (X.basicOpen f).isOpen.isLocallyClosed
   have hb : ⊤ ≤ (pointOfClosedPoint π y hc) ⁻¹ᵁ X.basicOpen f := fun q _ => by
     show pointOfClosedPoint π y hc q ∈ X.basicOpen f
-    rw [pointOfClosedPoint_apply π y hc q]
-    exact hy
+    rwa [pointOfClosedPoint_apply π y hc q]
   have hU : ⊤ ≤ (pointOfClosedPoint π y hc) ⁻¹ᵁ U := hb.trans (Scheme.Hom.preimage_mono _ (X.basicOpen_le f))
   exact ((CrdCalc.isUnit_valR_iff _ U hU f).2 hb).ne_zero (h _ (pointOfClosedPoint_comp π y hc) hU)
 
@@ -334,8 +333,7 @@ theorem exists_point_mem {Z : Set Y} (hZ : IsLocallyClosed Z) (hne : Z.Nonempty)
   replace hz : IsClosed {z} := hz
   refine ⟨pointOfClosedPoint (pullback.snd q (spMap σ)) z hz ≫ pullback.fst _ _,
     by rw [Category.assoc, pullback.condition, pointOfClosedPoint_comp_assoc], fun w => ?_⟩
-  rw [Scheme.Hom.comp_apply, pointOfClosedPoint_apply]
-  exact hzZ
+  rwa [Scheme.Hom.comp_apply, pointOfClosedPoint_apply]
 
 theorem eq_of_val_eq [IsReduced Y] {W : Y.Opens} {r s : Γ(Y, W)}
     (h : ∀ x : Sp C ⟶ Y, x ≫ q = spMap σ → ⊤ ≤ x ⁻¹ᵁ W → valR x W r = valR x W s) : r = s := by
@@ -605,8 +603,7 @@ theorem norm_const_sec : ∀ (p : ℕ) [Fact p.Prime] (V : Type) [CommRing V] [I
     intro x l l' hl hl' i
     have e := (sec_val (t i) (x := x) (i := fun _ => l) (j := fun _ => l') (le_wchart fun _ => hl)
       (le_wchart fun _ => hl')).trans (congrArg (· * _) (tv_linComb M _ _ (fun _ => hl) fun _ => hl'))
-    rw [Fin.prod_univ_one, zpow_natCast, Category.comp_id] at e
-    exact e
+    rwa [Fin.prod_univ_one, zpow_natCast, Category.comp_id] at e
   have key : ∀ x l m, x ≫ q = spMap σ → ⊤ ≤ (x ≫ j) ⁻¹ᵁ M.U l → ⊤ ≤ (x ≫ ψ' ≫ π) ⁻¹ᵁ L.U m →
       ∃ c : PadicAlgCl p, c ≠ 0 ∧ ∀ i, (b.map σ).mulVec (v x m) i = c * w (x ≫ j) l i := by
     intro x l m hx hl hm
@@ -919,8 +916,7 @@ theorem exists_pos_isGreatest_norm_mulVec_on_ker : GlobalTheory.UT.LL → ∀ (o
     have e := (gen_val ρ.rig_gen (x := spMap y₀) (i := fun _ => m) (j := fun _ => m₀) (le_wchart fun _ => hm)
       (le_wchart fun _ => hm₀)).trans (congrArg (· * _) (tv_linComb _ _ _ (fun _ => hm) fun _ => hm₀))
     rw [← hω.right x₀ l₀ m m₀ hl₀' (hx₀ψ ▸ hm) (hx₀ψ ▸ hm₀), _root_.mul_assoc, hx₀ψ]
-    refine congrArg _ (e.trans ?_)
-    exact congrArg₂ (· * ·) (by simp) rfl
+    exact congrArg _ (e.trans (congrArg₂ (· * ·) (by simp) rfl))
   have hω₀ : ω x₀ l₀ m₀ ≠ 0 := hω.ne _ _ _ hl₀' (hx₀ψ ▸ hm₀)
   have hr₀ : rigVal ρ.P ρ.rig (spMap y₀) m₀ ≠ 0 := val_unit_ne_zero _ (le_wchart fun _ => hm₀) _
   set κ₁ := ‖ω x₀ l₀ m₀ * rigVal ρ.P ρ.rig (spMap y₀) m₀‖ with hκ₁
@@ -1269,7 +1265,7 @@ theorem E_eq_bdd [ArithBase o Ω] (φ : o →+* OO p) (hφ : ∀ a, (φ a : Padi
   rw [he']
   refine Submodule.sum_mem _ fun c _ => ?_
   obtain ⟨α, hα, rfl⟩ := (test_weights o Ω S p y₀ τ).1 c
-  have hPP : S.proj _ (τ.wt α) * S.proj _ (τ.wt α) = S.proj _ (τ.wt α) := by rw [hmul, if_pos rfl]
+  have hPP : S.proj _ (τ.wt α) * S.proj _ (τ.wt α) = S.proj _ (τ.wt α) := by rw [hmul, ite_eq_left rfl]
   have hfix : (ψ.mapMatrix (S.proj _ (τ.wt α))).mulVec ((ψ.mapMatrix (S.proj _ (τ.wt α))).mulVec e) =
       (ψ.mapMatrix (S.proj _ (τ.wt α))).mulVec e := by
     rw [Matrix.mulVec_mulVec, ← map_mul, hPP]
@@ -1360,8 +1356,7 @@ theorem weil_level (hL : Laws) [hA : ArithBase o Ω] (ρ : S.Real) (a b : S.Gam)
     (by rw [← hsm, mul_comm S.N S.r, nsmul_self, h0]) (pt_pow ρ b)
   rw [hsm S.r a]
   refine h₂.1 ?_
-  rw [← Nat.cast_mul, mul_comm S.N S.r]
-  exact h₁
+  rwa [← Nat.cast_mul, mul_comm S.N S.r]
 
 theorem rho_mul_rho (hL : Laws) [hA : ArithBase o Ω] (ρ : S.Real) (a b : S.Gam) :
     S.ρ a * S.ρ b =
@@ -1513,8 +1508,7 @@ theorem irred_of_comm [IsDomain o] (hc : Fintype.card S.J = S.N ^ S.g)
         simpa [eStd, Pi.single_apply] using this
     simp only [σ, nsmul_eq_mul, ← Nat.cast_mul] at h3
     have h4 := Nat.ModEq.mul_left_cancel' (by have := S.r_pos; omega) ((ZMod.natCast_eq_natCast_iff _ _ _).1 h3)
-    rw [← ZMod.natCast_eq_natCast_iff, ZMod.natCast_zmod_val, ZMod.natCast_zmod_val] at h4
-    exact h4
+    rwa [← ZMod.natCast_eq_natCast_iff, ZMod.natCast_zmod_val, ZMod.natCast_zmod_val] at h4
   have hspan : Submodule.span F (Set.range fun a => Λ (S.ρ (σ a))) = ⊤ := by
     apply hli.span_eq_top_of_card_eq_finrank'
     rw [Module.finrank_linearMap, Module.finrank_fintype_fun_eq_card, hc, ← pow_add]
@@ -1614,8 +1608,7 @@ theorem testLattice_eq_span_sections : GlobalTheory.UT.LL → ∀ (o Ω : Type) 
   have hd : ‖em d‖ = τ.δ := (congrArg norm (hy _)).symm.trans hx
   have hk : ‖em k‖ = κ := by
     refine Eq.trans ?_ hi
-    simp only [hy]
-    exact congrArg norm (congrFun (map_mulVec' em b _) i).symm
+    simpa only [hy] using congrArg norm (congrFun (map_mulVec' em b _) i).symm
   have hc : ‖em (d / k)‖ = τ.δ / κ := by rw [map_div₀, norm_div, hd, hk]
   have hc0 : em (d / k) ≠ 0 := norm_pos_iff.1 (hc ▸ div_pos τ.δ_pos hκ)
   refine ⟨d / k, fun h => hc0 (by rw [h, map_zero]), ?_⟩

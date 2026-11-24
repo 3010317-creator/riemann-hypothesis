@@ -221,8 +221,7 @@ private theorem exists_root_near_of_aeval_small (l : ℕ) [Fact l.Prime] (g : �
     apply Multiset.map_congr rfl
     intro b _
     simp
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hle : δ ^ n ≤ ‖aeval α g‖ := by
     rw [hev]
     show δ ^ n ≤ (normHom : Om l →*₀ ℝ) _
@@ -413,8 +412,7 @@ theorem UpperTheory.exists_real_split_primitive_element_padic_finite_ext :
   have hKn : Module.finrank ℚ_[l] K.1 = n := by
     have h1 : Module.finrank ℚ_[l] (ℚ_[l]⟮α₀⟯) = (minpoly ℚ_[l] α₀).natDegree :=
       IntermediateField.adjoin.finrank (Algebra.IsIntegral.isIntegral α₀)
-    rw [hα₀, IntermediateField.finrank_top', IntermediateField.minpoly_eq] at h1
-    exact h1
+    rwa [hα₀, IntermediateField.finrank_top', IntermediateField.minpoly_eq] at h1
   have hKeq : ℚ_[l]⟮α⟯ = K.1 := by
     apply IntermediateField.eq_of_le_of_finrank_le (IntermediateField.adjoin_simple_le_iff.mpr hαK)
     rw [IntermediateField.adjoin.finrank hint, hKn]
@@ -460,8 +458,7 @@ theorem UpperTheory.exists_real_split_primitive_element_padic_finite_ext :
     have hgm' : (g.map (algebraMap ℚ ℚ_[l])).Monic := hgm.map _
     have hdvd : minpoly ℚ_[l] β ∣ g.map (algebraMap ℚ ℚ_[l]) := by
       apply minpoly.dvd
-      rw [Polynomial.aeval_map_algebraMap]
-      exact hβ
+      rwa [Polynomial.aeval_map_algebraMap]
     calc (minpoly ℚ_[l] β).natDegree ≤ (g.map (algebraMap ℚ ℚ_[l])).natDegree :=
           Polynomial.natDegree_le_of_dvd hdvd hgm'.ne_zero
       _ = n := by rw [Polynomial.natDegree_map_eq_of_injective (algebraMap ℚ ℚ_[l]).injective, hgd]
@@ -631,8 +628,7 @@ theorem UpperTheory.exists_totally_imaginary_generator_of_isCMField :
   have hbc : ∀ φ : M →+* ℂ, starRingEnd ℂ (φ b) = φ b := fun φ => by
     refine conj_of_root g hgm.ne_zero hgs _ ?_
     have := Polynomial.aeval_algHom_apply φ.toRatAlgHom b g
-    rw [hb, map_zero] at this
-    exact this
+    rwa [hb, map_zero] at this
   have htc : IsTotallyComplex M := ⟨fun w => by
     rw [← InfinitePlace.not_isReal_iff_isComplex, InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
     intro h
@@ -824,8 +820,7 @@ private theorem hasLT_transfer {F K Ω : Type} [Field F] [NumberField F] [Field 
       Subtype.ext (AlgEquiv.ext fun x => (key _ x).trans (hc σ' x).symm)
     rw [MonoidHom.comp_apply, MonoidHom.comp_apply, e, h1, hp _ _ (hc σ')]
   · have e := h2 (c σ')
-    rw [eig_of_wdRel h4 (hc σ')] at e
-    exact e
+    rwa [eig_of_wdRel h4 (hc σ')] at e
 
 private theorem cont_symm {F K : Type} [Field F] [NumberField F] [Field K] [NumberField K]
     {v : HeightOneSpectrum (𝓞 F)} {w : HeightOneSpectrum (𝓞 K)} (i : v.adicCompletion F ≃+* w.adicCompletion K)
@@ -865,8 +860,7 @@ theorem UpperTheory.hasLocalLanglands_iff_of_placeIso :
       fun σ' σ H => (hp σ σ' (sy _ _ H)).symm⟩
   have e : (f.comp c.symm.toMonoidHom).comp c.toMonoidHom = f :=
     MonoidHom.ext fun σ => congrArg f (c.symm_apply_apply σ)
-  rw [e]
-  exact hf
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.HasLocalLanglandsIffOfPlaceIso =====
@@ -1023,19 +1017,16 @@ theorem UpperTheory.Reformulated.B.Qj6.ex_lift :
     have hr : f x ∈ (((minpoly ℚ x).map (algebraMap ℚ Ω)).map j).roots := by
       rw [Polynomial.mem_roots hne, hm, Polynomial.IsRoot.def, Polynomial.eval_map_algebraMap]
       have h := Polynomial.aeval_algHom_apply f.toRatAlgHom x (minpoly ℚ x)
-      rw [minpoly.aeval, map_zero] at h
-      exact h
+      rwa [minpoly.aeval, map_zero] at h
     rw [hs.roots_map, Multiset.mem_map] at hr
     obtain ⟨y, -, hy⟩ := hr
     exact ⟨y, hy⟩
   choose g hg using fun x => RingHom.mem_fieldRange.mp (key x)
   refine ⟨{ toFun := g, map_one' := ?_, map_mul' := ?_, map_zero' := ?_, map_add' := ?_ }, hg⟩
   · exact j.injective (by simp [hg])
-  · intro a b
-    exact j.injective (by simp [hg])
+  · exact fun a b => j.injective (by simp [hg])
   · exact j.injective (by simp [hg])
-  · intro a b
-    exact j.injective (by simp [hg])
+  · exact fun a b => j.injective (by simp [hg])
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExLift =====

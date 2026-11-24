@@ -119,8 +119,7 @@ theorem J_ibp {b : ℂ} (hb : b.re < 0) (k : ℕ) (c : ℂ) :
     have h0 : HasDerivAt (fun y : ℂ => b * y ^ 2 + c * y) (b * (2 * (x : ℂ)) + c) (x : ℂ) := by
       have h := ((hasDerivAt_pow 2 (x : ℂ)).const_mul b).add ((hasDerivAt_id (x : ℂ)).const_mul c)
       have e : b * (((2 : ℕ) : ℂ) * (x : ℂ) ^ (2 - 1)) + c * 1 = b * (2 * (x : ℂ)) + c := by push_cast; ring
-      rw [e] at h
-      exact h
+      rwa [e] at h
     exact h0.comp_ofReal.cexp
   have I1 := intg_pow_quad hb (k + 1) c
   have I0 := intg_pow_quad hb k c

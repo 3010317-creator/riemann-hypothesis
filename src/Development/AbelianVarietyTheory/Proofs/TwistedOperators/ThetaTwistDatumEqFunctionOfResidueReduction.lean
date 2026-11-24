@@ -80,9 +80,7 @@ theorem phiQ_eq_viaRed_qLoc : ∀ (D : D7) (v : FinPl D) (φ : SplitProj D v) (P
   have hle : Valued.v (d : Fv D.host.F v) ≤ 1 := d.2
   have hunit : IsUnit (r d) ↔ Valued.v (d : Fv D.host.F v) = 1 := by
     constructor
-    · intro hu
-      refine le_antisymm hle (not_lt.mp fun hlt => ?_)
-      exact hu.ne_zero ((hr.2.1 d).mpr hlt)
+    · exact fun hu => le_antisymm hle (not_lt.mp fun hlt => (hu.ne_zero ((hr.2.1 d).mpr hlt)))
     · intro h1
       have hne : (d : Fv D.host.F v) ≠ 0 := by
         intro h0; rw [h0, map_zero] at h1; exact zero_ne_one h1

@@ -176,8 +176,7 @@ theorem exists_isComb_translates_of_nuGe : LL → TwistBCSpanStatement → TWM.V
       have := hlin F (m ^ 2) w₀ σ σ (SecM.toSec A.A (κ (-1) • SecM.ofSec A.A σ + SecM.ofSec A.A σ)) _ _ (-1) hσ hσ
         fun j => rfl
       rw [map_neg, map_one, neg_one_smul, neg_one_smul, neg_add_cancel, neg_add_cancel] at this
-      rw [Finset.sum_empty, Finset.sum_empty]
-      exact this
+      rwa [Finset.sum_empty, Finset.sum_empty]
     | insert i S hi ih =>
       rw [Finset.sum_insert hi, Finset.sum_insert hi]
       exact hlin F (m ^ 2) w₀ _ _ _ _ _ (a i) (h i).2.2.2 ih fun j => rfl
@@ -293,8 +292,7 @@ theorem exists_eq_smul (a : S.Gam) (h : S.N • a = 0) : ∃ b, a = S.r • b :=
     have e : ((S.N * (a i).val : ℕ) : ZMod (S.r * S.N)) = 0 := by
       have := congrFun h i
       rw [Pi.smul_apply, nsmul_eq_mul] at this
-      rw [Nat.cast_mul, ZMod.natCast_zmod_val]
-      exact this
+      rwa [Nat.cast_mul, ZMod.natCast_zmod_val]
     rw [ZMod.natCast_eq_zero_iff, mul_comm S.N] at e
     obtain ⟨b, hb⟩ := Nat.dvd_of_mul_dvd_mul_right (lt_of_lt_of_le two_pos S.N_ge) e
     exact ⟨b, by rw [← ZMod.natCast_zmod_val (a i), hb, Nat.cast_mul, nsmul_eq_mul]⟩

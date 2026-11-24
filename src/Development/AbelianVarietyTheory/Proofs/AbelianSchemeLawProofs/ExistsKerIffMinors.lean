@@ -112,8 +112,7 @@ theorem nontrivial_sec_iff (N : LB X) : Nontrivial (LB.Sec N) ↔ ∃ (s : LB.Se
   obtain ⟨sf, hs⟩ := s
   constructor
   · intro h
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     have : sf = fun _ => 0 := funext hn
     subst this
     exact h rfl
@@ -132,8 +131,7 @@ theorem pull_pw (M : LB X) (π : Y ⟶ X) (t : ℤ) : (pw M t).pull π = pw (M.p
 theorem rs_ne_zero [IsIntegral X] {U V : X.Opens} (h : V ≤ U) (hV : (V : Set X).Nonempty) {x : Γ(X, U)}
     (hx : x ≠ 0) : rs X h x ≠ 0 := by
   have : Nonempty V := hV.to_subtype
-  intro e
-  exact hx (map_injective_of_isIntegral X (homOfLE h) (e.trans (map_zero _).symm))
+  exact fun e => hx (map_injective_of_isIntegral X (homOfLE h) (e.trans (map_zero _).symm))
 
 theorem nonempty_of_ne_zero {U : X.Opens} {x : Γ(X, U)} (hx : x ≠ 0) : (U : Set X).Nonempty := by
   by_contra h
@@ -224,7 +222,6 @@ theorem isClosed_trivLocus :
     have hk : RingHom.ker (algebraMap R p.asIdeal.ResidueField) = p.asIdeal := Ideal.ker_algebraMap_residueField _
     refine ⟨p.asIdeal.ResidueField, inferInstance, algebraMap R _, _, _, _, hk, IsPullback.of_hasPullback _ _, ?_⟩
     refine (triv_fibre_iff hM P Q _ (IsPullback.of_hasPullback _ _)).2 ?_
-    rw [hk]
-    exact hp
+    rwa [hk]
 
 end GlobalTheory.TrivLocus

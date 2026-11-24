@@ -124,8 +124,7 @@ theorem exists_quasiReflection {S : Type} [CommRing S] (s : S →+* S) (hs : ∀
       ∀ z, g *ᵥ z = z - (c * hform s J w z) • w := by
   let r : Fin n → S := fun j => ∑ i, s (w i) * J i j
   have hr : ∀ z, r ⬝ᵥ z = hform s J w z := fun z => by
-    simp only [r, dotProduct, hform, Finset.sum_mul]
-    exact Finset.sum_comm
+    simpa only [r, dotProduct, hform, Finset.sum_mul] using Finset.sum_comm
   let P : Matrix (Fin n) (Fin n) S := vecMulVec w r
   have hPP : P * P = hform s J w w • P := by
     ext i j
@@ -137,12 +136,10 @@ theorem exists_quasiReflection {S : Type} [CommRing S] (s : S →+* S) (hs : ∀
     ext i j
     have h1 : s (r i) = ∑ k, J i k * w k := by
 
-      simp only [r, map_sum, map_mul, hs, hJ]
-      exact Finset.sum_congr rfl fun k _ => by ring
+      simpa only [r, map_sum, map_mul, hs, hJ] using Finset.sum_congr rfl fun k _ => by ring
     simp only [P, cT, Matrix.mul_apply, vecMulVec_apply, transpose_apply, map_apply, map_mul]
     calc ∑ k, s (w k) * s (r i) * J k j = s (r i) * r j := by
-          simp only [r, Finset.mul_sum]
-          exact Finset.sum_congr rfl fun k _ => by ring
+          simpa only [r, Finset.mul_sum] using Finset.sum_congr rfl fun k _ => by ring
       _ = _ := by
           rw [h1, Finset.sum_mul]
           exact Finset.sum_congr rfl fun k _ => by ring

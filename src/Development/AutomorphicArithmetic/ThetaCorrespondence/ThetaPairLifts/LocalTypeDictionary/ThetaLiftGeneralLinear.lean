@@ -241,8 +241,7 @@ theorem UpperTheory.Lit.Mix.comb :
       have h2 : 0 ≤ (E.card : ℤ) * ((E.card : ℤ) - 1) := mul_nonneg (by linarith) (by linarith)
       nlinarith
   have key : ∃ t, J t ∧ ∀ b ∈ L, g b ≠ t + 1 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have hall : ∀ n : ℕ, J (g a0 + n) := by
       intro n
       induction n with
@@ -336,8 +335,7 @@ theorem _root_.GlobalTheory.WordGrowth.exists_average
       rfl
   · intro f hf
 
-    rw [map_smul, map_sum, smul_eq_mul]
-    rw [Finset.sum_congr rfl (g := fun _ => f u) ?_]
+    rw [map_smul, map_sum, smul_eq_mul, Finset.sum_congr rfl (g := fun _ => f u) ?_]
     · rw [Finset.sum_const, nsmul_eq_mul]
       field_simp
     · intro v hv
@@ -697,8 +695,7 @@ theorem UpperTheory.Lit.Mix.nolow :
       push_cast
       ring
     show (IrrGL.ofChar χ hχ).nu (c0 : ℂ) ∈ A
-    rw [e]
-    exact hmem
+    rwa [e]
   obtain ⟨h, x, hxA, -⟩ := id hA
   let P : Fin h → Prop := fun a => ∃ j : ℤ, x a = B (c0 + j)
   let L : Finset (Fin h) := Finset.univ.filter P
@@ -706,8 +703,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   have hg : ∀ a ∈ L, x a = B (c0 + g a) := by
     intro a ha
     have ha' : P a := (Finset.mem_filter.mp ha).2
-    simp only [g, dif_pos ha']
-    exact ha'.choose_spec
+    simpa only [g, dite_eq_left ha'] using ha'.choose_spec
   rw [← hxA] at hmem'
   obtain ⟨a₀, -, ha₀⟩ := Multiset.mem_map.mp hmem'
   have ha₀L : a₀ ∈ L := Finset.mem_filter.mpr ⟨Finset.mem_univ _, 0, by rw [ha₀]; simp⟩
@@ -720,8 +716,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   obtain ⟨S, hSL, hSne, hsep, hsum⟩ := UpperTheory.Lit.Mix.comb h L g ⟨a₀, ha₀L, hga₀.le⟩
   have hr : ∑ a, (x a).1 = r := by
     have e := hA.sum_fst
-    rw [← hxA, Multiset.map_map, Fintype.card_fin] at e
-    exact e
+    rwa [← hxA, Multiset.map_map, Fintype.card_fin] at e
   have hS1 : ∀ a ∈ S, (x a).1 = 1 := fun a ha => by rw [hg a (hSL ha)]; rfl
   have hScard : S.card ≤ r := by
     rw [← hr]
@@ -782,8 +777,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   have hE : ∀ e, E (B e) = e := by
     intro e
     have hy : ∃ e' : ℝ, B e = B e' := ⟨e, rfl⟩
-    simp only [E, dif_pos hy]
-    exact (hB_inj hy.choose_spec).symm
+    simpa only [E, dite_eq_left hy] using (hB_inj hy.choose_spec).symm
   have hu_form : ∀ a, u a = B (E (u a)) := by
     intro a
     have hmem0 : u a ∈ A₀ := by
@@ -809,8 +803,7 @@ theorem UpperTheory.Lit.Mix.nolow :
     have key := scalarBy_nu χ hχ z (E (u a))
     have e := hu_form a
     simp only [B] at e
-    rw [← e] at key
-    exact key
+    rwa [← e] at key
   have hscal := scalarFull k h₀ S.card u hu z c hsc
   have hadm : IsAdmissible σ := (hBZ k).1 _ V σ hA.isSmooth hA.isIrreducible
   have hnt : Nontrivial V := Model.nontrivial_of_isIrreducible hA.isIrreducible
@@ -825,14 +818,11 @@ theorem UpperTheory.Lit.Mix.nolow :
     simp only [c, norm_mul, hχu z, one_mul, Complex.norm_real, Real.norm_eq_abs]
     rw [Real.rpow_add hzpos, Real.rpow_sum_of_pos hzpos]
     congr 1
-    · apply Finset.prod_congr rfl
-      intro a _
-      exact abs_of_pos (Real.rpow_pos_of_pos hzpos _)
+    · exact Finset.prod_congr rfl (fun a _ => abs_of_pos (Real.rpow_pos_of_pos hzpos _))
     · exact abs_of_pos (Real.rpow_pos_of_pos hzpos _)
   rw [hnorm] at hb
   have hexp : 0 ≤ ∑ a, E (u a) + (S.card * n : ℝ) / 2 := by
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     have h3 := Real.one_lt_rpow_of_pos_of_lt_one_of_neg hzpos hz1 hneg
     linarith
   rw [hEsum, Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul] at hexp
@@ -856,42 +846,8 @@ open Filter Topology GlobalTheory.PRep GlobalTheory.SplitWeil GlobalTheory.SmGL 
 
 theorem UpperTheory.Lit.Mix.top :
     GlobalTheory.Published.GeometricLemma → GlobalTheory.Published.BernsteinZelevinskyFiniteness → GlobalTheory.Published.ZelevinskyPolynomialRing → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (r t : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (σ : Representation ℂ (GL (Fin r) k) V) (χ : kˣ →* ℂˣ), r < t → IsSmooth σ → σ.IsIrreducible → IsUnitarisable σ → IsSmoothChar χ → IsUnitaryChar χ → (prod₂ σ (detRep (Fin t) χ)).IsIrreducible := by
-  intro hG hB hZ k _ _ _ _ r t V _ _ σ χ hrt hs hi hu hχs hχu
-  have hds : IsSmooth (detRep (Fin t) χ) :=
-    (isSmooth_ofChar_iff _).2 (IsSmoothChar.detChar hχs)
-  have hdi : (detRep (Fin t) χ).IsIrreducible := isIrreducible_ofChar _
-  have hdu : IsUnitarisable (detRep (Fin t) χ) :=
-    (isUnitarisable_ofChar_iff _).2 (fun g => hχu _)
-  set x := IrrGL.of σ hs hi with hx
-  set y := IrrGL.of (detRep (Fin t) χ) hds hdi with hy
-  have hd : ∑ a, (![x, y] a).fst = r + t := by simp [hx, hy, IrrGL.of]
-  obtain ⟨e⟩ := nonempty_prod₂_equiv_prodIrr σ hs hi (detRep (Fin t) χ) hds hdi hd
-  refine GlobalTheory.Parabolic.isIrreducible_of_equiv e.symm ?_
-  have hxu : IsUnitarisable x.rep := GlobalTheory.GenericUnitary.isUnitarisable_of_equiv (IrrGL.equivOf σ hs hi) hu
-  have hyu : IsUnitarisable y.rep :=
-    GlobalTheory.GenericUnitary.isUnitarisable_of_equiv (IrrGL.equivOf (detRep (Fin t) χ) hds hdi) hdu
-  refine UpperTheory.Lit.Mix.ss hB k x y (r + t) hd hxu hyu ?_
-  refine UpperTheory.Lit.Mix.cellone hG hB k x y (r + t) hd ?_
-  intro q hq hq0 hjm p hc
-  have hqt : ∑ a, (q a).fst = t := hq
-  have hjm' : jm q hqt (detRep (Fin t) χ) ≠ 0 := by
-    have h1 := (jhMult_ne_zero_iff).1 hjm
-    have hsub : IsSubquotient y.rep (detRep (Fin t) χ) := by
-      have f := (IrrGL.equivOf (detRep (Fin t) χ) hds hdi)
-      exact IsSubquotient.of_surjective f.toIntertwiningMap
-        (fun w => ⟨f.invFun w, f.right_inv w⟩)
-    exact (jhMult_ne_zero_iff).2
-      (IsSubquotient.trans h1 (GlobalTheory.JacquetExact.isSubquotient_jac _ hds hsub))
-  obtain ⟨A, hA, hnu⟩ := UpperTheory.Lit.Mix.detjac k t χ hχs q hqt hq0 hjm'
-  by_contra hne
-  have hsq := (jhMult_ne_zero_iff).1 hne
-  obtain ⟨s, hsp⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.TD.exists_hasSupport hB hG p
-  have hsup := GlobalTheory.CompanionTheory.Hypotheses₂.TD.hasSupport_of_isSubquotient_prodIrr
-    (t := ![s, A]) (fun a => by fin_cases a <;> simpa) x.snd.rep.irr hsq
-  have hmem : (IrrGL.ofChar χ hχs).nu (-(↑t - 1) / 2) ∈ ∑ a, (![s, A] : Fin 2 → _) a := by
-    rw [Fin.sum_univ_two]
-    exact Multiset.mem_add.2 (Or.inr hnu)
-  exact UpperTheory.Lit.Mix.nolow hG hB hZ k r t _ x.rep _ χ hχs hrt hsup hxu hχu hmem
+  intros
+  apply UpperTheory.Lit.Full.top <;> assumption
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.ImportsAlt =====

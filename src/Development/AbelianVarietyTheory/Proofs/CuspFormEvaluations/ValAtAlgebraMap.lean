@@ -117,11 +117,10 @@ theorem exists_isHomogeneous_aeval_eq_zero {K Ω : Type} [Field K] [Field Ω] [A
     rw [htr, Cardinal.mk_fin, Nat.cast_le] at h1
     omega
   rw [algebraicIndependent_iff] at hdep
-  push_neg at hdep
+  push Not at hdep
   obtain ⟨P, hP, hP0⟩ := hdep
   have hex : ∃ d, MvPolynomial.homogeneousComponent d P ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     apply hP0
     rw [← MvPolynomial.sum_homogeneousComponent P]
     exact Finset.sum_eq_zero fun d _ => hall d
@@ -312,15 +311,14 @@ theorem phi_lower (X : Data E r) (hf : 0 < PT.f E) {th : ℝ} (hth : 0 < th) :
   have h1 := one_le_rd (E := E)
   refine ⟨2 * PT.f E / PT.rd E ^ 2, th, by positivity, hth, fun x _ hx => ?_⟩
   unfold phiFD
-  rw [if_pos hx, div_div]
+  rw [ite_eq_left hx, div_div]
 
 theorem phi_le (X : Data E r) (th : ℝ) (x : Frame X.Ψ r) : phiFD X th x ≤ 2 * PT.f E / X.la1 x ^ 2 := by
   have h1 := one_le_rd (E := E)
   unfold phiFD
   split_ifs
   · rw [← div_div]
-    refine div_le_div_of_nonneg_right ?_ (by positivity)
-    exact div_le_self (by positivity) (one_le_pow₀ h1)
+    exact div_le_div_of_nonneg_right (div_le_self (by positivity) (one_le_pow₀ h1)) (by positivity)
   · positivity
 
 theorem phi_threshold (X : Data E r) (th : ℝ) {th' : ℝ} (h' : 0 < th') :
@@ -331,7 +329,7 @@ theorem phi_threshold (X : Data E r) (th : ℝ) {th' : ℝ} (h' : 0 < th') :
   · have : phiFD X th x ≤ phiFD X th' x := by
       have h0 := phi_nonneg X th' x
       unfold phiFD at h0 ⊢
-      rw [if_pos hx] at h0 ⊢
+      rw [ite_eq_left hx] at h0 ⊢
       split_ifs
       · exact le_rfl
       · exact h0
@@ -406,17 +404,17 @@ theorem gaps_all (X : Data E r) (L G : Wt X.Ψ r) (T : ℕ) (hL : IsStrictDom X 
     have ha : (a : ℕ) < X.p0 := lt_of_le_of_lt hab hb
     have h1' : (G τ b : ℝ) + 2 * (L τ a - L τ b) ≤ G τ a := by exact_mod_cast h1
     have h2' : (L τ b : ℝ) ≤ L τ a := by exact_mod_cast h2
-    simp only [de2W, if_neg (not_le.2 ha), if_neg (not_le.2 hb)]
+    simp only [de2W, ite_eq_right (not_le.2 ha), ite_eq_right (not_le.2 hb)]
     linarith
   · obtain ⟨h1, h2⟩ := hg τ a b hab (Or.inr ha)
     have hb : X.p0 ≤ (b : ℕ) := ha.trans hab
     have h1' : (G τ b : ℝ) + 2 * (L τ a - L τ b) ≤ G τ a := by exact_mod_cast h1
     have h2' : (L τ b : ℝ) ≤ L τ a := by exact_mod_cast h2
-    simp only [de2W, if_pos ha, if_pos hb]
+    simp only [de2W, ite_eq_left ha, ite_eq_left hb]
     linarith
   · obtain ⟨-, -, h3⟩ := hn τ a b ha hb
     have h3' : 57 * (T : ℝ) ≤ 10 * (2 * ((G τ b : ℝ) - G τ a) - (L τ b - L τ a)) := by exact_mod_cast h3
-    simp only [de2W, if_neg (not_le.2 ha), if_pos hb]
+    simp only [de2W, ite_eq_right (not_le.2 ha), ite_eq_left hb]
     push_cast
     linarith
 
@@ -687,8 +685,7 @@ theorem archAt_nonempty : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj :
       refine GlobalTheory.Shares.margins_of_gaps _ _ _ Xa (by rw [hp0]; exact hq) (by rw [hp0]; exact hqr)
         (by obtain ⟨τ, hτ⟩ := Finset.card_pos.1 (hcard.symm ▸ hf); exact ⟨⟨τ, hτ⟩⟩) rfl hsL g1
         (5 * D.R.f * (D.R.r : ℝ) ^ 2) (19 / 5 * Tn) (19 / 10 * Tn) (by rw [hcard]; exact m1) g2 m2 ?_ m4
-      rw [hcard, hp0, hnd]
-      exact m3
+      rwa [hcard, hp0, hnd]
   choose Xa hN h1 h2 h3 h4 h5 h6 h7 using key
   exact ⟨⟨Xa, fun k => (GlobalTheory.Shares.WtDic.weights_dictionary D T h j hj k).2.2.2.2.1, hN, h1, h2, h3, h4, h5, h6, h7⟩⟩
 

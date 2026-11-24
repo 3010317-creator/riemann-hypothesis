@@ -155,8 +155,7 @@ private lemma cell_part (g : G1 F) : IsUnit (g 1 0) ↔ ∃ b a b', g = nU b * m
     · simp only [inv_neg, inv_inv, Units.val_neg]
       linear_combination (-((c : A F) * ((c⁻¹ : (A F)ˣ) : A F) ^ 2)) * hd +
         (-((c⁻¹ : (A F)ˣ) : A F) - g.1 0 1 * ((c : A F) * ((c⁻¹ : (A F)ˣ) : A F) + 1)) * he
-    · simp only [inv_neg, inv_inv, Units.val_neg, neg_neg]
-      exact hc'
+    · simpa only [inv_neg, inv_inv, Units.val_neg, neg_neg] using hc'
     · simp only [inv_neg, inv_inv, Units.val_neg]
       linear_combination (-g.1 1 1) * he
   · rintro ⟨b, a, b', rfl⟩
@@ -169,5 +168,4 @@ theorem UpperTheory.ConvolutionTheory.R2.C.grpRel :
     ∀ (F : Type) [Field F] [NumberField F], Rel (nU (F := F)) mD (wW F) ∧ Gauss (nU (F := F)) mD (wW F) ∧
     (∀ g : G1 F, g 1 0 = 0 ↔ ∃ b a, g = nU b * mD a) ∧ (∀ (b b' : A F) a a', nU b * mD a = nU b' * mD a' → b = b' ∧ a = a') ∧
     ∀ g : G1 F, IsUnit (g 1 0) ↔ ∃ b a b', g = nU b * mD a * wW F * nU b' := by
-  intro F _ _
-  exact ⟨rel_part, gauss_part, tri_part, tri_uniq, cell_part⟩
+  exact fun F _ _ => ⟨rel_part, gauss_part, tri_part, tri_uniq, cell_part⟩

@@ -69,8 +69,7 @@ open Formalism.QuantumDeterminants Formalism.MainNotions.S PI.AmpRootCommon
 variable {k r : ℕ}
 
 theorem det_ne_of_uh {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ UH (Hpk k r)) :
-    a.det ≠ 0 := by
-  exact (Matrix.isUnit_det_of_left_inverse (uh_left ha)).ne_zero
+    a.det ≠ 0 := (Matrix.isUnit_det_of_left_inverse (uh_left ha)).ne_zero
 
 theorem continuousAt_inv_of_uh {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (ha : a ∈ UH (Hpk k r)) : ContinuousAt (Inv.inv : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ → _) a := by
@@ -187,8 +186,7 @@ theorem rs_smul [Fact (g ∈ UH (Hpk k r))] (hμ : IsHaarOn (RStab k r g) μR) :
     rw [ht] at heq
     set ν := μR.comap (Subtype.val : RT k r g → Mt k r) with hνdef
     obtain ⟨n, hn⟩ : ∃ n, (haar : Measure (RT k r g)) (spanningSets ν n) ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have hU : (haar : Measure (RT k r g)) (⋃ n, spanningSets ν n) = 0 := measure_iUnion_null hcon
       rw [iUnion_spanningSets] at hU
       exact isOpen_univ.measure_ne_zero haar Set.univ_nonempty hU
@@ -301,10 +299,10 @@ private theorem hpk_sq_lemma (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
   rw [Finset.sum_eq_single (⟨_, hs⟩ : Fin (2 * r + k + 1))]
   · by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       simp only [Hpk, Fin.ext_iff]
       split_ifs <;> first | (exfalso; (try simp only at *); omega) | (simp_all; done)
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       rw [Fin.ext_iff] at hij
       simp only [Hpk, Fin.ext_iff]
       split_ifs <;> first | (exfalso; (try simp only at *); omega) | (simp_all; done)
@@ -312,8 +310,7 @@ private theorem hpk_sq_lemma (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
     rw [Ne, Fin.ext_iff, Fin.val_mk] at hl
     simp only [Hpk, Fin.ext_iff]
     split_ifs at * <;> first | (exfalso; (try simp only at *); omega) | (simp_all; done)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private theorem isUnit_det_of_mem_UH' {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hg : g ∈ UH (Hpk k r)) :
     IsUnit g.det := by
@@ -378,8 +375,7 @@ theorem Phi_lt_top (hg : g ∈ UH (Hpk k r)) (hμ : IsHaarOn (RStab k r g) μR) 
     rintro a ⟨ha, haR⟩
     have haU : Matrix.of a ∈ UH (Hpk k r) := haR.1.1
     refine ⟨nInv g a y, ⟨ha, ?_⟩, ?_⟩
-    · show (Matrix.of a)⁻¹ * n ∈ Nset k r
-      exact nset_mul (nset_inv haR.1) hy
+    · exact nset_mul (nset_inv haR.1) hy
     · have hu : IsUnit (Matrix.of a).det := isUnit_iff_ne_zero.2 (det_ne_of_uh haU)
       have hm : n * ((Matrix.of a)⁻¹ * n)⁻¹ = Matrix.of a := by
         rw [Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ hu, ← Matrix.mul_assoc, uh_mul_inv hnU,
@@ -446,9 +442,7 @@ theorem theta_at (hg : g ∈ UH (Hpk k r)) (hμ : IsHaarOn (RStab k r g) μR) (h
   · rw [indicator_of_mem ((hE m).2 hm)]
     show (K m).indicator 1 (stabAct g (Matrix.of a)⁻¹ y).1.2 * (Phi g μR K m (stabAct g (Matrix.of a)⁻¹ y))⁻¹ = _
     rw [hPhi m]; rfl
-  · intro j hj
-    refine indicator_of_notMem (fun h => hj ?_) _
-    exact (Eset_unique hm ((hE j).1 h)).symm
+  · exact fun j hj => indicator_of_notMem (fun h => hj (Eset_unique hm ((hE j).1 h)).symm) _
 
 theorem measurable_nInv_left (y : PairSp k r) : Measurable (fun a : Mt k r => nInv g a y) := by
   have hm : Measurable (fun a : Mt k r => (a, y)) := by

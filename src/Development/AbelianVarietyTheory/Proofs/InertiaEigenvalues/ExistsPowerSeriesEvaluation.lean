@@ -67,8 +67,7 @@ theorem exists_ev {L A : Type*} [Field L] [CommRing A] (t : A)
   haveI : IsLinearTopology A A := Ideal.isLinearTopology (Ideal.span {t})
   have hι : Continuous ι := continuous_of_discreteTopology
   have ht : PowerSeries.HasEval t := by
-    refine (WithIdeal.isTopologicallyNilpotent_of_mem ?_)
-    exact Ideal.mem_span_singleton_self t
+    exact (WithIdeal.isTopologicallyNilpotent_of_mem (Ideal.mem_span_singleton_self t))
   refine ⟨PowerSeries.eval₂Hom hι ht, fun c => ?_, ?_⟩
   · rw [PowerSeries.coe_eval₂Hom]; exact PowerSeries.eval₂_C _ _ _
   · rw [PowerSeries.coe_eval₂Hom]; exact PowerSeries.eval₂_X _ _
@@ -236,8 +235,7 @@ theorem smul_mem (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T
   refine (T.fil K a _).2 ?_
   rw [Algebra.smul_def, map_mul]
   have := Reformulated.AutPerF.BdR.mul_mem_fil (p := l) (R := Per.OC l) h0 ((T.fil K a _).1 hx)
-  rw [zero_add] at this
-  exact this
+  rwa [zero_add] at this
 
 theorem tS_mem_iff (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI)
     (K : FinExt l) (s : ℕ) (a : ℤ) :
@@ -290,10 +288,9 @@ theorem dvd_part_sub (M : ℕ) (f : PowerSeries L) (q : Polynomial L)
   have h1 : Polynomial.X ^ M ∣ PowerSeries.trunc M f - q := by
     rw [Polynomial.X_pow_dvd_iff]
     intro k hk
-    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, if_pos hk, h k hk, sub_self]
+    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, ite_eq_left hk, h k hk, sub_self]
   have h2 := map_dvd (Polynomial.eval₂RingHom c t) h1
-  rw [map_sub, map_pow, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] at h2
-  exact h2
+  rwa [map_sub, map_pow, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] at h2
 
 theorem mem_iff (n : ℕ) (x : A) : x ∈ (Ideal.span {t} ^ n • ⊤ : Submodule A A) ↔ t ^ n ∣ x := by
   rw [smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
@@ -309,7 +306,7 @@ theorem exists_lim (f : PowerSeries L) : ∃ x : A, ∀ M, t ^ M ∣ x - part c 
     (f := fun M => part c t M f) fun {m n} h => by
       rw [SModEq.sub_mem, mem_iff]
       exact dvd_part_sub c t m f _ fun k hk => by
-        rw [PowerSeries.coeff_trunc, if_pos (hk.trans_le h)]
+        rw [PowerSeries.coeff_trunc, ite_eq_left (hk.trans_le h)]
   exact ⟨x, fun M => by rw [← mem_iff, ← SModEq.sub_mem]; exact (hx M).symm⟩
 
 theorem exists_ev : ∃ ev : PowerSeries L →+* A, ∀ f M, t ^ M ∣ ev f - part c t M f := by
@@ -328,7 +325,7 @@ theorem exists_ev : ∃ ev : PowerSeries L →+* A, ∀ f M, t ^ M ∣ ev f - pa
       rw [PowerSeries.coeff_mul, Polynomial.coeff_mul]
       refine Finset.sum_congr rfl fun p hp => ?_
       have := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
-      rw [PowerSeries.coeff_trunc, PowerSeries.coeff_trunc, if_pos (by omega), if_pos (by omega)]
+      rw [PowerSeries.coeff_trunc, PowerSeries.coeff_trunc, ite_eq_left (by omega), ite_eq_left (by omega)]
     rw [map_mul] at h
     have h' := dvd_sub (dvd_add ((he f M).mul_right (e g)) ((he g M).mul_left (part c t M f))) h
     convert h' using 1

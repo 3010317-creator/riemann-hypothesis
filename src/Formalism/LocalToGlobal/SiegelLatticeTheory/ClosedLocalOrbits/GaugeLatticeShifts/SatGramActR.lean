@@ -89,7 +89,7 @@ theorem mapLF_mul_aut {Λ' : Submodule (𝓞 D.host.E) (VS D).V} {T : D.host.E} 
     rfl
   have hγβ : γ * β⁻¹ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := Subgroup.mul_mem _ hγ (Subgroup.inv_mem _ hiso)
   unfold mapLF
-  rw [dif_pos hγβ, dif_pos hγ]
+  rw [dite_eq_left hγβ, dite_eq_left hγ]
   congr 1
   · apply key
     · funext a
@@ -127,13 +127,13 @@ theorem cmap_pos (hN : AutFConjN) (hx : RatLink X x β) {Λ Λ' : Submodule (�
     (hβ : β ∈ Formalism.L2.SG.Saturated.AutF Λ' (lf D F0')) (p : GCar X u u' F0 F0' Λ Λ') :
     cmap x β hN hx (Quot.mk _ p) = Quot.mk _ (rmul x β hx hβ p) := by
   unfold cmap
-  exact dif_pos hβ
+  exact dite_eq_left hβ
 
 theorem cmap_neg (hN : AutFConjN) (hx : RatLink X x β) {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V}
     (hβ : β ∉ Formalism.L2.SG.Saturated.AutF Λ' (lf D F0')) (c : GQ X u u' F0 F0' Λ Λ') :
     cmap x β hN hx c = c := by
   unfold cmap
-  exact dif_neg hβ
+  exact dite_eq_right hβ
 
 theorem cmap_inv (hN : AutFConjN) (hx : RatLink X x β) {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V}
     (c : GQ X u u' F0 F0' Λ Λ') :
@@ -198,8 +198,7 @@ theorem toTerm_tmap (hN : AutFConjN) (hx : RatLink X x β) (t : GTerm X u u' F0 
     let f : GCar X u u' F0 F0' t.lam t.lam' → TermDef.TermQ t.lam (lf D F0) (TermDef.PD D t.lam (lf D F0) u') :=
       fun p => TermDef.mk _ _ _ ⟨mapLF p.1.2 (lf D F0'), p.2.2.2.2⟩
     have hf : ∀ p q, GRel X u u' F0 F0' t.lam t.lam' p q → f p = f q := by
-      intro p q h
-      exact Quot.sound (hTR _ _ p q h)
+      exact fun p q h => Quot.sound (hTR _ _ p q h)
     have key : ∀ c : GQ X u u' F0 F0' t.lam t.lam', f (Quot.out c) = Quot.lift f hf c :=
       fun c => congrArg (Quot.lift f hf) (Quot.out_eq c)
     have h1 := tmap_cls x β hN hx t hβ

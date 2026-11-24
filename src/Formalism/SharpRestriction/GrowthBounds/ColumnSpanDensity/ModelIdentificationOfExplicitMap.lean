@@ -77,8 +77,7 @@ theorem model_identification_of_explicit_map (h : TiePsi) : TwoLetterModelIdenti
     (LinearEquiv.ofBijective (e P Q) (he P Q)).symm
   have hαe : ∀ P Q (x : twoSp R.Kf m P Q),
       PsiXY R.Kf m (α P Q x : PolXY R.Kf (m + 1)) = x := fun P Q x => by
-    have h1 := (LinearEquiv.ofBijective (e P Q) (he P Q)).apply_symm_apply x
-    exact congrArg Subtype.val h1
+    exact congrArg Subtype.val ((LinearEquiv.ofBijective (e P Q) (he P Q)).apply_symm_apply x)
   let β : ∀ a b : ℕ, PolAB R.Kf (m + 1) a b →ₗ[R.Kf] dualWeyl R.Kf (m + 1) (m + 1) (nuOf (wtPQ m a b)) :=
     fun a b => (((deltaB R.Kf m).comp (PsiXY R.Kf m)).toLinearMap.domRestrict
       (PolAB R.Kf (m + 1) a b)).codRestrict _ (fun f => (hdw a b _).2 ⟨f.1, f.2, rfl⟩)
@@ -95,8 +94,7 @@ theorem model_identification_of_explicit_map (h : TiePsi) : TwoLetterModelIdenti
       rename_id, AlgHom.id_apply]
   have hh0 : deltaB R.Kf m (PsiXY R.Kf m (hXY R.Kf (m + 1))) = 0 := by
 
-    simp only [hXY, map_sum, map_mul, ha, hc]
-    exact sum_covY R.Kf m (by omega)
+    simpa only [hXY, map_sum, map_mul, ha, hc] using sum_covY R.Kf m (by omega)
   refine ⟨α, β, ?_, ?_, ?_⟩
   · intro a b y
     obtain ⟨f, hf, hfy⟩ := (hdw a b y.1).1 y.2
@@ -119,8 +117,7 @@ theorem model_identification_of_explicit_map (h : TiePsi) : TwoLetterModelIdenti
       · intro hx
         have hxs := twoLat_le_twoSp m P Q Λ hΛ x hx
         refine ⟨hxs, ?_⟩
-        rw [← h1 P Q _ (α P Q ⟨x, hxs⟩).2, hαe]
-        exact hx
+        rwa [← h1 P Q _ (α P Q ⟨x, hxs⟩).2, hαe]
       · rintro ⟨hxs, hl⟩
         have h3 := (h1 P Q _ (α P Q ⟨x, hxs⟩).2).2 hl
         rwa [hαe] at h3

@@ -69,8 +69,7 @@ theorem inT_eq_rename (σ : Type) (f : PowerSeries C) :
 
 theorem constantCoeff_inT (σ : Type) {f : PowerSeries C} (hf : PowerSeries.constantCoeff f = 0) :
     constantCoeff (inT σ f) = 0 := by
-  rw [inT_eq_rename, constantCoeff_rename]
-  exact hf
+  rwa [inT_eq_rename, constantCoeff_rename]
 
 theorem optionEquivLeft_inT (σ : Type) (f : PowerSeries C) :
     optionEquivLeft σ C (inT σ f) = PowerSeries.map (MvPowerSeries.C : C →+* MvPowerSeries σ C) f := by
@@ -111,8 +110,7 @@ theorem optionEquivLeft_rename_some {σ : Type} [Finite σ] (f : MvPowerSeries �
     apply hn
     have h1 : Finsupp.mapDomain (some : σ → Option σ) y none = 0 :=
       Finsupp.mapDomain_of_notMem_range _ _ (by simp)
-    rw [hy, Finsupp.optionElim_apply_none] at h1
-    exact h1
+    rwa [hy, Finsupp.optionElim_apply_none] at h1
 
 theorem pderiv_coeff_optionEquivLeft {σ : Type} (f : MvPowerSeries (Option σ) C) (n : ℕ) (s : σ) :
     pderiv s (PowerSeries.coeff n (optionEquivLeft σ C f)) =

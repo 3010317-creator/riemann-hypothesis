@@ -119,9 +119,7 @@ theorem smul_val (f : T') (a : spanSub T' rK) (y : X') :
 theorem finrank_range_eq (R' : Subalgebra O (X' → Matrix d d (FractionRing O))) (x' : X') (a : R') :
     Module.finrank (FractionRing O)
       (LinearMap.range (DistribSMul.toLinearMap (FractionRing O) (EvalSp O d R' x') a)) =
-      (a.1 x').rank := by
-  show Module.finrank (FractionRing O) (LinearMap.range (a.1 x').mulVecLin) = _
-  exact Matrix.finrank_range_mulVecLin _
+      (a.1 x').rank := Matrix.finrank_range_mulVecLin _
 
 end Build
 
@@ -140,7 +138,6 @@ theorem inj_of_prod_eq {K : Type*} [Field K] {t : ℕ} (a b : Fin t → K) (hb :
   have hnd : (Finset.univ.val.map a).Nodup := by
     rw [hm]
     exact Multiset.Nodup.map hb Finset.univ.nodup
-  intro x y hxy
-  exact Multiset.inj_on_of_nodup_map hnd x (by simp) y (by simp) hxy
+  exact fun x y hxy => Multiset.inj_on_of_nodup_map hnd x (by simp) y (by simp) hxy
 
 end Formalism.RepresentationBoundsCohomology.ringDataObjects

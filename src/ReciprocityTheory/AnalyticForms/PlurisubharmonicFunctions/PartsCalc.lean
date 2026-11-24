@@ -25,8 +25,7 @@ theorem integrable_fderiv_apply_of_cs {D : ℕ} {g : (Fin D → ℂ) → ℂ} (h
     (hcs : HasCompactSupport g) (u : Fin D → ℂ) : Integrable (fun z => fderiv ℝ g z u) := by
   have hc : Continuous fun z => fderiv ℝ g z u :=
     (hg.continuous_fderiv one_ne_zero).clm_apply continuous_const
-  refine hc.integrable_of_hasCompactSupport ?_
-  exact (hcs.fderiv ℝ).mono fun z hz h0 => hz (by simp [h0])
+  exact hc.integrable_of_hasCompactSupport ((hcs.fderiv ℝ).mono fun z hz h0 => hz (by simp [h0]))
 
 theorem integral_fderiv_apply_of_cs {D : ℕ} {g : (Fin D → ℂ) → ℂ} (hg : ContDiff ℝ 1 g)
     (hcs : HasCompactSupport g) (u : Fin D → ℂ) : ∫ z, fderiv ℝ g z u = 0 := by
@@ -316,8 +315,7 @@ theorem hessCof_contDiffOn {n : ℕ} (φ : Fin n → (Fin (n + 1) → ℂ) → �
     G.contDiff.comp_contDiffOn (contDiffOn_pi.2 h2)
   have hfun : (fun y => hessCof φ y j k) = fun y => G (fun i => fderiv ℝ (fderiv ℝ (φ i)) y) :=
     funext fun y => hG φ y
-  rw [hfun]
-  exact hc
+  rwa [hfun]
 
 end
 

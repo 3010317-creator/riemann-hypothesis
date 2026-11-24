@@ -289,8 +289,7 @@ theorem _root_.PositivityTheory.ThKEst.siegelAll_of (hS : GlobalTheory.Published
     exact Finset.sum_comm
   · funext k
     have := congrFun (congrFun (h3 t).1 k) i
-    rw [mul_diagonal, mul_comm, ← Algebra.smul_def] at this
-    exact this
+    rwa [mul_diagonal, mul_comm, ← Algebra.smul_def] at this
   · have e : incV F (c • fun k => Y k i) = inclR (F := F) (AF F) c • incV F fun k => Y k i :=
       funext fun k => map_mul (inclR (F := F) (AF F)) _ _
     change mat (a t) *ᵥ incV F (c • fun k => Y k i) = rId F (-t i) • incV F (c • fun k => Y k i)
@@ -298,8 +297,7 @@ theorem _root_.PositivityTheory.ThKEst.siegelAll_of (hS : GlobalTheory.Published
     congr 1
     funext k
     have := congrFun (congrFun (h3 t).2.1 k) i
-    rw [mul_diagonal, mul_comm, ← Algebra.smul_def] at this
-    exact this
+    rwa [mul_diagonal, mul_comm, ← Algebra.smul_def] at this
 
 end PositivityTheory.ThKEst.Sieg
 

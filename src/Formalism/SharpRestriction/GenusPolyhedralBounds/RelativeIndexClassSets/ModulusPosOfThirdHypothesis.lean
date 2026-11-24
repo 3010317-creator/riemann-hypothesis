@@ -51,8 +51,7 @@ namespace Formalism.MainNotions.Gaps.EtaleWeightGaps
 variable {D : D7} {B : WeightFamilies.Prov D} {P : ModuliIntegralCharts.Prov D} {j : ℕ}
 
 theorem lw_nonneg' (K : Type) [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K)) : 0 ≤ lw K la := by
-  simp only [lw]
-  exact div_nonneg (Real.log_natCast_nonneg _) (Nat.cast_nonneg _)
+  simpa only [lw] using div_nonneg (Real.log_natCast_nonneg _) (Nat.cast_nonneg _)
 
 theorem sum_mul_lw (B : WeightFamilies.Prov D) (nn : HeightOneSpectrum (𝓞 B.KO) →₀ ℝ) (s : Finset (HeightOneSpectrum (𝓞 B.KO)))
     (hs : nn.support ⊆ s) :
@@ -115,8 +114,7 @@ theorem quotCoreE (large₂ : SizeData₂ D) {CRm Ch Ah Cq Aq : ℝ} (ka : Weigh
   refine ⟨fun la => ?_, ?_, ?_⟩
   · rw [hℓeq la]
     exact ENat.coe_ne_top _
-  · simp only [hℓeq, ENat.toNat_coe]
-    exact hsf
+  · simpa only [hℓeq, ENat.toNat_coe] using hsf
   · simp only [hℓeq, ENat.toNat_coe]
     have hsub1 : nn.support ⊆ nn.support ∪ be.support := fun x hx => Finset.mem_union_left _ hx
     have hsub2 : be.support ⊆ nn.support ∪ be.support := fun x hx => Finset.mem_union_right _ hx
@@ -176,7 +174,7 @@ theorem DF_pos_of_SetC {large₂ : SizeData₂ D} {X : PJ D B P j} {CK C1 A1 : �
   have h2 := two_T_sq_le_last h τ i hi1
   have h3 := hL.2.1 τ i
   have hn : ¬ i.1 + 1 < (D.R.sigW j).1 := by omega
-  rw [if_neg hn] at h3
+  rw [ite_eq_right hn] at h3
   unfold gapZ at h3
   rw [dite_eq_right hn] at h3
   have hTp : (0 : ℤ) < (Tp D j T : ℤ) := by unfold Tp; positivity
@@ -229,8 +227,7 @@ theorem cc_pos_of {large₂ : SizeData₂ D} {X : PJ D B P j} {K : KAdm} {H : KH
   have hPP := PPv_pos_of_PolyDom hP
   have hq := modulus_pos_of_third_hypothesis h3
   have hD : (0 : ℝ) < (DF wL : ℝ) := by exact_mod_cast hDF
-  simp only [cc]
-  exact div_pos (mul_pos (mul_pos hRR hPP) (pow_pos hD 2)) hq
+  simpa only [cc] using div_pos (mul_pos (mul_pos hRR hPP) (pow_pos hD 2)) hq
 
 theorem T_mul_cc_le_one {large₂ : SizeData₂ D} {K : KAdm} {H : KHyp}
     {C2 A2 CR Ch Ah Cq Aq Gc PH Prw Pet Pd : ℝ} {ka wL : WeightFamilies.Wt D j} {T : ℕ}

@@ -116,8 +116,7 @@ theorem isIdemOf_algebraMap {v : HeightOneSpectrum (𝓞 F)} {α : Af F} (h1 : F
     (h2 : ∀ w, w ≠ v → Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F w α = 0) :
     IsIdemOf E v (algebraMap (AF F) (AF F ⊗[F] E) (pairA F 0 α)) := by
   refine ⟨?_, ?_, fun w hw => ?_⟩
-  · show (0 : Ainf F) ⊗ₜ (1 : E) = 0
-    exact TensorProduct.zero_tmul _ _
+  · exact TensorProduct.zero_tmul _ _
   · show Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v α ⊗ₜ (1 : E) = 1
     rw [h1]; rfl
   · show Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F w α ⊗ₜ (1 : E) = 0
@@ -186,8 +185,7 @@ theorem mem_ordAt_iff (v : HeightOneSpectrum (𝓞 (maximalRealSubfield E))) (z 
         a ⊗ₜ (x : E) := by
       show (a ⊗ₜ 1 : LocAlg v) * (1 ⊗ₜ (x : E)) = _
       rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · intro hz
     induction hz using Algebra.adjoin_induction with
     | mem x hx =>

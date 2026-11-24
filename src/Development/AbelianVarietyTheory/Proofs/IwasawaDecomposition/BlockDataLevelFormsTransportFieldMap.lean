@@ -207,8 +207,7 @@ theorem comap_baseChange (φ : K →+* K') {R R' : Type} [CommRing R] [CommRing 
     have hz : z = ∑ i, b i • (fun k => φ (F i (z k))) := by
       funext k
       rw [Finset.sum_apply]
-      simp only [Pi.smul_apply, Algebra.smul_def]
-      exact hb (z k)
+      simpa only [Pi.smul_apply, Algebra.smul_def] using hb (z k)
     rw [hz, Matrix.mulVec_sum]
     refine Submodule.sum_mem _ fun i _ => ?_
     rw [Matrix.mulVec_smul]
@@ -295,8 +294,7 @@ theorem subE_baseChange (φ : K →+* K') {n n' : ℕ} (C : Matrix (Fin n') (Fin
   have hA : subE W' * (Matrix.of fun i j => y j i) = C * (subE W).map φ := by
     ext i j
     have := congrFun (hy j) i
-    rw [Matrix.mulVec_single_one] at this
-    exact this
+    rwa [Matrix.mulVec_single_one] at this
   refine ⟨Matrix.of fun i j => y j i, ⟨?_, ?_⟩, hA⟩
   · intro x x' h
     have := congrArg (subE W').mulVec h
@@ -307,8 +305,7 @@ theorem subE_baseChange (φ : K →+* K') {n n' : ℕ} (C : Matrix (Fin n') (Fin
       rw [hrange.trans hr'.symm]; exact ⟨_, rfl⟩
     obtain ⟨x, hx⟩ := this
     refine ⟨x, hi' ?_⟩
-    rw [Matrix.mulVec_mulVec, hA]
-    exact hx
+    rwa [Matrix.mulVec_mulVec, hA]
 
 theorem map_conjTranspose (φ : K →+* K') (hφ : ∀ x : K, φ (star x) = star (φ x)) {n d : ℕ} (E : Matrix (Fin n) (Fin d) K) :
     (E.map φ)ᴴ = Eᴴ.map φ := by

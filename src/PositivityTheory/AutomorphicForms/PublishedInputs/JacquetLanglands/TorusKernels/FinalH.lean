@@ -694,16 +694,7 @@ theorem Jg_ne (hB : B1b) (k : InfinitePlace F → ℕ) (g : GL (Fin 2) (TR.Rinf 
 
 theorem pInf_alg (x : F) (v : InfinitePlace F) :
     TR.pInf F (algebraMap F (Ad F) x) v = InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal v) x := by
-  have h : algebraMap F (InfiniteAdeleRing F) x = TR.infEq F (fun w => InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w) x) := by
-    funext w
-    apply (InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)).injective
-    show _ = (InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w))
-      ((InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)).symm
-        (InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w) x))
-    rw [RingEquiv.apply_symm_apply]
-    simp
-  change (TR.infEq F).symm (algebraMap F (InfiniteAdeleRing F) x) v = _
-  rw [h, RingEquiv.symm_apply_apply]
+  exact UpperTheory.Esk.HyperbolicSetupLemmas.pInf_alg x v
 
 theorem gv_rat (γ : GL (Fin 2) F) (v : InfinitePlace F) :
     gv v (Matrix.GeneralLinearGroup.map (TR.pInf F) (ratGL F 2 γ)) =
@@ -1066,7 +1057,7 @@ theorem sign_holV {k c} {ω : HChar F} {φ : TR.Sm F 2} (hφ : IsHolV k c ω φ)
   classical
   obtain ⟨g, hg⟩ : ∃ g, φ.1 g ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     exact h0 (Subtype.ext (funext h))
   set e : TR.Rinf F := Pi.single v 1 with he
   have hr0 : rot ((0 : ℝ) • e) = 1 := by
@@ -1138,7 +1129,7 @@ theorem chi_of {k c} {ω : HChar F} {φ : TR.Sm F 2} (hφ : IsHolV k c ω φ) (h
   have hfix := fix_of k c ω φ hφ
   obtain ⟨g, hg⟩ : ∃ g, φ.1 g ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     exact h0 (Subtype.ext (funext h))
   have h1 : ∀ z, zc F z ∈ Kc c → (ω.1.comp (finId F)) z = 1 := by
     intro z hz

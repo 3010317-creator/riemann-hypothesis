@@ -188,8 +188,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cosAct :
     obtain ⟨h1, h2, -⟩ := fin_facts (hle hk)
     have h3 : MultiplicityOne.finProj K (2 + 2) k ∈ KG K (2 + 2) := by
       show ((MultiplicityOne.finProj K (2 + 2) k : G1 K (2 + 2)) : AdelicGLn.AdelicGL K (2 + 2)) ∈ Reduction.maxCompact
-      rw [h1]
-      exact h2
+      rwa [h1]
     unfold flat
     rw [FinA.fix_inv hL hle hfix y hk,
       show HP 2 2 (y * MultiplicityOne.finProj K (2 + 2) k) = HP 2 2 y from (hK _ h3).2 y]

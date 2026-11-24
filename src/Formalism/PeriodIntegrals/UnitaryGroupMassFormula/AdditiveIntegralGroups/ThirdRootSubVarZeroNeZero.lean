@@ -78,8 +78,7 @@ theorem rt_two_le_add {f g : MvPowerSeries σ ℂ_[p]} (hf : 2 ≤ f.order) (hg 
     MvPowerSeries.coeff_of_lt_order (hd.trans_le hg), add_zero]
 
 theorem rt_two_le_neg {f : MvPowerSeries σ ℂ_[p]} (hf : 2 ≤ f.order) : 2 ≤ (-f).order := by
-  rw [MvPowerSeries.order_neg]
-  exact hf
+  rwa [MvPowerSeries.order_neg]
 
 theorem rt_two_le_sub {f g : MvPowerSeries σ ℂ_[p]} (hf : 2 ≤ f.order) (hg : 2 ≤ g.order) :
     2 ≤ (f - g).order := by
@@ -88,7 +87,7 @@ theorem rt_two_le_sub {f g : MvPowerSeries σ ℂ_[p]} (hf : 2 ≤ f.order) (hg 
 
 theorem rt_one_le_X (i : σ) : 1 ≤ (Xv i : MvPowerSeries σ ℂ_[p]).order := by
   refine MvPowerSeries.le_order fun d hd => ?_
-  rw [MvPowerSeries.coeff_X, if_neg]
+  rw [MvPowerSeries.coeff_X, ite_eq_right]
   rintro rfl
   simp at hd
 
@@ -107,7 +106,7 @@ theorem rt_order_lam (wq : PowerSeries ℂ_[p]) : 2 ≤ (lam wq).order := by
   have hd : e 0 + e 1 < 2 := by
     rw [Finsupp.degree_eq_sum, Fin.sum_univ_two] at he
     exact_mod_cast he
-  rw [lamA_coeff_lam, lamA_coeff_wser, if_neg (by omega)]
+  rw [lamA_coeff_lam, lamA_coeff_wser, ite_eq_right (by omega)]
 
 private theorem rt_constantCoeff_lam_lemma {f : MvPowerSeries (Fin 2) ℂ_[p]} (hf : 2 ≤ f.order) :
     MvPowerSeries.constantCoeff f = 0 := by
@@ -157,8 +156,7 @@ theorem rt_Acf_ne (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
   exact one_ne_zero
 
 theorem rt_order_BA (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
-    2 ≤ (Bcf W wq * (Acf W wq)⁻¹).order := by
-  exact rt_two_le_mul_right _ _ (rt_order_Bcf W wq)
+    2 ≤ (Bcf W wq * (Acf W wq)⁻¹).order := rt_two_le_mul_right _ _ (rt_order_Bcf W wq)
 
 theorem constantCoeff_thirdRoot (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
     MvPowerSeries.constantCoeff (Z3 W wq) = 0 := by

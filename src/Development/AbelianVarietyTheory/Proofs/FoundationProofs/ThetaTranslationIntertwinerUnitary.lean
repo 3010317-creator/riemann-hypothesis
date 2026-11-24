@@ -91,14 +91,7 @@ theorem klat_gen {A : AddSubgroup (VC D N N')} (hA : KLat D (tor0 D cc δ) A) :
 
 theorem klat_smul_mem {A : AddSubgroup (VC D N N')} (hA : KLat D (tor0 D cc δ) A) (a : 𝓞 D.host.K)
     {x : VC D N N'} (hx : x ∈ A) : D.host.φ₀ (((a : D.host.K) : D.host.E)) • x ∈ A := by
-  obtain ⟨S, -, rfl⟩ := klat_gen hA
-  induction hx using AddSubgroup.closure_induction with
-  | mem w hw =>
-    obtain ⟨w, hw, B, hB, rfl⟩ := hw
-    exact AddSubgroup.subset_closure ⟨_, lam_mul_mem a hw, B, hB, smul_smul _ _ _⟩
-  | zero => simp
-  | add a b _ _ ha hb => rw [smul_add]; exact AddSubgroup.add_mem _ ha hb
-  | neg a _ ha => rw [smul_neg]; exact AddSubgroup.neg_mem _ ha
+  exact GlobalTheory.ConjNorm.Inter.klat_smul_mem hA a hx
 
 theorem embV_smul (h : GL3Theta.InducedCMType D) (k : D.host.K) (B : Matrix (Fin N') (Fin N) D.host.E) :
     embV D (tor0 D cc δ) (k • B) = D.host.φ₀ (k : D.host.E) • embV D (tor0 D cc δ) B := by

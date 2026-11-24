@@ -178,9 +178,7 @@ theorem isWeilDatumO_conjAdjoint : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
         have := congrArg (fun z : ratL T S => adjO T S (z : WO S T)) hab
         simp only [hT.invol] at this
         exact Subtype.ext this
-      · intro b
-        refine ⟨⟨adjO T S b, (hT.rat b).2 b.2⟩, Subtype.ext ?_⟩
-        exact hS.invol b
+      · exact fun b => ⟨⟨adjO T S b, (hT.rat b).2 b.2⟩, Subtype.ext (hS.invol b)⟩
       · intro γ x
         show adjO T S (adjO S T (γ : WO T S) + x) = (γ : WO T S) + adjO T S x
         rw [hT.add, hT.invol]
@@ -224,8 +222,7 @@ theorem isWeilDatumO_conjAdjoint : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
         (r : ℂ) * (splitFacO χS χT (Units.map (cA D).toMonoidHom y⁻¹) (Units.map (cA D).toMonoidHom x⁻¹) : ℂ) *
           starRingEnd ℂ (ℓ f) := by
       have := main
-      simp only [ℓ', LinearMap.coe_mk, AddHom.coe_mk, dd] at this
-      exact this
+      simpa only [ℓ', LinearMap.coe_mk, AddHom.coe_mk, dd] using this
     have hconj := congrArg (starRingEnd ℂ) m2
     rw [Complex.conj_conj] at hconj
     have hfac : (splitFacO χS χT (Units.map (cA D).toMonoidHom y⁻¹) (Units.map (cA D).toMonoidHom x⁻¹))⁻¹ =

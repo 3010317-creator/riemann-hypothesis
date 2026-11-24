@@ -121,8 +121,7 @@ theorem exists_secOn_pull {X' : Scheme.{0}} {F : X' ⟶ X} {L : LB X} {L' : LB X
   obtain ⟨hcovL, -, -⟩ := hL
   obtain ⟨-, hself', -⟩ := hL'
   have m1 : ∀ (J : (L.pull F).ι) (y : X'), y ∈ (L.pull F).U J ↔ F y ∈ L.U (J ⟨⟩) := fun J y => by
-    simp [LB.pull, LB.LinComb, LB.wchart]
-    exact ⟨fun h => h _, fun h _ => h⟩
+    simpa [LB.pull, LB.LinComb, LB.wchart] using ⟨fun h => h _, fun h _ => h⟩
   have hchart : ∀ y : X, ∃ i, y ∈ L.U i := fun y => by
     have hy : y ∈ (⨆ i, L.U i) := by rw [hcovL]; trivial
     exact TopologicalSpace.Opens.mem_iSup.1 hy
@@ -227,8 +226,7 @@ theorem abLocus_sections_pull : ∀ (X X' : Scheme.{0}) (f : X' ⟶ X) (G : Over
     have hW : G'.hom ⁻¹ᵁ (f ⁻¹ᵁ V) ≤ φ ⁻¹ᵁ (G.hom ⁻¹ᵁ V) := by
       intro g hg
       show G.hom (φ g) ∈ V
-      rw [← Scheme.Hom.comp_apply, hp.1.w, Scheme.Hom.comp_apply]
-      exact hg
+      rwa [← Scheme.Hom.comp_apply, hp.1.w, Scheme.Hom.comp_apply]
     obtain ⟨θ', hθ', hnz⟩ := exists_secOn_pull hL hL' hw hW hθ
     refine ⟨f ⁻¹ᵁ V, hxV, θ', hθ', fun y hy => ?_⟩
     obtain ⟨g, i, hg, hgi⟩ := hV (f y) hy

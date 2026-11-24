@@ -138,8 +138,7 @@ theorem norm_eq_one_iff [Fintype Γ] [(L.subgroupOf K).FiniteIndex] (a : fixedMo
   · intro h
     ext
     simp [h]
-  · intro h
-    exact Subtype.ext (by simpa using congrArg Subtype.val h)
+  · exact fun h => Subtype.ext (by simpa using congrArg Subtype.val h)
 
 theorem map_ker_norm [Fintype Γ] [(L.subgroupOf K).FiniteIndex] :
     (norm A K L).ker.map T.equiv.toMonoidHom = (tateNorm Γ M).ker := by
@@ -148,8 +147,7 @@ theorem map_ker_norm [Fintype Γ] [(L.subgroupOf K).FiniteIndex] :
   constructor
   · rintro ⟨a, ha, rfl⟩
     exact (T.norm_eq_one_iff a).1 ha
-  · intro hm
-    exact ⟨T.equiv.symm m, (T.norm_eq_one_iff _).2 (by simpa using hm), by simp⟩
+  · exact fun hm => ⟨T.equiv.symm m, (T.norm_eq_one_iff _).2 (by simpa using hm), by simp⟩
 
 
 omit [(L.subgroupOf K).Normal] in
@@ -181,10 +179,8 @@ theorem mem_augmentation_iff (a : fixedModule A L) :
   constructor
   · rintro ⟨m, hm, h⟩
     have : T.equiv.symm m = a := Subtype.ext h
-    rw [← this, MulEquiv.apply_symm_apply]
-    exact hm
-  · intro h
-    exact ⟨T.equiv a, h, by simp⟩
+    rwa [← this, MulEquiv.apply_symm_apply]
+  · exact fun h => ⟨T.equiv a, h, by simp⟩
 
 noncomputable def kerEquiv [Fintype Γ] [(L.subgroupOf K).FiniteIndex] :
     (norm A K L).ker ≃* (tateNorm Γ M).ker :=
@@ -298,8 +294,7 @@ theorem fixingSubgroup_le_fixingSubgroup_iff {L L' : IntermediateField K Ω} :
   · intro h
     rw [← InfiniteGalois.fixedField_fixingSubgroup L, ← InfiniteGalois.fixedField_fixingSubgroup L']
     exact IntermediateField.fixedField_antitone h
-  · intro h
-    exact IntermediateField.fixingSubgroup_antitone h
+  · exact fun h => IntermediateField.fixingSubgroup_antitone h
 
 theorem mem_iff_forall_fixingSubgroup (L : IntermediateField K Ω) (x : Ω) :
     x ∈ L ↔ ∀ σ ∈ L.fixingSubgroup, σ x = x := by

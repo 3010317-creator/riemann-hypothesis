@@ -62,8 +62,7 @@ variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberFi
 
 theorem map_mem_extP {𝔭 : Ideal (𝓞 F)} {k : ℕ} {s : 𝓞 F} (hs : s ∈ 𝔭 ^ k) :
     algebraMap (𝓞 F) (𝓞 K) s ∈ extP K 𝔭 ^ k := by
-  rw [← Ideal.mem_comap, MeanB.comap_extP_pow]
-  exact hs
+  rwa [← Ideal.mem_comap, MeanB.comap_extP_pow]
 
 theorem mem_extP_of_mul {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {t : 𝓞 F} (ht : t ∉ 𝔭) {k : ℕ}
     {z : 𝓞 K} (hz : algebraMap (𝓞 F) (𝓞 K) t * z ∈ extP K 𝔭 ^ k) : z ∈ extP K 𝔭 ^ k := by
@@ -79,8 +78,7 @@ theorem conjO_mem_extP (hF : IsFixF K F) (𝔭 : Ideal (𝓞 F)) (k : ℕ) {z : 
     (hz : z ∈ extP K 𝔭 ^ k) : conjO K z ∈ extP K 𝔭 ^ k := by
   obtain ⟨z', hz', e⟩ := MeanB.star_mem_extP hF 𝔭 k hz
   have : conjO K z = z' := RingOfIntegers.ext e.symm
-  rw [this]
-  exact hz'
+  rwa [this]
 
 theorem ne_bot_of_isMaximal {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) : 𝔭 ≠ ⊥ :=
   Ring.ne_bot_of_isMaximal_of_not_isField h𝔭 (RingOfIntegers.not_isField F)

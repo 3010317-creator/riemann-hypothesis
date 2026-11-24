@@ -125,8 +125,7 @@ theorem tendsto_corner (y : ∀ v : HeightOneSpectrum (𝓞 E), Matrix (Fin a) (
     (tendsto_sLoc (E := E) (fun v => (1 : Matrix (Fin a) (Fin a) (v.adicCompletion E)) i j) fun v => by
       rw [Matrix.one_apply]; split_ifs; exacts [one_mem _, zero_mem _])).add
     (tendsto_sLoc (fun v => (y v i j : v.adicCompletion E)) fun v => (y v i j).2)
-  rw [sub_zero, add_zero] at h
-  exact h
+  rwa [sub_zero, add_zero] at h
 
 theorem tendsto_locGL (y : ∀ v : HeightOneSpectrum (𝓞 E), GL (Fin a) (v.adicCompletionIntegers E)) :
     Tendsto (fun v => locGL E a v (GeneralLinearGroup.map (v.adicCompletionIntegers E).subtype (y v))) cofinite (𝓝 1) := by
@@ -177,8 +176,7 @@ theorem iSup_range_eq (π : CuspSub E a) (w : HeightOneSpectrum (𝓞 E)) (σ : 
       | cpt k =>
         refine comm (.cpt k) (fun g => ?_) f v
         have h2 := congrArg (rt E a) (infGL_comm (Unitary.toUnits k) (locGL E a w g))
-        rw [map_mul, map_mul] at h2
-        exact h2
+        rwa [map_mul, map_mul] at h2
       | lie X => exact comm (.lie X) (fun g => lie_rt_fin X (locGL E a w g)) f v
     exact this hφ
   · obtain ⟨f, h0, hf⟩ := h
@@ -186,8 +184,7 @@ theorem iSup_range_eq (π : CuspSub E a) (w : HeightOneSpectrum (𝓞 E)) (σ : 
     have : (f v).1 ∈ ⨆ f : Maps π w σ, LinearMap.range f.1 :=
       Submodule.mem_iSup_of_mem (⟨π.V.subtype ∘ₗ f, fun v => (f v).2, fun g v => congrArg Subtype.val (hf g v)⟩ :
         Maps π w σ) ⟨v, rfl⟩
-    rw [hb] at this
-    exact this
+    rwa [hb] at this
 
 theorem locComp_spherical : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (π : CuspSub E a), ∀ᶠ w : HeightOneSpectrum (𝓞 E) in Filter.cofinite, ∀ σ : SmIrr (GL (Fin a) (w.adicCompletion E)), π.IsLocComp w σ → ∃ v : σ.V, v ≠ 0 ∧ ∀ g : GL (Fin a) (w.adicCompletionIntegers E), σ.ρ (Matrix.GeneralLinearGroup.map (w.adicCompletionIntegers E).subtype g) v = v := by
   intro E _ _ _ a π

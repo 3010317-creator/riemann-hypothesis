@@ -648,12 +648,9 @@ theorem range_le (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     refine (hW k (spMap f ≫ h)).2 ⟨f.comp MvPolynomial.C, base_eq hb f, ?_⟩
     intro τ j hj b v hv e
     obtain ⟨u, rfl⟩ := unit_of_eq hp f _ e
-    have hl := lead_eq (w := w) hD f (down_std τ j hj) u
-    intro h0
-    exact u.ne_zero (hl.symm.trans h0)
+    exact fun h0 => u.ne_zero ((lead_eq (w := w) hD f (down_std τ j hj) u).symm.trans h0)
   have hy : (spMap f) (show Sp k from (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum k)) = y := by
-    apply PrimeSpectrum.ext
-    exact Ideal.ker_algebraMap_residueField _
+    exact PrimeSpectrum.ext (Ideal.ker_algebraMap_residueField _)
   exact hz ⟨_, by rw [Scheme.Hom.comp_apply, hy]⟩
 
 private theorem mono_cell_lemma (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
@@ -679,8 +676,7 @@ private theorem mono_cell_lemma (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     over_inj (by rw [← base_eq hb ψ₁, ← base_eq hb ψ₂, e])
   congr 1
   apply MvPolynomial.ringHom_ext
-  · intro r
-    exact congrArg (fun f => f r) hC
+  · exact fun r => congrArg (fun f => f r) hC
   · intro x
     obtain ⟨hu₂, he₂⟩ := hp (vEn x)
     have e₂ : (spMap ψ₁ ≫ h) ≫ p (vEn x) =
@@ -694,8 +690,7 @@ private theorem mono_cell_lemma (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     rw [one_smul, hu, ← hC] at l₂ r₂
     have hu₁ : (u : R) = 1 := l₁.symm.trans (by rw [l₂, Units.val_one])
     have key := r₁.symm.trans r₂
-    rw [hu₁, Units.val_one, one_mul, one_mul] at key
-    exact key
+    rwa [hu₁, Units.val_one, one_mul, one_mul] at key
 
 theorem mono_cell (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     (hp : ∀ en, ∃ hu, h ≫ p en = pt a (plk (uvec c w) en.2.1) hu) : Mono h := by
@@ -915,7 +910,7 @@ theorem exists_lower_mul_upper (A : Matrix (Fin n) (Fin n) K)
   refine ⟨Matrix.of fun i k => if h : (k : ℕ) < i then -v i ⟨k, h⟩ else if k = i then 1 else 0, ?_, ?_, ?_⟩
   · intro i k h
     simp only [Matrix.of_apply]
-    rw [dite_eq_right (by have := Fin.lt_def.mp h; omega), if_neg (ne_of_gt h)]
+    rw [dite_eq_right (by have := Fin.lt_def.mp h; omega), ite_eq_right (ne_of_gt h)]
   · intro i
     simp
   · intro i j h
@@ -927,19 +922,18 @@ theorem exists_lower_mul_upper (A : Matrix (Fin n) (Fin n) K)
       simp only [Matrix.of_apply]
       rcases lt_trichotomy k i with h | h | h
       · have hk : (k : ℕ) < i := h
-        rw [dite_eq_left hk, dite_eq_left hk, if_neg (ne_of_lt h), add_zero]
+        rw [dite_eq_left hk, dite_eq_left hk, ite_eq_right (ne_of_lt h), add_zero]
       · subst h; simp
       · have hk : ¬ (k : ℕ) < i := by have := Fin.lt_def.mp h; omega
-        rw [dite_eq_right hk, dite_eq_right hk, if_neg (ne_of_gt h), if_neg (ne_of_gt h), zero_mul, add_zero]
+        rw [dite_eq_right hk, dite_eq_right hk, ite_eq_right (ne_of_gt h), ite_eq_right (ne_of_gt h), zero_mul, add_zero]
     rw [Finset.sum_congr rfl fun k _ => hsplit k, Finset.sum_add_distrib, Finset.sum_ite_eq',
-      if_pos (Finset.mem_univ _)]
+      ite_eq_left (Finset.mem_univ _)]
     have hs : ∑ k : Fin i, -v i k * A (Fin.castLE i.isLt.le k) j =
         ∑ k : Fin n, (if h : (k : ℕ) < i then -v i ⟨k, h⟩ * A k j else 0) := by
       refine Fintype.sum_of_injective (Fin.castLE i.isLt.le) (Fin.castLE_injective _) _ _ (fun k hk => ?_)
         (fun k => by simp)
       rw [dite_eq_right]
-      intro hlt
-      exact hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
+      exact fun hlt => hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
     rw [← hs]
     have hj := congrFun (hv i) ⟨j, h⟩
     simp only [vecMul, dotProduct, Matrix.submatrix_apply] at hj
@@ -1012,7 +1006,7 @@ theorem exists_cell (T : Type) (m : T → ℕ) (K : Type) [Field K] (M : ℕ) (D
           rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun r _ => by ring, h1]
       by_cases hi : i' = i
       · subst hi; simp [wLet]
-      · rw [if_neg hi, if_neg, mul_zero]
+      · rw [ite_eq_right hi, ite_eq_right, mul_zero]
         intro he
         simp only [wLet, Sigma.mk.injEq, heq_eq_eq, true_and] at he
         exact hi ((w τ).injective he).symm
@@ -1030,7 +1024,7 @@ theorem exists_cell (T : Type) (m : T → ℕ) (K : Type) [Field K] (M : ℕ) (D
     intro τ i j
     unfold cell
     rcases lt_trichotomy i j with h | h | h
-    · rw [dite_eq_right (not_lt.2 h.le), if_neg h.ne, hN τ i j h]
+    · rw [dite_eq_right (not_lt.2 h.le), ite_eq_right h.ne, hN τ i j h]
     · subst h; simp [hN1]
     · rw [dite_eq_left h]
   rintro ⟨τ, j⟩
@@ -1335,8 +1329,7 @@ theorem exists_integral_cell : ∀ (O K : Type) [CommRing O] [Field K] (β : O �
   · have e : ((algebraMap A k).comp χ) ∘ MvPolynomial.X = y := funext fun v => by
       rw [← hyt]
       exact congrArg (algebraMap A k) (MvPolynomial.eval₂Hom_X' φ t v)
-    rw [map_uvec, map_uvec, hχ', e]
-    exact ht
+    rwa [map_uvec, map_uvec, hχ', e]
 
 end GlobalTheory.FlagEmb.Valu
 end -- clump:auto

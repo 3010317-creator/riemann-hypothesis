@@ -94,8 +94,7 @@ alias castM_cont := _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_cont
 
 theorem inWb_castV {a b : ℕ} (h : a = b) {v : Fin (2 * a + k + 1) → ℂ} (hv : inWb k a v) : inWb k b (D.castV h v) := by
   subst h
-  rw [castV_rfl']
-  exact hv
+  rwa [castV_rfl']
 
 theorem uw_closedSubgroup (r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) : B2.IsClosedSubgroup (UWset k r z) :=
   ⟨Dx2.Rad.one_UW z, fun _ ha _ hb => WeylGroupFacts.uw_mul ha hb, fun _ ha => WeylGroupFacts.uw_inv ha,
@@ -109,12 +108,10 @@ private theorem continuous_ιLev_apply (ρ : ℕ) (p q : Fin (2 * (1 + ρ) + k +
   simp only [Formalism.QuantumDeterminants.ιLev]
   by_cases hp : 1 ≤ p.val ∧ p.val < 2 * ρ + k + 1 + 1
   · by_cases hq : 1 ≤ q.val ∧ q.val < 2 * ρ + k + 1 + 1
-    · simp only [dif_pos hp, dif_pos hq, Matrix.of_apply]
+    · simp only [dite_eq_left hp, dite_eq_left hq, Matrix.of_apply]
       exact (continuous_apply _).comp (continuous_apply _)
-    · simp only [dif_pos hp, dif_neg hq]
-      exact continuous_const
-  · simp only [dif_neg hp]
-    exact continuous_const
+    · simpa only [dite_eq_left hp, dite_eq_right hq] using continuous_const
+  · simpa only [dite_eq_right hp] using continuous_const
 
 theorem levA_cont (ρ : ℕ) : Continuous (levA (k := k) ρ) := by
   apply continuous_pi

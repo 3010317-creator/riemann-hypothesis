@@ -171,15 +171,13 @@ theorem _root_.GlobalTheory.SelfDualLatticeSplit.unit_vector_splits :
     refine Submodule.add_mem _ (Submodule.mem_sup_left ?_) (Submodule.mem_sup_right (hprojL y hy))
     exact Submodule.smul_mem _ (⟨_, mul_mem hbO (hxy y hy)⟩ : _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryLatticeOrthogonal.OEv F E v)
       (Submodule.subset_span rfl)
-  · rw [Submodule.span_le, Set.singleton_subset_iff]
-    exact hx
+  · rwa [Submodule.span_le, Set.singleton_subset_iff]
   · have heq : _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryLatticeOrthogonal.perpLat σ J v L x =
         L.map ((_root_.GlobalTheory.SelfDualLatticeSplit.proj σ J v x b).restrictScalars
           (_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryLatticeOrthogonal.OEv F E v)) := by
       ext y
       constructor
-      · intro hy
-        exact ⟨y, ((hperp y).1 hy).2, hfix y ((hperp y).1 hy).1⟩
+      · exact fun hy => ⟨y, ((hperp y).1 hy).2, hfix y ((hperp y).1 hy).1⟩
       · rintro ⟨z, hz, rfl⟩
         exact hprojL z hz
     rw [heq]
@@ -232,11 +230,7 @@ theorem hform_eq (s : A →+* A) (J : Matrix n n A) (y z : n → A) :
 
 theorem hform_mulVec (s : A →+* A) (J g : Matrix n n A) (y z : n → A) :
     Formalism.UG.hform s J (g *ᵥ y) (g *ᵥ z) = Formalism.UG.hform s (Formalism.UG.cT s g * J * g) y z := by
-  have h : s ∘ (g *ᵥ y) = (g.map s) *ᵥ (s ∘ y) := by
-    funext i
-    exact RingHom.map_mulVec s g y i
-  rw [hform_eq, hform_eq, h, Formalism.UG.cT, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
-    Matrix.dotProduct_mulVec (s ∘ y), Matrix.vecMul_transpose]
+  exact GlobalTheory.UnitVectorStabiliser.hf_mulVec s J g y z
 
 theorem hform_sub_smul (s : A →+* A) (J : Matrix n n A) (x y : n → A) (a : A) :
     Formalism.UG.hform s J x (y - a • x) = Formalism.UG.hform s J x y - a * Formalism.UG.hform s J x x := by
@@ -367,12 +361,7 @@ theorem h_sum_left {ι : Type} (s : Finset ι) (x : ι → Fin M → A) (z : Fin
 variable {c J}
 
 theorem h_conj (hc : ∀ a, c (c a) = a) (hJ : ∀ i j, c (J j i) = J i j) (x y : Fin M → A) :
-    c (hform c J x y) = hform c J y x := by
-
-  simp only [hform, map_sum, map_mul, hc]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  rw [hJ]; ring
+    c (hform c J x y) = hform c J y x := GlobalTheory.WittTransitivity.conj_hform c J hc hJ x y
 
 theorem h_mulVec (P Q : Matrix (Fin M) (Fin M) A) (x y : Fin M → A) :
     hform c J (P *ᵥ x) (Q *ᵥ y) = hform c (cT c P * J * Q) x y := by
@@ -575,8 +564,7 @@ theorem exists_next [Nontrivial A] (hc : ∀ a, c (c a) = a) (hJ : ∀ i j, c (J
       have h5 : (r : A) • π y = 0 := hr0 _ ⟨y, hy, rfl⟩
       show π y = 0
       rw [← one_smul A (π y), ← hb, mul_smul, h5, smul_zero]
-    intro y
-    exact this (hsp ▸ Submodule.mem_top)
+    exact fun y => this (hsp ▸ Submodule.mem_top)
   have h6 : Submodule.span A (Set.range e) = ⊤ := by
     refine eq_top_iff.2 fun y _ => ?_
     have := h4 y
@@ -596,7 +584,7 @@ theorem exists_family (hc : ∀ a, c (c a) = a) (hJ : ∀ i j, c (J j i) = J i j
       (∀ i j, hform c J (e i) (e j) = if i = j then 1 else 0) ∧ e 0 = x := by
   induction k with
   | zero => exact ⟨fun _ => x, fun _ => hx, fun i j => by
-      rw [hx1, if_pos (Subsingleton.elim (α := Fin 1) i j)], rfl⟩
+      rw [hx1, ite_eq_left (Subsingleton.elim (α := Fin 1) i j)], rfl⟩
   | succ k ih =>
     obtain ⟨e, heL, he, he0⟩ := ih (by omega)
     obtain ⟨y, hy, hy0, hy1⟩ := step (k + 1) (by omega) e heL he
@@ -627,7 +615,7 @@ theorem exists_basis (hL : ∀ y, y ∈ L ↔ ∀ z ∈ L, hform c J z y ∈ O) 
 
     rw [map_sum, map_zero] at h2
     simp only [map_smul, hLin_apply, he, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true] at h2
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h2
     exact Subtype.ext h2
   have hsp : ⊤ ≤ Submodule.span O (Set.range f) := by
     intro y _
@@ -669,9 +657,7 @@ theorem exists_image (hfg : L.FG) (hsp : Submodule.span A (L : Set (Fin M → A)
     · rintro ⟨y', hy', hyy⟩ _ ⟨z, hz, rfl⟩
       rw [← hyy]
       exact (h_unitary hg z y').symm ▸ (hL y').1 hy' z hz
-    · intro h
-      refine ⟨y, (hL y).2 fun z hz => ?_, rfl⟩
-      exact h_unitary hg z y ▸ h _ ⟨z, hz, rfl⟩
+    · exact fun h => ⟨y, (hL y).2 fun z hz => (h_unitary hg z y ▸ h _ ⟨z, hz, rfl⟩), rfl⟩
 
 end Lattice
 

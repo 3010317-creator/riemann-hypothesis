@@ -212,8 +212,7 @@ theorem regAt_and_unitAt_div_gen : ∀ (Y₀ Y₁ : Scheme.{0}) [IsIntegral Y₁
     intro a ha
     rw [Ideal.mem_comap, RingHom.comp_apply, germ_appLE]
     have h3 := Ideal.mem_map_of_mem (t.stalkMap y).hom (hgerm ⟨W, hWa⟩ hxW a ha)
-    rw [Ideal.map_span, ← Set.range_comp] at h3
-    exact h3
+    rwa [Ideal.map_span, ← Set.range_comp] at h3
   have hfK : algebraMap R Y₁.functionField g = fnOf U'.1 (gen_mem hyU') f := algebraMap_germ hyU' f
   have hg0 : g ≠ 0 := fun h => hf0 (by rw [← hfK, h, map_zero])
   have hFk : ∀ k, fnOf V (gen_mem hyV) (t.appLE U V hV (b k)) / fnOf U'.1 (gen_mem hyU') f =
@@ -231,8 +230,7 @@ theorem regAt_and_unitAt_div_gen : ∀ (Y₀ Y₁ : Scheme.{0}) [IsIntegral Y₁
       exact Finset.sum_congr rfl fun k _ => by rw [hcβ k, smul_eq_mul, mul_assoc]
     exact mul_right_cancel₀ hg0 this
   obtain ⟨k, hk⟩ : ∃ k, IsUnit (c k) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have : (1 : R) ∈ IsLocalRing.maximalIdeal R := hsum ▸ Ideal.sum_mem _ fun k _ =>
       Ideal.mul_mem_left _ _ ((IsLocalRing.mem_maximalIdeal _).2 (hcon k))
     exact (Ideal.ne_top_iff_one _).1 (IsLocalRing.maximalIdeal.isMaximal R).ne_top this
@@ -293,8 +291,7 @@ theorem Twist.exists_secs_generating_ideal : ∀ (X : Scheme.{0}) (M : LB X), M.
       rw [ha x]; exact Submodule.mem_top
     have h2 := Submodule.apply_mem_span_image_of_mem_span l hmem
     rw [← Set.range_comp, e] at h2
-    rw [hu]
-    exact h2
+    rwa [hu]
 
 end GlobalTheory
 end -- clump:auto
@@ -465,7 +462,7 @@ theorem exists_pullCart_agree : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁
   have hc : ∀ w, t w ∈ U → c (t w) = H.mult w := by
     intro w hw
     have h : ∃ w', t w' = t w ∧ t w ∈ U := ⟨w, rfl, hw⟩
-    simp only [c, dif_pos h]
+    simp only [c, dite_eq_left h]
     have e := h.choose_spec
     rw [hinj _ _ (by rw [e.1]; exact hw) hw e.1]
   have hsupp : Function.support c ⊆ t '' Function.support H.mult := by
@@ -473,7 +470,7 @@ theorem exists_pullCart_agree : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁
     by_cases h : ∃ w, t w = z ∧ z ∈ U
     · obtain ⟨w, rfl, hw⟩ := h
       exact ⟨w, by simpa [hc w hw] using hz, rfl⟩
-    · exact (hz (by simp only [c]; exact dif_neg h)).elim
+    · exact (hz (by simp only [c]; exact dite_eq_right h)).elim
   have hfin : (Function.support c).Finite := (H.finite_support_mult.image _).subset hsupp
   have hcod : ∀ z, c z ≠ 0 → Order.coheight z = 1 := by
     intro z hz
@@ -482,7 +479,7 @@ theorem exists_pullCart_agree : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁
       rw [hc w hw] at hz
       rw [← (_root_.GlobalTheory.Discrepancy.MultIso.coheight_eq_and_mult_pullCart Y₀ Y₁ t U hU w hw).1]
       exact CartierDiv.coheight_eq_one_of_mult_ne_zero hz
-    · exact (hz (by simp only [c]; exact dif_neg h)).elim
+    · exact (hz (by simp only [c]; exact dite_eq_right h)).elim
   obtain ⟨H₀, hH₀⟩ := _root_.GlobalTheory.Cartier.CartierDiv.exists_mult_eq_of_locallyFactorial Y₀ (fun x => AbelianProjective.ufd_stalk q x) c hfin hcod
   refine ⟨H₀, fun y hy hmem => ?_⟩
   have : GlobalTheory.IsNormalScheme Y₁ := (isNormalScheme_iff Y₁).mpr fun x =>
@@ -529,13 +526,11 @@ private theorem exists_pow_eq_mul_of_mem_maximalIdeal_dim_le_one {R : Type} [Com
         simp at h'
         rw [h'] at hpP
         exact absurd ((Submodule.mem_bot R).1 hpP) hp
-      · have h' := congrArg PrimeSpectrum.asIdeal h
-        simpa using h'
+      · simpa using congrArg PrimeSpectrum.asIdeal h
     have hrad : a ∈ (Ideal.span {p}).radical := by
       rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
       rintro P ⟨hPp, hP⟩
-      rw [hmax P hP (hPp (Ideal.mem_span_singleton_self p))]
-      exact ha
+      rwa [hmax P hP (hPp (Ideal.mem_span_singleton_self p))]
     have hle : Ideal.span {a} ≤ (Ideal.span {p}).radical := (Ideal.span_singleton_le_iff_mem _).2 hrad
     obtain ⟨N, hN⟩ := Ideal.exists_pow_le_of_le_radical_of_fg hle (Submodule.fg_span_singleton a)
     have : a ^ N ∈ Ideal.span {p} := hN (by rw [Ideal.span_singleton_pow]; exact Ideal.mem_span_singleton_self _)
@@ -555,8 +550,7 @@ private theorem exists_nsmul_sub_regularAt_of_supp_le {X : Scheme.{0}} [IsIntegr
   by_cases hzD : z ∈ D.supp
   · have ha' : a ∈ IsLocalRing.maximalIdeal (X.presheaf.stalk z) := by
       rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-      intro hau
-      exact (hgE.mem_supp_iff.1 (hsupp hzD)) ⟨a, hau, ha⟩
+      exact fun hau => (hgE.mem_supp_iff.1 (hsupp hzD)) ⟨a, hau, ha⟩
     obtain ⟨⟨q, ⟨p, hp⟩⟩, hpq⟩ := IsLocalization.mk'_surjective (nonZeroDivisors (X.presheaf.stalk z))
       ((gD⁻¹ : (X.functionField)ˣ) : X.functionField)
     dsimp only at hpq

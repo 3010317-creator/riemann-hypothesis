@@ -96,8 +96,8 @@ def whB_g (k r : ℕ) (ψ : Fin (k + 2 * r + 1) → Fin (k + 2 * r + 1) → ℂ)
 theorem whB_g_eq {k r : ℕ} (ψ : Fin (k + 2 * r + 1) → Fin (k + 2 * r + 1) → ℂ) {a b0 : Fin (k + 2 * r + 1)}
     (h : IsSimplePair k r a b0) : whB_g k r ψ a = ψ a b0 := by
   unfold whB_g
-  rw [Finset.prod_eq_single b0 (fun b _ hb => ?_) (by simp), if_pos h]
-  rw [if_neg]
+  rw [Finset.prod_eq_single b0 (fun b _ hb => ?_) (by simp), ite_eq_left h]
+  rw [ite_eq_right]
   intro hb'
   apply hb
   obtain ⟨h1, h2, h3⟩ := h
@@ -109,7 +109,7 @@ theorem whB_g_eq {k r : ℕ} (ψ : Fin (k + 2 * r + 1) → Fin (k + 2 * r + 1) �
 
 theorem whB_g_one {k r : ℕ} (ψ : Fin (k + 2 * r + 1) → Fin (k + 2 * r + 1) → ℂ) {a : Fin (k + 2 * r + 1)}
     (h : ∀ b, ¬ IsSimplePair k r a b) : whB_g k r ψ a = 1 :=
-  Finset.prod_eq_one fun b _ => if_neg (h b)
+  Finset.prod_eq_one fun b _ => ite_eq_right (h b)
 
 theorem whB_kappa (k r : ℕ) (hr : 0 < r) (ψ : Fin (k + 2 * r + 1) → Fin (k + 2 * r + 1) → ℂ) :
     kappa k r ψ = (∏ j ∈ range r, whB_g k r ψ (whB_c (k + 2 * r + 1) (k + r + j))) *
@@ -335,8 +335,7 @@ theorem capelliTensor : CapelliTensorStatement.{u} := by
   exact ⟨isGlRep_tensV E hE, isGlRep_tensVd E hE, casimir_tensV E, casimir_tensVd E⟩
 
 theorem capelliAPlus : CapelliAPlusStatement.{u} := by
-  intro M _ _ m E y om v hE hv
-  exact eeV_nnPlus E hE y om v hv
+  exact fun M _ _ m E y om v hE hv => eeV_nnPlus E hE y om v hv
 
 theorem capelliAMinus : CapelliAMinusStatement.{u} := by
   intro M _ _ m E β om v hE hv
@@ -347,8 +346,7 @@ theorem capelliB : CapelliBStatement.{u, v} := by
   exact capelli_whittaker k r E D ψ l x hE hr hl hψ hD
 
 theorem whittakerZeroStatement : WhittakerZeroStatement.{u, v} := by
-  intro M R _ _ _ _ k E D l x hD
-  exact capelli_whittaker_zero k E D l x hD
+  exact fun M R _ _ _ _ k E D l x hD => capelli_whittaker_zero k E D l x hD
 
 end ReciprocityTheory.ChartRestriction.DS.Lap.Capelli
 end -- clump:auto

@@ -92,7 +92,7 @@ private theorem absNil_eig {T W : Type} [CommGroup T] [AddCommGroup W] [Module �
       by_cases hsc : ∀ t, ∃ μ : ℂ, ∀ v ∈ S, (θ t : Module.End ℂ W) v = μ • v
       · obtain ⟨v, hv, hv0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hS
         exact ⟨v, hv, hv0, fun t => (hsc t).imp fun μ h => h v hv⟩
-      · push_neg at hsc
+      · push Not at hsc
         obtain ⟨t0, ht0⟩ := hsc
         haveI : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS
         obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue ((θ t0 : Module.End ℂ W).restrict (fun v hv => hinv t0 v hv))
@@ -100,9 +100,7 @@ private theorem absNil_eig {T W : Type} [CommGroup T] [AddCommGroup W] [Module �
         have hw1 : (θ t0 : Module.End ℂ W) w = μ • (w : W) := by
           have := congrArg Subtype.val hw.apply_eq_smul
           simpa [LinearMap.restrict_apply] using this
-        have hw0 : (w : W) ≠ 0 := by
-          intro h
-          exact hw.2 (Subtype.ext h)
+        have hw0 : (w : W) ≠ 0 := fun h => hw.2 (Subtype.ext h)
         set S1 := S ⊓ (θ t0 : Module.End ℂ W).eigenspace μ with hS1
         have hwS1 : (w : W) ∈ S1 := ⟨w.2, Module.End.mem_eigenspace_iff.2 hw1⟩
         have hS1b : S1 ≠ ⊥ := by
@@ -190,8 +188,7 @@ theorem UpperTheory.V.Th.absNil :
     have hinv : ∀ u, ∀ w ∈ V, (θ u : Module.End ℂ W) w ∈ V := by
       intro u w hw
       rw [hV, Submodule.mem_iInf] at hw ⊢
-      intro s
-      exact Module.End.mapsTo_maxGenEigenspace_of_comm (hcomm s u) (χ s) (hw s)
+      exact fun s => Module.End.mapsTo_maxGenEigenspace_of_comm (hcomm s u) (χ s) (hw s)
     obtain ⟨χ', w, hw, hw0, hwχ⟩ := absNil_eig θ V hV0 hinv
     have hχ : ∀ s, (χ' s : ℂ) = χ s := fun s =>
       absNil_uniq _ _ _ w hw0 ((Submodule.mem_iInf _).1 hw s) (hwχ s)
@@ -216,8 +213,7 @@ theorem UpperTheory.V.Th.absNil :
     have hFI : F ∈ I := by
       rw [← Ideal.Quotient.eq_zero_iff_mem, ← Ideal.Quotient.mkₐ_eq_mk ℂ]
       refine hF χ' ?_ _ (Ideal.Quotient.mkₐ ℂ I) ?_ ?_
-      · rw [← hVeq]
-        exact hV0
+      · rwa [← hVeq]
       · intro a
         rw [← AlgHom.commutes (Ideal.Quotient.mkₐ ℂ I), ← map_sub, ← map_pow, Ideal.Quotient.mkₐ_eq_mk,
           Ideal.Quotient.eq_zero_iff_mem, hmemI]

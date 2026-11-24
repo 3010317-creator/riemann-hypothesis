@@ -73,10 +73,8 @@ theorem setLIntegral_comp_addEquiv {G : Type} [AddCommGroup G] [TopologicalSpace
     let f : Γ → Γ := fun y => ⟨e.symm y, (hΓ _).1 (by simp)⟩
     have hf : Function.Bijective f := by
       constructor
-      · intro a b hab
-        exact Subtype.ext (e.symm.injective (congrArg Subtype.val hab))
-      · intro x
-        exact ⟨⟨e x, (hΓ _).2 x.2⟩, Subtype.ext (by simp [f])⟩
+      · exact fun a b hab => Subtype.ext (e.symm.injective (congrArg Subtype.val hab))
+      · exact fun x => ⟨⟨e x, (hΓ _).2 x.2⟩, Subtype.ext (by simp [f])⟩
     refine hF.preimage_of_equiv hmp'.quasiMeasurePreserving hf ?_
     intro y x
     simp [f, AddSubgroup.vadd_def]

@@ -88,36 +88,7 @@ open GlobalTheory.Poinc.Sep
 namespace GlobalTheory.GSep.GMem
 
 theorem exists_yy : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)), ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (t : X → V) (δ : I → X → X) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) (mu : X), ∃ a : X₁.S.Gam, 𝔪.YY a mu := by
-  intro I X₁ z₁ act V _ _ _ ev X _ t δ 𝔪 mu
-  haveI : CharZero V := 𝔪.cn.2.2.2
-  have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
-  have hk : 1 ≤ X₁.S.r * X₁.S.N := by
-    obtain ⟨j, -, hj⟩ := X₁.ρ.r_eq
-    have hn := X₁.ρ.n_prime.pos
-    rw [hj, X₁.ρ.N_eq]
-    exact Nat.one_le_iff_ne_zero.2 (by positivity)
-  obtain ⟨h, hh⟩ := GlobalTheory.TorusExt.exists_iota (F := AlgebraicClosure (FractionRing V)) 𝔪.D.tau_bimult (𝔪.e₈ mu)
-  obtain ⟨g', hg'⟩ := (GlobalTheory.UT.gt_onto_divisible_kernel GlobalTheory.firstFiveLaws V (maximalIdeal V) hA 𝔪.D
-    (AlgebraicClosure (FractionRing V))).2.1 _ hk h
-  let p : QkPt 𝔪.D.toPre (AlgebraicClosure (FractionRing V)) (X₁.S.r * X₁.S.N) := ⟨𝔪.e₈ mu, g', h, hg', hh⟩
-  obtain ⟨f, hf, -⟩ := GlobalTheory.TorsionIso.torsion_eq GlobalTheory.firstFiveLaws V (maximalIdeal V) hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U
-    (AlgebraicClosure (FractionRing V)) _ hk
-  have hx := (hf p (f p)).2 rfl
-  obtain ⟨w, hw⟩ := 𝔪.U.ext
-  have hpow : f p ^ (X₁.S.r * X₁.S.N) = 1 := (hx w hw).1
-  let z := pushHom 𝔪.cart (TFK (R := V) (AlgebraicClosure (FractionRing V))) (f p)
-  have hz : z ^ (X₁.S.r * X₁.S.N) = 1 := by
-    simp only [z]
-    rw [← map_pow, hpow, map_one]
-  obtain ⟨a, ha, -⟩ := X₁.ρ.pt_bij (AlgebraicClosure (FractionRing V)) _ z hz
-  refine ⟨a, p, f p, rfl, hx, ?_⟩
-  have e := congrArg (fun q => q.left) ha
-  simp only [Over.comp_left, Over.homMk_left] at e
-  have e2 : spMap ((algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))).comp 𝔪.yK) =
-      jFK (R := V) (AlgebraicClosure (FractionRing V)) ≫ spMap 𝔪.yK := by
-    simp [spMap, jFK, ← Spec.map_comp]
-  rw [e2]
-  exact e.symm
+  apply GlobalTheory.GSep.TwistModel.exists_yy
 
 end GlobalTheory.GSep.GMem
 end -- clump:auto
@@ -451,8 +422,7 @@ theorem const_term_sub_mem : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z�
   rw [div_mul_cancel₀ _ hd.1, ← hr, GlobalTheory.GSep.TwistModel.val_stalkHom] at e
   have e' : 𝔪.yK ⟨X₁.S.th (lab c), X₁.S.th_mem _⟩ =
       algebraMap V (FractionRing V) (ev r) * 𝔪.yK ⟨X₁.S.th x₀, X₁.S.th_mem x₀⟩ := by
-    rw [𝔪.yK_eq, 𝔪.yK_eq]
-    exact e
+    rwa [𝔪.yK_eq, 𝔪.yK_eq]
   have hS := GlobalTheory.GSep.MemberModel.terms_sum 𝔪 hT c
   rw [e'] at hS
   have hI := GlobalTheory.Poinc.TwistSum₂.sumI_of_sumF_mul (fun χ => T (𝔪.e₈.symm χ) c) (ev r) _ hθ hS
@@ -526,9 +496,8 @@ theorem twist_resid : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X�
     · subst h0
       have ha : a ∈ X₁.S.HH X₁.M z₁ := (GlobalTheory.T.mem_dividingLabels_iff_class_zero I X₁ z₁ act x₀ hx₀ V ev Y t δ 𝔪 a).2 h
       have h1 : eStd X₁.S.g _ τ a = 0 := hτ a ha
-      simp only [wt', if_pos rfl, h1, smul_zero]
-    · simp only [wt', if_neg h0]
-      exact hwt a mu h
+      simp only [wt', ite_eq_left rfl, h1, smul_zero]
+    · simpa only [wt', ite_eq_right h0] using hwt a mu h
   have hh : X₁.M.stalkHom z₁ (s * u * r) = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e) * X₁.S.th (lab c + τ) / X₁.S.th x₀ := by
     rw [map_mul, map_mul, hs, hu, hr]
     field_simp [hcd.1, hx₀.1]
@@ -665,8 +634,7 @@ theorem pow_eq_iff_cast (X₁ : GSet) (a b : ℕ) :
   constructor
   · intro h
     apply X₁.S.prim.pow_inj (Nat.mod_lt _ hpos) (Nat.mod_lt _ hpos)
-    rw [hord, pow_mod_orderOf, pow_mod_orderOf]
-    exact h
+    rwa [hord, pow_mod_orderOf, pow_mod_orderOf]
   · intro h
     calc X₁.S.ζ ^ a = X₁.S.ζ ^ (a % orderOf X₁.S.ζ) := (pow_mod_orderOf _ _).symm
       _ = X₁.S.ζ ^ (b % orderOf X₁.S.ζ) := by rw [← hord, h]

@@ -63,8 +63,7 @@ private theorem fromRows_gram_mul_fromCols_eq_one_of_hypDec {D : D7} {S S₀ : H
     have h := congrArg Matrix.conjTranspose h1
     simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, _root_.GlobalTheory.MixModel.gram_conjTranspose,
       Matrix.conjTranspose_one] at h
-    rw [Matrix.mul_assoc]
-    exact h
+    rwa [Matrix.mul_assoc]
   rw [Matrix.fromRows_mul_fromCols]
   simp only [Matrix.mul_smul, Matrix.smul_mul, h1, h0, h0', h2, smul_zero, smul_smul,
     mul_inv_cancel₀ hμ, one_smul, Matrix.fromBlocks_one]

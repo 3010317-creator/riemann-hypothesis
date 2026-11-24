@@ -92,8 +92,7 @@ theorem mem_mulLat (M : Submodule K.O B.A) (y : B.Aˣ) (z : B.A) :
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa using hx
-  · intro h
-    exact ⟨_, h, by simp⟩
+  · exact fun h => ⟨_, h, by simp⟩
 
 theorem mulLat_inv (M : Submodule K.O B.A) (y : B.Aˣ) :
     mulLat K.O ((y⁻¹ : B.Aˣ) : B.A) (mulLat K.O (y : B.A) M) = M := by
@@ -116,8 +115,7 @@ theorem mulLat_mem_Lin (y : B.Aˣ) (hy : B.σ (y : B.A) = y) (M : Submodule K.O 
       rw [mulLat, Submodule.map_coe]
       rfl
     rw [h1, Submodule.span_image, hsp, Submodule.map_top, LinearMap.range_eq_top]
-    intro x
-    exact ⟨((y⁻¹ : B.Aˣ) : B.A) * x, by simp⟩
+    exact fun x => ⟨((y⁻¹ : B.Aˣ) : B.A) * x, by simp⟩
   · rw [mem_mulLat] at hz ⊢
     rw [mul_left_comm]
     exact hg _ hz

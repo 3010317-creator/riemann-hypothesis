@@ -142,9 +142,7 @@ theorem gauge_kappa_of_point_line : GTKapOfCut := by
     have hc0 : c0 ∈ OmX P.r := fun _ => one_ne_zero
     have hq0 : ((c0, ζ0) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' := ⟨hc0, by rw [hTz]; exact hζ0⟩
     have hval : Φ c0 (NF.muZ P.k P.r Bs.μsec ζ0) = Z := by
-      have h := congrFun hrad (c0, ζ0)
-      simp only [NF.radR, Set.indicator_of_mem hq0, φ] at h
-      exact h
+      simpa only [NF.radR, Set.indicator_of_mem hq0, φ] using congrFun hrad (c0, ζ0)
     let q0 : MA.Qp P.r P.TT := ⟨(c0, ζ0), ⟨hc0, hζ0⟩⟩
     let f : M.Ty P → ℂ := fun σ => if σ = ρ then 1 else 0
     have hk := hQk f ⟨Φ, hΦ⟩ q0
@@ -158,8 +156,7 @@ theorem gauge_kappa_of_point_line : GTKapOfCut := by
     have hk' : (((d.κ f).1 ⟨Φ, hΦ⟩ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) c0
         (NF.muZ P.k P.r Bs.μsec ζ0) = Z.comp (Qr ρ) := by
       rw [← hval]; exact hk
-    rw [hk'] at h2
-    exact h2
+    rwa [hk'] at h2
   refine ⟨fun ρ _ => E ρ, ⟨fun ρ => contDiffOn_const, fun ζ hζ => ⟨fun ρ => ?_, fun ρ ρ' => ?_, fun Z hZ => ?_⟩⟩, ?_⟩
   · rw [hFib ζ hζ]; exact hEF ρ
   · split_ifs with h
@@ -169,7 +166,7 @@ theorem gauge_kappa_of_point_line : GTKapOfCut := by
         _ = inner ℂ (B.hsVec ((E ρ).comp (Qr ρ'))) (B.hsVec (E ρ')) := hs_comp_right _ _ _ (hQs ρ')
         _ = 0 := by
           have h0 : (E ρ).comp (Qr ρ') = 0 := by
-            rw [← hEQ ρ, ContinuousLinearMap.comp_assoc, hQQ ρ ρ', if_neg h, ContinuousLinearMap.comp_zero]
+            rw [← hEQ ρ, ContinuousLinearMap.comp_assoc, hQQ ρ ρ', ite_eq_right h, ContinuousLinearMap.comp_zero]
           rw [h0, VLem.hsV_zero, inner_zero_left]
   · have hZ0 : Z ∈ NF.Fib P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' ζ0 := by rw [← hFib ζ hζ]; exact hZ
     have hdec : Z = ∑ ρ, Z.comp (Qr ρ) := by
@@ -177,7 +174,7 @@ theorem gauge_kappa_of_point_line : GTKapOfCut := by
     conv_lhs => rw [hdec]
     refine Finset.sum_congr rfl fun ρ _ => ?_
     have hfix : (Z.comp (Qr ρ)).comp (Qr ρ) = Z.comp (Qr ρ) := by
-      rw [ContinuousLinearMap.comp_assoc, hQQ ρ ρ, if_pos rfl]
+      rw [ContinuousLinearMap.comp_assoc, hQQ ρ ρ, ite_eq_left rfl]
     rw [hEu ρ _ (hcomp Z hZ0 ρ) hfix, hs_comp_right _ _ _ (hQs ρ), hEQ ρ]
   · intro f Φ
     funext ρ
@@ -196,9 +193,9 @@ theorem gauge_kappa_of_point_line : GTKapOfCut := by
         split_ifs with h
         · subst h; rw [hEQ σ]
         · have h0 : (E ρ).comp (Qr σ) = 0 := by
-            rw [← hEQ ρ, ContinuousLinearMap.comp_assoc, hQQ ρ σ, if_neg (Ne.symm h), ContinuousLinearMap.comp_zero]
+            rw [← hEQ ρ, ContinuousLinearMap.comp_assoc, hQQ ρ σ, ite_eq_right (Ne.symm h), ContinuousLinearMap.comp_zero]
           rw [h0, VLem.hsV_zero, inner_zero_left, mul_zero]
-      simp only [hterm, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [hterm, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       ring
     show MA.toSm P (rawR P Bs.μsec (fun ρ _ => E ρ)
         (((d.κ f).1 Φ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) ρ) = _

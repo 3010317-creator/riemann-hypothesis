@@ -111,8 +111,7 @@ theorem artinian_fields {ι : Type} [Finite ι] (A : ι → Type) [∀ i, CommRi
     obtain ⟨M, hM, hzM⟩ := exists_max_ideal_of_mem_nonunits hu
     obtain ⟨k, hk⟩ : ∃ k, q.symm k = ⟨i, ⟨M, hM⟩⟩ := ⟨q _, q.symm_apply_apply _⟩
     refine hz k (Ideal.Quotient.eq_zero_iff_mem.2 ?_)
-    rw [hk]
-    exact hzM
+    rwa [hk]
   · have hk := hmax k
     have h' : c (q.symm k).1 z ∈ (q.symm k).2.asIdeal := Ideal.Quotient.eq_zero_iff_mem.1 h
     exact hk.ne_top (Ideal.eq_top_of_isUnit_mem _ h' (hz _))
@@ -131,10 +130,8 @@ theorem exists_adele (S : Finset (HeightOneSpectrum (𝓞 F))) (b : ∀ v : Heig
   obtain ⟨a, ha, hc⟩ := GlobalTheory.AdelicU.Frames.exists_GL_of_components S (fun v => sc (b v))
     (fun v hv => by rw [hb v hv]; exact map_one _) (fun w => sc (c w))
   refine ⟨a.1 0 0, fun v => ?_, fun w => ?_⟩
-  · have h := congrArg (fun g : GL (Fin 1) (Fv F v ⊗[F] E) => g.1 0 0) (ha v)
-    exact h.trans (sc_apply _)
-  · have h := congrArg (fun g : GL (Fin 1) (w.Completion ⊗[F] E) => g.1 0 0) (hc w)
-    exact h.trans (sc_apply _)
+  · exact (congrArg (fun g : GL (Fin 1) (Fv F v ⊗[F] E) => g.1 0 0) (ha v)).trans (sc_apply _)
+  · exact (congrArg (fun g : GL (Fin 1) (w.Completion ⊗[F] E) => g.1 0 0) (hc w)).trans (sc_apply _)
 
 
 variable (F E) in
@@ -168,7 +165,7 @@ theorem crit (S : Finset (HeightOneSpectrum (𝓞 F))) (e : AF F ⊗[F] E) (h1 :
   have he : ∀ k, φ k e = 1 := hφ e (by
     rintro (w | ⟨v, hv⟩)
     · exact h1 w
-    · exact (h2 v).trans (if_pos hv))
+    · exact (h2 v).trans (ite_eq_left hv))
   refine ⟨m, Ω, fld, φ, he, fun z => ⟨fun h k => ?_, fun h => ?_⟩⟩
   · have h' := h.map (φ k)
     rw [map_add (f := _), map_sub, map_mul, map_one, he, sub_self, zero_add, one_mul] at h'
@@ -177,15 +174,15 @@ theorem crit (S : Finset (HeightOneSpectrum (𝓞 F))) (e : AF F ⊗[F] E) (h1 :
     have hI : ∀ w, IsUnit (compInf F E w z) := fun w => hz (.inl w)
     have hS : ∀ v (h : v ∈ S), IsUnit (compFin F E v z) := fun v h => hz (.inr ⟨v, h⟩)
     obtain ⟨x, hxf, hxi⟩ := exists_adele (E := E) S
-      (fun v => if h : v ∈ S then (hS v h).unit⁻¹ else 1) (fun v hv => dif_neg hv) (fun w => (hI w).unit⁻¹)
+      (fun v => if h : v ∈ S then (hS v h).unit⁻¹ else 1) (fun v hv => dite_eq_right hv) (fun w => (hI w).unit⁻¹)
     refine isUnit_iff_exists_inv.2 ⟨x, GlobalTheory.AdelicU.Supp.adTens_eq_one' (fun w => ?_) fun v => ?_⟩
     · rw [map_mul, map_add (f := _), map_sub, map_mul, map_one, h1, hxi, sub_self, zero_add, one_mul]
       exact (hI w).mul_val_inv
     · rw [map_mul, map_add (f := _), map_sub, map_mul, map_one, h2, hxf]
       by_cases hv : v ∈ S
-      · simp only [if_pos hv, dif_pos hv, sub_self, zero_add, one_mul]
+      · simp only [ite_eq_left hv, dite_eq_left hv, sub_self, zero_add, one_mul]
         exact (hS v hv).mul_val_inv
-      · simp [if_neg hv, dif_neg hv]
+      · simp [ite_eq_right hv, dite_eq_right hv]
 
 end Glue
 
@@ -279,8 +276,7 @@ lemma measurable_coord [IsTopologicalGroup G] {N : Type} [AddCommGroup N] [Topol
   · have : (coord Ω τ : G ⧸ P → N) ⁻¹' U = {q : G ⧸ P | rp q ∈ Ω ∧ τ (rp q) ∈ U} := by
       ext q
       by_cases hq : rp q ∈ Ω <;> simp [coord, hq, h0]
-    rw [this]
-    exact hA
+    rwa [this]
 
 theorem cellFormula_of_invM (hI : InvM) : CellFormula := by
   intro G _ _ _ _ _ _ P _ _ h mu hs ν hν N _ _ _ _ _ _ _ _ lam _ Ω τ w nb hc hInv hh hnull
@@ -301,8 +297,7 @@ theorem cellFormula_of_invM (hI : InvM) : CellFormula := by
     rw [lintegral_withDensity_eq_lintegral_mul _ h1 hφ, lintegral_map (h1.mul hφ) Tm]
     rfl
   have hae : ∀ᵐ q ∂ν, rp q ∈ Ω := by
-    rw [ae_iff]
-    exact hnull
+    rwa [ae_iff]
   have hshift : ∀ (a : N) (φ : N → ℝ≥0∞), Measurable φ →
       ∫⁻ q, (D (T q) : ℝ≥0∞) * φ (a + T q) ∂ν = ∫⁻ q, (D (T q) : ℝ≥0∞) * φ (T q) ∂ν := by
     intro a φ hφ
@@ -374,8 +369,7 @@ theorem cellFormula_of_invM (hI : InvM) : CellFormula := by
   obtain ⟨hint, hmu⟩ := hν.2 f hf
   constructor
   · refine (integrable_withDensity_iff_integrable_smul Dm).2 ?_
-    refine (integrable_map_measure ψc.aestronglyMeasurable Tm.aemeasurable).2 ?_
-    exact hint.congr hcomp.symm
+    exact (integrable_map_measure ψc.aestronglyMeasurable Tm.aemeasurable).2 (hint.congr hcomp.symm)
   · rw [hmu]
     change _ = ∫ y, f (w * nb y) ∂((ν.map T).withDensity fun y => (D y : ℝ≥0∞))
     rw [integral_withDensity_eq_integral_smul Dm, integral_map Tm.aemeasurable ψc.aestronglyMeasurable]
@@ -422,8 +416,7 @@ theorem div_rp {P : Subgroup G} {h : G → ℝ} {f : G → ℂ} (hpos : ∀ g, 0
   have key := hf.2 (p : G)⁻¹ (P.inv_mem p.2) g
   have h1 : (h ((p : G)⁻¹ * g) : ℂ) ≠ 0 := by exact_mod_cast (hpos _).ne'
   have h2 : (h g : ℂ) ≠ 0 := by exact_mod_cast (hpos _).ne'
-  rw [div_eq_div_iff h1 h2]
-  exact key
+  rwa [div_eq_div_iff h1 h2]
 
 variable [IsTopologicalGroup G]
 
@@ -460,8 +453,7 @@ theorem continuous_div_rp {P : Subgroup G} {h : G → ℝ} {f : G → ℂ} (hc :
       fun a => f a⁻¹ / (h a⁻¹ : ℂ) := by
     funext a
     have := div_rp hpos hf a⁻¹
-    rw [inv_inv] at this
-    exact this
+    rwa [inv_inv] at this
   rw [hcomp]
   exact (hf.1.comp continuous_inv).div (Complex.continuous_ofReal.comp (hc.comp continuous_inv))
     fun a => by exact_mod_cast (hpos _).ne'
@@ -517,8 +509,7 @@ theorem exists_repr [T2Space G] (P : Subgroup G) [MeasurableSpace (G ⧸ P)] [Bo
       _ = ∫ q, Fc q ∂ν := hrep Fc
 
 theorem riesz : Riesz := by
-  intro G _ _ _ _ _ _ P _ _ h mu S
-  exact exists_repr P h mu S
+  exact fun G _ _ _ _ _ _ P _ _ h mu S => exists_repr P h mu S
 
 end GlobalTheory.CompanionTheory.RswCell
 end -- clump:auto
@@ -617,19 +608,7 @@ theorem continuous_smul_quot {P : Subgroup G} (x : G) : Continuous fun q : G ⧸
 
 theorem compact_quot' {P : Subgroup G}
     (hco : ∃ C : Set G, IsCompact C ∧ ∀ g, ∃ q ∈ P, ∃ c ∈ C, g = q * c) : CompactSpace (G ⧸ P) := by
-  obtain ⟨C, hC, hcov⟩ := hco
-  have hK : IsCompact ((fun g : G => (QuotientGroup.mk g⁻¹ : G ⧸ P)) '' C) :=
-    hC.image (QuotientGroup.continuous_mk.comp continuous_inv)
-  refine ⟨?_⟩
-  convert hK using 1
-  symm
-  refine Set.eq_univ_of_forall fun x => ?_
-  obtain ⟨y, rfl⟩ := QuotientGroup.mk_surjective x
-  obtain ⟨q, hq, c, hc, hqc⟩ := hcov y⁻¹
-  refine ⟨c, hc, ?_⟩
-  have : y = (q * c)⁻¹ := by rw [← hqc, inv_inv]
-  rw [this, QuotientGroup.eq]
-  simpa using hq
+  exact GlobalTheory.CompanionTheory.RswCell.compact_quot hco
 
 theorem integral_translate {P : Subgroup G} [MeasurableSpace (G ⧸ P)] {h : G → ℝ} {mu : (G → ℂ) → ℂ}
     (S : Setup P h mu) {ν : Measure (G ⧸ P)} (hR : Repr P h mu ν) {x : G} (hx : Inv P h mu x)
@@ -796,10 +775,8 @@ theorem few_roots {m p M : ℕ} {Ω : Fin m → Type} [∀ i, Field (Ω i)] [∀
           · intro j hj
             simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hj
             simp only [Finset.mem_coe, Multiset.mem_toFinset]
-            rw [Polynomial.mem_roots hP0, Polynomial.IsRoot.def, hev]
-            exact hj
-          · intro a _ b _ hab
-            exact ht (Rat.cast_injective hab)
+            rwa [Polynomial.mem_roots hP0, Polynomial.IsRoot.def, hev]
+          · exact fun a _ b _ hab => ht (Rat.cast_injective hab)
       _ ≤ Multiset.card P.roots := Multiset.toFinset_card_le _
       _ ≤ P.natDegree := Polynomial.card_roots' P
       _ ≤ p := hdeg
@@ -808,8 +785,7 @@ theorem few_roots {m p M : ℕ} {Ω : Fin m → Type} [∀ i, Field (Ω i)] [∀
     intro j hj
     simp only [Set.mem_setOf_eq, not_forall, not_not] at hj
     obtain ⟨i, hi⟩ := hj
-    simp only [Finset.coe_biUnion, Set.mem_iUnion]
-    exact ⟨i, by simp, by simpa using hi⟩
+    simpa only [Finset.coe_biUnion, Set.mem_iUnion] using ⟨i, by simp, by simpa using hi⟩
   calc _ ≤ Set.ncard ((Finset.univ.biUnion fun i => Finset.univ.filter fun j => Matrix.det (A i - ((t j : ℚ) : Ω i) • B i) = 0 : Finset (Fin M)) : Set (Fin M)) :=
         Set.ncard_le_ncard hsub (Finset.finite_toSet _)
     _ = (Finset.univ.biUnion fun i => Finset.univ.filter fun j => Matrix.det (A i - ((t j : ℚ) : Ω i) • B i) = 0 : Finset (Fin M)).card := Set.ncard_coe_finset _
@@ -933,8 +909,7 @@ theorem small_line (nb : hermA D p → G D p) (w : G D p) (e : AE D) (he2 : e * 
   have hV0 : (fun z : hermS D p e => w * nb z.1 * w⁻¹) ⁻¹' V ∈ 𝓝 (0 : hermS D p e) := by
     apply hcont.continuousAt.preimage_mem_nhds
     show V ∈ 𝓝 (w * nb (0 : hermS D p e).1 * w⁻¹)
-    rw [hnb0, mul_one, mul_inv_cancel]
-    exact hV
+    rwa [hnb0, mul_one, mul_inv_cancel]
   have hind : Topology.IsInducing (fun z : hermS D p e => (z.1.1 : Mx D p p)) :=
     Topology.IsInducing.subtypeVal.comp Topology.IsInducing.subtypeVal
   rw [hind.nhds_eq_comap, Filter.mem_comap] at hV0
@@ -943,8 +918,7 @@ theorem small_line (nb : hermA D p → G D p) (w : G D p) (e : AE D) (he2 : e * 
     have hc : Continuous (fun a : AE D => a • Y) := continuous_id.smul continuous_const
     apply hc.continuousAt.preimage_mem_nhds
     show W' ∈ 𝓝 ((0 : AE D) • Y)
-    rw [zero_smul]
-    exact hW'
+    rwa [zero_smul]
   obtain ⟨t, ht, htV⟩ := hsm _ hV' M
   exact ⟨t, ht, fun j => hsub (a := lineS e he2 hce Y hY _ (cA_incA_rat _)) (htV j)⟩
 
@@ -1196,8 +1170,7 @@ theorem isOpen_rp [IsTopologicalGroup G] (P : Subgroup G) {Ω : Set G} (hΩ : Is
     constructor
     · intro hq
       refine ⟨(rp q)⁻¹, by simpa using hq, ?_⟩
-      simp only [rp, inv_inv]
-      exact QuotientGroup.out_eq' q
+      simpa only [rp, inv_inv] using QuotientGroup.out_eq' q
     · rintro ⟨g, hg, rfl⟩
       obtain ⟨p, hp, hrp⟩ := rp_mk_inv P g⁻¹
       simp only [inv_inv] at hrp
@@ -1248,8 +1221,7 @@ theorem local_null [IsTopologicalGroup G] [LocallyCompactSpace G] {P : Subgroup 
     rw [isOpen_iff_forall_mem_open]
     rintro y ⟨p, hp, n, hn, rfl⟩
     refine ⟨(fun z => (p * rp q0)⁻¹ * z) ⁻¹' interior N0, ?_, ?_, ?_⟩
-    · intro z hz
-      exact ⟨p, hp, (p * rp q0)⁻¹ * z, hz, by group⟩
+    · exact fun z hz => ⟨p, hp, (p * rp q0)⁻¹ * z, hz, by group⟩
     · exact hNo.preimage (continuous_const.mul continuous_id)
     · show (p * rp q0)⁻¹ * (p * (rp q0 * n)) ∈ interior N0
       simpa [mul_assoc] using hn
@@ -1261,8 +1233,7 @@ theorem local_null [IsTopologicalGroup G] [LocallyCompactSpace G] {P : Subgroup 
     rintro y ⟨p, hp, n, hn, rfl⟩ γ hγ
     have h1 := hsub (Set.mk_mem_prod (interior_subset hn) (hVN1 hγ))
     simp only [Set.mem_preimage] at h1
-    have h2 := hUP p hp _ h1
-    simpa [mul_assoc] using h2
+    simpa [mul_assoc] using hUP p hp _ h1
   refine ⟨{q | rp q ∈ U'}, isOpen_rp P hU'o hU'P, hgU', ?_⟩
   have hopenU : IsOpen {q : G ⧸ P | rp q ∈ U} := isOpen_rp P hUo hUP
   have hopenΩ0 : IsOpen {q : G ⧸ P | rp q ∈ Ω} := isOpen_rp P hΩ hP
@@ -1290,9 +1261,7 @@ theorem local_null [IsTopologicalGroup G] [LocallyCompactSpace G] {P : Subgroup 
     · have h3 := hUP p⁻¹ (P.inv_mem hp) _ h2
       show rp q ∈ U
       simpa [mul_assoc] using h3
-    · show ¬ (rp q * γ ∈ Ω)
-      intro h4
-      exact h1 (hP p hp _ h4)
+    · exact fun h4 => h1 (hP p hp _ h4)
   have hfin : ENNReal.ofReal B * ((d : ℝ≥0∞) * ν univ) ≠ ⊤ :=
     ENNReal.mul_ne_top ENNReal.ofReal_ne_top
       (ENNReal.mul_ne_top (ENNReal.natCast_ne_top d) (measure_ne_top ν univ))
@@ -1420,8 +1389,7 @@ theorem tendsto_tau_fin (v : HeightOneSpectrum (𝓞 F)) {N : ℕ} (hN : ((N : �
       (map_natCast _ N).symm
     rw [e]
     have h1 := HeightOneSpectrum.valuedAdicCompletion_eq_valuation (K := F) v (N : 𝓞 F)
-    have h2 := (HeightOneSpectrum.valuation_lt_one_iff_mem (K := F) v (N : 𝓞 F)).2 hN
-    exact h1 ▸ h2
+    exact h1 ▸ ((HeightOneSpectrum.valuation_lt_one_iff_mem (K := F) v (N : 𝓞 F)).2 hN)
   have ht := Valued.tendsto_zero_pow_of_v_lt_one hv
   have h2 : Tendsto (fun k : ℕ => 1 + ((N : v.adicCompletion F) ^ k) ^ 2) atTop (𝓝 1) := by
     simpa using (ht.pow 2).const_add 1
@@ -1461,7 +1429,7 @@ def finS (S : Finset (HeightOneSpectrum (𝓞 F))) (q : F) :
     rw [Filter.eventually_principal]
     intro v hv
     have hv' : v ∉ S := by simpa using hv
-    simp only [if_neg hv']
+    simp only [ite_eq_right hv']
     exact zero_mem _⟩
 
 theorem cofinite_le (S : Finset (HeightOneSpectrum (𝓞 F))) :
@@ -1481,11 +1449,8 @@ theorem tendsto_sAd (S : Finset (HeightOneSpectrum (𝓞 F))) (q : ℕ → F)
     rw [RestrictedProduct.isEmbedding_coe_of_principal.isInducing.tendsto_nhds_iff, tendsto_pi_nhds]
     intro v
     by_cases hv : v ∈ S
-    · refine (hf v hv).congr fun k => ?_
-      exact (if_pos hv).symm
-    · refine tendsto_const_nhds.congr fun k => ?_
-      show (0 : v.adicCompletion F) = _
-      exact (if_neg hv).symm
+    · exact (hf v hv).congr fun k => (ite_eq_left hv).symm
+    · exact tendsto_const_nhds.congr fun k => (ite_eq_right hv).symm
   have h2 := ((RestrictedProduct.continuous_inclusion (cofinite_le S)).tendsto 0).comp h1
   refine Tendsto.prodMk_nhds (tendsto_pi_nhds.2 hi) h2
 
@@ -1511,13 +1476,13 @@ theorem tensor_key {E : Type} [Field E] [Algebra F E] (S : Finset (HeightOneSpec
     exact one_tmul_algebraMap (A := w.Completion) _
   · refine ring_hom_mul_sub_eq_zero (compFin F E v) _ _ _ _ (hf v) ?_
     by_cases hv : v ∈ S
-    · rw [if_pos hv, mul_one]
-      have h : evFin F v (sAd S q) = algebraMap F (v.adicCompletion F) q := if_pos hv
+    · rw [ite_eq_left hv, mul_one]
+      have h : evFin F v (sAd S q) = algebraMap F (v.adicCompletion F) q := ite_eq_left hv
       show (1 : v.adicCompletion F) ⊗ₜ[F] _ = evFin F v (sAd S q) ⊗ₜ[F] (1 : E)
       rw [h]
       exact one_tmul_algebraMap _
-    · rw [if_neg hv, mul_zero]
-      have h : evFin F v (sAd S q) = 0 := if_neg hv
+    · rw [ite_eq_right hv, mul_zero]
+      have h : evFin F v (sAd S q) = 0 := ite_eq_right hv
       show 0 = evFin F v (sAd S q) ⊗ₜ[F] (1 : E)
       rw [h, TensorProduct.zero_tmul]
 
@@ -1558,8 +1523,7 @@ theorem smallRat : PositivityTheory.Rg.Rsw.L.IdemEx → PositivityTheory.Rg.Rsw.
         ((j.1 + 1 : ℕ) : AE D) * incA D ((tau N k : ℚ) : D.host.E) := by
       rw [Rat.cast_mul, map_mul, Rat.cast_natCast, map_natCast]
     show incA D (((((j.1 + 1 : ℕ) : ℚ) * tau N k : ℚ)) : D.host.E) * e ∈ V
-    rw [e1, mul_assoc]
-    exact h
+    rwa [e1, mul_assoc]
 
 end GlobalTheory.CompanionTheory.SmallRatCell
 

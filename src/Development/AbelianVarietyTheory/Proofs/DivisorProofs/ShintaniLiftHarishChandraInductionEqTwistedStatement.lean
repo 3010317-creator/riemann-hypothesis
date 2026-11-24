@@ -288,8 +288,7 @@ theorem GlobalTheory.Shin.inPar_twistedConj_iff : ∀ (F F' : Type) [Field F] [F
       rw [e]; exact inPar_mul (inPar_inv hδP) hq
     have hεN : nrm s (y⁻¹ * galAct F F' n s y) = 1 := by
       have := hconj 1 y
-      rw [nrm_one', mul_one, inv_mul_cancel] at this
-      exact this
+      rwa [nrm_one', mul_one, inv_mul_cancel] at this
     obtain ⟨x, hxB, hε⟩ := _root_.GlobalTheory.HilbertNinety.hilbert90_matrix_subalgebra_norm_one F F' s hs n (parAlg F' a n) hB _ hεP hεN
     have hfx : galAct F F' n s (y * x⁻¹) = y * x⁻¹ := by
       rw [map_mul, map_inv]
@@ -444,8 +443,7 @@ theorem isNorm_exists_twistedConj_adjoin :
     rw [h3, ← hc]; group
   have hcomm1 : Commute (c⁻¹ * δ * galAct F F' n s c) (incl F F' n γ) := by
     have := h4 (c⁻¹ * δ * galAct F F' n s c)
-    rw [hn1, hgfix s] at this
-    exact this
+    rwa [hn1, hgfix s] at this
 
   obtain ⟨δ₀, hδ₀A, hn0⟩ := _root_.GlobalTheory.Shin.NormSurj.nrm_surj_adjoin F F' s hs n γ
   have hδ₀g : Commute δ₀ (incl F F' n γ) := hC δ₀ _ hδ₀A (Commute.refl _)
@@ -467,8 +465,7 @@ theorem isNorm_exists_twistedConj_adjoin :
     subst hg'
     have e := congrArg (fun N => ((s : F' ≃+* F') : F' →+* F').mapMatrix N) (hM _ rfl)
     simp only [map_mul] at e
-    rw [← _root_.GlobalTheory.Shin.NormSurj.map_incl n s γ]
-    exact e
+    rwa [← _root_.GlobalTheory.Shin.NormSurj.map_incl n s γ]
   have hεB : ((δ₀⁻¹ * (c⁻¹ * δ * galAct F F' n s c) : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') ∈
       Subalgebra.centralizer F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} := by
     rw [Subalgebra.mem_centralizer_iff]
@@ -568,8 +565,7 @@ theorem blocks_twist : ∀ (F : Type) [Field F] (t : F →+* F) (a b n : ℕ), n
     unfold brG
     rw [coe_gal, br_map, toG_map _ _ (BlockPar.units_of_par p hp).2]
   simp only [Prod.ext_iff, Prod.fst_mul, Prod.snd_mul, Prod.fst_inv, Prod.snd_inv] at key
-  rw [← htl, ← hbr]
-  exact key
+  rwa [← htl, ← hbr]
 
 end GlobalTheory.Shin.BlocksTwist
 end -- clump:auto
@@ -619,14 +615,7 @@ theorem br_eq {a b : ℕ} (M : Matrix (Fin (a + b)) (Fin (a + b)) K) :
   rfl
 
 theorem inPar_mul {a n : ℕ} {x y : GL (Fin n) K} (hx : InPar a x) (hy : InPar a y) :
-    InPar a (x * y) := by
-  intro i j hj hi
-  rw [Units.val_mul, Matrix.mul_apply]
-  apply Finset.sum_eq_zero
-  intro k _
-  by_cases hk : (k : ℕ) < a
-  · rw [hx i k hk hi, zero_mul]
-  · rw [hy k j hj (by omega), mul_zero]
+    InPar a (x * y) := GlobalTheory.Shin.FlagDesc.inPar_mul hx hy
 
 theorem inPar_one {a n : ℕ} : InPar a (1 : GL (Fin n) K) := by
   intro i j hj hi
@@ -643,7 +632,7 @@ theorem inPar_inv {a n : ℕ} {x : GL (Fin n) K} (hx : InPar a x) : InPar a x⁻
   have := Matrix.blockTriangular_inv_of_blockTriangular hB
   intro i j hj hi
   rw [Matrix.coe_units_inv]
-  exact this (by simp only; rw [if_pos hi, if_neg (by omega)]; exact Nat.zero_lt_one)
+  exact this (by simp only; rw [ite_eq_left hi, ite_eq_right (by omega)]; exact Nat.zero_lt_one)
 
 theorem tl_mul {a b : ℕ} {x y : GL (Fin (a + b)) K} (hy : InPar a y) :
     tl a (x * y).val = tl a x.val * tl a y.val := by
@@ -777,8 +766,7 @@ theorem nrm_blocks : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Fini
       congr 1
       apply List.map_congr_left
       intro i _
-      simp only [Function.comp_apply, galAct_apply]
-      exact (tlG_gal _ hδ).symm
+      simpa only [Function.comp_apply, galAct_apply] using (tlG_gal _ hδ).symm
     rw [e, ← h2, ← hn, h]
     exact tlG_gal _ hγ
   · have e : nrm s (brG a b δ) = (((List.range (Module.finrank F F')).map
@@ -788,8 +776,7 @@ theorem nrm_blocks : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Fini
       congr 1
       apply List.map_congr_left
       intro i _
-      simp only [Function.comp_apply, galAct_apply]
-      exact (brG_gal _ hδ).symm
+      simpa only [Function.comp_apply, galAct_apply] using (brG_gal _ hδ).symm
     rw [e, ← h3, ← hn, h]
     exact brG_gal _ hγ
 
@@ -890,7 +877,7 @@ theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : 
       rw [← hH]
       exact H.mul_mem (H.mul_mem (H.inv_mem ((hH p).2 hp)) ((hH _).2 hδ₁))
         ((hH _).2 (inPar_gal _ a n p hp))
-    rw [if_pos hin, if_pos h1]
+    rw [ite_eq_left hin, ite_eq_left h1]
     obtain ⟨et, eb⟩ := blocks_twist (s : F' →+* F') a b n hn p δ₁ hp hδ₁
     have hN₁ : nrm s δ₁ = incl F F' n (y₀⁻¹ * γ * y₀) := by
       rw [hδ₁def, nrm_conj_incl, hN, map_mul, map_mul, map_inv]
@@ -902,7 +889,7 @@ theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : 
     have eβ := lβ.2 (brG a b δ₁) (brG a b p)
     rw [galAct_apply] at eα eβ
     rw [eα, eβ, lα.1 _ _ (by unfold IsNorm; rw [nt]), lβ.1 _ _ (by unfold IsNorm; rw [nb])]
-  · rw [if_neg h1, if_neg]
+  · rw [ite_eq_right h1, ite_eq_right]
     intro hin
     obtain ⟨y₁, p₁, hp₁, e, hγ₁⟩ := (_root_.GlobalTheory.Shin.inPar_twistedConj_iff F F' s hs a n hle γ δ (c * p) hA hN).1 hin
     have hh : incl F F' n (y₁⁻¹ * y₀) = p₁ * p⁻¹ := by
@@ -934,7 +921,7 @@ theorem pointwise (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] 
   have hsupp : ∀ y, T y ≠ 0 → ∃ k p, p ∈ H ∧ y = incl F F' n k * p := by
     intro y hy
     have hin : InPar a (y⁻¹ * δ * gal (s : F' →+* F') n y) := by
-      by_contra h; exact hy (if_neg h)
+      by_contra h; exact hy (ite_eq_right h)
     obtain ⟨k, p, hp, e, -⟩ := (_root_.GlobalTheory.Shin.inPar_twistedConj_iff F F' s hs a n (by omega) γ δ y hA hN).1 hin
     exact ⟨k, p, (hH p).2 hp, e⟩
   have hcnt := count (incl F F' n) H T hsupp

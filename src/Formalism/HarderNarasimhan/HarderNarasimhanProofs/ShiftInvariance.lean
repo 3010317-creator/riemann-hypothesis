@@ -69,8 +69,7 @@ theorem shiftInv_isSat_iff {R V E : Type*} [Ring R] [AddCommGroup V] [Module R V
       N ≤ L ∧ ∀ N' : Submodule R V, N ≤ N' → N' ≤ L → rk ρ N' = rk ρ N → N' = N := by
   have hB := saturation_basic_properties R V E ρ L hL
   constructor
-  · intro hN
-    exact ⟨hN.1, fun N' h₁ h₂ h₃ => hB.2.2.1 N N' hN h₁ h₂ h₃⟩
+  · exact fun hN => ⟨hN.1, fun N' h₁ h₂ h₃ => hB.2.2.1 N N' hN h₁ h₂ h₃⟩
   · rintro ⟨hNL, hmax⟩
     obtain ⟨N', hNN', hN'L, himg⟩ := real_saturation_property R V E ρ L N hL hNL
     have hsat := Formalism.F.saturProps E (zl ρ L) (zl ρ N) hL.2
@@ -131,10 +130,10 @@ theorem shiftInv_count (c : ℝ) (k m : ℕ) :
   | succ m ih =>
     rw [Finset.sum_range_succ, ih]
     by_cases h : m < k
-    · rw [if_pos h, min_eq_right h.le, min_eq_right (show m + 1 ≤ k by omega)]
+    · rw [ite_eq_left h, min_eq_right h.le, min_eq_right (show m + 1 ≤ k by omega)]
       push_cast
       ring
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       replace h := not_lt.mp h
       rw [min_eq_left h, min_eq_left (show k ≤ m + 1 by omega)]
       ring
@@ -175,8 +174,7 @@ private theorem lt_card_filter_le_iff_of_antitone {n : ℕ} {s : Fin n → ℝ} 
     have h1 : Finset.Iic j ⊆ Finset.univ.filter (fun i => θ ≤ s i) := by
       intro i hi
       simp only [Finset.mem_Iic] at hi
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact h.trans (hs hi)
+      simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using h.trans (hs hi)
     have c1 := Finset.card_le_card h1
     rw [Fin.card_Iic] at c1
     omega

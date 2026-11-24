@@ -67,16 +67,14 @@ theorem x_linearIndependent (D : ℕ) : LinearIndependent ℤ (x D) := by
           (Finsupp.single q.2.1.1 1 + Finsupp.single q.2.1.2 1 : Fin (D + 1) →₀ ℕ) := by
       funext q
       simp only [Function.comp_apply, coe_basisMonomials, X, monomial_mul, mul_one]
-    rw [e]
-    exact h
+    rwa [e]
   have h2 := hmono.map' (polyMap D).toAddMonoidHom.toIntLinearMap
     (LinearMap.ker_eq_bot.mpr (polyMap_injective D))
   have e2 : x D = ⇑(polyMap D).toAddMonoidHom.toIntLinearMap ∘ fun q : Ix (Idx D) =>
       (X q.2.1.1 * X q.2.1.2 : MvPolynomial (Fin (D + 1)) ℤ) := by
     funext q
     simp [x, t, polyMap, map_mul]
-  rw [e2]
-  exact h2
+  rwa [e2]
 
 theorem isSmoothMetric_metric (D : ℕ) : IsSmoothMetric (metric D) := by
   have hs : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (scale D) :=
@@ -147,8 +145,7 @@ theorem SecondVeronese.proof (hA : VeroneseArith.Statement) (hS : VeroneseSemipo
       have : conjPt (c • z) = conj c • conjPt z := by
         funext q
         simp [conjPt]
-      simp only [this]
-      exact pairVal_smul (hb k) (hb l) _ _ ((map_ne_zero _).mpr hc)
+      simpa only [this] using pairVal_smul (hb k) (hb l) _ _ ((map_ne_zero _).mpr hc)
     unfold resGram gram resPt
     rw [e1, e2]
   rw [← hC D hD n]

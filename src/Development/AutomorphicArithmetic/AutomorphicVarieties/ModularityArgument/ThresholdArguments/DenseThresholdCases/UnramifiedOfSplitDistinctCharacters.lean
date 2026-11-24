@@ -75,8 +75,7 @@ theorem UpperTheory.V.Z.Sym.Al.unramified_of_split_distinct_characters :
         exact this
     intro x hx
     have : x ∈ S.toSubmodule := hx
-    rw [hS] at this
-    exact this
+    rwa [hS] at this
   obtain ⟨ω, rfl, hω⟩ : ∃ ω : Fin n → (Kw w)ˣ →* ℂˣ,
       ψ = (fun i => ω i * absPow (Kw w) (((n : ℂ) - 1) / 2)) ∧ ∀ i, IsSmoothChar (ω i) := by
     refine ⟨fun i => ψ i * absPow (Kw w) (-(((n : ℂ) - 1) / 2)), funext fun i => ?_,
@@ -98,9 +97,7 @@ theorem UpperTheory.V.Z.Sym.Al.unramified_of_split_distinct_characters :
     rintro rfl
     exact hv₀ (map_zero E)
   have hτ : ∀ u ∈ KO (Kw w) (Fin n), τ.ρ u v = v := fun u hu' => by
-    apply E.injective
-    have h1 := LinearMap.congr_fun (E.isIntertwining' u) v
-    exact h1.trans (hfix u hu')
+    exact E.injective ((LinearMap.congr_fun (E.isIntertwining' u) v).trans (hfix u hu'))
   refine ⟨f v, hfπ v, fun h => hv (hker v h), fun x hx hK => ?_⟩
   have h := hf ⟨x, hx⟩ v
   rw [← GlobalTheory.HeckeEigConj.KO_eq_KGL] at hK

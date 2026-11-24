@@ -120,8 +120,7 @@ theorem UpperTheory.Gal.G3.pTransOrbit :
     have s2 := (hRC p D G L R gb _ s _ _ _ o₁ o o₂ k' t I₁' I₂'' I₂' (ψ₁ ≫ 𝟙 _) (inv ψ₂) (w * 1) 1
       inferInstance hmi₂ (UpperTheory.Gal.Int.Geo.integ_of_mem one_mem)).2 s1 (rev I₂' I₂'' r₂)
     refine ⟨I₁', I₂', a₁, a₂, w, hw, ?_⟩
-    rw [Category.comp_id, _root_.mul_one, _root_.one_mul] at s2
-    exact s2
+    rwa [Category.comp_id, _root_.mul_one, _root_.one_mul] at s2
   obtain ⟨I₀', I₀'', hI₀', hI₀'', w₀, hw₀, r₀⟩ :=
     key k (𝟙 (Sp k)) (Spec.preimage s).hom (by simp [spMap])
   obtain ⟨c₁, hc₁, ⟨i₁⟩, t₁, t₁', x1, x2, x3, x4⟩ := h₁.2.2.2.1
@@ -185,5 +184,4 @@ theorem UpperTheory.Gal.G3.pTransOrbit :
     refine ⟨I', J, hI', hJ, ?_⟩
     have := (hRC p D G L R gb _ s _ _ _ o₁ o₂ o₂ k' t I' I'' J (ψ₁ ≫ inv ψ₂) (𝟙 _) w (w₀ * w⁻¹)
       inferInstance inferInstance (UpperTheory.Gal.Int.Geo.integ_of_mem (kn1 hv))).2 r rJ
-    rw [Category.comp_id, _root_.inv_mul_cancel_right] at this
-    exact this
+    rwa [Category.comp_id, _root_.inv_mul_cancel_right] at this

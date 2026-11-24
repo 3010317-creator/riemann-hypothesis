@@ -376,11 +376,11 @@ theorem top_cf (hσ : IsURepOn (UJset ε) σ) (hQP : Q * P = 1) (hPQ : P * Q = 1
   unfold Formalism.QuantumDeterminants.Top Formalism.REAL.Tm
   rw [eabH_cf hσ hQP hPQ a T x f hf c d hg, hf g hg]
   by_cases hcd : c = d
-  · rw [if_pos hcd, if_pos hcd, LinearMap.add_apply, Submodule.coe_add, map_add (f := _), inner_add_right, add_smul,
+  · rw [ite_eq_left hcd, ite_eq_left hcd, LinearMap.add_apply, Submodule.coe_add, map_add (f := _), inner_add_right, add_smul,
       Algebra.algebraMap_eq_smul_one, LinearMap.smul_apply, Module.End.one_apply, Submodule.coe_smul, map_smul,
       inner_smul_right, smul_smul]
     rfl
-  · rw [if_neg hcd, if_neg hcd, zero_add, zero_add]
+  · rw [ite_eq_right hcd, ite_eq_right hcd, zero_add, zero_add]
     rfl
 
 theorem foldr_cf (hσ : IsURepOn (UJset ε) σ) (hQP : Q * P = 1) (hPQ : P * Q = 1) (a : H) (T : E) :
@@ -513,9 +513,7 @@ theorem coefCap_carrierInT_own (u u' : D.what₂.Word) (e : InfinitePlace D.host
   obtain ⟨g, rfl⟩ : ∃ g' : Matrix (Fin (2 * D.R.rS + D.R.k + 1)) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ, g' = g := ⟨g, rfl⟩
   set w := tauE X e j with hw
   set τ := e (plE D j) with hτ
-  have hpl : X.pl w = τ := by
-    show X.pl (X.pl.symm (e (plE D j))) = _
-    exact Equiv.apply_symm_apply _ _
+  have hpl : X.pl w = τ := Equiv.apply_symm_apply _ _
   obtain ⟨hQP, hPQ, hH, -⟩ := isTransp_Qcs X C w
   rw [hpl] at hQP hPQ hH
   set P := Qcs C τ

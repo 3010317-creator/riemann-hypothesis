@@ -335,13 +335,7 @@ variable {R : Type} [CommRing R] [IsDomain R] (A : PolAV (Sp (FractionRing R)))
 
 theorem noetherianSpace_prod_field (F : Type) [Field F] [Algebra (FractionRing R) F] :
     TopologicalSpace.NoetherianSpace (TFK (R := R) F ⊗ A.A).left := by
-  have := A.isAb.proper
-  let b : (TFK (R := R) F ⊗ A.A).left ⟶ Spec (CommRingCat.of F) := (fst (TFK (R := R) F) A.A).left
-  have : IsProper b := inferInstanceAs (IsProper (pullback.fst _ _))
-  have : IsLocallyNoetherian (TFK (R := R) F ⊗ A.A).left := LocallyOfFiniteType.isLocallyNoetherian b
-  have : CompactSpace (TFK (R := R) F ⊗ A.A).left := QuasiCompact.compactSpace_of_compactSpace b
-  have : IsNoetherian (TFK (R := R) F ⊗ A.A).left := {}
-  infer_instance
+  apply GlobalTheory.Mum.UpExt.noeth
 
 theorem isPullback_baseEm_whiskerRight {F : Type} [Field F] [Algebra (FractionRing R) F]
     (em : Kb R →ₐ[FractionRing R] F) :
@@ -355,8 +349,7 @@ theorem isPullback_baseEm_whiskerRight {F : Type} [Field F] [Algebra (FractionRi
   have e₁ : (baseEm em ▷ A.A).left ≫ (snd (TFK (R := R) (Kb R)) A.A).left =
       (snd (TFK (R := R) F) A.A).left := congrArg (fun q => q.left) (whiskerRight_snd (baseEm em) A.A)
   have e₂ : (baseEm em).left ≫ (TFK (R := R) (Kb R)).hom = (TFK (R := R) F).hom := Over.w (baseEm em)
-  rw [e₁, e₂]
-  exact h₂
+  rwa [e₁, e₂]
 
 end
 
@@ -465,9 +458,7 @@ theorem GlobalTheory.Mum.Desc.lab_onto_of_labExt : ∀ (R : Type) [CommRing R] [
       rw [h4]
     exact spec_map_field_cancel em.toRingHom y.left y'.left (congrArg CommaMorphism.left h)
   have hlab : ∀ p p', QkExt em.toRingHom p p' → lab' p' = baseEm em ≫ lab p := by
-    intro p p' hp
-    apply Over.OverMorphism.ext
-    exact hext p p' hp
+    exact fun p p' hp => Over.OverMorphism.ext (hext p p' hp)
   constructor
   · intro hx
     have hx' : (baseEm em ≫ x) ^ N = 1 := by rw [← MonObj.comp_pow, hx, MonObj.comp_one]
@@ -1603,8 +1594,7 @@ theorem desc : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R 
     have h₂ : (d ≫ q₁) ≫ T.G.hom = ℓ.left ≫ (fst (TFK (R := R) F) C.A.A).left ≫ spMap ρ := by
       rw [← Category.assoc, hfst, Category.assoc, hdt]
     have := H _ (d ≫ q₁) ℓ.left h₁ h₂ x J' hJ'
-    rw [hsnd] at this
-    exact this
+    rwa [hsnd] at this
 
   set u : Z ⟶ pullback T.β C.α := pullback.lift p p' hpp with hu
   have hu₁ : u ≫ q₁ = p := pullback.lift_fst _ _ _
@@ -1612,11 +1602,9 @@ theorem desc : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R 
   have hz : u z ∈ V := by
     refine ⟨Set.mem_iInter.2 fun _ => ?_, Set.mem_iInter.2 fun _ => ?_⟩
     · have h : (p ≫ T.β) z ∈ C.P.L.L.U i := hJ (p ≫ T.β)
-      rw [← hu₁] at h
-      exact h
+      rwa [← hu₁] at h
     · have h : (p ≫ T.β) z ∈ C.P.L.L.U i := hJ (p ≫ T.β)
-      rw [hpp, ← hu₂] at h
-      exact h
+      rwa [hpp, ← hu₂] at h
   have A := ka Z u z J hz (by rw [hu₁])
   have B := kb Z u z J hz (by rw [hu₂, ← hpp])
   rw [hu₁] at A B
@@ -1725,7 +1713,7 @@ theorem exp_of_values : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     have ga := gs_scal_eq T.G.hom ((algebraMap (FractionRing W) F).comp (algebraMap W _)) p _ e2' z a
     have gb := gs_scal_eq T.G.hom ((algebraMap (FractionRing W) F).comp (algebraMap W _)) p _ e2' z b
     rw [hv Z p z J hJ, h2 F₁ σ₁ hσ₁ Z p p' e1 e2 z J hJ, ga, gb, ← _root_.mul_assoc, ← gs_mul _ z ⊤ trivial, fnF, ← map_mul, key]
-  · push_neg at hB
+  · push Not at hB
     refine ⟨1, 1, one_ne_zero, one_ne_zero, fun F₀ => ?_⟩
     obtain ⟨σ, hσ⟩ := h1 F₀
     refine ⟨σ, hσ, _root_.GlobalTheory.Mum.ValDescent.desc R hR D C k W T F hF σ (Φ F₀) 1 ?_⟩

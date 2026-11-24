@@ -134,8 +134,7 @@ theorem coeff_eq_zero {r k : ℕ} {w : Fin r → V} {q : Fin k → V} (h : Linea
     exact neg_add_cancel _)
   funext j
   have h2 := h1 (Fin.natAdd r j)
-  rw [Fin.append_right, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 L) L)] at h2
-  exact h2
+  rwa [Fin.append_right, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 L) L)] at h2
 
 variable {s : Ψ ⊕ Ψ} {r k : ℕ} {w : Fin r → V} {q : Fin k → A.Λ}
 
@@ -223,8 +222,7 @@ theorem index_quot {R N N' : Type} [CommRing R] [AddCommGroup N] [Module R N] [A
     obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.mem_sup.1 hx
     obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun R).1 hz
     refine (Submodule.mem_span_range_iff_exists_fun R).2 ⟨c, ((key c).2 ?_).symm⟩
-    rw [← hyz, add_sub_cancel_right]
-    exact hy
+    rwa [← hyz, add_sub_cancel_right]
   · intro hx
     obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun R).1 hx
     exact Submodule.mem_sup.2 ⟨_, (key c).1 hc.symm, _, (Submodule.mem_span_range_iff_exists_fun R).2 ⟨c, rfl⟩,
@@ -264,8 +262,7 @@ theorem index_split (hb : LinearIndependent L (Fin.append w fun c => (q c : V)))
   have h' := index_quot (M := A.eig s) (T := A.tor s) A.f inf_le_left q hq fun x hx =>
     (A.ker x).trans ⟨fun h => Submodule.mem_inf.2 ⟨h, (Submodule.mem_inf.1 hx).2⟩, fun h => (Submodule.mem_inf.1 h).1⟩
   rw [h'] at h
-  rw [range_append, Submodule.span_union]
-  exact h
+  rwa [range_append, Submodule.span_union]
 
 theorem gramDet_eq (ι : L →+* ℂ) (q : Fin k → A.Λ) :
     A.gramDet ι q = GroundTheory.Heights₂.Heights.gramDet A.Bq.metric ι fun c => A.f (q c) := rfl

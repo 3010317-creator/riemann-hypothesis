@@ -77,8 +77,7 @@ theorem isSmoothDivisor_boundary_comap_isoObjZero (T : MarkedIdealWithBoundary.{
     (hj : j < T.boundary.length) (s : T.SequenceOfBlowups) :
     IsSmoothDivisor (s.projectionToSpec 0) ((T.boundary.get ⟨j, hj⟩).comap s.isoZero.hom) := by
   have hmem : T.boundary.get ⟨j, hj⟩ ∈ T.boundary := by
-    simp only [List.get_eq_getElem]
-    exact List.getElem_mem hj
+    simpa only [List.get_eq_getElem] using List.getElem_mem hj
   have hD : IsSmoothDivisor T.structMap (T.boundary.get ⟨j, hj⟩) :=
     ((inStrictNormalCrossingPosition_iff T.structMap T.boundary).1 hV.snc).1 _ hmem
   rw [MarkedSequenceOfBlowups.projectionToSpec_zero]
@@ -122,8 +121,7 @@ theorem isOpen_preimage_support_containedComponentsIdeal (T : MarkedIdealWithBou
     IsOpen (⇑(T.boundary.get ⟨j, hj⟩).subschemeι ⁻¹'
       ((containedComponentsIdeal T j hj).support : Set ↥T.scheme)) := by
   by_cases h : IsOpen (boundaryComponentsInOrderLocus T j hj)
-  · rw [containedComponentsIdeal_eq_ker_of_isOpen T j hj h, hc h]
-    exact h
+  · rwa [containedComponentsIdeal_eq_ker_of_isOpen T j hj h, hc h]
   · rw [containedComponentsIdeal_eq_top_of_not_isOpen_locus T j hj h,
       AlgebraicGeometry.Scheme.IdealSheafData.support_top, TopologicalSpace.Closeds.coe_bot,
       Set.preimage_empty]

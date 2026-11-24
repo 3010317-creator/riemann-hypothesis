@@ -136,8 +136,8 @@ theorem hermC_neg (X : FD.Data E r) (h0 : X.p0 = 0) (τ : X.Ψ) {v : Fin r → �
     exact lt_of_lt_of_le (Complex.normSq_pos.mpr ha)
       (Finset.single_le_sum (fun i _ => Complex.normSq_nonneg (w i)) (Finset.mem_univ a))
   · rw [← hPw, hermC_mulVec_mulVec, hG]
-    simp only [Matrix.diagonal_apply, FD.sgn, h0, Nat.not_lt_zero, if_false]
-    simp only [mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Matrix.diagonal_apply, FD.sgn, h0, Nat.not_lt_zero, ite_false]
+    simp only [mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     push_cast
     rw [← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun a _ => ?_
@@ -164,8 +164,7 @@ theorem sum_norm_eq_two_mul (X : FD.Data E r) (y : E) :
       (fun σ => ComplexEmbedding.conjugate σ) ?_ ?_ ?_ ?_ ?_
     · intro σ hσ
       simp only [Finset.mem_compl] at hσ ⊢
-      rw [X.cmType, ComplexEmbedding.involutive_conjugate E σ]
-      exact hσ
+      rwa [X.cmType, ComplexEmbedding.involutive_conjugate E σ]
     · intro σ hσ
       simp only [Finset.mem_compl] at hσ ⊢
       exact (X.cmType σ).mp hσ
@@ -237,8 +236,7 @@ theorem finrank_div_rd_le {β : E} (hβ : ∀ a : 𝓞 E, ∃ k : ℤ, Algebra.t
     rw [abs_pos]
     exact_mod_cast NumberField.discr_ne_zero E
   have hdN : |(NumberField.discr E : ℝ)|⁻¹ ≤ |(Algebra.norm ℚ β : ℝ)| := by
-    rw [inv_eq_one_div, div_le_iff₀ hd]
-    exact hN
+    rwa [inv_eq_one_div, div_le_iff₀ hd]
   have hlow : (I2.PT.rd E)⁻¹ ≤ |(Algebra.norm ℚ β : ℝ)| ^ ((n : ℝ)⁻¹) := by
     have hrd : I2.PT.rd E = |(NumberField.discr E : ℝ)| ^ (1 / (n : ℝ)) := rfl
     rw [hrd, ← Real.inv_rpow (abs_nonneg _), one_div]
@@ -267,8 +265,7 @@ theorem two_f_div_rd_le_la1sq (X : FD.Data E r) (hr : 0 < r) (h0 : X.p0 = 0)
     by_cases h : σ0 ∈ X.Ψ
     · exact ⟨σ0, h⟩
     · refine ⟨ComplexEmbedding.conjugate σ0, ?_⟩
-      rw [X.cmType, ComplexEmbedding.involutive_conjugate E σ0]
-      exact h
+      rwa [X.cmType, ComplexEmbedding.involutive_conjugate E σ0]
   have hbound : ∀ v ∈ X.Λ, v ≠ 0 →
       2 * (I2.PT.f E : ℝ) / I2.PT.rd E ≤ ∑ τ, X.c τ * X.maj x τ (FD.Data.emb τ.1 v) := by
     intro v hv hv0
@@ -357,7 +354,7 @@ theorem firstMinimumSq_ge_and_phi_eq_zero_definite :
   refine ⟨hla, fun q R0 hrd hq hb => ?_⟩
   have hth := th_sq_le (E := E) hrd hq hb
   unfold I2.phiFD
-  rw [if_neg]
+  rw [ite_eq_right]
   rw [not_lt]
   unfold FD.Data.la1 I2.th
   exact Real.sqrt_le_sqrt (hth.trans hla)

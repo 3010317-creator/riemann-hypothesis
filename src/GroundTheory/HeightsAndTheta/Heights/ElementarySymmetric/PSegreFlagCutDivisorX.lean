@@ -158,8 +158,7 @@ theorem SegreFlagCutDivisor.proof (hSpec : SegreFlagCutSpecialize.Statement)
   obtain ⟨hPQ, hspec⟩ := hSpec O ϖ hϖ Ω K ι y d hV N E B B' hB w w' x x' f g hfl M M' a₀ a₀' φ φ' hφ hφ'
     Φ e t ht k hk
   have hτ : flagLineCoord w' w e t (k + 1) ⟨k, hk⟩ ≠ 0 := by
-    intro h0
-    exact hsP (mem_of_homog hs (by rw [hval, h0, zero_mul]))
+    exact fun h0 => hsP (mem_of_homog hs (by rw [hval, h0, zero_mul]))
   by_cases hWc : W.IsPrime ∧ IsRelevant W ∧ pointIdeal O (flagClosurePt y w e φ φ' t (k + 1)) ≤ W
   · obtain ⟨hWp, hWrel, hPW⟩ := hWc
     obtain ⟨cl, cm, l, μ, u, hl, hμ, hdl, hμW, huW, hlv, hl0, hsat⟩ :=
@@ -450,11 +449,11 @@ theorem core {Φ : Type} [Field Φ] [Algebra O Φ] (P Q : (Σ o, bundleIdx (bund
     intro v
     rw [hΛ]
     rcases v with ⟨_ | _ | k, j⟩
-    · simp only [Λ₁, substPhi, if_neg (show (none : Option (Option K)) ≠ some none by simp)]
+    · simp only [Λ₁, substPhi, ite_eq_right (show (none : Option (Option K)) ≠ some none by simp)]
       exact isWeightedHomogeneous_X O _ _
-    · simp only [Λ₁, substPhi, if_pos rfl]
+    · simp only [Λ₁, substPhi, ite_eq_left rfl]
       exact hL j
-    · simp only [Λ₁, substPhi, if_neg (show some (some k) ≠ some none by simp)]
+    · simp only [Λ₁, substPhi, ite_eq_right (show some (some k) ≠ some none by simp)]
       exact isWeightedHomogeneous_X O _ _
 
   have hform : ∀ (b : Option (Option K) → ℕ) (q : MRing (bundleIdx (bundleIdx ι M) M') O),
@@ -497,8 +496,7 @@ theorem core {Φ : Type} [Field Φ] [Algebra O Φ] (P Q : (Σ o, bundleIdx (bund
     have h2 : bind₁ (substPhi L) q ∈ (pointIdeal O (fun p => Q (f p))).map (rename f) := by
       rw [← heq]
       refine Ideal.mem_map_of_mem _ ?_
-      rw [← comap_pointIdeal_blockIncl, Ideal.mem_comap, heq]
-      exact hσ
+      rwa [← comap_pointIdeal_blockIncl, Ideal.mem_comap, heq]
     have h3 := A.add_mem (Ideal.mem_sup_left h1)
       (Ideal.mem_sup_right (Ideal.mul_mem_left _ (X ⟨some none, i₀⟩ ^ b (some none)) h2))
     rwa [sub_add_cancel] at h3
@@ -608,8 +606,7 @@ theorem SegreFlagCutPreimage.proof : SegreFlagCutPreimage.Statement := by
           have := hdeg j
           have := hdeg' j
           omega
-      rw [IsMultiHomog, hd]
-      exact h1
+      rwa [IsMultiHomog, hd]
     · show aeval (pairProjCoord y w φ φ' (flagCoord w e t (k + 1))) _ =
         aeval (pairProjCoord y w φ φ' (flagCoord w e t (k + 1))) _
       have hterm : ∀ i, aeval (pairProjCoord y w φ φ' (flagCoord w e t (k + 1))) (L i * G' i) =
@@ -639,8 +636,7 @@ theorem SegreFlagCutPreimage.proof : SegreFlagCutPreimage.Statement := by
   refine core (flagClosurePt y w e φ φ' t (k + 1)) (flagClosurePt y w e φ φ' t k) L
     (C (ϖ ^ n) * chartMonoZ O M M' c bH) δ ?_ hL ?_ i₀ ?_
   · simp [hδdef, vdeg]
-  · intro i
-    exact hLval (flagCoord w e t k) i
+  · exact fun i => hLval (flagCoord w e t k) i
   · intro i
     refine sub_mem_of_homog (b := δ + Pi.single (some none) 1) ((hL i₀).mul (isWeightedHomogeneous_X O _ _)) ?_ ?_
     · rw [add_comm]
@@ -699,8 +695,7 @@ theorem pairCoordRing_map {B B' : Type*} [CommRing B] [Algebra Ω B] [CommRing B
   rcases p with ⟨_ | o, l⟩
 
   · simp [pairCoordRing, map_sum]
-  · simp only [pairCoordRing]
-    exact projCoordRing_map g y w φ u _
+  · simpa only [pairCoordRing] using projCoordRing_map g y w φ u _
 
 theorem flagCoord_eq_flagCoordRing {Φ : Type*} [Field Φ] [Algebra Ω Φ] (w e : Module.Basis (Fin N) Ω E)
     (t : Fin N → Φ) (k : ℕ) : flagCoord w e t k = flagCoordRing w e t k := rfl
@@ -757,16 +752,16 @@ theorem SegreFlagCutSpecialize.proof : SegreFlagCutSpecialize.Statement := by
     simp only [Function.comp_apply, flagCoordRing]
     rcases lt_trichotomy (j : ℕ) k with h | h | h
     · have hkj : kk ≠ j := fun h' => by rw [← h'] at h; exact lt_irrefl _ h
-      rw [if_pos (by omega), if_pos h]
+      rw [ite_eq_left (by omega), ite_eq_left h]
       simp only [MvPolynomial.algebraMap_eq]
       refine hs.trans ?_
-      rw [if_neg hkj, sub_zero]
+      rw [ite_eq_right hkj, sub_zero]
     · have hkj : kk = j := Fin.ext h.symm
-      rw [if_pos (by omega), if_neg (by omega)]
+      rw [ite_eq_left (by omega), ite_eq_right (by omega)]
       simp only [MvPolynomial.algebraMap_eq]
       refine hs.trans ?_
-      rw [if_pos hkj, hkj, sub_self]
-    · rw [if_neg (by omega), if_neg (by omega), map_zero]
+      rw [ite_eq_left hkj, hkj, sub_self]
+    · rw [ite_eq_right (by omega), ite_eq_right (by omega), map_zero]
   let cA : ℕ → (Σ o, bundleIdx (bundleIdx ι M) M' o) → (MvPolynomial (Fin N) Ω) :=
     fun j => pairCoordRing y w φ φ' (flagCoordRing w e X j)
   have hcoord : ∀ j : ℕ, flagClosurePt y w e φ φ' t j = fun p => ev (cA j p) := by

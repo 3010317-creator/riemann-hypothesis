@@ -238,8 +238,7 @@ theorem UpperTheory.Gal.Int.Div.dGenMul_of :
   by_cases hm : (fun i => (⟨m i, hle i⟩ : Fin (a + 1))) = fun _ => 1
   · intro i
     have h := congrArg Fin.val (congrFun hm i)
-    rw [hone] at h
-    exact h
+    rwa [hone] at h
   · exfalso
     have hmem : (fun i => (⟨m i, hle i⟩ : Fin (a + 1))) ∈
         (Finset.univ : Finset (Fin a → Fin (a + 1))).filter
@@ -247,8 +246,7 @@ theorem UpperTheory.Gal.Int.Div.dGenMul_of :
       Finset.mem_filter.mpr ⟨Finset.mem_univ _, hs, hm⟩
     refine Finset.prod_ne_zero_iff.mp h3 _ hmem ?_
     have hp' : ∏ i, (α i : ℂ) ^ m i = ∏ i, (α i : ℂ) := by
-      have h := congrArg Units.val hp
-      simpa [Units.coe_prod] using h
+      simpa [Units.coe_prod] using congrArg Units.val hp
     simpa [map_sub, map_prod, map_pow, MvPolynomial.aeval_X] using sub_eq_zero.mpr hp'
 end -- clump:auto
 end -- clump:auto
@@ -301,11 +299,9 @@ private theorem lacunary_of_shift {J : Finset ℤ} {c : ℤ} (hmin : ∀ x ∈ J
   have hmax : ∀ x ∈ A ∪ B, x ≤ (A ∪ B).max' hne := fun x hx => Finset.le_max' _ _ hx
   rcases Finset.mem_union.1 (Finset.max'_mem _ hne) with hm | hm
   · refine (avg_lt hmin hg hA hB hBn hm fun b hb => lt_of_le_of_ne (hmax b (Finset.mem_union_right _ hb)) ?_).ne'
-    intro e
-    exact Finset.disjoint_left.1 hd hm (e ▸ hb)
+    exact fun e => Finset.disjoint_left.1 hd hm (e ▸ hb)
   · refine (avg_lt hmin hg hB hA hAn hm fun b hb => lt_of_le_of_ne (hmax b (Finset.mem_union_left _ hb)) ?_).ne
-    intro e
-    exact Finset.disjoint_left.1 hd hb (e ▸ hm)
+    exact fun e => Finset.disjoint_left.1 hd hb (e ▸ hm)
 
 theorem gapLac_of : GapLac := by
   intro a J hcard hgap
@@ -408,8 +404,7 @@ theorem UpperTheory.Gal.Int.Div.lacConj_of :
   · intro x hx
     have hy : ((IsCMField.ringOfIntegersComplexConj E x : 𝓞 E) : E) = IsCMField.complexConj E (x : E) := rfl
     have h := hτ _ ((hC E v x _ hy).1 hx)
-    rw [hy, IsCMField.complexEmbedding_complexConj] at h
-    exact h
+    rwa [hy, IsCMField.complexEmbedding_complexConj] at h
   · rw [wtJumps_dual]
     exact lacunary_image_sub _ hl
 end -- clump:auto
@@ -591,8 +586,7 @@ open UpperTheory.Gal.Int.Div
 
 private theorem two_cases {R : Type} [CommRing R] (T : R → Prop) (hT : ∀ a b, T a → T b → T (a + b))
     (I J : Ideal R) (h : ∀ y, T y → y ∈ I ∨ y ∈ J) : (∀ y, T y → y ∈ I) ∨ (∀ y, T y → y ∈ J) := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨⟨a, ha, haI⟩, b, hb, hbJ⟩ := hcon
   have haJ : a ∈ J := (h a ha).resolve_left haI
   have hbI : b ∈ I := (h b hb).resolve_right hbJ
@@ -782,17 +776,14 @@ theorem UpperTheory.Gal.Int.Div.tyConj_of :
   · exact hJo.preimage β.continuous
   · exact β.toHomeomorph.isCompact_preimage.2 hJc
   · intro x hx k hk hxk
-    have h := hJt (β x) hx k hk (by rw [← map_pow, hxk, map_one])
-    exact β.injective (h.trans (map_one β).symm)
+    exact β.injective ((hJt (β x) hx k hk (by rw [← map_pow, hxk, map_one])).trans (map_one β).symm)
   · intro t
     obtain ⟨g, rfl⟩ := hθ t
     have hg : β.symm g.1 ∈ J' := by
       show β (β.symm g.1) ∈ J
       rw [β.apply_symm_apply]
       exact g.2
-    refine ⟨⟨β.symm g.1, hg⟩, ?_⟩
-    show θ (r _) = θ g
-    exact congrArg θ (Subtype.ext (β.apply_symm_apply _))
+    exact ⟨⟨β.symm g.1, hg⟩, congrArg θ (Subtype.ext (β.apply_symm_apply _))⟩
   · intro σ' v hv he
     have hcu : GlobalTheory.SmGL.IsCuspidal (smIrrComap β σ').ρ := by
       refine hcus (smIrrComap β σ') v hv fun g => ?_
@@ -803,8 +794,7 @@ theorem UpperTheory.Gal.Int.Div.tyConj_of :
       have h := he ⟨β.symm g.1, hg⟩
       have e : r ⟨β.symm g.1, hg⟩ = g := Subtype.ext (β.apply_symm_apply _)
       have e' : (θ.comp r) ⟨β.symm g.1, hg⟩ = θ g := congrArg θ e
-      rw [e'] at h
-      exact h
+      rwa [e'] at h
     have h3 := hc σ'.V (σ'.ρ.comp β.symm.toMulEquiv.toMonoidHom) hcu
     have e : (σ'.ρ.comp β.symm.toMulEquiv.toMonoidHom).comp β.toMulEquiv.toMonoidHom = σ'.ρ :=
       MonoidHom.ext fun g => congrArg σ'.ρ (β.symm_apply_apply g)
@@ -812,8 +802,7 @@ theorem UpperTheory.Gal.Int.Div.tyConj_of :
   · intro x hx h
     have hx' : x ∈ locU a w := hU ▸ hx
     have hm : cLoc w x ∈ J := by
-      rw [← hβ]
-      exact h
+      rwa [← hβ]
     rw [hφ x hx' hm]
     have e : r ⟨cLoc (cpl w) x, h⟩ = ⟨cLoc w x, hm⟩ := Subtype.ext (hβ x)
     show _ = ((χ (θ (r ⟨cLoc (cpl w) x, h⟩)) : ℂˣ) : ℂ) • φ
@@ -996,8 +985,7 @@ theorem linApprox_of_polyApprox_trc : ∀ (k Γ : Type) [NormedField k] [IsUltra
     rw [Finset.sum_image hinj]
     have e : ∑ x ∈ s, c (trc (f x)) * trc (f x) g = ∑ η ∈ s, c η * η g :=
       Finset.sum_congr rfl fun η hη => by rw [(hf η hη).2]
-    rw [e]
-    exact this
+    rwa [e]
 
 end GlobalTheory.Cong
 end -- clump:auto
@@ -1024,8 +1012,7 @@ theorem apart_of_not_mem {w₀ w : HeightOneSpectrum (𝓞 E)} (h₀ : ((l : ℕ
   apply hw
   have h1 : ((l : ℕ) : 𝓞 (maximalRealSubfield E)) ∈ (w₀.under (𝓞 (maximalRealSubfield E))).asIdeal := by
     rw [HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, map_natCast]; exact h₀
-  rw [← h, HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, map_natCast] at h1
-  exact h1
+  rwa [← h, HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, map_natCast] at h1
 
 theorem z_eq_of_equiv {ι : Qbar l ≃+* ℂ} {Kw : Levels E a} {J : Type} (O : LocOps l ι Kw J) (j : J)
     {σ σ' : SmIrr (GL (Fin a) ((O.pl j).adicCompletion E))} (e : σ.ρ.Equiv σ'.ρ)
@@ -1138,8 +1125,7 @@ theorem not_dvd_norm_of_not_mem {E : Type} [Field E] [NumberField E] {l : ℕ} (
   unfold Formalism.ConjugateSelfDual.normV at h
   have h0 := natCast_eq_zero_of_dvd_card (R := RingOfIntegers E ⧸ w.asIdeal) hl h
   apply hw
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-  exact h0
+  rwa [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
 
 end GlobalTheory.NormDivisibility
 end -- clump:auto
@@ -1221,7 +1207,7 @@ theorem frobOpsIdx : SphOps → ∀ (E Ω : Type) [Field E] [NumberField E] [IsC
       GlobalTheory.LFun.HasSatGL j.1.1 σ.ρ B → zz j σ = ((UpperTheory.V.Af.algSat a (normV j.1.1) B).map (· ^ j.1.2.2.2)).sum := by
     intro j σ B hB
     have h : ∃ B, GlobalTheory.LFun.HasSatGL j.1.1 σ.ρ B := ⟨B, hB⟩
-    simp only [zz, dif_pos h]
+    simp only [zz, dite_eq_left h]
     rw [show h.choose = B from h.choose_spec.unique hB]
   let T : LocOps l ι Kw J :=
     { pl := fun j => j.1.1
@@ -1249,10 +1235,8 @@ theorem frobOpsIdx : SphOps → ∀ (E Ω : Type) [Field E] [NumberField E] [IsC
   let nn : J → ℕ := fun j => j.1.2.2.2
   let x : J → G E Ω := fun j => (fr j)⁻¹ ^ nn j
   refine ⟨J, T, x, fr, nn, fun j => rfl, ?_, ?_, ?_, ?_, ?_⟩
-  · intro j
-    exact ⟨j.2.1, j.1.2.1, j.2.2.1, j.2.2.2.1⟩
-  · intro w hw A hA s hsF
-    exact ⟨⟨(w, A, s, 1), hw, hA, hsF, le_rfl⟩, rfl, rfl, rfl⟩
+  · exact fun j => ⟨j.2.1, j.1.2.1, j.2.2.1, j.2.2.2.1⟩
+  · exact fun w hw A hA s hsF => ⟨⟨(w, A, s, 1), hw, hA, hsF, le_rfl⟩, rfl, rfl, rfl⟩
   · intro j g
     obtain ⟨m, e, he⟩ := (hf j).choose_spec.1 g
     refine ⟨(m : ℚ) / ((normV j.1.1 : ℕ) : ℚ) ^ e, ?_⟩
@@ -1452,9 +1436,7 @@ theorem exists_trace_limit : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ]
             funext fun g => (hη i (σ g) (hσD' g i hi)).symm]
       rw [e0, e2]
       exact hc _
-    have h := hsub hmem
-    simp only [Set.mem_setOf_eq, Ψ] at h
-    exact h
+    simpa only [Set.mem_setOf_eq, Ψ] using hsub hmem
   refine ⟨t, htL, fun F c ε hc g => ?_, fun A hA => ⟨?_, ?_⟩⟩
   · have := core F c ε hc (MvPolynomial.X g)
     simpa [MvPolynomial.aeval_X] using this
@@ -1736,8 +1718,7 @@ theorem limWU4_of : ∀ (Rk : ℕ → Prop) (Ty : UnitaryAutomorphicTypeClass) (
   have hpt : PolyApprox t ((fun ρ' g => trc ρ' (id g)) '' Set.range ρ) := by
     have := (ht Set.univ (by rw [Set.image_univ]; exact (hpaY ∅).mono (Set.image_subset_range _ _))).1
     rw [Set.image_univ] at this
-    rw [← Set.range_comp]
-    exact this
+    rwa [← Set.range_comp]
   obtain ⟨r, hrc, hrss, hrt, -⟩ := GlobalTheory.Cong.exists_limit_rep l (Formalism.ConjugateSelfDual.G E Ω) a (Formalism.ConjugateSelfDual.G E Ω) id denseRange_id t L.1 L.2 htL
     (Set.range ρ) (by rintro _ ⟨i, rfl⟩; exact (hQi i).1) hpt
   have htr : trc r = t := funext hrt

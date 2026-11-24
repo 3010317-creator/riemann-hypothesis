@@ -108,9 +108,7 @@ theorem measurePreserving_of_normSq {ι V : Type} [Fintype ι] [Fintype V] {α :
     ext a
     have := congrArg (fun w : EuclideanSpace ℝ (Σ v, α v) => w ⟨v, a⟩) h
     exact this
-  have hFs : Function.Surjective F := by
-    intro w
-    exact ⟨fun v => WithLp.toLp 2 (fun a => w ⟨v, a⟩), rfl⟩
+  have hFs : Function.Surjective F := fun w => ⟨fun v => WithLp.toLp 2 (fun a => w ⟨v, a⟩), rfl⟩
   have hGs : Function.Surjective G := (hFs.comp hbij.2)
   let Ge := LinearIsometryEquiv.ofSurjective G hGs
   have hGe : MeasurePreserving Ge volume volume := Ge.measurePreserving
@@ -132,7 +130,6 @@ theorem measurePreserving_of_normSq {ι V : Type} [Fintype ι] [Fintype V] {α :
   have key := hFe.symm.comp hGe
   convert key using 1
   funext x
-  show T x = Fe.symm (F (T x))
   exact (Fe.symm_apply_apply (T x)).symm
 
 def piProdEquiv {V : Type} (A B : V → Type) [∀ v, MeasurableSpace (A v)] [∀ v, MeasurableSpace (B v)] :

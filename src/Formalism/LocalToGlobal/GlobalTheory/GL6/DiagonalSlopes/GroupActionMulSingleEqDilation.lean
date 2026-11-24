@@ -183,16 +183,12 @@ theorem torsion_reduction_trivial (S : StepLevel F E σ J T f bad) (G : GLoc F E
     refine ⟨fun hqp => ?_, ?_⟩
     · have h1 := hInJ.1 p q (by
         unfold blkOf
-        rw [if_pos (lt_of_lt_of_le q.2 ha), if_pos (lt_of_lt_of_le p.2 ha)]
+        rw [ite_eq_left (lt_of_lt_of_le q.2 ha), ite_eq_left (lt_of_lt_of_le p.2 ha)]
         exact hqp)
-      rw [hred] at h1
-      exact h1
+      rwa [hred] at h1
     · have h1 := hInJ.2.1 p (lt_of_lt_of_le p.2 ha)
-      rw [hred] at h1
-      exact h1
-  have hiw : M ∈ iwU F n v := by
-    refine ⟨aGL, ?_, hbc⟩
-    exact Subgroup.subset_closure hup
+      rwa [hred] at h1
+  have hiw : M ∈ iwU F n v := ⟨aGL, Subgroup.subset_closure hup, hbc⟩
   have hpw : ∀ j : ℕ, M ^ j = fr⁻¹ * (bc (G.phi i v h) x) ^ j * fr := by
     intro j
     induction j with
@@ -232,8 +228,7 @@ theorem level_functional_torsion (S : StepLevel F E σ J T f bad) (v : HeightOne
     (T : ℤ) • S.fT v hv x = 0 := by
   have h := S.fT_T v hv x
   rw [map_smul] at h
-  rw [natCast_zsmul, ← Nat.cast_smul_eq_nsmul (intV E v)]
-  exact h
+  rwa [natCast_zsmul, ← Nat.cast_smul_eq_nsmul (intV E v)]
 
 def LocalDiamondCondition (S : StepLevel F E σ J T f bad) (v : HeightOneSpectrum (𝓞 F)) (hv : (T : 𝓞 F) ∈ v.asIdeal) (k : ℤ)
     (x : GL (Fin n) (E ⊗[F] v.adicCompletion F)) : Prop :=
@@ -299,8 +294,7 @@ theorem local_diamond_mem_level (S : StepLevel F E σ J T f bad) (v : HeightOneS
   rw [S.UlocAlt v hv]
   refine ⟨h2, hg, fun y => ?_⟩
   have e := h3 y
-  rw [zsmul_eq_of_dvd_sub_one T _ (level_functional_torsion S v hv _) k hk] at e
-  exact e
+  rwa [zsmul_eq_of_dvd_sub_one T _ (level_functional_torsion S v hv _) k hk] at e
 
 theorem local_multiplier_congr_one (S : StepLevel F E σ J T f bad) (hT : T.Prime) (v : HeightOneSpectrum (𝓞 F))
     (hv : (T : 𝓞 F) ∈ v.asIdeal) {k : ℤ} {x : GL (Fin n) (E ⊗[F] v.adicCompletion F)} (h : LocalDiamondCondition S v hv k x)
@@ -309,8 +303,7 @@ theorem local_multiplier_congr_one (S : StepLevel F E σ J T f bad) (hT : T.Prim
   rw [S.UlocAlt v hv] at hU
   obtain ⟨_, hg', hfix⟩ := hU
   obtain ⟨y, hy⟩ : ∃ y, S.fT v hv y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact S.fT_ne v hv (LinearMap.ext hc)
   have e1 := h3 y
   rw [hfix y] at e1
@@ -370,7 +363,7 @@ theorem multi_diamond_conj_mem (S : StepLevel F E σ J T f bad) {P : Type} (pl :
   · obtain ⟨p, rfl⟩ := hw
     simp only [map_mul, map_inv]
     exact local_diamond_conj_mem S (pl p) (hpl p) (h.2 p) _ (hκ'.2 (pl p))
-  · push_neg at hw
+  · push Not at hw
     simpa [map_mul, map_inv, h.1 w hw] using hκ'.2 w
 
 theorem multi_diamond_mem_level (S : StepLevel F E σ J T f bad) {P : Type} (pl : P → HeightOneSpectrum (𝓞 F))
@@ -381,7 +374,7 @@ theorem multi_diamond_mem_level (S : StepLevel F E σ J T f bad) {P : Type} (pl 
   by_cases hw : ∃ p, w = pl p
   · obtain ⟨p, rfl⟩ := hw
     exact local_diamond_mem_level S (pl p) (hpl p) (h.2 p) (hk p)
-  · push_neg at hw
+  · push Not at hw
     rw [h.1 w hw]; exact (S.Uloc w).one_mem
 
 theorem multi_diamond_multiplier_congr (S : StepLevel F E σ J T f bad) (hT : T.Prime) {P : Type} (pl : P → HeightOneSpectrum (𝓞 F))
@@ -406,26 +399,12 @@ theorem level_prime_ne_type_prime' (A : AtTTied u) (j : Fin 2) : (D.mem u).A.T �
   apply Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.level_prime_ne_type_prime <;> assumption
 
 theorem level_places_prime_to_type (A : AtTTied u) (v : (D.mem u).A.vT) : (A.eV v).1 ∉ badG D := by
-  have hT := (A.eV v).2
-  have hTp := (D.mem u).A.T_prime
-  have key : ∀ j : Fin 2, (D.host.g j : 𝓞 D.host.F) ∉ (A.eV v).1.asIdeal := by
-    intro j hj
-    have hcop : Nat.Coprime (D.mem u).A.T (D.host.g j) :=
-      (Nat.coprime_primes hTp (D.host.g_prime j)).2 (level_prime_ne_type_prime' A j)
-    obtain ⟨a, b, hab⟩ := Nat.isCoprime_iff_coprime.2 hcop
-    have h1 : ((a * (D.mem u).A.T + b * D.host.g j : ℤ) : 𝓞 D.host.F) ∈ (A.eV v).1.asIdeal := by
-      push_cast
-      exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ hT) (Ideal.mul_mem_left _ _ hj)
-    rw [hab, Int.cast_one] at h1
-    exact (A.eV v).1.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h1)
-  rintro (h | h)
-  · exact key 0 h
-  · exact key 1 h
+  exact Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.S0.level_places_not_bad A v
 
 theorem rank_zero_le_type_level : D.R.N 0 ≤ aOf D.R 0 := by
   have := D.R.two_le_m
   unfold aOf Ranks.N
-  rw [if_pos (by omega)]
+  rw [ite_eq_left (by omega)]
   simp
 
 theorem fixed_class_mem_level_general (K : ClsTied u 0 (Nat.zero_le _)) (G : GLoc D.host.F D.host.E (sigD D) D.host.g)
@@ -441,8 +420,7 @@ theorem fixed_class_mem_level_general (K : ClsTied u 0 (Nat.zero_le _)) (G : GLo
   obtain ⟨g, hgU, hge⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 hhH)
   have e1 : (K.y c).1 = hh.1 * ((K.y c).1 * δ.1) * κ.1 := by
     have := congrArg Subtype.val e
-    simp only [Subgroup.coe_mul] at this
-    exact this
+    simpa only [Subgroup.coe_mul] using this
   have hzp := conj_pow_rational_rel (bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F))) g hh.1 (K.y c).1
     δ.1 κ.1 hge e1
   have hgi : g⁻¹ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D 0 (Nat.zero_le _)) := (UJ _ _).inv_mem hgU
@@ -483,7 +461,7 @@ theorem rank_zero_le_weight : D.R.N 0 ≤ D.R.k := by
   have h := rank_zero_le_type_level (D := D)
   have e : aOf D.R 0 = D.R.k := by
     unfold aOf
-    rw [if_pos (by have := D.R.two_le_m; omega)]
+    rw [ite_eq_left (by have := D.R.two_le_m; omega)]
     simp
   omega
 
@@ -732,8 +710,7 @@ theorem zero_of_group_action_zero [Fact (D.mem u).A.T.Prime] (Tf : Forms0 D u) (
   · intro a b ha hb c φ hab
     rw [map_mul, Module.End.mul_apply] at hab
     have h2 := hb _ φ (ha c _ hab)
-    rw [mul_comm a b, map_mul]
-    exact h2
+    rwa [mul_comm a b, map_mul]
   · intro c φ h1
     rw [map_one] at h1 ⊢
     exact h1
@@ -781,8 +758,7 @@ theorem multi_diamond_of_group_elem [Fact (D.mem u).A.T.Prime] (Tf : Forms0 D u)
   · intro v _
     obtain ⟨k0, hk0, δ, hδ⟩ := hE 0 (Nat.zero_le _) rfl v ((t2xU v).symm (g v))
     refine ⟨Function.update 1 v k0, δ, Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.S0.multi_diamond_of_is_diamond _ _ _ ?_ v hδ, ?_, ?_⟩
-    · intro a b hab
-      exact Tf.atT.eV.injective (Subtype.ext hab)
+    · exact fun a b hab => Tf.atT.eV.injective (Subtype.ext hab)
     · intro w
       by_cases hw : w = v
       · subst hw
@@ -833,8 +809,7 @@ theorem free_rank_model_of_free_action (A : ColumnsAtT R C) {H : Type} [CommGrou
     simpa using h1
   · intro v a φ hmem x
     have hφ : (⟨A.rhoT v a φ, hmem⟩ : A.Mu0) = ρ (Pi.mulSingle v (e v a)) φ := by
-      apply Subtype.ext
-      exact (hρ v a φ).symm
+      exact Subtype.ext (hρ v a φ).symm
     rw [hφ, t2xEquiv_apply, t2xEquiv_apply]
     show Φ (ρ x.1 (ρ (Pi.mulSingle v (e v a)) φ)) (Quotient.out x.2.1) x.2.2 =
       Φ (ρ (Pi.mulSingle v (e v a) * x.1) φ) (Quotient.out x.2.1) x.2.2
@@ -853,8 +828,7 @@ theorem free_rank_model_of_diamonds (Tf : Forms0 D u) (hS : Formalism.MainNotion
   · intro g c φ h
     rw [hΦ] at h ⊢
     exact zero_of_group_action_zero Tf hE g c φ h
-  · intro g c h
-    exact group_acts_freely_classes Tf hS hE g c h
+  · exact fun g c h => group_acts_freely_classes Tf hS hE g c h
   · intro v a φ
     rw [group_rep_mulSingle_eq_rho, MulEquiv.symm_apply_apply]
 

@@ -136,8 +136,7 @@ theorem vle_add_of_lt {a b : ℝ} {x y : K} (hx : vle v a x) (hy : vge v b y) (h
   have e : vR v (x + y) = vR v x := by
     unfold vR
     rw [AddValuation.map_add_eq_of_lt_left v hlt']
-  rw [e]
-  exact hx
+  rwa [e]
 
 theorem cge_zero {σ : Type} (a : ℝ) : cge v a (0 : MvPolynomial σ K) := by
   intro α
@@ -253,8 +252,7 @@ theorem v_natCast_of_not_dvd (hD : DVRHyp v p) {m : ℕ} (h : ¬ p ∣ m) : v (m
     rw [v.map_mul, hD.vp]
     exact lt_of_lt_of_le h01 (le_add_of_nonneg_left (v_intCast_nonneg v b))
   have ham : v ((a : K) * m) ≤ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact absurd h1 (not_le.mpr (lt_min hc hbp))
   rw [v.map_mul] at ham
   exact le_antisymm (le_trans (le_add_of_nonneg_left (v_intCast_nonneg v a)) ham)
@@ -375,8 +373,7 @@ theorem prod_factorial_eq {L : Type} [Fintype L] {r : ℕ} {α : L × Fin r →�
   rw [fact_eq_prod_letters, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
   rw [← h i]
-  simp only [ldeg]
-  exact (Nat.multinomial_spec _ _).symm
+  simpa only [ldeg] using (Nat.multinomial_spec _ _).symm
 
 theorem fact_add_eq {σ : Type} [Fintype σ] (α α' : σ →₀ ℕ) :
     fact (α + α') = (∏ x, (α x + α' x).choose (α' x)) * fact α * fact α' := by
@@ -417,12 +414,12 @@ theorem kapL_mono {p : ℕ} (hp : 2 ≤ p) (r : ℕ) {L : Type} [Fintype L] {d d
   apply Finset.sum_le_sum
   intro i _
   by_cases h0 : d i = 0
-  · rw [if_pos h0]
+  · rw [ite_eq_left h0]
     exact kapL_term_nonneg hp r (d' i)
   · have h1 : d' i ≠ 0 := by
       have := h i
       omega
-    rw [if_neg h0, if_neg h1]
+    rw [ite_eq_right h0, ite_eq_right h1]
     exact mul_le_mul_of_nonneg_left (logb_add_mono hp r (by omega) (h i)) (Nat.cast_nonneg r)
 
 theorem kapL_le_kap {p : ℕ} (hp : 2 ≤ p) {r : ℕ} (hr : 1 ≤ r) {L : Type} [Fintype L] (d : L → ℕ) :

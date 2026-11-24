@@ -130,9 +130,7 @@ theorem points_integral_section_snoc : ∀ II : IntersectionSystem, IsFullInters
   obtain ⟨hIS, -, -, -⟩ := hII
   obtain ⟨hperm, -, hrec⟩ := hIS K ι
   set O : HermLine ι := HermLine.ofWeight (K := K) (ι := ι) (fun _ => (-1 : ℝ)) (fun _ _ _ => rfl) with hO
-  have hOs : IsSmoothHerm O := by
-    show ContDiffOn ℝ _ (fun _ => Real.exp (-(-1 : ℝ))) _
-    exact contDiffOn_const
+  have hOs : IsSmoothHerm O := contDiffOn_const
   have hsnL := smooth_snoc hL hA
   have hsnO := smooth_snoc hL hOs
   obtain ⟨a, ha, hsa, hsP⟩ := hs
@@ -156,14 +154,14 @@ theorem points_integral_section_snoc : ∀ II : IntersectionSystem, IsFullInters
     by_cases hh : IsHorizontal W
     · have hWa := (hDS K ι P (e + 1) A s W hP ⟨a, ha, hsa, hsP⟩ hW).1 hh
       have hh' : IsHorizontal W ↔ True := iff_true_intro hh
-      simp only [hW', hh', and_self, if_true]
+      simp only [hW', hh', and_self, ite_true]
       rw [intersection_constant_metric_line II hIS K ι W e L (-1) hWa hL]
       ring
     · have hh' : IsHorizontal W ↔ False := iff_false_intro hh
-      simp only [hW', hh', and_false, if_true, if_false]
+      simp only [hW', hh', and_false, ite_true, ite_false]
       rw [geoNum_last_zero e W _ (by simp [hO, HermLine.ofWeight])]
       simp
   · have hW' : W ∈ divSupp P s ↔ False := iff_false_intro hW
-    simp only [hW', false_and, if_false]
+    simp only [hW', false_and, ite_false]
 
 end RootFieldNumerics

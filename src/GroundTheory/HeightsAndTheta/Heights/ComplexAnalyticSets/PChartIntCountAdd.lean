@@ -36,8 +36,7 @@ theorem hasSum_indicator {E : ℕ → Set (Fin n → ℂ)} (hE : Pairwise (Funct
       have hxi : x ∉ E i := fun h => hx (Set.mem_iUnion.2 ⟨i, h⟩)
       simp [hxi]
     have hu : (⋃ i, E i).indicator g x = 0 := by simp only [Set.indicator_of_notMem hx]
-    simp only [h0, hu]
-    exact hasSum_zero
+    simpa only [h0, hu] using hasSum_zero
 
 
 open Classical in
@@ -56,8 +55,8 @@ theorem hasSum_sheetSum {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin 
   simp only [sheetSum_eq_sum hfin]
   refine hasSum_sum fun x _ => ?_
   by_cases h : ∃ s, IsSheetAt J A x s
-  · simp only [dif_pos h]; exact hF x _
-  · simp only [dif_neg h]; exact hasSum_zero
+  · simp only [dite_eq_left h]; exact hF x _
+  · simp only [dite_eq_right h]; exact hasSum_zero
 
 theorem abs_sheetSum_le {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin d) (Fin n) ℂ} {y : Fin d → ℂ}
     (hfin : (fibre J A y).Finite) (F : (Fin n → ℂ) → ((Fin d → ℂ) → Fin n → ℂ) → ℝ) :
@@ -66,8 +65,8 @@ theorem abs_sheetSum_le {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin 
   rw [sheetSum_eq_sum hfin, sheetSum_eq_sum hfin]
   refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun x _ => ?_)
   by_cases h : ∃ s, IsSheetAt J A x s
-  · simp only [dif_pos h, le_refl]
-  · simp only [dif_neg h, abs_zero, le_refl]
+  · simp only [dite_eq_left h, le_refl]
+  · simp only [dite_eq_right h, abs_zero, le_refl]
 
 theorem sheetSum_mono {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin d) (Fin n) ℂ} {y : Fin d → ℂ}
     (hfin : (fibre J A y).Finite) {F G : (Fin n → ℂ) → ((Fin d → ℂ) → Fin n → ℂ) → ℝ}
@@ -76,8 +75,8 @@ theorem sheetSum_mono {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin d)
   rw [sheetSum_eq_sum hfin, sheetSum_eq_sum hfin]
   refine Finset.sum_le_sum fun x _ => ?_
   by_cases h : ∃ s, IsSheetAt J A x s
-  · simp only [dif_pos h]; exact hFG x _
-  · simp only [dif_neg h, le_refl]
+  · simp only [dite_eq_left h]; exact hFG x _
+  · simp only [dite_eq_right h, le_refl]
 
 theorem indicator_mul (S : Set (Fin n → ℂ)) (f : (Fin n → ℂ) → ℝ) (x : Fin n → ℂ) (c : ℝ) :
     S.indicator f x * c = S.indicator (fun z => f z * c) x := by
@@ -110,15 +109,13 @@ theorem ChartIntCountAdd.proof (hCM : ChartMassCompact.Statement) : ChartIntCoun
     intro y
     unfold chartDens
     refine hasSum_sheetSum (hfin y) _ _ fun x s => ?_
-    simp only [indicator_mul]
-    exact hasSum_indicator hE _ x
+    simpa only [indicator_mul] using hasSum_indicator hE _ x
   have habs : ∀ y, HasSum (fun i => chartAbsDens W A ((E i).indicator f) φ y)
       (chartAbsDens W A ((⋃ i, E i).indicator f) φ y) := by
     intro y
     unfold chartAbsDens
     refine hasSum_sheetSum (hfin y) _ _ fun x s => ?_
-    simp only [abs_indicator_mul]
-    exact hasSum_indicator hE _ x
+    simpa only [abs_indicator_mul] using hasSum_indicator hE _ x
 
   have hdom : Integrable (chartAbsDens W A ((⋃ i, E i).indicator f) φ) := by
     refine (hCM n d W A f φ hW hdim hA hf.continuousOn hφ (Or.inl hfc)).mono'

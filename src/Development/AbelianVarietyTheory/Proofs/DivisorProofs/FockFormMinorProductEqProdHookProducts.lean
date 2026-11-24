@@ -149,7 +149,7 @@ theorem coeff_rename_mul (hf : Function.Injective f) (hg : Function.Injective g)
       by_cases h : α'.mapDomain f + β'.mapDomain g = α.mapDomain f + β.mapDomain g
       · obtain ⟨rfl, rfl⟩ := mapDomain_add_inj hf hg hfg h
         simp
-      · rw [if_neg h]
+      · rw [ite_eq_right h]
         split_ifs with h1 h2
         · exact absurd (by rw [h1, h2]) h
         all_goals simp
@@ -418,20 +418,20 @@ theorem capelli_step (hd : ∀ r j s c, d r j (x s c) = if r = s ∧ j = c then 
         have := j.2
         rw [Fin.lt_def]; omega
       rcases lt_trichotomy (I s) j with h | h | h
-      · rw [hup _ _ h, if_neg h.ne, Finset.sum_eq_zero]
+      · rw [hup _ _ h, ite_eq_right h.ne, Finset.sum_eq_zero]
         · simp
         · intro t _
           simp only [hδ]
-          rw [if_neg (h.trans (hgt t)).ne, zero_mul]
-      · rw [h, hwt, if_pos rfl, Finset.sum_eq_zero]
+          rw [ite_eq_right (h.trans (hgt t)).ne, zero_mul]
+      · rw [h, hwt, ite_eq_left rfl, Finset.sum_eq_zero]
         · simp
         · intro t _
           simp only [hδ]
-          rw [if_neg (h.trans_lt (hgt t)).ne, zero_mul]
+          rw [ite_eq_right (h.trans_lt (hgt t)).ne, zero_mul]
       · have h1 := (I s).2
         have h2 : (j : ℕ) < I s := h
         have h3 := j.2
-        rw [if_neg h.ne', zero_mul, zero_add,
+        rw [ite_eq_right h.ne', zero_mul, zero_add,
           Finset.sum_eq_single (⟨(I s : ℕ) - (j + 1), by omega⟩ : Fin m)]
         · have : I s = Fin.tail J ⟨(I s : ℕ) - (j + 1), by omega⟩ := by
             have := hJ' ⟨(I s : ℕ) - (j + 1), by omega⟩
@@ -439,10 +439,10 @@ theorem capelli_step (hd : ∀ r j s c, d r j (x s c) = if r = s ∧ j = c then 
             simp only at this
             omega
           simp only [hδ]
-          rw [if_pos this, one_mul, ← this]
+          rw [ite_eq_left this, one_mul, ← this]
         · intro t _ ht
           simp only [hδ]
-          rw [if_neg, zero_mul]
+          rw [ite_eq_right, zero_mul]
           intro h'
           apply ht
           have := hJ' t
@@ -538,13 +538,13 @@ theorem pol_minor (hd : ∀ r j s c, d r j (x s c) = if r = s ∧ j = c then 1 e
   by_cases hj : (j : ℕ) < m
   · rw [Finset.sum_eq_single (⟨j, hj⟩ : Fin m)]
     · have e : Fin.castLE hm ⟨j, hj⟩ = j := rfl
-      simp only [e, if_true]
+      simp only [e, ite_true]
       by_cases h : i = j
       · subst h
-        rw [if_pos ⟨rfl, hj⟩, one_mul]
+        rw [ite_eq_left ⟨rfl, hj⟩, one_mul]
         congr 1
         exact updateRow_eq_self _ _
-      · rw [if_neg (fun h' => h h'.1), zero_mul]
+      · rw [ite_eq_right (fun h' => h h'.1), zero_mul]
         have hi : (i : ℕ) < j := lt_of_le_of_ne hij (fun h' => h (Fin.ext h'))
         refine det_zero_of_row_eq (i := ⟨j, hj⟩) (j := ⟨i, hi.trans hj⟩)
           (fun h' => hi.ne' (Fin.mk.inj h')) ?_
@@ -552,13 +552,12 @@ theorem pol_minor (hd : ∀ r j s c, d r j (x s c) = if r = s ∧ j = c then 1 e
         rfl
     · intro t _ ht
       refine det_eq_zero_of_row_eq_zero t fun u => ?_
-      rw [updateRow_self, if_neg]
-      intro h
-      exact ht (Fin.ext (congrArg Fin.val h :))
+      rw [updateRow_self, ite_eq_right]
+      exact fun h => ht (Fin.ext (congrArg Fin.val h :))
     · simp
-  · rw [if_neg (fun h => hj h.2), zero_mul]
+  · rw [ite_eq_right (fun h => hj h.2), zero_mul]
     refine Finset.sum_eq_zero fun t _ => det_eq_zero_of_row_eq_zero t fun u => ?_
-    rw [updateRow_self, if_neg]
+    rw [updateRow_self, ite_eq_right]
     intro h
     apply hj
     rw [← h]
@@ -645,7 +644,7 @@ theorem coeff_pderiv' (v : σ) (m : σ →₀ ℕ) (Q : MvPolynomial σ ℂ) :
     rw [pderiv_monomial, coeff_monomial, coeff_monomial]
     by_cases h : b = m + Finsupp.single v 1
     · subst h; simp
-    · rw [if_neg h, zero_mul]
+    · rw [ite_eq_right h, zero_mul]
       split_ifs with h'
       · have : b v = 0 := by
           by_contra hb
@@ -664,7 +663,7 @@ theorem fock_X_mul (v : σ) (P Q : MvPolynomial σ ℂ) :
     rw [mul_comm, X, monomial_mul, mul_one,
       fock_eq_sum _ _ {a + Finsupp.single v 1} support_monomial_subset,
       fock_eq_sum _ _ {a} support_monomial_subset, Finset.sum_singleton, Finset.sum_singleton,
-      coeff_monomial, coeff_monomial, if_pos rfl, if_pos rfl, coeff_pderiv', mfact_add_single]
+      coeff_monomial, coeff_monomial, ite_eq_left rfl, ite_eq_left rfl, coeff_pderiv', mfact_add_single]
     simp only [star_mul', star_add, star_natCast, star_one]
     push_cast
     ring
@@ -791,8 +790,7 @@ theorem prod_Ioi_eq (K : Fin l) (g : ℕ → ℚ) :
   · intro j hj
     have : K < j := Finset.mem_Ioi.mp hj
     exact Finset.mem_Ico.mpr ⟨this, j.2⟩
-  · intro j _ j' _ h
-    exact Fin.ext h
+  · exact fun j _ j' _ h => Fin.ext h
   · intro j hj
     obtain ⟨h1, h2⟩ := Finset.mem_Ico.mp hj
     exact ⟨⟨j, h2⟩, Finset.mem_Ioi.mpr h1, rfl⟩
@@ -830,8 +828,8 @@ theorem addCol_antitone {a : Fin l → ℕ} (ha : Antitone a) (K : Fin l) : Anti
   have := ha hij
   unfold addCol
   by_cases h : j ≤ K
-  · rw [if_pos h, if_pos (hij.trans h)]; omega
-  · rw [if_neg h]; omega
+  · rw [ite_eq_left h, ite_eq_left (hij.trans h)]; omega
+  · rw [ite_eq_right h]; omega
 
 theorem hookProd_addCol {a : Fin l → ℕ} (ha : Antitone a) (K : Fin l) (hK : ∀ i, K < i → a i = 0) :
     hookProd (addCol a K) =
@@ -852,8 +850,7 @@ theorem hookProd_addCol {a : Fin l → ℕ} (ha : Antitone a) (K : Fin l) (hK : 
         omega
       rw [hu, Finset.prod_union]
       rw [Finset.disjoint_left]
-      intro j h1 h2
-      exact absurd (Finset.mem_Ioc.mp h1).2 (not_le.mpr (Finset.mem_Ioi.mp h2))
+      exact fun j h1 h2 => absurd (Finset.mem_Ioc.mp h1).2 (not_le.mpr (Finset.mem_Ioi.mp h2))
     have e1 : ∏ j ∈ Finset.Ioc i K, ((addCol a K i : ℚ) - addCol a K j + (j : ℕ) - (i : ℕ)) =
         ∏ j ∈ Finset.Ioc i K, ((a i : ℚ) - a j + (j : ℕ) - (i : ℕ)) := by
       refine Finset.prod_congr rfl fun j hj => ?_
@@ -863,7 +860,7 @@ theorem hookProd_addCol {a : Fin l → ℕ} (ha : Antitone a) (K : Fin l) (hK : 
       rw [← prod_Ioi_eq]
       refine Finset.prod_congr rfl fun j hj => ?_
       have hj' := Finset.mem_Ioi.mp hj
-      simp only [addCol, hi, if_true, not_le.mpr hj', if_false, hK j hj']
+      simp only [addCol, hi, ite_true, not_le.mpr hj', ite_false, hK j hj']
       push_cast
       ring
     have e3 : ∏ j ∈ Finset.Ioi K, ((a i : ℚ) - a j + (j : ℕ) - (i : ℕ)) =
@@ -877,16 +874,16 @@ theorem hookProd_addCol {a : Fin l → ℕ} (ha : Antitone a) (K : Fin l) (hK : 
     have e4 : ((addCol a K i + (l - ((i : ℕ) + 1))).factorial : ℚ) =
         ((a i : ℚ) - (i : ℕ) + l) * (a i + (l - ((i : ℕ) + 1))).factorial := by
       have : addCol a K i + (l - ((i : ℕ) + 1)) = (a i + (l - ((i : ℕ) + 1))) + 1 := by
-        simp only [addCol, hi, if_true]; omega
+        simp only [addCol, hi, ite_true]; omega
       rw [this, Nat.factorial_succ]
       push_cast [Nat.cast_sub (show (i : ℕ) + 1 ≤ l from i.2)]
       ring
     have t := telescope ((a i : ℚ) - (i : ℕ)) ((K : ℕ) + 1) l K.2
-    rw [hsplit, hsplit, e1, e2, e3, e4, if_pos hi]
+    rw [hsplit, hsplit, e1, e2, e3, e4, ite_eq_left hi]
     push_cast at t
     linear_combination (-((a i + (l - ((i : ℕ) + 1))).factorial : ℚ) *
       ∏ j ∈ Finset.Ioc i K, ((a i : ℚ) - a j + (j : ℕ) - (i : ℕ))) * t
-  · rw [if_neg hi, one_mul]
+  · rw [ite_eq_right hi, one_mul]
     have e : ∀ j, i ≤ j → addCol a K j = a j := fun j hj => by
       simp [addCol, show ¬ j ≤ K from fun h => hi (hj.trans h)]
     rw [e i le_rfl]
@@ -904,8 +901,7 @@ theorem prod_ite_le (K : Fin l) (g : Fin l → ℚ) :
     have := t.2
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.le_def, Fin.val_castLE]
     omega
-  · intro t _ t' _ h
-    exact Fin.castLE_injective _ h
+  · exact fun t _ t' _ h => Fin.castLE_injective _ h
   · intro j hj
     have : (j : ℕ) ≤ K := (Finset.mem_filter.mp hj).2
     exact ⟨⟨j, by omega⟩, Finset.mem_univ _, rfl⟩
@@ -925,7 +921,7 @@ theorem del_addCol {a : Fin l → ℕ} (ha : Antitone a) (K : Fin l) :
     del v (addCol a K) = minor v K * del v a := by
   unfold del
   simp only [addCol_exp ha, pow_add, Finset.prod_mul_distrib, pow_ite, pow_one, pow_zero,
-    Finset.prod_ite_eq', Finset.mem_univ, if_true]
+    Finset.prod_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 variable {v}
@@ -967,7 +963,7 @@ theorem pol_del (hv : ∀ r c s e, v r c = v s e → r = s ∧ c = e) {k : ℕ} 
     rw [del_addCol v ha, Derivation.leibniz, ih', hm]
     simp only [addCol, smul_eq_mul, Fin.le_def, Fin.val_castLE, Nat.lt_succ_iff]
     by_cases h : i = j
-    · simp only [h, true_and, if_true]
+    · simp only [h, true_and, ite_true]
       push_cast
       ring
     · simp [h]
@@ -994,8 +990,8 @@ theorem fock_del (hv : ∀ r c s e, v r c = v s e → r = s ∧ c = e) (a : Fin 
       (fun t => addCol a K (Fin.castLE K.2 t)) (del v a) (del v (addCol a K)) (del_addCol v ha K)
       (det_X_ne_zero _ hv')
       (fun i j hij => by
-        rw [pol_del hv K.2 i j hij.le _ (addCol_antitone ha K) h0, if_neg hij.ne]; simp)
-      (fun j => by rw [pol_del hv K.2 j j le_rfl _ (addCol_antitone ha K) h0, if_pos rfl])
+        rw [pol_del hv K.2 i j hij.le _ (addCol_antitone ha K) h0, ite_eq_right hij.ne]; simp)
+      (fun j => by rw [pol_del hv K.2 j j le_rfl _ (addCol_antitone ha K) h0, ite_eq_left rfl])
     rw [h, ih, hookProd_addCol ha K hK, prod_ite_le]
     push_cast
     congr 1
@@ -1004,7 +1000,7 @@ theorem fock_del (hv : ∀ r c s e, v r c = v s e → r = s ∧ c = e) (a : Fin 
       have := t.2
       simp only [Fin.le_def, Fin.val_castLE]
       omega
-    simp only [addCol, ht, if_true, Fin.val_castLE]
+    simp only [addCol, ht, ite_true, Fin.val_castLE]
     rw [Nat.cast_sub (show (t : ℕ) ≤ K from ht)]
     push_cast
     ring
@@ -1202,10 +1198,8 @@ theorem hookOf_eq_hookProd (l : ℕ) (a : ℕ → ℕ) (ha : Antitone a) :
     refine Finset.prod_congr rfl fun i _ => ?_
     symm
     refine Finset.prod_bij (fun j _ => (j : ℕ)) ?_ ?_ ?_ ?_
-    · intro j hj
-      exact Finset.mem_Ioo.mpr ⟨Fin.lt_iff_val_lt_val.mp (Finset.mem_Ioi.mp hj), j.2⟩
-    · intro j _ j' _ e
-      exact Fin.ext e
+    · exact fun j hj => Finset.mem_Ioo.mpr ⟨Fin.lt_iff_val_lt_val.mp (Finset.mem_Ioi.mp hj), j.2⟩
+    · exact fun j _ j' _ e => Fin.ext e
     · intro b hb
       have := Finset.mem_Ioo.mp hb
       exact ⟨⟨b, this.2⟩, Finset.mem_Ioi.mpr (Fin.lt_iff_val_lt_val.mpr this.1), rfl⟩

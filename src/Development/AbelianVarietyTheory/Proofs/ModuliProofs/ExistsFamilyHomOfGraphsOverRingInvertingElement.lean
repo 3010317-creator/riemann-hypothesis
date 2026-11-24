@@ -85,13 +85,7 @@ open GlobalTheory.ZM.SegreCoord GlobalTheory.AbLaw.Segre
 open MvPolynomial in
 theorem homogeneousComponent_mem_vanIdeal {R σ Hh : Type} [CommRing R] (d : ℕ) (p : Hh → σ → R)
     (F : MvPolynomial σ R) (hF : F ∈ vanIdeal d p) (e : ℕ) : homogeneousComponent e F ∈ vanIdeal d p := by
-  classical
-  letI := (MvPolynomial.gradedAlgebra : GradedAlgebra (homogeneousSubmodule σ R))
-  have h : (vanIdeal d p).IsHomogeneous (homogeneousSubmodule σ R) :=
-    Ideal.homogeneous_span _ _ fun x hx => ⟨d, hx.1⟩
-  have := h e hF
-  rwa [show ((DirectSum.decompose (homogeneousSubmodule σ R) F e : homogeneousSubmodule σ R e) : MvPolynomial σ R)
-    = homogeneousComponent e F from MvPolynomial.decomposition.decompose'_apply F e] at this
+  exact GlobalTheory.ZM.FormsFamily.component_mem_vanIdeal d p F hF e
 
 
 open MvPolynomial in
@@ -115,7 +109,7 @@ theorem mem_of_forall_map_mem {S σ : Type} [CommRing S] (J : Ideal (MvPolynomia
   let π : MvPolynomial σ S →ₗ[S] (↥(homogeneousSubmodule σ S e) ⧸ N) :=
     N.mkQ ∘ₗ (homogeneousComponent e).codRestrict (homogeneousSubmodule σ S e) fun G => homogeneousComponent_mem e G
   have hπ : ∀ G, π G = 0 ↔ homogeneousComponent e G ∈ J := fun G => Submodule.Quotient.mk_eq_zero N
-  have hFe : homogeneousComponent e F = F := by rw [homogeneousComponent_of_mem hF, if_pos rfl]
+  have hFe : homogeneousComponent e F = F := by rw [homogeneousComponent_of_mem hF, ite_eq_left rfl]
   rw [← hFe, ← hπ]
   by_contra hne
   obtain ⟨l, hl⟩ := Module.Projective.exists_dual_ne_zero S hne

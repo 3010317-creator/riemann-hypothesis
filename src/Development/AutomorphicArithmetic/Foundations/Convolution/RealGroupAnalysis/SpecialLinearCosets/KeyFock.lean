@@ -275,8 +275,7 @@ private theorem keyFock {F E : Type} [Field F] [NumberField F] [Field E] [Number
       funext x
       obtain ⟨B, hB⟩ := lin (h' * J x)
       have e := map_add B ⟨a, ha⟩ ⟨b, hb⟩
-      rw [hB, hB, hB] at e
-      exact e
+      rwa [hB, hB, hB] at e
     rw [this]
     exact add_mem ia ib
   · rintro c a _ ⟨ha, ia⟩
@@ -285,8 +284,7 @@ private theorem keyFock {F E : Type} [Field F] [NumberField F] [Field E] [Number
       funext x
       obtain ⟨B, hB⟩ := lin (h' * J x)
       have e := map_smul B c (⟨a, ha⟩ : Fock (F := F) D.δ)
-      rw [hB, hB] at e
-      exact e
+      rwa [hB, hB] at e
     rw [this]
     exact Submodule.smul_mem _ c ia
 
@@ -325,8 +323,7 @@ theorem UpperTheory.ConvolutionTheory.R2.I.key :
     have : (fun x => WE D (a + b).1 (h * J x)) =
         (fun x => WE D a.1 (h * J x)) + fun x => WE D b.1 (h * J x) := by
       funext x
-      have e := (UpperTheory.ConvolutionTheory.R2.H.weEig F E D a.1 ca).2.2 b.1 1 cb (h * J x)
-      simpa using e
+      simpa using (UpperTheory.ConvolutionTheory.R2.H.weEig F E D a.1 ca).2.2 b.1 1 cb (h * J x)
     rw [this]
     exact add_mem (ia h) (ib h)
   · rintro c a ha ia h

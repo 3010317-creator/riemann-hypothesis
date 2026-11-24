@@ -118,8 +118,7 @@ theorem trIdeal_eq_top
   obtain ⟨θ, t, ht, hnot⟩ := hP P hPmax
   have htc : t = conj θ := by
     apply RingOfIntegers.ext
-    rw [coe_conj]
-    exact ht
+    rwa [coe_conj]
   rw [htc] at hnot
   have h1 : θ + conj θ ∈ P :=
     hle (Ideal.subset_span (isTr_self θ))
@@ -149,8 +148,7 @@ theorem main : PI.CMTraceOnto := by
   intro L _ _ _ hL a ha
   have hfix : conj a = a := by
     apply RingOfIntegers.ext
-    rw [coe_conj]
-    exact ha
+    rwa [coe_conj]
   obtain ⟨x, hx⟩ := isTr_mul_fixed hfix (isTr_one (K := L) hL.2.2)
   refine ⟨x, conj x, coe_conj x, ?_⟩
   rw [hx, mul_one]

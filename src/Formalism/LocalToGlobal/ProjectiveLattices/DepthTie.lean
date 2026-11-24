@@ -41,8 +41,7 @@ private theorem tensor_exists_basis_expansion_lemma (f : R →+* R) {I J : Ideal
   obtain ⟨X, hX⟩ := Ideal.dvd_iff_le.2 hleI
   obtain ⟨Y, hY⟩ := Ideal.dvd_iff_le.2 hleJ
   have hne : I * J * (I.map f * J.map f) ≠ 0 := by
-    rw [← Ideal.map_mul, hprod, ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hgh
+    rwa [← Ideal.map_mul, hprod, ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   have h1 : I * J * (I.map f * J.map f) * (X * Y) = I * J * (I.map f * J.map f) * 1 := by
     calc I * J * (I.map f * J.map f) * (X * Y) = (I * I.map f * X) * (J * J.map f * Y) := by ring
       _ = Ideal.span {g} * Ideal.span {h} := by rw [hX, hY]
@@ -176,7 +175,7 @@ theorem piOf_eq_bar_iff (T : Core D) (h : LawsM T) (EX : ErrX D) (i : Fin 2) :
     piOf T EX i = barE D (EX.piG i) ↔ barE D (EX.piG i) ∈ halfI T i := by
   constructor
   · intro he; rw [← he]; exact piOf_mem T h EX i
-  · intro hm; unfold piOf; rw [if_pos hm]
+  · intro hm; unfold piOf; rw [ite_eq_left hm]
 
 theorem bar_core (T : Core D) (a : 𝓞 D.host.E) : T.Q.H.bar a = barE D a := by
   apply IsFractionRing.injective (𝓞 D.host.E) D.host.E

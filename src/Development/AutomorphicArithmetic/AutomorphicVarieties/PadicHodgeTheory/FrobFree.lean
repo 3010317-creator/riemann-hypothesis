@@ -148,8 +148,7 @@ private theorem graph_ext {G Y : Type} [Group G] [TopologicalSpace G] [IsTopolog
     obtain ⟨U, hUn, hUo, hIU, hUk⟩ := hU N.toSubgroup.index (Nat.pos_of_ne_zero Subgroup.FiniteIndex.index_ne_zero)
     have hle : Γ ≤ U.prod N.toSubgroup ⊔ Subgroup.zpowers (σ, y) := by
       refine Subgroup.topologicalClosure_minimal _ (sup_le_sup_right (Subgroup.prod_mono hIU bot_le) _) ?_
-      refine Subgroup.isClosed_of_isOpen _ (Subgroup.isOpen_mono le_sup_left ?_)
-      exact hUo.prod N.isOpen
+      exact Subgroup.isClosed_of_isOpen _ (Subgroup.isOpen_mono le_sup_left (hUo.prod N.isOpen))
     have h1 := hle hz
     rw [← SetLike.mem_coe, Subgroup.normal_mul] at h1
     obtain ⟨⟨u, w⟩, ⟨hu, hw⟩, _, ⟨k, rfl⟩, h⟩ := h1
@@ -178,12 +177,10 @@ private theorem graph_ext {G Y : Type} [Group G] [TopologicalSpace G] [IsTopolog
   have : f ⁻¹' C = Prod.fst '' ((Γ : Set (G × Y)) ∩ Prod.snd ⁻¹' C) := by
     ext g
     constructor
-    · intro hg
-      exact ⟨(g, f g), ⟨(hmem _ _).2 rfl, hg⟩, rfl⟩
+    · exact fun hg => ⟨(g, f g), ⟨(hmem _ _).2 rfl, hg⟩, rfl⟩
     · rintro ⟨⟨a, b⟩, ⟨h1, h2⟩, rfl⟩
       show f a ∈ C
-      rw [(hmem _ _).1 h1]
-      exact h2
+      rwa [(hmem _ _).1 h1]
   rw [this]
   exact isClosedMap_fst_of_compactSpace _ (hΓc.inter (hC.preimage continuous_snd))
 

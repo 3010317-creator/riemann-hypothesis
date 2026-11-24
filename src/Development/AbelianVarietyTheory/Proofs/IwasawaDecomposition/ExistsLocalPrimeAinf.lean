@@ -208,8 +208,7 @@ theorem exists_abstract (R : LocRings l) (K : FinExt l)
     Fil_anti := fun a x hx => F_anti a hx
     one_mem := by
       have := F_o 1
-      rw [map_one] at this
-      exact this
+      rwa [map_one] at this
     Fil_mul := F_mul
     Fil_exh := F_exh
     Fil_sep := F_sep
@@ -221,8 +220,7 @@ theorem exists_abstract (R : LocRings l) (K : FinExt l)
       rw [Algebra.smul_def]
       exact t_act g
     t_φ := by
-      rw [Algebra.smul_def, map_natCast]
-      exact t_φ
+      rwa [Algebra.smul_def, map_natCast]
     mem_filtration_one := t1
     not_mem_filtration_two := t2
     fund := fund }, rfl, fun _ _ => rfl, fun _ _ => rfl, fun _ => rfl, fun _ => rfl, rfl, fun _ => rfl,
@@ -321,8 +319,7 @@ theorem _root_.GlobalTheory.MemLoc.exists_addValuation_normalised : ∀ (l : ℕ
     obtain ⟨q, hvq, hlog⟩ := hv _ hx
     rw [hvq, WithTop.coe_nonneg, ← Real.log_nonpos_iff (norm_nonneg _), hlog]
     constructor
-    · intro h
-      exact mul_nonpos_of_nonneg_of_nonpos (by exact_mod_cast h) hL.le
+    · exact fun h => mul_nonpos_of_nonneg_of_nonpos (by exact_mod_cast h) hL.le
     · intro h
       have h' : (0 : ℝ) ≤ q := (mul_le_mul_right_of_neg hL).1 (by simpa using h)
       exact_mod_cast h'

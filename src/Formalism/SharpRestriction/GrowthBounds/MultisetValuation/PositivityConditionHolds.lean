@@ -70,8 +70,7 @@ theorem sx_norm_le_inv_iff (x : K0 p) :
     ‖x‖ ≤ (p : ℝ)⁻¹ ↔ ∃ w : WW p, x = (p : K0 p) * algebraMap (WW p) (K0 p) w := by
   have h := Formalism.InvariantFactorPaths.G7.WModel.abv_le_pow_iff p 1 x
   rw [pow_one, pow_one] at h
-  rw [Formalism.InvariantFactorPaths.G7.WModel.norm_def]
-  exact h
+  rwa [Formalism.InvariantFactorPaths.G7.WModel.norm_def]
 
 theorem sx_norm_p : ‖(p : K0 p)‖ = (p : ℝ)⁻¹ := by
   rw [Formalism.InvariantFactorPaths.G7.WModel.norm_def]
@@ -112,8 +111,7 @@ theorem sx_expS_eq {ι : Type} {f : MvPowerSeries ι (K0 p)} (hf : MvPowerSeries
     have hd0 : d = 0 := by
       have : Finsupp.degree d = 0 := by exact_mod_cast Nat.lt_one_iff.mp (by exact_mod_cast hd)
       exact (Finsupp.degree_eq_zero_iff d).mp this
-    rw [hd0, MvPowerSeries.coeff_zero_eq_constantCoeff]
-    exact hf
+    rwa [hd0, MvPowerSeries.coeff_zero_eq_constantCoeff]
   have hz : ∀ d : ℕ, Finsupp.degree n < d → MvPowerSeries.coeff n (f ^ d) = 0 := by
     intro d hd
     apply MvPowerSeries.coeff_of_lt_order
@@ -129,8 +127,7 @@ theorem sx_expS_eq {ι : Type} {f : MvPowerSeries ι (K0 p)} (hf : MvPowerSeries
   · intro d hd
     rw [Function.mem_support] at hd
     simp only [Finset.coe_range, Set.mem_Iio]
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hd
     rw [hz d (by omega), smul_zero]
 

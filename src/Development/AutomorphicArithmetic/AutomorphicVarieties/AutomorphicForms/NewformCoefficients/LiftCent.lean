@@ -92,10 +92,8 @@ private theorem idele_dec (z : Ideles ℚ) : ∃ (r : ℚˣ) (t : (TR.Rinf ℚ)�
       refine hz.trans (Units.ext ?_)
       simp
   · refine ⟨r, Units.map (TR.pInf ℚ).toMonoidHom w, Units.map (pFin ℚ).toMonoidHom w, fun v => ?_, e1 ▸ hu, ?_⟩
-    · rw [Subsingleton.elim v Rat.infinitePlace]
-      exact h
-    · rw [idele_split]
-      exact hz
+    · rwa [Subsingleton.elim v Rat.infinitePlace]
+    · rwa [idele_split]
 
 theorem UpperTheory.V.Af.Nf.liftCent :
     UpperTheory.V.Af.Nf.LiftCent := by

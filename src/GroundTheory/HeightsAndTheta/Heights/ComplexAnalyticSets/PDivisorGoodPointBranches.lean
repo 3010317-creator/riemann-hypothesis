@@ -69,8 +69,7 @@ theorem tail_mem_ball {d : ℕ} {s : ℝ} {t : Fin (d + 1) → ℂ} (ht : t ∈ 
   rw [mem_ball_zero_iff] at ht ⊢
   have hs : 0 < s := lt_of_le_of_lt (norm_nonneg _) ht
   rw [pi_norm_lt_iff hs]
-  intro j
-  exact (norm_le_pi_norm t j.succ).trans_lt ht
+  exact fun j => (norm_le_pi_norm t j.succ).trans_lt ht
 
 def consCLM (d : ℕ) : (ℂ × (Fin d → ℂ)) →L[ℂ] (Fin (d + 1) → ℂ) :=
   ContinuousLinearMap.pi (Fin.cons (α := fun _ => (ℂ × (Fin d → ℂ)) →L[ℂ] ℂ)
@@ -117,8 +116,7 @@ theorem slice_chart {d n : ℕ} {ψ : (Fin (d + 1) → ℂ) → Fin n → ℂ} {
   have hAqO : A q ∈ O := by
     have hq : q ∈ g '' O := by rw [← hS]; exact ⟨hqS, hqV⟩
     obtain ⟨y, hy, hyq⟩ := hq
-    rw [← hyq, hAg y hy]
-    exact hy
+    rwa [← hyq, hAg y hy]
   have hcomp : σ =ᶠ[𝓝 0] fun v => g (A (σ v)) := hev.mono fun v hv => (hgA _ hv.1 hv.2).symm
   have hgd : HasFDerivAt g (fderiv ℂ g (A q)) (A (σ 0)) := by
     rw [hσ0]
@@ -131,15 +129,13 @@ theorem slice_chart {d n : ℕ} {ψ : (Fin (d + 1) → ℂ) → Fin n → ℂ} {
     intro v hv0 hAv
     apply hD v hv0
     have h := congrArg (fun L : (Fin d → ℂ) →L[ℂ] Fin n → ℂ => L (Fin.tail v)) heq
-    simp only [ContinuousLinearMap.comp_apply, consZero_tail v hv0, hAv, map_zero] at h
-    exact h
+    simpa only [ContinuousLinearMap.comp_apply, consZero_tail v hv0, hAv, map_zero] using h
   refine ⟨ha, ?_⟩
   have hinj : Function.Injective (A.comp (D.comp (consZero d))) := by
     intro a b hab
     simp only [ContinuousLinearMap.comp_apply] at hab
     have h0 : A (D (consZero d (a - b))) = 0 := by rw [map_sub, map_sub, map_sub, hab, sub_self]
-    have h1 := ha _ (consZero_apply_zero _) h0
-    exact sub_eq_zero.1 (consZero_injective (by rw [h1, map_zero]))
+    exact sub_eq_zero.1 (consZero_injective (by rw [(ha _ (consZero_apply_zero _) h0), map_zero]))
   let e : (Fin d → ℂ) ≃L[ℂ] (Fin d → ℂ) :=
     (LinearEquiv.ofInjectiveEndo ((A.comp (D.comp (consZero d))) : (Fin d → ℂ) →ₗ[ℂ] (Fin d → ℂ))
       hinj).toContinuousLinearEquiv
@@ -302,8 +298,7 @@ theorem exists_branch {n d : ℕ} {J : Ideal (MvPolynomial (Fin n) ℂ)} (M : In
           ⇑(consCLM d) ∘ fun τ : Fin (d + 1) → ℂ => (τ 0, A (ψ τ)) := by
         funext τ
         rw [Function.comp_apply, consCLM_apply, hπ]
-      rw [hfun]
-      exact h3
+      rwa [hfun]
     rw [h2.fderiv]
     set L := (consCLM d).comp ((ContinuousLinearMap.proj 0).prod (A.comp (fderiv ℂ ψ 0))) with hL
     have hLinj : Function.Injective L := by

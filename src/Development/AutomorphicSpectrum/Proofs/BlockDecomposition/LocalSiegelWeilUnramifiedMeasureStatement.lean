@@ -137,8 +137,7 @@ theorem GlobalTheory.CompanionTheory.AvgFree.exists_lattice_tupIn : ∀ (F E : T
   have hC : IsCompact (⋃ i : Fin n, ⋃ k : Fin M, (fun X : Fin n → Fin M → Fv F v ⊗[F] E => X i k) '' A) :=
     isCompact_iUnion fun i => isCompact_iUnion fun k => hA.image (by fun_prop)
   obtain ⟨L, h1, h2, h3⟩ := exists_lattice_of_compact O hOc hOo hC
-  refine ⟨L, h1, h2, fun X hX i k => h3 ?_⟩
-  exact Set.mem_iUnion₂.2 ⟨i, k, X, hX, rfl⟩
+  exact ⟨L, h1, h2, fun X hX i k => h3 (Set.mem_iUnion₂.2 ⟨i, k, X, hX, rfl⟩)⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactSetContainedInLattice =====
@@ -383,20 +382,17 @@ theorem GlobalTheory.CompanionTheory.AvgFree.Lim.avg_tendsto_free : ∀ (F E : T
       have : c - Q X = u := Subtype.ext e
       show c - Q X ∈ W
       rwa [this]
-    · intro h
-      exact ⟨c - Q X, h, rfl⟩
+    · exact fun h => ⟨c - Q X, h, rfl⟩
   let S : ℕ → Set (HermR (Fv F v) σ n) := fun k => (fun y => c - y) ⁻¹' U k
   have hgram : ∀ k, gramNear (Fv F v) σ J c (U k) = gramIn (Fv F v) σ J (S k) := by
     intro k
     rw [hnear]
     ext X
     constructor
-    · intro h
-      exact ⟨Q X, h, rfl⟩
+    · exact fun h => ⟨Q X, h, rfl⟩
     · rintro ⟨y, hy, e⟩
       have : y = Q X := Subtype.ext e.symm
-      rw [this] at hy
-      exact hy
+      rwa [this] at hy
   have hSo : ∀ k, IsOpen (S k) := fun k => (hU k).2.1.preimage (continuous_const.sub continuous_id)
   have hSm : ∀ k, MeasurableSet (S k) := fun k => (hSo k).measurableSet
   have hSc : ∀ k, c ∈ S k := fun k => by
@@ -453,8 +449,7 @@ theorem GlobalTheory.CompanionTheory.AvgFree.Lim.avg_tendsto_free : ∀ (F E : T
         ENNReal.mul_ne_top ENNReal.coe_ne_top (by rw [← hSU k]; exact htop k)⟩) hs
       rw [ENNReal.toReal_add (hAfin _ (Set.inter_subset_inter_left _ (hT j).2.2.1 |>.trans Set.inter_subset_left))
         (ENNReal.mul_ne_top ENNReal.coe_ne_top (by rw [← hSU k]; exact htop k)), ENNReal.toReal_mul, ENNReal.coe_toReal] at hr
-      rw [div_le_iff₀ hp, add_mul, div_mul_cancel₀ _ hp.ne']
-      exact hr
+      rwa [div_le_iff₀ hp, add_mul, div_mul_cancel₀ _ hp.ne']
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFibreMeasureUnramifiedVolume =====
@@ -472,18 +467,15 @@ theorem GlobalTheory.CompanionTheory.AvgFree.Cov.exists_sep :
   classical
   refine Finset.induction_on T ?_ ?_
   · refine ⟨∅, Finset.Subset.refl _, ?_, ?_⟩
-    · intro x hx
-      exact absurd hx (Finset.notMem_empty x)
-    · intro r hr
-      exact absurd hr (Finset.notMem_empty r)
+    · exact fun x hx => absurd hx (Finset.notMem_empty x)
+    · exact fun r hr => absurd hr (Finset.notMem_empty r)
   · intro a S _ha ih
     obtain ⟨Rep, hsub, hcov, hsep⟩ := ih
     by_cases h : ∃ r ∈ Rep, a - r ∈ H
     · refine ⟨Rep, hsub.trans (Finset.subset_insert a S), ?_, hsep⟩
       intro x hx
       rcases Finset.mem_insert.mp hx with hxa | hx
-      · rw [hxa]
-        exact h
+      · rwa [hxa]
       · exact hcov x hx
     · have h' : ∀ r ∈ Rep, a - r ∉ H := fun r hr har => h ⟨r, hr, har⟩
       refine ⟨insert a Rep, Finset.insert_subset_insert a hsub, ?_, ?_⟩
@@ -613,8 +605,7 @@ theorem exists_reps {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalR
     simpa [hUμ, hHμ] using h1
   have hcard : (Rep.card : ℝ≥0) * c ≤ 1 := by
     have h2 : (Rep.card : ℝ≥0∞) * c * μ (O : Set K) ≤ 1 * μ (O : Set K) := by
-      rw [mul_assoc, one_mul]
-      exact hsum
+      rwa [mul_assoc, one_mul]
     have h3 := (ENNReal.mul_le_mul_iff_left hOpos hOtop).1 h2
     exact_mod_cast h3
   refine ⟨Rep, (NNReal.le_inv_iff_mul_le hc0).2 hcard, hRO, ?_⟩
@@ -678,8 +669,7 @@ theorem rmul_mem_tupIn {n M : ℕ} (L : Set (R ⊗[F] E)) (s : (R ⊗[F] E)ˣ) (
         exact Finset.sum_congr rfl fun e _ => by ring
       rw [e1, ← hye]
       exact Units.inv_mul_cancel_left s y
-    rw [this]
-    exact hy
+    rwa [this]
   · have : ∑ e, X e k * (eMat R l a e c * Function.update (1 : Fin n → R ⊗[F] E) l ((s⁻¹ : (R ⊗[F] E)ˣ) : R ⊗[F] E) c) = X c k := by
       simp only [eMat, Matrix.updateCol_ne hc, Function.update_of_ne hc, Pi.one_apply, mul_one,
         Matrix.one_apply]
@@ -877,8 +867,7 @@ private theorem tendsto_mul_zero_of_tendsto_zero_of_mem_compact {K : Type} [Comm
     rw [Set.mem_singleton_iff] at hx
     subst hx
     show 0 * y ∈ V
-    rw [zero_mul]
-    exact h0V
+    rwa [zero_mul]
   obtain ⟨u, w, hu, -, h0u, hLw, huw⟩ :=
     generalized_tube_lemma isCompact_singleton hL (hVo.preimage continuous_mul) hsub
   have hev : ∀ᶠ j in Filter.atTop, f j ∈ u := hf (hu.mem_nhds (h0u (Set.mem_singleton 0)))
@@ -904,8 +893,7 @@ theorem GlobalTheory.CompanionTheory.AvgFree.not_linearIndependent_of_near {K : 
     have h := Set.mem_singleton_iff.mp (Set.mem_preimage.mp hj)
     exact ⟨congrArg Subtype.val (Prod.ext_iff.mp h).1, (Prod.ext_iff.mp h).2⟩
   haveI hNe : (Filter.atTop ⊓ Filter.principal J).NeBot := by
-    have h := Nat.frequently_atTop_iff_infinite.mpr hJ
-    exact Filter.frequently_iff_neBot.mp h
+    exact Filter.frequently_iff_neBot.mp (Nat.frequently_atTop_iff_infinite.mpr hJ)
   have hcomp : IsCompact (Set.pi Set.univ (fun _ : Fin n => O)) := isCompact_univ_pi (fun _ => hO)
   have hin : Filter.Tendsto a (Filter.atTop ⊓ Filter.principal J)
       (Filter.principal (Set.pi Set.univ (fun _ : Fin n => O))) :=
@@ -921,8 +909,7 @@ theorem GlobalTheory.CompanionTheory.AvgFree.not_linearIndependent_of_near {K : 
       rw [← (hJp j hj).2]
       exact hal j
     have hcl := hclus.mono hle
-    rw [← mem_closure_iff_clusterPt, hC.closure_eq] at hcl
-    exact hcl
+    rwa [← mem_closure_iff_clusterPt, hC.closure_eq] at hcl
   have hzero : ∀ k, p₀.1.2 * ∑ i, X i k * a₀ i = 0 := by
     intro k
     have hcont : Continuous (fun x : Fin n → K => p₀.1.2 * ∑ i, X i k * x i) := by
@@ -936,8 +923,7 @@ theorem GlobalTheory.CompanionTheory.AvgFree.not_linearIndependent_of_near {K : 
       have hw := hweq j k
       simp only at hw
       rw [← hw, (hJp j hj).1, mul_assoc]
-    have hcl := hclus.map hcont.continuousAt (Filter.tendsto_map'_iff.mpr htend)
-    exact eq_of_nhds_neBot hcl
+    exact eq_of_nhds_neBot (hclus.map hcont.continuousAt (Filter.tendsto_map'_iff.mpr htend))
   have hsum : ∑ i, (p₀.1.2 * a₀ i) • X i = 0 := by
     ext k
     rw [Finset.sum_apply, Pi.zero_apply]
@@ -1052,8 +1038,7 @@ theorem isClosed_nearNF [T2Space (R ⊗[F] E)] {M n : ℕ} {O L : Set (R ⊗[F] 
     simp only [nearNF, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_image]
     constructor
     · rintro ⟨h1, l, a, h2, h3, h4⟩
-      refine ⟨l, (X, a), ⟨⟨h1, fun i _ => h2 i⟩, h3, ?_⟩, rfl⟩
-      exact Set.mem_iInter.2 h4
+      exact ⟨l, (X, a), ⟨⟨h1, fun i _ => h2 i⟩, h3, Set.mem_iInter.2 h4⟩, rfl⟩
     · rintro ⟨l, ⟨X', a⟩, ⟨⟨h1, h2⟩, h3, h4⟩, rfl⟩
       exact ⟨h1, l, a, fun i => h2 i trivial, h3, Set.mem_iInter.1 h4⟩
   rw [this]
@@ -1063,8 +1048,7 @@ theorem goodT_compact_open [T2Space (R ⊗[F] E)] {M n : ℕ} {O L : Set (R ⊗[
     (hLc : IsCompact L) (hLo : IsOpen L) (S : Finset ((R ⊗[F] E)ˣ × (R ⊗[F] E))) (j : ℕ) :
     IsCompact (goodT (M := M) (n := n) R O L S j) ∧ IsOpen (goodT (M := M) (n := n) R O L S j) := by
   constructor
-  · refine (isCompact_tupIn R hLc).diff ?_
-    exact isOpen_biUnion fun p _ => isOpen_nearNF R O hLo p.1 j
+  · exact (isCompact_tupIn R hLc).diff (isOpen_biUnion fun p _ => isOpen_nearNF R O hLo p.1 j)
   · refine (isOpen_tupIn_of_isOpen R hLo).sdiff ?_
     exact S.finite_toSet.isClosed_biUnion fun p _ => isClosed_nearNF R hO hLc _ j
 
@@ -1289,8 +1273,7 @@ theorem cjPre_haar (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
       have : t y = z := Subtype.ext e
       show t y ∈ Z
       rwa [this]
-    · intro h
-      exact ⟨t y, h, rfl⟩
+    · exact fun h => ⟨t y, h, rfl⟩
 
   have hent : ∀ (h : Matrix (Fin n) (Fin n) (R ⊗[F] E)), (∀ i j, h i j ∈ O) →
       ∀ y : Matrix (Fin n) (Fin n) (R ⊗[F] E), (∀ i j, y i j ∈ O) → ∀ i j, cjM R σ h y i j ∈ O := by
@@ -1324,8 +1307,7 @@ theorem cjPre_haar (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
       have e : t.symm (t y) = y := t.symm_apply_apply y
       rw [← e]
       exact hent g' hg' _ h
-    · intro h
-      exact hent g hg _ h
+    · exact fun h => hent g hg _ h
   haveI hνt : (ν.map t).IsAddHaarMeasure := t.isAddHaarMeasure_map ν htc hts
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, ν.map t = c • ν := ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
   have hCpos : ν C ≠ 0 := hCo.measure_ne_zero ν ⟨0, hC0⟩
@@ -1335,8 +1317,7 @@ theorem cjPre_haar (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
       rw [Measure.map_apply htc.measurable hCo.measurableSet, htC]
     rw [hc, Measure.coe_nnreal_smul_apply] at h1
     have h2 : (c : ℝ≥0∞) * ν C = 1 * ν C := by
-      rw [one_mul]
-      exact h1
+      rwa [one_mul]
     have h3 := (ENNReal.mul_left_inj hCpos hCfin).1 h2
     exact_mod_cast h3
   refine ⟨?_, ?_⟩
@@ -1602,8 +1583,7 @@ theorem GlobalTheory.CompanionTheory.AvgFree.scale_density : ∀ (F E : Type) [F
     have hbs := (Subtype.borelSpace (α := Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))
       (fun x => x ∈ ((HermR (Fv F v) σ n : AddSubgroup _) : Set _))).measurable_eq
     have hY3 : @MeasurableSet {x // x ∈ ((HermR (Fv F v) σ n : AddSubgroup _) : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)))} Subtype.instMeasurableSpace Y' := by
-      rw [hbs]
-      exact hY'
+      rwa [hbs]
     exact (a10 n M J).measurable ((a9 n).isClosedEmbedding_subtypeVal.measurableEmbedding.measurableSet_image.2 hY3)
   have hD2 := hD.inter (hgm _ hY2m)
   have hwe := _root_.GlobalTheory.CompanionTheory.AvgFree.shear_measurePreserving F E σ hσ d b v lv hlv O hOc hOo hOs n M l a ha hal
@@ -1784,11 +1764,9 @@ theorem GlobalTheory.CompanionTheory.AvgFree.bad_density : ∀ (F E : Type) [Fie
       rintro X ⟨⟨hX1, hX2⟩, hX3⟩
       have h1 : ∃ p ∈ S, X ∈ nearNF (M := M) (n := n) (Fv F v) (O : Set (Fv F v ⊗[F] E))
           (L : Set (Fv F v ⊗[F] E)) (p.1 : Fv F v ⊗[F] E) j := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         refine hX2 ⟨hX1, ?_⟩
-        simp only [Set.mem_iUnion, not_exists]
-        exact fun p hpS => hcon p hpS
+        simpa only [Set.mem_iUnion, not_exists] using fun p hpS => hcon p hpS
       obtain ⟨p, hpS, hXp⟩ := h1
       obtain ⟨q, hq, hXq⟩ := (hG j p hpS).2.2 X hXp
       exact Set.mem_biUnion (x := (⟨p, q⟩ : Σ _ : (Fv F v ⊗[F] E)ˣ × (Fv F v ⊗[F] E), Fin n × (Fin n → Fv F v ⊗[F] E)))

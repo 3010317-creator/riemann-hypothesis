@@ -333,8 +333,7 @@ theorem genMap_stalkMap₀ (ξ' : Spec (CommRingCat.of Ω) ⟶ X') (g : X' ⟶ X
   have e := Scheme.Hom.stalkSpecializes_stalkMap g _ _ q.2
   have e2 := congrArg (fun t => (t ≫ Scheme.stalkClosedPointTo ξ').hom s) e
   have e3 := Scheme.stalkClosedPointTo_comp ξ' g
-  have e4 := congrArg (fun t => (X.presheaf.stalkSpecializes h ≫ t).hom s) e3
-  exact e2.symm.trans e4.symm
+  exact e2.symm.trans (congrArg (fun t => (X.presheaf.stalkSpecializes h ≫ t).hom s) e3).symm
 
 def push (ξ' : Spec (CommRingCat.of Ω) ⟶ X') (g : X' ⟶ X) (p : Cpt ξ') : Cpt (ξ' ≫ g) :=
   ⟨g p.1, p.2.map g.continuous⟩
@@ -596,13 +595,13 @@ theorem exists_orders (hZ : PropZ) {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ :
   let r₀ : HeightOneSpectrum (𝓞 F') → ℚ := fun v => if v ∈ T then (a v : ℚ) / M v else 0
   have hr₀ : (Function.support r₀).Finite := hfin.subset fun v hv => by
     by_contra h
-    exact hv (if_neg h)
+    exact hv (ite_eq_right h)
   refine ⟨Finsupp.ofSupportFinite r₀ hr₀, fun v π' hπ' => ?_⟩
   have hrv : (Finsupp.ofSupportFinite r₀ hr₀) v = r₀ v := rfl
   rw [hrv]
   by_cases hv : v ∈ T
   · have hMv : (M v : ℚ) ≠ 0 := by exact_mod_cast (hM v).ne'
-    refine ⟨M v, a v, hM v, by simp only [r₀, if_pos hv]; field_simp, fun p hp => ?_⟩
+    refine ⟨M v, a v, hM v, by simp only [r₀, ite_eq_left hv]; field_simp, fun p hp => ?_⟩
     refine orderAt_of_unit (hord v p hp) ?_
     have h0 : π' ≠ 0 := by
       rintro rfl
@@ -619,7 +618,7 @@ theorem exists_orders (hZ : PropZ) {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ :
     have e2 : v.valuation F' (π v / π')⁻¹ = 1 := by rw [map_inv₀, e1, inv_one]
     rw [← map_div₀]
     exact ⟨(map_ne_zero ψ).2 (div_ne_zero h1 h0), hp _ e1.le, by rw [← map_inv₀]; exact hp _ e2.le⟩
-  · refine ⟨1, 0, one_pos, by simp only [r₀, if_neg hv]; simp, fun p hp => ?_⟩
+  · refine ⟨1, 0, one_pos, by simp only [r₀, ite_eq_right hv]; simp, fun p hp => ?_⟩
     have h1 : v.valuation F' (n : F') ≤ 1 := by
       have := v.valuation_le_one (K := F') (n : 𝓞 F')
       simpa using this
@@ -789,12 +788,7 @@ theorem cone_eq (y : (Σ k, ι k) → Ω) (g : MRing ι) : mConeMap y g =
 
 theorem aeval_ne_zero {y : (Σ k, ι k) → Ω} {g : MRing ι} {d : K → ℕ} (hg : IsMultiHomog g d)
     (hn : g ∉ mCoordIdeal y) : aeval y g ≠ 0 := by
-  intro h0
-  apply hn
-  have h := scale (S := MvPolynomial K Ω) (fun k => X k) (fun p => C (y p)) hg
-  rw [← map_aeval' (C : Ω →+* MvPolynomial K Ω) y g, h0, map_zero, mul_zero] at h
-  show mConeMap y g = 0
-  rw [cone_eq, h]
+  exact GlobalTheory.CompanionTheory.Ar.Flat.UnitChart.aeval_ne_zero hg hn
 
 theorem aeval_eq_zero {y : (Σ k, ι k) → Ω} (t : K → Ω) {f : MRing ι} (hf : f ∈ mCoordIdeal y) :
     aeval (fun p : Σ k, ι k => t p.1 * y p) f = 0 := by
@@ -832,8 +826,7 @@ theorem PositivityTheory.Xgn.exists_point_over_nonvanishing : ∀ (K : Type) [Fi
     exact (map_aeval' (ψ : A →+* ℂ) wA f).symm
   refine ⟨fun p => ψ (wA p), ⟨⟨fun k => ⟨c k, ?_⟩, fun f hf => ?_⟩, fun a e f h hf hh H => ?_⟩, ?_⟩
   · have : wA ⟨k, c k⟩ = 1 := Subtype.ext (inv_mul_cancel₀ (hc k))
-    simp only [this, map_one]
-    exact one_ne_zero
+    simpa only [this, map_one] using one_ne_zero
   · have : aeval wA f = 0 := Subtype.ext ((hco f).trans (aeval_eq_zero t hf))
     exact (hev f).trans (by rw [this, map_zero])
   · have : aeval wA f = algebraMap F A a * aeval wA h := by
@@ -1084,8 +1077,7 @@ theorem exists_global {y : (Σ k, ι k) → Ω} {φ : F →+* Ω} {L : Lat ξ E}
   obtain ⟨u, hu, e⟩ := ZUnit.exists_of_span_eq hne ((hD.2 p trivial c hc).symm.trans (hL p))
   have hB : (∏ k, y ⟨k, c k⟩ ^ a k) = u * ∏ k, y ⟨k, cp p k⟩ ^ a k := by
     apply smul_left_injective Ω he₀
-    simp only [mul_smul]
-    exact e
+    simpa only [mul_smul] using e
   have hU : unitAt ξ p (s p ^ M / φ α) :=
     ⟨div_ne_zero (pow_ne_zero _ (hs0 p)) hφα, (hx p).1, by rw [inv_div]; exact (hx p).2⟩
   have : (c₀ / ∏ k, y ⟨k, c k⟩ ^ a k) ^ M / φ α = s p ^ M / φ α * u⁻¹ ^ M := by
@@ -1410,8 +1402,7 @@ theorem isUnit_of_pow_mul_unit_add_eq_zero (X : Scheme.{0}) [ConnectedSpace X]
     have hx : x ∈ X.basicOpen (a ^ m * (u + a * b)) := by
       rw [Scheme.mem_basicOpen_top, map_mul, map_pow]
       exact (hxa.pow m).mul hxg
-    rw [h, Scheme.basicOpen_zero] at hx
-    exact hx
+    rwa [h, Scheme.basicOpen_zero] at hx
   have hall : ∀ x : X, x ∈ X.basicOpen a := by
     intro x
     by_contra hx
@@ -1523,8 +1514,7 @@ theorem unit_of_cover {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (CommRi
     rw [isUnit_map_iff]
     refine Iff.trans ?_ (unitAt_iff_of_isCptGen ξ hc ⟨ι y, hs y⟩ _).symm
     constructor
-    · intro hu
-      exact ⟨c y, hu, hcv y⟩
+    · exact fun hu => ⟨c y, hu, hcv y⟩
     · rintro ⟨u, hu, e⟩
       rwa [← hc.inj ⟨ι y, hs y⟩ (e.trans (hcv y).symm)]
   have lift : ∀ p : Cpt ξ, ¬ unitAt ξ p ϖ → ∃ y : Y, p = ⟨ι y, hs y⟩ := fun p hp => by
@@ -1571,8 +1561,7 @@ theorem PositivityTheory.Xgn.function_on_connected_fibre_unit : ∀ (X : Scheme.
     · rintro ⟨h1, h2⟩
       rw [(ConstReg.regular_const X Ω ξ O s hs ⟨_, h1⟩ ϖ).2 hc, not_not, ← hrr] at h2
       have h3 : (⟨x, (hU x).2 h1⟩ : U.toScheme) ∈ Set.range (pullback.fst (U.ι ≫ s) r) := by
-        rw [Scheme.Pullback.range_fst]
-        exact h2
+        rwa [Scheme.Pullback.range_fst]
       obtain ⟨y, hy⟩ := h3
       refine ⟨y, ?_⟩
       simp [ι, hy]
@@ -1593,8 +1582,7 @@ theorem PositivityTheory.Xgn.function_on_connected_fibre_unit : ∀ (X : Scheme.
     rw [← h3', (IsLocalRing.residue_eq_zero_iff ϖ).2 (hmax ▸ Ideal.mem_span_singleton_self ϖ), map_zero]
   have e2 : (ι ≫ s).appTop ((Scheme.ΓSpecIso (CommRingCat.of O)).inv ϖ) = 0 := by
     rw [e, Scheme.Hom.comp_appTop, CommRingCat.comp_apply, e1, map_zero]
-  rw [Scheme.Hom.comp_appTop, CommRingCat.comp_apply] at e2
-  exact e2
+  rwa [Scheme.Hom.comp_appTop, CommRingCat.comp_apply] at e2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.FunctionOnConnectedFibreUnit =====
@@ -1894,8 +1882,7 @@ theorem core (hSm : SmoothLine) (hLc : LocalCmp) (hNu : Numerics) (hF : HT.Fargu
         exact ea.trans (congrArg (d₁ • ·) h7)
       · rw [mul_smul]
         exact eb.trans (congrArg (d₂ • ·) h8)
-      · rw [← div_mul_div_comm, ← mul_div_assoc]
-        exact h9
+      · rwa [← div_mul_div_comm, ← mul_div_assoc]
     rw [← hA₀h]
     exact mul_left_cancel₀ (Real.exp_pos _).ne' (mul_right_cancel₀ (norm_ne_zero_iff.2 hne) (k1.symm.trans k2))
   · rw [hSf]

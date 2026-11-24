@@ -91,8 +91,7 @@ theorem fst_eq_one_of_bridge (I : AutInst) (e : I.GA ≃ₜ* HAd I) (hB : IsBrid
   show uMat (x.1 v) = 1
   rw [h1]
   unfold ofHAInf
-  rw [hz]
-  rw [map_thetaV_eq_one I v _ hx, Matrix.mul_one, Matrix.nonsing_inv_mul _ hP]
+  rw [hz, map_thetaV_eq_one I v _ hx, Matrix.mul_one, Matrix.nonsing_inv_mul _ hP]
 
 theorem iota_fst_eq_one {D : D7} (y : GA D (D.sp.Y 0)) (hy : y ∈ GfC (D.sp.Y 0)) :
     (Formalism.IndefR.RationalEmbedding.iota D y).1 = 1 := by
@@ -141,8 +140,7 @@ theorem mem_hatL_iff_of_St {β M : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)}
     group
   rw [hF, hF, e]
   constructor
-  · intro hw i
-    exact mulVec_mem_intAf _ (hint u) _ hw i
+  · exact fun hw i => mulVec_mem_intAf _ (hint u) _ hw i
   · intro hw i
     have e2 : (β⁻¹).val *ᵥ x = (Formalism.L2.DIV.intGL F E n u⁻¹).val *ᵥ
           ((Formalism.L2.DIV.intGL F E n u).val *ᵥ ((β⁻¹).val *ᵥ x)) := by
@@ -182,8 +180,7 @@ theorem fmat_eq_of_bridge (I : AutInst) (e : I.GA ≃ₜ* HAd I) (hB : IsBridge 
 theorem Lv_iff {D : D7} (z : Fin (D.sp.Y 0).rank → D.host.E) :
     z ∈ Formalism.L2.SG.InstExistsPf.Lv D ↔ z ∈ Formalism.L2.Herm.crdLat (D.sp.Y 0) (D.sp.Y 0).L0 := by
   constructor
-  · intro hz
-    exact ⟨_, hz, (D.sp.Y 0).frame.equivFun.apply_symm_apply z⟩
+  · exact fun hz => ⟨_, hz, (D.sp.Y 0).frame.equivFun.apply_symm_apply z⟩
   · rintro ⟨w, hw, rfl⟩
     show (D.sp.Y 0).frame.equivFun.symm ((D.sp.Y 0).frame.equivFun w) ∈ (D.sp.Y 0).L0
     simpa using hw

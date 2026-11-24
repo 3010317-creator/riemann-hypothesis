@@ -64,8 +64,7 @@ lemma keyU_injective (e : ι ≃ Fin (Fintype.card ι)) : Function.Injective (ke
   obtain ⟨h1, h2, h3⟩ := h
   have ha : (a : ℕ) = a' := by have := a.isLt; have := a'.isLt; omega
   apply Subtype.ext
-  simp only [Prod.mk.injEq]
-  exact ⟨e.injective h3, Fin.ext ha, Fin.ext h1⟩
+  simpa only [Prod.mk.injEq] using ⟨e.injective h3, Fin.ext ha, Fin.ext h1⟩
 
 private lemma toMatrix_entry_lemma (β : ι → Matrix (Fin r) (Fin r) ℂ) (i j : UpI ι r) :
     LinearMap.toMatrix' (Lβ β) i j =
@@ -78,10 +77,10 @@ private lemma toMatrix_entry_lemma (β : ι → Matrix (Fin r) (Fin r) ℂ) (i j
   · by_cases h : τ' = τ ∧ b' = b
     · obtain ⟨rfl, rfl⟩ := h
       simp [hj]
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       split_ifs with h'
       · simp
-      · rw [Pi.single_apply, if_neg, mul_zero]
+      · rw [Pi.single_apply, ite_eq_right, mul_zero]
         intro heq
         apply h
         simp only [Subtype.mk.injEq, Prod.mk.injEq] at heq
@@ -89,7 +88,7 @@ private lemma toMatrix_entry_lemma (β : ι → Matrix (Fin r) (Fin r) ℂ) (i j
   · intro c _ hc
     split_ifs with h'
     · simp
-    · rw [Pi.single_apply, if_neg, mul_zero]
+    · rw [Pi.single_apply, ite_eq_right, mul_zero]
       intro heq
       simp only [Subtype.mk.injEq, Prod.mk.injEq] at heq
       exact hc heq.2.1
@@ -113,7 +112,7 @@ lemma toMatrix_Lβ_zero (e : ι ≃ Fin (Fintype.card ι)) (β : ι → Matrix (
 
 lemma toMatrix_Lβ_diag (β : ι → Matrix (Fin r) (Fin r) ℂ) (hβ : ∀ τ, (β τ).BlockTriangular id) (i : UpI ι r) :
     LinearMap.toMatrix' (Lβ β) i i = β i.1.1 i.1.2.1 i.1.2.1 := by
-  rw [toMatrix_entry_lemma, if_pos ⟨rfl, rfl⟩]
+  rw [toMatrix_entry_lemma, ite_eq_left ⟨rfl, rfl⟩]
 
 theorem det_Lβ (β : ι → Matrix (Fin r) (Fin r) ℂ) (hβ : ∀ τ, (β τ).BlockTriangular id) :
     LinearMap.det (Lβ β) = ∏ i : UpI ι r, β i.1.1 i.1.2.1 i.1.2.1 := by
@@ -166,8 +165,7 @@ lemma Lβ_diag (β : ι → Matrix (Fin r) (Fin r) ℂ) (hβ : ∀ τ, (β τ).B
     rcases lt_or_gt_of_ne hcb with h | h
     · rw [hβ τ h, zero_mul]
     · simp [Umat, h]
-  · intro h
-    exact absurd (Finset.mem_univ b) h
+  · exact fun h => absurd (Finset.mem_univ b) h
 
 lemma jacU_Lβ (β : ι → Matrix (Fin r) (Fin r) ℂ) (hβ : ∀ τ, (β τ).BlockTriangular id) (y : UpI ι r → ℂ) :
     jacU (Lβ β y) = jacβ β * jacU y := by
@@ -230,10 +228,8 @@ lemma continuous_jacU : Continuous (jacU (ι := ι) (r := r)) := by
   unfold jacU
   refine continuous_finsetProd _ fun i _ => ?_
   by_cases h : i.2.2 < i.2.1
-  · simp only [h, ↓reduceIte]
-    exact continuous_apply _
-  · simp only [h, ↓reduceIte]
-    exact continuous_const
+  · simpa only [h, ↓reduceIte] using continuous_apply _
+  · simpa only [h, ↓reduceIte] using continuous_const
 
 lemma measurable_normSq_jacU : Measurable fun y : UpI ι r → ℂ => ENNReal.ofReal (Complex.normSq (jacU y)) :=
   (ENNReal.continuous_ofReal.comp (Complex.continuous_normSq.comp continuous_jacU)).measurable

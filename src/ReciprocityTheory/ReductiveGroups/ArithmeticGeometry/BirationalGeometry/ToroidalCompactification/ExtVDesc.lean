@@ -242,8 +242,7 @@ theorem pullCubDescent (hExt : extendGenSt.{0}) (hGF : GlobalFnsDvrSt) : PullCub
     have hz : (𝟙 _ ≫ etaK V (FractionRing V)) y ∈
         ((LB.div (t'.PP.L.pull ψ.left) t.PP.L).pull (eSec t.G)).U (fun _ => J ((𝟙 _ ≫ eA) ≫ ja)) := by
       have := hJ.mem (fun _ : PUnit => eSec t.G) (𝟙 _ ≫ etaK V (FractionRing V))
-      rw [hQ] at this
-      exact this
+      rwa [hQ] at this
     exact (gm_divPullGen (eSec t.G) t.PP.rig ((CubeMap.ofHom ψ).rigPull t'.PP.L t'.PP.rig)
       (𝟙 _ ≫ etaK V (FractionRing V)) y (fun _ => J ((𝟙 _ ≫ eA) ≫ ja)) hz).trans
       (congrArg₂ (fun a b => a * b⁻¹) (gm_rigPullOf ψ.left (𝟙 _) _ t'.PP.L t'.PP.rig
@@ -267,8 +266,7 @@ theorem pullCubDescent (hExt : extendGenSt.{0}) (hGF : GlobalFnsDvrSt) : PullCub
           (gw w₁ ((𝟙 _ ≫ eA) ≫ io.hom.left) y (J ((𝟙 _ ≫ eA) ≫ ja)).2 k₂)⁻¹ := hL
     rw [hval]
     have e4 : (𝟙 _ ≫ eA) ≫ io.hom.left = 𝟙 _ ≫ eSec tK.G := by rw [Category.id_comp, Category.id_comp, e2]
-    rw [e4]
-    rw [hNrig y J hJ]
+    rw [e4, hNrig y J hJ]
     have mφ : m.φ (eSec tK.G y) ∈ t.PP.L.U (J ((𝟙 _ ≫ eA) ≫ ja)).2 := pm ▸ hm.2
     have mφ' : m'.φ (eSec tK.G y) ∈ t'.PP.L.U ((J ((𝟙 _ ≫ eA) ≫ ja)).1 ⟨⟩) := by
       have h' : m'.φ (eSec tK.G y) = ψ.left (((𝟙 _ ≫ eA) ≫ ja) y) := by
@@ -306,12 +304,10 @@ theorem pullCubDescent (hExt : extendGenSt.{0}) (hGF : GlobalFnsDvrSt) : PullCub
         exact ((gm_res _ y₀ _ (hG.mem _ _) _).trans (gm_pull _ _ y₀ _ hP _)).symm
       have m1 : ψ.left (eSec t.G ((𝟙 _ ≫ etaK V (FractionRing V)) y₀)) ∈ t'.PP.L.U ((J ((𝟙 _ ≫ eA) ≫ ja)).1 ⟨⟩) := by
         have := (mem_pull_iff ψ.left _ _).1 hP.1
-        rw [← pJ] at this
-        exact this
+        rwa [← pJ] at this
       have m2 : eSec t.G ((𝟙 _ ≫ etaK V (FractionRing V)) y₀) ∈ t.PP.L.U (J ((𝟙 _ ≫ eA) ≫ ja)).2 := by
         have := hP.2
-        rw [← pJ] at this
-        exact this
+        rwa [← pJ] at this
       have hu' := hu _ (𝟙 _ ≫ etaK V (FractionRing V)) y₀ (fun _ => (J ((𝟙 _ ≫ eA) ≫ ja)).1 ⟨⟩)
         (fun _ => (J ((𝟙 _ ≫ eA) ≫ ja)).2) (fun _ => m1) (fun _ => m2)
       simp only [Fintype.prod_unique, zpow_one] at hu'
@@ -368,8 +364,7 @@ theorem pullCubDescent (hExt : extendGenSt.{0}) (hGF : GlobalFnsDvrSt) : PullCub
         (congrArg (fun y => gm (eSec (G3 t.G)) z ⊤ u *
           ((∏ I : thK, gw w (eSec (G3 t.G) ≫ thφ t.G (x3 t.G) I) z p₀ q₀ ^ thε I) * y)) c₁).symm.trans
             (hu'.symm.trans c₂)
-      rw [hprod, _root_.mul_one, _root_.mul_one] at h2
-      exact h2
+      rwa [hprod, _root_.mul_one, _root_.mul_one] at h2
     have hprop : IsProper ((Over.pullback (spMap (algebraMap V (FractionRing V)))).obj t.G).hom := by
       haveI : IsIso io.hom.left := ⟨⟨io.inv.left, by rw [← Over.comp_left, io.hom_inv_id, Over.id_left],
         by rw [← Over.comp_left, io.inv_hom_id, Over.id_left]⟩⟩

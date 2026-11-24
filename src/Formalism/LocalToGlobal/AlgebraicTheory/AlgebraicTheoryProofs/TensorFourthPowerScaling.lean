@@ -59,8 +59,7 @@ theorem jets_rescale (hS : LinScale) (p : ℕ) [Fact p.Prime] (m : Type) [Fintyp
     rw [norm_pow, _root_.ReciprocityTheory.ChartRestriction.L1.norm_natCast_Cl_of_not_dvd p hN', one_pow]
   rw [hsplit] at h1
   have eq : ∀ a b c d : ℂ_[p], a * (b * c * d) = b * (a * (c * d)) := by intros; ring
-  rw [eq, norm_mul, hn, one_mul] at h1
-  exact h1
+  rwa [eq, norm_mul, hn, one_mul] at h1
 
 end LocalJetRescaling
 
@@ -85,8 +84,7 @@ private theorem exists_quadratic_of_mul_mem_lattice (L : PeriodPair) (c : ℂ) (
   · exact absurd h (mul_ne_zero n1 n2)
 private theorem norm_le_one_of_monic_int_quadratic {K : Type} [NormedField K] [IsUltrametricDist K] (x : K) (s t : ℤ)
     (h : x ^ 2 + s * x + t = 0) : ‖x‖ ≤ 1 := by
-  by_contra hx
-  push_neg at hx
+  by_contra! hx
   have hs : ‖(s : K)‖ ≤ 1 := IsUltrametricDist.norm_intCast_le_one K s
   have ht : ‖(t : K)‖ ≤ 1 := IsUltrametricDist.norm_intCast_le_one K t
   have e : x ^ 2 = -((s : K) * x + t) := by linear_combination h
@@ -193,8 +191,7 @@ private theorem norm_apply_le_one_of_not_dvd_relIdx (L : PeriodPair) {n : Type} 
     simpa using this
   rw [map_mul, norm_mul, map_natCast] at h1
   have hD1 : ‖(D : ℂ_[p])‖ = 1 := _root_.ReciprocityTheory.ChartRestriction.L1.norm_natCast_Cl_of_not_dvd p hidx
-  rw [hD1, one_mul] at h1
-  exact h1
+  rwa [hD1, one_mul] at h1
 
 private theorem sum_inverse_mul_sum_eq_ite_frameM {n ν J : Type} [Fintype n] [DecidableEq n] [Fintype ν] [Fintype J] (p : ℕ) [Fact p.Prime]
     (ι : ℂ ≃+* ℂ_[p]) (g : (Fin 4 × n → ℂ) ≃ₗ[ℂ] (Fin 4 × n → ℂ)) (v : J → n → ℂ) (A : J → ν → ℂ_[p])
@@ -288,8 +285,7 @@ theorem etLoc_of (h1 : TensZEt) (h2 : EtThetaZ) (h3 : LinScale) : EtLoc := by
         rw [div_le_one (norm_pos_iff.2 hMne)]
         exact hA j y.2
       exact mul_le_one₀ e1 (by positivity) e2
-    · intro a i b x
-      exact sum_inverse_mul_sum_eq_ite_frameM p ι g₁ v A _ hMne a i b x
+    · exact fun a i b x => sum_inverse_mul_sum_eq_ite_frameM p ι g₁ v A _ hMne a i b x
   have hJ : JetsIntegral (thetaLin (ι : ℂ →+* ℂ_[p]) h θ r t (frameM (ι : ℂ →+* ℂ_[p]) v A)) := by
     unfold thetaLin
     exact jetsIntegral_sum_C_mul r _ hr hk

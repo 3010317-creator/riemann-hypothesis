@@ -191,8 +191,7 @@ theorem card_symIdx (n : ℕ) (mid : Prop) [Decidable mid] (s : Finset (Fin (n /
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton, Fin.ext_iff]
       exact ⟨fun h => h.2.2, fun h => ⟨hc.1, hc.2, h⟩⟩
     · rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
-      intro i _ h
-      exact hc ⟨h.1, h.2.1⟩
+      exact fun i _ h => hc ⟨h.1, h.2.1⟩
   rw [hsplit, Finset.card_union_of_disjoint hd2, Finset.card_union_of_disjoint hd1, Finset.card_map,
     Finset.card_map, hM]
   ring
@@ -269,9 +268,9 @@ theorem prod_of_hasVals {w : Pl E} {n m : ℕ} (x : Fin n → ℤ) (S : Finset (
     have hm := Finset.orderEmbOfFin_mem S h j
     have hk : (S.orderIsoOfFin h).symm ⟨S.orderEmbOfFin h j, hm⟩ = j :=
       (S.orderIsoOfFin h).symm_apply_eq.mpr (Subtype.ext (Finset.coe_orderIsoOfFin_apply S h j).symm)
-    simp only [dif_pos hm, hk]
+    simp only [dite_eq_left hm, hk]
   · intro i hi
-    simp only [dif_pos hi]
+    simp only [dite_eq_left hi]
     have hk : S.orderEmbOfFin h ((S.orderIsoOfFin h).symm ⟨i, hi⟩) = i := by
       rw [← Finset.coe_orderIsoOfFin_apply, OrderIso.apply_symm_apply]
     refine ⟨(hv _).1, ?_⟩
@@ -290,8 +289,7 @@ theorem csr_root {w : Pl E} (hw : ¬ IsSplitAt w) {Q : (w.adicCompletion E)[X]} 
   have h1 : eval₂ (RingHom.id _) (⅟(cj w r)) (Q.map (cj w)).reverse = 0 := by
     rw [eval₂_reverse_eq_zero_iff, eval₂_map, RingHom.id_comp, eval₂_at_apply, hr.eq_zero, map_zero]
   have h2 : eval (cj w r)⁻¹ (C (cj w (Q.coeff 0)) * Q) = 0 := by
-    rw [hc', ← invOf_eq_inv]
-    exact h1
+    rwa [hc', ← invOf_eq_inv]
   rw [eval_mul, eval_C] at h2
   exact (mul_eq_zero.mp h2).resolve_left ((_root_.map_ne_zero _).mpr h0)
 
@@ -324,18 +322,16 @@ theorem combine_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a �
       _ = Q₁ * Q₂ := by
         rw [hQ₁, hQ₂]
         congr 1
-        · exact Finset.prod_congr rfl fun i hi => by simp only [if_pos hi]
-        · exact Finset.prod_congr rfl fun i hi => by simp only [if_neg (Finset.disjoint_right.mp hD hi)]
+        · exact Finset.prod_congr rfl fun i hi => by simp only [ite_eq_left hi]
+        · exact Finset.prod_congr rfl fun i hi => by simp only [ite_eq_right (Finset.disjoint_right.mp hD hi)]
   · intro i
     by_cases hi : i ∈ S₁
-    · simp only [if_pos hi]
-      exact hu₁ i hi
+    · simpa only [ite_eq_left hi] using hu₁ i hi
     · have hi2 : i ∈ S₂ := by
         have := Finset.mem_univ i
         rw [← hU, Finset.mem_union] at this
         exact this.resolve_left hi
-      simp only [if_neg hi]
-      exact hu₂ i hi2
+      simpa only [ite_eq_right hi] using hu₂ i hi2
 
 theorem split_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a ≤ n) (x : Fin n → ℤ) (hx : StrictAnti x)
     (Q₁ Q₂ : (w.adicCompletion E)[X]) (hm₁ : Q₁.Monic) (hm₂ : Q₂.Monic) (hd₁ : Q₁.natDegree = a)
@@ -426,8 +422,7 @@ theorem split_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a ≤ 
       apply hanti.injective
       rw [← (hu k).2, hku, GlobalTheory.WeylCell.U21TorusFactor.ordL_inv,
         GlobalTheory.WeylCell.U21TorusFactor.ordL_map (GlobalTheory.T.localConjugation_involutive_valuation_preserving E w).2, (hu i).2, wexp_rev]
-    rw [← hkr]
-    exact hk
+    rwa [← hkr]
   have hsymc : ∀ i, i ∈ Tᶜ → i.rev ∈ Tᶜ := fun i hi => by
     rw [Finset.mem_compl] at hi ⊢
     exact fun h => hi (by simpa using hsym _ h)
@@ -452,15 +447,15 @@ theorem split_caseA_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n a : ℕ) (ha : a ≤ 
     by_cases hp1 : ∃ j ∈ T, j.val = n / 2 ∧ n % 2 = 1 <;> by_cases hp2 : ∃ j ∈ Tᶜ, j.val = n / 2 ∧ n % 2 = 1
     · exact absurd ⟨hp1, hp2⟩ hex
     · have ho : n % 2 = 1 := by obtain ⟨_, _, _, ho⟩ := hp1; exact ho
-      rw [if_pos ⟨hp1, ho⟩] at cT
-      rw [if_neg fun h => hp2 h.1] at cTc
+      rw [ite_eq_left ⟨hp1, ho⟩] at cT
+      rw [ite_eq_right fun h => hp2 h.1] at cTc
       exact ⟨iff_of_true (by omega) hp1, iff_of_false (by omega) hp2, by omega, by omega, by omega⟩
     · have ho : n % 2 = 1 := by obtain ⟨_, _, _, ho⟩ := hp2; exact ho
-      rw [if_neg fun h => hp1 h.1] at cT
-      rw [if_pos ⟨hp2, ho⟩] at cTc
+      rw [ite_eq_right fun h => hp1 h.1] at cT
+      rw [ite_eq_left ⟨hp2, ho⟩] at cTc
       exact ⟨iff_of_false (by omega) hp1, iff_of_true (by omega) hp2, by omega, by omega, by omega⟩
-    · rw [if_neg fun h => hp1 h.1] at cT
-      rw [if_neg fun h => hp2 h.1] at cTc
+    · rw [ite_eq_right fun h => hp1 h.1] at cT
+      rw [ite_eq_right fun h => hp2 h.1] at cTc
       exact ⟨iff_of_false (by omega) hp1, iff_of_false (by omega) hp2, by omega, by omega, by omega⟩
   obtain ⟨hm1, hm2, hsc1, hsc2, hpar⟩ := hcases
   have hS₁ : symIdx n (a % 2 = 1) (half T) = T := by

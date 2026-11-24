@@ -211,13 +211,13 @@ private theorem mem_ker_iff {k D : Type} [Field k] [Group D] (η : D →* ℤˣ)
   constructor
   · intro h a b
     have h1 := congrArg (fun Y : Gb (k := k) j => Y.val a b) h
-    simp only [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, if_neg hne] at h1
+    simp only [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, ite_eq_right hne] at h1
     exact h1.symm
   · intro h
     apply Subtype.ext
     ext a b
     show ((gRep η Ψ j c) X).val a b = X.val a b
-    rw [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, if_neg hne]
+    rw [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, ite_eq_right hne]
     exact (h a b).symm
 
 private theorem ker_one {k : Type} [Field k] (j : ℤ) (K : Submodule k (Gb (k := k) j))
@@ -260,11 +260,10 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
       finrank k (LinearMap.ker (gRep η Ψ j c - LinearMap.id)) = 0 := by
     intro hz
     rw [Submodule.finrank_eq_zero, Submodule.eq_bot_iff]
-    intro X hX
-    exact hz X ((hK X).1 hX)
+    exact fun X hX => hz X ((hK X).1 hX)
   rcases (show j ≤ -3 ∨ j = -2 ∨ j = -1 ∨ j = 0 ∨ j = 1 ∨ j = 2 ∨ 3 ≤ j by omega)
     with h | rfl | rfl | rfl | rfl | rfl | h
-  · rw [if_neg (by rw [abs_le]; omega)]
+  · rw [ite_eq_right (by rw [abs_le]; omega)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ j → X.val a b = 0 := X.2
@@ -276,7 +275,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
     have := a.isLt
     have := b.isLt
     omega
-  · rw [if_neg (by norm_num)]
+  · rw [ite_eq_right (by norm_num)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ -2 → X.val a b = 0 := X.2
@@ -286,7 +285,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
     fin_cases a <;> fin_cases b <;> first
       | exact hZ _ _ (by decide)
       | exact half h2 (hA _ _)
-  · rw [if_pos (by norm_num)]
+  · rw [ite_eq_left (by norm_num)]
     refine ker_one _ _ hK (!![0, 0, 0; 1, 0, 0; 0, -1, 0]) ?_ ?_ 1 0 (by simp) ?_
     · show ∀ a b, wt a b ≠ -1 → _ = 0
       intro a b hab
@@ -300,7 +299,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
       fin_cases a <;> fin_cases b <;> simp <;> first
         | exact (hZ _ _ (by decide)).symm
         | exact (hXa 2 1).symm
-  · rw [if_pos (by norm_num)]
+  · rw [ite_eq_left (by norm_num)]
     refine ker_one _ _ hK (!![1, 0, 0; 0, 0, 0; 0, 0, -1]) ?_ ?_ 0 0 (by simp) ?_
     · show ∀ a b, wt a b ≠ 0 → _ = 0
       intro a b hab
@@ -315,7 +314,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
         | exact (hZ _ _ (by decide)).symm
         | exact (half h2 (hXa 1 1)).symm
         | exact (hXa 2 2).symm
-  · rw [if_pos (by norm_num)]
+  · rw [ite_eq_left (by norm_num)]
     refine ker_one _ _ hK (!![0, 1, 0; 0, 0, -1; 0, 0, 0]) ?_ ?_ 0 1 (by simp) ?_
     · show ∀ a b, wt a b ≠ 1 → _ = 0
       intro a b hab
@@ -329,7 +328,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
       fin_cases a <;> fin_cases b <;> simp <;> first
         | exact (hZ _ _ (by decide)).symm
         | exact (hXa 1 2).symm
-  · rw [if_neg (by norm_num)]
+  · rw [ite_eq_right (by norm_num)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ 2 → X.val a b = 0 := X.2
@@ -339,7 +338,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
     fin_cases a <;> fin_cases b <;> first
       | exact hZ _ _ (by decide)
       | exact half h2 (hA _ _)
-  · rw [if_neg (by rw [abs_le]; omega)]
+  · rw [ite_eq_right (by rw [abs_le]; omega)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ j → X.val a b = 0 := X.2
@@ -418,8 +417,7 @@ private theorem zhat_lift :
     exact this (Subgroup.mem_top x)
   · show f (d φ) = e
     rw [hdφ, hf1]
-  · intro g
-    exact Subgroup.npow_mem_zpowers e _
+  · exact fun g => Subgroup.npow_mem_zpowers e _
 
 theorem UpperTheory.finrank_unramified_cocycles_eq_finrank_invariants :
     ∀ {k D M : Type} [Field k] [Group D] [TopologicalSpace D] [IsTopologicalGroup D] [AddCommGroup M] [Module k M] [Finite M] [TopologicalSpace M] [DiscreteTopology M] (ρ : Representation k D M) (I : Subgroup D) (W : Submodule k (D → M)), ContAction ρ → I.Normal → (∃ φ : D, (I ⊔ Subgroup.zpowers φ).topologicalClosure = ⊤ ∧ ∀ n : ℕ, 0 < n → ∃ d : D →* Multiplicative (ZMod n), IsLocallyConstant d ∧ (∀ s ∈ I, d s = 1) ∧ d φ = Multiplicative.ofAdd 1) →
@@ -708,8 +706,7 @@ private theorem cone {k ι A1 A2 : Type} [Field k] [Fintype ι] {L1 L2 : ι → 
   · rw [Module.finrank_prod, Module.finrank_pi_fintype, Module.finrank_pi_fintype,
       Module.finrank_pi_fintype] at key
     exact key
-  · intro x y hxy
-    exact Subtype.ext (congrArg (fun t => t.1.1) hxy)
+  · exact fun x y hxy => Subtype.ext (congrArg (fun t => t.1.1) hxy)
   · intro x
     constructor
     · intro hx
@@ -996,7 +993,7 @@ private theorem hc_scal {k D : Type} [CommRing k] [Group D] (η : D →* ℤˣ) 
     (X : Gb (k := k) j) : gRep η Ψ j g X = ((Ψ g ^ j : kˣ) : k) • X := by
   refine hc_val ?_
   ext a b
-  rw [gRep_val, adRep_baseLift_apply, if_pos hg]
+  rw [gRep_val, adRep_baseLift_apply, ite_eq_left hg]
   show _ = ((Ψ g ^ j : kˣ) : k) * X.val a b
   by_cases h : wt a b = j
   · rw [h]
@@ -1010,7 +1007,7 @@ private theorem hc_congr {k D : Type} [CommRing k] [Group D] (η : D →* ℤˣ)
   · refine hc_val ?_
     ext a b
     have h2 : ¬ η g = 1 := by rw [h1]; decide
-    rw [gRep_val, gRep_val, adRep_baseLift_apply, adRep_baseLift_apply, if_neg h2, if_neg (h ▸ h2)]
+    rw [gRep_val, gRep_val, adRep_baseLift_apply, adRep_baseLift_apply, ite_eq_right h2, ite_eq_right (h ▸ h2)]
     by_cases e : wt a b = j
     · rw [e, h']
     · have : X.val b.rev a.rev = 0 := X.2 _ _ (by
@@ -1062,8 +1059,7 @@ private theorem exists_scalar_action_nontrivial (hF : F.Ok) {j : ℤ} (hj : j �
   by_cases h : |j| ≤ 2
   · refine ⟨_, hc_scal _ _ j h1, hc_pow ?_ hj h⟩
     have := (h2.map (residue O)).ne_zero
-    rw [map_sub, map_pow, map_one] at this
-    exact this
+    rwa [map_sub, map_pow, map_one] at this
   · obtain ⟨f, e, -⟩ := UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants F.η F.Ψbar F.c (hc_two hF) hF.ηc (hc_c hF) j
     have : Subsingleton (Gb (k := ResidueField O) j) := by
       rw [← Module.finrank_zero_iff (R := ResidueField O), e]; omega
@@ -1165,7 +1161,7 @@ private theorem hc_count [Fintype ι] (hF : F.Ok) (hV : F.LocVan) (j : ℤ)
       · simpa using hc_scal F.η F.Ψbar 0 h1 m
       · exact (hc_congr F.η F.Ψbar 0 (h1.trans hF.ηc.symm) (by simp) m).trans h
     rw [e] at g3
-    simp only [show ¬ (0 : ℤ) = -1 by decide, show ¬ ((0 : ℤ) = 1 ∨ (0 : ℤ) = 2) by decide, if_false]
+    simp only [show ¬ (0 : ℤ) = -1 by decide, show ¬ ((0 : ℤ) = 1 ∨ (0 : ℤ) = 2) by decide, ite_false]
     omega
   · have e : F.ZL j F.vl = Z1 (F.gloc j F.vl) := le_antisymm (fun y hy => hy.1) fun y hy =>
       ⟨hy, fun e => (e rfl).elim, fun _ e => (lt_asymm hj e).elim, fun _ e => (hj.ne' e).elim⟩

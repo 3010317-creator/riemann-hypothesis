@@ -338,13 +338,7 @@ theorem isEnum_cast' {S : SPar} {n k : ℕ} (h : k = n) {lam : Fin n → ℝ} {�
   simpa using hE
 
 theorem UH_mul' {n : ℕ} {H a b : Matrix (Fin n) (Fin n) ℂ} (ha : a ∈ Formalism.QuantumDeterminants.UH H) (hb : b ∈ Formalism.QuantumDeterminants.UH H) :
-    a * b ∈ Formalism.QuantumDeterminants.UH H := by
-  have ha' : aᴴ * H * a = H := ha
-  have hb' : bᴴ * H * b = H := hb
-  show (a * b)ᴴ * H * (a * b) = H
-  rw [Matrix.conjTranspose_mul]
-  calc bᴴ * aᴴ * H * (a * b) = bᴴ * (aᴴ * H * a) * b := by simp only [Matrix.mul_assoc]
-    _ = H := by rw [ha', hb']
+    a * b ∈ Formalism.QuantumDeterminants.UH H := GlobalTheory.PointAtPlaceHom.mul_mem_UH ha hb
 
 theorem conj_mul' {n : ℕ} {B : Matrix (Fin n) (Fin n) ℂ} (hB : IsUnit B) (x y : Matrix (Fin n) (Fin n) ℂ) :
     B * (x * y) * B⁻¹ = B * x * B⁻¹ * (B * y * B⁻¹) := by
@@ -603,8 +597,7 @@ theorem hs_eq_norm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) :
     Real.sqrt (∑ i, ∑ j, ‖A i j‖ ^ 2) = ‖A‖ := by
   rw [Matrix.frobenius_norm_def, Real.sqrt_eq_rpow]
   congr 1
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  exact (Real.rpow_natCast _ 2).symm
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => (Real.rpow_natCast _ 2).symm
 
 theorem hsn_mul_le {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℂ) :
     GlobalTheory.SepPer.hsn (A * B) ≤ GlobalTheory.SepPer.hsn A * GlobalTheory.SepPer.hsn B := by
@@ -1018,10 +1011,10 @@ theorem norm_prod_sub {ι : Type} [Fintype ι] [DecidableEq ι] (a b : ι → �
     simpa using hσ
   have hb : ∏ σ, b σ = b τ * ∏ σ ∈ ({τ}ᶜ : Finset ι), b σ := Fintype.prod_eq_mul_prod_compl τ _
   have hr : (∏ σ, if σ = τ then ‖a σ - b σ‖ else ‖b σ‖) = ‖a τ - b τ‖ * ∏ σ ∈ ({τ}ᶜ : Finset ι), ‖b σ‖ := by
-    rw [Fintype.prod_eq_mul_prod_compl τ, if_pos rfl]
+    rw [Fintype.prod_eq_mul_prod_compl τ, ite_eq_left rfl]
     congr 1
     refine Finset.prod_congr rfl fun σ hσ => ?_
-    rw [if_neg (by simpa using hσ)]
+    rw [ite_eq_right (by simpa using hσ)]
   rw [ha, hb, hr, ← sub_mul, norm_mul, norm_prod]
 
 theorem pack_of_loc : ∀ {D : D7} (θ : InfFam D), IsInfFam θ → ∀ {Y V : HSp D} (d : HermitianOrthogonalExtensionData Y V 1 1) {S S' : D.what₂.Tau → SPar}
@@ -1136,7 +1129,7 @@ theorem pack_of_loc : ∀ {D : D7} (θ : InfFam D), IsInfFam θ → ∀ {Y V : H
           simp only [↓reduceIte, hcomp]
         · simp only [hσ, ↓reduceIte]
       · intro σ hσ
-        rw [hcomp, if_neg hσ, one_mul]
+        rw [hcomp, ite_eq_right hσ, one_mul]
     have hb : ∀ σ, (∫ u, (fun σ Z => if σ = τ then
             ‖mco M σ (g₀ σ) (v₀ σ) (embAt θ d σ (GlobalTheory.SepPer.cmp θ τ (oneP θ Y τ X s) * Z)) -
               mco M σ (g₀ σ) (v₀ σ) (embAt θ d σ Z)‖
@@ -1176,7 +1169,7 @@ theorem pack_of_loc : ∀ {D : D7} (θ : InfFam D), IsInfFam θ → ∀ {Y V : H
     calc _ ≤ κ * ∏ σ, (Real.exp q * ‖c σ‖ * (if σ = τ then |s| * hsn (A τ * X * (A τ)⁻¹) else 1)) :=
           mul_le_mul_of_nonneg_left hle hκ.le
       _ = _ := by
-        rw [Finset.prod_mul_distrib, Finset.prod_ite_eq', if_pos (Finset.mem_univ τ), Finset.prod_mul_distrib,
+        rw [Finset.prod_mul_distrib, Finset.prod_ite_eq', ite_eq_left (Finset.mem_univ τ), Finset.prod_mul_distrib,
           Finset.prod_const, Finset.card_univ, ← Real.exp_nat_mul, norm_mul, Complex.norm_real, norm_prod,
           Real.norm_eq_abs, abs_of_pos hκ]
         show _ = Real.exp (Fintype.card D.what₂.Tau * q) * (κ * ∏ σ, ‖c σ‖) * |s| * hsn (A τ * X * (A τ)⁻¹)
@@ -1681,8 +1674,7 @@ theorem locOK_of_eigen : RealInputE → ∃ C : ℝ, 0 ≤ C ∧ Ev fun {D} _ _ 
   have hP := hx₀ D large₂ h1 h2 h3 T L μ0 hL G W M hM
   intro M₀ MP τ
   have hY : (Yc D 0).rank = D.R.r := by
-    have h := D.sp.Y_rank 0 (Nat.zero_le _)
-    simpa [Yc, Ranks.rankY] using h
+    simpa [Yc, Ranks.rankY] using D.sp.Y_rank 0 (Nat.zero_le _)
   have hN : (G.V (.core 0)).rank = D.R.r + 1 := by
     have h : (Yc D 0).rank + 1 = (G.V (.core 0)).rank := G.sp.dec0.rank
     omega
@@ -1778,8 +1770,7 @@ theorem packEx_of_eigen : RealInputE → PackEx := by
   refine ⟨p, ?_⟩
   have e : loss D (6 * C) large₂.sc.b = Fintype.card D.what₂.Tau * (6 * C * ((D.R.r : ℝ) + 1) ^ 4 * Real.log large₂.sc.b) := by
     unfold loss; ring
-  rw [e]
-  exact hp
+  rwa [e]
 
 end UpperTheory.Lit.Branch
 

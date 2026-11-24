@@ -122,8 +122,7 @@ theorem flCol_smul (ψ : AddChar k Circle) (ν : Measure k) (p : ℕ) (a : ℂ)
     (Φ : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k → ℂ) :
     flCol ψ ν p (a • Φ) = a • flCol ψ ν p Φ := by
   funext x
-  simp only [flCol_eq_integral, Pi.smul_apply, smul_eq_mul, mul_assoc]
-  exact integral_const_mul _ _
+  simpa only [flCol_eq_integral, Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul _ _
 
 end Lin
 
@@ -318,15 +317,14 @@ private theorem killsKernel_rowShear_invariant_lemma_10 (ν : Measure k) [ν.IsA
     have hfm : ∀ p, Measurable (f p) := by
       intro p
       by_cases hp : p.1.1 = Sum.inr i₀
-      · simp only [f, hp, if_true]
+      · simp only [f, hp, ite_true]
         exact (continuous_const.mul ((continuous_apply _).comp
           ((continuous_apply _).comp hXc))).measurable
-      · simp only [f, hp, if_false]
-        exact measurable_const
+      · simpa only [f, hp, ite_false] using measurable_const
     have hfd : ∀ (p : ↥it) (x y : ↥it → k), (∀ q, rk q < rk p → x q = y q) → f p x = f p y := by
       intro p x y hxy
       by_cases hp : p.1.1 = Sum.inr i₀
-      · simp only [f, hp, if_true, hX]
+      · simp only [f, hp, ite_true, hX]
         split_ifs with h1 h2
         · congr 1
           apply hxy
@@ -334,7 +332,7 @@ private theorem killsKernel_rowShear_invariant_lemma_10 (ν : Measure k) [ν.IsA
           omega
         · rfl
         · rfl
-      · simp only [f, hp, if_false]
+      · simp only [f, hp, ite_false]
     have hmp := _root_.GlobalTheory.SgLoc.TriShift.measurePreserving_triangular ν rk f hfm hfd
     have hshear : ∀ a, X (fun p => a p + f p a) = (1 + single (Sum.inr i₀) (Sum.inr j) s : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) * X a := by
       intro a
@@ -344,7 +342,7 @@ private theorem killsKernel_rowShear_invariant_lemma_10 (ν : Measure k) [ν.IsA
       · subst hr
         rw [single_mul_apply_same, hX, hX]
         by_cases hit : (Sum.inr i₀, q) ∈ it
-        · simp only [hit, dite_true, f, if_true]
+        · simp only [hit, dite_true, f, ite_true]
         · simp only [hit, dite_false]
           have hz : X a (Sum.inr j) q = 0 := by
             rw [mem_itB_iff] at hit
@@ -360,7 +358,7 @@ private theorem killsKernel_rowShear_invariant_lemma_10 (ν : Measure k) [ν.IsA
                 subst hq'
                 simp [_root_.GlobalTheory.RootEx.Free] at hit
                 omega
-            rw [hX, dite_eq_right hnit, if_pos hev]
+            rw [hX, dite_eq_right hnit, ite_eq_left hev]
             rcases q with q | q
             · simp [hβdef, _root_.GlobalTheory.RootEx.basePt]
             · simp [_root_.GlobalTheory.RootEx.Free] at hit
@@ -390,11 +388,9 @@ private theorem killsKernel_rowShear_invariant_lemma_10 (ν : Measure k) [ν.IsA
       Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k → ℂ) (X a) ∂(Measure.pi fun _ => ν) = 0
     simp only [Submodule.coe_sub, Pi.sub_apply]
     rw [integral_sub (hI Θ') (hI Θ), sub_eq_zero]
-    simp only [hΘ', ← hshear]
-    exact hcomp
+    simpa only [hΘ', ← hshear] using hcomp
   have h := hker (Θ' - Θ) key
-  rw [map_sub, sub_eq_zero] at h
-  exact h
+  rwa [map_sub, sub_eq_zero] at h
 
 open MeasureTheory ValuativeRel Matrix in
 variable {k : Type} [Field k] in
@@ -438,7 +434,7 @@ private theorem twist_invariant_of_lowerEntry_lemma_4 (ψ : AddChar k Circle) (�
   have hmem : _root_.GlobalTheory.RootEx.embA n u ∈ _root_.GlobalTheory.RootEx.N k n c (ρ + 1) := by
     rw [_root_.GlobalTheory.RootEx.Model.mem_N_iff]
     intro r s hrs
-    rw [hg, _root_.Matrix.add_apply, Matrix.single_apply, if_neg, add_zero]
+    rw [hg, _root_.Matrix.add_apply, Matrix.single_apply, ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     simp [_root_.GlobalTheory.RootEx.lev] at hrs
     omega
@@ -471,8 +467,7 @@ private theorem twist_invariant_of_lowerEntry_lemma_4 (ψ : AddChar k Circle) (�
     simp only [_root_.GlobalTheory.RootEx.ch, _root_.Matrix.add_apply, Finset.sum_add_distrib,
       add_sub_cancel_left]
     rw [Fintype.sum_eq_single i₀, single_mul_apply_same, hsucc]
-    intro i hi
-    exact single_mul_apply_of_ne (h := by simpa using hi) ..
+    exact fun i hi => single_mul_apply_of_ne (h := by simpa using hi) ..
   have hI' : (I : ℕ) = (i₀ : ℕ) + 1 := by
     rw [hi₀v]
     omega
@@ -616,8 +611,7 @@ theorem measurePreserving_shear {k ι : Type} [AddCommGroup k] [MeasurableSpace 
   funext i
   by_cases hi : p i
   · simp [e, w, MeasurableEquiv.piEquivPiSubtypeProd, hi, h0 α i hi]
-  · simp [e, w, MeasurableEquiv.piEquivPiSubtypeProd, hi]
-    exact (congrFun hα i).symm
+  · simpa [e, w, MeasurableEquiv.piEquivPiSubtypeProd, hi] using (congrFun hα i).symm
 
 section Gen
 variable {k : Type} [Field k] {m m' : Type} [Fintype m] [DecidableEq m] [Fintype m'] [DecidableEq m']
@@ -689,8 +683,7 @@ theorem red_rowAdd (ν : Measure k) [ν.IsAddHaarMeasure] (ev it : Finset (m × 
     · rw [h α r q hq]
       simp [fill, hq]
   unfold red
-  simp only [hfill]
-  exact hmp.integral_comp' (fun α => Θ (fill ev it β t' α))
+  simpa only [hfill] using hmp.integral_comp' (fun α => Θ (fill ev it β t' α))
 
 theorem kerRed_eq {M : Type} [AddCommGroup M] [Module ℂ M] (ν : Measure k) [ν.IsAddHaarMeasure]
     (ev it : Finset (m × m')) (β : Matrix m m' k) (l : SB (Matrix m m' k) →ₗ[ℂ] M) (hK : KerRed ν ev it β l)
@@ -844,7 +837,7 @@ theorem rowAdd_fill (l j : Fin c) (hl : l.val < j.val) (hj : j.val < ρ) (a : k)
         (t + Matrix.single (Sum.inr l) (Sum.inr j.castSucc) a) α r q := by
   have h' := h
   rw [mem_itUp] at h
-  simp only [rowAdd, fill, Matrix.of_apply, Matrix.add_apply, Matrix.single_apply, dif_neg h']
+  simp only [rowAdd, fill, Matrix.of_apply, Matrix.add_apply, Matrix.single_apply, dite_eq_right h']
   by_cases hr : r = Sum.inr l
   · subst hr
     rcases q with q | i
@@ -861,13 +854,13 @@ theorem rowAdd_fill (l j : Fin c) (hl : l.val < j.val) (hj : j.val < ρ) (a : k)
         rw [mem_evAll]
         simp only [Free, IsRead, not_false_eq_true, and_true]
         omega
-      rw [dif_neg hj', if_pos hjev]
+      rw [dite_eq_right hj', ite_eq_left hjev]
       by_cases hli : l.val < i.val
       · have hlev : (Sum.inr l, Sum.inr i) ∉ evAll n n' c ρ := by
           rw [mem_evAll]
           simp only [Free]
           omega
-        rw [if_neg hlev, if_neg hlev]
+        rw [ite_eq_right hlev, ite_eq_right hlev]
         by_cases hji : j.val = i.val
         · simp [basePt, Fin.ext_iff, hji]
         · simp [basePt, Fin.ext_iff, hji]
@@ -875,7 +868,7 @@ theorem rowAdd_fill (l j : Fin c) (hl : l.val < j.val) (hj : j.val < ρ) (a : k)
           rw [mem_evAll]
           simp only [Free, IsRead, not_false_eq_true, and_true]
           omega
-        rw [if_pos hlev, if_pos hlev]
+        rw [ite_eq_left hlev, ite_eq_left hlev]
         have hji : j.val ≠ i.val := by omega
         simp [basePt, hji]
   · simp [hr, Ne.symm hr]
@@ -900,8 +893,7 @@ theorem translate_law (ψ : AddChar k Circle) (ν : Measure k) (hψ : Continuous
     fun Φ => Φ.2
   have hnev : (Sum.inr l, Sum.inr j.castSucc) ∉ evAll n n' c ρ := by
     rw [mem_evAll]
-    intro hc
-    exact hc.1 (by simpa [Free] using hl)
+    exact fun hc => hc.1 (by simpa [Free] using hl)
   have hnit : (Sum.inr l, Sum.inr j.castSucc) ∉ itUp n n' c ρ (j.val + 1) := by
     rw [mem_itUp]
     rintro ⟨-, h2⟩
@@ -955,7 +947,7 @@ theorem translate_law (ψ : AddChar k Circle) (ν : Measure k) (hψ : Continuous
     have hfv : fill (evAll n n' c ρ) (itUp n n' c ρ (j.val + 1)) (basePt c (0 : Matrix n n' k)) t α (Sum.inr j) (Sum.inr l.succ)
         = if j.val = l.val + 1 then 1 else 0 := by
       simp only [fill, Matrix.of_apply]
-      rw [dif_neg hnit2, if_pos hev2]
+      rw [dite_eq_right hnit2, ite_eq_left hev2]
       simp [basePt]
     show (ψ (-simpleSum (embA n u)) : ℂ) * ((ψ (-a * _) : ℂ) * Θ.1 _) = Θ.1 _
     rw [← mul_assoc, hfv, hu, simpleSum_tv]
@@ -979,8 +971,7 @@ theorem kerRed_itFree : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       rw [mem_evAll] at he
       rw [mem_itUp] at he'
       exact he.1 he'.1
-    · intro e he he'
-      exact absurd he he'
+    · exact fun e he he' => absurd he he'
     · rintro ⟨r, q⟩ he he' b Θ Θ' hΘ
       rw [mem_itUp] at he he'
       obtain ⟨hf, hcol⟩ := he
@@ -1008,8 +999,7 @@ theorem kerRed_itFree : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     induction d with
     | zero =>
       intro _
-      rw [Nat.sub_zero, itUp_top]
-      exact hB
+      rwa [Nat.sub_zero, itUp_top]
     | succ d ih =>
       intro hd
       have h1 : ρ - d = (ρ - (d + 1)) + 1 := by omega
@@ -1080,7 +1070,7 @@ theorem fill_eq (ρ : ℕ) (h : ρ < c + 1) (t : Matrix (n ⊕ Fin c) (n' ⊕ Fi
       simp [basePt, colAt, h2]
   · rw [dite_eq_right (fun hh => hF ((mem_itFree ρ _).1 hh)), dite_eq_right hF]
     by_cases hR : IsRead n n' c ρ (r, q)
-    · rw [if_neg (fun hh => ((mem_evAll ρ _).1 hh).2 hR)]
+    · rw [ite_eq_right (fun hh => ((mem_evAll ρ _).1 hh).2 hR)]
       rcases r with r | l <;> rcases q with s | i
       · simp [basePt, colAt, readPart]
       · have h1 : i.val = ρ := hR
@@ -1088,7 +1078,7 @@ theorem fill_eq (ρ : ℕ) (h : ρ < c + 1) (t : Matrix (n ⊕ Fin c) (n' ⊕ Fi
         simp [basePt, colAt, readPart]
       · exact hR.elim
       · exact hR.elim
-    · rw [if_pos ((mem_evAll ρ _).2 ⟨hF, hR⟩)]
+    · rw [ite_eq_left ((mem_evAll ρ _).2 ⟨hF, hR⟩)]
       rcases r with r | l <;> rcases q with s | i
       · exact (hR trivial).elim
       · have h1 : i.val ≠ ρ := hR
@@ -1240,8 +1230,7 @@ theorem GlobalTheory.FlatFactor.flCol_factor : ∀ (k : Type) [Field k] [Valuati
     rw [← mul_assoc, ← Circle.coe_mul, ← AddChar.map_add_eq_mul, add_neg_cancel, AddChar.map_zero_eq_one,
       Circle.coe_one, one_mul]
   have := hS3 Θ (_root_.GlobalTheory.FlatRed.red_eq_zero_of_flCol k ψ ν n n' c ρ hc Φ.1 hΦ)
-  rw [hL', hΘ] at this
-  exact this
+  rwa [hL', hΘ] at this
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

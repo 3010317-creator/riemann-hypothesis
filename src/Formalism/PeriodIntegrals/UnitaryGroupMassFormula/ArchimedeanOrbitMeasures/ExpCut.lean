@@ -103,8 +103,7 @@ theorem expProdU_of (hC : CayProdU) (hL : CayLiftU) : ExpProdU := by
           expR ε (L₁ p.2 : EuclideanSpace ℝ (Fin n × Fin n × Bool))) '' A =
         ((fun p => cayR ε ((L₀ p.1 : EuclideanSpace ℝ (Fin n × Fin n × Bool)) +
           (L₁ p.2 : EuclideanSpace ℝ (Fin n × Fin n × Bool)))) ∘ ψ) '' A := by
-      refine Set.image_congr fun p hp => ?_
-      exact (heq p (hrs (hAU hp)).1).symm
+      exact Set.image_congr fun p hp => (heq p (hrs (hAU hp)).1).symm
     rw [e]
     exact chart_change volume _ _ (ball 0 r₀) f hf ψ ψ' (ball 0 r)
       (fun p hp => (hψ p (hrs hp).1).mono fun q hq => (hrs hq).1) (hinj.mono fun q hq => (hrs hq).1)
@@ -116,8 +115,7 @@ theorem locChart_of_contDiff {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ 
       ContinuousAt ψ 0 ∧ ContinuousAt (fun p => (fderiv ℝ ψ p).det) 0 ∧ |(fderiv ℝ ψ 0).det| = 1 := by
   have hs : HasStrictFDerivAt ψ ((ContinuousLinearEquiv.refl ℝ E : E ≃L[ℝ] E) : E →L[ℝ] E) 0 := by
     have := hψ.hasStrictFDerivAt_fderiv one_ne_zero
-    rw [hd, ← ContinuousLinearEquiv.coe_refl] at this
-    exact this
+    rwa [hd, ← ContinuousLinearEquiv.coe_refl] at this
   have hev : ∀ᶠ p in 𝓝 (0 : E), ContDiffAt ℝ 1 ψ p := hψ.eventually (by simp)
   refine ⟨(HasStrictFDerivAt.toOpenPartialHomeomorph ψ hs).source ∩ {p | ContDiffAt ℝ 1 ψ p},
     Filter.inter_mem ((HasStrictFDerivAt.toOpenPartialHomeomorph ψ hs).open_source.mem_nhds

@@ -72,20 +72,7 @@ lemma det_pos (g : GQ) : 0 < ent g 0 0 * ent g 1 1 - ent g 0 1 * ent g 1 0 := by
   simpa [ent, Matrix.det_fin_two] using h
 
 lemma den_ne (g : GQ) {z : ℂ} (hz : z ∈ Hs) : (ent g 1 0 : ℂ) * z + (ent g 1 1 : ℂ) ≠ 0 := by
-  intro h
-  have him := congrArg Complex.im h
-  have hre := congrArg Complex.re h
-  have hz' : 0 < z.im := hz
-  simp at him hre
-  have hc : ent g 1 0 = 0 := by
-    rcases him with h1 | h1
-    · exact h1
-    · exact absurd h1 hz'.ne'
-  rw [hc] at hre
-  simp at hre
-  have := det_pos g
-  rw [hc, hre] at this
-  simp at this
+  exact GlobalTheory.FNMob.denom_ne g hz
 
 lemma mob_im (g : GQ) {z : ℂ} (hz : z ∈ Hs) : mob g z ∈ Hs := by
   apply GlobalTheory.FNMob.mob_mem <;> assumption
@@ -142,8 +129,7 @@ theorem jK_sl_isIntegral : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     rintro _ ⟨γ, rfl⟩
     refine ⟨red γ, ?_⟩
     have h : ∃ γ', red γ' = red γ := ⟨γ, rfl⟩
-    simp only [F, dif_pos h]
-    exact hred _ _ h.choose_spec
+    simpa only [F, dite_eq_left h] using hred _ _ h.choose_spec
   let T := hSfin.toFinset
   have hT : ∀ y, y ∈ T ↔ y ∈ S := fun y => Set.Finite.mem_toFinset hSfin
   let P : Tw.K[X] := ∏ y ∈ T, (X - C y)
@@ -199,8 +185,7 @@ theorem jK_sl_isIntegral : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     _root_.GlobalTheory.KZ.LevelOne.mem_adjoin_j ε Tw hε ⟨φ, hφ, hjφ⟩ (P.coeff n) (fun δ => hinv δ n) (hhol n)
   have hlift : P ∈ lifts (algebraMap (Algebra.adjoin Ω {Tw.jK}) Tw.K) := by
     rw [lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hA n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hA n⟩, rfl⟩
   obtain ⟨q, hqmap, -, hqmon⟩ := lifts_and_natDegree_eq_and_monic hlift hPmon
   exact ⟨q, hqmon, by rw [eval₂_eq_eval_map, hqmap, hPf]⟩
 

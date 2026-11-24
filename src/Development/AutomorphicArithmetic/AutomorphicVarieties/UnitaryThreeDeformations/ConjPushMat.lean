@@ -115,8 +115,7 @@ private theorem adicCont_push [TopologicalSpace D] (φ : R →ₐ[O] R') [IsLoca
     intro x hx
     have h1 : Ideal.map (φ : R →+* R') (maximalIdeal R) ≤ maximalIdeal R' := by
       rw [Ideal.map_le_iff_le_comap]
-      intro y hy
-      exact map_mem_max φ hy
+      exact fun y hy => map_mem_max φ hy
     have h2 : Ideal.map (φ : R →+* R') (maximalIdeal R ^ n) ≤ maximalIdeal R' ^ n := by
       rw [Ideal.map_pow]
       exact Ideal.pow_right_mono h1 n
@@ -146,8 +145,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.isPt_push :
   refine ⟨⟨⟨⟨?_, ?_⟩, ?_⟩, ?_⟩, adicCont_push φ hr.cont⟩
   · have hm := hr.mult
     unfold HasMult at hm ⊢
-    intro g
-    exact hm g
+    exact fun g => hm g
   · intro g a b
     rw [Matrix.sub_apply, hpm, Matrix.map_apply, Matrix.map_apply, ← AlgHom.commutes φ, ← map_sub]
     apply map_mem_max φ

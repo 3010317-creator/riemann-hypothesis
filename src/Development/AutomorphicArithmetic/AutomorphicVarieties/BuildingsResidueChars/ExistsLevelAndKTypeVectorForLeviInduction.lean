@@ -180,10 +180,10 @@ private theorem block_mem {K : Type} [Field K] [NumberField K] (S : Finset (Pl K
   change ∀ v, finAt v (finEmb K 2 d) ∈ (if v ∈ S then V v else GLnLocal.integralGL (v.adicCompletion K) 2)
   intro v
   by_cases hv : v ∈ S
-  · rw [if_pos hv]
+  · rw [ite_eq_left hv]
     refine hV v ((GLnLocal.mem_congruenceSubgroup_iff _ _).2 ⟨hint v, fun i j => ?_⟩)
     have h1 := hu' v
-    rw [if_pos hv] at h1
+    rw [ite_eq_left hv] at h1
     have h2 := ((GLnLocal.mem_congruenceSubgroup_iff _ _).1 h1).2 (f i) (f j)
     have h3 : finAt v (finEmb K (2 + 2) u) (f i) (f j) = finAt v (finEmb K 2 d) i j := by
       simp only [finAt_apply, he]
@@ -192,7 +192,7 @@ private theorem block_mem {K : Type} [Field K] [NumberField K] (S : Finset (Pl K
         (1 : Matrix (Fin 2) (Fin 2) (v.adicCompletion K)) i j := by
       simp [Matrix.one_apply, hf.eq_iff]
     rwa [h4] at h2
-  · rw [if_neg hv]
+  · rw [ite_eq_right hv]
     exact hint v
 
 theorem UpperTheory.exists_level_indicator_unipotent_invariant :
@@ -220,8 +220,7 @@ theorem UpperTheory.exists_level_indicator_unipotent_invariant :
   have hL : ∀ (h₀ h : FA K (2 + 2)) X, fin1 h₀ = nn X → (P (h₀ * h) ↔ P h) := by
     refine fun h₀ h X e => ⟨fun hp => ?_, hL1 h₀ h X e⟩
     have e' : fin1 h₀⁻¹ = nn (-X) := by
-      rw [fi, e, inv_eq_iff_mul_eq_one]
-      rw [← unipOne_add, add_neg_cancel, unipOne_zero]
+      rw [fi, e, inv_eq_iff_mul_eq_one, ← unipOne_add, add_neg_cancel, unipOne_zero]
     simpa using hL1 _ _ _ e' hp
   let χ : AdelicGLn.integralFiniteGL K (2 + 2) → ℂ := fun h => if P h then 1 else 0
   have hχR : ∀ h u : AdelicGLn.integralFiniteGL K (2 + 2), (u : FA K (2 + 2)) ∈ levOn S U → χ (h * u) = χ h := by
@@ -235,9 +234,9 @@ theorem UpperTheory.exists_level_indicator_unipotent_invariant :
     have := hχR x _ hy
     rwa [mul_inv_cancel_left] at this
   · by_cases hp : P h
-    · exact Or.inr (if_pos hp)
-    · exact Or.inl (if_neg hp)
-  · refine if_pos ⟨0, 1, one_mem _, ?_⟩
+    · exact Or.inr (ite_eq_left hp)
+    · exact Or.inl (ite_eq_right hp)
+  · refine ite_eq_left ⟨0, 1, one_mem _, ?_⟩
     rw [show nn (0 : UPos (2 + 2) 2 → 𝔸[K]) = 1 from unipOne_zero 2]
     simp
   · intro h₀ h X e
@@ -245,7 +244,7 @@ theorem UpperTheory.exists_level_indicator_unipotent_invariant :
   · intro d₁ d₂ h e hne
     have hP : P h := by
       by_contra hn
-      exact hne (if_neg hn)
+      exact hne (ite_eq_right hn)
     obtain ⟨X, u, hu, e'⟩ := hP
     have key : blk (finEmb K 2 d₁) (finEmb K 2 d₂) = unipGL X * finEmb K (2 + 2) u := by
       have a1 := congrArg Subtype.val e
@@ -519,8 +518,7 @@ private theorem lv_fin (d₁ d₂ : AdelicGLn.integralFiniteGL K 2) :
     have := congrArg (archEquiv K (2 + 2)) e2
     simpa using this.symm
   refine ⟨β ⟨_, hmem⟩, ?_⟩
-  rw [e3, archimedean_projection_one, one_mul] at e
-  exact e
+  rwa [e3, archimedean_projection_one, one_mul] at e
 
 end SlopeTestRemainingChoices
 
@@ -561,8 +559,7 @@ private theorem fixInv {n : ℕ} (κ : Measure (archCompact K n)) (hinv : Measur
     ∫ a, conj (p a) * φ (m * arc1 a⁻¹) ∂κ = φ m := by
   rw [← h m]
   have := hinv.integral_comp (Homeomorph.inv (archCompact K n)).measurableEmbedding (fun k => p k * φ (m * arc1 k))
-  simp only [hs] at this
-  exact this
+  simpa only [hs] using this
 
 private theorem κInv {ι : Type} [Fintype ι] (C : Co K ι) : MeasurePreserving (·⁻¹) C.κ₂ C.κ₂ := by
   have hm : Measurable (C.Φ 2).symm := (C.Φ 2).symm.continuous.measurable
@@ -825,8 +822,7 @@ theorem UpperTheory.exists_level_and_KTypeVector_for_leviInduction :
       fun g => (C.Φ (2 + 2)).symm.toHomeomorph.measurableEmbedding.integral_map g
     have e2 : ∫ a, C.e e a * ψ (C.Φ (2 + 2) (a₀ * a)) ∂C.κ₄ μ = ψ (C.Φ (2 + 2) a₀) := by
       rw [hi]
-      simp only [Co.e, map_mul, ContinuousMulEquiv.apply_symm_apply]
-      exact hψfix _
+      simpa only [Co.e, map_mul, ContinuousMulEquiv.apply_symm_apply] using hψfix _
     simp only [e1, ← mul_assoc]
     rw [integral_mul_const, e2, hat]
   · intro k hk u hu

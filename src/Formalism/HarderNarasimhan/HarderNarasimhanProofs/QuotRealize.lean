@@ -79,8 +79,7 @@ variable {E F M : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Finit
 theorem eq_of_norm_eq (f : M →+ E) (g : M →+ F) (hn : ∀ m, ‖f m‖ = ‖g m‖) {m m' : M}
     (h : f m = f m') : g m = g m' := by
   have h0 : ‖g (m - m')‖ = 0 := by rw [← hn, map_sub, h, sub_self, norm_zero]
-  rw [norm_eq_zero, map_sub, sub_eq_zero] at h0
-  exact h0
+  rwa [norm_eq_zero, map_sub, sub_eq_zero] at h0
 
 def transport (f : M →+ E) (g : M →+ F) (L1 : Submodule ℤ E) (L2 : Submodule ℤ F)
     (h1 : ∀ y, y ∈ L1 ↔ ∃ m, f m = y) (h2 : ∀ y, y ∈ L2 ↔ ∃ m, g m = y)
@@ -105,7 +104,6 @@ theorem transport_apply (f : M →+ E) (g : M →+ F) (L1 : Submodule ℤ E) (L2
     (h1 : ∀ y, y ∈ L1 ↔ ∃ m, f m = y) (h2 : ∀ y, y ∈ L2 ↔ ∃ m, g m = y)
     (hn : ∀ m, ‖f m‖ = ‖g m‖) (y : L1) (m : M) (hm : f m = y) :
     ((transport f g L1 L2 h1 h2 hn y : L2) : F) = g m := by
-  show g ((h1 y).1 y.2).choose = g m
   exact eq_of_norm_eq f g hn (((h1 y).1 y.2).choose_spec.trans hm.symm)
 
 theorem covol_eq_of_norm_eq (f : M →+ E) (g : M →+ F) (L1 : Submodule ℤ E) (L2 : Submodule ℤ F)
@@ -157,7 +155,7 @@ theorem inner_psi_psi (u v : P) (y z : ι → ℂ) :
   rw [PiLp.inner_apply]
   by_cases h : u = v
   · subst h
-    rw [if_pos rfl, PiLp.inner_apply, Complex.re_sum, Fintype.sum_prod_type, Finset.sum_eq_single u]
+    rw [ite_eq_left rfl, PiLp.inner_apply, Complex.re_sum, Fintype.sum_prod_type, Finset.sum_eq_single u]
     · rw [Fintype.sum_prod_type]
       refine Finset.sum_congr rfl (fun i _ => ?_)
       simp [PlaceDecomposition.psi, Fin.sum_univ_two, Complex.mul_re]
@@ -165,9 +163,8 @@ theorem inner_psi_psi (u v : P) (y z : ι → ℂ) :
       apply Finset.sum_eq_zero
       rintro ⟨i, k⟩ -
       simp [PlaceDecomposition.psi, hw]
-    · intro hu
-      exact absurd (Finset.mem_univ u) hu
-  · rw [if_neg h]
+    · exact fun hu => absurd (Finset.mem_univ u) hu
+  · rw [ite_eq_right h]
     apply Finset.sum_eq_zero
     rintro ⟨w, i, k⟩ -
     by_cases hw : w = u
@@ -368,14 +365,12 @@ theorem proj_norm_sq [DecidableEq (InfinitePlace K)] (b : Basis ι K V)
     exact psi_mem b X S v _ (Submodule.starProjection_apply_mem _ _)
   have hproj : Wᗮ.starProjection (Formalism.HermitianLatticesTheory.realize b X x) = r := by
     apply Submodule.eq_starProjection_of_mem_orthogonal hr_orth
-    rw [Submodule.orthogonal_orthogonal]
-    exact hdiff
+    rwa [Submodule.orthogonal_orthogonal]
   rw [hproj, ← real_inner_self_eq_norm_sq, inner_sum_psi]
   refine Finset.sum_congr rfl fun v _ => ?_
   rw [show (WithLp.toLp 2 (WithLp.ofLp (cv v)) : EuclideanSpace ℂ ι) = cv v from rfl]
   have h := inner_self_eq_norm_sq (𝕜 := ℂ) (cv v)
-  rw [RCLike.re_to_complex] at h
-  exact h
+  rwa [RCLike.re_to_complex] at h
 
 section Lift
 
@@ -392,8 +387,7 @@ theorem sub_mem_of_lift (hc : ∀ k, U.mkQ (c k) = b'' k) (x : V) :
   change U.mkQ x = U.mkQ (∑ k, b''.repr (U.mkQ x) k • c k)
 
   rw [map_sum]
-  simp only [LinearMap.map_smul, hc]
-  exact (b''.sum_repr (U.mkQ x)).symm
+  simpa only [LinearMap.map_smul, hc] using (b''.sum_repr (U.mkQ x)).symm
 
 theorem proj_eq_tv (hc : ∀ k, U.mkQ (c k) = b'' k) (v : InfinitePlace K) (x : V) :
     (pv b X U v)ᗮ.starProjection (WithLp.toLp 2 (Formalism.HermitianLatticesTheory.fcoord b X v x)) =
@@ -488,8 +482,7 @@ theorem quotient_lattice_realization : QuotRealize := by
       rw [LinearMap.ker_comp, Submodule.ker_mkQ]
     rw [hr, hk, (Submodule.comapSubtypeEquivOfLe hUle).finrank_eq] at h1
     unfold rkK
-    rw [hspan]
-    exact h1
+    rwa [hspan]
   have hrkR : ((rkK N : ℝ) - rkK S) = rkK N'' := by
     rw [← hrk]; push_cast; ring
 

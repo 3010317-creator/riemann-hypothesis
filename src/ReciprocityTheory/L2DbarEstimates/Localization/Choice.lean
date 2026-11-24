@@ -85,8 +85,7 @@ theorem choice (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     refine ⟨max B1 (max B 0), ?_⟩
     rintro y ⟨t, ht, rfl⟩
     refine max_le_max (hB1 ⟨t, ht, rfl⟩) (sSup_image_le_max g _ B ?_)
-    intro x hx
-    exact hB ⟨x, (show X.e x + ‖X.z x‖ ^ 2 ≤ b from le_trans hx ht), rfl⟩
+    exact fun x hx => hB ⟨x, (show X.e x + ‖X.z x‖ ^ 2 ≤ b from le_trans hx ht), rfl⟩
   have hgR : ∀ x, g x ≤ R (X.e x + ‖X.z x‖ ^ 2) := by
     intro x
     refine le_max_of_le_right (le_csSup ((hExh _).bddAbove_image hgc.continuousOn) ⟨x, ?_, rfl⟩)
@@ -132,8 +131,7 @@ theorem choice (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
         ‖dDot n X.z (fun y => ((X.e y + ‖X.z y‖ ^ 2 : ℝ) : ℂ)) x ξ‖ ^ 2 :=
       mul_nonneg (hχ2 _) (sq_nonneg _)
     linarith
-  · refine ⟨hv.aestronglyMeasurable, ?_⟩
-    exact hR1χ χ hχ0 (fun t ht => (hχR t ht).1.trans' (le_max_left _ _))
+  · exact ⟨hv.aestronglyMeasurable, hR1χ χ hχ0 (fun t ht => (hχR t ht).1.trans' (le_max_left _ _))⟩
 
 end
 

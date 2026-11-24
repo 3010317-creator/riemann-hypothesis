@@ -151,10 +151,8 @@ theorem mkCpt : MkCpt := by
     · intro q hq
       obtain ⟨h1, h2⟩ := hKU hq
       refine ⟨h1, ?_⟩
-      rw [hz, hz', gf_eq_ggl hρ]
-      exact h2
-    · intro q hG hq
-      exact hsupp q ((glev_last_iff hρ _).2 hG) hq
+      rwa [hz, hz', gf_eq_ggl hρ]
+    · exact fun q hG hq => hsupp q ((glev_last_iff hρ _).2 hG) hq
   refine ⟨cptCoef_castF e p.T.base _ hCpt,
     (fun q : (Fin P.r → Fin P.r → ℂ) × Mt P.k (P.r - P.r) => (Matrix.of q.1).det) '' K,
     hK.image (Continuous.matrix_det continuous_fst), ?_, ?_⟩
@@ -164,11 +162,11 @@ theorem mkCpt : MkCpt := by
     have hg' : D.castM e g ∈ B.GV P.k (P.r + (P.r - P.r)) := Formalism.FourierDecayAlt.P.PBE.castM_GV e hg
     have hne' : PBI.chartCoefficient b b' Φ (D.castM e g) ≠ 0 := hne
     have hD : U.DjU P.k P.r (P.r - P.r) (D.castM e g) ≠ 0 := by
-      intro h0; apply hne'; unfold PBI.chartCoefficient; rw [if_neg (not_not.2 h0)]
+      intro h0; apply hne'; unfold PBI.chartCoefficient; rw [ite_eq_right (not_not.2 h0)]
     obtain ⟨-, hμ, heq⟩ := PBI.chart_spec (D.castM e g) hg' hD
     have hmk := hne'
     unfold PBI.chartCoefficient at hmk
-    rw [if_pos hD] at hmk
+    rw [ite_eq_left hD] at hmk
     obtain ⟨-, hΦne⟩ := smul_ne_zero_iff.1 hmk
     have hμ' : Matrix.of (PBI.chart (Matrix.of.symm (D.castM e g))).2.2 ∈ B.GV P.k (P.r - P.r) := by
       simpa only [PBI.chart, Equiv.apply_symm_apply] using hμ
@@ -178,8 +176,7 @@ theorem mkCpt : MkCpt := by
     refine ⟨_, hK', ?_⟩
     have hpsi : PBI.psiC (PBI.chart (Matrix.of.symm (D.castM e g))) = D.castM e g := by
       unfold PBI.psiC PBI.chart
-      simp only [Equiv.apply_symm_apply]
-      exact heq.symm
+      simpa only [Equiv.apply_symm_apply] using heq.symm
     have e1 := PBI.djU_psiC (PBI.chart (Matrix.of.symm (D.castM e g)))
     rw [hpsi] at e1
     show (Matrix.of (PBI.chart (Matrix.of.symm (D.castM e g))).2.1).det = _

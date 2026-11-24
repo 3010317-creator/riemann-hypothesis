@@ -231,8 +231,8 @@ theorem approxB_split {K : Type} [Field K] [NumberField K] {r p : ℕ} (hp : p �
       ∑ k : {j : Fin r // ¬ (j : ℕ) < p}, g k.1 • T (v (a0 (e k))) = 0 := by
     rw [← hg, ← Fintype.sum_subtype_add_sum_subtype (fun j : Fin r => (j : ℕ) < p)]
     congr 1
-    · exact Finset.sum_congr rfl fun k _ => by simp only [dif_pos k.2]
-    · exact Finset.sum_congr rfl fun k _ => by simp only [dif_neg k.2]; rfl
+    · exact Finset.sum_congr rfl fun k _ => by simp only [dite_eq_left k.2]
+    · exact Finset.sum_congr rfl fun k _ => by simp only [dite_eq_right k.2]; rfl
   have hBorth : ∀ k' : ApproxPosIdx r p,
       S.h (l k'.1) (∑ k : {j : Fin r // ¬ (j : ℕ) < p}, g k.1 • T (v (a0 (e k)))) = 0 := by
     intro k'
@@ -241,8 +241,7 @@ theorem approxB_split {K : Type} [Field K] [NumberField K] {r p : ℕ} (hp : p �
   have hApos : ∀ k' : ApproxPosIdx r p, S.h (l k'.1) (∑ k : ApproxPosIdx r p, g k.1 • l k.1) = 0 := by
     intro k'
     have := congrArg (S.h (l k'.1)) hsplit
-    rw [approxB_h_add_right, hBorth, add_zero, approxB_h_zero_right] at this
-    exact this
+    rwa [approxB_h_add_right, hBorth, add_zero, approxB_h_zero_right] at this
   have hg1 := hinj (fun k => g k.1) hApos
   have hA0 : ∑ k : ApproxPosIdx r p, g k.1 • l k.1 = 0 :=
     Finset.sum_eq_zero fun k _ => by rw [show g k.1 = 0 from congrFun hg1 k, zero_smul]
@@ -341,10 +340,10 @@ theorem approxBasis_holds (hG : ApproxGraphStatement) : ApproxStatement := by
   obtain ⟨la, hla⟩ : ∃ la : Fin r → Fin r → K, la = fun j : Fin r => if h : (j : ℕ) < p then l0 j
       else Δ • v (a ⟨j, h⟩) - ∑ k', coef (v (a ⟨j, h⟩)) k' • l0 k'.1 := ⟨_, rfl⟩
   have hla_pos : ∀ (j : Fin r) (h : (j : ℕ) < p), la j = l0 j := fun j h => by
-    rw [hla]; simp only [dif_pos h]
+    rw [hla]; simp only [dite_eq_left h]
   have hla_neg : ∀ (j : Fin r) (h : ¬ (j : ℕ) < p), la j =
       Δ • v (a ⟨j, h⟩) - ∑ k', coef (v (a ⟨j, h⟩)) k' • l0 k'.1 := fun j h => by
-    rw [hla]; simp only [dif_neg h]
+    rw [hla]; simp only [dite_eq_right h]
   have hli' : LinearIndependent K la := by rw [hla]; exact hli
   have horth' : ∀ (k : Fin r), (k : ℕ) < p → ∀ j : Fin r, ¬ (j : ℕ) < p →
       S.h (l0 k) (la j) = 0 := fun k hk j hj => by
@@ -677,7 +676,7 @@ theorem bwp_ext_poly {σ : Type*} [Fintype σ] [DecidableEq σ] (k : ℕ) (g D :
       refine Finset.sum_congr rfl (fun c hc => ?_)
       rw [Polynomial.eval_mul, Polynomial.eval_C, ← hQ _ c (ht c hc)]
       congr 1
-      simp only [Pc, dif_neg (hSz c hc)]
+      simp only [Pc, dite_eq_right (hSz c hc)]
       rw [← hP _ _ (hSz c hc) t (by rw [add_right_comm]; exact ht c hc), add_right_comm]
     have hbad : ∀ S : Finset ℂ, (∀ c ∈ S, D (z + c • w) ≠ 0) →
         {t : ℂ | ∃ c ∈ S, D ((z + t • e) + c • w) = 0}.Finite := by
@@ -730,8 +729,7 @@ theorem bwp_eval_smul_of_isHomogeneous {σ : Type*} {φ : MvPolynomial σ ℂ} {
   rw [MvPolynomial.eval_eq, MvPolynomial.eval_eq, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m hm => ?_
   have hdeg : ∑ i ∈ m.support, m i = d := by
-    have h := hφ (MvPolynomial.mem_support_iff.mp hm)
-    simpa [Finsupp.weight_apply, Finsupp.sum] using h
+    simpa [Finsupp.weight_apply, Finsupp.sum] using hφ (MvPolynomial.mem_support_iff.mp hm)
   simp_rw [Pi.smul_apply, smul_eq_mul, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum,
     hdeg]
   ring
@@ -764,8 +762,7 @@ theorem bwp_finite_det_line {p : ℕ} (z v : Fin p × Fin p → ℂ) (hz : (bwpM
     simpa using h0.symm
   refine (bwp_finite_eval_eq_zero hΛ0).subset fun t ht => ?_
   simp only [Set.mem_setOf_eq] at ht ⊢
-  rw [hΛ]
-  exact ht
+  rwa [hΛ]
 
 theorem bwp_finite_det_id_line {p : ℕ} (z : Fin p × Fin p → ℂ) :
     {s : ℂ | (bwpMat (z + s • bwpId p)).det = 0}.Finite := by
@@ -796,8 +793,7 @@ theorem bwp_exists_bound_unitary {p : ℕ} (P : Matrix (Fin p) (Fin p) ℂ → �
     rw [Metric.isBounded_iff_subset_closedBall 0]
     refine ⟨1, fun y hy => ?_⟩
     have hU : Matrix.of y ∈ Matrix.unitaryGroup (Fin p) ℂ := by
-      rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
-      exact hy
+      rwa [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
     rw [Metric.mem_closedBall, dist_zero_right]
     refine (pi_norm_le_iff_of_nonneg zero_le_one).mpr fun i =>
       (pi_norm_le_iff_of_nonneg zero_le_one).mpr fun j => ?_
@@ -811,8 +807,7 @@ theorem bwp_exists_bound_unitary {p : ℕ} (P : Matrix (Fin p) (Fin p) ℂ → �
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn (DifferentiableOn.continuousOn hP |>.mono hsub)
   refine ⟨C, fun U hU => ?_⟩
   have hU' : U ∈ S := by
-    rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose] at hU
-    exact hU
+    rwa [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose] at hU
   exact hC U hU'
 
 theorem bwp_line_poly (hH : LemmaHStatement) (hO : OnePolyGrowthStatement) {p : ℕ} (a : Fin p → ℕ)
@@ -985,7 +980,7 @@ theorem exists_entire_of_finite_growth (f : ℂ → ℂ) (B : Set ℂ) (A : ℝ)
     ∃ g : ℂ → ℂ, Differentiable ℂ g ∧ ∀ t ∉ B, g t = f t := by
   classical
   let g : ℂ → ℂ := fun t => if t ∈ B then limUnder (𝓝[≠] t) f else f t
-  refine ⟨g, fun c => ?_, fun t ht => if_neg ht⟩
+  refine ⟨g, fun c => ?_, fun t ht => ite_eq_right ht⟩
   by_cases hc : c ∈ B
   · have hU : IsOpen (B \ {c})ᶜ := (hB.sdiff).isClosed.isOpen_compl
     set s : Set ℂ := (B \ {c})ᶜ ∩ ball c 1 with hs
@@ -1018,7 +1013,7 @@ theorem exists_entire_of_finite_growth (f : ℂ → ℂ) (B : Set ℂ) (A : ℝ)
   · have hO : IsOpen Bᶜ := hB.isClosed.isOpen_compl
     refine (hf.differentiableAt (hO.mem_nhds hc)).congr_of_eventuallyEq ?_
     filter_upwards [hO.mem_nhds hc] with t ht
-    exact if_neg ht
+    exact ite_eq_right ht
 
 theorem onePolyGrowth_holds : OnePolyGrowthStatement := by
   intro f B A k hB hf hb

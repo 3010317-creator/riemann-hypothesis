@@ -113,8 +113,7 @@ private theorem isL_chars {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (
     refine ⟨equivOfBijective F ⟨(injective_iff_map_eq_zero _).2 fun x hx => ?_, hs⟩⟩
     rcases eq_bot_or_eq_top F.ker with h | h
     · have : x ∈ F.ker := hx
-      rw [h] at this
-      exact this
+      rwa [h] at this
     · have : v.1 ∈ F.ker := by rw [h]; trivial
       exact absurd this hy
   obtain ⟨e1⟩ := eqv (GlobalTheory.PrinProd.isSubquotient_prinSeries_multiProd k n ξ) hM
@@ -136,7 +135,6 @@ private theorem monodromy_free_sum_list (l : List (WD h)) (hl : ∀ z ∈ l, z.m
     rw [WD.lpZero, WD.monodromyZero_ofWeilDeligneRepClass_iff]
     rfl
   | cons b l ih =>
-    show (WD.lpSum b (sumList l)).mono0
     exact (WD.monomial_sum_iff _ _).2 ⟨hl b (by simp), ih fun z hz => hl z (by simp [hz])⟩
 
 private theorem monodromy_free_of_character (c : Weil h →* ℂˣ) (hc : GlobalTheory.WeilDeligne.IsSmooth c) : (WD.lpOfChar h c hc).mono0 := by

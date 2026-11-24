@@ -114,12 +114,7 @@ theorem gram_eq_mul (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (x : Matri
   ring
 
 theorem det_ne_zero_of_orth (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (τ : X.Ψ) :
-    (mat x τ).det ≠ 0 := by
-  intro h
-  have h1 := congrArg Matrix.det (hx τ)
-  rw [gram_eq_mul, Matrix.det_mul, Matrix.det_transpose, h, zero_mul, Matrix.det_diagonal] at h1
-  refine (Finset.prod_ne_zero_iff.2 fun a _ => ?_) h1.symm
-  exact_mod_cast sgn_ne X.p0 (a : ℕ)
+    (mat x τ).det ≠ 0 := GlobalTheory.RiemConst.Jac.det_mat_ne X x hx τ
 
 theorem densF_orth (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) :
     densF X x = fun w => ∏ τ, ∏ i : Fin r, ‖lminor (Gw X w τ) i.castSucc‖ ^ (-2 : ℤ) := by
@@ -174,8 +169,7 @@ theorem exists_angles_of_prod_eq_one : ∀ (r : ℕ) (z : Fin r → ℂ), (∀ a
     · have ha : a = Fin.last n := by ext; simp at h ⊢; omega
       subst ha
       rw [Fin.prod_univ_castSucc] at hp
-      have hlast : z (Fin.last n) = (∏ k : Fin n, z k.castSucc)⁻¹ := by
-        exact eq_inv_of_mul_eq_one_right hp
+      have hlast : z (Fin.last n) = (∏ k : Fin n, z k.castSucc)⁻¹ := eq_inv_of_mul_eq_one_right hp
       rw [hlast, Complex.ofReal_neg, Complex.ofReal_sum, mul_neg, Finset.mul_sum, ← Finset.sum_neg_distrib,
         Complex.exp_sum, ← Finset.prod_inv_distrib]
       show ∏ k : Fin n, Complex.exp (-(Complex.I * (Complex.arg (z ⟨k, _⟩) : ℂ))) = _
@@ -334,17 +328,7 @@ open scoped ComplexConjugate
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 
 theorem torusDer_sum_angles (φ : Fin (r - 1) → ℝ) : ∑ a : Fin r, angles φ a = 0 := by
-  cases r with
-  | zero => simp
-  | succ n =>
-    rw [Fin.sum_univ_castSucc]
-    have h1 : ∀ i : Fin n, angles φ i.castSucc = φ ⟨i, by simp⟩ := by
-      intro i; unfold angles; rw [dite_eq_left (by simp)]; rfl
-    have h2 : angles φ (Fin.last n) = -∑ k, φ k := by
-      unfold angles; rw [dite_eq_right (by simp)]
-    rw [h2, Finset.sum_congr rfl fun i _ => h1 i]
-    rw [add_neg_eq_zero]
-    exact Fintype.sum_equiv (finCongr (by simp)) _ _ (fun i => rfl)
+  exact GlobalTheory.TorusFrame.sum_angles φ
 
 theorem torusDer_hermC_dot (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u w : Fin r → ℂ) :
     hermC τ G u w = u ⬝ᵥ (G.map τ *ᵥ fun b => conj (w b)) := by
@@ -611,12 +595,12 @@ theorem exists_measurable_extend {α β : Type} [TopologicalSpace α] [PolishSpa
   have hφs : ∀ a ∈ s, φ (M a) = ψ a := by
     intro a ha
     have h : ∃ a' ∈ s, M a' = M a := ⟨a, ha, rfl⟩
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
     rw [hinj h.choose_spec.1 ha h.choose_spec.2]
   have hφ0 : ∀ y, y ∉ M '' s → φ y = 0 := by
     intro y hy
     have h : ¬ ∃ a ∈ s, M a = y := fun ⟨a, ha, e⟩ => hy ⟨a, ha, e⟩
-    simp only [φ, dif_neg h]
+    simp only [φ, dite_eq_right h]
   refine ⟨φ, fun t ht => ?_, hφs, hφ0⟩
   have e : φ ⁻¹' t = M '' (s ∩ ψ ⁻¹' t) ∪ {y | y ∉ M '' s ∧ (0 : ℝ≥0∞) ∈ t} := by
     ext y
@@ -657,8 +641,7 @@ theorem haar_map_mul_right_of_compact {G : Type} [Group G] [TopologicalSpace G] 
   have hCc : IsCompact C := hK.mul hT
   have hCm : MeasurableSet C := hCc.isClosed.measurableSet
   have hC1 : C ∈ 𝓝 (1 : G) := by
-    refine Filter.mem_of_superset hK1 fun k hk => ?_
-    exact ⟨k, hk, 1, T.one_mem, mul_one k⟩
+    exact Filter.mem_of_superset hK1 fun k hk => ⟨k, hk, 1, T.one_mem, mul_one k⟩
   have hpos : ν C ≠ 0 := (ν.measure_pos_of_mem_nhds hC1).ne'
   have hfin : ν C ≠ ⊤ := hCc.measure_lt_top.ne
   have hpre : (fun h => h * g) ⁻¹' C = C := by
@@ -796,8 +779,7 @@ theorem haar_chart_formula : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     · show (Matrix.diagonal fun a => Complex.exp (Complex.I * (angles (θ τ) a : ℂ))).det ≠ 0
       rw [Matrix.det_diagonal]
       exact Finset.prod_ne_zero_iff.mpr fun a _ => Complex.exp_ne_zero _
-    · show (Matrix.diagonal fun a => Complex.exp (Complex.I * (angles (θ τ) a : ℂ))) a c = 0
-      exact Matrix.diagonal_apply_ne _ (ne_of_gt hca)
+    · exact Matrix.diagonal_apply_ne _ (ne_of_gt hca)
   have hang : ∀ (θ θ' : X.Ψ → Fin (r - 1) → ℝ), (∀ i k, ∃ n : ℤ, θ' i k = θ i k + 2 * Real.pi * n) →
       ∀ τ a, ∃ m : ℤ, angles (θ' τ) a = angles (θ τ) a + 2 * Real.pi * m := by
     intro θ θ' hn τ a
@@ -831,7 +813,7 @@ theorem haar_chart_formula : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     funext τ k
     have hk : (k : ℕ) < r := lt_of_lt_of_le k.isLt (Nat.sub_le r 1)
     have e1 := congrFun (congrFun (congrFun e τ) ⟨k, hk⟩) ⟨k, hk⟩
-    simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, k.isLt, dif_pos] at e1
+    simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, k.isLt, dite_eq_left] at e1
     obtain ⟨n, hn⟩ := Complex.exp_eq_exp_iff_exists_int.mp e1
     have hn' : θ τ k = θ' τ k + n * (2 * Real.pi) := by
       have := congrArg Complex.im hn
@@ -1487,7 +1469,7 @@ theorem phaseFrame_small_angles : ∀ (E : Type) [Field E] (Ψ : Finset (E →+*
     have hk := hθ τ (Fin.castLE (Nat.sub_le r 1) k)
     have hentry : phaseFrame θ τ (Fin.castLE (Nat.sub_le r 1) k) (Fin.castLE (Nat.sub_le r 1) k)
         = Complex.exp (Complex.I * (θ τ k : ℂ)) := by
-      simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, Fin.coe_castLE, k.isLt, dif_pos]
+      simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, Fin.coe_castLE, k.isLt, dite_eq_left]
     rw [hentry] at hk
     have := hcont (x := Complex.exp (Complex.I * (θ τ k : ℂ))) (by rwa [dist_eq_norm])
     rw [Complex.arg_one, Real.dist_eq, sub_zero] at this
@@ -1703,8 +1685,8 @@ theorem riemHaar_eq_smul (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
     obtain ⟨h4, h5⟩ := hDt w.2
     refine ⟨?_, fun τ a b hab => ?_, fun τ a => ?_⟩
     · rw [hDw]; exact (realLie X.Ψ X.Gm).add_mem h1 h4
-    · rw [e, Matrix.add_apply, h2 τ a b hab, h5, if_neg (ne_of_gt hab), add_zero]
-    · rw [e, Matrix.add_apply, h3, h5, if_pos rfl, zero_add]
+    · rw [e, Matrix.add_apply, h2 τ a b hab, h5, ite_eq_right (ne_of_gt hab), add_zero]
+    · rw [e, Matrix.add_apply, h3, h5, ite_eq_left rfl, zero_add]
   obtain ⟨hDinj, hriem⟩ := _root_.GlobalTheory.RiemConst.Jac.riemLie_eq_smul_map E r X x hr hx D hspec
   have hform := _root_.GlobalTheory.FibreVol.haar_chart_formula E r X x ν σ t ρ hr hx hν hfib hρ hσc hσB htx htmul htc hstab
   have hsurj := _root_.GlobalTheory.eq_chart_mul_of_near_one E r X x σ t ρ hx hρ hσ0 hσc hσB htx htmul htc hstab

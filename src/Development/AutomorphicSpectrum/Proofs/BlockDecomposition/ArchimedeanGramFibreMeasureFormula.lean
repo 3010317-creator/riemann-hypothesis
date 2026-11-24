@@ -107,8 +107,7 @@ theorem exists_integral_ne_zero_of_carried_by_isOpen
   have hσ : IsSigmaCompact U := isSigmaCompact_iff_sigmaCompactSpace.2 inferInstance
   obtain ⟨K, hK, hKU⟩ := hσ
   have hex : ∃ n, m (K n) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hmU
     rw [← hKU]
     exact measure_iUnion_null hcon
@@ -177,8 +176,7 @@ theorem integral_comp_additive_continuousAt :
     have h2 : 1 / δ ≤ max 1 (1 / δ) := le_max_right _ _
     have hb : 0 ≤ b := le_trans (mul_nonneg hδ.le ha) hab
     have h3 : a ≤ 1 / δ * b := by
-      rw [one_div, ← div_eq_inv_mul, le_div_iff₀ hδ, mul_comm]
-      exact hab
+      rwa [one_div, ← div_eq_inv_mul, le_div_iff₀ hδ, mul_comm]
     have h4 : a ≤ max 1 (1 / δ) * b := h3.trans (mul_le_mul_of_nonneg_right h2 hb)
     rw [mul_add, mul_one]
     linarith
@@ -453,8 +451,7 @@ theorem eventually_lower_bound_of_tendsto_injective
     have h2 : 2 * δ = (K : ℝ)⁻¹ := by
       rw [hδ]
       field_simp
-    rw [h2, inv_mul_le_iff₀ hKpos]
-    exact h1
+    rwa [h2, inv_mul_le_iff₀ hKpos]
 
   let b : Fin N → Fin N → ℝ := fun i j => if i = j then 1 else 0
   set ε : ℝ := δ / (N + 1) with hε
@@ -634,8 +631,7 @@ theorem exists_fin_point {V P : Type} [MeasurableSpace V] [MeasurableSpace P]
     (μ : Measure V) (ν : Measure P) (U : Set V) (fib : P → Measure V) (f : V → ℝ≥0∞)
     (h : ∫⁻ v in U, f v ∂μ = ∫⁻ b, ∫⁻ v, f v ∂(fib b) ∂ν) (hfin : ∫⁻ v, f v ∂μ ≠ ⊤)
     (O : Set P) (hO : MeasurableSet O) (hpos : ν O ≠ 0) : ∃ s ∈ O, ∫⁻ v, f v ∂(fib s) ≠ ⊤ := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hle : (⊤ : ℝ≥0∞) * ν O ≤ ∫⁻ b, ∫⁻ v, f v ∂(fib b) ∂ν := by
     rw [← lintegral_indicator_const hO]
     refine lintegral_mono fun S => ?_
@@ -826,8 +822,7 @@ theorem fibre_schwartzN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     intro x y hxy
     have h1 : GlobalTheory.CompanionTheory.SW.rmul (Ainf F) x g0⁻¹ = GlobalTheory.CompanionTheory.SW.rmul (Ainf F) y g0⁻¹ := by
       have := hxy
-      simp only [A, rmulHom_apply, htc, mul_one] at this
-      exact this
+      simpa only [A, rmulHom_apply, htc, mul_one] using this
     have h2 := congrArg (fun Z => GlobalTheory.CompanionTheory.SW.rmul (Ainf F) Z g0) h1
     simpa only [hcomp, hgi2, hone] using h2
   have hAm : ∀ s, Measurable (A s) := fun s => (hAc s).measurable

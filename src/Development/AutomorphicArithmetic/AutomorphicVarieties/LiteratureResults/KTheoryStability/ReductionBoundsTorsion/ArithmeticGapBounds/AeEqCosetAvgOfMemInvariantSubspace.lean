@@ -88,13 +88,11 @@ theorem linv_rel {u : S → ℝ} (hu : LInv j B u) {x y : S} (h : MulAction.orbi
   obtain ⟨γ, hγ, rfl⟩ := Subgroup.mem_map.mp hg
   exact hu γ hγ y
 
-theorem measurable_pr : Measurable (pr j B) := by
-  exact measurable_quotient_mk''
+theorem measurable_pr : Measurable (pr j B) := measurable_quotient_mk''
 
 theorem pr_mul {γ : Λ} (hγ : γ ∈ B) (x : S) : pr j B (j γ * x) = pr j B x := by
   unfold pr
-  apply Quotient.sound
-  exact MulAction.orbitRel_apply.mpr ⟨⟨j γ, Subgroup.mem_map_of_mem j hγ⟩, rfl⟩
+  exact Quotient.sound (MulAction.orbitRel_apply.mpr ⟨⟨j γ, Subgroup.mem_map_of_mem j hγ⟩, rfl⟩)
 
 theorem lift_pr {u : S → ℝ} (hu : LInv j B u) (x : S) : lift j B u (pr j B x) = u x := by
   exact linv_rel hu (Quotient.mk_out' x)
@@ -247,8 +245,7 @@ theorem idx_ne {Λ : Type} [Group Λ] {B E K : Subgroup Λ} (hBE : B ≤ E) (hEK
 
 theorem exists_not_mem {Λ : Type} [Group Λ] {B E : Subgroup Λ} (h : 25 ≤ (B.subgroupOf E).index) :
     ∃ g ∈ E, g ∉ B := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have htop : B.subgroupOf E = ⊤ := Subgroup.subgroupOf_eq_top.mpr (fun g hg => hc g hg)
   rw [htop, Subgroup.index_top] at h
   omega
@@ -283,7 +280,7 @@ theorem t_trick {I X Y : ℝ} (hX : 0 ≤ X) (hY : 0 ≤ Y) (h : ∀ t : ℝ, 0 
       nlinarith [mul_nonneg hb.le hr, mul_nonneg (mul_nonneg hb.le hr) hδ.le]
     nlinarith
   by_contra hc
-  push_neg at hc
+  push Not at hc
   set δ := (|I| - 1 / 5 * (s * r)) * 10 / (r + s + 1) with hδ_def
   have hpos : 0 < r + s + 1 := by linarith
   have hδ : 0 < δ := by

@@ -80,8 +80,7 @@ theorem intst : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) (v u : Height
     change _ ∈ u.adicCompletionIntegers E
     change x ∈ v.adicCompletionIntegers E at hx
     rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hx ⊢
-    rw [hf]
-    exact hx
+    rwa [hf]
   refine ⟨invT n _ (GeneralLinearGroup.map r g0), ?_⟩
   apply Units.ext
   ext i j
@@ -100,8 +99,7 @@ theorem ns : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (Y
       (HeightOneSpectrum.denseRange_algebraMap (K := E) v).equalizer hf hex.choose_spec.1
         (funext fun k => (hext k).trans (hex.choose_spec.2 k).symm)
     rw [hcj]
-    refine Units.ext (Matrix.ext fun i j => ?_)
-    exact congrFun hfs ((Y v).val i j)
+    exact Units.ext (Matrix.ext fun i j => (congrFun hfs ((Y v).val i j)))
   have hcu : conjSrc (GlobalTheory.SplitPts.conjE E) u = u := by
     by_contra h
     exact hu ⟨_, h, (GlobalTheory.Mem.Chr.under_eq_iff_conjPl (IsCMField.complexConj E)
@@ -116,8 +114,7 @@ theorem twice : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ)
     rintro v rfl f hf hext
     have hfs : (f : v.adicCompletion E → v.adicCompletion E) = id :=
       (HeightOneSpectrum.denseRange_algebraMap (K := E) v).equalizer hf continuous_id (funext fun k => hext k)
-    refine Units.ext (Matrix.ext fun i j => ?_)
-    exact congrFun hfs ((Y v).val i j)
+    exact Units.ext (Matrix.ext fun i j => (congrFun hfs ((Y v).val i j)))
   have h := key _ (GlobalTheory.SplitPts.conjSrc_conjSrc_cm u)
     ((conjLoc (GlobalTheory.SplitPts.conjE E) u).comp (conjLoc (GlobalTheory.SplitPts.conjE E) (conjSrc (GlobalTheory.SplitPts.conjE E) u)))
     ((conjLoc_spec _ u).1.comp (conjLoc_spec _ _).1) fun k => by
@@ -146,9 +143,9 @@ theorem GlobalTheory.BCT.exists_finU_of_loc : ∀ (E : Type) [Field E] [NumberFi
     exact hne ((hS v).unique ⟨h, hund⟩ ⟨hv, rfl⟩)
   let z : ∀ v : Pl E, GLw n v := fun v => if v ∈ S then (y v).1 else
     invT n _ (GeneralLinearGroup.map (conjLoc c v) (y (conjSrc c v)).1)
-  have hz_in : ∀ v ∈ S, z v = (y v).1 := fun v hv => if_pos hv
+  have hz_in : ∀ v ∈ S, z v = (y v).1 := fun v hv => ite_eq_left hv
   have hz_out : ∀ v, v ∉ S → z v = invT n _ (GeneralLinearGroup.map (conjLoc c v) (y (conjSrc c v)).1) :=
-    fun v hv => if_neg hv
+    fun v hv => ite_eq_right hv
   have hint : ∀ᶠ v in cofinite, z v ∈ GlobalTheory.LFun.KGL v (n := n) := by
     have h1 : ∀ᶠ v in cofinite, (y v).1 ∈ GlobalTheory.LFun.KGL v (n := n) := hy.mono fun v hv => Subgroup.mem_subgroupOf.1 hv
     have h2 := (conjSrc_injective c).tendsto_cofinite.eventually h1
@@ -177,11 +174,10 @@ theorem GlobalTheory.BCT.exists_finU_of_loc : ∀ (E : Type) [Field E] [NumberFi
         have key : ∀ g : GLw n u, g ∈ UL n u → g ∈ UJ (cj u) 1 := by
           intro g hg
           unfold UL at hg
-          rwa [if_neg hsp] at hg
+          rwa [ite_eq_right hsp] at hg
         have hUL : (y u).1 ∈ UJ (cj u) 1 := key _ (y u).2
         have h3 : cT (cj u) (y u).1.val * 1 * (y u).1.val = 1 := hUL
-        rw [Matrix.mul_one] at h3
-        exact h3
+        rwa [Matrix.mul_one] at h3
     · rw [hz_out u hu, hz_in _ (hnotS u hu)]
       change ((GeneralLinearGroup.map (conjLoc c u) (y (conjSrc c u)).1).val)ᵀ *
         (((GeneralLinearGroup.map (conjLoc c u) (y (conjSrc c u)).1)⁻¹ : GLw n u).val)ᵀ = 1

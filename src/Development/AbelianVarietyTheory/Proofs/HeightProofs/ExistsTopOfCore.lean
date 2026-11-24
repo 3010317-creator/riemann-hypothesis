@@ -750,8 +750,7 @@ theorem isIntegral_rat_zeta_of_coeff (n : ℕ) : IsIntegral ℚ (zeta n) := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · have : zeta 0 = 1 := by simp [zeta]
     rw [this]; exact isIntegral_one
-  · have h := Complex.isPrimitiveRoot_exp n hn.ne'
-    exact (h.isIntegral hn).tower_top
+  · exact ((Complex.isPrimitiveRoot_exp n hn.ne').isIntegral hn).tower_top
 
 theorem exists_coeff_containing :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (l : Level H) (s : Finset ℂ), (∀ z ∈ s, IsAlgebraic ℚ z) → ∃ c : Coeff l, ∀ z ∈ s, z ∈ c.F := by
@@ -781,11 +780,8 @@ theorem exists_coeff_containing :
     rw [map_rat_smul]
     exact IntermediateField.smul_mem _ (hsub (Or.inl (Or.inr ⟨(τ, i), rfl⟩)))
   · exact hsub (Or.inr (by simp))
-  · refine IntermediateField.adjoin.mono _ _ _ ?_
-    intro x hx
-    exact Or.inr (Or.inr hx)
-  · intro z hz
-    exact hsub (Or.inl (Or.inl hz))
+  · exact IntermediateField.adjoin.mono _ _ _ (fun x hx => Or.inr (Or.inr hx))
+  · exact fun z hz => hsub (Or.inl (Or.inl hz))
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
 
@@ -809,28 +805,7 @@ theorem baseAt_of_eq {l : Level H} {c : Coeff l} {v : HeightOneSpectrum (𝓞 c.
   exact y.2
 
 theorem exists_coeff_ge {l : Level H} (c : Coeff l) (l₂ : Level H) : ∃ c₂ : Coeff l₂, c.F ≤ c₂.F := by
-  classical
-  haveI := c.fin
-  let b := Module.finBasis ℚ c.F
-  obtain ⟨c₂, h⟩ := exists_coeff_containing E H l₂ (Finset.univ.image fun i => ((b i : c.F) : ℂ)) (by
-    intro z hz
-    obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hz
-    exact (Algebra.IsAlgebraic.isAlgebraic (R := ℚ) (b i)).algHom c.F.val)
-  refine ⟨c₂, fun x hx => ?_⟩
-  have key : ∀ y : c.F, (y : ℂ) ∈ c₂.F := by
-    intro y
-    have hy : y ∈ Submodule.span ℚ (Set.range b) := b.span_eq ▸ Submodule.mem_top
-    induction hy using Submodule.span_induction with
-    | mem z hz =>
-      obtain ⟨i, rfl⟩ := hz
-      exact h _ (Finset.mem_image_of_mem _ (Finset.mem_univ i))
-    | zero => exact zero_mem _
-    | add y z _ _ hy hz => exact add_mem hy hz
-    | smul a y _ hy =>
-      have e : ((a • y : c.F) : ℂ) = (a : ℂ) * (y : ℂ) := by simp [Rat.smul_def]
-      rw [e]
-      exact mul_mem (SubfieldClass.ratCast_mem _ a) hy
-  exact key ⟨x, hx⟩
+  exact GlobalTheory.RaisedAmple.exists_coeff c l₂
 
 def deeper (l : Level H) (k : ℕ) (hk : 0 < k) : Level H :=
   { l with A := k * l.A, A_pos := Nat.mul_pos hk l.A_pos }

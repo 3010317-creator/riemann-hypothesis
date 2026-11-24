@@ -163,8 +163,7 @@ theorem frMap_ext {S T : Type} [CommRing S] [Algebra c.F S] [Algebra c'.F S] [Co
     FrMap Φ (y.ext hle hS) (z.ext hle hT) := by
   have e' : φ.toRingHom = Φ.toRingHom := RingHom.ext e
   unfold FrMap at h ⊢
-  rw [e'] at h
-  exact h
+  rwa [e'] at h
 
 theorem frMap_res {S T : Type} [CommRing S] [Algebra c.F S] [Algebra c'.F S] [CommRing T] [Algebra c.F T]
     [Algebra c'.F T] (hS : AlgOver c c' hle S) (hT : AlgOver c c' hle T) (φ : S →ₐ[c.F] T) (Φ : S →ₐ[c'.F] T)
@@ -172,8 +171,7 @@ theorem frMap_res {S T : Type} [CommRing S] [Algebra c.F S] [Algebra c'.F S] [Co
     FrMap φ (y.res hle hS) (z.res hle hT) := by
   have e' : φ.toRingHom = Φ.toRingHom := RingHom.ext e
   unfold FrMap at h ⊢
-  rw [← e'] at h
-  exact h
+  rwa [← e'] at h
 
 theorem frBor_ext {S : Type} [CommRing S] [Algebra c.F S] [Algebra c'.F S] (hS : AlgOver c c' hle S)
     {t : Ix Dw → Sˣ} {y z : FrPt Xo c S} (h : FrBor t y z) : FrBor t (y.ext hle hS) (z.ext hle hS) := h

@@ -424,7 +424,7 @@ private theorem fmFst_loc {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
   have hb : GlobalTheory.StdPairCone.blk₁ ((Mᵀ).submatrix id (finCongr (rfl : a + a' = a + a'))) = (topL a M)ᵀ := by
     ext i j
     have : j.1 < a + a' ∧ i.1 < a := ⟨by omega, i.2⟩
-    simp only [GlobalTheory.StdPairCone.blk₁, topL, Matrix.of_apply, Matrix.submatrix_apply, Matrix.transpose_apply, dif_pos this]
+    simp only [GlobalTheory.StdPairCone.blk₁, topL, Matrix.of_apply, Matrix.submatrix_apply, Matrix.transpose_apply, dite_eq_left this]
     rfl
   have hb2 : ∀ i j, GlobalTheory.StdPairCone.blk₂ ((Mᵀ).submatrix id (finCongr (rfl : a + a' = a + a'))) i j = M (Fin.natAdd a j) i :=
     fun i j => rfl
@@ -441,14 +441,14 @@ private theorem fmFst_loc {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
   unfold GlobalTheory.StdPairCone.stdA GlobalTheory.StdPairCone.unitInd GlobalTheory.StdPairCone.IsGLO
   simp only [hb1, hb2]
   by_cases h : (∀ i j, M i j ∈ (ValuativeRel.valuation k).integer) ∧ ∀ i j, a ≤ i.1 → M i j ∈ GlobalTheory.SplitWeil.cball (ϖ ^ c)
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     by_cases h' : (topL a M).det ≠ 0 ∧ ValuativeRel.valuation k (topL a M).det = 1
-    · rw [dif_pos h', dif_pos ⟨hd ▸ h'.1, ⟨fun i j => h.1 _ _, hd ▸ h'.2⟩, fun i j => h.2 _ _ (by simp)⟩]
+    · rw [dite_eq_left h', dite_eq_left ⟨hd ▸ h'.1, ⟨fun i j => h.1 _ _, hd ▸ h'.2⟩, fun i j => h.2 _ _ (by simp)⟩]
       simp only [hd]
     · rw [dite_eq_right h', dite_eq_right]
       rintro ⟨h1, ⟨-, h2⟩, -⟩
       exact h' ⟨hd ▸ h1, hd ▸ h2⟩
-  · rw [if_neg h, dite_eq_right]
+  · rw [ite_eq_right h, dite_eq_right]
     rintro ⟨-, ⟨h1, -⟩, h2⟩
     refine h ⟨fun i j => ?_, fun i j => ?_⟩
     · induction i using Fin.addCases with
@@ -491,8 +491,7 @@ theorem UpperTheory.exists_gl_stdFst_eq_product_local :
       unfold frMapO
       rw [Matrix.map_mul, Matrix.map_mul]
       congr 2
-      refine Matrix.ext fun i j => ?_
-      exact piF_toEAf (t v) (x i j)
+      exact Matrix.ext fun i j => piF_toEAf (t v) (x i j)
     rw [← hG, IsUnit.unit_spec, e1, e2]
     refine fmFst_mat (finCongr hr) _ _ _ (hGi v) (βW.1.map (piF (t v))) _ ?_ (m v) (hm v) _
     rw [← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
@@ -501,8 +500,8 @@ theorem UpperTheory.exists_gl_stdFst_eq_product_local :
   unfold GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.stdFst
   by_cases hx : IsHalf e₀ x
   swap
-  · rw [if_neg hx, if_neg fun h => hx h.1]
-  rw [if_pos hx]
+  · rw [ite_eq_right hx, ite_eq_right fun h => hx h.1]
+  rw [ite_eq_left hx]
   have hN : ∀ i j, toEAf D e₀ * frMapO A WW βA βW x i j = frMapO A WW βA βW x i j := by
     have h1 : toEAf D e₀ • Matrix.map x (toEAf D) = Matrix.map x (toEAf D) := by
       ext i j
@@ -515,9 +514,9 @@ theorem UpperTheory.exists_gl_stdFst_eq_product_local :
   generalize frMapO A WW βA βW x = N at hN
   have hI := fun i j => UpperTheory.mem_intAf_and_inId_iff_splitComponents D e₀ S hS P t hP ht c (N i j) (hN i j)
   by_cases h : IsIntM N ∧ ∀ i j, A.rank ≤ i.1 → GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.InId (∏ w ∈ S, w.asIdeal ^ c w) (N i j)
-  · rw [if_pos ⟨hx, h⟩, UpperTheory.unitChar_idempotentSum_eq_prod_over_splitPlaces D e₀ S hS P t hP ht ν _ (topL A.rank N)]
+  · rw [ite_eq_left ⟨hx, h⟩, UpperTheory.unitChar_idempotentSum_eq_prod_over_splitPlaces D e₀ S hS P t hP ht ν _ (topL A.rank N)]
     · refine Finset.prod_congr rfl fun v _ => ?_
-      rw [if_pos ⟨fun i j => (hI i j).1.1 (h.1 i j) v, fun i j hi => (hI i j).2.1 (h.2 i j hi) v⟩]
+      rw [ite_eq_left ⟨fun i j => (hI i j).1.1 (h.1 i j) v, fun i j hi => (hI i j).2.1 (h.2 i j hi) v⟩]
       congr 2
       refine Matrix.ext fun i j => ?_
       simp only [topL, Matrix.map_apply]
@@ -529,7 +528,7 @@ theorem UpperTheory.exists_gl_stdFst_eq_product_local :
       split_ifs
       · exact h.1 _ _
       · exact zero_mem _
-  · rw [if_neg fun h' => h h'.2]
+  · rw [ite_eq_right fun h' => h h'.2]
     by_contra hne
     have hv := fun v : P => Finset.prod_ne_zero_iff.1 (Ne.symm hne) v (Finset.mem_univ v)
     have hv' := fun v : P => (ite_ne_right_iff.1 (hv v)).1
@@ -561,11 +560,11 @@ private theorem stdB_eq {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace 
   unfold GlobalTheory.StdPairCone.stdB GlobalTheory.StdPairCone.unitInd
   by_cases h : (∀ i j, Y i j ∈ (ValuativeRel.valuation k).integer) ∧
           ∀ i j, Y i (Fin.castAdd a' j) ∈ GlobalTheory.SplitWeil.cball (ϖ ^ c)
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     by_cases h2 : (GlobalTheory.StdPairCone.blk₂ Y).det ≠ 0 ∧ ValuativeRel.valuation k (GlobalTheory.StdPairCone.blk₂ Y).det = 1
     · rw [dite_eq_left h2, dite_eq_left ⟨h2.1, ⟨fun i j => h.1 _ _, h2.2⟩, h.2⟩]
     · rw [dite_eq_right h2, dite_eq_right fun h3 => h2 ⟨h3.1, h3.2.1.2⟩]
-  · rw [if_neg h, dite_eq_right]
+  · rw [ite_eq_right h, dite_eq_right]
     rintro ⟨-, h1, h2⟩
     refine h ⟨fun i j => ?_, h2⟩
     refine Fin.addCases (fun j => ?_) (fun j => h1.1 i j) j
@@ -595,8 +594,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
   have hG : (A'.gram⁻¹)ᴴ = A'.gram⁻¹ := by
     rw [Matrix.conjTranspose_nonsing_inv]
     congr 1
-    refine Matrix.ext fun i j => ?_
-    exact GlobalTheory.DualPairCheck.gram_star A' j i
+    exact Matrix.ext fun i j => GlobalTheory.DualPairCheck.gram_star A' j i
   have h0 : ((GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM (A'.gram⁻¹))ᵀ).map (piW (t.comp D.sp.cm.sig)) = (A'.gram⁻¹).map t := by
     refine Matrix.ext fun i j => ?_
     have h := congrFun (congrFun hG i) j
@@ -627,8 +625,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
         ((y : Matrix _ _ (AE D))ᵀ).map (piW (t.comp D.sp.cm.sig)) * WW.gram.map t) * βW.1.map (piF t)) := by
     rw [← hxi, ← hinc, ← hinc, ← hy, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul,
       ← Matrix.map_mul, ← Matrix.map_mul]
-    refine Matrix.ext fun i j => ?_
-    exact map_mul (piF t) _ _
+    exact Matrix.ext fun i j => map_mul (piF t) _ _
   rw [h1, h2, h3, Matrix.mul_smul, Matrix.smul_mul, Matrix.submatrix_smul]
   simp only [Pi.smul_apply]
   congr 1
@@ -649,8 +646,7 @@ private theorem half_dual {D : D7} (e₀ : AE D) (A' WW : HSp D)
     conv_rhs => rw [← h1, Matrix.mul_smul, Matrix.smul_mul]
     rw [← Matrix.smul_mul, ← Matrix.mul_smul]
     congr 2
-    refine Matrix.ext fun i j => ?_
-    exact (map_mul (toEAf D) _ _).symm
+    exact Matrix.ext fun i j => (map_mul (toEAf D) _ _).symm
   have h3 : toEAf D e₀ • GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.dualCoord A' WW βA' βW y = GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.dualCoord A' WW βA' βW y := by
     unfold GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.dualCoord
     rw [smul_comm, h2]
@@ -673,8 +669,8 @@ theorem UpperTheory.exists_gl_stdSnd_eq_product_local :
   unfold GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.stdSnd
   by_cases hy : IsHalf (cA D e₀) y
   swap
-  · rw [if_neg fun h => hy h.1, if_neg hy]
-  rw [if_pos hy]
+  · rw [ite_eq_right fun h => hy h.1, ite_eq_right hy]
+  rw [ite_eq_left hy]
   have hc : ∀ v : P, GlobalTheory.StdPairCone.stdB (chrW ν (t v)) (unifAt v.1) (c (splitPrime (t v))) a A'.rank
       ((Matrix.GeneralLinearGroup.map (piF (t v)) βA'⁻¹).1 *
         (ptO (sgn false A').gram (finCongr hr) y).map (piW ((t v).comp D.sp.cm.sig)) *
@@ -698,11 +694,11 @@ theorem UpperTheory.exists_gl_stdSnd_eq_product_local :
       unfold GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.rightBlock
       rw [dite_eq_left hj]
       rfl
-    rw [if_pos ⟨hy, h⟩, UpperTheory.unitChar_idempotentSum_eq_prod_over_splitPlaces D e₀ S hS P t hP ht ν _ _ (by rw [hb]; exact fun i j => h.1 _ _)]
+    rw [ite_eq_left ⟨hy, h⟩, UpperTheory.unitChar_idempotentSum_eq_prod_over_splitPlaces D e₀ S hS P t hP ht ν _ _ (by rw [hb]; exact fun i j => h.1 _ _)]
     refine Finset.prod_congr rfl fun v _ => ?_
-    rw [if_pos ⟨fun i j => (hI _ _).1.1 (h.1 _ _) v, fun i j => (hI _ _).2.1 (h.2 _ _ j.2) v⟩, hb]
+    rw [ite_eq_left ⟨fun i j => (hI _ _).1.1 (h.1 _ _) v, fun i j => (hI _ _).2.1 (h.2 _ _ j.2) v⟩, hb]
     rfl
-  · rw [if_neg fun h' => h h'.2]
+  · rw [ite_eq_right fun h' => h h'.2]
     symm
     by_contra h0
     refine h ⟨fun i j => (hI i j).1.2 fun v => ?_, fun i j hj => (hI i j).2.2 fun v => ?_⟩
@@ -1044,8 +1040,8 @@ theorem UpperTheory.exists_polynomial_of_isFinF_thetaLift_pureTensor :
   have hg : (show Matrix (Fin S.rank) (Fin S.rank) D.host.E from (sgn ε S).gram) =
       (if ε then -1 else 1 : D.host.E) • S.gram := by
     cases ε
-    · simp only [Bool.false_eq_true, if_false, one_smul]; rfl
-    · simp only [if_true, neg_smul, one_smul]; exact neg_gram S
+    · simp only [Bool.false_eq_true, ite_false, one_smul]; rfl
+    · simp only [ite_true, neg_smul, one_smul]; exact neg_gram S
   obtain ⟨cS, hcS, hcS'⟩ : ∃ cS : Matrix (Fin S.rank) (Fin d) (AE D) ≃+ WO S X,
       (∀ u, cS u = (HMul.hMul (uᵀ.submatrix e.symm id) (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM ((if ε then -1 else 1 : D.host.E) • S.gram)) :
         Matrix (Fin X.rank) (Fin S.rank) (AE D))) ∧ ∀ x, cS.symm x = ptO (sgn ε S).gram e x :=
@@ -1149,8 +1145,7 @@ private theorem eq_sum_of_halfEl {P : Finset (HeightOneSpectrum (𝓞 F))} {t : 
 
     rw [map_sub, map_one, map_sum, Finset.sum_eq_single (⟨w, hw⟩ : P) (fun v _ hv => evFin_liftV_ne
     (fun e => hv (Subtype.ext e.symm)) 1) (fun h => absurd (Finset.mem_univ _) h), evFin_liftV, sub_self]
-  rw [sub_smul, one_smul, sub_eq_zero, Finset.sum_smul] at h
-  exact h
+  rwa [sub_smul, one_smul, sub_eq_zero, Finset.sum_smul] at h
 
 private theorem at_mul_smul {n d : ℕ} {v : HeightOneSpectrum (𝓞 F)} {a : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)} (ha : At (evFin F v) a)
     (x : Matrix (Fin n) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) : At (evFin F v) (a • x) := fun u hu => by
@@ -1302,8 +1297,8 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
         if IsHalf eh x then ∏ v : P, ι v (χ v) ((b v).1 * (ptO (sgn ε S).gram e x).map (piW (t₁ v)) * (c v).1) else 0 := by
     intro χ x
     by_cases hx : IsHalf eh x
-    · rw [if_pos hx, Set.indicator_of_mem ((hH x).2 hx)]
-    · rw [if_neg hx, Set.indicator_of_notMem (mt (hH x).1 hx)]
+    · rw [ite_eq_left hx, Set.indicator_of_mem ((hH x).2 hx)]
+    · rw [ite_eq_right hx, Set.indicator_of_notMem (mt (hH x).1 hx)]
   have hbase : (fun x : WO (sgn ε S) X => Set.indicator (H : Set _)
       (fun u => ∏ v : P, ι v (M.vac v) ((b v).1 * u.map (piW (t₁ v)) * (c v).1)) (ptO (sgn ε S).gram e x)) =
       (∏ v, z v) • halfInd eh Λ := by
@@ -1317,12 +1312,12 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
           rw [Matrix.map_apply, Matrix.smul_apply, GlobalTheory.LatFill.piW_smul, ((h₀ _).1 (hu i j)).2 v, mul_zero]; rfl)]
         refine congrArg (fun w => ι v (M.vac v) ((b v).1 * w * (c v).1)) (Matrix.ext fun i j => ?_)
         rw [Matrix.map_apply, Matrix.map_apply, Matrix.smul_apply, GlobalTheory.LatFill.piW_smul, GlobalTheory.LatVac.evFin_liftV, one_mul]
-      rw [if_pos hx, Finset.prod_congr rfl fun v _ => key v]
+      rw [ite_eq_left hx, Finset.prod_congr rfl fun v _ => key v]
       by_cases hl : x ∈ Λ
-      · rw [if_pos ⟨hl, hx⟩, mul_one]
-        exact Finset.prod_congr rfl fun v _ => if_pos (lat₂ v _ (GlobalTheory.LatVac.at_liftV v.1 1)
+      · rw [ite_eq_left ⟨hl, hx⟩, mul_one]
+        exact Finset.prod_congr rfl fun v _ => ite_eq_left (lat₂ v _ (GlobalTheory.LatVac.at_liftV v.1 1)
           (by rw [GlobalTheory.LatVac.evFin_liftV]; exact one_mem _) x hl)
-      · rw [if_neg fun h => hl h.1, mul_zero]
+      · rw [ite_eq_right fun h => hl h.1, mul_zero]
         by_contra hne
         refine hl ?_
         have hx' : x = ∑ v : P, GlobalTheory.LatVac.liftV v.1 (1 : Fv D.host.F v) • x := Matrix.ext fun i j => by
@@ -1332,8 +1327,8 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
         refine sum_mem fun v _ => lat₁ v _ ?_
         rw [UpperTheory.FmPlace.ptO_smul']
         by_contra hn
-        exact hne (Finset.prod_eq_zero (Finset.mem_univ v) (if_neg hn))
-    · rw [if_neg hx, if_neg fun h => hx h.2, mul_zero]
+        exact hne (Finset.prod_eq_zero (Finset.mem_univ v) (ite_eq_right hn))
+    · rw [ite_eq_right hx, ite_eq_right fun h => hx h.2, mul_zero]
   have hmm : ∀ (v : P) (t : D.host.E →ₐ[D.host.F] Fv D.host.F v) (w : AE D) (u : Matrix (Fin S.rank) (Fin d) (AE D)),
       (w • u).map (piW t) = piW t w • u.map (piW t) := fun v t w u => Matrix.ext fun i j => map_mul (piW t) w (u i j)
   have hR := _root_.GlobalTheory.InductLagr.rel_of_vac M Bs.ψ hstd hM (Finset.univ : Finset P) Subtype.val Subtype.val_injective.injOn
@@ -1362,8 +1357,7 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
         (GlobalTheory.PlaceVec.selfDual_isFullLattice _ _ sdS) (GlobalTheory.PlaceVec.selfDual_isFullLattice _ _ sdX) y
         (Matrix.ext fun i j => infPart_halfEl ((h₀ _).1 (hy i j)))
       refine ⟨GlobalTheory.HeisSchA.rho_mem_schA M _ hstd _ _ hp.1, ?_, ?_⟩
-      · simp only [← ptO_add]
-        exact sb_trans hp.2.1 hy hk hky
+      · simpa only [← ptO_add] using sb_trans hp.2.1 hy hk hky
       · simp only [← ptO_add]
         rw [lrho, ← hp.2.2]
         exact hT.trans _ hp.2.1 y hy)
@@ -1478,8 +1472,7 @@ private theorem local_matching_decomposition {B : Base F E} {a a' : ℕ} {G : Ge
       have e2 : c'.1 = (G.W.J.map (B.τ v))ᵀ * c.1 := rfl
       rw [e1, e2]
       simp only [Matrix.neg_mul, Matrix.mul_assoc]
-    rw [e]
-    exact hι'
+    rwa [e]
   · rw [eφ]
     beta_reduce
     refine congrArg _ ?_
@@ -1497,8 +1490,7 @@ private theorem local_matching_decomposition {B : Base F E} {a a' : ℕ} {G : Ge
     rw [Matrix.mul_assoc (g'.1 * U), ← e1, ← e2]
     simp only [Matrix.mul_assoc]
   · have := (hz φ hφ 0 (zero_mem _)).1 (by rw [h0, map_zero])
-    rw [eφ, map_zero, s0] at this
-    exact this
+    rwa [eφ, map_zero, s0] at this
 end Local
 section Pair
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S IsDedekindDomain NumberField Matrix
@@ -1613,10 +1605,10 @@ theorem exists_finite_place_theta_match (hP : _root_.GlobalTheory.FunPr.ThetaLoc
     fun v => if hv : v ∈ Bs.P then φl ⟨v, hv⟩ else Γ.M.vac v
   let φ' : ∀ v : HeightOneSpectrum (𝓞 D.host.F), (Fin A'.rank × Fin (A.rank + A'.rank) → Fv D.host.F v) → ℂ :=
     fun v => if hv : v ∈ Bs.P then φl' ⟨v, hv⟩ else Γ.M'.vac v
-  have e1 : ∀ v : Bs.P, φ v = φl v := fun v => dif_pos v.2
-  have e1' : ∀ v : Bs.P, φ' v = φl' v := fun v => dif_pos v.2
-  have e2 : ∀ v, v ∉ Bs.P → φ v = Γ.M.vac v := fun v hv => dif_neg hv
-  have e2' : ∀ v, v ∉ Bs.P → φ' v = Γ.M'.vac v := fun v hv => dif_neg hv
+  have e1 : ∀ v : Bs.P, φ v = φl v := fun v => dite_eq_left v.2
+  have e1' : ∀ v : Bs.P, φ' v = φl' v := fun v => dite_eq_left v.2
+  have e2 : ∀ v, v ∉ Bs.P → φ v = Γ.M.vac v := fun v hv => dite_eq_right hv
+  have e2' : ∀ v, v ∉ Bs.P → φ' v = Γ.M'.vac v := fun v hv => dite_eq_right hv
   have sb : ∀ v, φ v ∈ GlobalTheory.WeilM.SB _ := fun v => by
     by_cases hv : v ∈ Bs.P
     · exact e1 ⟨v, hv⟩ ▸ hφ ⟨v, hv⟩

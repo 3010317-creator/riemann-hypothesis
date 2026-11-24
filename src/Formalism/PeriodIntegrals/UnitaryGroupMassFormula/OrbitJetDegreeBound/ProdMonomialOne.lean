@@ -104,8 +104,7 @@ theorem cc_bsum {N0 N1 : ℕ} (sg : ℂ_[p]) (be : MvPowerSeries (ZMod (nP D p))
     constantCoeff (sg • bsum D p (N0 := N0) (N1 := N1) be) = 0 := by
   unfold bsum
 
-  rw [MvPowerSeries.smul_eq_C_mul, map_mul, map_sum]
-  rw [Finset.sum_eq_zero (fun a _ => ?_), mul_zero]
+  rw [MvPowerSeries.smul_eq_C_mul, map_mul, map_sum, Finset.sum_eq_zero (fun a _ => ?_), mul_zero]
 
   rw [map_sum]
   refine Finset.sum_eq_zero fun b _ => ?_
@@ -205,8 +204,7 @@ theorem sum_resM {γ : Type} {R : Finset (Pl D)} (hR : IsReps D p R) (m : Pl D �
     have hsc' : ((orbMap D p r s, c') : Pl D × γ) = (z, c) := hsc
     rw [← (Prod.mk.inj hsc').1]
     rfl
-  · intro h
-    exact absurd hr0 h
+  · exact fun h => absurd hr0 h
 
 theorem mono_eq {γ : Type} {R : Finset (Pl D)} (hR : IsReps D p R) (m : Pl D × γ →₀ ℕ) :
     (monomial m (1 : ℂ_[p]) : MvPowerSeries (Pl D × γ) ℂ_[p]) =

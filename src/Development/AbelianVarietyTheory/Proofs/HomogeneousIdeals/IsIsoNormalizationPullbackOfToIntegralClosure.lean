@@ -152,8 +152,7 @@ theorem normalizationMap_fromNormalization :
 theorem eq_normalizationMap {m : f₁.normalization ⟶ f₂.normalization}
     (h₁ : f₁.toNormalization ≫ m = a ≫ f₂.toNormalization)
     (h₂ : m ≫ f₂.fromNormalization = f₁.fromNormalization ≫ b) :
-    m = normalizationMap f₁ f₂ a b H := by
-  exact eq_normalizationLift f₁ _ _ _ _ h₁ h₂
+    m = normalizationMap f₁ f₂ a b H := eq_normalizationLift f₁ _ _ _ _ h₁ h₂
 
 theorem normalizationMap_comp (a' : X₂ ⟶ X₃) (b' : Y₂ ⟶ Y₃) (H' : a' ≫ f₃ = f₂ ≫ b') :
     normalizationMap f₁ f₂ a b H ≫ normalizationMap f₂ f₃ a' b' H' =
@@ -652,8 +651,7 @@ theorem mem_range_app_of_locally {X Y : Scheme.{u}} (q : X ⟶ Y) [QuasiCompact 
   refine ⟨a, X.sheaf.eq_of_locally_eq' (fun y ↦ q ⁻¹ᵁ V y) (q ⁻¹ᵁ W)
     (fun y ↦ homOfLE (q.preimage_mono (hV y)))
     (fun x hx ↦ Opens.mem_iSup.mpr ⟨⟨q x, hx⟩, hyV _⟩) _ _ fun y ↦ ?_⟩
-  refine (app_presheaf_map_apply q (hV y) a).symm.trans (.trans ?_ (ht y))
-  exact congrArg _ (ha y)
+  exact (app_presheaf_map_apply q (hV y) a).symm.trans (.trans (congrArg _ (ha y)) (ht y))
 
 theorem mem_range_app_of_forall_isAffineOpen {X Y : Scheme.{u}} (q : X ⟶ Y) [QuasiCompact q]
     [IsSchemeTheoreticallyDominant q] (W : Y.Opens) (s : Γ(X, q ⁻¹ᵁ W))

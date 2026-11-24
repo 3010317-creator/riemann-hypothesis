@@ -118,8 +118,7 @@ theorem adapted_span : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (C
       intro j'
       have hs := congrArg (fun y : V × Module.Dual Ω V => y.2 (w j')) hg
       simpa [Prod.fst_sum, Prod.snd_sum, Prod.smul_fst, Prod.smul_snd, LinearMap.sum_apply, Finset.sum_apply, LinearMap.smul_apply, smul_eq_mul, h1, hz2] using hs
-    intro i
-    exact Fin.addCases h1 h2 i
+    exact fun i => Fin.addCases h1 h2 i
   have hspan : Submodule.span Ω (Set.range u) = HT.eigSp 𝓗.ρH σ := by
     apply le_antisymm
     · rw [Submodule.span_le]
@@ -130,8 +129,7 @@ theorem adapted_span : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (C
         rw [HT.LatBasic.mem_eigSp]
         intro a
         have h1 := congrArg Prod.fst ((HT.LatBasic.mem_eigSp.mp hy) a)
-        rw [𝓗.act_fst] at h1
-        exact h1
+        rwa [𝓗.act_fst] at h1
       rw [← hvs, Submodule.mem_span_range_iff_exists_fun] at hy1
       obtain ⟨c, hc⟩ := hy1
       set y' := y - ∑ i, c i • u (Fin.castAdd q i) with hy'

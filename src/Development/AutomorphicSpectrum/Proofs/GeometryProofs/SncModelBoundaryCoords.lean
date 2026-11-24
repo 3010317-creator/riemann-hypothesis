@@ -130,8 +130,7 @@ theorem isSncModel_seg {Ω : Type} [Field Ω] [Algebra ℚ Ω] [∀ k, Fintype (
     Cmp.IsSncModel y e (bd₁.map (segMap E)) := by
   intro c hc
   have h0 : ∀ k : Unit, segPt E y ⟨k, E.symm c⟩ ≠ 0 := fun k => by
-    simp only [segPt, Equiv.apply_symm_apply]
-    exact Finset.prod_ne_zero_iff.2 fun k _ => hc k
+    simpa only [segPt, Equiv.apply_symm_apply] using Finset.prod_ne_zero_iff.2 fun k _ => hc k
   obtain ⟨m, f, b, hf, hb, hsum, hS⟩ := h (fun _ => E.symm c) h0
   have hA := adjoin_ratios_seg E y c hc
   refine ⟨m, f, b, fun l => ?_, fun l => ?_, hsum, fun l hfl S hSeq => ?_⟩
@@ -165,8 +164,7 @@ theorem mem_mcPts_seg (E : Fin (N + 1) ≃ ((k : K) → J k)) (bd₁ : Ideal (MR
     refine ⟨fun _ => ?_, fun g hg => ?_⟩
     · choose c hc using hw
       refine ⟨E.symm c, ?_⟩
-      simp only [segPt, Equiv.apply_symm_apply]
-      exact Finset.prod_ne_zero_iff.2 fun k _ => hc k
+      simpa only [segPt, Equiv.apply_symm_apply] using Finset.prod_ne_zero_iff.2 fun k _ => hc k
     · rw [← hval]
       exact h _ (Ideal.mem_map_of_mem _ hg)
   · rintro ⟨-, h⟩
@@ -174,8 +172,7 @@ theorem mem_mcPts_seg (E : Fin (N + 1) ≃ ((k : K) → J k)) (bd₁ : Ideal (MR
     have hle : bd₁.map (segMap E) ≤ RingHom.ker (aeval w : MRing J →ₐ[ℤ] ℂ) :=
       Ideal.map_le_iff_le_comap.2 fun g hg => by
         have h1 := h g hg
-        rw [eval_map_int, ← aeval_segMap] at h1
-        exact h1
+        rwa [eval_map_int, ← aeval_segMap] at h1
     rw [eval_map_int]
     exact hle hf
 
@@ -222,8 +219,7 @@ theorem coordsAt_seg [Nonempty K] (E : Fin (N + 1) ≃ ((k : K) → J k)) (y : (
       exact (hrv k).choose
     refine ⟨∏ k, r k, ?_, ?_⟩
     · have h1 := valAt_prod hgen Finset.univ _ _ fun k _ => hrv k
-      rw [Finset.prod_div_distrib] at h1
-      exact h1
+      rwa [Finset.prod_div_distrib] at h1
     · show (∏ k, w ⟨k, E i k⟩) = (∏ k, r k) * ∏ k, w ⟨k, E j k⟩
       rw [← Finset.prod_mul_distrib]
       exact Finset.prod_congr rfl fun k _ => hrw k
@@ -242,8 +238,7 @@ theorem points_of_isEmpty [IsEmpty K] [∀ k, Fintype (J k)] {Ω : Type} [Field 
   rw [hr] at hf ha hS
   rw [Algebra.adjoin_empty] at hf ha
   obtain ⟨l, hl⟩ : ∃ l, f l ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     simp [hall] at hsum
   obtain ⟨hsm, zz, n, hn, hli, hspan, hq⟩ := hS l hl _ rfl
   set S : Subalgebra ℚ Ω := Algebra.adjoin ℚ (insert (f l)⁻¹ ∅) with hSdef
@@ -262,8 +257,7 @@ theorem points_of_isEmpty [IsEmpty K] [∀ k, Fintype (J k)] {Ω : Type} [Field 
   have hcl := hq ⊥ Ideal.isPrime_bot
   obtain ⟨g, hg, s, hs1, hs0⟩ : ∃ g ∈ bd, ∃ s : S, (s : Ω) = aeval (fun p : Σ k, J k => y p / y ⟨p.1, c p.1⟩) g ∧
       s ∉ (⊥ : Ideal S) := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     obtain ⟨i, -⟩ := hcl.1 hall
     exact isEmptyElim i
   constructor

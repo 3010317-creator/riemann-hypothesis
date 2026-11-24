@@ -141,16 +141,14 @@ theorem isLattice_chainLat_and_comap :
   intro k _ _ _ _ n _ _ c
   refine ⟨fun ϖ hϖ L hL => ⟨?_, ?_⟩, fun Λ hΛ => ⟨?_, ?_⟩⟩
   · exact (hL.fg.map _).sup (Submodule.fg_span (Set.finite_range _))
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
   · refine Submodule.fg_of_fg_map_injective (inX k n c) ?_
       (hΛ.fg.of_le (Submodule.map_comap_le _ _))
     intro x y hxy
     funext r
     have := congrFun hxy (Sum.inl r)
     simpa [inX_apply] using this
-  · intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
 
 end GlobalTheory.RootEx.ChainLattice
 end -- clump:auto

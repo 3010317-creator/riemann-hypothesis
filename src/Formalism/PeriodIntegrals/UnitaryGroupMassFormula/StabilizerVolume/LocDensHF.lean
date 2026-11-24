@@ -308,8 +308,7 @@ theorem fibCos (μ : Measure V) (ν : Measure X) [μ.IsAddHaarMeasure] [ν.IsAdd
       ext z
       simp only [mem_setOf_eq, mem_image, SetLike.mem_coe]
       constructor
-      · intro hz
-        exact ⟨z - y, hz, by abel⟩
+      · exact fun hz => ⟨z - y, hz, by abel⟩
       · rintro ⟨w, hw, rfl⟩
         simpa using hw
     rw [this]
@@ -420,8 +419,7 @@ theorem fibLat_holds : FibLat := by
     have hreal : ∀ n, μ.real (Pn n) * ν.real (H 0) = (Tf.card : ℝ) * (μ.real (Λ 0 : Set V) * ν.real (H n)) := by
       intro n
       have e' := congrArg ENNReal.toReal (hcount n)
-      simp only [ENNReal.toReal_mul, ENNReal.toReal_natCast, ← measureReal_def] at e'
-      exact e'
+      simpa only [ENNReal.toReal_mul, ENNReal.toReal_natCast, ← measureReal_def] using e'
     have hratio : ∀ n, μ.real ((L : Set V) ∩ G ⁻¹' {z | z - T ∈ H n}) =
         μ.real (Pn 0) / ν.real (H 0) * ν.real (H n) := by
       intro n
@@ -457,8 +455,7 @@ theorem fibLat_holds : FibLat := by
           show G x - T ∈ H 0
           rw [hxT, sub_self]
           exact (H 0).zero_mem⟩
-        rw [hP0] at this
-        exact this
+        rwa [hP0] at this
       · exact indicator_of_notMem hxL _
     rw [integral_congr_ae hae, integral_zero]
 

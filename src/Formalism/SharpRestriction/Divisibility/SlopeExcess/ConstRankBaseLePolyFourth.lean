@@ -144,12 +144,10 @@ theorem w''_nonneg : 0 ≤ L.sc.w'' D.R.n := by
 
 theorem w''_le (hN : SizeN L) : L.sc.w'' D.R.n ≤ L.sc.b' := by
   unfold Scale.w''
-  apply div_le_self (b'_nonneg L)
-  exact one_le_mul_of_one_le_of_one_le L.sc.one_lt_alt.le (n_pos hN)
+  exact div_le_self (b'_nonneg L) (one_le_mul_of_one_le_of_one_le L.sc.one_lt_alt.le (n_pos hN))
 
 theorem Sc_le (hK : SizeK L) (hDel : SizeDel L) : L.Sc ≤ L.sc.w'' D.R.n := by
-  have h4 := hDel.2.2.2.1
-  exact (le_mul_of_one_le_left L.Sc_pos.le (k_one hK)).trans h4
+  exact (le_mul_of_one_le_left L.Sc_pos.le (k_one hK)).trans hDel.2.2.2.1
 
 theorem Sc_le' (hN : SizeN L) (hK : SizeK L) (hDel : SizeDel L) : L.Sc ≤ szPol L * L.sc.b :=
   (Sc_le hK hDel).trans ((w''_le hN).trans ((b'_le_a L).trans (a_le L hK)))
@@ -1028,8 +1026,7 @@ theorem _root_.Formalism.MainNotions.DIV.Proofs.szPol_le_rpow (hS : SizesAt L) (
     refine hM.2.trans ?_
     have hs : Real.sqrt (L.sc.x * L.sc.delta1) ≤ L.sc.x ^ (1 / 2 : ℝ) := by
       rw [← Real.sqrt_eq_rpow]
-      apply Real.sqrt_le_sqrt
-      exact mul_le_of_le_one_right hx0.le (delta1_le (L := L))
+      exact Real.sqrt_le_sqrt (mul_le_of_le_one_right hx0.le (delta1_le (L := L)))
     rw [← hxx]
     exact mul_le_mul_of_nonneg_left hs (Real.rpow_pos_of_pos hx0 _).le
   have hmX : (D.R.m : ℝ) ≤ X := hm.trans (rp _ _ (by unfold szTh at *; linarith))

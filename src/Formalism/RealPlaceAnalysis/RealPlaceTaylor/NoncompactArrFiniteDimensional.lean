@@ -97,10 +97,9 @@ theorem noncompact_arr_one_values {ε : Fin n → Bool} {E : Fin n → Fin n →
   have h := (mem_noncompact_arr_iff_general F).mp hF (fun _ => (a, b))
   constructor
   · intro hne
-    rwa [if_pos (fun _ => hne)] at h
+    rwa [ite_eq_left (fun _ => hne)] at h
   · intro he
-    rw [if_neg (fun h' => h' 0 he), Submodule.mem_bot] at h
-    exact h
+    rwa [ite_eq_right (fun h' => h' 0 he), Submodule.mem_bot] at h
 
 theorem mem_noncompact_arr_one {ε : Fin n → Bool} {E : Fin n → Fin n → Module.End ℂ V} {u : V} {F : Arr V n 1}
     (h1 : ∀ a b, ε a ≠ ε b → F (fun _ => (a, b)) ∈ kSpan ε E u)
@@ -109,8 +108,8 @@ theorem mem_noncompact_arr_one {ε : Fin n → Bool} {E : Fin n → Fin n → Mo
   intro α
   rw [fin_one_fun_eq_const_apply_zero α]
   by_cases h : ε (α 0).1 = ε (α 0).2
-  · rw [if_neg (fun h' => h' 0 h), Submodule.mem_bot]; exact h2 _ _ h
-  · rw [if_pos (fun _ => h)]; exact h1 _ _ h
+  · rw [ite_eq_right (fun h' => h' 0 h), Submodule.mem_bot]; exact h2 _ _ h
+  · rw [ite_eq_left (fun _ => h)]; exact h1 _ _ h
 
 theorem compact_highest_weight_unique (hl : KLow) (hw : KWtOrth) {ε : Fin n → Bool}
     {E : Fin n → Fin n → Module.End ℂ V} {Λ ν : Fin n → ℝ} {u y : V}
@@ -174,7 +173,7 @@ theorem hVCoeff_of (hl : KLow) (hw : KWtOrth) (ha : ArrModule) : HVCoeff := by
     by_cases hac : a = c
     · subst hac
       have hbc : b ≠ a := Ne.symm hab
-      simp only [if_true, if_neg hbc, sub_zero] at h1
+      simp only [ite_true, ite_eq_right hbc, sub_zero] at h1
       have : ((μ - root a b) a : ℝ) = μ a - 1 := by
         simp [root, hbc]
       rw [this]
@@ -183,18 +182,17 @@ theorem hVCoeff_of (hl : KLow) (hw : KWtOrth) (ha : ArrModule) : HVCoeff := by
       simp [hf]
     · by_cases hbc : b = c
       · subst hbc
-        simp only [if_neg hac, if_true, zero_sub] at h1
+        simp only [ite_eq_right hac, ite_true, zero_sub] at h1
         have : ((μ - root a b) b : ℝ) = μ b + 1 := by
           simp [root, hab]
         rw [this]
         push_cast
         rw [add_smul, one_smul, ← h1]
         simp [hf]
-      · simp only [if_neg hac, if_neg hbc, sub_zero, zero_add] at h1
+      · simp only [ite_eq_right hac, ite_eq_right hbc, sub_zero, zero_add] at h1
         have : ((μ - root a b) c : ℝ) = μ c := by
           simp [root, Ne.symm hac, Ne.symm hbc]
-        rw [this]
-        exact h1
+        rwa [this]
   have hhi : ∀ c d, c < d → ε c = ε d → E c d (f (a, b)) = 0 := by
     intro c d hcd hcomp
     have hcd' := Fin.lt_iff_val_lt_val.mp hcd
@@ -211,8 +209,7 @@ theorem hVCoeff_of (hl : KLow) (hw : KWtOrth) (ha : ArrModule) : HVCoeff := by
       · subst h
         exact hzero (a, c) (by simp only; omega)
       · rfl
-    rw [e1, e2, sub_zero, zero_add] at h1
-    exact h1
+    rwa [e1, e2, sub_zero, zero_add] at h1
   have hν := compact_highest_weight_unique hl hw hg hu hΛ ((hval a b).1 hne) ⟨hwt, hhi⟩ hab0
   rw [← hν]
   simp
@@ -229,8 +226,7 @@ theorem compact_span_stable_general {W : Type} [AddCommGroup W] [Module ℂ W] {
     {F : Fin n → Fin n → Module.End ℂ W} (x : W) : KStable ε F (kSpan ε F x) := by
   intro a b hab y hy
   rw [kSpan, Submodule.mem_sInf] at hy ⊢
-  intro S hS
-  exact hS.2 a b hab y (hy S hS)
+  exact fun S hS => hS.2 a b hab y (hy S hS)
 
 theorem compact_span_le_of_stable {W : Type} [AddCommGroup W] [Module ℂ W] {ε : Fin n → Bool}
     {F : Fin n → Fin n → Module.End ℂ W} {S : Submodule ℂ W} {x : W} (hS : KStable ε F S)
@@ -265,15 +261,15 @@ theorem root_injective_of_ne {a b a' b' : Fin n} (hab : a ≠ b) (h : root a b =
   have hba : b ≠ a := Ne.symm hab
   have h1 := congrFun h a
   have h2 := congrFun h b
-  simp only [root, Pi.sub_apply, Pi.single_apply, if_neg hab, if_neg hba] at h1 h2
+  simp only [root, Pi.sub_apply, Pi.single_apply, ite_eq_right hab, ite_eq_right hba] at h1 h2
   have e1 : a = a' := by
     by_contra e1
-    rw [if_neg e1] at h1
+    rw [ite_eq_right e1] at h1
     split_ifs at h1 <;> norm_num at h1
   subst e1
   refine ⟨rfl, ?_⟩
   by_contra e4
-  rw [if_neg hba, if_neg e4] at h2
+  rw [ite_eq_right hba, ite_eq_right e4] at h2
   norm_num at h2
 
 theorem noncompact_arr_one_compact_stable {ε : Fin n → Bool} {E : Fin n → Fin n → Module.End ℂ V} {u : V} :
@@ -362,8 +358,7 @@ theorem typesSplit_of (hv : HVCoeff) (hi : KIsoSplit) (ha : ArrModule) : TypesSp
       subst e1; subst e2
       exact absurd h (not_lt.mpr h'.le)
   refine ⟨fun F hF G hG => h1 F hF G (heq ▸ hG), ?_⟩
-  rw [← heq]
-  exact h2
+  rwa [← heq]
 
 theorem root_swap' {n : ℕ} (a b : Fin n) : root a b = -root b a := by
   unfold root; abel
@@ -417,7 +412,7 @@ theorem compact_casimir_positions_one {ε : Fin n → Bool} (F : Arr V n 1)
       intro c d
       have hab' : a ≠ b := fun h => hab (h ▸ rfl)
       by_cases hcd : ε c = ε d
-      · rw [if_pos hcd]
+      · rw [ite_eq_left hcd]
         simp only [positions_one_apply]
         by_cases h1 : c = a
         · subst h1
@@ -427,7 +422,7 @@ theorem compact_casimir_positions_one {ε : Fin n → Bool} (F : Arr V n 1)
           · subst h2
             simp [h1, Ne.symm h1, hab', hcd]
           · simp [h1, Ne.symm h1, h2, Ne.symm h2]
-      · rw [if_neg hcd]
+      · rw [ite_eq_right hcd]
         have e1 : (if c = a then (if ε d = ε a then F (fun _ => (a, b)) else 0) else 0) = 0 := by
           split_ifs with h1 h2
           · subst h1; exact absurd h2.symm hcd
@@ -440,14 +435,14 @@ theorem compact_casimir_positions_one {ε : Fin n → Bool} (F : Arr V n 1)
           · rfl
         rw [e1, e2, add_zero]
     simp only [key, Finset.sum_add_distrib, Finset.sum_ite_irrel, Finset.sum_const_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [← Finset.sum_add_distrib]
     have : ∀ d : Fin n, ((if ε d = ε a then F (fun _ => (a, b)) else 0) +
         (if ε d = ε b then F (fun _ => (a, b)) else 0)) = F (fun _ => (a, b)) := by
       intro d
       rcases bool_trichotomy_of_ne (ε a) (ε b) (ε d) hab with ⟨h1, h2⟩ | ⟨h1, h2⟩
-      · rw [if_pos h1, if_neg h2, add_zero]
-      · rw [if_neg h2, if_pos h1, zero_add]
+      · rw [ite_eq_left h1, ite_eq_right h2, add_zero]
+      · rw [ite_eq_right h2, ite_eq_left h1, zero_add]
     simp only [this, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
     rw [Nat.cast_smul_eq_nsmul]
 
@@ -528,8 +523,7 @@ theorem omPlus_of (hd : KDecomp) (ho : KOrth) (hk : KCasSpan) (hca : CasArr) (ha
         rw [Set.mem_singleton_iff] at hμ''
         subst hμ''
         rw [Submodule.mem_orthogonal]
-        intro G hG
-        exact ho (Arr V n 1) n ε (arrE E 1) _ _ y y' hKR hKU hyh hyh' hμ G hG H hH
+        exact fun G hG => ho (Arr V n 1) n ε (arrE E 1) _ _ y y' hKR hKU hyh hyh' hμ G hG H hH
       intro G hG
       rw [Submodule.mem_orthogonal]
       intro H hH

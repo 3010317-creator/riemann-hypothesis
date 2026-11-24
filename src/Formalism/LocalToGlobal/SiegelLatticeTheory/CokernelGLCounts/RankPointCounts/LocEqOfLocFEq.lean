@@ -211,8 +211,7 @@ theorem exists_smul_mem_of_local (W : Ideal R → Set V) (L : Submodule R V)
         refine ⟨s * a, fun h => (hp.isPrime.mem_or_mem h).elim hs hap, ?_⟩
         rwa [mul_smul]
   apply key (Z.map PrimeSpectrum.asIdeal) _ x hx
-  · intro r hr
-    exact (hI r).1 (hZle hr)
+  · exact fun r hr => (hI r).1 (hZle hr)
   · intro P hP
     obtain ⟨P', _, rfl⟩ := Multiset.mem_map.1 hP
     refine ⟨P'.isPrime, fun h => hZne ?_⟩
@@ -339,8 +338,7 @@ theorem exists_unique_lat (L0 : Submodule R V) (hL0 : IsFullLat K L0) (M : Ideal
 end Main
 
 theorem latLocGlob_core : LatLocGlob := by
-  intro R K V _ _ _ _ _ _ _ _ _ _ L0 hL0 M hM hfin
-  exact exists_unique_lat L0 hL0 M hM hfin
+  exact fun R K V _ _ _ _ _ _ _ _ _ _ L0 hL0 M hM hfin => exists_unique_lat L0 hL0 M hM hfin
 
 end PI.LatLocGlob.Proof
 end -- clump:auto
@@ -507,7 +505,7 @@ theorem latPatch_holds : Formalism.L2.SG.Pf.FrameGlobalPatching.LatPatch := by
   let M : Ideal (𝓞 D.host.E) → Set (VS D).V := fun P =>
     if hP : P.IsMaximal then PI.LatLocGlob.loc P (Λ' (plOf P hP)) else ∅
   have hMP : ∀ P (hP : P.IsMaximal), M P = PI.LatLocGlob.loc P (Λ' (plOf P hP)) := fun P hP => by
-    simp only [M, dif_pos hP]
+    simp only [M, dite_eq_left hP]
   have hexc : {P : Ideal (𝓞 D.host.E) | P.IsMaximal ∧ M P ≠ PI.LatLocGlob.loc P Λ₀}.Finite := by
     refine (hfin.biUnion fun p _ => finite_over p).subset ?_
     rintro P ⟨hPm, hne⟩

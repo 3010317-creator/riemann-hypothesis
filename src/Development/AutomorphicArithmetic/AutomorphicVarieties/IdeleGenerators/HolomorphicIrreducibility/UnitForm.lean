@@ -119,13 +119,11 @@ theorem UpperTheory.V.Sd.unitForm :
     have hdet : (((γ : Matrix (Fin 2) (Fin 2) ℤ) 1 1 : ℤ) : ZMod N) * (((γ : Matrix (Fin 2) (Fin 2) ℤ) 0 0 : ℤ) : ZMod N) = 1 := by
       have h := congrArg (fun x : ℤ => (x : ZMod N)) (Matrix.SpecialLinearGroup.det_coe γ)
       simp only [Matrix.det_fin_two, Int.cast_sub, Int.cast_mul, Int.cast_one, h10, mul_zero, sub_zero] at h
-      rw [mul_comm]
-      exact h
+      rwa [mul_comm]
     set u : (ZMod N)ˣ := Units.mkOfMulEqOne _ _ hdet with hu
     have huv : (u : ZMod N) = (((γ : Matrix (Fin 2) (Fin 2) ℤ) 1 1 : ℤ) : ZMod N) := rfl
     have hstep : ∀ a, (f a : ℍ → ℂ) ∣[(k : ℤ)] γ = f (a * u) := by
-      intro a
-      exact hfam a (a * u) γ hγ (by rw [Units.val_mul, huv])
+      exact fun a => hfam a (a * u) γ hγ (by rw [Units.val_mul, huv])
     simp only [hstep]
     rw [Fintype.sum_equiv (Equiv.mulRight u) (fun a => w a • (f (a * u) : ℍ → ℂ))
       (fun b => w (b * u⁻¹) • (f b : ℍ → ℂ)) (fun a => by simp)]

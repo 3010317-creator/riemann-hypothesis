@@ -101,7 +101,7 @@ theorem bumpFun_apply {x : GL (Fin n) F} {K : Subgroup (GL (Fin n) F)} {v : W}
   unfold bumpFun
   have h : ∃ p' : blockUpper F n β, ∃ k' ∈ K,
       (p : GL (Fin n) F) * x * k = (p' : GL (Fin n) F) * x * k' := ⟨p, k, hk, rfl⟩
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   obtain ⟨k', hk', he⟩ := h.choose_spec
   set p' := h.choose
   have hmem : ((p'⁻¹ * p : blockUpper F n β) : GL (Fin n) F) ∈
@@ -599,8 +599,7 @@ theorem cellJacquetMap_surjective (hσ : IsSmooth σ) :
   obtain ⟨U', hU'o, hU'⟩ := isOpen_induced_iff.1 hKo
   have h1U : (1 : GL (Fin n) F) ∈ U' := by
     have : (1 : levi F n γ) ∈ (K : Set (levi F n γ)) := K.one_mem
-    rw [← hU'] at this
-    exact this
+    rwa [← hU'] at this
   obtain ⟨j₀, -, hj₀⟩ := (hasBasis_nhds_one F n).mem_iff.1 (hU'o.mem_nhds h1U)
   have hinv : ∀ J ≥ j₀, ∀ g k : levi F n γ, (k : GL (Fin n) F) ∈ congruenceSubgroup F n J →
       (φ : levi F n γ → Representation.Coinvariants (cellRepA β γ w σ)) (g * k) =
@@ -608,8 +607,7 @@ theorem cellJacquetMap_surjective (hσ : IsSmooth σ) :
     intro J hJ g k hk
     refine hKφ k ?_ g
     have : k ∈ Subtype.val ⁻¹' U' := hj₀ (congruenceSubgroup_antitone F n hJ hk)
-    rw [hU'] at this
-    exact this
+    rwa [hU'] at this
   obtain ⟨T, hT, hTcov⟩ := exists_finset_levi_eq_mul (F := F) (β := β) (γ := γ) (w := w) j₀
 
   have hlift : ∀ m : levi F n γ, ∃ v : W, ∃ j : ℕ,
@@ -663,7 +661,7 @@ theorem cellJacquetMap_surjective (hσ : IsSmooth σ) :
       (integralGL F n).mul_mem ht2 (congruenceSubgroup_le F n j₀ hr2)⟩
   have hlj : ∀ t (ht : t ∈ T), lj ⟨t, (hT t ht).1⟩ ≤ J := by
     intro t ht
-    have : jj t = lj ⟨t, (hT t ht).1⟩ := dif_pos (hT t ht).1
+    have : jj t = lj ⟨t, (hT t ht).1⟩ := dite_eq_left (hT t ht).1
     rw [← this]
     exact (Finset.le_sup ht).trans (le_max_right _ _)
 
@@ -814,8 +812,7 @@ theorem cellJacquetMap_surjective (hσ : IsSmooth σ) :
     refine ⟨(t, r), Finset.mem_product.2 ⟨ht, hr⟩, b, hb, k', hk', ?_⟩
     rw [he, hkr]
     group
-  · intro x _ hx
-    exact Or.inr rfl
+  · exact fun x _ hx => Or.inr rfl
 
 end Surjective
 

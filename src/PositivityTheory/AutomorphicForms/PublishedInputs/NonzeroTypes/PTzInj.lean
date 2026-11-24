@@ -60,8 +60,7 @@ theorem exists_KC_subset {n : ℕ} (hsub : ∀ r, ((KCg k n r : Set (GL (Fin n) 
   refine ⟨r, fun g hg => ?_⟩
   by_contra hgU
   have : g ∈ (KO k (Fin n) : Set (GL (Fin n) k)) ∩ (KC k n r ∩ Uᶜ) := ⟨hg.1, hg, hgU⟩
-  rw [hr] at this
-  exact this
+  rwa [hr] at this
 
 variable {n : ℕ} (G : Grp k n)
 
@@ -126,8 +125,7 @@ theorem step_TzInj {n : ℕ} (G : Grp k n) : TorusCentreInjectiveProp G := by
       G.PJ π r (∑ c, f c) = ∑ c, G.PJ π r (f c) := by
     intro f
 
-    simp only [Grp.PJ, finsum_eq_sum_of_fintype, map_sum, Finset.smul_sum]
-    exact Finset.sum_comm
+    simpa only [Grp.PJ, finsum_eq_sum_of_fintype, map_sum, Finset.smul_sum] using Finset.sum_comm
   have hsum' := congrArg (G.PJ π r) hsum
   rw [hlin, PJ_zero] at hsum'
   let c1 : ↥G.NO ⧸ G.zN ϖ 1 := QuotientGroup.mk (1 : ↥G.NO)
@@ -167,7 +165,6 @@ theorem step_TzInj {n : ℕ} (G : Grp k n) : TorusCentreInjectiveProp G := by
       exact (Quotient.out_eq c).symm.trans h
     exact hkill hcb hccB hΔU hΔM hJone hJmul hJinv hlM hlB hKC hPJ V π r hrl x hx _ hfix
       (hni hcb hccB _ hyU hyK)
-  · intro h
-    exact absurd (Finset.mem_univ c1) h
+  · exact fun h => absurd (Finset.mem_univ c1) h
 
 end UpperTheory.TNZ.Grp

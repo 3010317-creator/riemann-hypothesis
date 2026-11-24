@@ -85,8 +85,7 @@ theorem BK.hom_eq_of_X_C {K : FinExt l} (bk : BK K) {B : Obj l ↥(OL K)} (f g :
   have hle : Ideal.span {(l : bk.S)} ⊔ Ideal.span {bk.E} ≤
       (Ideal.span {(l : B.A)} ⊔ B.I).comap (BK.hf f) := by
     refine sup_le ?_ ?_
-    · rw [Ideal.span_le, Set.singleton_subset_iff]
-      rw [SetLike.mem_coe, Ideal.mem_comap, map_natCast]
+    · rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.mem_comap, map_natCast]
       exact Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)
     · rw [Ideal.span_le, Set.singleton_subset_iff]
       exact Ideal.mem_sup_right (f.f_I _ (Ideal.mem_span_singleton_self _))
@@ -144,8 +143,7 @@ theorem MReal.exists_fixed_frob : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (b
   have cancel : ∀ M N : Matrix (Fin d') (Fin d) (WCb l), T' * M = T' * N → M = N := by
     intro M N h
     have h2 := congrArg (fun Z => (↑u⁻¹ : Matrix (Fin d') (Fin d') (WCb l)) * Z) h
-    simp only [← hu, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul] at h2
-    exact h2
+    simpa only [← hu, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul] using h2
   have hzmul : ∀ {m n o : Type} [Fintype n] (A : Matrix m n ℤ_[l]) (B : Matrix n o ℤ_[l]),
       zW (A * B) = zW A * zW B := fun A B => Matrix.map_mul
   set Xm : Matrix (Fin d') (Fin d) (WCb l) := (↑u⁻¹ : Matrix (Fin d') (Fin d') (WCb l)) * (zW f * T) with hXm

@@ -160,8 +160,7 @@ private theorem norm_smooth_char {χ : kˣ →* ℂˣ} (hχ : IsSmoothChar χ) (
     have h : χ (x⁻¹ * y) = 1 := hy
     rw [map_mul, map_inv, inv_mul_eq_one] at h
     show χ y ∈ U
-    rw [← h]
-    exact hx
+    rwa [← h]
   rw [GroundTheory.LocalField.norm_quasiChar_apply hc z,
     GroundTheory.LocalField.modulus_of_ne_zero z.ne_zero, nabs_eq_residue]
   simp
@@ -271,8 +270,7 @@ theorem UpperTheory.card_residueField_adicCompletionIntegers_eq_absNorm :
     obtain ⟨x, hx⟩ := DiscreteGroups.sglob.DzType.exists_int_approx_compl u _ ha
     refine ⟨x, ?_⟩
     show IsLocalRing.residue _ _ = _
-    rw [eq_comm, ← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff, hmax]
-    exact hx
+    rwa [eq_comm, ← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff, hmax]
   show Nat.card _ = Nat.card (𝓞 L ⧸ u.asIdeal)
   exact (Nat.card_congr ((Ideal.quotEquivOfEq hker.symm).trans (RingHom.quotientKerEquivOfSurjective hsurj)).toEquiv).symm
 end -- clump:auto
@@ -343,8 +341,7 @@ private lemma intValuation_le_of_equiv {L : Type} [Field L] [NumberField L]
   have hmem' : σ r ∈ u.asIdeal ^ ((Associates.mk u.asIdeal).count
       (Associates.mk (Ideal.span {r})).factors) := by
     have := hm ((Associates.mk u.asIdeal).count (Associates.mk (Ideal.span {r})).factors)
-    rw [← this] at hmem
-    exact hmem
+    rwa [← this] at hmem
   exact (HeightOneSpectrum.intValuation_le_pow_iff_mem u _ _).2 hmem'
 
 private lemma intValuation_eq_of_equiv {L : Type} [Field L] [NumberField L]
@@ -502,8 +499,7 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
     have := hφn _ hyA
     have hy2 : (φ ^ n) (algebraMap L Ω (y : L)) = algebraMap L Ω (y : L) := hfix _ (y : L).2
     rw [hy2] at this
-    rw [map_sub, map_pow, Valuation.map_sub_swap]
-    exact this
+    rwa [map_sub, map_pow, Valuation.map_sub_swap]
 
   have hq0 : ((q : ℕ) : 𝓞 L) ≠ 0 := by
     have : q ≠ 0 := by omega
@@ -519,8 +515,7 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
   let ζ' : 𝓞 L := ⟨ζL, hζint⟩
   refine ⟨L, inferInstance, hNF, inferInstance, inferInstance, inferInstance, hAC', u, hu,
     AlgEquiv.restrictNormal φ L, ?_, hine, ?_, ?_⟩
-  · intro x
-    exact (AlgEquiv.restrictNormal_commutes φ L x).symm
+  · exact fun x => (AlgEquiv.restrictNormal_commutes φ L x).symm
   · have hmap : ∀ p : ℤ[X], algebraMap L Ω ((aeval ζ' p : 𝓞 L) : L) = aeval ζ p := by
       intro p
       have h1 : ((aeval ζ' p : 𝓞 L) : L) = aeval (ζ' : L) p :=
@@ -543,16 +538,14 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
   · show Nat.card (𝓞 L ⧸ u.asIdeal) = q ^ n
     haveI : u.asIdeal.IsMaximal := u.isMaximal
     refine _root_.GlobalTheory.card_quotient_eq_of_pow_sub_self_mem u.asIdeal (q ^ n) ζ' (by omega) ?_ ?_ ?_
-    · apply Subtype.ext
-      exact hζL.pow_eq_one
+    · exact Subtype.ext hζL.pow_eq_one
     · intro j hj0 hjq hm
       have hm1 : A.valuation (algebraMap L Ω (algebraMap (𝓞 L) L (ζ' ^ j - 1))) < 1 := hm
       rw [map_sub, map_pow, map_one, map_sub, map_pow, map_one] at hm1
       have hm' : A.valuation (ζ ^ j - 1) < 1 := hm1
       have := ReciprocityTheory.Gal.eq_of_pow_eq_one A hN'
         (by rw [← pow_mul, mul_comm, pow_mul, hζ.pow_eq_one, one_pow]) (one_pow _) hm'
-      have hd := hζ.dvd_of_pow_eq_one j this
-      exact absurd (Nat.le_of_dvd hj0 hd) (by omega)
+      exact absurd (Nat.le_of_dvd hj0 (hζ.dvd_of_pow_eq_one j this)) (by omega)
     · intro y
       have := hpowq y
       show A.valuation (algebraMap L Ω (((y ^ (q ^ n) - y : 𝓞 L)) : L)) < 1
@@ -613,7 +606,7 @@ theorem UpperTheory.exists_unit_residue_logarithm_of_roots_of_unity :
   have key : ∀ (a : Cˣ) (y : v.valuationSubring), (y : C) = ((a : C) ^ N - 1) / ϖ → abelian₂ a = ρ y := by
     intro a y hy
     have hm : ((a : C) ^ N - 1) / ϖ ∈ v.valuationSubring := hy ▸ y.2
-    simp only [abelian₂, dif_pos hm]
+    simp only [abelian₂, dite_eq_left hm]
     congr 1
     exact Subtype.ext hy.symm
   have hϖm : ϖ ∈ v.valuationSubring := by
@@ -834,8 +827,7 @@ private theorem eta_eq_of_wild [Finite K] (h : IsPlaceOver A w) (n : ℕ) (f : R
     have e3 : π ((cj h)^[n] s) = π s := by
       rw [e2, ← hord, pow_orderOf_eq_one]
       rfl
-    rw [h3 _ _ e3, ← hcard, hχa, div_pow, eta_pow_card, eta_pow_card, div_one] at e1
-    exact e1
+    rwa [h3 _ _ e3, ← hcard, hχa, div_pow, eta_pow_card, eta_pow_card, div_one] at e1
   exact MonoidHom.ext fun s => div_eq_one.1 (h4 s)
 
 end
@@ -886,8 +878,7 @@ theorem UpperTheory.tameInertiaCharacter_frobenius_conj_eq_pow :
     refine Complex.norm_eq_one_of_pow_eq_one (n := Nat.card K) ?_ Nat.card_pos.ne'
     rw [← Units.val_pow_eq_pow_val, h2, Units.val_one]
   · obtain ⟨t, htw, hne⟩ : ∃ t : Ine (F := E) A, Formalism.MainNotions.BlochKatoReduction.IsWild A (t : G E Ω) ∧ eta f ψ π 0 t ≠ eta f ψ π 1 t := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       have e := (hiff 0 1).1 (eta_eq_of_wild h n f ψ π hcard hord hπ hall)
       have e2 := Int.le_of_dvd (by norm_num) ((dvd_neg).2 e)
       norm_num at e2
@@ -1079,8 +1070,7 @@ private theorem junkData (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Alg
       simp [z', Z]
     rw [e]
     refine Valuation.map_add_lt _ ?_ (DiscreteGroups.sglob.DzType.val_alg_lt_one_of_mem z' hz')
-    rw [hiv]
-    exact hz
+    rwa [hiv]
 
   have hfixA : ∀ t : Ine (F := E) A, ∀ x : L, (t : G E Ω) (algebraMap L Ω x) = algebraMap L Ω x := fun t => hfix t t.2
   let ι₀ : Ine (F := E) A → G L Ω := fun t => { (t : G E Ω).toRingEquiv with commutes' := hfixA t }
@@ -1185,8 +1175,7 @@ private theorem exists_dual_map {G K Γ V W : Type} [Group G] [TopologicalSpace 
     ∃ ψ : Module.Dual ℂ W →ₗ[ℂ] V, ψ ≠ 0 ∧ ∀ k l, ψ (ρ.dual (q k) l) = π (ι k) (ψ l) := by
   classical
   obtain ⟨w0, v1, hv1⟩ : ∃ w v, B w v ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hB (LinearMap.ext fun w => LinearMap.ext fun v => hc w v)
   have hfix : ∀ (w : W) (x : H) (v : V), B w (π x v) = B w v := fun w x v => by
     obtain ⟨k, hk, hk1⟩ := h2 x x.2
@@ -1319,8 +1308,7 @@ private theorem aeval_charpoly_inv {n : ℕ} {K : Type} [Field K] [Algebra (ZMod
   have r : aeval (((z⁻¹ : Kˣ)) : K) (y : Mt g n).charpoly.reverse = 0 := by
     rw [aeval_def, Units.val_inv_eq_inv_val, ← invOf_eq_inv, eval₂_reverse_eq_zero_iff, ← aeval_def, h]
   rw [map_mul, map_mul, r, mul_zero, aeval_C, mul_eq_zero] at e
-  refine e.resolve_right ?_
-  exact (_root_.map_ne_zero _).2 hd.ne_zero
+  exact e.resolve_right ((_root_.map_ne_zero _).2 hd.ne_zero)
 
 private theorem rad_iff {a b n : ℕ} (hn : a + b = n) (M : Mt g n) :
     (InPar a M ∧ tl a M = ((1 : Gn g a) : Mt g a) ∧ br a b M = ((1 : Gn g b) : Mt g b)) ↔
@@ -1345,7 +1333,7 @@ private theorem rad_iff {a b n : ℕ} (hn : a + b = n) (M : Mt g n) :
         have := congrFun (congrFun h3 ⟨i - a, hi'⟩) ⟨j - a, hj'⟩
         have e1 : a + ((i : ℕ) - a) = i := by omega
         have e2 : a + ((j : ℕ) - a) = j := by omega
-        simp only [br, entN, e1, e2, i.2, j.2, and_self, dif_pos, Units.val_one] at this
+        simp only [br, entN, e1, e2, i.2, j.2, and_self, dite_eq_left, Units.val_one] at this
         rw [this, Matrix.one_apply, Matrix.one_apply]
         simp only [Fin.ext_iff]
         congr 1
@@ -1370,7 +1358,7 @@ private theorem rad_iff {a b n : ℕ} (hn : a + b = n) (M : Mt g n) :
         have := h _ _ hc
         simp only at this
         omega
-      simp only [tl, entN, hi, hj, and_self, dif_pos, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
+      simp only [tl, entN, hi, hj, and_self, dite_eq_left, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
     · ext i j
       have hi : a + (i : ℕ) < n := by omega
       have hj : a + (j : ℕ) < n := by omega
@@ -1379,7 +1367,7 @@ private theorem rad_iff {a b n : ℕ} (hn : a + b = n) (M : Mt g n) :
         have := h _ _ hc
         simp only at this
         omega
-      simp only [br, entN, hi, hj, and_self, dif_pos, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
+      simp only [br, entN, hi, hj, and_self, dite_eq_left, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
       simp
 
 private theorem rad_inv {a b n : ℕ} (hn : a + b = n) {x : Gn g n}
@@ -1418,8 +1406,7 @@ private theorem isCusp_dual {n : ℕ} {τ : FDRep ℂ (Gn g n)} (h : IsCusp τ.c
     refine ⟨FDRep.of (Representation.dual V.ρ), ?_, fun x => ?_⟩
     · rw [FDRep.simple_iff_char_is_norm_one] at hV ⊢
       rw [← hV]
-      simp only [FDRep.char_dual, inv_inv]
-      exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
+      simpa only [FDRep.char_dual, inv_inv] using Finset.sum_congr rfl fun _ _ => mul_comm _ _
     · rw [FDRep.char_dual, FDRep.char_dual, hc]
   · have h3 := h.2.2 a ha ha'
     have hn : a + (n - a) = n := by omega
@@ -1485,8 +1472,7 @@ private theorem inflates_dual {E : Type} [Field E] [NumberField E] {w : HeightOn
   have h1 : ∀ k, GlobalTheory.GLp.red g n k = 1 → ι k ∈ KOne (w.adicCompletion E) (Fin n) := fun k hk => by
     have : DiscreteGroups.sglob.DzIso.toKO i hi n k ∈ (DiscreteGroups.sglob.DzIso.redKO i hi n).ker := by
       rw [MonoidHom.mem_ker, DiscreteGroups.sglob.DzIso.redKO_toKO, hk]
-    rw [hker, Subgroup.mem_subgroupOf, DiscreteGroups.sglob.DzIso.coe_toKO] at this
-    exact this
+    rwa [hker, Subgroup.mem_subgroupOf, DiscreteGroups.sglob.DzIso.coe_toKO] at this
   have h2 : ∀ x ∈ KOne (w.adicCompletion E) (Fin n), ∃ k, ι k = x ∧ GlobalTheory.GLp.red g n k = 1 := fun x hx => by
     have hxK : x ∈ KO (w.adicCompletion E) (Fin n) := by
       obtain ⟨b, -, rfl⟩ := Subgroup.mem_map.1 hx
@@ -1784,8 +1770,8 @@ theorem cuspEx : CuspEx := by
   haveI : Nonempty (WD h) := ⟨WD.lpZero (h := h)⟩
   choose! J hJ using junkEx E Ω A w h
   let r : IrrGL (k := w.adicCompletion E) → WD h := fun x => if GoodCusp x then r₀ x else (J x.1).lpTw (e x)
-  have rg : ∀ x, GoodCusp x → r x = r₀ x := fun x hx => if_pos hx
-  have rb : ∀ x, ¬ GoodCusp x → r x = (J x.1).lpTw (e x) := fun x hx => if_neg hx
+  have rg : ∀ x, GoodCusp x → r x = r₀ x := fun x hx => ite_eq_left hx
+  have rb : ∀ x, ¬ GoodCusp x → r x = (J x.1).lpTw (e x) := fun x hx => ite_eq_right hx
   have two : ∀ x : IrrGL (k := w.adicCompletion E), x.IsCusp → ¬ GoodCusp x → 2 ≤ x.1 := by
     intro x hx hb
     have h0 := hx.1

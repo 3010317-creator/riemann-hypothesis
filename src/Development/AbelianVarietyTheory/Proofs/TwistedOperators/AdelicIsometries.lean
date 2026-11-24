@@ -626,8 +626,7 @@ theorem glueLat_fg {L₀ : Lat X} (hL : Submodule.IsLattice D.host.E L₀) (x₀
       L₀.map ((Formalism.L2.Herm.crd X).symm.toLinearMap.restrictScalars (𝓞 D.host.E)) := by
     ext x
     constructor
-    · intro hx
-      exact ⟨_, hx, (Formalism.L2.Herm.crd X).symm_apply_apply x⟩
+    · exact fun hx => ⟨_, hx, (Formalism.L2.Herm.crd X).symm_apply_apply x⟩
     · rintro ⟨y, hy, rfl⟩
       change Formalism.L2.Herm.crd X ((Formalism.L2.Herm.crd X).symm y) ∈ L₀
       rwa [LinearEquiv.apply_symm_apply]
@@ -881,7 +880,7 @@ theorem form_sumMap {Y X : HSp D} {ι : X.V →ₗ[D.host.E] Y.V} {a ρ : ℕ} {
     exact ⟨fun i j => Fin.ext (by omega)⟩
   have zz : ∀ i j, Y.hT (z i) (z j) = if i = j then c else 0 := fun i j => by
     obtain rfl := Subsingleton.elim i j
-    rw [if_pos rfl]; exact h.z_norm i
+    rw [ite_eq_left rfl]; exact h.z_norm i
   have zx : ∀ i x, Y.hT (z i) (ι x) = 0 := fun i x => h.z_X i x
   have xz : ∀ i x, Y.hT (ι x) (z i) = 0 := fun i x => by rw [hT_swap, zx, star_zero]
   have ex : ∀ i x, Y.hT (e i) (ι x) = 0 := fun i x => (h.hyp_X i x).1
@@ -903,7 +902,7 @@ theorem form_sumMap {Y X : HSp D} {ι : X.V →ₗ[D.host.E] Y.V} {a ρ : ℕ} {
   simp only [map_add (f := _), map_sum, LinearMap.map_smulₛₗ, LinearMap.add_apply, LinearMap.sum_apply,
   LinearMap.smul_apply, zz, zx, xz, ex, xe, fx, xf, ez, ze, fz, zf, ee, ff, fe, ef, xx, smul_eq_mul, mul_zero,
   Finset.sum_const_zero, add_zero, zero_add, mul_ite, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ,
-  if_true, mul_one, RingHom.id_apply, starRingEnd_apply]
+  ite_true, mul_one, RingHom.id_apply, starRingEnd_apply]
   rw [add_comm (∑ i, star (p.2.2.1 i) * q.2.2.2 i)]
   congr 1
   congr 1
@@ -1394,16 +1393,13 @@ theorem isDec_smul (D : D7) (t : D.host.E) :
     ring
   · intro i x
     simp only [HSpace.hD, LinearMap.map_smulₛₗ₂, hsym _ _ (D.sp.zm_orth x), smul_zero]
-  · intro i j
-    exact D.sp.hyp_ee j i
-  · intro i j
-    exact D.sp.hyp_ff j i
+  · exact fun i j => D.sp.hyp_ee j i
+  · exact fun i j => D.sp.hyp_ff j i
   · intro i j
     simp only [HSpace.hD]
     rw [← (D.sp.Y 0).herm.eq (D.sp.hypE i) (D.sp.hypF j), D.sp.hyp_ef]
     split_ifs <;> simp
-  · intro i x
-    exact ⟨hsym _ _ (D.sp.hyp_orthX i x).1, hsym _ _ (D.sp.hyp_orthX i x).2⟩
+  · exact fun i x => ⟨hsym _ _ (D.sp.hyp_orthX i x).1, hsym _ _ (D.sp.hyp_orthX i x).2⟩
   · intro i j
     simp only [HSpace.hD, map_smul, hsym _ _ (D.sp.hyp_orthz i).1, hsym _ _ (D.sp.hyp_orthz i).2, smul_zero,
       and_self]
@@ -1416,8 +1412,7 @@ theorem recordDec (D : D7) : RecordDecSt D := by
     have hs : -((D.cOf u)⁻¹ * star (D.cOf u)⁻¹ * ((D.mem D.u₀).A.T : D.host.E)) = -Tu D u := by
       rw [star_inv₀, GlobalTheory.NormSum.AdLattice.star_eq_conj, ← D.cOf_eq u]
       field_simp
-    rw [hs] at h
-    exact h
+    rwa [hs] at h
   · obtain ⟨π, -, hπ, -⟩ := D.T_norm D.u₀
     have hT : ((D.mem D.u₀).A.T : D.host.E) ≠ 0 := by
       rw [← D.sp_T]
@@ -1432,8 +1427,7 @@ theorem recordDec (D : D7) : RecordDecSt D := by
     have hs : -((π : D.host.E)⁻¹ * star (π : D.host.E)⁻¹ * ((D.mem D.u₀).A.T : D.host.E)) = -1 := by
       rw [star_inv₀, GlobalTheory.NormSum.AdLattice.star_eq_conj, ← hπ]
       field_simp
-    rw [hs] at h
-    exact h
+    rwa [hs] at h
 
 end GlobalTheory.Proof.normLineDecompositionsOfBaseSpace_proof
 end -- clump:auto

@@ -174,8 +174,7 @@ theorem approx (N : ℕ) (hN : 0 < N) (r : Af F ⊗[F] E) :
 theorem nat_mult (c : 𝓞 F) (hc : c ≠ 0) : ∃ k : ℕ, 0 < k ∧ ∃ c' : 𝓞 F, (k : 𝓞 F) = c * c' := by
   obtain ⟨c', h⟩ := Ideal.mem_span_singleton'.mp (Ideal.absNorm_mem (Ideal.span {c}))
   refine ⟨Ideal.absNorm (Ideal.span {c}), ?_, c', by rw [← h, mul_comm]⟩
-  rw [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-  exact hc
+  rwa [Nat.pos_iff_ne_zero, Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
 
 theorem low_nat {M : ℕ} (L : Set (Fin M → E))
     (h5 : ∃ c : 𝓞 F, c ≠ 0 ∧ ∀ i, ∀ e : E, IsIntegral ℤ e → Pi.single i ((c : F) • e) ∈ L) :
@@ -185,8 +184,7 @@ theorem low_nat {M : ℕ} (L : Set (Fin M → E))
   refine ⟨k, hk, fun i e he => ?_⟩
   have hkF : (k : F) = (c : F) * (c' : F) := by
     have h1 := congrArg (algebraMap (𝓞 F) F) hkc
-    rw [map_natCast, map_mul] at h1
-    exact h1
+    rwa [map_natCast, map_mul] at h1
   have he' : IsIntegral ℤ ((c' : F) • e) := by
     rw [Algebra.smul_def]
     exact (map_isIntegral_int (algebraMap F E) (RingOfIntegers.isIntegral_coe c')).mul he

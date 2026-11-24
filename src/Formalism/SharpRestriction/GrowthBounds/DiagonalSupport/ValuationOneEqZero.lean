@@ -123,17 +123,17 @@ theorem levImg_coeff_bigM (hp : 0 < p) (hinj : Function.Injective fun x : TL J n
   rw [levImg_coeff]
   refine (Finset.sum_eq_single (bigM Fr p hk nL rho bp bn) ?_ ?_).trans ?_
   · intro mo hmo hne
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨e1, e2⟩
     apply hne
     obtain ⟨hmo1, hlow, -⟩ := Finset.mem_filter.mp hmo
     rw [eq_bigM hinj rho mo (hz mo hmo1) hlow, e1, e2]
   · intro hnot
-    rw [if_pos ⟨hpl, hno⟩]
+    rw [ite_eq_left ⟨hpl, hno⟩]
     by_contra hc
     exact hnot (Finset.mem_filter.mpr ⟨mem_support_iff.mpr hc, bigM_inLow (hk := hk) hinj rho hrho bp bn,
       bigM_inBlock (hk := hk) hp hinj rho hrho bp bn dPl dNo h1 h2⟩)
-  · rw [if_pos ⟨hpl, hno⟩]
+  · rw [ite_eq_left ⟨hpl, hno⟩]
 
 end Up
 
@@ -256,8 +256,7 @@ theorem digFacts_of [CharZero (KK O)] (hp : 0 < p)
       have hb' := MvPolynomial.support_monomial_subset hb
       rw [Finset.mem_singleton] at hb'
       subst hb'
-      intro x
-      exact (Finset.mem_filter.1 hmo).2.2.2 x
+      exact fun x => (Finset.mem_filter.1 hmo).2.2.2 x
     · exact Submodule.zero_mem _
   · intro mo hmo
     have hlow : InLow Fr p hk nL (classOf Fr p hk nL mo) mo :=
@@ -283,12 +282,10 @@ theorem digFacts_of [CharZero (KK O)] (hp : 0 < p)
       ring
     · have h := levImg_coeff_bigM hp hinj G hz (classOf Fr p hk nL mo) hrho (blkPl Fr p hk nL mo) (blkNo Fr p hk nL mo)
         (plMon Fr p hk nL mo) (noMon Fr p hk nL mo) (fun x => rfl) (fun x => rfl)
-      rw [← heq] at h
-      exact h
+      rwa [← heq] at h
     · have h := expFact_bigM_Q (p := p) (hk := hk) hinj (classOf Fr p hk nL mo) (blkPl Fr p hk nL mo) (blkNo Fr p hk nL mo)
         (plMon Fr p hk nL mo) (noMon Fr p hk nL mo) (fun x => rfl) (fun x => rfl)
-      rw [← heq] at h
-      exact h
+      rwa [← heq] at h
 
 end Main
 
@@ -317,40 +314,13 @@ variable {n' r : ℕ} [NeZero n'] (Fr : Frames n' r) {L₁ N₁ : ℕ}
 
 theorem dg_posOf_inj {y a b : ℤ} (ha : y ≤ a ∧ a < y + n') (hb : y ≤ b ∧ b < y + n') (h : posOf n' a = posOf n' b) :
     a = b := by
-  have hn : (0 : ℤ) < n' := by exact_mod_cast NeZero.pos n'
-  have hv := congrArg (fun t : Fin n' => (t.val : ℤ)) h
-  simp only [_root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.residue_position_val] at hv
-  have e1 := Int.mul_ediv_add_emod a n'
-  have e2 := Int.mul_ediv_add_emod b n'
-  have hk : a - b = n' * (a / n' - b / n') := by
-    rw [hv] at e1
-    linear_combination e2 - e1
-  have hlt : a - b < n' := by linarith [ha.2, hb.1]
-  have hgt : -(n' : ℤ) < a - b := by linarith [ha.1, hb.2]
-  rw [hk] at hlt hgt
-  have h1 : a / n' - b / n' < 1 := by
-    by_contra hc
-    push_neg at hc
-    nlinarith
-  have h2 : -1 < a / n' - b / n' := by
-    by_contra hc
-    push_neg at hc
-    nlinarith
-  have h3 : a / n' - b / n' = 0 := by omega
-  rw [h3, mul_zero] at hk
-  linarith
+  exact Formalism.MainNotions.G.WittFrameLocaliserOrders.residue_position_injective_window n' y a b
+    ha hb h
 
 variable {Fr}
 
 theorem dg_fr_lt (hV : Fr.Valid L₁ N₁) (j : ℤ) (i : ℕ) : ∀ i', i < i' → i' < r → Fr.fr j i < Fr.fr j i' := by
-  intro i' hii' hi'
-  induction i' with
-  | zero => omega
-  | succ k ih =>
-    rcases Nat.lt_succ_iff_lt_or_eq.mp hii' with h | h
-    · exact lt_trans (ih h (by omega)) (hV.2.2.1 j k (by omega))
-    · subst h
-      exact hV.2.2.1 j i (by omega)
+  exact Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_entries_strictMono Fr L₁ N₁ hV j i
 
 theorem dg_fr_le (hV : Fr.Valid L₁ N₁) (j : ℤ) {i i' : ℕ} (h : i ≤ i') (h' : i' < r) : Fr.fr j i ≤ Fr.fr j i' := by
   obtain h | rfl := h.lt_or_eq
@@ -359,8 +329,7 @@ theorem dg_fr_le (hV : Fr.Valid L₁ N₁) (j : ℤ) {i i' : ℕ} (h : i ≤ i')
 
 theorem dg_z_mono (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) : StrictMono fun j : ℤ => Fr.fr j (r - 1) := by
   apply strictMono_int_of_lt_succ
-  intro j
-  exact lt_of_lt_of_le (hV.2.2.2.1 j) (dg_fr_le hV (j + 1) (Nat.zero_le _) (by omega))
+  exact fun j => lt_of_lt_of_le (hV.2.2.2.1 j) (dg_fr_le hV (j + 1) (Nat.zero_le _) (by omega))
 
 alias frame_end_lt_next_start := _root_.Formalism.MainNotions.G.symbolGeneratorData.dv_frame_lt
 
@@ -388,8 +357,7 @@ theorem dg_posTL_mem (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL j
       dg_fr_le hV _ (by omega) (by omega)⟩
 
 theorem dg_segZ_range (j : ZMod J) : 0 ≤ segZ j ∧ segZ j < J := by
-  simp only [segZ]
-  exact ⟨by positivity, by exact_mod_cast ZMod.val_lt j⟩
+  simpa only [segZ] using ⟨by positivity, by exact_mod_cast ZMod.val_lt j⟩
 
 theorem dg_segZ_inj {j j' : ZMod J} (h : segZ j = segZ j') : j = j' := by
   have h' : (j.val : ℤ) = j'.val := h
@@ -471,20 +439,7 @@ theorem dg_inj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL : �
 
 theorem dg_frame (hV : Fr.Valid L₁ N₁) (j t : ℤ) (ht : posOf n' t ∈ Fr.TT) (h0 : Fr.fr j 0 ≤ t) :
     ∀ i, i < r → t ≤ Fr.fr j i → ∃ i' ≤ i, t = Fr.fr j i' := by
-  intro i
-  induction i with
-  | zero =>
-    intro _ ht0
-    exact ⟨0, le_rfl, le_antisymm ht0 h0⟩
-  | succ k ih =>
-    intro hk htk
-    by_cases hle : t ≤ Fr.fr j k
-    · obtain ⟨i', hi', he⟩ := ih (by omega) hle
-      exact ⟨i', by omega, he⟩
-    · push_neg at hle
-      rcases htk.lt_or_eq with hlt | heq
-      · exact absurd ht (hV.2.2.2.2.2.1 j k t (by omega) hle hlt)
-      · exact ⟨k + 1, le_rfl, heq⟩
+  exact Formalism.MainNotions.G.symbolGeneratorData.ge_frame Fr L₁ N₁ hV j t ht h0
 
 theorem dg_surj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) :
     ∀ s ∈ Fr.TT, ∃ x : TL J nL r, posOf n' (posTL Fr x) = s := by
@@ -516,20 +471,17 @@ theorem dg_surj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL : 
     push_cast [Nat.cast_sub hJ1]
     ring
   have hwit : t ≤ Fr.fr ((J - 1 : ℕ) : ℤ) (r - 1) := by
-    rw [hJc, hper]
-    exact ht2
+    rwa [hJc, hper]
   have hex : ∃ k : ℕ, t ≤ Fr.fr (k : ℤ) (r - 1) := ⟨J - 1, hwit⟩
   have hkspec : t ≤ Fr.fr ((Nat.find hex : ℕ) : ℤ) (r - 1) := Nat.find_spec hex
   have hkJ : Nat.find hex ≤ J - 1 := Nat.find_min' hex hwit
   have hklow : Fr.fr (((Nat.find hex : ℕ) : ℤ) - 1) (r - 1) < t := by
     rcases Nat.eq_zero_or_pos (Nat.find hex) with h0 | h0
-    · rw [h0, Nat.cast_zero, zero_sub]
-      exact ht1
+    · rwa [h0, Nat.cast_zero, zero_sub]
     · have hm := Nat.find_min hex (show Nat.find hex - 1 < Nat.find hex by omega)
-      push_neg at hm
+      push Not at hm
       have e : (((Nat.find hex - 1 : ℕ)) : ℤ) = ((Nat.find hex : ℕ) : ℤ) - 1 := by omega
-      rw [e] at hm
-      exact hm
+      rwa [e] at hm
   have hseg : segZ ((Nat.find hex : ℕ) : ZMod J) = ((Nat.find hex : ℕ) : ℤ) := by
     simp only [segZ, ZMod.val_natCast]
     rw [Nat.mod_eq_of_lt (by omega)]
@@ -538,8 +490,7 @@ theorem dg_surj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL : 
   · have hmemLL : t ∈ Fr.LLset ((Nat.find hex : ℕ) : ℤ) := dg_mem_LL.mpr ⟨⟨hklow, htl⟩, hsT⟩
     obtain ⟨i, hi⟩ : ∃ i, (Fr.LLset ((Nat.find hex : ℕ) : ℤ)).orderEmbOfFin rfl i = t := by
       have hr' : t ∈ Set.range ((Fr.LLset ((Nat.find hex : ℕ) : ℤ)).orderEmbOfFin rfl) := by
-        rw [Finset.range_orderEmbOfFin]
-        exact hmemLL
+        rwa [Finset.range_orderEmbOfFin]
       exact hr'
     have hiL : i.val < nL ((Nat.find hex : ℕ) : ZMod J) := by
       rw [hnL, hseg]
@@ -547,7 +498,7 @@ theorem dg_surj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL : 
     refine ⟨⟨((Nat.find hex : ℕ) : ZMod J), Sum.inl ⟨i.val, hiL⟩⟩, ?_⟩
     show posOf n' (llPos Fr (segZ ((Nat.find hex : ℕ) : ZMod J)) i.val) = s
     rw [hseg, dg_llPos_eq _ _ i.2, Fin.eta, hi, hpos]
-  · push_neg at htl
+  · push Not at htl
     obtain ⟨i', hi', he⟩ := dg_frame hV ((Nat.find hex : ℕ) : ℤ) t hsT htl (r - 1) (by omega) hkspec
     refine ⟨⟨((Nat.find hex : ℕ) : ZMod J), Sum.inr ⟨r - 1 - i', by omega⟩⟩, ?_⟩
     show posOf n' (Fr.fr (segZ ((Nat.find hex : ℕ) : ZMod J)) (r - 1 - (r - 1 - i'))) = s

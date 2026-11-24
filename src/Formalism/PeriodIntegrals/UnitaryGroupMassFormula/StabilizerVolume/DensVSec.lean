@@ -81,8 +81,7 @@ theorem secGram_holds : SecGram := by
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Z, Matrix.vecMul, dotProduct,
         Finset.mul_sum, Pi.zero_apply] at this
       simp only [Matrix.vecMul, dotProduct, v, Finset.sum_mul, Pi.zero_apply]
-      rw [Finset.sum_comm]
-      rw [← this]
+      rw [Finset.sum_comm, ← this]
       exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun l _ => by ring
     have hv : v = 0 := by
       have := congrArg (fun u => Matrix.vecMul u (JR (F := F) R J)⁻¹) hv0
@@ -96,9 +95,7 @@ theorem secGram_holds : SecGram := by
       simp only [v, map_sum, map_mul, s, sigR_invol R σ hσ, Pi.zero_apply, map_zero] at this
       simpa [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using this
     have := Fintype.linearIndependent_iff.1 hx _ hX0 i
-    have e2 := congrArg s this
-    simp only [s, sigR_invol R σ hσ, map_zero] at e2
-    exact e2
+    simpa only [s, sigR_invol R σ hσ, map_zero] using congrArg s this
   obtain ⟨q, hq⟩ := exists_leftInv_of_linIndep Z hZ
   refine ⟨q, fun S hS => ?_⟩
   have hh : algebraMap F (R ⊗[F] E) (1 / 2) + algebraMap F (R ⊗[F] E) (1 / 2) = 1 := by
@@ -116,7 +113,7 @@ theorem secGram_holds : SecGram := by
         algebraMap F (R ⊗[F] E) (1 / 2) * S i' j * (if i = i' then 1 else 0) := fun i' => by
       rw [← hq i i', Finset.mul_sum]
       exact Finset.sum_congr rfl fun k _ => by ring
-    simp only [e3, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [e3, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   have h2 : ∀ i j, hR R σ J
       (fun k => ∑ i', (algebraMap F (R ⊗[F] E) (1 / 2) * S i' i) * q k i') (x j) =
         algebraMap F (R ⊗[F] E) (1 / 2) * S i j := by

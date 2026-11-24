@@ -133,9 +133,7 @@ lemma haar_push {k r : ℕ} {Γ : Type*} [Group Γ] [TopologicalSpace Γ] [IsTop
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · rw [Measure.map_apply hmeas hUm.compl]
     have : φ ⁻¹' (U : Set (Mt k r))ᶜ = ∅ := by
-      apply Set.eq_empty_of_forall_notMem
-      intro x hx
-      exact hx (hU ▸ ⟨x, rfl⟩)
+      exact Set.eq_empty_of_forall_notMem (fun x hx => hx (hU ▸ ⟨x, rfl⟩))
     rw [this, measure_empty]
   · intro a ha
     rw [← hU] at ha
@@ -326,16 +324,16 @@ lemma emb_out_col (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * 
   unfold embWb
   rw [dite_eq_right (fun h => hj h.2)]
   by_cases h : q = j
-  · subst h; rw [if_pos ⟨rfl, hj⟩, if_pos rfl]
-  · rw [if_neg (fun h' => h h'.1), if_neg h]
+  · subst h; rw [ite_eq_left ⟨rfl, hj⟩, ite_eq_left rfl]
+  · rw [ite_eq_right (fun h' => h h'.1), ite_eq_right h]
 
 lemma emb_out_row (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hq : ¬ mid k r q) :
     embWb k r μ q j = if q = j then 1 else 0 := by
   unfold embWb
   rw [dite_eq_right (fun h => hq h.1)]
   by_cases h : q = j
-  · rw [if_pos ⟨h, hq⟩, if_pos h]
-  · rw [if_neg (fun h' => h h'.1), if_neg h]
+  · rw [ite_eq_left ⟨h, hq⟩, ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h h'.1), ite_eq_right h]
 
 lemma emb_mid (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hq : mid k r q) (hj : mid k r j) :
     embWb k r μ q j = μ (midx hq) (midx hj) := by
@@ -348,9 +346,9 @@ def Em (k r : ℕ) : Matrix (Fin (2 * r + k + 1)) (Fin (k + 1)) ℂ := fun i m =
 lemma Em_mul_mid {X : Type*} (A : Matrix (Fin (k + 1)) X ℂ) (i : Fin (2 * r + k + 1)) (x : X) (hi : mid k r i) :
     (Em k r * A) i x = A (midx hi) x := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (midx hi)]
-  · rw [Em, if_pos (wI_midx hi).symm, one_mul]
+  · rw [Em, ite_eq_left (wI_midx hi).symm, one_mul]
   · intro b _ hb
-    rw [Em, if_neg, zero_mul]
+    rw [Em, ite_eq_right, zero_mul]
     intro h
     apply hb
     apply wI_inj (r := r)
@@ -362,16 +360,15 @@ lemma Em_mul_out {X : Type*} (A : Matrix (Fin (k + 1)) X ℂ) (i : Fin (2 * r + 
   rw [Matrix.mul_apply]
   apply Finset.sum_eq_zero
   intro b _
-  rw [Em, if_neg, zero_mul]
-  intro h
-  exact hi (h ▸ mid_wI b)
+  rw [Em, ite_eq_right, zero_mul]
+  exact fun h => hi (h ▸ mid_wI b)
 
 lemma mul_EmT_mid {X : Type*} [Fintype X] (A : Matrix X (Fin (k + 1)) ℂ) (j : Fin (2 * r + k + 1)) (x : X) (hj : mid k r j) :
     (A * (Em k r)ᵀ) x j = A x (midx hj) := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (midx hj)]
-  · rw [Matrix.transpose_apply, Em, if_pos (wI_midx hj).symm, mul_one]
+  · rw [Matrix.transpose_apply, Em, ite_eq_left (wI_midx hj).symm, mul_one]
   · intro b _ hb
-    rw [Matrix.transpose_apply, Em, if_neg, mul_zero]
+    rw [Matrix.transpose_apply, Em, ite_eq_right, mul_zero]
     intro h
     apply hb
     apply wI_inj (r := r)
@@ -383,20 +380,19 @@ lemma mul_EmT_out {X : Type*} [Fintype X] (A : Matrix X (Fin (k + 1)) ℂ) (j : 
   rw [Matrix.mul_apply]
   apply Finset.sum_eq_zero
   intro b _
-  rw [Matrix.transpose_apply, Em, if_neg, mul_zero]
-  intro h
-  exact hj (h ▸ mid_wI b)
+  rw [Matrix.transpose_apply, Em, ite_eq_right, mul_zero]
+  exact fun h => hj (h ▸ mid_wI b)
 
 lemma EmT_Em : (Em k r)ᵀ * Em k r = 1 := by
   ext a b
   rw [Matrix.mul_apply, Finset.sum_eq_single (wI k r a)]
-  · simp only [Matrix.transpose_apply, Em, if_true, Matrix.one_apply]
+  · simp only [Matrix.transpose_apply, Em, ite_true, Matrix.one_apply]
     by_cases hab : a = b
     · subst hab; simp
-    · rw [if_neg (fun h => hab (wI_inj h)), if_neg hab, mul_zero]
+    · rw [ite_eq_right (fun h => hab (wI_inj h)), ite_eq_right hab, mul_zero]
   · intro i _ hi
     simp only [Matrix.transpose_apply, Em]
-    rw [if_neg hi (c := i = wI k r a), zero_mul]
+    rw [ite_eq_right hi (c := i = wI k r a), zero_mul]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 lemma Em_conjT : (Em k r)ᴴ = (Em k r)ᵀ := by
@@ -419,7 +415,7 @@ lemma emb_eq (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
       rw [this, sub_self, add_zero]
     · rw [Em_mul_out _ i _ hi, emb_out_row μ i j hi]
       have : Em k r i (midx hj) = if i = j then 1 else 0 := by rw [Em, wI_midx hj]
-      rw [this, sub_self, add_zero, if_neg (fun h => hi (by rw [h]; exact hj))]
+      rw [this, sub_self, add_zero, ite_eq_right (fun h => hi (by rw [h]; exact hj))]
   · rw [mul_EmT_out _ j i hj, mul_EmT_out _ j i hj, emb_out_col μ i j hj]
     ring
 
@@ -427,9 +423,9 @@ lemma Hpk_Em : Hpk k r * Em k r = Em k r * Hb k := by
   ext i m
   have h1 : (Hpk k r * Em k r) i m = Hpk k r i (wI k r m) := by
     rw [Matrix.mul_apply, Finset.sum_eq_single (wI k r m)]
-    · rw [Em, if_pos rfl, mul_one]
+    · rw [Em, ite_eq_left rfl, mul_one]
     · intro b _ hb
-      rw [Em, if_neg hb, mul_zero]
+      rw [Em, ite_eq_right hb, mul_zero]
     · intro h; exact absurd (Finset.mem_univ _) h
   rw [h1]
   have hm := m.isLt
@@ -522,8 +518,7 @@ lemma emb_mem (a : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
   show (embWb k r a)ᴴ * Hpk k r * embWb k r a = Hpk k r ↔ _
   rw [emb_form]
   constructor
-  · intro h
-    exact sand_inj (add_right_cancel (h.trans (Hpk_eq (k := k) (r := r))))
+  · exact fun h => sand_inj (add_right_cancel (h.trans (Hpk_eq (k := k) (r := r))))
   · intro h
     rw [h]
     exact Hpk_eq.symm
@@ -594,8 +589,8 @@ lemma uwb_row {g : Mat k r} (hg : g ∈ UWb k r) (i l : Fin (2 * r + k + 1)) (hi
     rw [star_star] at h2
     rw [h2]
     by_cases e : l = j
-    · rw [if_pos e, if_pos e.symm, star_one]
-    · rw [if_neg e, if_neg (fun e' => e e'.symm), star_zero]
+    · rw [ite_eq_left e, ite_eq_left e.symm, star_one]
+    · rw [ite_eq_right e, ite_eq_right (fun e' => e e'.symm), star_zero]
   obtain ⟨a, rfl | rfl⟩ := not_mid_cases i hi
   · apply key
     have := fix_dual hg.1 (hg.2 a).2
@@ -664,8 +659,7 @@ theorem haarWb : HaarWbExists := by
     exact this.symm
   refine ⟨(muG (εb k)).map ((fun x : Fin (k + 1) → Fin (k + 1) → ℂ => (embWb k r (Matrix.of x) : Mt k r)) ∘ ι), ?_⟩
   apply haar_push (muG (εb k)) (haar_ne_zero _) _ (emb_closedEmb.comp hι)
-  · intro a b
-    exact emb_mul _ _
+  · exact fun a b => emb_mul _ _
   · ext g
     constructor
     · rintro ⟨x, rfl⟩
@@ -682,16 +676,15 @@ theorem haarWb : HaarWbExists := by
       obtain ⟨x, hx⟩ := (hιr a).mp h2
       refine ⟨x, ?_⟩
       show embWb k r (Matrix.of (ι x)) = g
-      rw [hx]
-      exact hag
+      rwa [hx]
 
 lemma hb_form (v w : Fin (k + 1) → ℂ) :
     star w ⬝ᵥ (Hb k *ᵥ v) =
       (∑ i : Fin k, star (w i.castSucc) * v i.castSucc) - star (w (Fin.last k)) * v (Fin.last k) := by
   unfold Hb
-  simp only [dotProduct, Matrix.mulVec_diagonal, Fin.sum_univ_castSucc, Pi.star_apply, if_true]
+  simp only [dotProduct, Matrix.mulVec_diagonal, Fin.sum_univ_castSucc, Pi.star_apply, ite_true]
   have h : ∀ i : Fin k, (if i.castSucc = Fin.last k then (-1 : ℂ) else 1) = 1 := fun i =>
-    if_neg (Fin.castSucc_lt_last i).ne
+    ite_eq_right (Fin.castSucc_lt_last i).ne
   simp only [h, one_mul]
   ring
 
@@ -799,30 +792,28 @@ lemma col_bound (z : Fin (k + 1) → ℂ) (hT : (star z ⬝ᵥ (Hb k *ᵥ z)).re
 
 lemma EmT_mulVec (z : Fin (2 * r + k + 1) → ℂ) (m : Fin (k + 1)) : ((Em k r)ᵀ *ᵥ z) m = z (wI k r m) := by
   rw [Matrix.mulVec, dotProduct, Finset.sum_eq_single (wI k r m)]
-  · rw [Matrix.transpose_apply, Em, if_pos rfl, one_mul]
+  · rw [Matrix.transpose_apply, Em, ite_eq_left rfl, one_mul]
   · intro b _ hb
-    rw [Matrix.transpose_apply, Em, if_neg hb, zero_mul]
+    rw [Matrix.transpose_apply, Em, ite_eq_right hb, zero_mul]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 lemma Em_EmT_mulVec (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) : Em k r *ᵥ ((Em k r)ᵀ *ᵥ z) = z := by
   ext i
   by_cases hi : mid k r i
   · rw [Matrix.mulVec, dotProduct, Finset.sum_eq_single (midx hi)]
-    · rw [Em, if_pos (wI_midx hi).symm, one_mul, EmT_mulVec, wI_midx]
+    · rw [Em, ite_eq_left (wI_midx hi).symm, one_mul, EmT_mulVec, wI_midx]
     · intro b _ hb
-      rw [Em, if_neg, zero_mul]
+      rw [Em, ite_eq_right, zero_mul]
       intro h
       apply hb
       apply wI_inj (r := r)
       rw [wI_midx hi, h]
     · intro h; exact absurd (Finset.mem_univ _) h
-  · rw [hz i (by omega)]
-    rw [Matrix.mulVec, dotProduct]
+  · rw [hz i (by omega), Matrix.mulVec, dotProduct]
     apply Finset.sum_eq_zero
     intro b _
-    rw [Em, if_neg, zero_mul]
-    intro h
-    exact hi (h ▸ mid_wI b)
+    rw [Em, ite_eq_right, zero_mul]
+    exact fun h => hi (h ▸ mid_wI b)
 
 lemma herm_wb (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) :
     herm (Hpk k r) z z = star ((Em k r)ᵀ *ᵥ z) ⬝ᵥ (Hb k *ᵥ ((Em k r)ᵀ *ᵥ z)) := by

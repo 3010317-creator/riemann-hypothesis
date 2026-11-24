@@ -178,8 +178,7 @@ theorem unitary_diag (W : Matrix (Fin n) (Fin n) ℂ) (hW : Wᴴ * W = 1) :
   have hUu' : U * Uᴴ = 1 := mul_eq_one_comm.1 hUu
   have hspec : H = U * diagonal (fun j => ((d j : ℝ) : ℂ)) * Uᴴ := by
     have := hHerm.spectral_theorem
-    rw [Unitary.conjStarAlgAut_apply] at this
-    exact this
+    rwa [Unitary.conjStarAlgAut_apply] at this
   have hdI : ∀ j, ((d j : ℝ) : ℂ) + Complex.I ≠ 0 := by
     intro j h; have := congrArg Complex.im h; simp at this
   set E : Fin n → ℂ := fun j => (Complex.I - (d j : ℂ)) / (Complex.I + (d j : ℂ)) with hE
@@ -199,8 +198,7 @@ theorem unitary_diag (W : Matrix (Fin n) (Fin n) ℂ) (hW : Wᴴ * W = 1) :
   have hEq1 : (H + Complex.I • 1) * V' = Complex.I • 1 - H := by
     have := hHB
     rw [hB, hA, Matrix.mul_add, Matrix.mul_one, smul_sub] at this
-    rw [Matrix.add_mul, Matrix.smul_mul, Matrix.one_mul]
-    rw [← sub_eq_zero]
+    rw [Matrix.add_mul, Matrix.smul_mul, Matrix.one_mul, ← sub_eq_zero]
     rw [← sub_eq_zero] at this
     rw [← this]
     abel
@@ -224,8 +222,7 @@ theorem unitary_diag (W : Matrix (Fin n) (Fin n) ℂ) (hW : Wᴴ * W = 1) :
       rw [Matrix.mul_sub, hEq1, hEq2, sub_self]
     have := congrArg (fun M => (H + Complex.I • 1)⁻¹ * M) h0
     simp only [Matrix.mul_zero] at this
-    rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hHI, Matrix.one_mul, sub_eq_zero] at this
-    exact this
+    rwa [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hHI, Matrix.one_mul, sub_eq_zero] at this
   refine ⟨U, fun j => lam * E j, hUu, hUu', ?_, ?_⟩
   · intro j
     rw [norm_mul, hlam1, one_mul, hE]

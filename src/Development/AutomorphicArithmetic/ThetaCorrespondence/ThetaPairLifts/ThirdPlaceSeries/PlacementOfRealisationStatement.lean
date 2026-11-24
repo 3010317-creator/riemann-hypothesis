@@ -545,8 +545,7 @@ theorem mem_NI_iff_iota : ∀ (D : D7) {r : ℕ} (C : Matrix (Fin (D.sp.Y 0).ran
     · have hb := (Formalism.IndefR.RationalEmbedding.iota_symm_isBridge D (T h)).2
       have h2 := hb.trans (congrArg (Formalism.L2.SG.AdBridge.ofHAFin I) hs)
       unfold Formalism.L2.SG.AdBridge.ofHAFin at h2
-      rw [Formalism.L2.SG.EvalTIota.tauF_eq_i] at h2
-      exact h2
+      rwa [Formalism.L2.SG.EvalTIota.tauF_eq_i] at h2
     · obtain ⟨ρ, rfl⟩ := (Formalism.L2.Host.tauPl D).surjective v
       have hb := Formalism.L2.SG.EvalTIota.infMat_brg_i (T h) ρ
       rw [hs] at hb
@@ -670,8 +669,7 @@ theorem contRep_bound : GlobalTheory.Published.DiscreteSeriesClassification → 
   intro hDS D G _ _ Pl0 T A Ks _ _ _ R F X h h1 h2 h3 hH hι t c ht hcl hc Φ hΦ hrep hrank
   classical
   have hn : 1 ≤ X.B.I.n := by
-    rw [← GlobalTheory.Core.Mi.rank_eq X h]
-    exact hrank
+    rwa [← GlobalTheory.Core.Mi.rank_eq X h]
   have hg : 1 ≤ X.B.g := by
     rw [X.g_eq]
     exact Nat.mul_pos (D.host.g_prime 0).pos (D.host.g_prime 1).pos
@@ -694,8 +692,7 @@ theorem contRep_bound : GlobalTheory.Published.DiscreteSeriesClassification → 
       (Φ (X.B.tens (GlobalTheory.ConjRowMult.vecC X (MP R) c u))) (f u) := by
     intro u
     obtain ⟨ψ, hψ⟩ := hrep u
-    rw [hfdef, GlobalTheory.ConjRowMult.contRepL_spec X hψ]
-    exact hψ
+    rwa [hfdef, GlobalTheory.ConjRowMult.contRepL_spec X hψ]
   have hK : ∀ u, ∀ k ∈ X.B.I.Kg X.B.g, ∀ y, f u (y * (1, k)) = f u y := by
     intro u k hk y
     obtain ⟨S, -, hS⟩ := Submodule.mem_map.mp hΦ
@@ -740,12 +737,10 @@ theorem contRep_bound : GlobalTheory.Published.DiscreteSeriesClassification → 
       rw [star_star]
       erw [map_mul, map_inv, hsymm]
       rw [mul_inv_cancel_right, hfdef]
-    rw [hfun, hval]
-    exact key
+    rwa [hfun, hval]
   refine ⟨m, fun u => ?_⟩
   have hb := hm (Set.range f) hW (f u) ⟨u, rfl⟩
-  rw [hfdef] at hb
-  exact hb
+  rwa [hfdef] at hb
 
 end GlobalTheory.ConjRepBound
 
@@ -828,8 +823,7 @@ theorem iota_norm_of_eq {D : D7} (θ : D.what₂.Tau → (Formalism.MainNotions.
     exact h2.trans (mul_le_mul h3 (GlobalTheory.TauNorm.sum_le_normInf θ g ((Formalism.L2.Host.tauPl D).symm v))
       (Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => norm_nonneg _) hC)
   have hh := GlobalTheory.TauNorm.inv_tau_mul_le (Formalism.L2.SG.InstExistsPf.instOf D) hn' x (ι g) (hfin g hg) _ hv
-  rw [← mul_assoc] at hh
-  exact hh
+  rwa [← mul_assoc] at hh
 
 theorem iotaX_norm : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D), R.toLevCh.Is A.μ0 → R.IsGrp F → R.IsModels → (∀ x : X.B.I.E, HEq (X.ιE x) x) → (∀ g ∈ GinfC (D.sp.Y 0), (iotaX X h g).2 = 1) ∧ (1 ≤ (D.sp.Y 0).rank → ∀ x : X.B.I.GA, ∃ C : ℝ, 0 ≤ C ∧ ∀ g ∈ GinfC (D.sp.Y 0), (GlobalTheory.Count.tau1 X.B.I (x * iotaX X h g))⁻¹ ≤ C * normInf R.θ (D.sp.Y 0) g) := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F X h _ _ hMod _
@@ -928,8 +922,7 @@ theorem conjMap_isAutFunSm : GlobalTheory.Published.DiscreteSeriesClassification
       have hcomm : iotaX X h (x * a * t⁻¹) = iotaX X h (x * t⁻¹) * iotaX X h a := by
         have e1 : iotaX X h (x * a * t⁻¹) = iotaX X h x * iotaX X h a * iotaX X h t⁻¹ := by
           exact (map_mul (iotaX X h) (x * a) t⁻¹).trans (congrArg (· * iotaX X h t⁻¹) (map_mul (iotaX X h) x a))
-        have e2 : iotaX X h (x * t⁻¹) = iotaX X h x * iotaX X h t⁻¹ := by
-          exact map_mul (iotaX X h) x t⁻¹
+        have e2 : iotaX X h (x * t⁻¹) = iotaX X h x * iotaX X h t⁻¹ := map_mul (iotaX X h) x t⁻¹
         rw [e1, e2, mul_assoc, hc, ← mul_assoc]
       have hp : 0 ≤ (GlobalTheory.Count.tau1 X.B.I (iotaX X h (x * t⁻¹) * iotaX X h a))⁻¹ :=
         inv_nonneg.2 ((GlobalTheory.TauLipschitz.tauLip X.B.I (by rw [h]; exact hn)).1 _).le
@@ -1171,10 +1164,8 @@ theorem goodOp_star_ev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : 
       intro γ
       by_cases hγ : γ = red k
       · subst hγ
-        simp only [s', Function.update_self]
-        exact ⟨hk, trivial⟩
-      · simp only [s', Function.update_of_ne hγ]
-        exact ⟨hsK γ, hsred γ⟩
+        simpa only [s', Function.update_self] using ⟨hk, trivial⟩
+      · simpa only [s', Function.update_of_ne hγ] using ⟨hsK γ, hsred γ⟩
     have e1 := hEv a s' hs'
     have e2 := hEv a s (fun γ => ⟨hsK γ, hsred γ⟩)
     have hsum : ∀ u : G0g D.nd → X.B.I.Gf,
@@ -1184,8 +1175,7 @@ theorem goodOp_star_ev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : 
       · simp [a]
       · intro γ _ hγ
         simp [a, hγ]
-      · intro hn
-        exact absurd (Finset.mem_univ _) hn
+      · exact fun hn => absurd (Finset.mem_univ _) hn
     rw [hsum] at e1 e2
     have e3 : star (X.B.R (1, k) (star φ)) = (star (X.B.R (1, s (red k)) (star φ)) : L2X X) := by
       apply Lp.ext
@@ -1249,8 +1239,7 @@ theorem goodOp_star_ev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : 
         · rw [Set.indicator_of_mem ((hCmem _ k).2 ⟨hk, rfl⟩), heg, hF1 k hk]
         · intro γ _ hγ
           exact Set.indicator_of_notMem (fun hm => hγ ((hCmem γ k).1 hm).2.symm) _
-        · intro hn
-          exact absurd (Finset.mem_univ _) hn
+        · exact fun hn => absurd (Finset.mem_univ _) hn
       · have heg : eg X k = 0 := by
           unfold eg
           rw [dite_eq_right (fun h' => hk h'.1)]
@@ -1374,8 +1363,7 @@ theorem evalTieT_of_levelMatch : GlobalTheory.Published.DiscreteSeriesClassifica
     refine ⟨⟨hmem.toLp _, Submodule.mem_inf.mpr ⟨hHH, LinearMap.mem_ker.mpr (sub_eq_zero.mpr hfix)⟩⟩,
       hmem.coeFn_toLp, ?_⟩
     show ‖(hmem.toLp _ : L2X X)‖ ^ 2 = _
-    rw [Formalism.IndefR.AutomorphicEvaluation.norm_sq_toLp hmem]
-    exact hint
+    rwa [Formalism.IndefR.AutomorphicEvaluation.norm_sq_toLp hmem]
   · intro Φ
     have hF : star (Φ : L2X X) ∈ goodSub X Gd := Φ.2
     have hfix : Gd.Rg (star (Φ : L2X X)) = star (Φ : L2X X) :=
@@ -1531,7 +1519,7 @@ theorem redFn_conj (β t x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP :
       refine MonoidHom.mem_range.2 ⟨y, ?_⟩
       rw [frGL_mul_apply, hy]
       group
-    simp only [Formalism.L2.DIV.redFn, Formalism.L2.DIV.ext1, dif_neg hx, dif_neg hx']
+    simp only [Formalism.L2.DIV.redFn, Formalism.L2.DIV.ext1, dite_eq_right hx, dite_eq_right hx']
 
 end Gen
 
@@ -1561,8 +1549,7 @@ theorem core (D : D7) (Pg : Finset (Formalism.L2.DIV.Pl D.host.E)) (β : GL (Fin
     x ∈ (Formalism.L2.SG.InstExistsPf.instOf D).Kg g ↔ ∀ PP ∈ Pg, Formalism.L2.DIV.redFn β PP x.1 = 1 := by
   rw [GlobalTheory.KgFrame.mem_Kg_iff_redFn D β x g hβ hx hg hrad]
   constructor
-  · intro H PP hP
-    exact H PP (hin PP hP)
+  · exact fun H PP hP => H PP (hin PP hP)
   · intro H PP hgP
     rcases hcov PP hgP with hP | ⟨PP', hP', hc⟩
     · exact H PP hP
@@ -1590,8 +1577,7 @@ theorem red_kap_eq_one_iff : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 
       have hI : PP.asIdeal =
           (D.naut.plGw (plg.symm ⟨PP, hP⟩).1 (plg.symm ⟨PP, hP⟩).2).asIdeal := by
         rw [← hsame]
-      rw [hI]
-      exact hov
+      rwa [hI]
     have hdvd : ∀ q : Fin 2, D.host.g q ∣ D.host.g 0 * D.host.g 1 := by
       intro q
       fin_cases q
@@ -1616,8 +1602,7 @@ theorem red_kap_eq_one_iff : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 
     show Formalism.L2.DIV.upperLeftBlock (R.dat0 R.triv).hr (Formalism.L2.DIV.redFn (R.βY 0) PP.1 _) = 1 ↔ _
     rw [redFn_conj, upperLeftBlock_eq_one_iff_of_mem_blockTri (R.dat0 R.triv).hr (by exact rank_lowerChainSpace_zero_le D)]
   constructor
-  · intro H PP hP
-    exact (key ⟨PP, hP⟩).1 (congrFun H ⟨PP, hP⟩)
+  · exact fun H PP hP => (key ⟨PP, hP⟩).1 (congrFun H ⟨PP, hP⟩)
   · intro H
     funext PP
     exact (key PP).2 (H PP.1 PP.2)

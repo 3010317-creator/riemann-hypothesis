@@ -89,14 +89,12 @@ theorem integral_coset {X G : Type*} [Group X] [MeasurableSpace X] [MeasurableMu
         QuotientGroup.mk (ρ x)} from rfl) (fun _ => c (QuotientGroup.mk (ρ x)))).symm
     · intro u _ hu
       exact Set.indicator_of_notMem (by intro h; exact hu (Eq.symm h)) _
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   rw [finsum_eq_sum_of_fintype, hdecomp, integral_finsetSum]
   · rw [Finset.mul_sum]
     refine Finset.sum_congr rfl (fun u _ => ?_)
     rw [integral_indicator_const _ (hmeas u), hmeasure u, Complex.real_smul]
-  · intro u _
-    exact (integrable_const (c u)).indicator (hmeas u)
+  · exact fun u _ => (integrable_const (c u)).indicator (hmeas u)
 
 theorem integral_level {X G : Type*} [Group X] [MeasurableSpace X] [MeasurableMul X] (ν : Measure X)
     [IsProbabilityMeasure ν] [ν.IsMulLeftInvariant] [Group G] (N : Subgroup G) [Finite (G ⧸ N)] (ρ : X →* G)

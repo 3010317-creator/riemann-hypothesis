@@ -105,8 +105,7 @@ theorem exists_isCompact_isOpen_inter_eq {U O A : Set X} (hU : IsOpen U) (hOU : 
   refine ⟨B, hBc, hBo, hBV.trans inter_subset_right, subset_antisymm ?_ ?_⟩
   · rintro x ⟨hxB, hxO⟩
     have : (⟨x, hxO⟩ : O) ∈ (Subtype.val : O → X) ⁻¹' V := (hBV hxB).1
-    rw [hV] at this
-    exact this
+    rwa [hV] at this
   · exact fun x hx => ⟨hAB hx, hAO hx⟩
 
 theorem exists_lift {U O : Set X} (hU : IsOpen U) (hOU : O ⊆ U) {φ : O → ℂ}
@@ -131,8 +130,7 @@ theorem exists_lift {U O : Set X} (hU : IsOpen U) (hOU : O ⊆ U) {φ : O → �
       have : (x : X) ∈ B ∩ O := ⟨hx, x.2⟩
       rw [hBO] at this
       obtain ⟨y, hy, hyx⟩ := this
-      rw [← Subtype.ext hyx]
-      exact hy
+      rwa [← Subtype.ext hyx]
     · intro hx
       have : (x : X) ∈ (Subtype.val : O → X) '' {x | φ x = c} := ⟨x, hx, rfl⟩
       rw [← hBO] at this
@@ -172,8 +170,7 @@ theorem exists_lift_indicator {U O A : Set X} (hU : IsOpen U) (hOU : O ⊆ U) (h
       exact this.1
     rw [Set.indicator_of_mem hxA, Set.indicator_of_mem hxB]
   · rw [Set.indicator_of_notMem hxA, Set.indicator_of_notMem]
-    intro hxB
-    exact hxA (hBO ▸ (⟨hxB, hx⟩ : x ∈ B ∩ O))
+    exact fun hxB => hxA (hBO ▸ (⟨hxB, hx⟩ : x ∈ B ∩ O))
 
 theorem exists_isClopen_mem_disjoint {Q : Set X} (hQ : IsCompact Q) {y : X} (hy : y ∉ Q) :
     ∃ V : Set X, IsClopen V ∧ y ∈ V ∧ Disjoint V Q := by

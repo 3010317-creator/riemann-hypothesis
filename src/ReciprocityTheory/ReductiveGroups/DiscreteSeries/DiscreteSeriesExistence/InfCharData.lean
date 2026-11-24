@@ -208,8 +208,7 @@ theorem capelli_data (hgap : StdGap ε lam) (hσ : IsURepOn (UJset ε) σ) (hD :
   simp only [AlgHom.fst_apply, AlgHom.snd_apply] at h1 h2
   have hp : (Formalism.REAL.qdet E (Y + ((n : ℂ) - 1) / 2), Formalism.REAL.qdet (smE ε (rreg ε)) (Y + ((n : ℂ) - 1) / 2)) ∈
       Algebra.adjoin ℂ (Set.range fun ab : Fin n × Fin n => (E ab.1 ab.2, smE ε (rreg ε) ab.1 ab.2)) := by
-    rw [← h1, ← h2]
-    exact hm
+    rwa [← h1, ← h2]
   exact ICD.transfer hgap hσ hD hV hc hVK hV0 hP hp _
     (fun v₀ hv₀ y hy => capelli_sigLam hgap hP hv₀ hcap Y y hy) x hx
 

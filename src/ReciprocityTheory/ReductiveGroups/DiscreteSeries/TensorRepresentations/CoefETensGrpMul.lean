@@ -95,8 +95,7 @@ private theorem actM_pow_apply_mem_genSub {M : Type*} [AddCommGroup M] [Module �
   have hE : ∀ a b, ∀ w ∈ genSub E S, E a b w ∈ genSub E S := by
     intro a b w hw
     simp only [genSub, Submodule.mem_sInf, Set.mem_setOf_eq] at hw ⊢
-    intro T hT
-    exact hT.2 a b w (hw T hT)
+    exact fun T hT => hT.2 a b w (hw T hT)
   induction m with
   | zero => simpa using hv
   | succ m ih =>
@@ -231,8 +230,7 @@ theorem coefE_all (dual : Bool) (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn
   have hQ1 : CoefQ dual σ E V' ι f z 1 := by
     intro y hy
     rw [coefE_tensGrp_one dual hσ, hσ.1.1, ContinuousLinearMap.one_apply]
-    simp only [← Submodule.coe_inner]
-    exact (hz y hy).symm
+    simpa only [← Submodule.coe_inner] using (hz y hy).symm
 
   have hZ1 := coefE_line dual hσ hD hZ.1 one_pos (coefE_goodK hD hVf hVK hZ 1)
     (coefE_goodK hD hV'f hV'K hZ 1) hι1 hιE f z coefE_one_mem hQ1 1

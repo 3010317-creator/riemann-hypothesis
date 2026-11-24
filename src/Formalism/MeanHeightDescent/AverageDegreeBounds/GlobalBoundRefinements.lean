@@ -84,7 +84,7 @@ theorem mk_lt (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotally
     exact fun w => not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w)
   have hm : ∀ w : InfinitePlace K, mult w = 2 := fun w => by
     unfold mult
-    rw [if_neg (not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w))]
+    rw [ite_eq_right (not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w))]
   have hd : Module.finrank ℝ (mixedSpace K) = 2 * nrComplexPlaces K := by
     rw [mixedEmbedding.finrank, ← card_add_two_mul_card_eq_rank, hr, zero_add]
   have hL : minkowskiBound K I ≠ ⊤ := by
@@ -129,9 +129,7 @@ theorem muDef_line_eq (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι �
       -((1 / (nPl K : ℝ)) * ∑ v, 2 * Real.log (Formalism.HermitianLatticesTheory.normAt b X v x)) := by
   set L : Submodule (𝓞 K) V := Submodule.span (𝓞 K) ({x} : Set V) with hL
   have hLfg : L.FG := Submodule.fg_span (Set.finite_singleton x)
-  have hL0 : L ≠ ⊥ := by
-    intro h
-    exact hx ((Submodule.span_singleton_eq_bot).1 h)
+  have hL0 : L ≠ ⊥ := fun h => hx ((Submodule.span_singleton_eq_bot).1 h)
   have hrk : rkK (K := K) L = 1 := rkK_span_singleton x hx
   have hf : 0 < nPl K := Fintype.card_pos
   have hfR : (0 : ℝ) < (nPl K : ℝ) := by exact_mod_cast hf

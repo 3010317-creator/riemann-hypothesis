@@ -265,12 +265,7 @@ open GlobalTheory.TauTwist ReciprocityTheory.ChartRestriction.G.DVR
 variable {R : Type} [CommRing R] [IsDomain R] {D : DegPre R}
 
 theorem degenerationPointOfLattice_zsmul (T : Over (Spec (CommRingCat.of R))) (n : ℤ) (b : D.X) : cP D T (n • b) = cP D T b ^ n := by
-  let f : Multiplicative D.X →* (T ⟶ D.P.A) :=
-    { toFun := fun x => cP D T x.toAdd
-      map_one' := by simpa using cPoint_nsmul D T 0 0
-      map_mul' := fun x y => cPoint_add D T _ _ }
-  have := map_zpow f (Multiplicative.ofAdd b) n
-  simpa [f] using this
+  exact GlobalTheory.IntEnd.cPoint_zsmul D T n b
 
 theorem overSpec_comp_zpow_grpObj {T T' : Over (Spec (CommRingCat.of R))} (ρ : T' ⟶ T) (y : T ⟶ D.P.A) (n : ℤ) :
     ρ ≫ y ^ n = (ρ ≫ y) ^ n := by
@@ -336,8 +331,7 @@ theorem exists_lamGen_zpow : ∀ {R : Type} [CommRing R] [IsDomain R] (D : DegPr
     have e := val_tau_nsmul (𝟙 (TK R)) hJ hB k b a
     rw [val_tau_symm _ hJ (k • b) a, val_tau_symm _ hJ b a] at e
     simp only [Over.id_left] at e
-    rw [natCast_zsmul, zpow_natCast]
-    exact e
+    rwa [natCast_zsmul, zpow_natCast]
   · obtain ⟨t, ht, hv⟩ := exists_cubN D.cub (snd D.P.A D.P.A ^ (-(k : ℤ))) (snd D.P.A D.P.A) (fst D.P.A D.P.A) k
     have hF : FormEq
         ![(snd D.P.A D.P.A ^ (-(k : ℤ)) * snd D.P.A D.P.A ^ k * fst D.P.A D.P.A).left,
@@ -614,10 +608,10 @@ theorem pair_pull : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Ad
       simp only [Sum.elim_inl, GlobalTheory.TensPair.lamPts_pull, Fintype.prod_prod_type]
       symm
       rw [Finset.prod_eq_single i₀ ?_ (by simp)]
-      · exact Finset.prod_congr rfl fun j _ => Finset.prod_congr rfl fun l _ => by rw [if_pos rfl]
+      · exact Finset.prod_congr rfl fun j _ => Finset.prod_congr rfl fun l _ => by rw [ite_eq_left rfl]
       · intro i _ hi
         refine Finset.prod_eq_one fun j _ => ?_
-        rw [Fin.prod_univ_four, if_neg hi]
+        rw [Fin.prod_univ_four, ite_eq_right hi]
         simp only [GlobalTheory.PolDeg.lamPts, Oε, _root_.one_mul]
         simp
         apply Additive.ofMul.injective
@@ -631,8 +625,8 @@ theorem pair_pull : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Ad
       val (D.toPre.tau a b) (𝟙 _) z J' = GlobalTheory.PolDeg.lamVal w (lift (toUnit (TK R) ≫ D.toPre.c a) (toUnit (TK R) ≫ D.toPre.c b) : TK R ⟶ G2 D.toPre.P.A).left z J J' *
         val (D'.toPre.tau (T.xi i₀ a) b') (𝟙 _) z J by
     exact key _ (fun j => (Tens.xe_smul T (symUnitOf W h) (TensO.binv _) (T.xi i₀ b) j).trans (by
-      rw [Finset.sum_eq_single i₀ (fun k _ hk => by rw [GlobalTheory.TensPair.xe_xi, if_neg hk, smul_zero]) (by simp),
-        GlobalTheory.TensPair.xe_xi, if_pos rfl]))
+      rw [Finset.sum_eq_single i₀ (fun k _ hk => by rw [GlobalTheory.TensPair.xe_xi, ite_eq_right hk, smul_zero]) (by simp),
+        GlobalTheory.TensPair.xe_xi, ite_eq_left rfl]))
   intro b' hb'
   have hPl : (lift (toUnit (TK R) ≫ D'.toPre.c (T.xi i₀ a)) (toUnit (TK R) ≫ D'.toPre.c b') : TK R ⟶ G2 D'.toPre.P.A).left =
       (lift (toUnit (TK R) ≫ D.toPre.c a) (toUnit (TK R) ≫ D.toPre.c b) : TK R ⟶ G2 D.toPre.P.A).left ≫
@@ -645,9 +639,9 @@ theorem pair_pull : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Ad
   have hPi : ∏ i, ∏ j, val (D.toPre.tau (T.xe (T.xi i₀ a) i) (T.xe b' j)) (𝟙 _) z J' ^ ((W + W.transpose) i j) =
       ∏ j, val (D.toPre.tau a (TensO.mat _ (TensO.binv (symUnitOf W h)) j i₀ • b)) (𝟙 _) z J' ^ ((W + W.transpose) i₀ j) := by
     rw [Finset.prod_eq_single i₀ (fun i _ hi => Finset.prod_eq_one fun j _ => by
-      rw [GlobalTheory.TensPair.xe_xi, if_neg hi, t0, one_zpow]) (by simp)]
+      rw [GlobalTheory.TensPair.xe_xi, ite_eq_right hi, t0, one_zpow]) (by simp)]
     refine Finset.prod_congr rfl fun j _ => ?_
-    rw [GlobalTheory.TensPair.xe_xi, if_pos rfl, hb']
+    rw [GlobalTheory.TensPair.xe_xi, ite_eq_left rfl, hb']
   have e1 := hv₁ (T.xi i₀ a) b' z J' J hJ' hJ
   rw [hPi, hPl] at e1
   have e2 := hvw _ (lift (toUnit (TK R) ≫ D.toPre.c a) (toUnit (TK R) ≫ D.toPre.c b) : TK R ⟶ G2 D.toPre.P.A).left z J' hJ'
@@ -780,11 +774,7 @@ namespace GlobalTheory.Mum.TensBal
 theorem transpose_mul_eq {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (h : IsUnit (W + W.transpose).det)
     (a : TensO (symUnitOf W h)) :
     (TensO.mat _ a).transpose * (W + W.transpose) = (W + W.transpose) * TensO.mat _ (star a) := by
-  have hb : ((symUnitOf W h).1 : Matrix (Fin r) (Fin r) ℤ) = W + W.transpose := rfl
-  rw [TensO.star_def]
-  show _ = (W + W.transpose) * (((((symUnitOf W h).1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) *
-    (TensO.mat _ a).transpose * ((symUnitOf W h).1 : Matrix (Fin r) (Fin r) ℤ)))
-  rw [hb.symm, ← Matrix.mul_assoc, ← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
+  exact (GlobalTheory.Mum.RosatiTens.symUnit_mul_star h a).symm
 
 theorem tauBal_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (D D' : DegData R (maximalIdeal R)) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (h : IsUnit (W + W.transpose).det), ((W + W.transpose).map (Int.cast : ℤ → ℝ)).PosDef → ∀ (T : Tens D.toPre D'.toPre W), letI := T.mod (symUnitOf W h); ∀ a : TensO (symUnitOf W h), D'.toPre.TauBal (T.act (TensO.mat _ a)) (T.act (TensO.mat _ (star a))) (fun y => a • y) (fun y => star a • y) := by
   intro R _ _ _ _ D D' r W h _ T a

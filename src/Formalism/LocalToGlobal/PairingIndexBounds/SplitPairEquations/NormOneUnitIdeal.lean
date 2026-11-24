@@ -60,8 +60,7 @@ theorem norm_one_unit_ideal : NormOneUnitIdeal D := by
       exact ⟨a, by rw [Pi.smul_apply, Algebra.smul_def]⟩
     · rintro ⟨a, ha⟩
       refine ⟨a, funext fun i => ?_⟩
-      rw [Subsingleton.elim i 0, Pi.smul_apply, Algebra.smul_def]
-      exact ha
+      rwa [Subsingleton.elim i 0, Pi.smul_apply, Algebra.smul_def]
   have hH : ∀ x y : Fin 1 → D.host.E, stdH D.host.E 1 x y = star (x 0) * y 0 := fun x y => by
     simp only [stdH, Fin.sum_univ_one]
   have hSD : SD D L := by
@@ -176,8 +175,7 @@ theorem smulSD : SmulSD D := by
     constructor
     · rintro ⟨w', hw', rfl⟩
       rwa [happ, Matrix.mulVec_mulVec, hu, Matrix.one_mulVec]
-    · intro h
-      exact ⟨_, h, by rw [happ, ← hy]⟩
+    · exact fun h => ⟨_, h, by rw [happ, ← hy]⟩
   unfold SD SDLat.smulLat
   refine ⟨hfg.map _, ?_, ?_⟩
   · have himg : ((L.map ((toLin' (γ : Matrix (Fin N) (Fin N) D.host.E)).restrictScalars (𝓞 D.host.E)) : Submodule _ _) : Set (Fin N → D.host.E)) =
@@ -197,7 +195,6 @@ theorem smulSD : SmulSD D := by
       rwa [happ]
     · intro H x' hx'
       have h1 := H _ (Submodule.mem_map_of_mem hx')
-      rw [happ, hy y, stdH_unitary D (γ : Matrix (Fin N) (Fin N) D.host.E) hu] at h1
-      exact h1
+      rwa [happ, hy y, stdH_unitary D (γ : Matrix (Fin N) (Fin N) D.host.E) hu] at h1
 
 end Formalism.L2.PairingIndexBounds.Eq

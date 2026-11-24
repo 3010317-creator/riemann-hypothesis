@@ -42,13 +42,6 @@ theorem subst_zero' {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ C}
     (ha : ∀ s, MvPowerSeries.constantCoeff (a s) = 0) : MvPowerSeries.subst a (0 : MvPowerSeries σ C) = 0 := by
   rw [← MvPowerSeries.coe_substAlgHom (Formalism.L2.FormalSeriesBounds.VP.hs ha), map_zero]
 
-theorem constantCoeff_two_points_zero {n : ℕ} (b : Fin n) (q : Fin 2 × Fin dd) :
-    MvPowerSeries.constantCoeff ((![pt C dd b, 0] : Fin 2 → Pt C n dd) q.1 q.2) = 0 := by
-  rcases q with ⟨i, j⟩
-  fin_cases i
-  · simp [ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ.pt]
-  · simp
-
 end VP
 
 end Formalism.L2.FormalSeriesBounds

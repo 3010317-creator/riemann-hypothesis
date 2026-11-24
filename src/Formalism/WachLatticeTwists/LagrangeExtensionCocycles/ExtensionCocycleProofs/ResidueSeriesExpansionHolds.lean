@@ -101,7 +101,7 @@ theorem wI_le (L Q : A) (W e c y : ℕ) (hW : 1 ≤ W) (h : c * W + y ≤ e + 1)
       rw [← mul_assoc, ← pow_add, Nat.add_sub_cancel' hca]
     rw [SetLike.mem_coe, e1]
     exact Ideal.mul_mem_right _ _ (Ideal.subset_span (Set.mem_insert _ _))
-  · push_neg at hca
+  · push Not at hca
     have h1 : (a + 1) * W ≤ c * W := Nat.mul_le_mul_right W hca
     rw [add_mul, one_mul] at h1
     have hyb : y ≤ b := by linarith
@@ -131,8 +131,7 @@ theorem sign_character_at_j_holds : StatSigJ := by
     intro z hz
     rcases hz with rfl | rfl
     · refine Ideal.subset_span ⟨1, 0, ?_, by simp⟩
-      simp only [one_mul, add_zero]
-      exact Nat.pow_le_pow_right (by omega) (by omega)
+      simpa only [one_mul, add_zero] using Nat.pow_le_pow_right (by omega) (by omega)
     · exact Ideal.subset_span ⟨0, ℓ ^ k, by simp, by simp⟩
   have hP : ∏ k ∈ Finset.range j, p k ^ (ℓ - 1) ∈
       wI (ℓ : A) (x + (ℓ : A)) (ℓ ^ (j - 1)) (ℓ ^ j - 1) := by
@@ -142,8 +141,7 @@ theorem sign_character_at_j_holds : StatSigJ := by
         exact h2)
     have hg := geom_nat ℓ (by omega) j
     have e : ∑ k ∈ Finset.range j, (ℓ - 1) * ℓ ^ k = ℓ ^ j - 1 := by omega
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   have hx : x ∈ wI (ℓ : A) (x + (ℓ : A)) (ℓ ^ (j - 1)) 1 := by
     have hQ : x + (ℓ : A) ∈ wI (ℓ : A) (x + (ℓ : A)) (ℓ ^ (j - 1)) 1 :=
       Ideal.subset_span ⟨0, 1, by simp, by simp⟩
@@ -224,7 +222,6 @@ theorem residue_series_expansion_holds : StatResSeries := by
     have h1 := hunroll N
     have h2 := hsum.sum_le_tsum (Finset.range N) (fun a _ => hf0 a)
     linarith)
-  rw [sub_zero] at hfin
-  exact hfin
+  rwa [sub_zero] at hfin
 
 end Formalism.RepresentationBoundsCohomology.N2

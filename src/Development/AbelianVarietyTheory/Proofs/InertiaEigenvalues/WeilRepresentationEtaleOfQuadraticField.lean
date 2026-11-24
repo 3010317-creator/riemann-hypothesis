@@ -232,7 +232,7 @@ theorem etaK_eq_neg_one : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivi
     | add y z hy hz => exact add_mem (hy trivial) (hz trivial)
   have hodd := not_two_dvd_ord_norm F A.K A.L h2 _ hζ' htop' s s.ne_zero hs
   unfold Et.etaK eta
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨y, hy⟩
   apply hodd
   have hy0 : y ≠ 0 := by
@@ -375,8 +375,7 @@ theorem exists_idem (K : Type) [CommRing K] [IsArtinianRing K] [IsReduced K] [No
   classical
   obtain ⟨m₁, hm₁⟩ := Ideal.exists_maximal K
   have hex : ∃ m₂ : Ideal K, m₂.IsMaximal ∧ m₂ ≠ m₁ := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     haveI : IsLocalRing K := IsLocalRing.of_unique_max_ideal ⟨m₁, hm₁, fun y hy => h y hy⟩
     exact hf (IsArtinianRing.isField_of_isReduced_of_isLocalRing K)
   obtain ⟨m₂, hm₂, hne⟩ := hex
@@ -554,15 +553,13 @@ theorem selfDual_kx_exists : ∀ (F E : Type) [NontriviallyNormedField F] [Nontr
     refine ⟨hleft, fun b hb => hleft b (fun u => ?_)⟩
     have := hb u
     simp only [trxForm, LinearMap.mk₂_apply] at this ⊢
-    rw [show (x : A.K) * b * u = x * u * b by ring]
-    exact this
+    rwa [show (x : A.K) * b * u = x * u * b by ring]
   obtain ⟨⟨μ, hμ, -⟩, -⟩ := _root_.GlobalTheory.JR.SelfDualUniq.selfDual_exists_unique_isTest F E ψ hψ A.K (trxForm A (x : A.K)) hsymm hnd
   refine ⟨μ, ?_⟩
   have hk : (fun u b => ψ (trxForm A (x : A.K) u b)) = Hyp.kx A ψ x := by
     funext u b
     simp [trxForm, Hyp.kx, Et.psiK]
-  rw [← hk]
-  exact hμ
+  rwa [← hk]
 
 end GlobalTheory.JR.Hyp
 end -- clump:auto
@@ -707,8 +704,7 @@ theorem wHyp_wS_eq_fourB : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriv
   have hh : IsTest (fun y' => φ y' * A.kerL ψ x y' (cc A e p)) :=
     ⟨hφ.1.mul (hlc _), hφ.2.mul_right⟩
   unfold wHyp
-  rw [hinv _ hG]
-  rw [← hp]
+  rw [hinv _ hG, ← hp]
   conv_rhs => rw [hy]
   unfold fourB
   rw [hint _ hh]
@@ -1156,9 +1152,7 @@ variable {X : Type} [TopologicalSpace X]
 theorem isTest_of_lc {g : X → ℂ} (hg : IsLocallyConstant g) {K : Set X} (hK : IsCompact K)
     (hs : Function.support g ⊆ K) : IsTest g := by
   refine ⟨hg, ?_⟩
-  have hcl : IsClosed (Function.support g) := by
-    show IsClosed {x | g x ≠ 0}
-    exact (hg.isOpen_fiber 0).isClosed_compl
+  have hcl : IsClosed (Function.support g) := (hg.isOpen_fiber 0).isClosed_compl
   unfold HasCompactSupport tsupport
   rw [hcl.closure_eq]
   exact hK.of_isClosed_subset hcl hs
@@ -1215,8 +1209,7 @@ theorem isTest_mul_prod {a : X → ℂ} {b : Y → ℂ} (ha : IsTest a) (hb : Is
 
 theorem isTest_fibre {f : X × Y → ℂ} (hf : IsTest f) (u : X) : IsTest (fun v => f (u, v)) := by
   refine isTest_of_lc (hf.1.comp_continuous (continuous_const.prodMk continuous_id)) (hf.2.isCompact.image continuous_snd) ?_
-  intro v hv
-  exact ⟨(u, v), subset_tsupport _ hv, rfl⟩
+  exact fun v hv => ⟨(u, v), subset_tsupport _ hv, rfl⟩
 
 theorem isLocallyConstant_curry {f : X × Y → ℂ} (hf : IsTest f) :
     IsLocallyConstant (fun u => fun v => f (u, v)) := by
@@ -1273,7 +1266,7 @@ theorem decomp {f : X × Y → ℂ} (hf : IsTest f) :
     by_contra hK
     apply hu
     show (if (fun v => f (u, v)) = φ then (1:ℂ) else 0) = 0
-    rw [hzero u hK, if_neg (Ne.symm hφ0)]
+    rw [hzero u hK, ite_eq_right (Ne.symm hφ0)]
   · intro φ hφ
     obtain ⟨u, rfl⟩ : φ ∈ Set.range (fun u => fun v => f (u, v)) :=
       (hfin.mem_toFinset).1 (Finset.mem_of_mem_erase hφ)
@@ -1661,12 +1654,10 @@ theorem weilAt_of_subsingleton (F E : Type) [NontriviallyNormedField F] [Nontriv
     · intro s y
       have he : A.etaK (s : A.K) = 1 := by
         unfold Et.etaK eta
-        rw [Subsingleton.elim (s : A.K) 1, map_one]
-        rw [if_pos ⟨1, by simp⟩]
+        rw [Subsingleton.elim (s : A.K) 1, map_one, ite_eq_left ⟨1, by simp⟩]
       have ha : A.absK (s : A.K) = 1 := by
         unfold Et.absK
-        rw [dite_eq_left s.isUnit]
-        rw [Subsingleton.elim (s.isUnit.unit) 1, map_one]
+        rw [dite_eq_left s.isUnit, Subsingleton.elim (s.isUnit.unit) 1, map_one]
         rfl
       rw [he, ha, Subsingleton.elim ((s : A.K) • y) y]
       simp

@@ -70,8 +70,7 @@ theorem DualPtsOfPlane.proof : DualPtsOfPlane.Statement := by
       intro h0
       apply hw
       apply hb.1
-      rw [map_zero, Matrix.mulVecLin_apply]
-      exact h0
+      rwa [map_zero, Matrix.mulVecLin_apply]
     obtain ⟨t, ht⟩ := Function.ne_iff.mp hne
     exact ⟨t, by rw [dualPlanePt_eq_mulVec]; exact ht⟩
   · have h0 : mConeMap (dualLatticeCoord b) f = 0 := hf
@@ -90,8 +89,7 @@ theorem DualPtsOfPlane.proof : DualPtsOfPlane.Statement := by
     rw [map_zero, map_eval₂_int] at h3
     have hz : (eval₂Hom σ v) ∘ formPoly b = dualPlanePt b σ v := funext (eval₂_formPoly b σ v)
     rw [hz] at h3
-    rw [eval_map]
-    exact h3
+    rwa [eval_map]
 
 end
 

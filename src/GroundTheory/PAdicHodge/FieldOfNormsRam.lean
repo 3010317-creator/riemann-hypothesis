@@ -52,9 +52,7 @@ def unifNrm : ℝ := nrm K (((unif F : F) : Ω))
 
 theorem unif_ne_zero : ((unif F : F) : Ω) ≠ 0 := by
   have := (irreducible_unif F).ne_zero
-  intro h
-  apply this
-  exact Subtype.ext (Subtype.ext h)
+  exact fun h => this (Subtype.ext (Subtype.ext h))
 
 theorem unifNrm_pos : 0 < unifNrm F := nrm_pos.mpr (unif_ne_zero F)
 
@@ -85,8 +83,7 @@ theorem normalizedValuation_le_exp_iff (y : F) (m : ℤ) :
     normalizedValuation F y ≤ WithZero.exp (-m) ↔ nrm K (y : Ω) ≤ unifNrm F ^ m := by
   rcases eq_or_ne y 0 with rfl | hy
   · simp only [map_zero, zero_le, true_iff]
-    simp only [IntermediateField.coe_zero, nrm_zero]
-    exact (zpow_pos (unifNrm_pos F) m).le
+    simpa only [IntermediateField.coe_zero, nrm_zero] using (zpow_pos (unifNrm_pos F) m).le
   rw [normalizedValuation_eq_exp_ord hy, WithZero.exp_le_exp, neg_le_neg_iff,
     nrm_eq_unifNrm_zpow F hy]
   exact (zpow_le_zpow_iff_right_of_lt_one₀ (unifNrm_pos F) (unifNrm_lt_one F)).symm
@@ -198,8 +195,7 @@ theorem nrm_sub_le_of_forall_integer (i : ℕ)
     conv_lhs => rw [this]
     rw [IntermediateField.coe_mul, coe_zpow']
   have := (hϖ.zpow hρ0 (ord x)).mul hρ0 hu
-  rw [← hx'] at this
-  exact this
+  rwa [← hx'] at this
 
 end Relative
 

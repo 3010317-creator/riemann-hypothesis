@@ -75,13 +75,11 @@ theorem tprod_eq_zero_of_kFin_off (hHC : GlobalTheory.Published.HarishChandraMod
       refine ih _ fun τ hτ => ?_
       by_cases e : τ = a
       · subst e
-        rw [Function.update_self]
-        exact hw
+        rwa [Function.update_self]
       · rw [Function.update_of_ne e]
         exact hv τ (by simp [e, hτ])
     have := GlobalTheory.KFiniteDense.eq_zero_of_kFin hHC D V S M a ℓ hℓ hk (v a) (v a).2
-    rw [hℓv (v a), Function.update_eq_self] at this
-    exact this
+    rwa [hℓv (v a), Function.update_eq_self] at this
 
 theorem eq_zero_of_sepCont : GlobalTheory.Published.HarishChandraModules → ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (Λ : SmT M →ₗ[ℂ] ℂ), SepCont M Λ → (∀ v : M.Vec, KVecP M v → Λ (PiTensorProduct.tprod ℂ v) = 0) → Λ = 0 := by
   intro hHC D V S M Λ hΛ h0

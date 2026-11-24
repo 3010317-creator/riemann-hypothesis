@@ -156,8 +156,7 @@ theorem good_comp {A B : Module.End ℂ (Q.RadSp k ρ z z' π π')} (hA : Good z
       exact hS₁ K hK q' hq'.2 hG' hq'.1
     refine hS₂ _ hK' q hq hG ?_
     rw [closure_union, hU₀.isClosed_compl.closure_eq, closure_closure]
-    simp only [Set.mem_union, Set.mem_compl_iff, not_or, not_not]
-    exact ⟨hqK, hq⟩
+    simpa only [Set.mem_union, Set.mem_compl_iff, not_or, not_not] using ⟨hqK, hq⟩
   · intro ν _ Kp hKp hν Ψi y V hV hyV hyG hKV hi c
     have hi' : ∀ c y', y' ∈ V → Matrix.of y' ∈ Q.Glev k ρ (Fin.last ρ) →
         (B Ψi : Q.Fn k ρ (Wq →L[ℂ] Wp)) c (Matrix.of y') = ∫ Z, Φ₁ Z y' ∂ν :=

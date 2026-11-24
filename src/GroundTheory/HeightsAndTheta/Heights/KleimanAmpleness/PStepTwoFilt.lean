@@ -85,8 +85,8 @@ theorem laurent_smul_apply_of_isHomogeneous {f : Poly S N} {d : ℕ} (hf : f.IsH
     change (f • laurentSingle x a m) c = aeval x f • laurentSingle x a m (c - d)
     rw [laurent_smul_single hf, laurentSingle_apply, laurentSingle_apply]
     by_cases h : a = c - d
-    · rw [if_pos (by omega), if_pos h]
-    · rw [if_neg (by omega), if_neg h, smul_zero]
+    · rw [ite_eq_left (by omega), ite_eq_left h]
+    · rw [ite_eq_right (by omega), ite_eq_right h, smul_zero]
 
 theorem laurent_smul_apply (f : Poly S N) (m : LaurentSpace x E) (c : ℤ) :
     (f • m) c = ∑ i ∈ Finset.range (f.totalDegree + 1),
@@ -179,7 +179,7 @@ theorem quotIota_eq_zero_iff {c : ℤ} (z : M₁.piece c) :
   constructor
   · intro h
     have := FinGradedSub.mem_laurent.mp h c
-    rwa [laurentSingle_apply, if_pos rfl] at this
+    rwa [laurentSingle_apply, ite_eq_left rfl] at this
   · exact laurentSingle_mem
 
 def laurentCoeff (c : ℤ) : M₁.laurent →ₗ[S] M₁.piece c :=
@@ -194,14 +194,14 @@ theorem quotProj_iota_self (c : ℤ) (z : M₁.piece c) :
     quotProj M₁ M₂ c (quotIota M₁ M₂ c z) = quotIota M₁ M₂ c z := by
   have h : (⟨laurentSingle x c (z : E) c, FinGradedSub.mem_laurent.mp (laurentSingle_mem z.2) c⟩ :
       M₁.piece c) = z :=
-    Subtype.ext (by change laurentSingle x c (z : E) c = (z : E); rw [laurentSingle_apply, if_pos rfl])
+    Subtype.ext (by change laurentSingle x c (z : E) c = (z : E); rw [laurentSingle_apply, ite_eq_left rfl])
   exact congrArg (quotIota M₁ M₂ c) h
 
 theorem quotProj_iota_ne {c c' : ℤ} (h : c' ≠ c) (z : M₁.piece c') :
     quotProj M₁ M₂ c (quotIota M₁ M₂ c' z) = 0 := by
   have h0 : (⟨laurentSingle x c' (z : E) c, FinGradedSub.mem_laurent.mp (laurentSingle_mem z.2) c⟩ :
       M₁.piece c) = 0 :=
-    Subtype.ext (by change laurentSingle x c' (z : E) c = 0; rw [laurentSingle_apply, if_neg h])
+    Subtype.ext (by change laurentSingle x c' (z : E) c = 0; rw [laurentSingle_apply, ite_eq_right h])
   exact (congrArg (quotIota M₁ M₂ c) h0).trans (map_zero _)
 
 def quotPiece (c : ℤ) : Submodule S (quotLaurent M₁ M₂) := LinearMap.range (quotIota M₁ M₂ c)
@@ -356,8 +356,7 @@ theorem filtPiece_smul_mem (A : Submodule (Poly S N) (quotLaurent M₁ M₂)) {d
   obtain ⟨h, hA⟩ := mem_filtPiece.mp hz
   refine mem_filtPiece.mpr ⟨M₁.smul_mem d c f z hf h, ?_⟩
   have key := A.smul_mem f hA
-  rw [smul_quotIota M₁ M₂ hf] at key
-  exact key
+  rwa [smul_quotIota M₁ M₂ hf] at key
 
 theorem quotProj_smul_iota (r : Poly S N) {e : ℤ} (g : M₁.piece e) (c : ℤ) :
     quotProj M₁ M₂ c (r • quotIota M₁ M₂ e g) = ∑ i ∈ Finset.range (r.totalDegree + 1),
@@ -436,8 +435,7 @@ theorem filtPiece_sup {A : Submodule (Poly S N) (quotLaurent M₁ M₂)} (hA : I
     refine mem_filtPiece.mpr ⟨M₁.smul_mem d e f g hf g.2, ?_⟩
     have h2 : f • quotIota M₁ M₂ e g ∈ A ⊔ Submodule.span (Poly S N) {quotIota M₁ M₂ e g} :=
       Submodule.smul_mem _ f (Submodule.mem_sup_right (Submodule.mem_span_singleton_self _))
-    rw [smul_quotIota M₁ M₂ hf] at h2
-    exact h2
+    rwa [smul_quotIota M₁ M₂ hf] at h2
 
 
 variable (M₁ M₂) in
@@ -496,8 +494,7 @@ theorem StepTwo.Filt.proof (h : PrimeFiltration.Exists.Statement.{u, v, w}) :
     induction k using Fin.induction with
     | zero =>
       rw [F.step_zero]
-      simp only [filtPiece_bot hle]
-      exact M₂.fg
+      simpa only [filtPiece_bot hle] using M₂.fg
     | succ k ih =>
       obtain ⟨n, deg, gen, hmem, hspan⟩ := ih
       have hsup := filtPiece_sup (hstab k.castSucc) (g k)

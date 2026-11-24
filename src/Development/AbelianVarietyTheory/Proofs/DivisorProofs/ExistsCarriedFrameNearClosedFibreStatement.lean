@@ -418,8 +418,7 @@ theorem pmaps_of_pullGen {X X' Y Y' : Scheme.{0}} {L : LB X} {L' : LB X'} {F : X
     rw [← hc k]; exact hp k
   have hm : r z ∈ LB.wchart L (fun k => h ≫ φ k) p := Set.mem_iInter.2 hm'
   have hm2 : h (r z) ∈ LB.wchart L φ p := Set.mem_iInter.2 hm'
-  refine Eq.trans ?_ e
-  exact ((gm_res r z _ hm _).trans (gm_pull r h z _ hm2 _)).symm
+  exact Eq.trans ((gm_res r z _ hm _).trans (gm_pull r h z _ hm2 _)).symm e
 
 
 open RigidIsoCube in
@@ -447,8 +446,7 @@ theorem cubeMap_tripleProduct_unit_eq {S : Scheme.{0}} {G' : Over S} [GrpObj G']
     (lift (1 : 𝟙_ (Over S) ⟶ G') (lift 1 1)).left ≫ m.F3 =
       (lift (1 : Over.mk (m.e ≫ (𝟙_ (Over S)).hom) ⟶ G') (lift 1 1)).left := by
   have ht : (toUnit (Over.mk (m.e ≫ (𝟙_ (Over S)).hom))).left = m.e := by
-    have w := Over.w (toUnit (Over.mk (m.e ≫ (𝟙_ (Over S)).hom)))
-    simpa using w
+    simpa using Over.w (toUnit (Over.mk (m.e ≫ (𝟙_ (Over S)).hom)))
   apply hom_ext_triple
   intro i
   rw [Category.assoc, cubeMap_comp_proj_three m i, ← Category.assoc, ← Over.comp_left, ← Over.comp_left]
@@ -748,8 +746,7 @@ theorem germ_eq_zero : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁] (ρ₁ :
     have hc : Spec.map iA z = closedPoint A := PrimeSpectrum.ext (IsLocalRing.eq_maximalIdeal hm)
     have hzx : pullback.fst f (spMap ρ₁) (r z) = x := by
       have : (r ≫ pullback.fst f (spMap ρ₁)) z = X.fromSpecStalk x (Spec.map iA z) := by rw [r1]; rfl
-      rw [hc, Scheme.fromSpecStalk_closedPoint] at this
-      exact this
+      rwa [hc, Scheme.fromSpecStalk_closedPoint] at this
     have e := congrArg (r.stalkMap z).hom (h (r z) hzx)
 
     rw [map_zero, map_sum] at e
@@ -865,8 +862,7 @@ theorem secCarriedOver_of_lift {X Z P : Scheme.{0}} (q : Z ⟶ X) (p₁ : Z ⟶ 
     rw [Finset.sum_congr rfl (fun l' _ => e4 l'), Finset.sum_sub_distrib, ← Finset.mul_sum, S1, ← S3, hcz,
       Units.val_mul, sub_self])
   have e := key l
-  rw [ha (𝟙 X) x hxU l, Category.id_comp, sub_eq_zero] at e
-  exact e
+  rwa [ha (𝟙 X) x hxU l, Category.id_comp, sub_eq_zero] at e
 
 theorem secCarriedOver_of_frameCarriedAlong : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁] (ρ₁ : R →+* R₁) (d : ℕ) (b : Fin d → R₁), (∀ r : R₁, ∃! c : Fin d → R, r = ∑ l, ρ₁ (c l) * b l) → ∀ (X : Scheme.{0}) (f : X ⟶ Sp R) (L : LB X) (W O : X.Opens), O ≤ W → ∀ (τ : ∀ k : L.ι, Γ((pullback f (spMap ρ₁)), (pullback.fst f (spMap ρ₁)) ⁻¹ᵁ W ⊓ (pullback.fst f (spMap ρ₁)) ⁻¹ᵁ L.U k)ˣ) (s : Fin d → ∀ k : L.ι, Γ(X, O ⊓ L.U k)), (∀ (z : (pullback f (spMap ρ₁) : Scheme.{0})) (k : L.ι), (pullback.fst f (spMap ρ₁)) z ∈ O → (pullback.fst f (spMap ρ₁)) z ∈ L.U k → gs (𝟙 (pullback f (spMap ρ₁))) z ((pullback.fst f (spMap ρ₁)) ⁻¹ᵁ W ⊓ (pullback.fst f (spMap ρ₁)) ⁻¹ᵁ L.U k) (τ k).val = ∑ l, gs (pullback.snd f (spMap ρ₁)) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of R₁)).inv.hom (b l)) * gs (pullback.fst f (spMap ρ₁)) z (O ⊓ L.U k) (s l k)) → ∀ (φ : X ⟶ X) (w : LB.Iso L (L.pull φ)), φ ≫ f = f → (∀ f' : (pullback f (spMap ρ₁)) ⟶ (pullback f (spMap ρ₁)), f' ≫ (pullback.fst f (spMap ρ₁)) = (pullback.fst f (spMap ρ₁)) ≫ φ → f' ≫ (pullback.snd f (spMap ρ₁)) = (pullback.snd f (spMap ρ₁)) → FrameCarriedAlong L (pullback.fst f (spMap ρ₁)) ((pullback.fst f (spMap ρ₁)) ⁻¹ᵁ W) τ φ w f') → ∀ l, SecCarriedOver L O (s l) φ w := by
   intro R R₁ _ _ ρ₁ d b hb X f L W O hOW τ s hdec φ w hφ hcar l
@@ -1319,8 +1315,7 @@ theorem FrameCarried.descend_finiteEtale : ∀ (R : Type) [CommRing R] [IsDomain
     refine GlobalTheory.T.carried_section_of_frame_carried_along_lifts R R₁ ρ₁ d b hb G'.left (G'.hom ≫ spMap ρ) U'.LG.L (β ⁻¹ᵁ V₀) (β ⁻¹ᵁ V₁) hOW τ s hdec _
       (Classical.choose hP.lg) ?_ ?_
     · rw [hbc, ← hβ.1.w, ← Category.assoc, hact]
-    · intro f' h1 h2
-      exact hτc σ h bc hbc hP hPO f' (h1.trans (by rw [hbc])) h2
+    · exact fun f' h1 h2 => hτc σ h bc hbc hP hPO f' (h1.trans (by rw [hbc])) h2
   have hd : 0 < d := by
     rcases Nat.eq_zero_or_pos d with h0 | h0
     · subst h0
@@ -1358,7 +1353,7 @@ theorem FrameCarried.descend_finiteEtale : ∀ (R : Type) [CommRing R] [IsDomain
         rw [e]; exact (Units.isUnit _).mul (hl' k₀ hk₀)
       rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap (bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ))) z₀ (β ⁻¹ᵁ V₁ ⊓ U'.LG.L.U k) ⟨hzO, hk⟩] at hu
       exact (isUnit_map_iff _ _).1 hu
-    · push_neg at hne
+    · push Not at hne
       exact ⟨⟨0, hd⟩, fun z k hz _ => absurd hz (hne z)⟩
   obtain ⟨l, hl⟩ := key
   obtain ⟨V, hyV, -, T, hT, hTc⟩ :=
@@ -1462,8 +1457,7 @@ theorem closed_spec {R : Type} [CommRing R] [IsLocalRing R] (G : Over (Sp R)) [G
   refine ⟨y₀, hsp, hcl, ?_⟩
   have h1 : G.hom y ⤳ G.hom y₀ := hsp.map G.hom.continuous
   rw [hy] at h1
-  have h2 := specializes_iff_mem_closure.1 h1
-  exact (isClosed_singleton_closedPoint R).closure_subset h2
+  exact (isClosed_singleton_closedPoint R).closure_subset (specializes_iff_mem_closure.1 h1)
 
 
 

@@ -91,7 +91,7 @@ theorem UpperTheory.V.Z.Tf.GOne.crossUp :
   obtain ⟨M, hM⟩ := isCompact_Icc.exists_bound_of_continuousOn hc
   refine ⟨M, fun σ h1 h2 => ?_⟩
   have h3 := hM σ ⟨h1.le, h2⟩
-  rw [hFe σ h1, if_neg hxy, one_mul, Complex.norm_exp] at h3
+  rw [hFe σ h1, ite_eq_right hxy, one_mul, Complex.norm_exp] at h3
   linarith [Real.add_one_le_exp (∑' p, lterm q (A x) (A y) σ p).re]
 end -- clump:auto
 end -- clump:auto
@@ -109,7 +109,7 @@ theorem UpperTheory.V.Z.Tf.GOne.logTwo :
     ExtId → LogTwo := by
   intro hE W q X d A hS x
   obtain ⟨F, hFa, hFe⟩ := hE W q X d A hS x x
-  simp only [if_true] at hFe
+  simp only [ite_true] at hFe
   have hq : ∀ w, (0 : ℝ) < q w := fun w => by exact_mod_cast lt_of_lt_of_le two_pos (hS.primes.two w)
   have hne : ∀ σ : ℝ, 1 < σ → (σ : ℂ) - 1 ≠ 0 := fun σ h => sub_ne_zero.2 (by exact_mod_cast h.ne')
   have h1 : F 1 ≠ 0 := by
@@ -549,21 +549,18 @@ theorem UpperTheory.V.Z.Tf.SR.splitRigid_of (hSh : ShareBd) (hAS : AbsShare) (hT
     intro w
     by_contra h
     refine w.2 (Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_union_left _ ?_)))
-    rw [Set.Finite.mem_toFinset]
-    exact h
+    rwa [Set.Finite.mem_toFinset]
   have hS2 : ∀ w : Off E S, χ.UnrAt w.1 ∧ ‖((χ.val w.1 : ℂˣ) : ℂ)‖ = 1 ∧ (¬ IsSplitAt w.1 → χ.val w.1 = 1) := by
     intro w
     by_contra h
     refine w.2 (Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_union_right _ ?_)))
-    rw [Set.Finite.mem_toFinset]
-    exact h
+    rwa [Set.Finite.mem_toFinset]
   have hex : ∀ (x : X) (w : Off E S), ∃ f : Fin x.1.1 → ℂˣ, x.1.2.HasSat w.1 (Finset.univ.val.map f) := by
     intro x w
     have hw : ∃ B, x.1.2.HasSat w.1 B := by
       by_contra h
       refine w.2 (Finset.mem_union_left _ (Finset.mem_union_right _ (Finset.mem_biUnion.2 ⟨x, Finset.mem_univ _, ?_⟩)))
-      rw [Set.Finite.mem_toFinset]
-      exact h
+      rwa [Set.Finite.mem_toFinset]
     obtain ⟨B, hB⟩ := hw
     obtain ⟨f, hf⟩ := _root_.PositivityTheory.RgJS.RigidityLemmas.exists_fin B hB.card
     exact ⟨f, hf ▸ hB⟩
@@ -580,16 +577,15 @@ theorem UpperTheory.V.Z.Tf.SR.splitRigid_of (hSh : ShareBd) (hAS : AbsShare) (hT
       rw [Real.sqrt_eq_rpow]
       exact h.le
     · have h := determinant_one_condition_holds E x.1.1 x.1.2 w.1 _ (hX x).2 (hα x w)
-      rw [← Finset.prod_eq_multiset_prod, Units.coe_prod] at h
-      exact h
+      rwa [← Finset.prod_eq_multiset_prod, Units.coe_prod] at h
     · obtain ⟨F, σ₀, hF, hFe⟩ := hS0 x y S (hsub x y) (α x) (α y) (hα x) (hα y)
       refine ⟨F, σ₀, hF, fun σ hσ => ?_⟩
       rw [hFe σ hσ]
       by_cases hxy : x = y
       · subst hxy
-        rw [if_pos rfl, if_pos rfl]
+        rw [ite_eq_left rfl, ite_eq_left rfl]
         rfl
-      · rw [if_neg (fun h => hxy (Subtype.ext (by simpa using h))), if_neg hxy]
+      · rw [ite_eq_right (fun h => hxy (Subtype.ext (by simpa using h))), ite_eq_right hxy]
         rfl
   let I : Set (Off E S) := {w | ¬ IsSplitAt w.1}
   have hx₀ : ∀ w : Off E S, π.HasSat w.1 (Finset.univ.val.map (α x₀ w)) := fun w => by
@@ -671,11 +667,11 @@ theorem UpperTheory.V.Z.Tf.SR.shareBd :
       obtain ⟨C, hC⟩ := hLog W q X d A hS (z i)
       refine ⟨C, fun σ a b => ?_⟩
       have := (abs_le.1 (hC σ a b)).2
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       linarith
     · obtain ⟨C, hC⟩ := hCross W q X d A hS (z i) (z j) (fun h => e (hz h))
       refine ⟨C, fun σ a b => ?_⟩
-      rw [if_neg e]
+      rw [ite_eq_right e]
       linarith [hC σ a b]
   choose D hD using bound
   have hMpos : (0 : ℝ) < M := by exact_mod_cast hM

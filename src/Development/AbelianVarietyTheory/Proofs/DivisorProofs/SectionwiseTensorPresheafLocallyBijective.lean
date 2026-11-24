@@ -166,8 +166,7 @@ theorem inj
       (φ.app (op U)).hom ∘ₗ B₀.subtype := rfl
   have ht : LinearMap.lTensor _ (B₀.map (φ.app (op U)).hom).subtype
       (LinearMap.lTensor _ ((φ.app (op U)).hom.submoduleMap B₀) x₀) = 0 := by
-    rw [← LinearMap.lTensor_comp_apply, hcomp, LinearMap.lTensor_comp_apply]
-    exact hx
+    rwa [← LinearMap.lTensor_comp_apply, hcomp, LinearMap.lTensor_comp_apply]
   obtain ⟨K, hJK, ⟨s, hs'⟩, hK0⟩ := fg_lTensor_eq_zero (hB₀.map _) ht
   have hloc := locFin (ι := Fin s.card)
     (fun i V g => ∃ p, (φ.app (op V)).hom p = (Q.map g.op).hom (s.equivFin.symm i).1)
@@ -206,8 +205,7 @@ theorem inj
     have := congrArg Subtype.val (LinearMap.mem_ker.mp hk)
     simpa using this
   refine locMono (kerPart C P Q φ hi V _ hK z) fun W k hk => ?_
-  rw [map_restr_comp, LinearMap.comp_apply, ← hz]
-  exact hk
+  rwa [map_restr_comp, LinearMap.comp_apply, ← hz]
 
 theorem main : ∀ (R : Type) [CommRing R] (C P Q : Scheme.{0}ᵒᵖ ⥤ ModuleCat.{1} (ULift.{1} R)) (φ : P ⟶ Q), (∀ (U : Scheme.{0}) (y : Q.obj (op U)), Loc U fun V g => ∃ x, (φ.app (op V)).hom x = (Q.map g.op).hom y) → (∀ (U : Scheme.{0}) (x : P.obj (op U)), (φ.app (op U)).hom x = 0 → Loc U fun _ g => (P.map g.op).hom x = 0) → ∀ U : Scheme.{0}, (∀ y : TensorProduct (ULift.{1} R) (C.obj (op U)) (Q.obj (op U)), Loc U fun V g => ∃ x, LinearMap.lTensor _ (φ.app (op V)).hom x = TensorProduct.map (C.map g.op).hom (Q.map g.op).hom y) ∧ ∀ x : TensorProduct (ULift.{1} R) (C.obj (op U)) (P.obj (op U)), LinearMap.lTensor _ (φ.app (op U)).hom x = 0 → Loc U fun _ g => TensorProduct.map (C.map g.op).hom (P.map g.op).hom x = 0 :=
   fun _ _ C P Q φ hs hi U => ⟨surj C P Q φ hs U, inj C P Q φ hs hi U⟩

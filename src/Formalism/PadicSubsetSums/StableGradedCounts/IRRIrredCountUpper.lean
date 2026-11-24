@@ -68,13 +68,13 @@ theorem monicOf_natDegree (c : Fin N → K) : (monicOf c).natDegree = N := by
   exact monicOf_degree_lt c
 
 theorem monicOf_coeff (c : Fin N → K) (i : Fin N) : (monicOf c).coeff i = c i := by
-  rw [monicOf, coeff_add, coeff_X_pow, if_neg (Nat.ne_of_lt i.isLt), zero_add,
+  rw [monicOf, coeff_add, coeff_X_pow, ite_eq_right (Nat.ne_of_lt i.isLt), zero_add,
     Polynomial.finsetSum_coeff]
   simp only [coeff_C_mul_X_pow]
   rw [Finset.sum_eq_single i]
   · simp
   · intro j _ hj
-    rw [if_neg]
+    rw [ite_eq_right]
     exact fun h => hj (Fin.ext h).symm
   · simp
 
@@ -123,8 +123,7 @@ theorem irreducible_count_upper : IrredCountUpper := by
       rw [natDegree_prod_of_monic _ _ (fun c _ => monicOf_monic c),
         Finset.sum_congr rfl (fun c _ => monicOf_natDegree c), Finset.sum_const, smul_eq_mul, mul_comm]
     have hle := natDegree_le_of_dvd hprod (FiniteField.X_pow_card_pow_sub_X_ne_zero K hd0 hq1)
-    rw [hdeg, FiniteField.X_pow_card_pow_sub_X_natDegree_eq K hd0 hq1] at hle
-    exact hle
+    rwa [hdeg, FiniteField.X_pow_card_pow_sub_X_natDegree_eq K hd0 hq1] at hle
   exact main _ (fun c hc => (Finset.mem_filter.mp hc).2)
 
 end Formalism.IrreducibleCountingLemmas.GaloisIrreducibility

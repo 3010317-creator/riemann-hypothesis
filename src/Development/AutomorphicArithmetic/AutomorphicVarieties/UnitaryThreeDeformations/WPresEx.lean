@@ -246,8 +246,7 @@ theorem surjective_of_max_le [IsAdicComplete (maximalIdeal O) O] {σ : Type} [Fi
   have hnak : maximalIdeal R ≤ J ⊔ (maximalIdeal O).map (algebraMap O R) := by
     refine Submodule.le_of_le_smul_of_le_jacobson_bot (I := maximalIdeal R) (IsNoetherian.noetherian _)
       (maximalIdeal_le_jacobson _) ?_
-    rw [smul_eq_mul, ← pow_two]
-    exact h
+    rwa [smul_eq_mul, ← pow_two]
   let f : O →+* R ⧸ J := (Ideal.Quotient.mk J).comp (algebraMap O R)
   have hjac : (maximalIdeal O).map f ≤ Ideal.jacobson ⊥ := by
     rw [Ideal.map_le_iff_le_comap]
@@ -279,8 +278,7 @@ theorem surjective_of_max_le [IsAdicComplete (maximalIdeal O) O] {σ : Type} [Fi
     rw [Ideal.Quotient.eq]
     have hmem : algebraMap O R a - r ∈ maximalIdeal R := by
       simpa using neg_mem ha
-    have h3 := hle (Ideal.mem_map_of_mem (Ideal.Quotient.mk J) (hnak hmem))
-    simpa [f] using h3
+    simpa [f] using hle (Ideal.mem_map_of_mem (Ideal.Quotient.mk J) (hnak hmem))
   have hmapJ : (Ideal.span (Set.range (X : σ → MvPowerSeries σ O))).map (π : MvPowerSeries σ O →+* R) = J := by
     rw [Ideal.map_span, ← Set.range_comp]
     rfl
@@ -310,8 +308,7 @@ private theorem eq_zero_or_exists_eq_single_of_degree_lt_two {τ : Type} (d : τ
   · exact Or.inl h0
   right
   obtain ⟨j, hj⟩ : ∃ j, d j ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact h0 (Finsupp.ext hc)
   have hle : Finsupp.single j 1 ≤ d := by
     rw [Finsupp.single_le_iff]
@@ -438,8 +435,7 @@ theorem zpow_indep {A : Type} [CommRing A] (t : (PowerSeries A)ˣ) (ht : (t : Po
     (T : Finset ℤ) (b : ℤ → A) (h : ∑ j ∈ T, ((t ^ j : (PowerSeries A)ˣ) : PowerSeries A) * PowerSeries.C (b j) = 0) :
     ∀ j ∈ T, b j = 0 := by
   classical
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨j1, hj1T, hj1⟩ := hcon
   set S := T.filter (fun j => b j ≠ 0) with hS
   have hSne : S.Nonempty := ⟨j1, by simp [hS, hj1T, hj1]⟩
@@ -470,8 +466,7 @@ theorem zpow_indep {A : Type} [CommRing A] (t : (PowerSeries A)ˣ) (ht : (t : Po
     rw [e, Polynomial.coeff_coe, Polynomial.coeff_X_add_one_pow]
   have h3 := congrArg (PowerSeries.coeff (j0 + N).toNat) h2
 
-  rw [map_sum, map_zero] at h3
-  rw [Finset.sum_eq_single j0] at h3
+  rw [map_sum, map_zero, Finset.sum_eq_single j0] at h3
   · rw [PowerSeries.coeff_mul_C, hc, Nat.choose_self, Nat.cast_one, one_mul] at h3
     exact hj0.2 h3
   · intro j hj hne
@@ -485,8 +480,7 @@ theorem zpow_indep {A : Type} [CommRing A] (t : (PowerSeries A)ˣ) (ht : (t : Po
       have hb' := hN j0 hj0.1
       have hlt' : (j + N).toNat < (j0 + N).toNat := by omega
       rw [Nat.choose_eq_zero_of_lt hlt', Nat.cast_zero, zero_mul]
-  · intro hn
-    exact absurd hj0.1 hn
+  · exact fun hn => absurd hj0.1 hn
 
 private theorem mvPolynomial_aeval_powerSeries_C {O A σ : Type} [CommRing O] [CommRing A] [Algebra O A] (z : σ → A)
     (p : MvPolynomial σ O) :
@@ -505,8 +499,7 @@ theorem wcomp_eq_of_nilp {A : Type} [CommRing A] [Algebra O A] (J : Ideal A) {n 
   classical
   have hJn : ∀ x ∈ J ^ n, x = 0 := fun x hx => by simpa using hJ hx
   have hψe : ∀ g, ψ g = MvPolynomial.aeval (fun i => ψ (X i)) (truncTotal n g) := by
-    intro g
-    exact sub_eq_zero.mp (hJn _ (GlobalTheory.algHom_sub_aeval_truncTotal_mem ψ hψ n g))
+    exact fun g => sub_eq_zero.mp (hJn _ (GlobalTheory.algHom_sub_aeval_truncTotal_mem ψ hψ n g))
   set J' : Ideal (PowerSeries A) := J.map PowerSeries.C with hJ'
   have hφX : ∀ i, φ (X i) ∈ J' := fun i => by
     rw [h i]
@@ -521,8 +514,7 @@ theorem wcomp_eq_of_nilp {A : Type} [CommRing A] [Algebra O A] (J : Ideal A) {n 
       exact Ideal.zero_mem _
     simpa using h0 hx
   have hφe : ∀ g, φ g = MvPolynomial.aeval (fun i => φ (X i)) (truncTotal n g) := by
-    intro g
-    exact sub_eq_zero.mp (hJ'n _ (GlobalTheory.algHom_sub_aeval_truncTotal_mem φ hφX n g))
+    exact fun g => sub_eq_zero.mp (hJ'n _ (GlobalTheory.algHom_sub_aeval_truncTotal_mem φ hφX n g))
   set P := truncTotal n G with hP
   set K : Finset ℤ := insert j (P.support.image (Finsupp.weight w)) with hK
   let Pk : ℤ → MvPolynomial σ O := fun k => MvPolynomial.weightedHomogeneousComponent w k P
@@ -545,7 +537,7 @@ theorem wcomp_eq_of_nilp {A : Type} [CommRing A] [Algebra O A] (J : Ideal A) {n 
     rw [aeval_weight w (fun i => PowerSeries.C (ψ (X i))) t k (Pk k), mvPolynomial_aeval_powerSeries_C]
     intro d hd
     simp only [Pk]
-    rw [MvPolynomial.coeff_weightedHomogeneousComponent, if_neg hd]
+    rw [MvPolynomial.coeff_weightedHomogeneousComponent, ite_eq_right hd]
   have hψG : ψ G = ∑ k ∈ K, c k := by
 
     rw [hψe G, ← hP, ← hsum, map_sum]
@@ -556,14 +548,11 @@ theorem wcomp_eq_of_nilp {A : Type} [CommRing A] [Algebra O A] (J : Ideal A) {n 
   have hz : ∑ k ∈ K, ((t ^ k : (PowerSeries A)ˣ) : PowerSeries A) *
       PowerSeries.C (c k - if k = j then ψ G else 0) = 0 := by
     simp only [map_sub, mul_sub, Finset.sum_sub_distrib]
-    rw [← hφG, hG]
-    rw [sub_eq_zero]
-    rw [Finset.sum_eq_single j]
+    rw [← hφG, hG, sub_eq_zero, Finset.sum_eq_single j]
     · simp
     · intro k _ hk
       simp [hk]
-    · intro hj
-      exact absurd (Finset.mem_insert_self j _) hj
+    · exact fun hj => absurd (Finset.mem_insert_self j _) hj
   have hb := zpow_indep t ht K _ hz
   have hcj : c j = ψ G := by
     have := hb j (Finset.mem_insert_self j _)
@@ -573,8 +562,7 @@ theorem wcomp_eq_of_nilp {A : Type} [CommRing A] [Algebra O A] (J : Ideal A) {n 
     ext d
     simp only [Pk, MvPolynomial.coeff_weightedHomogeneousComponent, coeff_truncTotal_eq_ite, coeff_wcomp, hP]
     split_ifs <;> rfl
-  rw [hψe, hwP]
-  exact hcj
+  rwa [hψe, hwP]
 
 end Wt
 
@@ -667,8 +655,7 @@ theorem exists_wpres_of_coord {O R : Type} [CommRing O] [IsLocalRing O] [IsAdicC
     rw [RingHom.mem_ker] at hf ⊢
     rw [hkey j f (fun R' _ _ _ g g' t _ => by simp [hf]), hf]
   refine ⟨WPres.mk (↥T) wt π hsurj hhom, ?_, ?_, ?_⟩
-  · intro i
-    exact ⟨i.1, rfl, hπX i⟩
+  · exact fun i => ⟨i.1, rfl, hπX i⟩
   · intro j y
     constructor
     · rintro ⟨G, hG, rfl⟩ R' _ _ _ f f' t h
@@ -874,8 +861,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_adapted :
       rw [(conjBy_tor (push f u) t).1]
       have := h (⟨g, hg⟩, a, b)
       simp only [x, w, map_sub, mul_sub] at this
-      rw [scale_const F.η F.Ψ f f' t, sub_left_inj] at this
-      exact this
+      rwa [scale_const F.η F.Ψ f f' t, sub_left_inj] at this
     · simp only [x, w, map_sub, mul_sub]
       rw [scale_const F.η F.Ψ f f' t, entry_mem u _ _ _ R' f f' t h]
   obtain ⟨W, h1, h2, h3⟩ := exists_wpres_of_coord (O := O) x w (fun s => hu.pt.red s.1 s.2.1 s.2.2)

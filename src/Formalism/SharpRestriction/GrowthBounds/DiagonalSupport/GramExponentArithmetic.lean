@@ -121,9 +121,9 @@ theorem digQ (D : Formalism.BasicNotions.D7) (p : ℕ) (hp : p.Prime) (h5 : 5 �
     · have h1 := hrho v
       rw [h, pow_zero] at h1
       have h2 : rho v = 0 := by omega
-      rw [if_pos h, h2, gamR_zero_zero, h, pow_zero, gamR_one_zero]
+      rw [ite_eq_left h, h2, gamR_zero_zero, h, pow_zero, gamR_one_zero]
     · have : g v - 1 + 1 = g v := by omega
-      rw [if_neg h, this]
+      rw [ite_eq_right h, this]
   have hratio : ∀ e' : σ → ℕ,
       ((∏ k, (((rho k + p ^ (g k - 1 + 1) * e' k).factorial : ℕ) : ℚ)) /
         (∏ k, ((rho k).factorial : ℚ) * ((e' k).factorial : ℚ) * ((p ^ (g k - 1 + 1)).factorial : ℚ) ^ (e' k))) =
@@ -136,8 +136,7 @@ theorem digQ (D : Formalism.BasicNotions.D7) (p : ℕ) (hp : p.Prime) (h5 : 5 �
     have e1 : (∏ k, cUnit (p ^ (g k - 1 + 1)) (if g k = 0 then 0 else be k) *
         dUnit (p ^ (g k - 1 + 1)) (if g k = 0 then 0 else be k) (rho k)) = ∏ v, gamR (p ^ g v) (rho v) (be v) :=
       Finset.prod_congr rfl fun v _ => by rw [← hgam, hkey]
-    rw [e1] at h
-    exact h
+    rwa [e1] at h
   · obtain ⟨T, q, hT, hq⟩ := hQ inv c
     refine ⟨T.filter (fun j => ∀ k, g k = 0 → j k = 0), q, fun j hj => hT j (Finset.mem_filter.1 hj).1, fun be => ?_⟩
     have h := hq (fun v => if g v = 0 then 0 else be v)
@@ -153,18 +152,17 @@ theorem digQ (D : Formalism.BasicNotions.D7) (p : ℕ) (hp : p.Prime) (h5 : 5 �
       · congr 1
         refine Finset.prod_congr rfl fun k _ => ?_
         by_cases hk : g k = 0
-        · rw [if_pos hk, hj k hk]; simp
-        · rw [if_neg hk]
+        · rw [ite_eq_left hk, hj k hk]; simp
+        · rw [ite_eq_right hk]
       · push Not at hj
         obtain ⟨k, hk, hjk⟩ := hj
         have : ∏ k, (((if g k = 0 then 0 else be k).choose (j k) : ℕ) : ℚ) = 0 := by
           refine Finset.prod_eq_zero (Finset.mem_univ k) ?_
-          rw [if_pos hk]
+          rw [ite_eq_left hk]
           have : Nat.choose 0 (j k) = 0 := Nat.choose_eq_zero_of_lt (Nat.pos_of_ne_zero hjk)
           rw [this]; simp
         rw [this, mul_zero]
-    rw [e2] at h
-    exact h
+    rwa [e2] at h
 
 variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 
@@ -192,7 +190,7 @@ theorem binomCombF_onFinset {σ : Type} [Fintype σ] (T : Finset (σ → ℕ)) (
     rw [Finset.sum_subset (Finsupp.support_onFinset_subset)]
     · rw [Finset.sum_map]
       refine Finset.sum_congr rfl fun j hj => ?_
-      rw [Finsupp.onFinset_apply, hem, if_pos hj]
+      rw [Finsupp.onFinset_apply, hem, ite_eq_left hj]
       congr 1
       rw [← Finset.prod_subset (Finset.subset_univ (em j).support)]
       · intro k _ hk
@@ -367,8 +365,7 @@ theorem asm_coefGe' {n' r K m : ℕ} [NeZero n'] (Fr : Frames n' r) (p : ℕ) (O
   have h1 : CoefGe p (monomial (labMon Fr hk nL rho) (1 : KK O)) 0 := CoefGe.monomial _ geQ_one
   have h2 : CoefGe p (upPl Fr p O hk nL A) 0 := CoefGe.aeval _ (fun v => CoefGe.X_pow _ _) hA
   have h3 : CoefGe p (upNo Fr p O hk nL N) t := CoefGe.aeval _ (fun v => CoefGe.X_pow _ _) hN
-  have h4 := CoefGe.mul (CoefGe.mul h1 h2) h3
-  simpa using h4
+  simpa using CoefGe.mul (CoefGe.mul h1 h2) h3
 
 theorem padicVal_expFact_le (p : ℕ) [hp : Fact p.Prime] {n' k : ℕ} (d : Fin n' → ℕ) (α : Fin n' × Fin k →₀ ℕ)
     (hα : ∀ s, multideg α s = d s) : padicValNat p (expFact α) ≤ padicValNat p (∏ s, (d s).factorial) := by
@@ -482,9 +479,8 @@ theorem pick_core (p : ℕ) [hpF : Fact p.Prime] {n' r K m : ℕ} [NeZero n'] [N
     have : mo = nu := by
       rw [Finset.mem_coe, mem_support_iff, coeff_monomial] at hmo
       by_contra h
-      exact hmo (if_neg fun h' => h h'.symm)
-    rw [this]
-    exact hnud
+      exact hmo (ite_eq_right fun h' => h h'.symm)
+    rwa [this]
   obtain ⟨N0, cY, hNT, hcY, hNerr⟩ := hNo dNo ka rho e nu hBlk.1 hJPOK hnud
   have hXX : Dt.XX (z⁻¹ • Pc) := by
     rw [hPc]
@@ -564,8 +560,7 @@ theorem pick_core (p : ℕ) [hpF : Fact p.Prime] {n' r K m : ℕ} [NeZero n'] [N
       linear_combination (-(((cstOf Fr p Dt.nL rho dPl dNo : ℕ) : KK O) * cY * ((expFact nu : ℕ) : KK O) *
         fock Pc (diagK (fun bp => ((gamPl Fr p Dt.nL rho bp : ℚ) : KK O)) A))) * h3
     have hfin := geQ_fock S d G _ hdeg hGint (asm_coefGe' Fr p O hk Dt.nL rho hAint hNerr')
-    rw [← hsub] at hfin
-    exact hfin
+    rwa [← hsub] at hfin
 
 end Formalism.MainNotions.Proposition5Numerics
 end -- clump:auto
@@ -782,14 +777,14 @@ theorem coeff_mon_divDer (m a : σ →₀ ℕ) (F : MvPolynomial σ Kf) :
           else 0) (a - m) = 0 := by
       intro b _ hb
       split_ifs with hmb
-      · rw [coeff_monomial, if_neg]
+      · rw [coeff_monomial, ite_eq_right]
         intro h
         apply hb
         have h1 : b - m + m = a - m + m := by rw [h]
         rwa [tsub_add_cancel_of_le hmb, tsub_add_cancel_of_le hma] at h1
       · simp
     by_cases ha : a ∈ F.support
-    · rw [Finset.sum_eq_single a hsingle (fun h => absurd ha h), if_pos hma, coeff_monomial, if_pos rfl]
+    · rw [Finset.sum_eq_single a hsingle (fun h => absurd ha h), ite_eq_left hma, coeff_monomial, ite_eq_left rfl]
       unfold Finsupp.prod
       push_cast
       ring
@@ -908,7 +903,7 @@ theorem vBB_monomial_one {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscr
     (nu : σ →₀ ℕ) :
     vBB (O := O) p (monomial nu (1 : KK O)) = (((padicValNat p (expFact nu) : ℚ) / 2 : ℚ) : WithTop ℚ) := by
   unfold vBB
-  rw [support_monomial, if_neg one_ne_zero, Finset.inf_singleton, coeff_monomial, if_pos rfl, valuation_one_eq_zero_alt, zero_add]
+  rw [support_monomial, ite_eq_right one_ne_zero, Finset.inf_singleton, coeff_monomial, ite_eq_left rfl, valuation_one_eq_zero_alt, zero_add]
 
 theorem monomial_mem_pol {Kf : Type} [Field Kf] {ι : Type} {n : ℕ} (d : ι → ℕ) (nu : ι × Fin n →₀ ℕ)
     (hnu : ∀ x, multideg nu x = d x) : (monomial nu (1 : Kf)) ∈ Pol Kf n d := by
@@ -917,9 +912,8 @@ theorem monomial_mem_pol {Kf : Type} [Field Kf] {ι : Type} {n : ℕ} (d : ι �
   have : mo = nu := by
     rw [Finset.mem_coe, mem_support_iff, coeff_monomial] at hmo
     by_contra h
-    exact hmo (if_neg fun h' => h h'.symm)
-  rw [this]
-  exact hnu
+    exact hmo (ite_eq_right fun h' => h h'.symm)
+  rwa [this]
 
 theorem noAt (D : Formalism.BasicNotions.D7) (p : ℕ) [hpF : Fact p.Prime] {n' r K : ℕ} [NeZero n'] [NeZero r] [NeZero K] (O : Type)
     [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (S : UniformizedDVR p O) (w : O) (hw2 : w ^ 2 = (p : O))
@@ -968,8 +962,7 @@ theorem noAt (D : Formalism.BasicNotions.D7) (p : ℕ) [hpF : Fact p.Prime] {n' 
       geQ (vK p (binomCombF (K := KK O) lam bn - ((gamNo Fr p Dt.nL rho bn : ℚ) : KK O)⁻¹)) (cP : ℝ) := by
     intro bn
     have h := geQ_neg _ (hlam2 bn)
-    rw [neg_sub, if_pos rfl] at h
-    exact h
+    rwa [neg_sub, ite_eq_left rfl] at h
   refine ⟨diagK (fun bn => binomCombF (K := KK O) lam bn) Yy, cY, ⟨?_, diagK_mem_pol _ _ hYpol, ?_⟩, ?_, ?_⟩
   · intro bn
     rw [coeff_diagK]
@@ -1219,7 +1212,7 @@ theorem pickStep_all (D : Formalism.BasicNotions.D7) : ∃ CDn C₁ : ℝ, 0 < C
     intro s hs
     rw [hD.2.2.1.1] at hs
     unfold dT
-    rw [if_neg hs]
+    rw [ite_eq_right hs]
   exact pickAt_of p O S w hD.1.1.w_sq hD.1.2.1 hk F (flatDeg lam0) Y _ _ _ hcP (dT TT lam0) _ hB
     (digFacts F p hpF.out O hk (segmentLetterCount F) L₁ _ hV (by omega) rfl (fun _ => rfl) (dT TT lam0) hd)
     (fun Dt dNo y _ => by

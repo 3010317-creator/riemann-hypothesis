@@ -46,8 +46,7 @@ theorem exists_gen_prod (K : ℕ → Type) [∀ i, Fintype (K i)] (φ : ∀ i, K
     · intro U _ h
       simp only [Fintype.prod_sum_type, Sum.elim_inl, Sum.elim_inr, Finset.prod_range_succ, hprod U h]
     · intro Z r z J hJ
-      rw [val_mul, Finset.prod_range_succ, hval Z r z J hJ]
-      exact hJ
+      rwa [val_mul, Finset.prod_range_succ, hval Z r z J hJ]
 
 theorem exists_const {S₀ : Scheme.{0}} (hL : L.IsLB) {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ}
     (p : Y ⟶ S₀) (hp : Function.Surjective p.appTop.hom) (t : LB.Gen (LB.LinComb L φ ε)) (ht : t.IsGen)
@@ -84,8 +83,7 @@ theorem exists_const {S₀ : Scheme.{0}} (hL : L.IsLB) {K : Type} [Fintype K] {�
       show _ = (dite _ _ _) ^ ε k
       rw [dite_eq_left (show ∃ k', φ k' = φ k from ⟨k, rfl⟩)]
       rfl
-    rw [h1, one_mul] at hg
-    exact hg
+    rwa [h1, one_mul] at hg
   have key := TopCat.Sheaf.existsUnique_gluing' Y.sheaf
     (fun c : (Y ⟶ X) → L.ι => LB.wchart L φ (fun k => c (φ k))) ⊤ (fun _ => homOfLE le_top) hcov
   obtain ⟨f, hf1, -⟩ := key (fun c => (t.s (fun k => c (φ k))).val)

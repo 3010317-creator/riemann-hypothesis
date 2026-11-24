@@ -78,9 +78,7 @@ theorem family_orbital_valid : FamJFOK := by
       exact hfe (t, γ) hγ hγV
   refine ⟨⟨?_, ε, hε, ?_⟩, ?_⟩
   · exact JFxG.cptInCC_G hCk hC (fun g _ hg => hzero g hg)
-  · intro g hg hne
-    exact (hCε t rfl g hne).2 hg
-  · refine HasCompactSupport.intro hC ?_
-    exact hzero
+  · exact fun g hg hne => (hCε t rfl g hne).2 hg
+  · exact HasCompactSupport.intro hC hzero
 
 end Formalism.FourierDecayAlt.P.CutSH

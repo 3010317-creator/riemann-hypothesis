@@ -55,7 +55,6 @@ theorem pInf_s_sFin (s : Ad M ≃+* Ad M) (hs : Continuous s) (y : Af M) : pInf 
   have hf : Continuous f := by
     have h1 : Continuous fun y : Af M => (sFin M y : Ad M) :=
       (continuous_const.prodMk continuous_id : Continuous fun y : Af M => ((0 : InfiniteAdeleRing M), y))
-    show Continuous fun y : Af M => pInf M (s (sFin M y))
     exact (GlobalTheory.CuspRep.ContAut.continuous_pInf (E := M)).comp (hs.comp h1)
   have hint : ∀ z ∈ GlobalTheory.SchADecomp.intA M, f z = 0 := by
     intro z hz
@@ -123,8 +122,7 @@ theorem main (σ : M ≃+* M) (s : Ad M ≃+* Ad M) (hs : IsGalAd σ s) {n : ℕ
     have h : (fun g => φ.1.1 (S g)) ∈ Sm M n := by rw [e]; exact ψ.2
     refine ⟨h, ?_⟩
     have e2 : (⟨_, h⟩ : Sm M n) = ψ := Subtype.ext e
-    rw [e2]
-    exact hψ
+    rwa [e2]
   let T : P.V →ₗ[ℂ] P'.V :=
     { toFun := fun φ => ⟨⟨_, (hT φ).1⟩, (hT φ).2⟩
       map_add' := fun _ _ => rfl

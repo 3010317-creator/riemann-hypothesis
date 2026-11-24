@@ -84,8 +84,7 @@ theorem det_gram_contraction_le : ∀ (r : ℕ) (V W : Type) [NormedAddCommGroup
     have e1 : a = Fin.cons (a 0) (fun b => c b • a 0 + w b) := by
       funext i
       refine Fin.cases rfl (fun b => ?_) i
-      simp only [Fin.cons_succ]
-      exact hc b
+      simpa only [Fin.cons_succ] using hc b
     have e2 : (fun b => T (a b)) = Fin.cons (T (a 0)) (fun b => (c b + c' b) • T (a 0) + T' (w b)) := by
       funext i
       refine Fin.cases rfl (fun b => ?_) i
@@ -200,13 +199,11 @@ theorem vol_le (d c j : ℕ) (hj : j ≤ d) (g : Matrix (Fin (d + c)) (Fin (d + 
         have hT : ∀ x, ‖T x‖ ≤ ‖x‖ := fun x => by
           rw [hT0]; exact le_trans (WithLp.norm_fst_le _ (Φ x)) (Φ.norm_map x).le
         have := det_gram_contraction_le j _ _ T hT (fun b => P.starProjection (v b))
-        simp only [hT0, hΦ] at this
-        exact this
+        simpa only [hT0, hΦ] using this
       · rw [mem_closedBall_zero_iff]
         exact le_trans (PiLp.norm_apply_le (Φ (v b)).ofLp.2 i)
           (le_trans (WithLp.norm_snd_le _ _) (hn b))
-    rw [hv] at goal
-    exact goal
+    rwa [hv] at goal
   · rw [hS, Measure.volume_eq_prod, Measure.prod_prod, hball, ENNReal.ofReal_mul (by positivity)]
     gcongr
     exact Formalism.HermitianLatticeCounting.P.s5b7_vol R hR j d hj t ht

@@ -121,10 +121,8 @@ theorem coordsAt_pull (hd : GlobalTheory.CompanionTheory.Ar.Dominates ξ' ξ f i
       exact hval s2
     obtain ⟨r, h1, h2⟩ := aux (v ⟨k, e⟩) (hv.2.2.1 ⟨k, e⟩)
     refine ⟨r, ?_, ?_⟩
-    · rw [map_div₀, ← hy, ← hy, hdv k]
-      exact h1
-    · rw [hdv k]
-      exact h2
+    · rwa [map_div₀, ← hy, ← hy, hdv k]
+    · rwa [hdv k]
   have hyd : ∀ k, y ⟨k, d k⟩ ≠ 0 := fun k h0 => by
     have h1 := (hw.2 (κ k) (c' (κ k)) (hc' _)).1
     rw [← hdv k, hy, h0, map_zero] at h1
@@ -168,8 +166,7 @@ theorem coordsAt_pull (hd : GlobalTheory.CompanionTheory.Ar.Dominates ξ' ξ f i
       have e3 : y ⟨k, e2⟩ / y ⟨k, e⟩ = y ⟨k, e2⟩ / y ⟨k, d k⟩ * (y ⟨k, e⟩ / y ⟨k, d k⟩)⁻¹ := by
         have := hyd k
         field_simp
-      rw [e3]
-      exact h5
+      rwa [e3]
     · show w (v ⟨k, e2⟩) = r2 * re⁻¹ * w (v ⟨k, e⟩)
       rw [h4, h2]
       field_simp
@@ -387,7 +384,7 @@ theorem grNorm_down (m : SABMap t' t f) (hξ' : IsCptGen ξ') (hd : GlobalTheory
   have hφ : ∀ a : regAt ξ' p', ValAt ξ' z (a : Ω') (φ a) := fun a =>
     ⟨hq, eA.symm a, congrArg Subtype.val (eA.apply_symm_apply a), rfl⟩
   let val : Li' → Vz := fun e => if he : e ∈ M'.lat p' then ev ⟨e, he⟩ else 0
-  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dif_pos he
+  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dite_eq_left he
   have h0 : val 0 = 0 := by
     rw [hval 0 (zero_mem _)]
     exact map_zero ev

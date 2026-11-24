@@ -85,17 +85,14 @@ theorem seenC_or_seenBarC (hX : X.Ok) (hPr : Pr.Ok) (u : Pr.Word) (w : HeightOne
   by_cases hne : Nonempty X.Tau
   · obtain ⟨τ₀⟩ := hne
     have h1 : X.embO τ₀ (Pr.piT u) * X.embO τ₀ (X.conjO (Pr.piT u)) ∈ w.asIdeal := by
-      rw [← map_mul, hPr.piT_norm u, map_natCast]
-      exact hw
+      rwa [← map_mul, hPr.piT_norm u, map_natCast]
     rcases w.isPrime.mem_or_mem h1 with h | h
     · left
       intro τ
-      rw [embO_of_Kq (hPr.piT_Kq u) τ τ₀]
-      exact h
+      rwa [embO_of_Kq (hPr.piT_Kq u) τ τ₀]
     · right
       intro τ
-      rw [embO_of_Kq (conjO_mem_Kq hX (hPr.piT_Kq u)) τ τ₀]
-      exact h
+      rwa [embO_of_Kq (conjO_mem_Kq hX (hPr.piT_Kq u)) τ τ₀]
   · left
     intro τ
     exact absurd ⟨τ⟩ hne

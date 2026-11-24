@@ -40,8 +40,7 @@ theorem mem_colon_smul_top_of_flat [Module.Flat A M] (J : Ideal A) (a : A) {v : 
     apply (TensorProduct.quotTensorEquivQuotSMul M J).injective
     rw [map_zero, LinearMap.rTensor_tmul]
     have : g 1 = Ideal.Quotient.mk J a := by simp [g, Ideal.Quotient.mk_eq_mk]
-    rw [this, TensorProduct.quotTensorEquivQuotSMul_mk_tmul, Submodule.Quotient.mk_eq_zero]
-    exact hv
+    rwa [this, TensorProduct.quotTensorEquivQuotSMul_mk_tmul, Submodule.Quotient.mk_eq_zero]
   obtain ⟨t, ht⟩ := (hex ((1 : A) ⊗ₜ v)).mp h0
   have := lid_rTensor_subtype_mem_smul_top (LinearMap.ker g) t
   rwa [ht, TensorProduct.lid_tmul, one_smul] at this

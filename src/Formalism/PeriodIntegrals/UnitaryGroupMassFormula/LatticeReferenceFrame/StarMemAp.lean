@@ -95,8 +95,7 @@ theorem hG_sum_right {ι : Type*} (s : Finset ι) (x : Fin I.n → I.E) (y : ι 
 
 theorem J_entry (i j : Fin I.n) : star (I.J j i) = I.J i j := by
   have h : Formalism.UG.cT (starRingEnd I.E) I.J = I.J := I.J_herm
-  have h2 := congrFun (congrFun h i) j
-  simpa [Formalism.UG.cT, starRingEnd_apply] using h2
+  simpa [Formalism.UG.cT, starRingEnd_apply] using congrFun (congrFun h i) j
 
 theorem hG_symm (x y : Fin I.n → I.E) : hG I y x = star (hG I x y) := by
   simp only [hG_def, star_sum, star_mul', star_star]

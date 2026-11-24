@@ -37,7 +37,7 @@ variable [IsGalois K L] [IsMulCommutative (L ≃ₐ[K] L)] [IsGalois K' L']
 theorem restrictNormal_restrictScalars_ideleSymbol (x : IdeleGroup K') :
     ((ideleSymbol K' L' x).restrictScalars K).restrictNormal L =
       ideleSymbol K L (ideleNorm K K' x) := by
-  have h := IdeleGroup.continuous_monoidHom_ext
+  exact DFunLike.congr_fun (IdeleGroup.continuous_monoidHom_ext
     (ψ := (AlgEquiv.restrictNormalHom (F := K) (K₁ := L') L).comp
       ((restrictScalarsHom K).comp (ideleSymbol K' L')))
     (ψ' := (ideleSymbol K L).comp (ideleNorm K K'))
@@ -45,16 +45,13 @@ theorem restrictNormal_restrictScalars_ideleSymbol (x : IdeleGroup K') :
       (K₁ := L') L).comp (restrictScalarsHom (L' := L') K))).comp (continuous_ideleSymbol L'))
     ((continuous_ideleSymbol L).comp (continuous_ideleNorm (K := K) (L := K')))
     (fun v' a ↦ by
-      change ((ideleSymbol K' L' (finiteEmbedding v' a)).restrictScalars K).restrictNormal L =
-        ideleSymbol K L (ideleNorm K K' (finiteEmbedding v' a))
-      rw [ideleSymbol_finiteEmbedding, ideleNorm_finiteEmbedding, ideleSymbol_finiteEmbedding]
+      rw [MonoidHom.comp_apply, MonoidHom.comp_apply, MonoidHom.comp_apply,
+        ideleSymbol_finiteEmbedding, ideleNorm_finiteEmbedding, ideleSymbol_finiteEmbedding]
       exact restrictNormal_localSymbol_norm (below K v') v' a)
     (fun w' a ↦ by
-      change ((ideleSymbol K' L' (infiniteEmbedding w' a)).restrictScalars K).restrictNormal L =
-        ideleSymbol K L (ideleNorm K K' (infiniteEmbedding w' a))
-      rw [ideleSymbol_infiniteEmbedding, ideleNorm_infiniteEmbedding, ideleSymbol_infiniteEmbedding]
-      exact restrictNormal_infiniteLocalSymbol_norm w' a)
-  exact congrArg (fun f : IdeleGroup K' →* (L ≃ₐ[K] L) ↦ f x) h
+      rw [MonoidHom.comp_apply, MonoidHom.comp_apply, MonoidHom.comp_apply,
+        ideleSymbol_infiniteEmbedding, ideleNorm_infiniteEmbedding, ideleSymbol_infiniteEmbedding]
+      exact restrictNormal_infiniteLocalSymbol_norm w' a)) x
 
 end
 

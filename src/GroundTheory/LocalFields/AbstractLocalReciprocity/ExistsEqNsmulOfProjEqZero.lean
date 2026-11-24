@@ -32,8 +32,7 @@ theorem exists_eq_nsmul_of_proj_eq_zero {n : ℕ+} {x : ℤ̂} (hx : proj n x = 
   have hdvd : ∀ m : ℕ+, (n : ℕ) ∣ v m := by
     intro m
     have h := proj_eq_val_cast (n := n) (k := n * m) (by simp) x
-    rw [hx, eq_comm, ZMod.natCast_eq_zero_iff] at h
-    exact h
+    rwa [hx, eq_comm, ZMod.natCast_eq_zero_iff] at h
   have hmod : ∀ m k : ℕ+, (m : ℕ) ∣ (k : ℕ) → v k ≡ v m [MOD (n : ℕ) * m] := by
     intro m k hmk
     have h := proj_eq_val_cast (n := n * m) (k := n * k) (by simpa using Nat.mul_dvd_mul_left _ hmk) x
@@ -76,12 +75,10 @@ theorem eq_zero_of_nsmul_eq_zero {n : ℕ} (hn : n ≠ 0) {x : ℤ̂} (h : n •
   have h' := congrArg (proj (N * m)) h
   rw [map_nsmul, map_zero, nsmul_eq_mul] at h'
   have h'' : (((N : ℕ) * (proj (N * m) x).val : ℕ) : ZMod ((N * m : ℕ+) : ℕ)) = 0 := by
-    rw [Nat.cast_mul, ZMod.natCast_zmod_val]
-    exact h'
+    rwa [Nat.cast_mul, ZMod.natCast_zmod_val]
   rw [ZMod.natCast_eq_zero_iff] at h''
   have h3 : (N : ℕ) * m ∣ (N : ℕ) * (proj (N * m) x).val := by
-    rw [← PNat.mul_coe]
-    exact h''
+    rwa [← PNat.mul_coe]
   exact Nat.dvd_of_mul_dvd_mul_left N.pos h3
 
 instance : IsAddTorsionFree ℤ̂ where

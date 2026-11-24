@@ -201,12 +201,8 @@ theorem ord_eq_of_addVal_eq {a : 𝒪[K]} (ha : a ≠ 0) {n : ℕ}
       IsDiscreteValuationRing.addVal_uniformizer hϖ,
       IsDiscreteValuationRing.addVal_eq_zero_of_unit, zero_add, nsmul_eq_mul, mul_one] at hn
     exact_mod_cast hn
-  have hu0 : ((u : 𝒪[K]) : K) ≠ 0 := by
-    intro h
-    exact u.ne_zero (Subtype.ext h)
-  have hϖ0 : (ϖ : K) ≠ 0 := by
-    intro h
-    exact hϖ.ne_zero (Subtype.ext h)
+  have hu0 : ((u : 𝒪[K]) : K) ≠ 0 := fun h => u.ne_zero (Subtype.ext h)
+  have hϖ0 : (ϖ : K) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
   rw [Subring.coe_mul, Subring.coe_pow, ord_mul hu0 (pow_ne_zero _ hϖ0), ord_unit,
     ord_pow hϖ0, ord_uniformizer hϖ, ← hm]
   simp

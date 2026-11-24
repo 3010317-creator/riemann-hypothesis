@@ -184,9 +184,7 @@ theorem exists_sp (s : ℝ → (l ⊕ l → ℝ) →ₗ[ℝ] (l ⊕ l → ℝ))
   have hP : ∀ t, Φ t * NormedSpace.exp ((-t) • A) = 1 := by
     intro t
     have hd : ∀ x, HasDerivAt (fun x => Φ x * NormedSpace.exp ((-x) • A)) 0 x := by
-      intro x
-      have h1 := (hΦd x).mul (hE x)
-      exact h1.congr_deriv (by rw [mul_neg, mul_assoc, add_neg_cancel])
+      exact fun x => ((hΦd x).mul (hE x)).congr_deriv (by rw [mul_neg, mul_assoc, add_neg_cancel])
     have hc := is_const_of_deriv_eq_zero (fun x => (hd x).differentiableAt) (fun x => (hd x).deriv) t 0
     rw [hc, hΦ0, neg_zero, zero_smul, NormedSpace.exp_zero, one_mul]
   letI : NormedAlgebra ℚ (Matrix (l ⊕ l) (l ⊕ l) ℝ) :=
@@ -198,8 +196,7 @@ theorem exists_sp (s : ℝ → (l ⊕ l → ℝ) →ₗ[ℝ] (l ⊕ l → ℝ))
     have hcomm : Commute ((-t) • A) (t • A) := ((Commute.refl A).smul_left _).smul_right _
     have h1 : NormedSpace.exp ((-t) • A) * NormedSpace.exp (t • A) = 1 := by
       have h2 := (NormedSpace.exp_add_of_commute hcomm).symm
-      rw [← add_smul, neg_add_cancel, zero_smul, NormedSpace.exp_zero] at h2
-      exact h2
+      rwa [← add_smul, neg_add_cancel, zero_smul, NormedSpace.exp_zero] at h2
     calc Φ t = Φ t * (NormedSpace.exp ((-t) • A) * NormedSpace.exp (t • A)) := by
           rw [h1, mul_one]
       _ = NormedSpace.exp (t • A) := by rw [← mul_assoc, hP t, one_mul]
@@ -232,8 +229,7 @@ theorem exists_smooth_fun (S : ℝ → Sch l →ₗ[ℂ] Sch l) (hn : ∀ t f, �
     exact this.trans (map_zero (schwartzToL2 l)).symm)
   have hb : ∀ t f, ‖lam (S t f)‖ ≤ ‖φ.toLp 2 volume‖ * ‖schwartzToL2 l f‖ := fun t f => by
     have := norm_inner_le_norm (𝕜 := ℂ) (φ.toLp 2 volume) ((S t f).toLp 2 volume)
-    rw [hn] at this
-    exact this
+    rwa [hn] at this
   have hc := Sc φ lam
   have hI : ∀ t, HasDerivAt (fun u => ∫ s in (0 : ℝ)..u, lam (S s φ)) (lam (S t φ)) t := fun t =>
     intervalIntegral.integral_hasDerivAt_right (hc.intervalIntegrable _ _) (hc.stronglyMeasurableAtFilter _ _)
@@ -306,8 +302,7 @@ theorem lie' (hL : PositivityTheory.ThKR.LocalLift) (s : ℝ → (l ⊕ l → �
     filter_upwards [e1, (Vd φ mu).continuousAt.eventually_ne hV0] with t ht hne f
     obtain ⟨b, hb⟩ := hc t ht
     have : c t = b := by
-      simp only [c, hb, map_smul, smul_eq_mul]
-      exact mul_div_cancel_right₀ _ hne
+      simpa only [c, hb, map_smul, smul_eq_mul] using mul_div_cancel_right₀ _ hne
     rw [this, hb]
   refine ⟨(deriv c 0 + a) • 1 + quad X, add_mem (Subalgebra.smul_mem _ (one_mem _) _) (quad_mem X), fun f lam => ?_⟩
   refine ((cd.hasDerivAt.fun_mul (Vd f lam)).congr_deriv ?_).congr_of_eventuallyEq ?_
@@ -562,8 +557,8 @@ theorem finAt_sph {ω ρ ω' ρ'} (L : IsLocRep G.M B.ψ om v ω ρ) (L' : IsLoc
     { Pi := fun _ => S
       p := fun u => if h : v = u then h ▸ (π ∘ₗ c) else 0
       p' := fun u => if h : v = u then h ▸ (π ∘ₗ c') else 0 }
-  have e : R.p v = π ∘ₗ c := dif_pos rfl
-  have e' : R.p' v = π ∘ₗ c' := dif_pos rfl
+  have e : R.p v = π ∘ₗ c := dite_eq_left rfl
+  have e' : R.p' v = π ∘ₗ c' := dite_eq_left rfl
   have hx : ∀ x : S, π x.1 = x := fun x => hπ' x.1 x.2
   have on : ∀ x : S, ∃ φ ∈ SB _, c φ = x := fun x => (mS.symm ▸ x.2 : x.1 ∈ (SB _).map c)
   have on' : ∀ x : S, ∃ φ ∈ SB _, c' φ = x := fun x => (mS'.symm ▸ x.2 : x.1 ∈ (SB _).map c')

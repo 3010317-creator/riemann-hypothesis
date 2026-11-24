@@ -101,8 +101,7 @@ theorem GlobalTheory.exists_trait_nonlocal_torusExtension : ∀ (R : Type) [Comm
   set p : Ideal R := Ideal.comap g (maximalIdeal W) with hp
   haveI : p.IsPrime := Ideal.comap_isPrime g (maximalIdeal W)
   obtain ⟨r₀, hr₀u, hr₀⟩ : ∃ r, IsUnit (g r) ∧ ¬ IsUnit r := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hg ⟨fun r hr => h r hr⟩
   have hr₀p : r₀ ∉ p := fun h => ((mem_maximalIdeal _).1 (Ideal.mem_comap.1 h)) hr₀u
   have hpm : p ≤ maximalIdeal R := le_maximalIdeal (Ideal.IsPrime.ne_top inferInstance)
@@ -177,8 +176,7 @@ theorem GlobalTheory.exists_trait_nonlocal_torusExtension : ∀ (R : Type) [Comm
     obtain ⟨b, hb⟩ := v.2
     refine (Units.mkOfMulEqOne a b (hinjA ?_)).isUnit
     have := congrArg Subtype.val huv
-    rw [map_mul, map_one, hb]
-    exact this
+    rwa [map_mul, map_one, hb]
   let κ := ResidueField W
   let gA : (R ⧸ p) →+* κ := Ideal.Quotient.lift p ((residue W).comp g) (fun a ha => by
     show residue W (g a) = 0
@@ -216,5 +214,4 @@ theorem GlobalTheory.exists_trait_nonlocal_torusExtension : ∀ (R : Type) [Comm
     show i (α₀ (algebraMap (R ⧸ p) k₀ (Ideal.Quotient.mk p r))) = _
     rw [h1]
     simp [g₀, gA, IsFractionRing.lift_algebraMap]
-  · rw [← key, spMap_comp']
-    exact T₂
+  · rwa [← key, spMap_comp']

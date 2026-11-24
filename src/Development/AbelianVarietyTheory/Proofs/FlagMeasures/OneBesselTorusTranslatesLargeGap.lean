@@ -241,8 +241,7 @@ theorem ampTK_pt (H : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) (μG
     have h1 := hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem _ hγ) _ (hG.inv_mem _ ha.1.1)) _ hγ
     have h3 : γ⁻¹ * (Matrix.of a)⁻¹ * γ * Matrix.of x ∈ UH (Hpk k r) := hx
     have h2 := hG.mul_mem _ (hG.inv_mem _ h1) _ h3
-    rw [Matrix.nonsing_inv_mul_cancel_left _ _ (hG.unit _ h1)] at h2
-    exact h2
+    rwa [Matrix.nonsing_inv_mul_cancel_left _ _ (hG.unit _ h1)] at h2
   have hI := integrable_ker L hγ w v v' ξ ξ' hμ aν (e := Formalism.FourierDecayAlt.ThreeDimData.aOf r h - 1) hb0 (by linarith) hint
     (fun x hx => by rw [neg_sub]; exact hC w hsm x hx) (fun x hx => by rw [neg_sub]; exact hC' w hsm x hx)
   have hgrp : ∀ᵐ p ∂ν, ∫ x, ker L γ w v v' ξ ξ' (p, x) ∂μG =
@@ -502,8 +501,7 @@ theorem gap_thresholds (k r : ℕ) (hk : 1 ≤ k) :
     linarith only [hX3, hXmul, hN3]
   · rw [ha]
     linarith only [hprod, hAG, m1, m2, m3, m4, hbig]
-  · rw [ha]
-    rw [← hPdef]
+  · rw [ha, ← hPdef]
     linarith only [hAG, m3, m4, m5, hbig]
   · unfold GlobalTheory.CellAmp.GapCell
     rw [ha]
@@ -753,12 +751,7 @@ open Formalism.FourierDecayAlt.P.TwoByOneBlock Formalism.FourierDecayAlt.P.BigCe
 
 variable {k r : ℕ}
 
-theorem hb_mul_self : Hb k * Hb k = 1 := by
-  unfold Hb
-  rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> norm_num
+theorem hb_mul_self : Hb k * Hb k = 1 := Formalism.FourierDecayAlt.P.TwoByOneBlock.Hb_sq
 
 theorem isUnit_det_of_hb {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (h : μᴴ * Hb k * μ = Hb k) :
     IsUnit μ.det := by
@@ -777,16 +770,16 @@ theorem conj_mem_of_levi (A B n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k +
     have hea : ¬ mid k r (eI k r a) := by
       have := a.isLt; simp only [mid, eI]; omega
     rw [Matrix.mul_apply, Finset.sum_eq_single (eI k r a)]
-    · rw [hB1 _ _ hea, if_pos rfl, mul_one, Matrix.mul_apply, Finset.sum_eq_single (eI k r a)]
-      · rw [hn.2.1 a (eI k r a) (by simp [eI]), if_pos rfl, mul_one, hA1 _ _ hea]
+    · rw [hB1 _ _ hea, ite_eq_left rfl, mul_one, Matrix.mul_apply, Finset.sum_eq_single (eI k r a)]
+      · rw [hn.2.1 a (eI k r a) (by simp [eI]), ite_eq_left rfl, mul_one, hA1 _ _ hea]
       · intro l _ hl
         by_cases hla : a.val ≤ l.val
-        · rw [hn.2.1 a l hla, if_neg hl, mul_zero]
+        · rw [hn.2.1 a l hla, ite_eq_right hl, mul_zero]
         · have hlm : ¬ mid k r l := by have := a.isLt; simp only [mid]; omega
-          rw [hA1 i l hlm, if_neg (by rw [Fin.ext_iff]; omega), zero_mul]
+          rw [hA1 i l hlm, ite_eq_right (by rw [Fin.ext_iff]; omega), zero_mul]
       · simp
     · intro l _ hl
-      rw [hB1 _ _ hea, if_neg hl, mul_zero]
+      rw [hB1 _ _ hea, ite_eq_right hl, mul_zero]
     · simp
   · intro i j hj1 hj2 hi
     have hjm : mid k r j := ⟨hj1, hj2⟩
@@ -796,12 +789,12 @@ theorem conj_mem_of_levi (A B n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k +
       by_cases hm : mid k r m
       · congr 1
         rw [Matrix.mul_apply, Finset.sum_eq_single m]
-        · rw [hn.2.2 m m hm.1 hm.2 hm.1, if_pos rfl, mul_one]
+        · rw [hn.2.2 m m hm.1 hm.2 hm.1, ite_eq_left rfl, mul_one]
         · intro l _ hl
           by_cases hlr : r ≤ l.val
-          · rw [hn.2.2 l m hm.1 hm.2 hlr, if_neg hl, mul_zero]
+          · rw [hn.2.2 l m hm.1 hm.2 hlr, ite_eq_right hl, mul_zero]
           · have hlm : ¬ mid k r l := by simp only [mid]; omega
-            rw [hA1 i l hlm, if_neg (by rw [Fin.ext_iff]; omega), zero_mul]
+            rw [hA1 i l hlm, ite_eq_right (by rw [Fin.ext_iff]; omega), zero_mul]
         · simp
       · rw [hB3 m j hjm hm, mul_zero, mul_zero]
     rw [Finset.sum_congr rfl (fun m _ => key m), ← Matrix.mul_apply, hAB, Matrix.one_apply]
@@ -827,7 +820,7 @@ theorem cellQuot_props (c : Fin r → ℂ) (μ₁ μ : Matrix (Fin (k + 1)) (Fin
       · obtain ⟨s, rfl⟩ := mid_exists hi
         rw [jV_wI]
         simp only [Pi.single_apply, wI_inj.eq_iff]
-      · rw [jV_out _ hi, Pi.single_apply, if_neg (fun he : i = wI k r t => hi (he ▸ mid_wI t))]
+      · rw [jV_out _ hi, Pi.single_apply, ite_eq_right (fun he : i = wI k r t => hi (he ▸ mid_wI t))]
     have col : ((bigCell k r c μ₁)⁻¹ * bigCell k r c μ) m (wI k r t) =
         (((bigCell k r c μ₁)⁻¹ * bigCell k r c μ) *ᵥ Pi.single (wI k r t) 1) m := by
       rw [Matrix.mulVec_single_one]; rfl
@@ -1018,8 +1011,7 @@ theorem integrable_mul_right : ∀ (k r : ℕ) (L : Formalism.MainNotions.S.LocB
     unfold pairMeas
     rw [lintegral_prod _ hm.aemeasurable, lintegral_prod _ hfm.aemeasurable]
     rw [← lintegral_const_mul' _ _ hC]
-    refine lintegral_congr fun x => ?_
-    exact inner_eq L a hmap hfm x
+    exact lintegral_congr fun x => inner_eq L a hmap hfm x
   have hfin : ∫⁻ p, f p ∂(pairMeas L) < ⊤ :=
     (hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall hQ0)).1 hint.2
   refine ⟨(GlobalTheory.CellMaj.meas_pairMaj (γ₁ * a) b).aestronglyMeasurable, ?_⟩
@@ -1145,8 +1137,8 @@ theorem conv_good (k r : ℕ) (L : Formalism.MainNotions.S.LocBessel k r) (h : �
       rw [Matrix.diagonal_apply]
       show _ = if i = j then _ else _
       by_cases h : i = j
-      · rw [if_pos h, if_pos h, h]
-      · rw [if_neg h, if_neg h]
+      · rw [ite_eq_left h, ite_eq_left h, h]
+      · rw [ite_eq_right h, ite_eq_right h]
   have hR := GlobalTheory.AmpNorm.rStab_bigCell c μ₁ hc hg
   have hcd := GlobalTheory.CellAmp.Model.cellData_open L 0 _ hg hinv hG hmono hR
   exact GlobalTheory.CellMaj.cellConv k r L h 0 _ _ _ _ hκ hok hgap hcd hmono
@@ -1257,14 +1249,12 @@ theorem oneBesselTor_of_gapHyp : GlobalTheory.GapIn.Hyp → ∃ Cgf : ℝ, ∀ D
   · have hs' := hs
     obtain ⟨m, x, y, X, hxy, -, hsdef⟩ := hs'
     have hx : ∃ x ∈ (rep L).TK, l x ≠ 0 := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       apply hs0
       rw [hsdef]
       exact Finset.sum_eq_zero fun i _ => by rw [hne _ (hxy i).1, inner_zero_left]
     have hy : ∃ y ∈ (rep L).TK, l' y ≠ 0 := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       apply hs0
       rw [hsdef]
       exact Finset.sum_eq_zero fun i _ => by rw [hne _ (hxy i).2, map_zero, inner_zero_right]

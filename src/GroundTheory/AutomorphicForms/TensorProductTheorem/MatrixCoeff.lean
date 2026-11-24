@@ -37,16 +37,14 @@ theorem orbitSpan_eq_top {ρ : Representation ℂ G V} [ρ.IsIrreducible] {v : V
   · exfalso
     apply hv
     have := mem_orbitSpan_self ρ v
-    rw [h] at this
-    exact this
+    rwa [h] at this
   · exact h
 
 theorem mem_span_orbit {ρ : Representation ℂ G V} [ρ.IsIrreducible] {v : V} (hv : v ≠ 0) (x : V) :
     x ∈ Submodule.span ℂ (range fun g => ρ g v) := by
   have := orbitSpan_eq_top (ρ := ρ) hv
   have hx : x ∈ (⊤ : Subrepresentation ρ).toSubmodule := trivial
-  rw [← this] at hx
-  exact hx
+  rwa [← this] at hx
 
 theorem eq_zero_of_forall_apply {ρ : Representation ℂ G V} [ρ.IsIrreducible] {v : V} (hv : v ≠ 0)
     {l : Module.Dual ℂ V} (h : ∀ g, l (ρ g v) = 0) : l = 0 := by

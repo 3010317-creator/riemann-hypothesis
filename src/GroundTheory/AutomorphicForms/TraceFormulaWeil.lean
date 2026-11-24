@@ -32,11 +32,9 @@ theorem isFundamentalDomain_preimage_mul_right (L : Subgroup H) [DiscreteTopolog
   obtain ⟨l, hl, hlu⟩ := existsUnique_smul_mem_fundamentalDomain L (h * g)
   refine ⟨l, ?_, fun l' hl' => hlu l' ?_⟩
   · show (l • h) * g ∈ fundamentalDomain L
-    rw [smul_mul_assoc]
-    exact hl
+    rwa [smul_mul_assoc]
   · have hl'' : (l' • h) * g ∈ fundamentalDomain L := hl'
-    rw [smul_mul_assoc] at hl''
-    exact hl''
+    rwa [smul_mul_assoc] at hl''
 
 theorem isMulRightInvariant_of_compactSpace (L : Subgroup H) [DiscreteTopology L]
     [CompactSpace (RightCosetSpace L)] (ν : Measure H) [ν.IsHaarMeasure] :

@@ -101,8 +101,7 @@ theorem contDiff_insertNth_pair {D : ℕ} (j : Fin (D + 1)) :
     exact (contDiff_apply ℝ (fun _ => ℂ) i).comp contDiff_snd
 
 theorem uPair_contDiff {D : ℕ} (j : Fin (D + 1)) {u : (Fin (D + 1) → ℂ) → ℝ}
-    (hu : ContDiff ℝ 2 u) : ContDiff ℝ 2 (uPair j u) := by
-  exact hu.comp (contDiff_insertNth_pair j)
+    (hu : ContDiff ℝ 2 u) : ContDiff ℝ 2 (uPair j u) := hu.comp (contDiff_insertNth_pair j)
 
 theorem uPair_hasCompactSupport {D : ℕ} (j : Fin (D + 1)) {u : (Fin (D + 1) → ℂ) → ℝ}
     (hs : HasCompactSupport u) : HasCompactSupport (uPair j u) := by
@@ -210,8 +209,7 @@ theorem integral_log_coord_mul_fderiv {D : ℕ} (j : Fin (D + 1)) {g : (Fin (D +
     refine Filter.Eventually.of_forall fun z t _ => ?_
     have h1 : HasDerivAt (fun t : ℝ => z + t • x) x t := by
       simpa using ((hasDerivAt_id t).smul_const x).const_add z
-    have h2 := (hdiff (z + t • x)).hasFDerivAt.comp_hasDerivAt t h1
-    exact h2.const_mul (f z)
+    exact ((hdiff (z + t • x)).hasFDerivAt.comp_hasDerivAt t h1).const_mul (f z)
   obtain ⟨-, hder⟩ := hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (Metric.ball_mem_nhds (0 : ℝ) one_pos) hmeas hint hmeas' hbound hboundint hd
   have hc : HasDerivAt (fun t => ∫ z, F t z) 0 0 := by
@@ -403,7 +401,7 @@ theorem fTerm_props (i : Fin (n + 1)) {h : (Fin (n + 1) → ℂ) → ℝ} (hh : 
       field_simp
     have e' : fTerm i h i i = fun z =>
         (Real.pi / 2) * (1 / ((n : ℝ) + 1)) * (Real.log ‖z i‖ * ddcCoordDens i h z) := funext e
-    rw [e', if_pos ⟨rfl, rfl⟩, integral_const_mul, hG.2]
+    rw [e', ite_eq_left ⟨rfl, rfl⟩, integral_const_mul, hG.2]
     exact ⟨hG.1.const_mul _, rfl⟩
   · have hne : (j, k) ≠ (i, i) := fun h' => hjk ⟨(Prod.mk.inj h').1, (Prod.mk.inj h').2⟩
     have hm := greenMixed_thm n i j k h hh hhc hne
@@ -412,7 +410,7 @@ theorem fTerm_props (i : Fin (n + 1)) {h : (Fin (n + 1) → ℂ) → ℝ} (hh : 
         (Real.log ‖z i‖ : ℂ) * (hessC h z j k * M)) := by
       simpa [mul_assoc] using hm.1.mul_const M
     refine ⟨Complex.reCLM.integrable_comp hi, ?_⟩
-    rw [if_neg hjk]
+    rw [ite_eq_right hjk]
     have := Complex.reCLM.integral_comp_comm hi
     simp only [Complex.reCLM_apply] at this
     simp only [fTerm]
@@ -572,8 +570,7 @@ theorem log_norm_integral_formula : PoincareLelongHyperplane := by
   have hf : (hypInclAt (n := n) 0) = hypIncl := funext hypInclAt_zero
   have h := log_norm_integral_at_coordinate n 0 U v φ hp
   unfold densHypAt at h
-  rw [hf] at h
-  exact h
+  rwa [hf] at h
 
 theorem log_norm_integral_formula_unit : PoincareLelongUnitPower := by
   intro n m U v φ u hp hu hu0

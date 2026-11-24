@@ -147,8 +147,7 @@ theorem exists_smul_stdVec_mem_integralCore (a : ι × κ) :
     exact zero_mem _
   obtain ⟨d, hd0, hd⟩ := exists_forall_mul_mem_of_mem_nhds hW
   refine ⟨algebraMap (𝓞 K) K d, ?_, ?_⟩
-  · rw [Ne, ← RingOfIntegers.coe_eq_algebraMap, RingOfIntegers.coe_eq_zero_iff]
-    exact hd0
+  · rwa [Ne, ← RingOfIntegers.coe_eq_algebraMap, RingOfIntegers.coe_eq_zero_iff]
   · have := hd 1 (one_mem _)
     rwa [mul_one] at this
 
@@ -192,20 +191,17 @@ theorem isOpen_coreStabilizer :
     rw [Set.mem_singleton_iff] at hg
     subst hg
     show unitaryMat (1 : unitaryPoints K E H (FinAdele K)) *ᵥ x ∈ integralCore ι b
-    rw [show unitaryMat (1 : unitaryPoints K E H (FinAdele K)) = 1 from rfl, Matrix.one_mulVec]
-    exact hx
+    rwa [show unitaryMat (1 : unitaryPoints K E H (FinAdele K)) = 1 from rfl, Matrix.one_mulVec]
   obtain ⟨u, v, hu, -, h1u, hΛv, huv⟩ :=
     generalized_tube_lemma isCompact_singleton hΛc (hΛo.preimage hA) hsub
   have h1 : (1 : unitaryPoints K E H (FinAdele K)) ∈ u := h1u rfl
   have hmem : ∀ g ∈ u, ∀ x ∈ integralCore ι b, unitaryMat g *ᵥ x ∈ integralCore ι b := by
     intro g hg x hx
     have := huv (Set.mk_mem_prod hg (hΛv hx))
-    rw [Set.mem_preimage] at this
-    exact this
+    rwa [Set.mem_preimage] at this
   have h1' : (1 : unitaryPoints K E H (FinAdele K)) ∈ (fun g => g⁻¹) ⁻¹' u := by
     show (1 : unitaryPoints K E H (FinAdele K))⁻¹ ∈ u
-    rw [inv_one]
-    exact h1
+    rwa [inv_one]
   have hW : u ∩ (fun g => g⁻¹) ⁻¹' u ∈ 𝓝 (1 : unitaryPoints K E H (FinAdele K)) :=
     Filter.inter_mem (hu.mem_nhds h1) ((hu.preimage continuous_inv).mem_nhds h1')
   refine Subgroup.isOpen_of_mem_nhds _ (Filter.mem_of_superset hW ?_)
@@ -357,22 +353,18 @@ theorem mem_coreStabilizer_of_coreLattice_eq {g g' : unitaryPoints K E H (FinAde
   constructor
   · have : unitaryMat g' *ᵥ u ∈ transCore b H g' := by
       show unitaryMat g'⁻¹ *ᵥ (unitaryMat g' *ᵥ u) ∈ integralCore ι b
-      rw [mulVec_mulVec, unitaryMat_inv_mul, one_mulVec]
-      exact hu
+      rwa [mulVec_mulVec, unitaryMat_inv_mul, one_mulVec]
     rw [← hT] at this
     change unitaryMat g⁻¹ *ᵥ (unitaryMat g' *ᵥ u) ∈ integralCore ι b at this
     rw [mulVec_mulVec] at this
-    rw [unitaryMat_mul]
-    exact this
+    rwa [unitaryMat_mul]
   · have : unitaryMat g *ᵥ u ∈ transCore b H g := by
       show unitaryMat g⁻¹ *ᵥ (unitaryMat g *ᵥ u) ∈ integralCore ι b
-      rw [mulVec_mulVec, unitaryMat_inv_mul, one_mulVec]
-      exact hu
+      rwa [mulVec_mulVec, unitaryMat_inv_mul, one_mulVec]
     rw [hT] at this
     change unitaryMat g'⁻¹ *ᵥ (unitaryMat g *ᵥ u) ∈ integralCore ι b at this
     rw [mulVec_mulVec] at this
-    rw [_root_.mul_inv_rev, inv_inv, unitaryMat_mul]
-    exact this
+    rwa [_root_.mul_inv_rev, inv_inv, unitaryMat_mul]
 
 theorem coreLattice_eq_of_mem_coreStabilizer {g g' : unitaryPoints K E H (FinAdele K)}
     (h : g⁻¹ * g' ∈ coreStabilizer b H) : coreLattice b H g = coreLattice b H g' := by
@@ -380,8 +372,7 @@ theorem coreLattice_eq_of_mem_coreStabilizer {g g' : unitaryPoints K E H (FinAde
   ext x
   rw [mem_coreLattice, mem_coreLattice, _root_.mul_inv_rev, unitaryMat_mul, ← mulVec_mulVec]
   constructor
-  · intro hx
-    exact (hk _ hx).2
+  · exact fun hx => (hk _ hx).2
   · intro hx
     have := (hk _ hx).1
     rwa [mulVec_mulVec, unitaryMat_mul_inv, one_mulVec] at this
@@ -608,8 +599,7 @@ theorem isUnit_det_traceGram_of_isUnit (hH : IsUnit H.det) : IsUnit (traceGram H
     funext a
     simp [vecCoords]
   obtain ⟨i, hi⟩ : ∃ i, X i ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hX0 (funext hc)
   have hci : conjBase K E K (X i) ≠ 0 := by
     intro h
@@ -617,8 +607,7 @@ theorem isUnit_det_traceGram_of_isUnit (hH : IsUnit H.det) : IsUnit (traceGram H
     rw [← conjBase_conjBase (X i), h, map_zero]
   have hunit : IsUnit (conjBase K E K (X i)) := by
     have h1 : Algebra.TensorProduct.lid K E (conjBase K E K (X i)) ≠ 0 := by
-      intro h
-      exact hci ((Algebra.TensorProduct.lid K E).injective (by rw [h, map_zero]))
+      exact fun h => hci ((Algebra.TensorProduct.lid K E).injective (by rw [h, map_zero]))
     have := (isUnit_iff_ne_zero.2 h1).map (Algebra.TensorProduct.lid K E).symm
     rwa [AlgEquiv.symm_apply_apply] at this
   obtain ⟨u, hu⟩ := hunit
@@ -885,8 +874,7 @@ theorem dictLattice_eq_iff {d : ℤ} (hd : d ≠ 0) {g g' : unitaryPoints F E (g
   exact (AddSubgroup.comap_injective hsurj).eq_iff
 
 theorem mem_smul_addSubgroup_iff (γ : h.unitaryGroup) (S : AddSubgroup W) (x : W) :
-    x ∈ γ • S ↔ γ⁻¹ • x ∈ S := by
-  exact AddSubgroup.mem_pointwise_smul_iff_inv_smul_mem
+    x ∈ γ • S ↔ γ⁻¹ • x ∈ S := AddSubgroup.mem_pointwise_smul_iff_inv_smul_mem
 
 variable [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E]
 
@@ -1024,8 +1012,7 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
     have hx' : coordEquiv F v ((d : E)⁻¹ • x) ∈ coreLattice b (gram h.toSesq v) g := hx
     have := hm' _ (coreLattice_le_adelicLattice b g hx') (i, k)
     rw [vecCoords_coordEquiv, repr_repr_smul_inv_int] at this
-    rw [hcdef, mul_assoc]
-    exact this
+    rwa [hcdef, mul_assoc]
   have hLQ : (dictLattice b h v d g).toIntSubmodule ≤ LinearMap.range (coordSpan b v c) :=
     fun x hx => mem_range_coordSpan b v hc (hcoordL x hx)
 
@@ -1038,8 +1025,7 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
       refine hm g _ fun X hX => ?_
       set x0 := (coordEquiv F v).symm X
       have hx0 : (d : E) • x0 ∈ dictLattice b h v d g := by
-        rw [mem_dictLattice, inv_smul_smul₀ hdE, AddEquiv.apply_symm_apply]
-        exact hX
+        rwa [mem_dictLattice, inv_smul_smul₀ hdE, AddEquiv.apply_symm_apply]
       have h2 := (mem_integralClosure_iff ℤ E).1 (hy _ hx0)
       rw [show X = coordEquiv F v x0 from (AddEquiv.apply_symm_apply _ X).symm, pairE_coordEquiv,
         hsmulL, hconjd, ← hsmulR]
@@ -1051,8 +1037,7 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
         congr 1
         push_cast
         field_simp
-      rw [e, map_zsmul, ← Int.cast_smul_eq_zsmul F]
-      exact h1
+      rwa [e, map_zsmul, ← Int.cast_smul_eq_zsmul F]
     have : (M.natAbs : ℤ) • y ∈ dictLattice b h v d g := by
       rcases Int.natAbs_eq M with hM | hM
       · rwa [← hM]
@@ -1065,8 +1050,7 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
     refine mem_range_coordSpan b v hcn fun i k => ?_
     have := hcoordL _ (hnL y hy) i k
     rw [repr_repr_nsmul] at this
-    rw [mul_assoc]
-    exact this
+    rwa [mul_assoc]
   obtain ⟨hne, hle⟩ := relIndex_ne_zero_and_le_of_nsmul_mem hLP hPQ hM0 hnL
   refine ⟨⟨fun a x hx => ?_, ?_, ?_⟩, fun x hx y hy => (mem_integralClosure_iff ℤ E).2 (hint x hx y hy),
     hne, hle.trans (Nat.pow_le_pow_right (Nat.pos_of_ne_zero hM0)
@@ -1096,9 +1080,8 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
         by_cases hij : i = j
         · subst hij
           simp [Algebra.TensorProduct.one_def]
-        · rw [if_neg hij, if_neg (Ne.symm hij), TensorProduct.tmul_zero]
-      rw [e1, map_zsmul, e2, ← Int.cast_smul_eq_zsmul F]
-      exact hn
+        · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij), TensorProduct.tmul_zero]
+      rwa [e1, map_zsmul, e2, ← Int.cast_smul_eq_zsmul F]
     have hvi : v i = ((d * n : ℤ) : E)⁻¹ • ((d * n) • v i) := by
       rw [← Int.cast_smul_eq_zsmul E (d * n), inv_smul_smul₀ (by exact_mod_cast mul_ne_zero hd0 hn0)]
     rw [SetLike.mem_coe, hvi]

@@ -116,8 +116,7 @@ private lemma dom_integrableOn {a : ℝ} (ha : 1 < a) : IntegrableOn dom (Set.Io
     unfold dom
     have hpos : 0 < x * Real.log x ^ 2 := mul_pos (by linarith) (pow_pos (Real.log_pos hx1) 2)
     exact (one_div_pos.2 hpos).le
-  · have h := (Real.tendsto_log_atTop.inv_tendsto_atTop).neg
-    simpa using h
+  · simpa using (Real.tendsto_log_atTop.inv_tendsto_atTop).neg
 
 private lemma exp_sqrt_le {c : ℝ} (hc : 0 < c) {x : ℝ} (hx : 1 < x) :
     Real.exp (-c * Real.sqrt (Real.log x)) ≤ 24 / c ^ 4 / Real.log x ^ 2 := by
@@ -202,8 +201,7 @@ private lemma core_integrable {a : ℕ → ℂ} {m : ℂ} (h : RemBound a m) :
             refine add_le_add ?_ le_rfl
             apply Finset.sum_le_sum_of_subset_of_nonneg
             · exact Finset.Icc_subset_Icc le_rfl (Nat.floor_mono ht.2)
-            · intro i _ _
-              exact norm_nonneg _
+            · exact fun i _ _ => norm_nonneg _
     calc ‖rem a m t‖ * t ^ (-((1 : ℝ) + 1)) ≤ (∑ k ∈ Icc 1 ⌊x₁⌋₊, ‖a k‖ + ‖m‖ * x₁) * 1 :=
           mul_le_mul hr hp (Real.rpow_nonneg ht0.le _) (le_trans (norm_nonneg _) hr)
       _ = ∑ k ∈ Icc 1 ⌊x₁⌋₊, ‖a k‖ + ‖m‖ * x₁ := mul_one _
@@ -332,8 +330,7 @@ private lemma zeta_logderiv_limit :
     have h4 : Tendsto (fun s => deriv g s / g s) (𝓝[≠] 1) (𝓝 (deriv g 1 / g 1)) :=
       (hcd.div (hdiff 1).continuousAt (by rw [h1]; exact one_ne_zero)).tendsto.mono_left
         nhdsWithin_le_nhds
-    rw [hd1, h1, div_one] at h4
-    exact h4
+    rwa [hd1, h1, div_one] at h4
   refine hlim.congr' ?_
   have hne : ∀ᶠ s in 𝓝[≠] (1 : ℂ), g s ≠ 0 :=
     ((hdiff 1).continuousAt.eventually_ne (by rw [h1]; exact one_ne_zero)).filter_mono nhdsWithin_le_nhds
@@ -393,8 +390,7 @@ private theorem logDerivSeries_main : Formalism.HermitianLattices.GL2a2.LogDeriv
   intro q _ χ hχ
   have h : RemBound (fun n : ℕ => ((Λ n : ℝ) : ℂ) * χ (n : ZMod q)) 0 := by
     have h0 := sw_bound q χ
-    rw [if_neg hχ] at h0
-    exact h0
+    rwa [ite_eq_right hχ] at h0
   have hc0 : ((Λ 0 : ℝ) : ℂ) * χ ((0 : ℕ) : ZMod q) = 0 := by simp
   have hs : Tendsto (fun σ : ℝ => (σ : ℂ)) (𝓝[>] 1) (𝓝 1) :=
     (Complex.continuous_ofReal.tendsto' (1 : ℝ) 1 Complex.ofReal_one).mono_left nhdsWithin_le_nhds
@@ -446,8 +442,7 @@ private theorem logDerivSeries_main : Formalism.HermitianLattices.GL2a2.LogDeriv
       apply Complex.continuous_ofReal.comp_continuousOn
       apply ContinuousOn.fun_neg
       apply ContinuousOn.fun_inv₀ (by fun_prop)
-      intro t ht
-      exact pow_ne_zero 2 (show (0 : ℝ) < t from lt_of_lt_of_le one_pos ht).ne'
+      exact fun t ht => pow_ne_zero 2 (show (0 : ℝ) < t from lt_of_lt_of_le one_pos ht).ne'
     exact (hc.congr (fun t ht => hdf t (show (0 : ℝ) < t from lt_of_lt_of_le one_pos ht).ne')).locallyIntegrableOn
       measurableSet_Ici
   have hlim0 : Tendsto (fun n : ℕ => ((((n : ℝ))⁻¹ : ℝ) : ℂ) *
@@ -506,9 +501,8 @@ private theorem psiZeroConst_main : Formalism.HermitianLattices.GL2a2.PsiZeroCon
       | exact MulChar.one_apply (isUnit_of_subsingleton _)
   have h : RemBound (fun n : ℕ => ((Λ n : ℝ) : ℂ)) 1 := by
     have h0 := sw_bound 1 (1 : DirichletCharacter ℂ 1)
-    rw [if_pos rfl] at h0
-    simp only [hone, mul_one] at h0
-    exact h0
+    rw [ite_eq_left rfl] at h0
+    simpa only [hone, mul_one] using h0
   have hid : ∀ σ : ℝ, 1 < σ →
       (σ : ℂ) * ∫ t in Set.Ioi (1 : ℝ), rem (fun n : ℕ => ((Λ n : ℝ) : ℂ)) 1 t * (t : ℂ) ^ (-((σ : ℂ) + 1))
         = -(deriv riemannZeta σ / riemannZeta σ + 1 / ((σ : ℂ) - 1)) - 1 := by
@@ -592,8 +586,7 @@ private theorem psiZeroConst_main : Formalism.HermitianLattices.GL2a2.PsiZeroCon
     push_cast
     ring
   have hT := intervalIntegral_tendsto_integral_Ioi 1 hint tendsto_id
-  rw [hval] at hT
-  exact hT
+  rwa [hval] at hT
 
 end Formalism.HermitianLattices.P.PsiZeroIntegral
 

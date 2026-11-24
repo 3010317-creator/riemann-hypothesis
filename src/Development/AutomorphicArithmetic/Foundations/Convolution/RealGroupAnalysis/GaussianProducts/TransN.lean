@@ -49,8 +49,7 @@ open scoped Classical ENNReal nonZeroDivisors
 private theorem nu_nE {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (D : Dat F E) (u : Fin 2 → A F) (h : GL (Fin 2) (A E)) :
     nu F (nE D u * h) = nu F h := by
-  have hd : Matrix.GeneralLinearGroup.det (nE D u) = 1 := by
-    exact Units.ext (nU (D.mkE (u 0) (u 1))).2
+  have hd : Matrix.GeneralLinearGroup.det (nE D u) = 1 := Units.ext (nU (D.mkE (u 0) (u 1))).2
   simp only [nu, map_mul, hd, one_mul]
 
 private theorem om_L {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]

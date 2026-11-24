@@ -64,8 +64,7 @@ theorem sum_act_act (x : R) (g : H) : ∑ k : H, act k (act g x) = ∑ k : H, ac
 
 theorem act_sum_act (x : R) (g : H) : act g (∑ k : H, act k x) = ∑ k : H, act k x := by
 
-  rw [map_sum]
-  rw [← Equiv.sum_comp (Equiv.mulLeft g⁻¹)]
+  rw [map_sum, ← Equiv.sum_comp (Equiv.mulLeft g⁻¹)]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [Equiv.coe_mulLeft, ← act_mul_apply, Subgroup.coe_mul, Subgroup.coe_inv, mul_inv_cancel_left]
 
@@ -173,7 +172,6 @@ theorem embReg_of_groupDet : ∀ (K Γ R : Type) [Field K] [Group Γ] [Finite Γ
       rw [map_mul (act (h : Γ)), Subgroup.coe_mul, Subgroup.coe_inv, ← act_mul_apply act (h : Γ) ((h : Γ)⁻¹ * k),
         mul_inv_cancel_left]
     rw [this]
-  · rw [Nat.card_eq_fintype_card, mul_comm]
-    exact hle
+  · rwa [Nat.card_eq_fintype_card, mul_comm]
 
 end GlobalTheory.BadCount

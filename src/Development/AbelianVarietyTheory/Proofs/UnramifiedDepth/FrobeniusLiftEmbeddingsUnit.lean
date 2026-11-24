@@ -266,8 +266,7 @@ theorem exists_teichmueller_sequence : ∀ (C : Type) [Field C] [CharZero C] (V 
       have := (hπ (e a (x ^ q)) (e a x)).1 (by
         show φ a (x ^ q) = φ a x
         rw [map_pow, hper])
-      rw [map_sub]
-      exact this
+      rwa [map_sub]
     have h2 := hεpow (q - 1)
     rw [Nat.sub_add_cancel hq.le] at h2
     have : (ε * x) ^ q - ε * x = (ε ^ q - ε) * x ^ q + ε * (x ^ q - x) := by ring
@@ -282,8 +281,7 @@ theorem exists_teichmueller_sequence : ∀ (C : Type) [Field C] [CharZero C] (V 
     have h2 : n ≤ d * n + 1 :=
       (Nat.le_mul_of_pos_left n (Nat.pos_of_ne_zero (NeZero.ne d))).trans (Nat.le_succ _)
     have h3 := (pow_dvd_pow (V.l : O) h2).trans h1
-    rw [pow_mul, ← hqdef, ← pow_mul, ← pow_succ'] at h3
-    exact h3
+    rwa [pow_mul, ← hqdef, ← pow_mul, ← pow_succ'] at h3
   have hlim : ∀ a, ∃ z, ∀ n : ℕ, V.Ge n (z - em a (s n)) := fun a => by
     refine hcomp (fun n => em a (s n)) fun n => ?_
     obtain ⟨y, hy⟩ := hsd n
@@ -333,8 +331,7 @@ theorem exists_teichmueller_sequence : ∀ (C : Type) [Field C] [CharZero C] (V 
       (by rw [← pow_mul, mul_comm, pow_mul, hZN, one_pow])
       (by rw [map_pow, hZ, hZ, hφ])
     exact congrArg Subtype.val this
-  · intro a K
-    exact ⟨K, fun n hn => (hζ a n).mono (by exact_mod_cast hn)⟩
+  · exact fun a K => ⟨K, fun n hn => (hζ a n).mono (by exact_mod_cast hn)⟩
 
 end GlobalTheory
 end -- clump:auto

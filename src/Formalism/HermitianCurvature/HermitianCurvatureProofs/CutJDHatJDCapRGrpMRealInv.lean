@@ -85,13 +85,10 @@ theorem rim_rowV (z : Fin (2 * r + k + 1) → ℂ) (J : Fin (r + k) → Fin (2 *
     U.IsPolyDeg 1 (fun g => rowV k r z g J p q) := by
   unfold rowV
   by_cases h : p.val < r
-  · simp only [dif_pos h]
-    exact rim_herm _ _
+  · simpa only [dite_eq_left h] using rim_herm _ _
   · by_cases h2 : p.val = r
-    · simp only [dif_neg h, dif_pos h2]
-      exact rim_herm _ _
-    · simp only [dif_neg h, dif_neg h2]
-      exact pd_const _ 1
+    · simpa only [dite_eq_right h, dite_eq_left h2] using rim_herm _ _
+    · simpa only [dite_eq_right h, dite_eq_right h2] using pd_const _ 1
 
 theorem rim_alJ (z : Fin (2 * r + k + 1) → ℂ) (J : Fin (r + k) → Fin (2 * r + k + 1)) :
     U.IsPolyDeg (2 * r + k + 1) (fun g => alJ k r z g J) :=
@@ -154,8 +151,7 @@ theorem rim_real (z z' : Fin (2 * r + k + 1) → ℂ) (Y ε : ℂ) :
   let idx : List (Fin (k + 1) × (Fin (r + k) → Fin (2 * r + k + 1))) :=
     ((Finset.univ : Finset (Fin (k + 1))) ×ˢ jSetR k r).toList
   have hmem : ((0 : Fin (k + 1)), rowsR k r 0) ∈ idx := by
-    simp only [idx, Finset.mem_toList, Finset.mem_product, Finset.mem_univ, true_and]
-    exact rim_mem
+    simpa only [idx, Finset.mem_toList, Finset.mem_product, Finset.mem_univ, true_and] using rim_mem
   refine ⟨rimCat Θs idx, rimCat_poly hP _, ?_, ?_⟩
   · obtain ⟨i, l, hl⟩ : ∃ i l, idx = i :: l := by
       cases h' : idx with

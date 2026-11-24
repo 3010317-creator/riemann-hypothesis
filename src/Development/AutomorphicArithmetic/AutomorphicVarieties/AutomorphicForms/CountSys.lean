@@ -139,12 +139,10 @@ theorem eventually_natCast_notMem {F : Type} [Field F] [NumberField F] {M : ℕ}
   rw [Filter.eventually_cofinite]
   have hM' : (M : 𝓞 F) ≠ 0 := Nat.cast_ne_zero.mpr hM
   have hI : Ideal.span {(M : 𝓞 F)} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hM'
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   refine (Ideal.finite_factors hI).subset ?_
   intro w hw
   simp only [Set.mem_setOf_eq, not_not] at hw ⊢
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hw
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 end UpperTheory.V.Af

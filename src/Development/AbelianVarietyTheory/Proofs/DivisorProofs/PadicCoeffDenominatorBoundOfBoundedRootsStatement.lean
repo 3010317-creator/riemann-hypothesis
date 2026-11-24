@@ -131,26 +131,7 @@ namespace GlobalTheory
 open Polynomial
 
 theorem not_dvd_den_of_padic_norm_le_one (p : ℕ) [Fact p.Prime] (c : ℚ)
-    (hc : ‖(c : ℚ_[p])‖ ≤ 1) : ¬ p ∣ c.den := by
-  intro hd
-  have hden : ‖((c.den : ℤ) : ℚ_[p])‖ < 1 :=
-    Padic.norm_intCast_lt_one_iff.2 (Int.natCast_dvd_natCast.2 hd)
-  have hnum : ‖((c.num : ℤ) : ℚ_[p])‖ < 1 := by
-    have h1 : ((c.num : ℤ) : ℚ_[p]) = (c : ℚ_[p]) * ((c.den : ℤ) : ℚ_[p]) := by
-      have : (c.num : ℚ) = c * (c.den : ℤ) := by
-        rw [Int.cast_natCast, Rat.mul_den_eq_num]
-      exact_mod_cast congrArg (fun x : ℚ => (x : ℚ_[p])) this
-    rw [h1, norm_mul]
-    calc ‖(c : ℚ_[p])‖ * ‖((c.den : ℤ) : ℚ_[p])‖ ≤ 1 * ‖((c.den : ℤ) : ℚ_[p])‖ :=
-          mul_le_mul_of_nonneg_right hc (norm_nonneg _)
-      _ < 1 := by rw [one_mul]; exact hden
-  have hpn : (p : ℤ) ∣ c.num := Padic.norm_intCast_lt_one_iff.1 hnum
-  have hcop := c.reduced
-  have h2 : p ∣ c.num.natAbs := by
-    rw [← Int.natCast_dvd_natCast, Int.natCast_natAbs]; exact (dvd_abs _ _).2 hpn
-  have h3 := Nat.dvd_gcd h2 hd
-  rw [hcop.gcd_eq_one] at h3
-  exact (Fact.out : p.Prime).ne_one (Nat.dvd_one.1 h3)
+    (hc : ‖(c : ℚ_[p])‖ ≤ 1) : ¬ p ∣ c.den := GlobalTheory.LocalData.not_dvd_den p hc
 
 theorem padic_denom_coeff_of_roots_bounded :
     ∀ (p : ℕ) [Fact p.Prime] (q : Polynomial ℚ), q.Monic → ∀ k : ℕ,
@@ -161,7 +142,7 @@ theorem padic_denom_coeff_of_roots_bounded :
   by_cases hi : q.natDegree < i
   · refine ⟨1, Nat.coprime_one_left _, 0, ?_⟩
     rw [coeff_eq_zero_of_natDegree_lt hi]; simp
-  push_neg at hi
+  push Not at hi
   have hQm : (q.map (algebraMap ℚ (PadicAlgCl p))).Monic := hq.map _
   have hQd : (q.map (algebraMap ℚ (PadicAlgCl p))).natDegree = q.natDegree := natDegree_map _
   have hB := GlobalTheory.norm_coeff_natDegree_sub_le_pow_of_roots_le (PadicAlgCl p) _ hQm ((p : ℝ) ^ k)

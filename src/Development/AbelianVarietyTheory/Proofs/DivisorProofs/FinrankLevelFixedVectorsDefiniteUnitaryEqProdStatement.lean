@@ -189,8 +189,7 @@ theorem exists_split {ρ : Representation ℂ Γ V} (hρ : ρ.IsIrreducible) {σ
       exact ⟨_, heq g t⟩) with h | h
     · refine absurd (LinearMap.ext fun x => ?_) hf0
       have : ev (x ⊗ₜ ⟨f, hf⟩) ∈ LinearMap.range ev := ⟨_, rfl⟩
-      rw [h] at this
-      exact this
+      rwa [h] at this
     · exact LinearMap.range_eq_top.1 h
   have hinj : Function.Injective ev := by
     refine (injective_iff_map_eq_zero ev).2 fun t ht => ?_
@@ -213,8 +212,7 @@ theorem exists_split {ρ : Representation ℂ Γ V} (hρ : ρ.IsIrreducible) {σ
       refine Finset.sum_congr rfl fun i hi => ?_
       rw [TensorProduct.map_tmul, hev, hev, ← key, hr _ (Finset.mem_image_of_mem _ hi)]
       rfl
-    rw [ht, map_zero, map_smulRight, hev] at h1
-    exact h1
+    rwa [ht, map_zero, map_smulRight, hev] at h1
   refine ⟨homSp σ ρ e, inferInstance, inferInstance, homRep σ ρ e hc, LinearEquiv.ofBijective ev ⟨hinj, hsurj⟩,
     fun g => LinearMap.ext fun u => Subtype.ext (LinearMap.ext fun x => ?_), heq⟩
   change ρ ((e (e g))⁻¹ * e g) (u.1 x) = u.1 x

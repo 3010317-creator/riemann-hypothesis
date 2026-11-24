@@ -129,9 +129,7 @@ theorem exists_finset_comps {X : Scheme.{0}} [IsNoetherian X] (E : Closeds X) :
       have hsC : (s : Set X) ⊆ C := hCmax s (hirr s hs) (hsub s hs) hCs
       have hCeq : C = s := SetLike.coe_injective (Set.Subset.antisymm hCs hsC)
       subst hCeq
-      refine ⟨hs, ?_⟩
-      intro s' hs' hle
-      exact hCmax s' (hirr s' hs') (hsub s' hs') hle
+      exact ⟨hs, fun s' hs' hle => hCmax s' (hirr s' hs') (hsub s' hs') hle⟩
   · apply Set.Subset.antisymm
     · intro x hx
       simp only [Set.mem_iUnion, Finset.mem_filter] at hx
@@ -167,8 +165,7 @@ theorem linearIndependent_toCotangent_of_span {A : Type*} [CommRing A] [IsLocalR
     induction hb' using Submodule.span_induction with
     | mem z hz =>
         obtain ⟨i, rfl⟩ := hz
-        intro hz'
-        exact Submodule.subset_span ⟨i, rfl⟩
+        exact fun hz' => Submodule.subset_span ⟨i, rfl⟩
     | zero =>
         intro hz'
         have h0 : (⟨(0 : A), hz'⟩ : IsLocalRing.maximalIdeal A) = 0 := rfl
@@ -314,8 +311,8 @@ theorem exists_coords_containing (k : Type*) [CommRing k] (ι : Type*) [Fintype 
       (∀ x : {j : ι // ¬ (j ∈ Jst)}, w (x : ι) = s (e x)) := by
     refine ⟨fun j => if hj : j ∈ Jst then EtaleCoordinates.coord k ι S j else s (e ⟨j, hj⟩),
       fun j hj => ?_, fun x => ?_⟩
-    · exact dif_pos hj
-    · exact dif_neg x.2
+    · exact dite_eq_left hj
+    · exact dite_eq_right x.2
   have hbasisApply : ∀ x : Fin h ⊕ {j : ι // j ∈ Jst},
       B x = (1 : IsLocalRing.ResidueField A) ⊗ₜ[A]
         KaehlerDifferential.D k A (algebraMap S A (w (τ x))) := by
@@ -374,8 +371,7 @@ private theorem formallyEtale_away_of_isUnit_det' (k : Type*) [CommRing k] (ι :
     Algebra.FormallySmooth.comp k (MvPolynomial ι k) T
   have hdet' : IsUnit ((EtaleCoordinates.basisKaehler k ι T).det
       fun i : ι => KaehlerDifferential.D k T (algebraMap S T (w i))) := by
-    rw [← EtaleCoordinates.algebraMap_det_basisKaehler k ι S T w]
-    exact hdet
+    rwa [← EtaleCoordinates.algebraMap_det_basisKaehler k ι S T w]
   have h := EtaleCoordinates.formallyEtale_aeval_of_isUnit_det (EtaleCoordinates.basisKaehler k ι T)
     (fun i : ι => algebraMap S T (w i)) hdet'
   exact h
@@ -552,11 +548,8 @@ theorem isRadical_span_coord {Y : Scheme.{0}} {k : Type} [Field k] {q : Y ⟶ Sp
   let _ : Algebra (CoordPolynomialRing k m) Γ(Y, V) := c.algebra
   have : Algebra.Etale (CoordPolynomialRing k m) Γ(Y, V) := c.algebra_etale hV
   have h := isRadical_span_singleton_prod_etaleChartCoord k m Γ(Y, V) {j}
-  have hcoord : etaleChartCoord k m Γ(Y, V) j = c.coord j := by
-    show c.coordRingHom (MvPolynomial.X (ULift.up j)) = c.coord j
-    exact c.coordRingHom_X j
-  rw [Finset.prod_singleton, hcoord] at h
-  exact h
+  have hcoord : etaleChartCoord k m Γ(Y, V) j = c.coord j := c.coordRingHom_X j
+  rwa [Finset.prod_singleton, hcoord] at h
 
 theorem radical_coordIdeal_singleton {X : Scheme.{0}} {k : Type} [Field k] {p : X ⟶ Spec (CommRingCat.of k)}
     {U : X.Opens} {m : ℕ} (c : EtaleChart p U m) (j : Fin m) :
@@ -629,9 +622,7 @@ theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X 
   choose N hNV hxN hNirr hNempty using hN
   let B : Set X := ⋃ C ∈ 𝒞.filter (fun C : Closeds X => x ∉ C), (C : Set X)
   have hB : IsClosed B := by
-    refine Set.Finite.isClosed_biUnion (Finset.finite_toSet _) ?_
-    intro C _
-    exact C.isClosed
+    exact Set.Finite.isClosed_biUnion (Finset.finite_toSet _) (fun C _ => C.isClosed)
   have hxB : x ∉ B := by
     intro hx'
     obtain ⟨C, hC, hxC⟩ := Set.mem_iUnion₂.mp hx'
@@ -649,8 +640,7 @@ theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X 
       refine ⟨t, ht, ?_, ⟨hWV hy, hyt⟩⟩
       by_contra hxt
       have : y ∈ Z t ∩ N t := ⟨⟨hWV hy, hyt⟩, hWN t hy⟩
-      rw [hNempty t hxt] at this
-      exact this
+      rwa [hNempty t hxt] at this
     · rintro ⟨t, ht, -, hyt⟩
       exact ⟨t, ht, hyt.2⟩
   have hZirr : ∀ t, x ∈ Z t → IsIrreducible (Z t ∩ W) := by
@@ -681,19 +671,15 @@ theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X 
     simp only [Finset.mem_image, Finset.mem_filter] at hz
     obtain ⟨t, ⟨ht, hxt⟩, rfl⟩ := hz
     refine ⟨t, hxt, le_antisymm ?_ ?_⟩
-    · intro y hy
-      exact ⟨⟨hWV hy.2, hsub hy⟩, hy.2⟩
+    · exact fun y hy => ⟨⟨hWV hy.2, hsub hy⟩, hy.2⟩
     · have hS := hZirr t hxt
-      have hSE : Z t ∩ W ⊆ E := by
-        intro y hy
-        exact (hEW y hy.2).2 ⟨t, ht, hxt, hy.1⟩
+      have hSE : Z t ∩ W ⊆ E := fun y hy => (hEW y hy.2).2 ⟨t, ht, hxt, hy.1⟩
       have hclE : closure (Z t ∩ W) ⊆ E := closure_minimal hSE E.isClosed
       have hCcl : (C : Set X) ⊆ closure (Z t ∩ W) := by
         rw [← closure_inter_open_eq' hCc.1 C.isClosed W.isOpen ⟨x, hxC, hxW⟩]
         exact closure_mono (fun y hy => ⟨⟨hWV hy.2, hsub hy⟩, hy.2⟩)
       have := hCc.2.2 _ hS.closure hclE hCcl
-      intro y hy
-      exact ⟨this (subset_closure hy), hy.2⟩
+      exact fun y hy => ⟨this (subset_closure hy), hy.2⟩
   let lab : Closeds X → Option (Fin m) := fun C =>
     if h : C ∈ 𝒞 ∧ x ∈ C then some (Classical.choose (hcomp C h.1 h.2)) else none
   have hlab : ∀ C ∈ 𝒞, ∀ t, lab C = some t → x ∈ Z t ∧ (C : Set X) ∩ W = Z t ∩ W := by
@@ -720,16 +706,14 @@ theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X 
     rw [restrictIdeal_eq_top_iff_forall_notMem_support]
     intro y hyW hyC
     have hyC' : y ∈ (C : Set X) := by
-      rw [← SetLike.mem_coe, Scheme.IdealSheafData.coe_support_vanishingIdeal] at hyC
-      exact hyC
+      rwa [← SetLike.mem_coe, Scheme.IdealSheafData.coe_support_vanishingIdeal] at hyC
     have hxC : x ∉ (C : Set X) := by
       intro hxC
-      have h' : lab C = some (Classical.choose (hcomp C hC hxC)) := dif_pos ⟨hC, hxC⟩
+      have h' : lab C = some (Classical.choose (hcomp C hC hxC)) := dite_eq_left ⟨hC, hxC⟩
       rw [h'] at hnone
       cases hnone
     apply hyW.2
-    simp only [B, Set.mem_iUnion, Finset.mem_filter, exists_prop]
-    exact ⟨C, ⟨hC, hxC⟩, hyC'⟩
+    simpa only [B, Set.mem_iUnion, Finset.mem_filter, exists_prop] using ⟨C, ⟨hC, hxC⟩, hyC'⟩
   · intro C hC t ht
     obtain ⟨-, e⟩ := hlab C hC t ht
     rw [← radical_coordIdeal_singleton, ← Scheme.IdealSheafData.vanishingIdeal_support,
@@ -789,8 +773,7 @@ theorem mem_E_iff_of_ideal_eq {X : Scheme.{0}} (E : Closeds X) (U : X.affineOpen
   have hU : (⟨U.1, U.2⟩ : X.affineOpens) = U := rfl
   rw [hU, hid]
   constructor
-  · intro h
-    exact (notMem_basicOpen_prod_iff f J y).1 (h _ (Ideal.mem_span_singleton_self _)) hy
+  · exact fun h => (notMem_basicOpen_prod_iff f J y).1 (h _ (Ideal.mem_span_singleton_self _)) hy
   · intro h g hg
     rw [Ideal.mem_span_singleton] at hg
     obtain ⟨a, rfl⟩ := hg
@@ -842,20 +825,20 @@ theorem gBoundary : PositivityTheory.ResPlug.WeightsCompactStabilizer.GBoundary 
     · intro i hi i' hi' s hs hs'
       simp only [List.length_map] at hi hi'
       dsimp only at hs hs'
-      rw [dif_pos hi] at hs
-      rw [dif_pos hi'] at hs'
+      rw [dite_eq_left hi] at hs
+      rw [dite_eq_left hi'] at hs'
       have := h1 _ (Finset.mem_toList.mp (List.getElem_mem hi)) _
         (Finset.mem_toList.mp (List.getElem_mem hi')) s hs hs'
       exact (hnd.getElem_inj_iff).mp this
     · intro i hi hnone
       simp only [List.length_map] at hi
       dsimp only at hnone
-      rw [dif_pos hi] at hnone
+      rw [dite_eq_left hi] at hnone
       simpa using h2 _ (Finset.mem_toList.mp (List.getElem_mem hi)) hnone
     · intro i hi s hs
       simp only [List.length_map] at hi
       dsimp only at hs
-      rw [dif_pos hi] at hs
+      rw [dite_eq_left hi] at hs
       simpa using h3 _ (Finset.mem_toList.mp (List.getElem_mem hi)) s hs
   · rw [← hcov]
     ext y

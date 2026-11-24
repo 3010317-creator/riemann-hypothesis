@@ -62,8 +62,7 @@ theorem isMultiProjPrime_red [∀ k, Fintype (ι k)] {J : Ideal (MRing ι)} (hJ 
     exact ⟨a, fun m hm => ha m (support_map_subset _ _ hm)⟩
   · obtain ⟨i, hi⟩ := hJr k
     refine ⟨i, fun h => hi ((mem_map_red_iff p hp _).mp ?_)⟩
-    rw [map_X]
-    exact h
+    rwa [map_X]
 
 variable {K' : Type} {ι' : K' → Type}
 
@@ -137,8 +136,7 @@ theorem geoNum_eq_zero
   have hpQ : ((p : ℕ) : MRing ι) ∉ imageZ v P' := by
     intro h
     have h2 : ((p : ℕ) : ℤ) ∈ (imageZ v P').comap (C : ℤ →+* MRing ι) := by
-      rw [Ideal.mem_comap, map_natCast]
-      exact h
+      rwa [Ideal.mem_comap, map_natCast]
     rw [hQh, Ideal.mem_bot] at h2
     exact hpr.ne_zero (by exact_mod_cast h2)
   have hdim := krullDim_quot_add_one_le hle hpI hpQ
@@ -175,7 +173,7 @@ theorem ProjectivePointVertical.proof
   · obtain ⟨hWm, hpr, hWd⟩ := hvert hh
     have hPW : P' ≤ W := le_sup_left.trans hW.1.1.2
     have e : (fun j => (L' j).a) = fun j => pullDeg κ (L j).a := funext fun j => (hL j).1
-    simp only [if_neg hh, e, geoNum_eq_zero hGeo hR4 hPC hv hP hdn hPW hWm hpr hWd (fun j => (L j).a)]
+    simp only [ite_eq_right hh, e, geoNum_eq_zero hGeo hR4 hPC hv hP hdn hPW hWm hpr hWd (fun j => (L j).a)]
     simp
 
 end GroundTheory.Heights₂.Heights.Inter

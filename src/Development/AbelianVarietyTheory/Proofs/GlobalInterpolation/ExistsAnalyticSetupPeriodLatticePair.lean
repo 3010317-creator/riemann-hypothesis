@@ -96,7 +96,7 @@ theorem hf_coord (T : Tor D) (z w : VC D N N') :
         = (∑ k, u k * starRingEnd ℂ (v k)) / (area T.abelian₂ : ℂ) := by
     intro u v
     simp only [JMB.hf, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_div]
+      ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_div]
     exact Finset.sum_congr rfl fun k _ => by ring
   rw [h1, Hf]
   congr 1
@@ -251,14 +251,12 @@ theorem setup_ok (B : Base D cc δ) (hcc : IsCurveIdeal D cc) (hδ : IsDiscrimin
         = f '' (La D (tor0 D cc δ) L L' : Set (VC D N N')) := by
       ext y
       constructor
-      · intro hy
-        exact ⟨(coord D N N').symm y, hy, by simp [f]⟩
+      · exact fun hy => ⟨(coord D N N').symm y, hy, by simp [f]⟩
       · rintro ⟨x, hx, rfl⟩
         show (coord D N N').symm (coord D N N' x) ∈ La D (tor0 D cc δ) L L'
         simpa using hx
     rw [hset, Submodule.span_image, hspan, Submodule.map_top, LinearMap.range_eq_top]
-    intro y
-    exact ⟨(coord D N N').symm y, by simp [f]⟩
+    exact fun y => ⟨(coord D N N').symm y, by simp [f]⟩
   ·
     intro x hx
     obtain ⟨o, ho⟩ := (hOK (GlobalTheory.MomOne.wK D.host.d)).1 ⟨0, 1, by simp⟩

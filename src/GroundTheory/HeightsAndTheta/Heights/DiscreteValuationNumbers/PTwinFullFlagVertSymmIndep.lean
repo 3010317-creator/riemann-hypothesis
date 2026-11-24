@@ -64,7 +64,7 @@ theorem le_of_mem_ratCyc_support {O : Type} [CommRing O] [IsDomain O] [IsDiscret
     by_contra hPW
     apply hs
     simp only [ReciprocityTheory.ChartRestriction.G.Geo.divCycle, Finsupp.ofSupportFinite_coe]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨hmin, -⟩
     exact hPW (le_trans le_sup_left hmin.1.2)
   rw [Finsupp.mem_support_iff] at hW
@@ -92,11 +92,9 @@ theorem FullFlagVerticalSymmetric.proof (hFib : VerticalDivisorFibreVariety.Stat
   obtain ⟨fl₂', h₂, -⟩ := hfl fl₂
   have hV' : ReciprocityTheory.ChartRestriction.G.AI.I1.IsProjVarF (IndefiniteRowSideFullHecke.NumbersDVR.Bundles.mcIdeal (IsLocalRing.ResidueField O)
       (IndefiniteRowSideFullHecke.NumbersDVR.Bundles.genPt (IsLocalRing.ResidueField O) (IndefiniteRowSideFullHecke.NumbersDVR.Bundles.redIdeal O W))) d := by
-    rw [hmc]
-    exact hV
+    rwa [hmc]
   have := SegreFlagIndep.segreFlagIndep_homogeneous_implies_general _ _ ι (hSeg (IsLocalRing.ResidueField O) _ K ι)
     (IndefiniteRowSideFullHecke.NumbersDVR.Bundles.genPt _ (IndefiniteRowSideFullHecke.NumbersDVR.Bundles.redIdeal O W)) d hV' N _ B' fl₁' fl₂' I hI G hG n Y R
-  rw [hmc, h₁, h₂] at this
-  exact this
+  rwa [hmc, h₁, h₂] at this
 
 end GroundTheory.Heights₂.Heights.NumbersDVR

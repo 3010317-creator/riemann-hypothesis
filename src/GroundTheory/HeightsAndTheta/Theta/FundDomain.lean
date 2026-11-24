@@ -79,8 +79,7 @@ theorem existsUnique_mem_firstHit (Γ : Subgroup G) (A : ℕ → Set G)
     simpa [mul_assoc] using hjA
   refine ⟨⟨γ, hγ⟩, ?_, ?_⟩
   · show ((⟨γ, hγ⟩ : Γ) • x ∈ firstHit Γ A)
-    rw [Subgroup.smul_def, smul_eq_mul]
-    exact hγF
+    rwa [Subgroup.smul_def, smul_eq_mul]
   ·
     have key : ∀ (α β : Γ), (α : G) * x ∈ firstHit Γ A → (β : G) * x ∈ firstHit Γ A →
         ∀ i i', (α : G) * x ∈ A i \ saturate Γ (⋃ j < i, A j) →
@@ -137,8 +136,7 @@ theorem exists_isFundamentalDomain_of_isCompact [MeasurableSpace G] [BorelSpace 
     show γ * x ∈ (if h : n < l.length then V (l.get ⟨n, h⟩) else ∅)
     rw [dite_eq_left hn]
     have hget : l.get ⟨n, hn⟩ = c := hnc
-    rw [hget]
-    exact hcV'
+    rwa [hget]
   choose L hL hVL' using hVL
   refine ⟨firstHit Γ A, ⋃ c ∈ t, L c, measurableSet_firstHit Γ hAo,
     t.isCompact_biUnion fun c _ => hL c, ?_, existsUnique_mem_firstHit Γ A hinj hcovA⟩

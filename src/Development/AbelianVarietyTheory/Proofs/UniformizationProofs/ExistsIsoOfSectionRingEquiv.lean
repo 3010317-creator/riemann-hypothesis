@@ -120,8 +120,7 @@ theorem exists_quot {M : LB X} (t u : M.Sec) (W : X.Opens) (hW : W ≤ nonzeroLo
   have hu : ∀ j, IsUnit (resG X (inf_le_right : W ⊓ M.U j ≤ M.U j) (u.f j)) := fun j =>
     X.toRingedSpace.isUnit_of_isUnit_germ _ _ fun y hy => by
       have := (mem_nonzeroLocus_iff_isUnit u hy.2).1 (hW hy.1)
-      rw [← gs_res (𝟙 X) y (inf_le_right : W ⊓ M.U j ≤ M.U j) hy, gs_eq _ y _ hy] at this
-      exact this
+      rwa [← gs_res (𝟙 X) y (inf_le_right : W ⊓ M.U j ≤ M.U j) hy, gs_eq _ y _ hy] at this
   obtain ⟨v, hv⟩ : ∃ v : ∀ j, Γ(X, W ⊓ M.U j), ∀ (y : X) j, y ∈ W ⊓ M.U j →
       gs (𝟙 X) y _ (t.f j) = gs (𝟙 X) y _ (u.f j) * gs (𝟙 X) y _ (v j) :=
     ⟨fun j => ((hu j).unit⁻¹).val * resG X inf_le_right (t.f j), fun y j hy => by
@@ -512,8 +511,7 @@ theorem Corresp.over {R : Type} [CommRing R] {X X' Z : Scheme.{0}} {L : LB X} {L
       gs (𝟙 Z) z ⊤ ((χ ≫ q).appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom c)) = gs χ z ⊤ (scal q c) :=
     fun χ q => by
       have e := gs_pull (𝟙 Z) χ z ⊤ trivial (scal q c)
-      rw [Category.id_comp] at e
-      exact e
+      rwa [Category.id_comp] at e
   rw [v, v]
   obtain ⟨i, hi⟩ := Opens.mem_iSup.1 (hc.ge (Set.mem_univ (ψ z)))
   have hi' := (h n hn (s i) (s i) z).1.2 hi

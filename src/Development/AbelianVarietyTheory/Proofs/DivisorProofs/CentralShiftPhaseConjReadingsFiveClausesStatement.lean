@@ -405,8 +405,7 @@ theorem CompFun.gelf (hu : CompFun V u) (τ : D.what₂.Tau) (k : ℕ) (φ : GA 
   simp only [Formalism.L2.Theta.gelf, Finset.mul_sum]
   refine Finset.sum_congr rfl fun idx _ => ?_
   have := h (List.ofFn fun a : Fin (k + 1) => Matrix.single (idx a) (idx (a + 1)) 1)
-  rw [List.map_ofFn] at this
-  exact this
+  rwa [List.map_ofFn] at this
 
 theorem CompFun.aut (hu : CompFun V u) {φ : GA D V → ℂ} (h : IsAutFunSm θ V φ) : IsAutFunSm θ V (u * φ) := by
   refine ⟨⟨fun γ hγ g => ?_, ?_, hu.cont.mul h.cont⟩, fun k τs Xs hX g => ?_, ?_, ?_⟩
@@ -419,8 +418,7 @@ theorem CompFun.aut (hu : CompFun V u) {φ : GA D V → ℂ} (h : IsAutFunSm θ 
       hu.real _ (Subgroup.list_prod_mem _ fun x hx => by
         obtain ⟨i, rfl⟩ := List.mem_ofFn.1 hx
         exact atTau_mem_real _ _) g
-    simp only [Pi.mul_apply, hc]
-    exact contDiff_const.mul (h.smooth k τs Xs hX g)
+    simpa only [Pi.mul_apply, hc] using contDiff_const.mul (h.smooth k τs Xs hX g)
   · obtain ⟨W, hW, m, s⟩ := h.zfin
     refine ⟨W.map (LinearMap.mulLeft ℂ u), inferInstance, ⟨φ, m, rfl⟩, ?_⟩
     rintro τ k _ ⟨f, hf, rfl⟩
@@ -555,15 +553,13 @@ theorem hasType_e (he : R.models_HW) (i : Fin D.R.m) (σ : D.what₂.LL →+* �
   have hm : (R.HW i σ).e y ∈ R.Wall i σ := by
     rw [← (he i σ).2.1]
     exact LinearMap.mem_range_self _ y
-  intro k hk h
-  exact wall_apply_mul_eq_levChi_mul_of_mem_levS R hm v hk h
+  exact fun k hk h => wall_apply_mul_eq_levChi_mul_of_mem_levS R hm v hk h
 
 theorem actW_apply (he : R.models_HW) {i : Fin D.R.m} (σ : D.what₂.LL →+* ℂ) {g : G} {k : GA D (Wc D i)}
     (hk : IsLevelLift (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG g) k) (y : (R.HW i σ).H) (v : (R.MW i σ).Vec)
     (x : GA D (Wc D i)) : actW R i σ g ((R.HW i σ).e y) v x = (R.HW i σ).e y v (x * k) := by
   have hs := level_action_spec (hasType_e R he i σ y v) ⟨k, hk⟩ k hk x
-  rw [levChi_flag R i k, inv_one, one_mul] at hs
-  exact hs
+  rwa [levChi_flag R i k, inv_one, one_mul] at hs
 
 end Model
 

@@ -200,14 +200,12 @@ theorem formNonneg_pullback (A : FinHolAtlas e X) (B : FinHolAtlas e' Y) (h : Y 
     simp only [Function.comp_apply, LocPot.pullback]
     rw [(A.chart j).left_inv (show h ((B.chart k).symm y') ∈ (A.chart j).source from hy')]
   have hU : (A.chart j).symm ((A.chart j ∘ h ∘ (B.chart k).symm) y) ∈ P.U (h x) := by
-    rw [hsymm]
-    exact hyU
+    rwa [hsymm]
   rw [ReciprocityTheory.AnForm.levi_congr hev w, ReciprocityTheory.AnForm.levi_comp w hτa
     (ReciprocityTheory.AnForm.M.pot_contDiffAt_two hP (h x) j hτy hU)]
   refine hnn (h x) j _ ⟨hτy, ?_, hU⟩ _
   show (A.chart j).symm ((A.chart j ∘ h ∘ (B.chart k).symm) y) ∈ V
-  rw [hsymm]
-  exact hyV
+  rwa [hsymm]
 
 theorem smooth_comp_holoMap (A : FinHolAtlas e X) (B : FinHolAtlas e' Y) (h : Y → X)
     (hh : HoloMap B A h) {u : X → ℝ} (hu : A.Smooth u) : B.Smooth (u ∘ h) := by
@@ -980,17 +978,17 @@ theorem mixedForms_eq_cons {W : Type} [TopologicalSpace W] {D : ℕ} (Om : LocPo
     have hD : (i : ℕ) < D := by omega
     have hc : Fin.cycleRange (⟨a, ha⟩ : Fin (D + 1)) i = Fin.succ ⟨i, hD⟩ :=
       Fin.ext (by simp [Fin.coe_cycleRange_of_lt h])
-    rw [hc, Fin.cons_succ, if_pos hi]
-    simp only [restForms, if_pos hi]
+    rw [hc, Fin.cons_succ, ite_eq_left hi]
+    simp only [restForms, ite_eq_left hi]
     rfl
-  · rw [h, Fin.cycleRange_self, Fin.cons_zero, if_neg (lt_irrefl a)]
+  · rw [h, Fin.cycleRange_self, Fin.cons_zero, ite_eq_right (lt_irrefl a)]
   · have hi : a < (i : ℕ) := h
     have hne : i ≠ 0 := fun h0 => by rw [h0] at hi; exact Nat.not_lt_zero _ hi
-    rw [Fin.cycleRange_of_gt h, if_neg (by omega)]
+    rw [Fin.cycleRange_of_gt h, ite_eq_right (by omega)]
     obtain ⟨j, rfl⟩ := Fin.exists_succ_eq.2 hne
     rw [Fin.cons_succ]
     simp only [restForms]
-    rw [if_neg]
+    rw [ite_eq_right]
     simp only [Fin.val_succ] at hi
     omega
 
@@ -1295,20 +1293,18 @@ theorem interior_secZero {r : ℕ} {m : Fin r → ℕ} {Δ : Fin r → Set W} (h
   have hw0 : ∀ i, w i ≠ 0 := by
     intro i
     by_cases h : ψ x i = 0
-    · simp only [w, if_pos h, ne_eq, Complex.ofReal_eq_zero]
+    · simp only [w, ite_eq_left h, ne_eq, Complex.ofReal_eq_zero]
       linarith
-    · simp only [w, if_neg h]
-      exact h
+    · simpa only [w, ite_eq_right h] using h
   have hwb : w ∈ Metric.ball (ψ x) δ := by
     rw [Metric.mem_ball, dist_eq_norm, pi_norm_lt_iff hδ]
     intro i
     by_cases h : ψ x i = 0
     · rw [Pi.sub_apply]
       simp only [w]
-      rw [if_pos h, h, sub_zero, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by linarith)]
+      rw [ite_eq_left h, h, sub_zero, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by linarith)]
       linarith
-    · simp only [w, Pi.sub_apply, if_neg h, sub_self, norm_zero]
-      exact hδ
+    · simpa only [w, Pi.sub_apply, ite_eq_right h, sub_self, norm_zero] using hδ
   obtain ⟨hwt, hwU⟩ := hball hwb
   obtain ⟨i, hi⟩ := hcoord _ (ψ.map_target hwt) hwU
   rw [ψ.right_inv hwt] at hi
@@ -1483,11 +1479,11 @@ theorem mixedForms_cycle {D : ℕ} (Om : LocPot W) (T : Fin (D + 1) → LocPot W
   · simp only [Function.comp_apply, Fin.cons_succ, Fin.cycleRange_symm_succ]
     by_cases hj : (j : ℕ) < a
     · rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simpa using hj)]
-      simp only [mixedForms, restForms, Fin.val_castSucc, hj, if_true]
-      rw [if_pos (by omega)]
+      simp only [mixedForms, restForms, Fin.val_castSucc, hj, ite_true]
+      rw [ite_eq_left (by omega)]
     · rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def]; simp; omega)]
-      simp only [mixedForms, restForms, Fin.val_succ, hj, if_false]
-      rw [if_neg (by omega)]
+      simp only [mixedForms, restForms, Fin.val_succ, hj, ite_false]
+      rw [ite_eq_right (by omega)]
 
 end
 
@@ -1555,8 +1551,7 @@ theorem GreenMassStep.proof : GreenMassStep.Statement := by
     · exact mIntAdd S.A _ _ _ hth hDd hΦ _ (hGi _ hth) (hGi _ hDd)
     · intro i x y
       refine Fin.cases ?_ (fun j => ?_) i
-      · simp only [Fin.cons_zero]
-        exact (add_formDiff_φ _ _ x y).symm
+      · simpa only [Fin.cons_zero] using (add_formDiff_φ _ _ x y).symm
       · simp only [Fin.cons_succ]
   have hpos : 0 ≤ mInt S.A (Fin.cons (formDiff S.Om.pot (S.th a')) (S.rest a t))
       (greenSplit S.L S.s ε) := by
@@ -1664,8 +1659,7 @@ theorem ListTailLog.proof (hE : LemmaETailLog.Statement) (hM : ListMono.Statemen
     · rcases hTi.smooth_or_pole with h | h
       · exact Or.inl h
       · right
-        rw [hYo]
-        exact h
+        rwa [hYo]
   have h2 : TailLogBound A R.Yo (rSec L s) (fun j => potForm (th j) (u j)) CE := by
     have h1 := hCE u hu
     rw [hYo] at h1

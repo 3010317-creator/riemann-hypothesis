@@ -66,9 +66,7 @@ private theorem burnside_endomorphism {S A : Type} [AddCommGroup S] [Module ℂ 
   obtain ⟨a, ha⟩ := jacobson_density f (Finset.univ.image b)
   refine ⟨a, fun m => ?_⟩
   let u : Module.End ℂ S := Module.toModuleEnd ℂ (S := A) S a
-  have : t = u := by
-    refine b.ext fun i => ?_
-    exact ha (b i) (Finset.mem_image_of_mem _ (Finset.mem_univ i))
+  have : t = u := b.ext fun i => ha (b i) (Finset.mem_image_of_mem _ (Finset.mem_univ i))
   rw [this]; rfl
 
 private theorem burn_sub {S : Type} [AddCommGroup S] [Module ℂ S] [FiniteDimensional ℂ S]
@@ -149,7 +147,6 @@ theorem UpperTheory.exists_algHom_end_intertwining_mem_adjoin :
   have he : ∀ t, ((e.symm t : Q) : Module.End ℂ S × Module.End ℂ X).1 = t := fun t => e.apply_symm_apply t
   refine ⟨ψ.comp (e.symm : Module.End ℂ S →ₐ[ℂ] Q), fun t f hf => ?_, fun t => ?_⟩
   · have := hcomm _ (e.symm t).2 f hf
-    rw [he t] at this
-    exact this
+    rwa [he t] at this
   · rw [← hmap₂]
     exact ⟨_, (e.symm t).2, rfl⟩

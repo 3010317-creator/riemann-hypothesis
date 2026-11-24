@@ -87,11 +87,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.LoopC.SizeQ
 
 theorem one_le_size (D : D7) (b C : ℝ) (Z : GramM D) : 1 ≤ sizeZ D b C Z := by
-  unfold sizeZ
-  refine Finset.prod_induction _ (fun x : ℝ => 1 ≤ x)
-    (fun x y hx hy => one_le_mul_of_one_le_of_one_le hx hy) le_rfl (fun τ _ => ?_)
-  exact Finset.prod_induction _ (fun x : ℝ => 1 ≤ x)
-    (fun x y hx hy => one_le_mul_of_one_le_of_one_le hx hy) le_rfl (fun l _ => le_max_left _ _)
+  exact GlobalTheory.LoopC.TermsOver.one_le_sizeZ D b C Z
 
 private lemma one_add_logb_two_mul_le_of_log_le_sqrt (f r : ℕ) (hf : 1 ≤ f) (hr : 1 ≤ r)
     (hlog : Real.log f ≤ Real.sqrt r) : 1 + Real.logb 2 (2 * (f : ℝ)) ≤ 2 * (r : ℝ) + 2 := by
@@ -140,8 +136,7 @@ private lemma le_rpow_abs_div_eight_of_mul_pow_le (k b Cg g : ℝ) (hk : 0 ≤ k
           apply pow_le_pow_left₀ hk; nlinarith
       _ ≤ b ^ Cg := h1.trans h2
       _ ≤ b ^ |Cg| := Real.rpow_le_rpow_of_exponent_le hb (le_abs_self _)
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hpos : 0 ≤ b ^ (|Cg| / 8) := Real.rpow_nonneg (by linarith) _
   have := pow_lt_pow_left₀ hlt hpos (by norm_num : (8 : ℕ) ≠ 0)
   rw [← Real.rpow_natCast, ← Real.rpow_mul (by linarith)] at this
@@ -444,11 +439,10 @@ theorem pow_card_le {R Q : Type} [CommRing R] [AddCommGroup Q] [Module R Q] [Fin
     choose c hc using fun b => Ideal.Quotient.mk_surjective (I := I) (t b)
     have hx : ∃ c' : Fin n → R, ∑ b, c' b • q b = ∑ b, c b • q b := ⟨c, rfl⟩
     refine ⟨∑ b, c b • q b, ?_⟩
-    simp only [f, dif_pos hx]
+    simp only [f, dite_eq_left hx]
     funext b
     rw [key _ c hx.choose_spec b, hc]
-  have hle := Nat.card_le_card_of_surjective f hf
-  simpa [Nat.card_fun] using hle
+  simpa [Nat.card_fun] using Nat.card_le_card_of_surjective f hf
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ} {T T' : E}
 
@@ -472,11 +466,11 @@ theorem frame_indep (F : FlagG S r T) (F' : FlagG S r T') (hG : Gflag F F' ≠ 0
     rw [hlast, Matrix.mulVec_zero, Pi.single_zero]
   have hd1 : Dl F F' (r + 1) = (Zhat F F').det := by
     unfold Dl leadMinorE
-    rw [dif_pos le_rfl]
+    rw [dite_eq_left le_rfl]
     congr 1
   have hd0 : Dl F F' r = ((Zhat F F').submatrix Fin.castSucc Fin.castSucc).det := by
     unfold Dl leadMinorE
-    rw [dif_pos (Nat.le_succ r)]
+    rw [dite_eq_left (Nat.le_succ r)]
     congr 1
   have hG' := hG
   unfold Gflag at hG'
@@ -534,7 +528,6 @@ theorem coeff_mem {g : ℕ} (F : LFlag S r T) (hL : IsLift Λ F) (hC : IsFixedCo
     · intro P hP
       obtain ⟨cc, -, hc1, hloc⟩ := hC.1 P
       have hx' : x ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (XLam Λ F)) := by
-        show ∃ s ∈ P.asIdeal.primeCompl, s • x ∈ XLam Λ F
         exact ⟨1, Submonoid.one_mem _, by rwa [one_smul]⟩
       rw [hloc] at hx'
       obtain ⟨s, hs, hsx⟩ := hx'
@@ -657,15 +650,13 @@ theorem fullLattice_latIn_span {K V : Type} [Field K] [NumberField K] [AddCommGr
   letI := isLattice_latIn_span hN hU
   refine ⟨?_⟩
   apply Submodule.map_injective_of_injective U.injective_subtype
-  rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype]
-  rw [← hU]
+  rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← hU]
   congr 1
   ext x
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact hy
-  · intro hx
-    exact ⟨⟨x, hU ▸ Submodule.subset_span hx⟩, hx, rfl⟩
+  · exact fun hx => ⟨⟨x, hU ▸ Submodule.subset_span hx⟩, hx, rfl⟩
 
 open GlobalTheory.Mass GlobalTheory.LoopC.DetCard Formalism.HermitianLatticesTheory in
 theorem det_index {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V]
@@ -823,8 +814,7 @@ theorem cntCl_le_encard_mul {α ι : Type} {R : α → α → Prop} (hR : Equiva
       exact ⟨i, hI.mem_toFinset.2 hi, a, hi', hR.refl a⟩
     have h2 : (cntCl X R : ℝ≥0∞) ≤ ∑ i ∈ hI.toFinset, (cntCl (Y i) R : ℝ≥0∞) := by
       have := ENat.toENNReal_le.2 h1
-      refine this.trans (le_of_eq ?_)
-      exact map_sum ENat.toENNRealRingHom _ _
+      exact this.trans (le_of_eq (map_sum ENat.toENNRealRingHom _ _))
     refine h2.trans ((Finset.sum_le_card_nsmul _ _ B fun i hi => hY i (hI.mem_toFinset.1 hi)).trans ?_)
     rw [hI.encard_eq_coe_toFinset_card, nsmul_eq_mul]
     simp

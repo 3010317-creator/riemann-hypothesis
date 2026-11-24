@@ -235,8 +235,7 @@ private theorem spans_setOf_q_le_ten_mul_of_covering {L : Type} [Field L] [Numbe
     rw [LinearMap.pi_apply_eq_sum_univ f x]
     simp [ha, smul_eq_mul]
   have ha0 : ∃ i, a i ≠ 0 := by
-    by_contra h0
-    push_neg at h0
+    by_contra! h0
     exact hf0 (LinearMap.ext fun x => by simp [hfv, h0])
   obtain ⟨i0, hi0⟩ := ha0
   let b : VR L N := fun w i => star (w.embedding (a i))
@@ -336,8 +335,7 @@ private theorem normSq_det_mul_re_det_le_pow_of_posDef {N : ℕ} {K : Matrix (Fi
     simp only [Complex.star_def]
     ring
   rw [this, ← mul_assoc, ← Complex.ofReal_pow, ← Complex.ofReal_mul, Complex.re_ofReal_mul] at h1
-  rw [inv_pow, mul_assoc, inv_mul_le_iff₀ (by positivity), mul_one] at h1
-  exact h1
+  rwa [inv_pow, mul_assoc, inv_mul_le_iff₀ (by positivity), mul_one] at h1
 
 private theorem prod_normSq_embedding_eq_abs_norm_of_isTotallyComplex {L : Type} [Field L] [NumberField L] [_root_.NumberField.IsTotallyComplex L] (x : L) :
     ∏ w : InfinitePlace L, Complex.normSq (w.embedding x) = |(Algebra.norm ℚ x : ℝ)| := by
@@ -435,8 +433,7 @@ theorem pf_GThick : GThick := by
       rw [mulVec_mulVec, Units.inv_mul, one_mulVec]
     refine ⟨g, Set.mem_biUnion (Finset.mem_filter.mpr ⟨hg, ?_⟩) ⟨?_, ?_⟩⟩
     · rw [det_mul]
-      refine mul_ne_zero ?_ hA0
-      exact (Matrix.isUnit_det_of_invertible _).ne_zero
+      exact mul_ne_zero (Matrix.isUnit_det_of_invertible _).ne_zero hA0
     · intro v hv
       rw [hB2]
       refine hlam _ ?_

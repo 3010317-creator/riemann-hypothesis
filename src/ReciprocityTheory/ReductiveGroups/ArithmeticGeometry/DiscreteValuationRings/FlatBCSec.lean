@@ -50,8 +50,7 @@ theorem flat_ker_rank_one (δ : M →ₗ[R] N) (θ : M) (hker : ∀ m, δ m = 0 
   · show t = _
     rw [← hx, ← key]; exact congrArg _ hxa
   · have h1 : ι.lTensor S (a ⊗ₜ[R] (1 : R)) = ι.lTensor S x := by rw [key, hx, ha]
-    have h2 := congrArg (TensorProduct.rid R S) (hinjS h1)
-    simpa using h2
+    simpa using congrArg (TensorProduct.rid R S) (hinjS h1)
 
 theorem flat_ker_rank_one_r (δ : M →ₗ[R] N) (θ : M) (hker : ∀ m, δ m = 0 ↔ ∃ r : R, m = r • θ)
     (hfree : ∀ r : R, r • θ = 0 → r = 0) (t : M ⊗[R] S) (ht : δ.rTensor S t = 0) :
@@ -122,8 +121,7 @@ lemma dfun_ev (σ : LB.Sec L) : dfun L V c hVc (ev L V c hVc σ) = 0 := by
   have e := congrArg (rs (pair_le L V c hVc k l)) (σ.compat (c k) (c l))
   simp only [rs_mul, rs_rs, rs_units] at e
   simp only [dfun, ev, rs_rs, Pi.zero_apply]
-  rw [sub_eq_zero]
-  exact e
+  rwa [sub_eq_zero]
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor in
 lemma gs_dfun {f : ∀ k, Γ(Y, V k)} (hf : dfun L V c hVc f = 0) (k l : Fin n) (y : Y) (hk : y ∈ V k) (hl : y ∈ V l) :
@@ -131,8 +129,7 @@ lemma gs_dfun {f : ∀ k, Γ(Y, V k)} (hf : dfun L V c hVc f = 0) (k l : Fin n) 
   have e := sub_eq_zero.1 (congrFun (congrFun hf k) l)
   have hy : y ∈ V k ⊓ V l := ⟨hk, hl⟩
   have e2 := congrArg (gs (𝟙 Y) y (V k ⊓ V l)) e
-  rw [gs_res _ y _ hy, gs_mul _ y _ hy, gs_res _ y _ hy, gs_unit _ y _ hy, gm_res _ y _ hy] at e2
-  exact e2
+  rwa [gs_res _ y _ hy, gs_mul _ y _ hy, gs_res _ y _ hy, gs_unit _ y _ hy, gm_res _ y _ hy] at e2
 
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor in
@@ -180,8 +177,7 @@ lemma gs_sec (σ : LB.Sec L) (i j : L.ι) (y : Y) (hi : y ∈ L.U i) (hj : y ∈
     gs (𝟙 Y) y (L.U i) (σ.f i) = (gm (𝟙 Y) y (L.U i ⊓ L.U j) (L.g i j)).val * gs (𝟙 Y) y (L.U j) (σ.f j) := by
   have hy : y ∈ L.U i ⊓ L.U j := ⟨hi, hj⟩
   have e := congrArg (gs (𝟙 Y) y (L.U i ⊓ L.U j)) (σ.compat i j)
-  rw [gs_res _ y _ hy, gs_mul _ y _ hy, gs_res _ y _ hy, gs_unit _ y _ hy] at e
-  exact e
+  rwa [gs_res _ y _ hy, gs_mul _ y _ hy, gs_res _ y _ hy, gs_unit _ y _ hy] at e
 
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor in

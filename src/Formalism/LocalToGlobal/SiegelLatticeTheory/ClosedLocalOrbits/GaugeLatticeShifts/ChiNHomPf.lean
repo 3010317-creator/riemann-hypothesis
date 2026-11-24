@@ -26,7 +26,7 @@ theorem hfe : ∀ a b : Fin D.R.rS, a ≠ b → ZMod' X.B.I X.B.g (hA X.B.I (X.f
   intro a b hab
   rw [hA_symm]
   exact Z_sig X.B.I X.B.g (by
-    simpa only [if_neg (Ne.symm hab), sub_zero] using (X.gramIntegral b a).2.2)
+    simpa only [ite_eq_right (Ne.symm hab), sub_zero] using (X.gramIntegral b a).2.2)
 
 theorem hfz : ∀ a, ZMod' X.B.I X.B.g (hA X.B.I (X.f0 a) X.z0) := fun a => ((X.formsAtZero).2 a).2
 
@@ -107,8 +107,7 @@ theorem termK_car {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Λ ∈ wh
     refine Formalism.L2.SG.Pf.LatDictK.dict_K X _ _ {y | y ∈ Λ} (fun y => ?_) (fun y => ?_)
     · show y ∈ Λ ↔ _
       have := cs.lat_eq (cs.base Λ) y
-      rw [hb0] at this
-      exact this
+      rwa [hb0] at this
     · show y ∈ Λ ↔ _
       have e1 : y ∈ Λ ↔ p.1.2.symm y ∈ Λ' := by
         have hm2 : y ∈ Formalism.HermitianLatticesTheory.gmap p.1.2 Λ' ↔ y ∈ Λ := by rw [hmap]
@@ -117,13 +116,11 @@ theorem termK_car {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Λ ∈ wh
         · rintro ⟨z, hz, hzy⟩
           have : p.1.2.symm y = z := by rw [← hzy]; simp
           rw [this]; exact hz
-        · intro h
-          exact ⟨p.1.2.symm y, h, by simp⟩
+        · exact fun h => ⟨p.1.2.symm y, h, by simp⟩
       have hlat : ∀ w, w ∈ Λ' ↔ X.B.I.fmat ((cs'.h (cs'.base Λ') : X.B.I.Gf) * X.xu u')⁻¹ *ᵥ
           incl X.B.I (X.crd w) ∈ X.B.I.Lf := fun w => by
         have := cs'.lat_eq (cs'.base Λ') w
-        rw [hb1] at this
-        exact this
+        rwa [hb1] at this
       rw [e1, hlat, show (p.1.1.2 * ((cs'.h (cs'.base Λ') : X.B.I.Gf) * X.xu u'))⁻¹ =
           ((cs'.h (cs'.base Λ') : X.B.I.Gf) * X.xu u')⁻¹ * p.1.1.2⁻¹ from _root_.mul_inv_rev _ _,
         Formalism.L2.SG.Pf.LatDictK.fmatK_mul, ← Matrix.mulVec_mulVec, Formalism.L2.SG.Pf.LatDictK.ratLink_incl_inv X hRL]
@@ -131,8 +128,7 @@ theorem termK_car {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Λ ∈ wh
       ((cs.h (cs.base Λ) : X.B.I.Gf) * X.xu u)⁻¹ *
         (p.1.1.2 * ((cs'.h (cs'.base Λ') : X.B.I.Gf) * X.xu u')) := by
     simp only [kOf, mul_assoc]
-  rw [e]
-  exact key
+  rwa [e]
 
 theorem adm_norm_of_carrier (hTF : FrameTie X u u' F0 F0') (hM : Formalism.L2.SG.NormCut.ModGAt X)
     {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Λ ∈ what₂) (hΛ' : Λ' ∈ rows') (p : GCar X u u' F0 F0' Λ Λ')

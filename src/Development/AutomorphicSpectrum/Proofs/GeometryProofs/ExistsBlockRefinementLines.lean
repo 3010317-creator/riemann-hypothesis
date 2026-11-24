@@ -314,8 +314,7 @@ theorem line_twist_generated : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ :
     have e1 : T i / x (cc j) ^ n = (x (cc i) / x (cc j)) ^ n * gg i ^ M * bb i := by
       simp only [T, div_pow]
       ring
-    rw [e1]
-    exact h
+    rwa [e1]
   obtain ⟨k, ⟨eq⟩⟩ := Finite.exists_equiv_fin (Option I)
   obtain ⟨m, rfl⟩ : ∃ m, k = m + 1 := by
     cases k with
@@ -377,10 +376,8 @@ theorem block_chart {K : Type} [Fintype K] {J : K → Type} {y : (Σ k, J k) →
       Finset.prod_congr rfl fun k' hk' => by rw [Function.update_of_ne (Finset.ne_of_mem_erase hk')]
     have hP : ∏ k' ∈ Finset.univ.erase k, y ⟨k', c k'⟩ ≠ 0 :=
       Finset.prod_ne_zero_iff.mpr fun k' _ => hne k'
-    simp only [hrest, Function.update_self]
-    exact mul_div_mul_right _ _ hP
-  rw [← e]
-  exact hreg
+    simpa only [hrest, Function.update_self] using mul_div_mul_right _ _ hP
+  rwa [← e]
 
 theorem segre_chart {K : Type} [Fintype K] {J : K → Type} {y : (Σ k, J k) → Ω} {c : (k : K) → J k} {p : Cpt ξ}
     (h : ∀ k, InChart ξ (fun i : J k => y ⟨k, i⟩) (c k) p) :
@@ -453,8 +450,7 @@ theorem exists_addBlocks_isDegOn : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (
         fun c' : (k : K ⊕ I) → Sum.elim J J₂ k =>
           (∏ k, y ⟨k, c' (Sum.inl k)⟩) * ∏ k, s₂ ⟨k, c' (Sum.inr k)⟩ :=
       funext fun c' => Fintype.prod_sum_type (fun k => joinY y s₂ ⟨k, c' k⟩)
-    rw [e]
-    exact hadd
+    rwa [e]
   · refine ⟨Sum.elim (fun _ => -(n i : ℤ)) (fun i' => if i' = i then 1 else 0), 1, one_ne_zero, ?_⟩
     intro p _ c hc
     have hb := block_chart hc
@@ -478,13 +474,12 @@ theorem exists_addBlocks_isDegOn : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (
           (Sum.elim (fun _ => -(n i : ℤ)) (fun i' => if i' = i then (1 : ℤ) else 0) (Sum.inr i' : K ⊕ I) : ℤ) =
           s i (c (Sum.inr i)) := by
         rw [Fintype.prod_eq_single i]
-        · simp only [Sum.elim_inr, if_true, zpow_one]
+        · simp only [Sum.elim_inr, ite_true, zpow_one]
           rfl
         · intro i' hi'
           simp [hi']
       rw [h1, h2, div_eq_mul_inv, _root_.mul_comm]
-    rw [hprod]
-    exact hgen'
+    rwa [hprod]
 
 end GlobalTheory.CompanionTheory.Ar
 end -- clump:auto

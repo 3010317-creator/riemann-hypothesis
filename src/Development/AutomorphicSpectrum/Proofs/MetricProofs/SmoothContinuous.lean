@@ -108,8 +108,7 @@ theorem differentiableAt_affCoord {K : Type} [Fintype K] {ι : K → Type} [∀ 
   have hd : AnalyticAt ℂ ((fun y => R.lift x y ⟨q.1, p q.1⟩) ∘ (R.A.chart k).symm)
       (R.A.chart k x) := R.holo x ⟨q.1, p q.1⟩ k _ hmem
   have hne : ((fun y => R.lift x y ⟨q.1, p q.1⟩) ∘ (R.A.chart k).symm) (R.A.chart k x) ≠ 0 := by
-    simp only [Function.comp, (R.A.chart k).left_inv hk]
-    exact hp q.1
+    simpa only [Function.comp, (R.A.chart k).left_inv hk] using hp q.1
   exact (hn.div hd hne).differentiableAt
 
 theorem isLiftSys_of_top {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
@@ -220,7 +219,7 @@ theorem clampT_le {T : ℝ} (t : ℝ) : clampT T t ≤ T := by
   · exact le_rfl
 
 theorem clampT_eq {T t : ℝ} (h0 : 0 < t) (h1 : t ≤ T) : clampT T t = t := by
-  unfold clampT; rw [if_pos ⟨h0, h1⟩]
+  unfold clampT; rw [ite_eq_left ⟨h0, h1⟩]
 
 def avgSys {e : ℕ} {σ : Type} (S : AnSys e σ) (c : S.X → S.X) (C T : ℝ)
     (hreg : ∀ a, IsRegFamily S.A S.Θ S.L S.s (S.th a) (S.ph a)
@@ -270,8 +269,7 @@ theorem onStep_conjAvg (M : FlagModel y Ψ N j) {p : Ψ × Fin N} {A : HermLine 
   rw [hA z z' hb hk, hA (cj z) (cj z') ?_ ?_]
   · funext q
     exact congrArg (starRingEnd ℂ) (congrFun hb q)
-  · intro k hk' m
-    exact congrArg (starRingEnd ℂ) (hk k hk' m)
+  · exact fun k hk' m => congrArg (starRingEnd ℂ) (hk k hk' m)
 
 theorem conj_of_flagAn [Fintype Ψ] {M : FlagModel y Ψ N j} {n d : ℕ} {BM : BaseMetric M n}
     (FA : FlagAn BM d)
@@ -297,8 +295,7 @@ theorem conj_of_flagAn [Fintype Ψ] {M : FlagModel y Ψ N j} {n d : ℕ} {BM : B
     have e2 := FA.pr_eq (g x)
     rw [hπg] at e1 e2
     have e3 := sameOrbit_base M.blk (hspec x)
-    refine sameOrbit_trans (sameOrbit_symm e1) (sameOrbit_trans e3 ?_)
-    exact sameOrbit_cj e2
+    exact sameOrbit_trans (sameOrbit_symm e1) (sameOrbit_trans e3 (sameOrbit_cj e2))
   have hs_eq : ∀ x, FA.S.s x x = BM.s (FA.pr x) (FA.pr x) := fun x => by rw [FA.s_eq]
   have hbd : ∀ x, x ∈ bdry FA.S.s ↔ FA.pr x ∈ bdry BM.s := fun x => by
     change FA.S.s x x = 0 ↔ BM.s (FA.pr x) (FA.pr x) = 0

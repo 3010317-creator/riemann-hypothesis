@@ -65,8 +65,7 @@ theorem avg_linear_translate_const : ∀ (H : Type) [Group H] (u v : H → ℂ) 
   · rw [_root_.GlobalTheory.BCT.avg_eq_of_le_rStab H (u + v) S hSuv hSi, _root_.GlobalTheory.BCT.avg_eq_of_le_rStab H u S hSu hSi, _root_.GlobalTheory.BCT.avg_eq_of_le_rStab H v S hSv hSi,
       ← mul_add]
     congr 1
-    simp only [Pi.add_apply]
-    exact finsum_add_distrib (Set.toFinite _) (Set.toFinite _)
+    simpa only [Pi.add_apply] using finsum_add_distrib (Set.toFinite _) (Set.toFinite _)
   · have hc : rStab u ≤ rStab (c • u) := by
       intro k hk x
       simp only [Pi.smul_apply, smul_eq_mul]
@@ -97,7 +96,6 @@ theorem avg_linear_translate_const : ∀ (H : Type) [Group H] (u v : H → ℂ) 
     rw [_root_.GlobalTheory.BCT.avg_eq_of_le_rStab H _ ⊤ htop (by simp)]
     simp only [Subgroup.index_top, Nat.cast_one, inv_one, one_mul]
     rw [finsum_eq_single (fun _ => c) (1 : H ⧸ (⊤ : Subgroup H))]
-    intro x hx
-    exact absurd (QuotientGroup.subsingleton_quotient_top.elim x 1) hx
+    exact fun x hx => absurd (QuotientGroup.subsingleton_quotient_top.elim x 1) hx
 
 end GlobalTheory.AvgLin

@@ -164,7 +164,7 @@ theorem exists_expansion (hL : IsSelfDualC S L) :
     · rw [RingHom.map_zero, zero_mul]
   simp only [pairing, Finset.sum_mul]
   rw [Finset.sum_comm]
-  simp only [h1, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [h1, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem mem_of_pairing (hL : IsSelfDualC S L) {v : Pl D} {y : Fin S.rank → AE D} (hy : ∀ i, y i ∈ idAt D (· = v))
     (h : ∀ s ∈ L, finPart D (pairing S s y) ∈ intAE D) : y ∈ latV S L (· = v) := by
@@ -287,8 +287,7 @@ theorem pairing_csec (s : Fin S.rank → D.host.E) (z : Fin S.rank → k) :
 
 theorem sec_inc_mem {L : Lat S} {s : Fin S.rank → D.host.E} (hs : s ∈ L) :
     (fun i => p.sec (p.pr (incA D (s i)))) ∈ latV S L (· = p.v) := by
-  simp only [p.sec_pr]
-  exact int_mul_mem (e_mem_intAt p) hs
+  simpa only [p.sec_pr] using int_mul_mem (e_mem_intAt p) hs
 
 theorem exists_gen {L : Lat S} (hL : IsSelfDualC S L) :
     ∃ (m : ℕ) (s : Fin m → Fin S.rank → D.host.E) (c : Fin m → (Fin S.rank → k) → k), (∀ l, s l ∈ L) ∧
@@ -300,8 +299,7 @@ theorem exists_gen {L : Lat S} (hL : IsSelfDualC S L) :
     have h := congrArg p.pr (hd (fun i => p.sec (u i)) a)
 
     simp only [pairing_sec, map_sum p.pr, RingHom.map_mul, p.pr_sec] at h
-    rw [Finset.sum_apply]
-    exact h
+    rwa [Finset.sum_apply]
   · rw [p.int_iff, ← pairing_sec]
     exact pairing_int hL (hs' l) hu
 
@@ -397,8 +395,7 @@ theorem exists_lat : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolog
       rw [hexp x]
       exact Submodule.sum_mem _ fun l _ =>
         Submodule.smul_mem _ (⟨_, hint _ hx l⟩ : 𝒪[k]) (Submodule.subset_span ⟨l, rfl⟩)
-    · intro s hs hli
-      exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
   · intro g
     have key : ∀ x : n → k, mt S (β.gl g) *ᵥ (fun i => p.sec ((β.b *ᵥ x) i)) =
         fun i => p.sec ((β.b *ᵥ (g.val *ᵥ x)) i) := by

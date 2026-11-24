@@ -54,8 +54,7 @@ theorem hstrip_iff {n : ℕ} (nu mu : Fin n → ℤ) (b : ℕ) :
   unfold Formalism.InvariantFactorPaths.GelfandTsetlinBases.HStrip Formalism.MainNotions.G.HStrip
   refine and_congr Iff.rfl (and_congr ?_ ?_)
   · constructor
-    · intro h a ha
-      exact h a ⟨a.1 + 1, ha⟩ rfl
+    · exact fun h a ha => h a ⟨a.1 + 1, ha⟩ rfl
     · intro h m m' hm
       have hlt : m.1 + 1 < n := by rw [hm]; exact m'.2
       have : m' = ⟨m.1 + 1, hlt⟩ := Fin.ext hm.symm
@@ -93,8 +92,7 @@ theorem restPathFrom : RestPathFrom := by
   obtain ⟨h0, hd, hs⟩ := hμ
   refine ⟨⟨res N μ, ?_, ?_, ?_⟩, rfl⟩
   · exact h0
-  · intro i
-    exact hd i.val (Nat.le_of_lt_succ i.2)
+  · exact fun i => hd i.val (Nat.le_of_lt_succ i.2)
   · intro i
     have h := hs i.val i.2
     rw [isV_of_lt LL i.2, Bn_of_lt B i.2] at h
@@ -128,8 +126,7 @@ theorem dom_iff_le {n : ℕ} (A B : Finset (Fin n)) :
     · simp [Formalism.InvariantFactorPaths.GelfandTsetlinBases.Branch.cnt]
     · by_cases hy : y < n
       · have := h ⟨y, hy⟩
-        rw [← cnt_succ, ← cnt_succ] at this
-        exact this
+        rwa [← cnt_succ, ← cnt_succ] at this
       · have hn : n ≤ y + 1 := by omega
         rw [Formalism.InvariantFactorPaths.GelfandTsetlinBases.Branch.cnt_of_le A hn, Formalism.InvariantFactorPaths.GelfandTsetlinBases.Branch.cnt_of_le B hn]
         rcases Nat.eq_zero_or_pos n with h0 | hpos
@@ -150,7 +147,7 @@ theorem index_off_range {N n : ℕ} (mu : Fin (N + 1) → Fin n → ℤ) (I : �
   have hT0 : (0 : ℤ) ≤ ∑ i, ∑ m, |mu i m| := Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _
   simp only [colRange, Finset.mem_Icc, not_and_or, not_le] at hc
   rcases hc with hc | hc
-  · rw [if_neg (by omega)]
+  · rw [ite_eq_right (by omega)]
     have : colH (pEnd mu) c = n := by
       unfold colH
       rw [Finset.filter_true_of_mem]
@@ -160,7 +157,7 @@ theorem index_off_range {N n : ℕ} (mu : Fin (N + 1) → Fin n → ℤ) (I : �
         have := hT m
         omega
     omega
-  · rw [if_pos (by omega)]
+  · rw [ite_eq_left (by omega)]
     unfold colH
     rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     intro m _
@@ -181,7 +178,6 @@ theorem restStd : RestStd := by
   · rintro ⟨h2, h3⟩
     refine ⟨index_off_range mu I h2, h2, fun c t => ?_⟩
     have := (dom_iff_le _ _).1 ((Formalism.InvariantFactorPaths.GelfandTsetlinBases.Branch.dom_iff _ _).1 (h3 c)) t
-    rw [← tabCol_eq, ← tabCol_eq] at this
-    exact this
+    rwa [← tabCol_eq, ← tabCol_eq] at this
 
 end Formalism.MainNotions.G.ColumnFamilies

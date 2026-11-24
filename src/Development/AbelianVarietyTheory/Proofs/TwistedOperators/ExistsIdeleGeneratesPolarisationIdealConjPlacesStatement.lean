@@ -137,8 +137,7 @@ theorem exists_gen_avoid {R K ι : Type} [CommRing R] [IsDedekindDomain R] [Fiel
   obtain ⟨s, hsJ, hsQ⟩ : ∃ s ∈ J, ∀ i ∈ Qs, s ∉ Q i := by
     rcases Qs.eq_empty_or_nonempty with rfl | ⟨i0, hi0⟩
     · exact ⟨0, J.zero_mem, by simp⟩
-    · by_contra hcon
-      push_neg at hcon
+    · by_contra! hcon
       have hsub : (J : Set R) ⊆ ⋃ i ∈ (Qs : Set ι), (Q i : Set R) := by
         intro x hx
         obtain ⟨i, hi, hxi⟩ := hcon x hx
@@ -443,7 +442,7 @@ theorem adj_int_iff : ∀ (D : D7) (S T : HSp D), S.gram = 1 → ∀ (ΛT : Lt D
   · rintro ⟨hint, hred⟩ k j
     refine ⟨⟨_, hint k j⟩, GlobalTheory.LiftLevel.mem_idS hJ fun PP hPP => ?_, rfl⟩
     have h0 := congrFun (congrFun (hred PP hPP) k) j
-    simpa only [Matrix.zero_apply, Pi.zero_apply, dif_pos (hint k j)] using h0
+    simpa only [Matrix.zero_apply, Pi.zero_apply, dite_eq_left (hint k j)] using h0
   · intro h
     have hint : ∀ k j, adjA S T βS βT 1 x k j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := by
       intro k j
@@ -454,7 +453,7 @@ theorem adj_int_iff : ∀ (D : D7) (S T : HSp D), S.gram = 1 → ∀ (ΛT : Lt D
     funext k j
     obtain ⟨s, hsI, hs⟩ := h k j
     have hse : (⟨adjA S T βS βT 1 x k j, hint k j⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) = s := Subtype.ext hs.symm
-    simp only [Matrix.zero_apply, dif_pos (hint k j), hse]
+    simp only [Matrix.zero_apply, dite_eq_left (hint k j), hse]
     exact GlobalTheory.LiftLevel.resS_eq_zero hPP hsI
 
 end GlobalTheory.DualRed
@@ -665,8 +664,7 @@ theorem primeProd_squarefree_le_conj : ∀ (D : D7) (P : Finset (Formalism.L2.DI
       exact PP.prime
     have hne : (∏ PP ∈ P, PP.asIdeal) ≠ 0 := by
       rw [Finset.prod_ne_zero_iff]
-      intro PP _
-      exact PP.ne_bot
+      exact fun PP _ => PP.ne_bot
     rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors hne, hprod,
       UniqueFactorizationMonoid.normalizedFactors_prod_of_prime hprime]
     exact (Multiset.nodup_map_iff_of_injective (fun a b h => HeightOneSpectrum.ext h)).2 P.nodup
@@ -677,8 +675,7 @@ theorem primeProd_squarefree_le_conj : ∀ (D : D7) (P : Finset (Formalism.L2.DI
       have : PP.asIdeal = PP'.asIdeal := PP.isMaximal.eq_of_le PP'.isPrime.ne_top hle'
       have h2 : PP = PP' := HeightOneSpectrum.ext this
       exact h2 ▸ hPP
-    · intro h
-      exact Ideal.le_of_dvd (Finset.dvd_prod_of_mem _ h)
+    · exact fun h => Ideal.le_of_dvd (Finset.dvd_prod_of_mem _ h)
   · simp only [primeProd_conjI_eq_map]
     exact map_prod (Ideal.mapHom _) _ _
 
@@ -784,8 +781,7 @@ theorem exists_isGen : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.rank ≤
     · intro hm
       have := hmulA (I • ΛT) (I • C.X.Λ) γ (hsc I ΛT C.X.Λ _ h2') _ hy hm
       rwa [hback] at this
-    · intro hm
-      exact hmulA (I • C.X.Λ) (I • ΛT) γ⁻¹ (hsc I C.X.Λ ΛT _ h1) x hx hm
+    · exact fun hm => hmulA (I • C.X.Λ) (I • ΛT) γ⁻¹ (hsc I C.X.Λ ΛT _ h1) x hx hm
   have hctop : conjI (⊤ : Ideal (𝓞 D.host.E)) = ⊤ := by
     rw [Ideal.eq_top_iff_one]
     unfold conjI

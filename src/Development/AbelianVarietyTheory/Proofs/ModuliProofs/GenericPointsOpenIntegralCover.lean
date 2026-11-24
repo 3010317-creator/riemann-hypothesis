@@ -158,8 +158,7 @@ theorem eq_one_of_existsUnique {Γ : Type} [CommRing Γ] [Nontrivial Γ] {n : �
       exact (hd c (hF c)).trans (hd c' (hcc.trans (hF c'))).symm
     · obtain ⟨c, hc, -⟩ := h a
       exact ⟨c, (hF c).trans hc.symm⟩
-  have e := (LinearEquiv.ofBijective F hb).finrank_eq
-  simpa using e
+  simpa using (LinearEquiv.ofBijective F hb).finrank_eq
 
 theorem eq_one_of_bijective {Z : Scheme.{0}} (G : Over Z) (L : LB G.left) (hL : L.IsLB) (T : Over Z)
     [Nontrivial Γ(T.left, ⊤)] (hb : Function.Bijective (fst T G).left.appTop.hom) {n : ℕ}
@@ -221,8 +220,7 @@ theorem GlobalTheory.basisAlong_zero_card : Out.GlobalFnsSt → ∀ (R : Type) [
     (inferInstance : IsIso ((Over.forget _).map (snd (Over.mk (𝟙 (Sp R))) P.A)))
   have e1 : (fst (Over.mk (𝟙 (Sp R))) P.A).left = (snd (Over.mk (𝟙 (Sp R))) P.A).left ≫ P.A.hom := by
     have h1 : (fst (Over.mk (𝟙 (Sp R))) P.A).left ≫ 𝟙 (Sp R) = _ := Over.w (fst (Over.mk (𝟙 (Sp R))) P.A)
-    have h2 := Over.w (snd (Over.mk (𝟙 (Sp R))) P.A)
-    exact (Category.comp_id _).symm.trans (h1.trans h2.symm)
+    exact (Category.comp_id _).symm.trans (h1.trans (Over.w (snd (Over.mk (𝟙 (Sp R))) P.A)).symm)
   have hc : ((snd (Over.mk (𝟙 (Sp R))) P.A).left ≫ P.A.hom).appTop =
       P.A.hom.appTop ≫ (snd (Over.mk (𝟙 (Sp R))) P.A).left.appTop := by
     simp
@@ -267,8 +265,7 @@ theorem card_basis_eq_pow : Out.Laws → Out.Laws2 → ∀ (R : Type) [CommRing 
   intro _ hL R _ _ P N n b hN hb
   obtain ⟨V, hV, c, hc⟩ := hL.secBaseChangeAny (Sp R) P N hN (IsLocalRing.closedPoint R)
   have hV' : V = ⊤ := by
-    refine eq_top_iff.2 fun x _ => ?_
-    exact (IsLocalRing.specializes_closedPoint x).mem_open V.isOpen hV
+    exact eq_top_iff.2 fun x _ => (IsLocalRing.specializes_closedPoint x).mem_open V.isOpen hV
   subst hV'
   let χ : Sp R ⟶ (⊤ : (Sp R).Opens).toScheme := (Sp R).topIso.inv
   choose c' hc' _ using fun i => PolFrames.exists_pullSec P.A P.L N (Out.homAt χ) (c i)
@@ -321,8 +318,7 @@ theorem exists_transport {A B : Scheme.{0}} (e : A ≅ B) (t : SAB H A) :
 theorem mem_genericPoints_iso {A B : Scheme.{0}} (e : A ≅ B) (x : A) (hx : e.hom x ∈ genericPoints B) :
     x ∈ genericPoints A := by
   have hx' : closure {Scheme.homeoOfIso e x} ∈ irreducibleComponents B := by
-    rw [Scheme.coe_homeoOfIso]
-    exact hx
+    rwa [Scheme.coe_homeoOfIso]
   have key := preimage_mem_irreducibleComponents hx' (Scheme.homeoOfIso e).isOpenEmbedding
     ⟨Scheme.homeoOfIso e x, subset_closure rfl, x, rfl⟩
   rw [(Scheme.homeoOfIso e).preimage_closure, ← Set.image_singleton,
@@ -337,8 +333,7 @@ theorem generic_transport {A B : Scheme.{0}} (e : A ≅ B) {t : SAB H A} {t' : S
   have hy' : e.inv y ∈ genericPoints A := by
     apply mem_genericPoints_iso e
     have hyy : e.hom (e.inv y) = y := (Scheme.homeoOfIso e).apply_symm_apply y
-    rw [hyy]
-    exact hy
+    rwa [hyy]
   have ha := hg hy'
   simp only [abLocus, Set.mem_setOf_eq] at ha ⊢
   intro K _ _ u hu
@@ -511,8 +506,7 @@ open GlobalTheory.LN ReciprocityTheory.ChartRestriction.G.Out in
 theorem lin_of_isEmpty {S : Scheme.{0}} (G : Over S) (L : LB G.left) (N : ℕ) {T T' : Over S} [hT : IsEmpty T'.left]
     (h : T' ⟶ T) {n : ℕ} (b : Fin n → LB.Sec (LPow G L (N : ℤ) T)) (c : Fin n → Γ(T'.left, ⊤))
     (s : LB.Sec (LPow G L (N : ℤ) T')) : Lin G L N h b c s := by
-  intro z
-  exact isEmptyElim ((fst T' G).left z)
+  exact fun z => isEmptyElim ((fst T' G).left z)
 
 theorem isEmpty_of_eq_bot {Z : Scheme.{0}} {U : Z.Opens} (h : U = ⊥) : IsEmpty U.toScheme := by
   subst h
@@ -598,8 +592,7 @@ theorem noTrait_exists_gl_det_eq {R : Type*} [CommRing R] {n : ℕ} (hn : 1 ≤ 
     rw [Matrix.det_diagonal, Finset.prod_update_of_mem (Finset.mem_univ _)]
     simp
   refine ⟨Matrix.GeneralLinearGroup.mk'' _ (by rw [hd]; exact u.isUnit), Units.ext ?_⟩
-  rw [Matrix.GeneralLinearGroup.val_det_apply]
-  exact hd
+  rwa [Matrix.GeneralLinearGroup.val_det_apply]
 
 theorem hasFrames_rank_of_isEmpty (Z : Scheme.{0}) (G : Over Z) (L : LB G.left) (N : ℕ) (A : LB Z) (n n' : ℕ) (r s : ℤ)
     (hn : 1 ≤ n') (hZ : ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → IsEmpty (Sp W ⟶ Z))
@@ -668,8 +661,7 @@ theorem gm_pushLB (f : Z' ⟶ Z) [IsOpenImmersion f] (A : LB Z') (i j : A.ι) (y
 theorem part_left (f : Z' ⟶ Z) [IsOpenImmersion f] (A : LB Z') (B : LB Z) (hB : ∀ p y, f y ∉ B.U p) :
     Part f A (sumLB (pushLB f A) B) Sum.inl := by
   refine ⟨Sum.inl_injective, ?_, ?_, ?_, gm_pushLB f A⟩
-  · intro i y
-    exact f.apply_mem_image_iff
+  · exact fun i y => f.apply_mem_image_iff
   · rintro i x ⟨y, _, hy⟩
     exact ⟨y, hy⟩
   · intro p y hp
@@ -680,8 +672,7 @@ theorem part_left (f : Z' ⟶ Z) [IsOpenImmersion f] (A : LB Z') (B : LB Z) (hB 
 theorem part_right (f : Z' ⟶ Z) [IsOpenImmersion f] (A : LB Z') (B : LB Z) (hB : ∀ p y, f y ∉ B.U p) :
     Part f A (sumLB B (pushLB f A)) Sum.inr := by
   refine ⟨Sum.inr_injective, ?_, ?_, ?_, gm_pushLB f A⟩
-  · intro i y
-    exact f.apply_mem_image_iff
+  · exact fun i y => f.apply_mem_image_iff
   · rintro i x ⟨y, _, hy⟩
     exact ⟨y, hy⟩
   · intro p y hp
@@ -709,7 +700,7 @@ theorem mem_wchart {X : Scheme.{0}} (L : LB X) (J : Fin 1 → L.ι) (x : X) :
 theorem gs_zero' {X Y : Scheme.{0}} (r : Y ⟶ X) (z : Y) (U : X.Opens) : gs r z U 0 = 0 := by
   by_cases h : r z ∈ U
   · rw [gs_eq r z U h, map_zero, map_zero]
-  · exact dif_neg h
+  · exact dite_eq_right h
 
 theorem Part.exists_local [IsOpenImmersion f] (h : Part f A C e) {d : ℕ} (s : H0 A d) (J : Fin 1 → C.ι) :
     ∃ t : Γ(Z, LB.wchart C (fun _ : Fin 1 => 𝟙 Z) J),
@@ -724,7 +715,7 @@ theorem Part.exists_local [IsOpenImmersion f] (h : Part f A C e) {d : ℕ} (s : 
       obtain ⟨y, rfl⟩ := h.sub i x hx'
       exact ⟨y, (mem_wchart A _ y).2 ((h.mem i y).1 hx'), rfl⟩
     refine ⟨(Z.presheaf.map (homOfLE le).op).hom ((f.appIso _).inv.hom (s.f fun _ => i)), fun i' y hi' hy => ?_,
-      fun x hx => dif_neg fun hx' => hx ?_⟩
+      fun x hx => dite_eq_right fun hx' => hx ?_⟩
     · obtain rfl : i' = i := h.inj (hi'.trans hi.symm)
       have hm : f y ∈ LB.wchart C (fun _ : Fin 1 => 𝟙 Z) J :=
         (mem_wchart C J _).2 (hi ▸ (h.mem i' y).2 hy)
@@ -1525,8 +1516,7 @@ theorem hasModel_rank (hL : Out.Laws) (hL' : Out.Laws2) (hp : IsProper tM.G.hom)
   obtain ⟨a, ha⟩ := exists_chart A.isLB (genericPoint C.Z)
   have hU : Set.range χ ⊆ Set.range (A.A.U a).ι := by
     rintro _ ⟨y, rfl⟩
-    rw [hχ, Scheme.Opens.range_ι]
-    exact ha
+    rwa [hχ, Scheme.Opens.range_ι]
   obtain ⟨t', ⟨p⟩⟩ := exists_pull (IsOpenImmersion.lift C.j χ hj) C.tW
   obtain ⟨q⟩ := map_comp C.m₁ k rfl
   obtain ⟨p₁⟩ := map_comp p q rfl

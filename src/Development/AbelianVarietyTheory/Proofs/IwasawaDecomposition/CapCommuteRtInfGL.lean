@@ -236,8 +236,7 @@ theorem sum_eq_sum_perm {n : ℕ} {V : Type} [AddCommMonoid V] (F : (Fin n → F
     (fun _ _ => rfl)
   intro d _ hd
   apply hF
-  intro hinj
-  exact hd ⟨Equiv.ofBijective d (Finite.injective_iff_bijective.1 hinj), by simp, rfl⟩
+  exact fun hinj => hd ⟨Equiv.ofBijective d (Finite.injective_iff_bijective.1 hinj), by simp, rfl⟩
 
 theorem Tm_conj {n : ℕ} (E : Fin n → Fin n → A) (P Q : Matrix (Fin n) (Fin n) ℂ)
     (h : Q * P = 1) (x : ℂ) (a b : Fin n) :

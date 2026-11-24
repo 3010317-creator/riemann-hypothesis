@@ -121,8 +121,7 @@ theorem Cg.pow {δ : ℝ} {x x' : C} (hx : V.Ge 0 x) (hx' : V.Ge 0 x') (h : Cg V
     Cg V δ (x ^ n) (x' ^ n) := by
   induction n with
   | zero =>
-    simp only [pow_zero]
-    exact Cg.refl δ 1
+    simpa only [pow_zero] using Cg.refl δ 1
   | succ n ih =>
     rw [pow_succ, pow_succ]
     exact Cg.mul (ge0_pow_lemma_8 hx n) hx' ih h
@@ -217,8 +216,7 @@ theorem exists_ge_of_mm_fin {ι : Type} [Fintype ι] (f : ι → C) (h : ∀ i, 
 theorem ge_pow_mul {δ : ℝ} {e : C} (h : V.Ge δ e) (n : ℕ) : V.Ge (n * δ) (e ^ n) := by
   induction n with
   | zero =>
-    simp only [Nat.cast_zero, zero_mul, pow_zero]
-    exact ge_one_lemma_5
+    simpa only [Nat.cast_zero, zero_mul, pow_zero] using ge_one_lemma_5
   | succ n ih =>
     rw [pow_succ]
     apply ge_mono_lemma_3 (ge_mul_lemma_2 ih h)
@@ -347,8 +345,7 @@ theorem frob_cg (em : ZMod d → O →+* C) (hint : ∀ a x, V.Ge 0 (em a x)) (x
     Cg V δ (em b x ^ (V.l ^ s)) (em (b + s) x) := by
   induction s with
   | zero =>
-    simp only [pow_zero, pow_one, Nat.cast_zero, add_zero]
-    exact Cg.refl δ _
+    simpa only [pow_zero, pow_one, Nat.cast_zero, add_zero] using Cg.refl δ _
   | succ s ih =>
     have h1 : Cg V δ ((em b x ^ (V.l ^ s)) ^ V.l) (em (b + s) x ^ V.l) :=
       Cg.pow (ge0_pow_lemma_8 (hint b x) _) (hint _ x) ih V.l
@@ -501,8 +498,7 @@ theorem entry_cg (em : ZMod d → O →+* C) (hint : ∀ a x, V.Ge 0 (em a x)) (
     have hrint : V.Ge 0 r := valuation_nonneg_of_zero (by rw [← hr, AddValuation.map_mul, hu b, v_inv (hu _), add_zero])
     have hgs : V.Ge δ (∑ j ∈ Finset.range (V.l ^ d - 1), r ^ j) := by
       have h1 : V.Ge δ ((∑ j ∈ Finset.range (V.l ^ d - 1), r ^ j) * (r - 1)) := by
-        rw [geom_sum_mul]
-        exact hrn
+        rwa [geom_sum_mul]
       exact ge_of_mul_unit hr1 h1
     have hsum := Cg.sum (Finset.range (V.l ^ d - 1)) fun j _ => Cg.pow (hKint t0 ht0) hrint hKt j
     have hfac0 : V.Ge δ (fac V em xs a b s t0) := by
@@ -547,8 +543,7 @@ theorem ind_gen (em : ZMod d → O →+* C) (hint : ∀ a x, V.Ge 0 (em a x))
     intro m hm j
     induction j with
     | zero =>
-      rw [pow_zero]
-      exact h1
+      rwa [pow_zero]
     | succ j ih =>
       rw [pow_succ]
       exact hmul _ _ ih hm
@@ -556,8 +551,7 @@ theorem ind_gen (em : ZMod d → O →+* C) (hint : ∀ a x, V.Ge 0 (em a x))
     intro s f
     refine Finset.induction_on s ?_ ?_
     · intro _
-      rw [Finset.sum_empty]
-      exact h0
+      rwa [Finset.sum_empty]
     · intro j s hj ih hf
       rw [Finset.sum_insert hj]
       exact hadd _ _ (hf j (Finset.mem_insert_self j s)) (ih fun i hi => hf i (Finset.mem_insert_of_mem hi))
@@ -566,8 +560,7 @@ theorem ind_gen (em : ZMod d → O →+* C) (hint : ∀ a x, V.Ge 0 (em a x))
     intro s f
     refine Finset.induction_on s ?_ ?_
     · intro _
-      rw [Finset.prod_empty]
-      exact h1
+      rwa [Finset.prod_empty]
     · intro j s hj ih hf
       rw [Finset.prod_insert hj]
       exact hmul _ _ (hf j (Finset.mem_insert_self j s)) (ih fun i hi => hf i (Finset.mem_insert_of_mem hi))
@@ -703,13 +696,11 @@ theorem ptSelf_of (hEx : PTExSelfSt) (hAvg : PTAvgSelfSt) (hStab : HStabSelfSt) 
     rw [coeff_alongCv_low le_rfl hγ0 (FBChart.self_chart_log_constantCoeff (Y := Y) (p := p) i), map_sum] at h1
     simp only [PowerSeries.coeff_smul, c1, hx0, smul_eq_mul] at h1
     rw [← h1, Finset.sum_eq_single i]
-    · rw [FBChart.rawSelf_lin (Y := Y) (p := p) i _ (hdeg i), MvPowerSeries.coeff_X, if_pos rfl, one_mul]
+    · rw [FBChart.rawSelf_lin (Y := Y) (p := p) i _ (hdeg i), MvPowerSeries.coeff_X, ite_eq_left rfl, one_mul]
     · intro j _ hji
-      rw [FBChart.rawSelf_lin (Y := Y) (p := p) i _ (hdeg j), MvPowerSeries.coeff_X, if_neg, zero_mul]
-      intro h
-      exact hji (Finsupp.single_left_injective one_ne_zero h)
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+      rw [FBChart.rawSelf_lin (Y := Y) (p := p) i _ (hdeg j), MvPowerSeries.coeff_X, ite_eq_right, zero_mul]
+      exact fun h => hji (Finsupp.single_left_injective one_ne_zero h)
+    · exact fun h => absurd (Finset.mem_univ i) h
   have key : ∀ q : I0, V.Ge 0 (PowerSeries.coeff 1 (lam q) - x 0 (Sum.inr q)) := by
     intro q
     have h2 := congrArg (PowerSeries.coeff 1) (hq q)
@@ -762,12 +753,11 @@ theorem ptSelf_of (hEx : PTExSelfSt) (hAvg : PTAvgSelfSt) (hStab : HStabSelfSt) 
           exact key q
         · have h4 : PowerSeries.coeff m (lam q - PowerSeries.C (x 0 (Sum.inr q)) * PowerSeries.X) =
               PowerSeries.coeff m (lam q) := by
-            rw [map_sub, ← pow_one (PowerSeries.X : PowerSeries C), PowerSeries.coeff_C_mul_X_pow, if_neg hm,
+            rw [map_sub, ← pow_one (PowerSeries.X : PowerSeries C), PowerSeries.coeff_C_mul_X_pow, ite_eq_right hm,
               sub_zero]
           rw [h4]
           exact (hlam q).2 m
-    · intro i
-      exact hlg i
+    · exact fun i => hlg i
     · intro q
       show tyS V.l (fun s => x s (Sum.inr q) - if s = 0 then x 0 (Sum.inr q) else 0) =
         (lam q - PowerSeries.C (x 0 (Sum.inr q)) * PowerSeries.X) -
@@ -816,11 +806,11 @@ theorem ptAvgSelf_of (hAct : OActSelfSt) (hLim : LimSelfSt) : PTAvgSelfSt := by
   · funext n
     simp only [Pi.mul_apply, Nat.cast_zero, add_zero]
     by_cases hn : X.tyC g n = a
-    · rw [if_pos hn, one_mul]
-    · rw [if_neg hn, zero_mul, hx0 n hn]
+    · rw [ite_eq_left hn, one_mul]
+    · rw [ite_eq_right hn, zero_mul, hx0 n hn]
   · intro i n hn
     simp only [Pi.mul_apply]
-    rw [if_neg hn, zero_mul]
+    rw [ite_eq_right hn, zero_mul]
 
 theorem ptSelf_of_act (hEx : PTExSelfSt) (hAct : OActSelfSt) (hLim : LimSelfSt) (hStab : HStabSelfSt) : PTSelfSt :=
   ptSelf_of hEx (ptAvgSelf_of hAct hLim) hStab

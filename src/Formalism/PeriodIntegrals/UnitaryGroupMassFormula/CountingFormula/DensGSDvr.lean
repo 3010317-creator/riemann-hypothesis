@@ -78,8 +78,7 @@ theorem resF_one : resF F 1 = 1 := by
 
 theorem resF_mul {x y : F} (hx : x ∈ 𝒪[F]) (hy : y ∈ 𝒪[F]) : resF F (x * y) = resF F x * resF F y := by
   have h := resF_coe F (⟨x, hx⟩ * ⟨y, hy⟩)
-  rw [map_mul, ← resF_coe F ⟨x, hx⟩, ← resF_coe F ⟨y, hy⟩] at h
-  exact h
+  rwa [map_mul, ← resF_coe F ⟨x, hx⟩, ← resF_coe F ⟨y, hy⟩] at h
 
 theorem resF_sum_mul {ι : Type} [Fintype ι] (c x : ι → F) (hc : ∀ i, c i ∈ 𝒪[F]) (hx : ∀ i, x i ∈ 𝒪[F]) :
     resF F (∑ i, c i * x i) = ∑ i, resF F (c i) * resF F (x i) := by
@@ -147,8 +146,7 @@ theorem indep_of_red {ι : Type} [Fintype ι] {n : ℕ} (X : ι → Fin n → F)
     (hred : LinearIndependent 𝓀[F] (redM F X)) : LinearIndependent F X := by
   rw [Fintype.linearIndependent_iff]
   intro g hg
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨i0, hi0⟩ := hne
   obtain ⟨j, -, hj⟩ := Finset.exists_max_image Finset.univ (fun i => valuation F (g i))
     ⟨i0, Finset.mem_univ _⟩
@@ -194,8 +192,7 @@ theorem red_of_indep_sat [IsDiscreteValuationRing 𝒪[F]] {ϖ : 𝒪[F]} (hϖ :
     have h := resF_sum_mul F d (fun i => X i k) hdm (fun i => hX i k)
     rw [hcomp, h]
     simp only [hres]
-    have h2 := congrFun ha k
-    simpa [Finset.sum_apply, redM] using h2
+    simpa [Finset.sum_apply, redM] using congrFun ha k
   choose w hw using fun k => dvd_of_resF_eq_zero F hϖ (hmem k) (hr0 k)
   have hϖ0 : (ϖ : F) ≠ 0 := by exact_mod_cast hϖ.ne_zero
   obtain ⟨c', hc'm, hc'⟩ := hsat (fun k => (w k : F)) (fun k => (w k).2)

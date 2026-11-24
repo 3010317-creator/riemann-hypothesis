@@ -206,11 +206,9 @@ theorem one_sub_frob_bij : ∀ {k : Type} [Field k] {l : ℕ} [Fact l.Prime] [Ch
   refine ⟨fun b hb => ?_, fun m hm hfix => ?_⟩
   · obtain ⟨m, hm⟩ := hsurj (fun i => ⟨b i, hb i⟩)
     refine ⟨fun i => (m i : V), fun i => (m i).2, fun i => ?_⟩
-    have h := congrArg (fun z => ((z i : P i) : V)) hm
-    simpa [T] using h
+    simpa [T] using congrArg (fun z => ((z i : P i) : V)) hm
   · have h := hinj (fun i => ⟨m i, hm i⟩) (funext fun i => Subtype.ext (hfix i))
     funext i
-    have hi := congrArg (fun z => ((z i : P i) : V)) h
-    simpa using hi
+    simpa using congrArg (fun z => ((z i : P i) : V)) h
 
 end GlobalTheory.PhiGam

@@ -111,8 +111,7 @@ theorem _root_.GlobalTheory.Mem.RayZeta.root_mem_rayField : ∀ (K M L : Type) [
       one_pow, one_pow, (h : a % p = b % p)]
   have hζint : IsIntegral ℤ ζ := IsIntegral.of_pow (Nat.pos_of_ne_zero hp) (hζ ▸ isIntegral_one)
   let z : 𝓞 L := ⟨ζ, hζint⟩
-  have hz : z ^ p = 1 := by
-    exact NumberField.RingOfIntegers.ext hζ
+  have hz : z ^ p = 1 := NumberField.RingOfIntegers.ext hζ
   have hfrob : ∀ (σ : L ≃ₐ[K] L) (v : HeightOneSpectrum (𝓞 K)), ¬ v.asIdeal ∣ 𝔮 →
       _root_.GlobalTheory.NT.IsFrob L v σ → σ ζ = ζ ^ Ideal.absNorm v.asIdeal := by
     intro σ v hv hF

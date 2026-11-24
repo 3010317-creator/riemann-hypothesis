@@ -94,8 +94,7 @@ theorem val_rigT' {S : Scheme.{0}} (A : Over S) [GrpObj A] (L : LB A.left) (rig 
   unfold val rigT
   rw [map_zpow]
   congr 1
-  rw [gm_res r z _ hm']
-  exact key
+  rwa [gm_res r z _ hm']
 
 def Chartwise {X X' : Scheme.{0}} {L₀ : LB X} {L₁ : LB X'} {φ : X' ⟶ X} (w : LB.Iso L₁ (L₀.pull φ))
     (c : L₁.ι → L₀.ι) : Prop :=
@@ -154,8 +153,7 @@ theorem symLift_chartwise [IsCommMonObj A] (hw : w.IsGen) (hc : Chartwise w c) (
       refine (v _ _ _ _ _ hJ hJ').trans ?_
       rw [(g _ (o₂ _ _)).2, (g _ (o₂ _ _)).2, one_zpow, one_zpow, _root_.one_mul, _root_.one_mul]
       rfl
-    simp only [e] at q
-    exact q
+    simpa only [e] using q
   · obtain ⟨J, hJ, g⟩ := exists_gauge hp hL₀ hc (T ⊗ A).hom hJ'
     have q := val_corr hJ hs (𝟙 _ ≫ psi hp τ hτ)
     rw [val_symGen _ _ _ hJ, val_one] at q
@@ -302,8 +300,7 @@ theorem thJetT_move (hw : w.IsGen) (hc : Chartwise w c) (hs : Function.Surjectiv
     rw [Category.assoc, ← he] at q
     exact (hc.1 _ _).2 q
   · have q := h₃ a j
-    rw [ey, valR_sec_move hp τ hτ hc (ht a), valR_rig_move hc he hρ] at q
-    exact q
+    rwa [ey, valR_sec_move hp τ hτ hc (ht a), valR_rig_move hc he hρ] at q
 
 include hp in
 theorem exists_ptEquiv {Z : Scheme.{0}} {s : Z ⟶ S'} {s₀ : Z ⟶ S} (e : s₀ = s ≫ f) :

@@ -238,8 +238,7 @@ theorem exists_baseChange : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] (R
     have m := gp.2 _ (c a) (c b) (toUnit _ ≫ D₁.c a) (toUnit _ ≫ D₁.c b)
       (by rw [hc, Over.comp_left, u]) (by rw [hc, Over.comp_left, u])
     rw [← MonObj.comp_mul, Over.comp_left, u] at m
-    rw [hc, D₁.c_add]
-    exact m
+    rwa [hc, D₁.c_add]
   have hK : jK R₂ ≫ spMap σ = spMap gam ≫ jK R₁ := by
     show Spec.map _ ≫ Spec.map _ = Spec.map _ ≫ Spec.map _
     rw [← Spec.map_comp, ← Spec.map_comp]
@@ -477,8 +476,7 @@ theorem exists_sqrt_hom : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
   have h2 : Additive.toMul (L a + L a) = Units.map gam.toMonoidHom (h a) := by
     rw [← LinearMap.add_apply, LinearMap.congr_fun hLG a]
     rfl
-  rw [sq, ← toMul_add]
-  exact h2
+  rwa [sq, ← toMul_add]
 
 end GlobalTheory.RootHom
 end -- clump:auto
@@ -781,8 +779,7 @@ theorem half_exists : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [Comm
     have m := hpb.2 _ (c a) (c b) (toUnit _ ≫ Q.c a) (toUnit _ ≫ Q.c b)
       (by rw [hc, Over.comp_left, u]) (by rw [hc, Over.comp_left, u])
     rw [← MonObj.comp_mul, Over.comp_left, u] at m
-    rw [hc, Q.c_add]
-    exact m
+    rwa [hc, Q.c_add]
   choose psi hpsi using fun x : Q.X => GlobalTheory.SS.HtForm.gen_field _
     (DVR.linComb_isLB P.L P.isLB (K := PUnit) (fun _ => ptK (c x)) (fun _ => -1))
   let D : DegPre R' :=
@@ -799,9 +796,8 @@ theorem half_exists : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [Comm
   have h : ∃ κ : (TK R').left ⟶ (TK R).left, κ ≫ jK R = jK R' ≫ spMap ρ := ⟨κ, hκ⟩
   have e := kappa_unique R R' ρ _ _ h.choose_spec hκ
   have := (hR h.choose h.choose_spec a b).choose_spec z J J' hJ hJ'
-  simp only [f, dif_pos h]
-  rw [← e]
-  exact this
+  simp only [f, dite_eq_left h]
+  rwa [← e]
 
 end GlobalTheory.HalfEx
 end -- clump:auto
@@ -894,15 +890,7 @@ theorem alg {X U : Type} [AddCommGroup X] [CommGroup U] (F t P : X → X → U) 
 
 theorem exists_genPtMap {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] (ρ : R →+* R')
     (hρ : Function.Injective ρ) : ∃ κ : (TK R').left ⟶ (TK R).left, κ ≫ jK R = jK R' ≫ spMap ρ := by
-  have hu : ∀ y : nonZeroDivisors R, IsUnit ((algebraMap R' (FractionRing R')).comp ρ y) := fun y => by
-    refine IsUnit.mk0 _ ?_
-    rw [RingHom.comp_apply, ne_eq, IsFractionRing.to_map_eq_zero_iff]
-    exact (map_ne_zero_iff ρ hρ).2 (nonZeroDivisors.ne_zero y.2)
-  refine ⟨Spec.map (CommRingCat.ofHom (IsLocalization.lift (M := nonZeroDivisors R) (S := FractionRing R) hu)), ?_⟩
-  simp only [jK, spMap, ← Spec.map_comp]
-  congr 1
-  ext x
-  simp
+  exact GlobalTheory.PsiRing.exists_generic_map hρ
 
 end GlobalTheory.PolDeg.SymCoc
 
@@ -1238,15 +1226,7 @@ namespace GlobalTheory.PolDeg
 
 theorem exists_fracSpec {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] (ρ : R →+* R')
     (hρ : Function.Injective ρ) : ∃ κ : (TK R').left ⟶ (TK R).left, κ ≫ jK R = jK R' ≫ spMap ρ := by
-  have hu : ∀ y : nonZeroDivisors R, IsUnit ((algebraMap R' (FractionRing R')).comp ρ y) := fun y => by
-    refine IsUnit.mk0 _ ?_
-    rw [RingHom.comp_apply, ne_eq, IsFractionRing.to_map_eq_zero_iff]
-    exact (map_ne_zero_iff ρ hρ).2 (nonZeroDivisors.ne_zero y.2)
-  refine ⟨Spec.map (CommRingCat.ofHom (IsLocalization.lift (M := nonZeroDivisors R) (S := FractionRing R) hu)), ?_⟩
-  simp only [jK, spMap, ← Spec.map_comp]
-  congr 1
-  ext x
-  simp
+  exact GlobalTheory.PolDeg.SymCoc.exists_genPtMap ρ hρ
 
 alias toUnit_left := _root_.GlobalTheory.ObjPull.toUnit_left'
 
@@ -1278,8 +1258,7 @@ theorem tauBimult_of_half : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type)
       rw [Category.id_comp]
       exact Q.tau_add a a' b y J hJ
     have := (val_mul hJ _ _ _).symm.trans ((val_corr hJ hcorr κ).trans (val_mul hJ _ _ _))
-    refine Eq.trans ?_ this
-    exact congrArg₂ (· * ·) rfl (val_cub Q.cub k hJ _ _ _).symm
+    exact Eq.trans (congrArg₂ (· * ·) rfl (val_cub Q.cub k hJ _ _ _).symm) this
   intro a a' b
   refine corr_of_val D.P.isLB fun y J' hJ' => ?_
   obtain ⟨J, hJ, -⟩ := exists_good Q.M.L Q.M.isLB y (K := PEmpty) (fun i => i.elim) (fun i => i.elim)
@@ -1383,8 +1362,7 @@ theorem GlobalTheory.PolDeg.refine_monomial_of_polarised : ∀ (R : Type) [CommR
     intro i
     refine (inferInstance : (maximalIdeal R₂).IsPrime).mem_of_pow_mem 2 ?_
     rw [hr' i, mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    exact (mem_maximalIdeal _).1 (htm i) ((isUnit_map_iff (σ.comp ρ₁) _).1 hu)
+    exact fun hu => (mem_maximalIdeal _).1 (htm i) ((isUnit_map_iff (σ.comp ρ₁) _).1 hu)
   have key : ∀ (D₃ : DegPre R₂) (e' : D₃.X ≃+ Q.X), D₃.PsiEven → D₃.TauBimult →
       Half Q (σ.comp ρ₁) D₃ e' (fun _ _ => 1) →
       IsMonomial D₃ r (fun i => (2 : ℤ) • pull e'.toIntLinearEquiv.toLinearMap (δ i)) →

@@ -65,8 +65,8 @@ theorem pair_of_X {g : Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ} {x : Fin X.B.I.n 
     induction hw using Submodule.span_induction with
     | mem w hw =>
       obtain ⟨b, -, rfl⟩ := hw
-      rw [Finset.sum_eq_single b (fun c _ hc => by rw [fr_fe, if_neg hc, star_zero, zero_mul])
-        (fun h => absurd (Finset.mem_univ b) h), fr_fe, if_pos rfl, star_one, one_mul]
+      rw [Finset.sum_eq_single b (fun c _ hc => by rw [fr_fe, ite_eq_right hc, star_zero, zero_mul])
+        (fun h => absurd (Finset.mem_univ b) h), fr_fe, ite_eq_left rfl, star_one, one_mul]
     | zero => simp only [hz1, hz2, star_zero, zero_mul, Finset.sum_const_zero]
     | add a b _ _ ha hb =>
       rw [hadd1, ha, hb, ← Finset.sum_add_distrib]
@@ -119,7 +119,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
       · exact cx b a hba
       · have hz : ∀ c ∈ {c : Fin D.R.rS | c.1 < a.1}, hJ (X.B.I.ε v) (fV X v b) (eV X v c) = 0 := by
           intro c hc
-          rw [fr_fe, if_neg]
+          rw [fr_fe, ite_eq_right]
           rintro rfl
           exact hba hc
         rw [mulVec_split (uMat (s v)), mulVec_split (uMat (s' v)), hJa, hJa,
@@ -206,8 +206,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
       simp only [Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, Pi.zero_apply]
       rw [← hexp b]
       exact hgd _ (he b) a
-    intro c
-    exact congrFun (key _ hXu) c
+    exact fun c => congrFun (key _ hXu) c
   have hdz : ∀ a, hJ (X.B.I.ε v) (zV X u v) (d a) = 0 := by
     intro a
     have h := hgd _ hz a
@@ -228,7 +227,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
     · rw [hde a b]
       simp [fr_ee]
     · rw [← hΔ b a]
-      simp only [fr_fe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [fr_fe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     · rw [hdw a j]
       simp [fr_we]
     · rw [hdz a]
@@ -271,8 +270,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
   have hskew : ∀ b a, (αmᴴ * Δ) b a + star ((αmᴴ * Δ) a b) = 0 := by
     intro b a
     have h := hsk b a
-    rw [hstar, Matrix.conjTranspose_apply] at h
-    exact h
+    rwa [hstar, Matrix.conjTranspose_apply] at h
   have hlt : ∀ b a : Fin D.R.rS, b < a → (αmᴴ * Δ) b a = 0 := by
     intro b a hba
     have h1 := hskew b a
@@ -292,8 +290,7 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
         linarith
       · rw [hNe, Complex.sub_im, cdiag b, sub_self, Complex.zero_im]
     · have h1 := hskew b a
-      rw [hlt a b hab, star_zero, add_zero] at h1
-      exact h1
+      rwa [hlt a b hab, star_zero, add_zero] at h1
   have hΔ0 : Δ = 0 := by
     have hz0 : αmᴴ * Δ = 0 := Matrix.ext fun b a => by rw [hN0 b a]; rfl
     calc Δ = (xMat X v s * αmᴴ) * Δ := by rw [hXαh, Matrix.one_mul]

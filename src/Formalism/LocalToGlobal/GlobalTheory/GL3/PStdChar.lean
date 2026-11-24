@@ -202,14 +202,12 @@ variable {ω₀ : ℂ} (h0 : ω₀ ∈ L.lattice) (hθ : cmTheta 1 d * (ω₀ / 
   (hθ' : (1 - cmTheta 1 d) * (ω₀ / 2) ∉ L.lattice)
 include h0 hθ hθ'
 
-theorem half_notMem : ω₀ / 2 ∉ L.lattice := by
-  exact fun h => hθ (hst _ h)
+theorem half_notMem : ω₀ / 2 ∉ L.lattice := fun h => hθ (hst _ h)
 
 private theorem half_periods_not_mem_cm_lattice : ω₀ / 2 ∉ L.lattice ∧ cmTheta 1 d * ω₀ / 2 ∉ L.lattice ∧
     (ω₀ + cmTheta 1 d * ω₀) / 2 ∉ L.lattice := by
   refine ⟨half_notMem hst h0 hθ hθ', ?_, ?_⟩
-  · rw [mul_div_assoc]
-    exact hθ
+  · rwa [mul_div_assoc]
   · intro h
     apply hθ'
     have e : (1 - cmTheta 1 d) * (ω₀ / 2) = ω₀ - (ω₀ + cmTheta 1 d * ω₀) / 2 := by ring
@@ -232,16 +230,14 @@ theorem q_odd : ∃ Q : ℤ, Odd Q ∧ q1 L d ω₀ = (Q : ℝ) := by
     intro h
     apply n3
     have eq : ω₀ + cmTheta 1 d * ω₀ = (((a + c : ℤ)) : ℂ) * L.ω₁ + ((b + e : ℤ) : ℂ) * L.ω₂ := by
-      rw [hce]
-      rw [hab]
+      rw [hce, hab]
       push_cast
       ring
     rw [eq]
     exact half_mem L _ _ h.1 h.2
   obtain ⟨s, hs, hE⟩ := exists_sign_EE_lattice_eq_det L
   have hq : q1 L d ω₀ = ((s * (c * b - e * a) : ℤ) : ℝ) := by
-    rw [← altE_theta, hce]
-    rw [hab]
+    rw [← altE_theta, hce, hab]
     exact hE c e a b
   have hodd : Odd (c * b - e * a) := by
     rw [Int.odd_iff, Int.sub_emod, Int.mul_emod c, Int.mul_emod e]
@@ -278,7 +274,7 @@ theorem char_eq (hd : d % 8 = 7) (w : ℂ) (hw : w ∈ L.lattice) : aa L d w = t
   have rtwo : ∀ v ∈ L.lattice, aa L d (2 * v) * thetaZeroCharacter L ω₀ (2 * v) = 1 := by
     intro v hv; rw [two_mul, radd v hv v hv, rsq v hv]
   have r0 : aa L d ω₀ * thetaZeroCharacter L ω₀ ω₀ = 1 := by
-    rw [aa, hQ, exp_pi_int, hodd.neg_one_zpow, thetaZeroCharacter, semiChar, if_neg (half_notMem hst h0 hθ hθ'), cayleyGaussianIntegrals_self_fact]
+    rw [aa, hQ, exp_pi_int, hodd.neg_one_zpow, thetaZeroCharacter, semiChar, ite_eq_right (half_notMem hst h0 hθ hθ'), cayleyGaussianIntegrals_self_fact]
     simp
   have ru : aa L d (cmTheta 1 d * ω₀) * thetaZeroCharacter L ω₀ (cmTheta 1 d * ω₀) = 1 := by
     have hne : cmTheta 1 d * ω₀ / 2 ∉ L.lattice := by rwa [mul_div_assoc]
@@ -287,7 +283,7 @@ theorem char_eq (hd : d % 8 = 7) (w : ℂ) (hw : w ∈ L.lattice) : aa L d w = t
       rw [quadratic_form_theta_scaling, hQ]
       have hd' : (d : ℝ) = 8 * (k' : ℝ) + 7 := by exact_mod_cast hk'
       rw [hd']; push_cast; ring
-    rw [aa, hq2, exp_pi_int, thetaZeroCharacter, semiChar, if_neg hne, altE_theta, hQ, exp_pi_int, hodd.neg_one_zpow,
+    rw [aa, hq2, exp_pi_int, thetaZeroCharacter, semiChar, ite_eq_right hne, altE_theta, hQ, exp_pi_int, hodd.neg_one_zpow,
       Even.neg_one_zpow ⟨(k' + 1) * Q, by ring⟩]
     norm_num
   have rall : aa L d w * thetaZeroCharacter L ω₀ w = 1 := by

@@ -465,7 +465,7 @@ theorem bound_main : Bound k := by
     exact hu (hf1.symm.trans h1)
   have hni : ¬ Function.Injective S := fun hi => hns (LinearMap.injective_iff_surjective.1 hi)
   rw [injective_iff_map_eq_zero] at hni
-  push_neg at hni
+  push Not at hni
   obtain ⟨y, hSy, hy0⟩ := hni
   have hAy : A y = μ • (y : IndSp (blk2 d) τ) := by
     have := congrArg Subtype.val hSy
@@ -514,16 +514,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem isOpen_fix {G V : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup V]
     [Module ℂ V] (ρ : Representation ℂ G V) (v : V) (U : Set G) (hU : IsOpen U) (h1 : (1 : G) ∈ U)
     (hfix : ∀ u ∈ U, ρ u v = v) : IsOpen {g : G | ρ g v = v} := by
-  rw [isOpen_iff_mem_nhds]
-  intro g hg
-  have hgU : (fun x => g * x) '' U ∈ nhds g := by
-    have ho : IsOpen ((fun x => g * x) '' U) := (Homeomorph.mulLeft g).isOpenMap U hU
-    exact ho.mem_nhds ⟨1, h1, mul_one g⟩
-  refine Filter.mem_of_superset hgU ?_
-  rintro _ ⟨u, hu, rfl⟩
-  show ρ (g * u) v = v
-  rw [map_mul, Module.End.mul_apply, hfix u hu]
-  exact hg
+  exact CompanionTheory.RgGu.NR.Compact.isOpen_fix ρ v U hU h1 hfix
 
 def rc (m : Levi k fun _ : Fin 2 => Fin d) : ℝ :=
   (nabs k (Matrix.GeneralLinearGroup.det (m 0)))⁻¹ * nabs k (Matrix.GeneralLinearGroup.det (m 1))
@@ -913,7 +904,7 @@ def stabG (ρ : Representation ℂ G V) (v : V) : Subgroup G where
 theorem nondeg {ρ : Representation ℂ G V} (hi : ρ.IsIrreducible) (C : V →ₗ[ℂ] V →ₛₗ[starRingEnd ℂ] ℂ) (hC0 : C ≠ 0)
     (hCi : ∀ g v w, C (ρ g v) (ρ g w) = C v w) (v : V) (hv : v ≠ 0) : ∃ x, C v x ≠ 0 := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   let R : Submodule ℂ V :=
     { carrier := {v | ∀ x, C v x = 0}
       add_mem' := fun {a b} ha hb x => by simp [ha x, hb x]
@@ -1540,7 +1531,7 @@ theorem someRed_of (h1 : Complementary) (h2 : Compact k) (h3 : Bound k) (h4 : He
     SomeRed k := by
   intro x hx hu
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   set d := x.1 with hdd
   have hd2 : ∀ s : ℝ, ∑ a, (![x.nu (-(s : ℂ)), x.nu (s : ℂ)] a).1 = x.1 + x.1 := fun s => by
     simp [Fin.sum_univ_two, IrrGL.nu, IrrGL.tw]

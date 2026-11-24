@@ -397,8 +397,7 @@ theorem graded (D : BKDat O K l e a ι η H) (Sig : Finset (ZMod e))
   have hred : red y = 0 := by
     by_contra hne
     obtain ⟨τ, hτ⟩ : ∃ τ, red y τ ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hne (funext h)
     have hmem : c - (i : ZMod e) ∈ D.desc.chars τ := ⟨red y, hτ, fun ζ => actD_red D c i y hxW ζ τ⟩
     refine hi ⟨_, hch τ hmem, i / e, ?_⟩
@@ -777,8 +776,7 @@ theorem mem_lpow_L_of_vpow_smul (O K : Type) [CommRing O] [NormedField K] [IsUlt
   have hi : X ^ (e * n) * (P.mxInv τ *ᵥ w τ) i = (l : K) ^ b • (P.mxInv τ *ᵥ z τ) i := by
     have hτ := congrArg (fun v : Vec K a ι => (P.mxInv τ *ᵥ v τ) i) h
     simp only [Pi.smul_apply, Matrix.mulVec_smul, smul_eq_mul] at hτ
-    rw [pow_mul]
-    exact hτ
+    rwa [pow_mul]
   rw [mem_A]
   intro k
   rw [Pi.smul_apply, Matrix.mulVec_smul, Pi.smul_apply, coeff_smul, smul_eq_mul,
@@ -816,8 +814,7 @@ theorem root_inertia_ne_one {K : Type} [NormedField K] {l e a : ℕ} [Fact l.Pri
   apply h
   have h2 : powL l (-τ) ζ = 1 := Subtype.ext (Units.ext h1)
   have h3 := powL_add l τ (-τ) ζ
-  rw [h2, map_one, add_neg_cancel, powL_zero] at h3
-  exact h3
+  rwa [h2, map_one, add_neg_cancel, powL_zero] at h3
 
 theorem sum_isoProj : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist K] [Algebra O K]
     [IsUnitBall O K] (l e a : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] [Fact l.Prime]
@@ -1008,8 +1005,7 @@ theorem E_pow_mul_mem_colon_frob (O K : Type) [CommRing O] [NormedField K] [IsUl
   have hmM : (Pi.single τ m : Vec K a ι) ∈ D₁.M := mem_tot.2 fun σ => by
     by_cases h : σ = τ
     · subst h
-      rw [Pi.single_eq_same]
-      exact hm
+      rwa [Pi.single_eq_same]
     · simp [h, zero_mem]
   have hlow := mem_tot.1 (D₁.lower _ hmM) τ
   simp only [Pi.smul_apply, Pi.single_eq_same] at hlow
@@ -1153,15 +1149,15 @@ lemma phi_X : φ PowerSeries.X = PowerSeries.X ^ l := by
   rw [hφ, PowerSeries.coeff_X_pow]
   by_cases h1 : l ∣ m
   · obtain ⟨q, rfl⟩ := h1
-    rw [if_pos (dvd_mul_right l q), Nat.mul_div_cancel_left q (by omega), PowerSeries.coeff_X]
+    rw [ite_eq_left (dvd_mul_right l q), Nat.mul_div_cancel_left q (by omega), PowerSeries.coeff_X]
     by_cases hq : q = 1
     · subst hq; simp
-    · rw [if_neg hq, if_neg]
+    · rw [ite_eq_right hq, ite_eq_right]
       intro h2
       apply hq
       have : l * q = l * 1 := by simpa using h2
       exact Nat.eq_of_mul_eq_mul_left (by omega) this
-  · rw [if_neg h1, if_neg]
+  · rw [ite_eq_right h1, ite_eq_right]
     rintro rfl
     exact h1 dvd_rfl
 
@@ -1172,7 +1168,7 @@ lemma comps_X_pow (t : ℕ) :
       if j = (⟨t % l, Nat.mod_lt _ (Nat.lt_of_lt_of_le (by norm_num) hl)⟩ : Fin l) then PowerSeries.X ^ (t / l) else 0 := by
     apply comps_eq
     simp only [apply_ite φ, map_zero, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true]
+      ite_true]
     rw [map_pow, phi_X l hl φ hφ, ← pow_mul, ← pow_add, Nat.mod_add_div]
   rw [this]; simp
 
@@ -1273,8 +1269,7 @@ theorem frobenius_ideal_degree_bound : ∀ {O : Type} [CommRing O] (l : ℕ), 2 
     have d := down τ0
     have m := hmax (τ0 + 1) (Finset.mem_univ _)
     rw [hn] at d
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     nlinarith
   intro τ
   have h1 := step (τ + 1) (s (τ + 1)) (hspec (τ + 1))
@@ -1703,7 +1698,7 @@ theorem psi_frob_mul (l : ℕ) [Fact l.Prime] (g h : K⟦X⟧) :
       ∑ p ∈ (Finset.HasAntidiagonal.antidiagonal n).map ⟨_, hinj⟩, coeff p.1 (frob K l g) * coeff p.2 h := by
     rw [Finset.sum_map]
     refine Finset.sum_congr rfl fun p _ => ?_
-    simp only [Function.Embedding.coeFn_mk, coeff_frob, coeff_psi, dvd_mul_right, if_true,
+    simp only [Function.Embedding.coeFn_mk, coeff_frob, coeff_psi, dvd_mul_right, ite_true,
       Nat.mul_div_cancel_left _ hl]
   rw [h1]
   refine (Finset.sum_subset ?_ ?_).symm
@@ -1714,7 +1709,7 @@ theorem psi_frob_mul (l : ℕ) [Fact l.Prime] (g h : K⟦X⟧) :
     simp only [Function.Embedding.coeFn_mk]
     rw [← mul_add, hq]
   · intro p hp hp'
-    rw [coeff_frob, if_neg, zero_mul]
+    rw [coeff_frob, ite_eq_right, zero_mul]
     rintro ⟨c, hc⟩
     apply hp'
     rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
@@ -1730,7 +1725,7 @@ theorem psi_frob_mul (l : ℕ) [Fact l.Prime] (g h : K⟦X⟧) :
 
 theorem psi_frob (l : ℕ) [Fact l.Prime] (g : K⟦X⟧) : psi l (frob K l g) = g := by
   ext n
-  rw [coeff_psi, coeff_frob, if_pos (dvd_mul_right _ _),
+  rw [coeff_psi, coeff_frob, ite_eq_left (dvd_mul_right _ _),
     Nat.mul_div_cancel_left _ (Fact.out : l.Prime).pos]
 
 theorem psi_mulVec {ι κ : Type} [Fintype ι] (l : ℕ) [Fact l.Prime] (Y : Matrix κ ι K⟦X⟧)
@@ -1789,8 +1784,7 @@ theorem killsCoker_EM [NormedAlgebra ℚ_[l] K] [NeZero e] {P : PhiMod O K l e a
   obtain ⟨x, hx, hxy⟩ := hM _ hy
   refine ⟨Ezpow K l e (-(η : ℤ)) • x, ?_, ?_⟩
   · change E K l e ^ η • Ezpow K l e (-(η : ℤ)) • x ∈ P.M
-    rw [smul_smul, E_pow_mul_Ezpow_neg, one_smul]
-    exact hx
+    rwa [smul_smul, E_pow_mul_Ezpow_neg, one_smul]
   · rw [map_smul, hxy, smul_comm, smul_smul, mul_comm, E_pow_mul_Ezpow_neg, one_smul]
 
 theorem killsCoker_invOf [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] [TameDescentExponentData K l e a]

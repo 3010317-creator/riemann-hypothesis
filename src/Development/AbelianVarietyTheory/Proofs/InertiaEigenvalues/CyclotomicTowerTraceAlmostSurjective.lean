@@ -124,8 +124,7 @@ theorem exists_generator (E : IntermediateField ℚ_[l] (Om l)) [FiniteDimension
   let φ : integralClosure ℤ_[l] E →ₐ[ℤ_[l]] Om l :=
     (E.val.restrictScalars ℤ_[l]).comp (integralClosure ℤ_[l] E).val
   have := congrArg φ hp
-  rw [show (aeval θ).toRingHom p = aeval θ p from rfl, ← aeval_algHom_apply] at this
-  exact this
+  rwa [show (aeval θ).toRingHom p = aeval θ p from rfl, ← aeval_algHom_apply] at this
 
 theorem gal_aeval (g : GQ l) (x : Om l) (p : ℤ_[l][X]) : g (aeval x p) = aeval (g x) p :=
   (aeval_algHom_apply ((g : Om l →ₐ[ℚ_[l]] Om l).restrictScalars ℤ_[l]) x p).symm
@@ -258,8 +257,7 @@ theorem exists_gal_pow (K : FinExt l) (i m : ℕ) {ζ : Om l} (hζ : ζ ^ l ^ i 
     exact (hlt.trans_lt hlt1).ne'
   obtain ⟨g, hg, hgu⟩ := (_root_.GlobalTheory.Cyc.finrank_Ks_and_chi_surjective l K).2 χ hχ _ hu
   refine ⟨g, (((cyc_basic l χ hχ).2.2 K g hg).1 1).2 ?_, ?_⟩
-  · rw [hgu, Nat.cast_add, Nat.cast_one, add_sub_cancel_left]
-    exact hlt
+  · rwa [hgu, Nat.cast_add, Nat.cast_one, add_sub_cancel_left]
   · obtain ⟨a, ha, hga⟩ := hχ g i ζ hζ
     rw [hga]
     rw [hgu] at ha
@@ -306,8 +304,7 @@ theorem prod_lift_le (F E : IntermediateField ℚ_[l] (Om l)) (S : Finset (GQ l)
   have hfix : ∀ s t : GQ l, s⁻¹ * t ∈ E.fixingSubgroup → t x = s x := by
     intro s t h
     have := (IntermediateField.mem_fixingSubgroup_iff _ _).1 h x hxE
-    have h2 := congrArg s this
-    simpa using h2
+    simpa using congrArg s this
   set f : (Om l)[X] := ∏ s ∈ S, (X - C (s x)) with hf
   have hfi : f ∈ intPoly l := prod_mem fun t _ =>
     sub_mem X_mem_intPoly (C_mem_intPoly (by rwa [norm_gal]))

@@ -218,8 +218,7 @@ theorem integral_pi_repro {ι : Type} [Fintype ι] [DecidableEq ι] {G : Type} [
       simp [hi, this]
   have h' : ∀ k z, ∫ t, a' k t * f' (z * Pi.mulSingle k t) ∂μ = s (e.symm k) * f' z := by
     intro k z
-    simp only [a', f', hmul]
-    exact h (e.symm k) _
+    simpa only [a', f', hmul] using h (e.symm k) _
   rw [integral_fin_repro μ _ a' (fun k => ha _) (fun k => ha' _) f' hf' _ h']
   have e2 : f' 1 = f 1 := rfl
   rw [e2]
@@ -260,9 +259,7 @@ theorem haar_restrict_eq {X A : Type} [Group X] [TopologicalSpace X] [IsTopologi
     refine ⟨fun C hC => ?_⟩
     obtain ⟨D, hD, hsub⟩ := hprop C hC
     rw [hlam, Measure.map_apply hPm hC.isClosed.measurableSet, Measure.restrict_apply (hPm hC.isClosed.measurableSet)]
-    refine lt_of_le_of_lt (measure_mono ?_) hD.measure_lt_top
-    intro x hx
-    exact hsub ⟨hx.2, hx.1⟩
+    exact lt_of_le_of_lt (measure_mono (fun x hx => hsub ⟨hx.2, hx.1⟩)) hD.measure_lt_top
   have heq := Measure.isMulLeftInvariant_eq_smul lam lam0
   set c' := Measure.haarScalarFactor lam lam0 with hc'
   have hpos : c' ≠ 0 := by
@@ -341,10 +338,10 @@ theorem jvMat_mem (v : InfinitePlace E) (u : UN N) : jvMat v u.1 ∈ Matrix.unit
   simp only [Matrix.mul_apply, Matrix.star_apply, jvMat, Matrix.of_apply, Finset.sum_apply, Pi.mul_apply,
     Pi.star_apply, Matrix.one_apply]
   by_cases hw : w = v
-  · simp only [hw, if_true]
+  · simp only [hw, ite_true]
     rw [hij]
     split_ifs <;> rfl
-  · simp only [hw, if_false]
+  · simp only [hw, ite_false]
     by_cases h : i = j
     · subst h; simp
     · simp [h]

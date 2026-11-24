@@ -75,6 +75,4 @@ theorem UpperTheory.V.Hi.JEx.map_of_rel {l : ℕ} [Fact l.Prime] {F : GFrame l} 
           rfl
       _ = κ' v i := by rw [e2]
   have h2 : ∀ v i, pushCh (φ : Λ.Λ →+* T) (Λ.κ v i) = κ' v i := fun v i => (hpsi v i).2
-  have heq := (hu _ h1).trans (hu _ h2).symm
-  intro b
-  exact DFunLike.congr_fun heq b
+  exact fun b => DFunLike.congr_fun ((hu _ h1).trans (hu _ h2).symm) b

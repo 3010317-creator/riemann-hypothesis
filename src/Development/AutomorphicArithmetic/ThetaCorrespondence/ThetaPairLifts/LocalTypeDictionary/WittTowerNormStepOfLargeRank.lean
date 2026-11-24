@@ -188,7 +188,7 @@ theorem _root_.GlobalTheory.T.adaptedHyperbolicPlane_rescale_rebasis : ∀ (F E 
     GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) Y₁.L hcm
   choose β₁ hβ₁ using hb₁
   let bas₁ : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), GL (Fin n₁) (Fv F v) := fun v => if h : v ∈ B.P then β₁ ⟨v, h⟩ else Y₁.bas v
-  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dif_pos v.2]
+  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dite_eq_left v.2]
   have hb : ∀ v : B.P, ∃ β : GL (Fin n) (Fv F v), (∀ i : Fin n, (i.1 = i₀ → ∀ r, β.1 r i = B.τ v (x r)) ∧
       (i.1 = i₁ → ∀ r, β.1 r i = B.τ v (y r)) ∧
       ∀ j : Fin n₁, i.1 = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.skip i₀ i₁ j → ∀ r, β.1 r i = (H₀.ι.map (B.τ v) * (β₁ v).1) r j) ∧
@@ -202,7 +202,7 @@ theorem _root_.GlobalTheory.T.adaptedHyperbolicPlane_rescale_rebasis : ∀ (F E 
       (by rw [hcomap]; exact hβ₁ v)
   choose β hβ using hb
   let bas : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), GL (Fin n) (Fv F v) := fun v => if h : v ∈ B.P then β ⟨v, h⟩ else Y.bas v
-  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dif_pos v.2]
+  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dite_eq_left v.2]
   let Y' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n := ⟨Y.J, Y.L, Y.θ, bas⟩
   let Y₁' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n₁ := ⟨Y₁.J, Y₁.L, Y₁.θ, bas₁⟩
   refine ⟨Y', Y₁', ⟨x, y, H₀.ι, 𝔟⟩, rfl, rfl, fun v => ?_, fun v => ?_, ?_⟩
@@ -438,18 +438,7 @@ theorem sesq_unimod (hV : V.IsHerm D.sp.cm.sig B r s) :
   rw [e]
 
 theorem hasSig_map_conj {m a b : ℕ} {M : Matrix (Fin m) (Fin m) ℂ} (h : HasSig M a b) :
-    HasSig (M.map (starRingEnd ℂ)) a b := by
-  obtain ⟨hn, A, hA⟩ := h
-  refine ⟨hn, A.map star, ?_⟩
-  have e1 : (A.map star).map star = A := by ext i j; simp
-  have e2 : (A.map star)ᵀ * M.map (starRingEnd ℂ) * A = (Aᵀ * M * A.map star).map (starRingEnd ℂ) := by
-    simp only [Matrix.map_mul, Matrix.transpose_map]
-    congr 1
-    ext i j; simp
-  rw [e1, e2, hA, Matrix.fromBlocks_map]
-  have e3 : (-1 : Matrix (Fin b) (Fin b) ℂ).map (starRingEnd ℂ) = -1 := by
-    ext i j; by_cases hij : i = j <;> simp [hij]
-  simp [e3]
+    HasSig (M.map (starRingEnd ℂ)) a b := GlobalTheory.PlaceSpaces.hasSig_map_conj h
 
 theorem hasSignature_all (hG : B.IsGood D.sp.cm.sig) {m a b : ℕ} (J : Matrix (Fin m) (Fin m) D.host.E)
     (hs : ∀ w, HasSig (J.map (B.emb w).1) a b) (φ : D.host.E →+* ℂ) : Formalism.UG.HasSignature (J.map φ) a b := by
@@ -894,14 +883,7 @@ namespace GlobalTheory.SqTower.StageExists
 
 theorem hasSignature_map_conj {n p q : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h : Formalism.UG.HasSignature M p q) :
     Formalism.UG.HasSignature (M.map (starRingEnd ℂ)) p q := by
-  obtain ⟨e, P, hP⟩ := h
-  refine ⟨e, Matrix.GeneralLinearGroup.map (starRingEnd ℂ) P, ?_⟩
-  have := congrArg (fun A => Matrix.map A (starRingEnd ℂ)) hP
-  simp only [Matrix.map_mul] at this
-  have hJ : (Formalism.UG.Jpq p q : Matrix _ _ ℂ).map (starRingEnd ℂ) = Formalism.UG.Jpq p q := by
-    ext (a | a) (b | b) <;> simp [Formalism.UG.Jpq, Matrix.one_apply, apply_ite]
-  rw [hJ] at this
-  exact this
+  exact GlobalTheory.TripleDarboux.hasSignature_map_conj h
 
 def withIdx {D : D7} (V : HSp D) (p : ℕ) : HSp D := { V with sig := fun _ => (V.rank - p, p) }
 

@@ -185,8 +185,7 @@ theorem allInt_one : AllInt (1 : Matrix ι ι K) := by
   · exact isIntegral_zero
 
 theorem int_star [StarRing K] {x : K} (h : IsIntegral ℤ x) : IsIntegral ℤ (star x) := by
-  have hs := h.map (starRingEnd K).toIntAlgHom
-  exact hs
+  exact h.map (starRingEnd K).toIntAlgHom
 
 theorem AllInt.conjT [StarRing K] {M : Matrix ι ι K} (hM : AllInt M) : AllInt Mᴴ := fun i j => int_star (hM j i)
 
@@ -332,7 +331,6 @@ theorem comb_mem_X (F : LFlag S r T) (c : Fin (r + 1) → E) (hc : c (Fin.last r
   rw [Fin.sum_univ_castSucc, hc, zero_smul, add_zero]
   refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ ?_
   rw [frame_cast]
-  show F.fl.e i ∈ Submodule.span E (Set.range F.fl.e)
   exact Submodule.subset_span ⟨i, rfl⟩
 
 theorem flag_step (F : LFlag S r T) (n : S.V ≃ₗ[E] S.V) {a : Matrix (Fin (r + 1)) (Fin (r + 1)) E}
@@ -356,17 +354,16 @@ theorem flag_step (F : LFlag S r T) (n : S.V ≃ₗ[E] S.V) {a : Matrix (Fin (r 
       show k'.1 < j
       have : k'.1 < i.1 := hki
       omega
-    · rw [if_pos hk, hk, (ha _ _).2 rfl, sub_self, zero_smul]
+    · rw [ite_eq_left hk, hk, (ha _ _).2 rfl, sub_self, zero_smul]
       exact Submodule.zero_mem _
-    · rw [if_neg (ne_of_gt hk), (ha _ _).1 hk, sub_self, zero_smul]
+    · rw [ite_eq_right (ne_of_gt hk), (ha _ _).1 hk, sub_self, zero_smul]
       exact Submodule.zero_mem _
   have hle : Xflag F (j + 1) ≤ (Xflag F j).comap ((n : S.V →ₗ[E] S.V) - LinearMap.id) := by
     show Submodule.span E (F.fl.e '' {i | i.1 < j + 1}) ≤ _
     rw [Submodule.span_le]
     rintro _ ⟨i, hi, rfl⟩
     exact hgen i hi
-  intro x hx
-  exact hle hx
+  exact fun x hx => hle hx
 
 theorem gram_self (F : LFlag S r T) (a b : Fin (r + 1)) :
     S.hT (frame F a) (frame F b) = diagonal (fun a => if a = Fin.last r then -T else 0) a b := by
@@ -389,8 +386,7 @@ theorem gramM_apply (F : LFlag S r T) (F' : LFlag S r T') (p q) :
   rcases p with a | a <;> rcases q with b | b
   · exact (gram_self F a b).symm
   · rfl
-  · show star (S.hT (frame F b) (frame F' a)) = S.hT (frame F' a) (frame F b)
-    exact (herm' _ _).symm
+  · exact (herm' _ _).symm
   · exact (gram_self F' a b).symm
 
 theorem Dr1_eq (F : LFlag S r T) (F' : LFlag S r T') : Dr1 F F' = (ZhatL F F').det := by
@@ -417,13 +413,12 @@ theorem gramM_det (F : LFlag S r T) (F' : LFlag S r T') : (gramM F F').det = (-1
 
 theorem diag_cast (t : E) (c : Fin (r + 1) → E) (i : Fin r) :
     ((diagonal fun a : Fin (r + 1) => if a = Fin.last r then t else 0) *ᵥ c) i.castSucc = 0 := by
-  rw [Matrix.mulVec_diagonal, if_neg (Fin.castSucc_ne_last i), zero_mul]
+  rw [Matrix.mulVec_diagonal, ite_eq_right (Fin.castSucc_ne_last i), zero_mul]
 
 private lemma cancel_lemma {N : Type} [Fintype N] [DecidableEq N] {Mx : Matrix N N E} (hM : Mx.det ≠ 0)
     {w w' : N → E} (h : Mx *ᵥ w = Mx *ᵥ w') : w = w' := by
   have hU : IsUnit Mx.det := isUnit_iff_ne_zero.mpr hM
-  have h1 := congrArg (fun t => Mx⁻¹ *ᵥ t) h
-  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hU] using h1
+  simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hU] using congrArg (fun t => Mx⁻¹ *ᵥ t) h
 
 theorem main_gen {Λ : Submodule (𝓞 E) S.V} (hΛ : Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ)
     (F : LFlag S r T) (F' : LFlag S r T') (hF : ∀ b, frame F b ∈ Λ) (hF' : ∀ b, frame F' b ∈ Λ)
@@ -446,8 +441,7 @@ theorem main_gen {Λ : Submodule (𝓞 E) S.V} (hΛ : Formalism.HermitianLattice
   have hbZa : bᴴ * Z * a = Z := by
     rw [hb, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc, ← hLZ, Matrix.nonsing_inv_mul_cancel_left _ _ hLU]
   have hAZb : aᴴ * Zᴴ * b = Zᴴ := by
-    have h1 := congrArg Matrix.conjTranspose hbZa
-    simpa [Matrix.conjTranspose_mul, Matrix.mul_assoc] using h1
+    simpa [Matrix.conjTranspose_mul, Matrix.mul_assoc] using congrArg Matrix.conjTranspose hbZa
   have ha_det : a.det = 1 := by
     have h1 := lo_det (up_conjT haU)
     rw [Matrix.det_conjTranspose] at h1
@@ -539,12 +533,10 @@ theorem main_gen {Λ : Submodule (𝓞 E) S.V} (hΛ : Formalism.HermitianLattice
       Finset.sum_sub_distrib]
   have hnF' : ∀ c, n (frame F' c) = ∑ i, a i c • frame F' i := by
     intro c
-    have h1 := hnv (Sum.inr c)
-    simpa [hvdef, hAdef, Fintype.sum_sum_type] using h1
+    simpa [hvdef, hAdef, Fintype.sum_sum_type] using hnv (Sum.inr c)
   have hnF : ∀ c, n (frame F c) = ∑ i, b i c • frame F i := by
     intro c
-    have h1 := hnv (Sum.inl c)
-    simpa [hvdef, hAdef, Fintype.sum_sum_type] using h1
+    simpa [hvdef, hAdef, Fintype.sum_sum_type] using hnv (Sum.inl c)
   have hA1 : A - 1 = Gval F F' • P := by
     have h1 : A - 1 = fromBlocks (b - 1) 0 0 (a - 1) := by
       rw [hAdef]
@@ -574,10 +566,8 @@ theorem main_gen {Λ : Submodule (𝓞 E) S.V} (hΛ : Formalism.HermitianLattice
     rw [hAdef]
     ext (i | i) (j | j) <;> simp [Matrix.one_apply]
   have hXe : ∀ i : Fin r, F.fl.e i ∈ Xsp F := fun i => by
-    show F.fl.e i ∈ Submodule.span E (Set.range F.fl.e)
     exact Submodule.subset_span ⟨i, rfl⟩
   have hXe' : ∀ i : Fin r, F'.fl.e i ∈ Xsp F' := fun i => by
-    show F'.fl.e i ∈ Submodule.span E (Set.range F'.fl.e)
     exact Submodule.subset_span ⟨i, rfl⟩
   have horthF : ∀ x ∈ orth S (Xsp F), n x - x ∈ Xsp F := by
     intro x hx
@@ -691,8 +681,7 @@ theorem Dr1_ne_zero {T' : ℕ} (F : LFlag S r T) (F' : LFlag S r (T' : E)) (τ :
       exact add_neg_cancel _)
     apply hw0
     funext b
-    have h1 := congrFun hs (Sum.inr b)
-    simpa using h1
+    simpa using congrFun hs (Sum.inr b)
   · have hp := hpos y hyX hyin
     have hyy : S.hT y y = star (w (Fin.last r)) * w (Fin.last r) * -(T' : E) := by
       have h1 : ∀ b, S.hT (frame F' b) y = w b * (if b = Fin.last r then -(T' : E) else 0) := by
@@ -708,7 +697,7 @@ theorem Dr1_ne_zero {T' : ℕ} (F : LFlag S r T) (F' : LFlag S r (T' : E)) (τ :
       rw [show S.hT y y = S.hT (∑ b, w b • frame F' b) y by rw [← hy], e]
       simp only [dotProduct, Pi.star_apply, h1]
       rw [Finset.sum_eq_single (Fin.last r)]
-      · rw [if_pos rfl]; ring
+      · rw [ite_eq_left rfl]; ring
       · intro c _ hc; simp [hc]
       · simp
     rw [hyy, map_mul, map_mul, hτ, map_neg, map_natCast] at hp
@@ -786,8 +775,7 @@ theorem congruence_mem : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ 
     have e4 : (hS D).hT (D.sp.iXY 0 w') (D.sp.iXY 0 w') = (D.sp.X 0).hT w' w' := D.sp.iXY_isom 0 hm0 w' w'
     simp only [map_add (f := _), LinearMap.add_apply]
     rw [e1, e2, e3, e4]
-    simp only [map_zero, add_zero]
-    exact hposW (embS D τ0) w' hw'0
+    simpa only [map_zero, add_zero] using hposW (embS D τ0) w' hw'0
   have hD : Dr1 (lf D F0) F' ≠ 0 := Dr1_ne_zero (lf D F0) F' (embS D τ0) (hstar τ0) hpos hG
   have hΛint : ∀ x ∈ Λ, ∀ y ∈ Λ, IsIntegral ℤ ((hS D).hT y x) := fun x hx => (mem_unimod hunim x).1 hx
   have hΓint : AllInt (gramM (lf D F0) F') := fun p q => by
@@ -891,7 +879,7 @@ theorem lm_cons (t : K) (s : ℕ) (bs : List (K × ℕ)) (l : ℕ) :
       have hj := j.2
       simp only [Matrix.submatrix_apply, finSumFinEquiv_apply_left, Matrix.of_apply, Fin.val_castAdd,
         ptEntry.eq_2, Matrix.fromBlocks_apply₁₁, id, Matrix.diagonal_apply, Fin.revPerm_apply,
-        Fin.ext_iff, Fin.val_rev, hi, hj, and_self, if_true]
+        Fin.ext_iff, Fin.val_rev, hi, hj, and_self, ite_true]
       exact if_congr (by omega) rfl rfl
     · have hi := i.2
       simp [ptEntry.eq_2]
@@ -916,7 +904,7 @@ theorem prodMaxOneNorm_cons (t : K) (s : ℕ) (bs : List (K × ℕ)) (n : ℕ) :
     intro i hi
     have hi' := Finset.mem_range.1 hi
     rw [Finset.prod_eq_single (s - 1 - i)]
-    · rw [ptEntry.eq_2, if_pos (by omega), if_pos (by omega)]
+    · rw [ptEntry.eq_2, ite_eq_left (by omega), ite_eq_left (by omega)]
     · intro j _ hj
       rw [ptEntry.eq_2]
       split_ifs with h1 h2 h3
@@ -924,15 +912,14 @@ theorem prodMaxOneNorm_cons (t : K) (s : ℕ) (bs : List (K × ℕ)) (n : ℕ) :
       · simp
       · omega
       · simp
-    · intro h
-      exact absurd (Finset.mem_range.2 (by omega)) h
+    · exact fun h => absurd (Finset.mem_range.2 (by omega)) h
   · refine Finset.prod_congr rfl fun i _ => ?_
     rw [Finset.prod_range_add, Finset.prod_eq_one, one_mul]
     · refine Finset.prod_congr rfl fun j _ => ?_
       simp [ptEntry.eq_2]
     · intro j hj
       have hj' := Finset.mem_range.1 hj
-      rw [ptEntry.eq_2, if_neg (by omega), if_neg (by omega)]
+      rw [ptEntry.eq_2, ite_eq_right (by omega), ite_eq_right (by omega)]
       simp
 
 noncomputable def gg2 (x : ℝ) : ℝ := max 1 x * max 1 x⁻¹
@@ -1002,11 +989,11 @@ theorem minor_pt_le {N : ℕ} (p : Point K N) (t : ℕ) (I J : Fin t → Fin N) 
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [Finset.prod_range, Finset.prod_eq_single (σ i)]
     · have := hw i (σ i)
-      rw [if_pos rfl] at this
+      rw [ite_eq_left rfl] at this
       rw [← this]; rfl
     · intro j _ hj
       have := hw i j
-      rw [if_neg hj] at this
+      rw [ite_eq_right hj] at this
       have h0 : ptEntry p.1 i j = 0 := this
       simp [h0]
     · simp
@@ -1184,8 +1171,7 @@ theorem cov_lead [StarRing K] (L U : Matrix (Fin N) (Fin N) K) (p : Point K N) (
   have e : U * (B * a * B⁻¹) * U⁻¹ = U * B * a * (U * B)⁻¹ := by
     simp only [Matrix.mul_inv_rev, Matrix.mul_assoc]
   refine ⟨B * a * B⁻¹, ?_, ?_, ?_⟩
-  · rw [(stab_cell K N L U p hL hU).1, e, ← (stab_cell K N _ _ p hL' hU').1]
-    exact ha
+  · rwa [(stab_cell K N L U p hL hU).1, e, ← (stab_cell K N _ _ p hL' hU').1]
   · rw [← conj_sub_one (up_det hB)]
     exact entIn_mul hBi hai (entIn_inv hBi hBd)
   · rw [e]; exact hΩ
@@ -1454,8 +1440,7 @@ theorem covolume_term : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C : ℝ, 1 ≤ C ∧ 
     have h4 : InfinitePlace.nrRealPlaces D.host.E = 0 := by omega
     intro w
     rw [← InfinitePlace.not_isReal_iff_isComplex]
-    intro hw'
-    exact (Fintype.card_eq_zero_iff.1 h4).elim ⟨w, hw'⟩
+    exact fun hw' => (Fintype.card_eq_zero_iff.1 h4).elim ⟨w, hw'⟩
   have hcov : ∀ x : D.host.E, ∃ o : 𝓞 D.host.E, ∀ v, ‖embS D v (x + o)‖ ≤ ρ := by
     intro x
     obtain ⟨a, ha⟩ := GlobalTheory.coveringO_holds D.host.E hcx (fun w => w.embedding x)

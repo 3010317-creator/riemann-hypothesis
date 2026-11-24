@@ -90,8 +90,7 @@ private lemma exists_uniform_im_quadForm_lower_bound_on_compact {K : Set ((ι �
     · exfalso
       have hmem : (p, ‖x‖⁻¹ • x) ∈ K ×ˢ Metric.sphere (0 : ι → ℝ) 1 :=
         ⟨hp, by simp [norm_smul, hx]⟩
-      rw [he] at hmem
-      exact hmem
+      rwa [he] at hmem
   · obtain ⟨q, hq, hmin⟩ := hS.exists_isMinOn hne hg.continuousOn
     have hq0 : q.2 ≠ 0 := by
       intro h
@@ -120,8 +119,7 @@ private lemma exists_uniform_im_quadForm_lower_bound_on_compact {K : Set ((ι �
       calc g q * ‖x‖ ^ 2 ≤ ‖x‖⁻¹ ^ 2 * Q * ‖x‖ ^ 2 := by gcongr
         _ = Q := by field_simp
     have hxx : 0 ≤ x ⬝ᵥ x := by
-      simp only [dotProduct]
-      exact Finset.sum_nonneg fun i _ => mul_self_nonneg (x i)
+      simpa only [dotProduct] using Finset.sum_nonneg fun i _ => mul_self_nonneg (x i)
     calc g q / (Fintype.card ι + 1) * (x ⬝ᵥ x)
         ≤ g q / (Fintype.card ι + 1) * (Fintype.card ι * ‖x‖ ^ 2) := by gcongr
       _ ≤ g q * ‖x‖ ^ 2 := by

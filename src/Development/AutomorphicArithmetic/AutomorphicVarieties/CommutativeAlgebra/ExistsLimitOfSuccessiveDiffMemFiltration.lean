@@ -64,15 +64,13 @@ theorem UpperTheory.exists_limit_of_successive_diff_mem_filtration :
     · have h1 : y - p (N₀ + k + 1) ∈ J (N₀ + k) := by
         have h := sub_mem hy (hp (N₀ + k) (Nat.le_add_right _ _))
         have e : y - p (N₀ + k + 1) = y - p (N₀ + k) - (p (N₀ + k + 1) - p (N₀ + k)) := by ring
-        rw [e]
-        exact h
+        rwa [e]
       obtain ⟨j, hj, t, ht, hjt⟩ := Submodule.mem_sup.1 (hJ (N₀ + k) h1)
       refine ⟨y - t, fun _ => ⟨?_, ?_⟩⟩
       · have e : y - t - p (N₀ + k + 1) = j := by
           rw [sub_right_comm, ← hjt]
           ring
-        rw [e]
-        exact hj
+        rwa [e]
       · rw [sub_sub_cancel_left]
         exact neg_mem ht
     · exact ⟨y, fun h => absurd h hy⟩

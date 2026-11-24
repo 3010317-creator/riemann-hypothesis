@@ -516,8 +516,7 @@ theorem exists_theta (hG : GlobalFnsSt) {k : ℕ} (p : QkPt D F k) (hy : p.y = 0
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, zpow_neg, zpow_natCast, Over.comp_left]) u hu
   refine ⟨⟨p.g.b, v, hvg⟩, rfl, fun s t H ρ z J hJ => ?_⟩
   have e := (phiRel_iff hG p w hw s t).1 H 0 0 (by rw [hy, add_zero]) _ ρ z J hJ
-  rw [← hv u hu hc _ ρ z J hJ, ← hvv _ _ z J hJ] at e
-  exact e
+  rwa [← hv u hu hc _ ρ z J hJ, ← hvv _ _ z J hJ] at e
 
 theorem eq_of_sval {k : ℕ} (s : Fam D F k) (hs : ¬ ∀ j, (s.s 0).f j = 0) {c c' : F}
     (h : ∀ y J, Good D.P.L y J → sval ((c • s).s 0) (𝟙 _) y J = sval ((c' • s).s 0) (𝟙 _) y J) : c = c' := by
@@ -644,16 +643,12 @@ theorem exists_tateIso_of_perp {E : Type} [Field E] [NumberField E] [IsCMField E
   · split_ifs with hn
     · rw [map_smul, hlin n hn]
     · exact (hact c).symm
-  · simp only [if_pos hn]
-    exact (hko n hn).1
-  · simp only [if_pos hn]
-    exact (hko n hn).2
-  · simp only [if_pos hn, if_pos (Nat.mul_pos hn hm)]
-    exact htow n m hn hm _
-  · simp only [if_pos hn]
-    exact hiso'' n hn w w'
+  · simpa only [ite_eq_left hn] using (hko n hn).1
+  · simpa only [ite_eq_left hn] using (hko n hn).2
+  · simpa only [ite_eq_left hn, ite_eq_left (Nat.mul_pos hn hm)] using htow n m hn hm _
+  · simpa only [ite_eq_left hn] using hiso'' n hn w w'
   · show _ = if 0 < n then b n (s (f a)) else 1
-    rw [if_pos hn]
+    rw [ite_eq_left hn]
     obtain ⟨w, hw⟩ := ((hko n hn).2 _).1 (hpow n hn a)
     obtain ⟨c, hc⟩ := TorsIsometry.exists_eq_nsmul_of_dvd D'.EF D'.unimod n (f a - w) fun w' => by
       have h₁ := hiso' n hn a w'
@@ -746,7 +741,7 @@ theorem exists_gradedTateIso : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
       have e : unitOn (c * c) = unitOn c * unitOn c := map_mul _ _ _
       exact mul_eq_left.1 (huniq n 1 y _ _ (e ▸ h₁) h))
     (fun n hn a a' => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       have h := (TorusExt.qkAdd_iff hB _ _ _).1
         ((TorusExt.qkAdd_iff_of_equiv hB (hq n hn a) (hq n hn a') (I.add n hn a a')).2 (hq n hn (a + a')))
       rw [← eq_of_equiv hB hn h (by
@@ -754,7 +749,7 @@ theorem exists_gradedTateIso : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
         rw [hy, hy, hy, add_zero])]
       exact TorusExt.add_b _ _)
     (fun n hn c a => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       have h := (TorusExt.qkAct_iff hB hG P.oD _ _ _).1
         ((TorusExt.qkAct_iff_of_equiv hB hG P.oD (hq n hn a) (I.lin n hn c a)).2 (hq n hn (c • a)))
       rw [← eq_of_equiv hB hn h (by
@@ -762,18 +757,18 @@ theorem exists_gradedTateIso : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
         rw [hy, hy, smul_zero])]
       exact TorusExt.gtSmul_b hG P.oD _ _)
     (fun n hn a => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       exact b_pow hB _ (hy n hn a))
     (fun n m hn hm a => by
-      simp only [dif_pos hn, dif_pos (Nat.mul_pos hn hm)]
+      simp only [dite_eq_left hn, dite_eq_left (Nat.mul_pos hn hm)]
       obtain ⟨r, r₁, r₂, r₃⟩ := I.tower n m hn hm a
       exact b_tower hB hn (hq _ _ a) (hy _ _ a) r₁ r₂ r₃ (hq n hn a) (hy n hn a))
     (fun n hn a a' => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       exact (UT.WeilAbelianPart.weilQkIs_iff_weilIs_abelianPart hL R _ hR.1 P.D F n hn _ _ (hy n hn a) (hy n hn a')
         _).1 (PhiOperatorCompare.weilQkIs_of_equiv hB (hq n hn a) (hq n hn a') (I.isom n hn a a')))
   refine ⟨I', h₁, fun n hn a r hr hr₀ => ?_⟩
-  rw [← h₂ n hn a, dif_pos hn, eq_of_equiv hB hn
+  rw [← h₂ n hn a, dite_eq_left hn, eq_of_equiv hB hn
     (TorusExt.equiv_trans hB (TorusExt.equiv_symm hB hr) (hq n hn a)) (hr₀.trans (hy n hn a).symm)]
 
 end GlobalTheory.LowDat.GradedTate
@@ -830,8 +825,8 @@ theorem exists_tateIso_toA : ∀ {E : Type} [Field E] [NumberField E] [IsCMField
   choose f f₁ f₂ f₃ f₄ f₅ f₆ using hT F
   obtain ⟨ev, ev0, evp⟩ : ∃ ev : ℕ → D.La → (TFK (R := R) F ⟶ P.A.A), (∀ a, ev 0 a = 1) ∧
       ∀ n (hn : 0 < n) a, ev n a = f n hn (I.ev n a) :=
-    ⟨fun n a => if hn : 0 < n then f n hn (I.ev n a) else 1, fun a => dif_neg (lt_irrefl 0),
-      fun n hn a => dif_pos hn⟩
+    ⟨fun n a => if hn : 0 < n then f n hn (I.ev n a) else 1, fun a => dite_eq_right (lt_irrefl 0),
+      fun n hn a => dite_eq_left hn⟩
   have add : ∀ n a b, ev n (a + b) = ev n a * ev n b := fun n a b => by
     rcases Nat.eq_zero_or_pos n with rfl | hn
     · rw [ev0, ev0, ev0, _root_.one_mul]
@@ -865,8 +860,7 @@ theorem exists_tateIso_toA : ∀ {E : Type} [Field E] [NumberField E] [IsCMField
       (I.ev (n * m) a) _).2 q₁ q₂ ((f₁ _ hN _ _).2 rfl)
     rw [evp _ hN, evp n hn, (f₁ n hn _ _).1 h, (f₃ n hn _ _).2 q₃]
   · have h := (f₆ n hn _ _ _).1 (I.isom n hn a b)
-    rw [← evp, ← evp] at h
-    exact h
+    rwa [← evp, ← evp] at h
 
 end GlobalTheory.LowDat
 end -- clump:auto
@@ -916,8 +910,7 @@ theorem ev_zsmul {D : Datum H} {k : Type} [Field k] {Q : Type} [Group Q] {act : 
   let f : Multiplicative D.La →* Q :=
     MonoidHom.mk' (fun y => J.ev n (Multiplicative.toAdd y)) (fun a b => J.add n _ _)
   have h := map_zpow f (Multiplicative.ofAdd x) m
-  rw [← ofAdd_zsmul] at h
-  exact h
+  rwa [← ofAdd_zsmul] at h
 
 theorem mul_mem_M (l : Level H) {x y : 𝓞 E} (hx : x ∈ l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E)) (hy : y ∈ l.Mb) :
     ∃ r : 𝓞 E, x * y = r * (l.M : 𝓞 E) := by
@@ -1160,8 +1153,7 @@ theorem left_eq_of_section (C : UChart.Fam Xo c R) (tK : SAB H (Sp (FractionRing
       rw [w0, w, w', spMap_comp_jFK]
   have hi : C.P.U.gen.inv.left ≫ C.P.U.gen.hom.left = 𝟙 _ := by
     rw [← Over.comp_left, Iso.inv_hom_id, Over.id_left]
-  have e3 := congrArg (· ≫ C.P.U.gen.hom.left) e2
-  simpa only [Category.assoc, hi, Category.comp_id] using e3
+  simpa only [Category.assoc, hi, Category.comp_id] using congrArg (· ≫ C.P.U.gen.hom.left) e2
 
 theorem exists_tateIso_ext (D : Datum H) {S : Scheme.{0}} (P : Out.PolAV S) (act : 𝓞 E → (P.A ⟶ P.A))
     {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed K] [IsAlgClosed Ω] [CharZero K] (i : K →+* Ω)
@@ -1360,8 +1352,7 @@ theorem abPartAct_isAdj (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     have h : RosatiAdj U.D.toPre.P.A U.D.toPre.P.L ((abPartAct U).act c) ((abPartAct U).act (H.bar c)) := by
       letI := H.starRing
       exact U.oD.onB.rosati c
-    rw [← bar_eq_star H]
-    exact h
+    rwa [← bar_eq_star H]
   obtain ⟨V, hV, g, hg⟩ := hr (IsLocalRing.closedPoint R)
   obtain rfl : V = ⊤ := (IsLocalRing.closedPoint_mem_iff V).1 hV
   have hL : U.D.toPre.P.L.IsLB := U.D.toPre.P.isLB
@@ -1688,8 +1679,7 @@ theorem detCond_generic (hR : GlobalTheory.Mum.Base R) (C : UChart.Fam Xo c R) (
     have h₂ := (lieMult_iff_of_isGrpPullback m1.cart tK.act C.t.act m1.act (jFK (R := R) F) τ n).1 h₁
     rw [jFR_eq] at h₂ ⊢
     obtain ⟨m, hm, rfl⟩ := GlobalTheory.CharRank.lieMult_unif_loc H R C.t C.P F _ (inj_jFR R F) τ n h₂
-    rw [Nat.add_sub_cancel]
-    exact hm
+    rwa [Nat.add_sub_cancel]
   intro τ
   have hρ : lowF C F (baseKA (lowLevel l)).ρ = β (baseKA l).ρ := congrArg (toF C F) (rho_eq l c)
   rw [hρ, hp, hq]
@@ -1714,10 +1704,10 @@ theorem finrank_eq_of_detCond (D : Datum H) {S : Scheme.{0}} (P : PolAV S) (act 
         rw [← map_neg, ← hb]; rfl
       rw [e]
       by_cases hτ : τ H.rt = ρ
-      · refine ⟨by rw [if_pos hτ]; exact (h τ).1 hτ, ?_⟩
-        rw [if_pos hτ, if_neg (by rw [hτ]; exact h0.symm)]
-      · refine ⟨by rw [if_neg hτ]; exact (h τ).2 hτ, ?_⟩
-        rw [if_neg hτ, if_pos (by rw [(sq_eq_sq_iff_eq_or_eq_neg.1 hs).resolve_left hτ, neg_neg]), add_comm])
+      · refine ⟨by rw [ite_eq_left hτ]; exact (h τ).1 hτ, ?_⟩
+        rw [ite_eq_left hτ, ite_eq_right (by rw [hτ]; exact h0.symm)]
+      · refine ⟨by rw [ite_eq_right hτ]; exact (h τ).2 hτ, ?_⟩
+        rw [ite_eq_right hτ, ite_eq_left (by rw [(sq_eq_sq_iff_eq_or_eq_neg.1 hs).resolve_left hτ, neg_neg]), add_comm])
   have := D.fin
   have := D.proj
   have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La

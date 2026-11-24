@@ -79,15 +79,13 @@ theorem balanced_pairs (H : Host E) {l : Level H} (c : Coeff l) {S : Type} [Comm
     (hv : ∀ a : 𝓞 E, algebraMap c.F S (embK c τ a) * v = algebraMap c.F S (embK c τ' (H.bar a)) * v)
     (hne : τ ≠ ComplexEmbedding.conjugate τ') : v = 0 := by
   have : ∃ a : 𝓞 E, embK c τ a ≠ embK c τ' (H.bar a) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hne
     apply IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E))
     ext a
     have := congrArg (fun z : c.F => (z : ℂ)) (hcon a)
     simp only [embK_coe] at this
-    rw [emb_bar] at this
-    exact this
+    rwa [emb_bar] at this
   obtain ⟨a, ha⟩ := this
   have hu : IsUnit (algebraMap c.F S (embK c τ a - embK c τ' (H.bar a))) :=
     (IsUnit.mk0 _ (sub_ne_zero.2 ha)).map _
@@ -209,8 +207,7 @@ theorem harmonicValue_chart_independent : Formalism.MainNotions.ModuliIntegralCh
   refine chartIndep2_verb ?_ (GlobalTheory.BalancedTwist.frTruncFix_iff.mp frTruncFix_holds) germFix_holds (harmInv_of hAct)
   refine chartIndepTrunc_of (expChartOf_of hAct) (ExpGauge.expGaugeOf_of hAct) tie_holds ExpUniqChart.expUniqTan
     (gaugeUniq_of_global globalFns_holds) (killAddVal_of ?_)
-  intro E _ _ _ H
-  exact psiCover_holds H
+  exact fun E _ _ _ H => psiCover_holds H
 
 end GlobalTheory
 end -- clump:auto

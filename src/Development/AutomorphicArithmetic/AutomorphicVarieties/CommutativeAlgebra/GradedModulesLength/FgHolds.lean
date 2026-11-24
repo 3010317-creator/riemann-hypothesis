@@ -71,8 +71,7 @@ theorem UpperTheory.V.Alg.M.fg_holds :
   have hI : (Ideal.span (𝒜 j : Set A)).FG := IsNoetherian.noetherian _
   obtain ⟨t, ht, hspan⟩ := (Submodule.fg_span_iff_fg_span_finset_subset _).1 hI
   refine ⟨t, le_antisymm ?_ ?_⟩
-  · rw [Submodule.span_le]
-    exact ht
+  · rwa [Submodule.span_le]
   · intro y hy
     have hyA : y ∈ 𝒜 j := hy
     have hy' : y ∈ Submodule.span A (t : Set A) := by
@@ -84,7 +83,6 @@ theorem UpperTheory.V.Alg.M.fg_holds :
     refine Submodule.sum_mem _ fun i hi => ?_
     have e : (DirectSum.decompose 𝒜 (f i • i) j : A) = (DirectSum.decompose 𝒜 (f i) 0 : A) * i := by
       have := DirectSum.coe_decompose_mul_add_of_right_mem 𝒜 (a := f i) (i := 0) (ht hi)
-      rw [zero_add] at this
-      exact this
+      rwa [zero_add] at this
     rw [e]
     exact Submodule.smul_mem _ (DirectSum.decompose 𝒜 (f i) 0) (Submodule.subset_span hi)

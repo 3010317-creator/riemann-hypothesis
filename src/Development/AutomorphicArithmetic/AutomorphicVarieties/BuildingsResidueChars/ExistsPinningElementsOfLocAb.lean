@@ -64,8 +64,7 @@ private theorem exists_pow_l_pow_eq_one_of_mem_muG {l : ℕ} [Fact l.Prime] {G :
   obtain ⟨n, hn⟩ := CommGroup.mem_primaryComponent.1 hg
   refine ⟨n, ?_⟩
   have h1 : g ^ (l ^ n) ∈ (commutator G).topologicalClosure := by
-    rw [← QuotientGroup.eq_one_iff, QuotientGroup.mk_pow]
-    exact hn
+    rwa [← QuotientGroup.eq_one_iff, QuotientGroup.mk_pow]
   have hker : (commutator G).topologicalClosure ≤ ψ.ker :=
     Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker ψ)
       (isClosed_ker_of_adicCont ψ hψc)
@@ -114,8 +113,7 @@ theorem UpperTheory.exists_pinning_elements_of_locAb :
   have hφloc : ∀ N, IsLocallyConstant (φN N) := fun N => (hloc N).comp (fun u => u ^ M)
   have hφ : ∀ N g, φN N g = 1 ↔ ((ψ g ^ M : Rˣ) : R) - 1 ∈ maximalIdeal R ^ N := by
     intro N g
-    rw [← hq]
-    rw [map_pow]
+    rw [← hq, map_pow]
     exact Iff.rfl
   have hφp : ∀ N g, (φN N g) ^ (l ^ N) = 1 := by
     intro N g
@@ -183,8 +181,7 @@ theorem UpperTheory.exists_pinning_elements_of_locAb :
     have hk : h⁻¹ * g ∈ A.a.ker := by
       rw [MonoidHom.mem_ker, map_mul, map_inv, hah, hx, inv_mul_eq_one, ← hx2]
     have := hK N hk
-    rw [MonoidHom.mem_ker, map_mul, map_inv, MonoidHom.mem_ker.1 hh, inv_one, one_mul] at this
-    exact this
+    rwa [MonoidHom.mem_ker, map_mul, map_inv, MonoidHom.mem_ker.1 hh, inv_one, one_mul] at this
   have hzero : ((ψ g ^ M : Rˣ) : R) - 1 = 0 := by
     have : ((ψ g ^ M : Rˣ) : R) - 1 ∈ ⨅ N, maximalIdeal R ^ N :=
       Ideal.mem_iInf.2 fun N => (hφ N g).1 (hgN N)

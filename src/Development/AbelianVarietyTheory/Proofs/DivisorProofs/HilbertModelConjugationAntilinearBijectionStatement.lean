@@ -216,13 +216,7 @@ theorem OrthFr.tor_mem {q : ℕ} {x : Mt n} (h : OrthFr Hm q x) (s : Fin n → �
 
 theorem frDom_mul (hH : Hm.det ≠ 0) {q : ℕ} {g x : Mt n} (hg : g ∈ Formalism.QuantumDeterminants.UH Hm) (hx : x ∈ frDom Hm q) :
     g * x ∈ frDom Hm q := by
-  have hg' : gᴴ * Hm * g = Hm := hg
-  have e : (g * x)ᴴ * Hm * (g * x) = xᴴ * Hm * x := by
-    calc _ = xᴴ * (gᴴ * Hm * g) * x := by rw [conjTranspose_mul]; simp only [Matrix.mul_assoc]
-      _ = _ := by rw [hg']
-  refine ⟨?_, fun i => ?_⟩
-  · rw [det_mul]; exact mul_ne_zero (uh_det_isUnit hH hg).ne_zero hx.1
-  · rw [e]; exact hx.2 i
+  apply GlobalTheory.HolDict.FrameDom.unitary_mul_mem <;> assumption
 
 end
 

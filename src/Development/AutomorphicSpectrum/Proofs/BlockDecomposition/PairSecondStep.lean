@@ -89,8 +89,7 @@ theorem ap₂_smul (hS : PairSlices) (T : Sm E b →ₗ[ℂ] Sm E b) (c : ℂ) (
 
 theorem ap₂_zero (hS : PairSlices) (T : Sm E b →ₗ[ℂ] Sm E b) (U₁ : Submodule ℂ (Sm E a))
     (U₂ : Submodule ℂ (Sm E b)) : ap₂ T (0 : H E a b → ℂ) = 0 := by
-  have h := ap₂_smul hS T (0 : ℂ) (Submodule.zero_mem (pairSpace U₁ U₂))
-  simpa using h
+  simpa using ap₂_smul hS T (0 : ℂ) (Submodule.zero_mem (pairSpace U₁ U₂))
 
 theorem ap₂_sum (hS : PairSlices) (T : Sm E b →ₗ[ℂ] Sm E b) {α : Type} (s : Finset α)
     (f : α → H E a b → ℂ) (hf : ∀ j ∈ s, f j ∈ pairSpace U₁ U₂) :
@@ -218,8 +217,7 @@ theorem pairStep₂ : PairSlices → PairStep₂ := by
   have e : sl₂ (f i) m = φ := PairT₂.sl₂_eq hφ
   have h1 : ap₂ T (f i) (m, y) = 0 := congrFun (congrFun h0 i) (m, y)
   change (T (sl₂ (f i) m)).1 y = 0 at h1
-  rw [e] at h1
-  exact h1
+  rwa [e] at h1
 
 end GlobalTheory.CompanionTheory.EGlue
 

@@ -39,8 +39,7 @@ theorem gramC_single {K : Type} [Field K] [NumberField K] {r : ℕ} (δ : (K →
     ring
   · intro a _ ha
     simp [Fin.default_eq_zero, hx a ha]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem latDeg_single {K : Type} [Field K] [NumberField K] {r : ℕ}
     (δ : (K →+* ℂ) → Fin r → ℝ) (C : Submodule (𝓞 K) (Fin r → K)) (i : Fin r) (x : Fin r → K)
@@ -115,14 +114,13 @@ theorem rankOne_le_zero (hB : LatDegBasisStatement) {K : Type} [Field K] [Number
       rw [Fin.sum_univ_succ, Fin.sum_univ_succ]
       have h0 : ∀ j : Fin k, t j.succ.succ = 0 := fun j => by
         simp only [t]
-        rw [if_neg (Fin.succ_ne_zero _), if_neg]
-        intro h
-        exact Fin.succ_ne_zero j (Fin.succ_injective _ h)
+        rw [ite_eq_right (Fin.succ_ne_zero _), ite_eq_right]
+        exact fun h => Fin.succ_ne_zero j (Fin.succ_injective _ h)
       simp only [h0, zero_smul, Finset.sum_const_zero, add_zero]
       have t0 : t 0 = c 1 i := by simp [t]
       have t1 : t (Fin.succ 0) = -(c 0 i) := by
         simp only [t]
-        rw [if_neg (Fin.succ_ne_zero _)]
+        rw [ite_eq_right (Fin.succ_ne_zero _)]
         rfl
       rw [t0, t1]
       funext a
@@ -149,8 +147,7 @@ theorem relIndex_sup_proj {G : Type} [AddCommGroup G] (π : G →+ G) (A X C : A
         exact X.zero_mem
       · intro x hx
         show π x ∈ X
-        rw [hC x (hXC hx)]
-        exact hx
+        rwa [hC x (hXC hx)]
     · rintro z ⟨hzX, hz⟩
       obtain ⟨a, ha, w, hw, rfl⟩ := AddSubgroup.mem_sup.1 hz
       have hπ : π (a + w) = w := by rw [map_add (f := _), hA a ha, hC w hw, zero_add]
@@ -168,10 +165,8 @@ theorem relIndex_sup_proj {G : Type} [AddCommGroup G] (π : G →+ G) (A X C : A
     have h2 : C.map π = C := by
       apply le_antisymm
       · rintro _ ⟨x, hx, rfl⟩
-        rw [hC x hx]
-        exact hx
-      · intro x hx
-        exact ⟨x, hx, hC x hx⟩
+        rwa [hC x hx]
+      · exact fun x hx => ⟨x, hx, hC x hx⟩
     rw [h1, h2, bot_sup_eq]
   rw [heq, AddSubgroup.inf_relIndex_right, AddSubgroup.relIndex_comap, hmap]
 

@@ -260,7 +260,7 @@ theorem norm_sMat_dg_mul {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {c : ℂ} (hc : �
   rw [hmat, Matrix.det_mul, det_dg]
   simp only [dg, Matrix.sub_apply, Matrix.mul_diagonal, Matrix.diagonal_mul, Function.update_apply, Pi.one_apply]
   by_cases ha : a = a₀ <;> by_cases hb : b = a₀
-  · simp only [ha, hb, if_true]
+  · simp only [ha, hb, ite_true]
     congr 2
     rw [mul_inv]; field_simp
   · have : a ≠ b := by rintro rfl; exact hb ha
@@ -344,7 +344,7 @@ theorem exp_box {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {n : ℝ} (hn : n = ((p + q
     calc ∑ i ∈ Finset.univ.erase a₀, ‖X.1 i i‖ ≤ ∑ _i ∈ Finset.univ.erase a₀, 9 / 10 * ε * n⁻¹ := by
           refine Finset.sum_le_sum fun i hi => ?_
           have h1 := (hX i i).le
-          rwa [rad, if_pos ⟨rfl, Finset.ne_of_mem_erase hi⟩] at h1
+          rwa [rad, ite_eq_left ⟨rfl, Finset.ne_of_mem_erase hi⟩] at h1
       _ ≤ ∑ _i : Fin p ⊕ Fin q, 9 / 10 * ε * n⁻¹ :=
           Finset.sum_le_sum_of_subset_of_nonneg (Finset.erase_subset _ _) fun _ _ _ => by positivity
       _ = 9 / 10 * ε := by
@@ -364,7 +364,7 @@ theorem exp_box {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {n : ℝ} (hn : n = ((p + q
     unfold sMat
     simp only [dg, Matrix.sub_apply, Matrix.mul_diagonal, Function.update_apply, Pi.one_apply] at h0 ⊢
     by_cases hb : b = a₀
-    · rw [if_pos hb]
+    · rw [ite_eq_left hb]
       by_cases hab : a = b
       · subst hab
         subst hb
@@ -385,7 +385,7 @@ theorem exp_box {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {n : ℝ} (hn : n = ((p + q
         linarith
       · rw [Matrix.one_apply_ne hab, sub_zero] at h0 ⊢
         rwa [norm_mul, norm_inv, hz1, inv_one, mul_one]
-    · rwa [if_neg hb, mul_one]
+    · rwa [ite_eq_right hb, mul_one]
   · linarith [Complex.abs_im_le_norm X.1.trace]
   · rw [hdet, Complex.norm_exp, Real.exp_eq_one_iff] at hz1
     rw [hdet]
@@ -651,43 +651,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 theorem exists_lam (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (x : Frame Ψ r)
     (hx : ∀ τ, (mat x τ).det ≠ 0) :
     ∃ lam : Measure (realLie Ψ G), lam.IsAddHaarMeasure ∧ lam.map Subtype.val = riemLie Ψ G x := by
-  set W := (realLie Ψ G).comap (fromFrame x)
-  let Φ : W →ₗ[ℝ] realLie Ψ G :=
-    ((fromFrame x).comp W.subtype).codRestrict (realLie Ψ G) (fun v => v.2)
-  have key2 : ∀ τ (A : Matrix (Fin r) (Fin r) ℂ),
-      mat x τ * ((mat x τ)⁻¹ * A * mat x τ) * (mat x τ)⁻¹ = A := fun τ A => by
-    rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv_cancel_right _ _ (hx τ).isUnit,
-      Matrix.mul_nonsing_inv_cancel_left _ _ (hx τ).isUnit]
-  have hsurj : Function.Surjective Φ := by
-    intro X
-    let Y : EuclideanSpace ℂ (Ψ × Fin r × Fin r) := WithLp.toLp 2 (fun p : Ψ × Fin r × Fin r =>
-      ((mat x p.1)⁻¹ * Matrix.of (X.1 p.1) * mat x p.1) p.2.1 p.2.2)
-    have hY : fromFrame x Y = X.1 := by
-      funext τ
-      have e : Matrix.of (fun a b => Y (τ, a, b)) = (mat x τ)⁻¹ * Matrix.of (X.1 τ) * mat x τ := by
-        ext a b; simp [Y]
-      change (mat x τ * Matrix.of _ * (mat x τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ) = X.1 τ
-      rw [e, key2]; rfl
-    exact ⟨⟨Y, show fromFrame x Y ∈ realLie Ψ G by rw [hY]; exact X.2⟩, Subtype.ext hY⟩
-  have key1 : ∀ τ (A : Matrix (Fin r) (Fin r) ℂ),
-      (mat x τ)⁻¹ * (mat x τ * A * (mat x τ)⁻¹) * mat x τ = A := fun τ A => by
-    rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_right _ _ (hx τ).isUnit,
-      Matrix.nonsing_inv_mul_cancel_left _ _ (hx τ).isUnit]
-  have hinj : Function.Injective Φ := by
-    intro Y Z h
-    have h' : fromFrame x Y.1 = fromFrame x Z.1 := congrArg Subtype.val h
-    have hτ : ∀ τ, Matrix.of (fun a b => Y.1 (τ, a, b)) = Matrix.of (fun a b => Z.1 (τ, a, b)) := by
-      intro τ
-      have h1 : mat x τ * Matrix.of (fun a b => Y.1 (τ, a, b)) * (mat x τ)⁻¹ =
-          mat x τ * Matrix.of (fun a b => Z.1 (τ, a, b)) * (mat x τ)⁻¹ := congrFun h' τ
-      rw [← key1 τ (Matrix.of (fun a b => Y.1 (τ, a, b))), h1, key1]
-    refine Subtype.ext (PiLp.ext fun p => ?_)
-    obtain ⟨τ, a, b⟩ := p
-    exact congrFun (congrFun (hτ τ) a) b
-  let φ : W ≃L[ℝ] realLie Ψ G := (LinearEquiv.ofBijective Φ ⟨hinj, hsurj⟩).toContinuousLinearEquiv
-  refine ⟨(stdOrthonormalBasis ℝ W).toBasis.addHaar.map φ, φ.isAddHaarMeasure_map _, ?_⟩
-  rw [Measure.map_map measurable_subtype_coe φ.continuous.measurable]
-  rfl
+  exact GlobalTheory.CovTop.VolUp.UpBall.exists_lam Ψ G x hx
 
 theorem exists_conj_bound (Ψ : Finset (E →+* ℂ)) (x : Frame Ψ r) (hx : ∀ τ, (mat x τ).det ≠ 0) :
     ∃ C : ℝ, 0 < C ∧ ∀ (t : ℝ) (X : Ψ → Fin r → Fin r → ℂ), 0 ≤ t →

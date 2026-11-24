@@ -140,10 +140,8 @@ theorem grOk {a a' c : ℕ} (h : a + a' = c) :
     MulOk (thFil L a) (thFil L ((a : ℤ) + 1)) (thFil L a') (thFil L ((a' : ℤ) + 1)) (thFil L c) (thFil L ((c : ℤ) + 1)) := by
   subst c
   constructor
-  · intro T x y hx hy
-    exact dividedPowerFiltration_mul T.δ a a' hx hy
-  · intro T x y hx hy
-    exact dividedPowerFiltration_mul T.δ a (a' + 1) hx hy
+  · exact fun T x y hx hy => dividedPowerFiltration_mul T.δ a a' hx hy
+  · exact fun T x y hx hy => dividedPowerFiltration_mul T.δ a (a' + 1) hx hy
   · intro T x y hx hy
     have hmul := dividedPowerFiltration_mul T.δ (a + 1) a' hx hy
     rwa [Nat.add_right_comm] at hmul

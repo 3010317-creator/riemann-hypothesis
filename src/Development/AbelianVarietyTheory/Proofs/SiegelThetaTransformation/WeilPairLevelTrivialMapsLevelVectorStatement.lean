@@ -87,29 +87,7 @@ namespace GlobalTheory.KerVacIp
 variable {D : D7} {S T : HSp D} (C : Ctx S T)
 
 theorem isONFr_xB (B : C.Bas) (hB : C.IsB B) : IsONFr C.X (C.xB B) := by
-  unfold IsONFr
-  intro τ
-  have h1 : ∀ x y : T.V, star (T.hT x y) = T.hT y x := by
-    intro x y
-    exact T.herm.eq x y
-  have h2 : ∀ x : D.host.E, tauE D (C.m.e.symm τ) (star x) = (starRingEnd ℂ) (tauE D (C.m.e.symm τ) x) := by
-    intro x
-    unfold tauE
-    dsimp only [star, Formalism.BasicNotions.Host.cmStar]
-    exact IsCMField.complexEmbedding_complexConj D.host.E (D.host.emb ↑(D.eTau (C.m.e.symm τ))) x
-  have key : ∀ i j, (τ : D.host.E →+* ℂ) (C.X.Gm i j) = tauE D (C.m.e.symm τ) (HSpace.gram T i j) := by
-    intro i j
-    have he := C.m.e_emb (C.m.e.symm τ)
-    rw [Equiv.apply_symm_apply] at he
-    rw [he, C.m.gT, Matrix.transpose_apply, NumberField.ComplexEmbedding.conjugate_coe_eq, ← h2]
-    unfold HSpace.gram
-    rw [h1]
-  rw [← hB (C.m.e.symm τ)]
-  ext a b
-  unfold FD.gram mat Ctx.xB hermC FD.col gramAt
-  simp only [Matrix.of_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.map_apply,
-    Complex.star_def, Complex.conj_conj, Finset.sum_mul, key]
-  rw [Finset.sum_comm]
+  exact GlobalTheory.Ker.ONBasis.isONFr_xB C hB
 
 theorem rho_zero_pt (f : WO S T → ℂ) : C.rho 0 f = f := by
   unfold Ctx.rho heisO
@@ -193,8 +171,7 @@ namespace GlobalTheory.Ker.VacPhase
 theorem isMov_one {D : D7} {k : ℕ} (L : Lt D.host.E k) :
     IsMov (1 : Matrix (Fin k) (Fin k) (AfE D)) L L := by
   intro u
-  simp only [Matrix.one_mulVec]
-  exact ⟨fun h => ⟨u, h, rfl⟩, fun ⟨_, h, e⟩ => e ▸ h⟩
+  simpa only [Matrix.one_mulVec] using ⟨fun h => ⟨u, h, rfl⟩, fun ⟨_, h, e⟩ => e ▸ h⟩
 
 theorem conjI_ne_bot {E : Type} [Field E] [NumberField E] [IsCMField E] {P : Ideal (𝓞 E)} (hP : P ≠ ⊥) :
     conjI P ≠ ⊥ := by
@@ -404,8 +381,7 @@ private theorem exists_pow_evalV_mul_mem_adicCompletionIntegers {F : Type} [Fiel
   refine ⟨m, fun t ht => ?_⟩
   have hv1 : Valued.v (algebraMap F (Fv F v) (t : F)) = v.intValuation t := by
     have e1 := IsDedekindDomain.HeightOneSpectrum.valuedAdicCompletion_eq_valuation' (v := v) (t : F)
-    have e2 := IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap (v := v) (K := F) t
-    exact e1.trans e2
+    exact e1.trans (IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap (v := v) (K := F) t)
   have ht' : v.intValuation t ≤ WithZero.exp (-(m : ℤ)) :=
     (IsDedekindDomain.HeightOneSpectrum.intValuation_le_pow_iff_mem (v := v) t m).mpr ht
   rw [map_mul, AlgHom.commutes, IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, hv1]
@@ -524,8 +500,7 @@ private theorem stdL_fg' (m : ℕ) : (stdL E m).FG :=
 private theorem exists_pos_nat_smul_mem_of_span_eq_top' {N : Lt E r} (hsp : Submodule.span E (N : Set (Fin r → E)) = ⊤) (x : Fin r → E) :
     ∃ d : ℕ, 0 < d ∧ d • x ∈ N := by
   obtain ⟨d, hd, hdx⟩ := HatLat.tens_den (stdL E 1) N (span_stdL_eq_top 1) hsp (Matrix.of fun _ j => x j)
-  refine ⟨d, hd, ?_⟩
-  exact row_zero_mem_of_mem_tens_stdL hdx
+  exact ⟨d, hd, row_zero_mem_of_mem_tens_stdL hdx⟩
 
 theorem mem_of_hat {N : Lt E r} (hfg : N.FG) (hsp : Submodule.span E (N : Set (Fin r → E)) = ⊤) {v : Fin r → E}
     (hv : (fun i => (1 : Af F) ⊗ₜ[F] v i) ∈ latHat F E (N : Set _)) : v ∈ N := by
@@ -717,13 +692,12 @@ theorem exists_idem (I : Ideal (𝓞 D.host.F)) (hI : I ≠ ⊥) : ∃ α ∈ in
       if w ∈ hfin.toFinset then 1 else 0 := by
     intro w
 
-    rw [map_sum]
-    rw [Finset.sum_congr rfl (g := fun v => if w = v then (1 : Fv D.host.F w) else 0)]
+    rw [map_sum, Finset.sum_congr rfl (g := fun v => if w = v then (1 : Fv D.host.F w) else 0)]
     · exact Finset.sum_ite_eq _ _ _
     · intro v _
       by_cases h : w = v
-      · subst h; rw [GlobalTheory.LatVac.evalV_singleV_same, if_pos rfl]
-      · rw [GlobalTheory.LatVac.evalV_singleV_ne _ _ _ h, if_neg h]
+      · subst h; rw [GlobalTheory.LatVac.evalV_singleV_same, ite_eq_left rfl]
+      · rw [GlobalTheory.LatVac.evalV_singleV_ne _ _ _ h, ite_eq_right h]
   refine ⟨∑ v ∈ hfin.toFinset, singleV D.host.F v 1, ?_, ?_, ?_⟩
   · intro w
     rw [hev w]
@@ -731,7 +705,7 @@ theorem exists_idem (I : Ideal (𝓞 D.host.F)) (hI : I ≠ ⊥) : ∃ α ∈ in
     · exact one_mem _
     · exact zero_mem _
   · intro v hv
-    rw [hev v, if_pos (hfin.mem_toFinset.mpr hv)]
+    rw [hev v, ite_eq_left (hfin.mem_toFinset.mpr hv)]
   · intro V J g hJ hg
     have he : (pairA D.host.F 0 (∑ v ∈ hfin.toFinset, singleV D.host.F v 1) ⊗ₜ[D.host.F] (1 : D.host.E) : AE D) =
         ∑ v ∈ hfin.toFinset, algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 (singleV D.host.F v 1)) := by
@@ -756,8 +730,7 @@ theorem cong_of_act : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (Lv : SW.Lev
   unfold Formalism.IndefR.Datum.actO at hy
   have hMu : (M : 𝓞 D.host.F) ∈ C.under Lv := by
     show algebraMap (𝓞 D.host.F) (𝓞 D.host.E) (M : 𝓞 D.host.F) ∈ Lv.𝔪
-    rw [map_natCast]
-    exact hMm
+    rwa [map_natCast]
   have hI : C.under Lv ≠ ⊥ := by
     intro h0
     rw [h0, Ideal.mem_bot] at hMu
@@ -776,15 +749,13 @@ theorem cong_of_act : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (Lv : SW.Lev
   have hgF : (α ⊗ₜ[D.host.F] (1 : D.host.E)) • fmt T g =
       (α ⊗ₜ[D.host.F] (1 : D.host.E)) • (1 : Matrix (Fin T.rank) (Fin T.rank) (AfE D)) := by
     have h2 := map_smul_eq (finPart D) hgE
-    rw [hfe] at h2
-    exact h2
+    rwa [hfe] at h2
   have hhF : (α ⊗ₜ[D.host.F] (1 : D.host.E)) • fmtC S h =
       (α ⊗ₜ[D.host.F] (1 : D.host.E)) • (1 : Matrix (Fin S.rank) (Fin S.rank) (AfE D)) := by
     have h1 := map_smul_eq (cA D) hhE
     rw [hce] at h1
     have h2 := map_smul_eq (finPart D) h1
-    rw [hfe] at h2
-    exact h2
+    rwa [hfe] at h2
   have hΛ : ∀ v ∈ Λ, (fun i => α ⊗ₜ[D.host.F] v i) ∈
       latHat D.host.F D.host.E (stdL D.host.E S.rank : Set (Fin S.rank → D.host.E)) := fun v hv =>
     tmul_mem_of_mov (L := (stdL D.host.E S.rank : Set (Fin S.rank → D.host.E)))
@@ -1017,8 +988,7 @@ theorem om_Th_phi : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ om : GA D S ×
       obtain ⟨c, hc⟩ := GlobalTheory.T.finitePoints_carry_latticeVacuum_to_moved_vacuum D S T C om hom Lv.w Lv.w_int Lv.w_tr hw M _ hSV _ hSV _ _ (hl _ hX).1
         (hl _ hL).1 1 (one_mem _) g h1 hone (hm.2.2.2.2 _ _ Lv.ne_bot hc).2.1 _ _ (hv₀ _ hX) (hv₀ _ hL) B hB
       refine ⟨c, fun L' _ _ h3' h4' => ?_⟩
-      rw [hm.2.2.1 L' h3' h4']
-      exact hc
+      rwa [hm.2.2.1 L' h3' h4']
     · exact ⟨1, fun L h1 h2 h3 h4 => (H ⟨L, h1, h2, h3, h4⟩).elim⟩
   choose ep hep using H1
   choose c hc using H2

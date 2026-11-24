@@ -285,8 +285,7 @@ theorem SemilocMaxIdeals.proof (hFin : FibreOverFinite.Statement) (hInc : FibreI
   have hW₂ : W' = W₂ := hInc K ι K' ι' κ v P' n s α W hv hP' hZ hs hsP hW W' W₂ hW' h₂
     (le_of_semiMaxIdeal_le hfin h𝒲 hW' h₂ (hle.trans e.le))
   subst hW₂
-  rw [e] at hM
-  exact hM
+  rwa [e] at hM
 
 end GroundTheory.Heights₂.Heights.Inter
 end -- clump:auto
@@ -354,8 +353,7 @@ theorem SemilocResidueAdjoin.isMultiHomogIdeal_ker {K : Type} [Fintype K] {ι : 
       rw [← hg, ← mul_assoc, ← C_mul, inv_mul_cancel₀ hd, C_1, one_mul]
     rw [hf']
     exact Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ hg0)
-  · rw [Ideal.mem_comap, RingHom.mem_ker, e]
-    exact hg
+  · rwa [Ideal.mem_comap, RingHom.mem_ker, e]
 
 theorem SemilocResidueAdjoin.proof (hR : SemilocResidueFrac.Statement) (hT : ChartScalingIndep.Statement) :
     SemilocResidueAdjoin.Statement := by
@@ -396,13 +394,11 @@ theorem SemilocResidueDeg.proof (hDim : SemilocResidueFibreDim.Statement) (hAdj 
   have hz : ∀ k : FibreBlock κ, G'.x' ⟨k.1, i' k.1⟩ ≠ 0 := by
     intro k h0
     apply hi' k.1
-    rw [← G'.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
-    exact h0
+    rwa [← G'.genericFibre_ker_target, RingHom.mem_ker, aeval_X]
   have hj : IsChart (fibreIdeal κ G') (fun k => i' k.1) := by
     intro k hk
     apply hz k
-    rw [fibreIdeal, RingHom.mem_ker, aeval_X] at hk
-    exact hk
+    rwa [fibreIdeal, RingHom.mem_ker, aeval_X] at hk
   refine ⟨_, hAdj K ι K' ι' κ v P' n s α W hv hP' hZ hs hsP hW W' hW' G' i' hi', ?_⟩
   rw [hJ.1 _ Fin.elim0 _ hfib hj]
   exact congrArg _ (ChartRankAdjoin.proof (FibreBlock κ) (fibreIdx ι' κ) G'.Φ G'.Φ' (fun q => G'.x' ⟨q.1.1, q.2⟩)
@@ -665,8 +661,7 @@ theorem length_quot_eq_relfinrank {F : Type} [Field F] [Algebra F Ω] {A B : Typ
     rw [RingHom.mem_ker, ← hker]
     exact ⟨fun h => congrArg Subtype.val h, fun h => Subtype.ext h⟩
   have hH : ∀ b ∈ 𝔪, ψB b = 0 := fun b hb => by
-    rw [← hkerψ] at hb
-    exact hb
+    rwa [← hkerψ] at hb
   let φ := Ideal.Quotient.lift 𝔪 ψB hH
   let φl : (B ⧸ 𝔪) →ₗ[A] E :=
     { toFun := φ

@@ -44,10 +44,8 @@ theorem mem_map_conj {G0 : Type} [Group G0] (S : Subgroup G0) (y g : G0) :
   · rintro ⟨u, hu, rfl⟩
     have : y⁻¹ * (MulAut.conj y).toMonoidHom u * y = u := by
       simp [MulAut.conj_apply, mul_assoc]
-    rw [this]
-    exact hu
-  · intro h
-    exact ⟨_, h, by simp [MulAut.conj_apply, mul_assoc]⟩
+    rwa [this]
+  · exact fun h => ⟨_, h, by simp [MulAut.conj_apply, mul_assoc]⟩
 
 theorem mem_gamC_iff (y : GA sp) (γ : UJ (sp.cm.sig : E →+* E) sp.gram0) :
     γ ∈ gamC sp.cm.sig sp.gram0 (Formalism.L2.Herm.awayFrom₂ L p) (y : GL (Fin R.k) _) ↔ y⁻¹ * ratA sp γ * y ∈ KA' L p :=

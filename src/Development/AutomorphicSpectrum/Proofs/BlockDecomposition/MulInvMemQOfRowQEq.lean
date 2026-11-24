@@ -117,13 +117,10 @@ theorem continuous_rowMat (n : ℕ) : Continuous (rowMat (k := k) n) := by
     simp only [Matrix.updateRow_self]
     induction j using Fin.lastCases with
     | last =>
-      simp only [Fin.lastCases_last]
-      exact continuous_const
+      simpa only [Fin.lastCases_last] using continuous_const
     | cast j =>
-      simp only [Fin.lastCases_castSucc]
-      exact continuous_apply j
-  · simp only [Matrix.updateRow_ne hi]
-    exact continuous_const
+      simpa only [Fin.lastCases_castSucc] using continuous_apply j
+  · simpa only [Matrix.updateRow_ne hi] using continuous_const
 
 theorem continuous_rowEl (n : ℕ) :
     Continuous fun r : {r : Fin (n + 1) → k // (rowMat n r).det ≠ 0} => rowEl n r.1 r.2 := by

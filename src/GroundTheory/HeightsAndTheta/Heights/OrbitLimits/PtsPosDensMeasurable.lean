@@ -52,8 +52,7 @@ theorem exists_bound {g : ((Σ k, ι k) → ℂ) → ℝ} (hg : IsDegZeroSmooth 
     rw [mem_closedBall_zero_iff]
     refine (pi_norm_le_iff_of_nonneg zero_le_one).2 fun p => ?_
     have h1 := norm_le_pi_norm (fun i : ι p.1 => z ⟨p.1, i⟩) p.2
-    rw [hz p.1] at h1
-    exact h1
+    rwa [hz p.1] at h1
   have hTK : IsCompact T := Metric.isCompact_of_isClosed_isBounded hTc (Metric.isBounded_closedBall.subset hTb)
   have hTU : T ⊆ {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
     intro z hz k
@@ -97,13 +96,11 @@ theorem isSemiPosHerm_tensor {A B : HermLine ι} (hA : IsSmoothHerm A) (hB : IsS
     have h2 : ContDiffAt ℝ 2 (fun t : ℂ => z + t • v) 0 := by fun_prop
     have h3 := h1.comp (0 : ℂ) h2
     refine h3.log ?_
-    simp only [Function.comp, zero_smul, add_zero]
-    exact (C.pos z hz).ne'
+    simpa only [Function.comp, zero_smul, add_zero] using (C.pos z hz).ne'
   have heq : (fun t : ℂ => Real.log ((A.tensor B).h (z + t • v))) =ᶠ[𝓝 0]
       (fun t : ℂ => Real.log (A.h (z + t • v))) + fun t : ℂ => Real.log (B.h (z + t • v)) := by
     filter_upwards [hev] with t ht
-    simp only [Pi.add_apply, HermLine.tensor]
-    exact Real.log_mul (A.pos _ ht).ne' (B.pos _ ht).ne'
+    simpa only [Pi.add_apply, HermLine.tensor] using Real.log_mul (A.pos _ ht).ne' (B.pos _ ht).ne'
   rw [(laplacian_congr_nhds heq).eq_of_nhds, (hsm A hA).laplacian_add (hsm B hB)]
   exact add_nonneg (hAp z hz v) (hBp z hz v)
 
@@ -169,8 +166,7 @@ theorem aestronglyMeasurable {P : Ideal (MRing ι)} {e : ℕ}
     simp only
     rw [Set.indicator_of_mem hm, hdens m y hm.1]
     unfold sheetDensity
-    rw [dite_eq_left hex]
-    rw [hy _ _ _ hex.choose_spec hsh]
+    rw [dite_eq_left hex, hy _ _ _ hex.choose_spec hsh]
   have hmemF : ∀ m, y ∈ S m → σ m y ∈ (hfin y).toFinset := by
     intro m hm
     rw [Set.Finite.mem_toFinset, hσB m y hm.1]
@@ -179,7 +175,7 @@ theorem aestronglyMeasurable {P : Ideal (MRing ι)} {e : ℕ}
     intro m
     rw [Finset.sum_ite_eq]
     by_cases hm : y ∈ S m
-    · rw [if_pos (hmemF m hm)]
+    · rw [ite_eq_left (hmemF m hm)]
     · split_ifs
       · rfl
       · rw [hfdef]
@@ -198,7 +194,7 @@ theorem aestronglyMeasurable {P : Ideal (MRing ι)} {e : ℕ}
       have hm1S : y ∈ S (Nat.find hP') :=
         ⟨hm1B, fun m' hm' h => Nat.find_min hP' hm' ⟨h.1, h.2.trans hm1w⟩⟩
       filter_upwards [eventually_gt_atTop (Nat.find hP')] with N hN
-      rw [Finset.sum_eq_single_of_mem (Nat.find hP') (Finset.mem_range.2 hN), if_pos hm1w,
+      rw [Finset.sum_eq_single_of_mem (Nat.find hP') (Finset.mem_range.2 hN), ite_eq_left hm1w,
         hterm _ hm1S, hm1w]
       intro m _ hne
       split_ifs with hmw

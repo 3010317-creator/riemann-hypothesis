@@ -114,8 +114,7 @@ theorem exists_triv (hur : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (�
     obtain ⟨a, ha⟩ := (hU w).1 w.2 v v.2
     refine ⟨a - ∑ j, x j * IsCMField.ringOfIntegersComplexConj E (y j), ?_⟩
     have e1 : ∑ j, (v : Fin N → E) j * IsCMField.complexConj E ((w : Fin N → E) j) = (a : E) := by
-      refine Eq.trans ?_ ha.symm
-      exact Finset.sum_congr rfl fun j _ => mul_comm _ _
+      exact Eq.trans (Finset.sum_congr rfl fun j _ => mul_comm _ _) ha.symm
     have e2 : ∑ j, (x j : E) * IsCMField.complexConj E (y j : E) =
         ((∑ j, x j * IsCMField.ringOfIntegersComplexConj E (y j) : 𝓞 E) : E) := by
       change _ = algebraMap (𝓞 E) E _
@@ -343,8 +342,7 @@ theorem idele_ideal_laws : ∀ (D : D7), (∀ (u v : (AE D)ˣ) (𝔞 𝔟 : IdE 
       rw [← hr]; exact r.isIntegral_coe
     have h1 : (1 : D.host.E) ∈ 𝔞 * 𝔟 := by rw [hab, Submodule.mem_one]; exact ⟨1, map_one _⟩
     obtain ⟨a₀, ha₀, b₀, hb₀, h0⟩ : ∃ a ∈ 𝔞, ∃ b ∈ 𝔟, a * b ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact one_ne_zero (Submodule.mul_induction_on (C := fun x => x = 0) h1 h fun x y hx hy => by rw [hx, hy, add_zero])
     have hb0 : b₀ ≠ 0 := right_ne_zero_of_mul h0
     let B : Ideal (𝓞 D.host.E) := Submodule.comap (LinearMap.toSpanSingleton (𝓞 D.host.E) D.host.E b₀⁻¹) 𝔞
@@ -419,8 +417,7 @@ theorem maps_iff (hden : ∀ {κ : Type} [Fintype κ] (y : κ → A), ∃ m : �
     fun v => funext fun j => RingHom.map_mulVec ι B v j
   have hmv : ∀ {M : Matrix (Fin N) (Fin N) A} {v : Fin N → A}, (∀ i j, M i j ∈ S) → (∀ i, v i ∈ S) →
       ∀ i, M.mulVec v i ∈ S := fun hM hv i => by
-    simp only [Matrix.mulVec, dotProduct]
-    exact sum_mem fun j _ => mul_mem (hM i j) (hv j)
+    simpa only [Matrix.mulVec, dotProduct] using sum_mem fun j _ => mul_mem (hM i j) (hv j)
   constructor
   · intro h i j
     set X := ((g₂⁻¹ : GL (Fin N) A) : Matrix (Fin N) (Fin N) A) * B.map ι * (g₁ : Matrix (Fin N) (Fin N) A) with hX
@@ -610,8 +607,7 @@ theorem exists_coef_field : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ)
   have hconj := fun ρ => GlobalTheory.ThetaConj.useConj_all D cc δ hC t0 ht N N' _ _ s0 s0' hev e0 he.2.2.2.1 Qbar ρ hD he.2.1
   set G := Iop D (tor0 D cc δ) (La0 D (tor0 D cc δ) N N') (La D (tor0 D cc δ) L L') e0 with hGdef
   obtain ⟨α₀, hα₀⟩ : ∃ α, TaylorLogMetric.taylor D G α ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     refine hne (funext fun z => ?_)
     have := GlobalTheory.EntireTaylor.hasSum_taylor_mono D N N' G hTh.1 z
     simp only [h, zero_mul] at this
@@ -824,7 +820,7 @@ theorem exists_chi (D : D7) (κ : (AE D)ˣ →* ℂˣ) (h1 : ∀ u, IntU D u →
     have h : ∃ u : (AE D)ˣ, ∀ a, a ∈ 𝔞 ↔ ((u⁻¹ : (AE D)ˣ) : AE D) * inc D a ∈ OhE D := ⟨u, hu⟩
     have := h1 _ (i2 h.choose u fun a => (h.choose_spec a).symm.trans (hu a))
     rw [map_mul, map_inv, mul_inv_eq_one] at this
-    simp only [χ, dif_pos h, this]
+    simp only [χ, dite_eq_left h, this]
   refine ⟨χ, ⟨fun 𝔞 𝔟 ha hb => ?_, fun z => ?_⟩, fun n g₁ g₂ L₁ L₂ m₁ m₂ => hχ _ _ (mem_detId_iff D n _ _ L₁ L₂ m₁ m₂)⟩
   · obtain ⟨u, hu⟩ := i3 𝔞 ha
     obtain ⟨v, hv⟩ := i3 𝔟 hb

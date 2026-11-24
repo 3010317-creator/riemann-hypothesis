@@ -61,23 +61,18 @@ theorem hasFDerivAt_prodExpVal_zero {d : ℕ} (X : Fin d → 𝔸) :
     rw [e]
     have hA : HasFDerivAt (fun t : Fin (d + 1) → ℝ => exp (t 0 • X 0))
         ((ContinuousLinearMap.proj 0 : (Fin (d + 1) → ℝ) →L[ℝ] ℝ).smulRight (X 0)) 0 := by
-      have hL : HasFDerivAt (fun t : Fin (d + 1) → ℝ => t 0 • X 0)
-          ((ContinuousLinearMap.proj 0 : (Fin (d + 1) → ℝ) →L[ℝ] ℝ).smulRight (X 0)) 0 :=
-        ((ContinuousLinearMap.proj 0 : (Fin (d + 1) → ℝ) →L[ℝ] ℝ).smulRight (X 0)).hasFDerivAt
       have hE : HasFDerivAt (exp : 𝔸 → 𝔸) (1 : 𝔸 →L[ℝ] 𝔸) ((0 : Fin (d + 1) → ℝ) 0 • X 0) := by
-        have : (0 : Fin (d + 1) → ℝ) 0 • X 0 = 0 := by simp
-        rw [this]; exact hasFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := 𝔸)
-      exact (hE.comp (0 : Fin (d + 1) → ℝ) hL).congr_fderiv (by ext t; simp)
+        simpa using hasFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := 𝔸)
+      exact (hE.comp (0 : Fin (d + 1) → ℝ)
+        ((ContinuousLinearMap.proj 0 : (Fin (d + 1) → ℝ) →L[ℝ] ℝ).smulRight (X 0)).hasFDerivAt
+        ).congr_fderiv (by ext t; simp)
     let T : (Fin (d + 1) → ℝ) →L[ℝ] (Fin d → ℝ) :=
       ContinuousLinearMap.pi fun i => ContinuousLinearMap.proj i.succ
     have hB : HasFDerivAt (fun t : Fin (d + 1) → ℝ =>
         prodExpVal (fun i => X i.succ) (fun i => t i.succ))
         ((∑ i, (ContinuousLinearMap.proj i : (Fin d → ℝ) →L[ℝ] ℝ).smulRight (X i.succ)).comp T)
         0 := by
-      have h0 : T 0 = 0 := map_zero T
-      have := (ih (fun i => X i.succ))
-      rw [← h0] at this
-      exact this.comp (0 : Fin (d + 1) → ℝ) (T.hasFDerivAt)
+      exact (ih fun i => X i.succ).comp (0 : Fin (d + 1) → ℝ) T.hasFDerivAt
     refine (hA.mul' hB).congr_fderiv ?_
     ext t
     simp [T, Fin.sum_univ_succ, prodExpVal_zero']

@@ -117,8 +117,7 @@ theorem relIndex_twist : ∀ (D : D7) (c : Com D) (w : Twist D) (j : ℕ) (s : P
     constructor
     · rintro ⟨-, h⟩ PP -
       exact h PP.1 PP.2
-    · intro h
-      exact ⟨x.2, fun PP hP => h ⟨PP, hP⟩ (Set.mem_univ _)⟩
+    · exact fun h => ⟨x.2, fun PP hP => h ⟨PP, hP⟩ (Set.mem_univ _)⟩
   have hsurj : Function.Surjective φ := by
     intro g
     obtain ⟨N, hN, -⟩ := hflat.base
@@ -136,15 +135,13 @@ theorem relIndex_twist : ∀ (D : D7) (c : Com D) (w : Twist D) (j : ℕ) (s : P
     have hκ1 : Lev.finE s.V h0.choose ∈ Formalism.L2.DIV.parLev D.sp.cm s.V.gram s.β L' := hκ.2.1
     have hκ2 : Formalism.L2.DIV.rTup s.β L' (Lev.finE s.V h0.choose) = g0 := hκ.2.2
     have hred : ∀ PP (h : PP ∈ c.Pg), Formalism.L2.DIV.redFn s.β PP (Lev.finE s.V h0.choose) = g0 ⟨PP, h⟩ := by
-      intro PP h
-      exact (restrictedBlock_self_apply _).symm.trans (congrFun hκ2 ⟨PP, h⟩)
+      exact fun PP h => (restrictedBlock_self_apply _).symm.trans (congrFun hκ2 ⟨PP, h⟩)
     have hPg : ∀ PP ∈ w.Pg, Formalism.L2.DIV.redFn s.β PP (Lev.finE s.V h0.choose) = 1 := by
       intro PP hP
       have hc : PP ∈ c.Pg := by rw [hw.union]; exact Finset.mem_union_left _ hP
       rw [hred PP hc]
       have hq : PP ∉ w.Q := Finset.disjoint_left.1 hw.disj hP
-      show (if h : PP ∈ w.Q then g ⟨PP, h⟩ else (1 : GL (Fin s.V.rank) (kP PP))) = 1
-      exact dif_neg hq
+      exact dite_eq_right hq
     have hSt' := Formalism.L2.DIV.parLev_St hκ1
     have hxbig : Lev.finE s.V h0.choose ∈
         Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β (Lev.datY s.V.rank D.R.r D.R.t j hr' w.Pg ∅ (LevelP.triv _ _ _) χ ξ Lev.Frm.B) := by

@@ -68,8 +68,7 @@ theorem polyTangent_eq_of_subset (S T : Set (MvPolynomial (Fin n) ℂ)) (p : Fin
   have hle : Submodule.span ℂ (polyDiff p '' S) ≤ LinearMap.ker (dotForm.flip v) := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨g, hg, rfl⟩
-    simp only [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.flip_apply]
-    exact hv g hg
+    simpa only [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.flip_apply] using hv g hg
   have := hle (h f hf)
   simpa only [LinearMap.mem_ker, LinearMap.flip_apply] using this
 
@@ -275,8 +274,7 @@ theorem PolyLocalGenerators.proof : PolyLocalGenerators.Statement := by
       intro hyM'
       have hyN : y ∈ N.comap (Ideal.Quotient.mk J) := by rw [hNM]; exact hyM'
       apply t.2
-      rw [← hy]
-      exact hyN
+      rwa [← hy]
     refine ⟨IsLocalization.mk' P x ⟨y, hyM⟩, ?_⟩
     rw [halg, Localization.localRingHom_mk']
     congr 1
@@ -384,8 +382,7 @@ theorem PolyLocalGenerators.proof : PolyLocalGenerators.Statement := by
     have hx' : algebraMap (MvPolynomial (Fin n) ℂ) P x ∈
         Ideal.span (Set.range f) ⊔ maximalIdeal P ^ 2 := by
       have h1 := Ideal.mem_map_of_mem (algebraMap (MvPolynomial (Fin n) ℂ) P) (hJcov hxJ)
-      rw [Ideal.map_sup, Ideal.map_span, Ideal.map_pow, ← hmP, ← Set.range_comp] at h1
-      exact h1
+      rwa [Ideal.map_sup, Ideal.map_span, Ideal.map_pow, ← hmP, ← Set.range_comp] at h1
     rw [IsLocalization.mk'_eq_mul_mk'_one]
     exact Ideal.mul_mem_right _ _ hx'
 
@@ -418,8 +415,7 @@ theorem PolyLocalGenerators.proof : PolyLocalGenerators.Statement := by
     exact Submodule.subset_span hx
   refine ⟨q, ∏ x ∈ s, σ x, hqJ, ?_, ?_, ?_⟩
   · rw [map_prod]
-    refine Finset.prod_ne_zero_iff.2 fun x hx h0 => ?_
-    exact hσM x (hsJ x hx) (RingHom.mem_ker.2 h0)
+    exact Finset.prod_ne_zero_iff.2 fun x hx h0 => hσM x (hsJ x hx) (RingHom.mem_ker.2 h0)
   · rw [htq, htan]
   · intro r hr
     have hle : J ≤ Submodule.comap (LinearMap.mulLeft (MvPolynomial (Fin n) ℂ) (∏ x ∈ s, σ x))

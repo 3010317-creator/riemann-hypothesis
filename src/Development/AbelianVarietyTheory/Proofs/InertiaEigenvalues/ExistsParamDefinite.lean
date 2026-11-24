@@ -83,8 +83,7 @@ theorem level_abs {Γ Gf W : Type} [Group Γ] [Group Gf] [NormedAddCommGroup W] 
     {ρ : Γ →* Module.End ℂ W} {J : Subgroup Gf} {χ : J →* ℂˣ} {f : Gf → W} (hf : f ∈ Bridge.AdForms ι ρ J χ)
     {k : Gf} (hk : k ∈ J) (h : Gf) : f (h * k) = ((χ ⟨k, hk⟩ : ℂˣ) : ℂ) • f h := by
   have h3 := hf 1 h ⟨k, hk⟩
-  rw [map_one, map_one, one_mul] at h3
-  exact h3
+  rwa [map_one, map_one, one_mul] at h3
 
 theorem ext_level {V : HSp D} (c : CoefA V) (hc : c.Is) {β : GL (Fin V.rank) (Lev.EAf D)} {L : LevDat D.host.E ℂ V.rank}
     {f : Bridge.Gf V → c.W}
@@ -102,8 +101,7 @@ theorem exists_coord_ne {V : HSp D} (c : CoefA V) {f : Bridge.Gf V → c.W} (h0 
     have e' : c.ρ g⁻¹ (f ((finHom V).rangeRestrict g)) = 0 := e
     have := congrArg (c.ρ g) e'
     rwa [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, map_zero] at this)
-  refine ⟨innerₛₗ ℂ (c.ext f g), Function.ne_iff.2 ⟨g, fun e => h1 ?_⟩⟩
-  exact inner_self_eq_zero.1 e
+  exact ⟨innerₛₗ ℂ (c.ext f g), Function.ne_iff.2 ⟨g, fun e => h1 (inner_self_eq_zero.1 e)⟩⟩
 
 
 

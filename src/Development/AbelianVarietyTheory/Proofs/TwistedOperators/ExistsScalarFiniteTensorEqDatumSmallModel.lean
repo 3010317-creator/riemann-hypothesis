@@ -113,12 +113,10 @@ theorem mixCoS_spec : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G :
     refine ⟨ofMaps t e (x₁, x₂), ⟨?_, ?_⟩, ?_⟩
     · show IsHalf _ (mapA t e _)
       rw [k₁]
-      intro a b
-      exact atPl_one_mul w _
+      exact fun a b => atPl_one_mul w _
     · show IsHalf _ (mapB e _)
       rw [k₂]
-      intro a b
-      exact atPl_one_mul w _
+      exact fun a b => atPl_one_mul w _
     · rw [mixCoS_eq, k₁, k₂, m₁, m₂, hy₁, hy₂, transpose_transpose, fromCols_toCols]
   · have k₁ : mapA t e (ofMaps t e (atPl w 1 • mapA t e u, atPl w 1 • mapB e u)) = atPl w 1 • mapA t e u := mapA_ofMaps t e _
     have k₂ : mapB e (ofMaps t e (atPl w 1 • mapA t e u, atPl w 1 • mapB e u)) = atPl w 1 • mapB e u := mapB_ofMaps t e _
@@ -519,7 +517,7 @@ theorem exists_scalar_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
     · rw [Set.indicator_of_mem (mem_halfPt.2 hu), Finset.prod_congr rfl fun w hw =>
         (congrArg _ ((hco w).2.2.1 u).symm).trans ((hv w hw).2 _ ((hh w hw).2.2.2.2 u).1)]
       by_cases hl : mapA t e u ∈ latA G t i j ∧ mapB e u ∈ latB G i j
-      · rw [if_pos ⟨hl.1, hu.1⟩, if_pos ⟨hl.2, hu.2⟩, mul_one, mul_one]
+      · rw [ite_eq_left ⟨hl.1, hu.1⟩, ite_eq_left ⟨hl.2, hu.2⟩, mul_one, mul_one]
         exact Finset.prod_congr rfl fun w hw => Set.indicator_of_mem (((hh w hw).2.2.2.2 u).2.2 hl.1 hl.2) _
       · have : ∃ w ∈ locPl G t, ofMaps t e (atPl w 1 • mapA t e u, atPl w 1 • mapB e u) ∉ latPtS t e (w.under (𝓞 D.host.F)) := by
           by_contra! hall
@@ -528,12 +526,12 @@ theorem exists_scalar_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
         obtain ⟨w, hw, hn⟩ := this
         rw [Finset.prod_eq_zero hw (Set.indicator_of_notMem hn _)]
         rcases not_and_or.1 hl with hl | hl
-        · rw [if_neg fun h => hl h.1, zero_mul, mul_zero]
-        · rw [if_neg fun h : _ ∧ IsHalf ε (mapB e u) => hl h.1, mul_zero, mul_zero]
+        · rw [ite_eq_right fun h => hl h.1, zero_mul, mul_zero]
+        · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapB e u) => hl h.1, mul_zero, mul_zero]
     · rw [Set.indicator_of_notMem (mt mem_halfPt.1 hu)]
       rcases not_and_or.1 hu with hl | hl
-      · rw [if_neg fun h => hl h.2, zero_mul, mul_zero]
-      · rw [if_neg fun h : _ ∧ IsHalf ε (mapB e u) => hl h.2, mul_zero, mul_zero]
+      · rw [ite_eq_right fun h => hl h.2, zero_mul, mul_zero]
+      · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapB e u) => hl h.2, mul_zero, mul_zero]
   have hR := _root_.GlobalTheory.InductLagr.rel_of_vac Γ.M' W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
     (fun w => mixHalfS e (atPl w 1)) (fun w => mixHalfS e (cA D (atPl w 1))) (mixCoS B t e) I (halfPt t e ε) R (c • f)
     hI (fun w hw u hu => ⟨(hh w hw).1 u hu, mem_halfPt.2 (hA w hw u hu)⟩) (fun w hw => (hh w hw).2.1)
@@ -573,8 +571,7 @@ theorem exists_scalar_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
     have := sub_mem hR.2 hτ
     rwa [← Prod.mk.eta (p := Finset.sum _ _), Prod.mk_sub_mk, ← hfst, sub_self] at this)
   have := congrFun (sub_eq_zero.1 this) u
-  rw [Prod.snd_sum, Finset.sum_apply] at this
-  exact this
+  rwa [Prod.snd_sum, Finset.sum_apply] at this
 
 end GlobalTheory.SmallPlaces
 

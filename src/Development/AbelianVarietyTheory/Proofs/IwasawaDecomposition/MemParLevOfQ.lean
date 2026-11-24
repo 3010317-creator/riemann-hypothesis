@@ -95,10 +95,8 @@ theorem redQ_eq_one_iff (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r) (i : Fin X.toD7
     redQ X I U L eG i t q = 1 ↔ (q : Bridge.Gf (Vc X.toD7 i)) ∈ (levEnv (Vc X.toD7 i) (L.βV i) (L.datVt i t)).J := by
   rw [redQ_apply, MulEquiv.map_eq_one_iff]
   constructor
-  · intro h
-    exact ⟨mem_parLev_of_Q X I U L i t q, Subgroup.mem_bot.2 h⟩
-  · intro h
-    exact Subgroup.mem_bot.1 h.2
+  · exact fun h => ⟨mem_parLev_of_Q X I U L i t q, Subgroup.mem_bot.2 h⟩
+  · exact fun h => Subgroup.mem_bot.1 h.2
 
 def ptS (i : Fin X.toD7.R.m) (t : TupU I U) (A k : GL (Fin X.B.R.nV) (EA X)) (g : Bridge.Gf (Vc X.toD7 i)) :
     Formalism.L2.Col.DecoSet (E := X.B.fields.E) (n := X.B.R.nV) (ST := ∅) (SG := Formalism.L2.Col.rowSG (X.B.primes px) I.sel t.1) :=

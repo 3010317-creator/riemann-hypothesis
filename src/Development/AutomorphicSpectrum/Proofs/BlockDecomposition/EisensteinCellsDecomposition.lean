@@ -99,9 +99,7 @@ variable {D : D7} {n : ℕ}
 
 abbrev sg (D : D7) : D.host.E →+* D.host.E := (D.sp.cm.sig : D.host.E →+* D.host.E)
 
-theorem sg_sg (D : D7) (x : D.host.E) : sg D (sg D x) = x := by
-  show star (star x) = x
-  exact star_star x
+theorem sg_sg (D : D7) (x : D.host.E) : sg D (sg D x) = x := star_star x
 
 theorem mat_mul' (x y : G D n) : mat (x * y) = mat x * mat y := by
   simp only [mat, map_mul, Units.val_mul]
@@ -127,8 +125,7 @@ theorem mk_eq_iff_siegel (hR : RatPts) (x y : GF D n) {gx gy : Matrix (Fin (n + 
 
 theorem isSiegelParabolic_one (K : Type) [Field K] (n : ℕ) : IsSiegelP (1 : Matrix (Fin (n + n)) (Fin (n + n)) K) := by
   unfold IsSiegelP
-  intro i j
-  exact Matrix.one_apply_ne (finSumFinEquiv.injective.ne Sum.inr_ne_inl)
+  exact fun i j => Matrix.one_apply_ne (finSumFinEquiv.injective.ne Sum.inr_ne_inl)
 
 theorem eisCells_of : Bruhat → RatPts → PInv → Term2 → EisCells := by
   intro hBr hRat hPInv hT2 D n V ψ χ θ μ ω hS Φ hconv μr hμr c hc

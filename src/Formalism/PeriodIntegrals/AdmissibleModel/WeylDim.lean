@@ -65,13 +65,13 @@ def SSZ (k : ℕ) (κ : Fin k → ℤ) : Type :=
 theorem sum_le_castSucc {k : ℕ} (F : Fin (k + 1) → ℕ) (a : Fin k) :
     (∑ b : Fin (k + 1) with b ≤ a.castSucc, F b) = ∑ b : Fin k with b ≤ a, F b.castSucc := by
   have h : ¬ (Fin.last k ≤ a.castSucc) := not_le.mpr (Fin.castSucc_lt_last a)
-  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, if_neg h, add_zero]
+  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, ite_eq_right h, add_zero]
   simp [Fin.castSucc_le_castSucc_iff]
 
 theorem sum_lt_castSucc {k : ℕ} (F : Fin (k + 1) → ℕ) (a : Fin k) :
     (∑ b : Fin (k + 1) with b < a.castSucc, F b) = ∑ b : Fin k with b < a, F b.castSucc := by
   have h : ¬ (Fin.last k < a.castSucc) := not_lt.mpr (Fin.castSucc_lt_last a).le
-  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, if_neg h, add_zero]
+  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, ite_eq_right h, add_zero]
   simp [Fin.castSucc_lt_castSucc_iff]
 
 theorem sum_le_last {k : ℕ} (F : Fin (k + 1) → ℕ) :
@@ -80,7 +80,7 @@ theorem sum_le_last {k : ℕ} (F : Fin (k + 1) → ℕ) :
 
 theorem sum_lt_last {k : ℕ} (F : Fin (k + 1) → ℕ) :
     (∑ b : Fin (k + 1) with b < Fin.last k, F b) = ∑ b : Fin k, F b.castSucc := by
-  rw [Finset.sum_filter, Fin.sum_univ_castSucc, if_neg (lt_irrefl _), add_zero]
+  rw [Finset.sum_filter, Fin.sum_univ_castSucc, ite_eq_right (lt_irrefl _), add_zero]
   simp [Fin.castSucc_lt_last]
 
 theorem intl_zero {K N : ℕ} (f : Fin K → Fin N → ℕ) (hf : Intl f) :
@@ -200,8 +200,7 @@ theorem ext_intl {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.last 
     induction j using Fin.lastCases with
     | last => simp [ext_cl]
     | cast j =>
-      simp only [ext_cc]
-      exact g.2.1 l' j (by simpa using hlj) a
+      simpa only [ext_cc] using g.2.1 l' j (by simpa using hlj) a
 
 theorem rho_surj {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.last k)) : Function.Surjective (rho μ) := by
   intro g
@@ -332,8 +331,7 @@ theorem weyl_dualWeyl (K : Type) [Field K] (n : ℕ) (nu : Fin n → ℕ) (h : A
   rfl
 
 theorem weyl_dual_weight_admissible (D : Formalism.BasicNotions.D7) : Formalism.MainNotions.ColumnSystems.adm3 D := by
-  intro K _ _ n nu h
-  exact weyl_dualWeyl K n nu h
+  exact fun K _ _ n nu h => weyl_dualWeyl K n nu h
 
 theorem finrank_tensor' (Kf : Type) [Field Kf] (S : Type) [Fintype S] [DecidableEq S] (k n : ℕ)
     (ν : S → Fin n → ℕ) :
@@ -362,7 +360,7 @@ theorem weylV_proved : Formalism.MainNotions.flipOneThree.WeylV := by
     unfold Vsp
     congr 1
     funext s
-    rw [if_pos (hA s)]
+    rw [ite_eq_left (hA s)]
   show ((Module.finrank Kf (Vsp Kf lam0) : ℕ) : ℚ) = _
   rw [hV, finrank_tensor', Nat.cast_prod]
   refine Finset.prod_congr rfl (fun s _ => ?_)
@@ -393,8 +391,7 @@ theorem gl_branching_dimension (D : Formalism.BasicNotions.D7) : Formalism.MainN
   · intro mu hmu
     rw [Finset.mem_filter] at hmu
     rw [_root_.Formalism.InvariantFactorPaths.GelfandTsetlinBases.Pieri.mem_gtBox]
-    intro i
-    exact ⟨Nat.cast_le.mpr (hmu.2 i).1, Nat.cast_le.mpr (hmu.2 i).2⟩
+    exact fun i => ⟨Nat.cast_le.mpr (hmu.2 i).1, Nat.cast_le.mpr (hmu.2 i).2⟩
   · intro κ hκ
     rw [_root_.Formalism.InvariantFactorPaths.GelfandTsetlinBases.Pieri.mem_gtBox] at hκ
     rw [Finset.mem_filter, Fintype.mem_piFinset]

@@ -315,8 +315,7 @@ theorem exists_lagrangian {R : Type} [CommRing R] {M : Type} [AddCommGroup M] [M
         rw [e2, hs]
         exact L.add_mem (hL a ha _) (hL a ha _)
       simpa using L.add_mem hzl hl
-    · intro hz
-      exact ⟨z, hz, 0, X.zero_mem, by simp⟩
+    · exact fun hz => ⟨z, hz, 0, X.zero_mem, by simp⟩
   have h2 : ∀ c ∈ P, ∀ x ∈ N, ∃ z, σ c • x = p • z := by
     intro c hc y hy
     obtain ⟨l, hl, x, hx, rfl⟩ := (hN y).1 hy
@@ -393,8 +392,7 @@ theorem exists_lagrangian {R : Type} [CommRing R] {M : Type} [AddCommGroup M] [M
     have hone : L.toAddSubgroup.relIndex L2 = 1 := by
       apply mul_left_cancel₀ hL0
       rw [o3, Nat.mul_one, eq12]
-    intro l hl
-    exact AddSubgroup.relIndex_eq_one.1 hone hl
+    exact fun l hl => AddSubgroup.relIndex_eq_one.1 hone hl
   have hKN : (nsmulAddMonoidHom (α := M) (p * p)).range ≤ N.toAddSubgroup := by
     rintro _ ⟨w, rfl⟩
     show (p * p) • w ∈ N
@@ -403,8 +401,7 @@ theorem exists_lagrangian {R : Type} [CommRing R] {M : Type} [AddCommGroup M] [M
   have hself : ∀ x, x ∈ N.toAddSubgroup ↔ ∀ y ∈ N.toAddSubgroup, ((p * p : ℕ) : ℤ) ∣ B x y := by
     intro x
     constructor
-    · intro hx y hy
-      exact h3 x hx y hy
+    · exact fun hx y hy => h3 x hx y hy
     · intro hx
       have hxX : x ∈ X := by
         rw [hX]

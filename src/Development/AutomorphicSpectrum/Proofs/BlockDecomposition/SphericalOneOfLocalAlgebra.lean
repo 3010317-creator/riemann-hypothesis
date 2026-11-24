@@ -145,8 +145,7 @@ theorem tr_mem_UJ (σ : L →+* L) (hσ : ∀ x, σ (σ x) = x) {h : GL (Fin n) 
     simp [hσ]
   have h1 : h.valᵀ * antiJ L n * h.val.map σ = antiJ L n := by
     have := congrArg (fun M : Matrix (Fin n) (Fin n) L => M.map σ) h0
-    simp only [cT, Matrix.map_mul, hJσ, hmm] at this
-    exact this
+    simpa only [cT, Matrix.map_mul, hJσ, hmm] using this
   have h2 : h.valᵀ * (antiJ L n * h.val.map σ * antiJ L n) = 1 := by
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, h1, hJ]
   have h3 : (antiJ L n * h.val.map σ * antiJ L n) * h.valᵀ = 1 := mul_eq_one_comm.1 h2
@@ -181,7 +180,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem isClosed_UL (hU : Unr E) (n : ℕ) (w : Pl E) : IsClosed (UL n w : Set (GLw n w)) := by
   by_cases hw : IsSplitAt w
-  · have h : UL n w = ⊤ := if_pos hw
+  · have h : UL n w = ⊤ := ite_eq_left hw
     rw [h]
     exact isClosed_univ
   · rw [GlobalTheory.CompanionTheory.UnitaryWitt.UL_eq_of_not_split hw]
@@ -203,7 +202,7 @@ theorem isCompact_KL (hU : Unr E) (n : ℕ) (w : Pl E) : IsCompact (KL n w : Set
 
 theorem conv_comm_split {n : ℕ} {w : Pl E} (hw : IsSplitAt w) (f₁ f₂ : UL n w → ℂ)
     (hf₁ : IsBiInv (KL n w) f₁) (hf₂ : IsBiInv (KL n w) f₂) : conv (KL n w) f₁ f₂ = conv (KL n w) f₂ f₁ := by
-  have hT : UL n w = ⊤ := if_pos hw
+  have hT : UL n w = ⊤ := ite_eq_left hw
   have hmem : ∀ x : GLw n w, x ∈ UL n w := fun x => by
     rw [hT]
     trivial

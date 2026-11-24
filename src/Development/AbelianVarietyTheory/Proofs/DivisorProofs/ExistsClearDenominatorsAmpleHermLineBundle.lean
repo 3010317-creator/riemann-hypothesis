@@ -183,8 +183,7 @@ theorem exists_pos_nonzero_mem_H : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) 
   obtain ⟨e, -, hrange, -, hloc⟩ := RepDict.rep_dict k X p P a b _ hN
   have hmem : e u ∈ P.H a b := by
     have : e u ∈ Set.range e := Set.mem_range_self u
-    rw [hrange] at this
-    exact this
+    rwa [hrange] at this
   obtain ⟨i, hi⟩ : ∃ i, genericPoint X ∈ P.L.B.U i :=
     Opens.mem_iSup.1 (P.L.isLB.cover.ge (Opens.mem_top _))
   obtain ⟨j, hj⟩ : ∃ j, genericPoint X ∈ P.A.B.U j :=
@@ -218,8 +217,7 @@ namespace GlobalTheory.HSNef.Den
 variable {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp k}
 
 theorem one_mem_H (P : Pair p) : (1 : X.functionField) ∈ P.H 0 0 := by
-  intro x i j _ _
-  exact ⟨1, by simp [Pair.loc]⟩
+  exact fun x i j _ _ => ⟨1, by simp [Pair.loc]⟩
 
 theorem mul_mem_H {P : Pair p} {a b a' b' : ℤ} {f g : X.functionField} (hf : f ∈ P.H a b) (hg : g ∈ P.H a' b') :
     f * g ∈ P.H (a + a') (b + b') :=

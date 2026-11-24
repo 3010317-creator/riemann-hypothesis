@@ -141,8 +141,7 @@ theorem rhoStab_chiInLL0 : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0
       rw [LinearEquiv.apply_symm_apply] at heq
       rw [← heq]
       exact Submodule.coe_mem _
-    · rw [(B.rhoGeo (NX.idxOf D j)).2 hK g0]
-      exact hx
+    · rwa [(B.rhoGeo (NX.idxOf D j)).2 hK g0]
   · intro g0
     change (((R.FW (NX.idxOf D j)).chi g0 : D.what₂.LLˣ) : D.what₂.LL) ∈ D.LL0
     have hL := hP.char.base.lev
@@ -314,16 +313,14 @@ theorem exists_heckeRd (R : RealDat3 D A3 Ks) (cG : G0 R.Pg D.R.r ≃* G0g D.nd)
       simp only [GlobalTheory.IndefiniteRowSideFullHecke.RationalHeckeScalars.heckeScalar_zero, one_smul] at e1 e2
       have e4 := (e2.trans (heckeOn_one _ _)).symm.trans e1
       have hn : hkNorm R (idxOf D j) 0 Pl = 1 := by simp [hkNorm]
-      rw [famOf_zero, hn, one_smul]
-      exact e4
+      rwa [famOf_zero, hn, one_smul]
     · have h : k ≠ 0 ∧ GlobalTheory.IndefiniteRowSideFullHecke.RationalHeckeScalars.GoodPlace R.toRealDat Pl ∧ k ≤ D.R.r := ⟨hk0, hg', hd.le⟩
       have e1 := (GlobalTheory.IndefiniteRowSideFullHecke.RationalHeckeScalars.readAs_iff _ _ _ _ _ _).1
         ((Classical.choose_spec (hq (idxOf D j) Pl h.2.1 k h.2.2)).1 Rr ⟨α, hd.elt, hd.reps⟩) y
       have h1 : famOf R hq j k Pl = Classical.choose (hq (idxOf D j) Pl h.2.1 k h.2.2) := by
         unfold famOf
         rw [dite_eq_left h]
-      rw [h1, ← heckeScalar_eq]
-      exact e1
+      rwa [h1, ← heckeScalar_eq]
 end Gen
 
 end GlobalTheory.HeightCounting.RatSide.HeckeAtState
@@ -583,11 +580,7 @@ theorem exists_prime_dvd_card (P : HeightOneSpectrum (𝓞 E)) :
 
 theorem prime_eq_of_mem (P : HeightOneSpectrum (𝓞 E)) {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     (hpP : (p : 𝓞 E) ∈ P.asIdeal) (hqP : (q : 𝓞 E) ∈ P.asIdeal) : p = q := by
-  by_contra hne
-  have hco : IsCoprime (p : 𝓞 E) (q : 𝓞 E) := ((Nat.coprime_primes hp hq).2 hne).cast
-  obtain ⟨u, v, huv⟩ := hco
-  exact P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2
-    (huv ▸ P.asIdeal.add_mem (P.asIdeal.mul_mem_left _ hpP) (P.asIdeal.mul_mem_left _ hqP)))
+  exact GlobalTheory.StepLifts.prime_eq_of_mem P hp hq hpP hqP
 
 end Prime
 

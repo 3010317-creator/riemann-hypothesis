@@ -132,22 +132,12 @@ theorem unipotentCompactG_mono {e e' : ℕ} (h : e ≤ e') :
     rw [rankTorus_conj_apply] at hij ⊢
     obtain ⟨hvP, hv1⟩ := mem_unipotentRadical.1 hv
     rcases lt_trichotomy (γ i) (γ j) with hlt | heq | hgt
-    · have hr := blockRank_lt hlt
-      have : (((e' * blockRank γ j : ℕ) : ℤ) - ((e' * blockRank γ i : ℕ) : ℤ)) =
+    · have : (((e' * blockRank γ j : ℕ) : ℤ) - ((e' * blockRank γ i : ℕ) : ℤ)) =
           (((e * blockRank γ j : ℕ) : ℤ) - ((e * blockRank γ i : ℕ) : ℤ)) +
             (((e' - e) * (blockRank γ j - blockRank γ i) : ℕ) : ℤ) := by
-        push_cast [Nat.cast_sub h, Nat.cast_sub hr.le]
+        push_cast [Nat.cast_sub h, Nat.cast_sub (blockRank_lt hlt).le]
         ring
-      rw [this, zpow_add₀ uniformizer_ne_zero, zpow_natCast]
-      have e1 : ((GLnLocal.uniformizer F : F) ^ ((((e * blockRank γ j : ℕ) : ℤ) -
-          ((e * blockRank γ i : ℕ) : ℤ))) *
-            (GLnLocal.uniformizer F : F) ^ ((e' - e) * (blockRank γ j - blockRank γ i))) *
-              (v : Matrix (Fin n) (Fin n) F) i j =
-          ((GLnLocal.uniformizer F : F) ^ ((((e * blockRank γ j : ℕ) : ℤ) -
-            ((e * blockRank γ i : ℕ) : ℤ))) * (v : Matrix (Fin n) (Fin n) F) i j) *
-            (GLnLocal.uniformizer F : F) ^ ((e' - e) * (blockRank γ j - blockRank γ i)) := by
-        ring
-      rw [e1]
+      rw [this, zpow_add₀ uniformizer_ne_zero, zpow_natCast, mul_right_comm]
       exact mul_mem hij (pow_mem (GLnLocal.uniformizer F).2 _)
     · rw [blockRank_eq heq, sub_self] at hij ⊢
       exact hij
@@ -156,13 +146,11 @@ theorem unipotentCompactG_mono {e e' : ℕ} (h : e ≤ e') :
   rw [mem_integralGL_iff F n]
   refine ⟨key u huN hu', ?_⟩
   intro i j
-  have : (rankTorus F n γ e' * u * (rankTorus F n γ e')⁻¹)⁻¹ =
-      rankTorus F n γ e' * u⁻¹ * (rankTorus F n γ e')⁻¹ := by group
-  rw [this]
-  have h' : (rankTorus F n γ e * u * (rankTorus F n γ e)⁻¹)⁻¹ =
-      rankTorus F n γ e * u⁻¹ * (rankTorus F n γ e)⁻¹ := by group
+  have hconj : ∀ k : ℕ, (rankTorus F n γ k * u * (rankTorus F n γ k)⁻¹)⁻¹ =
+      rankTorus F n γ k * u⁻¹ * (rankTorus F n γ k)⁻¹ := fun k => by group
+  rw [hconj]
   have hinv := (integralGL F n).inv_mem hu'
-  rw [h'] at hinv
+  rw [hconj] at hinv
   exact key u⁻¹ ((unipotentRadical F n γ).inv_mem huN) hinv i j
 
 end UnipotentCompact
@@ -193,8 +181,7 @@ theorem isClopen_support_parabolicInd (f : parabolicIndSpace F n β σ) :
     intro g hg
     refine Filter.mem_of_superset (hnhds g) fun x hx => ?_
     simp only [mem_ofPred_eq] at hg ⊢
-    rw [hval g x hx]
-    exact hg
+    rwa [hval g x hx]
 
 variable (w : Equiv.Perm (Fin n))
 
@@ -318,14 +305,12 @@ theorem exists_unipotentCompactG_support {Y : Set (GL (Fin n) F)} (hYo : IsOpen 
       EntryBound.leviProj (p := ⟨l, hlQ⟩) hlb
     refine mem_unipotentCompactG_of_bound hvN ?_ ?_
     · rw [hv]
-      simp only [Units.val_mul]
-      exact ((hmb.mul hcb').mul hlb).mul hmb'
+      simpa only [Units.val_mul] using ((hmb.mul hcb').mul hlb).mul hmb'
     · have : ((b : GL (Fin n) F) * l * m⁻¹)⁻¹ = m * l⁻¹ * (c : GL (Fin n) F) * m⁻¹ := by
         rw [hbc]
         group
       rw [this]
-      simp only [Units.val_mul]
-      exact ((hmb.mul hlb').mul hcb).mul hmb'
+      simpa only [Units.val_mul] using ((hmb.mul hlb').mul hcb).mul hmb'
   · rw [show u = x * l * m⁻¹ by rw [← hum]; group]
     group
 
@@ -509,8 +494,7 @@ theorem exists_congruence_fixed (hσ : IsSmooth σ) (v : W) :
   obtain ⟨U, hU, hUe⟩ := isOpen_induced_iff.1 (hσ v)
   have h1 : (1 : GL (Fin n) F) ∈ U := by
     have : (1 : levi F n β) ∈ (stabilizerOf σ v : Set (levi F n β)) := (stabilizerOf σ v).one_mem
-    rw [← hUe] at this
-    exact this
+    rwa [← hUe] at this
   obtain ⟨j, -, hj⟩ := (hasBasis_nhds_one F n).mem_iff.1 (hU.mem_nhds h1)
   refine ⟨j, fun m hm => ?_⟩
   have : m ∈ (stabilizerOf σ v : Set (levi F n β)) := by
@@ -655,8 +639,7 @@ theorem exists_finset_levi_eq_mul (j : ℕ) :
       ext x
       simp only [L, Subgroup.mem_subgroupOf, Subgroup.mem_inf]
       exact ⟨fun h => h.2, fun h => ⟨x.2.1, h⟩⟩
-    rw [this]
-    exact h
+    rwa [this]
   have : L.FiniteIndex := ⟨hfin⟩
   let _ := Fintype.ofFinite (K₀ ⧸ L)
   refine ⟨Finset.univ.image fun q : K₀ ⧸ L => ((Quotient.out q : K₀) : GL (Fin n) F),

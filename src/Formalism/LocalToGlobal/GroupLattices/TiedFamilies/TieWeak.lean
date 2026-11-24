@@ -63,8 +63,7 @@ lemma g_B_big (hϖ : Irreducible ϖ) {q Y : Q} (hq : q ≠ 0) (hqs : Sm Q ϖ 1 q
     ring
   rw [e]
   have h2 : Sm Q ϖ 0 (1 + (q⁻¹) ^ r) := Sm.add Sm.one (ht.mono hϖ (by norm_num))
-  have h3 := h2.mul hϖ hY
-  simpa using h3
+  simpa using h2.mul hϖ hY
 
 lemma g_B_small (hϖ : Irreducible ϖ) {q Y : Q} (hq : Sm Q ϖ 1 q) {m : ℤ} (hY : Sm Q ϖ m Y) {r : ℕ}
     (hr : 1 ≤ r) (hrm : 1 ≤ (r : ℤ) + m) : Sm Q ϖ 1 (q ^ r * (1 + q ^ r)⁻¹ * Y) := by
@@ -178,8 +177,7 @@ theorem big_existence_holds : BigExists := by
             rw [← this, h, map_zero])
           refine ⟨z ^ r * (1 + z ^ r)⁻¹ * y,
             mul_ne_zero (mul_ne_zero (pow_ne_zero _ hz0) (inv_ne_zero hd')) hy0, ?_, ?_⟩
-          · rw [hmap]
-            exact hbig
+          · rwa [hmap]
           · intro k hk hki
             rw [hmap]
             rcases Finset.mem_insert.mp hk with h | hkS
@@ -281,14 +279,14 @@ theorem rho_projection_assembly : Assembly := by
     · subst hij
       obtain ⟨hne, hsm⟩ := big_one_add_pow (hϖ i) ((map_ne_zero (iw i)).mpr (hz0 i)) (hzi i) hr1
       have hid : iw i (e i) - (if i = i then 1 else 0) = -(1 + iw i (z i) ^ r)⁻¹ := by
-        rw [if_pos rfl, he]
+        rw [ite_eq_left rfl, he]
         calc iw i (z i) ^ r * (1 + iw i (z i) ^ r)⁻¹ - 1
             = (iw i (z i) ^ r - (1 + iw i (z i) ^ r)) * (1 + iw i (z i) ^ r)⁻¹ := by
               rw [sub_mul, mul_inv_cancel₀ hne]
           _ = -(1 + iw i (z i) ^ r)⁻¹ := by ring
       rw [hid]
       exact (hsm.neg.mul (hϖ i) (hk i i)).mono (hϖ i) (hrk i i)
-    · rw [if_neg hij, sub_zero, he]
+    · rw [ite_eq_right hij, sub_zero, he]
       obtain ⟨_, hsm⟩ := small_one_add_pow (hϖ j) (hzj i j (Ne.symm hij)) hr1
       exact (hsm.mul (hϖ j) (hk i j)).mono (hϖ j) (hrk i j)
   have hsum : iw j (∑ i, e i * y i) - x j =
@@ -296,7 +294,7 @@ theorem rho_projection_assembly : Assembly := by
 
     rw [map_sum]
     simp only [map_mul, sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
   have htot : PI.WADVR.Sm (Q j) (ϖ j) K (iw j (∑ i, e i * y i) - x j) := by
     rw [hsum]

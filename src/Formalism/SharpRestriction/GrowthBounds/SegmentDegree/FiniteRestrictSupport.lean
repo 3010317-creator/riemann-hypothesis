@@ -93,9 +93,7 @@ theorem restFin : RestFin := by
   have hfg := finite_restrictSupport' O (ℤ × Fin (r + K)) _ (segDegSet_finite (r := r) K b (X.F.letters j) hb)
   have hN : IsNoetherian O (restrictSupport O (Dat.segDegSet (r := r) K b) : Submodule O (SegRing O r K)) :=
     isNoetherian_of_fg_of_noetherian _ hfg
-  have hle : X.Mj p K O j b ≤ restrictSupport O (Dat.segDegSet (r := r) K b) := by
-    intro P hP
-    exact hP.1.2
+  have hle : X.Mj p K O j b ≤ restrictSupport O (Dat.segDegSet (r := r) K b) := fun P hP => hP.1.2
   have : IsNoetherian O (X.Mj p K O j b) := isNoetherian_of_le hle
   infer_instance
 

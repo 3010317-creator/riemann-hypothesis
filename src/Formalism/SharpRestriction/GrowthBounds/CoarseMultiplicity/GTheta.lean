@@ -117,7 +117,7 @@ theorem cth_gen (D7 : Formalism.BasicNotions.D7) {D : BlockData N} (hT : TieOK D
       · refine freeV_of_vars (nv_add (nv_mul (nv_X (hZS i).1) (nv_X (hZS i).2)) (nv_sum _ fun c' hc' =>
           nv_mul (nv_X (hemb fun h => Finset.ne_of_mem_erase hc' (congrArg Prod.snd h).symm))
             (nv_X (hemb fun h => tieW_ne_tieE hT i i (congrArg Prod.fst h)))))
-      · simp only [Bool.false_eq_true, if_false, zero_add, map_mul, rename_X]
+      · simp only [Bool.false_eq_true, ite_false, zero_add, map_mul, rename_X]
       · refine otherE_free hT j i fun i' hi' => nv_Ehat hT i' (hZS i').1 (hZS i').2
           (fun c' => hemb fun h => hi' (hT.inj _ _ (congrArg Fin.val (congrArg Prod.fst h)).symm))
           (fun c' => hemb fun h => tieW_ne_tieE hT i i' (congrArg Prod.fst h))
@@ -133,7 +133,7 @@ theorem cth_gen (D7 : Formalism.BasicNotions.D7) {D : BlockData N} (hT : TieOK D
         · refine freeV_of_vars (nv_add (nv_mul (nv_X (hZS i).1) (nv_X (hZS i).2)) (nv_sum _ fun c' hc' =>
             nv_mul (nv_X (hemb fun h => tieW_ne_tieE hT i i (congrArg Prod.fst h).symm))
               (nv_X (hemb fun h => Finset.ne_of_mem_erase hc' (congrArg Prod.snd h).symm))))
-        · simp only [Bool.false_eq_true, if_false, zero_add, map_mul, rename_X]
+        · simp only [Bool.false_eq_true, ite_false, zero_add, map_mul, rename_X]
           ring
         · refine otherE_free hT j i fun i' hi' => nv_Ehat hT i' (hZS i').1 (hZS i').2
             (fun c' => hemb fun h => tieW_ne_tieE hT i' i (congrArg Prod.fst h).symm)
@@ -142,7 +142,7 @@ theorem cth_gen (D7 : Formalism.BasicNotions.D7) {D : BlockData N} (hT : TieOK D
               simp only [tieE] at this
               omega)))
       ·
-        push_neg at hW hE
+        push Not at hW hE
         have hfree : FreeV (chainEmb N r D.T.t (a0, c)) (∏ i, D.Ehat O (r := r) i ^ j i) :=
           freeV_of_vars (nv_prod _ fun i' _ => nv_pow (nv_Ehat hT i' (hZS i').1 (hZS i').2
             (fun c' => hemb fun h => hW i' (congrArg Prod.fst h))
@@ -184,7 +184,7 @@ theorem cth_gen (D7 : Formalism.BasicNotions.D7) {D : BlockData N} (hT : TieOK D
         (E' := rename (chainEmb N r D.T.t) (pairP O r hT i)) (Ehat_eq' hT i) ?_ (freeV_of_vars hpair) (hPP i) true ?_
         hoth hg ?_
       · exact freeV_of_vars (nv_X (by simp [scalS, scalZ]))
-      · simp only [if_true]
+      · simp only [ite_true]
         rw [Ehat_eq' hT i, map_neg]
         ring
       · intro b _
@@ -211,7 +211,7 @@ theorem cth_gen (D7 : Formalism.BasicNotions.D7) {D : BlockData N} (hT : TieOK D
         unfold scalS
         ring
       · exact freeV_of_vars (nv_X (by simp [scalZ]))
-      · simp only [if_true]
+      · simp only [ite_true]
         rw [Ehat_eq' hT i, map_neg]
         unfold scalS
         ring
@@ -266,8 +266,7 @@ theorem op_single_add {K σ : Type} [Field K] (a : σ) (b : ℕ) (f : σ →₀ 
   rw [eig_one, coeff_cth, eig_one]
   have hd : Disjoint (Finsupp.single a b).support f.support := by
     refine Finset.disjoint_of_subset_left Finsupp.support_single_subset ?_
-    rw [Finset.disjoint_singleton_left]
-    exact ha
+    rwa [Finset.disjoint_singleton_left]
   rw [Finsupp.prod_add_index_of_disjoint hd, Finsupp.prod_single_index (by simp)]
   push_cast
   ring
@@ -296,8 +295,7 @@ theorem op_SSt (D7 : Formalism.BasicNotions.D7) {D : BlockData N} (hT : TieOK D)
     have hsupp : (Finsupp.single a b + f).support = insert a f.support := by
       rw [Finsupp.support_add_eq, Finsupp.support_single _ hb]
       · rfl
-      · rw [Finsupp.support_single _ hb, Finset.disjoint_singleton_left]
-        exact ha
+      · rwa [Finsupp.support_single _ hb, Finset.disjoint_singleton_left]
     have h1 := ih (fun v hvf => hv v (by rw [hsupp]; exact Finset.mem_insert_of_mem hvf)) thr
       (fun k => thr k + (((f.sum fun _ n => n : ℕ) : ℤ) : WithTop ℤ)) (fun _ => le_rfl) u hu
     refine cth_SSt D7 hT b (fun k => ?_) a (hv a (by rw [hsupp]; exact Finset.mem_insert_self _ _)) h1
@@ -376,8 +374,7 @@ theorem gThetaAt (D7 : Formalism.BasicNotions.D7) : GThetaAt := by
   · intro k
     have := thr_shift (segmentCapacities X.p (X.seg C0 CE1 CE2 j) b k) mm (ν.sum fun _ n => n) (4 * c) (hT ν hν).1
     have e : (((4 * c : ℕ) : ℕ) : ℝ) = 4 * (c : ℝ) := by push_cast; ring
-    rw [e] at this
-    exact this
+    rwa [e] at this
 
 end Formalism.MainNotions.ColumnSystems.Pf
 end -- clump:auto

@@ -187,8 +187,7 @@ theorem point_pow_card {ι : Type*} [Fintype ι] (b : Module.Basis ι C (C ⊗[R
   apply ofConv_injective
   apply AlgHom.toLinearMap_injective
   apply toConv_injective
-  rw [AlgHom.toLinearMap_convPow, AlgHom.toLinearMap_convOne]
-  exact key
+  rwa [AlgHom.toLinearMap_convPow, AlgHom.toLinearMap_convOne]
 
 theorem comp_convPow (h : C →ₐ[R] F) (f : WithConv (B →ₐ[R] C)) (n : ℕ) :
     h.comp (f ^ n).ofConv = (toConv (h.comp f.ofConv) ^ n).ofConv := by
@@ -222,9 +221,7 @@ theorem exists_id_pow_eq_one [Module.Finite R B] [Module.Flat R B] :
   obtain ⟨k, hk⟩ := Nat.dvd_factorial hpos hle
   have h2 := comp_convPow u (toConv (AlgHom.id R B)) d.factorial
   rw [ofConv_toConv, AlgHom.comp_id, hk, pow_mul (toConv u), h1, one_pow, ← hk] at h2
-  have h3 := congr($h2 c)
-  refine h3.trans ?_
-  exact IsScalarTower.algebraMap_apply R B C _
+  exact (congr($h2 c)).trans (IsScalarTower.algebraMap_apply R B C _)
 
 end Algebra
 

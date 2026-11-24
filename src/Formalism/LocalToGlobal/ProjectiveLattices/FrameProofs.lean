@@ -81,9 +81,7 @@ theorem intDiagUnit_of (hL : IntLatU Xo c) : IntDiagUnit Xo c := by
     obtain ⟨cf, hci, hcz, hcomb⟩ := hu τ i'
     have htan : IsTanAt y.1.x (y'.1.u τ i') := hx ▸ y'.1.tan τ i'
     obtain ⟨a0, -, huniq⟩ := y.1.basis τ (y'.1.u τ i') htan (y'.1.eig τ i')
-    have e1 := huniq cf hcomb
-    have e2 := huniq _ (hAc i')
-    exact ⟨cf, hci, hcz, fun j => congrFun (e2.trans e1.symm) j⟩
+    exact ⟨cf, hci, hcz, fun j => congrFun ((huniq _ (hAc i')).trans (huniq cf hcomb).symm) j⟩
   have hinj : Function.Injective (algebraMap T.V T.Fr) := IsFractionRing.injective T.V T.Fr
   have hlow : A.IsLowerTriangular := by
     intro i' j hij

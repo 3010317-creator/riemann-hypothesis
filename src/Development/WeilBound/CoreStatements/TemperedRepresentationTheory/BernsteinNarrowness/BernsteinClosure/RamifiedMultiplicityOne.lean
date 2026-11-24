@@ -172,8 +172,7 @@ theorem ev_unip (e : (Σ a, m a) ≃ n) (ρ : Representation ℂ (Levi k m) X) {
   have h := f.1.2 p 1
   rw [MonoidHom.comp_apply, hp, map_one, Module.End.one_apply, mul_one] at h
   show f.1.1 (1 * ((parab k e).subtype p)) = f.1.1 1
-  rw [one_mul]
-  exact h
+  rwa [one_mul]
 
 theorem ev_levi (e : (Σ a, m a) ≃ n) (ρ : Representation ℂ (Levi k m) X) (g : Levi k m)
     (f : IndSp e ρ) :
@@ -182,8 +181,7 @@ theorem ev_levi (e : (Σ a, m a) ≃ n) (ρ : Representation ℂ (Levi k m) X) (
   have h := f.1.2 ⟨leviEmb k e g, hmem⟩ 1
   rw [mul_one, MonoidHom.comp_apply, leviProj_leviEmb] at h
   show f.1.1 (1 * leviEmb k e g) = (deltaHalf k m g : ℂ) • ρ g (f.1.1 1)
-  rw [one_mul]
-  exact h
+  rwa [one_mul]
 
 theorem exists_ev_ne (e : (Σ a, m a) ≃ n) (ρ : Representation ℂ (Levi k m) X) {f : IndSp e ρ}
     (hf : f ≠ 0) : ∃ g, ev e ρ (parInd e ρ g f) ≠ 0 := by
@@ -239,8 +237,7 @@ theorem exists_lam_ne {S S' : Subrepresentation (parInd e ρ)} (h : IsCompl S S'
   obtain ⟨f, hfS, hf0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hS0
   obtain ⟨g, hg⟩ := exists_ev_ne e ρ hf0
   refine ⟨parInd e ρ g f, S.apply_mem_toSubmodule g hfS, ?_⟩
-  rw [lam_apply, proj_left h (S.apply_mem_toSubmodule g hfS)]
-  exact hg
+  rwa [lam_apply, proj_left h (S.apply_mem_toSubmodule g hfS)]
 
 theorem not_dichotomy {S S' : Subrepresentation (parInd e ρ)} (h : IsCompl S S') (hS : S ≠ ⊥)
     (hS' : S' ≠ ⊥) :
@@ -314,11 +311,9 @@ theorem isUnitarisable_degenerateSeries (k : Type) [Field k] [ValuativeRel k] [T
         (leviTwo k (Fin a) (Fin b)).symm.toMonoidHom)) := by
   apply GlobalTheory.SmGL.UnitInd.isUnitarisable_prod₂
   · rw [GlobalTheory.SmGL.detRep, GlobalTheory.SmGL.isUnitarisable_ofChar_iff]
-    intro g
-    exact h₁ _
+    exact fun g => h₁ _
   · rw [GlobalTheory.SmGL.detRep, GlobalTheory.SmGL.isUnitarisable_ofChar_iff]
-    intro g
-    exact h₂ _
+    exact fun g => h₂ _
 
 end GlobalTheory.CompanionTheory.DegenerateSeries
 end -- clump:auto
@@ -376,8 +371,7 @@ theorem dichotomy {V X T : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup X
   haveI : Module.Finite ℂ V := Module.Finite.of_injective ι hι
   have hV : Module.finrank ℂ V ≤ 1 := (LinearMap.finrank_le_finrank_of_injective hι).trans hX
   obtain ⟨v, hv⟩ : ∃ v, φ v ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     exact hφ (LinearMap.ext hne)
   have hv0 : v ≠ 0 := by
     rintro rfl
@@ -479,8 +473,7 @@ theorem vanish_climb {N : ℕ} (S : Fin (N + 1) → Subrepresentation π) (f : �
       ∀ v ∈ (S ⟨hi, hhi⟩).toSubmodule, f v = 0 := by
   induction hi, hle using Nat.le_induction with
   | base =>
-    intro _ _
-    exact h0
+    exact fun _ _ => h0
   | succ k hk ih =>
     intro hhi hz
     have hkN : k < N := Nat.lt_of_succ_lt_succ hhi
@@ -570,8 +563,7 @@ theorem intertwining_proportional :
     intro v
     have h := hup χ hχS v
     rw [hχ, sub_eq_zero] at h
-    rw [LinearMap.smul_apply, happ, happ]
-    exact h
+    rwa [LinearMap.smul_apply, happ, happ]
 
 end GlobalTheory.CompanionTheory.Filtration
 end -- clump:auto
@@ -750,8 +742,7 @@ theorem prod₂_detRep_isIrreducible :
   obtain ⟨W', hc⟩ := _root_.GlobalTheory.CompanionTheory.UnitSemisimple.exists_isCompl _ (GlobalTheory.CompanionTheory.SmGL.exists_compact_open_subgroup_subset k (a + b))
     (GlobalTheory.CompanionTheory.DegenSeries.isAdmissible_degenerate k a b χ₁ χ₂ s₁ s₂)
     (GlobalTheory.CompanionTheory.DegenerateSeries.isUnitarisable_degenerateSeries k a b χ₁ χ₂ s₁ s₂ u₁ u₂) W
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hW' : W' ≠ ⊥ := by
     rintro rfl
     exact h.2 (eq_top_of_isCompl_bot hc)
@@ -861,8 +852,7 @@ theorem onto_of_irred (hI : IndIrredNarrow) {a a' : ℕ} {ϖ : kˣ} {α β ν : 
   · obtain ⟨Φ, hΦ, hne⟩ := hne
     exact absurd ((Submodule.eq_bot_iff N).1 h _ ⟨Φ, hΦ, rfl⟩) hne
   · intro F hF
-    rw [← h] at hF
-    exact hF
+    rwa [← h] at hF
 
 end Local
 
@@ -1040,8 +1030,7 @@ theorem irr_gen (NB : NarrowBernstein) (n t : ℕ) {μ : kˣ →* ℂˣ} (hμ : 
   rcases hI.eq_bot_or_eq_top S with h | h
   · refine Or.inr fun f hf => hK f ?_
     have : Φ.toLinearMap f ∈ S.toSubmodule := ⟨f, hf, rfl⟩
-    rw [h] at this
-    exact this
+    rwa [h] at this
   · exact Or.inl (top_of_map Φ.toLinearMap hK hR (congrArg Subrepresentation.toSubmodule h))
 
 theorem irr_ind (NB : NarrowBernstein) (n t : ℕ) {μ : kˣ →* ℂˣ} (hμ : IsSmoothChar μ) (hμ1 : μ ≠ 1)

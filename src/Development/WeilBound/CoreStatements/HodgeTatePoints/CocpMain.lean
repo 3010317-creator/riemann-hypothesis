@@ -129,25 +129,12 @@ theorem pderiv_ev_local {m n : ℕ} {a : Fin m → Pt R n d} (ha : NoConst a)
 
 theorem pderiv_second_of_ev_first_point_local (h : PS R 1 d) (i : Fin d) :
     pderiv (R := R) ((1 : Fin 2), i) (ev (n := 2) ![pt R d 0] h) = 0 := by
-  have hx : NoConst (![pt R (n := 2) d 0] : Fin 1 → Pt R 2 d) := noConst_one (cc_pt 0)
-  rw [pderiv_ev_local hx]
-  refine Finset.sum_eq_zero fun j _ => Finset.sum_eq_zero fun k _ => ?_
-  rw [Fin.fin_one_eq_zero j]
-  show _ * pderiv (R := R) ((1 : Fin 2), i) (X ((0 : Fin 2), k)) = 0
-  rw [pderiv_X_of_ne (by simp), mul_zero]
+  exact GlobalTheory.DerivEndo.pderiv_second_of_ev_first_point h i
 
 theorem dy_y_local (h : PS R 1 d) (i : Fin d) :
     pderiv (R := R) ((1 : Fin 2), i) (ev (n := 2) ![pt R d 1] h) =
       ev (n := 2) ![pt R d 1] (pderiv (R := R) ((0 : Fin 1), i) h) := by
-  have hy : NoConst (![pt R (n := 2) d 1] : Fin 1 → Pt R 2 d) := noConst_one (cc_pt 1)
-  rw [pderiv_ev_local hy, Fin.sum_univ_one, Finset.sum_eq_single i]
-  · show _ * pderiv (R := R) ((1 : Fin 2), i) (X ((1 : Fin 2), i)) = _
-    simp [pderiv_X_self]
-  · intro k _ hk
-    show _ * pderiv (R := R) ((1 : Fin 2), i) (X ((1 : Fin 2), k)) = 0
-    rw [pderiv_X_of_ne (by simp [hk]), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  exact GlobalTheory.DerivEndo.dy_y h i
 
 theorem cc_ptPow {n p : ℕ} (hp : p ≠ 0) (j : Fin n) (i : Fin d) :
     constantCoeff (ptPow R d p j i : PS R n d) = 0 := by
@@ -255,7 +242,7 @@ theorem d_zero_pt (h : PS R 2 d) (j : Fin d) :
     by_cases hx : x = j
     · subst hx
       simp
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       exact pderiv_X_of_ne (by simpa using hx)
   rw [pderiv_ev_local noConst_0x, Fin.sum_univ_two]
   simp [pt, e]
@@ -329,7 +316,7 @@ theorem pd_pt_eq {n : ℕ} (j : Fin n) (i x : Fin d) :
   by_cases hx : x = i
   · subst hx
     simp
-  · rw [if_neg hx]
+  · rw [ite_eq_right hx]
     exact pderiv_X_of_ne (by simpa using hx)
 
 theorem partial_derivative_first_evaluation (h : PS R 2 d) (b : Pt R 3 d) (hb0 : ∀ l, constantCoeff (b l) = 0)
@@ -852,13 +839,12 @@ theorem top_coeff_eq (hp : 1 ≤ p) (b : Fin (p + 1) → B) (v : B)
     rw [Finset.sum_eq_single (Fin.last p)]
     · simp
     · intro i _ hi
-      rw [if_neg]
-      intro h'
-      exact hi (Fin.ext (by simpa using h'.symm))
+      rw [ite_eq_right]
+      exact fun h' => hi (Fin.ext (by simpa using h'.symm))
     · simp
   rw [e₁] at hc
   simp only [Polynomial.coeff_sub, Polynomial.coeff_add, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow,
-    Polynomial.coeff_one, if_neg hp0, e₂, if_true, zero_add] at hc
+    Polynomial.coeff_one, ite_eq_right hp0, e₂, ite_true, zero_add] at hc
   exact sub_eq_zero.1 hc
 
 end Ring
@@ -1031,8 +1017,7 @@ theorem pderiv_eq_zero_of_jet_pow_sub : ∀ (k : Type) [Field k] (p : ℕ) [Fact
     rw [map_add (f := _), Finsupp.degree_single]; omega
   have hz := coeff_eq_zero_of_mem_span_X_pow_of_degree_lt (e.degree + 1 + 1) _ hmem (e + Finsupp.single q 1) hdeg
   have hbd : ∀ i, (e + Finsupp.single q 1 : Fin 1 × Fin d →₀ ℕ) i ≤ (e + Finsupp.single q 1).degree := by
-    intro i
-    exact Finsupp.le_degree i _
+    exact fun i => Finsupp.le_degree i _
   have hin : e + Finsupp.single q 1 ∈ degLE (e.degree + 1) := by
     simp only [degLE, Finset.mem_filter, Finset.mem_image, Finset.mem_univ, true_and]
     constructor
@@ -1115,8 +1100,7 @@ theorem cocycle_p : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.1 this
     refine ⟨j, fun s' _ => ?_⟩
     have e : s' = s := Subsingleton.elim (α := Sp k) _ _
-    rw [e]
-    exact hj
+    rwa [e]
   have hU : ∀ m, ⊤ ≤ xkZ t.G x (g.x m) ⁻¹ᵁ (pullback.fst t.G.hom x ⁻¹ᵁ t.PP.L.U j₀) := by
     intro m q _
     have e : (homAt x (jetAug : Jet k (Fin 1 × Fin d) m →ₐ[k] k) ≫ g.x m).left = (1 : overAt x k ⟶ t.G).left :=
@@ -1151,8 +1135,7 @@ theorem cocycle_p : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
         rw [← hv hr']
         exact congrArg (fun q => q.hom (C.s fun _ => j₀).val) (Scheme.Hom.map_appLE (rQ t.G x p (g.x m)) hr (homOfLE h).op))
       exact toΓ_inj _ ((hF1 m).symm.trans h2))
-  rw [trY_pa, trY_pb] at main
-  exact main
+  rwa [trY_pa, trY_pb] at main
 
 theorem tanpf_inj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X0 : Scheme.{0}) (t : SAB H X0) (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [Fact p.Prime] [CharP k p] (x : Sp k ⟶ X0) (d : ℕ) (g : GermAt t x d), TanPF t x p → ConjInj g.B p :=
   PositivityTheory.HtPt.Ce.tanpf_inj_of cocycle_p

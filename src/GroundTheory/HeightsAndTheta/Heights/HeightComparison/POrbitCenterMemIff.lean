@@ -36,8 +36,7 @@ theorem weightedHomogeneousComponent_X_mul (j : Coord n) (G : MvPolynomial (Coor
       by_cases h1 : Finsupp.weight (coordDeg n) m = e
       · rw [ite_eq_left h1, ite_eq_left (by rw [← h1, hw, add_tsub_cancel_right])]
       · rw [ite_eq_right h1, ite_eq_right]
-        intro h3
-        exact h1 (by rw [hw, h3, tsub_add_cancel_of_le h2])
+        exact fun h3 => h1 (by rw [hw, h3, tsub_add_cancel_of_le h2])
     · rw [ite_eq_right h2, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ite_eq_right]
       intro h1
       apply h2

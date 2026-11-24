@@ -42,8 +42,7 @@ lemma comp_mem (H : HodgeTateDatum p g v R O σ cp) (a : O) {f : Nb p g → C} (
     funext y
     obtain ⟨t, rfl⟩ := red_surj y
     rw [hf'e, red_mulVec]
-  rw [hfun]
-  exact hf'
+  rwa [hfun]
 
 variable {G : Type} [CommGroup G] [Fintype G] (β : G → O)
 
@@ -51,8 +50,7 @@ private lemma smul_cancel_lemma {S K : Type*} [CommRing S] [Field K] [Algebra S 
     (hinj : Function.Injective (algebraMap S K)) {ι κ : Type*} {M : Matrix ι κ S} (hM : M ≠ 0)
     {a b : S} (h : a • M = b • M) : a = b := by
   obtain ⟨x, y, hxy⟩ : ∃ x y, M x y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hM (Matrix.ext fun x y => by simpa using hc x y)
   have h2 : a * M x y = b * M x y := by
     have := congrFun (congrFun h x) y

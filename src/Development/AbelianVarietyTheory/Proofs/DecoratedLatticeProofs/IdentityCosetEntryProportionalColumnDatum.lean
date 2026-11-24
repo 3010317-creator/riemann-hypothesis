@@ -109,8 +109,7 @@ theorem reduction_natCast_eq_zero (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) : re
   have := reduction_coe P ((q : ℕ) : 𝓞 E)
   simp only [map_natCast] at this
   rw [this]
-  have h2 := Ideal.Quotient.eq_zero_iff_mem.2 hq
-  simpa using h2
+  simpa using Ideal.Quotient.eq_zero_iff_mem.2 hq
 
 theorem q_ne_zero (hu : ((q : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) : (q : E) ≠ 0 := by
   intro h
@@ -203,7 +202,7 @@ theorem volN_one_ne (j : ℕ) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.
       (Loc.N1 X.E (R.N j) (cOf R j) ⊓ stabL X.E _ (lamYat (Pr := Pr) (R := R) j P)) ≠ 0 := by
   have hJ : Jat (Pr := Pr) (R := R) true j P ≤ stabL X.E _ (lamYat (Pr := Pr) (R := R) j P) := by
     unfold Jat lamYat
-    rw [if_pos hP, if_pos rfl, if_pos hP]
+    rw [ite_eq_left hP, ite_eq_left rfl, ite_eq_left hP]
     exact inf_le_left
   have hle : Loc.Cbe (Jat (Pr := Pr) (R := R) true j P) (1 : AutY X R j) ⊓ Loc.N1 X.E (R.N j) (cOf R j) ≤
       Loc.N1 X.E (R.N j) (cOf R j) ⊓ stabL X.E _ (lamYat (Pr := Pr) (R := R) j P) := by
@@ -211,15 +210,14 @@ theorem volN_one_ne (j : ℕ) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.
     refine Subgroup.mem_inf.2 ⟨(Subgroup.mem_inf.1 hg).2, hJ ?_⟩
     have h1 := (Subgroup.mem_inf.1 hg).1
     unfold Loc.Cbe at h1
-    have h2 := (Subgroup.mem_inf.1 h1).2
-    simpa using h2
+    simpa using (Subgroup.mem_inf.1 h1).2
   have hne := relIndex_congruenceJacobiSubgroup_stabilizer_ne_zero (E := X.E) (ChainCounts.unifAt_of_not_mem_sq P hu) R.k R.rS R.r R.t (R.N j) (cOf R j)
   unfold Loc.volN
   rw [Subgroup.relIndex_eq_one.2 hle, Nat.cast_one, one_div]
   refine inv_ne_zero ?_
   rw [Nat.cast_ne_zero]
   unfold Jat lamYat
-  rw [if_pos hP, if_pos rfl, if_pos hP]
+  rw [ite_eq_left hP, ite_eq_left rfl, ite_eq_left hP]
   exact hne
 
 end Vol
@@ -293,7 +291,7 @@ theorem entry_agree : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X
       unfold XiAt E1at
       rw [omPhi_one Ch sel mu cst j P hq hu]
       unfold PhiAt
-      rw [if_pos hA.mem, if_pos hA.sharp, hrS, hr]
+      rw [ite_eq_left hA.mem, ite_eq_left hA.sharp, hrS, hr]
     rw [e1, hsum x, e2, map_mul]
     have h1 : σ₀ V⁻¹ ≠ 0 := (map_ne_zero σ₀).2 (inv_ne_zero hvol)
     rw [div_mul_eq_mul_div, eq_div_iff h1]

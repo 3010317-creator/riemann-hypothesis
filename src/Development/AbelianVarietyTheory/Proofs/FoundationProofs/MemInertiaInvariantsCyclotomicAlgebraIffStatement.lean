@@ -108,14 +108,12 @@ theorem fixed_cycMod_of_fixed_cycZ : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [F
     refine ⟨⟨h0, ?_⟩, h2⟩
     simp only [Set.mem_setOf_eq] at h1 ⊢
     rw [← PadicInt.zmod_cast_comp_toZModPow m k hmk, RingHom.comp_apply, h1, map_one]
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hCn : ∀ m, (C m).Nonempty := by
     intro m
     obtain ⟨s, ⟨hs1, hs2, hs3⟩, hs4⟩ := hne m
     refine ⟨s, ⟨⟨hs1, ?_⟩, (hcm m s).mp hs3⟩, hs4⟩
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
-    exact hs2
+    simpa only [Set.mem_iInter, Set.mem_setOf_eq] using hs2
   have hdir : Directed (· ⊇ ·) C := fun m k =>
     ⟨max m k, hmono m _ (le_max_left m k), hmono k _ (le_max_right m k)⟩
   obtain ⟨s, hs⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed C hdir hCn
@@ -169,8 +167,7 @@ theorem mem_cycAlg_iff : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Al
   · intro hx
     have hv : A.valuation (l : Ω) < 1 := by
       obtain ⟨v, hv, hl⟩ := hA
-      have h1 := (hv ((l : ℕ) : 𝓞 ℚ)).2 hl
-      simpa using h1
+      simpa using (hv ((l : ℕ) : 𝓞 ℚ)).2 hl
     obtain ⟨m, hm⟩ := GlobalTheory.fixed_cycMod_of_fixed_cycZ l Ω A hv ∅ (x : Ω)
       (fun s hs _ hz => hx s (mem_ineCyc.2 ⟨hs, hz⟩))
     obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)

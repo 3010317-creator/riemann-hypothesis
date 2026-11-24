@@ -61,8 +61,7 @@ theorem finite_of_isClosed_of_finite_closedPoints {T : Type*} [TopologicalSpace 
   have hc : IsClosed (S ∩ closedPoints T) := by
     rw [← Set.biUnion_of_singleton (S ∩ closedPoints T)]
     exact h.isClosed_biUnion fun x hx ↦ hx.2
-  rw [← JacobsonSpace.closure_inter_closedPoints hS, hc.closure_eq]
-  exact h
+  rwa [← JacobsonSpace.closure_inter_closedPoints hS, hc.closure_eq]
 
 theorem locallyQuasiFinite_of_finite_closedFibres {Y X : Scheme.{0}} (f : Y ⟶ X)
     [LocallyOfFiniteType f] [JacobsonSpace Y]
@@ -152,8 +151,7 @@ theorem isFinite_iff_finite_ker : ∀ (K : Type) [Field K] (A B : AbVar K) (f : 
         exact Over.OverMorphism.ext hw1.symm
       refine ⟨⟨_, hk⟩, ?_⟩
       change (x * (x⁻¹ * w')).left pt = z
-      rw [mul_inv_cancel_left]
-      exact hw2
+      rwa [mul_inv_cancel_left]
     exact IsFinite.of_isProper_of_locallyQuasiFinite _
 
 end GlobalTheory.AV.AbVar

@@ -106,8 +106,7 @@ theorem open_eq_countable_union {W : Set V} (hW : IsOpen W) :
     constructor
     · rintro ⟨x, hy⟩
       exact (hK x).2.2.2 hy
-    · intro hy
-      exact ⟨⟨y, hy⟩, (hK ⟨y, hy⟩).2.2.1⟩
+    · exact fun hy => ⟨⟨y, hy⟩, (hK ⟨y, hy⟩).2.2.1⟩
 
 variable [MeasurableSpace V] [BorelSpace V]
 
@@ -182,8 +181,7 @@ theorem fib_compactOpen {μ : Measure V} {ν : Measure X} {f : V → Y} {ι : X 
       congr 1
       funext x
       by_cases hx : x ∈ K <;> simp [hx]
-    rw [← hl]
-    exact hfi
+    rwa [← hl]
   · rw [← hEq]
     exact continuousOn_univ.1 hco
 
@@ -247,8 +245,7 @@ theorem fib_unique (hA : ∀ S : Set X, MeasurableSet S → MeasurableSet (f ⁻
     have hae' : (fun b => (fib b K).toReal) =ᵐ[ν] fun b => (fib' b K).toReal :=
       hae.mono fun b hb => by simp only at hb ⊢; rw [hb]
     have heq := (hK1.2.ae_eq_iff_eq ν hK2.2).1 hae'
-    intro b
-    exact (ENNReal.toReal_eq_toReal_iff' (hK1.1 b).ne (hK2.1 b).ne).1 (congrFun heq b)
+    exact fun b => (ENNReal.toReal_eq_toReal_iff' (hK1.1 b).ne (hK2.1 b).ne).1 (congrFun heq b)
   funext b
   have h0 : fib b Uᶜ = 0 := measure_mono_null (compl_subset_compl.2 inter_subset_right) (h.1 b)
   have h0' : fib' b Uᶜ = 0 := measure_mono_null (compl_subset_compl.2 inter_subset_right) (h'.1 b)

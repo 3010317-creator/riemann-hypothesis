@@ -38,8 +38,7 @@ instance : SecondCountableTopology (Gt G) :=
 
 def mat (a : Gt G) : Matrix (Fin m) (Fin m) ℂ := Matrix.of a.1
 
-theorem mat_mem (a : Gt G) : mat G a ∈ G := by
-  exact a.2
+theorem mat_mem (a : Gt G) : mat G a ∈ G := a.2
 
 def mk (M : Matrix (Fin m) (Fin m) ℂ) (h : M ∈ G) : Gt G := ⟨Matrix.of.symm M, by
   have heq : Matrix.of (Matrix.of.symm M) = M := by ext i j; rfl
@@ -48,29 +47,23 @@ def mk (M : Matrix (Fin m) (Fin m) ℂ) (h : M ∈ G) : Gt G := ⟨Matrix.of.sym
 @[simp] theorem mat_mk (M : Matrix (Fin m) (Fin m) ℂ) (h : M ∈ G) : mat G (mk G M h) = M := by
   ext i j; rfl
 
-theorem ext_mat {a b : Gt G} (h : mat G a = mat G b) : a = b := by
-  exact Subtype.ext (Matrix.of.injective h)
+theorem ext_mat {a b : Gt G} (h : mat G a = mat G b) : a = b := Subtype.ext (Matrix.of.injective h)
 
 instance : Mul (Gt G) := ⟨fun a b => mk G (mat G a * mat G b) (hG.out.2.2.1 _ (mat_mem G a) _ (mat_mem G b))⟩
 instance : One (Gt G) := ⟨mk G 1 hG.out.2.1⟩
 instance : Inv (Gt G) := ⟨fun a => mk G (mat G a)⁻¹ (hG.out.2.2.2 _ (mat_mem G a)).1⟩
 
-@[simp] theorem mat_mul (a b : Gt G) : mat G (a * b) = mat G a * mat G b := by
-  exact mat_mk G _ _
-@[simp] theorem mat_one : mat G (1 : Gt G) = 1 := by
-  exact mat_mk G _ _
-@[simp] theorem mat_inv (a : Gt G) : mat G a⁻¹ = (mat G a)⁻¹ := by
-  exact mat_mk G _ _
+@[simp] theorem mat_mul (a b : Gt G) : mat G (a * b) = mat G a * mat G b := mat_mk G _ _
+@[simp] theorem mat_one : mat G (1 : Gt G) = 1 := mat_mk G _ _
+@[simp] theorem mat_inv (a : Gt G) : mat G a⁻¹ = (mat G a)⁻¹ := mat_mk G _ _
 
 instance : Group (Gt G) :=
   Group.ofLeftAxioms (fun a b c => ext_mat G (by simp [Matrix.mul_assoc]))
     (fun a => ext_mat G (by simp)) (fun a => ext_mat G (by simp [inv_mul_of G (mat_mem G a)]))
 
-theorem continuous_mat : Continuous (mat G) := by
-  exact continuous_subtype_val
+theorem continuous_mat : Continuous (mat G) := continuous_subtype_val
 
-theorem isClosed_set : IsClosed {x : PI.MtM m | Matrix.of x ∈ G} := by
-  exact hG.out.1.preimage continuous_id
+theorem isClosed_set : IsClosed {x : PI.MtM m | Matrix.of x ∈ G} := hG.out.1.preimage continuous_id
 
 theorem isClosedEmbedding_val : IsClosedEmbedding (Subtype.val : Gt G → PI.MtM m) := by
   exact (isClosed_set G).isClosedEmbedding_subtypeVal
@@ -79,8 +72,7 @@ instance : LocallyCompactSpace (Gt G) := (isClosedEmbedding_val G).locallyCompac
 
 theorem continuous_mk {X : Type*} [TopologicalSpace X] {f : X → Matrix (Fin m) (Fin m) ℂ}
     (hf : Continuous fun x => (Matrix.of.symm (f x) : PI.MtM m)) (h : ∀ x, f x ∈ G) :
-    Continuous fun x => mk G (f x) (h x) := by
-  exact hf.subtype_mk _
+    Continuous fun x => mk G (f x) (h x) := hf.subtype_mk _
 
 theorem det_ne (a : Gt G) : (mat G a).det ≠ 0 := by
   exact Matrix.det_ne_zero_of_left_inverse (inv_mul_of G (mat_mem G a))
@@ -161,8 +153,7 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
     constructor
     · rintro ⟨h, rfl⟩
       exact h.2
-    · intro hx
-      exact ⟨⟨⟨x, hSG hx⟩, hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨⟨x, hSG hx⟩, hx⟩, rfl⟩
   have hae : ∀ᵐ x ∂μS, x ∈ Set.range e := by
     rw [hrange, ae_iff]
     simpa using hScon
@@ -208,14 +199,14 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
     refine measurable_of_restrict_of_restrict_compl hGm ?_ ?_
     · have e1 : Set.domRestrict {y | Matrix.of y ∈ G} φ = fun y => β (mk G (Matrix.of y.1) y.2)⁻¹ := by
         funext y
-        exact dif_pos y.2
+        exact dite_eq_left y.2
       rw [e1]
       refine hβm.comp (measurable_inv.comp ?_)
       exact (continuous_mk G (f := fun y : {y : PI.MtM m | Matrix.of y ∈ G} => Matrix.of y.1)
         continuous_subtype_val fun y => y.2).measurable
     · have e2 : Set.domRestrict {y | Matrix.of y ∈ G}ᶜ φ = fun _ => 0 := by
         funext y
-        exact dif_neg y.2
+        exact dite_eq_right y.2
       rw [e2]
       exact measurable_const
   refine ⟨μG.withDensity (fun y => c⁻¹ * φ y), inferInstance, fun f hf => ?_⟩
@@ -260,7 +251,7 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
         ext_mat G (by rw [mat_mk, mat_mul, mat_mk]; rfl)
       show (if hy' : Matrix.of (PI.lmulQ (mat G (h⁻¹ : H).1) y) ∈ G then
         β (mk G (Matrix.of (PI.lmulQ (mat G (h⁻¹ : H).1) y)) hy')⁻¹ else 0) = _
-      rw [dif_pos hm, hk, mul_inv_rev, Subgroup.coe_inv, inv_inv]
+      rw [dite_eq_left hm, hk, mul_inv_rev, Subgroup.coe_inv, inv_inv]
     simp_rw [hval]
     rw [hκeq, lintegral_smul_measure]
     have := hβ1 (mk G (Matrix.of y) hy)⁻¹

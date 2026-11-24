@@ -56,7 +56,7 @@ private theorem func_repr {ι : Type} [Fintype ι] [DecidableEq ι] (f : (ι →
       intro τ
       by_cases h : k = τ
       · subst h
-        simp only [Pi.add_apply, Pi.smul_apply, Pi.single_eq_same, if_true]
+        simp only [Pi.add_apply, Pi.smul_apply, Pi.single_eq_same, ite_true]
         apply Complex.ext <;> simp
       · simp [h]
     rw [Finset.sum_apply]
@@ -85,11 +85,9 @@ private theorem family_inj {E : Type} [Field E] [NumberField E] [IsCMField E] (A
     ext x
     exact congrArg (fun g : E →* ℂ => g x) h
   · exfalso
-    refine hval τ τ' fun x => ?_
-    exact congrArg (fun g : E →* ℂ => g x) h
+    exact hval τ τ' fun x => congrArg (fun g : E →* ℂ => g x) h
   · exfalso
-    refine hval τ' τ fun x => ?_
-    exact (congrArg (fun g : E →* ℂ => g x) h).symm
+    exact hval τ' τ fun x => (congrArg (fun g : E →* ℂ => g x) h).symm
   · congr 1
     apply Subtype.ext
     ext x

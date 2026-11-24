@@ -77,8 +77,7 @@ lemma exists_borel_of_isUpperTriangular (M : Matrix (Fin n) (Fin n) k)
   obtain ⟨u, hu⟩ := hdet
   refine ⟨u, ?_, hu⟩
   show (u : Matrix (Fin n) (Fin n) k).IsUpperTriangular
-  rw [hu]
-  exact hM
+  rwa [hu]
 
 lemma mul_one_add_vecMulVec_apply (M : Matrix (Fin n) (Fin n) k) (j : Fin n) (v : Fin n → k)
     (r c : Fin n) :
@@ -219,8 +218,7 @@ lemma rowsReduced_step (h : GL (Fin n) k) (t : ℕ) (ht : t < n)
     subst hii
     rw [Function.update_self]
     refine ⟨?_, ?_, ?_⟩
-    · rw [hM₂, hu0 _ le_rfl, zero_mul, add_zero, hM₁i₀, ite_eq_left rfl]
-      exact hj
+    · rwa [hM₂, hu0 _ le_rfl, zero_mul, add_zero, hM₁i₀, ite_eq_left rfl]
     · intro c hc
       rw [hM₂, hu0 _ le_rfl, zero_mul, add_zero, hM₁i₀, ite_eq_right hc]
     · intro r hr
@@ -233,8 +231,7 @@ lemma rowsReduced_step (h : GL (Fin n) k) (t : ℕ) (ht : t < n)
     rw [Function.update_of_ne (hne i hi').symm]
     obtain ⟨h1, h2, h3⟩ := hp i hi'
     refine ⟨?_, ?_, ?_⟩
-    · rw [hM₂, hu0 i hi, zero_mul, add_zero, hM₁S i hi']
-      exact h1
+    · rwa [hM₂, hu0 i hi, zero_mul, add_zero, hM₁S i hi']
     · intro c hc
       rw [hM₂, hu0 i hi, zero_mul, add_zero, hM₁S i hi']
       exact h2 c hc

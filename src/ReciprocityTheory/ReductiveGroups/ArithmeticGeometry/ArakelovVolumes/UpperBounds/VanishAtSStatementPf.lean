@@ -52,8 +52,7 @@ theorem lower_of_det {n : ℕ} (hn : 0 < n) {σ : V n → V n} (h0 : σ 0 = 0)
   filter_upwards [ho] with z hz
   simp only [zero_add, h0, sub_zero] at hz
   have h3 : ‖L z‖ ≤ ‖σ z‖ + ‖σ z - L z‖ := by
-    have h4 := norm_sub_le (σ z) (σ z - L z)
-    simpa using h4
+    simpa using norm_sub_le (σ z) (σ z - L z)
   have h4 : 1 / (2 * K) * ‖z‖ ≤ 1 / (2 * K) * (K * ‖L z‖) := mul_le_mul_of_nonneg_left (hle z) hc0.le
   have h5 : 1 / (2 * K) * (K * ‖L z‖) = ‖L z‖ / 2 := by rw [← mul_assoc, hcK]; ring
   linarith
@@ -90,8 +89,7 @@ theorem crit_div {n : ℕ} (hn : 0 < n) {δ : ℝ} (hδ : 0 < δ) :
           refine setLIntegral_mono' (measurableSet_ball.diff measurableSet_ball) fun y hy => ?_
           refine ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow_of_nonpos hδ ?_ hp)
           have := hy.2
-          rw [mem_ball, dist_zero_right, not_lt] at this
-          exact this
+          rwa [mem_ball, dist_zero_right, not_lt] at this
       _ = ENNReal.ofReal (δ ^ (-2 * (n : ℝ))) * volume (ball (0 : V n) 1 \ ball (0 : V n) δ) :=
           setLIntegral_const _ _
       _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top

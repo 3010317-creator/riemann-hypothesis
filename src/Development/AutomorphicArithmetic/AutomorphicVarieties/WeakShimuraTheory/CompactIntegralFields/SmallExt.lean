@@ -72,8 +72,7 @@ private theorem fin_quot (A B : Type) [CommRing A] [IsDomain A] [IsDiscreteValua
     have hli : LinearIndependent A b := by
       rw [Fintype.linearIndependent_iff]
       intro c hc
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       obtain ⟨i0, hi0⟩ := hne
       obtain ⟨j, hj, hjmin⟩ := (Finset.univ.filter (fun i => c i ≠ 0)).exists_min_image
         (fun i => IsDiscreteValuationRing.addVal A (c i)) ⟨i0, by simpa using hi0⟩
@@ -187,8 +186,7 @@ theorem UpperTheory.V.Ws.smallExt :
     obtain ⟨p, hp0, hp⟩ := hf.alg x
     refine IsAlgebraic.isIntegral ⟨p.map (algebraMap A E), ?_, ?_⟩
     · exact (Polynomial.map_ne_zero_iff (IsFractionRing.injective A E)).mpr hp0
-    · rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← IsScalarTower.algebraMap_eq]
-      exact hp
+    · rwa [Polynomial.aeval_def, Polynomial.eval₂_map, ← IsScalarTower.algebraMap_eq]
   let L' : IntermediateField E 𝔞.K := IntermediateField.adjoin E (s : Set 𝔞.K)
   haveI : FiniteDimensional E L' := IntermediateField.finiteDimensional_adjoin hint
   have hcl : ∀ y ∈ Subfield.closure (Set.range (𝔞.toK.comp f) ∪ ↑s), y ∈ L' := by
@@ -239,8 +237,7 @@ theorem UpperTheory.V.Ws.smallExt :
     obtain ⟨p, hp0, hp⟩ := hf.alg ((x : 𝔞.V) : 𝔞.K)
     refine ⟨p, hp0, ?_⟩
     have e : (𝔞.toK.comp B.subtype) (Polynomial.aeval x p) = 0 := by
-      rw [Polynomial.aeval_def, Polynomial.hom_eval₂]
-      exact hp
+      rwa [Polynomial.aeval_def, Polynomial.hom_eval₂]
     exact hBext _ _ e⟩
   haveI : IsAdicComplete (maximalIdeal A) A := hf.complete
   let ψ : B →ₗ[A] L' :=
@@ -268,7 +265,5 @@ theorem UpperTheory.V.Ws.smallExt :
       exact ⟨⟨x, ⟨_, hmem⟩, hBext _ _ hxy, hBext _ _ (by rw [mul_comm]; exact hxy)⟩, rfl⟩
     · obtain ⟨p, hp0, hp⟩ := hf.alg x
       refine ⟨p.map g, (Polynomial.map_ne_zero_iff hgi).mpr hp0, ?_⟩
-      rw [Polynomial.eval₂_map]
-      exact hp
-  · intro x hx
-    exact RingHom.mem_range.mpr ⟨⟨x, hcl _ hx⟩, rfl⟩
+      rwa [Polynomial.eval₂_map]
+  · exact fun x hx => RingHom.mem_range.mpr ⟨⟨x, hcl _ hx⟩, rfl⟩

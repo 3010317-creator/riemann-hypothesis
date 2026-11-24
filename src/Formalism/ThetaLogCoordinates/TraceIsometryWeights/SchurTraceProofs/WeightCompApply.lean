@@ -79,24 +79,24 @@ theorem glAct_whe (LL : Letters N) (j : ℕ) (e : Fin n ↪o Fin r) (a b : Fin n
   rw [glAct_apply]
   refine Submodule.sum_mem _ fun i _ => ?_
   by_cases hij : (i : ℕ) < j
-  · rw [if_pos hij]
+  · rw [ite_eq_left hij]
     by_cases hv : LL.vec i
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       have := wh_XD (K := ℚ_[p]) (fun x => (wv LL j x) ∘ e) (i, e b) (i, e a) d (AddMonoidAlgebra.coeff x d)
       have e' : ν + dl a b = Finsupp.weight (fun x => (wv LL j x) ∘ e) d - (wv LL j (i, e b)) ∘ e
           + (wv LL j (i, e a)) ∘ e := by
-        rw [hdw]; simp only [wv, hij, hv, if_true, dl, single_comp_emb]; abel
+        rw [hdw]; simp only [wv, hij, hv, ite_true, dl, single_comp_emb]; abel
       rw [e']; exact this
-    · rw [if_neg hv]
+    · rw [ite_eq_right hv]
       refine Submodule.neg_mem _ ?_
       have := wh_XD (K := ℚ_[p]) (fun x => (wv LL j x) ∘ e) (i, e a) (i, e b) d (AddMonoidAlgebra.coeff x d)
       have hn : ∀ c : Fin n, (-(Pi.single (e c) (1 : ℤ) : Fin r → ℤ)) ∘ e = -Pi.single c 1 := by
         intro c; rw [← single_comp_emb e c]; rfl
       have e' : ν + dl a b = Finsupp.weight (fun x => (wv LL j x) ∘ e) d - (wv LL j (i, e a)) ∘ e
           + (wv LL j (i, e b)) ∘ e := by
-        rw [hdw]; simp only [wv, hij, hv, if_true, if_false, Bool.false_eq_true, dl, hn]; abel
+        rw [hdw]; simp only [wv, hij, hv, ite_true, ite_false, Bool.false_eq_true, dl, hn]; abel
       rw [e']; exact this
-  · rw [if_neg hij]; exact Submodule.zero_mem _
+  · rw [ite_eq_right hij]; exact Submodule.zero_mem _
 
 noncomputable def GAe (p : ℕ) [Fact p.Prime] (LL : Letters N) (j : ℕ) (e : Fin n ↪o Fin r) :
     GlW ℚ_[p] (MvPolynomial (Fin N × Fin r) ℚ_[p]) n where
@@ -184,7 +184,7 @@ theorem GAe_isWt_iff (LL : Letters N) (j : ℕ) (e : Fin n ↪o Fin r) (μ : Fin
     have hm' : AddMonoidAlgebra.coeff x m ≠ 0 := mem_support_iff.mp hm
     rw [← h, coeff_weightedHomogeneousComponent] at hm'
     have hw : Finsupp.weight (fun x => (wv LL j x) ∘ e) m = μ := by
-      by_contra hne; exact hm' (if_neg hne)
+      by_contra hne; exact hm' (ite_eq_right hne)
     rw [← weight_comp_apply, hw]
   · intro h
     ext m
@@ -228,8 +228,7 @@ theorem hwc_iff (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (la : Fin r →
   simp only [Submodule.mem_iInf, LinearMap.mem_ker, GAe_E]
   refine and_congr_right fun _ => ?_
   constructor
-  · intro h a b hab
-    exact h _ _ ⟨enumC_mem Cs a, enumC_mem Cs b, (enumC Cs).lt_iff_lt.mpr hab⟩
+  · exact fun h a b hab => h _ _ ⟨enumC_mem Cs a, enumC_mem Cs b, (enumC Cs).lt_iff_lt.mpr hab⟩
   · rintro h c d ⟨hc, hd, hcd⟩
     obtain ⟨a, rfl⟩ := enumC_surj Cs hc
     obtain ⟨b, rfl⟩ := enumC_surj Cs hd
@@ -239,8 +238,7 @@ theorem stableC_iff (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
     (S : Submodule ℚ_[p] (MvPolynomial (Fin N × Fin r) ℚ_[p])) :
     GlStableC p LL j Cs S ↔ (GAe p LL j (enumC Cs)).Stable S := by
   constructor
-  · intro h a b x hx
-    exact h _ (enumC_mem Cs a) _ (enumC_mem Cs b) x hx
+  · exact fun h a b x hx => h _ (enumC_mem Cs a) _ (enumC_mem Cs b) x hx
   · intro h c hc d hd x hx
     obtain ⟨a, rfl⟩ := enumC_surj Cs hc
     obtain ⟨b, rfl⟩ := enumC_surj Cs hd

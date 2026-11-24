@@ -164,8 +164,7 @@ theorem diagonalIntegral : DiagIntegral := by
       simp [altE, Measure.real]
     · have hne : y + (x : V) ≠ 0 := fun h => hx (eq_neg_iff_add_eq_zero.mpr (by rw [add_comm]; exact h))
       have hy' : y ∈ dualLat H Λ₂ := by
-        rw [hS₂]
-        exact hy
+        rwa [hS₂]
       have hx' : (x : V) ∈ dualLat H Λ := by
         rw [hS]
         exact x.2
@@ -187,8 +186,7 @@ theorem diagonalIntegral : DiagIntegral := by
 
 theorem KerPNonzero_of (hD : DiagIntegral) : KerPNonzero := by
   intro V _ _ _ H Λ α hH hPos hL hS hC
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   letI : MeasurableSpace V := borel V
   haveI : BorelSpace V := ⟨rfl⟩
   obtain ⟨D, hD1, hD2, hD3, -⟩ :=
@@ -306,8 +304,7 @@ theorem expFPS_hasSum {X : Type*} (c : X → ℂ) (l : X → V →L[ℂ] ℂ)
     intro x
     have h1 := NormedSpace.expSeries_div_hasSum_exp (l x y)
     rw [← Complex.exp_eq_exp_ℂ] at h1
-    have h2 := h1.mul_left (c x)
-    simpa [g, mul_div_assoc] using h2
+    simpa [g, mul_div_assoc] using h1.mul_left (c x)
   have hg : ∀ p : X × ℕ, ‖g p‖ = ‖c p.1‖ * (‖l p.1 y‖ ^ p.2 / (p.2 ! : ℝ)) := by
     intro p
     have hn : ‖((p.2 ! : ℕ) : ℂ)‖ = (p.2 ! : ℝ) := by simp
@@ -331,8 +328,7 @@ theorem expFPS_hasSum {X : Type*} (c : X → ℂ) (l : X → V →L[ℂ] ℂ)
     rw [hsum.tsum_prod' (fun x => (hfib x).summable)] at h1
     have e : (fun b => ∑' n, g (b, n)) = fun b => c b * Complex.exp (l b y) :=
       funext fun b => (hfib b).tsum_eq
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   have hswap : HasSum (fun p : ℕ × X => g (p.2, p.1)) (∑' x, c x * Complex.exp (l x y)) :=
     (Equiv.prodComm ℕ X).hasSum_iff.2 htot
   have hfin := hswap.prod_fiberwise (fun n => (hswap.summable.prod_factor n).hasSum)
@@ -662,8 +658,7 @@ theorem exists_const (hL : IsLat Λ) (hU : UnitaryData H Λ α δ Ae) (hLine : A
     intro h
     apply hwz
     have := congrFun h z
-    rw [hdef] at this
-    exact this
+    rwa [hdef] at this
   obtain ⟨-, hline2⟩ := lineTransport V H hU.herm Λ (imgLat (δ : V →ₗ[ℂ] V) Λ) α hU.selfDual
     (Cay.selfDual_img H Λ δ hU.isom hU.selfDual) hU.semi hU.semi' hU.idx₂ hU.idx₁ θ₀ hθ₀ hne
     (hLine θ₀ hθ₀ hne)
@@ -787,11 +782,11 @@ theorem const_value {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] [Finit
     (fun y => ∫ z in D', α y * opU H y (fun v => kerP H α Λ v z) z * (wt H z : ℂ) ∂μ)
     (fun y hy hyΛ => by
       have := hdiag y (hS₂.1 y hy)
-      rw [if_neg hyΛ] at this
+      rw [ite_eq_right hyΛ] at this
       exact this)
   rw [hsum]
   have := hdiag y₀ (hS₂.1 y₀ hy₀)
-  rw [if_pos hy₀Λ] at this
+  rw [ite_eq_left hy₀Λ] at this
   rw [this]
 
 end UC

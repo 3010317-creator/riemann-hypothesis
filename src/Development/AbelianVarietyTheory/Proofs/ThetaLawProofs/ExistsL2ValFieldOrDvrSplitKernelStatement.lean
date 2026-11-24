@@ -150,8 +150,7 @@ theorem main : ∀ (R R' : Type) [CommRing R] [CommRing R'] (x : KeyIn R) (x' : 
       obtain ⟨j, hj⟩ := exists_chart x.P.isLB (φ y)
       have e := (comb_eq x'.P.A.hom hb' a y hj hy).symm.trans (hc y j trivial hj)
       rw [Units.mul_right_eq_zero] at e
-      refine Eq.trans ?_ e.symm
-      exact (GlobalTheory.RelBasis.gs_eq_gsHom _ y _ hy _).trans (map_zero _)
+      exact Eq.trans ((GlobalTheory.RelBasis.gs_eq_gsHom _ y _ hy _).trans (map_zero _)) e.symm
     have h₂ : Coords x' b' 0 z.f := fun i =>
       (Finset.sum_eq_zero fun k _ => by rw [Pi.zero_apply, map_zero, zero_mul]).symm
     obtain rfl : a = 0 := (hB z).unique h₁ h₂
@@ -367,8 +366,7 @@ theorem affine_transfer (b : Fin N → LB.Sec (pw L t)) (p₁ : Y ⟶ T) (p₂ :
     obtain ⟨z, rfl, -⟩ := Scheme.exists_preimage_of_isPullback sq y s hs.symm
     apply (ConcreteCategory.bijective_of_isIso (j.stalkMap z)).1
     have := hc' z i trivial hi
-    rw [key z i hi, ← funext hc, affine_comb b p₁ p₂ W j p₁' g sq.w e c z i hi] at this
-    exact this
+    rwa [key z i hi, ← funext hc, affine_comb b p₁ p₂ W j p₁' g sq.w e c z i hi] at this
 
 theorem indepOn_spanOn_of_affine : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (p : X ⟶ Sp R) (L : LB X) (t : ℤ) (N : ℕ) (b : Fin N → LB.Sec (pw L t)), (∀ (R' : Type) [CommRing R'] (f : R →+* R'), ∃ (Y : Scheme.{0}) (p₁ : Y ⟶ Sp R') (p₂ : Y ⟶ X), IsPullback p₂ p₁ p (spMap f) ∧ GlobalTheory.RelBasis.IndepOn b p₁ p₂ ⊤ ∧ GlobalTheory.RelBasis.SpanOn b p₁ p₂ ⊤) → ∀ (T Y : Scheme.{0}) (q : T ⟶ Sp R) (p₁ : Y ⟶ T) (p₂ : Y ⟶ X), IsPullback p₂ p₁ p q → ∀ W : T.Opens, IsAffineOpen W → GlobalTheory.RelBasis.IndepOn b p₁ p₂ W ∧ GlobalTheory.RelBasis.SpanOn b p₁ p₂ W := by
   intro R _ X p L t N b H T Y q p₁ p₂ sq W hW

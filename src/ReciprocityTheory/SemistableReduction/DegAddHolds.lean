@@ -42,12 +42,10 @@ theorem embMat_mulVec_injective {K : Type} [Field K] [NumberField K] {r k : ℕ}
     funext j a
     rfl
   have hB : Function.Injective B.mulVec := by
-    rw [Matrix.mulVec_injective_iff, hcol]
-    exact hv
+    rwa [Matrix.mulVec_injective_iff, hcol]
   have hker : LinearMap.ker (Matrix.toLin' B) = ⊥ := by
     rw [LinearMap.ker_eq_bot]
-    intro x y h
-    exact hB (by simpa [Matrix.toLin'_apply] using h)
+    exact fun x y h => hB (by simpa [Matrix.toLin'_apply] using h)
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective (Matrix.toLin' B) hker
   have hNB : LinearMap.toMatrix' g * B = 1 := by
     rw [← LinearMap.toMatrix'_toLin' B, ← LinearMap.toMatrix'_comp, hg, LinearMap.toMatrix'_id]
@@ -55,8 +53,7 @@ theorem embMat_mulVec_injective {K : Type} [Field K] [NumberField K] {r k : ℕ}
   have h1 : (LinearMap.toMatrix' g).map σ * embMat σ v = 1 := by
     rw [hE, ← Matrix.map_mul, hNB, Matrix.map_one _ σ.map_zero σ.map_one]
   intro x y hxy
-  have h := congrArg ((LinearMap.toMatrix' g).map σ).mulVec hxy
-  simpa [Matrix.mulVec_mulVec, h1] using h
+  simpa [Matrix.mulVec_mulVec, h1] using congrArg ((LinearMap.toMatrix' g).map σ).mulVec hxy
 
 theorem gramC_posDef {K : Type} [Field K] [NumberField K] {r k : ℕ}
     (H : Matrix (Fin r) (Fin r) ℂ) (σ : K →+* ℂ) {v : Fin k → Fin r → K} (hH : H.PosDef)

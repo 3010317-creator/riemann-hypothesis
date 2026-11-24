@@ -145,7 +145,7 @@ theorem hfun_eq_zero (y : G) (hy : ∀ q : K' ⧸ U.subgroupOf K', ∀ g ∈ s, 
     hfun K' U s a y = 0 := by
   unfold hfun
   refine Finset.sum_eq_zero fun q _ => Finset.sum_eq_zero fun g hg => ?_
-  rw [if_neg (fun h => hy q g hg (QuotientGroup.eq.1 h)), mul_zero]
+  rw [ite_eq_right (fun h => hy q g hg (QuotientGroup.eq.1 h)), mul_zero]
 
 theorem hasCompactSupport_hfun [TopologicalSpace G] [IsTopologicalGroup G] (hK'c : IsCompact (K' : Set G))
     (hK'o : IsOpen (K' : Set G)) : HasCompactSupport (hfun K' U s a) := by
@@ -192,7 +192,7 @@ theorem levOp_hfun {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : Representati
   refine Finset.sum_congr rfl fun q _ => ?_
   rw [Finset.sum_comm (s := T)]
   refine Finset.sum_congr rfl fun g hg => ?_
-  rw [← LinearMap.sum_apply, Finset.sum_ite_eq, if_pos (hmemT q g hg), LinearMap.smul_apply,
+  rw [← LinearMap.sum_apply, Finset.sum_ite_eq, ite_eq_left (hmemT q g hg), LinearMap.smul_apply,
     LinearMap.comp_apply, LinearMap.id_apply, hout]
 
 end GlobalTheory.HeckeTraceIndep
@@ -247,15 +247,14 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
     have hxk := hx i _ (Finset.mem_image_of_mem _ (Finset.mem_univ k))
     rw [hact i _ (b i k).2]
     by_cases hi : i = i₀
-    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = b i k := by
-        exact hxk.trans (if_pos hi)
-      rw [if_pos hi, e]
+    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = b i k := hxk.trans (ite_eq_left hi)
+      rw [ite_eq_left hi, e]
       have h2 : ∀ q : K' ⧸ U.subgroupOf K', (σ i).ρ ((q.out : K') : G) (b i k : (σ i).V) = b i k :=
         fun q => fixed_apply (b i k).2 q.out
       simp only [h2, Finset.sum_const, Finset.card_univ]
       rw [← Nat.cast_smul_eq_nsmul ℂ, smul_smul]
-    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = 0 := hxk.trans (if_neg hi)
-      rw [if_neg hi, e]
+    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = 0 := hxk.trans (ite_eq_right hi)
+      rw [ite_eq_right hi, e]
       simp
   have hfixedEq : ∀ i, ∀ v ∈ fixed (σ i).ρ K', levOp (σ i).ρ K K' f LinearMap.id v =
       (if i = i₀ then r⁻¹ * N else 0) • v := by
@@ -264,8 +263,7 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
       (f₂ := (if i = i₀ then r⁻¹ * N else 0) • (fixed (σ i).ρ K').subtype) (fun k => by
         rw [LinearMap.comp_apply, LinearMap.smul_apply, Submodule.subtype_apply]
         exact hbasis i k)) ⟨v, hv⟩
-    rw [LinearMap.comp_apply, LinearMap.smul_apply, Submodule.subtype_apply] at this
-    exact this
+    rwa [LinearMap.comp_apply, LinearMap.smul_apply, Submodule.subtype_apply] at this
   have htr : ∀ i, twTr (σ i).ρ K K' f LinearMap.id =
       (if i = i₀ then r⁻¹ * N else 0) * Module.finrank ℂ (fixed (σ i).ρ K') := by
     intro i
@@ -283,7 +281,7 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
     rw [this, map_smul, LinearMap.trace_id, smul_eq_mul]
   have hsum := hc f hHecke
   simp only [htr] at hsum
-  rw [Finset.sum_eq_single i₀ (fun i _ hi => by simp [hi]) (by simp), if_pos rfl] at hsum
+  rw [Finset.sum_eq_single i₀ (fun i _ hi => by simp [hi]) (by simp), ite_eq_left rfl] at hsum
   have hr : r ≠ 0 := by
     haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
     haveI : Finite (K ⧸ K'.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ (by
@@ -464,8 +462,7 @@ theorem UpperTheory.ConvolutionTheory.C.charIndep :
     ext i
     simp only [Set.mem_setOf_eq, Finset.coe_filter, Finset.mem_univ, true_and]
     exact ⟨fun h => Quotient.sound h, fun h => Quotient.exact h⟩
-  rw [hset, finsum_mem_coe_finset]
-  exact hfin
+  rwa [hset, finsum_mem_coe_finset]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -495,8 +492,7 @@ private theorem fixed_fd (U : Subgroup (Gw n v)) (hU : CO U) (σ : SmIrr (Gw n v
       simpa using hx ⟨g, hg⟩
     · intro hx g
       simpa using hx g g.2
-  rw [← e]
-  exact h2
+  rwa [← e]
 
 private theorem td : TotallyDisconnectedSpace (Gw n v) := by
   haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) (v.adicCompletion K)) :=

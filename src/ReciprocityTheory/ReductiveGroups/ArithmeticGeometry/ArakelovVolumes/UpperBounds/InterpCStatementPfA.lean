@@ -60,11 +60,9 @@ theorem cfwM_smul {r : ℕ} (X : Data E r) {ps : Frame X.Ψ r → ℝ} {a : ℝ}
     (ht : 0 < t) : cfwM X (fun x => t * ps x) (t * a) := by
   obtain ⟨⟨C, A', h1⟩, h2⟩ := h
   refine ⟨⟨t * C, t * A', fun x hx => ?_⟩, fun η hη hη' => ?_⟩
-  · show t * ps x ≤ _
-    exact (mul_le_mul_of_nonneg_left (h1 x hx) ht.le).trans_eq (by ring)
+  · exact (mul_le_mul_of_nonneg_left (h1 x hx) ht.le).trans_eq (by ring)
   · obtain ⟨C, A', h3⟩ := h2 η hη hη'
     refine ⟨t * C, t * A', fun x hx ξ hξ hτ => ?_⟩
-    show t * ps x ≤ _
     exact (mul_le_mul_of_nonneg_left (h3 x hx ξ hξ hτ) ht.le).trans_eq (by ring)
 
 theorem half_le {w : ℝ≥0∞} {p ψ : ℝ} (hw : ENNReal.ofReal (Real.exp (-(p + ψ))) ≤ w) :

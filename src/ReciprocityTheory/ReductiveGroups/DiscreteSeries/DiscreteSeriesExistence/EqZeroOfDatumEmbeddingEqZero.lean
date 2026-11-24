@@ -96,7 +96,7 @@ theorem datumEmbedding_add (hP : IsPsiFor ε lam T Ψ) (v₀ v v' : T.V) :
   have h1 := dt_memLp hP v₀ v
   have h2 := dt_memLp hP v₀ v'
   have h3 := dt_memLp hP v₀ (v + v')
-  simp only [uniformisationL2, toL2, dif_pos h1, dif_pos h2, dif_pos h3]
+  simp only [uniformisationL2, toL2, dite_eq_left h1, dite_eq_left h2, dite_eq_left h3]
   rw [← MemLp.toLp_add]
   exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall fun g => by simp [jfun, inner_add_right])
 
@@ -104,7 +104,7 @@ theorem datumEmbedding_smul (hP : IsPsiFor ε lam T Ψ) (v₀ : T.V) (c : ℂ) (
     uniformisationL2 ε Ψ v₀ (c • v) = c • uniformisationL2 ε Ψ v₀ v := by
   have h1 := dt_memLp hP v₀ v
   have h3 := dt_memLp hP v₀ (c • v)
-  simp only [uniformisationL2, toL2, dif_pos h1, dif_pos h3]
+  simp only [uniformisationL2, toL2, dite_eq_left h1, dite_eq_left h3]
   rw [← MemLp.toLp_const_smul]
   exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall fun g => by simp [jfun, inner_smul_right])
 
@@ -119,7 +119,7 @@ private theorem toL2_congr_of_eq_on_umat (F G : Matrix (Fin n) (Fin n) ℂ → �
   unfold toL2
   by_cases hF : MemLp (fun g : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε)
   · have hG : MemLp (fun g : Formalism.REAL.UJ ε => G (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε) := hfg ▸ hF
-    rw [dif_pos hF, dif_pos hG]
+    rw [dite_eq_left hF, dite_eq_left hG]
     exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall h)
   · have hG : ¬ MemLp (fun g : Formalism.REAL.UJ ε => G (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε) := hfg ▸ hF
     rw [dite_eq_right hF, dite_eq_right hG]
@@ -235,7 +235,7 @@ theorem datumEmbedding_self_ne_zero (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv
     exact ((innerSL ℂ v₀).comp (ContinuousLinearMap.apply ℂ T.V v₀)).continuous.continuousAt.comp
       (hFc.comp hc.continuousAt)
   have hae : (fun g : Formalism.REAL.UJ ε => jfun Ψ v₀ v₀ (Formalism.MainNotions.S.umat g)) =ᵐ[Formalism.REAL.muG ε] 0 := by
-    have h1 : uniformisationL2 ε Ψ v₀ v₀ = hm.toLp _ := by simp only [uniformisationL2, toL2, dif_pos hm]
+    have h1 : uniformisationL2 ε Ψ v₀ v₀ = hm.toLp _ := by simp only [uniformisationL2, toL2, dite_eq_left hm]
     rw [h1] at h0
     have h2 := hm.coeFn_toLp
     rw [h0] at h2
@@ -270,8 +270,7 @@ theorem eq_zero_of_datumEmbedding_eq_zero (hP : IsPsiFor ε lam T Ψ) {v₀ : T.
 theorem datumV_ne_bot (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv₀ : v₀ ≠ 0) : datumV ε Ψ v₀ ≠ ⊥ := by
   rw [Submodule.ne_bot_iff]
   refine ⟨⟨uniformisationL2 ε Ψ v₀ v₀, datumEmbedding_mem_smooth hP v₀ v₀⟩, (mem_datumV_iff hP v₀ _).2 ⟨v₀, rfl⟩, ?_⟩
-  intro h0
-  exact datumEmbedding_self_ne_zero hP hv₀ (congrArg Subtype.val h0)
+  exact fun h0 => datumEmbedding_self_ne_zero hP hv₀ (congrArg Subtype.val h0)
 
 theorem datumV_weight_le (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv₀ : v₀ ≠ 0) {μ : Fin n → ℝ}
     {x : smD ε (rreg ε)} (hx : x ∈ datumV ε Ψ v₀) (hx0 : x ≠ 0)
@@ -289,8 +288,7 @@ theorem datumV_weight_le (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv₀ : v₀ 
     intro a
     have e1 := rightDerivative_datum_embedding hP v₀ v (a := a) (b := a) rfl
     have e2 := congrArg Subtype.val (hμ a)
-    rw [hxe] at e2
-    rw [e1, Submodule.coe_smul] at e2
+    rw [hxe, e1, Submodule.coe_smul] at e2
     have e3 : datumEmbeddingToL2 hP v₀ (T.dτ (Matrix.single a a 1) v - ((μ a : ℝ) : ℂ) • v) = 0 := by
       rw [map_sub, map_smul]
       exact sub_eq_zero.2 e2

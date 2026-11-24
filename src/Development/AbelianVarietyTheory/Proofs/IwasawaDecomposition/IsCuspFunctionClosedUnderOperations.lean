@@ -56,10 +56,8 @@ theorem isCuspFun_closed : ∀ (D : D7) (V : HSp D) (φ φ' : GA D V → ℂ), I
     rw [Pi.add_apply, Pi.add_apply, h.left γ hγ, h'.left γ hγ]
   · simp only [Pi.smul_apply]
     rw [integral_smul, c r C hC μ 𝓕 hμ h𝓕 g, smul_zero]
-  · simp only [rTr, mul_assoc]
-    exact c r C hC μ 𝓕 hμ h𝓕 (g * k)
+  · simpa only [rTr, mul_assoc] using c r C hC μ 𝓕 hμ h𝓕 (g * k)
   · have e := integral_conj (𝕜 := ℂ) (μ := μ.restrict 𝓕) (f := fun n : NI V C => φ ((n : GA D V) * g))
-    rw [c r C hC μ 𝓕 hμ h𝓕 g, map_zero] at e
-    exact e
+    rwa [c r C hC μ 𝓕 hμ h𝓕 g, map_zero] at e
 
 end GlobalTheory.Mem.Th

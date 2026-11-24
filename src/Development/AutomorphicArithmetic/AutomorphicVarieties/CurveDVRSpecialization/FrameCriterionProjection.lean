@@ -52,8 +52,7 @@ theorem UpperTheory.frame_criterion_projection :
   let f : G (W.Lp L) Ω →* Φ.Γ := k.p.comp (toUpl Ω L)
   have hf : Continuous f := k.p_cont.comp hup
   have hclosed : IsClosed (f.ker : Set (G (W.Lp L) Ω)) := by
-    have h := (isClosed_singleton (x := (1 : Φ.Γ))).preimage hf
-    exact h
+    exact (isClosed_singleton (x := (1 : Φ.Γ))).preimage hf
   have hNS : NS Ω V.S' ≤ f.ker := by
     unfold ReciprocityTheory.Gal.NS
     apply Subgroup.topologicalClosure_minimal _ _ hclosed
@@ -73,8 +72,7 @@ theorem UpperTheory.frame_criterion_projection :
     apply Subgroup.le_topologicalClosure
     apply Subgroup.subset_normalClosure
     refine ⟨A, ?_, hti, ?_, ?_⟩
-    · rw [natCast_place hA]
-      exact hl
+    · rwa [natCast_place hA]
     · exact k.unr A ⟨hti, (toUpl Ω L t).2⟩
     · have hΨ : Ψ (galEmb ℚ (W.Lp L) Ω t) = 1 :=
         x.unr A (by rw [natCast_place hA]; exact hMv) hti

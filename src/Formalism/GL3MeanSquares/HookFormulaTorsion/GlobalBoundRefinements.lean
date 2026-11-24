@@ -767,8 +767,7 @@ theorem shortIntervalLowerBound : ShortIntervalLowerBound := by
   obtain ⟨β', hβ1, hβ2, hE, hd⟩ := exists_adjusted_exceptional_exponent hcb hB hβ hcbX
   have hlow := (exceptional_zero_estimates hθ' hB hβ1 hβ2 hd hX60).1
   refine ⟨?_, ?_⟩
-  · rw [hE X]
-    exact hlow
+  · rwa [hE X]
   · intro h hh1 hρ hB7
     refine exceptional_zero_contribution_bound hCr hcr hθ' hB hG1 hGB hβ1 hβ2 hd hX60 hπ₂ hη ?_ hh1 hρ hB7
     intro Y hY
@@ -813,8 +812,7 @@ theorem shortIntervalImpliesProgressions_statement : ShortIntervalImpliesProgres
   have hY13 : 0 ≤ Y ^ ((1 : ℝ) / 3) := Real.rpow_nonneg hYpos.le _
   have h47 : 0 < (4 * (m : ℝ)) ^ (7 : ℝ) := Real.rpow_pos_of_pos (by linarith) _
   have hpos : 0 < h := by
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     linarith [mul_nonpos_of_nonpos_of_nonneg hneg hY13]
   have hfl1 : 1 ≤ ⌊Y⌋₊ := Nat.le_floor (by exact_mod_cast hY1)
   have hfl2 : ⌊Y⌋₊ ≤ ⌊Y * (1 + h)⌋₊ := Nat.floor_mono (le_mul_of_one_le_right hYpos.le (by linarith))
@@ -933,8 +931,7 @@ theorem log_l_value_field_bound : LogLFunctionEulerBound := by
       (hc : Formalism.HermitianLatticesTheory.conjIdeal (K := K) P = P)
       (hu : ∃ θ t : 𝓞 K, algebraMap (𝓞 K) K t = star (algebraMap (𝓞 K) K θ) ∧ θ - t ∉ P) :
       residueCharacteristic P ^ 2 ≤ Ideal.absNorm P := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     obtain ⟨θ, t, ht, hθt⟩ := hu
     obtain ⟨k, hk1, hk⟩ := abs_norm_eq_prime_pow P hP
     have hp := residue_characteristic_prime P hP
@@ -1031,8 +1028,7 @@ theorem log_l_value_field_bound : LogLFunctionEulerBound := by
       linarith [inv_prime_pow_lt_one M (by omega) p (hS p hp)]
     have hsum : ∑ p ∈ S, negLogOneSubInvPow M p = Real.log (∏ p ∈ S, (1 - ((p : ℝ)⁻¹) ^ M)⁻¹) := by
       rw [Real.log_prod (fun p hp => (inv_pos.mpr (hpos p hp)).ne')]
-      refine Finset.sum_congr rfl (fun p _ => ?_)
-      exact (Real.log_inv _).symm
+      exact Finset.sum_congr rfl (fun p _ => (Real.log_inv _).symm)
     rw [hsum]
     exact Real.log_le_log (Finset.prod_pos (fun p hp => inv_pos.mpr (hpos p hp))) (euler_product_le_zeta M hM S hS)
 

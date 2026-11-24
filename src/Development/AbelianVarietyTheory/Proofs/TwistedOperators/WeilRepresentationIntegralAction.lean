@@ -71,8 +71,7 @@ theorem isCompact_integralFinite :
   have h := isCompact_range (RestrictedProduct.isEmbedding_structureMap
     (R := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
     (A := fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) (𝓕 := Filter.cofinite)).continuous
-  rw [RestrictedProduct.range_structureMap] at h
-  exact h
+  rwa [RestrictedProduct.range_structureMap] at h
 
 def intAd : AddSubgroup (AF F) where
   carrier := {a | evI F a = 0 ∧ ∀ v, evFin F v a ∈ v.adicCompletionIntegers F}
@@ -281,8 +280,7 @@ theorem restriction_at_standard_point (κ : Type) [Fintype κ] (f : SInf F κ) :
       have h := congrFun (hz u h0) i
       have h2 := congrArg Prod.snd h
       have h4 : ((u • z) i).2 = (1 : FiniteAdeleRing (𝓞 F) F) * (z i).2 := rfl
-      rw [h4, one_mul] at h2
-      exact h2
+      rwa [h4, one_mul] at h2
     show g0 F κ (fun i => (x i + z i).2) = g0 F κ (fun i => (x i).2)
     congr 1
     funext i
@@ -321,8 +319,7 @@ theorem lintegral_tensor_at_standard_point (κ : Type) [Fintype κ] (μ : Measur
   have hm := lintegral_prod_mul (μ := μ) (ν := ν) (f := fun y => ‖g y‖ₑ ^ 2)
     (g := (intPts F κ).indicator 1) (g.continuous.measurable.enorm.pow_const 2).aemeasurable
     ((measurable_one.indicator (isOpen_intPts κ).measurableSet).aemeasurable)
-  rw [lintegral_indicator_one (isOpen_intPts κ).measurableSet] at hm
-  exact hm
+  rwa [lintegral_indicator_one (isOpen_intPts κ).measurableSet] at hm
 
 end GlobalTheory.ArchIsom
 

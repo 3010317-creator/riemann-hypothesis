@@ -83,12 +83,9 @@ theorem isSelfDualMod_loc {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule (�
     unfold Formalism.HermitianLatticesTheory.IsUnimodularAt at hu
     rw [hu]
   refine ⟨?_, ?_, ?_, ?_⟩
-  · intro a ha m hm
-    exact smul_mem_loc hp ha hm
-  · intro x hx y hy
-    exact (hu' y).mp hy x hx
-  · intro x hx
-    exact (hu' x).mpr hx
+  · exact fun a ha m hm => smul_mem_loc hp ha hm
+  · exact fun x hx y hy => (hu' y).mp hy x hx
+  · exact fun x hx => (hu' x).mpr hx
   · intro x
     obtain ⟨n, hn, hnx⟩ := _root_.Bl.general_b_fact_second'''''.goal1 L hL x
     refine ⟨(n : K), by exact_mod_cast hn, ?_⟩

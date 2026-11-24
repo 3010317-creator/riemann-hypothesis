@@ -107,8 +107,7 @@ private theorem exists_coeff_vanishing_sum {A : Type} [Ring A] [Algebra ℂ A] (
     ∃ v : ℕ → A, v p = 0 ∧ ∀ u, ∑ i, f i u = ∑ l ∈ Finset.range K, u ^ l • v l := by
   choose v hv0 hv using hf
   refine ⟨fun l => ∑ i, v i l, by simp [hv0], fun u => ?_⟩
-  simp only [hv, Finset.smul_sum]
-  exact Finset.sum_comm
+  simpa only [hv, Finset.smul_sum] using Finset.sum_comm
 
 private theorem etr_mem_adjoin_range_qdet (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E : Fin (m + 1) → Fin (m + 1) → A)
     (hE : GlRel E) (N : ℕ) : etr E N ∈ Algebra.adjoin ℂ (Set.range (qdet E)) := by
@@ -126,7 +125,7 @@ private theorem etr_mem_adjoin_range_qdet (A : Type) [Ring A] [Algebra ℂ A] (m
     rw [sub_zero] at e
     rw [e]
     refine Finset.sum_congr rfl fun l hl => ?_
-    rw [if_pos (Finset.mem_range.mp hl)]
+    rw [ite_eq_left (Finset.mem_range.mp hl)]
   refine Nat.strong_induction_on N ?_
   intro N ih
   have hgS : ∀ u : ℂ, algebraMap ℂ A ((-1) ^ N) *
@@ -232,12 +231,10 @@ private theorem mem_mul_of_sup (C B : Subalgebra ℂ A) (h : ∀ a ∈ C, ∀ b 
     refine sup_le (fun c hc => ?_) (fun b hb => ?_)
     · have := Submodule.mul_mem_mul (show c ∈ Subalgebra.toSubmodule C from hc)
         (show (1 : A) ∈ Subalgebra.toSubmodule B from one_mem B)
-      rw [mul_one] at this
-      exact this
+      rwa [mul_one] at this
     · have := Submodule.mul_mem_mul (show (1 : A) ∈ Subalgebra.toSubmodule C from one_mem C)
         (show b ∈ Subalgebra.toSubmodule B from hb)
-      rw [one_mul] at this
-      exact this
+      rwa [one_mul] at this
   exact hle hz
 
 private theorem mul_mono_left {M N P : Submodule ℂ A} (h : M ≤ N) : M * P ≤ N * P :=
@@ -380,8 +377,7 @@ private theorem central_of_filtB (hX : GlRel X) (B : Subalgebra ℂ A)
       have : X p.1 p.2 * Phi X d b M - Phi X d b M * X p.1 p.2 =
           -(X p.1 p.2 * y - y * X p.1 p.2) := by
         rw [mul_add, add_mul] at e
-        rw [neg_sub, sub_eq_sub_iff_add_eq_add, add_comm (y * X p.1 p.2)]
-        exact e
+        rwa [neg_sub, sub_eq_sub_iff_add_eq_add, add_comm (y * X p.1 p.2)]
       rw [this]
       exact neg_mem (filtB_ad hX B hB d p.1 p.2 hy)
     obtain ⟨M₀, hMM₀, hM₀⟩ := _root_.GlobalTheory.matrix_commutant_lift_mod_stable _ S N hS hN M hM
@@ -446,8 +442,7 @@ end UpperTheory.AdjointWordCommutation
 
 theorem UpperTheory.mem_adjoin_gelfand_sup_of_commute_glGenerators :
     ∀ (A : Type) [Ring A] [Algebra ℂ A] (n : ℕ) (X : Fin n → Fin n → A), GlRel X → ∀ B : Subalgebra ℂ A, (∀ b ∈ B, ∀ i j, X i j * b = b * X i j) → ∀ z ∈ Algebra.adjoin ℂ (Set.range fun p : Fin n × Fin n => X p.1 p.2) ⊔ B, (∀ i j, X i j * z = z * X i j) → z ∈ Algebra.adjoin ℂ (Set.range (GlobalTheory.SmoothForms.gelfA X)) ⊔ B := by
-  intro A _ _ n X hX B hB z hz hc
-  exact UpperTheory.AdjointWordCommutation.main hX B hB z hz hc
+  exact fun A _ _ n X hX B hB z hz hc => UpperTheory.AdjointWordCommutation.main hX B hB z hz hc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.DivisorFrames.MemAdjoinGelfandSupOfCommuteGlGenerators =====

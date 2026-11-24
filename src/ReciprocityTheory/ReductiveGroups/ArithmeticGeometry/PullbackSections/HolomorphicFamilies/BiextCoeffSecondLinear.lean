@@ -39,7 +39,7 @@ theorem dLin_addOf (F : Fin d → PS k 2 d)
       · exact hv i')]
   rw [Fintype.sum_prod_type, Fin.sum_univ_two]
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, hF0, hF1, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rfl
 
 theorem const_actK' (B : FB R d O) (a : O) (l : Fin d) : constantCoeff (B.actK k a l) = 0 := by
@@ -213,9 +213,7 @@ theorem eigLift_core {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing O] [
       simp only [Matrix.sum_mulVec, Matrix.smul_mulVec, he, smul_smul]
       rw [← Finset.sum_smul, hnorm, one_smul]
     obtain ⟨u1, φ1, hu1⟩ := hξ1
-    have hU1 : (fun j => algebraMap R k (u1 j)) = U := by
-      have h1 := congrArg Prod.fst hu1
-      exact h1.symm.trans hfirst
+    have hU1 : (fun j => algebraMap R k (u1 j)) = U := (congrArg Prod.fst hu1).symm.trans hfirst
     refine ⟨φ1, fun ℓ hℓ => ?_⟩
     obtain ⟨a, ha⟩ := hℓ
     obtain ⟨m, hb, hcm⟩ := hm (star a)
@@ -244,8 +242,7 @@ theorem eigLift_core {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing O] [
       exact (mul_eq_zero.1 h2).resolve_left (sub_ne_zero.2 ha)
     rw [hu1] at hβ
     simp only [betaH, Pi.zero_apply, zero_mul, sub_zero] at hβ
-    rw [hU1] at hβ
-    exact hβ
+    rwa [hU1] at hβ
   choose φ hφ using key
   exact ⟨φ, fun ℓ ℓ' hℓ => hφ ℓ' ℓ hℓ⟩
 

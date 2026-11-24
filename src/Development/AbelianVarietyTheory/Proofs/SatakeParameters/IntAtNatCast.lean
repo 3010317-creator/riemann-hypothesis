@@ -137,12 +137,10 @@ theorem lam_root {X : Fields} {Pr : Primes X} {R : Ranks} {Ch : Chars X Pr R.m}
   have hb := hL.boundQ j b P' hP
   have hD := hL.depthQ' P' hP
   have hm := hL.hm
-  simp only [lamYat, show P'.1 ∉ Pr.vGs from hP, if_false, mem_lamY_zero] at hb
+  simp only [lamYat, show P'.1 ∉ Pr.vGs from hP, ite_false, mem_lamY_zero] at hb
   have hκ := hr.2
-  simp only [Jat, hP, if_false] at hκ
-  have hκ' : ∀ x, (h⁻¹ * r * h) x ∈ stdAt X.E _ P.1 ↔ x ∈ stdAt X.E _ P.1 := by
-    intro x
-    exact hκ.1 x
+  simp only [Jat, hP, ite_false] at hκ
+  have hκ' : ∀ x, (h⁻¹ * r * h) x ∈ stdAt X.E _ P.1 ↔ x ∈ stdAt X.E _ P.1 := fun x => hκ.1 x
   have hint : IntAt P.1 ((qOf P.1 : X.E) ^ j * Loc.n1Arg r) := by
     refine intAt_n1Arg _ r fun x hx => ?_
     have h1 := (hb _ ((hκ' _).2 (hb x hx).1)).2
@@ -156,7 +154,7 @@ theorem lam_root {X : Fields} {Pr : Primes X} {R : Ranks} {Ch : Chars X Pr R.m}
     rw [hd, pow_add, mul_assoc, ← Nat.cast_pow]
     exact (intAt_natCast _).mul hint
   have h1 := psi_root hL.cst_ok P' _ hint'
-  simp only [chiInv, lamRow, show P'.1 ∉ Pr.vGs from hP, if_false, LocE.lamQB] at hχ
+  simp only [chiInv, lamRow, show P'.1 ∉ Pr.vGs from hP, ite_false, LocE.lamQB] at hχ
   have hne := ((L.levQ j b P).lam g).ne_zero
   rw [hχ] at hne
   obtain ⟨k, hk, h2⟩ := unitV_root _ _ (fun h0 => right_ne_zero_of_mul hne (inv_eq_zero.2 h0))

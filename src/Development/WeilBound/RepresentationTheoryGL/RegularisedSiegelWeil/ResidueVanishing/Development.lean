@@ -166,8 +166,7 @@ theorem k2b2_tendsto {s₀ : ℂ} : ∀ (k : ℕ) {g : ℂ → ℂ} {p : FormalM
   have hval : ∀ j, (Function.swap dslope s₀)^[j] g s₀ = p.coeff j := fun j => by
     rw [← (hp.has_fpower_series_iterate_dslope_fslope j).coeff_zero 1]
     have := FormalMultilinearSeries.coeff_iterate_fslope (p := p) j 0
-    rw [zero_add] at this
-    exact this
+    rwa [zero_add] at this
   have hz : ∀ j < k, (Function.swap dslope s₀)^[j] g s₀ = 0 := fun j hj => by
     rw [hval j, hk j hj]
   have heq := pow_sub_smul_iterate_dslope_of_zero k hz
@@ -420,12 +419,10 @@ theorem local_representation_smoothness : PositivityTheory.Rg.Rsw.Kplug.K1 := by
       have hsub : (fun w : ℂ => w - τ) ⁻¹' U ⊆ A := fun w hw τ' hτ' => by
         have h1 := interior_subset hw (τ + τ') (by positivity)
         have e : w - (τ : ℂ) + ((τ + τ' : ℝ) : ℂ) = w + τ' := by push_cast; ring
-        rw [e] at h1
-        exact h1
+        rwa [e] at h1
       refine interior_maximal hsub hopen ?_
       show z + (τ : ℂ) - τ ∈ U
-      rw [add_sub_cancel_right]
-      exact hz
+      rwa [add_sub_cancel_right]
 
   have hd0 : d ≠ 0 := Finset.prod_ne_zero_iff.2 fun x _ => pow_ne_zero _ (Polynomial.X_sub_C_ne_zero x)
 
@@ -558,7 +555,7 @@ theorem theta_continuation : K4 := by
   let c : GA D A × GA D A → G D A.rank := fun x => if x ∈ K ×ˢ K then κ (io A x * p) else 1
   have hKK : IsCompact (K ×ˢ K) := hKc.prod hKc
   have hXX : X ×ˢ X ⊆ K ×ˢ K := Set.prod_mono hXK hXK
-  have hcK : ∀ x ∈ X ×ˢ X, c x = κ (io A x * p) := fun x hx => if_pos (hXX hx)
+  have hcK : ∀ x ∈ X ×ˢ X, c x = κ (io A x * p) := fun x hx => ite_eq_left (hXX hx)
   have hc0 : Continuous fun x : GA D A × GA D A => κ (io A x * p) :=
     hκc.comp ((continuous_io A).mul continuous_const)
   have hcm : Measurable c := Measurable.ite hKK.isClosed.measurableSet hc0.measurable measurable_const
@@ -566,8 +563,8 @@ theorem theta_continuation : K4 := by
     refine ((hKK.image hc0).union (isCompact_singleton (x := (1 : G D A.rank)))).closure_of_subset ?_
     rintro _ ⟨x, rfl⟩
     by_cases h : x ∈ K ×ˢ K
-    · exact Or.inl ⟨x, h, (if_pos h).symm⟩
-    · exact Or.inr (if_neg h)
+    · exact Or.inl ⟨x, h, (ite_eq_left h).symm⟩
+    · exact Or.inr (ite_eq_right h)
   have : IsFiniteMeasure ((m.prod m).restrict (X ×ˢ X)) :=
     isFiniteMeasure_restrict.2 ((measure_mono hXX).trans_lt hKK.measure_lt_top).ne
   have hwi : Integrable w ((m.prod m).restrict (X ×ˢ X)) :=
@@ -576,8 +573,7 @@ theorem theta_continuation : K4 := by
   have hE : Continuous fun g : GA D (dblSp A) => F (κ (g * p)) :=
     hF.comp (hκc.comp (continuous_id.mul continuous_const))
   have hEi : LeftInv (GQ (dblSp A)) fun g => F (κ (g * p)) := fun γ hγ g => by
-    simp only [mul_assoc, map_mul]
-    exact hFi _ ((hG' γ).1 hγ) _
+    simpa only [mul_assoc, map_mul] using hFi _ ((hG' γ).1 hγ) _
   have key := hX (GA D A × GA D A) ((m.prod m).restrict (X ×ˢ X)) c hcm hcr w hwi ?_
   · rw [dblInt_eq_fd A hχ m hE hEi hcu hcui hcu hcui hXf hKc hXK, ← key]
     refine setIntegral_congr_fun hXXm fun x hx => ?_

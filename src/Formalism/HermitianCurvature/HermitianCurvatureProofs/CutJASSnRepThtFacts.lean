@@ -75,13 +75,7 @@ variable {k r : ℕ}
 def InW (k r : ℕ) (z x : Fin (2 * r + k + 1) → ℂ) : Prop := inWb k r x ∧ herm (Hpk k r) x z = 0
 
 theorem herm_alt {z : Fin (2 * r + k + 1) → ℂ} : herm (Hpk k r) z z = ((-(Tz k r z) : ℝ) : ℂ) := by
-  have h := P.Qx2.herm_star (k := k) (r := r) z z
-  apply Complex.ext
-  · simp [Tz]
-  · have := congrArg Complex.im h
-    simp only [Complex.star_def, Complex.conj_im] at this
-    simp only [Complex.ofReal_im]
-    linarith
+  exact Formalism.FourierDecayAlt.P.C2x5.hzz_real z
 
 theorem herm_wbP {y w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) :
     herm (Hpk k r) y w = herm (Hpk k r) (SSn.wbP k r y) w := by
@@ -94,8 +88,8 @@ theorem herm_wbP {y w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) :
     refine Finset.sum_congr rfl fun j _ => ?_
     unfold SSn.wbP Hpk
     by_cases hj : r ≤ j.val ∧ j.val ≤ r + k
-    · rw [if_pos hj]
-    · rw [if_neg hj]
+    · rw [ite_eq_left hj]
+    · rw [ite_eq_right hj]
       have h1 : ¬ (i.val < r ∧ i.val + j.val = 2 * r + k) := by omega
       have h2 : ¬ (j.val < r ∧ i.val + j.val = 2 * r + k) := by omega
       have h3 : ¬ (r ≤ i.val ∧ i.val ≤ r + k ∧ i = j) := by
@@ -109,7 +103,7 @@ theorem blockProjection_smul (c : ℂ) (x : Fin (2 * r + k + 1) → ℂ) : SSn.w
   funext i; simp only [SSn.wbP, Pi.smul_apply]; split_ifs <;> simp
 
 theorem blockProjection_mem_block (x : Fin (2 * r + k + 1) → ℂ) : inWb k r (SSn.wbP k r x) := by
-  intro i hi; unfold SSn.wbP; rw [if_neg (by omega)]
+  intro i hi; unfold SSn.wbP; rw [ite_eq_right (by omega)]
 
 theorem prWv_add (z x y : Fin (2 * r + k + 1) → ℂ) :
     SSn.prWv k r z (x + y) = SSn.prWv k r z x + SSn.prWv k r z y := by
@@ -515,13 +509,11 @@ theorem hs_sandw_adj (A₁ A₂ : Wp →L[ℂ] Wp) (B₁ B₂ : Wq →L[ℂ] Wq)
 
 theorem hs_sum_left {ι : Type*} (s : Finset ι) (T : ι → Wq →L[ℂ] Wp) (Y : Wq →L[ℂ] Wp) :
     B.hsInner (∑ i ∈ s, T i) Y = ∑ i ∈ s, B.hsInner (T i) Y := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, inner_sum]
-  exact Finset.sum_comm
+  simpa only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, inner_sum] using Finset.sum_comm
 
 theorem hs_sum_right {ι : Type*} (s : Finset ι) (X : Wq →L[ℂ] Wp) (T : ι → Wq →L[ℂ] Wp) :
     B.hsInner X (∑ i ∈ s, T i) = ∑ i ∈ s, B.hsInner X (T i) := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, sum_inner]
-  exact Finset.sum_comm
+  simpa only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, sum_inner] using Finset.sum_comm
 
 theorem hs_smul_right (c : ℂ) (X T : Wq →L[ℂ] Wp) : B.hsInner X (c • T) = star c * B.hsInner X T := by
   simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.smul_apply, inner_smul_left, Finset.mul_sum, Complex.star_def]

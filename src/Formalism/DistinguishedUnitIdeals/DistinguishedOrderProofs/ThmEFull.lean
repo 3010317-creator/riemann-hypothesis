@@ -172,8 +172,7 @@ theorem exists_lift_of_dvd {ϖ : O} (hϖ : Irreducible ϖ) {r : ℕ} {V : Submod
       intro v hv
       apply ih
       apply hV
-      rw [smul_smul, ← pow_succ']
-      exact hv
+      rwa [smul_smul, ← pow_succ']
   have : Module.IsTorsionFree O ((Fin r → O) ⧸ V) := by
     refine Module.IsTorsionFree.of_smul_eq_zero (fun a q hq => ?_)
     obtain ⟨v, rfl⟩ := Submodule.Quotient.mk_surjective V q
@@ -304,7 +303,7 @@ theorem extF_mem_of_levelCond {ϖ : O} (hϖ : Irreducible ϖ) {r : ℕ} (φ : (F
     obtain ⟨N, z, hz⟩ := h
     have e := congrArg (extF φ) hz
     simp only [map_smul, map_sub, extF_cst, smul_eq_mul] at e
-    rw [if_neg (by decide)]
+    rw [ite_eq_right (by decide)]
     apply mem_span_pow_of_uniformizer_mul O ϖ hϖ dd q hq _ (N + k)
     rw [Ideal.mem_span_singleton]
     exact ⟨extF φ z + PowerSeries.C (ϖ ^ N) * R * PowerSeries.C (φ d), by
@@ -313,7 +312,7 @@ theorem extF_mem_of_levelCond {ϖ : O} (hϖ : Irreducible ϖ) {r : ℕ} (φ : (F
     obtain ⟨N, c, z, hc, hz⟩ := h
     have e := congrArg (extF φ) hz
     simp only [map_smul, map_sub, map_add (f := _), extF_cst, smul_eq_mul] at e
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have hH : q ^ H = q ^ (H - bb) * q ^ bb := by rw [← pow_add, Nat.sub_add_cancel (hkb rfl)]
     apply mem_span_pow_of_uniformizer_mul O ϖ hϖ dd q hq _ (N + k)
     rw [Ideal.mem_span_singleton]
@@ -324,7 +323,7 @@ theorem extF_mem_of_levelCond {ϖ : O} (hϖ : Irreducible ϖ) {r : ℕ} (φ : (F
     obtain ⟨N, c, z, hc, hz⟩ := h
     have e := congrArg (extF φ) hz
     simp only [map_smul, map_sub, map_add (f := _), extF_cst, smul_eq_mul] at e
-    rw [if_neg (by decide)]
+    rw [ite_eq_right (by decide)]
     apply mem_span_pow_of_uniformizer_mul O ϖ hϖ dd q hq _ (N + k)
     rw [Ideal.mem_span_singleton]
     exact ⟨extF φ c + q ^ bb * extF φ z + PowerSeries.C (ϖ ^ N) * R * PowerSeries.C (φ d), by
@@ -459,8 +458,7 @@ theorem sub_unit_X_pow_mem {ϖ : O} {n : ℕ} {p : PowerSeries O} (h : UnitDist 
     have e : ((E : PowerSeries O) - PowerSeries.X ^ n) =
         ((E - Polynomial.X ^ n : Polynomial O) : PowerSeries O) := by
       push_cast; rfl
-    rw [e, Polynomial.coeff_coe]
-    exact hm
+    rwa [e, Polynomial.coeff_coe]
   rw [Ideal.mem_span_singleton]
   have hd := C_dvd_of_forall_dvd_coeff ϖ _ hc
   have e2 : u * (E : PowerSeries O) - u * PowerSeries.X ^ n =
@@ -512,7 +510,7 @@ theorem descent_estimate_down : MD := by
         by_cases h : s = s₁
         · subst h; rw [hk₁]; decide
         · rw [hthin s (Finset.mem_range.1 hs) h]; decide
-      rw [if_neg this, pow_zero]
+      rw [ite_eq_right this, pow_zero]
     rw [hB, one_mul] at hw
     have hw1 : PowerSeries.C (ϖ ^ k) * w - PowerSeries.C (φ d) ∈ Ideal.span {p s₁} :=
       Ideal.span_singleton_le_span_singleton.mpr (dvd_pow_self _ hb) hw
@@ -541,12 +539,12 @@ theorem descent_estimate_down_up : MDU := by
     have hB : ∏ s ∈ Finset.range ell, p s ^ (if kind s = Kind.up then b s else 0) =
         p s₀ ^ b s₀ := by
       rw [Finset.prod_eq_single_of_mem s₀ (Finset.mem_range.2 hs₀) (fun s hs hne => ?_)]
-      · rw [if_pos hk₀]
+      · rw [ite_eq_left hk₀]
       · have : kind s ≠ Kind.up := by
           by_cases h : s = s₁
           · subst h; rw [hk₁]; decide
           · rw [hthin s (Finset.mem_range.1 hs) hne h]; decide
-        rw [if_neg this, pow_zero]
+        rw [ite_eq_right this, pow_zero]
     rw [hB] at hw
     exact dvd_of_down_up hϖ h01 hb (hP.1 s₀ hs₀) (hP.1 s₁ hs₁) (φ d) k w hw
   · rintro ⟨lam, ν, hν, rfl⟩
@@ -758,8 +756,7 @@ theorem pow_mem_pair {ϖ : O} {p₁ p₀ : PowerSeries O} (h : CoprimeRat ϖ p�
     Ideal.pow_mem_pow hmem _
   have h3 := Ideal.sup_pow_add_le_pow_sup_pow h2
   rw [Ideal.span_singleton_pow, Ideal.span_singleton_pow] at h3
-  rw [pow_mul, map_pow, Ideal.span_insert]
-  exact h3
+  rwa [pow_mul, map_pow, Ideal.span_insert]
 
 theorem consts_DD {ϖ : O} {p₁ p₀ : PowerSeries O} (h : CoprimeRat ϖ p₁ p₀) (b₁ b₀ : ℕ) :
     ∃ (ρ : ℕ) (fρ : PowerSeries O),

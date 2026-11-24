@@ -86,7 +86,6 @@ theorem exists_rest_ne_zero : ∀ {F : Type} [Field F] [NumberField F] (v : IsDe
   unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure
   have hI : (fun i : κ => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F ((0 : κ → AF F) i)) = 0 := by
     funext i
-    show (InfiniteAdeleRing.ringEquiv_mixedSpace F) (0 : AF F).1 = 0
     exact map_zero _
   have hP : (∏ᶠ w, Function.update φs v (fun _ => 1) w fun i => evFin F w ((0 : κ → AF F) i)) = 1 := by
     refine finprod_eq_one_of_forall_eq_one fun w => ?_
@@ -96,7 +95,6 @@ theorem exists_rest_ne_zero : ∀ {F : Type} [Field F] [NumberField F] (v : IsDe
       simp only [φs, Pi.zero_apply, map_zero]
       rw [Set.indicator_of_mem (by intro i; exact zero_mem _)]
       rfl
-  rw [hI, hP, mul_one]
-  exact hf
+  rwa [hI, hP, mul_one]
 
 end GlobalTheory.RestComplement

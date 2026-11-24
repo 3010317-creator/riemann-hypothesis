@@ -97,12 +97,10 @@ private theorem conjTranspose_mul_mul_col_eq_const_iff_fm {A : Type*} [CommRing 
   constructor
   · intro h
     have h1 := congrFun (congrFun h ()) ()
-    rw [hX, form_col] at h1
-    exact h1
+    rwa [hX, form_col] at h1
   · intro h
     ext a b
-    rw [hX, form_col]
-    exact h
+    rwa [hX, form_col]
 
 theorem card_vec_succ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal)
     (H : Matrix m m (𝓞 K)) (hH : Hᴴ = H) (n : 𝓞 F) {k j : ℕ}
@@ -142,12 +140,10 @@ theorem card_vec_succ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭
       rfl
     have hx : fm H (fun i => X i ()) (fun i => X i ()) - ι n ∈ extP K 𝔭 ^ k := by
       have h1 := hX () ()
-      rw [Matrix.sub_apply, hXc, form_col, hTdef, Matrix.of_apply] at h1
-      exact h1
+      rwa [Matrix.sub_apply, hXc, form_col, hTdef, Matrix.of_apply] at h1
     obtain ⟨y, hy, hy'⟩ := RC (fun i => X i ()) hp hx (S () ()) (hS () ()) (hS' () ())
     refine ⟨colU y, fun a b => hy a, fun a b => ?_⟩
-    rw [Matrix.sub_apply, Matrix.add_apply, hXc, form_col, form_col]
-    exact hy'
+    rwa [Matrix.sub_apply, Matrix.add_apply, hXc, form_col, form_col]
   have h := card_rep_succ (m := m) (r := Unit) hK h𝔭 H hH T hT hj (fun X => p' (fun i => X i ()))
     (fun X Y hY => hinv (fun i => X i ()) (fun i => Y i ()) (fun a => hY a ())) RC''
   have c1 : Nat.card {x : m → 𝓞 K ⧸ extP K 𝔭 ^ (k + 1) // p' (fun i => piQ K 𝔭 k (x i)) ∧
@@ -166,8 +162,7 @@ theorem card_vec_succ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭
     exact Nat.card_congr (Equiv.subtypeEquiv colU (fun x => and_congr Iff.rfl
       (conjTranspose_mul_mul_col_eq_const_iff_fm (H.map (mkk K 𝔭 k)) (mkk K 𝔭 k (ι n)) (colU x)).symm))
   rw [c1, c2]
-  simp only [Fintype.card_unit, mul_one, pow_one] at h
-  exact h
+  simpa only [Fintype.card_unit, mul_one, pow_one] using h
 
 section star
 
@@ -268,8 +263,7 @@ theorem nkQ_succ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭 : Id
       exact ⟨j', fun h => hj' (Ideal.add_mem _ h (hy' j'))⟩
     · rintro ⟨j', hj'⟩
       refine ⟨j', fun h => hj' ?_⟩
-      have h2 := Ideal.sub_mem _ h (hy' j')
-      simpa using h2
+      simpa using Ideal.sub_mem _ h (hy' j')
   have RC : ∀ x : m → 𝓞 K, Qc 𝔭 k c H (fun i => mkk K 𝔭 k (x i)) →
       fm H x x - ι n ∈ extP K 𝔭 ^ k → ∀ s ∈ extP K 𝔭 ^ k, star s - s ∈ extP K 𝔭 ^ (k + 1) →
       ∃ y : m → 𝓞 K, (∀ a, y a ∈ extP K 𝔭 ^ (k - c)) ∧
@@ -286,28 +280,24 @@ theorem nkQ_succ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭 : Id
         rw [fm_eq]
         first
         | exact dotProduct_single _ _ _
-      rw [fm_star hH x (Pi.single j0 r), e1]
-      exact hr'
+      rwa [fm_star hH x (Pi.single j0 r), e1]
   have h := card_vec_succ hK h𝔭 H hH n hj (Qc 𝔭 k c H) hinv RC
   have e : Nat.card {x : m → 𝓞 K ⧸ extP K 𝔭 ^ (k + 1) //
       Qc 𝔭 k c H (fun i => piQ K 𝔭 k (x i)) ∧
         fm (H.map (mkk K 𝔭 (k + 1))) x x = mkk K 𝔭 (k + 1) (ι n)} = nkQ 𝔭 (k + 1) c H n :=
     Nat.card_congr (Equiv.subtypeEquivRight (fun x => by rw [Qc_piQ hck H x]))
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem exists_notMem_of_sol {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {H : Matrix m m (𝓞 K)}
     (hH : Hᴴ = H) {D n : 𝓞 F} (hD : H.det = ι D) {d v c k : ℕ} (hDd : D ∉ 𝔭 ^ (d + 1))
     (hn : n ∉ 𝔭 ^ (v + 1)) (hk : d + v + 1 ≤ k) (hc : d + v + 1 ≤ 2 * (c + 1)) {x : m → 𝓞 K}
     (hx : fm H x x - ι n ∈ extP K 𝔭 ^ k) : ∃ j, (star x ᵥ* H) j ∉ extP K 𝔭 ^ (c + 1) := by
   have hF : IsFixF K F := Fact.out
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   have h1 : ∀ i, ι D * star (x i) ∈ extP K 𝔭 ^ (c + 1) := by
     intro i
     have h2 := vecMul_mem hall H.adjugate i
-    rw [vecMul_adjugate, hD, Pi.smul_apply, smul_eq_mul] at h2
-    exact h2
+    rwa [vecMul_adjugate, hD, Pi.smul_apply, smul_eq_mul] at h2
   have h3 : ∀ i, ι D * x i ∈ extP K 𝔭 ^ (c + 1) := by
     intro i
     have h4 := conjO_mem_pow hF 𝔭 (c + 1) _ (h1 i)
@@ -319,8 +309,7 @@ theorem exists_notMem_of_sol {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {H
       change star ((ι D : 𝓞 K) : K) = ((ι D : 𝓞 K) : K)
       rw [hDcoe]
       exact (hF _).mpr ⟨_, rfl⟩
-    rw [map_mul, hDconj, ← idealPowerSpanBounds.star_def, star_star] at h4
-    exact h4
+    rwa [map_mul, hDconj, ← idealPowerSpanBounds.star_def, star_star] at h4
   have h5 : ι D * fm H x x ∈ extP K 𝔭 ^ (d + v + 1) := by
     rw [fm_eq]
     simp only [dotProduct, Finset.mul_sum]

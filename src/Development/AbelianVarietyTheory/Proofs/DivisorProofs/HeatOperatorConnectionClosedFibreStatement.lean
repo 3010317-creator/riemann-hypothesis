@@ -241,8 +241,7 @@ theorem exists_descData : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R
     rw [← hV i]
     refine ⟨isField_dE h ν hfield i, fun O hO r => ?_⟩
     show h.d i O _ + constFn Y.H.hom O ν * ∑ a, constFn Y.H.hom O (h.u a) * dd a O (constFn Y.H.hom O r) = _
-    simp only [hconst, mul_zero, Finset.sum_const_zero, add_zero]
-    exact (h.lift i).2 O hO r
+    simpa only [hconst, mul_zero, Finset.sum_const_zero, add_zero] using (h.lift i).2 O hO r
   have hwt0 : ∀ i (V' : Q.P.A.left.Opens), V' ≤ V i → ∀ f, IsWt Y 0 (Y.q.left ⁻¹ᵁ V') f →
       IsWt Y 0 (Y.q.left ⁻¹ᵁ V') (dE h ν i _ f) := by
     intro i V' hV' f hf
@@ -299,7 +298,7 @@ theorem connK_transition : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre 
   have hΩL : Y.q.left ⁻¹ᵁ (V i ⊓ V i') ≤ Y.q.left ⁻¹ᵁ (Q.P.L.U (h.j i) ⊓ Q.P.L.U (h.j i')) := pre_mono _ hUL
   have hG : (Y.q.left.app (V i ⊓ V i')).hom (rsT (Q.P.L.g (h.j i) (h.j i')).val (V i ⊓ V i')) =
       pbT Y.q.left (Q.P.L.g (h.j i) (h.j i')).val (Y.q.left ⁻¹ᵁ (V i ⊓ V i')) := by
-    rw [rsT_eq hUL, ← res_app Y.q.left hUL (pre_mono _ hUL), pbT, dif_pos hΩL]; rfl
+    rw [rsT_eq hUL, ← res_app Y.q.left hUL (pre_mono _ hUL), pbT, dite_eq_left hΩL]; rfl
   have hz1 : (b ≫ m₀) z ∈ V i := hz.1
   have hz2 : (b ≫ m₀) z ∈ V i' := hz.2
   rw [hD.2.1 Z a b w z i _ inf_le_left hz, hG, gs_mul b z _ hz, gs_sub b z _ hz, gs_pbT b m₀ z (pre_mono _ hUL) hz,
@@ -330,7 +329,7 @@ theorem connK_transition : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre 
     simpa only [map_natCast] using
       (Nat.cast_ne_zero.2 (Nat.succ_ne_zero k) : ((k + 1 : ℕ) : K) ≠ 0).isUnit.map (cstH (b ≫ A₀.hom) z)
   have hGu : IsUnit G := by
-    simp only [G, pbT, dif_pos hΩL]; exact (Units.isUnit _).map _
+    simp only [G, pbT, dite_eq_left hΩL]; exact (Units.isUnit _).map _
   have hc : IsUnit (2 * ((k + 1 : ℕ) : Z.presheaf.stalk z) ^ 2 * π G ^ k) := (h2.mul (hk.pow 2)).mul ((hGu.map π).pow k)
   refine hc.mul_left_cancel ?_
   push_cast at e1 ⊢
@@ -462,8 +461,7 @@ theorem term_germ {e : ℕ} {α : Q.X} {σ : Q.SecB e α} {τ : SecM Y.q.left Q.
   have f0 : Q.famφB α 0 = 𝟙 _ := rfl
   have h₀ : y ∈ LB.wchart Q.P.L (fun _ : Fin 1 => Y.q.left) fun _ => t 0 := Set.mem_iInter.2 fun _ => by
     have := Set.mem_iInter.1 h₁ 0
-    rw [f0] at this
-    exact this
+    rwa [f0] at this
   rw [sval_of τ _ y J (fun _ => J Y.q.left) (fun _ => by simp),
     sval_of σ _ y J (fun j => J (Y.q.left ≫ Q.famφB α j)) (fun _ => by simp),
     val_of _ _ y J (fun k => J (Y.q.left ≫ Q.famφB α (![1, 2, 0, 3] k))) (fun k => by rw [Category.id_comp, gtφT_eq])] at e₀
@@ -832,8 +830,7 @@ theorem exists_coordEq : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R}
     · rw [hD.1]; exact hy.1
     · have := Set.mem_iInter.1 hy.2 (![1, 2, 0, 3] k)
       show y ∈ DegPre.gtφT Q Y.H (Y.Φ Y.H (𝟙 _)).b α k ⁻¹ᵁ Q.P.L.U (h.j (i (![1, 2, 0, 3] k)))
-      rw [gtφT_eq, Scheme.Hom.comp_preimage]
-      exact this
+      rwa [gtφT_eq, Scheme.Hom.comp_preimage]
   have exA : ∀ i : Fin 4 → h.J, ∃ A : Γ(Q.P.A.left, U i), (Y.q.left.app (U i)).hom A *
       rsT (xc Y α fun j => h.j (i j)).val (Y.q.left ⁻¹ᵁ U i) =
       dE h ν (i 0) _ (rsT (xc Y α fun j => h.j (i j)).val (Y.q.left ⁻¹ᵁ U i)) := fun i =>
@@ -849,18 +846,15 @@ theorem exists_coordEq : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R}
     · rintro ⟨⟨⟨h0, h1⟩, h2⟩, h3⟩ j
       fin_cases j
       exacts [h0, h1, h2, h3]
-    · intro H
-      exact ⟨⟨⟨H 0, H 1⟩, H 2⟩, H 3⟩
+    · exact fun H => ⟨⟨⟨H 0, H 1⟩, H 2⟩, H 3⟩
   have hOU : ∀ i, Oi i ≤ m₀ ⁻¹ᵁ U i := by
     intro i p hp
     have H := (memO i p).1 hp
     refine ⟨?_, Set.mem_iInter.2 fun k => ?_⟩
     · have := H 0
-      rw [hT0] at this
-      exact this
+      rwa [hT0] at this
     · have := hV _ (H k)
-      rw [← Scheme.Hom.comp_apply, hT₁ k, Scheme.Hom.comp_apply] at this
-      exact this
+      rwa [← Scheme.Hom.comp_apply, hT₁ k, Scheme.Hom.comp_apply] at this
   have hOT : ∀ i j, Oi i ≤ T j ⁻¹ᵁ (m₀ ⁻¹ᵁ V (i j)) := fun i j p hp => (memO i p).1 hp j
   let f : ∀ i, Γ(A₀.left, Oi i) := fun i =>
     pbT m₀ (A i) (Oi i) + pbT (T 0) (pb (i 0)) (Oi i) - pbT (T 1) (pb (i 1)) (Oi i) +
@@ -1237,11 +1231,7 @@ namespace GlobalTheory.HeatConn.Comm
 
 theorem spMap_fst_alg (k : Type) [Field k] :
     spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ spMap (algebraMap k (DualNumber k)) = 𝟙 _ := by
-  rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
-  have : (TrivSqZeroExt.fstHom k k k).toRingHom.comp (algebraMap k (DualNumber k)) = RingHom.id k := by
-    ext; simp
-  rw [this, spMap]
-  exact Spec.map_id _
+  exact GlobalTheory.spMap_fstHom_comp_algebraMap
 
 theorem exists_sec {k : Type} [Field k] {S A A₀ B' : Scheme.{0}} (p : A ⟶ S) (s : Sp k ⟶ S) (q₀ : A₀ ⟶ Sp k)
     (q : B' ⟶ Sp (DualNumber k)) (m₀ : A₀ ⟶ A) (π₁ π₂ : B' ⟶ A) (pr : B' ⟶ A₀)
@@ -1336,8 +1326,7 @@ theorem commutes : ∀ {R : Type} [CommRing R] [IsDomain R] (Q : DegPre R) {k : 
     (e2 ▸ h₂.1) h₃ hpr₁ hpr₂
   have hpre : ∀ U : Q.P.A.left.Opens, π₂ ⁻¹ᵁ U ≤ π₁ ⁻¹ᵁ U := fun U x hx => by
     change π₁ x ∈ U
-    rw [hpts x]
-    exact hx
+    rwa [hpts x]
   have hprle : ∀ U : Q.P.A.left.Opens, π₂ ⁻¹ᵁ U ≤ pr ⁻¹ᵁ (m₀ ⁻¹ᵁ U) := fun U x hx => by
     change m₀ (pr x) ∈ U
     have : (pr ≫ m₀) x ∈ U := by rw [hpr₁]; exact hx

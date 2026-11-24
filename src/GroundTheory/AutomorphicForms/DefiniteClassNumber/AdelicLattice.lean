@@ -131,7 +131,7 @@ theorem vecCoords_stdVec [DecidableEq κ] (a c : ι × κ) :
   simp only [vecCoords, stdVec, Pi.single_apply]
   by_cases hij : j = i
   · subst hij
-    simp only [if_true]
+    simp only [ite_true]
     rw [← Algebra.TensorProduct.basis_apply, Basis.repr_self, Finsupp.single_apply]
     by_cases h : k = l <;> simp [h]
   · have : ¬ (i, k) = (j, l) := fun h => hij (congrArg Prod.fst h).symm
@@ -202,12 +202,10 @@ theorem denseRange_toFinAdele : DenseRange (toFinAdele K E ι) := by
       simp only [Φ, Function.comp_apply, Pi.map_apply, vecCoordsHomeomorph,
         Homeomorph.piCongrRight_apply, tensorCoordsHomeomorph_apply]
       have := vecCoords_toFinAdele b (vecOfCoords b K fun a => c a.1 a.2) (i, k)
-      rw [vecCoords_vecOfCoords] at this
-      exact this
+      rwa [vecCoords_vecOfCoords] at this
   have h1 : DenseRange (Φ ∘ toFinAdele K E ι) := by
     unfold DenseRange
-    rw [hrange]
-    exact hd
+    rwa [hrange]
   have h2 : toFinAdele K E ι = Φ.symm ∘ (Φ ∘ toFinAdele K E ι) := by
     funext x
     simp
@@ -526,7 +524,7 @@ theorem exists_int_smul_mem_of_forall_isIntegral [DecidableEq κ] (hM : IsUnit (
     rw [← hermTrace_mulVec g⁻¹, mulVec_mulVec, unitaryMat_inv_mul, one_mulVec,
       hermTrace_eq_sum_traceGram (H := H) (b := b) (FinAdele K)] at h
     simp only [vecCoords_stdVec, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true] at h
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h
     convert h using 1
     simp only [mulVec, dotProduct, Matrix.map_apply, A, Matrix.smul_apply, Matrix.transpose_apply,
       smul_eq_mul, map_mul, Finset.mul_sum, cu]
@@ -575,8 +573,7 @@ theorem exists_int_smul_mem_adelicLattice [DecidableEq κ] (g : unitaryPoints K 
   obtain ⟨d, hd0, hd⟩ := exists_forall_mul_mem_of_mem_nhds hW0
   set r : ℕ := Ideal.absNorm (Ideal.span {d})
   have hr0 : r ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hd0
+    rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   obtain ⟨e, he⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {d}))
   refine ⟨r, by exact_mod_cast hr0, fun x hx => ?_⟩
   rw [mem_adelicLattice, toFinAdele_smul, mulVec_smul]

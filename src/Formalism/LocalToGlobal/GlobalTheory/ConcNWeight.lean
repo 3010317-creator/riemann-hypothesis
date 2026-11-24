@@ -44,13 +44,13 @@ theorem sum_eSer (k : Fin 2) :
       (Formalism.CyclotomicNorms.monicOf c).coeff (i : ℕ) = c i := by
     intro c i
     unfold Formalism.CyclotomicNorms.monicOf
-    rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg i.isLt.ne, zero_add,
+    rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right i.isLt.ne, zero_add,
       Polynomial.finsetSum_coeff]
     simp only [Polynomial.coeff_C_mul_X_pow]
     rw [Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hj (Fin.ext h).symm
     · simp
   have hinj : Function.Injective (fun c : Fin D.R.r → ZMod (D.host.g k) => Formalism.CyclotomicNorms.monicOf c) := by
@@ -74,8 +74,7 @@ theorem sum_eSer (k : Fin 2) :
   · intro f hf
     rw [Finset.mem_image]
     exact ⟨_, Finset.mem_univ _, (hsurj f hf).symm⟩
-  · intro f _ hf
-    exact D.ntypes.eSer_zero k f (fun h => hf ((hS f).2 h))
+  · exact fun f _ hf => D.ntypes.eSer_zero k f (fun h => hf ((hS f).2 h))
 
 theorem sum_wtOf (k : Fin 2) (a : MonoidAlgebra ℂ (GL (Fin D.R.r) (ZMod (D.host.g k))))
     (ha : (a.coeff 1).re ≠ 0) :
@@ -117,8 +116,7 @@ theorem eDat_coeff_one_re_pos (g N : ℕ) [NeZero g] (P : Matrix (Fin N) (Fin N)
       | exact Finset.card_pos.mp hc
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (by simp [hP]) h
+  · exact fun h => absurd (by simp [hP]) h
 
 theorem eU_coeff_one_re_pos (g N : ℕ) [NeZero g] (ψ₀ : AddChar (ZMod g) ℂ) :
     0 < ((eU g N ψ₀).coeff 1).re := by
@@ -153,12 +151,10 @@ theorem eJ_coeff_one_re_pos (g N kk s : ℕ) [NeZero g] (ψ₀ : AddChar (ZMod g
     · simp
 
 theorem eUk_coeff_one_re_pos {D : D7} (k : Fin 2) (ψ₀ : AddChar (ZMod (D.host.g k)) ℂ) :
-    0 < ((eUk D k ψ₀).coeff 1).re := by
-  exact eU_coeff_one_re_pos (D.host.g k) D.R.r ψ₀
+    0 < ((eUk D k ψ₀).coeff 1).re := eU_coeff_one_re_pos (D.host.g k) D.R.r ψ₀
 
 theorem eJk_coeff_one_re_pos {D : D7} (k : Fin 2) (ψ₀ : AddChar (ZMod (D.host.g k)) ℂ) :
-    0 < ((eJk D k ψ₀).coeff 1).re := by
-  exact eJ_coeff_one_re_pos (D.host.g k) D.R.r D.R.k (D.R.m / 2 - 1) ψ₀
+    0 < ((eJk D k ψ₀).coeff 1).re := eJ_coeff_one_re_pos (D.host.g k) D.R.r D.R.k (D.R.m / 2 - 1) ψ₀
 
 end Value
 

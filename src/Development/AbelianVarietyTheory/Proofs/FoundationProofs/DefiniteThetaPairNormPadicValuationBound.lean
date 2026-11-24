@@ -65,8 +65,7 @@ lemma Bd.zero {r : ℝ} (hr : 0 ≤ r) : Bd p r 0 := by
   refine ⟨zero_mem _, fun lam => ?_⟩
   rw [lamC_of_mem lam (zero_mem _)]
   have : (⟨0, zero_mem _⟩ : Qbar) = 0 := rfl
-  rw [this, map_zero, norm_zero]
-  exact hr
+  rwa [this, map_zero, norm_zero]
 
 lemma Bd.add {r : ℝ} {x y : ℂ} (hx : Bd p r x) (hy : Bd p r y) : Bd p r (x + y) := by
   refine ⟨add_mem hx.1 hy.1, fun lam => ?_⟩
@@ -104,8 +103,7 @@ lemma Bd.conj {r : ℝ} {x : ℂ} (hx : Bd p r x) : Bd p r ((starRingEnd ℂ) x)
   refine ⟨conj_mem hx.1, fun lam => ?_⟩
   have h1 := hx.2 (lam.comp conjQ)
   rw [lamC_of_mem _ hx.1] at h1
-  rw [lamC_of_mem lam (conj_mem hx.1)]
-  exact h1
+  rwa [lamC_of_mem lam (conj_mem hx.1)]
 
 lemma Bd.inv_nat {n M : ℕ} (hM : M ≠ 0) (h : n ∣ M) :
     Bd p ((p : ℝ) ^ (padicValNat p M : ℝ)) ((n : ℂ)⁻¹) := by

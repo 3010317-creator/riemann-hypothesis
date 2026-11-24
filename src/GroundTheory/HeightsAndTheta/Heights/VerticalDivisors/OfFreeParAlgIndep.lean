@@ -67,9 +67,7 @@ theorem ChartPointTrdeg.proof (h₁ : ConeDimOfChowForm.Statement) (h₂ : Affin
   let K := FractionRing R
   let π : R →ₐ[k] L := Ideal.Quotient.liftₐ Q (aeval x) hx
   let s : R := Ideal.Quotient.mk Q (X j₀)
-  have hs : s ≠ 0 := by
-    intro h
-    exact hXj (Ideal.Quotient.eq_zero_iff_mem.mp h)
+  have hs : s ≠ 0 := fun h => hXj (Ideal.Quotient.eq_zero_iff_mem.mp h)
   have hπX : ∀ m, π (Ideal.Quotient.mk Q (X m)) = x m := fun m =>
     (AlgHom.congr_fun (Ideal.Quotient.liftₐ_comp Q (aeval x) hx) (X m)).trans (aeval_X x m)
   have hπs : π s = x j₀ := hπX j₀
@@ -301,8 +299,7 @@ theorem GenericFormsKer.proof : GenericFormsKer.Statement := by
       · simp [hh]
       · simp [hh, Ne.symm hh]
     rw [hil, ← this]
-    simp only [A₀]
-    exact Finset.sum_congr rfl fun j _ => mul_comm _ _
+    simpa only [A₀] using Finset.sum_congr rfl fun j _ => mul_comm _ _
 
   let x : Fin e × ι → F := fun p => if hp : p.1.val < r' then A₀ ⟨p.1.val, hp⟩ p.2 else 0
   have hPx : (eval x).mapMatrix P = 1 := by
@@ -476,8 +473,7 @@ theorem mem_of_G_mem (hσ : ∀ s ∈ (parPrime e n v).primeCompl, σ e I j s �
   have h : 𝔫 = (IsLocalRing.maximalIdeal (Localization.AtPrime (Q e I j W))).comap (G hσ) :=
     Ideal.IsMaximal.eq_of_le ‹_› (Ideal.comap_ne_top _ (IsLocalRing.maximalIdeal.isMaximal _).ne_top)
       (fun _ hb => G_mem hσ h𝔫 hb)
-  rw [h]
-  exact hb
+  rwa [h]
 
 variable {𝔫 : Ideal (SecB e I v)} [𝔫.IsPrime]
 
@@ -582,8 +578,7 @@ theorem Φloc_Gloc (hj : toSecB e I v (X j) ∉ 𝔫)
       rw [G, Ideal.Quotient.lift_mk, G', eval₂Hom_X', Φloc_algebraMap, Φ_cx]
       simp [toSecB]
   refine RingHom.ext fun b => ?_
-  simp only [RingHom.comp_apply, Gloc_algebraMap, RingHom.id_apply]
-  exact RingHom.congr_fun h b
+  simpa only [RingHom.comp_apply, Gloc_algebraMap, RingHom.id_apply] using RingHom.congr_fun h b
 
 theorem quotToBn_flat (hj : toSecB e I v (X j) ∉ 𝔫)
     (hσ : ∀ s ∈ (parPrime e n v).primeCompl, σ e I j s ∉ Q e I j W)
@@ -697,8 +692,7 @@ theorem SpecChart.proof : SpecChart.Statement := by
       refine RingHom.ext fun g => ?_
       simp only [RingHom.comp_apply]
       rw [Ideal.Quotient.algebraMap_quotient_map_quotient, hψ, SpecChart.quotToBn_mk]
-    rw [h]
-    exact hflat
+    rwa [h]
 
 end
 

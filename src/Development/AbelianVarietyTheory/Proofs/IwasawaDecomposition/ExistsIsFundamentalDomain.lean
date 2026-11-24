@@ -76,8 +76,7 @@ theorem exists_measurable_section {G : Type*} [Group G] [TopologicalSpace G]
       rw [div_eq_mul_inv]; group
     rw [h2] at h
     have : γ ∈ ((↑) : Γ → G) ⁻¹' W := h
-    rw [hW] at this
-    exact this
+    rwa [hW] at this
   obtain ⟨s, hsc, hs⟩ := TopologicalSpace.countable_cover_nhds (f := U)
     (fun g => (hUo g).mem_nhds (by simpa [U] using h1V))
   have hsne : s.Nonempty := by
@@ -123,8 +122,7 @@ theorem exists_measurable_section {G : Type*} [Group G] [TopologicalSpace G]
           rw [Nat.find_eq_iff]
           exact ⟨(hSmem n x).2 ⟨γ, hn⟩, hk⟩
         rw [this]; exact hn
-      · intro h
-        exact ⟨_, h, fun k hk => Nat.find_min hex hk⟩
+      · exact fun h => ⟨_, h, fun k hk => Nat.find_min hex hk⟩
     obtain ⟨γ, hγ⟩ := (hSmem _ x).1 (Nat.find_spec hex)
     refine ⟨γ, (key γ).2 hγ, fun δ hδ => ?_⟩
     have hδ' := (key δ).1 hδ

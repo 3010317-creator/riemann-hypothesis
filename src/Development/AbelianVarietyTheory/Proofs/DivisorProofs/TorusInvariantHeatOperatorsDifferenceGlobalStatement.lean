@@ -402,26 +402,7 @@ theorem evalPt_lieExp_comb {m : ℕ} (u : Fin m → TanM (𝟙 (Sp R)) G) (dd : 
     (h : ⊤ ≤ z.left ⁻¹ᵁ O) :
     ∃ h' : ⊤ ≤ (GlobalTheory.SqZero.lieExp (fun i => GlobalTheory.VertCoeffRing.tvE (u i)) e (fun i => he i i) * z).left ⁻¹ᵁ O, ∀ f,
       evalPt _ O h' f = evalPt z.left O h f + ∑ i, e i * evalPt z.left O h (dd i O f) := by
-  induction m with
-  | zero =>
-    have : GlobalTheory.SqZero.lieExp (fun i => GlobalTheory.VertCoeffRing.tvE (u i)) e (fun i => he i i) * z = z := by
-      simp [GlobalTheory.SqZero.lieExp]
-    rw [this]
-    exact ⟨h, fun f => by simp⟩
-  | succ m ih =>
-    obtain ⟨h₁, H₁⟩ := ih (fun i => u i.succ) (fun i => dd i.succ) (fun i => hd i.succ) (fun i => e i.succ)
-      (fun i j => he _ _)
-    obtain ⟨h₂, H₂⟩ := GlobalTheory.VertCoeffRing.evalPt_tvE_mul (hd 0) (e 0) (he 0 0) _ O h₁
-    have : GlobalTheory.SqZero.lieExp (fun i => GlobalTheory.VertCoeffRing.tvE (u i)) e (fun i => he i i) * z =
-        (ReciprocityTheory.ChartRestriction.G.Chart.spMap (GlobalTheory.SqZero.epsTo R (e 0) (he 0 0)) ≫ GlobalTheory.VertCoeffRing.tvE (u 0)) *
-          (GlobalTheory.SqZero.lieExp (fun i => GlobalTheory.VertCoeffRing.tvE (u i.succ)) (fun i => e i.succ)
-            (fun i => he i.succ i.succ) * z) := by
-      rw [GlobalTheory.SqZero.lieExp, GlobalTheory.SqZero.lieExp, Fin.prod_univ_succ, _root_.mul_assoc]
-    rw [this]
-    refine ⟨h₂, fun f => ?_⟩
-    rw [H₂, H₁, H₁, Fin.sum_univ_succ, mul_add, Finset.mul_sum]
-    simp only [← _root_.mul_assoc, he, zero_mul, Finset.sum_const_zero]
-    ring
+  exact GlobalTheory.VertCoeffRing.evalPt_lieExp u dd hd B e he z O h
 
 theorem coeff_eq_zero [Smooth G.hom] {n : ℕ} (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G))
     (dd : Fin n → Fld G.left) (hd : ∀ a, IsInv G (v a) (dd a)) (W : G.left.Opens) (c : Fin n → Γ(G.left, W))
@@ -440,8 +421,7 @@ theorem coeff_eq_zero [Smooth G.hom] {n : ℕ} (v : Module.Basis (Fin n) R (TanM
     (fun _ => 0) (fun _ _ => by simp) (fun _ _ => by simp) (fun _ => rfl)
   have h1 : ∀ f, (fun _ => (0 : Γ(G.left, V))) f = ∑ a, (fun a => rsT (c a) V) a * rsT (dd a V f) V := by
     intro f
-    simp only [rsT_self]
-    exact (hc V hVW f).symm
+    simpa only [rsT_self] using (hc V hVW f).symm
   have h0 : ∀ f, (fun _ => (0 : Γ(G.left, V))) f = ∑ a, (fun _ => (0 : Γ(G.left, V))) a * rsT (dd a V f) V := by
     intro f; simp
   exact congrFun (hu.unique h1 h0) a
@@ -669,8 +649,7 @@ theorem within {R : Type} [CommRing R] [Algebra ℚ R] {G : Over (Sp R)} [GrpObj
     have canc : ∀ z : Γ(G.left, Wo), g ^ k * z = 0 → z = 0 := fun z hz => by
       have e := congrArg (gi ^ k * ·) hz
       simp only [mul_zero] at e
-      rw [← _root_.mul_assoc, gk, _root_.one_mul] at e
-      exact e
+      rwa [← _root_.mul_assoc, gk, _root_.one_mul] at e
     apply canc
     linear_combination gl
   have hB := fun f => (sep two (key f)).2
@@ -801,8 +780,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoeth
     intro i i' Wo hWo f
     have hk : Wo ≤ Wk (i, i') := hWo.trans (hWk (i, i')).ge
     have := PE (i, i') Wo hk f
-    simp only [he, rsT_constFn _ hk] at this
-    exact this
+    simpa only [he, rsT_constFn _ hk] using this
 
   obtain ⟨P, hP⟩ : ∃ P : K → ∀ Wo : Y.H.left.Opens, Γ(Y.H.left, Wo), ∀ k Wo, P k Wo =
       2 * (rsT (h.p k.1) Wo - rsT (h'.p k.2) Wo) + 2 * dlg Y.H Y.q.left Q.P.L (h.d k.1) (h.j k.1) (h'.j k.2) Wo -

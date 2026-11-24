@@ -203,8 +203,7 @@ theorem pair_typ {a b : ℕ} {U₁ : Submodule ℂ (Sm E a)} {U₂ : Submodule �
         infGL E b (Unitary.toUnits k.2)))) = fun k => F (g * infGL E a (Unitary.toUnits k), y) := by
       funext k
       simp [R, map_one]
-    rw [e] at hm
-    exact hm
+    rwa [e] at hm
   · have := hT.1 1 (one_mem _) u hu (x, g)
     simpa [map_one] using this
   · let R : (Kinf E a × Kinf E b → ℂ) →ₗ[ℂ] (Kinf E b → ℂ) :=
@@ -223,8 +222,7 @@ theorem pair_typ {a b : ℕ} {U₁ : Submodule ℂ (Sm E a)} {U₂ : Submodule �
         infGL E b (Unitary.toUnits k.2)))) = fun k => F (x, g * infGL E b (Unitary.toUnits k)) := by
       funext k
       simp [R, map_one]
-    rw [e] at hm
-    exact hm
+    rwa [e] at hm
 
 end PositivityTheory.Rg.BcB.SpectralAccumulation.LV
 

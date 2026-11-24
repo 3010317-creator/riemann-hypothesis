@@ -173,9 +173,7 @@ def Good (n : ℕ) (v : V n) (f : V n → Ev n) : Prop :=
 variable {n : ℕ} {v : V n}
 
 theorem diff_of_smooth {α : V n → Alt n} (h : ∀ S, ContDiffAt ℝ ∞ (fun x => (bas n).repr (α x) S) v) (S) :
-    DifferentiableAt ℝ (fun x => (bas n).repr (α x) S) v := by
-  have h1 := h S
-  exact h1.differentiableAt (by simp)
+    DifferentiableAt ℝ (fun x => (bas n).repr (α x) S) v := (h S).differentiableAt (by simp)
 
 theorem good_const (c : Ev n) : Good n v (fun _ => c) := by
   refine ⟨fun S => (_root_.GlobalTheory.ChernCalc.smooth_coeff_closure n v).1 (c : Alt n) S, ?_⟩
@@ -223,11 +221,9 @@ theorem goodM_pow (M : V n → Matrix r r (Ev n)) (hM : ∀ i j, Good n v (fun x
     Good n v (fun x => (M x ^ k) i j) := by
   induction k generalizing i j with
   | zero =>
-    simp only [pow_zero]
-    exact good_const _
+    simpa only [pow_zero] using good_const _
   | succ k ih =>
-    simp only [pow_succ]
-    exact goodM_mul (fun x => M x ^ k) M (fun a b => ih a b) hM i j
+    simpa only [pow_succ] using goodM_mul (fun x => M x ^ k) M (fun a b => ih a b) hM i j
 
 theorem goodM_curv (G : V n → Matrix r r ℂ) (hG : MContDiffAt ∞ G v) (hd : IsUnit (G v).det) (i j : r) :
     Good n v (fun x => curvEv G x i j) := ⟨((_root_.GlobalTheory.CurvSmooth.curvEv_entry_smooth n r G v hG hd) i j).2, _root_.GlobalTheory.ChernCalc.CurvClosed.dbarAt_curvEv n r G v hG hd i j⟩

@@ -244,8 +244,7 @@ theorem mem_of_repr_ne_zero (ρ : Representation k G V) (e : Module.Basis (Fin N
       ∃ u ∈ W, e.repr u i ≠ 0 ∧ ∀ l ∈ s, e.repr u l = 0 := by
     intro s
     refine Finset.induction_on s ?_ ?_
-    · intro _
-      exact ⟨w, hw, hi, fun l hl => by simp at hl⟩
+    · exact fun _ => ⟨w, hw, hi, fun l hl => by simp at hl⟩
     · intro j s hjs ih hi'
       have hij : i ≠ j := by
         rintro rfl
@@ -334,8 +333,7 @@ theorem restriction_of_blocks_and_jordan (hB : BlocksCycle) (hJ : JordanTransiti
       apply le_antisymm
       · intro x hx
         apply hspan
-        intro i hi
-        exact Submodule.subset_span ⟨⟨i, (hidx U i).mpr (hI U hU x hx i hi)⟩, rfl⟩
+        exact fun i hi => Submodule.subset_span ⟨⟨i, (hidx U i).mpr (hI U hU x hx i hi)⟩, rfl⟩
       · rw [Submodule.span_le]
         rintro _ ⟨i, rfl⟩
         exact (hidx U i).mp i.2
@@ -398,7 +396,7 @@ theorem restriction_of_blocks_and_jordan (hB : BlocksCycle) (hJ : JordanTransiti
       have hmem : ρ g' (e i) ∈ W.map (ρ (g' * g)) :=
         Submodule.mem_map.mpr ⟨w, hw, by rw [map_mul ρ g' g, Module.End.mul_apply, hwe]⟩
       exact hj (g' * g) (hI _ (htr W hW (g' * g)) _ hmem j hne)
-    · push_neg at hi
+    · push Not at hi
       rw [(hY x).mp hx i hi, zero_smul]
       exact Y.zero_mem
   have hWY : W ≤ Y := by
@@ -413,8 +411,7 @@ theorem restriction_of_blocks_and_jordan (hB : BlocksCycle) (hJ : JordanTransiti
     exact le_bot_iff.mp hWY
   have hcov : ∀ j, ∃ g, e j ∈ W.map (ρ g) := by
     intro j
-    by_contra hj
-    push_neg at hj
+    by_contra! hj
     have h1 : e j ∈ Y := by
       rw [hYtop]
       exact Submodule.mem_top
@@ -483,8 +480,7 @@ theorem restriction_of_blocks_and_jordan (hB : BlocksCycle) (hJ : JordanTransiti
     obtain ⟨g₁, rfl⟩ := (hBmem b).mp hb
     obtain ⟨g₂, rfl⟩ := (hBmem b').mp hb'
     rw [Finset.disjoint_left]
-    intro j h1 h2
-    exact hbb (hFeq g₁ g₂ j ((hidx _ j).mp h1) ((hidx _ j).mp h2))
+    exact fun j h1 h2 => hbb (hFeq g₁ g₂ j ((hidx _ j).mp h1) ((hidx _ j).mp h2))
   have hBcov : ∀ x, ∃ b ∈ B, x ∈ b := by
     intro x
     obtain ⟨g, hg⟩ := hcov x
@@ -509,8 +505,7 @@ theorem restriction_of_blocks_and_jordan (hB : BlocksCycle) (hJ : JordanTransiti
   · obtain ⟨S, hS⟩ := Finset.card_eq_one.mp h1
     have hWS : idx W = S := by
       have h3 : idx (W.map (ρ 1)) ∈ B := (hBmem _).mpr ⟨1, rfl⟩
-      rw [hS, Finset.mem_singleton, hmap1] at h3
-      exact h3
+      rwa [hS, Finset.mem_singleton, hmap1] at h3
     have hall : ∀ j, j ∈ idx W := by
       intro j
       obtain ⟨g, hg⟩ := hcov j

@@ -101,8 +101,7 @@ theorem mem_fixedModule_of_smul_eq [IsDiscreteModule G A] (K : OpenSubgroup G) {
   have hu : (K : Subgroup G) ⊓ D.deg.ker ≤ M := fun g hg => ⟨hw g hg, hg.1⟩
   have hrel : D.relDeg K ⟨φ, hφK⟩ = Multiplicative.ofAdd 1 := by
     refine (ProfiniteInteger.pow_left_inj (D.inertiaDegree_ne_zero K)).1 ?_
-    rw [D.relDeg_pow, ← ofAdd_nsmul, nsmul_one]
-    exact hdφ
+    rwa [D.relDeg_pow, ← ofAdd_nsmul, nsmul_one]
   intro τ hτ
   obtain ⟨m, hm⟩ := D.exists_pow_mul_mem_of_unramified hMK hu hrel ⟨τ, hτ⟩
   have h1 : ∀ j : ℕ, (φ ^ j) • w = w := by
@@ -243,8 +242,7 @@ theorem coe_norm_field_field (s1 s2 : D.FrobeniusLift K) (k : ℕ) (hk : 0 < k)
     exact coe_norm_of_le hfield_inf_ker.le _
   · intro x hx
     have : D.deg x ∈ (frobeniusClosure D.deg L s2.elt).map D.deg := ⟨x, hx, rfl⟩
-    rw [hmap2] at this
-    exact this
+    rwa [hmap2] at this
   · intro x _ hx
     have : D.deg x ∈ AddSubgroup.toSubgroup (multiples (k * (s1.deg * inertiaDegree D.deg K))) := hx
     rw [← hmap2] at this
@@ -252,8 +250,7 @@ theorem coe_norm_field_field (s1 s2 : D.FrobeniusLift K) (k : ℕ) (hk : 0 < k)
     exact ⟨y, hy, hyx⟩
   · intro x hx
     have : D.deg x ∈ (frobeniusClosure D.deg L s1.elt).map D.deg := ⟨x, hx, rfl⟩
-    rw [hmap1] at this
-    exact this
+    rwa [hmap1] at this
   · intro q hq
     have hqJ : q ∈ (L : Subgroup G) ⊓ D.deg.ker := hfield_inf_ker.le hq
     exact ⟨fun _ => hqJ, fun h => le_frobeniusClosure h⟩
@@ -458,10 +455,8 @@ theorem exists_norm_eq_norm_inf_ker (hax : ClassFieldAxiom G A) [IsDiscreteModul
         (mul_ne_zero s2.deg_pos.ne' (D.inertiaDegree_ne_zero K)) s2.deg_eq
     refine coe_norm_eq_prod_smul_norm D.deg s2.deg_pos (Nat.pos_of_ne_zero (D.inertiaDegree_ne_zero K))
       (fun x hx => hLK (hP'L hx)) ?_ ?_ (fun _ hk => toAdd_deg_mem_multiples K hk) ?_ hφK hdφ b hbJ
-    · intro x hx
-      exact hmap.le ⟨x, hx, rfl⟩
-    · intro k _ hk
-      exact hmap.ge hk
+    · exact fun x hx => hmap.le ⟨x, hx, rfl⟩
+    · exact fun k _ hk => hmap.ge hk
     · intro q hq
       exact ⟨fun hqS => hfield₂_inf_ker.le ⟨hqS, hq.2⟩, fun hqJ => le_frobeniusClosure hqJ⟩
   refine ⟨⟨w, fixedModule_anti hLK hwK⟩ * norm A (L : Subgroup G)
@@ -804,15 +799,13 @@ theorem recFrob_mul_ofDegOne (hax : ClassFieldAxiom G A) [IsDiscreteModule G A]
   have hδ : δ ∈ (K : Subgroup G) ⊓ D.deg.ker := by
     refine ⟨K.mul_mem (K.pow_mem hφK n) (K.inv_mem s.mem), ?_⟩
     show D.deg (φ ^ n * s.elt⁻¹) = 1
-    rw [map_mul, map_inv, map_pow, hdφ, s.deg_eq, ← ofAdd_nsmul, ← ofAdd_neg, ← ofAdd_add]
-    rw [hndef]
+    rw [map_mul, map_inv, map_pow, hdφ, s.deg_eq, ← ofAdd_nsmul, ← ofAdd_neg, ← ofAdd_add, hndef]
     push_cast
     rw [nsmul_eq_mul, add_neg_cancel, ofAdd_zero]
   have hδπ1 : δ • (π1 : A) = φ ^ n • (π1 : A) := by
     rw [hδdef, mul_smul, inv_smul_eq_iff.2 hσπ1.symm]
   have hφπ3 : φ • (π3 : A) = s.elt⁻¹ • (π3 : A) := by
-    rw [eq_inv_smul_iff, ← mul_smul]
-    exact hσφπ3
+    rwa [eq_inv_smul_iff, ← mul_smul]
   have hδπ3 : δ • (π3 : A) = φ ^ (n + 1) • (π3 : A) := by
     rw [hδdef, mul_smul, ← hφπ3, ← mul_smul, ← pow_succ]
   have e2 : φ • φ ^ n • (π2 : A) = φ ^ n • (π2 : A) := by

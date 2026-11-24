@@ -70,8 +70,7 @@ theorem exists_algebraicIndependent (k R : Type) [Field k] [CommRing R] [Nontriv
   refine ⟨e, fun i => g (MvPolynomial.X i), ?_, ?_⟩
   · have e : MvPolynomial.aeval (fun i => g (MvPolynomial.X i)) = g :=
       (MvPolynomial.aeval_unique g).symm
-    rw [algebraicIndependent_iff_injective_aeval, e]
-    exact hg
+    rwa [algebraicIndependent_iff_injective_aeval, e]
   · letI := g.toRingHom.toAlgebra
     have : Algebra.IsIntegral (MvPolynomial (Fin e) k) R := ⟨RingHom.Finite.to_isIntegral hf⟩
     refine (Order.krullDim_le_of_strictMono
@@ -95,8 +94,7 @@ theorem linearIndependent_monomials {k R : Type} [Field k] [CommRing R] [IsDomai
       (LinearMap.mulLeft k σ ∘ₗ (MvPolynomial.aeval y).toLinearMap) ∘
         MvPolynomial.basisMonomials (Fin e) k ∘ d := funext fun α => by
     simp [d, MvPolynomial.aeval_monomial, Finsupp.prod_fintype]
-  rw [e]
-  exact h₁
+  rwa [e]
 
 variable {X : Scheme.{0}} {L : LB X}
 

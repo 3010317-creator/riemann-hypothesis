@@ -67,8 +67,7 @@ theorem nonzero_K_finite : Formalism.MainNotions.S.Pv.AmpDD.NzKF := by
     exact Formalism.FourierDecayAlt.P.DDSmoothness.smooth_add hxs (Formalism.FourierDecayAlt.P.DDSmoothness.smooth_smul (-1) hvs)
   have hsplit : l x = l (x - v) + l v := by
     have := hadd (x - v) hdiff_s v hvs
-    rw [sub_add_cancel] at this
-    exact this
+    rwa [sub_add_cancel] at this
   rw [hlv, add_zero] at hsplit
   have hb := hbd (x - v) hdiff_s
   set S := (Ws.map fun w => ‖PI.UpqRep.dsigW (k := k) (r := r) σ w (x - v)‖).sum with hS
@@ -79,8 +78,7 @@ theorem nonzero_K_finite : Formalism.MainNotions.S.Pv.AmpDD.NzKF := by
     rw [hsplit]; exact hb.trans (mul_le_mul_of_nonneg_right (le_abs_self C) hS0)
   have h2 : |C| * S ≤ |C| * e := mul_le_mul_of_nonneg_left hv.le (abs_nonneg C)
   have h3 : |C| * e < ‖l x‖ := by
-    rw [he, mul_div_assoc']
-    rw [div_lt_iff₀ (by positivity)]
+    rw [he, mul_div_assoc', div_lt_iff₀ (by positivity)]
     nlinarith [abs_nonneg C]
   linarith
 

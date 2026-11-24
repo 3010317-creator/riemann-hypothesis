@@ -404,7 +404,6 @@ private theorem continuous_ph' (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (
 theorem continuous_phe (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h : IsDSData B d) :
     Continuous (phe B d) := by
   obtain ⟨hlc, -⟩ := B.e_adm
-  show Continuous fun x : B.I.GA => ph B d x.1 * B.e x.2
   exact ((continuous_ph' B d h).comp continuous_fst).mul (hlc.continuous.comp continuous_snd)
 
 private theorem continuous_conj_by_inv (B : RowsAut) (γ : B.I.GA) :
@@ -477,7 +476,7 @@ theorem nearAbs_measurable_and_split : ∀ (B : RowsAut) (d : InfinitePlace B.I.
           by_cases hγ : γ = o
           · simp [hγ]
           have hγ1 : γ.1 ≠ 1 := fun h' => hγ (Subtype.ext h')
-          rw [if_neg hγ]
+          rw [ite_eq_right hγ]
           by_cases hn : IsNear B d (epN B) x γ.1
           · have hm : γ.1 ∈ GlobalTheory.IndefiniteRowSideFullHecke.NearNonzeroTerms.nearNe B d x := ⟨hn, hγ1⟩
             rw [Set.indicator_of_mem hm]

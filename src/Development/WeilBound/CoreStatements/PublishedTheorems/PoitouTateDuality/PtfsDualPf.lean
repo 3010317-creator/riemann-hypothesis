@@ -80,8 +80,7 @@ theorem rootOf_apply (c : ZMod N) : rootOf w c = Additive.ofMul (w ^ c.val) := r
 
 theorem rootOf_bijective (hw : IsPrimitiveRoot (((w : Lˣ) : L)) N) : Function.Bijective (rootOf w) := by
   have hwu : IsPrimitiveRoot w N := by
-    rw [← IsPrimitiveRoot.coe_submonoidClass_iff, ← IsPrimitiveRoot.coe_units_iff]
-    exact hw
+    rwa [← IsPrimitiveRoot.coe_submonoidClass_iff, ← IsPrimitiveRoot.coe_units_iff]
   refine ⟨fun a b h => ?_, fun x => ?_⟩
   · have h' : w ^ a.val = w ^ b.val := Additive.ofMul.injective h
     exact ZMod.val_injective N (hwu.pow_inj (ZMod.val_lt a) (ZMod.val_lt b) h')
@@ -241,14 +240,12 @@ theorem dualCmp' (Kf : FiniteSubfield) [NumberField Kf.1] [IsAlgClosure Kf.1 (Al
     mem_maxUnramifiedOutside_of_pow_eq_one _ hN0 (natCast_pow_not_mem Kf S hS) hζ.pow_eq_one
   haveI : NeZero (l ^ r) := ⟨hN0⟩
   have hζL : IsPrimitiveRoot (⟨ζ, hmem⟩ : maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1)))) (l ^ r) := by
-    rw [← IsPrimitiveRoot.coe_submonoidClass_iff]
-    exact hζ
+    rwa [← IsPrimitiveRoot.coe_submonoidClass_iff]
   have hex := exists_root_of_primitive (L := maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1)))) hN0 hζL
   refine Exists.elim hex (fun w hwv => ?_)
   have hwv' : (((w : (maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1))))ˣ) : maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1)))) : AlgebraicClosure ℚ) = ζ := congrArg Subtype.val hwv
   have hw : IsPrimitiveRoot (((w : (maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1))))ˣ) : maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1))))) (l ^ r) := by
-    rw [hwv]
-    exact hζL
+    rwa [hwv]
   let rr : ZMod (l ^ r) ≃+ (gsRoots (S : Set (HeightOneSpectrum (𝓞 Kf.1))) (l ^ r)).V :=
     AddEquiv.ofBijective (rootOf w) (rootOf_bijective w hw)
   have hrr : ∀ c, rr c = rootOf w c := fun _ => rfl

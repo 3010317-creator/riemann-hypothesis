@@ -68,8 +68,7 @@ theorem hasCov_pi {β : Type} [Fintype β] {V : β → Type} [∀ b, NormedAddCo
   let B : ∀ i, Module.Basis (Module.Free.ChooseBasisIndex ℤ (L i)) ℝ (V i) := fun i =>
     (Module.Free.chooseBasis ℤ (L i)).ofZLatticeBasis ℝ
   have hBmem : ∀ i j, B i j ∈ L i := fun i j => by
-    simp only [B, Module.Basis.ofZLatticeBasis_apply]
-    exact (Module.Free.chooseBasis ℤ (L i) j).2
+    simpa only [B, Module.Basis.ofZLatticeBasis_apply] using (Module.Free.chooseBasis ℤ (L i) j).2
   have hBspan : ∀ i, Submodule.span ℤ (Set.range (B i)) = L i := fun i =>
     (Module.Free.chooseBasis ℤ (L i)).ofZLatticeBasis_span ℝ
   have hspan : Submodule.pi Set.univ L = Submodule.span ℤ (Set.range (Pi.basis B)) := by

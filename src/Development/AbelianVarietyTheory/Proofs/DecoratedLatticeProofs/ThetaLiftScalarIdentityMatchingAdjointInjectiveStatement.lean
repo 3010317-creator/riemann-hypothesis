@@ -89,10 +89,8 @@ theorem matchUp_of_tr : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : T
       (levChi _ (R.βY 0) (R.dat0 R.triv)) R.e0 SF c ≠ ⊥ := by
     refine (Submodule.ne_bot_iff _).2 ⟨R.HE.e x, Submodule.mem_inf.2 ⟨hx, ?_⟩, ?_⟩
     · have hmem : R.HE.e x ∈ LinearMap.range R.HE.e := LinearMap.mem_range_self _ x
-      rw [hrngE] at hmem
-      exact hmem
-    · intro h0
-      exact hx0 (hinjE (h0.trans (map_zero R.HE.e).symm))
+      rwa [hrngE] at hmem
+    · exact fun h0 => hx0 (hinjE (h0.trans (map_zero R.HE.e).symm))
 
   have hW' : TrCopy.partW R.θ (R.MW i (sg0 D A)) (levS _ (R.βW i) (R.datWp i R.triv))
       (levChi _ (R.βW i) (R.datWp i R.triv)) (R.eWf i (sg0 D A)) SF c ≠ ⊥ := by
@@ -109,8 +107,7 @@ theorem matchUp_of_tr : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : T
     exact (Submodule.mem_inf.1 hyG).1
   obtain ⟨z, rfl⟩ := hyR
   refine (Submodule.ne_bot_iff _).2 ⟨z, ?_, ?_⟩
-  · show (R.HW i (sg0 D A)).e z ∈ R.Wat i (sg0 D A) R.triv ⊓ _
-    exact Submodule.mem_inf.2 ⟨hyG, hyF⟩
+  · exact Submodule.mem_inf.2 ⟨hyG, hyF⟩
   · rintro rfl
     exact hy0 (map_zero _)
 

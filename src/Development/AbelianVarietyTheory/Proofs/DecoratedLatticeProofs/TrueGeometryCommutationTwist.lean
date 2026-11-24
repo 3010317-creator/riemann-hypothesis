@@ -87,8 +87,8 @@ theorem edgeSum_elem (Ed : Fin r → Fin r → Prop) [DecidableRel Ed] (hE : ∀
   have h1 : ∀ a b, (if Ed a b then (elem h u).val a b else 0) = if i = a then (if j = b then u else 0) else 0 := fun a b => by
     rw [elem_apply]
     by_cases h2 : Ed a b
-    · rw [if_pos h2, one_apply_ne fun e => hE a (by rwa [← e] at h2), zero_add, ite_and]
-    · rw [if_neg h2, ← ite_and, if_neg]
+    · rw [ite_eq_left h2, one_apply_ne fun e => hE a (by rwa [← e] at h2), zero_add, ite_and]
+    · rw [ite_eq_right h2, ← ite_and, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact h2 hij
   unfold edgeSum
@@ -99,13 +99,13 @@ theorem elem_mem_unipCol {i j : Fin r} (h : i ≠ j) (hij : i.val < j.val) (u : 
     elem h u ∈ unipCol κ r a c := by
   refine ⟨⟨fun x y hxy => ?_, fun x => ?_⟩, fun x y h1 h2 h3 => ?_⟩
   · have hxy' : y.val < x.val := hxy
-    rw [elem_apply, one_apply_ne (fun e => by rw [e] at hxy'; omega), if_neg, add_zero]
+    rw [elem_apply, one_apply_ne (fun e => by rw [e] at hxy'; omega), ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     omega
-  · rw [elem_apply, one_apply_eq, if_neg, add_zero]
+  · rw [elem_apply, one_apply_eq, ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     exact h rfl
-  · rw [elem_apply, one_apply_ne (fun e => by rw [e] at h2; omega), if_neg, add_zero]
+  · rw [elem_apply, one_apply_ne (fun e => by rw [e] at h2; omega), ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     omega
 
@@ -217,8 +217,7 @@ theorem norm_notMem_sq {D : D7} {PP : Pl D.host.E} (h : ((D.host.g 0 * D.host.g 
     (PP.isPrime.mem_or_mem h).elim (fun h => ⟨0, h⟩) fun h => ⟨1, h⟩
   obtain ⟨h1, h2⟩ := hspl k _ PP.isMaximal hk
   unfold Formalism.L2.Col.qOf
-  rw [h1]
-  exact h2
+  rwa [h1]
 
 section Levels
 
@@ -235,8 +234,7 @@ theorem prod_single {ι : Type} [Fintype ι] (pl : ι ≃ Pg) (α : ∀ i, AddCh
   rw [Finset.prod_eq_single n, Pi.mulSingle_eq_same, edgeSum_elem Ed hE h hij]
   · intro m _ hm
     rw [Pi.mulSingle_eq_of_ne (pl.injective.ne hm), edgeSum_one Ed hE, AddChar.map_zero_eq_one]
-  · intro hn
-    exact absurd (Finset.mem_univ n) hn
+  · exact fun hn => absurd (Finset.mem_univ n) hn
 
 theorem single_mem (H : ∀ PP : Pg, Subgroup (GL (Fin r) (kP PP.1))) (n : Pg) {x : GL (Fin r) (kP n.1)} (hx : x ∈ H n) :
     (Pi.mulSingle n x : G0 Pg r) ∈ Subgroup.pi Set.univ H := fun PP _ => by
@@ -254,12 +252,11 @@ theorem edgeSum_eq_supSum {κ : Type} [CommRing κ] {r : ℕ} (g : GL (Fin r) κ
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs with h
   · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
-    · exact if_pos (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
-    · intro j _ hj
-      exact if_neg (fun hj' => hj (Fin.ext hj'))
+    · exact ite_eq_left (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
+    · exact fun j _ hj => ite_eq_right (fun hj' => hj (Fin.ext hj'))
     · intro hn; exact absurd (Finset.mem_univ _) hn
   · refine Finset.sum_eq_zero fun j _ => ?_
-    refine if_neg (fun hj => ?_)
+    refine ite_eq_right (fun hj => ?_)
     have := j.2
     unfold supEdge at hj
     omega

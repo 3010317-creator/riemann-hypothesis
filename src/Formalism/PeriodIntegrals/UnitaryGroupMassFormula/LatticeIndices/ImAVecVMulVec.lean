@@ -140,14 +140,11 @@ theorem imA_kpp_sub (p : TypX X) : KppX X hb p ⊆ {y | y ∈ KvX X p ∧ LocCon
     exact hK p.1
   · intro a
     have h := imA_inMod_loc X p _ _ _ (h1 a)
-    rw [imA_vecV_mulVec X hb, Set.image_image] at h
-    exact h
+    rwa [imA_vecV_mulVec X hb, Set.image_image] at h
   · have h := imA_inMod_loc X p _ _ _ h2
-    rw [imA_vecV_mulVec X hb, ← Set.range_comp] at h
-    exact h
+    rwa [imA_vecV_mulVec X hb, ← Set.range_comp] at h
   · intro i
     have h := imA_inMod_loc X p _ _ _ (h3 i)
-    rw [imA_vecV_mulVec X hb, Set.image_union, Set.image_image, ← Set.range_comp] at h
-    exact h
+    rwa [imA_vecV_mulVec X hb, Set.image_union, Set.image_image, ← Set.range_comp] at h
 
 end MassDataIdxSteps

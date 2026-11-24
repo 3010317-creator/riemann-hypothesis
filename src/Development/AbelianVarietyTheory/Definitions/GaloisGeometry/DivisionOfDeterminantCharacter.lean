@@ -74,11 +74,9 @@ theorem lacunary_of_growth {J : Finset ℤ} (hpos : ∀ x ∈ J, 0 < x) (hg : �
   have hmax : ∀ x ∈ A ∪ B, x ≤ (A ∪ B).max' hne := fun x hx => Finset.le_max' _ _ hx
   rcases Finset.mem_union.1 (Finset.max'_mem _ hne) with hm | hm
   · refine (key A B hA hB hBn _ hm fun b hb => lt_of_le_of_ne (hmax b (Finset.mem_union_right _ hb)) ?_).ne'
-    intro e
-    exact Finset.disjoint_left.1 hd hm (e ▸ hb)
+    exact fun e => Finset.disjoint_left.1 hd hm (e ▸ hb)
   · refine (key B A hB hA hAn _ hm fun b hb => lt_of_le_of_ne (hmax b (Finset.mem_union_left _ hb)) ?_).ne
-    intro e
-    exact Finset.disjoint_left.1 hd hb (e ▸ hm)
+    exact fun e => Finset.disjoint_left.1 hd hb (e ▸ hm)
 
 theorem not_lacunary_three (k : ℤ) : ¬ Lacunary ({k, k + 1, k + 2} : Finset ℤ) := by
   intro h

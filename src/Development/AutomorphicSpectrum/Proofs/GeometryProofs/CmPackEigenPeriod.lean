@@ -88,8 +88,7 @@ theorem _root_.GlobalTheory.CMPeriodCompare.isDerivAt0_comp_linear {g g' : ℕ} 
   rw [h1 U hU f]
   have hU0 : ⊤ ≤ e 0 ⁻¹ᵁ U := by
     rw [← h0]
-    intro x _
-    exact hU (by trivial)
+    exact fun x _ => hU (by trivial)
   have hd := _root_.GlobalTheory.LocalLift.hol_differentiableAt he (Set.mem_univ 0) hU0 f
   unfold _root_.GlobalTheory.FibreDeriv.jet
   simp only [map_zero]
@@ -114,8 +113,7 @@ private theorem isDerivAt0_ex_of_isDiff_tangent (u : _root_.ReciprocityTheory.Ch
     {t : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.epsR ℂ ⟶ P'.A} (ht : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsTangent t) {w : Fin P'.g → ℂ} (hw : u.IsDiff w t) :
     _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsDerivAt0 (fun z => (u.ex z).left) w t.left := by
   have h0 : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom ≫ t.left = (u.ex 0).left := by
-    rw [_root_.GlobalTheory.TangentOrigin.ex_zero_left]
-    exact ht
+    rwa [_root_.GlobalTheory.TangentOrigin.ex_zero_left]
   rw [_root_.GlobalTheory.FibreDeriv.isDerivAt0_iff]
   refine ⟨h0, fun U h f => ?_⟩
   ext
@@ -311,8 +309,7 @@ theorem cm_image_unique_lattice : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       have hhol : IsHolTo Set.univ (fun z => (FU.ex i P z).left) := by
         intro U f
         obtain ⟨h1, h2⟩ := ReciprocityTheory.ChartRestriction.G.PullbackSections.anHol FU i P hP U f
-        simp only [Set.mem_univ, true_and]
-        exact ⟨h1, h2⟩
+        simpa only [Set.mem_univ, true_and] using ⟨h1, h2⟩
       have hDl : Dl (fun _ => 1) = (Z b).z • P a := by simp [Dl]
       have hDz : ∀ z, Dl z = (z 0 * (Z b).z) • P a := fun z => by simp [Dl, smul_smul]
       obtain ⟨v₀, hv₀, -⟩ := (FU.ex_diff i P hP).1 ((Z b).z • P a)
@@ -322,8 +319,7 @@ theorem cm_image_unique_lattice : ∀ (E : Type) [Field E] [NumberField E] [IsCM
             fun z : Fin 1 → ℂ => (FU.ex i P ((z 0 * (Z b).z) • P a)).left := funext fun z => by
           rw [hDz]
         rw [← e]; exact h3
-      rw [ReciprocityTheory.ChartRestriction.G.PullbackSections.ExpRows.isDerivAt0_unique h2 h3']
-      exact hv₀
+      rwa [ReciprocityTheory.ChartRestriction.G.PullbackSections.ExpRows.isDerivAt0_unique h2 h3']
 
 end PositivityTheory.Xgf
 end -- clump:auto

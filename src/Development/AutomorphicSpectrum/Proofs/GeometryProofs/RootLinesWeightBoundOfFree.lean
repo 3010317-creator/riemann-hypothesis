@@ -98,8 +98,7 @@ theorem geoNum_nonneg_of_regular (p : ℕ) [Fact p.Prime] {W : Ideal (MRing J)} 
       GroundTheory.Heights₂.Heights.NumbersDVR.IsMultiHomog (red (ι := J) p h) b := by
     intro h b hh
     rw [GroundTheory.Heights₂.Heights.Bridge.isMultiHomog_iff]
-    intro m hm k
-    exact hh m (MvPolynomial.support_map_subset _ _ hm) k
+    exact fun m hm k => hh m (MvPolynomial.support_map_subset _ _ hm) k
   have hPhom : GroundTheory.Heights₂.Heights.NumbersDVR.IsMultiHomogIdeal P := by
     rw [GroundTheory.Heights₂.Heights.Bridge.isMultiHomogIdeal_iff]
     obtain ⟨S, hS, rfl⟩ := hW.2.1
@@ -314,8 +313,7 @@ theorem sum_filter_lt {M : Type} [AddCommMonoid M] {N i : ℕ} (hi : i ≤ N) (f
   symm
   refine Finset.sum_bij (fun l _ => Fin.castLE hi l) (by simp) (fun a _ b _ h => Fin.castLE_injective hi h) ?_
     (fun _ _ => rfl)
-  intro b hb
-  exact ⟨⟨b, by simpa using hb⟩, by simp, rfl⟩
+  exact fun b hb => ⟨⟨b, by simpa using hb⟩, by simp, rfl⟩
 
 theorem trivflag_deg : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (p : ℕ) [Fact p.Prime] (o : Type) [CommRing o] [Algebra o Ω] (ho : ∀ x : Ω, x ∈ (algebraMap o Ω).range ↔ ∃ (a : ℤ) (b : ℕ), ¬ p ∣ b ∧ x = (a : Ω) / (b : Ω)) (W : Ideal (MRing J)) (N : ℕ) (b : Fin N → K → ℤ), IsMultiProjPrime W → mCoordIdeal y ≤ W → charOf W = p → ringKrullDim (MRing J ⧸ W) = ((1 + Fintype.card K : ℕ) : WithBot ℕ∞) → Num.TrivFlagMod o (p : o) y N b → (∀ i : ℕ, i ≤ N → ∑ l ∈ Finset.univ.filter (fun l : Fin N => (l : ℕ) < i), geoNum 1 W (fun _ => b l) ≤ 0) ∧ ∑ l, geoNum 1 W (fun _ => b l) = 0 := by
   intro Ω _ _ K _ J _ y p _ o _ _ ho W N b hW hle hch hdim ⟨g, h1, h2⟩
@@ -450,8 +448,7 @@ theorem trivflag_nef : ∀ (Ψ : Type) [Fintype Ψ] (N : ℕ) (M : Top.RootModel
     intro τ
     obtain ⟨hp, ht⟩ := trivflag_deg M.Ω M.K M.ι M.y p o ho W N (fun i => M.xdeg (τ, i)) h1 h2 h3 h4 (hτ τ)
     apply abel_sum N (mu τ) (fun i => -(geoNum 1 W (fun _ : Fin 1 => M.xdeg (τ, i)) : ℝ))
-    · intro a b hab
-      exact hmu τ a b hab
+    · exact fun a b hab => hmu τ a b hab
     · intro i hi
       have := hp i hi
       simp only [Finset.sum_neg_distrib, neg_nonneg]

@@ -163,17 +163,17 @@ theorem isPolyN_pi {ι : Type*} [Fintype ι] {F : ℂ → ι → X} {N : ℕ}
 theorem IsPolyN.norm {F : ℂ → X} {N : ℕ} (hF : IsPolyN F N) :
     ∃ c : ℕ → X, (∀ k, N ≤ k → c k = 0) ∧ ∀ x, F x = ∑ k ∈ range N, x ^ k • c k := by
   obtain ⟨c, hc⟩ := hF
-  refine ⟨fun k => if k < N then c k else 0, fun k hk => if_neg (not_lt.2 hk), fun x => ?_⟩
+  refine ⟨fun k => if k < N then c k else 0, fun k hk => ite_eq_right (not_lt.2 hk), fun x => ?_⟩
   beta_reduce
   rw [hc]
-  exact Finset.sum_congr rfl fun k hk => by rw [if_pos (Finset.mem_range.1 hk)]
+  exact Finset.sum_congr rfl fun k hk => by rw [ite_eq_left (Finset.mem_range.1 hk)]
 
 theorem sum_shift (a b : ℕ → X) (N : ℕ) (x : ℂ) :
     ∑ k ∈ range N, x ^ k • a k + x • ∑ k ∈ range N, x ^ k • b k =
       ∑ k ∈ range (N + 1), x ^ k • ((if k < N then a k else 0) + if k = 0 then 0 else b (k - 1)) := by
   have h1 : ∑ k ∈ range (N + 1), x ^ k • (if k < N then a k else 0) = ∑ k ∈ range N, x ^ k • a k := by
-    rw [Finset.sum_range_succ, if_neg (lt_irrefl N), smul_zero, add_zero]
-    exact Finset.sum_congr rfl fun k hk => by rw [if_pos (Finset.mem_range.1 hk)]
+    rw [Finset.sum_range_succ, ite_eq_right (lt_irrefl N), smul_zero, add_zero]
+    exact Finset.sum_congr rfl fun k hk => by rw [ite_eq_left (Finset.mem_range.1 hk)]
   have h2 : ∑ k ∈ range (N + 1), x ^ k • (if k = 0 then (0 : X) else b (k - 1)) =
       x • ∑ k ∈ range N, x ^ k • b k := by
     rw [Finset.sum_range_succ', Finset.smul_sum]
@@ -199,8 +199,7 @@ theorem isPolyN_list_prod {R : Type*} [Ring R] [Algebra ℂ R] (l : List (R × R
   induction l with
   | nil => simpa using isPolyN_const (1 : R)
   | cons p l ih =>
-    simp only [List.map_cons, List.prod_cons, List.length_cons]
-    exact ih.affine_mul p.1 p.2
+    simpa only [List.map_cons, List.prod_cons, List.length_cons] using ih.affine_mul p.1 p.2
 
 theorem poly_coeff_eq_zero {N : ℕ} (v : ℕ → X) (h : ∀ x : ℂ, ∑ k ∈ range N, x ^ k • v k = 0) (k : ℕ)
     (hk : k < N) : v k = 0 := by
@@ -287,11 +286,10 @@ theorem adjVec_key (E : Fin (m + 1) → Fin (m + 1) → Module.End ℂ M) (hE : 
     rw [Capelli.capelli_expand_plus E hE ω b c]
   have hsum : ∑ c, (if b = c then Capelli.capelliC E ω else 0) (f c) = Capelli.capelliC E ω (f b) := by
     rw [Finset.sum_eq_single b]
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
     · intro c _ hc
-      rw [if_neg (Ne.symm hc), LinearMap.zero_apply]
-    · intro h
-      exact absurd (mem_univ b) h
+      rw [ite_eq_right (Ne.symm hc), LinearMap.zero_apply]
+    · exact fun h => absurd (mem_univ b) h
   rw [← hsum, ← Finset.sum_congr rfl (fun c _ => hx c)]
 
   simp only [Pi.add_apply, Pi.smul_apply, eeV_apply', adjVec, LinearMap.sum_apply, LinearMap.smul_apply,
@@ -300,11 +298,10 @@ theorem adjVec_key (E : Fin (m + 1) → Fin (m + 1) → Module.End ℂ M) (hE : 
   congr 1
   refine sum_congr rfl fun c _ => ?_
   rw [Finset.sum_eq_single b]
-  · rw [if_pos rfl, smul_comm]
+  · rw [ite_eq_left rfl, smul_comm]
   · intro d _ hd
-    rw [if_neg hd, smul_zero]
-  · intro h
-    exact absurd (mem_univ b) h
+    rw [ite_eq_right hd, smul_zero]
+  · exact fun h => absurd (mem_univ b) h
 
 theorem isPolyN_adjVec (E : Fin (m + 1) → Fin (m + 1) → Module.End ℂ M) (f : Fin (m + 1) → M) :
     IsPolyN (adjVec E f) (m + 1) := by
@@ -389,15 +386,15 @@ theorem prodShift_eeV_of_capelli (E : Fin (m + 1) → Fin (m + 1) → Module.End
     rw [← h3]
     congr 1
     by_cases h : k < m + 1
-    · rw [if_pos h]
-    · rw [if_neg h, hg0 k (by omega), map_zero]
+    · rw [ite_eq_left h]
+    · rw [ite_eq_right h, hg0 k (by omega), map_zero]
   have tele : ∀ (w : ℕ → (Fin (m + 1) → M)) (N : ℕ),
       ∑ k ∈ range (N + 1), (-(w k) + if k = 0 then 0 else w (k - 1)) = -w N := by
     intro w N
     induction N with
     | zero => simp
     | succ N ih =>
-      rw [Finset.sum_range_succ, ih, if_neg (Nat.succ_ne_zero N), Nat.add_sub_cancel]
+      rw [Finset.sum_range_succ, ih, ite_eq_right (Nat.succ_ne_zero N), Nat.add_sub_cancel]
       abel
   have step : ∀ k ∈ range (m + 2), ((shiftPoly θ).coeff k • (-eeV E) ^ k) f =
       -(((-eeV E) ^ (k + 1)) (g k)) + if k = 0 then 0 else ((-eeV E) ^ (k - 1 + 1)) (g (k - 1)) := by
@@ -411,7 +408,7 @@ theorem prodShift_eeV_of_capelli (E : Fin (m + 1) → Fin (m + 1) → Module.End
     congr 1
     by_cases h0 : k = 0
     · subst h0; simp
-    · rw [if_neg h0, if_neg h0, Nat.sub_add_cancel (Nat.pos_of_ne_zero h0)]
+    · rw [ite_eq_right h0, ite_eq_right h0, Nat.sub_add_cancel (Nat.pos_of_ne_zero h0)]
   have hzero : (Polynomial.aeval (-eeV E) (shiftPoly θ)) f = 0 := by
     rw [Polynomial.aeval_eq_sum_range' (shiftPoly_natDegree_lt θ), LinearMap.sum_apply,
       Finset.sum_congr rfl step, tele, hg0 (m + 1) le_rfl, map_zero, neg_zero]

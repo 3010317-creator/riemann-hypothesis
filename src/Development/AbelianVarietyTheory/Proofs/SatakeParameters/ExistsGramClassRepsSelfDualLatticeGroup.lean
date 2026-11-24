@@ -216,8 +216,7 @@ theorem GlobalTheory.Hk3.HoweDuality.exists_finset_reps_mul_inv :
   let S : Finset (Matrix (Fin n') (Fin n) L) :=
     Fintype.piFinset fun _ : Fin n' => Fintype.piFinset fun _ : Fin n => R
   have hSint : ∀ s ∈ S, ∀ i j, s i j ∈ Formalism.UG.intL L := by
-    intro s hs i j
-    exact hRint _ (Fintype.mem_piFinset.1 (Fintype.mem_piFinset.1 hs i) j)
+    exact fun s hs i j => hRint _ (Fintype.mem_piFinset.1 (Fintype.mem_piFinset.1 hs i) j)
 
   have hcong : ∀ d : Matrix (Fin n') (Fin n) L, (∀ i j, Valued.v (d i j) ≤ Valued.v ϖ ^ K) →
       d * ai ∈ GlobalTheory.Hk3.HoweDuality.intMat L n' n := by
@@ -246,8 +245,7 @@ theorem GlobalTheory.Hk3.HoweDuality.exists_finset_reps_mul_inv :
     · have hr : rep (q t) = x := by simp [rep, hxt]
       rw [hr]; exact ⟨Finset.mem_insert_self _ _, hxt⟩
     · have h : ∃ t' ∈ T, q t' = q t := ⟨t, ht, rfl⟩
-      simp only [rep, hxt, if_false, h, dif_pos]
-      exact h.choose_spec
+      simpa only [rep, hxt, ite_false, h, dite_eq_left] using h.choose_spec
   refine ⟨T.image fun t => rep (q t), ?_, ?_, ?_, ?_⟩
   · refine Finset.mem_image.2 ⟨x, Finset.mem_insert_self _ _, ?_⟩
     simp [rep]
@@ -438,7 +436,6 @@ theorem gam_quot_finite : ∀ (L : Type) [Field L] [Valued L (WithZero (Multipli
     exact h1.trans h2
   have hint : ∀ Γ : ↥(gam σ ϖ e), ∀ k j, (Γ : Matrix (Fin r) (Fin r) L) k j ∈ Formalism.UG.intL L := by
     intro Γ k j
-    show Valued.v ((Γ : Matrix (Fin r) (Fin r) L) k j) ≤ 1
     exact (Γ.2.2 k j).trans (pow_le_one' hle1 _)
   have hch : ∀ Γ : ↥(gam σ ϖ e), ∀ k j, ∃ x ∈ R, Valued.v ((Γ : Matrix (Fin r) (Fin r) L) k j - x) ≤ Valued.v ϖ ^ K :=
     fun Γ k j => hRc _ (hint Γ k j)
@@ -697,8 +694,7 @@ theorem gramDiff_entry_int : ∀ (L : Type) [Field L] [Valued L (WithZero (Multi
     · rw [Matrix.mulVec_smul, Matrix.mulVec_mulVec, a.mul_inv, Matrix.one_mulVec]
   have key := hG (fun i => M i j) (fun i => M i k) (fun i => hM i j) (fun i => hM i k) _ (hcO _)
     (hx j (le_max_left _ _)) (hx k (le_max_right _ _))
-  rw [Matrix.sub_apply, gram_entry_eq_hform, gram_entry_eq_hform, mul_comm]
-  exact key
+  rwa [Matrix.sub_apply, gram_entry_eq_hform, gram_entry_eq_hform, mul_comm]
 
 end GlobalTheory.Hk3.HoweG
 end -- clump:auto
@@ -852,8 +848,7 @@ theorem eint : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ)
     exact matMul_int (matMul_int hM hG2i) (matMul_int (sigmaConjTranspose_integral_gramSeparation σ hv hPi) hSDa) i j
   · set G3 : Matrix (Fin r) (Fin r) L := Matrix.of fun k j => Γ k j * (ϖ ^ 1)⁻¹ with hG3
     have hG3i : ∀ k j, G3 k j ∈ Formalism.UG.intL L := by
-      intro k j
-      exact val_div_pow_le_one hϖ1 rfl hϖ0 (hΓv k j) ((he k).trans (le_max_left _ _))
+      exact fun k j => val_div_pow_le_one hϖ1 rfl hϖ0 (hΓv k j) ((he k).trans (le_max_left _ _))
     have hΓ3 : Γ = ϖ • G3 := by
       ext k j; rw [hG3]; simp only [Matrix.smul_apply, of_apply, smul_eq_mul, pow_one]
       field_simp
@@ -919,8 +914,7 @@ theorem int_of_psi_trace_gam : ∀ (L : Type) [Field L] [Valued L (WithZero (Mul
     rw [Matrix.add_mul, Matrix.trace_add, Matrix.trace_single_mul, Matrix.trace_single_mul]
     simp only [smul_eq_mul]
     ring
-  rw [GlobalTheory.Hk3.mem_intL_iff, map_mul, hδ.1, one_mul] at hw
-  exact hw
+  rwa [GlobalTheory.Hk3.mem_intL_iff, map_mul, hδ.1, one_mul] at hw
 
 end GlobalTheory.Hk3.GramSep
 end -- clump:auto
@@ -1511,8 +1505,7 @@ theorem gram_class_family : ∀ (L : Type) [Field L] [Valued L (WithZero (Multip
     apply hPA
     · have h1 := _root_.GlobalTheory.Hk3.VacPhase.locH_sub_trace_mem L σ δ hσv hδO n n' JS a (kf b) JT (E b) y hSJ hSJi hTJ hSD (hsk b).1 (hEi b).1 (hEi b).2.1
         (hkf b) (hkinv b) hya
-      rw [(hsk b).2 n' JT y] at h1
-      exact h1
+      rwa [(hsk b).2 n' JT y] at h1
     · exact (_root_.GlobalTheory.gram_hermitian_and_trace_fixed L σ δ hσσ hδ.2 n' r JT (y * M) (Γf b) hT (hΓ b).1).2
   have hw0 : ∀ Γ0 ∈ gam0 σ ϖ e, ∀ y, (∀ i j, (y * (a : Matrix (Fin n) (Fin n) L)) i j ∈ Formalism.UG.intL L) →
       δ * Matrix.trace (Γ0 * Φ y) ∈ Formalism.UG.intL L ∧ σ (δ * Matrix.trace (Γ0 * Φ y)) = δ * Matrix.trace (Γ0 * Φ y) :=

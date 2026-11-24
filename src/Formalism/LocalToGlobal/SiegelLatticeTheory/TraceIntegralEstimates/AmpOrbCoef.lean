@@ -48,8 +48,7 @@ theorem fdegH_pos {k r : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 
     rw [show (1 : ℂ) / (d : ℂ) = ((1 / d : ℝ) : ℂ) by push_cast; rfl, Complex.ofReal_re]
   delta PI.BesselPeriodGGP.fdegH
   rw [hI, hw]
-  simp only [one_pow, one_div, inv_inv]
-  exact hd
+  simpa only [one_pow, one_div, inv_inv] using hd
 
 theorem muS_conc {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Mt k r)} [SigmaFinite μW] [SigmaFinite μN]
     (hW : ∀ᵐ x ∂μW, Matrix.of x ∈ UWset k r z) (hN : ∀ᵐ x ∂μN, Matrix.of x ∈ Nset k r) :
@@ -66,8 +65,7 @@ theorem muS_conc {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measur
   have g : ∀ᵐ p ∂(μW.prod μN), Matrix.of p.1 * Matrix.of p.2 ∈ UH (Hpk k r) := by
     filter_upwards [g1, g2] with p h1 h2
     exact WeylGroupFacts.uh_mul h1.1 h2.1
-  rw [ae_iff] at g
-  exact g
+  rwa [ae_iff] at g
 
 theorem B_ne {k r : ℕ} {H Wp : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] [Nontrivial Wp]

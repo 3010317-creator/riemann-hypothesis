@@ -174,13 +174,13 @@ theorem weight_annulus (k : ℕ) {T T' : ℝ} (hTT : 0 ≤ T * T') :
       _ ≤ ∫⁻ ζ in A', rbW k T T' ζ := by
         refine setLIntegral_mono (measurable_radial_weight k _ _) fun ζ hζ => ?_
         unfold rbW B2.zWeight
-        rw [if_pos (by linarith [hζ.1])]
+        rw [ite_eq_left (by linarith [hζ.1])]
         exact ENNReal.ofReal_le_ofReal (pow_le_pow_left₀ (by norm_num) (by linarith [hζ.1]) _)
       _ ≤ ∫⁻ ζ in A, rbW k T T' ζ := lintegral_mono_set hA'A
   · calc ∫⁻ ζ in A, rbW k T T' ζ ≤ ∫⁻ _ in A, (1 : ℝ≥0∞) := by
           refine setLIntegral_mono measurable_const fun ζ hζ => ?_
           unfold rbW B2.zWeight
-          rw [if_pos hζ.1.le]
+          rw [ite_eq_left hζ.1.le]
           rw [ENNReal.ofReal_le_one]
           exact pow_le_one₀ (by linarith [hζ.1]) (by linarith [hζ.2])
       _ = volume A := by rw [setLIntegral_const, one_mul]
@@ -237,8 +237,7 @@ theorem pairAt_one (D : B.RealPlaceData k r Wp Wq) (μ : Measure (Mt k r)) (hZ :
   have hCm : (C : ℝ) * (D.μW.prod D.μW').real Set.univ = 1 := by
     have h2 := congrArg ENNReal.toReal h1
     rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.coe_toReal, ENNReal.toReal_one] at h2
-    rw [Measure.real_def, ← Set.univ_prod_univ, Measure.prod_prod, ENNReal.toReal_mul]
-    exact h2
+    rwa [Measure.real_def, ← Set.univ_prod_univ, Measure.prod_prod, ENNReal.toReal_mul]
   have key : P5.pairAt μ Φ Φ' c = (((C : ℝ) * (D.μW.prod D.μW').real Set.univ : ℝ) : ℂ) *
       ∫ ζ, (B2.zWeight k (Tz k r D.z) (Tz k r D.z') ζ : ℂ) *
         (((rbGauge k r c ^ 2 : ℝ) : ℂ) * B.hsInner (B.JF D F (B.gq D (c, ζ))) (B.JF D F' (B.gq D (c, ζ)))) := by

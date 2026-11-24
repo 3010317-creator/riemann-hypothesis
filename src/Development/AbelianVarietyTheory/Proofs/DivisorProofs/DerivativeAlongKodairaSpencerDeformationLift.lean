@@ -102,11 +102,9 @@ theorem lift_eq {S : Scheme.{0}} {a b : S ⟶ M.X} (h : a ≫ toFlag M = b ≫ t
     a = b := by
   have hU : ⊤ ≤ (a ≫ M.σ) ⁻¹ᵁ U₀ X Z := fun s _ => by
     have := ha (Set.mem_univ s)
-    rw [M.off_eq] at this
-    exact this
+    rwa [M.off_eq] at this
   have e : a ≫ M.σ = b ≫ M.σ := by
-    rw [← cancel_mono (inc₀ X Z), Category.assoc, Category.assoc]
-    exact h
+    rwa [← cancel_mono (inc₀ X Z), Category.assoc, Category.assoc]
   exact (M.existsUnique_lift (a ≫ M.σ) hU).unique rfl e.symm
 
 theorem exists_lift_of_unique {L R : Type} [Field L] [Algebra c.F L] [CommRing R] [Algebra c.F R]
@@ -116,8 +114,7 @@ theorem exists_lift_of_unique {L R : Type} [Field L] [Algebra c.F L] [CommRing R
   have e := (X.ptY_frMap hd).trans hz.symm
   have hU : ⊤ ≤ (z ≫ M.σ) ⁻¹ᵁ U₀ X Z := fun s _ => by
     have := ho (Set.mem_univ s)
-    rw [M.off_eq] at this
-    exact this
+    rwa [M.off_eq] at this
   have hb : ⊤ ≤ X.ptY W ⁻¹ᵁ (inc₀ X Z).opensRange := le_preimage_of_unique hR ρ.toRingHom _ _ (by
     rw [e]
     rintro s -

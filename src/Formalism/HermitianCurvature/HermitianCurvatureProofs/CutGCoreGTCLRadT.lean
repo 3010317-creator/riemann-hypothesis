@@ -188,8 +188,7 @@ theorem Bsl_smooth (hG : Gd z z' μs π π' Pr) (hc0 : c0 ∈ OmX r) (j : ℕ) (
       (∏ i ∈ t, -crd (s i) ζ0) • VV z z' μs π π' Pr T c0 (wt j s t X) ζ0 := by
     intro ζ0
     rw [Bsl_apply hG, pw_expand, VV_sum hG _ _ (fun t => (wt_smooth j s t X).const_smul _)]
-    refine Finset.sum_congr rfl fun t _ => ?_
-    exact VV_smulR hG (wt_smooth j s t X) _ ζ0
+    exact Finset.sum_congr rfl fun t _ => VV_smulR hG (wt_smooth j s t X) _ ζ0
   refine (ContDiffOn.sum fun t _ => ?_).congr fun ζ0 _ => key ζ0
   exact (contDiff_prod fun i _ => (crd (s i)).contDiff.neg).contDiffOn.smul (VV_smooth hG hc0)
 
@@ -443,8 +442,7 @@ theorem jetT_gen {D G : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D] [Norme
   rw [Finset.sum_eq_zero (fun i hi => by rw [hzero i hi, norm_zero, mul_zero, zero_mul]), mul_zero] at hbd
   have h0 := norm_le_zero_iff.1 hbd
   rw [iteratedFDerivWithin_of_isOpen j hU hgU] at h0
-  rw [hfun]
-  exact h0
+  rwa [hfun]
 
 theorem jetT_rd {N : ℕ} {f : Q.Mx k r → E} {g₀ X : Q.Mx k r}
     (hX : Q.inLieLev k r (Fin.last r) X) (h : ZJ k r (N + 1) f g₀) : ZJ k r N (RdV X f) g₀ := by
@@ -473,13 +471,13 @@ theorem jetT_Top {N : ℕ} {f : Q.Mx k r → E} {g₀ : Q.Mx k r} (u : ℂ) (a b
   · have he : Top (Q.EH k r) u (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f =
         fun g => u • f g + Q.EH k r (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f g := by
       funext g
-      simp only [Formalism.QuantumDeterminants.Top, hab, if_true]
+      simp only [Formalism.QuantumDeterminants.Top, hab, ite_true]
     rw [he]
     exact jetT_add (jetT_smul u (jetT_mono (Nat.le_succ N) h)) (jetT_EH a b h)
   · have he : Top (Q.EH k r) u (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f =
         Q.EH k r (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f := by
       funext g
-      simp only [Formalism.QuantumDeterminants.Top, hab, if_false, zero_add]
+      simp only [Formalism.QuantumDeterminants.Top, hab, ite_false, zero_add]
     rw [he]
     exact jetT_EH a b h
 
@@ -699,17 +697,14 @@ theorem jet_radial_holds : GTCLRJetRad := by
   have hF : ContDiffOn ℝ ∞ (fun g => Bc Wp Wq (Pp (a g)) (Bd Wp Wq (Pq (b g)) ((ψ ∘ zL) g))) W :=
     ((Bc Wp Wq).contDiff.comp_contDiffOn hu).clm_apply hv
   have hz1 : ∀ j ≤ N, iteratedFDeriv ℝ j ψ (zL (NF.muZ P.k P.r Bs.μsec q.2)) = 0 := by
-    rw [hz0]
-    exact hN
+    rwa [hz0]
   have hv'0 := zero_comp hW ht hg₀W (fun g hg => hg.2) hψs hzL.contDiffOn N hz1
   have hv0 := zero_bilin (Bd Wp Wq) hW hg₀W hu' hv' N hv'0
   have hF0 := zero_bilin (Bc Wp Wq) hW hg₀W hu hv N hv0
   refine ⟨W, _, hW, hg₀W, hF, ?_, hF0⟩
   intro g hg hGl
   have hgt : Tz P.k P.r Bs.z * Tz P.k P.r Bs.z' < Complex.normSq (zL g) := hg.2
-  have hGG : 0 < Q.GGl P.k P.r Bs.z Bs.z' g := by
-    show 0 < Complex.normSq (zL g) - Tz P.k P.r Bs.z * Tz P.k P.r Bs.z'
-    exact sub_pos.2 hgt
+  have hGG : 0 < Q.GGl P.k P.r Bs.z Bs.z' g := sub_pos.2 hgt
   obtain ⟨haU, hbU, hfg⟩ := hfac g hg.1.1.1 hGl hGG
   have hdom' := Formalism.FourierDecayAlt.P.NFRadRedA.mem_domR Bs.z_mem Bs.z'_mem Bs.sec (q := (q.1, zL g)) ⟨hq1, hgt⟩
   have he := hΦe (q.1, NF.muZ P.k P.r Bs.μsec (zL g)) hdom' (a g) haU (b g) hbU
@@ -932,7 +927,7 @@ theorem taylor_expansion_holds : GTCLRTaylor := by
     · exact absurd h2.symm h1
     · rw [smul_zero]
   rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq' (Finset.range (N + 1)) i,
-    if_pos (Finset.mem_range.2 (Nat.lt_succ_of_le hi))]
+    ite_eq_left (Finset.mem_range.2 (Nat.lt_succ_of_le hi))]
   have hs : ∀ σ : Equiv.Perm (Fin i), iteratedFDeriv ℝ i ψ ζ₀ (v ∘ σ) = iteratedFDeriv ℝ i ψ ζ₀ v :=
     fun σ => symm_iter i V ψ U hU hψ ζ₀ hζ σ v
   rw [Finset.sum_congr rfl (fun σ _ => hs σ), Finset.sum_const, Finset.card_univ, Fintype.card_perm,

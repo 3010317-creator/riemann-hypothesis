@@ -98,7 +98,7 @@ private theorem coeff_mem_subalgebra_of_eval_mem {R : Type} [CommRing R] [Algebr
   by_cases hj : F.natDegree + 1 ≤ j
   · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)]
     exact S.zero_mem
-  push_neg at hj
+  push Not at hj
   let v : Fin (F.natDegree + 1) → ℂ := fun i => ((i : ℕ) : ℂ)
   have hv : Function.Injective v := fun a b hab => Fin.ext (by simpa [v] using hab)
   let V := Matrix.vandermonde v
@@ -127,8 +127,7 @@ theorem UpperTheory.isIntegral_eval_of_monic_mul_isIntegral :
   have hcoeff : ∀ j, (P * Q).coeff j ∈ integralClosure ℂ R := coeff_mem_subalgebra_of_eval_mem _ (P * Q) h
   have hlift : P * Q ∈ Polynomial.lifts (algebraMap (integralClosure ℂ R) R) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hcoeff n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hcoeff n⟩, rfl⟩
   obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hlift (hP.mul hQ)
   have hPc : ∀ i, P.coeff i ∈ integralClosure ℂ R := by
     intro i
@@ -342,8 +341,7 @@ private theorem block_congr {V : Type} [AddCommGroup V] [Module ℂ V] {r m : �
     | add a b _ _ ha hb => rw [map_add (f := _)]; exact Submodule.add_mem _ ha hb
     | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ c ha
   have h3 := h2 _ h1
-  rw [map_sub, map_mul, map_qdet, map_qdet, map_qdet] at h3
-  exact h3
+  rwa [map_sub, map_mul, map_qdet, map_qdet, map_qdet] at h3
 
 private theorem span_stable {V : Type} [AddCommGroup V] [Module ℂ V] {r m : ℕ}
     (X : Fin (r + m) → Fin (r + m) → Module.End ℂ V) (hX : GlRel X) (W : Submodule ℂ V)
@@ -528,7 +526,7 @@ private theorem archExp_single (K : Type) [Field K] [NumberField K] (r s : ℕ) 
     intro p
     by_cases hp : p.1 = (Fin.castAdd s i, Fin.natAdd r j)
     · simp [P, hp]
-    · simp only [P, hp, if_false]
+    · simp only [P, hp, ite_false]
       rfl
   have hc := conj_unipGL_eq_archExp (1 : AdelicGLn.AdelicGL K (r + s)) P h0
   simp only [inv_one, one_mul, mul_one] at hc
@@ -542,17 +540,17 @@ private theorem archExp_single (K : Type) [Field K] [NumberField K] (r s : ℕ) 
   · obtain ⟨rfl, rfl⟩ := hab
     have hh : ((Fin.castAdd s i : Fin (r + s)) : ℕ) < r ∧ r ≤ ((Fin.natAdd r j : Fin (r + s)) : ℕ) :=
       ⟨by simp, by simp⟩
-    rw [dite_eq_left hh, if_pos ⟨rfl, rfl⟩]
-    simp only [P, if_pos rfl]
+    rw [dite_eq_left hh, ite_eq_left ⟨rfl, rfl⟩]
+    simp only [P, ite_eq_left rfl]
     exact (e.apply_symm_apply x).symm
-  · rw [if_neg hab]
+  · rw [ite_eq_right hab]
     split_ifs with hh
     · have hne : ¬ ((a, b) : Fin (r + s) × Fin (r + s)) = (Fin.castAdd s i, Fin.natAdd r j) := by
         intro heq
         apply hab
         simp only [Prod.mk.injEq] at heq
         exact ⟨heq.1.symm, heq.2.symm⟩
-      simp only [P, hne, if_false]
+      simp only [P, hne, ite_false]
       exact (map_zero e).symm
     · exact (map_zero e).symm
 
@@ -585,8 +583,7 @@ theorem UpperTheory.archExp_single_unipotent_embedding :
     show ψ.1 (blk m₁ m₂ * unipGL P) = ψ.1 (blk m₁ m₂)
     rw [h1, hψ']
   rw [hconst] at hd
-  have h2 := hd.unique (hasDerivAt_const (0 : ℝ) (ψ.1 g))
-  exact h2
+  exact hd.unique (hasDerivAt_const (0 : ℝ) (ψ.1 g))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.ArchExpSingleUnipotentEmbedding =====

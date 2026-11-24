@@ -134,8 +134,7 @@ theorem delta_eq_relIndex (c : Matrix (Fin m) (Fin m) K) :
         change -(c.mulVec (fun j => algebraMap (𝓞 K) K (y j))) + (a + c.mulVec v) = a
         rw [hyv]
         abel
-      rw [key]
-      exact ha
+      rwa [key]
   show (Kc c).index = H.index
   rw [hker, AddSubgroup.index_ker, AddMonoidHom.range_eq_top.2 hsurj, AddSubgroup.card_top]
   rfl
@@ -143,7 +142,6 @@ theorem delta_eq_relIndex (c : Matrix (Fin m) (Fin m) K) :
 theorem delta_index : ∀ (K : Type) [Field K] [NumberField K] (m : ℕ)
     (c : Matrix (Fin m) (Fin m) K),
     delta c ≠ 0 ∧ delta c = (intVec K m).toAddSubgroup.relIndex (lam c).toAddSubgroup := by
-  intro K _ _ m c
-  exact ⟨delta_ne_zero c, delta_eq_relIndex c⟩
+  exact fun K _ _ m c => ⟨delta_ne_zero c, delta_eq_relIndex c⟩
 
 end GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DeltaIndex

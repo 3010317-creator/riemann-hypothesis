@@ -54,8 +54,7 @@ theorem coneTangent_eq_ker (h : HermNorm n) {J : Ideal (MvPolynomial (Fin n) ℂ
   ext v
   rw [mem_ker_coneJacMat]
   constructor
-  · intro hv i
-    exact hv (g i) (hg ▸ Submodule.subset_span ⟨i, rfl⟩)
+  · exact fun hv i => hv (g i) (hg ▸ Submodule.subset_span ⟨i, rfl⟩)
   · intro hv q hq
     rw [← hg] at hq
     induction hq using Submodule.span_induction with
@@ -97,7 +96,7 @@ theorem coneTangent_eq_bot (h : HermNorm n) {J : Ideal (MvPolynomial (Fin n) ℂ
     · simp [pderiv_X_of_ne hj, hj]
       ring
   simp only [h3, Finset.sum_add_distrib, ← Finset.mul_sum, h1, mul_zero, zero_add,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true] at h2
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h2
   exact (mul_eq_zero.1 h2).resolve_left hq0
 
 theorem starProjection_congr {U V : Submodule ℂ (EuclideanSpace ℂ (Fin n))} (e : U = V) :
@@ -166,8 +165,7 @@ theorem ConeJacMeasurable.proof (hComp : TangentJacCompress.Statement)
   have hM2 : Measurable fun p : (Fin m → Fin n → ℂ) × EuclideanSpace ℂ (Fin n) => (p.1, P p.2) :=
     measurable_fst.prodMk (hP.comp measurable_snd)
   have hM3 := hM.comp hM2
-  rw [hJac]
-  exact hM3
+  rwa [hJac]
 
 end
 

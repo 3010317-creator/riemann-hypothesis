@@ -131,8 +131,7 @@ private theorem exists_isotropic_of_three_le_of_indefinite {m : ℕ} (G : Matrix
     simpa using hj
   obtain ⟨z, hz, hz0⟩ := iso_diag d (by omega) hdr (hd0 hd) hsig
   refine ⟨P *ᵥ z, fun h => hz (eq_zero_of_mulVec_eq_zero hP h), ?_⟩
-  rw [← hf_congr, hPd]
-  exact hz0
+  rwa [← hf_congr, hPd]
 
 theorem iso_gen {n : Type} [Fintype n] [DecidableEq n] (G : Matrix n n E) (hG : ∀ a b, FD.cc (G a b) = G b a)
     (hd : G.det ≠ 0) (h3 : 3 ≤ Fintype.card n)
@@ -147,8 +146,7 @@ theorem iso_gen {n : Type} [Fintype n] [DecidableEq n] (G : Matrix n n E) (hG : 
     apply hz
     funext i
     simpa using congrFun h (e i)
-  · rw [← hf_submatrix]
-    exact hz0
+  · rwa [← hf_submatrix]
 
 end PositivityTheory.Rg.Sw.Glob.WLt
 

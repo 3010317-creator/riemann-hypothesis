@@ -200,7 +200,7 @@ theorem lastDatum : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologi
       rw [dite_eq_left Q.lat.zero_mem]
       exact map_zero Q.fn
     have h0 := congrFun h 0
-    simp only [charInd, vecInd, hev, neg_zero, AddChar.map_zero_eq_one, Q.lat.zero_mem, if_true, mul_one,
+    simp only [charInd, vecInd, hev, neg_zero, AddChar.map_zero_eq_one, Q.lat.zero_mem, ite_true, mul_one,
       Pi.zero_apply] at h0
     exact one_ne_zero h0
   have hA : ∀ y : WO L S, Vac ψ A S LA LS (· = p.v) (comb ψ A S e (fun u => Ξ ((o.resS S).symm (u, y)))) ∧
@@ -248,8 +248,7 @@ theorem lastDatum : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologi
       funext u''
       exact congrFun (hX u'').2 x
     show C u x = comb ψ A S c (fun u' => comb ψ S X c' (fun x' => comb ψ A S e (fun u'' => comb ψ S X e' (C u'') x') u') x) u
-    simp only [hsw]
-    exact (congrFun (hAc x).2 u).symm
+    simpa only [hsw] using (congrFun (hAc x).2 u).symm
 
 end GlobalTheory.LastSeeSawDatum
 end -- clump:auto
@@ -329,8 +328,7 @@ theorem _root_.GlobalTheory.T.lastSeeSawDatum_exists_at_levelPrimePlace : ∀ (D
       funext u''
       exact congrFun (hX u'').2 x
     show C u x = comb ψ A S c (fun u' => comb ψ S X c' (fun x' => comb ψ A S e (fun u'' => comb ψ S X e' (C u'') x') u') x) u
-    simp only [hsw]
-    exact (congrFun (hAc x).2 u).symm
+    simpa only [hsw] using (congrFun (hAc x).2 u).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDatumExistsAtLevelPrimePlaceStatement =====
@@ -634,8 +632,7 @@ theorem main : ∀ D : D7, GlobalTheory.FinPl.LastTAll D := by
       rw [← hXY]
       have hΞ' : Ξ = f₁ := by
         have h := hΞ
-        rw [hl] at h
-        exact h
+        rwa [hl] at h
       subst hΞ'
       have hΞθ := hf₁.1
       have hΦθ := hΦ.1
@@ -731,8 +728,7 @@ theorem splitFac_eq {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT χS'
     rwa [norm_mul, norm_mul, Circle.norm_coe, Circle.norm_coe, mul_one, mul_one, Complex.norm_real, Complex.norm_real,
       Real.norm_of_nonneg hr.le, Real.norm_of_nonneg hr'.le] at this
   subst e3
-  apply Circle.ext
-  exact (mul_left_cancel₀ (Complex.ofReal_ne_zero.2 hr'.ne') e2).symm
+  exact Circle.ext (mul_left_cancel₀ (Complex.ofReal_ne_zero.2 hr'.ne') e2).symm
 
 theorem exists_unit_idem {e : AE D} (he : e * e = e) (u : (AE D)ˣ) : ∃ x : (AE D)ˣ, (x : AE D) = e * u + (1 - e) := by
   have hu : (u : AE D) * ((u⁻¹ : (AE D)ˣ) : AE D) = 1 := u.mul_inv
@@ -751,8 +747,7 @@ theorem exists_detUnit {e : AE D} (he : IsSplitIdem D e) (u : (AE D)ˣ) :
   have hab : (u : AE D) * ((u⁻¹ : (AE D)ˣ) : AE D) = 1 := u.mul_inv
   have hk := alg_key (cA D) he.1 he.2.1 hab
   refine ⟨⟨_, _, hk, by rw [mul_comm]; exact hk⟩, ?_, alg_supp (cA D) he.1 he.2.1, alg_at (cA D) he.1 he.2.1⟩
-  rw [alg_conj (cA D) Formalism.L2.Theta.cA_cA]
-  exact hk
+  rwa [alg_conj (cA D) Formalism.L2.Theta.cA_cA]
 
 theorem chiT_agree {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT χS' χT' : (AE D)ˣ →* Circle}
     {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
@@ -951,10 +946,8 @@ theorem SmallPl.exists_card_withLat (k : Type) [Field k] [ValuativeRel k] [Topol
       have hP' : P.lat = Q₀.lat := mem_withLat.1 hP
       refine Finset.mem_coe.2 (mem_withLat.2 ?_)
       rw [Pair.smul_lat, Pair.smul_lat, hP']
-    · intro P _
-      exact smul_inv_smul g P
-    · intro P _
-      exact inv_smul_smul g P
+    · exact fun P _ => smul_inv_smul g P
+    · exact fun P _ => inv_smul_smul g P
   · exact ⟨1, one_pos, fun Q => (h ⟨Q⟩).elim⟩
 
 theorem SmallPl.liftA_contAut {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {V₀ A L S : HSp D} (o : OrthDec V₀ A L)
@@ -1183,8 +1176,7 @@ theorem main : ∀ D : D7, GlobalTheory.FinPl.SmallAll D := by
     | nil =>
       intro f f' h i _ hv
       have h' : f' = f := h
-      rw [h']
-      exact hv
+      rwa [h']
     | cons j l ih =>
       intro f f' h i hi hv
       obtain ⟨g, hg, hOj⟩ := h
@@ -1288,8 +1280,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [Valu
         (fun i => phiOne (u i • o.Q (j + 1) i) (lastPair o.q (Λ i))) := by
       funext i
       simp only [Q, ε, smul_smul, mul_inv_cancel_left]
-    rw [hf]
-    exact hrep
+    rwa [hf]
   obtain ⟨e₁, e₂, he₁, he₂, hE⟩ := hε' (o.β j) (o.β₀ j 0 h) (o.β (j + 1)) o.γ (o.γ₀ (j + 1 + 1) h)
     (fun i => ⟨(hS.glued j 0 h i).sum, (hS.pre.topT (j + 1 + 1) h i).1⟩) Q Λ
     (fun i => phiOne (o.Q j i) (o.Q (j + 1) i)) (c.x j).L (c.x (j + 1)).L v.NT (c.x (j + 1 + 1)).L (o.M j 0 h)

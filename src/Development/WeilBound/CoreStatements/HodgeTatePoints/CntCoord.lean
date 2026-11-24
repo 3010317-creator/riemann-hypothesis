@@ -114,11 +114,9 @@ lemma map_intFun (e : X ≃+ Y) :
   refine map_pbE_eq_of_addEquiv e _ _ ?_ ?_
   · intro f hf
     have h : ∀ y : Y, ∃ r : R, algebraMap R C r = f y := hf
-    show ∀ x : X, ∃ r : R, algebraMap R C r = f (e x)
     exact fun x => h (e x)
   · intro g hg
     have h : ∀ x : X, ∃ r : R, algebraMap R C r = g x := hg
-    show ∀ y : Y, ∃ r : R, algebraMap R C r = g (e.symm y)
     exact fun y => h (e.symm y)
 
 lemma map_pFun (p : ℕ) (e : X ≃+ Y) :
@@ -185,8 +183,7 @@ private theorem genAF_bot_of_span_monomials {C : Type} [Field C] {R : Type} [Com
   have hinv : invFun M (⊥ : AddSubgroup N) = M := by
     ext g
     constructor
-    · intro h
-      exact (show g ∈ M ∧ ∀ x k : N, k ∈ (⊥ : AddSubgroup N) → g (x + k) = g x from h).1
+    · exact fun h => (show g ∈ M ∧ ∀ x k : N, k ∈ (⊥ : AddSubgroup N) → g (x + k) = g x from h).1
     · intro h
       show g ∈ M ∧ ∀ x k : N, k ∈ (⊥ : AddSubgroup N) → g (x + k) = g x
       refine ⟨h, ?_⟩
@@ -236,8 +233,7 @@ theorem cnt_of (hcoord : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAl
   · have h1 := Submodule.map_span (pbE (C := C) (R := R) e.symm : ((Fin n → ZMod p) → C) →ₗ[R] (N → C))
       (Set.range fun (α : Fin n → ZMod p) (y : Fin n → ZMod p) => ∏ j, x j y ^ (α j).val)
     rw [← hspan] at h1
-    rw [← map_pbE_symm e AA.carrier]
-    exact h1
+    rwa [← map_pbE_symm e AA.carrier]
   · rintro s ⟨_, ⟨α, rfl⟩, rfl⟩
     refine ⟨fun j => (α j).val, ?_⟩
     funext z
@@ -308,10 +304,10 @@ theorem exists_smith_basis (hv : v.Integers R) {ι : Type} [Fintype ι] [Decidab
     · have hj : ((e (e.symm j)) : ℕ) < m := by
         rw [Equiv.apply_symm_apply, ← hkj]; exact k.2
       have hε : ε (e.symm j) = a j := by
-        simp only [ε, if_pos hj, Equiv.apply_symm_apply]
-      rw [if_pos hkj, mul_smul, ← hε]
+        simp only [ε, ite_eq_left hj, Equiv.apply_symm_apply]
+      rw [ite_eq_left hkj, mul_smul, ← hε]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨e.symm j, rfl⟩)
-    · rw [if_neg hkj, mul_zero, zero_smul]
+    · rw [ite_eq_right hkj, mul_zero, zero_smul]
       exact Submodule.zero_mem _
   · rw [Submodule.span_le]
     rintro _ ⟨j, rfl⟩
@@ -328,17 +324,16 @@ theorem exists_smith_basis (hv : v.Integers R) {ι : Type} [Fintype ι] [Decidab
           rw [Matrix.mul_apply, Finset.sum_eq_single (e j)]
           · rw [hD]; simp [mul_comm]
           · intro b _ hb
-            rw [hD, if_neg, mul_zero]
-            intro h
-            exact hb (Fin.ext h.symm)
+            rw [hD, ite_eq_right, mul_zero]
+            exact fun h => hb (Fin.ext h.symm)
           · intro h; exact absurd (Finset.mem_univ _) h
         simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
         rw [← h2, h1, h3]
-        simp only [ε, if_pos hj, Λ, Matrix.of_apply]
+        simp only [ε, ite_eq_left hj, Λ, Matrix.of_apply]
       rw [hsum, ← hg]
       exact Submodule.sum_mem _ fun l _ =>
         Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, rfl⟩)
-    · have : ε j = 0 := if_neg hj
+    · have : ε j = 0 := ite_eq_right hj
       rw [this, zero_smul]
       exact Submodule.zero_mem _
 

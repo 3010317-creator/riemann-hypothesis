@@ -74,8 +74,7 @@ theorem hasFiniteMulSupport_iSup_place {F : Type*} [Field F] [NumberField F] {ι
     (f := fun i (w : FinitePlace F) ↦ w (y i)) fun i ↦ FinitePlace.hasFiniteMulSupport i.2
   have e : (fun w : FinitePlace F ↦ ⨆ i, w (y i)) = fun w ↦ ⨆ i : {j // y j ≠ 0}, w (y i) :=
     funext fun w ↦ Finite.iSup_eq_iSup_subtype hy
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem finprod_algebraMap {c : K} (hc : c ≠ 0) :
     ∏ᶠ w : FinitePlace L, w (algebraMap K L c) = (∏ᶠ v : FinitePlace K, v c) ^ finrank K L := by
@@ -93,9 +92,7 @@ theorem finprod_iSup_algebraMap {ι : Type*} [Finite ι] {y : ι → K} (hy : y 
     rw [Ne, RingOfIntegers.coe_eq_zero_iff]
     exact nonZeroDivisors.ne_zero hb
   have hzy : ∀ i, ((z i : 𝓞 K) : K) = (b : K) * y i := fun i ↦ by
-    have h := hz i
-    simp only [Algebra.smul_def] at h
-    exact h
+    simpa only [Algebra.smul_def] using hz i
   have hz0 : z ≠ 0 := by
     obtain ⟨i, hi⟩ := Function.ne_iff.mp hy
     refine Function.ne_iff.mpr ⟨i, fun h ↦ hi ?_⟩

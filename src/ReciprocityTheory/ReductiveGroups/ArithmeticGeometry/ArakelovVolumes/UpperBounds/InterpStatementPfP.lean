@@ -40,8 +40,7 @@ private theorem submatrix_castLE_mul_of_left_zero {i : ℕ} (h : i ≤ r) (M N :
     _ = ∑ k, M (Fin.castLE h a) k * N k (Fin.castLE h c) := by
         refine Finset.sum_subset (Finset.subset_univ _) (fun k _ hk => ?_)
         have hik : i ≤ (k : ℕ) := by
-          by_contra hlt
-          push_neg at hlt
+          by_contra! hlt
           exact hk (Finset.mem_map.2 ⟨⟨k, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
         rw [hM a k hik, zero_mul]
 
@@ -58,8 +57,7 @@ private theorem submatrix_castLE_mul_of_right_zero {i : ℕ} (h : i ≤ r) (N U 
     _ = ∑ k, N (Fin.castLE h a) k * U k (Fin.castLE h c) := by
         refine Finset.sum_subset (Finset.subset_univ _) (fun k _ hk => ?_)
         have hik : i ≤ (k : ℕ) := by
-          by_contra hlt
-          push_neg at hlt
+          by_contra! hlt
           exact hk (Finset.mem_map.2 ⟨⟨k, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
         rw [hU k c hik, mul_zero]
 
@@ -67,9 +65,7 @@ private theorem exists_dmin_rmul_eq_normSq_mul (x b : Frame X.Ψ r) (hb : b ∈ 
     (i : Fin (r + 1)) :
     ∃ d : ℂ, d ≠ 0 ∧ dmin X.Gm (rmul x b) τ i = (Complex.normSq d : ℂ) * dmin X.Gm x τ i := by
   have h : (i : ℕ) ≤ r := Nat.le_of_lt_succ i.isLt
-  have hB : (mat b τ).BlockTriangular id := by
-    intro a c hac
-    exact (hb τ).2 a c hac
+  have hB : (mat b τ).BlockTriangular id := fun a c hac => (hb τ).2 a c hac
   refine ⟨((mat b τ).submatrix (Fin.castLE h) (Fin.castLE h)).det, ?_, ?_⟩
   · have hdet := (hb τ).1
     rw [Matrix.det_of_upperTriangular hB] at hdet
@@ -114,13 +110,9 @@ private theorem exists_mem_bor_rmul_rmul_eq {u : Frame X.Ψ r} (hu : u ∈ Bor X
     intro τ
     have hdu : IsUnit (mat u τ).det := (hu τ).1.isUnit
     letI : Invertible (mat u τ) := Matrix.invertibleOfIsUnitDet _ hdu
-    have h1 : (mat u τ).BlockTriangular id := by
-      intro a c h
-      exact (hu τ).2 a c h
+    have h1 : (mat u τ).BlockTriangular id := fun a c h => (hu τ).2 a c h
     have h2 := Matrix.blockTriangular_inv_of_blockTriangular h1
-    refine ⟨?_, fun a c hac => h2 hac⟩
-    show ((mat u τ)⁻¹).det ≠ 0
-    exact (Matrix.isUnit_nonsing_inv_det _ hdu).ne_zero
+    exact ⟨(Matrix.isUnit_nonsing_inv_det _ hdu).ne_zero, fun a c hac => h2 hac⟩
   · funext τ
     show mat y τ * mat u τ * (mat u τ)⁻¹ = mat y τ
     rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (hu τ).1.isUnit, Matrix.mul_one]

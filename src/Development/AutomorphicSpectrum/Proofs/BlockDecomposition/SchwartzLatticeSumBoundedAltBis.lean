@@ -72,7 +72,7 @@ theorem maj_add_le (θ : InfFam D) (K K₀ : Set (Mx D ρ p)) (N : ℕ) (R : ℝ
       have e : g - (k + -w) = g + w - k := by abel
       rw [e]; exact h0
     unfold GlobalTheory.Unf.maj
-    rw [if_pos hb, if_pos hb']
+    rw [ite_eq_left hb, ite_eq_left hb']
     have h0 := GlobalTheory.Unf.realSize_nonneg θ g
     have h1 := GlobalTheory.Unf.realSize_nonneg θ (g + w)
     have h2 : 1 + GlobalTheory.Unf.realSize θ g ≤ (1 + R) * (1 + GlobalTheory.Unf.realSize θ (g + w)) := by
@@ -85,9 +85,8 @@ theorem maj_add_le (θ : InfFam D) (K K₀ : Set (Mx D ρ p)) (N : ℕ) (R : ℝ
     have h5 : (1 + GlobalTheory.Unf.realSize θ g) ^ N ≤ (1 + R) ^ N * (1 + GlobalTheory.Unf.realSize θ (g + w)) ^ N := by
       rw [← mul_pow]
       exact pow_le_pow_left₀ (by linarith) h2 N
-    rw [← div_eq_mul_inv, inv_eq_one_div, div_le_div_iff₀ hp hq, one_mul]
-    exact h5
-  · have h0 : GlobalTheory.Unf.maj θ K N (g + w) = 0 := by unfold GlobalTheory.Unf.maj; rw [if_neg hb]
+    rwa [← div_eq_mul_inv, inv_eq_one_div, div_le_div_iff₀ hp hq, one_mul]
+  · have h0 : GlobalTheory.Unf.maj θ K N (g + w) = 0 := by unfold GlobalTheory.Unf.maj; rw [ite_eq_right hb]
     rw [h0]
     exact mul_nonneg (by positivity) (GlobalTheory.Unf.maj_nonneg θ _ N g)
 
@@ -114,8 +113,7 @@ theorem periodisation_bound : ∀ {D : D7} {ρ p : ℕ} (θ : InfFam D), IsInfFa
     (le_abs_self _).trans ((hR₀ w hw).trans (le_abs_self _))
   have hg : Summable fun γ : ratMx D ρ p => GlobalTheory.Unf.maj θ (K + (-K₀)) N (γ : Mx D ρ p) := by
     have h := ENNReal.summable_toReal (hN _ hK')
-    refine h.congr fun γ => ?_
-    exact ENNReal.toReal_ofReal (GlobalTheory.Unf.maj_nonneg θ _ N _)
+    exact h.congr fun γ => ENNReal.toReal_ofReal (GlobalTheory.Unf.maj_nonneg θ _ N _)
   set c : ℝ := |C| * (1 + |R₀|) ^ N with hc
   have hc0 : 0 ≤ c := by positivity
   refine ⟨c * ∑' γ : ratMx D ρ p, GlobalTheory.Unf.maj θ (K + (-K₀)) N (γ : Mx D ρ p), fun y => ?_⟩

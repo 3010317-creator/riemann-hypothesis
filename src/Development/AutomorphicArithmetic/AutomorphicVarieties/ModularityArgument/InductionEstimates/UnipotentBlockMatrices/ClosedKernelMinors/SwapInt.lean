@@ -439,8 +439,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.dies :
     funext y
     obtain ⟨Z, hZ⟩ := fromMat γ (unipOne (K := _) (n := _) r fun p => y * algebraMap K 𝔸[K] (X₀ p)) 1
       ((μ : G1 K 2)⁻¹ * unipOne (K := _) (n := _) 1 (fun _ => y) * (μ : G1 K 2)) (y • C.map (algebraMap K 𝔸[K])) (by
-        rw [← hg, coe_unipOne, conjMat g X₀ _ _ _ hC]
-        rw [conjU m μ hμ]
+        rw [← hg, coe_unipOne, conjMat g X₀ _ _ _ hC, conjU m μ hμ]
         simp)
     rw [hZ, mul_assoc, hF.unip, ← hF.rat _ (hP 1 μ)]
     simp only [← mul_assoc, hmul, OneMemClass.coe_one, mul_inv_cancel, one_mul, add_zero]
@@ -449,8 +448,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.dies :
     funext y
     obtain ⟨Z, hZ⟩ := fromMat γ (unipOne (K := _) (n := _) r fun p => y * algebraMap K 𝔸[K] (X₀ p))
       ((μ : G1 K 2)⁻¹ * unipOne (K := _) (n := _) 1 (fun _ => y) * (μ : G1 K 2)) 1 (y • C.map (algebraMap K 𝔸[K])) (by
-        rw [← hg, coe_unipOne, conjMat g X₀ _ _ _ hC]
-        rw [conjU m μ hμ]
+        rw [← hg, coe_unipOne, conjMat g X₀ _ _ _ hC, conjU m μ hμ]
         simp)
     rw [hZ, mul_assoc, hF.unip, ← hF.rat _ (hP μ 1)]
     simp only [← mul_assoc, hmul, OneMemClass.coe_one, mul_inv_cancel, one_mul, add_zero]
@@ -646,7 +644,7 @@ private theorem w_mul {R : Type} [CommRing R] (M : Matrix (Fin (2 + 2)) (Fin (2 
   rw [Matrix.mul_apply, Fin.sum_univ_add]
   simp only [wGL, Matrix.reindex_apply, Matrix.submatrix_apply, finSumFinEquiv_symm_apply_natAdd,
     finSumFinEquiv_symm_apply_castAdd, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂, Matrix.zero_apply, zero_mul,
-    Finset.sum_const_zero, add_zero, Matrix.one_apply, ite_mul, one_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_const_zero, add_zero, Matrix.one_apply, ite_mul, one_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 private theorem mul_w {R : Type} [CommRing R] (M : Matrix (Fin (2 + 2)) (Fin (2 + 2)) R) (j : Fin 2) (k : Fin (2 + 2)) :
     (M * ((wGL R)⁻¹).val) k (Fin.castAdd 2 j) = M k (Fin.natAdd 2 j) := by
@@ -654,7 +652,7 @@ private theorem mul_w {R : Type} [CommRing R] (M : Matrix (Fin (2 + 2)) (Fin (2 
   change (∑ i, _ * (wGL R).inv _ _) + (∑ i, _ * (wGL R).inv _ _) = _
   simp only [wGL, Matrix.reindex_apply, Matrix.submatrix_apply, finSumFinEquiv_symm_apply_natAdd,
     finSumFinEquiv_symm_apply_castAdd, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₁₁, Matrix.zero_apply, mul_zero,
-    Finset.sum_const_zero, zero_add, Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_const_zero, zero_add, Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 private theorem swap_int {K : Type} [Field K] [NumberField K] (F : G1 K (2 + 2) → ℂ) (hF : Continuous F)
     (hfin : ∀ C : Set (G1 K (2 + 2)), IsCompact C → {q : Cos K | ∃ g ∈ C, F ((q.out : G1 K (2 + 2)) * g) ≠ 0}.Finite)

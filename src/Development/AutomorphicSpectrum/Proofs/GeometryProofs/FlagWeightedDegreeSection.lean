@@ -84,7 +84,7 @@ theorem ιMulti_eq_prod_smul {b₀ b : Fin r → V} {t : Fin r → Ω}
   have hb : b = fun i => ∑ k, a i k • b₀ k := by
     funext i
     have e : b i = t i • b₀ i + ∑ l, d i l • b₀ l := by rw [← hd2 i]; abel
-    simp only [a, add_smul, Finset.sum_add_distrib, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [a, add_smul, Finset.sum_add_distrib, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [e, add_comm]
   have hdet : a.det = ∏ k, t k := by
     rw [Matrix.det_of_lowerTriangular a]
@@ -135,11 +135,11 @@ theorem prod_roots (D : Datum H) (τ : CMType H) {M : Type} [CommMonoid M]
   congr 1
   · refine Finset.prod_congr rfl fun k _ => ?_
     have h : ((Fin.castAdd D.q k : Fin (D.p + D.q)) : ℕ) < D.p := k.2
-    simp only [HodgeCpt.rootIdx, HodgeCpt.rootSgn, dif_pos h, if_pos h]
+    simp only [HodgeCpt.rootIdx, HodgeCpt.rootSgn, dite_eq_left h, ite_eq_left h]
     rfl
   · refine Fintype.prod_equiv Fin.revPerm _ _ fun j => ?_
     have h : ¬ ((Fin.natAdd D.p j : Fin (D.p + D.q)) : ℕ) < D.p := by simp
-    simp only [HodgeCpt.rootIdx, HodgeCpt.rootSgn, dif_neg h, if_neg h]
+    simp only [HodgeCpt.rootIdx, HodgeCpt.rootSgn, dite_eq_right h, ite_eq_right h]
     congr 2
     apply Fin.ext
     simp only [Fin.revPerm_apply, Fin.val_rev, Fin.val_natAdd]
@@ -356,9 +356,7 @@ theorem exists_doubled [NumberField c.F] {Y : Model Xo c (algebraMap (𝓞 c.F) 
       (two_ne_zero : (2 : ℂ) ≠ 0) ((map_ofNat (Scheme.stalkClosedPointTo z).hom 2).symm.trans h)
   let ρ : 𝔐.X.presheaf.stalk (centre z) →+* regAt 𝔐.ξ ⟨centre z, hgen⟩ := (genMap 𝔐.ξ ⟨centre z, hgen⟩).rangeRestrict
   let u2 : (regAt 𝔐.ξ ⟨centre z, hgen⟩)ˣ := Units.map (ρ : _ →* _) hu2.unit
-  have hu2c : ((u2 : regAt 𝔐.ξ ⟨centre z, hgen⟩) : Ω) = 2 := by
-    show genMap 𝔐.ξ ⟨centre z, hgen⟩ 2 = 2
-    exact map_ofNat _ 2
+  have hu2c : ((u2 : regAt 𝔐.ξ ⟨centre z, hgen⟩) : Ω) = 2 := map_ofNat _ 2
   obtain ⟨h1, h2, -⟩ := GrNorm.scale_frame (regAt 𝔐.ξ ⟨centre z, hgen⟩) hb.1 (fun _ => u2)
   simp only [hu2c] at h1 h2
   have hfr : (𝔐.V s).IsFrameAt (fun k => (2 : Ω) • b k) ⟨centre z, 𝔐.all _⟩ := ⟨h1, hb.2.trans h2.symm⟩
@@ -425,8 +423,7 @@ theorem norm_against_root_metrics : ∀ (E : Type) [Field E] [NumberField E] [Is
     have e2 : (∏ j : Fin (labelRk D (.inr τ)), t (.inr τ) j ^ (-1 : ℤ)) = Q⁻¹ := by
       rw [hQdef, ← Finset.prod_inv_distrib]
       simp only [zpow_neg_one]
-    rw [← e1, ← e2]
-    exact h1
+    rwa [← e1, ← e2]
   have hPN : ∏ i, N i = (∏ k : Fin (labelRk D (.inl τ)), ν (.inl τ) k) *
       (∏ j : Fin (labelRk D (.inr τ)), ν (.inr τ) j)⁻¹ := by
     have h1 := prod_roots D τ (fun x n => ν x.1 x.2 ^ n)
@@ -435,14 +432,12 @@ theorem norm_against_root_metrics : ∀ (E : Type) [Field E] [NumberField E] [Is
     have e2 : (∏ j : Fin (labelRk D (.inr τ)), ν (.inr τ) j ^ (-1 : ℤ)) = (∏ j, ν (.inr τ) j)⁻¹ := by
       rw [← Finset.prod_inv_distrib]
       simp only [zpow_neg_one]
-    rw [← e1, ← e2]
-    exact h1
+    rwa [← e1, ← e2]
   have hval : ValAt 𝔐.ξ z (c₁ * P⁻¹ / Q⁻¹) u' := by
     have e1 : c₁ * P⁻¹ / Q⁻¹ = c₁ / ∏ i, T i := by
       rw [hPT]
       field_simp
-    rw [e1]
-    exact hu'
+    rwa [e1]
   have hw1 : exteriorPower.ιMulti Ω _ (Fl.b (.inl τ)) = P⁻¹ • exteriorPower.ιMulti Ω _ (b (.inl τ)) := by
     rw [hbw, ← hPdef, smul_smul, inv_mul_cancel₀ hP0, one_smul]
   have hw2 : exteriorPower.ιMulti Ω _ (Fl.b (.inr τ)) = Q⁻¹ • exteriorPower.ιMulti Ω _ (b (.inr τ)) := by

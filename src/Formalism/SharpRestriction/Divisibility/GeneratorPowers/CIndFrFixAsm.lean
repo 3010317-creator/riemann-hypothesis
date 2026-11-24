@@ -125,8 +125,7 @@ theorem bal_of {P : MvPolynomial (Fin 2 × Fin d) S} {m : ℕ} (hm : 2 ≤ m) (B
   ext i0 l0
   have hc := congrArg (AddMonoidAlgebra.coeff · (sil i0 l0)) hb1
   rw [hhdef, eval_pair_bilinear, eval_pair_bilinear, coeff_linL, coeff_linR] at hc
-  simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply]
-  exact hc
+  simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply] using hc
 
 end Formalism.MainNotions.ModuliIntegralCharts.H1.CIndFrExp2b
 end -- clump:auto
@@ -188,8 +187,7 @@ private lemma low_two_of_lemma {σ : Type} {f : MvPowerSeries σ S} (h0 : consta
   intro e he
   by_cases hz : e = 0
   · subst hz
-    rw [coeff_zero_eq_constantCoeff_apply]
-    exact h0
+    rwa [coeff_zero_eq_constantCoeff_apply]
   · obtain ⟨w, hw⟩ := Finsupp.support_nonempty_iff.mpr hz
     have hdeg : e.degree = ∑ s ∈ e.support, e s := rfl
     rw [hdeg] at he
@@ -211,7 +209,7 @@ private lemma low_two_of_lemma {σ : Type} {f : MvPowerSeries σ S} (h0 : consta
       by_cases hvw : v = w
       · subst hvw
         simp [hew]
-      · rw [hv v hvw, Finsupp.single_apply, if_neg (Ne.symm hvw)]
+      · rw [hv v hvw, Finsupp.single_apply, ite_eq_right (Ne.symm hvw)]
     rw [he1]
     exact h1 w
 
@@ -229,8 +227,7 @@ private lemma cc_subst_lemma_2 {σ τ : Type} [Finite σ] {a : σ → MvPowerSer
     rw [← coe_substAlgHom ha, map_sub, map_smul, map_one]
   rw [hsub] at hS
   have h0 := hS 0 (by simp)
-  rw [map_sub, map_smul, coeff_zero_one, smul_eq_mul, mul_one, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, map_smul, coeff_zero_one, smul_eq_mul, mul_one, sub_eq_zero] at h0
 
 private lemma lin_subst_lemma_3 {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries τ S}
     (ha0 : ∀ s, constantCoeff (a s) = 0) {f : MvPowerSeries σ S} (hf0 : constantCoeff f = 0) (w : τ) :
@@ -301,14 +298,12 @@ theorem dLin_logOf (G : FGLaw S d) : ReciprocityTheory.ChartRestriction.G.TB.dLi
     · simp [coeff_zero_eq_constantCoeff_apply]
     · intro w _ hw
       simp [Ne.symm hw]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   show coeff (Finsupp.single ((0 : Fin 1), j) 1) (ReciprocityTheory.ChartRestriction.G.TB.LogPf.logOf G i) = (1 : Matrix (Fin d) (Fin d) S) i j
   rw [hcoef]
   have h2 : ((ReciprocityTheory.ChartRestriction.G.TB.LogPf.Om G).map constantCoeff) i j = (1 : Matrix (Fin d) (Fin d) S) i j := by
     rw [hOm]
-  rw [Matrix.map_apply] at h2
-  exact h2
+  rwa [Matrix.map_apply] at h2
 
 theorem cc_logOf (G : FGLaw S d) (i : Fin d) : constantCoeff (ReciprocityTheory.ChartRestriction.G.TB.LogPf.logOf G i) = 0 := by
   rw [← coeff_zero_eq_constantCoeff_apply]
@@ -433,12 +428,12 @@ theorem psTrunc_two_twist (G : FGLaw S d) (c : Fin d → Fin d → S) :
     rw [psTrunc, MvPolynomial.coeff_sum]
     simp only [MvPolynomial.coeff_monomial, Finset.sum_ite_eq']
     by_cases h : e.degree ≤ 2
-    · rw [if_pos ((hmem e).2 h), if_pos h]
-    · rw [if_neg (fun h' => h ((hmem e).1 h')), if_neg h]
+    · rw [ite_eq_left ((hmem e).2 h), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h ((hmem e).1 h')), ite_eq_right h]
   have hXX : ∀ (a b : Fin 2 × Fin d) (e : Fin 2 × Fin d →₀ ℕ), 2 < e.degree →
       coeff e (X a * X b : MvPowerSeries (Fin 2 × Fin d) S) = 0 := by
     intro a b e he
-    rw [MvPowerSeries.X, MvPowerSeries.X, monomial_mul_monomial, coeff_monomial, if_neg]
+    rw [MvPowerSeries.X, MvPowerSeries.X, monomial_mul_monomial, coeff_monomial, ite_eq_right]
     rintro rfl
     have hdeg : (Finsupp.single a 1 + Finsupp.single b 1 : Fin 2 × Fin d →₀ ℕ).degree = 2 := by
       show (Finsupp.single a 1 + Finsupp.single b 1 : Fin 2 × Fin d →₀ ℕ).sum (fun _ k => k) = 2
@@ -448,17 +443,17 @@ theorem psTrunc_two_twist (G : FGLaw S d) (c : Fin d → Fin d → S) :
   ext e
   rw [hpt]
   by_cases hd : e.degree ≤ 2
-  · rw [if_pos hd, ← MvPolynomial.coeff_coe]
+  · rw [ite_eq_left hd, ← MvPolynomial.coeff_coe]
     have h := hdiff e (by omega)
     rwa [map_sub, sub_eq_zero] at h
   · set_option synthInstance.maxHeartbeats 100000 in
-      rw [if_neg hd, ← MvPolynomial.coeff_coe, hcoe, map_add (f := _), map_sum]
+      rw [ite_eq_right hd, ← MvPolynomial.coeff_coe, hcoe, map_add (f := _), map_sum]
     have h2 : 2 < e.degree := by omega
     have hz : ∀ a b : Fin 2 × Fin d, coeff e (X a * X b : MvPowerSeries (Fin 2 × Fin d) S) = 0 :=
       fun a b => hXX a b e h2
 
     simp only [map_sum, map_smul, hz, smul_zero, Finset.sum_const_zero, add_zero]
-    rw [coeff_one, if_neg]
+    rw [coeff_one, ite_eq_right]
     rintro rfl
     simp at hd
 
@@ -524,8 +519,7 @@ theorem isUnit_coeff_zero {m : ℕ} {P : MvPolynomial (Fin 2 × Fin d) S} (U : (
   let φ := Ideal.Quotient.lift _ (constantCoeff : MvPolynomial (Fin 2 × Fin d) S →+* S) hker
   have hφP : φ (Ideal.Quotient.mk _ P) = AddMonoidAlgebra.coeff P 0 := Ideal.Quotient.lift_mk _ _ _
   have hu : IsUnit (φ (U : Jet S (Fin 2 × Fin d) m)) := U.isUnit.map φ
-  rw [← hP, hφP] at hu
-  exact hu
+  rwa [← hP, hφP] at hu
 
 theorem bilL_neg [Algebra ℚ S] (G : FGLaw S d) (c : Fin d → Fin d → S) : bilL G (-c) = -bilL G c := by
   simp only [bilL, Pi.neg_apply, neg_smul, Finset.sum_neg_distrib]
@@ -587,8 +581,7 @@ theorem const_one' {P : MvPolynomial (Fin 2 × Fin d) S} {m : ℕ} (fF : Fin d �
   have hu' : IsUnit (constantCoeff P) := hu
   have hc : constantCoeff P = 1 := by
     have h3 : constantCoeff P * (1 - constantCoeff P) = 0 := by
-      rw [mul_sub, mul_one]
-      exact h0
+      rwa [mul_sub, mul_one]
     exact (sub_eq_zero.1 ((hu'.mul_right_eq_zero).1 h3)).symm
   rw [pow_one]
   unfold Io idealOfVars
@@ -600,8 +593,7 @@ theorem const_one' {P : MvPolynomial (Fin 2 × Fin d) S} {m : ℕ} (fF : Fin d �
     rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, MvPolynomial.coeff_zero_one, hc', sub_self] at he
     exact he rfl
   obtain ⟨i, hi⟩ : ∃ i, e i ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hne (Finsupp.ext hcon)
   exact ⟨i, Set.mem_univ _, hi⟩
 

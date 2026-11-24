@@ -20,9 +20,7 @@ section Layers
 variable {M : Type*} [AddCommGroup M] [Module ℂ M] {ε : Fin n → Bool}
   {E : Fin n → Fin n → Module.End ℂ M} {V : Submodule ℂ M}
 
-theorem layer_le_succ (k : ℕ) : layer ε E V k ≤ layer ε E V (k + 1) := by
-  show layer ε E V k ≤ layer ε E V k ⊔ _
-  exact le_sup_left
+theorem layer_le_succ (k : ℕ) : layer ε E V k ≤ layer ε E V (k + 1) := le_sup_left
 
 theorem layer_mono {k l : ℕ} (hkl : k ≤ l) : layer ε E V k ≤ layer ε E V l := by
   exact monotone_nat_of_le_succ (fun k => layer_le_succ (ε := ε) (E := E) (V := V) k) hkl
@@ -30,7 +28,6 @@ theorem layer_mono {k l : ℕ} (hkl : k ≤ l) : layer ε E V k ≤ layer ε E V
 theorem apply_mem_layer_succ_nc {a b : Fin n} (hab : ε a ≠ ε b) {k : ℕ} {v : M}
     (hv : v ∈ layer ε E V k) : E a b v ∈ layer ε E V (k + 1) := by
   have h1 : (layer ε E V k).map (E a b) ≤ layer ε E V (k + 1) := by
-    show _ ≤ layer ε E V k ⊔ ⨆ (a : Fin n) (b : Fin n) (_ : ε a ≠ ε b), (layer ε E V k).map (E a b)
     exact le_sup_of_le_right (le_iSup_of_le a (le_iSup_of_le b (le_iSup_of_le hab le_rfl)))
   exact h1 (Submodule.mem_map_of_mem hv)
 
@@ -42,21 +39,17 @@ theorem layer_le_of_stable {T : Submodule ℂ M} (hVT : V ≤ T)
     show layer ε E V k ⊔ _ ≤ T
     refine sup_le ih (iSup_le fun a => iSup_le fun b => iSup_le fun _ => ?_)
     rw [Submodule.map_le_iff_le_comap]
-    intro v hv
-    exact hT a b v (ih hv)
+    exact fun v hv => hT a b v (ih hv)
 
 theorem layer_le_genSub (k : ℕ) : layer ε E V k ≤ genSub E V := by
   have hVT : V ≤ genSub E V := by
     unfold genSub
-    apply le_sInf
-    intro T hT
-    exact hT.1
+    exact le_sInf (fun T hT => hT.1)
   have hStable : ∀ a b, ∀ v ∈ genSub E V, E a b v ∈ genSub E V := by
     intro a b v hv
     unfold genSub at hv ⊢
     simp only [Submodule.mem_sInf, Set.mem_setOf_eq] at hv ⊢
-    intro T hT
-    exact hT.2 a b v (hv T hT)
+    exact fun T hT => hT.2 a b v (hv T hT)
   exact layer_le_of_stable hVT hStable k
 
 theorem layer_kStable (hE : IsGlRep E) (hV : IsKStableSub ε E V) (k : ℕ) :
@@ -87,8 +80,7 @@ theorem layer_kStable (hE : IsGlRep E) (hV : IsKStableSub ε E V) (k : ℕ) :
       · split_ifs with hda
         · exact apply_mem_layer_succ_nc (fun h' => hcd (by rw [hda, hab]; exact h')) hv
         · simp
-    intro v hv
-    exact key hv
+    exact fun v hv => key hv
 
 theorem apply_mem_layer_succ (hE : IsGlRep E) (hV : IsKStableSub ε E V) (a b : Fin n) {k : ℕ}
     {v : M} (hv : v ∈ layer ε E V k) : E a b v ∈ layer ε E V (k + 1) := by

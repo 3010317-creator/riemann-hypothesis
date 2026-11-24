@@ -29,8 +29,7 @@ theorem exists_isCompact_mul_mem_of_ideleModule_mem_Icc {a : ℝ} (ha : 0 < a) (
       constructor
       · rintro ⟨t, ht, rfl⟩
         exact ht
-      · intro hr
-        exact ⟨⟨r, lt_of_lt_of_le ha hr.1⟩, hr, rfl⟩
+      · exact fun hr => ⟨⟨r, lt_of_lt_of_le ha hr.1⟩, hr, rfl⟩
     rw [this]
     exact isCompact_Icc
   refine ⟨(fun p : IdeleGroup K × {r : ℝ // 0 < r} => p.1 * moduleSection w₀ p.2) '' (D ×ˢ I),

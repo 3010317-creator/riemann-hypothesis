@@ -85,8 +85,7 @@ private theorem sn_mul (X Y : Matrix (Fin m) (Fin m) (DualNumber κ)) :
   ext i j
   simp only [Matrix.map_apply, Matrix.mul_apply, Matrix.add_apply, snd_sum, DualNumber.snd_mul,
     ← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl fun k _ => ?_
-  exact add_comm _ _
+  exact Finset.sum_congr rfl fun k _ => add_comm _ _
 
 private theorem sn_J : (Jmat (DualNumber κ) m).map snd = 0 := by
   ext i j
@@ -137,9 +136,9 @@ private theorem tc_mul (x y : GG (m := m) (R := DualNumber κ)) : tc (x * y) = t
   unfold GG.adFun
   rw [e, GG.map_mat, GG.map_right]
   rcases Int.units_eq_one_or s with rfl | rfl
-  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_one, if_true, _root_.mul_inv_rev, Units.val_mul,
+  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_one, ite_true, _root_.mul_inv_rev, Units.val_mul,
       sn_mul, Matrix.map_mul, Matrix.add_mul, Matrix.mul_assoc, h1]
-  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_neg_one, h, if_false, _root_.mul_inv_rev,
+  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_neg_one, h, ite_false, _root_.mul_inv_rev,
       Units.val_mul, theta_val, theta_inv_val, thetaLie, sn_mul, sn_J, Matrix.map_mul, Jmat_map,
       Matrix.transpose_map, sn_inv, Matrix.add_mul, Matrix.mul_assoc, Matrix.zero_mul,
       Matrix.mul_zero, zero_add, add_zero, Matrix.transpose_neg, Matrix.transpose_mul, Matrix.neg_mul,
@@ -218,12 +217,10 @@ private theorem fin_case (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] 
   have hz : tanCoc F U.r.hom ∈ Z1 (adRep (push (dualFst F) U.r.hom)) := by
     refine ⟨h2.matrix_mul h3, fun g h => ?_⟩
     have := tc_mul (push F U.r.hom g) (push F U.r.hom h)
-    rw [← map_mul] at this
-    exact this
+    rwa [← map_mul] at this
   refine ((dualCr D E (push (dualFst F) U.r.hom) (fun g => U.r.hasMult g) h1 _ hz (push F U.r.hom)
     fun g => ⟨rfl, fun a b => ?_⟩).1 hcr).2
-  refine TrivSqZeroExt.ext rfl ?_
-  exact (congrFun (congrFun (tc_mul_mat (push F U.r.hom g)) a) b).symm
+  exact TrivSqZeroExt.ext rfl (congrFun (congrFun (tc_mul_mat (push F U.r.hom g)) a) b).symm
 
 end UpperTheory.V.Loc.RootDualTransport
 
@@ -259,8 +256,7 @@ theorem UpperTheory.V.Loc.rtDual :
   have e : (fun g => (tanCoc F' U.r.hom g).map K.val) = tanCoc F U.r.hom := by
     funext g
     exact Matrix.map_mul (f := (K.val : ↥K →+* PadicAlgCl l))
-  rw [e] at h
-  exact h
+  rwa [e] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.RtDual =====
@@ -342,10 +338,10 @@ private theorem tan_coc (F : R →ₐ[O] DualNumber κ) (r : Γ →* GG (m := 3)
   generalize (r g).left = a
   generalize (r h).left = b
   rcases Int.units_eq_one_or (r g).right with hs | hs <;> rw [hs]
-  · simp only [sgnAct_one, if_true, _root_.mul_inv_rev, Units.val_mul, sndM_mul, map_mul, Matrix.add_mul,
+  · simp only [sgnAct_one, ite_true, _root_.mul_inv_rev, Units.val_mul, sndM_mul, map_mul, Matrix.add_mul,
       Matrix.mul_assoc, hc]
     rw [add_comm]
-  · simp only [sgnAct_neg_one, hn, if_false, _root_.mul_inv_rev, Units.val_mul, theta_val, theta_inv_val, sndM_mul,
+  · simp only [sgnAct_neg_one, hn, ite_false, _root_.mul_inv_rev, Units.val_mul, theta_val, theta_inv_val, sndM_mul,
       map_mul, sndM_J, fstM_J, sndM_tr, fstM_tr, sndM_inv, thetaLie, Matrix.add_mul, Matrix.mul_zero, Matrix.zero_mul,
       add_zero, zero_add, Matrix.transpose_neg, Matrix.transpose_mul, Matrix.neg_mul, Matrix.mul_neg,
       Matrix.mul_assoc, hJ, hc']

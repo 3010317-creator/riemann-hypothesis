@@ -224,8 +224,7 @@ theorem frameA_letter {K : Type u} [NormedField K] [IsUltrametricDist K] (J N0 :
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl (fun i'' _ => ?_)
       rw [hAc]
-      simp only [c, Finset.sum_mul]
-      exact Finset.sum_congr rfl (fun a _ => by ring)
+      simpa only [c, Finset.sum_mul] using Finset.sum_congr rfl (fun a _ => by ring)
     rw [h1, ← Matrix.mul_apply, Matrix.mul_nonsing_inv _ hunit, Matrix.one_apply]
 
   have hzy : ∀ i'' a, ∑ i', c (e i'') i' * z i' a = y (e i'') a := by
@@ -248,11 +247,11 @@ theorem frameA_letter {K : Type u} [NormedField K] [IsUltrametricDist K] (J N0 :
     have hex : ∃ i', e i' = e i := ⟨i, rfl⟩
     have hch : hex.choose = i := he hex.choose_spec
     simp only [x]
-    rw [if_neg (htop i), dite_eq_left hex, hch]
+    rw [ite_eq_right (htop i), dite_eq_left hex, hch]
   have hxn : ∀ k a, ¬ top k → (¬ ∃ i, e i = k) → x k a = y k a - ∑ i', c k i' * z i' a := by
     intro k a h1 h2
     simp only [x]
-    rw [if_neg h1, dite_eq_right h2]
+    rw [ite_eq_right h1, dite_eq_right h2]
   have hsumT : ∀ i k, (∑ i', if k = e i' then c i i' else 0) = 0 ∨
       ∃ i', (∑ i', if k = e i' then c i i' else 0) = c i i' := by
     intro i k
@@ -263,15 +262,15 @@ theorem frameA_letter {K : Type u} [NormedField K] [IsUltrametricDist K] (J N0 :
       rw [Finset.sum_eq_single i0]
       · simp
       · intro b _ hb
-        rw [if_neg (fun h => hb (he h).symm)]
+        rw [ite_eq_right (fun h => hb (he h).symm)]
       · intro h; exact absurd (Finset.mem_univ _) h
     · left
       refine Finset.sum_eq_zero (fun i' _ => ?_)
-      rw [if_neg (fun hk => h ⟨i', hk.symm⟩)]
+      rw [ite_eq_right (fun hk => h ⟨i', hk.symm⟩)]
   refine ⟨x, T, ?_, ?_, ?_, ?_, ?_⟩
   · intro k a
     by_cases h1 : top k
-    · simp only [x]; rw [if_pos h1]; exact hy _ _
+    · simp only [x]; rw [ite_eq_left h1]; exact hy _ _
     · by_cases h2 : ∃ i, e i = k
       · obtain ⟨i, rfl⟩ := h2
         rw [hxe]; exact hz _ _
@@ -285,7 +284,7 @@ theorem frameA_letter {K : Type u} [NormedField K] [IsUltrametricDist K] (J N0 :
       · rw [h]; simp
       · rw [h]; exact hc _ _
   · intro k a h1
-    simp only [x]; rw [if_pos h1]
+    simp only [x]; rw [ite_eq_left h1]
   · intro i a hi
     have hT0 : ∀ k, (if top k then 0 else T i k) = T i k := by
       intro k
@@ -294,9 +293,9 @@ theorem frameA_letter {K : Type u} [NormedField K] [IsUltrametricDist K] (J N0 :
         have h1 : k ≠ i := fun h => hi (h ▸ hk)
         have h2 : (∑ i', if k = e i' then c i i' else 0) = 0 :=
           Finset.sum_eq_zero (fun i' _ => by
-            rw [if_neg (fun h : k = e i' => htop i' (h ▸ hk))])
+            rw [ite_eq_right (fun h : k = e i' => htop i' (h ▸ hk))])
         simp only [T]
-        rw [h2, if_neg h1]
+        rw [h2, ite_eq_right h1]
         simp
       · rfl
     simp only [hT0]
@@ -305,27 +304,27 @@ theorem frameA_letter {K : Type u} [NormedField K] [IsUltrametricDist K] (J N0 :
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl (fun i' _ => ?_)
       rw [Finset.sum_eq_single (e i')]
-      · rw [if_pos rfl, hxe]
+      · rw [ite_eq_left rfl, hxe]
       · intro b _ hb
-        rw [if_neg hb, zero_mul]
+        rw [ite_eq_right hb, zero_mul]
       · intro h; exact absurd (Finset.mem_univ _) h
     simp only [T, add_mul, Finset.sum_add_distrib]
     rw [hsecond]
     by_cases h2 : ∃ i', e i' = i
-    · simp only [if_pos h2, zero_mul, Finset.sum_const_zero, zero_add]
+    · simp only [ite_eq_left h2, zero_mul, Finset.sum_const_zero, zero_add]
       obtain ⟨i0, rfl⟩ := h2
       exact (hzy i0 a).symm
-    · simp only [if_neg h2]
+    · simp only [ite_eq_right h2]
       rw [Finset.sum_eq_single i]
-      · rw [if_pos rfl, one_mul, hxn i a hi h2]; ring
+      · rw [ite_eq_left rfl, one_mul, hxn i a hi h2]; ring
       · intro b _ hb
-        rw [if_neg hb, zero_mul]
+        rw [ite_eq_right hb, zero_mul]
       · intro h; exact absurd (Finset.mem_univ _) h
   · intro i k hk hne'
     by_cases h2 : ∃ i', e i' = k
     · obtain ⟨i0, rfl⟩ := h2
       simp only [hxe]
-      rw [hlz, if_neg (fun h : i = i0 => hne' (h ▸ rfl))]
+      rw [hlz, ite_eq_right (fun h : i = i0 => hne' (h ▸ rfl))]
     · simp only [hxn k _ hk h2, mul_sub, Finset.sum_sub_distrib]
       have h3 : ∑ a, lam i a * ∑ i', c k i' * z i' a = ∑ i', c k i' * ∑ a, lam i a * z i' a := by
         simp only [Finset.mul_sum]
@@ -362,15 +361,14 @@ theorem thmAFrame_of : ThmAGen.{u} → ThmAFrame.{u} := by
     ε hε TT colN p hp hp1 I T hT xg ?_ nu1 nu2 size hnu1 hnu2 hsize a ha hsa spec ?_ ?_ ?_
   · intro s i b
     by_cases hi : s ∈ TT ∧ i.val = 0
-    · simp only [effMat, if_pos hi]
+    · simp only [effMat, ite_eq_left hi]
       rw [Finset.sum_eq_single i]
-      · rw [if_pos rfl, one_mul]
+      · rw [ite_eq_left rfl, one_mul]
         exact (hxtop s i b hi).symm
       · intro k _ hk
-        rw [if_neg hk, zero_mul]
+        rw [ite_eq_right hk, zero_mul]
       · intro h; exact absurd (Finset.mem_univ _) h
-    · simp only [effMat, if_neg hi]
-      exact hrec s i b hi
+    · simpa only [effMat, ite_eq_right hi] using hrec s i b hi
   · intro s k s0 j hsp
     obtain ⟨i, rfl⟩ := hspec_some s k (by rw [hsp]; simp)
     rw [hspec_e] at hsp
@@ -468,9 +466,8 @@ theorem generic_mono_det {R : Type*} [CommRing R] [Nontrivial R] {d N0 n : ℕ} 
     rw [Finsupp.finsetSum_apply, Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [Finsupp.single_apply, if_neg]
-      intro h
-      exact hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun h => hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
     · simp
   have hval2 : ∀ (i : Fin n) (u : ZMod d),
       (∑ j, Finsupp.single (t j, z, γ j) (L j)) (u, z, γ i) = if t i = u then L i else 0 := by
@@ -479,13 +476,11 @@ theorem generic_mono_det {R : Type*} [CommRing R] [Nontrivial R] {d N0 n : ℕ} 
     · rw [Finsupp.single_apply]
       by_cases h : t i = u
       · simp [h]
-      · rw [if_neg, if_neg h]
-        intro h'
-        exact h (Prod.ext_iff.mp h').1
+      · rw [ite_eq_right, ite_eq_right h]
+        exact fun h' => h (Prod.ext_iff.mp h').1
     · intro j _ hj
-      rw [Finsupp.single_apply, if_neg]
-      intro h
-      exact hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun h => hj (hγ (Prod.ext_iff.mp (Prod.ext_iff.mp h).2).2)
     · simp
   have key : ∀ σ : Equiv.Perm (Fin n),
       (∑ i, Finsupp.single (t (σ i), z, γ i) (L (σ i))) = ∑ i, Finsupp.single (t i, z, γ i) (L i) → σ = 1 := by
@@ -495,10 +490,10 @@ theorem generic_mono_det {R : Type*} [CommRing R] [Nontrivial R] {d N0 n : ℕ} 
         = (∑ j, Finsupp.single (t j, z, γ j) (L j)) (t (σ i), z, γ i) := by rw [h]
     rw [hval (fun j => t (σ j)) (fun j => L (σ j)) i, hval2] at h1
     by_cases ht : t i = t (σ i)
-    · rw [if_pos ht] at h1
+    · rw [ite_eq_left ht] at h1
       have : σ i = i := hinj (Prod.ext ht.symm h1)
       simp [this]
-    · rw [if_neg ht] at h1
+    · rw [ite_eq_right ht] at h1
       exact absurd h1 (hL (σ i))
   intro hdet
   have hc := congrArg (AddMonoidAlgebra.coeff · (∑ i, Finsupp.single (t i, z, γ i) (L i))) hdet
@@ -506,7 +501,7 @@ theorem generic_mono_det {R : Type*} [CommRing R] [Nontrivial R] {d N0 n : ℕ} 
   · rw [hprod] at hc
     simp at hc
   · intro σ _ hσ
-    rw [hprod, Units.smul_def, MvPolynomial.coeff_smul, MvPolynomial.coeff_monomial, if_neg]
+    rw [hprod, Units.smul_def, MvPolynomial.coeff_smul, MvPolynomial.coeff_monomial, ite_eq_right]
     · simp
     · exact fun h => hσ (key σ h)
   · simp
@@ -550,11 +545,11 @@ theorem generic_minor_norm {K : Type u} [NormedField K] {l d N0 n : ℕ} (hl : l
     ext i i'
 
     simp only [AlgHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply, map_sum, map_mul, map_pow,
-    MvPolynomial.bind₁_X_right, f, if_neg (hts i), if_true]
+    MvPolynomial.bind₁_X_right, f, ite_eq_right (hts i), ite_true]
     rw [Finset.sum_eq_single (e i')]
     · simp
     · intro b _ hb
-      rw [if_neg (Ne.symm hb), mul_zero]
+      rw [ite_eq_right (Ne.symm hb), mul_zero]
     · simp
   rw [h2] at h1
   exact generic_mono_det z t L e he hL hinj h1
@@ -625,7 +620,7 @@ theorem theorem_A_generic : ThmAGeneric.{u} := by
     have hx : ∀ i' a, genFrame TT l m Y (s, e s i', a) = Y (s, e s i', a) := by
       intro i' a
       simp only [genFrame]
-      rw [if_neg (he0 s i')]
+      rw [ite_eq_right (he0 s i')]
     simp only [hx]
     have hts : ∀ i, (lab s i).1 ≠ s := by
       intro i h
@@ -771,10 +766,8 @@ theorem young_second_row_length_count (μ : YoungDiagram) :
   refine Finset.card_bij (fun (c : Fin (μ.rowLen 0)) _ => (c : ℕ)) ?_ ?_ ?_
   · intro c hc
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hc
-    rw [Finset.mem_range, ← YoungDiagram.mem_iff_lt_rowLen, YoungDiagram.mem_iff_lt_colLen]
-    exact hc
-  · intro a _ b _ h
-    exact Fin.ext h
+    rwa [Finset.mem_range, ← YoungDiagram.mem_iff_lt_rowLen, YoungDiagram.mem_iff_lt_colLen]
+  · exact fun a _ b _ h => Fin.ext h
   · intro b hb
     rw [Finset.mem_range] at hb
     refine ⟨⟨b, lt_of_lt_of_le hb (μ.rowLen_anti 0 1 zero_le_one)⟩, ?_, rfl⟩
@@ -803,15 +796,15 @@ theorem lpF_eq_Fnum (l d : ℕ) [NeZero d] (D : ZMod d → ℝ) : Formalism.Basi
       have hz' : ∀ s i, (if Odd i then xs s i else 0) = xs s i := by
         intro s i
         by_cases ho : Odd i
-        · rw [if_pos ho]
-        · rw [if_neg ho, hz s i (Or.inl ho)]
+        · rw [ite_eq_left ho]
+        · rw [ite_eq_right ho, hz s i (Or.inl ho)]
       refine ⟨xs, ⟨h0, fun s => ?_⟩, ?_⟩
       · have e1 : ∑ i ∈ Finset.range d, (if Odd i then (l : ℝ) ^ i * xs s i else 0) =
             ∑ i ∈ Finset.range d, (l : ℝ) ^ i * xs s i := by
           refine Finset.sum_congr rfl fun i _ => ?_
           by_cases ho : Odd i
-          · rw [if_pos ho]
-          · rw [if_neg ho, hz s i (Or.inl ho), mul_zero]
+          · rw [ite_eq_left ho]
+          · rw [ite_eq_right ho, hz s i (Or.inl ho), mul_zero]
         have e2 : ∑ i ∈ Finset.range d, (if Odd i then xs (s - (i : ZMod d)) i else 0) =
             ∑ i ∈ Finset.range d, xs (s - (i : ZMod d)) i :=
           Finset.sum_congr rfl fun i _ => hz' _ _
@@ -827,7 +820,7 @@ theorem lpF_eq_Fnum (l d : ℕ) [NeZero d] (D : ZMod d → ℝ) : Formalism.Basi
         · exact le_rfl
       · intro s i h
         dsimp only
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨h1, h2⟩
         rcases h with h | h
         · exact h h1
@@ -1032,13 +1025,13 @@ theorem base_term_le_top_term (L : product_zeroth_first_parts.Loc) (s : ZMod L.d
   refine Summable.tsum_le_tsum (fun e => ?_) (Summable.of_nonneg_of_le (fun e => ?_) (fun e => ?_) hgeo)
     (Summable.of_nonneg_of_le (fun e => ?_) (fun e => ?_) hgeo)
   · by_cases h1 : Odd e ∧ (e : ℕ∞) ≠ L.dTop s
-    · rw [if_pos h1]
+    · rw [ite_eq_left h1]
       by_cases h2 : Odd e ∧ (e : ℕ∞) < L.dTop s
-      · rw [if_pos h2]
+      · rw [ite_eq_left h2]
         exact max_le_max (sub_le_sub_right (hsub e) _) le_rfl
-      · rw [if_neg h2]
+      · rw [ite_eq_right h2]
         by_cases h3 : Odd e ∧ L.dTop s < (e : ℕ∞)
-        · rw [if_pos h3]
+        · rw [ite_eq_left h3]
           have := hc (s + (e : ZMod L.d))
           have := hsub e
           exact max_le (by linarith) (hq e)
@@ -1047,7 +1040,7 @@ theorem base_term_le_top_term (L : product_zeroth_first_parts.Loc) (s : ZMod L.d
           · exact h2 ⟨h1.1, h⟩
           · exact h1.2 h
           · exact h3 ⟨h1.1, h⟩
-    · rw [if_neg h1]
+    · rw [ite_eq_right h1]
       split_ifs
       · exact le_max_right _ _
       · exact hq e

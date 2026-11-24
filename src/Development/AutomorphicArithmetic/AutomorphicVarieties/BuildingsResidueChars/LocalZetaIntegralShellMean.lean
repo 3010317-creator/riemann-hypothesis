@@ -330,8 +330,7 @@ theorem UpperTheory.local_zeta_integral_shell_mean :
   let Λ2 : Module.Dual ℂ W :=
     { toFun := fun w => ∫ g in {g : GL (Fin m) F | ordDet g = k}, ℓ (σ (g⁻¹, 1) w) ∂μ
       map_add' := fun a b => by
-        simp only [map_add (f := _)]
-        exact integral_add (hint2 a) (hint2 b)
+        simpa only [map_add (f := _)] using integral_add (hint2 a) (hint2 b)
       map_smul' := fun c w => by
         simp only [map_smul, smul_eq_mul, RingHom.id_apply]
         exact integral_const_mul _ _ }

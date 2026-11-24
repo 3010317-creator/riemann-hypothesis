@@ -64,8 +64,7 @@ theorem IsIdealClassPoint.exists_lattice_eq {K : Type} [Field K] [NumberField K]
         FractionalIdeal.spanSingleton (𝓞 K)⁰ x₀ := by
       apply FractionalIdeal.coeToSubmodule_injective
       dsimp only
-      rw [FractionalIdeal.coe_spanSingleton]
-      exact hx₀
+      rwa [FractionalIdeal.coe_spanSingleton]
     have h2 : J = 𝔞 * (𝔞⁻¹ * J) := (mul_inv_cancel_left 𝔞 J).symm
     conv_lhs => rw [h2]
     rw [Units.val_mul, h1, mul_comm]
@@ -120,8 +119,7 @@ theorem log_pi_sub_mean_log_latticeNormDisc :
           rw [h, Complex.conj_conj]
       obtain ⟨a, ha, h⟩ := hτC.exists_lattice_eq hP
       have e := log_pi_sub_log_latticeNormDisc ha h
-      rw [← latticeNormDisc_eq, latticeNormDisc_conjPeriods, latticeNormDisc_eq] at e
-      exact e
+      rwa [← latticeNormDisc_eq, latticeNormDisc_conjPeriods, latticeNormDisc_eq] at e
   have hh : (Fintype.card (ClassGroup (𝓞 K)) : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   simp_rw [← key]
   rw [Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, ← Finset.sum_div]

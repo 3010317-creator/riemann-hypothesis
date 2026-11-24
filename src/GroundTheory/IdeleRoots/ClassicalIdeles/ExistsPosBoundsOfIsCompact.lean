@@ -126,8 +126,7 @@ theorem siegelSetsSL2Adelic_holds : Formalism.D.siegelSetsSL2Adelic := by
     constructor
     · rintro ⟨s, hs, rfl⟩
       exact hs
-    · intro hx
-      exact ⟨⟨x, hLpos.trans_le hx.1⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, hLpos.trans_le hx.1⟩, hx, rfl⟩
   let zA : {r : ℝ // 0 < r} → 𝔸[F] := fun s => ((posIdeleHom F s : IdeleGroup F) : 𝔸[F])
   let zAi : {r : ℝ // 0 < r} → 𝔸[F] := fun s => (((posIdeleHom F s)⁻¹ : IdeleGroup F) : 𝔸[F])
   let kap : AdelicGLn.AdelicGL F 2 → 𝔸[F] := fun k => ((AdelicGLn.det F 2 k : IdeleGroup F) : 𝔸[F])
@@ -234,8 +233,7 @@ theorem siegelSetsSL2Adelic_holds : Formalism.D.siegelSetsSL2Adelic := by
         (inv_mul_cancel b)
       simp only [Units.val_mul, Matrix.mul_apply, Fin.sum_univ_two, Units.val_one,
         Matrix.one_apply_eq] at h
-      rw [← hBdef, ← hBidef, hb10, mul_zero, add_zero] at h
-      exact h
+      rwa [← hBdef, ← hBidef, hb10, mul_zero, add_zero] at h
     set z : 𝔸[F] := ((posIdele ρ hρ : IdeleGroup F) : 𝔸[F]) with hzdef
     set zi : 𝔸[F] := (((posIdele ρ hρ)⁻¹ : IdeleGroup F) : 𝔸[F]) with hzidef
     have hz : z * zi = 1 := Units.mul_inv _
@@ -253,8 +251,7 @@ theorem siegelSetsSL2Adelic_holds : Formalism.D.siegelSetsSL2Adelic := by
       have h := congrArg Units.val hdetGL
       rw [e0, e1, Units.val_mul, Units.val_mul, Units.val_mul, Units.val_mul, Units.val_mul,
         IdeleGroup.coe_diagonal, AdelicGLn.coe_det, Matrix.det_fin_two, Matrix.GeneralLinearGroup.val_det_apply] at h
-      rw [← hBdef, hb10, mul_zero, sub_zero] at h
-      exact h
+      rwa [← hBdef, hb10, mul_zero, sub_zero] at h
     have heqM : (γ : Matrix (Fin 2) (Fin 2) F).map (algebraMap F 𝔸[F]) * (g : Matrix (Fin 2) (Fin 2) 𝔸[F]) =
         B * Matrix.diagonal ![z * σ, z * σ'] * (k : Matrix (Fin 2) (Fin 2) 𝔸[F]) := by
       have h := congrArg (fun h : AdelicGLn.AdelicGL F 2 => (h : Matrix (Fin 2) (Fin 2) 𝔸[F])) heq
@@ -264,8 +261,7 @@ theorem siegelSetsSL2Adelic_holds : Formalism.D.siegelSetsSL2Adelic := by
         fin_cases i
         · simp [e0, hzdef, hσdef]
         · simp [e1, hzdef, hσ'def]
-      rw [hd2] at h
-      exact h
+      rwa [hd2] at h
     have he : algebraMap F 𝔸[F] δ⁻¹ * algebraMap F 𝔸[F] δ = 1 := by
       rw [← map_mul, inv_mul_cancel₀ hδ, map_one]
     have hX : Matrix.diagonal ![1, algebraMap F 𝔸[F] δ⁻¹] * (B * Matrix.diagonal ![z * σ, z * σ']) =

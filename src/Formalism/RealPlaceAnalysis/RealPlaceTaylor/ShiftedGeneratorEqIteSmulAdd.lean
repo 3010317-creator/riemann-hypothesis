@@ -235,8 +235,7 @@ lemma quantumMinor_adjacent_col_swap {A : Type*} [Ring A] [Algebra ℂ A] {n m :
     apply eq_zero_of_add_self_eq_zero
     convert hsum using 1
     abel
-  rw [eq_neg_iff_add_eq_zero, add_comm]
-  exact hX
+  rwa [eq_neg_iff_add_eq_zero, add_comm]
 
 theorem quantumMinorColSkew_holds : QSkewCol := by
   intro A _ _ n t E hE a b τ u

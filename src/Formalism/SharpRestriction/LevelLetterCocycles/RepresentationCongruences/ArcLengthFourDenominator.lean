@@ -124,8 +124,7 @@ theorem content_bound_level_ideal {ϖ : O} (hϖ : Irreducible ϖ) (w b₀ B s₁
   have hp1 : P.p 1 = P.φ X := P.p_succ 0
   have hm3 : P.p 1 ^ w ∈ Ideal.span {C ϖ ^ k, X ^ (B - (a' + s₁ - 1))} := by
     apply P.DESC hϖ
-    rw [map_pow, map_pow, ← hp2, ← hp1]
-    exact hm2
+    rwa [map_pow, map_pow, ← hp2, ← hp1]
 
   have hB1 : 1 ≤ B - (a' + s₁ - 1) := by omega
   obtain ⟨hne, hle⟩ := P.constant_le_rpow_of_three_le hϖ (B - (a' + s₁ - 1)) w hB1 hw
@@ -319,8 +318,7 @@ theorem den_of_rel (P : PhiData O l) {ϖ : O} (hϖ : Irreducible ϖ) {D U₁ U�
   rw [he]
 
   have hlt : e * s₁ + m < e * κ := by
-    by_contra hle
-    push_neg at hle
+    by_contra! hle
     apply hnd
     refine ⟨(u : O) ^ s₁ * v * ((u⁻¹ : Oˣ) : O) ^ κ * ϖ ^ (e * s₁ + m - e * κ), ?_⟩
     have h1 : ((u : O) * ((u⁻¹ : Oˣ) : O)) ^ κ = 1 := by rw [Units.mul_inv, one_pow]
@@ -436,8 +434,7 @@ theorem arc_length_four_denominator [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDo
     have hmem : (2 : ℕ) ∈ {d : ℕ | 1 ≤ d ∧ ¬ TruncatedSeriesCountingBounds.Thick b η size (c - (d : ZMod n) + 1)} := by
       refine ⟨by norm_num, ?_⟩
       have e : c - ((2 : ℕ) : ZMod n) + 1 = c - 1 := by push_cast; ring
-      rw [e]
-      exact hnt
+      rwa [e]
     have hle := Nat.sInf_le hmem
     rw [hlen'] at hle
     omega
@@ -451,7 +448,7 @@ theorem arc_length_four_denominator [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDo
     simpa using h
   have hh : TruncatedSeriesCountingBounds.hB b w S η size = b + η + S := by
     unfold TruncatedSeriesCountingBounds.hB
-    rw [if_pos ⟨c, hT0⟩]
+    rw [ite_eq_left ⟨c, hT0⟩]
   obtain ⟨s₁, hs1, hs1le, hsB, hnot⟩ := exists_s1_bound_choice PD.p b w S η (size c) (size (c - 1))
     (size (c - 2)) hp11 (Formalism.MainNotions.N.Ln17.Sg PD.p b w S η size)
     (by unfold Formalism.MainNotions.N.Ln17.Sg; rw [hh]) hsm h20w h20η

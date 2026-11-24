@@ -132,15 +132,13 @@ theorem heckePol_map (D : D7) (L : LocAll (lay0 D)) (i : (withLoc L).nd.Loc) (x 
       GenAt (withLoc L) ((withLoc L).nd.l i) ((withLoc L).nd.Q i) v k := by
     intro k hk
     obtain ⟨hk1, hk2⟩ := Finset.mem_Icc.1 hk
-    refine ⟨hsp, hl, ?_, hQ, hk1, hk2⟩
-    intro hmem
-    exact hSi (((withLoc L).nd.S_def i v).2 hmem)
+    exact ⟨hsp, hl, fun hmem => hSi (((withLoc L).nd.S_def i v).2 hmem), hQ, hk1, hk2⟩
 
   simp only [heckePol, sysPol, Polynomial.map_add (f := _), Polynomial.map_pow, Polynomial.map_X, Polynomial.map_sum,
   Polynomial.map_mul, Polynomial.map_C]
   congr 1
   refine Finset.sum_congr rfl fun k hk => ?_
-  simp only [GlobalTheory.CoefDuty.ptSys, if_pos (hgen k hk), map_mul, map_pow, map_neg, map_one, map_natCast]
+  simp only [GlobalTheory.CoefDuty.ptSys, ite_eq_left (hgen k hk), map_mul, map_pow, map_neg, map_one, map_natCast]
   rfl
 
 end GlobalTheory.OSplitBig
@@ -184,8 +182,7 @@ theorem continuous_adic (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDoma
       exact (p.coeff i).2
     · have := congrArg f hpx
       rw [hom_eval₂, map_zero] at this
-      rw [eval_map]
-      exact this
+      rwa [eval_map]
 
   have hlnorm : ‖f (l : O)‖ = (l : ℝ)⁻¹ := by
     rw [map_natCast, ← map_natCast (algebraMap ℚ_[l] (Qbar l)), PadicAlgCl.norm_extends, Padic.norm_p]
@@ -206,8 +203,7 @@ theorem continuous_adic (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDoma
             mul_le_mul_of_nonneg_right (h1 _) (by positivity)
         _ = _ := one_mul _
     have hlinv : (l : ℝ)⁻¹ < 1 := inv_lt_one_of_one_lt₀ hl1
-    by_contra hge
-    push_neg at hge
+    by_contra! hge
     have : 1 ≤ ‖f ϖ‖ ^ e := one_le_pow₀ hge
     linarith
   have hcont : ContinuousAt f 0 := by
@@ -277,8 +273,7 @@ theorem exists_constituent_image : ∀ {Γ L : Type} [Group Γ] [Field L] {a n :
     rw [hM, ← Matrix.mulVec_mulVec, hπv]; exact hpV _
 
   have hex : ∃ j, Submodule.map M.mulVecLin (Vs j) ≠ ⊥ := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨x, hxV, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hV.1
     have hsup : Submodule.map M.mulVecLin ⊤ = ⊥ := by
       rw [← hVs, Submodule.map_iSup]; simp [hne]
@@ -292,8 +287,7 @@ theorem exists_constituent_image : ∀ {Γ L : Type} [Group Γ] [Field L] {a n :
   · have hinv : IsInv τ (Submodule.map M.mulVecLin (Vs j)) := by
       rintro g _ ⟨v, hv, rfl⟩
       refine ⟨(τ₀ g : Matrix (Fin a) (Fin a) L).mulVec v, (hirr j).2.1 g v hv, ?_⟩
-      simp only [Matrix.mulVecLin_apply]
-      exact (hMv g v).symm
+      simpa only [Matrix.mulVecLin_apply] using (hMv g v).symm
     have hle : Submodule.map M.mulVecLin (Vs j) ≤ V := by
       rintro _ ⟨v, _, rfl⟩; exact hMV v
     rcases hV.2.2 _ hle hinv with h | h
@@ -472,9 +466,7 @@ theorem span_restrict_eq_top_of_isIrrSub_map {k Γ L : Type} [Field k] [Group Γ
   let σ : Γ →* GL (Fin d) k := MonoidHom.toHomUnits S
   have hσ : ∀ g, (σ g : Matrix (Fin d) (Fin d) k) = φ (r g) := fun g => rfl
   let Li : (Fin d → k) →ₗ[k] (Fin a → k) := W.subtype ∘ₗ e.symm.toLinearMap
-  have hLinj : Function.Injective Li := by
-    intro x y hxy
-    exact e.symm.injective (Subtype.val_injective hxy)
+  have hLinj : Function.Injective Li := fun x y hxy => e.symm.injective (Subtype.val_injective hxy)
   obtain ⟨L', hL'⟩ := LinearMap.exists_leftInverse_of_injective Li (LinearMap.ker_eq_bot.2 hLinj)
   let B : Matrix (Fin a) (Fin d) k := LinearMap.toMatrix' Li
   let C : Matrix (Fin d) (Fin a) k := LinearMap.toMatrix' L'
@@ -539,8 +531,7 @@ theorem span_restrict_eq_top_of_isIrrSub_map {k Γ L : Type} [Field k] [Group Γ
   change Submodule.span k (Set.range r) = ⊤
   refine Submodule.map_injective_of_injective φ.injective ?_
   rw [h6, Submodule.map_top, LinearEquiv.range]
-  rw [h5] at h4
-  exact h4
+  rwa [h5] at h4
 
 theorem absIrrSub_of_isIrrSub_map : ∀ {k Γ L : Type} [Field k] [Group Γ] [Field L] [IsAlgClosed L]
     (f : k →+* L) {a : ℕ} (ρ : Γ →* GL (Fin a) k) (W : Submodule k (Fin a → k)), IsInv ρ W →
@@ -581,12 +572,10 @@ theorem matrix_system_nonzero_solution_descends {k L Γ : Type} [Field k] [Field
   intro hC hAB hQ
   letI := f.toAlgebra
   obtain ⟨i₀, j₀, hij⟩ : ∃ i j, C i j ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hC (Matrix.ext h)
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual k L, φ (C i₀ j₀) ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hij ((Module.forall_dual_apply_eq_zero_iff k (C i₀ j₀)).mp h)
   have key : ∀ (x : k) (y : L), φ (f x * y) = x * φ y := by
     intro x y
@@ -982,8 +971,7 @@ theorem finite_intCast_mem {K : Type} [Field K] [NumberField K] (N : ℤ) (hN : 
   refine (Ideal.finite_factors h0).subset ?_
   intro v hv
   simp only [Set.mem_setOf_eq] at hv ⊢
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem exists_intCast_mem {K : Type} [Field K] [NumberField K] (q : HeightOneSpectrum (𝓞 K)) :
     ∃ n : ℤ, n ≠ 0 ∧ (n : 𝓞 K) ∈ q.asIdeal := by
@@ -991,8 +979,7 @@ theorem exists_intCast_mem {K : Type} [Field K] [NumberField K] (q : HeightOneSp
   have h := Ideal.comap_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral (R := ℤ) x)
   obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h
   refine ⟨n, hn0, ?_⟩
-  rw [Ideal.mem_comap, eq_intCast] at hn
-  exact hn
+  rwa [Ideal.mem_comap, eq_intCast] at hn
 
 theorem intCast_mem_of_dvd {K : Type} [Field K] [NumberField K] {v : HeightOneSpectrum (𝓞 K)} {n N : ℤ} (hd : n ∣ N)
     (h : (n : 𝓞 K) ∈ v.asIdeal) : (N : 𝓞 K) ∈ v.asIdeal := by
@@ -1012,9 +999,8 @@ theorem eigSet_restrict {μ : D.what₂.Tup} {j : ℕ} (X : MtReal D μ j) (l : 
     {c : PlE D.host → ℕ → ℂ} (hc : c ∈ EigSet X l Q) :
     (fun v k => if GenAt D l Q' v k then c v k else 0) ∈ EigSet X l Q' := by
   obtain ⟨-, y, hy, hy'⟩ := hc
-  refine ⟨fun v k hg => if_neg hg, y, hy, fun v k s ϖ hg hcj hu => ?_⟩
-  simp only [if_pos hg]
-  exact hy' v k s ϖ (genAt_mono hQ hg) hcj hu
+  refine ⟨fun v k hg => ite_eq_right hg, y, hy, fun v k s ϖ hg hcj hu => ?_⟩
+  simpa only [ite_eq_left hg] using hy' v k s ϖ (genAt_mono hQ hg) hcj hu
 
 theorem eigSet_transport (M : MtFam D) {μ μ' : D.what₂.Tup} {j j' : ℕ} (hμ : μ = μ') (hj : j = j')
     (a1 : 1 ≤ j) (a2 : j ≤ D.R.m) (b1 : 1 ≤ j') (b2 : j' ≤ D.R.m) (l : ℕ) (Q : Finset (PlE D.host))
@@ -1057,8 +1043,7 @@ theorem ptSys_finite_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* 
   by_cases hw0 : D.what₂.muAt w = D.what₂.mu0
   · refine ⟨∅, ∅, fun big L Sp Au i x hi => absurd hw0 ?_⟩
     have := L.X.w_tw i
-    rw [show L.X.w i = w from hi] at this
-    exact this
+    rwa [show L.X.w i = w from hi] at this
   choose nq hnq0 hnqm using fun q : PlE D.host => exists_intCast_mem q
   set N : ℤ := (D.host.g 0 : ℤ) * (D.host.g 1 : ℤ) * (D.host.pde : ℤ) * (D.host.pde' : ℤ) * ∏ q ∈ C.Q w, nq q with hNdef
   have hN : N ≠ 0 := by
@@ -1117,7 +1102,7 @@ theorem ptSys_finite_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* 
     split_ifs with hg
     · rfl
     · unfold ptSys
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hg'
       apply hg
       have hg2 : GenAt D l (C.Q w) v k := by rw [← hl, ← hQ]; exact hg'
@@ -1179,8 +1164,7 @@ theorem exists_big_oSplit_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E �
   refine hSC ((withLoc L).nd.w i) c ((withLoc L).nd.l i) ((withLoc L).nd.w_l i) ((withLoc L).nd.O i) ((withLoc L).nd.O_adic i) (Sp.iq i) ?_ ?_ r
     hr.1 hr.2.1 ?_
   · exact fun z => Sp.iq_alg i z
-  · intro z hz
-    exact Sp.iq_big i z (Finset.mem_biUnion.2 ⟨c, hcS, hz⟩)
+  · exact fun z hz => Sp.iq_big i z (Finset.mem_biUnion.2 ⟨c, hcS, hz⟩)
   · intro σ hσ
     have hex : ∃ v, Pv ((withLoc L).nd.w i) σ v := hσ
     have hspec := hex.choose_spec
@@ -1197,8 +1181,7 @@ theorem exists_big_oSplit_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E �
       · intro hmem
         apply h2
         have := ((withLoc L).nd.S_def i _).1 hmem
-        rw [← (withLoc L).nd.w_l i] at this
-        exact this
+        rwa [← (withLoc L).nd.w_l i] at this
       · show _ ∉ (withLoc L).nd.Q i
         rw [hQi]; exact hvQ
     refine (congrArg (Polynomial.map _) (hr.2.2 _ hSO B σ hB hFr)).trans ?_
@@ -1211,7 +1194,7 @@ theorem exists_big_oSplit_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E �
       rfl
     refine (congrArg (fun f => (heckePol (withLoc L).nd i x hex.choose).map f) hio).trans ?_
     rw [heckePol_map D L i x _ hSO]
-    simp only [pw, dif_pos hex, sysPol]
+    simp only [pw, dite_eq_left hex, sysPol]
     congr 1
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [hc _ hvA k]

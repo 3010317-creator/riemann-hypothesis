@@ -49,8 +49,7 @@ theorem stepPointsG_of
   have hF : ∀ b, frame (lf D (X.Fu u)) b ∈ t.toTerm.lam := frame_mem _ hrow.2.1.2.2.1.1 hrow.2.2
   have hF' : ∀ b, frame F' b ∈ t.toTerm.lam := frame_mem _ hP.1.1 hP.2.2.2
   have hE := blockEndMinors_of_cell _ (zhatOM_isIntegral _ _ hrow.2.1.2.1 hF hF') _ hcell
-  rw [← hpt]
-  exact hE
+  rwa [← hpt]
 
 open Formalism.L2.SG.TermOp.Vanish in
 theorem stepPointsG_of_leaves (hA : AvgCore) (hU : GinfUnimod) (hN : NLamNinf) (hC : ChiTrivialC) (hG : PsiInfChar)
@@ -61,7 +60,6 @@ theorem stepPointsG_of_leaves (hA : AvgCore) (hU : GinfUnimod) (hN : NLamNinf) (
   refine stepPointsG_of ?_ hAt
   intro D X Y u u'
   unfold Formalism.L2.SG.TermOp.KExpCut.OOVanish
-  intro t ht
-  exact ooVanish_of hA hU hN hC hG h1 h2 h3 h4 Y t ht
+  exact fun t ht => ooVanish_of hA hU hN hC hG h1 h2 h3 h4 Y t ht
 
 end Formalism.L2.SG.Pf.MainEqPoints

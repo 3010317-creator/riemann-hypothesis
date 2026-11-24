@@ -253,22 +253,12 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 include hπ0 hΔπ γ0 in
 theorem framepf_hhx_ι_Δ (i : ZMod n) (g : PowerSeries O) (δ : W.Gam) (hδ : δ ∈ W.DelF) :
     W.γA δ (framepf_ι π' i g) = framepf_ι π' i g := by
-  have h := framepf_ι_letγ π' i (hπ0 i) (W.γ₀ δ) (γ0 δ hδ) PowerSeries.X (by simp)
-    (by rw [PowerSeries.subst_X (PowerSeries.HasSubst.of_constantCoeff_zero' (hπ0 i))];
-        exact congrFun (hΔπ δ hδ) i) g
-  rw [PowerSeries.X_subst] at h
-  exact h
+  exact Formalism.MainNotions.N.Ln34.framepf_ι_Δ π' hπ0 hΔπ γ0 i g δ hδ
 
 include hπ0 hΔπ γ0 in
 theorem framepf_hhx_vec_mem (H : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (k : Fin Bs.r) :
     framepf_vec Bs π' (c - 1) H k ∈ NcS W T (c - 1) := by
-  unfold framepf_vec
-  refine Submodule.sum_mem _ fun m _ => ?_
-  rw [mem_NcS]
-  obtain ⟨hN, hΔ⟩ := Bs.mem m
-  refine ⟨(W.N T).smul_mem _ hN, fun δ hδ => ?_, ?_⟩
-  · rw [_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear, framepf_hhx_ι_Δ π' hπ0 hΔπ γ0 _ _ δ hδ, hΔ δ hδ]
-  · rw [smul_smul, framepf_letE_ι π' (c - 1) hπ0]
+  exact Formalism.MainNotions.N.Ln34.framepf_vec_mem Bs π' c hπ0 hΔπ γ0 H k
 
 theorem framepf_hhx_mem (H : Matrix (Fin Bs.r) (Fin Bs.r) (PowerSeries O)) (ℓ : LcQ W T π' c) :
     framepf_hh Bs π' c hπ0 hΔπ hR2 γ0 hu H ℓ ∈ NcS W T (c - 1) := by
@@ -373,7 +363,7 @@ variable {LL V : Type} [Field LL] [AddCommGroup V] [Module LL V]
 
 theorem framepf_serC_neg (f : PowerSeries LL) (d : V) (i : ℤ) (hi : i < 0) : serC f d i = 0 := by
   simp only [serC]
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 theorem framepf_serMul_serC (g f : PowerSeries LL) (d : V) (i : ℤ) :
     serMul g (serC f d) i = serC (g * f) d i := by
@@ -396,10 +386,10 @@ theorem framepf_serMul_serC (g f : PowerSeries LL) (d : V) (i : ℤ) :
       intro j hj
       rw [Finset.mem_range] at hj
       simp only [serC]
-      rw [if_pos (by omega), show ((n : ℤ) - j).toNat = n - j by omega, smul_smul]
+      rw [ite_eq_left (by omega), show ((n : ℤ) - j).toNat = n - j by omega, smul_smul]
     rw [Finset.sum_congr rfl h1, ← Finset.sum_smul]
     simp only [serC]
-    rw [if_pos hi, PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
+    rw [ite_eq_left hi, PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
     simp
 
 theorem framepf_serMul_congr (g : PowerSeries LL) (m : ℕ) (hg : ∀ j < m, PowerSeries.coeff j g = 0)
@@ -696,7 +686,7 @@ theorem framepf_locC (hc : IsCrys PD T.ρ) (hs : W.s = 1) (c : ZMod n) (ζ : LL)
         PowerSeries.X ^ (s' * M) * (W.lev (c - 1) 1 w ^ M * f ^ (s' * M)) := by
       rw [hπ, map_pow, map_mul, map_pow, hf]
       ring
-    rw [this, PowerSeries.coeff_X_pow_mul', if_neg (by omega)]
+    rw [this, PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega)]
   have key := framepf_loc_core Ct T hc c ζ hζ hQ0 hQ1 hneg (4 * h') (fun j => (a j : LetA O n))
     (fun j => ⟨_, hN (mkL W T π' c (z j) (hz j))⟩) (fun j => hmid _)
     (-(π' ^ M * Eπ ^ (4 * h'))) (fun j hj => by
@@ -705,7 +695,7 @@ theorem framepf_locC (hc : IsCrys PD T.ρ) (hs : W.s = 1) (c : ZMod n) (ζ : LL)
           PowerSeries.X ^ (4 * h') * (-(W.lev c ζ π' ^ M * f ^ (4 * h'))) := by
         rw [map_neg, map_mul, map_pow, map_pow, hf]
         ring
-      rw [this, PowerSeries.coeff_X_pow_mul', if_neg (by omega)]) p
+      rw [this, PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega)]) p
     (Submodule.span_mono (Set.image_mono fun _ hx => Formalism.MainNotions.LiftingTheory.wmap_Nl_le W T (c - 1) hx) hp.1.1)
     (Eπ ^ h' • y) (by
       rw [← hΛ, show y = Ψ x - (π' ^ M * Eπ ^ (3 * h')) • p by rw [hpe']; abel, smul_sub, smul_smul,

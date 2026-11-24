@@ -86,7 +86,7 @@ theorem yv_orth_X {T T' : D.host.E} (F : FlagG (VS D) D.R.rS T) (F' : FlagG (VS 
       simp [Zhat, brS, FlagG.fvec, Fin.snoc_castSucc]
     have hm := congrFun (congrFun (Matrix.mul_adjugate (Zhat F F')) a.castSucc) (Fin.last _)
     rw [Matrix.mul_apply] at hm
-    simp only [Matrix.smul_apply, Matrix.one_apply, Fin.castSucc_ne_last, if_false, smul_zero] at hm
+    simp only [Matrix.smul_apply, Matrix.one_apply, Fin.castSucc_ne_last, ite_false, smul_zero] at hm
     unfold NormalVectorPairings.yv NormalVectorPairings.omp
 
     rw [map_add (f := _), map_smul, map_smul, F.z_orth a, smul_zero, add_zero, map_sum]
@@ -378,8 +378,7 @@ theorem yT'_orth (t : TauC Y u u') : ∀ x ∈ (X.Fu u').X, brS (VS D) (NormalVe
   show (VS D).hT x (t.lin.symm (NormalVectorPairings.yv t.frame.fl (X.Fu u))) = 0
   have e := hiso x (t.lin.symm (NormalVectorPairings.yv t.frame.fl (X.Fu u)))
   rw [LinearEquiv.apply_symm_apply] at e
-  rw [← e]
-  exact h
+  rwa [← e]
 
 theorem yT'_self (t : TauC Y u u') :
     brS (VS D) (NormalVectorPairings.yT' Y u u' t) (NormalVectorPairings.yT' Y u u' t) =

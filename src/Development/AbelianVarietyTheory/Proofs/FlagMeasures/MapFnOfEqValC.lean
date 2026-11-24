@@ -55,8 +55,7 @@ theorem rowAct_mem_delSq {n : ℕ} (lam : DomWeight n) (g : Matrix (Fin n) (Fin 
   have hanti : Antitone lam.natW := by
     intro i j hij
     have h := lam.anti hij
-    simp only [DomWeight.natW]
-    exact Int.toNat_le_toNat (by omega)
+    simpa only [DomWeight.natW] using Int.toNat_le_toNat (by omega)
   have hw := Formalism.L2.Col.dualWeyl_eq_weyl ℂ (le_rfl : n ≤ n) lam.natW hanti
   change p ∈ Formalism.GradedWeylDivisibility.weyl ℂ n n le_rfl lam.natW at hp
   change Formalism.GradedWeylDivisibility.rowAct ℂ g p ∈ Formalism.GradedWeylDivisibility.weyl ℂ n n le_rfl lam.natW
@@ -113,8 +112,7 @@ theorem map_fnOf_eq_ValC :
   intro ι _ n lam G M hM
   have hinv : (fun τ => (M τ)⁻¹) * M = 1 := by
     funext τ
-    simp only [Pi.mul_apply, Pi.one_apply]
-    exact Matrix.nonsing_inv_mul (M τ) (hM τ)
+    simpa only [Pi.mul_apply, Pi.one_apply] using Matrix.nonsing_inv_mul (M τ) (hM τ)
   unfold ValC
   apply le_antisymm
   · have h := map_fnOf_mul_le lam G (shiftOf lam) M 1

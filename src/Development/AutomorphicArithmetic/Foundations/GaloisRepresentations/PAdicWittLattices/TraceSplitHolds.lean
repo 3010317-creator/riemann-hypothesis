@@ -176,8 +176,7 @@ theorem UpperTheory.Gal.G3.jBridgeInt :
     exact_mod_cast hm
   have h3 : ‖γ (Bw.j (algebraMap E Ω x))‖ = ‖Bw.j (algebraMap E Ω x)‖ :=
     (GlobalTheory.Cyc.Model.isom_gal γ).norm_map_of_map_zero (map_zero _) _
-  rw [h3]
-  exact h2
+  rwa [h3]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.JBridgeInt =====
@@ -249,8 +248,7 @@ theorem UpperTheory.Gal.G3.jConjBridge :
       eO_cont := Bw.eO_cont
       eO_symm_cont := Bw.eO_symm_cont }
   refine ⟨g, O, iR, iA, iT, Bw', ⟨fun x => rfl, fun h => rfl⟩, ?_⟩
-  refine RingHom.ext fun x => ?_
-  exact (hg ⟨Bw.j (algebraMap E Ω x), Bw.j_E x⟩).trans (hτ x).symm
+  exact RingHom.ext fun x => (hg ⟨Bw.j (algebraMap E Ω x), Bw.j_E x⟩).trans (hτ x).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.JConjBridge =====
@@ -268,8 +266,7 @@ namespace UpperTheory.Gal.G3
 private theorem isUnit_natCast_sp (l : ℕ) (hl : l ≠ 0) (Ω : Type) [Field Ω] [CharZero Ω] :
     IsUnit ((l : Γ(sp Ω, ⊤))) := by
   have h : IsUnit ((l : Ω)) := isUnit_iff_ne_zero.2 (Nat.cast_ne_zero.2 hl)
-  have h2 := h.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
-  simpa using h2
+  simpa using h.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
 
 private theorem th_pull_congr {B : Scheme.{0}} {R : Type} [Field R] (T : Th.{u} B R) {X Y : Scheme.{0}} {p : X ⟶ B}
     {q : Y ⟶ B} {f f' : Y ⟶ X} (e : f = f') (h : f ≫ p = q) (h' : f' ≫ p = q) : T.pull f h = T.pull f' h' := by
@@ -348,7 +345,7 @@ private theorem coverCore (hE : EtnGood) (hS : BcSplits) (hG : BcGal) (hU : Corr
   refine ⟨Tm, ?_, key, fun m => ?_⟩
   · have hh : hop l H Ω g = hEx.choose := by
       unfold hop
-      exact dif_pos hEx
+      exact dite_eq_left hEx
     rw [hh]
     exact hU l Ω (pullback.snd H.q g₀) _ _ _ _ hEx.choose_spec hA
   · exact (hGood m).inj _ _ (bcMap g₀ c rfl) (bcMap_snd _ _ _) G _ hgal'
@@ -563,8 +560,7 @@ private theorem isBC_pi {T : Type} [Finite T] {M N : T → Type} [∀ t, AddComm
         · subst hst
           simp
         · simp [Pi.single_eq_of_ne hst]
-    simp only [hs]
-    exact Finset.univ_sum_single y
+    simpa only [hs] using Finset.univ_sum_single y
 
 end
 
@@ -1010,8 +1006,7 @@ private theorem unit_l (l : ℕ) {k Ω : Type} [Field k] [Field Ω] [Algebra k �
     apply hl
     apply (algebraMap k Ω).injective
     simpa using h0
-  have h2 := (h1.isUnit).map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
-  simpa using h2
+  simpa using (h1.isUnit).map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
 
 private theorem low_fet (hF : FEtBasic) {k L O : Type} [Field k] [Field L] [CommRing O] [Algebra O k] {H : HTower k}
     {θ : H.Γ → L} {C : Cover H θ O} (D : LowData C) (g : H.Γ) : FEt ((low D).s g) (D.d g) := by
@@ -1141,8 +1136,7 @@ private theorem modP (hM : ModBc) (l : ℕ) [Fact l.Prime] (K : FinExt l) {O : T
   have h : (⟨_, pullback.snd (𝟙 Y ≫ p) (Spec.map (CommRingCat.ofHom φ))⟩ : CrystallineSemistableComparison.Model l K.1).Sm ∧
       SmoothOfRelativeDimension d (pullback.snd (𝟙 Y ≫ p) (Spec.map (CommRingCat.ofHom φ))) :=
     hM l K φ p d hs hp (𝟙 Y)
-  rw [Category.id_comp] at h
-  exact h
+  rwa [Category.id_comp] at h
 
 private theorem galPart (hSp : BcSplits) (hGal : BcGal) {B k K Y T W₀ : Scheme.{0}} (p : Y ⟶ B) (g₁ : k ⟶ B) (g₂ : K ⟶ k)
     (s : T ⟶ Y) [IsFinite s] [Etale s] (c₀ : W₀ ⟶ Y) (G : Type) [Group G] [Finite G] (a₀ : G → (W₀ ⟶ W₀)) (n : ℕ)
@@ -1380,8 +1374,7 @@ private theorem intertwine_of_restrict {K V₁ V₀ G : Type*} [Field K] [AddCom
       have hu : ⇑(b₁.repr (b₁.equivFun.symm u)) = u := by
         rw [← Module.Basis.equivFun_apply, LinearEquiv.apply_symm_apply]
       have := LinearMap.toMatrix_mulVec_repr b₁ b₀ f' (b₁.equivFun.symm u)
-      rw [hu] at this
-      exact this
+      rwa [hu] at this
     rw [key, key] at h
     exact b₁.equivFun.symm.injective (hf' (b₀.repr.injective (Finsupp.ext fun i => congrFun h i)))
   · have hli : LinearIndependent K (fun i => (b₀ i).1) :=
@@ -1543,8 +1536,7 @@ private theorem pull_isBC (pE : P_equiv) (pC : P_cube) (pA : P_affine) (pV : P_c
       (sectionsOn.mapOver (appTop_algebraMapS h.w) (omegaPullS h.w a) (cechOpen ⊤ U S))
       (LinearEquiv.refl k _) (sectionsOn.congrOpens k' _ (preimage_cechOpen g ⊤ U S)) _ ?_
       (pO k k' J e X X' s s' g h a _ hA)
-    intro x
-    exact (sectionsOn.congrOpens_apply k' (Omega s' a) (preimage_cechOpen g ⊤ U S) _).symm
+    exact fun x => (sectionsOn.congrOpens_apply k' (Omega s' a) (preimage_cechOpen g ⊤ U S) _).symm
   refine pE k k' J e _ _ _ _ _ (cechHEquivCoh k hc hU (Omega s a) b).symm
     (cechHEquivCoh k' hc' hU' (Omega s' a) b) (hodgePullS h.w a b) ?_ hcube
   intro x
@@ -1616,28 +1608,28 @@ theorem OccMove_holds : OccMove := by
       exact absurd (hmax q (Finset.mem_filter.2 ⟨Finset.mem_univ _, h0⟩)) (not_le.2 hq)
     refine ⟨S, fun q => if c q = c q₀ then z q else 0, fun h0 => ?_, fun σ hσ => ?_⟩
     · have h1 : (if c q₀ = c q₀ then z q₀ else 0) = 0 := congrFun h0 q₀
-      rw [if_pos rfl] at h1
+      rw [ite_eq_left rfl] at h1
       exact (Finset.mem_filter.1 hq₀).2 h1
     obtain ⟨hB, hρ⟩ := hc σ
     have hE := congrFun (h σ hσ)
     funext p
     simp only [Matrix.mulVec, dotProduct, Matrix.map_apply, Pi.smul_apply] at hE ⊢
     by_cases hp : c p = c q₀
-    · rw [if_pos hp, ← hE p]
+    · rw [ite_eq_left hp, ← hE p]
       refine Finset.sum_congr rfl fun q _ => ?_
       rw [hρ]
       by_cases hq : c q = c q₀
-      · rw [if_pos hq, if_pos (hp.trans hq.symm)]
-      · rw [if_neg hq, map_zero, mul_zero]
+      · rw [ite_eq_left hq, ite_eq_left (hp.trans hq.symm)]
+      · rw [ite_eq_right hq, map_zero, mul_zero]
         rcases lt_or_gt_of_ne hq with hlt | hgt'
         · rw [hB (lt_of_lt_of_eq hlt hp.symm), map_zero, zero_mul]
         · rw [hgt q hgt', map_zero, mul_zero]
-    · rw [if_neg hp, smul_zero]
+    · rw [ite_eq_right hp, smul_zero]
       refine Finset.sum_eq_zero fun q _ => ?_
       rw [hρ]
       by_cases hq : c q = c q₀
-      · rw [if_neg (fun e => hp (e.trans hq)), map_zero, zero_mul]
-      · rw [if_neg hq, map_zero, mul_zero]
+      · rw [ite_eq_right (fun e => hp (e.trans hq)), map_zero, zero_mul]
+      · rw [ite_eq_right hq, map_zero, mul_zero]
 
 end PositivityTheory.AutomorphicGaloisHodgeTate.G8
 
@@ -1679,8 +1671,7 @@ theorem occ_low (hS : CrystallineSemistableComparison.HTSpecB.HTSpecGood) (h5 : 
   refine ⟨S, z, hz, fun σ hσ => ?_⟩
   have := h σ hσ
   beta_reduce at this
-  rw [e σ] at this
-  exact this
+  rwa [e σ] at this
 
 theorem jumpCore_of (hS : CrystallineSemistableComparison.HTSpecB.HTSpecGood) (h1 : LowNice) (h2 : LowHodge) (h3 : LowPiece) (h4 : MatEx) (h5 : LocalMat)
     (h6 : CoverLow) (h7 : BridgeInt) (h8 : BCTower) (h9 : LocE) (h10 : OccMove) (h11 : JumpsEx) (h12 : ConjBridge)

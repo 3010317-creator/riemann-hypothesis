@@ -79,8 +79,7 @@ theorem hom_f_injective (n : ℕ) : Injective (P.hom.f n) := by
   obtain ⟨g, rfl⟩ : ∃ g : Fin n → G, (fun i => (g i : G ⧸ N)) = x :=
     ⟨fun i => (x i).out, funext fun i => QuotientGroup.out_eq' (x i)⟩
   have h1 : P.u (f.1 fun i => P.φ (g i)) = P.u (f'.1 fun i => P.φ (g i)) := congrArg (fun F => F.1 g) h
-  have h2 := hP.2.1.injective h1
-  simpa [phi_apply M N Q P hP] using h2
+  simpa [phi_apply M N Q P hP] using hP.2.1.injective h1
 
 theorem inflation_hom_degree_two_apply (z : Q.coch.X 2) (a b : G) :
     (P.hom.f 2 z).1 ![a, b] = P.u (z.1 ![(a : G ⧸ N), b]) := by
@@ -134,10 +133,8 @@ theorem descend1 (w : G → M.V) (hw : Continuous w) (hr : ∀ a (n : N), w (a *
   have hv0 : Continuous v0 := by
     rw [hP.2.1.continuous_iff]
     have e : (P.u ∘ v0) = wq := funext hv0u
-    rw [e]
-    exact hwq
-  refine ⟨⟨fun g => v0 (g 0), hv0.comp (continuous_apply 0)⟩, fun a => ?_⟩
-  exact hv0u _
+    rwa [e]
+  exact ⟨⟨fun g => v0 (g 0), hv0.comp (continuous_apply 0)⟩, fun a => (hv0u _)⟩
 
 theorem descend2 (D : G → G → M.V) (hD : Continuous fun p : G × G => D p.1 p.2) (hI : InflD M N D) :
     ∃ z : Q.coch.X 2, ∀ a b : G, P.u (z.1 ![(a : G ⧸ N), b]) = D a b := by
@@ -155,8 +152,7 @@ theorem descend2 (D : G → G → M.V) (hD : Continuous fun p : G × G => D p.1 
     rw [hq.continuous_iff]
     have e : Dq ∘ Prod.map (QuotientGroup.mk : G → G ⧸ N) (QuotientGroup.mk : G → G ⧸ N) =
         fun p : G × G => D p.1 p.2 := funext fun p => hout p.1 p.2
-    rw [e]
-    exact hD
+    rwa [e]
   have hmem : ∀ x, Dq x ∈ LinearMap.range P.u := fun x =>
     (hP.2.2 (Dq x)).2 fun g hg => hI.inv _ _ ⟨g, hg⟩
   let z0 : (G ⧸ N) × (G ⧸ N) → Q.V := fun x =>
@@ -168,8 +164,7 @@ theorem descend2 (D : G → G → M.V) (hD : Continuous fun p : G × G => D p.1 
   have hz0 : Continuous z0 := by
     rw [hP.2.1.continuous_iff]
     have e : (P.u ∘ z0) = Dq := funext hz0u
-    rw [e]
-    exact hDq
+    rwa [e]
   refine ⟨⟨fun g => z0 (g 0, g 1), hz0.comp ((continuous_apply 0).prodMk (continuous_apply 1))⟩, fun a b => ?_⟩
   show P.u (z0 ((a : G ⧸ N), (b : G ⧸ N))) = D a b
   rw [hz0u]

@@ -83,8 +83,7 @@ theorem finrank_perp_add {E : Type} [Field E] [NumberField E] [StarRing E] (V : 
       have : w = ∑ i, (b.repr ⟨w, hw⟩ i) • (b i : V.V) := by
         have := congrArg Subtype.val hw'
         rw [Submodule.coe_sum] at this
-        simp only [Submodule.coe_smul] at this
-        exact this
+        simpa only [Submodule.coe_smul] using this
 
       rw [this, map_sum, LinearMap.sum_apply]
       refine Finset.sum_eq_zero fun i _ => ?_
@@ -115,8 +114,7 @@ theorem finrank_perp_add {E : Type} [Field E] [NumberField E] [StarRing E] (V : 
         exact (Submodule.mem_bot E).1 this
       rw [hfc] at h1
 
-      rw [map_sum, LinearMap.sum_apply]
-      rw [← h1]
+      rw [map_sum, LinearMap.sum_apply, ← h1]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, star_star]
       simp [ψ, mul_comm]

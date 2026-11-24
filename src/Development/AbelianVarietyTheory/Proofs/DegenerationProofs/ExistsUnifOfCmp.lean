@@ -204,8 +204,7 @@ theorem fe_of_field (hG : GlobalFnsSt) (F : Type) [Field F] [Algebra (FractionRi
     rw [sval_pullMulSec _ _ _ _ _ y hJ, (gen_fe (D := D) (F := FractionRing R) hG k mu α).2 u hu hc _ π y J hJ,
       FamPull.val_feUnit k mu α π hJ, ← SectionScalarValuation.secScal_sval (hs _) _ y hJ, ← SectionScalarValuation.secScal_sval (hs _) _ y hJ,
       FamPull.comp_trF, ← Over.comp_left, p₂, b]
-    simp only [Category.id_comp] at e
-    exact e
+    simpa only [Category.id_comp] using e
 
 end Field
 
@@ -461,8 +460,7 @@ theorem level_of_cmp (hI : I.map φ ≤ I') (U : PreU I D.toPre A G) (U' : PreU 
     refine ThickIso.pmaps_of_good ((isGen_iff wL).1 wL_map.gen) U.P.L.isLB U'.P.L.isLB (fun _ => he)
       U'.P.L.rigGen U.P.L.rigGen fun y J J' hJ hJ' => ?_
     have e := (wL_map.vals (𝟙_ _) y J' J hJ' hJ _ (fun _ => rfl)).1
-    rw [Fintype.prod_unique, zpow_one]
-    exact e
+    rwa [Fintype.prod_unique, zpow_one]
   · obtain ⟨q, hq⟩ : ∃ q : Spec (CommRingCat.of (R' ⧸ I' ^ (e + 1))) ⟶ Spec (CommRingCat.of (R ⧸ I ^ (e + 1))),
         q ≫ thick R I e = thick R' I' e ≫ specOf φ := by
       refine ⟨Spec.map (CommRingCat.ofHom (Ideal.quotientMap (I' ^ (e + 1)) φ ?_)), ?_⟩

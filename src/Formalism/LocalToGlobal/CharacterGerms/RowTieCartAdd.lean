@@ -25,11 +25,7 @@ section IntSec
 variable {V : VF C} {τ : Type}
 
 theorem IntS.mul {f g : MvPowerSeries τ C} (hf : IntS V f) (hg : IntS V g) : IntS V (f * g) := by
-  intro μ
-  rw [MvPowerSeries.coeff_mul]
-  refine VF.Ge.sum fun p _ => ?_
-  have hp := (hf p.1).mul (hg p.2)
-  simpa using hp
+  exact Formalism.L2.FormalSeriesBounds.PartialDerivEval.intS_mul hf hg
 
 theorem IntS.one : IntS V (1 : MvPowerSeries τ C) := by
   intro μ
@@ -49,8 +45,7 @@ theorem IntS.subst {σ : Type} [Finite σ] {a : σ → MvPowerSeries τ C}
 
 theorem intS_ps {f : PowerSeries C} : IntS V f ↔ ∀ n, V.Ge 0 (PowerSeries.coeff n f) := by
   constructor
-  · intro h n
-    exact h (Finsupp.single () n)
+  · exact fun h n => h (Finsupp.single () n)
   · intro h μ
     have hμ : μ = Finsupp.single () (μ ()) := by
       ext
@@ -87,7 +82,7 @@ theorem subst_ev_kill (h : PS C 2 dd) (g : Fin 2) (a : Fin 2 → Pt C 1 dd) (hag
   · have h1 : a s.1 s.2 = MvPowerSeries.X ((0 : Fin 1), s.2) := by rw [hao _ hs]; rfl
     rw [h1, MvPowerSeries.subst_X hbS]
     have h2 : s = (1 - g, s.2) := Prod.ext (fin_two_eq_one_sub_of_ne' g s.1 hs) rfl
-    simp only [Pi.smul_apply', if_neg hs, one_smul]
+    simp only [Pi.smul_apply', ite_eq_right hs, one_smul]
     rw [← h2]
 
 theorem coeff_eval_second_zero (G : PS C 2 dd) (μ : Fin dd →₀ ℕ) :
@@ -117,7 +112,7 @@ theorem coeff_eval_second_zero (G : PS C 2 dd) (μ : Fin dd →₀ ℕ) :
     rw [Finset.mem_image] at hs'
     obtain ⟨x, _, rfl⟩ := hs'
     show (if (0 : Fin 2) = 1 then (0 : C) else 1) ^ _ = 1
-    rw [if_neg (by decide), one_pow]
+    rw [ite_eq_right (by decide), one_pow]
   rw [h3, one_mul]
 
 end Kill

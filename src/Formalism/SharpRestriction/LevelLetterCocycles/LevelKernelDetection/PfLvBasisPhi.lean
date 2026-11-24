@@ -122,8 +122,7 @@ private theorem eigen_finset_eq_zero_of_injective_embeddings {ι : Type} [Decida
     intro x hx hs
     rw [Finset.sum_insert hj] at hs
     have h2 : ∑ i ∈ s, x i = -x j := by
-      rw [eq_neg_iff_add_eq_zero, add_comm]
-      exact hs
+      rwa [eq_neg_iff_add_eq_zero, add_comm]
     have key : ∀ c, ∀ i ∈ s, (τ i c - τ j c) • x i = 0 := by
       intro c
       apply ih (fun i => (τ i c - τ j c) • x i)
@@ -134,20 +133,17 @@ private theorem eigen_finset_eq_zero_of_injective_embeddings {ι : Type} [Decida
         rw [map_add (f := _), map_sum, map_zero, hx j (Finset.mem_insert_self j s) c,
         Finset.sum_congr rfl (fun i hi => hx i (Finset.mem_insert_of_mem hi) c)] at h1
         simp_rw [sub_smul]
-        rw [Finset.sum_sub_distrib, ← Finset.smul_sum, h2, smul_neg, sub_neg_eq_add, add_comm]
-        exact h1
+        rwa [Finset.sum_sub_distrib, ← Finset.smul_sum, h2, smul_neg, sub_neg_eq_add, add_comm]
     have hs0 : ∀ i ∈ s, x i = 0 := by
       intro i hi
       have hij : τ i ≠ τ j := fun h => hj (by rw [← hτ h]; exact hi)
       obtain ⟨c, hc⟩ : ∃ c, τ i c ≠ τ j c := by
-        by_contra hne
-        push_neg at hne
+        by_contra! hne
         exact hij (AlgHom.ext hne)
       exact (smul_eq_zero.mp (key c i hi)).resolve_left (sub_ne_zero.mpr hc)
     intro i hi
     rcases Finset.mem_insert.mp hi with rfl | hi
-    · rw [Finset.sum_eq_zero hs0, add_zero] at hs
-      exact hs
+    · rwa [Finset.sum_eq_zero hs0, add_zero] at hs
     · exact hs0 i hi
 
 theorem lvBasis_indep {ι : Type} [Fintype ι] (τ : ι → (K₀ →ₐ[Qp] LL)) (hτ : Function.Injective τ)

@@ -220,8 +220,7 @@ theorem exists_rat_bilin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     have hk' : (k : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr hk
     have hl' : (l : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr hl
     exact mul_left_cancel₀ (mul_ne_zero (mul_ne_zero hn' hk') hl') (by linear_combination h2)
-  · intro u v
-    exact (LinearMap.IsAlt.neg (B := B) halt v u).symm
+  · exact fun u v => (LinearMap.IsAlt.neg (B := B) halt v u).symm
   · intro u hu
     obtain ⟨k, y, hk, hy⟩ := hs u
     have hf : ∀ x, form x y = 0 := by
@@ -365,13 +364,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Cusp.CMRank
 
 theorem restrict_bijective (E : Type) [Field E] [NumberField E] :
     Function.Bijective (fun φ : E →+* ℂ => φ.comp (algebraMap (𝓞 E) E)) := by
-  constructor
-  · intro φ ψ h
-    exact IsFractionRing.ringHom_ext (A := 𝓞 E) (K := E) (fun a => DFunLike.congr_fun h a)
-  · intro s
-    refine ⟨embOf s, ?_⟩
-    ext a
-    exact IsFractionRing.lift_algebraMap (intEmb_injective s) a
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.Dict.TangentDim.restrict_bijective E
 
 theorem natCard_intEmb (E : Type) [Field E] [NumberField E] :
     Nat.card (𝓞 E →+* ℂ) = Module.finrank ℚ E := by
@@ -438,8 +431,7 @@ theorem conj_inv_mul_rt (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
       Complex.I * (((1 / ((m : ℝ) * Real.sqrt H.d)) * ε : ℝ) : ℂ) := by
   have hcoe : embOf s (H.rt : E) = s H.rt := IsFractionRing.lift_algebraMap (intEmb_injective s) H.rt
   have hw : (s H.rt) ^ 2 = -(H.d : ℂ) := by
-    have h := congrArg s H.rt_sq
-    simpa [map_pow, map_neg, map_natCast] using h
+    simpa [map_pow, map_neg, map_natCast] using congrArg s H.rt_sq
   have hd : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
   have hr0 : 0 < Real.sqrt H.d := Real.sqrt_pos.2 hd
   have hrC : ((Real.sqrt H.d : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hr0.ne'
@@ -573,8 +565,7 @@ theorem span_eq_top {E : Type} [Field E] {Ψ : Type} [Fintype Ψ] (N : ℕ) (s :
     intro z
     rw [apply_eq_re, h1, h2]
     simp
-  refine LinearMap.pi_ext' fun τ => LinearMap.pi_ext' fun i => ?_
-  exact hl i τ
+  exact LinearMap.pi_ext' fun τ => LinearMap.pi_ext' fun i => hl i τ
 
 def vecOf {E : Type} [Field E] {Ψ : Type} (N : ℕ) (s : Ψ → (E →+* ℂ)) :
     (Fin N → E) →+ (Ψ → Fin N → ℂ) where

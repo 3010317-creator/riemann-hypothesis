@@ -82,7 +82,7 @@ theorem ie_taylor_lin {m : ℕ} (c : Fin m → ℂ) (G : Fin m → VC D N N' →
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem ie_lamC_of_mem (lam : Qbar →+* ℂ_[p]) {x : ℂ} (h : x ∈ Qbar) : lamC lam x = lam ⟨x, h⟩ := dif_pos h
+theorem ie_lamC_of_mem (lam : Qbar →+* ℂ_[p]) {x : ℂ} (h : x ∈ Qbar) : lamC lam x = lam ⟨x, h⟩ := dite_eq_left h
 
 theorem ie_lamC_mul (lam : Qbar →+* ℂ_[p]) {x y : ℂ} (hx : x ∈ Qbar) (hy : y ∈ Qbar) :
     lamC lam (x * y) = lamC lam x * lamC lam y := by
@@ -219,8 +219,7 @@ theorem pullback_torsion : PullTors := by
   have e : ieTPullHom cc δ (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin N') (Fin N') D.host.E) (n • t) =
       n • tPull D (tor0 D cc δ) (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin N') (Fin N') D.host.E) t :=
     map_nsmul _ n t
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 section Pair
 
@@ -286,14 +285,12 @@ theorem pairing_fact : PairFact := by
     exact ie_yy_scale s s' hs2 hs1' hm0
   · obtain ⟨s1, hc1, c, hcs⟩ := hb2 _ (ie_yy_scale s s' hs1 hs2' hy)
     refine ⟨s1 * (s * s'), Nat.Coprime.mul_left hc1 hss, c, ?_⟩
-    rw [Nat.cast_mul, mul_smul]
-    exact hcs
+    rwa [Nat.cast_mul, mul_smul]
   · have hp : p ≠ 1 := (Fact.out : p.Prime).one_lt.ne'
     have hs0 : 0 < s := Nat.pos_of_ne_zero fun h => hp (Nat.coprime_zero_left p |>.1 (h ▸ hs))
     have hs0' : 0 < s' := Nat.pos_of_ne_zero fun h => hp (Nat.coprime_zero_left p |>.1 (h ▸ hs'))
     refine ⟨(s * s') * n, Nat.mul_pos (Nat.mul_pos hs0 hs0') hn, Nat.Coprime.mul_left hss hc, ?_⟩
     have h := ie_La_scale cc δ s s' hs2 hs1' hm
-    rw [AddSubgroup.mem_comap, DistribSMul.toAddMonoidHom_apply, ← mul_smul] at h
-    exact h
+    rwa [AddSubgroup.mem_comap, DistribSMul.toAddMonoidHom_apply, ← mul_smul] at h
 
 end Formalism.L2.KerInert

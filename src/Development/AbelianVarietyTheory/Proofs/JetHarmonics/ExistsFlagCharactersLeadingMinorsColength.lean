@@ -84,8 +84,7 @@ theorem minor_dvd_minor {R : Type} [CommRing R] {g N : ℕ} (M : Matrix (Fin g) 
     have h := hι m (Nat.le_of_succ_le hm)
     have h2 : (fun a : Fin m => M (Fin.castLE (Nat.le_of_succ_le hm) a) (ι (Fin.castLE hm j))) ∈
         omTr M m (Nat.le_of_succ_le hm) := Submodule.subset_span ⟨_, rfl⟩
-    rw [← h] at h2
-    exact h2
+    rwa [← h] at h2
 
 theorem exists_smul_eq_zero_of_hasLen {C : Type} [Field C] {v : Valuation C NNReal} {R : Type} [CommRing R]
     [Algebra R C] (hv : v.Integers R) {M : Type} [AddCommGroup M] [Module R M] {x : NNReal}
@@ -135,7 +134,6 @@ theorem exists_flag_characters (C : Type) [Field C] (v : Valuation C NNReal) (O 
   have hxe := hasLen_unique hv hlen hfull
   refine ⟨fun b => u (ι b), fun b => hu _, fun i => ?_⟩
   have hd := hv.le_of_dvd (minor_dvd_minor M ι hι (i.val + 1) s i.isLt le_rfl)
-  rw [← hxe] at hd
-  exact hd
+  rwa [← hxe] at hd
 
 end GlobalTheory.CharDepth

@@ -224,8 +224,7 @@ theorem rel_indep {G M : Type} [AddCommGroup G] [AddCommGroup M] [Module ℂ M] 
         rw [← QuotientAddGroup.out_eq' y, ← QuotientAddGroup.out_eq' y', QuotientAddGroup.eq_iff_sub_mem]
         exact hm)
       C (by rw [← hdec s hvac]; exact hsum)
-    intro y hy
-    exact (smul_eq_zero.mp (hind y hy)).resolve_right (hnz _)
+    exact fun y hy => (smul_eq_zero.mp (hind y hy)).resolve_right (hnz _)
   rw [hdec s' hvac']
   exact Finset.sum_eq_zero fun y hy => by rw [hC0 y hy, zero_smul]
 
@@ -267,8 +266,7 @@ theorem exists_latO_le (S T : HSp D) (U : AddSubgroup (WO S T)) (hU : IsOpen (U 
     induction he using Submodule.span_induction with
     | mem e he =>
       refine hS i j e α hα fun v hv => h0 v (not_not.2 ?_)
-      simp only [Finset.mem_biUnion, Finset.mem_univ, true_and]
-      exact ⟨i, j, e, he, hv⟩
+      simpa only [Finset.mem_biUnion, Finset.mem_univ, true_and] using ⟨i, j, e, he, hv⟩
     | zero => rw [TensorProduct.tmul_zero, Matrix.single_zero]; exact zero_mem U
     | add e e' _ _ h h' => rw [TensorProduct.tmul_add, Matrix.single_add]; exact add_mem h h'
     | smul n e _ h =>
@@ -599,8 +597,8 @@ theorem GlobalTheory.DownLift.SplitCoef.exists_locSpan_coef_eq : ∀ (D : D7) (�
     by_cases hΦx : Φ x = 0
     · rw [hΦx, zero_mul, mul_zero, zero_mul]
     · obtain ⟨z₀, ⟨hz₀, hP₀⟩, huniq⟩ := hXu x hx (hkΦ' x (hΦsupp x hΦx))
-      rw [Finset.sum_eq_single_of_mem z₀ hz₀ (fun z hz hne => if_neg fun hP => hne (huniq z ⟨hz, hP⟩)),
-        if_pos hP₀]
+      rw [Finset.sum_eq_single_of_mem z₀ hz₀ (fun z hz hne => ite_eq_right fun hP => hne (huniq z ⟨hz, hP⟩)),
+        ite_eq_left hP₀]
       field_simp
 
 end
@@ -653,8 +651,7 @@ theorem mul_mt_eq {S T : HSp D} {e : AE D} {g : GA D S} (hg : ∀ i j, e * (mt S
   have hM : ∀ k j, e * mt S g k j = e * (1 : Matrix (Fin S.rank) (Fin S.rank) (AE D)) k j := by
     intro k j
     have h := hg k j
-    rw [Matrix.sub_apply, mul_sub, sub_eq_zero] at h
-    exact h
+    rwa [Matrix.sub_apply, mul_sub, sub_eq_zero] at h
   ext i j
   rw [Matrix.mul_apply]
   conv_rhs => rw [← Matrix.mul_one (u : Matrix (Fin T.rank) (Fin S.rank) (AE D)), Matrix.mul_apply]
@@ -846,10 +843,8 @@ theorem form_placeModel_eq_zero_of_vanish : ∀ (D : D7) (ψ : AddChar (AF D.hos
     · rintro _ ⟨u, rfl⟩
       exact GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ hf₀ u
     · exact Formalism.IndefR.Fock.CCR.theta_zero ψ S T
-    · intro x y _ _ hx hy
-      exact Formalism.IndefR.Fock.CCR.theta_add hx hy
-    · intro c x _ hx
-      exact Formalism.IndefR.Fock.CCR.theta_smul hx c
+    · exact fun x y _ _ hx hy => Formalism.IndefR.Fock.CCR.theta_add hx hy
+    · exact fun c x _ hx => Formalism.IndefR.Fock.CCR.theta_smul hx c
   have hca : cA D b * cA D a = cA D a := by rw [← RingHom.map_mul, hba]
   have hmod : ∀ y, IsHalf (cA D a) y → ℓ (Tm (fun t => ψ (symplO S T t y) * Ψ t)) = ℓ (Tm Ψ) := by
     intro y hy
@@ -954,8 +949,7 @@ theorem isSBHalf_sub_smul {m n : ℕ} {e : AE D} {Λ : AddSubgroup (Mx D m n)} {
   obtain ⟨f1, k, hk, f2, f3⟩ := hf
   obtain ⟨g1, l, hl, g2, g3⟩ := hg
   have hne : ∀ t, (f - c • g) t ≠ 0 → f t ≠ 0 ∨ g t ≠ 0 := fun t ht => by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact ht (by rw [Pi.sub_apply, Pi.smul_apply, h.1, h.2, smul_zero, sub_zero])
   have hh : ∀ (j : ℕ) (u : Mx D m n), IsHalf e u → IsHalf e (j • u) := fun j u hu => by
     rw [GlobalTheory.SplitScalar.isHalf_iff] at hu ⊢
@@ -1078,13 +1072,13 @@ theorem hasShape_adjDat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : H
       rw [GlobalTheory.PlaceVec.frMapAdj_add]
       by_cases c1 : IsIntM (frMapAdj S T βS βT x)
       · by_cases c2 : IsHalf (cA D e) t ∧ IsIntM (frMapAdj S T βS βT t)
-        · rw [if_pos ⟨(isHalf_add_iff hx' t).2 c2.1, hI.2 ⟨c2.2, c1⟩⟩, if_pos ⟨hx, c1⟩, if_pos c2]
+        · rw [ite_eq_left ⟨(isHalf_add_iff hx' t).2 c2.1, hI.2 ⟨c2.2, c1⟩⟩, ite_eq_left ⟨hx, c1⟩, ite_eq_left c2]
           beta_reduce
           rw [h₁ _ (fun Q => redM Q (frMapAdj S T βS βT x)) (redM_add_of_one PP hp hp1 hM hN c2.2 c1),
             h₂ _ (fun Q => redM Q (frMapAdj S T βS βT t)) fun Q _ hQ =>
               redM_add_of_zero Q hp (GlobalTheory.TameProd.resS_idem_eq_zero he₀ hQ.symm hp) hN c2.2 c1]
-        · rw [if_neg c2, if_neg fun h => c2 ⟨(isHalf_add_iff hx' t).1 h.1, (hI.1 h.2).1⟩, mul_zero]
-      · rw [if_neg fun h => c1 (hI.1 h.2).2, if_neg fun h => c1 h.2, zero_mul]
+        · rw [ite_eq_right c2, ite_eq_right fun h => c2 ⟨(isHalf_add_iff hx' t).1 h.1, (hI.1 h.2).1⟩, mul_zero]
+      · rw [ite_eq_right fun h => c1 (hI.1 h.2).2, ite_eq_right fun h => c1 h.2, zero_mul]
   rw [map_sub, map_smul, hTm.trans _ s12 x hx', ← hfT, map_sub, map_smul, smul_eq_mul, sub_eq_zero] at key
   rw [key, mul_comm]
 
@@ -1169,8 +1163,7 @@ theorem exists_decomp (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE D) 
       simp [LinearMap.mem_ker, map_sub, hℓ u hu g hg]
     · intro hle u hu g hg
       have := hle (Submodule.subset_span ⟨u, g, hu, hg, rfl⟩)
-      rw [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
-      exact this
+      rwa [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
   have inv_comp : ∀ μ : ((WO S T → ℂ) ⧸ K) →ₗ[ℂ] ℂ, InvForm ψ S T a (μ ∘ₗ K.mkQ) := by
     intro μ
     rw [inv_iff]
@@ -1211,8 +1204,7 @@ theorem exists_decomp (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE D) 
       · simp [Fq, he]
       · intro b _ hb
         simp [hb]
-      · intro h
-        exact absurd hx₁ h
+      · exact fun h => absurd hx₁ h
   have key := congrArg (K.liftQ ℓ hle) (hs _ hmem)
 
   rw [hA, map_sum] at key
@@ -1254,7 +1246,7 @@ theorem mem_span_of_coef_mem_span : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
 
       rw [heisO_lin_sub, GlobalTheory.SplitScalar.heisO_sum, map_sub, map_sum, hL ℓ hℓ x hx, sub_eq_zero]
       refine Finset.sum_congr rfl fun x₁ hx₁ => ?_
-      rw [hφe x₁ hx₁ ℓ hℓ x hx, coef, if_pos hx])
+      rw [hφe x₁ hx₁ ℓ hℓ x hx, coef, ite_eq_left hx])
   rw [sub_eq_zero] at hzero
   exact hzero ▸ hsum
 
@@ -1429,7 +1421,7 @@ theorem rel_extend {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) 
     refine Finset.sum_eq_zero fun u _ => ?_
     show c u • heisO ψ S T u 0 = 0
     rw [hz, smul_zero]
-  push_neg at hΦ
+  push Not at hΦ
   obtain ⟨x₀, hx₀, h0⟩ := hΦ
   choose p hp using fun x u => heisO_factor ψ S T hE x u
   have key : ∀ g, IsThetaFunO ψ S T g → HasShape ψ S T a Φ g → ∀ ℓ, InvForm ψ S T a ℓ → ∀ x, IsHalf a x →
@@ -1571,7 +1563,7 @@ theorem cross_law {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D T →* M
   rw [ef, GlobalTheory.SplitScalar.heisO_smul, map_smul, smul_eq_mul] at e1
   rw [ew, GlobalTheory.SplitScalar.heisO_smul, map_smul, smul_eq_mul, hc₀ _ (GlobalTheory.SplitHecke.isHalf_actO κ 1 hx'), hc₀ _ hx'] at e2
   unfold coef
-  rw [if_pos (GlobalTheory.SplitHecke.isHalf_actO κ 1 hx), if_pos hx]
+  rw [ite_eq_left (GlobalTheory.SplitHecke.isHalf_actO κ 1 hx), ite_eq_left hx]
   have e3 : c * Φ (actO S T κ 1 x') = s * Φ x' := mul_left_cancel₀ hc0 (by linear_combination e2)
   apply mul_left_cancel₀ hc
   linear_combination (Φ x') * e1 - (ℓ (heisO ψ S T x f)) * e3
@@ -1593,15 +1585,15 @@ theorem omegaQ_split {a b : ℕ} (Q : Finset (Pl D.host.E)) (r : ℕ) (ξ : ∀ 
     · rfl
   rw [key, key, key]
   by_cases h : ∀ P ∈ Q, LowZero r (y P) ∧ IsUnit (topL r (y P)).det
-  · rw [if_pos h, if_pos (fun P hP' => h P (by rw [Finset.mem_singleton.1 hP']; exact hP)),
-      if_pos (fun P hP' => h P (Finset.mem_of_mem_erase hP')), Finset.prod_singleton, Finset.mul_prod_erase Q F hP]
-  · rw [if_neg h]
+  · rw [ite_eq_left h, ite_eq_left (fun P hP' => h P (by rw [Finset.mem_singleton.1 hP']; exact hP)),
+      ite_eq_left (fun P hP' => h P (Finset.mem_of_mem_erase hP')), Finset.prod_singleton, Finset.mul_prod_erase Q F hP]
+  · rw [ite_eq_right h]
     by_cases h1 : ∀ P ∈ ({PP} : Finset (Pl D.host.E)), LowZero r (y P) ∧ IsUnit (topL r (y P)).det
-    · rw [if_pos h1, if_neg (fun h2 => h fun P hP' => by
+    · rw [ite_eq_left h1, ite_eq_right (fun h2 => h fun P hP' => by
         by_cases e : P = PP
         · exact h1 P (Finset.mem_singleton.2 e)
         · exact h2 P (Finset.mem_erase.2 ⟨e, hP'⟩)), mul_zero]
-    · rw [if_neg h1, zero_mul]
+    · rw [ite_eq_right h1, zero_mul]
 
 theorem idem_over {e : AE D} {PP : Pl D.host.E} {v : HeightOneSpectrum (𝓞 D.host.F)}
     (he : Formalism.L2.NTheta.IsIdemAt e PP) (hv : Over PP v) :
@@ -1740,8 +1732,7 @@ theorem step_twist : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
     · refine Subgroup.mem_iInf.2 fun P' => Subgroup.mem_iInf.2 fun h => mem_parah.2 ⟨k3, ?_⟩
       by_cases h' : P' = PP
       · rw [h']
-        rw [rW] at k4
-        exact k4
+        rwa [rW] at k4
       · rw [k5 P' ((hP P').2 (Or.inr h)) h']
         exact one_mem _
     · refine Subgroup.mem_bot.2 (funext fun P' => ?_)

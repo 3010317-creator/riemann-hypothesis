@@ -75,16 +75,14 @@ theorem norm_pow_le_of_eigenvalues_lt (W : Type) [NormedAddCommGroup W] [NormedS
     have hT : (Module.End.toContinuousLinearMap (𝕜 := ℂ) W) (T : Module.End ℂ W) = T := by
       ext x
       rfl
-    rw [← AlgEquiv.spectrum_eq (Module.End.toContinuousLinearMap (𝕜 := ℂ) W), hT]
-    exact hz
+    rwa [← AlgEquiv.spectrum_eq (Module.End.toContinuousLinearMap (𝕜 := ℂ) W), hT]
   have hlt : ‖z‖ < ρ := h z hzE
   have hρ : 0 < ρ := (norm_nonneg z).trans_lt hlt
   let ρ' : ℝ≥0 := ⟨ρ, hρ.le⟩
   have hr : spectralRadius ℂ T < (ρ' : ℝ≥0∞) := by
     rw [← hzr]
     have : ‖z‖₊ < ρ' := by
-      rw [← NNReal.coe_lt_coe]
-      exact hlt
+      rwa [← NNReal.coe_lt_coe]
     exact_mod_cast this
   have hev := (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius T).eventually_lt_const hr
   obtain ⟨N, hN⟩ := eventually_atTop.1 (hev.and (eventually_gt_atTop 0))
@@ -99,8 +97,7 @@ theorem norm_pow_le_of_eigenvalues_lt (W : Type) [NormedAddCommGroup W] [NormedS
       exact h3
     have h4 : ‖T ^ n‖₊ ≤ ρ' ^ n := by exact_mod_cast h2
     have h5 : ((‖T ^ n‖₊ : ℝ≥0) : ℝ) ≤ ((ρ' ^ n : ℝ≥0) : ℝ) := NNReal.coe_le_coe.2 h4
-    rw [NNReal.coe_pow, coe_nnnorm] at h5
-    exact h5
+    rwa [NNReal.coe_pow, coe_nnnorm] at h5
   refine ⟨1 + ∑ i ∈ Finset.range N, ‖T ^ i‖ / ρ ^ i, fun j => ?_⟩
   have hpow : 0 < ρ ^ j := pow_pos hρ j
   have hsum : 0 ≤ ∑ i ∈ Finset.range N, ‖T ^ i‖ / ρ ^ i :=

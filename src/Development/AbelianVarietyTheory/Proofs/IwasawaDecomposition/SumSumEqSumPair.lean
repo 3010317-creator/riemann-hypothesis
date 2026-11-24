@@ -209,20 +209,17 @@ open ChernSpan
 theorem evEnt_blockSum {M N : ℕ} (P : Matrix (Fin M) (Fin M) (MvPolynomial (EntIx m) ℤ))
     (Q : Matrix (Fin N) (Fin N) (MvPolynomial (EntIx m) ℤ)) {R : Type} [CommRing R] (A : Mat m R) :
     evEnt (blockSum P Q) A = blockSum (evEnt P A) (evEnt Q A) := by
-  have h := blockSum_map (aeval fun v : EntIx m => A v.1 v.2.1 v.2.2).toRingHom P Q
-  simpa [evEnt] using h
+  simpa [evEnt] using blockSum_map (aeval fun v : EntIx m => A v.1 v.2.1 v.2.2).toRingHom P Q
 
 theorem evEnt_kron {M N : ℕ} (P : Matrix (Fin M) (Fin M) (MvPolynomial (EntIx m) ℤ))
     (Q : Matrix (Fin N) (Fin N) (MvPolynomial (EntIx m) ℤ)) {R : Type} [CommRing R] (A : Mat m R) :
     evEnt (kron P Q) A = kron (evEnt P A) (evEnt Q A) := by
-  have h := kron_map (aeval fun v : EntIx m => A v.1 v.2.1 v.2.2).toRingHom P Q
-  simpa [evEnt] using h
+  simpa [evEnt] using kron_map (aeval fun v : EntIx m => A v.1 v.2.1 v.2.2).toRingHom P Q
 
 theorem evEnt_wedge2 {M : ℕ} (P : Matrix (Fin M) (Fin M) (MvPolynomial (EntIx m) ℤ))
     {R : Type} [CommRing R] (A : Mat m R) :
     evEnt (ChernSpan.wedge2 P) A = ChernSpan.wedge2 (evEnt P A) := by
-  have h := wedge2_map (aeval fun v : EntIx m => A v.1 v.2.1 v.2.2).toRingHom P
-  simpa [evEnt] using h
+  simpa [evEnt] using wedge2_map (aeval fun v : EntIx m => A v.1 v.2.1 v.2.2).toRingHom P
 
 def zero (m : ι → ℕ) : PolyRep m where
   M := 0

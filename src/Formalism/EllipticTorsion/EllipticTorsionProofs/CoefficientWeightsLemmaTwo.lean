@@ -71,8 +71,7 @@ theorem norm_nat_eq_one {p : ℕ} (hp : p.Prime) (hpl : ‖(p : K)‖ < 1) (m : 
     push_cast at this
     exact this
   refine le_antisymm (IsUltrametricDist.norm_natCast_le_one K m) ?_
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hmax := IsUltrametricDist.norm_add_le_max ((p : K) * (Nat.gcdA p m : K)) ((m : K) * (Nat.gcdB p m : K))
   rw [← hK, norm_one, norm_mul, norm_mul] at hmax
   have ha := IsUltrametricDist.norm_intCast_le_one K (Nat.gcdA p m)
@@ -126,18 +125,18 @@ theorem coeff_X0_add_X1_pow {R : Type*} [CommRing R] (d i j : ℕ) :
         omega
       · rintro ⟨rfl, rfl⟩; rfl
     by_cases hc : m = i ∧ d - m = j
-    · rw [if_pos (this.2 hc), if_pos hc]; simp
-    · rw [if_neg (fun h => hc (this.1 h)), if_neg hc, mul_zero]
+    · rw [ite_eq_left (this.2 hc), ite_eq_left hc]; simp
+    · rw [ite_eq_right (fun h => hc (this.1 h)), ite_eq_right hc, mul_zero]
   rw [Finset.sum_congr rfl hterm]
   by_cases hij : i + j = d
-  · rw [if_pos hij, Finset.sum_eq_single i]
-    · rw [if_pos ⟨rfl, by omega⟩]
-    · intro b _ hb; rw [if_neg (fun h => hb h.1)]
+  · rw [ite_eq_left hij, Finset.sum_eq_single i]
+    · rw [ite_eq_left ⟨rfl, by omega⟩]
+    · intro b _ hb; rw [ite_eq_right (fun h => hb h.1)]
     · intro h; simp at h; omega
-  · rw [if_neg hij]
+  · rw [ite_eq_right hij]
     refine Finset.sum_eq_zero fun m hm => ?_
     simp at hm
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
 
 open Formalism.G
 
@@ -160,21 +159,16 @@ theorem add_identity (Fs : MvPowerSeries (Fin 2) K) (hFc : MvPowerSeries.constan
     simp only [hbdef]
     rw [← PowerSeries.subst_comp_subst_apply hE (PowerSeries.HasSubst.X i), hlE,
       PowerSeries.subst_X (PowerSeries.HasSubst.X i)]
-  have hsF : MvPowerSeries.constantCoeff (MvPowerSeries.subst b Fs) = 0 := by
-    rw [LogP.constantCoeff_subst_of_zero Fs hbi, hFc]
+  have hF : PowerSeries.HasSubst (MvPowerSeries.subst b Fs) :=
+    PowerSeries.HasSubst.of_constantCoeff_zero
+      (by rw [LogP.constantCoeff_subst_of_zero Fs hbi, hFc])
   have h1 : l.subst (MvPowerSeries.subst b Fs) = MvPowerSeries.X 0 + MvPowerSeries.X 1 := by
     rw [← LogP.psubst_subst l hFc hb, hlF, MvPowerSeries.subst_add hb, atX, atY,
       LogP.psubst_subst l (by simp) hb, LogP.psubst_subst l (by simp) hb,
       MvPowerSeries.subst_X hb, MvPowerSeries.subst_X hb, hlb, hlb]
-  have key : MvPowerSeries.subst b Fs = E.subst (MvPowerSeries.X 0 + MvPowerSeries.X 1 : MvPowerSeries (Fin 2) K) := by
-    calc MvPowerSeries.subst b Fs
-        = PowerSeries.subst (MvPowerSeries.subst b Fs) (X : PowerSeries K) :=
-          (PowerSeries.subst_X (PowerSeries.HasSubst.of_constantCoeff_zero hsF)).symm
-      _ = PowerSeries.subst (MvPowerSeries.subst b Fs) (PowerSeries.subst l E : PowerSeries K) := by rw [hEl]
-      _ = PowerSeries.subst (PowerSeries.subst (MvPowerSeries.subst b Fs) l) E :=
-          PowerSeries.subst_comp_subst_apply (PowerSeries.HasSubst.of_constantCoeff_zero' hl0)
-            (PowerSeries.HasSubst.of_constantCoeff_zero hsF) E
-      _ = _ := by rw [h1]
+  have key : MvPowerSeries.subst b Fs = E.subst (MvPowerSeries.X 0 + MvPowerSeries.X 1) := by
+    rw [← h1, ← PowerSeries.subst_comp_subst_apply
+      (PowerSeries.HasSubst.of_constantCoeff_zero' hl0) hF, hEl, PowerSeries.subst_X hF]
   rw [MvPowerSeries.subst_sub hb, MvPowerSeries.subst_sub hb, LogP.psubst_subst g hFc hb, key, atX, atY,
     LogP.psubst_subst g (by simp) hb, LogP.psubst_subst g (by simp) hb,
     MvPowerSeries.subst_X hb, MvPowerSeries.subst_X hb,
@@ -261,19 +255,19 @@ theorem main (hCE : Formalism.ELL.CompExpWeight.{u}) : Formalism.ELL.EllipticTor
         (((i + j).choose i : ℕ) : K) * coeff (i + j) G := by
       rw [PowerSeries.coeff_subst (PowerSeries.HasSubst.of_constantCoeff_zero hS),
         finsum_eq_single _ (i + j)]
-      · rw [coeff_X0_add_X1_pow, if_pos rfl, smul_eq_mul, mul_comm]
+      · rw [coeff_X0_add_X1_pow, ite_eq_left rfl, smul_eq_mul, mul_comm]
       · intro d hd
-        rw [coeff_X0_add_X1_pow, if_neg (Ne.symm hd), smul_zero]
+        rw [coeff_X0_add_X1_pow, ite_eq_right (Ne.symm hd), smul_zero]
     have e2 : MvPowerSeries.coeff (Finsupp.single 0 i + Finsupp.single 1 j)
         (PowerSeries.subst (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K) G) = 0 := by
-      rw [PowerSeries.coeff_subst_single, if_neg]
+      rw [PowerSeries.coeff_subst_single, ite_eq_right]
       intro h
       have := congrArg (· 1) h
       simp at this
       omega
     have e3 : MvPowerSeries.coeff (Finsupp.single 0 i + Finsupp.single 1 j)
         (PowerSeries.subst (MvPowerSeries.X 1 : MvPowerSeries (Fin 2) K) G) = 0 := by
-      rw [PowerSeries.coeff_subst_single, if_neg]
+      rw [PowerSeries.coeff_subst_single, ite_eq_right]
       intro h
       have := congrArg (· 0) h
       simp at this
@@ -321,8 +315,7 @@ theorem main (hCE : Formalism.ELL.CompExpWeight.{u}) : Formalism.ELL.EllipticTor
         (ζ ^ m - ζ ^ p) * coeff m G := by
       change coeff m (PowerSeries.rescale ζ G - ζ ^ p • G) = _
       rw [map_sub, PowerSeries.coeff_rescale, LinearMap.map_smul_of_tower, smul_eq_mul, sub_mul]
-    rw [hcm] at hw
-    exact hw
+    rwa [hcm] at hw
   have strong : ∀ x : K, ‖x‖ ≤ c ^ (-(n : ℤ)) → ‖x‖ ≤ ‖(p : K)‖ ^ (-(n : ℝ) / D) := by
     intro x hx
     rw [cz] at hx
@@ -392,8 +385,7 @@ theorem main (hCE : Formalism.ELL.CompExpWeight.{u}) : Formalism.ELL.EllipticTor
             rw [← pow_add, Nat.add_sub_cancel' hle]]
           rw [show ζ ^ p * ζ ^ (p ^ k - p) - ζ ^ p = ζ ^ p * (ζ ^ (p ^ k - p) - 1) by ring,
             norm_mul, norm_pow, hnz, one_pow, hζu _ hndvd, one_mul]
-      rw [norm_mul, hunit, one_mul] at hb
-      exact hb
+      rwa [norm_mul, hunit, one_mul] at hb
     · right
       refine ⟨k, hko, rfl, weak _ ?_⟩
       have hk1 : 1 ≤ k := hko.pos
@@ -409,8 +401,7 @@ theorem main (hCE : Formalism.ELL.CompExpWeight.{u}) : Formalism.ELL.EllipticTor
         rwa [hf, pow_one] at this
       have hb := hbin (p ^ (k - 1)) (p ^ k - p ^ (k - 1)) (Nat.one_le_pow _ _ hp.pos) (Nat.sub_pos_of_lt hlt)
       have hs : p ^ (k - 1) + (p ^ k - p ^ (k - 1)) = p ^ k := Nat.add_sub_cancel' hlt.le
-      rw [hs, hNd, Nat.cast_mul, norm_mul, norm_nat_eq_one hp hp1 _ hNp, mul_one] at hb
-      exact hb
+      rwa [hs, hNd, Nat.cast_mul, norm_mul, norm_nat_eq_one hp hp1 _ hNp, mul_one] at hb
   · left
     apply strong
     have hm2 : 2 ≤ m := by omega
@@ -427,8 +418,7 @@ theorem main (hCE : Formalism.ELL.CompExpWeight.{u}) : Formalism.ELL.EllipticTor
       unfold Nat.ModEq at h
       rw [Nat.dvd_iff_mod_eq_zero] at hd
       exact hm (Nat.dvd_of_mod_eq_zero (by omega))
-    rw [hs, norm_nat_eq_one hp hp1 _ hch, one_mul] at hb
-    exact hb
+    rwa [hs, norm_nat_eq_one hp hp1 _ hch, one_mul] at hb
 
 end Formalism.ELL.Lemma2Aux
 

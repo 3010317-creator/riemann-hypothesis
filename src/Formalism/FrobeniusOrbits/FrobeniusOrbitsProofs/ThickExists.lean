@@ -136,10 +136,9 @@ lemma noRel_image (L S d k : ℕ) (hL : 1 ≤ L) :
     NoRel ((Behrend.sphere S d k).image (Behrend.map (4 * L * d))) L := by
   unfold NoRel
   intro s₁ hs₁ s₂ hs₂ s₃ hs₃ h12 h13 h23 i j hi0 hiL hj0 hjL hij heq
-  rw [Finset.mem_image] at hs₁ hs₂ hs₃
-  obtain ⟨v₁, hv₁, rfl⟩ := hs₁
-  obtain ⟨v₂, hv₂, rfl⟩ := hs₂
-  obtain ⟨v₃, hv₃, rfl⟩ := hs₃
+  obtain ⟨v₁, hv₁, rfl⟩ := Finset.mem_image.1 hs₁
+  obtain ⟨v₂, hv₂, rfl⟩ := Finset.mem_image.1 hs₂
+  obtain ⟨v₃, hv₃, rfl⟩ := Finset.mem_image.1 hs₃
   obtain ⟨hb₁, hq₁⟩ := sphere_mem_lemma hv₁
   obtain ⟨hb₂, hq₂⟩ := sphere_mem_lemma hv₂
   obtain ⟨hb₃, hq₃⟩ := sphere_mem_lemma hv₃
@@ -147,28 +146,23 @@ lemma noRel_image (L S d k : ℕ) (hL : 1 ≤ L) :
   obtain ⟨B, hB⟩ : ∃ B : ℤ, B = ((4 * L * d : ℕ) : ℤ) := ⟨_, rfl⟩
   rw [← hB] at heq
   have hL' : (1 : ℤ) ≤ L := by exact_mod_cast hL
+  have key : ∀ (c : ℤ) (a b : ℕ), |c| ≤ L → a < d → b < d → |c * ((a : ℤ) - b)| ≤ L * d := by
+    intro c a b hc ha hb
+    have ha' : (a : ℤ) < d := by exact_mod_cast ha
+    have hb' : (b : ℤ) < d := by exact_mod_cast hb
+    rw [abs_mul]
+    exact mul_le_mul hc (abs_le.mpr ⟨by linarith, by linarith⟩) (abs_nonneg _) (by linarith)
   have hbound : ∀ m : Fin S, |j * ((v₂ m : ℤ) - v₁ m) - i * ((v₃ m : ℤ) - v₁ m)| < B := by
     intro m
-    have a1 : (v₁ m : ℤ) < d := by exact_mod_cast hb₁ m
-    have a2 : (v₂ m : ℤ) < d := by exact_mod_cast hb₂ m
-    have a3 : (v₃ m : ℤ) < d := by exact_mod_cast hb₃ m
-    have z1 : (0 : ℤ) ≤ v₁ m := by positivity
-    have z2 : (0 : ℤ) ≤ v₂ m := by positivity
-    have z3 : (0 : ℤ) ≤ v₃ m := by positivity
-    have hdpos : (1 : ℤ) ≤ d := by omega
+    have hdpos : (1 : ℤ) ≤ d := by
+      have := hb₁ m
+      omega
     have hLd : (1 : ℤ) ≤ L * d := one_le_mul_of_one_le_of_one_le hL' hdpos
-    have h1 : |j * ((v₂ m : ℤ) - v₁ m)| ≤ L * d := by
-      rw [abs_mul]
-      exact mul_le_mul hjL (abs_le.mpr ⟨by linarith, by linarith⟩) (abs_nonneg _) (by linarith)
-    have h2 : |i * ((v₃ m : ℤ) - v₁ m)| ≤ L * d := by
-      rw [abs_mul]
-      exact mul_le_mul hiL (abs_le.mpr ⟨by linarith, by linarith⟩) (abs_nonneg _) (by linarith)
+    have h1 := key j (v₂ m) (v₁ m) hjL (hb₂ m) (hb₁ m)
+    have h2 := key i (v₃ m) (v₁ m) hiL (hb₃ m) (hb₁ m)
     rw [hB]
     push_cast
-    calc |j * ((v₂ m : ℤ) - v₁ m) - i * ((v₃ m : ℤ) - v₁ m)|
-        ≤ |j * ((v₂ m : ℤ) - v₁ m)| + |i * ((v₃ m : ℤ) - v₁ m)| := abs_sub _ _
-      _ ≤ L * d + L * d := add_le_add h1 h2
-      _ < 4 * L * d := by linarith
+    exact (abs_sub _ _).trans_lt (by linarith)
   have hsum : ∑ m, (j * ((v₂ m : ℤ) - v₁ m) - i * ((v₃ m : ℤ) - v₁ m)) * B ^ (m : ℕ) = 0 := by
     have E : ∑ m, (j * ((v₂ m : ℤ) - v₁ m) - i * ((v₃ m : ℤ) - v₁ m)) * B ^ (m : ℕ)
         = ∑ m, (j * ((v₂ m : ℤ) * B ^ (m : ℕ)) - j * ((v₁ m : ℤ) * B ^ (m : ℕ))
@@ -179,14 +173,9 @@ lemma noRel_image (L S d k : ℕ) (hL : 1 ≤ L) :
     linear_combination heq
   have hzero := coeff_zero B (fun m => j * ((v₂ m : ℤ) - v₁ m) - i * ((v₃ m : ℤ) - v₁ m))
     hbound hsum
-  have q₁ : ∑ m, ((v₁ m : ℕ) : ℤ) ^ 2 = (k : ℤ) := by exact_mod_cast hq₁
-  have q₂ : ∑ m, ((v₂ m : ℕ) : ℤ) ^ 2 = (k : ℤ) := by exact_mod_cast hq₂
-  have q₃ : ∑ m, ((v₃ m : ℕ) : ℤ) ^ 2 = (k : ℤ) := by exact_mod_cast hq₃
   have hrel := sphere_rel (fun m => (v₁ m : ℤ)) (fun m => (v₂ m : ℤ)) (fun m => (v₃ m : ℤ))
-    (k : ℤ) q₁ q₂ q₃ i j (abs_pos.mp hj0) hij (fun m => by
-      show j * ((v₂ m : ℤ) - v₁ m) = i * ((v₃ m : ℤ) - v₁ m)
-      have h0 : j * ((v₂ m : ℤ) - v₁ m) - i * ((v₃ m : ℤ) - v₁ m) = 0 := hzero m
-      linarith)
+    (k : ℤ) (by exact_mod_cast hq₁) (by exact_mod_cast hq₂) (by exact_mod_cast hq₃) i j
+    (abs_pos.mp hj0) hij fun m => sub_eq_zero.1 (hzero m)
   have hv : v₂ = v₁ := funext fun m => Nat.cast_injective (congrFun hrel m)
   exact h12 (by rw [hv])
 
@@ -258,7 +247,7 @@ theorem hostThickExists : HostThickExists := by
         exact absurd (hs₁.trans hs₂.symm) h12
       · rw [Finset.card_singleton, Nat.cast_one]
         exact hsmall
-  push_neg at hsmall
+  push Not at hsmall
   have hnpos : (0 : ℝ) < n := by
     rcases Nat.eq_zero_or_pos n with hn | hn
     · rw [hn] at hsmall
@@ -274,7 +263,7 @@ theorem hostThickExists : HostThickExists := by
   have hs2 : s ^ 2 = x * y := by rw [hs]; exact Real.sq_sqrt (mul_pos hxpos hy0).le
   have hs32 : 32 * y < s := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     grind [mul_nonneg hs0 (sub_nonneg.mpr hc), mul_pos hpos hy0, sq_nonneg y]
   have hs16 : 16 < s := by linarith
   obtain ⟨S, hSdef⟩ : ∃ S : ℕ, S = ⌊s / y⌋₊ := ⟨_, rfl⟩

@@ -132,8 +132,7 @@ theorem indicator_mem_SB_of_isClopen {X : Type} [TopologicalSpace X] {Y : Set X}
     · filter_upwards [hY.compl.isOpen.mem_nhds hx] with y hy
       rw [Set.indicator_of_notMem hy, Set.indicator_of_notMem hx]
   · by_cases h : x ∈ Y
-    · rw [Function.mem_support, Set.indicator_of_mem h] at hx
-      exact hx
+    · rwa [Function.mem_support, Set.indicator_of_mem h] at hx
     · exact absurd (Set.indicator_of_notMem h _) hx
 
 theorem exists_clopen_cut : ∀ (X : Type) [TopologicalSpace X] (Y : Set X), IsClopen Y → ∀ f : SB X, ∃ f₁ f₂ : SB X, f = f₁ + f₂ ∧ (∀ x, f₁.1 x ≠ 0 → x ∈ Y ∧ f.1 x ≠ 0) ∧ (∀ x, f₂.1 x ≠ 0 → x ∉ Y ∧ f.1 x ≠ 0) := by
@@ -161,8 +160,7 @@ theorem exists_gl_mul_eq_base (e : c ⊕ d ≃ a) (x : Matrix c a k) (hx : x.ran
     ∃ g : GL a k, ∀ i s, (x * g.val) i (e s) = Sum.elim (fun j => (1 : Matrix c c k) i j) (fun _ => 0) s := by
   obtain ⟨g, hg⟩ := _root_.GlobalTheory.exists_gl_mul_cols_eq_zero_of_rank k c c d a e x hx
   have hr : (x * g.val).rank = Fintype.card c := by
-    rw [rank_mul_eq_left_of_isUnit_det _ _ ((isUnit_iff_isUnit_det _).1 g.isUnit)]
-    exact hx
+    rwa [rank_mul_eq_left_of_isUnit_det _ _ ((isUnit_iff_isUnit_det _).1 g.isUnit)]
   have h := _root_.GlobalTheory.mulVec_firstCols_eq_zero_of_rank_eq_card k c c d a e (x * g.val) hr hg
   have hu : IsUnit ((x * g.val).submatrix id fun i => e (.inl i)) :=
     mulVec_injective_iff_isUnit.1 fun v w hvw => sub_eq_zero.1 (h _ (by rw [mulVec_sub, hvw, sub_self]))
@@ -596,8 +594,7 @@ theorem exists_fun (hκ : κ = Fintype.card a) {ξ : GL a k →* ℂˣ} (hξ : I
   obtain ⟨s, hs, e⟩ := key t φ h1
   obtain ⟨s₀, -, e₀⟩ := key t φ₀ h2
   have ht : l t ≠ 0 := fun h => h0 (by rw [e₀, h, mul_zero])
-  rw [(mul_eq_zero.1 (e.symm.trans hφ)).resolve_right ht, zero_smul, sub_zero] at hs
-  exact hs
+  rwa [(mul_eq_zero.1 (e.symm.trans hφ)).resolve_right ht, zero_smul, sub_zero] at hs
 
 end PositivityTheory.KCo
 end -- clump:auto

@@ -63,8 +63,7 @@ theorem monic_eq_prod {F : Type} [Field F] [IsAlgClosed F] (W : ValuationSubring
   intro n
   induction n with
   | zero =>
-    intro f hf h0
-    exact ⟨0, by simpa using (hf.natDegree_eq_zero).1 h0⟩
+    exact fun f hf h0 => ⟨0, by simpa using (hf.natDegree_eq_zero).1 h0⟩
   | succ n ih =>
     intro f hf hn
     have hinj : Function.Injective (algebraMap W F) := Subtype.val_injective
@@ -177,8 +176,7 @@ theorem main : ∀ (F : Type) [inst : Field F] [IsAlgClosed F] (W : ValuationSub
         induction hy using Submodule.span_induction with
         | mem y hy =>
           apply Ideal.subset_span
-          simp only [Finset.coe_image]
-          exact ⟨y, hy, rfl⟩
+          simpa only [Finset.coe_image] using ⟨y, hy, rfl⟩
         | zero => simp [τ]
         | add y z _ _ hy hz =>
           have : τ (y + z) = τ y + τ z := by simp only [τ, map_add (f := _)]; ring

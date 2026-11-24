@@ -237,8 +237,7 @@ private theorem irr_L {D : Raw Ω c} (T : Tower D) (hT : T.Ok) (𝔞 : Amb l) (f
     refine Finset.sum_congr rfl fun i _ => ?_
     have h1 : residue 𝔞.V (r g i i) = residue 𝔞.V (𝔞.a c (D.r0 g i i)) := Ideal.Quotient.eq.2 (hr g i i)
     have h2 : D.r0 g i i = D.ps i g := Matrix.diagonal_apply_eq _ i
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
   · obtain ⟨g, hg, hne⟩ := dist_L T hT i j hij
     refine ⟨g, hg, fun h => hne ((𝔞.j c).injective ?_)⟩
     have h1 : 𝔞.red c (D.ps i g) = 𝔞.red c (D.ps j g) := congrArg Units.val h
@@ -279,8 +278,7 @@ theorem UpperTheory.V.Ws.aut_n_alt :
   have hiL := irr_L T hfit.1 𝔞 f (e.injective.comp Subtype.val_injective) r hK.red hi
   have hm : D.Mult (mapRep f r₁) := fun g => by
     have h1 := gsp_map f (hmult g)
-    rw [show f (𝔞.a c (D.th g)) = algebraMap c.O (PadicAlgCl l) (D.th g) from he.1 c _] at h1
-    exact h1
+    rwa [show f (𝔞.a c (D.th g)) = algebraMap c.O (PadicAlgCl l) (D.th g) from he.1 c _] at h1
   have hr : (mapRep f r₁).comp (resQ T.F) = (X.P.map (y' : X.A →+* PadicAlgCl l)).r := by
     ext g i j
     exact congrArg f (congrFun (congrFun (DFunLike.congr_fun hres g) i) j)

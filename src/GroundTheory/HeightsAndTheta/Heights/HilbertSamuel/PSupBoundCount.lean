@@ -61,8 +61,7 @@ theorem main {D : ℕ} {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} 
     have hF := isMultiHomog_zsum f m hf
     have h1 := blockL2Norm_le_one_of_sup_bound d n hF ((isSmallH_iff d n hF).1 hm)
     rw [blockL2Norm_sum_eq_sqrt_gram d n f hf m] at h1
-    by_contra h
-    push_neg at h
+    by_contra! h
     have := Real.sqrt_lt_sqrt zero_le_one h
     rw [Real.sqrt_one] at this
     linarith
@@ -80,8 +79,7 @@ theorem main {D : ℕ} {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} 
     have h0 : ∑ k, (m k - m' k) • aeval d.y (f k) = 0 := by
 
       simp only [map_sum, map_zsmul] at h
-      simp only [sub_smul, Finset.sum_sub_distrib]
-      exact sub_eq_zero.2 h
+      simpa only [sub_smul, Finset.sum_sub_distrib] using sub_eq_zero.2 h
     funext k
     exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hli _ h0 k)
   let E : {m // P m} → {s : secM d.y (blockDeg d.k₀ n) // IsSmallH (mCoordIdeal d.y) d.y d.A n (s : Ω)} :=
@@ -98,8 +96,7 @@ theorem main {D : ℕ} {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} 
       simp [map_sum, aeval_map_int]
     refine ⟨⟨m, ?_⟩, ?_⟩
     · show IsSmallH _ _ _ _ _
-      rw [hms]
-      exact hsm
+      rwa [hms]
     · exact Subtype.ext (Subtype.ext hms)
   have hcard := Nat.card_congr (Equiv.ofBijective E hE)
   simp only [smallSectionCount]

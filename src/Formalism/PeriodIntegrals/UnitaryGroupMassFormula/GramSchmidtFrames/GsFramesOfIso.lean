@@ -63,10 +63,9 @@ variable {k r : ℕ}
 
 lemma uw_inWb {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {α : B.Mat k r} (hα : α ∈ UWset k r z)
     {u : Fin (2 * r + k + 1) → ℂ} (hu : inWb k r u) : inWb k r (α *ᵥ u) := by
-  have hα' := hα
-  unfold UWset at hα'
-  simp only [Set.mem_setOf_eq] at hα'
-  obtain ⟨hU, hfix, -⟩ := hα'
+  unfold UWset at hα
+  simp only [Set.mem_setOf_eq] at hα
+  obtain ⟨hU, hfix, -⟩ := hα
   unfold UH at hU
   simp only [Set.mem_setOf_eq] at hU
   have key : ∀ x w : Fin (2 * r + k + 1) → ℂ,
@@ -80,52 +79,44 @@ lemma uw_inWb {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {α : B.Mat k 
     intro w j
     rw [dotProduct_single, mul_one]
     rfl
-  have hHe : ∀ a : Fin r, Hpk k r *ᵥ bvec (esI k r a) = bvec (eI k r a) := by
+  have hH : ∀ a : Fin r, Hpk k r *ᵥ bvec (esI k r a) = bvec (eI k r a) ∧
+      Hpk k r *ᵥ bvec (eI k r a) = bvec (esI k r a) := by
     intro a
     have ha := a.isLt
-    funext i
-    have hi := i.isLt
-    unfold Hpk bvec eI esI
-    simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
-    split_ifs <;> first | rfl | omega | (simp only [Fin.ext_iff] at *; omega)
-  have hHe' : ∀ a : Fin r, Hpk k r *ᵥ bvec (eI k r a) = bvec (esI k r a) := by
-    intro a
-    have ha := a.isLt
-    funext i
-    have hi := i.isLt
-    unfold Hpk bvec eI esI
-    simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
-    split_ifs <;> first | rfl | omega | (simp only [Fin.ext_iff] at *; omega)
+    constructor
+    all_goals
+      funext i
+      have hi := i.isLt
+      unfold Hpk bvec eI esI
+      simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+      split_ifs <;> first | rfl | omega | (simp only [Fin.ext_iff] at *; omega)
+  have gen : ∀ (i : Fin (2 * r + k + 1)) (b : Fin (2 * r + k + 1) → ℂ), α *ᵥ b = b →
+      Hpk k r *ᵥ b = Pi.single i 1 → star ((α *ᵥ u) i) = star (u i) := by
+    intro i b hb hHb
+    calc star ((α *ᵥ u) i) = star (α *ᵥ u) ⬝ᵥ Pi.single i 1 := (hstar _ _).symm
+      _ = star (α *ᵥ u) ⬝ᵥ (Hpk k r *ᵥ (α *ᵥ b)) := by rw [hb, hHb]
+      _ = star u ⬝ᵥ (Hpk k r *ᵥ b) := key _ _
+      _ = star (u i) := by rw [hHb, hstar]
   intro i hi
-  have hsi : star ((α *ᵥ u) i) = 0 := by
-    rcases hi with hi | hi
-    · have he : bvec (eI k r ⟨i, hi⟩) = Pi.single i 1 := by
-        unfold bvec eI
-        rfl
-      calc star ((α *ᵥ u) i) = star (α *ᵥ u) ⬝ᵥ Pi.single i 1 := (hstar _ _).symm
-        _ = star (α *ᵥ u) ⬝ᵥ (Hpk k r *ᵥ (α *ᵥ bvec (esI k r ⟨i, hi⟩))) := by
-          rw [(hfix _).2, hHe, he]
-        _ = star u ⬝ᵥ (Hpk k r *ᵥ bvec (esI k r ⟨i, hi⟩)) := key _ _
-        _ = star (u i) := by rw [hHe, he, hstar]
-        _ = 0 := by rw [hu i (Or.inl hi), star_zero]
-    · have hi2 := i.isLt
-      have h' : 2 * r + k - (i : ℕ) < r := by omega
-      have he : bvec (esI k r ⟨2 * r + k - i, h'⟩) = Pi.single i 1 := by
-        unfold bvec esI
-        dsimp only
-        congr 1
-        ext
-        simp only
-        omega
-      calc star ((α *ᵥ u) i) = star (α *ᵥ u) ⬝ᵥ Pi.single i 1 := (hstar _ _).symm
-        _ = star (α *ᵥ u) ⬝ᵥ (Hpk k r *ᵥ (α *ᵥ bvec (eI k r ⟨2 * r + k - i, h'⟩))) := by
-          rw [(hfix _).1, hHe', he]
-        _ = star u ⬝ᵥ (Hpk k r *ᵥ bvec (eI k r ⟨2 * r + k - i, h'⟩)) := key _ _
-        _ = star (u i) := by rw [hHe', he, hstar]
-        _ = 0 := by rw [hu i (Or.inr hi), star_zero]
-  exact star_eq_zero.mp hsi
+  refine star_eq_zero.mp ?_
+  rcases hi with hi | hi
+  · have he : bvec (eI k r ⟨i, hi⟩) = Pi.single i 1 := by
+      unfold bvec eI
+      rfl
+    rw [gen i (bvec (esI k r ⟨i, hi⟩)) (hfix _).2 (by rw [(hH _).1, he]), hu i (Or.inl hi),
+      star_zero]
+  · have hi2 := i.isLt
+    have h' : 2 * r + k - (i : ℕ) < r := by omega
+    have he : bvec (esI k r ⟨2 * r + k - i, h'⟩) = Pi.single i 1 := by
+      unfold bvec esI
+      dsimp only
+      congr 1
+      ext
+      simp only
+      omega
+    rw [gen i (bvec (eI k r ⟨2 * r + k - i, h'⟩)) (hfix _).1 (by rw [(hH _).2, he]),
+      hu i (Or.inr hi), star_zero]
 
 lemma det_ne_of_G {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : C2.StdZ k r z') {y : B.Mat k r}
     (hG : 0 < Gf k r z z' y) : (Zhat k r z z' y).det ≠ 0 := by

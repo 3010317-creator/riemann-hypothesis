@@ -26,7 +26,7 @@ theorem sum_coordV (z : VC D N N') : ∑ k, cz D z k • coordV D k = z := by
   rw [Finset.sum_eq_single (τ, i, j)]
   · simp
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨h1, h2, h3⟩
     exact hb (Prod.ext h1.symm (Prod.ext h2.symm h3.symm))
   · simp
@@ -50,9 +50,7 @@ theorem exists_perm_of_map_eq {β : Type*} {m : ℕ} (g g' : Fin m → β)
     intro f b
     rw [Multiset.count_map, Fintype.card_subtype, Finset.card_def, Finset.filter_val]
     congr 1
-    apply Multiset.filter_congr
-    intro x _
-    exact eq_comm
+    exact Multiset.filter_congr (fun x _ => eq_comm)
   have hc : ∀ b, Fintype.card {j // g' j = b} = Fintype.card {j // g j = b} := by
     intro b; rw [h1, h1, h]
   let e : ∀ b, {j // g' j = b} ≃ {j // g j = b} := fun b => Fintype.equivOfCardEq (hc b)
@@ -157,8 +155,8 @@ theorem RP_eq (G : VC D N N' → ℂ) (hG : AnalyticOnNhd ℂ G Set.univ) (n : �
     rw [Finset.mem_finsuppAntidiag, Finsupp.sum_fintype _ _ (fun _ => rfl)]
     simp
   by_cases h : (β.sum fun _ m => m) = n
-  · rw [if_pos h, if_pos (hiff.1 h)]
-  · rw [if_neg h, if_neg (mt hiff.2 h)]
+  · rw [ite_eq_left h, ite_eq_left (hiff.1 h)]
+  · rw [ite_eq_right h, ite_eq_right (mt hiff.2 h)]
 
 theorem eval_aeval' {ι : Type*} (x : ι → ℂ) (ℓ : ι → MvPolynomial ι ℂ) (P : MvPolynomial ι ℂ) :
     eval x (aeval ℓ P) = eval (fun s => eval x (ℓ s)) P := by
@@ -196,7 +194,7 @@ theorem taylor_comp (H : VC D N N' → ℂ) (hH : AnalyticOnNhd ℂ H Set.univ)
     hH.comp (A.analyticOnNhd _) (Set.mapsTo_univ _ _)
   have h1 := congrArg (AddMonoidAlgebra.coeff · α) (RP_comp D H hH A (α.sum fun _ m => m))
 
-  rw [coeff_RP D (H ∘ A) hHA, if_pos rfl, RP_eq D H hH, map_sum, coeff_sum] at h1
+  rw [coeff_RP D (H ∘ A) hHA, ite_eq_left rfl, RP_eq D H hH, map_sum, coeff_sum] at h1
   simp only [aeval_monomial, algebraMap_eq, coeff_C_mul] at h1
   have h0 : ((α.sum fun _ m => m).factorial : ℂ) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero _
   apply mul_left_cancel₀ h0
@@ -236,8 +234,7 @@ theorem isHom_prodQ {σ : Type*} [Fintype σ] {R : Type*} [CommSemiring R] (c : 
 
 theorem mem_S_iff (d : Mono D N N') (n : ℕ) :
     d ∈ Finset.finsuppAntidiag Finset.univ n ↔ d.degree = n := by
-  rw [Finset.mem_finsuppAntidiag]
-  rw [Finsupp.degree_eq_sum]
+  rw [Finset.mem_finsuppAntidiag, Finsupp.degree_eq_sum]
   simp
 
 theorem coe_prodQ {σ : Type*} {R : Type*} [CommSemiring R] (Q : σ → MvPolynomial σ R) (d : σ →₀ ℕ) :
@@ -246,8 +243,7 @@ theorem coe_prodQ {σ : Type*} {R : Type*} [CommSemiring R] (Q : σ → MvPolyno
   have := map_prod (MvPolynomial.coeToMvPowerSeries.ringHom (σ := σ) (R := R))
     (fun s => Q s ^ d s) d.support
   simp only [MvPolynomial.coeToMvPowerSeries.ringHom_apply, MvPolynomial.coe_pow] at this
-  simp only [Finsupp.prod]
-  exact this.symm
+  simpa only [Finsupp.prod] using this.symm
 
 theorem pSer_comp (H : VC D N N' → ℂ) (hH : AnalyticOnNhd ℂ H Set.univ)
     (hq : ∀ β, taylor D H β ∈ Qbar)
@@ -522,8 +518,7 @@ theorem homL_map {N N' : ℕ} (P : Matrix (Fin N') (Fin N') D.host.E) (Q : Matri
   have hle : Submodule.map ((PQ P Q).restrictScalars (𝓞 D.host.E)) (homL D L1 L1') ≤ homL D L2 L2' := by
     unfold homL
     rw [Submodule.map_span_le]
-    intro A hA
-    exact Submodule.subset_span (h A hA)
+    exact fun A hA => Submodule.subset_span (h A hA)
   exact hle (Submodule.mem_map_of_mem hB)
 
 theorem YY_map {N N' : ℕ} (P : Matrix (Fin N') (Fin N') D.host.E) (Q : Matrix (Fin N) (Fin N) D.host.E)
@@ -586,8 +581,7 @@ theorem locBasis_pull {N N' r : ℕ} (p : ℕ) (γ : Matrix (Fin N) (Fin N) D.ho
   · have hinj : Function.Injective (PQK (star γ') γ) := by
       intro B B' h
       have := congrArg (fun X => γ' * X * star γ) h
-      simp only [PQK_apply, hinv] at this
-      exact this
+      simpa only [PQK_apply, hinv] using this
     have := hli.map' (PQK (star γ') γ) (LinearMap.ker_eq_bot.2 hinj)
     simpa only [Function.comp_def, PQK_apply] using this
   · intro i
@@ -616,8 +610,7 @@ theorem ortho_pull {N N' r : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E)
   simp only [conj_eq_star]
   have := sum_mul_star_conj γ γ' (by rw [← Matrix.star_eq_conjTranspose]; exact h1)
     (by rw [← Matrix.star_eq_conjTranspose]; exact h3) (b i) (b j)
-  rw [Matrix.star_eq_conjTranspose]
-  exact this
+  rwa [Matrix.star_eq_conjTranspose]
 
 theorem atLog_subst {N N' r : ℕ} {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (Λ : AddSubgroup ℂ)
     (C : WeierstrassCurve.VariableChange ℂ_[p]) (wq : PowerSeries ℂ_[p])

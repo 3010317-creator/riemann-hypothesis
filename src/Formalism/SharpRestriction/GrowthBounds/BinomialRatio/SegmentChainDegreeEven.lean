@@ -72,11 +72,9 @@ theorem strip_cons {r : ℕ} {nu mu : Fin r → ℤ} {g e : ℕ} (h : Strip nu m
     · intro hij; simp at hij
     · refine Fin.cases ?_ (fun c => ?_) i
       · intro hij
-        simp only [Fin.cons_succ, Fin.cons_zero]
-        exact h2 j' (by simpa using hij.symm)
+        simpa only [Fin.cons_succ, Fin.cons_zero] using h2 j' (by simpa using hij.symm)
       · intro hij
-        simp only [Fin.cons_succ]
-        exact h.2.1 c j' (by simpa using hij)
+        simpa only [Fin.cons_succ] using h.2.1 c j' (by simpa using hij)
   · rw [Fin.sum_univ_succ, Fin.sum_univ_succ]
     simp only [Fin.cons_zero, Fin.cons_succ]
     have := h.2.2
@@ -89,7 +87,7 @@ def fstOf {s : ℕ} (A : Fin s → ℕ) (cp : ℕ → ℤ) (LLv : ChainLetters (
 theorem fstOf_odd {s : ℕ} (A : Fin s → ℕ) (cp : ℕ → ℤ) (LLv : ChainLetters (2 * s + 1)) (i : ℕ) :
     fstOf A cp LLv (2 * i + 1) = cp i := by
   unfold fstOf
-  rw [if_pos (by omega)]
+  rw [ite_eq_left (by omega)]
   congr 1
   omega
 
@@ -97,7 +95,7 @@ theorem fstOf_even {s : ℕ} (A : Fin s → ℕ) (cp : ℕ → ℤ) (LLv : Chain
     fstOf A cp LLv (2 * i.val + 2) = cp i + A i - LLv.deg ⟨2 * i.val, by omega⟩ := by
   have hi := i.isLt
   unfold fstOf
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
   have hk : (2 * i.val + 2 - 2) / 2 = i.val := by omega
   rw [dite_eq_left (by omega)]
   simp only [hk]
@@ -129,7 +127,7 @@ theorem kLetters_deg_odd {s : ℕ} (A0 : ℕ) (A C : Fin s → ℕ) (i : Fin s) 
   have h1 : (2 * i.val + 1 - 1) / 2 < s := by omega
   have h2 : (2 * i.val + 1) % 2 = 1 := by omega
   simp only [kLetters]
-  rw [if_neg h0, dite_eq_left h1, if_pos h2]
+  rw [ite_eq_right h0, dite_eq_left h1, ite_eq_left h2]
   congr 1
   ext
   simp only
@@ -142,7 +140,7 @@ theorem kLetters_deg_even {s : ℕ} (A0 : ℕ) (A C : Fin s → ℕ) (i : Fin s)
   have h1 : (2 * i.val + 2 - 1) / 2 < s := by omega
   have h2 : ¬ ((2 * i.val + 2) % 2 = 1) := by omega
   simp only [kLetters]
-  rw [if_neg h0, dite_eq_left h1, if_neg h2]
+  rw [ite_eq_right h0, dite_eq_left h1, ite_eq_right h2]
   congr 1
   ext
   simp only
@@ -158,12 +156,12 @@ theorem chain_of_facts {s r : ℕ} {A0 : ℤ} {A C : Fin s → ℕ} {cp : ℕ �
     rcases Nat.eq_zero_or_pos a with rfl | hpos
     ·
       have hv : (kLetters A0.toNat A C).vec ⟨0, ha⟩ = true := by simp [kLetters]
-      rw [if_pos hv]
+      rw [ite_eq_left hv]
       have e0 : muOf (fstOf A cp LLv) ka (Fin.castSucc ⟨0, ha⟩) = 0 := by unfold muOf; simp
       have e1 : muOf (fstOf A cp LLv) ka (Fin.succ ⟨0, ha⟩) = Fin.cons A0 0 := by
         unfold muOf
         simp only [Fin.succ_mk, Nat.zero_add]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         have := fstOf_odd A cp LLv 0
         simp only [Nat.mul_zero, Nat.zero_add] at this
         rw [this, hF.c0]
@@ -188,19 +186,17 @@ theorem chain_of_facts {s r : ℕ} {A0 : ℤ} {A C : Fin s → ℕ} {cp : ℕ �
         have hi : i' < s := by omega
         have hv : (kLetters A0.toNat A C).vec ⟨2 * (i' + 1), ha⟩ = false := by
           simp [kLetters]
-        rw [if_neg (by rw [hv]; simp)]
+        rw [ite_eq_right (by rw [hv]; simp)]
         have hst := hch.2 ⟨2 * i' + 1, by omega⟩
-        rw [if_neg (by rw [hF.vecv]; simp)] at hst
+        rw [ite_eq_right (by rw [hF.vecv]; simp)] at hst
         have e0 : muOf (fstOf A cp LLv) ka (Fin.castSucc ⟨2 * (i' + 1), ha⟩) =
             Fin.cons (cp i' + A ⟨i', hi⟩ - LLv.deg ⟨2 * i', by omega⟩) (ka (Fin.castSucc ⟨2 * i' + 1, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * i' + 1) (by omega)
-          rw [show fstOf A cp LLv (2 * i' + 1 + 1) = _ from fstOf_even A cp LLv ⟨i', hi⟩] at h
-          exact h
+          rwa [show fstOf A cp LLv (2 * i' + 1 + 1) = _ from fstOf_even A cp LLv ⟨i', hi⟩] at h
         have e1 : muOf (fstOf A cp LLv) ka (Fin.succ ⟨2 * (i' + 1), ha⟩) =
             Fin.cons (cp (i' + 1)) (ka (Fin.succ ⟨2 * i' + 1, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * (i' + 1)) (by omega)
-          rw [fstOf_odd A cp LLv (i' + 1)] at h
-          exact h
+          rwa [fstOf_odd A cp LLv (i' + 1)] at h
         have hdeg : (kLetters A0.toNat A C).deg ⟨2 * (i' + 1), ha⟩ = C ⟨i', hi⟩ :=
           kLetters_deg_even A0.toNat A C ⟨i', hi⟩
         rw [e0, e1, hdeg]
@@ -209,37 +205,33 @@ theorem chain_of_facts {s r : ℕ} {A0 : ℤ} {A C : Fin s → ℕ} {cp : ℕ �
         have hi : i < s := by omega
         have hv : (kLetters A0.toNat A C).vec ⟨2 * i + 1, ha⟩ = true := by
           simp [kLetters]
-        rw [if_pos hv]
+        rw [ite_eq_left hv]
         have hst := hch.2 ⟨2 * i, by omega⟩
-        rw [if_pos (by rw [hF.vecv]; simp)] at hst
+        rw [ite_eq_left (by rw [hF.vecv]; simp)] at hst
         have e0 : muOf (fstOf A cp LLv) ka (Fin.castSucc ⟨2 * i + 1, ha⟩) =
             Fin.cons (cp i) (ka (Fin.castSucc ⟨2 * i, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * i) (by omega)
-          rw [fstOf_odd A cp LLv i] at h
-          exact h
+          rwa [fstOf_odd A cp LLv i] at h
         have e1 : muOf (fstOf A cp LLv) ka (Fin.succ ⟨2 * i + 1, ha⟩) =
             Fin.cons (cp i + A ⟨i, hi⟩ - LLv.deg ⟨2 * i, by omega⟩) (ka (Fin.succ ⟨2 * i, by omega⟩)) := by
           have h := muOf_succ (fstOf A cp LLv) ka (2 * i + 1) (by omega)
-          rw [show fstOf A cp LLv (2 * i + 1 + 1) = _ from fstOf_even A cp LLv ⟨i, hi⟩] at h
-          exact h
+          rwa [show fstOf A cp LLv (2 * i + 1 + 1) = _ from fstOf_even A cp LLv ⟨i, hi⟩] at h
         have hdeg : (kLetters A0.toNat A C).deg ⟨2 * i + 1, ha⟩ = A ⟨i, hi⟩ :=
           kLetters_deg_odd A0.toNat A C ⟨i, hi⟩
         rw [e0, e1, hdeg]
         refine strip_cons hst (by have := hF.hw ⟨i, hi⟩; linarith) (fun c hc => hF.hb ⟨i, hi⟩ c hc) (by ring)
   ·
     have hst := hch.2 (Fin.last (2 * s))
-    rw [if_pos (by rw [hF.vecv]; simp)] at hst
+    rw [ite_eq_left (by rw [hF.vecv]; simp)] at hst
     have e1 : muOf (fstOf A cp LLv) ka (Fin.last (2 * s + 1)) =
         Fin.cons (cp s) (ka (Fin.castSucc (Fin.last (2 * s)))) := by
       have h := muOf_succ (fstOf A cp LLv) ka (2 * s) (by omega)
-      rw [fstOf_odd A cp LLv s] at h
-      exact h
+      rwa [fstOf_odd A cp LLv s] at h
     rw [Fin.succ_last] at hst
     rw [e1]
     intro i
     constructor
-    · simp only [Fin.cons_succ]
-      exact hst.1 i
+    · simpa only [Fin.cons_succ] using hst.1 i
     · rcases Nat.eq_zero_or_pos i.val with h0 | hp
       · have : i.castSucc = 0 := Fin.ext (by simp [h0])
         rw [this, Fin.cons_zero]
@@ -272,11 +264,9 @@ theorem muOf_inj {s r : ℕ} {fst fst' : ℕ → ℤ} {ka ka' : Fin (2 * s + 1 +
   · have e := congrFun h ⟨l.val + 1, hlt⟩
     rw [muOf_succ, muOf_succ] at e
     funext c
-    have e2 := congrFun e c.succ
-    simpa only [Fin.cons_succ] using e2
+    simpa only [Fin.cons_succ] using congrFun e c.succ
   · have hl' : l = Fin.last _ := Fin.ext (by simp only [Fin.val_last]; omega)
-    rw [hl']
-    exact hl
+    rwa [hl']
 
 theorem matchUp_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hF : LevFactsAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc)
     (hI : SrcInjAt) : MatchUpAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc := by
@@ -287,8 +277,7 @@ theorem matchUp_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hF : LevFactsAt C0 CY
   · intro z hz z' hz' h
     have h1 := congrArg Prod.fst h
     have h2 := congrArg (fun t => t.2.1) h
-    have h3 := congrArg (fun t => t.2.2) h
-    exact hI C0 CE1 CE2 X j m rz ry z z' hz hz' (muOf_inj h1 h2) h3
+    exact hI C0 CE1 CE2 X j m rz ry z z' hz hz' (muOf_inj h1 h2) (congrArg (fun t => t.2.2) h)
   · intro z hz
     have h := chain_of_facts (hF X hD hH hc j m hm rz ry hd z hz) hz.2.2.1
     exact ⟨h.1, h.2, rfl, rfl⟩
@@ -331,19 +320,18 @@ theorem tieSum (S : SegData s) (jl : Fin S.t → ℕ) (a : ℕ) :
   split_ifs with h
   · obtain ⟨h1, h2⟩ := h
     rw [Finset.sum_eq_single (⟨a / 2 - S.sigma, by unfold SegData.t; omega⟩ : Fin S.t)]
-    · rw [if_pos (show a / 2 = S.sigma + (a / 2 - S.sigma) by omega)]
+    · rw [ite_eq_left (show a / 2 = S.sigma + (a / 2 - S.sigma) by omega)]
     · intro l _ hl
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       apply hl
       apply Fin.ext
       show l.val = a / 2 - S.sigma
       omega
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · apply Finset.sum_eq_zero
     intro l _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h'
     have hl := l.2
     unfold SegData.t at hl
@@ -356,8 +344,8 @@ theorem lev_deg (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ) (
   have e1 := tieSum S jl a.val
   have e2 : (if a = (⟨2 * s, by omega⟩ : Fin (2 * s + 1)) then jp else 0) = (if a.val = 2 * s then jp else 0) := by
     by_cases h : a.val = 2 * s
-    · rw [if_pos (Fin.ext h), if_pos h]
-    · rw [if_neg (fun h' => h (congrArg Fin.val h')), if_neg h]
+    · rw [ite_eq_left (Fin.ext h), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h (congrArg Fin.val h')), ite_eq_right h]
   show (segChain p S aTop b).deg a -
       (∑ l : Fin S.t, if a.val = 2 * (S.sigma + l.val) ∨ a.val = 2 * (S.sigma + l.val) + 1 then jl l else 0) -
       (if a = (⟨2 * s, by omega⟩ : Fin (2 * s + 1)) then jp else 0) = _
@@ -370,7 +358,7 @@ theorem segment_chain_degree_even (p : ℕ) (S : SegData s) (aTop : Fin s → �
   have h3 : topOf x h1 = i := Fin.ext (by show (x : ℕ) / 2 = i.val; omega)
   unfold segChain
   dsimp only
-  rw [dite_eq_right h1, if_pos h2, h3]
+  rw [dite_eq_right h1, ite_eq_left h2, h3]
 
 theorem chain_deg_E (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (b : SegBlock s r) (x : Fin (2 * s + 1)) (i : Fin s)
     (hx : x.val = 2 * i.val + 1) : (segChain p S aTop b).deg x =
@@ -380,7 +368,7 @@ theorem chain_deg_E (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (b : SegBlo
   have h3 : topOf x h1 = i := Fin.ext (by show (x : ℕ) / 2 = i.val; omega)
   unfold segChain
   dsimp only
-  rw [dite_eq_right h1, if_neg h2, h3]
+  rw [dite_eq_right h1, ite_eq_right h2, h3]
 
 theorem chain_deg_U (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (b : SegBlock s r) (x : Fin (2 * s + 1))
     (hx : x.val = 2 * s) : (segChain p S aTop b).deg x = b.oPlus := by
@@ -418,7 +406,7 @@ theorem level_bounds (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : �
         show min (2 * (S.sigma + (i.val - S.sigma))) (2 * s + 1 - 1) = 2 * i.val
         omega
       rw [e]
-      exact (segment_chain_degree_even p S aTop b ⟨2 * i.val, by omega⟩ i rfl).trans (if_neg (by omega))
+      exact (segment_chain_degree_even p S aTop b ⟨2 * i.val, by omega⟩ i rfl).trans (ite_eq_right (by omega))
     have k2 : (blockData p S aTop aPlus m b).LL.deg ((blockData p S aTop aPlus m b).letterAt
         ((blockData p S aTop aPlus m b).T.pos ⟨i.val - S.sigma, hit⟩ + 1)) = coarseC p S aTop b i := by
       have e : (blockData p S aTop aPlus m b).letterAt ((blockData p S aTop aPlus m b).T.pos
@@ -427,7 +415,7 @@ theorem level_bounds (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : �
         show min (2 * (S.sigma + (i.val - S.sigma)) + 1) (2 * s + 1 - 1) = 2 * i.val + 1
         omega
       rw [e]
-      exact (chain_deg_E p S aTop b ⟨2 * i.val + 1, by omega⟩ i rfl).trans (if_neg (by omega))
+      exact (chain_deg_E p S aTop b ⟨2 * i.val + 1, by omega⟩ i rfl).trans (ite_eq_right (by omega))
     rw [eA]
     exact ⟨hl.1.trans (le_of_eq k1), hl.2.trans (le_of_eq k2)⟩
   · exact h2.trans ((min_le_left _ _).trans (le_of_eq (chain_deg_U p S aTop b ⟨2 * s, by omega⟩ rfl)))
@@ -444,13 +432,13 @@ theorem cap_succ (p : ℕ) (S : SegData s) (b : SegBlock s r) (i : Fin s) :
     intro k
     by_cases h1 : (k : ℕ) < i.val
     · have h2 : k ≠ i := fun h => by rw [h] at h1; exact lt_irrefl _ h1
-      rw [if_pos (show (k : ℕ) < i.val + 1 by omega), if_pos h1, if_neg h2, add_zero]
+      rw [ite_eq_left (show (k : ℕ) < i.val + 1 by omega), ite_eq_left h1, ite_eq_right h2, add_zero]
     · by_cases h2 : k = i
       · subst h2
-        rw [if_pos (show (k : ℕ) < k.val + 1 by omega), if_neg h1, if_pos rfl, zero_add]
+        rw [ite_eq_left (show (k : ℕ) < k.val + 1 by omega), ite_eq_right h1, ite_eq_left rfl, zero_add]
       · have h3 : ¬ (k : ℕ) < i.val + 1 := fun h => h2 (Fin.ext (by omega))
-        rw [if_neg h3, if_neg h1, if_neg h2, add_zero]
-  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        rw [ite_eq_right h3, ite_eq_right h1, ite_eq_right h2, add_zero]
+  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 theorem levW (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ) (m : ℝ) (b : SegBlock s r)
@@ -465,7 +453,7 @@ theorem levW (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ) (m :
     show ¬ (2 * i.val = 2 * s)
     have := i.2
     omega
-  rw [h1, if_neg h2, Nat.sub_zero]
+  rw [h1, ite_eq_right h2, Nat.sub_zero]
 
 theorem levE (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ) (m : ℝ) (b : SegBlock s r)
     (jl : Fin S.t → ℕ) (jp : ℕ) (i : Fin s) :
@@ -478,7 +466,7 @@ theorem levE (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ) (m :
   have h2 : ¬ ((⟨2 * i.val + 1, by omega⟩ : Fin (2 * s + 1)).val = 2 * s) := by
     show ¬ (2 * i.val + 1 = 2 * s)
     omega
-  rw [h1, if_neg h2, Nat.sub_zero]
+  rw [h1, ite_eq_right h2, Nat.sub_zero]
 
 theorem levU (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ) (m : ℝ) (b : SegBlock s r)
     (jl : Fin S.t → ℕ) (jp : ℕ) :
@@ -488,7 +476,7 @@ theorem levU (p : ℕ) (S : SegData s) (aTop : Fin s → ℕ) (aPlus : ℕ) (m :
     show 2 * s / 2 = s
     omega
   have h2 : (⟨2 * s, by omega⟩ : Fin (2 * s + 1)).val = 2 * s := rfl
-  rw [h1, if_pos h2, jE_top, Nat.sub_zero]
+  rw [h1, ite_eq_left h2, jE_top, Nat.sub_zero]
 
 theorem jE_at (S : SegData s) (jl : Fin S.t → ℕ) (l : Fin S.t) : jE S jl (S.sigma + l.val) = jl l := by
   have hl := l.2
@@ -523,12 +511,12 @@ theorem srcInjAt : SrcInjAt := by
     have h2 := hch'.2 a
     by_cases hv : ((BD C0 CE1 CE2 X j m b).lettersAt jl jp).vec a = true
     · have hv' : ((BD C0 CE1 CE2 X j m b').lettersAt jl' jp).vec a = true := hv
-      rw [if_pos hv] at h1
-      rw [if_pos hv'] at h2
+      rw [ite_eq_left hv] at h1
+      rw [ite_eq_left hv'] at h2
       exact_mod_cast h1.2.2.symm.trans h2.2.2
     · have hv' : ¬ ((BD C0 CE1 CE2 X j m b').lettersAt jl' jp).vec a = true := hv
-      rw [if_neg hv] at h1
-      rw [if_neg hv'] at h2
+      rw [ite_eq_right hv] at h1
+      rw [ite_eq_right hv'] at h2
       exact_mod_cast h1.2.2.symm.trans h2.2.2
   have hC : ∀ i, coarseC X.p (X.seg C0 CE1 CE2 j) (segATop X.TT X.aT j) b i =
       coarseC X.p (X.seg C0 CE1 CE2 j) (segATop X.TT X.aT j) b' i := fun i => by
@@ -547,14 +535,14 @@ theorem srcInjAt : SrcInjAt := by
     rcases Nat.lt_or_ge i.val (X.seg C0 CE1 CE2 j).sigma with h | h
     · obtain ⟨ho, -, hsg, -, -⟩ := hK.2.2.1 i h
       obtain ⟨ho', -, hsg', -, -⟩ := hK'.2.2.1 i h
-      rw [if_pos h, if_pos h, jE_S _ _ h, jE_S _ _ h] at dW dE
+      rw [ite_eq_left h, ite_eq_left h, jE_S _ _ h, jE_S _ _ h] at dW dE
       rw [jE_S _ _ h, jE_S _ _ h]
       refine ⟨by omega, by omega, by omega, rfl⟩
     · obtain ⟨-, -, hw, hsg⟩ := hK.2.1 i h
       obtain ⟨-, -, hw', hsg'⟩ := hK'.2.1 i h
       have b1 := hB.1 i h
       have b2 := hB'.1 i h
-      rw [if_neg (by omega), if_neg (by omega)] at dW dE
+      rw [ite_eq_right (by omega), ite_eq_right (by omega)] at dW dE
       refine ⟨by omega, by omega, by omega, by omega⟩
   have hU := hdeg ⟨2 * segS X.TT j, by omega⟩
   rw [levU, levU] at hU
@@ -564,8 +552,7 @@ theorem srcInjAt : SrcInjAt := by
     funext l
     have hl : l.val < segS X.TT j - (X.seg C0 CE1 CE2 j).sigma := l.2
     have := (key ⟨(X.seg C0 CE1 CE2 j).sigma + l.val, by omega⟩).2.2.2
-    rw [jE_at, jE_at] at this
-    exact this
+    rwa [jE_at, jE_at] at this
   rw [hbb, hjl]
 
 def FirstRowsAt (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) : Prop :=
@@ -603,7 +590,7 @@ theorem levFactsAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc H : ℝ}
   · rw [← cap_zero X.p (X.seg C0 CE1 CE2 j) b]
     obtain ⟨hk0, hst⟩ := hch
     have e := hst ⟨0, by omega⟩
-    rw [if_pos (show ((BD C0 CE1 CE2 X j m b).lettersAt jl jp).vec ⟨0, by omega⟩ = true from rfl)] at e
+    rw [ite_eq_left (show ((BD C0 CE1 CE2 X j m b).lettersAt jl jp).vec ⟨0, by omega⟩ = true from rfl)] at e
     have c0 : (0 : Fin X.m).val = 0 := by simp
     have e1 := e.1 0
     have e0 : Fin.castSucc (⟨0, by omega⟩ : Fin (2 * segS X.TT j + 1)) = 0 := Fin.ext (by simp)
@@ -614,8 +601,7 @@ theorem levFactsAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc H : ℝ}
       · have h3 := hrows.2 0 c0
         have e3 : Fin.last (2 * segS X.TT j + 1) = Fin.succ ⟨0, by omega⟩ :=
           Fin.ext (by show 2 * segS X.TT j + 1 = 1; omega)
-        rw [e3, congrArg (cap X.p (X.seg C0 CE1 CE2 j) b) hs] at h3
-        exact h3
+        rwa [e3, congrArg (cap X.p (X.seg C0 CE1 CE2 j) b) hs] at h3
       · exact (hrows.1 ⟨0, hs⟩ 0 c0).1
     exact le_trans e1 e2
   · rw [hA i, levW]

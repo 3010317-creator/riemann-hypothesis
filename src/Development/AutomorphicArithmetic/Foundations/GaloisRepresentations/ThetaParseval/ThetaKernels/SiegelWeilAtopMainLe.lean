@@ -55,8 +55,7 @@ theorem LD.n_succ_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (L :
   have h1 : Finset.univ.image L.em = Finset.univ.erase L.i₀ := by
     ext i
     rw [Finset.mem_image, Finset.mem_erase]
-    simp only [Finset.mem_univ, true_and, and_true]
-    exact ((L.rng i).trans Set.mem_range).symm
+    simpa only [Finset.mem_univ, true_and, and_true] using ((L.rng i).trans Set.mem_range).symm
   have h2 := congrArg Finset.card h1
   rw [Finset.card_image_of_injective _ L.inj, Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ,
     Finset.card_univ, Fintype.card_fin, Fintype.card_fin] at h2
@@ -66,8 +65,7 @@ theorem mainInequality_by_corank (hRD : _root_.PositivityTheory.SiegelWeilFormul
     (hVA : _root_.PositivityTheory.SiegelWeilFormula.VacAll_k) (k : ℕ) : ∀ d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ, d.m ≤ d.n → d.n - d.m = k → _root_.PositivityTheory.SiegelWeilFormula.MainC_k 2 d := by
   induction k with
   | zero =>
-    intro d h hk
-    exact hEq F E σ d (by omega)
+    exact fun d h hk => hEq F E σ d (by omega)
   | succ k ih =>
     intro d h hk
     have hm := d.ok.hm

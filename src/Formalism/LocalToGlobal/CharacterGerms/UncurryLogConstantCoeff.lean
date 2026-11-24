@@ -27,8 +27,7 @@ private theorem cc_subst_lemma {σ τ A : Type} [Finite σ] [CommRing A] (a : σ
   · simp
   · intro e he
     obtain ⟨s, hs⟩ : ∃ s, e s ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact he (Finsupp.ext h)
     rw [map_finsuppProd]
     simp only [map_pow, ha, Finsupp.prod]
@@ -87,11 +86,11 @@ private theorem un1_lift_lemma_2 (f : MvPowerSeries (Fin 1 × Fin dd) C) :
       exact Prod.ext (Subsingleton.elim _ _) rfl
     rw [hc, Finsupp.mapDomain_id]
   rw [finsum_eq_single _ (μ.mapDomain Prod.snd)]
-  · rw [if_pos hμ.symm, smul_eq_mul, mul_one]
+  · rw [ite_eq_left hμ.symm, smul_eq_mul, mul_one]
     show MvPowerSeries.coeff ((μ.mapDomain Prod.snd).mapDomain (fun x : Fin dd => ((0 : Fin 1), x))) f = _
     rw [show (fun x : Fin dd => ((0 : Fin 1), x)) = Prod.mk (0 : Fin 1) from rfl, hμ]
   · intro d hd
-    rw [if_neg, smul_zero]
+    rw [ite_eq_right, smul_zero]
     intro h
     apply hd
     rw [h, ← Finsupp.mapDomain_comp,
@@ -141,8 +140,7 @@ theorem fb_add (Y : FBChart C V O dd) (j : Fin dd) :
     rw [hX, ← MvPowerSeries.map_algebraMap_eq_subst_X]
     simp
   have e := Y.lg_add j
-  rw [ev1_lemma_3 _ hadd, ev1_lemma_3 _ (hpt 0), ev1_lemma_3 _ (hpt 1), hF] at e
-  exact e
+  rwa [ev1_lemma_3 _ hadd, ev1_lemma_3 _ (hpt 0), ev1_lemma_3 _ (hpt 1), hF] at e
 
 variable {d : ℕ} {I0 : Type} [Fintype I0]
 
@@ -198,11 +196,10 @@ private theorem un1_lift_lemma_4 (h : MvPowerSeries (Fin dd) C) :
   rw [MvPowerSeries.coeff_subst (MvPowerSeries.hasSubst_of_constantCoeff_zero (fun _ => by simp))]
   simp only [prod_X_lemma (Prod.mk (0 : Fin 1)), MvPowerSeries.coeff_monomial]
   rw [finsum_eq_single _ μ]
-  · rw [if_pos rfl, smul_eq_mul, mul_one]
+  · rw [ite_eq_left rfl, smul_eq_mul, mul_one]
   · intro d hd
-    rw [if_neg, smul_zero]
-    intro h'
-    exact hd (Finsupp.mapDomain_injective (Prod.mk_right_injective (0 : Fin 1)) h').symm
+    rw [ite_eq_right, smul_zero]
+    exact fun h' => hd (Finsupp.mapDomain_injective (Prod.mk_right_injective (0 : Fin 1)) h').symm
 
 private theorem inner_lemma_5 (Y : FBChart C V O dd) (i : Fin dd) :
     MvPowerSeries.subst (fun j : Fin dd => un1 (Y.lg j)) (un1 (Y.ex i)) =
@@ -241,8 +238,7 @@ theorem lgS_lin (Y : FBChart C V O dd) (p : SelfData Y d I0) (x : Fin 2 × Fin d
         rintro rfl
         simp at h1
       obtain ⟨c, hc⟩ : ∃ c, μ c ≠ 0 := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         exact hne (Finsupp.ext h)
       refine ⟨c, ?_⟩
       have hle : Finsupp.single c 1 ≤ μ := by
@@ -252,8 +248,7 @@ theorem lgS_lin (Y : FBChart C V O dd) (p : SelfData Y d I0) (x : Fin 2 × Fin d
       have h2 := congrArg Finsupp.degree hsplit
       rw [map_add (f := _), deg_single_lemma_0, h1] at h2
       have h3 : μ - Finsupp.single c 1 = 0 := deg_zero_lemma_0 _ (by omega)
-      rw [h3, add_zero] at hsplit
-      exact hsplit
+      rwa [h3, add_zero] at hsplit
     have hc : ∀ s : Fin dd, MvPowerSeries.constantCoeff
         ((MvPowerSeries.X (x.1, s) : MvPowerSeries (Fin 2 × Fin dd) C)) = 0 := fun _ => by simp
     rw [lg_self Y p x]
@@ -321,7 +316,7 @@ theorem sat_self (Y : FBChart C V O dd) (p : SelfData Y d I0) (g : Fin 2) :
     · subst hcc
       simp only [mul_one]
       have hh := p.gm_hyp (p.ty0 c) (g + 1) g
-      rw [if_neg (by fin_cases g <;> decide)] at hh
+      rw [ite_eq_right (by fin_cases g <;> decide)] at hh
       rw [← hh]
       exact Finset.sum_congr rfl (fun r _ => mul_comm _ _)
     · simp

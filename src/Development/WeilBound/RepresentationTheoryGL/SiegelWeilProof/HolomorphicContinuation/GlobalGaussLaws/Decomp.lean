@@ -75,8 +75,7 @@ theorem jj_mul_jj : JJ n * JJ n = -1 := by
 
 theorem inG_dual {g : M2 n} (h : InG g) : g * JJ n * gᴴ = JJ n := by
   have h' : gᴴ * (JJ n * g) = JJ n := by
-    rw [← Matrix.mul_assoc]
-    exact h
+    rwa [← Matrix.mul_assoc]
   have hK : (-(JJ n * gᴴ * JJ n)) * g = 1 := by
     simp only [Matrix.neg_mul, Matrix.mul_assoc, h', jj_mul_jj, neg_neg]
   have hK' : g * (-(JJ n * gᴴ * JJ n)) = 1 := mul_eq_one_comm.mp hK
@@ -106,8 +105,7 @@ theorem inG_blocks_dual {A B C D : Matrix (Fin n) (Fin n) ℂ} (h : InG (fromBlo
   have h' : InG (fromBlocks Aᴴ Cᴴ Bᴴ Dᴴ) := by
     have hd := inG_dual h
     unfold InG
-    rw [← fromBlocks_conjTranspose, conjTranspose_conjTranspose]
-    exact hd
+    rwa [← fromBlocks_conjTranspose, conjTranspose_conjTranspose]
   obtain ⟨h1, h2, h3⟩ := inG_blocks h'
   simp only [conjTranspose_conjTranspose] at h1 h2 h3
   refine ⟨h1, h2, ?_, h3⟩
@@ -175,8 +173,7 @@ theorem det_sub_I_smul_ne_zero {A B C D : Matrix (Fin n) (Fin n) ℂ} (h : InG (
 theorem exists_real_det_ne_zero {A C : Matrix (Fin n) (Fin n) ℂ} (h : (A - Complex.I • C).det ≠ 0) :
     ∃ t : ℝ, (A - (t : ℂ) • C).det ≠ 0 := by
   classical
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   set p : Polynomial ℂ :=
     ((Polynomial.X : Polynomial ℂ) • (-C).map Polynomial.C + A.map Polynomial.C).det with hp
   have heval : ∀ z : ℂ, p.eval z = (A - z • C).det := by

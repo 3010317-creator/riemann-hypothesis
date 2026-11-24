@@ -118,8 +118,7 @@ theorem change (S : IsStep P A B y) (hP : P.IsMaximal) {x₀ : V} (hx : x₀ ∈
   have hcP : c ∉ P := by
     intro hcP
     apply hn
-    have h0 := A.add_mem hc (S.smul c hcP)
-    simpa using h0
+    simpa using A.add_mem hc (S.smul c hcP)
   obtain ⟨r, π, hπ, hrc⟩ := hP.exists_inv hcP
   refine ⟨S.le, hx, hn, ?_, ?_⟩
   · intro p hp
@@ -151,8 +150,7 @@ theorem det_add_smul {ι : Type*} [Fintype ι] [DecidableEq ι] (b : Basis ι K 
 
 theorem conjO_mem_conjIdeal {P : Ideal (𝓞 K)} {π : 𝓞 K} (hπ : π ∈ P) :
     conjO K π ∈ Formalism.HermitianLatticesTheory.conjIdeal (K := K) P := by
-  apply Ideal.subset_span
-  exact ⟨π, hπ, by first | rfl | simp [conjO]⟩
+  exact Ideal.subset_span ⟨π, hπ, by first | rfl | simp [conjO]⟩
 
 theorem term_mem {P I : Ideal (𝓞 K)} {p₁ p₂ z : 𝓞 K} (h₁ : p₁ ∈ P) (h₂ : p₂ ∈ P) (hz : z ∈ I) :
     conjO K p₁ * p₂ * z ∈ P * Formalism.HermitianLatticesTheory.conjIdeal (K := K) P * I := by
@@ -185,7 +183,7 @@ theorem step_ge (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {h : V →�
       have hx' : ∀ k, k ≠ i₀ → x' k ∈ A := by
         intro k hk
         have : x' k = x k - c k • x i₀ := by
-          simp only [x', e, if_neg hk, neg_smul, algebraMap_smul]
+          simp only [x', e, ite_eq_right hk, neg_smul, algebraMap_smul]
           abel
         rw [this]; exact hc k
       have hup : ∀ a : 𝓞 K, b.det (Function.update x' i₀ (a • x i₀)) =
@@ -248,8 +246,7 @@ theorem exists_adjust (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {P : 
       have e1 : algebraMap (𝓞 K) K (conjO K r) = star (algebraMap (𝓞 K) K r) := by
         first | rfl
       rw [e1, hrs, star_star]
-    rw [e]
-    exact hs
+    rwa [e]
   have hne_top : Formalism.HermitianLatticesTheory.conjIdeal (K := K) P ≠ ⊤ := by
     intro htop
     have h1 : (1 : 𝓞 K) ∈ P.comap (conjO K) := hle2 (by rw [htop]; exact Submodule.mem_top)
@@ -262,8 +259,7 @@ theorem exists_adjust (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {P : 
       exact hc (by rw [hPe]; exact hc')
     obtain ⟨π, hπ, hπ'⟩ := SetLike.not_le_iff_exists.1 hnle
     refine ⟨π, hπ, hadd π hπ, fun h => hπ' ?_⟩
-    have h3 := (Formalism.HermitianLatticesTheory.conjIdeal (K := K) P).sub_mem h hc'
-    simpa using h3
+    simpa using (Formalism.HermitianLatticesTheory.conjIdeal (K := K) P).sub_mem h hc'
   · exact ⟨0, P.zero_mem, by simpa using hc, by simpa using hc'⟩
 
 theorem step_le (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {h : V →ₗ⋆[K] V →ₗ[K] K} {P : Ideal (𝓞 K)}

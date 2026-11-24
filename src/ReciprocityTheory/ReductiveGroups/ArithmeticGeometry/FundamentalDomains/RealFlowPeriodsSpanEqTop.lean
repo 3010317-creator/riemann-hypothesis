@@ -75,8 +75,7 @@ theorem realFlowPeriods_span_eq_top {r : ℕ} (X : Data E r) (la : Wt X.Ψ r) :
       have h1 : |t * v τ - (τ.1 (α : E)).re| ≤ ‖τ.1 (α : E) - ((t * v τ : ℝ) : ℂ)‖ := by
         have h := Complex.abs_re_le_norm (τ.1 (α : E) - ((t * v τ : ℝ) : ℂ))
         rw [Complex.sub_re, Complex.ofReal_re] at h
-        rw [abs_sub_comm]
-        exact h
+        rwa [abs_sub_comm]
       have h2 : ‖τ.1 (α : E) - ((t * v τ : ℝ) : ℂ)‖ ≤ B := hα τ
       linarith [le_abs_self B]
     exact (pi_norm_lt_iff hε).2 hlt
@@ -110,7 +109,7 @@ theorem spectralGap_holds : CuspFormGapCondition (E := E) := by
   have hint : ∀ p ∈ X.periods la, ∃ k : ℤ, 2 * ∑ τ, ν τ * p τ = k := by
     by_contra hc
     apply hne
-    rw [Data.fj, if_neg hc]
+    rw [Data.fj, ite_eq_right hc]
   have hpos : ∀ τ, 0 ≤ ν τ := hnn ξ hξ ν x hx hne
   have hsmall : ∀ τ, ν τ ≤ 1 / (2 * M + 2) := fun τ =>
     le_trans (Finset.single_le_sum (fun σ _ => hpos σ) (Finset.mem_univ τ)) hν

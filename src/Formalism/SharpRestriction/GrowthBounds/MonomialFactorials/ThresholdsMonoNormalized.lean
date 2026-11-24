@@ -177,8 +177,7 @@ theorem digit_class_dimension_comparison_of_remaining_estimates {D : Formalism.B
     (fun aTop => (mCl C0 CE1 CE2 X dl aTop : ℝ))
     ((30 + CM) / X.L.Y) (5 / X.L.Y) (Real.exp 3) (by positivity) (by positivity) (fun z => Nat.cast_nonneg _)
     ?_ ?_ ?_ ?_
-  · rw [Finset.card_univ, Fintype.card_fin] at key
-    exact key
+  · rwa [Finset.card_univ, Fintype.card_fin] at key
   · intro aTop ha z hz
     have h := hPlus dl hdl aTop ha z (by rw [hFree dl hdl aTop ha a0 ha0]; exact hz)
     have e : (rL C0 CE1 CE2 X aTop z.1 z.2 : ℝ) =
@@ -187,10 +186,8 @@ theorem digit_class_dimension_comparison_of_remaining_estimates {D : Formalism.B
       unfold rL
       push_cast
       rfl
-    rw [e] at h
-    exact h
-  · intro z hz
-    exact hTM dl hdl a0 ha0 z hz
+    rwa [e] at h
+  · exact fun z hz => hTM dl hdl a0 ha0 z hz
   · intro aTop ha
     have h := claim2 hH h11 hDir hW dl aTop ha
     rw [hFree dl hdl aTop ha a0 ha0] at h
@@ -199,8 +196,7 @@ theorem digit_class_dimension_comparison_of_remaining_estimates {D : Formalism.B
     unfold rL
     push_cast
     rfl
-  · intro aTop ha i _
-    exact hRat dl hdl aTop ha i
+  · exact fun aTop ha i _ => hRat dl hdl aTop ha i
 
 def RestAll (C0 CYb Cde Ck CD Cb CE1 CE2 Cc CM C : ℝ) (X : flipOneThree.Inst) : Prop :=
   flipOneThree.HI C0 CYb Cde Ck CD Cb Cc X →
@@ -294,8 +290,7 @@ theorem ratio_num (x y r : ℕ) (hx : 1 ≤ x) (hxy : x ≤ y) (h : (r : ℝ) * 
       _ = Real.exp ((r : ℝ) * (((y : ℝ) - x) / x)) := by rw [← Real.exp_nat_mul]
       _ ≤ Real.exp 3 := by
           apply Real.exp_le_exp.2
-          rw [← mul_div_assoc, div_le_iff₀ hx0]
-          exact h
+          rwa [← mul_div_assoc, div_le_iff₀ hx0]
   calc (((y + r).choose r : ℕ) : ℝ) ≤ ((y : ℝ) / x) ^ r * (((x + r).choose r : ℕ) : ℝ) := h1
     _ ≤ Real.exp 3 * (((x + r).choose r : ℕ) : ℝ) := by gcongr
 
@@ -307,8 +302,7 @@ theorem topA_spec (dl : DCl X) (aTop : Fin X.s → ℕ) (ha : aTop ∈ cbox C0 C
   classical
   obtain ⟨hT, hc⟩ := mem_cbox' ha
   have hmem : aTop l ∈ X.winA.filter fun x => ∑ c, dl.2 l c ≤ x ∧ (X.S C0 CE1 CE2).P X.p l ∣ x - ∑ c, dl.2 l c := by
-    simp only [Finset.mem_filter]
-    exact ⟨Fintype.mem_piFinset.1 hT l, hc.2.2 l⟩
+    simpa only [Finset.mem_filter] using ⟨Fintype.mem_piFinset.1 hT l, hc.2.2 l⟩
   unfold topA
   obtain ⟨x, hxF, hx⟩ := Finset.exists_mem_eq_sup _ ⟨_, hmem⟩ (id : ℕ → ℕ)
   have hle : aTop l ≤ (X.winA.filter fun x => ∑ c, dl.2 l c ≤ x ∧
@@ -573,7 +567,7 @@ theorem nv_irr' {w : O} (hw : Irreducible w) : dvrOrderNat w = 1 := by
 
 theorem vK_int_form (x : KK O) (hx : x ≠ 0) : ∃ k : ℤ, vK p x = (((k : ℚ) / (ramE p O : ℚ) : ℚ) : WithTop ℚ) := by
   unfold vK ordW
-  rw [if_neg hx]
+  rw [ite_eq_right hx]
   exact ⟨_, rfl⟩
 
 theorem vK_le_zero_of_not_int (S : UniformizedDVR p O) (a : KK O)
@@ -597,15 +591,14 @@ theorem vK_le_zero_of_not_int (S : UniformizedDVR p O) (a : KK O)
       nv_irr' S.w_irr]
     simp [dvrOrderNat]
   rw [valuation_mul_alt, hk, hwinv, ← WithTop.coe_add, ← WithTop.coe_zero, WithTop.coe_le_coe] at h
-  push_neg at h
+  push Not at h
   refine ⟨(k : ℚ) / (ramE p O : ℚ), hk, ?_⟩
   have h2 : ((k : ℚ) - 1) / (ramE p O : ℚ) < 0 := by
     rw [sub_div]
     rw [neg_div] at h
     linarith
   have h3 : (k : ℚ) - 1 < 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact absurd h2 (not_lt.2 (div_nonneg hc hepos.le))
   have h4 : k < 1 := by exact_mod_cast (by linarith : (k : ℚ) < 1)
   have h5 : (k : ℚ) ≤ 0 := by exact_mod_cast (by omega : k ≤ 0)
@@ -676,7 +669,7 @@ theorem goodSub_of_dual (S : UniformizedDVR p O) (be : V → V → KK O)
         intro i _
         rw [ht i, mul_smul, algebraMap_smul, algebraMap_smul]
       exact S.w_irr.not_isUnit (hprim S.w _ hx' hu')
-    · push_neg at hall
+    · push Not at hall
       obtain ⟨j, hj⟩ := hall
       obtain ⟨q, hq, hq0⟩ := vK_le_zero_of_not_int S (t j) (not_le.2 hj)
       obtain ⟨qc, hqc, hqcD⟩ := hc
@@ -1082,8 +1075,7 @@ theorem Yl_bound (hFree : RestFree C0 CE1 CE2 X) {dl : DCl X} (hdl : dl ∈ clSe
   rw [hdlo] at hx1
   have hvv : vlo < vhi := by omega
   have hqq : qlo ≤ qhi := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have : P * qhi < P * qlo := Nat.mul_lt_mul_of_pos_left hc hPpos
     omega
   obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hqq
@@ -1146,8 +1138,7 @@ theorem Wl_ne {dl : DCl X} {a : Fin X.s → ℕ} (ha : a ∈ cbox C0 CE1 CE2 X d
 theorem topA_mem_Wl {dl : DCl X} {a : Fin X.s → ℕ} (ha : a ∈ cbox C0 CE1 CE2 X dl) (l : Fin X.s) :
     topA C0 CE1 CE2 X dl l ∈ Wl C0 CE1 CE2 X dl l := by
   obtain ⟨M, hM, hMe⟩ := Finset.exists_mem_eq_sup _ (Wl_ne ha l) (id : ℕ → ℕ)
-  rw [topA_eq, hMe]
-  exact hM
+  rwa [topA_eq, hMe]
 
 theorem aTopPt_mem {dl : DCl X} {a : Fin X.s → ℕ} (ha : a ∈ cbox C0 CE1 CE2 X dl) :
     aTopPt C0 CE1 CE2 X dl a ∈ cbox C0 CE1 CE2 X dl := by
@@ -1345,12 +1336,10 @@ theorem restSI_proved (hFree : RestFree C0 CE1 CE2 X) : RestSI (C0 := C0) (CE1 :
     have hb := cbox_eq C0 CE1 CE2 X dl a ha
     rw [hb]
     apply ovr_mem _ hinj
-    · rw [← hb]
-      exact ha
+    · rwa [← hb]
     · exact Fintype.mem_piFinset.mpr (fun k => topA_mem_Wl ha _)
   have hx' : x ∈ idx C0 CE1 CE2 X dl a' := by
-    rw [← hFree dl hdl a ha a' ha']
-    exact hx
+    rwa [← hFree dl hdl a ha a' ha']
   obtain ⟨hK', -, -⟩ := digits_of_idx hx'
   obtain ⟨-, hdl0, -⟩ := digits_of_idx hx
   have hry : x.1.ry = dl.2 := by rw [← hdl0]
@@ -1364,8 +1353,7 @@ theorem restSI_proved (hFree : RestFree C0 CE1 CE2 X) : RestSI (C0 := C0) (CE1 :
     have hne : (Nl C0 CE1 CE2 X dl x.2 k).Nonempty := (Wl_ne ha _).image _
     have h1 := cm_top (dl := dl) x.2 k (Wl_ne ha _)
     have h2 : sInf (↑(Nl C0 CE1 CE2 X dl x.2 k) : Set ℕ) ≤ (Nl C0 CE1 CE2 X dl x.2 k).sup id := by
-      have hm := Nat.sInf_mem (Finset.coe_nonempty.mpr hne)
-      exact Finset.le_sup (f := id) hm
+      exact Finset.le_sup (f := id) (Nat.sInf_mem (Finset.coe_nonempty.mpr hne))
     rw [hry]
     show sInf (↑(Nl C0 CE1 CE2 X dl x.2 k) : Set ℕ) +
         1 * ((Nl C0 CE1 CE2 X dl x.2 k).sup id - sInf (↑(Nl C0 CE1 CE2 X dl x.2 k) : Set ℕ) + 1 - 1) =
@@ -1407,8 +1395,7 @@ theorem restSI_proved (hFree : RestFree C0 CE1 CE2 X) : RestSI (C0 := C0) (CE1 :
   have hnat : GM.M.TieData.S (lLL C0 CE1 CE2 X a' x.1 x.2) (gT C0 CE1 CE2 X x.1) i ≤
       (XMof C0 CE1 CE2 X dl a x.1 x.2).n₀ i := by
     exact_mod_cast le_of_mul_le_mul_right hreal hP
-  rw [hL]
-  exact hnat
+  rwa [hL]
 
 theorem restTMSize_proved (hFree : RestFree C0 CE1 CE2 X) : RestTMSize C0 CE1 CE2 X :=
   restTMSize_of hS hFree (restSI_proved hS hFree)
@@ -1521,8 +1508,7 @@ theorem epsFacts {CYb Cde Ck CD Cb Cc : ℝ} (hCYb : 2 ≤ CYb) (hC0 : 1 ≤ C0)
     unfold lambdaScale
     have h1 : (1 : ℝ) ≤ (X.L.N1 : ℝ) := by exact_mod_cast hN1
     have h2 : (1 : ℝ) ≤ (X.L.N1 : ℝ) ^ 2 := one_le_pow₀ h1
-    have h3 := one_le_mul_of_one_le_of_one_le hC0 h2
-    exact one_le_mul_of_one_le_of_one_le h3 hloga
+    exact one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le hC0 h2) hloga
   have hYb2 : (2 : ℝ) ≤ X.L.Yb := le_trans hCYb hYb
   refine ⟨hpk, ?_⟩
   have h1 : X.L.k * X.L.Y ^ 2 * X.L.Yb * X.L.N * X.L.La C0 * Real.log X.L.a * X.L.b' ≤ X.L.a := by
@@ -1621,8 +1607,7 @@ theorem restTMEps_of (hS : SegFacts C0 CE1 CE2 X) (hE' : (X.r : ℝ) + 1 ≤ X.L
     have : (0 : ℝ) < X.L.a := by nlinarith only [hYb', hY, hb0]
     positivity
   have hYr0 : (0 : ℝ) < ((XMof C0 CE1 CE2 X dl a x.1 x.2).Yl i : ℝ) := by
-    have h2 := lt_of_lt_of_le hB2 hYP
-    exact pos_of_mul_pos_left h2 (by linarith)
+    exact pos_of_mul_pos_left (lt_of_lt_of_le hB2 hYP) (by linarith)
   have hB1 : 0 ≤ 5 / 2 * X.L.b' + (2 * X.s + 1) * (2 * X.L.a / X.p) := by
     have : (0 : ℝ) ≤ X.L.a := Nat.cast_nonneg _
     positivity

@@ -170,10 +170,8 @@ theorem notMem_iff_unitAt {ξ : Spec (CommRingCat.of Ω) ⟶ X} {x : κ → Ω} 
   rw [e, natCast_mul_notMem_iff x c hI hm] at h1
   rw [h1]
   constructor
-  · intro h
-    exact unitAt_of_mul_right h (natCast_mem _ m) (chartQ_le_regAt hchar hc s.2)
-  · intro h
-    exact unitAt_mul (Char0.unitAt_natCast hchar hm) h
+  · exact fun h => unitAt_of_mul_right h (natCast_mem _ m) (chartQ_le_regAt hchar hc s.2)
+  · exact fun h => unitAt_mul (Char0.unitAt_natCast hchar hm) h
 
 theorem isLocAt_of_unit {ξ : Spec (CommRingCat.of Ω) ⟶ X} {x : κ → Ω} {c : κ} {I : Ideal (chartQ x c)}
     {p : Cpt ξ} (hchar : Char0 ξ p) (hc : InChart ξ x c p)

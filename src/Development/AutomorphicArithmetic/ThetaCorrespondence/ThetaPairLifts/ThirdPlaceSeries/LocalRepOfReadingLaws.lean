@@ -467,8 +467,7 @@ theorem stable_all (H : PlaceSys Gv Gc J) (horb : ∀ x, ((fun k => ρ k x) '' (
     ∀ z ∈ X, (P (ρ g z.1), P (ρ g z.2)) ∈ X := by
   refine H.ind (fun g => ∀ z ∈ X, (P (ρ g z.1), P (ρ g z.2)) ∈ X) (fun k hk z hz => ?_)
     (fun v x hx y hy ih z hz => ?_) g
-  · rw [(hXf z hz).1 k hk, (hXf z hz).2 k hk, hP.self _ (hXf z hz).1, hP.self _ (hXf z hz).2]
-    exact hz
+  · rwa [(hXf z hz).1 k hk, (hXf z hz).2 k hk, hP.self _ (hXf z hz).1, hP.self _ (hXf z hz).2]
   · obtain ⟨Pv, hPv⟩ := exists_avg ρ (Gv v ⊓ J) fun x => (horb x).subset (Set.image_mono fun k hk => hk.2)
     obtain ⟨Q, hQ⟩ := exists_avg ρ (Gc v ⊓ J) fun x => (horb x).subset (Set.image_mono fun k hk => hk.2)
     have hc' : ∀ x ∈ Gc v, ∀ y ∈ Gv v, x * y = y * x := fun x hx y hy => (H.comm v y hy x hx).symm
@@ -814,8 +813,7 @@ theorem eig_drop (U : Submodule ℂ V) [FiniteDimensional ℂ U] (hU : U ≠ ⊥
   have hr : LinearMap.range f = U.map (g - algebraMap ℂ (Module.End ℂ V) μ) := by
     rw [hf, LinearMap.range_comp, Submodule.range_subtype]
   have hz1 : g (z : V) = μ • (z : V) := by
-    have h1 := congrArg Subtype.val hz.apply_eq_smul
-    simpa [LinearMap.restrict_apply] using h1
+    simpa [LinearMap.restrict_apply] using congrArg Subtype.val hz.apply_eq_smul
   have hk : z ∈ LinearMap.ker f := by
     simp [hf, hz1]
   have hsum := LinearMap.finrank_range_add_finrank_ker f
@@ -835,8 +833,7 @@ theorem graph_of_scalars (C : ι → Subalgebra ℂ (Module.End ℂ V)) (U₁ U�
   obtain ⟨x₂, hx₂, hx₂0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h₂
   refine ⟨ℂ ∙ (x₁, x₂), ?_, ?_, ?_, ?_, ?_⟩
   · rw [Ne, Submodule.span_singleton_eq_bot]
-    intro h
-    exact hx₁0 (congrArg Prod.fst h)
+    exact fun h => hx₁0 (congrArg Prod.fst h)
   · intro z hz
     obtain ⟨t, rfl⟩ := Submodule.mem_span_singleton.mp hz
     exact ⟨U₁.smul_mem t hx₁, U₂.smul_mem t hx₂⟩
@@ -989,8 +986,7 @@ theorem kills_drop {C : ι → Subalgebra ℂ (Module.End ℂ V)} {v : ι} {U : 
       intro x hx
       rw [← hsp] at hx
       exact key hx
-    · intro hk x hx
-      exact hk x (map_le_self hS hc₀ hx)
+    · exact fun hk x hx => hk x (map_le_self hS hc₀ hx)
 
 theorem glue (C : ι → Subalgebra ℂ (Module.End ℂ V)) (v : ι) {U₁ U₂ : Submodule ℂ V}
     {c₀ : Module.End ℂ V} (hc₀ : c₀ ∈ C v)
@@ -1048,8 +1044,7 @@ theorem glue (C : ι → Subalgebra ℂ (Module.End ℂ V)) (v : ι) {U₁ U₂ 
   refine ⟨Submodule.span ℂ S, ?_, fun z hz => Submodule.mem_prod.mp (hU hz), hst, ?_, ?_⟩
   · intro h
     apply hX'0
-    rw [eq_bot_iff, ← h]
-    exact hsub
+    rwa [eq_bot_iff, ← h]
   · set K := (Submodule.span ℂ S).comap (LinearMap.inr ℂ V V) with hK
     have hKU : K ≤ U₂ := fun u hu => (Submodule.mem_prod.mp (hU hu)).2
     have hKS : Stab C K := by
@@ -1112,7 +1107,7 @@ theorem main_ind (n : ℕ) : ∀ (C : ι → Subalgebra ℂ (Module.End ℂ V)) 
     intro x hx
     have := (hK v _ hm).mp hk x hx
     simpa [sub_eq_zero] using this
-  push_neg at hB
+  push Not at hB
   obtain ⟨v₁, a₁, ha₁, hna⟩ := hB
   obtain ⟨μ₁, hμ₁⟩ := eig_drop U₁ h₁ a₁ (fun x hx => hS₁ v₁ a₁ ha₁ x hx)
   have he₁m : a₁ - algebraMap ℂ (Module.End ℂ V) μ₁ ∈ C v₁ :=

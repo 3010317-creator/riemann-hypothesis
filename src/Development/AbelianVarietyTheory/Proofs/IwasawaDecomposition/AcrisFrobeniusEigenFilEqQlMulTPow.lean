@@ -142,8 +142,7 @@ theorem mk_rootT (x : Per.Fl l) (n : ℕ) :
     Ideal.Quotient.mk (span {(l : Per.OC l)}) (rootT x n) = PreTilt.coeff n x := by
   rw [rootT, PreTilt.mk_untilt_eq_coeff_zero]
   have := PreTilt.coeff_iterate_frobeniusEquiv_symm 0 n x
-  rw [zero_add] at this
-  exact this
+  rwa [zero_add] at this
 
 theorem rootT_pow (x : Per.Fl l) (n : ℕ) : rootT x n ^ l ^ n = x.untilt := by
   rw [rootT_eq, ← map_pow, rt_pow]
@@ -185,8 +184,7 @@ theorem dvd_of_nm_le {x c : Per.Fl l} (hx : x ≠ 0) (h : nm c ≤ nm x) : x ∣
       have a := congrArg Subtype.val (rootT_pow c n)
       have b := congrArg Subtype.val (rootT_pow x n)
       push_cast at a b
-      rw [a, b]
-      exact h
+      rwa [a, b]
     have h2 := (pow_le_pow_iff_left₀ (norm_nonneg _) (norm_nonneg _) (pow_ne_zero n hl.out.ne_zero)).1 h1
     have hne : (rootT x n : ℂ_[l]) ≠ 0 := fun h0 => hsne n (Subtype.ext h0)
     refine ⟨⟨(rootT c n : ℂ_[l]) / rootT x n, (GlobalTheory.RingBasics.mem_OC _).2 ?_⟩, Subtype.ext ?_⟩
@@ -222,8 +220,7 @@ theorem dvd_of_forall {x c : Per.Fl l} (hx : x ≠ 0) (h : ∀ n, x ∣ c * rt x
   have h3 : (nm c / nm x) ^ n ≤ (nm c / nm x) ^ l ^ n :=
     pow_le_pow_right₀ hr.le (Nat.lt_pow_self hl.out.one_lt).le
   have h4 : (nm c / nm x) ^ l ^ n ≤ (nm x)⁻¹ := by
-    rw [div_pow, div_le_iff₀ (pow_pos hp _), inv_mul_eq_div, le_div_iff₀ hp]
-    exact h2
+    rwa [div_pow, div_le_iff₀ (pow_pos hp _), inv_mul_eq_div, le_div_iff₀ hp]
   linarith
 
 theorem iter_eq (n : ℕ) (a : Per.Ainf l) :

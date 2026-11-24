@@ -95,8 +95,7 @@ theorem constantCoeff_subst_of_zero {σ τ : Type*} [Finite σ] [Finite τ]
   · simp
   · intro d hd
     obtain ⟨i, hi⟩ : ∃ i, d i ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     have h0 : constantCoeff (d.prod fun s e => b s ^ e) = 0 := by
       rw [Finsupp.prod, map_prod]
@@ -254,8 +253,7 @@ theorem omega_key :
   simp only [subst_X hc3, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
     Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons] at E'
   rw [subst_XX, F.add_zero (PowerSeries.HasSubst.of_constantCoeff_zero hX1), subst_XX] at E'
-  rw [omega_subst hFc, atY, omega_subst hX1]
-  exact E'
+  rwa [omega_subst hFc, atY, omega_subst hX1]
 
 end Formalism.G.LogP
 
@@ -292,8 +290,7 @@ theorem eq_zero_of_pderiv_one [Algebra ℚ R] {h : MvPowerSeries (Fin 2) R}
       fin_cases s
       · simp
       · exact absurd hn (Finsupp.mem_support_iff.mp hs)
-    rw [hprod, one_mul] at h1
-    exact h1
+    rwa [hprod, one_mul] at h1
   · have hm : n = (n - Finsupp.single 1 1) + Finsupp.single 1 1 := by
       ext i
       fin_cases i <;> simp <;> omega
@@ -319,7 +316,7 @@ theorem derivative_logF : PowerSeries.derivative (R := R) (logF F) = lam F := by
   ext n
   rw [PowerSeries.coeff_derivative]
   unfold logF
-  rw [PowerSeries.coeff_mk, if_neg (Nat.succ_ne_zero n), Nat.add_sub_cancel, mul_comm, ← mul_assoc]
+  rw [PowerSeries.coeff_mk, ite_eq_right (Nat.succ_ne_zero n), Nat.add_sub_cancel, mul_comm, ← mul_assoc]
   have h : ((n : R) + 1) * algebraMap ℚ R (1 / ((n + 1 : ℕ) : ℚ)) = 1 := by
     rw [show ((n : R) + 1) = algebraMap ℚ R ((n + 1 : ℕ) : ℚ) by simp, ← map_mul,
       mul_one_div_cancel (by positivity), map_one]
@@ -331,9 +328,9 @@ theorem logF_isLog : IsLog F (logF F) := by
   have hX1s : PowerSeries.HasSubst (MvPowerSeries.X 1 : MvPowerSeries (Fin 2) R) :=
     PowerSeries.HasSubst.of_constantCoeff_zero hX1
   have hc0 : PowerSeries.constantCoeff (logF F) = 0 := by
-    rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, logF, PowerSeries.coeff_mk, if_pos rfl]
+    rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, logF, PowerSeries.coeff_mk, ite_eq_left rfl]
   refine ⟨hc0, ?_, ?_⟩
-  · rw [logF, PowerSeries.coeff_mk, if_neg one_ne_zero, Nat.sub_self,
+  · rw [logF, PowerSeries.coeff_mk, ite_eq_right one_ne_zero, Nat.sub_self,
       PowerSeries.coeff_zero_eq_constantCoeff_apply, lam, PowerSeries.constantCoeff_invOfUnit]
     simp
   · have hω := omega_mul_lam F
@@ -358,8 +355,7 @@ theorem logF_isLog : IsLog F (logF F) := by
         subst_X hc2, subst_X hc2]
       simp [PowerSeries.subst_zero_of_constantCoeff_zero hc0]
     have := eq_zero_of_pderiv_one hD h0
-    rw [sub_sub, sub_eq_zero] at this
-    exact this
+    rwa [sub_sub, sub_eq_zero] at this
 
 end Formalism.G.LogP
 

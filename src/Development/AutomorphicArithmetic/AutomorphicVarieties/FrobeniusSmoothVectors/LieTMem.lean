@@ -102,8 +102,7 @@ private theorem gl_inv_apply_eq_zero_of_forall_pw_ne_zero {K : Type} [Field K] (
   set E : Matrix (Fin 3) (Fin 3) K := Matrix.diagonal (fun a => sg K (pq a)) with hE
   have hEE : E * E = 1 := by
     rw [hE, Matrix.diagonal_mul_diagonal]
-    simp only [sg_sq]
-    exact Matrix.diagonal_one
+    simpa only [sg_sq] using Matrix.diagonal_one
   have hconj : ∀ (A : Matrix (Fin 3) (Fin 3) K) a b, (E * A * E) a b = sg K (pw a b) * A a b := by
     intro A a b
     rw [hE, Matrix.mul_diagonal, Matrix.diagonal_mul, pw_eq, sg_sub]
@@ -223,12 +222,12 @@ theorem UpperTheory.V.Fr.ep_dproj :
     · refine Finset.sum_congr rfl (fun c _ => ?_)
       rw [Matrix.map_apply, Matrix.map_apply, hDp]
       by_cases hcb : pw c b = 0
-      · rw [if_pos ((hsame c hcb).trans hab)]
+      · rw [ite_eq_left ((hsame c hcb).trans hab)]
       · rw [hN c b hcb, mul_zero, mul_zero]
     · refine Finset.sum_eq_zero (fun c _ => ?_)
       rw [Matrix.map_apply, hDp]
       by_cases hcb : pw c b = 0
-      · rw [if_neg (fun h => hab ((hsame c hcb).symm.trans h)), zero_mul]
+      · rw [ite_eq_right (fun h => hab ((hsame c hcb).symm.trans h)), zero_mul]
       · rw [hN c b hcb, mul_zero]
 end -- clump:auto
 end -- clump:auto
@@ -300,12 +299,9 @@ theorem UpperTheory.V.Fr.ep_tan :
         (fun v => (x.2 v : Matrix (Fin 3) (Fin 3) (ResidueField O)))) ∈
         Z1C F.loc (B.bar O).ad (B.bar O).b := by
       refine ⟨?_, ?_, ?_⟩
-      · show IsLocallyConstant (fun s => (x.1 s : Matrix (Fin 3) (Fin 3) (ResidueField O)))
-        exact hlc.comp Subtype.val
-      · intro s t
-        exact congrArg Subtype.val (hco s t)
-      · intro v s
-        exact hloc v s
+      · exact hlc.comp Subtype.val
+      · exact fun s t => congrArg Subtype.val (hco s t)
+      · exact fun v s => hloc v s
     obtain ⟨D, hD, X, hX⟩ := pr_tsurj hOk O R ρ B hU hOf hCont hGood _ hy
     obtain ⟨D', hD', hD'e⟩ := ep_dproj O h2 R σ hσ B π hGr j D hD
     refine ⟨⟨D', hD'⟩, prp _ j X, fun s => ?_⟩
@@ -321,8 +317,7 @@ theorem UpperTheory.V.Fr.ep_tan :
   have e0 : prp (ResidueField O) 0 (lieT (ResidueField O) 3) = ⟨lieT (ResidueField O) 3, lieT_mem _⟩ :=
     prp_coe 0 ⟨_, lieT_mem _⟩
   refine hc ⟨lieT _ 3, lieT_mem _⟩ ⟨D', hD'⟩ ?_ ?_
-  · intro h0
-    exact hT0 (congrArg Subtype.val h0)
+  · exact fun h0 => hT0 (congrArg Subtype.val h0)
   · intro s
     show prp _ 0 (Box.tanCo O B D' s) = _
     rw [hD'e s, prp_coe, hDe s, map_sub, hP, e0]

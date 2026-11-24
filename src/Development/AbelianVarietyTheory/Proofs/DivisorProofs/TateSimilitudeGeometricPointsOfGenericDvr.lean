@@ -276,8 +276,7 @@ theorem sections_restrict_bijective (U Ω k : Type) [CommRing U] [IsDomain U] [V
   have hrank := (Scheme.Hom.isLocallyConstant_finrank p).apply_eq_of_preconnectedSpace (spMap h z)
     (spMap (algebraMap U Ω) w)
   refine inj.bijective_of_nat_card_le ?_
-  rw [hB, hrank, ← hC]
-  exact hle
+  rwa [hB, hrank, ← hC]
 
 theorem torsion_lift_unique : ∀ (U Ω k : Type) [CommRing U] [IsDomain U] [ValuationRing U] [Field Ω] [IsAlgClosed Ω] [Algebra U Ω] [IsFractionRing U Ω] [Field k] [IsAlgClosed k] (h : U →+* k) (S : Scheme.{0}) (G : Over S) [GrpObj G], IsAbelianScheme G → ∀ (u : Sp U ⟶ S) (n : ℕ), IsUnit (n : U) → ∀ y : Over.mk (spMap h ≫ u) ⟶ G, y ^ n = 1 → ∃! P : Over.mk u ⟶ G, P ^ n = 1 ∧ y.left = spMap h ≫ P.left := by
   intro U Ω k _ _ _ _ _ _ _ _ _ h S G _ hA u n hn y hy
@@ -605,8 +604,7 @@ theorem exists_valuationSubring_ext : ∀ (W Ω k : Type) [CommRing W] [Field Ω
         have : b₁ = b₂ := Subtype.ext e'
         subst this; rfl
       · obtain ⟨a, ha1, ha2⟩ := hG2 _ (hGb w)
-        refine ⟨Subring.inclusion hAB a, ?_⟩
-        exact Prod.ext ha1 ((hh' a).trans ha2)
+        exact ⟨Subring.inclusion hAB a, Prod.ext ha1 ((hh' a).trans ha2)⟩
     have hle : G ≤ G' := fun p hp => by
       obtain ⟨a, ha1, ha2⟩ := hG2 p hp
       exact ⟨Subring.inclusion hAB a, Prod.ext ha1 ((hh' a).trans ha2)⟩
@@ -635,8 +633,7 @@ theorem exists_valuationSubring_ext : ∀ (W Ω k : Type) [CommRing W] [Field Ω
     show j w ∈ A
     rw [← show (a : Ω) = j w from ha1]; exact a.2
   refine ⟨U, hU, h.comp (Subring.inclusion (le_refl A)), fun w => ?_⟩
-  have m1 := hA ⟨j w, hU w⟩
-  exact hGf _ m1 _ (hGb w) rfl
+  exact hGf _ (hA ⟨j w, hU w⟩) _ (hGb w) rfl
 
 end GlobalTheory.ValExt
 end -- clump:auto
@@ -854,8 +851,7 @@ theorem tateIsoO_geom_of_generic : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R
     rw [← hzU n h1 h2, ← map_zpow] at hi
     have ho := hr4 _ hLb n (hunit n h2) _ _ (z n ^ (2 * D.EF x x'))
       ((I.onto n h1 h2 _).2 ⟨x, rfl⟩) ((I.onto n h1 h2 _).2 ⟨x', rfl⟩) hi
-    rw [map_zpow] at ho
-    exact ho
+    rwa [map_zpow] at ho
   obtain ⟨I', hI'⟩ := tateIsoO_transport (act' := fun c g => g ≫ act.act c)
     (e' := fun n g g' z => Out.WeilIs G (P.pull (lift (𝟙 G) (𝟙 G)).left) n g g' (unitOn z)) I r (fun c q => hr2 (act.act c) q)
     (fun n _ h2 => hr3 n (hunit n h2)) (fun n => Units.map (h : V →* k) (z n))

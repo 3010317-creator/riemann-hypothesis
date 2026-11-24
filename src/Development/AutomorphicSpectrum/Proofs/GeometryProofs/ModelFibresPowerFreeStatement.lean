@@ -686,8 +686,7 @@ theorem model_fibPF : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       show (Y.jQ ≫ pullback.fst _ _) w = _
       rw [Scheme.Hom.comp_apply]
     show ξ pt₀ ∈ abLocus Y.t.G
-    rw [h1, ← hw, h4]
-    exact h2
+    rwa [h1, ← hw, h4]
   have key : spMap s ≫ Spec.map (CommRingCat.ofHom (algebraMap (Y.X.residueField z) k)) ≫
       Y.X.fromSpecResidueField z = spMap (residue R) ≫ ξ := key_sq Y.X z k R g s hs
   obtain ⟨S', -, -, -, -, hGt'⟩ := Out.GtBCPf.gtBaseChange _ _ (spMap s) S _ hGt

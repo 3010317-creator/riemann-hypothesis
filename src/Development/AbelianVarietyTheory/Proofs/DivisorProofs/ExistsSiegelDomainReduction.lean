@@ -63,8 +63,7 @@ theorem cone_low {r : ℕ} {c : ℝ} (hc : 0 < c) {t : Fin r → ℝ}
     induction k with
     | zero =>
       intro i hi
-      simp only [zero_add, pow_one]
-      exact (min_le_right _ _).trans (hlast i (by omega))
+      simpa only [zero_add, pow_one] using (min_le_right _ _).trans (hlast i (by omega))
     | succ k ih =>
       intro i hi
       have hj : i.val + 1 < r := by omega
@@ -76,8 +75,7 @@ theorem cone_low {r : ℕ} {c : ℝ} (hc : 0 < c) {t : Fin r → ℝ}
         _ ≤ c * t ⟨i.val + 1, hj⟩ := mul_le_mul_of_nonneg_right (min_le_right _ _) h3.le
         _ ≤ t i := h2
   have := key (r - i.val - 1) i (by omega)
-  refine le_trans ?_ this
-  exact pow_le_pow_of_le_one hm0.le hm1 (by omega)
+  exact le_trans (pow_le_pow_of_le_one hm0.le hm1 (by omega)) this
 
 end GlobalTheory.SiegelHt
 

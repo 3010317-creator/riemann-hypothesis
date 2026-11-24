@@ -111,8 +111,7 @@ theorem isCompact_cos (Λ : AddSubgroup V) (hΛc : IsCompact (Λ : Set V)) (y : 
   have he : {z | z - y ∈ Λ} = (fun w => w + y) '' (Λ : Set V) := by
     ext z
     constructor
-    · intro hz
-      exact ⟨z - y, hz, sub_add_cancel z y⟩
+    · exact fun hz => ⟨z - y, hz, sub_add_cancel z y⟩
     · rintro ⟨w, hw, rfl⟩
       simpa using hw
   rw [he]
@@ -206,8 +205,8 @@ theorem densLC_of_cosB [IsFiniteMeasureOnCompacts μ] [IsFiniteMeasureOnCompacts
         conv_rhs => rw [← QuotientAddGroup.out_eq' q]
         rw [eq_comm, QuotientAddGroup.eq, neg_add_eq_sub]
       by_cases hq : (x : V ⧸ Λ') = q
-      · rw [if_pos hq, Set.indicator_of_mem (show x ∈ {z | z - q.out ∈ Λ'} from this.2 hq)]
-      · rw [if_neg hq, Set.indicator_of_notMem (show x ∉ {z | z - q.out ∈ Λ'} from
+      · rw [ite_eq_left hq, Set.indicator_of_mem (show x ∈ {z | z - q.out ∈ Λ'} from this.2 hq)]
+      · rw [ite_eq_right hq, Set.indicator_of_notMem (show x ∉ {z | z - q.out ∈ Λ'} from
           fun h' => hq (this.1 h'))]
     simp only [hind, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq]
     split_ifs with hxT

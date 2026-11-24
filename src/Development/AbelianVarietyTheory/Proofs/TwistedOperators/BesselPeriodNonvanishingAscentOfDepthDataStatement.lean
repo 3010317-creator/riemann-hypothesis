@@ -128,9 +128,9 @@ theorem ascent_of_rungs : TowerEx → Rung0 → RungB → RungJ → Ascent := by
   refine ⟨ρ, Φ, ?_⟩
   let f : ∀ i, Fn G (.grid i 0) := fun i => if hi : i ≤ D.R.m then part W M ρ Φ u i hi else 0
   have hf : f D.R.m = thetaChi W M ρ Φ u := by
-    simp only [f, dif_pos le_rfl]; rfl
+    simp only [f, dite_eq_left le_rfl]; rfl
   have := hE.top (r - 1) hk hk' Ψ f (hΨ.1 _ le_rfl) (by rw [hf, ← part_m]; exact hu ρ Φ _ le_rfl) (by
-    simp only [f, dif_pos hk]; exact hne)
+    simp only [f, dite_eq_left hk]; exact hne)
   rwa [hf] at this
 
 end GlobalTheory.Asc
@@ -256,7 +256,7 @@ theorem rungJ : FockTot → PartFixed → RungJ := by
   obtain ⟨κ, P, hκP⟩ : ∃ κ P, (F.jac v (k + 1) h).per W.ψ (F.ζ (k + 1)) omz (star (Ψ (2 * k + 2 + 1)))
       (s.lift (star (part W M ρ Φ u (2 * k + 2) h')) (star (W.fock (.chi (2 * k + 2) 0) (W.cosVec (2 * k + 2) κ) P))) Φ₀ ≠ 0 := by
     by_contra hall
-    push_neg at hall
+    push Not at hall
     exact hΦ'ne (hFk hall Φ' (hRow Φ' hΦ'𝒮))
 
   have hpart : part W M (Function.update ρ ⟨2 * k + 2, hi⟩ P) (Function.update Φ ⟨2 * k + 2, hi⟩ κ) u (2 * k + 2) hi.le =
@@ -606,12 +606,7 @@ theorem ell_scaled {ρ : ℕ} (b : Fin ρ → AE D) :
   · ring
 
 theorem star_psi_neg {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (x : AF D.host.F) : ψ (-x) = star (ψ x) := by
-  have h1 : ‖ψ x‖ = 1 := hψ.1.2.1 x
-  have h2 : ψ x * star (ψ x) = 1 := by
-    rw [Complex.star_def, Complex.mul_conj', h1]; simp
-  have h3 : ψ x * ψ (-x) = 1 := by rw [← AddChar.map_add_eq_mul, add_neg_cancel, AddChar.map_zero_eq_one]
-  have h0 : ψ x ≠ 0 := by intro h; rw [h, zero_mul] at h3; exact zero_ne_one h3
-  exact mul_left_cancel₀ h0 (h3.trans h2.symm)
+  exact (GlobalTheory.LinkInvTheta.star_psi hψ x).symm
 
 theorem psiE_neg_star {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (x : AE D) :
     psiE ψ (-x) = star (psiE ψ x) := by
@@ -1050,13 +1045,7 @@ theorem per_zero (J : JacL D 0) {L' : HSp D} (ζ' : Fin L'.rank → D.host.E) (o
 
 theorem integrable_norm_mul_pow {V : HSp D} (v : GlobalTheory.Unf.Vol V) {φ : GA D V → ℂ} (hφ : RapidDec V φ) (k : ℕ) :
     Integrable (fun g => ‖φ g‖ * quotHeight V g ^ k) (v.μ.restrict v.𝓕) := by
-  have hm : AEStronglyMeasurable (fun g => ((quotHeight V g ^ k : ℝ) : ℂ)) (v.μ.restrict v.𝓕) :=
-    (Complex.continuous_ofReal.comp ((GlobalTheory.Grow.continuous_quotHeight V).pow k)).aestronglyMeasurable
-  have hI := hφ.integrableOn_mul_of_le v.haar v.fund hm (C := 1) (A := k) (fun g => by
-    rw [one_mul, Complex.norm_real, norm_pow, Real.norm_of_nonneg (GlobalTheory.Grow.quotHeight_pos _ g).le])
-  refine hI.norm.congr (ae_of_all _ fun g => ?_)
-  simp only [Pi.mul_apply, norm_mul, Complex.norm_real, norm_pow, Real.norm_of_nonneg (GlobalTheory.Grow.quotHeight_pos _ g).le]
-  ring
+  exact GlobalTheory.Asc.VanJac.integrable_rapid v hφ k
 
 theorem tame_double {S X T L : HSp D} (o : OrthDec X T L) {χS χX : (AE D)ˣ →* Circle} {omX : Om S X}
     (hX : IsWeilDatumO ψ S X χS χX omX) (vS : GlobalTheory.Unf.Vol S) (vT : GlobalTheory.Unf.Vol T) {φ : GA D S → ℂ} {u : GA D T → ℂ}
@@ -1343,7 +1332,7 @@ theorem rung0 (hF : FockTot) : Rung0 := by
       (F.ζ 0) a⁻¹⁻¹ L.eta omz homz (star (Ψ 1)) Φz hφ hΦz.1
   have hK : ∃ κ P, ℓ (star (W.fock (.chi 0 0) (W.cosVec 0 κ) P)) ≠ 0 := by
     by_contra hno
-    push_neg at hno
+    push Not at hno
     exact hne (hF D hq T L μ0 hL sc G W M hM ⟨0, hm⟩ ℓ hT hno Φ' hΦ')
   obtain ⟨κ, P, hκP⟩ := hK
   let ρ : G.RealVec := Function.update ρ₀ ⟨0, hm⟩ P

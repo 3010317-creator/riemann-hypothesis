@@ -139,18 +139,14 @@ theorem chartMonomial_homog (j : ∀ k, J k) (d : K → ℕ) : IsMultiHomog (cha
   · rw [Finset.sum_eq_single (j k)]
     · simp
     · intro i _ hi
-      rw [Finsupp.single_apply, if_neg]
-      intro h
-      exact hi (eq_of_heq (Sigma.mk.inj h).2).symm
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      rw [Finsupp.single_apply, ite_eq_right]
+      exact fun h => hi (eq_of_heq (Sigma.mk.inj h).2).symm
+    · exact fun h => absurd (Finset.mem_univ _) h
   · intro k' _ hk
     refine Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.single_apply, if_neg]
-    intro h
-    exact hk (congrArg Sigma.fst h)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    rw [Finsupp.single_apply, ite_eq_right]
+    exact fun h => hk (congrArg Sigma.fst h)
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem eval_chartMonomial {F : Type} [CommRing F] (f : (Σ k, J k) → F) (j : ∀ k, J k) (d : K → ℕ)
     (hf : ∀ k, f ⟨k, j k⟩ = 1) :
@@ -158,11 +154,7 @@ theorem eval_chartMonomial {F : Type} [CommRing F] (f : (Σ k, J k) → F) (j : 
   simp [chartMonomial, MvPolynomial.eval₂_prod, MvPolynomial.eval₂_pow, MvPolynomial.eval₂_X, hf]
 
 theorem C_homog (n : ℤ) : IsMultiHomog (MvPolynomial.C n : MRing J) (0 : K → ℕ) := by
-  intro m hm k
-  have hm' : m = 0 := by
-    rw [← MvPolynomial.monomial_zero'] at hm
-    exact Finset.mem_singleton.mp (MvPolynomial.support_monomial_subset hm)
-  simp [hm']
+  apply GroundTheory.Heights₂.Heights.LowerBoundFree.isMultiHomog_C_zero
 
 variable {Ω : Type} [Field Ω]
 
@@ -220,8 +212,7 @@ theorem valAt_iff_isValueAt_coords : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω]
     have hre : e ⟨k, i⟩ = r := by
       show w ⟨k, i⟩ / w ⟨k, c k⟩ = r
       rw [hwr, mul_div_assoc, div_self (hwc k), _root_.mul_one]
-    rw [hre]
-    exact hr
+    rwa [hre]
   have scaleY : ∀ {G : ReciprocityTheory.ChartRestriction.G.Geo.MRing J} {d : K → ℕ}, IsMultiHomog G d →
       MvPolynomial.aeval y G = (∏ k, y ⟨k, c k⟩ ^ d k) * MvPolynomial.eval₂ (Int.castRingHom Ω) u G := by
     intro G d hG
@@ -282,11 +273,9 @@ theorem valAt_iff_isValueAt_coords : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω]
       rw [add_comm dt ds]
       exact GroundTheory.Heights₂.Heights.LowerBoundFree.isMultiHomog_mul hGs (chartMonomial_homog c dt)
     have ug : MvPolynomial.eval₂ (Int.castRingHom Ω) u (Gt * chartMonomial c ds) = s * a := by
-      rw [MvPolynomial.eval₂_mul, eval_chartMonomial u c ds hu1, _root_.mul_one]
-      exact htG
+      rwa [MvPolynomial.eval₂_mul, eval_chartMonomial u c ds hu1, _root_.mul_one]
     have uh : MvPolynomial.eval₂ (Int.castRingHom Ω) u (Gs * chartMonomial c dt) = s := by
-      rw [MvPolynomial.eval₂_mul, eval_chartMonomial u c dt hu1, _root_.mul_one]
-      exact hsG
+      rwa [MvPolynomial.eval₂_mul, eval_chartMonomial u c dt hu1, _root_.mul_one]
     have eg : MvPolynomial.eval₂ (Int.castRingHom ℂ) e (Gt * chartMonomial c ds) =
         MvPolynomial.eval₂ (Int.castRingHom ℂ) e Gs * v := by
       rw [MvPolynomial.eval₂_mul, eval_chartMonomial e c ds he1, _root_.mul_one, hre]
@@ -303,11 +292,9 @@ theorem valAt_iff_isValueAt_coords : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω]
     · rw [scaleW hg, scaleW hh, eg, eh, mul_div_mul_left _ _ (hMw _), mul_div_cancel_left₀ _ hr]
   · rintro ⟨d, g, h, hg, hh, hyh, hgh, hwh, rfl⟩
     have hu : MvPolynomial.eval₂ (Int.castRingHom Ω) u h ≠ 0 := by
-      intro h0
-      exact hyh (by rw [scaleY hh, h0, mul_zero])
+      exact fun h0 => hyh (by rw [scaleY hh, h0, mul_zero])
     have he : MvPolynomial.eval₂ (Int.castRingHom ℂ) e h ≠ 0 := by
-      intro h0
-      exact hwh (by rw [scaleW hh, h0, mul_zero])
+      exact fun h0 => hwh (by rw [scaleW hh, h0, mul_zero])
     have ha : a = MvPolynomial.eval₂ (Int.castRingHom Ω) u g *
         (MvPolynomial.eval₂ (Int.castRingHom Ω) u h)⁻¹ := by
       rw [scaleY hg, scaleY hh] at hgh

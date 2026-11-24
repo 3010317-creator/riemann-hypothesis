@@ -51,9 +51,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.ptExt :
     have := congrArg (fun r => r g i j) hrep
     simpa [Model.rep, mapRep, Model.rS, RingHom.mapMatrix_apply] using this
   let Q : Subalgebra c.O M.S := (AlgHom.equalizer ξ ξ').map M.SS.val
-  have hQent : ∀ g i j, M.ru.hom g i j ∈ Q := by
-    intro g i j
-    exact ⟨M.ent g i j, hent g i j, rfl⟩
+  have hQent : ∀ g i j, M.ru.hom g i j ∈ Q := fun g i j => ⟨M.ent g i j, hent g i j, rfl⟩
   have hQmono : ∀ w, mono M.ru.hom w ⊆ (Q : Set M.S) := by
     intro w y hy
     obtain ⟨L, -, rfl⟩ := hy
@@ -70,5 +68,4 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.ptExt :
   have hx : (x : M.S) ∈ ⨆ j, M.sPart j := x.2
   obtain ⟨y, hy, hyx⟩ := hle hx
   have : y = x := Subtype.ext hyx
-  rw [← this]
-  exact hy
+  rwa [← this]

@@ -101,9 +101,8 @@ theorem exists_sec_rdU_ne_zero (U : Formalism.L2.PjFree.Unf Xo c σ r) (k : U.Co
   have hv := (GlobalTheory.EtaForm.etaValAt_evR_of_fromTest E H Dw l Xo c 3 hR _ _ _ _ f hrule (CAt σ) (U.un k ⟨x₀, hx₀⟩)
     (hT _ _)).1
   have h0 := hne 0 _ hv
-  have e1 : Formalism.L2.PjFree.rdU U f k x₀ = Formalism.L2.PjFree.toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dif_pos hx₀
-  rw [e1]
-  exact h0
+  have e1 : Formalism.L2.PjFree.rdU U f k x₀ = Formalism.L2.PjFree.toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dite_eq_left hx₀
+  rwa [e1]
 
 end GlobalTheory.CuspFrom.KeyHol
 end -- clump:auto
@@ -275,7 +274,7 @@ theorem isSec_modelWt_rdU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     · simp [exZ, wtZ]
       linarith
     · simp [exZ, wtZ, hag]
-      rw [ha τ j, if_pos j.isLt]
+      rw [ha τ j, ite_eq_left j.isLt]
   have hfgsec : f * ((κ.ρ : Rul Xo c) ^ (B + 1) * f₀ ^ (B + 1 + N + 1)) ∈ sec Xo c a (2 * t) := by
     rw [← hsn, hEa]; exact GlobalTheory.AllWt.mul_mem_secZ hf hgZ
 
@@ -291,11 +290,11 @@ theorem isSec_modelWt_rdU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have hj := ha τ j
     by_cases hjm : j < Dw.mult τ
     · have him : i < Dw.mult τ := lt_of_le_of_lt hij hjm
-      rw [if_pos hjm] at hj
-      rw [if_pos him] at hi
+      rw [ite_eq_left hjm] at hj
+      rw [ite_eq_left him] at hi
       have hd := hdec τ i j hij hjm
       omega
-    · rw [if_neg hjm] at hj
+    · rw [ite_eq_right hjm] at hj
       omega
 
   have hWeven : Even (wtZ ag (2 * tg)).2 := ⟨(tg : ℤ), by simp [wtZ, two_mul]⟩
@@ -308,15 +307,13 @@ theorem isSec_modelWt_rdU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     intro h0
     apply hne'
     have h6 : rdU U (f₀ * 1) k x₀ = rdU U f₀ k x₀ * rdU U 1 k x₀ := by rw [GlobalTheory.AllWt.rdU_mul]; rfl
-    rw [mul_one, h0, mul_zero] at h6
-    exact h6
+    rwa [mul_one, h0, mul_zero] at h6
   have hρne : rdU U (κ.ρ : Rul Xo c) k x₀ ≠ 0 := by
     intro h0
     apply h1ne
     have h6 : rdU U ((κ.ρ : Rul Xo c) * ((κ.ρ⁻¹ : (Rul Xo c)ˣ) : Rul Xo c)) k x₀ =
         rdU U (κ.ρ : Rul Xo c) k x₀ * rdU U ((κ.ρ⁻¹ : (Rul Xo c)ˣ) : Rul Xo c) k x₀ := by rw [GlobalTheory.AllWt.rdU_mul]; rfl
-    rw [Units.mul_inv, h0, zero_mul] at h6
-    exact h6
+    rwa [Units.mul_inv, h0, zero_mul] at h6
   have hgx : rdU U ((κ.ρ : Rul Xo c) ^ (B + 1) * f₀ ^ (B + 1 + N + 1)) k x₀ =
       rdU U (κ.ρ : Rul Xo c) k x₀ ^ (B + 1) * rdU U f₀ k x₀ ^ (B + 1 + N + 1) := by
     rw [← rdU_pow_succ_apply U (κ.ρ : Rul Xo c) k x₀ B, ← rdU_pow_succ_apply U f₀ k x₀ (B + 1 + N), GlobalTheory.AllWt.rdU_mul]

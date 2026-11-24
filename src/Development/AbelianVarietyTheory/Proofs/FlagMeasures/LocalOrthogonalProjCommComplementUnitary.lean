@@ -128,8 +128,7 @@ theorem localLattice_map (f : (VS D).V →ₗ[D.host.E] (VS D).V) (fp : Vp D p �
   unfold lattice₂
   rw [Submodule.map_span, Submodule.map_coe, Set.image_image, Set.image_image]
   congr 1
-  refine Set.image_congr fun x _ => ?_
-  exact hf x
+  exact Set.image_congr fun x _ => hf x
 
 end GlobalTheory.FrameProj
 
@@ -297,8 +296,7 @@ theorem localOrthogonalProj_comm_complementUnitary {T T' : D.host.E} (F : LFlag 
   congr 2
   funext j
   have h2 := hu y (baseChange₂ D p (bU (Xplus F ⊔ Xplus F') j))
-  rw [hb j] at h2
-  exact h2
+  rwa [hb j] at h2
 
 end GlobalTheory.FrameProj
 

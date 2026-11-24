@@ -254,8 +254,7 @@ theorem exists_fractionalIdeal_isLocGen_of_valuation : ∀ (K : Type) [Field K] 
   · refine finprod_induction (fun L : FractionalIdeal (𝓞 K)⁰ K => L ≠ 0) one_ne_zero
       (fun _ _ h h' => mul_ne_zero h h') fun v => ?_
     exact zpow_ne_zero _ (FractionalIdeal.coeIdeal_ne_zero.2 v.ne_bot)
-  · rw [isLocGen_iff_valuation_eq, FractionalIdeal.count_finprod K p oa, ha]
-    exact hfin
+  · rwa [isLocGen_iff_valuation_eq, FractionalIdeal.count_finprod K p oa, ha]
 
 end GlobalTheory.LamF
 end -- clump:auto
@@ -453,8 +452,7 @@ theorem exists_scalar (hT : Out.SecTwistSt) (P : Out.PolAV (Sp (𝓞 K))) (x : K
   · rintro rfl
     obtain ⟨z, -, hz⟩ := hne (default : PrimeSpectrum K)
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hz
-    rw [ha i, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
-    exact hi
+    rwa [ha i, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
   by_contra hn
   refine h𝔭 ?_
   have hv : 𝔭.valuation K (algebraMap (𝓞 K) K d) = 1 := by
@@ -489,13 +487,13 @@ theorem exists_isThetaDeg : Out.SecTwistSt → ThetaUnifAV → ∀ (K : Type) [F
     fun 𝔭 => ?_, fun σ => ?_, (hfin.union (KeyPow.sum_log_norm_eq_finsum ha _ hv).1).subset fun 𝔭 h => ?_, rfl⟩
   · by_cases h : ∃ M, KeyPow.IsLocalModel x 𝔭 a M
     · obtain ⟨M, hM⟩ := id h
-      exact ⟨a, M, hM, by beta_reduce; rw [if_pos h]; exact hv 𝔭⟩
+      exact ⟨a, M, hM, by beta_reduce; rw [ite_eq_left h]; exact hv 𝔭⟩
     · obtain ⟨a', M, hM, h₁, -⟩ := hloc 𝔭
-      exact ⟨a', M, hM, by beta_reduce; rw [if_neg h]; exact h₁⟩
+      exact ⟨a', M, hM, by beta_reduce; rw [ite_eq_right h]; exact h₁⟩
   · obtain ⟨x', h₁, h₂⟩ := hn σ
     exact ⟨x', _, h₁, h₂⟩
   · by_cases h' : ∃ M, KeyPow.IsLocalModel x 𝔭 a M
-    · exact Or.inr (by simpa only [Function.mem_support, if_pos h'] using h)
+    · exact Or.inr (by simpa only [Function.mem_support, ite_eq_left h'] using h)
     · exact Or.inl h'
 
 end GlobalTheory.ThetaDegree
@@ -705,7 +703,7 @@ theorem exists_eigenbasis_fibre : Out.SecTwistSt → Out.Laws → ∀ (E : Type)
     apply Submodule.exists_mem_ne_zero_of_ne_bot
     intro h
     have := hrk (res t)
-    rw [latRank, h, if_pos (hrt t), finrank_bot] at this
+    rw [latRank, h, ite_eq_left (hrt t), finrank_bot] at this
     exact zero_ne_one this
   choose b hb hb0 using hb
   have hli : LinearIndependent K b := (hind.comp hinj).linearIndependent _ hb hb0
@@ -762,8 +760,7 @@ theorem exists_fractionalIdeal_single_mem {K : Type} [Field K] [NumberField K] {
   rw [Submodule.span_eq] at ht
   have h2 : algebraMap (𝓞 K) K t ∈ J := by
     change Pi.single i _ ∈ Λ
-    rw [Algebra.algebraMap_eq_smul_one, Pi.single_smul]
-    exact ht
+    rwa [Algebra.algebraMap_eq_smul_one, Pi.single_smul]
   have h3 : J = ⊥ := (congrArg FractionalIdeal.coeToSubmodule h0).trans FractionalIdeal.coe_zero
   rw [h3, Submodule.mem_bot] at h2
   exact nonZeroDivisors.coe_ne_zero t (FaithfulSMul.algebraMap_injective _ K (h2.trans (map_zero _).symm))
@@ -860,8 +857,7 @@ theorem lamEq_adj {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
     (a : 𝓞 E) : LamEq t.PP.L (t.act.act a) (𝟙 t.G) t.PP.L (𝟙 t.G) (t.act.act (H.bar a)) := by
   have := t.adj a
   unfold LamEq
-  rw [Category.comp_id, Category.comp_id]
-  exact this
+  rwa [Category.comp_id, Category.comp_id]
 
 theorem exists_lamObjGood_of_cmObj : Out.SecTwistSt → ThetaUnifAV → Out.Laws → HomExtDvr → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [StarRing (𝓞 E)] (H : Host E) (l : Level H) (c : Coeff l), (∀ a : 𝓞 E, star a = H.bar a) → ∀ (K : Type) [Field K] [NumberField K] [Algebra c.F K] (ρ : 𝓞 K) (σ₁ : K →+* ℂ) (p q : ℕ) (X : CMObj H K ρ σ₁ p q) (La : ℝ), (∀ τ, τ ∈ psiSet H ↔ labK c K τ (H.rt : E) = (ρ : K)) → (∀ j (τ : E →+* ℂ), ‖τ (X.hh j : E)‖ ≤ La ^ 2) → ∀ (xB : KeyIn K) (φB : xB.P.A.left ⟶ X.B.pol.A.left), IsFibreOf X.B.pol xB (gmap K) φB → ∃ (oa : X.B.pol.OAct (𝓞 E)) (oaΨ : (X.A true).pol.OAct (𝓞 E)) (oa' : (X.A false).pol.OAct (𝓞 E)) (xΨ x' : KeyIn K) (φΨ : xΨ.P.A.left ⟶ (X.A true).pol.A.left) (φ' : x'.P.A.left ⟶ (X.A false).pol.A.left) (τΨ : Fin xΨ.P.g ≃ {τ : E →+* ℂ // τ (H.rt : E) = H.rt0}) (τ' : Fin x'.P.g ≃ {τ : E →+* ℂ // τ (H.rt : E) ≠ H.rt0}) (ℓΨ : Fin xΨ.P.g → MLine K) (ℓ' : Fin x'.P.g → MLine K) (Tl LamL : MLine K), oa.act = X.B.t.act.act ∧ oaΨ.act = (X.A true).t.act.act ∧ oa'.act = (X.A false).t.act.act ∧ LamObjGood (LamObj.mk (c := c) (nΨ := p) (n' := q) K X.B.pol oa (X.A true).pol oaΨ (X.A false).pol oa' (fun i => X.φ (Sum.inl i)) (fun i => X.φ (Sum.inr i)) (fun i => X.hh (Sum.inl i)) (fun i => X.hh (Sum.inr i)) xB xΨ x' φB φΨ φ' τΨ τ' ℓΨ ℓ' Tl LamL) (Module.finrank ℚ E / 2) La := by
   intro hS hU hL hX E _ _ _ _ H l c hstar K _ _ _ ρ σ₁ p q X La hρ hLa xB φB hB

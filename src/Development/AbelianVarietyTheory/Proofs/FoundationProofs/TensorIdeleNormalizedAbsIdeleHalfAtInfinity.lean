@@ -72,9 +72,7 @@ theorem nnnorm_evInf_halfInf (F : Type) [Field F] [NumberField F] (w : InfiniteP
     simp
   have e : ‖((2⁻¹ : F) : w.Completion)‖ = 2⁻¹ := (InfinitePlace.Completion.norm_coe w _).trans h2
   apply NNReal.eq
-  rw [NNReal.coe_inv, NNReal.coe_ofNat]
-  rw [InfinitePlace.Completion.algebraMap_apply]
-  exact e
+  rwa [NNReal.coe_inv, NNReal.coe_ofNat, InfinitePlace.Completion.algebraMap_apply]
 
 theorem absE_halfE (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (h : IsCMExt F E σ) : absE F E (halfE F E) = ((4 : ℝ≥0) ^ Fintype.card (InfinitePlace F))⁻¹ := by
@@ -85,7 +83,7 @@ theorem absE_halfE (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
     simp
   have hinf : ∀ w, absEw F E w (unitInf F E w (halfE F E)) = 4⁻¹ := fun w => by
     rw [absEw_unitInf, hn, map_pow, nnnorm_pow, nnnorm_evInf_halfInf, InfinitePlace.mult,
-      if_pos (IsTotallyReal.isReal w), pow_one, inv_pow]
+      ite_eq_left (IsTotallyReal.isReal w), pow_one, inv_pow]
     norm_num
   rw [absE_apply, finprod_eq_one_of_forall_eq_one hfin, mul_one, Finset.prod_congr rfl fun w _ => hinf w,
     Finset.prod_const, Finset.card_univ, inv_pow]

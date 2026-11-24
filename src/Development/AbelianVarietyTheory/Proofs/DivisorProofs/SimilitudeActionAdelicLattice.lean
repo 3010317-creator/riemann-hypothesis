@@ -515,7 +515,7 @@ theorem invSys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (g : ℕ → D.La �
   have sec : ∀ n, 0 < n → n.Coprime p → ∀ x, ∃ z, g n (g' n x) = x + n • z := by
     intro n hn hc x
     have hg' : g' n = (b.constr ℤ (fun i => y n hn hc (b i))).toAddMonoidHom := by
-      simp only [g', dif_pos (And.intro hn hc)]
+      simp only [g', dite_eq_left (And.intro hn hc)]
     obtain ⟨w, hw⟩ := exists_nsmul_of_basis b
       ((g n).toIntLinearMap ∘ₗ b.constr ℤ (fun i => y n hn hc (b i)) - LinearMap.id) n
       (fun i => ⟨z n hn hc (b i), by simp [Module.Basis.constr_basis, hyz]⟩) x
@@ -582,12 +582,7 @@ namespace GlobalTheory.LKGeo.CommBC
 theorem actOn_tmul_tmul {C V : Type} [Ring C] [Algebra ℚ C] [AddCommGroup V] [Module ℚ V]
     (rep : C →ₐ[ℚ] Module.End ℚ V) (R : Type) [CommRing R] [Algebra ℚ R] (a b : R) (c : C) (v : V) :
     actOn rep R (a ⊗ₜ c) (b ⊗ₜ v) = (a * b) ⊗ₜ rep c v := by
-  have : actOn rep R (a ⊗ₜ c) = Algebra.ofId R _ a * Module.End.baseChangeHom ℚ R V (rep c) :=
-    Algebra.TensorProduct.lift_tmul _ _ _ a c
-  rw [this, Module.End.mul_apply]
-  simp only [Algebra.ofId_apply, Module.algebraMap_end_apply]
-  change a • (LinearMap.baseChange R (rep c)) (b ⊗ₜ v) = _
-  rw [LinearMap.baseChange_tmul, TensorProduct.smul_tmul', smul_eq_mul]
+  exact GlobalTheory.LKGeo.actOn_tmul_tmul' rep R a b c v
 
 theorem exists_actOn_eq {C V : Type} [Ring C] [Algebra ℚ C] [AddCommGroup V] [Module ℚ V] [Module.Finite ℚ V]
     (rep : C →ₐ[ℚ] Module.End ℚ V) {ι' : Type} (S : ι' → Module.End ℚ V)

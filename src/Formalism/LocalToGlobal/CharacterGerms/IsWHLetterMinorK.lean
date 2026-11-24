@@ -37,8 +37,7 @@ theorem isWH_aeval {σ τ : Type} {w : τ → ℕ} {w' : σ → ℕ} (f : σ →
     rw [← hp (mem_support_iff.1 hm), Finsupp.weight_apply]
     rfl
   have h3 := (isWeightedHomogeneous_C w (AddMonoidAlgebra.coeff p m)).mul h1
-  rw [zero_add, h2] at h3
-  exact h3
+  rwa [zero_add, h2] at h3
 
 theorem isWH_add {σ : Type} {w1 w2 : σ → ℕ} {p : MvPolynomial σ R} {D1 D2 : ℕ}
     (h1 : IsWeightedHomogeneous w1 p D1) (h2 : IsWeightedHomogeneous w2 p D2) :
@@ -79,9 +78,9 @@ theorem num_ch (g0 : Fin 2) (t0 : ZMod d) (c0 : ℕ) (g : Fin 2) (t : ZMod d) (u
   · obtain ⟨rfl, rfl⟩ := hg
     simp only [le_refl, true_and, and_true, Finset.sum_ite_eq', Finset.mem_Icc]
     split_ifs <;> first | omega | simp
-  · rw [if_neg (fun h => hg h.2.2.1), smul_zero, Finset.sum_eq_zero]
+  · rw [ite_eq_right (fun h => hg h.2.2.1), smul_zero, Finset.sum_eq_zero]
     intro k _
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨h1, h2, -⟩
     exact hg ⟨h1.symm, h2.symm⟩
 
@@ -101,11 +100,11 @@ theorem num_mon (g0 : Fin 2) (t0 : ZMod d) (c0 : ℕ) (g : Fin 2) (e : ZMod d �
       omega
     · intro t ht
       refine Finset.sum_eq_zero fun k _ => ?_
-      rw [if_neg (fun h => ht h.2.2.1.2), smul_zero]
+      rw [ite_eq_right (fun h => ht h.2.2.1.2), smul_zero]
   · rw [Finset.sum_eq_zero, Finset.sum_eq_zero]
     all_goals first
-      | (intro k _; rw [if_neg (fun h => hg h.1)])
-      | (intro t _; exact Finset.sum_eq_zero fun k _ => by rw [if_neg (fun h => hg h.2.2.1.1.symm), smul_zero])
+      | (intro k _; rw [ite_eq_right (fun h => hg h.1)])
+      | (intro t _; exact Finset.sum_eq_zero fun k _ => by rw [ite_eq_right (fun h => hg h.2.2.1.1.symm), smul_zero])
 
 
 include std in

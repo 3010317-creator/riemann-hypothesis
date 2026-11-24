@@ -58,8 +58,7 @@ theorem norm_entry_le (x : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) : ‖x i j�
   have h2 : ∑ j', ‖x i j'‖ ^ 2 ≤ ∑ i', ∑ j', ‖x i' j'‖ ^ 2 :=
     Finset.single_le_sum (f := fun i' => ∑ j', ‖x i' j'‖ ^ 2) (fun _ _ => by positivity) (Finset.mem_univ i)
   have h3 : ‖x i j‖ ^ 2 ≤ S7.hs x := by
-    simp only [S7.hs]
-    exact h1.trans h2
+    simpa only [S7.hs] using h1.trans h2
   have h4 := Real.abs_le_sqrt h3
   rwa [abs_of_nonneg (norm_nonneg _)] at h4
 
@@ -190,7 +189,6 @@ theorem continuous_ex {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) : Continu
     continuous_iff_continuousAt.2 fun s => (hasDerivAt_expm X s).continuousAt
   unfold ex toG
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨h1, ?_⟩) _
-  show Continuous fun s : ℝ => Formalism.REAL.Jm ε * (NormedSpace.exp ((s : ℂ) • X))ᴴ * Formalism.REAL.Jm ε
   exact (continuous_const.mul h1.matrix_conjTranspose).mul continuous_const
 
 theorem hasDerivAt_wt (dual : Bool) (ξ c : Fin n) (Y X : Matrix (Fin n) (Fin n) ℂ) :
@@ -240,10 +238,9 @@ theorem mx_apply_tensF {M : Type*} [AddCommGroup M] [Module ℂ M] (dual : Bool)
     rw [Finset.sum_eq_single c]
     · simp
     · intro a _ ha
-      rw [if_neg (Ne.symm ha)]
+      rw [ite_eq_right (Ne.symm ha)]
       simp
-    · intro h
-      exact absurd (Finset.mem_univ c) h
+    · exact fun h => absurd (Finset.mem_univ c) h
   · simp [mx, tensF, tensVd, actM, coordV, Finset.sum_apply, LinearMap.sum_apply, sub_eq_add_neg]
     simp only [Finset.sum_add_distrib, Finset.sum_neg_distrib]
     congr 2
@@ -251,10 +248,9 @@ theorem mx_apply_tensF {M : Type*} [AddCommGroup M] [Module ℂ M] (dual : Bool)
     rw [Finset.sum_eq_single c]
     · simp
     · intro b _ hb
-      rw [if_neg (Ne.symm hb)]
+      rw [ite_eq_right (Ne.symm hb)]
       simp
-    · intro h
-      exact absurd (Finset.mem_univ c) h
+    · exact fun h => absurd (Finset.mem_univ c) h
 
 section Rep
 
@@ -270,8 +266,7 @@ theorem sig_inv_apply (hσ : IsURepOn (UJset ε) σ) (g : Formalism.REAL.UJ ε) 
     σ (Formalism.MainNotions.S.umat g) (σ (Formalism.MainNotions.S.umat g⁻¹) v) = v := by
   have h := (sig_mul hσ g g⁻¹).symm
   rw [mul_inv_cancel, umat_one, hσ.1.1] at h
-  have h2 := congrArg (fun L : H →L[ℂ] H => L v) h
-  simpa using h2
+  simpa using congrArg (fun L : H →L[ℂ] H => L v) h
 
 theorem sig_inner (hσ : IsURepOn (UJset ε) σ) (g : Formalism.REAL.UJ ε) (a b : H) :
     inner ℂ (σ (Formalism.MainNotions.S.umat g) a) (σ (Formalism.MainNotions.S.umat g) b) = inner ℂ a b := by
@@ -359,8 +354,7 @@ theorem hasDerivAt_matrixCoeff_flow (hσ : IsURepOn (UJset ε) σ) (hD : IsDeriv
 
     · simp [map_sum, map_smul, map_neg, inner_sum,
       inner_smul_right, inner_neg_right]
-  rw [hv]
-  exact hs
+  rwa [hv]
 
 theorem hasDerivAt_cf (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) (dual : Bool) (y : H) (ξ : Fin n) (f : Fin n → D)
@@ -370,8 +364,7 @@ theorem hasDerivAt_cf (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E
   have h0 := hasDerivAt_matrixCoeff_flow hσ hD hX dual y ξ f (x * ex X hX t)
   have h0' : HasDerivAt (fun u => cf dual ε σ y ξ (fun c => ((f c : D) : H)) (x * ex X hX t * ex X hX u))
       (cf dual ε σ y ξ (fun c => ((mx (tensF dual E) X f c : D) : H)) (x * ex X hX t)) (t - t) := by
-    rw [sub_self]
-    exact h0
+    rwa [sub_self]
   have h1 := h0'.comp_sub_const t t
   refine h1.congr_of_eventuallyEq (Filter.Eventually.of_forall fun s => ?_)
   beta_reduce

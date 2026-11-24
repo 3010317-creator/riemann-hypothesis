@@ -100,8 +100,7 @@ theorem divCycle_extTo [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] (p : 
       divCycle P f (W'.comap (MvPolynomial.map (Int.castRingHom (ZP p)))) := by
   have h := divCycle_map_localisation K ι ℤ (ZP p) (Ideal.span {((p : ℕ) : ℤ)}).primeCompl P f W' hW'
   have e : algebraMap ℤ (ZP p) = Int.castRingHom (ZP p) := RingHom.ext_int _ _
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem isPrime_of_ne {R : Type} [CommRing R] {P : Ideal (MRing ι R)} {f : MRing ι R}
     {W : Ideal (MRing ι R)} (h : divCycle P f W ≠ 0) : W.IsPrime := by
@@ -150,8 +149,7 @@ theorem bijOn_comap [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] (p : Nat
   refine ⟨?_, ?_, ?_⟩
   · rintro W' ⟨hW', hp⟩
     refine ⟨?_, ?_⟩
-    · rw [← divCycle_extTo p P f W' (isPrime_of_ne hW')]
-      exact hW'
+    · rwa [← divCycle_extTo p P f W' (isPrime_of_ne hW')]
     · show MvPolynomial.map (Int.castRingHom (ZP p)) (C ((p : ℕ) : ℤ) : MRing ι ℤ) ∈ W'
       rwa [hCmap]
   · rintro W₁ - W₂ - h
@@ -166,11 +164,9 @@ theorem bijOn_comap [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] (p : Nat
       exact IsLocalization.isPrime_of_isPrime_disjoint (ZpModel.consts ι p) _ W hWp hd
     have hcomap : (extTo (ZP p) W).comap (MvPolynomial.map (Int.castRingHom (ZP p))) = W := by
       have h := IsLocalization.under_map_of_isPrime_disjoint (ZpModel.consts ι p) (MRing ι (ZP p)) hWp hd
-      rw [ZpModel.extTo_eq, ← ZpModel.algebraMap_eq]
-      exact h
+      rwa [ZpModel.extTo_eq, ← ZpModel.algebraMap_eq]
     refine ⟨extTo (ZP p) W, ⟨?_, ?_⟩, hcomap⟩
-    · rw [divCycle_extTo p P f _ hprime, hcomap]
-      exact hW
+    · rwa [divCycle_extTo p P f _ hprime, hcomap]
     · rw [← hCmap]
       exact Ideal.mem_map_of_mem _ hp
 
@@ -205,11 +201,10 @@ theorem GlobalTheory.CompanionTheory.Ar.Num.vertAt_eq_cycList : ∀ (K : Type) [
       simpa using hp
     rw [divCycle_extTo p P f W' hWp]
     beta_reduce
-    rw [if_pos hQp]
+    rw [ite_eq_left hQp]
     congr 1
     have h := vNumL_extTo p (W'.comap (MvPolynomial.map (Int.castRingHom (ZP p)))) l
-    rw [extTo_comap] at h
-    exact h
+    rwa [extTo_comap] at h
   · intro W' hW'
     have h1 := left_ne_zero_of_mul hW'
     refine ⟨h1, ?_⟩
@@ -220,4 +215,4 @@ theorem GlobalTheory.CompanionTheory.Ar.Num.vertAt_eq_cycList : ∀ (K : Type) [
     have h1 := left_ne_zero_of_mul hW
     refine ⟨h1, ?_⟩
     by_contra hp
-    exact right_ne_zero_of_mul hW (if_neg hp)
+    exact right_ne_zero_of_mul hW (ite_eq_right hp)

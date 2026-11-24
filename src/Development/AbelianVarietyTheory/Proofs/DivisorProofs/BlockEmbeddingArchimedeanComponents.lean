@@ -119,8 +119,7 @@ include hs
 theorem infTens_symm_sInf (x : Cinf E) : GlobalTheory.LFun.infTens F E (Φ.symm (sInf E x)) = j.symm (infEq E x) := by
   have h := hs (Φ.symm (sInf E x))
   rw [Φ.apply_symm_apply] at h
-  have h1 := congrArg Prod.fst h
-  exact j.injective ((j.apply_symm_apply _).trans h1).symm
+  exact j.injective ((j.apply_symm_apply _).trans (congrArg Prod.fst h)).symm
 
 theorem finTens_symm_sInf (x : Cinf E) : GlobalTheory.LFun.finTens F E (Φ.symm (sInf E x)) = 0 := by
   have h := hs (Φ.symm (sInf E x))
@@ -138,8 +137,7 @@ theorem map_star_of_continuous {ι : Type} [Fintype ι] (ψ : (ι → ℂ) →+*
     (z : ι → ℂ) : ψ (star z) = star (ψ z) := by
   classical
   obtain ⟨i, hi⟩ : ∃ i, ψ (Pi.single i 1) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : ψ 1 = ∑ i, ψ (Pi.single i 1) := by
 
       rw [← map_sum]
@@ -303,8 +301,7 @@ theorem GlobalTheory.BlockForms.exists_archComp_of_isBlockEmb : ∀ (F E : Type)
     rw [MonoidHom.mem_ker]
     apply Units.ext
     change ((matHom _ σ J (ι (infGL E d y))).1).map (GlobalTheory.LFun.finTens F E) = 1
-    rw [hform, ← map_inv]
-    rw [map_blockForm, hC, hq, hq', Formalism.UG.cT_one]
+    rw [hform, ← map_inv, map_blockForm, hC, hq, hq', Formalism.UG.cT_one]
     simp
   · have hp : ∀ y : GL (Fin d) (Cinf E), ((infGL E d y).1.map Φ.symm).map (compInf F E w) =
         (Matrix.GeneralLinearGroup.map (rhoW j w) y).1 := fun y => by
@@ -317,5 +314,4 @@ theorem GlobalTheory.BlockForms.exists_archComp_of_isBlockEmb : ∀ (F E : Type)
         Formalism.UG.cT (sigR w.Completion σ) (M.map (compInf F E w)) := fun M => map_cT_sigR_map (evInf F w) σ M
     rw [matHom_projArch]
     change ((matHom _ σ J (ι (infGL E d y))).1).map (compInf F E w) = _
-    rw [hform, ← map_inv]
-    rw [map_blockForm, hA, hA, hA, hA, hC, hp, hp, map_inv]
+    rw [hform, ← map_inv, map_blockForm, hA, hA, hA, hA, hC, hp, hp, map_inv]

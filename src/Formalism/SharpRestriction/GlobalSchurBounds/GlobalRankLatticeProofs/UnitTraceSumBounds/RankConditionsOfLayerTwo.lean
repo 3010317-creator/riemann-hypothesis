@@ -143,8 +143,7 @@ theorem cspan_eq (lam : ι → DomWeight n) : CSpan lam = Formalism.L2.DIV.VV �
   · rw [Submodule.span_le]
     rintro _ ⟨P, hP, rfl⟩
     show MvPolynomial.map (RingHom.id ℂ) P ∈ _
-    rw [MvPolynomial.map_id]
-    exact hP
+    rwa [MvPolynomial.map_id]
   · have h := Formalism.L2.Col.map_mem_CSpan (RingHom.id ℂ) lam F hF
     rwa [MvPolynomial.map_id] at h
 
@@ -204,13 +203,11 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem atInf_mul (emb : ι → E →+* ℂ) (a b : Matrix (Fin n) (Fin n) E) :
     atInf emb (a * b) = atInf emb a * atInf emb b := by
   funext τ
-  show (a * b).map (emb τ) = a.map (emb τ) * b.map (emb τ)
   exact Matrix.map_mul
 
 theorem isUnit_atInf (emb : ι → E →+* ℂ) (γ : GL (Fin n) E) (τ : ι) : IsUnit (atInf emb γ.1 τ).det := by
   have h := (Matrix.isUnits_det_units γ).map (emb τ)
-  rw [RingHom.map_det] at h
-  exact h
+  rwa [RingHom.map_det] at h
 
 theorem fiC_eq_pi (S : StepLevel F E σ J T f bad) (emb : ι → E →+* ℂ) (lam : ι → DomWeight n) {c : Type}
     (y : c → UPts σ J (FiniteAdeleRing (𝓞 F) F))

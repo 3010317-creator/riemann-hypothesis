@@ -46,8 +46,7 @@ namespace LocalizingAction
 
 lemma act_zero (W : Opens X) (x : P.obj (op W)) : A.act 0 W x = 0 := by
   have h := A.act_add 0 0 W x
-  rw [add_zero, eq_comm, ← sub_eq_zero, add_sub_cancel_right] at h
-  exact h
+  rwa [add_zero, eq_comm, ← sub_eq_zero, add_sub_cancel_right] at h
 
 lemma act_sum {α : Type*} (s : Finset α) (c : α → R) (W : Opens X) (x : P.obj (op W)) :
     A.act (∑ a ∈ s, c a) W x = ∑ a ∈ s, A.act (c a) W x := by
@@ -172,8 +171,7 @@ theorem exists_d_eq_pow_smul [Fintype ι] {n : ℕ} (σ : Cochain P (D ∘ h) (n
   funext J
   have hMJ : A.act (h j ^ M0) _ (d P _ n τ0 J - A.act (h j ^ N0) _ (σ J)) = 0 := by
     rw [← Nat.sub_add_cancel (hM0 J), pow_add, A.act_mul, hM J, map_zero]
-  rw [map_sub, sub_eq_zero, ← A.act_mul, ← pow_add] at hMJ
-  exact hMJ
+  rwa [map_sub, sub_eq_zero, ← A.act_mul, ← pow_add] at hMJ
 
 
 include A in
@@ -247,8 +245,7 @@ lemma bijective_smul_tilde (g : R) (W : Opens (Spec R).toTopCat) (hW : W ≤ bas
     Function.Bijective (fun x : (tildeAb M).obj.obj (op W) => g ^ k • x) := by
   have := (Module.End.isUnit_iff _).1
     ((Scheme.Modules.isUnit_algebraMap_end_of_le_basicOpen (M := tilde M) g hW).pow k)
-  rw [← map_pow] at this
-  exact this
+  rwa [← map_pow] at this
 
 lemma exists_cover_eq (g : R) {ι : Type*} [Fintype ι] (h : ι → R) (N : ℕ)
     (hle : basicOpen g ≤ ⨆ i, basicOpen (h i)) :
@@ -259,8 +256,7 @@ lemma exists_cover_eq (g : R) {ι : Type*} [Fintype ι] (h : ι → R) (N : ℕ)
     by_contra hg
     have hx : (⟨p, hp⟩ : PrimeSpectrum R) ∈ basicOpen g := (mem_basicOpen _ _).2 hg
     obtain ⟨i, hi⟩ := Opens.mem_iSup.1 (hle hx)
-    apply (mem_basicOpen _ _).1 hi
-    exact hp.mem_of_pow_mem N (hIp (Ideal.subset_span ⟨i, rfl⟩))
+    exact (mem_basicOpen _ _).1 hi (hp.mem_of_pow_mem N (hIp (Ideal.subset_span ⟨i, rfl⟩)))
   obtain ⟨L, hL⟩ := hrad
   obtain ⟨c, hc⟩ := Ideal.mem_span_range_iff_exists_fun.1 hL
   exact ⟨L, c, hc.symm⟩

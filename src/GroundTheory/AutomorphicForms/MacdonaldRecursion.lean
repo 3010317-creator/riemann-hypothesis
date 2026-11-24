@@ -42,7 +42,7 @@ theorem exists_ascent {l : Fin n → ℤ} (hl : Antitone l) {S : Finset (Fin n)}
   refine antitone_of_forall_succ_le fun i j hij => ?_
   have hle : l j ≤ l i := hl (Fin.le_def.2 (by omega))
   simp only [Pi.add_apply, lamS_apply]
-  by_cases hi : i ∈ S <;> by_cases hj : j ∈ S <;> simp only [hi, hj, if_true, if_false]
+  by_cases hi : i ∈ S <;> by_cases hj : j ∈ S <;> simp only [hi, hj, ite_true, ite_false]
   · omega
   · omega
   · rcases lt_or_eq_of_le hle with hlt | heq
@@ -97,11 +97,10 @@ theorem exists_perm_antitone {V : Type*} (H : (Fin n → ℤ) → V)
     have hsum := sum_val_map_swap hij hiS hjS
     obtain ⟨σ, hσ, hHσ⟩ := ih _ (by omega) (S.map (Equiv.swap i j).toEmbedding) rfl
     refine ⟨Equiv.swap i j * σ, ?_, ?_⟩
-    · rw [Equiv.Perm.coe_mul, ← Function.comp_assoc, hcomp]
-      exact hσ
+    · rwa [Equiv.Perm.coe_mul, ← Function.comp_assoc, hcomp]
     · rw [Equiv.Perm.coe_mul, ← Function.comp_assoc, hcomp, hHσ, ← hcomp]
       refine hH _ i j hij ?_
-      simp only [Pi.add_apply, lamS_apply, hiS, hjS, if_true, if_false, hlij]
+      simp only [Pi.add_apply, lamS_apply, hiS, hjS, ite_true, ite_false, hlij]
       ring
 
 def initSeg {r : ℕ} (hr : r ≤ n) : Finset (Fin n) := Finset.univ.map (Fin.castLEEmb hr)
@@ -111,8 +110,7 @@ theorem mem_initSeg {r : ℕ} (hr : r ≤ n) {i : Fin n} : i ∈ initSeg hr ↔ 
   constructor
   · rintro ⟨j, rfl⟩
     simp
-  · intro h
-    exact ⟨⟨i, h⟩, Fin.ext (by simp)⟩
+  · exact fun h => ⟨⟨i, h⟩, Fin.ext (by simp)⟩
 
 theorem card_initSeg {r : ℕ} (hr : r ≤ n) : (initSeg hr).card = r := by
   simp [initSeg]
@@ -272,8 +270,7 @@ theorem eq_zero_of_recursion (κ : Finset (Fin n) → ℝ) (hκ : ∀ S, 0 < κ 
     by_cases hc : ∀ i j, ν i = ν j
     · rcases n.eq_zero_or_pos with hn | hn
       · subst hn
-        rw [show ν = 0 from funext fun i => i.elim0]
-        exact h0
+        rwa [show ν = 0 from funext fun i => i.elim0]
       · have : ν = fun _ => ν ⟨0, hn⟩ := funext fun i => hc i _
         rw [this]
         exact hconst _
@@ -309,7 +306,7 @@ theorem eq_zero_of_recursion (κ : Finset (Fin n) → ℝ) (hκ : ∀ S, 0 < κ 
       rw [hl_def]
       simp only [Pi.sub_apply, lamS_apply, hT, mem_initSeg]
       have := hν hij
-      by_cases hi : (i : ℕ) < r <;> by_cases hj : (j : ℕ) < r <;> simp only [hi, hj, if_true, if_false]
+      by_cases hi : (i : ℕ) < r <;> by_cases hj : (j : ℕ) < r <;> simp only [hi, hj, ite_true, ite_false]
       · have := hbefore i hi
         have := hbefore j hj
         linarith

@@ -73,11 +73,9 @@ theorem Keeps.mul {F : FlagD H r} {s t : V ≃ₗ[K] V} (hs : Keeps F s) (ht : K
   · simp [hs.iso, ht.iso]
   · simp [hs.flag, ht.flag]
   · have h1 := (hs.flag _ _).2 (ht.vec a)
-    have h2 := add_mem h1 (hs.vec a)
-    simpa using h2
+    simpa using add_mem h1 (hs.vec a)
   · have h1 := (hs.flagX _).2 (ht.mid y hy)
-    have h2 := add_mem h1 (hs.mid y hy)
-    simpa using h2
+    simpa using add_mem h1 (hs.mid y hy)
 
 theorem apply_inv (s : V ≃ₗ[K] V) (x : V) : s (s⁻¹ x) = x := s.apply_symm_apply x
 
@@ -113,8 +111,7 @@ theorem keeps_of_inN [FiniteDimensional K V] {F : FlagD H r} {s : V ≃ₗ[K] V}
       rw [← heq] at hx
       obtain ⟨y, hy, hxy⟩ := hx
       rwa [← s.injective hxy]
-    · intro hx
-      exact hle ⟨x, hx, rfl⟩
+    · exact fun hx => hle ⟨x, hx, rfl⟩
   · induction a using Fin.lastCases with
     | last => exact h4 _ F.zperp
     | cast b => exact h3 b

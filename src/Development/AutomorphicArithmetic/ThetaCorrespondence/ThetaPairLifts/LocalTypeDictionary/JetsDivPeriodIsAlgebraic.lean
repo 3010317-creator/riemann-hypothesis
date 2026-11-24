@@ -167,15 +167,13 @@ theorem inV_stdL_eq_colLat {D : D7} {n : ℕ} (B : GL (Fin n) D.host.E) :
   constructor
   · rintro ⟨y, hy, rfl⟩
     have hy' : y ∈ Formalism.L2.Pj.stdLat D.host.E n := hy
-    rw [← hc] at hy'
-    exact hy'
+    rwa [← hc] at hy'
   · intro hx
     refine ⟨(B⁻¹ : GL (Fin n) D.host.E).1.mulVec x, ?_, ?_⟩
     · show _ ∈ Formalism.L2.Pj.stdLat D.host.E n
       rw [← hc, Submodule.mem_comap]
       simp only [LinearMap.restrictScalars_apply, Matrix.mulVecLin_apply, Matrix.mulVec_mulVec]
-      rw [show (B.1 * (B⁻¹).1) = 1 from B.mul_inv, Matrix.one_mulVec]
-      exact hx
+      rwa [show (B.1 * (B⁻¹).1) = 1 from B.mul_inv, Matrix.one_mulVec]
     · simp only [Matrix.mulVec_mulVec]
       rw [show (B.1 * (B⁻¹).1) = 1 from B.mul_inv, Matrix.one_mulVec]
 
@@ -287,8 +285,7 @@ theorem isAlgebraic_pureTensorO_div_period : ∀ {D : D7} {T : Type} [Finite T] 
     GlobalTheory.VacConj.isVacO_conj_negSp W.ψ W.θ A WW X.rA.s X.rW.s _ _ X.vac hIs.isVac
   have hf : IsVacO W.ψ W.θ A WW X.rA.s X.rW.s (colLat (1 : GL (Fin A.rank) D.host.E) : Set _)
       (colLat (1 : GL (Fin WW.rank) D.host.E) : Set _) f := by
-    rw [← std_eq_colLat_one X.rA.Λ hX.std.2.1, ← std_eq_colLat_one X.rW.Λ hX.stdW.2.1]
-    exact hf0
+    rwa [← std_eq_colLat_one X.rA.Λ hX.std.2.1, ← std_eq_colLat_one X.rW.Λ hX.stdW.2.1]
   have hS : Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) (1 : GL (Fin A.rank) D.host.E).1 * A.gram *
       (1 : GL (Fin A.rank) D.host.E).1 = 1 := by
     rw [hX.std.1]

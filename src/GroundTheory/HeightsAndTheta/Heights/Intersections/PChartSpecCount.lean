@@ -94,8 +94,7 @@ theorem ChartSpecCount.proof (hPE : ChartPrimElt.Statement) (hLA : LocAwaySpec.S
   let hq : Q → Φ[X] := fun q => if hq : r q ≠ 0 then (hh q hq).choose else 0
   have hhq : ∀ q, r q ≠ 0 → m ∣ hq q * g q - 1 := by
     intro q hq0
-    simp only [hq, dif_pos hq0]
-    exact (hh q hq0).choose_spec
+    simpa only [hq, dite_eq_left hq0] using (hh q hq0).choose_spec
   let S : Finset Φ := m.coeffs ∪ u.coeffs ∪ τ.coeffs ∪ Finset.univ.biUnion (fun q => (g q).coeffs ∪ (hq q).coeffs)
   obtain ⟨E, hE, hS, hker⟩ := hLA R Φ φ S hfrac
   set φA : Localization.Away E →+* Φ := IsLocalization.Away.lift E hE with hφA
@@ -174,8 +173,7 @@ theorem ChartSpecCount.proof (hPE : ChartPrimElt.Statement) (hLA : LocAwaySpec.S
     intro p hp t ht
     obtain ⟨c, hc⟩ := hD p hp
     have := congrArg (eval t) hc
-    rw [eval_mul, eval_map, eval_map, ht, zero_mul] at this
-    exact this
+    rwa [eval_mul, eval_map, eval_map, ht, zero_mul] at this
 
   have hZA : ∀ y : Q → ℂ, (∀ F : MvPolynomial Q R, MvPolynomial.eval₂ ((algebraMap Φ Φ').comp φ) r F = 0 →
       MvPolynomial.eval₂ ψ y F = 0) →
@@ -199,11 +197,9 @@ theorem ChartSpecCount.proof (hPE : ChartPrimElt.Statement) (hLA : LocAwaySpec.S
     have hp : (MvPolynomial.eval₂ C gA (MvPolynomial.map (algebraMap R (Localization.Away E)) F)).eval₂ f θ = 0 := by
       rw [eval₂_mvEval₂_C]
       simp only [hθg]
-      rw [MvPolynomial.eval₂_map, hfφ]
-      exact hF
+      rwa [MvPolynomial.eval₂_map, hfφ]
     have := hDr _ hp t ht
-    rw [eval₂_mvEval₂_C, MvPolynomial.eval₂_map, hσψ] at this
-    exact this
+    rwa [eval₂_mvEval₂_C, MvPolynomial.eval₂_map, hσψ] at this
 
   have ha : ∀ y : Q → ℂ, (∀ F : MvPolynomial Q R, MvPolynomial.eval₂ ((algebraMap Φ Φ').comp φ) r F = 0 →
       MvPolynomial.eval₂ ψ y F = 0) → MvPolynomial.eval₂ σ y τA ∈ T ∧ G (MvPolynomial.eval₂ σ y τA) = y := by
@@ -211,8 +207,7 @@ theorem ChartSpecCount.proof (hPE : ChartPrimElt.Statement) (hLA : LocAwaySpec.S
     have hyA := hZA y hy
     refine ⟨?_, ?_⟩
     · have := hyA (mA.eval₂ MvPolynomial.C τA) (by rw [mvEval₂_eval₂_C, hτθ, hθm])
-      rw [mvEval₂_eval₂_C] at this
-      exact this
+      rwa [mvEval₂_eval₂_C] at this
     · funext q
       have := hyA (MvPolynomial.X q - (gA q).eval₂ MvPolynomial.C τA)
         (by rw [MvPolynomial.eval₂_sub, MvPolynomial.eval₂_X, mvEval₂_eval₂_C, hτθ, hθg, sub_self])
@@ -222,14 +217,12 @@ theorem ChartSpecCount.proof (hPE : ChartPrimElt.Statement) (hLA : LocAwaySpec.S
   have hc : ∀ t ∈ T, MvPolynomial.eval₂ σ (G t) τA = t := by
     intro t ht
     have := hDr _ hθτ t ht
-    rw [Polynomial.eval₂_sub, eval₂_mvEval₂_C, Polynomial.eval₂_X, sub_eq_zero] at this
-    exact this
+    rwa [Polynomial.eval₂_sub, eval₂_mvEval₂_C, Polynomial.eval₂_X, sub_eq_zero] at this
   have hZ : {y : Q → ℂ | ∀ F : MvPolynomial Q R, MvPolynomial.eval₂ ((algebraMap Φ Φ').comp φ) r F = 0 →
       MvPolynomial.eval₂ ψ y F = 0} = G '' T := by
     ext y
     constructor
-    · intro hy
-      exact ⟨_, (ha y hy).1, (ha y hy).2⟩
+    · exact fun hy => ⟨_, (ha y hy).1, (ha y hy).2⟩
     · rintro ⟨t, ht, rfl⟩
       exact hb t ht
   have hinj : Set.InjOn G T := by

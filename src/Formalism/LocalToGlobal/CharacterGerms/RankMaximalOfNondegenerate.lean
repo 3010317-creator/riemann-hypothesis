@@ -155,22 +155,21 @@ theorem tyS_good_coeff {g : Fin 2} {w : I g → C} {x : ℕ → I g ⊕ JJ I g �
   · rw [pow_zero]
     by_cases hn1 : n = 1
     · subst hn1
-      rw [if_pos rfl, if_pos rfl]
+      rw [ite_eq_left rfl, ite_eq_left rfl]
       simp [h0]
     · have hn1' : ¬ (1 = n) := fun h => hn1 h.symm
-      rw [if_neg hn1', if_neg hn1]
+      rw [ite_eq_right hn1', ite_eq_right hn1]
   · intro s _ hs0
     by_cases hs1 : s = 1
     · subst hs1
       simp [h1 c]
-    · rw [if_neg]
+    · rw [ite_eq_right]
       intro hsn
       have h2 : 2 ≤ s := by omega
       have h3 : V.l ^ 2 ≤ V.l ^ s := Nat.pow_le_pow_right (by omega) h2
       rw [hsn] at h3
       exact absurd hn (not_lt.mpr h3)
-  · intro h
-    exact absurd (Finset.mem_range.2 (Nat.succ_pos n)) h
+  · exact fun h => absurd (Finset.mem_range.2 (Nat.succ_pos n)) h
 
 theorem coeffX' (n : ℕ) : PowerSeries.coeff n (MvPowerSeries.X () : PowerSeries C) = if n = 1 then 1 else 0 :=
   PowerSeries.coeff_X n
@@ -197,8 +196,7 @@ theorem lg_addOf (Y : FBChart C V O dd) {τ : Type} (P : Fin 2 → Fin dd → Mv
   rw [hadd, eval_single_eq_subst, eval_single_eq_subst, eval_single_eq_subst, MvPowerSeries.subst_add hPP,
     MvPowerSeries.subst_comp_subst_apply hA hPP, MvPowerSeries.subst_comp_subst_apply (hX 0) hPP,
     MvPowerSeries.subst_comp_subst_apply (hX 1) hPP] at key
-  simp only [pt, MvPowerSeries.subst_X hPP] at key
-  exact key
+  simpa only [pt, MvPowerSeries.subst_X hPP] using key
 
 end Step2
 

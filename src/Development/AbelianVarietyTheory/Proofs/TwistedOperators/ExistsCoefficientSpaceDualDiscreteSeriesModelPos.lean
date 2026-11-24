@@ -126,7 +126,7 @@ theorem exists_contragredient {G X κ : Type} [Group G] [TopologicalSpace G] [Ad
           refine Finset.sum_congr rfl fun q _ => ?_
           ring
       _ = ∑ p, y p * starRingEnd ℂ (x p) := by
-          simp only [horth, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          simp only [horth, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
           exact Finset.sum_congr rfl fun p _ => mul_comm _ _
   · intro x
     have hfun : (fun g => ρ g x) = fun g => WithLp.toLp 2 (fun q => ∑ p, x p * starRingEnd ℂ (B.repr (T g (B p)) q)) := by
@@ -144,8 +144,7 @@ theorem exists_contragredient {G X κ : Type} [Group G] [TopologicalSpace G] [Ad
       rintro φ ⟨w, hw, rfl⟩
       have hw' : ρ g⁻¹ w ∈ U := hU g⁻¹ ⟨w, hw, rfl⟩
       have := hx (e (ρ g⁻¹ w)) ⟨_, hw', rfl⟩
-      rw [hρ, inv_inv] at this
-      exact this
+      rwa [hρ, inv_inv] at this
     have hUW : U = W.comap e.toLinearMap := (Submodule.comap_map_eq_of_injective e.injective U).symm
     rcases hi _ hinv with h | h
     · right
@@ -196,8 +195,7 @@ theorem exists_contragredient_tensor {G ι : Type} [Group G] [TopologicalSpace G
     intro g x
     rw [tensRep_apply, PiTensorProduct.map_tprod]
   have hinner : ∀ i g (v w : H i), inner ℂ (r i g v) (r i g w) = inner ℂ v w := by
-    intro i g
-    exact (LinearMap.norm_map_iff_inner_map_map (r i g)).mp (hu i g)
+    exact fun i g => (LinearMap.norm_map_iff_inner_map_map (r i g)).mp (hu i g)
   have hback : ∀ i g (v : H i), r i g (r i g⁻¹ v) = v := by
     intro i g v
     rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
@@ -262,8 +260,7 @@ theorem frame_mem (M : DSModel V S) (τ : D.what₂.Tau) {g : Matrix (Fin V.rank
 theorem rep_one (M : DSModel V S) (τ : D.what₂.Tau) : M.rep τ 1 = 1 := by
   have hdet : IsUnit (M.fr τ).det := (Matrix.isUnit_iff_isUnit_det _).mp (M.fr_unit τ)
   obtain ⟨-, -, ⟨⟨h1, -⟩, -, -⟩, -⟩ := M.ds τ
-  rw [DSModel.rep, Matrix.mul_one, Matrix.mul_nonsing_inv _ hdet]
-  exact h1
+  rwa [DSModel.rep, Matrix.mul_one, Matrix.mul_nonsing_inv _ hdet]
 
 theorem rep_mul (M : DSModel V S) (τ : D.what₂.Tau) {g g' : Matrix (Fin V.rank) (Fin V.rank) ℂ}
     (hg : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)) (hg' : g' ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)) (v : M.H τ) :
@@ -305,8 +302,7 @@ theorem infMat_of_fin (φ : Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ) {h :
   unfold infMat
   simp only [infHom, matHom, Formalism.UG.bc] at h2
   have h3 := congrArg (fun m => Matrix.map m φ) h2
-  rw [Matrix.map_one _ (map_zero φ) (map_one φ)] at h3
-  exact h3
+  rwa [Matrix.map_one _ (map_zero φ) (map_one φ)] at h3
 
 theorem exists_dual_coef : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S), IsInfFam θ → AllPlus M → ∃ (c : CoefA V) (pr : c.W →ₗ[ℂ] SmT M →ₗ[ℂ] ℂ), c.Is ∧ IsDualPair θ M c pr ∧ Function.Surjective pr := by
   intro D θ V S M hθ hall

@@ -174,8 +174,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.vfDer :
   have hHm : ∀ τ t, Hm (τ D.θ) (pl F τ) (a t) = P τ t * Hm (τ D.θ) (pl F τ) a0 * (P τ t)ᴴ := fun τ t => by
     have h := (hA (ex Y (-t)) v).2 τ
     simp only [a, P]
-    rw [← map_inv, hinv]
-    exact h
+    rwa [← map_inv, hinv]
   have hP0 : ∀ τ, P τ 0 = 1 := fun τ => by
     simp only [P, neg_zero, hex0]
     exact Matrix.map_one _ (map_zero _) (map_one _)
@@ -215,8 +214,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.vfDer :
   · rw [hasDerivAt_pi]
     intro i
     rw [hasDerivAt_pi]
-    intro w
-    exact (hd w i).sub_const _
+    exact fun w => (hd w i).sub_const _
   · intro t
     have hf := (hA (ex Y t)⁻¹ v).1
     rw [map_inv] at hf
@@ -227,8 +225,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.vfDer :
       rw [map_add (f := _), h]
       simp [a, a0]
     · have h0 : ∀ x, pFin F (TR.sInf F x) = 0 := fun _ => rfl
-      rw [map_add (f := _), h0, add_zero]
-      exact hi
+      rwa [map_add (f := _), h0, add_zero]
   · intro τ
     rw [hm_der (pl F τ) a (fun i w => d w i) _ _ (hHm τ) (hQ τ) (fun i => hd _ i)]
     simp only [Matrix.conjTranspose_neg, neg_mul, mul_neg, neg_add]
@@ -361,8 +358,7 @@ private theorem pl_surj (D : Dat F E) (w : InfinitePlace F) : ∃ τ : E →+* �
   obtain ⟨w', hw'⟩ := InfinitePlace.comap_surjective (k := F) (K := E) w
   refine ⟨w'.embedding, ?_⟩
   unfold pl
-  rw [← InfinitePlace.comap_mk, InfinitePlace.mk_embedding]
-  exact hw'
+  rwa [← InfinitePlace.comap_mk, InfinitePlace.mk_embedding]
 
 private theorem sum_pl (D : Dat F E) (f : (E →+* ℂ) → ℂ) (g : InfinitePlace F → ℂ)
     (h : ∀ τ, f τ + f (ComplexEmbedding.conjugate τ) = g (pl (F := F) τ)) : ∑ τ, f τ = ∑ w, g w := by
@@ -426,7 +422,7 @@ private theorem term (Y : Lie E 2) (hY : (Matrix.of Y).trace = 0) (ψ' : S4 F) (
     have : Y 0 0 + Y 1 1 = 0 := hY
     rw [this, map_zero]
   simp only [dE_apply, T, Fin.sum_univ_two, Matrix.mul_apply, Matrix.map_apply, Matrix.of_apply]
-  simp only [Fin.isValue, zero_ne_one, one_ne_zero, if_true, if_false]
+  simp only [Fin.isValue, zero_ne_one, one_ne_zero, ite_true, ite_false]
   linear_combination (-(ψ'.1 v)) * tr
 
 end UpperTheory.ConvolutionTheory.R2.Ff.VectorFieldOperators

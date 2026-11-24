@@ -306,12 +306,12 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     if q = (D'.toPre.c mu).left then j' PUnit.unit else pk' q
   have hpkD : ∀ q, q ≫ D.toPre.P.A.hom = 𝟙 _ → ⊤ ≤ q ⁻¹ᵁ D.toPre.P.L.U (pkD q) := fun q _ => by
     by_cases hq : q = (D.toPre.c nu).left
-    · subst hq; simp only [pkD, if_pos rfl]; exact hj
-    · simp only [pkD, if_neg hq]; exact (hpk q).ge
+    · subst hq; simp only [pkD, ite_eq_left rfl]; exact hj
+    · simp only [pkD, ite_eq_right hq]; exact (hpk q).ge
   have hpkD' : ∀ q, q ≫ D'.toPre.P.A.hom = 𝟙 _ → ⊤ ≤ q ⁻¹ᵁ D'.toPre.P.L.U (pkD' q) := fun q _ => by
     by_cases hq : q = (D'.toPre.c mu).left
-    · subst hq; simp only [pkD', if_pos rfl]; exact hj'
-    · simp only [pkD', if_neg hq]; exact (hpk' q).ge
+    · subst hq; simp only [pkD', ite_eq_left rfl]; exact hj'
+    · simp only [pkD', ite_eq_right hq]; exact (hpk' q).ge
   obtain ⟨J, hJ, eJ⟩ := exists_good_pts D.toPre.P (FractionRing R) (π ≫ jK R) _ za z pkD hpkD
   obtain ⟨J', hJ', eJ'⟩ := exists_good_pts D'.toPre.P (FractionRing R) (π ≫ jK R) _ za z pkD' hpkD'
   have HH := H J J' hJ hJ'
@@ -327,10 +327,10 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     rw [Category.assoc, Over.w Φ.hom]; exact he'
   have V1 := val_psi_of_coord D.toPre nu h e π z J (by
     rw [show π ≫ D.toPre.xK nu = (π ≫ jK R) ≫ (D.toPre.c nu).left from (Category.assoc _ _ _).symm, eJ _ hc]
-    simp only [pkD, if_pos rfl])
+    simp only [pkD, ite_eq_left rfl])
   have V1' := val_psi_of_coord D'.toPre mu h' e' π z J' (by
     rw [show π ≫ D'.toPre.xK mu = (π ≫ jK R) ≫ (D'.toPre.c mu).left from (Category.assoc _ _ _).symm, eJ' _ hc']
-    simp only [pkD', if_pos rfl])
+    simp only [pkD', ite_eq_left rfl])
   obtain ⟨a, V2⟩ := val_rigK_of_top D.toPre π z J hJ (by rw [eJ _ he]; exact hpkD _ he)
   obtain ⟨a', V2'⟩ := val_rigK_of_top D'.toPre π z J' hJ' (by rw [eJ' _ he']; exact hpkD' _ he')
   have hψ : (ReciprocityTheory.ChartRestriction.G.DVR.cP D'.toPre (DegPre.BF D.toPre (FractionRing R)) mu).left =
@@ -348,11 +348,9 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     refine gm_of_top (π ≫ jK R) z (D'.toPre.c mu).left hψ (fun y _ => ?_) _
     refine ⟨Set.mem_iInter.2 fun _ => Set.mem_iInter.2 fun _ => ?_, Set.mem_iInter.2 fun _ => ?_⟩
     · have m := hpkD _ hcΦ (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k1] at m
-      exact m
+      rwa [← k1] at m
     · have m := hpkD' _ hc' (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k2] at m
-      exact m
+      rwa [← k2] at m
   have O2 : ∃ b : Rˣ, (ExpTrans.om w z (fun q _ => J q) (fun q _ => J' q)
       (1 : DegPre.BF D.toPre (FractionRing R) ⟶ D'.toPre.P.A).left).val = cst (π ≫ jK R) z b := by
     have k1 : J ((1 : DegPre.BF D.toPre (FractionRing R) ⟶ D'.toPre.P.A).left ≫ Φ.hom.left) =
@@ -363,11 +361,9 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     refine gm_of_top (π ≫ jK R) z (eSec D'.toPre.P.A) hψ1 (fun y _ => ?_) _
     refine ⟨Set.mem_iInter.2 fun _ => Set.mem_iInter.2 fun _ => ?_, Set.mem_iInter.2 fun _ => ?_⟩
     · have m := hpkD _ heΦ (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k1] at m
-      exact m
+      rwa [← k1] at m
     · have m := hpkD' _ he' (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k2] at m
-      exact m
+      rwa [← k2] at m
   obtain ⟨b, O1⟩ := O1
   obtain ⟨b', O2⟩ := O2
   rw [val_famMult_two D'.tau_bimult _ hJ', val_famMult_two D.tau_bimult _ hJ] at HH
@@ -742,7 +738,6 @@ theorem GlobalTheory.sq_corr_of_thickenings : ∀ (R : Type) [CommRing R] [IsDom
     fun e q => (ExtDiv.pG_app_eq_zero_iff (U'.gt e) _ _).1 (hvan e q)
   have key : sval a ρ z (fun q _ => J' q) = sval (sqSec s') ρ z (fun q _ => J' q) := by
     have h1 : sval (secSub a (sqSec s')) ρ z (fun q _ => J' q) = 0 := by
-      show gs _ _ _ _ = 0
       exact (congrArg (gs ρ z _) (h0 _)).trans (gs_zero _ _ _)
     have h2 := sval_secSub a (sqSec s') ρ z (good_sq hJ')
     rw [h1] at h2
@@ -1148,10 +1143,10 @@ theorem exists_good_ext {X Z : Scheme.{0}} (L : LB X) (hL : L.IsLB) (z : Z) (c :
     ∃ J, Good L z J ∧ ∀ ψ, ψ z ∈ L.U (c ψ) → J ψ = c ψ := by
   classical
   choose d hd using fun ψ : Z ⟶ X => exists_chart hL (ψ z)
-  refine ⟨fun ψ => if ψ z ∈ L.U (c ψ) then c ψ else d ψ, fun ψ => ?_, fun ψ h => if_pos h⟩
+  refine ⟨fun ψ => if ψ z ∈ L.U (c ψ) then c ψ else d ψ, fun ψ => ?_, fun ψ h => ite_eq_left h⟩
   by_cases h : ψ z ∈ L.U (c ψ)
-  · simpa only [if_pos h] using h
-  · simpa only [if_neg h] using hd ψ
+  · simpa only [ite_eq_left h] using h
+  · simpa only [ite_eq_right h] using hd ψ
 
 theorem pull_inv {P Y B : Scheme.{0}} {a b : P ⟶ Y} {p : Y ⟶ B} (h : a ≫ p = b ≫ p) {W : B.Opens}
     {V : Y.Opens} (hV : V ≤ p ⁻¹ᵁ W) (ha : b ⁻¹ᵁ V ≤ a ⁻¹ᵁ V) (x : Γ(B, W)) :
@@ -1177,7 +1172,7 @@ theorem GlobalTheory.termMatch_at_level : ∀ (R : Type) [CommRing R] [IsDomain 
   obtain ⟨h0, h0', -⟩ := hS Z r z J J' hJ hJ'
   by_cases hα : α' ∉ S
   · rw [h0 α' hα, h0' α' hα, zero_mul, mul_zero, zero_mul]
-  push_neg at hα
+  push Not at hα
 
   have hq : (U'.gt e).pG.left ≫ Φ.hom.left = (U.gt e).pG.left := (hlev e).1
   let c : ((thickObj R (maximalIdeal R) e G).left ⟶ D.toPre.P.A.left) → D.toPre.P.L.ι := fun ψ => J (r ≫ ψ)
@@ -1415,7 +1410,7 @@ theorem GlobalTheory.termMatch_at_level : ∀ (R : Type) [CommRing R] [IsDomain 
       ((map_sum _ _ _).symm.trans ((congrArg _ hsum0).trans (map_zero _)))
   let hfun : D'.toPre.X → Γ((thickObj R (maximalIdeal R) e G).left, Vst) := fun β =>
     if hβ : β ∈ S then Hv β hβ else 0
-  have hd : ∀ β (hβ : β ∈ S), hfun β = Hv β hβ := fun β hβ => dif_pos hβ
+  have hd : ∀ β (hβ : β ∈ S), hfun β = Hv β hβ := fun β hβ => dite_eq_left hβ
   have hsum : ∑ β ∈ S, chi (xe β) *
       ((snd (Te D.toPre (maximalIdeal R) e) (thickObj R (maximalIdeal R) e G)).left.app Vst).hom (hfun β) = 0 :=
     (Finset.sum_attach S (fun β => chi (xe β) *
@@ -1662,8 +1657,7 @@ theorem GlobalTheory.torus_coord_squares_correspond : ∀ (R : Type) [CommRing R
       thickObj R (maximalIdeal R) e G) ≫ (U.gt e).q))
     (GlobalTheory.globalFns_holds _ _ (TLinPf.isAb_pullback _ _ D.toPre.P.isAb)).2 a b ha hb hinv hone Z r z
     (fun q _ => J q) (GlobalTheory.SqCube.good_sq hJ)
-  rw [va' r z J hJ, vb' r z J J' hJ hJ'] at key
-  exact key
+  rwa [va' r z J hJ, vb' r z J J' hJ hJ'] at key
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1805,8 +1799,7 @@ theorem feq_of_expandsAt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   rw [vu] at hrel
   rw [← htr, ← congrArg (fun q => sval (f (α + k • mu)) q.left z J) ρ₂]
   rw [ρ₁] at hrel
-  simp only [Over.comp_left]
-  exact hrel
+  simpa only [Over.comp_left] using hrel
 
 end GlobalTheory.PsiCompare
 end -- clump:auto

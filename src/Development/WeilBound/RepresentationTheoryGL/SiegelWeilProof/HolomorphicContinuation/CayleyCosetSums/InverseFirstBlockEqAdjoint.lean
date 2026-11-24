@@ -58,8 +58,7 @@ theorem inverse_first_block_eq_adjoint {x : M2 n} (hx : InG x) : ub1 x = (u1 x)�
   have hl : (-(JJ n * xᴴ * JJ n)) * x = 1 := by
     have e : JJ n * xᴴ * JJ n * x = JJ n * (xᴴ * JJ n * x) := by simp only [Matrix.mul_assoc]
     rw [neg_mul, e, hx', hJ, neg_neg]
-  rw [ub1, Matrix.inv_eq_left_inv hl, u1]
-  rw [← fromBlocks_toBlocks x]
+  rw [ub1, Matrix.inv_eq_left_inv hl, u1, ← fromBlocks_toBlocks x]
   simp only [JJ, fromBlocks_conjTranspose, fromBlocks_multiply, fromBlocks_neg, toBlocks_fromBlocks₁₁,
     toBlocks_fromBlocks₂₁, conjTranspose_add, conjTranspose_smul, Complex.star_def, Complex.conj_I]
   simp

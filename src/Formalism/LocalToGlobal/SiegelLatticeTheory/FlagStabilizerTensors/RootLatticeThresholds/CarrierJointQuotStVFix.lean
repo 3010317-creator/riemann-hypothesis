@@ -90,8 +90,7 @@ theorem fix_loc (e : Fin r → Fin n → ℂ) (z z' : Fin n → ℂ) (G Gi Y T :
         rw [hZ0 (π b.castSucc) c.castSucc (fun h' => hcb (Fin.castSucc_injective _ (hπi h')).symm), mul_zero]
       · intro h'; exact absurd (Finset.mem_univ b) h'
     have : (Y - 1) *ᵥ q = 0 := by rw [hD]; simp [hβ0]
-    rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at this
-    exact this
+    rwa [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at this
 
   have hall : ∀ x, Y *ᵥ x = x := by
     intro x
@@ -191,9 +190,9 @@ theorem stVFix_holds (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.w
     intro c b
     rw [hZe]
     by_cases h : c.val = ptPar w.1 b.val
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       refine ⟨fun _ => Fin.ext h, fun _ => mul_ne_zero (pow_ne_zero _ (by norm_num)) (hne b.val b.2)⟩
-    · rw [if_neg h, map_zero, map_zero, mul_zero]
+    · rw [ite_eq_right h, map_zero, map_zero, mul_zero]
       exact ⟨fun h' => absurd rfl h', fun h' => absurd (congrArg Fin.val h') h⟩
   have hY1 := fix_loc (X.B.I.ε v) e z z' (uMat (γ v)) (uMat (γ v)⁻¹) (uMat y) (uMat ((γ v)⁻¹ * y * γ v))
     hGGi hG hee (hez u) (hez u') π hπ hP1 hy.1.2 hy.2.2 hYG hF hGF
@@ -202,8 +201,7 @@ theorem stVFix_holds (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.w
   simpa [uMat] using hY1
 
 theorem stVGeo_of_sec (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what₂.Word) (hS : StVSec X u u') :
-    StVGeo X u u' := by
-  exact stVGeo_of_fix_sec X u u' (stVFix_holds X u u') hS
+    StVGeo X u u' := stVGeo_of_fix_sec X u u' (stVFix_holds X u u') hS
 
 end FixGlob
 

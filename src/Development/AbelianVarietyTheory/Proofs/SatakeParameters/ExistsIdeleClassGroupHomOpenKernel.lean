@@ -92,7 +92,6 @@ theorem unitIdl_le_ker : GlobalTheory.Mem.Chr.unitIdl E ≤ (GlobalTheory.Mem.Un
 
 theorem infConn_le_unitIdl : infConn E ≤ GlobalTheory.Mem.Chr.unitIdl E := by
   rintro _ ⟨y, -, rfl⟩ v
-  show Valued.v (1 : v.adicCompletion E) = 1
   exact map_one _
 
 theorem diagUnits_range_le_ker : (diagUnits E).range ≤ (GlobalTheory.Mem.UnitIndex.classHom E).ker := by
@@ -109,8 +108,7 @@ theorem localIdele_mem_unitIdl (v : HeightOneSpectrum (𝓞 E)) (x : (v.adicComp
   intro w
   by_cases hw : w = v
   · subst hw
-    rw [localIdele_snd_self']
-    exact hx
+    rwa [localIdele_snd_self']
   · rw [localIdele_snd_ne' E v w hw]
     exact map_one _
 
@@ -122,11 +120,11 @@ theorem ord_vw_localIdele_unif (v : HeightOneSpectrum (𝓞 E)) (x : (v.adicComp
   rw [GlobalTheory.Idele.ord_vw, finIdele_apply]
   by_cases hw : w = v
   · subst hw
-    rw [localIdele_snd_self', if_pos rfl]
+    rw [localIdele_snd_self', ite_eq_left rfl]
     have hx' : Valued.v (x : w.adicCompletion E) = WithZero.exp (-1) := hx
     rw [hx', WithZero.log_exp]
     rfl
-  · rw [localIdele_snd_ne' E v w hw, if_neg (Ne.symm hw), map_one]
+  · rw [localIdele_snd_ne' E v w hw, ite_eq_right (Ne.symm hw), map_one]
     rfl
 
 theorem classHom_localIdele_unif (v : HeightOneSpectrum (𝓞 E)) (x : (v.adicCompletion E)ˣ)

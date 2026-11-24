@@ -131,8 +131,7 @@ theorem index_range_powMonoidHom {n : ℕ} (hn : n ≠ 0) :
       exact ⟨Multiplicative.ofAdd y, by rw [powMonoidHom_apply, ← ofAdd_nsmul]⟩
   have hi := index_multiples ⟨n, Nat.pos_of_ne_zero hn⟩
   simp only [PNat.mk_coe] at hi
-  rw [← h] at hi
-  exact hi
+  rwa [← h] at hi
 
 end ProfiniteInteger
 
@@ -193,8 +192,7 @@ theorem mem_map_relDeg_iff {K L : OpenSubgroup G} (hLK : L ≤ K) {x : Multiplic
   · rintro ⟨y, rfl⟩
     obtain ⟨σ, hσ, hσy⟩ := (D.mem_map_deg_iff L).2 ⟨y, rfl⟩
     refine ⟨⟨σ, hLK hσ⟩, hσ, ?_⟩
-    rw [relDeg_eq_iff, ← pow_mul, ← hf]
-    exact hσy
+    rwa [relDeg_eq_iff, ← pow_mul, ← hf]
 
 theorem relInertiaDegree_ne_zero {K L : OpenSubgroup G} (hLK : L ≤ K) :
     relInertiaDegree D.deg K L ≠ 0 := fun h =>

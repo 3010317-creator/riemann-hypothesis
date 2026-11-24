@@ -78,11 +78,7 @@ theorem chi_ne {la : Wt X.Ψ r} {γ : GL (Fin r) E} (hγ : γ ∈ X.Γ) : X.χ l
   exact zero_ne_one h1
 
 theorem lact_one (x : Frame X.Ψ r) : lact (1 : GL (Fin r) E) x = x := by
-  funext τ
-  show ((((1 : GL (Fin r) E) : Matrix (Fin r) (Fin r) E).map τ.1) * mat x τ :
-      Matrix (Fin r) (Fin r) ℂ) = x τ
-  rw [Units.val_one, Matrix.map_one _ (map_zero τ.1) (map_one τ.1), Matrix.one_mul]
-  rfl
+  exact ReciprocityTheory.ChartRestriction.G.AR.Up.KU.lact_one X x
 
 theorem cpt_lact (γ : GL (Fin r) E) (x : Frame X.Ψ r) (z : V (nd X)) :
     cpt X (lact γ x) z = lact γ (cpt X x z) := by
@@ -127,18 +123,7 @@ private lemma continuous_dmin_Gm (τ : X.Ψ) (i : Fin (r + 1)) :
     | fun_prop
 
 theorem isOpen_dom : IsOpen X.dom := by
-  have hd : ∀ (τ : X.Ψ) (i : Fin (r + 1)), Continuous fun x : Frame X.Ψ r => dmin X.Gm x τ i :=
-    fun τ i => continuous_dmin_Gm X τ i
-  have hdet : ∀ τ : X.Ψ, Continuous fun x : Frame X.Ψ r => (mat x τ).det := by
-    intro τ
-    first
-      | exact Continuous.matrix_det (continuous_apply τ)
-  show IsOpen {x : Frame X.Ψ r | ∀ τ : X.Ψ, (mat x τ).det ≠ 0 ∧
-    ∀ i : Fin (r + 1), 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}
-  simp only [Set.setOf_forall, Set.setOf_and]
-  refine isOpen_iInter_of_finite fun τ => ?_
-  refine (isOpen_ne_fun (hdet τ) continuous_const).inter (isOpen_iInter_of_finite fun i => ?_)
-  exact isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp (hd τ i)))
+  exact ReciprocityTheory.ChartRestriction.G.FD.FourierCoefficientDomain.isOpen_dom X
 
 theorem sig_cpt_diffAt {L : Wt X.Ψ r} {w0 : Frame X.Ψ r → ℂ} {s : Fin (nd X) → Frame X.Ψ r → ℂ}
     (hw0 : X.IsSec L w0) (hs : ∀ k, X.IsSec L (s k)) {x1 : Frame X.Ψ r} {z : V (nd X)}
@@ -247,7 +232,7 @@ theorem nbhd_avoid (x0 : Frame X.Ψ r) (hx0 : ∀ τ, (mat x0 τ).det ≠ 0) {K 
       ((mat (cpt X x0 z) τ).adjugate * mat x1 τ) a c ≠ 0 := by
     intro z hz
     by_contra hneg
-    push_neg at hneg
+    push Not at hneg
     have hdc : ∀ τ, (mat (cpt X x0 z) τ).det ≠ 0 := fun τ => by
       rw [det_cpt X x0 z τ]
       exact hx0 τ

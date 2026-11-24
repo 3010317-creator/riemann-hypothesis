@@ -172,7 +172,7 @@ lemma dual_eq {H : HermSp M V} {r : ℕ} (A : LocNG.FrameD H r) (a : Fin (r + 1)
     H.h (A.f a) (A.es j) = if a = j.castSucc then 1 else 0 := by
   induction a using Fin.lastCases with
   | last =>
-    rw [if_neg (Fin.castSucc_lt_last j).ne', H.h_herm, A.h_sz, map_zero]
+    rw [ite_eq_right (Fin.castSucc_lt_last j).ne', H.h_herm, A.h_sz, map_zero]
   | cast i =>
     rw [A.h_es i j]
     simp only [Fin.castSucc_inj]
@@ -182,11 +182,8 @@ lemma unit_of {T : F} (hT : T ∈ 𝒪[F]) (u : 𝒪[F]) (h : (u : F) * T = 1) :
   refine ⟨⟨⟨T, hT⟩, u, ?_, ?_⟩, rfl⟩
   · apply Subtype.ext
     show T * (u : F) = 1
-    rw [mul_comm]
-    exact h
-  · apply Subtype.ext
-    show (u : F) * T = 1
-    exact h
+    rwa [mul_comm]
+  · exact Subtype.ext h
 
 end
 

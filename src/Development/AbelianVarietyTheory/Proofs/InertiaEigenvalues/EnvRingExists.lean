@@ -117,8 +117,7 @@ theorem family_congr_basis_mod_nilpotent (R : Type) [CommRing R] (M : Type) [Add
   have hnil : IsNilpotent ν := by
     refine ⟨n, ?_⟩
     have := hpow n
-    rw [hIn, Submodule.bot_smul, le_bot_iff, LinearMap.range_eq_bot] at this
-    exact this
+    rwa [hIn, Submodule.bot_smul, le_bot_iff, LinearMap.range_eq_bot] at this
   have hunit : IsUnit (1 + ν) := hnil.isUnit_one_add
   have hbij : Function.Bijective ⇑(1 + ν) := (Module.End.isUnit_iff _).1 hunit
   have hcomp : b' = ⇑(1 + ν) ∘ b := by
@@ -173,7 +172,7 @@ theorem Led.monomial (m : MonomialOrder.{0, 0} σ) (γ : σ →₀ ℕ) :
     Led m (MvPolynomial.monomial γ (1 : R)) γ := by
   classical
   refine ⟨?_, MonomialOrder.degree_monomial_le _⟩
-  rw [MvPolynomial.coeff_monomial, if_pos rfl]
+  rw [MvPolynomial.coeff_monomial, ite_eq_left rfl]
   exact isUnit_one
 
 theorem Led.one (m : MonomialOrder.{0, 0} σ) : Led m (1 : MvPolynomial σ R) 0 := by
@@ -238,7 +237,7 @@ theorem led_tri {l : ℕ} (hl : 2 ≤ l) (i : ℕ) (v : Rˣ) {a b : MvPolynomial
         apply_eq_zero_of_supported ha (MvPolynomial.mem_support_iff.2 hc) hj
       refine ⟨fun j hj => ?_, ?_⟩
       · have h := hd j hj.le
-        rwa [Finsupp.tsub_apply, Finsupp.single_apply, if_neg hj.ne, Nat.sub_zero] at h
+        rwa [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hj.ne, Nat.sub_zero] at h
       · have h := hd i le_rfl
         rw [Finsupp.tsub_apply, Finsupp.single_eq_same] at h
         omega
@@ -254,7 +253,7 @@ theorem led_tri {l : ℕ} (hl : 2 ≤ l) (i : ℕ) (v : Rˣ) {a b : MvPolynomial
       have h' := hb0 _ h i le_rfl
       rw [Finsupp.single_eq_same] at h'
       omega
-    rw [MvPolynomial.coeff_add, MvPolynomial.coeff_add, hmon, MvPolynomial.coeff_monomial, if_pos rfl,
+    rw [MvPolynomial.coeff_add, MvPolynomial.coeff_add, hmon, MvPolynomial.coeff_monomial, ite_eq_left rfl,
       h1, h2, add_zero, add_zero]
     exact v.isUnit
   · rw [MonomialOrder.degree_le_iff]
@@ -263,7 +262,7 @@ theorem led_tri {l : ℕ} (hl : 2 ≤ l) (i : ℕ) (v : Rˣ) {a b : MvPolynomial
     · rw [hce]
     · have hc' := MvPolynomial.mem_support_iff.1 hc
       rw [MvPolynomial.coeff_add, MvPolynomial.coeff_add, hmon, MvPolynomial.coeff_monomial,
-        if_neg (Ne.symm hce), zero_add] at hc'
+        ite_eq_right (Ne.symm hce), zero_add] at hc'
       by_cases hA : (a * MvPolynomial.X i).coeff c = 0
       · rw [hA, zero_add] at hc'
         have h := hb0 c hc'
@@ -325,8 +324,7 @@ theorem tri_basis : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (t : �
         · simp [mul_comm]
         · intro k _ hk
           simp [hk]
-        · intro h
-          exact absurd hj h
+        · exact fun h => absurd hj h
       · rw [Finset.sum_eq_zero]
         · have h0 : x.2 j = 0 := by simpa using hj
           simp [h0]
@@ -358,8 +356,7 @@ theorem tri_basis : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (t : �
           lt_of_le_of_ne hle (fun e => hne (revLex.toSyn.injective e))
         obtain ⟨_, hdeg⟩ := hLed y
         rw [MonomialOrder.coeff_eq_zero_of_lt (lt_of_le_of_lt hdeg hlt), mul_zero]
-    · intro h
-      exact absurd hx.1 h
+    · exact fun h => absurd hx.1 h
   · rw [Submodule.eq_top_iff']
     have key : ∀ s : revLex.syn, ∀ q : MvPolynomial ℕ R,
         revLex.toSyn (revLex.degree q) = s → q ∈ Submodule.span R (Set.range F) := by
@@ -392,8 +389,7 @@ theorem tri_basis : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (t : �
             exact (MonomialOrder.coeff_degree_ne_zero_iff.2 h0) (by rw [e']; exact hz)
         have h := Submodule.add_mem _ hrest hmem
         rwa [sub_add_cancel] at h
-    intro q
-    exact key _ q rfl
+    exact fun q => key _ q rfl
 
 end GlobalTheory.TriBasis
 end -- clump:auto
@@ -552,7 +548,7 @@ theorem GlobalTheory.digitMonomials_basis_mod_pow : ∀ (l : ℕ) [Fact l.Prime]
       intro y
       by_cases h : y = 0
       · simp [sec, h]
-      · simp only [sec, h, if_false]; exact Function.surjInv_eq _ y
+      · simp only [sec, h, ite_false]; exact Function.surjInv_eq _ y
     refine ⟨g.mapRange sec hsec0, ?_⟩
     have hmap : π ((g.mapRange sec hsec0).sum fun α a => MvPolynomial.monomial α.1 a) =
         g.sum fun α a => MvPolynomial.monomial α.1 a := by
@@ -720,8 +716,7 @@ theorem GlobalTheory.BSP.exists_topBasis_of_levels (A : Type) [CommRing A] (L : 
           rw [Finsupp.smul_apply, smul_eq_mul]; ring
         rw [e]; exact Ideal.mul_mem_left _ _ (hC x k n c hc)
     c_self := fun k => by
-      simp only [AddMonoidHom.mk'_apply]
-      exact uniq _ k _ fun n => ⟨_, single_approx n k, by simp⟩
+      simpa only [AddMonoidHom.mk'_apply] using uniq _ k _ fun n => ⟨_, single_approx n k, by simp⟩
     c_ne := fun j k hjk => by
       simp only [AddMonoidHom.mk'_apply]
       exact uniq _ j _ fun n => ⟨_, single_approx n k, by simp [Ne.symm hjk]⟩
@@ -745,16 +740,16 @@ theorem GlobalTheory.BSP.exists_topBasis_of_levels (A : Type) [CommRing A] (L : 
         simp [RingHom.comp_apply, map_mul]
       have e2 : ∑ k ∈ F, (i.comp s) (C x k) * i (m k) =
           ∑ k ∈ F ∪ c.support, (i.comp s) (if k ∈ F then C x k else 0) * i (m k) := by
-        rw [← Finset.sum_subset Finset.subset_union_left (fun k _ hk => by rw [if_neg hk, map_zero, zero_mul])]
-        exact Finset.sum_congr rfl fun k hk => by rw [if_pos hk]
+        rw [← Finset.sum_subset Finset.subset_union_left (fun k _ hk => by rw [ite_eq_right hk, map_zero, zero_mul])]
+        exact Finset.sum_congr rfl fun k hk => by rw [ite_eq_left hk]
       have e3 : x - ∑ k ∈ F, (i.comp s) (C x k) * i (m k) = (x - i (lsum s m c)) +
           ∑ k ∈ F ∪ c.support, (i.comp s) (c k - if k ∈ F then C x k else 0) * i (m k) := by
         rw [e2, e1]; simp only [map_sub, sub_mul, Finset.sum_sub_distrib]; ring
       rw [e3]
       refine add_mem hc (Ideal.sum_mem _ fun k _ => Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ ?_))
       by_cases hk : k ∈ F
-      · rw [if_pos hk]; exact hC x k n c hc
-      · rw [if_neg hk, sub_zero]
+      · rw [ite_eq_left hk]; exact hC x k n c hc
+      · rw [ite_eq_right hk, sub_zero]
         have := add_mem (hC x k n c hc) (hF k hk)
         simpa using this
     complete := by rw [← Ideal.map_map]; exact hc.complete
@@ -857,8 +852,7 @@ theorem Delta.δ_φ_comm : ∀ (l : ℕ) [Fact l.Prime] (A : Type) [CommRing A] 
   have hgφ : ∀ p, g (D₀.φ p) = D.φ (g p) := Delta.map_φ_of_map_δ D₀ D g hgδ
   have hX : g (MvPolynomial.X 0) = a := by simp [g]
   have := congrArg g (poly_δ_φ l (MvPolynomial.X 0))
-  rw [hgδ, hgφ, hgφ, hgδ, hX] at this
-  exact this
+  rwa [hgδ, hgφ, hgφ, hgδ, hX] at this
 
 end GlobalTheory.BSP
 end -- clump:auto
@@ -1093,8 +1087,7 @@ theorem polyEval_isδ [Fact l.Prime] {A C : Type} [CommRing A] [CommRing C] (D :
     · intro a
       rw [mem_δLocus, polyDelta_C, MvPolynomial.eval₂Hom_C, MvPolynomial.eval₂Hom_C]
       exact hf a
-    · intro p q hp hq
-      exact add_mem hp hq
+    · exact fun p q hp hq => add_mem hp hq
     · intro p k hp
       refine mul_mem hp ?_
       rw [mem_δLocus, polyDelta_X, MvPolynomial.eval₂Hom_X', MvPolynomial.eval₂Hom_X',

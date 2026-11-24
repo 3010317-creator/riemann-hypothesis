@@ -89,15 +89,13 @@ theorem la_qminor {f : Mx k r → E} (hf : SmoothLev k r 0 D f) {t : ℕ} (a b :
   have hloc := (good_qminor (E := E) hD (cI ∘ a) (cI ∘ b) u).loc (cut k r 0 D f) f
     (fun x' hx' => cut_of_mem _ hx') _ hx
   rw [posL_cI_comp, posL_cI_comp] at hloc
-  rw [posL_cI_comp, posL_cI_comp]
-  exact hloc
+  rwa [posL_cI_comp, posL_cI_comp]
 
 include hD in
 theorem sm_qminor {f : Mx k r → E} (hf : SmoothLev k r 0 D f) {t : ℕ} (a b : Fin t → Fin (2 * r + k + 1)) (u : ℂ) :
     SmoothLev k r 0 D (qminorOp (EH k r) a b u f) := by
   have h := (good_qminor (E := E) hD (cI ∘ a) (cI ∘ b) u).sm f hf
-  rw [posL_cI_comp, posL_cI_comp] at h
-  exact h
+  rwa [posL_cI_comp, posL_cI_comp] at h
 
 theorem cell_mem {c : Fin r → ℂ} (hc : c ∈ OmX r) {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) :
     wCell k r (Fin.last r) c * g ∈ Glev k r 0 :=
@@ -200,7 +198,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
     by_cases hpr : p.val < r
     · have hpe : p = eI k r ⟨p.val, hpr⟩ := Fin.ext (by simp [eI])
       rw [hpe, Formalism.FourierDecayAlt.P.left_rule_cell E k r z D _ hz hD hN hsm hle c hc g hg hcD ⟨p.val, hpr⟩ ⟨l, by omega⟩
-        (by simp; omega), if_neg (by simp; omega), zero_smul]
+        (by simp; omega), ite_eq_right (by simp; omega), zero_smul]
     · have hpw : p = wI k r ⟨p.val - r, by omega⟩ := Fin.ext (by simp [wI]; omega)
       rw [hpw, leftRuleB z D _ hz hD hN hsm hle c hc g hg hcD ⟨l, by omega⟩ (by simp; omega)]
   have hL1 : ∀ X : SA E hD, Λ (EA hD (eI k r ⟨l + 1, by omega⟩) (eI k r ⟨l, by omega⟩) * X) =
@@ -210,7 +208,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
     have hsm := (((X : Module.End ℂ (VS k r 0 D E)) v₀ : VS k r 0 D E)).2.1
     have hle := leftEq_SA hD z hN X v₀ hLv
     rw [Formalism.FourierDecayAlt.P.left_rule_cell E k r z D _ hz hD hN hsm hle c hc g hg hcD ⟨l + 1, by omega⟩ ⟨l, by omega⟩
-      (by simp), if_pos (by simp), La_apply]
+      (by simp), ite_eq_left (by simp), La_apply]
   have hRmid : ∀ p : Fin (2 * r + k + 1), l + 2 ≤ p.val → p.val ≤ r + k → ∀ X : SA E hD,
       Λ (X * EA hD (eI k r ⟨l, by omega⟩) p) = 0 := by
     intro p hp1 hp2 X
@@ -219,7 +217,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
       by_cases hpr : p.val < r
       · have hpe : p = eI k r ⟨p.val, hpr⟩ := Fin.ext (by simp [eI])
         rw [hpe, hv₀, root_vector_action_cutoff hD z' hz' Formalism.FourierDecayAlt.P.right_rule_derivative hf hRf ⟨l, by omega⟩ ⟨p.val, hpr⟩ (by simp; omega),
-          if_neg (by simp; omega), zero_smul]
+          ite_eq_right (by simp; omega), zero_smul]
       · have hpw : p = wI k r ⟨p.val - r, by omega⟩ := Fin.ext (by simp [wI]; omega)
         rw [hpw, hv₀, EA_v0B hD z' hz' hf hRf ⟨l, by omega⟩ (by simp; omega)]
     rw [hzero, map_zero]
@@ -228,7 +226,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
     intro X
     rw [hΛ, La_apply, La_apply, Subalgebra.coe_mul, Module.End.mul_apply]
     rw [hv₀, root_vector_action_cutoff hD z' hz' Formalism.FourierDecayAlt.P.right_rule_derivative hf hRf ⟨l, by omega⟩ ⟨l + 1, by omega⟩ (by simp),
-      if_pos (by simp), one_smul]
+      ite_eq_left (by simp), one_smul]
   have hne : eI k r ⟨l, by omega⟩ ≠ eI k r ⟨l + 1, by omega⟩ := by simp [eI, Fin.ext_iff]
   have hring := stepB_ring (EA (E := E) hD) (EA_gl hD) Λ (eI k r ⟨l, by omega⟩) (eI k r ⟨l + 1, by omega⟩) hne
     (c ⟨l + 1, by omega⟩ / c ⟨l, by omega⟩) a b
@@ -270,8 +268,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
   have hread : ∀ {t' : ℕ} (a' b' : Fin t' → Fin (2 * r + k + 1)) (w : ℂ) (x : Mx k r), x ∈ Glev k r 0 ∩ D →
       La hD v₀ x (qminor (EA hD) a' b' w) = qminorOp (EH k r) a' b' w f x :=
     fun a' b' w x hx => la_qminor hD hf a' b' w hx
-  rw [hΛ, hread _ _ _ _ hx0, hread _ _ _ _ hx0, ← hΛ] at hring
-  rw [ha, hb] at hring
+  rw [hΛ, hread _ _ _ _ hx0, hread _ _ _ _ hx0, ← hΛ, ha, hb] at hring
   simp only [top_qminor_cast] at hring
   rw [hring]
 
@@ -282,7 +279,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
       u • Λ Q1 + EH k r (eI k r ⟨l, by omega⟩) (eI k r ⟨l, by omega⟩)
         (((Q1 : Module.End ℂ (VS k r 0 D E)) v₀ : VS k r 0 D E) : Mx k r → E) x0 := by
     unfold Tm
-    rw [if_pos rfl, add_mul, map_add (f := _), la_E hD v₀ hx0, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
+    rw [ite_eq_left rfl, add_mul, map_add (f := _), la_E hD v₀ hx0, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
       map_smul]
   rw [hT', Formalism.FourierDecayAlt.P.torus_cell E k r D _ hD (((Q1 : Module.End ℂ (VS k r 0 D E)) v₀ : VS k r 0 D E)).2.1
     c hc g hg hcD ⟨l, by omega⟩]
@@ -291,8 +288,7 @@ theorem stepB_pt (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hz' : i
   apply pOp_ev
   filter_upwards [nhds_cell hD hc hg hcD] with c' hc'
   have := hread (rowsN k r ⟨l + 1, by omega⟩ s ∘ Fin.cast hT1) (rowsN k r ⟨l + 1, by omega⟩ t ∘ Fin.cast hT1) (u - 1) _ hc'.2
-  rw [La_apply, top_qminor_cast] at this
-  exact this
+  rwa [La_apply, top_qminor_cast] at this
 
 end pt
 
@@ -326,7 +322,7 @@ theorem partial_derivative_double_sum {E : Type} [NormedAddCommGroup E] [NormedS
     (κ : ι → ι' → ℂ) (F : ι → ι' → (Fin r → ℂ) → E) {c : Fin r → ℂ} (hF : ∀ i j, DifferentiableAt ℝ (F i j) c)
     (l : Fin r) (hc : c ∈ OmX r) :
     pOp l (fun c' => ∑ i, ∑ j, κ i j • F i j c') c = ∑ i, ∑ j, κ i j • pOp l (F i j) c := by
-  simp only [pOp, if_pos hc, wirt, (has_fderiv_double_sum κ F hF).fderiv, ContinuousLinearMap.coe_sum', Finset.sum_apply,
+  simp only [pOp, ite_eq_left hc, wirt, (has_fderiv_double_sum κ F hF).fderiv, ContinuousLinearMap.coe_sum', Finset.sum_apply,
     ContinuousLinearMap.coe_smul', Pi.smul_apply]
   simp only [Finset.smul_sum, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_

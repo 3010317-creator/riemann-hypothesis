@@ -94,8 +94,8 @@ theorem resL_X_mul (v u : σ) (huv : u ≠ v) (e : ℕ) (g : MvPolynomial σ ℚ
   by_cases hu : u ∈ m.support
   · have hmv : (m - Finsupp.single u 1 : σ →₀ ℕ) v = m v := by
       simp [huv]
-    simp only [hu, if_true, coeff_initPart, hmv]
-  · simp only [hu, if_false]
+    simp only [hu, ite_true, coeff_initPart, hmv]
+  · simp only [hu, ite_false]
     split_ifs <;> rfl
 
 theorem resL_pderiv (v u : σ) (huv : u ≠ v) (e : ℕ) (g : MvPolynomial σ ℚ_[p]) :
@@ -108,8 +108,8 @@ theorem resL_pderiv (v u : σ) (huv : u ≠ v) (e : ℕ) (g : MvPolynomial σ �
     by_cases ha : a = 0
     · subst ha
       simp [initPart]
-    · rw [initPart, MvPolynomial.support_monomial, if_neg ha, Finset.sum_singleton,
-        MvPolynomial.coeff_monomial, if_pos rfl]
+    · rw [initPart, MvPolynomial.support_monomial, ite_eq_right ha, Finset.sum_singleton,
+        MvPolynomial.coeff_monomial, ite_eq_left rfl]
   induction g using MvPolynomial.induction_on' with
   | monomial m a =>
     rw [hr, hr, MvPolynomial.pderiv_monomial, hi, hi]
@@ -130,10 +130,10 @@ theorem resL_glAct {N r : ℕ} (LL : Letters N) (j : ℕ) (c d : Fin r) (v : Fin
   by_cases hij : (i : ℕ) < j
   · obtain ⟨hc, hd⟩ := h i hij
     by_cases hv : LL.vec i
-    · simp only [hij, hv, if_true, LinearMap.comp_apply, LinearMap.mulLeft_apply]
+    · simp only [hij, hv, ite_true, LinearMap.comp_apply, LinearMap.mulLeft_apply]
       rw [resL_X_mul v (i, c) hc]
       exact congrArg (X (i, c) * ·) (resL_pderiv v (i, d) hd e x)
-    · simp only [hij, hv, if_true, Bool.false_eq_true, if_false, LinearMap.neg_apply,
+    · simp only [hij, hv, ite_true, Bool.false_eq_true, ite_false, LinearMap.neg_apply,
         LinearMap.comp_apply, LinearMap.mulLeft_apply, map_neg]
       rw [resL_X_mul v (i, d) hd]
       exact congrArg (fun y => -(X (i, d) * y)) (resL_pderiv v (i, c) hc e x)
@@ -159,11 +159,10 @@ theorem glAct_succ (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (c d
     simp only [Fin.coe_castSucc]
     omega
   have h2 : ∀ i : Fin K, ((Fin.castSucc i : Fin (K + 1)) : ℕ) < K := fun i => by
-    simp only [Fin.coe_castSucc]
-    exact i.is_lt
+    simpa only [Fin.coe_castSucc] using i.is_lt
   rw [glAct, glAct, LinearMap.sum_apply, LinearMap.sum_apply, Fin.sum_univ_castSucc,
     Fin.sum_univ_castSucc]
-  simp only [h1, h2, if_true, Fin.val_last, lt_self_iff_false, if_false, Nat.lt_succ_self, hv,
+  simp only [h1, h2, ite_true, Fin.val_last, lt_self_iff_false, ite_false, Nat.lt_succ_self, hv,
     LinearMap.zero_apply, add_zero, LinearMap.comp_apply, LinearMap.mulLeft_apply]
   rfl
 
@@ -173,9 +172,8 @@ theorem wt_succ (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (c : Fi
     simp only [Fin.coe_castSucc]
     omega
   have h2 : ∀ i : Fin K, ((Fin.castSucc i : Fin (K + 1)) : ℕ) < K := fun i => by
-    simp only [Fin.coe_castSucc]
-    exact i.is_lt
-  simp only [wt, Fin.sum_univ_castSucc, h1, h2, if_true, Fin.val_last, lt_self_iff_false, if_false,
+    simpa only [Fin.coe_castSucc] using i.is_lt
+  simp only [wt, Fin.sum_univ_castSucc, h1, h2, ite_true, Fin.val_last, lt_self_iff_false, ite_false,
     Nat.lt_succ_self, hv, add_zero]
 
 theorem last_ne_of_lt (i : Fin (K + 1)) (hi : (i : ℕ) < K) : Fin.last K ≠ i := by
@@ -219,7 +217,7 @@ theorem pderiv_keep_wt [NeZero r] (LL : Letters (K + 1)) (hv : LL.vec (Fin.last 
     · intro i hi
       have hne : ((Fin.last K, c) : Fin (K + 1) × Fin r) ≠ (i, 0) :=
         fun h => last_ne_of_lt i hi (congrArg Prod.fst h)
-      rw [Finsupp.tsub_apply, Finsupp.single_apply, if_neg hne, Nat.sub_zero]
+      rw [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hne, Nat.sub_zero]
   exact_mod_cast hle
 
 private theorem pderiv_last_glAct_comm (LL : Letters (K + 1)) (a b c : Fin r)
@@ -233,10 +231,10 @@ private theorem pderiv_last_glAct_comm (LL : Letters (K + 1)) (a b c : Fin r)
   · have hne : ∀ d : Fin r, ((i, d) : Fin (K + 1) × Fin r) ≠ (Fin.last K, c) :=
       fun d h => last_ne_of_lt i hij (congrArg Prod.fst h).symm
     by_cases hv : LL.vec i
-    · simp only [hij, hv, if_true, LinearMap.comp_apply, LinearMap.mulLeft_apply]
+    · simp only [hij, hv, ite_true, LinearMap.comp_apply, LinearMap.mulLeft_apply]
       rw [Derivation.leibniz, MvPolynomial.pderiv_X_of_ne (hne a), smul_zero, add_zero, smul_eq_mul]
       exact congrArg (X (i, a) * ·) (Formalism.GM.ProjS.pderiv_comm (Fin.last K, c) (i, b) x)
-    · simp only [hij, hv, if_true, Bool.false_eq_true, if_false, LinearMap.neg_apply,
+    · simp only [hij, hv, ite_true, Bool.false_eq_true, ite_false, LinearMap.neg_apply,
         LinearMap.comp_apply, LinearMap.mulLeft_apply, map_neg]
       rw [Derivation.leibniz, MvPolynomial.pderiv_X_of_ne (hne b), smul_zero, add_zero, smul_eq_mul]
       exact congrArg (fun y => -(X (i, b) * y)) (Formalism.GM.ProjS.pderiv_comm (Fin.last K, c) (i, a) x)
@@ -252,7 +250,7 @@ theorem pderiv_glAct (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (a
     Formalism.GM.ProjS.pderiv_comm (Fin.last K, c) (Fin.last K, b) x]
   by_cases hac : a = c
   · subst hac
-    simp only [Pi.single_eq_same, mul_one, if_true]
+    simp only [Pi.single_eq_same, mul_one, ite_true]
     ring
   · simp [hac]
 
@@ -338,8 +336,7 @@ private theorem X_mul_mem_freeLast_of_ne_last (v : Fin (K + 1) × Fin r) (hv : v
   split_ifs at hm with hmem
   · have h1 := hy (MvPolynomial.mem_support_iff.2 hm) c
     have hne : v ≠ (Fin.last K, c) := fun h => hv (congrArg Prod.fst h)
-    rw [Finsupp.tsub_apply, Finsupp.single_apply, if_neg hne, Nat.sub_zero] at h1
-    exact h1
+    rwa [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hne, Nat.sub_zero] at h1
   · exact absurd rfl hm
 
 private theorem glAct_mem_freeLast (LL : Letters (K + 1)) (a b : Fin r) :
@@ -350,13 +347,12 @@ private theorem glAct_mem_freeLast (LL : Letters (K + 1)) (a b : Fin r) :
   by_cases hij : (i : ℕ) < K
   · have hi : i ≠ Fin.last K := fun h => last_ne_of_lt i hij h.symm
     by_cases hvi : LL.vec i
-    · simp only [hij, hvi, if_true, LinearMap.comp_apply, LinearMap.mulLeft_apply]
+    · simp only [hij, hvi, ite_true, LinearMap.comp_apply, LinearMap.mulLeft_apply]
       exact X_mul_mem_freeLast_of_ne_last (i, a) hi _ (pderiv_mem_freeLast (i, b) y hy)
-    · simp only [hij, hvi, if_true, Bool.false_eq_true, if_false, LinearMap.neg_apply,
+    · simp only [hij, hvi, ite_true, Bool.false_eq_true, ite_false, LinearMap.neg_apply,
         LinearMap.comp_apply, LinearMap.mulLeft_apply]
       exact Submodule.neg_mem _ (X_mul_mem_freeLast_of_ne_last (i, b) hi _ (pderiv_mem_freeLast (i, a) y hy))
-  · simp only [hij, if_false, LinearMap.zero_apply]
-    exact Submodule.zero_mem _
+  · simpa only [hij, ite_false, LinearMap.zero_apply] using Submodule.zero_mem _
 
 theorem free_le_ycond [NeZero r] (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K) = true) (Mt : WithTop ℤ) :
     YCond p LL (K + 1) Mt ⊓ FreeLast p K r ≤ YCond p LL K Mt := by
@@ -370,8 +366,7 @@ theorem free_le_ycond [NeZero r] (LL : Letters (K + 1)) (hv : LL.vec (Fin.last K
     have hw := h1 hm
     have h0 : m (Fin.last K, 0) = 0 := hzF hm 0
     simp only [Set.mem_setOf_eq] at hw ⊢
-    rw [wt_succ LL hv, h0, Nat.cast_zero, add_zero] at hw
-    exact hw
+    rwa [wt_succ LL hv, h0, Nat.cast_zero, add_zero] at hw
   · rintro a b z ⟨hzY, hzF⟩
     have e := glAct_succ LL hv a b z
     rw [pderiv_freeLast z hzF b, mul_zero, add_zero] at e
@@ -389,11 +384,11 @@ private theorem glAct_X_last_mul_eq (LL : Letters (K + 1)) (a b c : Fin r)
   · have hne : ∀ d : Fin r, ((Fin.last K, c) : Fin (K + 1) × Fin r) ≠ (i, d) :=
       fun d h => last_ne_of_lt i hij (congrArg Prod.fst h)
     by_cases hvi : LL.vec i
-    · simp only [hij, hvi, if_true, LinearMap.comp_apply, LinearMap.mulLeft_apply,
+    · simp only [hij, hvi, ite_true, LinearMap.comp_apply, LinearMap.mulLeft_apply,
         Derivation.coeFn_coe]
       rw [Derivation.leibniz, MvPolynomial.pderiv_X_of_ne (hne b), smul_zero, add_zero, smul_eq_mul]
       ring
-    · simp only [hij, hvi, if_true, Bool.false_eq_true, if_false, LinearMap.neg_apply,
+    · simp only [hij, hvi, ite_true, Bool.false_eq_true, ite_false, LinearMap.neg_apply,
         LinearMap.comp_apply, LinearMap.mulLeft_apply, Derivation.coeFn_coe]
       rw [Derivation.leibniz, MvPolynomial.pderiv_X_of_ne (hne a), smul_zero, add_zero, smul_eq_mul]
       ring
@@ -415,7 +410,7 @@ private theorem X_last_mul_mem_restrictSupport_wt_le [NeZero r] (LL : Letters (K
     intro i hi
     have hne : ((Fin.last K, c) : Fin (K + 1) × Fin r) ≠ (i, 0) :=
       fun h => last_ne_of_lt i hi (congrArg Prod.fst h)
-    rw [Finsupp.tsub_apply, Finsupp.single_apply, if_neg hne, Nat.sub_zero]
+    rw [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hne, Nat.sub_zero]
   · exact absurd rfl hm
 
 theorem mulX_ycond [NeZero r] (LL : Letters (K + 1)) (Mt : WithTop ℤ) (c : Fin r) :
@@ -427,8 +422,7 @@ theorem mulX_ycond [NeZero r] (LL : Letters (K + 1)) (Mt : WithTop ℤ) (c : Fin
     exact X_last_mul_mem_restrictSupport_wt_le LL Mt c y (yCond_le_restrictSupport_wt_le LL K Mt hy)
   · rintro a b _ ⟨y, hy, rfl⟩
     refine ⟨glAct p LL K a b y, glAct_mem_yCond_of_neZero LL K Mt a b y hy, ?_⟩
-    simp only [LinearMap.mulLeft_apply]
-    exact (glAct_X_last_mul_eq LL a b c y).symm
+    simpa only [LinearMap.mulLeft_apply] using (glAct_X_last_mul_eq LL a b c y).symm
 
 private theorem pderiv_last_eulL_eq (c : Fin r) (g : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p]) :
     pderiv (Fin.last K, c) (Formalism.GM.ProjS.eulL (fun d : Fin r => (Fin.last K, d)) g) =
@@ -445,8 +439,7 @@ private theorem pderiv_last_eulL_eq (c : Fin r) (g : MvPolynomial (Fin (K + 1) �
     · intro d _ hd
       have hne : ((Fin.last K, d) : Fin (K + 1) × Fin r) ≠ (Fin.last K, c) := by simp [hd]
       simp [hne]
-    · intro h
-      exact absurd (Finset.mem_univ c) h
+    · exact fun h => absurd (Finset.mem_univ c) h
   · refine Finset.sum_congr rfl fun d _ => ?_
     rw [Formalism.GM.ProjS.pderiv_comm]
 
@@ -506,8 +499,7 @@ theorem restriction_into_holds : ResInto := by
   split_ifs with hk
   · have h1 : h ∈ YCond p LL (K + 1) (M k) := by
       have := hhY k
-      rw [ycond_min, min_eq_right hk] at this
-      exact this
+      rwa [ycond_min, min_eq_right hk] at this
     refine Submodule.mem_inf.mpr ⟨key K le_rfl _ _ (condition_drop_holds p K r LL (M k) hv h hhP h1), ?_⟩
     have h0 : (0 : Fin r) ∈ (univ : Finset (Fin r)).erase ρ := by
       refine Finset.mem_erase.mpr ⟨?_, Finset.mem_univ _⟩

@@ -76,8 +76,7 @@ theorem isPrecomplete_of_basis {M : Type} [AddCommGroup M] [Module ℤ_[p] M] {�
   have hr : b.repr (∑ j, L j • b j) i = L i := by
     have h := congrFun (b.equivFun.apply_symm_apply L) i
     rwa [Module.Basis.equivFun_symm_apply, Module.Basis.equivFun_apply] at h
-  rw [map_sub, Finsupp.sub_apply, hr]
-  exact this
+  rwa [map_sub, Finsupp.sub_apply, hr]
 
 theorem span_p_eq (S : Type) [CommRing S] [Algebra ℤ_[p] S] :
     (maximalIdeal ℤ_[p]).map (algebraMap ℤ_[p] S) = Ideal.span {(p : S)} := by
@@ -284,8 +283,7 @@ theorem seed (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap R
         rw [map_sub, map_pow, hQ0, map_one]
       rw [e1, ← Ideal.Quotient.eq_zero_iff_mem]
       simp only [map_pow, map_add (f := _), map_sub, map_one]
-      rw [sub_eq_zero]
-      exact hw
+      rwa [sub_eq_zero]
     obtain ⟨t, ht⟩ := Ideal.mem_span_singleton'.1 hmem
     obtain ⟨K, rfl⟩ := AdjoinRoot.mk_surjective t
     exact ⟨K, by rw [← ht, mul_comm]⟩
@@ -321,8 +319,7 @@ theorem seed (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap R
     set x := res hv (sg j a + c) with hxdef
     have hxM : x ^ (N + 1) = 1 := by
       have hmem : r ^ (2 * (N + 1)) - r ^ (N + 1) ∈ J := by
-        rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_pow, map_pow, sub_eq_zero]
-        exact hM
+        rwa [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_pow, map_pow, sub_eq_zero]
       have h0 := hevJ _ hmem
       rw [map_sub, map_pow, map_pow, hevr, map_sub, map_pow, map_pow, ← hxdef, sub_eq_zero,
         pow_mul', sq] at h0
@@ -371,10 +368,8 @@ theorem pair (p : ℕ) [Fact p.Prime] (hp2 : p ≠ 2) (hv : v.Integers R)
       exact h10 (by linear_combination b2 - b1)
     · have b0 := h0 a0
       by_cases a1 : yi + 1 = 0
-      · have b2 := h2 (fun e => h10 (by linear_combination e - a1))
-        exact h20 (by linear_combination b2 - b0)
-      · have b1 := h1 a1
-        exact h10 (by linear_combination b1 - b0)
+      · exact h20 (by linear_combination (h2 (fun e => h10 (by linear_combination e - a1))) - b0)
+      · exact h10 (by linear_combination (h1 a1) - b0)
   obtain ⟨c, hci, hcj⟩ := hc
   obtain ⟨b, m, s, hm0, hmp, hbm, hbres⟩ := seed p hv hpv ρ εT sg heig a c
   refine ⟨b, m, hm0, hmp, hbm, fun heq => h ?_⟩
@@ -480,8 +475,7 @@ theorem embeddingSeparatingGroup : EmbeddingSeparatingGroupStatement := by
       have h21 : FrobeniusGroupField.res hv 2 - 1 = FrobeniusGroupField.res hv 1 := by
         rw [← map_one (FrobeniusGroupField.res hv), ← map_sub]
         norm_num
-      rw [h21]
-      exact hres1
+      rwa [h21]
     · by_cases hall : U.εT i ≠ 0 ∧ U.εT k ≠ 0 ∧ cond e (k ≠ U.φ i) (i ≠ k)
       · obtain ⟨hi, hk, hik⟩ := hall
         have ha : ∃ a, FrobeniusGroupField.res hv (U.sg k a) ≠ FrobeniusGroupField.res hv (U.sg i a) ^ p ^ e.toNat := by
@@ -496,8 +490,7 @@ theorem embeddingSeparatingGroup : EmbeddingSeparatingGroupStatement := by
             refine ⟨a, ?_⟩
             have hfr : FrobeniusGroupField.res hv (U.sg (U.φ i) a) = FrobeniusGroupField.res hv (U.sg i a) ^ p := by
               have h0 := (FrobeniusGroupField.res_eq_zero hv _).2 (U.frob i a)
-              rw [map_sub, map_pow, sub_eq_zero] at h0
-              exact h0
+              rwa [map_sub, map_pow, sub_eq_zero] at h0
             rw [← hfr]
             intro heq
             have h0 : FrobeniusGroupField.res hv (U.sg k a - U.sg (U.φ i) a) = 0 := by rw [map_sub, heq, sub_self]
@@ -568,19 +561,16 @@ theorem embeddingSeparatingGroup : EmbeddingSeparatingGroupStatement := by
     · rw [Pi.mulSingle_eq_same, toAdd_ofAdd, hone, pow_one]
     · intro u _ hu
       rw [Pi.mulSingle_eq_of_ne hu, toAdd_one, ZMod.val_zero, pow_zero]
-    · intro h
-      exact absurd (Finset.mem_univ t) h
+    · exact fun h => absurd (Finset.mem_univ t) h
   have hsep' : ∀ i k, U.εT i ≠ 0 → U.εT k ≠ 0 → i ≠ k →
       FrobeniusGroupField.res hv (U.sg k (b (some (i, k, false)))) ≠ FrobeniusGroupField.res hv (U.sg i (b (some (i, k, false)))) := by
     intro i k hi hk hik
-    have hq := hQ (some (i, k, false)) hi hk (by simpa using hik)
-    simpa using hq
+    simpa using hQ (some (i, k, false)) hi hk (by simpa using hik)
   have hsepψ : ∀ j k, U.εT j ≠ 0 → U.εT k ≠ 0 → j ≠ k → ∃ γ : G, U.sg j (β γ) ≠ U.sg k (β γ) := by
     intro j k hj hk hjk
     refine ⟨gen (some (j, k, false)), ?_⟩
     rw [hgen]
-    intro heq
-    exact hsep' j k hj hk hjk (by rw [heq])
+    exact fun heq => hsep' j k hj hk hjk (by rw [heq])
   refine ⟨G, inferInstance, inferInstance, β, hmul, h1, hcard, ?_, ?_, ?_⟩
   · intro i γ hi
     obtain ⟨j, hj, hψ⟩ := FrobeniusGroupField.proj p hv hpv hcard (fun γ => H.ρ (β γ)) hmul h1 U.εT U.εT_orth

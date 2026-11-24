@@ -144,8 +144,7 @@ theorem measurable_normT (h : HermNorm n) (T : Finset (Fin k)) : Measurable (nor
   · simp only [normT, hT, ite_true]
     exact (Complex.measurable_ofReal.comp (measurable_groupNorm h ij.1)).inv.mul
       (measurable_pi_apply _)
-  · simp only [normT, hT, ite_false]
-    exact measurable_pi_apply _
+  · simpa only [normT, hT, ite_false] using measurable_pi_apply _
 
 theorem scale_inGroup_apply_same (i : Fin k) (c : ℂ) (u : Fin k × Fin n → ℂ) (j : Fin n) :
     scaleP (inGroup i) c u (i, j) = c * u (i, j) := by
@@ -197,8 +196,7 @@ theorem normT_mem_polydisc (h : HermNorm n) (C : ℝ) (hC0 : 0 ≤ C)
     · rw [inv_mul_le_iff₀ (lt_of_le_of_ne (h.li_norm_nonneg _) (Ne.symm h0))]
       have := hC (fun j => u (ij.1, j)) ij.2
       simpa [mul_comm] using this
-  · simp only [normT, hT, ite_false]
-    exact hu ij
+  · simpa only [normT, hT, ite_false] using hu ij
 
 theorem integrableOn_log_groupNorm (h : HermNorm n) (r : ℝ) (i : Fin k) :
     IntegrableOn (fun u : Fin k × Fin n → ℂ => Real.log (h.norm fun j => u (i, j)))
@@ -312,8 +310,7 @@ theorem logNormT_insert_of_homog (h : HermNorm n) (r : ℝ) (T : Finset (Fin k))
         have := congrFun (h.li_eq_zero_of_norm_eq_zero _ h0) ij.2
         simp only [Pi.zero_apply] at this
         have e : (i, ij.2) = ij := by rw [← hgi]
-        rw [e] at this
-        exact this
+        rwa [e] at this
     filter_upwards [ih2, hnull] with u hu hn
     refine mul_ne_zero ?_ hu
     by_cases hd0 : d = 0
@@ -330,8 +327,7 @@ theorem logNormT (h : HermNorm n) (C : ℝ) (hC0 : 0 ≤ C)
   | empty =>
     intro g hg
     have e : normT h (∅ : Finset (Fin k)) = id := by funext u ij; simp [normT]
-    simp only [e, id]
-    exact ⟨integrableOn_log_norm_eval g hg C, ae_eval_ne_zero g hg C⟩
+    simpa only [e, id] using ⟨integrableOn_log_norm_eval g hg C, ae_eval_ne_zero g hg C⟩
   | insert i T hi ih =>
     intro g hg
     by_cases hhom : ∃ d, IsWeightedHomogeneous (indW (inGroup i)) g d

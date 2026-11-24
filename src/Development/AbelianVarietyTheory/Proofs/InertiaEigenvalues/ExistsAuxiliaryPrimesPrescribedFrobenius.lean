@@ -164,8 +164,7 @@ theorem dec_le [IsAlgClosure F Ω] {A : ValuationSubring Ω} {v : HeightOneSpect
     · intro x hx; exact hI hx
   have htop := Subgroup.topologicalClosure_minimal _ hle hKc
   rw [hcl] at htop
-  intro x hx
-  exact htop (Subgroup.mem_top (⟨x, hx⟩ : Dec (F := F) A))
+  exact fun x hx => htop (Subgroup.mem_top (⟨x, hx⟩ : Dec (F := F) A))
 
 theorem finite_ram [IsAlgClosure F Ω] {H : Subgroup (G F Ω)} (hH : IsOpen (H : Set (G F Ω))) :
     {v : HeightOneSpectrum (𝓞 F) | ∃ B : ValuationSubring Ω, IsPlaceOver B v ∧ ¬ Ine (F := F) B ≤ H}.Finite := by
@@ -179,8 +178,7 @@ theorem finite_ram [IsAlgClosure F Ω] {H : Subgroup (G F Ω)} (hH : IsOpen (H :
   rwa [hfix] at this
 
 theorem finite_mem {n : ℕ} (hn : n ≠ 0) : {v : HeightOneSpectrum (𝓞 F) | ((n : ℕ) : 𝓞 F) ∈ v.asIdeal}.Finite := by
-  have h := GlobalTheory.InertiaAlmostAll.finite_mem F (c := (n : ℤ)) (by exact_mod_cast hn)
-  simpa using h
+  simpa using GlobalTheory.InertiaAlmostAll.finite_mem F (c := (n : ℤ)) (by exact_mod_cast hn)
 
 end General
 
@@ -266,8 +264,7 @@ theorem exists_pick (hC : Cheb) {V : Subgroup (GE N)} (hV : IsOpen (V : Set (GE 
   · rcases hw with rfl | hw
     · exact hdeg
     ·
-      rw [← hiff, hnorm, GlobalTheory.TwistDet.normV_conj hw, ← hnorm, hiff]
-      exact hdeg
+      rwa [← hiff, hnorm, GlobalTheory.TwistDet.normV_conj hw, ← hnorm, hiff]
   ·
     obtain ⟨k, hk⟩ := ReciprocityTheory.Gal.exists_smul_eq_of_isPlaceOver hB (N.plOm.2 P)
     rw [← hk] at hσ
@@ -311,9 +308,9 @@ theorem not_mem_of_pD {v : PlE D.host} (hv : v ∈ X.pD i) (M : ℕ) :
   rw [X.pD_eq i] at hv'
   have h15 := D.host.pde_mod
   by_cases h : X.l i = D.host.pde
-  · rw [if_pos h] at hv'
+  · rw [ite_eq_left h] at hv'
     exact key _ D.host.pde'_prime (by omega) (fun e => D.host.pde_ne (h ▸ e).symm) hv'
-  · rw [if_neg h] at hv'
+  · rw [ite_eq_right h] at hv'
     exact key _ D.host.pde_prime (by omega) (fun e => h e.symm) hv'
 
 theorem stepAB : Cheb → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (i : X.Tw),
@@ -380,8 +377,7 @@ theorem stepAB : Cheb → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.h
   have hconjmem : ∀ (K : Subgroup (GE N)), K.Normal → ∀ σ k g : GE N, k * σ * k⁻¹ * g⁻¹ ∈ K → g ∈ K → σ ∈ K := by
     intro K hK σ k g h1 h2
     have h3 : k * σ * k⁻¹ ∈ K := by simpa using K.mul_mem h1 h2
-    have h4 := hK.conj_mem _ h3 k⁻¹
-    simpa [mul_assoc] using h4
+    simpa [mul_assoc] using hK.conj_mem _ h3 k⁻¹
 
   have hzHR : z ∈ H ⊓ rootFix D.host.E N.Om (2 * X.l i ^ M) := by
     obtain ⟨v, hv, B, hB, hzB, -, -⟩ := hz

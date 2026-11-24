@@ -180,8 +180,7 @@ def trHom (f : R →+* R) (hx : x' = spMap f ≫ x) : (epsAt x ⟶ G) →* (epsA
 theorem tr_prod (f : R →+* R) (hx : x' = spMap f ≫ x) {n : ℕ} (u : Fin n → (epsAt x ⟶ G)) :
     tr f hx (List.ofFn u).prod = (List.ofFn fun i => tr f hx (u i)).prod := by
   have := map_list_prod (trHom (G := G) f hx) (List.ofFn u)
-  rw [List.map_ofFn] at this
-  exact this
+  rwa [List.map_ofFn] at this
 
 theorem isTanAt_tr (f : R →+* R) (hx : x' = spMap f ≫ x) {v : epsAt x ⟶ G} (h : IsTanAt G x v) :
     IsTanAt G x' (tr f hx v) := by
@@ -272,8 +271,7 @@ theorem hasInfNorm_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have : (M.map star).det = (starRingEnd ℂ) M.det := by
       rw [RingHom.map_det]; rfl
     rw [this, RCLike.norm_conj]
-  rw [hnat, RCLike.norm_conj, hdet, hdet] at hm
-  exact hm
+  rwa [hnat, RCLike.norm_conj, hdet, hdet] at hm
 
 end GlobalTheory.CompanionTheory.Ar.Flat
 end -- clump:auto

@@ -151,7 +151,7 @@ theorem eq_zero_of_prod {T : Type} [Fintype T] [DecidableEq T] {ι : T → Type}
           rw [Finset.sum_comm]
           refine Finset.sum_congr rfl fun I' _ => ?_
           rw [Finset.sum_ite_eq]
-          simp only [Finset.mem_univ, if_true]
+          simp only [Finset.mem_univ, ite_true]
           ring)
         exact congrFun hc i
       have h3 := IH _ (step (I s)) I
@@ -166,8 +166,7 @@ theorem eq_zero_of_prod {T : Type} [Fintype T] [DecidableEq T] {ι : T → Type}
     ext I'
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton, forall_const]
     exact ⟨fun h => funext h, fun h t => h ▸ rfl⟩
-  rw [h6, Finset.sum_singleton] at h
-  exact h
+  rwa [h6, Finset.sum_singleton] at h
 
 theorem eq_zero_of_tval_invertible : ∀ (T : Type) [Fintype T] [DecidableEq T] (N : T → ℕ) (la : ∀ t, Fin (N t) → ℕ)
     (K : Type) [Field K] [CharZero K] (x : TIdx la → K),
@@ -206,7 +205,7 @@ def genUpperTri (n : ℕ) : Matrix (Fin n) (Fin n) (MvPolynomial (Fin n × Fin n
 theorem genUpperTri_blockTriangular (n : ℕ) : (genUpperTri n).BlockTriangular id := by
   intro i j hij
   simp only [genUpperTri, Matrix.of_apply]
-  rw [if_neg (not_le.mpr (show j < i from hij))]
+  rw [ite_eq_right (not_le.mpr (show j < i from hij))]
 
 theorem colAct_intCast_of_mem {n : ℕ} {la : Fin n → ℕ} {f : Pol n ℤ} (hf : f ∈ nabla la ℤ)
     {S : Type} [CommRing S] (b : Matrix (Fin n) (Fin n) S) (hb : b.BlockTriangular id) :
@@ -319,7 +318,7 @@ theorem eq_zero_of_evalFr {T : Type} [Fintype T] {N : T → ℕ} {K : Type} [Fie
     rw [map_zero, hy, hev]
     by_cases hw : ∀ t, (y t).det ≠ 0
     · rw [h y hw, zero_mul]
-    · push_neg at hw
+    · push Not at hw
       obtain ⟨t, ht⟩ := hw
       rw [Finset.prod_eq_zero (Finset.mem_univ t) ht, mul_zero]
   exact (mul_eq_zero.mp h1).resolve_right hd
@@ -423,8 +422,7 @@ theorem exists_slice (G : MvPolynomial (FrVar N) K)
         simp [Y]
       · ext i j
         simp [Y, Function.update_of_ne ht, DualWeyl.evalAt]
-    rw [h3] at h1
-    exact h1
+    rwa [h3] at h1
   let one : ∀ t, Matrix (Fin (N t)) (Fin (N t)) K := fun t => 1
   have hmem : p ∈ nabla (la a) K := by
     rw [mem_nabla_iff]
@@ -549,8 +547,7 @@ theorem exists_tval_of_triangular : ∀ (T : Type) [Fintype T] [DecidableEq T] (
           simp only [Q, L, Finset.prod_univ_sum, Fintype.piFinset_univ]
   have hLz : ∀ t k k', L t k (z t k') = if k = k' then 1 else 0 := fun t k k' => by
     have h1 := congrFun (congrFun (Matrix.nonsing_inv_mul (A t) ((Matrix.isUnit_iff_isUnit_det _).mp (hA t))) k) k'
-    rw [Matrix.mul_apply, Matrix.one_apply] at h1
-    exact h1
+    rwa [Matrix.mul_apply, Matrix.one_apply] at h1
   have hQz : ∀ J, Q (zK J) = evalFr G (zK J) := fun J => by
     simp only [Q, zK, hLz]
     rw [Finset.sum_eq_single J]
@@ -596,8 +593,7 @@ theorem exists_tval_of_triangular : ∀ (T : Type) [Fintype T] [DecidableEq T] (
               Finset.prod_congr rfl fun t ht => by rw [Function.update_of_ne (Finset.ne_of_mem_erase ht)]]
             ring
           rw [this]
-          refine Submodule.sum_mem _ fun J _ => Submodule.smul_mem _ _ ?_
-          exact hbV a _
+          exact Submodule.sum_mem _ fun J _ => Submodule.smul_mem _ _ (hbV a _)
       have h0 : ∀ k, evalFr G (Function.update y a (z a k)) - Q (Function.update y a (z a k)) = 0 := by
         intro k
         rw [sub_eq_zero]
@@ -793,8 +789,7 @@ theorem exists_coord {f : Rul Xo c} (hf : f ∈ sec Xo c a n) (hs : f ∈ suppOn
         exact (Finset.prod_ne_zero_iff.2 fun i _ => (hb τ).2 i).isUnit)
       (fun τ i j hij => (hb τ).1 hij) fun τ i => ((hb τ).2 i).isUnit
     have h2 : MvPolynomial.map (AlgHom.id c.F c.F).toRingHom G = G := MvPolynomial.map_id G
-    rw [h2] at h
-    exact h
+    rwa [h2] at h
   refine ⟨x, reads_of_test hf.1 hs fun p z y Y s hY hz hc => ?_⟩
   have hred : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
   have hg : ∀ τ, IsUnit ((Y τ)ᵀ).det := fun τ => by rw [Matrix.det_transpose]; exact hY τ

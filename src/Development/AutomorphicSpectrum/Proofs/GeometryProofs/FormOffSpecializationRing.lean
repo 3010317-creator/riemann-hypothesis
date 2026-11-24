@@ -82,7 +82,7 @@ theorem mh_C (r : ℤ) : IsMultiHomog (MvPolynomial.C r : MRing ι) 0 := by
   have hm0 : m = 0 := by
     rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C] at hm
     by_contra hne
-    exact hm (if_neg (Ne.symm hne))
+    exact hm (ite_eq_right (Ne.symm hne))
   subst hm0
   simp
 
@@ -178,8 +178,7 @@ def valMap (hz : z ∈ Small.ptsOver 𝕜 (mCoordIdeal y)) : valRing y z →+* �
       (hv_add a.2.choose_spec b.2.choose_spec)
 
 theorem hasVal_valMap (hz : z ∈ Small.ptsOver 𝕜 (mCoordIdeal y)) (x : valRing y z) :
-    Small.HasVal y (0 : K → ℤ) (x : Ω) z (valMap hz x) := by
-  exact x.2.choose_spec
+    Small.HasVal y (0 : K → ℤ) (x : Ω) z (valMap hz x) := x.2.choose_spec
 
 end Values
 
@@ -207,9 +206,7 @@ theorem exists_subring_val : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
   · intro 𝕜 _ _ z hz hzu
     rw [map_prod] at hzu
     refine ⟨valRing y z, valMap hz, ?_, ?_, fun x => hasVal_valMap hz x⟩
-    · intro b hb
-      exact ⟨_, hv_quot (hg b) (hh b) (e b) (Finset.prod_ne_zero_iff.mp hzu b hb)⟩
-    · intro n hn
-      exact ⟨_, hv_natInv hn⟩
+    · exact fun b hb => ⟨_, hv_quot (hg b) (hh b) (e b) (Finset.prod_ne_zero_iff.mp hzu b hb)⟩
+    · exact fun n hn => ⟨_, hv_natInv hn⟩
 
 end GlobalTheory.CompanionTheory.Ar.Rec.FinRd.ValSub

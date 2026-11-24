@@ -75,13 +75,11 @@ theorem IdealClassesFinite.proof (E) [Field E] [NumberField E] : IdealClassesFin
         obtain ⟨w, hw⟩ := hx
         obtain ⟨v, hv⟩ := hy
         exact ⟨w + v, by push_cast; linear_combination hw + hv⟩
-    intro x hx
-    exact hall ⟨x, hx⟩
+    exact fun x hx => hall ⟨x, hx⟩
   let 𝔞 := scaledIdeal I hI (b : E)
   have hmem : ∀ z ∈ I, ∀ w : 𝓞 E, (w : E) = b * z → w ∈ 𝔞 := by
     intro z hz w hw
-    rw [mem_scaledIdeal, hw, ← mul_assoc, inv_mul_cancel₀ hbne, one_mul]
-    exact hz
+    rwa [mem_scaledIdeal, hw, ← mul_assoc, inv_mul_cancel₀ hbne, one_mul]
   have h𝔞 : 𝔞 ∈ nonZeroDivisors (Ideal (𝓞 E)) := by
     apply mem_nonZeroDivisors_of_ne_zero
     obtain ⟨z, hz, hz0⟩ := (AddSubgroup.bot_or_exists_ne_zero I).resolve_left hne
@@ -296,9 +294,7 @@ theorem LineNormalForm.proof (h : HermitianForm F E W) : LineNormalForm.Statemen
     refine ⟨c * j, ?_, ?_⟩
     · rw [hJ₁]; exact ⟨j, hj, rfl⟩
     · simp [← mul_assoc, inv_mul_cancel₀ hc]
-  have hJne : J ≠ ⊥ := by
-    intro h0
-    exact hJ₁ne (by rw [hJ₁, h0, AddSubgroup.map_bot])
+  have hJne : J ≠ ⊥ := fun h0 => hJ₁ne (by rw [hJ₁, h0, AddSubgroup.map_bot])
   obtain ⟨hdJ, j₀, hj₀J, hj₀0, hdj₀⟩ := hdT J (hT.mem_toFinset.2 hJT) hJfg hJne
   set v := conjHom F E c⁻¹ • v₁ with hv_def
   have hBv : ∀ x, B v x = c⁻¹ * B v₁ x := by

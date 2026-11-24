@@ -103,8 +103,7 @@ theorem lifts_lE (W : LocWach PD LL O v n) (A : ArcP n) {T₁ T₂ : LocLat G Qp
   have hl : lE W e * (lE W k * f) = lE W (k + e) * f := by
     unfold lE
     ring
-  rw [hl] at h5
-  exact h5
+  rwa [hl] at h5
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries.ArcLengthOneTwo
 end -- clump:auto
@@ -235,8 +234,7 @@ theorem arc_length_one_or_two_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
     · simp [htyc] at hbs
     · simp only [Nat.cast_one, hty1, Formalism.MainNotions.LocalTheoryWindows.LT.down.injEq] at hbs
       subst hbs
-      rw [hnn]
-      exact hx''
+      rwa [hnn]
 
   have hNg := liftsAt_thick_letter_type W (arcOf b w S η up size) F c bb sol k₀ hOK hc hthick hcase hl5 hP2 hP9 hpi0
     hSec hGL hFL hO hOv hinj hArc hArcL hNN hW₁ hW₂ hsur rr hkill hbb hk₀ _ hg1 hgdown
@@ -251,7 +249,7 @@ theorem arc_length_one_or_two_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
   refine ⟨ArcLengthOneTwo.deA PD.p (size c) (size (c - 1) + S) + (rr + (arcOf b w S η up size).σ PD.p), ?_, hfin⟩
 
   have hhB : Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size = b + η + S := by
-    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [if_pos ⟨c, hthc⟩]
+    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [ite_eq_left ⟨c, hthc⟩]
   have hSgeq : Formalism.MainNotions.N.Ln17.Sg PD.p b w S η size = Formalism.MainNotions.N.FrobeniusPowerSeries.Sg PD.p (b + η + S) w S η := by
     rw [CaseA.sg_eq]; unfold Formalism.MainNotions.N.Ln17.Sg; rw [hhB]; push_cast; ring
   rw [hSgeq] at hrr hσ ⊢
@@ -267,7 +265,7 @@ theorem arc_length_one_or_two_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
       (Nat.le_of_not_lt hnb) (ArcLengthOneTwo.deA PD.p (size c) (size (c - 1) + S) : ℝ) (by push_cast at hde; exact hde)
     have hBand : Formalism.MainNotions.TruncatedSeriesCountingBounds.Band PD.p b S η size (Real.logb PD.p (2 * (Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size : ℝ))) Cb :=
       ⟨c - 1, hnt1, Or.inl (by rw [sub_add_cancel]; exact hthc), by rw [hhB]; exact hc1.2 Cb hCb⟩
-    have hbandI : bandI PD.p b w S η size Cb = 1 := by unfold bandI; rw [if_pos hBand]
+    have hbandI : bandI PD.p b w S η size Cb = 1 := by unfold bandI; rw [ite_eq_left hBand]
     rw [hbandI]
     linarith [hc1.1]
   · have hlt : (size c : ℝ) / PD.p < (size (c - 1) : ℝ) + S := by
@@ -440,8 +438,7 @@ theorem lifts_scale (W : LocWach PD LL O v n) (A : ArcP n) {T₁ T₂ : LocLat G
     simp only [lE, pow_add, mul_assoc]
   have hfun : (fun kk => if kk = k₀ then lE W (e + k) * f else 0) =
       (fun kk => if kk = k₀ then lE W e * (lE W k * f) else 0) := funext fun kk => by rw [he]
-  rw [hfun]
-  exact h5
+  rwa [hfun]
 
 theorem lE_alg (W : LocWach PD LL O v n) (k : ℕ) :
     lE W k = algebraMap (LetA O n) W.EE (lA W ^ k) := by
@@ -482,7 +479,7 @@ theorem den_step [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (IsLoc
   obtain ⟨x', hx'⟩ := hxd
   refine ⟨de, x', ?_, ?_, ?_⟩
   · rw [hde]; split_ifs <;> omega
-  · intro hlt; rw [hde, if_pos hlt]
+  · intro hlt; rw [hde, ite_eq_left hlt]
   obtain ⟨u₁, hu₁, hfu⟩ := hf
   obtain ⟨F₁, hF₁⟩ := Br.range u₁ hu₁ c
   set G : PowerSeries O := C ((PD.p : ℕ) : O) ^ de * F₁ - P.p 1 ^ y * C x' with hG
@@ -576,8 +573,7 @@ theorem hmax_le' [NeZero n] (Mi hi : ZMod n → ℕ) (j : ZMod n) :
     Mi j + hi j ≤ Formalism.MainNotions.LiftingTheory.Hmax n Mi hi := by
   unfold Formalism.MainNotions.LiftingTheory.Hmax
   have h := Finset.le_sup (f := fun k : ℕ => Mi k + hi k) (Finset.mem_range.2 (ZMod.val_lt j))
-  simp only [ZMod.natCast_zmod_val] at h
-  exact h
+  simpa only [ZMod.natCast_zmod_val] using h
 
 theorem aI_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
     {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L) {b w S η m : ℕ} {up : ZMod n → Bool}
@@ -595,15 +591,15 @@ theorem aI_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
     have h1 := hJA i τ hτ a ha
     have h2 := hηs i
     cases hu : up i
-    · simp only [hu, Mi', hi', Bool.false_eq_true, if_false, Set.mem_union, Set.mem_Icc] at h1 ⊢
+    · simp only [hu, Mi', hi', Bool.false_eq_true, ite_false, Set.mem_union, Set.mem_Icc] at h1 ⊢
       push_cast
       omega
-    · simp only [hu, Mi', hi', if_true, Set.mem_union, Set.mem_Icc] at h1 ⊢
+    · simp only [hu, Mi', hi', ite_true, Set.mem_union, Set.mem_Icc] at h1 ⊢
       push_cast
       omega
   have hwid : ∀ i, Mi' i + hi' i = size i + S + η := by
     intro i
-    cases hu : up i <;> simp only [hu, Mi', hi', Bool.false_eq_true, if_false, if_true] <;> omega
+    cases hu : up i <;> simp only [hu, Mi', hi', Bool.false_eq_true, ite_false, ite_true] <;> omega
   have hsz : ∀ i, size i ≤ b + η := by
     intro i
     by_cases ht : Formalism.MainNotions.TruncatedSeriesCountingBounds.Thick b η size i
@@ -650,8 +646,7 @@ theorem aI_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
   have key := Aa_cut_le PD.p hp11 (b + η + S) w S η (Formalism.MainNotions.LiftingTheory.Hmax n Mi' hi') (size c + S + η)
     (w + S + η) hη1 hHle (by have := hct.2; omega) le_rfl _ _ hst hA
   have ec : (((size c + S + η : ℕ) : ℝ)) = (size c : ℝ) + S + η := by push_cast; ring
-  rw [ec] at key
-  exact key
+  rwa [ec] at key
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries.ArcLengthTwo
 end -- clump:auto
@@ -710,9 +705,7 @@ theorem arc_length_two_case_down [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomai
   have hl5 : 5 ≤ PD.p := by omega
   obtain ⟨hct, hcm⟩ := ArcLengthTwo.arc_len_two_thick_letters c hlen
   have hc1 : ¬ Formalism.MainNotions.TruncatedSeriesCountingBounds.Thick b η size (c + 1) := by
-    have h := hc
-    simp only [arcOf, Finset.mem_filter, Finset.mem_univ, true_and] at h
-    exact h
+    simpa only [arcOf, Finset.mem_filter, Finset.mem_univ, true_and] using hc
   have hupm : up (c - 1) = true := by
     cases h : up (c - 1)
     · exact absurd (h.trans hup.symm) hdiff
@@ -744,8 +737,7 @@ theorem arc_length_two_case_down [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomai
     interval_cases s
     · simp only [Nat.cast_zero, sub_zero, hty0, Formalism.MainNotions.LocalTheoryWindows.LT.down.injEq] at hbs
       subst hbs
-      rw [hnn]
-      exact hg2
+      rwa [hnn]
     · simp [hty1] at hbs
   have hgl : LiftsAt W (arcOf b w S η up size) F c bb sol k₀ g (rr + (arcOf b w S η up size).σ PD.p) :=
     liftsAt_thick_letter_type W (arcOf b w S η up size) F c bb sol k₀ hOK hc hthick hcase hl5 hP2 hP9 hpi0 hSec hGL hFL
@@ -767,7 +759,7 @@ theorem arc_length_two_case_down [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomai
   refine ⟨rr + (arcOf b w S η up size).σ PD.p + de, ?_, hfin⟩
 
   have hhB : Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size = b + η + S := by
-    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [if_pos ⟨c, hct⟩]
+    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [ite_eq_left ⟨c, hct⟩]
   have hSgeq : Formalism.MainNotions.N.Ln17.Sg PD.p b w S η size = Formalism.MainNotions.N.FrobeniusPowerSeries.Sg PD.p (b + η + S) w S η := by
     unfold Formalism.MainNotions.N.Ln17.Sg Formalism.MainNotions.N.FrobeniusPowerSeries.Sg; rw [hhB]
   rw [hSgeq] at hrr hσ ⊢
@@ -808,9 +800,9 @@ theorem arc_length_two_case_down [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDomai
     linarith
   by_cases hband : Formalism.MainNotions.TruncatedSeriesCountingBounds.Band PD.p b S η size
       (Real.logb PD.p (2 * (Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size : ℝ))) Cb
-  · have h1 : bandI PD.p b w S η size Cb = 1 := by unfold bandI; rw [if_pos hband]
+  · have h1 : bandI PD.p b w S η size Cb = 1 := by unfold bandI; rw [ite_eq_left hband]
     rw [h1]; linarith
-  · have h0 : bandI PD.p b w S η size Cb = 0 := by unfold bandI; rw [if_neg hband]
+  · have h0 : bandI PD.p b w S η size Cb = 0 := by unfold bandI; rw [ite_eq_right hband]
     rw [hhB] at hband
     have hnb := fun hle => hband ⟨c - 1, hcm, Or.inl (by rw [sub_add_cancel]; exact hct), hle⟩
     have hη4 := k2 Cb hCb hge hnb
@@ -846,8 +838,7 @@ theorem hmax_le [NeZero n] (Mi hi : ZMod n → ℕ) (j : ZMod n) :
     Mi j + hi j ≤ Formalism.MainNotions.LiftingTheory.Hmax n Mi hi := by
   unfold Formalism.MainNotions.LiftingTheory.Hmax
   have h := Finset.le_sup (f := fun k : ℕ => Mi k + hi k) (Finset.mem_range.2 (ZMod.val_lt j))
-  simp only [ZMod.natCast_zmod_val] at h
-  exact h
+  simpa only [ZMod.natCast_zmod_val] using h
 
 theorem ai_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
     {T₁ T₂ : LocLat G Qp LL O} (F : LatHom T₁.L T₂.L) {b w S η m : ℕ} {up : ZMod n → Bool}
@@ -881,19 +872,19 @@ theorem ai_le [NeZero n] [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL O v n)
     have h1 := hJA i τ hτ x hx
     have h2 := hηs i
     cases hu : up i
-    · simp only [hu, Mi', hi', Bool.false_eq_true, if_false, Set.mem_union, Set.mem_Icc] at h1 ⊢
+    · simp only [hu, Mi', hi', Bool.false_eq_true, ite_false, Set.mem_union, Set.mem_Icc] at h1 ⊢
       push_cast
       omega
-    · simp only [hu, Mi', hi', if_true, Set.mem_union, Set.mem_Icc] at h1 ⊢
+    · simp only [hu, Mi', hi', ite_true, Set.mem_union, Set.mem_Icc] at h1 ⊢
       push_cast
       omega
   have hHbox : ∀ i, Mi' i + hi' i ≤ h + η := by
     intro i
     have := hF.1 i
-    cases hu : up i <;> simp only [hu, Mi', hi', Bool.false_eq_true, if_false, if_true] <;> omega
+    cases hu : up i <;> simp only [hu, Mi', hi', Bool.false_eq_true, ite_false, ite_true] <;> omega
   have hbx : ∀ i, Mi' i + hi' i = size i + S + η := by
     intro i
-    cases hu : up i <;> simp only [hu, Mi', hi', Bool.false_eq_true, if_false, if_true] <;> omega
+    cases hu : up i <;> simp only [hu, Mi', hi', Bool.false_eq_true, ite_false, ite_true] <;> omega
   obtain ⟨hs, -⟩ := hWR hcase T₁ T₂ F Mi' hi' hSur hbox a
   set H := Formalism.MainNotions.LiftingTheory.Hmax n Mi' hi' with hHdef
   have hHle : H ≤ h + η := Finset.sup_le fun k _ => hHbox _
@@ -1038,7 +1029,7 @@ theorem exists_exponent_le_liftsAt_arcOf [NeZero n] [Fintype (K →ₐ[Qp] LL)] 
     exact hm2 ⟨by norm_num, by rw [e2]; exact hcon⟩
 
   have hhB : Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size = b + η + S := by
-    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [if_pos ⟨c - 1, hT1⟩]
+    unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB; rw [ite_eq_left ⟨c - 1, hT1⟩]
   have eSg : Formalism.MainNotions.N.Ln17.Sg PD.p b w S η size = Formalism.MainNotions.N.FrobeniusPowerSeries.Sg PD.p (b + η + S) w S η := by
     rw [show Formalism.MainNotions.N.Ln17.Sg PD.p b w S η size =
       Formalism.MainNotions.N.FrobeniusPowerSeries.Sg PD.p (Formalism.MainNotions.TruncatedSeriesCountingBounds.hB b w S η size) w S η from rfl, hhB]
@@ -1169,7 +1160,7 @@ theorem exists_exponent_le_liftsAt_arcOf [NeZero n] [Fintype (K →ₐ[Qp] LL)] 
       bandI PD.p b w S η size Cb := by
     split_ifs with h1
     · unfold bandI
-      rw [hhB, if_pos]
+      rw [hhB, ite_eq_left]
       exact ⟨c - 2, hnt2, Or.inl (by rw [e21]; exact hT1), h1⟩
     · unfold bandI; split_ifs <;> norm_num
   have hηb0 : (0 : ℝ) ≤ η := Nat.cast_nonneg _

@@ -231,8 +231,7 @@ theorem sq_obj_subsingleton {R : Type} [CommRing R] {C : Type u} [Category.{v} C
   have h0 : ∀ x : sqM a b T, x = 0 := by
     rintro ⟨x, hx⟩
     obtain ⟨y, hy, rfl⟩ := (Ideal.mem_map_iff_of_surjective _ Ideal.Quotient.mk_surjective).1 hx
-    refine Subtype.ext ?_
-    exact Ideal.Quotient.eq_zero_iff_mem.2 (h ▸ hy)
+    exact Subtype.ext (Ideal.Quotient.eq_zero_iff_mem.2 (h ▸ hy))
   exact ⟨fun x y => (h0 x).trans (h0 y).symm⟩
 
 theorem HU_gr_neg {b : Base} (L : b.Fun) (Q : ObjectProperty (Thick L)) (r : ℤ) (hr : r < 0) (j : ℕ) :
@@ -713,8 +712,7 @@ theorem GlobalTheory.CompanionTheory.ConeOne.oneK_ne_zero : ∀ {K : Type} [Fiel
   have h1 := (Submodule.Quotient.mk_eq_zero _).1 h
   have h2 : (fun s : ComposableArrows (Thick (smFun X q)) 0 =>
       (1 : (thA (smFun X q)).obj (s.obj (Fin.last 0)))) = 0 := h1
-  have h3 := congrFun h2 (ComposableArrows.mk₀ (resT q x))
-  exact one_ne_zero (α := X.residueField x) h3
+  exact one_ne_zero (α := X.residueField x) (congrFun h2 (ComposableArrows.mk₀ (resT q x)))
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -776,7 +774,7 @@ theorem dlog_ratio_det {K R : Type} [Field K] [CommRing R] [Algebra K R] (n : �
   have hg0 : g 0 = u 0 := by simp [g, hu]
   have hgs : ∀ (l : Fin (n + 1)) (h : (l : ℕ) ≠ 0), g l = (t ⟨l - 1, by omega⟩ : R) * u l := by
     intro l h
-    exact dif_neg h
+    exact dite_eq_right h
   have hgu : ∀ l, IsUnit (g l) := by
     intro l
     by_cases h : (l : ℕ) = 0
@@ -805,11 +803,11 @@ theorem dlog_ratio_det {K R : Type} [Field K] [CommRing R] [Algebra K R] (n : �
           have := congrArg Fin.val e
           simp at this
           omega
-        simp only [if_true, hne, if_false]
+        simp only [ite_true, hne, ite_false]
         ring
       · by_cases hs : (k : ℕ) + 1 = l
         · have hp : k = ⟨(l : ℕ) - 1, by omega⟩ := Fin.ext (by simp; omega)
-          rw [if_neg hkl, if_pos hp, if_neg hkl, if_pos hs, ← hp]
+          rw [ite_eq_right hkl, ite_eq_left hp, ite_eq_right hkl, ite_eq_left hs, ← hp]
           have := htu k
           linear_combination (-(u l)) * this
         · have hp : k ≠ ⟨(l : ℕ) - 1, by omega⟩ := by
@@ -817,7 +815,7 @@ theorem dlog_ratio_det {K R : Type} [Field K] [CommRing R] [Algebra K R] (n : �
             have := congrArg Fin.val e
             simp at this
             omega
-          rw [if_neg hkl, if_neg hp, if_neg hkl, if_neg hs]
+          rw [ite_eq_right hkl, ite_eq_right hp, ite_eq_right hkl, ite_eq_right hs]
           simp
   have hB : B.det = (-1) ^ (n + 1) := by
     rw [Matrix.det_of_upperTriangular]
@@ -1101,8 +1099,7 @@ theorem powK_ne_zero_of (hG : LocalCohomologySetup.GeoSetupP) (hR : LocalCohomol
           ((thFil (smFun X q) ((n : ℤ) + 1 + 1)).res (capS W Finset.univ).ι)
           (cupListC ((capS W Finset.univ).ι ⋙ (thP (smFun X q)).A) ℓ) c0 := by
       have := _root_.GlobalTheory.CompanionTheory.ConeRepCup.exists_rep (sP (capS W Finset.univ)) (sFil (capS W Finset.univ)) (_root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil _) ℓ hℓcoc hℓ1
-      rw [Nat.cast_succ] at this
-      exact this
+      rwa [Nat.cast_succ] at this
     obtain ⟨c0, hc0⟩ := hc0'
     obtain ⟨ω, f, hf, hdf, hrep⟩ := _root_.GlobalTheory.CompanionTheory.ConeZig.cech_top_cup_power (thP (smFun X q)) (thFil (smFun X q)) (_root_.GlobalTheory.CompanionTheory.DPFil.isFil_thFil _) (n + 2) n W hsU
       (_root_.GlobalTheory.CompanionTheory.ConeSite.wK_rel q i y (n + 2)) hvan1 hvan2 (e • zK Λ (n + 2)) hze hz1 b hb1 hb hzero c0 hc0
@@ -1131,8 +1128,7 @@ theorem powK_ne_zero_of (hG : LocalCohomologySetup.GeoSetupP) (hR : LocalCohomol
         have e3 := _root_.GlobalTheory.CompanionTheory.ConeEval.ev_rs_eq T.obj (hUk k.succ) h h1
           ((i.appLE (Proj.basicOpen (MvPolynomial.homogeneousSubmodule (Fin (N + 1)) K) (y k.succ)) (uy i y k.succ)
             le_rfl).hom (yQ y hy k.castSucc k.succ))
-        refine e1.trans (e3.symm.trans ?_)
-        exact congrArg (ev T.obj h) e2
+        exact e1.trans (e3.symm.trans (congrArg (ev T.obj h) e2))
       have hℓeq : ℓ = fun k => dlogC (capS W Finset.univ) (n + 2) (ĝ k) := funext fun k =>
         congrArg (resB (thA (smFun X q))
           (fun T h α _ => h α (Finset.mem_univ α) : capS W Finset.univ ≤ capS W {k.castSucc, k.succ})) (hĝd k.castSucc k.succ)

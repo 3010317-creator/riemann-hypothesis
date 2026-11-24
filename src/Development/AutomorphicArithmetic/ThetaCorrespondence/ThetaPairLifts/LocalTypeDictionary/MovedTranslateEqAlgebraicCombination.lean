@@ -148,14 +148,7 @@ theorem std_eq_colLat_one' {D : D7} {n : ℕ} (L : Submodule (𝓞 D.host.E) (Fi
 
 theorem even_bot' {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW} (hX : IsBottomTri W i j X) : Even (A.rank * WW.rank) := by
-  refine Even.mul_left ?_ _
-  have h1 := hX.rank
-  have h2 := hX.rank'
-  have h3 := hX.is.rank
-  have h4 := SqNum.ranks_exact D i j
-  rw [← h3, h1, h2]
-  refine ⟨SqNum.halfRank D i j - (D.R.m - (j.1 + 1)) / 2 - (D.R.m - j.1) / 2, ?_⟩
-  omega
+  exact GlobalTheory.BotTransJet.even_bot hX
 
 theorem vac_jet_ne_zero {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW} (hI : ∀ D, GlobalTheory.NormSum.Inp D) (hX : IsBottomTri W i j X) :
@@ -170,8 +163,7 @@ theorem vac_jet_ne_zero {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : G
     GlobalTheory.VacConj.isVacO_conj_negSp W.ψ W.θ A WW X.rA.s X.rW.s _ _ X.vac hIs.isVac
   have hf : IsVacO W.ψ W.θ A WW X.rA.s X.rW.s (colLat (1 : GL (Fin A.rank) D.host.E) : Set _)
       (colLat (1 : GL (Fin WW.rank) D.host.E) : Set _) f := by
-    rw [← std_eq_colLat_one' X.rA.Λ hX.std.2.1, ← std_eq_colLat_one' X.rW.Λ hX.stdW.2.1]
-    exact hf0
+    rwa [← std_eq_colLat_one' X.rA.Λ hX.std.2.1, ← std_eq_colLat_one' X.rW.Λ hX.stdW.2.1]
   have hS : Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) (1 : GL (Fin A.rank) D.host.E).1 * A.gram *
       (1 : GL (Fin A.rank) D.host.E).1 = 1 := by
     rw [hX.std.1]
@@ -251,8 +243,7 @@ theorem moved_vacuum_jet_ne_zero : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh
   have hsW : ∀ τ, X.rW.s τ = 1 := fun τ => (hX.stdW.2.2 τ).1
   have hBA : ∀ τ, X.rA.B τ = 1 := fun τ => by rw [(hX.std.2.2 τ).2]
   obtain ⟨k₀, hk₀⟩ := vac_jet_ne_zero hI hX
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   set γs := (ofSgn true A).symm γ with hγs
   have hγsQ : γs ∈ GQ (neg A) :=
     (GlobalTheory.SgnIdent.mem_GQ_sgn true A γs).2 (by rw [hγs, MulEquiv.apply_symm_apply]; exact hγ)
@@ -360,8 +351,7 @@ theorem conjT_mul_compAt {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D
     unfold gramAt
     rw [hV]
     exact Matrix.map_one _ (map_zero _) (map_one _)
-  rw [hg, Matrix.mul_one] at h1
-  exact h1
+  rwa [hg, Matrix.mul_one] at h1
 
 theorem om_pureTensorO_vac {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW} (hX : IsBottomTri W i j X) (t : T) (g : GA D A)
@@ -403,8 +393,7 @@ theorem om_pureTensorO_vac {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
   have hunit : ∀ τ, (((u τ)⁻¹).transpose).map (starRingEnd ℂ) = u τ := fun τ =>
     conj_invT_of_unitary' (conjT_mul_compAt hθ hX.std.1 g τ)
   rw [funext hunit] at key
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]
 
 end GlobalTheory.MovedJet
 
@@ -556,8 +545,7 @@ theorem rational_vacuum_eq_smul_algebraic_combination : ∀ {D : D7} {T : Type} 
   have hsdS : IsSelfDualC (GlobalTheory.Grid.neg A) X.rA.Λ := GlobalTheory.RowTest.isSelfDualC_neg' hI.rigA.1
   have hx : (GlobalTheory.Grid.ofSgn true A).symm (γ * a) ∈ GfC (GlobalTheory.Grid.neg A) := by
     show (GlobalTheory.Grid.ofSgn true A) ((GlobalTheory.Grid.ofSgn true A).symm (γ * a)) ∈ GfC A
-    rw [MulEquiv.apply_symm_apply]
-    exact hfa
+    rwa [MulEquiv.apply_symm_apply]
   obtain ⟨κ₁, F, hF, hκ₁⟩ := GlobalTheory.T.weilDatum_finite_pair_vacuum_algebraic_combination hI.isVac hsdS hI.rigW.1 cS cT hom _ hx _ hfa'
   obtain ⟨C, -, hC⟩ := GlobalTheory.T.realPoint_acts_on_vacuum_by_algebraicScalar hX t γ hγ a ha γ' hγ' a' ha' hfa hfa'
   have e1 : X.ω t (γ * a, γ' * a') X.vac = κ₁ • F := hκ₁
@@ -781,8 +769,7 @@ theorem induct_suppSplit : ∀ {D : D7} (V : HSp D) (N : ℕ) (Q : GA D V → Pr
     refine hloc e PP hP ?_ _ (GlobalTheory.LocalApprox.cutAt_mem_GfC V g {v}) ?_
     · intro hm
       refine hv'.2 ?_
-      rw [← hco, Ideal.mem_comap, map_natCast]
-      exact hm
+      rwa [← hco, Ideal.mem_comap, map_natCast]
     · intro i j
       rw [he.2.2, hpl v]
       exact GlobalTheory.LocalApprox.cutAt_supp V g {v} i j
@@ -917,8 +904,7 @@ theorem vacuum_hecke : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
     (thetaFunO_stdLatSp hg).2 hX.is.isVac.2.theta
   have h := GlobalTheory.HeckeVacuum.om_elt hW hS hT hL he hα hf hX.is.isVac.2.lat hΔ
   have e1 : X.ω t (1, α) X.vac = ((X.ω t).toSgn true) ((GlobalTheory.Grid.ofSgn true A).symm 1, α) X.vac := rfl
-  rw [e1, map_one]
-  exact h
+  rwa [e1, map_one]
 
 end GlobalTheory.RowEx.BottomHecke
 end -- clump:auto
@@ -1170,8 +1156,7 @@ theorem supp_mem_closure : ∀ {D : D7} (V : HSp D) (P : Pl D.host.E) (e : AE D)
     · exact Or.inl (Or.inl ⟨(hK g hg).2 (hgx ▸ hx), hg⟩)
     · exact Or.inl (Or.inr ⟨k, (hH k g).2 ⟨hg, hgx ▸ hx⟩⟩)
     · refine Or.inr ⟨k, (hH k g⁻¹).2 ⟨suppAt_inv hg, ?_⟩⟩
-      rw [map_inv, hgx]
-      exact hx
+      rwa [map_inv, hgx]
   | one =>
     intro g hg hg1
     have : g = 1 := hinj _ _ hg s1 (by rw [hg1, map_one])
@@ -1352,11 +1337,11 @@ theorem algType_of_even {I : Type} [Fintype I] {φ : I → E →+* ℂ} {c : I �
   refine Finset.prod_congr rfl fun i _ => ?_
   rw [Finset.prod_mul_distrib, Finset.prod_inv_distrib]
   have e1 : ∏ ψ : E →+* ℂ, u ψ ^ (if φ i = ψ then c i else 0) = u (φ i) ^ c i := by
-    rw [Finset.prod_eq_single (φ i) (fun ψ _ hψ => by rw [if_neg (Ne.symm hψ), zpow_zero]) (by simp)]
+    rw [Finset.prod_eq_single (φ i) (fun ψ _ hψ => by rw [ite_eq_right (Ne.symm hψ), zpow_zero]) (by simp)]
     simp
   have e2 : ∏ ψ : E →+* ℂ, u ψ ^ (if (starRingEnd ℂ).comp (φ i) = ψ then c i else 0) =
       u ((starRingEnd ℂ).comp (φ i)) ^ c i := by
-    rw [Finset.prod_eq_single ((starRingEnd ℂ).comp (φ i)) (fun ψ _ hψ => by rw [if_neg (Ne.symm hψ), zpow_zero]) (by simp)]
+    rw [Finset.prod_eq_single ((starRingEnd ℂ).comp (φ i)) (fun ψ _ hψ => by rw [ite_eq_right (Ne.symm hψ), zpow_zero]) (by simp)]
     simp
   rw [e1, e2]
 
@@ -1565,8 +1550,7 @@ theorem split_vacuum_algebraic_combination : ∀ {D : D7} {T : Type} [Finite T] 
       exact (congrArg (fun y : GA D WW => IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (1, y) X.vac))
         (inv_inv x)).mp h2
   · show IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t 1 X.vac)
-    rw [map_one]
-    exact vac
+    rwa [map_one]
   · intro x y _ _ hx hy
     have e1 : ((1 : GA D A), x * y) = (1, x) * (1, y) := by simp
     rw [e1, map_mul, Module.End.mul_apply]

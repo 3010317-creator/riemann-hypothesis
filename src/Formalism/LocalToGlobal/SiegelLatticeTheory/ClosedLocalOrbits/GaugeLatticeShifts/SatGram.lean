@@ -428,8 +428,7 @@ theorem gt_mk {u' : D.what₂.Word}
 theorem gterm_G {u u' : D.what₂.Word}
     (t : GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u')) :
     t.G = Gval (lf D (X.Fu u)) t.frame := by
-  have hΛ := (Y.rowsOK u).1 t.lam t.mem
-  exact gt_mk ((_root_.term_function_const D u u' (X.Fu u) t.lam hΛ).1) _
+  exact gt_mk ((_root_.term_function_const D u u' (X.Fu u) t.lam ((Y.rowsOK u).1 t.lam t.mem)).1) _
 
 theorem corankPos_tO (u u' : D.what₂.Word) : (Y.tO u u').CorankPos := by
   intro t t' hr hG _
@@ -437,11 +436,11 @@ theorem corankPos_tO (u u' : D.what₂.Word) : (Y.tO u u').CorankPos := by
   have hlam' : t.lam' = t'.lam' := congrArg (fun r => (r.2.1 : Submodule (𝓞 D.host.E) (VS D).V)) hr
   show 1 ≤ s0T t t'
   unfold s0T
-  rw [if_pos ⟨hlam, hlam'⟩]
+  rw [ite_eq_left ⟨hlam, hlam'⟩]
   have hΛ := (Y.rowsOK u).1 t.lam t.mem
   have hGv : Gval (lf D (X.Fu u)) t.frame ≠ 0 := by
     rw [← gterm_G Y t]
-    intro h; apply hG; show TermOp.Gt t = 0; unfold TermOp.Gt; rw [if_pos h]
+    intro h; apply hG; show TermOp.Gt t = 0; unfold TermOp.Gt; rw [ite_eq_left h]
   exact pair_corank_pos D.host.E (VS D) D.R.rS D.R.k (Formalism.L2.SG.Corank.finrank_VS D) t.lam
     hΛ.1.1 _ _ (lf D (X.Fu u)) t.frame t'.frame (t'.lin * t.lin⁻¹) hΛ.2.1.2.2.1 t.rep.2.2.2.2.1 hGv
 
@@ -454,7 +453,7 @@ theorem idDegenerate_tO (u u' : D.what₂.Word) : (Y.tO u u').IdDegenerate := by
   have hG' : t.G = 0 := hG
   show TermOp.Gt t = 0
   unfold TermOp.Gt
-  rw [if_pos hG']
+  rw [ite_eq_left hG']
 
 end Corank
 
@@ -482,7 +481,7 @@ theorem zs_map (S : Set τ) (intersection_update_fsHerm_neg_one : τ → Q) (ιt
     · have h' : ¬ (φ t ∈ S ∧ intersection_update_fsHerm_neg_one (φ t) = q) := fun h'' => h ((hS t).2 h'')
       have e1 : ¬ (φ t ∈ S ∧ intersection_update_fsHerm_neg_one (φ t) = q ∧ ιt (φ t) = f i) := fun h3 => h' ⟨h3.1, h3.2.1⟩
       have e2 : ¬ (t ∈ S ∧ intersection_update_fsHerm_neg_one t = q ∧ ιt t = i) := fun h3 => h ⟨h3.1, h3.2.1⟩
-      rw [if_neg e1, if_neg e2, map_zero]
+      rw [ite_eq_right e1, ite_eq_right e2, map_zero]
   simp_rw [hpt]
   exact (U.toContinuousLinearEquiv.map_tsum).symm
 
@@ -564,8 +563,7 @@ theorem mem_ker_jointR (TR : TypedRed X) (x : ↥(IntAf X.B.I.F X.B.I.E)) :
     x ∈ RingHom.ker (jointR TR) ↔ ZMod' X.B.I X.B.g (X.ew * x) := by
   rw [RingHom.mem_ker, ← TR.res_ker]
   constructor
-  · intro h v
-    exact congrFun h v
+  · exact fun h v => congrFun h v
   · intro h
     funext v
     exact h v
@@ -674,8 +672,7 @@ theorem card_prod (hN : GCount X) (TR : TypedRed X) :
     rw [hcard]
     constructor
     · intro h
-      rw [← hinj j i h]
-      exact hj
+      rwa [← hinj j i h]
     · intro hi
       have hij : i = j := by
         by_contra hne
@@ -750,9 +747,7 @@ theorem cardU_eq (F : Type) [Field F] [Fintype F] (p : ℕ) [Fact p.Prime] (h : 
     map_eq_zero_iff _ (eqZ F p h).injective]
   constructor
   · rintro ⟨h1, h2⟩
-    refine ⟨?_, h1⟩
-    intro i j hij
-    exact h2 i j hij
+    exact ⟨fun i j hij => h2 i j hij, h1⟩
   · rintro ⟨h1, h2⟩
     exact ⟨h2, fun i j hij => h1 i j hij⟩
 
@@ -765,7 +760,7 @@ theorem gamma_one_eq_prod_card_ratio (TR : TypedRed X) :
     intro v
     have hU1 : Formalism.L2.SG.GGMirabolic.psiNat (TR.psi0 v) (1 : GL (Fin D.R.k) (TR.Fq v)) = 1 := by
       unfold Formalism.L2.SG.GGMirabolic.psiNat
-      rw [if_pos]
+      rw [ite_eq_left]
       · have h0 : (∑ i : Fin D.R.k, ∑ j : Fin D.R.k, if (j : ℕ) = (i : ℕ) + 1 then
             (1 : Matrix (Fin D.R.k) (Fin D.R.k) (TR.Fq v)) i j else 0) = 0 := by
           apply Finset.sum_eq_zero
@@ -842,8 +837,7 @@ theorem card_typ (hN : GCount X) (i : Fin 2) :
     split_ifs with h0
     · constructor
       · intro h
-        rw [← hinj 0 i h]
-        exact h0
+        rwa [← hinj 0 i h]
       · intro hi
         by_contra hne
         fin_cases i
@@ -852,8 +846,7 @@ theorem card_typ (hN : GCount X) (i : Fin 2) :
     · have h1 : ((D.host.g 1 : ℕ) : 𝓞 X.B.I.F) ∈ p.1.asIdeal := hp.resolve_left h0
       constructor
       · intro h
-        rw [← hinj 1 i h]
-        exact h1
+        rwa [← hinj 1 i h]
       · intro hi
         fin_cases i
         · exact absurd hi h0

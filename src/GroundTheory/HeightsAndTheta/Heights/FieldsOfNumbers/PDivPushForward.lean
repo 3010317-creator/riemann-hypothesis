@@ -42,10 +42,10 @@ theorem DivPushForward.proof (hC : ContractRelDimLe.Statement.{u})
   let M : Ideal (MRing (fun k => ι' (j k)) F) → Ideal (MRing ι' F) → ℤ := fun W W' =>
     if contractPrime j W' = W ∧ relDim W = (n : ℕ) then rd W' else 0
   have hM0 : ∀ W W', ¬ (contractPrime j W' = W ∧ relDim W = (n : ℕ)) → M W W' = 0 :=
-    fun _ _ h => if_neg h
+    fun _ _ h => ite_eq_right h
   have hM1 : ∀ (W : Ideal (MRing (fun k => ι' (j k)) F)) (W' : Ideal (MRing ι' F)) [hW' : W'.IsPrime], contractPrime j W' = W → relDim W = (n : ℕ) →
       M W W' = (relDeg j W' : ℤ) :=
-    fun _ _ hW' hc hd => (if_pos ⟨hc, hd⟩).trans (dif_pos hW')
+    fun _ _ hW' hc hd => (ite_eq_left ⟨hc, hd⟩).trans (dite_eq_left hW')
 
   have step1 : ∀ W', D' W' * N' W' = ∑ᶠ W, D' W' * M W W' * N W := by
     intro W'
@@ -57,10 +57,8 @@ theorem DivPushForward.proof (hC : ContractRelDimLe.Statement.{u})
     have hle := hC F K K' j ι' W' hW'
     rw [hdW'] at hle
     rcases hle.lt_or_eq with hlt | heq
-    · rw [h2 W' hW' hdW' hlt]
-      rw [hM0 _ W' (fun h => (ne_of_lt hlt) h.2), mul_zero, zero_mul]
-    · rw [h1 W' hW' hdW' heq]
-      rw [@hM1 _ W' hW'.isPrime rfl heq]
+    · rw [h2 W' hW' hdW' hlt, hM0 _ W' (fun h => (ne_of_lt hlt) h.2), mul_zero, zero_mul]
+    · rw [h1 W' hW' hdW' heq, @hM1 _ W' hW'.isPrime rfl heq]
       ring
 
   have step2 : ∀ W, ∑ᶠ W', D' W' * M W W' = relDeg j P' * D W := by

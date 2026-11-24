@@ -100,7 +100,7 @@ theorem gram_moved (F : FlagG S r T) (F1 F2 : FlagG S r T') (M U : Matrix (Fin (
     intro A hA t a b
     simp only [mul_ite, mul_zero, ite_and]
     rw [Finset.sum_eq_single (Fin.last r), Finset.sum_eq_single (Fin.last r)]
-    · simp only [if_true, upUni_last hA]
+    · simp only [ite_true, upUni_last hA]
       by_cases h1 : a = Fin.last r <;> by_cases h2 : b = Fin.last r <;> simp [h1, h2]
     · intro j _ hj; simp [hj]
     · simp
@@ -121,15 +121,13 @@ theorem gram_moved (F : FlagG S r T) (F1 F2 : FlagG S r T') (M U : Matrix (Fin (
   rcases i with a | a <;> rcases j with b | b
   · simp only [tupMU, Sum.elim_inl]
     rw [hexp]
-    simp only [hFF]
-    exact hdiag M hM (-T) a b
+    simpa only [hFF] using hdiag M hM (-T) a b
   · exact hcross a b
   · rw [hT_swap, hcross b a, ← hT_swap]
     rfl
   · simp only [tupMU, Sum.elim_inr]
     rw [hexp]
-    simp only [hFF']
-    exact hdiag U hU (-T') a b
+    simpa only [hFF'] using hdiag U hU (-T') a b
 
 theorem tupMU_indep (F : FlagG S r T) (F1 : FlagG S r T') (M U : Matrix (Fin (r + 1)) (Fin (r + 1)) E)
     (hM : IsUpUni M) (hU : IsUpUni U) (hG : Gflag F F1 ≠ 0) : LinearIndependent E (tupMU F F1 M U) := by

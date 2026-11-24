@@ -739,8 +739,7 @@ theorem invariant_prob_eq : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTop
     simp only [measure_univ, Measure.smul_apply, smul_eq_mul] at this
     rw [Measure.map_apply (measurable_cls Γ) MeasurableSet.univ] at this
     simpa using this.symm
-  rw [← ENNReal.eq_inv_of_mul_eq_one_left h1]
-  exact key
+  rwa [← ENNReal.eq_inv_of_mul_eq_one_left h1]
 
 end GlobalTheory.LatticeQuotUniq
 end -- clump:auto
@@ -783,7 +782,7 @@ theorem invProb_iff (V : HSp D) (hP : VolPairEx V) (hV : FinVol V) (ν : Measure
   have hV' := hV
   rw [FinVol, muQ_univ] at hV'
   have hq : muQ1 V = ((volPair V).1 (volPair V).2)⁻¹ • ((volPair V).1.restrict (volPair V).2).map (autMk V) := by
-    rw [muQ1, if_pos (show _ ∧ _ from hV), muQ_univ]; rfl
+    rw [muQ1, ite_eq_left (show _ ∧ _ from hV), muQ_univ]; rfl
   constructor
   · rintro ⟨h1, h2⟩
     rw [hq]
@@ -858,8 +857,7 @@ theorem val_transl_nonneg (hpq : 1 ≤ Dw.p + Dw.q) (hA : l.A.Coprime l.M) (γ :
   have h0 : 0 ≤ nval S.V n (evI y' f) := h la _ ⟨PtV.mk la ho y' hy () trivial, rfl⟩
   have e1 : evI y (transl Xo c γ f) = evI y' f := evR_transl hpq hA γ hf y.1
   show 0 ≤ nval S.V n (evI y (transl Xo c γ f))
-  rw [e1]
-  exact h0
+  rwa [e1]
 
 variable {σ : c.F →+* ℂ} {r : ℕ} {U : Unf Xo c σ r} {g : ℕ} {e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ)}
   {F : FamilyUnif Xo (σ.comp (IntermediateField.inclusion c.le).toRingHom) (fun j => relab c σ (e j).1)}
@@ -884,9 +882,9 @@ theorem norm_rdU_transl (hσ : GoodEmb c σ) (hU : IsUnf U) (hpq : 1 ≤ Dw.p + 
   obtain ⟨t₀, ht⟩ := GlobalTheory.GeoLevel.exists_frBor_gen _ _ a₁ b₁
   have key : ∀ (w : Ix Dw → ℤ), ∀ f ∈ secZ Xo c w, rdU U (transl Xo c γ f) k x =
       toC (t₀ : CAt σ) ^ w none * rdU U f k' (lact δ (castFr h.mt.psi x)) := fun w f hf => by
-    have v1 : rdU U (transl Xo c γ f) k x = toC (evR Xo c (transl Xo c γ f) (U.un k ⟨x, hx⟩)) := dif_pos hx
+    have v1 : rdU U (transl Xo c γ f) k x = toC (evR Xo c (transl Xo c γ f) (U.un k ⟨x, hx⟩)) := dite_eq_left hx
     have v2 : rdU U f k' (lact δ (castFr h.mt.psi x)) = toC (evR Xo c f (U.un k' ⟨_, h.mt.mem_dom hx⟩)) :=
-      dif_pos (h.mt.mem_dom hx)
+      dite_eq_left (h.mt.mem_dom hx)
     rw [v1, v2, evR_transl hpq hA' γ hf, GlobalTheory.FlagTan.evR_frBor hf ht, Fintype.prod_option]
     simp only [Option.elim, one_zpow, Finset.prod_const_one, mul_one]
     exact congrArg (· * toC (evR Xo c f (U.un k' ⟨_, h.mt.mem_dom hx⟩))) (Units.val_zpow_eq_zpow_val (α := ℂ) t₀ _)

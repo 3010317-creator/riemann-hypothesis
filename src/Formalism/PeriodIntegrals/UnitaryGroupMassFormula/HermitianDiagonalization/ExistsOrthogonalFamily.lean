@@ -110,14 +110,13 @@ theorem exists_orthogonal_family [CharZero E] (σ : E →+* E) :
   intro k
   induction k with
   | zero =>
-    intro V _ _ _ hk h hh
-    exact ⟨Fin.elim0, linearIndependent_empty_type, fun i => Fin.elim0 i⟩
+    exact fun V _ _ _ hk h hh => ⟨Fin.elim0, linearIndependent_empty_type, fun i => Fin.elim0 i⟩
   | succ k ih =>
     intro V _ _ _ hk h hh
     by_cases hzero : ∀ x, h x x = 0
     · let b := Module.finBasisOfFinrankEq E V hk
       exact ⟨b, b.linearIndependent, fun i j _ => hh.eq_zero_of_diag hzero _ _⟩
-    · push_neg at hzero
+    · push Not at hzero
       obtain ⟨v, hv⟩ := hzero
       let f : V →ₗ[E] E :=
         { toFun := h v
@@ -158,7 +157,6 @@ theorem exists_orthogonal_family [CharZero E] (σ : E →+* E) :
             simp only [Fin.cons_zero, Fin.cons_succ]
             rw [hh.herm, hw0 i, map_zero]
           | succ j =>
-            simp only [Fin.cons_succ]
-            exact hwo i j (fun e => hij (by rw [e]))
+            simpa only [Fin.cons_succ] using hwo i j (fun e => hij (by rw [e]))
 
 end PI.UnitaryGroupMassFormula.HermConj

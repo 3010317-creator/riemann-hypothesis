@@ -146,8 +146,7 @@ theorem petersson_self_re_pos_of_ne_zero (hν : ν.IsHaarMeasure) (h𝓕 : IsFun
     funext x
     by_contra hx
     have hx' : x ∈ U := hx
-    rw [hE] at hx'
-    exact hx'
+    rwa [hE] at hx'
   refine pos_iff_ne_zero.2 fun h0 => (hU.measure_pos ν hne).ne' ?_
   have hsub : U ⊆ {x | ¬ ∃ γ : GQ V, γ • x ∈ 𝓕} ∪
       ⋃ γ : GQ V, (fun x => (γ : GA D V) * x) ⁻¹' (U ∩ 𝓕) := by
@@ -156,13 +155,11 @@ theorem petersson_self_re_pos_of_ne_zero (hν : ν.IsHaarMeasure) (h𝓕 : IsFun
     · obtain ⟨γ, hγ⟩ := hx'
       refine Or.inr (Set.mem_iUnion.2 ⟨γ, ?_, hγ⟩)
       show (f : GA D V → ℂ) ((γ : GA D V) * x) ≠ 0
-      rw [hi γ γ.2]
-      exact hx
+      rwa [hi γ γ.2]
     · exact Or.inl hx'
   refine measure_mono_null hsub (measure_union_null (ae_iff.1 h𝓕.ae_covers) ?_)
   refine measure_iUnion_null fun γ => ?_
-  rw [measure_preimage_mul]
-  exact h0
+  rwa [measure_preimage_mul]
 
 theorem petersson_bounded_automorphic_right_translation_invariant (hν : ν.IsHaarMeasure) (h𝓕 : IsFundamentalDomain (GQ V) 𝓕 ν) (g : GA D V) (f f₂ : bddAut V) :
     l2 ν 𝓕 (bddRep V g f : GA D V → ℂ) (bddRep V g f₂ : GA D V → ℂ) = l2 ν 𝓕 (f : GA D V → ℂ) f₂ := by

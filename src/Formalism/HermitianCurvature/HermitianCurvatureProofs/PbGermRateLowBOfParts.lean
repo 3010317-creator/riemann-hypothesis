@@ -70,8 +70,7 @@ theorem fs_one_ne (r : ℕ) {g : ℝ} (hg : 0 < g) (b s : ℕ) : GermFibreKernel
   unfold GermFibreKernels.fs
   have h1 : (((g / (2 * Real.pi)) ^ S6.nuBlock (r : ℤ) (b : ℤ) (s : ℤ) : ℝ) : ℂ) ≠ 0 :=
     Complex.ofReal_ne_zero.mpr (zpow_pos (div_pos hg (by positivity)) _).ne'
-  simp only [mul_one]
-  exact mul_ne_zero h1 (pow_ne_zero _ Complex.I_ne_zero)
+  simpa only [mul_one] using mul_ne_zero h1 (pow_ne_zero _ Complex.I_ne_zero)
 
 theorem fs_ne_zero (r : ℕ) {g : ℝ} (hg : 0 < g) (b s : ℕ) {t : ℂ} (ht : t ≠ 0) : GermFibreKernels.fs r g b s t ≠ 0 := by
   rw [fs_eq]; exact mul_ne_zero (fs_one_ne r hg b s) ht
@@ -193,8 +192,7 @@ theorem cutN_supp {k r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ
   have hc : PBASM.cutN n g ≠ 0 := by intro h0; apply hne; simp [h0]
   unfold PBASM.cutN at hc
   have hpos : 0 < (4 - ∑ i, ∑ j, Complex.normSq ((((n : ℝ) + 1)⁻¹ • g) i j)) / 3 := by
-    by_contra hle
-    push_neg at hle
+    by_contra! hle
     apply hc
     rw [Real.smoothTransition.zero_of_nonpos hle]
     simp
@@ -256,7 +254,7 @@ theorem utOf_sub_mainD {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ 
       rintro rfl
       rw [mem_rootSet4 hs0, zero_pow hs0] at hz
       exact hD hz.symm
-    simp only [GermFibreKernels.btOf, if_neg hz0, smul_smul, neg_smul]
+    simp only [GermFibreKernels.btOf, ite_eq_right hz0, smul_smul, neg_smul]
 
 end decomp
 
@@ -312,8 +310,7 @@ theorem okG_qq (r : ℕ) {g : ℝ} (hg : 0 < g) (b s : ℕ) (hs : 2 ≤ s) (K : 
     have key := (GermFibreKernels.roots_std r g hg b s hs x⁻¹ (x ^ (s - 1) * D) z).2 (by
       rw [hz, inv_pow]; field_simp)
     rw [hb1, cD_eq r b s hs x D hx] at key
-    rw [e4, e5]
-    exact key
+    rwa [e4, e5]
 
 end frame2
 
@@ -360,8 +357,7 @@ theorem conjSum_eq {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] (S : C.
       have e : x ^ (m + 1) * D * x⁻¹ ^ (m + 2 - 1) = D := by
         show x ^ (m + 1) * D * x⁻¹ ^ (m + 1) = D
         rw [inv_pow]; field_simp
-      rw [e] at h0
-      exact h0
+      rwa [e] at h0
     have hinj : Set.InjOn (fun z => GermFibreKernels.fs S.G.r (S.g : ℝ) b (m + 2) z) (G.rootSet (m + 2) D) := by
       intro z1 _ z2 _ h
       simp only at h

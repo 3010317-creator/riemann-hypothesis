@@ -69,8 +69,7 @@ private theorem le_valS_iff_forall_coeff_ne_zero {R : Type} [CommRing R] {ι : T
       intro h0
       rw [h0] at hk
       simp at hk
-    · rw [Finsupp.mem_support_iff]
-      exact hk
+    · rwa [Finsupp.mem_support_iff]
   · intro h k hk
     rw [sDegs, Finset.mem_biUnion] at hk
     obtain ⟨m, -, hm⟩ := hk
@@ -107,8 +106,7 @@ theorem valS_sum_ge {R : Type} [CommRing R] {ι : Type} {n : ℕ} [NeZero n] (LL
 
     rw [map_sum, coeff_sum]
     apply Joints.StandardMonomialSpace.SuppIn.sum
-    intro i hi k' hk'
-    exact (le_valS_iff_forall_coeff_ne_zero LL S (f i) a).mp (h i hi) m k' hk'
+    exact fun i hi k' hk' => (le_valS_iff_forall_coeff_ne_zero LL S (f i) a).mp (h i hi) m k' hk'
   exact hs k hk
 
 theorem filtQ_eq_sum {Kf : Type} [Field Kf] {ι : Type} {n : ℕ} (Q : (ι → ℕ) → Prop) (F : MvPolynomial (ι × Fin n) Kf) :
@@ -168,7 +166,7 @@ theorem twist_aeval (LL : Letters ι) (LL' : Letters κ) (S L : Set ι) (S' : Se
     by_cases hS : v.1 ∈ S
     · obtain ⟨hg, hf, hvec⟩ := h1 v hv hS
       rw [hg]
-      simp only [twistSub, eval₂Hom_X', if_pos hS, if_pos hf, hvec]
+      simp only [twistSub, eval₂Hom_X', ite_eq_left hS, ite_eq_left hf, hvec]
       split_ifs
       · set_option synthInstance.maxHeartbeats 100000 in
           simp only [thetaG, map_sum, map_mul, eval₂Hom_C, eval₂Hom_X']
@@ -182,7 +180,7 @@ theorem twist_aeval (LL : Letters ι) (LL' : Letters κ) (S L : Set ι) (S' : Se
         rw [(h1 (v.1, b) hv hS).1, map_X]
     · have hgv := h2 v hv hS
       have hx : twistSub LL S j (X v : MvPolynomial (ι × Fin n) Kf) = X v := by
-        simp only [twistSub, eval₂Hom_X', if_neg hS]
+        simp only [twistSub, eval₂Hom_X', ite_eq_right hS]
       rw [hx, thetaG, eval₂Hom_X']
       refine ringHom_eq_of_mem_supported_of_eqOn (twistSub LL' S' j) (MvPolynomial.map (coefL Kf n))
         {u | u.1 ∉ S'} ?_ ?_ hgv
@@ -190,7 +188,7 @@ theorem twist_aeval (LL : Letters ι) (LL' : Letters κ) (S L : Set ι) (S' : Se
         simp [twistSub]
       · intro u hu
         have hu' : u.1 ∉ S' := hu
-        simp only [twistSub, eval₂Hom_X', if_neg hu', map_X]
+        simp only [twistSub, eval₂Hom_X', ite_eq_right hu', map_X]
 
 theorem thetaG_mem (g : ι × Fin n → MvPolynomial (κ × Fin n) Kf) (e t : ℤ)
     (P : MvPolynomial (ι × Fin n) (GLLaurent Kf n)) (hP : P ∈ (laurentCoeffFiltration Kf n (ι × Fin n) e).F t) :

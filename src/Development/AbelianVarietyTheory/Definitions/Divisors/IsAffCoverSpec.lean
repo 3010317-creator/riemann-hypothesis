@@ -91,9 +91,9 @@ theorem scale_bas (s t : ℂ) (S : Finset (Fin (n + n))) :
     congr 1
     rw [Finset.filter_insert, Finset.filter_insert]
     by_cases hn : a.val < n
-    · rw [if_pos hn, if_pos hn, if_neg (not_le.2 hn), Finset.card_insert_of_notMem (by simp [ha])]
+    · rw [ite_eq_left hn, ite_eq_left hn, ite_eq_right (not_le.2 hn), Finset.card_insert_of_notMem (by simp [ha])]
       ring
-    · rw [if_neg hn, if_neg hn, if_pos (not_lt.1 hn), Finset.card_insert_of_notMem (by simp [ha])]
+    · rw [ite_eq_right hn, ite_eq_right hn, ite_eq_left (not_lt.1 hn), Finset.card_insert_of_notMem (by simp [ha])]
       ring
 
 theorem repr_scale (s t : ℂ) (α : Alt n) (S : Finset (Fin (n + n))) :
@@ -102,7 +102,7 @@ theorem repr_scale (s t : ℂ) (α : Alt n) (S : Finset (Fin (n + n))) :
   conv_lhs => rw [← (bas n).sum_repr α]
 
   simp only [map_sum, map_smul, scale_bas, Module.Basis.repr_self, Finsupp.finsetSum_apply, Finsupp.smul_apply,
-  Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 theorem scale_pull (L : V n →L[ℂ] V m) (s t : ℂ) (α : Alt m) :
@@ -143,10 +143,8 @@ theorem mem_holGe_iff {n p : ℕ} (β : Alt n) :
     β ∈ holGe n p ↔ ∀ S, (bas n).repr β S ≠ 0 → p ≤ holCount S := by
   rw [holGe, Module.Basis.mem_span_image]
   constructor
-  · intro h S hS
-    exact h (Finsupp.mem_support_iff.2 hS)
-  · intro h S hS
-    exact h S (Finsupp.mem_support_iff.1 hS)
+  · exact fun h S hS => h (Finsupp.mem_support_iff.2 hS)
+  · exact fun h S hS => h S (Finsupp.mem_support_iff.1 hS)
 
 end GlobalTheory.CxForm
 end -- clump:auto
@@ -300,7 +298,7 @@ theorem repr_degPart (k : ℕ) (α : Alt n) (S : Finset (Fin (n + n))) :
 theorem hasDeg_degPart (k : ℕ) (α : Alt n) : HasDeg k (degPart n k α) := fun S hS => by
   rw [repr_degPart] at hS
   by_contra h
-  exact hS (if_neg h)
+  exact hS (ite_eq_right h)
 
 theorem HasDeg.degPart_eq {j : ℕ} {α : Alt n} (h : HasDeg j α) (k : ℕ) : degPart n k α = if j = k then α else 0 := by
   refine (bas n).ext_elem fun S => ?_
@@ -397,8 +395,7 @@ theorem coefwise_dirD_linear (i : Fin n ⊕ Fin n) (L : Alt n →ₗ[ℂ] Alt n)
     coefwise (fun f => dirD i f v) (fun x => L (F x)) = L (coefwise (fun f => dirD i f v) F) := by
   refine (bas n).ext_elem fun S => ?_
   rw [FormMul.repr_coefwise, repr_linear L (coefwise _ F)]
-  simp only [repr_linear L (F _), FormMul.repr_coefwise]
-  exact dirD_sum_mul i hF _
+  simpa only [repr_linear L (F _), FormMul.repr_coefwise] using dirD_sum_mul i hF _
 
 theorem delAt_dbarAt_mul {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (F x) S) v)
     (hG : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (G x) S) v) :
@@ -535,7 +532,7 @@ theorem IsDeg.mul {k l : ℕ} {α β : A.Fld} (hα : A.IsDeg k α) (hβ : A.IsDe
 theorem isDeg_degFld (k : ℕ) (α : A.Fld) : A.IsDeg k (A.degFld k α) := fun x => hasDeg_degPart k (α x)
 
 theorem IsDeg.degFld_eq {k : ℕ} {α : A.Fld} (hα : A.IsDeg k α) : A.degFld k α = α :=
-  funext fun x => ((hα x).degPart_eq k).trans (if_pos rfl)
+  funext fun x => ((hα x).degPart_eq k).trans (ite_eq_left rfl)
 
 theorem IsDeg.mul_comm {k l : ℕ} {α β : A.Fld} (hα : A.IsDeg k α) (hβ : A.IsDeg l β) :
     α * β = (-1 : ℂ) ^ (k * l) • (β * α) :=
@@ -948,10 +945,8 @@ variable {M : Type} [TopologicalSpace M] {n : ℕ} (A : HolAtlas M n)
 
 theorem FormOn.of_isForm {α : A.Fld} (h : A.IsForm α) (S : Set M) : FormOn A S α := by
   refine ⟨?_, ?_⟩
-  · intro i T
-    exact (h.smooth i T).mono Set.inter_subset_left
-  · intro x x' _ hx
-    exact h.compat x x' hx
+  · exact fun i T => (h.smooth i T).mono Set.inter_subset_left
+  · exact fun x x' _ hx => h.compat x x' hx
 
 theorem FormOn.zero (S : Set M) : FormOn A S 0 := by
   have h := (HolAtlas.isForm_algebra M n A).1

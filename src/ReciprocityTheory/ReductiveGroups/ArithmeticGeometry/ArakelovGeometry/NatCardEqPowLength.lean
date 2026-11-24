@@ -36,14 +36,12 @@ theorem dmap_injective {W : Ideal (MRing ι)} (hWp : W.IsPrime) (hWm : IsMultiHo
       · exact hx m h k
       · exact hy m h k
     | smul n x _ hx =>
-      intro m hm k
-      exact hx m (MvPolynomial.support_smul hm) k
+      exact fun m hm k => hx m (MvPolynomial.support_smul hm) k
   rintro ⟨_, s, hs, rfl⟩ ⟨_, t, ht, rfl⟩ hxy
   have hd : Ideal.Quotient.mk (dehomI W i) s = Ideal.Quotient.mk (dehomI W i) t := hxy
   have hsub : s - t ∈ dehomI W i := Ideal.Quotient.eq.1 hd
   have hW := mem_of_mem_dehomI hWp hWm hi (homog_of_mem (Submodule.sub_mem _ hs ht)) hsub
-  apply Subtype.ext
-  exact Ideal.Quotient.eq.2 hW
+  exact Subtype.ext (Ideal.Quotient.eq.2 hW)
 
 theorem dmap_mono (W : Ideal (MRing ι)) (i : ∀ k, ι k) {a a' : K → ℕ} (h : ∀ k, a k ≤ a' k)
     (x : mPiece W a) : ∃ x' : mPiece W a', dmap W i a' x' = dmap W i a x := by
@@ -62,8 +60,7 @@ theorem dmap_mono (W : Ideal (MRing ι)) (i : ∀ k, ι k) {a a' : K → ℕ} (h
       · exact hx m h k
       · exact hy m h k
     | smul n x _ hx =>
-      intro m hm k
-      exact hx m (MvPolynomial.support_smul hm) k
+      exact fun m hm k => hx m (MvPolynomial.support_smul hm) k
   obtain ⟨_, s, hs, rfl⟩ := x
   have hprod : s * xpow i (fun k => a' k - a k) ∈ mHom ι a' := by
     apply Submodule.subset_span
@@ -73,8 +70,7 @@ theorem dmap_mono (W : Ideal (MRing ι)) (i : ∀ k, ι k) {a a' : K → ℕ} (h
       simp only [Pi.add_apply]
       have := h k
       omega
-    rw [hsum] at this
-    exact this
+    rwa [hsum] at this
   refine ⟨⟨_, Submodule.mem_map_of_mem hprod⟩, ?_⟩
   show Ideal.Quotient.mk (dehomI W i) (s * xpow i (fun k => a' k - a k)) = Ideal.Quotient.mk (dehomI W i) s
   rw [map_mul, mk_xpow, mul_one]
@@ -109,8 +105,7 @@ theorem dmap_cover (W : Ideal (MRing ι)) (i : ∀ k, ι k) (y : MRing ι ⧸ de
       have := hle m hm k
       simp only [deg] at this ⊢
       omega
-    rw [hsum] at this
-    exact this
+    rwa [hsum] at this
   have hF : (∑ m ∈ f.support, monomial m (f.coeff m) * xpow i (fun k => a k - deg m k)) ∈ mHom ι a :=
     Submodule.sum_mem _ hterm
   refine ⟨a, ⟨_, Submodule.mem_map_of_mem hF⟩, ?_⟩
@@ -149,8 +144,7 @@ theorem card_dehom {W : Ideal (MRing ι)} (hWp : W.IsPrime) (hWm : IsMultiHomogI
             hconst a ha, hconst a' ha']
     have heq := Set.eq_of_subset_of_ncard_le hsub hcard (Set.finite_range _)
     have hy : y ∈ Set.range (dmap W i a') := ⟨x', hx'.trans hx⟩
-    rw [← heq] at hy
-    exact hy
+    rwa [← heq] at hy
   rw [← hconst a ha]
   exact (Nat.card_eq_of_bijective _ ⟨hinj a, hsurj⟩).symm
 

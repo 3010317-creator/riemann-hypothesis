@@ -147,11 +147,11 @@ theorem BlowUpHorizontalCorresp.proof (hsat : BlowUpHorizontalSat.Statement.{u})
   case hs =>
     intro W hW
     rw [Function.mem_support] at hW
-    exact ⟨fun h0 => hW (by rw [h0, zero_mul]), fun hc => hW (by simp only [if_pos hc, mul_zero])⟩
+    exact ⟨fun h0 => hW (by rw [h0, zero_mul]), fun hc => hW (by simp only [ite_eq_left hc, mul_zero])⟩
   case ht =>
     intro W hW
     rw [Function.mem_support] at hW
-    exact ⟨fun h0 => hW (by rw [h0, zero_mul]), fun hc => hW (by simp only [if_pos hc, mul_zero])⟩
+    exact ⟨fun h0 => hW (by rw [h0, zero_mul]), fun hc => hW (by simp only [ite_eq_left hc, mul_zero])⟩
   refine finsum_mem_eq_of_bijOn (fun W => W.comap (liftForm (ι := ι) (J := J) (R := O)))
     ⟨?_, ?_, ?_⟩ ?_
   · intro W hW
@@ -166,7 +166,7 @@ theorem BlowUpHorizontalCorresp.proof (hsat : BlowUpHorizontalSat.Statement.{u})
     exact ⟨W', ⟨h1, h2⟩, h3⟩
   · intro W hW
     simp only
-    rw [if_neg hW.2, if_neg (fun h => hW.2 ((hC W).1 h)), mult W hW.1 hW.2]
+    rw [ite_eq_right hW.2, ite_eq_right (fun h => hW.2 ((hC W).1 h)), mult W hW.1 hW.2]
 
 end GroundTheory.Heights₂.Heights.NumbersDVR
 end -- clump:auto
@@ -243,8 +243,7 @@ theorem BlowUpHorizontalLift.full : BlowUpHorizontalLift.Statement.{u} := by
     constructor
     · intro h
       simpa using Ideal.mem_map_C_iff.mp h 0
-    · intro h
-      exact Ideal.mem_map_of_mem _ h
+    · exact fun h => Ideal.mem_map_of_mem _ h
   have hBWt : blowUpOf P u ≤ Wt := fun F hF =>
     Ideal.map_mono hPW (aeval_chartSubst_mem_of_mem_blowUpOf hPp hu₀ ha hF)
   have hxWt : liftForm x ∈ Wt := (hcomap x).2 hxW
@@ -256,8 +255,7 @@ theorem BlowUpHorizontalLift.full : BlowUpHorizontalLift.Statement.{u} := by
       simpa using Ideal.mem_map_C_iff.mp h 1
     · obtain ⟨i, hi⟩ := hrelW k
       refine ⟨i, fun h => hi ((hcomap _).1 ?_)⟩
-      rw [liftForm_X]
-      exact h
+      rwa [liftForm_X]
 
   have hmin : Wt ∈ (blowUpOf P u ⊔ Ideal.span {liftForm x}).minimalPrimes := by
     refine ⟨⟨hWtp, sup_le hBWt ((Ideal.span_singleton_le_iff_mem _).mpr hxWt)⟩, fun Q hQ hQWt => ?_⟩
@@ -271,8 +269,7 @@ theorem BlowUpHorizontalLift.full : BlowUpHorizontalLift.Statement.{u} := by
           ((Ideal.span_singleton_le_iff_mem _).mpr hxQ)⟩ hle)
     intro F hF
     refine mem_of_aeval_chartSubst_mem hQp hQ₀.ge j₀ (fun h => haW ?_) (fun j => hBQ ?_) hF
-    · rw [← hQ₀]
-      exact h
+    · rwa [← hQ₀]
     · apply mem_blowUpOf_of_sub
       have e : u j * a j₀ - u j₀ * a j = (V * u j - u j₀ * a j) - u j * (V - a j₀) := by ring
       rw [e]
@@ -499,7 +496,7 @@ theorem trdeg_blocks_add_one_le {O Φ : Type} [CommRing O] [Field Φ] [Algebra O
     · intro o
       simp [ψ, hjb o]
   have hψz : ψ z = Polynomial.X := by
-    simp only [ψ, z, map_mul, eval₂Hom_C, eval₂Hom_X', if_true, RingHom.comp_apply]
+    simp only [ψ, z, map_mul, eval₂Hom_C, eval₂Hom_X', ite_true, RingHom.comp_apply]
     rw [← mul_assoc, ← map_mul, ← map_mul, mul_inv_cancel₀ hc, map_one, map_one, one_mul]
   have hadj : Algebra.adjoin O (F.range : Set (MvPolynomial Λ Φ)) = F.range := Algebra.adjoin_eq _
   have htr : Transcendental (Algebra.adjoin O (F.range : Set (MvPolynomial Λ Φ))) z := by
@@ -715,8 +712,7 @@ theorem LocalCoeffRing.proof (h₁ : LocalQuotRing.Statement.{u}) (h₂ : LocalQ
       have h1 := hmin (left_ne_zero_of_mul hW)
       have h2 := hmin (right_ne_zero_of_mul hW)
       exact ⟨h1.1.1, le_sup_left.trans h1.1.2, le_sup_left.trans h2.1.2⟩
-    · intro p hp
-      exact (hmin' (left_ne_zero_of_mul hp)).1.1
+    · exact fun p hp => (hmin' (left_ne_zero_of_mul hp)).1.1
     · intro W hW hPW hWU
       rw [h₃ R P U _ W le_sup_left hW hPW hWU, h₃ R P U (W ⊔ _) U (le_sup_of_le_left hPW) hU hPU le_rfl,
         hmapx, Ideal.map_sup, h₄ R P U f g]
@@ -1141,8 +1137,7 @@ theorem ExceptionalContraction.proof (h₁ : BlowUpDecomposition.Statement.{u}) 
         · have h1 := congrArg (fun p : Polynomial Cy => p.coeff 1) h0
           simp only [Polynomial.coeff_sub, Polynomial.coeff_C_mul_X, ite_true,
             Polynomial.coeff_C_of_ne_zero one_ne_zero, sub_zero, Polynomial.coeff_zero] at h1
-          have h2 := congrArg Subtype.val h1
-          simpa [a', hφ] using h2
+          simpa [a', hφ] using congrArg Subtype.val h1
         · simp only [map_sub, map_mul, Polynomial.aeval_C, Polynomial.aeval_X]
           change (algebraMap (MRing ι O ⧸ G) _ (Ideal.Quotient.mk G (powMonomial e i))) *
             Ideal.Quotient.mk G' (newVar (some j')) -

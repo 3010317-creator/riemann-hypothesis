@@ -85,7 +85,7 @@ private lemma exists_polynomial_weierstrass (n : ℕ) : ∀ (g h : ℂ → ℂ),
           · filter_upwards [self_mem_nhdsWithin] with w hw using sub_ne_zero.mpr hw
         have h1 : ∀ᶠ w in 𝓝[≠] z, G w = h (w - z) := by
           filter_upwards [ht.eventually he, eventually_ne_notMem_periodLattice L z] with w hw hw'
-          simp only [G, if_neg hw']
+          simp only [G, ite_eq_right hw']
           rw [hw, ← hp (w - z) z hz, sub_add_cancel]
         have h2 : G =ᶠ[𝓝 z] h ∘ fun w => w - z := by
           rw [eventually_nhdsWithin_iff] at h1
@@ -95,8 +95,7 @@ private lemma exists_polynomial_weierstrass (n : ℕ) : ∀ (g h : ℂ → ℂ),
             simp [G, hz]
           · exact hw hwz
         have h3 : DifferentiableAt ℂ h ((fun w : ℂ => w - z) z) := by
-          simp only [sub_self]
-          exact hh.differentiableAt
+          simpa only [sub_self] using hh.differentiableAt
         have h4 : DifferentiableAt ℂ (fun w : ℂ => w - z) z := differentiableAt_id.sub_const z
         exact (DifferentiableAt.comp (g := h) (f := fun w : ℂ => w - z) z h3 h4).congr_of_eventuallyEq h2
       · have h1 : G =ᶠ[𝓝 z] g := by
@@ -293,8 +292,7 @@ theorem exists_mul_eq_polynomial_weierstrassP {f : ℂ → ℂ} (hf : Meromorphi
     have hga := hgS a haS hal
     have htr : g = fun w => g (w - l) := funext fun w => by
       have := hgp (w - l) l hlL
-      rw [sub_add_cancel] at this
-      exact this
+      rwa [sub_add_cancel] at this
     rw [htr]
     have h2 : DifferentiableAt ℂ (fun w : ℂ => w - l) (a + l) := differentiableAt_id.sub_const l
     have h3 : DifferentiableAt ℂ g ((fun w : ℂ => w - l) (a + l)) := by simpa using hga

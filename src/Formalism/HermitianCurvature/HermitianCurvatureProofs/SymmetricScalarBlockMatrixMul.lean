@@ -159,12 +159,12 @@ theorem hpk_row (k r : ℕ) (a : ℕ) (ha : a < r) (c : Fin (2 * r + k + 1)) :
     Hpk k r ⟨a, by omega⟩ c = if c = ⟨2 * r + k - a, by omega⟩ then 1 else 0 := by
   unfold Hpk
   by_cases hc : c = ⟨2 * r + k - a, by omega⟩
-  · rw [if_pos hc, if_pos]
+  · rw [ite_eq_left hc, ite_eq_left]
     subst hc
     refine ⟨ha, ?_⟩
     show a + (2 * r + k - a) = 2 * r + k
     omega
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have hv : c.val ≠ 2 * r + k - a := fun h => hc (Fin.ext h)
     have e1 : ¬ ((⟨a, by omega⟩ : Fin (2 * r + k + 1)).val < r ∧ (⟨a, by omega⟩ : Fin (2 * r + k + 1)).val + c.val = 2 * r + k) := by
       rintro ⟨_, h⟩; exact hv (by simp only at h; omega)
@@ -173,7 +173,7 @@ theorem hpk_row (k r : ℕ) (a : ℕ) (ha : a < r) (c : Fin (2 * r + k + 1)) :
     have e3 : ¬ (r ≤ (⟨a, by omega⟩ : Fin (2 * r + k + 1)).val ∧ (⟨a, by omega⟩ : Fin (2 * r + k + 1)).val ≤ r + k ∧
         (⟨a, by omega⟩ : Fin (2 * r + k + 1)) = c) := by
       rintro ⟨h, _⟩; simp only at h; omega
-    rw [if_neg e1, if_neg e2, if_neg e3]
+    rw [ite_eq_right e1, ite_eq_right e2, ite_eq_right e3]
 
 theorem zhat_apply_low (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)
     (a b : Fin (r + 1)) (ha : a.val < r) (hb : b.val < r) :
@@ -354,12 +354,12 @@ theorem fm_eq (z : Fin (2 * (j + ρ) + k + 1) → ℂ) (hz : inWb k (j + ρ) z) 
   rcases x with ((x | x) | x) <;> rcases y with (y | y)
   · rw [fvec_apply_lt z hz _ _ (by rw [block_index_first_val]; omega), block_index_first_val, column_index_first_val]
     simp [Matrix.one_apply, Fin.ext_iff, eq_comm]
-  · rw [fvec_apply_lt z hz _ _ (by rw [block_index_first_val]; omega), block_index_first_val, column_index_second_val, if_neg (by omega)]
+  · rw [fvec_apply_lt z hz _ _ (by rw [block_index_first_val]; omega), block_index_first_val, column_index_second_val, ite_eq_right (by omega)]
     simp
   · by_cases hlt : j + x.val < j + ρ
-    · rw [fvec_apply_lt z hz _ _ (by rw [block_index_middle_val]; omega), block_index_middle_val, column_index_first_val, if_neg (by omega)]
+    · rw [fvec_apply_lt z hz _ _ (by rw [block_index_middle_val]; omega), block_index_middle_val, column_index_first_val, ite_eq_right (by omega)]
       simp
-    · rw [fvec_apply_ge z _ _ (by rw [block_index_middle_val]; omega), column_index_first_val, if_neg (by omega)]
+    · rw [fvec_apply_ge z _ _ (by rw [block_index_middle_val]; omega), column_index_first_val, ite_eq_right (by omega)]
       simp
   · simp only [Matrix.fromRows_apply_inl, Matrix.fromBlocks_apply₂₂, Matrix.of_apply]
     unfold fvec
@@ -368,8 +368,8 @@ theorem fm_eq (z : Fin (2 * (j + ρ) + k + 1) → ℂ) (hz : inWb k (j + ρ) z) 
     · rw [dite_eq_left (by omega), dite_eq_left hc]
       simp only [bvec, eI, Pi.single_apply, Fin.ext_iff, block_index_middle_val]
       by_cases hxy : x.val = y.val
-      · rw [if_pos (by omega), if_pos hxy]
-      · rw [if_neg (by omega), if_neg hxy]
+      · rw [ite_eq_left (by omega), ite_eq_left hxy]
+      · rw [ite_eq_right (by omega), ite_eq_right hxy]
     · rw [dite_eq_right (by omega), dite_eq_right hc]
       simp only [lowV]
       congr 1
@@ -534,8 +534,7 @@ theorem gv_det {r : ℕ} {γ : B.Mat k r} (hγ : γ ∈ B.GV k r) : IsUnit γ.de
   have h2 := congrArg Matrix.det h
   rw [Matrix.det_mul, Matrix.det_mul] at h2
   have h3 : IsUnit ((γᴴ).det * (Hpk k r).det * γ.det) := by
-    rw [h2]
-    exact hH
+    rwa [h2]
   exact isUnit_of_mul_isUnit_right h3
 
 theorem skewOf_apply_lt {n : ℕ} (q : (G.UT n → ℂ) × (Fin n → ℝ)) (a b : Fin n) (h : a < b) :
@@ -558,8 +557,7 @@ theorem skewOf_inj {n : ℕ} (q q' : (G.UT n → ℂ) × (Fin n → ℝ)) (h : s
     funext i
     have := congrFun (congrFun h i) i
     simp only [skewOf_apply_diag] at this
-    have h3 := mul_left_cancel₀ Complex.I_ne_zero this
-    simpa using h3
+    simpa using mul_left_cancel₀ Complex.I_ne_zero this
   rw [h1, h2]
 
 theorem bigCell_uniq (x1 x1' x2 x2' : RC k j ρ) (Z1 Z2 : Matrix (Fin j) (Fin j) ℂ) (γ1 γ2 : B.Mat k ρ)
@@ -773,8 +771,7 @@ theorem bigCell_exists (g : B.Mat k (j + ρ)) (hg : g ∈ B.GV k (j + ρ)) (hD :
     have hU := Formalism.QuantumDeterminants.uHGroup _ (Hpk k (j + ρ)) (hpk_det k (j + ρ))
     have h1 := hU.2.1 _ (rn_unitary (Matrix.of.symm c, skewCoords S)) _ hg
     have h2 := hU.2.1 _ h1 _ (hU.2.2 _ (rn_unitary (Matrix.of.symm c', skewCoords S'))).2
-    rw [hm] at h2
-    exact h2
+    rwa [hm] at h2
   have hm2 := hm
   rw [hRx, hRx', uni_inv, block3_mul, block3_mul, block3_eq_iff] at hm2
   obtain ⟨h11, h12, h13, h21, h22, h23, h31, h32, h33⟩ := hm2

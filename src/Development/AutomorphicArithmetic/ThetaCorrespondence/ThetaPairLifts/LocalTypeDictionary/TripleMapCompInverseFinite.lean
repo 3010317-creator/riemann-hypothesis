@@ -95,9 +95,7 @@ variable {D : D7}
 def eInf (F : Type) [Field F] [NumberField F] : AF F :=
   ((1 : Ainf F), (0 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F))
 
-theorem one_sub_eInf_fst (F : Type) [Field F] [NumberField F] : (1 - eInf F).1 = 0 := by
-  show (1 : Ainf F) - 1 = 0
-  exact sub_self _
+theorem one_sub_eInf_fst (F : Type) [Field F] [NumberField F] : (1 - eInf F).1 = 0 := sub_self _
 
 theorem evI_sub_eInf (F : Type) [Field F] [NumberField F] : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F (1 - eInf F) = 0 := by
   rw [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI, one_sub_eInf_fst, map_zero]
@@ -354,8 +352,7 @@ theorem GlobalTheory.PlaceProd.pure_of_finSupp : ∀ {F E : Type} [Field F] [Num
       have ha : (e * u) • (mat k - 1) = 0 := by
         apply h3 v (Finset.mem_singleton_self v)
         rw [he, GlobalTheory.ThK.LocalOps.liftV_one_mul]
-        intro u' hu'
-        exact GlobalTheory.LatVac.at_liftV v _ u' hu'
+        exact fun u' hu' => GlobalTheory.LatVac.at_liftV v _ u' hu'
       have hb : ((1 - e) * u) • (mat k - 1) = 0 := by
         set u' : AF F := (1 - e) * u with hu'def
         have hv' : evFin F v u' = 0 := by
@@ -487,13 +484,7 @@ theorem loc_mem_KAt' {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
 open scoped Classical in
 theorem ev_mem_adm' {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] (x : κ → AF F) :
     (LinearMap.proj x : ((κ → AF F) → ℂ) →ₗ[ℂ] ℂ) ∈ (GlobalTheory.WeilM.adeleClass F).adm κ := by
-  intro g _
-  refine ⟨g (fun i => (x i).2) • (BoundedContinuousFunction.evalCLM ℂ (fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (x i).1)).comp
-    (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (κ → mixedEmbedding.mixedSpace F) ℂ), fun f => ?_⟩
-  simp only [LinearMap.proj_apply, GlobalTheory.WeilM.pureA, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp',
-    Function.comp_apply, Pi.smul_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
-    BoundedContinuousFunction.evalCLM_apply, smul_eq_mul]
-  rw [mul_comm]
+  exact GlobalTheory.RealLift.eval_mem_adm x
 
 theorem fixes_pure_left : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (B : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) {n d : ℕ} (X : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n) (W : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E d)
@@ -740,8 +731,7 @@ theorem triple_map_comp_inverse_finite : GlobalTheory.Published.HoweDualityReal 
           congr 2
           funext v
           have := hM.fin.inv v (hd v)
-          rw [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
-          exact this
+          rwa [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
         · rfl
       | zero => simp
       | add x y _ _ hx hy =>
@@ -779,8 +769,7 @@ theorem triple_map_comp_inverse_finite : GlobalTheory.Published.HoweDualityReal 
           congr 2
           funext v
           have := hM.fin.inv' v (hd v)
-          rw [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
-          exact this
+          rwa [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
         · rfl
       | zero => simp
       | add x y _ _ hx hy =>

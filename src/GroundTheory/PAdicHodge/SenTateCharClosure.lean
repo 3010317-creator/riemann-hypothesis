@@ -62,13 +62,12 @@ theorem exists_mem_inertiaGal_unitsOneAdd_two (K : IntermediateField ℚ_[p] (Pa
   rintro _ ⟨τ, hτ, rfl⟩
   refine ⟨(τ : Gal(PadicAlgCl p/K) ⧸ U), ?_⟩
   have h : ∃ τ' ∈ inertiaGal K, (τ' : Gal(PadicAlgCl p/K) ⧸ U) = τ := ⟨τ, hτ, rfl⟩
-  simp only [f, dif_pos h]
+  simp only [f, dite_eq_left h]
   obtain ⟨hτ', hτ'U⟩ := h.choose_spec
   have hq : (h.choose)⁻¹ * τ ∈ U := QuotientGroup.eq.1 hτ'U
   have hI : (h.choose)⁻¹ * τ ∈ inertiaGal K := mul_mem (inv_mem hτ') hτ
   have h1 : η ((h.choose)⁻¹ * τ) = 1 := hne _ hI hq
-  rw [map_mul, map_inv, inv_mul_eq_one] at h1
-  exact h1
+  rwa [map_mul, map_inv, inv_mul_eq_one] at h1
 
 theorem eq_zero_of_tower (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K]
     (η : Gal(PadicAlgCl p/K) →* ℤ_[p]ˣ)
@@ -89,8 +88,7 @@ theorem eq_zero_of_tower (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteD
   have hmemE : ∀ {y : PadicAlgCl p}, y ∈ E → ∃ m, y ∈ M m := fun {y} hy => by
     have h : y ∈ ((⨆ k, M k : IntermediateField K (PadicAlgCl p)) : Set (PadicAlgCl p)) :=
       (mem_restrictScalars _).1 hy
-    rw [coe_iSup_of_directed hdir, Set.mem_iUnion] at h
-    exact h
+    rwa [coe_iSup_of_directed hdir, Set.mem_iUnion] at h
   have hME : ∀ {m} {y : PadicAlgCl p}, y ∈ M m → y ∈ E := fun {m} {y} hy =>
     (mem_restrictScalars _).2 (le_iSup M m hy)
 
@@ -105,8 +103,7 @@ theorem eq_zero_of_tower (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteD
     have h := fixedPoints_closedSubgroup_eq_closure Ms.fixingSubgroup
       (InfiniteGalois.fixingSubgroup_isClosed Ms)
     have hx' : x ∈ {x : ℂ_[p] | ∀ σ ∈ Ms.fixingSubgroup, σ • x = x} := hfixed
-    rw [h, InfiniteGalois.fixedField_fixingSubgroup] at hx'
-    exact hx'
+    rwa [h, InfiniteGalois.fixedField_fixingSubgroup] at hx'
 
   have hC1 : 1 ≤ C := by
     have h := hbound n₁ le_rfl n₁ 1 (one_mem _)

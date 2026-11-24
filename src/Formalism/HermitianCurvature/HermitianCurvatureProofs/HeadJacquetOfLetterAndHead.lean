@@ -138,12 +138,7 @@ theorem block_two_apply {p s : ℕ} (A : Matrix (Fin p) (Fin p) ℂ) (B' : Matri
   split_ifs <;> rfl
 
 theorem mul_w_apply {d : ℕ} {ι : Type*} [Fintype ι] (M : Matrix ι (Fin d) ℂ) (a : ι) (b : Fin d) :
-    (M * G.wMat d) a b = M a b.rev := by
-  simp only [G.wMat, Matrix.mul_apply, Matrix.of_apply, mul_ite, mul_one, mul_zero]
-  rw [Finset.sum_eq_single b.rev]
-  · simp
-  · intro c _ hc; rw [if_neg]; intro h; apply hc; rw [h, Fin.rev_rev]
-  · simp
+    (M * G.wMat d) a b = M a b.rev := by apply Formalism.FourierDecayAlt.P.Dx2.Split.mul_w_apply
 
 theorem xcongr {j : ℕ} (x : MJ j) {a a' b b' : Fin j} (ha : a.val = a'.val) (hb : b.val = b'.val) :
     x a b = x a' b' := by
@@ -301,8 +296,7 @@ theorem exp_w_conj (d : ℕ) (M : Matrix (Fin d) (Fin d) ℂ) :
     NormedSpace.exp (G.wMat d * M * G.wMat d) = G.wMat d * NormedSpace.exp M * G.wMat d := by
   have hu : IsUnit (G.wMat d) := ⟨⟨G.wMat d, G.wMat d, Ux4.wMat_mul_self d, Ux4.wMat_mul_self d⟩, rfl⟩
   have e := Matrix.exp_conj (G.wMat d) M hu
-  rw [w_inv] at e
-  exact e
+  rwa [w_inv] at e
 
 theorem block_two_exp_conjTranspose_inv {j : ℕ} (y : MJ j) :
     (U.blk2 (NormedSpace.exp y) 0 0 (1 : Matrix (Fin 1) (Fin 1) ℂ))ᴴ⁻¹ = U.blk2 (NormedSpace.exp (-yᴴ)) 0 0 1 := by
@@ -432,7 +426,7 @@ theorem xiCoef : XiCoef := by
     intro v
     simp [herm, bvec, dotProduct, Matrix.mulVec, Pi.single_apply]
   rw [h1]
-  simp only [_root_.AAInvW.lf_H_eI, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [_root_.AAInvW.lf_H_eI, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   simp only [bvec, Matrix.mulVec_single_one]
   exact level_point_first_lines k r j hj Z τ γ a p
 
@@ -460,21 +454,21 @@ theorem xiCoefV : XiCoefV := by
   split_ifs with hp
   · rw [Fintype.sum_eq_single ⟨2 * r + k - p.val, by omega⟩]
     · have hH1 : Hpk k r p ⟨2 * r + k - p.val, by omega⟩ = 1 := by
-        rw [Hpk_low _ _ _ _ (by simp only [Fin.val_mk]; omega), if_pos (by simp only [Fin.val_mk]; omega)]
+        rw [Hpk_low _ _ _ _ (by simp only [Fin.val_mk]; omega), ite_eq_left (by simp only [Fin.val_mk]; omega)]
       rw [hH1, one_mul, dite_eq_left (by simp only [Fin.val_mk]; omega)]
       rfl
     · intro s hs
       by_cases h : s.val < j
       · rw [dite_eq_left h]
         have : Hpk k r p s = 0 := by
-          rw [Hpk_low _ _ _ _ (by omega), if_neg (by intro h'; apply hs; ext; simp only [Fin.val_mk]; omega)]
+          rw [Hpk_low _ _ _ _ (by omega), ite_eq_right (by intro h'; apply hs; ext; simp only [Fin.val_mk]; omega)]
         rw [this, zero_mul]
       · rw [dite_eq_right h, star_zero, mul_zero]
   · refine Finset.sum_eq_zero fun s _ => ?_
     by_cases h : s.val < j
     · rw [dite_eq_left h]
       have : Hpk k r p s = 0 := by
-        rw [Hpk_low _ _ _ _ (by omega), if_neg (by omega)]
+        rw [Hpk_low _ _ _ _ (by omega), ite_eq_right (by omega)]
       rw [this, zero_mul]
     · rw [dite_eq_right h, star_zero, mul_zero]
 
@@ -754,10 +748,8 @@ theorem wirtinger_slice_smooth : WirtingerOperators.DzSlice := by
     refine ((rdz_H_smooth κ c s hU hKc).comp hι.contDiffOn (fun Z hZ => hZ)).congr fun Z hZ => ?_
     exact rdz_H_eq κ c s τ₀ Z (rdz_da hU hKc hZ)
   refine ⟨?_, ?_⟩
-  · simp only [rdz_dz_eq]
-    exact key _ _
-  · simp only [rdz_dzb_eq]
-    exact key _ _
+  · simpa only [rdz_dz_eq] using key _ _
+  · simpa only [rdz_dzb_eq] using key _ _
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -983,7 +975,7 @@ theorem EopZ_es (a b : Fin j) :
   unfold EopZ
   have ha := a.isLt
   have hb := b.isLt
-  rw [dite_eq_right (by simp [esI]; omega), dif_pos (by simp [esI]; omega), dif_pos (by simp [esI]; omega)]
+  rw [dite_eq_right (by simp [esI]; omega), dite_eq_left (by simp [esI]; omega), dite_eq_left (by simp [esI]; omega)]
   congr 1 <;> ext <;> simp [esI] <;> omega
 
 theorem eab_pull (hC : CurveLevi) (hH : HpartLevi) (p q : Fin (2 * r + k + 1)) (hpq : Good k r j p q)
@@ -1106,7 +1098,7 @@ theorem Dmin_pull (hXC : XiCoef) (z z' : Fin (2 * r + k + 1) → ℂ) (Z : MJ j)
   have ha := a.isLt
   have hb := b.isLt
   simp only [Matrix.submatrix_apply, Zhat, fvec]
-  rw [dif_pos (by simp; omega), dif_pos (by simp; omega)]
+  rw [dite_eq_left (by simp; omega), dite_eq_left (by simp; omega)]
   have := hXC k r j hj Z τ γ a (eI k r ⟨b.val, by omega⟩)
   simp only [eI] at this ⊢
   simpa [hb] using this
@@ -1153,7 +1145,7 @@ def linOf {T : (MJ j → E) → MJ j → E} (hT : ZOp T) : (MJ j → E) →ₗ[�
 
 theorem linOf_eq {T : (MJ j → E) → MJ j → E} (hT : ZOp T) {Z : MJ j} (hZ : Z.det ≠ 0) {h : MJ j → E}
     (hh : h ∈ W E Z) : linOf hT h Z = T h Z := by
-  simp only [linOf, LinearMap.pi_apply, dif_pos hZ]
+  simp only [linOf, LinearMap.pi_apply, dite_eq_left hZ]
   have := Classical.choose_spec (LinearMap.exists_extend (fW hT Z hZ))
   exact congrArg (fun L : W E Z →ₗ[ℂ] E => L ⟨h, hh⟩) this
 
@@ -1199,8 +1191,7 @@ theorem zOnly_of_parts (hC : CurveLevi) (hH : HpartLevi) (hXC : XiCoef) (hXV : X
   refine ⟨{Z' | Z'.det ≠ 0} ∩ (fun Z' => x0 k r j hj Z' τ γ) ⁻¹' UF,
     hcont.isOpen_inter_preimage isOpen_inv hUF, ⟨hZ, hgUF⟩, ?_⟩
   refine (hF.comp ((hXS k r j hj τ γ).mono Set.inter_subset_left) (fun _ h => h.2)).congr ?_
-  intro Z' hZ'
-  exact hΦF _ hZ'.2 (hXM k r j hj Z' τ γ hZ'.1 hτ hγ)
+  exact fun Z' hZ' => hΦF _ hZ'.2 (hXM k r j hj Z' τ γ hZ'.1 hτ hγ)
 
 end Formalism.FourierDecayAlt.P.WirtingerOperators
 end -- clump:auto
@@ -1279,7 +1270,7 @@ theorem paramComm_local {A : (Matrix (Fin j) (Fin j) ℂ → E) →ₗ[ℂ] (Mat
     have : τ ≠ 0 := hτ
     simp [hc, this]
   have := tendsto_nhds_unique t1 t2
-  simp only [hc, if_true, one_smul] at this
+  simp only [hc, ite_true, one_smul] at this
   have e : A h (Matrix.of Z) = A f (Matrix.of Z) - A g (Matrix.of Z) := by
     rw [hh, map_sub]; rfl
   rw [← sub_eq_zero, ← e, this]
@@ -1341,7 +1332,7 @@ theorem row_family (κ : ℂ) (pl : Bool) (Y : ℂ) {U : Set (ℂ × (Fin j → 
   have h3 : ContDiffOn ℝ ∞ (fun q : ℂ × (Fin j → Fin j → ℂ) => q.1⁻¹) U := cd_inv.comp contDiffOn_fst hm
   have h4 : ContDiffOn ℝ ∞ (fun q : ℂ × (Fin j → Fin j → ℂ) => (conj q.1)⁻¹) U := cd_conjinv.comp contDiffOn_fst hm
   unfold row
-  rcases _root_.Formalism.FourierDecayAlt.P.MAx3.NF.fin2 s with hs | hs <;> cases pl <;> simp only [hs, if_true, Bool.false_eq_true, if_false, one_ne_zero]
+  rcases _root_.Formalism.FourierDecayAlt.P.MAx3.NF.fin2 s with hs | hs <;> cases pl <;> simp only [hs, ite_true, Bool.false_eq_true, ite_false, one_ne_zero]
   · exact ((contDiffOn_const.smul ha).sub (h2.smul hdzb)).sub (h2.smul hb)
   · exact ((contDiffOn_const.smul ha).add (h1.smul hdz)).sub (h1.smul hb)
   · exact h4.smul ha
@@ -1357,7 +1348,7 @@ theorem row_comm {A : (Matrix (Fin j) (Fin j) ℂ → E) →ₗ[ℂ] (Matrix (Fi
   obtain ⟨-, hc⟩ := hA U Fa hU hUd ha
   obtain ⟨hz, hzb⟩ := hc q hq
   unfold row
-  rcases _root_.Formalism.FourierDecayAlt.P.MAx3.NF.fin2 s with hs | hs <;> cases pl <;> simp only [hs, if_true, Bool.false_eq_true, if_false, one_ne_zero]
+  rcases _root_.Formalism.FourierDecayAlt.P.MAx3.NF.fin2 s with hs | hs <;> cases pl <;> simp only [hs, ite_true, Bool.false_eq_true, ite_false, one_ne_zero]
   · rw [linM A _ _ _ (Fa q.1) (fun Z => PBP.dzb (fun τ => Fa τ Z) q.1) (Fb q.1)]
     simp only [Pi.sub_apply, Pi.smul_apply, hzb]
   · rw [linP A _ _ _ (Fa q.1) (fun Z => PBP.dz (fun τ => Fa τ Z) q.1) (Fb q.1)]
@@ -1477,8 +1468,7 @@ theorem rules_uw (hR : RulesClosed) {k r j : ℕ} (hj : j + 1 ≤ r) {z z' : Fin
   induction w with
   | nil => intro e; exact hΦ
   | cons l w ih =>
-    intro e
-    exact hR k r j hj z z' E Dm _ hz hz' hDm hDs (ih _) i (by omega) hor l (e 0)
+    exact fun e => hR k r j hj z z' E Dm _ hz hz' hDm hDs (ih _) i (by omega) hor l (e 0)
 
 theorem core (hH : HeadLetter) (hZ : ZOnly) (hR : RulesClosed) (hX : BasePointSmoothAndMem) {k r j : ℕ} (hj : j + 1 ≤ r)
     {z z' : Fin (2 * r + k + 1) → ℂ} {Dm : Set (Q.Mx k r)} {Φ : Q.Mx k r → E} (hz : inWb k r z)
@@ -1542,7 +1532,7 @@ theorem core (hH : HeadLetter) (hZ : ZOnly) (hR : RulesClosed) (hX : BasePointSm
     rw [← row_congr κ pl (Y : ℂ) hV (key 0) (key 1) (e 0) hq']
     unfold row
     rcases _root_.Formalism.FourierDecayAlt.P.MAx3.NF.fin2 (e 0) with h | h <;> cases pl <;>
-      simp only [h, if_true, Bool.false_eq_true, if_false, one_ne_zero, Complex.conj_ofReal] <;>
+      simp only [h, ite_true, Bool.false_eq_true, ite_false, one_ne_zero, Complex.conj_ofReal] <;>
       (try simp only [hκ]) <;> first | exact hHL.2.2.1 | exact hHL.1 | exact hHL.2.2.2 | exact hHL.2.1
 
 theorem wordIndOfParts_of (hX : BasePointSmoothAndMem) : WordIndOfParts := by
@@ -1588,8 +1578,7 @@ theorem es_const {m n : Type} (M : Matrix m n ℂ) (s : Set P) : ES (fun _ => M)
 theorem es_mul {m n o : Type} [Fintype n] {f : P → Matrix m n ℂ} {g : P → Matrix n o ℂ} (hf : ES f s) (hg : ES g s) :
     ES (fun x => f x * g x) s := by
   intro a b
-  simp only [Matrix.mul_apply]
-  exact ContDiffOn.sum fun c _ => (hf a c).mul (hg c b)
+  simpa only [Matrix.mul_apply] using ContDiffOn.sum fun c _ => (hf a c).mul (hg c b)
 
 theorem es_conjTranspose {m n : Type} {f : P → Matrix m n ℂ} (hf : ES f s) : ES (fun x => (f x)ᴴ) s := by
   intro a b
@@ -1599,8 +1588,7 @@ theorem es_conjTranspose {m n : Type} {f : P → Matrix m n ℂ} (hf : ES f s) :
 theorem es_det {n : Type} [Fintype n] [DecidableEq n] {f : P → Matrix n n ℂ} (hf : ES f s) :
     ContDiffOn ℝ ∞ (fun x => (f x).det) s := by
   simp only [Matrix.det_apply, Units.smul_def, zsmul_eq_mul]
-  refine ContDiffOn.sum fun σ _ => contDiffOn_const.mul ?_
-  exact contDiffOn_prod fun i _ => hf (σ i) i
+  exact ContDiffOn.sum fun σ _ => contDiffOn_const.mul (contDiffOn_prod fun i _ => hf (σ i) i)
 
 theorem es_updateRow {n : Type} [Fintype n] [DecidableEq n] {f : P → Matrix n n ℂ} (hf : ES f s) (r : n) (v : n → ℂ) :
     ES (fun x => (f x).updateRow r v) s := fun a b => by
@@ -1620,8 +1608,7 @@ theorem es_inv {n : Type} [Fintype n] [DecidableEq n] {f : P → Matrix n n ℂ}
 theorem es_reindex {m n m' n' : Type} (e : m ≃ m') (e' : n ≃ n') {f : P → Matrix m n ℂ} (hf : ES f s) :
     ES (fun x => Matrix.reindex e e' (f x)) s := by
   intro a b
-  simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-  exact hf _ _
+  simpa only [Matrix.reindex_apply, Matrix.submatrix_apply] using hf _ _
 
 theorem es_fromBlocks {l m n o : Type} {A : P → Matrix n l ℂ} {B' : P → Matrix n m ℂ} {C : P → Matrix o l ℂ}
     {D' : P → Matrix o m ℂ} (hA : ES A s) (hB : ES B' s) (hC : ES C s) (hD : ES D' s) :
@@ -1665,8 +1652,7 @@ theorem es_zfull (j : ℕ) (s : Set (ℂ × (Fin j → Fin j → ℂ))) :
     simp only [Matrix.of_apply]
     fun_prop
   have h4 : ES (fun q : ℂ × (Fin j → Fin j → ℂ) => (Matrix.of fun _ _ : Fin 1 => q.1)) s := fun a b => by
-    simp only [Matrix.of_apply]
-    exact contDiff_fst.contDiffOn
+    simpa only [Matrix.of_apply] using contDiff_fst.contDiffOn
   simp only [zfull, U.blk2]
   exact es_reindex _ _ (es_fromBlocks h1 (es_const _ _) (es_const _ _) h4)
 
@@ -1703,8 +1689,7 @@ theorem base_point_facts_holds : BasePointSmoothAndMem := by
         (es_fromCols (es_mul (es_const _ _) hZ) (es_const _ _)) (es_const _ _))
     have hX : ES (fun q : ℂ × (Fin j → Fin j → ℂ) => x0 k r j hj (Matrix.of q.2) q.1 γ)
         {q : ℂ × (Fin j → Fin j → ℂ) | q.1 ≠ 0 ∧ (Matrix.of q.2).det ≠ 0} := by
-      simp only [x0, D.castM]
-      exact es_reindex _ _ hM
+      simpa only [x0, D.castM] using es_reindex _ _ hM
     exact es_contDiffOn hX
   · intro q h1 h2
     apply PBF.mem_level_zero_of_mem_group

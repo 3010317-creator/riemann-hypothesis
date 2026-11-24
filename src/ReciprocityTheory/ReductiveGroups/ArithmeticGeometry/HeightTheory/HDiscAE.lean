@@ -174,10 +174,7 @@ private theorem isDedekindDomain_Op (D N : ℕ) (la : HeightOneSpectrum (𝓞 K)
     · rw [Ideal.map_le_iff_le_comap]
       have hle : laT D N la ≤ Ideal.comap (algebraMap (OT K D N) (Op D N la))
           (Ideal.span {algebraMap (OT K D N) (Op D N la) (MvPolynomial.C ϖ)}) := by
-        show Ideal.map (MvPolynomial.C : 𝓞 K →+* OT K D N) la.asIdeal ≤ _
-        refine Ideal.map_le_iff_le_comap.mpr ?_
-        intro a ha
-        exact hsub a ha
+        exact Ideal.map_le_iff_le_comap.mpr (fun a ha => hsub a ha)
       exact hle
     · rw [Ideal.span_le, Set.singleton_subset_iff]
       exact Ideal.mem_map_of_mem _ (Ideal.mem_map_of_mem _ hϖ)

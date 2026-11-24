@@ -85,7 +85,7 @@ theorem frame_ne_zero {Z : LocDat D} {p : PlF D} (Fr : LocNG.FrameD (locH Z p) D
     exact hT ((map_eq_zero_iff _ (RingHom.injective _)).mp h2)
   | cast i =>
     have h1 := Fr.h_es i i
-    rw [h0, h_zero_left, if_pos rfl] at h1
+    rw [h0, h_zero_left, ite_eq_left rfl] at h1
     exact zero_ne_one h1
 
 theorem frFac_unit {p : PlF D} (δ : ∀ p, (D.s.atP p).Fp) (a : Fin (D.R.rS + 1)) (v : Vp D p)
@@ -124,8 +124,7 @@ theorem xplus_le {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (S : Submodule D
 
 theorem le_of_loc (Z : LocDat D) (Λ₂ : LV D) (h2 : Submodule.IsLattice D.host.E Λ₂) (N : LV D)
     (hN : ∀ z ∈ N, ∀ p, baseChange₂ D p z ∈ lattice₂ D Z.M p Λ₂) : N ≤ Λ₂ := by
-  intro x hx
-  exact GlobalTheory.GenMass.GlueLoc.mem_of_bcP Z h2.fg (hN x hx)
+  exact fun x hx => GlobalTheory.GenMass.GlueLoc.mem_of_bcP Z h2.fg (hN x hx)
 
 theorem fix_span {u u' : D.what₂.Word}
     (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E))
@@ -160,8 +159,7 @@ theorem inf_span_eq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wh
     rw [← himg] at hm
     obtain ⟨y, hy, hyz⟩ := Submodule.mem_map.1 hm
     have : g y = g (baseChange₂ D p z) := by rw [hfix]; exact hyz
-    rw [g.injective this] at hy
-    exact hy
+    rwa [g.injective this] at hy
   · refine le_inf (le_of_loc Z Λ h1 _ fun z hz p => ?_) inf_le_right
     obtain ⟨g, hg, himg⟩ := hloc p
     have hfix : g (baseChange₂ D p z) = baseChange₂ D p z := fix_span F F' Z FP hB hR p hg hz.2

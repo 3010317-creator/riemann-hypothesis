@@ -126,8 +126,7 @@ theorem idLat_span_singleton {D : D7} (L : HSp D) (I : FractionalIdeal (𝓞 D.h
     simp only [LinearMap.coe_restrictScalars, LinearMap.toSpanSingleton_apply]
     rw [smul_assoc, smul_comm]
   · rintro _ ⟨s, hs, rfl⟩
-    apply Submodule.subset_span
-    exact ⟨s, hs, ζ, Submodule.mem_span_singleton_self ζ, by simp⟩
+    exact Submodule.subset_span ⟨s, hs, ζ, Submodule.mem_span_singleton_self ζ, by simp⟩
 
 theorem lineLat_smul {D : D7} (L : HSp D) (I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E)
     (ζ : Fin L.rank → D.host.E) {c : D.host.E} (hc : c ≠ 0) :
@@ -354,7 +353,7 @@ theorem incAdj_yZero_mulVec_gen {D : D7} {S A L T T₀ : HSp D} (o : OrthDec S A
     Matrix.vecMulVec_apply, smul_eq_mul, map_mul, map_neg, hell]
   rw [Finset.sum_congr rfl fun l _ => by
     rw [Finset.sum_eq_single (⟨ρ - 1, by omega⟩ : Fin ρ) (fun i _ hi => by simp [hi]) (fun h => absurd (Finset.mem_univ _) h)]]
-  simp only [if_true, mul_one, Finset.mul_sum, Finset.sum_mul]
+  simp only [ite_true, mul_one, Finset.mul_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun m _ => ?_
   ring
 
@@ -554,8 +553,7 @@ theorem GlobalTheory.intAf_div_prime_to_place (D : D7) (v : GlobalTheory.FinPl.P
     have : d = 0 := by exact_mod_cast h
     rw [this]; exact v.asIdeal.zero_mem
   have hval : v.valuation D.host.F (d : D.host.F) = 1 := by
-    rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
-    exact hd
+    rwa [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
   refine ⟨α * algebraMap D.host.F (Af D.host.F) (d : D.host.F)⁻¹, ?_, ?_, ?_⟩
   · intro w
     rw [map_mul, AlgHom.commutes]
@@ -758,8 +756,7 @@ theorem GlobalTheory.AscFin.stdAt_pcBF : OnStd fun {D} _ _ {sc} {G} W F => ∀ �
     obtain ⟨u, hu, rfl⟩ := Finset.mem_image.1 hPP
     exact hv (by rw [← e, G.pl.under_w hu]; exact hu)
   refine ⟨fun a ha => ?_, fun a ha => ?_, fun ξ hξ => ?_⟩
-  · have hu := mxAt_mul' ha (F.dB ρ h).pX
-    exact depLat_iff_at hoff _ hu
+  · exact depLat_iff_at hoff _ (mxAt_mul' ha (F.dB ρ h).pX)
   · refine ⟨idem D (· = v) • a, fun i j => (mem_idOff_iff _ _).2 (by
       rw [Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, mul_sub, ← mul_assoc, idem_mul_self, sub_self]), ?_⟩
     rw [HypDec.extX_apply, Matrix.smul_mul]

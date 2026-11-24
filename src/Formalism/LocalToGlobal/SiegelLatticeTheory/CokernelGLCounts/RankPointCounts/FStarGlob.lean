@@ -54,8 +54,7 @@ theorem starG_ne (γ : TermDef.Term D u u' F0 what₂) (w : Point D.host.E (D.R.
     have he := Formalism.L2.SG.Pf.gval_rel (lf D F0) hrel2
     change Gval (lf D F0) (repF γ) = _ at he
     rw [he]; exact hG
-  rw [← FsLA.leadMinorE_full, star_frame_lead_minor, star_frame_lead_minor]
-  exact hGv
+  rwa [← FsLA.leadMinorE_full, star_frame_lead_minor, star_frame_lead_minor]
 
 theorem starGlob (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D) (hC : Ctx γ Z)
     (F'₂ : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (hZ : ZhatL (lf D F0) F'₂ = Z)
@@ -99,7 +98,7 @@ theorem starGlob (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D) (hC 
     intro a b
     by_cases hab : a ≠ Fin.last D.R.rS ∨ b ≠ Fin.last D.R.rS
     · exact (FsLA.gram_fvec_zero F₃ a b hab).trans (FsLA.gram_fvec_zero F0 a b hab).symm
-    · push_neg at hab
+    · push Not at hab
       rw [hab.1, hab.2]
       exact (FsLA.gram_fvec_last F₃).trans (FsLA.gram_fvec_last F0).symm
   have k2 : ∀ a b, (VS D).hT (h a) (F₂.fvec b) = (VS D).hT (f a) (f₁ b) := by
@@ -115,7 +114,7 @@ theorem starGlob (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D) (hC 
     intro a b
     by_cases hab : a ≠ Fin.last D.R.rS ∨ b ≠ Fin.last D.R.rS
     · exact (FsLA.gram_fvec_zero F₂ a b hab).trans (hf1a a b hab).symm
-    · push_neg at hab
+    · push Not at hab
       rw [hab.1, hab.2]
       exact (FsLA.gram_fvec_last F₂).trans hf1b.symm
   have hGr : FsLA.gram (VS D) uu' uu' = FsLA.gram (VS D) uu uu := by
@@ -157,7 +156,6 @@ theorem starGlob (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D) (hC 
     exact (hgu (Sum.inl a)).symm
   have e1 : Z₁ᴴ.det = star Z₁.det := Matrix.det_conjTranspose _
   have e2 : (FsLA.gram (VS D) f F₂.fvec).det = star Z.det := by rw [hg2, Matrix.det_conjTranspose]
-  rw [e1, e2, homf, homh] at hom3
-  exact hom3
+  rwa [e1, e2, homf, homh] at hom3
 
 end Formalism.L2.SG.Pf.FrameGlobalPatching.FStar

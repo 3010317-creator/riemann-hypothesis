@@ -111,12 +111,10 @@ theorem MUc_h_of_mem (Hd : HodgeData D) {M : XModel D} (S : BoundedRegularisatio
     have hproj : M.proj (torusSmul c z) = M.proj z := ((M.fibre z hz _ hcz).2 ⟨c, hc, rfl⟩).symm
     have href : S.ref.h (torusSmul c z) = (∏ k, ‖c k‖ ^ Hd.aMu k) * S.ref.h z := by
       have := S.ref.smul c z hc
-      rw [S.ref_deg] at this
-      exact this
+      rwa [S.ref_deg] at this
     have hA : D.A'.h (torusSmul c z) = (∏ k, ‖c k‖ ^ D.a' k) * D.A'.h z := by
       have := D.A'.smul c z hc
-      rw [D.A'_deg] at this
-      exact this
+      rwa [D.A'_deg] at this
     have hV : ∀ p' ∈ D.SB B, D.vertFactor p' (torusSmul c z) =
         (∏ k, ‖c k‖ ^ D.vdeg p' k) * D.vertFactor p' z :=
       fun p' hp' => (hVS II Ψ K J Ω W D p' (hSB p' hp')).1 z hz c hc
@@ -282,12 +280,10 @@ theorem bregWeight_ge_and_MUc_smooth : ∀ (K : Type) [Fintype K] (J : K → Typ
         have hproj : M.proj (torusSmul c z) = M.proj z := ((M.fibre z hz _ hcz).2 ⟨c, hc, rfl⟩).symm
         have href : S.ref.h (torusSmul c z) = (∏ k, ‖c k‖ ^ H.aMu k) * S.ref.h z := by
           have := S.ref.smul c z hc
-          rw [S.ref_deg] at this
-          exact this
+          rwa [S.ref_deg] at this
         have hA : D.A'.h (torusSmul c z) = (∏ k, ‖c k‖ ^ D.a' k) * D.A'.h z := by
           have := D.A'.smul c z hc
-          rw [D.A'_deg] at this
-          exact this
+          rwa [D.A'_deg] at this
         have hV : ∀ p' ∈ D.SB B, D.vertFactor p' (torusSmul c z) =
             (∏ k, ‖c k‖ ^ D.vdeg p' k) * D.vertFactor p' z :=
           fun p' hp' => (hVS II Ψ K JJ Ω E D p' (hSB p' hp')).1 z hz c hc

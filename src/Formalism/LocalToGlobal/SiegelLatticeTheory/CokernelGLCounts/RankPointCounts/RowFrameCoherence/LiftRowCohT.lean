@@ -91,8 +91,7 @@ theorem liftRowCohC_of (hT : LiftTransNeed X Y u u') (hD : IotaDictNeed X Y u u'
   have hs't' : s'.toTerm = t := hs't.trans hp₂
   refine ⟨s', hs't', ?_⟩
   have hE' : Formalism.L2.SG.DataInst.Elig s'.toTerm := hs't' ▸ ht
-  have hi := hD s s' hs.2 hE'.2 hs.1 hE'.1 hl.symm hl'.symm hic
-  exact liftRowCoh_rowOf_eq hl hl' hi.symm
+  exact liftRowCoh_rowOf_eq hl hl' (hD s s' hs.2 hE'.2 hs.1 hE'.1 hl.symm hl'.symm hic).symm
 
 end Formalism.L2.SG.Pf.RowForm
 end -- clump:auto
@@ -135,14 +134,7 @@ theorem liftT_xsp_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism
   rfl
 
 theorem liftT_xsp_eq {T : E} (F : LFlag S r T) : Xsp F = Xflag F r := by
-  simp only [Xsp, Xflag, Formalism.MainNotions.S.FlagG.X, Formalism.MainNotions.S.FlagG.Xa]
-  congr 1
-  ext v
-  constructor
-  · rintro ⟨i, rfl⟩
-    exact ⟨i, i.2, rfl⟩
-  · rintro ⟨i, -, rfl⟩
-    exact ⟨i, rfl⟩
+  exact (PI.UnitaryGroupMassFormula.ScalEquivGen.XflagTopQ F).symm
 
 variable {Λ : Submodule (𝓞 E) S.V}
 
@@ -151,10 +143,8 @@ theorem liftT_mem_gmap {n : S.V ≃ₗ[E] S.V} {L : Submodule (𝓞 E) S.V} {v :
   constructor
   · rintro ⟨w, hw, h⟩
     have e : w = v := n.injective h
-    rw [← e]
-    exact hw
-  · intro h
-    exact ⟨v, h, rfl⟩
+    rwa [← e]
+  · exact fun h => ⟨v, h, rfl⟩
 
 theorem liftT_maps {n : S.V ≃ₗ[E] S.V} {L : Submodule (𝓞 E) S.V} (h : Formalism.HermitianLatticesTheory.gmap n L = L) {v : S.V}
     (hv : v ∈ L) : n v ∈ L := by
@@ -210,8 +200,7 @@ variable {D : D7} {X : HidaSetting D} {u u' : D.what₂.Word}
 
 theorem liftT_grel_equiv (Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V) : Equivalence (GRel X u u' F0 F0' Λ Λ') := by
   constructor
-  · intro p
-    exact ⟨1, one_mem_NLam _ _, 1, one_mem_NLam _ _, by simp⟩
+  · exact fun p => ⟨1, one_mem_NLam _ _, 1, one_mem_NLam _ _, by simp⟩
   · rintro p q ⟨n, hn, n', hn', h⟩
     exact ⟨n⁻¹, nlam_inv hn, n'⁻¹, nlam_inv hn', by rw [h]; group⟩
   · rintro p q r ⟨n, hn, n', hn', h⟩ ⟨m, hm, m', hm', h'⟩
@@ -301,8 +290,7 @@ theorem liftTransNeed_of (hR : RatPtNeed X) (hTR : ToTermRel X u u' (X.Fu u) (X.
       have := liftT_mem_gmap (n := s.lin⁻¹) (L := s.lam) (v := x') |>.2 hx'.1
       have hinv : Formalism.HermitianLatticesTheory.gmap s.lin⁻¹ s.lam = s.lam' := by
         rw [← hγΛ, ← gmap_mul', inv_mul_cancel, gmap_one']
-      rw [hinv] at this
-      exact this
+      rwa [hinv] at this
     have hwo : w ∈ orth (VS D) A := by
       rw [mem_orth_iff]
       intro a ha
@@ -310,8 +298,7 @@ theorem liftTransNeed_of (hR : RatPtNeed X) (hTR : ToTermRel X u u' (X.Fu u) (X.
         show s.lin a ∈ Xsp (mapLF s.lin (lf D (X.Fu u')))
         rw [liftT_xsp_mapLF _ hγi]
         exact Submodule.mem_map_of_mem ha)
-      rw [← hw, isom_app hγi] at h0
-      exact h0
+      rwa [← hw, isom_app hγi] at h0
     have hn'w : n' w - w ∈ s.lam' ⊓ toO (VS D) A :=
       ⟨Submodule.sub_mem _ (liftT_maps hn'.1.2 hwΛ) hwΛ, hn'.2.2 w hwo⟩
     have hd : μ (n' w) - w ∈ s.lam' ⊓ toO (VS D) A := by

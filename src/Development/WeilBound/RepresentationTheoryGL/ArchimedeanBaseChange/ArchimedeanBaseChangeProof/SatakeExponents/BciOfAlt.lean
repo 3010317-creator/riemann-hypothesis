@@ -249,8 +249,7 @@ theorem side_bound {n : ℕ} (hn : 0 < n) (m m₁ : (E →+* ℂ) → Multiset �
   have hwb : ‖w‖ ≤ R + |C| := by
     have hA := abs_nonneg C
     have hB : |C| ≤ ((Fintype.card (E →+* ℂ) * n : ℕ) : ℝ) * |C| := le_mul_of_one_le_left hA hTn
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have := mul_lt_mul_of_pos_left hcon (lt_of_lt_of_le one_pos hTn)
     nlinarith
   refine ⟨hwb, fun τ x hx => ?_⟩
@@ -460,9 +459,7 @@ theorem caseB (hTB : TwBound) (hNE : NodeEmb) (hG : Graft) (hTS : TwShift) (hTr 
   refine caseB' hTB hNE hG hTS hTr hΩb hΘb hBTK hIH hRep (fun k => hVd _) (fun k => hVt _) (fun k => hVb _)
     (fun k => ?_) (fun ε hε => (tendsto_add_atTop_nat k₁).eventually (hsmall ε hε))
   by_contra hcon
-  apply hk₁ (k + k₁) (Nat.le_add_left _ _)
-  intro r hr hrN c hc
-  exact (hcon ⟨r, hr, hrN, c, hc⟩).elim
+  exact hk₁ (k + k₁) (Nat.le_add_left _ _) (fun r hr hrN c hc => (hcon ⟨r, hr, hrN, c, hc⟩).elim)
 
 
 variable (E) in
@@ -535,11 +532,9 @@ theorem q_all (hFD : FinDisc) (hBT : BlockTypes) (hTB : TwBound) (hNE : NodeEmb)
     refine seq_mono (hΘI M' W' K' hM' ((hΩb M').2 W' hW') ((hΘb M').2 K' hK')).2 (fun M x hx => ?_)
       (fun M x hx => ?_)
     · refine Or.inr ?_
-      simp only [Set.mem_iUnion]
-      exact ⟨M', hM', W', hW', hx⟩
+      simpa only [Set.mem_iUnion] using ⟨M', hM', W', hW', hx⟩
     · refine Or.inr ?_
-      simp only [Set.mem_iUnion]
-      exact ⟨M', hM', W', hW', K', hK', hx⟩
+      simpa only [Set.mem_iUnion] using ⟨M', hM', W', hW', K', hK', hx⟩
 
 theorem limit_of_finite_discrete (hFD : FinDisc) (hBT : BlockTypes) (hTB : TwBound) (hNE : NodeEmb) (hG : Graft) (hTS : TwShift)
     (hTr : TrStable) : Lim5 := by
@@ -599,8 +594,7 @@ theorem hasInfCharGL_mono {N : ℕ} {V W : Submodule ℂ (Sm E N)} {τ : E →+*
 theorem hasInfCharGL_tw {N : ℕ} {V : Submodule ℂ (Sm E N)} {τ : E →+* ℂ} {m : Multiset ℂ}
     (h : HasInfCharGL V τ m) (z : ℂ) : HasInfCharGL (tw V z) τ (m.map (· + z)) := by
   have hW := GlobalTheory.NormIndCap.hasInfCharGL_map_mulChi h (GlobalTheory.CuspRep.Model.absC E z)
-  rw [GlobalTheory.CuspRep.Model.expo_absC] at hW
-  exact hW
+  rwa [GlobalTheory.CuspRep.Model.expo_absC] at hW
 
 theorem prod_cancel (m₁ m₂ : Multiset ℂ) (u : ℂ) (r s : ℕ) :
     ((m₁.map (· + (s : ℂ) / 2)).map (u - (s : ℂ) / 2 + ·)).prod *
@@ -675,8 +669,7 @@ theorem lie_oneL_eq_zero {N : ℕ} (φ : Sm E N) (h : ∀ t g, φ.1 (splitCentre
     rw [← GlobalTheory.CuspRep.CuspidalL2GL.splitCentre_comm, h]
   rw [h2] at h1
   have h3 := h1.unique (hasDerivAt_const (0 : ℝ) (φ.1 g))
-  rw [GlobalTheory.CuspRep.CuspidalL2GL.splitCentre_zero, mul_one] at h3
-  exact h3
+  rwa [GlobalTheory.CuspRep.CuspidalL2GL.splitCentre_zero, mul_one] at h3
 
 theorem sum_trace_eq_zero {N : ℕ} {V : Submodule ℂ (Sm E N)} (hV : IsDiscrete V) (m : (E →+* ℂ) → Multiset ℂ)
     (hm : ∀ τ, HasInfCharGL V τ (m τ)) : ∑ τ, (m τ).sum = 0 := by
@@ -1122,8 +1115,7 @@ theorem flatFn_nodeFn : ∀ {E : Type} [Field E] [NumberField E] [_root_.NumberF
     funext z
     unfold chart
     split_ifs
-    · simp only [mul_assoc]
-      exact hleft u _
+    · simpa only [mul_assoc] using hleft u _
     · rfl
   rw [e1, cf, infGL_comm, ← mul_assoc]
   refine GlobalTheory.DiscSMO.contDiffAt_chart_mul ?_
@@ -1158,8 +1150,7 @@ theorem absFn_tendsto_one : ∀ {E : Type} [Field E] [NumberField E] [_root_.Num
   intro E _ _ _ N x w hw
   have hL : ∀ t : ℂ, absFn N t x =
       Complex.exp (t * (GlobalTheory.Mem.Chr.CharModel.logNorm E (GeneralLinearGroup.det x) : ℝ)) := by
-    intro t
-    exact GlobalTheory.Mem.Chr.CharModel.absHom_val E t (GeneralLinearGroup.det x)
+    exact fun t => GlobalTheory.Mem.Chr.CharModel.absHom_val E t (GeneralLinearGroup.det x)
   have h0 : Tendsto (fun k => Complex.exp (w k *
       (GlobalTheory.Mem.Chr.CharModel.logNorm E (GeneralLinearGroup.det x) : ℝ))) atTop
       (𝓝 (Complex.exp (0 * (GlobalTheory.Mem.Chr.CharModel.logNorm E (GeneralLinearGroup.det x) : ℝ)))) :=
@@ -1224,8 +1215,7 @@ theorem mult_tendsto {N : ℕ} (b : Tr E N) (γ : ℕ → ℕ → ℂ) (hγ : �
   | node t₁ t₂ ih₁ ih₂ =>
     have h := (ih₁ γ hγ (GlobalTheory.CompanionTheory.LimV.leviOf x).1).mul
       (ih₂ (fun k i => γ k (i + t₁.twists.length)) (fun i => hγ _) (GlobalTheory.CompanionTheory.LimV.leviOf x).2)
-    rw [one_mul] at h
-    exact h
+    rwa [one_mul] at h
 
 theorem mult_mem_Sm {N : ℕ} (b : Tr E N) (γ : ℕ → ℂ) : mult b γ ∈ Sm E N :=
   (mult_flat b γ).sm

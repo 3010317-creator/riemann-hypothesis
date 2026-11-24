@@ -87,9 +87,7 @@ theorem mem_Hp_of_orth {T T' : E} (Λ : Submodule (𝓞 E) S.V) (F : LFlag S r T
     · exact Submodule.span_le.2 (by rintro _ rfl; exact (hK _).2 hz')
   have hUUE : UUE Λ F F' ≤ K := Submodule.span_le.2 fun y hy => hUU hy
   show v ∈ orth S (UUE Λ F F')
-  simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
-  intro y hy
-  exact (hK y).1 (hUUE hy)
+  simpa only [orth, Submodule.mem_iInf, LinearMap.mem_ker] using fun y hy => (hK y).1 (hUUE hy)
 
 theorem finrank_Hp {T T' : E} (k : ℕ) (hdim : finrank E S.V = k + 2 * r + 1) (Λ : Submodule (𝓞 E) S.V)
     (hΛ : Submodule.IsFullLattice E Λ) (F : LFlag S r T) (F' : LFlag S r T') (hL : IsLift Λ F) (hL' : IsLift Λ F')
@@ -122,8 +120,7 @@ theorem s0_eq_one_iff_Th_eq_Hp {T T' : E} (k : ℕ) (hdim : finrank E S.V = k + 
   have h2 := Submodule.finrank_mono hle
   unfold s0
   constructor
-  · intro h
-    exact Submodule.eq_of_le_of_finrank_le hle (by omega)
+  · exact fun h => Submodule.eq_of_le_of_finrank_le hle (by omega)
   · intro h
     rw [h]; omega
 
@@ -161,8 +158,7 @@ theorem Th_symm {T T' : E} (k : ℕ) (hdim : finrank E S.V = k + 2 * r + 1) (Λ 
       simp [this]
     rw [h2, sub_zero] at hsub
     have h1 := Xsp_Hp_eq_zero Λ hΛ F F₁ hL hL₁ hG₁ hsub.2.2.1 hsub.1
-    apply Subtype.ext
-    exact Prod.ext (sub_eq_zero.1 (by simpa using h1)) hab
+    exact Subtype.ext (Prod.ext (sub_eq_zero.1 (by simpa using h1)) hab)
   have hrange : LinearMap.range f = P.map (LinearMap.snd E S.V S.V) := LinearMap.range_domRestrict _ _
   have hTh2 : finrank E P ≤ finrank E (P.map (LinearMap.snd E S.V S.V)) := by
     rw [← hrange, LinearMap.finrank_range_of_inj hf]
@@ -223,8 +219,7 @@ theorem mem_Xsp_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.H
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨γ.symm x, h, by simp⟩
+  · exact fun h => ⟨γ.symm x, h, by simp⟩
 
 end Gen
 
@@ -257,7 +252,7 @@ theorem corankOne_equivalence_holds : CorankOneEquivalence := by
     apply ht.1
     show Formalism.L2.SG.TermOp.Gt t = 0
     unfold Formalism.L2.SG.TermOp.Gt
-    rw [if_pos ((Formalism.L2.SG.Pf.SatGram.gterm_G Y t).trans h)]
+    rw [ite_eq_left ((Formalism.L2.SG.Pf.SatGram.gterm_G Y t).trans h)]
   have hlat : ∀ t : Formalism.L2.SG.TermOp.GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u'),
       Submodule.IsFullLattice D.host.E t.lam := fun t => ((Y.rowsOK u).1 t.lam t.mem).1.1
   have hLF : ∀ t : Formalism.L2.SG.TermOp.GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u'),
@@ -267,7 +262,7 @@ theorem corankOne_equivalence_holds : CorankOneEquivalence := by
   refine ⟨fun t ht => ?_, fun t ht t' ht' hr h1 => ?_, fun t ht t' ht' t'' ht'' hr1 hr2 h1 h2 => ?_⟩
   · show Formalism.L2.SG.TermOp.s0T t t = 1
     unfold Formalism.L2.SG.TermOp.s0T
-    rw [if_pos ⟨rfl, rfl⟩, mul_inv_cancel]
+    rw [ite_eq_left ⟨rfl, rfl⟩, mul_inv_cancel]
     exact (s0_eq_one_iff_Th_eq_Hp D.R.k hdim t.lam (hlat t) _ t.frame t.frame 1 (hLF t) (hLt t) (hGv t ht)).2
       (Th_one _ _ _)
   · have hlam : t.lam = t'.lam := congrArg (fun r => (r.1 : Submodule (𝓞 D.host.E) (VS D).V)) hr
@@ -275,8 +270,8 @@ theorem corankOne_equivalence_holds : CorankOneEquivalence := by
     have h1' : Formalism.L2.SG.TermOp.s0T t t' = 1 := h1
     show Formalism.L2.SG.TermOp.s0T t' t = 1
     unfold Formalism.L2.SG.TermOp.s0T at h1' ⊢
-    rw [if_pos ⟨hlam, hlam'⟩] at h1'
-    rw [if_pos ⟨hlam.symm, hlam'.symm⟩, ← hlam]
+    rw [ite_eq_left ⟨hlam, hlam'⟩] at h1'
+    rw [ite_eq_left ⟨hlam.symm, hlam'.symm⟩, ← hlam]
     have hth := (s0_eq_one_iff_Th_eq_Hp D.R.k hdim t.lam (hlat t) _ t.frame t'.frame _ (hLF t) (hLt t)
       (hGv t ht)).1 h1'
     have hL' : IsLift t.lam t'.frame := by rw [hlam]; exact hLt t'
@@ -293,9 +288,9 @@ theorem corankOne_equivalence_holds : CorankOneEquivalence := by
     have h2' : Formalism.L2.SG.TermOp.s0T t' t'' = 1 := h2
     show Formalism.L2.SG.TermOp.s0T t t'' = 1
     unfold Formalism.L2.SG.TermOp.s0T at h1' h2' ⊢
-    rw [if_pos ⟨hl1, hl1'⟩] at h1'
-    rw [if_pos ⟨hl2, hl2'⟩, ← hl1] at h2'
-    rw [if_pos ⟨hl1.trans hl2, hl1'.trans hl2'⟩]
+    rw [ite_eq_left ⟨hl1, hl1'⟩] at h1'
+    rw [ite_eq_left ⟨hl2, hl2'⟩, ← hl1] at h2'
+    rw [ite_eq_left ⟨hl1.trans hl2, hl1'.trans hl2'⟩]
     have hL' : IsLift t.lam t'.frame := by rw [hl1]; exact hLt t'
     have hth1 := (s0_eq_one_iff_Th_eq_Hp D.R.k hdim t.lam (hlat t) _ t.frame t'.frame _ (hLF t) (hLt t)
       (hGv t ht)).1 h1'

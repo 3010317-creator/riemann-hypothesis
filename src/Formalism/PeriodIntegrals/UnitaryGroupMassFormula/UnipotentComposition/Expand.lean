@@ -128,8 +128,7 @@ theorem ck_Rw {k r m : ℕ} {F : Mat k r → E} (hF : CkOn (m : ℕ∞) (GV k r)
     (hv : ∀ X ∈ v, inLie k r X) (n : ℕ) (hn : n + v.length ≤ m) : CkOn (n : ℕ∞) (GV k r) (Rw v F) := by
   rw [← Dw_wR]
   apply CkOn_Dw (fun x hx => by obtain ⟨X, hX, rfl⟩ := List.mem_map.1 hx; exact hv X hX)
-  simp only [wR, List.length_map]
-  exact sCkOn_mono (by exact_mod_cast hn) hF
+  simpa only [wR, List.length_map] using sCkOn_mono (by exact_mod_cast hn) hF
 
 theorem step_eq {k j ρ m : ℕ} {F : Mat k (j + ρ) → E} (hF : CkOn (m : ℕ∞) (GV k (j + ρ)) F)
     {X : Mat k (j + ρ)} (hX : inLie k (j + ρ) X) {L : FS k (j + ρ)}

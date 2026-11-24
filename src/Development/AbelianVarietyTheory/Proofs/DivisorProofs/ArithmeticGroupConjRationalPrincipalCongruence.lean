@@ -82,8 +82,7 @@ theorem latOf_congr (F E : Type) [Field F] [NumberField F] [Field E] [CharZero E
       apply hinj
       have e3 := congrFun e2 a
       simp only [Pi.sub_apply, Function.comp, zero_smul, Pi.zero_apply] at e3
-      simp only [Pi.sub_apply, Pi.zero_apply, map_sub, map_zero]
-      exact e3
+      simpa only [Pi.sub_apply, Pi.zero_apply, map_sub, map_zero] using e3
     refine ⟨0, ⟨0, zero_mem _, ?_⟩, by rw [hx0, zero_smul]⟩
     rw [Matrix.mulVec_zero]
     funext a
@@ -145,8 +144,7 @@ theorem conj_rat_congr : ∀ (D : D7) (V : Formalism.BasicNotions.TH.HSp D) (Com
   have key : ∀ h ∈ GinfC V, ∃ γ'' ∈ (X k).Γ,
       dict (g * h) = ⟨k, lact γ'' (rmul (x0 k) (archMat V th rfl x0 h k))⟩ := by
     have := hA g
-    rw [hg] at this
-    exact this
+    rwa [hg] at this
   have h0 := ReciprocityTheory.ChartRestriction.G.AR.Up.PairUnfoldPf.gramE (X k) hγ
   rw [hGm k] at h0
   have h1 : ((γ : Matrix (Fin V.rank) (Fin V.rank) D.host.E).map cc)ᵀ * V.gram * γ.1 = V.gram := by
@@ -228,8 +226,7 @@ theorem conj_rat_congr : ∀ (D : D7) (V : Formalism.BasicNotions.TH.HSp D) (Com
     have e0 : finHom V γ₀⁻¹ = Formalism.UG.bc (inclR (F := D.host.F) (E := D.host.E) (Af D.host.F)) δ⁻¹ := by
       rw [map_inv, map_inv, hd]
     have e := congrArg Units.val hfin'
-    rw [Units.val_mul, Units.val_mul, e0] at e
-    exact e
+    rwa [Units.val_mul, Units.val_mul, e0] at e
   have C1 := latOf_congr D.host.F D.host.E V.rank M (GlobalTheory.Member.latC V : Set (Fin V.rank → D.host.E))
     (finHom V g).1 (finHom V κ⁻¹).1 δ.1 hinj hκ2 he1
   have C2 := latOf_congr D.host.F D.host.E V.rank M (GlobalTheory.Member.latC V : Set (Fin V.rank → D.host.E))

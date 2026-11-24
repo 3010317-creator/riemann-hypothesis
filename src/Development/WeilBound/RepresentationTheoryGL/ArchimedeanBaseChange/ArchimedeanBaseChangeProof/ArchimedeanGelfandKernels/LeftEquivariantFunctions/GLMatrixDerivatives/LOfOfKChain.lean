@@ -113,8 +113,7 @@ theorem trL_cont (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [Fi
 
 theorem trL_mul_comm {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V]
     (A B : V →L[ℂ] V) : trL V (A * B) = trL V (B * A) := by
-  simp only [trL_apply, ContinuousLinearMap.toLinearMap_mul]
-  exact LinearMap.trace_mul_comm ℂ _ _
+  simpa only [trL_apply, ContinuousLinearMap.toLinearMap_mul] using LinearMap.trace_mul_comm ℂ _ _
 
 theorem sigma_mem {σ : (Fin n × Fin n → ℝ) → Mat n} (hσ2 : ∀ v ∈ cone n, σ v * (σ v)ᴴ = hOf v) {v} (hv : v ∈ cone n) :
     σ v ∈ GLs n := by
@@ -409,8 +408,7 @@ theorem mem_GLs_mul {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y 
   exact mul_ne_zero hx hy
 
 theorem unitary_mem_GLs (k : Matrix.unitaryGroup (Fin n) ℂ) : k.1 ∈ GLs n := by
-  have h := Matrix.UnitaryGroup.det_isUnit k
-  exact h.ne_zero
+  exact (Matrix.UnitaryGroup.det_isUnit k).ne_zero
 
 theorem isMult_props [MeasurableSpace (G n)] {μ : Measure (G n)} {E : KMod n} {k : Mat n → (E.V →L[ℂ] E.V)}
     {val : Inf n → ℂ} {T : ℝ} (h : IsMult μ E k val T) :
@@ -458,18 +456,18 @@ theorem lAsm : LAsm := by
     if y ∈ cone n ×ˢ cone n then Kc σ c Fr k Γ T d.val y else 0 with hK'def
   have hUU : IsOpen (cone n ×ˢ cone n) := hopen.prod hopen
   have hKK' : ∀ y ∈ cone n ×ˢ cone n, K' =ᶠ[𝓝 y] Kc σ c Fr k Γ T d.val := fun y hy =>
-    Filter.eventually_of_mem (hUU.mem_nhds hy) fun y' hy' => by simp only [hK'def, if_pos hy']
+    Filter.eventually_of_mem (hUU.mem_nhds hy) fun y' hy' => by simp only [hK'def, ite_eq_left hy']
   obtain ⟨hherm, htr, -, -, -, -, -, hoPt⟩ := hHb n
   have hH := hHom (Fin n × Fin n) E.V (fun i => ε (hb i)) (fun i => ι (hb i)) S Γ (cone n) (oPt n) K' hopen hconv hoPt
     (fun i j => by
       rw [hCx.car (hb i) (hb j) (hherm i) (hherm j), htr i j]
       split_ifs <;> simp)
     (fun i => hCx.Γε _) (fun i => hCx.Γι _) hCx.SΓ hCx.Ssmooth (fun s i => hCx.Sε s _) hCx.Sder
-    (hKsm.congr fun y hy => by simp only [hK'def, if_pos hy])
+    (hKsm.congr fun y hy => by simp only [hK'def, ite_eq_left hy])
     (fun y => by
       by_cases hy : y ∈ cone n ×ˢ cone n
-      · simp only [hK'def, if_pos hy]; exact hKΓ y hy
-      · simp only [hK'def, if_neg hy, mul_zero, zero_mul])
+      · simp only [hK'def, ite_eq_left hy]; exact hKΓ y hy
+      · simp only [hK'def, ite_eq_right hy, mul_zero, zero_mul])
     (fun y hy => by
       rw [(hKK' y hy).fderiv_eq]
       exact hKch y hy)
@@ -485,8 +483,7 @@ theorem lAsm : LAsm := by
     intro x hx hlt
     by_contra hne
     have hle : lg (x⁻¹ * diagonal z * xᴴ⁻¹) ≤ R := by
-      by_contra hgt
-      push_neg at hgt
+      by_contra! hgt
       exact hne (hd ▸ hsuppk _ (hd ▸ tw_mem_GLs hx hdG) hgt)
     have := hR' 1 ⟨zero_le_one, le_refl _⟩ x hx x hx (by simp) hle
     linarith
@@ -498,13 +495,12 @@ theorem lAsm : LAsm := by
   rw [← heq1, ← heq0]
   have e1 : ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 1 * K' (v, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) =
       ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 1 * Kc σ c Fr k Γ T d.val (v, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) :=
-    setIntegral_congr_fun hopen.measurableSet fun v hv => by simp only [hK'def, if_pos (show (v, v) ∈ cone n ×ˢ cone n from ⟨hv, hv⟩)]
+    setIntegral_congr_fun hopen.measurableSet fun v hv => by simp only [hK'def, ite_eq_left (show (v, v) ∈ cone n ×ˢ cone n from ⟨hv, hv⟩)]
   have e0 : ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 0 * K' (oPt n, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) =
       ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 0 * Kc σ c Fr k Γ T d.val (oPt n, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) :=
     setIntegral_congr_fun hopen.measurableSet fun v hv => by
-      simp only [hK'def, if_pos (show (oPt n, v) ∈ cone n ×ˢ cone n from ⟨hoPt, hv⟩)]
-  rw [← e1, ← e0]
-  exact hH
+      simp only [hK'def, ite_eq_left (show (oPt n, v) ∈ cone n ×ˢ cone n from ⟨hoPt, hv⟩)]
+  rwa [← e1, ← e0]
 
 end PositivityTheory.RgBcC.LfSt
 end -- clump:auto
@@ -631,8 +627,7 @@ theorem diag_unitary {z : Fin n → ℂ} (hz : ∀ a, ‖z a‖ = 1) : diagonal 
   simpa [hz i] using Complex.mul_conj' (z i)
 
 theorem lg_diag_mul {z : Fin n → ℂ} (hz : ∀ a, ‖z a‖ = 1) (x : Mat n) : lg (diagonal z * x) = lg x := by
-  have h := GlobalTheory.CompanionTheory.LengthGL.lg_unitary x ⟨diagonal z, diag_unitary hz⟩ 1
-  simpa using h
+  simpa using GlobalTheory.CompanionTheory.LengthGL.lg_unitary x ⟨diagonal z, diag_unitary hz⟩ 1
 
 def trL {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V] (A : V →L[ℂ] V) :
     (V →L[ℂ] V) →L[ℂ] ℂ :=

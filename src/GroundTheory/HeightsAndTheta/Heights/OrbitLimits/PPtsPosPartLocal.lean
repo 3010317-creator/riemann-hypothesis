@@ -257,8 +257,7 @@ theorem ptsPosDens_eq {P : Ideal (MRing ι)} {L : Fin e → HermLine ι} (hL : �
       obtain ⟨hyU, hw1⟩ := hNp _ hqN
       have hseg : segre (h.choose y) = segre (γ y) := hc.1.trans (hw1 ⟨h.choose y, hc.2.self_of_nhds.2.1, hc.1, hΨw⟩)
       have := apply_eq_of_segre_eq hmemE hc.2.self_of_nhds.2.1.1 hseg
-      rw [this]
-      exact hcE
+      rwa [this]
     · exact absurd rfl hne
   unfold ptsPosDens
   by_cases hy : y ∈ U ∩ γ ⁻¹' E
@@ -269,7 +268,7 @@ theorem ptsPosDens_eq {P : Ideal (MRing ι)} {L : Fin e → HermLine ι} (hL : �
     have hqN : (y, segre (γ y)) ∈ N := by
       have h := hEN _ hy.2 (by rw [hΨ1]; simp)
       rwa [crd_of_eq hΨ1, nrm_of_eq hΨ1] at h
-    rw [finsum_eq_single _ (segre (γ y)) ?_, finsum_eq_if, if_pos hfib,
+    rw [finsum_eq_single _ (segre (γ y)) ?_, finsum_eq_if, ite_eq_left hfib,
       sheetDensity_eq hL hEg hU hγ hN hNp hqN hfib, Set.indicator_of_mem (show γ y ∈ E from hy.2)]
     intro w hne
     rw [finsum_eq_if]
@@ -314,8 +313,7 @@ theorem PtsPosPartLocal.proof : PtsPosPartLocal.Statement := by
     have h2 : crd Ψ (segre z) = y₀ := by
       funext i
       simp [crd, h1]
-    rw [h2]
-    exact hq₀
+    rwa [h2]
   have hN0' : (crd Ψ' (segre z), nrm Ψ' (segre z)) ∈ N' := by
     have h1 : Ψ' (nrm Ψ' (segre z)) = Fin.cons 1 y₀' := by
       rw [← (hγ₀' y₀' (hNp' _ hq₀').1).2.2, hseg₀']
@@ -323,8 +321,7 @@ theorem PtsPosPartLocal.proof : PtsPosPartLocal.Statement := by
     have h2 : crd Ψ' (segre z) = y₀' := by
       funext i
       simp [crd, h1]
-    rw [h2]
-    exact hq₀'
+    rwa [h2]
 
   set WS : Set (((k : K) → ι k) → ℂ) := {w | Ψ w 0 ≠ 0 ∧ Ψ' w 0 ≠ 0 ∧ (crd Ψ w, nrm Ψ w) ∈ N ∧
     (crd Ψ' w, nrm Ψ' w) ∈ N'} with hWSdef
@@ -410,8 +407,7 @@ theorem PtsPosPartLocal.proof : PtsPosPartLocal.Statement := by
       · subst hk
         simp only [hcdef, Function.update_self]
         exact AnalyticAt.inv (f := fun y => Φ y 0) (analyticAt_pi_iff.mp (hΦan y hy.1) 0) hy0
-      · simp only [hcdef, Function.update_of_ne hk]
-        exact analyticAt_const
+      · simpa only [hcdef, Function.update_of_ne hk] using analyticAt_const
     have hγ'a : AnalyticAt ℂ γ₀' y := hγ₀'an y hy.1
     have hγta : AnalyticAt ℂ γt y :=
       analyticAt_pi_iff.mpr fun p => (hca p.1).mul (analyticAt_pi_iff.mp hγ'a p)
@@ -435,8 +431,7 @@ theorem PtsPosPartLocal.proof : PtsPosPartLocal.Statement := by
     intro y hy
     have h1 : crd Ψ' (segre (γ₀' y)) = y := crd_of_eq (hγ₀' y hy.1).2.2
     have h2 := crd_smul (Ψ := Ψ') hy.2.1 (nrm Ψ (segre (γ₀' y)))
-    rw [← eq_smul_nrm hy.2.1, h1] at h2
-    exact h2
+    rwa [← eq_smul_nrm hy.2.1, h1] at h2
   have hτinj : Set.InjOn τ O' := by
     intro y₁ h₁ y₂ h₂ h
     have e₁ := (hτU y₁ h₁).2

@@ -84,8 +84,7 @@ theorem joinClosureDeg_comp (ζ : Option (Option K) → ℤ) (L : Fin m → K �
   · simp only [joinClosureDeg, closureDeg, Fin.append_left]
     funext o
     simp
-  · simp only [joinClosureDeg, closureDeg, Fin.append_right]
-    exact joinDeg_comp_closureBlockEquiv _
+  · simpa only [joinClosureDeg, closureDeg, Fin.append_right] using joinDeg_comp_closureBlockEquiv _
 
 theorem joinClosureDeg_natAdd (ζ : Option (Option K) → ℤ) (L : Fin m → K → ℤ) :
     joinClosureDeg ζ L ∘ Fin.natAdd 1 = fun j => joinDeg (L j) := by
@@ -99,8 +98,7 @@ theorem rename_closureForm {R : Type*} [CommRing R] (M M' : ℕ) (h : MRing (bun
   funext i
   refine Fin.addCases (fun i => ?_) (fun j => ?_) i
   · simp only [joinClosureForm, closureForm, Fin.append_left]
-  · simp only [joinClosureForm, closureForm, Fin.append_right]
-    exact rename_liftPairForm ι M M' _
+  · simpa only [joinClosureForm, closureForm, Fin.append_right] using rename_liftPairForm ι M M' _
 
 theorem joinClosureForm_natAdd {R : Type*} [CommRing R] (M M' : ℕ) (h : MRing (Sum.elim ι (lineBlocks M M')) R)
     (F : Fin m → MRing ι R) : joinClosureForm M M' h F ∘ Fin.natAdd 1 = fun j => joinForm (F j) := by
@@ -221,8 +219,7 @@ theorem SegreFlagClosurePullback.proof (hPull : PairNumberPullback.Statement)
           closureBlockEquiv K = zetaFirst a₀ - zetaSecond a₀' := by
         funext o
         simp
-      rw [hζ]
-      exact hD₁
+      rwa [hζ]
     · simp only [joinClosureDeg, joinClosureForm, Fin.append_right]
       have hd : joinDeg (K' := Option Unit) (Fin.append x z j) - joinDeg (Fin.append x' z' j) =
           joinDeg (Fin.append x z j - Fin.append x' z' j) := by

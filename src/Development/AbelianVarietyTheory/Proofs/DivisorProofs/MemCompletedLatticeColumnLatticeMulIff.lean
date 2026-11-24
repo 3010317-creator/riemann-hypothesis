@@ -97,11 +97,9 @@ theorem mem_hatL_colLat_mul (D : D7) {n : ℕ} (γ B : GL (Fin n) D.host.E) : �
     rw [colLat_mul] at hx
     obtain ⟨y, hy, rfl⟩ := hx
     show ((γ⁻¹ : GL (Fin n) D.host.E) : Matrix (Fin n) (Fin n) D.host.E) *ᵥ ((γ : Matrix (Fin n) (Fin n) D.host.E) *ᵥ y) ∈ _
-    rw [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
-    exact hy
+    rwa [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
   constructor
-  · intro hv
-    exact mulVec_map_mem_hatL _ _ _ h2 v hv
+  · exact fun hv => mulVec_map_mem_hatL _ _ _ h2 v hv
   · intro hv
     have := mulVec_map_mem_hatL _ _ _ h1 _ hv
     rwa [Matrix.mulVec_mulVec, ← Matrix.map_mul, Units.mul_inv, Matrix.map_one _ (map_zero _) (map_one _),

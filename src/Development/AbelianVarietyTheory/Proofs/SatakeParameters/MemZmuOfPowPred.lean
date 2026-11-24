@@ -279,7 +279,7 @@ theorem eN_of_not {N i : ℕ} (h : ¬ i < N) : Loc.eN E N i = 0 := by
   funext l
   have := l.2
   simp only [Loc.eN, Pi.zero_apply]
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 theorem entB_int {n' c' n c : ℕ} (k₀ : ℕ) {ex' ex : ℕ → ℕ} {x : HomE E (n' + c') (n + c)}
     (h : x ∈ homS (LocE.lamY P (qOf P) n' c' ex') (LocE.lamY P (qOf P) n c ex)) (p p' : ℕ) :
@@ -306,8 +306,7 @@ theorem homS_of_entB {n' c' n c k₀ : ℕ} (hk' : k₀ ≤ n') (hk : k₀ ≤ n
   obtain ⟨h1', h2'⟩ := fIdx_fPos hk' l'.2
   have := h _ _ h1 h1'
   unfold LocE.entB Loc.atN at this
-  rw [h2, h2', dite_eq_left l.2, eN_eq l'.2] at this
-  exact this
+  rwa [h2, h2', dite_eq_left l.2, eN_eq l'.2] at this
 
 omit [NumberField E] [StarRing E] in
 theorem entB_add_smul {N' N : ℕ} (q k₀ c' n' c n : ℕ) (ex' ex : ℕ → ℕ) (x z : HomE E N' N) (s : E) :
@@ -346,13 +345,13 @@ end Lat
 
 theorem ne_of_ite {α : Type} [Zero α] {p : Prop} {_ : Decidable p} {a : α} (h : (if p then a else 0) ≠ 0) : p := by
   by_contra hp
-  exact h (if_neg hp)
+  exact h (ite_eq_right hp)
 
 theorem ite_eq_ite_zero {α : Type} [Zero α] {p q : Prop} {_ : Decidable p} {_ : Decidable q} {a b : α} (h : p ↔ q)
     (h' : q → a = b) : (if p then a else 0) = if q then b else 0 := by
   by_cases hq : q
-  · rw [if_pos hq, if_pos (h.2 hq), h' hq]
-  · rw [if_neg hq, if_neg (fun hp => hq (h.1 hp))]
+  · rw [ite_eq_left hq, ite_eq_left (h.2 hq), h' hq]
+  · rw [ite_eq_right hq, ite_eq_right (fun hp => hq (h.1 hp))]
 
 section Data
 
@@ -576,12 +575,11 @@ theorem exists_split {V : Type} {n : ℕ} (F : V → Sp E n → K) (h1 : ∀ x y
       rw [← Submodule.Quotient.eq, hmk, Subtype.ext_iff, eq_comm]
     rw [Finset.sum_eq_single ⟨Submodule.Quotient.mk y, y, hy, rfl⟩]
     · dsimp only
-      rw [if_pos ((key _).2 rfl), mul_one, ← h2 x (a _) _ ((key _).2 rfl), add_sub_cancel]
+      rw [ite_eq_left ((key _).2 rfl), mul_one, ← h2 x (a _) _ ((key _).2 rfl), add_sub_cancel]
     · intro i _ hi
       dsimp only
-      rw [if_neg (fun h => hi ((key i).1 h)), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+      rw [ite_eq_right (fun h => hi ((key i).1 h)), mul_zero]
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [of_not_not fun h => hy (h1 x y h), Finset.sum_eq_zero]
     intro i _
     exact mul_eq_zero_of_right _ (of_not_not fun h => hy ((colFn_indicator (K := K) P _ (ha i)).1 y h))

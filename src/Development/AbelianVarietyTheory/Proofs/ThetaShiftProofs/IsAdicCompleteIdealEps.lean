@@ -135,8 +135,7 @@ theorem isJet_zero (z : V) : IsJet (fun _ => 0) z 0 := ⟨fun n => by simp, rfl,
 theorem IsJet.add {x x' : V → ℂ⟦X⟧} {y y' : DualNumber ℂ⟦X⟧} (h : IsJet x z y) (h' : IsJet x' z y') :
     IsJet (fun v => x v + x' v) z (y + y') := by
   refine ⟨fun n => ?_, by simp [h.2.1, h'.2.1], fun n => ?_⟩
-  · simp only [map_add (f := _)]
-    exact (h.1 n).fun_add (h'.1 n)
+  · simpa only [map_add (f := _)] using (h.1 n).fun_add (h'.1 n)
   · simp only [map_add (f := _), TrivSqZeroExt.snd_add]
     rw [fderiv_fun_add (h.1 n) (h'.1 n), h.2.2, h'.2.2, ContinuousLinearMap.add_apply]
 
@@ -152,8 +151,7 @@ theorem IsJet.sum {K : Type} (s : Finset K) {x : K → V → ℂ⟦X⟧} {y : K 
 theorem IsJet.const_mul {x : V → ℂ⟦X⟧} {y : DualNumber ℂ⟦X⟧} (h : IsJet x z y) (r : ℂ⟦X⟧) :
     IsJet (fun v => r * x v) z (TrivSqZeroExt.inl r * y) := by
   refine ⟨fun n => ?_, by simp [h.2.1], fun n => ?_⟩
-  · simp only [PowerSeries.coeff_mul]
-    exact DifferentiableAt.fun_sum fun p _ => (h.1 _).const_mul _
+  · simpa only [PowerSeries.coeff_mul] using DifferentiableAt.fun_sum fun p _ => (h.1 _).const_mul _
   · have e : (TrivSqZeroExt.inl r * y : DualNumber ℂ⟦X⟧).snd = r * y.snd := by simp [TrivSqZeroExt.snd_mul]
     simp only [e, PowerSeries.coeff_mul]
     rw [fderiv_fun_sum fun p _ => (h.1 _).const_mul _, ContinuousLinearMap.sum_apply]
@@ -184,8 +182,7 @@ theorem isJet_of_approx {x : V → ℂ⟦X⟧} {y : DualNumber ℂ⟦X⟧}
     rwa [map_sub, sub_eq_zero] at this
   refine ⟨fun n => ?_, PowerSeries.ext fun n => ?_, fun n => ?_⟩
   · obtain ⟨x', y', h₁, h₂, -⟩ := h n
-    simp only [fun v => key n _ _ (h₂ v)]
-    exact h₁.1 n
+    simpa only [fun v => key n _ _ (h₂ v)] using h₁.1 n
   · obtain ⟨x', y', h₁, h₂, h₃⟩ := h n
     rw [key n _ _ (h₂ 0), ← h₁.2.1]
     exact key n _ _ (by simpa using (mem_idealEps_pow h₃).1)
@@ -215,8 +212,7 @@ theorem IsJet.dualMapR_eq {x : V → ℂ⟦X⟧} {y : DualNumber ℂ⟦X⟧} (h 
   simp only [PowerSeries.coeff_coe]
   by_cases hk : k < 0
   · simp [hk]
-  · simp only [if_neg hk]
-    exact h.2.2 _
+  · simpa only [ite_eq_right hk] using h.2.2 _
 
 end Jet
 

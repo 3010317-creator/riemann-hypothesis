@@ -68,7 +68,7 @@ theorem convolution_one {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] 
   rw [finsum_eq_single _ 0]
   · simp
   · intro j hj
-    rw [PowerSeries.coeff_one, if_neg hj, zero_smul]
+    rw [PowerSeries.coeff_one, ite_eq_right hj, zero_smul]
 
 variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K]
     [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K]
@@ -186,8 +186,7 @@ theorem phiIt_levB (Lb : LevB W) (T : LocLat G Qp LL O)
   have h := phiIt_levB_gen Lb T levB_φ lev_φ hp0 m (c - ell) x ell hN ζ ⟨s + 1, hζ⟩ k
   have h1 : ζ ^ PD.p ^ ell = 1 :=
     (hζ.pow_eq_one_iff_dvd _).2 (pow_dvd_pow _ hs)
-  rw [h1, sub_add_cancel] at h
-  exact h
+  rwa [h1, sub_add_cancel] at h
 
 end Formalism.MainNotions.N.Ln03.Pf
 end -- clump:auto
@@ -227,10 +226,8 @@ theorem Pf_LvExp_coeff_smul (x : PowerSeries R) (y : HahnModule ℤ R M) (m : �
     have h2 : ((HahnModule.of R).symm y).coeff (k - j) ≠ 0 := fun h => hj (by rw [h, smul_zero])
     rw [Finset.mem_vaddAntidiagonal]
     refine ⟨?_, ?_, ?_⟩
-    · rw [HahnSeries.mem_support, HahnSeries.ofPowerSeries_apply_coeff]
-      exact h1
-    · rw [HahnSeries.mem_support]
-      exact h2
+    · rwa [HahnSeries.mem_support, HahnSeries.ofPowerSeries_apply_coeff]
+    · rwa [HahnSeries.mem_support]
     · show (j : ℤ) + (k - j) = k
       ring
   · intro j _ _ j' _ _ h
@@ -280,16 +277,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
     {v : AddValuation LL (WithTop ℚ)} {n : ℕ} [NeZero n] {W : LocWach PD LL O v n}
 
 theorem Pf_LvExp_ιV_inj (T : LocLat G Qp LL O) : Function.Injective (ιV PD (LL := LL) (V := T.V)) := by
-  have h : ∀ y, ιV PD (LL := LL) (V := T.V) y =
-      ((PD.ι.toLinearMap.restrictScalars Qp).lTensor T.V) y := fun y => by
-    induction y using TensorProduct.induction_on with
-    | zero => simp
-    | tmul x b => simp [ιV]
-    | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-  have hi : Function.Injective (PD.ι.toLinearMap.restrictScalars Qp) := PD.ι_inj
-  intro a b hab
-  rw [h, h] at hab
-  exact Module.Flat.lTensor_preserves_injective_linearMap _ hi hab
+  exact Formalism.MainNotions.N.Ln03.Pf.crystalline_to_deRham_injective T
 
 
 open Classical in
@@ -597,8 +585,7 @@ theorem level_expansion_exponent {T : LocLat G Qp LL O} {C : Coord W (baseIdOf h
   have hc : (PowerSeries.coeff i (rhoL hR c s (a * Pm))) ζ =
       PowerSeries.coeff i (W.lev c (ζ : LL) ((baseIdOf hR).d (a * Pm))) := by
     have := congrArg (PowerSeries.coeff i) (map_eval_rhoL hR c s (a * Pm) ζ)
-    rw [PowerSeries.coeff_map] at this
-    exact this
+    rwa [PowerSeries.coeff_map] at this
   rw [Submodule.coe_smul, hc]
   congr 1
   show _ = ((Pf_LvExp_Φ W s (Dc W T c) ((1 : KsW W s) ⊗ₜ[LL]

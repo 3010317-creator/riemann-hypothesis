@@ -111,8 +111,7 @@ theorem homog_pt {n d : ℕ} (P : V n → ℂ) (hP : ∀ (t : ℂ) (y : V n), P 
     exact this.mono_left nhdsWithin_le_nhds
   have hb : ∀ᶠ t in 𝓝[≠] (0 : ℂ), ‖P y‖ ≤ C * ‖y‖ ^ (d + 1) * ‖t‖ := by
     filter_upwards [ht.eventually hC, self_mem_nhdsWithin] with t h1 h2
-    rw [hP, norm_mul, norm_pow, norm_smul] at h1
-    rw [Real.norm_of_nonneg (by positivity), mul_pow] at h1
+    rw [hP, norm_mul, norm_pow, norm_smul, Real.norm_of_nonneg (by positivity), mul_pow] at h1
     have ht0 : 0 < ‖t‖ ^ d := pow_pos (norm_pos_iff.2 h2) d
     have h3 : ‖t‖ ^ d * ‖P y‖ ≤ ‖t‖ ^ d * (C * ‖y‖ ^ (d + 1) * ‖t‖) := by
       calc _ ≤ _ := h1
@@ -141,15 +140,12 @@ theorem coeff_zero {n : ℕ} (A : Finset (Fin n → ℕ)) (b : (Fin n → ℕ) �
     simp
   intro α hα
   have := congrArg (AddMonoidAlgebra.coeff · (Finsupp.equivFunOnFinite.symm α)) hp
-  rw [hpdef, MvPolynomial.coeff_sum, MvPolynomial.coeff_zero] at this
-  rw [Finset.sum_eq_single α] at this
+  rw [hpdef, MvPolynomial.coeff_sum, MvPolynomial.coeff_zero, Finset.sum_eq_single α] at this
   · simpa [MvPolynomial.coeff_monomial] using this
   · intro β _ hβ
-    rw [MvPolynomial.coeff_monomial, if_neg]
-    intro he
-    exact hβ (Finsupp.equivFunOnFinite.symm.injective he)
-  · intro h'
-    exact absurd hα h'
+    rw [MvPolynomial.coeff_monomial, ite_eq_right]
+    exact fun he => hβ (Finsupp.equivFunOnFinite.symm.injective he)
+  · exact fun h' => absurd hα h'
 
 theorem homog_L {n d : ℕ} (b : (Fin n → ℕ) → ℂ) (L : V n ≃L[ℂ] V n)
     (h : (fun z => ∑ α ∈ Finset.Nat.antidiagonalTuple n d, b α * ∏ i, (L z) i ^ α i) =O[𝓝 0]
@@ -551,19 +547,19 @@ theorem comb_facts {Ψ : Finset (E →+* ℂ)} {r p0 : ℕ} (s c : ℕ) {A L la 
   refine ⟨fun τ i j hij hj => ?_, fun τ i j hi hij => ?_, fun τ i j hi hj => ?_⟩
   · have hi : (i : ℕ) < p0 := lt_of_le_of_lt (Fin.le_def.1 hij) hj
     rw [hla, hla]
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds.deMul, if_pos hi, if_pos hj]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds.deMul, ite_eq_left hi, ite_eq_left hj]
     have h1 := mA τ i j hij (Or.inl hj)
     have h2 := mul_le_mul_of_nonneg_left (mL τ i j hij (Or.inl hj)) hc
     linarith
   · have hj : ¬ (j : ℕ) < p0 := by have := Fin.le_def.1 hij; omega
     have hi' : ¬ (i : ℕ) < p0 := by omega
     rw [hla, hla]
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds.deMul, if_neg hi', if_neg hj]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds.deMul, ite_eq_right hi', ite_eq_right hj]
     have h1 := mA τ i j hij (Or.inr hi)
     have h2 := mul_le_mul_of_nonneg_left (mL τ i j hij (Or.inr hi)) hc
     linarith
   · rw [hla, hla]
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds.deMul, if_pos hi, if_neg (not_lt.2 hj)]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds.deMul, ite_eq_left hi, ite_eq_right (not_lt.2 hj)]
     have pA := pair_of le_rfl hA hpA τ i j hi hj
     have pL := mul_le_mul_of_nonneg_left (pair_of zero_le_one hL hpL τ i j hi hj) (Nat.cast_nonneg (α := ℝ) c)
     have hs2 : ((s / 2 : ℕ) : ℝ) * 2 ≤ s := by exact_mod_cast Nat.div_mul_le_self s 2
@@ -622,8 +618,7 @@ theorem prod_mem_SS {r : ℕ} (X : Data E r) (Xa : ArchInM X) (Fl : FlatM X Xa) 
     ring
   · have hsum : ∑ q, α q = Xa.T := by omega
     obtain ⟨k, hk⟩ : ∃ k, α k ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       simp [hc] at hsum
       omega
     have hB := GlobalTheory.UpTie.LeadCount.bdd_mul_prod X (GlobalTheory.UpTie.LeadCount.bdd_mul_pow X hQ (hsb k) (α k - 1))
@@ -785,8 +780,7 @@ theorem GlobalTheory.ShareOn.lowerRank_oneComponent : ∀ (E : Type) [Field E] [
     have hc : ∀ q, cc (e q).1.2 (e q).1.1 = a q := by
       intro q
       have h : ((e q).1.1, (e q).1.2) ∈ PM := (e q).2
-      simp only [cc, dif_pos h]
-      exact congrArg a (e.symm_apply_apply q)
+      simpa only [cc, dite_eq_left h] using congrArg a (e.symm_apply_apply q)
     have hlead : ∀ x ∈ X.dom, leadM X.toData Fl.s Fl.w0 F Xa.T (Xa.T + 1) cc x = 0 := by
       intro x hx
       have h1 : leadM X.toData Fl.s Fl.w0 F Xa.T (Xa.T + 1) cc x =
@@ -796,8 +790,7 @@ theorem GlobalTheory.ShareOn.lowerRank_oneComponent : ∀ (E : Type) [Field E] [
         refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun α _ => ?_
         simp only [f]
         ring
-      rw [h1, ← Finset.sum_coe_sort PM, ← e.sum_comp]
-      rw [← ha x hx]
+      rw [h1, ← Finset.sum_coe_sort PM, ← e.sum_comp, ← ha x hx]
       refine Finset.sum_congr rfl fun q _ => ?_
       rw [hc q]
     have h7 := _root_.GlobalTheory.JetIndepAtPts.leadM_coeff_zero E r X.toData Xa Fl F hFd hFval Xa.T cc hlead

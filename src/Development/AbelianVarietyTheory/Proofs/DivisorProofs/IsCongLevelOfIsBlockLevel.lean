@@ -195,8 +195,7 @@ theorem exists_std_of_GfC (V : HSp D) (hG : V.gram = 1) (g : GA D V) (hg : g ∈
   have hM : Formalism.UG.cT (sigR (Af D.host.F) D.sp.cm.sig) M * M = 1 := by
     have h2 := GlobalTheory.UnitarySplit.finHom_mem V g
     change Formalism.UG.cT _ M * JR (Af D.host.F) V.gram * M = JR (Af D.host.F) V.gram at h2
-    rw [hG, JR, Matrix.map_one _ (map_zero _) (map_one _), mul_one] at h2
-    exact h2
+    rwa [hG, JR, Matrix.map_one _ (map_zero _) (map_one _), mul_one] at h2
   have hu : Formalism.UG.cT (Formalism.MainNotions.StandardLatticesGL3.sgA D) (M.map (GlobalTheory.BotFormula.toAfE D).symm.toRingHom) *
       M.map (GlobalTheory.BotFormula.toAfE D).symm.toRingHom = 1 := by
     refine GlobalTheory.DefU.ClassFin.unitary_map _ (sigR (Af D.host.F) D.sp.cm.sig) _ ?_ _ hM
@@ -207,10 +206,8 @@ theorem exists_std_of_GfC (V : HSp D) (hG : V.gram = 1) (g : GA D V) (hg : g ∈
   have hx0 : x0 ∈ Formalism.MainNotions.StandardLatticesGL3.GA D V.rank := by
     change Formalism.UG.cT _ (M.map (GlobalTheory.BotFormula.toAfE D).symm.toRingHom) *
       (1 : Matrix (Fin V.rank) (Fin V.rank) D.host.E).map _ * (M.map (GlobalTheory.BotFormula.toAfE D).symm.toRingHom) = _
-    rw [Matrix.map_one _ (map_zero _) (map_one _), mul_one]
-    exact hu
-  refine ⟨⟨x0, hx0⟩, hg, rfl, fun i j => ?_⟩
-  exact (toFinE_toAfE_symm _).symm
+    rwa [Matrix.map_one _ (map_zero _) (map_one _), mul_one]
+  exact ⟨⟨x0, hx0⟩, hg, rfl, fun i j => (toFinE_toAfE_symm _).symm⟩
 
 theorem exists_GQ_of_rat (V : HSp D) (hG : V.gram = 1) (x : Formalism.MainNotions.StandardLatticesGL3.GA D V.rank) (hxr : x ∈ ratG D V.rank)
     (g : GA D V) (hg : ∀ i j,
@@ -540,9 +537,7 @@ theorem cong_transfer (e : TensorProduct D.host.F (Af D.host.F) D.host.E) (c : F
     (hz : z ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) (hc : Lev.swapAE D e - (b : Lev.EAf D) = N • z) :
     ∃ s ∈ Formalism.MainNotions.StandardLatticesGL3.OhE D, c - (b : Formalism.MainNotions.StandardLatticesGL3.AE D) = (N : Formalism.MainNotions.StandardLatticesGL3.AE D) * s := by
   set w := (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E).symm z with hw_def
-  have hw : Lev.swapAE D w = z := by
-    show (Algebra.TensorProduct.comm _ _ _) ((Algebra.TensorProduct.comm _ _ _).symm z) = z
-    exact AlgEquiv.apply_symm_apply _ _
+  have hw : Lev.swapAE D w = z := AlgEquiv.apply_symm_apply _ _
   set s := (GlobalTheory.BotFormula.toFinE D).symm (GlobalTheory.LFun.finAdEquiv D.host.F D.host.E w) with hs_def
   have hs : s ∈ Formalism.MainNotions.StandardLatticesGL3.OhE D :=
     (swap_mem_iff w s (by rw [hs_def, RingEquiv.apply_symm_apply])).1 (hw ▸ hz)
@@ -687,8 +682,7 @@ theorem exists_level : ∀ {D : D7} (V : HSp D) (n : ℕ) (ι : Formalism.MainNo
       refine h.mono fun κ hκ => ?_
       obtain ⟨z, hz, hz'⟩ := hκ
       refine ⟨z, hz, ?_⟩
-      rw [inv_one, one_mul, mul_one] at hz'
-      exact hz'
+      rwa [inv_one, one_mul, mul_one] at hz'
     have hev2 : ∀ᶠ κ in nhds (1 : GA D V), ∃ z : Matrix (Fin V.rank) (Fin V.rank) (Lev.EAf D),
         (∀ i j, z i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) ∧ (Lev.finE V κ⁻¹).val - 1 = m • z := by
       have hc2 : Continuous fun κ : GA D V => finHom V κ⁻¹ := hc.comp continuous_inv
@@ -697,8 +691,7 @@ theorem exists_level : ∀ {D : D7} (V : HSp D) (n : ℕ) (ι : Formalism.MainNo
       refine h.mono fun κ hκ => ?_
       obtain ⟨z, hz, hz'⟩ := hκ
       refine ⟨z, hz, ?_⟩
-      rw [inv_one, one_mul, mul_one] at hz'
-      exact hz'
+      rwa [inv_one, one_mul, mul_one] at hz'
     filter_upwards [hev1, hev2] with κ ⟨z, hz, hz'⟩ ⟨z2, hz2, hz2'⟩
     obtain ⟨a, ha, k, hk, hκ⟩ := (GlobalTheory.UnitarySplit.real_finite_split D V).1 κ
     obtain ⟨x, hx⟩ : k ∈ ι.range := hrange ▸ hk
@@ -1152,8 +1145,7 @@ theorem measure_eq_relIndex_smul : ∀ {D : D7} (V : HSp D) (n : ℕ) (ι : Form
     · rintro ⟨g, hg, rfl⟩
       obtain ⟨x, hx⟩ := hfin g
       refine ⟨ι x, ⟨x, (hJK₀ x).1 ?_, rfl⟩, hx⟩
-      rw [hx]
-      exact hg
+      rwa [hx]
   have hidx : (K.comap (Lev.finE V)).relIndex (K₀.comap (Lev.finE V)) = J.relIndex J₀ := by
     rw [e1, Subgroup.relIndex_comap, Subgroup.relIndex_comap, ← Subgroup.map_map, e2]
   haveI : ((K.comap (Lev.finE V)).subgroupOf (K₀.comap (Lev.finE V))).FiniteIndex := ⟨hidx.trans_ne hJi⟩
@@ -1417,9 +1409,8 @@ theorem pi_prod_rows_orthonormal {K : Type} [Fintype K] [DecidableEq K] {κ : K 
   rw [Finset.prod_congr rfl (fun k _ => hA k (T k) (T'' k)), Finset.prod_boole]
   by_cases hT : T = T''
   · subst hT; simp
-  · rw [if_neg hT, if_neg]
-    intro hall
-    exact hT (funext fun k => hall k (Finset.mem_univ k))
+  · rw [ite_eq_right hT, ite_eq_right]
+    exact fun hall => hT (funext fun k => hall k (Finset.mem_univ k))
 
 theorem unitary_tensor_places_positions : ∀ (J ι : Type) [Fintype J] [DecidableEq J] [Fintype ι]
     [DecidableEq ι] (n : J → ℕ) (C : J → Matrix ι ι ℂ), (∀ j, C j ∈ Matrix.unitaryGroup ι ℂ) →
@@ -1834,15 +1825,13 @@ theorem IsExact.isDictWt (hI : GlobalTheory.NormSum.Inp D) (h : IsExact P X r) :
   · have h1 := h.reads_om hI k 1 hF h.read
     rw [P.fix k hk] at h1
     have h2 := h.om_fock k 1 T
-    rw [h1.unique h.read, map_one] at h2
-    exact h2
+    rwa [h1.unique h.read, map_one] at h2
   · obtain ⟨c, hc, hcF⟩ := P.eig j hj
     refine ⟨c, hc, fun T => ?_⟩
     have h1 := h.reads_om hI 1 j hF h.read
     rw [hcF] at h1
     have h2 := h.om_fock 1 j T
-    rw [h1.unique (h.read.smul c), map_one, GlobalTheory.FiniteFock.pureTensorO_smul] at h2
-    exact h2
+    rwa [h1.unique (h.read.smul c), map_one, GlobalTheory.FiniteFock.pureTensorO_smul] at h2
 
 theorem IsExact.upConv (hI : GlobalTheory.NormSum.Inp D) (h : IsExact P X r) {K₀ : Subgroup (GL (Fin X.B.rank) (Lev.EAf D))}
     {μ₀ : Measure (GA D X.B)} (hm : IsMaxLevel X.toFrame K₀ μ₀) (T : Tup D P.a P.d P.n) :

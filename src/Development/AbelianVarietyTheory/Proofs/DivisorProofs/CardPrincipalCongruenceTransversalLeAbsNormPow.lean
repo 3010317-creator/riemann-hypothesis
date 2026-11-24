@@ -67,9 +67,7 @@ theorem GlobalTheory.card_congRep_le : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E
     have h4 : CongOne D 𝔪 (r'⁻¹ * r') := by
       rw [inv_mul_cancel]; exact congOne_one 𝔪 a
     obtain ⟨s, -, hs⟩ := huniq r' (hR r' hr')
-    have e1 := hs r ⟨hr, h3⟩
-    have e2 := hs r' ⟨hr', h4⟩
-    exact Subtype.ext (e1.trans e2.symm)
+    exact Subtype.ext ((hs r ⟨hr, h3⟩).trans (hs r' ⟨hr', h4⟩).symm)
   have hc := Nat.card_le_card_of_injective f hf
   rw [Nat.card_eq_fintype_card, Fintype.card_coe] at hc
   calc R.card ≤ Nat.card Q := hc

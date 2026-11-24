@@ -27,8 +27,7 @@ theorem colH_ge (hν : Antitone ν) {k : ℕ} (t : Fin n) (h : k < ν t) : t.val
   have hsub : Finset.Iic t ⊆ Finset.univ.filter fun u : Fin n => k < ν u := by
     intro u hu
     rw [Finset.mem_Iic] at hu
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact lt_of_lt_of_le h (hν hu)
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using lt_of_lt_of_le h (hν hu)
   have := Finset.card_le_card hsub
   rwa [Fin.card_Iic] at this
 
@@ -105,16 +104,14 @@ theorem card_fin_Ico (c a b : ℕ) (hb : b ≤ c) :
 
 theorem card_fin_lt (c m : ℕ) (hm : m ≤ c) : (Finset.univ.filter fun k : Fin c => k.val < m).card = m := by
   have := card_fin_Ico c 0 m hm
-  simp only [Nat.zero_le, true_and, Nat.sub_zero] at this
-  exact this
+  simpa only [Nat.zero_le, true_and, Nat.sub_zero] using this
 
 theorem card_colH_eq {n : ℕ} {ν : Fin n → ℕ} (hν : Antitone ν) (c : ℕ) (hc : ∀ t, ν t ≤ c) (s : Fin n) :
     (Finset.univ.filter fun k : Fin c => colH ν k.val = s.val + 1).card = ν s - nuNext ν s := by
   have : (Finset.univ.filter fun k : Fin c => colH ν k.val = s.val + 1) =
       Finset.univ.filter fun k : Fin c => nuNext ν s ≤ k.val ∧ k.val < ν s := by
     ext k
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact colH_eq_iff hν k.val s
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using colH_eq_iff hν k.val s
   rw [this, card_fin_Ico c _ _ (hc s)]
 
 theorem prod_colH {M : Type*} [CommMonoid M] {n : ℕ} {ν : Fin n → ℕ} (hν : Antitone ν) (c : ℕ) (hc : ∀ t, ν t ≤ c)
@@ -165,16 +162,16 @@ theorem hvE_eq (K : Type) [CommRing K] (n : ℕ) (ν : Fin n → ℕ) (hν : Ant
     hvE (fun a i => C (x a i)) (yV K n) c (fun k => colH ν k.val) (fun k => colH_le ν k.val) =
       rowAct K (Matrix.of fun i a : Fin n => x a i.val) (hw K le_rfl ν) := by
   let F : ℕ → MvPolynomial (Fin n × Fin n) K := fun m => if h : m ≤ n then lpMinor K m h h else 1
-  have hF : F 0 = 1 := by simp only [F, Nat.zero_le, dif_pos]; unfold lpMinor; exact Matrix.det_isEmpty
+  have hF : F 0 = 1 := by simp only [F, Nat.zero_le, dite_eq_left]; unfold lpMinor; exact Matrix.det_isEmpty
   have hhw : hw K le_rfl ν = ∏ k : Fin c, F (colH ν k.val) := by
     rw [prod_colH hν c hc F hF]
     unfold hw
     refine Finset.prod_congr rfl fun s _ => ?_
-    simp only [F, dif_pos (show s.val + 1 ≤ n from s.isLt)]
+    simp only [F, dite_eq_left (show s.val + 1 ≤ n from s.isLt)]
   rw [hhw, map_prod]
   unfold hvE
   refine Finset.prod_congr rfl fun k _ => ?_
-  simp only [F, dif_pos (colH_le ν k.val)]
+  simp only [F, dite_eq_left (colH_le ν k.val)]
   rw [rowAct_lpMinor]
   rfl
 
@@ -254,17 +251,17 @@ theorem det_catM_block {A : Type*} [CommRing A] {n : ℕ} (h : ℕ) (hh : h ≤ 
     rcases a with a | a <;> rcases t with t | t
     · rw [Matrix.submatrix_apply, Matrix.fromBlocks_apply₁₁, e1, e1, Matrix.of_apply]
       unfold catM
-      rw [if_pos (by simp)]
+      rw [ite_eq_left (by simp)]
     · rw [Matrix.submatrix_apply, Matrix.fromBlocks_apply₁₂, e1, e2, Matrix.zero_apply]
       unfold catM
-      rw [if_neg (by simp)]
+      rw [ite_eq_right (by simp)]
       exact hz _ _ (by simp) (by simp)
     · rw [Matrix.submatrix_apply, Matrix.fromBlocks_apply₂₁, e1, Matrix.of_apply]
       unfold catM
-      rw [if_pos (by simp)]
+      rw [ite_eq_left (by simp)]
     · rw [Matrix.submatrix_apply, Matrix.fromBlocks_apply₂₂, e2, e2, Matrix.of_apply]
       unfold catM
-      rw [if_neg (by simp)]
+      rw [ite_eq_right (by simp)]
       simp
   rw [hb, Matrix.det_fromBlocks_zero₁₂]
 
@@ -286,7 +283,7 @@ theorem det_catM_inv {A : Type*} [CommRing A] {n : ℕ} (h : ℕ) (hh : h ≤ n)
       refine Finset.sum_congr rfl fun b _ => ?_
       congr 2
       omega
-    rw [h1, hZX, Matrix.one_apply, if_neg]
+    rw [h1, hZX, Matrix.one_apply, ite_eq_right]
     intro hEq
     have h2 := congrArg Fin.val hEq
     simp only at h2
@@ -346,12 +343,12 @@ theorem hvO_eq_inv (L : Type) [CommRing L] (n : ℕ) (μ : Fin n → ℕ) (hμ :
       C (∏ k : Fin c, (catM (colH μ k.val) (Matrix.of fun a t : Fin n => x a (n - 1 - t.val)) x).det) *
         rowAct L Z (hw L le_rfl fun t : Fin n => c - μ t.rev) := by
   let F : ℕ → MvPolynomial (Fin n × Fin n) L := fun m => if h : m ≤ n then lpMinor L m h h else 1
-  have hF : F 0 = 1 := by simp only [F, Nat.zero_le, dif_pos]; unfold lpMinor; exact Matrix.det_isEmpty
+  have hF : F 0 = 1 := by simp only [F, Nat.zero_le, dite_eq_left]; unfold lpMinor; exact Matrix.det_isEmpty
   have hhw : hw L le_rfl (fun t : Fin n => c - μ t.rev) = ∏ k : Fin c, F (n - colH μ k.val) := by
     rw [prod_kap hμ c hc F hF]
     unfold hw
     refine Finset.prod_congr rfl fun s _ => ?_
-    simp only [F, dif_pos (show s.val + 1 ≤ n from s.isLt)]
+    simp only [F, dite_eq_left (show s.val + 1 ≤ n from s.isLt)]
   have hZX' : Z.map (C (σ := Fin n × Fin n)) * (Matrix.of (fun a t : Fin n => x a (n - 1 - t.val))).map (C (σ := Fin n × Fin n)) = 1 := by
     rw [← Matrix.map_mul, hZX, Matrix.map_one _ (map_zero _) (map_one _)]
   have hXZ' : (Matrix.of (fun a t : Fin n => x a (n - 1 - t.val))).map (C (σ := Fin n × Fin n)) * Z.map (C (σ := Fin n × Fin n)) = 1 := by
@@ -359,7 +356,7 @@ theorem hvO_eq_inv (L : Type) [CommRing L] (n : ℕ) (μ : Fin n → ℕ) (hμ :
   rw [hhw, map_prod, map_prod, ← Finset.prod_mul_distrib]
   unfold hvO
   refine Finset.prod_congr rfl fun k _ => ?_
-  simp only [F, dif_pos (Nat.sub_le n (colH μ k.val))]
+  simp only [F, dite_eq_left (Nat.sub_le n (colH μ k.val))]
   rw [rowAct_lpMinor, det_catM_inv (colH μ k.val) (colH_le μ k.val) (fun a i => C (x a i)) _ (Z.map (C (σ := Fin n × Fin n)))
     (fun a t => rfl) hZX' hXZ' (yV L n)]
   congr 1
@@ -494,7 +491,7 @@ theorem pairing_odd_holds : PairO := by
   have hXg : (Matrix.of fun a t : Fin n => xg a (n - 1 - t.val)) = Matrix.mvPolynomialX (Fin n) (Fin n) K := by
     ext a t
     have := t.isLt
-    simp only [Matrix.of_apply, xg, Matrix.mvPolynomialX_apply, dif_pos (show n - 1 - t.val < n by omega)]
+    simp only [Matrix.of_apply, xg, Matrix.mvPolynomialX_apply, dite_eq_left (show n - 1 - t.val < n by omega)]
     have heq : (⟨n - 1 - (n - 1 - t.val), by omega⟩ : Fin n) = t := by
       apply Fin.ext
       simp only
@@ -508,8 +505,7 @@ theorem pairing_odd_holds : PairO := by
       rw [← hXg]
       rfl
     rw [hXL, ← RingHom.mapMatrix_apply, ← RingHom.map_det]
-    intro h0
-    exact Matrix.det_mvPolynomialX_ne_zero (Fin n) K (hι (by rw [h0, map_zero]))
+    exact fun h0 => Matrix.det_mvPolynomialX_ne_zero (Fin n) K (hι (by rw [h0, map_zero]))
   have hU : IsUnit XL.det := isUnit_iff_ne_zero.2 hdet
   have h1 := pairO_inv (FractionRing (MvPolynomial (Fin n × Fin n) K)) n μ hμ c hc
     (fun a i => algebraMap _ _ (xg a i)) XL⁻¹ (Matrix.nonsing_inv_mul XL hU) (Matrix.mul_nonsing_inv XL hU) I
@@ -519,7 +515,7 @@ theorem pairing_odd_holds : PairO := by
   rw [map_lhsO, map_rhsO] at h3
   have hx : ∀ a i, i < n → (fun a i => eval (fun v : Fin n × Fin n => x v.1 (n - 1 - v.2.val)) (xg a i)) a i = x a i := by
     intro a i hi
-    simp only [xg, dif_pos hi, eval_X]
+    simp only [xg, dite_eq_left hi, eval_X]
     congr 1
     omega
   rwa [lhsO_congr K n μ c _ x I hx, rhsO_congr K n μ c _ x I hx] at h3

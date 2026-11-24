@@ -103,8 +103,7 @@ theorem main : ∀ {G E : Type} [inst : Group G] [inst_1 : TopologicalSpace G] [
     have hgT : g ∉ T := fun hgT => hne g hgT (hW g g hg' (by simp; positivity))
     have far : ∀ h ∈ T, 2 * r < ‖φ g - φ h‖ := by
       intro h hh
-      by_contra hle
-      push_neg at hle
+      by_contra! hle
       exact hne h hh (hW g h (hT.1 h hh) hle)
     have hP : P (insert g T) := by
       refine ⟨?_, ?_⟩
@@ -213,8 +212,7 @@ theorem volBall : VolBall := by
         show hsn (umat (h⁻¹ * g) - 1) ≤ δ
         have h1 : umat h⁻¹ * umat h = 1 := by
           have := determinant_character_mul_inv h⁻¹
-          rw [inv_inv] at this
-          exact this
+          rwa [inv_inv] at this
         have h2 : umat (h⁻¹ * g) - 1 = umat h⁻¹ * (umat g - umat h) := by
           rw [Matrix.mul_sub, h1]; rfl
         rw [h2]
@@ -226,8 +224,7 @@ theorem volBall : VolBall := by
     have hfr : Module.finrank ℝ (EuclideanSpace ℂ (Fin m × Fin m)) = 2 * m ^ 2 := by
       rw [finrank_real_of_complex, finrank_euclideanSpace]; simp [sq]
     have hq : (R + δ / (2 * R)) / (δ / (2 * R)) = 1 + 2 * R ^ 2 / δ := by field_simp; ring
-    simp only [norm_vec, hfr, hq] at key
-    exact key
+    simpa only [norm_vec, hfr, hq] using key
 
 end GlobalTheory.SepReal
 

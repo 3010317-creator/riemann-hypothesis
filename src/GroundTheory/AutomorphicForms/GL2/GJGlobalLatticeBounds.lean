@@ -404,14 +404,14 @@ theorem exists_decay_siegel (hn : 0 < n) {Φ : Matrix (Fin n) (Fin n) 𝔸[K] �
       ∑' γ : GL (Fin n) K, ‖Φ ((Reduction.centralSection K n t * x⁻¹ *
         AdelicGLn.diagonal K n γ * y : AdelicGLn.AdelicGL K n) : Matrix (Fin n) (Fin n) 𝔸[K])‖ ≤
         C * (t : ℝ) ^ (-N) * (AutomorphicForm.height x * AutomorphicForm.height y) ^ M := by
-  set d := Module.finrank ℚ K with hd
+  set d := Module.finrank ℚ K
   have hd1 : 1 ≤ d := Module.finrank_pos
-  set M' : ℕ := ⌈N * (n * d)⌉₊ with hM'
+  set M' : ℕ := ⌈N * (n * d)⌉₊
   obtain ⟨C₁, hC₁, I, hmaj⟩ := exists_majorant hΦ (M + M')
   obtain ⟨c₀, hc₀, hc₀le⟩ := exists_le_infNorm_of_isInBox (K := K) hn I
   obtain ⟨Q, hQ, hQmem⟩ := exists_isCompact_finMat_siegelSet (K := K) (n := n) hω t₀
   obtain ⟨S, hS0, hS⟩ := exists_tsum_twistedWeight_le hQ I hM
-  set c : ℝ := 1 + n * n * Fintype.card (InfinitePlace K) with hc
+  set c : ℝ := 1 + n * n * Fintype.card (InfinitePlace K)
   refine ⟨C₁ * (c₀ ^ M')⁻¹ * c ^ (2 * M) * S, by positivity,
     fun x hx hx1 y hy hy1 t ht => ?_⟩
   obtain ⟨hsum, hle⟩ := hS x y (hQmem x hx).1 (hQmem y hy).2
@@ -439,17 +439,16 @@ theorem exists_decay_siegel (hn : 0 < n) {Φ : Matrix (Fin n) (Fin n) 𝔸[K] �
     unfold twistedWeight
     rw [← hW]
     by_cases hbox : IsInBox I W
-    · rw [if_pos hbox, mul_one, mul_one]
+    · rw [ite_eq_left hbox, mul_one, mul_one]
       have hdet : (Reduction.detModule K n (x⁻¹ * AdelicGLn.diagonal K n γ * y) : ℝ) = 1 := by
-        have hmem : x⁻¹ * AdelicGLn.diagonal K n γ * y ∈ Reduction.normOneGL (K := K) (n := n) :=
-          mul_mem (mul_mem (inv_mem hx1) (Reduction.rationalGL_le_normOneGL ⟨γ, rfl⟩)) hy1
-        rw [Reduction.mem_normOneGL_iff_detModule.1 hmem]
+        rw [Reduction.mem_normOneGL_iff_detModule.1
+          (mul_mem (mul_mem (inv_mem hx1) (Reduction.rationalGL_le_normOneGL ⟨γ, rfl⟩)) hy1)]
         rfl
       have hw := hc₀le _ hdet (by rw [hWG]; exact hbox)
       rw [hWG] at hw
       rw [mul_assoc]
       exact mul_le_mul_of_nonneg_left (inv_one_add_mul_pow_add_le hρ1 hc₀ hw M M') hC₁
-    · simp only [if_neg hbox, mul_zero, le_refl]
+    · simp only [ite_eq_right hbox, mul_zero, le_refl]
   have hsumγ : Summable fun γ : GL (Fin n) K =>
       twistedWeight I M x y (γ : Matrix (Fin n) (Fin n) K) :=
     hsum.comp_injective (fun _ _ h => Units.ext h)
@@ -469,36 +468,26 @@ theorem exists_decay_siegel (hn : 0 < n) {Φ : Matrix (Fin n) (Fin n) 𝔸[K] �
   have hx1' := one_add_infNorm_le_height (K := K) x
   have hy1' := one_add_infNorm_le_height (K := K) (y⁻¹)
   rw [AutomorphicForm.height_inv] at hy1'
-  have h0x : 0 ≤ 1 + infNorm (x : Matrix (Fin n) (Fin n) 𝔸[K]) := by
-    linarith [infNorm_nonneg (x : Matrix (Fin n) (Fin n) 𝔸[K])]
-  have h0y : 0 ≤ 1 + infNorm ((y⁻¹ : AdelicGLn.AdelicGL K n) : Matrix (Fin n) (Fin n) 𝔸[K]) := by
-    linarith [infNorm_nonneg ((y⁻¹ : AdelicGLn.AdelicGL K n) : Matrix (Fin n) (Fin n) 𝔸[K])]
   have hxh := AutomorphicForm.one_le_height x
-  calc ∑' γ : GL (Fin n) K, ‖Φ ((Reduction.centralSection K n t * x⁻¹ *
-        AdelicGLn.diagonal K n γ * y : AdelicGLn.AdelicGL K n) : Matrix (Fin n) (Fin n) 𝔸[K])‖
-      ≤ ∑' γ : GL (Fin n) K, C₁ * ((ρ * c₀) ^ M')⁻¹ *
-          twistedWeight I M x y (γ : Matrix (Fin n) (Fin n) K) := hsum'.tsum_le_tsum hpt hs'
-    _ = C₁ * ((ρ * c₀) ^ M')⁻¹ * ∑' γ : GL (Fin n) K,
-          twistedWeight I M x y (γ : Matrix (Fin n) (Fin n) K) := tsum_mul_left
+  calc _ ≤ C₁ * ((ρ * c₀) ^ M')⁻¹ * ∑' γ : GL (Fin n) K,
+          twistedWeight I M x y (γ : Matrix (Fin n) (Fin n) K) :=
+        (hsum'.tsum_le_tsum hpt hs').trans_eq tsum_mul_left
     _ ≤ C₁ * ((ρ * c₀) ^ M')⁻¹ * ∑' ξ, twistedWeight I M x y ξ :=
         mul_le_mul_of_nonneg_left (hsumγ.tsum_le_tsum_of_inj
           (fun γ : GL (Fin n) K => (γ : Matrix (Fin n) (Fin n) K)) (fun _ _ h => Units.ext h)
           (fun c _ => twistedWeight_nonneg I M x y c) (fun _ => le_rfl) hsum) (by positivity)
-    _ ≤ C₁ * ((c₀ ^ M')⁻¹ * (t : ℝ) ^ (-N)) * (((1 + infNorm (x : Matrix (Fin n) (Fin n) 𝔸[K])) *
-        (1 + infNorm ((y⁻¹ : AdelicGLn.AdelicGL K n) : Matrix (Fin n) (Fin n) 𝔸[K]))) ^ M * S) :=
-        mul_le_mul (mul_le_mul_of_nonneg_left hρN hC₁) hle
-          (tsum_nonneg (twistedWeight_nonneg I M x y)) (by positivity)
     _ ≤ C₁ * ((c₀ ^ M')⁻¹ * (t : ℝ) ^ (-N)) *
-          ((c * AutomorphicForm.height x * (c * AutomorphicForm.height y)) ^ M * S) := by
-        refine mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right (pow_le_pow_left₀
-          (mul_nonneg h0x h0y) (mul_le_mul hx1' hy1' h0y (by positivity)) M) hS0)
-          (by positivity)
+          ((c * AutomorphicForm.height x * (c * AutomorphicForm.height y)) ^ M * S) :=
+        mul_le_mul (mul_le_mul_of_nonneg_left hρN hC₁)
+          (hle.trans (mul_le_mul_of_nonneg_right (pow_le_pow_left₀
+            (mul_nonneg (add_nonneg zero_le_one (infNorm_nonneg _))
+              (add_nonneg zero_le_one (infNorm_nonneg _)))
+            (mul_le_mul hx1' hy1' (add_nonneg zero_le_one (infNorm_nonneg _))
+              (by positivity)) M) hS0))
+          (tsum_nonneg (twistedWeight_nonneg I M x y)) (by positivity)
     _ = C₁ * (c₀ ^ M')⁻¹ * c ^ (2 * M) * S * (t : ℝ) ^ (-N) *
           (AutomorphicForm.height x * AutomorphicForm.height y) ^ M := by
-        rw [show c * AutomorphicForm.height x * (c * AutomorphicForm.height y) =
-          c ^ 2 * (AutomorphicForm.height x * AutomorphicForm.height y) by ring, mul_pow,
-          ← pow_mul]
-        ring
+        ring_nf
 
 theorem exists_decay_tsum (hn : 0 < n) {Φ : Matrix (Fin n) (Fin n) 𝔸[K] → ℂ}
     (hΦ : Φ ∈ matrixSchwartzBruhat K n) {ψ₁ ψ₂ : AdelicGLn.AdelicGL K n → ℂ}

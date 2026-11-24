@@ -131,8 +131,7 @@ theorem mem_N_iff (g : GL (n ⊕ Fin c) k) : g ∈ N k n c p ↔ InN p g := by
     | one => intro r s _; rfl
     | mul x y _ _ hx hy => exact Uni.mul (b := lev p) hx hy
     | inv x _ hx => exact Uni.inv (b := lev p) hx
-  · intro hg
-    exact Subgroup.subset_closure hg
+  · exact fun hg => Subgroup.subset_closure hg
 
 theorem simpleSum_mul {g h : GL (n ⊕ Fin c) k} (hg : g ∈ N k n c p) (hh : h ∈ N k n c p) :
     simpleSum (g * h) = simpleSum g + simpleSum h := by
@@ -207,8 +206,7 @@ theorem exists_of_mem_R {r : GL (n ⊕ Fin c) k} (hr : r ∈ R k n c p) :
     refine sup_le ?_ ?_
     · rintro _ ⟨x, rfl⟩
       exact ⟨x, 1, one_mem _, (mul_one _).symm⟩
-    · intro g hg
-      exact ⟨1, g, hg, by simp⟩
+    · exact fun g hg => ⟨1, g, hg, by simp⟩
   exact this hr
 
 theorem toBlocks₁₁_embX_mul (x : GL n k) {g : GL (n ⊕ Fin c) k} (hg : g ∈ N k n c p) :
@@ -270,7 +268,6 @@ theorem unipotent_radical_basic : ∀ (k : Type) [Field k] (n : Type) [Fintype n
     fun M hM => Uni.det (b := lev p) hM,
     fun l u hl => ⟨rowE_mem u hl, simpleSum_eq_zero fun _ _ => rfl⟩,
     fun i β hi => ⟨colE_mem β hi, simpleSum_eq_zero fun _ _ => rfl⟩⟩
-  apply Units.ext
-  exact Uni.det (b := lev p) ((mem_N_iff g).1 hg)
+  exact Units.ext (Uni.det (b := lev p) ((mem_N_iff g).1 hg))
 
 end GlobalTheory.RootEx.Radical

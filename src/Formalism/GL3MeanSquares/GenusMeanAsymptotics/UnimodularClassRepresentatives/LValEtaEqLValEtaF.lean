@@ -94,7 +94,7 @@ theorem hasProd_fibre (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
     rw [hP𝔭] at hN
     have hval : Formalism.HermitianLatticesTheory.eulerFac K M P =
         (1 - etaF K F 𝔭.1 ^ M * (Ideal.absNorm 𝔭.1 : ℝ) ^ (-(M : ℤ)))⁻¹ := by
-      rw [← inv_inv (Formalism.HermitianLatticesTheory.eulerFac K M P), eulerFac_inv_inert hK hP hc, heta, if_pos hc, ← hN]
+      rw [← inv_inv (Formalism.HermitianLatticesTheory.eulerFac K M P), eulerFac_inv_inert hK hP hc, heta, ite_eq_left hc, ← hN]
       push_cast
       rw [Real.sqrt_sq (Nat.cast_nonneg _)]
     have h := hasProd_prod_of_ne_finset_one (L := SummationFilter.unconditional _) (f := fun c : {x : {P : Ideal (𝓞 K) // P.IsMaximal} //
@@ -111,8 +111,7 @@ theorem hasProd_fibre (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
         · exact h
         · exact h.trans hc)
     rw [Finset.prod_singleton] at h
-    rw [← hval]
-    exact h
+    rwa [← hval]
   · have hN := absNorm_comap_split hK hF hP hc
     rw [hP𝔭] at hN
     have hPb := conjIdeal_isMaximal hK hP
@@ -123,13 +122,11 @@ theorem hasProd_fibre (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
         (⟨x.1.comap (algebraMap (𝓞 F) (𝓞 K)), comap_isMaximal x.2⟩ :
           {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}) = 𝔭} :=
       ⟨⟨Formalism.HermitianLatticesTheory.conjIdeal (K := K) P, hPb⟩, Subtype.ext hPb𝔭⟩
-    have hne : c0 ≠ c1 := by
-      intro h
-      exact hc (congrArg (fun c => c.1.1) h).symm
+    have hne : c0 ≠ c1 := fun h => hc (congrArg (fun c => c.1.1) h).symm
     have hval : Formalism.HermitianLatticesTheory.eulerFac K M P * Formalism.HermitianLatticesTheory.eulerFac K M (Formalism.HermitianLatticesTheory.conjIdeal (K := K) P) =
         (1 - etaF K F 𝔭.1 ^ M * (Ideal.absNorm 𝔭.1 : ℝ) ^ (-(M : ℤ)))⁻¹ := by
       rw [← inv_inv (Formalism.HermitianLatticesTheory.eulerFac K M P * _), eulerFac_mul_conj_inv_split hK hP hc M hM, heta,
-        if_neg hc, hN, one_pow, one_mul]
+        ite_eq_right hc, hN, one_pow, one_mul]
     have h := hasProd_prod_of_ne_finset_one (L := SummationFilter.unconditional _) (f := fun c : {x : {P : Ideal (𝓞 K) // P.IsMaximal} //
         (⟨x.1.comap (algebraMap (𝓞 F) (𝓞 K)), comap_isMaximal x.2⟩ :
           {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}) = 𝔭} => Formalism.HermitianLatticesTheory.eulerFac K M c.1.1) (s := {c0, c1})
@@ -142,8 +139,7 @@ theorem hasProd_fibre (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
         · exact Or.inl (Subtype.ext (Subtype.ext h))
         · exact Or.inr (Subtype.ext (Subtype.ext h)))
     rw [Finset.prod_pair hne] at h
-    rw [← hval]
-    exact h
+    rwa [← hval]
 
 end Regroup
 

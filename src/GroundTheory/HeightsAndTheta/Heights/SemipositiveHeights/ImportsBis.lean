@@ -89,8 +89,7 @@ theorem isConjInvariantH_twist {A : ReciprocityTheory.ChartRestriction.G.Geo.Her
 
 theorem nefOnFibres_twist {P : Ideal (MRing ι)} {A : ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι} (h : NefOnFibres P A.a) (c : ℝ) :
     NefOnFibres P (A.tensor (constLine c)).a := by
-  rw [tensor_constLine_a]
-  exact h
+  rwa [tensor_constLine_a]
 
 theorem exists_small_section_of_arithmeticVolume_pos {Ω : Type} [Field Ω] {Q : ℕ → Ω → Prop} {La : ℕ → AddSubgroup Ω}
     {D : ℕ} (h : 0 < arVolP Q La 1 D) : ∃ τ, 1 ≤ τ ∧ ∃ s ∈ La τ, s ≠ 0 ∧ Q τ s := by
@@ -120,8 +119,7 @@ theorem exists_small_section_of_arithmeticVolume_pos {Ω : Type} [Field Ω] {Q :
       rw [hlog, zero_div]
   have : arVolP Q La 1 D = 0 := by
     unfold arVolP
-    simp only [hzero]
-    exact limsup_const 0
+    simpa only [hzero] using limsup_const 0
   linarith
 
 theorem exists_gt_of_lt {N e' g T : ℝ} (hN : 0 < N) (h : N * e' * g < T) :
@@ -193,8 +191,7 @@ theorem Z2.proof (hMo : MoriwakiBigStatement) : SuccessiveMinimaUpperBound := by
       funext i
       fin_cases i
       rfl
-    rw [e1, e1] at h
-    exact h
+    rwa [e1, e1] at h
   have hlow : ∀ W : Ideal (MRing ι), IsArithVar W 1 → ∀ c : ℝ,
       c * degC W ≤ ptsIntegral (e := 0) W (pot (![] : Fin 0 → ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι)) (fun _ => c) := by
     intro W hW c

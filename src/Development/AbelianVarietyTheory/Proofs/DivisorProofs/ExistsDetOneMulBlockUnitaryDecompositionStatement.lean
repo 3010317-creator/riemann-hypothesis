@@ -87,8 +87,7 @@ theorem isU_mat {R : Type} [CommRing R] {n : ℕ} (σ : R →+* R) (M γ : Matri
 theorem exists_aniso {K : Type} [Field K] [CharZero K] {n : ℕ} (σ : K →+* K) (hσ : ∀ a, σ (σ a) = a)
     (M : Matrix (Fin n) (Fin n) K) (hM : ∀ a b, σ (M a b) = M b a) {i j : Fin n} (hij : M i j ≠ 0) :
     ∃ x : Fin n → K, hf σ M x x ≠ 0 := by
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   set x : Fin n → K := Pi.single i 1
   set y : Fin n → K := Pi.single j 1
   have hm0 : hf σ M x y ≠ 0 := by rw [hf_single]; exact hij
@@ -126,8 +125,7 @@ theorem hf_incA (V : HSp D) (x0 : Fin V.rank → D.host.E) :
 theorem exists_aniso_gram (V : HSp D) (hV : 0 < V.rank) :
     ∃ x0 : Fin V.rank → D.host.E, hf (starRingEnd D.host.E) V.gramᵀ x0 x0 ≠ 0 := by
   obtain ⟨i, j, hij⟩ : ∃ i j, V.gramᵀ i j ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     apply GlobalTheory.LevelSubgroup.gram_det_ne_zero V
     have h0 : V.gram = 0 := Matrix.ext fun a b => hne b a
     rw [h0]
@@ -158,11 +156,9 @@ theorem exists_det_eq (V : HSp D) (hV : 0 < V.rank) (z : Formalism.L2.Theta.AE D
   refine ⟨⟨hunit.unit, ?_⟩, ?_⟩
   · show Formalism.UG.cT (sigR (AF D.host.F) D.sp.cm.sig) hunit.unit.1 * JR (AF D.host.F) V.gram * hunit.unit.1 =
       JR (AF D.host.F) V.gram
-    rw [IsUnit.unit_spec]
-    exact hmat
+    rwa [IsUnit.unit_spec]
   · show (hunit.unit.1).det = z
-    rw [IsUnit.unit_spec]
-    exact hdet
+    rwa [IsUnit.unit_spec]
 
 theorem det_blk {R : Type} [CommRing R] {p q d : ℕ} (e : Fin p ⊕ Fin q ≃ Fin d) (P : Matrix (Fin p) (Fin p) R)
     (Q : Matrix (Fin q) (Fin q) R) : (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.blk e P Q).det = P.det * Q.det := by
@@ -216,8 +212,7 @@ theorem exists_detOne_mul_blkU : ∀ {D : D7} (A B : HSp D) {d : ℕ} (e : Fin A
   have hd2 := congrArg Matrix.det hm
   rw [Matrix.det_mul, hg] at hd2
   apply hzu.mul_left_injective
-  simp only [one_mul]
-  exact hd2.symm
+  simpa only [one_mul] using hd2.symm
 
 end GlobalTheory.DetDecomp
 end -- clump:auto

@@ -324,8 +324,7 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.HeightCounting.Up
     refine ⟨P', hP', ?_⟩
     have hw := M.sp_w P' (hP'.elim Or.inl (fun h => Or.inr (Or.inl h)))
     have hov : NG.OverPl P' u := by
-      have e := (GlobalTheory.PlacePair.comap_eq_iff (Dof x) w' P').2 hc
-      exact e.symm.trans hw'u
+      exact ((GlobalTheory.PlacePair.comap_eq_iff (Dof x) w' P').2 hc).symm.trans hw'u
     apply HeightOneSpectrum.ext
     exact (M.sp P').w_under.symm.trans (by rw [hw]; exact hov)
   by_cases hq : w' ∈ T.Q v
@@ -462,8 +461,7 @@ theorem delta_isHeckeOf (cf : CharFrame D) (hR : DeltaRead D cf) {art : Ideles D
     refine h1.trans ?_
     show D.what₂.embLL ((x⁻¹ : D.LL0) : D.what₂.LL) = _
     rw [IntermediateField.coe_inv, map_inv₀, hx', inv_inv]
-  · apply Units.ext
-    exact (read_of_side he _ x hd).trans hx
+  · exact Units.ext ((read_of_side he _ x hd).trans hx)
 
 theorem tameVal_delta (hGAR : GlobalTheory.Published.GlobalArtinReciprocity) (cf : CharFrame D) (hR : DeltaRead D cf) {i : D.ntw.Tw} {b : Bool}
     {k : ℕ} {e : NX.Kk D i k →+* ℂ} (he : SideRead i b k e) {P : PlE D.host} (hP : P ∈ D.ntw.pD i) (a : 𝓞 D.host.E)
@@ -607,8 +605,7 @@ theorem tameVal_eq_locK (hGAR : GlobalTheory.Published.GlobalArtinReciprocity) (
   have hI : ∀ A : ValuationSubring D.nd.Om, IsPlaceOver A P' → ∀ σ ∈ Ine (F := D.host.E) A,
       ∃ N : ℕ, ψ σ ^ (D.ntw.l i ^ N) = 1 := fun _ _ σ _ => hord σ
   rw [GlobalTheory.TameResRead.tameVal_eq_of_tameRep ψ P' 1 (D.ntw.l i) hopen hl hI σ a ha hTR]
-  have h1 := hH _ σ hσart.symm
-  exact (congrArg (fun z : ℂˣ => (z : ℂ)) h1).symm
+  exact (congrArg (fun z : ℂˣ => (z : ℂ)) (hH _ σ hσart.symm)).symm
 
 end GlobalTheory.LevCmp.ValQ
 end -- clump:auto
@@ -652,20 +649,19 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.HeightCounting.Up
   have hp' : P' ∉ placesOver B.host.E (if B.places.resChar v = B.host.pde then B.host.pde' else B.host.pde) := by
     intro h
     apply hpD
-    rw [← Finset.mem_coe, (Dof x).ntw.pD_eq i, hl]
-    exact h
+    rwa [← Finset.mem_coe, (Dof x).ntw.pD_eq i, hl]
   show _ = ((((cfOf x).mu0 j).loc P' (atFin P' y) * (w.I.xi ((Dof x).what₂.muTw v)).loc P' (atFin P' y) : ℂˣ) : ℂ)
   rw [hmu _ hxu, one_mul]
   have h3 : w.I.xi ((Dof x).what₂.muTw v) = T.xiTw f v := h2
   rw [h3]
   unfold TwDat.xiTw
   split_ifs with hc
-  · rw [if_pos hc] at hp'
+  · rw [ite_eq_left hc] at hp'
     have hd := f.isDel'.unr P' hp' _ hxu
     show _ = (((f.del'.loc P') ((atFin P') y) * ((T.psi v).loc P') ((atFin P') y) : ℂˣ) : ℂ)
     rw [hd, one_mul]
     rfl
-  · rw [if_neg hc] at hp'
+  · rw [ite_eq_right hc] at hp'
     have hd := f.isDel.unr P' hp' _ hxu
     show _ = (((f.del.loc P') ((atFin P') y) * ((T.psi v).loc P') ((atFin P') y) : ℂˣ) : ℂ)
     rw [hd, one_mul]
@@ -729,8 +725,7 @@ theorem tameVal_eq_one {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algeb
     have e1 : (1 : Ω) - algebraMap E Ω (u : E) = -(algebraMap E Ω (((u - 1 : 𝓞 E)) : E)) := by
       push_cast
       ring
-    rw [e1, Valuation.map_neg]
-    exact h1
+    rwa [e1, Valuation.map_neg]
   have hT := GlobalTheory.TameResRead.tameRep_zpow hA (one_mem _) hϖ1 hϖ2 hπ hu hv e
   rw [GlobalTheory.TameResRead.tameVal_eq_of_tameRep φ P e m hopen hm hI _ u hu hT, one_zpow, map_one]
 

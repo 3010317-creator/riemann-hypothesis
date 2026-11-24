@@ -29,17 +29,7 @@ theorem sigma_sigma (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (x : E) : σ (σ x
   rw [hτ, hτ, star_star]
 
 theorem exists_moved (σ : E →ₐ[F] E) (h : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  by_contra hc
-  push_neg at hc
-  obtain ⟨-, htc, -, hτ⟩ := h
-  let w : InfinitePlace E := Classical.arbitrary _
-  have hcx : w.IsComplex := htc.isComplex w
-  apply InfinitePlace.not_isReal_iff_isComplex.mpr hcx
-  rw [InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
-  ext x
-  have := hτ w.embedding x
-  rw [hc x] at this
-  simpa using this.symm
+  exact GlobalTheory.CompanionTheory.SW.HermOne.exists_ne h
 
 theorem fixed_mem (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (e : E) (he : σ e = e) :
     ∃ t : F, e = algebraMap F E t := by
@@ -73,8 +63,7 @@ theorem gram_rational_finite : ∀ (F E : Type) [Field F] [NumberField F] [Field
     obtain ⟨t, ht⟩ := fixed_mem σ hcm _ (hE_self_fixed σ hcm J hJ (X 0))
     refine ⟨t, ?_⟩
     funext a b
-    rw [Subsingleton.elim a 0, Subsingleton.elim b 0]
-    exact ht
+    rwa [Subsingleton.elim a 0, Subsingleton.elim b 0]
   · intro n X
     ext a b
     have hs : ∀ e : E, sigR (AF F) σ (inclR (AF F) e) = inclR (AF F) (σ e) := fun e => by
@@ -97,7 +86,6 @@ theorem gram_rational_finite : ∀ (F E : Type) [Field F] [NumberField F] [Field
       refine ⟨Y, hY, ?_⟩
       funext a b
       exact congrFun (congrFun hYt 0) 0
-    · intro s _ t _ hst
-      exact (algebraMap F E).injective (congrFun (congrFun hst 0) 0)
+    · exact fun s _ t _ hst => (algebraMap F E).injective (congrFun (congrFun hst 0) 0)
 
 end GlobalTheory.CompanionTheory.SW.FinQ

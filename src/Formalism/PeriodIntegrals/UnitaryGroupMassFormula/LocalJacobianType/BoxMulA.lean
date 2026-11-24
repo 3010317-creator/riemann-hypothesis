@@ -93,8 +93,7 @@ theorem isOpen_Ov : IsOpen (Ov v) := by
 theorem isCompact_Ov : IsCompact (Ov v) := PI.AdicCompletionValuation.isCompact_adicCompletionIntegers F v
 
 theorem q_ne_zero : Ideal.absNorm v.asIdeal ≠ 0 := by
-  intro h
-  exact v.ne_bot (Ideal.absNorm_eq_zero_iff.mp h)
+  exact fun h => v.ne_bot (Ideal.absNorm_eq_zero_iff.mp h)
 
 theorem lt_one_iff (ϖ : Fv F v) (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (y : Fv F v) :
     Valued.v y < 1 ↔ Valued.v (ϖ⁻¹ * y) ≤ 1 := by
@@ -170,15 +169,12 @@ theorem measure_Ov [MeasurableSpace (Fv F v)] [BorelSpace (Fv F v)] (μ : Measur
     ext y
     constructor
     · rintro ⟨h1, -⟩; exact h1
-    · intro h1
-      refine ⟨h1, ?_⟩
-      exact le_of_lt ((lt_one_iff v ϖ hϖ y).2 h1)
+    · exact fun h1 => ⟨h1, le_of_lt ((lt_one_iff v ϖ hϖ y).2 h1)⟩
   have e2 : ν Set.univ = μ (Ov v) := by
     simp only [ν, hme.comap_apply, Set.image_univ]
     rw [Subtype.range_coe_subtype]
     rfl
-  rw [e1, e2, index_max] at key
-  exact key
+  rwa [e1, e2, index_max] at key
 
 section Char
 
@@ -260,7 +256,7 @@ theorem modF_Fv (a : Fv F v) (ha : a ≠ 0) :
     first
     | exact (map_ne_zero _).mpr ha
   unfold PI.NglqJacSplitW.modF PI.LocJacTyp.absV
-  simp only [dif_neg ha, dif_neg hva]
+  simp only [dite_eq_right ha, dite_eq_right hva]
   obtain ⟨m, hm, hmdef⟩ : ∃ m : ℤ, Valued.v a = WithZero.exp m ∧
       Multiplicative.toAdd (WithZero.unzero hva) = m :=
     ⟨_, (WithZero.coe_unzero hva).symm, rfl⟩

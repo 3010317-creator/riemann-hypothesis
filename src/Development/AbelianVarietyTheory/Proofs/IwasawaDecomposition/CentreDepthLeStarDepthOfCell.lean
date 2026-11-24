@@ -151,8 +151,7 @@ theorem mem_balForms_of_pull {O : Type} [CommRing O] {bar : O → O} [Module O X
   · obtain ⟨a, rfl⟩ := hq y
     obtain ⟨b, rfl⟩ := hq z
     have := h.2 c a b
-    simp only [pull_apply, map_smul] at this
-    exact this
+    simpa only [pull_apply, map_smul] using this
 
 end RadicalFree
 
@@ -214,8 +213,7 @@ theorem mem_depthSet_of_quot {X X₁ : Type} [AddCommGroup X] [Module O X] [Modu
       rw [hγ₁]
       exact hn _ a
     · refine (linearOn_pull_iff hq).1 ?_
-      simp only [hpull]
-      exact linearOn_comp hγ.linear s
+      simpa only [hpull] using linearOn_comp hγ.linear s
     · obtain ⟨N, ℓ, hN, h1, h2, h3⟩ := hγ.strict
       let P : LinearMap.BilinForm ℤ X₁ →ₗ[ℤ] LinearMap.BilinForm ℤ X :=
         { toFun := pull q, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
@@ -253,8 +251,7 @@ theorem mem_depthSet_of_quot {X X₁ : Type} [AddCommGroup X] [Module O X] [Modu
   · obtain ⟨a, rfl⟩ := hq y
     rw [hv₁]
     exact hvn a
-  · rw [← evalZ_pull w hq, hvpull]
-    exact hvw
+  · rwa [← evalZ_pull w hq, hvpull]
   · simp only [toReal_apply, hv₁]
   · simp only [LinearMap.sub_apply, LinearMap.smul_apply, toReal_apply, hB₁, hv₁]
 
@@ -369,8 +366,7 @@ theorem depthSet_bddAbove_of_unique_centre : ∀ (O : Type) [CommRing O] (bar : 
       BddAbove (depthSet bar ψ w n (fun a b => B (π a) (π b))) := by
   intro O _ bar ψ w X _ _ _ m γ B v hγ hB hv hvp hv0 huniq n π hπ
   obtain ⟨y₀, hy₀⟩ : ∃ y, 0 < v y y := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     apply hv0
     have hz : ∀ y, v y y = 0 := fun y => le_antisymm (hc y) (hvp y)
     refine LinearMap.ext₂ fun x y => ?_

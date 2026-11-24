@@ -87,8 +87,7 @@ theorem crd_gLam (hL : LatBasis X p θ (reindex₂ X p Q)) (v : Fin X.B.I.n → 
     ∃ y : p.1.adicCompletionIntegers X.B.I.F, crd X p θ Q v s = ((gOf p : ℕ) : FpX X p) * (y : FpX X p) := by
   have hv' : v ∈ Ideal.span {((gOf p : ℕ) : p.1.adicCompletionIntegers X.B.I.F)} •
       latLoc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) := by
-    rw [← imA_span_Bg (X := X) p]
-    exact hv
+    rwa [← imA_span_Bg (X := X) p]
   refine Submodule.smul_induction_on hv' ?_ ?_
   · intro r hr m hm
     obtain ⟨a, rfl⟩ := Ideal.mem_span_singleton'.1 hr
@@ -139,8 +138,7 @@ theorem theta_eps_one (hθ : IsSplitEquiv X p θ) (hW : WClause X hb u p θ Q) (
     rw [← crd_smul, ← Matrix.mulVec_smul, imA_bw_eps]
   obtain ⟨c, hc⟩ := coords_weight_vector X hb u p θ Q hW i
   have h2 := hc
-  rw [key] at h2
-  rw [hc] at h2
+  rw [key, hc] at h2
   have h3 := congrFun h2 (wI i)
   simp only [Pi.smul_apply, Pi.sub_apply, Pi.single_eq_same, smul_eq_mul] at h3
   have ha : (θ (epsP X p)).1 = 1 := by

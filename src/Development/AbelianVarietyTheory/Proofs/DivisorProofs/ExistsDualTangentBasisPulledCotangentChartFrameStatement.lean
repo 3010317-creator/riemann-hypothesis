@@ -128,8 +128,7 @@ theorem exists_dual_of_isFrame [QuasiSeparated G.hom] {n : ℕ} {e : Fin n → �
     simp only [← hb] at key
     choose a ha using fun j => hc.2 (b.repr (tangent ⟨w, fst_of_isTangent hw⟩) j)
     refine ⟨a, (key a).2 ?_, fun a' h' => funext fun j => hc.1 ?_⟩
-    · simp only [ha]
-      exact (b.sum_repr _).symm
+    · simpa only [ha] using (b.sum_repr _).symm
     · rw [ha, (key a').1 h', b.repr_sum_self]
 
 theorem exists_isDual : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (g : ℕ) (c : VB.Chart (LieVB.omega G) g) (R : Type) [CommRing R]

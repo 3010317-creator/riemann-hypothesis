@@ -118,7 +118,7 @@ lemma alternatingMap_sub_base_eq_alternating_sum_removeNth (q : ℕ) (f : V [⋀
     f (fun j => v j.succ - v 0) = ∑ i : Fin (q + 1), (-1 : ℝ) ^ (i : ℕ) * f (i.removeNth v) := by
   classical
   have h := alternatingMap_sub_on_finset_eq_sub_sum_update f (v 0) Finset.univ (fun j => v j.succ)
-  simp only [Finset.mem_univ, if_true] at h
+  simp only [Finset.mem_univ, ite_true] at h
   have hj : ∀ j : Fin q, f (update (fun j => v j.succ) j (v 0)) =
       (-1 : ℝ) ^ (j : ℕ) * f (j.succ.removeNth v) := by
     cases q with
@@ -287,8 +287,7 @@ lemma hyp_step (m : ℕ) (G : (Fin (m + 1) → ℝ) → ℝ) (i : Fin m) :
     (fun s => G (i.castSucc.insertNth (1 - ∑ j, s j) s)) (Δ (n + 1))
   rw [preimage_invC] at h
   rw [← h]
-  refine setIntegral_congr_fun (measurableSet_Δ _) fun s _ => ?_
-  exact congrArg G (insertNth_succ_eq i s)
+  exact setIntegral_congr_fun (measurableSet_Δ _) fun s _ => congrArg G (insertNth_succ_eq i s)
 
 end Hyp
 
@@ -320,13 +319,7 @@ open MeasureTheory
 
 namespace PositivityTheory.KB.StokesSlices
 
-lemma isClosed_Δ (m : ℕ) : IsClosed (Δ m) := by
-  have h1 : IsClosed {t : Fin m → ℝ | ∀ j, 0 ≤ t j} := by
-    simp only [Set.ofPred_forall]
-    exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
-  have h2 : IsClosed {t : Fin m → ℝ | ∑ j, t j ≤ 1} :=
-    isClosed_le (by fun_prop) continuous_const
-  exact h1.inter h2
+lemma isClosed_Δ (m : ℕ) : IsClosed (Δ m) := PositivityTheory.KB.StokesSlices.Hyp.isClosed_Δ m
 
 lemma isCompact_Δ (m : ℕ) : IsCompact (Δ m) := by
   refine (isCompact_Icc : IsCompact (Set.Icc (0 : Fin m → ℝ) 1)).of_isClosed_subset (isClosed_Δ m) ?_
@@ -383,8 +376,7 @@ theorem asm (hA : StokesSimplexSubdivision) (hH : SubHyp) (hS : SubSlice) (U : S
       refine Fin.cases ?_ (fun k => ?_) j
       · simp only [Fin.cons_zero]
         linarith [ht.2]
-      · simp only [Fin.cons_succ]
-        exact ht.1 k
+      · simpa only [Fin.cons_succ] using ht.1 k
     have hw1 : ∑ j, (Fin.cons (1 - ∑ k, t k) t : Fin (m + 1) → ℝ) j = 1 := by
       rw [Fin.sum_univ_succ]
       simp
@@ -538,8 +530,7 @@ lemma integrableOn_Δ_insertNth {m : ℕ} (i : Fin (m + 1)) (G : (Fin (m + 1) �
   have hcont : Continuous (fun s : Fin m → ℝ => (i.insertNth (c s) s : Fin (m + 1) → ℝ)) :=
     Continuous.finInsertNth i hc continuous_id
   refine hG.comp hcont.continuousOn ?_
-  intro s hs
-  exact hΔW ((mem_Δ_insertNth i _ _).2 ⟨hs, hc0 s hs, hc1 s hs⟩)
+  exact fun s hs => hΔW ((mem_Δ_insertNth i _ _).2 ⟨hs, hc0 s hs, hc1 s hs⟩)
 
 theorem subSlice : SubSlice := by
   intro m i G D W hW hΔW hG hD hderiv

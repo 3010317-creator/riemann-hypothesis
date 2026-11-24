@@ -76,8 +76,7 @@ theorem lowerTri_inv (A : Matrix (Fin n) (Fin n) S) (hA : ∀ i j, i < j → A i
     (hd : IsUnit A.det) : ∀ i j, i < j → A⁻¹ i j = 0 := by
   have h : A.BlockTriangular OrderDual.toDual := fun i j hij => hA i j hij
   letI := Matrix.invertibleOfIsUnitDet A hd
-  have h' := Matrix.blockTriangular_inv_of_blockTriangular h
-  exact fun i j hij => h' hij
+  exact fun i j hij => (Matrix.blockTriangular_inv_of_blockTriangular h) hij
 
 end Tri
 
@@ -87,9 +86,7 @@ theorem frBor_iff_frChg {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
     FrBor t y y' ↔ ∃ g : (∀ τ : E →+* ℂ, Matrix (Fin (Dw.mult τ)) (Fin (Dw.mult τ)) S),
       (∀ τ i j, i < j → g τ i j = 0) ∧ (∀ τ i, g τ i i = (t (some ⟨τ, i⟩) : S)) ∧
         FrChg g (t none : S) y y' := by
-  have hid : spMap (RingHom.id S) = 𝟙 _ := by
-    show Spec.map (𝟙 (CommRingCat.of S)) = _
-    exact Spec.map_id _
+  have hid : spMap (RingHom.id S) = 𝟙 _ := Spec.map_id _
   constructor
   · rintro ⟨hx, hu, pm, h1, h2, h3⟩
     choose cf hd hz hc using hu

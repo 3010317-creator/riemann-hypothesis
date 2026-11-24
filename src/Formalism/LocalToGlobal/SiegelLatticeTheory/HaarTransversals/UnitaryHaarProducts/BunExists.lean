@@ -150,8 +150,7 @@ theorem ctens_dense [DecidableEq V] (l : List V) (hl : l.Nodup) :
     have hy : y ∈ Submodule.span ℂ (Set.range (pt H l)) := by rw [pt_span H l hl]; trivial
     have h2 := Submodule.mem_map_of_mem
       (f := (UniformSpace.Completion.toComplL : (tw H l).C →L[ℂ] Cw H l).toLinearMap) hy
-    rw [Submodule.map_span, ← Set.range_comp] at h2
-    exact h2
+    rwa [Submodule.map_span, ← Set.range_comp] at h2
   exact Dense.mono h1 UniformSpace.Completion.denseRange_coe
 
 end Formalism.L2.SG.Pf.BunT
@@ -225,8 +224,7 @@ theorem repF_mp (g : I.GA) : MeasurePreserving (fun x => repF I (x * g))
     ((I.muA (muF I)).restrict (fundF I)) ((I.muA (muF I)).restrict (fundF I)) := by
   obtain ⟨_, h2⟩ := rr_map (fundF_FD I) g
   refine ⟨(repF_meas I).comp (measurable_mul_const g), ?_⟩
-  rw [← Measure.map_congr (rep_ae I g)]
-  exact h2
+  rwa [← Measure.map_congr (rep_ae I g)]
 
 def regR (g : I.GA) : I.L2 (muF I) (fundF I) →L[ℂ] I.L2 (muF I) (fundF I) :=
   (Lp.compMeasurePreservingₗᵢ ℂ (fun x => repF I (x * g)) (repF_mp I g)).toContinuousLinearMap
@@ -314,8 +312,7 @@ theorem b_lt (R : Ranks) (P : HCParam R) {h : ℚ} (hh : 0 ≤ h)
   have hij' : i.1 < j.1 := hij
   have := b_gap R P hh hb (j.1 - i.1 - 1) i (by omega)
   have e : (⟨i.1 + (j.1 - i.1 - 1) + 1, by omega⟩ : Fin R.m) = j := Fin.ext (by simp only; omega)
-  rw [e] at this
-  exact this
+  rwa [e] at this
 
 theorem u_anti (R : Ranks) (P : HCParam R) : ∀ (d : ℕ) (i : Fin R.k) (hi : i.1 + d < R.k),
     P.u ⟨i.1 + d, hi⟩ ≤ P.u i := by
@@ -374,14 +371,14 @@ theorem gap_lamS (R : Ranks) (P : HCParam R) {h : ℚ} (hh : 0 ≤ h)
   by_cases ha : a.1 < R.k - 1 <;> by_cases hb' : b.1 < R.k - 1
   · simp [ha, hb'] at hab
   · have hbm : b.1 - (R.k - 1) < R.m := by have := b.isLt; omega
-    simp only [ha, hb', if_true, if_false, dif_pos, dif_neg, not_false_eq_true, hbm] at hab ⊢
+    simp only [ha, hb', ite_true, ite_false, dite_eq_left, dite_eq_right, not_false_eq_true, hbm] at hab ⊢
     have hodd : 0 < b.1 - (R.k - 1) := by
       by_contra h0
       have : b.1 - (R.k - 1) = 0 := by omega
       simp [this] at hab
     exact mixed ⟨a.1, ha⟩ ⟨b.1 - (R.k - 1), hbm⟩ hodd
   · have ham : a.1 - (R.k - 1) < R.m := by have := a.isLt; omega
-    simp only [ha, hb', if_true, if_false, dif_pos, dif_neg, not_false_eq_true, ham] at hab ⊢
+    simp only [ha, hb', ite_true, ite_false, dite_eq_left, dite_eq_right, not_false_eq_true, ham] at hab ⊢
     have hodd : 0 < a.1 - (R.k - 1) := by
       by_contra h0
       have : a.1 - (R.k - 1) = 0 := by omega
@@ -390,7 +387,7 @@ theorem gap_lamS (R : Ranks) (P : HCParam R) {h : ℚ} (hh : 0 ≤ h)
     exact mixed ⟨b.1, hb'⟩ ⟨a.1 - (R.k - 1), ham⟩ hodd
   · have ham : a.1 - (R.k - 1) < R.m := by have := a.isLt; omega
     have hbm : b.1 - (R.k - 1) < R.m := by have := b.isLt; omega
-    simp only [ha, hb', if_false, dif_neg, not_false_eq_true, ham, hbm] at hab ⊢
+    simp only [ha, hb', ite_false, dite_eq_right, not_false_eq_true, ham, hbm] at hab ⊢
     refine bb _ _ fun e => hab ?_
     have := congrArg Fin.val e
     simp only at this
@@ -627,9 +624,9 @@ include h
 theorem eF_inv (x : I.Gf) : 𝔢 x⁻¹ = star (𝔢 x) := by
   unfold eF
   by_cases hx : x ∈ K2set I g e0 z0 bw
-  · rw [if_pos (level_subgroup_inv_mem h hx), if_pos hx, chi_inv h hx, star_div₀, star_star, Complex.star_def, Complex.conj_ofReal]
+  · rw [ite_eq_left (level_subgroup_inv_mem h hx), ite_eq_left hx, chi_inv h hx, star_div₀, star_star, Complex.star_def, Complex.conj_ofReal]
   · have : x⁻¹ ∉ K2set I g e0 z0 bw := fun h' => hx (by simpa using level_subgroup_inv_mem h h')
-    rw [if_neg this, if_neg hx, star_zero]
+    rw [ite_eq_right this, ite_eq_right hx, star_zero]
 
 theorem eF_bi (x : I.Gf) (k : I.Gf) (hk : k ∈ I.Kg g) (k' : I.Gf) (hk' : k' ∈ I.Kg g) :
     𝔢 (k * x * k') = 𝔢 x := by
@@ -637,17 +634,17 @@ theorem eF_bi (x : I.Gf) (k : I.Gf) (hk : k ∈ I.Kg g) (k' : I.Gf) (hk' : k' �
   have hk2' := principal_congruence_le_level h hk'
   by_cases hx : x ∈ K2set I g e0 z0 bw
   · have hm : k * x * k' ∈ K2set I g e0 z0 bw := level_subgroup_mul_mem h (level_subgroup_mul_mem h hk2.1 hx) hk2'.1
-    simp only [eF, if_pos hm, if_pos hx, chi_mul h (level_subgroup_mul_mem h hk2.1 hx) hk2'.1, chi_mul h hk2.1 hx, hk2.2, hk2'.2,
+    simp only [eF, ite_eq_left hm, ite_eq_left hx, chi_mul h (level_subgroup_mul_mem h hk2.1 hx) hk2'.1, chi_mul h hk2.1 hx, hk2.2, hk2'.2,
       one_mul, mul_one]
   · have hm : k * x * k' ∉ K2set I g e0 z0 bw := fun hm => hx (by
       have := level_subgroup_mul_mem h (level_subgroup_mul_mem h (level_subgroup_inv_mem h hk2.1) hm) (level_subgroup_inv_mem h hk2'.1)
       simpa [mul_assoc] using this)
-    simp only [eF, if_neg hm, if_neg hx]
+    simp only [eF, ite_eq_right hm, ite_eq_right hx]
 
 theorem eF_supp (x : I.Gf) (hx : 𝔢 x ≠ 0) : x ∈ I.Kset := by
   by_contra hK
   have : x ∉ K2set I g e0 z0 bw := fun h' => hK h'.1
-  exact hx (by simp only [eF, if_neg this])
+  exact hx (by simp only [eF, ite_eq_right this])
 
 theorem eF_lc : IsLocallyConstant (𝔢) := by
   rw [IsLocallyConstant.iff_eventually_eq]
@@ -672,15 +669,15 @@ theorem eF_conv (hpos : 0 < μf (K2set I g e0 z0 bw)) (hfin : μf (K2set I g e0 
     · rw [Set.indicator_of_mem hy]
       by_cases hx : x ∈ K2set I g e0 z0 bw
       · have hyx : y⁻¹ * x ∈ K2set I g e0 z0 bw := level_subgroup_mul_mem h (level_subgroup_inv_mem h hy) hx
-        simp only [eF, if_pos hy, if_pos hyx, if_pos hx]
+        simp only [eF, ite_eq_left hy, ite_eq_left hyx, ite_eq_left hx]
         have hc : chi2f I ψ g e0 f0 z0 bw bwd x =
             chi2f I ψ g e0 f0 z0 bw bwd y * chi2f I ψ g e0 f0 z0 bw bwd (y⁻¹ * x) := by
           rw [← chi_mul h hy hyx, mul_inv_cancel_left]
         rw [hc, star_mul', ← hVdef]
         field_simp
       · have hyx : y⁻¹ * x ∉ K2set I g e0 z0 bw := fun h' => hx (by simpa using level_subgroup_mul_mem h hy h')
-        simp only [eF, if_neg hyx, if_neg hx, mul_zero, zero_div]
-    · rw [Set.indicator_of_notMem hy]; simp only [eF, if_neg hy, zero_mul]
+        simp only [eF, ite_eq_right hyx, ite_eq_right hx, mul_zero, zero_div]
+    · rw [Set.indicator_of_notMem hy]; simp only [eF, ite_eq_right hy, zero_mul]
   rw [key, integral_indicator_const _ (level_subgroup_isOpen h).measurableSet, measureReal_def, ← hVdef, Complex.real_smul]
   field_simp
 
@@ -690,12 +687,12 @@ theorem fib_sum_nonneg {m : ℕ} (ρ : Fin m → Fin m) (a : Fin m → ℂ) :
       ∑ c, star (if ρ i = c then a i else 0) * (if ρ j = c then a j else 0) := by
     intro i j
     by_cases hij : ρ i = ρ j
-    · rw [if_pos hij, Finset.sum_eq_single (ρ i)]
+    · rw [ite_eq_left hij, Finset.sum_eq_single (ρ i)]
       · simp [hij]
       · intro c _ hc
         simp [Ne.symm hc]
       · simp
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       symm
       apply Finset.sum_eq_zero
       intro c _
@@ -750,15 +747,15 @@ theorem eF_pos (hpos : 0 < μf (K2set I g e0 z0 bw)) (hfin : μf (K2set I g e0 z
     intro i j
     by_cases e : ρ i = ρ j
     · have hin : (x i)⁻¹ * x j ∈ K2set I g e0 z0 bw := (hrel i j).2 e
-      rw [if_pos e]
-      simp only [eF, if_pos hin]
+      rw [ite_eq_left e]
+      simp only [eF, ite_eq_left hin]
       rw [hxx i j e, chi_mul h (level_subgroup_inv_mem h (hkk i)) (hkk j), chi_inv h (hkk i), ← hVdef]
       simp only [a, star_mul', star_star]
       push_cast
       ring
     · have hin : (x i)⁻¹ * x j ∉ K2set I g e0 z0 bw := fun h' => e ((hrel i j).1 h')
-      rw [if_neg e]
-      simp only [eF, if_neg hin]
+      rw [ite_eq_right e]
+      simp only [eF, ite_eq_right hin]
       ring
   simp_rw [hterm, ← Finset.sum_mul]
   refine mul_nonneg (fib_sum_nonneg h ρ a) ?_
@@ -1022,14 +1019,14 @@ theorem exp (h : FH I g e0 f0 z0 bw bwd ew) : ∀ w ∈ I.Lf, w - Rc I e0 f0 z0 
     · refine gen_ok I g e0 f0 z0 bw bwd hm (bw j) 0 0 0 (fun i => if i = j then ew else 0) 0 ?_
         (fun a => Z0 ((h.W j).2.2 a).2.1) (fun a => Z0 ((h.W j).2.2 a).1) ?_ (fun i => h.dual i j)
         (fun i => by rw [bwbw h]; exact Z0 (Z_zero I g))
-      · simp only [ite_smul, zero_smul, Pi.zero_apply, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+      · simp only [ite_smul, zero_smul, Pi.zero_apply, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
           Finset.sum_const_zero, add_zero, zero_add]
         exact h.bw_w j
       · simpa using Z_neg I g (h.W j).1
     · refine gen_ok I g e0 f0 z0 bw bwd hm (bwd j) 0 0 0 0 (fun i => if i = j then sigA I ew else 0) ?_
         (fun a => Z0 ((h.W j).2.2 a).2.2.2) (fun a => Z0 ((h.W j).2.2 a).2.2.1) ?_
         (fun i => by rw [bdbd h]; exact Z0 (Z_zero I g)) (fun i => ?_)
-      · simp only [ite_smul, zero_smul, Pi.zero_apply, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+      · simp only [ite_smul, zero_smul, Pi.zero_apply, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
           Finset.sum_const_zero, add_zero, zero_add]
         exact h.bwd_w j
       · simpa using Z_neg I g (h.W j).2.1
@@ -1047,8 +1044,7 @@ theorem exp (h : FH I g e0 f0 z0 bw bwd ew) : ∀ w ∈ I.Lf, w - Rc I e0 f0 z0 
     show (g : I.E ⊗[I.F] Af I.F) • y - Rc I e0 f0 z0 bw bwd ((g : I.E ⊗[I.F] Af I.F) • y) ∈ mL I g
     rw [Rc_smul, ← smul_sub]
     exact smul_mem_mL I (sub_mem hy (Rc_Lf I e0 f0 z0 bw bwd hm hy))
-  intro w hw
-  exact (sup_le (Submodule.span_le.2 hgen) hmL) (h.span w hw)
+  exact fun w hw => (sup_le (Submodule.span_le.2 hgen) hmL) (h.span w hw)
 
 end Main
 
@@ -1065,20 +1061,15 @@ theorem adj (x : I.Gf) (u w : VA I) :
     hA I u ((I.fmat x - 1) *ᵥ w) = hA I ((I.fmat x⁻¹ - 1) *ᵥ u) w := by
   have h1 : hA I u (I.fmat x *ᵥ w) = hA I (I.fmat x⁻¹ *ᵥ u) w := by
     have := hA_fmat I x (I.fmat x⁻¹ *ᵥ u) w
-    rw [Matrix.mulVec_mulVec, ← fmat_mul, mul_inv_cancel, fmat_one, Matrix.one_mulVec] at this
-    exact this
+    rwa [Matrix.mulVec_mulVec, ← fmat_mul, mul_inv_cancel, fmat_one, Matrix.one_mulVec] at this
   rw [Matrix.sub_mulVec, Matrix.sub_mulVec, Matrix.one_mulVec, Matrix.one_mulVec, hA_sub_right, hA_sub_left, h1]
 
 theorem mem_Mo_of {S : Set (VA I)} {w : VA I} (h1 : w - Rc I e0 f0 z0 bw bwd w ∈ mL I g)
     (h2 : Rc I e0 f0 z0 bw bwd w ∈ Mo I g S) : w ∈ Mo I g S := by
-  have h3 : w - Rc I e0 f0 z0 bw bwd w ∈ Mo I g S := by
-    show _ ∈ Submodule.span (IntAf I.F I.E) S ⊔ mL I g
-    exact Submodule.mem_sup_right h1
-  have h4 := Submodule.add_mem _ h3 h2
-  simpa using h4
+  have h3 : w - Rc I e0 f0 z0 bw bwd w ∈ Mo I g S := Submodule.mem_sup_right h1
+  simpa using Submodule.add_mem _ h3 h2
 
 theorem span_Mo {S : Set (VA I)} {v : VA I} (h : v ∈ Submodule.span (IntAf I.F I.E) S) : v ∈ Mo I g S := by
-  show v ∈ Submodule.span (IntAf I.F I.E) S ⊔ mL I g
   exact Submodule.mem_sup_left h
 
 theorem D1 (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.Kset) (hcx : K2cong I g e0 z0 bw x) (j : Fin k) :
@@ -1115,8 +1106,7 @@ theorem D1 (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.Kset) (hcx :
       · have hl' : l.1 < i.1 := hl
         have hlj : j ≠ l := fun e => hji (by rw [e]; exact hl')
         have := Zsym (h.dual j l)
-        rw [if_neg hlj, map_zero, sub_zero] at this
-        exact this
+        rwa [ite_eq_right hlj, map_zero, sub_zero] at this
 
 theorem F1 (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.Kset) (hcx : K2cong I g e0 z0 bw x) (b : Fin r) :
     (I.fmat x - 1) *ᵥ f0 b ∈
@@ -1140,7 +1130,7 @@ theorem F1 (h : FH I g e0 f0 z0 bw bwd ew) {x : I.Gf} (hx : x ∈ I.Kset) (hcx :
       have hc' : c.1 < a.1 := hc
       have hcb : c ≠ b := fun e => hba (by rw [← e]; exact hc')
       have := (h.gram c b).2.2
-      rwa [if_neg hcb, sub_zero] at this
+      rwa [ite_eq_right hcb, sub_zero] at this
   · exact span_Mo (smul_span I (hA_int I hm.2.1 hw) (Or.inl (Or.inl (Or.inl (Or.inr rfl)))))
   · exact span_Mo (sumSpan I _ _ _ (fun i _ => hA_int I (hm.2.2 i).2 hw)
       (fun i _ => Or.inl (Or.inl (Or.inr ⟨i, rfl⟩))))
@@ -1309,7 +1299,7 @@ theorem frameOK (A : UnitaryGroupInstance D) {L : UnitaryLatticeData D} (P : Add
     hbwd := fun i => (Rf.vectorsInLattice.2.2 i).2
     hfe := fun a b hab => by
       have h := (Rf.gramIntegral b a).2.2
-      rw [if_neg (Ne.symm hab), sub_zero] at h
+      rw [ite_eq_right (Ne.symm hab), sub_zero] at h
       rw [unitaryCongruence.hA_symm A.I (Rf.e0 b)]
       exact unitaryCongruence.Z_sig _ _ h
     hfz := fun a => (Rf.formsAtZero.2 a).2
@@ -1318,7 +1308,7 @@ theorem frameOK (A : UnitaryGroupInstance D) {L : UnitaryLatticeData D} (P : Add
       exact unitaryCongruence.Z_sig _ _ ((Rf.weightVectorsIntegral i).2.2 a).2.2.1
     hbb := fun i j hij => by
       have h := Rf.bw_dual i j
-      rwa [if_neg hij, sub_zero] at h }
+      rwa [ite_eq_right hij, sub_zero] at h }
 
 theorem level_subgroup_measure_pos (A : UnitaryGroupInstance D) {L : UnitaryLatticeData D} (P : AdditiveCharacterData A) (Rf : ReferenceFrame A L) (μf : Measure A.I.Gf)
     [μf.IsHaarMeasure] : 0 < μf (K2set A.I (gD D) Rf.e0 Rf.z0 Rf.bw) := by

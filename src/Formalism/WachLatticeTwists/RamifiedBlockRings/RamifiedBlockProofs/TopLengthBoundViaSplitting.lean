@@ -173,8 +173,7 @@ theorem colRho : StatColRho := by
       have := key g g.2
       simp only [map_smul, ← Finset.smul_sum]
       exact this)
-  rw [map_add (f := _), mkQ_cobZ, add_zero] at hz
-  exact hz
+  rwa [map_add (f := _), mkQ_cobZ, add_zero] at hz
 
 theorem liftBound : StatLiftBound := by
   intro O _ _ _ A T' G _ _ _ _ M _ _ _ _ L _ _ _ r χ e₁ Dl j Kc ℓ e' tens v₁ κ
@@ -188,8 +187,7 @@ theorem liftBound : StatLiftBound := by
     funext g
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [hx a, ← htens, hK a g g.2, map_smul, map_smul, LinearMap.smul_apply]) a
-  rw [hx a, ← map_smul]
-  exact h
+  rwa [hx a, ← map_smul]
 
 end Formalism.RepresentationBoundsCohomology.BR
 end -- clump:auto
@@ -232,8 +230,7 @@ theorem qPlace : StatQPlace := by
       (qAlg A T' G r χ E (γ : G) ζ hquad hζ)
     have h2 := congrArg φ h
     rw [map_smul, map_zero, sub_smul, one_smul, hγM] at h2
-    rw [sub_smul, one_smul]
-    exact h2
+    rwa [sub_smul, one_smul]
   have hpw : ∀ (φ : ColNNJ r χ E e₁ δ D j Kc k0 →ₗ[A] M) (k : ℕ),
       φ (yGen r χ E e₁ δ D j Kc k0 ((γ : G) ^ k)) =
         k • φ (yGen r χ E e₁ δ D j Kc k0 (γ : G)) := by
@@ -458,8 +455,7 @@ lemma length_mid_zero {H : Type*} [AddCommGroup H] [Module O H] (ρM : Represent
     obtain ⟨-, hz2⟩ := Submodule.mem_inf.mp hz
     rw [LinearMap.mem_ker, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero,
       Submodule.mem_comap, Submodule.subtype_apply] at hz2
-    have h0 := hB _ hz2
-    exact Subtype.ext (Subtype.ext h0)
+    exact Subtype.ext (Subtype.ext (hB _ hz2))
   rw [hz a, hz b]
 
 end Triv
@@ -483,8 +479,8 @@ lemma blockTrivAbs {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRin
   classical
   let A : ∀ w, Submodule O (H1z (resRep ρM (D w))) := fun w =>
     if hw : w ∈ what₂ then Classical.choose (hrows w hw) else F w
-  have hA : ∀ w (hw : w ∈ what₂), A w = Classical.choose (hrows w hw) := fun w hw => dif_pos hw
-  have hA' : ∀ w, w ∉ what₂ → A w = F w := fun w hw => dif_neg hw
+  have hA : ∀ w (hw : w ∈ what₂), A w = Classical.choose (hrows w hw) := fun w hw => dite_eq_left hw
+  have hA' : ∀ w, w ∉ what₂ → A w = F w := fun w hw => dite_eq_right hw
   have hFA : ∀ w, F w ≤ A w := by
     intro w
     by_cases hw : w ∈ what₂
@@ -508,9 +504,9 @@ lemma blockTrivAbs {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRin
         if w ∈ what₂ then lenRow w else 0 := by
       intro w _
       by_cases hwr : w ∈ what₂
-      · rw [if_pos hwr, hA w hwr]
+      · rw [ite_eq_left hwr, hA w hwr]
         exact (Classical.choose_spec (hrows w hwr)).2.1
-      · rw [if_neg hwr, hA' w hwr, Submodule.comap_subtype_self, Module.length_eq_zero]
+      · rw [ite_eq_right hwr, hA' w hwr, Submodule.comap_subtype_self, Module.length_eq_zero]
     calc Module.length O S ≤ _ := h2
       _ ≤ s + ∑ w ∈ what₂ ∪ cols, (if w ∈ what₂ then lenRow w else 0) :=
           add_le_add hsel (Finset.sum_le_sum hterm)
@@ -572,12 +568,11 @@ theorem blockChiCFull_of (hK : StatColKerChiC.{u₁, u₂, u₃, u₄, u₅}) :
     by_cases hwl : w ∈ lrows
     · obtain ⟨B, h1, h2, h3⟩ := hl w hwl
       refine ⟨B, h1, h2.trans ?_, h3⟩
-      simp only [lenRow, if_pos hwl]
-      exact le_self_add
+      simpa only [lenRow, ite_eq_left hwl] using le_self_add
     · have hwq : w ∈ qs := (Finset.mem_union.mp hw).resolve_left hwl
       obtain ⟨B, h1, h2, h3⟩ := hq w hwq
       refine ⟨B, h1, h2.trans ?_, h3⟩
-      simp only [lenRow, if_neg hwl, if_pos hwq, zero_add, le_refl]
+      simp only [lenRow, ite_eq_right hwl, ite_eq_left hwq, zero_add, le_refl]
   have hkerEq : LinearMap.ker Ψ = kerY (O := O) (M := d → KO O) r χ E e₁ δ
       (fun l => D (colIdx l)) (fun l => j (colIdx l)) Kc k0 :=
     colPsiKer O A T' G (d → KO O) r χ E e₁ δ ι (fun l => D (colIdx l)) (fun l => j (colIdx l))
@@ -630,12 +625,11 @@ theorem blockChiOneFull_of (hK : StatColKerChiOne.{u₁, u₂, u₃, u₄, u₅}
     by_cases hwl : w ∈ lrows
     · obtain ⟨B, h1, h2, h3⟩ := hl w hwl
       refine ⟨B, h1, h2.trans ?_, h3⟩
-      simp only [lenRow, if_pos hwl]
-      exact le_self_add
+      simpa only [lenRow, ite_eq_left hwl] using le_self_add
     · have hwq : w ∈ qs := (Finset.mem_union.mp hw).resolve_left hwl
       obtain ⟨B, h1, h2, h3⟩ := hq w hwq
       refine ⟨B, h1, h2.trans ?_, h3⟩
-      simp only [lenRow, if_neg hwl, if_pos hwq, zero_add, le_refl]
+      simp only [lenRow, ite_eq_right hwl, ite_eq_left hwq, zero_add, le_refl]
   have hB : ∀ x ∈ coB1 ρM, x = 0 := by
     rintro _ ⟨v, rfl⟩
     funext g
@@ -702,7 +696,7 @@ lemma sum_range_ite_le_add_sum_Ioo (t : ℕ) (a : ℕ∞) (Sha : ℕ → ℕ∞)
         have hne : e + 1 ≠ 1 := by
           have := (mem_Ioo.1 he).1
           omega
-        rw [if_neg hne, Nat.add_sub_cancel]
+        rw [ite_eq_right hne, Nat.add_sub_cancel]
 
 lemma collectAlt (t : ℕ) (ht : 1 ≤ t) (L : Fin (t + 1) → ℕ∞) (S : Finset (Fin (t + 1))) (v : ℕ∞)
     (what₂ cols qs : Finset ℕ) (lenRow vζ h0 : ℕ → ℕ∞) (e' j deg : ℕ → ℕ) (Sha : ℕ → ℕ∞)
@@ -732,7 +726,7 @@ lemma collectAlt (t : ℕ) (ht : 1 ≤ t) (L : Fin (t + 1) → ℕ∞) (S : Fins
     intro i
     by_cases hi : (i : ℕ) = 0
     · have hs : i.succ = ⟨1, by omega⟩ := Fin.ext (by simp [hi])
-      rw [if_pos (by omega), hs]
+      rw [ite_eq_left (by omega), hs]
       refine (hL1.trans ?_)
       rw [hB]
       calc vhE + C1 + eO * (cB : ℕ∞) * ∑ w ∈ what₂, ((deg w : ℕ∞) + 2) +
@@ -740,7 +734,7 @@ lemma collectAlt (t : ℕ) (ht : 1 ≤ t) (L : Fin (t + 1) → ℕ∞) (S : Fins
           ≤ vhE + C1 + eO * (cB : ℕ∞) * ∑ w ∈ what₂, ((deg w : ℕ∞) + 2) +
             4 * ((cols.card : ℕ∞) + 1) * vδ + ∑ w ∈ qs, vζ w + (cols.card : ℕ∞) * H0 := le_self_add
         _ = _ := by ring
-    · rw [if_neg (by omega)]
+    · rw [ite_eq_right (by omega)]
       have h2 : 2 ≤ ((i.succ : Fin (t + 1)) : ℕ) := by simp [Fin.val_succ]; omega
       refine (hLc i.succ h2).trans_eq ?_
       rw [hB, Fin.val_succ]

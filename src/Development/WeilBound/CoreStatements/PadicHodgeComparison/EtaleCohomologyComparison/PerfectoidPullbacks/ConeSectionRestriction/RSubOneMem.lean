@@ -81,12 +81,10 @@ theorem main : ∀ {R : Type} [CommRing R] {X : Scheme.{0}} (D : E.LineData X) (
   refine TopologicalSpace.Opens.mem_sSup.2 ⟨_, hmem, ?_⟩
   have e : (chart R N j).opensRange = GlobalTheory.ProjSpace.chart R N j := Proj.opensRange_awayι _ _ _ _
   have hr : i x ∈ ((chart R N j).opensRange : Set _) := by
-    rw [e]
-    exact hj
+    rwa [e]
   rw [Scheme.Hom.coe_opensRange] at hr
   show x ∈ ((pullback.fst i (chart R N j)).opensRange : Set X)
-  rw [Scheme.Hom.coe_opensRange, Scheme.Pullback.range_fst]
-  exact hr
+  rwa [Scheme.Hom.coe_opensRange, Scheme.Pullback.range_fst]
 
 end GlobalTheory.CompanionTheory.ConeCover
 end -- clump:auto

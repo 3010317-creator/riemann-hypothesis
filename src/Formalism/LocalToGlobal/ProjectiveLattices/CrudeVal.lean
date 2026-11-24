@@ -126,7 +126,7 @@ lemma crv_nval_natCast (ho : OverLa la V ι e) {N : ℕ} (hN : N ≠ 0) :
   have hN' : ((N : ℕ) : K') ≠ 0 := by
     rw [← map_natCast ι N]
     exact (map_ne_zero ι).mpr (Nat.cast_ne_zero.mpr hN)
-  rw [if_neg hN', ← map_natCast ι N, ho.2, crv_vLa_natCast la hN]
+  rw [ite_eq_right hN', ← map_natCast ι N, ho.2, crv_vLa_natCast la hN]
   have he : (e : ℝ) ≠ 0 := by exact_mod_cast ho.1.ne'
   congr 1
   generalize padicValNat (resCharOf la) N * ramOverZ la = m
@@ -162,8 +162,7 @@ theorem nval_factProd_le (ho : OverLa la V ι e) {σ : Type} (α : σ →₀ ℕ
   have hp := resCharOf_prime la
   haveI : Fact (resCharOf la).Prime := ⟨hp⟩
   have hne : (α.prod fun _ t => t.factorial) ≠ 0 := by
-    simp only [Finsupp.prod]
-    exact Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
+    simpa only [Finsupp.prod] using Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
   rw [crv_nval_natCast la ho hne, EReal.coe_le_coe_iff]
   have hleg := crv_legendre (resCharOf la) α
   have hp1 : (1 : ℝ) < resCharOf la := by exact_mod_cast hp.one_lt
@@ -183,8 +182,7 @@ theorem nval_factProd_le_zero (ho : OverLa la V ι e) {σ : Type} (α : σ →�
   have hp := resCharOf_prime la
   haveI : Fact (resCharOf la).Prime := ⟨hp⟩
   have hne : (α.prod fun _ t => t.factorial) ≠ 0 := by
-    simp only [Finsupp.prod]
-    exact Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
+    simpa only [Finsupp.prod] using Finset.prod_ne_zero_iff.mpr fun _ _ => Nat.factorial_ne_zero _
   have hv : padicValNat (resCharOf la) (α.prod fun _ t => t.factorial) = 0 := by
     rw [crv_padic_prod]
     refine Finset.sum_eq_zero fun s _ => by

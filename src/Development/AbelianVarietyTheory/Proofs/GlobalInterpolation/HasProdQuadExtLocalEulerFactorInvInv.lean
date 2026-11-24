@@ -186,9 +186,7 @@ theorem _root_.GlobalTheory.EtaEulerProduct.inert_or_split {σ : E →ₐ[F] E} 
         show (algebraMap (𝓞 E) E) t = _
         rw [ht, hsτ]; rfl
       have hfixa : τ • algebraMap (𝓞 F) (𝓞 E) a = algebraMap (𝓞 F) (𝓞 E) a := by
-        apply RingOfIntegers.ext
-        show τ ((algebraMap (𝓞 F) (𝓞 E) a : 𝓞 E) : E) = _
-        exact τ.commutes' _ |>.trans rfl
+        exact RingOfIntegers.ext (τ.commutes' _ |>.trans rfl)
       have hmem : τ • (θ - algebraMap (𝓞 F) (𝓞 E) a) ∈ τ • P :=
         Ideal.smul_mem_pointwise_smul _ _ _ ha
       rw [hfix hn τ, smul_sub, hfixa, ← htτ] at hmem
@@ -199,8 +197,7 @@ theorem _root_.GlobalTheory.EtaEulerProduct.inert_or_split {σ : E →ₐ[F] E} 
       Algebra.IsUnramifiedAt (𝓞 F) w.asIdeal := by
     intro w hw
     rw [Algebra.isUnramifiedAt_iff_of_isDedekindDomain]
-    rw [← Ideal.ramificationIdxIn_eq_ramificationIdx p w.asIdeal Gal(E/F)]
-    exact he1
+    rwa [← Ideal.ramificationIdxIn_eq_ramificationIdx p w.asIdeal Gal(E/F)]
   have hio := (_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E hfin v).mp hunr
   rw [he1, one_mul] at hcount
   have hnorm : ∀ Q ∈ p.primesOver (𝓞 E),
@@ -255,8 +252,7 @@ theorem _root_.GlobalTheory.EtaEulerProduct.inert_or_split {σ : E →ₐ[F] E} 
       · rw [← hg, one_smul]
       · rw [← hg, hQτ]
     have h1 := hall Q₁ (hQ12 ▸ Set.mem_insert _ _)
-    have h2 := hall Q₂ (hQ12 ▸ Set.mem_insert_of_mem _ rfl)
-    exact hne (h1.trans h2.symm)
+    exact hne (h1.trans (hall Q₂ (hQ12 ▸ Set.mem_insert_of_mem _ rfl)).symm)
 
 def below (F : Type) [Field F] [NumberField F] [Algebra F E] (P : {P : Ideal (𝓞 E) // P.IsMaximal}) :
     HeightOneSpectrum (𝓞 F) :=
@@ -354,12 +350,12 @@ private theorem eulerFac_hasProd_and_primesOver_card_le_two {σ : E →ₐ[F] E}
     have hval : ∀ Q ∈ v.asIdeal.primesOver (𝓞 E), _root_.Formalism.HermitianLatticesTheory.eulerFac E M Q = (1 - t)⁻¹ := by
       intro Q hQm
       unfold _root_.Formalism.HermitianLatticesTheory.eulerFac
-      rw [if_pos (hQ Q hQm).1, (hQ Q hQm).2]
+      rw [ite_eq_left (hQ Q hQm).1, (hQ Q hQm).2]
       push_cast
       rw [Real.sqrt_sq (by positivity)]
     have heul : _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv F E M v = 1 - t := by
       unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.etaV _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.resCard
-      rw [if_pos hF]
+      rw [ite_eq_left hF]
     have hpos : 0 < 1 - t := by linarith [le_abs_self t]
     refine ⟨?_, by omega, by omega, fun Q hQm => ⟨by rw [hval Q hQm]; positivity, ?_⟩⟩
     · obtain ⟨Q₀, hQ₀⟩ := Set.ncard_eq_one.mp hn
@@ -376,10 +372,10 @@ private theorem eulerFac_hasProd_and_primesOver_card_le_two {σ : E →ₐ[F] E}
   · have hval : ∀ Q ∈ v.asIdeal.primesOver (𝓞 E), _root_.Formalism.HermitianLatticesTheory.eulerFac E M Q = (1 - x) ^ (-1 / 2 : ℝ) := by
       intro Q hQm
       unfold _root_.Formalism.HermitianLatticesTheory.eulerFac
-      rw [if_neg (hQ Q hQm).1, (hQ Q hQm).2]
+      rw [ite_eq_right (hQ Q hQm).1, (hQ Q hQm).2]
     have heul : _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv F E M v = 1 - x := by
       unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.etaV _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.resCard
-      rw [if_neg hF]; simp [hxdef, hqdef]
+      rw [ite_eq_right hF]; simp [hxdef, hqdef]
     have hpos : 0 < 1 - x := by linarith
     refine ⟨?_, by omega, by omega, fun Q hQm => ⟨by rw [hval Q hQm]; positivity, ?_⟩⟩
     · obtain ⟨Q₁, Q₂, hne, hS⟩ := Set.ncard_eq_two.mp hn
@@ -506,8 +502,7 @@ theorem _root_.GlobalTheory.EtaEulerProduct.hasProd_eulerInv_inv : ∀ (F E : Ty
       (Ideal.absNorm v.asIdeal : ℝ) ^ (-(2 : ℝ))) := by
     have hinj : Function.Injective (fun v : HeightOneSpectrum (𝓞 F) =>
         (⟨v.asIdeal, v.isMaximal⟩ : {P : Ideal (𝓞 F) // P.IsMaximal})) := by
-      intro v w hvw
-      exact HeightOneSpectrum.ext (congrArg Subtype.val hvw)
+      exact fun v w hvw => HeightOneSpectrum.ext (congrArg Subtype.val hvw)
     have h2 := summable_absNorm_maximal_rpow_neg F (s := 2) (by norm_num)
     have h3 := h2.comp_injective hinj
     exact h3
@@ -559,7 +554,6 @@ theorem _root_.GlobalTheory.EtaEulerProduct.hasProd_eulerInv_inv : ∀ (F E : Ty
     have hsig : HasProd (g ∘ e) (Real.exp S) := (e.hasProd_iff).mpr hprod
     refine hsig.sigma (fun v => ?_)
     have := (hfib v).1
-    rw [← (_root_.GlobalTheory.EtaEulerProduct.fibreEquiv v).hasProd_iff] at this
-    exact this
+    rwa [← (_root_.GlobalTheory.EtaEulerProduct.fibreEquiv v).hasProd_iff] at this
 
 end GlobalTheory.EtaEulerProduct

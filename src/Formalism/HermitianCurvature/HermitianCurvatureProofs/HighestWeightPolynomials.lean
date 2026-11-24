@@ -74,8 +74,7 @@ theorem map_eq_of_cpol {n : ℕ} (m m' : Fin n → ℂ) (h : ∀ w, cpol m w = c
     Polynomial.funext (fun w => by rw [← key, ← key, h])
   have hr := congrArg Polynomial.roots hp
   rw [Polynomial.roots_multiset_prod_X_sub_C, Polynomial.roots_multiset_prod_X_sub_C] at hr
-  have h2 := congrArg (Multiset.map (fun z : ℂ => -z)) hr
-  simpa [Multiset.map_map, Function.comp_def] using h2
+  simpa [Multiset.map_map, Function.comp_def] using congrArg (Multiset.map (fun z : ℂ => -z)) hr
 
 theorem sdec_re {n : ℕ} {m : Fin n → ℂ} (hm : SDec m) : StrictAnti fun a => (m a).re := by
   intro a b hab
@@ -87,8 +86,7 @@ theorem sdec_re {n : ℕ} {m : Fin n → ℂ} (hm : SDec m) : StrictAnti fun a =
   linarith
 
 theorem sdec_inj {n : ℕ} {m : Fin n → ℂ} (hm : SDec m) : Function.Injective m := by
-  intro a b hab
-  exact (sdec_re hm).injective (congrArg Complex.re hab)
+  exact fun a b hab => (sdec_re hm).injective (congrArg Complex.re hab)
 
 theorem sdec_shift {n : ℕ} {ν : Fin n → ℂ} (h : ∀ a b : Fin n, a < b → ∃ N : ℕ, ν a - ν b = (N : ℂ)) :
     SDec fun k => ν k - ((k : ℕ) : ℂ) := by
@@ -126,7 +124,7 @@ theorem hval_shift {n : ℕ} (ν : Fin n → ℂ) (a b : Fin n) :
     split_ifs <;> simp <;> ring
   simp_rw [h]
   rw [Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   ring
 
 section mod
@@ -236,14 +234,14 @@ theorem qr_topWeightSing_of (hX : Qr.ExistsSingMax) (hS : Qr.CapSing) : Qr.TopWe
     · subst h1
       have h2 : ¬ (b = c) := fun h => (ne_of_gt hab) h
       have h3 : ¬ (c = b) := fun h => h2 h.symm
-      simp only [if_true, if_neg h2, if_neg h3, LinearMap.zero_apply]
+      simp only [ite_true, ite_eq_right h2, ite_eq_right h3, LinearMap.zero_apply]
       module
     · by_cases h2 : b = c
       · subst h2
-        simp only [if_true, if_neg h1, LinearMap.zero_apply]
+        simp only [ite_true, ite_eq_right h1, LinearMap.zero_apply]
         module
       · have h3 : ¬ (c = b) := fun h => h2 h.symm
-        simp only [if_neg h1, if_neg h2, if_neg h3, LinearMap.zero_apply]
+        simp only [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, LinearMap.zero_apply]
         module
   have h := hmax _ (E a b x) hx' hne hwt
   rw [hval_shift] at h

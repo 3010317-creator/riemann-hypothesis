@@ -157,8 +157,7 @@ theorem fd_B (N : ℕ) (lam : DomWeight N) : FiniteDimensional ℂ (nablaSq ℂ 
     refine Submodule.sum_mem _ fun d hd => ?_
     have hdeg : d.degree = ∑ s, lam.natW s := by
       have h2 := hf (MvPolynomial.mem_support_iff.mp hd)
-      rw [Finsupp.degree_eq_weight_one]
-      exact h2
+      rwa [Finsupp.degree_eq_weight_one]
     rw [show MvPolynomial.monomial d (f.coeff d) = f.coeff d • MvPolynomial.monomial d (1 : ℂ) by
       rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨d, hdeg, rfl⟩)
@@ -233,8 +232,7 @@ theorem stableCompl_B : StableCompl := by
     refine ⟨(a : MvPolynomial (Fin N × Fin N) ℂ), ha, (b : MvPolynomial (Fin N × Fin N) ℂ),
       ⟨b.2, fun w hw => ?_⟩, ?_⟩
     · exact (Submodule.mem_orthogonal K b).mp hb ⟨w, hW hw⟩ hw
-    · have hv := congrArg Subtype.val hab
-      simpa using hv
+    · simpa using congrArg Subtype.val hab
   · rw [eq_bot_iff]
     intro f hf
     obtain ⟨hfW, hfW'⟩ := Submodule.mem_inf.mp hf

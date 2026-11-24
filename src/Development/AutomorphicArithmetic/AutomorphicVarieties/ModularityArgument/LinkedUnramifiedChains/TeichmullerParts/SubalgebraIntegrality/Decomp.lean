@@ -127,8 +127,7 @@ theorem core3 {E : Type} [Field E] [NumberField E] [IsCMField E] {n m d : ℕ} {
         Units.val_one, Matrix.one_apply_eq, one_smul] at h4
       exact h4
     have h5 : ∀ g, G i (g * (1, (J k).2)) = G i g := fun g => by
-      have h6 := (hone ⟨_, hk⟩ G i).symm.trans (hG (.inr ⟨_, hk⟩) i)
-      exact congrFun h6 g
+      exact congrFun ((hone ⟨_, hk⟩ G i).symm.trans (hG (.inr ⟨_, hk⟩) i)) g
     have h6 : J k = ((u : Ga), 1) * (1, (J k).2) := Prod.ext (huk.symm.trans (mul_one _).symm) (one_mul _).symm
     rw [h6, ← mul_assoc, h5, h3]
   have hFA : ∀ i, F i ∈ X.AF ξ := fun i => hF.1 i trivial
@@ -140,8 +139,7 @@ theorem core3 {E : Type} [Field E] [NumberField E] [IsCMField E] {n m d : ℕ} {
     (by
       rintro (u | p) G hG γ g
       · have := hG γ (g * (((u : X.Ub) : Ga), 1))
-        rw [← mul_assoc] at this
-        exact this
+        rwa [← mul_assoc] at this
       · have := hG γ (g * (1, (p : Gp)))
         rw [← mul_assoc] at this
         exact this)
@@ -228,8 +226,7 @@ theorem UpperTheory.V.Z.J.D.Dc.int_conj (x : UA E n) (u : Pl E)
       rw [← Matrix.transpose_mul, Units.mul_inv, Matrix.transpose_one]
     calc (cLoc u x).val = (((B⁻¹ : GL (Fin n) _).val)ᵀ * (B.val)ᵀ) * (cLoc u x).val := by rw [h2, Matrix.one_mul]
       _ = ((B⁻¹ : GL (Fin n) _).val)ᵀ := by rw [Matrix.mul_assoc, hce, Matrix.mul_one]
-  rw [e]
-  exact h1
+  rwa [e]
 
 theorem UpperTheory.V.Z.J.D.Dc.int_over {w u : Pl E}
     (hu : u.under (𝓞 (maximalRealSubfield E)) = w.under (𝓞 (maximalRealSubfield E))) (x : UA E n)
@@ -320,13 +317,13 @@ variable {s n c}
 
 theorem Pc_notS {w : Plc L} (hw : w.under (𝓞 (Lp L)) ∉ s.S) : Pc s n c w = GlobalTheory.LFun.KGL w (n := n) := by
   unfold Pc
-  refine if_neg ?_
+  refine ite_eq_right ?_
   rintro ⟨v, hv, rfl⟩
   exact hw ((under_w s v).symm ▸ hv)
 
 theorem Pc_S {v : Plc (Lp L)} (hv : v ∈ s.S) : Pc s n c (s.w v) = Kc _ n c := by
   unfold Pc
-  exact if_pos ⟨v, hv, rfl⟩
+  exact ite_eq_left ⟨v, hv, rfl⟩
 
 theorem Kf_notS {w : Plc L} (hw : w.under (𝓞 (Lp L)) ∉ s.S) : Kf s n c w = GlobalTheory.BCT.KL n w := by
   unfold Kf GlobalTheory.BCT.KL
@@ -337,7 +334,7 @@ theorem levFam (hfin : s.S.Finite) :
   refine ⟨fun w => ⟨(Pc_open s n c w).preimage continuous_subtype_val, fun k hk => Pc_le s n c w hk, fun k hk => hk⟩, ?_⟩
   filter_upwards [(hfin.image s.w).compl_mem_cofinite] with w hw
   unfold Kf GlobalTheory.BCT.KL Pc
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 theorem loc_of_glob (hU : GlobalTheory.BCT.Unr L) {k : finU (E := L) (n := n)} (hk : k ∈ GlobalTheory.BCT.globLev (Set.range s.w) (Kf s n c))
     (v : Plc (Lp L)) : cLoc (s.w v) (k : UA L n) ∈ Pc s n c (s.w v) :=
@@ -353,8 +350,7 @@ theorem cmp_mem {w : Plc L} (U : Subgroup (GLw n w)) (x : UA L n) (hx : cLoc w x
     cmp n w ((away l L n).rangeRestrict x) ∈ U := by
   unfold CaseU.cmp
   by_cases h : ((l : ℕ) : 𝓞 L) ∉ w.asIdeal
-  · rw [dite_eq_left h]
-    exact hx
+  · rwa [dite_eq_left h]
   · rw [dite_eq_right h]
     exact one_mem _
 
@@ -412,8 +408,7 @@ theorem exC {cf : Coef l} {m : ℕ} (τ₀ : KT n (wt s) →* GL (Fin m) cf.O) (
     rintro g ⟨hg, hg0⟩
     have hK : g ∈ KT n (wt s) := fun u _ => UpperTheory.V.Hi.GlAx.Kc_le 0 (hg0 u trivial)
     have : (⟨g, hK⟩ : KT n (wt s)) ∈ (τ₀.ker : Set (KT n (wt s))) := by
-      rw [← hUe]
-      exact hg
+      rwa [← hUe]
     exact ⟨⟨g, hK⟩, this, rfl⟩
   have hloc : ∀ u : s.St, ∃ cu, Kc ((wt s u).adicCompletion L) n cu ≤
       H.comap (MonoidHom.mulSingle (fun u => GLw n (wt s u)) u) := fun u =>
@@ -426,8 +421,7 @@ theorem exC {cf : Coef l} {m : ℕ} (τ₀ : KT n (wt s) →* GL (Fin m) cf.O) (
       exact (UpperTheory.V.Hi.GlAx.Kc_anti ((Finset.le_sup (Finset.mem_univ u)).trans hc)).trans (hcu u)
   obtain ⟨g', hg', e⟩ := hpi (show (g : GV n (wt s)) ∈ _ from fun u _ => hg u)
   have : g' = g := Subtype.ext e
-  rw [← this]
-  exact hg'
+  rwa [← this]
 
 theorem unramOf (hU : GlobalTheory.BCT.Unr L) (π : Submodule ℂ (UA L n → ℂ))
     (hne : π ⊓ GlobalTheory.PRep.fixed (GlobalTheory.BCT.RF L n) (GlobalTheory.BCT.globLev (Set.range s.w) (Kf s n c)) ≠ ⊥) (w : Plc L)
@@ -483,7 +477,7 @@ private theorem fixOf {L : Type} [Field L] [NumberField L] [IsCMField L] (hU : G
     (h3 : π ⊓ GlobalTheory.PRep.fixed (GlobalTheory.BCT.RF L n) (GlobalTheory.BCT.globLev S K') ≠ ⊥) (w : GlobalTheory.BCT.Pl L) (hw : w ∈ S)
     (hs : IsSplitAt w) (τ : SmIrr (GLw n w)) (hc : Cp π w τ) :
     GlobalTheory.PRep.fixed (τ.ρ.comp (GlobalTheory.BCT.UL n w).subtype) (K' w) ≠ ⊥ := by
-  have hUL : GlobalTheory.BCT.UL n w = ⊤ := if_pos hs
+  have hUL : GlobalTheory.BCT.UL n w = ⊤ := ite_eq_left hs
   have hsurj : Function.Surjective (GlobalTheory.BCT.UL n w).subtype := fun g =>
     ⟨⟨g, hUL ▸ Subgroup.mem_top g⟩, rfl⟩
   let σ₁ : SmIrr (GlobalTheory.BCT.UL n w) :=
@@ -542,8 +536,7 @@ private theorem levLe {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberFi
     [IsAlgClosure L Ω] {s : HidaSetting l L Ω} {n : ℕ} {V : s.Lev} (Q : QData V) (hQ : IsEmpty Q.Q) {c : Coef l} {m : ℕ}
     (τ₀ : KT n (wt s) →* GL (Fin m) c.O) (K : (hset Q τ₀).Lev) : (hset Q τ₀).lev K ≤ (hset Q τ₀).UQ := by
   unfold HSet.lev
-  refine sup_le le_rfl (iSup_le fun q => ?_)
-  exact (hQ.false q).elim
+  exact sup_le le_rfl (iSup_le fun q => (hQ.false q).elim)
 
 private theorem mainStep {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω]
     [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (n : ℕ) (hn : 1 ≤ n) (V : s.Lev) (Q : QData V) (c : Coef l) (ι : Qbar l ≃+* ℂ)

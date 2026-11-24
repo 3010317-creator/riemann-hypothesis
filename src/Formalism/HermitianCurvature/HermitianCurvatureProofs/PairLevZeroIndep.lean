@@ -619,8 +619,7 @@ theorem dualityList_of (hIF : InsFree) (hIS : InsStar) (hWF : WordFree) (hWM : W
         have c0 : Commute (Ps QQ q w L) (ins a (YangianSpanCharacter.T.J (SlopeTestRemainingChoices S A))) :=
           (hIF K A S a _).2 _ hfP (fun i j => J_entry_comm _ i j)
         have c1 : Commute (Ps QQ q w L) (star (ins a (YangianSpanCharacter.T.J (SlopeTestRemainingChoices S A))ᵀ)) := by
-          rw [hIS K A S a _ (freeOf_matrix_transpose (freeOf_J_matrix a)), Jt_conj]
-          exact c0
+          rwa [hIS K A S a _ (freeOf_matrix_transpose (freeOf_J_matrix a)), Jt_conj]
         simpa using c1.star_star
       refine ⟨?_, hkap, ?_, ?_, ?_⟩
       · rw [ePs]
@@ -703,8 +702,7 @@ theorem dualityList_of (hIF : InsFree) (hIS : InsStar) (hWF : WordFree) (hWM : W
         have c0 : Commute (Ps QQ q w L) (ins a (YangianSpanCharacter.T.J (SlopeTestRemainingChoices S A))ᵀ) :=
           (hIF K A S a _).2 _ hfP (fun i j => J_entry_comm _ j i)
         have c1 : Commute (Ps QQ q w L) (star (ins a (YangianSpanCharacter.T.J (SlopeTestRemainingChoices S A)))) := by
-          rw [hIS K A S a _ (freeOf_J_matrix a), J_conj]
-          exact c0
+          rwa [hIS K A S a _ (freeOf_J_matrix a), J_conj]
         simpa using c1.star_star
       refine ⟨?_, hkap, ?_, ?_, ?_⟩
       · rw [ePs]
@@ -771,8 +769,7 @@ end Main
 end Formalism.FourierDecayAlt.P.Wd10
 
 theorem Formalism.FourierDecayAlt.P.kappa_formula_holds : Formalism.FourierDecayAlt.Wd.KapFormula := by
-  intro K S _ _ q w L _ _ h
-  exact Formalism.FourierDecayAlt.P.Wd10.kap_eq q w L h
+  exact fun K S _ _ q w L _ _ h => Formalism.FourierDecayAlt.P.Wd10.kap_eq q w L h
 
 theorem Formalism.FourierDecayAlt.P.duality_list_holds : Formalism.FourierDecayAlt.Wd.DualityList :=
   Formalism.FourierDecayAlt.P.Wd10.dualityList_of Formalism.FourierDecayAlt.P.position_insertion_free_compat Formalism.FourierDecayAlt.P.position_insertion_star_compat
@@ -967,13 +964,11 @@ theorem word_transfer_mem_entrywise (QQ : ℂ → M2 A) (w : List (Letter ℂ S)
     E2 𝒜 (TTw QQ w Y) := by
   induction w with
   | nil =>
-    intro a b
-    show io (QQ Y a b) ∈ entSub 𝒜
-    exact io_mem (hQ a b)
+    exact fun a b => io_mem (hQ a b)
   | cons l w ih =>
     by_cases hp : l.plus
-    · rw [TTw, if_pos hp]; exact entries_mem_mul ih (reflection_entries_mem _ _)
-    · rw [TTw, if_neg hp]; exact entries_mem_mul (reflection_transpose_entries_mem _ _) ih
+    · rw [TTw, ite_eq_left hp]; exact entries_mem_mul ih (reflection_entries_mem _ _)
+    · rw [TTw, ite_eq_right hp]; exact entries_mem_mul (reflection_transpose_entries_mem _ _) ih
 
 theorem rrw_mem_at (QQ : ℂ → M2 A) (w : List (Letter ℂ S)) (hw : ∀ l ∈ w, ∀ a b, QQ l.pt a b ∈ 𝒜) :
     RRw QQ w ∈ entSub 𝒜 := by
@@ -1131,8 +1126,7 @@ theorem form_single_left (μ : MeasureTheory.Measure (Mt k r)) (a : Ix S) (Φ : 
   · rw [Pi.single_eq_same]
   · intro b _ hb
     rw [Pi.single_eq_of_ne hb, pairAt_zero_left]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem form_eq_pairS (μ : MeasureTheory.Measure (Mt k r)) (K0 : Submodule ℂ (RadSp k r z z' π π'))
     (c : Fin r → ℂ) (hS : SesqOn (Submodule.pi Set.univ fun _ : Ix S => K0) (fun x y => form μ 0 x y c))
@@ -1219,8 +1213,7 @@ theorem form_single_right (μ : MeasureTheory.Measure (Mt P.k P.r)) (a : Ix S)
   · rw [Pi.single_eq_same]
   · intro b _ hb
     rw [Pi.single_eq_of_ne hb, pairAt_zero_right]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem herm_on {W : Type} [AddCommGroup W] [Module ℂ W] (U' : Submodule ℂ W) (f : W → W → ℂ) (hS : SesqOn U' f)
     (hN : NonnegOn U' f) (x : W) (hx : x ∈ U') (y : W) (hy : y ∈ U') : f y x = conj (f x y) := by

@@ -167,8 +167,7 @@ theorem isRealLine_lineM {N : ℕ} (l : Fin N) (w₀ : {w : InfinitePlace F // w
         · subst hj; simp only [Pi.single_eq_same]; exact continuous_id'
         · simpa [Pi.single_eq_of_ne hj] using continuous_const
       exact (continuous_eMsymm.comp hc).prodMk continuous_const
-    · simp only [Pi.single_eq_of_ne h]
-      exact continuous_const
+    · simpa only [Pi.single_eq_of_ne h] using continuous_const
   · funext i; show sndA F (0 : AF F) = 0; exact map_zero _
   · funext i; rfl
 
@@ -197,8 +196,7 @@ theorem invV_bdd {N : ℕ} [Invertible (2 : AF F)] {ψ : AddChar (AF F) ℂ} (h�
   have := norm_setIntegral_le_of_norm_le_const (μ := muV N ν) (s := 𝓓)
     (f := fun y => f (z, y) * ψ (-(⅟(2 : AF F) * (z ⬝ᵥ y)))) (C := C) (by rw [h1]; exact ENNReal.one_lt_top)
     (fun y _ => by rw [norm_mul, hψ, mul_one]; exact hC _)
-  rw [Measure.real, h1, ENNReal.toReal_one, mul_one] at this
-  exact this
+  rwa [Measure.real, h1, ENNReal.toReal_one, mul_one] at this
 
 theorem invV_deriv {N : ℕ} [Invertible (2 : AF F)] {ψ : AddChar (AF F) ℂ} {lam : InfinitePlace F → ℝ}
     {ν : Measure (AF F)} (hL : IsLam ψ lam) (hν : IsCov1 ν) {𝓓 : Set (Fin N → AF F)}

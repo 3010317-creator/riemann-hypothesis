@@ -82,9 +82,7 @@ theorem proof : RankDeficientFibreInfinite.Statement := by
   obtain ⟨w, hw, hw0⟩ : ∃ w, fderiv ℂ f s w = 0 ∧ w ≠ 0 := by
     by_contra hno
     push Not at hno
-    apply hinj s hs
-    intro x y hxy
-    exact sub_eq_zero.1 (hno _ (by rw [map_sub, hxy, sub_self]))
+    exact hinj s hs (fun x y hxy => sub_eq_zero.1 (hno _ (by rw [map_sub, hxy, sub_self])))
   have hw' : Λ (fderiv ℂ f s w) = 0 := by rw [hw, map_zero]
 
   let A' : ℂ × (Fin r → ℂ) →L[ℂ] (Fin k → ℂ) :=
@@ -156,8 +154,7 @@ theorem proof : RankDeficientFibreInfinite.Statement := by
     have hgc : fderiv ℂ (fun z => Λc (f (P z))) z = Λc.comp ((fderiv ℂ f (P z)).comp (fderiv ℂ P z)) := by
       rw [← hcomp]
       have h := fderiv_comp z Λc.differentiableAt ((hfd z hz).comp z (hPd z hz))
-      rw [ContinuousLinearMap.fderiv] at h
-      exact h
+      rwa [ContinuousLinearMap.fderiv] at h
     have hx : Λ (fderiv ℂ f (P z) (fderiv ℂ P z 1)) = 0 := by
       have := congrArg (fun L => L 1) (hgc.symm.trans hg0)
       simpa [hΛc] using this

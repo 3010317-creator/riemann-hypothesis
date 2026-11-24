@@ -112,8 +112,7 @@ theorem exists_char_of_cub [ConnectedSpace S] [Module.Free ℤ X] (u : Γ((split
       simp only [ofMul_mul, ofMul_inv] at e' ⊢
       linear_combination (norm := abel) e') (fun Z t z => by
         rw [hd, _root_.mul_one, h₁, mul_inv_cancel, inv_one, _root_.one_mul]) Z x y z
-    rw [hd, _root_.mul_assoc, ← mul_inv, mul_inv_eq_one] at e
-    exact e
+    rwa [hd, _root_.mul_assoc, ← mul_inv, mul_inv_eq_one] at e
   have : ConnectedSpace (𝟙_ (Over S)).left := ‹ConnectedSpace S›
   let ρ : Γ((splitTorus S X ⊗ 𝟙_ (Over S)).left, ⊤)ˣ := pb (fst _ _)
   have hρ : ∀ (Z : Over S) (t : Z ⟶ splitTorus S X) (y : Z ⟶ 𝟙_ (Over S)) (z : Z.left),
@@ -583,8 +582,7 @@ theorem exists_even_comp : ∀ (S : Scheme.{0}) (G H H' : Over S) [GrpObj G] [Is
   refine ⟨⟨s₁, isGen_cast hφ (DVR.pullGen_isGen _ _ _ _ σ.gen _), fun T x y u z J hJ => ?_⟩, fun T x z J hJ => ?_⟩
   · have c := σ.cub T (x ≫ e) (y ≫ e) (u ≫ e) z J hJ
     simp only [← MonObj.mul_comp, Category.assoc] at c
-    simp only [v _ hJ]
-    exact c
+    simpa only [v _ hJ] using c
   · show val s₁ (x⁻¹).left z J = val P.sym (x ≫ e ≫ i).left z J * val s₁ x.left z J
     rw [v _ hJ, v _ hJ, GrpObj.inv_comp, hσ T (x ≫ e) z J hJ, Category.assoc]
 
@@ -636,8 +634,7 @@ theorem exists_torus_factor : ∀ (k k' : Type) [CommRing k] [CommRing k'], IsFi
   haveI : IsProper Q'₀.B.hom := Q'₀.isAb.proper
   have hc : i₁ ≫ Q'₀.q = toUnit _ ≫ η[Q'₀.B] := by
     have h := GlobalTheory.TorusConst.eq_const (K := k') X (i₁ ≫ Q'₀.q)
-    rw [IsMonHom.one_hom] at h
-    exact h
+    rwa [IsMonHom.one_hom] at h
   let e := Q'₀.isKernel.lift i₁ (toUnit _) hc
   have he : e ≫ Q'₀.i = i₁ := Q'₀.isKernel.lift_fst _ _ hc
   haveI : Mono Q'₀.i := by

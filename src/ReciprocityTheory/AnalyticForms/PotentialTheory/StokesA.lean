@@ -107,8 +107,7 @@ theorem st_isPotential_cons (A : FinHolAtlas (e + 1) X) {u : X → ℝ} (hu : A.
   · show IsPotential A (LocPot.ofFun u)
     exact ⟨fun x => hu, fun x x' y _ => ⟨Set.univ, isOpen_univ, Set.mem_univ _, fun _ => 0,
       fun j => analyticOnNhd_const, fun z _ => by simp [LocPot.ofFun]⟩⟩
-  · show IsPotential A (Φ i)
-    exact hΦ i
+  · exact hΦ i
 
 theorem st_mInt_finset_sum [CompactSpace X] [T2Space X] (A : FinHolAtlas e X)
     (Φ : Fin e → LocPot X) (hΦ : ∀ i, IsPotential A (Φ i)) {ι : Type*} (s : Finset ι)

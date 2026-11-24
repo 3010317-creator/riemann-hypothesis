@@ -125,8 +125,7 @@ theorem idemKO : StatIdemKO := by
     rw [← hsum]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
   obtain ⟨i0, hi0⟩ : ∃ i0, IsUnit (e i0 i0) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hmem : ∑ i, e i i ∈ IsLocalRing.maximalIdeal O :=
       Ideal.sum_mem _ fun i _ => (IsLocalRing.mem_maximalIdeal _).2 (mem_nonunits_iff.2 (hcon i))
     rw [htr] at hmem
@@ -209,10 +208,8 @@ private theorem exists_universal_splitting_algebra (n : ℕ) : ∀ (T : Type u) 
         rfl
     · simp [hP1]
     · rw [eq_top_iff]
-      intro t _
-      exact Subalgebra.algebraMap_mem _ t
-    · intro B _ _ a _
-      exact ⟨Algebra.ofId T B, fun i => i.elim0⟩
+      exact fun t _ => Subalgebra.algebraMap_mem _ t
+    · exact fun B _ _ a _ => ⟨Algebra.ofId T B, fun i => i.elim0⟩
   | succ n ih =>
     intro T _ P hP hdeg
     have hnt : Nontrivial T := by
@@ -303,8 +300,7 @@ private theorem exists_universal_splitting_algebra (n : ℕ) : ∀ (T : Type u) 
       refine Fin.cases ?_ (fun j => ?_) i
       · simp only [rr, Fin.cons_zero, AlgHom.restrictScalars_apply]
         rw [AlgHom.commutes, hψr]
-      · simp only [rr, Fin.cons_succ, AlgHom.restrictScalars_apply]
-        exact hφ₂ j
+      · simpa only [rr, Fin.cons_succ, AlgHom.restrictScalars_apply] using hφ₂ j
 
 theorem splitAux (n : ℕ) : ∀ (T : Type u) [CommRing T] (P : T[X]), P.Monic → P.natDegree = n →
     ∃ (T' : Type u) (_ : CommRing T') (_ : Algebra T T') (rr : Fin n → T'),
@@ -313,8 +309,7 @@ theorem splitAux (n : ℕ) : ∀ (T : Type u) [CommRing T] (P : T[X]), P.Monic �
       Algebra.adjoin T (Set.range rr) = ⊤ ∧
       ∀ (B : Type u) [CommRing B] [Algebra T B] (a : Fin n → B),
         P.map (algebraMap T B) = ∏ i, (X - C (a i)) →
-        ∃ φ : T' →ₐ[T] B, ∀ i, φ (rr i) = a i := by
-  exact exists_universal_splitting_algebra n
+        ∃ φ : T' →ₐ[T] B, ∀ i, φ (rr i) = a i := exists_universal_splitting_algebra n
 
 theorem splitAlg : StatSplitAlg := by
   unfold StatSplitAlg
@@ -504,13 +499,12 @@ theorem splitPts : StatSplitPts := by
   have hle : PT.natDegree ≤ t := by
     rw [Polynomial.natDegree_le_iff_coeff_eq_zero]
     intro N hN
-    rw [hcoef, if_neg (by omega)]
+    rw [hcoef, ite_eq_right (by omega)]
   have hone : PT.coeff t = 1 := by
-    rw [hcoef, if_pos le_rfl]
+    rw [hcoef, ite_eq_left le_rfl]
     refine Subtype.ext (funext fun x => ?_)
     have := (hmonP x).coeff_natDegree
-    rw [hdegP] at this
-    exact this
+    rwa [hdegP] at this
   have hmon : PT.Monic := Polynomial.monic_of_natDegree_le_of_coeff_eq_one t hle hone
   have hdeg : PT.natDegree = t :=
     le_antisymm hle (Polynomial.le_natDegree_of_ne_zero (by rw [hone]; exact one_ne_zero))

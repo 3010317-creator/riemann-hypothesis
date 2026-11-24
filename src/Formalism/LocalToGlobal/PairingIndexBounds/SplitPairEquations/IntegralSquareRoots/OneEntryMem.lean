@@ -57,23 +57,20 @@ theorem form_put (L : PeriodPair) (y : n → Fin N' → Fin N → ℂ) (k : Fin 
   rw [Finset.sum_eq_single k]
   · have : (fun τ => putL n N N' k x τ k.1 k.2) = x := by
       have := ent_putL k k x
-      rw [if_pos rfl] at this
-      exact this
+      rwa [ite_eq_left rfl] at this
     rw [this]
     rfl
   · intro p _ hp
     have : (fun τ => putL n N N' k x τ p.1 p.2) = 0 := by
       have := ent_putL k p x
-      rw [if_neg hp] at this
-      exact this
+      rwa [ite_eq_right hp] at this
     rw [this, map_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem alphaQ_put (c : ℝ) (L : PeriodPair) (k : Fin N' × Fin N) (x : n → ℂ) :
     alphaQ c (formV (Formalism.L2.Th1.F.area L) n N N') (putL n N N' k x) = alphaQ c (matH (hOne L n)) x := by
   unfold alphaQ qOf
-  rw [form_put, ent_putL, if_pos rfl]
+  rw [form_put, ent_putL, ite_eq_left rfl]
 
 theorem oneEntry_mem (c : ℝ) (L : PeriodPair) (ΛM : AddSubgroup (n → ℂ)) {F : (n → Fin N' → Fin N → ℂ) → ℂ}
     (hF : F ∈ Formalism.L2.Th1.H.Th (formV (Formalism.L2.Th1.F.area L) n N N') (alphaQ c (formV (Formalism.L2.Th1.F.area L) n N N'))
@@ -93,8 +90,7 @@ theorem oneEntry_mem (c : ℝ) (L : PeriodPair) (ΛM : AddSubgroup (n → ℂ)) 
     have h := hF.2 (putL n N N' k x) (putL_mem ΛM N N' k hx) (setE z k w)
     rw [alphaQ_put] at h
     simp only [opU] at h ⊢
-    rw [setE_add, form_put, form_put, ent_setE, ent_putL, if_pos rfl] at h
-    exact h
+    rwa [setE_add, form_put, form_put, ent_setE, ent_putL, ite_eq_left rfl] at h
 
 theorem tens_spans (c : ℝ) (L : PeriodPair) (ΛM : AddSubgroup (n → ℂ)) {θ : (n → ℂ) → ℂ} (hθ0 : θ ≠ 0)
     (hline : ∀ G ∈ Formalism.L2.Th1.H.Th (matH (hOne L n)) (alphaQ c (matH (hOne L n))) ΛM, ∃ a : ℂ, G = a • θ)
@@ -148,8 +144,7 @@ theorem tens_spans (c : ℝ) (L : PeriodPair) (ΛM : AddSubgroup (n → ℂ)) {�
     exact (Fintype.prod_prod_type' (f := fun i j => θ fun τ => z τ i j)).symm
   rw [e1] at h
   show F z = _ * tensPow θ N N' z
-  rw [e2, div_mul_eq_mul_div, eq_div_iff (pow_ne_zero _ ha₀)]
-  exact h
+  rwa [e2, div_mul_eq_mul_div, eq_div_iff (pow_ne_zero _ ha₀)]
 
 end Gen
 

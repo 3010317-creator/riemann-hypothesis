@@ -156,7 +156,7 @@ def vRing (v : AddValuation K (WithTop ℤ)) : ValuationSubring K where
     · right
       show 0 ≤ v x⁻¹
       by_contra hy
-      push_neg at hx hy
+      push Not at hx hy
       have hx0 : x ≠ 0 := by
         rintro rfl
         rw [v.map_zero] at hx
@@ -172,8 +172,7 @@ theorem v_nonneg_int [NumberField K] (v : AddValuation K (WithTop ℤ)) (a : �
   have h2 : IsIntegral (vRing v) (a : K) := h1.tower_top
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.mp h2
   have h3 : algebraMap (vRing v) K y ∈ vRing v := y.2
-  rw [hy] at h3
-  exact h3
+  rwa [hy] at h3
 
 theorem emb_int_mem [NumberField K] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     (e : K →+* FractionRing O) (a : 𝓞 K) : ∃ y : O, algebraMap O (FractionRing O) y = e a := by
@@ -385,8 +384,7 @@ theorem star_mul_self_of_pow (D : D7) (ζ : (↥D.LL0)ˣ) (n : ℕ) (hn : n ≠ 
   apply D.what₂.embLL.injective
   rw [map_mul, map_one, D.starLL_cx]
   have hp : ((ζ : ↥D.LL0) : D.what₂.LL) ^ n = 1 := by
-    have e := congrArg (fun u : (↥D.LL0)ˣ => ((u : ↥D.LL0) : D.what₂.LL)) h
-    simpa using e
+    simpa using congrArg (fun u : (↥D.LL0)ˣ => ((u : ↥D.LL0) : D.what₂.LL)) h
   have hz : (D.what₂.embLL ((ζ : ↥D.LL0) : D.what₂.LL)) ^ n = 1 := by
     rw [← map_pow, hp, map_one]
   have hn1 : ‖D.what₂.embLL ((ζ : ↥D.LL0) : D.what₂.LL)‖ = 1 := Complex.norm_eq_one_of_pow_eq_one hz hn
@@ -395,7 +393,7 @@ theorem star_mul_self_of_pow (D : D7) (ζ : (↥D.LL0)ˣ) (n : ℕ) (hn : n ≠ 
 
 theorem readT_false_eq (D : D7) (T : TwR D.LL0 D.nd) (hstar : ∀ x : D.LL0, star (x : D.what₂.LL) ∈ D.LL0)
     (i : T.Tw) (x : ↥D.LL0) : readT D T i false x = readT D T i true ⟨star (x : D.what₂.LL), hstar x⟩ := by
-  simp only [readT, RingHom.comp_apply, Bool.false_eq_true, if_false, if_true]
+  simp only [readT, RingHom.comp_apply, Bool.false_eq_true, ite_false, ite_true]
   rw [T.restX_coefficientEmbedding_conj i x ⟨star (x : D.what₂.LL), hstar x⟩ rfl]
 
 theorem readT_false_mul_true (D : D7) (T : TwR D.LL0 D.nd) (hstar : ∀ x : D.LL0, star (x : D.what₂.LL) ∈ D.LL0)
@@ -419,7 +417,7 @@ theorem psiUT_eq_thSide : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : 
   · simp only [psiUT, MonoidHom.comp_apply, psiUOf_apply, map_prod]
     refine Finset.prod_congr rfl fun kv _ => ?_
     cases b
-    · simp only [thSide, Bool.false_eq_true, if_false, MonoidHom.inv_apply, MonoidHom.comp_apply]
+    · simp only [thSide, Bool.false_eq_true, ite_false, MonoidHom.inv_apply, MonoidHom.comp_apply]
       apply Units.ext
       rw [Units.coe_map, Units.val_inv_eq_inv_val, Units.coe_map]
       refine eq_inv_of_mul_eq_one_left ?_
@@ -485,8 +483,7 @@ theorem exists_root_congr_unit : ∀ {E Ω : Type} [Field E] [NumberField E] [Fi
     simp only [hp, Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X,
       Polynomial.eval_C, Function.comp_def] at this
     rw [this]
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hall : ∀ ζ ∈ p.roots, 1 ≤ A.valuation (a - ζ) := by
     intro ζ hζ
     have hroot : ζ ^ n = 1 := by
@@ -767,10 +764,9 @@ theorem formsExport_eq : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : T
     induction y using TensorProduct.induction_on with
     | zero => simp only [map_zero]
     | tmul a w =>
-      show a ⊗ₜ[S.Ks] (LinearEquiv.ofEq _ _ hW (f w)) = a ⊗ₜ[S.Ks] (f' (LinearEquiv.ofEq _ _ hW w))
       exact congrArg (a ⊗ₜ[S.Ks] ·) (Subtype.ext (hf w))
     | add y z hy hz => rw [map_add (f := _), map_add (f := _), hy, hz, map_add (f := _), map_add (f := _)]
-  have hc : ∀ g', cR D S In.chi j g' = chiL S j (In.chi j h1 h2) g' := fun g' => dif_pos ⟨h1, h2⟩
+  have hc : ∀ g', cR D S In.chi j g' = chiL S j (In.chi j h1 h2) g' := fun g' => dite_eq_left ⟨h1, h2⟩
   have hsm : ∀ (r : T.O i') (y : KT D T i' b ⊗[S.Ks] ↥(WKr D S j)),
       e ((show KT D T i' b from algebraMap (T.O i') (FractionRing (T.O i')) r) • y) =
         (show KT D T i' b from algebraMap (T.O i') (FractionRing (T.O i')) r) • e y := fun r y => e.map_smul _ y
@@ -814,7 +810,7 @@ theorem formsExport_eq : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : T
             fun x hx => In.hs j h1 h2 k P x hx) (e x)
     rw [LinearEquiv.map_smul, hbc _ _ ?_ x]
     intro w
-    rw [hLr, dif_pos ⟨h1, h2⟩]
+    rw [hLr, dite_eq_left ⟨h1, h2⟩]
     rfl
 
 end GlobalTheory.HeightCounting.FormsStep
@@ -848,8 +844,7 @@ theorem universalCharacter_admissibleConductor_inertia_surjective : GlobalTheory
   obtain ⟨-, hadm⟩ := hQ
   have hcl : ∀ P ∈ Q, ∀ P', IsConjPl D.host P P' → P' ∈ Q := fun P hP P' h => by
     obtain ⟨⟨P'', hP'', h''⟩, -⟩ := hadm P hP
-    rw [GlobalTheory.GalChar.isConjPl_unique h h'']
-    exact hP''
+    rwa [GlobalTheory.GalChar.isConjPl_unique h h'']
   obtain ⟨-, χ, h1, h2, h3, h4, h5⟩ := hadm P hP
   have hsP : ∀ A : ValuationSubring D.nd.Om, IsPlaceOver A P →
       ∀ b, ∃ σ ∈ Ine (F := D.host.E) A, χ σ = b := fun A hA b => by
@@ -921,13 +916,7 @@ noncomputable section
 namespace GlobalTheory.ChosenHalf
 
 theorem isConjPl_unique (D : D7) {P w w' : PlE D.host} (h : IsConjPl D.host P w) (h' : IsConjPl D.host P w') :
-    w = w' := by
-  apply HeightOneSpectrum.ext
-  ext y
-  obtain ⟨x, hx⟩ := (RingOfIntegers.mapRingEquiv D.host.conj.toRingEquiv).surjective y
-  have hy : (y : D.host.E) = D.host.conj (x : D.host.E) := by
-    rw [← hx]; rfl
-  rw [← h x y hy, ← h' x y hy]
+    w = w' := GlobalTheory.TwistDet.isConjPl_unique h h'
 
 theorem not_isConjPl_self (D : D7) {P : PlE D.host} (hs : IsSplitPl D.host P) : ¬ IsConjPl D.host P P := by
   intro hc
@@ -954,7 +943,7 @@ theorem qpOf_half : ∀ (D : D7) (Pq : HeightOneSpectrum (𝓞 (maximalRealSubfi
   · by_cases hq : P ∈ qpOf D Pq S
     · exact ⟨P, hq, Or.inl rfl⟩
     · have hn : ¬ ∀ v, NG.OverPl P v → P = Pq v ∨ Pq v ∉ S := fun h => hq ((memq P).2 ⟨hP, h⟩)
-      push_neg at hn
+      push Not at hn
       obtain ⟨v, hv, -, hin⟩ := hn
       refine ⟨Pq v, (memq _).2 ⟨hin, fun v' hv' => Or.inl ?_⟩, ?_⟩
       · rw [overPl_unique D (hPq v) hv']
@@ -1002,8 +991,7 @@ theorem residueHom_zmod : ∀ (D : D7) (kv : Σ k : Fin 2, D.nd.PlG k) (s : Spli
   have hN := GlobalTheory.TameLabels.normV_eq_of_split hp (D.nd.g_split kv.1) (D.naut.plGw_over kv.1 kv.2)
   have hc : Nat.card (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) =
       D.host.g kv.1 := by
-    rw [ReciprocityTheory.Bridge.ResidueFieldCardinality.card_residue, ← s.card_quot, hs]
-    rw [← hN]
+    rw [ReciprocityTheory.Bridge.ResidueFieldCardinality.card_residue, ← s.card_quot, hs, ← hN]
     rfl
   haveI : Finite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact hp.ne_zero)
@@ -1110,8 +1098,7 @@ theorem mem_placesOver_of_comap {D : D7} {P P' : PlE D.host}
   have e : ((p : ℕ) : 𝓞 D.host.E) = (algebraMap (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E)) (p : 𝓞 (maximalRealSubfield D.host.E)) := (map_natCast _ p).symm
   show ((p : ℕ) : 𝓞 D.host.E) ∈ P'.asIdeal
   have hP' : ((p : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal := hP
-  rw [e, ← Ideal.mem_comap, ← h, Ideal.mem_comap, ← e]
-  exact hP'
+  rwa [e, ← Ideal.mem_comap, ← h, Ideal.mem_comap, ← e]
 
 theorem isConjPl_conjPlE {D : D7} (P : PlE D.host) : Formalism.BasicNotions.IsConjPl D.host P (GlobalTheory.SplitConjPlace.conjPlE P) := by
   intro x y hxy
@@ -1259,7 +1246,7 @@ theorem levDatum_forms_alt : GlobalTheory.Published.GlobalArtinReciprocity → �
   let sp : PlE D.host → SplitPlace D.host.E := fun P =>
     if h : IsSplitPl D.host P then (_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P h).choose else Classical.arbitrary _
   have hsp : ∀ P, IsSplitPl D.host P → (sp P).w = P := fun P h => by
-    simp only [sp, dif_pos h]; exact (_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P h).choose_spec
+    simp only [sp, dite_eq_left h]; exact (_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P h).choose_spec
   have hspw : ∀ P, (P ∈ qpOf D Pq Q ∨ P ∈ qpOf D Pq (T.pD i) ∨ ∃ kv, P = NX.pG D kv) → (sp P).w = P := by
     rintro P (h | h | ⟨kv, rfl⟩)
     · exact hsp P (hQs P (qpOf_sub D Pq Q h))
@@ -1579,8 +1566,7 @@ theorem span_eig_BI_alt (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb) (A 
   intro y _
   have hy : e y ∈ Submodule.map e _ := key (he_rng ▸ LinearMap.mem_range_self e y)
   obtain ⟨z, hz, hze⟩ := Submodule.mem_map.mp hy
-  rw [← he_inj hze]
-  exact hz
+  rwa [← he_inj hze]
 theorem sig_of_fg_alt (hfg : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : TwR D.LL0 D.nd) (i : T.Tw) (j : ℕ) (b : Bool),
     (BsupT D T S i j b).FG ∧
       Submodule.span (FractionRing (T.O i)) (BsupT D T S i j b : Set (FmT D T S i j b)) = ⊤) : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb) (A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE) (S : RatDat D.ntw)

@@ -127,8 +127,7 @@ theorem exists_equiv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (I
   refine ⟨e₀.symm.trans e, fun i x ↦ ?_⟩
   have := he (e₀.symm i) x
   simp only [Equiv.apply_symm_apply] at this
-  simp only [Equiv.trans_apply]
-  exact this.symm
+  simpa only [Equiv.trans_apply] using this.symm
 
 end GlobalTheory.CMTypeEmb
 end -- clump:auto

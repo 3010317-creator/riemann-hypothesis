@@ -130,8 +130,7 @@ theorem b_eps_mul_unit (v : HeightOneSpectrum (𝓞 F)) (u : (RInt F E)ˣ)
   intro v' hv'
   have := (b_mem_suppAt v _).mp hu v' hv'
   show prV (E := E) v' (((u : RInt F E) : AfE F E) - 1) = 0
-  rw [map_sub, map_one, sub_eq_zero]
-  exact this
+  rwa [map_sub, map_one, sub_eq_zero]
 
 theorem b_val_one (v : HeightOneSpectrum (𝓞 F)) (r : 𝓞 F) (hr : r ∉ v.asIdeal) :
     Valued.v (algebraMap (𝓞 F) (v.adicCompletion F) r) = 1 := by
@@ -195,8 +194,8 @@ theorem b_off_inv (v : HeightOneSpectrum (𝓞 F)) (r : 𝓞 F)
       (if w = v then (0 : w.adicCompletion F) else (algebraMap (𝓞 F) (w.adicCompletion F) r)⁻¹) = _
     by_cases h : w = v
     · subst h
-      rw [if_pos rfl, afsplitI_self, mul_zero, sub_self]
-    · rw [if_neg h, afsplitI_ne v w h, sub_zero]
+      rw [ite_eq_left rfl, afsplitI_self, mul_zero, sub_self]
+    · rw [ite_eq_right h, afsplitI_ne v w h, sub_zero]
       exact mul_inv_cancel₀ (b_alg_ne_zero w r (hr w h))
 
 theorem b_pi (v : HeightOneSpectrum (𝓞 F)) :
@@ -450,12 +449,12 @@ theorem tpExU_proof' (P : HeightOneSpectrum (𝓞 E)) (v : HeightOneSpectrum (�
     (fun Q => if (Q : HeightOneSpectrum (𝓞 E)) = P then b0 else 1)
   have hbP : b' - b0 ∈ P.asIdeal := by
     have := hb' P (hmemT P hPv)
-    rwa [if_pos rfl, pow_one] at this
+    rwa [ite_eq_left rfl, pow_one] at this
   have hbP' : ∀ P' : HeightOneSpectrum (𝓞 E), P' ≠ P → P'.asIdeal.under (𝓞 F) = v.asIdeal →
       b' - 1 ∈ P'.asIdeal := by
     intro P' hne hP'
     have := hb' P' (hmemT P' hP')
-    rwa [if_neg hne, pow_one] at this
+    rwa [ite_eq_right hne, pow_one] at this
   have hnot : ∀ Q : HeightOneSpectrum (𝓞 E), Q.asIdeal.under (𝓞 F) = v.asIdeal → b' ∉ Q.asIdeal := by
     intro Q hQ hmem
     by_cases h : Q = P
@@ -505,8 +504,7 @@ theorem b_same (ξ : Chr F E L) (hξ : ∀ v : HeightOneSpectrum (𝓞 F), wildA
       rw [this]
       exact Ideal.mul_mem_right _ _ (h P)
   have h1 := hξ v hw
-  rw [MonoidHom.mem_ker, map_mul, map_mul, map_inv, map_inv, mul_inv_eq_one] at h1
-  exact h1
+  rwa [MonoidHom.mem_ker, map_mul, map_mul, map_inv, map_inv, mul_inv_eq_one] at h1
 
 theorem residue_character_exists : ResCharEx := by
   intro F E _ _ _ _ _ L _ ξ hξ P
@@ -624,8 +622,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem d_other {v : HeightOneSpectrum (𝓞 F)} {P P' Q : HeightOneSpectrum (𝓞 E)}
     (hv : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) v.asIdeal = P.asIdeal * P'.asIdeal) (h1 : Q ≠ P) (h2 : Q ≠ P') :
-    Q.asIdeal.under (𝓞 F) ≠ v.asIdeal := by
-  exact b_other_of_split v P P' Q hv h1 h2
+    Q.asIdeal.under (𝓞 F) ≠ v.asIdeal := b_other_of_split v P P' Q hv h1 h2
 
 end D2
 

@@ -102,16 +102,7 @@ theorem at2_zero {u v : Fin d → MvPowerSeries τ R}
 theorem map_formalGroupLawCoboundaryTwo (φ : R →+* S) {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R}
     (h : ∀ i, constantCoeff (μ i) = 0) (c : MvPowerSeries (Fin d ⊕ Fin d) R) :
     map φ (cob2 μ c) = cob2 (fun i => map φ (μ i)) (map φ c) := by
-  have e1 : (fun i => map φ (x1 (R := R) (d := d) i)) = x1 := funext fun i => map_X _ _
-  have e2 : (fun i => map φ (x2 (R := R) (d := d) i)) = x2 := funext fun i => map_X _ _
-  have e3 : (fun i => map φ (x3 (R := R) (d := d) i)) = x3 := funext fun i => map_X _ _
-  have o1 : (fun i => map φ (op μ x1 x2 i)) = op (fun i => map φ (μ i)) x1 x2 :=
-    funext fun i => by unfold op; rw [mvPowerSeriesMap_evalTwoGroups φ _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsFirstVariables _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsSecondVariables, e1, e2]
-  have o2 : (fun i => map φ (op μ x2 x3 i)) = op (fun i => map φ (μ i)) x2 x3 :=
-    funext fun i => by unfold op; rw [mvPowerSeriesMap_evalTwoGroups φ _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsSecondVariables _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsThirdVariables, e2, e3]
-  unfold cob2
-  rw [map_sub, map_add (f := _), map_sub, mvPowerSeriesMap_evalTwoGroups φ _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsSecondVariables _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsThirdVariables, mvPowerSeriesMap_evalTwoGroups φ (_root_.GlobalTheory.Katz.CobCob.op_const h _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsFirstVariables _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsSecondVariables) _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsThirdVariables,
-    mvPowerSeriesMap_evalTwoGroups φ _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsFirstVariables (_root_.GlobalTheory.Katz.CobCob.op_const h _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsSecondVariables _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsThirdVariables), mvPowerSeriesMap_evalTwoGroups φ _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsFirstVariables _root_.GlobalTheory.Katz.CobCob.constantCoeff_threeGroupsSecondVariables, o1, o2, e1, e2, e3]
+  exact GlobalTheory.CocLift.map_formalGroupLawCoboundaryTwo φ μ h c
 
 theorem formalGroupLawCoboundaryTwo_smul_add {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R}
     (h : ∀ i, constantCoeff (μ i) = 0) (n : R) (c r : MvPowerSeries (Fin d ⊕ Fin d) R) :
@@ -723,7 +714,7 @@ theorem GlobalTheory.basis_lift : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [C
     · refine ⟨0, fun g hg => ⟨0, ?_⟩⟩
       rw [hα, coeff_zero_eq_constantCoeff_apply, hg.1]; simp
     · obtain ⟨i, hi⟩ : ∃ i, α i ≠ 0 := by
-        by_contra h; push_neg at h; exact hα (Finsupp.ext fun i => by simp [h i])
+        by_contra h; push Not at h; exact hα (Finsupp.ext fun i => by simp [h i])
       obtain ⟨v, n, hn, hαi⟩ := Nat.exists_eq_pow_mul_and_not_dvd hi p (Fact.out : p.Prime).one_lt.ne'
       have hcop : Nat.Coprime n p := Nat.Coprime.symm (((Fact.out : p.Prime).coprime_iff_not_dvd).2 hn)
       obtain ⟨w, hw⟩ := hF.unit_coprime n hcop

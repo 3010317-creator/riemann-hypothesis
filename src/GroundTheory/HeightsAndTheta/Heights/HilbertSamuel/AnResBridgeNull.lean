@@ -98,8 +98,7 @@ theorem volume_projection_zeroSet_null (Ψ : (((k : K) → ι k) → ℂ) →ₗ
       intro z hz h
       refine hΨ z hz (funext fun i => ?_)
       have := congrFun h (Equiv.swap 0 i0 i)
-      rw [hΨ'app, Equiv.swap_apply_self] at this
-      exact this
+      rwa [hΨ'app, Equiv.swap_apply_self] at this
     have hg'c : ContinuousOn (fun u => Ψ' (segre (R.lift x0 ((R.A.chart j).symm u))) 0)
         (Metric.ball u0 r) := fun u hu =>
       (analyticAt_pi_iff.mp (analyticAt_segre_lift R Ψ' x0 j (hball hu)) 0).continuousAt.continuousWithinAt
@@ -109,8 +108,7 @@ theorem volume_projection_zeroSet_null (Ψ : (((k : K) → ι k) → ℂ) →ₗ
     have hu0O : u0 ∈ O := by
       refine ⟨Metric.mem_ball_self hr, ?_⟩
       show Ψ' (segre (R.lift x0 x0)) 0 ≠ 0
-      rw [hΨ'app, Equiv.swap_apply_left]
-      exact hi0
+      rwa [hΨ'app, Equiv.swap_apply_left]
     have h0O : ∀ u ∈ O,
         Ψ' (segre (R.lift ((R.A.chart j).symm u) ((R.A.chart j).symm u))) 0 ≠ 0 := by
       intro u hu

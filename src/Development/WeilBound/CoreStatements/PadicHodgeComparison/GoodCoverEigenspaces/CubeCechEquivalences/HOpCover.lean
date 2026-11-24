@@ -84,8 +84,7 @@ theorem corr_mat {R m m' c c' I : Type*} [CommRing R] [Fintype m] [Fintype m'] [
   have h : Ep * (T * Φ) = Ep * (Φ * T') := by
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hE, np, Matrix.mul_assoc, hH, Matrix.sum_mul, Matrix.mul_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [Matrix.smul_mul, Matrix.mul_smul, nt]
-  have h2 := congrArg (L * ·) h
-  simpa only [← Matrix.mul_assoc, hL, Matrix.one_mul] using h2
+  simpa only [← Matrix.mul_assoc, hL, Matrix.one_mul] using congrArg (L * ·) h
 
 variable {l : ℕ} [Fact l.Prime] {K : FinExt l} {X X' : Scheme.{0}} {q : X ⟶ Sp ↥K.1} {q' : X' ⟶ Sp ↥K.1} {n : ℕ}
 
@@ -170,8 +169,8 @@ theorem block_eig {k o : Type*} [Field k] [Fintype o] [DecidableEq o] {e : o →
       ∀ (M' : ∀ r, Matrix (e r) (e r) k) (t' : k), M' r₀ *ᵥ y = t' • y →
         (blockDiagonal' M' - t' • (1 : Matrix (Σ r, e r) (Σ r, e r) k)) ^ 1 *ᵥ Y = 0 := by
   let Y : (Σ r, e r) → k := fun p => if h : p.1 = r₀ then y (h ▸ p.2) else 0
-  have h1 : ∀ i, Y ⟨r₀, i⟩ = y i := fun i => dif_pos rfl
-  have h2 : ∀ p, p.1 ≠ r₀ → Y p = 0 := fun p hp => dif_neg hp
+  have h1 : ∀ i, Y ⟨r₀, i⟩ = y i := fun i => dite_eq_left rfl
+  have h2 : ∀ p, p.1 ≠ r₀ → Y p = 0 := fun p hp => dite_eq_right hp
   refine ⟨Y, h1, fun p hp => by_contra fun hn => hp (h2 p hn), fun M' t' h' => funext fun ⟨r, i⟩ => ?_⟩
   rw [pow_one, sub_mulVec, smul_mulVec, one_mulVec, Pi.sub_apply, Pi.zero_apply, sub_eq_zero, mulVec, dotProduct,
     Fintype.sum_sigma, Finset.sum_eq_single r]
@@ -230,8 +229,7 @@ theorem occ1 {Γ m n d J : Type*} [Fintype m] [Fintype n] [Fintype d] [Decidable
       have e1 := (RingHom.map_mulVec (a σ) (B.map i) z p).symm
       have e2 := RingHom.map_mulVec (a σ) Φ yC p
       have e3 : (⇑(a σ) ∘ yC) = yC := funext h1
-      rw [hBσ, hz, e2, e3] at e1
-      exact e1
+      rwa [hBσ, hz, e2, e3] at e1
     change B.map i *ᵥ _ = B.map i *ᵥ _
     rw [mulVec_mulVec, ← Matrix.map_mul, ← hρ, Matrix.map_mul, ← mulVec_mulVec, hx, mulVec_mulVec, hΦ, ← mulVec_mulVec,
       mulVec_smul, hz, ← mulVec_smul]

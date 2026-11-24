@@ -109,19 +109,19 @@ theorem dg_mul_dg (he : CompleteOrthogonalIdempotents ε) {x y : S} (h : x * y =
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [sand_dg he, sand_dg he]
     rcases lt_trichotomy (w a) (w c) with h1 | h1 | h1
-    · rw [if_neg h1.ne, hx a c h1, zero_mul, zero_mul]
-    · rw [if_pos h1, if_pos (h1 ▸ hab)]
-    · rw [if_neg h1.ne', hy c b (hab ▸ h1), zero_mul, mul_zero]
+    · rw [ite_eq_right h1.ne, hx a c h1, zero_mul, zero_mul]
+    · rw [ite_eq_left h1, ite_eq_left (h1 ▸ hab)]
+    · rw [ite_eq_right h1.ne', hy c b (hab ▸ h1), zero_mul, mul_zero]
   · rw [mul_one, he.ortho (fun e => hab (congrArg w e)), sand_mul he]
     refine Finset.sum_eq_zero fun c _ => ?_
     rw [sand_dg he, sand_dg he]
     by_cases h1 : w a = w c
-    · rw [if_neg (show ¬ w c = w b from h1 ▸ hab), mul_zero]
-    · rw [if_neg h1, zero_mul]
+    · rw [ite_eq_right (show ¬ w c = w b from h1 ▸ hab), mul_zero]
+    · rw [ite_eq_right h1, zero_mul]
 
 theorem exists_weightPart : ∀ {S ι : Type} [Ring S] [Fintype ι] (st : S →+ S) (ε : ι → S) (w : ι → ℤ) (τ : ι → ι), (∀ x y, st (x * y) = st y * st x) → (∀ x, st (st x) = x) → CompleteOrthogonalIdempotents ε → (∀ a, st (ε a) = ε (τ a)) → (∀ a, w (τ a) = -w a) → (∀ a, τ (τ a) = a) → ∀ x y : S, x * y = 1 → y * x = 1 → st x = y → (∀ a b, w a < w b → ε a * x * ε b = 0) → (∀ a b, w a < w b → ε a * y * ε b = 0) → ∃ m m' : S, m * m' = 1 ∧ m' * m = 1 ∧ st m = m' ∧ (∀ a b, w a ≠ w b → ε a * m * ε b = 0) ∧ (∀ a b, w a ≠ w b → ε a * m' * ε b = 0) ∧ x * m' - 1 ∈ raise ε w 0 ∧ ∀ S₀ : Subring S, (∀ a, ε a ∈ S₀) → x ∈ S₀ → y ∈ S₀ → m ∈ S₀ ∧ m' ∈ S₀ := by
   intro S ι _ _ st ε w τ hst hss he hε hw hτ x y hxy hyx hs hx hy
-  have hm : ∀ z a b, w a ≠ w b → ε a * dg ε w z * ε b = 0 := fun z a b h => by rw [sand_dg he, if_neg h]
+  have hm : ∀ z a b, w a ≠ w b → ε a * dg ε w z * ε b = 0 := fun z a b h => by rw [sand_dg he, ite_eq_right h]
   have h1 := dg_mul_dg he hxy hx hy
   refine ⟨dg ε w x, dg ε w y, h1, dg_mul_dg he hyx hy hx, ?_, hm x, hm y, ?_, ?_⟩
   · have key : ∀ z a b, ε a * st z * ε b = st (ε (τ b) * z * ε (τ a)) := fun z a b => by
@@ -129,8 +129,8 @@ theorem exists_weightPart : ∀ {S ι : Type} [Ring S] [Fintype ι] (st : S →+
     refine ext_sand he fun a b => ?_
     rw [key, sand_dg he, sand_dg he, ← hs, key, hw, hw]
     by_cases h : w a = w b
-    · rw [if_pos h, if_pos (by rw [h])]
-    · rw [if_neg h, if_neg (fun e => h (neg_inj.1 e).symm), map_zero]
+    · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+    · rw [ite_eq_right h, ite_eq_right (fun e => h (neg_inj.1 e).symm), map_zero]
   · intro a b hab
     have hab' : w a ≤ w b := by simpa using hab
     rw [← h1, ← sub_mul, sand_mul he]
@@ -515,7 +515,7 @@ theorem exists_diagonal (h : IsCMExt F E σ) {a : GAd σ J} (ha : a ∈ infPts �
       rfl
 
     simp only [map_sum, map_mul, hfin, hδ, Matrix.one_apply, ite_mul, one_mul, zero_mul, mul_one,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem mem_parFlag (h : IsCMExt F E σ) {a : GAd σ J} (ha : a ∈ infPts σ J) (Z : Matrix (Fin n) (Fin r) E)
     (d : Fin r → ℕ) (s : Fin r → ℝ) (h0 : ∀ i, s i ≠ 0) (hs : ∀ (w : InfinitePlace F) (τ : EmbOver E w),
@@ -665,8 +665,7 @@ private theorem exists_unipFlag_mul_leviFlag_eq_of_mem_parFlag (F E : Type) [Fie
   have hgl : g ∈ leviFlag σ J X Y d :=
     _root_.GlobalTheory.UAut.mem_leviFlag_of_keeps_weights F E σ h n J hJ r X Y d _ hdM hxx hyy hxy g (by rw [hg1]; exact hmd) (by rw [hg2]; exact hm'd)
   refine ⟨p * g⁻¹, ?_, g, hgl, (inv_mul_cancel_right p g).symm, ?_⟩
-  · rw [mem_unipFlag_iff_raise hJ hσ X _ hL hxx hLL hdM, map_mul, Units.val_mul, hg2]
-    exact hraise
+  · rwa [mem_unipFlag_iff_raise hJ hσ X _ hL hxx hLL hdM, map_mul, Units.val_mul, hg2]
   · intro hpr
     rw [← range_ratEmb σ J] at hpr
     obtain ⟨γ, hγ⟩ := hpr
@@ -716,13 +715,9 @@ private theorem exists_unipFlag_mul_leviFlag_eq_of_mem_parFlag (F E : Type) [Fie
             rw [← mul_assoc J, ← mul_assoc J, Matrix.mul_nonsing_inv _ hdet, one_mul]
         _ = J := by rw [hadj, mul_assoc, hk'k, mul_one]
     let K : GL (Fin n) E := ⟨k, k', hkk', hk'k⟩
-    have hK : K ∈ Formalism.UG.UJ (σ : E →+* E) J := by
-      show Formalism.UG.cT (σ : E →+* E) k * J * k = J
-      exact hUJ
+    have hK : K ∈ Formalism.UG.UJ (σ : E →+* E) J := hUJ
     rw [← range_ratEmb σ J]
-    refine ⟨⟨K, hK⟩, matHom_injective _ σ J (Units.ext ?_)⟩
-    show (inclR (F := F) (AF F) : E →+* AF F ⊗[F] E).mapMatrix k = m
-    exact hk
+    exact ⟨⟨K, hK⟩, matHom_injective _ σ J (Units.ext hk)⟩
 
 private theorem unipFlag_inf_leviFlag_eq_bot (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (hJ : IsHermND σ J) (r : ℕ)

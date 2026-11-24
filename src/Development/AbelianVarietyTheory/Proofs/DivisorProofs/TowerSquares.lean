@@ -78,8 +78,7 @@ theorem GlobalTheory.FormalAlg.towerSquares : ∀ (R : Type) [CommRing R] (I : I
   refine ⟨fun e => ?_, fun γ h0 hγ e => ?_⟩
   · have := mono_thick' R I (e + 1)
     have h := (hβ e).paste_vert (isPullback_id_of_mono (thickTrans R I e) (thick R I (e + 1)))
-    rw [thickTrans_thick', Category.comp_id] at h
-    exact h
+    rwa [thickTrans_thick', Category.comp_id] at h
   · have hc : ∀ e, ∃ u : Spec (CommRingCat.of (R ⧸ I ^ (0 + 1))) ⟶ Spec (CommRingCat.of (R ⧸ I ^ (e + 1))),
         u ≫ thick R I e = thick R I 0 ∧ IsPullback (γ e) (Y 0).hom (Y e).hom u := by
       intro e
@@ -95,5 +94,4 @@ theorem GlobalTheory.FormalAlg.towerSquares : ∀ (R : Type) [CommRing R] (I : I
     obtain ⟨u, hu, hp⟩ := hc e
     have := mono_thick' R I e
     have h := hp.paste_vert (isPullback_id_of_mono u (thick R I e))
-    rw [hu, Category.comp_id] at h
-    exact h
+    rwa [hu, Category.comp_id] at h

@@ -40,9 +40,9 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
       intro p hp
       rw [Function.mem_support] at hp
       by_cases hps : p ∈ (e k).source
-      · simp only [hG, if_pos hps] at hp
+      · simp only [hG, ite_eq_left hps] at hp
         exact ⟨e k p, subset_tsupport g hp, (e k).left_inv hps⟩
-      · simp only [hG, if_neg hps] at hp
+      · simp only [hG, ite_eq_right hps] at hp
         exact absurd rfl hp
     have hts : tsupport G ⊆ T := closure_minimal hsupp hTc.isClosed
     refine ⟨hts.trans hTs, fun j => ?_⟩
@@ -56,7 +56,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
       refine (h1.mono Set.inter_subset_right).congr ?_
       intro y' hy'
       have hc : (e j).symm y' ∈ (e k).source := hy'.2.2
-      simp only [Function.comp, hG, if_pos hc]
+      simp only [Function.comp, hG, ite_eq_left hc]
     · refine ⟨(e j).target ∩ (e j).symm ⁻¹' Tᶜ,
         (e j).isOpen_inter_preimage_symm hTc.isClosed.isOpen_compl,
         ⟨hy, fun hT' => hp (hTs hT')⟩, ?_⟩
@@ -99,8 +99,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
     exact lt_of_lt_of_le (by norm_num : (0 : ℝ) < 1 / 2)
       (le_trans (hOψ x p hpx).le (Finset.single_le_sum (fun y _ => hψ0 y p) hx))
   refine ⟨fun k p => (∑ x ∈ t.filter (fun x => κ x = k), ψ x p) / ∑ x ∈ t, ψ x p, ?_, ?_, ?_, ?_⟩
-  · intro k p
-    exact div_nonneg (Finset.sum_nonneg fun x _ => hψ0 x p) (hS p).le
+  · exact fun k p => div_nonneg (Finset.sum_nonneg fun x _ => hψ0 x p) (hS p).le
   · intro p
     rw [← Finset.sum_div, Finset.sum_fiberwise]
     exact div_self (hS p).ne'
@@ -118,8 +117,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
       obtain ⟨x, hx, hpx⟩ := hp
       have hk : κ x = k := (Finset.mem_filter.mp hx).2
       have hsrc := (hψext x).1 hpx
-      rw [hk] at hsrc
-      exact hsrc
+      rwa [hk] at hsrc
   · intro k j
     have hsum : ∀ s : Finset X, ContDiffOn ℝ ∞
         (fun y => ∑ x ∈ s, ψ x ((e j).symm y)) (e j).target :=

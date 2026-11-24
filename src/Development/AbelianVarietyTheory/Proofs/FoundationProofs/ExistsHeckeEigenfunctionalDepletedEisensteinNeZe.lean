@@ -107,11 +107,7 @@ open scoped MatrixGroups Real ComplexConjugate Manifold ModularForm
 namespace GlobalTheory.DepletedValue
 
 lemma isUnit_of_isCoprime {n : ℕ} {d : ℤ} (h : IsCoprime d (n : ℤ)) : IsUnit (d : ZMod n) := by
-  obtain ⟨u, v, huv⟩ := h
-  have h1 := congrArg (Int.cast : ℤ → ZMod n) huv
-  push_cast at h1
-  simp only [ZMod.natCast_self, mul_zero, add_zero] at h1
-  exact isUnit_iff_exists_inv.mpr ⟨_, by rw [mul_comm]; exact h1⟩
+  exact GlobalTheory.EisM.ZEdge.isUnit_of_isCoprime h
 
 lemma ch_ne_zero {n : ℕ} (χ : DirichletCharacter ℂ n) {d : ℤ} (h : IsCoprime d (n : ℤ)) : ch χ d ≠ 0 :=
   ((isUnit_of_isCoprime h).map χ).ne_zero
@@ -230,7 +226,7 @@ lemma good_ne (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (ψ : DirichletCh
     ring
   have hEn : ∀ c' : ℂ, ∀ n, n ≠ 0 → (eis (e + 1) c₁ (hat φ) fun _ => 1) n = κ * (eis (e + 1) c' (fun y => ch ψ⁻¹ y * hat ⇑(θ * χ) y) fun _ => 1) n := by
     intro c' n hn
-    simp only [eis, if_neg hn, Finset.mul_sum, hhat]
+    simp only [eis, ite_eq_right hn, Finset.mul_sum, hhat]
     exact Finset.sum_congr rfl (fun _ _ => by ring)
   have hκ0 : κ ≠ 0 := by
     intro h0
@@ -309,7 +305,7 @@ lemma good_one (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (φ : DirichletC
     rcases eq_or_ne n 0 with rfl | hn
     · simp [hBsdef, eis, Vo]
     · rw [Pi.add_apply, Pi.smul_apply, smul_eq_mul, neg_mul (et * (l : ℂ) ^ e) (Vo l Bs n), ← hVpart n hn, hBsdef]
-      simp only [eis, if_neg hn, hinv]
+      simp only [eis, ite_eq_right hn, hinv]
       rw [← sub_eq_add_neg, ← Finset.sum_sub_distrib]
       refine Finset.sum_congr rfl (fun p _ => ?_)
       by_cases h : (l : ℤ) ∣ (p.1 : ℤ)
@@ -341,7 +337,7 @@ lemma good_one (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (φ : DirichletC
         ch θ' l * (l : ℂ) * eis (e + 1) c'' (fun x => if (l : ℤ) ∣ x then hat ⇑θ' x else 0) (fun _ => 1) n - ch θ' l * Bs n := by
       rw [hV, Pi.add_apply, Pi.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul, pow_succ]; ring
     rw [hsplit, hBsdef]
-    simp only [eis, if_neg hn, Finset.mul_sum, ← Finset.sum_sub_distrib, hhatE]
+    simp only [eis, ite_eq_right hn, Finset.mul_sum, ← Finset.sum_sub_distrib, hhatE]
     refine Finset.sum_congr rfl (fun p _ => ?_)
     split_ifs <;> ring
   have hRmf : MF (e + 1) (N * l) (ch φ⁻¹) ((ch θ' l * (et * (l : ℂ) ^ (e + 1))) • Vo l Bs + (-ch θ' l) • Bs) := by
@@ -571,8 +567,7 @@ theorem adjoint_U : ∀ (k L N l : ℕ) (ε : DirichletCharacter ℂ N) (ρ : �
     funext τ
     refine Finset.sum_congr rfl (fun j _ => ?_)
     simp [repL, ch, Matrix.adjugate_fin_two_of]
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]
 
 end GlobalTheory
 end -- clump:auto
@@ -675,8 +670,7 @@ theorem repL_LRep : ∀ L q : ℕ, q.Prime → ¬ q ∣ L → LRep L (DT L q) (r
       | none => simpa [repL, Matrix.mul_apply, Fin.sum_univ_two] using h
       | some j =>
         simp only [repL, Matrix.mul_apply, Fin.sum_univ_two]
-        simp
-        exact dvd_add (dvd_mul_of_dvd_left h _) (Dvd.dvd.mul_left (dvd_mul_right _ _) _)
+        simpa using dvd_add (dvd_mul_of_dvd_left h _) (Dvd.dvd.mul_left (dvd_mul_right _ _) _)
   · rintro ⟨γ, i⟩ - ⟨γ', i'⟩ - h
     dsimp only at h
     have hd := (γ : SL(2, ℤ)).2
@@ -747,8 +741,7 @@ theorem repL_LRep : ∀ L q : ℕ, q.Prime → ¬ q ∣ L → LRep L (DT L q) (r
         · rw [Ne, ZMod.natCast_eq_zero_iff]; exact hqL
         · have := congrArg (fun x : ℤ => (x : ZMod q)) hdet
           simpa using this
-        · by_contra hn
-          push_neg at hn
+        · by_contra! hn
           exact hbd ⟨(ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp hn.1,
             (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp hn.2⟩
       obtain ⟨u, hu0, hu1⟩ := hu
@@ -831,8 +824,7 @@ namespace GlobalTheory.EisM
 
 private theorem qs_smul (t : ℂ) (a : ℕ → ℂ) : qs (t • a) = fun τ => t * qs a τ := by
   funext τ; unfold qs
-  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc]
-  exact tsum_mul_left
+  simpa only [Pi.smul_apply, smul_eq_mul, mul_assoc] using tsum_mul_left
 
 theorem sum_slz_repL_Vo : ∀ (k N l : ℕ) (ε : DirichletCharacter ℂ N) (h : ℕ → ℂ) (t : ℂ), 1 ≤ k → 0 < N → l.Prime → ¬ l ∣ N → MF k N (ch ε) h → To k (ch ε l) l h = t • h → ∀ τ : ℍ, ∑ j : Fin l, slz k (repL (N * l) l (some j)) (qs (Vo l h)) τ = ch ε⁻¹ l * (t * qs (Vo l h) τ - (l : ℂ)⁻¹ * qs h τ) := by
   intro k N l ε h t hk hN hl hlN hMF hT τ
@@ -926,7 +918,7 @@ theorem qExpansionFunction_coeffHeckeVOperator_eq_tsum (l : ℕ) (hl : 0 < l) (a
     simpa [hl.ne'] using h
   rw [← hinj.tsum_eq]
   · congr 1; ext m
-    simp only [dvd_mul_right, if_true, Nat.mul_div_cancel_left m hl]
+    simp only [dvd_mul_right, ite_true, Nat.mul_div_cancel_left m hl]
     congr 2; push_cast; ring
   · intro n hn
     by_cases h : l ∣ n
@@ -1141,8 +1133,7 @@ theorem factors_ne_zero : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* 
     have hcu : ‖χ⁻¹ (l : ZMod N)‖ = 1 := Complex.norm_eq_one_of_pow_eq_one hut htot.ne'
     have hβn : ‖β‖ = (l : ℝ) ^ (2 * e) := by
       have h := congrArg norm hp
-      rw [norm_mul, norm_mul, hcα, hcu, norm_pow, Complex.norm_natCast, one_mul, one_mul] at h
-      exact h
+      rwa [norm_mul, norm_mul, hcα, hcu, norm_pow, Complex.norm_natCast, one_mul, one_mul] at h
     obtain ⟨_, hrec, _⟩ := _root_.GlobalTheory.EisM.hecke_relations (2 * e + 1) N χ g (by omega) hN hP
     obtain ⟨_, ⟨C, hC⟩, _⟩ := _root_.GlobalTheory.rankin_mean_square (2 * e + 1) N (ch χ) g (by omega) hP.cf
     set u := χ⁻¹ (l : ZMod N) with hu_def
@@ -1204,11 +1195,7 @@ noncomputable section
 namespace GlobalTheory.EisM
 
 theorem zv_unit_of_isCoprime {L : ℕ} {d : ℤ} (h : IsCoprime d (L : ℤ)) : IsUnit (d : ZMod L) := by
-  obtain ⟨u, v, huv⟩ := h
-  have h1 := congrArg (Int.cast : ℤ → ZMod L) huv
-  push_cast at h1
-  rw [ZMod.natCast_self, mul_zero, add_zero] at h1
-  exact isUnit_iff_exists_inv.mpr ⟨_, (mul_comm _ _).trans h1⟩
+  exact GlobalTheory.DepletedValue.isUnit_of_isCoprime h
 
 theorem zv_apply_ne_zero {L : ℕ} (χ : DirichletCharacter ℂ L) {x : ZMod L} (hx : IsUnit x) : χ x ≠ 0 := by
   obtain ⟨u, rfl⟩ := hx

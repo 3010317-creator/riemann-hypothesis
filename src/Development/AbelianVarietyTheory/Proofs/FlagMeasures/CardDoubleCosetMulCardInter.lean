@@ -66,8 +66,7 @@ theorem card_doubleCoset_mul_card_inter {G : Type} [Group G] [Fintype G] (H K : 
   have hmaps : ∀ p ∈ (Finset.univ : Finset (H × K)),
       (p.1 : G) * w * p.2 ∈ Finset.univ.filter fun y : G => ∃ h ∈ H, ∃ k ∈ K, y = h * w * k := by
     intro p _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact ⟨p.1, p.1.2, p.2, p.2.2, rfl⟩
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using ⟨p.1, p.1.2, p.2, p.2.2, rfl⟩
   have hcard := Finset.card_eq_sum_card_fiberwise
     (f := fun p : H × K => (p.1 : G) * w * p.2) (s := Finset.univ) hmaps
   have hfib : ∀ y ∈ (Finset.univ.filter fun y : G => ∃ h ∈ H, ∃ k ∈ K, y = h * w * k),
@@ -127,8 +126,8 @@ private theorem sum_conj_double_coset_eq_of_invariant {G : Type} [Group G] [Fint
   by_cases hx : x ∈ H ∧ w⁻¹ * x * w ∈ K
   · have hc := hφ k⁻¹ (K.inv_mem hk) _ hx.2
     rw [inv_inv] at hc
-    rw [if_pos hx, if_pos ⟨eH.2 hx.1, eK.2 hx.2⟩, hlam h hh x hx.1, hc]
-  · rw [if_neg hx, if_neg]
+    rw [ite_eq_left hx, ite_eq_left ⟨eH.2 hx.1, eK.2 hx.2⟩, hlam h hh x hx.1, hc]
+  · rw [ite_eq_right hx, ite_eq_right]
     rintro ⟨h1, h2⟩
     exact hx ⟨eH.1 h1, eK.1 h2⟩
 
@@ -142,12 +141,12 @@ theorem mackey_doubleCoset_pairing : ∀ (G : Type) [Group G] [Fintype G] (H K :
         (if x ∈ H ∧ y⁻¹ * x * y ∈ K then lam x * φ (y⁻¹ * x * y) else 0) := by
     intro x
     by_cases hx : x ∈ H
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       simp only [Finset.mul_sum]
       refine Finset.sum_congr rfl fun y _ => ?_
       by_cases hy : y⁻¹ * x * y ∈ K
-      · rw [if_pos hy, if_pos ⟨hx, hy⟩]; ring
-      · rw [if_neg hy, if_neg (fun hc => hy hc.2)]; ring
+      · rw [ite_eq_left hy, ite_eq_left ⟨hx, hy⟩]; ring
+      · rw [ite_eq_right hy, ite_eq_right (fun hc => hy hc.2)]; ring
     · simp [hx]
   rw [Finset.sum_congr rfl (fun x _ => h1 x), ← Finset.mul_sum, Finset.sum_comm]
   have h2 : ∀ y : G, (∑ x : G,
@@ -158,10 +157,10 @@ theorem mackey_doubleCoset_pairing : ∀ (G : Type) [Group G] [Fintype G] (H K :
     intro y
     obtain ⟨i, ⟨hi, h, hhH, k, hkK, rfl⟩, huniq⟩ := hR y
     rw [Finset.sum_eq_single_of_mem i hi]
-    · rw [if_pos ⟨h, hhH, k, hkK, rfl⟩]
+    · rw [ite_eq_left ⟨h, hhH, k, hkK, rfl⟩]
       exact sum_conj_double_coset_eq_of_invariant H K (w i) h k hhH hkK lam φ hlam hφ
     · intro j hj hji
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hP
       exact hji (huniq j ⟨hj, hP⟩)
   rw [Finset.sum_congr rfl (fun y _ => h2 y), Finset.sum_comm]

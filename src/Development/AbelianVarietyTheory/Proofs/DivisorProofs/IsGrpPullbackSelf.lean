@@ -392,8 +392,7 @@ theorem weilIs_zpow_of_fieldPoint : ∀ (O : Type) [CommRing O] [IsDomain O] (A 
     intro F _ σ
     have hN' := CommPairing.weilIs_pull hG hA hD (toUnit (Over.mk (spMap σ))) hc₀
     have hl : (toUnit (Over.mk (spMap σ))).left = spMap σ := rfl
-    rw [hl, GlobalTheory.Ex.Specialise.map_unitOn] at hN'
-    exact hN'
+    rwa [hl, GlobalTheory.Ex.Specialise.map_unitOn] at hN'
   have e := GlobalTheory.Ex.Specialise.unitOn_bijective.1 (CommutatorPairing.weilIs_unique hG hA hD (spec K κ) H)
   have hw : w = ζ ^ m := eq_zpow_of_map_eq κ hN hNu hζ hwN m e
   rw [← hw]
@@ -581,8 +580,7 @@ theorem level_spreads : ∀ (n : ℕ), 3 ≤ n → Odd n → ∀ (R₀ : Type) [
     rw [ht] at H'
     have H'' := l3 R₀ A hA P hP n (by omega) hnR (σ a) (σ a') (hσn a) (hσn a') ζR hζR (2 * omegaStd a a')
       (AlgebraicClosure K) (iK.comp κ) H' k ρ
-    rw [← map_zpow]
-    exact H''
+    rwa [← map_zpow]
 
 end GlobalTheory.LevSpread
 end -- clump:auto

@@ -140,9 +140,7 @@ theorem iwa : Iwa := by
   let kGL : GL (Fin n ⊕ Fin n) ℂ := ⟨kmat ((u2 (mR y))⁻¹ * u1 (mR y)) 1, _, hK', hK⟩
   have hkG : kGL ∈ GR n := kmat_inG _ 1 hVu h1'
   let k : GR n := ⟨kGL, hkG⟩
-  have hkK : k ∈ KR n := by
-    show InK (kmat ((u2 (mR y))⁻¹ * u1 (mR y)) 1)
-    exact ⟨kmat_inG _ 1 hVu h1', hK⟩
+  have hkK : k ∈ KR n := ⟨kmat_inG _ 1 hVu h1', hK⟩
   refine ⟨y * k⁻¹, k, ?_, hkK, (inv_mul_cancel_right y k).symm⟩
   show toBlocks₂₁ (mR (y * k⁻¹)) = 0
   have hm : mR (y * k⁻¹) = mR y * (kmat ((u2 (mR y))⁻¹ * u1 (mR y)) 1)ᴴ := rfl

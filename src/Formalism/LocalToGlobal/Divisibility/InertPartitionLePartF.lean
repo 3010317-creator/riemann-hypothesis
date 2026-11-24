@@ -31,8 +31,7 @@ theorem eigAt_elim_le (x : I ⊕ I' → K) :
     eigAt (Sum.elim a b) x ≤ eigAt a (fun i => x (Sum.inl i)) := by
   intro v hv
   simp only [eigAt, Submodule.mem_iInf] at hv ⊢
-  intro i
-  exact hv (Sum.inl i)
+  exact fun i => hv (Sum.inl i)
 
 theorem eigSum_elim_le (C : (I → K) → Prop) :
     eigSum (Sum.elim a b) (fun x => C (fun i => x (Sum.inl i))) ≤ eigSum a C := by
@@ -57,8 +56,7 @@ theorem le_eigSum_elim [FiniteDimensional K V] (hc : PairComm (Sum.elim a b)) (h
     have := Submodule.sub_mem _ hv (hE he)
     simpa using this
   have he'0 : e' = 0 := Submodule.disjoint_def.mp hdis e' he'A (hE' he')
-  rw [he'0, add_zero]
-  exact he
+  rwa [he'0, add_zero]
 
 theorem splitOver_elim (ha : SplitOver a) (hb : SplitOver b) : SplitOver (Sum.elim a b) := by
   intro i
@@ -137,11 +135,9 @@ theorem resSet3_finite (hc : Col.PairComm D.opAll) (X : Finset (G → K)) : (D.r
     if h : p ∈ D.resSet3 X then (hex p h).choose else 0
   have hf : ∀ p (h : p ∈ D.resSet3 X), D.HasRes3 p (f p) ∧ Col.Occurs D.opAll (f p) := by
     intro p h
-    simp only [f, dif_pos h]
-    exact (hex p h).choose_spec
+    simpa only [f, dite_eq_left h] using (hex p h).choose_spec
   refine Set.Finite.of_injOn (f := f) (t := (F : Set (D.OpIx → K))) ?_ ?_ F.finite_toSet
-  · intro p h
-    exact Finset.mem_coe.2 ((hF _).1 (hf p h).2)
+  · exact fun p h => Finset.mem_coe.2 ((hF _).1 (hf p h).2)
   · intro p h p' h' e
     have h1 := hf p h
     have h2 := hf p' h'
@@ -160,7 +156,7 @@ theorem resSet3_finite (hc : Col.PairComm D.opAll) (X : Finset (G → K)) : (D.r
 theorem mem_ixFin3 (hc : Col.PairComm D.opAll) (X : Finset (G → K)) (p : Typ3 K Pl0 I0 Ty) :
     p ∈ D.ixFin3 X ↔ p ∈ D.resSet3 X := by
   unfold InertDat3.ixFin3
-  rw [dif_pos (D.resSet3_finite hc X), Set.Finite.mem_toFinset]
+  rw [dite_eq_left (D.resSet3_finite hc X), Set.Finite.mem_toFinset]
 
 theorem mem_resSet3_of_mem_ixFin3 {X : Finset (G → K)} {p : Typ3 K Pl0 I0 Ty} (h : p ∈ D.ixFin3 X) :
     p ∈ D.resSet3 X := by
@@ -320,13 +316,13 @@ theorem sameTypes_self3 {v0 : InfinitePlace K} (hv0 : IsConjAt v0) {s : ℕ} (h 
   have hSg : ∀ P, Sg (B.pl P) = c P := by
     intro P
     have hP : ∃ P', B.pl P' = B.pl P := ⟨P, rfl⟩
-    simp only [Sg, dif_pos hP]
+    simp only [Sg, dite_eq_left hP]
     rw [h.pl_inj hP.choose_spec]
   let e : I0 × Ty → K := fun k0 => if hP : ∃ P, D.plI P = k0.1 then i.1 (Sum.inr (hP.choose, k0.2)) else 0
   have he : ∀ (P : D.PlI) (y : Ty), e (D.plI P, y) = i.1 (Sum.inr (P, y)) := by
     intro P y
     have hP : ∃ P', D.plI P' = D.plI P := ⟨P, rfl⟩
-    simp only [e, dif_pos hP]
+    simp only [e, dite_eq_left hP]
     rw [hD.plI_inj hP.choose_spec]
   have hres : D.HasRes3 (Sg, e) i.1 := by
     refine ⟨fun P => ?_, fun k => (he k.1 k.2).symm⟩
@@ -338,10 +334,10 @@ theorem sameTypes_self3 {v0 : InfinitePlace K} (hv0 : IsConjAt v0) {s : ℕ} (h 
   refine ⟨fun P0 hP0 => ?_, fun P0 hP0 y => ?_, ?_⟩
   · have hP : ¬ ∃ P, B.pl P = P0 := fun ⟨P, hP⟩ => hP0 ⟨P, hP⟩
     show Sg P0 = 1
-    simp only [Sg, dif_neg hP]
+    simp only [Sg, dite_eq_right hP]
   · have hP : ¬ ∃ P, D.plI P = P0 := fun ⟨P, hP⟩ => hP0 ⟨P, hP⟩
     show e (P0, y) = 0
-    simp only [e, dif_neg hP]
+    simp only [e, dite_eq_right hP]
   · obtain ⟨u0, hu0⟩ := B.exists_vE_of_fix (Lvl.full ℓ.X) hψA
     intro hbot
     have hu0mem : u0 ∈ B.inV0 (Lvl.full ℓ.X) (D.inertTypeEigenspaceSum (Sg, e)) := by

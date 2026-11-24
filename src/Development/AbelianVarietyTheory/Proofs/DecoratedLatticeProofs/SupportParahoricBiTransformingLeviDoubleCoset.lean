@@ -82,8 +82,7 @@ theorem exists_unipLevel (A : Matrix (Fin n) (Fin n) k) (h1 : ∀ i j, valuation
     exact Valuation.Integer.not_isUnit_iff_valuation_lt_one
   have hBd : ∀ i, B i i = 1 := fun i => Subtype.ext (h3 i)
   have hRtri : ((IsLocalRing.residue 𝒪[k]).mapMatrix B).BlockTriangular id := by
-    intro i j hji
-    exact (hres0 (B i j)).2 (h2 i j hji)
+    exact fun i j hji => (hres0 (B i j)).2 (h2 i j hji)
   have hdet : IsUnit B.det := by
     by_contra hnu
     have h0 : IsLocalRing.residue 𝒪[k] B.det = 0 := (IsLocalRing.residue_eq_zero_iff _).2 hnu
@@ -130,8 +129,8 @@ theorem monomial_of_clean (g : GL (Fin n) k) (h : ∀ i, Clean g.val i) :
   ext a b
   rw [Units.val_mul, GlobalTheory.SmGL.val_diagT, Matrix.mul_diagonal, GlobalTheory.Parabolic.permGL_apply]
   by_cases hab : a = e.symm b
-  · rw [if_pos hab, one_mul, Units.val_mk0, hab]
-  · rw [if_neg hab, zero_mul]
+  · rw [ite_eq_left hab, one_mul, Units.val_mk0, hab]
+  · rw [ite_eq_right hab, zero_mul]
     apply hrow a b
     intro hb
     apply hab
@@ -146,8 +145,7 @@ private lemma one_add_col_mul_apply (G : Matrix (Fin n) (Fin n) k) (x : Fin n �
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ i₀) h
+  · exact fun h => absurd (Finset.mem_univ i₀) h
 
 private lemma mul_one_add_row_apply (H : Matrix (Fin n) (Fin n) k) (y : Fin n → k) (j₀ a c : Fin n) :
     (H * (1 + Matrix.of fun a b => if a = j₀ then y b else 0)) a c = H a c + H a j₀ * y c := by
@@ -157,8 +155,7 @@ private lemma mul_one_add_row_apply (H : Matrix (Fin n) (Fin n) k) (y : Fin n �
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ j₀) h
+  · exact fun h => absurd (Finset.mem_univ j₀) h
 
 theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.val i) (hne : (Sᶜ).Nonempty) :
     ∃ (u u' : unipLevel k n) (i₀ : Fin n), i₀ ∉ S ∧
@@ -219,8 +216,7 @@ theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.
   have hleft : ∀ j ∈ D, j < j₀ → valuation k (G i₀ j) < M := by
     intro j hj hlt
     refine lt_of_le_of_ne (hmax i₀ hi₀ j hj) (fun heq => ?_)
-    have h1 := hj₀min j (Finset.mem_filter.2 ⟨hj, heq⟩)
-    exact absurd hlt (not_lt.2 h1)
+    exact absurd hlt (not_lt.2 (hj₀min j (Finset.mem_filter.2 ⟨hj, heq⟩)))
   have hp0 : G i₀ j₀ ≠ 0 := by
     intro h0
     apply hM0
@@ -241,41 +237,33 @@ theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.
   have hx0 : ∀ a, a ∈ S ∨ a = i₀ → x a = 0 := by
     intro a h
     simp only [x]
-    rw [if_neg]
+    rw [ite_eq_right]
     tauto
   have hy0 : ∀ b, b ∉ D ∨ b = j₀ → y b = 0 := by
     intro b h
     simp only [y]
-    rw [if_neg]
+    rw [ite_eq_right]
     tauto
   have hx1 : ∀ a, valuation k (x a) ≤ 1 := by
     intro a
     by_cases h : a ∉ S ∧ a ≠ i₀
-    · simp only [x, if_pos h]
-      exact hq1 _ (hmax a h.1 j₀ hj₀)
-    · simp only [x, if_neg h, Valuation.map_zero]
-      exact zero_le
+    · simpa only [x, ite_eq_left h] using hq1 _ (hmax a h.1 j₀ hj₀)
+    · simpa only [x, ite_eq_right h, Valuation.map_zero] using zero_le
   have hx2 : ∀ a, i₀ < a → valuation k (x a) < 1 := by
     intro a hlt
     by_cases h : a ∉ S ∧ a ≠ i₀
-    · simp only [x, if_pos h]
-      exact hq2 _ (hlow a h.1 hlt)
-    · simp only [x, if_neg h, Valuation.map_zero]
-      exact zero_lt_one
+    · simpa only [x, ite_eq_left h] using hq2 _ (hlow a h.1 hlt)
+    · simpa only [x, ite_eq_right h, Valuation.map_zero] using zero_lt_one
   have hy1 : ∀ b, valuation k (y b) ≤ 1 := by
     intro b
     by_cases h : b ∈ D ∧ b ≠ j₀
-    · simp only [y, if_pos h]
-      exact hq1 _ (hmax i₀ hi₀ b h.1)
-    · simp only [y, if_neg h, Valuation.map_zero]
-      exact zero_le
+    · simpa only [y, ite_eq_left h] using hq1 _ (hmax i₀ hi₀ b h.1)
+    · simpa only [y, ite_eq_right h, Valuation.map_zero] using zero_le
   have hy2 : ∀ b, b < j₀ → valuation k (y b) < 1 := by
     intro b hlt
     by_cases h : b ∈ D ∧ b ≠ j₀
-    · simp only [y, if_pos h]
-      exact hq2 _ (hleft b h.1 hlt)
-    · simp only [y, if_neg h, Valuation.map_zero]
-      exact zero_lt_one
+    · simpa only [y, ite_eq_left h] using hq2 _ (hleft b h.1 hlt)
+    · simpa only [y, ite_eq_right h, Valuation.map_zero] using zero_lt_one
   have hU : ∀ a b, U a b = (if a = b then 1 else 0) + (if b = i₀ then x a else 0) := by
     intro a b
     simp only [U, Matrix.add_apply, Matrix.one_apply, Matrix.of_apply]
@@ -284,21 +272,21 @@ theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.
     simp only [U', Matrix.add_apply, Matrix.one_apply, Matrix.of_apply]
   have hUd : ∀ a, U a a = 1 := by
     intro a
-    rw [hU, if_pos rfl]
+    rw [hU, ite_eq_left rfl]
     by_cases h : a = i₀
-    · rw [if_pos h, hx0 a (Or.inr h), add_zero]
-    · rw [if_neg h, add_zero]
+    · rw [ite_eq_left h, hx0 a (Or.inr h), add_zero]
+    · rw [ite_eq_right h, add_zero]
   have hU'd : ∀ a, U' a a = 1 := by
     intro a
-    rw [hU', if_pos rfl]
+    rw [hU', ite_eq_left rfl]
     by_cases h : a = j₀
-    · rw [if_pos h, hy0 a (Or.inr h), add_zero]
-    · rw [if_neg h, add_zero]
+    · rw [ite_eq_left h, hy0 a (Or.inr h), add_zero]
+    · rw [ite_eq_right h, add_zero]
   have hU1 : ∀ a b, valuation k (U a b) ≤ 1 := by
     intro a b
     by_cases hab : a = b
     · rw [hab, hUd, Valuation.map_one]
-    · rw [hU, if_neg hab, zero_add]
+    · rw [hU, ite_eq_right hab, zero_add]
       split_ifs
       · exact hx1 a
       · rw [Valuation.map_zero]
@@ -307,38 +295,35 @@ theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.
     intro a b
     by_cases hab : a = b
     · rw [hab, hU'd, Valuation.map_one]
-    · rw [hU', if_neg hab, zero_add]
+    · rw [hU', ite_eq_right hab, zero_add]
       split_ifs
       · exact hy1 b
       · rw [Valuation.map_zero]
         exact zero_le
   have hU2 : ∀ a b, b < a → valuation k (U a b) < 1 := by
     intro a b hlt
-    rw [hU, if_neg hlt.ne', zero_add]
+    rw [hU, ite_eq_right hlt.ne', zero_add]
     by_cases hb : b = i₀
-    · rw [if_pos hb]
+    · rw [ite_eq_left hb]
       exact hx2 a (by rw [← hb]; exact hlt)
-    · rw [if_neg hb, Valuation.map_zero]
+    · rw [ite_eq_right hb, Valuation.map_zero]
       exact zero_lt_one
   have hU'2 : ∀ a b, b < a → valuation k (U' a b) < 1 := by
     intro a b hlt
-    rw [hU', if_neg hlt.ne', zero_add]
+    rw [hU', ite_eq_right hlt.ne', zero_add]
     by_cases ha : a = j₀
-    · rw [if_pos ha]
+    · rw [ite_eq_left ha]
       exact hy2 b (by rw [← ha]; exact hlt)
-    · rw [if_neg ha, Valuation.map_zero]
+    · rw [ite_eq_right ha, Valuation.map_zero]
       exact zero_lt_one
   obtain ⟨u, hu⟩ := exists_unipLevel U hU1 hU2 hUd
   obtain ⟨u', hu'⟩ := exists_unipLevel U' hU'1 hU'2 hU'd
   refine ⟨u, u', i₀, hi₀, ?_⟩
   have hprod : (incl k n u * g * incl k n u').val = U * G * U' := by
     rw [Units.val_mul, Units.val_mul, hu, hu']
-  have hH : ∀ a c, (U * G) a c = G a c + x a * G i₀ c := by
-    intro a c
-    exact one_add_col_mul_apply G x i₀ a c
+  have hH : ∀ a c, (U * G) a c = G a c + x a * G i₀ c := fun a c => one_add_col_mul_apply G x i₀ a c
   have hF : ∀ a c, (U * G * U') a c = (U * G) a c + (U * G) a j₀ * y c := by
-    intro a c
-    exact mul_one_add_row_apply (U * G) y j₀ a c
+    exact fun a c => mul_one_add_row_apply (U * G) y j₀ a c
   have hHi₀ : ∀ c, (U * G) i₀ c = G i₀ c := by
     intro c
     rw [hH, hx0 i₀ (Or.inr rfl), zero_mul, add_zero]
@@ -348,7 +333,7 @@ theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.
     by_cases haS : a ∈ S
     · rw [hx0 a (Or.inl haS), zero_mul, add_zero]
       exact (memD j₀).1 hj₀ a haS
-    · simp only [x, if_pos (⟨haS, ha⟩ : a ∉ S ∧ a ≠ i₀)]
+    · simp only [x, ite_eq_left (⟨haS, ha⟩ : a ∉ S ∧ a ≠ i₀)]
       field_simp
       try ring
   intro i hi
@@ -358,7 +343,7 @@ theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.
     refine ⟨j₀, fun c hc => ?_, fun i' hi' => ?_⟩
     · rw [hF, hHi₀, hHi₀]
       by_cases hcD : c ∈ D
-      · simp only [y, if_pos (⟨hcD, hc⟩ : c ∈ D ∧ c ≠ j₀)]
+      · simp only [y, ite_eq_left (⟨hcD, hc⟩ : c ∈ D ∧ c ≠ j₀)]
         field_simp
         try ring
       · rw [hy0 c (Or.inl hcD), hout i₀ hi₀ c hcD, mul_zero, add_zero]
@@ -368,8 +353,7 @@ theorem step (g : GL (Fin n) k) (S : Finset (Fin n)) (hS : ∀ i ∈ S, Clean g.
     have hc0 : G i c ≠ 0 := by
       obtain ⟨j, hj⟩ := exists_ne_zero g i
       by_cases hjc : j = c
-      · rw [hjc] at hj
-        exact hj
+      · rwa [hjc] at hj
       · exact absurd (hrow j hjc) hj
     have hcD : c ∉ D := fun h => hc0 ((memD c).1 h i hiS)
     refine ⟨c, fun c' hc' => ?_, fun i' hi' => ?_⟩
@@ -411,8 +395,7 @@ theorem aux (m : ℕ) : ∀ (g : GL (Fin n) k) (S : Finset (Fin n)), (∀ i ∈ 
 theorem iwahori_bruhat : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (n : ℕ) (g : GL (Fin n) k), ∃ (j j' : unipLevel k n) (w : Equiv.Perm (Fin n)) (c : Fin n → kˣ),
       g = incl k n j * (GlobalTheory.Parabolic.permGL (k := k) w * diagT k (Fin n) c) * incl k n j' := by
-  intro k _ _ _ _ n g
-  exact aux n g ∅ (by simp) (by simp)
+  exact fun k _ _ _ _ n g => aux n g ∅ (by simp) (by simp)
 
 end GlobalTheory.TypeDim.IwahoriBruhat
 end -- clump:auto
@@ -475,8 +458,7 @@ theorem eq_zero_of_mixed (ξ : kˣ →* ℂˣ) (hξ : ¬ IsUnram ξ) (φ : GL (A
     (m : GL (A ⊕ D) k) (τ : Equiv.Perm (A ⊕ D)) (hm : ∀ x y, y ≠ τ x → (m : Matrix (A ⊕ D) (A ⊕ D) k) x y = 0)
     (p : A ⊕ D) (hp : (τ p).isRight ≠ p.isRight) : φ m = 0 := by
   obtain ⟨u, hu1, hu⟩ : ∃ u : kˣ, valuation k (u : k) = 1 ∧ ξ u ≠ 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hξ h
   have hv : ∀ q : A ⊕ D, ∀ i, valuation k ((Pi.mulSingle q u : A ⊕ D → kˣ) i : k) = 1 := fun q i => by
     rw [Pi.mulSingle_apply]
@@ -591,7 +573,7 @@ theorem support_levi : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
   have hm : ∀ x y, y ≠ τ x →
       (toAD k A D (GlobalTheory.Parabolic.permGL k w * diagT k _ c) : Matrix (A ⊕ D) (A ⊕ D) k) x y = 0 := by
     intro x y h
-    rw [toAD_val, Units.val_mul, val_diagT, mul_diagonal, GlobalTheory.Parabolic.permGL_apply, if_neg, zero_mul]
+    rw [toAD_val, Units.val_mul, val_diagT, mul_diagonal, GlobalTheory.Parabolic.permGL_apply, ite_eq_right, zero_mul]
     intro h'
     apply h
     simp [τ, h']
@@ -604,8 +586,7 @@ theorem support_levi : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     rw [hgm, (hφ j' hj' (Units.mk0 _ hd') rfl _).2, (hφ j hj (Units.mk0 _ hd) rfl _).1, h0]
     simp
   have hτ : ∀ p, (τ p).isRight = p.isRight := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     obtain ⟨p, hp⟩ := h
     exact hφm (eq_zero_of_mixed ξ hξ φ hφ m τ hm p hp)
   obtain ⟨x, y, hxy⟩ := exists_emb₂ m τ hm hτ

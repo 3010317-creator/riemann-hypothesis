@@ -95,8 +95,7 @@ theorem exists_isPlaceOver_of_tower : ∀ (K L Ω : Type) [Field Ω] [Field K] [
       rw [hmem, hmem] at *
       have e : ((x * y : 𝓞 L) : L) = (x : L) * y := rfl
       rw [e, map_mul, map_mul] at hxy
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact absurd hxy (not_lt.mpr (one_le_mul hc.1 hc.2))
   have hK : ∀ x : 𝓞 K, (algebraMap (𝓞 K) (𝓞 L) x ∈ m ↔ x ∈ v.asIdeal) := by
     intro x
@@ -110,11 +109,9 @@ theorem exists_isPlaceOver_of_tower : ∀ (K L Ω : Type) [Field Ω] [Field K] [
     intro hb
     have h1 : algebraMap (𝓞 K) (𝓞 L) x ∈ m := (hK x).mpr hx
     rw [hb, Ideal.mem_bot] at h1
-    apply hx0
-    exact (FaithfulSMul.algebraMap_injective (𝓞 K) (𝓞 L)) (by rw [h1, map_zero])
+    exact hx0 ((FaithfulSMul.algebraMap_injective (𝓞 K) (𝓞 L)) (by rw [h1, map_zero]))
   refine ⟨⟨m, hprime, hne⟩, ?_, ?_⟩
-  · intro y
-    exact (hmem y).symm.trans Iff.rfl
+  · exact fun y => (hmem y).symm.trans Iff.rfl
   · apply HeightOneSpectrum.ext
     ext x
     exact hK x

@@ -267,9 +267,7 @@ theorem pIdx_pTor_ker_range_ne_zero :
   · set f : A →* A := powMonoidHom p with hf
     have hP : ((⊤ : Subgroup A).map f).relIndex g.ker ≠ 0 :=
       fun h0 => h1 (Subgroup.relIndex_eq_zero_of_le_right le_top h0)
-    have hBD : g.ker ≤ g.ker.comap f := by
-      intro x hx
-      exact g.ker.pow_mem hx p
+    have hBD : g.ker ≤ g.ker.comap f := fun x hx => g.ker.pow_mem hx p
     have hD : g.ker.relIndex (g.ker.comap f) ≠ 0 := by
       rw [Subgroup.relIndex_ker]
       have : Nat.card ((g.ker.comap f).map g) = Nat.card {x : A' // x ∈ g.range ∧ x ^ p = 1} := by
@@ -284,8 +282,7 @@ theorem pIdx_pTor_ker_range_ne_zero :
           refine ⟨a, ?_, rfl⟩
           change g (a ^ p) = 1
           rwa [map_pow]
-      rw [this]
-      exact h3
+      rwa [this]
     have hQ : (g.ker.map f).relIndex ((g.ker.comap f).map f) ≠ 0 := by
       intro h0
       have hd := Subgroup.relIndex_map_map f g.ker (g.ker.comap f)
@@ -303,8 +300,7 @@ theorem pIdx_pTor_ker_range_ne_zero :
     have he : (g.ker.comap f).map f = ((⊤ : Subgroup A).map f) ⊓ g.ker := by
       rw [Subgroup.map_comap_eq, ← MonoidHom.range_eq_map]
     refine Subgroup.relIndex_ne_zero_trans hQ ?_
-    rw [he, Subgroup.inf_relIndex_right]
-    exact hP
+    rwa [he, Subgroup.inf_relIndex_right]
   · have hfin : Finite {x : A // x ∈ (⊤ : Subgroup A) ∧ x ^ p = 1} := Nat.finite_of_card_ne_zero h2
     have : Finite {x : A // x ∈ g.ker ∧ x ^ p = 1} :=
       Finite.of_injective
@@ -368,17 +364,17 @@ private lemma cyclotomic_comp_X_add_one_eq (p : ℕ) [Fact p.Prime] :
     intro i
     rw [coeff_sub, coeff_X_pow]
     rcases lt_trichotomy i (p - 1) with h | h | h
-    · rw [if_neg h.ne, sub_zero]
+    · rw [ite_eq_right h.ne, sub_zero]
       exact Ideal.mem_span_singleton.1 (hE.mem (by rwa [hd]))
-    · rw [if_pos h, h, ← hd, hm.coeff_natDegree, sub_self]
+    · rw [ite_eq_left h, h, ← hd, hm.coeff_natDegree, sub_self]
       exact dvd_zero _
-    · rw [if_neg h.ne', sub_zero, coeff_eq_zero_of_natDegree_lt (by rwa [hd])]
+    · rw [ite_eq_right h.ne', sub_zero, coeff_eq_zero_of_natDegree_lt (by rwa [hd])]
       exact dvd_zero _
   have h0 : G.coeff 0 = 1 := by
     have h : ((cyclotomic p ℤ).comp (X + 1) - X ^ (p - 1)).coeff 0 = (C (p : ℤ) * G).coeff 0 := by
       rw [hG]
     have hp1 : (0 : ℕ) ≠ p - 1 := (Nat.sub_pos_of_lt hp.one_lt).ne
-    rw [coeff_sub, coeff_X_pow, if_neg hp1, sub_zero, coeff_C_mul, coeff_zero_eq_eval_zero,
+    rw [coeff_sub, coeff_X_pow, ite_eq_right hp1, sub_zero, coeff_C_mul, coeff_zero_eq_eval_zero,
       eval_comp] at h
     simp only [eval_add, eval_X, eval_one, zero_add, eval_one_cyclotomic_prime] at h
     have hpz : (p : ℤ) ≠ 0 := by exact_mod_cast hp.ne_zero

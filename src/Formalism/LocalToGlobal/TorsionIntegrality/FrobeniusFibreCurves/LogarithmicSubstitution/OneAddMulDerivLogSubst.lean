@@ -41,8 +41,7 @@ theorem one_add_X_subst {ι : Type} {a : MvPowerSeries ι K} (ha : HasSubst a) :
 theorem one_add_mul_deriv_log_subst {ι : Type} {a : MvPowerSeries ι K} (ha : HasSubst a) :
     (1 + a) * (derivative (R := K) (log K)).subst a = 1 := by
   have h := congrArg (PowerSeries.substAlgHom ha) (one_add_X_mul_deriv_log (K := K))
-  rw [map_mul, map_one, coe_substAlgHom, one_add_X_subst ha] at h
-  exact h
+  rwa [map_mul, map_one, coe_substAlgHom, one_add_X_subst ha] at h
 
 private theorem constantCoeff_powerSeries_subst_mv_eq {ι : Type} (φ : PowerSeries K) {f : MvPowerSeries ι K}
     (hf : MvPowerSeries.constantCoeff f = 0) :
@@ -78,8 +77,7 @@ private theorem derivative_subst_eq_chain_rule {g : PowerSeries K} (hg : constan
     (φ : PowerSeries K) :
     derivative (R := K) (φ.subst g) = (derivative (R := K) φ).subst g * derivative (R := K) g := by
   have h := Formalism.G.LogCR.pderiv_psubst (R := K) (τ := Unit) (a := g) hg φ ()
-  simp only [derivative_eq_pderiv_unit]
-  exact h
+  simpa only [derivative_eq_pderiv_unit] using h
 
 theorem log_subst_exp : (log K).subst (exp K - 1) = X := by
   have hc : constantCoeff (exp K - 1 : PowerSeries K) = 0 := by simp
@@ -89,8 +87,7 @@ theorem log_subst_exp : (log K).subst (exp K - 1) = X := by
     have h := one_add_mul_deriv_log_subst (HasSubst.of_constantCoeff_zero' hc)
     have e : (1 : PowerSeries K) + (exp K - 1) = exp K := by ring
     rw [e] at h
-    rw [mul_comm]
-    exact h
+    rwa [mul_comm]
   · rw [constantCoeff_powerSeries_subst_eq _ hc, constantCoeff_log_eq_zero']
     simp
 
@@ -145,8 +142,7 @@ private theorem eq_zero_of_forall_pderiv_eq_self {σ : Type} {u : MvPowerSeries 
   | succ N ih =>
     intro n hn
     obtain ⟨i, hi⟩ : ∃ i, n i ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       have : n = 0 := by
         ext j
         exact hc j
@@ -290,7 +286,7 @@ theorem subst_fLog {κ : Type} [Finite ι] {φ : ι → MvPowerSeries κ K}
 theorem dz_prim (f : PowerSeries K) : dz (prim f) = f := by
   ext n
   rw [dz, PowerSeries.coeff_derivative]
-  simp only [prim, coeff_mk, Nat.add_one_ne_zero, if_false, Nat.add_sub_cancel]
+  simp only [prim, coeff_mk, Nat.add_one_ne_zero, ite_false, Nat.add_sub_cancel]
   have hne : ((n : K) + 1) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero n
   push_cast
   field_simp

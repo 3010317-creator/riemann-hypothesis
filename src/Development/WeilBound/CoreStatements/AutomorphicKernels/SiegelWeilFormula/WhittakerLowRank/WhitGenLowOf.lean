@@ -192,8 +192,7 @@ theorem GlobalTheory.CompanionTheory.SDPadic.exists_selfDual : ∀ (V : Type) [A
     exact_mod_cast e1.symm
   refine ⟨μ, hμ, fun Φ hΦ hΦc hint z => ?_⟩
   have hmono : Monotone (fun n => (D n : Set V)) := by
-    intro m n hmn y hy
-    exact (hD n y).2 fun x hx => (hD m y).1 hy x (hanti hmn hx)
+    exact fun m n hmn y hy => (hD n y).2 fun x hx => (hD m y).1 hy x (hanti hmn hx)
   have hU : (⋃ n, (D n : Set V)) = Set.univ := by
     ext x; simpa using hDall x
   have hg : Integrable (fun y => (∫ x, Φ x * χ x y ∂μ) * χ y z) μ := by
@@ -355,8 +354,7 @@ theorem exists_of_bilin (ψ : AddChar (Fv F v) ℂ) (hψ : Continuous ψ) (hu : 
     exact WithZero.exp_ne_zero (hcv.symm.trans (map_zero _))
   have hstd : GlobalTheory.JR.IsStdChar (ψ.mulShift c) := by
     constructor
-    · intro x hx
-      exact (hc c).2 hcv.le x (Valued.toNormedField.norm_le_one_iff.1 hx)
+    · exact fun x hx => (hc c).2 hcv.le x (Valued.toNormedField.norm_le_one_iff.1 hx)
     · obtain ⟨t, ht⟩ := HeightOneSpectrum.valuedAdicCompletion_surjective F v (WithZero.exp 1)
       have h1 : ¬ ∀ s : Fv F v, Valued.v s ≤ (1 : WithZero (Multiplicative ℤ)) → ψ (c * t * s) = 1 := by
         rw [hc, map_mul, hcv, ht, ← WithZero.exp_add, WithZero.exp_le_exp]
@@ -634,8 +632,7 @@ theorem selfDual_transport {V W : Type} [AddCommGroup V] [TopologicalSpace V] [M
   have h2 : g (-f z) = -z := by
     change f.symm (-f z) = -z
     simp
-  rw [h2] at this
-  exact this
+  rwa [h2] at this
 
 theorem selfDual_euclid {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℝ W]
     [FiniteDimensional ℝ W] [MeasurableSpace W] [BorelSpace W] (S : W →ₗ[ℝ] W)
@@ -671,8 +668,7 @@ theorem selfDual_euclid {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℝ
     simp [hc0.ne']
   have hi3 : Integrable (𝓕 Φ) := by
     have h1 : Integrable (𝓕 Φ) (Measure.map S volume) := hm.integrable_map_iff.mpr hi2
-    rw [hmap, integrable_smul_measure hne' ENNReal.ofReal_ne_top] at h1
-    exact h1
+    rwa [hmap, integrable_smul_measure hne' ENNReal.ofReal_ne_top] at h1
   have hinv := congrFun (hΦ.fourierInv_fourier_eq hΦi hi3) (-z)
   rw [Real.fourierInv_eq_fourier_neg, neg_neg, Real.fourier_eq'] at hinv
   have h3 := hm.integral_map (μ := volume)
@@ -697,8 +693,7 @@ theorem exists_selfDual : ∀ (V : Type) [AddCommGroup V] [TopologicalSpace V] [
   let B : Matrix (Fin N) (Fin N) ℝ := (-2 * Real.pi)⁻¹ • A
   have hpi : (-2 * Real.pi) ≠ 0 := by have := Real.pi_pos; intro h; linarith
   have hB : B.det ≠ 0 := by
-    simp only [B, Matrix.det_smul]
-    exact mul_ne_zero (pow_ne_zero _ (inv_ne_zero hpi)) hd
+    simpa only [B, Matrix.det_smul] using mul_ne_zero (pow_ne_zero _ (inv_ne_zero hpi)) hd
   have hBs : B.IsSymm := hA.smul _
   let S : EuclideanSpace ℝ (Fin N) →ₗ[ℝ] EuclideanSpace ℝ (Fin N) :=
     (p.symm.toLinearEquiv : (Fin N → ℝ) →ₗ[ℝ] _) ∘ₗ Matrix.toLin' B ∘ₗ
@@ -713,8 +708,7 @@ theorem exists_selfDual : ∀ (V : Type) [AddCommGroup V] [TopologicalSpace V] [
     rw [hin, hin, hSa, hSa, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hBs.eq]
   have hdS : LinearMap.det S ≠ 0 := by
     simp only [S]
-    rw [LinearMap.det_conj, LinearMap.det_toLin']
-    exact hB
+    rwa [LinearMap.det_conj, LinearMap.det_toLin']
   obtain ⟨ν, hν⟩ := selfDual_euclid S hS hdS
   let f : V ≃+ EuclideanSpace ℝ (Fin N) := e.trans p.symm.toLinearEquiv.toAddEquiv
   have := selfDual_transport f (p.symm.continuous.comp he) (he'.comp p.continuous) ν _ hν
@@ -867,12 +861,7 @@ variable {F E : Type} [Field F] [Field E] [Algebra F E] [FiniteDimensional F E]
 
 theorem trace_tmul (r : R) (x : E) : Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] x) =
     r * algebraMap F R (Algebra.trace F E x) := by
-  have h : Algebra.lmul R (R ⊗[F] E) (r ⊗ₜ[F] x) =
-      r • (Algebra.lmul F E x).baseChange R := by
-    refine TensorProduct.AlgebraTensorModule.curry_injective ?_
-    ext y
-    simp [Algebra.TensorProduct.tmul_mul_tmul, TensorProduct.smul_tmul']
-  rw [Algebra.trace_apply, h, map_smul, LinearMap.trace_baseChange, smul_eq_mul, Algebra.trace_apply]
+  apply GlobalTheory.CompanionTheory.SdFin.trace_tmul
 
 theorem sigR_tmul (r : R) (x : E) : sigR R σ (r ⊗ₜ[F] x) = r ⊗ₜ[F] σ x := rfl
 
@@ -922,8 +911,7 @@ theorem trace_nondeg [Algebra.IsSeparable F E] (z : R ⊗[F] E)
     · have h2 : Algebra.trace F E (b j * b' j) = 1 := by
         have := LinearMap.BilinForm.apply_dualBasis_right hB (Algebra.traceForm_isSymm F) b j j
         simpa [B, b', Algebra.traceForm_apply] using this
-      rw [h2, map_one, mul_one] at h1
-      exact h1
+      rwa [h2, map_one, mul_one] at h1
     · intro i _ hij
       have h2 : Algebra.trace F E (b i * b' j) = 0 := by
         have := LinearMap.BilinForm.apply_dualBasis_right hB (Algebra.traceForm_isSymm F) b i j
@@ -1211,14 +1199,14 @@ theorem det_mul_eq_zero_of_lt {R : Type*} [CommRing R] {M n : ℕ} (h : M < n)
   have he : e * eᵀ = 1 := by
     ext i j
     simp only [e, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.one_apply, ite_mul, one_mul,
-      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Fin.castLE_inj, eq_comm (a := j)]
+      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Fin.castLE_inj, eq_comm (a := j)]
   have : X * Y = (X * e) * (eᵀ * Y) := by
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc e, he, Matrix.one_mul]
   rw [this, Matrix.det_mul, Matrix.det_eq_zero_of_column_eq_zero (A := X * e) ⟨M, h⟩, zero_mul]
   intro a
   simp only [Matrix.mul_apply, e, Matrix.of_apply]
   refine Finset.sum_eq_zero fun i _ => ?_
-  rw [if_neg, mul_zero]
+  rw [ite_eq_right, mul_zero]
   intro hh
   have := congrArg Fin.val hh
   simp at this
@@ -1266,14 +1254,14 @@ theorem count (c d M n : ℕ) (hd : 1 ≤ d) (h : M < n) :
   | zero =>
     rw [Nat.add_zero, Finset.sum_range_succ, Finset.sum_eq_zero fun i hi => by
       have := Finset.mem_range.1 hi
-      rw [if_pos (by omega)]]
-    rw [if_neg (by omega), if_pos (by omega)]
+      rw [ite_eq_left (by omega)]]
+    rw [ite_eq_right (by omega), ite_eq_left (by omega)]
     have : M + 1 - M = 1 := by omega
     rw [this, mul_one]
     omega
   | succ r ih =>
     rw [show M + 1 + (r + 1) = M + 1 + r + 1 by ring, Finset.sum_range_succ, add_right_comm, ih]
-    rw [if_neg (by omega), if_neg (by omega)]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega)]
     have : M + 1 + r + 1 - M = (M + 1 + r - M) + 1 := by omega
     rw [this, Nat.mul_succ]
     ring
@@ -1287,8 +1275,8 @@ theorem analyticAt_update_zero {G A : ℂ → ℂ} {s₀ c : ℂ} {K N : ℕ} (h
   filter_upwards [eventually_nhdsWithin_iff.1 h] with z hz
   by_cases hzs : z = s₀
   · subst hzs
-    rw [if_pos rfl, sub_self, zero_pow (by omega), zero_mul, mul_zero]
-  · rw [if_neg hzs]
+    rw [ite_eq_left rfl, sub_self, zero_pow (by omega), zero_mul, mul_zero]
+  · rw [ite_eq_right hzs]
     have hx : z - s₀ ≠ 0 := sub_ne_zero.2 hzs
     have h1 := hz hzs
     have hN : (z - s₀) ^ N = (z - s₀) ^ K * (z - s₀) ^ (N - K) := by
@@ -1482,11 +1470,11 @@ theorem whitGenLowOf : WhitGenLowOf := by
     by_cases hx : x = s₀
     · subst hx
       filter_upwards [self_mem_nhdsWithin] with z hz
-      exact (if_neg hz).symm
+      exact (ite_eq_right hz).symm
     · filter_upwards [nhdsWithin_le_nhds (eventually_ne_nhds hx)] with z hz
-      exact (if_neg hz).symm
+      exact (ite_eq_right hz).symm
   · show (if z = s₀ then 0 else G z) = _
-    rw [if_neg (hne z hz)]
+    rw [ite_eq_right (hne z hz)]
     exact hright z hz
 
 end PositivityTheory.SiegelWeilFormula.Gen.WL

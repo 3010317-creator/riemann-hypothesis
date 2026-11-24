@@ -121,13 +121,11 @@ theorem integrable_box {F : (ι → 𝔸[K]) → ℂ} (hF : Continuous F) :
     (GroundTheory.Global.isCompact_closure_fundamentalSetInfinite K).prod
       (GroundTheory.Global.isCompact_integralFiniteAdeles K)
   have hDC : (Set.univ.pi fun _ : ι => GroundTheory.Global.fundamentalSet K) ⊆ C := by
-    intro X hX p _
-    exact ⟨subset_closure (hX p (mem_univ p)).1, (hX p (mem_univ p)).2⟩
+    exact fun X hX p _ => ⟨subset_closure (hX p (mem_univ p)).1, (hX p (mem_univ p)).2⟩
   have h1 : IntegrableOn F (Set.univ.pi fun _ : ι => GroundTheory.Global.fundamentalSet K)
       (Measure.pi fun _ => GroundTheory.Global.adeleMeasure K) :=
     (hF.continuousOn.integrableOn_compact hC).mono_set hDC
-  rw [IntegrableOn, Measure.restrict_pi_pi] at h1
-  exact h1
+  rwa [IntegrableOn, Measure.restrict_pi_pi] at h1
 
 theorem integral_box_reindex (e : ι ≃ ι') (F : (ι' → 𝔸[K]) → ℂ) :
     ∫ Y, F Y ∂(Measure.pi fun _ : ι' => boxMeasure K) =

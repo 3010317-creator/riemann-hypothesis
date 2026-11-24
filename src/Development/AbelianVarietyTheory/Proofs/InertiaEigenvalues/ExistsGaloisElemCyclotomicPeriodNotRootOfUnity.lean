@@ -233,8 +233,7 @@ theorem exists_one_add_pow_mul_not_root : ∀ (l : ℕ) [Fact l.Prime] (a : ℂ_
   have hl0 : (0 : ℝ) < l := by linarith
   have hnl : ‖(l : ℂ_[l])‖ = (l : ℝ)⁻¹ := by
     have h := PadicComplex.norm_extends' l (l : ℚ_[l])
-    rw [Padic.norm_p, map_natCast, PadicComplex.coe_natCast] at h
-    exact h
+    rwa [Padic.norm_p, map_natCast, PadicComplex.coe_natCast] at h
   have ha0 : 0 < ‖a‖ := norm_pos_iff.2 ha
   obtain ⟨k, hk⟩ := exists_pow_lt_of_lt_one (div_pos (inv_pos.2 hl0) ha0)
     (inv_lt_one_of_one_lt₀ hl1)
@@ -371,8 +370,7 @@ theorem Θ_flat (bk : BK K) : Θ l (WittVector.teichmuller l bk.flat) ≠ 0 := b
   intro h
   have h1 := congrArg norm h
   rw [PadicComplex.norm_extends, norm_zero, norm_eq_zero] at h1
-  apply (GlobalTheory.BSP.BK.prime_unif l K bk).1.ne_zero
-  exact Subtype.ext (Subtype.ext h1)
+  exact (GlobalTheory.BSP.BK.prime_unif l K bk).1.ne_zero (Subtype.ext (Subtype.ext h1))
 
 end GlobalTheory.BKLim.ZNotRoot
 
@@ -390,8 +388,7 @@ theorem GlobalTheory.BKLim.exists_isZ_not_root : ∀ (l : ℕ) [Fact l.Prime] (K
     · exact ((Units.isUnit η⁻¹).map (Θ l)).ne_zero
     · simpa using _root_.GlobalTheory.ThetaPer.thetaD_aDp_pow_ne_zero l K bk τ hτ 1
     · rw [Θ_apply]; intro h
-      apply theta_deriv_ne bk
-      exact Subtype.ext h
+      exact theta_deriv_ne bk (Subtype.ext h)
   obtain ⟨k, hk0, hk⟩ := _root_.GlobalTheory.SmallRootCl.exists_one_add_pow_mul_not_root l a ha
   obtain ⟨g, hg⟩ := _root_.GlobalTheory.BSP.galois_moves_flat_by_unit_root l (_root_.GlobalTheory.rootOfUnity_mem_range_Om l) K bk (ε ^ (l ^ k)) (by rw [map_pow, hε.1, one_pow])
   set μ : Ainf l := WittVector.teichmuller l ε - 1 with hμ_def

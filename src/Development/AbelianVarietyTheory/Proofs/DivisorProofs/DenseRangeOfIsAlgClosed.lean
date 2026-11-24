@@ -90,29 +90,7 @@ theorem norm_l : ‖(l : PadicAlgCl l)‖ < 1 := by
   exact Padic.norm_p_lt_one
 
 theorem norm_eq_of_ball {Ω : Type} [Field Ω] (i j : Ω →+* PadicAlgCl l) (h : ∀ x, ‖i x‖ ≤ 1 ↔ ‖j x‖ ≤ 1) (x : Ω) :
-    ‖i x‖ = ‖j x‖ := by
-  let v : AbsoluteValue Ω ℝ := (NormedField.toAbsoluteValue (PadicAlgCl l)).comp i.injective
-  let w : AbsoluteValue Ω ℝ := (NormedField.toAbsoluteValue (PadicAlgCl l)).comp j.injective
-  have hv : ∀ x, v x = ‖i x‖ := fun _ => rfl
-  have hw : ∀ x, w x = ‖j x‖ := fun _ => rfl
-  have he : v.IsEquiv w := by
-    rw [AbsoluteValue.isEquiv_iff_lt_one_iff]
-    intro y
-    rcases eq_or_ne y 0 with rfl | hy
-    · simp
-    have := h y⁻¹
-    rw [map_inv₀, map_inv₀, norm_inv, norm_inv, inv_le_one₀ (norm_pos_iff.2 ((map_ne_zero i).2 hy)),
-      inv_le_one₀ (norm_pos_iff.2 ((map_ne_zero j).2 hy))] at this
-    rw [hv, hw, ← not_le, ← not_le, this]
-  obtain ⟨c, hc, e⟩ := AbsoluteValue.isEquiv_iff_exists_rpow_eq.1 he
-  have h1 := congrFun e (l : Ω)
-  simp only [hv, hw, map_natCast] at h1
-  have h0 : 0 < ‖(l : PadicAlgCl l)‖ := norm_pos_iff.2 (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
-  have hc1 : c = 1 := by
-    refine (Real.rpow_right_inj h0 norm_l.ne).1 ?_
-    rw [h1, Real.rpow_one]
-  have h2 := congrFun e x
-  simpa only [hv, hw, hc1, Real.rpow_one] using h2
+    ‖i x‖ = ‖j x‖ := (GlobalTheory.PlaceBridge.norm_eq_of_le_one_iff i j h x).symm
 
 theorem exists_aut {Ω : Type} [Field Ω] (i j : Ω →+* PadicAlgCl l) (hj : DenseRange j) (h : ∀ x, ‖i x‖ = ‖j x‖) :
     ∃ σ : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l, ∀ x, σ (j x) = i x := by

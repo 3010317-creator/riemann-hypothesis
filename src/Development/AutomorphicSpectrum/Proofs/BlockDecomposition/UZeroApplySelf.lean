@@ -133,8 +133,7 @@ theorem exists_hom {B : Type} [CommMonoid B] (s : ℕ → B) (hs : ∀ m, s (m +
     have e : (x * y).toAdd = a + b := rfl
     simp only [e]
     rw [key _ _ _ h3, key _ _ _ h1, key _ _ _ h2, pow_add]
-  · intro x m n h
-    exact key x m n h
+  · exact fun x m n h => key x m n h
 
 noncomputable def u {d : ℕ} (p : ℕ) [NeZero p] (k : Fin d) (m : ℕ) : Q p d := Pi.single k (pinv p m)
 
@@ -266,7 +265,7 @@ theorem T_add (a : Q p d) (k : Fin d) : T t (a + u p k 0) = T t a * t k := by
     intro j
     by_cases hj : j = k
     · subst hj
-      simp only [Pi.add_apply, AddSubmonoid.coe_add, u_zero_apply_self, if_true]
+      simp only [Pi.add_apply, AddSubmonoid.coe_add, u_zero_apply_self, ite_true]
       rw [Nat.floor_add_one (a j).2.1, pow_succ]
     · simp [u_zero_apply_ne hj, hj]
   simp only [T, h, Finset.prod_mul_distrib]
@@ -275,8 +274,7 @@ theorem T_add (a : Q p d) (k : Fin d) : T t (a + u p k 0) = T t a * t k := by
 theorem fr_of_I (i : I p d) : fr i.1 = i := by
   apply Subtype.ext
   funext j
-  apply Subtype.ext
-  exact Int.fract_eq_self.2 ⟨(i.1 j).2.1, i.2 j⟩
+  exact Subtype.ext (Int.fract_eq_self.2 ⟨(i.1 j).2.1, i.2 j⟩)
 
 theorem T_of_I (i : I p d) : T t i.1 = 1 := by
   refine Finset.prod_eq_one fun k _ => ?_
@@ -440,8 +438,7 @@ theorem cl_zero_one : cl t (0 : Q p d) = 1 := rfl
 theorem exists_not_dvd (a : I p d) (ha : a ≠ ⟨0, fun k => by simp⟩) {m : ℕ} {c : Fin d → ℕ}
     (h : ∀ k, (p : ℚ) ^ m * (a.1 k : ℚ) = c k) : ∃ k, ¬ p ^ m ∣ c k := by
   have : ∃ k, (a.1 k : ℚ) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact ha (Subtype.ext (funext fun k => Subtype.ext (hc k)))
   obtain ⟨k, hk⟩ := this
   refine ⟨k, ?_⟩

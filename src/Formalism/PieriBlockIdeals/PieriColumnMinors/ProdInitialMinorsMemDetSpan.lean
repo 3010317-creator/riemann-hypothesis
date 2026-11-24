@@ -125,8 +125,7 @@ theorem la_mem_of_dvd (R : Type) [CommRing R] {n : ℕ} (s : Fin n) {d p q N : �
       la_binLat R s d := Submodule.subset_span ⟨p, q, h, rfl⟩
   have h2 := Submodule.smul_mem _ (c : R) hmem
   rw [MvPolynomial.smul_eq_C_mul, map_natCast] at h2
-  rw [Nat.cast_mul, mul_comm ((p + q).choose q : MvPolynomial (Fin 2 × Fin n) R), mul_assoc]
-  exact h2
+  rwa [Nat.cast_mul, mul_comm ((p + q).choose q : MvPolynomial (Fin 2 × Fin n) R), mul_assoc]
 
 theorem la_coeff (A : Type) [CommRing A] (u v w : A) (p k : ℕ) :
     ((Polynomial.C u + Polynomial.X * Polynomial.C v) ^ p * Polynomial.C w).coeff k =
@@ -159,10 +158,10 @@ theorem la_rowDiv_xy_zero (R : Type) [CommRing R] {n : ℕ} (s : Fin n) (a : Fin
         (X ((0 : Fin 2), s) ^ (p - k) * X (a, s) ^ k * X ((1 : Fin 2), s) ^ q) := by
   have h0 : rowGen R a (0 : Fin 2) (X ((0 : Fin 2), s) : MvPolynomial (Fin 2 × Fin n) R) =
       Polynomial.C (X ((0 : Fin 2), s)) + Polynomial.X * Polynomial.C (X (a, s)) := by
-    rw [la_rowGen_X, if_pos rfl]
+    rw [la_rowGen_X, ite_eq_left rfl]
   have h1 : rowGen R a (0 : Fin 2) (X ((1 : Fin 2), s) : MvPolynomial (Fin 2 × Fin n) R) =
       Polynomial.C (X ((1 : Fin 2), s)) := by
-    rw [la_rowGen_X, if_neg (show ¬ ((1 : Fin 2) = 0) by decide), add_zero]
+    rw [la_rowGen_X, ite_eq_right (show ¬ ((1 : Fin 2) = 0) by decide), add_zero]
   simp only [rowDiv]
   rw [la_xy, map_mul, map_pow, map_pow, h0, h1, ← Polynomial.C_pow, la_coeff]
 
@@ -172,10 +171,10 @@ theorem la_rowDiv_xy_one (R : Type) [CommRing R] {n : ℕ} (s : Fin n) (a : Fin 
         (X ((1 : Fin 2), s) ^ (q - k) * X (a, s) ^ k * X ((0 : Fin 2), s) ^ p) := by
   have h0 : rowGen R a (1 : Fin 2) (X ((1 : Fin 2), s) : MvPolynomial (Fin 2 × Fin n) R) =
       Polynomial.C (X ((1 : Fin 2), s)) + Polynomial.X * Polynomial.C (X (a, s)) := by
-    rw [la_rowGen_X, if_pos rfl]
+    rw [la_rowGen_X, ite_eq_left rfl]
   have h1 : rowGen R a (1 : Fin 2) (X ((0 : Fin 2), s) : MvPolynomial (Fin 2 × Fin n) R) =
       Polynomial.C (X ((0 : Fin 2), s)) := by
-    rw [la_rowGen_X, if_neg (show ¬ ((0 : Fin 2) = 1) by decide), add_zero]
+    rw [la_rowGen_X, ite_eq_right (show ¬ ((0 : Fin 2) = 1) by decide), add_zero]
   simp only [rowDiv]
   rw [la_xy, map_mul, map_pow, map_pow, h0, h1, ← Polynomial.C_pow,
     mul_comm (Polynomial.C (X ((0 : Fin 2), s) ^ p)), la_coeff]
@@ -312,7 +311,7 @@ theorem la_arith (l d : ℕ) (hl : l.Prime) :
     ∃ m : ℕ, ¬ l ∣ m ∧ ∀ i ≤ d, d.choose i ∣ m * l ^ Formalism.RankGapBounds.JumpSetsAlt.maxVal l d := by
   refine ⟨∏ i ∈ Finset.range (d + 1), d.choose i / l ^ ((d.choose i).factorization l), ?_, ?_⟩
   · rw [Prime.dvd_finsetProd_iff hl.prime]
-    push_neg
+    push Not
     intro i hi
     exact Nat.not_dvd_ordCompl hl (Nat.choose_pos (by rw [Finset.mem_range] at hi; omega)).ne'
   · intro i hi
@@ -340,8 +339,7 @@ theorem la_arith_conv (l d m e : ℕ) (hl : l.Prime) (hm : ¬ l ∣ m)
   have h2 : (m * l ^ e).factorization l = e := by
     rw [Nat.factorization_mul hm0 (pow_ne_zero _ hl.ne_zero)]
     simp [Nat.factorization_eq_zero_of_not_dvd hm, hl.factorization_self]
-  rw [h2] at h1
-  exact h1
+  rwa [h2] at h1
 
 theorem la_smul_monLat {n : ℕ} (s : Fin n) (d N : ℕ) (hN : ∀ i ≤ d, d.choose i ∣ N)
     (y : MvPolynomial (Fin 2 × Fin n) ℤ) (hy : y ∈ la_monLat ℤ s d) :
@@ -378,7 +376,7 @@ theorem la_core {n : ℕ} (s : Fin n) (d : ℕ) (g : MvPolynomial (Fin 2 × Fin 
       apply mul_left_cancel₀ hg
       rw [hgz, mul_smul_comm]
     have hc := la_coeff_binLat s d z hz (d - i) i
-    rw [hz', la_xy_eq, MvPolynomial.coeff_smul, coeff_monomial, if_pos rfl, smul_eq_mul, mul_one,
+    rw [hz', la_xy_eq, MvPolynomial.coeff_smul, coeff_monomial, ite_eq_left rfl, smul_eq_mul, mul_one,
       show d - i + i = d by omega] at hc
     exact_mod_cast hc
   · intro he
@@ -388,8 +386,7 @@ theorem la_core {n : ℕ} (s : Fin n) (d : ℕ) (g : MvPolynomial (Fin 2 × Fin 
     refine Submodule.mem_map.mpr ⟨((m * l ^ e : ℕ) : ℤ) • y,
       la_smul_monLat s d (m * l ^ e)
         (fun i hi => (hdiv i hi).trans (Nat.mul_dvd_mul_left m (Nat.pow_dvd_pow l he))) y hy, ?_⟩
-    simp only [LinearMap.mulLeft_apply]
-    exact mul_smul_comm _ _ _
+    simpa only [LinearMap.mulLeft_apply] using mul_smul_comm _ _ _
 
 theorem la_lpMinor_one (R : Type) [CommRing R] {r n : ℕ} (s : ℕ) (hs : s = 1) (hr : s ≤ r)
     (hn : s ≤ n) :
@@ -403,7 +400,7 @@ theorem la_lpMinor_one (R : Type) [CommRing R] {r n : ℕ} (s : ℕ) (hs : s = 1
 theorem highest_weight_one_column (R : Type) [CommRing R] {r : ℕ} (hn : 1 ≤ r) (ν : Fin 1 → ℕ) :
     hw R hn ν = X ((⟨0, hn⟩ : Fin r), (0 : Fin 1)) ^ ν 0 := by
   show ∏ s : Fin 1, (lpMinor R (s.val + 1) (by omega) (by omega)) ^ (ν s - nuNext ν s) = _
-  rw [Fin.prod_univ_one, show nuNext ν 0 = 0 from dif_neg (by decide), Nat.sub_zero]
+  rw [Fin.prod_univ_one, show nuNext ν 0 = 0 from dite_eq_right (by decide), Nat.sub_zero]
   exact congrArg (· ^ ν 0) (la_lpMinor_one R _ rfl _ _)
 
 theorem la_weyl_le_of_stable (R : Type) [CommRing R] {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ)
@@ -434,8 +431,7 @@ theorem la_weyl_r2n1 (R : Type) [CommRing R] (hn : 1 ≤ 2) (ν : Fin 1 → ℕ)
       show rowDiv R 1 0 q (hw R hn ν) = _
       rw [hhw, ← hpq, la_rowDiv_xy_zero]
       simp [la_xy]
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 theorem la_mono_of_weight {m : Fin 2 × Fin 1 →₀ ℕ} {ν : Fin 1 → ℕ}
     (h : Finsupp.weight (colW 2 1) m = ν) :
@@ -471,14 +467,13 @@ theorem la_nabla_r2n1 (R : Type) [CommRing R] (ν : Fin 1 → ℕ) :
       fin_cases j
       simp [la_mono, colW, Finsupp.weight_single, hpq]
     · simp only [Submodule.mem_iInf]
-      intro a b hab
-      exact ((ne_of_lt hab) (Subsingleton.elim a b)).elim
+      exact fun a b hab => ((ne_of_lt hab) (Subsingleton.elim a b)).elim
 
 theorem la_eExp_r2n1 (ν : Fin 1 → ℕ) (l : ℕ) :
     Formalism.RankGapBounds.JumpSetsAlt.eExp (lamU 2 1 ν) l = Formalism.RankGapBounds.JumpSetsAlt.maxVal l (ν 0) := by
   rw [exact_exponent_rank_two 1 ν l]
-  have h0 : rowNu (r := 2) ν 0 = ν 0 := dif_pos (by decide)
-  have h1 : rowNu (r := 2) ν 1 = 0 := dif_neg (by decide)
+  have h0 : rowNu (r := 2) ν 0 = ν 0 := dite_eq_left (by decide)
+  have h1 : rowNu (r := 2) ν 1 = 0 := dite_eq_right (by decide)
   rw [h0, h1, Nat.sub_zero]
 
 theorem sharp_rank_two_one_column : SharpInclusionRankTwoOneColumn := by
@@ -487,8 +482,7 @@ theorem sharp_rank_two_one_column : SharpInclusionRankTwoOneColumn := by
   have hc := la_core (0 : Fin 1) (ν 0) 1 one_ne_zero l e hl
   simp only [LinearMap.mulLeft_one, Submodule.map_id] at hc
   unfold InclZ
-  rw [la_nabla_r2n1, la_weyl_r2n1]
-  exact hc
+  rwa [la_nabla_r2n1, la_weyl_r2n1]
 
 theorem lattice_z_rank_two_one_column : LemmaAZ_r2n1 := by
   unfold LemmaAZ_r2n1
@@ -539,8 +533,8 @@ theorem la_lpMinor_two (R : Type) [CommRing R] (s : ℕ) (hs : s = 2) (hr : s �
 theorem highest_weight_rank_two (R : Type) [CommRing R] (hn : 2 ≤ 2) (ν : Fin 2 → ℕ) :
     hw R hn ν = la_det R ^ ν 1 * la_xy R (0 : Fin 2) (ν 0 - ν 1) 0 := by
   show ∏ s : Fin 2, (lpMinor R (s.val + 1) (by omega) (by omega)) ^ (ν s - nuNext ν s) = _
-  rw [Fin.prod_univ_two, show nuNext ν 0 = ν 1 from dif_pos (by decide),
-    show nuNext ν 1 = 0 from dif_neg (by decide), Nat.sub_zero]
+  rw [Fin.prod_univ_two, show nuNext ν 0 = ν 1 from dite_eq_left (by decide),
+    show nuNext ν 1 = 0 from dite_eq_right (by decide), Nat.sub_zero]
   have e1 := la_lpMinor_one R (r := 2) (n := 2) ((0 : Fin 2).val + 1) (by decide) (by decide) (by decide)
   have e2 := la_lpMinor_two R ((1 : Fin 2).val + 1) (by decide) (by decide) (by decide)
   rw [e1, e2, la_xy, pow_zero, mul_one]
@@ -613,8 +607,7 @@ theorem la_weyl_r2n2 (R : Type) [CommRing R] (hn : 2 ≤ 2) (ν : Fin 2 → ℕ)
       rw [hhw, la_rowDiv_tw_ne R 1 0 (by decide), ← hpq, la_rowDiv_xy_zero,
         LinearMap.mulLeft_apply]
       simp [la_xy]
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 theorem la_monLat_mul (R : Type) [CommRing R] {n : ℕ} (s : Fin n) {d d' : ℕ}
     {u u' : MvPolynomial (Fin 2 × Fin n) R} (hu : u ∈ la_monLat R s d)
@@ -725,8 +718,7 @@ theorem la_nabla_r2n2 (hn : 2 ≤ 2) (ν : Fin 2 → ℕ) (hν : Antitone ν) :
       simp only [Fin.val_zero]
       split_ifs <;> omega
     have c2 : (∑ k : Fin K, if sz k = 1 then 1 else 0) = ν 0 - ν 1 := by omega
-    rw [c1, c2] at h1
-    exact h1
+    rwa [c1, c2] at h1
   · unfold detPowMulMonomialSpan
     rw [Submodule.map_le_iff_le_comap]
     apply Submodule.span_le.2
@@ -744,8 +736,8 @@ theorem la_nabla_r2n2 (hn : 2 ≤ 2) (ν : Fin 2 → ℕ) (hν : Antitone ν) :
 theorem la_eExp_r2n2 (ν : Fin 2 → ℕ) (l : ℕ) :
     Formalism.RankGapBounds.JumpSetsAlt.eExp (lamU 2 2 ν) l = Formalism.RankGapBounds.JumpSetsAlt.maxVal l (ν 0 - ν 1) := by
   rw [exact_exponent_rank_two 2 ν l]
-  have h0 : rowNu (r := 2) ν 0 = ν 0 := dif_pos (by decide)
-  have h1 : rowNu (r := 2) ν 1 = ν 1 := dif_pos (by decide)
+  have h0 : rowNu (r := 2) ν 0 = ν 0 := dite_eq_left (by decide)
+  have h1 : rowNu (r := 2) ν 1 = ν 1 := dite_eq_left (by decide)
   rw [h0, h1]
 
 theorem sharp_rank_two_two_columns : SharpInclusionRankTwoTwoColumns := by
@@ -753,8 +745,7 @@ theorem sharp_rank_two_two_columns : SharpInclusionRankTwoTwoColumns := by
   intro hn ν hν l e hl
   have hc := la_core (0 : Fin 2) (ν 0 - ν 1) (la_det ℤ ^ ν 1) (pow_ne_zero _ la_det_ne) l e hl
   unfold InclZ
-  rw [la_nabla_r2n2 hn ν hν, la_weyl_r2n2 ℤ hn ν]
-  exact hc
+  rwa [la_nabla_r2n2 hn ν hν, la_weyl_r2n2 ℤ hn ν]
 
 theorem lattice_z_rank_two_two_columns : LemmaAZ_r2n2 := by
   unfold LemmaAZ_r2n2
@@ -804,8 +795,7 @@ theorem la_uniform (r n : ℕ) (hn : n ≤ r) (ν : Fin n → ℕ) (hν : Antito
       | add x y _ _ hx hy => rw [smul_add]; exact Submodule.add_mem _ hx hy
       | smul a x _ hx => rw [smul_comm]; exact Submodule.smul_mem _ _ hx
     rcases Int.natAbs_eq (∏ g ∈ S, c g) with h | h
-    · rw [← h]
-      exact key
+    · rwa [← h]
     · have h2 : (((∏ g ∈ S, c g).natAbs : ℕ) : ℤ) = -(∏ g ∈ S, c g) := by omega
       rw [h2, neg_smul]
       exact Submodule.neg_mem _ key

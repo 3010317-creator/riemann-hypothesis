@@ -403,7 +403,7 @@ theorem finite_image_tSet_loc : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
   have key : ∀ x ∈ tSet L n s ϖ k, ∀ x' ∈ tSet L n s ϖ k, κ x = κ x' →
       (x : GAf L n ⧸ J) = x' := by
     intro x hx x' hx' hκ
-    simp only [κ, dif_pos hx, dif_pos hx'] at hκ
+    simp only [κ, dite_eq_left hx, dite_eq_left hx'] at hκ
     obtain ⟨ha, b, hb, hg⟩ := hx.2.choose_spec
     obtain ⟨ha', b', hb', hg'⟩ := hx'.2.choose_spec
     set a := hx.2.choose
@@ -433,7 +433,7 @@ theorem finite_image_tSet_loc : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
   rintro _ ⟨x, hx, rfl⟩ _ ⟨x', hx', rfl⟩ hgg
   have h : ∃ y ∈ tSet L n s ϖ k, (y : GAf L n ⧸ J) = x := ⟨x, hx, rfl⟩
   have h' : ∃ y ∈ tSet L n s ϖ k, (y : GAf L n ⧸ J) = x' := ⟨x', hx', rfl⟩
-  simp only [g, dif_pos h, dif_pos h'] at hgg
+  simp only [g, dite_eq_left h, dite_eq_left h'] at hgg
   show (x : GAf L n ⧸ J) = x'
   rw [← h.choose_spec.2, ← h'.choose_spec.2]
   exact key _ h.choose_spec.1 _ h'.choose_spec.1 hgg
@@ -798,8 +798,7 @@ theorem unif_to_unif : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   obtain ⟨π, hπ⟩ := HeightOneSpectrum.valuation_exists_uniformizer E w
   set z : w.adicCompletion E := (π : w.adicCompletion E)
   have hz : Valued.v z = WithZero.exp (-1 : ℤ) := by
-    rw [HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-    exact hπ
+    rwa [HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
   set y := i.symm z
   have hy1 : Valued.v y < 1 := by
     rw [← hlt, RingEquiv.apply_symm_apply, hz, ← WithZero.exp_zero, WithZero.exp_lt_exp]; omega
@@ -1354,8 +1353,7 @@ theorem f_sph_alt (π : NG.AutRep D.host.E D.R.nV) (w : PlE D.host) (v : HeightO
   · rintro ⟨v', hv', hs⟩
     rw [overPl_unique hv hv']
     exact _root_.UpperTheory.One.M.New.sphAt_iso (rep_iso π) hs
-  · intro hs
-    exact ⟨v, hv, _root_.UpperTheory.One.M.New.sphAt_iso (autIso_symm (rep_iso π)) hs⟩
+  · exact fun hs => ⟨v, hv, _root_.UpperTheory.One.M.New.sphAt_iso (autIso_symm (rep_iso π)) hs⟩
 theorem unr_locOf_of_sphAt (π : NG.AutRep D.host.E D.R.nV) (s : SplitPlace D.host.E) (hs : π.SphericalAtPlace s.v) :
     D.naut.unr (_root_.GlobalTheory.AutQuot.locOf_alt hL D T (clsA π).rep s.w) := by
   obtain ⟨x, hx⟩ := locAt_of_split π s
@@ -1377,8 +1375,7 @@ theorem f_locPol_alt (π : NG.AutRep D.host.E D.R.nV) (s : SplitPlace D.host.E) 
       ((1 - (D.R.nV : ℝ)) / 2)) := by
     rw [T.unr, T.tw, Equiv.apply_symm_apply]; exact hun
   unfold galPol
-  rw [T.frobEig _ _ hu2, T.tw, Equiv.apply_symm_apply]
-  exact hpol
+  rwa [T.frobEig _ _ hu2, T.tw, Equiv.apply_symm_apply]
 theorem e_locOf_eq_locRecT_of_isLocS (π : NG.AutRep D.host.E D.R.nV) (s : SplitPlace D.host.E)
     (σ : GlobalTheory.SmGL.IrrRep (GL (Fin D.R.nV) (s.w.adicCompletion D.host.E))) (hσ : IsLocS π.S s σ) :
     T.e s.w (_root_.GlobalTheory.AutQuot.locOf_alt hL D T (clsA π).rep s.w) =

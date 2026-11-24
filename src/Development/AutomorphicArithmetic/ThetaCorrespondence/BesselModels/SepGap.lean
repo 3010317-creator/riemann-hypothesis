@@ -141,13 +141,11 @@ theorem vec_resid_map {S : Type} [CommRing S] (f : R →+* S) (L : Matrix (Fin r
 
 theorem cols_of_resid {M : Matrix (Fin n) (Fin n) R} {E : Matrix (Fin n) (Fin r) R} {T : Matrix (Fin r) (Fin r) R}
     (h : (M - 1) * E - E * T = 0) : M * E = E + E * T := by
-  rw [sub_eq_zero, Matrix.sub_mul, Matrix.one_mul, sub_eq_iff_eq_add'] at h
-  exact h
+  rwa [sub_eq_zero, Matrix.sub_mul, Matrix.one_mul, sub_eq_iff_eq_add'] at h
 
 theorem vec_of_resid {M : Matrix (Fin n) (Fin n) R} {E : Matrix (Fin n) (Fin r) R} {z : Fin n → R} {b : Fin r → R}
     (h : (M - 1) *ᵥ z - E *ᵥ b = 0) : M *ᵥ z = z + E *ᵥ b := by
-  rw [sub_eq_zero, Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_iff_eq_add'] at h
-  exact h
+  rwa [sub_eq_zero, Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_iff_eq_add'] at h
 
 theorem coordSum_one (c : Fin r → R) (L : Matrix (Fin r) (Fin n) R) (E : Matrix (Fin n) (Fin r) R) (z : Fin n → R) :
     coordSum c L E z 1 = 0 := by
@@ -183,14 +181,13 @@ theorem coordSum_flag {n r : ℕ} (c : Fin r → ℂ) {L : Matrix (Fin r) (Fin n
     intro i
     split_ifs with h
     · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
-      · rw [if_pos rfl, hT i ⟨i.1 + 1, h⟩ rfl]
+      · rw [ite_eq_left rfl, hT i ⟨i.1 + 1, h⟩ rfl]
       · intro j _ hj
-        rw [if_neg]
-        intro h'
-        exact hj (Fin.ext h')
+        rw [ite_eq_right]
+        exact fun h' => hj (Fin.ext h')
       · intro h'; exact absurd (Finset.mem_univ _) h'
     · refine Finset.sum_eq_zero fun j _ => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       have := j.2
       omega
@@ -200,8 +197,8 @@ theorem coordSum_flag {n r : ℕ} (c : Fin r → ℂ) {L : Matrix (Fin r) (Fin n
   refine Finset.sum_congr rfl fun i _ => ?_
   have := i.2
   by_cases h : i.1 + 1 < r
-  · rw [if_pos h, if_neg (by omega), add_zero]
-  · rw [if_neg h, if_pos (by omega), zero_add, hb i (by omega)]
+  · rw [ite_eq_left h, ite_eq_right (by omega), add_zero]
+  · rw [ite_eq_right h, ite_eq_left (by omega), zero_add, hb i (by omega)]
 
 variable {D : D7}
 
@@ -359,8 +356,7 @@ theorem factor_multT_le_empty {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} 
     (χ : GA D V → ℂ) : MultT θ M J χ ≤ MultT θ M ∅ 1 := by
 
   refine Submodule.map_mono (Submodule.span_mono ?_)
-  intro T hT
-  exact ⟨hT.aut, hT.cusp, fun v k hk g => by simp at hk, hT.equiv, hT.cont⟩
+  exact fun T hT => ⟨hT.aut, hT.cusp, fun v k hk g => by simp at hk, hT.equiv, hT.cont⟩
 
 end GlobalTheory.SepRows
 end -- clump:auto
@@ -523,7 +519,7 @@ theorem mul_prod_of_separately {ι : Type} [Fintype ι] [DecidableEq ι] {X : ι
     have := hc (x i)
     rw [Function.update_eq_self, hi] at this
     simp [this]
-  push_neg at h0
+  push Not at h0
   choose x₀ hx₀ using h0
   have key : ∀ s : Finset ι, ∀ x, (∀ i, i ∉ s → x i = x₀ i) →
       β x * ∏ i ∈ s, b i (x₀ i) = β x₀ * ∏ i ∈ s, b i (x i) := by
@@ -724,8 +720,7 @@ theorem cloud_gt {x : ℚ} (h : x ∈ (num D C τ).cloud) : -((num D C τ).b 1 :
   have a2 := (D.hc τ).v_gt_u ⟨D.R.k - 2, by omega⟩
   have e : (⟨(⟨D.R.k - 2, by omega⟩ : Fin (D.R.k - 1)).1 + 1, by simp only; omega⟩ : Fin D.R.k) = ⟨D.R.k - 1, by omega⟩ :=
     Fin.ext (by simp only; omega)
-  rw [e] at a2
-  rw [v_spec D C τ (by omega)] at a2
+  rw [e, v_spec D C τ (by omega)] at a2
   have e0 : (D.hc τ).b ⟨0, by omega⟩ = ((num D C τ).b 1 : ℚ) := b_spec D C τ (by omega)
   rw [e0] at a1
   have e2 : D.R.k - 2 + 2 = D.R.k := by omega
@@ -824,7 +819,7 @@ theorem gapOver_parD (C : ℝ) (hS : LowsOver D g) (τ : D.what₂.Tau) {i : ℕ
     · exact absurd h (by simp)
     · obtain ⟨rfl, es⟩ := Prod.mk.inj e
       have hn : ¬ (l ≤ j + 1 ∨ Even (l - j - 1)) := by simpa using es.symm
-      push_neg at hn
+      push Not at hn
       exact gap_true C hS τ hi (by omega) h2 (by simpa using hn.2) hy
     · exact absurd h (by simp)
     · exact absurd h (by simp)
@@ -848,8 +843,7 @@ theorem gapAtLeast_of_gapOver {n : ℕ} {P : SPar} {lam : Fin n → ℝ} {ε : F
     have e3 : x = (-(q c), ε c) := Prod.ext (by simp [← e1]) e2
     rw [e3] at hx; exact hx
   have h2 : g < |(-(q a)) - (-(q b))| := by
-    have h0 := hG (-(q a), ε a) (mem a) (-(q b), ε b) (mem b) hab
-    simpa only using h0
+    simpa only using hG (-(q a), ε a) (mem a) (-(q b), ε b) (mem b) hab
   have e : (-(q a)) - (-(q b)) = -(q a - q b) := by ring
   rw [e, abs_neg] at h2
   rw [hq, hq]
@@ -960,8 +954,7 @@ theorem fit_gap {D : D7} (large₂ : SizeData₂ D) (hs : SizeRows large₂) {T 
     unfold parV
     exact gapOver_shift _ (gapOver_parD sc.cGap (lowsOver_of_sizeRows large₂ hs) τ 0 le_rfl)
   have hE1 : IsEnum (dualPar (parV D 1 D.R.m 0 τ)) (MB.lam τ) (MB.ε τ) := by
-    rw [← hsc]
-    exact hE
+    rwa [← hsc]
   refine ⟨GlobalTheory.SepRows.isHCParam_dual_parV D D.R.m 0 τ _ _ hr hE1, _, ?_, gapAtLeast_of_gapOver hE hG⟩
   rw [hr]
   push_cast
@@ -1023,8 +1016,7 @@ theorem burGap_model (hB : BurGapPos) {D : D7} {V : HSp D} {S : D.what₂.Tau �
       congr 1
       rw [Matrix.mul_assoc, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.mul_one,
         ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.one_mul]
-    rw [e1]
-    exact hds
+    rwa [e1]
   exact hB _ _ _ _ _ _ _ _ hf hc.1 hc.2.1 hc.2.2 χ hχ _ _ (GlobalTheory.SmVec.isURepOn_trRep (M.fr_unit τ) (M.fr_gram τ) hU)
     (GlobalTheory.SmVec.isIrredOn_trRep (M.fr_unit τ) (M.fr_gram τ) hI) h hh hgap W π₀ hπ
 
@@ -1081,8 +1073,8 @@ theorem besselDatum_middleVector_norm_eq {A B : HSp D} {c : ℕ} {ε : D.host.E}
       (fun k => tauE D τ ((d.besDat hε ρ h).z k)) = tauE D τ ε := by
   have h1 := congrFun (congrFun d.gram ⟨ρ, by omega⟩) ⟨ρ, by omega⟩
   have h2 : antiDiagonalSignGramMatrix c ε ⟨ρ, by omega⟩ ⟨ρ, by omega⟩ = ε := by
-    simp only [antiDiagonalSignGramMatrix, if_true]
-    rw [if_pos (by omega)]
+    simp only [antiDiagonalSignGramMatrix, ite_true]
+    rw [ite_eq_left (by omega)]
   rw [h2] at h1
   refine Eq.trans ?_ (congrArg (tauE D τ) h1)
   show star _ ⬝ᵥ _ = _
@@ -1170,7 +1162,7 @@ theorem topLine_gap (hB : BurGapPos) (hCT : CoefTensor) (hTS : TopSep) :
     rw [hb]
     beta_reduce
     rw [hb₀, key, LinearMap.smul_apply, LinearMap.smul_apply, smul_eq_mul, mul_comm]
-  · push_neg at h
+  · push Not at h
     exact ⟨0, fun F' hF' Ψ hΨ => ⟨0, fun ξ v => by rw [h F' hF' Ψ hΨ ξ v, mul_zero]⟩⟩
 
 theorem factor_gap (hB : BurGapPos) (hCT : CoefTensor) (hTS : TopSep) (hT : RowTower) (D : D7) (large₂ : SizeData₂ D)
@@ -1221,9 +1213,8 @@ theorem separate_of_burGapPos (hB : BurGapPos) (hCT : CoefTensor) (hTS : TopSep)
     obtain ⟨l, hl⟩ := ha _ (hrow t ht) Ψ hΨ Φ
     have hl' : l ≠ 0 := fun h => hf (by rw [hl, h, mul_zero])
     refine ⟨Ψ, hΨ, Φ, hCo _ (hrow t ht) w ρ₀ ξ₀ Ψ hΨ Φ, ?_⟩
-    intro h
-    exact mul_ne_zero ha0 hl' ((hl ρ₀ ξ₀).symm.trans h)
-  · push_neg at h0
+    exact fun h => mul_ne_zero ha0 hl' ((hl ρ₀ ξ₀).symm.trans h)
+  · push Not at h0
     exact ⟨Classical.arbitrary _, 0, fun t ht htne => absurd (h0 t ht) htne⟩
 
 end UpperTheory.Lit.Bur

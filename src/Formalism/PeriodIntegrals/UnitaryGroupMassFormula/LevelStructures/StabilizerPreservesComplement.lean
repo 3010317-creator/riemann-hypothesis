@@ -175,8 +175,7 @@ theorem witt_decomposition_lattice {r : ℕ} (P : Frame E n r) (hee : ∀ a b, h
   have hc' := localLattice_le_span v P.f C hC hc
   have hwb := witt_decomposition_unique (P := P) (hee := hee) (hef := hef) (hfe := hfe) (hx := hx) (ha := ha')
     (hc := hc') (hw := hw) (hb := hb') (h := h.symm)
-  rw [hwb]
-  exact hb
+  rwa [hwb]
 
 theorem lin_mem_localLattice (g : HA (Fv F v) σ J) (A : Set (Fin n → E))
     (hg : ∀ y ∈ A, lin (Fv F v) σ J g (ratV (F := F) (Fv F v) y) ∈ latLoc (E := E) v A)
@@ -221,8 +220,7 @@ theorem leviIntH : LeviIntH := by
   have hWgen : ∀ y ∈ LatW.LW X, ratV (F := X.B.I.F) (Fv X.B.I.F p.1) y ∈ M :=
     fun y hy => hgen y (Or.inl (Or.inr hy))
   have hLWM : ∀ u, u ∈ latLoc (E := X.B.I.E) p.1 (LatW.LW X) → u ∈ M := by
-    intro u hu
-    exact (Submodule.span_mono (Set.image_mono (fun y hy => Or.inl (Or.inr hy)))) hu
+    exact fun u hu => (Submodule.span_mono (Set.image_mono (fun y hy => Or.inl (Or.inr hy)))) hu
   have hdec : ∀ {m x w' : Fin X.B.I.n → Fv X.B.I.F p.1 ⊗[X.B.I.F] X.B.I.E}, m ∈ M →
       x ∈ spanR (F := X.B.I.F) (Fv X.B.I.F p.1) (frameOf X w).e Set.univ →
       WbR (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X w) w' → m = x + w' →
@@ -260,8 +258,7 @@ theorem leviIntH : LeviIntH := by
       have := (hKi' _).1 (hWgen y hy)
       rw [mul_inv_rev, lin_mul] at this
       have e : lin _ X.B.I.cm.sig X.B.I.J n⁻¹ y' = y' + x' := by simp [x']
-      rw [e, map_add (f := _), hfix, add_comm] at this
-      exact this
+      rwa [e, map_add (f := _), hfix, add_comm] at this
     exact hLWM _ (hdec hm hx' (stabilizer_preserves_complement (frameOf X w) hh' hy') rfl)
   have hall : ∀ g ∈ Hsub (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X w),
       (∀ y ∈ LatW.LW X, lin _ X.B.I.cm.sig X.B.I.J g (ratV (F := X.B.I.F) (Fv X.B.I.F p.1) y) ∈ M) →

@@ -94,22 +94,12 @@ theorem norm_le_one (ψ0 : AddChar k ℂ) (hc : Continuous ψ0) (x : k) : ‖ψ0
       simpa using (Subring.natCast_mem (𝒪[k]) m)
     have := hB _ hm
     rwa [show x * (m : k) = m • x by rw [nsmul_eq_mul, mul_comm], AddChar.map_nsmul_eq_pow, norm_pow] at this
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨m, hm⟩ := (tendsto_pow_atTop_atTop_of_one_lt h).eventually_gt_atTop B |>.exists
   exact absurd (hpow m) (not_le.mpr hm)
 
 theorem norm_eq_one (ψ0 : AddChar k ℂ) (hc : Continuous ψ0) (x : k) : ‖ψ0 x‖ = 1 := by
-  have h1 := norm_le_one ψ0 hc x
-  have h2 := norm_le_one ψ0 hc (-x)
-  have hm : ψ0 x * ψ0 (-x) = 1 := by
-    rw [← AddChar.map_add_eq_mul, add_neg_cancel, AddChar.map_zero_eq_one]
-  have hn : ‖ψ0 x‖ * ‖ψ0 (-x)‖ = 1 := by rw [← norm_mul, hm, norm_one]
-  by_contra hne
-  have hlt : ‖ψ0 x‖ < 1 := lt_of_le_of_ne h1 hne
-  have : ‖ψ0 x‖ * ‖ψ0 (-x)‖ < 1 :=
-    lt_of_le_of_lt (mul_le_of_le_one_right (norm_nonneg _) h2) hlt
-  linarith
+  exact GlobalTheory.norm_addChar_nonarch ψ0 hc x
 
 def toCircle (ψ0 : AddChar k ℂ) (h : ∀ x, ‖ψ0 x‖ = 1) : AddChar k Circle where
   toFun x := ⟨ψ0 x, mem_sphere_zero_iff_norm.2 (h x)⟩
@@ -136,8 +126,7 @@ theorem unitary_and_separates : ∀ {k : Type} [Field k] [ValuativeRel k] [Topol
   obtain ⟨c₀, hc₀⟩ := SplitWeil.exists_hasConductor_of_continuous ψ hψc hψ1
   have hx : a ∉ SplitWeil.cball (c₀ * c₀⁻¹) := by
     rw [mul_inv_cancel]
-    intro h
-    exact ha ((Valuation.mem_integer_iff _ _).mpr (by simpa [SplitWeil.cball] using h))
+    exact fun h => ha ((Valuation.mem_integer_iff _ _).mpr (by simpa [SplitWeil.cball] using h))
   obtain ⟨t, ht, hne⟩ := hc₀.exists_ne_one c₀ hx
   refine ⟨t, fun y hy => ?_, fun h => hne (Circle.ext (by simpa [ψ, toCircle_apply] using h))⟩
   have hy' : valuation k y ≤ 1 := hy
@@ -323,9 +312,9 @@ theorem _root_.GlobalTheory.T.norm_character_unit_eq_one_heisenberg : ∀ {k : T
       change ((GlobalTheory.HeisUnit.diagAt u i0).valᵀ * Y) i j ∈ 𝒪[k] ↔ Y i j ∈ 𝒪[k]
       rw [GlobalTheory.HeisUnit.diagAt_val, diagonal_transpose, diagonal_mul]
       by_cases hi : i = i0
-      · rw [if_pos hi]
+      · rw [ite_eq_left hi]
         simp only [Valuation.mem_integer_iff, map_mul, hu, one_mul]
-      · rw [if_neg hi, one_mul]
+      · rw [ite_eq_right hi, one_mul]
     let L : Set (Matrix (Fin n) (Fin d) k) := {Z | ∀ i j, Z i j ∈ 𝒪[k]}
     have hL : g.valᵀ * Y ∈ L ↔ Y ∈ L :=
       forall_congr' fun i => forall_congr' fun j => hEntry i j
@@ -740,14 +729,12 @@ theorem GlobalTheory.LinModelLocal.exists_omB_of_linBar : ∀ {F E : Type} [Fiel
     intro g φ hφ
     funext Y
     have := congrFun (hc g φ hφ) (g.valᵀ * Y)
-    simp only [key2, Pi.smul_apply, smul_eq_mul] at this
-    exact this
+    simpa only [key2, Pi.smul_apply, smul_eq_mul] using this
   have hvac := (hTr.geo.hM'.vac Bs.v₁)
   set φv := Γ.M'.vac Bs.v₁
   have hφv : φv ∈ GlobalTheory.WeilM.SB (Fin a' × Fin (a + a') → Fv F Bs.v₁) := hvac.1
   have hιv : ι₀ φv ≠ 0 := by
-    intro h0
-    exact hvac.2.1 (hbij0.injOn hφv (Submodule.zero_mem _) (by rw [h0, map_zero]))
+    exact fun h0 => hvac.2.1 (hbij0.injOn hφv (Submodule.zero_mem _) (by rw [h0, map_zero]))
   obtain ⟨Y₀, hY₀⟩ := Function.ne_iff.mp hιv
   have hmul : ∀ g g', c (g * g') = c g * c g' := by
     intro g g'

@@ -46,10 +46,8 @@ theorem holoWeak : HoloWeakStatement := by
         · simp [hzero x hx]
     · exact hint _ (hg'c w) (hzero' w)
     · exact hint _ hgs.continuous hzero
-    · intro x hx
-      exact ((hu x (hgΩ hx)).differentiableAt (hΩ.mem_nhds (hgΩ hx))).restrictScalars ℝ
-    · intro x _
-      exact hgd x
+    · exact fun x hx => ((hu x (hgΩ hx)).differentiableAt (hΩ.mem_nhds (hgΩ hx))).restrictScalars ℝ
+    · exact fun x _ => hgd x
   have hlin : ∀ x, fderiv ℝ u x (I • v) * g x = I * (fderiv ℝ u x v * g x) := by
     intro x
     by_cases hx : x ∈ tsupport g

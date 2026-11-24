@@ -203,8 +203,7 @@ theorem prime_dvd_card_residue (v : HeightOneSpectrum (𝓞 (NumberField.maximal
   have h1 : ringChar (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺)) = p :=
     (hp.eq_one_or_self_of_dvd _ (ringChar.dvd h0)).resolve_left CharP.ringChar_ne_one
   have h2 := ringChar.dvd (FiniteField.cast_card_eq_zero (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺)))
-  rw [h1, ← Nat.card_eq_fintype_card] at h2
-  exact h2
+  rwa [h1, ← Nat.card_eq_fintype_card] at h2
 
 end Main
 
@@ -275,7 +274,7 @@ theorem relIndex_coprime : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L
       · by_cases hij : i = j
         · subst hij
           rw [hdiag, map_one, map_one, h1]
-        · simp only [B, if_neg hji, if_neg hij]
+        · simp only [B, ite_eq_right hji, ite_eq_right hij]
           exact Function.surjInv_eq _ _
   refine Nat.Coprime.coprime_dvd_left (Subgroup.index_dvd_of_le hU) ?_
   rw [unip_index]
@@ -342,8 +341,7 @@ variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {V : Type}
 
 theorem eig_unique {F : GAf L n → V} (hF : F ≠ 0) {κ : GAf L n} {c d : ℂ} (h1 : Eig F κ c) (h2 : Eig F κ d) : c = d := by
   obtain ⟨g, hg⟩ : ∃ g, F g ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hF (funext h)
   have : c • F g = d • F g := by rw [← h1 g, ← h2 g]
   exact smul_left_injective ℂ hg this
@@ -447,8 +445,7 @@ theorem idx {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (s : Sp
   have hJH : ∀ κ, TrivOutside {s.v} κ → (κ ∈ J ↔ s.loc n κ ∈ H) := by
     intro κ hκT
     constructor
-    · intro hκJ
-      exact ⟨κ, ⟨hκJ, hκT⟩, rfl⟩
+    · exact fun hκJ => ⟨κ, ⟨hκJ, hκT⟩, rfl⟩
     · rintro ⟨κ', ⟨hκ'J, hκ'T⟩, he⟩
       have : κ' = κ := (hlift (s.loc n κ)).unique ⟨hκ'T, he⟩ ⟨hκT, rfl⟩
       exact this ▸ hκ'J
@@ -508,8 +505,7 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
       rw [Subgroup.mem_map_equiv, ← hθK, MulEquiv.apply_symm_apply]
     have h3 : ((J ⊓ K).map θ.toMonoidHom).relIndex K = J.relIndex K := by
       have e := Subgroup.relIndex_map_map_of_injective (f := θ.toMonoidHom) (J ⊓ K) K θ.injective
-      rw [hKθ, Subgroup.inf_relIndex_right] at e
-      exact e
+      rwa [hKθ, Subgroup.inf_relIndex_right] at e
     exact Nat.Coprime.coprime_dvd_left (h3 ▸ (h1.trans h2)) (idx s r p J hp hsp hrn hJ.mem)
   have hn : 2 ≤ n := le_trans h2r hrn
   let i0 : Fin n := ⟨0, by omega⟩
@@ -544,7 +540,7 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
         rintro ⟨rfl, -⟩
         simp [i0] at ha
         omega
-      rw [hent, if_neg h1, if_neg h2, add_zero, map_zero]
+      rw [hent, ite_eq_right h1, ite_eq_right h2, add_zero, map_zero]
       exact zero_lt_one
     · have h1 : a ≠ b := by
         rintro rfl
@@ -552,13 +548,13 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
       have h2 : ¬(a = i0 ∧ b = i1) := by
         rintro ⟨rfl, -⟩
         simp [i0] at hba
-      rw [hent, if_neg h1, if_neg h2, add_zero, map_zero]
+      rw [hent, ite_eq_right h1, ite_eq_right h2, add_zero, map_zero]
       exact zero_lt_one
     · subst hab
       have h2 : ¬(a = i0 ∧ a = i1) := by
         rintro ⟨h3, h4⟩
         exact hne (h3.symm.trans h4)
-      rw [hent, if_pos rfl, if_neg h2, add_zero, sub_self, map_zero]
+      rw [hent, ite_eq_left rfl, ite_eq_right h2, add_zero, sub_self, map_zero]
       exact zero_lt_one
   have hdet : NG.detDD s r (s.loc n x) = 1 := by
     unfold NG.detDD
@@ -572,27 +568,25 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
         rw [h3] at this
         simp [i0] at this
         omega
-      rw [Matrix.of_apply, hent, if_neg h2, add_zero, Matrix.one_apply]
+      rw [Matrix.of_apply, hent, ite_eq_right h2, add_zero, Matrix.one_apply]
       simp only [Subtype.ext_iff]
     rw [this, Matrix.det_one]
   have hsup : NG.supDiag s r (s.loc n x) = y := by
     unfold NG.supDiag
     rw [Finset.sum_eq_single i0, Finset.sum_eq_single i1]
-    · rw [if_pos ⟨rfl, by simp [i1]; omega⟩, hent, if_neg hne, if_pos ⟨rfl, rfl⟩, zero_add]
+    · rw [ite_eq_left ⟨rfl, by simp [i1]; omega⟩, hent, ite_eq_right hne, ite_eq_left ⟨rfl, rfl⟩, zero_add]
     · intro b _ hb
       split_ifs with h
-      · rw [hent, if_neg (fun h' => by simp [i0, Fin.ext_iff] at h'; omega), if_neg (fun h' => hb h'.2), add_zero]
+      · rw [hent, ite_eq_right (fun h' => by simp [i0, Fin.ext_iff] at h'; omega), ite_eq_right (fun h' => hb h'.2), add_zero]
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
     · intro a _ ha
       apply Finset.sum_eq_zero
       intro b _
       split_ifs with h
-      · rw [hent, if_neg (fun h' => by simp [Fin.ext_iff] at h'; omega), if_neg (fun h' => ha h'.1), add_zero]
+      · rw [hent, ite_eq_right (fun h' => by simp [Fin.ext_iff] at h'; omega), ite_eq_right (fun h' => ha h'.1), add_zero]
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hxJ : x ∈ J := (hJ.mem x hxT).2 hUni
   have hxJ' : x ∈ J' := (hJ'.mem x hxT).2 hUni
   have hχx : ((χ ⟨x, hxJ⟩ : ℂˣ) : ℂ) = ψ₀ y := by

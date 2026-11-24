@@ -351,8 +351,7 @@ theorem unip_pi_iff {ι S : Type} [Fintype ι] [DecidableEq ι] [CommRing S] {n 
         ext j l; rfl
       have h2 : ((M * E).map (Pi.evalRingHom (fun _ => S) i)) k l
           = ((E + E * Matrix.of fun j l i => T i j l).map (Pi.evalRingHom (fun _ => S) i)) k l := by
-        rw [Matrix.map_mul, Matrix.map_add _ (map_add _), Matrix.map_mul, hT']
-        exact h1
+        rwa [Matrix.map_mul, Matrix.map_add _ (map_add _), Matrix.map_mul, hT']
       simpa using h2
     · have hyi : ∀ i, K.map (Pi.evalRingHom (fun _ => S) i) *ᵥ (fun k => y k i) = 0 := by
         intro i
@@ -627,7 +626,7 @@ theorem linearIndependent_eX_of_dual {D : D7} (X : HidaSetting D) : LinearIndepe
   have h1 := congrArg (fun y => (VS D).hT y (X.fY b)) hg
 
   simp only [map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, X.ef, map_zero,
-  LinearMap.zero_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
+  LinearMap.zero_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h1
   simpa using h1
 
 theorem eM_transpose_linearIndependent : ∀ {D : D7} (X : HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D) (t lam : D.host.E), t ≠ 0 → lam ≠ 0 → LinearIndependent D.host.E (GlobalTheory.Core.SBesEx.eM X h t lam).transpose := by
@@ -644,8 +643,7 @@ theorem eM_transpose_linearIndependent : ∀ {D : D7} (X : HidaSetting D) (h : X
       (fun a => Units.mk0 (scl t lam a) (hs a)) • fun a => b.equivFun (X.eX a) := by
     funext a k
     simp [eM, hc, Matrix.transpose_apply, Units.smul_def]
-  rw [he]
-  exact h1
+  rwa [he]
 
 end GlobalTheory.Core.SBesEx
 
@@ -719,8 +717,7 @@ theorem castGA_self {I : Formalism.MainNotions.S.AutInst} (e : I = I) (x : I.GA)
 theorem thetaV_incA (v : InfinitePlace (Formalism.L2.SG.InstExistsPf.instOf D).F) (y : D.host.E) :
     thetaV (Formalism.L2.SG.InstExistsPf.instOf D) v (incA D y) = (Formalism.L2.SG.InstExistsPf.instOf D).φ v y := by
   have := thetaV_tmul (Formalism.L2.SG.InstExistsPf.instOf D) v 1 y
-  rw [map_one, one_mul] at this
-  exact this
+  rwa [map_one, one_mul] at this
 
 theorem tauF_incA (y : D.host.E) :
     tauF (Formalism.L2.SG.InstExistsPf.instOf D) (incA D y) = Formalism.UG.inclE (F := D.host.F) (Formalism.MainNotions.S.Af D.host.F) y := by

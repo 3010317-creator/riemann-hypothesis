@@ -107,10 +107,8 @@ theorem tame_eq {ξ : kˣ →* ℂˣ} (hξ : IsTame ξ) {a b : kˣ} (hb : valuat
     apply hξ
     have e : ((a * b⁻¹ : kˣ) : k) - 1 = ((a : k) - b) * (b : k)⁻¹ := by
       rw [Units.val_mul, Units.val_inv_eq_inv_val]; field_simp
-    rw [e, map_mul, map_inv₀, hb, inv_one, mul_one]
-    exact h
-  rw [map_mul, map_inv, mul_inv_eq_one] at h1
-  exact h1
+    rwa [e, map_mul, map_inv₀, hb, inv_one, mul_one]
+  rwa [map_mul, map_inv, mul_inv_eq_one] at h1
 
 variable [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -201,8 +199,7 @@ theorem om_datum : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
       exact det_cong hj
     have t2 : ξ (Units.mk0 _ hs.det_ne) = ξ (Units.mk0 _ hx.det_ne * u) := by
       refine tame_eq hξ (by rw [Units.val_mul, map_mul, Units.val_mk0, hx.2.1, one_mul]; exact h11) ?_
-      rw [Units.val_mul, Units.val_mk0, Units.val_mk0]
-      exact hc
+      rwa [Units.val_mul, Units.val_mk0, Units.val_mk0]
     rw [dite_eq_left hs, dite_eq_left hx, t1, t2, map_mul, map_mul]
     simp only [Units.val_mul, _root_.mul_inv_rev, Units.val_inv_eq_inv_val]
     have a1 : (ξ u : ℂ) ≠ 0 := Units.ne_zero _

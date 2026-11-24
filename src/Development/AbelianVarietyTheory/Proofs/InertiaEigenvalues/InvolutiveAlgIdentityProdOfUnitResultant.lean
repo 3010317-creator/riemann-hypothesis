@@ -133,8 +133,7 @@ theorem stabLat_prod (L₁ : Submodule O A₁) (L₂ : Submodule O A₂) (t : (A
     (∀ y, y ∈ L₁ ↔ (t : A₁ × A₂).1 * y ∈ L₁) ∧ (∀ y, y ∈ L₂ ↔ (t : A₁ × A₂).2 * y ∈ L₂)
   simp only [Submodule.mem_prod, Prod.fst_mul, Prod.snd_mul]
   constructor
-  · intro h
-    exact ⟨fun y => by simpa using h (y, 0), fun y => by simpa using h (0, y)⟩
+  · exact fun h => ⟨fun y => by simpa using h (y, 0), fun y => by simpa using h (0, y)⟩
   · rintro ⟨h1, h2⟩ y
     rw [← h1, ← h2]
 

@@ -273,7 +273,7 @@ theorem subst_add_sqZero {σ τ S : Type} [Fintype σ] [CommRing S]
         intro i
         by_cases h : i = s
         · subst h; simp
-        · rw [if_neg h, pderiv_X_of_ne]
+        · rw [ite_eq_right h, pderiv_X_of_ne]
           intro h'
           exact h h'.symm
       have hterm : ∀ i : σ, b i * subst a (pderiv i ((MvPolynomial.toMvPowerSeries p) * X s)) =
@@ -286,7 +286,7 @@ theorem subst_add_sqZero {σ τ S : Type} [Fintype σ] [CommRing S]
         · rw [hs1]; ring
         · rw [hs0]; ring
       rw [Finset.sum_congr rfl (fun i _ => hterm i), Finset.sum_add_distrib, Finset.sum_ite_eq',
-        if_pos (Finset.mem_univ _), ← Finset.mul_sum]
+        ite_eq_left (Finset.mem_univ _), ← Finset.mul_sum]
       linear_combination (b s * ∑ i, b i * subst a (pderiv i (MvPolynomial.toMvPowerSeries p))) * he
   have := (MvPowerSeries.WithPiTopology.denseRange_toMvPowerSeries).equalizer hcb c2 (funext fun p => hpoly p)
   exact congrFun this g
@@ -468,12 +468,7 @@ theorem hasSubst_tanPair (d : ℕ) (v : Fin d → R) : HasSubst (tanPair d v) :=
   · simpa [tanPair] using inr_nilpotent (v i)
 
 theorem ev_pt_pt {d : ℕ} (g : PS R 2 d) : ev (n := 2) ![pt R d 0, pt R d 1] g = g := by
-  have : (fun p : Fin 2 × Fin d => (![pt R d 0, pt R d 1] : Fin 2 → Pt R 2 d) p.1 p.2) = X := by
-    funext p
-    obtain ⟨j, i⟩ := p
-    fin_cases j <;> rfl
-  unfold ev
-  rw [this, subst_self, id]
+  exact GlobalTheory.ChartBaseChange.eval_standard_points_two g
 
 theorem subst_tanPair_fst {d : ℕ} (v : Fin d → R) (f : PS R 1 d) :
     subst (tanPair d v) (ev (n := 2) ![pt R d 0] f) = MvPowerSeries.map (algebraMap R (DualNumber R)) f := by

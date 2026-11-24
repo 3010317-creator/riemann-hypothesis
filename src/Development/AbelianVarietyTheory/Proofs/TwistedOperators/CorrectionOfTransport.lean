@@ -106,8 +106,7 @@ theorem exists_finE (V : HSp D) (g : GL (Fin V.rank) (EAf D)) (hg : g ∈ UA D.s
   refine ⟨⟨k, (h1 k).2 ⟨k1 ▸ one_mem _, k2 ▸ b.2⟩⟩, k1, ?_⟩
   have e := congrArg Subtype.val hb
   have e2 := GlobalTheory.Mass.coe_swapPts (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) D.sp.cm.sig V.gram b
-  refine Eq.trans ?_ (e2.symm.trans e)
-  exact congrArg (Formalism.UG.bc (Formalism.IndefR.Lev.swapAE D)) k2
+  exact Eq.trans (congrArg (Formalism.UG.bc (Formalism.IndefR.Lev.swapAE D)) k2) (e2.symm.trans e)
 
 theorem mA_mul (X Y Z : HSp D) (f : X.V →ₗ[D.host.E] Y.V) (g : Y.V →ₗ[D.host.E] Z.V) :
     mA Z Y g * mA Y X f = mA Z X (g.comp f) := by
@@ -121,8 +120,8 @@ theorem vA_frame (X : HSp D) (i : Fin X.rank) : vA X (X.frame i) = Pi.single i 1
   have : Formalism.L2.Herm.crd X (X.frame i) j = X.frame.repr (X.frame i) j := rfl
   rw [vA, this, Module.Basis.repr_self, Finsupp.single_apply, Pi.single_apply]
   by_cases h : i = j
-  · rw [if_pos h, if_pos h.symm, RingHom.map_one]
-  · rw [if_neg h, if_neg (Ne.symm h), RingHom.map_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm, RingHom.map_one]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), RingHom.map_zero]
 
 theorem gram_mA (Y Y' : HSp D) (f : Y.V →ₗ[D.host.E] Y'.V) (hf : HSpace.IsIsomEmb Y Y' f) :
     HMul.hMul (HMul.hMul (cT (cjA D) (mA Y' Y f)) (Y'.gram.map (inc D))) (mA Y' Y f) = Y.gram.map (inc D) := by
@@ -140,7 +139,6 @@ theorem correction_of_transport : ∀ D : D7, TransportSt D → CorrectionSt D :
     (gram_of_form _ _ _ _ fun i j => (hx.1.2 _ _).trans (hform_single _ _ i j)) (gram_mA Y Y' _ hio)
   obtain ⟨k, hk, e⟩ := exists_finE Y' g hg
   refine ⟨k, hk, ?_⟩
-  rw [e, hgx]
-  exact hx
+  rwa [e, hgx]
 
 end GlobalTheory.AdIsomCorrection

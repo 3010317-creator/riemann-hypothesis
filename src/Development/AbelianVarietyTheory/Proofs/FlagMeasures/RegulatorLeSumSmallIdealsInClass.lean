@@ -149,7 +149,7 @@ theorem volume_pos_simplex_le (ι : Type) [Fintype ι] [Nonempty ι] (L : ℝ) (
   have hf : ∀ e i, MeasurePreserving (f e i) volume volume := by
     intro e i
     by_cases h : e i
-    · simp only [f, h, if_true]
+    · simp only [f, h, ite_true]
       exact MeasurePreserving.id (volume : Measure ℝ)
     · simpa [f, h] using Measure.measurePreserving_neg (volume : Measure ℝ)
   let R : (ι → Bool) → (ι → ℝ) → (ι → ℝ) := fun e x i => f e i (x i)
@@ -194,8 +194,7 @@ theorem volume_simplex_le (ι : Type) [Fintype ι] (a : ι → ℝ) (L : ℝ) (h
       by_cases h : ∃ i, t i = a i
       · exact Or.inr (Set.mem_iUnion.2 h)
       · push Not at h
-        refine Or.inl ⟨fun i => ?_, ht.2⟩
-        exact sub_pos.2 (lt_of_le_of_ne (ht.1 i) (h i).symm)
+        exact Or.inl ⟨fun i => (sub_pos.2 (lt_of_le_of_ne (ht.1 i) (h i).symm)), ht.2⟩
     have hnull : volume (⋃ i, {t : ι → ℝ | t i = a i}) = 0 :=
       measure_iUnion_null fun i => Measure.pi_hyperplane (fun _ : ι => (volume : Measure ℝ)) i (a i)
     refine le_trans (measure_mono hsub) (le_trans (measure_union_le _ _) ?_)
@@ -274,8 +273,7 @@ theorem exists_mem_box (K : Type) [Field K] [NumberField K] [_root_.NumberField.
   obtain ⟨a, ha, hne, hlt⟩ := exists_ne_zero_mem_ideal_lt K J h
   rw [Units.val_mk0, FractionalIdeal.mem_coeIdeal] at ha
   obtain ⟨x, hx, rfl⟩ := ha
-  refine ⟨x, hx, fun h0 => hne (by rw [h0, map_zero]), fun w => ?_⟩
-  exact hlt w
+  exact ⟨x, hx, fun h0 => hne (by rw [h0, map_zero]), fun w => (hlt w)⟩
 
 theorem sum_mult_log (K : Type) [Field K] [NumberField K] (a : 𝓞 K) (ha : a ≠ 0) :
     ∑ w : InfinitePlace K, (w.mult : ℝ) * Real.log (w (a : K)) =
@@ -326,7 +324,7 @@ theorem regulator_le_sum_class : ∀ (K : Type) [Field K] [NumberField K], IsTot
     intro t
     let b : InfinitePlace K → ℝ := fun w =>
       if h : w = w₀ then Real.log ((Ideal.absNorm J : ℝ) * Y) - ∑ i, t i else t ⟨w, h⟩
-    have hb : ∀ i : {w : InfinitePlace K // w ≠ w₀}, b i.1 = t i := fun i => dif_neg i.2
+    have hb : ∀ i : {w : InfinitePlace K // w ≠ w₀}, b i.1 = t i := fun i => dite_eq_right i.2
     have hbsum : ∑ w, b w = Real.log ((Ideal.absNorm J : ℝ) * Y) := by
       rw [Fintype.sum_eq_add_sum_subtype_ne _ w₀]
       simp only [hb]
@@ -391,8 +389,7 @@ theorem regulator_le_sum_class : ∀ (K : Type) [Field K] [NumberField K], IsTot
       (Real.log (Y / Ideal.absNorm I) ^ Units.rank K / ((Units.rank K).factorial : ℝ)) := by
     refine Finset.sum_le_sum fun I hI => ?_
     have := GlobalTheory.SimplexVolume.volume_simplex_le _ (a I) _ (hL I hI)
-    rw [hcard] at this
-    exact this
+    rwa [hcard] at this
   have hnn : ∀ I ∈ S, 0 ≤
       Real.log (Y / Ideal.absNorm I) ^ Units.rank K / ((Units.rank K).factorial : ℝ) :=
     fun I hI => div_nonneg (pow_nonneg (hL I hI) _) (Nat.cast_nonneg _)

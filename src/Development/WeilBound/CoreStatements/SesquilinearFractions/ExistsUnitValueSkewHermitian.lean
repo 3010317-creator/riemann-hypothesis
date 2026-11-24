@@ -100,17 +100,13 @@ theorem local_exists [Nonempty I] (G : Matrix I I R) (hG : Gᴴ = -G) (hdet : Is
     (hm : ∃ a : R, a - star a ∉ m) : ∃ x : I → R, hf G x x ∉ m := by
   obtain ⟨a, ha⟩ := hm
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   obtain ⟨k⟩ := ‹Nonempty I›
   set e : I → R := Pi.single k 1 with he
   set v : I → R := e ᵥ* G⁻¹ with hv
   have hse : star e = e := by
     ext i
-    simp only [he, Pi.star_apply]
-    by_cases h : i = k
-    · subst h
-      simp
-    · simp [h]
+    by_cases h : i = k <;> simp [he, h]
   have hvG : v ᵥ* G = e := by
     rw [hv, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul _ hdet, Matrix.vecMul_one]
   have hve : hf G v e = 1 := by
@@ -118,18 +114,12 @@ theorem local_exists [Nonempty I] (G : Matrix I I R) (hG : Gᴴ = -G) (hdet : Is
     simp
   have hxy : hf G (a • v) e = a := by rw [hf_smul_left, hve, mul_one]
   have hyx : hf G e (a • v) = -star a := by rw [hf_skew G hG, hxy]
-  have key : hf G (a • v + e) (a • v + e) = hf G (a • v) (a • v) + a + -star a + hf G e e := by
+  have key : a - star a = hf G (a • v + e) (a • v + e) - hf G (a • v) (a • v) - hf G e e := by
     rw [hf_add_left, hf_add_right, hf_add_right, hxy, hyx]
     ring
   apply ha
-  have h1 := hcon (a • v + e)
-  have h2 := hcon (a • v)
-  have h3 := hcon e
-  have : a - star a = hf G (a • v + e) (a • v + e) - hf G (a • v) (a • v) - hf G e e := by
-    rw [key]
-    ring
-  rw [this]
-  exact m.sub_mem (m.sub_mem h1 h2) h3
+  rw [key]
+  exact m.sub_mem (m.sub_mem (hcon _) (hcon _)) (hcon _)
 
 def starI (m : Ideal R) : Ideal R := m.comap (starRingEnd R)
 
@@ -282,7 +272,7 @@ theorem unimod {I : Type} [Fintype I] [DecidableEq I] (G : Matrix I I R) (x : I 
     ∀ M : Ideal R, M.IsMaximal → ∃ i, x i ∉ M := by
   intro M hM
   by_contra h
-  push_neg at h
+  push Not at h
   have hmem : hf G x x ∈ M := by
     rw [hf_expand]
     exact Ideal.sum_mem _ fun i _ => Ideal.sum_mem _ fun j _ => M.mul_mem_right _ (M.mul_mem_right _ (h i))
@@ -329,13 +319,13 @@ theorem unitCoord [Finite (MaximalSpectrum R)] {n : ℕ} (x : Fin (n + 1) → R)
       by_cases hi : i = 0
       · subst hi
         by_cases h0 : (0 : Fin (n + 1)) = k P
-        · rw [if_pos h0]
+        · rw [ite_eq_left h0]
           simp [c']
-        · rw [if_neg h0]
+        · rw [ite_eq_right h0]
           simpa [c'] using hk0 P (Ne.symm h0)
       · have h : x i * (c i - if i = k P then 1 else 0) ∈ M := Ideal.mul_mem_left _ (x i) (hc i P)
         have he : x i * c' i - (if i = k P then x i else 0) = x i * (c i - if i = k P then 1 else 0) := by
-          simp only [c', if_neg hi]
+          simp only [c', ite_eq_right hi]
           split_ifs <;> ring
         rw [he]
         exact h
@@ -507,7 +497,7 @@ theorem PositivityTheory.Xgf.skew_hermitian_diagonalizable : ∀ (R : Type) [Com
 theorem PositivityTheory.Xgf.exists_not_mem_sub_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (bar : 𝓞 E ≃+* 𝓞 E), (∀ a : 𝓞 E, ((bar a : 𝓞 E) : E) = IsCMField.complexConj E (a : E)) → Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) → ∀ m : Ideal (𝓞 E), m.IsMaximal → ∃ a : 𝓞 E, a - bar a ∉ m := by
   intro E _ _ _ bar hbar hunr m hm
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have hfix : ∀ r : 𝓞 (maximalRealSubfield E),
       bar (algebraMap _ (𝓞 E) r) = algebraMap _ (𝓞 E) r := by
     intro r
@@ -565,7 +555,7 @@ end PositivityTheory.Xgf.LocGen
 private theorem norm_le_one_lemma (p : Nat.Primes) (y : ℂ_[(p : ℕ)]) (f : Polynomial ℤ) (hmon : f.Monic)
     (hf : f.eval₂ (Int.castRingHom ℂ_[(p : ℕ)]) y = 0) : ‖y‖ ≤ 1 := by
   by_contra hlt
-  push_neg at hlt
+  push Not at hlt
   rw [hmon.as_sum] at hf
   simp only [Polynomial.eval₂_add, Polynomial.eval₂_pow, Polynomial.eval₂_X, Polynomial.eval₂_finsetSum,
     Polynomial.eval₂_mul, Polynomial.eval₂_C, Int.coe_castRingHom] at hf

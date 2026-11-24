@@ -104,8 +104,7 @@ theorem ckExt_proof : CkExt := by
   have hVo : ∀ i, IsOpen (V i) := fun i => (hUo i.1 i.2).inter Metric.isOpen_ball
   have hs : IsClosed (tsupport F ∩ B.GV k r) := (isClosed_tsupport F).inter B5.GV_closed
   have hcov : tsupport F ∩ B.GV k r ⊆ ⋃ i, V i := by
-    intro x hx
-    exact Set.mem_iUnion.2 ⟨⟨x, hx.2⟩, hmem x hx.2, hR hx.1⟩
+    exact fun x hx => Set.mem_iUnion.2 ⟨⟨x, hx.2⟩, hmem x hx.2, hR hx.1⟩
   obtain ⟨ρ, hρ⟩ := @SmoothPartitionOfUnity.exists_isSubordinate _ (B.Mat k r) _ _ (B.Mat k r) _
     (modelWithCornersSelf ℝ (B.Mat k r)) (B.Mat k r) _ (chartedSpaceSelf _) _ _ _ _ _ hs V hVo hcov
   refine ⟨fun x => ∑ᶠ i, ρ i x • f' i.1 i.2 x, ?_, ?_, ?_⟩
@@ -160,7 +159,7 @@ private theorem mMap_mem_GV_of_isUnit_det_of_mem_GV {k j ρ : ℕ} (Z : Matrix (
     rw [Finset.sum_eq_single b.rev]
     · simp [Fin.rev_rev, Fin.rev_inj, eq_comm]
     · intro c _ hc
-      rw [if_neg (fun h => hc ((hr c b).2 h))]
+      rw [ite_eq_right (fun h => hc ((hr c b).2 h))]
       simp
     · simp
   have hwh : (G.wMat j).conjTranspose = G.wMat j := by
@@ -659,8 +658,7 @@ theorem rc_bd (x : U.RC k 1 ρ) {M : ℝ} (hM : 0 ≤ M) (hc : ∀ v, ‖cy x v�
     refine (pi_norm_le_iff_of_nonneg hM).2 fun i => ?_
     have hi : i = 0 := Subsingleton.elim _ _
     subst hi
-    rw [Real.norm_eq_abs]
-    exact hd
+    rwa [Real.norm_eq_abs]
   rw [Prod.norm_def, Prod.norm_def]
   exact max_le h1 (max_le h2 h3)
 
@@ -771,7 +769,7 @@ theorem rad_main (t : ℂ) (γ : B.Mat k ρ) (x x' : U.RC k 1 ρ) {R δ : ℝ} (
         linarith
   · intro i j
     have h := eV i (U.eB k 1 ρ (Sum.inl (Sum.inr j)))
-    simp only [rn_VV, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    simp only [rn_VV, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
     rw [← h]
     calc _ ≤ ‖P (U.eB k 1 ρ (Sum.inl (Sum.inr i))) (U.eB k 1 ρ (Sum.inl (Sum.inr j)))‖ +
           ‖cy x i * P (U.eB k 1 ρ (Sum.inr 0)) (U.eB k 1 ρ (Sum.inl (Sum.inr j)))‖ := norm_add_le _ _
@@ -932,9 +930,8 @@ theorem point_smooth : PtSmooth := by
       unfold ell
       refine ContDiff.sum fun a _ => ?_
       by_cases h : a.val + 1 < m
-      · simp only [dif_pos h]
-        exact hE _ _
-      · simp only [dif_neg h, Matrix.mulVec, dotProduct]
+      · simpa only [dite_eq_left h] using hE _ _
+      · simp only [dite_eq_right h, Matrix.mulVec, dotProduct]
         exact ContDiff.sum fun b _ => (hE _ _).mul contDiff_const
     unfold psi
     have hre : ContDiff ℝ ∞ (fun x : U.RC k 1 ρ => (((cStd * ell k m z (rn1 e x)).re : ℝ) : ℂ)) :=

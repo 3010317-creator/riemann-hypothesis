@@ -225,8 +225,7 @@ private theorem inflW_desc [CompactSpace Γ'] [T2Space Γ] (hp : Continuous p) (
   have hb : ∀ g, x.1.2 (Function.surjInv hs (p g)) = x.1.2 g := fun g => by
     have h1 : p (g⁻¹ * Function.surjInv hs (p g)) = 1 := by simp [Function.surjInv_eq hs]
     have := (inflW_mul p ρ x _ h1 g).2
-    rw [mul_inv_cancel_left, (hN h1).2, map_zero, add_zero] at this
-    exact this
+    rwa [mul_inv_cancel_left, (hN h1).2, map_zero, add_zero] at this
   refine ⟨fun γ => x.1.2 (Function.surjInv hs γ), ?_, hb⟩
   rw [(hp.isClosedMap.isQuotientMap hp hs).continuous_iff]
   exact x.2.1.congr fun g => (hb g).symm
@@ -441,9 +440,9 @@ theorem UpperTheory.V.GC.H2_galois_quotient_eq :
       A = fun v : S => A' v.1 := by
     refine ⟨fun v => if hv : v ∈ S then A ⟨v, hv⟩ else (exists_isPlaceOver Ω v).choose, fun v => ?_, funext fun v => ?_⟩
     · by_cases hv : v ∈ S
-      · simpa only [dif_pos hv] using hA ⟨v, hv⟩
-      · simpa only [dif_neg hv] using (exists_isPlaceOver Ω v).choose_spec
-    · simp only [dif_pos v.2]
+      · simpa only [dite_eq_left hv] using hA ⟨v, hv⟩
+      · simpa only [dite_eq_right hv] using (exists_isPlaceOver Ω v).choose_spec
+    · simp only [dite_eq_left v.2]
   obtain ⟨S', p, hSS, hp, hps, rfl, hker⟩ := levelS F Ω l S K Γ π h
   haveI hcl := isClosed_NS Ω (S' : Set (HeightOneSpectrum (𝓞 F)))
   haveI : TotallyDisconnectedSpace (GS Ω (S' : Set (HeightOneSpectrum (𝓞 F)))) :=
@@ -455,8 +454,7 @@ theorem UpperTheory.V.GC.H2_galois_quotient_eq :
     have : g ∈ (p.comp (toGS Ω _)).ker := by
       rw [h.ker]
       refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-      simp only [Set.mem_iUnion]
-      exact ⟨q, hq, A' q, hA' q, hg⟩
+      simpa only [Set.mem_iUnion] using ⟨q, hq, A' q, hA' q, hg⟩
     exact this
   let n : HeightOneSpectrum (𝓞 F) → ℕ := fun v =>
     finrank k (H2 ((ρ.comp p).comp (locHom (S' : Set (HeightOneSpectrum (𝓞 F))) (A' v))))

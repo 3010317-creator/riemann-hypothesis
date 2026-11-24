@@ -240,8 +240,7 @@ theorem split_pull (C : Charts H'.left) [IsAffineHom e.hom.left] {d : ℕ} {c : 
     exact MorphismProperty.of_isPullback (P := @GeometricallyConnected)
       (IsPullback.of_horiz_isIso (fst := e.hom.left) (g := 𝟙 S) ⟨(Category.comp_id _).symm⟩) hc
   · have := hi.stable a Y t (g ≫ e.hom) k
-    rw [← mul_comp_hom] at this
-    exact this
+    rwa [← mul_comp_hom] at this
   · obtain ⟨a, j, hj, hx⟩ := hi.bpf k (e.hom.left x)
     exact ⟨a, j, hj, (Scheme.preimage_basicOpen e.hom.left _).le hx⟩
   · obtain ⟨u, rfl⟩ := (ConcreteCategory.bijective_of_isIso (e.hom.left.app (C.W a))).2 u
@@ -380,7 +379,7 @@ theorem exists_adapted [hA : ArithBase o Ω] (hB : BaseFacts S M U₀ EE) (Q : C
       rfl
     rw [e1, Matrix.mulVec_mulVec]
     congr 1
-    exact (map_mul (algebraMap o Ω).mapMatrix _ _).symm.trans (congrArg _ ((hmul _ _).trans (if_pos rfl)))
+    exact (map_mul (algebraMap o Ω).mapMatrix _ _).symm.trans (congrArg _ ((hmul _ _).trans (ite_eq_left rfl)))
 
 end Base
 
@@ -475,7 +474,7 @@ theorem mem_G_iff [hA : ArithBase o Ω] (hB : BaseFacts S M U₀ EE) (Q : Clos �
         rw [hj] at h0
         rw [h0]
         exact Submodule.subset_span ⟨j, hj, rfl⟩
-      · rw [← hwt j, Matrix.mulVec_mulVec, hP, ← Matrix.map_mul, hmul, if_neg (Ne.symm hj), Matrix.map_zero _ (map_zero _),
+      · rw [← hwt j, Matrix.mulVec_mulVec, hP, ← Matrix.map_mul, hmul, ite_eq_right (Ne.symm hj), Matrix.map_zero _ (map_zero _),
           Matrix.zero_mulVec]
         exact Submodule.zero_mem _
 
@@ -560,7 +559,7 @@ theorem exists_matrix [hA : ArithBase o Ω] (hB : BaseFacts S M U₀ EE) (Q : Cl
       exact congrArg (· * _) (RatModel.val_gPt rfl ((a * g) i j)).symm
     refine eq_of_ne_zero (fun c => (S.proj _ c).map (y₀.comp (algebraMap o S.R))) (fun c c' h => ?_) _ hb
       (fun j => t.l.wt (t.cls j)) t.wt ((n.map (ZH.OO p).subtype) i) (wt i) ?_ (j := j) fun h0 => hij ?_
-    · rw [← Matrix.map_mul, hmul, if_neg h, Matrix.map_zero _ (map_zero _)]
+    · rw [← Matrix.map_mul, hmul, ite_eq_right h, Matrix.map_zero _ (map_zero _)]
     · rw [e2]
       funext k
       refine Eq.trans ?_ (congrArg (M.val (ZH.gPt p ≫ y)) (congrFun (hwt i) k))
@@ -692,16 +691,7 @@ theorem exists_hom {V C : Type} [CommRing V] [IsDomain V] [Field C] (g : V →+*
       (CommRingCat.ofHom (algebraMap V (FractionRing V))) (CommRingCat.ofHom (IsFractionRing.lift hg)))
 
 theorem cl_of_test {C : Core} {p : ℕ} [Fact p.Prime] {y : Sp (ZJ.OO p) ⟶ C.Z} (τ : C.Test y) : C.Cl y := by
-  obtain ⟨φ, hφ⟩ := exists_hom ((ZJ.OO p).subtype.comp τ.j) (Subtype.val_injective.comp τ.j_inj)
-  have e₀ : ZJ.gPt p ≫ spMap τ.j = spMap φ ≫ jK τ.V := by
-    rw [← hφ, ← Spec.map_comp]
-    rfl
-  have e : ZJ.gPt p ≫ y = (spMap φ ≫ τ.yK) ≫ C.U.ι := by
-    rw [Category.assoc, τ.yK_fac, ← reassoc_of% e₀, τ.fac]
-  unfold Core.Cl
-  rw [e]
-  rintro _ ⟨a, rfl⟩
-  exact ((spMap φ ≫ τ.yK) a).2
+  exact GlobalTheory.ZJ.Core.Test.cl τ
 
 end Main
 
@@ -1011,8 +1001,7 @@ theorem isRatio_app {s t : Φ.N₀.Sec} {s' t' : (Φ.H 1).Sec}
   intro l
   have := congrArg (Φ.D.q.left.app _).hom (hr l)
   rw [map_mul, ← WtPart.rapp, ← WtPart.rapp, ← WtPart.rapp] at this
-  rw [hs, ht]
-  exact this
+  rwa [hs, ht]
 
 theorem gen {I : Type} {s : I → Φ.N₀.Sec} (hs : ImmBy Φ.E.B.hom Φ.N₀ s Set.univ) {s' : I → (Φ.H 1).Sec}
     (hf : ∀ i l, (s' i).f l = (Φ.D.q.left.app (Φ.N₀.U l)).hom ((s i).f l)) (a : I)

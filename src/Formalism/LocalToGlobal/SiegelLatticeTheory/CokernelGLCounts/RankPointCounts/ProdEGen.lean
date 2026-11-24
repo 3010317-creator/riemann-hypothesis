@@ -51,9 +51,8 @@ theorem relIndex_glob (A C : ∀ i, Subgroup (H i)) (S : Finset ι) (hS : ∀ i 
       intro i
       by_cases hi : i ∈ S
       · have h1 := hg1 i hi
-        simp only [dif_pos hi] at h1
-        have h2 := (A i).mul_mem (r ⟨i, hi⟩).2 (Subgroup.mem_inf.1 h1).1
-        simpa using h2
+        simp only [dite_eq_left hi] at h1
+        simpa using (A i).mul_mem (r ⟨i, hi⟩).2 (Subgroup.mem_inf.1 h1).1
       · exact hg2 i hi
     refine ⟨⟨g, hgA⟩, ?_⟩
     funext i
@@ -61,7 +60,7 @@ theorem relIndex_glob (A C : ∀ i, Subgroup (H i)) (S : Finset ι) (hS : ∀ i 
     simp only [Φ]
     rw [QuotientGroup.eq, Subgroup.mem_subgroupOf]
     have h1 := hg1 i.1 i.2
-    simp only [dif_pos i.2] at h1
+    simp only [dite_eq_left i.2] at h1
     simpa using (C i).inv_mem (Subgroup.mem_inf.1 h1).2
   let Ψ : ↥(glob π A) ⧸ K → ∀ i : S, ↥(A (i : ι)) ⧸ (C (i : ι)).subgroupOf (A (i : ι)) :=
     Quotient.lift Φ (fun a b hab => (hrel a b).2 (QuotientGroup.leftRel_apply.1 hab))
@@ -76,8 +75,7 @@ theorem relIndex_glob (A C : ∀ i, Subgroup (H i)) (S : Finset ι) (hS : ∀ i 
       exact ⟨QuotientGroup.mk a, ha⟩
   have hcard := Nat.card_congr (Equiv.ofBijective Ψ hbij)
   rw [Nat.card_pi] at hcard
-  rw [← Finset.prod_coe_sort S]
-  exact hcard
+  rwa [← Finset.prod_coe_sort S]
 
 theorem idxRatio_glob (A C : ∀ i, Subgroup (H i)) (S : Finset ι) (hS : ∀ i ∉ S, A i = C i)
     (hfinA : ∀ i, (C i).relIndex (A i) ≠ 0) (hfinC : ∀ i, (A i).relIndex (C i) ≠ 0)

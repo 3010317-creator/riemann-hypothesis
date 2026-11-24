@@ -94,8 +94,7 @@ private theorem bar_mul (l L N p : ℕ) (hL : L ≠ 0) (h : Nat.Coprime p (N * l
       unfold bar
       rw [Int.cast_natCast, ZMod.natCast_val]
       rfl
-    rw [h2, mul_comm]
-    exact h1
+    rwa [h2, mul_comm]
 
 theorem UpperTheory.V.Z.Kato.Nb.sTopT :
     UpperTheory.V.Z.Kato.Nb.STopT := by
@@ -144,14 +143,12 @@ theorem UpperTheory.V.Z.Kato.Nb.sTopT :
       have e : (((bar l (r + n) N p * ((N : ℤ) + ((x.val : ℕ) : ℤ) * ((topT l (r + n) N : ℕ) : ℤ) * (l : ℤ) ^ (r + n)) * (p : ℤ) + (N : ℤ) * (l : ℤ) ^ (r + n)) : ℤ) : ZMod l) = (N : ZMod l) := by
         push_cast
         linear_combination (N : ZMod l) * hbp + (((bar l (r + n) N p : ℤ) : ZMod l) * ((x.val : ℕ) : ZMod l) * ((topT l (r + n) N : ℕ) : ZMod l) * (p : ZMod l) + (N : ZMod l)) * hlL
-      rw [e]
-      exact hN0
+      rwa [e]
     have hb1 : (((bar l (r + n) N p * (N : ℤ) * (p : ℤ) + (N : ℤ) * (l : ℤ) ^ (r + n)) : ℤ) : ZMod l) ≠ 0 := by
       have e : (((bar l (r + n) N p * (N : ℤ) * (p : ℤ) + (N : ℤ) * (l : ℤ) ^ (r + n)) : ℤ) : ZMod l) = (N : ZMod l) := by
         push_cast
         linear_combination (N : ZMod l) * hbp + (N : ZMod l) * hlL
-      rw [e]
-      exact hN0
+      rwa [e]
     let x₀ : Row (N * l ^ (r + n) * p) :=
       ![(((bar l (r + n) N p * ((N : ℤ) + ((x.val : ℕ) : ℤ) * ((topT l (r + n) N : ℕ) : ℤ) * (l : ℤ) ^ (r + n)) * (p : ℤ) + (N : ℤ) * (l : ℤ) ^ (r + n)) : ℤ) : ZMod (N * l ^ (r + n) * p)),
         (((0 : ℤ)) : ZMod (N * l ^ (r + n) * p))]

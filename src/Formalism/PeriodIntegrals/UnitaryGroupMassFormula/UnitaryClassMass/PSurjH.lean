@@ -108,8 +108,7 @@ theorem equiv_smul_O (u : V ≃ₗ[E] V) (s : 𝓞 E) (v : V) : u (s • v) = s 
   rw [← algebraMap_smul E s v, LinearEquiv.map_smul, algebraMap_smul]
 
 theorem hcompl_le_primeCompl (p : Ideal (𝓞 E)) [p.IsPrime] : hcompl (K := E) p ≤ p.primeCompl := by
-  refine Submonoid.closure_le.2 fun s hs => ?_
-  exact Ideal.mem_primeCompl_iff.2 hs.1
+  exact Submonoid.closure_le.2 fun s hs => Ideal.mem_primeCompl_iff.2 hs.1
 
 end Basic
 
@@ -131,8 +130,7 @@ theorem locGmapStep : LocGmapStep := by
     have h3 : s • u.symm x = y := by
       apply u.injective
       rw [equiv_smul_O, u.apply_symm_apply, hyx]
-    rw [h3]
-    exact hy
+    rwa [h3]
   · rintro ⟨y, hy, rfl⟩
     rw [mem_loc_iff] at hy
     obtain ⟨s, hs, hsy⟩ := hy
@@ -151,8 +149,7 @@ theorem cofin1 {E : Type} [Field E] [NumberField E] {V : Type} [AddCommGroup V] 
   refine ⟨y1 * y2, mul_ne_zero hy1 hy2, fun v hv => ?_⟩
   have hx : b.equivFun v ∈ crdOf b L := by
     show ∑ i, b.equivFun v i • b i ∈ L
-    rw [b.sum_equivFun]
-    exact hv
+    rwa [b.sum_equivFun]
   have e : ((y1 * y2 : ℤ) : 𝓞 E) • v = ∑ i, (y1 • b.equivFun v i) • (y2 • b i) := by
     conv_lhs => rw [← b.sum_equivFun v]
     rw [Finset.smul_sum]

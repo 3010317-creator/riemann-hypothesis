@@ -131,13 +131,12 @@ variable {S : Scheme.{0}}
 def incl (Z : Over S) (W : Z.left.Opens) : Over.mk (W.ι ≫ Z.hom) ⟶ Z := Over.homMk W.ι rfl
 
 theorem over_ext {Z Y : Over S} {a b : Z ⟶ Y} (h : ∀ z : Z.left, ∃ W, z ∈ W ∧ incl Z W ≫ a = incl Z W ≫ b) :
-    a = b :=  by
+    a = b := by
   choose W hW he using h
   apply Over.OverMorphism.ext
   refine Scheme.Cover.hom_ext (Z.left.openCoverOfIsOpenCover W ?_) _ _ fun z => ?_
   · rw [TopologicalSpace.IsOpenCover, eq_top_iff]
-    intro z _
-    exact TopologicalSpace.Opens.mem_iSup.2 ⟨z, hW z⟩
+    exact fun z _ => TopologicalSpace.Opens.mem_iSup.2 ⟨z, hW z⟩
   · have := congrArg (fun f => f.left) (he z)
     simp only [incl, Over.comp_left, Over.homMk_left] at this
     exact this
@@ -185,7 +184,7 @@ include hV h₀ hU
 
 include hu in
 theorem exists_sum (a : Γ(G.left, q.left ⁻¹ᵁ V)) : ∃ c : X →₀ Γ(B.left, V),
-    a = c.sum fun χ r => (q.left.app V).hom r * (u (Multiplicative.ofAdd χ)).val :=  by
+    a = c.sum fun χ r => (q.left.app V).hom r * (u (Multiplicative.ofAdd χ)).val := by
   classical
   have hA : IsAffineOpen (q.left ⁻¹ᵁ V) := hV.preimage q.left
   obtain ⟨w, hw, rfl⟩ := (GlobalTheory.T.torusStable_affineOpen_functions_weightGraded S G X i inferInstance _ hA hU).1 a
@@ -198,12 +197,11 @@ theorem exists_sum (a : Γ(G.left, q.left ⁻¹ᵁ V)) : ∃ c : X →₀ Γ(B.l
   refine ⟨Finsupp.onFinset w.support (fun χ => if w χ = 0 then 0 else c χ) ?_, ?_⟩
   · intro χ hχ
     rw [Finsupp.mem_support_iff]
-    intro h0
-    exact hχ (if_pos h0)
+    exact fun h0 => hχ (ite_eq_left h0)
   · rw [Finsupp.onFinset_sum]
     · rw [Finsupp.sum]
       refine Finset.sum_congr rfl fun χ hχ => ?_
-      rw [if_neg (Finsupp.mem_support_iff.1 hχ), hc, Units.inv_mul_cancel_right]
+      rw [ite_eq_right (Finsupp.mem_support_iff.1 hχ), hc, Units.inv_mul_cancel_right]
     · intro χ
       simp
 
@@ -258,11 +256,10 @@ theorem comp_eq {Z : Over S} (t : Z ⟶ splitTorus S X) {g : Z ⟶ G} (hg : ⊤ 
 
 include hu in
 theorem exists_point {Z : Over S} {g g' : Z ⟶ G} (hg : ⊤ ≤ g.left ⁻¹ᵁ (q.left ⁻¹ᵁ V)) (h : g ≫ q = g' ≫ q) :
-    ∃ t : Z ⟶ splitTorus S X, g' = (t ≫ i) * g :=  by
+    ∃ t : Z ⟶ splitTorus S X, g' = (t ≫ i) * g := by
   have hg' : ⊤ ≤ g'.left ⁻¹ᵁ (q.left ⁻¹ᵁ V) := by
     have : ⊤ ≤ (g ≫ q).left ⁻¹ᵁ V := hg
-    rw [h] at this
-    exact this
+    rwa [h] at this
   let φ : Multiplicative X →* Γ(Z.left, ⊤)ˣ :=
     (Units.map (g'.left.appLE _ ⊤ hg').hom.toMonoidHom).comp u /
       (Units.map (g.left.appLE _ ⊤ hg).hom.toMonoidHom).comp u

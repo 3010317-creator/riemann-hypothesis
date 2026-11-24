@@ -171,8 +171,7 @@ theorem nsmul_apply_mem_of_mem_tensorLat {N : ℕ} (hN : ∀ u ∈ stdLat E n, N
   have hcc : cc (N : E) = N := by
     unfold cc
     exact map_natCast _ N
-  rw [hcc, actE_natCast] at h2
-  exact h2
+  rwa [hcc, actE_natCast] at h2
 
 theorem exists_nsmul_stdLat_le (hfg : Λ'.FG)
     (hint : ∀ x ∈ Λ', ∀ y ∈ Λ', IsIntegral ℤ (herm 1 x y))
@@ -196,8 +195,7 @@ theorem exists_nsmul_stdLat_le (hfg : Λ'.FG)
     have h := hy _ (Finset.mem_image.2 ⟨(i, a), Finset.mem_univ _, rfl⟩)
     rw [zsmul_eq_mul] at h
     rcases hN with e | e
-    · rw [e]
-      exact h
+    · rwa [e]
     · rw [e, neg_mul]
       exact h.neg
   refine ⟨y.natAbs, Nat.one_le_iff_ne_zero.2 (Int.natAbs_ne_zero.2 hy0), fun u hu => ?_⟩

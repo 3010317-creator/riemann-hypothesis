@@ -162,8 +162,7 @@ theorem dScale : AMem → ACls → AUnit → DScale := by
       rw [mul_one]
       exact Nat.mul_dvd_mul (Nat.mul_dvd_mul_left _ (Finset.dvd_prod_of_mem _ hr)) dvd_rfl) i j
     refine (hint _).2 ?_
-    rw [map_mul, map_natCast]
-    exact hg2
+    rwa [map_mul, map_natCast]
   ·
     have hV : ∀ r' : (Af F)ˣ, 0 < absF (Matrix.GeneralLinearGroup.det (zc F r')) := fun r' => (Hm.absf F).1 _
     have habs : absF (ratU F (Matrix.GeneralLinearGroup.det g)) = absF (Matrix.GeneralLinearGroup.det (zc F r)) := by
@@ -175,8 +174,7 @@ theorem dScale : AMem → ACls → AUnit → DScale := by
         rw [reAt_eq, Matrix.GeneralLinearGroup.val_det_apply]
       simp only [e] at this
       refine eq_inv_of_mul_eq_one_left ?_
-      rw [← habs]
-      exact this
+      rwa [← habs]
     have hdg : g.val.det = d * ε ^ 2 := by
       rw [hg, Units.val_mul, Matrix.det_mul, hd]
       simp [Matrix.det_fin_two]
@@ -187,8 +185,7 @@ theorem dScale : AMem → ACls → AUnit → DScale := by
     intro v
     refine bal (fun v => |sg v g.val.det|) (pow_pos hC0 2) ?_ ?_ ?_ ?_ ?_ v
     · exact inv_pos.2 (lt_of_lt_of_le (hV r) (Finset.single_le_sum (fun r' _ => (hV r').le) hr))
-    · intro v
-      exact abs_pos.2 ((map_ne_zero (sg v)).2 g.det_ne_zero)
+    · exact fun v => abs_pos.2 ((map_ne_zero (sg v)).2 g.det_ne_zero)
     · intro v v'
       rw [ha, ha, ← mul_pow]
       exact pow_le_pow_left₀ (abs_nonneg _) (hεb v v') 2

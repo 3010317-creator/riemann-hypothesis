@@ -49,8 +49,7 @@ theorem eqz {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι → V} (hN : GramI
     exact Finset.sum_congr rfl fun j _ => mul_comm _ _
   have hc : c = 0 := by
     have h2 := congrArg (fun u => N *ᵥ u) hg
-    simp only [Matrix.mulVec_mulVec, hN, Matrix.one_mulVec, Matrix.mulVec_zero] at h2
-    exact h2
+    simpa only [Matrix.mulVec_mulVec, hN, Matrix.one_mulVec, Matrix.mulVec_zero] using h2
   simp [hc]
 
 theorem decompE {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι → V} (hN : GramInvE H v) (x : V) :
@@ -126,8 +125,7 @@ theorem y_eq_om {r : ℕ} (f f' : Fin (r + 1) → V) (α : Fin (r + 1) → E)
     · intro b _ hb
       have hb0 : β b = 0 := hy b hb
       rw [hb0, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   unfold Formalism.MainNotions.S.Loc.HermSp.om
   rw [Finset.smul_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun a _ => ?_
@@ -270,8 +268,7 @@ theorem psi_unique {r : ℕ} (t₁ t₂ : Term V M r) (φ : H.Wb t₁.f ≃ₗ[E
     have e12 : H.mkW t₂.f ⟨w₂, w_zero_le_perp_first _ _ hw₂⟩ = H.mkW t₂.f ⟨w₂', w_zero_le_perp_first _ _ hw₂'⟩ := by
       rw [← e1, ← e2]
     have hsub : w₂ - w₂' ∈ H.X t₂.f := by
-      have h := (Submodule.Quotient.eq _).1 e12
-      simpa using h
+      simpa using (Submodule.Quotient.eq _).1 e12
     have hz0 : w₂ - w₂' = 0 := by
       refine eqz hN2 (X_le_span _ _ hsub) fun k => ?_
       have hk : Sum.elim t₂.f t₂.f' k ∈ H.Xp t₂.f ⊔ H.Xp t₂.f' := by

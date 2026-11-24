@@ -160,12 +160,12 @@ lemma exists_u (v : Place k F) {r : ℕ} (y : Fin (r+1) → F) (hy : y ≠ 0) :
       have := congrArg (Equiv.swap 0 i) h
       rw [Equiv.swap_apply_self, Equiv.swap_apply_right] at this
       exact Fin.succ_ne_zero a this
-    rw [hu0y]; simp only [hc, if_neg hne]; field_simp; ring
+    rw [hu0y]; simp only [hc, ite_eq_right hne]; field_simp; ring
 
 lemma exists_h {n : ℕ} (x : Fin (n+1) → F) (hx : x ≠ 0) :
     ∃ h : Matrix (Fin (n+1)) (Fin (n+1)) F, h.det ≠ 0 ∧ ∀ a, h a 0 = x a := by
   obtain ⟨i, hi⟩ : ∃ i, x i ≠ 0 := by
-    by_contra hc; push_neg at hc; exact hx (funext hc)
+    by_contra hc; push Not at hc; exact hx (funext hc)
   refine ⟨(1 + Matrix.vecMulVec (x - Pi.single i 1) (Pi.single i 1)).submatrix id (Equiv.swap 0 i), ?_, ?_⟩
   · rw [Matrix.det_permute', det_one_add_vmv]
     simp [hi]
@@ -184,7 +184,7 @@ lemma unimod_ae [IsAlgClosed k] [CharZero k] (hF : IsFF k F) {n : ℕ} (h : Matr
   refine ((_root_.GlobalTheory.Nef.finite_support_and_sum_ord_eq_zero k F hF _ hd).1.union (Set.finite_iUnion fun p : Fin n × Fin n => fin1 (h p.1 p.2))).subset ?_
   intro v hv
   simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion]
-  by_contra hc; push_neg at hc
+  by_contra hc; push Not at hc
   exact hv ⟨fun i j => hc.2 (i, j), hc.1⟩
 
 lemma unimod_pull {E : Type} [Field E] [Algebra k E] [Algebra F E] (ρ : Place k E → Place k F) (hρ : IsRes ρ)
@@ -440,8 +440,7 @@ theorem centre_place : ∀ (k K : Type) [Field k] [IsAlgClosed k] [CharZero k] [
       have hd := GlobalTheory.LieSemineg.dim_curve (k := k) (C := C) hC.1
       have h1 := (Order.coheight_le_krullDim c).trans (Order.krullDim_eq_of_orderIso (irreducibleSetEquivPoints (α := C))).ge
       rw [topologicalKrullDim] at hd
-      rw [hd] at h1
-      exact h1
+      rwa [hd] at h1
     have hle' : Order.coheight c ≤ 1 := by exact_mod_cast hle
     exact le_antisymm hle' (ENat.one_le_iff_ne_zero.2 hne)
   haveI hdvr := GlobalTheory.IsNormalScheme.isDiscreteValuationRing_stalk hco
@@ -482,9 +481,7 @@ theorem centre_place : ∀ (k K : Type) [Field k] [IsAlgClosed k] [CharZero k] [
     have h1 : x ≫ strHom k C = spMap ((φ.comp (C.presheaf.germ ⊤ c trivial).hom).comp (algebraMap k Γ(C, ⊤))) := by
       rw [← hφ, Category.assoc, strHom, ← Category.assoc (C.fromSpecStalk c), Scheme.fromSpecStalk_toSpecΓ]
       simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp, CommRingCat.ofHom_hom, Category.assoc]
-    have h2 := Spec.map_injective (hstr.symm.trans h1)
-    intro t
-    exact congrArg (fun f => f.hom t) h2
+    exact fun t => congrArg (fun f => f.hom t) (Spec.map_injective (hstr.symm.trans h1))
   let vK : Valuation K (WithZero (Multiplicative ℤ)) := (P.valuation C.functionField).comap e.symm.toRingHom
   have hvφ : ∀ a, vK (φ a) = P.intValuation a := fun a => hval a
   have hunit : ∀ a : A, IsUnit a → P.intValuation a = 1 := by
@@ -514,8 +511,7 @@ theorem centre_place : ∀ (k K : Type) [Field k] [IsAlgClosed k] [CharZero k] [
     have h1 : φ a * (w : K) = 1 := by
       have := congrArg (fun z : v.O => (z : K)) u.mul_inv
       have e1 : φ a = ((u : v.O) : K) := by rw [hu]; rfl
-      rw [e1]
-      exact this
+      rwa [e1]
     have h2 := congrArg vK h1
     rw [map_mul, map_one] at h2
     have : vK (φ a) * vK (w : K) < 1 :=
@@ -803,8 +799,7 @@ theorem closedPoint_mem_nonzeroLocus {K : Type} [Field K] {C : Scheme.{0}} [IsIn
   obtain ⟨i, hi⟩ := h
   have hne : ((C.basicOpen (σ.f i) : C.Opens) : Set C).Nonempty := by
     rw [Set.nonempty_iff_ne_empty]
-    intro e
-    exact hi ((basicOpen_eq_bot_iff _).1 (Opens.ext e))
+    exact fun e => hi ((basicOpen_eq_bot_iff _).1 (Opens.ext e))
   obtain ⟨y, hy⟩ := x.denseRange.exists_mem_open (C.basicOpen (σ.f i)).isOpen hne
   obtain rfl : y = IsLocalRing.closedPoint K := Subsingleton.elim _ _
   exact Opens.mem_iSup.2 ⟨i, hy⟩
@@ -902,8 +897,7 @@ theorem locFrame_of_frames {k K : Type} [Field k] [Field K] [Algebra k K] {C : S
   · have := (ht.basis (inf_le_right : V₀ ⊓ V ≤ V)).sum_repr (hs.basis (inf_le_left : V₀ ⊓ V ≤ V₀) j)
     simp only [IsFrame.basis_apply] at this
     rw [hM]
-    simp only [Module.Basis.toMatrix_apply, IsFrame.basis_apply]
-    exact this.symm
+    simpa only [Module.Basis.toMatrix_apply, IsFrame.basis_apply] using this.symm
   · have hu : IsUnit M.det := by
       have := Module.Basis.toMatrix_mul_toMatrix_flip (ht.basis (inf_le_right : V₀ ⊓ V ≤ V))
         (hs.basis (inf_le_left : V₀ ⊓ V ≤ V₀))

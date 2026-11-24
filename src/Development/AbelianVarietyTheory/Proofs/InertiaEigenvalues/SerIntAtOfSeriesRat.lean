@@ -258,8 +258,7 @@ theorem exists_isHalfIdem : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (l : Geo.To
     refine sup_le h1 (Ideal.map_le_iff_le_comap.2 fun x hx => ?_)
     have h3 := h2 hx
     rw [GlobalTheory.IdemSupport.mem_cP] at h3
-    rw [Ideal.mem_comap, RingHom.coe_coe, hbar]
-    exact h3
+    rwa [Ideal.mem_comap, RingHom.coe_coe, hbar]
   have hne : l.Mb ≠ ⊥ := by
     intro h
     have h1 := l.prod
@@ -274,8 +273,7 @@ theorem exists_isHalfIdem : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (l : Geo.To
     refine GlobalTheory.Hk3.SplitMatch.exists_isIdemAt fun h => key Q hQ fun x hx => ?_
     rw [GlobalTheory.IdemSupport.mem_cP]
     have h4 : Formalism.DivisionValues.cO D.host.E x ∈ (Formalism.DivisionValues.conjPl Q).asIdeal := Ideal.mem_map_of_mem _ (hQ hx)
-    rw [h] at h4
-    exact h4
+    rwa [h] at h4
   · intro Q hQ Q' hQ' hu
     rw [Set.Finite.mem_toFinset] at hQ hQ'
     rcases GlobalTheory.IdemSupport.eq_or_eq_cP hu with h | h
@@ -484,31 +482,7 @@ theorem exists_int_add_mul (F : Type) [Field F] [NumberField F] (M : ℕ) (hM : 
 theorem exists_finTens_add_nsmul {D : D7} (V W : HSp D) (LV : Set (Fin V.rank → D.host.E)) (LW : Set (Fin W.rank → D.host.E))
     (M : ℕ) (hM : 0 < M) (Y : WO V W) (hY : Y ∈ latO V W LV LW fun _ => True) :
     ∃ R ∈ GlobalTheory.LatVac.latRat V W LV LW, ∃ c ∈ latO V W LV LW (fun _ => True), Y = GlobalTheory.LatVac.finTens 1 R + M • c := by
-  refine GlobalTheory.LatVac.latO_induction (p := fun Y => ∃ R ∈ GlobalTheory.LatVac.latRat V W LV LW, ∃ c ∈ latO V W LV LW (fun _ => True),
-    Y = GlobalTheory.LatVac.finTens 1 R + M • c) ?_ ?_ ?_ ?_ hY
-  · intro α hα R hR
-    obtain ⟨ρ, β, hβ, hαe⟩ := exists_int_add_mul D.host.F M hM α hα
-    refine ⟨((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) ρ : 𝓞 D.host.E) : D.host.E) • R,
-      GlobalTheory.LatVac.smul_mem_latRat _ hR, GlobalTheory.LatVac.finTens β R, GlobalTheory.LatVac.finTens_mem_latO hβ hR, ?_⟩
-    ext i j
-    simp only [GlobalTheory.LatVac.finTens, Matrix.map_apply, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
-    have h1 : pairA D.host.F 0 α = (ρ : D.host.F) • pairA D.host.F 0 1 + M • pairA D.host.F 0 β := by
-      rw [hαe]
-      refine Prod.ext ?_ ?_
-      · show (0 : Ainf D.host.F) = (ρ : D.host.F) • (0 : Ainf D.host.F) + M • (0 : Ainf D.host.F)
-        simp
-      · show algebraMap D.host.F (Af D.host.F) ρ + (M : Af D.host.F) * β = (ρ : D.host.F) • (1 : Af D.host.F) + M • β
-        rw [Algebra.smul_def, mul_one, nsmul_eq_mul]
-    have h2 : ((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) ρ : 𝓞 D.host.E) : D.host.E) * R i j =
-        (ρ : D.host.F) • R i j := by
-      rw [Algebra.smul_def]
-      congr 1
-    rw [h1, TensorProduct.add_tmul, TensorProduct.smul_tmul, h2, nsmul_eq_mul, ← nsmul_eq_mul, TensorProduct.smul_tmul']
-  · exact ⟨0, zero_mem _, 0, zero_mem _, by simp [GlobalTheory.LatVac.finTens_zero]⟩
-  · rintro x y ⟨R, hR, c, hc, rfl⟩ ⟨R', hR', c', hc', rfl⟩
-    exact ⟨R + R', add_mem hR hR', c + c', add_mem hc hc', by rw [GlobalTheory.LatVac.finTens_add, smul_add]; exact add_add_add_comm _ _ _ _⟩
-  · rintro x ⟨R, hR, c, hc, rfl⟩
-    exact ⟨-R, neg_mem hR, -c, neg_mem hc, by rw [GlobalTheory.LatVac.finTens_neg, smul_neg, neg_add]⟩
+  exact GlobalTheory.DatumFourier.approx_mod hM hY
 
 
 theorem exists_levSum_add_of_half : ∀ (D : D7) (V W : HSp D) (ΛV : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)) (ΛW : Submodule (𝓞 D.host.E) (Fin W.rank → D.host.E)), V.gram = 1 → (ΛV : Set (Fin V.rank → D.host.E)) = (Formalism.L2.Pj.stdLat D.host.E V.rank : Set (Fin V.rank → D.host.E)) → (ΛW : Set (Fin W.rank → D.host.E)) = L0c D W → ∀ (H : Geo.Tor.Host D.host.E) (Dw : Datum H) (ι : Dw.La →ₗ[𝓞 D.host.E] (Fin W.rank → D.host.E)), GlobalTheory.Member.IotaOK Dw W ι → ∀ (l₂ : Geo.Tor.Level H) (e : AE D), IsHalfIdem l₂ e → ∀ y : WO V W, IsHalf e y → l₂.M • y ∈ latO V W (ΛV : Set (Fin V.rank → D.host.E)) (ΛW : Set (Fin W.rank → D.host.E)) (fun _ => True) → ∃ (x : Fin V.rank → Dw.La) (c : WO V W), c ∈ latO V W (ΛV : Set (Fin V.rank → D.host.E)) (ΛW : Set (Fin W.rank → D.host.E)) (fun _ => True) ∧ y = (Matrix.of fun a b => e * incA D (ι (x b) a / (l₂.M : D.host.E)) : WO V W) + c := by
@@ -612,8 +586,7 @@ theorem sub_levPoint_mem_latO : ∀ (D : D7) (V W : HSp D) (ΛV : Submodule (�
     ext a b
     have hzb : (β : D.host.E) * ι (x b - cSep l₂ • r b) a = (l₂.M : D.host.E) * ι (w b) a := by
       have := congrFun (congrArg ι (hw b)) a
-      rw [map_smul, map_nsmul, Pi.smul_apply, Pi.smul_apply, nsmul_eq_mul] at this
-      exact this
+      rwa [map_smul, map_nsmul, Pi.smul_apply, Pi.smul_apply, nsmul_eq_mul] at this
     rw [map_sub, Pi.sub_apply] at hzb
     change e * incA D (ι (x b) a / (l₂.M : D.host.E)) - e * incA D (ι (cSep l₂ • r b) a / (l₂.M : D.host.E)) =
       (e * incA D ((β : D.host.E))⁻¹) * (pairA D.host.F 0 1 ⊗ₜ[D.host.F] ι (w b) a)
@@ -718,7 +691,7 @@ theorem exists_transSum_of_mem_trSp : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
       · exact natCast_mem O _
       · exact zero_mem O
     · rw [transSum_eq, hq₀]
-      simp only [ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, smul_smul, inv_mul_cancel₀ hcard,
+      simp only [ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, smul_smul, inv_mul_cancel₀ hcard,
         one_smul]
   | zero => exact ⟨0, fun _ => zero_mem _, by rw [transSum_eq]; simp⟩
   | add g g' _ _ hg hg' =>
@@ -788,12 +761,7 @@ theorem isTorsionFree_int_of {E : Type} [Field E] [NumberField E] (X : Type) [Ad
   Module.IsTorsionFree.trans_faithfulSMul ℤ (𝓞 E) X
 
 theorem datum_free {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Geo.Tor.Host E} (Dw : Datum H) :
-    Module.Free ℤ Dw.La ∧ Module.Finite ℤ Dw.La := by
-  have := Dw.fin
-  have := Dw.proj
-  have : Module.IsTorsionFree ℤ Dw.La := isTorsionFree_int_of (E := E) Dw.La
-  have : Module.Finite ℤ Dw.La := Module.Finite.trans (𝓞 E) Dw.La
-  exact ⟨inferInstance, inferInstance⟩
+    Module.Free ℤ Dw.La ∧ Module.Finite ℤ Dw.La := GlobalTheory.LevCover.datum_free Dw
 
 theorem card_levQ_dvd {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Geo.Tor.Host E} (Dw : Datum H)
     (l : Geo.Tor.Level H) : Nat.card (LevQ Dw l) ∣ l.M ^ Module.finrank ℤ Dw.La := by
@@ -947,8 +915,7 @@ theorem rd_add (C : Cover T j σ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (f g
 
 theorem rd_smul (C : Cover T j σ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (x : C.d.c₂.F) (f : Rul C.d.Xo₂ C.d.c₂) :
     C.rd a (x • f) = C.σ₂ x • C.rd a f := by
-  simp only [Cover.rd, LinearMap.map_smulₛₗ, map_smul]
-  exact smul_comm _ _ _
+  simpa only [Cover.rd, LinearMap.map_smulₛₗ, map_smul] using smul_comm _ _ _
 
 theorem rd_zero (C : Cover T j σ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) : C.rd a 0 = 0 := by
   simp only [Cover.rd, map_zero, smul_zero]
@@ -1035,8 +1002,7 @@ theorem mem_intForms_of_spans : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, F
   obtain ⟨f, hf, rfl⟩ := exists_of_mem_span_ratForms C wa n hφ
   refine ⟨f, ⟨hf, fun la hla => ?_⟩, rfl⟩
   obtain ⟨g, hg, hvg, hfg⟩ := exists_of_mem_span_intForms C wa n la (hS la hla)
-  rw [eq_of_rd_eq D T hT j hj σ hσ C hC hcc wa n hn hf.1 hg.1 hfg.symm]
-  exact hvg
+  rwa [eq_of_rd_eq D T hT j hj σ hσ C hC hcc wa n hn hf.1 hg.1 hfg.symm]
 
 end GlobalTheory.LevelSeries.SpanInt
 end -- clump:auto
@@ -1220,8 +1186,7 @@ theorem mul_twist_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
     obtain ⟨w', hw', e⟩ := GlobalTheory.CharRead.det_cong_one D.host.F (GlobalTheory.Member.latC (T.V j T.σ₀)) k3 k4 C.d.l₂.M (by omega)
       (finHom (T.V j T.σ₀) u).1 (by rw [← k1]; exact hu)
     refine hxi.cond _ (hno u) ⟨T.Q.l.M • w', AddSubgroup.nsmul_mem _ (GlobalTheory.IdeleParts.integralFiniteAdeles_eq_adelicCompletion_integers D ▸ hw') _, ?_⟩
-    rw [smul_smul, mul_comm, ← hlev]
-    exact e
+    rwa [smul_smul, mul_comm, ← hlev]
   have key := (GlobalTheory.CoverComp.forms_mul_comp D T hL j hj T.σ₀ rfl C hU C.d.l₂.M (by omega) dvd_rfl (Or.inl hWc) w
     (fun h h' hh => hinj _ _ (by rw [hh]))
     (fun γ hγ h => hinj _ _ (by rw [map_mul, map_mul, map_mul, hleft γ hγ, one_mul]))
@@ -1294,9 +1259,9 @@ theorem charSum (M K : ℕ) (hM : M ≠ 0) (z : Fin K → ℂ) (hz : ∀ i, z i 
   simp only [h1]
   split_ifs with h
   · simp [h]
-  · push_neg at h
+  · push Not at h
     obtain ⟨i, hi⟩ := h
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
 
 theorem char_sum {A ι : Type} [AddCommMonoid A] (ψ : AddChar A ℂ) (s : Finset ι) (f : ι → A) :
     ψ (∑ i ∈ s, f i) = ∏ i ∈ s, ψ (f i) := by
@@ -1325,7 +1290,7 @@ theorem gens (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank
     split_ifs
     · exact one_mem _
     · exact zero_mem _
-  have hε0 : ∀ v, ¬ P v → evalV D.host.F v ε = 0 := fun v hv => by rw [evalV_idemAt, if_neg hv]
+  have hε0 : ∀ v, ¬ P v → evalV D.host.F v ε = 0 := fun v hv => by rw [evalV_idemAt, ite_eq_right hv]
   let φ : Matrix (Fin T.rank) (Fin S.rank) D.host.E →ₗ[ℤ] WO S T :=
     (AddMonoidHom.mk' (finTens ε) (finTens_add ε)).toIntLinearMap
   let G := φ '' ((fun p : _ × _ × _ => genMap S T p.1 p.2.1 p.2.2) '' (A ×ˢ B ×ˢ C))
@@ -1483,10 +1448,10 @@ theorem smul_mem_trSp : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
     simp only [hprod t]
     rw [charSum M K hM _ (hroot t ht)]
     by_cases hc : ∃ u ∈ Λ, IsHalf (cA D e) u ∧ t = M • u
-    · rw [if_pos hc, if_pos]
+    · rw [ite_eq_left hc, ite_eq_left]
       obtain ⟨u, hu, -, rfl⟩ := hc
       exact hconv u hu
-    · rw [if_neg hc, if_neg]
+    · rw [ite_eq_right hc, ite_eq_right]
       exact fun hall => hc (hdualT t ht hth hall)
 
   obtain ⟨C, hCh, hC⟩ := GlobalTheory.BadOrth.finCosets D V W ΛV ΛW hSV hSW (cA D e) hcc M hMpos
@@ -1507,7 +1472,7 @@ theorem smul_mem_trSp : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
   have hrepex : ∀ q ∈ Q, ∃ c ∈ C', mkL c = q := fun q hq => Finset.mem_image.1 hq
   let rep : WO V W ⧸ L → WO V W := fun q => if hq : q ∈ Q then (hrepex q hq).choose else 0
   have hrep : ∀ q ∈ Q, rep q ∈ Λ ∧ IsHalf (cA D e) (rep q) ∧ mkL (rep q) = q := fun q hq => by
-    simp only [rep, dif_pos hq]
+    simp only [rep, dite_eq_left hq]
     obtain ⟨h1, h2⟩ := (hrepex q hq).choose_spec
     obtain ⟨h3, h4⟩ := Finset.mem_filter.1 h1
     exact ⟨h4, hCh _ h3, h2⟩
@@ -1543,7 +1508,7 @@ theorem smul_mem_trSp : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
           refine if_congr ?_ rfl rfl
           rw [← memL, ← hmkL, hq3]
       rw [e1, Finset.sum_congr rfl fun q hq => by rw [e2 q hq, mul_ite, mul_zero], Finset.sum_ite_eq,
-        if_pos (hcover t ht.1 ht.2)]
+        ite_eq_left (hcover t ht.1 ht.2)]
       obtain ⟨-, -, hr3⟩ := hrep (mkL t) (hcover t ht.1 ht.2)
       obtain ⟨w, hw, hwh, hwe⟩ := (memL _).1 ((hmkL _ _).1 hr3)
       have hΦr : Φ (rep (mkL t)) = Φ t := by

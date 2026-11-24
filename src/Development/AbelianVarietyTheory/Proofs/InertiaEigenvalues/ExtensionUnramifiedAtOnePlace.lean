@@ -376,8 +376,7 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
     have := hσn _ hyA
     have hy2 : (σ ^ n) (algebraMap E' Ω (y : E')) = algebraMap E' Ω (y : E') := hfix _ (y : E').2
     rw [hy2] at this
-    rw [map_sub, map_pow, Valuation.map_sub_swap]
-    exact this
+    rwa [map_sub, map_pow, Valuation.map_sub_swap]
 
   have hg0 : ((g : ℕ) : 𝓞 E') ≠ 0 := by exact_mod_cast hgp.ne_zero
   have hgΩ : A.valuation ((g : ℕ) : Ω) < 1 := by
@@ -446,8 +445,7 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
       have hm' : A.valuation (ζ ^ j - 1) < 1 := hm1
       have := ReciprocityTheory.Gal.eq_of_pow_eq_one A hN' (by rw [← pow_mul, mul_comm, pow_mul, hζ.pow_eq_one, one_pow])
         (one_pow _) hm'
-      have hd := hζ.dvd_of_pow_eq_one j this
-      exact absurd (Nat.le_of_dvd hj0 hd) (by omega)
+      exact absurd (Nat.le_of_dvd hj0 (hζ.dvd_of_pow_eq_one j this)) (by omega)
     · intro y
       have := hpowq y
       show A.valuation (algebraMap E' Ω (((y ^ (g ^ n) - y : 𝓞 E')) : E')) < 1
@@ -529,8 +527,7 @@ theorem exists_unramified_ext : ∀ (E Ω : Type) [Field E] [NumberField E] [Fie
         rw [Valuation.map_one_sub_of_lt _ h2α]
         exact lt_irrefl 1
       · have e : α ^ (2 ^ 1) - α = -2 := by linear_combination hα'
-        rw [e, Valuation.map_neg]
-        exact h2Ω
+        rwa [e, Valuation.map_neg]
     ·
       let f : ℤ[X] := X ^ 2 + C 2
       have hfm : f.Monic := by

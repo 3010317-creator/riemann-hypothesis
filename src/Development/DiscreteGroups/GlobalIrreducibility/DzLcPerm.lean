@@ -182,13 +182,11 @@ theorem exists_perm_conj {s : ℕ} {d : Fin s → ℕ} (e : (Σ a, Fin (d a)) �
       · exfalso
         apply hpq
         have h := hxe p q (by unfold GlobalTheory.FiniteGL.twoBlocks; split_ifs <;> omega)
-        rw [Matrix.sub_apply, sub_eq_zero] at h
-        exact h
+        rwa [Matrix.sub_apply, sub_eq_zero] at h
     · exfalso
       apply hpq
       have h := hxe p q (by unfold GlobalTheory.FiniteGL.twoBlocks; split_ifs <;> omega)
-      rw [Matrix.sub_apply, sub_eq_zero] at h
-      exact h
+      rwa [Matrix.sub_apply, sub_eq_zero] at h
   refine GlobalTheory.SmGL.mem_unipRad.2 ⟨GlobalTheory.SmGL.mem_parab.2 fun u v huv => ?_, fun c i j => ?_⟩
   · rw [hQ x u v]
     have hne : u ≠ v := fun h => by subst h; exact lt_irrefl _ huv

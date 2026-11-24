@@ -65,8 +65,8 @@ theorem exists_pole_idem {E : Type} [Field E] [NumberField E] (z w : FiniteAdele
   let e : FiniteAdeleRing (𝓞 E) E := ⟨fun P => if 1 < Valued.v (z P) then 1 else 0,
     Filter.Eventually.of_forall fun P => by
       by_cases h : 1 < Valued.v (z P)
-      · simp only [if_pos h]; exact one_mem _
-      · simp only [if_neg h]; exact zero_mem _⟩
+      · simp only [ite_eq_left h]; exact one_mem _
+      · simp only [ite_eq_right h]; exact zero_mem _⟩
   have he : ∀ P, e P = if 1 < Valued.v (z P) then 1 else 0 := fun _ => rfl
   have hmul : ∀ (a b : FiniteAdeleRing (𝓞 E) E) P, (a * b) P = a P * b P := fun _ _ _ => rfl
   refine ⟨e, ?_, fun P => ?_, fun h P => ?_, fun f hf hfz => ?_⟩
@@ -84,7 +84,7 @@ theorem exists_pole_idem {E : Type} [Field E] [NumberField E] (z w : FiniteAdele
     · simp
   · have h0 : e P = 0 := by rw [h]; rfl
     by_contra h3
-    rw [he, if_pos (not_le.1 h3)] at h0
+    rw [he, ite_eq_left (not_le.1 h3)] at h0
     exact one_ne_zero h0
   · refine Subtype.ext (funext fun P => ?_)
     change e P * f P = 0
@@ -131,17 +131,7 @@ theorem tmul_trace {F E R : Type} [Field F] [Field E] [Algebra F E] [CommRing R]
   rw [← TensorProduct.tmul_add, ← ht, TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
 
 theorem trace_mem (z : AE D) : ∃ a, z + cA D z = algebraMap (AF D.host.F) (AE D) a := by
-  induction z using TensorProduct.inductionOn with
-  | tmul a x =>
-    obtain ⟨t, ht⟩ : ∃ t : D.host.F, algebraMap _ _ t = x + D.sp.cm.sig x := by
-      apply (D.sp.cm.fixed _).1
-      change D.sp.cm.sig _ = _
-      rw [map_add (f := _), show D.sp.cm.sig (D.sp.cm.sig x) = x from star_star x, add_comm]
-    exact ⟨t • a, tmul_trace a x _ t ht⟩
-  | add a b ha hb =>
-    obtain ⟨s, hs⟩ := ha
-    obtain ⟨t, ht⟩ := hb
-    exact ⟨s + t, by rw [RingHom.map_add (f := _), RingHom.map_add (f := _), ← hs, ← ht, add_add_add_comm]⟩
+  exact GlobalTheory.IdemModTwo.exists_add_cA D z
 
 theorem one_int : (1 : Af D.host.F ⊗[D.host.F] D.host.E) ∈ intAE D :=
   AddSubgroup.subset_closure ⟨1, fun w => by rw [map_one]; exact one_mem _, 1, rfl⟩

@@ -281,13 +281,7 @@ noncomputable section
 namespace GlobalTheory.PsCo.HomotDeriv
 
 theorem ev_rP {n : ℕ} (ε : Fin n → Bool) (g : Mat n) : ev g (rP ε) = ((rM ε g : ℝ) : ℂ) := by
-
-  simp only [rP, rM, map_sum, map_mul, ev, MvPolynomial.eval_X, Sum.elim_inl, Sum.elim_inr]
-  push_cast
-  refine Finset.sum_congr rfl fun x _ => ?_
-  rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq]
-  push_cast
-  ring
+  exact GlobalTheory.PsCo.Pc1.B.sb_evrp ε g
 
 theorem hasDerivAt_scale (G : ℝ → ℝ) (hG : ContDiff ℝ (⊤ : ℕ∞) G) (k : ℕ) (r t : ℝ) (ht : t ≠ 0) :
     HasDerivAt (fun s : ℝ => iteratedDeriv k (fun y => G (s * y)) r)
@@ -747,12 +741,7 @@ namespace GlobalTheory.PsCo.Pc1
 
 theorem iteratedDeriv_scale_eq_zero {G : ℝ → ℝ} (hG : ∀ x, 1 ≤ x → G x = 0) {t : ℝ} (ht : 0 < t) (k : ℕ)
     {x : ℝ} (hx : 1 < t * x) : iteratedDeriv k (fun y => G (t * y)) x = 0 := by
-  have hev : (fun y => G (t * y)) =ᶠ[𝓝 x] (fun _ => (0 : ℝ)) := by
-    have hopen : IsOpen {y : ℝ | 1 < t * y} := isOpen_lt continuous_const (continuous_const.mul continuous_id)
-    filter_upwards [hopen.mem_nhds hx] with y hy
-    exact hG _ (le_of_lt hy)
-  rw [hev.iteratedDeriv_eq k]
-  simp
+  exact GlobalTheory.PsCo.Pcd.iter_zero hG ht k hx
 
 theorem isCutFn_iteratedDeriv_scale {G : ℝ → ℝ} (hGs : ContDiff ℝ ∞ G) (hG : ∀ x, 1 ≤ x → G x = 0) {t : ℝ}
     (ht : 0 < t) (k : ℕ) : IsCutFn (iteratedDeriv k (fun y => G (t * y))) := by
@@ -1103,14 +1092,7 @@ open MeasureTheory
 namespace GlobalTheory.CompanionTheory.HaarUJ
 
 theorem haar_rinv_UJ : ∀ (n : ℕ) (ε : Fin n → Bool) (μ : Measure (Formalism.REAL.UJ ε)) [μ.IsHaarMeasure],
-    μ.IsMulRightInvariant := by
-  intro n ε μ _
-  have hν : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
-  have hμ : μ = Measure.haarScalarFactor μ (Formalism.REAL.muG ε) • Formalism.REAL.muG ε :=
-    Measure.isMulLeftInvariant_eq_smul μ (Formalism.REAL.muG ε)
-  refine ⟨fun g => ?_⟩
-  rw [hμ, Measure.map_smul, map_mul_right_eq_self]
-  exact (continuous_id.mul continuous_const).aemeasurable
+    μ.IsMulRightInvariant := GlobalTheory.haar_UJ_isMulRightInvariant
 
 end GlobalTheory.CompanionTheory.HaarUJ
 end -- clump:auto

@@ -141,18 +141,7 @@ namespace GlobalTheory.RealPlaceConj
 
 theorem piInf_cA_eq_star : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E),
     IsCMExt F E σ → ∀ (w : InfinitePlace F) (τ : EmbOver E w) (z : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), piInf τ (cA σ z) = star (piInf τ z) := by
-  intro F E _ _ _ _ _ σ hσ w τ z
-
-  have hcomp : compInf F E w (cA σ z) = Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR _ σ (compInf F E w z) := by
-    induction z using TensorProduct.induction_on with
-    | zero => simp
-    | tmul a x =>
-      simp [cA, compInf, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR, Algebra.TensorProduct.map_tmul]
-    | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy, map_add (f := _), map_add (f := _)]
-
-  change infEmb τ (compInf F E w (cA σ z)) = star (infEmb τ (compInf F E w z))
-  rw [hcomp, ← GlobalTheory.AdelicU.infEmb_sigR hσ τ]
-  rfl
+  apply GlobalTheory.WrongSignPair.piInf_cA
 
 end GlobalTheory.RealPlaceConj
 end -- clump:auto
@@ -432,13 +421,7 @@ theorem incM_map_piInf {n m : Type} (J : Matrix n m E) {w : InfinitePlace F} (τ
 theorem exists_mat_at {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w)
     {m k : Type} (z : InfinitePlace F → Matrix m k ℂ) :
     ∃ u : Matrix m k (AE F E), At (evI F) u ∧ ∀ w, u.map (piInf (τ w)) = z w := by
-  choose a ha using fun i j => GlobalTheory.PolRangeInf.exists_at_inf_values hcm τ (fun w => z w i j)
-  refine ⟨Matrix.of a, fun x hx => ?_, fun w => ?_⟩
-  · ext i j
-    simp only [Matrix.smul_apply, Matrix.of_apply, Matrix.zero_apply]
-    exact (ha i j).1 x hx
-  · ext i j
-    simp [(ha i j).2 w]
+  exact GlobalTheory.RealLift.PolRangePf.exists_mat_at hcm τ z
 
 theorem mat_eq_zero {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w)
     {m k : Type} (D : Matrix m k (AE F E)) (hD : At (evI F) D) (h0 : ∀ w, D.map (piInf (τ w)) = 0) : D = 0 := by

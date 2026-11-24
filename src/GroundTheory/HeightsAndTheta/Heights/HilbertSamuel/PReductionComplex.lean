@@ -84,7 +84,7 @@ theorem homog_monomial_one_of_zmod [Fact p.Prime] {d : (Σ k, ι k) →₀ ℕ} 
     (h : IsMultiHomog (monomial d 1 : MRingOver (ZMod p) ι) e) : IsMultiHomog (monomial d 1 : MRingOver ℤ ι) e :=
   by
   classical
-  exact GenOnFibres.homog_monomial d 1 e fun k => h d (by rw [mem_support_iff, coeff_monomial, if_pos rfl]; exact one_ne_zero) k
+  exact GenOnFibres.homog_monomial d 1 e fun k => h d (by rw [mem_support_iff, coeff_monomial, ite_eq_left rfl]; exact one_ne_zero) k
 
 def liftPoly (F : MRingOver (ZMod p) ι) : MRingOver ℤ ι :=
   ∑ d ∈ F.support, monomial d ((AddMonoidAlgebra.coeff F d).val : ℤ)
@@ -96,8 +96,8 @@ theorem coeff_liftPoly (F : MRingOver (ZMod p) ι) (d : (Σ k, ι k) →₀ ℕ)
   simp only [coeff_monomial]
   rw [Finset.sum_ite_eq']
   by_cases h : d ∈ F.support
-  · rw [if_pos h]
-  · rw [if_neg h, notMem_support_iff.mp h]
+  · rw [ite_eq_left h]
+  · rw [ite_eq_right h, notMem_support_iff.mp h]
     simp
 
 theorem map_liftPoly [NeZero p] (F : MRingOver (ZMod p) ι) :
@@ -312,8 +312,7 @@ theorem ker_locPart [Fact p.Prime] (hP : IsMultiHomogIdeal (mCoordIdeal y)) (I :
     MvPolynomial.map_surjective _ ZMod.intCast_surjective
   have hmem : monomial d 1 * F ∈
       mCoordIdeal y ⊔ Ideal.comap (MvPolynomial.map (Int.castRingHom (ZMod p)) : MRingOver ℤ ι →+* _) ⊥ := by
-    rw [← Ideal.comap_map_of_surjective _ hsurj]
-    exact hu
+    rwa [← Ideal.comap_map_of_surjective _ hsurj]
   obtain ⟨q, hq, g0, hg0, hsum⟩ := Submodule.mem_sup.mp hmem
   have hg0' : g0 ∈ Ideal.span {C ((p : ℤ))} := by
     have h1 : g0 ∈ RingHom.ker (MvPolynomial.map (Int.castRingHom (ZMod p)) : MRingOver ℤ ι →+* _) := by
@@ -358,8 +357,7 @@ theorem eq_zero_of_p_smul (hP : (mCoordIdeal y).IsPrime) (hH : IsHorizontal (mCo
   have hpP : ((p : ℤ) : MRingOver ℤ ι) ∉ mCoordIdeal y := by
     intro hmem
     have h1 : (p : ℤ) ∈ (mCoordIdeal y).comap (C : ℤ →+* MRingOver ℤ ι) := by
-      rw [Ideal.mem_comap, eq_intCast]
-      exact hmem
+      rwa [Ideal.mem_comap, eq_intCast]
     rw [hH, Ideal.mem_bot] at h1
     exact hp (by exact_mod_cast h1)
   induction x using LocalizedModule.induction_on with
@@ -375,8 +373,7 @@ theorem eq_zero_of_p_smul (hP : (mCoordIdeal y).IsPrime) (hH : IsHorizontal (mCo
       ring
     refine (LocalizedModule.mk_eq.mpr ⟨u, ?_⟩).trans (LocalizedModule.zero_mk 1)
     simp only [one_smul, smul_zero, Submonoid.smul_def, GenOnFibres.smul_mk]
-    rw [Ideal.Quotient.eq_zero_iff_mem, idealOver_int]
-    exact hu'
+    rwa [Ideal.Quotient.eq_zero_iff_mem, idealOver_int]
 
 theorem redLoc_p_smul (I : ∀ k, Finset (ι k))
     (x : LocalizedModule (KH.cellMon ℤ I) (MRingOver ℤ ι ⧸ GenOnFibres.idealOver y ℤ)) :

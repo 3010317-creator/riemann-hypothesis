@@ -71,8 +71,7 @@ private theorem cc_ev_lemma {m n : ℕ} {a : Fin m → Pt R n d} (ha : CZ a) (f 
   · simp
   · intro e he
     obtain ⟨p, hp⟩ : ∃ p, e p ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact he (Finsupp.ext hc)
     rw [Finsupp.prod, map_prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.2 hp), smul_zero]
     simp [ha p.1 p.2, hp]
@@ -155,8 +154,7 @@ theorem IntTie.hAc (a : O) (i : Fin d) : constantCoeff (t.actT a i) = 0 := by
   simp only [MvPowerSeries.constantCoeff_map, B.A.const a i] at h2
   exact hφ (h2.trans (map_zero φ).symm)
 
-theorem IntTie.hFi (i : Fin d) : MvPowerSeries.map φ (t.FT i) = B.G.F i := by
-  exact congrFun t.hF i
+theorem IntTie.hFi (i : Fin d) : MvPowerSeries.map φ (t.FT i) = B.G.F i := congrFun t.hF i
 
 end Comparison₂
 

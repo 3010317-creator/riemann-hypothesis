@@ -216,8 +216,7 @@ theorem exists_conj_cuspSub : ∀ (E : Type) [Field E] [NumberField E] [_root_.N
   obtain ⟨C, hC, hact⟩ := _root_.GlobalTheory.smooth_conj_commutes_act E a
   have hZ := _root_.GlobalTheory.CuspRep.ConjZalg.conj_Zalg E a C hact
   have hcusp := isCuspForm_of_conj_pointwise E a C hC hact hZ
-  refine ⟨π.mapConj C hact hcusp, C.submoduleMap π.V, fun o φ => Subtype.ext ?_⟩
-  exact (hact o φ.1).symm
+  exact ⟨π.mapConj C hact hcusp, C.submoduleMap π.V, fun o φ => Subtype.ext (hact o φ.1).symm⟩
 
 end GlobalTheory
 end -- clump:auto
@@ -246,19 +245,7 @@ theorem esymm_map_conj (s : Multiset ℂ) (j : ℕ) : (s.map (starRingEnd ℂ)).
 
 theorem conj_satEig (q n : ℕ) (B : Multiset ℂˣ) (j : ℕ) :
     conj (GlobalTheory.LFun.satEig q n B j) = GlobalTheory.LFun.satEig q n (B.map star) j := by
-  have hz : conj (((j : ℂ) * ((n : ℂ) - j)) / 2) = ((j : ℂ) * ((n : ℂ) - j)) / 2 := by
-    rw [map_div₀, map_mul, map_sub, Complex.conj_natCast, Complex.conj_natCast, map_ofNat]
-  have harg : (q : ℂ).arg ≠ Real.pi := by
-    rw [Complex.natCast_arg]; exact Real.pi_pos.ne
-  have hp : conj ((q : ℂ) ^ (((j : ℂ) * ((n : ℂ) - j)) / 2)) = (q : ℂ) ^ (((j : ℂ) * ((n : ℂ) - j)) / 2) := by
-    have := Complex.conj_cpow (q : ℂ) (((j : ℂ) * ((n : ℂ) - j)) / 2) harg
-    rw [hz, Complex.conj_natCast] at this
-    exact this.symm
-  have hm : ((B.map star).map fun b : ℂˣ => (b : ℂ)) = (B.map fun b : ℂˣ => (b : ℂ)).map (starRingEnd ℂ) := by
-    simp only [Multiset.map_map]
-    refine Multiset.map_congr rfl fun b _ => ?_
-    simp [Units.coe_star]
-  rw [GlobalTheory.LFun.satEig, GlobalTheory.LFun.satEig, map_mul, hp, hm, esymm_map_conj]
+  exact (GlobalTheory.LFun.UnitaryParam.satEig_map_star q n B j).symm
 
 theorem conj_Tj {L : Type} [Field L] (n : ℕ) (O : Subring L) (ϖ : L) (j : ℕ) (g : GL (Fin n) L) :
     conj (Formalism.UG.Tj ℂ n O ϖ j g) = Formalism.UG.Tj ℂ n O ϖ j g := by
@@ -348,8 +335,7 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 theorem map_inv_map_star {B : Multiset ℂˣ} (h : B.map star = B.map (·⁻¹)) : (B.map (·⁻¹)).map star = B := by
   have e : (B.map (·⁻¹)).map star = (B.map star).map (·⁻¹) := by
     rw [Multiset.map_map, Multiset.map_map]
-    refine Multiset.map_congr rfl fun u _ => ?_
-    exact Units.ext (by simp)
+    exact Multiset.map_congr rfl fun u _ => Units.ext (by simp)
   rw [e, h, Multiset.map_map]
   conv_rhs => rw [← Multiset.map_id B]
   exact Multiset.map_congr rfl fun u _ => inv_inv u
@@ -390,8 +376,7 @@ theorem paired_invTOp (hJS : GlobalTheory.Published.JacquetShalikaRigidity) (hB 
     have h2 := _root_.GlobalTheory.LFun.hasSatGL_of_conjIntertwiner E w a _ _ ((UpperTheory.V.TC.dual π).locRep w) (π₂.locRep w) J
       (fun g x => by rw [CuspSub.locRep_eq, CuspSub.locRep_eq, hJ]) _ h1
     have h3 := _root_.GlobalTheory.CuspRep.UnitaryParam.map_star_eq_map_inv_of_form E a π H hH hpos hfin w B hBw
-    rw [map_inv_map_star h3] at h2
-    exact h2
+    rwa [map_inv_map_star h3] at h2
   have e := hJS.strong_multiplicity_one ha (CG.mk π₂) (CG.mk π) hsat
   obtain ⟨T, hT⟩ : CuspSub.Iso π₂ π := Quotient.exact e
   let L : π.V ≃ₗ⋆[ℂ] π.V := ((UpperTheory.V.TC.toDual π).trans J).trans T

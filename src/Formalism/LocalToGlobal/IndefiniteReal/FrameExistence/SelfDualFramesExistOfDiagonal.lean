@@ -80,9 +80,7 @@ theorem isFrame_one_std (V : HSp D) (hV : FrmC.StdLat V) :
     induction hx using Submodule.span_induction with
     | mem y hy =>
       obtain ⟨lv, hlv, rfl⟩ := hy
-      intro i
-      have hi := ((hV lv).1 ((mem_coordL V lv).1 hlv)) i
-      exact eToEAf_mem_intAf_of_isIntegral hi
+      exact fun i => eToEAf_mem_intAf_of_isIntegral (((hV lv).1 ((mem_coordL V lv).1 hlv)) i)
     | zero => intro i; exact zero_mem _
     | add x y _ _ hx hy => intro i; exact add_mem (hx i) (hy i)
     | smul c x _ hx => intro i; exact mul_mem c.2 (hx i)

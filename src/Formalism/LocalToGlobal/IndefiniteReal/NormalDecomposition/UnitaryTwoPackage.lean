@@ -124,10 +124,9 @@ private lemma le_iSup_eigPart_inf_of_invariant {I A : Type} [NormedAddCommGroup 
     have hle : W ≤ eigPart op c := fun x hx => (mem_eigPart_iff' op c x).mpr fun i => hc' i x hx
     have hocc : c ∈ Occ op W := by
       change eigPart op c ⊓ W ≠ ⊥
-      rw [inf_eq_right.mpr hle]
-      exact hbot
+      rwa [inf_eq_right.mpr hle]
     exact le_iSup₂_of_le c hocc (le_inf hle le_rfl)
-  push_neg at hsc
+  push Not at hsc
   obtain ⟨i, hi⟩ := hsc
   have hex : ∃ μ : ℂ, ∃ v : A, v ∈ W ∧ v ≠ 0 ∧ op i v = μ • v := by
     haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hbot
@@ -135,10 +134,8 @@ private lemma le_iSup_eigPart_inf_of_invariant {I A : Type} [NormedAddCommGroup 
     obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue ((op i).restrict hmaps)
     obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
     refine ⟨μ, v, v.2, ?_, ?_⟩
-    · intro h
-      exact hv.2 (Subtype.ext h)
-    · have h := congrArg Subtype.val hv.apply_eq_smul
-      simpa using h
+    · exact fun h => hv.2 (Subtype.ext h)
+    · simpa using congrArg Subtype.val hv.apply_eq_smul
   obtain ⟨μ, v, hvW, hv0, hv1⟩ := hex
   obtain ⟨x0, hx0W, hx0⟩ := hi μ
   obtain ⟨W1, hW1⟩ : ∃ W1 : Submodule ℂ A, ∀ x, x ∈ W1 ↔ x ∈ W ∧ op i x = μ • x :=
@@ -167,14 +164,12 @@ private lemma le_iSup_eigPart_inf_of_invariant {I A : Type} [NormedAddCommGroup 
   have hlt1 : W1 < W := by
     refine lt_of_le_of_ne hW1W fun h => hx0 ?_
     have hx0' : x0 ∈ W1 := by
-      rw [h]
-      exact hx0W
+      rwa [h]
     exact ((hW1 x0).mp hx0').2
   have hlt2 : W1ᗮ ⊓ W < W := by
     refine lt_of_le_of_ne inf_le_right fun h => hv0 ?_
     have hv2 : v ∈ W1ᗮ ⊓ W := by
-      rw [h]
-      exact hvW
+      rwa [h]
     exact inner_self_eq_zero.mp
       (Submodule.inner_right_of_mem_orthogonal hvW1 (Submodule.mem_inf.mp hv2).1)
   have hr1 : Module.finrank ℂ W1 < n := by

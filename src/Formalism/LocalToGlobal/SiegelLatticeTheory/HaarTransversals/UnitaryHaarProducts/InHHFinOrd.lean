@@ -116,8 +116,7 @@ theorem mapM_unitaryC (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ
     simp [Formalism.UG.cT, Matrix.conjTranspose_apply]
     all_goals first
       | (rw [starRingEnd_apply]; exact hc _)
-  rw [h2] at h1
-  exact h1
+  rwa [h2] at h1
 
 theorem matE_isomC (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ (starRingEnd X.B.I.E) X.B.I.J) :
     matEC X M ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := by
@@ -194,8 +193,7 @@ theorem fmat_eq_one_of_fix (g : X.B.I.Gf) (hg : ∀ y, X.B.I.fmat g *ᵥ incl X.
       first
       | exact h
     rw [Pi.single_apply] at h2
-    rw [Matrix.one_apply]
-    exact h2
+    rwa [Matrix.one_apply]
   exact Subtype.ext (Units.ext hm)
 
 theorem decomp (v : (VS D).V) : ∃ s ∈ Submodule.span D.host.E (Set.range X.eX ∪ Set.range X.fY ∪ {X.zu u}),
@@ -297,7 +295,7 @@ theorem delta_finOrd (δ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (hδiso : δ ∈ 
 
       rw [← hcf, map_sum] at h1
       simp only [map_smul, smul_eq_mul, hT_f_e, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true] at h1
+        Finset.mem_univ, ite_true] at h1
       exact h1
     rw [← hcf]
     simp [hc0]
@@ -333,8 +331,7 @@ theorem delta_finOrd (δ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (hδiso : δ ∈ 
     refine hpos w w.2 ?_
     intro hwX
     apply hq
-    rw [Submodule.Quotient.mk_eq_zero]
-    exact hwX
+    rwa [Submodule.Quotient.mk_eq_zero]
   have haut : Q ∈ Formalism.L2.Col.autLat (qLat Λ W ⊥) := by
     have : Formalism.HermitianLatticesTheory.gmap Q (qLat Λ W ⊥) = qLat Λ W ⊥ := by
       ext n
@@ -466,8 +463,7 @@ theorem gamFinKu_of (hK : X.LevelSubgroupCharacter) (hL : LatOfLattice X u) : Ga
       have hi : ((iotaF X u γ : Hfin X u) : X.B.I.Gf) = (γ : X.B.I.GA).2 := rfl
       simp only [Subgroup.coe_mul, Subgroup.coe_inv, hi]
       group
-    rw [e]
-    exact hγ
+    rwa [e]
   have hkK : ∀ x, x ∈ X.B.I.Lf ↔
       X.B.I.fmat (((h : X.B.I.Gf) * X.xu u)⁻¹ * (γ : X.B.I.GA).2 * ((h : X.B.I.Gf) * X.xu u)) *ᵥ x
         ∈ X.B.I.Lf :=

@@ -38,14 +38,12 @@ theorem IsChartVel.real_smul {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fi
   refine ⟨fun s => γ ((r : ℂ) * s), by simpa using h0, ?_, ?_, ?_⟩
   · have hd' : HasDerivAt γ w ((r : ℂ) * 0) := by simpa using hd
     have h' := hd'.scomp (0 : ℂ) hm
-    rw [hsw] at h'
-    exact h'
+    rwa [hsw] at h'
   · filter_upwards [ht.eventually hev] with s hs
     exact ⟨hs.1.comp s (differentiableAt_id.const_mul _), hs.2⟩
   · have hv' : HasDerivAt (fun s => e (M.proj (γ s))) v ((r : ℂ) * 0) := by simpa using hv
     have h' := hv'.scomp (0 : ℂ) hm
-    rw [hsw] at h'
-    exact h'
+    rwa [hsw] at h'
 
 theorem APrimeChartMargin.proof (hQ : APrimeChartLevi.Statement) (hL : ChartVelLift.Statement) :
     APrimeChartMargin.Statement := by

@@ -23,10 +23,8 @@ theorem fmat_one : I.fmat 1 = 1 := rfl
 theorem fmat_inv_mul (x : I.Gf) : I.fmat x⁻¹ * I.fmat x = 1 := by
   rw [← fmat_mul, inv_mul_cancel, fmat_one]
 
-theorem K_one : (1 : I.Gf) ∈ I.Kset := by
-  exact (Formalism.UG.stabGL I.Lf).one_mem
-theorem K_inv {x : I.Gf} (hx : x ∈ I.Kset) : x⁻¹ ∈ I.Kset := by
-  exact (Formalism.UG.stabGL I.Lf).inv_mem hx
+theorem K_one : (1 : I.Gf) ∈ I.Kset := (Formalism.UG.stabGL I.Lf).one_mem
+theorem K_inv {x : I.Gf} (hx : x ∈ I.Kset) : x⁻¹ ∈ I.Kset := (Formalism.UG.stabGL I.Lf).inv_mem hx
 theorem K_mv {x : I.Gf} (hx : x ∈ I.Kset) {y : VA I} (hy : y ∈ I.Lf) : I.fmat x *ᵥ y ∈ I.Lf := by
   exact ((show ∀ z, z ∈ I.Lf ↔ I.fmat x *ᵥ z ∈ I.Lf from hx) y).1 hy
 theorem K_sub_mv {x : I.Gf} (hx : x ∈ I.Kset) {y : VA I} (hy : y ∈ I.Lf) :
@@ -44,15 +42,13 @@ def Mo (g : ℕ) (S : Set (VA I)) : Submodule (IntAf I.F I.E) (VA I) :=
   Submodule.span (IntAf I.F I.E) S ⊔ mL I g
 
 theorem smul_mem_mL {g : ℕ} {y : VA I} (hy : y ∈ I.Lf) :
-    ((g : I.E ⊗[I.F] Af I.F) • y) ∈ mL I g := by
-  exact Submodule.subset_span ⟨y, hy, rfl⟩
+    ((g : I.E ⊗[I.F] Af I.F) • y) ∈ mL I g := Submodule.subset_span ⟨y, hy, rfl⟩
 
 theorem Mo_mono {g : ℕ} {S T : Set (VA I)} (h : S ⊆ T) : Mo I g S ≤ Mo I g T := by
   exact sup_le_sup_right (Submodule.span_mono h) _
 theorem sub_Mo {g : ℕ} {S : Set (VA I)} : S ⊆ Mo I g S := by
   exact fun s hs => Submodule.mem_sup_left (Submodule.subset_span hs)
-theorem mL_Mo {g : ℕ} {S : Set (VA I)} : mL I g ≤ Mo I g S := by
-  exact le_sup_right
+theorem mL_Mo {g : ℕ} {S : Set (VA I)} : mL I g ≤ Mo I g S := le_sup_right
 
 theorem mv_mem (M : Matrix (Fin I.n) (Fin I.n) (I.E ⊗[I.F] Af I.F)) (g : ℕ) (S : Set (VA I))
     (N : Submodule (IntAf I.F I.E) (VA I)) (hS : ∀ s ∈ S, M *ᵥ s ∈ N)
@@ -62,8 +58,7 @@ theorem mv_mem (M : Matrix (Fin I.n) (Fin I.n) (I.E ⊗[I.F] Af I.F)) (g : ℕ) 
   have h : Mo I g S ≤ N.comap (mvO I M) := by
     refine sup_le ?_ ?_
     · rw [Submodule.span_le]
-      intro s hs
-      exact hS s hs
+      exact fun s hs => hS s hs
     · unfold mL
       rw [Submodule.span_le]
       rintro _ ⟨y, hy, rfl⟩
@@ -118,8 +113,7 @@ theorem sigA_sigA (a : I.E ⊗[I.F] Af I.F) : sigA I (sigA I a) = a := by
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
 
 theorem sigA_inclE (a : I.E) : sigA I (Formalism.UG.inclE (F := I.F) (Af I.F) a) =
-    Formalism.UG.inclE (F := I.F) (Af I.F) (star a) := by
-  exact sigA_tmul I a 1
+    Formalism.UG.inclE (F := I.F) (Af I.F) (star a) := sigA_tmul I a 1
 
 theorem star_intOE {a : I.E} (ha : a ∈ Formalism.UG.intOE I.E) : star a ∈ Formalism.UG.intOE I.E := by
   obtain ⟨o, rfl⟩ := ha
@@ -512,10 +506,10 @@ theorem Afun_mul {x y : I.Gf} (hx : x ∈ I.Kset) (hcx : K2cong I g e0 z0 bw x)
   · exact term_Z I g _ _ (nxt_Z I g e0 f0 z0 hfe hfz a)
       (Me_Q I g e0 f0 hf0 hfe a (e_step I g e0 z0 bw hx hcx a _ (nxt_cong I g e0 z0 bw hcy a)))
   · by_cases h : i.1 + 1 < k
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       exact term_Z I g _ _ (hbb i _ (fun he => by rw [Fin.ext_iff] at he; simp at he))
         (Mb_Q I g e0 bw bwd hbwd hbe hbb i (b_step I g e0 z0 bw hx hcx i _ (hcy.2.2 ⟨i.1 + 1, h⟩)))
-    · simp only [dif_neg h, sub_self]; exact Z_zero I g
+    · simp only [dite_eq_right h, sub_self]; exact Z_zero I g
 
 theorem Afun_int {x : I.Gf} (hx : x ∈ I.Kset) (he0 : ∀ a, e0 a ∈ I.Lf) (hf0 : ∀ a, f0 a ∈ I.Lf)
     (hz0 : z0 ∈ I.Lf) (hbw : ∀ i, bw i ∈ I.Lf) (hbwd : ∀ i, bwd i ∈ I.Lf) :
@@ -580,11 +574,11 @@ theorem reference_frame_congruences :
     (∀ i j, i ≠ j → ZMod' X.B.I X.B.g (hA X.B.I (X.bwd i) (X.bw j))) := by
   refine ⟨fun a b hab => ?_, fun a => (X.formsAtZero.2 a).2, fun i a => ?_, fun i j hij => ?_⟩
   · have h := (X.gramIntegral b a).2.2
-    rw [if_neg (Ne.symm hab), sub_zero] at h
+    rw [ite_eq_right (Ne.symm hab), sub_zero] at h
     rw [hA_symm X.B.I (X.e0 b)]; exact Z_sig _ _ h
   · rw [hA_symm X.B.I (X.e0 a)]; exact Z_sig _ _ ((X.weightVectorsIntegral i).2.2 a).2.2.1
   · have h := X.bw_dual i j
-    rwa [if_neg hij, sub_zero] at h
+    rwa [ite_eq_right hij, sub_zero] at h
 
 theorem level_subgroup_character_unitary : X.LevelSubgroupCharacter := by
   have hg := modulus_g_ne_zero X

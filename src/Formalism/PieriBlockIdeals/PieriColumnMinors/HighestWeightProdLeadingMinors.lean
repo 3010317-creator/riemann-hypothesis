@@ -271,8 +271,7 @@ theorem dual_weyl_degree_bound {r : ℕ} (ν : Fin r → ℕ) (hν : Antitone ν
     · exact hx m h
     · exact hy m h
   | smul c x _ hx =>
-    intro m hm
-    exact hx m (support_smul hm)
+    exact fun m hm => hx m (support_smul hm)
 
 theorem wtBound : WtBound := by
   intro r M ν μ hν hM hne a
@@ -325,8 +324,7 @@ theorem block_weight_last_le_bound (p q w M : ℕ) (κ : Fin q → ℕ) (hκ : �
   refine Fin.addCases (fun b => ?_) (fun b => ?_) a
   · rw [Fin.append_left]
     exact hκ b
-  · rw [Fin.append_right]
-    exact hw
+  · rwa [Fin.append_right]
 
 theorem weight_space_ne_bot {r : ℕ} {ν μ : Fin r → ℕ} {x : MvPolynomial (Fin r × Fin r) ℤ} (hx : x ∈ nablaWt r ν μ)
     (hne : x ≠ 0) : nablaWt r ν μ ≠ ⊥ := by
@@ -347,9 +345,7 @@ theorem last_graded_at_of_exp_dual (hE : ExpDual) (hD : LemmaDGraded) (l p q w M
   simp only [dualWt] at hB
   rw [hB]
   have hξs : Antitone fun a : Fin (p + q) => -ξ (Fin.rev (Fin.cast (Nat.add_comm p q) a)) := by
-    intro a b hab
-    refine neg_le_neg (hξ (Fin.rev_le_rev.mpr ?_))
-    exact hab
+    exact fun a b hab => neg_le_neg (hξ (Fin.rev_le_rev.mpr hab))
   refine hD l p q (M - w) (dualWt M lam2) _ hl ((dualWtSpec q M lam2).2.2 ha)
     (fun b => Nat.sub_le_sub_left (hb _).1 M) hξs i' eL ?_ i _ ((depthDual p q w M i μ hwM hμM).1 hd) ?_
   · intro μ2' hdep
@@ -501,8 +497,7 @@ theorem cofactor_leading_minor {r s t : ℕ} (h : s + t = r) (hs : s ≤ r) (ht 
     unfold lpMinor
     refine congrArg Matrix.det (Matrix.ext fun i j => ?_)
     simp only [Matrix.of_apply, ld3Gam_inr, genericMatrix']
-  rw [e1, e2, Fintype.card_fin, Matrix.det_submatrix_equiv_self] at J
-  exact J
+  rwa [e1, e2, Fintype.card_fin, Matrix.det_submatrix_equiv_self] at J
 
 theorem cofactor_bideterminant {r K : ℕ} (sz : Fin K → ℕ) (hsz : ∀ k, sz k ≤ r) (I : ∀ k, Fin (sz k) → Fin r) :
     ∃ g ∈ dualWeyl ℤ r r (∑ k, initW r (r - sz k)),
@@ -532,8 +527,7 @@ theorem shape_total_degree {r K : ℕ} (sz : Fin K → ℕ) (hsz : ∀ k, sz k �
   have e := sum_min_eq_shapeDeg sz hsz r
   have e1 : ∀ k', min r (sz k') = sz k' := fun k' => min_eq_right (hsz k')
   simp only [e1] at e
-  rw [Finset.filter_true_of_mem (fun t _ => t.isLt)] at e
-  exact e
+  rwa [Finset.filter_true_of_mem (fun t _ => t.isLt)] at e
 
 theorem det_pow_mul_mem_dual_weyl {r : ℕ} (ν : Fin r → ℕ) (c : ℕ) {g : MvPolynomial (Fin r × Fin r) ℤ}
     (hg : g ∈ dualWeyl ℤ r r ν) : genericDet ℤ r ^ c * g ∈ dualWeyl ℤ r r (fun a => ν a + c) := by
@@ -618,11 +612,11 @@ theorem adjugate_entry_weighted_homog (r : ℕ) (i j : Fin r) :
   rw [e]
   refine IsWeightedHomogeneous.prod _ _ _ fun k _ => ?_
   by_cases h : σ k = j
-  · rw [if_pos h, h, Matrix.updateRow_self, Pi.single_apply]
+  · rw [ite_eq_left h, h, Matrix.updateRow_self, Pi.single_apply]
     split_ifs
     · exact isWeightedHomogeneous_one _ _
     · exact isWeightedHomogeneous_zero _ _ _
-  · rw [if_neg h, Matrix.updateRow_ne h]
+  · rw [ite_eq_right h, Matrix.updateRow_ne h]
     exact isWeightedHomogeneous_X ℤ (rowW r r) _
 
 theorem aeval_weighted_homog {σ τ Mo : Type*} [AddCommMonoid Mo] (w : τ → Mo) (φ : σ → MvPolynomial τ ℤ) (ω : σ → Mo)
@@ -723,8 +717,7 @@ theorem cofactor_cofactor_variable (r : ℕ) (v : Fin r × Fin r) :
     simp
   have h3 := congrFun (congrFun (adjugate_adjugate_smul (genericMatrix' ℤ r)) a) s
   rw [Fintype.card_fin] at h3
-  rw [h1]
-  exact h3
+  rwa [h1]
 
 theorem pow_mul_eval_homogeneous_eq {σ S : Type*} [CommRing S] (φ ψ : MvPolynomial σ ℤ →ₐ[ℤ] S) (d e : S)
     (h : ∀ v, d * φ (X v) = e * ψ (X v)) (N : ℕ) (x : MvPolynomial σ ℤ) (hx : x.IsHomogeneous N) :
@@ -750,8 +743,7 @@ theorem cofCof : CofCof := by
   refine ⟨cofactor_det_eq_pow r, fun N x hx => ?_⟩
   have h := pow_mul_eval_homogeneous_eq ((cofMap r).comp (cofMap r)) (AlgHom.id ℤ _) (genericDet ℤ r) (genericDet ℤ r ^ (r - 1))
     (fun v => cofactor_cofactor_variable r v) N x hx
-  rw [← pow_mul] at h
-  exact h
+  rwa [← pow_mul] at h
 
 theorem generator_diag_variable {r : ℕ} (a : Fin r) (v : Fin r × Fin r) :
     rowGen ℤ a a (X v) = Polynomial.C (X v) * (1 + Polynomial.X) ^ (lgraded_wa (n := r) a v) := by
@@ -846,8 +838,7 @@ theorem weyl_le_of_stable_submodule {r : ℕ} (ν : Fin r → ℕ) (hν : Antito
     rintro z hz ⟨μ', hμ'⟩ μ
     by_cases h : μ = μ'
     · subst h
-      rw [hμ'.weightedHomogeneousComponent_same]
-      exact hz
+      rwa [hμ'.weightedHomogeneousComponent_same]
     · rw [hμ'.weightedHomogeneousComponent_ne μ h]
       exact L.zero_mem
   have hle : L' ≤ L := by
@@ -952,17 +943,17 @@ noncomputable def leadingMinorPolynomial (r s : ℕ) : MvPolynomial (Fin r × Fi
 
 def partialSumOfExponents {r : ℕ} (ν : Fin r → ℕ) (s : ℕ) : ℕ := if h : s < r then ν ⟨s, h⟩ else 0
 
-theorem partial_sequence_val {r : ℕ} (ν : Fin r → ℕ) (s : Fin r) : partialSumOfExponents ν s.val = ν s := dif_pos s.isLt
+theorem partial_sequence_val {r : ℕ} (ν : Fin r → ℕ) (s : Fin r) : partialSumOfExponents ν s.val = ν s := dite_eq_left s.isLt
 
 theorem partial_sequence_antitone {r : ℕ} (ν : Fin r → ℕ) (hν : Antitone ν) (s : ℕ) : partialSumOfExponents ν (s + 1) ≤ partialSumOfExponents ν s := by
   unfold partialSumOfExponents
   by_cases h : s + 1 < r
-  · rw [dif_pos h, dif_pos (by omega)]
+  · rw [dite_eq_left h, dite_eq_left (by omega)]
     exact hν (Fin.le_def.mpr (by simp))
-  · rw [dif_neg h]
+  · rw [dite_eq_right h]
     exact Nat.zero_le _
 
-theorem partial_sequence_top_eq_zero {r : ℕ} (ν : Fin r → ℕ) : partialSumOfExponents ν r = 0 := dif_neg (lt_irrefl r)
+theorem partial_sequence_top_eq_zero {r : ℕ} (ν : Fin r → ℕ) : partialSumOfExponents ν r = 0 := dite_eq_right (lt_irrefl r)
 
 theorem partial_sequence_sum {r : ℕ} (ν : Fin r → ℕ) : ∑ s ∈ Finset.range r, partialSumOfExponents ν s = ∑ a, ν a := by
   rw [← Fin.sum_univ_eq_sum_range]
@@ -973,14 +964,14 @@ theorem highest_weight_prod_leading_minors {r : ℕ} (ν : Fin r → ℕ) :
   rw [← Fin.prod_univ_eq_prod_range (fun s => leadingMinorPolynomial r (s + 1) ^ (partialSumOfExponents ν s - partialSumOfExponents ν (s + 1)))]
   unfold hw
   refine Finset.prod_congr rfl fun s _ => ?_
-  have h1 : leadingMinorPolynomial r (s.val + 1) = lpMinor ℤ (s.val + 1) (by omega) (by omega) := dif_pos (by omega)
+  have h1 : leadingMinorPolynomial r (s.val + 1) = lpMinor ℤ (s.val + 1) (by omega) (by omega) := dite_eq_left (by omega)
   have h2 : nuNext ν s = partialSumOfExponents ν (s.val + 1) := rfl
   rw [h1, h2, partial_sequence_val]
 
 theorem cofactor_leading_minor_pow {r s t : ℕ} (h : s + t = r) :
     genericDet ℤ r * cofMap r (leadingMinorPolynomial r s) = genericDet ℤ r ^ s * leadingMinorPolynomial r t := by
   unfold leadingMinorPolynomial
-  rw [dif_pos (by omega), dif_pos (by omega)]
+  rw [dite_eq_left (by omega), dite_eq_left (by omega)]
   exact cofactor_leading_minor h _ _
 
 theorem telescoping_sum_eq_head (f : ℕ → ℕ) (hf : ∀ s, f (s + 1) ≤ f s) (n : ℕ) :
@@ -1024,7 +1015,7 @@ theorem leading_minor_zero_eq_one (r s : ℕ) (hs : s = 0) : leadingMinorPolynom
 theorem partial_sequence_dual {r : ℕ} (M : ℕ) (ν : Fin r → ℕ) (t : ℕ) (ht : t < r) :
     partialSumOfExponents (dualWt M ν) t = M - partialSumOfExponents ν (r - (t + 1)) := by
   unfold partialSumOfExponents dualWt
-  rw [dif_pos ht, dif_pos (by omega)]
+  rw [dite_eq_left ht, dite_eq_left (by omega)]
   rfl
 
 theorem highest_weight_dual_weight {r : ℕ} (M : ℕ) (ν : Fin r → ℕ) (hν : Antitone ν) (hM : ∀ a, ν a ≤ M) :
@@ -1041,7 +1032,7 @@ theorem highest_weight_dual_weight {r : ℕ} (M : ℕ) (ν : Fin r → ℕ) (hν
     rw [highest_weight_prod_leading_minors, ld3Q, Finset.prod_range_succ, Finset.prod_range_succ]
     have e1 : leadingMinorPolynomial (n + 1) (n + 1) = genericDet ℤ (n + 1) := by
       unfold leadingMinorPolynomial
-      rw [dif_pos le_rfl]
+      rw [dite_eq_left le_rfl]
       exact leading_minor_full_eq_det ℤ _ rfl _ _
     have e2 : leadingMinorPolynomial (n + 1) (n + 1 - (n + 1)) = 1 := leading_minor_zero_eq_one _ _ (by omega)
     rw [e1, e2, one_pow, mul_one, partial_sequence_dual M ν n (by omega), partial_sequence_top_eq_zero, Nat.sub_zero,
@@ -1149,8 +1140,7 @@ theorem exp_le_of_dual_exp_le (hN : NablaDual) (hW : WeylDual) (hT : DualWeight)
       (genDet r ^ M * C (m * (l : ℤ) ^ e) * (genDet r ^ (r - 1)) ^ M) * H3
   have hne : genDet r ^ (∑ a, dualWt M ν a) * (genDet r ^ (r - 1)) ^ (∑ a, ν a) * genDet r ^ (∑ a, ν a) ≠ 0 :=
     mul_ne_zero (mul_ne_zero (genericDet_pow_ne_zero r _) (pow_ne_zero _ (genericDet_pow_ne_zero r _))) (genericDet_pow_ne_zero r _)
-  rw [← mul_left_cancel₀ hne hfin]
-  exact hy
+  rwa [← mul_left_cancel₀ hne hfin]
 
 theorem expDualOfLattices : ExpDualOfLattices := by
   intro hN hW hT hC l r M ν μ e hl hν hνM hμM
@@ -1158,8 +1148,7 @@ theorem expDualOfLattices : ExpDualOfLattices := by
   · intro h
     refine exp_le_of_dual_exp_le hN hW hT hC l r M (dualWt M ν) (dualWt M μ) e hl ((dualWtSpec r M ν).2.2 hν)
       (dualWtSpec r M ν).2.1 (dualWtSpec r M μ).2.1 ?_
-    rw [(dualWtSpec r M ν).1 hνM, (dualWtSpec r M μ).1 hμM]
-    exact h
+    rwa [(dualWtSpec r M ν).1 hνM, (dualWtSpec r M μ).1 hμM]
   · exact exp_le_of_dual_exp_le hN hW hT hC l r M ν μ e hl hν hνM hμM
 
 theorem expDual : ExpDual := expDualOfLattices nablaDual weylDual dualWeight cofCof

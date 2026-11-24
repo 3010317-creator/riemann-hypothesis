@@ -85,8 +85,7 @@ theorem analyticAt_comp_of_holo_in_charts (e n : ℕ) (X : Type) [TopologicalSpa
     apply hf k
     refine ⟨(A.chart k).map_source hk, ?_⟩
     show (A.chart k).symm (A.chart k (bp w₀)) ∈ W
-    rw [(A.chart k).left_inv hk]
-    exact hwW
+    rwa [(A.chart k).left_inv hk]
   have h3 := h2.comp h1
   refine h3.congr ?_
   have hev : ∀ᶠ w in 𝓝 w₀, bp w ∈ (A.chart k).source :=
@@ -133,9 +132,9 @@ theorem analyticAt_minorIJ_of_entries {E : Type} [NormedAddCommGroup E] [NormedS
     (A : E → Matrix (Fin N) (Fin N) ℂ) (x : E) (h : ∀ r s, AnalyticAt ℂ (fun u => A u r s) x)
     (I J : Finset (Fin N)) : AnalyticAt ℂ (fun u => minorIJ (A u) I J) x := by
   by_cases e : I.card = J.card
-  · simp only [minorIJ, dif_pos e]
+  · simp only [minorIJ, dite_eq_left e]
     exact analyticAt_det_of_entries _ x fun r s => h _ _
-  · simp only [minorIJ, dif_neg e]
+  · simp only [minorIJ, dite_eq_right e]
     exact analyticAt_const
 
 theorem analyticAt_flagAt_entry {Ψ : Type} [DecidableEq Ψ] {N d : ℕ} (H : Ψ → (Fin d → ℂ) → Matrix (Fin N) (Fin N) ℂ)
@@ -148,13 +147,12 @@ theorem analyticAt_flagAt_entry {Ψ : Type} [DecidableEq Ψ] {N d : ℕ} (H : Ψ
     (ContinuousLinearMap.proj 0 : (Fin (d + 1) → ℂ) →L[ℂ] ℂ).analyticAt _
   unfold flagAt
   by_cases h : τ' = τ
-  · simp only [if_pos h, Matrix.mul_apply, Matrix.add_apply]
+  · simp only [ite_eq_left h, Matrix.mul_apply, Matrix.add_apply]
     refine Finset.analyticAt_fun_sum _ fun t _ => (hHt _ _ _).mul (analyticAt_const.add ?_)
     by_cases e : cb = t ∧ ca = s
-    · simpa only [Matrix.single_apply, if_pos e] using h0
-    · simpa only [Matrix.single_apply, if_neg e] using analyticAt_const
-  · simp only [if_neg h]
-    exact hHt _ _ _
+    · simpa only [Matrix.single_apply, ite_eq_left e] using h0
+    · simpa only [Matrix.single_apply, ite_eq_right e] using analyticAt_const
+  · simpa only [ite_eq_right h] using hHt _ _ _
 
 theorem sameOrbit_basePart {K : Type} {ι : K → Type} {σ : Type} (blk : σ → Option K) {z z' : (Σ k, ι k) → ℂ}
     (h : SameOrbit z z') : SameOrbit (basePart blk z) (basePart blk z') := by

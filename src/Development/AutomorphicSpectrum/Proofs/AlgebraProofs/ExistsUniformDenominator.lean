@@ -145,11 +145,9 @@ theorem locFree_reflexive : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o
   · obtain ⟨m, hm⟩ := exists_uniform_denominator R r L h (f l) (hf l) (B.coord q) fun e he => by
       obtain ⟨a, ha, rfl⟩ := (hb e).1 ⟨0, by simpa using he⟩
       have : B.coord q (∑ q, a q • b q) = a q := by
-        simp only [← hB, Module.Basis.coord_apply]
-        exact congrFun (B.repr_sum_self a) q
+        simpa only [← hB, Module.Basis.coord_apply] using congrFun (B.repr_sum_self a) q
       rw [this]; exact ha q
     exact ⟨m, by simpa using hv (f l ^ m • B.coord q) (by simpa using hm)⟩
-  · simp only [← hB, Module.Basis.coord_apply]
-    exact (B.sum_repr v).symm
+  · simpa only [← hB, Module.Basis.coord_apply] using (B.sum_repr v).symm
 
 end GlobalTheory.CompanionTheory.Ar.Num.Reflexive

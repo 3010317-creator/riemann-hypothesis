@@ -142,15 +142,13 @@ theorem descent {j : ℕ} {g : ℝ} {L : (X.Pj j).Tup} (y : (X.Pj j).Xsp)
 
 theorem natInv_mem (m : ℕ) (hm : ¬ p ∣ m) : ((m : Y.Kc))⁻¹ ∈ Y.Oc := by
   have hk : ((m : kb p)) ≠ 0 := by
-    rw [Ne, CharP.cast_eq_zero_iff (kb p) p]
-    exact hm
+    rwa [Ne, CharP.cast_eq_zero_iff (kb p) p]
 
   have hu : IsUnit ((m : WW p)) := by
     apply WittVector.isUnit_of_coeff_zero_ne_zero
     have hc : WittVector.constantCoeff ((m : WW p)) = (m : kb p) := map_natCast _ m
     change WittVector.constantCoeff ((m : WW p)) ≠ 0
-    rw [hc]
-    exact hk
+    rwa [hc]
   obtain ⟨u, hu⟩ := hu
   have h1 : algebraMap (K0 p) Y.Kc (algebraMap (WW p) (K0 p) (↑u⁻¹ : WW p)) * (m : Y.Kc) = 1 := by
     rw [← map_natCast (algebraMap (K0 p) Y.Kc), ← map_natCast (algebraMap (WW p) (K0 p)), ← map_mul,
@@ -248,8 +246,7 @@ theorem vGe_of (Y : Pend X) {j : ℕ} {F : X.Fm j} {g : ℝ} (hE : Eqv X j F)
     simp only [LinearMap.restrictScalars_apply, LinearMap.lsmul_apply, hc, zero_smul, Pi.zero_apply]
     by_cases hL : (X.Pj j).IsLatTup L
     · obtain ⟨y, _, hy⟩ := hv c L hL
-      simp only [LinearMap.restrictScalars_apply, LinearMap.lsmul_apply, hc, zero_smul] at hy
-      exact hy
+      simpa only [LinearMap.restrictScalars_apply, LinearMap.lsmul_apply, hc, zero_smul] using hy
     · exact (hE.1 c L hL).symm
   · refine ⟨(X.vsc g)⁻¹ • F, ?_, ?_⟩
     · rw [mem_Int_iff]
@@ -257,8 +254,7 @@ theorem vGe_of (Y : Pend X) {j : ℕ} {F : X.Fm j} {g : ℝ} (hE : Eqv X j F)
       obtain ⟨y, hy, hy'⟩ := hv c L hL
       simp only [LinearMap.restrictScalars_apply, LinearMap.lsmul_apply] at hy'
       simp only [Pi.smul_apply]
-      rw [← hy', smul_smul, inv_mul_cancel₀ hc, one_smul]
-      exact hy
+      rwa [← hy', smul_smul, inv_mul_cancel₀ hc, one_smul]
     · simp [smul_smul, inv_mul_cancel₀ hc]
 
 variable (X)
@@ -297,7 +293,7 @@ theorem TtL_mem (J : ℕ) (i0 : X.Pl → ℕ) (c' : X.Lv.comp J) (T : Submodule 
     rw [hT]
     by_cases h0 : i0 v = 0
     · unfold Sys.Tt
-      rw [if_pos h0]
+      rw [ite_eq_left h0]
       apply ih hnd' a Lc
       intro L'' hrel
       have hfun : (fun u => if u ∈ v :: vs then i0 u else 0) = (fun u => if u ∈ vs then i0 u else 0) := by
@@ -308,7 +304,7 @@ theorem TtL_mem (J : ℕ) (i0 : X.Pl → ℕ) (c' : X.Lv.comp J) (T : Submodule 
       have := H L'' (by rw [hfun]; exact hrel)
       rwa [List.map_cons, List.prod_cons, pN_zero X J i0 v h0, one_mul] at this
     · unfold Sys.Tt
-      rw [if_neg h0]
+      rw [ite_eq_right h0]
       show a • ((p : X.G.Kf) ^ (Nprime (X.G.P.lam0 v) (X.w v) J (i0 v)) •
         ∑ᶠ (L1 : Submodule ((X.Pj J).W (X.vJ J v)) (Fin ((X.Pj J).m + 1) → (X.Pj J).Qq (X.vJ J v)))
           (_ : IsEdge p ((X.Pj J).n' (X.vJ J v)) (i0 v) ⟨L1, Lc (X.vJ J v)⟩),
@@ -329,15 +325,14 @@ theorem TtL_mem (J : ℕ) (i0 : X.Pl → ℕ) (c' : X.Lv.comp J) (T : Submodule 
         · subst hv'
           right
           have h1 := hrel (X.vJ J v)
-          simp only [vB_vJ, if_neg hv] at h1
+          simp only [vB_vJ, ite_eq_right hv] at h1
           rcases h1 with ⟨_, h1⟩ | ⟨h1, _⟩
-          · simp only [vB_vJ, List.mem_cons, true_or, if_true]
+          · simp only [vB_vJ, List.mem_cons, true_or, ite_true]
             refine ⟨Nat.one_le_iff_ne_zero.mpr h0, ?_⟩
             have e1 : Function.update (β := fun a => Submodule ((X.Pj J).W a) (Fin ((X.Pj J).m + 1) → (X.Pj J).Qq a))
                 Lc (X.vJ J v) L1 (X.vJ J v) = L1 := Function.update_self _ _ _
             have h1' : L'' (X.vJ J v) = L1 := h1.trans e1
-            rw [h1']
-            exact hE
+            rwa [h1']
           · omega
         · have hne : X.vB J v' ≠ v := by
             intro h
@@ -421,11 +416,9 @@ theorem entry_mem (D : Formalism.BasicNotions.D7) (Y : Pend X) (hA : admitted D 
     have h7' := hφ (X.ThZA Y.Kc j (Y.ThA j (La x y) (c', L'') φ)) g
       (fun I n => hE (La x y) (c', L'') hLaL hL'' φ I n)
       (G (La x y).1 (La x y).2) (((mem_Int_iff X j G).mp hG).1 (La x y).1 (La x y).2 hLaL)
-    rw [← Y.ThF_frm] at h7'
-    exact h7'
+    rwa [← Y.ThF_frm] at h7'
   have := inLatC_smulC Y _ _ hb hy
-  rw [Int.cast_natCast] at this
-  exact this
+  rwa [Int.cast_natCast] at this
 
 def RestTmEquiv (X : Sys p) : Prop :=
   ∀ (J : ℕ) (v : X.Pl) (i : ℕ) (F : X.Fm J), Eqv X J F → Eqv X J (X.Tm v i J F)
@@ -454,8 +447,7 @@ theorem formB_of (D : Formalism.BasicNotions.D7) (Y : Pend X) (hA : admitted D X
   have hprod : (vs.map (pN X (j + 1) i0)).prod = ∏ v : X.Pl, pN X (j + 1) i0 v := by
     rw [← List.prod_toFinset _ hnd]
     apply Finset.prod_subset (Finset.subset_univ _)
-    intro v _ hv
-    exact pN_zero X (j + 1) i0 v (hoff v (by simpa using hv))
+    exact fun v _ hv => pN_zero X (j + 1) i0 v (hoff v (by simpa using hv))
   have := TtL_mem X (j + 1) i0 c' (scale (X.vsc (g - X.dG j)) ((X.Pj (j + 1)).HtupW L')) (X.Kz j G) vs hnd 1 L'
     (by
       intro L'' hrel

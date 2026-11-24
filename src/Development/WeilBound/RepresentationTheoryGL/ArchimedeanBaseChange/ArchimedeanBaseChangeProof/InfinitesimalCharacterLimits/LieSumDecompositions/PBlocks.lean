@@ -144,8 +144,7 @@ theorem kl_iff (r : ℕ) (s : ℝ) (p : ℂ[X]) (F : GA E N → ℂ) : Kl r s p 
   · intro h
     funext g
     exact h g
-  · intro h g
-    exact congrFun h g
+  · exact fun h g => congrFun h g
 
 theorem kl_mul {r : ℕ} {s : ℝ} {p q : ℂ[X]} {F : GA E N → ℂ} (h : Kl r s p F) : Kl r s (p * q) F := by
   rw [kl_iff] at h ⊢
@@ -203,8 +202,7 @@ theorem good_bound {β : ℕ → ℝ} {φ : Sm E N} (h : Good β φ) :
   have hroot' := kl_eigen (kl_span hk₀ hFspan) hF0 hFe
   have h1 := hroot (Complex.exp (c * ((1 : ℝ) : ℂ))) hroot'
   rw [Complex.norm_exp] at h1
-  have h2 := Real.exp_le_exp.1 h1
-  simpa using h2
+  simpa using Real.exp_le_exp.1 h1
 
 theorem good_of (β : ℕ → ℝ) {φ : Sm E N} (hφ : IsAutForm φ)
     (hexp : ∀ r, 0 < r → r < N → ∀ c ∈ Exp r φ.1, c.re ≤ β r) : Good β φ := by
@@ -482,8 +480,7 @@ theorem nonPos_tw {a : ℕ} (V : Submodule ℂ (Sm E a)) (w : ℂ) (haut : ∀ �
   have h0 := expTw_holds E a ψ w (haut ψ hψ) r hr hra c hc
   have h1 := hV ψ hψ r hr hra _ h0
   have e : c = (c - w * r * (Module.finrank ℚ E : ℂ)) + w * r * (Module.finrank ℚ E : ℂ) := by ring
-  rw [e, pE_shift]
-  exact h1
+  rwa [e, pE_shift]
 
 end PositivityTheory.Rg.BcB.SpectralAccumulation.Cz.BlockTwistCharacters
 
@@ -576,8 +573,7 @@ theorem hyp_right (hU : IsAutSt U) (hNP : NonPos U) (hT : IsSliceMap U c T) (hpE
     have e3 : (((r + r₂ : ℕ) : ℝ) * (((r + s : ℕ) : ℝ) - ((r + r₂ : ℕ) : ℝ)) / 2 - (r : ℝ) * s / 2) *
         (Module.finrank ℚ E : ℝ) = (Module.finrank ℚ E : ℝ) * (((r + r₂ : ℕ) : ℝ) *
         (((r + s : ℕ) : ℝ) - ((r + r₂ : ℕ) : ℝ))) / 2 - (r : ℝ) * s * (Module.finrank ℚ E : ℝ) / 2 := by ring
-    rw [e3, ← hc]
-    exact hb
+    rwa [e3, ← hc]
   unfold pE
   have e : ((r : ℂ) / 2).re = (r : ℝ) / 2 := by simp
   rw [e]
@@ -678,15 +674,15 @@ theorem proj_decomp {P : ι → Submodule ℂ M} (hP : ∀ k, ∀ φ ∈ P k, �
     rw [← hμ, map_sum]
     rw [Finset.sum_congr rfl (g := fun k => if k = i then (μ k : M) else 0) (fun k hk => by
       by_cases h : k = i
-      · subst h; rw [if_pos rfl, proj_self hP hlam SS k (μ k).2]
-      · rw [if_neg h, proj_other hP SS i k hk h (μ k).2])]
+      · subst h; rw [ite_eq_left rfl, proj_self hP hlam SS k (μ k).2]
+      · rw [ite_eq_right h, proj_other hP SS i k hk h (μ k).2])]
     rw [Finset.sum_ite_eq']
   refine ⟨fun i => ?_, ?_⟩
   · rw [key]
     split_ifs
     · exact (μ i).2
     · exact (P i).zero_mem
-  · rw [Finset.sum_congr rfl (fun i hi => by rw [key, if_pos hi]), hμ]
+  · rw [Finset.sum_congr rfl (fun i hi => by rw [key, ite_eq_left hi]), hμ]
 
 theorem proj_commute (SS : Finset ι) (i : ι) (B : Module.End ℂ M) (hB : ∀ l, Commute (A l) B) :
     Commute (proj A χ lam SS i) B := by
@@ -738,8 +734,7 @@ theorem proj_exists {a : ℕ} (L : Submodule ℂ (Sm E a)) (SS : Finset ((E →+
     if h : σ ≠ σ' then Classical.choose (hsep σ σ' h) else (Classical.arbitrary _, 0)
   have hlam : ∀ σ σ', σ ≠ σ' → χ σ (lam σ σ') ≠ χ σ' (lam σ σ') := by
     intro σ σ' h
-    simp only [lam, dif_pos h]
-    exact Classical.choose_spec (hsep σ σ' h)
+    simpa only [lam, dite_eq_left h] using Classical.choose_spec (hsep σ σ' h)
   have hP : ∀ k, ∀ φ ∈ BlockCapelli.Eig L k sh, ∀ l, A l φ = χ k l • φ := fun k φ hφ l => hφ.2 l.1 l.2
   refine ⟨proj A χ lam SS, fun σ o => proj_commute SS σ _ fun l => GlobalTheory.SpehInfChar.cap_commute_act l.1 l.2 o,
     fun σ φ hφ => (proj_decomp hP hlam SS (hL hφ)).1 σ, fun φ hφ => (proj_decomp hP hlam SS (hL hφ)).2⟩
@@ -827,13 +822,12 @@ theorem blocks_of (hfg : FgSl) : Blocks := by
   have hdec : ∀ j ∈ Finset.range N, dec j ∈ SS := by
     intro j hj
     have h := Finset.mem_range.1 hj
-    simp only [dec, dif_pos h]
-    exact (SS.equivFin.symm ⟨j, h⟩).2
+    simpa only [dec, dite_eq_left h] using (SS.equivFin.symm ⟨j, h⟩).2
   have hreidx : ∀ f : ((E →+* ℂ) → Multiset ℂ) × ((E →+* ℂ) → Multiset ℂ) → Sm E (r + s),
       ∑ j ∈ Finset.range N, f (dec j) = ∑ p ∈ SS, f p := by
     intro f
     rw [Finset.sum_range (fun j => f (dec j))]
-    have e : ∀ i : Fin N, f (dec i) = f (SS.equivFin.symm i).1 := fun i => by simp only [dec, dif_pos i.2, Fin.eta]
+    have e : ∀ i : Fin N, f (dec i) = f (SS.equivFin.symm i).1 := fun i => by simp only [dec, dite_eq_left i.2, Fin.eta]
     simp only [e]
     rw [Equiv.sum_comp SS.equivFin.symm (fun x => f x.1), Finset.sum_coe_sort SS f]
   refine ⟨Finset.range N, fun j => P' (dec j), fun j => tw ((LS U T).map (z₁ (dec j).1)) (-(s : ℂ) / 2),
@@ -893,8 +887,7 @@ def ecurve {N : ℕ} (Z : Matrix (Fin N) (Fin N) (Cinf E)) (t : ℝ) : Matrix (F
 
 theorem hasDerivAt_ecurve {N : ℕ} (Z : Matrix (Fin N) (Fin N) (Cinf E)) : HasDerivAt (ecurve Z) Z 0 := by
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) Z (0 : ℝ)
-  rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-  exact h
+  rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
 
 theorem ecurve_zero {N : ℕ} (Z : Matrix (Fin N) (Fin N) (Cinf E)) : ecurve Z 0 = 1 := by
   simp [ecurve]
@@ -958,8 +951,7 @@ theorem lie_mem_orbSpan {N : ℕ} (φ : Sm E N) [FiniteDimensional ℂ (GlobalTh
     exact A.sum_mem fun κ _ => A.smul_mem _ (a κ).2
   obtain ⟨y, hy, e⟩ := hL
   have : y = lie E N (toL Z) φ := Subtype.ext e
-  rw [← this]
-  exact hy
+  rwa [← this]
 
 end PositivityTheory.Rg.BcB.SpectralAccumulation.Cz.BlockFiniteGeneration
 end -- clump:auto

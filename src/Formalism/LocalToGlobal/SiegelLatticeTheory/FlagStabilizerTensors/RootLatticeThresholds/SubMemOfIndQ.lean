@@ -71,10 +71,8 @@ theorem indQ_mem {Λ : Submodule (𝓞 D.host.E) (VS D).V} (c : (VS D).V ≃ₗ[
     · rintro ⟨z, hz, rfl⟩
       show c z ∈ F0.Xa j
       rw [hfixX z hz]; exact hz
-    · intro hy
-      exact ⟨y, hy, hfixX y hy⟩
-  · have h := hfix (Fin.last D.R.rS)
-    simpa [FlagG.fvec] using h
+    · exact fun hy => ⟨y, hy, hfixX y hy⟩
+  · simpa [FlagG.fvec] using hfix (Fin.last D.R.rS)
 
 theorem sub_mem_of_indQ {c c' : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hc : c ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT)
     (hfix : ∀ a, c (F0.fvec a) = F0.fvec a) (hc' : c' ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT)
@@ -117,8 +115,7 @@ theorem nlam_of_sub {Λ : Submodule (𝓞 D.host.E) (VS D).V} {c c' : (VS D).V �
     rw [e1]
     have hmem : c' x - c x ∈ F0.X := by
       simpa using F0.X.neg_mem hd
-    rw [hXinv _ hmem]
-    exact hmem
+    rwa [hXinv _ hmem]
 
 end Flag
 

@@ -463,8 +463,7 @@ theorem exists_l1_ball {S : Set (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)
 
 theorem exp_isLittleO (A : Type) [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] :
     (fun Z : A => NormedSpace.exp Z - 1 - Z) =o[𝓝 0] fun Z => Z := by
-  have h := (hasFDerivAt_exp_zero (𝕂 := ℂ) (𝔸 := A)).isLittleO
-  simpa using h
+  simpa using (hasFDerivAt_exp_zero (𝕂 := ℂ) (𝔸 := A)).isLittleO
 
 theorem eventually_l1_exp {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ Z : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ in 𝓝 0,
@@ -476,8 +475,7 @@ theorem eventually_l1_exp {ε : ℝ} (hε : 0 < ε) :
     intro Z i
     rw [Matrix.linfty_opNorm_def]
     have := Finset.le_sup (f := fun i => ∑ j, ‖Z i j‖₊) (Finset.mem_univ i)
-    have h2 := NNReal.coe_le_coe.2 this
-    simpa using h2
+    simpa using NNReal.coe_le_coe.2 this
   have h1 : ∀ Z : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ, l1 Z ≤ (P + Q : ℝ) * ‖Z‖ := by
     intro Z
     have := Finset.sum_le_card_nsmul Finset.univ (fun i => ∑ j, ‖Z i j‖) ‖Z‖ fun i _ => hrow Z i
@@ -488,8 +486,7 @@ theorem eventually_l1_exp {ε : ℝ} (hε : 0 < ε) :
     have : (Finset.univ.sup fun i => ∑ j, ‖Z i j‖₊) ≤ ∑ i, ∑ j, ‖Z i j‖₊ :=
       Finset.sup_le fun i _ => Finset.single_le_sum (f := fun i => ∑ j, ‖Z i j‖₊)
         (fun _ _ => by positivity) (Finset.mem_univ i)
-    have h2 := NNReal.coe_le_coe.2 this
-    simpa [l1] using h2
+    simpa [l1] using NNReal.coe_le_coe.2 this
   have hN : (0 : ℝ) < P + Q + 1 := by positivity
   have h3 := (exp_isLittleO (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)).def (div_pos hε hN)
   filter_upwards [h3] with Z hZ
@@ -608,12 +605,10 @@ theorem mp_diag : MeasurePreserving
       rotation (Circle.exp (Real.pi / 2)) ∘ Complex.measurableEquivRealProd.symm := by
     funext ab
     simp [rotation_apply, Complex.measurableEquivRealProd, Complex.ext_iff]
-  rw [h5]
-  exact h4
+  rwa [h5]
 
 theorem mp_unit (s : ℂ) (hs : ‖s‖ = 1) : MeasurePreserving (fun z : ℂ => s * z) volume volume := by
-  have h := (rotation ⟨s, by simpa [Submonoid.unitSphere] using hs⟩).measurePreserving
-  exact h
+  exact (rotation ⟨s, by simpa [Submonoid.unitSphere] using hs⟩).measurePreserving
 
 theorem mp_colrow {ι : Type} [Fintype ι] (s : ι → ℂ) (hs : ∀ i, ‖s i‖ = 1) :
     MeasurePreserving (fun z : (ι → ℂ) × (ι → ℂ) =>
@@ -1016,9 +1011,7 @@ theorem tendsto_fib (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q)) (he :
           have h5 := Real.pi_gt_three
           exact abs_lt.1 (by linarith)
         exact ⟨h1, (hr u h1).1 hu⟩
-      · apply measure_mono
-        intro u hu
-        exact (hr u hu.1).2 hu.2
+      · exact measure_mono (fun u hu => (hr u hu.1).2 hu.2)
     · have h2 : ‖y (e none) - 1‖ + 2 * ∑ i, ‖y (e (some i))‖ < r := hy
       have h3 : 0 ≤ ∑ i, ‖y (e (some i))‖ := Finset.sum_nonneg fun _ _ => norm_nonneg _
       rw [h0, zero_sub, norm_neg, norm_one] at h2
@@ -1032,8 +1025,8 @@ theorem ptGauge_act_le (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q)) (g
     Finset.sum_le_sum fun i _ => Finset.single_le_sum (f := fun j => ‖(UpqT.mat g - 1) i j‖)
       (fun _ _ => norm_nonneg _) (Finset.mem_univ _)
   rw [← e.sum_comp, Fintype.sum_option] at h2
-  simp only [Matrix.sub_apply, Matrix.one_apply, e.injective.eq_iff, if_true, reduceCtorEq,
-    if_false, sub_zero] at h2
+  simp only [Matrix.sub_apply, Matrix.one_apply, e.injective.eq_iff, ite_true, reduceCtorEq,
+    ite_false, sub_zero] at h2
   simp only [ptGauge, h1]
   linarith [norm_nonneg (UpqT.mat g (e none) (e none) - 1)]
 
@@ -1116,8 +1109,7 @@ theorem const_mul_density (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q))
     · have hlt : ptGauge e p.1 + gauge p.2 < t⁻¹ * r := hlt
       have h6 : t⁻¹ * r ≤ r := mul_le_of_le_one_left hr.1.le (inv_le_one_of_one_le₀ ht.le)
       have h7 : 0 ≤ gauge p.2 := weightAbsEntrySum_nonneg _
-      have h8 := (key p hp (by linarith [hr.1])).2
-      exact h8.trans_lt ((lt_inv_mul_iff₀ ht0).1 hlt)
+      exact ((key p hp (by linarith [hr.1])).2).trans_lt ((lt_inv_mul_iff₀ ht0).1 hlt)
     · have hlt : gauge (σ p.1 * j p.2) < r := hlt
       have h6 := ptGauge_act_le e (σ p.1 * j p.2)
       rw [GlobalTheory.RealPlaceCompare.act_mul, hjs, hσ.2 _ hp] at h6
@@ -1264,8 +1256,7 @@ theorem selfDual_of_map {V E : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     · rw [← he.integral_map, h, integral_smul_nnreal_measure, NNReal.smul_def, Complex.real_smul]
     · have := he.integrable_map_iff (μ := μ) (g := g)
       rw [h] at this
-      refine this.symm.trans ?_
-      exact integrable_smul_measure (by exact_mod_cast hc) ENNReal.coe_ne_top
+      exact this.symm.trans (integrable_smul_measure (by exact_mod_cast hc) ENNReal.coe_ne_top)
   have ha : a ≠ 0 := left_ne_zero_of_mul_eq_one hab
   have hb : b ≠ 0 := right_ne_zero_of_mul_eq_one hab
   obtain ⟨haI, haG⟩ := gen T a ha T.toHomeomorph.measurableEmbedding hT

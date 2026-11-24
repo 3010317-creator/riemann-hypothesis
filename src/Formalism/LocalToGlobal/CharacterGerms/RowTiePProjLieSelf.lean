@@ -57,8 +57,7 @@ theorem mm_add {a b : C} (ha : V.MM a) (hb : V.MM b) : V.MM (a + b) := by
 
 theorem mm_neg {a : C} (ha : V.MM a) : V.MM (-a) := by
   unfold VF.MM at ha ⊢
-  rw [AddValuation.map_neg]
-  exact ha
+  rwa [AddValuation.map_neg]
 
 theorem v_unit {x : C} (hx : V.MM (x - 1)) : V.v x = 0 := by
   unfold VF.MM at hx
@@ -162,8 +161,7 @@ section Main
 private lemma mm_pow_l_pow_sub_of_mm_sub {C : Type} [Field C] {V : VF C} {s t : C} (hs : V.Ge 0 s) (ht : V.Ge 0 t)
     (h : V.MM (s - t)) (k : ℕ) : V.MM (s ^ V.l ^ k - t ^ V.l ^ k) := by
   rcases Nat.eq_zero_or_pos k with rfl | hk
-  · simp only [pow_zero, pow_one]
-    exact h
+  · simpa only [pow_zero, pow_one] using h
   · obtain ⟨r, hr, hge⟩ := mm_exists h
     exact mm_of_ge (add_pos_of_pos_of_nonneg hr (le_min zero_le_one hr.le))
       (pow_lk_close hs ht hr.le hge k hk)
@@ -183,8 +181,7 @@ private lemma mm_em_add_sub_em_pow_l_pow {C : Type} [Field C] {V : VF C} {O : Ty
     simp only [pow_one] at h2
     have h3 := mm_add h1 h2
     rw [sub_add_sub_cancel] at h3
-    rw [Nat.cast_succ, ← add_assoc, pow_succ, pow_mul]
-    exact h3
+    rwa [Nat.cast_succ, ← add_assoc, pow_succ, pow_mul]
 
 theorem keyDelta_holds : KeyDeltaSt := by
   intro C _ _ V O _ n d _ K χ c hχ hcong
@@ -256,13 +253,11 @@ theorem keyDelta_holds : KeyDeltaSt := by
       have h2 : min ((ρ + min 1 ρ : ℝ) : WithTop ℝ) ((r + 1 : ℝ) : WithTop ℝ) ≤ (ρ : WithTop ℝ) := by
         rw [← hv, hdec]
         refine le_trans (min_le_min h1 ?_) (AddValuation.map_add _ _ _)
-        rw [AddValuation.map_neg]
-        exact hx
+        rwa [AddValuation.map_neg]
       rw [← WithTop.coe_min, WithTop.coe_le_coe] at h2
       rw [WithTop.coe_le_coe]
       rcases le_total (r + 1) (ρ + min 1 ρ) with hle | hle
-      · rw [min_eq_right hle] at h2
-        exact h2
+      · rwa [min_eq_right hle] at h2
       · rw [min_eq_left hle] at h2
         have : 0 < min 1 ρ := lt_min one_pos hρ
         linarith
@@ -277,8 +272,7 @@ theorem keyDelta_holds : KeyDeltaSt := by
       unfold VF.Ge at h0 h1 ⊢
       rw [sub_eq_add_neg]
       refine le_trans (le_min h0 ?_) (AddValuation.map_add _ _ _)
-      rw [AddValuation.map_neg]
-      exact h1
+      rwa [AddValuation.map_neg]
     | succ N ih =>
       intro y
       rw [Nat.cast_succ]
@@ -358,7 +352,7 @@ theorem chi_kill (K : KeyData C V O n d) (w : Fin n → C) (hw : w ≠ 0) (hP : 
   have hint : ∀ y, V.Ge 0 (χ y) := fun y => eig_int (K.ρ y) (K.ρ_int y) w hw (χ y) (hχ y)
   refine ⟨hint, ?_⟩
   obtain ⟨i, hi⟩ : ∃ i, w i ≠ 0 := by
-    by_contra hc; push_neg at hc; exact hw (funext hc)
+    by_contra hc; push Not at hc; exact hw (funext hc)
 
   have hT : Tends V (fun m => χ K.ε ^ V.l ^ m * w i) (w i) := by
     have h1 : Tends V (fun m => Matrix.mulVec (K.ρ (K.ε ^ V.l ^ m)) w i) (Matrix.mulVec K.P w i) := by
@@ -368,8 +362,7 @@ theorem chi_kill (K : KeyData C V O n d) (w : Fin n → C) (hw : w ≠ 0) (hP : 
     have e : (fun m => Matrix.mulVec (K.ρ (K.ε ^ V.l ^ m)) w i) = fun m => χ K.ε ^ V.l ^ m * w i := by
       funext m
       rw [hχ, map_pow]; rfl
-    rw [e, hP] at h1
-    exact h1
+    rwa [e, hP] at h1
   have hunit : ¬ V.MM (χ K.ε) := by
     intro hm
     have h0 := (tends_pow_zero hm).mul (tends_const (V := V) (w i))
@@ -380,7 +373,7 @@ theorem chi_kill (K : KeyData C V O n d) (w : Fin n → C) (hw : w ≠ 0) (hP : 
   have h1 := congrArg (fun t => V.v (χ t)) hy
   simp only [map_mul, map_natCast, AddValuation.map_mul, V.v_l] at h1
   unfold VF.MM at hunit ⊢
-  push_neg at hunit
+  push Not at hunit
   have he0 : V.v (χ K.ε) = 0 := le_antisymm hunit (hint K.ε)
   rw [he0, zero_add] at h1
   rw [h1]
@@ -547,8 +540,7 @@ theorem fixed_nat (p : ℕ) [hp : Fact p.Prime] [CharP k p] (a : k) (ha : a ^ p 
     intro b hb
     rw [Multiset.mem_toFinset, Polynomial.mem_roots hP]
     simp [hb]
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hnotin : a ∉ Finset.univ.image φ := by
     intro h
     obtain ⟨i, -, hi⟩ := Finset.mem_image.1 h
@@ -631,8 +623,7 @@ theorem core (p : ℕ) [hp : Fact p.Prime] [CharP k p] {O : Type} [CommRing O] {
       exact Fintype.prod_equiv (Equiv.addRight 1) _ _ fun c => rfl
     have hcoef : ∀ i, Q.coeff i ^ p = Q.coeff i := fun i => by
       have h1 := congrArg (fun P => _root_.AddMonoidAlgebra.coeff (M := ℕ) P i) hfix
-      simp only [coeff_map, frobenius_def] at h1
-      exact h1
+      simpa only [coeff_map, frobenius_def] using h1
     obtain ⟨μ, hμ⟩ := exists_lift p Q hcoef
     have hev : ∀ g : O →+* k, g (μ.eval₂ (Int.castRingHom O) y) = Q.eval (g y) := fun g => by
       rw [hom_eval₂, RingHom.ext_int (g.comp (Int.castRingHom O)) (Int.castRingHom k), eval₂_eq_eval_map, hμ]
@@ -651,8 +642,7 @@ theorem core (p : ℕ) [hp : Fact p.Prime] [CharP k p] {O : Type} [CommRing O] {
       (fun u => ⟨((u : kˣ) : k), ?_⟩) ?_
     · obtain ⟨y, hy⟩ := u.2
       rw [Finset.mem_coe, Multiset.mem_toFinset, mem_roots hQ0, IsRoot, eval_sub, eval_pow, eval_X, ← hy, hq, sub_self]
-    · intro u v huv
-      exact Subtype.ext (Units.ext (congrArg Subtype.val huv))
+    · exact fun u v huv => Subtype.ext (Units.ext (congrArg Subtype.val huv))
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := Hs (e 0) (p ^ d) hq1 hq)
   obtain ⟨y0, hy0⟩ := g.2
   obtain ⟨c, hc⟩ := hpt y0
@@ -665,8 +655,7 @@ theorem core (p : ℕ) [hp : Fact p.Prime] [CharP k p] {O : Type} [CommRing O] {
     have h2 : e 0 y0 ^ m = e 0 y := by
       have h3 := congrArg (fun s : Hs (e 0) (p ^ d) hq1 hq => ((s : kˣ) : k)) hm
       simp only [Subgroup.coe_pow, Units.val_pow_eq_pow_val, Units.val_mk0] at h3
-      rw [hy0]
-      exact h3
+      rwa [hy0]
     have h4 : e 0 (y - y0 ^ m) = 0 := by rw [map_sub, map_pow, h2, sub_self]
     have h5 := hker _ (hkill _ h4)
     have h6 := hkill _ h4 c
@@ -841,8 +830,7 @@ theorem coeff_extract [CharZero K] {ι : Type} [Fintype ι] [DecidableEq ι] (B 
       exact hroot t
     have hc1 := congrArg (fun p : K[X] => p.coeff 1) hq0
     simp only [hq, finsetSum_coeff, coeff_monomial_apply, Finset.sum_ite_eq', Finset.mem_range, coeff_zero] at hc1
-    rw [if_pos (by omega)] at hc1
-    exact hc1
+    rwa [ite_eq_left (by omega)] at hc1
   have hR1 : R.coeff 1 = (X - Polynomial.C (μ c)) * Polynomial.C (∏ c' ∈ Finset.univ.erase c, a c') := by
     rw [hR, ← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ c), hac, map_zero, map_zero, zero_add, mul_assoc]
     refine (coeff_X_mul _ 0).trans ?_
@@ -865,8 +853,7 @@ theorem split_holds : SplitSt := by
   rcases isEmpty_or_nonempty ι with hι | hι
   · have hP : P = 0 := by
       have h := hann 0
-      rw [Finset.univ_eq_empty, Finset.prod_empty, map_one, one_mul] at h
-      exact h
+      rwa [Finset.univ_eq_empty, Finset.prod_empty, map_one, one_mul] at h
     refine ⟨fun c => (hι.false c).elim, ?_, fun c => (hι.false c).elim⟩
     rw [hP, Matrix.zero_mulVec, Finset.univ_eq_empty, Finset.sum_empty]
   obtain ⟨x0, hx0⟩ := exists_sep em hinj

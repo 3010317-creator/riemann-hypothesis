@@ -133,8 +133,7 @@ theorem latTransport : ∀ (D : D7) (X : HidaSetting D) (ιA : X.B.I.E ⊗[X.B.I
         rw [this]; exact Submodule.smul_mem _ _ hx
     have := key _ hw
     have e : (fun i => ιA (ιA.symm (w i))) = w := funext fun i => by simp
-    rw [e] at this
-    exact this
+    rwa [e] at this
 
 end GlobalTheory.St.G
 end -- clump:auto
@@ -179,8 +178,7 @@ theorem coordLat_isLat (D : D7) (X : HidaSetting D) :
     simp only [Submodule.mem_comap, LinearMap.restrictScalars_apply, hcomb, Submodule.mem_map,
       LinearEquiv.coe_coe, LinearEquiv.restrictScalars_apply]
     constructor
-    · intro hx
-      exact ⟨_, hx, X.bas.equivFun.apply_symm_apply x⟩
+    · exact fun hx => ⟨_, hx, X.bas.equivFun.apply_symm_apply x⟩
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
   rw [heq]
@@ -286,8 +284,7 @@ theorem sum_swap4 {α β γ δ R : Type} [Fintype α] [Fintype β] [Fintype γ] 
         rw [Finset.sum_comm]
     _ = ∑ c, ∑ a, ∑ d, ∑ b, f a b c d := Finset.sum_comm
     _ = _ := by
-        refine Finset.sum_congr rfl fun c _ => ?_
-        exact Finset.sum_comm
+        exact Finset.sum_congr rfl fun c _ => Finset.sum_comm
 
 theorem sigR_inclE (I : Formalism.MainNotions.S.AutInst) (e : I.E) :
     Formalism.UG.sigR I.cm.sig (Af I.F) (Formalism.UG.inclE (F := I.F) (Af I.F) e) =

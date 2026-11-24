@@ -175,7 +175,7 @@ theorem ae_simple_col {n N : ℕ} (U : Set (EuclideanSpace ℂ (Fin n))) (hU : I
     have : S (A y) y = S t y + (y - colProj j0 t) := by
       ext k
       simp only [hS, hA, Pi.add_apply, colInc_apply, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true, PiLp.add_apply]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true, PiLp.add_apply]
       field_simp
     simp only [hG, hπA, this]
     simp only [hA, map_add (f := _)]
@@ -467,8 +467,7 @@ theorem subset_closure_forall_ne_zero {E : Type*} [NormedAddCommGroup E] [Normed
     rw [Set.not_nonempty_iff_eq_empty] at hemp
     have hnot : ∀ y ∈ O, y ∉ W j := fun y hy hyW => by
       have : y ∈ O ∩ W j := ⟨hy, hyW⟩
-      rw [hemp] at this
-      exact this
+      rwa [hemp] at this
     obtain ⟨y, hy⟩ := hOne
     have hyc : y ∈ closure U := by
       by_contra h
@@ -807,15 +806,7 @@ namespace GlobalTheory.FiniteZeroOrbits
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem cpt_origin {r : ℕ} (X : Data E r) (x : Frame X.Ψ r) : cpt X x 0 = x := by
-  have : nmat X 0 = ExtFPf.oneF X := by
-    funext τ a b
-    simp only [nmat, ExtFPf.oneF, Matrix.one_apply]
-    split_ifs with h1 h2 h3
-    · exact absurd h2 (ne_of_gt h1)
-    · rfl
-    · rfl
-    · rfl
-  rw [cpt, this, ExtFPf.rmul_oneF]
+  exact ReciprocityTheory.ChartRestriction.G.AR.Up.IW.cpt_zero X x
 
 theorem eventually_split {r : ℕ} (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) {δ : ℝ} (hδ : 0 < δ) :
     ∀ᶠ y in 𝓝 x, y ∈ X.dom ∧ ∃ z ∈ Metric.closedBall (0 : V (nd X)) δ, ∃ b ∈ Bor X.Ψ r,

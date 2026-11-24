@@ -66,8 +66,7 @@ private theorem toDeg_single_one (i : Fin k) : toDeg (Finsupp.single i 1) = e i 
 
 private theorem exists_sec_notMem {p : Ideal (rees N)} (hp : ¬ Irr (reesGr N) ≤ p) (i : Fin k) :
     ∃ (f : A) (hf : f ∈ N i), sec N i f hf ∉ p := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hp
   have hle : Ideal.span (reesGr N (e i) : Set (rees N)) ≤ p := by
     rw [Ideal.span_le]
@@ -175,8 +174,7 @@ theorem UpperTheory.V.Alg.M.zi_holds :
       by_cases hj : j + d = 0
       · have h0 := hc j hj a a.2
         convert h0 using 2
-        apply Subtype.ext
-        exact DirectSum.decompose_of_mem_same 𝒜 (hmul hj a.2 hg)
+        exact Subtype.ext (DirectSum.decompose_of_mem_same 𝒜 (hmul hj a.2 hg))
       · have h0 : DirectSum.decompose 𝒜 ((a : A) * g) 0 = 0 :=
           Subtype.ext (DirectSum.decompose_of_mem_ne 𝒜 (hmul rfl a.2 hg) hj)
         rw [h0, map_zero]
@@ -242,5 +240,4 @@ theorem UpperTheory.V.Alg.M.zi_holds :
   have h1 := hall _ hb 1
   rw [one_mul] at h1
   convert h1 using 2
-  apply Subtype.ext
-  exact (DirectSum.decompose_of_mem_same 𝒜 b.2).symm
+  exact Subtype.ext (DirectSum.decompose_of_mem_same 𝒜 b.2).symm

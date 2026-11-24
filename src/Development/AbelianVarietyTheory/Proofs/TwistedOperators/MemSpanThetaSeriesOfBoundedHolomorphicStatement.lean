@@ -142,7 +142,7 @@ theorem mul_idem_eq_zero {k M : ℕ} (hk : k.Coprime M) {v : HeightOneSpectrum (
   change α w * idem F k w = 0
   by_cases h : w = v
   · subst h
-    rw [idem_apply, if_neg, mul_zero]
+    rw [idem_apply, ite_eq_right, mul_zero]
     intro hk'
     obtain ⟨a, b, hab⟩ : IsCoprime (k : 𝓞 F) (M : 𝓞 F) := Nat.Coprime.cast hk
     exact w.isPrime.ne_top ((Ideal.eq_top_iff_one _).2
@@ -702,8 +702,7 @@ theorem pnorm_le_of_bdd : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA D S 
   have hFa : ∀ L ∈ Lv.lats, ∀ a ∈ GinfC T, ‖F L (C.xB (C.mvB a B))‖ ≤ K := by
     intro L hL a ha
     have h := hKφ (gL L * a)
-    rw [hFφ L hL a ha, norm_mul, norm_mul, hz1 a ha, hec L hL, one_mul, one_mul] at h
-    exact h
+    rwa [hFφ L hL a ha, norm_mul, norm_mul, hz1 a ha, hec L hL, one_mul, one_mul] at h
   refine ⟨K, fun L hL x hx => ?_⟩
   obtain ⟨hON, hbB, hxe, hdm, -⟩ := hob x hx
   obtain ⟨a, ha, hax⟩ := (GlobalTheory.AdSpan.ConjHol.unitFr_conj_moved D S T C B hB).2.1 (o x) hON
@@ -712,16 +711,14 @@ theorem pnorm_le_of_bdd : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA D S 
   set la := wtOf C.X C.hr c c' S.rank with hla
   have hval : F L x = bchar la (b x) * F L (o x) := by
     have := hFb L hL (o x) hox (b x) hbB
-    rw [← hxe] at this
-    exact this
+    rwa [← hxe] at this
   have hprod : ‖bchar la (b x)‖ * ∏ τ, ∏ i, (‖b x τ i i‖ ^ 2) ^ (-(la τ i : ℝ) / 2) = 1 := by
     unfold bchar
     simp_rw [norm_prod, norm_zpow]
     rw [← Finset.prod_mul_distrib]
     refine Finset.prod_eq_one fun τ _ => ?_
     rw [← Finset.prod_mul_distrib]
-    refine Finset.prod_eq_one fun i _ => ?_
-    exact zpow_mul_rpow_sq _ (norm_pos_iff.2 (diag_ne_zero hbB τ i)) _
+    exact Finset.prod_eq_one fun i _ => zpow_mul_rpow_sq _ (norm_pos_iff.2 (diag_ne_zero hbB τ i)) _
   simp only [Data.pnorm]
   simp only [← hdm]
   rw [hval, norm_mul]
@@ -944,8 +941,7 @@ theorem frame_decomp : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (B : C.Bas), C.I
     rw [hσ, Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr (hdet σ)),
       Matrix.mul_one] at hstep
     exact hstep
-  rw [hmove]
-  exact hxeq
+  rwa [hmove]
 
 end GlobalTheory.FrameDecomp
 end -- clump:auto
@@ -1027,7 +1023,7 @@ theorem mem_of_loc (L : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (𝓞 E)
     · rw [map_sub, map_one, hev]; split_ifs
       · rw [sub_self]; exact zero_mem _
       · rw [sub_zero]; exact one_mem _
-    · rw [map_sub, map_one, hev, if_pos ((hmemP w).2 hw), sub_self]
+    · rw [map_sub, map_one, hev, ite_eq_left ((hmemP w).2 hw), sub_self]
   · by_cases hI : 𝔪.comap (algebraMap (𝓞 F) (𝓞 E)) ≤ v.asIdeal
     · exact hloc v hI (ind v) (hind1 v) (hind0 v)
     · obtain ⟨c, hc, hcv⟩ := SetLike.not_le_iff_exists.1 hI

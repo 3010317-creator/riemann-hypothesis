@@ -77,8 +77,7 @@ theorem fin0 (D : Formalism.BasicNotions.D7) (u u' : D.what₂.Word) (F0 : FlagG
     · rintro ⟨hF'', m, hm, he, hz⟩
       refine ⟨hF'', m.symm.trans n, hgrp.2.2 _ (hgrp.2.1 m hm) n hn, ?_⟩
       ext a <;> simp [← he, ← hz]
-  simp only [cntE]
-  exact ((hK.image g).subset hsub).encard_lt_top.ne
+  simpa only [cntE] using ((hK.image g).subset hsub).encard_lt_top.ne
 
 theorem finR (D : Formalism.BasicNotions.D7) (u u' : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u))
     (what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)) (hR : IsRowReps D F0 what₂) (Z : MatZ D)
@@ -93,8 +92,7 @@ theorem finR (D : Formalism.BasicNotions.D7) (u u' : D.what₂.Word) (F0 : FlagG
     · rw [← he1]
       funext a
       exact hβe a
-    · rw [← hz1]
-      exact hβz
+    · rwa [← hz1]
   have h := fin0 D u u' _ _ hRo Z _ hmem
   rwa [Formalism.L2.SG.Pf.Cnt.counting_iso_inverse D β hβ (Tn u') F0 Λ Z] at h
 

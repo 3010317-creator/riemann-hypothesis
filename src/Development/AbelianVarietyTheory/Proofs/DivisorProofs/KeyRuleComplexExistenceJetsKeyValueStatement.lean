@@ -745,10 +745,9 @@ theorem exists_keyIn_nf :
         (2 * Real.pi * Complex.I : ℂ)⁻¹ • Mx i := by
       funext k
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, MulZeroClass.mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       ring
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
 
 end GlobalTheory.MBLow.Cl
 end -- clump:auto
@@ -902,8 +901,7 @@ theorem weilIs_per : ∀ (x : KeyIn ℂ) (g : ℕ) (u : HolUnif x.P.A x.P.L g) (
   have hw := hW n ⟨_, hmem p⟩ ⟨_, hmem q⟩ e hn (by rw [he, hEf])
   have e1 : u.ex ((n : ℂ)⁻¹ • per τ p) = u₁.ex ((n : ℂ)⁻¹ • F (per τ p)) := by rw [← map_smul, hF]
   have e2 : u.ex ((n : ℂ)⁻¹ • per τ q) = u₁.ex ((n : ℂ)⁻¹ • F (per τ q)) := by rw [← map_smul, hF]
-  rw [e1, e2]
-  exact hw
+  rwa [e1, e2]
 
 end GlobalTheory.WeilStd
 end -- clump:auto
@@ -1324,7 +1322,7 @@ theorem main_eq {N : NumD ℂ} {g' r g : ℕ} {bX : Module.Basis (Fin r) ℤ N.X
     have hq0 : 0 ≤ q := by
       rw [hq] at hnn
       have hp : (0:ℤ) < 2 * m ^ 2 := by positivity
-      by_contra hc; push_neg at hc
+      by_contra hc; push Not at hc
       have := mul_neg_of_pos_of_neg hp hc; linarith
     rw [hq, Int.mul_ediv_cancel_left _ hm2]
     have : ((q.toNat : ℕ) : ℂ) = (q : ℂ) := by exact_mod_cast Int.toNat_of_nonneg hq0
@@ -1467,8 +1465,7 @@ theorem norm_thT_le_corners {k : ℕ} (τ : Matrix (Fin k) (Fin k) ℂ) (a b Z W
     generalize ((fun i => (n i : ℂ)) + a) = v
     simp only [dotProduct_add, dotProduct_smul, smul_eq_mul]
     ring
-  simp only [key]
-  exact norm_exp_le_corners _ _ s hs
+  simpa only [key] using norm_exp_le_corners _ _ s hs
 
 def splitE {g g' r : ℕ} (σ : Fin g ≃ Fin g' ⊕ Fin r) : (Fin g → ℤ) ≃ (Fin r → ℤ) × (Fin g' → ℤ) where
   toFun := fun n => (tP σ n, zP σ n)
@@ -1665,10 +1662,8 @@ theorem term_sum_and_fderiv : AllCD fun {N} {g'} {r} {g} {bX} d σ => ∀ S : Ma
   have s1 := hs.of_norm
   have s2 := hs'.of_norm
   refine ⟨?_, ?_, ?_, ?_⟩
-  · simp only [e0]
-    exact (s1.mul_left _).norm
-  · simp only [e1]
-    exact ((s1.mul_left _).add (s2.mul_left _)).norm
+  · simpa only [e0] using (s1.mul_left _).norm
+  · simpa only [e1] using ((s1.mul_left _).add (s2.mul_left _)).norm
   · simp only [e0]
     rw [tsum_mul_left, he]
     simp only [trF, smul_zero, zero_add, hfdef, hp]

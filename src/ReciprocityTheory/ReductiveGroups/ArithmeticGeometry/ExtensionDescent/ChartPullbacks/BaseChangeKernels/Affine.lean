@@ -29,8 +29,7 @@ theorem isPullback_resLE (sq : IsPullback g q' q b) (V : B.Opens) (V' : B'.Opens
   rw [Scheme.Hom.resLE_eq_morphismRestrict, Scheme.Hom.resLE_eq_morphismRestrict]
   refine IsPullback.of_right (h₁₂ := (q ⁻¹ᵁ V).ι) (h₂₂ := V.ι) (v₁₃ := q) ?_ ?_
     (isPullback_morphismRestrict q V).flip
-  · rw [Scheme.Hom.resLE_comp_ι, Scheme.Hom.resLE_comp_ι]
-    exact outer
+  · rwa [Scheme.Hom.resLE_comp_ι, Scheme.Hom.resLE_comp_ι]
   · rw [← cancel_mono V.ι]
     simp only [Category.assoc, morphismRestrict_ι, Scheme.Hom.resLE_comp_ι]
     rw [← Category.assoc, Scheme.Hom.resLE_comp_ι, Category.assoc, sq.w, ← Category.assoc,
@@ -124,8 +123,7 @@ theorem bijective_liftNC_of_isPushout (hP : IsPushout qa ba ga qa')
         show F (G.hom (qa'.hom r)) = qa'.hom r
         rw [hG2, hF]
         simp
-    intro a
-    exact congrArg (fun f => f.hom a) h3
+    exact fun a => congrArg (fun f => f.hom a) h3
   exact Function.bijective_iff_has_inverse.mpr ⟨G.hom, fun p => congrArg (fun f => f p) hleft, hright⟩
 
 end Algebra

@@ -327,8 +327,7 @@ theorem CMLengthParameters.proof (hCM : CMRegularElement.Statement.{u})
       obtain ⟨p, hp, hpq⟩ := Ideal.exists_minimalPrimes_le (bot_le : ⊥ ≤ q.comap f)
       have hpP : p = P := by
         have : p ∈ minimalPrimes B := hp
-        rw [hmin, Set.mem_singleton_iff] at this
-        exact this
+        rwa [hmin, Set.mem_singleton_iff] at this
       subst hpP
       have hyq : Ideal.span {y} ≤ q.comap f := fun z hz => by
         rw [Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.2 hz]
@@ -339,13 +338,11 @@ theorem CMLengthParameters.proof (hCM : CMRegularElement.Statement.{u})
       ext q
       rw [Set.mem_singleton_iff]
       constructor
-      · intro hq
-        exact le_antisymm (hq.2 ⟨hP', bot_le⟩ (hall q hq.1.1)) (hall q hq.1.1)
+      · exact fun hq => le_antisymm (hq.2 ⟨hP', bot_le⟩ (hall q hq.1.1)) (hall q hq.1.1)
       · rintro rfl
         exact ⟨⟨hP', bot_le⟩, fun q hq _ => hall q hq.1⟩
     have hdim' : ringKrullDim ((B ⧸ Ideal.span {y}) ⧸ P') = (k : ℕ) := by
-      rw [ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE hyQ)]
-      exact hdimQ
+      rwa [ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE hyQ)]
 
     set x' : Fin k → B ⧸ Ideal.span {y} := fun j => f (x j.succ) with hx'
     have hmB' : (maximalIdeal B).map f = maximalIdeal (B ⧸ Ideal.span {y}) :=
@@ -872,7 +869,7 @@ theorem IdealHeightSpread.proof : IdealHeightSpread.Statement := by
   have ha : ∀ p : Ideal R, ¬ p ≤ P → a p ∈ p ∧ a p ∉ P := by
     intro p h
     have h' : ¬ (p : Set R) ⊆ P := h
-    simp only [a, dif_pos h']
+    simp only [a, dite_eq_left h']
     exact Classical.choose_spec (Set.not_subset.mp h')
   let s : Finset (Ideal R) := hF.toFinset.filter (fun p => ¬ p ≤ P)
   refine ⟨∏ p ∈ s, a p, ?_, ?_⟩
@@ -884,8 +881,7 @@ theorem IdealHeightSpread.proof : IdealHeightSpread.Statement := by
     refine le_iInf₂ fun J hJ => ?_
     have hJp : J.IsPrime := hJ.isPrime
     have hmin : J.comap (algebraMap R (Localization.AtPrime Q)) ∈ I.minimalPrimes := by
-      rw [IsLocalization.minimalPrimes_map Q.primeCompl] at hJ
-      exact hJ
+      rwa [IsLocalization.minimalPrimes_map Q.primeCompl] at hJ
     set p := J.comap (algebraMap R (Localization.AtPrime Q)) with hpdef
     have hpp : p.IsPrime := hmin.1.1
 
@@ -903,8 +899,7 @@ theorem IdealHeightSpread.proof : IdealHeightSpread.Statement := by
       exact Ideal.mem_of_dvd _ (Finset.dvd_prod_of_mem a hps) (ha p hnot).1
     have hdisj : Disjoint (P.primeCompl : Set R) (p : Set R) := by
       rw [Set.disjoint_left]
-      intro x hx hxp
-      exact hx (hpP hxp)
+      exact fun x hx hxp => hx (hpP hxp)
     have hJh : J.height = p.height := (IsLocalization.height_under Q.primeCompl J).symm
     rw [hJh, ← IsLocalization.height_map_of_disjoint P.primeCompl (S := Localization.AtPrime P) p hdisj]
     exact Ideal.height_mono (Ideal.map_mono hmin.1.2)
@@ -1293,9 +1288,7 @@ theorem SliceCMUnmixed.proof (h : CMQuotientUnmixed.Statement) : SliceCMUnmixed.
   rw [hsl] at hP hdimS ⊢
   have h1 := sliceCMUnmixed_local h (RingHom.ker (eval q : MvPolynomial (Fin n) ℂ →+* ℂ)) J
     (fun i => linPoly L i - C ((L *ᵥ q) i)) hℓ (localRingAt J q)
-  have h2 := h1 (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective Ideal.mk_ker
-  have h3 := h2 hdimB hdimS
-  exact h3 P hP hPm
+  exact ((h1 (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective Ideal.mk_ker) hdimB hdimS) P hP hPm
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto

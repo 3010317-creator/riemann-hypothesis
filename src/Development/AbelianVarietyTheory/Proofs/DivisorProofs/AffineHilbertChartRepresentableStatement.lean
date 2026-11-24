@@ -488,8 +488,7 @@ theorem exists_chart_of_quotient (J : Ideal (S ⊗[A] B))
     intro y
     rw [← Ideal.Quotient.eq_zero_iff_mem, hq y]
     constructor
-    · intro h
-      exact funext ((Fintype.linearIndependent_iff.1 bq.linearIndependent) _ h)
+    · exact fun h => funext ((Fintype.linearIndependent_iff.1 bq.linearIndependent) _ h)
     · intro h; simp [h]
   have hc : IsChart e σ c := by
     refine ⟨ha, fun a m k => ?_⟩
@@ -580,8 +579,7 @@ theorem GlobalTheory.hilbChart_representable : ∀ (A B : Type) [CommRing A] [Co
       apply Ideal.Quotient.algHom_ext
       apply MvPolynomial.algHom_ext
       intro p
-      have h2 := congrFun (congrFun (h1.symm.trans hφ.symm) p.1) p.2
-      simpa [univChart] using h2
+      simpa [univChart] using congrFun (congrFun (h1.symm.trans hφ.symm) p.1) p.2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChartOfQuotient =====
@@ -676,8 +674,7 @@ theorem tensor_ideal_eq_of_span_of_linearIndependent
     rw [← hmk J₂, Ideal.Quotient.eq_zero_iff_mem]; exact h2
   have hc0 : ∀ k, c k = 0 := Fintype.linearIndependent_iff.1 hli c hsum
   have hs0 : s = 0 := by simp [hs, hc0]
-  rw [hs0, sub_zero] at h1
-  exact h1
+  rwa [hs0, sub_zero] at h1
 
 end GlobalTheory
 end -- clump:auto

@@ -35,7 +35,7 @@ theorem zp (h : PS k 2 d) (i : Fin d) (p : Pt k 3 d) (hp : ∀ c, constantCoeff 
   rw [pderiv_ev hq, Fintype.sum_prod_type, Fin.sum_univ_two]
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, hpz, mul_zero, Finset.sum_const_zero,
     zero_add, pderiv_pt, Prod.mk.injEq, true_and, mul_ite, mul_one, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   rw [ev_neg hp', neg_neg, ev_ev czZ hq, ev_ev hp' cz1]
   congr 1
   funext j c
@@ -105,8 +105,7 @@ theorem sig_add {B : FB R d O} {h : PS k 2 d} (hc : B.IsCanonGauge k h) (i : Fin
       ev (n := 2) ![pt k d 1] (sgOf k h i) =
       -ev (n := 2) ![pt k d 0] (sgOf k h i) + -ev (n := 2) ![pt k d 1] (sgOf k h i) -
         -ev (n := 2) ![(lawK k B).F] (sgOf k h i) := by ring
-  rw [e]
-  exact h2
+  rwa [e]
 
 theorem sig_lin {B : FB R d O} {h : PS k 2 d} (hc : B.IsCanonGauge k h) (i b : Fin d) :
     ∑ c, pderiv (R := k) ((0 : Fin 1), c) (sgOf k h i) * Jac (lawK k B) c b - C (sg1 k h i b) ∈ Ig R k (Fin 1 × Fin d) := by
@@ -128,8 +127,7 @@ theorem dof_sig {B : FB R d O} {h : PS k 2 d} (hc : B.IsCanonGauge k h) (u : Fin
   have e2 : (C (∑ j, sg1 k h i j * algebraMap R k (u j)) : PS k 1 d) =
       ∑ b, C (algebraMap R k (u b)) * C (sg1 k h i b) := by
 
-    simp only [map_sum, map_mul]
-    exact Finset.sum_congr rfl fun b _ => mul_comm _ _
+    simpa only [map_sum, map_mul] using Finset.sum_congr rfl fun b _ => mul_comm _ _
   rw [e1, e2, ← Finset.sum_sub_distrib]
   refine sum_mem fun b _ => ?_
   rw [← mul_sub]

@@ -47,11 +47,8 @@ theorem stDiagExists (h : UnitaryGroupStructuralFacts) : StDiagExists := by
   have hcomp : IsCompact (UWset k r z) := hCW k r z hz hT
   have hW : IsHaarOn (UWset k r z) D.μW := by
     have h0 := D.haarW
-    rw [hDz] at h0
-    exact h0
-  have hm0 : D.μW Set.univ ≠ 0 := by
-    intro h0
-    exact hW.ne_zero (Measure.measure_univ_eq_zero.mp h0)
+    rwa [hDz] at h0
+  have hm0 : D.μW Set.univ ≠ 0 := fun h0 => hW.ne_zero (Measure.measure_univ_eq_zero.mp h0)
   have hmt : D.μW Set.univ ≠ ∞ := by
     have h1 : D.μW Set.univ ≤ D.μW (UWset k r z) + D.μW (UWset k r z)ᶜ :=
       measure_univ_le_add_compl _
@@ -62,8 +59,7 @@ theorem stDiagExists (h : UnitaryGroupStructuralFacts) : StDiagExists := by
   have hH : IsHaarOn (UWset k r D.z) ((D.μW Set.univ)⁻¹ • D.μW) :=
     isHaarOn_smul_of D.haarW hc0 hct
   have hH' : IsHaarOn (UWset k r D.z') ((D.μW Set.univ)⁻¹ • D.μW) := by
-    rw [hDz', ← hDz]
-    exact hH
+    rwa [hDz', ← hDz]
   let D' : RealPlaceData k r Wp Wp :=
     { D with
       μW := (D.μW Set.univ)⁻¹ • D.μW
@@ -75,7 +71,6 @@ theorem stDiagExists (h : UnitaryGroupStructuralFacts) : StDiagExists := by
   · show ((D.μW Set.univ)⁻¹ • D.μW) Set.univ = 1
     rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hm0 hmt]
   · show Formalism.MainNotions.S.IsIrredOn (UWset k r D.z) D.π
-    rw [hDz, hDπ]
-    exact hirr
+    rwa [hDz, hDπ]
 
 end ReciprocityTheory.ChartRestriction.DS.Mult1

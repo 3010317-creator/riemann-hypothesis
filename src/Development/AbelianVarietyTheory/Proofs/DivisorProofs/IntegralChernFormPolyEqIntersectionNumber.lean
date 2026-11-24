@@ -366,8 +366,7 @@ theorem dbar_form_mem {v : V n} {θ : Fin n → V n → ℂ} (hθ : ∀ a, ContD
     differentiableAt_dbar_apply (hθ p.1) _
   change IsClosedAt v _
   refine ⟨fun S => ?_, ?_⟩
-  · simp only [e]
-    exact differentiableAt_sum_smul hd _ S
+  · simpa only [e] using differentiableAt_sum_smul hd _ S
   · simp only [e]
     rw [dbarAt_sum_smul hd]
     simp only [Fintype.sum_prod_type]
@@ -673,11 +672,7 @@ theorem mem_closedAt {v : V n} {F : V n → Ev n} : F ∈ closedAt v ↔
 
 theorem coeff_charpolyRev_map {R S r : Type} [CommRing R] [CommRing S] [Fintype r] [DecidableEq r] (f : R →+* S)
     (M : Matrix r r R) (j : ℕ) : (M.map f).charpolyRev.coeff j = f (M.charpolyRev.coeff j) := by
-  rw [← Polynomial.coeff_map]
-  rw [Matrix.charpolyRev, Matrix.charpolyRev, ← Polynomial.coe_mapRingHom, RingHom.map_det]
-  apply congrArg (fun A : Matrix r r (Polynomial S) => A.det.coeff j)
-  ext a b
-  simp [Matrix.one_apply, apply_ite (Polynomial.map f)]
+  exact GlobalTheory.CxForm.ChernDbar.coeff_charpolyRev_map f M j
 
 theorem mem_closedAt_of_symm {v : V n} {u : Fin n × Fin n → V n → ℂ} (hu : ∀ p, DifferentiableAt ℝ (u p) v)
     (hs : ∀ a b c, del (u (a, b)) v (coordVec c) = del (u (c, b)) v (coordVec a)) :
@@ -795,13 +790,7 @@ theorem chernAt_congr {n : ℕ} {r : Type} [Fintype r] [DecidableEq r] {H K : V 
   simp only [curv_congr h]
 
 theorem delAt_congr {n : ℕ} {α β : V n → Alt n} {v : V n} (h : α =ᶠ[𝓝 v] β) : delAt α v = delAt β v := by
-  unfold delAt coefwise
-  refine Finset.sum_congr rfl fun a _ => ?_
-  congr 1
-  refine Finset.sum_congr rfl fun S _ => ?_
-  exact congrArg (fun L => L (coordVec a) • bas n S)
-    (GlobalTheory.del_congr (f := fun x => (bas n).repr (α x) S) (g := fun x => (bas n).repr (β x) S)
-      (h.mono fun x hx => congrArg (fun y => (bas n).repr y S) hx))
+  exact GlobalTheory.CxForm.ChernDel.delAt_congr h
 
 theorem dbarAt_congr {n : ℕ} {α β : V n → Alt n} {v : V n} (h : α =ᶠ[𝓝 v] β) : dbarAt α v = dbarAt β v := by
   unfold dbarAt coefwise
@@ -1176,16 +1165,14 @@ theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree →
       congr 2
     have e2 : X.interPoly Δ (GlobalTheory.ArInt.lin (fun i => (n i : ℝ)) ^ X.dim) = (X.inter fun _ => ∑ a, n a • Δ a : ℝ) := by
       have := Var.interPoly_prod_sum X Δ (fun _ a => n a)
-      rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin] at this
-      exact this
+      rwa [Finset.prod_const, Finset.card_univ, Fintype.card_fin] at this
     rw [e1, e2, HolAtlas.integral, _root_.GlobalTheory.ChernCalc.TopPow.part_c1W_pow F σ X L' ψ' hci, _root_.GlobalTheory.ChernCalc.TopPow.part_c1W_pow F σ X L' ψ' hci,
       ← (hCD F X σ _ L' r' hpr ψ' hci).2]
     simp only [Weight.chernInt, Measure.restrict_univ, integral_const, smul_eq_mul, mul_one]
   | zero =>
     rw [map_zero]
     have := hsmul 0 0
-    rw [zero_smul, zero_mul] at this
-    exact this
+    rwa [zero_smul, zero_mul] at this
   | add x y _ _ hx hy =>
     rw [map_add (f := _), hadd, hx, hy]
   | smul t x _ hx =>
@@ -1268,8 +1255,7 @@ theorem eq_homogeneousComponent {κ R : Type} [AddCommGroup R] (f : MvPolynomial
   conv_lhs => rw [← sum_homogeneousComponent P]
 
   rw [map_sum, Finset.sum_eq_single D]
-  · intro b _ hb
-    exact hf b hb _ (homogeneousComponent_isHomogeneous b P)
+  · exact fun b _ hb => hf b hb _ (homogeneousComponent_isHomogeneous b P)
   · intro hD
     rw [Finset.mem_range, not_lt] at hD
     rw [homogeneousComponent_eq_zero _ _ (by omega), map_zero]

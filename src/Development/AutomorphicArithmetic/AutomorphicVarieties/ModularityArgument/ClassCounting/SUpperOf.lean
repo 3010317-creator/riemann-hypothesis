@@ -220,8 +220,7 @@ theorem UpperTheory.V.ZK.Up.descend : UpperTheory.V.ZK.Up.Descend := by
     obtain ⟨z', hz'⟩ := hnat n (d * n) (psi R d n) z
     rw [← hcls.nat _ _ _ z z' hz', hφ, hφ, hz', ← hrq.2.1, hΦ.psi d n _ (hcyc n z),
       Nat.cast_smul_eq_nsmul]
-  · intro n z hz
-    exact ⟨cls _ ⟨z, hz⟩, hφ n ⟨z, hz⟩⟩
+  · exact fun n z hz => ⟨cls _ ⟨z, hz⟩, hφ n ⟨z, hz⟩⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ClassCounting.TorsionRankCounts.Descend =====
@@ -474,8 +473,7 @@ private theorem UpperTheory.V.ZK.selmer_upper_bound_of_inputs (hS : TorsStab) (h
       ((Φ n).toAddMonoidHom.comp (LinearMap.ker (bd (ZMod (l ^ ν)) (GL (Fin n) (𝓞 L)) k)).subtype.toAddMonoidHom)
   have hg : ∀ y, g y = l ^ k • Φ n y.1 := fun y => rfl
   have key := hF _ _ B β g ((l ^ ν) ^ InfinitePlace.nrComplexPlaces L * tc L (2 * (k + 1) + 4) (k + 1)) ?_ S ?_
-  · rw [hcard] at key
-    exact key
+  · rwa [hcard] at key
   · intro T hT
     rw [← hcard']
     refine rankCount_mod hR _ B (l ^ ν) _ hq hqB hfin' _ (hO L hL k hk hr l hl0 n hn0) (φ (lev l n k)) T fun s hs => ?_
@@ -489,8 +487,7 @@ private theorem UpperTheory.V.ZK.selmer_upper_bound_of_inputs (hS : TorsStab) (h
     obtain ⟨y, hy, e⟩ := hnn s hs
     refine ⟨⟨cm _ (stab (𝓞 L) (nn s) n (hnS s hs)) (k + 1) y, ?_⟩, ?_⟩
     · rw [LinearMap.mem_ker, (hC _).2.1, show bd _ _ k y = 0 from hy, map_zero]
-    · rw [hg, hΦ.stab _ _ _ _ hy]
-      exact e
+    · rwa [hg, hΦ.stab _ _ _ _ hy]
 
 theorem UpperTheory.V.ZK.sUpperOf :
     UpperTheory.V.ZK.SUpperOf :=

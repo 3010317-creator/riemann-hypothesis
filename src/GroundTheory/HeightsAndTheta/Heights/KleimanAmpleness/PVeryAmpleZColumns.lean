@@ -173,8 +173,7 @@ theorem mono (hH : ∀ j, h j ∈ H.sub I) {J J' : Chart h} (hJJ' : J.1 ⊆ J'.1
   have hx : xProd J' = (∏ j ∈ J'.1 \ J.1, h j) * xProd J := (Finset.prod_sdiff hJJ').symm
   have hc : J'.1.card = J.1.card + (J'.1 \ J.1).card := by
     rw [Finset.card_sdiff_of_subset hJJ']; have := Finset.card_le_card hJJ'; omega
-  rw [hx, mul_pow, mul_smul, hc, add_mul]
-  exact this
+  rwa [hx, mul_pow, mul_smul, hc, add_mul]
 
 theorem exists_partition {H : LineBundle S x} (hV : IsVeryAmpleBy H.toSubSystem h) (I : Chart x)
     (m : ℕ) : ∃ w : Fin (r + 1) → Ω, ∑ k, w k * h k ^ m = 1 ∧
@@ -221,8 +220,7 @@ theorem exists_partition {H : LineBundle S x} (hV : IsVeryAmpleBy H.toSubSystem 
   have htop : Ideal.span (Set.range b) = ⊤ := by
     rw [Ideal.eq_top_iff_one, Ideal.mem_span_range_iff_exists_fun]
     refine ⟨fun _ => 1, Subtype.ext ?_⟩
-    simp only [one_mul, b, AddSubmonoidClass.coe_finsetSum, OneMemClass.coe_one]
-    exact hsum
+    simpa only [one_mul, b, AddSubmonoidClass.coe_finsetSum, OneMemClass.coe_one] using hsum
   have htop' := Ideal.span_pow_eq_top _ htop m
   rw [← Set.range_comp] at htop'
   obtain ⟨c, hc⟩ := Ideal.mem_span_range_iff_exists_fun.mp
@@ -257,8 +255,7 @@ theorem VeryAmpleZColumns.proof : VeryAmpleZColumns.Statement.{u, v, w} := by
     refine Submodule.subset_span ⟨0, ?_⟩
     rw [pow_zero, one_smul, mul_zero]
     change e ∈ (G.toSubSystem.twist (twistSys S x 0)).sub I
-    rw [SubSystem.twist_twistSys_zero]
-    exact he
+    rwa [SubSystem.twist_twistSys_zero]
   ·
     intro s hs hds
     have hconst := Cech.Partition.const hds
@@ -290,8 +287,7 @@ theorem VeryAmpleZColumns.proof : VeryAmpleZColumns.Statement.{u, v, w} := by
       rw [hx, hc] at h1
       have h2 := smul_mem_twist_of_inv (hwinv k) h1
       change _ ∈ (G.toSubSystem.twist (twistSys S x 0)).sub I at h2
-      rw [SubSystem.twist_twistSys_zero] at h2
-      exact h2
+      rwa [SubSystem.twist_twistSys_zero] at h2
   ·
     intro p s hs hds
     have hex : ∀ J : Cech.Idx (support h) (p + 1), ∃ n, ∀ m, n ≤ m →
@@ -323,8 +319,7 @@ theorem VeryAmpleZColumns.proof : VeryAmpleZColumns.Statement.{u, v, w} := by
       refine Submodule.subset_span ⟨m, ?_⟩
       have e : xProd K.1 ^ m • (w k * h k ^ m) • s L = w k • (h k * xProd K.1) ^ m • s L := by
         rw [smul_smul, smul_smul, mul_pow]; congr 1; ring
-      rw [e]
-      exact h2
+      rwa [e]
 
 end
 

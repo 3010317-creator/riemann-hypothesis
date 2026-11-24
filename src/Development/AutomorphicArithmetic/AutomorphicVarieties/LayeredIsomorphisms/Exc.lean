@@ -140,14 +140,12 @@ theorem UpperTheory.V.Win.exc :
   · intro e he1 heZ hne m L₁ _ _ _ hL
     have hfar : ∀ i : Fin R', (l : ℝ) ^ (-(Nat.log l Z : ℤ)) ≤ ‖s i - (e : K)‖ := by
       intro i
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       apply hne
       rw [hnear]
       simp only [Finset.mem_biUnion, Finset.mem_univ, true_and, Finset.mem_filter, Finset.mem_Icc]
       exact ⟨i, ⟨he1, heZ⟩, hlt⟩
-    have h1 := hb e he1 m L₁ hL (Nat.log l Z) hfar
-    exact h1.trans (by gcongr)
+    exact (hb e he1 m L₁ hL (Nat.log l Z) hfar).trans (by gcongr)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.Exc =====

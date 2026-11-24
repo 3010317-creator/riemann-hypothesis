@@ -190,16 +190,9 @@ theorem measurePreserving_mulVec (hNM : N * M = 1) (hMN : M * N = 1) :
   set τ : ι ≃ Fin (Fintype.card ι) := Fintype.equivFin ι
   set ρ : κ ≃ Fin (Fintype.card ι) := (Fintype.equivFin κ).trans (finCongr hcard)
   set P : Matrix (Fin (Fintype.card ι)) (Fin (Fintype.card ι)) K := M.submatrix ρ.symm τ.symm
-  set Q : Matrix (Fin (Fintype.card ι)) (Fin (Fintype.card ι)) K := N.submatrix τ.symm ρ.symm
-  have hQP : Q * P = 1 := by
-    rw [Matrix.submatrix_mul_equiv, hNM, Matrix.submatrix_one_equiv]
-  have hPQ : P * Q = 1 := by
-    rw [Matrix.submatrix_mul_equiv, hMN, Matrix.submatrix_one_equiv]
-  have h1 : MeasurePreserving (fun x : ι → 𝔸[K] ↦ x ∘ τ.symm) (adeleMeasurePi K)
-      (adeleMeasurePi K) := measurePreserving_comp_equiv (adeleMeasure K) τ.symm
-  have h2 := measurePreserving_mulVec_fin P Q hQP hPQ
-  have h3 : MeasurePreserving (fun x : Fin (Fintype.card ι) → 𝔸[K] ↦ x ∘ ρ) (adeleMeasurePi K)
-      (adeleMeasurePi K) := measurePreserving_comp_equiv (adeleMeasure K) ρ
+  have h2 := measurePreserving_mulVec_fin P (N.submatrix τ.symm ρ.symm)
+    (by rw [Matrix.submatrix_mul_equiv, hNM, Matrix.submatrix_one_equiv])
+    (by rw [Matrix.submatrix_mul_equiv, hMN, Matrix.submatrix_one_equiv])
   have hfun : (fun x : ι → 𝔸[K] ↦ M.map (algebraMap K 𝔸[K]) *ᵥ x) =
       (fun x ↦ x ∘ ρ) ∘ (fun x ↦ P.map (algebraMap K 𝔸[K]) *ᵥ x) ∘ (fun x ↦ x ∘ τ.symm) := by
     funext x
@@ -213,7 +206,8 @@ theorem measurePreserving_mulVec (hNM : N * M = 1) (hMN : M * N = 1) :
     funext i
     simp
   rw [hfun]
-  exact h3.comp (h2.comp h1)
+  exact (measurePreserving_comp_equiv (adeleMeasure K) ρ).comp
+    (h2.comp (measurePreserving_comp_equiv (adeleMeasure K) τ.symm))
 
 
 omit [Fintype κ] [DecidableEq κ] in

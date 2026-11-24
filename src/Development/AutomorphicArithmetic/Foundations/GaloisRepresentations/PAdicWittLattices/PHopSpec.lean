@@ -56,8 +56,7 @@ private theorem l_unit (l : ℕ) {k : Type} [Field k] (hl : (l : k) ≠ 0) (Ω :
     apply (algebraMap k Ω).injective
     rw [map_natCast, h, map_zero]
   have h2 : IsUnit (l : Ω) := isUnit_iff_ne_zero.mpr h1
-  have h3 := h2.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv.symm
-  simpa using h3
+  simpa using h2.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv.symm
 
 theorem UpperTheory.Gal.G3.pHopSpec :
     EtGood → BcGood.{1} → GalClos → OpEx.{1} → OpTr.{1} → OpEt → OpBc.{1} → BcSplits → HopSpec := by
@@ -90,6 +89,4 @@ theorem UpperTheory.Gal.G3.pHopSpec :
   obtain ⟨tr', htr'⟩ := hT.tr (pullback.snd H.q g₀) (pullback.snd (H.s g ≫ H.q) g₀) (bcMap g₀ (H.s g) rfl) (bcMap_snd _ _ _)
   have key := fun A => hTr _ hT (pullback.snd H.q g₀) (pullback.snd (H.s g ≫ H.q) g₀) (pullback.snd H.q g₀)
     (bcMap g₀ (H.s g) rfl) (bcMap g₀ (H.t g) (H.comm g)) (bcMap_snd _ _ _) (bcMap_snd _ _ _) tr' htr' A
-  have e1 := (key _).1 ((hEq _).2 hspec)
-  have e2 := (key _).1 ((hEq _).2 hcorr)
-  exact e1.trans e2.symm
+  exact ((key _).1 ((hEq _).2 hspec)).trans ((key _).1 ((hEq _).2 hcorr)).symm

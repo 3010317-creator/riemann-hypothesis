@@ -114,7 +114,7 @@ theorem injective_of_finite_dvr {A B : Type} [CommRing A] [IsDomain A] [IsPrinci
     Function.Injective (algebraMap A B) := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   by_contra hne
-  push_neg at hne
+  push Not at hne
   obtain ⟨a, ha, ha0⟩ := hne
   have hker : (⊥ : Ideal B).comap (algebraMap A B) ≠ ⊥ := by
     intro h
@@ -186,8 +186,7 @@ theorem eval_specAt (τ₀ : ι) (y : ι × Fin n × Fin n → K) (z : Fin n × 
 
 theorem exists_specAt_ne [Infinite K] (τ₀ : ι) (w : Formalism.L2.DIV.Pol K ι n) (hw : w ≠ 0) :
     ∃ y, specAt τ₀ y w ≠ 0 := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply hw
   apply MvPolynomial.funext
   intro z
@@ -207,9 +206,8 @@ theorem specAt_blockEmb (τ₀ : ι) (y : ι × Fin n × Fin n → K) (τ : ι) 
   rw [MvPolynomial.aeval_rename]
   split_ifs with h
   · subst h
-    simp only [Function.comp_def, if_true]
-    exact MvPolynomial.aeval_X_left_apply F
-  · simp only [Function.comp_def, h, if_false]
+    simpa only [Function.comp_def, ite_true] using MvPolynomial.aeval_X_left_apply F
+  · simp only [Function.comp_def, h, ite_false]
     have hh : (MvPolynomial.aeval (R := K) fun x : Fin n × Fin n => (MvPolynomial.C (y (τ, x)) : MvPolynomial (Fin n × Fin n) K)).toRingHom =
         MvPolynomial.C.comp (MvPolynomial.eval fun v => y (τ, v)) := by
       apply MvPolynomial.ringHom_ext
@@ -233,13 +231,13 @@ theorem specAt_mem (lam : ι → DomWeight n) (τ₀ : ι) (y : ι × Fin n × F
     obtain ⟨F, hF, rfl⟩ := hx
     rw [map_prod]
     simp only [specAt_blockEmb]
-    rw [Fintype.prod_eq_mul_prod_compl τ₀, if_pos rfl, mul_comm]
+    rw [Fintype.prod_eq_mul_prod_compl τ₀, ite_eq_left rfl, mul_comm]
     have : ∏ i ∈ ({τ₀}ᶜ : Finset ι), (if i = τ₀ then F i else
         MvPolynomial.C (MvPolynomial.eval (fun v => y (i, v)) (F i))) =
         MvPolynomial.C (∏ i ∈ ({τ₀}ᶜ : Finset ι), MvPolynomial.eval (fun v => y (i, v)) (F i)) := by
       rw [map_prod]
       refine Finset.prod_congr rfl fun i hi => ?_
-      rw [if_neg (by simpa using hi)]
+      rw [ite_eq_right (by simpa using hi)]
     rw [this, ← MvPolynomial.smul_eq_C_mul]
     exact Submodule.smul_mem _ _ (hF τ₀)
   | zero => simp
@@ -258,7 +256,7 @@ theorem specAt_blockAct (τ₀ : ι) (y : ι × Fin n × Fin n → K) (M : Matri
     · subst hτ
       simp [specAt, Formalism.GradedWeylDivisibility.blockAct, Formalism.GradedWeylDivisibility.rowAct]
     · set_option synthInstance.maxHeartbeats 100000 in
-      simp only [AlgHom.comp_apply, Formalism.GradedWeylDivisibility.blockAct, specAt, MvPolynomial.aeval_X, hτ, if_false, map_sum, map_mul,
+      simp only [AlgHom.comp_apply, Formalism.GradedWeylDivisibility.blockAct, specAt, MvPolynomial.aeval_X, hτ, ite_false, map_sum, map_mul,
         MvPolynomial.aeval_C, Matrix.one_apply]
       rw [Finset.sum_eq_single a]
       · simp
@@ -316,11 +314,11 @@ theorem fam_conj (τ : L →+* K) (B : GL (Fin n) K) (h : τ.comp (IsCMField.com
     rw [← hcc σ₁, e, hcc]
   by_cases h1 : σ = τ
   · subst h1
-    simp only [fam, h, if_false, if_true]
+    simp only [fam, h, ite_false, ite_true]
     rfl
   · by_cases h2 : σ = τ.comp (IsCMField.complexConj L : L →+* L)
     · subst h2
-      simp only [fam, hcc, if_true, h]
+      simp only [fam, hcc, ite_true, h]
       simp [inside₂]
     · have h3 : σ.comp (IsCMField.complexConj L : L →+* L) ≠ τ := by
         intro e; apply h2; rw [← e, hcc]
@@ -505,8 +503,7 @@ theorem hw_eigvec_transport : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
     rw [← hM]
   refine wOf_eig lam _ (blockAct_mem lam τ₀ B) c χ hc0 u fun i => ?_
   have := congrFun hTu i
-  simp only [Matrix.mulVec, dotProduct, hTe, Pi.smul_apply, smul_eq_mul] at this
-  exact this
+  simpa only [Matrix.mulVec, dotProduct, hTe, Pi.smul_apply, smul_eq_mul] using this
 
 end Main
 
@@ -546,7 +543,7 @@ theorem rowAct_transvection_eq_eval (K : Type) [Field K] (n : ℕ) (a b : Fin n)
         Matrix.single_apply, add_mul, Finset.sum_add_distrib]
       split_ifs with hv
       · rw [Finset.sum_eq_single a]
-        · simp only [hv, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_X, and_self, if_true]
+        · simp only [hv, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_X, and_self, ite_true]
           exact mul_comm _ _
         · intro c _ hc
           simp [Ne.symm hc]
@@ -576,8 +573,7 @@ theorem rowDiv_eq_zero_of_fixed (K : Type) [Field K] [Infinite K] (n : ℕ) (a b
     rw [← rowAct_transvection_eq_eval K n a b hab s, hfix s, sub_self]
   have h := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p k) hP
   simp only [Polynomial.coeff_sub, Polynomial.coeff_C, Polynomial.coeff_zero] at h
-  rw [if_neg (by omega), sub_zero] at h
-  exact h
+  rwa [ite_eq_right (by omega), sub_zero] at h
 
 theorem mu_eq_of_upper_eigen : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (lam0 : DomWeight n) (mu : Fin n → ℤ)
     (f : MvPolynomial (Fin n × Fin n) K), f ∈ nablaSq K n lam0 → f ≠ 0 →
@@ -622,8 +618,7 @@ theorem mu_eq_of_upper_eigen : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (
         simp [Matrix.GeneralLinearGroup.val_det_apply, hBv, hdet]
       rw [this, one_zpow, Units.val_one]
     unfold sqAct at h
-    rw [hdp, one_smul, hBv] at h
-    exact h
+    rwa [hdp, one_smul, hBv] at h
 
   obtain ⟨c, hc⟩ := Formalism.GradedWeylDivisibility.hwLine K n n le_rfl lam0.natW (PI.WGB.natW_anti_A lam0) f hf hkill
   have he : extremal K n lam0 ≠ 0 := Formalism.GradedWeylDivisibility.hwNe K n n le_rfl lam0.natW
@@ -660,8 +655,7 @@ theorem mu_eq_of_upper_eigen : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (
     rw [mul_comm] at this
     exact (mul_right_cancel₀ hc0 this)
   have h4 : (((2 : ℚ) ^ lam0.w i : ℚ) : K) = (((2 : ℚ) ^ mu i : ℚ) : K) := by
-    rw [Rat.cast_zpow, Rat.cast_zpow, Rat.cast_ofNat]
-    exact h3
+    rwa [Rat.cast_zpow, Rat.cast_zpow, Rat.cast_ofNat]
   have h5 := Rat.cast_injective h4
   exact (zpow_right_injective₀ (by norm_num : (0 : ℚ) < 2) (by norm_num) h5).symm
 
@@ -845,11 +839,7 @@ theorem awf_det_conj (σ : L →+* K) (γ₀ : GL (Fin n) L) (hγ : γ₀ ∈ GQ
 theorem awf_inv_entry (γ₀ : GL (Fin n) L) (hγ : γ₀ ∈ GQ0 L n) (k l : Fin n) :
     ((γ₀⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) k l =
       (IsCMField.complexConj L : L →+* L) ((γ₀ : Matrix (Fin n) (Fin n) L) l k) := by
-  have h1 : ((γ₀⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) =
-      conjT (IsCMField.complexConj L : L →+* L) (γ₀ : Matrix (Fin n) (Fin n) L) :=
-    Units.inv_eq_of_mul_eq_one_right hγ
-  rw [h1]
-  rfl
+  exact GlobalTheory.WtDual.inv_entry γ₀ hγ k l
 
 def awfTwP (emb : ι → L →+* K) (lam : ι → DomWeight n) : MvPolynomial ((L →+* K) × Fin n × Fin n) K :=
   ∏ τ, if 0 ≤ (lam τ).detShift then awfDetP (emb τ) ^ (lam τ).detShift.toNat
@@ -1235,8 +1225,7 @@ theorem wt_weights_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (
       obtain ⟨lam, hl⟩ := _root_.GlobalTheory.WtComb.paramV_eq_infOf D.R (D.hc t) j sh (_root_.GlobalTheory.T.infG_eq_half_integer D cf jE A t sh hs)
       refine ⟨lam, fun sh' hs' => ?_⟩
       rw [hs, Multiset.singleton_inj] at hs'
-      rw [← hs']
-      exact hl
+      rwa [← hs']
     · exact ⟨⟨fun _ => 0, antitone_const⟩, fun sh hs => absurd ⟨sh, hs⟩ h⟩
   choose lamF hlamF using hlam
   let lamD : ℕ → D.what₂.Tau → DomWeight D.R.nV := fun j t =>
@@ -1249,7 +1238,7 @@ theorem wt_weights_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (
   haveI := _root_.GlobalTheory.HeightCounting.TwR.charZero_fractionRing_O D T i
   have hE := _root_.GlobalTheory.HeightCounting.FormsStep.kEmbT_cmDist D T i b
   have hl : lamD j = lamF ⟨j - 1, by omega⟩ := by
-    simp only [lamD, dif_pos (And.intro hj hjm)]
+    simp only [lamD, dite_eq_left (And.intro hj hjm)]
   refine ⟨GlobalTheory.T.contragredient_isIrreducible_finiteDimensional _ _ _ _ (_root_.GlobalTheory.AlgWtF.tenRepF_isIrreducible _ _ _ _ _ _ hE), _root_.GlobalTheory.AlgWtF.wtRepF_alg _ _ _ _ _ _,
     fun k => @_root_.GlobalTheory.AlgWtBC.isIrreducible_bcRep_wtRepF _ _ _ _ _ _ _ _ _ _ _ _ hE (FractionRing (T.Ok i k)) _ (algKkT D T i k),
     fun t => ⟨_, hc ▸ _root_.GlobalTheory.AlgWtF.DDHw.dd_hwAt _ _ _ _ _ _ hE t⟩, fun t sh lam hs hw => ?_⟩

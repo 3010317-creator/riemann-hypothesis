@@ -38,8 +38,7 @@ lemma tb_inv_hasFDerivAt {x : Matrix (Fin n) (Fin n) ℂ} (hx : IsUnit x) :
     rw [hx.unit_spec] at h
     have e : (fun z : Matrix (Fin n) (Fin n) ℂ => z⁻¹) = Ring.inverse :=
       funext Matrix.nonsing_inv_eq_ringInverse
-    rw [e]
-    exact h
+    rwa [e]
   · intro h
     simp only [Matrix.coe_units_inv, hx.unit_spec]
     exact congrArg Neg.neg (ContinuousLinearMap.mulLeftRight_apply ℂ (Matrix (Fin n) (Fin n) ℂ) x⁻¹ x⁻¹ h)
@@ -54,7 +53,7 @@ lemma tb_isUnit_of_omega {y : Matrix (Fin n) (Fin n) ℂ} (hy : y ∈ OmegaSet n
   | zero => simp
   | succ m =>
     have h := hy (Fin.last m)
-    simp only [lead, Fin.val_last, le_refl, dif_pos] at h
+    simp only [lead, Fin.val_last, le_refl, dite_eq_left] at h
     have e : y.submatrix (Fin.castLE (le_refl (m + 1))) (Fin.castLE (le_refl (m + 1))) = y := by
       ext a b; rfl
     rw [e] at h
@@ -67,13 +66,11 @@ lemma tb_contDiff_entry (a b : Fin n) : ContDiff ℂ ω (fun z : Matrix (Fin n) 
 lemma tb_contDiff_lead (i : ℕ) : ContDiff ℂ ω (lead (n := n) i) := by
   unfold lead
   by_cases h : i ≤ n
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     simp_rw [det_apply']
     refine ContDiff.sum fun σ _ => ?_
-    refine contDiff_const.mul ?_
-    exact contDiff_prod fun j _ => tb_contDiff_entry _ _
-  · simp only [dif_neg h]
-    exact contDiff_const
+    exact contDiff_const.mul (contDiff_prod fun j _ => tb_contDiff_entry _ _)
+  · simpa only [dite_eq_right h] using contDiff_const
 
 lemma tb_contDiffOn_zpow {f : Matrix (Fin n) (Fin n) ℂ → ℂ} {s : Set (Matrix (Fin n) (Fin n) ℂ)}
     (hf : ContDiffOn ℂ ω f s) (h0 : ∀ x ∈ s, f x ≠ 0) (m : ℤ) :

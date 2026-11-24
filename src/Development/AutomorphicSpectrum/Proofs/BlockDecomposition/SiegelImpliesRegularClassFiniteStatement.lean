@@ -180,8 +180,7 @@ theorem archMat_projArch_unitary : ∀ (F E : Type) [Field F] [NumberField F] [F
   have e : cT (starRingEnd ℂ) (archMat σ J τ (projArch σ J w g)) = (archMat σ J τ (projArch σ J w g))ᴴ := by
     ext i j
     simp [cT, Matrix.conjTranspose_apply]
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.CompanionTheory.CFin
 end -- clump:auto
@@ -435,9 +434,9 @@ namespace GlobalTheory.CompanionTheory.CFin.Ratio
 
 def ext {r : ℕ} (t : Fin r → ℝ) (n : ℕ) : ℝ := if h : n < r then t ⟨n, h⟩ else 1
 
-theorem ext_of_lt {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : n < r) : ext t n = t ⟨n, h⟩ := dif_pos h
+theorem ext_of_lt {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : n < r) : ext t n = t ⟨n, h⟩ := dite_eq_left h
 
-theorem ext_of_ge {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : r ≤ n) : ext t n = 1 := dif_neg (not_lt.mpr h)
+theorem ext_of_ge {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : r ≤ n) : ext t n = 1 := dite_eq_right (not_lt.mpr h)
 
 def bnd (r : ℕ) (c t₁ : ℝ) : ℝ := max ((t₁ / (min c 1) ^ r) ^ r) (((min c 1)⁻¹) ^ r)
 
@@ -500,7 +499,7 @@ theorem ext_nondeep (hc : 0 < c) (ht1 : 1 ≤ t₁) (ht : t ∈ cone r c) {j : �
     rw [e]
     calc t ⟨j, hj⟩ ≤ t₁ * t j' := hle
       _ ≤ _ := mul_le_mul_of_nonneg_right hR (ht.1 j').le
-  · push_neg at h
+  · push Not at h
     calc t ⟨j, hj⟩ ≤ t₁ := h
       _ = t₁ / (min c 1) ^ r * (min c 1) ^ r := by field_simp
       _ ≤ _ := mul_le_mul_of_nonneg_left hlow (div_nonneg (by linarith) hp.le)
@@ -589,8 +588,7 @@ theorem t_pair (hc : 0 < c) (ht1 : 1 ≤ t₁) (ht : t ∈ cone r c) {i l : Fin 
   rcases le_total i l with hil | hli
   · have := ext_bnd hc ht1 ht (i := i.val) (l := l.val) hil l.isLt.le
       (fun j hj a b => no_deep_of_cnt_eq hil h ⟨j, hj⟩ (show i ≤ (⟨j, hj⟩ : Fin r) from a) b)
-    rw [ext_of_lt t i.isLt, ext_of_lt t l.isLt] at this
-    exact this
+    rwa [ext_of_lt t i.isLt, ext_of_lt t l.isLt] at this
   · have := ext_bnd hc ht1 ht (i := l.val) (l := i.val) hli i.isLt.le
       (fun j hj a b => no_deep_of_cnt_eq hli h.symm ⟨j, hj⟩ (show l ≤ (⟨j, hj⟩ : Fin r) from a) b)
     rw [ext_of_lt t i.isLt, ext_of_lt t l.isLt] at this
@@ -601,8 +599,7 @@ theorem t_zero (hc : 0 < c) (ht1 : 1 ≤ t₁) (ht : t ∈ cone r c) {i : Fin r}
     t i ≤ bnd r c t₁ ∧ 1 ≤ bnd r c t₁ * t i := by
   have := ext_bnd hc ht1 ht (i := i.val) (l := r) i.isLt.le le_rfl
     (fun j hj a _ => no_deep_of_cnt_card h ⟨j, hj⟩ (show i ≤ (⟨j, hj⟩ : Fin r) from a))
-  rw [ext_of_lt t i.isLt, ext_of_ge t le_rfl, mul_one] at this
-  exact this
+  rwa [ext_of_lt t i.isLt, ext_of_ge t le_rfl, mul_one] at this
 
 theorem wt_zero (hc : 0 < c) (ht1 : 1 ≤ t₁) (ht : t ∈ cone r c) (m : ℕ) (u : Idx r m)
     (hu : lev m (deep t₁ t) u = 0) :
@@ -615,8 +612,7 @@ theorem wt_zero (hc : 0 < c) (ht1 : 1 ≤ t₁) (ht : t ∈ cone r c) (m : ℕ) 
     show (bnd r c t₁)⁻¹ ≤ t i ∧ t i ≤ bnd r c t₁
     refine ⟨?_, h1⟩
     rw [inv_le_iff_one_le_mul₀' hB0]; exact h2
-  · show (bnd r c t₁)⁻¹ ≤ 1 ∧ 1 ≤ bnd r c t₁
-    exact ⟨inv_le_one_of_one_le₀ hB, hB⟩
+  · exact ⟨inv_le_one_of_one_le₀ hB, hB⟩
   · simp only [lev] at hu
     obtain ⟨h1, h2⟩ := t_zero hc ht1 ht (i := i) (by linarith)
     have hti := ht.1 i
@@ -649,7 +645,6 @@ theorem ratio_bounded : ∀ (r m : ℕ) (c t₁ : ℝ), 0 < c → 1 ≤ t₁ →
   rcases u with i | k | i <;> rcases v with l | k' | l
   · simp only [lev] at huv
     have h := (t_pair hc ht1 ht (i := i) (l := l) (by linarith)).1
-    show t i ≤ bnd r c t₁ ^ 2 * t l
     exact h.trans (mul_le_mul_of_nonneg_right hBB (ht.1 l).le)
   · exact zero_case _ _ (by simp only [lev] at huv ⊢; linarith) (by simp only [lev])
   · exact zero_case _ _ (by simp only [lev] at huv ⊢; linarith [hcl i, hcl l])
@@ -884,17 +879,16 @@ theorem levi_unitary {ι L : Type} [Fintype ι] [DecidableEq ι] [Field L] (s : 
   have hbdtri : (bd b (Qi * g * Q)).BlockTriangular b := by
     intro i j hij
     simp only [bd, Matrix.of_apply]
-    rw [if_neg (ne_of_gt hij)]
+    rw [ite_eq_right (ne_of_gt hij)]
   have hdet : (bd b (Qi * g * Q)).det = (Qi * g * Q).det := by
     rw [hbdtri.det, hB.det]
     refine Finset.prod_congr rfl (fun a _ => ?_)
     congr 1
     ext i j
     simp only [Matrix.toSquareBlock_def, Matrix.of_apply, bd]
-    rw [if_pos (i.2.trans j.2.symm)]
+    rw [ite_eq_left (i.2.trans j.2.symm)]
   have hbdunit : IsUnit (bd b (Qi * g * Q)) := by
-    rw [Matrix.isUnit_iff_isUnit_det, hdet, ← Matrix.isUnit_iff_isUnit_det]
-    exact hGunit
+    rwa [Matrix.isUnit_iff_isUnit_det, hdet, ← Matrix.isUnit_iff_isUnit_det]
   obtain ⟨w, hw⟩ := hbdunit
   refine ⟨⟨⟨Q * (↑w : Matrix ι ι L) * Qi, Q * (↑w⁻¹ : Matrix ι ι L) * Qi, ?_, ?_⟩, ?_⟩, ?_⟩
   · calc Q * (↑w : Matrix ι ι L) * Qi * (Q * (↑w⁻¹ : Matrix ι ι L) * Qi) = Q * ((↑w : Matrix ι ι L) * (Qi * Q) * (↑w⁻¹ : Matrix ι ι L)) * Qi := by
@@ -934,16 +928,13 @@ theorem gram_frm_degree {L : Type} [Field L] (s : L →+* L) (hs : ∀ x, s (s x
     simp
   have hYX : cT s Y * J * X = 1 := by
     have e := congrArg (cT s) hXY
-    rw [cTm, cTm, cT_cT_self s hs, hJ, cT1, ← Matrix.mul_assoc] at e
-    exact e
+    rwa [cTm, cTm, cT_cT_self s hs, hJ, cT1, ← Matrix.mul_assoc] at e
   have hZX : cT s Z * J * X = 0 := by
     have e := congrArg (cT s) hXZ
-    rw [cTm, cTm, cT_cT_self s hs, hJ, cT0, ← Matrix.mul_assoc] at e
-    exact e
+    rwa [cTm, cTm, cT_cT_self s hs, hJ, cT0, ← Matrix.mul_assoc] at e
   have hZY : cT s Z * J * Y = 0 := by
     have e := congrArg (cT s) hYZ
-    rw [cTm, cTm, cT_cT_self s hs, hJ, cT0, ← Matrix.mul_assoc] at e
-    exact e
+    rwa [cTm, cTm, cT_cT_self s hs, hJ, cT0, ← Matrix.mul_assoc] at e
   rcases u with i | i | i <;> rcases v with j | j | j
   · have e : (cT s (frm X Z Y) * J * frm X Z Y) (Sum.inl i) (Sum.inl j) = (cT s X * J * X) i j := by
       rw [gram_apply, gram_apply]
@@ -1036,13 +1027,11 @@ theorem exists_least {r : ℕ} {S : Finset (Fin r)} {i : Fin r} (h : cnt S i < S
   refine ⟨(S.filter (i ≤ ·)).min' hne, ?_, ?_, ?_⟩
   · exact (Finset.mem_filter.mp (Finset.min'_mem _ hne)).1
   · exact (Finset.mem_filter.mp (Finset.min'_mem _ hne)).2
-  · intro j' hj' hij'
-    exact Finset.min'_le _ _ (Finset.mem_filter.mpr ⟨hj', hij'⟩)
+  · exact fun j' hj' hij' => Finset.min'_le _ _ (Finset.mem_filter.mpr ⟨hj', hij'⟩)
 
 theorem exists_between {r : ℕ} {S : Finset (Fin r)} {i k : Fin r} (h : cnt S i < cnt S k) :
     ∃ t ∈ S, i ≤ t ∧ t < k := by
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   have hsub : S.filter (· < k) ⊆ S.filter (· < i) := by
     intro t ht
     obtain ⟨htS, htk⟩ := Finset.mem_filter.mp ht
@@ -1153,7 +1142,7 @@ theorem block_tri (L : Type) [Field L] (s : L →+* L) (n r m : ℕ)
   intro u v huv
   by_cases hv : lev m S v < 0
   · exact A1 u v huv hv
-  push_neg at hv
+  push Not at hv
   rcases u with i | k | l
   · have := cnt_le S i
     rw [lx] at huv
@@ -1171,7 +1160,7 @@ theorem block_tri (L : Type) [Field L] (s : L →+* L) (n r m : ℕ)
   by_cases hw : lev m S (Sum.inl l) < lev m S w
   · have : M' w (Sum.inl l) = 0 := A2 w _ hw hl0
     simp [cT, this]
-  push_neg at hw
+  push Not at hw
   rcases w with l' | k | l'
   · rcases v with a | b | c
     · simp [hrow]
@@ -1472,8 +1461,7 @@ theorem block_diagonal_bound_weighted : ∀ {ι : Type} [Fintype ι] [DecidableE
   have hB0 : 0 ≤ B := (norm_nonneg _).trans (hBM u u)
   have hR0 : 0 ≤ R := by
     have h1 := hR u u rfl
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     nlinarith [hw u]
   rw [bd_mul (hP.mul hT) hP', bd_mul hP hT]
   have hbP : ∀ x y, ‖bd b P x y‖ ≤ B := fun x y => by
@@ -1607,8 +1595,7 @@ theorem arch_bound (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame �
   have hPP : cd (am p) * cd (am p⁻¹) = 1 := by rw [← cmul, ainv, cone']
   rw [hD] at tN
   have := block_diagonal_bound_weighted (lev m S) (cd (am p)) (cd (am p⁻¹)) (cd (am y)) (wt m t) b0 R wpos hPP tP tN b1 b2 b3 hR u v
-  rw [← hD, ← bd_map _ _ (map_zero φ)] at this
-  exact this
+  rwa [← hD, ← bd_map _ _ (map_zero φ)] at this
 
 end Arch
 
@@ -1623,8 +1610,7 @@ theorem isRegSS_of_isConj {γ δ : GRat σ J} (hc : IsConj γ δ) (hγ : GlobalT
   obtain ⟨c, rfl⟩ := isConj_iff.1 hc
   have e : (c * γ * c⁻¹).1.1 = (c.1 : GL (Fin n) E).1 * γ.1.1 * ((c.1)⁻¹ : GL (Fin n) E).1 := rfl
   unfold GlobalTheory.Orb.IsRegSS at *
-  rw [e, Matrix.coe_units_inv, Matrix.charpoly_units_conj]
-  exact hγ
+  rwa [e, Matrix.coe_units_inv, Matrix.charpoly_units_conj]
 
 theorem classes_finite (hS : PositivityTheory.ThKR.SiegelCore) (h : IsCMExt F E σ) (hJ : IsHermND σ J) {C : Set (GAd σ J)}
     (hC : IsCompact C) :

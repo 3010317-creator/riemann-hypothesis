@@ -146,50 +146,16 @@ theorem ratPts_eq : ratPts σ J = rat (HR (AF F) σ J) := by
   exact hg
 
 theorem exists_herm (h : IsCMExt F E σ) (hJ : EpsHerm σ J) : ∃ c : E, c ≠ 0 ∧ IsHermND σ (c • J.map σ) := by
-  have hσ := sigma_sigma h
-  have hd : ∀ c : E, c ≠ 0 → (c • J.map σ).det ≠ 0 := fun c hc => by
-    have e : (J.map σ).det = σ J.det := ((σ : E →+* E).map_det _).symm
-    rw [det_smul, e]
-    exact mul_ne_zero (pow_ne_zero _ hc) ((map_ne_zero σ).2 hJ.2)
-  rcases hJ.1 with h1 | h1
-  · exact ⟨1, one_ne_zero, fun i j => by simp [h1], hd 1 one_ne_zero⟩
-  · obtain ⟨x, hx⟩ : ∃ x, σ x ≠ x := by
-      by_contra! hx
-      obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-      have := h.2.1
-      refine IsTotallyComplex.complexEmbedding_not_isReal τ ?_
-      rw [ComplexEmbedding.isReal_iff]
-      ext z
-      have := h.2.2.2 τ z
-      rw [hx] at this
-      exact this.symm
-    refine ⟨σ x - x, sub_ne_zero.2 hx, fun i j => ?_, hd _ (sub_ne_zero.2 hx)⟩
-    simp only [Matrix.smul_apply, map_apply, smul_eq_mul, map_mul, map_sub, hσ, h1 j i]
-    ring
+  exact PositivityTheory.ThKEst.Sieg.exists_herm_smul h hJ
 
 omit [NumberField F] [NumberField E] in
 theorem gram (hσ : ∀ x, σ (σ x) = x) (c : E) (Z : Matrix (Fin n) (Fin r) E) (u : Fin n → E) (i : Fin r) :
     ((cT (σ : E →+* E) Z * (c • J.map σ)) *ᵥ u) i = c * σ (form σ J (fun k => Z k i) u) := by
-
-  simp only [form, mulVec, dotProduct, Matrix.mul_apply, cT, transpose_apply, map_apply, Matrix.smul_apply, smul_eq_mul,
-  map_sum, map_mul, hσ, RingHom.coe_coe, Finset.mul_sum, Finset.sum_mul]
-  rw [Finset.sum_comm]
-  exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
+  exact PositivityTheory.ThKEst.Sieg.gram_smul hσ c Z u i
 
 omit [NumberField F] [NumberField E] in
 theorem swap (hσ : ∀ x, σ (σ x) = x) (hJ : EpsHerm σ J) {x y : Fin n → E} (e : form σ J x y = 0) :
-    form σ J y x = 0 := by
-  have e2 := congrArg σ e
-
-  simp only [form, mulVec, dotProduct, map_sum, map_mul, hσ, map_zero, Finset.mul_sum] at e2 ⊢
-  rw [Finset.sum_comm]
-  rcases hJ.1 with h1 | h1
-  · rw [← e2]
-    exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by rw [h1]; ring
-  · rw [← neg_zero, ← e2, ← Finset.sum_neg_distrib]
-    refine Finset.sum_congr rfl fun _ _ => ?_
-    rw [← Finset.sum_neg_distrib]
-    exact Finset.sum_congr rfl fun _ _ => by rw [h1]; ring
+    form σ J y x = 0 := PositivityTheory.ThKEst.Sieg.form_eq_zero_swap hσ hJ e
 
 omit [NumberField F] [NumberField E] in
 theorem perp_span {S : Set (Fin n → E)} {z : Fin n → E} (h : ∀ u ∈ S, form σ J u z = 0) :
@@ -238,8 +204,7 @@ omit [NumberField E] in
 theorem mem_cols {C : Matrix (Fin n) (Fin r) E} {u : Fin n → E} (hu : u ∈ Submodule.span E (Set.range Cᵀ)) :
     ∃ a, C *ᵥ a = u := by
   have e : LinearMap.range C.mulVecLin = Submodule.span E (Set.range Cᵀ) := Matrix.range_mulVecLin C
-  rw [← e] at hu
-  exact hu
+  rwa [← e] at hu
 
 omit [NumberField E] in
 theorem span_eq (C : Matrix (Fin n) (Fin r) E) (x : Fin n → AE F E) :
@@ -376,8 +341,7 @@ theorem moderate (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w
         have e2 : lineDer γ (l.foldr lineDer f) = f₂ := funext fun g => by
           rw [e]
           exact (a2 g).deriv
-        rw [List.foldr_cons, e2]
-        exact a1
+        rwa [List.foldr_cons, e2]
     exact (hSS _ this).2.1
 
 theorem cuspidal (f : GAd σ J → ℂ)
@@ -503,8 +467,7 @@ theorem step (β : Multiplicative ℝ →* H) (hβ : Continuous β) (f f' : H �
     have e : R t = f (p t * β (Multiplicative.ofAdd (u t))) - u t * f' (p 0) - f (p t) := by
       simp only [hR]
       ring
-    rw [e]
-    exact h3
+    rwa [e]
   have hO : u =O[𝓝 0] fun t : ℝ => t - 0 := by
     have := hu.isBigO_sub
     simpa [hu0] using this
@@ -615,8 +578,7 @@ theorem prod_strict : ∀ (m : ℕ) {V : Type} [NormedAddCommGroup V] [NormedSpa
     simp only [h2] at h1
     simp only [h0, one_smul, MulOpposite.op_one] at h1
     simp only [List.ofFn_succ, List.prod_cons, Fin.sum_univ_succ]
-    rw [add_comm (e' 0)]
-    exact h1
+    rwa [add_comm (e' 0)]
 
 theorem coords (ha : ∀ x y, a (x * y) = a y * a x) (h1 : a 1 = 1) {m : ℕ} (Y : Fin m → A) (hY : ∀ i, a (Y i) = -Y i)
     (c : A →L[ℝ] (Fin m → ℝ)) (hc : ∀ s : Fin m → ℝ, c (∑ i, s i • Y i) = s)
@@ -692,8 +654,7 @@ theorem gr_exp [CompleteSpace A] (ha : ∀ x y, a (x * y) = a y * a x) (h1 : a 1
   have h2 := NormedSpace.map_exp φ (MulOpposite.continuous_op.comp a.continuous) Y
   have h3 : a (NormedSpace.exp Y) = NormedSpace.exp (-Y) := by
     apply MulOpposite.op_injective
-    rw [← hY, ← NormedSpace.exp_op]
-    exact h2
+    rwa [← hY, ← NormedSpace.exp_op]
   constructor
   · rw [h3, ← NormedSpace.exp_add_of_commute (Commute.refl Y).neg_left, neg_add_cancel, NormedSpace.exp_zero]
   · rw [h3, ← NormedSpace.exp_add_of_commute (Commute.refl Y).neg_right, add_neg_cancel, NormedSpace.exp_zero]
@@ -1180,27 +1141,11 @@ theorem piInf_tmul' {w : InfinitePlace F} (τ : EmbOver E w) (a : AF F) (x : E) 
   rfl
 
 theorem continuous_piInf {w : InfinitePlace F} (τ : EmbOver E w) : Continuous (piInf τ) := by
-  refine IsModuleTopology.continuous_of_ringHom (R := AF F) (piInf τ) ?_
-  have h : ⇑((piInf τ).comp (algebraMap (AF F) (AE F E))) =
-      fun a : AF F => InfinitePlace.Completion.extensionEmbedding w (a.1 w) := by
-    funext a
-    change piInf τ (a ⊗ₜ[F] (1 : E)) = _
-    rw [piInf_tmul', map_one, mul_one]
-  rw [h]
-  exact (InfinitePlace.Completion.isometry_extensionEmbedding w).continuous.comp
-    ((continuous_apply w).comp continuous_fst)
+  apply PositivityTheory.ThKEst.LatticeQuotientMeasure.continuous_piInf
 
 theorem piInf_cA (h : IsCMExt F E σ) {w : InfinitePlace F} (τ : EmbOver E w) (z : AE F E) :
     piInf τ (cA σ z) = star (piInf τ z) := by
-  have hw : w.IsReal := h.1.isReal w
-  induction z using TensorProduct.induction_on with
-  | zero => simp only [map_zero, star_zero]
-  | add x y hx hy => simp only [map_add (f := _), hx, hy, star_add]
-  | tmul a x =>
-    change piInf τ (a ⊗ₜ[F] σ x) = _
-    rw [piInf_tmul', piInf_tmul', h.2.2.2, star_mul',
-      ← InfinitePlace.Completion.extensionEmbeddingOfIsReal_apply hw]
-    rw [Complex.star_def, Complex.conj_ofReal]
+  exact PositivityTheory.ThKEst.ExponentialLineExistence.piInf_cA h τ z
 
 theorem map_incM {w : InfinitePlace F} (τ : EmbOver E w) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) :
     (incM F J).map (piInf τ) = J.map τ.1 := by
@@ -1696,8 +1641,7 @@ theorem contDiff_comp_pr [FiniteDimensional ℝ A] (m : ι → G →* A) (L : Se
     · exact ContDiff.sum fun i _ =>
         (StrongDual.smulRightL ℝ (Fin k → ℝ) ℂ (ContinuousLinearMap.proj i)).contDiff.comp (hD i)
     · obtain ⟨γ', h1, h2, h3⟩ := hZ' i t
-      simp only [h3, ← mul_assoc]
-      exact hl f f' (fun j => ⟨(hS _ (hf'S j)).1, hf' j⟩) γ' h1 _ h2 _
+      simpa only [h3, ← mul_assoc] using hl f f' (fun j => ⟨(hS _ (hf'S j)).1, hf' j⟩) γ' h1 _ h2 _
 
 end PositivityTheory.ThKEst.UMGS
 

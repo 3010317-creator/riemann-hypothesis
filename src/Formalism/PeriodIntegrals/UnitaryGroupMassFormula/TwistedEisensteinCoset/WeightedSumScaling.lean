@@ -280,8 +280,7 @@ theorem sg_qpow {a b : ℕ} {φ : E → K} (h : Good1 P a b φ) (f : ℕ) :
   have hq0 := qE_ne P hp
   refine ⟨⟨fun u hu => ?_, fun u δ hδ => ?_⟩, ?_⟩
   · have h1 := h.1 _ hu
-    rw [pow_add, mul_assoc]
-    exact h1
+    rwa [pow_add, mul_assoc]
   · show φ ((qOf P : E) ^ f * (u + δ)) = φ ((qOf P : E) ^ f * u)
     rw [mul_add]
     apply h.2
@@ -311,8 +310,7 @@ theorem sg_qinv {a b : ℕ} {φ : E → K} (h : Good1 P a b φ) (f : ℕ) :
     have e : δ / (qOf P : E) ^ f / (qOf P : E) ^ b = δ / (qOf P : E) ^ (b + f) := by
       rw [pow_add]
       field_simp
-    rw [e]
-    exact hδ
+    rwa [e]
   · have e : Sg P a (b + f) (fun u => φ (u / (qOf P : E) ^ f)) = Sg P (a + f) b φ := by
       unfold Sg
       rw [show a + (b + f) = a + f + b by ring]

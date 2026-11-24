@@ -203,8 +203,7 @@ theorem stabilizer_isClosed {r : ℕ} (P : Frame E n r) :
     IsClosed (S0 (Fv F v) σ J P : Set (HA (Fv F v) σ J)) := by
   have := LocMassOrdSF.t2_tensor_product (F := F) (E := E) (Fv F v)
   have hcont : Continuous (fun h : HA (Fv F v) σ J => h • ratTup (F := F) (Fv F v) (F0 P)) := by
-    refine continuous_pi fun a => ?_
-    exact continuous_act σ J v (ratTup (F := F) (Fv F v) (F0 P) a)
+    exact continuous_pi fun a => continuous_act σ J v (ratTup (F := F) (Fv F v) (F0 P) a)
   have e : (S0 (Fv F v) σ J P : Set (HA (Fv F v) σ J)) =
       {h : HA (Fv F v) σ J | h • ratTup (F := F) (Fv F v) (F0 P) = ratTup (F := F) (Fv F v) (F0 P)} := by
     ext h
@@ -243,8 +242,7 @@ theorem nondegenerate_lattice : LocMassOrdW.NonDegLat := by
         refine ⟨⟨_, hx⟩, ?_, rfl⟩
         show y * (y⁻¹ * k * y) * y⁻¹ ∈ Formalism.L2.SG.TypedSets.Kv σ J Λ v
         have e2 : y * (y⁻¹ * k * y) * y⁻¹ = k := by group
-        rw [e2]
-        exact hk
+        rwa [e2]
     rw [e]
     exact (hKc.image ((continuous_const.mul continuous_id).mul continuous_const)).inter_left
       (stabilizer_isClosed σ J v P)

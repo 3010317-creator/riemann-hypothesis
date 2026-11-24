@@ -81,8 +81,7 @@ theorem I_nhds {R : Subring K} (ho : IsOpen (R : Set K)) (a : Kˣ) : I R (a : K)
     ext x; constructor
     · rintro ⟨r, hr, rfl⟩
       simpa using hr
-    · intro hx
-      exact ⟨_, hx, by simp⟩
+    · exact fun hx => ⟨_, hx, by simp⟩
   rw [this]
   refine (ho.preimage (continuous_const.mul continuous_id)).mem_nhds ?_
   simp
@@ -154,8 +153,7 @@ theorem adic_of_datum {R : Subring K} {ψ : AddChar K ℂ} (hD : LocalDatum K R 
   by_contra hc
   have : (ϖ : K) ^ n * r ∈ ((R : Set K) ∩ W'ᶜ) ∩ I R ((ϖ : K) ^ n) :=
     ⟨⟨R.mul_mem (R.pow_mem hϖ n) hr, hc⟩, r, hr, rfl⟩
-  rw [hn'] at this
-  exact this
+  rwa [hn'] at this
 
 variable {R : Subring K} {ϖ : Kˣ}
 
@@ -497,8 +495,7 @@ theorem avg_zero (Λ N : AddSubgroup K) [Finite (N ⧸ Λ.addSubgroupOf N)] {d :
         rw [ho]
         exact local_zero Λ N F hF _ (hx _)
       simp only [this, finsum_zero]
-    · intro h _
-      exact hfin.preimage ((Equiv.addRight (fun i => (o h i : K ⧸ Λ))).injective.injOn)
+    · exact fun h _ => hfin.preimage ((Equiv.addRight (fun i => (o h i : K ⧸ Λ))).injective.injOn)
   simp only [h1, Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at h2
   rcases mul_eq_zero.1 h2 with h | h
   · exact absurd h (by exact_mod_cast Fintype.card_ne_zero)
@@ -580,8 +577,7 @@ theorem nonStationary_main : NonStationary := by
     fun v hv => hA.2 x v fun i => (hNB _ (hv i)).2
   by_cases hEx : ∃ z : Kˣ, z ^ (m + 1) = D' ∧ ∀ k, x k - (z : K) ∈ B
   · left
-    intro v hv
-    exact if_pos ((hE v hv).2 hEx)
+    exact fun v hv => ite_eq_left ((hE v hv).2 hEx)
   by_cases hAx : A x = 0
   · left
     intro v hv
@@ -613,7 +609,7 @@ theorem nonStationary_main : NonStationary := by
         else A (x + v) * ψ (g0 (D' : K) (x + v) * ti)) =
       A x * ψ (g0 (D' : K) x * ti) * ψ ((∑ i, v i * G i) * ti) := by
     intro v hv
-    rw [if_neg (fun hc => hEx ((hE v hv).1 hc)), hAv v hv]
+    rw [ite_eq_right (fun hc => hEx ((hE v hv).1 hc)), hAv v hv]
     obtain ⟨ρ, hρ, e⟩ := h.taylor m a (D' : K) x xi v μ hμI hxxi hxiR (fun i => by
       obtain ⟨r, hr, e⟩ := mem_mulR.1 (hv i)
       exact ⟨r, hr, by rw [e, hν]⟩)

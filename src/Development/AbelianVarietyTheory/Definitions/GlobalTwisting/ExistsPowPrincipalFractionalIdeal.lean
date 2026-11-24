@@ -82,11 +82,7 @@ theorem exists_single_mem_span {E M ι : Type} [Field E] [NumberField E] [Field 
 
   let χ : ι → (𝓞 E →* M) := fun j => ((f j).comp (algebraMap (𝓞 E) E)).toMonoidHom
   have hχ : Function.Injective χ := by
-    intro j k h
-    apply hf
-    apply IsFractionRing.ringHom_ext (A := 𝓞 E)
-    intro x
-    exact DFunLike.congr_fun h x
+    exact fun j k h => hf (IsFractionRing.ringHom_ext (A := 𝓞 E) (fun x => DFunLike.congr_fun h x))
   have hli : LinearIndependent M (fun j => (χ j : 𝓞 E → M)) :=
     (linearIndependent_monoidHom (𝓞 E) M).comp χ hχ
 
@@ -117,8 +113,7 @@ theorem exists_single_mem_span {E M ι : Type} [Field E] [NumberField E] [Field 
     by_cases hk : k = i
     · subst hk; simp
     · simp [hk]
-  rw [this]
-  exact hy
+  rwa [this]
 
 open Formalism.BasicNotions Formalism.MainNotions.TaylorLogMetric
 
@@ -288,8 +283,7 @@ theorem normSq1_eq_nrm1Sq (Λ : AddSubgroup ℂ) (G : ℂ → ℂ) : GL3Theta.no
 
 theorem normSq1_nonneg (Λ : AddSubgroup ℂ) (G : ℂ → ℂ) : 0 ≤ GL3Theta.normSq1 Λ G := by
   unfold GL3Theta.normSq1
-  simp only [MeasureTheory.average]
-  exact MeasureTheory.integral_nonneg fun z => by positivity
+  simpa only [MeasureTheory.average] using MeasureTheory.integral_nonneg fun z => by positivity
 
 theorem normSq_thetaZero_pos (h : Crv D cc δ) (hM : DataIn D (tor0 D cc δ) M) (ρ : M →ₐ[ℚ] ℂ) {t : ℂ}
     (ht : GL3Theta.IsTwoTorsionPointUnkilled D (lamConj M ρ (lamOf D cc δ)) t) :
@@ -520,7 +514,7 @@ theorem sum_dual_family {r : ℕ} {a a' : Fin r → D.host.E}
     rw [map_mul]; ring
   simp only [h2] at h1
   simp only [sub_mul, Finset.sum_sub_distrib, Finset.sum_mul, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Finset.sum_comm, ← h1, sub_self]
 
 theorem mem_ellT_iff {M : IntermediateField ℚ ℂ} [NumberField M] (hM : ∀ τ x, embT D τ x ∈ M)
@@ -536,7 +530,7 @@ theorem mem_ellT_iff {M : IntermediateField ℚ ℂ} [NumberField M] (hM : ∀ �
       induction hv using Submodule.span_induction with
       | mem x hx =>
         obtain ⟨a, ha, rfl⟩ := hx
-        simp only [TaylorLogMetric.liftM, dif_pos (hM _ _), ← map_mul]
+        simp only [TaylorLogMetric.liftM, dite_eq_left (hM _ _), ← map_mul]
         have e2 := GlobalTheory.InducedType.sum_eq_trace D (a * D.host.conj y)
         erw [e2]
         obtain ⟨c, hc⟩ := (factMMUnimodular D.R D.host a).1 ha y hy
@@ -567,7 +561,7 @@ theorem mem_ellT_iff {M : IntermediateField ℚ ℂ} [NumberField M] (hM : ∀ �
     apply Subtype.ext
     have e : ∀ k, (((c k • (fun σ => TaylorLogMetric.liftM M (embT D σ (a k)))) σ : M) : ℂ) =
         (x : ℂ) * (embT D τ (D.host.conj (a' k)) * embT D σ (a k)) := fun k => by
-      simp only [TaylorLogMetric.liftM, dif_pos (hM _ _), Pi.smul_apply]
+      simp only [TaylorLogMetric.liftM, dite_eq_left (hM _ _), Pi.smul_apply]
       rw [← mul_assoc]
       rfl
     rw [Finset.sum_apply, IntermediateField.coe_sum]

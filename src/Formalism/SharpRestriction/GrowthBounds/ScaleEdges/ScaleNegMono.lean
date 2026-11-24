@@ -55,8 +55,7 @@ theorem w_ne_zero {p n' : ℕ} {W Qq O Kf : Type} [CommRing W] [IsDomain W] [IsD
   have h2 : algebraMap O Kf ((p : ℕ) : O) = 0 := by
     rw [← hS.w_sq, map_pow, h, zero_pow two_ne_zero]
   have h3 : ι (algebraMap W Qq ((p : ℕ) : W)) = 0 := by
-    rw [hS.ι_comp, map_natCast j]
-    exact h2
+    rwa [hS.ι_comp, map_natCast j]
   have h4 : algebraMap W Qq ((p : ℕ) : W) = 0 := (map_eq_zero ι).mp h3
   have h5 : ((p : ℕ) : W) = 0 := IsFractionRing.injective W Qq (by rw [h4, map_zero])
   exact hS.p_unif.ne_zero h5
@@ -102,7 +101,7 @@ theorem asm : Asm := by
   unfold SrcTests
   refine ⟨E, nE, fun e => if h : e ∈ E then F e h else fun _ => 0, hE, ?_, ?_, ?_, hcard⟩
   · intro e he i
-    simp only [dif_pos he]
+    simp only [dite_eq_left he]
     unfold Nsrc
     refine Submodule.mem_inf.mpr ⟨scale_neg_mono w hw (htS e he) _ (hF1 e he i).1, ?_⟩
     refine (Submodule.mem_iInf _).mpr fun e' => (Submodule.mem_iInf _).mpr fun he' => ?_
@@ -111,8 +110,7 @@ theorem asm : Asm := by
       exact (hF1 e' he i).2
     · exact scale_pos_le w cStar _ (hF2 e he i e' he'.1 he'.2 hee)
   · intro e he i e' he' hsrc hne
-    simp only [dif_pos he]
-    exact hF2 e he i e' he' hsrc hne
+    simpa only [dite_eq_left he] using hF2 e he i e' he' hsrc hne
   · intro e he c hc
     obtain ⟨G, hG1, hG2, hG3, hG4⟩ := hF3 e he c hc
     refine ⟨G, ?_, ?_, ?_⟩
@@ -124,9 +122,7 @@ theorem asm : Asm := by
       · subst hee
         exact hG2
       · exact scale_pos_le w cStar _ (hG3 e' he'.1 (he'.2.trans (hE e he).2.symm) hee)
-    · simp only [dif_pos he]
-      exact ValLe.mono hG4 (hD1 e he)
-    · intro e' he' hne
-      exact hG3 e' (hE e' he').1 ((hE e' he').2.trans (hE e he).2.symm) hne
+    · simpa only [dite_eq_left he] using ValLe.mono hG4 (hD1 e he)
+    · exact fun e' he' hne => hG3 e' (hE e' he').1 ((hE e' he').2.trans (hE e he).2.symm) hne
 
 end Formalism.MainNotions.Pf14

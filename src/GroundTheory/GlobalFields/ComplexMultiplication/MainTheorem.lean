@@ -165,8 +165,7 @@ theorem main_theorem_complexMultiplication (σ : ℂ ≃ₐ[K] ℂ) (s : IdeleGr
   refine ⟨F n₀, ⟨hF n₀, hprop⟩, fun g ⟨hg, hgp⟩ ↦ ?_⟩
 
   have hg' : IsAnalyticUniformization (idealPeriodPair (algebraMap K ℂ) hK (s⁻¹ • 𝔞)).lattice g := by
-    rw [hLs]
-    exact hg
+    rwa [hLs]
   obtain ⟨c, -, -, hcz⟩ := exists_mul_eq_of_isAnalyticUniformization (hF' n₀) hg'
   have hker : ∀ y : K, (c - 1) * algebraMap K ℂ y ∈
       (idealPeriodPair (algebraMap K ℂ) hK (s⁻¹ • 𝔞)).lattice := by
@@ -197,8 +196,7 @@ theorem main_theorem_complexMultiplication (σ : ℂ ≃ₐ[K] ℂ) (s : IdeleGr
       push_cast
       nlinarith
     have h2 : δ * (N + 1 : ℕ) ≤ ‖c - 1‖ := by
-      rw [← le_div_iff₀ hpos, div_eq_mul_inv]
-      exact hle
+      rwa [← le_div_iff₀ hpos, div_eq_mul_inv]
     linarith
   ext z
   rw [hcz, hc1, one_mul]

@@ -143,7 +143,7 @@ theorem epow_left {A : Type} [Ring A] (E : Fin n → Fin n → A) (k : ℕ) (a b
 theorem cov_apply {E : Fin n → Fin n → Module.End ℂ V} (hE : GlRel E) (k : ℕ) (p c q : Fin n) (x : V) :
     E p c (Formalism.REAL.epow E k c q x) = Formalism.REAL.epow E k c q (E p c x) + Formalism.REAL.epow E k p q x - (if q = p then Formalism.REAL.epow E k c c x else 0) := by
   have h := LinearMap.congr_fun (_root_.Formalism.REAL.generatorPowCovariance_holds _ n E hE k c q p c) x
-  simp only [LinearMap.sub_apply, Module.End.mul_apply, if_true] at h
+  simp only [LinearMap.sub_apply, Module.End.mul_apply, ite_true] at h
   rw [sub_eq_iff_eq_add] at h
   rw [h]
   split_ifs <;> (try simp only [LinearMap.zero_apply]) <;> abel
@@ -161,7 +161,7 @@ theorem upper_mem {E : Fin n → Fin n → Module.End ℂ V} (hE : GlRel E) (k :
     rw [Module.End.mul_apply]
     rcases lt_or_ge p c with hc | hc
     · exact e_mem E hc _
-    · rw [cov_apply hE, if_neg h.ne', sub_zero]
+    · rw [cov_apply hE, ite_eq_right h.ne', sub_zero]
       exact Submodule.add_mem _ (ih c q (lt_of_le_of_lt hc h) _) (ih p q h x)
 
 def bk (n k : ℕ) : Fin n → FreeAlgebra ℂ (Fin n) :=
@@ -197,9 +197,9 @@ theorem diag_mem {E : Fin n → Fin n → Module.End ℂ V} (hE : GlRel E) (k : 
       rw [Nat.cast_smul_eq_nsmul]
     have h1 : ∀ c ∈ Finset.Iio a, E a c (Formalism.REAL.epow E k c a x) =
         Formalism.REAL.epow E k c a (E a c x) + Formalism.REAL.epow E k a a x - Formalism.REAL.epow E k c c x := fun c _ => by
-      rw [cov_apply hE, if_pos rfl]
+      rw [cov_apply hE, ite_eq_left rfl]
     have h2 : E a a (Formalism.REAL.epow E k a a x) = Formalism.REAL.epow E k a a (E a a x) := by
-      rw [cov_apply hE, if_pos rfl]
+      rw [cov_apply hE, ite_eq_left rfl]
       abel
     have e : Formalism.REAL.epow E (k + 1) a a x - evd (fun c => E c c) (bk n (k + 1) a) x =
         ∑ c ∈ Finset.Iio a, Formalism.REAL.epow E k c a (E a c x) + (Formalism.REAL.epow E k a a (E a a x) - B a (E a a x)) +
@@ -333,8 +333,7 @@ theorem kill_list {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
     refine ⟨L₁ ++ [(mm, s)], fun p hp => ?_, fun x hx => ?_⟩
     · rcases List.mem_append.1 hp with h | h
       · exact hL₁ p h
-      · rw [List.mem_singleton.1 h]
-        exact hs
+      · rwa [List.mem_singleton.1 h]
     · obtain ⟨p, hp, q, hq, hpq⟩ := Submodule.exists_add_mem_mem_orthogonal (K := L) x
       have hqS : q ∈ S := by
         have : q = x - p := by rw [hpq]; abel
@@ -413,8 +412,7 @@ theorem etr_cycle (E : Fin n → Fin n → Module.End ℂ V) (hE : GlRel E) (m j
       · rw [evK_etr]
         exact hN V E hG x) V E (k_of_glRel hE) ∅ j z hz (ref_all z) hb
   refine ⟨w, hw1, ?_⟩
-  rw [evK_etr, evd_wt E τ z hw b, hv τ] at hw2
-  exact hw2
+  rwa [evK_etr, evd_wt E τ z hw b, hv τ] at hw2
 
 end
 
@@ -754,7 +752,7 @@ theorem frC_apply (B : Finset (Lt n)) (y : Cn n V) (S : Finset (Lt n)) :
 
 theorem toC_frC {B : Finset (Lt n)} (hB : ∀ l ∈ B, l.1 = true) (y : Cn n V) : toC B (frC B y) = y := by
   funext A
-  simp only [toC, frC_apply, ppart_emb hB, kpart_emb hB, if_true]
+  simp only [toC, frC_apply, ppart_emb hB, kpart_emb hB, ite_true]
 
 theorem frC_toC {B : Finset (Lt n)} {x : Cq n V} (hx : PartL B x) : frC B (toC B x) = x := by
   funext S
@@ -803,7 +801,7 @@ theorem frC_bd (B : Finset (Lt n)) (E1 E2 : Fin n → Fin n → Module.End ℂ V
     frC B (bd (allT n) (kA E1 E2) y) = bdL isK E1 E2 (frC B y) := by
   rw [bdL_isK]
 
-  simp only [bd, cpt, true_and, if_true, LinearMap.add_apply, LinearMap.sum_apply, map_add (f := _), map_sum,
+  simp only [bd, cpt, true_and, ite_true, LinearMap.add_apply, LinearMap.sum_apply, map_add (f := _), map_sum,
   Module.End.mul_apply]
   congr 1
   · refine Finset.sum_congr rfl fun i _ => ?_
@@ -815,12 +813,12 @@ theorem frC_bd (B : Finset (Lt n)) (E1 E2 : Fin n → Fin n → Module.End ℂ V
 
 theorem part_frC (B : Finset (Lt n)) (y : Cn n V) : PartL B (frC B y) := fun S h => by
   by_contra h2
-  exact h (by rw [frC_apply, if_neg h2])
+  exact h (by rw [frC_apply, ite_eq_right h2])
 
 theorem deg_frC {B : Finset (Lt n)} {j : ℕ} {y : Cn n V} (hy : Sup (allT n) ∅ j y) : DegL (j + B.card) (frC B y) := by
   intro S h
   have h1 : ppart S = B := part_frC B y S h
-  rw [frC_apply, if_pos h1] at h
+  rw [frC_apply, ite_eq_left h1] at h
   have h2 := (hy _ h).2
   rw [Finset.filter_true_of_mem (fun _ _ => rfl)] at h2
   rw [card_parts S, h2, h1]
@@ -859,8 +857,7 @@ theorem wt_frC {B : Finset (Lt n)} (E1 E2 : Fin n → Fin n → Module.End ℂ V
       (((τ - wtL B) c : ℝ) : ℂ) • y (kpart S) at h1
     rw [Finset.filter_true_of_mem (fun _ _ => rfl), Pi.sub_apply, Complex.ofReal_sub, sub_smul, eq_sub_iff_add_eq,
       add_assoc, ← add_smul, ← Complex.ofReal_add] at h1
-    rw [wtL_split, h]
-    exact h1
+    rwa [wtL_split, h]
   · simp
 
 end Chains

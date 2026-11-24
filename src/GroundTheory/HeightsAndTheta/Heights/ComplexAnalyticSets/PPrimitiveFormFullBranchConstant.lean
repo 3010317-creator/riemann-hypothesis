@@ -64,9 +64,7 @@ theorem PrimitiveFormFullBranchConstant.proof : PrimitiveFormFullBranchConstant.
         (fun j => (ha j s (hOB hs)).continuousAt) (hr' s hsO').continuousAt (hr s hs).continuousAt hrs
         (hsep s hs) hroot' (Filter.mem_of_superset (hO.mem_nhds hs) hrO)
       filter_upwards [hO'.mem_nhds hsO', heq] with u hu hru
-      have h := hw u hu
-      simp only [hru] at h
-      exact h
+      simpa only [hru] using hw u hu
     · intro hev
       obtain ⟨U, hUs, hUo, hsU⟩ := mem_nhds_iff.1 hev
       exact ⟨U ∩ O, r, hUo.inter hO, ⟨hsU, hs⟩, hr.mono Set.inter_subset_right, rfl, fun u hu => hUs hu.1⟩
@@ -116,7 +114,6 @@ theorem PrimitiveFormFullBranchConstant.proof : PrimitiveFormFullBranchConstant.
     intro s hs s' hs' h
     have hsub : O ⊆ S := hOc.subset_of_closure_inter_subset hSo ⟨s, hs, (hfull s hs).1 h⟩ hSc
     exact (hfull s' hs').2 (hsub hs')
-  intro s hs s' hs'
-  exact ⟨key s hs s' hs', key s' hs' s hs⟩
+  exact fun s hs s' hs' => ⟨key s hs s' hs', key s' hs' s hs⟩
 
 end GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets

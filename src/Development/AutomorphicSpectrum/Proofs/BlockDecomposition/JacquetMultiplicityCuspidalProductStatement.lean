@@ -237,9 +237,7 @@ private theorem occursTimes_of_equiv_lemma {G V₁ V₂ Y : Type} [Group G] [Add
     show Submodule.Quotient.mk (e1 ((A.toRepresentation g) x)) =
       Submodule.Quotient.mk (((mp A).toRepresentation g) (e1 x))
     congr 1
-    apply Subtype.ext
-    show e (ρ₁ g (x : V₁)) = ρ₂ g (e (x : V₁))
-    exact he g x
+    exact Subtype.ext (he g x)
   refine Exists.intro (fun i => mp (S i)) (Exists.intro (fun i => mp (T i))
     ⟨fun i => hmono (hTS i), fun i j hij => hmono (hST i j hij), fun i => ?_⟩)
   obtain ⟨q⟩ := hQ (S i) (T i)
@@ -266,16 +264,16 @@ theorem cell_bij {α β : Type} [Fintype α] [LinearOrder α] [Fintype β] [Line
       Nonempty ((cellFunctor f g (piTensor ρ)).Equiv (piTensor fun j => ρ (e j))) := by
   have hrz : ∀ i j, j ≠ e.symm i → b.1 i j = 0 := by
     intro i j hj
-    rw [hb, if_neg fun h => hj (by rw [← h, Equiv.symm_apply_apply])]
+    rw [hb, ite_eq_right fun h => hj (by rw [← h, Equiv.symm_apply_apply])]
   have hcz : ∀ j i, i ≠ e j → b.1 i j = 0 := by
     intro j i hi
-    rw [hb, if_neg fun h => hi h.symm]
+    rw [hb, ite_eq_right fun h => hi h.symm]
   have hrf : ∀ i, b.1 i (e.symm i) = d i := by
     intro i
-    rw [hb, if_pos (e.apply_symm_apply i)]
+    rw [hb, ite_eq_left (e.apply_symm_apply i)]
   have hcf : ∀ j, b.1 (e j) j = d (e j) := by
     intro j
-    rw [hb, if_pos rfl]
+    rw [hb, ite_eq_left rfl]
   let f : ∀ i, (Σ j, Fin (b.1 i j)) ≃ Fin (d i) := fun i =>
     GlobalTheory.OneBlockCell.valEquiv (e.symm i) (hrf i) (fun j hj => hrz i j hj)
   let g : ∀ j, (Σ i, Fin (b.1 i j)) ≃ Fin (d (e j)) := fun j =>
@@ -361,8 +359,7 @@ theorem cell_bij {α β : Type} [Fintype α] [LinearOrder α] [Fintype β] [Line
   · show Ψ ((piTensor fun j => ρ (e j)) x (Ψ.symm (φ.1.1 1))) = φ.1.1 x
     refine (law ⟨x, hP x⟩ (Ψ.symm (φ.1.1 1))).symm.trans ?_
     refine (congrArg (τ ⟨x, hP x⟩) (Ψ.apply_symm_apply (φ.1.1 1))).trans ?_
-    refine (φ.1.2 ⟨x, hP x⟩ 1).symm.trans ?_
-    exact congrArg φ.1.1 (mul_one x)
+    exact (φ.1.2 ⟨x, hP x⟩ 1).symm.trans (congrArg φ.1.1 (mul_one x))
 
 theorem isIrreducible_piTensor (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {β : Type} [Fintype β]
     (x : β → IrrGL (k := k)) : (piTensor fun j => (x j).rep).IsIrreducible := by
@@ -381,8 +378,7 @@ theorem jhMult_cell_comp (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {
   obtain ⟨g, hg⟩ := hf
   refine ⟨f, g, ?_⟩
   have h1 := jhMult_self (isIrreducible_piTensor hA fun j => x (e j))
-  have h2 := jhMult_of_nonempty (piTensor fun j => (x (e j)).rep) hg
-  exact h2.trans h1
+  exact (jhMult_of_nonempty (piTensor fun j => (x (e j)).rep) hg).trans h1
 
 theorem jhMult_cell_bij : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k], GlobalTheory.Published.IrreducibleAdmissibleGL →
@@ -423,7 +419,7 @@ def IsPermCell {l c : ℕ} (x : Fin l → IrrGL (k := k)) (y : Fin c → IrrGL (
 def permMatrix {l c : ℕ} (x : Fin l → IrrGL (k := k)) (y : Fin c → IrrGL (k := k)) (e : Fin c ≃ Fin l)
     (h : ∀ a, y a = x (e a)) : SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1) :=
   ⟨fun i j => if e j = i then (x i).1 else 0, fun i => by
-    rw [Finset.sum_eq_single (e.symm i) (fun j _ hj => if_neg fun h' => hj (by rw [← h', e.symm_apply_apply]))
+    rw [Finset.sum_eq_single (e.symm i) (fun j _ hj => ite_eq_right fun h' => hj (by rw [← h', e.symm_apply_apply]))
       (by simp)]
     simp, fun j => by
     rw [Finset.sum_ite_eq]
@@ -464,9 +460,9 @@ theorem card_permCell {l c : ℕ} (x : Fin l → IrrGL (k := k)) (y : Fin c → 
   · intro e he e' he' H
     refine Equiv.ext fun j => ?_
     have h2 := congrArg (fun b : SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1) => b.1 (e j) j) H
-    simp only [permMatrix, if_true] at h2
+    simp only [permMatrix, ite_true] at h2
     by_contra hne
-    rw [if_neg (Ne.symm hne)] at h2
+    rw [ite_eq_right (Ne.symm hne)] at h2
     exact (hxc (e j)).1.ne' h2
   · intro b hb
     obtain ⟨e, he, hb⟩ := (Finset.mem_filter.1 hb).2

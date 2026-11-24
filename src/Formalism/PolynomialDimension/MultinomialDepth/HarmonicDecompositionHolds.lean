@@ -539,8 +539,7 @@ theorem levelProj_apply (A B j : ℕ) (f : PolXY K k) : levelProj K k A B j f =
 
 theorem ctrDiv_mem {A B : ℕ} (j : ℕ) {f : PolXY K k} (hf : f ∈ PolAB K k A B) :
     ctrDiv K k j f ∈ PolAB K k (A - j) (B - j) := by
-  simp only [ctrDiv, LinearMap.smul_apply]
-  exact Submodule.smul_mem _ _ (ctrF_pow_mem j hf)
+  simpa only [ctrDiv, LinearMap.smul_apply] using Submodule.smul_mem _ _ (ctrF_pow_mem j hf)
 
 theorem levelProj_image [CharZero K] (hk : 1 ≤ k) {A B : ℕ} (j : ℕ) {f : PolXY K k}
     (hf : f ∈ PolAB K k A B) :
@@ -564,9 +563,9 @@ theorem levelProj_level [CharZero K] (hk : 1 ≤ k) {A B i j : ℕ} (hi : i ≤ 
   rw [hc]
   rcases lt_trichotomy i j with hij | hij | hij
   · rw [Nat.descFactorial_eq_zero_iff_lt.2 hij, zero_mul, Nat.cast_zero, mul_zero, zero_smul, map_zero,
-      smul_zero, mul_zero, if_neg hij.ne]
+      smul_zero, mul_zero, ite_eq_right hij.ne]
   · subst hij
-    rw [if_pos rfl, Nat.sub_self, pow_zero, one_mul, map_smul, harProj_har hw, smul_smul]
+    rw [ite_eq_left rfl, Nat.sub_self, pow_zero, one_mul, map_smul, harProj_har hw, smul_smul]
     congr 1
     convert one_smul K w using 2
     have hN : A - i + (B - i) + k + i - 1 = A + B + k - 2 * i + i - 1 := by omega
@@ -575,7 +574,7 @@ theorem levelProj_level [CharZero K] (hk : 1 ≤ k) {A B i j : ℕ} (hi : i ≤ 
       Nat.cast_ne_zero.2 (Nat.choose_pos (by omega)).ne'
     rw [hN, Nat.descFactorial_self, Nat.descFactorial_eq_factorial_mul_choose, Nat.cast_mul, Nat.cast_mul]
     field_simp
-  · rw [if_neg hij.ne', map_smul]
+  · rw [ite_eq_right hij.ne', map_smul]
     have hpow : hXY K k ^ (i - j) * w = hXY K k * (hXY K k ^ (i - j - 1) * w) := by
       rw [← mul_assoc, ← pow_succ', Nat.sub_add_cancel (by omega)]
     have hg : hXY K k ^ (i - j - 1) * w ∈ PolAB K k (A - j - 1) (B - j - 1) := by
@@ -597,7 +596,7 @@ theorem levelProj_sum [CharZero K] (hk : 1 ≤ k) {A B : ℕ} {f : PolXY K k} (h
       = ∑ j ∈ range (min A B + 1), if i = j then hXY K k ^ i * w i else 0 :=
         Finset.sum_congr rfl fun j hj =>
           levelProj_level hk hi' (Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)) (hw i)
-    _ = hXY K k ^ i * w i := by rw [Finset.sum_ite_eq, if_pos hi]
+    _ = hXY K k ^ i * w i := by rw [Finset.sum_ite_eq, ite_eq_left hi]
 
 end Har2
 
@@ -619,7 +618,7 @@ theorem isotypicProjection_holds : LevelProj := by
   by_cases h : i = j
   · subst h
     simp
-  · rw [if_neg (Ne.symm h), if_neg h]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
 
 namespace Har2
 

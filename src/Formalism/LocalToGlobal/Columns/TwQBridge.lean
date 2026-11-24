@@ -58,8 +58,7 @@ theorem qsp_sp_P (r : 𝓞 E) : Valued.v (qbPhi hc P ϖ s (algebraMap (𝓞 E) E
   have key : ∀ a : 𝓞 E, a ∈ P.asIdeal → Valued.v (qbPhi hc P ϖ s (algebraMap (𝓞 E) E a)) < 1 := fun a ha => by
     have h1 := hker a ha
     rw [gloRho_oToS] at h1
-    have h2 := glk_val_lt (underPl F P) _ h1
-    exact h2
+    exact glk_val_lt (underPl F P) _ h1
   refine ⟨fun h => ?_, key r⟩
   by_contra hr
   obtain ⟨y, i, hi, e⟩ := P.isMaximal.exists_inv hr
@@ -108,8 +107,7 @@ theorem qsp_approx (D : 𝓞 F) (hD : D ≠ 0) (x : v.adicCompletion F) (hx : x 
   obtain ⟨r, y, hy, e⟩ := integral_adele_approximation_holds F D hD (afsplitI v x) (afsplitI_mem_intAd v _ hx)
   refine ⟨r, y v, hy v, ?_⟩
   have := congrArg (fun z : Formalism.L2.Herm.Af F => z v) e
-  rw [afsplitI_self] at this
-  exact this
+  rwa [afsplitI_self] at this
 
 theorem qsp_std_mulVec {M : Matrix (Fin n) (Fin n) (𝓞 F)} {x : Sp E n} (hx : x ∈ stdLat E n) :
     (M.map (algebraMap (𝓞 F) E)).mulVec x ∈ stdLat E n := by
@@ -161,8 +159,7 @@ theorem qsp_dense (D : 𝓞 F) (hD : D ≠ 0) (hDv : D ∈ v.asIdeal) (k : GL (F
   have hROval : ((RO.det : O) : v.adicCompletion F) = algebraMap (𝓞 F) (v.adicCompletion F) R.det := by
     have h1 : (O.subtype).mapMatrix RO = (algebraMap (𝓞 F) (v.adicCompletion F)).mapMatrix R := rfl
     have h2 := RingHom.map_det (O.subtype) RO
-    rw [h1, ← RingHom.map_det] at h2
-    exact h2
+    rwa [h1, ← RingHom.map_det] at h2
   have hdetv : R.det ∉ v.asIdeal := fun h => by
     apply hRO
     apply glo_res_zero v

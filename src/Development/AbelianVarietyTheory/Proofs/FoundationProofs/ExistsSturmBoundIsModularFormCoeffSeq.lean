@@ -84,8 +84,7 @@ theorem qExpansion_coeff_zero_of_isBigO_qParam_pow {F : Type*} [FunLike F ℍ �
     ∀ n < m, (qExpansion 1 f).coeff n = 0 := by
   have ha := ModularFormClass.analyticAt_cuspFunction_zero f one_pos hΓ
   have h1 : (m : ℕ∞) ≤ analyticOrderAt (cuspFunction 1 f) 0 := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     obtain ⟨j, hj⟩ := ENat.ne_top_iff_exists.mp hlt.ne_top
     rw [← hj] at hlt
     have hjm : j < m := by exact_mod_cast hlt
@@ -123,8 +122,7 @@ theorem modularFormNorm_isBigO_self_atImInfty {F : Type*} [FunLike F ℍ ℂ] {�
       (by simpa using hc.of_isFiniteRelIndex_conj hr)
     rw [OnePoint.isBoundedAt_infty_iff] at this
     have h2 : (ModularForm.translate f r⁻¹ : ℍ → ℂ) =O[atImInfty] (1 : ℍ → ℝ) := this
-    refine IsBigO.trans h2 ?_
-    exact IsBigO.of_bound 1 (by simp)
+    exact IsBigO.trans h2 (IsBigO.of_bound 1 (by simp))
   have h1 : (∏ q ∈ Finset.univ.erase (⟦1⟧ : 𝒮ℒ ⧸ (Γ.subgroupOf 𝒮ℒ)),
       SlashInvariantForm.quotientFunc (k := k) f q) =O[atImInfty] fun _ => (1 : ℂ) := by
     have := IsBigO.finsetProd (s := Finset.univ.erase (⟦1⟧ : 𝒮ℒ ⧸ (Γ.subgroupOf 𝒮ℒ))) (fun q _ => hb q)

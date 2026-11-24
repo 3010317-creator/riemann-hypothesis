@@ -301,8 +301,7 @@ theorem UpperTheory.thetaLift_triple_local_split_places :
       unfold frMapO
       rw [Matrix.map_mul, Matrix.map_mul]
       congr 2
-      refine Matrix.ext fun i j => ?_
-      exact GlobalTheory.BotMatch.evW_toEAf (τ v) (x i j)
+      exact Matrix.ext fun i j => GlobalTheory.BotMatch.evW_toEAf (τ v) (x i j)
     rw [← hG, hbG, e1, e2]
     refine fmFst_mat (finCongr hr) _ _ _ (hGi v) (X.rW.β.1.map (evW (τ v))) _ ?_ (c v) (hc v) _
     rw [← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
@@ -313,13 +312,13 @@ theorem UpperTheory.thetaLift_triple_local_split_places :
     (fun v => GlobalTheory.SplitFlip.invT (c v)) ι (fun v => hι v) hι0 φ hφ hφ' g
     (GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.stdFst (α t / β t) (X.e t) (X.ideal S t) A WW X.rA.β X.rW.β) (X.f t) (fun x => ?_) hth
   by_cases hx : IsHalf (X.e t) x
-  · rw [if_pos hx]
+  · rw [ite_eq_left hx]
     refine (UpperTheory.stdSectionFirst_eq_prod_local D (X.e t) (S t) (hX.idem t) P (fun v => v.1) τ hS hinj (X.c t) (α t / β t) A WW X.rA.β X.rW.β
       A'.rank hr x hx).trans (Finset.prod_congr rfl fun v _ => ?_)
     rw [hφA v]
     exact congrArg _ (key x v).symm
-  · rw [if_neg hx]
-    exact if_neg fun h => hx h.1
+  · rw [ite_eq_right hx]
+    exact ite_eq_right fun h => hx h.1
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.DivisorFrames.ThetaLiftTripleLocalSplitPlaces =====
@@ -361,8 +360,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
   have hG : (A'.gram⁻¹)ᴴ = A'.gram⁻¹ := by
     rw [Matrix.conjTranspose_nonsing_inv]
     congr 1
-    refine Matrix.ext fun i j => ?_
-    exact GlobalTheory.DualPairCheck.gram_star A' j i
+    exact Matrix.ext fun i j => GlobalTheory.DualPairCheck.gram_star A' j i
   have h0 : ((GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM (A'.gram⁻¹))ᵀ).map (piW (t.comp D.sp.cm.sig)) = (A'.gram⁻¹).map t := by
     refine Matrix.ext fun i j => ?_
     have h := congrFun (congrFun hG i) j
@@ -393,8 +391,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
         ((y : Matrix _ _ (AE D))ᵀ).map (piW (t.comp D.sp.cm.sig)) * WW.gram.map t) * βW.1.map (evW t)) := by
     rw [← hxi, ← hinc, ← hinc, ← hy, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul,
       ← Matrix.map_mul, ← Matrix.map_mul]
-    refine Matrix.ext fun i j => ?_
-    exact map_mul (evW t) _ _
+    exact Matrix.ext fun i j => map_mul (evW t) _ _
   rw [h1, h2, h3, Matrix.mul_smul, Matrix.smul_mul, Matrix.submatrix_smul]
   simp only [Pi.smul_apply]
   congr 1
@@ -467,13 +464,13 @@ theorem UpperTheory.triple_dualCoord_split_places_of_isPair_isLat :
     rw [← hbb v]
     simp only [Matrix.neg_mul, Matrix.mul_assoc]
   · by_cases hx : IsHalf (cA D (X.e t)) x
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       refine (UpperTheory.stdSectionSecond_eq_prod_local D (X.e t) (S t) (hX.idem t) P (fun v => v.1) τ hS hinj (X.c t) (α t / β t) A.rank A' WW
         X.rA'.β X.rW.β hr x hx).trans (Finset.prod_congr rfl fun v _ => ?_)
       rw [hstd v, ← coord_eq, ← hc v, ← hp.JW, Matrix.mul_assoc]
       rfl
-    · rw [if_neg hx]
-      exact if_neg fun h => hx h.1
+    · rw [ite_eq_right hx]
+      exact ite_eq_right fun h => hx h.1
   · rw [← hvac]
     exact hX.snd t
 end -- clump:auto
@@ -541,10 +538,10 @@ theorem exists_fin (hX : X.Is ψ θ α β νH S) (hG : IsStageGeo ψ X FA FA' FW
     fun v => if h : v ∈ Xc.T then φ₀ ⟨v, h⟩ else Γ.M.vac v
   let φ' : ∀ v : HeightOneSpectrum (𝓞 D.host.F), (Fin A'.rank × Fin (A.rank + A'.rank) → Fv D.host.F v) → ℂ :=
     fun v => if h : v ∈ Xc.T then φ₀' ⟨v, h⟩ else Γ.M'.vac v
-  have e1 : ∀ v (h : v ∈ Xc.T), φ v = φ₀ ⟨v, h⟩ := fun v h => dif_pos h
-  have e1' : ∀ v (h : v ∈ Xc.T), φ' v = φ₀' ⟨v, h⟩ := fun v h => dif_pos h
-  have e2 : ∀ v ∉ Xc.T, φ v = Γ.M.vac v := fun v h => dif_neg h
-  have e2' : ∀ v ∉ Xc.T, φ' v = Γ.M'.vac v := fun v h => dif_neg h
+  have e1 : ∀ v (h : v ∈ Xc.T), φ v = φ₀ ⟨v, h⟩ := fun v h => dite_eq_left h
+  have e1' : ∀ v (h : v ∈ Xc.T), φ' v = φ₀' ⟨v, h⟩ := fun v h => dite_eq_left h
+  have e2 : ∀ v ∉ Xc.T, φ v = Γ.M.vac v := fun v h => dite_eq_right h
+  have e2' : ∀ v ∉ Xc.T, φ' v = Γ.M'.vac v := fun v h => dite_eq_right h
   have s1 : ∀ v, φ v ∈ GlobalTheory.WeilM.SB _ ∧ φ v ≠ 0 := fun v => by
     by_cases h : v ∈ Xc.T
     · rw [e1 v h]; exact ⟨l5 _, l10 _⟩

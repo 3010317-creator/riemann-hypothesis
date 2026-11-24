@@ -102,9 +102,7 @@ theorem rho_unique {Λ A B K : Type} [CommRing Λ] [CommRing A] [CommRing B] [Fi
     f' f hfs' hfs ?_).symm
   · intro m bs g hg s
     obtain ⟨g0, _, hu⟩ := hC.basis j bs 0
-    have h1 := hu g hg.symm
-    have h2 := hu 0 (by simp)
-    exact congrFun (h1.trans h2.symm) s
+    exact congrFun ((hu g hg.symm).trans (hu 0 (by simp)).symm) s
   · intro m bs
     have h := hw
     rw [map_sub, hb, hb, ← hzb bs, ← hzb' bs] at h

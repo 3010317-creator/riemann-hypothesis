@@ -97,8 +97,7 @@ theorem coeff_extract {W : Type*} [AddCommGroup W] [Module ℂ W] (T : Module.En
       simp only [map_add (f := _), map_sum, map_smul, smul_eq_mul] at this
       simp only [eval_sub, eval_add, eval_mul, Polynomial.eval_finsetSum, eval_C, eval_X, eval_pow, eval_zero]
       rw [sub_eq_zero, mul_comm (φ u)]
-      simp only [mul_comm (φ _) (t ^ _)]
-      exact this
+      simpa only [mul_comm (φ _) (t ^ _)] using this
     have c0 := congrArg (fun q : ℂ[X] => q.coeff 0) hQ
     have c1 := congrArg (fun q : ℂ[X] => q.coeff 1) hQ
     have k0 : 0 ∈ range k := mem_range.2 (by omega)
@@ -130,8 +129,7 @@ theorem om_nnPlus {m : ℕ} (X : GMod (m + 1)) (y : Fin (m + 1) → ℂ) (x : �
       · simp [Module.algebraMap_end_apply, smul_smul, mul_comm]
       · intro d _ hd; simp [hd]
       · simp
-    rw [h2] at h
-    exact h
+    rwa [h2] at h
   have hR : y b • capelliC X.E x v = ∑ c, y c • (if b = c then capelliC X.E x else 0) v := by
     rw [Finset.sum_eq_single b]
     · simp
@@ -159,8 +157,7 @@ theorem nonScal : NonScal := by
     intro x
     have h := hS (x - cn (m + 1))
     have e : x - cn (m + 1) + (((m + 1 : ℕ) : ℂ) - 1) / 2 = x := by simp [cn]
-    rw [e, GlobalTheory.CompanionTheory.RgExhHecke.qdetEq] at h
-    exact h
+    rwa [e, GlobalTheory.CompanionTheory.RgExhHecke.qdetEq] at h
 
   set P : ℂ[X] := ∏ q : Fin (m + 1), (Polynomial.X + C (χ q - χ s)) with hPdef
   have hPe : ∀ t : ℂ, P.eval t = Formalism.QuantumDeterminants.capP χ (ω + t - cn (m + 1)) := by
@@ -182,10 +179,9 @@ theorem nonScal : NonScal := by
     rw [hω] at hq
     linear_combination hq
   obtain ⟨d, hd⟩ : ∃ d : Fin (m + 1), cminor X.E s.succAbove d.succAbove (ω - 1) v ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     have h := LinearMap.congr_fun (capelli_expand_minus X.E hE' (ω - 1) s s) v
-    rw [LinearMap.sum_apply, if_pos rfl, hC] at h
+    rw [LinearMap.sum_apply, ite_eq_left rfl, hC] at h
     have h0 : ∑ d : Fin (m + 1), (((-1 : ℂ) ^ ((d : ℕ) + (s : ℕ))) •
         (capEntry X.E (ω - 1 - (m : ℂ)) s d * cminor X.E s.succAbove d.succAbove (ω - 1))) v = 0 :=
       Finset.sum_eq_zero fun d _ => by simp [hall d]
@@ -227,8 +223,7 @@ theorem nonScal : NonScal := by
       simp [hT, add_smul, add_assoc]
     rw [e, h, hC, ← hPe]
     funext b
-    simp only [LinearMap.smul_apply, Module.End.one_apply, Pi.smul_apply]
-    exact smul_comm _ _ _
+    simpa only [LinearMap.smul_apply, Module.End.one_apply, Pi.smul_apply] using smul_comm _ _ _
   obtain ⟨h0, h1⟩ := coeff_extract T k (by omega) w P _ hPd hid
   have hw0 : w 0 = nnPlus X.E y ω v := by
     have := hNt 0
@@ -261,7 +256,6 @@ theorem nonScal : NonScal := by
     have e2 : T (w 1) = - w 0 := eq_neg_of_add_eq_zero_left h1
     rw [e, pow_two, Module.End.mul_apply, e2, map_neg, h0, neg_zero]
   · have := (hTa _).2 h
-    rw [this, zero_add] at h1
-    exact h1
+    rwa [this, zero_add] at h1
 
 end GlobalTheory.CompanionTheory.RgExhHecke.NonScalProof

@@ -116,8 +116,7 @@ theorem BlockMeasureChange.proof (hS : SupBoundBlock.Statement) : BlockMeasureCh
     have hf' : ∀ k, IsMultiHomog (f k) (blockDeg d'.k₀ n) := fun k => by rw [hk]; exact hf k
     have hli : LinearIndependent ℤ fun k => aeval d.y (f k) := by
       have := hb.2.1
-      simp only [hbf, aeval_map_int] at this
-      exact this
+      simpa only [hbf, aeval_map_int] using this
     have hli' : LinearIndependent ℤ fun k => aeval d'.y (f k) := by rw [hy]; exact hli
     have hsame : ∀ (y' : (Σ k, ι k) → Ω) (k' : K), y' = d.y → k' = d.k₀ →
         ∀ h : ∃ p : (Σ r : ℕ, Fin r → MvPolynomial (Σ k, ι k) ℚ), IsSecBasisM y' k' n p.2,
@@ -216,8 +215,7 @@ theorem BlockMeasureChange.proof (hS : SupBoundBlock.Statement) : BlockMeasureCh
     rw [abs_of_nonneg (mul_nonneg (by positivity) (by linarith [Real.log_nonneg hnR]))]
   have hlog : (fun n : ℕ => 1 + Real.log n) =o[atTop] fun n : ℕ => (n : ℝ) := by
     have h1 := (isLittleO_const_id_atTop (1 : ℝ)).comp_tendsto tendsto_natCast_atTop_atTop
-    have h2 := Real.isLittleO_log_id_atTop.comp_tendsto tendsto_natCast_atTop_atTop
-    exact h1.add h2
+    exact h1.add (Real.isLittleO_log_id_atTop.comp_tendsto tendsto_natCast_atTop_atTop)
   have ho : (fun n : ℕ => (n : ℝ) ^ D * (1 + Real.log n)) =o[atTop] pw D := by
     have := (isBigO_refl (fun n : ℕ => (n : ℝ) ^ D) atTop).mul_isLittleO hlog
     refine this.congr_right fun n => ?_

@@ -68,15 +68,13 @@ theorem int_fin {α Y : Type} [MeasurableSpace α] (μ : Measure α) (G : α →
     · rw [Finset.sum_eq_single (G a), Set.indicator_of_mem (by rfl)]
       · intro g _ hne
         rw [Set.indicator_of_notMem (s := {a | G a = g}) (fun h => hne (Eq.symm h)), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_erase.2 ⟨h0, hf.mem_toFinset.2 ⟨a, rfl⟩⟩) h
+      · exact fun h => absurd (Finset.mem_erase.2 ⟨h0, hf.mem_toFinset.2 ⟨a, rfl⟩⟩) h
   have hi : ∀ g ∈ s, Integrable (({a | G a = g} : Set α).indicator w) μ := fun g hg =>
     (integrable_indicator_iff (hm g)).2 (hw.mono_set fun a ha => by
       by_contra hn
       exact (Finset.mem_erase.1 hg).1 (Eq.trans (Eq.symm ha) (hD a hn)))
   refine ⟨fun y => ?_, ?_⟩
-  · simp only [e y]
-    exact integrable_finsetSum _ fun g hg => (hi g hg).const_mul _
+  · simpa only [e y] using integrable_finsetSum _ fun g hg => (hi g hg).const_mul _
   · have : (fun y => ∫ a, G a y * w a ∂μ) = ∑ g ∈ s, (∫ a, ({a | G a = g} : Set α).indicator w a ∂μ) • g := by
       funext y
       simp only [e y, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
@@ -139,8 +137,7 @@ theorem schr_lc (hψ : IsLocallyConstant ψ) {φ : (κ → k) → ℂ} (hs : ∀
     filter_upwards [schr_fix hψ (hs w₀), (hψ.comp_continuous c).eventually_eq 0] with w a b
     simp only [Function.comp_apply, Prod.snd_zero, Prod.fst_zero, dotProduct_zero, zero_dotProduct, sub_zero, mul_zero,
       AddChar.map_zero_eq_one] at b
-    rw [schr_mul, b, one_smul] at a
-    exact a
+    rwa [schr_mul, b, one_smul] at a
   have t : Tendsto (fun w : (κ → k) × (κ → k) => w - w₀) (𝓝 w₀) (𝓝 0) := by
     have := (continuous_sub_right w₀).tendsto w₀
     rwa [sub_self] at this

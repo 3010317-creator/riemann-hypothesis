@@ -76,7 +76,7 @@ theorem weighted_component_mul_lowest {f g : MvPolynomial σ R} {a b : ℕ}
     · simp [h2]
     have e1 := hf x.1 (mem_support_iff.2 h1)
     have e2 := hg x.2 (mem_support_iff.2 h2)
-    rw [if_pos (by omega), if_pos (by omega)]
+    rw [ite_eq_left (by omega), ite_eq_left (by omega)]
   · symm
     refine Finset.sum_eq_zero fun x hx => ?_
     rw [coeff_weightedHomogeneousComponent, coeff_weightedHomogeneousComponent]
@@ -174,7 +174,7 @@ theorem substitution_rename_lift (w : O) (hn : Even n') (g : Matrix (Fin k) (Fin
       have h1 : (LLT n').vec (rho F j k v).1 = true := by simp [LLT, rho, hE']
       have h2 : (LLs F j).vec v.1 = true := by simp [LLs, hE]
 
-      rw [if_pos h1, if_pos h2, map_sum]
+      rw [ite_eq_left h1, ite_eq_left h2, map_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
       rw [map_mul, rename_C]
       split_ifs <;> simp [rho]
@@ -182,7 +182,7 @@ theorem substitution_rename_lift (w : O) (hn : Even n') (g : Matrix (Fin k) (Fin
       have h1 : ¬ (LLT n').vec (rho F j k v).1 = true := by simp [LLT, rho, hE']
       have h2 : ¬ (LLs F j).vec v.1 = true := by simp [LLs, hE]
 
-      rw [if_neg h1, if_neg h2, map_sum]
+      rw [ite_eq_right h1, ite_eq_right h2, map_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
       rw [map_mul, rename_C]
       split_ifs <;> simp [rho]
@@ -216,14 +216,14 @@ theorem normal_iff_letter_column (hn : Even n') (v : Fin (Mj F j) × Fin (r + K)
     have h2 : (LLs F j).toLetters.vec v.1 = true := by simp [LLs, hE]
     have h3 : IsNormal r (rho F j (r + K) v) ↔ r ≤ v.2.val := by
       show (if Even (posOf n' (eL F j v.1)).val then r ≤ v.2.val else v.2.val < r) ↔ _
-      rw [if_pos hE']
+      rw [ite_eq_left hE']
     rw [h3, h2]
     simp
   · have hE' : ¬ Even (posOf n' (eL F j v.1)).val := fun h => hE ((posOf_even hn _).1 h)
     have h2 : (LLs F j).toLetters.vec v.1 = false := by simp [LLs, hE]
     have h3 : IsNormal r (rho F j (r + K) v) ↔ v.2.val < r := by
       show (if Even (posOf n' (eL F j v.1)).val then r ≤ v.2.val else v.2.val < r) ↔ _
-      rw [if_neg hE']
+      rw [ite_eq_right hE']
     rw [h3, h2]
     simp
 
@@ -232,8 +232,8 @@ theorem symbol_weight_factor (hn : Even n') (v : Fin (Mj F j) × Fin (r + K)) :
       omL F j p v.1 * normalVariableWeight n' (r + K) r (rho F j (r + K) v) := by
   unfold symWt normalVariableWeight
   by_cases hN : IsNormal r (rho F j (r + K) v)
-  · rw [if_pos ((normal_iff_letter_column F j K hn v).2 hN), if_pos hN, mul_one]
-  · rw [if_neg (fun h => hN ((normal_iff_letter_column F j K hn v).1 h)), if_neg hN, mul_zero]
+  · rw [ite_eq_left ((normal_iff_letter_column F j K hn v).2 hN), ite_eq_left hN, mul_one]
+  · rw [ite_eq_right (fun h => hN ((normal_iff_letter_column F j K hn v).1 h)), ite_eq_right hN, mul_zero]
 
 variable (O : Type) [CommRing O]
 
@@ -268,8 +268,7 @@ theorem segment_substitution_weighted_homog (hn : Even n') (Y : MvPolynomial (Fi
   have e : m v • symWt (r := r) (K := K) (LLs F j).toLetters (omL F j p) v =
       m v • (omL F j p v.1 • normalVariableWeight n' (r + K) r (rho F j (r + K) v)) := by
     rw [symbol_weight_factor F j p K hn v]; rfl
-  rw [e]
-  exact h1
+  rwa [e]
 
 variable {O} [IsDomain O] [Fact p.Prime]
 
@@ -376,8 +375,7 @@ theorem key_column_leading_bound (D : Formalism.BasicNotions.D7) (hB2 : admB2 D)
   · exact leading_part_normal_degree r _ _ _ (segment_substitution_weighted_homog Cx.Fr j p K O hn _ _ hWH)
   · have h1 := inWj_mul (inWj_Cpow (σ := TV n' (r + K)) (w := Cx.S.w) (oc (omL Cx.Fr j p) Pth.mu c))
       (inWj_map (w := Cx.S.w) (phSeg O K p Cx.Fr j (plnm Cx.Fr j O K (plTanCol O Pth.mu c J))))
-    rw [add_zero] at h1
-    exact h1
+    rwa [add_zero] at h1
   · rw [hka0, substitution_rename_lift Cx.Fr j Cx.S.w hn, ← map_sub]
     exact depth_filtration_rename _ htail'
   · intro g' hg'
@@ -448,8 +446,7 @@ theorem generator_path_homogeneous_holds (D : Formalism.BasicNotions.D7) (hB2 : 
         (PsiPl O nu I' * PsiTan O ka I'') (∑ c ∈ colRange Pth.mu, oc (omL Cx.Fr j p) Pth.mu c) := by
       rw [← hI2]; exact weightedHomogeneousComponent_isWeightedHomogeneous _ _
     have h1 := leading_part_normal_degree r _ (1 : KK O) _ (segment_substitution_weighted_homog Cx.Fr j p K O hn _ _ hWH)
-    rw [C_1, one_mul] at h1
-    exact h1
+    rwa [C_1, one_mul] at h1
   · rw [hPsi]
     exact AddSubmonoid.subset_closure
       ⟨_, 1, key_polynomial_leading_part Cx j D hB2 hC1 B Pth I (colRange Pth.mu), bc_IT_one, (mul_one _).symm⟩

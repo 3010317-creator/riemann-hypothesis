@@ -319,13 +319,11 @@ theorem clear_sum : ∀ {A B Af Bw : Type} [CommRing A] [CommRing B] [CommRing A
   have h0 : lam (ρ f ^ K * x - ∑ L, ρ (e L) * nn L) = 0 := by
 
     rw [map_sub, map_mul, map_pow, hx, Finset.mul_sum, map_sum]
-    simp only [hterm]
-    exact sub_self _
+    simpa only [hterm] using sub_self _
   obtain ⟨N', hN'⟩ := hker _ h0
   refine ⟨N' + K, ?_⟩
   have h2 : ρ f ^ (N' + K) * x = ρ (f ^ N') * ∑ L, ρ (e L) * nn L := by
-    rw [pow_add, mul_assoc, ← sub_eq_zero, map_pow, ← mul_sub]
-    exact hN'
+    rwa [pow_add, mul_assoc, ← sub_eq_zero, map_pow, ← mul_sub]
   rw [h2]
   exact minorGroup_mul ρ D κ (f ^ N') hymem
 
@@ -414,8 +412,7 @@ theorem taylor_form {Fil : ℤ → IdF Φ.A} (hF : IsFil Φ Fil) (E : Frame Φ d
       simpa using this
     have a2 := hc 0 (σ (u.obj 0) ≫ φ) (σ (u.obj (Fin.last 1))) (x := P i x) (by
       rw [hF.top _ (by simp)]; trivial)
-    have a3 := hF.mul 1 1 _ a1 (by simpa using a2)
-    simpa using a3
+    simpa using hF.mul 1 1 _ a1 (by simpa using a2)
   have h3 := Ideal.add_mem _ h1 (Ideal.sum_mem _ h2)
   convert h3 using 1
   rw [← e0]
@@ -436,12 +433,11 @@ theorem sum_sgn {B : Type} [CommRing B] {m d : ℕ} (I : Idx m d) (a : Fin d →
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [Finset.sum_eq_single (I.1 ∘ π)]
-  · simp only [if_true, Matrix.of_apply, Function.comp_apply]
+  · simp only [ite_true, Matrix.of_apply, Function.comp_apply]
     rw [Units.smul_def]
   · intro J _ hJ
-    rw [if_neg hJ, zero_smul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    rw [ite_eq_right hJ, zero_smul]
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 end Sign
 
@@ -555,11 +551,9 @@ theorem rep_sum {a b : IdF A} {j : ℕ} {ι : Type} [Fintype ι]
     intro S
     induction S using Finset.induction_on with
     | empty =>
-      simp only [Finset.sum_empty]
-      exact rep_zero fun s => Ideal.zero_mem _
+      simpa only [Finset.sum_empty] using rep_zero fun s => Ideal.zero_mem _
     | insert i S hi ih =>
-      simp only [Finset.sum_insert hi]
-      exact rep_add (h i) ih
+      simpa only [Finset.sum_insert hi] using rep_add (h i) ih
   exact key Finset.univ
 
 end Sum
@@ -619,8 +613,7 @@ theorem cmp_coef : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X
   have h5 : CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {W}) r) (sFil (KS q s {W}) (r + 1))
       (fun u => ∑ I : Idx m d, EW.form σW I.1 (εW (y' I)) u) ξ := by
     refine rep_congr h4 fun u => ?_
-    simp only [e2, sub_self]
-    exact Ideal.zero_mem _
+    simpa only [e2, sub_self] using Ideal.zero_mem _
   have h6 : CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {W}) r) (sFil (KS q s {W}) (r + 1))
       (fun u => ∑ I : Idx m d, EW.form σW I.1 (εW (y I - y' I)) u) 0 := by
     have h := rep_add hy (rep_smul (-1 : K) h5)
@@ -653,15 +646,14 @@ theorem det_delta {R : Type} [CommRing R] {m d : ℕ} (I L : Idx m d) :
     (Matrix.of fun k l => if I.1 k = L.1 l then (1 : R) else 0).det = if I = L then 1 else 0 := by
   by_cases h : I = L
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have e : (Matrix.of fun k l => if I.1 k = I.1 l then (1 : R) else 0) = 1 := by
       ext k l
       simp [Matrix.one_apply, I.2.injective.eq_iff]
     rw [e, Matrix.det_one]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     have hk : ∃ k, ∀ l, I.1 k ≠ L.1 l := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       apply h
       have hsub : Finset.univ.image I.1 ⊆ Finset.univ.image L.1 := by
         intro x hx

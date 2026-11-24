@@ -87,8 +87,7 @@ theorem wa_finrank_inf_ker {K : Type} [Field K] {V : Type} [AddCommGroup V] [Mod
     have h := LinearMap.finrank_range_add_finrank_ker f
     have hr : LinearMap.range f = ⊤ := by
       rw [eq_top_iff]
-      intro a _
-      exact ⟨(a / f z) • z, by rw [map_smul, smul_eq_mul, div_mul_cancel₀ _ hfz]⟩
+      exact fun a _ => ⟨(a / f z) • z, by rw [map_smul, smul_eq_mul, div_mul_cancel₀ _ hfz]⟩
     rw [hr, finrank_top, Module.finrank_self] at h
     omega
   have h := Submodule.finrank_sup_add_finrank_inf_eq W (LinearMap.ker f)
@@ -103,8 +102,7 @@ theorem wa_diag {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r
   intro n
   induction n with
   | zero =>
-    intro W _ _
-    exact ⟨Fin.elim0, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0⟩
+    exact fun W _ _ => ⟨Fin.elim0, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0⟩
   | succ n ih =>
     intro W hW han
     have hne : W ≠ ⊥ := by
@@ -136,8 +134,7 @@ theorem wa_diag {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r
           simp only [Fin.cons_succ, Fin.cons_zero]
           rw [wa_symm S z (b i), hk i, map_zero]
         | succ j =>
-          simp only [Fin.cons_succ]
-          exact hbo i j fun h => hij (by rw [h])
+          simpa only [Fin.cons_succ] using hbo i j fun h => hij (by rw [h])
 
 theorem wa_hyp {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K r)
     (W : Submodule K (Fin r → K)) (hnd : ∀ x ∈ W, (∀ y ∈ W, S.h x y = 0) → x = 0)
@@ -184,7 +181,6 @@ theorem wa_perp_nondeg {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermF
   have h1 := hzo _ hw'
   have hzx' : S.h z x = 0 := by rw [wa_symm S x z, hzx, map_zero]
   have hzy' : S.h z y = 0 := by rw [wa_symm S y z, hzy, map_zero]
-  simp only [wa_sub_right, wa_smul_right, hzx', hzy', mul_zero, sub_zero] at h1
-  exact h1
+  simpa only [wa_sub_right, wa_smul_right, hzx', hzy', mul_zero, sub_zero] using h1
 
 end ReciprocityTheory.MultiplicativeHeights

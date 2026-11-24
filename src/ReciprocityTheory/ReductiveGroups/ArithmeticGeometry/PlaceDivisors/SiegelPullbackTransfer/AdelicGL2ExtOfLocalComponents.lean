@@ -60,8 +60,7 @@ theorem one_left_pφ :
   have e : (toUnit ((Over.pullback f).obj G)).left ≫ (Functor.LaxMonoidal.ε (Over.pullback f)).left ≫
       pullback.snd (𝟙_ (Over S)).hom f = pullback.snd G.hom f := by
     have h0 := Over.w (toUnit ((Over.pullback f).obj G) ≫ Functor.LaxMonoidal.ε (Over.pullback f))
-    rw [Over.comp_left, Category.assoc] at h0
-    exact h0
+    rwa [Over.comp_left, Category.assoc] at h0
   have hε : (toUnit ((Over.pullback f).obj G)).left ≫ (Functor.LaxMonoidal.ε (Over.pullback f)).left ≫
       pullback.fst (𝟙_ (Over S)).hom f = pullback.fst G.hom f ≫ (toUnit G).left := by
     apply unit_left_ext_lemma
@@ -131,12 +130,10 @@ theorem lift_swap :
   · have e1 := congrArg Over.Hom.left (CartesianMonoidalCategory.lift_fst (snd ((Over.pullback f).obj G) ((Over.pullback f).obj G)) (fst ((Over.pullback f).obj G) ((Over.pullback f).obj G)))
     have e2 := congrArg Over.Hom.left (CartesianMonoidalCategory.lift_fst (snd G G) (fst G G))
     rw [Over.comp_left] at e1 e2
-    rw [Category.assoc, pφ₂_fst, reassoc_of% e1, Category.assoc, e2]
-    rw [pφ₂_snd]
+    rw [Category.assoc, pφ₂_fst, reassoc_of% e1, Category.assoc, e2, pφ₂_snd]
   · have e1 := congrArg Over.Hom.left (CartesianMonoidalCategory.lift_snd (snd ((Over.pullback f).obj G) ((Over.pullback f).obj G)) (fst ((Over.pullback f).obj G) ((Over.pullback f).obj G)))
     have e2 := congrArg Over.Hom.left (CartesianMonoidalCategory.lift_snd (snd G G) (fst G G))
     rw [Over.comp_left] at e1 e2
-    rw [Category.assoc, pφ₂_snd, reassoc_of% e1, Category.assoc, e2]
-    rw [pφ₂_fst]
+    rw [Category.assoc, pφ₂_snd, reassoc_of% e1, Category.assoc, e2, pφ₂_fst]
 
 end ReciprocityTheory.ChartRestriction.G.Pdiv.PullbackComparison

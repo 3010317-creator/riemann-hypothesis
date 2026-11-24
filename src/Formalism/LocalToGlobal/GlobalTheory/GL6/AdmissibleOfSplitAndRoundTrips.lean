@@ -83,8 +83,7 @@ theorem scalar_mem_lattice_stabiliser {A : Type} [CommRing A] {S : Subring A} (�
   intro x
   rw [hg]
   constructor
-  · intro hx
-    exact Λ.smul_mem (⟨μ, hμ⟩ : S) hx
+  · exact fun hx => Λ.smul_mem (⟨μ, hμ⟩ : S) hx
   · intro hx
     have h := Λ.smul_mem (⟨μ', hμ'⟩ : S) hx
     change μ' • μ • x ∈ Λ at h
@@ -131,7 +130,6 @@ theorem local_diamond_of_idempotent (S : StepLevel F E σ J T f bad) (v : Height
     rw [hcT, Matrix.smul_mul, Matrix.one_mul, Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_one, smul_smul, hμ'μ,
       one_smul]
   have hL : M ∈ levelVL σ J v S.Lb := by
-    show M ∈ UJ _ _ ⊓ stabGL _
     exact Subgroup.mem_inf.2 ⟨hU, scalar_mem_lattice_stabiliser _ M μ μ' hμO hμ'O hμ'μ hmv⟩
   have hg : M ∈ stabGL (latS (F := F) (v.adicCompletion F) (intV E v)
       (Submodule.span (𝓞 E) (dualSet (σ : E →+* E) J S.Lb))) :=
@@ -139,8 +137,7 @@ theorem local_diamond_of_idempotent (S : StepLevel F E σ J T f bad) (v : Height
   refine ⟨M, hL, hg, fun x => ?_⟩
   have hx : (⟨(M : Matrix (Fin n) (Fin n) _) *ᵥ x.1, (hg x.1).1 x.2⟩ : latS (F := F) (v.adicCompletion F) (intV E v)
       (Submodule.span (𝓞 E) (dualSet (σ : E →+* E) J S.Lb))) = (⟨μ, hμO⟩ : intV E v) • x := by
-    apply Subtype.ext
-    exact (hmv x.1).trans rfl
+    exact Subtype.ext ((hmv x.1).trans rfl)
   rw [hx, map_smul]
   set y := S.fT v hv x
   have hsplit : (⟨μ, hμO⟩ : intV E v) = ⟨c, hc⟩ * ⟨e, he⟩ + ⟨c', hc'⟩ * (1 - ⟨e, he⟩) := Subtype.ext rfl

@@ -271,8 +271,7 @@ theorem eq_zero_of_coeffs_vanish [SecondCountableTopology V] [MeasurableSpace V]
   have hZe : Z = ∅ := (hZo.measure_eq_zero_iff μ).1 hZ0
   by_contra hx
   have hxZ : x ∈ Z := hx
-  rw [hZe] at hxZ
-  exact hxZ
+  rwa [hZe] at hxZ
 
 end Gen
 

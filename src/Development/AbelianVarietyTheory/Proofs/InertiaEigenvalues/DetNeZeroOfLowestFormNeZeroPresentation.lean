@@ -58,8 +58,7 @@ section
 variable {R m n : Type} [CommRing R]
 
 theorem mem_rows [Fintype m] (M : Matrix m n R) (v : n → R) : v ∈ what₂ M ↔ ∃ z, z ᵥ* M = v := by
-  simp only [what₂, Matrix.vecMul_eq_sum]
-  exact Submodule.mem_span_range_iff_exists_fun R
+  simpa only [what₂, Matrix.vecMul_eq_sum] using Submodule.mem_span_range_iff_exists_fun R
 
 theorem det_relations [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] (P : Matrix n n R) (G : Matrix m n R)
     (T : Matrix m m R) (hG : ∀ v, ∃ w z, v = w ᵥ* G + z ᵥ* P) (hT : ∀ i, T i ᵥ* G ∈ what₂ P) (h0 : P.det = 0) :
@@ -91,8 +90,7 @@ theorem det_relations [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] (P
     rw [hrow]
     exact hT i
   have h := (GlobalTheory.FitSquare.relations_mem Q.mkQ Q.mkQ_surjective Pᵀ hΦ _ hq Tᵀ hT').1
-  rw [Matrix.det_transpose, Matrix.det_transpose, h0, Ideal.mem_span_singleton, zero_dvd_iff] at h
-  exact h
+  rwa [Matrix.det_transpose, Matrix.det_transpose, h0, Ideal.mem_span_singleton, zero_dvd_iff] at h
 
 theorem multilinear_add_smul [Fintype m] [DecidableEq m] (f : (m → n → R) →ₘₗ[R] R)
     (M V : m → n → R) (x : R) (hx : x * x = 0) :
@@ -267,7 +265,7 @@ theorem det_expand (x y : B) (hx : x * x = 0) (hy : y ^ Fintype.card μ = 0) (D 
     rw [e, Matrix.det_mul_column]
     congr 1
     rw [Fintype.prod_sum_type]
-    simp only [hν, Function.update_apply, reduceCtorEq, if_false, Sum.elim_inl, Sum.elim_inr,
+    simp only [hν, Function.update_apply, reduceCtorEq, ite_false, Sum.elim_inl, Sum.elim_inr,
       Finset.prod_const_one, one_mul, Sum.inr.injEq]
     rw [Finset.prod_ite, Finset.prod_const_one, one_mul, Finset.prod_const]
     congr 1
@@ -311,8 +309,7 @@ theorem det_ne_zero : ∀ (A B : Type) [CommRing A] [CommRing B] (π : B →+* A
     refine ⟨r, ?_⟩
     have e : (Φ * E) b = Φ b ᵥ* E := by
       funext c; simp [Matrix.mul_apply, Matrix.vecMul, dotProduct]
-    rw [← e, ← hfg, add_sub_cancel_right]
-    exact hf
+    rwa [← e, ← hfg, add_sub_cancel_right]
   choose r hr using hr
   set C : Matrix (Fin a) μ A := fun b => -r b with hC
   have hD : ∀ b, ∃ d : Fin a ⊕ μ → B,
@@ -325,8 +322,7 @@ theorem det_ne_zero : ∀ (A B : Type) [CommRing A] [CommRing B] (π : B →+* A
       · subst hb
         have := neg_mem hk
         convert this using 1
-        simp [htπ]
-        exact Matrix.vecMul_eq_sum _ _
+        simpa [htπ] using Matrix.vecMul_eq_sum _ _
       · have := neg_mem (hr b)
         convert this using 1
         rw [Matrix.updateRow_ne hb, Matrix.updateRow_ne hb]

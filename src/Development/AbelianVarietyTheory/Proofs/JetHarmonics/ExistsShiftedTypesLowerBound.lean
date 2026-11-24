@@ -109,8 +109,7 @@ private theorem prod_erase_succAbove {n : ℕ} (f : Fin (n + 1) → ℝ) (l : Fi
     ∏ j ∈ univ.erase l, f j = ∏ j : Fin n, f (l.succAbove j) := by
   rw [← Finset.compl_singleton, ← Fin.image_succAbove_univ]
   · rw [Finset.prod_image]
-    intro a _ b _ hab
-    exact Fin.succAbove_right_injective hab
+    exact fun a _ b _ hab => Fin.succAbove_right_injective hab
 
 private theorem ratio_pos_case {a b c : ℝ} (hb : 0 < b) (h : c ≤ a) :
     c * b / b ^ 2 ≤ a / b := by
@@ -222,8 +221,7 @@ def Box {n : ℕ} (L : Fin (n + 1) → ℤ) (M : Fin n → ℤ) : Prop :=
 theorem Box.strictAnti {n : ℕ} {L : Fin (n + 1) → ℤ} {M : Fin n → ℤ} (h : Box L M) :
     StrictAnti L := by
   rw [Fin.strictAnti_iff_succ_lt]
-  intro j
-  exact lt_of_lt_of_le (h j).1 (h j).2
+  exact fun j => lt_of_lt_of_le (h j).1 (h j).2
 
 theorem prod_erase_eq {n : ℕ} (f : Fin (n + 1) → ℝ) (l : Fin (n + 1)) :
     ∏ j ∈ univ.erase l, f j = ∏ j : Fin n, f (l.succAbove j) := by
@@ -618,7 +616,7 @@ theorem EB_tensor_std : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace
     by_cases hd : d = b
     · subst hd
       have e : herm (Hpk k r) ((1 : ℂ) • B a) (B c) = herm (Hpk k r) (B a) (B c) := by rw [one_smul]
-      rw [if_pos rfl, if_pos rfl, e, this]
+      rw [ite_eq_left rfl, ite_eq_left rfl, e, this]
       simp only [eq_comm]
     · simp [hd, herm]
   show dOp πt _ y c + Complex.I • dOp πt _ y c = (dOp π _ (y c) + Complex.I • dOp π _ (y c)) + _
@@ -675,7 +673,7 @@ theorem tenOp_norm (C : Fin k → Fin k → ℂ) (A : V →L[ℂ] V)
       refine Finset.sum_congr rfl fun c _ => ?_
       simp only [Complex.star_def]
       ring
-    simp only [hterm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hterm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), norm_eq_sqrt_re_inner (𝕜 := ℂ), key]
 
 end GlobalTheory.TensorStd
@@ -740,8 +738,7 @@ theorem exists_tensor_standard_rep :
     rw [← hpres]
     conv_rhs => rw [hexp h hh d, herm_sum_smul_right']
     exact Finset.sum_congr rfl fun c _ => mul_comm _ _
-  · intro h hh y c
-    exact tenOp_apply _ _ _ _
+  · exact fun h hh y c => tenOp_apply _ _ _ _
 
 end GlobalTheory
 end -- clump:auto
@@ -965,7 +962,7 @@ theorem splitCasimir_eigenspace_irreducible_standard : ∀ (V : Type) [NormedAdd
     have hν := hwtV _ _ hc0 hcw
     have hcl : c = l := by
       have h1 := hν c
-      simp only [if_true] at h1
+      simp only [ite_true] at h1
       have h2 : (L c : ℂ) = L l := by linear_combination -h1 - hlam
       exact hyp.anti.injective (by exact_mod_cast h2)
     subst hcl
@@ -997,8 +994,7 @@ theorem splitCasimir_eigenspace_irreducible_standard : ∀ (V : Type) [NormedAdd
   have hirr : ∀ S' : Submodule ℂ (PiLp 2 (fun _ : Fin (n + 1) => V)), S' ≤ S → Stab Et S' →
       S' = ⊥ ∨ S' = S := by
     intro S' hle hst
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨hb, hne⟩ := hcon
     have hst2 : Stab Et (S'ᗮ ⊓ S) := by
       intro a b v hv
@@ -1293,8 +1289,7 @@ theorem chain_raise : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace �
           have := hreg a hab
           push_cast at this
           omega
-        · rw [Function.update_of_ne ha, Function.update_of_ne hb]
-          exact h1
+        · rwa [Function.update_of_ne ha, Function.update_of_ne hb]
     have hu' : ∀ j : Fin (n + 1),
         ((Function.update u ((l : ℕ) + 1) (u ((l : ℕ) + 1) + (m : ℝ)) ((j : ℕ) + 1) : ℝ) : ℂ) -
           ((n + 1 : ℕ) : ℂ) / 2 + 1 / 2 = β + ((Function.update L l (L l + (m : ℤ)) j : ℤ) : ℂ) := by
@@ -1330,8 +1325,7 @@ theorem chain_raise : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace �
       have e : u ((l : ℕ) + 1) + ((m + 1 : ℕ) : ℝ) = u ((l : ℕ) + 1) + (m : ℝ) + 1 := by
         push_cast
         ring
-      rw [e]
-      exact hπ₃
+      rwa [e]
     · intro M v hv
       have hc := GlobalTheory.adjoint_mem_CapSp_subA V V₂ n r z π π₂ B (A (B (Fin.last n))) (shf β M)
         ⟨hπ.2.1, hπ.2.2.1⟩ ⟨hπ₂.2.1, hπ₂.2.2.1⟩ hπ.2.2.2.1 hπ₂.2.2.2.1 hB

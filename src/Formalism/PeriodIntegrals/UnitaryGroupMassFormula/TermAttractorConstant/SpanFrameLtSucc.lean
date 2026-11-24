@@ -139,8 +139,7 @@ theorem lieN_transport (F₁ : FlagG S r T) (F₂ : FlagG S r T') (g : S.V ≃�
     rw [hX, cg_apply, LinearEquiv.symm_apply_apply]
     refine hp' _ fun u hu => ?_
     have h1 := hv' (g u) ((hX (g u)).2 (by simpa using hu))
-    rw [← hg u (g.symm v), LinearEquiv.apply_symm_apply]
-    exact h1
+    rwa [← hg u (g.symm v), LinearEquiv.apply_symm_apply]
 
 theorem maps_iff {U : Submodule E S.V} (n : S.V ≃ₗ[E] S.V) (h : ∀ x ∈ U, n x ∈ U) (v : S.V) :
     v ∈ U ↔ n.symm v ∈ U :=
@@ -190,8 +189,7 @@ theorem Yf_mem (F : FlagG S r T) {Y : S.V →ₗ[E] S.V} (hY : Y ∈ F.LieN) (i 
     have hf : F.fvec i.succ = F.e j := by rw [hs]; simp [FlagG.fvec]
     rw [hf]
     have hj : F.e j ∈ F.Xa (i.1 + 2) := Submodule.subset_span ⟨j, (show j.1 < i.1 + 2 by simp [j]), rfl⟩
-    have h := hY.2.1 (i.1 + 2) (by omega) (by omega) (F.e j) hj
-    simpa using h
+    simpa using hY.2.1 (i.1 + 2) (by omega) (by omega) (F.e j) hj
   · have hr : i.1 + 1 = r := by omega
     have hs : i.succ = Fin.last r := Fin.ext (by simp; omega)
     have hf : F.fvec i.succ = F.z := by rw [hs]; simp [FlagG.fvec]

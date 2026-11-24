@@ -70,8 +70,7 @@ private theorem adic_map {O : Type} [CommRing O] [IsLocalRing O] {R R' : Type} [
     rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
     apply Ideal.pow_right_mono
     rw [Ideal.map_le_iff_le_comap]
-    intro x hx
-    exact mem_map f hx
+    exact fun x hx => mem_map f hx
   have key := (ha N).comp (Ideal.quotientMap (maximalIdeal R' ^ N) f.toRingHom hle)
   convert key using 1
   funext g
@@ -103,8 +102,7 @@ theorem UpperTheory.V.Pa.Core.tupMap :
     · intro g
       simpa using congrArg f (hp.mu g)
   · intro j i
-    have h := mem_map f (t.U_mem j i)
-    simpa using h
+    simpa using mem_map f (t.U_mem j i)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.AnnihilatorBaseChange.TupMap =====

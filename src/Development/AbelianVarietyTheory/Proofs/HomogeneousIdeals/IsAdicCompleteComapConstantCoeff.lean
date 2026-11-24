@@ -224,8 +224,7 @@ theorem isHausdorff_comap_constantCoeff [IsHausdorff I A] :
 
 theorem isPrecomplete_comap_constantCoeff [IsPrecomplete I A] :
     IsPrecomplete (I.comap (constantCoeff (R := A))) A⟦X⟧ where
-  prec' F hF := by
-    exact (ReciprocityTheory.P1.isPrecomplete_comap_constantCoeff I).prec' F hF
+  prec' F hF := (ReciprocityTheory.P1.isPrecomplete_comap_constantCoeff I).prec' F hF
 
 theorem isAdicComplete_comap_constantCoeff [IsAdicComplete I A] :
     IsAdicComplete (I.comap (constantCoeff (R := A))) A⟦X⟧ :=

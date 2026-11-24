@@ -327,16 +327,7 @@ theorem idxN_span (x : V) (S : Submodule (𝓞 K) V) :
 
 omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 theorem nondeg (h : V →ₗ⋆[K] V →ₗ[K] K) (hp : PD h) : h.Nondegenerate := by
-  obtain ⟨τ⟩ : Nonempty (K →+* ℂ) := inferInstance
-  refine And.intro (fun x hx => ?_) (fun y hy => ?_)
-  · by_contra h0
-    have hpos := hp τ x h0
-    rw [hx x, map_zero, Complex.zero_re] at hpos
-    exact lt_irrefl _ hpos
-  · by_contra h0
-    have hpos := hp τ y h0
-    rw [hy y, map_zero, Complex.zero_re] at hpos
-    exact lt_irrefl _ hpos
+  exact GlobalTheory.Mass.SameBad.nondeg_of_PD h hp
 
 omit [StarRing K] in
 theorem span_isLattice (h1 : Module.finrank K V = 1) {x : V} (hx : x ≠ 0) :
@@ -834,7 +825,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
     rw [e1] at H2
     have e2 : ((Lat.Tu D u ^ (2 * D.R.f) : ℕ) : ℝ) = Cnt.NT D u ^ 2 := by
       rw [Cnt.NT, ← pow_mul, mul_comm D.R.f]; push_cast; rfl
-    rw [e2, _root_.Formalism.BasicNotions.Host.finrank_E', Cnt.XiS, Cnt.Xi, if_pos ⟨hs2, hmid⟩]
+    rw [e2, _root_.Formalism.BasicNotions.Host.finrank_E', Cnt.XiS, Cnt.Xi, ite_eq_left ⟨hs2, hmid⟩]
     push_cast
     exact H2
   · have hk : 1 ≤ D.R.k := by omega
@@ -859,7 +850,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
         exact one_le_mul_of_one_le_of_one_le (one_le_pow₀ (by linarith)) (one_le_pow₀ hde')
     · rw [o2, ← hm1, mul_comm, ← ENNReal.ofReal_mul hm2.le]
       refine ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left ?_ hm2.le)
-      rw [Cnt.XiS, Cnt.Xi, if_neg (fun a => hmid a.2), if_pos (by omega)]
+      rw [Cnt.XiS, Cnt.Xi, ite_eq_right (fun a => hmid a.2), ite_eq_left (by omega)]
       exact H2
 
 end GlobalTheory.Mass.PrimMeanRow

@@ -104,8 +104,7 @@ theorem exists_sim (hpq : 1 ≤ D.p + D.q) (hA : l.A.Coprime l.M) (γ : LaMod D 
   refine GlobalTheory.exists_sim_of_aut_mod E H D l l.A (liftLa γ) hpq l.A_pos hA fun x hx => ?_
   have h := liftLa_spec γ x
   rw [Submodule.mkQ_apply, (Submodule.Quotient.mk_eq_zero _).2 hx] at h
-  have h2 := γ.map_eq_zero_iff.1 h.symm
-  exact (Submodule.Quotient.mk_eq_zero _).1 h2
+  exact (Submodule.Quotient.mk_eq_zero _).1 (γ.map_eq_zero_iff.1 h.symm)
 
 theorem exists_move (hpq : 1 ≤ D.p + D.q) (hA : l.A.Coprime l.M) (Xo : Moduli D l)
     (γ : LaMod D l ≃ₗ[𝓞 E] LaMod D l) :
@@ -116,8 +115,7 @@ theorem exists_move (hpq : 1 ≤ D.p + D.q) (hA : l.A.Coprime l.M) (Xo : Moduli 
   refine ⟨ρ.hom, ν, inferInstance, hs, fun a => ?_, fun a => ?_⟩
   · rw [← eta_congr Xo (h1 a)]; exact hM a
   · have e := hAA a
-    rw [etaA_congr Xo (h2 a)] at e
-    exact e
+    rwa [etaA_congr Xo (h2 a)] at e
 
 theorem move_unique (hpq : 1 ≤ D.p + D.q) (hA : l.A.Coprime l.M) (Xo : Moduli D l) (c : Coeff l)
     (γ : LaMod D l ≃ₗ[𝓞 E] LaMod D l) {ρ ρ' : Xo.X ⟶ Xo.X} {ν : SABMap Xo.univ.t Xo.univ.t ρ}

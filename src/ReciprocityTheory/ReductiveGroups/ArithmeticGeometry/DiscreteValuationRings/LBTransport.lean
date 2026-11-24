@@ -48,8 +48,7 @@ lemma units_glue {Y : Scheme.{0}} (W : Y.Opens) {ι : Type} (V : ι → Y.Opens)
     rw [e1, e2]
   refine ⟨⟨g, g', h1, by rw [mul_comm]; exact h1⟩, fun i => ?_⟩
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
-  exact hg i
+  simpa only [res, Units.coe_map, MonoidHom.coe_coe] using hg i
 
 section Regroup
 

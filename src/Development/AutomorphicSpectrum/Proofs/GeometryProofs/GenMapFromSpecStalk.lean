@@ -90,8 +90,7 @@ theorem surjective_fst :
   · intro h
     have := p.asIdeal.add_mem h (hn y.snd)
     rwa [sub_add_cancel] at this
-  · intro h
-    exact p.asIdeal.sub_mem h (hn y.snd)
+  · exact fun h => p.asIdeal.sub_mem h (hn y.snd)
 
 theorem tan_ext {G : Over S} [GrpObj G] (φ : R →+* R') (hφ : Function.Injective φ)
     (x : Spec (CommRingCat.of R) ⟶ S) (v v' : epsAt x ⟶ G) (hv : IsTanAt G x v) (hv' : IsTanAt G x v')
@@ -157,8 +156,7 @@ theorem span_ext {G : Over S} [GrpObj G] (φ : R →+* R') (x : Spec (CommRingCa
     obtain ⟨c, rfl⟩ := RingHom.mem_range.mp hr
     refine ⟨GlobalTheory.CompanionTheory.Ar.LieEx.hom x (c • LinearMap.id) ≫ v, ?_, ?_⟩
     · rw [GlobalTheory.CompanionTheory.Ar.LieEx.isTanAt_iff] at hv ⊢
-      rw [← Category.assoc, GlobalTheory.CompanionTheory.Ar.LieEx.zsec_hom]
-      exact hv
+      rwa [← Category.assoc, GlobalTheory.CompanionTheory.Ar.LieEx.zsec_hom]
     · apply Over.OverMorphism.ext
       change (M.pt ((φ c) • b)).left = _
       rw [M.smul, hvb]

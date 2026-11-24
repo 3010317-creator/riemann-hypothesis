@@ -85,8 +85,7 @@ theorem card_linearEquiv_le : Formalism.SLP.GlobalBoundRefinements.AutCount := b
   intro R M _ _ _ _ e v hv
   have hinj : Function.Injective (fun f : M ≃ₗ[R] M => fun i => f (v i)) := by
     intro f g hfg
-    apply LinearEquiv.toLinearMap_injective
-    exact LinearMap.ext_on_range hv (fun i => congrFun hfg i)
+    exact LinearEquiv.toLinearMap_injective (LinearMap.ext_on_range hv (fun i => congrFun hfg i))
   calc Nat.card (M ≃ₗ[R] M) ≤ Nat.card (Fin e → M) := Nat.card_le_card_of_injective _ hinj
     _ = Nat.card M ^ e := by rw [Nat.card_fun, Nat.card_fin]
 
@@ -644,8 +643,7 @@ lemma index_ideal_smul_top_le_norm_pow {E : Type} [Field E] [NumberField E] (p :
         have : Ideal.absNorm p ≠ 1 := by rw [Ne, Ideal.absNorm_eq_one_iff]; exact hp.ne_top
         omega
       have hex : ∃ e, ¬ Jg ≤ p ^ (e + 1) := by
-        by_contra hall
-        push_neg at hall
+        by_contra! hall
         have hN : Ideal.absNorm Jg ≠ 0 := by rwa [Ne, Ideal.absNorm_eq_zero_iff]
         have h0 := Ideal.absNorm_dvd_absNorm_of_le (hall (Ideal.absNorm Jg))
         rw [map_pow] at h0
@@ -676,8 +674,7 @@ lemma index_ideal_smul_top_le_norm_pow {E : Type} [Field E] [NumberField E] (p :
         have h' : p ^ (e + 1) * A ∣ Jg * A := Ideal.dvd_iff_le.2 h
         exact Ideal.dvd_iff_le.1 ((mul_dvd_mul_iff_right hA0).1 h')
       have hgen : ∃ i ∈ s, ∃ x ∈ A, g i * x ∉ p ^ (e + 1) * A := by
-        by_contra hall
-        push_neg at hall
+        by_contra! hall
         apply hnot
         have hcol : Jg ≤ (p ^ (e + 1) * A).colon A := by
           rw [Ideal.span_le]
@@ -781,8 +778,7 @@ lemma ideal_smul_top_prod {R M N : Type} [CommRing R] [AddCommGroup M] [Module R
       (I • (⊤ : Submodule R M)).prod (I • (⊤ : Submodule R N)) := by
   apply le_antisymm
   · rw [Submodule.smul_le]
-    intro r hr m _
-    exact ⟨Submodule.smul_mem_smul hr trivial, Submodule.smul_mem_smul hr trivial⟩
+    exact fun r hr m _ => ⟨Submodule.smul_mem_smul hr trivial, Submodule.smul_mem_smul hr trivial⟩
   · rintro ⟨m, n⟩ ⟨hm, hn⟩
     have e : ((m, n) : M × N) = LinearMap.inl R M N m + LinearMap.inr R M N n := by simp
     rw [e]

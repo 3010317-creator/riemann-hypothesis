@@ -84,10 +84,8 @@ theorem surjective_eval₂Hom_of_isPushout {A B C P : CommRingCat.{0}} {α : A �
       rw [RingHom.mem_ker, map_sub, e, sub_self]
     rw [PrimeSection.ker_eq_map_of_isPushout h hβ] at hk
     refine Submodule.mem_sup.2 ⟨MvPolynomial.eval₂Hom α.hom r q, ⟨q, rfl⟩, _, ?_, add_sub_cancel _ _⟩
-    rw [Ideal.smul_top_eq_map]
-    exact hk
-  intro b
-  exact (hN.ge (Submodule.mem_top : b ∈ ⊤) :)
+    rwa [Ideal.smul_top_eq_map]
+  exact fun b => (hN.ge (Submodule.mem_top : b ∈ ⊤) :)
 
 theorem surjective_specMap_of_isNilpotent {R R₀ : Type} [CommRing R] [CommRing R₀] (g : R →+* R₀)
     (hg : Function.Surjective g) (hJ : IsNilpotent (RingHom.ker g)) :

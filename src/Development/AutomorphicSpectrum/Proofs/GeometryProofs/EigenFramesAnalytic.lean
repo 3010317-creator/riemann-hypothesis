@@ -213,7 +213,7 @@ theorem coef_eq {R U : Type} [CommRing R] [AddCommGroup U] [Module R U] {n : ℕ
   funext l
   have h0 : ∑ m, (c m - (Pi.single i 1 : Fin n → R) m) • x m = 0 := by
     simp only [sub_smul, Finset.sum_sub_distrib, ← h, Pi.single_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
   exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hx _ h0 l)
 
 variable {A Ω T F V N : Type} [CommRing A] [Field Ω] [CommRing T] [AddCommGroup F] [Module A F]
@@ -368,8 +368,7 @@ theorem exists_coeff_map (Z : CptOver Y U) (hβ : Function.Injective β)
   let e := RingEquiv.ofBijective (genMap (Z.ξ₀ ≫ Y.j) p).rangeRestrict
     ⟨fun a b h => Z.gen.inj p (congrArg Subtype.val h), RingHom.rangeRestrict_surjective _⟩
   refine ⟨(e.symm : _ →+* _).comp (Z.inc.codRestrict _ hm), RingHom.ext fun x => ?_⟩
-  have h1 := e.apply_symm_apply (Z.inc.codRestrict _ hm x)
-  exact congrArg Subtype.val h1
+  exact congrArg Subtype.val (e.apply_symm_apply (Z.inc.codRestrict _ hm x))
 
 theorem comp_coeff_map (Z : CptOver Y U) (hfr : ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a)
     (p : Cpt (Z.ξ₀ ≫ Y.j)) (κ : c.F →+* Y.X.presheaf.stalk p.1) (hκ : (genMap (Z.ξ₀ ≫ Y.j) p).comp κ = Z.inc)
@@ -508,8 +507,7 @@ theorem isFrameAt_span_and_nhd : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [I
   have hc : ∀ q : Cpt ξ, q.1 ∈ x.opensRange → M.lat.IsFrameAt c q := by
     intro q hq
     have hq' : (X.fromSpecStalk q.1) (IsLocalRing.closedPoint (X.presheaf.stalk q.1)) ∈ x.opensRange := by
-      rw [Scheme.fromSpecStalk_closedPoint]
-      exact hq
+      rwa [Scheme.fromSpecStalk_closedPoint]
     obtain ⟨ψ, hψ⟩ := exists_lift (A := X.presheaf.stalk q.1) x (X.fromSpecStalk q.1) hq'
     refine hfr q ψ hψ ?_
     have h1 : spMap ((genMap ξ q).comp ψ) ≫ x = spMap φ ≫ x := by
@@ -521,8 +519,7 @@ theorem isFrameAt_span_and_nhd : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [I
         _ = spMap (genMap ξ q) ≫ X.fromSpecStalk q.1 := by rw [hψ]
         _ = ξ := spec_genMap ξ q
         _ = spMap φ ≫ x := hφ.symm
-    have h2 := Spec.map_injective ((cancel_mono x).1 h1)
-    exact congrArg (fun g => g.hom) h2
+    exact congrArg (fun g => g.hom) (Spec.map_injective ((cancel_mono x).1 h1))
   have hbc : Submodule.span (regAt ξ p) (Set.range b) = Submodule.span (regAt ξ p) (Set.range c) :=
     hb.2.symm.trans (hc p hp).2
   have hbi : ∀ i, b i ∈ Submodule.span (regAt ξ p) (Set.range c) := fun i => by
@@ -586,8 +583,7 @@ theorem isFrameAt_comp : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω
         (fun i => (c i : Ω) - ∑ j, if ix j = i then d j else 0) (by
           simp only [sub_smul, Finset.sum_sub_distrib]
           rw [hc', hD, sub_self])
-      intro i
-      exact sub_eq_zero.1 (h0 i)
+      exact fun i => sub_eq_zero.1 (h0 i)
     rw [← hc]
     apply Submodule.sum_mem
     intro i _
@@ -699,8 +695,7 @@ theorem exists_chart_values : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCo
   obtain ⟨_, ⟨A, hA, rfl⟩, hpA, hAx⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open hpx x.opensRange.isOpen
   replace hA : IsAffineOpen A := hA
   have hrange : Set.range hA.fromSpec ⊆ Set.range x := by
-    rw [hA.range_fromSpec]
-    exact hAx
+    rwa [hA.range_fromSpec]
   obtain ⟨a, ha⟩ : ∃ a : R →+* Γ(X, A), spMap a ≫ x = hA.fromSpec :=
     ⟨(Spec.preimage (IsOpenImmersion.lift x hA.fromSpec hrange)).hom, by
       change Spec.map (CommRingCat.ofHom (Spec.preimage (IsOpenImmersion.lift x _ hrange)).hom) ≫ x = _
@@ -718,8 +713,7 @@ theorem exists_chart_values : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCo
     simp only [centre, hy, Scheme.Hom.comp_apply]
     rfl
   have hqx : (X.fromSpecStalk q.1) (IsLocalRing.closedPoint (X.presheaf.stalk q.1)) ∈ x.opensRange := by
-    rw [Scheme.fromSpecStalk_closedPoint]
-    exact hqr
+    rwa [Scheme.fromSpecStalk_closedPoint]
   obtain ⟨ψ, hψ⟩ := exists_lift (A := X.presheaf.stalk q.1) x (X.fromSpecStalk q.1) hqx
   have hring : (Scheme.stalkClosedPointTo y).hom.comp ψ = f.comp a := by
     refine GlobalTheory.CompanionTheory.Ar.LocFrames.ring_eq x y ψ hψ _ ?_
@@ -937,8 +931,7 @@ theorem exists_ιMulti_eq_smul {Ω : Type} [Field Ω] {E : Type} [AddCommGroup E
       rw [h5, (exteriorPower.ιMulti Ω r (M := E)).map_perm b σ]
       have hm := Submodule.mem_span_singleton_self (R := Ω) (exteriorPower.ιMulti Ω r b)
       rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with hs | hs
-      · rw [hs, one_smul]
-        exact hm
+      · rwa [hs, one_smul]
       · rw [hs, Units.neg_smul, one_smul]
         exact neg_mem hm
     · have h6 : ¬ Function.Injective (fun i => b (f i)) := fun hh =>
@@ -1024,8 +1017,7 @@ theorem extendsUnitAt_resolution : ∀ (E : Type) [Field E] [NumberField E] [IsC
   intro m B y hB hy hyσ b₀ hb₀ hyx
   have hxA : ⊤ ≤ x ⁻¹ᵁ (π ⁻¹ᵁ A) := fun q _ => by
     have : q = IsLocalRing.closedPoint ℂ := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
-    rw [this]
-    exact hp₀A
+    rwa [this]
   obtain ⟨ε, hh, hε, hdiff, hne, key⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.flat_unit_along_families E H D l Xo c O β Y τ σ Φ X' π s' d W' jW A hA EB MB e₁ e₂ x hpq hτ hσ hΦ hπ hsm hsnc hj hjs hx hxA heig m B y hB hy hyσ b₀ hb₀ hyx
   refine ⟨ε, hh, hε, hdiff, hne, fun b hbB hbW r hr => ?_⟩
   obtain ⟨f, hf, hk⟩ := key b hbB
@@ -1094,8 +1086,7 @@ theorem mem_regAt_genPt {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (Comm
     TopCat.Presheaf.stalkSpecializes_refl _ _
   show (X.presheaf.stalkSpecializes (specializes_rfl : genPt ξ ⤳ genPt ξ) ≫
     Scheme.stalkClosedPointTo ξ).hom g = a
-  rw [e]
-  exact hg
+  rwa [e]
 
 theorem exists_open_forall_mem_regAt {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X}
     (hξ : IsCptGen ξ) (S : Finset Ω) :
@@ -1411,8 +1402,7 @@ theorem exists_gen_of_unitAn : Geo.ResK.ResKStatement → GagaSections → ∀ (
   · intro x hx
     obtain ⟨-, α, β', hα, hβ', hwa, hwb, e⟩ := (hLgen x hx f₀).1 (hall x hx)
     refine ⟨α / f₀, β', div_ne_zero hα hf0, hβ', ?_, hwb, ?_⟩
-    · rw [smul_smul, div_mul_cancel₀ _ hf0]
-      exact hwa
+    · rwa [smul_smul, div_mul_cancel₀ _ hf0]
     · rw [_root_.one_mul, ← e]
       field_simp
   · intro y hys hyW hyU
@@ -1426,8 +1416,7 @@ theorem exists_gen_of_unitAn : Geo.ResK.ResKStatement → GagaSections → ∀ (
       · show π (y' pt) ∈ W₁ ⊓ W₂
         have : π (y' pt) = Y.j (y pt) := by
           rw [← Scheme.Hom.comp_apply, e1, Scheme.Hom.comp_apply]
-        rw [this]
-        exact hp
+        rwa [this]
       · rw [hy']
         exact ((y ≫ inv jW) pt).2
     have hyW' : ⊤ ≤ y' ⁻¹ᵁ W := fun pt _ => hpt pt
@@ -1439,8 +1428,7 @@ theorem exists_gen_of_unitAn : Geo.ResK.ResKStatement → GagaSections → ∀ (
     have hv' := hval y' e2 hyW' hsp
     have hs := hsurj (centre y') (hWW' (hpt _))
     have h := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ValLift.valAt_of_stalkMap_surjective _ _ _ _ _ ξ' π y' f₀ _ h2 hs hv'
-    rw [e1, hFe] at h
-    exact h
+    rwa [e1, hFe] at h
 
 end GlobalTheory.CompanionTheory.Ar.Flat
 end -- clump:auto

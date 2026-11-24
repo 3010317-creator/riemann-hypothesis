@@ -76,9 +76,7 @@ theorem exists_point_of_finite_etale (k₀ K : Type) [Field k₀] [IsAlgClosed k
   obtain ⟨hfin₀, hc₀⟩ := GlobalTheory.FinEt.card_points_eq_finrank p (𝟙 (Sp k₀)) z₀
   let F : {y : Sp k₀ ⟶ X // y ≫ p = 𝟙 _} → {y : Sp Ω ⟶ X // y ≫ p = t} :=
     fun y ↦ ⟨t ≫ y.1, by rw [Category.assoc, y.2, Category.comp_id]⟩
-  have hFi : Function.Injective F := by
-    intro a b hab
-    exact Subtype.ext ((cancel_epi t).mp congr(($hab).1))
+  have hFi : Function.Injective F := fun a b hab => Subtype.ext ((cancel_epi t).mp congr(($hab).1))
   have hcard : Nat.card {y : Sp Ω ⟶ X // y ≫ p = t} ≤ Nat.card {y : Sp k₀ ⟶ X // y ≫ p = 𝟙 _} := by
     rw [hc₁, hc₀, Subsingleton.elim (t zΩ) ((𝟙 (Sp k₀) : Sp k₀ ⟶ Sp k₀) z₀)]
   have hFb : Function.Bijective F := hFi.bijective_of_nat_card_le hcard

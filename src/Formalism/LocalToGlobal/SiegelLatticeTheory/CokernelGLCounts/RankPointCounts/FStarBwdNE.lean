@@ -74,11 +74,11 @@ theorem stepD (X : Submodule E S.V) (hXiso : ∀ x ∈ X, ∀ y ∈ X, S.hT x y 
       simp only [LinearMap.map_smulₛₗ, LinearMap.smul_apply, starRingEnd_apply, smul_eq_mul,
         LinearMap.add_apply, LinearMap.comp_apply]
       rw [Finset.sum_eq_single k']
-      · rw [hsw S (b k') (bs k'), hbs k' k', if_pos rfl, star_one, mul_one, star_mul, star_neg, star_add,
+      · rw [hsw S (b k') (bs k'), hbs k' k', ite_eq_left rfl, star_one, mul_one, star_mul, star_neg, star_add,
           ← hsw S (B₀ (b k')) v, ← hsw S (b k') (B₀ v)]
         ring
       · intro k _ hk
-        rw [hsw S (b k') (bs k), hbs k' k, if_neg (Ne.symm hk), star_zero, mul_zero]
+        rw [hsw S (b k') (bs k), hbs k' k, ite_eq_right (Ne.symm hk), star_zero, mul_zero]
       · simp
     rw [key]
     rfl
@@ -171,8 +171,7 @@ theorem main (X : Submodule E S.V) (hXiso : ∀ x ∈ X, ∀ y ∈ X, S.hT x y =
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
-    · intro h
-      exact ⟨g.symm x, h, by simp⟩
+    · exact fun h => ⟨g.symm x, h, by simp⟩
   have hfg₃ : Λ₃.FG := hΛ₂.fg.map _
   have hfull₃ : ∀ u : S.V, ∃ d : 𝓞 E, d ≠ 0 ∧ d • u ∈ Λ₃ := fun u => by
     have hfull₂ : ∀ v : S.V, ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ Λ₂ := by
@@ -203,12 +202,10 @@ theorem main (X : Submodule E S.V) (hXiso : ∀ x ∈ X, ∀ y ∈ X, S.hT x y =
       intro x hx
       have hxP : x ∈ P := (hs ▸ Submodule.span_le.mpr hsP) hx
       change IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT x v) at hxP
-      rw [oSmul, map_smul, smul_eq_mul]
-      exact hxP
+      rwa [oSmul, map_smul, smul_eq_mul]
     obtain ⟨d, hd, hdu⟩ := hfull₂ (g.symm u)
     refine ⟨d, hd, (hmem₃ _).2 ?_⟩
-    rw [oSmul, map_smul, ← oSmul]
-    exact hdu
+    rwa [oSmul, map_smul, ← oSmul]
   have hSD₃ : SD S Λ₃ := fun x => by
     rw [hmem₃, hSD₂]
     constructor

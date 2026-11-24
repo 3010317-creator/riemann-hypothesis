@@ -308,10 +308,7 @@ theorem kapPiPf_card (W : LocWach PD LL O v n) [FiniteDimensional K₀ K] (c : Z
         exact hx }
   have hF : Function.Injective F := by
     intro a b hab
-    apply Subtype.ext
-    apply AlgHom.ext
-    intro x
-    exact congrArg (fun f : K →ₐ[K₀] LL => f x) hab
+    exact Subtype.ext (AlgHom.ext (fun x => congrArg (fun f : K →ₐ[K₀] LL => f x) hab))
   have hli := linearIndependent_toLinearMap K₀ K LL
   haveI : Finite (K →ₐ[K₀] LL) := hli.finite
   letI := Fintype.ofFinite (K →ₐ[K₀] LL)
@@ -396,8 +393,7 @@ theorem kapPiPf_uU {l : ℕ} [Fact l.Prime] (P : LocPrime l) (H : LocHW l P) (K 
   have e4 : algebraMap ↥(OL LL) ↥LL.1
       (((Formalism.MainNotions.DeltaInvariantLattices.uU (H.W K 1 LL hg)) ^ k : (↥(OL LL))ˣ) : ↥(OL LL)) =
       algebraMap ↥(OL LL) ↥LL.1 (algebraMap ℤ_[l] ↥(OL LL) ((χ ^ k : ℤ_[l]ˣ) : ℤ_[l])) := by
-    rw [← IsScalarTower.algebraMap_apply]
-    exact e3
+    rwa [← IsScalarTower.algebraMap_apply]
   exact Subtype.val_injective e4
 
 theorem kapPiPf_main {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) (P : LocPrime l) (H : LocHW l P)

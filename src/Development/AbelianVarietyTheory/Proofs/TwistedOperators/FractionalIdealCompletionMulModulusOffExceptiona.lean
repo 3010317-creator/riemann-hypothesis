@@ -57,8 +57,7 @@ variable {D : D7}
 
 theorem exists_sep {v v' : GlobalTheory.FinPl.Pl D} (h : v' ≠ v) :
     ∃ t : 𝓞 D.host.F, t ∈ v'.asIdeal ∧ t ∉ v.asIdeal := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   exact h (HeightOneSpectrum.ext (v'.isMaximal.eq_of_le v.isPrime.ne_top hc))
 
 theorem idV_eq_one_of_mem {v : GlobalTheory.FinPl.Pl D} {I : Ideal (𝓞 D.host.E)} {t : 𝓞 D.host.F} (ht : t ∉ v.asIdeal)
@@ -111,9 +110,7 @@ variable {D : D7} {T : Type} {L : LevCh D T}
 
 theorem conj_smul_algebraMap (s : 𝓞 D.host.F) :
     D.host.conj • algebraMap (𝓞 D.host.F) (𝓞 D.host.E) s = algebraMap (𝓞 D.host.F) (𝓞 D.host.E) s := by
-  apply RingOfIntegers.ext
-  show D.host.conj ((s : D.host.F) : D.host.E) = ((s : D.host.F) : D.host.E)
-  exact (D.host.conjE_mem_hostF_iff _).1 (s : D.host.F).2
+  exact RingOfIntegers.ext ((D.host.conjE_mem_hostF_iff _).1 (s : D.host.F).2)
 
 theorem exists_mem_modulBar (P : Places L) (sc : Consts) {v : GlobalTheory.FinPl.Pl D} (hv : v ∉ P.S0) :
     ∃ s : 𝓞 D.host.F, s ∉ v.asIdeal ∧ algebraMap (𝓞 D.host.F) (𝓞 D.host.E) s ∈ P.modulBar sc := by

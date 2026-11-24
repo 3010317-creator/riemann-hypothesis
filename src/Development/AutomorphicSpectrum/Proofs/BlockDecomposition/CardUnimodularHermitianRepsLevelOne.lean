@@ -114,7 +114,7 @@ theorem exists_congr_one : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ
     by_cases h : i = j
     · subst h
       simp
-    · rw [if_neg (Ne.symm h), if_neg h]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
   exact ⟨_, Matrix.isUnit_det_of_left_inverse hg, hg⟩
 
 end GlobalTheory.CompanionTheory.UnrDens
@@ -257,8 +257,7 @@ theorem red_cT_one {R : Type} [CommRing R] (σ : R →+* R) (ϖ : R) (h : σ ϖ 
 theorem red_mul_one {R : Type} [CommRing R] (ϖ : R) {a b c : ℕ}
     (x : Matrix (Fin a) (Fin b) R) (y : Matrix (Fin b) (Fin c) R) :
     red ϖ 1 (x * y) = red ϖ 1 x * red ϖ 1 y := by
-  simp only [red]
-  exact Matrix.map_mul
+  simpa only [red] using Matrix.map_mul
 
 theorem red_surj_one {R : Type} [CommRing R] (ϖ : R) {a b : ℕ}
     (y : Matrix (Fin a) (Fin b) (R ⧸ lev ϖ 1)) : ∃ x, red ϖ 1 x = y := by
@@ -283,15 +282,13 @@ theorem red_image_one {R : Type} [CommRing R] (σ : R →+* R) (ϖ : R) (h : σ 
   constructor
   · rintro ⟨x, hx, rfl⟩
     simp only [Set.mem_setOf_eq] at hx ⊢
-    rw [red_mul_one, red_mul_one, red_cT_one σ ϖ h] at hx
-    exact hx
+    rwa [red_mul_one, red_mul_one, red_cT_one σ ϖ h] at hx
   · intro hy
     obtain ⟨x, rfl⟩ := red_surj_one ϖ y
     simp only [Set.mem_setOf_eq] at hy
     refine ⟨x, ?_, rfl⟩
     simp only [Set.mem_setOf_eq]
-    rw [red_mul_one, red_mul_one, red_cT_one σ ϖ h]
-    exact hy
+    rwa [red_mul_one, red_mul_one, red_cT_one σ ϖ h]
 
 theorem solCount_one : ∀ (R : Type) [CommRing R] (σ : R →+* R) (ϖ : R) (q : ℕ) (ε : ℤ), IsUnrQuad R σ ϖ q ε → ∀ (m n : ℕ), n ≤ m → ∀ (S : Matrix (Fin m) (Fin m) R) (T : Matrix (Fin n) (Fin n) R), IsUnimod σ S → IsUnimod σ T → (solCount σ ϖ S T 1 : ℝ) = (q : ℝ) ^ (2 * m * n - n ^ 2) * ∏ i : Fin n, (1 - ((ε : ℝ) / q) ^ (m - (i : ℕ))) := by
   intro R _ σ ϖ q ε hR m n hnm S T hS hT

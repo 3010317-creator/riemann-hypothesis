@@ -280,8 +280,7 @@ theorem exists_coords (τ : A →+* Module.End K V) {r : ℕ} (x : Fin r → V) 
   obtain ⟨p, hp, μ, hμ, e⟩ := Submodule.mem_sup.1 (h (hspan v))
   obtain ⟨d, hd⟩ := (Submodule.mem_span_range_iff_exists_fun K).1 hp
   refine ⟨d, ?_⟩
-  rw [hd, ← e, add_sub_cancel_left]
-  exact hμ
+  rwa [hd, ← e, add_sub_cancel_left]
 
 theorem exists_of_mem_idealV (τ : A →+* Module.End K V) {J₁ J : Ideal A} {t : A}
     (hc : ∀ (c : k) (y : V), τ (algebraMap k A c) y = algebraMap k K c • y)
@@ -296,8 +295,7 @@ theorem exists_of_mem_idealV (τ : A →+* Module.End K V) {J₁ J : Ideal A} {t
     exact Submodule.add_mem_sup (LinearMap.mem_range_self _ _) (apply_mem_idealV τ hc' v)
   obtain ⟨p, ⟨z, rfl⟩, w, hw, e⟩ := Submodule.mem_sup.1 (h hy)
   refine ⟨z, ?_⟩
-  rw [← e, add_sub_cancel_left]
-  exact hw
+  rwa [← e, add_sub_cancel_left]
 
 end Coord
 
@@ -450,10 +448,7 @@ theorem subDeg_range_shortExact : ∀ (K : Type) [Field K] (C : ACurve K) (V : T
   have hSE0 : ShortExact C (sub C L (LinearMap.range P)) (sub C L' (LinearMap.range P'))
       (sub C L'' (LinearMap.range P'')) f₀ g₀ := by
     refine ⟨?_, ?_, ?_, ?_, ?_⟩
-    · intro x y h
-      apply Subtype.ext
-      apply hinj
-      exact congrArg Subtype.val h
+    · exact fun x y h => Subtype.ext (hinj (congrArg Subtype.val h))
     · intro y
       constructor
       · intro hy
@@ -464,18 +459,14 @@ theorem subDeg_range_shortExact : ∀ (K : Type) [Field K] (C : ACurve K) (V : T
         show f (P x) = (y : V')
         rw [hfP, hx, mP' _ y.2]
       · rintro ⟨x, rfl⟩
-        apply Subtype.ext
-        show g (f (x : V)) = 0
-        exact (hex _).2 ⟨x, rfl⟩
+        exact Subtype.ext ((hex _).2 ⟨x, rfl⟩)
     · intro z
       obtain ⟨y, hy⟩ := hsurj (z : V'')
       refine ⟨⟨P' y, LinearMap.mem_range_self P' y⟩, ?_⟩
       apply Subtype.ext
       show g (P' y) = (z : V'')
       rw [hgP, hy, mP'' _ z.2]
-    · intro i x
-      show (x : V) ∈ L i ↔ f (x : V) ∈ L' i
-      exact hL i x
+    · exact fun i x => hL i x
     · intro i z
       constructor
       · intro hz
@@ -545,11 +536,9 @@ theorem exists_colength_one (k A : Type) [Field k] [CommRing A] [Algebra k A] [F
   obtain ⟨t, htJ, htW⟩ := SetLike.not_le_iff_exists.mp hJ
   let W : Submodule k A := (m * J).restrictScalars k
   have hq : W.mkQ t ≠ 0 := by
-    rw [Ne, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    exact htW
+    rwa [Ne, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual k (A ⧸ W), φ (W.mkQ t) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hq ((Module.forall_dual_apply_eq_zero_iff k _).mp hcon)
   set l : A →ₗ[k] k := (φ (W.mkQ t))⁻¹ • (φ ∘ₗ W.mkQ) with hl
   have hlt : l t = 1 := by
@@ -557,8 +546,7 @@ theorem exists_colength_one (k A : Type) [Field k] [CommRing A] [Algebra k A] [F
   have hlW : ∀ a ∈ m * J, l a = 0 := by
     intro a ha
     have : W.mkQ a = 0 := by
-      rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact ha
+      rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     rw [hl, LinearMap.smul_apply, LinearMap.comp_apply, this, map_zero, smul_zero]
   have hdec : ∀ r : A, r - algebraMap k A (χ r) ∈ m := by
     intro r
@@ -586,10 +574,8 @@ theorem exists_colength_one (k A : Type) [Field k] [CommRing A] [Algebra k A] [F
   · intro a ha
     refine ⟨l a, (hmemJ₁ _).mpr ⟨J.sub_mem ha (J.mul_mem_left _ htJ), ?_⟩⟩
     rw [← Algebra.smul_def, map_sub, map_smul, hlt, smul_eq_mul, mul_one, sub_self]
-  · intro a ha
-    exact (hmemJ₁ _).mpr ⟨J.mul_mem_left a htJ, hlW _ (Ideal.mul_mem_mul ha htJ)⟩
-  · intro a ha
-    exact ((hmemJ₁ a).mp ha).2
+  · exact fun a ha => (hmemJ₁ _).mpr ⟨J.mul_mem_left a htJ, hlW _ (Ideal.mul_mem_mul ha htJ)⟩
+  · exact fun a ha => ((hmemJ₁ a).mp ha).2
 
 end GlobalTheory.CompanionTheory.Ar.Flat.StepIdeal
 end -- clump:auto
@@ -673,7 +659,7 @@ theorem freeAt_of_basis_lattice (K : Type) [Field K] (C : ACurve K) (V : Type) [
     rw [map_sum, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun j _ => ?_
     dsimp only
-    rw [if_pos rfl, map_zsmul, Int.cast_smul_eq_zsmul]
+    rw [ite_eq_left rfl, map_zsmul, Int.cast_smul_eq_zsmul]
     rfl
   refine ⟨x, fun l s => ∑ j, algebraMap k K (l (1 ⊗ₜ[ℤ] b j)) • B.coord (s, j), ?_, ?_, ?_, ?_⟩
   · intro s
@@ -896,8 +882,7 @@ theorem exists_finite_subfield (K O : Type) [Field K] [CommRing O] [IsDomain O]
     have : x * (y : K) = 1 := congrArg Subtype.val hy
     rw [inv_eq_of_mul_eq_one_right this]
     exact y.2
-  refine ⟨{ χ.range with inv_mem' := hinv }, ?_, fun a => ⟨a, rfl⟩⟩
-  exact (inferInstance : Finite χ.range)
+  exact ⟨{ χ.range with inv_mem' := hinv }, (inferInstance : Finite χ.range), fun a => ⟨a, rfl⟩⟩
 
 theorem act_isHom {K : Type} [Field K] (C : ACurve K) {V : Type} [AddCommGroup V] [Module K V]
     {L : C.I → AddSubgroup V} (hL : IsBun C L) {O k : Type} [CommRing O] [Field k] [Algebra k K]

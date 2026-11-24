@@ -64,8 +64,7 @@ theorem coeff_iterate_zero (c : B) (A : Z →₀ ℕ) {n : ℕ} (hn : A.degree �
   have h1 := H.iterate_close (a := Ψ^[j] 0) (b := 0) (H.noConst_iterate noConst_zero j)
     noConst_zero A.degree c A (Nat.lt_succ_self _)
   rw [map_sub, sub_eq_zero] at h1
-  rw [Function.iterate_add_apply, e]
-  exact h1
+  rwa [Function.iterate_add_apply, e]
 
 theorem fixPt_close (n : ℕ) (c : B) : OrdGE (n + 1) (H.fixPt c - Ψ^[n] 0 c) := by
   intro A hA
@@ -73,8 +72,7 @@ theorem fixPt_close (n : ℕ) (c : B) : OrdGE (n + 1) (H.fixPt c - Ψ^[n] 0 c) :
 
 theorem noConst_fixPt : NoConst H.fixPt := by
   intro c A hA
-  have h := H.fixPt_close 0 c A hA
-  simpa using h
+  simpa using H.fixPt_close 0 c A hA
 
 theorem fix_fixPt : Ψ H.fixPt = H.fixPt := by
   funext c
@@ -90,8 +88,7 @@ theorem exists_unique : ∃! t : B → MvPowerSeries Z k, NoConst t ∧ Ψ t = t
   funext c
   ext A
   have h1 := H.iterate_close ht H.noConst_fixPt A.degree c A (Nat.lt_succ_self _)
-  rw [Function.iterate_fixed hft, Function.iterate_fixed H.fix_fixPt, map_sub, sub_eq_zero] at h1
-  exact h1
+  rwa [Function.iterate_fixed hft, Function.iterate_fixed H.fix_fixPt, map_sub, sub_eq_zero] at h1
 
 end Contr
 
@@ -99,8 +96,7 @@ theorem noConst_iff (t : B → MvPowerSeries Z k) :
     NoConst t ↔ ∀ c, MvPowerSeries.constantCoeff (t c) = 0 := by
   constructor
   · intro h c
-    have h0 := h c 0 (by simp)
-    simpa using h0
+    simpa using h c 0 (by simp)
   · intro h c A hA
     have hA0 : A.degree = 0 := by omega
     have hA1 : A = 0 := by
@@ -160,7 +156,7 @@ theorem contr : Contr S.Ps := by
       funext x
       have h1 : dl (C := C) x A = 0 := by
         unfold dl
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         rw [h, Finsupp.degree_single] at hA0
         omega

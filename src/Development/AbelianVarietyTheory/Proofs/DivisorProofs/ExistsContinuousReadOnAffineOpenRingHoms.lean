@@ -95,8 +95,7 @@ theorem exists_continuous_read : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
     obtain ⟨σ₀, hσ₀⟩ : ∃ σ₀, x₀.comp (algX p U) = σ₀ := ⟨_, rfl⟩
     have hN : {x : Γ(X, U) →+* ℂ | x.comp (algX p U) = σ₀} ∈ 𝓝 x₀ := by
       have hex : ∀ τ : k →+* ℂ, τ ≠ σ₀ → ∃ a, τ a ≠ σ₀ a := fun τ h => by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         exact h (RingHom.ext hc)
       choose! a ha using hex
       have hopen : ∀ τ : k →+* ℂ,
@@ -114,11 +113,11 @@ theorem exists_continuous_read : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
     let F : (Γ(X, U) →+* ℂ) → CxPts p σ₀ := fun x =>
       if h : x.comp (algX p U) = σ₀ then ofHom hU x (fun a => RingHom.congr_fun h a)
       else ofHom hU x₀ (fun a => RingHom.congr_fun hσ₀ a)
-    have hF0 : F x₀ = ofHom hU x₀ (fun a => RingHom.congr_fun hσ₀ a) := dif_pos hσ₀
+    have hF0 : F x₀ = ofHom hU x₀ (fun a => RingHom.congr_fun hσ₀ a) := dite_eq_left hσ₀
     have hFmem : ∀ x, F x ∈ ptsIn p σ₀ U := fun x => by
       by_cases h : x.comp (algX p U) = σ₀
-      · simp only [F, dif_pos h]; exact ofHom_mem _ _ _
-      · simp only [F, dif_neg h]; exact ofHom_mem _ _ _
+      · simp only [F, dite_eq_left h]; exact ofHom_mem _ _ _
+      · simp only [F, dite_eq_right h]; exact ofHom_mem _ _ _
     have hF : ContinuousAt F x₀ := by
       refine tendsto_subtype_rng.2 ?_
       rw [hF0]
@@ -126,7 +125,7 @@ theorem exists_continuous_read : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
         fun f => ?_
       have e : ∀ᶠ x in 𝓝 x₀, x f = valR (F x).1 U f := by
         filter_upwards [hN] with x hx
-        simp only [F, dif_pos hx]
+        simp only [F, dite_eq_left hx]
         exact (ev_ofHom hU x _ f).symm
       rw [show valR (ofHom hU x₀ (fun a => RingHom.congr_fun hσ₀ a)).1 U f = x₀ f from
         ev_ofHom hU x₀ _ f]
@@ -135,7 +134,7 @@ theorem exists_continuous_read : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
       (hu σ₀).continuousAt ((isOpen_ptsIn U).mem_nhds (hFmem x₀))
     refine (hu0.comp hF).congr_of_eventuallyEq ?_
     filter_upwards [hN] with x hx
-    simp only [Function.comp_apply, F, dif_pos hx]
+    simp only [Function.comp_apply, F, dite_eq_left hx]
     exact eq_of_val_eq u hx _ _ rfl
   · intro σ y hy
     exact eq_of_val_eq u (evHom_comp_algX hy) _ _
@@ -153,7 +152,6 @@ theorem exists_continuous_read : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
     refine ⟨hzU, hsub ?_⟩
     have hv : (fun f : Γ(X, U) => ev p σ U f z) = ⇑(evHom hzU) := funext fun f => ev_eq hzU f
     show ⇑(evHom hzU) ∈ t
-    rw [← hv]
-    exact hz
+    rwa [← hv]
 
 end GlobalTheory.ContRead

@@ -101,8 +101,7 @@ theorem VS_anti {m n : ℕ} (h : m ∣ n) (e : ℕ) (ψ : G k Ω →* Oˣ) : VS 
   have hle : ShaU (rho l e ψ) n ⊤ ≤ ShaU (rho l e ψ) m ⊤ := by
     intro x hx
     simp only [ShaU, LocSel, Submodule.mem_iInf] at hx ⊢
-    intro D hD
-    exact hx D (shaFam_mono h hD)
+    exact fun D hD => hx D (shaFam_mono h hD)
   exact Module.length_le_of_injective (Submodule.inclusion hle) (Submodule.inclusion_injective hle)
 
 theorem V'_le_V (N e : ℕ) (ψ : G k Ω →* Oˣ) : V' l N e ψ ≤ V l e ψ := by

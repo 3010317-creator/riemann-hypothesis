@@ -105,8 +105,7 @@ theorem acts_arch_of_weil {F E : Type} [Field F] [NumberField F] [Field E] [Numb
     have hs0 : ∀ G : (Fin n × Fin d → AF F) → ℂ,
         GlobalTheory.WeilM.schr ψ (u • (-y), u • (0 : Fin n × Fin d → AF F)) G = fun w => G (w + u • (-y)) := by
       intro G; funext w; simp [GlobalTheory.WeilM.schr]
-    rw [hs0, hs0] at e
-    exact e
+    rwa [hs0, hs0] at e
   set Φ₁ := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F)
     (f : (Fin n × Fin d → mixedEmbedding.mixedSpace F) → ℂ) r with hΦ₁
   set Φ₂ : (Fin n × Fin d → AF F) → ℂ := r y • (fun w => Φ₀ (w + u • (-y))) with hΦ₂
@@ -117,8 +116,7 @@ theorem acts_arch_of_weil {F E : Type} [Field F] [NumberField F] [Field E] [Numb
     have := congrArg Prod.snd (congrFun (hz u hu0) i)
     change (u * z i).2 = (0 : AF F).2 at this
     have e : (u * z i).2 = (z i).2 := one_mul _
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hvan : ∀ z, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F) z → (Φ₁ - Φ₂) (y + z) = 0 := by
     intro z hz
     have e1 : r (y + z) = r y := hr.1 y z hz
@@ -182,8 +180,7 @@ theorem pure_arch : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Number
       have h3 := congrArg (evFin F v) h1
       simp only [Pi.zero_apply, map_zero] at h3
       change evFin F v (u * z i) = 0 at h3
-      rw [map_mul, h2, one_mul] at h3
-      exact h3
+      rwa [map_mul, h2, one_mul] at h3
     simp only [hr, Pi.add_apply, map_add (f := _), hz0, add_zero]
   exact hc r hRest
 
@@ -309,7 +306,6 @@ theorem smooth_line_of_pure_tensor_theta : _root_.GlobalTheory.FunPr.ThetaLocalI
         (show InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F from y i).2))
     have hzI : (fun i => evI F (z i)) = x := by
       funext i
-      show (InfiniteAdeleRing.ringEquiv_mixedSpace F) ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (x i)) = x i
       exact RingEquiv.apply_symm_apply _ _
     have hzF : (∏ᶠ v, φ v fun i => evFin F v (z i)) = ∏ᶠ v, φ v fun i => evFin F v (y i) := rfl
     have e := congrFun h1 z
@@ -318,8 +314,7 @@ theorem smooth_line_of_pure_tensor_theta : _root_.GlobalTheory.FunPr.ThetaLocalI
   have hc' : c = c₁ := funext heq
   subst hc'
   refine ⟨c', ?_⟩
-  rw [h0]
-  exact hlim
+  rwa [h0]
 end GlobalTheory.Twist.SmoothLine
 end
 
@@ -361,7 +356,7 @@ theorem GlobalTheory.Twist.twist_smoothLine_isPure : _root_.GlobalTheory.FunPr.T
   by_cases h : ∃ y : Fin n × Fin d → AF F, ∏ᶠ v, φ v (fun i => evFin F v (y i)) ≠ 0
   · obtain ⟨g, hg⟩ := _root_.GlobalTheory.Twist.SmoothLine.smooth_line_of_pure_tensor_theta hP M ψ χX χW om hCM hψ hM hW γ hγ f φ hφ hv h c hc
     exact ⟨c, g, hc, hg⟩
-  · push_neg at h
+  · push Not at h
     have h0 : ∀ c' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F (Fin n × Fin d), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure c' φ = 0 := fun c' => by
       funext x; simp [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, h x]
     refine ⟨fun _ => 0, 0, fun t => ?_, ?_⟩

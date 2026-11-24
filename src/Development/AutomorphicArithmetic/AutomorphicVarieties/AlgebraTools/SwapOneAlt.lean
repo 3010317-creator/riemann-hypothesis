@@ -74,8 +74,7 @@ private theorem swap_one {R : Type} [CommRing R] {n : ℕ} {q : R} {H : Type} [R
         simpa [Perm.mul_apply, mul_inv_rev, swap_inv, swap_apply_left, swap_apply_right] using hw
       have := pair_lt b h (swap a c * w) hu
       rw [← mul_assoc, swap_mul_self, one_mul] at this
-      rw [add_comm]
-      exact this
+      rwa [add_comm]
   have hsum : ∑ w, (b.T (swap a c) * b.T w - q • b.T w) = 0 := by
     refine Finset.sum_ninvolution (fun w => swap a c * w) key ?_ (fun _ => Finset.mem_univ _) ?_
     · intro w _ e
@@ -86,8 +85,7 @@ private theorem swap_one {R : Type} [CommRing R] {n : ℕ} {q : R} {H : Type} [R
     · intro w
       rw [← mul_assoc, swap_mul_self, one_mul]
   unfold Bern.one
-  rw [Finset.mul_sum, Finset.smul_sum, ← sub_eq_zero, ← Finset.sum_sub_distrib]
-  exact hsum
+  rwa [Finset.mul_sum, Finset.smul_sum, ← sub_eq_zero, ← Finset.sum_sub_distrib]
 
 theorem UpperTheory.V.AlgebraTools.hkOne :
     ∀ (R : Type) [CommRing R] (n : ℕ) (q : R) (H : Type) [Ring H] [Algebra R H] (b : Bern n q H),

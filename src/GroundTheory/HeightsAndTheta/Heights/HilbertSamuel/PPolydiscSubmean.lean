@@ -74,8 +74,7 @@ theorem setIntegral_mul_weight_eq {D : ℕ} {ρ : ℝ} {g : (Fin D → ℂ) → 
     intro θ
     have := setIntegral_circle_smul (Circle.exp θ) ρ (fun z => g z * (w z : ℂ))
     simp only [hrot] at this
-    simp only [Circle.coe_exp] at this
-    exact this
+    simpa only [Circle.coe_exp] using this
 
   have hmean : ∀ z ∈ B, ∫ θ in (0 : ℝ)..2 * π, g (Complex.exp (θ * Complex.I) • z) =
       (2 * π) • g 0 := by
@@ -106,8 +105,7 @@ theorem setIntegral_mul_weight_eq {D : ℕ} {ρ : ℝ} {g : (Fin D → ℂ) → 
     have hmaps : MapsTo (fun p : ℝ × (Fin D → ℂ) => Complex.exp (p.1 * Complex.I) • p.2)
         (Icc 0 (2 * π) ×ˢ B) B := by
       intro p hp
-      simp only [hBdef, mem_closedBall_zero_iff, hnorm]
-      exact mem_closedBall_zero_iff.mp hp.2
+      simpa only [hBdef, mem_closedBall_zero_iff, hnorm] using mem_closedBall_zero_iff.mp hp.2
     exact (hg.continuousOn.comp (by fun_prop) hmaps).mul (by fun_prop)
   have hint : Integrable (Function.uncurry F)
       ((volume.restrict (Ioc 0 (2 * π))).prod (volume.restrict B)) := by
@@ -193,13 +191,13 @@ theorem integral_closedBall_gauss (c ρ : ℝ) (hρ : 0 ≤ ρ) :
   rw [h1]
   by_cases hc : c = 0
   · subst hc
-    simp only [if_true]
+    simp only [ite_true]
     have : ∫ y in (0 : ℝ)..ρ, y * Real.exp (-0 * y ^ 2) = ρ ^ 2 / 2 := by
       simp
     rw [this]
     simp [nsmul_eq_mul]
     ring
-  · simp only [hc, if_false]
+  · simp only [hc, ite_false]
     have hd : ∀ y ∈ uIcc 0 ρ, HasDerivAt (fun y : ℝ => -Real.exp (-c * y ^ 2) / (2 * c))
         (y * Real.exp (-c * y ^ 2)) y := by
       intro y _
@@ -258,10 +256,10 @@ theorem integral_polydisc_gauss (D n : ℕ) (lam : Fin D → ℝ) (R : ℝ) (hn 
     intro j
     rw [integral_closedBall_gauss _ _ hρ.le, gaussDiscMass]
     by_cases hl : lam j = 0
-    · rw [if_pos (by simp [hl]), if_pos hl, hsq]
+    · rw [ite_eq_left (by simp [hl]), ite_eq_left hl, hsq]
       ring
     · have hnl : (n : ℝ) * lam j ≠ 0 := mul_ne_zero hn' hl
-      rw [if_neg hnl, if_neg hl, hsq]
+      rw [ite_eq_right hnl, ite_eq_right hl, hsq]
       have e : -((n : ℝ) * lam j) * (R ^ 2 / n) = -lam j * R ^ 2 := by
         field_simp
       rw [e]
@@ -285,8 +283,7 @@ theorem PolydiscSubmean.proof : PolydiscSubmean.Statement := by
     simp only [hwdef, Pi.smul_apply, smul_eq_mul, norm_mul, Circle.norm_coe, one_mul]
   have h := sq_norm_mul_setIntegral_le hf hwc hw0 hrot
   simp only [hwdef] at h
-  rw [integral_polydisc_gauss D n lam R hn hR, ← mul_assoc] at h
-  exact h
+  rwa [integral_polydisc_gauss D n lam R hn hR, ← mul_assoc] at h
 
 end
 

@@ -76,8 +76,7 @@ theorem loc_eq_one_of_val {ν : HChar L} {v : HeightOneSpectrum (𝓞 L)} (hu : 
       ← WithZero.exp_zsmul, ← WithZero.exp_add, smul_eq_mul]
     simp
   have h2 := hu _ hy
-  rw [map_mul, map_zpow, hπ1, _root_.one_zpow, mul_one] at h2
-  exact h2
+  rwa [map_mul, map_zpow, hπ1, _root_.one_zpow, mul_one] at h2
 
 theorem inf_eq_prod (ν : HChar L) (k : Lˣ) :
     ν.inf k = ∏ w ∈ (Finset.univ : Finset (InfinitePlace L)), ν.locInf w (atInf w k) := by
@@ -114,10 +113,9 @@ theorem eq_one (ν : HChar L) (h : ∀ᶠ w in cofinite, ν.val w = 1) : ν = 1 
       intro v
       rw [finprod_eq_if]
       by_cases hv : v ∈ S
-      · rw [if_neg (not_not.mpr hv)]
-      · rw [if_pos hv, (hS v hv).2, _root_.one_zpow]
-    rw [hf, mul_one] at h0
-    exact h0
+      · rw [ite_eq_right (not_not.mpr hv)]
+      · rw [ite_eq_left hv, (hS v hv).2, _root_.one_zpow]
+    rwa [hf, mul_one] at h0
   have key : ∀ p : ((v : S) → (v.1.adicCompletion L)ˣ) ×
       ((w : (Finset.univ : Finset (InfinitePlace L))) → (w.1.Completion)ˣ),
       (∏ v : S, ν.loc v.1 (p.1 v)) *

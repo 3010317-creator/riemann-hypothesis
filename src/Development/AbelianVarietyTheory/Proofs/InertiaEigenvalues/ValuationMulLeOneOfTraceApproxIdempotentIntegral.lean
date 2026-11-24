@@ -143,13 +143,11 @@ theorem exists_approx_idempotent {K L : Type} [Field K] [NumberField K] [Field L
     refine ((IsDedekindDomain.primesOver_finite p.asIdeal (𝓞 L)).preimage
       (f := HeightOneSpectrum.asIdeal) ?_).subset ?_
     · intro a _ b _ h; exact HeightOneSpectrum.ext h
-    · intro la' h
-      exact ⟨la'.isPrime, ⟨h.2.symm⟩⟩
+    · exact fun la' h => ⟨la'.isPrime, ⟨h.2.symm⟩⟩
   haveI := la.isPrime
   have hw : ∀ la' ∈ S, ∃ w : 𝓞 L, w ∈ la'.asIdeal ^ N ∧ w ∉ la.asIdeal := by
     intro la' h
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : la'.asIdeal ^ N ≤ la.asIdeal := fun w hw => hc w hw
     have h2 := Ideal.IsPrime.le_of_pow_le h1
     exact h.1 (HeightOneSpectrum.ext (la'.isMaximal.eq_of_le la.isPrime.ne_top h2))
@@ -227,14 +225,12 @@ theorem valuation_mul_different_le_one : ∀ (K L : Type) [Field K] [NumberField
     rw [IsScalarTower.algebraMap_apply (𝓞 K) (𝓞 L) L]
     refine le_antisymm (la.valuation_le_one _) (not_lt.1 fun h => hs0p ?_)
     rw [la.valuation_lt_one_iff_mem] at h
-    rw [← hp]
-    exact h
+    rwa [← hp]
   have hzla' : la.valuation L (z : L) = 1 := by
     refine le_antisymm (la.valuation_le_one z) (not_lt.1 fun h => hzla ?_)
     exact (la.valuation_lt_one_iff_mem z).1 h
   have : (c : L) = (algebraMap (𝓞 K) L s0 * (z : L)) * (y * (d : L)) := by
     rw [hc, hx'def, hxdef]; ring
-  rw [this, map_mul, map_mul, hs0la, hzla', one_mul, one_mul] at hcle
-  exact hcle
+  rwa [this, map_mul, map_mul, hs0la, hzla', one_mul, one_mul] at hcle
 
 end GlobalTheory.InvDiffLocal

@@ -373,16 +373,7 @@ theorem posV_val_ne_zero (z : PosV G v β) : z.1 ≠ 0 := by
   simp at hz
 
 theorem fixL_smul_vec_iff (y : grp G β) (z : Fin G.n → ℂ) {c : ℂ} (hc : c ≠ 0) :
-    FixL G v β y (c • z) ↔ FixL G v β y z := by
-  unfold FixL
-  simp only [Matrix.mulVec_smul]
-  constructor
-  · rintro ⟨e, he⟩
-    refine ⟨e, ?_⟩
-    rw [smul_comm e c z] at he
-    exact smul_right_injective _ hc he
-  · rintro ⟨e, he⟩
-    exact ⟨e, by rw [he, smul_comm]⟩
+    FixL G v β y (c • z) ↔ FixL G v β y z := GlobalTheory.CxUnfold.fixL_smul_iff G v β y z c hc
 
 variable (G v β x t hx Kf K')
 
@@ -635,8 +626,8 @@ theorem cxF_smul_conj_gen : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : In
   by_cases hca : (0 < (star (Projectivization.rep (a.2 : Projectivization ℂ (Fin G.n → ℂ))) ⬝ᵥ
         (herm G v β *ᵥ Projectivization.rep (a.2 : Projectivization ℂ (Fin G.n → ℂ)))).re ∧
       FixL G v β y (Projectivization.rep (a.2 : Projectivization ℂ (Fin G.n → ℂ))))
-  · rw [if_pos hca, if_pos (hcond.2 hca), hF, hF', hM]
-  · rw [if_neg hca, if_neg (mt hcond.1 hca)]
+  · rw [ite_eq_left hca, ite_eq_left (hcond.2 hca), hF, hF', hM]
+  · rw [ite_eq_right hca, ite_eq_right (mt hcond.1 hca)]
 
 end GlobalTheory.CxUnfold
 end -- clump:auto
@@ -681,7 +672,7 @@ theorem support_cxF_finite : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : I
     ext y
     simp only [Function.mem_support, Set.mem_empty_iff_false, iff_false, not_not]
     unfold cxF
-    rw [if_neg (fun hc => hpos hc.1)]
+    rw [ite_eq_right (fun hc => hpos hc.1)]
 
 end GlobalTheory.CxUnfold
 end -- clump:auto
@@ -1060,7 +1051,7 @@ theorem eigL_smul (y : grp G β) {z : Fin G.n → ℂ} (hz : z ≠ 0) {u : ℂ} 
       refine ⟨c, ?_⟩
       rw [Matrix.mulVec_smul, smul_comm c u z] at hc
       exact smul_right_injective _ hu hc
-    simp only [eigL, dif_neg hF, dif_neg hF']
+    simp only [eigL, dite_eq_right hF, dite_eq_right hF']
 
 theorem toV_ne_zero (η : grp G β) {z : Fin G.n → ℂ} (hz : z ≠ 0) :
     (toV G v β η : Matrix (Fin G.n) (Fin G.n) ℂ) *ᵥ z ≠ 0 := by
@@ -1095,7 +1086,7 @@ theorem eigL_conj (η y : grp G β) {z : Fin G.n → ℂ} (hz : z ≠ 0) :
         rw [Matrix.mulVec_mulVec, ← Units.val_mul, ← map_mul, inv_mul_cancel, map_one, Units.val_one,
           Matrix.one_mulVec]
       rwa [e1, e2] at h2
-    simp only [eigL, dif_neg hF, dif_neg hF']
+    simp only [eigL, dite_eq_right hF, dite_eq_right hF']
 
 def cxM (w : Polynomial G.F → ℂ → ℂ) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) β x t)
     (Kf : Subgroup G.GAf) (f : G.GAf → ℂ) (K' : Subgroup (Gr G 1)) (f' : Gr G 1 → ℂ)
@@ -1385,7 +1376,7 @@ theorem markTerm_rel (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) {P P' : P
       _root_.GlobalTheory.LKMid.Pair.term_eq_of_rel p G P P' Kf f 1 K' f' one_pos hf hf' h]
     congr 2
     exact mark_unique ha hv P' hM'.choose_spec ((Pair.mark_iff_of_rel p G P P' _ h).mp hM.choose_spec)
-  · rw [dif_neg hM, dif_neg (fun h' => hM (hiff.mpr h'))]
+  · rw [dite_eq_right hM, dite_eq_right (fun h' => hM (hiff.mpr h'))]
 
 include hf hf' in
 theorem clsW_eq_markTerm (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (P : Pair G)

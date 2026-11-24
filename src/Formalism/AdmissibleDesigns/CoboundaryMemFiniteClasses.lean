@@ -191,10 +191,8 @@ theorem finK_of_lat {V : Type} [AddCommGroup V] [Module O V] [Module (FractionRi
   apply Submodule.span_le.mpr
   have hsub : Submodule.span O (S : Set V) ≤
       (Submodule.span (FractionRing O) (S : Set V)).restrictScalars O := by
-    apply Submodule.span_le.mpr
-    exact fun x hx => Submodule.subset_span hx
-  rw [hS] at hsub
-  exact hsub
+    exact Submodule.span_le.mpr (fun x hx => Submodule.subset_span hx)
+  rwa [hS] at hsub
 variable {Γ : Type} [Group Γ] [TopologicalSpace Γ]
   {V : Type} [AddCommGroup V] [Module O V] [TopologicalSpace V] [IsTopologicalAddGroup V]
   [ContinuousSMul O V] [Module (FractionRing O) V] [IsScalarTower O (FractionRing O) V]
@@ -243,8 +241,7 @@ theorem mem_span_iff (ρ : Representation O Γ V) [ContinuousConstSMul (Fraction
   let S : Submodule (FractionRing O) (H1 ρ) :=
     { carrier := {a | ∀ c : Z1 ρ, Submodule.mkQ ((B1 ρ).comap (Z1 ρ).subtype) c = a → (c : Γ → V) ∈ Z}
       zero_mem' := fun c hc => by
-        have h := sub_mem_of_mk_eq ρ Z hB c 0 (by rw [hc, map_zero])
-        simpa using h
+        simpa using sub_mem_of_mk_eq ρ Z hB c 0 (by rw [hc, map_zero])
       add_mem' := fun {a b} ha hb c hc => by
         obtain ⟨ca, rfl⟩ := Submodule.mkQ_surjective _ a
         obtain ⟨cb, rfl⟩ := Submodule.mkQ_surjective _ b
@@ -270,8 +267,7 @@ theorem mem_span_iff (ρ : Representation O Γ V) [ContinuousConstSMul (Fraction
       rw [e1]
       exact Z.add_mem h1 hc0
     exact hle h c rfl
-  · intro h
-    exact Submodule.subset_span ⟨c, h, rfl⟩
+  · exact fun h => Submodule.subset_span ⟨c, h, rfl⟩
 
 end GenP
 
@@ -324,8 +320,7 @@ theorem finK' [Module.Finite (FractionRing O) VT] (hP : PerfectRight Dat.bT) :
 theorem nondeg_left (hP : PerfectRight Dat.bT) (x : VT) (hx : ∀ y, Dat.bT x y = 0) : x = 0 := by
   by_contra hne
   obtain ⟨ψ, hψ⟩ : ∃ ψ : VT →ₗ[FractionRing O] FractionRing O, ψ x ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     exact hne ((Module.forall_dual_apply_eq_zero_iff (FractionRing O) x).1 hall)
   obtain ⟨f, hf, _⟩ := hP ψ
   exact hψ ((hf x).symm.trans (hx f))
@@ -517,8 +512,7 @@ theorem bka_gen [Module (FractionRing O) (H1 Dat.ρT)] [IsScalarTower O (Fractio
   constructor
   · intro H b hb
     obtain ⟨d, rfl⟩ := Submodule.mkQ_surjective _ b
-    have hd := (mem_span_iff Dat.ρT' _ hB' d).1 hb
-    exact (cup_iff Dat e ι PD hιc hK hcyc h hh c d).2 (H _ hd)
+    exact (cup_iff Dat e ι PD hιc hK hcyc h hh c d).2 (H _ ((mem_span_iff Dat.ρT' _ hB' d).1 hb))
   · intro H b hb
     obtain ⟨d, hd⟩ := exists_cocycle_of_continuous e ι Dat.ρT' ht' h hh b hb.1
     have hbd : b = fun g => ofV e (d.1 (ι g)) := funext fun g => (hd g).symm

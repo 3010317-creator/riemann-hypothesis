@@ -131,8 +131,7 @@ theorem killPoly4 : KillPoly := by
       intro t x hx
       rw [Module.End.mem_eigenspace_iff] at hx ⊢
       have e := LinearMap.congr_fun (hTc 1 t) x
-      rw [Module.End.mul_apply, Module.End.mul_apply, hx, map_smul] at e
-      exact e
+      rwa [Module.End.mul_apply, Module.End.mul_apply, hx, map_smul] at e
     obtain ⟨v, hvW, hv0, hμ⟩ := UpperTheory.V.LinAlg.simEig T hTc _ _ rfl hW hWi
     have hf0 : (v : G → ℂ) ≠ 0 := fun h => hv0 (Subtype.ext h)
     obtain ⟨g₀, hg₀⟩ := Function.ne_iff.1 hf0
@@ -153,8 +152,7 @@ theorem killPoly4 : KillPoly := by
     · have h1 : (v : G → ℂ) (a 1 * g₀) = z * (v : G → ℂ) g₀ :=
         congrArg (fun w : V => (w : G → ℂ) g₀) (Module.End.mem_eigenspace_iff.1 hvW)
       have e := hc 1
-      rw [h1, mul_div_cancel_right₀ _ hg₀', Complex.ofReal_one, mul_one] at e
-      exact e
+      rwa [h1, mul_div_cancel_right₀ _ hg₀', Complex.ofReal_one, mul_one] at e
     · rw [heig t g, hc t]
 
 end PositivityTheory.Rg.Rs.KillingPolynomialDegreeFour

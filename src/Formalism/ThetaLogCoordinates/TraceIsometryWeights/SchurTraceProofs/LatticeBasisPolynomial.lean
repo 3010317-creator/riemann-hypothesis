@@ -73,8 +73,7 @@ theorem exists_unit_coeff (U : Submodule ℚ_[p] (MvPolynomial σ ℚ_[p])) (hU 
   obtain ⟨x, hxU, hx0⟩ := (Submodule.ne_bot_iff U).mp hU
   have hne : x.support.Nonempty := by
     rw [Finset.nonempty_iff_ne_empty]
-    intro h
-    exact hx0 (support_eq_empty.mp h)
+    exact fun h => hx0 (support_eq_empty.mp h)
   obtain ⟨m, hm, hmax⟩ := Finset.exists_max_image x.support (fun m => ‖x.coeff m‖) hne
   have ha : x.coeff m ≠ 0 := mem_support_iff.mp hm
   refine ⟨(x.coeff m)⁻¹ • x, U.smul_mem _ hxU, m, ?_, ?_⟩
@@ -100,8 +99,7 @@ theorem exists_family (d : ℕ) : ∀ (U : Submodule ℚ_[p] (MvPolynomial σ �
     by_cases hU : U = ⊥
     · subst hU
       refine ⟨0, Fin.elim0, linearIndependent_empty_type, by simp, fun i => i.elim0, ?_⟩
-      intro x hx _
-      exact ⟨Fin.elim0, fun i => i.elim0, by simpa using hx⟩
+      exact fun x hx _ => ⟨Fin.elim0, fun i => i.elim0, by simpa using hx⟩
     · obtain ⟨x₀, hx₀U, m, hm1, hx₀I⟩ := exists_unit_coeff U hU
       set U' : Submodule ℚ_[p] (MvPolynomial σ ℚ_[p]) := U ⊓ LinearMap.ker (lcoeff ℚ_[p] m) with hU'
       have hle : U' ≤ U := inf_le_left

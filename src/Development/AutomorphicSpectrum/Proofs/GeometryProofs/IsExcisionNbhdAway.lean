@@ -106,8 +106,7 @@ theorem spec_fst_dual (φ : R →+* R') :
       Spec.map (CommRingCat.ofHom φ) ≫ Spec.map (CommRingCat.ofHom (TrivSqZeroExt.fstHom R R R).toRingHom) := by
   rw [spec_comp, spec_comp]
   congr 2
-  refine RingHom.ext fun a => ?_
-  exact dualMap_fst φ a
+  exact RingHom.ext fun a => dualMap_fst φ a
 
 theorem spec_eps_alg (c : R) :
     Spec.map (CommRingCat.ofHom (epsMul c)) ≫ Spec.map (CommRingCat.ofHom (algebraMap R (DualNumber R))) =
@@ -121,8 +120,7 @@ theorem spec_fst_eps (c : R) :
       Spec.map (CommRingCat.ofHom (TrivSqZeroExt.fstHom R R R).toRingHom) := by
   rw [spec_comp]
   congr 2
-  refine RingHom.ext fun a => ?_
-  exact epsMul_fst c a
+  exact RingHom.ext fun a => epsMul_fst c a
 
 theorem spec_dual_eps (φ : R →+* R') (c : R) :
     Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ Spec.map (CommRingCat.ofHom (epsMul c)) =
@@ -171,8 +169,7 @@ theorem isTanAt_mul {v v' : epsAt x ⟶ G} (h : IsTanAt G x v) (h' : IsTanAt G x
 
 theorem isTanAt_scale (c : R) {v : epsAt x ⟶ G} (h : IsTanAt G x v) : IsTanAt G x (epsScale x c ≫ v) := by
   change _ ≫ Spec.map _ ≫ v.left = _
-  rw [← Category.assoc, spec_fst_eps]
-  exact h
+  rwa [← Category.assoc, spec_fst_eps]
 
 theorem isTanAt_base (φ : R →+* R') (hφ : Spec.map (CommRingCat.ofHom φ) ≫ x = x') {v : epsAt x ⟶ G}
     (h : IsTanAt G x v) : IsTanAt G x' (epsBase φ hφ ≫ v) := by

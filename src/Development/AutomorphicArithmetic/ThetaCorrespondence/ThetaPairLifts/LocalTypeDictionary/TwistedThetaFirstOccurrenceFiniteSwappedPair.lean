@@ -117,8 +117,8 @@ theorem givenFn_eq_extDat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
   unfold GlobalTheory.FlipStart.givenFn extDat
   by_cases hx : IsHalf e x
   swap
-  · rw [if_neg hx, if_neg fun h => hx h.1]
-  rw [if_pos hx]
+  · rw [ite_eq_right hx, ite_eq_right fun h => hx h.1]
+  rw [ite_eq_left hx]
   set N := GlobalTheory.FunObj.Comparison₂.fr (B.β 0 (j + 1)) (B.β 0 j) (x.map (toEAf D)) with hN
   have hfr : ∀ a : AE D, GlobalTheory.FunObj.Comparison₂.fr (B.β 0 (j + 1)) (B.β 0 j) ((x.map (a * ·)).map (toEAf D)) = toEAf D a • N := by
     intro a
@@ -142,7 +142,7 @@ theorem givenFn_eq_extDat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     have hla : locArg B t w (.down t 0 j) x = B.coord t w (X := (0, j + 1)) (Y := (0, j)) ⟨Nat.zero_le _, hj⟩
         ⟨Nat.zero_le _, hj.le⟩ ((x.map (toEAf D)).map (cpt (D := D) w)) := by
       rw [Matrix.map_map]
-      exact dif_pos ⟨Nat.zero_le _, hj⟩
+      exact dite_eq_left ⟨Nat.zero_le _, hj⟩
     rw [hla]
     exact GlobalTheory.FunObj.Comparison₂.givenDatum_theta_coord B t w Φ hj ha hb (x.map (toEAf D))
   rw [Finset.prod_congr rfl fun w _ => hR w, ← Finset.prod_sdiff hsub]
@@ -154,7 +154,7 @@ theorem givenFn_eq_extDat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     have hP : w ∉ L.Pg := fun h => hw2 (Finset.mem_union_left _ h)
     have hQ : w ∉ L.Q t := fun h => hw2 (Finset.mem_union_right _ h)
     unfold stepFn
-    rw [if_neg hP, if_neg hQ, Set.indicator_apply]
+    rw [ite_eq_right hP, ite_eq_right hQ, Set.indicator_apply]
     exact if_congr (hsubm w) rfl rfl
   rw [Finset.prod_congr rfl hout, Finset.prod_boole]
 
@@ -197,22 +197,22 @@ theorem givenFn_eq_extDat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     unfold stepDat
     rw [hfrO]
     by_cases H : ∀ w ∈ L.Pg ∪ L.Q t, GlobalTheory.StepData.IntM (N.map (cpt (D := D) w))
-    · rw [if_pos ⟨hx0, hint.2 H⟩]
+    · rw [ite_eq_left ⟨hx0, hint.2 H⟩]
       have key := GlobalTheory.FunObj.Comparison₂.omega_eq_prod_stepFn G t hL hj ha hb (r_le_colY L j) (toEAf D e' • N) (hint.2 H)
       refine key.trans (Finset.prod_congr rfl fun w hw => ?_)
       have e1 : (toEAf D e' • N).map (cpt (D := D) w) = N.map (cpt (D := D) w) := by
         rw [← hfr e']; exact hcomp e' w (c1 w hw)
       rw [e1]
-    · rw [if_neg fun h => H (hint.1 h.2)]
-      push_neg at H
+    · rw [ite_eq_right fun h => H (hint.1 h.2)]
+      push Not at H
       obtain ⟨w, hw, hn⟩ := H
       refine (Finset.prod_eq_zero hw ?_).symm
       by_contra h0
       exact hn ((hsubm w).1 (GlobalTheory.FunObj.LocTest.intM_of_stepFn t w j h0))
   rw [k0]
   by_cases hl : ∀ w ∈ locPl G t \ (L.Pg ∪ L.Q t), GlobalTheory.StepData.IntM (N.map (cpt (D := D) w))
-  · rw [if_pos hl, one_mul, if_pos ⟨hx, k1.2 hl⟩]
-  · rw [if_neg hl, zero_mul, if_neg fun h => hl (k1.1 h.2)]
+  · rw [ite_eq_left hl, one_mul, ite_eq_left ⟨hx, k1.2 hl⟩]
+  · rw [ite_eq_right hl, zero_mul, ite_eq_right fun h => hl (k1.1 h.2)]
 
 end GlobalTheory.ChainColRead
 
@@ -256,7 +256,7 @@ theorem stepFn_congr_red' (G : GridData L sc) {μ₀ : T} (hL : L.Is μ₀) (t :
       rw [cptO_apply]
       exact (vEq w).le_one_iff_le_one.2 h1
     unfold stepFn
-    simp only [if_neg hP, if_neg hQ, Set.indicator_apply, Set.mem_setOf_eq, if_pos (hI N), if_pos (hI N'), Pi.one_apply]
+    simp only [ite_eq_right hP, ite_eq_right hQ, Set.indicator_apply, Set.mem_setOf_eq, ite_eq_left (hI N), ite_eq_left (hI N'), Pi.one_apply]
 
 
 open Classical in
@@ -291,7 +291,7 @@ theorem isSBHalf_colFn (G : GridData L sc) (B : Frames G) {μ₀ : T} (hL : L.Is
   obtain ⟨K, hK⟩ : ∃ K : ℕ, K = a * (b * Ideal.absNorm 𝔪) := ⟨_, rfl⟩
   refine ⟨fun x hx => ?_, K, by rw [hK]; positivity, fun u hu hh x => ?_, fun x hx => ?_⟩
   · by_contra h
-    exact hx (by unfold colFn; rw [if_neg fun H => h H.1])
+    exact hx (by unfold colFn; rw [ite_eq_right fun H => h H.1])
   · have hk : K • u ∈ hatMx (𝔪 • homLat (G.Λ (.grid 0 j)) (G.Λ (.grid 0 (j + 1)))) := by
       have := nsmul_mem (CosSB.nsmul_mem_hatMx h2 𝔪 hu) a
       rwa [smul_smul, ← hK] at this
@@ -338,7 +338,7 @@ theorem isSBHalf_colFn (G : GridData L sc) (B : Frames G) {μ₀ : T} (hL : L.Is
     · rfl
   · obtain ⟨hth, hti⟩ : IsHalf e x ∧ IsIntM (fr (B.β 0 (j + 1)) (B.β 0 j) (x.map (toEAf D))) := by
       by_contra h
-      exact hx (by unfold colFn; rw [if_neg h])
+      exact hx (by unfold colFn; rw [ite_eq_right h])
     have hmem : x ∈ hatMx ((⊤ : Ideal (𝓞 D.host.E)) • homLat (G.Λ (.grid 0 j)) (G.Λ (.grid 0 (j + 1)))) := by
       refine (mem_hatMx_iff hFS hFT ⊤ _).2 ⟨fun i l => ?_, fun i l => ⟨⟨_, hti i l⟩, ?_, rfl⟩⟩
       · rw [← hth i l, map_mul, e0, zero_mul]
@@ -366,14 +366,14 @@ theorem givenFn_down_eq_colFn (G : GridData L sc) (B : Frames G) {μ₀ : T} (hL
     have hla : locArg B t w (.down t 0 j) x = B.coord t w (X := (0, j + 1)) (Y := (0, j)) ⟨Nat.zero_le _, hj⟩
         ⟨Nat.zero_le _, hj.le⟩ ((x.map (toEAf D)).map (cpt (D := D) w)) := by
       rw [Matrix.map_map]
-      exact dif_pos ⟨Nat.zero_le _, hj⟩
+      exact dite_eq_left ⟨Nat.zero_le _, hj⟩
     rw [hla]
     exact givenDatum_theta_coord B t w Φ hj ha hb (x.map (toEAf D))
   unfold GlobalTheory.FlipStart.givenFn colFn
   rw [Finset.prod_congr rfl fun w _ => hR w]
   by_cases hx : IsHalf e x
   swap
-  · rw [if_neg hx, if_neg fun h => hx h.1]
+  · rw [ite_eq_right hx, ite_eq_right fun h => hx h.1]
   have hex : e • x = x := Matrix.ext fun p q => by rw [Matrix.smul_apply, smul_eq_mul]; exact hx p q
   have hNe : N = toEAf D e • N := by
     rw [hN, ← fr_smul]
@@ -383,19 +383,18 @@ theorem givenFn_down_eq_colFn (G : GridData L sc) (B : Frames G) {μ₀ : T} (hL
     simp [Matrix.map_apply, Matrix.smul_apply, RingHom.map_mul]
   have hint : IsIntM N ↔ ∀ w ∈ locPl G t, GlobalTheory.StepData.IntM (N.map (cpt (D := D) w)) := by
     constructor
-    · intro h w hw i l
-      exact (vEq w).le_one_iff_le_one.2 ((mem_OA_iff _).1 (h i l) w)
+    · exact fun h w hw i l => (vEq w).le_one_iff_le_one.2 ((mem_OA_iff _).1 (h i l) w)
     · intro h i l
       refine (mem_OA_iff _).2 fun w => ?_
       by_cases hw : w ∈ locPl G t
       · exact (vEq w).le_one_iff_le_one.1 (h w hw i l)
       · rw [hNe, Matrix.smul_apply, smul_eq_mul, RingHom.map_mul, c0 w hw, zero_mul]
         simp
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
   by_cases H : ∀ w ∈ locPl G t, GlobalTheory.StepData.IntM (N.map (cpt (D := D) w))
-  · rw [if_pos ⟨hx, hint.2 H⟩]
-  · rw [if_neg fun h => H (hint.1 h.2)]
-    push_neg at H
+  · rw [ite_eq_left ⟨hx, hint.2 H⟩]
+  · rw [ite_eq_right fun h => H (hint.1 h.2)]
+    push Not at H
     obtain ⟨w, hw, hn⟩ := H
     refine Finset.prod_eq_zero hw ?_
     by_contra h0
@@ -445,8 +444,7 @@ theorem map_sub_half {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') {x : M
 
 theorem map_half {e' : AE D} {x : Mx D m n} (hx : IsHalf e' x) : x.map (e' * ·) = x := by
   ext i j
-  simp only [Matrix.map_apply]
-  exact hx i j
+  simpa only [Matrix.map_apply] using hx i j
 
 theorem map_sub_eq {e e' : AE D} {u : Mx D m n} (hu : IsHalf e u) :
     u.map ((e - e') * ·) = u - u.map (e' * ·) := by
@@ -505,8 +503,7 @@ theorem extDat_sb {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') (Λ : Add
   refine ⟨fun t ht => ?_, k, hk, fun u hu hue t => ?_, fun t ht => ?_⟩
   · by_contra hn
     apply ht
-    simp only [GlobalTheory.ChainCol.extDat]
-    exact if_neg fun hc => hn hc.1
+    simpa only [GlobalTheory.ChainCol.extDat] using ite_eq_right fun hc => hn hc.1
   · have hku : IsHalf e (k • u) := fun i j => by rw [Matrix.smul_apply, mul_nsmul_comm', hue i j]
     have hsu : u.map ((e - e') * ·) ∈ Λ := by
       rw [map_sub_eq hue]
@@ -521,13 +518,12 @@ theorem extDat_sb {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') (Λ : Add
   · have hc : IsHalf e t ∧ t.map ((e - e') * ·) ∈ Λ := by
       by_contra hn
       apply ht
-      simp only [GlobalTheory.ChainCol.extDat]
-      exact if_neg hn
+      simpa only [GlobalTheory.ChainCol.extDat] using ite_eq_right hn
     have hΦt : Φ (t.map (e' * ·)) ≠ 0 := by
       intro h0
       apply ht
       simp only [GlobalTheory.ChainCol.extDat]
-      rw [if_pos hc, h0]
+      rw [ite_eq_left hc, h0]
     have hsplit : t = t.map (e' * ·) + t.map ((e - e') * ·) := by
       rw [map_sub_eq hc.1]
       abel
@@ -619,8 +615,7 @@ theorem isThetaAt_extDat : ∀ {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : I
         rw [extDat_modul ψ h1 h2 _ Φ hy]
         exact hmo _ (extDat_sb h1 h2 _ hstab hΦ) y (half_of_half hce hy)
       · simp only [LinearMap.comp_apply, extL_apply]
-        rw [extDat_halfInd h2 _ hstab]
-        exact hva
+        rwa [extDat_halfInd h2 _ hstab]
     rw [hall _ hT', LinearMap.comp_apply, extL_apply]
 
 end GlobalTheory.ExtDatTheta
@@ -738,8 +733,7 @@ theorem locVec_col {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {
   refine ⟨?_, ?_⟩
   · rw [Units.val_one, one_smul]
     exact GlobalTheory.FlipStart.ColSB.isSBHalf_givenFn_down ch.G ch.S.B hL t j j.2 Φ e he
-  · rw [Units.val_one, one_smul, h3, hw.ψ]
-    exact h1
+  · rwa [Units.val_one, one_smul, h3, hw.ψ]
 
 end GlobalTheory.ChainCol
 end -- clump:auto
@@ -763,8 +757,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem chainColumn_inner_succ : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (j : Fin D.R.m) (g : Sch ch.G (.down t 0 j)), (j : ℕ) + 1 < D.R.m → HEq g (R.vY t j) → ∃ c : ℂˣ, c ∈ xiVals R.toLevCh t ∧ ∀ e : AE D, IsIdemSum e (locPl ch.G t) → ∀ Φ : ch.G.Datum, IsLocVec ch.W (.mu t 0 j) e (ch.rm.vT 0 j) ((c : ℂ) • GlobalTheory.FlipStart.givenFn ch.S.B t Φ e (.down t 0 j)) g := by
   intro _
   refine ⟨0, fun ε CF _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F s ch hch _ => ?_⟩⟩
-  intro t j g hj hg
-  exact ⟨1, one_mem _, fun e he Φ => locVec_col s ch hch t j g hj hg e he Φ⟩
+  exact fun t j g hj hg => ⟨1, one_mem _, fun e he Φ => locVec_col s ch hch t j g hj hg e he Φ⟩
 end GlobalTheory.ChainCol
 end
 end
@@ -830,8 +823,8 @@ theorem givenFn_right_eq_extFn {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
   rw [hee]
   by_cases hx : IsHalf e x
   swap
-  · rw [if_neg hx, if_neg hx]
-  rw [if_pos hx, if_pos hx]
+  · rw [ite_eq_right hx, ite_eq_right hx]
+  rw [ite_eq_left hx, ite_eq_left hx]
 
   have hfac : ∀ w, givenDatum t w B Φ (edgeOf (.right i 0)) (locArg B t w (.right i 0) x) =
       if B.coord t w (X := ((i : ℕ), 0)) (Y := ((i : ℕ) + 1, 0)) ⟨i.2.le, Nat.zero_le _⟩ ⟨i.2, Nat.zero_le _⟩
@@ -839,9 +832,9 @@ theorem givenFn_right_eq_extFn {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
     have hh : (i : ℕ) < D.R.m ∧ 0 ≤ D.R.m := ⟨i.2, Nat.zero_le _⟩
     have hla : locArg B t w (.right i 0) x = B.coord t w (X := ((i : ℕ), 0)) (Y := ((i : ℕ) + 1, 0))
         ⟨i.2.le, Nat.zero_le _⟩ ⟨i.2, Nat.zero_le _⟩ (x.map (cpt (D := D) w ∘ toEAf D)) := by
-      exact dif_pos hh
+      exact dite_eq_left hh
     rw [hla]
-    simp only [edgeOf, givenDatum, dif_pos i.2, Set.indicator_apply, Pi.one_apply, Fin.eta]
+    simp only [edgeOf, givenDatum, dite_eq_left i.2, Set.indicator_apply, Pi.one_apply, Fin.eta]
   rw [Finset.prod_congr rfl fun w _ => hfac w, ← Finset.prod_sdiff hsub, Finset.prod_boole, Finset.prod_boole]
   have hx0 : IsHalf e₀ (e₀ • x) := fun p q => by
     simp only [Matrix.smul_apply, smul_eq_mul, ← mul_assoc, h0]
@@ -919,23 +912,11 @@ section ThetaExt
 variable {D : D7} {m n : ℕ}
 
 theorem isHalf_add_right_iff {e : AE D} {t x : Mx D m n} (hx : IsHalf e x) :
-    IsHalf e (t + x) ↔ IsHalf e t := by
-  constructor
-  · intro h i j
-    have h1 := h i j
-    have h2 := hx i j
-    simp only [Matrix.add_apply, mul_add] at h1
-    linear_combination h1 - h2
-  · intro h i j
-    have h1 := h i j
-    have h2 := hx i j
-    simp only [Matrix.add_apply, mul_add]
-    linear_combination h1 + h2
+    IsHalf e (t + x) ↔ IsHalf e t := GlobalTheory.ExtDatTheta.half_add_iff hx
 
 theorem smul_of_isHalf {e : AE D} {x : Mx D m n} (hx : IsHalf e x) : e • x = x := by
   ext i j
-  simp only [Matrix.smul_apply, smul_eq_mul]
-  exact hx i j
+  simpa only [Matrix.smul_apply, smul_eq_mul] using hx i j
 
 theorem smul_eq_zero_of_isHalf {e e' : AE D} (h : e' * e = 0) {x : Mx D m n} (hx : IsHalf e x) : e' • x = 0 := by
   ext i j
@@ -985,14 +966,14 @@ theorem extFn_halfInd {e₀ e₁ : AE D} (h00 : e₀ * e₀ = e₀) (h11 : e₁ 
       · intro h; exact ⟨hΛ0 t h, hΛ1 t h⟩
     have a0 := _root_.GlobalTheory.SplitScalar.isHalf_smul h00 t
     have a1 := _root_.GlobalTheory.SplitScalar.isHalf_smul h11 t
-    rw [if_pos ht]
+    rw [ite_eq_left ht]
     by_cases h0 : e₀ • t ∈ Λ <;> by_cases h1 : e₁ • t ∈ Λ
-    · rw [if_pos ⟨h0, a0⟩, if_pos ⟨h1, a1⟩, if_pos ⟨hiff.1 ⟨h0, h1⟩, ht⟩, one_mul]
-    · rw [if_pos ⟨h0, a0⟩, if_neg (fun h => h1 h.1), if_neg (fun h => h1 (hiff.2 h.1).2), mul_zero]
-    · rw [if_neg (fun h => h0 h.1), if_pos ⟨h1, a1⟩, if_neg (fun h => h0 (hiff.2 h.1).1), zero_mul]
-    · rw [if_neg (fun h => h0 h.1), if_neg (fun h => h1 h.1), if_neg (fun h => h0 (hiff.2 h.1).1), zero_mul]
-  · simp only [if_neg ht]
-    rw [if_neg (fun h => ht h.2)]
+    · rw [ite_eq_left ⟨h0, a0⟩, ite_eq_left ⟨h1, a1⟩, ite_eq_left ⟨hiff.1 ⟨h0, h1⟩, ht⟩, one_mul]
+    · rw [ite_eq_left ⟨h0, a0⟩, ite_eq_right (fun h => h1 h.1), ite_eq_right (fun h => h1 (hiff.2 h.1).2), mul_zero]
+    · rw [ite_eq_right (fun h => h0 h.1), ite_eq_left ⟨h1, a1⟩, ite_eq_right (fun h => h0 (hiff.2 h.1).1), zero_mul]
+    · rw [ite_eq_right (fun h => h0 h.1), ite_eq_right (fun h => h1 h.1), ite_eq_right (fun h => h0 (hiff.2 h.1).1), zero_mul]
+  · simp only [ite_eq_right ht]
+    rw [ite_eq_right (fun h => ht h.2)]
 
 theorem isThetaAt_extFn : ∀ {D : D7} {m n : ℕ} {ψ : AddChar (AF D.host.F) ℂ} {B : Mx D m n → Mx D m n → AF D.host.F} {hs : Mx D m n → (Mx D m n → ℂ) → (Mx D m n → ℂ)} {Λ : AddSubgroup (Mx D m n)} {e₀ e₁ : AE D} {f₀ Φ f : Mx D m n → ℂ}, e₀ * e₀ = e₀ → e₁ * e₁ = e₁ → e₀ * e₁ = 0 → (∀ u ∈ Λ, e₀ • u ∈ Λ) → (∀ u ∈ Λ, e₁ • u ∈ Λ) → (∀ t y, IsHalf (e₀ + e₁) t → IsHalf (cA D e₀) y → B t y = B (e₀ • t) y) → (∃ T, IsPlaceModel ψ B hs (e₀ + e₁) Λ 1 f₀ T) → IsThetaAt ψ B hs e₀ Λ 1 f₀ Φ f → IsThetaAt ψ B hs (e₀ + e₁) Λ 1 f₀ (GlobalTheory.CosetRow.extFn e₀ e₁ Λ Φ) f := by
   intro D m n ψ B hs Λ e₀ e₁ f₀ Φ f h00 h11 h01 hΛ0 hΛ1 hB hex h
@@ -1128,8 +1109,8 @@ theorem prodHalf_topFn_eq_givenFn : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc 
   unfold GlobalTheory.FlipStart.givenFn
   by_cases hx : IsHalf e x
   swap
-  · rw [if_neg hx, if_neg hx, mul_zero]
-  rw [if_pos hx, if_pos hx, mul_one]
+  · rw [ite_eq_right hx, ite_eq_right hx, mul_zero]
+  rw [ite_eq_left hx, ite_eq_left hx, mul_one]
   set N := GlobalTheory.FunObj.Comparison₂.fr (B.β 0 (j + 1)) (B.β 0 j) (x.map (toEAf D)) with hN
   have hfr : ∀ a : AE D, GlobalTheory.FunObj.Comparison₂.fr (B.β 0 (j + 1)) (B.β 0 j) ((a • x).map (toEAf D)) = toEAf D a • N := by
     intro a
@@ -1154,7 +1135,7 @@ theorem prodHalf_topFn_eq_givenFn : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc 
     have hla : locArg B t w (.down t 0 j) x = B.coord t w (X := (0, j + 1)) (Y := (0, j)) ⟨Nat.zero_le _, hj⟩
         ⟨Nat.zero_le _, hj.le⟩ ((x.map (toEAf D)).map (cpt (D := D) w)) := by
       rw [Matrix.map_map]
-      exact dif_pos ⟨Nat.zero_le _, hj⟩
+      exact dite_eq_left ⟨Nat.zero_le _, hj⟩
     rw [hla]
     exact GlobalTheory.FunObj.Comparison₂.givenDatum_theta_coord B t w Φ hj ha hb (x.map (toEAf D))
   rw [Finset.prod_congr rfl fun w _ => hR w, ← Finset.prod_sdiff hsub]
@@ -1166,7 +1147,7 @@ theorem prodHalf_topFn_eq_givenFn : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc 
     have hP : w ∉ L.Pg := fun h => hw2 (Finset.mem_union_left _ h)
     have hQ : w ∉ L.Q t := fun h => hw2 (Finset.mem_union_right _ h)
     unfold stepFn
-    rw [if_neg hP, if_neg hQ, Set.indicator_apply]
+    rw [ite_eq_right hP, ite_eq_right hQ, Set.indicator_apply]
     exact if_congr (hsubm w) rfl rfl
   rw [Finset.prod_congr rfl hout, Finset.prod_boole]
 
@@ -1207,9 +1188,9 @@ theorem prodHalf_topFn_eq_givenFn : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc 
     unfold GlobalTheory.FlipTop.topFn
     rw [Finset.prod_congr rfl fun w hw => by rw [hcomp e' w (c1 w hw)]]
     by_cases H : ∀ w ∈ GlobalTheory.FlipTop.topPl L t, GlobalTheory.StepData.IntM (N.map (cpt (D := D) w))
-    · rw [if_pos ⟨hx0, by rw [hfr]; exact hint.2 H⟩]
-    · rw [if_neg fun h => H (by have h' := h.2; rw [hfr] at h'; exact hint.1 h')]
-      push_neg at H
+    · rw [ite_eq_left ⟨hx0, by rw [hfr]; exact hint.2 H⟩]
+    · rw [ite_eq_right fun h => H (by have h' := h.2; rw [hfr] at h'; exact hint.1 h')]
+      push Not at H
       obtain ⟨w, hw, hn⟩ := H
       refine (Finset.prod_eq_zero hw ?_).symm
       by_contra h0
@@ -1365,10 +1346,10 @@ theorem transport {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridDat
   rename_i x
   by_cases h : IsHalf e x ∧ IsIntM (Comparison₂.fr βT βS (x.map (toEAf D)))
   · have h' : IsHalf e x ∧ IsIntM (frMapO S S' βS βT x) := h
-    rw [if_pos h, if_pos h']
+    rw [ite_eq_left h, ite_eq_left h']
     exact (hN _ h.2).symm
   · have h' : ¬ (IsHalf e x ∧ IsIntM (frMapO S S' βS βT x)) := h
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
 
 end GlobalTheory.FlipTopChain
 

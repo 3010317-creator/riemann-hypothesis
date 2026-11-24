@@ -89,10 +89,8 @@ theorem lin_Hd {R : Type} [CommRing R] {k d : ℕ} (M : Matrix (Fin k) (Fin k) R
     intro c _
     rw [map_pow]
     have h1 : lin M (X c) ∈ Hd R k 1 := by
-      simp only [lin, aeval_X]
-      exact Submodule.sum_mem _ fun b _ => Hd_X R k _ b
-    have h2 := Hd_prod (Finset.range (μ c)) (fun _ => 1) (fun _ => lin M (X c)) (fun _ _ => h1)
-    simpa using h2
+      simpa only [lin, aeval_X] using Submodule.sum_mem _ fun b _ => Hd_X R k _ b
+    simpa using Hd_prod (Finset.range (μ c)) (fun _ => 1) (fun _ => lin M (X c)) (fun _ _ => h1)
   | zero => simp
   | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
   | smul a x _ hx => rw [map_smul]; exact Submodule.smul_mem _ _ hx
@@ -101,7 +99,7 @@ theorem map_Nv {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') (m : �
     map f (Nv R m vec c) = Nv R' m vec c := by
   simp only [Nv]
   cases vec
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     have h1 : (MvPolynomial.map f).mapMatrix (genM R m) = genM R' m := by
       ext i j
       simp [genM]
@@ -175,8 +173,7 @@ theorem Lin_one {R : Type} [CommRing R] {k : ℕ} (P : MvPolynomial (S × Fin k)
     _ = P := MvPolynomial.aeval_X_left_apply P
 
 theorem mem_Pol {R : Type} [CommRing R] {k : ℕ} {d : S → ℕ} {F : MvPolynomial (S × Fin k) R} :
-    F ∈ Pol R k d ↔ ∀ μ ∈ F.support, ∀ i, multideg μ i = d i := by
-  exact Iff.rfl
+    F ∈ Pol R k d ↔ ∀ μ ∈ F.support, ∀ i, multideg μ i = d i := Iff.rfl
 
 theorem Pol_one (R : Type) [CommRing R] (k : ℕ) : (1 : MvPolynomial (S × Fin k) R) ∈ Pol R k (0 : S → ℕ) := by
   rw [mem_Pol]
@@ -286,8 +283,7 @@ theorem Lin_Pol {R : Type} [CommRing R] {k : ℕ} {d : S → ℕ} (N : S → Mat
     obtain ⟨μ, hμ, rfl⟩ := hx
     beta_reduce
     rw [mono_factor, map_prod]
-    simp only [Lin_emb]
-    exact prod_emb_Pol d _ fun s => lin_Hd _ _ (partS_Hd R d μ hμ s)
+    simpa only [Lin_emb] using prod_emb_Pol d _ fun s => lin_Hd _ _ (partS_Hd R d μ hμ s)
   | zero => simp
   | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
   | smul a x _ hx => rw [map_smul]; exact Submodule.smul_mem _ _ hx

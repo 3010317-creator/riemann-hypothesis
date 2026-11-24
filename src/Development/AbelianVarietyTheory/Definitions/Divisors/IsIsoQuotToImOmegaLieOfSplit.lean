@@ -782,8 +782,7 @@ theorem dualApp_tangent_dUnit (x : LieG G) {V : (Sp O).Opens} {W : G.left.Opens}
 theorem tangent_mul [QuasiSeparated G.hom] (x y : LieG G) (h) :
     tangent ⟨x.1 * y.1, h⟩ = tangent x + tangent y := by
   have e := cotMap_mul (epsZero_comp x) (epsZero_comp y) (epsZero_comp ⟨_, h⟩)
-  refine dual_ext fun W _ s => ?_
-  exact (congr((epsIso O).hom.app W (($e).app W s))).trans (map_add _ _ _)
+  exact dual_ext fun W _ s => (congr((epsIso O).hom.app W (($e).app W s))).trans (map_add _ _ _)
 
 theorem tangent_scale (a : O) (x : LieG G) (h) :
     tangent ⟨ptMap (dualScale a) ≫ x.1, h⟩ = cst O a • tangent x := by

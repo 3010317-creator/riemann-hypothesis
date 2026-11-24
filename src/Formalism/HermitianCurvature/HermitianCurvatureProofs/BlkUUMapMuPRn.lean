@@ -167,8 +167,7 @@ theorem sgs_formula (z0 z0' : Fin (2 * 0 + k + 1) → ℂ) (h h' : Mt k r)
     rw [← Dx2.Tower.lev_eq_embG]; exact _root_.PI.StabPairsW.isUnit_det_of_mem_GV (Dx2.Tower.lev_GV r 0 y1' hy1'.1)
   have uV : IsUnit (G.upper V).det := _root_.Formalism.FourierDecayAlt.P.Dx2.Split.upper_det V
   have uRn : IsUnit (U.Rn k r 0 y).det := by
-    refine Matrix.isUnit_det_of_right_inverse (B := U.Rn k r 0 (-y)) ?_
-    exact PBM.rn_mul_neg y
+    exact Matrix.isUnit_det_of_right_inverse (B := U.Rn k r 0 (-y)) (PBM.rn_mul_neg y)
 
   have hM1 : (U.muP k r 0 (G.upper V))⁻¹ * U.mMap k r 0 Z γ0 * U.muP k r 0 (G.upper V') =
       U.mMap k r 0 ((G.upper V)ᴴ * Z * G.upper V') γ0 := by
@@ -238,8 +237,7 @@ theorem relevance_U {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
     refine ⟨hN Q hQ, ?_⟩
     rw [conj_muP Z hZ γ0 hγ0 Q uQ]; exact hN _ hQ'
   have h := hrel.2 _ hρ
-  rw [conj_muP Z hZ γ0 hγ0 Q uQ, psi_muP S.z S.z_mem, psi_muP S.z' S.z'_mem] at h
-  exact h
+  rwa [conj_muP Z hZ γ0 hγ0 Q uQ, psi_muP S.z S.z_mem, psi_muP S.z' S.z'_mem] at h
 
 end alg
 

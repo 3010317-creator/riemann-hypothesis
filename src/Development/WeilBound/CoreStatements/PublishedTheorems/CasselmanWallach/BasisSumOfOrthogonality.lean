@@ -102,8 +102,7 @@ lemma beta_mono
       (inner ℂ w (fc b μ φ w)).re ≤ (inner ℂ w (fc b μ ψ w)).re)
     (φ ψ : ℝ → ℝ) (h : ∀ x, 0 ≤ x → φ x ≤ ψ x) (v : V) :
     (beta ε E (fc b μ φ) v v).re ≤ (beta ε E (fc b μ ψ) v v).re := by
-  simp only [beta, Complex.re_sum]
-  exact Finset.sum_le_sum fun p _ => hmono φ ψ h _
+  simpa only [beta, Complex.re_sum] using Finset.sum_le_sum fun p _ => hmono φ ψ h _
 
 lemma norm_fib (hb : Orthonormal ℂ b) (f : V →ₗ[ℂ] ℂ) (F : Finset ι) :
     ‖∑ j ∈ F, starRingEnd ℂ (f (b j)) • b j‖ ^ 2 = ∑ j ∈ F, ‖f (b j)‖ ^ 2 := by
@@ -152,7 +151,7 @@ lemma key {κ c x₀ R : ℝ} {s : ℕ}
     linarith
   have hn : 0 ≤ ‖h‖ ^ 2 := by positivity
   by_cases hx : ν < x₀
-  · rw [if_pos hx]
+  · rw [ite_eq_left hx]
     have hp0 := phi_nonneg s R ν
     have hp1 := phi_le_one (s := s) hR hν
     have hbd : phiR s R ν * (ν - κ + c) ≤ x₀ + |κ| + c := by
@@ -161,7 +160,7 @@ lemma key {κ c x₀ R : ℝ} {s : ℕ}
       · nlinarith [abs_nonneg κ, mul_nonpos_of_nonneg_of_nonpos hp0 h0]
     have := mul_le_mul_of_nonneg_right hbd hn
     linarith [hN h]
-  · rw [if_neg hx]
+  · rw [ite_eq_right hx]
     have hA := hA12 ν h (not_lt.mp hx) hh
     by_cases hνR : ν < R
     · rw [phi_eq hν hνR]
@@ -240,10 +239,8 @@ theorem basis_form_sum_of_gain : A0 → FunctionalCalculusLaws → A12 → Basis
             exact Finset.sum_congr rfl fun j _ => by split_ifs <;> simp
         _ ≤ ∑ i ∈ T, (x₀ + |κ| + c) * ‖f (b i)‖ ^ 2 := by
             apply Finset.sum_le_sum_of_subset_of_nonneg
-            · intro j hj
-              exact (hT j).2 (Finset.mem_filter.1 hj).2
-            · intro j _ _
-              exact mul_nonneg hK (by positivity)
+            · exact fun j hj => (hT j).2 (Finset.mem_filter.1 hj).2
+            · exact fun j _ _ => mul_nonneg hK (by positivity)
     have hle := Finset.sum_le_sum hstep
     rw [hsum1, hsplit, ← key1] at hle
     have hR2 : ∑ i ∈ S, phiR s R (μ i) *

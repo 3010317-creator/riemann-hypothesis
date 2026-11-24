@@ -87,8 +87,7 @@ theorem mem_stab_iff (g : GL (ι ⊕ ι) R) : g ∈ stab R (Sum.inl '' (Set.univ
     ∀ i j, (g : Matrix (ι ⊕ ι) (ι ⊕ ι) R) (Sum.inr i) (Sum.inl j) = 0 ∧
       ((g⁻¹ : GL (ι ⊕ ι) R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R) (Sum.inr i) (Sum.inl j) = 0 := by
   constructor
-  · intro h i j
-    exact h (Sum.inr i) (by simp) (Sum.inl j) (by simp)
+  · exact fun h i j => h (Sum.inr i) (by simp) (Sum.inl j) (by simp)
   · intro h r hr c hc
     obtain ⟨j, -, rfl⟩ := hc
     rcases r with i | i
@@ -192,7 +191,6 @@ theorem exists_isPar_iff_mem_uQ : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     simp only [Matrix.map_mul] at this
     exact this
   have h := exists_mul_eq_iff_mem_stab (bA (F := F) b) x.1 (diagCols (Fin n)) _ hB
-  rw [PositivityTheory.RgEis.Ad.uQ, Subgroup.mem_subgroupOf, frameEquiv_val]
-  exact h
+  rwa [PositivityTheory.RgEis.Ad.uQ, Subgroup.mem_subgroupOf, frameEquiv_val]
 
 end GlobalTheory.CompanionTheory.SiegelFrame.ParStab

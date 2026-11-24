@@ -135,8 +135,7 @@ theorem base_term_norm_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V
           refine lintegral_congr fun n => ?_
           rw [enorm_mul, hsplit]
   rw [← Measure.prod_restrict, lintegral_prod_symm _ hFm.aemeasurable]
-  refine lintegral_congr fun h => ?_
-  exact hfib h
+  exact lintegral_congr fun h => hfib h
 
 end GlobalTheory.Unf
 
@@ -272,8 +271,7 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
         constructor
         · rintro ⟨p, hp, rfl⟩
           exact (Subgroup.mem_prod.1 hp).2
-        · intro hh
-          exact ⟨(1, h), Subgroup.mem_prod.2 ⟨one_mem _, hh⟩, rfl⟩
+        · exact fun hh => ⟨(1, h), Subgroup.mem_prod.2 ⟨one_mem _, hh⟩, rfl⟩
       rw [hc]; exact vW.fund
   have hG' : IsFundamentalDomain ((MulAction.stabilizer ((NFlagQ V d.e).prod (GQ W)) y₀).map (Subgroup.subtype _))
       (𝓐 ×ˢ 𝓑) (vN.ν.prod vW.μ) := by
@@ -316,8 +314,7 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
   obtain ⟨hl, -⟩ := GlobalTheory.T.lintegral_unfold_sum_transitive_orbit (flagN d × GA D W) (vN.ν.prod vW.μ) ((NFlagQ V d.e).prod (GQ W)) (Orb W x₀) y₀ htrans
     (vN.𝓝 ×ˢ vW.𝓕) (𝓐 ×ˢ 𝓑) hF hG'
     (fun y p => G p.2 * term ψ d W vS (om (p.1.1 * g, p.2) Φ) y.1) hmeas hinv
-  simp only [hy₀] at hl
-  exact hl
+  simpa only [hy₀] using hl
 
 end GlobalTheory.Unf
 end -- clump:auto

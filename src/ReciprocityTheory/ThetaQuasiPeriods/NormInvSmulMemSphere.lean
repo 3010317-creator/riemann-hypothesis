@@ -52,8 +52,7 @@ theorem quad_lower {X : Type*} [TopologicalSpace X] (Mf : X → Matrix ι ι ℝ
     · exfalso
       have hy : (p, ‖x‖⁻¹ • x) ∈ K ×ˢ Metric.sphere (0 : ι → ℝ) 1 :=
         ⟨hp, norm_inv_smul_mem_sphere hx⟩
-      rw [he] at hy
-      exact hy
+      rwa [he] at hy
   · obtain ⟨q0, hq0, hmin⟩ := hKS.exists_isMinOn hne hF.continuousOn
     have hq0S : q0.2 ∈ Metric.sphere (0 : ι → ℝ) 1 := hq0.2
     have hne0 : q0.2 ≠ 0 := by
@@ -61,8 +60,7 @@ theorem quad_lower {X : Type*} [TopologicalSpace X] (Mf : X → Matrix ι ι ℝ
       rw [h] at hq0S
       simp at hq0S
     have hmpos : 0 < q0.2 ⬝ᵥ (Mf q0.1 *ᵥ q0.2) := by
-      have h0 := (Matrix.posDef_iff_dotProduct_mulVec.mp (hpos q0.1 hq0.1)).2 hne0
-      simpa using h0
+      simpa using (Matrix.posDef_iff_dotProduct_mulVec.mp (hpos q0.1 hq0.1)).2 hne0
     refine ⟨q0.2 ⬝ᵥ (Mf q0.1 *ᵥ q0.2) / (Fintype.card ι + 1), by positivity, fun p hp x => ?_⟩
     by_cases hx : x = 0
     · simp [hx]
@@ -150,8 +148,7 @@ private theorem summable_pi_prod_of_nonneg' {α : Type*} {q : ℕ} (f : Fin q �
     Summable (fun x : Fin q → α => ∏ i, f i (x i)) := by
   induction q with
   | zero =>
-    simp only [Fin.prod_univ_zero]
-    exact Summable.of_finite
+    simpa only [Fin.prod_univ_zero] using Summable.of_finite
   | succ q ih =>
     have hs : Summable (fun x : Fin q → α => ∏ i, f i.succ (x i)) :=
       ih (fun (i : Fin q) => f i.succ) (fun (i : Fin q) a => hf0 i.succ a)

@@ -25,8 +25,7 @@ theorem v_le_iff (L : Formalism.MainNotions.S.Loc.LocAt F E sig p) (x y : F) :
 
 theorem v_le_one_iff (L : Formalism.MainNotions.S.Loc.LocAt F E sig p) (x : F) :
     valuation L.Fp (L.ιF x) ≤ 1 ↔ p.valuation F x ≤ 1 := by
-  have h := v_le_iff L x 1
-  simpa only [map_one] using h
+  simpa only [map_one] using v_le_iff L x 1
 
 theorem v_lt_one_iff (L : Formalism.MainNotions.S.Loc.LocAt F E sig p) (x : F) :
     valuation L.Fp (L.ιF x) < 1 ↔ p.valuation F x < 1 := by
@@ -46,8 +45,7 @@ theorem exists_int_approx (x : F) (hx : p.valuation F x ≤ 1) :
   have hp0 : p.asIdeal ≠ ⊥ := p.ne_bot
   have htop : p.asIdeal ≠ ⊤ := p.isPrime.ne_top
   have hex : ∃ n : ℕ, (s : 𝓞 F) ∉ p.asIdeal ^ (n + 1) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hs0
     have hmem : (s : 𝓞 F) ∈ ⨅ i, p.asIdeal ^ i := by
       rw [Ideal.mem_iInf]
@@ -62,8 +60,7 @@ theorem exists_int_approx (x : F) (hx : p.valuation F x ≤ 1) :
     rcases Nat.eq_zero_or_pos (Nat.find hex) with h0 | hpos
     · simp [h0]
     · have hm := Nat.find_min hex (Nat.sub_lt hpos Nat.one_pos)
-      rw [not_not, Nat.sub_add_cancel hpos] at hm
-      exact hm
+      rwa [not_not, Nat.sub_add_cancel hpos] at hm
   have hb : b ∈ p.asIdeal ^ n := by
     rw [← HeightOneSpectrum.intValuation_le_pow_iff_mem] at hn ⊢
     exact hx.trans hn
@@ -182,8 +179,7 @@ theorem prod_bounds (N : ℕ) (hN : 2 ≤ N) (η : ℝ) (hη : η = 1 ∨ η = -
   have hN' : (2 : ℝ) ≤ N := by exact_mod_cast hN
   have hx0 : 0 ≤ x := by positivity
   have hx2 : x ≤ 1 / 2 := by
-    rw [hx]
-    rw [inv_le_comm₀ (by positivity) (by norm_num)]
+    rw [hx, inv_le_comm₀ (by positivity) (by norm_num)]
     linarith
   have hx1 : x < 1 := by linarith
   have habs : ∀ i, |η ^ i / (N : ℝ) ^ i| = x ^ i := by
@@ -280,8 +276,7 @@ theorem alpBoundU (D : Formalism.BasicNotions.D7) :
     have h3 : x ^ 2 ≤ 1 / 4 := by nlinarith
     have h4 : x ^ m ≤ (q ^ m)⁻¹ := by
       rw [hx, inv_pow]
-      apply inv_anti₀ (pow_pos (by linarith) m)
-      exact pow_le_pow_left₀ (by linarith) hqN m
+      exact inv_anti₀ (pow_pos (by linarith) m) (pow_le_pow_left₀ (by linarith) hqN m)
     have h5 : 0 ≤ x ^ m := pow_nonneg hx0 m
     have h6 : x ^ m * x ^ (2 * D.R.rS + 2) ≤ x ^ m * (1 / 4) :=
       mul_le_mul_of_nonneg_left (h2.trans h3) h5

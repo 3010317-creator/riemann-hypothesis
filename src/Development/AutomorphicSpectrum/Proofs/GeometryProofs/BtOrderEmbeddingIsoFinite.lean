@@ -104,8 +104,7 @@ theorem val_secMap (Γ : QFGroup R T) {A : Subalgebra R (T → R)} {j : Γ.G.lef
       (⊤ : (Spec (CommRingCat.of A)).Opens) := by simp
   have e1 := valHom_appLE (Γ.pt t).left j (V := ⊤) (W := ⊤) (by simp) h h2
     ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom a)
-  rw [e0, valHom_congr (hj.pt t) _ h2 h3, valHom_spec_top] at e1
-  exact e1
+  rwa [e0, valHom_congr (hj.pt t) _ h2 h3, valHom_spec_top] at e1
 
 theorem isIso_of_secMap_bijective {X : Scheme.{0}} [IsAffine X] {A : Type} [CommRing A]
     (j : X ⟶ Spec (CommRingCat.of A)) (hb : Function.Bijective (secMap j)) : IsIso j := by
@@ -155,8 +154,7 @@ theorem isIso_of_finite : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrally
     let f' : H → R := fun h => f h
     have hf' : f' ∈ A' := (hA' f').2 ⟨s, fun t h => (hf t).symm⟩
     have hind : f' ∈ indOrder (MonoidHom.id H) A' := by
-      rw [_root_.GlobalTheory.CompanionTheory.Ar.BT.indOrder_id_eq_of_isHopfOrder R H A' hopf]
-      exact hf'
+      rwa [_root_.GlobalTheory.CompanionTheory.Ar.BT.indOrder_id_eq_of_isHopfOrder R H A' hopf]
     have hmem : f ∈ Γ.btOrder ⊤ := by
       apply Algebra.subset_adjoin
       intro t g _

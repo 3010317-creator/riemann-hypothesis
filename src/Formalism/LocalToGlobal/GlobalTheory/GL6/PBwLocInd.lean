@@ -55,9 +55,8 @@ theorem bwG_intSpan_allSubP (w : D.what₂.places.Pl) {n : ℕ} (lam : D.what₂
     intro S
     induction S using Finset.induction_on with
     | empty =>
-      simp only [Finset.prod_empty, map_one, one_mul, Finset.notMem_empty, if_false]
-      rw [substitution_one]
-      exact hQ
+      simp only [Finset.prod_empty, map_one, one_mul, Finset.notMem_empty, ite_false]
+      rwa [substitution_one]
     | insert τ0 S h0 ih =>
       set U : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ := Function.update 1 τ0 (N τ0) with hU
       have hU1 : ∀ τ, τ ≠ τ0 → U τ = 1 := fun τ hτ => by rw [hU, Function.update_of_ne hτ]; rfl
@@ -66,11 +65,11 @@ theorem bwG_intSpan_allSubP (w : D.what₂.places.Pl) {n : ℕ} (lam : D.what₂
         funext τ
         by_cases hτ : τ = τ0
         · subst hτ
-          rw [if_neg h0, if_pos (Finset.mem_insert_self _ _), one_mul, hUτ]
+          rw [ite_eq_right h0, ite_eq_left (Finset.mem_insert_self _ _), one_mul, hUτ]
         · rw [hU1 τ hτ, mul_one]
           by_cases hS : τ ∈ S
-          · rw [if_pos hS, if_pos (Finset.mem_insert_of_mem hS)]
-          · rw [if_neg hS, if_neg (by simp [hτ, hS])]
+          · rw [ite_eq_left hS, ite_eq_left (Finset.mem_insert_of_mem hS)]
+          · rw [ite_eq_right hS, ite_eq_right (by simp [hτ, hS])]
       have e : MvPolynomial.C (∏ τ ∈ insert τ0 S, (N τ).det ^ s τ) *
           subP (fun τ => if τ ∈ insert τ0 S then N τ else 1) Q =
           (N τ0).det ^ s τ0 • subP U (MvPolynomial.C (∏ τ ∈ S, (N τ).det ^ s τ) *
@@ -83,9 +82,7 @@ theorem bwG_intSpan_allSubP (w : D.what₂.places.Pl) {n : ℕ} (lam : D.what₂
       intro g hg
       rw [hUτ]
       exact hB τ0 g hg
-  have h := key Finset.univ
-  simp only [Finset.mem_univ, if_true] at h
-  exact h
+  simpa only [Finset.mem_univ, ite_true] using key Finset.univ
 
 theorem local_GL_stabilises_lattice (w : D.what₂.places.Pl) : BwGLStab D w := by
   intro n ν s M M' hMM' hM hM' g hg
@@ -120,7 +117,6 @@ theorem bwG_change_mem (w : D.what₂.places.Pl) (hw : OverT D u w) (τ : D.what
     atInf (embT D) ((B₂⁻¹ * B : GL (Fin n) D.host.E) : Matrix (Fin n) (Fin n) D.host.E) τ a b ∈ bwA_Ow D w := by
   obtain ⟨s, hs, hx⟩ := bwE_col_loc D u w hw hB b
   have h := bwE_locBasis_int D u w hw τ hB₂ _ s hs hx a
-  rw [bwE_mulVec_col, ← Units.val_mul] at h
-  exact h
+  rwa [bwE_mulVec_col, ← Units.val_mul] at h
 
 end Formalism.L2.GlobalTheoryTheory.LocalLatticeBases

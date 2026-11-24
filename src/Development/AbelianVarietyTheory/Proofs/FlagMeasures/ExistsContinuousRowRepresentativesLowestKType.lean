@@ -257,12 +257,7 @@ theorem expU_zero {n : ℕ} {ε : Fin n → Bool} : expU (0 : gLie ε) = 1 := by
   exact Subtype.ext (Units.ext h)
 
 theorem expU_add {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) (a b : ℝ) :
-    expU ((a + b) • X) = expU (a • X) * expU (b • X) := by
-  apply Subtype.ext
-  apply Units.ext
-  show uMat (expU ((a + b) • X)) = uMat (expU (a • X)) * uMat (expU (b • X))
-  rw [uMat_expU, uMat_expU, uMat_expU, Submodule.coe_smul, Submodule.coe_smul, Submodule.coe_smul, _root_.add_smul]
-  exact Matrix.exp_add_of_commute _ _ (((Commute.refl _).smul_left a).smul_right b)
+    expU ((a + b) • X) = expU (a • X) * expU (b • X) := GlobalTheory.SobolevBound.expU_add X a b
 
 theorem expU_inv {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) (t : ℝ) : (expU (t • X))⁻¹ = expU (t • (-X)) := by
   have h := expU_add X t (-t)
@@ -508,7 +503,7 @@ theorem repsExist : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ), IsDSDat
   have hFr : ∀ u f, IsContRep B (T u) f → Fr u = f := by
     intro u f hf
     have h : ∃ f, IsContRep B (T u) f := ⟨f, hf⟩
-    have : Fr u = h.choose := dif_pos h
+    have : Fr u = h.choose := dite_eq_left h
     rw [this]
     exact huniq _ _ _ h.choose_spec hf
   refine ⟨Fr, fun P u hu => ?_⟩

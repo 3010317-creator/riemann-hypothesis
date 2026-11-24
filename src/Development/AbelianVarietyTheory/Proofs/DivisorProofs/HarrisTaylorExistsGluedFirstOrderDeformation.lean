@@ -252,8 +252,7 @@ theorem glueFil_isotropic : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.
     have h0 : φ' x' y' = 0 := h5 j φ' hφ' x' hx' y' hy'
     have e2 : proj j (φ x y) = 0 := e.symm.trans h0
     have e3 : (proj j (φ x y)).snd = (0 : TrivSqZeroExt k k).snd := congrArg TrivSqZeroExt.snd e2
-    rw [snd_proj] at e3
-    exact e3
+    rwa [snd_proj] at e3
   exact TrivSqZeroExt.ext hfst (funext hsnd)
 
 end GlobalTheory.HTGlueIso
@@ -703,8 +702,7 @@ theorem lie_glueFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Dat
   have L1j := fun j ↦ _root_.GlobalTheory.HTGlueLie.fo_summand_coords k o₀.A o₀.ab (f j) (E' j) (hcompl j) (hred j) (hlift j)
   have hχ : ∀ i i', i ≠ i' → ∃ c : 𝓞 D.F, tk (b.t i c) ≠ tk (b.t i' c) := by
     intro i i' hii'
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hle : Ideal.span (Set.range fun x ↦ b.t i x - b.t i' x) ≤ RingHom.ker tk := by
       rw [Ideal.span_le]
       rintro _ ⟨x, rfl⟩
@@ -1016,8 +1014,7 @@ theorem lie_liftFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Dat
   have hy : GlobalTheory.HTSummand.crysAct (dp0 C) (𝟙 _) o.act (algebraMap (𝓞 D.F) D.O D.ω) (crysToDR (divided₂ hsq) m.cart d) -
       tR b.ρ • crysToDR (divided₂ hsq) m.cart d ∈ Fil o.A := by
     have h' := hd
-    rw [liftFil, Submodule.mem_comap, map_sub, map_smul, key] at h'
-    exact h'
+    rwa [liftFil, Submodule.mem_comap, map_sub, map_smul, key] at h'
   obtain ⟨w', hw', hsum⟩ := GlobalTheory.HTSummand.lie_mod_fil p D R b N C tR s hs o _ hy
   choose w hw using fun i => bij.2 (w' i)
   refine ⟨w, fun i c => ?_, ?_⟩
@@ -1025,8 +1022,7 @@ theorem lie_liftFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Dat
     exact hw' i c
 
   · rw [liftFil, Submodule.mem_comap, map_sub, map_sum]
-    simp only [hw]
-    exact hsum
+    simpa only [hw] using hsum
 
 end GlobalTheory.HTLiftLie
 end -- clump:auto
@@ -1133,8 +1129,7 @@ theorem corr_crysRedMor_iff (A₀ : Over (Sp k)) [GrpObj A₀] (hA : IsAbelianSc
   constructor
   · intro H c
     have := H ((GlobalTheory.FODef.constMorV k V A₀).pull c)
-    rw [red_constPull] at this
-    exact this
+    rwa [red_constPull] at this
   · intro H c'
     have hm := GlobalTheory.SqZeroCrys.isBC_trivSqZeroExt k V A₀ hA (GlobalTheory.FODef.sqZero k V) (GlobalTheory.FODef.constMorV k V A₀)
     obtain ⟨z, rfl⟩ := hm.2 c'

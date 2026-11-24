@@ -253,8 +253,7 @@ theorem exists_level {F : Type} [Field F] {ζ : Fˣ} {n : ℕ} (hn : 0 < n)
   let χ : ZMod n → Fˣ := fun a => ((Additive.toMul (hζ.zmodEquivZPowers a) : Subgroup.zpowers ζ) : Fˣ)
   have χadd : ∀ a b, χ (a + b) = χ a * χ b := by intro a b; simp [χ]
   have χinj : Function.Injective χ := by
-    intro a b h
-    exact hζ.zmodEquivZPowers.injective (Additive.toMul.injective (Subtype.ext h))
+    exact fun a b h => hζ.zmodEquivZPowers.injective (Additive.toMul.injective (Subtype.ext h))
   have χint : ∀ i : ℤ, χ i = ζ ^ i := by
     intro i; simp only [χ, hζ.zmodEquivZPowers_apply_coe_int]; rfl
   have χ0 : χ 0 = 1 := by simpa using χint 0
@@ -1050,7 +1049,7 @@ theorem form_cx_baseChange_pos (S : Matrix (Fin r) (Fin r) ℤ) (hS : (S.map (In
       ∑ α, v α ⬝ᵥ ((S.map (Int.cast : ℤ → ℝ)).mulVec (v α)) := by
     rw [key, Finset.sum_comm]
     simp only [Fintype.sum_prod_type, Int.cast_ite, Int.cast_zero, mul_ite, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, dotProduct, Matrix.mulVec,
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, dotProduct, Matrix.mulVec,
       Matrix.map_apply, Finset.mul_sum, hv]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun α _ => Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
@@ -1064,7 +1063,7 @@ theorem form_cx_baseChange_pos (S : Matrix (Fin r) (Fin r) ℤ) (hS : (S.map (In
   have hne : c ≠ 0 := by
     intro h; apply hx; rw [hx']; simp [h]
   obtain ⟨⟨i, α⟩, hp⟩ : ∃ p, c p ≠ 0 := by
-    by_contra h; push_neg at h; exact hne (Finsupp.ext h)
+    by_contra h; push Not at h; exact hne (Finsupp.ext h)
   have hα : v α ≠ 0 := fun h => hp (by simpa [hv] using congrFun h i)
   have hpos : 0 < v α ⬝ᵥ ((S.map (Int.cast : ℤ → ℝ)).mulVec (v α)) := by
     simpa using hS.dotProduct_mulVec_pos hα
@@ -1354,8 +1353,7 @@ theorem finrank_dvd_of_ringOfIntegers_to_matrix (E : Type) [Field E] [NumberFiel
     rfl
   refine ⟨Module.finrank E (Fin r → ℚ), ?_⟩
   have := Module.finrank_mul_finrank ℚ E (Fin r → ℚ)
-  rw [Module.finrank_fin_fun] at this
-  rw [mul_comm] at this
+  rw [Module.finrank_fin_fun, mul_comm] at this
   exact this.symm
 
 end GlobalTheory
@@ -1501,8 +1499,7 @@ theorem act_eq {S : Scheme.{0}} {O : Type} [CommRing O] {G : Over S} [GrpObj G] 
     (h : ∀ c, x.act c = y.act c) : x = y := by
   obtain ⟨_, _, _, _, _⟩ := x
   obtain ⟨_, _, _, _, _⟩ := y
-  simp only [OAct.mk.injEq]
-  exact funext h
+  simpa only [OAct.mk.injEq] using funext h
 
 theorem comapAct_intCast {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] (n : ℤ) :
     (comapAct (intAct G) (Rat.ringOfIntegersEquiv : 𝓞 ℚ →+* ℤ)).act (n : 𝓞 ℚ) = (𝟙 G) ^ n := by
@@ -1545,8 +1542,7 @@ theorem lieMult_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R],
         rw [IsTensor.tmul_algAct, IsTensor.congrLeft_tmul, IsTensor.congrLeft_tmul, IsTensor.tmul_mapLeft]
         rfl
       refine pow_hom_ext p fun i => ?_
-      rw [e1, IsTensor.pow_mapLeft_pr]
-      rw [show p.pr i = T.pr i from rfl, hact.2 c i]
+      rw [e1, IsTensor.pow_mapLeft_pr, show p.pr i = T.pr i from rfl, hact.2 c i]
       refine Finset.prod_congr rfl fun j _ => ?_
       show T.pr j ≫ a₀.act ((ρ c i j : ℤ) : 𝓞 ℚ) = T.pr j ^ ρ c i j
       rw [comapAct_intCast, GrpObj.comp_zpow, Category.comp_id]

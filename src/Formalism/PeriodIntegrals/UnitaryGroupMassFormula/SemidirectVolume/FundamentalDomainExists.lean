@@ -83,8 +83,7 @@ theorem exists_sfd {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
       convert hm using 1
       push_cast
       group
-    rw [hV1, mul_inv_eq_one] at this
-    exact this
+    rwa [hV1, mul_inv_eq_one] at this
 
   obtain ⟨S, hS, hSo⟩ : ∃ S : ℕ → Set G, (∀ m x, x ∈ S m ↔ ∃ γ : Λ, (γ : G) * x * (d m)⁻¹ ∈ U) ∧
       ∀ m, IsOpen (S m) :=
@@ -125,8 +124,7 @@ theorem exists_sfd {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
     have hxn : x ∈ S n := (hS n x).mpr ⟨γ', hn⟩
     have hn0 : n = n0 := by
       apply le_antisymm
-      · by_contra hlt
-        push_neg at hlt
+      · by_contra! hlt
         exact hnmin n0 hlt ((hinv γ' x n0).mpr hn0x)
       · exact not_lt.mp fun h => hmin n h hxn
     rw [hn0] at hn

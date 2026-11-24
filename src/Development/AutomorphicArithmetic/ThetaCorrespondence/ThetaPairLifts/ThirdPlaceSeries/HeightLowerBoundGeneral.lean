@@ -444,7 +444,7 @@ theorem quo_gaps {PP A M : ℝ} (hN : HostNum D L PP A M) (hw : WtNum p i PP) (h
     have hT0 : (0 : ℤ) < 4 * (lenT p i PP : ℤ) := by nlinarith
     have hle : (lenT p i PP : ℤ) ≤ u1 τ a - u1 τ b - 3 * (((dat p i).p + (dat p i).q : ℕ) : ℤ) := by
       by_contra hc
-      push_neg at hc
+      push Not at hc
       have := mul_lt_mul_of_pos_left hc hT0
       nlinarith
     push_cast at hle
@@ -600,14 +600,7 @@ theorem vLa_nat_nonneg (la : HeightOneSpectrum (𝓞 K)) {n : ℕ} (hn : n ≠ 0
   simpa [vLa, Formalism.BasicNotions.vAdd] using this
 
 theorem vLa_pos {la : HeightOneSpectrum (𝓞 K)} {q : ℕ} (hq : q ≠ 0) (h : (q : 𝓞 K) ∈ la.asIdeal) :
-    0 < vLa la (q : K) := by
-  have h1 : la.valuation K (q : K) < 1 := by
-    have := (la.valuation_lt_one_iff_mem (K := K) (q : 𝓞 K)).2 h
-    simpa using this
-  have h0 : la.valuation K (q : K) ≠ 0 := (Valuation.ne_zero_iff _).2 (Nat.cast_ne_zero.2 hq)
-  unfold vLa
-  rw [← WithZero.exp_log h0, ← WithZero.exp_zero, WithZero.exp_lt_exp] at h1
-  omega
+    0 < vLa la (q : K) := GlobalTheory.IntCuspLat.vLa_pos_of_mem la hq h
 
 theorem exists_spread {S : Finset ℕ} {a : ℕ → ℝ} {s : ℝ} (h : PrimeSum S a s) (e : HeightOneSpectrum (𝓞 K) →₀ ℝ)
     (t : (K →+* ℂ) → ℝ) : ∃ e' : HeightOneSpectrum (𝓞 K) →₀ ℝ, cost e' t ≤ cost e t + s ∧

@@ -212,8 +212,7 @@ private lemma exists_multiplier_of_level_sections_lemma {g : ℕ} {τ : Matrix (
           have r₂ := hRel b' x
           apply mul_left_cancel₀ hx'
           linear_combination Den b x * r₂ - Den b' x * r₁)
-    intro x
-    exact congrFun hfun x
+    exact fun x => congrFun hfun x
   refine ⟨fun x => Num (B x) x / Den (B x) x, ?_, fun x => div_ne_zero (hB x).2 (hB x).1, ?_⟩
   · intro y
     have hev : (fun x => Num (B y) x / Den (B y) x) =ᶠ[𝓝 y]

@@ -145,8 +145,7 @@ theorem quotInl_injective (F₁ F₂ F₃ : SubSystem k x E) (h21 : ∀ I, F₂.
   have h' : (Submodule.Quotient.mk (⟨(y : E), h21 I y.2⟩ : F₁.sub I) :
       F₁.sub I ⧸ SubSystem.quotSub F₁ F₃ I) = 0 := hm
   rw [Submodule.Quotient.mk_eq_zero] at h'
-  rw [Submodule.mem_bot, Submodule.Quotient.mk_eq_zero]
-  exact h'
+  rwa [Submodule.mem_bot, Submodule.Quotient.mk_eq_zero]
 
 theorem quotPr_quotInl (F₁ F₂ F₃ : SubSystem k x E) (h21 : ∀ I, F₂.sub I ≤ F₁.sub I)
     (h32 : ∀ I, F₃.sub I ≤ F₂.sub I) (I : Chart x) (m : F₂.sub I ⧸ SubSystem.quotSub F₂ F₃ I) :

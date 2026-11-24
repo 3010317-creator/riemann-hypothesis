@@ -213,8 +213,7 @@ theorem exists_lat [NumberField K] {O : Type} [CommRing O] (o : O →+* K) (σ :
   obtain ⟨G, hG⟩ := hN.fg.restrictScalars (R := ℤ)
   have hGN : ∀ g ∈ G, g ∈ N := fun g hg => by
     have : g ∈ Submodule.span ℤ (G : Set (Fin n → K)) := Submodule.subset_span hg
-    rw [hG] at this
-    exact this
+    rwa [hG] at this
 
   have hsum : ∀ φ : W → ℂ, ∑ v ∈ G.image j, φ v • v = ∑ g ∈ G, φ (j g) • j g := fun φ =>
     Finset.sum_image fun a _ b _ h => hj h
@@ -636,8 +635,7 @@ theorem hp_model (h : PeterssonHilbertSpace.IsHermPos C ip) : ∃ H : Hs, ∃ j 
     intro x hx y hy z hz c
     refine ⟨?_, ?_⟩
     · have e1 := hp_add_right h ⟨x, hx⟩ ⟨y, hy⟩ ⟨c • z, C.smul_mem c hz⟩
-      have e2 := hp_smul_right h c ⟨x, hx⟩ ⟨z, hz⟩
-      exact e1.trans (congrArg (fun t => ip x y + t) e2)
+      exact e1.trans (congrArg (fun t => ip x y + t) (hp_smul_right h c ⟨x, hx⟩ ⟨z, hz⟩))
     · exact (h.herm ⟨x, hx⟩ ⟨y, hy⟩).symm
   have h2 : ∀ x ∈ C, x ≠ 0 → 0 < (ip x x).re := fun x hx hne =>
     h.pos ⟨x, hx⟩ (fun h0 => hne (by simpa using congrArg Subtype.val h0))
@@ -680,13 +678,13 @@ theorem heqv_self {A : Hs} (h : A = A) (x : A.T) : heqv h x = x := rfl
 
 def chSel (m : ℕ) (A B : Hs) (L : ℕ → Hs) (j : ℕ) : Hs := if j = 0 then A else if j = m then B else L j
 
-theorem chSel_zero {m : ℕ} {A B : Hs} {L : ℕ → Hs} : chSel m A B L 0 = A := if_pos rfl
+theorem chSel_zero {m : ℕ} {A B : Hs} {L : ℕ → Hs} : chSel m A B L 0 = A := ite_eq_left rfl
 
 theorem chSel_top {m : ℕ} {A B : Hs} {L : ℕ → Hs} (hm : m ≠ 0) : chSel m A B L m = B := by
-  rw [chSel, if_neg hm, if_pos rfl]
+  rw [chSel, ite_eq_right hm, ite_eq_left rfl]
 
 theorem chSel_mid {m j : ℕ} {A B : Hs} {L : ℕ → Hs} (h1 : j ≠ 0) (h2 : j ≠ m) : chSel m A B L j = L j := by
-  rw [chSel, if_neg h1, if_neg h2]
+  rw [chSel, ite_eq_right h1, ite_eq_right h2]
 
 end GlobalTheory.ChainHilb
 
@@ -1093,7 +1091,7 @@ theorem top_read : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Typ
   refine ⟨jX, fun μ hμ => ?_, fun t ht x => ?_⟩
   · have key : ∀ ν (h : ν = μ) (L : (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX), (Function.Injective L ∧ LinearMap.range L = (y.C F.lv2).CCXP b μ ∧ ∀ x x', ⟪x, x'⟫_ℂ = (y.C F.lv2).ipXP b μ (L x) (L x')) → (Function.Injective (cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) h) L : (s μ).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) ∧ LinearMap.range (cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) h) L : (s μ).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) = (y.C F.lv2).CCXP b μ ∧ ∀ x x', ⟪x, x'⟫_ℂ = (y.C F.lv2).ipXP b μ ((cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) h) L : (s μ).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) x) ((cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) h) L : (s μ).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) x')) := by
       intro ν h L hL; subst h; exact hL
-    have e : jX μ = (cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) (hused μ hμ)) (J' (y.tupT μ)) : (s μ).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) := dif_pos (hused μ hμ)
+    have e : jX μ = (cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) (hused μ hμ)) (J' (y.tupT μ)) : (s μ).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) := dite_eq_left (hused μ hμ)
     rw [e]
     refine key _ (hused μ hμ) (J' (y.tupT μ)) ?_
     have hHb := (hHil.1 b).2 μ
@@ -1101,7 +1099,7 @@ theorem top_read : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Typ
       rw [(hTb μ).2]
       exact ((tie (y.tupT μ)).forms.inner x x').symm
   · show jX (y.tup t) ((tie t).j x) = _
-    have e : jX (y.tup t) = (cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) (hused _ ht)) (J' (y.tupT (y.tup t))) : (s (y.tup t)).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) := dif_pos (hused _ ht)
+    have e : jX (y.tup t) = (cast (congrArg (fun ν => (s ν).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) (hused _ ht)) (J' (y.tupT (y.tup t))) : (s (y.tup t)).A.T →ₗ[ℂ] (y.C F.lv2).AmbX) := dite_eq_left (hused _ ht)
     rw [e, hcast _ _ (y.tupT_tup t) (hused _ ht)]
     exact (constrOf_apply D.what₂.embLL (tie t).j (tie t).forms.li (tie t).forms.span (aS t) x).trans (haS t x)
 
@@ -1160,8 +1158,7 @@ theorem chain_exists : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T :
   have hptop : (⨆ π, p π) = ⊤ := by
     apply Submodule.map_injective_of_injective hEi
     rw [Submodule.map_iSup, Submodule.map_top, hEr]
-    simp only [hmap]
-    exact hsup
+    simpa only [hmap] using hsup
   have hporth : ∀ π π', π ≠ π' → p π ⟂ p π' := by
     intro π π' hne
     rw [Submodule.isOrtho_iff_inner_eq]

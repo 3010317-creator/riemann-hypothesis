@@ -86,10 +86,8 @@ theorem uc_prod {A B : Type} [CommRing A] [CommRing B] (hA : UnitChoice A) (hB :
   obtain ⟨eA, hA1', hA2, hA3, hA4⟩ := hA k _ hA1
   obtain ⟨eB, hB1', hB2, hB3, hB4⟩ := hB k _ hB1
   refine ⟨fun i => (eA i, eB i), ?_, ?_, ?_, ?_⟩
-  · intro i
-    exact Prod.ext (hA1' i) (hB1' i)
-  · intro i j hij
-    exact Prod.ext (hA2 i j hij) (hB2 i j hij)
+  · exact fun i => Prod.ext (hA1' i) (hB1' i)
+  · exact fun i j hij => Prod.ext (hA2 i j hij) (hB2 i j hij)
   · exact Prod.ext (by simpa [Prod.fst_sum] using hA3) (by simpa [Prod.snd_sum] using hB3)
   · rw [Prod.isUnit_iff]
     constructor
@@ -101,8 +99,7 @@ theorem uc_pi {ι : Type} (K : ι → Type) [∀ v, Field (K v)] : UnitChoice (�
   obtain ⟨a, ha⟩ := uc_coeffs hf
   have hex : ∀ v, ∃ i, f i v ≠ 0 := by
     intro v
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have h := congrFun ha v
     simp [Finset.sum_apply, hne] at h
   choose c hc using hex
@@ -125,13 +122,11 @@ theorem uc_pi {ι : Type} (K : ι → Type) [∀ v, Field (K v)] : UnitChoice (�
     · simpa using hc v
     · intro b _ hb
       simp [Ne.symm hb]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem local_sum {A : Type} [CommRing A] [IsLocalRing A] {k : ℕ} (a f : Fin k → A)
     (h : ∑ i, a i * f i = 1) : ∃ i, IsUnit (f i) := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hmem : ∀ i, a i * f i ∈ IsLocalRing.maximalIdeal A := fun i =>
     Ideal.mul_mem_left _ _ ((IsLocalRing.mem_maximalIdeal _).mpr (hne i))
   have h1 : (1 : A) ∈ IsLocalRing.maximalIdeal A := by
@@ -171,8 +166,7 @@ theorem uc_rp {ι : Type} (K : ι → Type) [∀ v, Field (K v)] {S : ι → Typ
       · rw [inv_eq_of_mul_eq_one_right hb']
         exact b.2
     · obtain ⟨i, hi⟩ : ∃ i, f i v ≠ 0 := by
-        by_contra hne
-        push_neg at hne
+        by_contra! hne
         have h := hcomp v
         simp [hne] at h
       exact ⟨i, hi, fun h => absurd h hg⟩
@@ -203,8 +197,7 @@ theorem uc_rp {ι : Type} (K : ι → Type) [∀ v, Field (K v)] {S : ι → Typ
     simp [he]
   · have hgood : ∀ᶠ v in 𝓕, ∀ j, a j v ∈ B v ∧ f j v ∈ B v := by
       rw [Filter.eventually_all]
-      intro j
-      exact (a j).2.and (f j).2
+      exact fun j => (a j).2.and (f j).2
     let z : Πʳ v, [K v, B v]_[𝓕] := RestrictedProduct.mk (fun v => (f (c v) v)⁻¹)
       (hgood.mono fun v hv => (hc v).2 hv)
     refine isUnit_iff_exists_inv.mpr ⟨z, ?_⟩
@@ -213,11 +206,10 @@ theorem uc_rp {ι : Type} (K : ι → Type) [∀ v, Field (K v)] {S : ι → Typ
     rw [RestrictedProduct.mul_apply, hev]
     have hs : ∑ i, (e i * f i) v = f (c v) v := by
       rw [Finset.sum_eq_single (c v)]
-      · rw [RestrictedProduct.mul_apply, he, if_pos rfl, one_mul]
+      · rw [RestrictedProduct.mul_apply, he, ite_eq_left rfl, one_mul]
       · intro b _ hb
-        rw [RestrictedProduct.mul_apply, he, if_neg (Ne.symm hb), zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+        rw [RestrictedProduct.mul_apply, he, ite_eq_right (Ne.symm hb), zero_mul]
+      · exact fun h => absurd (Finset.mem_univ _) h
     rw [hs]
     exact mul_inv_cancel₀ (hc v).1
 

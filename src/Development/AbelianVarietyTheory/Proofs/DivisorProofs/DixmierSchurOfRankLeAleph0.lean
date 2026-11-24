@@ -95,8 +95,7 @@ theorem linearIndependent_of_sub_apply_eq {V : Type*} [AddCommGroup V] [Module �
   have hq : q = 0 := by
     by_contra hne
     have hu := isUnit_aeval_of_forall_isUnit_sub T h q hne
-    have hinj := ((Module.End.isUnit_iff _).1 hu).1
-    exact hv (hinj (by rw [hq0, map_zero]))
+    exact hv ((((Module.End.isUnit_iff _).1 hu).1) (by rw [hq0, map_zero]))
   have h2 : eval i q = g i * ∏ j ∈ s.erase i, (i - j) := by
     rw [hqdef, Polynomial.eval_finsetSum, Finset.sum_eq_single i]
     · simp [eval_prod]
@@ -114,8 +113,7 @@ theorem dixmier_schur_of_rank_le_aleph0 :
       (∀ N : Submodule ℂ V, (∀ i, ∀ x ∈ N, ρ i x ∈ N) → N = ⊥ ∨ N = ⊤) →
       (∀ i, T * ρ i = ρ i * T) → ∃ c : ℂ, T = c • 1 := by
   intro V ι _ _ ρ T hV hrank hirr hcomm
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hunit : ∀ c : ℂ, IsUnit (T - algebraMap ℂ (Module.End ℂ V) c) := by
     intro c
     set S := T - algebraMap ℂ (Module.End ℂ V) c with hS

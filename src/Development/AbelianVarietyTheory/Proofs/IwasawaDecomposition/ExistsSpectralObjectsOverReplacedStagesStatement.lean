@@ -169,8 +169,7 @@ theorem fibre_iff (X : HidaSetting D) {red : X.B.I.Gf → G0g D.nd} (hr : IsRedH
     rw [mul_inv_cancel_left] at h2
     refine ⟨h2, ?_⟩
     have h3 := hr.2.1 _ hs _ hkK
-    rw [mul_inv_cancel_left, hr1, mul_one] at h3
-    exact h3
+    rwa [mul_inv_cancel_left, hr1, mul_one] at h3
 
 theorem kg_open (X : HidaSetting D) : IsOpen (X.B.I.Kg X.B.g) := X.B.I.topf_open X.B.g (_root_.Formalism.L2.SG.PoincareInHH.Cut.one_le_g X)
 
@@ -210,25 +209,21 @@ theorem top_expand [Fintype (G0g D.nd)] (X : HidaSetting D) {red : X.B.I.Gf → 
   have hFb : ∀ γ, MeasurableSet (Fb γ) ∧ X.B.μf (Fb γ) = X.B.μf (X.B.I.Kg X.B.g) := by
     intro γ
     have := fibre_meas X hr (hs0 γ).1
-    rw [(hs0 γ).2] at this
-    exact this
+    rwa [(hs0 γ).2] at this
   let cf : G0g D.nd → ℂ := fun γ => a γ / (V : ℂ) * ⟪x, X.B.R (1, s0 γ) y⟫_ℂ
   have hpt : ∀ g : X.B.I.Gf,
       (if g ∈ X.B.I.Kset then a (red g) / (V : ℂ) else 0) * ⟪x, X.B.R (1, g) y⟫_ℂ =
         ∑ γ, (Fb γ).indicator (fun _ => cf γ) g := by
     intro g
     by_cases hg : g ∈ X.B.I.Kset
-    · rw [if_pos hg, Finset.sum_eq_single (red g)]
+    · rw [ite_eq_left hg, Finset.sum_eq_single (red g)]
       · rw [Set.indicator_of_mem (show g ∈ Fb (red g) from ⟨hg, rfl⟩), hy g hg]
-      · intro b _ hb
-        exact Set.indicator_of_notMem (by exact fun hm => hb hm.2.symm) _
+      · exact fun b _ hb => Set.indicator_of_notMem (by exact fun hm => hb hm.2.symm) _
       · intro h1; exact absurd (Finset.mem_univ _) h1
-    · rw [if_neg hg, zero_mul]
+    · rw [ite_eq_right hg, zero_mul]
       symm
-      refine Finset.sum_eq_zero fun b _ => ?_
-      exact Set.indicator_of_notMem (by exact fun hm => hg hm.1) _
-  rw [integral_congr_ae (Filter.Eventually.of_forall hpt)]
-  rw [integral_finsetSum]
+      exact Finset.sum_eq_zero fun b _ => Set.indicator_of_notMem (by exact fun hm => hg hm.1) _
+  rw [integral_congr_ae (Filter.Eventually.of_forall hpt), integral_finsetSum]
   · refine Finset.sum_congr rfl fun γ _ => ?_
     rw [integral_indicator_const _ (hFb γ).1, measureReal_def, (hFb γ).2, ← hV]
     simp only [cf, Complex.real_smul]
@@ -266,9 +261,9 @@ theorem eg_eq_step {D : D7} (X : HidaSetting D) {red : X.B.I.Gf → G0g D.nd} (h
   unfold eg
   by_cases hx : x ∈ X.B.I.Kset
   · have hex : x ∈ X.B.I.Kset ∧ ∃ γ : G0g D.nd, GoodAt X x γ := ⟨hx, red x, hr.1 x hx⟩
-    rw [dite_eq_left hex, if_pos hx,
+    rw [dite_eq_left hex, ite_eq_left hx,
       Formalism.L2.SG.Pf.rowDictEgWellDef_holds X x _ _ (Classical.choose_spec hex.2) (hr.1 x hx)]
-  · rw [dite_eq_right (fun h => hx h.1), if_neg hx]
+  · rw [dite_eq_right (fun h => hx h.1), ite_eq_right hx]
 
 theorem rg_expand : ∀ (D : D7) (X : HidaSetting D) (G : GoodOp X) [Fintype (G0g D.nd)] (red : X.B.I.Gf → G0g D.nd) (s : G0g D.nd → X.B.I.Gf), IsRedHom X red → (∀ γ, s γ ∈ X.B.I.Kset ∧ red (s γ) = γ) → ∀ φ : L2X X, (∀ k ∈ X.B.I.Kg X.B.g, X.B.R (1, k) φ = φ) → G.Rg φ = ∑ γ, D.ntypes.e0.coeff γ • X.B.R (1, s γ) φ := by
   intro D X G _ red s hr hs φ hφ
@@ -370,10 +365,8 @@ theorem evalOn_good : ∀ (D : D7) (G' : Type) [Group G'] [Fintype G'] (Pl0 T : 
       intro γ
       by_cases hγ : γ = 1
       · subst hγ
-        simp only [s, if_pos rfl]
-        exact ⟨hkK, hrk⟩
-      · simp only [s, if_neg hγ]
-        exact hs0' γ
+        simpa only [s, ite_eq_left rfl] using ⟨hkK, hrk⟩
+      · simpa only [s, ite_eq_right hγ] using hs0' γ
     have hI := GlobalTheory.Mem.SRe.evalAct_intertwines D G' Pl0 T A Ks R F X h t v₀ σ red hB (S : MMap (MP R)) S.2
       ((J S : conjRows X) : L2X X) (hJ S).1 (hGQ _ S.2) a s hs
     have e1 : (∑ γ, star (a γ) • star (X.B.R (1, s γ) (star ((J S : conjRows X) : L2X X))) : L2X X) =
@@ -382,8 +375,7 @@ theorem evalOn_good : ∀ (D : D7) (G' : Type) [Group G'] [Fintype G'] (Pl0 T : 
       · simp [a, s]
       · intro b _ hb
         simp [a, hb]
-      · intro h1
-        exact absurd (Finset.mem_univ _) h1
+      · exact fun h1 => absurd (Finset.mem_univ _) h1
     have hsum : (gaL (Yc D 0) (R.βY 0) (R.dat0 R.triv) R.eG fun g => star (a (σ.symm g))) =
         actL (Yc D 0) (R.βY 0) (R.dat0 R.triv) (R.eG 1) := by
       unfold gaL
@@ -398,8 +390,7 @@ theorem evalOn_good : ∀ (D : D7) (G' : Type) [Group G'] [Fintype G'] (Pl0 T : 
           simpa using congrArg σ h1
         have ha0 : a (σ.symm b) = 0 := by simp [a, hb']
         simp only [ha0, star_zero, zero_smul]
-      · intro h1
-        exact absurd (Finset.mem_univ _) h1
+      · exact fun h1 => absurd (Finset.mem_univ _) h1
     have e2 : ∀ y : GA D (D.sp.Y 0),
         (gaL (Yc D 0) (R.βY 0) (R.dat0 R.triv) R.eG fun g => star (a (σ.symm g))) ((S : MMap (MP R)) v₀) y =
           (S : MMap (MP R)) v₀ y := by
@@ -448,10 +439,8 @@ theorem evalOn_good : ∀ (D : D7) (G' : Type) [Group G'] [Fintype G'] (Pl0 T : 
   have hEPS : ∀ S : MultR R F, (S : MMap (MP R)) ∈ EP R F ↔ postOn (MP R) R.e0 S = S := by
     intro S
     constructor
-    · intro hS
-      exact sub_eq_zero.1 (LinearMap.mem_ker.1 hS.2)
-    · intro e
-      exact ⟨S.2, LinearMap.mem_ker.2 (sub_eq_zero.2 e)⟩
+    · exact fun hS => sub_eq_zero.1 (LinearMap.mem_ker.1 hS.2)
+    · exact fun e => ⟨S.2, LinearMap.mem_ker.2 (sub_eq_zero.2 e)⟩
   have hconj : ∀ Fx : L2X X, Fx ∈ EEC X G → Fx ∈ conjRows X := fun Fx hF => (Submodule.mem_inf.1 hF).1
   let L0 : EP R F →ₗ[ℂ] L2X X :=
     (conjRows X).subtype ∘ₗ (J : MultR R F →ₗ[ℂ] conjRows X) ∘ₗ Submodule.inclusion hle
@@ -495,8 +484,7 @@ theorem evalOn_good : ∀ (D : D7) (G' : Type) [Group G'] [Fintype G'] (Pl0 T : 
     rw [hJS, hRg, star_star, ← hJS] at k1
     have hfix : postOn (MP R) R.e0 S = S := congrArg Subtype.val (J.injective (Subtype.ext k1))
     refine ⟨⟨(S : MMap (MP R)), (hEPS S).2 hfix⟩, Subtype.ext ?_⟩
-    rw [hLv]
-    exact hJS
+    rwa [hLv]
   let j : EP R F ≃ₗ[ℂ] EEC X G := LinearEquiv.ofBijective L ⟨hinj, hsurj⟩
   have hj : ∀ S : EP R F, ((j S : EEC X G) : L2X X) = ((J (Submodule.inclusion hle S) : conjRows X) : L2X X) :=
     fun S => rfl
@@ -558,8 +546,7 @@ theorem cong_nsmul {V : Type*} [AddCommGroup V] (W : AddSubgroup V) {r g : ℕ} 
 theorem sum_nsmul_sum {V : Type*} [AddCommGroup V] {r : ℕ} (u : Fin r → V) (a : Fin r → ℕ)
     (b : Fin r → Fin r → ℕ) :
     ∑ j, a j • ∑ l, b l j • u l = ∑ l, (∑ j, a j * b l j) • u l := by
-  simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
 
 theorem rebase_rel {V : Type*} [AddCommGroup V] (W : AddSubgroup V) {r g : ℕ} [NeZero g] (F : V →+ V) (u : Fin r → V)
     (hu : ∀ j, g • u j ∈ W) (M c d : Matrix (Fin r) (Fin r) (ZMod g)) (hcd : c * d = 1)
@@ -586,8 +573,7 @@ theorem rebase_span {V : Type*} [AddCommGroup V] (W : AddSubgroup V) {r g : ℕ}
   refine ⟨fun m => ∑ l, ((d m l).val : ℤ) * a l, ?_⟩
   have e1 : ∑ m, (∑ l, ((d m l).val : ℤ) * a l) • ∑ j, (c j m).val • u j =
       ∑ j, (∑ m, (∑ l, ((d m l).val : ℤ) * a l) * ((c j m).val : ℤ)) • u j := by
-    simp only [Finset.smul_sum, ← natCast_zsmul, smul_smul, Finset.sum_smul]
-    exact Finset.sum_comm
+    simpa only [Finset.smul_sum, ← natCast_zsmul, smul_smul, Finset.sum_smul] using Finset.sum_comm
   rw [e1]
   refine cong_zsmul W u hu _ _ fun j => ?_
   have e2 := congrFun (congrFun hcd j) j
@@ -926,7 +912,7 @@ theorem kap_mem' (R : RealDat D A Ks) (X : HidaSetting D) (h : X.B.I = Formalism
       intro i j hij
       exfalso
       unfold Formalism.L2.DIV.blkOf at hij
-      rw [if_pos (hr i), if_pos (hr j)] at hij
+      rw [ite_eq_left (hr i), ite_eq_left (hr j)] at hij
       exact lt_irrefl 0 hij
     · exact absurd hP (Finset.notMem_empty PP)
 
@@ -1060,8 +1046,7 @@ theorem redK_eq_one_iff (R : RealDat D A Ks) (X : HidaSetting D) (h : X.B.I = Fo
     rw [Equiv.apply_symm_apply] at e
     have := Formalism.L2.SG.Pf.RowDictPf.level_mem X (plg.symm ⟨PP, hP⟩)
     rw [X.g_eq] at this
-    rw [show PP = D.naut.plGw _ _ from e]
-    exact this
+    rwa [show PP = D.naut.plGw _ _ from e]
   have hg : 1 ≤ D.host.g 0 * D.host.g 1 :=
     Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (D.host.g_prime 0).ne_zero (D.host.g_prime 1).ne_zero)
   have hcore : x ∈ (Formalism.L2.SG.InstExistsPf.instOf D).Kg (D.host.g 0 * D.host.g 1) ↔
@@ -1279,8 +1264,7 @@ theorem seeAt_exists : ∀ (D : D7) (G' : Type) [Group G'] [Fintype G'] (Pl0 T :
   have hgw : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), ((D.host.g kv.1 : ℕ) : 𝓞 D.host.E) ∈ (D.naut.plGw kv.1 kv.2).asIdeal := by
     intro kv
     have := D.naut.plGw_over kv.1 kv.2
-    simp [placesOver] at this
-    exact this
+    simpa [placesOver] using this
   obtain ⟨t₀, ht₀, red, b, hred, hfix, hlift, hcover⟩ := GlobalTheory.Mem.SRe.TrPt.exists_trans D G' Pl0 T A Ks R X h eR plg iso hι hL hpl hdiv heG
   obtain ⟨c, hc⟩ := GlobalTheory.T.conj_level_conjCharacter_symmetricLevel D G' Pl0 T A Ks R X h eR plg iso hι hL hpl hdiv heG ψ0 hgen π hπ red b hred hfix hgw
   obtain ⟨b', hfix'⟩ := GlobalTheory.T.isFixedBasisReductionMap_conj D X red b c hgw hfix
@@ -1379,8 +1363,7 @@ theorem seeAt_exists : ∀ (D : D7) (G' : Type) [Group G'] [Fintype G'] (Pl0 T :
     have hkK := hK2K k hk
     have hJ := (key k hkK).1.2 hk
     exact ⟨hJ, (key k hkK).2 hJ⟩
-  · intro k hk T hT v g
-    exact mult_act_of_lift R (R.levR F true) (hliftT k hk) T hT v g
+  · exact fun k hk T hT v g => mult_act_of_lift R (R.levR F true) (hliftT k hk) T hT v g
   · intro γ
     show star (D.ntypes.e0.coeff γ) = D.what₂.embLL ((idemOf A.X).coeff (eR.symm γ))
     rw [he, MulEquiv.apply_symm_apply, hE γ]
@@ -1530,19 +1513,7 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Fo
 
 namespace GlobalTheory.DegreeRankEquations
 
-theorem f_eq (D : D7) (X : HidaSetting D) : X.B.I.f = D.R.f := by
-  have e1 : Module.finrank ℚ X.B.I.E = Module.finrank ℚ D.host.E :=
-    (X.ιE.toRatAlgEquiv).toLinearEquiv.finrank_eq
-  have e2 : Module.finrank ℚ X.B.I.F * Module.finrank X.B.I.F X.B.I.E = Module.finrank ℚ X.B.I.E :=
-    Module.finrank_mul_finrank ℚ X.B.I.F X.B.I.E
-  have e3 : Module.finrank X.B.I.F X.B.I.E = 2 := X.B.I.cm.deg2
-  have e4 : Module.finrank ℚ D.host.E = 2 * D.R.f := by
-    rw [D.host.finrank_cmField]
-    unfold Ranks.f Ranks.n
-    ring_nf
-  rw [e3] at e2
-  unfold AutInst.f
-  omega
+theorem f_eq (D : D7) (X : HidaSetting D) : X.B.I.f = D.R.f := Formalism.L2.SG.Pf.RowDictPf.f_eq X
 
 theorem rd_eq (D : D7) (X : HidaSetting D) : X.B.I.rd = D.host.rdE := by
   have hd : discr X.B.I.E = discr D.host.E := NumberField.discr_eq_discr_of_algEquiv X.B.I.E X.ιE.toRatAlgEquiv
@@ -1588,7 +1559,7 @@ theorem chi2_apply_one : X.chi2 1 = 1 := by
 
 theorem e_one : X.B.e 1 = 1 / (X.volK2 : ℂ) := by
   have h1 : (1 : X.B.I.Gf) ∈ K2set X.B.I X.B.g X.e0 X.z0 X.bw := (Formalism.L2.SG.Pf.level_subgroup_character_unitary X).1
-  rw [X.e_eq 1, if_pos h1]
+  rw [X.e_eq 1, ite_eq_left h1]
   have hc : chi2f X.B.I X.psiEf X.B.g X.e0 X.f0 X.z0 X.bw X.bwd 1 = 1 := chi2_apply_one X
   rw [hc, star_one]
   rfl

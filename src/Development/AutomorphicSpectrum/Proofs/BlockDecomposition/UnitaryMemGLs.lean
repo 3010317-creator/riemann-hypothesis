@@ -100,8 +100,7 @@ theorem Pw_commute {T : Fin n → Fin n → A} {u : A} (h : ∀ a b, Commute u (
     · exact Commute.one_right u
     · exact Commute.zero_right u
   | succ m ih =>
-    simp only [Pw]
-    exact Commute.sum_right _ _ _ fun c _ => (h a c).mul_right (ih c b)
+    simpa only [Pw] using Commute.sum_right _ _ _ fun c _ => (h a c).mul_right (ih c b)
 
 theorem Pw_bracket {T : Fin n → Fin n → A}
     (hT : ∀ a b c d, T a b * T c d - T c d * T a b = (if b = c then T a d else 0) - (if d = a then T c b else 0))
@@ -119,7 +118,7 @@ theorem Pw_bracket {T : Fin n → Fin n → A}
     simp only [Pw]
     rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
     simp only [e, hT, ih, sub_mul, mul_sub, Finset.sum_add_distrib, Finset.sum_sub_distrib, ite_mul, mul_ite, zero_mul,
-      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     have s1 : (∑ x, if x = a then T c b * Pw T m x d else 0) = T c b * Pw T m a d := by simp
     have s2 : (∑ x, if b = x then T c x * Pw T m a d else 0) = T c b * Pw T m a d := by simp
     by_cases h1 : b = c <;> by_cases h2 : d = a <;> simp [h1, h2, Finset.sum_const_zero] <;> abel
@@ -129,7 +128,7 @@ theorem trPw_central {T : Fin n → Fin n → A}
     (m : ℕ) (a b : Fin n) : Commute (T a b) (∑ c, Pw T m c c) := by
   have : T a b * ∑ c, Pw T m c c - (∑ c, Pw T m c c) * T a b = 0 := by
     rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
-    simp only [Pw_bracket hT, Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [Pw_bracket hT, Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp
   exact sub_eq_zero.mp this
 
@@ -227,7 +226,7 @@ theorem D_single (hs : ∀ (r : ℝ) X, D ((r : ℂ) • X) = (r : ℂ) • D X)
     congr 1
     apply Complex.ext <;> simp
   rw [e, map_add (f := _), hs, hs]
-  simp only [Tc, TX, eps, if_true, Bool.false_eq_true, if_false]
+  simp only [Tc, TX, eps, ite_true, Bool.false_eq_true, ite_false]
   have hz : z = (z.re : ℂ) + (z.im : ℂ) * Complex.I := (Complex.re_add_im z).symm
   have hc : conj z = (z.re : ℂ) - (z.im : ℂ) * Complex.I := by
     apply Complex.ext <;> simp
@@ -255,10 +254,10 @@ theorem TX_expand (hs : ∀ (r : ℝ) X, D ((r : ℂ) • X) = (r : ℂ) • D X
   have hI : Complex.I * Complex.I = -1 := Complex.I_mul_I
   generalize X a b = z
   cases s
-  · simp only [eps, cs, Bool.false_eq_true, if_false]
+  · simp only [eps, cs, Bool.false_eq_true, ite_false]
     generalize conj z = w
     match_scalars <;> first | linear_combination (z / 2) * hI | linear_combination (-w / 2) * hI
-  · simp only [eps, cs, if_true, RingHom.id_apply]
+  · simp only [eps, cs, ite_true, RingHom.id_apply]
     generalize conj z = w
     match_scalars <;> first | linear_combination (-z / 2) * hI | linear_combination (w / 2) * hI
 
@@ -532,8 +531,7 @@ theorem gel_eq (s : Bool) (m : ℕ) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f
   have e : (Gl n V s m (res hf)).1 g = ∑ c, (Pw (Tc (DA n V) s) m c c (res hf)).1 g := by
     simp [Gl, LinearMap.sum_apply, Finset.sum_apply]
   rw [e]
-  simp only [gel, Finset.sum_apply]
-  exact Finset.sum_congr rfl fun c _ => Epow_eq s m c c hf hg
+  simpa only [gel, Finset.sum_apply] using Finset.sum_congr rfl fun c _ => Epow_eq s m c c hf hg
 
 theorem mul_mem_GLs {x g : Mat n} (hx : x ∈ GLs n) (hg : g ∈ GLs n) : x * g ∈ GLs n := by
   simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
@@ -584,8 +582,7 @@ theorem postE_apply (L : V →L[ℂ] V) (h : Sm n V) {g : Mat n} (hg : g ∈ GLs
 theorem Gl_commute {u : Module.End ℂ (Sm n V)} (h : ∀ X, Commute u (DA n V X)) (s : Bool) (m : ℕ) :
     Commute u (Gl n V s m) := by
   refine Commute.sum_right _ _ _ fun c _ => Pw_commute (fun a b => ?_) m c c
-  simp only [Tc, TX]
-  exact ((h _).add_right ((h _).smul_right _)).smul_right _
+  simpa only [Tc, TX] using ((h _).add_right ((h _).smul_right _)).smul_right _
 
 theorem DA_Gl_commute (X : Mat n) (s : Bool) (m : ℕ) : Commute (DA n V X) (Gl n V s m) :=
   D_commute_trPw DA_bracket (fun r X => DA_smul r X) s m X

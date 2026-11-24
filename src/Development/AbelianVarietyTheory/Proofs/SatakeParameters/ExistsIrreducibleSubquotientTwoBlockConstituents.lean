@@ -215,8 +215,7 @@ theorem isSubquotient_dichotomy {F G V W V₁ V₂ : Type} [Field F] [Group G] [
       exact Representation.IntertwiningMap.isIntertwining _ _ f g ⟨v, hv⟩
     · rw [hf'v v hv]
       constructor
-      · intro h0
-        exact ⟨⟨v, hv⟩, h0, rfl⟩
+      · exact fun h0 => ⟨⟨v, hv⟩, h0, rfl⟩
       · rintro ⟨x, hx, hxv⟩
         have : x = ⟨v, hv⟩ := Subtype.ext hxv
         subst this
@@ -415,8 +414,7 @@ theorem exists_covBy_left {r t : ℕ} {U V W : Type} [AddCommGroup U] [Module �
     haveI := tensor_subsingleton_left (F := ℂ)
       (V := ↥S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype S.toSubmodule) (W := W)
     exact not_isSubquotient_ind₂ _ _ hπ hS
-  · intro S₀ M₀ T₀ hTM hMS hQ
-    exact step_left π A B hπ hTM hMS hQ
+  · exact fun S₀ M₀ T₀ hTM hMS hQ => step_left π A B hπ hTM hMS hQ
   · exact top_left π A B h
 
 theorem exists_covBy_right {r t : ℕ} {U V W : Type} [AddCommGroup U] [Module ℂ U] [AddCommGroup V] [Module ℂ V]
@@ -431,8 +429,7 @@ theorem exists_covBy_right {r t : ℕ} {U V W : Type} [AddCommGroup U] [Module �
     haveI := tensor_subsingleton_right (F := ℂ) (V := V)
       (W := ↥S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype S.toSubmodule)
     exact not_isSubquotient_ind₂ _ _ hπ hS
-  · intro S₀ M₀ T₀ hTM hMS hQ
-    exact step_right π A B hπ hTM hMS hQ
+  · exact fun S₀ M₀ T₀ hTM hMS hQ => step_right π A B hπ hTM hMS hQ
   · exact top_right π A B h
 
 end Main

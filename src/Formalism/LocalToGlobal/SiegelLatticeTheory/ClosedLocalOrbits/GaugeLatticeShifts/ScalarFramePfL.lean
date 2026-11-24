@@ -53,12 +53,12 @@ theorem hT_om_X (u v : Fin (D.R.rS + 1) → (VS D).V) {w : (VS D).V} (hw : w ∈
     rcases eq_or_ne b (Fin.last _) with hb | hb
     · subst hb
       simp
-    · rw [if_neg (Ne.symm hb), if_neg hb, smul_zero]
+    · rw [ite_eq_right (Ne.symm hb), ite_eq_right hb, smul_zero]
   obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun D.host.E).1 hw
 
   rw [map_sum]
   refine Finset.sum_eq_zero fun b _ => ?_
-  rw [map_smul, om_pair, if_neg (Fin.castSucc_ne_last b), smul_zero]
+  rw [map_smul, om_pair, ite_eq_right (Fin.castSucc_ne_last b), smul_zero]
 
 theorem scal_om (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R.rS T') (β : (VS D).V ≃ₗ[D.host.E] (VS D).V)
     (hz : F.zt = F.fl.z) (hz' : F'.zt = F'.fl.z) (hz'' : F''.zt = F''.fl.z) (hT0' : T' ≠ 0)
@@ -96,7 +96,7 @@ theorem scal_om (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R.r
     rcases eq_or_ne b (Fin.last _) with hb | hb
     · subst hb
       simp
-    · rw [if_neg (Ne.symm hb), if_neg hb, smul_zero]
+    · rw [ite_eq_right (Ne.symm hb), ite_eq_right hb, smul_zero]
   have om_decomp (u v : Fin (D.R.rS + 1) → (VS D).V) :
       Gom u v - star (GDl u v D.R.rS) • u (Fin.last _) ∈ Xs (S := VS D) u := by
     unfold Gom
@@ -113,8 +113,7 @@ theorem scal_om (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R.r
 
       rw [map_sum, LinearMap.sum_apply] at this
       simp only [LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply] at this
-      simp only [Matrix.vecMul, dotProduct, Pi.zero_apply, GZ_apply]
-      exact this
+      simpa only [Matrix.vecMul, dotProduct, Pi.zero_apply, GZ_apply] using this
     rw [GDl_top'] at hdet
     have hκ := Matrix.eq_zero_of_vecMul_eq_zero hdet hm
     have : κ = 0 := by
@@ -149,14 +148,13 @@ theorem scal_om (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R.r
     · rw [hu', map_add (f := _), map_smul, F'.fl.z_orth b, smul_zero, add_zero, hT_swap,
         hom1X _ (Submodule.subset_span ⟨b, rfl⟩), star_zero]
     · have h1 := q1 (Fin.last _)
-      rw [if_pos rfl, hfl'] at h1
+      rw [ite_eq_left rfl, hfl'] at h1
       rw [hu', map_add (f := _), map_smul, hz'z', hT_swap, h1, smul_eq_mul]
       field_simp
       ring
   have hu'oX : u' ∈ orth (VS D) (Xsp F') := by
     rw [mem_orth]
-    intro x hx
-    exact (mem_orth (VS D)).1 hu'o x (Submodule.mem_sup_left hx)
+    exact fun x hx => (mem_orth (VS D)).1 hu'o x (Submodule.mem_sup_left hx)
   have hβU : β u' ∈ UUE Λ F F'' := htrβ u' hu'U hu'oX
   have hβo : β u' ∈ orth (VS D) (Xplus F'') := by
     rw [Xplus, mem_orth_Xplus]
@@ -191,10 +189,10 @@ theorem scal_om (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R.r
       PI.ScalarPairDr.W.hT_add_left, q2]
     induction b using Fin.lastCases with
     | last =>
-      rw [if_pos rfl, hfl'', hT_X_alt F''.fl hx''X, ← hβz, hiso, ← hfl', q1, if_pos rfl]
+      rw [ite_eq_left rfl, hfl'', hT_X_alt F''.fl hx''X, ← hβz, hiso, ← hfl', q1, ite_eq_left rfl]
       ring
     | cast b =>
-      rw [if_neg (Fin.castSucc_ne_last b), hfc'', hT_X_X F''.fl hx''X (Submodule.subset_span ⟨b, rfl⟩),
+      rw [ite_eq_right (Fin.castSucc_ne_last b), hfc'', hT_X_X F''.fl hx''X (Submodule.subset_span ⟨b, rfl⟩),
         show F''.fl.e b = β (β.symm (F''.fl.e b)) from (β.apply_symm_apply _).symm, hiso,
         hom1X _ (hXm' _ (Submodule.subset_span ⟨b, rfl⟩))]
       ring
@@ -293,8 +291,7 @@ theorem gfacts_of (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R
     intro x hx
     rw [← hPX] at hx
     obtain ⟨y, hy, rfl⟩ := hx
-    rw [LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
-    exact hy
+    rwa [LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
   have hiso : ∀ x y, (VS D).hT (β x) (β y) = (VS D).hT x y := fun x y => hP.1.1 x y
   have hβz : β F'.fl.z = F''.fl.z := hP.2.2.1
 
@@ -373,8 +370,7 @@ theorem gfacts_of (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R
     rw [← hP.1.2] at hv
     obtain ⟨w, hw, rfl⟩ := hv
     show β.symm (β w) ∈ Λ
-    rw [LinearEquiv.symm_apply_apply]
-    exact hw
+    rwa [LinearEquiv.symm_apply_apply]
   · intro a
     show _ ∈ Xs (S := VS D) (frameAct (frame F'') (admXi D Λ F F'')⁻¹)
     rw [hXg2]
@@ -405,13 +401,11 @@ theorem gfacts_of (F : LFlag (D.sp.Y 0) D.R.rS T) (F' F'' : LFlag (D.sp.Y 0) D.R
     have ha : frameAct (frame F'') (admXi D Λ F F'')⁻¹ a.castSucc ∈ F''.fl.X := by
       have h : frameAct (frame F'') (admXi D Λ F F'')⁻¹ a.castSucc ∈
           Xs (S := VS D) (frameAct (frame F'') (admXi D Λ F F'')⁻¹) := Submodule.subset_span ⟨a, rfl⟩
-      rw [hXg2] at h
-      exact h
+      rwa [hXg2] at h
     have hb : frameAct (frame F'') (admXi D Λ F F'')⁻¹ b.castSucc ∈ F''.fl.X := by
       have h : frameAct (frame F'') (admXi D Λ F F'')⁻¹ b.castSucc ∈
           Xs (S := VS D) (frameAct (frame F'') (admXi D Λ F F'')⁻¹) := Submodule.subset_span ⟨b, rfl⟩
-      rw [hXg2] at h
-      exact h
+      rwa [hXg2] at h
     exact hT_X_X F''.fl ha hb
   · intro y
     have hsup : UUE Λ F F' ⊔ orth (VS D) (UUE Λ F F') = ⊤ := by

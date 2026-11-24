@@ -145,12 +145,10 @@ theorem mixCo_spec : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : 
     refine ⟨ofMaps e (x₁, x₂), ⟨?_, ?_⟩, ?_⟩
     · show IsHalf _ (mapV e _)
       rw [k₁]
-      intro a b
-      exact atPl_one_mul w _
+      exact fun a b => atPl_one_mul w _
     · show IsHalf _ (mapW e _)
       rw [k₂]
-      intro a b
-      exact atPl_one_mul w _
+      exact fun a b => atPl_one_mul w _
     · rw [mixCo_eq, k₁, k₂, m₁, m₂, hy₁, hy₂, transpose_transpose, fromCols_toCols]
   · have k₁ : mapV e (ofMaps e (atPl w 1 • mapV e u, atPl w 1 • mapW e u)) = atPl w 1 • mapV e u := mapV_ofMaps e _
     have k₂ : mapW e (ofMaps e (atPl w 1 • mapV e u, atPl w 1 • mapW e u)) = atPl w 1 • mapW e u := mapW_ofMaps e _

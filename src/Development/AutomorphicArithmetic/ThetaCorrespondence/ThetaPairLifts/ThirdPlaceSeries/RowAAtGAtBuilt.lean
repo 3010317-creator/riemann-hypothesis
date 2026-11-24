@@ -1289,13 +1289,7 @@ theorem b'_pos (L : SizeData₂ D) : 0 < L.sc.b' := by
   unfold Scale.b' Scale.a Scale.X'
   positivity
 
-theorem one_le_n (D : D7) : (1 : ℝ) ≤ D.R.n := by
-  have : 1 ≤ D.R.n := by
-    have := D.R.two_le_m
-    have := D.R.m_le_f
-    unfold Ranks.n
-    omega
-  exact_mod_cast this
+theorem one_le_n (D : D7) : (1 : ℝ) ≤ D.R.n := Formalism.MainNotions.FormalGroupSystem.Pf.nd_n_ge
 
 theorem exists_top {τ : D.what₂.Tau} (h : (D.eTau τ : D.R.GG) ∈ D.host.topPlaces) :
     ∃ t : D.host.TT, (D.eTau τ : D.R.GG) = D.R.tau1 t := by
@@ -1391,7 +1385,7 @@ theorem key_ineq (A N Y : ℝ) (hA : 10 ≤ A) (hN : 2 ≤ N) (h1 : A ^ 8 ≤ Y)
     have e2 : A ^ 8 = A * A ^ 7 := by ring
     have e3 : 10 * A ^ 7 ≤ A * A ^ 7 := mul_le_mul_of_nonneg_right hA (by positivity)
     linarith
-  · push_neg at h
+  · push Not at h
     have hA25 : A ^ 2 ≤ A ^ 5 := pow_le_pow_right₀ hA1 (by norm_num)
     have hAN : A ^ 2 < N := lt_of_le_of_lt hA25 h
     have e1 : 6 * A ^ 2 * N < 6 * N * N := by nlinarith

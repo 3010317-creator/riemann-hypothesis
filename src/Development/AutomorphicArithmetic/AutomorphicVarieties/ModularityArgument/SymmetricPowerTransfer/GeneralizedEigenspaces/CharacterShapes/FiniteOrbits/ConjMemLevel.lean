@@ -70,8 +70,7 @@ theorem UpperTheory.V.Z.Sym.So.extF :
       rw [e]
       apply S.mul_mem s'.2
       have hc := hSn.conj_mem _ (S.inv_mem s.2) (u * u'⁻¹)⁻¹
-      rw [inv_inv] at hc
-      exact hc
+      rwa [inv_inv] at hc
     have hvS : u * u'⁻¹ ∈ S := by
       have e : u * u'⁻¹ = (ι (γ'⁻¹ * γ) * ↑s)⁻¹ * ↑s' := by
         rw [← h1]
@@ -80,8 +79,7 @@ theorem UpperTheory.V.Z.Sym.So.extF :
       exact S.mul_mem (S.inv_mem (S.mul_mem hδ s.2)) s'.2
     have e1 : s' = ⟨ι (γ'⁻¹ * γ) * s, S.mul_mem hδ s.2⟩ * ⟨u * u'⁻¹, hvS⟩ := by
       apply Subtype.ext
-      simp only [Subgroup.coe_mul]
-      exact h1.symm
+      simpa only [Subgroup.coe_mul] using h1.symm
     rw [e1, hψU ⟨u * u'⁻¹, hvS⟩ hv,
       hψΓ (γ'⁻¹ * γ) s ⟨ι (γ'⁻¹ * γ) * s, S.mul_mem hδ s.2⟩ rfl, ← Module.End.mul_apply, ← map_mul,
       mul_inv_cancel_left]
@@ -111,8 +109,7 @@ theorem UpperTheory.V.Z.Sym.So.extF :
       group
   refine ⟨Φ, ?_, ?_, hUinv, ?_⟩
   · intro g
-    have h := Φ_spec 1 g 1 U.one_mem
-    simpa using h
+    simpa using Φ_spec 1 g 1 U.one_mem
   · intro γ g
     by_cases hg : P g
     · obtain ⟨δ, s, u, hu, rfl⟩ := (hP g).1 hg

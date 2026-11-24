@@ -99,8 +99,7 @@ theorem squareBottomHalfRankSum_le_halfRank (D : D7) (i j : ℕ) : h0 D i j ≤ 
 
 theorem exists_ne_zero_of_integral {Y : Type} [MeasurableSpace Y] {ν : Measure Y} {S : Set Y} {f : Y → ℂ}
     (h : (∫ y in S, ‖f y‖ ^ 2 ∂ν) ≠ 0) : ∃ y, f y ≠ 0 := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   exact h (by simp [hc])
 
 theorem exists_ne_zero_of_norm_formula {Y : Type} [MeasurableSpace Y] {ν : Measure Y} {S : Set Y} {f : Y → ℂ} {c : ℂ}
@@ -158,8 +157,7 @@ theorem normSq_eq_petersson : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Glob
     intro y γ hγ g
     show om (γ * g, y) Φ 0 * 1 = om (g, y) Φ 0 * 1
     have e : ((γ * g, y) : GA D (GlobalTheory.Grid.neg A) × GA D WW) = (γ, 1) * (g, y) := by rw [Prod.mk_mul_mk, one_mul]
-    rw [e, map_mul, Module.End.mul_apply]
-    rw [hW.om_aut γ hγ 1 (GQ WW).one_mem _ (hW.om_pres _ _ hΦ)]
+    rw [e, map_mul, Module.End.mul_apply, hW.om_aut γ hγ 1 (GQ WW).one_mem _ (hW.om_pres _ _ hΦ)]
 
   have hup : ∀ y, up om ν₁ Φ (fun _ => 1) y = X.I W.ψ W.θ t P y := by
     intro y
@@ -561,8 +559,7 @@ theorem bottom_theta_lift_ne_zero : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
     refine (hJ t).resolve_left fun h0 => hy ?_
     rw [hlam P, h0]
     simp
-  by_contra hc'
-  push_neg at hc'
+  by_contra! hc'
   apply hP'
   apply hinj
   rw [← hI' t P', map_zero]

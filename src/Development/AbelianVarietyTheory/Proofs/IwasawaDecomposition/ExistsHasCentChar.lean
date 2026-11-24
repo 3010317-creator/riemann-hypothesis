@@ -125,7 +125,7 @@ theorem lie_mem_Zalg (x : Cinf E) : lie E a (scL a x) ∈ Zalg E a := by
   have e : x = ∑ w : InfinitePlace E, atEmb w.embedding (x w) := by
     have : ∀ w : InfinitePlace E, atEmb w.embedding (x w) = Pi.single w (x w) := fun w => by
       unfold atEmb
-      simp only [InfinitePlace.mk_embedding, if_true]
+      simp only [InfinitePlace.mk_embedding, ite_true]
     simp [this, Finset.univ_sum_single]
   have e2 : lie E a (scL a x) = ∑ i, lieS E a i i x := by
 
@@ -166,8 +166,7 @@ theorem hasDerivAt_scalar (z : Cinf E) (ψ : Sm E a) (g : GA E a) :
       refine hasDerivAt_pi.2 fun w => ?_
       change HasDerivAt (fun t : ℝ => Complex.exp (t * z w)) _ 0
       simpa using ((Complex.ofRealCLM.hasDerivAt (x := 0)).mul_const (z w)).cexp
-    · simp only [Matrix.diagonal_apply_ne _ h]
-      exact hasDerivAt_const _ _
+    · simpa only [Matrix.diagonal_apply_ne _ h] using hasDerivAt_const _ _
   have h := hasDerivAt_curve ψ g (fun t => GeneralLinearGroup.scalar (Fin a) (expU (t • z))) _ (by simp [expU_zero]) hc
   simpa only [infGL, cornerGL_scalar, infId] using h
 
@@ -185,8 +184,7 @@ theorem lie_act (z : Cinf E) (o : Op E a) : Commute (lie E a (scL a z)) (act o) 
     have e : Matrix.of (scL a z) * Matrix.of Y = Matrix.of Y * Matrix.of (scL a z) :=
       (Matrix.scalar_commute z (fun _ => Commute.all _ _) (Matrix.of Y)).eq
     have h := lie_comm (scL a z) Y
-    rw [e, sub_self, sub_eq_zero] at h
-    exact h
+    rwa [e, sub_self, sub_eq_zero] at h
 
 theorem lie_scalar (π : CuspSub E a) (z : Cinf E) : ∃ c : ℂ, ∀ ψ ∈ π.V, lie E a (scL a z) ψ = c • ψ := by
   obtain ⟨φ, hφ, h0⟩ := (Submodule.ne_bot_iff _).1 π.ne_bot
@@ -272,8 +270,7 @@ theorem exists_open (π : CuspSub E a) : ∃ U : Subgroup (Af E)ˣ, IsOpen (U : 
   · refine LinearMap.ext fun ψ => Subtype.ext ?_
     have h1 := RankOne.scalar_of_eigen π _ (rs_act (finId E k)) hφ h0 (c := 1)
       (by rw [rs_finId, one_smul]; exact hk) ψ.1 ψ.2
-    rw [rs_finId, one_smul] at h1
-    exact h1
+    rwa [rs_finId, one_smul] at h1
   · rw [rs_finId]
     exact congrArg Subtype.val (LinearMap.congr_fun hk ⟨ψ, hψ⟩)
 

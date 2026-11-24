@@ -134,8 +134,7 @@ theorem IsMult.pow {vec : Fin N → Bool} {q : ℕ} {J : Fin q → ℕ} {aW aE :
       funext k
       rw [add_assoc]
       norm_cast
-    rw [e1, e2] at h1
-    exact h1
+    rwa [e1, e2] at h1
 
 theorem isMult_XX (D7 : Formalism.BasicNotions.D7) (vec : Fin N → Bool) {q : ℕ} (J : Fin q → ℕ) (aW aE : Fin N) (hne : aW ≠ aE)
     (hE : vec aE = false) (c c' : Fin r) : IsMult O r vec J aW aE (X (aW, c) * X (aE, c')) := by
@@ -150,8 +149,7 @@ theorem isMult_XX (D7 : Formalism.BasicNotions.D7) (vec : Fin N → Bool) {q : �
       · subst h1; simp [hne]
       · simp [h1]) J (thr := thr) (thr' := fun k => thr k + ((1 : ℤ) : WithTop ℤ)) 1 (fun _ => le_rfl)
     (fun k => by norm_cast) h1
-  rw [mul_assoc]
-  exact h2
+  rwa [mul_assoc]
 
 theorem IsMult.neg {vec : Fin N → Bool} {q : ℕ} {J : Fin q → ℕ} {aW aE : Fin N}
     {q0 : MvPolynomial (Fin N × Fin r) (KK O)} (h : IsMult O r vec J aW aE q0) : IsMult O r vec J aW aE (-q0) := by
@@ -214,11 +212,11 @@ theorem lettersAt_update {D : BlockData N} (hT : TieOK D) {j : Fin D.T.t → ℕ
       · exact hi' (hT.inj _ _ (by omega))
     have s1 : (∑ i', if (a : ℕ) = D.T.pos i' ∨ (a : ℕ) = D.T.pos i' + 1 then
         Function.update j i (j i - l) i' else 0) = j i - l := by
-      rw [Finset.sum_eq_single i (fun i' _ hi' => if_neg (hoth i' hi')) (fun h => absurd (Finset.mem_univ i) h),
-        if_pos ha, Function.update_self]
+      rw [Finset.sum_eq_single i (fun i' _ hi' => ite_eq_right (hoth i' hi')) (fun h => absurd (Finset.mem_univ i) h),
+        ite_eq_left ha, Function.update_self]
     have s2 : (∑ i', if (a : ℕ) = D.T.pos i' ∨ (a : ℕ) = D.T.pos i' + 1 then j i' else 0) = j i := by
-      rw [Finset.sum_eq_single i (fun i' _ hi' => if_neg (hoth i' hi')) (fun h => absurd (Finset.mem_univ i) h),
-        if_pos ha]
+      rw [Finset.sum_eq_single i (fun i' _ hi' => ite_eq_right (hoth i' hi')) (fun h => absurd (Finset.mem_univ i) h),
+        ite_eq_left ha]
     have hu : a ≠ D.uPos := by
       intro h
       rcases ha with ha | ha
@@ -239,14 +237,14 @@ theorem lettersAt_update {D : BlockData N} (hT : TieOK D) {j : Fin D.T.t → ℕ
           simp only
           omega
         rw [← this]; exact (hL.1 i).2
-    rw [s1, s2, if_neg hu, if_pos ha]
+    rw [s1, s2, ite_eq_right hu, ite_eq_left ha]
     omega
-  · rw [if_neg ha, add_zero]
+  · rw [ite_eq_right ha, add_zero]
     congr 2
     refine Finset.sum_congr rfl fun i' _ => ?_
     by_cases hi' : i' = i
     · subst hi'
-      rw [if_neg ha, if_neg ha]
+      rw [ite_eq_right ha, ite_eq_right ha]
     · rw [Function.update_of_ne hi']
 
 theorem levelOK_update {D : BlockData N} {j : Fin D.T.t → ℕ} {jp : ℕ} (hL : D.LevelOK j jp) (i : Fin D.T.t) (l : ℕ) :
@@ -357,7 +355,7 @@ theorem tie_mem {D : BlockData N} (hT : TieOK D) {thr thr' : Fin D.T.q → WithT
         SSt O r D thr' := by
       cases δ with
       | false =>
-        simp only [Bool.false_eq_true, if_false, zero_add] at hq
+        simp only [Bool.false_eq_true, ite_false, zero_add] at hq
         rw [hq]
         refine shift_mem hT hL i l hl (fun k => ?_) hq0 hyb hg
         refine le_trans (le_of_eq ?_) (hthr k)
@@ -365,7 +363,7 @@ theorem tie_mem {D : BlockData N} (hT : TieOK D) {thr thr' : Fin D.T.q → WithT
         push_cast
         rw [add_comm (l : WithTop ℤ)]
       | true =>
-        simp only [if_true] at hq
+        simp only [ite_true] at hq
         rw [hq, add_pow, Finset.mul_sum, Finset.sum_mul, Finset.sum_mul]
         refine Submodule.sum_mem _ fun a ha => ?_
         have ha' : a ≤ l := Nat.lt_succ_iff.1 (Finset.mem_range.1 ha)
@@ -425,8 +423,7 @@ theorem nv_add {v : σ} {F G : MvPolynomial σ K} (h1 : v ∉ F.vars) (h2 : v �
   · exact h2 h'
 
 theorem nv_pow {v : σ} {F : MvPolynomial σ K} (h1 : v ∉ F.vars) (n : ℕ) : v ∉ (F ^ n).vars := by
-  intro h
-  exact h1 (MvPolynomial.vars_pow F n h)
+  exact fun h => h1 (MvPolynomial.vars_pow F n h)
 
 theorem nv_prod {v : σ} {ι : Type} (s : Finset ι) {f : ι → MvPolynomial σ K} (h1 : ∀ i ∈ s, v ∉ (f i).vars) :
     v ∉ (∏ i ∈ s, f i).vars := by
@@ -448,8 +445,7 @@ theorem nv_sum {v : σ} {ι : Type} (s : Finset ι) {f : ι → MvPolynomial σ 
 
 theorem nv_X {v u : σ} (h : v ≠ u) : v ∉ (X u : MvPolynomial σ K).vars := by
   classical
-  rw [MvPolynomial.vars_X, Finset.mem_singleton]
-  exact h
+  rwa [MvPolynomial.vars_X, Finset.mem_singleton]
 
 theorem nv_rename {τ : Type} {v : σ} (f : τ → σ) (h : ∀ x, f x ≠ v) (y : MvPolynomial τ K) : v ∉ (rename f y).vars := by
   classical

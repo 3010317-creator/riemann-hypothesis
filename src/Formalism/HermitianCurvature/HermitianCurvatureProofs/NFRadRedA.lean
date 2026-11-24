@@ -108,10 +108,8 @@ theorem muZ_contDiffOn (hsec : IsSection k r z z' μsec) :
   refine contDiffOn_pi.2 fun i => contDiffOn_pi.2 fun j => ?_
   simp only [NF.muZ, B2.embWb]
   by_cases h : (r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k)
-  · simp only [dif_pos h]
-    exact hsec.1 _ _
-  · simp only [dif_neg h]
-    exact contDiffOn_const
+  · simpa only [dite_eq_left h] using hsec.1 _ _
+  · simpa only [dite_eq_right h] using contDiffOn_const
 
 theorem decomp (hk : 1 ≤ k) (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hT' : 0 < Tz k r z')
     (hsec : IsSection k r z z' μsec) {g : Q.Mx k r} (hg : g ∈ Glev k r (Fin.last r)) (hG : 0 < GGl k r z z' g) :
@@ -124,8 +122,7 @@ theorem decomp (hk : 1 ≤ k) (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz
     linarith
   obtain ⟨h, hh, h', hh', he⟩ := TwoByOneBlock.rankOneCoord k r z z' μsec hk hz hz' hT hT' hsec g hU hζ
   refine ⟨h⁻¹, BigCellInversePair.uw_inv hh, h', hh', ?_⟩
-  rw [zeta_eq]
-  exact he
+  rwa [zeta_eq]
 
 theorem radRedMem : NF.RadRedMem := by
   intro Wp Wq _ _ _ _ k r z z' μsec π π' hB Φ hΦ

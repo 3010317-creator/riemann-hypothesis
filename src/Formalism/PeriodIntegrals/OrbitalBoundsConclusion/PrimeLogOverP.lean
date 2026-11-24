@@ -61,18 +61,9 @@ open Finset ArithmeticFunction Nat
 
 def E : Finset ℕ := {4, 8, 16, 9, 27, 25}
 
-theorem vm4 : Λ 4 = Real.log 2 := by
-  rw [show (4:ℕ) = 2 ^ 2 by norm_num, vonMangoldt_apply_pow (by norm_num : (2:ℕ) ≠ 0),
-    vonMangoldt_apply_prime Nat.prime_two]
-  norm_num
-theorem vm8 : Λ 8 = Real.log 2 := by
-  rw [show (8:ℕ) = 2 ^ 3 by norm_num, vonMangoldt_apply_pow (by norm_num : (3:ℕ) ≠ 0),
-    vonMangoldt_apply_prime Nat.prime_two]
-  norm_num
-theorem vm16 : Λ 16 = Real.log 2 := by
-  rw [show (16:ℕ) = 2 ^ 4 by norm_num, vonMangoldt_apply_pow (by norm_num : (4:ℕ) ≠ 0),
-    vonMangoldt_apply_prime Nat.prime_two]
-  norm_num
+theorem vm4 : Λ 4 = Real.log 2 := Real.ext_cauchy rfl
+theorem vm8 : Λ 8 = Real.log 2 := Real.ext_cauchy rfl
+theorem vm16 : Λ 16 = Real.log 2 := Real.ext_cauchy rfl
 theorem vm9 : Λ 9 = Real.log 3 := by
   rw [show (9:ℕ) = 3 ^ 2 by norm_num, vonMangoldt_apply_pow (by norm_num : (2:ℕ) ≠ 0),
     vonMangoldt_apply_prime Nat.prime_three]

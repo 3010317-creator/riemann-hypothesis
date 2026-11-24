@@ -63,11 +63,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
     {v : AddValuation LL (WithTop ℚ)} {n : ℕ} {W : LocWach PD LL O v n}
 
 theorem letE_mem (a : ZMod n) : (letE a : LetA O n) ∈ W.AΔ := by
-  intro δ _
-  funext i
-  simp only [LocWach.γA, letγ, AlgHom.pi_apply, AlgHom.comp_apply, Pi.evalAlgHom_apply, letE,
-    Pi.single_apply]
-  split_ifs <;> simp
+  exact Formalism.MainNotions.UnusedSlot80.SatPW.letE_mem_AΔ W a
 
 theorem lev_letE' (a : ZMod n) (ζ : LL) : W.lev a ζ (letE a : LetA O n) = 1 := by
   have h : W.lev a ζ (1 - letE a) = 0 := W.lev_letter a ζ _ (by simp [letE])
@@ -178,7 +174,7 @@ theorem step (hR : ToolsR.RingP W) (hpu : ¬ IsUnit ((PD.p : ℕ) : O))
   have hord : (D.map (Ideal.Quotient.mk I)).order.toNat = 1 := by rw [hmap, order_X]; rfl
   have hdiv : D.IsWeierstrassDivisorAt I := by
     unfold IsWeierstrassDivisorAt
-    rw [hord, hD, map_add (f := _), coeff_C, if_neg one_ne_zero, add_zero]
+    rw [hord, hD, map_add (f := _), coeff_C, ite_eq_right one_ne_zero, add_zero]
     simp [coeff_X]
   have HD := hdiv.isWeierstrassDivisionAt_div_mod (f := f a)
   set H := hdiv.div (f a)
@@ -189,8 +185,7 @@ theorem step (hR : ToolsR.RingP W) (hpu : ¬ IsUnit ((PD.p : ℕ) : O))
     exact_mod_cast this
   have heq : f a = D * H + (r : PowerSeries O) := HD.eq_mul_add
   have hr : (r : PowerSeries O) = r.coeff 0 • (1 : PowerSeries O) := by
-    have hle : r.degree ≤ 0 := by
-      exact Nat.WithBot.lt_one_iff_le_zero.mp hdeg
+    have hle : r.degree ≤ 0 := Nat.WithBot.lt_one_iff_le_zero.mp hdeg
     conv_lhs => rw [Polynomial.eq_C_of_degree_le_zero hle]
     rw [Polynomial.coe_C, smul_eq_C_mul, mul_one]
   have hDn : D = X + ((PD.p : ℕ) : PowerSeries O) := by rw [hD, map_natCast]
@@ -236,8 +231,7 @@ theorem divLev_of (hR : ToolsR.RingP W) (hpu : ¬ IsUnit ((PD.p : ℕ) : O))
   intro g hg k
   induction k generalizing g with
   | zero =>
-    intro _
-    exact ⟨letE a * g, W.AΔ.mul_mem (letE_mem a) hg, by simp⟩
+    exact fun _ => ⟨letE a * g, W.AΔ.mul_mem (letE_mem a) hg, by simp⟩
   | succ k ih =>
     intro hv
     obtain ⟨S, hS0, hLqP⟩ := lev_qP_X hR a ζ hζ

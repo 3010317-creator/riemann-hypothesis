@@ -243,7 +243,7 @@ theorem isHCParam_sub {N : ℕ} {lam : Fin N → ℝ} (s : Fin N) (hl : Formalis
       push_cast
       linarith
     · refine ⟨m, ?_⟩
-      simp only [Pi.sub_apply, Pi.single_apply, if_neg ha]
+      simp only [Pi.sub_apply, Pi.single_apply, ite_eq_right ha]
       linarith
 
 theorem gap_sub {N : ℕ} (ε : Fin N → Bool) (lam : Fin N → ℝ) (s : Fin N) {h : ℝ}
@@ -271,9 +271,9 @@ theorem fdegHC_le {N : ℕ} (lam : Fin N → ℝ) (s : Fin N) (hw : ∀ a c, a <
     · subst ha
       have e1 : lam' a = lam a - 1 := by simp [hlam']
       have e2 : lam' b = lam b := by simp [hlam', hne.symm]
-      rw [if_pos rfl, e1, e2, abs_of_pos (by linarith), abs_of_pos (by linarith)]
+      rw [ite_eq_left rfl, e1, e2, abs_of_pos (by linarith), abs_of_pos (by linarith)]
       linarith
-    · rw [if_neg ha, one_mul]
+    · rw [ite_eq_right ha, one_mul]
       by_cases hb : b = s
       · subst hb
         have e1 : lam' a = lam a := by simp [hlam', ha]
@@ -322,7 +322,7 @@ theorem degRatio_holds : DegRatio := by
   obtain ⟨i0, hi0⟩ := hP.neg
   have hε't : ∃ a, ε' a = true := by
     by_contra hne
-    push_neg at hne
+    push Not at hne
     have h1 := hP.pos
     have h0 : (univ.filter fun i => ε' i = true) = ∅ := by
       ext i
@@ -398,7 +398,7 @@ theorem hsn_pos {m : ℕ} (hm : 1 ≤ m) {ε : Fin m → Bool} {g : Mat m} (hg :
   unfold hsn
   apply Real.sqrt_pos.2
   by_contra hle
-  push_neg at hle
+  push Not at hle
   have hsum : ∑ a, ∑ b, ‖g a b‖ ^ 2 = 0 := le_antisymm hle (by positivity)
   have hg0 : g = 0 := by
     ext a b
@@ -547,7 +547,7 @@ theorem one_le_hsn {m : ℕ} {ε : Fin m → Bool} (hm : 1 ≤ m) (g : UJ ε) : 
   have h : (umat g)ᴴ * Jm ε * umat g = Jm ε := g.2
   have h2 := congrFun (congrFun h a) a
   simp only [Jm, Matrix.diagonal_apply_eq] at h2
-  simp only [Matrix.mul_apply, Matrix.diagonal_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.conjTranspose_apply] at h2
+  simp only [Matrix.mul_apply, Matrix.diagonal_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Matrix.conjTranspose_apply] at h2
   have hn : (1 : ℝ) ≤ ∑ l, ‖umat g l a‖ ^ 2 := by
     have e1 : ‖((if ε a = true then 1 else -1 : ℂ))‖ = 1 := by split_ifs <;> simp
     rw [← e1, ← h2]
@@ -878,11 +878,7 @@ theorem const_le (C₀ : ℝ) (hC₀ : 0 < C₀) (m L R : ℝ) (hm : 4 ≤ m) (h
         linarith
 
 theorem mem_mul {m : ℕ} {ε : Fin m → Bool} {g g' : Mat m} (hg : g ∈ UJset ε) (hg' : g' ∈ UJset ε) : g * g' ∈ UJset ε := by
-  have h1 : gᴴ * Jm ε * g = Jm ε := hg
-  have h2 : g'ᴴ * Jm ε * g' = Jm ε := hg'
-  show (g * g')ᴴ * Jm ε * (g * g') = Jm ε
-  have : g'ᴴ * (gᴴ * Jm ε * g) * g' = Jm ε := by rw [h1, h2]
-  simpa [Matrix.mul_assoc, conjTranspose_mul] using this
+  exact GlobalTheory.SepReal.ProjSm.mul_mem' hg hg'
 
 theorem mem_inv {m : ℕ} {ε : Fin m → Bool} {g : Mat m} (hg : g ∈ UJset ε) : g⁻¹ ∈ UJset ε := by
   have hJ : IsUnit (Jm ε) := ⟨⟨Jm ε, Jm ε, Jm_mul_self ε, Jm_mul_self ε⟩, rfl⟩
@@ -1133,13 +1129,7 @@ theorem exists_umat {x : Mat m} (hx : x ∈ UJset ε) : ∃ u : Formalism.REAL.U
   ⟨⟨(isUnit_of_mem hx).unit, hx⟩, rfl⟩
 
 theorem mul_mem {x y : Mat m} (hx : x ∈ UJset ε) (hy : y ∈ UJset ε) : x * y ∈ UJset ε := by
-  have hx' : xᴴ * Formalism.REAL.Jm ε * x = Formalism.REAL.Jm ε := hx
-  have hy' : yᴴ * Formalism.REAL.Jm ε * y = Formalism.REAL.Jm ε := hy
-  show (x * y)ᴴ * Formalism.REAL.Jm ε * (x * y) = Formalism.REAL.Jm ε
-  rw [Matrix.conjTranspose_mul]
-  calc yᴴ * xᴴ * Formalism.REAL.Jm ε * (x * y) = yᴴ * (xᴴ * Formalism.REAL.Jm ε * x) * y := by
-        simp only [Matrix.mul_assoc]
-    _ = _ := by rw [hx', hy']
+  exact GlobalTheory.SepReal.DerInt.mem_mul hx hy
 
 theorem inv_facts {x : Mat m} (hx : x ∈ UJset ε) :
     x⁻¹ ∈ UJset ε ∧ x * x⁻¹ = 1 ∧ x⁻¹ * x = 1 ∧ x⁻¹⁻¹ = x := by
@@ -1157,7 +1147,7 @@ theorem hsn_pos (hm : 0 < m) {x : Mat m} (hx : x ∈ UJset ε) : 0 < hsn x := by
   have hne : x ≠ 0 := (isUnit_of_mem hx).ne_zero
   obtain ⟨i, j, hij⟩ : ∃ i j, x i j ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     exact hne (Matrix.ext h)
   have h1 : ‖x i j‖ ^ 2 ≤ ∑ b, ‖x i b‖ ^ 2 :=
     Finset.single_le_sum (f := fun b => ‖x i b‖ ^ 2) (fun _ _ => by positivity) (Finset.mem_univ j)

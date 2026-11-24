@@ -82,8 +82,7 @@ theorem vl_coordF (J : Matrix (Fin n) (Fin n) E) (lam : ι → DomWeight n) (B :
     rw [← map_inv, bc_coe]
     refine Matrix.ext fun a b => ?_
     rfl
-  rw [← e]
-  exact h
+  rwa [← e]
 
 include hval
 
@@ -113,8 +112,7 @@ theorem mem_localization_iff_forall_localBasis (w : Pl.Pl) (J : Matrix (Fin n) (
         rw [← hGF]
         show actP lam (vlBdF emb B)⁻¹ (actP lam (vlBdF emb B) G) = G
         rw [← polyAction_mul, inv_mul_cancel, polyAction_one₂]
-      rw [e]
-      exact hG
+      rwa [e]
     · intro h
       refine ⟨_, h, ?_⟩
       show actP lam (vlBdF emb B) (actP lam (vlBdF emb B)⁻¹ F.1) = F.1
@@ -134,8 +132,7 @@ theorem mem_localization_iff_forall_localBasis (w : Pl.Pl) (J : Matrix (Fin n) (
       (fun τ => atInf (embAt s emb) (((B τ)⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) τ)
       (fun τ => Matrix.isUnits_det_units (Matrix.GeneralLinearGroup.map (embAt s emb τ) (B τ)⁻¹)) ⟨fun _ => 1, fun _ => by simp⟩ hPe
     have hG' : actP lam (vlBdF emb B)⁻¹ F.1 = G := MvPolynomial.map_injective s s.injective hinj
-    rw [hmem B hB, hG']
-    exact hG
+    rwa [hmem B hB, hG']
 
 theorem mem_localization_iff_forall_localBasis_of_valuation (w : Pl.Pl) (J : Matrix (Fin n) (Fin n) E) (lam lam' : ι → DomWeight n)
     (hn : ∀ τ, (lam τ).natW = (lam' τ).natW) (M : ι → Submodule (𝓞 E) (Fin n → E)) (hM : ∀ τ, Submodule.IsFullLattice E (M τ))

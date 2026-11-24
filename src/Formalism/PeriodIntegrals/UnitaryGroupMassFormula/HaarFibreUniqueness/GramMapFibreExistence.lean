@@ -252,7 +252,7 @@ theorem measure_thick_eq (m1 m2 : Measure X) (Λ : AddSubgroup X) (hΛ : IsOpen 
           simp only [Set.mem_iUnion, Set.mem_setOf_eq]
           exact ⟨s, hs, by simpa [sub_add_sub_cancel] using Λ.add_mem hz hss⟩
         rw [Set.union_eq_right.2 hsub, ih]
-      · push_neg at hex
+      · push Not at hex
         have hdisj : Disjoint {z : X | z - s0 ∈ Λ} (⋃ s ∈ t, {z | z - s ∈ Λ}) := by
           rw [Set.disjoint_left]
           intro z hz hz'
@@ -302,19 +302,7 @@ theorem measure_eq_of_cos (m1 m2 : Measure X) [IsFiniteMeasure m1]
     (hb : ∀ N ∈ 𝓝 (0 : X), ∃ n, (Λ n : Set X) ⊆ N)
     (h : ∀ n y, m1 {z | z - y ∈ Λ n} = m2 {z | z - y ∈ Λ n})
     (S : Set X) (hS : IsCompact S) (hSc : IsClosed S) : m1 S = m2 S := by
-  have hmono : Antitone fun n => thick S (Λ n) := by
-    intro i j hij x hx
-    obtain ⟨s, hs, hxs⟩ := hx
-    exact ⟨s, hs, hanti hij hxs⟩
-  have hmeas : ∀ n, MeasurableSet (thick S (Λ n)) := fun n =>
-    (isOpen_thick S (Λ n) (hΛo n)).measurableSet
-  have heq : ∀ n, m1 (thick S (Λ n)) = m2 (thick S (Λ n)) := fun n =>
-    measure_thick_eq m1 m2 (Λ n) (hΛo n) (h n) S hS
-  rw [← iInter_thick S hSc Λ hb,
-    hmono.measure_iInter (fun n => (hmeas n).nullMeasurableSet) ⟨0, measure_ne_top _ _⟩,
-    hmono.measure_iInter (fun n => (hmeas n).nullMeasurableSet)
-      ⟨0, by rw [← heq 0]; exact measure_ne_top _ _⟩]
-  simp_rw [heq]
+  exact PI.VolStabS.measure_eq_of_cos m1 m2 Λ hΛo hanti hb h S hS hSc
 
 end CosMeas
 

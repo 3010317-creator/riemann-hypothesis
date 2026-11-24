@@ -171,8 +171,7 @@ theorem genV_of_pow : AllDV fun {V} _ _ _ {ϖ} hϖ D Q {F} _ _ {v} hv => ∀ (n 
   have hx' : ∀ z J, Good D.toPre.P.L z J → (val w (𝟙 _) z J).val =
       cst (R := V) F z x * (val t₀ (TWM.ιS hϖ hv).left z J).val := fun z J hJ => by
     have e := hx _ (𝟙 _) z J hJ
-    rw [val_pull hJ] at e
-    exact e
+    rwa [val_pull hJ] at e
   refine ⟨TWM.lineφO hϖ hv m, hl, t₀, ht₀, x, ?_, hx'⟩
   obtain ⟨e, c, he, hc, hce⟩ := SectionScalarValuation.exists_val_genHasVal (hQ p.y)
   obtain ⟨u, hu, eu⟩ := exists_ratio_zero hϖ hv hL (fun U _ h => by
@@ -290,8 +289,7 @@ theorem partial_sum_convolution {F : Type} [Field F] (v : AddValuation F (WithTo
     simp only [Finset.sum_sub_distrib, mul_sub, ← Finset.sum_mul]
     rw [e2]
     ring
-  rw [e]
-  exact h8
+  rwa [e]
 
 theorem partial_sum_convolution_pow {F : Type} [Field F] (v : AddValuation F (WithTop ℚ)) {X : Type}
     [AddCommGroup X] {a : X → F} {c : ℕ → X → F} (h0 : c 0 = a) (hn : ∀ j, NullV v (c j))
@@ -344,8 +342,7 @@ theorem sumV_root_of_convolution_pow : ∀ (F : Type) [Field F] [IsAlgClosed F] 
       have h2 := le_v_sum_sub_sum v q hT' (x := a) fun i hi =>
         not_lt.1 fun h => hi (hT ((Set.Finite.mem_toFinset _).2 h))
       have h3 := v.map_le_add h2 (not_le.1 hlt).le
-      rw [sub_add_sub_cancel, v.map_sub_swap] at h3
-      exact h3
+      rwa [sub_add_sub_cancel, v.map_sub_swap] at h3
     · exact ⟨0, fun h => absurd h hr⟩
   choose qf hqf using hfar
   obtain ⟨Q, hQ⟩ := (p.roots.toFinset.image qf).finite_toSet.bddAbove
@@ -527,22 +524,12 @@ theorem coef_scale {k : ℕ} {g : GtPtF D F} {w w' : Frm D F k g.b} (hw : w.IsGe
 
 theorem exists_frm_pow {b : TF (R := R) F ⟶ D.P.A} (ω : Frm D F 1 b) (hω : ω.IsGen) (k : ℕ) :
     ∃ w : Frm D F k b, w.IsGen ∧ ∀ z J, Good D.P.L z J → val w (𝟙 _) z J = val ω (𝟙 _) z J ^ k := by
-  obtain ⟨w, hw, hv⟩ := exists_gen D.P.isLB (φ' := DegPre.lineφ D F b) (ε' := DegPre.lineε k) (fun U _ h => by
-      rw [prod_line, Fin.prod_univ_two]
-      show h (1 : TF (R := R) F ⟶ D.P.A).left ^ ((k : ℤ) * ((1 : ℕ) : ℤ)) * h b.left ^ ((k : ℤ) * -((1 : ℕ) : ℤ)) = _
-      simp)
-    (GeneratorPullback.powGen D.P.L _ _ ω k) (powGen_isGen _ _ _ ω hω k)
-  exact ⟨w, hw, fun z J hJ => (hv _ _ z J hJ).trans (map_pow _ _ _)⟩
+  exact GlobalTheory.Ex.CoordSeries.exists_frm_pow ω hω k
 
 theorem exists_frm_scale {k : ℕ} {b : TF (R := R) F ⟶ D.P.A} (ω : Frm D F k b) (hω : ω.IsGen) {c : F} (hc : c ≠ 0) :
     ∃ w : Frm D F k b, w.IsGen ∧ ∀ z J, Good D.P.L z J →
       (val w (𝟙 _) z J).val = cst F z c * (val ω (𝟙 _) z J).val := by
-  let u : Γ((TF (R := R) F).left, ⊤)ˣ := ((Ne.isUnit hc).map (Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom).unit
-  refine ⟨scaleGen u ω, scaleGen_isGen u ω hω, fun z J hJ => ?_⟩
-  have e : val (scaleGen u ω) (𝟙 _) z J = gm (𝟙 _) z ⊤ u * val ω (𝟙 _) z J :=
-    (map_mul _ _ _).trans (congrArg₂ (· * ·) (gm_res (𝟙 _) z le_top (hJ.mem _ (𝟙 _)) u) rfl)
-  rw [e, Units.val_mul, ← gs_unit (𝟙 _) z ⊤ trivial u]
-  rfl
+  exact GlobalTheory.UT.PhiProj.exists_scaled hω c hc
 
 theorem exists_frm_psi (k : ℕ) (y : D.X) {b : TF (R := R) F ⟶ D.P.A} (hb : b = DegPre.cF D F y) :
     ∃ w : Frm D F k b, w.IsGen ∧ ∀ z J, Good D.P.L z J → val w (𝟙 _) z J =
@@ -574,12 +561,7 @@ theorem exists_frm_kap {k' k : ℕ} {b b' : TF (R := R) F ⟶ D.P.A} {a : D.P.A 
 theorem exists_secA_mul {A : PolAV (Spec (CommRingCat.of (FractionRing R)))} {k k' : ℕ} (t : SecA A F k)
     (t' : SecA A F k') : ∃ t'' : SecA A F (k + k'), ∀ (Z : Scheme.{0}) (r : Z ⟶ (TFK (R := R) F ⊗ A.A).left) (z : Z) (J),
       Good A.L z J → sA t'' r z J = sA t r z J * sA t' r z J := by
-  obtain ⟨t'', h⟩ := exists_sec A.isLB (φ' := fun _ : Fin 1 => (snd (TFK (R := R) F) A.A).left)
-    (ε' := fun _ => ((k + k' : ℕ) : ℤ)) (fun U _ h => by
-      simp only [Fintype.prod_sum_type, Sum.elim_inl, Sum.elim_inr, Fin.prod_univ_one, Nat.cast_add, zpow_add])
-    (H1.SectionArithmetic.mulSec (φ := fun _ : Fin 1 => (snd (TFK (R := R) F) A.A).left) (ε := fun _ => (k : ℤ))
-      (φ' := fun _ : Fin 1 => (snd (TFK (R := R) F) A.A).left) (ε' := fun _ => (k' : ℤ)) t t')
-  exact ⟨t'', fun Z r z J hJ => (h Z r z J hJ).trans (H1.SectionArithmetic.sval_mulSec _ _ r z hJ)⟩
+  exact GlobalTheory.Ex.CoordSeries.exists_secA_mul t t'
 
 end Frames
 

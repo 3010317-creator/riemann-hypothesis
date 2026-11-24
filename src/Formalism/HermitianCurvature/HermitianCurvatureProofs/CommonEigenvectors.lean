@@ -72,8 +72,7 @@ theorem eig_in [FiniteDimensional ℂ V] (T : Module.End ℂ V) (G : Submodule �
   obtain ⟨x, hx⟩ := hμ.exists_hasEigenvector
   refine ⟨μ, x, x.2, fun h => hx.2 (Subtype.ext h), ?_⟩
   have h1 := Module.End.mem_eigenspace_iff.1 hx.1
-  have h2 := congrArg Subtype.val h1
-  simpa using h2
+  simpa using congrArg Subtype.val h1
 
 theorem common [FiniteDimensional ℂ V] {ι : Type} [DecidableEq ι] (D : ι → Module.End ℂ V)
     (hc : ∀ a b, D a * D b = D b * D a) (s : Finset ι) (G : Submodule ℂ V) (hG : G ≠ ⊥)
@@ -125,7 +124,7 @@ theorem hop_move {n : ℕ} {E : Fin n → Fin n → Module.End ℂ V} (hE : GlRe
 
   simp only [LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, diag_move hE, smul_add, smul_sub,
   smul_ite, smul_zero, Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.sum_ite_eq,
-  Finset.mem_univ, if_true]
+  Finset.mem_univ, ite_true]
   rw [← sub_smul]
   congr 2
   ring
@@ -160,9 +159,7 @@ theorem exists_singular_maximal_vector : Qr.ExistsSingMax := by
     by_cases hab : a = b
     · subst hab; simp
     · simp [hab, Ne.symm hab]
-  have hstab : ∀ a b, ∀ x ∈ S, E a b x ∈ S := by
-    intro a b x hx
-    exact hS a b x hx
+  have hstab : ∀ a b, ∀ x ∈ S, E a b x ∈ S := fun a b x hx => hS a b x hx
   obtain ⟨G', ν0, hG'S, hG'0, -, hG'ν⟩ :=
     common (fun a => E a a) hcomm Finset.univ S hS0 (fun a => hstab a a)
   obtain ⟨x0, hx0G, hx00⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hG'0

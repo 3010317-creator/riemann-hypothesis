@@ -81,8 +81,7 @@ def ζQ : ℕ → Om l
 
 theorem ζQ_zero : ζQ l 0 = 1 := rfl
 
-theorem ζQ_one : ζQ l 1 ≠ 1 := by
-  exact (exists_root_ne_one l).choose_spec.2
+theorem ζQ_one : ζQ l 1 ≠ 1 := (exists_root_ne_one l).choose_spec.2
 
 theorem ζQ_succ (m : ℕ) : ζQ l (m + 1) ^ l = ζQ l m := by
   cases m with
@@ -281,8 +280,7 @@ theorem natDegree_minpoly_eq (hF : F ≤ MaximalUnramifiedExtension l) {k : ℕ}
     first
     | exact Nat.totient_pos.mpr hpos
   have hj' : j ≤ -1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have : (0 : ℤ) ≤ j * (l ^ k).totient := mul_nonneg (by omega) (by positivity)
     omega
   have hge : ((l ^ k).totient : ℤ) ≤ m.natDegree := by nlinarith

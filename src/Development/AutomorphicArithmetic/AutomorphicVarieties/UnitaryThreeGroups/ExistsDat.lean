@@ -97,7 +97,7 @@ private theorem dx_zpow {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I : Id
     funext g
     have hx : IsUnit (Ideal.Quotient.mk (I ^ N) (Ψ g : R)) := (Ψ g).isUnit.map _
     have e : hx.unit = Units.map (Ideal.Quotient.mk (I ^ N)).toMonoidHom (Ψ g) := Units.ext rfl
-    simp only [Function.comp_apply, dif_pos hx]
+    simp only [Function.comp_apply, dite_eq_left hx]
     rw [e, ← map_zpow]
     rfl
   rw [key]
@@ -122,8 +122,7 @@ private theorem dx_lmem (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLoca
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := ℤ_[l]) _)
   have h1 : (l : ℤ_[l]) ∈ IsLocalRing.maximalIdeal ℤ_[l] := by
     rw [PadicInt.maximalIdeal_eq_span_p]; exact Ideal.mem_span_singleton_self _
-  rw [← h, Ideal.mem_comap, map_natCast] at h1
-  exact h1
+  rwa [← h, Ideal.mem_comap, map_natCast] at h1
 
 private theorem dx_dir (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {O : Type} [CommRing O] {N : ℕ} [NeZero N]
     (ψ : DirichletCharacter O N) : IsLocallyConstant (Chr.dirG ℚ Ω ψ) :=
@@ -191,8 +190,7 @@ theorem UpperTheory.V.U3.exists_dat :
     Kv_spec := fun g => by rw [← hKv]; rfl
     η_unr := fun g hg => by
       have h1 := dx_unr Ω K l hd _ hA (hI g hg)
-      rw [← hη] at h1
-      exact h1
+      rwa [← hη] at h1
     τ_open := ((dx_dir Ω (comp l ψ)).comp_continuous i1.continuous).isOpen_fiber 1
     Ψ_cont := dx_cont Ω e ψ
     Ψ_I := fun g hg => by

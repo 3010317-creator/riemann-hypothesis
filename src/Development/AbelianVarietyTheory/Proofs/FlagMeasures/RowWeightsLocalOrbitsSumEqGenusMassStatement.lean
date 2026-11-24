@@ -446,12 +446,7 @@ theorem tri_adapt_loc (Z : LocDat D) (p : PlF D) (g : GV D) {T : D.host.E} (F₁
     rw [mul_assoc (frFac Z.δ p b * _), Ring.inverse_mul_cancel _ (hu a), mul_one]
 
 theorem finrank_Vp_eq (p : PlF D) : Module.finrank (D.s.atP p).Ep (Vp D p) = D.R.k + 2 * D.R.rS + 1 := by
-  rw [finrank_Vp]
-  have h1 := D.R.m_even
-  have h2 := D.R.two_le_m
-  obtain ⟨c, hc⟩ := h1
-  simp only [Ranks.r, Ranks.rS]
-  omega
+  exact GlobalTheory.RatLocMove.finrank_Vp_eq p
 
 theorem local_data_of_term : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ (t : TauC Y u u') (Λ : LV D), TG F F' t Λ → ∃ y : Dat Z FP, LocOver Λ y ∧ ∀ p d, GlobalTheory.LocOver.Over (FP p) d (GlobalTheory.LocOver.locU Z p t.toTerm.lam (lf D (X.Fu u)) (Quot.out t.toTerm.cls).1 (Tu D u) (Tu D u')) ↔ LocNG.Datum.Rel d (y p) := by
   intro D X Y u u' F F' w hZ hG Z FP hB hRel t Λ hTG
@@ -692,11 +687,7 @@ namespace GlobalTheory.GenusStab
 
 theorem finrank_Vp_k (D : D7) (p : PlF D) :
     Module.finrank (D.s.atP p).Ep (Vp D p) = D.R.k + 2 * D.R.rS + 1 := by
-  rw [finrank_Vp]
-  have h2 := D.R.two_le_m
-  obtain ⟨c, hc⟩ := D.R.m_even
-  simp only [Ranks.r, Ranks.rS]
-  omega
+  exact GlobalTheory.Unfold.GlueOrbit.finrank_loc p
 
 theorem inGen_of_gRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ (Λ : LV D) (d y y' : Dat Z FP), LocOver Λ y → InGen d y → GRel F F' y y' → InGen d y' := by
   intro D X Y u u' F F' w hw hG Z FP hB hRel Λ d y y' hov hgen hgr
@@ -923,14 +914,7 @@ theorem mem_orth_iff (A : Submodule D.host.E (VS D).V) (y : (VS D).V) :
   unfold orth; simp [Submodule.mem_iInf, LinearMap.mem_ker]
 
 theorem frame_mapLF {T : D.host.E} (P : LFlag (D.sp.Y 0) D.R.rS T) (γ : GV D) (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT) :
-    ∀ a, frame (mapLF γ P) a = γ (frame P a) := by
-  intro a
-  unfold mapLF; rw [dite_eq_left hγ]
-  show FlagG.fvec (mapFlag γ hγ P.fl) a = γ (FlagG.fvec P.fl a)
-  unfold FlagG.fvec
-  refine Fin.lastCases ?_ (fun i => ?_) a
-  · simp [mapFlag]
-  · simp [mapFlag]
+    ∀ a, frame (mapLF γ P) a = γ (frame P a) := GlobalTheory.Unfold.CntC.frame_mapLF P hγ
 
 theorem orth_map (K : GV D) (hK : K ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT) (A : Submodule D.host.E (VS D).V) (y : (VS D).V) :
     K y ∈ orth (VS D) (A.map (K : (VS D).V →ₗ[D.host.E] (VS D).V)) ↔ y ∈ orth (VS D) A := by
@@ -1306,7 +1290,7 @@ theorem weights_add_up_to_mass_of
   rw [← ENNReal.tsum_fiberwise _ φ]
   refine tsum_congr fun o => ?_
   by_cases ho : InGen d o.out
-  · rw [if_pos ho]
+  · rw [ite_eq_left ho]
     have hIG01 : InGen y₀ o.out := inGen_symm_of (hRelEqv D Z FP) hIG₀ ho
     obtain ⟨Λ₁, hLO₁, hloc⟩ := GlobalTheory.T.genusFamily_carried_by_lattice_in_localOrbits D X Y u u' F F' w hw hG Z FP hB hR Λ₀ y₀ o.out hLO₀ hIG01
     obtain ⟨t₁, hTG₁⟩ := GlobalTheory.T.exists_rowTerm_of_local_completions_terms D X Y u u' F F' w hw hG Z FP hB hR Λ₁ o.out hLO₁
@@ -1344,7 +1328,7 @@ theorem weights_add_up_to_mass_of
       obtain ⟨t, hTG, hkey⟩ := hcarry _ hb
       rw [hω b.1 t hkey, hwt t Λ₁ hTG hRefl]
     rw [tsum_congr hconst, ENNReal.tsum_set_const, ← Subtype.val_injective.encard_image, hfib, hmass, hStab]
-  · rw [if_neg ho]
+  · rw [ite_eq_right ho]
     refine ENNReal.tsum_eq_zero.2 fun b => (ho ?_).elim
     have hb : φ b.1 = o := b.2
     rw [← hb]

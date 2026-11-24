@@ -72,8 +72,7 @@ theorem exists_unit_factor {P : Type} (A B : P → ℂ)
     simp only [norm_mul, Complex.norm_conj] at this
     exact (mul_self_inj (norm_nonneg _) (norm_nonneg _)).mp this
   have hB₀ : B p₀ ≠ 0 := by
-    rw [← norm_ne_zero_iff, hn, norm_ne_zero_iff]
-    exact hp₀
+    rwa [← norm_ne_zero_iff, hn, norm_ne_zero_iff]
   refine ⟨B p₀ / A p₀, by rw [norm_div, hn, div_self (norm_ne_zero_iff.mpr hp₀)], fun p => ?_⟩
   have e₁ := h p p₀
   have key : B p * A p₀ = B p₀ * A p := by
@@ -106,8 +105,7 @@ theorem mul_mem_tens_iff {Λ Λ' : Lt E n} {K : Lt E r} {h : Matrix (Fin n) (Fin
   · intro hy
     have := mul_mem_tens_of_moves m' hy
     rwa [← Matrix.mul_assoc, hu, Matrix.one_mul] at this
-  · intro hy
-    exact mul_mem_tens_of_moves m hy
+  · exact fun hy => mul_mem_tens_of_moves m hy
 
 theorem trace_mul_unitary {h : Matrix (Fin n) (Fin n) E} (hu : ccT h * h = 1)
     (β : Matrix (Fin r) (Fin r) E) (y : Matrix (Fin n) (Fin r) E) :
@@ -232,8 +230,7 @@ private theorem thH_unitary_translate_eq {h : Matrix (Fin n) (Fin n) E} (hu : cc
   unfold expo
   refine Finset.sum_congr rfl fun τ _ => ?_
   have := sum_quadratic_linear_unitary_mul_rows_eq (h.map τ.1) (map_unitary hu τ.1) (y.map τ.1) (D τ) (D' τ) (Z τ)
-  rw [← Matrix.map_mul] at this
-  exact this
+  rwa [← Matrix.map_mul] at this
 
 variable (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ)
 

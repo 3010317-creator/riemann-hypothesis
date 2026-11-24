@@ -134,8 +134,7 @@ theorem integral_span_of_values (φ : K →+* K') {σ C M M' : Type} [AddCommGro
       smul_eq_mul]
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [mul_comm (a k), hF, mul_comm]
-    rw [h2]
-    exact hq
+    rwa [h2]
   · intro h c
     induction h using Submodule.span_induction with
     | mem x hx =>
@@ -244,12 +243,10 @@ theorem nab_glue_inv_H {E K L : Type} [Field E] [NumberField E] [Field K] [Field
   intro w hw
   have h1 : w.1 ∈ SG₁ := by
     have := w.2
-    simp only [Formalism.L2.Col.uSG, hQ₁, Finset.union_empty] at this
-    exact this
+    simpa only [Formalism.L2.Col.uSG, hQ₁, Finset.union_empty] using this
   have h2 : w.1 ∈ SG₂ := by
     have := hw
-    simp only [Formalism.L2.Col.uSG, hQ₂, Finset.union_empty] at this
-    exact this
+    simpa only [Formalism.L2.Col.uSG, hQ₂, Finset.union_empty] using this
   show ((A₂.glue B₂) ⟨w.1, hw⟩).H = ((A₁.glue B₁) w).H
   rw [Formalism.L2.Col.LevFam.glue_of_mem _ _ _ h2, Formalism.L2.Col.LevFam.glue_of_mem _ _ _ h1]
   exact hA ⟨w.1, h1⟩ h2

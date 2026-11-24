@@ -72,8 +72,7 @@ theorem exists_coeff (b : Module.Basis (Fin n) R S) {x : M} (hx : x ∈ S) :
 
 theorem sum_smul_sum {m : ℕ} (a : Fin m → R) (B : Fin m → Fin n → R) (e : Fin n → M) :
     ∑ k, a k • ∑ j, B k j • e j = ∑ j, (∑ k, a k * B k j) • e j := by
-  simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
 
 end Gen
 
@@ -178,8 +177,7 @@ theorem exists_mapMat (RF : ∀ a : O⟦X⟧, (∀ δ ∈ W.DelF, W.γ₀ δ a =
 
     rw [hc, map_sum] at e1
     simp only [gamD_smul, hb2] at e1
-    have e2 := coeff_unique (c := fun m => letγ (W.γ₀ δ) (c m)) (d := c) b' e1
-    exact congrFun (congrFun e2 m) i
+    exact congrFun (congrFun (coeff_unique (c := fun m => letγ (W.γ₀ δ) (c m)) (d := c) b' e1) m) i
   choose c hc hinv using key
   refine ⟨fun i m k => Classical.choose (RF (c k m i) (fun δ hδ => hinv k m i δ hδ)), fun k => ?_⟩
   rw [hc k]
@@ -220,8 +218,7 @@ theorem red_frob (hl : l ≠ 2) (hred : ∀ z : ℤ_[l], red (algebraMap ℤ_[l]
     rw [hφ, hY m k]
   have hM : P' i * Y = A i * P i := mul_eq_of_inc hl (P i) (P' i) (A i) Y hi
   have hYr : Y.map (PowerSeries.map red) = ((A (i - 1)).map (PowerSeries.map red)).map (frob0 l) := by
-    refine Matrix.ext fun m k => ?_
-    exact (hred' (A (i - 1) m k)).2 _ (hY m k)
+    exact Matrix.ext fun m k => (hred' (A (i - 1) m k)).2 _ (hY m k)
   rw [← hYr, ← Matrix.map_mul, hM, Matrix.map_mul]
 
 

@@ -83,8 +83,7 @@ theorem nrmL_charpoly {w : Pl E} (hw : ¬ IsSplitAt w) {u : GL (Fin n) E} (hu : 
   set r := ratF E n (d * u⁻¹) with hr0
   set s := ratF E n (thE E n (d * u⁻¹)) with hs0
   have hr : thF E n r = s := by
-    rw [hr0, hs0]
-    rw [GlobalTheory.EulerTw.Comm.thF_ratF]
+    rw [hr0, hs0, GlobalTheory.EulerTw.Comm.thF_ratF]
   have h2 : (c⁻¹ * r * thF E n c) * thF E n (c⁻¹ * r * thF E n c) = c⁻¹ * ratF E n (nrm d) * c := by
     rw [← poleq_norm E n u hu d, map_mul (ratF E n), ← hr0, ← hs0, map_mul, map_mul, map_inv,
       GlobalTheory.EulerTw.Comm.thF_thF, hr]
@@ -92,15 +91,14 @@ theorem nrmL_charpoly {w : Pl E} (hw : ¬ IsSplitAt w) {u : GL (Fin n) E} (hu : 
   have h3 : nrmL n w (GeneralLinearGroup.map (pLoc E w) (c⁻¹ * r * thF E n c)) =
       GeneralLinearGroup.map (pLoc E w) (c⁻¹ * ratF E n (nrm d) * c) := by
     have hz : ∀ g, thetaGL n (cj w) (GeneralLinearGroup.map (pLoc E w) g) = GeneralLinearGroup.map (pLoc E w) (thF E n g) := by
-      intro g; rw [GlobalTheory.CompanionTheory.SuppFinTw.map_thF_of_not_split hw, thL, if_neg hw]
-    rw [nrmL, if_neg hw, hz, ← map_mul, h2]
+      intro g; rw [GlobalTheory.CompanionTheory.SuppFinTw.map_thF_of_not_split hw, thL, ite_eq_right hw]
+    rw [nrmL, ite_eq_right hw, hz, ← map_mul, h2]
   rw [h1, h3, map_mul, map_mul, map_inv, Units.val_mul, Units.val_mul, Matrix.coe_units_inv,
     Matrix.charpoly_units_conj']
   rw [← Matrix.charpoly_map]
   rfl
 
 theorem val_mem {m : ℕ} (y : GL (Fin m) ℂ) : y.val ∈ GLs m := by
-  show y.val.det ≠ 0
   exact ((Matrix.isUnit_iff_isUnit_det _).mp y.isUnit).ne_zero
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace in

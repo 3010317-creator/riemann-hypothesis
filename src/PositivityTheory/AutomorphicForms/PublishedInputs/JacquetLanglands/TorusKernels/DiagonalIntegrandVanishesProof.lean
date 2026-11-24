@@ -86,8 +86,7 @@ theorem tendsto_norm_D {A s : ℝ} (hA : A ≠ 0) {l : Filter ℝ} (hl : Tendsto
     Tendsto (fun x => ‖D A s x‖) l atTop := by
   refine tendsto_atTop_mono (fun x => ?_) (hl.const_mul_atTop (abs_pos.2 hA))
   have h := Complex.abs_re_le_norm (D A s x)
-  rw [D_re, abs_mul] at h
-  exact h
+  rwa [D_re, abs_mul] at h
 
 theorem tendsto_inv_D {A s : ℝ} (hA : A ≠ 0) {l : Filter ℝ} (hl : Tendsto (fun x : ℝ => |x|) l atTop)
     (n : ℕ) : Tendsto (fun x => (D A s x ^ (n + 1))⁻¹) l (𝓝 0) := by
@@ -195,7 +194,7 @@ theorem UpperTheory.Esk.diagonal_integrand_vanishes_proof : UpperTheory.Esk.Diag
             = (y : ℂ) * (((1 - r : ℝ) : ℂ) * (x : ℂ) + ((1 + r : ℝ) : ℂ) * Complex.I) := by
           push_cast; ring
         rw [e1, e2, mul_div_mul_left _ _ hy']
-      simp only [q1, if_pos hpos', j1, hden]
+      simp only [q1, ite_eq_left hpos', j1, hden]
       rw [hratio, div_pow, hE, hcdef]
       ring
     · obtain ⟨K, hK, h⟩ := bound hr1 hs hk

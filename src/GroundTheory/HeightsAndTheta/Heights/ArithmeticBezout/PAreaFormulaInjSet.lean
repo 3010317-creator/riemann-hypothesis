@@ -45,8 +45,7 @@ theorem AreaFormulaInjSet.proof (h : AreaFormulaLocal.Statement) : AreaFormulaIn
       (s := e ⁻¹' C) (f' := fun x => (fderiv ℝ f (e x)).comp (e : (Fin k → ℝ) →L[ℝ] E)) ?_ ?_
     · rw [himg]
       simpa using key
-    · intro x hx
-      exact ((hdiff (e x) (hAU hx.1)).comp x e.hasFDerivAt).hasFDerivWithinAt
+    · exact fun x hx => ((hdiff (e x) (hAU hx.1)).comp x e.hasFDerivAt).hasFDerivWithinAt
     · intro x hx hinj'
       apply hx.2
       intro a c hac
@@ -75,8 +74,7 @@ theorem AreaFormulaInjSet.proof (h : AreaFormulaLocal.Statement) : AreaFormulaIn
       rw [hVeq]
       exact mem_range_self n
     rcases hn with h0 | hT
-    · rw [h0]
-      exact hG0
+    · rwa [h0]
     · exact hTG hT
   have hRV : R ⊆ ⋃ n, V n := by
     intro x hx

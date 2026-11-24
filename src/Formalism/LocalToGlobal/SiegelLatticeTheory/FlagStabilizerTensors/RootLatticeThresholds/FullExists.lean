@@ -79,8 +79,7 @@ theorem muN_pos_of (hc : NOCount X u) {FN : Set X.B.I.Ginf} (hF : IsSFund X.B.I 
   have hN : X.muN u (X.NinfU u) = 0 := by
     refine measure_mono_null hsub ?_
     refine (measure_biUnion_null_iff hc).2 fun s hs => ?_
-    rw [muN_pre X u s (no_sub_ninf X u hs) hF.1]
-    exact h0
+    rwa [muN_pre X u s (no_sub_ninf X u hs) hF.1]
   rw [← Measure.measure_univ_eq_zero]
   exact measure_mono_null (fun x _ => em (x ∈ X.NinfU u)) (measure_union_null hN hcompl)
 
@@ -127,8 +126,7 @@ theorem volPos_of (hsub : NOSub X u) (hc : NOCount X u) (hC : NOCofinite X u) (h
       (muN_fin_of X u hsub hc hC (Y.FN_fund u)).ne)
   · unfold Full.volH
     refine ENNReal.toReal_pos ?_ hH.ne
-    intro h0
-    exact (X.muH_haar u).2.1 (Measure.measure_univ_eq_zero.1 h0)
+    exact fun h0 => (X.muH_haar u).2.1 (Measure.measure_univ_eq_zero.1 h0)
 
 end Vol
 
@@ -232,8 +230,7 @@ theorem rowsCols_of (hK : X.LevelSubgroupCharacter) (h0 : EqvEquiv X u) (h1 : La
       base_lam := by
         intro Λ hΛ
         have hΛ' := (hmem Λ).1 hΛ
-        simp only [dif_pos hΛ', hqcc]
-        exact hΛ'.choose_spec
+        simpa only [dite_eq_left hΛ', hqcc] using hΛ'.choose_spec
       lat_eq := by
         intro ρ y
         rw [← SetLike.mem_coe, hL, ← hlat ρ]
@@ -316,8 +313,7 @@ theorem kmap_mul (γ δ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (W : Submodule D.h
 theorem kmap_one (W : Submodule D.host.E (VS D).V) :
     W.map ((1 : (VS D).V ≃ₗ[D.host.E] (VS D).V) : (VS D).V →ₗ[D.host.E] (VS D).V) = W := by
   ext x
-  simp only [Submodule.mem_map]
-  exact ⟨fun ⟨y, hy, h⟩ => h ▸ hy, fun hx => ⟨x, hx, rfl⟩⟩
+  simpa only [Submodule.mem_map] using ⟨fun ⟨y, hy, h⟩ => h ▸ hy, fun hx => ⟨x, hx, rfl⟩⟩
 
 theorem eqvEquiv : EqvEquiv X u := by
   have st_one : (1 : (VS D).V ≃ₗ[D.host.E] (VS D).V) ∈ stabF D (X.Fu u) :=
@@ -372,8 +368,7 @@ theorem latCompat_of (hK : X.LevelSubgroupCharacter) (hG : GamIsom X u) : LatCom
     constructor
     · rintro ⟨x, hx, rfl⟩
       simpa using hx
-    · intro hy
-      exact ⟨γ.symm y, hy, by simp⟩
+    · exact fun hy => ⟨γ.symm y, hy, by simp⟩
   set k : X.B.I.Gf := (X.xu u)⁻¹ * (κ : X.B.I.Gf) * X.xu u with hkdef
   have hk : k ∈ X.B.I.Kset := (κ.2 : k ∈ X.K2).1
   have ekk : X.B.I.fmat k * X.B.I.fmat k⁻¹ = 1 := by simp [Formalism.MainNotions.S.AutInst.fmat]
@@ -529,8 +524,7 @@ theorem mapM_unitary (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ 
     ext i j
     simp only [mapM, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.conjTranspose_apply, Formalism.UG.cT,
       Matrix.transpose_apply, starRingEnd_apply, RingEquiv.coe_toRingHom, X.ιE_conj, Formalism.BasicNotions.bridge_star_holds D.R D.host]
-  rw [hA]
-  exact h
+  rwa [hA]
 
 theorem matE_isom (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ (starRingEnd X.B.I.E) X.B.I.J) :
     matE X M ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := by

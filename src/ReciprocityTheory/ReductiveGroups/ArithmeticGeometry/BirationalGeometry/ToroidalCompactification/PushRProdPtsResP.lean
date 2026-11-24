@@ -70,12 +70,10 @@ theorem isTan_iff_tanS (w : sp (R₀ := Localization.AtPrime p) (DualNumber (Loc
   constructor
   · intro h
     have h' := congrArg (pushR G) h
-    rw [pushR_spMap, pushR_one] at h'
-    exact h'
+    rwa [pushR_spMap, pushR_one] at h'
   · intro h
     apply pushR_inj (G := G)
-    rw [pushR_spMap, pushR_one]
-    exact h
+    rwa [pushR_spMap, pushR_one]
 
 variable [∀ s : S, Smooth (Gs G s).hom]
 
@@ -126,8 +124,7 @@ theorem prodPts_resP_inj {d : ℕ} {u : Fin d → (Geo.Tor.epsR S ⟶ G)} (hu : 
   change preH (spMap (scaleS (S := S) q)) (prodPts a' u * (prodPts b' u)⁻¹) = 1 at hq1
   rw [map_mul, map_inv, _root_.mul_inv_eq_one] at hq1
   have hq2 : prodPts (q • a') u = prodPts (q • b') u := by
-    rw [← scale_prodPts, ← scale_prodPts]
-    exact hq1
+    rwa [← scale_prodPts, ← scale_prodPts]
   have hw : Geo.Tor.IsTangent (prodPts (q • a') u) := (isTan_iff _).1 (tanS_prodPts _ hTS)
   obtain ⟨c, _, huniq⟩ := hU _ hw
   have e1 := huniq (q • a') ((isLieComb_iff _ _ _).2 rfl)
@@ -141,8 +138,7 @@ theorem prodPts_resP_inj {d : ℕ} {u : Fin d → (Geo.Tor.epsR S ⟶ G)} (hu : 
     IsLocalization.map_units (M := p.primeCompl) _ ⟨q, hq⟩
   have hsu : IsUnit (algebraMap S (Localization.AtPrime p) s) :=
     IsLocalization.map_units (M := p.primeCompl) _ ⟨s, hs⟩
-  rw [hqu.mul_right_inj, hsu.mul_right_inj] at hi
-  exact hi
+  rwa [hqu.mul_right_inj, hsu.mul_right_inj] at hi
 
 private theorem scaleD_comp_scaleD {R : Type} [CommRing R] (a b : R) :
     (scaleD a).comp (scaleD b) = scaleD (a * b) := by

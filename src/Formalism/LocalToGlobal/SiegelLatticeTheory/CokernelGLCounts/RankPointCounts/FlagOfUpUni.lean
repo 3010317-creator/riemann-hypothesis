@@ -43,14 +43,12 @@ theorem loUni_iff_ct {A : Matrix (Fin N) (Fin N) K} [StarRing K] : IsLoUni A ↔
 theorem upUni_det {A : Matrix (Fin N) (Fin N) K} (h : IsUpUni A) : A.det = 1 := by
   rw [Matrix.det_of_upperTriangular]
   · exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
-  · intro i j hij
-    exact (h i j).1 hij
+  · exact fun i j hij => (h i j).1 hij
 
 theorem loUni_det {A : Matrix (Fin N) (Fin N) K} (h : IsLoUni A) : A.det = 1 := by
   rw [Matrix.det_of_lowerTriangular]
   · exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
-  · intro i j hij
-    exact (h i j).1 hij
+  · exact fun i j hij => (h i j).1 hij
 
 theorem upUni_inv {A : Matrix (Fin N) (Fin N) K} (h : IsUpUni A) : IsUpUni A⁻¹ := by
   apply Formalism.L2.SG.Pf.StabilizerIndexVolumes.up_inv <;> assumption
@@ -67,8 +65,8 @@ theorem loUni_inv {A : Matrix (Fin N) (Fin N) K} [StarRing K] (h : IsLoUni A) : 
 theorem upUni_last {r : ℕ} {A : Matrix (Fin (r + 1)) (Fin (r + 1)) K} (h : IsUpUni A) (c : Fin (r + 1)) :
     A (Fin.last r) c = if c = Fin.last r then 1 else 0 := by
   by_cases hc : c = Fin.last r
-  · subst hc; rw [if_pos rfl]; exact (h _ _).2 rfl
-  · rw [if_neg hc]
+  · subst hc; rw [ite_eq_left rfl]; exact (h _ _).2 rfl
+  · rw [ite_eq_right hc]
     exact (h _ _).1 (lt_of_le_of_ne (Fin.le_last c) hc)
 
 end Uni

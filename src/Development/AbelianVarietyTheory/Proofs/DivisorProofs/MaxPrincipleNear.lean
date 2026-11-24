@@ -192,7 +192,7 @@ private lemma norm_root_le_two_pow_mul_of_coeff_le {p : ℂ[X]} {n : ℕ} (hp : 
     ‖a‖ ≤ 2 ^ n * ρ := by
   by_cases hle : ‖a‖ ≤ ρ
   · exact hle.trans (le_mul_of_one_le_left hρ (one_le_pow₀ (by norm_num)))
-  push_neg at hle
+  push Not at hle
   have hpos : 0 < ‖a‖ := hρ.trans_lt hle
   obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := by
     rcases n with _ | m
@@ -256,8 +256,7 @@ private lemma natDegree_minpoly_pow_le {A S : Type*} [CommRing A] [IsDomain A]
     have h2 : Algebra.lmul A (AdjoinRoot (minpoly A g))
         (aeval (AdjoinRoot.root (minpoly A g) ^ N) L.charpoly) = 0 := by
       rw [← Polynomial.aeval_algHom_apply]; exact h
-    have h3 := congrArg (fun F : Module.End A (AdjoinRoot (minpoly A g)) => F 1) h2
-    simpa using h3
+    simpa using congrArg (fun F : Module.End A (AdjoinRoot (minpoly A g)) => F 1) h2
   let φ : AdjoinRoot (minpoly A g) →ₐ[A] S :=
     AdjoinRoot.liftAlgHom (minpoly A g) (Algebra.ofId A S) g
       (by rw [← minpoly.aeval A g, Polynomial.aeval_def]; rfl)
@@ -389,8 +388,7 @@ theorem _root_.GlobalTheory.maxPrinciple_line_eval₂ : ∀ (d : ℕ) (B : Type)
     gcongr
     · norm_num
     · exact natDegree_minpoly_pow_le hg N
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   rcases hR0.eq_or_lt with hR00 | hRpos
   · have h1 := key 1
     rw [← hR00] at h1 hlt
@@ -434,8 +432,7 @@ private lemma norm_le_one_add_sum_norm_coeff_of_isRoot_monic {p : Polynomial ℂ
     rw [hp.leadingCoeff, nnnorm_one, div_one, add_comm]
     gcongr
   have h2 : ‖t‖₊ ≤ 1 + ∑ k ∈ Finset.range (p.natDegree + 1), ‖p.coeff k‖₊ := h.le.trans hb
-  have h3 := NNReal.coe_le_coe.mpr h2
-  simpa [NNReal.coe_sum] using h3
+  simpa [NNReal.coe_sum] using NNReal.coe_le_coe.mpr h2
 
 open Polynomial in
 private lemma ringHom_algebraMap_eq_eval_map {d : ℕ} {B : Type} [CommRing B] [Algebra (MvPolynomial (Fin d) ℚ) B]
@@ -587,8 +584,7 @@ private lemma exists_small_direction_eval_circle_ne_zero {d : ℕ} {P : MvPolyno
       ∀ᶠ z' in nhds z, ∀ w : ℂ, ‖w‖ = 1 → MvPolynomial.eval (z' + w • v) P ≠ 0 := by
   classical
   obtain ⟨u, hu⟩ : ∃ u, MvPolynomial.eval u P ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hP (MvPolynomial.funext fun u => by simpa using h u)
   set q : Polynomial ℂ := MvPolynomial.eval₂ Polynomial.C
     (fun i => Polynomial.C (z i) + Polynomial.X * Polynomial.C (u i - z i)) P with hq
@@ -631,8 +627,7 @@ private lemma exists_small_direction_eval_circle_ne_zero {d : ℕ} {P : MvPolyno
       intro h0
       apply hrS
       refine Finset.mem_image.2 ⟨w * r, ?_, ?_⟩
-      · rw [Multiset.mem_toFinset, Polynomial.mem_roots hq0]
-        exact h0
+      · rwa [Multiset.mem_toFinset, Polynomial.mem_roots hq0]
       · rw [mem_sphere_zero_iff_norm] at hw
         rw [norm_mul, hw, one_mul, Complex.norm_real, Real.norm_of_nonneg hr.1.le]
 
@@ -657,8 +652,7 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
   obtain ⟨k, e, he⟩ := ((finite_setOf_homs_over_point (B := B) z).diff (t := {x₀})).fin_embedding
   have hsep : ∀ j, ∃ b : B, e j b ≠ x₀ b := by
     intro j
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hj : e j ∈ Set.range e := ⟨j, rfl⟩
     rw [he] at hj
     exact hj.2 (RingHom.ext h)
@@ -698,8 +692,7 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
         ∀ {y}, pa y → ∀ {x}, pb x → ‖Φ (y, x)‖ < Real.exp (ψ x₀ - C) := by
     intro j
     have h := hfar j
-    rw [nhds_prod_eq, Filter.eventually_prod_iff] at h
-    exact h
+    rwa [nhds_prod_eq, Filter.eventually_prod_iff] at h
   choose qa hqa qb hqb hfar using hfar'
 
   set Q : (B →+* ℂ) → Prop := fun x => (pb x ∧ ψ x < ψ x₀ + δ / 3) ∨ ∃ j, qb j x
@@ -789,8 +782,7 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
         Finset.prod_eq_one fun j _ => mul_inv_cancel₀ (sub_ne_zero.mpr (hy4 j))
       rw [hΦy, one_pow, mul_one] at key
       have hR : 0 ≤ R := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         have := mul_neg_of_neg_of_pos h (Real.exp_pos (N * (ψ x₀ + 2 * δ / 3)))
         linarith [norm_nonneg (y f)]
       calc ‖y f‖ * Real.exp (-(N * ψ y)) ≤ R' * Real.exp (-(N * ψ y)) :=

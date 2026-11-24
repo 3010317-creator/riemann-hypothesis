@@ -373,8 +373,7 @@ private lemma supp_bound {m : ℕ} (γ : G) (Z : Subgroup G) (hcomm : ∀ a ∈ 
       | zero =>
         intro hk
         have : (⟨0, hk⟩ : Fin (m + 1)) = 0 := rfl
-        rw [this, hx₀, inv_mul_cancel_left]
-        exact hy₀
+        rwa [this, hx₀, inv_mul_cancel_left]
       | succ k ih =>
         intro hk
         have hk' : k < m + 1 := by omega
@@ -394,8 +393,7 @@ private lemma supp_bound {m : ℕ} (γ : G) (Z : Subgroup G) (hcomm : ∀ a ∈ 
         rw [e]
         exact Set.mul_mem_mul (Set.mul_mem_mul ⟨⟨k, hk'⟩, rfl⟩ (ih hk'))
           (Set.mem_iUnion.2 ⟨⟨k, hk'⟩, _, hx, rfl⟩)
-    intro i _
-    exact key i i.2
+    exact fun i _ => key i i.2
   · funext i
     simp
 end

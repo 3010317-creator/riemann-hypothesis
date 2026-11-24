@@ -111,8 +111,7 @@ theorem count_step (he : ∀ m k, e m k ∈ D ⊓ Fil (-k))
       rcases lt_or_eq_of_le (show i ≤ j by omega) with hi' | rfl
       · exact (mem_Ub Fil e j c).1 hc i hi'
       · exact h
-    · intro h
-      exact h j (by omega)
+    · exact fun h => h j (by omega)
   have hrange : LinearMap.range ψ = (D ⊓ Fil (-j)).map (Fil (-j + 1)).mkQ := by
     apply le_antisymm
     · rintro _ ⟨⟨c, hc⟩, rfl⟩
@@ -123,8 +122,7 @@ theorem count_step (he : ∀ m k, e m k ∈ D ⊓ Fil (-k))
       obtain ⟨c, hlow, hk⟩ := hS j w hw
       refine ⟨⟨c, (mem_Ub Fil e j c).2 hlow⟩, ?_⟩
       simp only [ψ, LinearMap.comp_apply, Submodule.coe_subtype, Submodule.mkQ_apply]
-      rw [Submodule.Quotient.eq, sumAt_apply]
-      exact hk
+      rwa [Submodule.Quotient.eq, sumAt_apply]
   have h1 := LinearMap.finrank_range_add_finrank_ker ψ
   rw [hker, (Submodule.comapSubtypeEquivOfLe hle).finrank_eq, hrange] at h1
   have : FiniteDimensional LL ↥(D ⊓ Fil (-j)) := Submodule.finiteDimensional_of_le inf_le_left
@@ -154,8 +152,7 @@ theorem indep_of_span (a₀ a₁ : ℤ) (h₀ : D ≤ Fil a₀) (h₁ : D ⊓ Fi
     intro j
     have := count_step hFa D he hS j
     simp only [H]
-    rw [show -(j + 1) + 1 = -j by ring]
-    exact this
+    rwa [show -(j + 1) + 1 = -j by ring]
   have hiter : ∀ (j : ℤ) (N : ℕ), H (j + N) = H j := by
     intro j N
     induction N with

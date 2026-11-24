@@ -226,22 +226,16 @@ theorem len_ker_le (F : A →ₗ[O] Matrix δ δ O) (κ : (δ → KO O) →ₗ[O
       rintro _ ⟨k, rfl⟩
       rw [SetLike.mem_coe, LinearMap.mem_ker]
       funext b
-      have hk := congrFun hv (k, b)
-      simpa [L, relMap, bigRect, Fintype.sum_prod_type, Finset.sum_apply] using hk
+      simpa [L, relMap, bigRect, Fintype.sum_prod_type, Finset.sum_apply] using congrFun hv (k, b)
     rw [LinearMap.mem_ker] at hL
     have hs : ∑ j, actQ (F (θ j)) (φ v j) = κ (L θ) := by
 
       simp only [L, LinearMap.coe_mk, AddHom.coe_mk, map_sum]
-      refine Finset.sum_congr rfl fun j _ => ?_
-      exact hact _ _
+      exact Finset.sum_congr rfl fun j _ => hact _ _
     rw [hs, hL, map_zero]
   let ψ : LinearMap.ker (relMap O (KO O) (bigRect F P)) →ₗ[O] H :=
     LinearMap.codRestrict H (φ.comp (LinearMap.ker _).subtype) fun v => hmem v v.2
-  have hψ : Function.Injective ψ := by
-    intro v w hvw
-    apply Subtype.ext
-    apply hφinj
-    exact congrArg Subtype.val hvw
+  have hψ : Function.Injective ψ := fun v w hvw => Subtype.ext (hφinj (congrArg Subtype.val hvw))
   first
   | exact Module.length_le_of_injective ψ hψ
 
@@ -342,7 +336,7 @@ theorem blocks_eq (a : A) :
     rw [Finset.sum_eq_single c]
     · simp
     · intro b _ hb
-      rw [if_neg (Ne.symm hb), map_zero, zero_mul]
+      rw [ite_eq_right (Ne.symm hb), map_zero, zero_mul]
     · simp
 
 theorem det_at (g : ℕ) (Θ : Matrix (Fin g) (Fin g) A) :
@@ -703,8 +697,7 @@ theorem relation_lemma_of_large_residue (hG : GoodCongruenceObjects N r ρ π S)
       ((nρ + ∑ c, nχ c : ℕ) : ℕ∞) := by
     push_cast
     rw [hnρ]
-    simp only [hnχ]
-    exact key
+    simpa only [hnχ] using key
   have key3 := ENat.toNat_le_of_le_natCast key2
   rw [← Finset.sum_div, ← add_div]
   apply div_le_div_of_nonneg_right _ (Nat.cast_nonneg _)
@@ -739,8 +732,7 @@ theorem relation_lemma_clause {D : D7} (i : D.nd.Loc)
     (r : D.nd.X i → (Formalism.MainNotions.N.GE D.nd →* Matrix.GeneralLinearGroup (Fin D.R.nV) (D.nd.O i)))
     (ρ : D.nd.X i → (Formalism.MainNotions.N.GE D.nd →* Matrix.GeneralLinearGroup (Fin D.R.r) (D.nd.O i)))
     (π : D.nd.X i) : HomRelationsLemmaAllChoices i r ρ π := by
-  intro _ S hG
-  exact Br.relation_lemma D.nd r ρ π S hG
+  exact fun _ S hG => Br.relation_lemma D.nd r ρ π S hG
 
 end Formalism.MainNotions.LargeLevelLemmas
 
@@ -760,7 +752,7 @@ theorem inj_of_card {A : Type} [CommRing A] [IsDomain A] {t : ℕ} {F : Type} [F
   by_contra hni
   obtain ⟨i, j, hij, hne⟩ : ∃ i j, Φ x i = Φ x j ∧ i ≠ j := by
     unfold Function.Injective at hni
-    push_neg at hni
+    push Not at hni
     exact hni
   have hroot : ∀ z, Multiset.map (Φ z) Finset.univ.val = P.roots := by
     intro z
@@ -800,19 +792,18 @@ theorem inj_of_card {A : Type} [CommRing A] [IsDomain A] {t : ℕ} {F : Type} [F
     intro y c
     by_cases h : σ y = Equiv.swap i j
     · dsimp only [τ]
-      rw [if_pos h, hσ y c, h]
+      rw [ite_eq_left h, hσ y c, h]
       exact hswap c
     · dsimp only [τ]
-      rw [if_neg h, hσ y c]
+      rw [ite_eq_right h, hσ y c]
   have hτne : ∀ y, τ y ≠ Equiv.swap i j := by
     intro y
     by_cases h : σ y = Equiv.swap i j
     · dsimp only [τ]
-      rw [if_pos h]
+      rw [ite_eq_left h]
       exact hsw.symm
     · dsimp only [τ]
-      rw [if_neg h]
-      exact h
+      rwa [ite_eq_right h]
   have hτinj : Function.Injective τ := by
     intro y y' h
     apply hinj
@@ -841,8 +832,7 @@ theorem sep_of_indep {A : Type} [CommRing A] [IsDomain A] {F : Type} [Fintype F]
   apply hv
   apply hind
   intro z
-  have hz := congrFun hMv (e z)
-  simpa [M, Matrix.vecMul, dotProduct] using hz
+  simpa [M, Matrix.vecMul, dotProduct] using congrFun hMv (e z)
 
 end Count
 
@@ -857,22 +847,22 @@ theorem sepElt (x : N.X i) : ∃ g ∈ N.T i, g x ≠ 0 ∧ ∀ y, y ≠ x → g
     if h : x ≠ y then f y h - algebraMap (N.O i) (N.X i → N.O i) (f y h y) else 1
   refine ⟨∏ y, F y, Subalgebra.prod_mem _ (fun y _ => ?_), ?_, ?_⟩
   · by_cases h : x ≠ y
-    · simp only [F, dif_pos h]
+    · simp only [F, dite_eq_left h]
       exact Subalgebra.sub_mem _ (hfT y h) (Subalgebra.algebraMap_mem _ _)
-    · simp only [F, dif_neg h]
+    · simp only [F, dite_eq_right h]
       exact Subalgebra.one_mem _
   · rw [Finset.prod_apply]
     refine Finset.prod_ne_zero_iff.mpr (fun y _ => ?_)
     by_cases h : x ≠ y
-    · simp only [F, dif_pos h, Pi.sub_apply]
+    · simp only [F, dite_eq_left h, Pi.sub_apply]
       exact sub_ne_zero.mpr (hf y h)
-    · simp only [F, dif_neg h, Pi.one_apply]
+    · simp only [F, dite_eq_right h, Pi.one_apply]
       exact one_ne_zero
   · intro y hy
     rw [Finset.prod_apply]
     refine Finset.prod_eq_zero (Finset.mem_univ y) ?_
     have h : x ≠ y := fun e => hy e.symm
-    simp only [F, dif_pos h, Pi.sub_apply]
+    simp only [F, dite_eq_left h, Pi.sub_apply]
     exact sub_self _
 
 variable {r : N.X i → (GE N →* GL (Fin R.nV) (N.O i))}
@@ -1044,8 +1034,7 @@ theorem span_lemma_of_charpoly
       have := hx x'
       simp only [map_self] at this
       exact this.symm
-    rw [this]
-    exact ht
+    rwa [this]
   · intro g Θ hΘ
     have hsub : LemmaDetSub.{0, 0, 0} := eta_determinant_comparison det_poly_statement blockDet
     let R'K : Subalgebra (N.O i) (X' → Matrix (Fin R.nV) (Fin R.nV) (KK N i)) :=
@@ -1066,8 +1055,7 @@ theorem span_lemma_of_charpoly
       apply IsFractionRing.injective (N.O i) (KK N i)
       rw [hx x', RingHom.map_det]
       rfl
-    rw [this]
-    exact hf
+    rwa [this]
 
 end Det
 
@@ -1101,8 +1089,7 @@ theorem exists_nonfixed_twisted_vector
     (x : N.X i) (hx : x ∉ N.Z i) (η : Fin R.nV → KK N i) (hη : η ≠ 0) :
     ∃ g : GE N, toK N i (((chiU N i 1 g)⁻¹ : (N.O i)ˣ) : N.O i) •
       (mapM (toK N i) (rO N i r x) g).mulVec η ≠ η := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hx
   apply hG6 x
   refine ⟨η, hη, fun g => ?_⟩
@@ -1160,8 +1147,7 @@ variable {D : D7} (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV)
   (ρ : D.nd.X i → (GE D.nd →* GL (Fin D.R.r) (D.nd.O i))) (π : D.nd.X i)
 
 theorem eigenspace_lemma_clause : SpanQuotientLemma i r ρ π := by
-  intro _ S hG
-  exact Formalism.MainNotions.N.Inst.eigenspace_lemma D.nd hG
+  exact fun _ S hG => Formalism.MainNotions.N.Inst.eigenspace_lemma D.nd hG
 
 theorem span_lemma_clause (h : Formalism.MainNotions.TruncatedSeriesCountingIdentities.admG1 i r) : CharpolyCoeffsLemmaFamily i r := Formalism.MainNotions.N.Inst.span_lemma_of_charpoly_coeffs D.nd r h
 

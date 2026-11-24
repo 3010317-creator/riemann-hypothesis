@@ -145,8 +145,7 @@ theorem descent (hst : ∀ P : Ideal (𝓞 K), P.IsPrime → P ≠ ⊥ → ((p :
     exact hC.1 (by rw [Ideal.mul_bot])
   refine ⟨I', ⟨hI', cancel_coe hP0 ?_⟩, ?_⟩
   · have h := hC.2
-    rw [Ideal.map_mul, hst P hPp hP0 hpP, coeSubmodule_mul, coeSubmodule_mul, mul_assoc] at h
-    exact h
+    rwa [Ideal.map_mul, hst P hPp hP0 hpP, coeSubmodule_mul, coeSubmodule_mul, mul_assoc] at h
   · rw [map_mul]
     have h1 : Ideal.absNorm P ≠ 1 := fun h => hPp.ne_top (Ideal.absNorm_eq_one_iff.mp h)
     have h0 : Ideal.absNorm P ≠ 0 := fun h => hP0 (Ideal.absNorm_eq_zero_iff.mp h)
@@ -246,8 +245,7 @@ theorem idealDescent_conjInvariant_of_inverse (hb : ∀ x, x ∈ 𝔟 ↔ c x �
     have hle : Submodule.span (𝓞 K) {(z' : K)} * 𝔟 * 𝔞 ≤
         coeSubmodule K (Submodule.comap (Algebra.linearMap (𝓞 K) K) 𝔟) * 𝔞 := by
       rw [Submodule.mul_le]
-      intro u hu a ha
-      exact Submodule.mul_mem_mul (hsp hu) ha
+      exact fun u hu a ha => Submodule.mul_mem_mul (hsp hu) ha
     exact hle hmem
 
 theorem fractionalIdealUnitAtPrime_of_conj_inverse (hst : ∀ P : Ideal (𝓞 K), P.IsPrime → P ≠ ⊥ → ((p : ℕ) : 𝓞 K) ∈ P →
@@ -272,7 +270,7 @@ def NormUnitK (D : D7) (p : ℕ) [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+
   ∀ z : D.host.E, z * D.host.conj z = 1 → ‖TaylorLogMetric.lamC lam (∏ τ : D.what₂.Tau, TaylorLogMetric.embT D τ z)‖ = 1
 
 theorem lamC_of_mem {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) :
-    TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dif_pos h
+    TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dite_eq_left h
 
 def FrobOut (D : D7) (p : ℕ) : Prop :=
   ∃ g : D.R.GG, g ∉ D.R.Psi ∧ ∀ P : Ideal (𝓞 D.host.E), P.IsPrime → P ≠ ⊥ → ((p : ℕ) : 𝓞 D.host.E) ∈ P →
@@ -295,13 +293,7 @@ theorem conj_sigmaOf (g : D.R.GG) (x : D.host.E) :
   rw [← sigmaOf_mul', ← sigmaOf_mul', mul_comm]
 
 theorem conj_conj' (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
-  rw [conj_eq']
-  change (D.host.sigmaOf (D.R.cc) * D.host.sigmaOf (D.R.cc)) x = x
-  rw [← sigmaOf_mul']
-  have : D.R.cc * D.R.cc = 1 := by
-    exact Prod.ext (by change c0 * c0 = 1; decide) (mul_one _)
-  rw [this, show D.host.sigmaOf 1 = 1 from map_one (D.host.gal).symm]
-  rfl
+  exact Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU.conj_conj D x
 
 def nPsi (D : D7) (z : D.host.E) : D.host.E := ∏ τ : D.what₂.Tau, D.host.sigmaOf (D.eTau τ : D.R.GG) z
 
@@ -419,8 +411,7 @@ theorem frobOut_of_inertK {p : ℕ} [hp : Fact p.Prime] (hp2 : p ≠ 2) (hI : Fo
     intro σ τ
     apply (galRestrict ℤ ℚ D.host.E (𝓞 D.host.E)).symm.injective
     apply (D.host.gal).injective
-    simp only [map_mul]
-    exact mul_comm _ _
+    simpa only [map_mul] using mul_comm _ _
 
   have hpZ : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp.out
   have hPmax : (Ideal.span {(p : ℤ)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hpZ.irreducible
@@ -533,8 +524,7 @@ theorem frobOut_of_inertK {p : ℕ} [hp : Fact p.Prime] (hp2 : p ≠ 2) (hI : Fo
       have : (-4 * (D.host.d : ℤ)) ∈ Q₀.comap (algebraMap ℤ (𝓞 D.host.E)) := by
         rw [Ideal.mem_comap]; simpa using h4d
       change (-4 * (D.host.d : ℤ)) ∈ Q₀.under ℤ at this
-      rw [hQc, Ideal.mem_span_singleton] at this
-      exact this
+      rwa [hQc, Ideal.mem_span_singleton] at this
     rw [neg_mul, dvd_neg] at hdvd
     rcases hpZ.dvd_or_dvd hdvd with h4 | hd
     · have : (p : ℤ) ∣ 2 * 2 := by norm_num at h4 ⊢; exact h4

@@ -99,8 +99,7 @@ theorem liftAt_mk'_mul (φ : S →+* DualNumber K) (hφ : ∀ s, (φ s).fst = ψ
     (IsLocalization.mk'_spec (Localization.AtPrime (RingHom.ker ψ)) s t)
   rw [map_mul] at this
   unfold liftAt at this ⊢
-  rw [IsLocalization.lift_eq, IsLocalization.lift_eq] at this
-  exact this
+  rwa [IsLocalization.lift_eq, IsLocalization.lift_eq] at this
 
 theorem psi_ne_zero (t : (RingHom.ker ψ).primeCompl) : ψ t ≠ 0 := fun h0 =>
   t.2 (by simpa [RingHom.mem_ker] using h0)
@@ -110,8 +109,7 @@ theorem liftAt_mk'_snd (φ : S →+* DualNumber K) (hφ : ∀ s, (φ s).fst = ψ
     (liftAt ψ φ hφ (IsLocalization.mk' (Localization.AtPrime (RingHom.ker ψ)) s t)).snd =
       ((φ s).snd - ψ s / ψ t * (φ t).snd) / ψ t := by
   have := snd_of_mul_eq _ _ _ (by rw [hφ]; exact psi_ne_zero ψ t) (liftAt_mk'_mul ψ φ hφ s t)
-  rw [hφ, hφ] at this
-  exact this
+  rwa [hφ, hφ] at this
 
 theorem liftAt_isLocalHom (φ : S →+* DualNumber K) (hφ : ∀ s, (φ s).fst = ψ s) :
     IsLocalHom ((TrivSqZeroExt.fstHom K K K).toRingHom.comp (liftAt ψ φ hφ)) := by

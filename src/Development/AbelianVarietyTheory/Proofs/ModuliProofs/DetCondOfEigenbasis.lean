@@ -135,8 +135,7 @@ theorem exists_fibre_unif {S : Scheme.{0}} (t : SAB H (Sp ℂ)) (t₀ : SAB H S)
   have hee : (fun z => (φ (u.ex z)).left) = fun z => (u.ex z).left ≫ m.cm.F := funext fun z => hφ _
   have hol : IsHolTo Set.univ (fun z => (u.ex z).left ≫ m.cm.F) := fun U f => by
     obtain ⟨a, b⟩ := u.hol (m.cm.F ⁻¹ᵁ U) ((m.cm.F.app U).hom f)
-    simp only [← valAt'_comp, Set.mem_univ, true_and]
-    exact ⟨a, b⟩
+    simpa only [← valAt'_comp, Set.mem_univ, true_and] using ⟨a, b⟩
   have key : ∀ (w : Fin g → ℂ) (v : epsR ℂ ⟶ t.G), IsTangent v ∧ u.IsDiff w v ↔
       IsDerivAt0 (fun z => (φ (u.ex z)).left) w (ψ v).left := fun w v => by
     have e₀ : IsTangent v ∧ u.IsDiff w v ↔ IsDerivAt0 (fun z => (u.ex z).left) w v.left :=
@@ -159,8 +158,7 @@ theorem exists_fibre_unif {S : Scheme.{0}} (t : SAB H (Sp ℂ)) (t₀ : SAB H S)
       refine (Spec.map_comp _ _).symm.trans ((congrArg Spec.map ?_).trans (Spec.map_id _))
       ext a
       simp
-    simp only [← key, ht, true_and]
-    exact h₁ v ht
+    simpa only [← key, ht, true_and] using h₁ v ht
   · rw [Over.comp_left, hφ, hφ, h, Over.comp_left, Category.assoc, m.act, Category.assoc]
   · obtain ⟨ω, hω, -⟩ := m.lin
     have H := fun (y' : Sp ℂ ⟶ S) (hy' : y' = (𝟙_ (Over (Sp ℂ))).hom ≫ y) (x₀ y₀ : Over.mk y' ⟶ t₀.G)

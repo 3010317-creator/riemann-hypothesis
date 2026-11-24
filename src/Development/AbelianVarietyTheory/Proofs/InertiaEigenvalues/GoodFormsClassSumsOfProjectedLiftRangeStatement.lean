@@ -241,8 +241,7 @@ theorem GlobalTheory.SeriesTie.rd_good_model : ∀ (D : D7) (X : RealSide D) (E 
   refine ⟨mv Y.YS Y.Z.good i j b (Formalism.MainNotions.IntegralHeckeForms.eG D.nexp i _ b f), ⟨?_, ?_⟩, ?_⟩
   · have h := LinearMap.mem_range_self (X.R.HW j (sg0 D X.A3.A)).e
       (mv Y.YS Y.Z.good i j b (Formalism.MainNotions.IntegralHeckeForms.eG D.nexp i _ b f))
-    rw [(X.char.models.HW j _).2.1] at h
-    exact h
+    rwa [(X.char.models.HW j _).2.1] at h
   · rw [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero, LinearMap.id_apply]
     rw [← mv_eG Y.YS Y.Z.good i j b X.unif X.idem, hidem]
   · change (Y.Z.ν i j b)⁻¹ • evK Y.YS X.geo.v₀ Y.Z.good i j b _ = _
@@ -297,7 +296,7 @@ theorem support_term_subset (y x : G) (P : W) :
     Function.support (term ι ρ J χ y x P) ⊆ {γ | (ι γ * y)⁻¹ * x ∈ J} := by
   intro γ hγ
   by_contra h
-  exact hγ (by unfold term; exact dif_neg (show ¬ ((ι γ * y)⁻¹ * x ∈ J) from h))
+  exact hγ (by unfold term; exact dite_eq_right (show ¬ ((ι γ * y)⁻¹ * x ∈ J) from h))
 
 theorem finite_cond {y : G} (hf : Finite (Bridge.stab ι J y)) (x : G) : {γ | (ι γ * y)⁻¹ * x ∈ J}.Finite := by
   rcases Set.eq_empty_or_nonempty {γ | (ι γ * y)⁻¹ * x ∈ J} with h | ⟨γ₀, h₀⟩
@@ -326,7 +325,7 @@ theorem term_mul (y x : G) (P : W) (γ₀ γ : Γ) (k : J) :
     rw [ek, map_mul, map_mul, Units.val_mul, map_smul, smul_smul, mul_comm, Module.End.mul_apply]
   · have h' : ¬ (ι (γ₀ * γ) * y)⁻¹ * (ι γ₀ * x * k) ∈ J := by
       rw [e]; intro h2; exact h (by simpa using J.mul_mem h2 (J.inv_mem k.2))
-    rw [dif_neg h', dif_neg h, map_zero, smul_zero]
+    rw [dite_eq_right h', dite_eq_right h, map_zero, smul_zero]
 
 theorem tr_law {y : G} (hf : Finite (Bridge.stab ι J y)) (P : W) (γ₀ : Γ) (x : G) (k : J) :
     tr ι ρ J χ y P (ι γ₀ * x * k) = ((χ k : ℂˣ) : ℂ) • ρ γ₀ (tr ι ρ J χ y P x) := by
@@ -353,8 +352,7 @@ theorem tr_smul (y : G) (a : ℂ) (P : W) : tr ι ρ J χ y (a • P) = a • tr
   funext x
   have e : ∀ γ, term ι ρ J χ y x (a • P) γ = a • term ι ρ J χ y x P γ := fun γ => by
     unfold term; split_ifs <;> simp [smul_comm a]
-  simp only [tr, Pi.smul_apply, e]
-  exact (smul_finsum a _).symm
+  simpa only [tr, Pi.smul_apply, e] using (smul_finsum a _).symm
 
 theorem tr_zero (y : G) : tr ι ρ J χ y (0 : W) = 0 := by
   simpa using tr_smul (ι := ι) (ρ := ρ) (χ := χ) y (0 : ℂ) (0 : W)
@@ -364,8 +362,7 @@ theorem tr_mem {R : Type} [Semiring R] [Module R W] {y : G} (hf : Finite (Bridge
   unfold tr
   rw [finsum_eq_sum _ (support_term_finite hf x P)]
   refine Submodule.sum_mem _ fun γ hγ => ?_
-  have h := support_term_subset y x P ((Set.Finite.mem_toFinset _).1 hγ)
-  exact hM γ h
+  exact hM γ (support_term_subset y x P ((Set.Finite.mem_toFinset _).1 hγ))
 
 theorem tr_self {y : G} (hf : Finite (Bridge.stab ι J y)) {F : G → W} (hF : F ∈ GlobalTheory.ExportSeries.lawForms ι ρ J χ) :
     tr ι ρ J χ y (F y) y = (Nat.card (Bridge.stab ι J y) : ℂ) • F y := by
@@ -376,11 +373,11 @@ theorem tr_self {y : G} (hf : Finite (Bridge.stab ι J y)) {F : G → W} (hF : F
       rw [Bridge.mem_stab, ← J.inv_mem_iff]
       simp [mul_assoc]
     by_cases h : (ι γ * y)⁻¹ * y ∈ J
-    · rw [dite_eq_left h, if_pos (hc.1 h)]
+    · rw [dite_eq_left h, ite_eq_left (hc.1 h)]
       have := GlobalTheory.ExportSeries.mem_lawForms.1 hF γ y ⟨_, h⟩
       rw [show ι γ * y * ((ι γ * y)⁻¹ * y) = y by group] at this
       exact this.symm
-    · rw [dif_neg h, if_neg fun h' => h (hc.2 h')]
+    · rw [dite_eq_right h, ite_eq_right fun h' => h (hc.2 h')]
   unfold tr
   simp only [e]
   have hs : ((Bridge.stab ι J y : Subgroup Γ) : Set Γ).Finite := Set.finite_coe_iff.1 hf
@@ -410,9 +407,8 @@ theorem eq_sum_tr {I : Type} [Fintype I] {y : I → G} (hr : Bridge.IsReps ι J 
       unfold tr
       refine finsum_eq_zero_of_forall_eq_zero fun γ => ?_
       unfold term
-      rw [dif_neg]
-      intro h
-      exact hi (huniq i ⟨γ, ⟨_, h⟩, by simp [mul_assoc]⟩)
+      rw [dite_eq_right]
+      exact fun h => hi (huniq i ⟨γ, ⟨_, h⟩, by simp [mul_assoc]⟩)
     rw [this, smul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
@@ -650,8 +646,7 @@ theorem tr_mem_mtLat {B : Base S T} (hB : B.Good) {K : Type} [Field K] [NumberFi
       group
     have h1 := Base.act_mem_coefLat hB.frame hc γ y _ (Base.mem_St_of_mem_levJ (B := B) h) hP
     rw [← hx] at h1
-    have h2 := Submodule.smul_mem (B.coefLat σ emb O x) (⟨_, hlam ⟨_, h⟩⟩ : O) h1
-    exact h2
+    exact Submodule.smul_mem (B.coefLat σ emb O x) (⟨_, hlam ⟨_, h⟩⟩ : O) h1
 
 end GlobalTheory.BaseSpan
 
@@ -757,7 +752,7 @@ theorem isLevelLift_base_of_realisation_lift : ∀ (D : D7) (X : RealSide D) (E 
   have tri : ∀ (PP : Pl D.host.E) (r t : ℕ), r = (Wc D j).rank → ∀ x : GL (Fin (Wc D j).rank) (kP PP),
       x ∈ blockTri (blkOf r t) := fun PP r t hr x => mem_blockTri.2 fun a c hac => by
     have ha : a.val < r := lt_of_lt_of_eq a.2 hr.symm
-    have e : blkOf r t a = 0 := if_pos ha
+    have e : blkOf r t a = 0 := ite_eq_left ha
     exact absurd (lt_of_lt_of_eq hac e) (Nat.not_lt_zero _)
   refine ⟨h.1, mem_parLev.2 ⟨parLev_UA h.2.1, ?_, fun PP _ => tri PP _ _ rfl _,
     fun PP hPP => absurd hPP (Finset.notMem_empty _)⟩, ?_⟩
@@ -1026,10 +1021,10 @@ theorem avg_law {G H W : Type} [Group G] [Fintype G] [Mul H] [AddCommGroup W] [M
     f (h * r (gk * g)))) (fun g => lamk • ((if inU g then N * (Λ g)⁻¹ else 0) • f (h * r g))) (fun _ => rfl)]
   refine Finset.sum_congr rfl fun g _ => ?_
   by_cases hg : inU g
-  · rw [if_pos hg, if_pos ((hgk g).2 hg), key g hg, smul_smul, smul_smul]
+  · rw [ite_eq_left hg, ite_eq_left ((hgk g).2 hg), key g hg, smul_smul, smul_smul]
     congr 1
     field_simp [hΛ g, hΛ (gk * g)]
-  · rw [if_neg hg, if_neg (fun h' => hg ((hgk g).1 h')), zero_smul, zero_smul, smul_zero]
+  · rw [ite_eq_right hg, ite_eq_right (fun h' => hg ((hgk g).1 h')), zero_smul, zero_smul, smul_zero]
 
 theorem avg_value {G : Type} [Fintype G] (inU : G → Prop) [DecidablePred inU] (Λ lc ev : G → ℂ) (F : ℂ)
     (hlc : ∀ g, lc g ≠ 0) (hev : ∀ g, inU g → Λ g = lc g * ev g) (hev0 : ∀ g, inU g → ev g ≠ 0)
@@ -1039,9 +1034,9 @@ theorem avg_value {G : Type} [Fintype G] (inU : G → Prop) [DecidablePred inU] 
       if inU g then ((Finset.univ.filter inU).card : ℂ)⁻¹ * F else 0 := by
     intro g
     by_cases hg : inU g
-    · rw [if_pos hg, if_pos hg, hev g hg]
+    · rw [ite_eq_left hg, ite_eq_left hg, hev g hg]
       field_simp [hlc g, hev0 g hg]
-    · rw [if_neg hg, if_neg hg, zero_mul]
+    · rw [ite_eq_right hg, ite_eq_right hg, zero_mul]
   rw [Finset.sum_congr rfl fun g _ => e g, ← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul]
   field_simp
 
@@ -1245,7 +1240,7 @@ theorem avg_level : ∀ (D : D7) (X : RealSide D) (E : IntegralHeckeForms.XD D) 
       (fun g => (if h : X.cG (X.R.eG g) ∈ D.nexp.U then Y.Z.ρ.e i b ((D.nexp.psiU i b ⟨_, h⟩ : (FractionRing (D.ntw.O i))ˣ) : FractionRing (D.ntw.O i)) else 1)) _ hlc hev hev0 hN)
     by_cases hg : X.cG (X.R.eG g) ∈ D.nexp.U
     · rw [act_type D X E Y i j b _ hty g hg g', dite_eq_left hg]
-    · simp only [if_neg hg, zero_mul]
+    · simp only [ite_eq_right hg, zero_mul]
 
 end GlobalTheory.AvgLevel
 

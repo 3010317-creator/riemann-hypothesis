@@ -174,8 +174,7 @@ private theorem comm_proj {H V W : Type} [NormedAddCommGroup H] [InnerProductSpa
     rwa [star_mul, hQ.star_eq, hP.1.star_eq] at this
   change (T * prj F) * P = P * (T * prj F) at hY
   change T * P = P * T
-  rw [mul_assoc, h2, hT.eq, ← mul_assoc, h1] at hY
-  exact hY
+  rwa [mul_assoc, h2, hT.eq, ← mul_assoc, h1] at hY
 
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.uiwAct :
     ∀ (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (μ : Measure (G1 K (2 + 2))) [μ.IsHaarMeasure] (μ₂ : Measure (G1 K 2))
@@ -200,14 +199,13 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.uiwAct :
     refine (hmem _).2 fun v => ?_
     by_cases hv : v = w
     · subst hv
-      rw [hl1, if_pos hw]
-      exact hj
+      rwa [hl1, ite_eq_left hw]
     · rw [hl2 v hv]
       exact one_mem _
   have hUJ : ∀ u ∈ levOn S U, finAt w (finEmb K (2 + 2) u) ∈ U w := by
     intro u hu
     have h := (hmem u).1 hu w
-    rwa [if_pos hw] at h
+    rwa [ite_eq_left hw] at h
   obtain ⟨ho, hc, hfix⟩ := level_facts μ D _ hD hle
   have hT : Uiw μ w ν = Hop μ w (U w) (Cartan.diagPow (w.adicCompletion K) (2 + 2) ν) := by rw [hI]; rfl
   obtain ⟨⟨s, ⟨u, κ, hκ, hact, hs⟩, hsec⟩, hcomm⟩ := cosAct K μ μ₂ τ₁ τ₂ hp D d d' A A' _ hD hle _ _

@@ -262,14 +262,12 @@ theorem bisimplicial_action_second_factor {n p q q' : ℕ} (ψ' : Fin (q + 1) �
 theorem bi_boxL {n p q : ℕ} (θ : Fin (n + 1) →o Fin (p + 1)) (ψ : Fin (n + 1) →o Fin (q + 1)) (x : Cn F n)
     (c : Fin (p + 1) ⥤ C) (b : Fin (q + 1) ⥤ C) :
     bi F θ ψ (pulln (boxL F) n x) c b = act F θ x c ⊗ₜ[R] 1 := by
-  refine (mp_box_tmul F _ _ _).trans ?_
-  exact congrArg (fun y ↦ act F θ x c ⊗ₜ[R] y) (map_one (mp F _))
+  exact (mp_box_tmul F _ _ _).trans (congrArg (fun y ↦ act F θ x c ⊗ₜ[R] y) (map_one (mp F _)))
 
 theorem bi_boxR {n p q : ℕ} (θ : Fin (n + 1) →o Fin (p + 1)) (ψ : Fin (n + 1) →o Fin (q + 1)) (x : Cn F n)
     (c : Fin (p + 1) ⥤ C) (b : Fin (q + 1) ⥤ C) :
     bi F θ ψ (pulln (boxR F) n x) c b = 1 ⊗ₜ[R] act F ψ x b := by
-  refine (mp_box_tmul F _ _ _).trans ?_
-  exact congrArg (fun y ↦ y ⊗ₜ[R] act F ψ x b) (map_one (mp F _))
+  exact (mp_box_tmul F _ _ _).trans (congrArg (fun y ↦ y ⊗ₜ[R] act F ψ x b) (map_one (mp F _)))
 
 theorem act_const {p : ℕ} (x : Cn F 1) (hx : dn F 1 x = 0) (θ : Fin 2 →o Fin (p + 1)) (h : θ 0 = θ 1) :
     act F θ x = 0 := by

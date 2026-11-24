@@ -239,8 +239,7 @@ theorem isLift_one_iff (h : GL n F) : IsLift (1 : GL n (ZMod p)) h ↔ h ∈ KOn
         (GeneralLinearGroup.map (algebraMap 𝒪[F] F) κ).val a b - (1 : Matrix n n F) a b := by
       rw [← coe_one_matrix_integers_apply a b]
       rfl
-    rw [← h2]
-    exact e1
+    rwa [← h2]
 
 theorem IsLift.inv_mul_mem (hp : resCard F = p) {g : GL n (ZMod p)} {h h' : GL n F} (H : IsLift g h) (H' : IsLift g h') :
     h⁻¹ * h' ∈ KOne F n := by
@@ -354,10 +353,8 @@ theorem TypeVec.up {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
     ext g
     simp only [Set.mem_setOf_eq]
     constructor
-    · intro h1
-      exact congrArg Subtype.val h1
-    · intro h1
-      exact Subtype.ext h1
+    · exact fun h1 => congrArg Subtype.val h1
+    · exact fun h1 => Subtype.ext h1
   have hfin := image_compact_orbit_finite_of_open_stabilizer ρS s hopen (isCompact_KOne' p)
   let O := hfin.toFinset
   have hmemO : ∀ u, u ∈ O ↔ ∃ g ∈ (KOne F n : Set (GL n F)), ρS g s = u := by
@@ -421,8 +418,7 @@ theorem TypeVec.factor {α : Type} [Fintype α] [DecidableEq α] {m : α → Typ
   set w := z.coeff.sum fun g c =>
     c • ((piTensor ρ).comp (MonoidHom.mulSingle (fun j => GL (m j) F) a)) (ℓ g) y with hw
   obtain ⟨q, hq⟩ : ∃ q, (Basis.piTensorProduct B).repr w q ≠ 0 := by
-    by_contra hq0
-    push_neg at hq0
+    by_contra! hq0
     apply hne
     apply (Basis.piTensorProduct B).repr.injective
     ext r
@@ -528,8 +524,7 @@ theorem exists_eigen_of_map {G V Y : Type} [Group G] [Finite G] [AddCommGroup V]
   classical
   haveI : Fintype G := Fintype.ofFinite G
   obtain ⟨w, hw⟩ : ∃ w, Λ w ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact h0 (LinearMap.ext hcon)
   refine ⟨∑ x : H, ((ψ x : ℂ))⁻¹ • ρ x w, ?_, ?_⟩
   · intro hP

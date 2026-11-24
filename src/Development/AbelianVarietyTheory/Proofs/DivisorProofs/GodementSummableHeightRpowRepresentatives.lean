@@ -275,8 +275,7 @@ theorem packing_count : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopolog
   have hsubS : ∀ (γ : Λ), ∀ t ∈ T, γ • (t • U) ⊆ S := by
     intro γ t ht y hy
     rw [mem_smul_smul_iff] at hy
-    have h1 := hSinv (γ : G) γ.2 _ (hTS t ht _ hy)
-    simpa [mul_assoc] using h1
+    simpa [mul_assoc] using hSinv (γ : G) γ.2 _ (hTS t ht _ hy)
   set ν := μ.restrict (S ∩ D) with hν
   have key : ∀ t ∈ T, μ U = ∑' γ : Λ, ∫⁻ x, (γ • (t • U)).indicator 1 x ∂ν := by
     intro t ht
@@ -808,8 +807,7 @@ theorem final_eq (X y p : Matrix (Fin j) (Fin m) A) (c r z ws : Matrix (Fin j) (
     (-((2⁻¹ : k) • (X * (K * cT s X))) - r) + c - (-X) * (K * cT s (X + (y + p))) =
       (z - (2⁻¹ : k) • (y * (K * cT s y))) + (ws - (2⁻¹ : k) • (p * (K * cT s p))) - y * (K * cT s p) := by
   have h := sub_eq_zero.2 hR
-  rw [← sub_eq_zero]
-  rw [← h, Matrix.neg_mul]
+  rw [← sub_eq_zero, ← h, Matrix.neg_mul]
   module
 
 end GlobalTheory.SphEis.SphericalEisensteinCover
@@ -889,8 +887,7 @@ theorem cover_unipRad : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have hf : ∀ b z, cT (sigR (AF F) σ) z = -z → f (b, z) ∈ unipRad σ J C ∧
       Crd σ J C D Z J₀ (f (b, z)) b (z - (2⁻¹ : F) • (b * plus σ J₀ b)) := by
     intro b z hz
-    simp only [f, dif_pos hz]
-    exact Classical.choose_spec (crd2 b _ (hrel b z hz))
+    simpa only [f, dite_eq_left hz] using Classical.choose_spec (crd2 b _ (hrel b z hz))
   refine ⟨(Y₁ ×ˢ Y₂).image f, ?_, ?_, fun u hu => ?_⟩
   · refine (Nat.cast_le.mpr Finset.card_image_le).trans ?_
     rw [Finset.card_product, Nat.cast_mul]
@@ -986,8 +983,7 @@ theorem semiLat_fixG : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have key : ∀ {P : Subgroup (GAd σ J)}, P ≤ fixG σ J C →
       (ratPts σ J ⊓ fixG σ J C).subgroupOf P = (ratPts σ J).subgroupOf P := fun h => by
     ext x
-    simp only [Subgroup.mem_subgroupOf, Subgroup.mem_inf]
-    exact ⟨fun e => e.1, fun e => ⟨e, h x.2⟩⟩
+    simpa only [Subgroup.mem_subgroupOf, Subgroup.mem_inf] using ⟨fun e => e.1, fun e => ⟨e, h x.2⟩⟩
   obtain ⟨hC, -, cM, cN, hN, hP, hd, hn, -⟩ := _root_.GlobalTheory.SphEis.frame_facts F E σ n J j m C D Z J₀ H
   haveI := locallyCompact_unipRad H.cm H.herm hC
   obtain ⟨ν, DN, hν, hDN, h1⟩ := exists_mass_one (cocompact_unipRad H.cm H.herm hC)

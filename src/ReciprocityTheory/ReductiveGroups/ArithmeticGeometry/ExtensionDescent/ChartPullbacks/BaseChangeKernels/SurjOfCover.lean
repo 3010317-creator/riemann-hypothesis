@@ -129,8 +129,7 @@ lemma surj_of_cover {V : B.Opens} (h : V ≤ W) {ι : Type} [Finite ι] (U : ι 
   refine ⟨AddMonoidAlgebra.ofCoeff F, ?_⟩
   have hcovG : q ⁻¹ᵁ V ≤ iSup (fun i => q ⁻¹ᵁ U i) := by
     have e := q.preimage_mono hcov
-    rw [Scheme.Hom.preimage_iSup] at e
-    exact e
+    rwa [Scheme.Hom.preimage_iSup] at e
   apply TopCat.Sheaf.eq_of_locally_eq' G.sheaf (fun i => q ⁻¹ᵁ U i) (q ⁻¹ᵁ V)
     (fun i => homOfLE (q.preimage_mono (hU i))) hcovG
   intro i

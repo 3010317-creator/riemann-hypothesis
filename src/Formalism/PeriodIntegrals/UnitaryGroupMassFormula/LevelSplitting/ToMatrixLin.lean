@@ -79,9 +79,7 @@ theorem ext_lin {g g' : HA R σ J} (h : ∀ v, lin R σ J g v = lin R σ J g' v)
   have hl : lin R σ J g = lin R σ J g' := LinearMap.ext h
   have hm := congrArg LinearMap.toMatrix' hl
   rw [toMatrix'_lin, toMatrix'_lin] at hm
-  apply Subtype.ext
-  apply Units.ext
-  exact hm
+  exact Subtype.ext (Units.ext hm)
 
 def piMat (g : HA R σ J) : Matrix (Fin M) (Fin M) (R ⊗[F] E) :=
   LinearMap.toMatrix' ((datR R σ J P T).Pi (lin R σ J g))
@@ -192,8 +190,7 @@ private theorem mapX_lin_of_mem_Ssub {g : HA R σ J} (hg : g ∈ Ssub R σ J P) 
     (Submodule.subset_span (⟨a, rfl⟩ : (datR R σ J P T).e a ∈ Set.range (datR R σ J P T).e))
   have hF : ratV (F := F) R (F0 P (Fin.castSucc a)) = (datR R σ J P T).e a := by
     simp [F0, datR]
-  rw [hF, sub_add_cancel] at h2
-  exact h2
+  rwa [hF, sub_add_cancel] at h2
 
 private theorem mapW_lin_of_mem_Ssub {g : HA R σ J} (hg : g ∈ Ssub R σ J P) :
     (datR R σ J P T).MapW (lin R σ J g) := by
@@ -259,7 +256,7 @@ theorem Pi_lin_one : (datR R σ J P T).Pi (lin R σ J 1) = LinearMap.id := by
     by_cases h : b = a
     · subst h
       simp
-    · rw [if_neg (Ne.symm h), if_neg h]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
       simp
   have hez : ∀ b, (datR R σ J P T).hL ((datR R σ J P T).e b) (datR R σ J P T).z = 0 := by
     intro b
@@ -309,8 +306,7 @@ theorem Pi_lin_one : (datR R σ J P T).Pi (lin R σ J 1) = LinearMap.id := by
       Finset.sum_const_zero, zero_add]
       linear_combination ((datR R σ J P T).tz * (datR R σ J P T).hL (datR R σ J P T).z v) * hzz
     rw [hpU ((datR R σ J P T).pU v), c3]
-    simp only [c1, c2]
-    exact (hpU v).symm
+    simpa only [c1, c2] using (hpU v).symm
   have hid : lin R σ J 1 = LinearMap.id := by
     apply LinearMap.ext
     intro v

@@ -356,13 +356,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory
 
 theorem levelff_stalkMap_injective {X Y : Scheme.{0}} (f : X ⟶ Y) [Flat f] (x : X) :
-    Function.Injective (f.stalkMap x).hom := by
-  have h := Flat.stalkMap f x
-  have hl : IsLocalHom (f.stalkMap x).hom := inferInstance
-  algebraize [(f.stalkMap x).hom]
-  have : IsLocalHom (algebraMap (Y.presheaf.stalk (f x)) (X.presheaf.stalk x)) := hl
-  have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := Y.presheaf.stalk (f x)) (B := X.presheaf.stalk x)
-  exact FaithfulSMul.algebraMap_injective (Y.presheaf.stalk (f x)) (X.presheaf.stalk x)
+    Function.Injective (f.stalkMap x).hom := GlobalTheory.LiftTest.stalkMap_injective_of_flat f x
 
 theorem levelff_gs_comp {X Y Z : Scheme.{0}} (p : Z ⟶ Y) (r : Y ⟶ X) (z : Z) (U : X.Opens) (h : r (p z) ∈ U)
     (a : Γ(X, U)) : gs (p ≫ r) z U a = (p.stalkMap z).hom (gs r (p z) U a) := by
@@ -1416,7 +1410,7 @@ theorem main : Laws → Laws2 → AllPre fun {V} _ _ _ {D} {_} {_} _ _ U => D.Ta
   obtain ⟨ϑ, g, sg, hϑ, hpg, hfeg, ⟨j₁, hs1⟩, -⟩ := IntWit.integral_witness V hV D A G U (Kbar V) 1 β₁ hF1 hβ₁
   have hg0 : ∃ j, (g (α - β₀)).f j ≠ 0 := by
     by_contra hn
-    push_neg at hn
+    push Not at hn
     have h1 : ∀ j, (sg (α - β₀)).f j = 0 := fun j =>
       sec_ext_val (s' := DVR.SecOps.secZero) D.P.isLB (fun y J hJ => by
         rw [hpg _ y J hJ, DVR.UUA.sval_zero_of hn _ y J (hJ.mem _ _),
@@ -1441,7 +1435,7 @@ theorem main : Laws → Laws2 → AllPre fun {V} _ _ _ {D} {_} {_} _ _ U => D.Ta
     rw [one_smul, ofAdd_nsmul, map_pow, MonoidHom.inv_apply, MonoidHom.pow_apply, mul_inv_cancel]
   · obtain ⟨j, hj⟩ := hnv f' g' h hff hgg hconv
     by_contra hn
-    push_neg at hn
+    push Not at hn
     haveI := D.P.isAb.smooth
     haveI : Flat D.P.A.hom := inferInstance
     haveI : IsAffine (TA V W).left := inferInstanceAs (IsAffine (Spec _))

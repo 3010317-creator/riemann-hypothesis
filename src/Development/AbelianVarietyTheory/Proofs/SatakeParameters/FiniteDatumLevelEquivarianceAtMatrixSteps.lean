@@ -102,14 +102,12 @@ theorem exists_basePlace_contains_every_chartLevelPrime {A : AdData t u μ St} {
     rw [← t.pr_ok.piT_norm]
     exact Ideal.mul_mem_right _ _ hpi
   have hTQ : (((St j hj).T : ℕ) : 𝓞 D.host.E) ∈ (seamP t.seam P.1).asIdeal := by
-    rw [H.T_eq j hj, ← t.T_rec u, ← map_natCast (RingOfIntegers.mapRingEquiv t.seam.iE), mem_seamP]
-    exact hT
+    rwa [H.T_eq j hj, ← t.T_rec u, ← map_natCast (RingOfIntegers.mapRingEquiv t.seam.iE), mem_seamP]
   have hT0 : (((St j hj).T : ℕ) : 𝓞 D.host.F) ≠ 0 := by
     rw [H.T_eq j hj, ← t.T_rec u]
     exact Nat.cast_ne_zero.2 (t.pr_ok.T_prime _).ne_zero
   have hmem : (((St j hj).T : ℕ) : 𝓞 D.host.F) ∈ (seamP t.seam P.1).asIdeal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) := by
-    rw [Ideal.mem_comap, map_natCast]
-    exact hTQ
+    rwa [Ideal.mem_comap, map_natCast]
   let v : HeightOneSpectrum (𝓞 D.host.F) := ⟨(seamP t.seam P.1).asIdeal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)),
     Ideal.IsPrime.comap _, fun h => hT0 (by rw [h] at hmem; exact (Ideal.mem_bot.1 hmem))⟩
   exact ⟨v, hmem, rfl⟩
@@ -147,8 +145,7 @@ theorem ptAd_mul_lev_deco : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A 
     rw [p₁.deco.2.f_smul P _ w hw₁, p.deco.2.f_smul P _ w hw] at e3
     haveI hP := P.1.isPrime
     have hu : Ideal.Quotient.mk P.1.asIdeal s ≠ 0 := by
-      rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
-      exact hs
+      rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
     exact mul_left_cancel₀ hu e3
   · have hw₁ : w ∉ p₁.deco.1.at P.1 := by simpa only [Deco.at, hN] using hw
     rw [p₁.deco.2.f_off P w hw₁, p.deco.2.f_off P w hw]
@@ -270,8 +267,7 @@ theorem core [StarRing E] (Q : HeightOneSpectrum (𝓞 E)) (n : ℕ) (hn : 1 ≤
   show IntAt Q ((((qOf Q : ℕ) : E) ^ n)⁻¹ * Mm a b)
   refine GlobalTheory.RatInt.intAt_of_intAtA (F := F) Q _ ?_
   have e3 : iA F E ((((qOf Q : ℕ) : E) ^ n)⁻¹ * Mm a b) = qi * Mh a b := by rw [map_mul, hMh, Matrix.map_apply]
-  rw [e3]
-  exact hfin
+  rwa [e3]
 
 end Core
 
@@ -282,18 +278,7 @@ open Formalism.L2.Ker Formalism.MainNotions
 variable {D : D7} {X : Fields} (s : Seam D X)
 
 theorem intAt_of_seamP (P : HeightOneSpectrum (𝓞 X.E)) (z : X.E) (h : IntAt (seamP s P) (s.iE z)) : IntAt P z := by
-  obtain ⟨r, c, hc, e⟩ := h
-  set f := RingOfIntegers.mapRingEquiv s.iE
-  refine ⟨f.symm r, f.symm c, fun hm => hc ?_, ?_⟩
-  · have := (mem_seamP s P (f.symm c)).2 hm
-    rwa [show (RingOfIntegers.mapRingEquiv s.iE) (f.symm c) = c from f.apply_symm_apply c] at this
-  · apply s.iE.injective
-    rw [map_mul]
-    have h1 : ∀ w : 𝓞 D.host.E, s.iE (algebraMap (𝓞 X.E) X.E (f.symm w)) = algebraMap (𝓞 D.host.E) D.host.E w := by
-      intro w
-      have h2 : ∀ x : 𝓞 X.E, s.iE (algebraMap (𝓞 X.E) X.E x) = algebraMap (𝓞 D.host.E) D.host.E (f x) := fun x => rfl
-      rw [h2, f.apply_symm_apply]
-    rw [h1, h1, e]
+  exact GlobalTheory.TwU.MidIndep.intAt_of_seam s P h
 
 end Seam
 
@@ -498,7 +483,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
   have hq := qOf_ne_zero (P := P.1)
   have hstd : lamYat (Pr := Pr) (R := R) j P.1 = stdAt X.E (R.N j + cOf R j) P.1 := by
     unfold lamYat
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     exact lamY_zero _ _ _
   have hD : j + 1 ≤ cst.D P := by
     have h1 := hL.depthQ' P hP
@@ -531,7 +516,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
     show (MulAut.conj (L.h j b P)⁻¹).toMonoidHom (CongLevel.extE (cOf R j) C.1) ∈ Jat (Pr := Pr) cst.sharp j P.1
     rw [e]
     unfold Jat
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     refine ⟨hs, ?_⟩
     have ep : LocE.parL P.1 (qOf P.1) (R.k + j) (R.N j) (cOf R j) =
         LocE.sclLat P.1 (qOf P.1) (R.N j + cOf R j)
@@ -565,7 +550,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
       · rfl
     rw [hn, hL.cst_ok.psi_int P 0 intAt_zero, inv_one, one_mul]
     unfold lamRow
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     unfold LocE.lamQB
     rw [GlobalTheory.LamRowCong.unitV_det_eq_one, inv_one]
     · intro s t
@@ -582,7 +567,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
       by_cases hst : s = t
       · subst hst
         simp
-      · rw [if_neg (fun e => hst (Fin.ext (by omega))), if_neg hst]
+      · rw [ite_eq_right (fun e => hst (Fin.ext (by omega))), ite_eq_right hst]
 
 end GlobalTheory.TwistCong
 end -- clump:auto

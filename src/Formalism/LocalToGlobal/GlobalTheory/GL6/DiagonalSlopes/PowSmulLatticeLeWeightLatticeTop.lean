@@ -85,9 +85,9 @@ theorem elementary_product_of_column_reduction (hL : bwD_Loc O) (N M : Matrix (F
     rw [hN''def, Matrix.mul_diagonal, hN']
     by_cases hb : b = j
     · subst hb
-      rw [if_neg (fun h => (Finset.mem_erase.1 h).1 rfl), sub_zero, Function.update_self]
+      rw [ite_eq_right (fun h => (Finset.mem_erase.1 h).1 rfl), sub_zero, Function.update_self]
       exact hpN a b
-    · rw [if_pos (Finset.mem_erase.2 ⟨hb, Finset.mem_univ _⟩), Function.update_of_ne hb, Pi.one_apply, mul_one]
+    · rw [ite_eq_left (Finset.mem_erase.2 ⟨hb, Finset.mem_univ _⟩), Function.update_of_ne hb, Pi.one_apply, mul_one]
       exact hcol b hb a
   have hN''det : N''.det = 1 := by
     rw [hN''def, Matrix.det_mul, Matrix.det_diagonal, Finset.prod_update_of_mem (Finset.mem_univ j), hN'det]
@@ -131,8 +131,7 @@ theorem bwL_lcInt0 (D : D7) (u : D.what₂.Word) (Tt : Forms0 D u) (i : ℕ) (hi
   apply Submodule.subset_span
   intro x' hx'
   have hglob : ∀ z ∈ clsCrd D u i hi c, z ∈ Formalism.UG.CS.globLat ((Tt.cls i hi h0).y c).1 (Tt.cls i hi h0).lev.Lb := by
-    intro z hz
-    exact ((Tt.cls i hi h0).y_lat c _).1 (Submodule.subset_span ⟨z, hz, rfl⟩)
+    exact fun z hz => ((Tt.cls i hi h0).y_lat c _).1 (Submodule.subset_span ⟨z, hz, rfl⟩)
   have hm : ∀ a ∈ (Tt.cls i hi h0).lev.Lb, ∀ b ∈ (Tt.cls i hi h0).lev.Lb,
       IsIntegral ℤ (((1 : ℤ) : D.host.E) * Formalism.UG.hform (sigD D : D.host.E →+* D.host.E) (gramN D i hi) a b) := by
     intro a ha b hb
@@ -175,8 +174,7 @@ theorem basis_change_mem_elementary (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
     intro a k
     obtain ⟨s, hs, hsL⟩ := bwD_col_loc D u w hw hB' k
     have := bwD_locBasis_int D u w hw τ hB _ s hs (hLk hsL) a
-    rw [bwD_mulVec_col, ← Units.val_mul] at this
-    exact this
+    rwa [bwD_mulVec_col, ← Units.val_mul] at this
   choose sB hsB hsBL using fun k => bwD_col_loc D u w hw hB k
   have hT0 : ∀ k, (sB k : D.host.E) ≠ 0 := fun k => Nat.cast_ne_zero.2 (fun h => hsB k (h ▸ dvd_zero _))
   have htN : ∀ a b, ((D.mem u).A.T : ℂ) * N a b ∈ bwA_Ow D w := by
@@ -184,8 +182,7 @@ theorem basis_change_mem_elementary (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
     have hL : (sB b : D.host.E) • (((D.mem u).A.T : D.host.E) • colB b) ∈ (Lk Tt.atT i hi v c : Set _) := by
       rw [smul_comm]
       have := bwA_T_smul_Ld_mem_Lk D u Tt.atT i hi v c _ (hsBL b)
-      rw [Nat.cast_smul_eq_nsmul, ← Nat.cast_smul_eq_nsmul D.host.E] at this
-      exact this
+      rwa [Nat.cast_smul_eq_nsmul, ← Nat.cast_smul_eq_nsmul D.host.E] at this
     have := bwD_locBasis_int D u w hw τ hB' _ (sB b) (hsB b) hL a
     rw [Matrix.mulVec_smul, Pi.smul_apply, smul_eq_mul, map_mul, map_natCast] at this
     rw [hNa]; exact this
@@ -221,8 +218,7 @@ theorem basis_change_mem_elementary (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
         (((Tt.lv i hi h0).fv_ker v c _).1 (hex k)) a
   obtain ⟨-, -, -, -, hpO, hp0, hdet, htdet, -⟩ := bwD_decomp (bwD_loc_Ow D w) N M _ hMI hNM htN j av hav hcol
   refine ⟨elementary_product_of_column_reduction (bwD_loc_Ow D w) N M hMI hNM j av hav hcol, hpO, hp0, ?_⟩
-  rw [← eq_inv_of_mul_eq_one_left hdet]
-  exact htdet
+  rwa [← eq_inv_of_mul_eq_one_left hdet]
 
 theorem pow_smul_mem_weight_lattice (Tt : Forms0 D u) (w : D.what₂.places.Pl) (hw : OverT D u w) (hs : (D.fm u).seenP w = true)
     (v : (D.mem u).A.vT) (i : ℕ) (hi : i ≤ D.R.m) (h0 : i = 0) (n : ℕ)
@@ -251,10 +247,10 @@ theorem pow_smul_mem_weight_lattice (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
       simp only [atInf, hMv]
       rw [← Matrix.map_mul, ← Units.val_mul, mul_assoc, mul_inv_cancel, mul_one]
     · rw [one_mul]
-  have ho : ∀ τ, τ ≠ τv → Nτ τ = 1 := fun τ hτ => by simp only [hNτ]; rw [if_neg hτ]
+  have ho : ∀ τ, τ ≠ τv → Nτ τ = 1 := fun τ hτ => by simp only [hNτ]; rw [ite_eq_right hτ]
   have hprod : (∏ τ, (Nτ τ).det ^ shiftOf (lamT u i) τ) = Mv.det ^ shiftOf (lamT u i) τv := by
     rw [Finset.prod_eq_single τv]
-    · simp only [hNτ, if_pos rfl]
+    · simp only [hNτ, ite_eq_left rfl]
     · intro τ _ hτ; rw [ho τ hτ, Matrix.det_one, one_zpow]
     · simp
   have hc : tpow D u n * Mv.det ^ shiftOf (lamT u i) τv ∈ bwA_Ow D w := by
@@ -267,7 +263,7 @@ theorem pow_smul_mem_weight_lattice (Tt : Forms0 D u) (w : D.what₂.places.Pl) 
     have h1 := bwA_span_closure (bwA_Ow D w) le_rfl _ Mv hME _ hg'
     have e : (tpow D u n * Mv.det ^ shiftOf (lamT u i) τv) • Formalism.GradedWeylDivisibility.rowAct ℂ (Nτ τv) (MvPolynomial.map (Int.castRingHom ℂ) g) =
         (⟨_, hc⟩ : bwA_Ow D w) • Formalism.GradedWeylDivisibility.rowAct ℂ Mv (MvPolynomial.map (Int.castRingHom ℂ) g) := by
-      simp only [hNτ, if_pos rfl]; rfl
+      simp only [hNτ, ite_eq_left rfl]; rfl
     rw [e]
     exact Submodule.smul_mem _ _ h1
   · have hval : fnOf (gramC (gramN D i hi) (embT D)) (shiftOf (lamT u i))

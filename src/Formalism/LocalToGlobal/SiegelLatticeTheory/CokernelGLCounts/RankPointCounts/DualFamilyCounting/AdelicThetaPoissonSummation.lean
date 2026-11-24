@@ -93,8 +93,7 @@ theorem IsSD.exists_norm' (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.I
     have e : starRingEnd K (h ξ ξ) = h ξ ξ := by
       first
         | exact hs.eq ξ ξ
-    rw [hξu, starRingEnd_apply] at e
-    exact e
+    rwa [hξu, starRingEnd_apply] at e
   exact exists_norm_of_not_dv hS hπ hs hM.smul_mem hM.int hy hw ha hu huf hyy hn
 
 theorem IsSD.exists_unit_norm' (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.IsSymm)
@@ -118,7 +117,6 @@ theorem nondegOn_cut (hnd : NondegOn h W) {x : V} (hx : x ∈ W) (hxx : h x x �
   · rw [mem_cutW]
     refine ⟨W.sub_mem hw (W.smul_mem _ hx), ?_⟩
     rw [map_sub, map_smul, smul_eq_mul, inv_mul_cancel_right₀ hxx, sub_self]
-  · rw [map_sub, LinearMap.sub_apply, map_smulₛₗ, LinearMap.smul_apply, hξ.2, smul_zero, sub_zero]
-    exact hwξ
+  · rwa [map_sub, LinearMap.sub_apply, map_smulₛₗ, LinearMap.smul_apply, hξ.2, smul_zero, sub_zero]
 
 end Formalism.L2.SG.Pf.G4

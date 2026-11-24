@@ -215,8 +215,7 @@ private theorem fromBlocks_unitary_and_conj_JJ_eq {n : ℕ} (X Y : Matrix (Fin n
     simp [h2]
     rw [h1, add_comm, h1, fromBlocks_one]
   · rw [JJ, fromBlocks_conjTranspose, fromBlocks_multiply, fromBlocks_multiply]
-    simp [h2]
-    exact ⟨by rw [add_comm, h1], by rw [← neg_add, h1]⟩
+    simpa [h2] using ⟨by rw [add_comm, h1], by rw [← neg_add, h1]⟩
 
 private theorem exists_normalizing_factor_of_left_inverse {n : ℕ} (X Y A B : Matrix (Fin n) (Fin n) ℂ) (h : A * X + B * Y = 1) :
     ∃ R : Matrix (Fin n) (Fin n) ℂ, (X * R)ᴴ * (X * R) + (Y * R)ᴴ * (Y * R) = 1 := by
@@ -266,8 +265,7 @@ private theorem exists_mul_lower_zero_and_inK_of_normalized (n : ℕ) (y : GR n)
       ← Matrix.mul_assoc, ← Matrix.mul_assoc, ← Matrix.add_mul, hb, Matrix.zero_mul]
   · refine ⟨(⟨_, hu⟩ : GR n)⁻¹.2, ?_⟩
     have hm : mR (⟨_, hu⟩ : GR n)⁻¹ = kvᴴ := rfl
-    rw [hm, conjTranspose_conjTranspose]
-    exact hU'
+    rwa [hm, conjTranspose_conjTranspose]
 
 theorem iwaGR : IwaGR := by
   intro n y
@@ -710,16 +708,16 @@ theorem prodF {m n : ℕ} (t : ℝ) (ε : Fin m → Bool) (φ : Fin n → ℝ) :
       else (∏ j, Complex.exp (Complex.I * (φ j : ℂ)))⁻¹ := by
     intro a
     by_cases h : epsT t ε a = true
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       refine Finset.prod_congr rfl fun j _ => ?_
-      simp only [rhoT, if_pos h]
+      simp only [rhoT, ite_eq_left h]
       rw [show Complex.I * (φ j : ℂ) = (φ j : ℂ) * Complex.I by ring, Complex.exp_mul_I, ← Complex.ofReal_cos,
         ← Complex.ofReal_sin]
       push_cast
       ring
-    · rw [if_neg h, ← Finset.prod_inv_distrib]
+    · rw [ite_eq_right h, ← Finset.prod_inv_distrib]
       refine Finset.prod_congr rfl fun j _ => ?_
-      simp only [rhoT, if_neg h]
+      simp only [rhoT, ite_eq_right h]
       rw [← Complex.exp_neg, show -(Complex.I * (φ j : ℂ)) = (-(φ j : ℂ)) * Complex.I by ring, Complex.exp_mul_I,
         Complex.cos_neg, Complex.sin_neg, ← Complex.ofReal_cos, ← Complex.ofReal_sin]
       push_cast
@@ -790,8 +788,7 @@ theorem vacK_of : GZSch → LawN → LawNbar → LocMul → LNe → VacK := by
     apply Units.ext
     change mR k = mR (VacB.mkG (mM u) (VacB.inG_mM u hdu)) * mR (VacB.mkG (VacB.kth φ) (VacB.inK_kth φ).1) *
       mR (VacB.mkG (mM u') (VacB.inG_mM u' hdu'))
-    rw [VacB.mR_mkG, VacB.mR_mkG, VacB.mR_mkG]
-    exact hkm
+    rwa [VacB.mR_mkG, VacB.mR_mkG, VacB.mR_mkG]
   have hLM' := hLM _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hC L hL
   have h1 : L (VacB.mkG (mM u') (VacB.inG_mM u' hdu')) (DG 1 (fun _ _ => ((cLoc l τ : ℝ) : ℂ))) =
       DG (1 * (u'.det ^ e * (star u'.det) ^ ((V.rank : ℤ) - e))) (fun _ _ => ((cLoc l τ : ℝ) : ℂ)) := by

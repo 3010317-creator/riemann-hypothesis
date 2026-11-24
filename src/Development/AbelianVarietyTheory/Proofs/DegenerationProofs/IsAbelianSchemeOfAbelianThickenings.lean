@@ -95,11 +95,9 @@ theorem preconnectedSpace_of_functions (Y : Scheme.{0})
   · have h₁ : u ∈ Y.basicOpen s := (mem_basicOpen_rs (le_top : O true ≤ ⊤) s hu).1 (by
       rw [show rs Y (le_top : O true ≤ ⊤) s = 1 from hs true]
       exact mem_of_isUnit isUnit_one hu)
-    rw [h] at h₁
-    exact h₁
+    rwa [h] at h₁
   · have h₁ := (mem_basicOpen_rs (le_top : O false ≤ ⊤) s hw).2 (h.ge (Set.mem_univ w))
-    rw [show rs Y (le_top : O false ≤ ⊤) s = 0 from hs false, Scheme.basicOpen_zero] at h₁
-    exact h₁
+    rwa [show rs Y (le_top : O false ≤ ⊤) s = 0 from hs false, Scheme.basicOpen_zero] at h₁
 
 theorem surjective_appTop {k : Type} [Field k] [IsAlgClosed k] {X : Scheme.{0}}
     (p : X ⟶ Spec (.of k)) [IsIntegral X] [UniversallyClosed p] :
@@ -197,8 +195,7 @@ theorem geometricallyConnected_of_quotient (V : Type) [CommRing V] [IsLocalRing 
     rintro rfl
     obtain ⟨i, hi⟩ := exists_mem P ((pullback.fst Y₀.hom y₀ ≫ b) x₀)
     have h₁ := mem_of_isUnit (hu i) (y := x₀) hi
-    rw [← zero_smul L (0 : Fin P.a → L), loc_smul, map_zero, zero_mul, Scheme.basicOpen_zero] at h₁
-    exact h₁
+    rwa [← zero_smul L (0 : Fin P.a → L), loc_smul, map_zero, zero_mul, Scheme.basicOpen_zero] at h₁
   obtain ⟨δ, v₀, hδ, hker⟩ := exists_kernel_vector g₀ P.D₀ v hv0 (hline (surjective_appTop _))
   have hδ' : IsUnit δ := by
     by_contra hn

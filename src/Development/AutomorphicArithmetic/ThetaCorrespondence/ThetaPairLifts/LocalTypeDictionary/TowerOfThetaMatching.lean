@@ -122,15 +122,7 @@ section Units
 variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
 theorem isAwayUnit_inv {m : ℕ} {x : K} (h : GlobalTheory.Square.IsAwayUnit m x) (hx : x ≠ 0) : GlobalTheory.Square.IsAwayUnit m x⁻¹ := by
-  obtain ⟨a, k, k', ⟨b, hb⟩, e⟩ := h
-  refine ⟨(m : 𝓞 K) ^ k * b, k', k + k', ⟨a, by rw [pow_add, hb]; ring⟩, ?_⟩
-  have e2 : ((m : 𝓞 K) : K) ^ k' = (a : K) * (b : K) := by
-    rw [← map_pow, hb]; push_cast; ring
-  have e3 : ((m : 𝓞 K) : K) = (m : K) := by simp
-  rw [e3] at e2
-  rw [e2, ← e]
-  push_cast
-  field_simp
+  apply GlobalTheory.SqStepBig.awayUnit_inv <;> assumption
 
 theorem stepRatio_self {T' : Type} (σ₀ : K →+* ℂ) (Qn : ℕ) (S0 : Finset T') (cc qq : T' → ℕ) (x : ℂ) :
     GlobalTheory.Square.StepRatio σ₀ Qn S0 cc qq x x :=
@@ -647,8 +639,7 @@ theorem GlobalTheory.RightTranslateFundDomain.haar_and_fundDomain : ∀ {D : D7}
   intro D V m fd g hm hfd
   have hmeas : Measurable (fun x : GA D V => x * g⁻¹) := measurable_mul_const g⁻¹
   refine ⟨?_, ?_⟩
-  · have h := Measure.isHaarMeasure_map_mul_right m g⁻¹
-    exact h
+  · exact Measure.isHaarMeasure_map_mul_right m g⁻¹
   · refine hfd.preimage_of_equiv (e := id) ?_ Function.bijective_id ?_
     · refine ⟨(measurable_mul_const g).aemeasurable, ?_⟩
       rw [Measure.map_map (measurable_mul_const g) hmeas]
@@ -807,8 +798,7 @@ theorem _root_.GlobalTheory.T.movedFiniteDatum_negHom_eq_standardPair_first : �
   show IsThetaAt ψ (symplO (neg A) WW) (heisO ψ (neg A) WW) (Y.e t) (latO (neg A) WW ΛA ΛW fun _ => True) 1 (Y.ω t₀ (g, h) Y.vac)
     (stdFst (α t / β t) (Y.e t) (Y.ideal S t) A WW (Lev.finE A g * Y.rA.β) (Lev.finE WW h * Y.rW.β))
     ((r t)⁻¹ • Y.ω t (g, h) (Y.f t))
-  rw [e2]
-  exact h2
+  rwa [e2]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MovedFiniteDatumNegHomEqStandardPairFirst =====
@@ -928,8 +918,7 @@ theorem _root_.GlobalTheory.T.movedVacuum_negHom_eq_vacuum_movedLattices : ∀ {
   have e3 : (moveTri Y ΛA ΛA' ΛW g g' h t₀ r r').rA.Λ = ΛA := rfl
   have e4 : (moveTri Y ΛA ΛA' ΛW g g' h t₀ r r').rW.Λ = ΛW := rfl
   have e5 : (moveTri Y ΛA ΛA' ΛW g g' h t₀ r r').vac = Y.ω t₀ (g, h) Y.vac := rfl
-  rw [e1, e2, e3, e4, e5]
-  exact key
+  rwa [e1, e2, e3, e4, e5]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MovedVacuumNegHomEqVacuumMovedLattices =====
@@ -1010,8 +999,7 @@ theorem stdSnd_move (ν : (AE D)ˣ →* Circle) (e : AE D) (I : Ideal (𝓞 D.ho
     (βS : GL (Fin S.rank) (Lev.EAf D)) (βT : GL (Fin T.rank) (Lev.EAf D)) (g : GA D S) (h : GA D T) (x : WO S T) :
     stdSnd ν e I a S T (Lev.finE S g * βS) (Lev.finE T h * βT) x = stdSnd ν e I a S T βS βT (actO S T g⁻¹ h⁻¹ x) := by
   unfold stdSnd dualCoord
-  rw [frMapAdj_move]
-  rw [propext (isHalf_actO_inv_iff (cA D e) g h x)]
+  rw [frMapAdj_move, propext (isHalf_actO_inv_iff (cA D e) g h x)]
 
 theorem snd_moved : ∀ {D : D7} {T : Type} {A A' WW : HSp D} (Y : Tri T A A' WW) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D)
     (α β : T → ((AE D)ˣ →* Circle)) (νH : T → HChar D.host.E) (S : T → Finset (Formalism.L2.DIV.Pl D.host.E)),
@@ -1040,8 +1028,7 @@ theorem snd_moved : ∀ {D : D7} {T : Type} {A A' WW : HSp D} (Y : Tri T A A' WW
   have hΦ : (fun x => stdSnd (α t / β t) (Y.e t) (Y.ideal S t) A.rank A' WW Y.rA'.β Y.rW.β (actO A' WW g'⁻¹ h⁻¹ x)) =
       stdSnd (α t / β t) (Y.e t) (Y.ideal S t) A.rank A' WW (Lev.finE A' g' * Y.rA'.β) (Lev.finE WW h * Y.rW.β) :=
     funext fun x => (stdSnd_move _ _ _ _ _ _ _ _ _ _ x).symm
-  rw [hΦ] at hm2
-  exact hm2
+  rwa [hΦ] at hm2
 
 end GlobalTheory.BotMoveSnd
 
@@ -1348,19 +1335,7 @@ namespace GlobalTheory.SqStep
 theorem gbig_three {Q₁ Q₂ Q₃ Q : GP} (h₁ : GBig Q₁) (h₂ : GBig Q₂) (h₃ : GBig Q₃)
     (H : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} (G : GridData Lc sc) (μ₀ : T) (C x b : ℝ),
       Q₁ G μ₀ C x b → Q₂ G μ₀ C x b → Q₃ G μ₀ C x b → Q G μ₀ C x b) : GBig Q := by
-  obtain ⟨F₁, h₁⟩ := h₁
-  obtain ⟨F₂, h₂⟩ := h₂
-  obtain ⟨F₃, h₃⟩ := h₃
-  refine ⟨max F₁ (max F₂ F₃), fun ε CF hCF => ?_⟩
-  obtain ⟨C₁, x₁, k₁⟩ := h₁ ε CF (le_trans (le_max_left _ _) hCF)
-  obtain ⟨C₂, x₂, k₂⟩ := h₂ ε CF (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hCF)
-  obtain ⟨C₃, x₃, k₃⟩ := h₃ ε CF (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hCF)
-  refine ⟨max C₁ (max C₂ C₃), max x₁ (max x₂ x₃), fun C hC D large₂ he hx hR T Lc μ₀ hL G => H G μ₀ C _ _ ?_ ?_ ?_⟩
-  · exact k₁ C (le_trans (le_max_left _ _) hC) D large₂ he (le_trans (le_max_left _ _) hx) hR T Lc μ₀ hL G
-  · exact k₂ C (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hC) D large₂ he
-      (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hx) hR T Lc μ₀ hL G
-  · exact k₃ C (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hC) D large₂ he
-      (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hx) hR T Lc μ₀ hL G
+  exact GlobalTheory.SqStepBig.gbig_of_three h₁ h₂ h₃ H
 
 end GlobalTheory.SqStep
 

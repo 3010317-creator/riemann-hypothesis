@@ -1496,7 +1496,7 @@ theorem exists_value (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {n : ℕ}
   have hherm := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStep.WittOne.hE_herm σ hσ T hT
   have hne : ∃ x, hE σ T x x ≠ 0 := by
     by_contra hall
-    push_neg at hall
+    push Not at hall
     have key : ∀ x y, hE σ T x y + hE σ T y x = 0 := by
       intro x y
       have h := hall (x + y)
@@ -1527,19 +1527,7 @@ theorem hE_hypOne_cons (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M
     (x y : Fin M → E) :
     hE σ (hypOne J) (Fin.cons a (Fin.cons b x) : Fin (M + 2) → E)
         (Fin.cons c (Fin.cons d y) : Fin (M + 2) → E) = σ a * d + σ b * c + hE σ J x y := by
-  simp only [hE, hform, Fin.sum_univ_succ, Fin.cons_zero, Fin.cons_succ]
-  have e00 : hypOne J 0 0 = 0 := rfl
-  have e01 : hypOne J 0 (Fin.succ 0) = 1 := rfl
-  have e10 : hypOne J (Fin.succ 0) 0 = 1 := rfl
-  have e11 : hypOne J (Fin.succ 0) (Fin.succ 0) = 0 := rfl
-  have e0r : ∀ j : Fin M, hypOne J 0 j.succ.succ = 0 := fun _ => rfl
-  have e1r : ∀ j : Fin M, hypOne J (Fin.succ 0) j.succ.succ = 0 := fun _ => rfl
-  have er0 : ∀ i : Fin M, hypOne J i.succ.succ 0 = 0 := fun _ => rfl
-  have er1 : ∀ i : Fin M, hypOne J i.succ.succ (Fin.succ 0) = 0 := fun _ => rfl
-  have err : ∀ i j : Fin M, hypOne J i.succ.succ j.succ.succ = J i j := fun _ _ => rfl
-  simp only [e00, e01, e10, e11, e0r, e1r, er0, er1, err]
-  simp
-  ring
+  apply GlobalTheory.CompanionTheory.WeilSiegel.HypStep.Unf.FrOne.hE_cons
 
 theorem split_hyp (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ}
     (J : Matrix (Fin (M + 2)) (Fin (M + 2)) E) (hJ : IsHermND σ J) (x : Fin (M + 2) → E)
@@ -1552,7 +1540,7 @@ theorem split_hyp (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ}
 
   have hex : ∃ y₀, hE σ J x y₀ ≠ 0 := by
     by_contra hall
-    push_neg at hall
+    push Not at hall
     have hv : Matrix.vecMul (fun i => σ (x i)) J = 0 := by
       funext j
       have := hall (Pi.single j 1)

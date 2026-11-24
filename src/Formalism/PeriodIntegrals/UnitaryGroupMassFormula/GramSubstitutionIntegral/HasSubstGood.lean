@@ -109,12 +109,10 @@ theorem lg_pt (hD : Data l ex ph) {x : MvPowerSeries σ ℂ_[p]} (hx : MvPowerSe
 
 theorem cc_add (hD : Data l ex ph) {a b : MvPowerSeries σ ℂ_[p]} (ha : MvPowerSeries.constantCoeff a = 0)
     (hb : MvPowerSeries.constantCoeff b = 0) : MvPowerSeries.constantCoeff (add l ex a b) = 0 := by
-  show MvPowerSeries.constantCoeff (pt ex (lg l a + lg l b)) = 0
   exact cc_pt hD (by rw [map_add (f := _), cc_lg hD ha, cc_lg hD hb, add_zero])
 
 theorem cc_mulBy (hD : Data l ex ph) (c : ℂ_[p]) {a : MvPowerSeries σ ℂ_[p]}
     (ha : MvPowerSeries.constantCoeff a = 0) : MvPowerSeries.constantCoeff (mulBy l ex c a) = 0 := by
-  show MvPowerSeries.constantCoeff (pt ex (MvPowerSeries.C c * lg l a)) = 0
   exact cc_pt hD (by rw [map_mul, cc_lg hD ha, mul_zero])
 
 theorem mulBy_mulBy (hD : Data l ex ph) (c d : ℂ_[p]) {a : MvPowerSeries σ ℂ_[p]}
@@ -271,7 +269,6 @@ theorem moveSub : MoveSub := by
   rw [subst_be H.data hs (cc_mulBy H.data α'.1 (cc_X 0)) (cc_X 1), subst_mulBy H.data hs α'.1 (cc_X 0),
     subst_be H.data hs (cc_X 0) (cc_mulBy H.data α'.2 (cc_X 1)), subst_mulBy H.data hs α'.2 (cc_X 1),
     e0, e1, mulBy_mulBy H.data α.1 α'.2 ha.1] at h
-  rw [be_comm' (mulBy l ex α.1 a), be_comm' (mulBy l ex (α'.2 * α.1) a)]
-  exact h
+  rwa [be_comm' (mulBy l ex α.1 a), be_comm' (mulBy l ex (α'.2 * α.1) a)]
 
 end PI.UnitaryGroupMassFormula.PhGram

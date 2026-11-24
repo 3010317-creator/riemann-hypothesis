@@ -181,9 +181,9 @@ private theorem cols_of_trace (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+
     simp only [embQ, RingHom.codRestrict_apply]
     rw [_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.sum_tau_trace D Y, htr]
     by_cases h : i = i'
-    · rw [if_pos h.symm, if_pos h]
+    · rw [ite_eq_left h.symm, ite_eq_left h]
       simp
-    · rw [if_neg (fun e => h e.symm), if_neg h]
+    · rw [ite_eq_right (fun e => h e.symm), ite_eq_right h]
       simp
   calc ∑ k, lamBc D lam b k i * lamB D lam b k i'
       = ∑ τ : D.what₂.Tau, lam (embQ τ Y) := by
@@ -404,7 +404,7 @@ private theorem hK_gK_dual : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qbar �
     have hsimp : ∀ k m : Fin N' × Fin N, ((tauPl D w, k.1, k.2) = (tauPl D w, m.1, m.2)) ↔ k = m := by
       intro k m
       simp [Prod.ext_iff]
-    simp only [hsimp, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hsimp, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have e1 : ∑ k : Fin N' × Fin N, A b₀ k.1 * rhoK D lam w (P (tauPl D w) k.2 a) *
         (rhoK D lam w (P' (tauPl D w) k.1 b₁) * B a₁ k.2) =
         (A * (P' (tauPl D w)).map (rhoK D lam w)) b₀ b₁ * (B * (P (tauPl D w)).map (rhoK D lam w)) a₁ a := by
@@ -414,9 +414,9 @@ private theorem hK_gK_dual : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qbar �
       Matrix.one_apply, Matrix.one_apply]
     by_cases h1 : b₀ = b₁ <;> by_cases h2 : a = a₁ <;> simp [h1, h2, eq_comm]
   · have hne : tauPl D w ≠ tauPl D z := fun h => hwz ((tauPl_bij D).1 h)
-    rw [if_neg (fun h => hwz h.1)]
+    rw [ite_eq_right (fun h => hwz h.1)]
     refine Finset.sum_eq_zero fun k _ => Finset.sum_eq_zero fun m _ => ?_
-    rw [if_neg (fun h => hne (congrArg Prod.fst h)), mul_zero]
+    rw [ite_eq_right (fun h => hne (congrArg Prod.fst h)), mul_zero]
 
 private theorem map_inv_field_hom {K L : Type} [Field K] [Field L] (f : K →+* L) {n : ℕ} (A : Matrix (Fin n) (Fin n) K) :
     (A⁻¹).map f = (A.map f)⁻¹ := by
@@ -485,11 +485,9 @@ private theorem entry_le_of_maps (hQ : Q' * P' = 1) (hP : LocBasisW D ρ L P) (h
     have e2 : (∑ x, c x • fun b => (1 : Matrix (Fin N') (Fin N') D.host.E) b x) b = (c b : D.host.E) := by
       rw [Finset.sum_apply]
       simp [Algebra.smul_def, Matrix.one_apply]
-    rw [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
-    exact h1
+    rwa [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
   have h4 := norm_int_le_one ρ (c b)
-  rw [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
-  exact h4
+  rwa [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
 
 private def IntIn (ρ : D.host.E →+* ℂ_[p]) (Q' : Matrix (Fin N') (Fin N') D.host.E) (P : Matrix (Fin N) (Fin N) D.host.E)
     (B : Matrix (Fin N') (Fin N) D.host.E) : Prop :=
@@ -581,8 +579,7 @@ private theorem norm_hK_le_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qb
     simp only [Matrix.mul_apply, Matrix.map_apply, map_sum, map_mul, Finset.sum_mul]
     rw [Finset.sum_comm]
   show ‖((hK D lam P P' b w a b₀ i : MaximalUnramifiedExtension p) : ℂ_[p])‖ ≤ 1
-  rw [e, hρC]
-  exact hint
+  rwa [e, hρC]
 
 end UpperTheory.LocalBasisConjugationRank
 
@@ -698,8 +695,7 @@ private lemma dual_swap {om oms : Fin i → K}
     simp only [V, Q, Matrix.of_apply, mul_comm ((σ ^ _) (oms r)), this, eq_comm]
   have hVQ : V * Q = 1 := mul_eq_one_comm.1 hQV
   have := congrFun (congrFun hVQ t) s
-  rw [Matrix.mul_apply, Matrix.one_apply] at this
-  exact this
+  rwa [Matrix.mul_apply, Matrix.one_apply] at this
 
 private lemma gam_pair [Fintype ι] {R : Finset Lt}
     (hB : Function.Injective fun y : {z // z ∈ R} × Fin i => pos y.1.1 (2 * y.2.val))
@@ -719,16 +715,15 @@ private lemma gam_pair [Fintype ι] {R : Finset Lt}
     by_cases hz : pos r.1 (2 * m.val) = pos r'.1 (2 * m'.val)
     · obtain ⟨rfl, rfl⟩ := Prod.mk.inj (hB (a₁ := (r, m)) (a₂ := (r', m')) hz)
       by_cases hq : q <;> simp [hq]
-    · rw [if_neg fun h => hz h.1, mul_zero]
+    · rw [ite_eq_right fun h => hz h.1, mul_zero]
       by_cases hm : m = m'
-      · rw [if_pos hm, if_neg]
+      · rw [ite_eq_left hm, ite_eq_right]
         rintro ⟨rfl, -⟩
         exact hz (by rw [hm])
-      · rw [if_neg hm]
+      · rw [ite_eq_right hm]
   simp only [gam, Finset.sum_mul_sum]
-  rw [Finset.sum_comm]
-  rw [Finset.sum_congr rfl fun m _ => Finset.sum_comm]
-  simp only [e, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  rw [Finset.sum_comm, Finset.sum_congr rfl fun m _ => Finset.sum_comm]
+  simp only [e, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   split_ifs <;> simp
 
 private lemma gam_lin {C : Type} [Field C] (j : K →+* C) [NeZero i] [Fintype Lt] [Fintype β] {R : Finset Lt}
@@ -887,7 +882,7 @@ theorem UpperTheory.stdSeries_orbit_coordinate_change_of_odd_inert :
     by_cases h1 : r₁ = r₂ ∧ a₁ = a₂ ∧ b₁ = b₂
     · obtain ⟨rfl, rfl, rfl⟩ := h1
       simp [eq_comm]
-    · rw [if_neg h1, if_neg]
+    · rw [ite_eq_right h1, ite_eq_right]
       intro h2
       simp only [Prod.mk.injEq] at h2
       exact h1 ⟨h2.1.1, h2.2⟩

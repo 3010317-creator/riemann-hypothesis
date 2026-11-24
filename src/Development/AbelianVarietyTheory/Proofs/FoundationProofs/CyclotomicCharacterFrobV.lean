@@ -77,8 +77,7 @@ theorem rootOfUnity_eq_one_of_val {K Γ : Type*} [Field K] [LinearOrderedCommGro
       have e : 1 - η ^ (i + 1) = (1 - η ^ i) + -(η ^ i * (η - 1)) := by ring
       rw [e]
       refine v.map_add_lt ih ?_
-      rw [v.map_neg, map_mul, map_pow, hv, one_pow, one_mul]
-      exact h1
+      rwa [v.map_neg, map_mul, map_pow, hv, one_pow, one_mul]
   have hs : ∑ i ∈ Finset.range m, η ^ i = 0 := by
     have := mul_geom_sum η m
     rw [hη, sub_self] at this
@@ -122,8 +121,7 @@ theorem FrobV.apply_rootOfUnity {Ω : Type} [Field Ω] [Algebra ℚ Ω] {V : Val
   have key : s ζ / ζ ^ q = 1 := by
     refine rootOfUnity_eq_one_of_val V.valuation (not_val_lt_one_of_coprime V hm hq) ?_ ?_
     · rw [div_pow, ← map_pow, hζ, map_one, ← pow_mul, mul_comm, pow_mul, hζ, one_pow, div_one]
-    · rw [div_sub_one hq0, map_div₀, map_pow, hv, one_pow, div_one]
-      exact h
+    · rwa [div_sub_one hq0, map_div₀, map_pow, hv, one_pow, div_one]
   exact (div_eq_one_iff_eq hq0).mp key
 
 theorem cyclotomicCharacter_frobV : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l q : ℕ) [Fact l.Prime],
@@ -142,7 +140,6 @@ theorem cyclotomicCharacter_frobV : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] 
   have ht' : (t : Ω) ^ (l ^ n) = 1 := (mem_rootsOfUnity' _ _).mp ht
   have hc : Nat.Coprime (l ^ n) q := ((Nat.coprime_primes hl.out hq).mpr hql.symm).pow_left n
   have := hs.apply_rootOfUnity (pow_ne_zero n hl.out.ne_zero) hc ht'
-  rw [ZMod.val_natCast, ← pow_eq_pow_mod q ht']
-  exact this
+  rwa [ZMod.val_natCast, ← pow_eq_pow_mod q ht']
 
 end GlobalTheory.KZ.ES

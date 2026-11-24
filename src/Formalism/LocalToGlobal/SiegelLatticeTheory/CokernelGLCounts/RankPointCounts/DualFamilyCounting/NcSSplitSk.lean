@@ -123,7 +123,7 @@ theorem SplitSk_finFactor (Λ : Set (Fin n → E)) (μ : Measure (Hsub (Af F) σ
     rw [e2, ← Measure.map_apply hm1 (measurable_subtype_coe hK), map_mul_left_eq_self]
   · have e0 : {X : Fin (r + 1 + r) → Fin n → Af F ⊗[F] E | ∃ k ∈ Kf σ J Λ, X = k • ratTup (Af F) (tupH P)}.indicator
         (1 : (Fin (r + 1 + r) → Fin n → Af F ⊗[F] E) → ENNReal) x = 0 := by
-      simp only [Set.indicator, hxK, if_false]
+      simp only [Set.indicator, hxK, ite_false]
     rw [e0, mul_zero]
     have e3 : {h : ↥(Hsub (Af F) σ J P) | c2 * (h : HA (Af F) σ J) ∈ Kf σ J Λ} = ∅ := by
       ext h
@@ -174,8 +174,7 @@ theorem SplitSk_ident (MG : MeasG σ J r) (MW : MeasW σ J P) (νH : Measure (Fi
   have hsf : ∀ x, (∃ k : HA (Af F) σ J, k • ratTup (F := F) (Af F) (tupH P) = x) →
       sf x • ratTup (F := F) (Af F) (tupH P) = x := by
     intro x hx
-    simp only [sf, dif_pos hx]
-    exact hx.choose_spec
+    simpa only [sf, dite_eq_left hx] using hx.choose_spec
   let sA : (Fin (r + 1 + r) → Fin n → AF F ⊗[F] E) → HA (AF F) σ J := fun y =>
     (hsurj (s (projInf y)) (sf (projFin y))).choose
   have hsA : ∀ y, splitA σ J (sA y) = (s (projInf y), sf (projFin y)) := fun y => (hsurj _ _).choose_spec
@@ -301,8 +300,7 @@ theorem splitOm_of (h0 : AdTup) (h1 : OmDecomp) (h2 : OmFinVol) : Formalism.L2.S
   have hs0 : ∀ y, (∃ g : HA (Ainf F) σ J, g • ratTup (F := F) (Ainf F) (tupH P) = y) →
       s0 y • ratTup (F := F) (Ainf F) (tupH P) = y := by
     intro y hy
-    simp only [s0, dif_pos hy]
-    exact hy.choose_spec
+    simpa only [s0, dite_eq_left hy] using hy.choose_spec
   have hpos1 : (∫⁻ _ : HA (Ainf F) σ J, (1 : ENNReal) ∂MG.μGinf) * MG.μGf (Kf σ J Λ) ≠ 0 := by
     have := hG.2.1
     rw [lintegral_one]
@@ -333,8 +331,7 @@ theorem splitOm_of (h0 : AdTup) (h1 : OmDecomp) (h2 : OmFinVol) : Formalism.L2.S
       have h3 := hI (fun _ => 1) measurable_const s0 hs0
       rw [hz, lintegral_zero_measure, mul_zero, mul_zero] at h3
       exact hpos1 h3
-    rw [← hfin μinf νinf fibInf hμ hν hfib hne ωf hdec]
-    exact hI
+    rwa [← hfin μinf νinf fibInf hμ hν hfib hne ωf hdec]
   obtain ⟨μ0, hμ0⟩ := hOm.2.1
   obtain ⟨ν0, hν0⟩ := (hOm.2.2 μ0 hμ0).1
   obtain ⟨⟨μv, hμv⟩, hX⟩ := (hOm.2.2 μ0 hμ0).2 ν0 hν0

@@ -30,8 +30,7 @@ theorem f_fst_eq_d_snd_of_d_eq_zero {n : ℕ} (p : (mappingCoconeNat f).X (n + 1
   rw [mappingCoconeNat_d] at hp
   have h2 := congrArg Prod.snd hp
   change ((f.f (n + 1)).hom p.1 : L.X (n + 1)) + -(L.d n (n + 1)).hom (p.2 : L.X n) = 0 at h2
-  rw [← sub_eq_add_neg, sub_eq_zero] at h2
-  exact h2
+  rwa [← sub_eq_add_neg, sub_eq_zero] at h2
 
 theorem f_fst_eq_zero_of_d_eq_zero (p : (mappingCoconeNat f).X 0)
     (hp : ((mappingCoconeNat f).d 0 1).hom p = 0) :
@@ -74,8 +73,7 @@ theorem homotopy_apply_succ_of_d_eq_zero (l : ℕ) (z : N.X (l + 1))
   simp only [HomologicalComplex.comp_f, ModuleCat.hom_comp, LinearMap.comp_apply,
     ModuleCat.hom_add, LinearMap.add_apply] at e
   rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_succ_cochainComplex] at e
-  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, hz, map_zero, zero_add] at e
-  exact e
+  simpa only [ModuleCat.hom_comp, LinearMap.comp_apply, hz, map_zero, zero_add] using e
 
 theorem snd_sub_eq_neg_d (hβ : ∀ {r s n : ℕ} (h : r + s = n) (y : LA.X r) (w : LN.X s),
       (βC.f n).hom (μL.μ h y w) = μL'.μ h ((βA.f r).hom y) ((βN.f s).hom w))

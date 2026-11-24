@@ -55,9 +55,7 @@ theorem EtNbhd.exists_sub_mem_maximalIdeal :
   obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective i.q.primeCompl b
   obtain ⟨r₁, hr₁⟩ := residue_surjective (i.pt a)
   obtain ⟨r₂, hr₂⟩ := residue_surjective (i.pt (s : i.A))
-  have hs : i.pt (s : i.A) ≠ 0 := by
-    intro h
-    exact s.2 (show (s : i.A) ∈ RingHom.ker i.pt from h)
+  have hs : i.pt (s : i.A) ≠ 0 := fun h => s.2 (show (s : i.A) ∈ RingHom.ker i.pt from h)
   have hu : IsUnit r₂ := by
     by_contra hn
     apply hs

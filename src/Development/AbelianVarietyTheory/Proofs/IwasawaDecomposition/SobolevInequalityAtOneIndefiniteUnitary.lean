@@ -85,8 +85,7 @@ theorem cube_step {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup 
     have h := integral_cube_succ_last N s
       (fun t => ‖w (List.ofFn fun i => c i (t i)).prod‖ ^ 2) ((hw.comp hΘ).norm.pow 2)
     simp only [hsn] at h
-    simp only [intervalIntegral.integral_of_le hs.le, ← integral_Icc_eq_integral_Ioc]
-    exact h
+    simpa only [intervalIntegral.integral_of_le hs.le, ← integral_Icc_eq_integral_Ioc] using h
   obtain ⟨i1, b1⟩ := fub f hf
   obtain ⟨i2, b2⟩ := fub f' hf'
   have pt : ∀ x : G, ‖f x‖ ^ 2 ≤ 2 / s * (∫ r in (0 : ℝ)..s, ‖f (x * c l r)‖ ^ 2)
@@ -112,8 +111,7 @@ theorem cube_step {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup 
   simp only [Pi.add_apply] at key
   rw [integral_add (i1.const_mul _) (i2.const_mul _), integral_const_mul,
     integral_const_mul] at key
-  rw [b1, b2]
-  exact key
+  rwa [b1, b2]
 
 theorem cube_sum {G V : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (A : Set V) (u : V)
     (hu : u ∈ A) (s : ℝ) (hs : 0 < s) : ∀ (N : ℕ) (c : Fin N → ℝ → G) (D : Fin N → V → V),

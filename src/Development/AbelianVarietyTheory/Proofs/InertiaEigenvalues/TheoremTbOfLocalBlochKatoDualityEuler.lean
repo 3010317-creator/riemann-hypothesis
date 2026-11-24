@@ -339,8 +339,7 @@ theorem norm_le_of_twist {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)}
       have := e g hg
       simp only [map_sub, map_mul, map_pow, map_natCast] at this ⊢
       linear_combination this)).1 hj
-  rw [sub_eq_zero.1 h0]
-  exact hγ
+  rwa [sub_eq_zero.1 h0]
 
 theorem norm_le_of_log {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} {χ : GQ l →* ℚ_[l]ˣ}
     (ha : IsActC act) (hχ : IsCyc χ) (K : FinExt l) {s : ℕ} (hs : Lev l s)
@@ -366,8 +365,7 @@ theorem norm_le_of_log {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} {
       simp only [map_sub, UniformSpace.Completion.coe_sub] at this ⊢
       linear_combination this)
   rw [UniformSpace.Completion.coe_sub, sub_eq_zero] at h0
-  rw [← PadicComplex.norm_extends, h0]
-  exact hn'
+  rwa [← PadicComplex.norm_extends, h0]
 
 theorem sum_val (e : ℕ) : ∑ i ∈ Finset.range e, (padicValInt l ((i : ℤ) - e)) =
     padicValNat l e.factorial := by
@@ -392,8 +390,7 @@ theorem om_mem (x : Om l) : algebraMap (Om l) P.R.BdR x ∈ (P.PD (botExt l)).Fi
     IntermediateField.mem_adjoin_simple_self _ _⟩
   have h2 := ((P.PD K).Fil 0).smul_mem (⟨x, hK⟩ : ↥K.1) (P.PD K).one_mem
   rw [Algebra.smul_def, mul_one] at h2
-  rw [← SetLike.mem_coe, P.PD_Fil (botExt l) K 0]
-  exact h2
+  rwa [← SetLike.mem_coe, P.PD_Fil (botExt l) K 0]
 
 theorem q_mem (x : ℚ_[l]) : algebraMap ℚ_[l] P.R.BdR x ∈ (P.PD (botExt l)).Fil 0 := by
   rw [IsScalarTower.algebraMap_apply ℚ_[l] (Om l) P.R.BdR]
@@ -590,7 +587,7 @@ theorem iterate (T : LocTied l P AI) (K : FinExt l) {s : ℕ} (hs : Lev l s) {e 
 theorem logChi_coe (LT : LocTheory) (g : GQ l) :
     ((logChi LT g : ℤ_[l]) : ℚ_[l]) = logZl l ((LT l).χQ g : ℚ_[l]) := by
   have h := (GlobalTheory.PadicLogUnits.logZl_hom l).2.2.1 _ ((cyc_basic l _ (LT l).χQ_cyc).1 g)
-  exact congrArg Subtype.val (dif_pos h : logChi LT g = ⟨_, h⟩)
+  exact congrArg Subtype.val (dite_eq_left h : logChi LT g = ⟨_, h⟩)
 
 theorem norm_zeta : ‖P.ζQ 1 - 1‖ = (l : ℝ) ^ (-(1 : ℝ) / ((l : ℝ) - 1)) := by
   have h2 : P.ζQ 1 ^ l = 1 := by rw [← P.ζQ_zero]; exact P.ζQ_succ 0
@@ -728,7 +725,7 @@ theorem exponent_le (s e : ℕ) :
   · have h3 : padicValNat l (e + 1).factorial = padicValNat l (e + 1) + padicValNat l e.factorial := by
       rw [Nat.factorial_succ, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) (by omega) (Nat.factorial_ne_zero _)]
     rw [h3]
-    simp only [betaE, Nat.add_sub_cancel, Nat.succ_ne_zero, if_false]
+    simp only [betaE, Nat.add_sub_cancel, Nat.succ_ne_zero, ite_false]
     generalize padicValNat l (e + 1) = u
     generalize padicValNat l e.factorial = v
     push_cast at h1 ⊢
@@ -749,8 +746,7 @@ theorem exists_expStar_zero_near : ∀ (D : Formalism.BasicNotions.D7), adm2 D �
   have hnorm : ‖(l : Om l) ^ ((a : ℤ) - betaE l s e) * α‖ ≤ 1 := by
     have h1 := hN.trans (Real.rpow_le_rpow_of_exponent_le hl.le hx)
     rw [Real.rpow_intCast] at h1
-    rw [norm_mul, norm_zpow, hnl, inv_zpow, inv_mul_le_iff₀ (zpow_pos (by linarith) _), mul_one]
-    exact h1
+    rwa [norm_mul, norm_zpow, hnl, inv_zpow, inv_mul_le_iff₀ (zpow_pos (by linarith) _), mul_one]
   obtain ⟨z1, hz1, hE1⟩ := _root_.GlobalTheory.ExpImage.expStar_image D l K s hs e _ hmem hnorm
   refine ⟨fun σ => (l : ℚ_[l]) ^ a * z σ - z1 σ, ?_, fun σ hσ => ?_⟩
   · have := expStar_mul_sub D.loc (Gj K s) e ((l : ℚ_[l]) ^ a) hE hE1
@@ -938,8 +934,7 @@ theorem index_smul_mem_HfD [CharZero LL] (L : Lattice (O := O) ρ) (hρ : ∀ g,
   obtain ⟨x', hx'⟩ := hY L.T L.stable f₀ 0 h₀ (by simpa using hZf)
   obtain ⟨X, hX⟩ := hX
   have hmul : ∀ a b y, actVB PD ρ a (actVB PD ρ b y) = actVB PD ρ (a * b) y := by
-    intro a b y
-    exact (LinearMap.congr_fun ((corHfRepVB PD ρ).map_mul a b) y).symm
+    exact fun a b y => (LinearMap.congr_fun ((corHfRepVB PD ρ).map_mul a b) y).symm
   have h1 : ∀ g (v : V), actVB PD ρ g (v ⊗ₜ[Qp] (1 : B)) = ρ g v ⊗ₜ[Qp] (1 : B) := by
     intro g v
     rw [corHf_actVB_tmul, map_one]
@@ -1130,8 +1125,7 @@ theorem cob_core {ι : Type} [Fintype ι] (bT : Basis ι R T) (bV : Basis ι F V
     rw [smul_sub]
     abel
   have h4 := Submodule.neg_mem _ (Submodule.sub_mem _ hx h1)
-  rw [map_sub, map_smul, e] at h4
-  exact h4
+  rwa [map_sub, map_smul, e] at h4
 
 end Abstract
 
@@ -1189,8 +1183,7 @@ theorem exists_beta_unit (LT : LocTied l P AI) (J : ThetaL P AI) (K : FinExt l) 
     obtain ⟨n, rfl⟩ := Int.exists_add_of_le hab
     obtain ⟨h1, -, -⟩ := GlobalTheory.BdRQuot.fil_quotient l P AI LT J n
     have hx' : (((u ^ a)⁻¹ : (P.R.BdR)ˣ) : P.R.BdR) * x ∈ (P.PD (botExt l)).Fil 0 := by
-      rw [← H 0, ← mul_assoc, Units.mul_inv, one_mul, zero_add, ← hF]
-      exact hx
+      rwa [← H 0, ← mul_assoc, Units.mul_inv, one_mul, zero_add, ← hF]
     obtain ⟨k, y, hy⟩ := h1 _ hx'
     refine ⟨k, eE AI a y, ?_⟩
     rw [← H, add_comm, ← hF] at hy
@@ -1273,8 +1266,7 @@ theorem exists_rational (AI : LocAinf l P) (LT : LocTied l P AI) (K LL : FinExt 
   have hone' : ∀ (W : Type) [AddCommGroup W] [Module ↥LL.1 W] [Module ℚ_[l] W]
       [IsScalarTower ℚ_[l] ↥LL.1 W] (v : W),
       v ⊗ₜ[ℚ_[l]] (1 : P.R.BdR) ∈ FilV (P.PD K) (LL := ↥LL.1) (V := W) 0 := by
-    intro W _ _ _ _ v
-    exact ⟨v ⊗ₜ[ℚ_[l]] ⟨1, h1F⟩, rfl⟩
+    exact fun W _ _ _ _ v => ⟨v ⊗ₜ[ℚ_[l]] ⟨1, h1F⟩, rfl⟩
   have hact : ∀ (W : Type) [AddCommGroup W] [Module ↥LL.1 W] [Module ℚ_[l] W]
       [IsScalarTower ℚ_[l] ↥LL.1 W] (ρ : Representation ↥LL.1 ↥(GK K) W) (g : ↥(GK K)) (v : W),
       actVdR (P.PD K) ρ g (v ⊗ₜ[ℚ_[l]] (1 : P.R.BdR)) = ρ g v ⊗ₜ[ℚ_[l]] (1 : P.R.BdR) := by
@@ -1618,7 +1610,7 @@ theorem scalar_of_isCob (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : Arch
           (s + padicValNat l (e + 1))) * ψ (f g)‖ ≤ 1 := by
   classical
   obtain ⟨c, hc⟩ : ∃ c : GQ l → ℚ_[l], ∀ (σ : GQ l) (h : σ ∈ GK K), c σ = ψ (f ⟨σ, h⟩) :=
-    ⟨fun σ => if h : σ ∈ GK K then ψ (f ⟨σ, h⟩) else 0, fun σ h => dif_pos h⟩
+    ⟨fun σ => if h : σ ∈ GK K then ψ (f ⟨σ, h⟩) else 0, fun σ h => dite_eq_left h⟩
   have H1 : ∀ σ ∈ Gj K s, ‖c σ‖ ≤ (l : ℝ) ^ r := fun σ hσ => by
     rw [hc σ (hle hσ)]; exact hψr _
   have H2 : ∀ σ ∈ Gj K s, ∀ τ ∈ Gj K s, ‖c (σ * τ) - c σ -
@@ -1693,8 +1685,7 @@ theorem mem_HfD_of_isCob (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : Arc
       ‖z i g - w.repr ((l ^ k : ℕ) • Φ (f g)) i‖ ≤ 1 := fun i g hg => by
     have := hzc i g hg
     rw [hψ] at this
-    rw [map_nsmul w.repr, Finsupp.smul_apply, nsmul_eq_mul, Nat.cast_pow]
-    exact this
+    rwa [map_nsmul w.repr, Finsupp.smul_apply, nsmul_eq_mul, Nat.cast_pow]
   exact mem_HfD_of_coords (D.loc l) K LL s hK V
     (fun σ => (((D.loc l).χQ σ ^ (-(e : ℤ)) : ℚ_[l]ˣ) : ℚ_[l])) hV w hw hwc
     (fun g => (l ^ k : ℕ) • Φ (f g)) A1 z hz x hx A2
@@ -1719,8 +1710,7 @@ theorem lift_equivariant {G : Type} [Group G] [TopologicalSpace G] {Qp LL O : Ty
     Φ (actT Y.L g y) - V.ρ g (Φ y) ∈ V.L.T := by
   refine (Submodule.Quotient.eq _).1 ?_
   have h1 := hφ g y
-  rw [← hΦ, ← hΦ] at h1
-  exact h1
+  rwa [← hΦ, ← hΦ] at h1
 
 
 
@@ -1751,8 +1741,7 @@ theorem mem_HfD_of_lattice (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : A
   have key := mem_HfD_of_isCob D h2 h4 K LL s hs hK hle e N r ↥Y.L.T (actTZ LL Y) f hf hfl one hone
     hcob V hV' w hw hwc Φ hΦ' ψ hψ hψr
   have h3 := fun a b g => pow_smul_eq_mk V.L.T l a b _ _ (hΦ (f g))
-  rw [cTB, funext (h3 _ _)]
-  exact key
+  rwa [cTB, funext (h3 _ _)]
 
 
 

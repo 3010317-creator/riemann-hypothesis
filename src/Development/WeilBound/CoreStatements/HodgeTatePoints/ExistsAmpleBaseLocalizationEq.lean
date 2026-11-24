@@ -168,8 +168,7 @@ theorem not_mem_locMax_of_inv_mem {A : Subalgebra S Ω} {p : Ideal A} [hp : p.Is
     apply Subtype.ext
     simp only [Subalgebra.coe_mul]
     have h1 : (z : Ω) * (z : Ω)⁻¹ = 1 := mul_inv_cancel₀ hz0
-    rw [hcd] at h1
-    rw [hab, div_mul_div_comm, div_eq_one_iff_eq (mul_ne_zero hb0 hd0)] at h1
+    rw [hcd, hab, div_mul_div_comm, div_eq_one_iff_eq (mul_ne_zero hb0 hd0)] at h1
     exact h1.symm
   have hmem : b * d ∈ p := by rw [key]; exact p.mul_mem_right _ ha
   exact (hp.mem_or_mem hmem).elim hb hd
@@ -246,8 +245,7 @@ theorem mem_of_pow_mul_mem' (A : Subalgebra S Ω) (M : Submodule A Ω) {m : ℕ}
     have := hK c
     rwa [Subalgebra.smul_def, smul_eq_mul, SubmonoidClass.coe_pow]
   rw [hpow] at hle
-  have h1 := hle (Submodule.mem_top : (1 : A) ∈ ⊤)
-  simpa [D] using h1
+  simpa [D] using hle (Submodule.mem_top : (1 : A) ∈ ⊤)
 
 theorem chartRingOver_oneBlock_eq_adjoin {n : ℕ} (h : Fin n → Ω) (c : Unit → Fin n) :
     chartRingOver S (IndefiniteRowSideFullHecke.Kleiman2.oneBlock h) c = Algebra.adjoin S (Set.range fun b => h b / h (c ())) := by
@@ -422,8 +420,7 @@ theorem exists_chart_localization_eq (Q : Kleiman.LineBundle S x) {r : ℕ} {h :
     show h c / h l ∈ IndefiniteRowSideFullHecke.Kleiman2.locIn A _
     rw [show h c / h l = (h c * w m) / (h l * w m) by field_simp]
     exact Subring.subset_closure ⟨⟨_, hw c m⟩, ⟨_, hw l m⟩, hm', rfl⟩
-  intro z hz
-  exact hBle hz
+  exact fun z hz => hBle hz
 
 theorem exists_chart_locIn_eq (Q : Kleiman.LineBundle S x) {r : ℕ} {h : Fin (r + 1) → Ω}
     (hva : Kleiman.IsVeryAmpleBy Q.toSubSystem h) {l : Fin (r + 1)} (hl : h l ≠ 0)

@@ -47,8 +47,7 @@ theorem one_mem_Kg : (1 : X.B.I.Gf) ∈ X.B.I.Kg X.B.g :=
 theorem isOpen_levelSubgroup' : IsOpen ((levelSubgroupOfCharacter X (_root_.Formalism.L2.SG.Pf.level_subgroup_character_unitary X) : Subgroup X.B.I.Gf) : Set X.B.I.Gf) := by
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
   refine Filter.mem_of_superset ((isOpen_Kg X).mem_nhds (one_mem_Kg X)) ?_
-  intro x hx
-  exact ((Formalism.L2.SG.Closed.level_subgroup_properties X).1 x hx).1
+  exact fun x hx => ((Formalism.L2.SG.Closed.level_subgroup_properties X).1 x hx).1
 
 theorem relIdx_eq : ((levelSubgroupOfCharacter X (_root_.Formalism.L2.SG.Pf.level_subgroup_character_unitary X)).relIndex (KsetSub X.B.I)) =
     ∏ p : TypX X, lIdx X hb p := by
@@ -65,8 +64,7 @@ theorem muK_eq : X.B.μf X.B.I.Kset =
     exact Finset.prod_ne_zero_iff.2 fun p _ => lIdx_ne X hb p
   have := Glob_measure_eq_relIndex_mul X.B.μf (KsetSub X.B.I) (levelSubgroupOfCharacter X (_root_.Formalism.L2.SG.Pf.level_subgroup_character_unitary X)) hle
     (isOpen_levelSubgroup' X) hi
-  rw [relIdx_eq X hb] at this
-  exact this
+  rwa [relIdx_eq X hb] at this
 
 theorem ratio_eq : (X.B.μf X.B.I.Kset).toReal / X.volK2 = ∏ p : TypX X, (lIdx X hb p : ℝ) := by
   have hL := Formalism.L2.SG.Closed.level_subgroup_properties X
@@ -137,8 +135,7 @@ theorem ggC_eq (R : Formalism.BasicNotions.Ranks) (g : ℕ) :
       Fintype.card_unit, Formalism.BasicNotions.Ranks.rS]
     omega
   have hc : Fintype.card (Formalism.FourierDecayAlt.S3.Idx R.rS R.k) = Fintype.card (Fin (R.k + R.m - 1)) := by
-    rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
-    exact hc0
+    rwa [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
   unfold ggC
   exact Nat.card_congr (Units.mapEquiv
     (Matrix.reindexAlgEquiv (ZMod g) (ZMod g) (Fintype.equivOfCardEq hc)).toMulEquiv).toEquiv
@@ -166,8 +163,7 @@ theorem lIdx_mul (p : TypX X) (hR : MassDataIdxSteps.StRed X p) (hI : MassDataId
     rw [e, Subgroup.closure_eq]
   have hidx : lIdx X hb p = A.index := by
     rw [lIdx, hKv, hKpp, Subgroup.relIndex, Subgroup.subgroupOf, Subgroup.comap_map_eq_self_of_injective K.subtype_injective]
-  rw [hidx, ← hcard]
-  exact key
+  rwa [hidx, ← hcard]
 
 theorem lIdx_eq (p : TypX X) (hR : MassDataIdxSteps.StRed X p) (hI : MassDataIdxSteps.StImA X hb p) :
     (lIdx X hb p : ℝ) = Formalism.MainNotions.StandardLattice.idxRowLoc (gOf p) D.R.k D.R.m := by
@@ -263,14 +259,11 @@ theorem gOf_iff (i : Fin 2) (p : TypX X) : gOf p = D.host.g i ↔ ((D.host.g i :
     · simp [h0]
     · simp [h0, Ne.symm hne]
   · by_cases h0 : ((D.host.g 0 : ℕ) : 𝓞 X.B.I.F) ∈ p.1.asIdeal
-    · simp only [h0, if_true]
+    · simp only [h0, ite_true]
       constructor
-      · intro h
-        exact absurd h hne
-      · intro h1
-        exact (not_both X p.1 h0 h1).elim
-    · simp only [h0, if_false]
-      exact ⟨fun _ => htyp.resolve_left h0, fun _ => trivial⟩
+      · exact fun h => absurd h hne
+      · exact fun h1 => (not_both X p.1 h0 h1).elim
+    · simpa only [h0, ite_false] using ⟨fun _ => htyp.resolve_left h0, fun _ => trivial⟩
 
 def typEquiv (i : Fin 2) :
     {p : TypX X // gOf p = D.host.g i} ≃ {v : HeightOneSpectrum (𝓞 X.B.I.F) // ((D.host.g i : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal} where
@@ -294,8 +287,7 @@ theorem prod_typ (φ : ℕ → ℝ) :
       rcases hp with h0 | h1
       · exact absurd ((gOf_iff X 0 p).2 h0) h
       · exact (gOf_iff X 1 p).2 h1
-    · intro h h'
-      exact not_both X p.1 ((gOf_iff X 0 p).1 h') ((gOf_iff X 1 p).1 h)
+    · exact fun h h' => not_both X p.1 ((gOf_iff X 0 p).1 h') ((gOf_iff X 1 p).1 h)
   have h1 : ∀ p : {p : TypX X // gOf p = D.host.g 0}, φ (gOf p.1) = φ (D.host.g 0) := fun p => by
     rw [p.2]
   have h2 : ∀ p : {p : TypX X // ¬ gOf p = D.host.g 0}, φ (gOf p.1) = φ (D.host.g 1) := fun p => by
@@ -316,8 +308,7 @@ theorem dstarIdx_of (hR : ∀ p : TypX X, MassDataIdxSteps.StRed X p)
     Formalism.L2.SG.Pf.RowDictPf.DstarIdx X := by
   let hb := (Formalism.L2.SG.Closed.adelic_isomorphism_statement X.B.I).1
   unfold Formalism.L2.SG.Pf.RowDictPf.DstarIdx
-  rw [ratio_eq X hb]
-  rw [Finset.prod_congr rfl (fun p _ => lIdx_eq X hb p (hR p) (hI hb p))]
+  rw [ratio_eq X hb, Finset.prod_congr rfl (fun p _ => lIdx_eq X hb p (hR p) (hI hb p))]
   rw [prod_typ X (fun g => Formalism.MainNotions.StandardLattice.idxRowLoc g D.R.k D.R.m)]
   rfl
 

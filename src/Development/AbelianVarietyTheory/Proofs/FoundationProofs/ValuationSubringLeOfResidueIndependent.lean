@@ -80,8 +80,7 @@ private lemma mem_of_monic_root_coeff_mem {L : Type} [Field L] (W : ValuationSub
     (hψ : ψ.Monic) (hc : ∀ i, ψ.coeff i ∈ W) (ω : L) (hω : ψ.eval ω = 0) : ω ∈ W := by
   have hl : ψ ∈ lifts (algebraMap W L) := by
     rw [lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hc n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hc n⟩, rfl⟩
   obtain ⟨q, hq, -, hqm⟩ := lifts_and_natDegree_eq_and_monic hl hψ
   have hint : IsIntegral W ω := ⟨q, hqm, by rw [← eval_map, hq, hω]⟩
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.mp hint
@@ -243,8 +242,7 @@ theorem _root_.GlobalTheory.BertiniNoether.le_of_residue_independent : ∀ {F : 
   have hu₁ : algebraMap F L u ∈ W₁ := by
     rw [← W₁.valuation_le_one_iff]
     have h1 : 1 ≤ W₁.valuation (R'.eval₂ (aeval t).toRingHom ω) := by
-      rw [W₁.mem_nonunits_iff, not_lt] at hR'unit
-      exact hR'unit
+      rwa [W₁.mem_nonunits_iff, not_lt] at hR'unit
     calc W₁.valuation (algebraMap F L u)
         ≤ W₁.valuation (algebraMap F L u) * W₁.valuation (R'.eval₂ (aeval t).toRingHom ω) :=
           le_mul_of_one_le_right' h1

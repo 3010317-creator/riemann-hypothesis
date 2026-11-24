@@ -139,7 +139,7 @@ theorem volq_zero {r : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hr : 
     funext l
     by_cases h : l.1 < n
     · simp [Loc.inX, h]
-    · simp only [Loc.inX, LinearMap.pi_apply, h, dif_neg, not_false_eq_true, LinearMap.zero_apply]
+    · simp only [Loc.inX, LinearMap.pi_apply, h, dite_eq_right, not_false_eq_true, LinearMap.zero_apply]
       exact hv l (by simpa using h)
   rw [sub_eq_zero, e]
   exact hr.2 _
@@ -220,16 +220,14 @@ theorem volq_relIndex (hq : (qOf P).Prime) {n c : ℕ} (J : Subgroup (Sp E (n + 
         induction m with
         | zero => rfl
         | succ m ih => rw [pow_succ', pow_succ', Module.End.mul_apply, ih]; rfl
-      rw [e] at this
-      exact this
+      rwa [e] at this
     · rw [AddSubgroup.mem_comap, map_nsmul]
       exact h₂ _ (by omega) v hv
     · have := h₁ (b₁ + b₂) (by omega) _ hv
       simpa using this
     · have := (hs (h.symm v)).2 hv
       change h.symm (r (h (h.symm v))) ∈ _ at this
-      rw [h.apply_symm_apply] at this
-      exact this
+      rwa [h.apply_symm_apply] at this
   refine volq_index _ hq (k := 2 * (b₁ + b₂) + c) fun g => ?_
   rw [Subgroup.mem_subgroupOf, Subgroup.coe_pow]
   refine ⟨pow_mem g.2.2 _, fun v => ⟨fun hv => ?_, key g.1 g.2 v⟩⟩
@@ -243,7 +241,7 @@ end Loc
 theorem volumeAtQ : VolumeAtQ := by
   intro X Pr R sharp j P h w hP hd hw
   unfold Loc.volN Jat lamYat
-  simp only [if_neg hP]
+  simp only [ite_eq_right hP]
   rw [volq_lamY, inv_div, map_div₀]
   have hn : ∀ m : ℕ, w.valuation X.K (m : X.K) ≤ 1 := fun m => by
     have := w.valuation_le_one (K := X.K) (m : 𝓞 X.K)

@@ -62,10 +62,8 @@ private theorem mem_dx_iff {K : Type} [Field K] {Δ : K} (g : GL (Fin 2) (Lsq K 
     g ∈ DX Δ ↔ (g : Matrix (Fin 2) (Fin 2) (Lsq K Δ)).map star =
       !![0, -1; 1, 0] * (g : Matrix (Fin 2) (Fin 2) (Lsq K Δ)) * !![0, 1; -1, 0] := by
   constructor
-  · intro h
-    exact congrArg Units.val h
-  · intro h
-    exact Units.ext h
+  · exact fun h => congrArg Units.val h
+  · exact fun h => Units.ext h
 
 private theorem conj_two {R : Type} [CommRing R] (a b c d : R) :
     (!![0, -1; 1, 0] : Matrix (Fin 2) (Fin 2) R) * !![a, b; c, d] * !![0, 1; -1, 0] = !![d, -c; -b, a] := by

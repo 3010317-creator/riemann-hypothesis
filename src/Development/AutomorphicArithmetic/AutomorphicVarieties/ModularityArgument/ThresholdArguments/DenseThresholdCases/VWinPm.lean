@@ -183,8 +183,7 @@ private theorem ine_dies {k Ω : Type} [Field k] [NumberField k] [Field Ω] [Alg
     {S : Set (HeightOneSpectrum (𝓞 k))} {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 k)} (hv : v ∉ S)
     (hA : IsPlaceOver A v) {t : G k Ω} (ht : t ∈ Ine (F := k) A) : toGS Ω S t = 1 := by
   refine (QuotientGroup.eq_one_iff t).2 (Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_))
-  simp only [Set.mem_iUnion]
-  exact ⟨v, hv, A, hA, ht⟩
+  simpa only [Set.mem_iUnion] using ⟨v, hv, A, hA, ht⟩
 
 private theorem fiber_fin {k L : Type} [Field k] [NumberField k] [Field L] [NumberField L] [Algebra k L]
     (v : HeightOneSpectrum (𝓞 k)) : {w : HeightOneSpectrum (𝓞 L) | w.under (𝓞 k) = v}.Finite := by
@@ -301,8 +300,7 @@ private theorem near {n : ℕ} {B K : Type} [CommRing B] [NormedField K] [IsUltr
   classical
   have hcoef : ∀ k, ‖(P.map x).coeff k‖ ≤ 1 := fun k => by rw [Polynomial.coeff_map]; exact h1 _
   have hz1 : ‖z‖ ≤ 1 := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have hev := hz.eq_zero
     rw [Polynomial.eval_eq_sum_range, Finset.sum_range_succ, hP.coeff_natDegree, one_mul] at hev
     set d := (P.map x).natDegree
@@ -347,10 +345,8 @@ private theorem near {n : ℕ} {B K : Type} [CommRing B] [NormedField K] [IsUltr
     have : ∏ i, (z - x (a i)) = -((P - ∏ i, (X - C (a i))).map x).eval z := by
       rw [hz.eq_zero] at hsum
       linear_combination (-1 : K) * hsum
-    rw [this, norm_neg]
-    exact hE
-  by_contra hne
-  push_neg at hne
+    rwa [this, norm_neg]
+  by_contra! hne
   have : (1 : ℝ) ≤ ‖∏ i, (z - x (a i))‖ := by
     rw [norm_prod]
     calc (1 : ℝ) = ∏ _i : Fin n, (1 : ℝ) := by simp
@@ -469,8 +465,7 @@ theorem UpperTheory.V.Ws.Pu.sepEl :
   have key : ∀ a b, ∃ e : MonoidAlgebra O Γ, MonoidAlgebra.lift O (ResidueField O) Γ ((Units.coeHom _).comp (χ a)) e = 1 ∧ MonoidAlgebra.lift O (ResidueField O) Γ ((Units.coeHom _).comp (ψ b)) e = 0 := by
     intro a b
     obtain ⟨γ, hγ⟩ : ∃ γ, χ a γ ≠ ψ b γ := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hne a b (MonoidHom.ext hc)
     have hu : ((χ a γ : ResidueField O) - (ψ b γ : ResidueField O)) ≠ 0 := sub_ne_zero.2 (fun h => hγ (Units.ext h))
     obtain ⟨r, hr⟩ := IsLocalRing.residue_surjective (ψ b γ : ResidueField O)
@@ -554,8 +549,7 @@ theorem UpperTheory.V.Ws.Pu.cpAlg :
     exact Finset.prod_ne_zero_iff.2 fun w hw => sub_ne_zero.2 (Finset.ne_of_mem_erase hw).symm
   have hpT : ∀ w ∈ T, p.eval w = 0 := by
     intro w hw
-    simp only [p, eval_prod, eval_sub, eval_X, eval_C]
-    exact Finset.prod_eq_zero hw (sub_self _)
+    simpa only [p, eval_prod, eval_sub, eval_X, eval_C] using Finset.prod_eq_zero hw (sub_self _)
   have hM0 : (aeval M p).trace = 0 := by
     rw [Matrix.trace_eq_sum_roots_charpoly]
     refine Multiset.sum_eq_zero fun w hw => ?_
@@ -740,8 +734,7 @@ theorem UpperTheory.V.Ws.Pu.noOm :
   rw [mul_assoc, mul_right_inj' u1, mul_comm, mul_right_inj' u2] at e0
   rw [hD.om_bar]
   apply (ResidueField.map (inc h)).injective
-  rw [ResidueField.map_residue, ResidueField.map_residue]
-  exact e0
+  rwa [ResidueField.map_residue, ResidueField.map_residue]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.CharacteristicPolynomialRoots.NoOmLift =====
@@ -837,8 +830,7 @@ private theorem frobAbs_isFrob_pow {K Ω : Type} [Field K] [NumberField K] [Fiel
       (by rw [map_pow]; exact pow_le_one' hx _) (ih.2 x hx) q
     have h3 := Valuation.map_add_lt A.valuation h1 h2
     rw [sub_add_sub_cancel, ← pow_mul, ← pow_succ] at h3
-    rw [pow_succ' g, AlgEquiv.mul_apply]
-    exact h3
+    rwa [pow_succ' g, AlgEquiv.mul_apply]
 
 private theorem frobAbs_eig {k : Type} [Field k] [IsAlgClosed k] {n : ℕ} (M N : GL (Fin n) k) {e f : ℕ} (hf : 0 < f)
     (h : M ^ e = N ^ f) {x : k} (hx : (M : Matrix (Fin n) (Fin n) k).charpoly.IsRoot x) :
@@ -849,8 +841,7 @@ private theorem frobAbs_eig {k : Type} [Field k] [IsAlgClosed k] {n : ℕ} (M N 
   obtain ⟨z, hz, hzx⟩ := h2
   have hz0 : z ≠ 0 := spectrum.ne_zero_of_mem_of_unit hz
   refine ⟨z, Matrix.mem_spectrum_iff_isRoot_charpoly.1 ?_, hzx⟩
-  have h3 := (spectrum.inv_mem_iff (r := Units.mk0 z hz0) (a := N)).1 (by simpa using hz)
-  simpa using h3
+  simpa using (spectrum.inv_mem_iff (r := Units.mk0 z hz0) (a := N)).1 (by simpa using hz)
 
 private theorem pos_of_mul_pos_of_pos {a b : ℝ} (ha : 0 < a) (h : 0 < a * b) : 0 < b := (mul_pos_iff_of_pos_left ha).1 h
 

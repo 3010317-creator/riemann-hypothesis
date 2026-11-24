@@ -87,8 +87,7 @@ private theorem aeval_map_minpoly_int (C : Type) [Field C] (OE : Type)
   have h4 : Int.castRingHom C = algebraMap ℤ C := RingHom.ext_int _ _
   rw [h4, Polynomial.aeval_map_algebraMap]
   have := Polynomial.aeval_algHom_apply ρ.toIntAlgHom a (minpoly ℤ a)
-  rw [minpoly.aeval, map_zero] at this
-  exact this
+  rwa [minpoly.aeval, map_zero] at this
 
 private theorem finite_ringHom_order (C : Type) [Field C] [CharZero C] (OE : Type)
     [CommRing OE] [IsDomain OE] [Module.Free ℤ OE] [Module.Finite ℤ OE] :
@@ -132,8 +131,7 @@ theorem order_rep_diagonalisable : ∀ (C : Type) [Field C] [IsAlgClosed C] [Cha
     have h := Module.End.independent_iInf_maxGenEigenspace_of_forall_mapsTo (fun a : OE => ρ a)
       (fun i j φ => Module.End.mapsTo_maxGenEigenspace_of_comm (hcomm j i) φ)
     have h2 := h.comp (f := fun τ : OE →+* C => (τ : OE → C)) DFunLike.coe_injective
-    refine h2.mono fun τ => ?_
-    exact iInf_mono fun a => (Module.End.genEigenspace (ρ a) (τ a)).mono le_top
+    exact h2.mono fun τ => iInf_mono fun a => (Module.End.genEigenspace (ρ a) (τ a)).mono le_top
   · have hcomm : ∀ a b : OE, Commute (ρ a) (ρ b) := fun a b => (Commute.all a b).map ρ
     have hss : ∀ a, (ρ a).IsSemisimple := fun a =>
       Module.End.isSemisimple_of_squarefree_aeval_eq_zero (squarefree_map_minpoly_int C OE a)

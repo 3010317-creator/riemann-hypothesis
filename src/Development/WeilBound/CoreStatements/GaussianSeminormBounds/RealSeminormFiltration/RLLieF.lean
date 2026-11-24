@@ -70,11 +70,9 @@ theorem lie_of_exp_banach {𝔸 : Type} [NormedRing 𝔸] [NormedAlgebra ℝ �
   have hf : ((fun u : ℝ => star (NormedSpace.exp (u • Z))) * (fun _ : ℝ => K)) *
       (fun u : ℝ => NormedSpace.exp (u • Z)) = fun _ => K := by
     funext u
-    simp only [Pi.mul_apply]
-    exact h u
+    simpa only [Pi.mul_apply] using h u
   rw [hf] at hP
-  have e := hP.unique (hasDerivAt_const (0 : ℝ) K)
-  simpa [NormedSpace.exp_zero] using e
+  simpa [NormedSpace.exp_zero] using hP.unique (hasDerivAt_const (0 : ℝ) K)
 
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem lie_of_exp {𝕜 ι : Type} [RCLike 𝕜] [Fintype ι] [DecidableEq ι] (Z K : Matrix ι ι 𝕜)

@@ -66,18 +66,15 @@ theorem mul_pow_mem_map_iff (V : Ideal (MRing ι F)) (f : MRing ι F) (t : ℕ) 
   · intro h
     have hle : V.map (rename (liftVar (ι := ι) ptIdx)) ≤ V.comap (aeval (dropPt F)) :=
       Ideal.map_le_iff_le_comap.mpr fun x hx => by
-        rw [Ideal.mem_comap, Ideal.mem_comap, dropPt_rename]
-        exact hx
+        rwa [Ideal.mem_comap, Ideal.mem_comap, dropPt_rename]
     have h2 := hle h
     rw [Ideal.mem_comap, map_mul, map_pow, dropPt_rename, aeval_X] at h2
     simpa [newVar, dropPt] using h2
-  · intro h
-    exact Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ h)
+  · exact fun h => Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ h)
 
 theorem weight_newBlock (d : (Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) →₀ ℕ) :
     Finsupp.weight (blockWeight (Sum.elim ι ptIdx)) d (.inr ()) = d newVar := by
-  rw [Finsupp.weight_apply, Finsupp.sum, Finset.sum_apply]
-  rw [Finset.sum_eq_single newVar]
+  rw [Finsupp.weight_apply, Finsupp.sum, Finset.sum_apply, Finset.sum_eq_single newVar]
   · simp [blockWeight, newVar]
   · rintro ⟨k | u, i⟩ _ hne
     · simp [blockWeight]
@@ -103,8 +100,7 @@ theorem rename_dropPt_monomial (d : (Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) →
         X newVar ^ (Finsupp.single a b newVar) = X a ^ b := by
       rcases a with ⟨k | u, i⟩
       · have hne : (⟨.inl k, i⟩ : Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) ≠ newVar := by
-          intro h
-          exact Sum.inl_ne_inr (congrArg Sigma.fst h)
+          exact fun h => Sum.inl_ne_inr (congrArg Sigma.fst h)
         rw [Finsupp.single_eq_of_ne hne.symm]
         simp only [map_pow, aeval_X, pow_zero, mul_one]
         show (rename (liftVar (ι := ι) ptIdx) (X ⟨k, i⟩ : MRing ι F)) ^ b = _
@@ -202,8 +198,7 @@ theorem homogSubmodule_eq_map (M : K ⊕ Unit → ℕ) :
       · simp [extendZero, restrictFirst, blockWeight, newVar]
       · cases u
         simp [extendZero, restrictFirst, blockWeight, newVar]
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 theorem finrank_gradedPiece (V : Ideal (MRing ι F)) (M : K ⊕ Unit → ℕ) :
     Module.finrank F (gradedPiece (V.map (rename (liftVar (ι := ι) ptIdx))) M) =
@@ -238,18 +233,18 @@ theorem hilbFn_map (V : Ideal (MRing ι F)) (m' : K ⊕ Unit → ℤ) :
       if 0 ≤ m' (.inr ()) then hilbFn V (fun k => m' (.inl k)) else 0 := by
   unfold hilbFn
   by_cases ht : 0 ≤ m' (.inr ())
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     by_cases hk : ∀ k, 0 ≤ m' (.inl k)
     · have hall : ∀ x, 0 ≤ m' x := by
         rintro (k | u)
         · exact hk k
         · cases u
           exact ht
-      rw [if_pos hall, if_pos hk, finrank_gradedPiece]
+      rw [ite_eq_left hall, ite_eq_left hk, finrank_gradedPiece]
       rfl
     · have hall : ¬ ∀ x, 0 ≤ m' x := fun h => hk fun k => h _
-      rw [if_neg hall, if_neg hk]
-  · rw [if_neg ht, if_neg (fun h => ht (h _))]
+      rw [ite_eq_right hall, ite_eq_right hk]
+  · rw [ite_eq_right ht, ite_eq_right (fun h => ht (h _))]
 
 theorem foldr_diffStep_pullDeg (L : List (K → ℤ)) (h : (K → ℤ) → ℤ)
     (h' : (K ⊕ Unit → ℤ) → ℤ)
@@ -297,7 +292,7 @@ theorem proof : JoinIntNum.Statement := by
     obtain ⟨N, hN⟩ := Filter.eventually_atTop.mp hc
     refine Filter.eventually_atTop.mpr ⟨Sum.elim N 0, fun m' hm' => ?_⟩
     have ht : 0 ≤ m' (.inr ()) := by simpa using hm' (.inr ())
-    rw [if_pos ht]
+    rw [ite_eq_left ht]
     exact hN _ (fun k => by simpa using hm' (.inl k))
   · have hc' : ¬ ∃ c, ∀ᶠ m' in Filter.atTop,
         (fun m' : K ⊕ Unit → ℤ => if 0 ≤ m' (.inr ()) then f (fun k => m' (.inl k)) else 0) m' =

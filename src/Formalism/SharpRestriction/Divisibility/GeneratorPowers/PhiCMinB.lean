@@ -74,8 +74,7 @@ theorem trace_sum (z : E) : ((Algebra.trace ℚ E z : ℚ) : ℂ) = ∑ σ : E �
     trace_eq_sum_embeddings ℂ]
   exact Fintype.sum_equiv (RingHom.equivRatAlgHom (R := E) (S := ℂ)).symm _ _ (fun σ => rfl)
 
-theorem emb_nonempty : Nonempty (E →+* ℂ) := by
-  exact ⟨(IsAlgClosed.lift : E →ₐ[ℚ] ℂ).toRingHom⟩
+theorem emb_nonempty : Nonempty (E →+* ℂ) := ⟨(IsAlgClosed.lift : E →ₐ[ℚ] ℂ).toRingHom⟩
 
 theorem eq_of_emb {a b : E} (h : ∀ σ : E →+* ℂ, σ a = σ b) : a = b := by
   obtain ⟨σ⟩ := emb_nonempty (E := E)
@@ -124,8 +123,7 @@ theorem exists_theta (hne : ∃ z : E, cj z ≠ z) :
     ∃ θ : 𝓞 E, (θ : E) ≠ 0 ∧ cj (θ : E) = -(θ : E) := by
   obtain ⟨z, hz⟩ := hne
   have hex : ∃ c : 𝓞 E, cj (c : E) ≠ c := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     apply hz
     let f : E →ₗ[ℚ] E :=
       { toFun := cj, map_add' := cj_add hcj, map_smul' := fun q a => cj_smul hcj q a }
@@ -153,8 +151,7 @@ def ed (E : Type) [Field E] [NumberField E] : Basis (Free.ChooseBasisIndex ℤ (
 theorem tr_ed_eb (i j : Free.ChooseBasisIndex ℤ (𝓞 E)) :
     Algebra.trace ℚ E (ed E i * integralBasis E j) = if j = i then 1 else 0 := by
   have h := LinearMap.BilinForm.apply_dualBasis_left (traceForm_nondegenerate ℚ E) (integralBasis E) i j
-  rw [Algebra.traceForm_apply] at h
-  exact h
+  rwa [Algebra.traceForm_apply] at h
 
 theorem eb_repr (z : E) (i : Free.ChooseBasisIndex ℤ (𝓞 E)) :
     (integralBasis E).repr z i = Algebra.trace ℚ E (ed E i * z) := by
@@ -167,8 +164,7 @@ theorem eb_repr (z : E) (i : Free.ChooseBasisIndex ℤ (𝓞 E)) :
 theorem tr_ed_int (c : 𝓞 E) (i : Free.ChooseBasisIndex ℤ (𝓞 E)) :
     Algebra.trace ℚ E (ed E i * (c : E)) = ((RingOfIntegers.basis E).repr c i : ℚ) := by
   rw [← eb_repr]
-  have h := integralBasis_repr_apply E c i
-  simpa using h
+  simpa using integralBasis_repr_apply E c i
 
 
 attribute [local instance] Classical.propDecidable

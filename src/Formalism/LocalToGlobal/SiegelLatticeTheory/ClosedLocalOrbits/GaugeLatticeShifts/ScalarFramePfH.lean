@@ -70,20 +70,7 @@ theorem hT_X_X (F : FlagG S r T) {x y : S.V} (hx : x ∈ F.X) (hy : y ∈ F.X) :
   apply Formalism.L2.SG.NGCut.NormalVectorPairings.hT_X_X <;> assumption
 
 theorem hT_z_X (F : FlagG S r T) {y : S.V} (hy : y ∈ F.X) : S.hT F.z y = 0 := by
-  have key : ∀ w : S.V, (∀ a, S.hT (F.e a) w = 0) → ∀ x ∈ F.X, S.hT x w = 0 := by
-    intro w hw x hx
-    have hx' : x ∈ Submodule.span E (Set.range F.e) := hx
-    clear hx
-    induction hx' using Submodule.span_induction with
-    | mem x h =>
-      obtain ⟨a, rfl⟩ := h
-      exact hw a
-    | zero =>
-      have h0 := hT_sub_left (S := S) w w w
-      rwa [sub_self, sub_self] at h0
-    | add x y _ _ ihx ihy => rw [hT_add_left, ihx, ihy, add_zero]
-    | smul c x _ ihx => rw [hT_smul_left, ihx, mul_zero]
-  rw [hT_swap, key F.z F.z_orth y hy, star_zero]
+  exact Formalism.L2.SG.NGCut.NormalVectorPairings.hT_z_X F hy
 
 theorem hT_X_alt (F : FlagG S r T) {x : S.V} (hx : x ∈ F.X) : S.hT x F.z = 0 := by
   have key : ∀ w : S.V, (∀ a, S.hT (F.e a) w = 0) → ∀ x ∈ F.X, S.hT x w = 0 := by

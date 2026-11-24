@@ -165,8 +165,7 @@ theorem finGL_cLoc {w : HeightOneSpectrum (𝓞 E)} (hw : ConjPl (IsCMField.comp
   simp only [Subgroup.mem_iInf] at hx2
   refine Units.ext (mat_ext ?_ fun v => ?_)
   · have h1 : GeneralLinearGroup.map (pInf E) (x : UA E n).1 = 1 := hx.1
-    have h2 := pInf_finGL (locGL E n w (cLoc w (x : UA E n)))
-    exact congrArg Units.val (h2.trans h1.symm)
+    exact congrArg Units.val ((pInf_finGL (locGL E n w (cLoc w (x : UA E n)))).trans h1.symm)
   · have h1 : GeneralLinearGroup.map ((pLoc E v).comp (pFin E)) (finGL E n (locGL E n w (cLoc w (x : UA E n)))) =
         GeneralLinearGroup.map ((pLoc E v).comp (pFin E)) (x : UA E n).1 := by
       refine (map_finGL v _).trans ?_

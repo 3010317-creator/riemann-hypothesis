@@ -79,8 +79,7 @@ theorem jetN_pow {n g : ℕ} (m : ℕ) {f : (Fin n → Fin g → ℂ) → ℂ} (
     jetN m (fun w => f w ^ p) = jetN m f ^ p := by
   induction p with
   | zero =>
-    simp only [pow_zero]
-    exact jetN_one m
+    simpa only [pow_zero] using jetN_one m
   | succ p ih =>
     have hp : AnO fun w => f w ^ p := by
       unfold AnO at hf ⊢
@@ -99,8 +98,7 @@ theorem jetN_inv_mul {n g : ℕ} (m : ℕ) {f : (Fin n → Fin g → ℂ) → �
     exact inv_mul_cancel₀ hv
   have h1 := jetN_one (n := n) (g := g) m
   simp only [jetN, jetOf] at h1 ⊢
-  rw [TM.taylor_multiplication.2.2 _ _ _ hev]
-  exact h1
+  rwa [TM.taylor_multiplication.2.2 _ _ _ hev]
 
 theorem AnO.zpow {n g : ℕ} {f : (Fin n → Fin g → ℂ) → ℂ} (hf : AnO f) (h0 : f (colsOf n g 0) ≠ 0) (k : ℤ) :
     AnO fun w => f w ^ k := by
@@ -178,7 +176,6 @@ theorem anO_fr {ψ : Sp (Jet ℂ (Fin n × Fin g) m) ⟶ A.left} {Λ : (Fin n �
     unfold colsOf
     fun_prop
   have hΛ : ContDiff ℂ ω (fun x : Fin n → Fin g → ℂ => Λ x) := (LinearMap.toContinuousLinearMap Λ).contDiff
-  show ContDiffAt ℂ ω (fun v => Φ.fr j (Λ (colsOf n g v))) 0
   exact han.contDiffAt.comp (x := 0) (hΛ.comp hc).contDiffAt
 
 variable {K : Type} [Fintype K] {φ : K → (Sp (Jet ℂ (Fin n × Fin g) m) ⟶ A.left)}
@@ -197,8 +194,7 @@ theorem anO_prod (hφ : ∀ k, Φ.JetMap m (φ k) (Λ k)) (ε : K → ℤ) {j : 
       ContDiffAt ℂ ω (fun v => ∏ k ∈ s, Φ.fr (j k) (Λ k (colsOf n g v)) ^ ε k) 0 := by
     intro s
     refine Finset.induction_on s ?_ ?_
-    · simp only [Finset.prod_empty]
-      exact contDiffAt_const
+    · simpa only [Finset.prod_empty] using contDiffAt_const
     · intro a s ha ih
       simp only [Finset.prod_insert ha]
       exact (show ContDiffAt ℂ ω (fun v => Φ.fr (j a) (Λ a (colsOf n g v)) ^ ε a) 0 from

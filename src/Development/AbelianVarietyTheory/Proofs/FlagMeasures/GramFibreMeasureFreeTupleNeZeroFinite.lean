@@ -282,11 +282,11 @@ theorem gramFiltration_of (hDx : DiffOpenOnLattice) : GramFiltration := by
     intro i j k
     show PositiveNearLattice.crd b (Fv F v) (e0 i j) k ∈ v.adicCompletionIntegers F
     by_cases hij : i = i0 ∧ j = j0
-    · simp only [e0, if_pos hij, PositiveNearLattice.crd_incl, b.repr_self, Finsupp.single_apply]
+    · simp only [e0, ite_eq_left hij, PositiveNearLattice.crd_incl, b.repr_self, Finsupp.single_apply]
       split_ifs
       · simp
       · simp
-    · simp only [e0, if_neg hij, PositiveNearLattice.crd, map_zero, Finsupp.zero_apply]
+    · simp only [e0, ite_eq_right hij, PositiveNearLattice.crd, map_zero, Finsupp.zero_apply]
       exact zero_mem _
   have hφe : φ e0 = 1 := by
     show PositiveNearLattice.crd b (Fv F v) (e0 i0 j0) k0 = 1
@@ -350,10 +350,8 @@ theorem lb_gram_preimage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     constructor
     · rintro ⟨s, hs, hsy⟩
       have : gramH (Fv F v) σ hσ J hJ.1 y = s := Subtype.ext hsy.symm
-      rw [this]
-      exact hs
-    · intro hy
-      exact ⟨_, hy, rfl⟩
+      rwa [this]
+    · exact fun hy => ⟨_, hy, rfl⟩
   rcases Nat.eq_zero_or_pos a with rfl | ha1
   · haveI : Subsingleton (HermR (Fv F v) σ 0) :=
       ⟨fun s t => Subtype.ext (Matrix.ext fun i => i.elim0)⟩
@@ -383,9 +381,7 @@ theorem lb_gram_preimage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     have hΛW : ∀ z, z - x ∈ Λ 0 → z ∈ W := by
       intro z hz
       rw [h0] at hz
-      have h := (hsub hz).2
-      simp only [Set.mem_preimage, add_sub_cancel] at h
-      exact h
+      simpa only [Set.mem_preimage, add_sub_cancel] using (hsub hz).2
     have hHa : Antitone H := by
       intro i j hij
       rw [← hD, ← hD]
@@ -598,8 +594,7 @@ theorem fib_ne_zero_of_lb (h : IsFibreFamily μ f ι U ν univ fib) (hU : IsOpen
     constructor
     · rintro ⟨b, hb, hbv⟩
       rwa [← hι hbv]
-    · intro hv
-      exact ⟨_, hv, rfl⟩
+    · exact fun hv => ⟨_, hv, rfl⟩
   have hsub : A ∩ W ⊆ {v | ENNReal.ofReal (1 / 2) ≤ Φ v} ∩ U := by
     intro v hv
     refine ⟨?_, hWU hv.2⟩

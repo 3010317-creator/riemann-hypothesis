@@ -82,8 +82,7 @@ theorem generator_mem (R : Subalgebra ℤ Ω) (y : (Σ k, ι k) → Ω) (c : ∀
     · subst hk; simp
     · simp [hk]
   rw [hb] at hmem
-  rw [hW, h1, ← mul_assoc, div_mul_cancel₀ _ h0]
-  exact hmem
+  rwa [hW, h1, ← mul_assoc, div_mul_cancel₀ _ h0]
 
 end RelChartPoly
 
@@ -271,8 +270,7 @@ theorem descend {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} [∀ k,
         simp
       simp only [Pi.add_apply, pow_add, Finset.prod_mul_distrib, h1]
       ring
-    rw [hprod, add_assoc, ← hee]
-    exact hs
+    rwa [hprod, add_assoc, ← hee]
 
 theorem proof (hC : RelChartPoly.Statement) (hO : RelOneStep.Statement) : RelSectionsLarge.Statement := by
   classical
@@ -403,8 +401,7 @@ theorem exists_chart_factor (N : ℕ) (μ : (Σ k, ι k) → ℕ) (c : ∀ k, ι
     split_ifs with h
     · have hp : N ≤ μ p := by
         have := hc p.1
-        rw [h] at this
-        exact this
+        rwa [h] at this
       omega
     · omega
   refine ⟨fun p => μ p - if c p.1 = p.2 then N else 0, fun k => ?_, fun z => ?_⟩
@@ -423,8 +420,7 @@ theorem comp_mul (R : Type*) [CommRing R] {d : K → ℕ} (m : K → ℕ) {G : M
       if d ≤ m then weightedHomogeneousComponent blockWeight (m - d) A * G else 0 := by
   have h := DirectSum.coe_decompose_mul_of_right_mem
     (𝒜 := weightedHomogeneousSubmodule R (blockWeight (ι := ι))) (a := A) m hG
-  rw [← decompose'_apply R blockWeight, ← decompose'_apply R blockWeight]
-  exact h
+  rwa [← decompose'_apply R blockWeight, ← decompose'_apply R blockWeight]
 
 def KilledAt (R : Subalgebra ℤ Ω) (y : (Σ k, ι k) → Ω) (c0 : ∀ k, ι k) (k0 : K) (c : ∀ k, ι k) (d : K → ℕ)
     (N : ℕ) (v : Ω) : Prop :=

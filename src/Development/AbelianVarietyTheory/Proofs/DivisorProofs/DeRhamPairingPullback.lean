@@ -208,8 +208,7 @@ theorem exists_of_pull1_eq (h₁ : IsMor κ₁ s₁ κ' s' σ₁ p₁) (h₂ : I
       G T' - φ.φ (G T) = pv h₁ f φ - (pv h₂ g φ + algebraMap R' T'.B r * pv h₂ b φ) := by
   have e' : H1.mk (O κ' s') (h₁.coef.pullbackOneCocycle f) =
       H1.mk (O κ' s') (h₂.coef.pullbackOneCocycle g + r • h₂.coef.pullbackOneCocycle b) := by
-    rw [map_add (f := _), map_smul]
-    exact e
+    rwa [map_add (f := _), map_smul]
   obtain ⟨G, hG⟩ := H1.mk_eq_mk.1 e'
   refine ⟨G, fun T T' φ ↦ ?_⟩
   rw [← Algebra.smul_def]
@@ -568,8 +567,7 @@ theorem chern_eq_sum_cup_form : GlobalTheory.Published.AbelianDeRham → ∀ (K 
       Form.cl _ w = ((c : primDR A) : FirstDeRham (A.hom ≫ 𝟙 (Sp K))) := fun c ↦ by
     have hc := c.2
     change ((c : primDR A) : FirstDeRham (A.hom ≫ 𝟙 (Sp K))) ∈ F1 _ at hc
-    rw [hodgeFiltration_eq_range] at hc
-    exact hc
+    rwa [hodgeFiltration_eq_range] at hc
   choose form hform using hform
   have hanti : ∀ u v : FirstDeRham (A.hom ≫ 𝟙 (Sp K)),
       cup (O (dp0 K) (A.hom ≫ 𝟙 (Sp K))) u v = -cup (O (dp0 K) (A.hom ≫ 𝟙 (Sp K))) v u := fun u v ↦ by
@@ -747,8 +745,7 @@ theorem le_preimage_of_red {B : Type} [CommRing B] {X : Scheme.{0}} (f : DualNum
   intro p _
   obtain ⟨q, rfl⟩ := spMap_fst_surjective f hf p
   have := h (Set.mem_univ q)
-  rw [← e] at this
-  exact this
+  rwa [← e] at this
 
 theorem ev_eq_of_triv {R : Type} [CommRing R] {X : Scheme.{0}} {s : X ⟶ Sp R} (ω : Form s)
     {T₁ T₂ T : Thick (dp0 R) s} (a : T₁ ⟶ T₂) (ψ : T₂ ⟶ T) (φ : T₁ ⟶ T) (h₁ : T₁.J = ⊥) (h₂ : T₂.J = ⊥)
@@ -960,7 +957,7 @@ theorem βa_step {I : Type} {U : I → A.left.Opens} {β : ∀ P Q : GPt A, P.Ho
       β P T (φ.comp ψ) = ψ.ρ (β P Q φ) + β Q T ψ) (a : Idx U) {P Q : GPt A} (h : P.In a.1.2.1)
     (φ : P.Hom Q) : βa β a Q = φ.ρ (βa β a P) + β P Q φ := by
   have hQ : Q.In a.1.2.1 := h.map φ
-  simp only [βa, dif_pos h, dif_pos hQ]
+  simp only [βa, dite_eq_left h, dite_eq_left hQ]
   rw [← affVal_comp a.1.2 h φ]
   exact hβ _ P Q _ φ ⟨a.1.1, (aff_in a.1.2).mono a.2⟩
 
@@ -997,7 +994,7 @@ theorem exists_coboundary_snd_tr : ∀ (K : Type) [Field K] (A : Over (Sp K)) [G
     have e2 := hψ h.choose a P hb ha
     change βa β h.choose (P.tr v) - βa β a (P.tr v) = valR (P.trx v) _ (φab h.choose a) at e1
     rw [← e1, TrivSqZeroExt.snd_sub] at e2
-    simp only [G, dif_pos h]
+    simp only [G, dite_eq_left h]
     linear_combination e2
   refine ⟨G, fun i V hVU P Q φ hP ↦ ?_⟩
   let a : Idx U := ⟨(i, V), hVU⟩
@@ -1065,8 +1062,7 @@ private theorem snd_signed_sum_add {B : Type} [CommRing B] (a b c d a' b' c' d' 
 theorem prism_add' {I : Type} {U : I → A.left.Opens} (z z' : C2 (OSmall U)) {v : epsR K ⟶ A}
     (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :
     prism (z + z') hv φ h = prism z hv φ h + prism z' hv φ h := by
-  simp only [prism, ev2, Pi.add_apply]
-  exact snd_signed_sum_add _ _ _ _ _ _ _ _
+  simpa only [prism, ev2, Pi.add_apply] using snd_signed_sum_add _ _ _ _ _ _ _ _
 
 private theorem snd_signed_sum_zero (B : Type) [CommRing B] :
     TrivSqZeroExt.snd ((0 : DualNumber B) - 0 - (0 - 0)) = 0 := by
@@ -1075,8 +1071,7 @@ private theorem snd_signed_sum_zero (B : Type) [CommRing B] :
 theorem prism_zero' {I : Type} {U : I → A.left.Opens} {v : epsR K ⟶ A}
     (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :
     prism (0 : C2 (OSmall U)) hv φ h = 0 := by
-  simp only [prism, ev2, Pi.zero_apply]
-  exact snd_signed_sum_zero _
+  simpa only [prism, ev2, Pi.zero_apply] using snd_signed_sum_zero _
 
 private theorem snd_signed_sum_sub {B : Type} [CommRing B] (a b c d a' b' c' d' : DualNumber B) :
     TrivSqZeroExt.snd (a - a' - (b - b') - (c - c' - (d - d'))) =
@@ -1087,8 +1082,7 @@ private theorem snd_signed_sum_sub {B : Type} [CommRing B] (a b c d a' b' c' d' 
 theorem prism_sub' {I : Type} {U : I → A.left.Opens} (z z' : C2 (OSmall U)) {v : epsR K ⟶ A}
     (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :
     prism (z - z') hv φ h = prism z hv φ h - prism z' hv φ h := by
-  simp only [prism, ev2, Pi.sub_apply]
-  exact snd_signed_sum_sub _ _ _ _ _ _ _ _
+  simpa only [prism, ev2, Pi.sub_apply] using snd_signed_sum_sub _ _ _ _ _ _ _ _
 
 theorem prism_sum' {I J : Type} {U : I → A.left.Opens} (t : Finset J) (z : J → C2 (OSmall U))
     {v : epsR K ⟶ A} (hv : IsTangent v) {P Q : GPt A} (φ : P.Hom Q) (h : ∃ i, P.In (U i)) :
@@ -1150,7 +1144,7 @@ theorem prismContractionTwoCochain_coboundary (β : C1 (OSmall U)) {v : epsR K �
   have ht : ∀ x : DualNumber Q.B, (Q.tan hv).φ x = x := fun _ ↦ rfl
   have hd : ∀ x : DualNumber P.B, φ.dual.φ x = dualAlg φ.ρ x := fun _ ↦ rfl
   rw [prism, k1, k2, k3, k4, triv_sec φ, triv_tan φ hv]
-  simp only [hs, ht, hd, cochainTangentDiffCoeff, dif_pos h, dif_pos hQ]
+  simp only [hs, ht, hd, cochainTangentDiffCoeff, dite_eq_left h, dite_eq_left hQ]
   exact snd_d1_lemma φ.ρ _ _ _ _ _ _ _ _ _
 
 private theorem ev2_pullback_cupZ (c : Z1 (O (dp0 K) (A.hom ≫ 𝟙 (Sp K)))) (ω : Form (A.hom ≫ 𝟙 (Sp K)))
@@ -1316,13 +1310,13 @@ theorem isRep_chern_tanVal : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj 
     (by
       intro P Q T φ ψ hP
       have hQ : ∃ i, Q.In (L.U i) := hP.imp fun _ e ↦ e.map φ
-      simp only [dif_pos hP, dif_pos hQ]
+      simp only [dite_eq_left hP, dite_eq_left hQ]
       exact triv_coc_lemma_7 c ω β ℓ (fun T T' T'' φ ψ ↦ (hℓ T T' T'' φ ψ).1) hβ P Q T φ ψ hP) v hv
   refine ⟨fun j P ↦ N (τ j) P - ∑ k, cupContractionCorrectionTerm (c k) (ω k) hv P - G3 P + cochainTangentDiffCoeff β hv P, ?_, ?_⟩
   · intro j P Q φ hP
     have hP' : P.In (L.U (τ j)) := hP.mono (hV j)
     have h3 := hG3 (τ j) (V j) (hV j) P Q φ hP
-    simp only [dif_pos (show ∃ i, (P.tr v).In (L.U i) from ⟨τ j, hP'.tr hv⟩)] at h3
+    simp only [dite_eq_left (show ∃ i, (P.tr v).In (L.U i) from ⟨τ j, hP'.tr hv⟩)] at h3
     exact prism_eq_of_pullback_cup_sub_d1 hA c ω β ℓ.1 hℓ1 hv (N (τ j)) G3 φ ⟨τ j, hP'⟩ (hN (τ j) P Q φ hP') h3
   · intro j j' P hj hj'
     have := hNd (τ j) (τ j') P (hj.mono (hV j)) (hj'.mono (hV j'))
@@ -1398,9 +1392,9 @@ theorem exists_isRep_eps {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] {A' :
       hP.mono (j.2.trans inf_le_left)
     refine ⟨fun j P ↦ if hP : P.In (W j.1.1) then (liftVal h ω'.1 (hl _ P hP)).snd + G P else 0,
       fun j P Q φ hP ↦ ?_, fun j j' P hj hj' ↦ ?_⟩
-    · simp only [dif_pos (hin j P hP), dif_pos (hin j Q (hP.map φ))]
+    · simp only [dite_eq_left (hin j P hP), dite_eq_left (hin j Q (hP.map φ))]
       exact hG P Q φ _ _ _ _ (hn _ P Q φ (hin j P hP))
-    · simp only [dif_pos (hin j P hj), dif_pos (hin j' P hj')]
+    · simp only [dite_eq_left (hin j P hj), dite_eq_left (hin j' P hj')]
       have hU : P.In (i ⁻¹ᵁ j.1.2.1.1) := hj.mono (j.2.trans inf_le_right)
       rw [add_sub_add_right_eq_sub, ← TrivSqZeroExt.snd_sub]
       exact GlobalTheory.T.firstOrderDeformation_form_lift_values_sub K A A' i h hA ω' _ j.1.2.1.2 P hU _ _ _ _ n u _ hu

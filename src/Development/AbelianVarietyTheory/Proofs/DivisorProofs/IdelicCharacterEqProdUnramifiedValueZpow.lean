@@ -64,8 +64,7 @@ theorem locK_eq_val_zpow {L : Type} [Field L] [NumberField L] (χ : HChar L) (Q 
       ← WithZero.exp_add]
     simp
   have h4 := hu _ h3
-  rw [map_mul, map_zpow, zpow_neg, mul_inv_eq_one] at h4
-  exact h4
+  rwa [map_mul, map_zpow, zpow_neg, mul_inv_eq_one] at h4
 
 theorem char_eq_prod_val_zpow : ∀ (D : D7) (ι : (Af D.host.F ⊗[D.host.F] D.host.E) ≃+* FiniteAdeleRing (𝓞 D.host.E) D.host.E), (∀ x : D.host.E, ι ((1 : Af D.host.F) ⊗ₜ[D.host.F] x) = algebraMap D.host.E (FiniteAdeleRing (𝓞 D.host.E) D.host.E) x) → (∀ y, y ∈ intAE D ↔ ∀ P : HeightOneSpectrum (𝓞 D.host.E), Valued.v (ι y P) ≤ 1) → (∀ P : HeightOneSpectrum (𝓞 D.host.E), ∃ e : AE D, IsPlIdem D e P ∧ infPart D e = 0 ∧ ι (finPart D e) P = 1 ∧ ∀ P' : HeightOneSpectrum (𝓞 D.host.E), P' ≠ P → ι (finPart D e) P' = 0) → ∀ (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E), ChrEq c χ → ∀ x : (AE D)ˣ, infPart D (x : AE D) = 1 → ∀ (S : Finset (HeightOneSpectrum (𝓞 D.host.E))) (m : HeightOneSpectrum (𝓞 D.host.E) → ℤ), (∀ Q ∈ S, χ.UnrAt Q ∧ Valued.v (ι (finPart D (x : AE D)) Q) = WithZero.exp (-m Q)) → (∀ Q, Q ∉ S → ι (finPart D (x : AE D)) Q = 1) → ((c x : Circle) : ℂ) = ((∏ Q ∈ S, χ.val Q ^ m Q : ℂˣ) : ℂ) := by
   classical
@@ -83,15 +82,14 @@ theorem char_eq_prod_val_zpow : ∀ (D : D7) (ι : (Af D.host.F ⊗[D.host.F] D.
   choose k hk using fun P => GlobalTheory.adicCompletion_exists_unit_approx D.host.E N hN P _ (hx0 P)
   have key := hprod x hx (S ∪ S') (fun P => if P ∈ S then k P else 1) (fun P _ => by
     by_cases hP : P ∈ S
-    · simp only [if_pos hP]
-      exact ⟨(hk P).1, (hk P).2.1⟩
-    · simp only [if_neg hP, hoff P hP, Units.val_one, map_one, sub_self, map_zero, zero_le, and_self])
+    · simpa only [ite_eq_left hP] using ⟨(hk P).1, (hk P).2.1⟩
+    · simp only [ite_eq_right hP, hoff P hP, Units.val_one, map_one, sub_self, map_zero, zero_le, and_self])
     (fun P hP => hS' P fun h => hP (Finset.mem_union_right _ h))
   rw [key, Units.coe_prod, ← Finset.prod_subset (Finset.subset_union_left (s₁ := S) (s₂ := S'))]
   · refine Finset.prod_congr rfl fun P hP => ?_
-    simp only [if_pos hP]
+    simp only [ite_eq_left hP]
     rw [locK_eq_val_zpow χ P (hS P hP).1 (k P) (m P) ((hk P).1.symm.trans (hS P hP).2)]
   · intro P _ hP
-    simp only [if_neg hP, map_one, Units.val_one]
+    simp only [ite_eq_right hP, map_one, Units.val_one]
 
 end GlobalTheory.CharUnramVal

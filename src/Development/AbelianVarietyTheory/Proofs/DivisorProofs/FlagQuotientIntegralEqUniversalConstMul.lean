@@ -107,7 +107,6 @@ theorem exists_invariant_test : ∀ {E : Type} [Field E] [NumberField E] [IsCMFi
   rw [Ne, withDensity_apply_eq_zero' hmeas]
   have hset : {z | ENNReal.ofReal (densF X (baseFr X) z) ≠ 0} ∩ A = A := by
     refine Set.inter_eq_right.mpr fun z hz => ?_
-    show ENNReal.ofReal (densF X (baseFr X) z) ≠ 0
     exact (ENNReal.ofReal_pos.mpr (OntoB.densF_pos (hball hz))).ne'
   rw [hset, Measure.restrict_apply hA, Set.inter_eq_left.mpr hball]
   exact (Metric.measure_closedBall_pos volume 0 hε).ne'
@@ -207,8 +206,7 @@ theorem isFundamentalDomain_satFrames : ∀ {E : Type} [Field E] [NumberField E]
     obtain ⟨s, hs⟩ := GlobalTheory.PeterssonCompare.exists_translation X (X.Γ.inv_mem hγ)
     refine ⟨⟨s, (hΛ s).2 ⟨γ⁻¹, X.Γ.inv_mem hγ, hs⟩⟩, ?_⟩
     show frameOf X (s * g) ∈ S
-    rw [← GlobalTheory.PeterssonCompare.lact_frameOf X hs]
-    exact hm
+    rwa [← GlobalTheory.PeterssonCompare.lact_frameOf X hs]
   ·
     intro s t hst
     refine Disjoint.aedisjoint (Set.disjoint_left.2 fun g hgs hgt => hst ?_)
@@ -355,8 +353,7 @@ theorem trF_mem_dom {E' : Type} [Field E'] [NumberField E'] [IsCMField E'] (X : 
     rw [hy', Matrix.det_mul, h0, mul_zero]
   · have := (hy τ).2 i
     unfold dmin at this ⊢
-    rw [hg, ← hp]
-    exact this
+    rwa [hg, ← hp]
 
 theorem haarChart_unique {E' : Type} [Field E'] [NumberField E'] [IsCMField E'] (X : Data E r) (X' : Data E' r)
     (hp : X.p0 = X'.p0) (hn : X.Ψ.card = X'.Ψ.card) {c c' : ℝ≥0∞} (hc : HaarChart X c) (hc' : HaarChart X' c') :

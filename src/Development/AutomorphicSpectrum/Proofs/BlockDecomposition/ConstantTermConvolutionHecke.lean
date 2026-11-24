@@ -194,13 +194,11 @@ theorem hint_conv {H : Type} [CommGroup H] (A L L' : Subgroup H) (hL : L ≤ A) 
     rw [hint_const_mul]
   · intro Y' l hl Y
     show p Y' * q (Y * l * (σ Y')⁻¹) = p Y' * q (Y * (σ Y')⁻¹)
-    rw [show Y * l * (σ Y')⁻¹ = Y * (σ Y')⁻¹ * l by rw [mul_right_comm]]
-    rw [sq hl]
+    rw [show Y * l * (σ Y')⁻¹ = Y * (σ Y')⁻¹ * l by rw [mul_right_comm], sq hl]
   · intro Y l hl Y'
     show p (Y' * l) * q (Y * (σ (Y' * l))⁻¹) = p Y' * q (Y * (σ Y')⁻¹)
     rw [sp hl, map_mul, mul_inv, ← mul_assoc, sq (inv_mem (hσ l hl))]
-  · intro Y Y' hu
-    exact hT Y Y' (left_ne_zero_of_mul hu) (right_ne_zero_of_mul hu)
+  · exact fun Y Y' hu => hT Y Y' (left_ne_zero_of_mul hu) (right_ne_zero_of_mul hu)
 
 theorem finite_out {G H : Type} [Group G] [Group H] [TopologicalSpace G] [IsTopologicalGroup G]
     (L : Subgroup H) (K' : Subgroup G) (ho : IsOpen (K' : Set G)) (θ : H → G)
@@ -214,7 +212,7 @@ theorem finite_out {G H : Type} [Group G] [Group H] [TopologicalSpace G] [IsTopo
   refine ⟨hfin.toFinset.image pick, fun z hz => ?_⟩
   refine Finset.mem_image.2 ⟨((θ z : G) : G ⧸ K'), hfin.mem_toFinset.2 ⟨_, hz, rfl⟩, ?_⟩
   have hx : ∃ z', θ z' ∈ C ∧ ((θ z' : G) : G ⧸ K') = ((θ z : G) : G ⧸ K') := ⟨z, hz, rfl⟩
-  simp only [pick, dif_pos hx]
+  simp only [pick, dite_eq_left hx]
   exact QuotientGroup.eq.2 (hθ _ _ (QuotientGroup.eq.1 hx.choose_spec.2))
 
 end Generic
@@ -278,8 +276,7 @@ theorem theta_sep (h : a + b = n) (w : Pl E) (K' : Subgroup (GLw n w)) (m : GLw 
   have hb : blk h w m (Multiplicative.toAdd z') =
       blk h w m (Multiplicative.toAdd z) * blk h w 1 (Multiplicative.toAdd (z⁻¹ * z')) := by
     rw [← GlobalTheory.CompanionTheory.DiagAvg.blk_toAdd_mul, mul_inv_cancel_left]
-  rw [hb, inv_mul_cancel_left] at hz
-  exact hz
+  rwa [hb, inv_mul_cancel_left] at hz
 
 theorem levi_compact (h : a + b = n) (w : Pl E) (C : Set (GLw n w)) (hC : IsCompact C) :
     ∃ D : Set (GLw a w × GLw b w), IsCompact D ∧ ∀ m X, blk h w m X ∈ C → m ∈ D := by
@@ -429,8 +426,7 @@ theorem Gf_conv (h : a + b = n) (w : Pl E) (K' : Subgroup (GLw n w)) (hKo : IsOp
     intro l hl
     rw [mem_uLev, unip_conj]
     have : blk h w 1 (Multiplicative.toAdd l) ∈ K₂ := hl
-    have h3 := this.2
-    simpa [MulAut.conj_apply] using h3
+    simpa [MulAut.conj_apply] using this.2
   obtain ⟨T, hT⟩ := finite_out (uLev h w K') K' hKo (fun Y : NM a b w => blk h w m (Multiplicative.toAdd Y))
     (theta_sep h w K' m) (({x} : Set (GLw n w)) * (tsupport f₁ * tsupport f₂) * {z⁻¹})
     ((isCompact_singleton.mul (IsCompact.mul c₁ c₂)).mul isCompact_singleton)

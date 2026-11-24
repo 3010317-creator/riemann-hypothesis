@@ -231,9 +231,7 @@ theorem taylor_tsum (D : D7) {N N' : ℕ} (c : Mono D N N' → ℂ)
   have hcont : Continuous (fun z => ∑' α, c α * mono D α (L z)) :=
     hd.continuous.comp L.continuous
   have hne : (fun z => ∑' α, c α * mono D α (L z)) ≠ 0 := by
-    intro h
-    refine h0 (funext fun w => ?_)
-    exact congrFun h fun k => w k.1 k.2.1 k.2.2
+    exact fun h => h0 (funext fun w => (congrFun h fun k => w k.1 k.2.1 k.2.2))
   simp only [hm] at han' hcont hne ⊢
   refine coeff_taylor_of_hasSum _ han' ?_ α (Nat.lt_succ_self _)
   filter_upwards [eventually_summable_of_ne_zero hcont hne] with z hz

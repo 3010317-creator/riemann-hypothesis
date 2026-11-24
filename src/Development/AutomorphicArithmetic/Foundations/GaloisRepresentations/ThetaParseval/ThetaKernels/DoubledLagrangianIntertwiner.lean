@@ -77,8 +77,7 @@ theorem pair_partnerF_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hmemA : a.1 ∈ Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (AF F) σ JT := by
     show Formalism.UG.cT _ a.1.val * _ * a.1.val = _
     simp only [Formalism.UG.cT, hmap]
-    rw [Matrix.mul_assoc]
-    exact ha'
+    rwa [Matrix.mul_assoc]
   obtain ⟨cR, hcR⟩ : ∃ f, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AF F) σ = f := ⟨_, rfl⟩
   have hb : (b.1.val)ᵀ * incM F JB * (b.1.val).map cR = incM F JB := by
     rw [← hcR, hmap]; exact b.2
@@ -106,8 +105,7 @@ theorem pair_partnerF_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hmemB : gU ∈ Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (AF F) σ JS := by
     show Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AF F) σ) Biᵀ * incM F JS * Biᵀ = incM F JS
     rw [hcR]
-    simp only [Formalism.UG.cT, Matrix.transpose_map, Matrix.transpose_transpose]
-    exact hcore
+    simpa only [Formalism.UG.cT, Matrix.transpose_map, Matrix.transpose_transpose] using hcore
   refine ⟨⟨gU, hmemB⟩, ⟨a.1, hmemA⟩, rfl, ?_⟩
   show Biᵀ = ((b⁻¹).1.val)ᵀ
   rw [hBidef]

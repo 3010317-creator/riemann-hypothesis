@@ -159,8 +159,7 @@ theorem exists_covolOne (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (n : ℕ) {d
       rw [hadd]
       intro p _
       have := hk p
-      rw [Pi.add_apply, hr, hrk, map_neg, neg_add_eq_sub]
-      exact this
+      rwa [Pi.add_apply, hr, hrk, map_neg, neg_add_eq_sub]
     · rintro ⟨_, r', rfl⟩ h
       change e (ratTup (AF F) r' + x) ∈ Set.univ.pi fun _ => fundamentalSet F at h
       rw [hadd] at h
@@ -199,8 +198,7 @@ theorem split_coord' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx
   obtain ⟨f1, f3⟩ := coordMapN σ hCM (Af F) b lf hlf n M
   haveI hBi := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.2.1 n M
   haveI hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
-  haveI : SigmaFinite l := by
-    exact Measure.IsAddHaarMeasure.sigmaFinite l
+  haveI : SigmaFinite l := Measure.IsAddHaarMeasure.sigmaFinite l
   haveI : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
   let eI := (i1.homeomorph).toMeasurableEquiv
   let eF := (f1.homeomorph).toMeasurableEquiv
@@ -260,8 +258,7 @@ theorem split_coord (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx 
     (GroundTheory.Global.borelSpace_infiniteAdeleRing F).measurable_eq
   obtain ⟨l, hl, hH, D, hD, hD1⟩ := @std_transfer F _ _ laminf hinf (GroundTheory.Global.measurableSpace_infiniteAdeleRing F) hm
   have h := split_coord' σ hCM M n dx b e he hB hdxc l hH D hD hD1 lf hlf h1
-  rw [coordW_congr hm l laminf hl b n M] at h
-  exact h
+  rwa [coordW_congr hm l laminf hl b n M] at h
 
 theorem euler_coord (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx : Measure (Fin n → Fin M → AF F ⊗[F] E))
     {d : ℕ} (b : Module.Basis (Fin d) F E)
@@ -523,8 +520,8 @@ theorem pureL_act {d M n : ℕ} (b : Module.Basis (Fin d) F E) (σ : E →ₐ[F]
       rw [← Finset.prod_subset hSS fun v hv hvS => ?_]
       · refine Finset.prod_congr rfl fun v hv => ?_
         rw [hfin]
-        simp only [if_pos hv]
-      · simp only [if_neg hvS]
+        simp only [ite_eq_left hv]
+      · simp only [ite_eq_right hvS]
         rw [Set.indicator_of_mem (hA v (Finset.mem_sdiff.2 ⟨hv, hvS⟩))]
         rfl
     · push Not at hA
@@ -535,7 +532,7 @@ theorem pureL_act {d M n : ℕ} (b : Module.Basis (Fin d) F E) (σ : E →ₐ[F]
         rw [hfin] at this
         exact hvl this
       rw [Set.indicator_of_notMem hY, Finset.prod_eq_zero (Finset.mem_sdiff.1 hv).1
-        (by simp only [if_neg (Finset.mem_sdiff.1 hv).2]; rw [Set.indicator_of_notMem hvl])]
+        (by simp only [ite_eq_right (Finset.mem_sdiff.1 hv).2]; rw [Set.indicator_of_notMem hvl])]
       simp
   · have hY : actW (AF F) σ Jp h X ∉ intOff b S := by
       intro hm
@@ -641,9 +638,9 @@ theorem inner_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   have mv : ∀ v, Measurable (fv v) := fun v => by
     rw [hfv]
     by_cases hv : v ∈ S
-    · simp only [hv, if_true]
+    · simp only [hv, ite_true]
       exact (hφ v).comp (measurable_actW σ hCM _ (hLv v) _ _)
-    · simp only [hv, if_false]
+    · simp only [hv, ite_false]
       exact (measurable_one.indicator
         (GlobalTheory.CompanionTheory.Hypotheses₂.OneV.DxEuler.measurableSet_latV σ hCM b _ _ v)).comp
         (measurable_actW σ hCM _ (hLv v) _ _)
@@ -665,11 +662,11 @@ theorem inner_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   have i2 : ∀ v, ∫⁻ Y, ∫⁻ a, fv v (consA a Y) ∂(coordW (Fv F v) b (lam v) 1 n) ∂(m v) =
       (if v ∈ S then Ψ v else G v) (actW (Fv F v) σ (hypOne J) (p v h) (e0 _ M)) := fun v => by
     by_cases hv : v ∈ S
-    · rw [if_pos hv, hΨ v (p v h), hfv]
-      simp only [hv, if_true]
+    · rw [ite_eq_left hv, hΨ v (p v h), hfv]
+      simp only [hv, ite_true]
       rfl
-    · rw [if_neg hv, hG v (p v h), hfv]
-      simp only [hv, if_false]
+    · rw [ite_eq_right hv, hG v (p v h), hfv]
+      simp only [hv, ite_false]
       rfl
   rw [i1, Finset.prod_congr rfl (fun v _ => i2 v)]
   have hmemP : actW (AF F) σ (hypOne J) h (e0 _ M) ∈
@@ -1013,14 +1010,12 @@ theorem hyp_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       rw [e1]
       refine le_trans ?_ (mul_meas_ge_le_lintegral (hGm v) (ENNReal.ofReal (τ v)))
       gcongr
-      intro y hy
-      exact (hGprim v hv y hy).ge
+      exact fun y hy => (hGprim v hv y hy).ge
     by_cases hpt : m₁ v (hermOf (Fv F v) σ 0 h₂) (primV σ J b v) = ⊤
     · rw [hp, hpt]
       simpa using hM0 v
     · have h2 : ENNReal.ofReal (τ v * p v) ≤ ENNReal.ofReal (Mv v) := by
-        rw [ENNReal.ofReal_mul (hτ0 v), hp, ENNReal.ofReal_toReal hpt, ← hMv']
-        exact h1
+        rwa [ENNReal.ofReal_mul (hτ0 v), hp, ENNReal.ofReal_toReal hpt, ← hMv']
       exact (ENNReal.ofReal_le_ofReal_iff (hM0 v)).1 h2
 
   have hpure := hS₂ S hS2 φinf φ Ψinf Ψ G hφinf hφ hΨinf1 hΨ1 hG1

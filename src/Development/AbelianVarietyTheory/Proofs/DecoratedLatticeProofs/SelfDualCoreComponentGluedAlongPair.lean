@@ -113,8 +113,7 @@ theorem exists_pair_of_line {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
     · refine Submodule.fg_of_fg_map_injective (inX k n 1) (fun x y h => ?_) (hΛ.fg.of_le (Submodule.map_comap_le _ _))
       funext j
       exact congrFun h (Sum.inl j)
-    · intro s hs hli
-      exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    · exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
   have hfull : L.IsFullLattice k := by
     refine { toIsLattice := hlat, span_eq_top := ?_ }
     rw [eq_top_iff]
@@ -140,8 +139,7 @@ theorem exists_pair_of_line {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
   have hglue : IsGlue L (e ∘ Sum.inl) := by
     refine (isGlue_iff q).2 ⟨hfull, fun h => hqi ?_, hqe⟩
     have h3 : (Sum.elim 0 (fun _ => e (Sum.inr 0)) : n ⊕ Fin 1 → k) ∈ Λ := by
-      rw [← Λ.add_mem_iff_right (show inX k n 1 (e ∘ Sum.inl) ∈ Λ from h), ← hsplit]
-      exact he
+      rwa [← Λ.add_mem_iff_right (show inX k n 1 (e ∘ Sum.inl) ∈ Λ from h), ← hsplit]
     have h4 : q.inv = m * e (Sum.inr 0) := by
       rw [← mul_one q.inv, ← he1, ← mul_assoc, mul_comm q.inv, hq, one_mul]
     rw [h4]

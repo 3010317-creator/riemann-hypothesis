@@ -117,8 +117,7 @@ theorem mem_noncompactPart_iff {𝔭 : Ideal (𝓞 F)} [h𝔭 : 𝔭.IsPrime] {�
     have h1 : InP 𝔭 k (jK (ι π₀) ^ k) := by
       rw [← map_pow]
       exact inP_jK (Ideal.pow_mem_pow (Ideal.mem_map_of_mem _ hu.mem) k)
-    have h2 := h1.mul (show InP 𝔭 0 s from hs)
-    simpa using h2
+    simpa using h1.mul (show InP 𝔭 0 s from hs)
 
 theorem exists_norm (hF : IsFixF K F) (u : 𝓞 K) : ∃ n₀ : 𝓞 F, ι n₀ = u * conjO K u := by
   have hs : star (jK (u * conjO K u)) = jK (u * conjO K u) := by
@@ -150,8 +149,7 @@ theorem isLocUnif (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsF
     obtain ⟨z, hz⟩ := exists_add_conj_eq hK hF (1 : 𝓞 F)
     refine ⟨jK z, jK_mem_SP _, ?_⟩
     have := congrArg jK hz
-    rw [map_add (f := _), map_one, map_one] at this
-    exact this
+    rwa [map_add (f := _), map_one, map_one] at this
   case skew =>
     obtain ⟨P, hP, -⟩ := exists_maximal_over hK hF h𝔭
     obtain ⟨θ, hθ⟩ := exists_sub_conjO_notMem hK hP

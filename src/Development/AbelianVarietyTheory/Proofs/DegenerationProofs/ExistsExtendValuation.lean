@@ -156,7 +156,7 @@ private theorem absSumAt_algebraMap (u a : C) :
     rcases n with _ | n <;> simp [PowerSeries.coeff_C]
   refine ⟨?_, ?_⟩
   · refine summable_of_ne_finset_zero (s := {0}) fun n hn => ?_
-    rw [congrFun h n, if_neg (by simpa using hn), norm_zero]
+    rw [congrFun h n, ite_eq_right (by simpa using hn), norm_zero]
   · rw [h]
     simp
 
@@ -249,8 +249,7 @@ private theorem finite_setOf_bilin_self_le_of_posDef {X : Type} [AddCommGroup X]
       have := hn i
       simp only [algebraMap_int_eq, eq_intCast, zsmul_eq_mul] at this
       have hr : b.repr y i = n i := by rw [← b.equivFun_apply, LinearEquiv.apply_symm_apply]
-      simp only [φ, Pi.smul_apply, smul_eq_mul, hr]
-      exact this
+      simpa only [φ, Pi.smul_apply, smul_eq_mul, hr] using this
     have hy0 : y ≠ 0 := by
       intro h
       apply hv
@@ -275,8 +274,7 @@ private theorem finite_setOf_bilin_self_le_of_posDef {X : Type} [AddCommGroup X]
     · intro l _ hlk
       rw [hw hlk]
       ring
-    · intro h
-      exact absurd (Finset.mem_univ k) h
+    · exact fun h => absurd (Finset.mem_univ k) h
   have hdpos : ∀ k, 0 < Bq (w k) (w k) := fun k => hqpos _ (w.ne_zero k)
   set A : ℚ := ∑ k, max 1 ((L : ℚ) / Bq (w k) (w k)) with hAdef
   set T : ℚ := ∑ i, A * ∑ k, |w k i| with hTdef
@@ -611,8 +609,8 @@ theorem exists_arcF_over : Laws → BrGtSt → BrWpSt → AllD fun D => ∀ (R :
     have := A.D₀.P.isAb.smooth
     refine ⟨n, ?_, h₂.trans (by
       by_cases h : τ H.rt = A.ρ
-      · rw [if_pos h, if_pos (show f.comp τ H.rt = f A.ρ from congrArg f h)]
-      · rw [if_neg h, if_neg (show ¬ f.comp τ H.rt = f A.ρ from fun e => h (f.injective e))])⟩
+      · rw [ite_eq_left h, ite_eq_left (show f.comp τ H.rt = f A.ρ from congrArg f h)]
+      · rw [ite_eq_right h, ite_eq_right (show ¬ f.comp τ H.rt = f A.ρ from fun e => h (f.injective e))])⟩
     have e : spMap ((algebraMap (FractionRing R) F').comp (algebraMap R _)) =
         spMap f ≫ spMap ((algebraMap (FractionRing R) F).comp (algebraMap R _)) := by
       rw [spMap, spMap, spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ← RingHom.comp_assoc, hf]
@@ -742,8 +740,7 @@ private theorem map_finsum_of_injective' {α M M' : Type*} [AddCommMonoid M] [Ad
       simp only [Function.mem_support, ne_eq]
       exact ⟨fun h1 h2 => h1 (by rw [h2, map_zero]), fun h1 h2 => h1 (hφ (by rw [h2, map_zero]))⟩
     have h' : (Function.support (fun a => φ (g a))).Infinite := by
-      rw [hs]
-      exact h
+      rwa [hs]
     rw [finsum_of_infinite_support h, finsum_of_infinite_support h', map_zero]
 
 private theorem unit_mul_map_finsum {α F F' : Type*} [Field F] [Field F'] (f : F →+* F') (c : F'ˣ) (g : α → F) :
@@ -823,8 +820,7 @@ theorem over_iff {f : F →+* F'} {A : ArcF D R F} {A' : ArcF D R' F'} (h : A.Ov
       obtain ⟨y, rfl⟩ := I.e.surjective y'
       obtain ⟨z, rfl⟩ := I.e.surjective z'
       have h1 := hB a y z
-      rw [hbe, hbe, hact, hact] at h1
-      exact h1
+      rwa [hbe, hbe, hact, hact] at h1
     · intro hB a y z
       rw [hbe, hbe, hact, hact]
       exact hB _ _ _
@@ -886,8 +882,7 @@ theorem aeval_arcTx_eq_zero_of_vanishC : HV → Laws6 → GlobalTheory.LN.UDvrSt
     · show IsAlgebraic ℚ H.rt0
       refine IsIntegral.isAlgebraic (IsIntegral.of_pow (n := 2) two_pos ?_)
       rw [H.sqrt_neg_disc_sq]
-      have hd := isIntegral_algebraMap (R := ℚ) (A := ℂ) (x := -(H.d : ℚ))
-      simpa using hd
+      simpa using isIntegral_algebraMap (R := ℚ) (A := ℂ) (x := -(H.d : ℚ))
   obtain ⟨g, hg⟩ := GlobalTheory.exists_ringHom_complex_of_countable_of_relations F₁
     ![(A₁.I.ζ (m ^ 2) : F₁), A₁.ρ] ![zeta (m ^ 2), H.rt0] halg hC₁
   have hg0 : g (A₁.I.ζ (m ^ 2) : F₁) = zeta (m ^ 2) := by simpa using hg 0
@@ -1307,8 +1302,7 @@ theorem qEq_pow {O : Type} [CommRing O] (N : NumD O) {La : Type} [AddCommGroup L
     (hq : ∀ a b, N.QEq (q a * q b) (q (a + b))) (x : La) (n : ℕ) : N.QEq (q x ^ (n + 1)) (q ((n + 1) • x)) := by
   have E : Equivalence (N.QEq (k := j)) := by
     constructor
-    · intro p
-      exact ⟨0, by simp, by simp⟩
+    · exact fun p => ⟨0, by simp, by simp⟩
     · rintro p p' ⟨z, h, h'⟩
       exact ⟨-z, by rw [h, smul_neg, add_neg_cancel_right], by rw [h', N.io_neg, mul_inv_cancel_right]⟩
     · rintro p p' p'' ⟨z, h, h'⟩ ⟨w, e, e'⟩

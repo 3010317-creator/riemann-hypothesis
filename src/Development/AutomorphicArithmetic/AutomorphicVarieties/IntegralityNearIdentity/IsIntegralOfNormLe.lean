@@ -67,15 +67,13 @@ theorem isIntegral_of_norm_le {l : ℕ} [Fact l.Prime] {z : PadicAlgCl l} (hz : 
   have hc : ∀ n, ‖(minpoly ℚ_[l] z).coeff n‖ ≤ 1 := (spectralValue_le_one_iff hm).1 hv
   have hl : minpoly ℚ_[l] z ∈ Polynomial.lifts (algebraMap ℤ_[l] ℚ_[l]) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hc n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hc n⟩, rfl⟩
   obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl hm
   refine ⟨q, hqm, ?_⟩
   have h0 : Polynomial.aeval z (q.map (algebraMap ℤ_[l] ℚ_[l])) = 0 := by
     rw [hq]
     exact minpoly.aeval _ _
-  rw [Polynomial.aeval_map_algebraMap] at h0
-  exact h0
+  rwa [Polynomial.aeval_map_algebraMap] at h0
 
 end UpperTheory.Reformulated.B.S4
 end -- clump:auto

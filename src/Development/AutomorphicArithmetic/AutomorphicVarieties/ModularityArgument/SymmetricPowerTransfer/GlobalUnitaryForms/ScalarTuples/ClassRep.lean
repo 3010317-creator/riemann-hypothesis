@@ -312,8 +312,7 @@ private theorem isUnit_p (x : Fin 4 → K) : IsUnit (pD Δ x) ↔ nD Δ x ≠ 0 
   · intro h h0
     rw [h0, map_zero] at h
     exact not_isUnit_zero h
-  · intro h
-    exact (IsUnit.mk0 _ h).map _
+  · exact fun h => (IsUnit.mk0 _ h).map _
 
 private theorem ex_mt (x : Fin 4 → K) (h : IsUnit (pD Δ x)) : ∃ g : DX Δ, mt g = pD Δ x := by
   refine ⟨⟨h.unit, (mem_iff Δ _).mpr ?_⟩, ?_⟩
@@ -400,10 +399,8 @@ private theorem loc_open {K : Type} [NontriviallyNormedField K] [CompleteSpace K
     have h4 := hc.tendsto (qD Δ (mt g⁻¹))
     have e : T (qD Δ (mt g⁻¹)) = ![1, 0, 0, 0] := by
       simp only [T, LinearMap.comp_apply, LinearMap.mulRight_apply]
-      rw [pq_mt]
-      rw [show mt g⁻¹ * mt g = 1 by simp [mt], ← p_one Δ, qp]
-    rw [e] at h4
-    exact h4
+      rw [pq_mt, show mt g⁻¹ * mt g = 1 by simp [mt], ← p_one Δ, qp]
+    rwa [e] at h4
   filter_upwards [hT.eventually hpow] with x hx
   obtain ⟨y, ⟨k, hk, hky⟩, hxy⟩ := hx
   refine ⟨k ^ J'.normalCore.index, hpowJ k hk, ?_⟩
@@ -447,7 +444,7 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
   let gv : ∀ v : Pl F, DX (cv v Δ) := fun v => (g : ∀ v : Pl F, DX (cv v Δ)) v
   have hJ : ∀ v ∈ D.Sg, (D.J2v v).relIndex (KD (cv v Δ) (Ov v)) ≠ 0 := by
     intro v hv
-    rw [Dat.J2v, if_pos hv]
+    rw [Dat.J2v, ite_eq_left hv]
     exact (hD.sig v hv).levelTwoFiniteIndex
   obtain ⟨x, hx⟩ := approx D.Sg (fun v => qD (cv v Δ) (mt (gv v)⁻¹))
     (fun v y => ∃ j ∈ D.J2v v, mt j = pD (cv v Δ) y * mt (gv v))
@@ -460,8 +457,7 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
       rw [hj] at h1
       exact isUnit_of_mul_isUnit_left h1
     rw [isUnit_p, n_map] at hu
-    intro h0
-    exact hu (by rw [h0, map_zero])
+    exact fun h0 => hu (by rw [h0, map_zero])
   obtain ⟨γ, hγ⟩ := ex_mt Δ x ((isUnit_p Δ x).mpr hn)
   have hmt : ∀ v, mt ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v) = pD (cv v Δ) (fun i => cv v (x i)) := by
     intro v
@@ -474,8 +470,7 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
       apply Units.ext
       change mt _ * mt _ = mt j
       rw [hmt, hj']
-    rw [e]
-    exact hj
+    rwa [e]
   let uf : ∀ v : Pl F, DX (cv v Δ) := fun v => if v ∈ D.Sg then ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ else 1
   have huf : uf ∈ RP (fun v : Pl F => DX (cv v Δ)) (fun v => KD (cv v Δ) (Ov v)) := by
     change ∀ᶠ v in Filter.cofinite, uf v ∈ KD (cv v Δ) (Ov v)
@@ -485,7 +480,7 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
     have hv2 : ¬ uf v ∈ KD (cv v Δ) (Ov v) := hv
     by_contra hv'
     apply hv2
-    have e : uf v = 1 := if_neg hv'
+    have e : uf v = 1 := ite_eq_right hv'
     rw [e]
     exact (KD (cv v Δ) (Ov v)).one_mem
   refine ⟨γ, ⟨uf, huf⟩, ?_, ?_⟩
@@ -494,15 +489,15 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
     rw [Subgroup.mem_comap]
     change uf v ∈ D.J2v v
     by_cases hv : v ∈ D.Sg
-    · have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := if_pos hv
+    · have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := ite_eq_left hv
       rw [e]
       exact inv_mem (hmem v hv)
-    · have e : uf v = 1 := if_neg hv
+    · have e : uf v = 1 := ite_eq_right hv
       rw [e]
       exact (D.J2v v).one_mem
   · intro v hv
     change (ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v * uf v = 1
-    have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := if_pos hv
+    have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := ite_eq_left hv
     rw [e]
     exact mul_inv_cancel _
 end -- clump:auto
@@ -622,8 +617,7 @@ private theorem det_eq [CharZero K] (g : DX Δ) : (mt g).det = algebraMap K _ (m
   have h1 := congrArg (fun x => (GeneralLinearGroup.det x : Lsq K Δ)) h
   simp only [map_mul, map_inv, mul_right_comm _ (GeneralLinearGroup.det g.1), mul_inv_cancel, one_mul] at h1
   have h2 : star (mt g).det = (mt g).det := by
-    rw [← starRingEnd_apply, RingHom.map_det]
-    exact h1
+    rwa [← starRingEnd_apply, RingHom.map_det]
   have h3 := congrArg QuadraticAlgebra.im h2
   rw [QuadraticAlgebra.im_star] at h3
   ext
@@ -750,8 +744,8 @@ theorem UpperTheory.V.Z.Sym.Glob.classRep :
     · exact split_ex (Ov v) ((map_ne_zero _).2 hΔ) (hD.split v hv) u
     · exact normEx _ _ _ (hD.off v hv) u
   have hidx : D.U2.relIndex (P.box fun v => KD (cv v Δ) (Ov v)) ≠ 0 :=
-    box_idx P D.J2v D.Sg (fun v hv => by rw [Dat.J2v, if_pos hv]; exact (hD.sig v hv).levelTwoFiniteIndex)
-      fun v hv => by rw [Dat.J2v, if_neg hv]
+    box_idx P D.J2v D.Sg (fun v hv => by rw [Dat.J2v, ite_eq_left hv]; exact (hD.sig v hv).levelTwoFiniteIndex)
+      fun v hv => by rw [Dat.J2v, ite_eq_right hv]
   obtain ⟨Y, hY, h⟩ := reps ι N D.U2 _ D.Off hidx (fun g => c fun v => WithZero.log (Valued.v (N g v : Kv v)))
     (fun g g' e => by
       obtain ⟨z, hz, hp, e⟩ := hc _ _ (hae g) (hae g') e

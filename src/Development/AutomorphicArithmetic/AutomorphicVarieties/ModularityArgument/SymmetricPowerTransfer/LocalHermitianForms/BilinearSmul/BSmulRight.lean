@@ -79,12 +79,11 @@ theorem multiple (L : IsLoc O Δ) {I : Type} (t : Finset I) (f : I → Lsq K Δ)
   refine (hdes _).1.2 ⟨?_, ?_⟩
   · obtain ⟨r, hr⟩ := hb (i, false) (Finset.mem_product.2 ⟨hi, Finset.mem_univ _⟩)
     refine ⟨r, ?_⟩
-    simp only [Bool.false_eq_true, if_false] at hr
-    rw [re_smul]
-    exact hr
+    simp only [Bool.false_eq_true, ite_false] at hr
+    rwa [re_smul]
   · obtain ⟨r, hr⟩ := hb (i, true) (Finset.mem_product.2 ⟨hi, Finset.mem_univ _⟩)
     refine ⟨r, ?_⟩
-    simp only [if_true] at hr
+    simp only [ite_true] at hr
     rw [im_smul]
     change algebraMap O K r = (b : O) • ((f i).im * s) at hr
     rw [hr, Algebra.smul_def, Algebra.smul_def]
@@ -192,12 +191,10 @@ private theorem exists_smul_isInt_of_fg (L : IsLoc O Δ) (M : Submodule O (Fin 3
   | mem x hx => exact fun j => hαS (x, j) (Finset.mem_product.2 ⟨Finset.mem_coe.1 hx, Finset.mem_univ _⟩)
   | zero =>
     intro j
-    simp only [Pi.zero_apply, smul_zero]
-    exact isIntegral_zero
+    simpa only [Pi.zero_apply, smul_zero] using isIntegral_zero
   | add x y _ _ hx hy =>
     intro j
-    simp only [Pi.add_apply, smul_add]
-    exact IsIntegral.add (hx j) (hy j)
+    simpa only [Pi.add_apply, smul_add] using IsIntegral.add (hx j) (hy j)
   | smul r x _ hx =>
     intro j
     simp only [Pi.smul_apply]
@@ -295,7 +292,7 @@ theorem step (L : IsLoc O Δ) (M : Submodule O (Fin 3 → Lsq K Δ)) (hfg : M.FG
     rw [B_sub_left, B_sub_left, B_smul_left, B_smul_left, ← B_star y a, ← B_star y b, hya, hyb, star_zero,
       mul_zero, mul_zero, sub_zero, sub_zero]
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have hq : ∀ y ∈ M, B y a = 0 → B y b = 0 → IsInt O (c * B y y) := by
     intro y hy hya hyb
     obtain ⟨r, hr⟩ := step_lemma_3 L (B y y) ((hd y).1 hy y hy) (B_star y y)
@@ -401,10 +398,10 @@ theorem step (L : IsLoc O Δ) (M : Submodule O (Fin 3 → Lsq K Δ)) (hfg : M.FG
     by_cases hjk : j = k
     · subst hjk
       rw [Pi.single_eq_same] at hk
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       linear_combination hk
     · rw [Pi.single_eq_of_ne (Ne.symm hjk)] at hk
-      rw [if_neg hjk]
+      rw [ite_eq_right hjk]
       linear_combination hk
   exact exists_basis_size_reduce_column a b hrel
 
@@ -445,8 +442,7 @@ theorem ortho (L : IsLoc O Δ) (M : Submodule O (Fin 3 → Lsq K Δ)) (hfg : M.F
     exact Finset.sum_congr rfl fun l _ => mul_comm _ _
   simp only [hcoord]
   constructor
-  · intro hx i
-    exact (hd (E i)).1 (hEM i) x hx
+  · exact fun hx i => (hd (E i)).1 (hEM i) x hx
   · intro hx
     have hGG' : G * star G = 1 := mul_eq_one_comm.1 hGG
     have hx' : x = ∑ j, B x (E j) • E j := by

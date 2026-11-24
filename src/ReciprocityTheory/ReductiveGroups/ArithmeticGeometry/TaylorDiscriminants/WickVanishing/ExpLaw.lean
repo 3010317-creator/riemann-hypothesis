@@ -142,10 +142,8 @@ theorem formal_exp_law : ExpLawSt := by
   have L3 : ∀ l : Fin 2, ev (n := 2) ![comp1 ε (pt k d l)] (ℓ i) = pt k d l i := by
     intro l
     have := congrFun (germComp1_germComp1_eq_substitute ℓ ε (pt k (n := 2) d l) hε0 (cc_pt l)) i
-    rw [hLε, germCompOne_identityPoint_left _ (cc_pt l)] at this
-    exact this
-  rw [L1, L2 0, L2 1, L3 0, L3 1] at e2
-  exact e2
+    rwa [hLε, germCompOne_identityPoint_left _ (cc_pt l)] at this
+  rwa [L1, L2 0, L2 1, L3 0, L3 1] at e2
 
 
 open Formalism.FG.SolveVAux in
@@ -179,7 +177,7 @@ theorem dLin_comp1 {d : ℕ} (φ ψ : Pt k 1 d) (hψ : ∀ i, constantCoeff (ψ 
         · have he0 : e = 0 := by
             have : e.degree = 0 := by omega
             exact (Finsupp.degree_eq_zero_iff e).1 this
-          rw [he0, Finsupp.prod_zero_index, coeff_one, if_neg]
+          rw [he0, Finsupp.prod_zero_index, coeff_one, ite_eq_right]
           exact Finsupp.single_ne_zero.2 one_ne_zero
         · obtain ⟨p, rfl⟩ := Formalism.FG.SolveVAux.degree_eq_one e (by omega)
           exact absurd (Finset.mem_coe.2 (Finset.mem_image_of_mem _ (Finset.mem_univ p))) hne
@@ -237,8 +235,7 @@ theorem add_at {d : ℕ} (G : FGLaw k d) (ℓ : Pt k 1 d)
     funext j m
     fin_cases j
     exact ev_X b hb 1 m
-  rw [L1, L2, L3] at e2
-  exact e2
+  rwa [L1, L2, L3] at e2
 
 
 end ReciprocityTheory.ChartRestriction.G.TB.WickVanishing

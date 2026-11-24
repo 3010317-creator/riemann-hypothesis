@@ -101,8 +101,7 @@ theorem ringKrullDim_quot_add_one_le {K : Type*} {ι : K → Type*} {F : Type*} 
   refine ringKrullDim_succ_le_of_surjective (Ideal.Quotient.factor hPQ)
     (Ideal.Quotient.factor_surjective hPQ) (r := Ideal.Quotient.mk P f) ?_ ?_
   · exact mem_nonZeroDivisors_of_ne_zero (by rwa [ne_eq, Ideal.Quotient.eq_zero_iff_mem])
-  · rw [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
-    exact hfQ
+  · rwa [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
 
 theorem le_of_add_one_le_natCast_add_one {x : WithBot ℕ∞} {n : ℕ}
     (h : x + 1 ≤ ((n + 1 : ℕ) : WithBot ℕ∞)) : x ≤ (n : WithBot ℕ∞) := by
@@ -128,10 +127,8 @@ theorem colon_span_singleton_eq_of_not_mem {R : Type*} [CommRing R] {q : Ideal R
   ext x
   rw [Submodule.mem_colon_span_singleton, smul_eq_mul]
   constructor
-  · intro h
-    exact (Ideal.IsPrime.mem_or_mem inferInstance h).resolve_right hs
-  · intro h
-    exact q.mul_mem_right _ h
+  · exact fun h => (Ideal.IsPrime.mem_or_mem inferInstance h).resolve_right hs
+  · exact fun h => q.mul_mem_right _ h
 
 theorem HilbertIncrement.closed : HilbertIncrement.Statement.{u} := by
   intro F _ K _ _ ι _ d q b i hq hdim hd hX
@@ -198,8 +195,7 @@ theorem isWeightedHomogeneous_intWeight_iff {f : MRing ι F} {a : K → ℕ} :
     funext k
     have e1 : ((Finsupp.weight (blockWeight ι) e k : ℕ) : ℤ) = (a k : ℤ) := by
       have := congrFun (h he) k
-      rw [weight_intWeight] at this
-      exact this
+      rwa [weight_intWeight] at this
     exact_mod_cast e1
   · intro h e he
     rw [weight_intWeight, h he]
@@ -208,8 +204,7 @@ theorem ringPiece_natCast (a : K → ℕ) :
     ringPiece (F := F) (ι := ι) (fun k => (a k : ℤ)) =
       weightedHomogeneousSubmodule F (blockWeight ι) a := by
   ext f
-  simp only [ringPiece, mem_weightedHomogeneousSubmodule]
-  exact isWeightedHomogeneous_intWeight_iff
+  simpa only [ringPiece, mem_weightedHomogeneousSubmodule] using isWeightedHomogeneous_intWeight_iff
 
 theorem component_intWeight_mem {J : Ideal (MRing ι F)} (hJ : IsMultiHomogIdeal J)
     {f : MRing ι F} (hf : f ∈ J) (m : K → ℤ) :
@@ -220,22 +215,11 @@ theorem component_intWeight_mem {J : Ideal (MRing ι F)} (hJ : IsMultiHomogIdeal
         weightedHomogeneousComponent (blockWeight ι) (fun k => (m k).toNat) f := by
       ext e
       rw [coeff_weightedHomogeneousComponent, coeff_weightedHomogeneousComponent, weight_intWeight]
-      have hiff : ((fun k => ((Finsupp.weight (blockWeight ι) e k : ℕ) : ℤ)) = m) ↔
-          Finsupp.weight (blockWeight ι) e = fun k => (m k).toNat := by
-        constructor
-        · intro h
-          funext k
-          have e1 : ((Finsupp.weight (blockWeight ι) e k : ℕ) : ℤ) = m k := congrFun h k
-          have := hm k
-          show _ = (m k).toNat
-          omega
-        · intro h
-          funext k
-          have e1 : Finsupp.weight (blockWeight ι) e k = (m k).toNat := congrFun h k
-          have := hm k
-          show ((Finsupp.weight (blockWeight ι) e k : ℕ) : ℤ) = m k
-          omega
-      simp only [hiff]
+      refine if_congr ?_ rfl rfl
+      simp only [funext_iff]
+      refine forall_congr' fun k => ?_
+      have := hm k
+      omega
     rw [e]
     exact hJ f hf _
   · push Not at hm
@@ -284,8 +268,7 @@ theorem isMultigrading_quotPiece [Fintype K] {J : Ideal (MRing ι F)} (hJ : IsMu
       choose! x hx hxv using hex
       have hy : (∑ i ∈ s, x i) ∈ J := by
 
-        rw [← Ideal.Quotient.eq_zero_iff_mem, map_sum]
-        rw [← hsum]
+        rw [← Ideal.Quotient.eq_zero_iff_mem, map_sum, ← hsum]
         refine Finset.sum_congr rfl fun i hi => ?_
         rw [← hxv i hi]
         rfl
@@ -297,8 +280,7 @@ theorem isMultigrading_quotPiece [Fintype K] {J : Ideal (MRing ι F)} (hJ : IsMu
         · rw [weightedHomogeneousComponent_of_mem (hx m hm), ite_eq_left rfl]
         · intro j hj hjm
           rw [weightedHomogeneousComponent_of_mem (hx j hj), ite_eq_right (Ne.symm hjm)]
-        · intro h
-          exact absurd hm h
+        · exact fun h => absurd hm h
       rw [hcs] at hc
       rw [← hxv m hm]
       simpa [Ideal.Quotient.eq_zero_iff_mem] using hc

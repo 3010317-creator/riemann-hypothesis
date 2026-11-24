@@ -127,8 +127,7 @@ theorem splitLocalPlace_up_wittExtendByZero_rankZero {S S₀ T : HSp D} (d : Hyp
   have h1 : d.q0.map p.pr * d.i₀.map p.pr = 1 := by
     have := congrArg (fun M : Matrix (Fin S₀.rank) (Fin S₀.rank) (AE D) => M.map p.π) d.p0_j0
     simp only [Matrix.map_mul] at this
-    rw [Matrix.map_one _ (map_zero _) (map_one _)] at this
-    exact this
+    rwa [Matrix.map_one _ (map_zero _) (map_one _)] at this
   have h2 : F.β = fromCols (d.i₀.map p.pr * F₀.β) 0 := by
     ext r (a | a)
     · simpa using hF r a
@@ -154,8 +153,7 @@ theorem splitLocalPlace_isModel_wittExtendByZero_rankZero (ψ : AddChar (AF D.ho
       ∀ Φ Ψ, (∀ x, Ψ.1 x = Φ.1 (fromCols x 0)) → (fun w => Tm Φ (d.ext0 T w)) = T₀ Ψ := by
   haveI := t2Space k
   have c1 : Continuous fun z : Matrix Z (n ⊕ Fin 0) k => z.toCols₁ := by
-    refine continuous_matrix fun i j => ?_
-    exact continuous_id.matrix_elem i (Sum.inl j)
+    exact continuous_matrix fun i j => continuous_id.matrix_elem i (Sum.inl j)
   have c2 : Continuous fun x : Matrix Z n k => (fromCols x 0 : Matrix Z (n ⊕ Fin 0) k) := by
     refine continuous_matrix fun i j => ?_
     rcases j with j | j
@@ -258,7 +256,7 @@ theorem one_place (hc : c.Is) (hv : v.Is) (G : GLoc v) (j : ℕ) (h : j + 2 * 0 
   have b₁' : flatBF s₁ (T₁ O₁) = U₁ O₁' := hfl O₁ O₁' (by
     have := (GlobalTheory.LocFlat.flat_contr_intIndicator G.k G.S.ψ G.ν G.S.cond G.unitVol (XIx (Fin D.R.k) (Fin D.R.t) (G.s + 1))
       (XIx (Fin D.R.k) (Fin D.R.t) G.s) Unit 0 (0 + 1)).1
-    rw [if_neg (by omega)] at this
+    rw [ite_eq_right (by omega)] at this
     exact this.symm)
   have b₂ := hext Φ₂ Ψ₂ hΨ₂
   have b₂' := hext O₂ O₂' fun x => by
@@ -279,8 +277,7 @@ theorem one_place (hc : c.Is) (hv : v.Is) (G : GLoc v) (j : ℕ) (h : j + 2 * 0 
       exact flCol_one _ _ _ x) hΨ₂ rfl rfl
   rw [a₁, a₂, ← hX₁ O₁ rfl, ← hX₂ O₂ rfl]
   unfold Comm.lst
-  rw [b₁, b₁', b₂, b₂']
-  exact key
+  rwa [b₁, b₁', b₂, b₂']
 
 theorem vac_foldr {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {S T : HSp D} {ι : Type} (pl : ι → Pl D)
     (e : ι → WO S T →₀ ℂ) (he : ∀ i, CombAt (· = pl i) (e i)) (LS LT) (a : ι) (l : List ι) (hl : ∀ i ∈ l, pl i ≠ pl a) (f)

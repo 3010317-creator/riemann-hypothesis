@@ -605,14 +605,7 @@ theorem exists_mul_eq_int {a : 𝓞 E} (ha : a ≠ 0) : ∃ (c : 𝓞 E) (N : �
   exact_mod_cast this
 
 theorem comp_bijective : Function.Bijective (fun s : E →+* ℂ => s.comp (algebraMap (𝓞 E) E)) := by
-  constructor
-  · intro s s' h
-    exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) h
-  · intro s
-    refine ⟨IsFractionRing.lift (K := E) (_root_.LevelTowerAlt.emb_inj s), ?_⟩
-    show (IsFractionRing.lift (K := E) (_root_.LevelTowerAlt.emb_inj s)).comp (algebraMap (𝓞 E) E) = s
-    refine RingHom.ext fun a => ?_
-    exact IsFractionRing.lift_algebraMap (K := E) (_root_.LevelTowerAlt.emb_inj s) a
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.Dict.TangentDim.restrict_bijective E
 
 variable [IsCMField E]
 
@@ -843,7 +836,7 @@ theorem short_vectors : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     omega
   have hv₀ : ∃ v₀ : Λ, v₀ ≠ 0 := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     haveI : Subsingleton Λ := ⟨fun x y => by rw [hcon x, hcon y]⟩
     have h1 := R.rank
     rw [Module.finrank_zero_of_subsingleton] at h1
@@ -1728,17 +1721,7 @@ section Dens
 variable {Ψ : Type} [Fintype Ψ] {j j' n : ℕ}
 
 theorem measurable_ballDens (q : Ψ × Fin j × Fin j' ≃ Fin n) : Measurable (ballDens q) := by
-  have hZ : ∀ τ, Continuous fun t : Fin n → ℂ => ballMat q t τ := fun τ =>
-    continuous_matrix fun a b => continuous_apply _
-  have hdet : ∀ τ, Measurable fun t : Fin n → ℂ =>
-      Real.log (1 - (ballMat q t τ)ᴴ * ballMat q t τ).det.re := fun τ =>
-    Real.measurable_log.comp (Complex.continuous_re.comp
-      (continuous_const.sub ((hZ τ).matrix_conjTranspose.matrix_mul (hZ τ))).matrix_det).measurable
-  have hpot : Measurable (ballPot q) := by
-    unfold ballPot
-    exact (Finset.measurable_sum _ fun τ _ => hdet τ).neg
-  unfold ballDens
-  exact Real.measurable_exp.comp (hpot.const_mul _)
+  exact GlobalTheory.CompanionTheory.Ar.Cusp.DictMeas.measurable_ballDens q
 
 theorem ballDens_pos (q : Ψ × Fin j × Fin j' ≃ Fin n) (t : Fin n → ℂ) : 0 < ballDens q t := Real.exp_pos _
 

@@ -69,10 +69,8 @@ theorem _root_.GlobalTheory.PullbackFinitePoint.residueDegree_ne_zero_iff_finite
   letI := (f.residueFieldMap x).hom.toAlgebra
   unfold Scheme.Hom.residueDegree RingHom.Finite
   constructor
-  · intro h
-    exact Module.finite_of_finrank_pos (Nat.pos_of_ne_zero h)
-  · intro h
-    exact Module.finrank_pos.ne'
+  · exact fun h => Module.finite_of_finrank_pos (Nat.pos_of_ne_zero h)
+  · exact fun h => Module.finrank_pos.ne'
 
 set_option autoImplicit false in
 open CategoryTheory AlgebraicGeometry TopologicalSpace in

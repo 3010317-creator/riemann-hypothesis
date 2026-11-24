@@ -107,8 +107,7 @@ theorem UpperTheory.Reformulated.B.Ra1.ab_eval :
       have hrank : Module.finrank k ↥K < Module.finrank k ↥H :=
         Submodule.finrank_lt_finrank_of_lt hlt
       obtain ⟨t, ht⟩ := ih K hKfin (by omega)
-      refine ⟨Fin.cons x t, fun φ hφ h0 => ?_⟩
-      exact ht φ ⟨hφ, h0 0⟩ (fun a => h0 a.succ)
+      exact ⟨Fin.cons x t, fun φ hφ h0 => (ht φ ⟨hφ, h0 0⟩ (fun a => h0 a.succ))⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.AbEval =====
@@ -197,13 +196,11 @@ private theorem ab_minus (hF : F.Ok C₀) : ∃ (s' : Fin F.d → F.G0) (h : ℕ
     hgen v A hA (χ.comp (F.loc0 v)) (ho.preimage (hF.loc_cont v)) fun a => by
       have := hz (e ⟨v, a⟩)
       beta_reduce at this
-      rw [e.symm_apply_apply] at this
-      exact this
+      rwa [e.symm_apply_apply] at this
   rintro ⟨v, _ | _⟩ g hg
   · exact key v g hg
   · have := hs (F.loc0 v g)⁻¹
-    rw [Frame.star, inv_inv, map_inv, key v g hg, inv_one] at this
-    exact this
+    rwa [Frame.star, inv_inv, map_inv, key v g hg, inv_one] at this
 
 private theorem ab_ext (hF : F.Ok C₀) : ∃ π : F.Γ → F.G0, (∀ g : F.G0, π g = g) ∧
     ∀ (A : Type) [CommGroup A] (χ : F.G0 →* A), (∀ g, χ (F.conj g) = χ g) → ∃ φ : F.Γ →* A, ∀ γ, φ γ = χ (π γ) := by
@@ -216,8 +213,8 @@ private theorem ab_ext (hF : F.Ok C₀) : ∃ π : F.Γ → F.G0, (∀ g : F.G0,
     show F.c * g * F.c⁻¹ = _
     rw [hci]
   let π : F.Γ → F.G0 := fun γ => if h : γ ∈ F.del.ker then ⟨γ, h⟩ else ⟨γ * F.c, hc γ h⟩
-  have p1 : ∀ γ, γ ∈ F.del.ker → (π γ : F.Γ) = γ := fun γ h => by simp only [π, dif_pos h]
-  have p2 : ∀ γ, γ ∉ F.del.ker → (π γ : F.Γ) = γ * F.c := fun γ h => by simp only [π, dif_neg h]
+  have p1 : ∀ γ, γ ∈ F.del.ker → (π γ : F.Γ) = γ := fun γ h => by simp only [π, dite_eq_left h]
+  have p2 : ∀ γ, γ ∉ F.del.ker → (π γ : F.Γ) = γ * F.c := fun γ h => by simp only [π, dite_eq_right h]
   refine ⟨π, fun g => Subtype.ext (p1 g g.2), fun A _ χ hχ => ⟨MonoidHom.mk' (fun γ => χ (π γ)) fun a b => ?_, fun _ => rfl⟩⟩
   by_cases ha : a ∈ F.del.ker
   · rw [← map_mul]

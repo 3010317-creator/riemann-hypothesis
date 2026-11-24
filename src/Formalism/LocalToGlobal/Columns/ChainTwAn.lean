@@ -44,7 +44,7 @@ theorem twAn_intMap_of_entries {N M : ℕ} (f : Sp E N →ₗ[E] Sp E M) (h : �
       rw [Pi.single_apply]
       by_cases hj : j = s
       · subst hj; simp
-      · rw [if_neg (Ne.symm hj), if_neg hj]
+      · rw [ite_eq_right (Ne.symm hj), ite_eq_right hj]
     rw [this]
     rfl
   rw [e]
@@ -64,8 +64,7 @@ theorem twAn_phiQ_int (q : ℕ) (ξ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) {k₀ r
     have e0 : ∀ (N : ℕ) (p : ℕ), LocE.scE N (0 : ℕ → ℕ) p = 0 := fun N p => by
       unfold LocE.scE
       split_ifs <;> rfl
-    rw [e0, e0, sub_self, zpow_zero, mul_one] at h1
-    exact h1
+    rwa [e0, e0, sub_self, zpow_zero, mul_one] at h1
   · exact absurd rfl h
 
 theorem integral_of_firstUnfolding_ne_zero {n' c' n c : ℕ} (Ψ : Loc.SF E K (n' + c') (n + c)) (a : ℕ) (qq : E)
@@ -85,8 +84,7 @@ theorem integral_of_firstUnfolding_ne_zero {n' c' n c : ℕ} (Ψ : Loc.SF E K (n
     rw [dite_eq_right hf, dite_eq_left (show (Fin.castAdd c' s).1 < n' from s.2), dite_eq_left (show (Fin.castAdd c l).1 < n from l.2),
       LinearMap.toMatrix'_apply]
     rfl
-  rw [e] at h3
-  exact h3
+  rwa [e] at h3
 
 theorem twAn_phiQ_congr (q : ℕ) (ξ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hq0 : (q : E) ≠ 0)
     {k₀ r c' n' c n : ℕ} (x x' : HomE E (n' + c') (n + c)) (hrn : r ≤ n + c) (hrn' : r ≤ n' + c')
@@ -125,14 +123,14 @@ theorem twAn_phiQ_congr (q : ℕ) (ξ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) (hq :
   rw [← hM, ← hM']
   by_cases hC : (∀ p p', p < n + c → p' < n' + c' → IntAt P (M p p')) ∧
       (∀ p p', r ≤ p → p < n + c → p' < r → IntAt P (M p p' / q))
-  · rw [if_pos (hc.2 hC), if_pos hC]
+  · rw [ite_eq_left (hc.2 hC), ite_eq_left hC]
     apply ciUnitV_congr
     rw [redP_det (Matrix.of fun s t : Fin r => M' s.1 t.1) (fun s t => (hc.2 hC).1 s.1 t.1 (by omega) (by omega)),
       redP_det (Matrix.of fun s t : Fin r => M s.1 t.1) (fun s t => hC.1 s.1 t.1 (by omega) (by omega))]
     congr 1
     ext s t
     exact k3 s.1 t.1 (by omega) (by omega)
-  · rw [if_neg (fun h => hC (hc.1 h)), if_neg hC]
+  · rw [ite_eq_right (fun h => hC (hc.1 h)), ite_eq_right hC]
 
 theorem frameEntry_unscaled_eq_coord (q : ℕ) {k₀ c' n' c n : ℕ} (hk' : k₀ ≤ n') (hk : k₀ ≤ n) (x : HomE E (n' + c') (n + c)) {p p' : ℕ}
     (hp : p < n + c) (hp' : p' < n' + c') :
@@ -182,7 +180,6 @@ theorem twAn_joinCol {n' c' n c : ℕ} (hc : 1 ≤ c') (x₀ : HomE E n' n) (y' 
   have h2 : atNL E (n' + c') n' (Pi.single (⟨n', by omega⟩ : Fin (n' + c')) (1 : E)) = 1 := by
     unfold atNL
     rw [dite_eq_left (by omega)]
-    show (Pi.single (⟨n', by omega⟩ : Fin (n' + c')) (1 : E) : Fin (n' + c') → E) ⟨n', by omega⟩ = 1
     exact Pi.single_eq_same _ _
   simp only [LinearMap.comp_apply, LinearMap.add_apply, LinearMap.smulRight_apply, h1, h2, map_zero, one_smul, zero_add]
 
@@ -237,7 +234,7 @@ theorem charArg_unipotentExtension_indep {n' c' n c : ℕ} (xj xj' : (Fin n' →
   · have e : Loc.eN E (n' + c') (n' + i + 1) = 0 := by
       funext l
       unfold Loc.eN
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
       rfl
     rw [e, map_zero, map_zero]
 
@@ -245,8 +242,7 @@ theorem twAn_atNL_int {N : ℕ} (k : ℕ) (s : Fin N) : IntAt P (atNL E N k (Pi.
   unfold atNL
   split_ifs
   · exact twAn_single_int s _
-  · show IntAt P 0
-    exact ⟨0, 1, one_notMem P, by simp⟩
+  · exact ⟨0, 1, one_notMem P, by simp⟩
 
 theorem twAn_funLeft_int {n' c' : ℕ} (s : Fin (n' + c')) (l : Fin n') :
     IntAt P (LinearMap.funLeft E E (Fin.castAdd c') (Pi.single s (1 : E)) l) := by
@@ -282,7 +278,7 @@ theorem twAn_chArg_term {n' c' n c : ℕ} (x : (Fin (n' + c') → E) →ₗ[E] (
   · have e : Loc.eN E (n' + c') (n' + i + 1) = 0 := by
       funext l
       unfold Loc.eN
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
       rfl
     rw [e, map_zero, dite_eq_right (fun h => h1 h.1)]
     unfold Loc.atN
@@ -310,8 +306,7 @@ theorem twAn_sum_valsQ {q A B : ℕ} (hq : (q : E) ≠ 0) (G : (ι → E) → K)
   apply Finset.sum_bij (fun k _ => fun f => twAnPhi (E := E) q A (k f))
   · intro k _
     rw [Fintype.mem_piFinset]
-    intro f
-    exact Finset.mem_image.2 ⟨k f, Finset.mem_range.2 (k f).2, rfl⟩
+    exact fun f => Finset.mem_image.2 ⟨k f, Finset.mem_range.2 (k f).2, rfl⟩
   · intro k _ k' _ h
     funext f
     exact Fin.ext (twAnPhi_inj hq (congrFun h f))
@@ -392,8 +387,7 @@ theorem twAn_deep_abs {q : ℕ} (hq : (q : E) ≠ 0) (hqK : (q : K) ≠ 0) (G : 
     | succ n hn ih =>
       rw [← ih]
       have := twAn_sumA (B := B'') hq G (hvan n (le_trans hA hn))
-      rw [show n + 1 + B'' = (n + 1) + B'' from rfl] at this
-      exact this
+      rwa [show n + 1 + B'' = (n + 1) + B'' from rfl] at this
   have stepB : ∀ B'', B ≤ B'' → (((q : K) ^ B'')⁻¹) ^ Fintype.card ι * ∑ k : ι → Fin (q ^ (A' + B'')), G (fun f => twAnPhi q A' (k f)) =
       (((q : K) ^ B)⁻¹) ^ Fintype.card ι * ∑ k : ι → Fin (q ^ (A' + B)), G (fun f => twAnPhi q A' (k f)) := by
     intro B'' hB''
@@ -421,7 +415,7 @@ theorem twAn_lam_mem {j : ℕ} {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∉ Pr
     v ∈ lamYat (Pr := Pr) (R := R) j P ↔ ∀ l, IntAt P (v l) := by
   have e : lamYat (Pr := Pr) (R := R) j P = LocE.lamY P (qOf P) (R.N j) (cOf R j) 0 := by
     unfold lamYat
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
   rw [e]
   unfold LocE.lamY
   rw [ciMem_sclLat]
@@ -450,7 +444,7 @@ theorem twAn_omPhi_supp {i : ℕ} (P : rowSG Pr sel mu) (hP : P.1 ∉ Pr.vGs) (h
   unfold omPhi Loc.om at h
   have h1 := right_ne_zero_of_mul h
   unfold PhiAt at h1
-  rw [if_neg hP] at h1
+  rw [ite_eq_right hP] at h1
   have hz := twAn_intMap_of_entries _ (twAn_phiQ_int (qOf P.1) _ (twAn_k_le i) (twAn_k_le (i + 1)) _ h1)
   have hw := twAn_bdd_inv hP hba (Pi.single s 1) (fun l => twAn_single_int s l)
   have h2 := twAn_bdd_q hP hbb _ (hz _ hw) l
@@ -459,8 +453,7 @@ theorem twAn_omPhi_supp {i : ℕ} (P : rowSG Pr sel mu) (hP : P.1 ∉ Pr.vGs) (h
     rw [LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply]
   have e' : hbe ((hbe.symm.toLinearMap ∘ₗ y ∘ₗ hal.toLinearMap) ((hal⁻¹ : AutY X R i).toLinearMap (Pi.single s 1))) =
       y (Pi.single s 1) := e
-  rw [e'] at h2
-  exact h2
+  rwa [e'] at h2
 
 theorem twAn_qpow_int (P : HeightOneSpectrum (𝓞 X.E)) (n : ℕ) : IntAt P ((qOf P : X.E) ^ n) := by
   have := IntAt.coe P ((qOf P : 𝓞 X.E) ^ n)
@@ -492,7 +485,7 @@ theorem twAn_omPhi_congr {i : ℕ} (P : rowSG Pr sel mu) (hP : P.1 ∉ Pr.vGs) (
   unfold omPhi Loc.om
   congr 1
   unfold PhiAt
-  rw [if_neg hP]
+  rw [ite_eq_right hP]
   apply twAn_phiQ_congr (qOf P.1) _ (ciQ_mem P.1) hq0 _ _ (twAn_r_le (by omega)) (twAn_r_le (by omega))
   intro p p' hp hp'
   rw [frameEntry_unscaled_eq_coord _ (twAn_k_le i) (twAn_k_le (i + 1)) _ hp hp', frameEntry_unscaled_eq_coord _ (twAn_k_le i) (twAn_k_le (i + 1)) _ hp hp']

@@ -188,17 +188,17 @@ theorem exists_basis_of_dual {K R : Type} [CommRing R] [IsNoetherianRing R] (hQ 
     have h2 : g l * u l = 0 := by
       rw [← hsum (fun k => g k * u k) l, h1]; rfl
     by_cases hl : l ∈ Set.range e
-    · simp only [u, if_pos hl] at h2
+    · simp only [u, ite_eq_left hl] at h2
       exact mem_of_mul_mem hQ (d l) ⊥ (fun r hr => by rw [Ideal.mem_bot.1 hr, map_zero]; exact zero_mem _)
         (t := z l) (by simp [hd]) (by rw [mul_comm, h2]; exact zero_mem _)
-    · simpa only [u, if_neg hl, mul_one] using h2
+    · simpa only [u, ite_eq_right hl, mul_one] using h2
   have hsp : ⊤ ≤ Submodule.span R (Set.range v) := by
     rintro ⟨D, hD⟩ -
     obtain ⟨hD0, hD1⟩ := (hM D).1 hD
     have hdiv : ∀ k, u k ∣ D (z k) := by
       intro k
       by_cases hk : k ∈ Set.range e
-      · simp only [u, if_pos hk]
+      · simp only [u, ite_eq_left hk]
         obtain ⟨j, rfl⟩ := hk
         have h1 := Ideal.mem_span_singleton.1 (hD1 _ (Ideal.mem_span_singleton_self _))
         rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ j), D.leibniz, smul_eq_mul, smul_eq_mul] at h1
@@ -216,7 +216,7 @@ theorem exists_basis_of_dual {K R : Type} [CommRing R] [IsNoetherianRing R] (hQ 
             exact Ideal.mem_span_singleton.1 (mem_of_mul_mem hQ (d (e i)) _
               (mem_span_of_dvd _ (by simp [hd, hij])) (by simp [hd]) (Ideal.mem_span_singleton.2 ha))
         exact h3 _ (Finset.notMem_erase _ _) _ h2
-      · simp only [u, if_neg hk, one_dvd]
+      · simp only [u, ite_eq_right hk, one_dvd]
     choose g hg using hdiv
     refine (Submodule.mem_span_range_iff_exists_fun R).2 ⟨g, Subtype.ext ?_⟩
     conv_rhs => rw [show (⟨D, hD⟩ : M).1 = D from rfl, hspan D hD0]
@@ -357,8 +357,7 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
       rw [KaehlerDifferential.map_D, ← algebraMap_smul (X.presheaf.stalk y) (a j l),
         TensorProduct.tmul_smul, ← algebraMap_smul (IsLocalRing.ResidueField (X.presheaf.stalk y))]
       rfl
-    rw [key]
-    exact hw
+    rwa [key]
   obtain ⟨e, he, hdet⟩ := GlobalTheory.extend_linearIndependent_rows_by_standard_basis ab hab
   let z : Fin n → Γ(X, U) := Function.extend e z₀ x
   let c : Matrix (Fin n) (Fin n) Γ(X, U) :=
@@ -366,8 +365,7 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
   have hdz (i : Fin n) : dFun (algX p U) (z i) = ∑ l, c i l • dFun (algX p U) (x l) := by
     by_cases hi : ∃ j, e j = i
     · obtain ⟨j, rfl⟩ := hi
-      simp only [z, c, Matrix.of_apply, he.extend_apply]
-      exact ha j
+      simpa only [z, c, Matrix.of_apply, he.extend_apply] using ha j
     · simp only [z, c, Matrix.of_apply, Function.extend_apply' _ _ _ hi]
       simp [Pi.single_apply]
   have hρ : ρ c.det ≠ 0 := by
@@ -406,8 +404,7 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
     exact (resG_resG _ _ _).symm ▸ this
   obtain ⟨b', hb'⟩ := exists_basis_map (k := k) (B := Γ(X, W)) b z c (fun i => by simpa only [hb] using hdz i) hu
   refine ⟨fun i => resG X hWU (z i), b', fun j => ?_, hb'⟩
-  simp only [z, z₀, he.extend_apply]
-  exact resG_resG _ _ _
+  simpa only [z, z₀, he.extend_apply] using resG_resG _ _ _
 
 theorem exists_logDer_basis_of_snc {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} (p : X ⟶ Sp k) (n : ℕ)
     [SmoothOfRelativeDimension n p] (I : X.IdealSheafData) (hI : FinalTheorems.Snc I) (U : X.affineOpens) (x : X) (hx : x ∈ U.1) :

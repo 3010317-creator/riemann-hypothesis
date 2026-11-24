@@ -200,8 +200,7 @@ private theorem core (hk : (p : k) = 0) (hT : (p : DualNumber k) = 0)
     have h0 : crysToDR (epsDP k) h d (primPull (dp0 (DualNumber k)) (𝟙 _) e' y) = 0 :=
       dual_zero_of_span _ (Set.forall_mem_range.2 (vanish hk hT h hBC g₀ g' hg n x d hd hx)) hmem
     exact h0
-  · have e₁ := corr_push (x := x) (d := d) hd e₀ c
-    exact e₁.trans (alg_eq _)
+  · exact (corr_push (x := x) (d := d) hd e₀ c).trans (alg_eq _)
 
 end
 
@@ -333,8 +332,7 @@ private theorem ks_core {k H C : Type*} [Field k] [AddCommGroup H] [Module k H] 
   have hwfl : ∀ c, ∀ u ∈ Fl, φ u (σ (bar c) (σ e h₀)) = χ (bar c) * φ u (σ e h₀) := by
     intro c u hu
     have h1 := hiso u hu _ (hL1 (bar c) h₀)
-    rw [map_sub, map_smul, smul_eq_mul, sub_eq_zero] at h1
-    exact h1
+    rwa [map_sub, map_smul, smul_eq_mul, sub_eq_zero] at h1
   have hxw : φ x (σ e h₀) = 0 := by
     have h1 : φ (σ ω x) (σ e h₀) = r * φ x (σ e h₀) := by
       rw [← hxe, hL3 x, hxe, map_smul, LinearMap.smul_apply, smul_eq_mul]
@@ -416,8 +414,7 @@ theorem UpperTheory.Gal.Ord.ks :
     have e2 := LinearMap.congr_fun e1 v
     rw [LinearMap.add_apply, map_intCast] at e2
     rw [e2]
-    simp only [Module.End.intCast_apply]
-    exact (Int.cast_smul_eq_zsmul k D.tr v).symm
+    simpa only [Module.End.intCast_apply] using (Int.cast_smul_eq_zsmul k D.tr v).symm
   have hdisc : 2 * β b.ρ - (D.tr : k) ≠ 0 := by
     haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out)).2 hk
     intro h0
@@ -434,8 +431,7 @@ theorem UpperTheory.Gal.Ord.ks :
     rw [hy c, map_smul, smul_eq_mul]
     rfl
   have hxα : φ x α ≠ 0 := by
-    rw [hα0]
-    exact hxy
+    rwa [hα0]
   obtain ⟨g, ga, gb, gc, gd⟩ := ks_core σ D.bar (β.comp (b.t i)) φ (Fil o.A) hskew hnd hiso hadj D.ω π.ε
     (D.tr : k) (β b.ρ) hT hdisc hL1 hL3 h₀ hh₀ x hxe α hα hxα
   refine ⟨g, ⟨?_, ?_, gc⟩, gd⟩
@@ -470,8 +466,7 @@ private lemma not_le_span_image {k P : Type*} [Field k] [AddCommGroup P] [Module
     ¬ G ≤ Submodule.span k (A '' G) := by
   intro hle
   obtain ⟨ℓ, hℓ⟩ : ∃ ℓ : Module.Dual k P, ℓ v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hv0 ((Module.forall_dual_apply_eq_zero_iff k v).1 h)
   let K : Submodule k P := G ⊓ LinearMap.ker ℓ
   have hKG : K < G := by
@@ -663,8 +658,7 @@ private lemma exists_not_mem {k C P : Type*} [Field k] [IsAlgClosed k] [CommRing
   have hvG : v ∈ G := by
     refine (Submodule.mem_iInf _).2 fun c => (Module.End.mem_maxGenEigenspace _ _ _).2 ⟨1, ?_⟩
     simp [hv]
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hS : Submodule.span k (Set.range A) ≤ Wd ⊔ H := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨z, rfl⟩
@@ -690,9 +684,7 @@ private lemma exists_not_mem {k C P : Type*} [Field k] [IsAlgClosed k] [CommRing
       refine Submodule.disjoint_def.1 hdisj _ (G.sub_mem (G.sub_mem hu (hWG hw)) (hρU a _ u1 hu1)) ?_
       rw [e1]
       exact H.add_mem (H.add_mem hh (hρH a _ hu2)) (hρH _ _ hv2)
-    refine ⟨w, hw, u1, hu1, ?_⟩
-    have h' := sub_eq_zero.1 hd0
-    exact sub_eq_iff_eq_add'.1 h'
+    exact ⟨w, hw, u1, hu1, sub_eq_iff_eq_add'.1 (sub_eq_zero.1 hd0)⟩
   have hpow : ∀ (n : ℕ), ∀ x ∈ Wd, (ρ a ^ n) x ∈ Wd := by
     intro n
     induction n with
@@ -718,8 +710,7 @@ private lemma exists_not_mem {k C P : Type*} [Field k] [IsAlgClosed k] [CommRing
     have h0 : (ρ a ^ e) u' = 0 := by
       have h1 : (ρ a ^ e * ρ ε) u' = 0 := by rw [he]; rfl
       rwa [Module.End.mul_apply, hεG u' hu'] at h1
-    rw [eq, h0, add_zero]
-    exact hw
+    rwa [eq, h0, add_zero]
   exact not_le_span_image G A q hq hsemi v hvG hv0 hAv hGW
 
 end UpperTheory.Gal.Ord
@@ -752,8 +743,7 @@ theorem UpperTheory.Gal.Ord.alg2 :
     rw [hcard'] at h
     exact congrArg Subtype.val h
   have hinj : Function.Injective fun x : k => x ^ (p ^ f) := by
-    intro x y h
-    exact (iterateFrobenius k p f).injective (by simpa [iterateFrobenius_def] using h)
+    exact fun x y h => (iterateFrobenius k p f).injective (by simpa [iterateFrobenius_def] using h)
   let A : P →+ P :=
     { toFun := (⇑Φ)^[f], map_zero' := iterate_map_zero Φ f, map_add' := iterate_map_add Φ f }
   have hsemiN : ∀ (n : ℕ) (l : k) x, (⇑Φ)^[n] (l • x) = l ^ (p ^ n) • (⇑Φ)^[n] x := by
@@ -820,8 +810,7 @@ theorem UpperTheory.Gal.Ord.alg2 :
     rwa [map_sub, map_pow, LinearMap.sub_apply, sub_eq_zero] at h
   obtain ⟨ξ, hξ1, hξ2⟩ := Submodule.exists_dual_map_eq_bot_of_notMem hnot inferInstance
   have hεε : ∀ y, ρ π.ε (ρ π.ε y) = ρ π.ε y := fun y => by
-    have h := congrArg (fun T : Module.End k P => T y) hε
-    exact h
+    exact congrArg (fun T : Module.End k P => T y) hε
   have hεg : ∀ y, ρ π.ε (ρ π.g y) = ρ π.g y := fun y => by
     have h := hdvd _ π.geps
     rw [map_sub, map_mul, sub_eq_zero] at h
@@ -832,8 +821,7 @@ theorem UpperTheory.Gal.Ord.alg2 :
     have hm : ρh π.g (A z) ∈ (Submodule.span k (Set.range A)).map (ρh π.g) :=
       Submodule.mem_map_of_mem (Submodule.subset_span ⟨z, rfl⟩)
     have h := Submodule.mem_map_of_mem (f := ξ) hm
-    rw [hξ2, Submodule.mem_bot] at h
-    exact h
+    rwa [hξ2, Submodule.mem_bot] at h
   · simp only [LinearMap.comp_apply, hεg]
     exact hξ1
 end -- clump:auto
@@ -868,8 +856,7 @@ private lemma notMem {w B : Ideal C} (hw : w.IsMaximal) (hw0 : w ≠ ⊥) {a y :
     (h : y * a ^ m ∈ w ^ (m + 1)) : False := by
   have hwp : Prime w := Ideal.prime_of_isPrime hw0 hw.isPrime
   have h1 : w ^ (m + 1) ∣ Ideal.span {y * a ^ m} := by
-    rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact h
+    rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   rw [← Ideal.span_singleton_mul_span_singleton, ← Ideal.span_singleton_pow, ha, mul_pow,
     pow_succ, show Ideal.span {y} * (w ^ m * B ^ m) = w ^ m * (Ideal.span {y} * B ^ m) by ring] at h1
   have hw0' : w ^ m ≠ 0 := pow_ne_zero _ hw0
@@ -884,22 +871,19 @@ private lemma approx {w B : Ideal C} {a : C} (ha : Ideal.span {a} = w * B) (hc :
   have hc' : IsCoprime (B ^ m) (w ^ k) := (hc.symm.pow_left).pow_right
   have htop : B ^ m ⊔ w ^ k = ⊤ := Ideal.isCoprime_iff_sup_eq.mp hc'
   have hx' : x ∈ Ideal.span {a} ^ m ⊔ w ^ (m + k) := by
-    rw [ha, mul_pow, pow_add, ← Ideal.mul_sup, htop, Ideal.mul_top]
-    exact hx
+    rwa [ha, mul_pow, pow_add, ← Ideal.mul_sup, htop, Ideal.mul_top]
   obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.mem_sup.mp hx'
   rw [Ideal.span_singleton_pow, Ideal.mem_span_singleton'] at hy
   obtain ⟨u, rfl⟩ := hy
   refine ⟨u, ?_⟩
   have : x - a ^ m * u = z := by rw [← hyz]; ring
-  rw [this]
-  exact hz
+  rwa [this]
 
 private lemma divA {w B : Ideal C} (hw : w.IsMaximal) (hw0 : w ≠ ⊥) {a : C}
     (ha : Ideal.span {a} = w * B) (hc : IsCoprime w B)
     (m : ℕ) {x : C} (hx : a * x ∈ w ^ (m + 1)) : x ∈ w ^ m := by
   have h1 : w ^ (m + 1) ∣ Ideal.span {a * x} := by
-    rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact hx
+    rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   rw [← Ideal.span_singleton_mul_span_singleton, ha, pow_succ', _root_.mul_assoc,
     mul_dvd_mul_iff_left hw0] at h1
   have h2 : w ^ m ∣ Ideal.span {x} := (hc.pow_left).dvd_of_dvd_mul_left h1
@@ -916,16 +900,14 @@ private lemma exPar (p : ℕ) (hp0 : (p : C) ≠ 0) {w : Ideal C} (hw : w.IsMaxi
     exact (Submodule.mem_bot C).mp hpw
   have hwp : Prime w := Ideal.prime_of_isPrime hw0 hw.isPrime
   have hP0 : Ideal.span {(p : C)} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hp0
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   obtain ⟨m, B, hwB, hPB⟩ := WfDvdMonoid.max_power_factor' hP0 hwp.not_unit
   obtain ⟨n, rfl⟩ : ∃ n, m = n + 1 := by
     rcases m with _ | n
     · exfalso
       apply hwB
       rw [pow_zero, _root_.one_mul] at hPB
-      rw [← hPB, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-      exact hpw
+      rwa [← hPB, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     · exact ⟨n, rfl⟩
   have hcB : IsCoprime w B := cop hw hwB
   have hmemP : ∀ z, z ∈ w ^ (n + 1) → z ∈ B → (p : C) ∣ z := by
@@ -1000,8 +982,7 @@ private lemma exPar (p : ℕ) (hp0 : (p : C) ≠ 0) {w : Ideal C} (hw : w.IsMaxi
   have hs : (p : C) ^ f ∣ a * (1 - j) := by
     have h3 : (1 - j) * a ∈ w ^ ((n + 1) * f) * B ^ f := by
       refine Ideal.mul_mem_mul ?_ haB
-      rw [h1ε]
-      exact hi
+      rwa [h1ε]
     rw [← Ideal.mem_span_singleton, ← Ideal.span_singleton_pow, hPB, mul_pow, ← pow_mul,
       _root_.mul_comm a]
     exact h3
@@ -1089,8 +1070,7 @@ private lemma exPar (p : ℕ) (hp0 : (p : C) ≠ 0) {w : Ideal C} (hw : w.IsMaxi
     obtain ⟨u, hu⟩ := hgen x hxw
     refine ⟨u, x, ?_⟩
     have e : x - a * u - (1 - j) * x = j * x - a * u := by ring
-    rw [e]
-    exact hu
+    rwa [e]
   exact ⟨Par.mk j a (j * a ^ n) c c' s hidem hεw hoff haw hs' hc hinv hgeps hnil hgen
     hannG hannA⟩
 
@@ -1127,8 +1107,7 @@ private theorem UpperTheory.Gal.Ord.one_left {S S' : Scheme.{0}} {G' : Over S'} 
     {f : S' ⟶ S} {φ : G'.left ⟶ G.left} (h : IsGrpPullback G' G f φ) (T : Over S') {y' : T.left ⟶ S}
     (hy : T.hom ≫ f = y') : (1 : Over.mk y' ⟶ G).left = (1 : T ⟶ G').left ≫ φ := by
   have hw : ((1 : T ⟶ G').left ≫ φ) ≫ G.hom = (Over.mk y').hom := by
-    rw [Category.assoc, h.1.w, ← Category.assoc, Over.w]
-    exact hy
+    rwa [Category.assoc, h.1.w, ← Category.assoc, Over.w]
   have e := eq_one_of_left h T hy (Over.homMk ((1 : T ⟶ G').left ≫ φ) hw) rfl
   rw [← e]
   rfl
@@ -1368,16 +1347,13 @@ private theorem no_down (p : ℕ) [Fact p.Prime] (hK : (p : K) = 0) (hL : (p : L
     rintro _ ⟨c, rfl⟩
     obtain ⟨t, ht⟩ := hbij.2 c
     have h4 := hgen t
-    rw [SetLike.mem_coe, ← ht]
-    exact h4
+    rwa [SetLike.mem_coe, ← ht]
   obtain ⟨s, hs⟩ := LinearMap.mem_range.mp (hle hy')
   simp only [Φ, LinearMap.comp_apply] at hs
   have h5 : liftSemi (bcMor h).pull (W.subtype.baseChange L s) =
       liftSemi (bcMor h).pull ((1 : L) ⊗ₜ[K] primPull (dp0 K) (𝟙 (Sp K)) e x) := by
-    rw [liftSemi_tmul, one_smul]
-    exact hs
-  have h6 := hbij.1 h5
-  exact mem_of_subtype_baseChange_eq_one_tmul W _ s h6
+    rwa [liftSemi_tmul, one_smul]
+  exact mem_of_subtype_baseChange_eq_one_tmul W _ s (hbij.1 h5)
 
 end Down
 
@@ -1475,8 +1451,7 @@ private theorem radical_stalk (R : Type) [CommRing R] (m : Ideal R) [m.IsMaximal
     hU.isLocalization_stalk ⟨z, hzU⟩
   have h2 := radical_loc Γ(X, U) (X.presheaf.stalk z) (hU.primeIdealOf ⟨z, hzU⟩).asIdeal.primeCompl _ h1
   rw [Ideal.map_map] at h2
-  rw [e]
-  exact h2
+  rwa [e]
 
 private theorem kills_max (R : Type) [CommRing R] [IsLocalRing R] (X : Scheme.{0})
     (s : X ⟶ Spec (CommRingCat.of R)) [Smooth s] (z : X)
@@ -1512,8 +1487,7 @@ private theorem kills_max (R : Type) [CommRing R] [IsLocalRing R] (X : Scheme.{0
     apply hrad
     rw [Ideal.radical_eq_sInf]
     refine Ideal.mem_sInf.mpr fun {P} hP => ?_
-    rw [hprime P hP.2 hP.1]
-    exact hx
+    rwa [hprime P hP.2 hP.1]
   have hker : (IsLocalRing.maximalIdeal R).map r.hom ≤ RingHom.ker φ.hom := by
     refine Ideal.map_le_iff_le_comap.mpr fun y hy => ?_
     have e : φ.hom (r.hom y) = c y := congrArg (fun f => f.hom y) hrc
@@ -1564,10 +1538,8 @@ private theorem charP_of_eq_closedPoint {p : ℕ} [Fact p.Prime] {R : Type} [Com
     rfl
   have h0 : (p : k) = 0 := by
     have hm : (p : R) ∈ RingHom.ker β := by
-      rw [hk]
-      exact hpR
-    rw [RingHom.mem_ker, map_natCast] at hm
-    exact hm
+      rwa [hk]
+    rwa [RingHom.mem_ker, map_natCast] at hm
   exact (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).mpr h0
 
 private theorem exists_absNorm_eq {p : ℕ} [Fact p.Prime] {F : Type} [Field F] [NumberField F] (w : Ideal (𝓞 F))
@@ -1612,8 +1584,7 @@ theorem UpperTheory.Gal.Ord.ordGen :
     rw [← hkerw]
     exact RingHom.ker_isPrime _
   have hpw : (p : 𝓞 D.F) ∈ w := by
-    rw [← hkerw, RingHom.mem_ker, RingHom.comp_apply, map_natCast, map_natCast]
-    exact hk
+    rwa [← hkerw, RingHom.mem_ker, RingHom.comp_apply, map_natCast, map_natCast]
   obtain ⟨hwM, f, hf, hnorm⟩ := exists_absNorm_eq w hwP hpw
   obtain ⟨π⟩ := par p D.F w f hwM hpw hf
   obtain ⟨o₀, ⟨a₀⟩⟩ := _root_.GlobalTheory.HTPullEvery.exists_objMap p D R b N M.X (Sp k) M.s (spMap β) y hyβ M.univ
@@ -1625,8 +1596,7 @@ theorem UpperTheory.Gal.Ord.ordGen :
   exfalso
   have hLin := lin p D R b N hN hNp hm k hk β o₀ i w f hkerw hnorm hf π
   have hcard : Nat.card (𝓞 D.F ⧸ w) = p ^ f := by
-    rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
-    exact hnorm
+    rwa [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
   obtain ⟨x, hxε, hxg, y0, hy0, hxy0⟩ :=
     alg2 p k (𝓞 D.F) w f hf hcard π (β.comp (b.t i)) _ (coh o₀) (PrimitiveSubmodule o₀.A) _ hLin
   have hxFil : x ∈ Fil o₀.A := by
@@ -1639,10 +1609,7 @@ theorem UpperTheory.Gal.Ord.ordGen :
       rintro _ ⟨c', rfl⟩
       exact hxg c'
     exact hle (hNO c hc)
-  have hhom : hom o₀ π.ε x = x := by
-    apply LinearMap.ext
-    intro c
-    exact hxε c
+  have hhom : hom o₀ π.ε x = x := LinearMap.ext (fun c => hxε c)
   obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.UPel.HT.CorrForm.exists_isCorrForm_obj p D R b N hN hNp k (spMap β) o₀
   obtain ⟨g, hKS, hgx⟩ :=
     ks p D R b N hN hNp hm k hk β o₀ i w f hkerw hnorm hf π φ hφ x hxFil hhom ⟨y0, hy0, hxy0⟩
@@ -1669,8 +1636,7 @@ theorem UpperTheory.Gal.Ord.ordGen :
   have hvz : v.base (IsLocalRing.closedPoint (DualNumber k)) = z := by
     rw [← hcl]
     have h1 := hy (IsLocalRing.closedPoint k)
-    rw [hyv] at h1
-    exact h1
+    rwa [hyv] at h1
   obtain ⟨σ, hσ⟩ := gen R M.X M.s z hz hmin k y β (hy _) hyβ (fun r hr => by
     have hr' : r ∈ RingHom.ker β := hkerβ ▸ hr
     exact RingHom.mem_ker.mp hr')
@@ -1681,11 +1647,9 @@ theorem UpperTheory.Gal.Ord.ordGen :
   obtain ⟨oκ, ⟨aκ⟩⟩ := _root_.GlobalTheory.HTPullEvery.exists_objMap p D R b N M.X _ M.s (M.X.fromSpecResidueField z ≫ M.s)
     (M.X.fromSpecResidueField z) rfl M.univ
   have a₀' : ObjMap o₀ M.univ (spMap σ ≫ M.X.fromSpecResidueField z) := by
-    rw [hσ]
-    exact a₀
+    rwa [hσ]
   have av' : ObjMap o' M.univ (spMap τ ≫ M.X.fromSpecResidueField z) := by
-    rw [hτ]
-    exact av
+    rwa [hτ]
   obtain ⟨b₀⟩ := factor p D R b N hN hNp _ _ _ M.s _ _ M.univ oκ o₀ (M.X.fromSpecResidueField z) (spMap σ)
     rfl ((Category.assoc _ _ _).symm.trans ((congrArg (· ≫ M.s) hσ).trans hyβ)) aκ a₀'
   obtain ⟨b'⟩ := factor p D R b N hN hNp _ _ _ M.s _ _ M.univ oκ o' (M.X.fromSpecResidueField z) (spMap τ)

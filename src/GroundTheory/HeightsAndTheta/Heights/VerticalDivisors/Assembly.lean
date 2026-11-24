@@ -489,8 +489,7 @@ theorem constantCoeff_specRest {R S : Type*} [CommRing R] [CommRing S] (φ : R �
     (hδ : 1 ≤ δ) {f : MvPolynomial (Fin (e + 1) × Fin n) R} (hf : Heights.IsMultiHomog δ f)
     (y : Par e n → S) : constantCoeff (specRest φ f y) = 0 := by
   unfold specRest
-  rw [← coe_eval₂Hom, ← RingHom.comp_apply, MvPolynomial.comp_eval₂Hom]
-  rw [coe_eval₂Hom, eval₂_eq']
+  rw [← coe_eval₂Hom, ← RingHom.comp_apply, MvPolynomial.comp_eval₂Hom, coe_eval₂Hom, eval₂_eq']
   refine Finset.sum_eq_zero fun d hd => ?_
   obtain ⟨j, hj⟩ : ∃ j, d (0, j) ≠ 0 := by
     by_contra hcon
@@ -804,8 +803,7 @@ theorem OrdEq.proof (hni : NormIdentity.Statement) (hnl : NormLength.Statement)
     refine ⟨fun 𝔫 _ => (hW 𝔫).1, fun 𝔫₁ _ 𝔫₂ _ h => ?_, fun W' hW' => ?_⟩
     · apply MaximalSpectrum.ext
       rw [← (hW 𝔫₁).2, ← (hW 𝔫₂).2, h]
-    · refine ⟨⟨secIdealOf e I v W', hmax1 W' hW'⟩, Set.mem_univ _, ?_⟩
-      exact (hWu _ W' ⟨hW', rfl⟩).symm
+    · exact ⟨⟨secIdealOf e I v W', hmax1 W' hW'⟩, Set.mem_univ _, (hWu _ W' ⟨hW', rfl⟩).symm⟩
   rw [← finsum_mem_univ, finsum_mem_eq_of_bijOn W hbij (g := G) fun 𝔫 _ => by
     rw [hlen K n e I f u v hI hf hu 𝔫 (W 𝔫) (hW 𝔫).1 (hW 𝔫).2, ← (hW 𝔫).2,
       hres K n e I f v hI hf (W 𝔫) (hW 𝔫).1]]
@@ -870,8 +868,7 @@ theorem ResidueAlgIndep.proof : ResidueAlgIndep.Statement := by
     have h2 : (IsLocalRing.maximalIdeal R).comap (algebraMap (MvPolynomial (Par e n) (𝓞 K)) R) =
         parPrime e n v :=
       Localization.AtPrime.under_maximalIdeal
-    rw [← h2]
-    exact hp
+    rwa [← h2]
   rw [parPrime, MvPolynomial.mem_map_C_iff] at hq
   ext m
   simpa only [coeff_map, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] using
@@ -901,15 +898,7 @@ namespace SecAlgField
 
 theorem genPar_algebraicIndependent (k : Type*) [Field k] (e n : ℕ) :
     AlgebraicIndependent k (genPar k e n) := by
-  have hinj : Function.Injective (IsScalarTower.toAlgHom k (MvPolynomial (Par e n) k)
-      (GenParField k e n)) :=
-    IsFractionRing.injective (MvPolynomial (Par e n) k) (GenParField k e n)
-  have h := (MvPolynomial.algebraicIndependent_X (Par e n) k).map' hinj
-  have hc : (⇑(IsScalarTower.toAlgHom k (MvPolynomial (Par e n) k) (GenParField k e n)) ∘ X) =
-      genPar k e n := by
-    funext p
-    simp only [Function.comp_apply, IsScalarTower.coe_toAlgHom', genPar]
-  rwa [hc] at h
+  exact GroundTheory.Heights₂.Heights.Vertical.genPar_algebraicIndependent k e n
 
 end SecAlgField
 
@@ -1026,7 +1015,7 @@ theorem coord_integral (h1 : IncidenceNull.Statement) (Q : Ideal (MvPolynomial (
 
         simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, map_sum, map_mul, hφ, aeval_X,
         Sum.elim_inr, Sum.elim_inl, h0, sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul,
-        zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         rw [sub_eq_zero]
         conv_rhs => rw [← mul_one (x m), ← ht, Finset.mul_sum]
         exact Finset.sum_congr rfl fun j _ => by ring
@@ -1301,8 +1290,7 @@ theorem SpecCompDim.proof (hCone : ConeDimOfChowForm.Statement) (hFib : FibreCom
     obtain ⟨j, hj⟩ := hWrel
     refine ⟨j, fun h => hj ?_⟩
     have h' : X j ∈ (W.map φ).comap φ := by
-      rw [Ideal.mem_comap, map_X]
-      exact h
+      rwa [Ideal.mem_comap, map_X]
     rwa [Ideal.comap_map_of_surjective _ hφ, ← RingHom.ker_eq_comap_bot,
       sup_eq_left.mpr hkerW] at h'
 
@@ -1450,8 +1438,7 @@ theorem length_quot_map_of_flat {A L : Type*} [CommRing A] [IsLocalRing A] [Comm
     rw [← h, Ideal.map_comap_of_surjective _ Ideal.Quotient.mk_surjective]
   have hmax' : (IsLocalRing.maximalIdeal (A ⧸ P)).map (algebraMap (A ⧸ P) L) =
       IsLocalRing.maximalIdeal L := by
-    rw [← hq, Ideal.map_map]
-    exact hmax
+    rwa [← hq, Ideal.map_map]
   have key := IsLocalRing.length_baseChange (A ⧸ P) L ((A ⧸ P) ⧸ J.map (Ideal.Quotient.mk P))
   rw [← (Algebra.TensorProduct.quotIdealMapEquivTensorQuot L
     (J.map (Ideal.Quotient.mk P))).toLinearEquiv.length_eq, hmax'] at key

@@ -143,11 +143,8 @@ theorem chartLength_localizedModule_quotient {A : Type*} [CommRing A] (K W : Ide
 
 theorem chartLength_self_eq_of_ringEquiv {Q Q' : Type*} [CommRing Q] [CommRing Q'] (τ : Q ≃+* Q') :
     Module.length Q Q = Module.length Q' Q' := by
-  let _ := RingHomInvPair.of_ringEquiv τ
-  let _ := RingHomInvPair.symm (↑τ : Q →+* Q') (τ.symm : Q' →+* Q)
-  apply WithBot.coe_injective
-  rw [Module.coe_length, Module.coe_length,
-    Order.krullDim_eq_of_orderIso (Submodule.orderIsoMapComap τ.toSemilinearEquiv)]
+  exact
+    GroundTheory.Heights₂.Heights.ObjectsChow.VerticalPartMultiplicity.length_self_eq_of_ringEquiv τ
 
 theorem chartLength_quotient_self {A : Type*} [CommRing A] (I : Ideal A) :
     Module.length A (A ⧸ I) = Module.length (A ⧸ I) (A ⧸ I) :=
@@ -1687,7 +1684,7 @@ theorem RegularityMaximalSurjective.proof (h₁ : RegularityOrder.Statement) (h�
   let g : Ideal (MRing ι) → Ideal (regRing P) := fun W =>
     if h : IsClosedPt W ∧ P ≤ W then regMaxAt P W h.1 h.2 (hL K ι P W hPp h.1.1.1 h.2).1 else ⊥
   have hgW : ∀ W (h : IsClosedPt W ∧ P ≤ W), g W = regMaxAt P W h.1 h.2 (hL K ι P W hPp h.1.1.1 h.2).1 :=
-    fun W h => dif_pos h
+    fun W h => dite_eq_left h
   by_contra hcon
   push Not at hcon
 

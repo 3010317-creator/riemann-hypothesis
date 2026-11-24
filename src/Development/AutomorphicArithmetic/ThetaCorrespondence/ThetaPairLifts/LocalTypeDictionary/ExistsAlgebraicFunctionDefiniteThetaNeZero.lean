@@ -551,7 +551,7 @@ theorem exists_pos_complex_structure : ∀ (F E : Type) [Field F] [NumberField F
     rw [pair_Psi, key]
     have hex : ∃ v, a.map (piInf (B.emb v)) ≠ 0 := by
       by_contra hn
-      push_neg at hn
+      push Not at hn
       have ha0 : a = 0 := eq_of_map_piInf hcm B.emb hat (fun c _ => smul_zero c)
         fun v => by rw [hn v, Matrix.map_zero _ (map_zero _)]
       exact hw (by rw [ha0, hPsi0])
@@ -1289,13 +1289,7 @@ theorem iteratedDeriv_cexp_mul (a : ℂ) (n : ℕ) :
     rw [h.deriv]; ring
 
 theorem hasTemperateGrowth_expI : Function.HasTemperateGrowth (fun t : ℝ => Complex.exp (Complex.I * t)) := by
-  have hc : ContDiff ℝ (⊤ : ℕ∞) (fun y : ℝ => Complex.exp (Complex.I * y)) :=
-    (contDiff_const.mul Complex.ofRealCLM.contDiff).cexp
-  refine ⟨hc, fun n => ⟨0, ‖Complex.I‖ ^ n, fun x => ?_⟩⟩
-  rw [norm_iteratedFDeriv_eq_norm_iteratedDeriv, iteratedDeriv_cexp_mul, pow_zero, mul_one, norm_mul, norm_pow]
-  have h1 : ‖Complex.exp (Complex.I * x)‖ = 1 := by
-    rw [mul_comm, Complex.norm_exp_ofReal_mul_I]
-  rw [h1, mul_one]
+  exact GlobalTheory.CompanionTheory.AdelicHeis.temperate_exp_I
 
 theorem hasTemperateGrowth_chirp {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (Q : V →L[ℝ] V →L[ℝ] ℂ) (s : ℝ) :
@@ -1731,7 +1725,7 @@ theorem continuous_pure_theta_integral : _root_.GlobalTheory.FunPr.ThetaLocalInp
     refine Seminorm.continuous_of_lowerSemicontinuous ν fun u y hy => ?_
     by_cases hy0 : y < 0
     · exact Filter.Eventually.of_forall fun u' => hy0.trans_le (apply_nonneg ν u')
-    · push_neg at hy0
+    · push Not at hy0
       have hy' : y < (∫⁻ g, ‖T u g‖ₑ ∂μd).toReal := by rw [← hν]; exact hy
       have h1 : ENNReal.ofReal y < ∫⁻ g, ‖T u g‖ₑ ∂μd := (ENNReal.ofReal_lt_iff_lt_toReal hy0 (hfin _)).2 hy'
       filter_upwards [hN u _ h1] with u' hu'
@@ -1791,7 +1785,7 @@ theorem exists_algebraic_vector_definite_theta_ne (hP : _root_.GlobalTheory.FunP
     {Φ' : (Fin a' × Fin (a + a') → AF F) → ℂ} (hΦ' : Φ' ∈ G.M'.So B.ψ B.τ₁) (hne : G.M'.I om' Φ' ≠ 0) :
     ∃ ΦD ∈ GlobalTheory.SquareAgree.algD G.M' B.ψ B.emb, G.M'.I om' ΦD ≠ 0 := by
   by_contra hall
-  push_neg at hall
+  push Not at hall
   apply hne
   clear hne
   funext h

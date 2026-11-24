@@ -30,7 +30,6 @@ universe u
 
 theorem PFContracted.natCast_lt_withBotWithTop {a b : ℕ} (h : a < b) :
     ((a : ℕ) : WithBot (WithTop ℤ)) < ((b : ℕ) : WithBot (WithTop ℤ)) := by
-  show (((a : ℤ) : WithTop ℤ) : WithBot (WithTop ℤ)) < (((b : ℤ) : WithTop ℤ) : WithBot (WithTop ℤ))
   exact WithBot.coe_lt_coe.mpr (WithTop.coe_lt_coe.mpr (by exact_mod_cast h))
 
 theorem PFContracted.blockIncl_injective_of_embedding {K K' : Type} (j : K ↪ K') (ι' : K' → Type) :
@@ -72,8 +71,7 @@ theorem finsum_mul_eq_sum {α : Type*} (D : α →₀ ℤ) (J : α → ℤ) :
   intro W hW
   rw [Function.mem_support] at hW
   rw [Finset.mem_coe, Finsupp.mem_support_iff]
-  intro h0
-  exact hW (by rw [h0, zero_mul])
+  exact fun h0 => hW (by rw [h0, zero_mul])
 
 section Theory
 
@@ -107,8 +105,7 @@ theorem isIntersectionTheory (I : AI.I1.IFamily F ι) (hI : AI.I1.IsFieldInterse
     rw [hI.2 P n bs _ f g ⟨(Bridge.isMultiProjPrime_iff P).mp hP, hd⟩
       ⟨bf, bg, (Bridge.isMultiHomog_iff f bf).mp hf, (Bridge.isMultiHomog_iff g bg).mp hg, hfP, hgP,
         fun k => rfl⟩]
-    simp only [NumbersDVR.cycEval, AI.I1.cycEval, ratDiv_eq]
-    exact (finsum_mul_eq_sum _ _).symm
+    simpa only [NumbersDVR.cycEval, AI.I1.cycEval, ratDiv_eq] using (finsum_mul_eq_sum _ _).symm
 
 end Theory
 

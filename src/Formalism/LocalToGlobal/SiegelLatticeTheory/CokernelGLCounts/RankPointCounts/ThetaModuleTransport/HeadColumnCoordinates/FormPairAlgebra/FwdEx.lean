@@ -59,8 +59,7 @@ theorem gam_bwd (hΓ : (fun p => (θ p.1, p.2)) '' GamC O cj (Z₁.map O.subtype
   obtain ⟨q, hq, rfl⟩ := hp
   have e : θ.symm.toLinearMap (θ q.1) = q.1 := θ.symm_apply_apply q.1
   show (θ.symm.toLinearMap (θ q.1), q.2) ∈ _
-  rw [e]
-  exact hq
+  rwa [e]
 
 omit hO in
 theorem gam_fwd' (hΓ' : (fun p => (θ p.1, p.2)) '' GamC' O cj (Z₁.map O.subtype) t t' = GamC' O cj (Z₂.map O.subtype) t t') : ∀ p ∈ GamC' O cj (Z₁.map O.subtype) t t',
@@ -77,8 +76,7 @@ theorem gam_bwd' (hΓ' : (fun p => (θ p.1, p.2)) '' GamC' O cj (Z₁.map O.subt
   obtain ⟨q, hq, rfl⟩ := hp
   have e : θ.symm.toLinearMap (θ q.1) = q.1 := θ.symm_apply_apply q.1
   show (θ.symm.toLinearMap (θ q.1), q.2) ∈ _
-  rw [e]
-  exact hq
+  rwa [e]
 
 def gsEquiv (hu₁ : IsUnit (Z₁.map O.subtype).det) (hu₂ : IsUnit (Z₂.map O.subtype).det) (hη₁ : EtaNZD O cj Z₁ t t') (hη₂ : EtaNZD O cj Z₂ t t')
     (hΓ : (fun p => (θ p.1, p.2)) '' GamC O cj (Z₁.map O.subtype) t t' = GamC O cj (Z₂.map O.subtype) t t') :
@@ -338,7 +336,7 @@ theorem formC_LR (hcj : ∀ x, cj (cj x) = x) (Z : Matrix (Fin (r + 1)) (Fin (r 
     have h := congrFun hcR b
     rw [h]
     simp only [Matrix.mulVec, dotProduct, mul_add, Finset.sum_add_distrib, mul_ite, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
 
   simp only [hcb, bRaw, lamStarC, map_sum, map_mul, hcj]
@@ -373,16 +371,14 @@ theorem fwd_B (hcj : ∀ x, cj (cj x) = x) (hO : ∀ x ∈ O, cj x ∈ O) (t t' 
   have hly : lamC (Z₂.map O.subtype) (fun j => ((Sum.elim y₂ 0 : Ix r → O) (Sum.inl j) : E)) =
       lamC (Z₁.map O.subtype) (fun j => ((Sum.elim y 0 : Ix r → O) (Sum.inl j) : E)) := by
     have := hl (Submodule.Quotient.mk y)
-    rw [h1, lamLQ_mk, lamLQ_mk] at this
-    exact this
+    rwa [h1, lamLQ_mk, lamLQ_mk] at this
   have hly' : lamStarC cj (Z₂.map O.subtype) (fun j => ((Sum.elim y₂ 0 : Ix r → O) (Sum.inr j) : E)) =
       lamStarC cj (Z₁.map O.subtype) (fun j => ((Sum.elim y 0 : Ix r → O) (Sum.inr j) : E)) := by
     simp [lamStarC]
   have hls' : lamStarC cj (Z₂.map O.subtype) (fun j => ((Sum.elim 0 y₂' : Ix r → O) (Sum.inr j) : E)) =
       lamStarC cj (Z₁.map O.subtype) (fun j => ((Sum.elim 0 y' : Ix r → O) (Sum.inr j) : E)) := by
     have := hls (Submodule.Quotient.mk y')
-    rw [h2, lamSQ_mk, lamSQ_mk] at this
-    exact this
+    rwa [h2, lamSQ_mk, lamSQ_mk] at this
   obtain ⟨c1, -⟩ := cG_transfer O cj hcj Z₁ Z₂ hu₁ hu₂ t t' hG₁ hG₂ hκ _ _ hly hly'
   rw [formC_LR O cj hcj Z₂ hu₂ t t' hG₂ _ _ (fun j => rfl) (fun j => rfl),
     formC_LR O cj hcj Z₁ hu₁ t t' hG₁ _ _ (fun j => rfl) (fun j => rfl), c1, hls',
@@ -421,8 +417,7 @@ theorem fwdEx : FwdEx := by
     fun m => (sL m).1, fun m => (sR m).1⟩
   · intro y' y₂' h
     have key := (sR (Submodule.Quotient.mk y')).2
-    rw [h, lamSQ_mk, lamSQ_mk] at key
-    exact key
+    rwa [h, lamSQ_mk, lamSQ_mk] at key
   · intro y y' y₂ y₂' h h'
     exact fwd_B O cj hcj hO t t' ht ht' hu₁ hu₂ hk hg₁ hg₂ θ hθ
       (gEquiv O cj hO t t' Z₁ Z₂ θ hu₁ hu₂ hη₁ hη₂ hΓ').toLinearMap

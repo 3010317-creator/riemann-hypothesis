@@ -440,12 +440,7 @@ namespace GlobalTheory.Amp.YBound
 
 open GlobalTheory.Amp.GramFlag (eucl_eq)
 
-theorem det_upper {r : ℕ} (x : UT r → ℂ) : (upper x).det = 1 := by
-  rw [Matrix.det_of_isUpperTriangular]
-  · simp [upper]
-  · intro a b h
-    have h' : b < a := h
-    simp [upper, not_lt.2 h'.le, h'.ne']
+theorem det_upper {r : ℕ} (x : UT r → ℂ) : (upper x).det = 1 := GlobalTheory.Amp.UEmb.det_upper x
 
 theorem det_change {V₁ V₂ : Type} [AddCommGroup V₁] [Module ℂ V₁] [AddCommGroup V₂] [Module ℂ V₂]
     (B : V₁ →ₗ[ℂ] V₂ →ₗ⋆[ℂ] ℂ) {j : ℕ} (y : Fin j → V₁) (y' : Fin j → V₂) (U U' : Matrix (Fin j) (Fin j) ℂ)
@@ -656,19 +651,7 @@ theorem hpk_unit : IsUnit (Hpk k r).det :=
   Matrix.isUnit_det_of_left_inverse (Formalism.QuantumDeterminants.hpkFacts k r).2.1
 
 theorem hpk_mulVec_e (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) : (Hpk k r *ᵥ v) (eI k r a) = v (esI k r a) := by
-  have ha := a.isLt
-  simp only [Matrix.mulVec, dotProduct]
-  rw [Finset.sum_eq_single (esI k r a)]
-  · have : Hpk k r (eI k r a) (esI k r a) = 1 := by
-      unfold Hpk; rw [if_pos]; simp only [eI, esI]; omega
-    rw [this, one_mul]
-  · intro j _ hj
-    have hj' : j.val ≠ 2 * r + k - a.val := fun h => hj (Fin.ext h)
-    have : Hpk k r (eI k r a) j = 0 := by
-      unfold Hpk
-      rw [if_neg, if_neg, if_neg] <;> simp only [eI] <;> omega
-    rw [this, zero_mul]
-  · simp
+  exact GlobalTheory.Amp.NCoord.H_e v a
 
 theorem herm_e (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) : herm (Hpk k r) v (bvec (eI k r a)) = v (esI k r a) := by
   rw [← hpk_mulVec_e v a]
@@ -693,7 +676,7 @@ theorem semidef (z y : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hT : 0 < 
     (hy : ∀ a, herm (Hpk k r) y (fvec k r z a) = 0) : 0 ≤ (herm (Hpk k r) y y).re := by
   have hy1 : ∀ a, y (esI k r a) = 0 := fun a => by
     have := hy a.castSucc
-    simp only [fvec, Fin.val_castSucc, a.isLt, dif_pos, Fin.eta] at this
+    simp only [fvec, Fin.val_castSucc, a.isLt, dite_eq_left, Fin.eta] at this
     rwa [herm_e] at this
   have hy2 : herm (Hpk k r) y z = 0 := by
     have := hy (Fin.last r)

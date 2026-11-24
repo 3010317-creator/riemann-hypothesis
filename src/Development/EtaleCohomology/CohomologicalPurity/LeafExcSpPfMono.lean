@@ -119,8 +119,7 @@ theorem free_mono (R : Type) [CommRing R] {A B : PSh} (g : A ⟶ B) [Mono g] : M
     rw [ModuleCat.mono_iff_injective]
     change Function.Injective ((ModuleCat.free (ULift.{1} R)).map (uliftFunctor.{1}.map (g.app U))).hom
     have hu : Function.Injective (uliftFunctor.{1}.map (g.app U)) := by
-      intro a b h
-      exact ULift.ext (hg (congrArg ULift.down h))
+      exact fun a b h => ULift.ext (hg (congrArg ULift.down h))
     exact Finsupp.mapDomain_injective hu
   change Mono ((presheafToSheaf _ _).map ((freeP R).map g))
   infer_instance
@@ -141,8 +140,7 @@ theorem leafChainsMono : LeafChainsMono := by
       exact free_mono R _
     infer_instance
   · push Not at hn
-    refine ⟨fun g h _ => ?_⟩
-    exact (HomologicalComplex.isZero_extend_X _ _ _ (fun i => hn i)).eq_of_tgt _ _
+    exact ⟨fun g h _ => ((HomologicalComplex.isZero_extend_X _ _ _ (fun i => hn i)).eq_of_tgt _ _)⟩
 
 theorem etaleSplitExcision_of_cokernel_relative (hK : LeafCokIso) (hR : LeafHsRel) : LateralTheory.CohomologicalPurity.Thom.LeafExcSp :=
   etaleSplitExcision_of_mono_cokernel_relative leafChainsMono hK hR

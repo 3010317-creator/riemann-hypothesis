@@ -93,8 +93,7 @@ private theorem lc_hom {k G : Type} [Group G] [TopologicalSpace G] [IsTopologica
   rintro _ ⟨x, hx, rfl⟩
   have hx1 : χ x = 1 := MonoidHom.mem_ker.1 hx
   show χ (g * x) = y
-  rw [map_mul, hx1, mul_one]
-  exact hg
+  rwa [map_mul, hx1, mul_one]
 
 
 theorem UpperTheory.smoothHom_weight_sum_neg :
@@ -124,8 +123,7 @@ theorem UpperTheory.smoothHom_weight_sum_neg :
       rw [map_zero, eq_comm]
       apply List.prod_eq_zero
       rw [List.mem_map]
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have hle : ∀ t ∈ L, w n t.2.1 - w n t.2.2 ≤ 0 := by
         intro t ht
         rcases lt_trichotomy t.2.1 t.2.2 with h | h | h

@@ -65,13 +65,11 @@ theorem deriv_deriv_line {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] 
   have hfe : ∀ᶠ y in 𝓝 z, ContDiffAt ℝ 2 f y := hf.eventually (by simp)
   have hev : deriv (fun s : ℝ => f (z + s • e)) =ᶠ[𝓝 0] fun s => fderiv ℝ f (z + s • e) e := by
     filter_upwards [hcont.eventually hfe] with s hs
-    have h := (hs.differentiableAt (by norm_num)).hasFDerivAt.comp_hasDerivAt s (hline s)
-    exact h.deriv
+    exact ((hs.differentiableAt (by norm_num)).hasFDerivAt.comp_hasDerivAt s (hline s)).deriv
   have hH : HasFDerivAt (fderiv ℝ f) (fderiv ℝ (fderiv ℝ f) z) z :=
     ((hf.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)).hasFDerivAt
   have hA : HasFDerivAt (fun y => fderiv ℝ f y e) ((fderiv ℝ (fderiv ℝ f) z).flip e) z := by
-    have h := hH.clm_apply (hasFDerivAt_const e z)
-    simpa using h
+    simpa using hH.clm_apply (hasFDerivAt_const e z)
   have hd : HasDerivAt (fun s : ℝ => fderiv ℝ f (z + s • e) e) (fderiv ℝ (fderiv ℝ f) z e e) 0 :=
     hA.comp_hasDerivAt_of_eq (0 : ℝ) (hline 0) hz0.symm
   rw [hev.deriv_eq]
@@ -170,11 +168,9 @@ theorem along {ξ : (J → ℂ) → ℝ} {a φ : (J → ℂ) → ℂ} {z : J →
     (Φ := fun t => φ (z + t • v)) (contDiffAt_line hξ v) (contDiffAt_line haR v)
     (contDiffAt_line hφR v) h0 h1
   refine ⟨?_, ?_⟩
-  · rw [← deriv_line (hu.differentiableAt (by norm_num)) v]
-    exact k1
+  · rwa [← deriv_line (hu.differentiableAt (by norm_num)) v]
   · rw [← deriv_deriv_line hu v, ← deriv_deriv_line hφR v]
-    rw [show ξ z = ξ (z + (0 : ℝ) • v) by rw [hz0], show a z = a (z + (0 : ℝ) • v) by rw [hz0]]
-    exact k2
+    rwa [show ξ z = ξ (z + (0 : ℝ) • v) by rw [hz0], show a z = a (z + (0 : ℝ) • v) by rw [hz0]]
 
 theorem proof : LeviHolPerturb.Statement := by
   intro J _ ξ a φ z w hξ ha hφ hφ0 hdφ

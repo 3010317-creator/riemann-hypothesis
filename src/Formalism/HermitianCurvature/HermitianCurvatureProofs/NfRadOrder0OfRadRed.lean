@@ -106,8 +106,8 @@ theorem jetR_zero (hU : IsOpen U) (h0 : ζ0 ∈ U) {Λ : (ℂ → ℂ) → M} (h
       intro i
       rw [wd_eq hU hsm (w i) h0, wn_cmono, wn_mono]
       by_cases hi : cnt i = c
-      · rw [if_pos hi, if_pos (by rw [← hi]), hy]
-      · rw [if_neg hi, if_neg (by intro h'; exact hi (by rw [h'])), mul_zero, map_zero]
+      · rw [ite_eq_left hi, ite_eq_left (by rw [← hi]), hy]
+      · rw [ite_eq_right hi, ite_eq_right (by intro h'; exact hi (by rw [h'])), mul_zero, map_zero]
     rw [Finset.sum_congr rfl (fun i _ => e1 i), ← Finset.sum_filter] at hc
     exact hc.symm
   intro f hf
@@ -516,11 +516,9 @@ theorem radOrder0_of (hMem : RadRedMem) (hInj : RadRedInj) : RadOrder0 := by
       abel
     have h0 := jetR_zero hUo hx.2 hJ hmono f hf
     rw [hΛeq f hf Ψ hΨ] at h0
-    rw [eD, radR_sub, radR_sub, radR_mulZ hB _ (T Φ).2 hx, radR_mulZ hB _ Φ.2 hx]
-    exact h0
+    rwa [eD, radR_sub, radR_sub, radR_mulZ hB _ (T Φ).2 hx, radR_mulZ hB _ Φ.2 hx]
   have hD0 := hInj Wp Wq k r z z' μsec π π' hB _ D.2 _ (0 : RadSp k r z z' π π').2 key
-  rw [eD, Submodule.coe_zero, sub_sub, sub_eq_zero] at hD0
-  exact hD0
+  rwa [eD, Submodule.coe_zero, sub_sub, sub_eq_zero] at hD0
 
 end Formalism.FourierDecayAlt.P.NFRO
 

@@ -82,8 +82,7 @@ theorem mat_cancel (W : HSp D) (hW : W.SigOK) (Fr : Frames W) (hFr : IsFrames W 
     {b b' : Upq W ρ} (h : UpqT.mat b * Fr ρ = UpqT.mat b' * Fr ρ) : b = b' := by
   obtain ⟨C, h1, -⟩ := (GlobalTheory.Mem.SignatureFactor.exists_factor _ _ _ _ (hW (tauE D ρ))).2.2 (Fr ρ) (hFr ρ)
   apply (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.2.2.injective
-  have h5 := congrArg (· * C) h
-  simpa only [Matrix.mul_assoc, h1, Matrix.mul_one] using h5
+  simpa only [Matrix.mul_assoc, h1, Matrix.mul_one] using congrArg (· * C) h
 
 theorem realMat_of (W : HSp D) (Fr : Frames W) (hFr : IsFrames W Fr) (ρ : D.what₂.Tau) (b : Upq W ρ)
     (M : Matrix (Fin W.rank) (Fin W.rank) ℂ) (h : UpqT.mat b * Fr ρ = Fr ρ * M) : realMat W Fr ρ b = M := by
@@ -102,7 +101,7 @@ theorem infMat_realElt (θ : InfFam D) (hθ : IsInfFam θ) (W : HSp D) (u : D.wh
     (hu : ∀ τ, u τ ∈ Formalism.QuantumDeterminants.UH (gramAt D W τ)) (ρ : D.what₂.Tau) :
     infMat D.sp.cm.sig W.gram (θ ρ) (realElt θ W u) = u ρ := by
   rw [realElt, GlobalTheory.RealTransSm.infMat_list_prod hθ u hu ρ _ (Finset.nodup_toList _),
-    if_pos (Finset.mem_toList.2 (Finset.mem_univ ρ))]
+    ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ ρ))]
 
 theorem realElt_mem (θ : InfFam D) (W : HSp D) (u : D.what₂.Tau → Matrix (Fin W.rank) (Fin W.rank) ℂ) :
     realElt θ W u ∈ GinfC W := by
@@ -169,8 +168,7 @@ theorem lintegral_levelSet_eq_pi : ∀ (D : D7) (θ : InfFam D), IsInfFam θ →
       · show finE W ((sec (φ h))⁻¹ * h) ∈ K
         rw [map_mul, map_inv, hsec]
         dsimp only
-        rw [finE_realElt, inv_one, one_mul]
-        exact hh
+        rwa [finE_realElt, inv_one, one_mul]
     rw [← hZK (sec (φ h)) _ hk, mul_inv_cancel_left]
   calc ∫⁻ g in {h : GA D W | finE W h ∈ K}, Z g ∂ν
       = ∫⁻ g in {h : GA D W | finE W h ∈ K}, Z (sec (φ g)) ∂ν := setLIntegral_congr_fun hS hfac

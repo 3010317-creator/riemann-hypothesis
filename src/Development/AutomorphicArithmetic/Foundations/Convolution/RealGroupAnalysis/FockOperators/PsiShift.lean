@@ -54,8 +54,7 @@ variable {F : Type} [Field F] [NumberField F]
 private theorem psi_add (a b : A F) : ψ (a + b) = ψ a * ψ b := by
   simp only [ψ, AddChar.map_add_eq_mul, Circle.coe_mul]
 
-private theorem norm_psi (a : A F) : ‖ψ a‖ = 1 := by
-  exact Circle.norm_coe _
+private theorem norm_psi (a : A F) : ‖ψ a‖ = 1 := Circle.norm_coe _
 
 private theorem cont_psi : Continuous (ψ : A F → ℂ) :=
   continuous_subtype_val.comp continuous_adelicChar
@@ -158,8 +157,7 @@ private theorem key (δ : F) (O : Ops F) (w : InfinitePlace F) (i : Fin 4) (φ :
     simp only [ft4, hu]
   have e2 : ft4 δ (O.p δ w i φ).1 v = ∫ y, (O.p δ w i φ).1 y * u 0 y ∂(adeleMeasurePi F) := by
     simp only [ft4, hu, h0, Pi.single_zero, add_zero]
-  rw [e1, e2]
-  exact h
+  rwa [e1, e2]
 
 end
 
@@ -167,8 +165,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.dW :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] (D : Dat F E) (W : Weil D) (O : Ops F) w i, O.d w i * W.Om (wW F) = W.Om (wW F) * O.p D.δ w i := by
   intro F E _ _ _ _ _ _ _ D W O w i
   refine LinearMap.ext fun φ => Subtype.ext (funext fun v => ?_)
-  rw [Module.End.mul_apply, Module.End.mul_apply]
-  rw [W.Om_w (O.p D.δ w i φ) v]
+  rw [Module.End.mul_apply, Module.End.mul_apply, W.Om_w (O.p D.δ w i φ) v]
   have hd := O.d_spec w i (W.Om (wW F) φ) v
   simp only [W.Om_w] at hd
   exact hd.unique (key D.δ O w i φ v)

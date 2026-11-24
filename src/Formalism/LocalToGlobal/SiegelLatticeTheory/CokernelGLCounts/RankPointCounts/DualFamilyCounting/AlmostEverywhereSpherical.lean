@@ -109,8 +109,7 @@ theorem exists_unif_fin (hF : IsFixF K F) {P : Ideal (𝓞 K)} (hP : P.IsMaximal
     | one =>
       refine ⟨hP1, fun s' hs' => ?_⟩
       have e : s' = 1 := inj (by rw [hs', map_one, star_one])
-      rw [e]
-      exact hP1
+      rwa [e]
     | mul x y _ _ hx hy =>
       refine ⟨fun h => (hP.isPrime.mem_or_mem h).elim hx.1 hy.1, fun s' hs' => ?_⟩
       obtain ⟨x', hx'⟩ := _root_.Formalism.HermitianLattices.Ext.L3.StandardSymmetricSums.star_int x
@@ -141,8 +140,7 @@ theorem exists_unif_fin (hF : IsFixF K F) {P : Ideal (𝓞 K)} (hP : P.IsMaximal
     rintro rfl
     simp at ha
   have hY0 : algebraMap (𝓞 K) K Y ≠ 0 := by
-    intro h
-    exact nonZeroDivisors.ne_zero hY (inj (by rw [h, map_zero]))
+    exact fun h => nonZeroDivisors.ne_zero hY (inj (by rw [h, map_zero]))
   by_contra hall
   push Not at hall
   have key : ∀ N, ∃ s ∈ Formalism.HermitianLatticesTheory.hcompl (K := K) P, ∃ r : 𝓞 K, s * X * s0 ^ N = r * Y * u ^ N := by
@@ -216,8 +214,7 @@ theorem mem_locF_span_iff (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
         obtain ⟨i, rfl⟩ := hw
         exact mem_spanS x i
       · exact Submodule.zero_mem _
-      · intro a b _ _ ha hb
-        exact Submodule.add_mem _ ha hb
+      · exact fun a b _ _ ha hb => Submodule.add_mem _ ha hb
       · intro c a _ ha
         rw [← algebraMap_smul K c a]
         exact smul_mem_spanS (algebraMap_mem_locRing P c) ha

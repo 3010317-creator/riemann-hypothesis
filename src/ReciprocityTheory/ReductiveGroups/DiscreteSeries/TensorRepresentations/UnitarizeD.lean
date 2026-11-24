@@ -17,11 +17,7 @@ open ReciprocityTheory.ChartRestriction.DS
 variable {n : ℕ} {ε : Fin n → Bool}
 
 theorem inG_sub (Y : Matrix (Fin n) (Fin n) ℂ) : inG ε (Y - Jm ε * Yᴴ * Jm ε) := by
-  unfold inG
-  rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, _root_.ReciprocityTheory.ChartRestriction.DS.S7.Jm_conjTranspose,
-    Matrix.conjTranspose_conjTranspose]
-  simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_assoc, _root_.ReciprocityTheory.ChartRestriction.DS.S7.Jm_mul_self, _root_.ReciprocityTheory.ChartRestriction.DS.Jm_mul_Jm_mul, Matrix.mul_one]
-  abel
+  exact ReciprocityTheory.ChartRestriction.DS.inG_sub_theta ε Y
 
 theorem inG_add (Y : Matrix (Fin n) (Fin n) ℂ) : inG ε (Complex.I • (Y + Jm ε * Yᴴ * Jm ε)) := by
   have h := inG_sub (ε := ε) (Complex.I • Y)
@@ -50,11 +46,7 @@ theorem mat_decomp (Y Z : Matrix (Fin n) (Fin n) ℂ) :
 
 theorem single_conj (a b : Fin n) :
     Jm ε * (Matrix.single a b (1 : ℂ))ᴴ * Jm ε = adjSign ε a b • Matrix.single b a 1 := by
-  ext i j
-  rw [Jm_eq, Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.conjTranspose_single, Matrix.smul_apply,
-    Matrix.single_apply, Matrix.single_apply]
-  unfold adjSign sg
-  split_ifs <;> simp_all
+  exact ReciprocityTheory.ChartRestriction.DS.theta_single ε a b
 
 end Mx
 
@@ -119,8 +111,7 @@ theorem genSub_le_perpPerp (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε �
     genSub E V ≤ perpPerp ε σ V := by
   refine sInf_le ⟨fun y hy u hu => ?_, fun a b v hv => ?_⟩
   · have := hu 1 y hy
-    rw [umat_one, hσ.1.1] at this
-    exact this
+    rwa [umat_one, hσ.1.1] at this
   · have hE : E a b = (1 / 2 : ℂ) • actM E (Matrix.single a b 1 - Jm ε * (Matrix.single a b 1)ᴴ * Jm ε) +
         (-(Complex.I / 2)) • actM E (Complex.I • (Matrix.single a b 1 + Jm ε * (Matrix.single a b 1)ᴴ * Jm ε)) := by
       have h1 : actM E = mx E := rfl
@@ -143,8 +134,7 @@ theorem cf_inj (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E) {V : 
   have hself := hmem ((f c : D) : H) fun g y hy => by
     have := ha g⁻¹ y hy c
     rw [inner_sig hσ, inv_inv] at this
-    rw [inner_eq_zero_symm]
-    exact this
+    rwa [inner_eq_zero_symm]
   rw [inner_self_eq_zero] at hself
   simp only [Pi.zero_apply]
   exact_mod_cast hself

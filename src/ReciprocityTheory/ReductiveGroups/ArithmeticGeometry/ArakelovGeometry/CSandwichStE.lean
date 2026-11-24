@@ -93,46 +93,30 @@ theorem pt_lower {x : Ix κ → Ω} {e : Fin (D + 1) → Ix κ} {m : ConeMetric 
       (adtEnum D N (finProdFinEquiv.symm p).2) (H (finProdFinEquiv.symm p).1))) =
       ∑ l, eval z (map (Int.castRingHom ℂ) (H l)) * P l := by
     rw [← Equiv.sum_comp finProdFinEquiv, Fintype.sum_prod_type]
-    refine Finset.sum_congr rfl fun l _ => ?_
-    rw [hP, Finset.mul_sum]
-    refine Finset.sum_congr rfl fun i _ => ?_
+    simp only [hP, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun i _ => ?_
     rw [Equiv.symm_apply_apply, eval_prodForm]; ring
   have hPl : ∀ l, ‖P l‖ ≤ Real.sqrt (((N + D).choose D : ℝ) * q l) * m.ρ z ^ N := fun l => by
     have h := form_enum_sq_le D N (fun i => c (finProdFinEquiv (l, i))) (z ∘ e)
     rw [hsqN] at h
-    have hsq : ‖P l‖ ^ 2 ≤ ((N + D).choose D : ℝ) * q l * (m.ρ z ^ N) ^ 2 := by
-      calc ‖P l‖ ^ 2 ≤ ((N + D).choose D : ℝ) * (m.ρ z ^ 2) ^ N * q l := h
-        _ = ((N + D).choose D : ℝ) * q l * (m.ρ z ^ N) ^ 2 := by ring
-    have hsqrt := Real.sqrt_le_sqrt hsq
-    rwa [Real.sqrt_sq (norm_nonneg _), Real.sqrt_mul (mul_nonneg hBn0 (hq0 l)),
-      Real.sqrt_sq (pow_nonneg hρ0 N)] at hsqrt
-  have hmain : ‖∑ l, eval z (map (Int.castRingHom ℂ) (H l)) * P l‖ ≤
-      (Cε * ∑ l, Real.sqrt (((N + D).choose D : ℝ) * q l)) * m.ρ z ^ (N + kε) := by
+    refine le_of_sq_le_sq ?_ (by positivity)
+    rw [mul_pow, Real.sq_sqrt (mul_nonneg hBn0 (hq0 l))]
+    exact h.trans_eq (by ring)
+  rw [hsum]
+  refine le_trans (b := (Cε * ∑ l, Real.sqrt (((N + D).choose D : ℝ) * q l)) ^ 2) ?_ ?_
+  · rw [wgt, Nat.mul_comm 2, pow_mul, mul_inv_le_iff₀ (pow_pos (pow_pos (m.pos z hz.1) _) 2),
+      ← mul_pow]
+    refine pow_le_pow_left₀ (norm_nonneg _) ?_ 2
     refine (norm_sum_le _ _).trans ?_
     rw [Finset.mul_sum, Finset.sum_mul]
     refine Finset.sum_le_sum fun l _ => ?_
     rw [norm_mul]
-    calc ‖eval z (map (Int.castRingHom ℂ) (H l))‖ * ‖P l‖ ≤
-          (Cε * m.ρ z ^ kε) * (Real.sqrt (((N + D).choose D : ℝ) * q l) * m.ρ z ^ N) :=
-          mul_le_mul (hCε l z hz) (hPl l) (norm_nonneg _) (by positivity)
-      _ = Cε * Real.sqrt (((N + D).choose D : ℝ) * q l) * m.ρ z ^ (N + kε) := by ring
-  rw [hsum]
-  have hweighted : ‖∑ l, eval z (map (Int.castRingHom ℂ) (H l)) * P l‖ ^ 2 *
-      wgt m (N + kε) z ≤ (Cε * ∑ l, Real.sqrt (((N + D).choose D : ℝ) * q l)) ^ 2 := by
-    have hρ : 0 < m.ρ z ^ (N + kε) := pow_pos (m.pos z hz.1) _
-    rw [wgt, Nat.mul_comm 2, pow_mul, mul_inv_le_iff₀ (pow_pos hρ 2), ← mul_pow]
-    exact pow_le_pow_left₀ (norm_nonneg _) hmain 2
-  refine hweighted.trans ?_
-  have hcs := sq_sum_le_card_mul_sum_sq (s := Finset.univ)
-    (f := fun l => Real.sqrt (((N + D).choose D : ℝ) * q l))
-  simp only [Finset.card_univ, Fintype.card_fin] at hcs
-  rw [mul_pow]
-  calc Cε ^ 2 * (∑ l, Real.sqrt (((N + D).choose D : ℝ) * q l)) ^ 2 ≤
-        Cε ^ 2 * (δ * ∑ l, Real.sqrt (((N + D).choose D : ℝ) * q l) ^ 2) :=
-        mul_le_mul_of_nonneg_left hcs (sq_nonneg _)
-    _ = Cε ^ 2 * δ * ((N + D).choose D : ℝ) * ∑ l, q l := by
-        simp_rw [Real.sq_sqrt (mul_nonneg hBn0 (hq0 _))]
-        rw [← Finset.mul_sum]; ring
+    exact (mul_le_mul (hCε l z hz) (hPl l) (norm_nonneg _) (by positivity)).trans_eq (by ring)
+  · rw [mul_pow]
+    refine (mul_le_mul_of_nonneg_left sq_sum_le_card_mul_sum_sq (sq_nonneg _)).trans_eq ?_
+    simp_rw [Finset.card_univ, Fintype.card_fin, Real.sq_sqrt (mul_nonneg hBn0 (hq0 _))]
+    rw [← Finset.mul_sum]
+    ring
 
 theorem pt_small {x : Ix κ → Ω} {e : Fin (D + 1) → Ix κ} {m : ConeMetric (C := ℂ) (ι := Ix κ)}
     (hFS : IsPullFS x e m) {N k₀ : ℕ} {a : Fin (D + 1) → ℕ} (ha : ∑ t, a t = N)

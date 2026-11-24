@@ -183,16 +183,12 @@ theorem adMat_exp_hasDeriv (X : Matrix (Fin n) (Fin n) ℂ) (x y : Fin n × Fin 
     simp
   unfold adMat adD
   by_cases hx : IsPhys ε x <;> by_cases hy : IsPhys ε y
-  · simp only [hx, hy, if_true, and_self]
+  · simp only [hx, hy, ite_true, and_self]
     have h := (he x.1 y.1).fun_mul (he x.2 y.2).star
-    rw [h0, h0] at h
-    exact h
-  · simp only [hx, hy, if_true, if_false, and_false]
-    exact hasDerivAt_const _ _
-  · simp only [hx, if_false, false_and]
-    exact hasDerivAt_const _ _
-  · simp only [hx, if_false, false_and]
-    exact hasDerivAt_const _ _
+    rwa [h0, h0] at h
+  · simpa only [hx, hy, ite_true, ite_false, and_false] using hasDerivAt_const _ _
+  · simpa only [hx, ite_false, false_and] using hasDerivAt_const _ _
+  · simpa only [hx, ite_false, false_and] using hasDerivAt_const _ _
 
 theorem adPhys_exp_hasDeriv (X : Matrix (Fin n) (Fin n) ℂ) (w : Fin n × Fin n → ℂ) (x : Fin n × Fin n) :
     HasDerivAt (fun t : ℝ => adPhys ε (NormedSpace.exp ((t : ℂ) • X)) w x) (∑ y, adD ε X x y * w y) 0 := by
@@ -209,7 +205,7 @@ theorem sum_adD_eq_LX {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) (w : Fin
   obtain ⟨x1, x2⟩ := x
   unfold adD IsPhys
   by_cases hx : ε x1 = true ∧ ε x2 = false
-  · simp only [hx, true_and, if_true]
+  · simp only [hx, true_and, ite_true]
     rw [Fintype.sum_prod_type]
     trans ∑ b, ∑ c, ((if ε b = true ∧ c = x2 then X x1 b * w (b, c) else 0) +
       (if b = x1 ∧ ε c = false then -X c x2 * w (b, c) else 0))
@@ -221,7 +217,7 @@ theorem sum_adD_eq_LX {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) (w : Fin
       rw [← Finset.sum_neg_distrib]
       refine Finset.sum_congr rfl fun a _ => ?_
       split_ifs <;> simp
-  · simp only [hx, false_and, if_false, zero_mul, Finset.sum_const_zero]
+  · simp only [hx, false_and, ite_false, zero_mul, Finset.sum_const_zero]
 
 theorem adPhys_one' (w : Fin n × Fin n → ℂ) : adPhys ε 1 w = w := by
   simp [adPhys, adMat_one]
@@ -454,8 +450,7 @@ theorem diagE_mem_of_wK (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D
       ((((1 : ℂ) • diagE ε (eT E) cpT cmT a b - star (1 : ℂ) • diagE ε (eT E) cpT cmT b a) y) -
         Complex.I • (((Complex.I • diagE ε (eT E) cpT cmT a b - star Complex.I • diagE ε (eT E) cpT cmT b a)) y)) := by
     simp only [Complex.star_def, Complex.conj_I, map_one]
-    simp only [LinearMap.sub_apply, LinearMap.smul_apply, one_smul]
-    exact gen _ _
+    simpa only [LinearMap.sub_apply, LinearMap.smul_apply, one_smul] using gen _ _
   rw [key]
   exact Submodule.smul_mem _ _ (Submodule.sub_mem _ h1 (Submodule.smul_mem _ _ h2))
 

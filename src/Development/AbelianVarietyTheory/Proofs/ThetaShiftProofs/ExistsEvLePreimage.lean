@@ -107,16 +107,13 @@ theorem spec_coords : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     apply germ_le_preimage
     have e : (Γ.ev w).toRingHom.comp (Subalgebra.inclusion (Γ.le Ψ.T w hwT)).toRingHom =
         (Conv.ev Ψ.T w hwT).toRingHom := RingHom.ext fun r => Γ.ev_eq Ψ.T w hwT r
-    rw [← Category.assoc, ← spMap_comp, e, ← Ψ.yw_eq w hwT]
-    exact hy
+    rwa [← Category.assoc, ← spMap_comp, e, ← Ψ.yw_eq w hwT]
   refine ⟨hy, fun _ => hg, fun i v x' j hx' hj => ?_⟩
   have hxU : ⊤ ≤ (Ψ.xt w hwT v).left ⁻¹ᵁ (o.t.G.hom ⁻¹ᵁ C.U) := by
-    rw [← Scheme.Hom.comp_preimage, Over.w]
-    exact hg
+    rwa [← Scheme.Hom.comp_preimage, Over.w]
   have hxj : ⊤ ≤ (Ψ.xt w hwT v).left ⁻¹ᵁ o.t.PP.L.U j := by
     apply germ_le_preimage
-    rw [← Ψ.pi_eq w hwT v]
-    exact hj
+    rwa [← Ψ.pi_eq w hwT v]
   obtain ⟨z, hz⟩ : ∃ z : Sp (Γ.R w) ⟶ (o.t.G.hom ⁻¹ᵁ C.U).toScheme,
       z ≫ (o.t.G.hom ⁻¹ᵁ C.U).ι = (Ψ.xt w hwT v).left :=
     ⟨IsOpenImmersion.lift (o.t.G.hom ⁻¹ᵁ C.U).ι (Ψ.xt w hwT v).left (by

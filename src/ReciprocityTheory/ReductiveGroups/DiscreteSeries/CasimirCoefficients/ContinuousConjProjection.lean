@@ -256,8 +256,7 @@ theorem psM_exp_neg (T : KType ε Λ) (μ : Fin n → ℤ) {X : Matrix (Fin n) (
   have hE := Matrix.exp_conj (Jm ε) X hU
   rw [hinv, hJ] at hE
   have hE' : NormedSpace.exp (-X) = toMK (ps2J ε) * NormedSpace.exp X * toMK (ps2J ε)⁻¹ := by
-    rw [signElement_inv, toMatrix_signElement]
-    exact hE
+    rwa [signElement_inv, toMatrix_signElement]
   rw [hE', psM_conj]
   obtain ⟨c, hc⟩ := kType_schur_lemma T (T.op (ps2J ε)) (fun k => by
     rw [← kType_op_mul, ← kType_op_mul, signElement_central])

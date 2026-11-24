@@ -93,8 +93,7 @@ private theorem chained_bot_of_chained_ker_of_surjective {A B : Type} [CommRing 
       conv_lhs => rw [← Ideal.map_comap_of_surjective p hp a', ← Ideal.map_comap_of_surjective p hp b',
         ← Ideal.map_sup, Ideal.comap_map_of_surjective p hp]
       exact sup_eq_left.mpr (le_trans (Ideal.comap_mono bot_le) le_sup_left)
-    rw [ringKrullDim_quotient_eq_quotient_comap_of_surjective' p hp, hsup]
-    exact hd
+    rwa [ringKrullDim_quotient_eq_quotient_comap_of_surjective' p hp, hsup]
 
 theorem UpperTheory.V.Fr.sharp2 :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ}, F.Ok C₀ → ∀ S : Space O F 2, ∀ (x : Ideal S.A) (L : S.Loc x), F.Big C₀ → ¬ S.u.triP ≤ x → Chained (⊥ : Ideal L.R) (2 * F.d + 1) ∧ ∀ P ∈ minimalPrimes L.R, L.ρ.TI P := by
@@ -115,8 +114,7 @@ theorem UpperTheory.V.Fr.sharp2 :
       exact le_of_eq (congrArg (fun n : ℕ => (n : WithBot ℕ∞)) (by omega))
   have h1 : Chained (⊥ : Ideal L.R) (2 * F.d + 1) := by
     refine chained_bot_of_chained_ker_of_surjective (p : MvPowerSeries (Fin N) L.O' →+* L.R) hs _ ?_
-    rw [← hk] at hch
-    exact hch
+    rwa [← hk] at hch
   refine ⟨h1, fun P hP => ?_⟩
   have hr := (loc_rho hok (Or.inl rfl) S x L).2.2.2 hx
   have hl := (krull_dim_lt_of_not_le_triangular hok (Or.inl rfl) S x L hbig hx).1

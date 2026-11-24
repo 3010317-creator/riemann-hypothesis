@@ -118,8 +118,7 @@ lemma stab_orth (hρ : Good ρ) {W : Submodule ℂ H} (hW : Stab ρ W) : Stab ρ
   exact hv _ (hW j w hw)
 
 lemma stab_inf {W W' : Submodule ℂ H} (h : Stab ρ W) (h' : Stab ρ W') : Stab ρ (W ⊓ W') := by
-  intro i v hv
-  exact ⟨h i v hv.1, h' i v hv.2⟩
+  exact fun i v hv => ⟨h i v hv.1, h' i v hv.2⟩
 
 lemma proj_comm (hρ : Good ρ) {W : Submodule ℂ H} [FiniteDimensional ℂ W] (hW : Stab ρ W) :
     Comm ρ (W.starProjection : H →ₗ[ℂ] H) := by
@@ -190,8 +189,7 @@ theorem exists_hit (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (�
   set P : H →ₗ[ℂ] H := (W.starProjection : H →ₗ[ℂ] H) with hP
   have hPc : Comm ρ P := proj_comm hρ hWs
   have hρ'c : ∀ j, Comm ρ (ρ' j : H →ₗ[ℂ] H) := fun j i v => (hcomm i j v).symm
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hzero : ∀ j, ∀ x ∈ X, P (ρ' j x) = 0 := by
     intro j
     have hcj : Comm ρ (P ∘ₗ (ρ' j : H →ₗ[ℂ] H)) := comm_comp hPc (hρ'c j)
@@ -235,11 +233,9 @@ theorem exists_hit (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (�
       exact hWS hw
     have h1 : P w = 0 := LinearMap.mem_ker.1 (hle hwT)
     have h2 : P w = w := by
-      simp only [hP, ContinuousLinearMap.coe_coe]
-      exact Submodule.starProjection_eq_self_iff.2 hw
+      simpa only [hP, ContinuousLinearMap.coe_coe] using Submodule.starProjection_eq_self_iff.2 hw
     refine (Submodule.mem_bot ℂ).2 ?_
-    rw [← h2]
-    exact h1
+    rwa [← h2]
 
 theorem schur2 (hρ : Good ρ) {X W : Submodule ℂ H} [FiniteDimensional ℂ X] [FiniteDimensional ℂ W]
     (hXs : Stab ρ X) (hXi : Irr ρ X) (hWs : Stab ρ W) (hWi : Irr ρ W) {x₀ : H} (hx₀ : x₀ ∈ X)

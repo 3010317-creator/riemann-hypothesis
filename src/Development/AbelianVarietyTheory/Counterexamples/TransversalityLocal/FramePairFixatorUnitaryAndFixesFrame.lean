@@ -75,8 +75,7 @@ theorem exists_transv {α : Type*} (rel : α → α → Prop) (hr : Equivalence 
   refine ⟨pick '' S, ?_, ?_, ?_⟩
   · rintro _ ⟨x, hx, rfl⟩
     exact (hpick x hx).1
-  · intro x hx
-    exact ⟨pick x, ⟨x, hx, rfl⟩, (hpick x hx).2⟩
+  · exact fun x hx => ⟨pick x, ⟨x, hx, rfl⟩, (hpick x hx).2⟩
   · rintro _ ⟨x, hx, rfl⟩ _ ⟨x', hx', rfl⟩ h
     exact hcongr x x' (hr.trans (hr.symm (hpick x hx).2) (hr.trans h (hpick x' hx').2))
 
@@ -98,13 +97,11 @@ theorem img_one (Λ : Submodule M.L.O V) : img (1 : V ≃ₗ[E] V) Λ = Λ := by
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact hy
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
 
 theorem trel_equiv (P : FPair H r) : Equivalence (TRel P) := by
   constructor
-  · intro t
-    exact ⟨1, P.St.one_mem, (img_one _).symm⟩
+  · exact fun t => ⟨1, P.St.one_mem, (img_one _).symm⟩
   · rintro t t' ⟨s, hs, h⟩
     refine ⟨s⁻¹, P.St.inv_mem hs, ?_⟩
     rw [h, ← img_mul, inv_mul_cancel, img_one]

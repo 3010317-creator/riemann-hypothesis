@@ -66,14 +66,12 @@ omit [NumberField K] in
 theorem mem_fixingSubgroup_adjoin_simple_iff {F E : Type*} [Field F] [Field E] [Algebra F E]
     (α : E) (τ : E ≃ₐ[F] E) : τ ∈ (F⟮α⟯).fixingSubgroup ↔ τ α = α := by
   constructor
-  · intro hτ
-    exact (mem_fixingSubgroup_iff _ _).1 hτ α (mem_adjoin_simple_self F α)
+  · exact fun hτ => (mem_fixingSubgroup_iff _ _).1 hτ α (mem_adjoin_simple_self F α)
   · intro hτ
     have hst : τ ∈ MulAction.stabilizer (E ≃ₐ[F] E) α := hτ
     have hle : F⟮α⟯ ≤ fixedField (Subgroup.zpowers τ) := by
       rw [adjoin_simple_le_iff, mem_fixedField_iff]
-      intro f hf
-      exact (Subgroup.zpowers_le.2 hst) hf
+      exact fun f hf => (Subgroup.zpowers_le.2 hst) hf
     exact (le_iff_le _ _).1 hle (Subgroup.mem_zpowers τ)
 
 
@@ -152,8 +150,7 @@ theorem hilbertClassFieldArtinEquiv_apply_j_weierstrassCurve (Λ Λ' : PeriodPai
     show (∀ l ∈ Λ'.lattice, α * l ∈ Λ'.lattice) ↔ ∀ l ∈ L''.lattice, α * l ∈ L''.lattice
     rw [h, hL''lat]
   have e := hilbertClassFieldArtinEquiv_apply_j hK (ClassGroup.mk K 𝔞) (ellOf (algebraMap K ℂ) Λ hΛ)
-  rw [classGroup_smul_ellOf (algebraMap K ℂ) hK Λ Λ' hΛ hΛ' 𝔞 h] at e
-  exact e
+  rwa [classGroup_smul_ellOf (algebraMap K ℂ) hK Λ Λ' hΛ hΛ' 𝔞 h] at e
 
 end
 

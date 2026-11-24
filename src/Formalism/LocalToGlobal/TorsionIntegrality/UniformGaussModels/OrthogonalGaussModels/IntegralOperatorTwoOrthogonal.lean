@@ -40,7 +40,7 @@ open Formalism.L2.Th1.F (MulStable IsKerReps taylor0 pSeries)
 
 theorem coeff_two_pSeries (L : PeriodPair) :
     PowerSeries.coeff 2 (pSeries L) = L.g₂ / 20 := by
-  rw [_root_.Formalism.L2.Th1.F.weierstrass_p_series_coeff L 2, if_neg (by norm_num)]
+  rw [_root_.Formalism.L2.Th1.F.weierstrass_p_series_coeff L 2, ite_eq_right (by norm_num)]
   first
     | (simp only [PeriodPair.g₂]; push_cast; ring)
 
@@ -211,8 +211,7 @@ theorem exists_order_two {G : Type*} [AddCommGroup G] (Q : G) (hQ : Q ≠ 0) (a 
   obtain ⟨j, hj⟩ := Nat.exists_eq_succ_of_ne_zero h0
   refine ⟨j, Nat.find_min hex (by omega), ?_⟩
   have := Nat.find_spec hex
-  rw [hj, Nat.succ_eq_add_one, pow_succ, mul_nsmul, two_nsmul] at this
-  exact this
+  rwa [hj, Nat.succ_eq_add_one, pow_succ, mul_nsmul, two_nsmul] at this
 
 section Main
 
@@ -287,8 +286,7 @@ theorem not_in_kernel_of_multiplier_torsion (h1 : TwoTorsionKernelUnique) (h2 : 
     rcases Int.natAbs_eq n with h | h
     · have e2 : ((n.natAbs : ℕ) : ℂ) = (n : ℂ) := by
         rw [← Int.cast_natCast, ← h]
-      rw [e2]
-      exact hz
+      rwa [e2]
     · have e3 : ((n.natAbs : ℕ) : ℤ) = -n := by omega
       have e2 : ((n.natAbs : ℕ) : ℂ) = -(n : ℂ) := by
         rw [← Int.cast_natCast, e3, Int.cast_neg]
@@ -318,11 +316,9 @@ theorem not_in_kernel_of_multiplier_torsion (h1 : TwoTorsionKernelUnique) (h2 : 
     rw [← hπS]
     exact (hcong _ _ hPSl).symm
   have hPS0 : π PS ≠ 0 := by
-    rw [hπPS]
-    exact hj0
+    rwa [hπPS]
   have hPS2 : π PS + π PS = 0 := by
-    rw [hπPS]
-    exact hj2
+    rwa [hπPS]
   have hPSE : InFormalGroupPoints (π PS) := by
     rw [hπPS]
     exact hE1n _ _ hE
@@ -497,8 +493,7 @@ lemma psi_le (h2 : ‖(2 : K)‖ = 2⁻¹) (hb2 : ‖b2‖ ≤ 1) (hb4 : ‖b4�
 
 lemma psi_zero_le (h2 : ‖(2 : K)‖ = 2⁻¹) (hb2 : ‖b2‖ ≤ 1) (hb4 : ‖b4‖ ≤ 1) (hb6 : ‖b6‖ ≤ 1)
     (h0 : 4 * x ^ 3 + b2 * x ^ 2 + 2 * b4 * x + b6 = 0) : ‖x‖ ≤ 4 := by
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have r0 : 0 ≤ ‖x‖ := norm_nonneg _
   have e1 : ‖x‖ ^ 2 < ‖x‖ ^ 3 / 4 := by linarith [mul_pos (pow_pos (by linarith : (0:ℝ) < ‖x‖) 2) (sub_pos.2 hlt)]
   have e2 : ‖x‖ / 2 < ‖x‖ ^ 3 / 4 := by linarith [mul_pos (by linarith : (0:ℝ) < ‖x‖) (sub_pos.2 hlt)]
@@ -539,8 +534,7 @@ lemma dup_core (h2 : ‖(2 : K)‖ = 2⁻¹) (hb2 : ‖b2‖ ≤ 1) (hb4 : ‖b4
   have hp := psi_le h2 hb2 hb4 hb6 hx
   have hm := congrArg norm hX
   rw [norm_mul, hn] at hm
-  by_contra hle
-  push_neg at hle
+  by_contra! hle
   have hb : ‖X‖ * ‖4 * x ^ 3 + b2 * x ^ 2 + 2 * b4 * x + b6‖ ≤ 4 * (‖x‖ ^ 3 / 4) :=
     mul_le_mul hle hp (norm_nonneg _) (by norm_num)
   have r3 : 0 < ‖x‖ ^ 3 := pow_pos (by linarith) 3
@@ -553,8 +547,7 @@ lemma dup_core (h2 : ‖(2 : K)‖ = 2⁻¹) (hb2 : ‖b2‖ ≤ 1) (hb4 : ‖b4
 lemma psi_zero_eq (h2 : ‖(2 : K)‖ = 2⁻¹) (hb2 : ‖b2‖ = 1) (hb4 : ‖b4‖ ≤ 1) (hb6 : ‖b6‖ ≤ 1)
     (hx : 1 < ‖x‖) (h0 : 4 * x ^ 3 + b2 * x ^ 2 + 2 * b4 * x + b6 = 0) : ‖x‖ = 4 := by
   refine le_antisymm (psi_zero_le h2 hb2.le hb4 hb6 h0) ?_
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have e1 : ‖x‖ ^ 3 / 4 < ‖x‖ ^ 2 := by linarith [mul_pos (pow_pos (by linarith : (0:ℝ) < ‖x‖) 2) (sub_pos.2 hlt)]
   have e2 : ‖x‖ / 2 < ‖x‖ ^ 2 := by
     calc ‖x‖ / 2 < ‖x‖ * 1 := by linarith
@@ -649,8 +642,7 @@ lemma dup (h : W.toAffine.Equation x y) (hy : y ≠ W.toAffine.negY x y) :
 lemma add_self_iff (h : W.toAffine.Nonsingular x y) :
     (Point.some x y h + Point.some x y h = 0) ↔ 2 * y + W.a₁ * x + W.a₃ = 0 := by
   rw [add_eq_zero_iff_eq_neg, WeierstrassCurve.Affine.Point.neg_some, WeierstrassCurve.Affine.Point.some.injEq]
-  simp only [true_and]
-  exact negY_iff
+  simpa only [true_and] using negY_iff
 
 lemma px_add_self (h : W.toAffine.Nonsingular x y) (hy : y ≠ W.toAffine.negY x y) :
     px W (Point.some x y h + Point.some x y h)
@@ -696,8 +688,7 @@ lemma dup_big (hW : IntCurve W) (h2 : ‖(2 : K)‖ = 2⁻¹) (P : W.toAffine.Po
 
 lemma tors_bound (hW : IntCurve W) (h2 : ‖(2 : K)‖ = 2⁻¹) (P : W.toAffine.Point) (k : ℕ)
     (hk : (2 ^ k) • P = 0) (hP : P + P ≠ 0) : ‖px W P‖ < 4 := by
-  by_contra hge
-  push_neg at hge
+  by_contra! hge
   have claim : ∀ j : ℕ, 4 < ‖px W ((2 ^ (j + 1)) • P)‖ := by
     intro j
     induction j with
@@ -774,8 +765,7 @@ theorem two_torsion_kernel_unique_holds : TwoTorsionKernelUnique := by
 
 open Classical in
 theorem torsion_norm_bound_holds : TorsBound := by
-  intro K _ _ W hW h2 P k hk hP
-  exact tors_bound hW h2 P k hk hP
+  exact fun K _ _ W hW h2 P k hk hP => tors_bound hW h2 P k hk hP
 
 theorem kappa_norm_holds : KapNorm := by
   intro K _ _ _ W hM h2 x

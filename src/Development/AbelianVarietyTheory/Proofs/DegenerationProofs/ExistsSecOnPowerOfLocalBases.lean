@@ -122,8 +122,7 @@ theorem ZHPre.genVal_of_cover (k : ℤ) {I : Type} [Fintype I]
   obtain ⟨a, ha⟩ := hV _ (h5 ⟨IsLocalRing.closedPoint K, rfl⟩)
   have h6 : Set.range (g ≫ Q.φ) ⊆ T a := by
     rintro _ ⟨w, rfl⟩
-    rw [Subsingleton.elim (α := PrimeSpectrum K) w (IsLocalRing.closedPoint K)]
-    exact ha
+    rwa [Subsingleton.elim (α := PrimeSpectrum K) w (IsLocalRing.closedPoint K)]
   rw [h a K β g r jP jL h1 h2 h3 h4 h6]
   congr 1
   have hU : ⊤ ≤ (g ≫ Q.φ) ⁻¹ᵁ (T a ⊓
@@ -193,8 +192,7 @@ theorem exists_secOn_genVal_of_bases : ∀ (o Ω : Type) [CommRing o] [Field Ω]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [hf, ← mul_div_assoc]
       rfl
-    rw [h4] at h3
-    exact h3
+    rwa [h4] at h3
   choose T hz hT σ hσ hg using H
   have hle : ∀ z, Q.G.hom ⁻¹ᵁ T z ≤ Q.G.hom ⁻¹ᵁ W := fun z x hx => hT z hx
   have hcov : ∀ x ∈ Q.G.hom ⁻¹ᵁ W, ∃ z, x ∈ Q.G.hom ⁻¹ᵁ T z := fun x hx => ⟨⟨Q.G.hom x, hx⟩, hz _⟩
@@ -203,7 +201,6 @@ theorem exists_secOn_genVal_of_bases : ∀ (o Ω : Type) [CommRing o] [Field Ω]
       (Q.genVal_res _ _ _ inf_le_right _ (hg z'))) j
   refine ⟨τ, hτ, Q.genVal_of_cover _ _ _ _ hle hcov τ fun z => ?_⟩
   have h5 := hg z
-  rw [← funext (hr z)] at h5
-  exact h5
+  rwa [← funext (hr z)] at h5
 
 end GlobalTheory.ZH

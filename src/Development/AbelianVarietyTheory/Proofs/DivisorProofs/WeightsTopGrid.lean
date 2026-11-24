@@ -102,7 +102,7 @@ theorem Good.union {lo1 hi1 t1 lo2 hi2 t2 lo hi : ℤ} {A1 B1 A2 B2 : Finset ℚ
       rw [e1]
       have := b2 p hp
       constructor <;> linarith [this.1, this.2]
-    · push_neg at hY
+    · push Not at hY
       have e2 : cnt p A2 B2 = 0 := by
         rw [cnt, filter_false_of_mem fun x hx => by simpa using hY x (mem_union_left _ hx),
           filter_false_of_mem fun x hx => by simpa using hY x (mem_union_right _ hx)]
@@ -229,8 +229,7 @@ theorem strictInterlace_of_good {A B : Finset ℚ} (h : Good 0 1 1 A B) : Strict
   obtain ⟨hd, hc, hb⟩ := h
   rw [strictInterlace_iff]
   refine ⟨hd, card_pos.1 (by omega), fun y hy => ?_, fun y hy => ?_, fun x hx y hy hxy hz => ?_⟩
-  · by_contra hne
-    push_neg at hne
+  · by_contra! hne
     have h1 : 0 ≤ ((A.filter fun z => y ≤ z).card : ℤ) - (B.filter fun z => y ≤ z).card := by
       have := (hb _ (isUp_le y)).1; rw [cnt_decide] at this; exact this
     have e1 : A.filter (fun z => y ≤ z) = ∅ := filter_eq_empty_iff.2 fun z hz h' =>
@@ -238,8 +237,7 @@ theorem strictInterlace_of_good {A B : Finset ℚ} (h : Good 0 1 1 A B) : Strict
     have e2 : 1 ≤ (B.filter (fun z => y ≤ z)).card := card_pos.2 ⟨y, mem_filter.2 ⟨hy, le_rfl⟩⟩
     rw [e1, card_empty] at h1
     omega
-  · by_contra hne
-    push_neg at hne
+  · by_contra! hne
     have h1 : ((A.filter fun z => y < z).card : ℤ) - (B.filter fun z => y < z).card ≤ 1 := by
       have := (hb _ (isUp_lt y)).2; rw [cnt_decide] at this; exact this
     have e1 : A.filter (fun z => y < z) = A := filter_true_of_mem fun z hz =>
@@ -292,15 +290,15 @@ theorem strictInterlace_of_good {A B : Finset ℚ} (h : Good 0 1 1 A B) : Strict
     · intro hxA hyA
       have hxB : x ∉ B := disjoint_left.1 hd hxA
       have hyB : y ∉ B := disjoint_left.1 hd hyA
-      rw [if_pos hxA, if_pos hyA] at hA
-      rw [if_neg hxB, if_neg hyB] at hB
+      rw [ite_eq_left hxA, ite_eq_left hyA] at hA
+      rw [ite_eq_right hxB, ite_eq_right hyB] at hB
       omega
     · intro hyA
       by_contra hxA
       have hxB : x ∈ B := hxAB.resolve_left hxA
       have hyB : y ∈ B := hyAB.resolve_left hyA
-      rw [if_neg hxA, if_neg hyA] at hA
-      rw [if_pos hxB, if_pos hyB] at hB
+      rw [ite_eq_right hxA, ite_eq_right hyA] at hA
+      rw [ite_eq_left hxB, ite_eq_left hyB] at hB
       omega
 
 end GlobalTheory.WtInterlace
@@ -353,8 +351,7 @@ theorem good_U {i : ℕ} (h1 : 1 ≤ i) (h2 : i ≤ D.R.m) :
     Good (-1) 0 0 ((Γ).blockC' i ∪ {(Γ).a i}) ((Γ).blockC i) := by
   have hs : 1 ≤ (Γ).s := (odd_sLen D).pos
   have key := good_CB ((Γ).cen i : ℚ) ((Γ).a i) ((Γ).s - 1) ?_
-  · rw [Nat.sub_add_cancel hs] at key
-    exact key
+  · rwa [Nat.sub_add_cancel hs] at key
   · have hmem : ((Γ).cen i : ℚ) - (((Γ).s - 1 : ℕ) : ℚ) / 2 ∈ (Γ).blockC i := by
       refine mem_block.2 ⟨(Γ).s - 1, by omega, ?_⟩
       rw [Nat.cast_sub hs]; push_cast; ring
@@ -599,8 +596,7 @@ theorem sameShift_wtOf {N n : ℕ} (hN : N = n + 1) (hn : 0 < n) {A B : Finset �
   rw [descEnum_last hB hn hxB hBm] at e1
   rw [descEnum_last hA (Nat.succ_pos n) hxA hAm] at e2
   have : (((wtOf n B).w ⟨n - 1, by omega⟩ : ℤ) : ℚ) = (((wtOf (n + 1) A).w ⟨n + 1 - 1, by omega⟩ : ℤ) : ℚ) := by
-    rw [e1, e2]
-    rw [Nat.cast_sub hn]
+    rw [e1, e2, Nat.cast_sub hn]
     push_cast
     ring
   exact_mod_cast this
@@ -699,7 +695,7 @@ theorem weights_top_grid : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
   have eB : entries (Node.par D sc.cGap (.grid D.R.m D.R.m) τ) = entries ((num D sc.cGap τ).parD D.R.m D.R.m) := by
     have : entries (Node.par D sc.cGap (.grid D.R.m D.R.m) τ) =
         entries (shift (if Odd (D.R.m + D.R.m) then -(1 / 2) else 0) ((num D sc.cGap τ).parD D.R.m (num D sc.cGap τ).m)) := rfl
-    rw [this, if_neg (by rw [Nat.odd_iff]; omega), shift_zero]
+    rw [this, ite_eq_right (by rw [Nat.odd_iff]; omega), shift_zero]
     rfl
   have hSI : StrictInterlace (entries (Node.par D sc.cGap (.top D.R.m) τ))
       (entries (Node.par D sc.cGap (.grid D.R.m D.R.m) τ)) := by

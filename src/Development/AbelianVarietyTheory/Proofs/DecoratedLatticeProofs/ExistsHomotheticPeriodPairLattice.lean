@@ -67,8 +67,7 @@ theorem homotheticLattice : ∀ (L : PeriodPair) (c : ℂ), c ≠ 0 → ∃ L' :
   · intro z
     constructor
     · have := hwp (c * z)
-      rw [← mul_assoc, inv_mul_cancel₀ hc, one_mul, inv_pow, inv_inv] at this
-      exact this
+      rwa [← mul_assoc, inv_mul_cancel₀ hc, one_mul, inv_pow, inv_inv] at this
     · unfold PeriodPair.derivWeierstrassP
       rw [Formalism.L2.Th1.F.Homog.tsum_scale L c⁻¹ hc' (fun l => 2 / (z - l) ^ 3), mul_neg,
         ← tsum_mul_left]
@@ -77,7 +76,6 @@ theorem homotheticLattice : ∀ (L : PeriodPair) (c : ℂ), c ≠ 0 → ∃ L' :
       have : z - c⁻¹ * (l : ℂ) = c⁻¹ * (c * z - l) := by field_simp
       rw [this, mul_pow, inv_pow, div_eq_mul_inv, div_eq_mul_inv, mul_inv, inv_inv]
       ring
-  · intro d hd
-    exact Formalism.L2.Th1.F.hasCMByScale d L c⁻¹ hc' hd
+  · exact fun d hd => Formalism.L2.Th1.F.hasCMByScale d L c⁻¹ hc' hd
 
 end GlobalTheory

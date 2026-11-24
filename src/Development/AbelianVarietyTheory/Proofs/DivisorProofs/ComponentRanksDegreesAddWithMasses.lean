@@ -81,8 +81,7 @@ theorem deg_scale : ∀ (K V : Type) [Field K] [NumberField K] [_root_.NumberFie
     simp only [hX', Matrix.smul_mul, Matrix.mul_smul, smul_smul, Matrix.nonsing_inv_mul _ (hG v).1,
       inv_mul_cancel₀ (htc v), one_smul]
   have hfc : ∀ v x, Formalism.HermitianLatticesTheory.fcoord b X' v x = (t v.embedding : ℂ) • Formalism.HermitianLatticesTheory.fcoord b X v x := fun v x => by
-    simp only [Formalism.HermitianLatticesTheory.fcoord, hinv]
-    exact Matrix.smul_mulVec _ _ _
+    simpa only [Formalism.HermitianLatticesTheory.fcoord, hinv] using Matrix.smul_mulVec _ _ _
   have hnorm : ∀ v x, Formalism.HermitianLatticesTheory.normAt b X' v x = t v.embedding * Formalism.HermitianLatticesTheory.normAt b X v x := fun v x => by
     simp only [Formalism.HermitianLatticesTheory.normAt, Formalism.HermitianLatticesTheory.cnorm, hfc, Pi.smul_apply, smul_eq_mul, norm_mul, mul_pow,
       ← Finset.mul_sum]
@@ -376,7 +375,7 @@ theorem hasGram_normRes (h : HasGram (normOn U (xiR D) V dict Z G)) : HasGram (n
     refine GlobalTheory.HSApp.hasGram_of_injective h LinearMap.id (fun _ _ h => h) (fun v => (k v.embedding)⁻¹)
       (fun v => inv_pos.2 (hkpos v)) fun v x => ?_
     rw [LinearMap.id_apply, hk, ← mul_assoc, inv_mul_cancel₀ (hkpos v).ne', one_mul]
-  · push_neg at h0
+  · push Not at h0
     refine GlobalTheory.HSApp.hasGram_of_injective h LinearMap.id (fun _ _ h => h) (fun _ => 1) (fun _ => one_pos)
       fun v x => ?_
     rw [h0 x, LinearMap.id_apply, one_mul, normRes_zero, normOn_zero]
@@ -455,8 +454,7 @@ theorem pyth [Fintype (Comp Xo c)] (hO : Orthogonal U V dict G) (σ : c.F →+* 
   have h := (hO σ).1 (fun Z => toOn U Z G (f Z))
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype] at h
   unfold normW
-  rw [Submodule.coe_sum]
-  exact h
+  rwa [Submodule.coe_sum]
 
 theorem goodW_of (hS : Splits U G) (hO : Orthogonal U V dict G) (h : ∀ Z, GoodOn U (xiR D) V dict Z G) :
     GoodW U (xiR D) V dict G := by

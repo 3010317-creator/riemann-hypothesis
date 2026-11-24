@@ -66,8 +66,7 @@ theorem infPlaceOfEmbedding_eq_inv_smul (ι ι' : ℚ̄ →ₐ[K.1] AlgebraicClo
     rw [AdeleBaseChange.infiniteCompletionMap_algebraMap, infCompletionEmbedding_algebraMap,
       AlgEquiv.coe_toRingEquiv, h x]
   have e := congrArg Subtype.val (eq_infPlaceOfEmbedding ι' L j hj)
-  rw [← e]
-  exact hcomap
+  rwa [← e]
 
 end InfPlace
 
@@ -122,8 +121,7 @@ theorem stabilizer_infPlaceOfEmbedding (v : {v : NumberField.InfinitePlace K.1 /
       refine (isReal_infPlaceOfEmbedding_iff L v.2 (ιr v)).2 fun g x => ?_
       have h1 : gsRestrictGal hL (gsRealFamily S ιr v g) = 1 := by
         have hmem : gsRestrictGal hL (gsRealFamily S ιr v g) ∈ gsRealDecompGroup S ιr hL v := ⟨g, rfl⟩
-        rw [hbot] at hmem
-        exact hmem
+        rwa [hbot] at hmem
       rw [← apply_gsRestrictGal_gsRealFamily S ιr hL v g x, h1]
       rfl
     have hfin : Finite (gsRealDecompGroup S ιr hL v) := inferInstance

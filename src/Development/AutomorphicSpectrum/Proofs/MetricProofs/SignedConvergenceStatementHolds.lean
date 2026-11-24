@@ -189,11 +189,7 @@ theorem tendsto_epsT_zero (C : ℝ) :
 
 theorem isPsh_of_isPosPot {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X)
     (Θ : LocPot X) (h : IsPosPot A Θ) : IsPsh A Θ := by
-  intro x j y hy w
-  by_cases hw : w = 0
-  · subst hw
-    simp [levi]
-  · exact (h x j y hy w hw).le
+  exact ReciprocityTheory.AnForm.P.TailBoundAlt.isPsh_of_isPosPot A Θ h
 
 theorem eventually_isPsh_add_pot {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X)
     (Θ L : LocPot X) (s : X → X → ℂ) (th : LocPot X) (ph : X → ℝ) (phT : ℝ → X → ℝ)

@@ -173,8 +173,7 @@ theorem HasBasisAway.comap {a : R} (π : X →ₗ[R] M) (hπ : Function.Surjecti
       rw [Set.image_image]
       simp [hσ _]
     rw [bot_sup_eq, this, ← map_span, ← map_smul] at hn
-    rw [sup_comm, ← comap_map_eq]
-    exact hn
+    rwa [sup_comm, ← comap_map_eq]
 
 theorem HasBasisAway.quotient {a : R} {P : Submodule R M} (h : HasBasisAway a P ⊤) :
     HasBasisAway a (⊥ : Submodule R (M ⧸ P)) ⊤ := by
@@ -317,8 +316,7 @@ theorem exists_hasBasisAway_powerChain [IsDomain R] (t : Module.End T M) (N : Su
       (N.map (t ^ (d + 1))).restrictScalars R := by
     ext x
     exact ⟨by rintro ⟨y, rfl⟩; exact ⟨y, y.2, rfl⟩, by rintro ⟨y, hy, rfl⟩; exact ⟨⟨y, hy⟩, rfl⟩⟩
-  rw [e2, ← restrictScalars_sup] at h2
-  exact h2
+  rwa [e2, ← restrictScalars_sup] at h2
 
 end Step
 
@@ -631,8 +629,7 @@ theorem exists_pow_smul_mem_range_of_dense {D : Set (PrimeSpectrum R)} (hD : Den
   obtain ⟨x, hxD, hxa⟩ := hD.exists_mem_open (PrimeSpectrum.basicOpen a).isOpen
     ⟨⟨⊥, Ideal.isPrime_bot⟩, by simpa using ha⟩
   refine ⟨x.asIdeal.ResidueField, inferInstance, inferInstance, inferInstance, ?_, h x hxD⟩
-  rw [isUnit_iff_ne_zero, Ne, Ideal.algebraMap_residueField_eq_zero]
-  exact hxa
+  rwa [isUnit_iff_ne_zero, Ne, Ideal.algebraMap_residueField_eq_zero]
 
 theorem exists_awayMap_surjective_of_dense {D : Set (PrimeSpectrum R)} (hD : Dense D)
     (h : ∀ x ∈ D, Function.Surjective (Algebra.TensorProduct.map

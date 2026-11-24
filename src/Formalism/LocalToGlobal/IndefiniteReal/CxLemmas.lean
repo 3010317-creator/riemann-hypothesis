@@ -223,8 +223,7 @@ theorem partPr_other {p q : Bs.Ix} {x : Fin (Df.dQ t) → K} (hx : x ∈ Df.Qp t
   rw [heq, LinearMap.toMatrix'_mulVec, LinearMap.comp_apply]
   have hx' : x ∈ ⨆ (p' : Bs.Ix) (_ : p' ≠ q), Df.Qp t p' := by
     have hle : Df.Qp t p ≤ ⨆ (p' : Bs.Ix) (_ : p' ≠ q), Df.Qp t p' := by
-      apply le_iSup_of_le p
-      exact le_iSup (fun _ : p ≠ q => Df.Qp t p) (Ne.symm hq)
+      exact le_iSup_of_le p (le_iSup (fun _ : p ≠ q => Df.Qp t p) (Ne.symm hq))
     exact hle hx
   have := Submodule.linearProjOfIsCompl_apply_right hc ⟨x, hx'⟩
   rw [this]
@@ -242,10 +241,8 @@ theorem sum_partPr_mulVec (y : Fin (Df.dQ t) → K) : ∑ q, (partPr Df t q).mul
     refine iSup_le fun p x hx => ?_
     rw [LinearMap.mem_ker, hT, Finset.sum_eq_single p]
     · rw [partPr_self Df t hi ht hx, sub_self]
-    · intro q _ hq
-      exact partPr_other Df t hi ht hx hq
-    · intro h
-      exact absurd (Finset.mem_univ p) h
+    · exact fun q _ hq => partPr_other Df t hi ht hx hq
+    · exact fun h => absurd (Finset.mem_univ p) h
   have hy : y ∈ LinearMap.ker T := hle (ht ▸ Submodule.mem_top)
   rw [LinearMap.mem_ker, hT] at hy
   exact sub_eq_zero.1 hy
@@ -295,7 +292,7 @@ theorem lin_basis {E : Type} [AddCommGroup E] [Module ℂ E] {n : ℕ} (f : (Fin
   apply LinearMap.pi_ext
   intro i x
   simp only [lin, Fintype.linearCombination_apply, Pi.single_apply, ite_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← map_smul]
   congr 1
   ext j

@@ -399,10 +399,9 @@ theorem good_of_parts {k : Type} [Field k] (Φ : FibPre k) (N : ℕ) (q : Quadra
     have key : ∀ i, (if h : cls i = cls i₀ then a ⟨i, h⟩ else 0) ≠ 0 → cls i = cls i₀ := by
       intro i hi
       by_contra h
-      exact hi (dif_neg h)
+      exact hi (dite_eq_right h)
     refine ⟨fun i => if h : cls i = cls i₀ then a ⟨i, h⟩ else 0, fun i hi => ?_, fun l => ?_⟩
-    · rw [key i hi]
-      exact hm
+    · rwa [key i hi]
     · rw [hsum i₀ α _ key l, wt_lin Φ ha α l]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [dite_eq_left i.2]
@@ -514,8 +513,7 @@ theorem good_reduction : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [
     · have : (a ∘ e.symm) ∘ e = a := by
         funext i
         simp
-      rw [this]
-      exact ha
+      rwa [this]
     · rw [← hu _ ((hlin b).1 hb)]
       funext i
       simp
@@ -665,8 +663,7 @@ theorem exists_gtDatum_baseChange_maps :
     · have e₂ : charUnit S' E.X χ =
           pullU (eT.hom.left ≫ pullback.fst (splitTorus S E.X).hom f) ⊤ (charUnit S E.X χ) :=
         Units.ext (hT χ).symm
-      refine Eq.trans ?_ (congrArg (gm τ.left z ⊤) e₂).symm
-      exact (gm_pull τ.left _ z ⊤ trivial _).symm
+      exact Eq.trans (gm_pull τ.left _ z ⊤ trivial _).symm (congrArg (gm τ.left z ⊤) e₂).symm
 
 end GlobalTheory
 end -- clump:auto
@@ -1239,8 +1236,7 @@ theorem pure_of_red : ∀ (k : Type) [Field k] [IsAlgClosed k] (Φ : FibPre k) (
   have h₂ := hr _ ((τ ≫ Φ.D.i) * g).left z J hJ l
     (GtBaseChange.translate_mem Φ.D.q Φ.D.i Φ.D.isKernel τ g _ z hz)
     (by rw [← Category.assoc, hq, Category.assoc]; exact e ())
-  rw [hq, hw Z τ g z J hJ, Units.val_mul, mul_left_comm, ← h₁] at h₂
-  exact h₂
+  rwa [hq, hw Z τ g z J hJ, Units.val_mul, mul_left_comm, ← h₁] at h₂
 
 end GlobalTheory.ZH.UFib
 end -- clump:auto
@@ -1601,8 +1597,7 @@ theorem utest_nonempty_mod : GlobalTheory.UT.LL → UTorsSt → ∀ (o Ω : Type
             dim := ?_
             red := hred
             ser := GlobalTheory.T.theta_series_at_point_integral_of_period_valuation hL hT o Ω S ρ p y₀ u l σ cls f hb }⟩
-  rw [fb.dim, fb.xe.toIntLinearEquiv.finrank_eq]
-  exact hdim
+  rwa [fb.dim, fb.xe.toIntLinearEquiv.finrank_eq]
 
 end GlobalTheory.ZH
 end -- clump:auto

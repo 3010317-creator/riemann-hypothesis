@@ -71,8 +71,7 @@ theorem _root_.GlobalTheory.exists_primitiveRoot_pow_cyclotomicCharacter {Ω : T
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
   set c := modularCyclotomicCharacter Ω hcard s.toRingEquiv with hc
   have hsζ : s ζ = ζ ^ (c : ZMod M).val := by
-    have h := modularCyclotomicCharacter.spec Ω hcard s.toRingEquiv hζ.toRootsOfUnity.2
-    simpa using h
+    simpa using modularCyclotomicCharacter.spec Ω hcard s.toRingEquiv hζ.toRootsOfUnity.2
   refine ⟨ζ, hζ, (c : ZMod M).val, ZMod.val_coe_unit_coprime c, hsζ, ?_⟩
   rw [cyclotomicCharacter.toZModPow]
   haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
@@ -84,8 +83,7 @@ theorem _root_.GlobalTheory.exists_primitiveRoot_pow_cyclotomicCharacter {Ω : T
   have h1 : s (ζ ^ (M / l ^ n)) = (ζ ^ (M / l ^ n)) ^ (c : ZMod M).val := by
     rw [map_pow, hsζ, ← pow_mul, ← pow_mul, mul_comm]
   have h2 : s (ζ ^ (M / l ^ n)) = (ζ ^ (M / l ^ n)) ^ (c' : ZMod (l ^ n)).val := by
-    have h := modularCyclotomicCharacter.spec Ω hcard' s.toRingEquiv hζ'.toRootsOfUnity.2
-    simpa using h
+    simpa using modularCyclotomicCharacter.spec Ω hcard' s.toRingEquiv hζ'.toRootsOfUnity.2
   have hfin : IsOfFinOrder (ζ ^ (M / l ^ n)) :=
     orderOf_pos_iff.1 (by rw [← hζ'.eq_orderOf]; exact Nat.pos_of_ne_zero (NeZero.ne _))
   have h3 := hfin.pow_eq_pow_iff_modEq.1 (h1.symm.trans h2)
@@ -119,8 +117,7 @@ theorem _root_.GlobalTheory.exists_sl2_conj_diag_zmod (M i : ℕ) (hi : i.Coprim
       ((γ : Matrix (Fin 2) (Fin 2) ℤ) 1 0 : ZMod M) * h1
   obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.specialLinearGroup_map_intCast_zmod_surjective M ⟨m, hm⟩
   have he : ∀ a b, (((δ : Matrix (Fin 2) (Fin 2) ℤ) a b : ℤ) : ZMod M) = m a b := fun a b => by
-    have h := congrArg (fun g : SL(2, ZMod M) => (g : Matrix (Fin 2) (Fin 2) (ZMod M)) a b) hδ
-    simpa using h
+    simpa using congrArg (fun g : SL(2, ZMod M) => (g : Matrix (Fin 2) (Fin 2) (ZMod M)) a b) hδ
   refine ⟨δ, ?_, ?_, ?_, ?_⟩ <;> simp only [_root_.GlobalTheory.KZ.en, he, hm_def]
   · simp
   · simp only [Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,

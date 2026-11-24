@@ -526,17 +526,7 @@ namespace GlobalTheory.ShortConnIndep
 
 theorem starRing_eq {R : Type} [CommRing R] (s t : StarRing R)
     (h : ∀ a : R, @star R s.toStarMul.toInvolutiveStar.toStar a = @star R t.toStarMul.toInvolutiveStar.toStar a) :
-    s = t := by
-  cases s with | @mk s1 _ =>
-  cases t with | @mk t1 _ =>
-  cases s1 with | @mk s2 _ =>
-  cases t1 with | @mk t2 _ =>
-  cases s2 with | @mk s3 _ =>
-  cases t2 with | @mk t3 _ =>
-  have : s3 = t3 := by
-    cases s3; cases t3; congr; exact funext h
-  subst this
-  rfl
+    s = t := GlobalTheory.BigOn.starRing_eq s t h
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l}
@@ -758,7 +748,7 @@ theorem exists_rat {D : D7} (x : (AfE D)ˣ) (a : D.host.E) (h : (x : AfE D) = 1 
       exact IsCMField.complexConj_ne_one _
     obtain ⟨z, hz⟩ : ∃ z, cF D z ≠ z := by
       by_contra h0
-      push_neg at h0
+      push Not at h0
       exact hc (AlgEquiv.ext h0)
     refine key (z - cF D z) (sub_ne_zero.2 hz.symm) ?_
     rw [hx, ← map_mul, map_sub, _root_.GlobalTheory.XiCounterexample.conj_conj]
@@ -915,13 +905,13 @@ theorem exists_run_pins : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
     ⟨_, rfl⟩
   have hδ : Formalism.L2.Host.IsDelta (H := D.host) l δ := by
     rcases hl with rfl | rfl
-    · rw [hδdef, if_pos rfl]; exact (R2 p).C.isDel
-    · rw [hδdef, if_neg D.host.pde_ne.symm]; exact (R2 p).C.isDel'
+    · rw [hδdef, ite_eq_left rfl]; exact (R2 p).C.isDel
+    · rw [hδdef, ite_eq_right D.host.pde_ne.symm]; exact (R2 p).C.isDel'
   have hδv : ∀ x, ((δ.1 x : ℂˣ) : ℂ) ∈ FO D := by
     intro x
     by_cases h : l = D.host.pde
-    · rw [hδdef, if_pos h]; exact hC.delVal x
-    · rw [hδdef, if_neg h]; exact hC.delVal' x
+    · rw [hδdef, ite_eq_left h]; exact hC.delVal x
+    · rw [hδdef, ite_eq_right h]; exact hC.delVal' x
   obtain ⟨χ, de, hχ, hd, hfin⟩ := GlobalTheory.TameFinitePart.exists_xiRec D l δ hl hδ hδv
   have hF : GlobalTheory.FinalJoin2.FieldOK0 D l := by
     rcases hl with rfl | rfl
@@ -971,10 +961,10 @@ theorem exists_run_pins : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
         unfold ownAt at hvl
         unfold Formalism.L2.Host.CharFrame.delAt
         by_cases h : Formalism.EigenvalueLevelCeiling.plc v = D.host.pde
-        · rw [if_pos h] at hvl ⊢
-          rw [hδdef, ← hvl, if_neg D.host.pde_ne.symm]
-        · rw [if_neg h] at hvl ⊢
-          rw [hδdef, ← hvl, if_pos rfl]
+        · rw [ite_eq_left h] at hvl ⊢
+          rw [hδdef, ← hvl, ite_eq_right D.host.pde_ne.symm]
+        · rw [ite_eq_right h] at hvl ⊢
+          rw [hδdef, ← hvl, ite_eq_left rfl]
       refine ⟨χ, hδv' ▸ hχ, fun g x hx => ?_⟩
       rw [xi_det_of_isDetRoot hxi _ _ _ hx]
       exact hfin x _ rfl
@@ -1036,8 +1026,8 @@ theorem exists_runs_at_alt (p : PtAt ex Csz) (hR : p.PointConditions') (hM : Mor
   have hused : ∀ v, (r.used v = r₂ ∧ ownAt D v = D.host.pde') ∨ (r.used v = r₁ ∧ ownAt D v = D.host.pde) := by
     intro v
     by_cases h : Formalism.EigenvalueLevelCeiling.plc v = D.host.pde
-    · exact Or.inl ⟨if_pos h, if_pos h⟩
-    · exact Or.inr ⟨if_neg h, if_neg h⟩
+    · exact Or.inl ⟨ite_eq_left h, ite_eq_left h⟩
+    · exact Or.inr ⟨ite_eq_right h, ite_eq_right h⟩
   have hlaws : ∀ v, LawsFull (r.used v).full := by
     intro v
     rcases hused v with ⟨h, _⟩ | ⟨h, _⟩ <;> rw [h]

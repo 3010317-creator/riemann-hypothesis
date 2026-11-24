@@ -71,8 +71,7 @@ theorem position_level_zero_coord (a : Fin (2 * r + k + 1)) : Q.posL k r 0 (c0 a
 
 theorem baseIndexConstant_injective {a b : Fin (2 * r + k + 1)} : c0 (k := k) a = c0 b ↔ a = b := by
   constructor
-  · intro h
-    exact Fin.ext (by simpa [c0] using congrArg Fin.val h)
+  · exact fun h => Fin.ext (by simpa [c0] using congrArg Fin.val h)
   · intro h
     rw [h]
 
@@ -180,8 +179,7 @@ theorem level_zero_derivative_rule (hD : IsOpen D) (z' : Fin (2 * r + k + 1) →
     rw [ev_E hD (c0 p) (c0 q) _ hg]
     have hl := (good_eh (E := E) hD (c0 p) (c0 q)).loc ((vK hD K hK) : Q.Mx k r → E) K
       (fun x hx => cut_of_mem K hx) g hg
-    rw [hl]
-    rw [position_level_zero_coord, position_level_zero_coord, hR g hg p q hpq]
+    rw [hl, position_level_zero_coord, position_level_zero_coord, hR g hg p q hpq]
     simp only [Submodule.coe_smul, Pi.smul_apply, vK]
     rw [cut_of_mem K hg]
   · rw [(E0 hD p q (vK hD K hK)).2.2 g hg]
@@ -225,17 +223,17 @@ theorem letter_plus_component_one (z z' : Fin (2 * r + k + 1) → ℂ) (j : ℕ)
     Formalism.FourierDecayAlt.D.vLet k r z z' j hj (true, Y) 1 f g =
       (Dmin k r z z' g ⟨j, by omega⟩)⁻¹ • C3.AAop k r (j - 1) (by omega) ((Y : ℂ) + ((2 * r + k : ℕ) : ℂ) / 2) f g := by
   show (if (1 : Fin 2) = 1 ∧ j = 0 then 0 else _) = _
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
   show (if true = true then _ else _) = _
-  rw [if_pos rfl, AAop_congr' (m₂ := j - 1) (by simp) _ (by omega)]
+  rw [ite_eq_left rfl, AAop_congr' (m₂ := j - 1) (by simp) _ (by omega)]
 
 theorem letter_plus_component_zero (z z' : Fin (2 * r + k + 1) → ℂ) (j : ℕ) (hj : j ≤ r) (Y : ℝ) (f : Q.Mx k r → E) (g : Q.Mx k r) :
     Formalism.FourierDecayAlt.D.vLet k r z z' j hj (true, Y) 0 f g =
       (Dmin k r z z' g ⟨j, by omega⟩)⁻¹ • C3.AAop k r j hj ((Y : ℂ) + ((2 * r + k : ℕ) : ℂ) / 2) f g := by
   show (if (0 : Fin 2) = 1 ∧ j = 0 then 0 else _) = _
-  rw [if_neg (by simp)]
+  rw [ite_eq_right (by simp)]
   show (if true = true then _ else _) = _
-  rw [if_pos rfl, AAop_congr' (m₂ := j) (by simp) _ hj]
+  rw [ite_eq_left rfl, AAop_congr' (m₂ := j) (by simp) _ hj]
 
 theorem letter_minus_component_one (z z' : Fin (2 * r + k + 1) → ℂ) (j : ℕ) (hj : j ≤ r) (hj1 : 1 ≤ j) (Y : ℝ) (f : Q.Mx k r → E)
     (g : Q.Mx k r) :
@@ -243,17 +241,17 @@ theorem letter_minus_component_one (z z' : Fin (2 * r + k + 1) → ℂ) (j : ℕ
       (conj (Dmin k r z z' g ⟨j, by omega⟩))⁻¹ •
         C3.AAvop k r (j - 1) (by omega) ((Y : ℂ) - ((2 * r + k : ℕ) : ℂ) / 2) f g := by
   show (if (1 : Fin 2) = 1 ∧ j = 0 then 0 else _) = _
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
   show (if false = true then _ else _) = _
-  rw [if_neg (by simp), AAvop_congr' (m₂ := j - 1) (by simp) _ (by omega)]
+  rw [ite_eq_right (by simp), AAvop_congr' (m₂ := j - 1) (by simp) _ (by omega)]
 
 theorem letter_minus_component_zero (z z' : Fin (2 * r + k + 1) → ℂ) (j : ℕ) (hj : j ≤ r) (Y : ℝ) (f : Q.Mx k r → E) (g : Q.Mx k r) :
     Formalism.FourierDecayAlt.D.vLet k r z z' j hj (false, Y) 0 f g =
       (conj (Dmin k r z z' g ⟨j, by omega⟩))⁻¹ • C3.AAvop k r j hj ((Y : ℂ) - ((2 * r + k : ℕ) : ℂ) / 2) f g := by
   show (if (0 : Fin 2) = 1 ∧ j = 0 then 0 else _) = _
-  rw [if_neg (by simp)]
+  rw [ite_eq_right (by simp)]
   show (if false = true then _ else _) = _
-  rw [if_neg (by simp), AAvop_congr' (m₂ := j) (by simp) _ hj]
+  rw [ite_eq_right (by simp), AAvop_congr' (m₂ := j) (by simp) _ hj]
 
 theorem dmin_nf (z z' : Fin (2 * r + k + 1) → ℂ) (x₁ : Q.Mx k r) (i0 s : ℕ) (hh : Matrix (Fin i0) (Fin i0) ℂ) (τ : ℂ)
     (hj : i0 + s ≤ r)
@@ -266,7 +264,7 @@ theorem dmin_nf (z z' : Fin (2 * r + k + 1) → ℂ) (x₁ : Q.Mx k r) (i0 s : �
   congr 1
   ext a b
   simp only [Matrix.of_apply]
-  rw [hnf _ _ (by simp; omega), if_pos (by simp [C3.xR, eI]; omega)]
+  rw [hnf _ _ (by simp; omega), ite_eq_left (by simp [C3.xR, eI]; omega)]
   simp [C3.xR, eI]
 
 theorem letter_plus_component_one_eq_smul_component_zero (hD : IsOpen D) (z z' : Fin (2 * r + k + 1) → ℂ) (i0 s : ℕ) (hs : 1 ≤ s) (hj : i0 + s ≤ r)
@@ -283,8 +281,7 @@ theorem letter_plus_component_one_eq_smul_component_zero (hD : IsOpen D) (z z' :
   rw [La_AAx hD K hK x₁ hx₁, La_AAx hD K hK x₁ hx₁] at hE
   rw [← dmin_nf z z' x₁ i0 s hh τ hj hnf (i0 + s) le_rfl, ← dmin_nf z z' x₁ i0 s hh τ hj hnf i0 (by omega)] at hE
   rw [letter_plus_component_one z z' (i0 + s) hj (by omega), letter_plus_component_zero z z' i0 (by omega), smul_smul]
-  rw [smul_smul] at hE
-  exact hE
+  rwa [smul_smul] at hE
 
 theorem letter_minus_component_one_eq_smul_component_zero (hD : IsOpen D) (z z' : Fin (2 * r + k + 1) → ℂ) (i0 s : ℕ) (hs : 1 ≤ s) (hj : i0 + s ≤ r)
     (hh : Matrix (Fin i0) (Fin i0) ℂ) (τ : ℂ) (hdet : hh.det ≠ 0) (hτ : τ ≠ 0) (x₁ : Q.Mx k r)
@@ -304,8 +301,7 @@ theorem letter_minus_component_one_eq_smul_component_zero (hD : IsOpen D) (z z' 
   rw [← dmin_nf z z' x₁ i0 s hh τ hj hnf (i0 + s) le_rfl, ← dmin_nf z z' x₁ i0 s hh τ hj hnf i0 (by omega)] at hE
   rw [letter_minus_component_one z z' (i0 + s) hj (by omega), letter_minus_component_zero z z' i0 (by omega), smul_smul]
   rw [smul_smul] at hE
-  simp only [starRingEnd_apply]
-  exact hE
+  simpa only [starRingEnd_apply] using hE
 
 end ring
 

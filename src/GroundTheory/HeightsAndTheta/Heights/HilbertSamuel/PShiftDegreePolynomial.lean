@@ -47,8 +47,7 @@ theorem expand {K : Type} {n : ℕ} (f : (Fin n → K → ℤ) → ℤ)
       (s.piecewise (fun _ => a) (fun _ => b)) = s.piecewise (fun _ => q • a) (fun _ => b) := by
     funext i
     by_cases hi : i ∈ s <;> simp [Finset.piecewise, hi]
-  rw [h3, Finset.prod_const, RingHom.id_apply, smul_eq_mul] at h2
-  exact h2
+  rwa [h3, Finset.prod_const, RingHom.id_apply, smul_eq_mul] at h2
 
 theorem genericFibre {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} [∀ k, Fintype (ι k)]
     {P : Ideal (MRing ι)} {D : ℕ} (hP : IsArithVar P (D + 1)) :
@@ -60,8 +59,7 @@ theorem genericFibre {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} [�
   have hchar : ∀ m : ℤ, (C m : MvPolynomial (Σ k, ι k) ℤ) ∈ P → m = 0 := by
     intro m hm
     have h1 : m ∈ P.comap (C : ℤ →+* MRing ι) := hm
-    rw [show P.comap (C : ℤ →+* MRing ι) = ⊥ from hhor, Ideal.mem_bot] at h1
-    exact h1
+    rwa [show P.comap (C : ℤ →+* MRing ι) = ⊥ from hhor, Ideal.mem_bot] at h1
   obtain ⟨hqp, hcomap, hform⟩ := ReciprocityTheory.AnForm.R.extQ_spec P hchar
   have hq : ReciprocityTheory.AnForm.R.extQ P = P.map (MvPolynomial.map (Int.castRingHom ℚ)) := rfl
   rw [← hq]
@@ -75,8 +73,7 @@ theorem genericFibre {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} [�
   · intro k
     obtain ⟨i, hi⟩ := hrel k
     refine ⟨i, fun hX => hi ?_⟩
-    rw [← hcomap, Ideal.mem_comap, map_X]
-    exact hX
+    rwa [← hcomap, Ideal.mem_comap, map_X]
   · rw [hdim] at hform
     refine GroundTheory.Heights₂.Heights.ObjectsChow.GenericFibreDim.eq_natCast_of_add_one_eq _ _ ?_
     rw [hform]
@@ -100,13 +97,12 @@ theorem proof (h : MixedNumberPolynomial.Statement.{0}) : ShiftDegreePolynomial.
     rw [Finset.sum_eq_single Finset.univ]
     · simp [c, f, genDeg, hQ]
     · intro s _ hs
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hD
       apply hs
       rw [← Finset.card_eq_iff_eq_univ, Fintype.card_fin]
       exact hD.symm
-    · intro hu
-      exact absurd (Finset.mem_univ _) hu
+    · exact fun hu => absurd (Finset.mem_univ _) hu
   · intro q
     have hexp := expand f hadd (q : ℤ) a b
     have hg : genDeg P D ((q : ℤ) • a + b) = f (fun _ => (q : ℤ) • a + b) := rfl

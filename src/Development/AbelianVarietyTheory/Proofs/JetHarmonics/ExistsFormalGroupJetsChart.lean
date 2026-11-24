@@ -203,8 +203,7 @@ theorem zero_iff {κ κ' : Type} {m : ℕ} (ψ : Jet V κ m →ₐ[V] Jet V κ' 
     have h1 := AlgHom.congr_fun h (Ideal.Quotient.mk _ (MvPolynomial.X j))
     rw [aug_X, AlgHom.comp_apply] at h1
     have h2 := AlgHom.congr_fun (jetZero_eq (V := V) κ' m) (ψ (Ideal.Quotient.mk _ (MvPolynomial.X j)))
-    rw [AlgHom.comp_apply, h1, map_zero] at h2
-    exact h2
+    rwa [AlgHom.comp_apply, h1, map_zero] at h2
 
 theorem coef_sq (φ : V →+* V') {κ κ' : Type} {m : ℕ} (g : Jet V κ m →ₐ[V] Jet V κ' m)
     (g' : Jet V' κ m →ₐ[V'] Jet V' κ' m)
@@ -233,7 +232,7 @@ theorem psJet_eq {n d : ℕ} (m : ℕ) (q : Fin n × Fin d) (f : PS V n d) (P : 
   refine Ideal.Quotient.eq.2 (Ideal.Quotient.eq_zero_iff_mem.1 ((GlobalTheory.JetTest.mk_eq_zero_iff (m := m) _).2 ?_))
   intro e he
   have hle : ∀ i, e i ≤ m := fun i => (Finsupp.le_degree i e).trans he
-  rw [MvPolynomial.coeff_sub, MvPowerSeries.coeff_trunc, if_pos, h e he, sub_self]
+  rw [MvPolynomial.coeff_sub, MvPowerSeries.coeff_trunc, ite_eq_left, h e he, sub_self]
   refine lt_of_le_of_ne (fun i => ?_) (fun hh => ?_)
   · simpa using (hle i).trans (Nat.le_succ m)
   · have := hle q
@@ -261,9 +260,9 @@ theorem subst_sq (φ : V →+* V') {n d : ℕ} (i0 : Fin n) (m : ℕ) (f : Fin d
   rw [GlobalTheory.JetTest.jetMap_mk, MvPolynomial.aeval_X]
   refine psJet_eq m (i0, q.2) _ (MvPolynomial.map φ _) fun a ha => ?_
   have hc : MvPolynomial.constantCoeff (psTrunc m (f q.2)) = 0 := by
-    rw [MvPolynomial.constantCoeff_eq, GlobalTheory.JetTest.coeff_psTrunc, if_pos (by simp),
+    rw [MvPolynomial.constantCoeff_eq, GlobalTheory.JetTest.coeff_psTrunc, ite_eq_left (by simp),
       MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hf]
-  rw [hc, map_zero, sub_zero, MvPolynomial.coeff_map, GlobalTheory.JetTest.coeff_psTrunc, if_pos ha, e,
+  rw [hc, map_zero, sub_zero, MvPolynomial.coeff_map, GlobalTheory.JetTest.coeff_psTrunc, ite_eq_left ha, e,
     MvPowerSeries.coeff_map]
 
 theorem copy_sq (φ : V →+* V') {n d : ℕ} (i : Fin n) (m : ℕ) :
@@ -308,8 +307,7 @@ theorem univ_toAlg (G : Over (Sp V)) [GrpObj G] (κ : Type) (z : GlobalTheory.Po
         (∀ j, jetZeroR V κ' m (ψ (zR m j)) = 0) ∧ y = algOverHom ψ ≫ toAlg (z m) := by
   obtain ⟨h1, h2, h3⟩ := hz
   refine ⟨fun m => ?_, fun m => ?_, fun κ' m y hy => ?_⟩
-  · apply Over.OverMorphism.ext
-    exact congrArg CommaMorphism.left (h1 m)
+  · exact Over.OverMorphism.ext (congrArg CommaMorphism.left (h1 m))
   · apply Over.OverMorphism.ext
     have h := congrArg CommaMorphism.left (h2 m)
     change spMap _ ≫ (z m).left = (spMap (algebraMap V V) ≫ 𝟙 _) ≫ η[G].left at h
@@ -329,18 +327,15 @@ theorem univ_toAlg (G : Over (Sp V)) [GrpObj G] (κ : Type) (z : GlobalTheory.Po
         spMap_comp_alg]
     obtain ⟨ψ, ⟨a1, a2⟩, hu⟩ := h3 (Jet V κ' m) jetAug m (ker_aug_pow κ' m) _ hy'
     refine ⟨ψ, ⟨(zero_iff ψ).2 a1, ?_⟩, fun ψ' h' => hu ψ' ⟨(zero_iff ψ').1 h'.1, ?_⟩⟩
-    · apply Over.OverMorphism.ext
-      exact congrArg CommaMorphism.left a2
-    · apply Over.OverMorphism.ext
-      exact congrArg CommaMorphism.left h'.2
+    · exact Over.OverMorphism.ext (congrArg CommaMorphism.left a2)
+    · exact Over.OverMorphism.ext (congrArg CommaMorphism.left h'.2)
 
 variable (φ : V →+* V') (G : Over (Sp V)) [GrpObj G] (G' : Over (Sp V')) [GrpObj G'] (Fm : G'.left ⟶ G.left)
   (hP : IsGrpPullback G' G (spMap φ) Fm)
 
 include hP in
 theorem pb_ext {T : Over (Sp V')} (a b : T ⟶ G') (h : a.left ≫ Fm = b.left ≫ Fm) : a = b := by
-  apply Over.OverMorphism.ext
-  exact hP.1.hom_ext h ((Over.w a).trans (Over.w b).symm)
+  exact Over.OverMorphism.ext (hP.1.hom_ext h ((Over.w a).trans (Over.w b).symm))
 
 variable {d : ℕ} (z : GlobalTheory.PowGerm.JetPts G (Fin 1 × Fin d)) (z' : GlobalTheory.PowGerm.JetPts G' (Fin 1 × Fin d))
   (hz : ∀ m, (z' m).left ≫ Fm = spMap (jetCoef φ (Fin 1 × Fin d) m) ≫ (z m).left)

@@ -132,8 +132,7 @@ theorem eigBasis_of_generic {V K : Type} [CommRing V] [IsDomain V] [Field K] [Al
   have hb1 : ∀ k, ∑ i, b ⟨τ, i⟩ * algebraMap V K (u ⟨τ, i⟩ k) = algebraMap V K (v k) := by
     intro k
     rw [← hb k, Fintype.sum_sigma, Finset.sum_eq_single τ]
-    · intro j _ hj
-      exact Finset.sum_eq_zero fun i _ => by rw [hb0 ⟨j, i⟩ hj, zero_mul]
+    · exact fun j _ hj => Finset.sum_eq_zero fun i _ => by rw [hb0 ⟨j, i⟩ hj, zero_mul]
     · simp
   obtain ⟨s, hs⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors V) fun i => b ⟨τ, i⟩
   choose g hg using hs

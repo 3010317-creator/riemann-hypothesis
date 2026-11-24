@@ -146,8 +146,7 @@ theorem fiber_card_le (q : ℕ) (hq : q.Prime) (s : Finset (HeightOneSpectrum (�
     rw [← this]
     exact resChar_le_absNorm p
   rw [← map_prod] at h2
-  have h3 := le_trans h2 (Nat.le_of_dvd (pow_pos hq.pos _) h1)
-  exact (Nat.pow_le_pow_iff_right hq.one_lt).mp h3
+  exact (Nat.pow_le_pow_iff_right hq.one_lt).mp (le_trans h2 (Nat.le_of_dvd (pow_pos hq.pos _) h1))
 end
 
 theorem prime_zeta_two : PrimeZeta2 := by
@@ -180,8 +179,7 @@ theorem prime_zeta_two : PrimeZeta2 := by
           · exact_mod_cast fiber_card_le q hq u
           · have : u.filter (fun p => resChar p = q) = ∅ := by
               rw [Finset.filter_eq_empty_iff]
-              intro p _ h
-              exact hq (h ▸ resChar_prime p)
+              exact fun p _ h => hq (h ▸ resChar_prime p)
             rw [this, Finset.card_empty, Nat.cast_zero]
             positivity
         gcongr

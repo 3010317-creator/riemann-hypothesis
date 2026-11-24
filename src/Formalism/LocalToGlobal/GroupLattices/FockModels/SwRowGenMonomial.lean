@@ -36,8 +36,7 @@ theorem sw_dom (R : Type) [CommRing R] [IsDomain R] {r n : ℕ} (ν : Fin n → 
     intro m hm k
     rw [hbm] at hm
     have h := (bidetDominance R r n K sz hsz I m hm).1 k
-    rw [hshape] at h
-    exact h
+    rwa [hshape] at h
   | zero =>
     intro m hm
     simp at hm
@@ -47,8 +46,7 @@ theorem sw_dom (R : Type) [CommRing R] [IsDomain R] {r n : ℕ} (ν : Fin n → 
     · exact hx m h
     · exact hy m h
   | smul c x _ hx =>
-    intro m hm
-    exact hx m (support_smul hm)
+    exact fun m hm => hx m (support_smul hm)
 
 theorem sw_kill (R : Type) [CommRing R] [IsDomain R] {r n : ℕ} (hn : n ≤ r) (ν : Fin n → ℕ)
     (G : MvPolynomial (Fin r × Fin n) R) (hG : G ∈ dualWeyl R r n ν)
@@ -91,8 +89,7 @@ theorem sw_line (K : Type) [Field K] [Infinite K] {r n : ℕ} (hn : n ≤ r) (ν
   obtain ⟨c, hc⟩ := hwLine K r n hn ν hν G hG (fun a b hab k hk => sw_kill K hn ν G hG hGh a b hab k hk)
   have h1 : eval (idPoint K r n) G = c := by
     rw [hc, smul_eq_C_mul, map_mul, eval_C, sw_eval_hw, mul_one]
-  rw [h1]
-  exact hc
+  rwa [h1]
 
 theorem sw_rowGen_X_self (R : Type) [CommRing R] {r n : ℕ} (a : Fin r) (v : Fin r × Fin n) :
     rowGen R a a (X v) = Polynomial.C (X v) * (1 + Polynomial.X) ^ (lgraded_wa (n := n) a v) := by

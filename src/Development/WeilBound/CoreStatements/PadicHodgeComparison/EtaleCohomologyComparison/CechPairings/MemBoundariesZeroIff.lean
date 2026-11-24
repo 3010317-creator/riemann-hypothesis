@@ -79,7 +79,6 @@ theorem cls_smul {K : Cx.{w} R} {n : ℕ} (r : R) (a : K.X n) (ha : K.d n a = 0)
 theorem cls_zero' {K : Cx.{w} R} {n : ℕ} (h) : K.cls (n := n) 0 h = 0 := rfl
 
 theorem mem_boundaries_zero_iff {K : Cx.{w} R} (a : K.X 0) : a ∈ K.B 0 ↔ a = 0 := by
-  show a ∈ (⊥ : Submodule R (K.X 0)) ↔ _
   exact Submodule.mem_bot R
 
 theorem mem_Bs {K : Cx.{w} R} {n : ℕ} (a : K.X (n + 1)) : a ∈ K.B (n + 1) ↔ ∃ b, K.d n b = a := Iff.rfl
@@ -247,8 +246,7 @@ theorem kill_iff {K : Cx.{w} R} (s : R) (n : ℕ) :
     exact ⟨x, hx⟩
   · intro h y hy
     have := h (K.cls y hy)
-    rw [← cls_smul (h := by rw [map_smul, hy, smul_zero]), cls_eq_zero, mem_Bs] at this
-    exact this
+    rwa [← cls_smul (h := by rw [map_smul, hy, smul_zero]), cls_eq_zero, mem_Bs] at this
 
 end CrystallineSemistableComparison.CechClassBoundaries
 
@@ -592,8 +590,7 @@ theorem CrystallineSemistableComparison.P.res_semilinear : ∀ {R R' : Type} [Co
     · rw [← inj, ← φ.comm, hc, h0]
     · have e : ε' (a x) = 0 := by rw [← hc, hx, map_zero]
       have e2 := h1 _ e
-      rw [← map_smulₛₗ, map_eq_zero_iff _ ha.1] at e2
-      exact e2
+      rwa [← map_smulₛₗ, map_eq_zero_iff _ ha.1] at e2
     · have hy' : L.d 0 (φ.f 0 y) = 0 := by rw [φ.comm, hy, map_zero]
       obtain ⟨x', hx'⟩ := h2 _ hy'
       obtain ⟨x, rfl⟩ := ha.2 x'

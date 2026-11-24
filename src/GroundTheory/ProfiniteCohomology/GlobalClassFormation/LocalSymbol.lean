@@ -57,15 +57,13 @@ theorem brauerSumInv_globalCupClass (χ : Additive K.1.fixingSubgroup →ₜ+ QZ
     conv_lhs => rw [← DFinsupp.sum_single (f := x)]
 
     rw [DFinsupp.sum, map_sum]
-    refine Finset.sum_congr rfl fun v _ => ?_
-    exact sumPlaceInv_of v (x v)
+    exact Finset.sum_congr rfl fun v _ => sumPlaceInv_of v (x v)
   rw [hsum, finsum_eq_sum_of_support_subset _ (s := x.support) ?_]
   · exact Finset.sum_congr rfl fun v _ => placeInv_brauerLocal_globalCupClass ι χ a v
   · intro v hv
     rw [Function.mem_support, ← placeInv_brauerLocal_globalCupClass] at hv
     rw [Finset.mem_coe, DFinsupp.mem_support_iff]
-    intro h
-    exact hv (by rw [h, map_zero])
+    exact fun h => hv (by rw [h, map_zero])
 
 end
 

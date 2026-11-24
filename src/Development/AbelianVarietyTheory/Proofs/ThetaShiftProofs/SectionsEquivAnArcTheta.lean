@@ -100,8 +100,7 @@ theorem secVal_eq_mul (hL : L.IsLB) {s : LB.Sec (LB.LinComb L φ ε)} {s' : LB.S
       ((gs_unit y pt _ (h₃ trivial) _).symm.trans (gs_eq_toStalk _ _ h₃ _))).trans (map_mul _ _ _).symm))
   · have := congrArg (Units.coeHom ℂ) (hs fun w => Units.mk0 _ (u.fr_ne _ w (le_chartAt hL (u.ex w).left)))
     simp only [map_mul, map_prod, map_zpow, Units.coeHom_apply, Units.val_mk0] at this
-    simp only [frameProd, hz _, hz' _, hz'' _]
-    exact this
+    simpa only [frameProd, hz _, hz' _, hz'' _] using this
 
 theorem secVal_add (hL : L.IsLB) (π : Y ⟶ Sp ℂ) (s t : SecOver π (LB.LinComb L φ ε)) (y : Sp ℂ ⟶ Y)
     (z : K → Fin g → ℂ) : secVal u hL (s + t : SecOver π _) y z = secVal u hL s y z + secVal u hL t y z := by
@@ -329,8 +328,7 @@ theorem theta_eq_thetaShift {O : Type} [CommRing O] [StarRing O] (A : AnArc O) {
   · rw [hχ l ⟨l, hΛ ▸ l.2⟩ rfl]
     exact H ⟨l, hΛ ▸ l.2⟩ z
   · have := H ⟨l, hΛ.ge l.2⟩ z
-    rw [hχ _ l rfl] at this
-    exact this
+    rwa [hχ _ l rfl] at this
 
 theorem sections_equiv_theta (D : Out.DegPre ℂ) {g : ℕ} (u : HolUnif D.P.A D.P.L g) (Hm : Matrix (Fin g) (Fin g) ℂ)
     (χ : u.Λ → ℂ) (h : u.IsAH Hm χ) (j : ℕ) (hj : 1 ≤ j) (hθ : ∀ θ, u.IsThetaFn Hm χ j θ → ∃ s, u.IsFnPow j s θ)

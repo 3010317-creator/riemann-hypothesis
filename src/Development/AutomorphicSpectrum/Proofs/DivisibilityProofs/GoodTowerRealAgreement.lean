@@ -94,14 +94,7 @@ open Filter Topology ReciprocityTheory.AnForm ReciprocityTheory.AnForm.M Recipro
 
 theorem contAt_of_holoOn {e : ℕ} {X : Type} [TopologicalSpace X] {A : FinHolAtlas e X} {U : Set X} {f : X → ℂ}
     (hf : A.HoloOn U f) {x : X} (hx : x ∈ U) : ContinuousAt f x := by
-  obtain ⟨j, hj⟩ := A.cover x
-  have h1 := (hf j (A.chart j x) ⟨(A.chart j).map_source hj, by
-    show (A.chart j).symm (A.chart j x) ∈ U
-    rwa [(A.chart j).left_inv hj]⟩).continuousAt
-  have h2 := h1.comp ((A.chart j).continuousAt hj)
-  refine h2.congr ?_
-  filter_upwards [(A.chart j).open_source.mem_nhds hj] with y hy
-  simp [(A.chart j).left_inv hy]
+  exact RootFieldNumerics.Desc.contAt_of_holoOn A hf hx
 
 theorem surj_of_degree {e : ℕ} {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] [T2Space X] [CompactSpace Y]
     {A : FinHolAtlas e X} {B : FinHolAtlas e Y} {h : Y → X} {S : Set X} (hc : Continuous h) (hd : IsDegreeOff A B h 1 S) :
@@ -215,8 +208,7 @@ theorem exists_poly (T : CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y �
     obtain ⟨r, rfl⟩ := (isIntegrallyClosed_iff Ω).1 h4 h5
     exact r.2
   unfold chartRingZ at hmem
-  rw [Algebra.adjoin_range_eq_range_aeval] at hmem
-  exact hmem
+  rwa [Algebra.adjoin_range_eq_range_aeval] at hmem
 
 variable {z : Spec (CommRingCat.of ℂ) ⟶ X} {w : (Σ k, J k) → ℂ}
 
@@ -367,8 +359,7 @@ theorem biholo_of : Descend → Biholo := by
     if h : ∃ r, ValAt Or.𝔐.ξ (z w) (fn RM.y (s i) m k₀ i₀ cc) r then h.choose else 0
   have hf : ∀ i i₀ cc w r, ValAt Or.𝔐.ξ (z w) (fn RM.y (s i) m k₀ i₀ cc) r → f i i₀ cc w = r := fun i i₀ cc w r h => by
     have h' : ∃ r, ValAt Or.𝔐.ξ (z w) (fn RM.y (s i) m k₀ i₀ cc) r := ⟨r, h⟩
-    simp only [f, dif_pos h']
-    exact CxVal.unique h'.choose_spec h
+    simpa only [f, dite_eq_left h'] using CxVal.unique h'.choose_spec h
   let U : RM.ι k₀ → Set Sys.X := fun i₀ => {x | Fx.pt x (Or.ix.symm i₀) ≠ 0}
   have hU : ∀ i₀ w, π w ∈ U i₀ ↔ R.lift w w ⟨k₀, i₀⟩ ≠ 0 := fun i₀ w => by
     obtain ⟨a, ha⟩ := Or.π_pt w
@@ -546,13 +537,13 @@ theorem root_log (Γ : ∀ s, Matrix (Fin (labelRk D s)) (Fin (labelRk D s)) ℂ
   let F : (Σ s, Fin (labelRk D s)) → ℝ := fun a => Real.log (Real.sqrt (leadMinor (Γ a.1) (a.2 + 1) / leadMinor (Γ a.1) a.2))
   show _ * F (HodgeCpt.rootIdx D (τ, i)) = _
   by_cases h : (i : ℕ) < D.p
-  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inl τ, ⟨i, h⟩⟩ := dif_pos h
+  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inl τ, ⟨i, h⟩⟩ := dite_eq_left h
     rw [e]
-    simp only [HodgeCpt.rootSgn, grLog, if_pos h, F, Int.cast_one, one_mul]
+    simp only [HodgeCpt.rootSgn, grLog, ite_eq_left h, F, Int.cast_one, one_mul]
     rfl
-  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inr τ, ⟨D.p + D.q - 1 - i, by have := i.2; show _ < D.q; omega⟩⟩ := dif_neg h
+  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inr τ, ⟨D.p + D.q - 1 - i, by have := i.2; show _ < D.q; omega⟩⟩ := dite_eq_right h
     rw [e]
-    simp only [HodgeCpt.rootSgn, grLog, if_neg h, F, Int.cast_neg, Int.cast_one, neg_mul, one_mul]
+    simp only [HodgeCpt.rootSgn, grLog, ite_eq_right h, F, Int.cast_neg, Int.cast_one, neg_mul, one_mul]
     rfl
 
 theorem locChart (hLP : LocPer) (hT : Transport) (hFV : FrameVals) (hPM : PerMat) (hPot : PotLoc) (hG : Top.Given)
@@ -647,8 +638,7 @@ theorem locChart (hLP : LocPer) (hT : Transport) (hFV : FrameVals) (hPM : PerMat
       rintro (τ | τ) k
       · exact (hfl τ k).1
       · exact (hfl τ k).2
-    · intro t₁ h₁ t₂ h₂ e
-      exact ch.symm.injOn (hV1 h₁.1).1 (hV1 h₂.1).1 (hzi e)
+    · exact fun t₁ h₁ t₂ h₂ e => ch.symm.injOn (hV1 h₁.1).1 (hV1 h₂.1).1 (hzi e)
 
 end RootFieldNumerics.Un
 end -- clump:auto

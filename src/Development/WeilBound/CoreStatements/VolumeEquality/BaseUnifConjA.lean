@@ -108,8 +108,7 @@ theorem eps_sq : spMap (dualMap (starRingEnd ℂ)) ≫ spMap (algebraMap ℂ (Du
   have h2 : CommRingCat.ofHom (algebraMap ℂ (DualNumber ℂ)) ≫ CommRingCat.ofHom (dualMap (starRingEnd ℂ)) =
       CommRingCat.ofHom (starRingEnd ℂ) ≫ CommRingCat.ofHom (algebraMap ℂ (DualNumber ℂ)) :=
     CommRingCat.hom_ext (RingHom.ext fun a => dualMap_algebraMap (starRingEnd ℂ) a)
-  have h3 := congrArg Spec.map h2
-  simpa only [Spec.map_comp] using h3
+  simpa only [Spec.map_comp] using congrArg Spec.map h2
 
 def cjVec (z : Spec (CommRingCat.of ℂ) ⟶ X) (w : epsAt z ⟶ G) : epsAt (spMap (starRingEnd ℂ) ≫ z) ⟶ G :=
   Over.homMk (spMap (dualMap (starRingEnd ℂ)) ≫ w.left) (by
@@ -219,8 +218,7 @@ theorem preimage_star_ballDom {Ψ : Type} [Fintype Ψ] {j j' n : ℕ} (q : Ψ ×
   · intro h
     have h' := star_mem_ballDom (q := q) (t := star t) h
     rwa [star_star] at h'
-  · intro h
-    exact star_mem_ballDom (q := q) (t := t) h
+  · exact fun h => star_mem_ballDom (q := q) (t := t) h
 
 theorem analyticAt_star_star {n : ℕ} {f : (Fin n → ℂ) → Fin g → ℂ} {t₀ : Fin n → ℂ} (h : AnalyticAt ℂ f (star t₀)) :
     AnalyticAt ℂ (fun t => star (f (star t))) t₀ := by

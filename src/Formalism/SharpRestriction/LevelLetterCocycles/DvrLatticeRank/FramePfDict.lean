@@ -144,7 +144,7 @@ private lemma powerSeries_algHom_eq_subst_X (ψ : PowerSeries O →ₐ[O] PowerS
   have hdvd : PowerSeries.X ^ (k + 1) ∣ f - (PowerSeries.trunc (k + 1) f : PowerSeries O) := by
     rw [PowerSeries.X_pow_dvd_iff]
     intro m hm
-    rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hm, sub_self]
+    rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, ite_eq_left hm, sub_self]
   obtain ⟨q, hq⟩ := hdvd
   have hf : f = (PowerSeries.trunc (k + 1) f : PowerSeries O) + PowerSeries.X ^ (k + 1) * q := by
     rw [← hq]; ring
@@ -154,8 +154,7 @@ private lemma powerSeries_algHom_eq_subst_X (ψ : PowerSeries O →ₐ[O] PowerS
       add_sub_add_left_eq_sub, ← mul_sub]
     exact Dvd.dvd.mul_right (pow_dvd_pow_of_dvd hXd _) _
   have h0 := PowerSeries.X_pow_dvd_iff.mp hdiff k (Nat.lt_succ_self k)
-  rw [map_sub, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, sub_eq_zero] at h0
 
 theorem framepf_ι_letγ (γ₀ : PowerSeries O →ₐ[O] PowerSeries O)
     (hγ0 : PowerSeries.constantCoeff (γ₀ PowerSeries.X) = 0) (G : PowerSeries O)
@@ -191,8 +190,7 @@ theorem framepf_ι_letγ (γ₀ : PowerSeries O →ₐ[O] PowerSeries O)
     simp only [Pi.single_eq_same]
     have hk := key g
     rw [AlgHom.comp_apply, AlgHom.comp_apply] at hk
-    rw [hS, hS, hSG]
-    exact hk
+    rwa [hS, hS, hSG]
   · simp only [Pi.single_eq_of_ne hj, map_zero]
 
 end Ring
@@ -256,8 +254,7 @@ theorem framepf_subst_inj (γ0 : ∀ δ ∈ W.DelF, PowerSeries.constantCoeff (W
     have h1 : W.γ₀ δ (π' i) = π' i := congrFun (hΔπ δ hδ) i
     have h2 : ((W.γ₀ δ).comp S) PowerSeries.X = π' i := by rw [AlgHom.comp_apply, hSX, h1]
     have h3 := powerSeries_algHom_eq_subst_X π' i (hπ0 i) ((W.γ₀ δ).comp S) (by rw [h2]; exact hπ0 i) g
-    rw [h2, AlgHom.comp_apply, ← hS] at h3
-    exact h3
+    rwa [h2, AlgHom.comp_apply, ← hS] at h3
   have hmem : ∀ g : PowerSeries O, framepf_ι π' i g ∈ W.AΔ := by
     intro g
     show ∀ δ ∈ W.DelF, W.γA δ (framepf_ι π' i g) = framepf_ι π' i g
@@ -282,8 +279,7 @@ theorem framepf_subst_inj (γ0 : ∀ δ ∈ W.DelF, PowerSeries.constantCoeff (W
   have e2 := huniq (Pi.single i g') (fun j => by
     rw [show framepf_ι π' i g = framepf_ι π' i g' by simp only [framepf_ι, h]]
     exact hrep g' j)
-  have e3 := congrFun (e1.trans e2.symm) i
-  simpa using e3
+  simpa using congrFun (e1.trans e2.symm) i
 
 include hπ0 in
 theorem framepf_ι_sum {ι' : Type*} (s : Finset ι') (g : ι' → PowerSeries O) :
@@ -431,8 +427,7 @@ theorem framepf_Γ (hu : IsUnit (algebraMap (LetA O n) W.EE π'))
     intro z hz
     obtain ⟨u, hu'⟩ := hu
     rw [← algebraMap_smul W.EE π' z, ← hu'] at hz
-    have h1 := congrArg (fun w => ((u⁻¹ : W.EEˣ) : W.EE) • w) hz
-    simpa [smul_smul] using h1
+    simpa [smul_smul] using congrArg (fun w => ((u⁻¹ : W.EEˣ) : W.EE) • w) hz
   have hcol : ∀ m, ∃ c e : Fin Bs.r → PowerSeries O,
       W.γD T W.gam ((letE i : LetA O n) • Bs.b m) = ∑ p, framepf_ι π' i (c p) • Bs.b p ∧
       W.γD T W.gam ((letE i : LetA O n) • Bs.b m) - (letE i : LetA O n) • Bs.b m =
@@ -475,8 +470,7 @@ theorem framepf_Γ (hu : IsUnit (algebraMap (LetA O n) W.EE π'))
         ∑ p, framepf_ι π' i (e m p) • Bs.b p := rfl
     rw [h1, h2, ← he m]
     abel
-  have h3 := framepf_coord_uniq Bs π' i hπ0 hΔπ hR2 γ0 key
-  exact congrFun h3 p
+  exact congrFun (framepf_coord_uniq Bs π' i hπ0 hΔπ hR2 γ0 key) p
 
 end Local
 

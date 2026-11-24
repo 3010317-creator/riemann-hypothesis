@@ -176,7 +176,7 @@ theorem T_eq (b i j : Fin d) :
 
   simp only [d_F, map_sum, Derivation.leibniz, smul_eq_mul, ev_sum cz1, ev_add cz1, ev_mul cz1, ezF, ez_dF, d_y,
   ez_y, ez_Ar, C_cc_jac, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true] at h
+  Finset.mem_univ, ite_true] at h
   have e : ∑ c, Jac G c b * pderiv (R := k) ((0 : Fin 1), c) (Jac G j i) =
       ∑ c, pderiv (R := k) ((0 : Fin 1), c) (Jac G j i) * Jac G c b :=
     Finset.sum_congr rfl fun _ _ => mul_comm _ _
@@ -303,8 +303,7 @@ def lawK (B : FB R d O) : FGLaw k d where
 
 theorem invariantDerivations_commute_formal_connection : GE.DofCommSt := by
   unfold GE.DofCommSt
-  intro R _ d O _ _ k _ _ _ B u v g
-  exact dof_comm_law (lawK k B) u v g
+  exact fun R _ d O _ _ k _ _ _ B u v g => dof_comm_law (lawK k B) u v g
 
 end Transfer
 

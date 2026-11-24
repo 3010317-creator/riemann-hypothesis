@@ -238,8 +238,7 @@ def pullIdealSheaf [QuasiCompact s] : X.IdealSheafData where
 theorem exists_idealSheaf : ∀ (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (s : Y ⟶ X) [IsDominant s]
     [QuasiCompact s] (D : CartierDiv Y), ∃ J : X.IdealSheafData, (∀ (U : X.affineOpens) (f : Γ(X, U.1)),
     f ∈ J.ideal U ↔ ∀ (y : Y) (hy : s y ∈ U.1), D.RegularAt y (functionFieldMap s (fnOf U.1 (gen_mem hy) f))) := by
-  intro X Y _ _ s _ _ D
-  exact ⟨pullIdealSheaf s D, fun _ _ => Iff.rfl⟩
+  exact fun X Y _ _ s _ _ D => ⟨pullIdealSheaf s D, fun _ _ => Iff.rfl⟩
 
 end GlobalTheory.Cartier.PullIdeal
 end -- clump:auto
@@ -298,11 +297,9 @@ theorem inMultAt_one_iff_kltAt {k : Type} [Field k] [CharZero k] {X : Scheme.{0}
     obtain ⟨g, hg⟩ := G.exists_isEqn y
     rw [hkey g hg]
     intro E hE
-    have h1 := h g hg E hE
-    simpa [DivOver.ord_one] using h1
+    simpa [DivOver.ord_one] using h g hg E hE
   · intro h g hg E hE
-    have h1 := (hkey g hg).1 h E hE
-    simpa [DivOver.ord_one] using h1
+    simpa [DivOver.ord_one] using (hkey g hg).1 h E hE
 
 theorem one_mem_ideal_iff {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsIntegral X]
     [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] {p : X ⟶ Sp k} {n : ℕ} (hp : IsProjOver p)
@@ -311,8 +308,7 @@ theorem one_mem_ideal_iff {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [Is
     (U : X.affineOpens) : (1 : Γ(X, U.1)) ∈ J.ideal U ↔ ∀ y ∈ U.1, KltAt p n Δ y := by
   rw [hJ U 1]
   constructor
-  · intro h y hy
-    exact (inMultAt_one_iff_kltAt hp hn hM y).1 (h y hy 1 (by simp))
+  · exact fun h y hy => (inMultAt_one_iff_kltAt hp hn hM y).1 (h y hy 1 (by simp))
   · intro h y hy u hu
     have : u = 1 := Units.ext (by simpa using hu)
     subst this
@@ -337,7 +333,7 @@ theorem mem_support_multIdeal_iff : ∀ (k : Type) [Field k] [CharZero k] (X : S
     have h2 : ¬ x ∈ X.zeroLocus (J.ideal ⟨V, hV⟩ : Set Γ(X, V)) := fun h =>
       hx ((Scheme.IdealSheafData.mem_support_iff_of_mem (U := ⟨V, hV⟩) hxV).2 h)
     rw [Scheme.mem_zeroLocus_iff] at h2
-    push_neg at h2
+    push Not at h2
     obtain ⟨f, hf, hfx⟩ := h2
     rw [Scheme.mem_basicOpen X f x hxV] at hfx
     haveI : Nonempty V := ⟨⟨x, hxV⟩⟩
@@ -377,8 +373,7 @@ theorem exists_isMultIdeal_support_iff_not_kltAt : GlobalTheory.Published.Princi
   have hne : (⊥ : Closeds X) ≠ ⊤ := by
     intro h
     have hx : genericPoint X ∈ ((⊤ : Closeds X) : Set X) := trivial
-    rw [← h] at hx
-    exact hx
+    rwa [← h] at hx
   obtain ⟨Y, hYi, s, hsd, K, B, hR, -⟩ :=
     LogResExist.exists_logRes hP k X p n hp hdim η m G hL.ne_zero ⊥ hne
   haveI := hYi
@@ -434,8 +429,7 @@ theorem regAt_of_regularAt_neg_roundDown : ∀ (k : Type) [Field k] [CharZero k]
   have hm : (0 : ℚ) < m := by exact_mod_cast hmult.pos
   have hnn : 0 ≤ (pullCart s G - m • K).mult w := by
     have e : ((pullCart s G - m • K).mult w : ℚ) / m = Δ (s w) := by
-      rw [← hd2, hd] at hd3
-      rw [neg_div] at hd3
+      rw [← hd2, hd, neg_div] at hd3
       exact neg_injective hd3
     have h0 : (0 : ℚ) ≤ ((pullCart s G - m • K).mult w : ℚ) / m := e ▸ hΔ (s w)
     have := (div_nonneg_iff.1 h0)
@@ -501,8 +495,7 @@ theorem cd_rel {W : Y.Opens} (σ : Γ(twist (GlobalTheory.structureModule Y) (to
   simp only [LinearEquiv.map_smul, smul_eq_mul, map_mul] at e
   change fnOf _ h (resG Y _ (cd σ i)) = fnOf _ h (resG Y _ ((toLB D).g i j).val) *
     fnOf _ h (resG Y _ (cd σ j)) at e
-  rw [fnOf_resG, fnOf_resG, fnOf_resG, fnOf_toLB_g] at e
-  exact e
+  rwa [fnOf_resG, fnOf_resG, fnOf_resG, fnOf_toLB_g] at e
 
 
 open Classical in
@@ -541,7 +534,7 @@ theorem ratOf_add {W : Y.Opens} (σ τ : Γ(twist (GlobalTheory.structureModule 
     apply mul_right_cancel₀ (Units.ne_zero (genChart D).1.2)
     rw [add_mul, ratOf_mul _ _ h, ratOf_mul _ _ h, ratOf_mul _ _ h, ← map_add (f := _)]
     congr 1
-  · simp [ratOf, dif_neg hW]
+  · simp [ratOf, dite_eq_right hW]
 
 theorem ratOf_smul {W : Y.Opens} (hW : genericPoint Y ∈ W) (a : Γ(Y, W))
     (σ : Γ(twist (GlobalTheory.structureModule Y) (toLB D), W)) :
@@ -774,8 +767,7 @@ theorem pushforward_twist_iso_idealModule : ∀ (X Y : Scheme.{0}) [IsIntegral X
         rw [hl]
         apply fnOf_injective V hV
         exact (fnOf_funOf hbij hReg hV _).trans ((congrArg _ hσ).trans (finv_fnMap hbij _))
-      · refine ⟨0, hι V ?_⟩
-        exact GlobalTheory.Cartier.fn_ext fun h => (hV h).elim
+      · exact ⟨0, hι V (GlobalTheory.Cartier.fn_ext fun h => (hV h).elim)⟩
   haveI := isIso_of_bijective φ hbj
   exact ⟨asIso φ⟩
 
@@ -830,8 +822,7 @@ theorem GlobalTheory.nadelVanishing : GlobalTheory.Published.Principalisation �
     intro h
     obtain ⟨x⟩ := (inferInstance : Nonempty X)
     have hx : x ∈ ((⊤ : Closeds X) : Set X) := trivial
-    rw [← h] at hx
-    exact hx
+    rwa [← h] at hx
   obtain ⟨Y, _, s, _, K, B, hres, -, a, Fd, A, hA, hkod⟩ :=
     GlobalTheory.LogResBig.exists_logRes_smul_eq_ample_add_eff hP k X p n hproj hdim η m G hlm.ne_zero ⊥ hZ M hM hMbig
   haveI : IsLocallyNoetherian Y :=

@@ -40,15 +40,13 @@ theorem emb_surj (D : Formalism.BasicNotions.D7) : Function.Surjective D.host.em
     exact h2
   obtain ⟨σ, hσ⟩ := key
   refine ⟨D.host.gal σ, ?_⟩
-  simp only [MulEquiv.symm_apply_apply]
-  exact hσ
+  simpa only [MulEquiv.symm_apply_apply] using hσ
 
 theorem totally_positive_all : TotPosAll := by
   intro D x hx hpos φ
   obtain ⟨g, rfl⟩ := emb_surj D φ
   by_cases hg : g ∈ D.R.Psi
-  · have h1 := hpos (D.eTau.symm ⟨g, hg⟩)
-    simpa using h1
+  · simpa using hpos (D.eTau.symm ⟨g, hg⟩)
   · have hmem : g * D.R.cc ∈ D.R.Psi := by
       rw [Formalism.HC.Frame.mem_Psi_iff] at hg ⊢
       have h2 : g.1.2 = -1 := (Int.units_eq_one_or _).resolve_left hg
@@ -62,8 +60,7 @@ theorem totally_positive_all : TotPosAll := by
       change D.host.φ₀ ((D.host.gal.symm (g * D.R.cc)) x) = D.host.φ₀ ((D.host.gal.symm g) x)
       rw [map_mul, AlgEquiv.mul_apply]
       congr 2
-    rw [he] at h1
-    exact h1
+    rwa [he] at h1
 
 end Formalism.L2.SG.Pf.Cnt.R1
 

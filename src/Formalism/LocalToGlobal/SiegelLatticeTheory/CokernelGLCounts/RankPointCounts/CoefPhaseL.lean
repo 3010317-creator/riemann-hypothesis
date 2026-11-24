@@ -32,9 +32,7 @@ theorem sg_dec_eq {m : ℕ} (a : Loc.Pt E (m + 1)) (l ρ l' ρ' : Matrix (Fin (m
   have hu : Formalism.DoubleCosetMeasures.IsUpUni (rI a ρ') := upUni_rI a hρ'
   have hvPu : rI a l' * Formalism.DoubleCosetMeasures.pt (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 * rI a ρ' =
       rI a l * Formalism.DoubleCosetMeasures.pt (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 * rI a ρ := by
-    have h' := congrArg (rI a) h
-    simp only [rI_mul, rI_mat] at h'
-    exact h'
+    simpa only [rI_mul, rI_mat] using congrArg (rI a) h
   have hLd : IsUnit (rI a l).det := by rw [Formalism.DoubleCosetMeasures.isLowUni_det E hLo]; exact isUnit_one
   have hUd : IsUnit (rI a ρ).det := by rw [Formalism.DoubleCosetMeasures.isUpUni_det E hUp]; exact isUnit_one
   have hfix : ((rI a l)⁻¹ * rI a l') * Formalism.DoubleCosetMeasures.pt (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 *
@@ -192,11 +190,11 @@ theorem phaseLoc_L (hA : ∀ p, Agree δ M p) {γ : TermDef.Term D u u' F0 what�
     ext a b
     rw [modMat_apply', Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.map_apply, ptMat_apply']
     by_cases hb : b = sgF w a
-    · rw [if_pos hb, if_pos hb, modMat_blk ⟨δ, M, hA⟩]
+    · rw [ite_eq_left hb, ite_eq_left hb, modMat_blk ⟨δ, M, hA⟩]
       simp only [twist, qE, tau0, hR, Ring.inverse_one, mul_one, ite_self, sub_zero, map_mul]
       subst hb
       ring
-    · rw [if_neg hb, if_neg hb, map_zero, mul_zero, zero_mul]
+    · rw [ite_eq_right hb, ite_eq_right hb, map_zero, mul_zero, zero_mul]
   have h1 := PCount.zzp_sgn_ord ⟨δ, M, hA⟩ u u' p hM (ZhatL (lf D F0) F')
   have hdec : CntLocal.ZZP (M := M) δ u u' p (ZhatL (lf D F0) F') * sgnP p =
       (Matrix.diagonal (fun a => algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (cf ⟨δ, M, hA⟩ p a)) *
@@ -233,7 +231,7 @@ theorem phaseLoc_L (hA : ∀ p, Agree δ M p) {γ : TermDef.Term D u u' F0 what�
     exact absurd this (by simp)
   have hg0 : Loc.resChar p ≠ D.host.g 0 := fun h => hres (by simp [h])
   have hg1 : Loc.resChar p ≠ D.host.g 1 := fun h => hres (by simp [h])
-  have hgp : gpart p = 1 := by unfold gpart; rw [if_neg hg0, if_neg hg1]
+  have hgp : gpart p = 1 := by unfold gpart; rw [ite_eq_right hg0, ite_eq_right hg1]
   have hδ : δ p ≠ 0 := (hA p).2.1
   have hu : (D.s.atP p).ιE ((uP p : ℚ) : D.host.E) =
       algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((D.s.atP p).ιF ((uP p : ℚ) : D.host.F)) := by
@@ -256,8 +254,7 @@ theorem phaseLoc_L (hA : ∀ p, Agree δ M p) {γ : TermDef.Term D u u' F0 what�
       (D.s.atP p).ιE ((Formalism.DoubleCosetMeasures.sLow L + Formalism.DoubleCosetMeasures.sUp U) / ((gS D : ℕ) : D.host.E)) := by
     rw [div_eq_mul_one_div, ← hup, map_mul, map_add (f := _), ← hyP]
     ring
-  simp only [sgLo_eq, sgUp_eq, map_neg]
-  exact congrArg Neg.neg key
+  simpa only [sgLo_eq, sgUp_eq, map_neg] using congrArg Neg.neg key
 
 section Steps
 

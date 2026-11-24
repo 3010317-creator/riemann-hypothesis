@@ -189,8 +189,7 @@ theorem shortDual_holds : ShortDualStatement := by
     intro a b hab
     have h0 : e (a ᵥ* R⁻¹) = e (b ᵥ* R⁻¹) := hab
     have h1 : a ᵥ* R⁻¹ = b ᵥ* R⁻¹ := e.injective h0
-    have h2 := congrArg (fun x => x ᵥ* R) h1
-    simpa only [Matrix.vecMul_vecMul, hRR, Matrix.vecMul_one] using h2
+    simpa only [Matrix.vecMul_vecMul, hRR, Matrix.vecMul_one] using congrArg (fun x => x ᵥ* R) h1
   have hne2 : ∃ b : ℝ, 0 ≤ b ∧ ∃ v : Fin d → EuclideanSpace ℝ (Fin d),
       (∀ j, v j ∈ PI.dualZ (LinearMap.range g)) ∧ LinearIndependent ℝ v ∧ ∀ j, ‖v j‖ ≤ b := by
     refine ⟨∑ j, ‖hZ (Pi.single j 1)‖, Finset.sum_nonneg (fun j _ => norm_nonneg _),
@@ -205,8 +204,7 @@ theorem shortDual_holds : ShortDualStatement := by
       rw [hh, hcast]
       show _ = e ((Pi.basisFun ℝ (Fin d) j) ᵥ* R⁻¹)
       rw [Pi.basisFun_apply]
-    rw [hfun]
-    exact hli
+    rwa [hfun]
   have hs2nn : 0 ≤ PI.succMin (PI.dualZ (LinearMap.range g)) d := by
     unfold PI.succMin
     exact le_csInf (by exact hne2) (fun x hx => hx.1)
@@ -238,8 +236,7 @@ theorem shortDual_holds : ShortDualStatement := by
   have hcli : LinearIndependent ℤ c := by
     apply LinearIndependent.of_comp hZ
     have hcomp : (hZ ∘ c) = v := funext fun j => (hv j).symm
-    rw [hcomp]
-    exact hliZ
+    rwa [hcomp]
   refine ⟨c, hcli, fun j => ?_⟩
   have hT' : ∀ x : Fin d → ℝ, (R⁻¹)ᵀ *ᵥ x = x ᵥ* R⁻¹ := by
     intro x

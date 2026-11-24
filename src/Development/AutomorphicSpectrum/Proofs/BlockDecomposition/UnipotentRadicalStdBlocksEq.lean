@@ -68,13 +68,11 @@ theorem unipRad_stdBlocks_eq_unipotentRadical (k : Type) [Field k] [ValuativeRel
     by_cases e : i = j
     · subst e; simp
     · rw [Matrix.one_apply_ne e, Matrix.one_apply_ne]
-      intro h'
-      exact e (by simpa using (stdBlocks d hd).injective h')
+      exact fun h' => e (by simpa using (stdBlocks d hd).injective h')
   · rw [H _ _ (by simp [Zl.JC.blockIdx])]
     by_cases e : i = j
     · subst e; simp
     · rw [Matrix.one_apply_ne e, Matrix.one_apply_ne]
-      intro h'
-      exact e (by simpa using (stdBlocks d hd).injective h')
+      exact fun h' => e (by simpa using (stdBlocks d hd).injective h')
 
 end GlobalTheory.CompanionTheory.ParabolicCompare

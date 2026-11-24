@@ -23,8 +23,7 @@ variable {C : Type} [Field C] [CharZero C] {V : VF C} {O : Type} [CommRing O] [S
 theorem lg_const (Y : FBChart C V O dd) (i : Fin dd) : constantCoeff (Y.lg i) = 0 := by
   have h := Y.lg_lin i 0 (by simp)
   rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, h]
-  simp [MvPowerSeries.coeff_X]
-  exact (Finsupp.single_ne_zero.2 one_ne_zero).symm
+  simpa [MvPowerSeries.coeff_X] using (Finsupp.single_ne_zero.2 one_ne_zero).symm
 
 theorem germEval_oneStandardPoint_self (f : PS C 1 dd) : ev (n := 1) ![pt C dd 0] f = f := by
   unfold ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ.ev
@@ -90,8 +89,7 @@ theorem lg_addOf (Y : FBChart C V O dd) {n : ℕ} (P Q : Pt C n dd) (hP : ∀ j,
     funext k j
     rw [Fin.fin_one_eq_zero k]
     exact ev_X hPQ 1 j
-  rw [e1, e2, e3] at h
-  exact h
+  rwa [e1, e2, e3] at h
 
 theorem lg_act_nat (Y : FBChart C V O dd) (k : ℕ) (i : Fin dd) :
     ev ![Y.B.A.act (k : O)] (Y.lg i) = MvPowerSeries.C (k : C) * Y.lg i := by

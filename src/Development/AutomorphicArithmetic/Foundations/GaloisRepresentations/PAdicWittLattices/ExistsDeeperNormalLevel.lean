@@ -127,8 +127,7 @@ theorem ext_pow {a b : ℕ} (h : a.Coprime b) {q r : G} (ha : q ^ a = r ^ a) (hb
 def crt (a b : ℕ) (x y : G) : G := x ^ Nat.gcdB a b * y ^ Nat.gcdA a b
 
 theorem crt_mul (a b : ℕ) (x y x' y' : G) : crt a b (x * x') (y * y') = crt a b x y * crt a b x' y' := by
-  simp only [crt, mul_zpow]
-  exact mul_mul_mul_comm _ _ _ _
+  simpa only [crt, mul_zpow] using mul_mul_mul_comm _ _ _ _
 
 theorem crt_pow_right {a b : ℕ} (h : a.Coprime b) {x y : G} (hx : x ^ a = 1) (hy : y ^ b = 1) :
     crt a b x y ^ b = x := by
@@ -583,8 +582,7 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
     intro n
     have h := congrArg (fun P => _root_.AddMonoidAlgebra.coeff (M := ℕ) P i) (key n)
     simp only [Polynomial.coeff_map, eq_intCast] at h ⊢
-    rw [map_intCast]
-    exact h
+    rwa [map_intCast]
   have hch := charpoly_eq_lattice_model k B f L φ l hl hlk (fun j y => e.symm (ev j y))
     (fun j y z => by rw [h1, map_mul])
     (fun j y => e.injective (by rw [ea, e.apply_symm_apply, e.apply_symm_apply, h2]))
@@ -602,7 +600,7 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
     rfl
   have hiso : IsIsogeny (A := B) (B := B) (-f) := by
     by_contra h
-    rw [deg, if_neg h] at hdeg
+    rw [deg, ite_eq_right h] at hdeg
     exact hφ (Int.natAbs_eq_zero.1 hdeg.symm)
   have hneg : ∀ (T : Over (Sp k)) (y : T ⟶ B.X), y ≫ Hom.hom (-f) = 1 ↔ y ≫ f.hom = 1 := fun T y => by
     rw [neg_hom, GrpObj.comp_inv, inv_eq_one]
@@ -629,8 +627,7 @@ theorem exists_mul_eq_nat {F : Type} [Field F] [NumberField F] (c : 𝓞 F) (hc 
     ∃ (c' : 𝓞 F) (n : ℕ), n ≠ 0 ∧ c' * c = n := by
   obtain ⟨c', hc'⟩ := Ideal.mem_span_singleton'.mp (Ideal.absNorm_mem (Ideal.span {c}))
   refine ⟨c', _, ?_, hc'⟩
-  rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-  exact hc
+  rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
 
 theorem natAbs_det_mulLa (w : Ideal (𝓞 D.F)) (hw : w.IsMaximal) (H : ℕ) (c : 𝓞 D.F) (hc : c ≠ 0)
     (hH : w ^ H = Ideal.span {c}) :
@@ -694,8 +691,7 @@ theorem card_torsion_place {F : Type} [Field F] [NumberField F] (M : Type) [AddC
   have hq : 1 < Nat.card (𝓞 F ⧸ w) := by
     have hfin : Finite (𝓞 F ⧸ w) := by
       apply Nat.finite_of_card_ne_zero
-      rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
-      exact hne
+      rwa [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
     letI := Ideal.Quotient.field w
     exact Finite.one_lt_card
   have hTHfin : Finite (Submodule.torsionBySet (𝓞 F) M ((w ^ H : Ideal (𝓞 F)) : Set (𝓞 F))) := by
@@ -751,8 +747,7 @@ theorem exists_lev_of_card (G : Type) [CommGroup G] (act : D.O → G → G)
     intro w hw hpw r
     have hne : w ≠ ⊥ := fun h0 => hp0 (by rwa [h0, Ideal.mem_bot] at hpw)
     have hq : Nat.card (𝓞 D.F ⧸ w) ≠ 0 := by
-      rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
-      exact hne
+      rwa [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
     have h1 := card_torsion_place (Additive G) w hw hne (D.m * D.n) hdiv' fun H c hc hH => by
       have hd := natAbs_det_mulLa D w hw H c hc hH
       rw [← hd, ← hcount c hc (Int.natAbs_ne_zero.1 (by rw [hd]; exact pow_ne_zero _ hq))]
@@ -885,8 +880,7 @@ theorem exists_padic_similitude : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
   have hE : ∀ n, 0 < n → ∀ a b : Q, a ^ n = 1 → b ^ n = 1 → E n a b (W n a b ^ 2) := fun n hn a b ha hb => by
     have h := GlobalTheory.DiagSqAxes.weilIs_diag_sq S o.A o.ab o.P o.isLB o.rig₁ o.rig₂ o.symm k x n hn
       (Nat.cast_ne_zero.2 hn.ne') a b ha hb _ (hW n a b hn ha hb)
-    rw [← upow] at h
-    exact h
+    rwa [← upow] at h
   have lev : ∀ n m, 0 < n → 0 < m → ∀ a b : Q, a ^ (n * m) = 1 → b ^ (n * m) = 1 →
       W n (a ^ m) (b ^ m) = W (n * m) a b ^ m := fun n m hn hm a b ha hb => by
     have h := GlobalTheory.LevelChangePairing.weilIs_levelChange S o.A o.ab o.P o.isLB o.rig₁ o.rig₂ k x n m hn hm
@@ -1273,8 +1267,7 @@ private theorem powMap_ext' {S S' : Scheme.{0}} {A : Over S} {A' : Over S'} (π 
   apply pb.hom_ext
   · rw [← hxy, Category.assoc]
     apply pow_left_hom_ext
-    · simp only [Category.assoc, powMap_w, reassoc_of% (powMap_w π' Φ' w' m)]
-      exact e1.symm
+    · simpa only [Category.assoc, powMap_w, reassoc_of% (powMap_w π' Φ' w' m)] using e1.symm
     · intro i
       simp only [Category.assoc, powMap_pr, reassoc_of% (powMap_pr π' Φ' w' m i)]
       have := h2 (x ≫ (pr A' i).left) (by rw [Category.assoc, Over.w])

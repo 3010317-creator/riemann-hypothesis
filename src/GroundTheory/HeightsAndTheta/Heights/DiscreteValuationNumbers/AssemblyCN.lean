@@ -62,8 +62,7 @@ theorem AssociatedMultiHomogPrime.proof (h1 : MultiHomogPrimeCriterion.Statement
   have hne : A.Nonempty := by
     refine ⟨J.colon {1}, 1, 0, ?_, ?_, rfl⟩
     · exact isWeightedHomogeneous_one F (blockWeight ι)
-    · intro h
-      exact hJtop ((Ideal.eq_top_iff_one J).2 h)
+    · exact fun h => hJtop ((Ideal.eq_top_iff_one J).2 h)
   have hnoeth : IsNoetherianRing (MRing ι F) := inferInstance
   obtain ⟨Q, ⟨f, s, hf, hfJ, rfl⟩, hmax⟩ :=
     (set_has_maximal_iff_noetherian (R := MRing ι F) (M := MRing ι F)).2 hnoeth A hne
@@ -78,9 +77,7 @@ theorem AssociatedMultiHomogPrime.proof (h1 : MultiHomogPrimeCriterion.Statement
     · exact Or.inr hbQ
     left
     have hbf : b * f ∉ J := by
-      intro h
-      apply hbQ
-      exact Submodule.mem_colon_singleton.2 (by simpa [smul_eq_mul] using h)
+      exact fun h => hbQ (Submodule.mem_colon_singleton.2 (by simpa [smul_eq_mul] using h))
     have hform : IsMultiHomog (b * f) (sb + s) := hb.mul hf
     have hle : J.colon {f} ≤ J.colon {b * f} := by
       intro x hx
@@ -147,11 +144,11 @@ theorem killB_monomial (B : Set K) (d : (Σ k, ι k) →₀ ℕ) (a : R) :
   · rw [monomial_eq, algebraMap_eq]
     congr 1
     refine Finsupp.prod_congr fun v hv => ?_
-    rw [if_neg (h v hv)]
+    rw [ite_eq_right (h v hv)]
   · push Not at h
     obtain ⟨v, hv, hB⟩ := h
     rw [Finsupp.prod, Finset.prod_eq_zero hv, mul_zero]
-    rw [if_pos hB, zero_pow (Finsupp.mem_support_iff.mp hv)]
+    rw [ite_eq_left hB, zero_pow (Finsupp.mem_support_iff.mp hv)]
 
 open Classical in
 theorem coeff_killB (B : Set K) (p : MRing ι R) (d : (Σ k, ι k) →₀ ℕ) :
@@ -224,8 +221,8 @@ theorem killB_mem {Q : Ideal (MRing ι R)} (hQ : IsMultiHomogIdeal Q) (B : Set K
         simp only [M, Finset.mem_filter, Finset.mem_image]
         exact ⟨fun h => h.2, fun h => ⟨⟨d, hmem, rfl⟩, h⟩⟩
       by_cases hP : ∀ v ∈ d.support, v.1 ∉ B
-      · rw [if_pos hP, if_pos (hiff.mpr hP)]
-      · rw [if_neg hP, if_neg (fun h => hP (hiff.mp h))]
+      · rw [ite_eq_left hP, ite_eq_left (hiff.mpr hP)]
+      · rw [ite_eq_right hP, ite_eq_right (fun h => hP (hiff.mp h))]
   rw [key]
   exact Q.sum_mem fun m _ => hQ q hq m
 
@@ -393,17 +390,17 @@ theorem CutPieces.proof : CutPieces.Statement := by
       ⟨weightedHomogeneousComponent_mem _ _ _, hI i hi m⟩, y, ?_⟩
     classical
     have h1 := weightedHomogeneousComponent_of_mem (m := m) hf
-    rw [if_pos rfl, map_add (f := _)] at h1
+    rw [ite_eq_left rfl, map_add (f := _)] at h1
     exact h1.symm
   by_cases hem : e ≤ m
-  · rw [if_pos hem]
+  · rw [ite_eq_left hem]
     set A := S m ⊓ I.restrictScalars F
     set B := (S (m - e)).map μ
     have hsup : S m ⊓ (I ⊔ Ideal.span {x}).restrictScalars F = A ⊔ B := by
       apply le_antisymm
       · rintro f ⟨hf, hfI⟩
         obtain ⟨i, hi, y, rfl⟩ := hsplit f hf hfI
-        rw [CutPieces.component_mul hx, if_pos hem]
+        rw [CutPieces.component_mul hx, ite_eq_left hem]
         exact Submodule.add_mem_sup hi
           ⟨_, weightedHomogeneousComponent_mem _ _ _, rfl⟩
       · refine sup_le (inf_le_inf_left _ (Submodule.restrictScalars_mono F le_sup_left)) ?_
@@ -429,13 +426,12 @@ theorem CutPieces.proof : CutPieces.Statement := by
     rw [hinf, h1, h2] at key
     rw [hsup]
     omega
-  · rw [if_neg hem, add_zero]
+  · rw [ite_eq_right hem, add_zero]
     have hsup : S m ⊓ (I ⊔ Ideal.span {x}).restrictScalars F = S m ⊓ I.restrictScalars F := by
       apply le_antisymm
       · rintro f ⟨hf, hfI⟩
         obtain ⟨i, hi, y, rfl⟩ := hsplit f hf hfI
-        rw [CutPieces.component_mul hx, if_neg hem, add_zero]
-        exact hi
+        rwa [CutPieces.component_mul hx, ite_eq_right hem, add_zero]
       · exact inf_le_inf_left _ (Submodule.restrictScalars_mono F le_sup_left)
     rw [hsup]
 
@@ -476,8 +472,7 @@ theorem foldr_diffStep_eventuallyEq (l : List (K → ℤ)) {F G : (K → ℤ) �
   induction l with
   | nil => simpa using h
   | cons b l ih =>
-    simp only [List.foldr_cons]
-    exact diffStep_eventuallyEq b ih
+    simpa only [List.foldr_cons] using diffStep_eventuallyEq b ih
 
 theorem DegLTClosure.proof (h1 : MixedDiffLinear.Statement) : DegLTClosure.Statement := by
   intro K n f g c s
@@ -491,8 +486,7 @@ theorem DegLTClosure.proof (h1 : MixedDiffLinear.Statement) : DegLTClosure.State
   · intro hf bs
     have h' := (tendsto_sub_const_atTop s).eventually (hf bs)
     filter_upwards [h'] with m hm
-    rw [(h1 K n bs f g c s 0).2.2.1]
-    exact hm
+    rwa [(h1 K n bs f g c s 0).2.2.1]
   · intro hf bs
     have hz : ∀ᶠ m in Filter.atTop, mixedDiff (fun i : Fin n => bs i.succ) f m = 0 :=
       hf (fun i => bs i.succ)
@@ -580,8 +574,7 @@ theorem proof (h1 : MixedDiffLinear.Statement) : DegLTEventuallyConst.Statement 
       mixedDiff bs f m - mixedDiff bs f (m - Pi.single k 1) = 0 := by
     intro k
     have hk := hf (Matrix.vecCons (Pi.single k 1) bs)
-    rw [(h1 K n bs f 0 0 0 (Pi.single k 1)).2.2.2.2] at hk
-    exact hk
+    rwa [(h1 K n bs f 0 0 0 (Pi.single k 1)).2.2.2.2] at hk
   obtain ⟨N, hN⟩ := Filter.eventually_atTop.mp (Filter.eventually_all.mpr hev)
   exact ⟨mixedDiff bs f N, Filter.eventually_atTop.mpr ⟨N, fun m hm =>
     eq_of_unitSteps_eq_zero (mixedDiff bs f) N (fun m hm => hN m hm) _ m hm rfl⟩⟩
@@ -810,8 +803,7 @@ theorem FiltrationStepLength.proof : FiltrationStepLength.Statement := by
     (LocalizedModule.map_injective _ _ hinj) (LocalizedModule.map_surjective _ _ hsurj)
     (LocalizedModule.map_exact _ _ _ hex)
   unfold multAt
-  rw [add_comm]
-  exact key
+  rwa [add_comm]
 
 end GroundTheory.Heights₂.Heights.NumbersDVR
 end -- clump:auto
@@ -1047,9 +1039,9 @@ theorem HilbFnCut.proof (h1 : GradedPieceQuot.Statement.{u}) (h2 : CutPieces.Sta
     have hC := h2 F K ι I x e n hI hx hnzd
     have hL : hilbFn (I ⊔ Ideal.span {x}) m =
         (Module.finrank F (gradedPiece (I ⊔ Ideal.span {x}) n) : ℤ) := by
-      unfold hilbFn; rw [if_pos hm]
+      unfold hilbFn; rw [ite_eq_left hm]
     have hM : hilbFn I m = (Module.finrank F (gradedPiece I n) : ℤ) := by
-      unfold hilbFn; rw [if_pos hm]
+      unfold hilbFn; rw [ite_eq_left hm]
     rw [hL, hM, hA, hB]
     by_cases he : e ≤ n
     · have hme : ∀ k, 0 ≤ (m - fun k => (e k : ℤ)) k := by
@@ -1066,9 +1058,9 @@ theorem HilbFnCut.proof (h1 : GradedPieceQuot.Statement.{u}) (h2 : CutPieces.Sta
         omega
       have hN : hilbFn I (m - fun k => (e k : ℤ)) =
           (Module.finrank F (gradedPiece I (n - e)) : ℤ) := by
-        unfold hilbFn; rw [if_pos hme, hq]
+        unfold hilbFn; rw [ite_eq_left hme, hq]
       rw [hN, h1 F K ι I (n - e)]
-      rw [if_pos he] at hC
+      rw [ite_eq_left he] at hC
       rw [hC]
       ring
     · have hme : ¬ ∀ k, 0 ≤ (m - fun k => (e k : ℤ)) k := by
@@ -1080,9 +1072,9 @@ theorem HilbFnCut.proof (h1 : GradedPieceQuot.Statement.{u}) (h2 : CutPieces.Sta
         simp only [Pi.sub_apply, hn] at h1k ⊢
         omega
       have hN : hilbFn I (m - fun k => (e k : ℤ)) = 0 := by
-        unfold hilbFn; rw [if_neg hme]
+        unfold hilbFn; rw [ite_eq_right hme]
       rw [hN]
-      rw [if_neg he] at hC
+      rw [ite_eq_right he] at hC
       rw [hC]
       ring
   · obtain ⟨k, hk⟩ := not_forall.mp hm
@@ -1092,7 +1084,7 @@ theorem HilbFnCut.proof (h1 : GradedPieceQuot.Statement.{u}) (h2 : CutPieces.Sta
       simp only [Pi.sub_apply] at this
       omega
     unfold hilbFn
-    rw [if_neg hm, if_neg hm, if_neg hme, sub_zero]
+    rw [ite_eq_right hm, ite_eq_right hm, ite_eq_right hme, sub_zero]
 
 end GroundTheory.Heights₂.Heights.NumbersDVR
 end -- clump:auto
@@ -1228,10 +1220,9 @@ theorem IntNumAssoc.proof (h1 : PrimeFiltration.Statement.{u})
       have hJ' : ringKrullDim (MRing ι F ⧸ J) <
           ((n + Fintype.card K + 1 : ℕ) : WithBot ℕ∞) := by
         have e : n + Fintype.card K + 1 = n + 1 + Fintype.card K := by omega
-        rw [e]
-        exact hdim
+        rwa [e]
       have hmin := h5 _ J p.1 (n + Fintype.card K) (hl p hpl).2.2 hJ' hbig
-      rw [if_pos (hfin.mem_toFinset.mpr hmin), if_pos hrel]
+      rw [ite_eq_left (hfin.mem_toFinset.mpr hmin), ite_eq_left hrel]
   have hl2 : (l.map fun p => intNum F p.1 bs) = l.map fun p =>
       ∑ W ∈ hfin.toFinset, if p.1 = W then (if IsRelevant W then intNum F W bs else 0) else 0 :=
     List.map_congr_left hp
@@ -1252,7 +1243,7 @@ theorem IntNumAssoc.proof (h1 : PrimeFiltration.Statement.{u})
   rw [IntNumAssoc.list_sum_ite_mul]
   unfold idealCycle
   by_cases hr : IsRelevant W
-  · rw [dite_eq_left ⟨hWm, hr⟩, if_pos hr]
+  · rw [dite_eq_left ⟨hWm, hr⟩, ite_eq_left hr]
     have hcount : multAt J W = (l.map fun p => if p.1 = W then (1 : ℕ∞) else 0).sum := by
       rw [hmult W]
       congr 1
@@ -1261,7 +1252,7 @@ theorem IntNumAssoc.proof (h1 : PrimeFiltration.Statement.{u})
       have := (hl p hpl).1
       exact h3 F K ι J p.1 W (hl p hpl).2.2 hWm
     rw [hcount, IntNumAssoc.list_sum_ite_enat, ENat.toNat_natCast]
-  · rw [dite_eq_right (fun h => hr h.2), if_neg hr]
+  · rw [dite_eq_right (fun h => hr h.2), ite_eq_right hr]
     simp
 
 end GroundTheory.Heights₂.Heights.NumbersDVR
@@ -1500,10 +1491,7 @@ theorem RelevantDimGe.proof (h1 : BlockAdjoinPrime.Statement.{u}) : RelevantDimG
     exact hi (((hJ j).2 ⟨e.symm ⟨j, hj⟩, i⟩ (by simp [B])).1 hmem)
   let f : Fin (Fintype.card K + 1) → PrimeSpectrum.zeroLocus (R := MRing ι R) (Q : Set (MRing ι R)) :=
     fun j => ⟨⟨J j, (hJ j).1⟩, hle j⟩
-  have hf : StrictMono f := by
-    refine Fin.strictMono_iff_lt_succ.2 fun j => ?_
-    show J j < J (j + 1)
-    exact hstrict j j.isLt
+  have hf : StrictMono f := Fin.strictMono_iff_lt_succ.2 fun j => hstrict j j.isLt
   rw [ringKrullDim_quotient]
   exact Order.LTSeries.length_le_krullDim (LTSeries.mk (Fintype.card K) f hf)
 

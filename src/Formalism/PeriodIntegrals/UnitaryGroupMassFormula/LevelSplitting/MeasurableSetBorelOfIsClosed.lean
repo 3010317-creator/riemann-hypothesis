@@ -88,10 +88,8 @@ theorem lattice_borel : LatBorel := by
         constructor
         · rintro ⟨i, rfl⟩
           exact Finset.mem_subtype.1 i.2
-        · intro hy
-          exact ⟨⟨⟨y, hT'S hy⟩, Finset.mem_subtype.2 hy⟩, rfl⟩
-      rw [this]
-      exact hxT'
+        · exact fun hy => ⟨⟨⟨y, hT'S hy⟩, Finset.mem_subtype.2 hy⟩, rfl⟩
+      rwa [this]
     · rintro ⟨T, hxT⟩
       refine Submodule.span_mono ?_ hxT
       rintro _ ⟨i, rfl⟩

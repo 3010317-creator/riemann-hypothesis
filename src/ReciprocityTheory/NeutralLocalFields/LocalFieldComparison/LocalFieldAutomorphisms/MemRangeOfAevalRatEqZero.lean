@@ -31,8 +31,7 @@ theorem mem_range_of_aeval_rat_eq_zero (ι : Ω →+* PadicAlgCl p) [IsAlgClosed
     congr 1
     exact RingHom.ext_rat _ _
   have hroot : ((g.map (algebraMap ℚ Ω)).map ι).IsRoot b := by
-    rw [hmap, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def]
-    exact hb
+    rwa [hmap, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def]
   exact Polynomial.Splits.mem_range_of_isRoot (IsAlgClosed.splits _) (Polynomial.map_ne_zero hg) hroot
 
 private theorem exists_root_norm_sub_pow_le_eval {K : Type*} [NormedField K] [IsAlgClosed K] (n : ℕ) :
@@ -139,10 +138,10 @@ theorem denseRange_of_isAlgClosed (ι : Ω →+* PadicAlgCl p) [IsAlgClosed Ω] 
       rw [Polynomial.coeff_sub, hG, hF, Polynomial.coeff_map, Polynomial.coeff_map]
       rcases Nat.lt_or_ge i (n + 1) with hi' | hi'
       · have hgc : g.coeff i = q i := by
-          rw [hg, Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg (by omega), zero_add, hs,
+          rw [hg, Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right (by omega), zero_add, hs,
             Polynomial.finsetSum_coeff]
           simp only [Polynomial.coeff_C_mul_X_pow]
-          rw [Finset.sum_ite_eq, if_pos (Finset.mem_range.mpr hi')]
+          rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_range.mpr hi')]
         rw [hgc, eq_ratCast (algebraMap ℚ (PadicAlgCl p)), ← map_ratCast (algebraMap ℚ_[p] (PadicAlgCl p)),
           ← map_sub, PadicAlgCl.norm_extends, norm_sub_rev]
         exact (hq i).le
@@ -177,8 +176,7 @@ theorem denseRange_of_isAlgClosed (ι : Ω →+* PadicAlgCl p) [IsAlgClosed Ω] 
     exact hβ)
   obtain ⟨y, hy⟩ := RingHom.mem_range.mp hβr
   refine ⟨y, ?_⟩
-  rw [dist_eq_norm, hy]
-  exact hβε
+  rwa [dist_eq_norm, hy]
 
 theorem finiteDimensional_Kloc (ι : Ω →+* PadicAlgCl p) : FiniteDimensional ℚ_[p] (Kloc F ι) := by
   classical

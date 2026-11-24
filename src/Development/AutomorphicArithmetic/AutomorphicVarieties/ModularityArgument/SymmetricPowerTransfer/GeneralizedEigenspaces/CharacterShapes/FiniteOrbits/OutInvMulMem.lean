@@ -130,8 +130,7 @@ private theorem finOrb_of_cover (U : Subgroup G) (a : G) (R : Finset G)
   refine (R.image (fun r : G => (r : G ⧸ U))).finite_toSet.subset ?_
   rintro q ⟨u, rfl⟩
   obtain ⟨r, hr, hr'⟩ := h ((u : G) * a) ⟨u, u.2, 1, U.one_mem, by simp⟩
-  refine Finset.mem_coe.2 (Finset.mem_image.2 ⟨r, hr, ?_⟩)
-  exact QuotientGroup.eq.2 hr'
+  exact Finset.mem_coe.2 (Finset.mem_image.2 ⟨r, hr, QuotientGroup.eq.2 hr'⟩)
 
 end SlopeTestRemainingChoices
 
@@ -220,8 +219,7 @@ theorem UpperTheory.V.Z.Sym.So.dcMap :
     obtain ⟨R', hR1', hR2'⟩ := reps_of_finOrb U' (e a) hf
     have hφe : ∀ u ∈ U, ∀ g, (φ ∘ e) (g * u) = (φ ∘ e) g := by
       intro u hu g
-      simp only [Function.comp_apply, map_mul]
-      exact hφ _ hu _
+      simpa only [Function.comp_apply, map_mul] using hφ _ hu _
     have hinj : Set.InjOn inv (R' : Set G') := fun x _ y _ h => by
       rw [← einv x, ← einv y, h]
     have hR1 : ∀ y ∈ R'.image inv, y ∈ DC U a := by

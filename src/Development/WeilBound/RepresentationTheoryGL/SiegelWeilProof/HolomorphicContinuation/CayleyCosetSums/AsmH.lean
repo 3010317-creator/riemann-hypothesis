@@ -262,8 +262,7 @@ theorem asmH_of (hF : FarId) (hS : SmoothX) (hT : TopHol) (hR : RcCongr) (hE : E
   have hιKiff : ∀ x, InK x ↔ ∃ k, ιK n k = x := by
     intro x
     constructor
-    · intro hx
-      exact ⟨⟨toGR x hx.1, hx⟩, rfl⟩
+    · exact fun hx => ⟨⟨toGR x hx.1, hx⟩, rfl⟩
     · rintro ⟨k, rfl⟩
       exact k.2
 
@@ -359,11 +358,9 @@ theorem asmH_of (hF : FarId) (hS : SmoothX) (hT : TopHol) (hR : RcCongr) (hE : E
     have hRj := hRv j le_rfl
     have h0 : D 0 * iteratedDeriv j L s₀ = 0 := by
       have h1 := iteratedDeriv_eq_of_eventuallyEq hev j
-      rw [hL1, hRj, sub_self] at h1
-      exact h1
+      rwa [hL1, hRj, sub_self] at h1
     have hLj : iteratedDeriv j L s₀ = 0 := (mul_eq_zero.1 h0).resolve_left hD0
-    rw [(hΦrC Q y).2 j] at hLj
-    exact hLj
+    rwa [(hΦrC Q y).2 j] at hLj
 
 end PositivityTheory.Rg.Sw.HSt
 end -- clump:auto
@@ -417,8 +414,7 @@ theorem dirSeries (hC : CurveGR) (hF : FzDer) (h : HD m n e G Pp Γ ι s₀ Ht f
           (mR (y₁ * γ s) * NormedSpace.exp (((x - s : ℝ) : ℂ) • (if b then dir1 Z else dir2 Z))) := by
       funext u
       rw [hfzγ, ← hγe, ← mR_mul, mul_assoc, ← hγadd, add_sub_cancel]
-    rw [hfe]
-    exact h1
+    rwa [hfe]
   have hK : IsCompact ((fun s : ℝ => g * ι (y * γ s)) '' Icc (-1) 1) :=
     isCompact_Icc.image (continuous_const.mul (h.ιc.comp (continuous_const.mul hγc)))
   obtain ⟨u, hu, hbound⟩ := (h.far z hz).1 _ hK
@@ -770,8 +766,7 @@ theorem topSeries (hS : SecFz) (h : HD m n e G Pp Γ ι s₀ Ht f U d Ê t) [Mea
     have h2 : ‖∫ s, C q * (fz m e (z - s₀) (mR (y₀ q * y) * ιK n k * a * nU (herm s) * b) * ψ s)‖ ≤
         ∫ s, |u q| * ‖ψ s‖ :=
       norm_integral_le_of_norm_le (hψi.const_mul _) (Filter.Eventually.of_forall fun s => hFb q k s)
-    rw [integral_const_mul] at h2
-    rw [integral_const_mul] at h2
+    rw [integral_const_mul, integral_const_mul] at h2
     rw [mul_left_comm, norm_mul, norm_mul]
     rw [norm_mul] at h2
     calc ‖ρ k‖ * (‖C q‖ * ‖∫ s, fz m e (z - s₀) (mR (y₀ q * y) * ιK n k * a * nU (herm s) * b) * ψ s‖)
@@ -839,7 +834,7 @@ theorem farId_of (hC : CurveGR) (hF : FzDer) : FarId := by
       deriv (fun (s : ℝ) => F (x * NormedSpace.exp ((s : ℂ) • if true = true then dir1 (lowQ Q) else dir2 (lowQ Q)))) 0 +
         Complex.I * deriv (fun (s : ℝ) => F (x * NormedSpace.exp ((s : ℂ) • if false = true then dir1 (lowQ Q) else dir2 (lowQ Q)))) 0 := by
     intro F x
-    simp only [rC, dir1, dir2, if_true]
+    simp only [rC, dir1, dir2, ite_true]
     rfl
   choose y₀ C hyC using fun q : GlobalTheory.Eis.Cosets Pp Γ => FarP.termSplit hS hD z (↑(Quotient.out q) * g)
   have d1 := FarP.dirSeries hC hF hD hz (lowQ Q) true g y y₀ C hyC
@@ -852,8 +847,7 @@ theorem farId_of (hC : CurveGR) (hF : FzDer) : FarId := by
       ∑ l : Fin N, M l (z - s₀) * tOp μ (⇑(ιK n)) (ρ l) (ψ l) (a l) (b l) (fz m e (z - s₀)) (mR (y₀ q * y)) := by
     intro q
     have h := hid (z - s₀) (mR (y₀ q * y)) (y₀ q * y).2
-    rw [key] at h
-    exact h
+    rwa [key] at h
   rw [key, d1.2, d2.2, Finset.sum_congr rfl (fun l _ => by rw [(tp l).2])]
   have e1 : ∑' q, C q * (D (z - s₀) * (deriv (fun (s : ℝ) => fz m e (z - s₀) (mR (y₀ q * y) * NormedSpace.exp ((s : ℂ) • if true = true then dir1 (lowQ Q) else dir2 (lowQ Q)))) 0 +
         Complex.I * deriv (fun (s : ℝ) => fz m e (z - s₀) (mR (y₀ q * y) * NormedSpace.exp ((s : ℂ) • if false = true then dir1 (lowQ Q) else dir2 (lowQ Q)))) 0)) =
@@ -872,8 +866,7 @@ theorem farId_of (hC : CurveGR) (hF : FzDer) : FarId := by
       intro q
       rw [hq q, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun l _ => by ring)
-    rw [tsum_congr hq2]
-    rw [Summable.tsum_finsetSum (fun l _ => ((tp l).1.mul_left (M l (z - s₀))))]
+    rw [tsum_congr hq2, Summable.tsum_finsetSum (fun l _ => ((tp l).1.mul_left (M l (z - s₀))))]
     refine Finset.sum_congr rfl (fun l _ => ?_)
     rw [← tsum_mul_left]
   have e3 := e1.symm.trans e2
@@ -936,8 +929,7 @@ theorem fz_deriv {X x : M2 n} (hX : IsLie X) (hx : InG x) (m : ℕ) (e : ℤ) (w
   have hf0 : fz m e w x = (det x) ^ e * (u1 x).det ^ (-(m : ℤ)) *
       Complex.exp (((Real.log (Complex.normSq (u1 x).det) : ℝ) : ℂ) * (-w)) := by
     have h := fz_curve hX hx m e w 0
-    rw [cE_zero, mul_one] at h
-    exact h
+    rwa [cE_zero, mul_one] at h
   have hD : HasDerivAt (fun s : ℝ => det (x * cE X s))
       ((fderiv ℂ (fun y : M2 n => det y) x) (x * X)) 0 :=
     curve_deriv (fun y : M2 n => det y) cd_det X x
@@ -957,12 +949,10 @@ theorem fz_deriv {X x : M2 n} (hX : IsLie X) (hx : InG x) (m : ℕ) (e : ℤ) (w
   have hAz := hzA.comp (0 : ℝ) hA
   have hre : HasDerivAt (fun s : ℝ => (u1 (x * cE X s)).det.re)
       ((fderiv ℂ (fun y : M2 n => (u1 y).det) x) (x * X)).re 0 := by
-    have h2 := Complex.reCLM.hasFDerivAt.comp_hasDerivAt (0 : ℝ) hA
-    exact h2
+    exact Complex.reCLM.hasFDerivAt.comp_hasDerivAt (0 : ℝ) hA
   have him : HasDerivAt (fun s : ℝ => (u1 (x * cE X s)).det.im)
       ((fderiv ℂ (fun y : M2 n => (u1 y).det) x) (x * X)).im 0 := by
-    have h2 := Complex.imCLM.hasFDerivAt.comp_hasDerivAt (0 : ℝ) hA
-    exact h2
+    exact Complex.imCLM.hasFDerivAt.comp_hasDerivAt (0 : ℝ) hA
   have hN := ((hre.mul hre).add (him.mul him)).congr_of_eventuallyEq
     (Filter.Eventually.of_forall fun s => Complex.normSq_apply (u1 (x * cE X s)).det)
   have hNne : Complex.normSq (u1 (x * cE X 0)).det ≠ 0 := by
@@ -1044,8 +1034,7 @@ theorem fzDer : FzDer := by
   obtain ⟨p, k, hp, hk, rfl⟩ := iwa n y
   obtain ⟨R, hR, hRb⟩ := fz_deriv (x := mR (p * k)) hX (p * k).2 m e w
   refine ⟨R, ?_, ?_⟩
-  · simp only [cE_eq_exp]
-    exact hR
+  · simpa only [cE_eq_exp] using hR
   · refine hRb.trans ?_
     have e1 : rD (if b = true then dir1 Z else dir2 Z) (mR (p * k)) =
         rD (if b = true then dir1 Z else dir2 Z) (mR k) := by
@@ -1100,13 +1089,7 @@ variable {n : ℕ}
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem lift_mR (φ : GR n → ℂ) (w : GR n) : lift φ (mR w) = φ w := by
-  have h : IsUnit (mR w) ∧ InG (mR w) := ⟨⟨w.1, rfl⟩, w.2⟩
-  unfold lift
-  rw [dite_eq_left h]
-  congr 1
-  apply Subtype.ext
-  apply Units.ext
-  simp [mR]
+  exact PositivityTheory.Rg.Sw.HSt.FarP.lift_mR φ w
 
 theorem ιK_apply (k : KR n) : ιK n k = mR (k : GR n) := rfl
 
@@ -1152,8 +1135,7 @@ theorem hol_int {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
       E y.2 (g * ι ((y.1.1 : GR n) * a * LocOpA.nbEl y.1.2 * b)) * ψ y.1.2) (univ ×ˢ U) := by
     refine ContinuousOn.mul ?_ (hψc.comp (continuous_snd.comp continuous_fst)).continuousOn
     refine hEc.comp (Continuous.continuousOn (continuous_snd.prodMk ((Vac.continuous_arg hιc hnb g).comp continuous_fst))) ?_
-    intro y hy
-    exact ⟨hy.2, trivial⟩
+    exact fun y hy => ⟨hy.2, trivial⟩
   have e1 : ∀ (k : KR n) (h : ℂ → G → ℂ) (z : ℂ), (∫ x in C, h z (g * ι ((k : GR n) * a * LocOpA.nbEl x * b)) * ψ x) =
       ∫ x, h z (g * ι ((k : GR n) * a * LocOpA.nbEl x * b)) * ψ x := fun k h z =>
     setIntegral_eq_integral_of_forall_compl_eq_zero fun x hx => by rw [image_eq_zero_of_notMem_tsupport hx, mul_zero]

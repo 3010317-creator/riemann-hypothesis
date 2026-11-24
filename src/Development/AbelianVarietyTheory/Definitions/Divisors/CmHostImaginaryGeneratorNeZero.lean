@@ -232,7 +232,7 @@ theorem isIsoSub_iso (ρ : ℕ) (h : 2 * ρ ≤ c) : IsIsoSub B (d.iso ρ h) := 
     refine Matrix.ext fun p q => ?_
     have := p.2; have := q.2
     simp only [submatrix_apply, antiDiagonalSignGramMatrix, Fin.val_castLE, Matrix.zero_apply]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
 
 def besDat (hε : ε ≠ 0) (ρ : ℕ) (h : c = 2 * ρ + 1) : BesDat A B d.ι where
   ρ := ρ
@@ -252,11 +252,11 @@ def besDat (hε : ε ≠ 0) (ρ : ℕ) (h : c = 2 * ρ + 1) : BesDat A B d.ι wh
     refine h1.trans ?_
     have := i.2
     simp only [antiDiagonalSignGramMatrix, Fin.val_castLE, Pi.zero_apply]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   z_ne := by
     have h1 := congrFun (congrFun d.gram ⟨ρ, by omega⟩) ⟨ρ, by omega⟩
-    simp only [antiDiagonalSignGramMatrix, if_true] at h1
-    rw [if_pos (by omega)] at h1
+    simp only [antiDiagonalSignGramMatrix, ite_true] at h1
+    rw [ite_eq_left (by omega)] at h1
     intro h0
     apply hε
     rw [← h1, ← h0, Formalism.UG.hform, Finset.sum_comm]
@@ -305,8 +305,7 @@ theorem congLev_top : congLev hc J Λ ⊤ = UA hc J ⊓ Formalism.UG.stabGL (hat
 theorem congLev_mono {𝔪 𝔫 : Ideal (𝓞 E)} (h : 𝔪 ≤ 𝔫) : congLev hc J Λ 𝔪 ≤ congLev hc J Λ 𝔫 := by
   rintro g ⟨g1, g2, g3⟩
   refine ⟨g1, g2, fun x hx => ?_⟩
-  refine Submodule.span_mono ?_ (g3 x hx)
-  exact Set.image_mono (Submodule.smul_mono_left h)
+  exact Submodule.span_mono (Set.image_mono (Submodule.smul_mono_left h)) (g3 x hx)
 
 end Cong
 

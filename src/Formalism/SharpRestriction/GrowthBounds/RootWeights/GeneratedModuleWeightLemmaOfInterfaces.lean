@@ -188,14 +188,11 @@ theorem generic_translate_weights_mem (hT : TransvectionExpansion) (hTo : TorusA
       refine ⟨?_, mul_one 1, mul_one 1⟩
       unfold SubstitutionPreservesExtension
       intro x hx
-      rw [matrixSubst_one, MvPolynomial.map_id]
-      exact hx
+      rwa [matrixSubst_one, MvPolynomial.map_id]
     | cons t l ih =>
       obtain ⟨hg, h1, h2⟩ := ih
-      have ht1 : t.toMatrix * Matrix.transvection t.i t.j (-t.c) = 1 := by
-        exact t.mul_inv
-      have ht2 : Matrix.transvection t.i t.j (-t.c) * t.toMatrix = 1 := by
-        exact t.inv_mul
+      have ht1 : t.toMatrix * Matrix.transvection t.i t.j (-t.c) = 1 := t.mul_inv
+      have ht2 : Matrix.transvection t.i t.j (-t.c) * t.toMatrix = 1 := t.inv_mul
       simp only [List.map_cons, List.prod_cons, List.reverse_cons, List.map_append, List.prod_append,
         List.map_nil, List.prod_nil, mul_one]
       generalize (l.map Matrix.TransvectionStruct.toMatrix).prod = P at hg h1 h2 ⊢

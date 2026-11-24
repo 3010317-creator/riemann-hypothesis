@@ -39,8 +39,7 @@ theorem mem_compSet_iff (x : PIW.MassDataColumns.KvH X u p.1) :
   · rintro ⟨z, hz, hzx⟩
     rw [← hzx]
     simpa [mul_assoc] using hz
-  · intro h
-    exact ⟨_, h, by group⟩
+  · exact fun h => ⟨_, h, by group⟩
 
 theorem idxHp_eq : MassDataLevelSSteps.idxHp X hb u p = PIW.MassDataColumns.lIdxH X hb u p := by
   have hKv : ∀ y : Hsub (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X u), (y : HA (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J) ∈ Kv X.B.I.cm.sig X.B.I.J (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) p.1 ↔ y ∈ PIW.MassDataColumns.KvH X u p.1 :=
@@ -54,8 +53,7 @@ theorem idxHp_eq : MassDataLevelSSteps.idxHp X hb u p = PIW.MassDataColumns.lIdx
     intro y hy
     have hyK : y ∈ PIW.MassDataColumns.KvH X u p.1 :=
       (hKv y).1 ((level_compression_chain (X := X) (hb := hb) (p := p) u).2 hy)
-    refine ⟨hyK, ?_⟩
-    exact Subgroup.mem_subgroupOf.1 ((mem_compSet_iff X hb u p ⟨y, hyK⟩).1 hy)
+    exact ⟨hyK, (Subgroup.mem_subgroupOf.1 ((mem_compSet_iff X hb u p ⟨y, hyK⟩).1 hy))⟩
   have hinf : Subgroup.closure (Subtype.val ⁻¹' compSet X.B.I.cm.sig X.B.I.J (K2u X hb u) p.1 : Set (Hsub (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X u))) ⊓ PIW.MassDataColumns.KvH X u p.1 =
       PIW.MassDataColumns.unitaryLevelLocalComponent X hb u p.1 ⊓ PIW.MassDataColumns.KvH X u p.1 := by
     have hle : Subgroup.closure (Subtype.val ⁻¹' compSet X.B.I.cm.sig X.B.I.J (K2u X hb u) p.1 : Set (Hsub (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X u))) ≤ PIW.MassDataColumns.unitaryLevelLocalComponent X hb u p.1 :=
@@ -85,8 +83,7 @@ theorem sTypIdx_holds : STypIdx := by
   obtain ⟨ρ, hs, hk, hc⟩ := (PIW.MassDataColumns.locRedH_of_rest (PIW.MassDataColumns.locRedRest_of_models
     (PIW.MassDataColumns.hModelAll_of (PIW.MassDataColumns.hAdaptAll_of PIW.MassDataColumns.adapted_basis_every_place)
       PIW.MassDataColumns.level_clause_adapted_basis))) X hb hK u hT hL p
-  rw [PIW.MassDataColumns.lIdxH_eq_of_red X hb u p ρ hs hk hc] at h1
-  exact h1
+  rwa [PIW.MassDataColumns.lIdxH_eq_of_red X hb u p ρ hs hk hc] at h1
 
 theorem typedAll_holds : Formalism.L2.SG.PoincareAmplitudeLowerBounds.TypedAll := typedAll_of_idx sTypIdx_holds
 

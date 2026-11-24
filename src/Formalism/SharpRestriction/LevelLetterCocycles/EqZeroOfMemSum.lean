@@ -89,8 +89,7 @@ theorem eq_zero_of_mem_sum (τ : K →ₐ[Qp] LL) :
     have haτ : a ≠ τ := fun h => hτ (h ▸ Finset.mem_insert_self a s)
     have hτs : τ ∉ s := fun h => hτ (Finset.mem_insert_of_mem h)
     obtain ⟨c, hc⟩ : ∃ c : K, τ c ≠ a c := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact haτ (AlgHom.ext fun c => (h c).symm)
 
     let φ : Module.End LL (V ⊗[Qp] BdR) :=
@@ -129,8 +128,7 @@ theorem mem_of_mem_filC (τ : K →ₐ[Qp] LL) (F : Submodule LL (V ⊗[Qp] BdR)
     rw [e]
     exact Submodule.sub_mem _ hx (hF hf)
   have hz0 := eq_zero_of_mem_sum PD ρ τ (s.filter (· ≠ τ)) (by simp) z hzτ (hle hs)
-  rw [← hfz, hz0, add_zero]
-  exact hf
+  rwa [← hfz, hz0, add_zero]
 
 theorem fildR_eq_bot (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] (b : ℤ)
     (hj : JumpsInV PD ρ τ (Set.Iic (-b))) : ∀ a : ℤ, -b < a → FildR PD ρ τ a = ⊥ := by
@@ -139,8 +137,7 @@ theorem fildR_eq_bot (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ
   have hstep : ∀ c : ℤ, -b < c → FildR PD ρ τ c = FildR PD ρ τ (c + 1) := by
     intro c hc
     by_contra h
-    have h2 := hj c (fun h' => h h'.symm)
-    exact absurd (Set.mem_Iic.1 h2) (not_le.2 hc)
+    exact absurd (Set.mem_Iic.1 (hj c (fun h' => h h'.symm))) (not_le.2 hc)
   have hk : ∀ k : ℕ, FildR PD ρ τ a = FildR PD ρ τ (a + k) := by
     intro k
     induction k with

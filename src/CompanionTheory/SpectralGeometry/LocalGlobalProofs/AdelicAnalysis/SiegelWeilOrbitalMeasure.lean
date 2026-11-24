@@ -139,14 +139,11 @@ theorem measurableEmbedding_orbitQuot {G V : Type} [Group G] [TopologicalSpace G
           have : y = (g : G ⧸ stabilizerOf act h1 hm x₀) :=
             orbitQuot_injective act h1 hm x₀ hyg
           simpa [this] using hy
-        · intro hg
-          exact ⟨_, hg, rfl⟩
+        · exact fun hg => ⟨_, hg, rfl⟩
       have hm' : MeasurableSet[MeasurableSpace.map o ‹MeasurableSpace G›] T := by
         show MeasurableSet (o ⁻¹' T)
-        rw [hpre]
-        exact hS'
-      rw [hb, ← BorelSpace.measurable_eq] at hm'
-      exact hm'
+        rwa [hpre]
+      rwa [hb, ← BorelSpace.measurable_eq] at hm'
     have himg : orbitQuot act h1 hm x₀ '' S = Subtype.val '' T := by
       rw [Subtype.image_preimage_coe, Set.inter_eq_right.2]
       rintro _ ⟨y, -, rfl⟩
@@ -236,14 +233,12 @@ theorem invariant_measure_unique :
     (comap_orbitQuot_invariant act hc h1 hm x₀ hφ μ hμ)
   have hμν : μ = c • ν := by
     have hφν : AEMeasurable φ (ν.comap φ) := hφ.measurable.aemeasurable
-    rw [← hrec μ hμZ, hcc, Measure.map_smul, hrec ν hνZ]
-    exact hφν
+    rwa [← hrec μ hμZ, hcc, Measure.map_smul, hrec ν hνZ]
 
   have hct : c ≠ ⊤ := by
     rintro rfl
     have hK : ∃ K : Set V, IsCompact K ∧ ν K ≠ 0 := by
-      by_contra hno
-      push_neg at hno
+      by_contra! hno
       apply hν0
       rw [← Measure.measure_univ_eq_zero, ← iUnion_compactCovering V]
       exact measure_iUnion_null fun n => hno _ (isCompact_compactCovering V n)
@@ -391,14 +386,12 @@ theorem lat_natMul {d M n : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSp
     (fun a i => (N : Fv F v ⊗[F] E) * Y a i) ∈ latV b v := by
   intro a i k
   have e : (N : Fv F v ⊗[F] E) * Y a i = N • Y a i := (nsmul_eq_mul _ _).symm
-  simp only [e, map_nsmul, Finsupp.smul_apply]
-  exact nsmul_mem (hY a i k) N
+  simpa only [e, map_nsmul, Finsupp.smul_apply] using nsmul_mem (hY a i k) N
 
 theorem zero_mem_lat {d M n : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) :
     (0 : Fin n → Fin M → Fv F v ⊗[F] E) ∈ latV b v := by
   intro a i k
-  simp only [Pi.zero_apply, map_zero, Finsupp.coe_zero]
-  exact zero_mem _
+  simpa only [Pi.zero_apply, map_zero, Finsupp.coe_zero] using zero_mem _
 
 theorem exists_scale (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E)
     (n M : ℕ) (v : HeightOneSpectrum (𝓞 F)) (K : Set (Fin n → Fin M → Fv F v ⊗[F] E))
@@ -449,8 +442,7 @@ theorem exists_scale (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b : 
       fun a i => (q : Fv F v ⊗[F] E) * (((k + 1 : ℕ) : Fv F v ⊗[F] E) * Y a i) := by
     funext a i
     rw [hq, Nat.cast_mul, ← mul_assoc, mul_comm ((k + 1 : ℕ) : Fv F v ⊗[F] E)]
-  rw [e]
-  exact h
+  rwa [e]
 
 def pr {n M : ℕ} (S : Finset (HeightOneSpectrum (𝓞 F))) (X : Fin n → Fin M → AF F ⊗[F] E) :
     (Fin n → Fin M → Ainf F ⊗[F] E) × ∀ v : S, Fin n → Fin M → Fv F v.1 ⊗[F] E :=
@@ -481,8 +473,7 @@ theorem preimage_lt_top (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b
           ((N ⟨v, hv⟩ : Fv F v ⊗[F] E) * projV v (projFin X) a i) := by
       funext a i
       rw [hq, Nat.cast_mul, ← mul_assoc, mul_comm (N ⟨v, hv⟩ : Fv F v ⊗[F] E)]
-    rw [e]
-    exact h
+    rwa [e]
   · exact lat_natMul b v _ (hXo v hv) _
 
 theorem push_inv (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M : ℕ} (J : Matrix (Fin M) (Fin M) E)

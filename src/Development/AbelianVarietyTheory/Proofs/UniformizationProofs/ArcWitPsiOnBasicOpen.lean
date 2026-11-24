@@ -85,8 +85,7 @@ theorem genRel_iff_val {F : Type} [Field F] {B B₀ : Scheme.{0}} {M : LB B} {M�
     rw [val_of t _ z J j (fun k => by rw [Category.id_comp]; exact eJ k),
       val_of t₀ _ z J₀ j₀ (fun k => by rw [Category.id_comp, ← eJ₀ k]; exact congrArg J₀ hp.symm), om, eJ,
       eJ₀ PUnit.unit] at e
-    rw [Fintype.prod_unique]
-    exact e
+    rwa [Fintype.prod_unique]
 
 theorem exists_unit_basicOpen {R : Type} [CommRing R] (u : R) :
     ∃ c : Γ((TW (R := R) (PrimeSpectrum.basicOpen u)).left, ⊤)ˣ, ∀ (F : Type) [Field F] (r : R →+* F)
@@ -191,8 +190,7 @@ theorem corr_of_geom (U : (Spec (CommRingCat.of R)).Opens) (hU : (U : Set (Spec 
   have hss : Subsingleton (Spec (CommRingCat.of (FractionRing R))) :=
     inferInstanceAs (Subsingleton (PrimeSpectrum (FractionRing R)))
   refine TauPull.corr_of_dense D.P.isLB lam p (fun V ⟨y, hy⟩ => ?_) fun J hJ => ?_
-  · rw [show lam p = y from Subtype.ext (Subsingleton.elim _ _)]
-    exact hy
+  · rwa [show lam p = y from Subtype.ext (Subsingleton.elim _ _)]
   · rw [val_pull hJ, val_pull hJ, hl]
     exact H _ hκ p J hJ
 
@@ -226,5 +224,4 @@ theorem GlobalTheory.arcWit_psiOn_basicOpen : ∀ (E : Type) [Field E] [NumberFi
     rwa [val_pull hJ, val_pull hJ, Category.id_comp, Category.id_comp] at e
   · have k := H (W.e y) F r z hz (jFK (R := O') F) ((spMap_comp _ _).symm.trans
       ((congrArg spMap (RingHom.ext hr)).trans (spMap_comp f r)))
-    rw [LinearEquiv.symm_apply_apply] at k
-    exact k
+    rwa [LinearEquiv.symm_apply_apply] at k

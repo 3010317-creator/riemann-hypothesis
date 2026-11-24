@@ -56,8 +56,7 @@ private theorem part_indep {O X R : Type} [CommRing O] [AddCommGroup X] [Decidab
   convert h using 1
   funext j
   rw [WPres.gr, Submodule.map_comap_eq, eq_comm, inf_eq_right]
-  intro x hx
-  exact ⟨⟨x, W.part_le_A hx⟩, rfl⟩
+  exact fun x hx => ⟨⟨x, W.part_le_A hx⟩, rfl⟩
 
 private theorem part_gen {O X R : Type} [CommRing O] [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X]
     [CommRing R] [Algebra O R] (W : WPres O X R) :
@@ -70,8 +69,7 @@ private theorem part_gen {O X R : Type} [CommRing O] [AddCommGroup X] [Module.Fr
   congr 1
   · ext x
     constructor
-    · intro hx
-      exact ⟨⟨x, W.part_le_A hx⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, W.part_le_A hx⟩, hx, rfl⟩
     · rintro ⟨y, hy, rfl⟩
       exact hy
   · ext x
@@ -103,8 +101,7 @@ private theorem quot_pres {O X R S : Type} [CommRing O] [IsLocalRing O] [IsNoeth
     show π (W.π f) = 0 ↔ W.π f ∈ Ideal.span (Set.range g)
     rw [← ker, RingHom.mem_ker]
   refine ⟨W.quot π surj hhom, ?_, ?_⟩
-  · intro w
-    exact Submodule.map_comp W.π.toLinearMap π.toLinearMap (wtPart O W.wt w)
+  · exact fun w => Submodule.map_comp W.π.toLinearMap π.toLinearMap (wtPart O W.wt w)
   · intro i
     show π (W.z i) ∈ maximalIdeal S
     rw [← res_eq_zero_iff O S, res_map, res_eq_zero_iff]

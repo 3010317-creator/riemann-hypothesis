@@ -143,8 +143,7 @@ theorem generated_subrep_operator_stable (E : GLOps n K V) (h : V) : ∀ a b, �
 
 theorem isHWV_mem_highestWeightSpace (E : GLOps n K V) (lam : Fin n → ℤ) (v : V) (hv : IsHWV E lam v) : v ∈ highestWeightVectors E lam := by
   refine Submodule.mem_inf.mpr ⟨hv.2.1, ?_⟩
-  simp only [Submodule.mem_iInf, LinearMap.mem_ker]
-  exact fun a b hab => hv.2.2 a b hab
+  simpa only [Submodule.mem_iInf, LinearMap.mem_ker] using fun a b hab => hv.2.2 a b hab
 
 theorem highestWeight_mem_weightSpace (E : GLOps n K V) (lam : Fin n → ℤ) (v : V) (hv : v ∈ highestWeightVectors E lam) : v ∈ weightSp E lam :=
   (Submodule.mem_inf.mp hv).1
@@ -157,9 +156,7 @@ theorem weight_projection_generated_scalar (E : GLOps n K V) (lam : Fin n → �
   obtain ⟨s, hs, t, ht, rfl⟩ := Submodule.mem_sup.mp (hB hy)
   obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.mp hs
   have hker : (⨆ mu ∈ {mu : Fin n → ℤ | mu ≠ lam}, (weightSp E mu ⊓ generatedSubrep E h)) ≤ LinearMap.ker π := by
-    refine iSup₂_le fun mu hmu => ?_
-    intro z hz
-    exact hπ.2 mu hmu z (Submodule.mem_inf.mp hz).1
+    exact iSup₂_le fun mu hmu => fun z hz => hπ.2 mu hmu z (Submodule.mem_inf.mp hz).1
   refine ⟨a, ?_⟩
   rw [map_add (f := _), LinearMap.mem_ker.mp (hker ht), add_zero, map_smul, hπ.1 h (highestWeight_mem_weightSpace E lam h hh)]
 

@@ -37,22 +37,18 @@ theorem exists_mul_mem_integralFiniteAdeles_of_isCompact {S : Set 𝔸ᶠ[K]} (h
     have hmK : algebraMap (𝓞 K) K m ≠ 0 :=
       (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 K) K)).mpr hm0
     refine Set.mem_iUnion.mpr ⟨⟨m, hm0⟩, ?_⟩
-    have h : algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K m) * s =
-        algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K n) + algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K m) *
-          (s - algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K n / algebraMap (𝓞 K) K m)) := by
-      rw [mul_sub, ← map_mul, mul_div_cancel₀ _ hmK]
-      ring
-    show algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K m) * s ∈ integralFiniteAdeles (𝓞 K) K
-    rw [h]
-    exact add_mem (hint n) (mul_mem (hint m) hk)
+    simp only [U, Set.mem_ofPred_eq]
+    convert add_mem (hint n) (mul_mem (hint m) hk) using 1
+    rw [mul_sub, ← map_mul, mul_div_cancel₀ _ hmK]
+    ring
   have hdU : Directed (· ⊆ ·) U := by
     intro d e
     refine ⟨⟨d.1 * e.1, mul_ne_zero d.2 e.2⟩, fun s hs ↦ ?_, fun s hs ↦ ?_⟩
     · have := mul_mem (hint e.1) hs
-      show algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K (d.1 * e.1)) * s ∈ integralFiniteAdeles (𝓞 K) K
+      simp only [U, Set.mem_ofPred_eq]
       rwa [map_mul, map_mul, mul_comm (algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K d.1)), mul_assoc]
     · have := mul_mem (hint d.1) hs
-      show algebraMap K 𝔸ᶠ[K] (algebraMap (𝓞 K) K (d.1 * e.1)) * s ∈ integralFiniteAdeles (𝓞 K) K
+      simp only [U, Set.mem_ofPred_eq]
       rwa [map_mul, map_mul, mul_assoc]
   have : Nonempty {d : 𝓞 K // d ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
   obtain ⟨d, hd⟩ := hS.elim_directed_cover U hUo hsU hdU
@@ -68,15 +64,14 @@ theorem summable_ite_mem_of_summable_idealLattice (J : (FractionalIdeal (𝓞 K)
   have hsupp : ∀ ξ ∉ Set.range g,
       (if ξ ∈ (J : FractionalIdeal (𝓞 K)⁰ K) then h (mixedEmbedding K ξ) else 0) = 0 := by
     intro ξ hξ
-    rw [if_neg]
-    intro hm
-    exact hξ ⟨e ⟨ξ, hm⟩, by simp [g]⟩
+    rw [ite_eq_right]
+    exact fun hm => hξ ⟨e ⟨ξ, hm⟩, by simp [g]⟩
   rw [← hinj.summable_iff hsupp]
   convert hh using 1
   funext α
   change (if ((e.symm α : _) : K) ∈ (J : FractionalIdeal (𝓞 K)⁰ K) then
     h (mixedEmbedding K ((e.symm α : _) : K)) else 0) = h α
-  rw [if_pos (show ((e.symm α : _) : K) ∈ (J : FractionalIdeal (𝓞 K)⁰ K) from (e.symm α).2)]
+  rw [ite_eq_left (show ((e.symm α : _) : K) ∈ (J : FractionalIdeal (𝓞 K)⁰ K) from (e.symm α).2)]
   have he := coe_idealLatticeEquiv J (e.symm α)
   rw [Equiv.apply_symm_apply] at he
   rw [he]
@@ -121,8 +116,7 @@ theorem exists_summable_bound_tensor_cosetIndicator (φ : 𝓢(mixedSpace K, ℂ
     have h1 := hd _ hmem
     rw [← map_mul] at h1
     have h2 : dK * ξ ∈ ((1 : (FractionalIdeal (𝓞 K)⁰ K)ˣ) : FractionalIdeal (𝓞 K)⁰ K) := by
-      rw [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
-      exact h1
+      rwa [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
     rw [Units.val_one] at h2
     obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp h2
     refine (FractionalIdeal.mem_spanSingleton _).mpr ⟨r, ?_⟩

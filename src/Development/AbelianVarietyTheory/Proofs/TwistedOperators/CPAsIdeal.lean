@@ -85,11 +85,9 @@ theorem conjPrime_asIdeal (PP : Pl D.host.E) :
   ext x
   rw [GlobalTheory.IdemSupport.mem_cP, Ideal.mem_map_of_equiv]
   constructor
-  · intro hx
-    exact ⟨GlobalTheory.IdemSupport.cO D x, hx, GlobalTheory.IdemSupport.cO_cO x⟩
+  · exact fun hx => ⟨GlobalTheory.IdemSupport.cO D x, hx, GlobalTheory.IdemSupport.cO_cO x⟩
   · rintro ⟨y, hy, rfl⟩
-    rw [GlobalTheory.IdemSupport.cO_cO]
-    exact hy
+    rwa [GlobalTheory.IdemSupport.cO_cO]
 
 def conjRes (PP : Pl D.host.E) : kP PP ≃+* kP (GlobalTheory.IdemSupport.cP PP) :=
   Ideal.quotientEquiv _ _ (GlobalTheory.IdemSupport.cO D) (conjPrime_asIdeal PP)

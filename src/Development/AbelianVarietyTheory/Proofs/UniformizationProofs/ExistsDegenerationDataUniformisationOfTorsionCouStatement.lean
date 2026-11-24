@@ -425,8 +425,7 @@ theorem psi_mul_psi_of_addition_second_variable : ∀ (R : Type) [CommRing R] [I
   simp only [map_mul] at k2
   rw [ψn, ψn, ψn, cn, cn, sn, sn, un, kn, MonObj.comp_mul, zs, h.face₂, h.face₃, comp_cT, _root_.one_mul (cT D _ mu),
     val_sym_one D hJ, Units.val_one, _root_.one_mul, _root_.one_mul, _root_.mul_one] at k2
-  simp only [Units.val_mul]
-  exact k2
+  simpa only [Units.val_mul] using k2
 
 end GlobalTheory
 end -- clump:auto
@@ -711,8 +710,7 @@ theorem psiIn_maximalIdeal_of_ne_zero : ∀ (V : Type) [CommRing V] [IsDomain V]
   refine hfin.subset ?_
   intro x hx
   show ¬ _
-  rw [pow_one, hiff]
-  exact hx
+  rwa [pow_one, hiff]
 
 end GlobalTheory
 end -- clump:auto
@@ -833,13 +831,11 @@ theorem exists_order_translates : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLo
       have h1 : r ∈ Ideal.jacobson (⊥ : Ideal V) := by
         rwa [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top]
       have h2 := Ideal.mem_map_of_mem e.toRingHom h1
-      rw [Ideal.map_jacobson_of_bijective (f := e.toRingHom) e.bijective, Ideal.map_bot] at h2
-      exact h2
+      rwa [Ideal.map_jacobson_of_bijective (f := e.toRingHom) e.bijective, Ideal.map_bot] at h2
     · rintro e Z r ⟨ρ, hρ⟩ z J hJ
       obtain ⟨g, hs, -⟩ := values_natural _ _ _ _ D.P.L _ (famφT D (𝟙_ _) 0) (DegPre.famε k) (𝟙 _) r z J hJ
       have h1 := stalkMap_mem_map_base _ _ _ r hρ.symm z _ (hc e _ _ g)
-      rw [← hs f₀, Category.comp_id, map_base_eq_bot] at h1
-      exact h1
+      rwa [← hs f₀, Category.comp_id, map_base_eq_bot] at h1
   refine ⟨m, fun χ => ?_⟩
   let σ : 𝟙_ _ ⊗ D.P.A ⟶ 𝟙_ _ ⊗ D.P.A := lift (fst (𝟙_ _) D.P.A) (snd (𝟙_ _) D.P.A * (cT D _ χ)⁻¹)
   let τ : 𝟙_ _ ⊗ D.P.A ⟶ 𝟙_ _ ⊗ D.P.A := lift (fst (𝟙_ _) D.P.A) (snd (𝟙_ _) D.P.A * cT D _ χ)
@@ -853,8 +849,7 @@ theorem exists_order_translates : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLo
   refine ⟨_, _, g, fun hm => h₀ ?_⟩
   have h1 := stalkMap_mem_map_base _ _ _ σ.left (Over.w σ) z₀ _ hm
   have h2 : σ.left ≫ τ.left = 𝟙 _ := congrArg CommaMorphism.left hστ
-  rw [← hs f₀, h2] at h1
-  exact h1
+  rwa [← hs f₀, h2] at h1
 
 end GlobalTheory
 end -- clump:auto

@@ -141,19 +141,16 @@ private theorem false_of_forall_sub_smul_bijective {V : Type} [AddCommGroup V] [
         rw [Polynomial.eval_mul, Polynomial.eval_prod,
           Finset.prod_eq_zero (Finset.mem_erase.2 ⟨fun h' => hji h'.symm, hi⟩)
             (by rw [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C, sub_self]), mul_zero]
-      · intro h'
-        exact absurd hi h'
+      · exact fun h' => absurd hi h'
     have hne : ∏ l ∈ s.erase i, (i - l) ≠ 0 := by
       rw [Finset.prod_ne_zero_iff]
-      intro l hl
-      exact sub_ne_zero.2 fun h' => Finset.ne_of_mem_erase hl h'.symm
+      exact fun l hl => sub_ne_zero.2 fun h' => Finset.ne_of_mem_erase hl h'.symm
     rw [hQ0, Polynomial.eval_zero] at hev
     exact (mul_eq_zero.1 hev.symm).resolve_right hne
   have hle := hli.cardinal_le_rank
   have hr : Module.rank ℂ V ≤ Cardinal.mk S := by
     have h' := rank_span_le (R := ℂ) S
-    rw [hspan, rank_top] at h'
-    exact h'
+    rwa [hspan, rank_top] at h'
   have hS' : Cardinal.mk S ≤ Cardinal.aleph0 := Cardinal.mk_le_aleph0_iff.2 hS.to_subtype
   have hC : Cardinal.mk ℂ ≤ Cardinal.aleph0 := (hle.trans hr).trans hS'
   rw [Cardinal.mk_complex] at hC
@@ -163,8 +160,7 @@ private theorem exists_eq_smul_one_of_intertwining {G V : Type} [Group G] [AddCo
     {σ : Representation ℂ G V} (hi : σ.IsIrreducible) {S : Set V} (hS : S.Countable)
     (hspan : Submodule.span ℂ S = ⊤) {v : V} (hv : v ≠ 0) (T : Module.End ℂ V)
     (hT : ∀ h x, T (σ h x) = σ h (T x)) : ∃ a : ℂ, T = a • (1 : Module.End ℂ V) := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   refine false_of_forall_sub_smul_bijective hS hspan hv T fun a => ?_
   have hU : ∀ h x, (T - a • (1 : Module.End ℂ V)) (σ h x) = σ h ((T - a • (1 : Module.End ℂ V)) x) := by
     intro h x
@@ -206,8 +202,7 @@ theorem exists_equiv_detRep (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       _ = h * g := by rw [scalar_det_of_subsingleton, scalar_det_of_subsingleton]
 
   obtain ⟨v, hv⟩ : ∃ v : V, v ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     haveI : Subsingleton V := ⟨fun x y => by rw [hcon x, hcon y]⟩
     apply (bot_ne_top : (⊥ : Subrepresentation σ) ≠ ⊤)
     apply Subrepresentation.toSubmodule_injective
@@ -311,8 +306,7 @@ theorem exists_equiv_detRep (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       constructor
       · intro h1
         rw [h1, one_smul]
-      · intro h1
-        exact smul_left_injective ℂ hv (show _ • v = (1 : ℂ) • v by rw [h1, one_smul])
+      · exact fun h1 => smul_left_injective ℂ hv (show _ • v = (1 : ℂ) • v by rw [h1, one_smul])
     unfold IsSmoothChar
     rw [hker]
     exact (hs v).preimage hsc

@@ -95,8 +95,7 @@ theorem nLv_mem (D : ℤ) (l : (Fin G.T.t → ℕ) × ℕ) :
   have hd : (degFact G l.1 l.2 : ℚ_[p]) ≠ 0 := by exact_mod_cast degFact_ne_zero G _ _
   have h := hxy i j
   unfold bejj at h
-  rw [div_eq_iff hd] at h
-  exact h
+  rwa [div_eq_iff hd] at h
 
 theorem blkZ_gen (hB : G.BlockOK) (hr : 1 ≤ r) (U Mx : ℕ)
     (hLL : ∀ x ∈ G.PSZ p (r := r), ((p : ℚ_[p]) ^ U) • x ∈ G.SSZ p (r := r))
@@ -136,20 +135,18 @@ theorem blkZ_gen (hB : G.BlockOK) (hr : 1 ≤ r) (U Mx : ℕ)
       push_cast at h2
       by_cases hik : i = k
       · subst hik
-        rw [if_pos rfl] at h1
-        rw [h1, if_pos rfl]
+        rw [ite_eq_left rfl] at h1
+        rw [h1, ite_eq_left rfl]
         rw [zpow_add₀ hp0, zpow_add₀ hp0, zpow_natCast, ← h2, two_mul, zpow_add₀ hp0, zpow_natCast]
         ring
-      · rw [if_neg (fun h => hik h.symm)] at h1
-        rw [h1, if_neg]
+      · rw [ite_eq_right (fun h => hik h.symm)] at h1
+        rw [h1, ite_eq_right]
         · ring
         · intro h
           rw [Sigma.mk.inj_iff] at h
           exact hik (eq_of_heq h.2)
-    · have hne : (l.1.1, l.1.2) ≠ (l'.1.1, l'.1.2) := by
-        intro h
-        exact hll (Subtype.ext h)
-      rw [Th_orth p G hB hr _ _ _ _ (hok l) (hok l') hne _ _ (hv _ _) (hu _ _), if_neg]
+    · have hne : (l.1.1, l.1.2) ≠ (l'.1.1, l'.1.2) := fun h => hll (Subtype.ext h)
+      rw [Th_orth p G hB hr _ _ _ _ (hok l) (hok l') hne _ _ (hv _ _) (hu _ _), ite_eq_right]
       · ring
       · intro h
         rw [Sigma.mk.inj_iff] at h
@@ -161,8 +158,7 @@ theorem blkZ_gen (hB : G.BlockOK) (hr : 1 ≤ r) (U Mx : ℕ)
     simp only [e.symm.injective.eq_iff]
   · have hc : Fintype.card I = ∑ l ∈ levels G, nLv p (r := r) G D l := by
       rw [Fintype.card_sigma]
-      simp only [Fintype.card_fin]
-      exact Finset.sum_coe_sort (levels G) (nLv p (r := r) G D)
+      simpa only [Fintype.card_fin] using Finset.sum_coe_sort (levels G) (nLv p (r := r) G D)
     rw [hc, ← Finset.sum_add_distrib]
     refine Finset.sum_le_sum fun l _ => ?_
     unfold badLvl bad nLv

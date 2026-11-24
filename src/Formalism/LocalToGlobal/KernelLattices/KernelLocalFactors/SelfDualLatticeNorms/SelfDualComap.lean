@@ -47,10 +47,8 @@ theorem selfDual_comap (hI : IsIsom H H' (g : V →ₗ[ℂ] W)) {Λ' : AddSubgro
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa using hy
-    · intro hx
-      exact ⟨g x, hx, by simp⟩
-  rw [← h2]
-  exact h1
+    · exact fun hx => ⟨g x, hx, by simp⟩
+  rwa [← h2]
 
 theorem isLat_comap {Λ' : AddSubgroup W} (h : IsLat Λ') : IsLat (Λ'.comap (g : V →ₗ[ℂ] W).toAddMonoidHom) := by
   obtain ⟨h1, h2⟩ := h
@@ -65,8 +63,7 @@ theorem isLat_comap {Λ' : AddSubgroup W} (h : IsLat Λ') : IsLat (Λ'.comap (g 
       ext x
       simp only [AddSubgroup.coe_comap, Set.mem_preimage, Set.mem_image, SetLike.mem_coe]
       constructor
-      · intro hx
-        exact ⟨g x, hx, by simp⟩
+      · exact fun hx => ⟨g x, hx, by simp⟩
       · rintro ⟨y, hy, rfl⟩
         simpa using hy
     rw [hset, Submodule.span_image (g.symm.restrictScalars ℝ : W ≃ₗ[ℝ] V).toLinearMap, h2, Submodule.map_top,
@@ -86,8 +83,7 @@ theorem th_comap (hI : IsIsom H H' (g : V →ₗ[ℂ] W)) {Λ' : AddSubgroup W} 
     have h := hG2' (g x) hx' (g z)
     simp only [Formalism.L2.Th1.H.opU] at h ⊢
     rw [hI' z x, hI' x x] at h
-    rw [map_add (f := _)]
-    exact h
+    rwa [map_add (f := _)]
 
 theorem relIdx_comap (Λ₁ Λ₂ : AddSubgroup W) :
     relIdx (Λ₁.comap (g : V →ₗ[ℂ] W).toAddMonoidHom) (Λ₂.comap (g : V →ₗ[ℂ] W).toAddMonoidHom) = relIdx Λ₁ Λ₂ := by
@@ -109,7 +105,7 @@ theorem form_flat (A : ℝ) (a b : ℕ) (x y : DVar X.Tau a b → ℂ) :
     matH (hSc X.Tau a b A⁻¹) x y = formV A D.what₂.Tau a b (s.flatV a b x) (s.flatV a b y) := by
   have hL : (matH (hSc X.Tau a b A⁻¹)) x y = ∑ k, x k * conj (y k) * ((A⁻¹ : ℝ) : ℂ) := by
     simp only [Formalism.L2.Th1.H.matH, LinearMap.mk₂'ₛₗ_apply, Formalism.L2.AlgTh.hSc, Matrix.diagonal_apply, mul_ite, ite_mul,
-      mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact Finset.sum_congr rfl fun k _ => by ring
   rw [hL]
   simp only [formV, LinearMap.mk₂'ₛₗ_apply]
@@ -123,13 +119,12 @@ theorem form_flat (A : ℝ) (a b : ℕ) (x y : DVar X.Tau a b → ℂ) :
 theorem isom_flat (A : ℝ) (a b : ℕ) :
     IsIsom (matH (hSc X.Tau a b A⁻¹)) (formV A D.what₂.Tau a b)
       ((s.flatV a b : (DVar X.Tau a b → ℂ) ≃ₗ[ℂ] TaylorLogMetric.VC D a b) : (DVar X.Tau a b → ℂ) →ₗ[ℂ] TaylorLogMetric.VC D a b) := by
-  intro x y
-  exact (form_flat s A a b x y).symm
+  exact fun x y => (form_flat s A a b x y).symm
 
 theorem matH_hSc (sc : ℝ) (a b : ℕ) (x y : DVar X.Tau a b → ℂ) :
     matH (hSc X.Tau a b sc) x y = (sc : ℂ) * ∑ k, x k * conj (y k) := by
   simp only [Formalism.L2.Th1.H.matH, LinearMap.mk₂'ₛₗ_apply, Formalism.L2.AlgTh.hSc, Matrix.diagonal_apply, mul_ite, ite_mul,
-    mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.mul_sum]
+    mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.mul_sum]
   exact Finset.sum_congr rfl fun k _ => by ring
 
 theorem herm_hSc (sc : ℝ) (a b : ℕ) : IsHerm (matH (hSc X.Tau a b sc)) := by
@@ -175,8 +170,7 @@ theorem isLat_La (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetri
   exact KR.isLat_of_comm h0 hc.2 hc.1
 
 theorem isLat_laF (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) (hA : TaylorLogMetric.admitted D a b L L') :
-    IsLat (s.laF B.tor L L') := by
-  exact isLat_comap (s.flatV a b) (isLat_La B hcc hδ hA)
+    IsLat (s.laF B.tor L L') := isLat_comap (s.flatV a b) (isLat_La B hcc hδ hA)
 
 theorem selfDual_laF (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) (hA : TaylorLogMetric.admitted D a b L L') :
     IsSelfDual (matH (hSc X.Tau a b (TaylorLogMetric.area (TaylorLogMetric.lamOf D cc δ))⁻¹)) (s.laF B.tor L L') :=

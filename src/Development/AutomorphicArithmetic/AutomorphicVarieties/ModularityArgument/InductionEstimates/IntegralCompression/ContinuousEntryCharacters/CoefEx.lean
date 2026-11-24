@@ -214,8 +214,7 @@ private theorem eb_four (π : Equiv.Perm (Fin (2 + 2))) (δ : ℤ) :
     fun _ k => (k : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ).det ^ δ, fun _ _ => δ, fun _ => ⟨hc, hc⟩, fun h k => ?_, rfl, rfl, rfl,
     fun _ θ h => ?_, fun _ w y _ => ?_, fun _ hs => absurd rfl hs⟩
   · simp only [hm, Finset.univ_unique, Finset.sum_singleton]
-  · simp only [hm, eb_det_dg, and_self, and_true]
-    exact mul_comm _ _
+  · simpa only [hm, eb_det_dg, and_self, and_true] using mul_comm _ _
   · exact (Equiv.sum_comp w fun i => δ * y i).le
 
 end UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA

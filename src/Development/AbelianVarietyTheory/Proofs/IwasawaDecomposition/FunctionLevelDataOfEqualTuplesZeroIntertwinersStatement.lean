@@ -193,8 +193,7 @@ theorem exists_common_nonzero_of_polynomial_on_lines (V : Type) [AddCommGroup V]
       rw [hp i s]
       intro h0
       apply hs
-      simp only [Set.mem_iUnion, Set.mem_preimage, Set.mem_setOf_eq]
-      exact ⟨i, hi, h0⟩
+      simpa only [Set.mem_iUnion, Set.mem_preimage, Set.mem_setOf_eq] using ⟨i, hi, h0⟩
   obtain ⟨v, hv⟩ := key Finset.univ
   exact ⟨v, fun i => hv i (Finset.mem_univ i)⟩
 
@@ -247,8 +246,7 @@ theorem exists_ellT_ne_zero : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SP
     haveI := hW τ; stdOrthonormalBasis ℂ (W τ)
   let B := Basis.piTensorProduct (fun τ => (ob τ).toBasis)
   obtain ⟨k, hk⟩ : ∃ k, B.repr y k ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hy
     apply B.repr.injective (show B.repr y = B.repr 0 from ?_)
     ext k
@@ -347,8 +345,7 @@ theorem isPolyFn_ellT (a b : M.Vec) (x : ⨂[ℂ] τ, M.H τ) :
       inner_add_left, inner_smul_left, Complex.conj_ofReal]
     exact (IsPolyFn.const _).mul (IsPolyFn.prod _ fun τ => (IsPolyFn.const _).add (IsPolyFn.coe.mul (IsPolyFn.const _)))
   | add x y hx hy =>
-    simp only [map_add (f := _)]
-    exact hx.add hy
+    simpa only [map_add (f := _)] using hx.add hy
 
 theorem ellT_smul (c : D.what₂.Tau → ℝ) (a : M.Vec) (x : ⨂[ℂ] τ, M.H τ) :
     ellT M (fun τ => (((c τ : ℂ) • a τ : M.sm τ) : M.H τ)) x = (∏ τ, (c τ : ℂ)) * ellT M (fun τ => (a τ : M.H τ)) x := by
@@ -590,8 +587,7 @@ theorem trace_pow_eq {A : Type} [Ring A] [Algebra ℂ A] {n m : ℕ}
       rw [hS, hT, Matrix.map_apply, Matrix.map_apply, Matrix.transpose_apply, Matrix.transpose_apply,
         Algebra.smul_def, map_mul, mul_assoc, Algebra.commutes (P b d) (E c d), ← mul_assoc]
     rw [Matrix.of_apply, h a b]
-    simp only [key, Matrix.mul_apply, Matrix.of_apply, Finset.sum_mul]
-    exact Finset.sum_comm
+    simpa only [key, Matrix.mul_apply, Matrix.of_apply, Finset.sum_mul] using Finset.sum_comm
 
   have hpow : ∀ j : ℕ, (S * Matrix.of E * T) ^ j = S * Matrix.of E ^ j * T := by
     intro j
@@ -800,8 +796,7 @@ theorem kap_mem_NI {r : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.host.E) {x : GA 
       rw [hGm, hm]
       exact conj_left_zero I.aQ_aP h2
     · have hx : (cT (D.sp.cm.sig : D.host.E →+* D.host.E) C * V.gram).mulVec (I.Q.mulVec x') = 0 := by
-        rw [Matrix.mulVec_mulVec, ← hG]
-        exact hx'
+        rwa [Matrix.mulVec_mulVec, ← hG]
       obtain ⟨a, ha⟩ := h3 _ hx
       refine ⟨a, ?_⟩
       have hQx : I.aQ.mulVec (fun i => incA D (x' i)) = fun i => incA D (I.Q.mulVec x' i) :=
@@ -809,8 +804,7 @@ theorem kap_mem_NI {r : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.host.E) {x : GA 
       show ((matHom V' (I.kap g)).1 - 1).mulVec (fun i => incA D (x' i)) = ((I.P * C).map (incA D)).mulVec a
       rw [hm, hPC]
       refine conj_mulVec _ _ _ _ _ _ ?_
-      rw [hQx]
-      exact ha
+      rwa [hQx]
   exact key hx
 
 theorem isIsoFrame_Q {r : ℕ} {C' : Matrix (Fin V'.rank) (Fin r) D.host.E} (h : IsIsoFrame V' C') :
@@ -1116,8 +1110,7 @@ theorem isThetaFunO_tr (S : HSp D) {ψ : AddChar (AF D.host.F) ℂ} {f : WO S V 
     have e : ratW V' S γ = I.phi S (ratW V S (I.Q * γ)) := by
       rw [phi_ratW, ← Matrix.mul_assoc, I.PQ, Matrix.one_mul]
     rw [e, ← map_add (f := _), I.symplOH_phi]
-    simp only [trW, AddEquiv.symm_apply_apply]
-    exact hf.quasi _ _
+    simpa only [trW, AddEquiv.symm_apply_apply] using hf.quasi _ _
   · obtain ⟨U, hU, e⟩ := hf.level
     refine ⟨U.map (I.phi S).toAddMonoidHom, ?_, ?_⟩
     · have e : ((U.map (I.phi S).toAddMonoidHom : AddSubgroup (WO S V')) : Set (WO S V')) = (I.phi S).symm ⁻¹' U := by
@@ -1126,8 +1119,7 @@ theorem isThetaFunO_tr (S : HSp D) {ψ : AddChar (AF D.host.F) ℂ} {f : WO S V 
         constructor
         · rintro ⟨u, hu, rfl⟩
           simpa using hu
-        · intro hw
-          exact ⟨_, hw, by simp⟩
+        · exact fun hw => ⟨_, hw, by simp⟩
       rw [e]
       exact hU.preimage (I.continuous_phi_symm S)
     · rintro _ ⟨u, hu, rfl⟩ h0
@@ -1178,8 +1170,7 @@ theorem isWeilDatumO_tr (S : HSp D) {ψ : AddChar (AF D.host.F) ℂ} {χ χ' : I
     have e1 : (mt V (I.kap.symm k)).det = (mt V' k).det := det_conj_rect I.rank_eq.symm I.aP_aQ (mt V' k)
     have hdet : IsDetAt e V (I.kap.symm k) y := by
       unfold IsDetAt at hy ⊢
-      rw [e1]
-      exact hy
+      rwa [e1]
     obtain ⟨r, hr, H⟩ := h.om_split e he g (I.kap.symm k) hg hsupp x y hx hdet
     refine ⟨r, hr, fun ℓ hℓ f hf => ?_⟩
     have hinv : ∀ u : WO S V, (∀ i j, cA D e * u i j = u i j) → ∀ f, IsThetaFunO ψ S V f →
@@ -1190,8 +1181,7 @@ theorem isWeilDatumO_tr (S : HSp D) {ψ : AddChar (AF D.host.F) ℂ} {χ χ' : I
       exact hℓ _ (fun i j => entries_fix' _ hu I.aP i j) _ (I.isThetaFunO_tr S hf)
     have := H (ℓ ∘ₗ I.trL S) hinv _ (hT f hf)
     have e1 : (ℓ ∘ₗ I.trL S) (I.symm.trW S f) = ℓ f := congrArg ℓ (I.symm.trW_symm_trW S f)
-    rw [e1] at this
-    exact this
+    rwa [e1] at this
 
 end IsoMat
 
@@ -1269,8 +1259,7 @@ theorem ker_eq_thetaKO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCha
 
   have hf0 : IsThetaFun ψ S T fun y => f (E.symm y) := by
     refine (h7 ψ _).1 ?_
-    simp only [AddEquiv.symm_apply_apply]
-    exact hf
+    simpa only [AddEquiv.symm_apply_apply] using hf
   let Φ₀ : ThS ψ S T := ⟨fun y => f (E.symm y), mem_ThS.2 hf0⟩
   have hfΦ : f = fun x => Φ₀.1 (toTWsmall S T x) := by
     funext x
@@ -1366,8 +1355,7 @@ theorem quot_transport {V V' : HSp D} {κ : GA D V ≃* GA D V'} (hκ : Moves V 
     exact this
   have hinv : ∀ γ ∈ GQ V', ∀ g, (fun h => φ (κ.symm h)) (γ * g) = (fun h => φ (κ.symm h)) g := by
     intro γ hγ g
-    simp only [map_mul]
-    exact hφ _ ((hmem γ).1 hγ) _
+    simpa only [map_mul] using hφ _ ((hmem γ).1 hγ) _
   have hpre : E ⁻¹' (κ '' 𝓕) = 𝓕 := by
     ext x
     simp only [Set.mem_preimage, Set.mem_image]
@@ -1378,8 +1366,7 @@ theorem quot_transport {V V' : HSp D} {κ : GA D V ≃* GA D V'} (hκ : Moves V 
     show φ (κ.symm (κ x)) = φ x
     rw [MulEquiv.symm_apply_apply]
   have hint' : IntegrableOn (fun h => φ (κ.symm h)) (κ '' 𝓕) (ν.map κ) := by
-    rw [hmap, E.measurableEmbedding.integrableOn_map_iff, hcomp, hpre]
-    exact hint
+    rwa [hmap, E.measurableEmbedding.integrableOn_map_iff, hcomp, hpre]
   have := hR _ hF _ hinv hint'
   convert this using 2
   rw [hmap, E.measurableEmbedding.setIntegral_map, hpre]
@@ -1790,9 +1777,9 @@ theorem GlobalTheory.Mem.OneTuple.rows_theta : GlobalTheory.Published.CuspRapidD
   choose κT hκT sT hsT rowT hrowT hisoT using htop'
   let row : ∀ j, D.what₂.Mult μ j →ₗ[ℂ] CuspS R.θ (D.sp.Y j) := fun j =>
     if hj : j < D.R.m then rowL j hj else if hj' : j = D.R.m then rowT j hj' else 0
-  have row_low : ∀ j (hj : j < D.R.m), row j = rowL j hj := fun j hj => dif_pos hj
+  have row_low : ∀ j (hj : j < D.R.m), row j = rowL j hj := fun j hj => dite_eq_left hj
   have row_top : ∀ j (hj : j = D.R.m), row j = rowT j hj := fun j hj => by
-    simp only [row, dif_neg (show ¬ j < D.R.m by omega), dif_pos hj]
+    simp only [row, dite_eq_right (show ¬ j < D.R.m by omega), dite_eq_left hj]
 
   have hstep : ∀ j, j < D.R.m → ∃ Φ : ThS R.ψ (D.sp.Y (j + 1)) (D.sp.Y j), Φ ≠ 0 ∧
       ∀ y : D.what₂.Mult μ (j + 1), ∃ L : GA D (D.sp.Y j) → ℂ,
@@ -1842,15 +1829,13 @@ theorem GlobalTheory.Mem.OneTuple.rows_theta : GlobalTheory.Published.CuspRapidD
   choose PhiC hPhiC hL2 using hstep
   let Phi : ∀ j, ThS R.ψ (D.sp.Y (j + 1)) (D.sp.Y j) := fun j => if hj : j < D.R.m then PhiC j hj else 0
   refine ⟨row, Phi, fun j hj => ?_, fun j hj x y => ?_, fun j hj y => ?_⟩
-  · simp only [Phi, dif_pos hj]
-    exact hPhiC j hj
+  · simpa only [Phi, dite_eq_left hj] using hPhiC j hj
   · rcases hj.lt_or_eq with hj | hj
     · rw [row_low j hj]
       exact hisoL j hj x y
     · rw [row_top j hj]
       exact hisoT j hj x y
-  · simp only [Phi, dif_pos hj]
-    exact hL2 j hj y
+  · simpa only [Phi, dite_eq_left hj] using hL2 j hj y
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneTupleRowsCuspFormsIsometricThetaLifts =====

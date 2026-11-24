@@ -64,8 +64,7 @@ private lemma inPhi_of_jac {φ : Frame} (H : HostAx φ) (u : (ZMod H.toHostRaw.c
     rw [H.der.art_ch u, jacobi_congr hk, hj]
   have h2 : (H.toHostRaw.art u).1.2 = 1 := Units.ext h1
   show Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 (H.toHostRaw.art u).1.2) = 0
-  rw [Formalism.LFunctionChainParameters.LHost.sgn2_toAdd_eq_zero_iff]
-  exact h2
+  rwa [Formalism.LFunctionChainParameters.LHost.sgn2_toAdd_eq_zero_iff]
 
 private lemma jac_of_dvd {φ : Frame} (H : HostRaw φ) {p : ℕ} (hp : p.Prime) (h : p ∣ H.QS * H.q) :
     jacobiSym (p : ℤ) H.d = 1 := by
@@ -154,15 +153,13 @@ private theorem hostFactsS_pf :
         have hloc : (u : ZMod H.toHostRaw.condN).val ≡ 1 [MOD H.QS * H.q] :=
           (unitsMap_eq_one_iff _ u).mp hu1
         refine ⟨u, ?_, ?_⟩
-        · rw [mem_localUnits_iff, hparts.2]
-          exact hloc
+        · rwa [mem_localUnits_iff, hparts.2]
         · have hcast : (((u : ZMod H.toHostRaw.condN).val : ℤ) : ZMod H.d) = ((-1 : ℤ) : ZMod H.d) := by
             have h3 := congrArg (fun v : (ZMod H.d)ˣ => (v : ZMod H.d)) hu2
             simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, ZMod.castHom_apply,
               Units.val_neg, Units.val_one] at h3
             push_cast
-            rw [ZMod.natCast_val]
-            exact h3
+            rwa [ZMod.natCast_val]
           rw [ZMod.intCast_eq_intCast_iff] at hcast
           have hjac : ((H.toHostRaw.art u).1.2 : ℤ) = -1 := by
             rw [H.der.art_ch u, jacobiSym.mod_left,

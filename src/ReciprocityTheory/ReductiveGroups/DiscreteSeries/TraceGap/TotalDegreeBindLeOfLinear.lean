@@ -64,8 +64,7 @@ theorem range_one_layer {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ
   let Xu : H → MvPolynomial (EntIdx n) ℂ →ₗ[ℂ] H := fun u =>
     { toFun := fun Q => ∫ k, eval (entVar (φ k)) Q • σ (φ k) u ∂μK
       map_add' := fun Q R => by
-        simp only [map_add (f := _), add_smul]
-        exact integral_add (hint Q u) (hint R u)
+        simpa only [map_add (f := _), add_smul] using integral_add (hint Q u) (hint R u)
       map_smul' := fun c Q => by
         simp only [smul_eval, mul_smul, RingHom.id_apply]
         exact integral_smul c _ }
@@ -123,8 +122,7 @@ theorem range_one_layer {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ
       rw [← map_smul, smul_monomial, smul_eq_mul, mul_one]
     have horth : ∀ m ∈ Q.support, inner ℂ (Xu u Q) (Xu u (monomial m 1)) = 0 := by
       intro m hm
-      refine kfin_wt_orth hσ hsw (hmono u m) fun h => hμ ?_
-      exact ⟨m, (le_totalDegree hm).trans hQ, h.symm⟩
+      exact kfin_wt_orth hσ hsw (hmono u m) fun h => hμ ⟨m, (le_totalDegree hm).trans hQ, h.symm⟩
     apply hs0
     rw [← inner_self_eq_zero (𝕜 := ℂ)]
     calc inner ℂ (Xu u Q) (Xu u Q) = inner ℂ (Xu u Q) (∑ m ∈ Q.support, AddMonoidAlgebra.coeff Q m • Xu u (monomial m 1)) := by

@@ -369,8 +369,7 @@ theorem conv_norm {r : ℕ} (Q : SelfRecip E r) {θ : E} (hθ0 : θ ≠ 0) (hθ 
   have hT : ((T⁻¹ : (k ⊗[(maximalRealSubfield E)] plus Q)ˣ) : k ⊗[(maximalRealSubfield E)] plus Q) = 1 ⊗ₜ ((t : plus Q))⁻¹ := by
     rw [← Units.val_inv_eq_inv_val]; rfl
   have hmem : a * T⁻¹ ∈ norms Q k := by
-    rw [GlobalTheory.TraceClasses.mem_norms_iff Q hθ0 hθ k hd, Units.val_mul, hT]
-    exact h
+    rwa [GlobalTheory.TraceClasses.mem_norms_iff Q hθ0 hθ k hd, Units.val_mul, hT]
   obtain ⟨c, hc⟩ := hmem
   have hc' : normHom Q k c = Units.map (inclPlus Q k).toMonoidHom (a * T⁻¹) := hc
   refine ⟨c⁻¹, ?_⟩
@@ -445,10 +444,10 @@ theorem factor_alt (hU : Unr E) {S : Set (Pl E)} (hS : IsSection S) {n : ℕ} {�
     by_cases hs : IsSplitAt (wv v)
     · have h1' : X v = 1 := by simp [hXdef, hx2 v hs]
       rw [h1', (GlobalTheory.QuadSymbol.eta_eq_one_iff).2 (one_mem _)]
-      simp [hRdef, if_pos hs]
+      simp [hRdef, ite_eq_left hs]
     · have key := _root_.GlobalTheory.CompanionTheory.LocalSignInert.main E hU (wv v) hs v (hwv v) n γ₀ hP H₀ h1 h2 h3 hpos (mw (wv v)) r Q hQ (x v) (hx1 v hs)
       rw [← hmw _ hs] at key
-      simp only [hRdef, if_neg hs]
+      simp only [hRdef, ite_eq_right hs]
       rw [key, mul_assoc, sgnOn_mul_self, mul_one]
 
   have hwvw : ∀ w ∈ S, wv (w.under (𝓞 (maximalRealSubfield E))) = w := fun w hw => sec_eq hS hw (hwvS _) (hwv _)
@@ -573,8 +572,7 @@ theorem PositivityTheory.BCUSide.L.hermitian_form_local_global : ∀ (E : Type) 
         rw [e]; exact (_root_.map_ne_zero _).2 h2
       have hinv0 : cT (cj w) (γ₀.val.map (algebraMap E (w.adicCompletion E))) * (H₀.map (algebraMap E (w.adicCompletion E))) * (γ₀.val.map (algebraMap E (w.adicCompletion E))) = (H₀.map (algebraMap E (w.adicCompletion E))) := by
         have := congrArg (Matrix.map · (algebraMap E (w.adicCompletion E))) h3
-        simp only [Matrix.map_mul, cT_map hU w hs] at this
-        exact this
+        simpa only [Matrix.map_mul, cT_map hU w hs] using this
       obtain ⟨m, hm⟩ := Lem.ratio_poly _ (cj w) n _ _ (H w) hAdet hAsep hH0 hinv0 (hH w hs).2.2
       exact ⟨m, fun _ => hm⟩
   choose mw hmw using hm
@@ -850,8 +848,7 @@ theorem norm_step [CompleteSpace L] (σ : L →+* L) (ϖ : L) (q : ℕ) (h : IsU
     have h1 : JO * ev (GlobalTheory.UTr.conj P tz) = JO * ev tz := by
       rw [← hcT, htO, cT_mul, hHhO, hcTJi, Matrix.mul_assoc, hJJO', Matrix.mul_one, ← Matrix.mul_assoc, hJJO,
         Matrix.one_mul]
-    have h2 := congrArg (JiO * ·) h1
-    simpa only [← Matrix.mul_assoc, hJJO', Matrix.one_mul] using h2
+    simpa only [← Matrix.mul_assoc, hJJO', Matrix.one_mul] using congrArg (JiO * ·) h1
   have hT : T ∈ GlobalTheory.UTr.plus P := (GlobalTheory.UTr.mem_plus (P := P)).2 (by rw [IsUnit.unit_spec]; exact hconj)
   have hsepP : (P : (intL L)[X]).Separable := hsep
   obtain ⟨u, hu⟩ := GlobalTheory.NormEq.normU_surj L σ ϖ q h P hsepP T hT

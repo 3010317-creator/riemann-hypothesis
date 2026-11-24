@@ -422,8 +422,7 @@ private theorem sum_pi_prod : ∀ (c : ℕ) (T : Fin c → Type) (f : ∀ i, T i
   intro c
   induction c with
   | zero =>
-    intro T f _
-    exact ⟨Summable.of_finite, by simp⟩
+    exact fun T f _ => ⟨Summable.of_finite, by simp⟩
   | succ c ih =>
     intro T f hf
     obtain ⟨h1, h2⟩ := ih (fun i => T i.succ) (fun i => f i.succ) (fun i => hf i.succ)
@@ -866,9 +865,7 @@ theorem map_mem_GLint {F : Type} [Field F] [ValuativeRel F] {n : ℕ}
       IsInt 𝒪[F] ((GeneralLinearGroup.map
         (algebraMap (ValuativeRel.valuation F).valuationSubring F) u : GL (Fin n) F) :
           Matrix (Fin n) (Fin n) F) := by
-    intro u i j
-    have h := (u.1 i j).2
-    exact h
+    exact fun u i j => (u.1 i j).2
   refine ⟨key k, ?_⟩
   rw [← map_inv]
   exact key k⁻¹
@@ -1453,7 +1450,7 @@ theorem locUnrSplit : LocUnrSplit := by
   simp only [e2] at i1 i2
   refine ⟨i1, ?_⟩
   rw [hC, ← Finset.prod_range_reflect, ← Finset.prod_mul_distrib] at i2
-  rw [locD, if_pos ⟨τ⟩]
+  rw [locD, ite_eq_left ⟨τ⟩]
   convert i2 using 2
   · refine Finset.prod_congr rfl fun i hi => ?_
     have := Finset.mem_range.1 hi

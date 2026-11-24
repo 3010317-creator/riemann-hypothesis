@@ -116,8 +116,7 @@ private lemma exists_ne_zero_mulVec_eq_zero_of_lt {E : Type} [Field E] {k n : �
       (A := Matrix.of fun (i j : Fin n) => if h : (i : ℕ) < k then A ⟨i, h⟩ j else 0)
       ⟨k, hk⟩ (fun j => by simp))
   refine ⟨y, hy0, fun a => ?_⟩
-  have h := congrFun hy ⟨a, lt_trans a.isLt hk⟩
-  simpa [Matrix.mulVec, dotProduct] using h
+  simpa [Matrix.mulVec, dotProduct] using congrFun hy ⟨a, lt_trans a.isLt hk⟩
 
 private lemma exists_hform_ne_zero_of_det_ne_zero {E : Type} [Field E] (σ : E →+* E) {n : ℕ}
     (J : Matrix (Fin n) (Fin n) E) (hJd : J.det ≠ 0) (y : Fin n → E) (hy : y ≠ 0) :
@@ -131,10 +130,8 @@ private lemma exists_hform_ne_zero_of_det_ne_zero {E : Type} [Field E] (σ : E �
     · simp [Matrix.mulVec, dotProduct]
     · intro l _ hl
       simp [hl]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
-  rw [e]
-  exact hi
+    · exact fun h => absurd (Finset.mem_univ i) h
+  rwa [e]
 
 private lemma hermC_ppos_col_castLE {E : Type} [Field E] (σ : E →+* E) (hσ : ∀ a, σ (σ a) = a) {n k : ℕ}
     (J : Matrix (Fin n) (Fin n) E) (hJ : ∀ i j, σ (J j i) = J i j) (v : Fin k → Fin n → E)
@@ -148,16 +145,14 @@ private lemma hermC_ppos_col_castLE {E : Type} [Field E] (σ : E →+* E) (hσ :
     · rw [hform_smul_right_orbital_bounds_conclusion, div_mul_cancel₀ _ (hvd b), sub_self]
     · intro a _ hab
       rw [hform_smul_right_orbital_bounds_conclusion, hvo b a (Ne.symm hab), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ b) h
+    · exact fun h => absurd (Finset.mem_univ b) h
   · rw [← hform_symm_of_involutive_of_hermitian σ hσ J hJ y0, Hf_sub_right', hform_sum_right']
     have h0 : ∀ a, PI.NormGramAtOrigin.hform σ J y0
         ((PI.NormGramAtOrigin.hform σ J (v a) z / PI.NormGramAtOrigin.hform σ J (v a) (v a)) • v a) = 0 := by
       intro a
       rw [hform_smul_right_orbital_bounds_conclusion, ← hform_symm_of_involutive_of_hermitian σ hσ J hJ (v a) y0, hy0W a, map_zero, mul_zero]
     simp only [h0, Finset.sum_const_zero, sub_zero]
-    rw [hform_symm_of_involutive_of_hermitian σ hσ J hJ]
-    exact hz
+    rwa [hform_symm_of_involutive_of_hermitian σ hσ J hJ]
 
 private lemma Hf_e_e_eq_ite {E : Type} [Field E] [CharZero E] (σ : E →+* E) (hσ : ∀ a, σ (σ a) = a)
     {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (hJ : ∀ i j, σ (J j i) = J i j) (hJd : J.det ≠ 0) :
@@ -167,8 +162,7 @@ private lemma Hf_e_e_eq_ite {E : Type} [Field E] [CharZero E] (σ : E →+* E) (
   intro k
   induction k with
   | zero =>
-    intro _
-    exact ⟨fun a => a.elim0, fun a => a.elim0, fun a => a.elim0⟩
+    exact fun _ => ⟨fun a => a.elim0, fun a => a.elim0, fun a => a.elim0⟩
   | succ k ih =>
     intro hk
     obtain ⟨v, hvo, hvd⟩ := ih (Nat.le_of_succ_le hk)
@@ -176,33 +170,27 @@ private lemma Hf_e_e_eq_ite {E : Type} [Field E] [CharZero E] (σ : E →+* E) (
     have hy0W : ∀ a, PI.NormGramAtOrigin.hform σ J (v a) y0 = 0 := by
       intro a
       calc _ = ∑ j, (∑ l, σ (v a l) * J l j) * y0 j := by
-            simp only [PI.NormGramAtOrigin.hform, Finset.sum_mul]
-            exact Finset.sum_comm
+            simpa only [PI.NormGramAtOrigin.hform, Finset.sum_mul] using Finset.sum_comm
         _ = 0 := hW0 a
     obtain ⟨z, hz⟩ := exists_hform_ne_zero_of_det_ne_zero σ J hJd y0 hy0
     obtain ⟨p, hpW, hp⟩ := hermC_ppos_col_castLE σ hσ J hJ v hvo hvd z y0 hy0W hz
     have key : ∃ y, (∀ a, PI.NormGramAtOrigin.hform σ J (v a) y = 0) ∧
         PI.NormGramAtOrigin.hform σ J y y ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       refine hform_add_smul_self_ne_zero_of_isotropic_pair σ hσ J hJ p y0 (hcon p hpW) (hcon y0 hy0W) _ rfl hp (hcon _ fun a => ?_)
       rw [hform_add_right_orbital_bounds_conclusion, hform_smul_right_orbital_bounds_conclusion, hpW a, hy0W a, mul_zero, add_zero]
     obtain ⟨y, hyW, hyy⟩ := key
     refine ⟨Fin.snoc (α := fun _ => Fin n → E) v y, fun a b hab => ?_, fun a => ?_⟩
     · rcases Fin.eq_castSucc_or_eq_last a with ⟨a, rfl⟩ | rfl <;>
         rcases Fin.eq_castSucc_or_eq_last b with ⟨b, rfl⟩ | rfl
-      · simp only [Fin.snoc_castSucc]
-        exact hvo a b fun h => hab (congrArg Fin.castSucc h)
-      · simp only [Fin.snoc_castSucc, Fin.snoc_last]
-        exact hyW a
+      · simpa only [Fin.snoc_castSucc] using hvo a b fun h => hab (congrArg Fin.castSucc h)
+      · simpa only [Fin.snoc_castSucc, Fin.snoc_last] using hyW a
       · simp only [Fin.snoc_castSucc, Fin.snoc_last]
         rw [← hform_symm_of_involutive_of_hermitian σ hσ J hJ, hyW b, map_zero]
       · exact absurd rfl hab
     · rcases Fin.eq_castSucc_or_eq_last a with ⟨a, rfl⟩ | rfl
-      · simp only [Fin.snoc_castSucc]
-        exact hvd a
-      · simp only [Fin.snoc_last]
-        exact hyy
+      · simpa only [Fin.snoc_castSucc] using hvd a
+      · simpa only [Fin.snoc_last] using hyy
 
 theorem exists_nondegenerate : PI.NormGramAtOrigin.Statement := by
   unfold PI.NormGramAtOrigin.Statement

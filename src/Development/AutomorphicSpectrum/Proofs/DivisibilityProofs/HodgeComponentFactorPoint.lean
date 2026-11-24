@@ -151,8 +151,7 @@ theorem gen_open : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
       calc spMap (A.fn.comp a) = spMap A.fn ≫ spMap a := by
             simp only [spMap, ← Spec.map_comp]; rfl
         _ = A.ξ ≫ A.f ≫ Y.s := by rw [ha, ← Category.assoc, ← hd, Category.assoc]
-    have h2 := Spec.map_injective h1
-    exact congrArg CommRingCat.Hom.hom h2
+    exact congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
   obtain ⟨a', ha'⟩ := factor_of_epi β hepi a A.fn A.cst hfa
   have hsq : A.ξ₀ ≫ Y.s = spMap a' ≫ spMap β := by
     rw [← ha, ← ha']
@@ -176,8 +175,7 @@ theorem gen_open : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
   have hrange : Set.range z ⊆ Set.range Y.jQ := by
     rintro _ ⟨p, rfl⟩
     have : p = IsLocalRing.closedPoint A.Ω₀ := Subsingleton.elim (α := PrimeSpectrum A.Ω₀) _ _
-    rw [this]
-    exact hy0
+    rwa [this]
   refine ⟨IsOpenImmersion.lift Y.jQ z hrange, ?_⟩
   show A.ξ₀ = IsOpenImmersion.lift Y.jQ z hrange ≫ Y.jQ ≫ pullback.fst _ _
   rw [← Category.assoc, IsOpenImmersion.lift_fac, hz]

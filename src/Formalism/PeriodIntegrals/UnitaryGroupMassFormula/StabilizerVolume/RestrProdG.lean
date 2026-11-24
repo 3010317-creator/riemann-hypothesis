@@ -83,32 +83,18 @@ end Maps
 
 theorem t2_tensor_product {F E : Type} [Field F] [Field E] [Algebra F E] [FiniteDimensional F E] (R : Type)
     [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] :
-    T2Space (R ⊗[F] E) := by
-  let b := Module.finBasis F E
-  refine T2Space.of_injective_continuous
-    (f := fun y : R ⊗[F] E => fun k => PositiveNearLattice.crd b R y k) ?_
-    (continuous_pi fun k => PositiveNearLattice.continuous_crd b R k)
-  intro y y' h
-  have h' : ∀ k, PositiveNearLattice.crd b R y k = PositiveNearLattice.crd b R y' k := fun k => congrFun h k
-  rw [PositiveNearLattice.eq_sum_crd b R y, PositiveNearLattice.eq_sum_crd b R y']
-  simp only [h']
+    T2Space (R ⊗[F] E) := PI.AdicCompletionValuation.t2Space_tensorProduct_finiteExtension R
 
 theorem rpGram_holds : RPGram := by
   intro F E _ _ _ _ _ σ M J a T
   let b := Module.finBasis F E
   refine ⟨?_, ?_, fun v => ?_, ?_⟩
   · have : T2Space (AF F ⊗[F] E) := t2_tensor_product (AF F)
-    have : T2Space (Matrix (Fin a) (Fin a) (AF F ⊗[F] E)) :=
-      inferInstanceAs (T2Space (Fin a → Fin a → AF F ⊗[F] E))
     exact (isClosed_singleton.preimage (continuous_gramR (AF F) σ J)).isOpen_compl.measurableSet
   · have : T2Space (Ainf F ⊗[F] E) := t2_tensor_product (Ainf F)
-    have : T2Space (Matrix (Fin a) (Fin a) (Ainf F ⊗[F] E)) :=
-      inferInstanceAs (T2Space (Fin a → Fin a → Ainf F ⊗[F] E))
     exact (isClosed_singleton.preimage (continuous_gramR (Ainf F) σ J)).measurableSet
   · have : LocallyCompactSpace (Fv F v) := locallyCompact_Fv F v
     have : T2Space (Fv F v ⊗[F] E) := t2_tensor_product (Fv F v)
-    have : T2Space (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
-      inferInstanceAs (T2Space (Fin a → Fin a → Fv F v ⊗[F] E))
     exact (isClosed_singleton.preimage (continuous_gramR (Fv F v) σ J)).measurableSet
   · intro X hI hV
     have key : ∀ w w' : AF F ⊗[F] E,

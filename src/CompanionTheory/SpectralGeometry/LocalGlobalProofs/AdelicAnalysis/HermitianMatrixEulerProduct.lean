@@ -52,11 +52,11 @@ def coordOf (b : Module.Basis (Fin d) F E) (S : Matrix (Fin n) (Fin n) (R ⊗[F]
 
 theorem psi_lt (σ : E →ₐ[F] E) (b : Module.Basis (Fin d) F E) (x : Idx n d → R) {a c : Fin n}
     (h : a < c) : psi R σ b x a c = offE R b x ⟨(a, c), h⟩ := by
-  simp only [psi, HaarCoord.hermMat, dif_pos h]
+  simp only [psi, HaarCoord.hermMat, dite_eq_left h]
 
 theorem psi_gt (σ : E →ₐ[F] E) (b : Module.Basis (Fin d) F E) (x : Idx n d → R) {a c : Fin n}
     (h : c < a) : psi R σ b x a c = sigR R σ (offE R b x ⟨(c, a), h⟩) := by
-  simp only [psi, HaarCoord.hermMat, dif_neg (not_lt_of_gt h), dif_pos h]
+  simp only [psi, HaarCoord.hermMat, dite_eq_right (not_lt_of_gt h), dite_eq_left h]
 
 theorem psi_eq (σ : E →ₐ[F] E) (b : Module.Basis (Fin d) F E) (x : Idx n d → R) (a : Fin n) :
     psi R σ b x a a = x (Sum.inl a) ⊗ₜ[F] (1 : E) := by
@@ -115,8 +115,7 @@ theorem coord_psi [CharZero F] (h2 : Module.finrank F E = 2) (σ : E →ₐ[F] E
     (b : Module.Basis (Fin d) F E) (x : Idx n d → R) : coordOf R b (psi R σ b x) = x := by
   ext i
   rcases i with i | ⟨⟨⟨a, c⟩, h⟩, k⟩
-  · simp only [coordOf, Sum.elim_inl, psi_eq]
-    exact HaarCoord.half_trace_tmul R h2 _
+  · simpa only [coordOf, Sum.elim_inl, psi_eq] using HaarCoord.half_trace_tmul R h2 _
   · have h' : a < c := h
     simp only [coordOf, Sum.elim_inr, psi_lt R σ b x h', offE]
     have : (∑ k, x (Sum.inr (⟨(a, c), h⟩, k)) ⊗ₜ[F] b k) =
@@ -154,8 +153,7 @@ theorem mg_mem {σ : E →ₐ[F] E} (hinv : ∀ x, σ (σ x) = x) (G : Matrix (F
     · intro h
       ext a c
       exact h a c
-    · intro h a c
-      exact congrFun (congrFun h a) c
+    · exact fun h a c => congrFun (congrFun h a) c
   rw [key] at hS ⊢
   have hcc : cT (sigR R σ) (cT (sigR R σ) G) = G := by
     ext a c
@@ -297,8 +295,7 @@ theorem continuous_tmul [IsTopologicalRing R] [ContinuousAdd (R ⊗[F] E)]
       ⇑(LinearMap.toSpanSingleton R (R ⊗[F] E) ((1 : R) ⊗ₜ[F] e)) := by
     funext r
     simp [TensorProduct.smul_tmul']
-  rw [h]
-  exact this
+  rwa [h]
 
 theorem continuous_offE [IsTopologicalRing R] [ContinuousAdd (R ⊗[F] E)]
     [ContinuousSMul R (R ⊗[F] E)] (b : Module.Basis (Fin d) F E) (p) :

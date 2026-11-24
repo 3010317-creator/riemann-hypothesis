@@ -58,8 +58,7 @@ theorem casimirK_bAct (k : ℕ) :
       ∑ i, ∑ a, ∑ b ∈ univ.filter (fun b => ε b = ε a), factorAd k i a b * mAct E k b a := by
     simp only [Finset.sum_mul]
     conv_rhs => rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun a _ => ?_
-    exact Finset.sum_comm
+    exact Finset.sum_congr rfl fun a _ => Finset.sum_comm
   unfold factorCasimir crossOp bAct casimirK
   simp only [add_mul, mul_add, Finset.sum_add_distrib]
   rw [hX, hY, two_smul]
@@ -80,8 +79,7 @@ theorem factorCasimir_ncV_one {F : Big n 1 M} (hF : F ∈ ncV ε V 1) :
     rw [Submodule.mem_comap] at h
     have hc : ¬ ∀ j : Fin 1, ε ((fun _ : Fin 1 => (x, y)) j).1 ≠ ε ((fun _ : Fin 1 => (x, y)) j).2 :=
       fun hall => hall 0 hxy
-    rw [if_neg hc, Submodule.mem_bot] at h
-    exact h
+    rwa [ite_eq_right hc, Submodule.mem_bot] at h
   have hupd : ∀ (κ : Fin 1 → Fin n × Fin n) (v : Fin n × Fin n),
       Function.update κ 0 v = fun _ => v := by
     intro κ v
@@ -230,8 +228,7 @@ theorem crossOp_comm (hE : IsGlRep E) (k : ℕ) (i : Fin k) {a b : Fin n} (hab :
   have hmain : (mAct E k a b + factorAd k i a b) * crossOp ε E k i -
       crossOp ε E k i * (mAct E k a b + factorAd k i a b) = 0 := by
     unfold crossOp
-    rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
-    rw [← key]
+    rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib, ← key]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun d _ => ?_
@@ -298,20 +295,20 @@ theorem crossOp_mem_ncV (hV : IsKStableSub ε E V) (k : ℕ) (i : Fin k) {F : Bi
       rw [hv, map_zero]
   refine Submodule.sub_mem _ ?_ ?_
   · by_cases h1 : (κ i).1 = a
-    · rw [if_pos h1]
+    · rw [ite_eq_left h1]
       refine hT _ ?_
       have hFκ := hF (Function.update κ i (b, (κ i).2))
       rwa [if_congr (hc (b, (κ i).2) (by show ε b = ε (κ i).1; rw [hab, h1]) rfl) rfl rfl]
         at hFκ
-    · rw [if_neg h1]
+    · rw [ite_eq_right h1]
       exact Submodule.zero_mem _
   · by_cases h2 : (κ i).2 = b
-    · rw [if_pos h2]
+    · rw [ite_eq_left h2]
       refine hT _ ?_
       have hFκ := hF (Function.update κ i ((κ i).1, a))
       rwa [if_congr (hc ((κ i).1, a) rfl (by show ε a = ε (κ i).2; rw [h2, hab])) rfl rfl]
         at hFκ
-    · rw [if_neg h2]
+    · rw [ite_eq_right h2]
       exact Submodule.zero_mem _
 
 end BigCas

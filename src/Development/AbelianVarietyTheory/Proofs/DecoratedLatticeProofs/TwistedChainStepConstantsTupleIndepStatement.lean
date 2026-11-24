@@ -144,8 +144,7 @@ theorem uniform_place : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPa
         simpa only [GlobalTheory.IndefiniteRowSideFullHecke.ThetaSourceAction.ptAt, GlobalTheory.FockIndep.pure_one] using this
       have h2 := hC.2.2 g₁ P Q
       rw [hg₁] at h2
-      rw [hN, ← mul_assoc]
-      exact h2
+      rwa [hN, ← mul_assoc]
     · have hV : V.rank = 0 := by
         have := Fintype.card_congr e
         simp at this
@@ -202,8 +201,7 @@ theorem uniform_place : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPa
     · have z0 : ∀ R, pt 0 R = 0 := fun R => by
         have h := ptAt_lin hψ hθ τ (cart M τ) (cart M' τ) (onb M τ) (onb M' τ) (-1)
           (GlobalTheory.ThetaL2InnerProduct.thetaSpace ψ V W).zero_mem (GlobalTheory.ThetaL2InnerProduct.thetaSpace ψ V W).zero_mem R
-        rw [smul_zero, add_zero, neg_one_smul, neg_add_cancel] at h
-        exact h
+        rwa [smul_zero, add_zero, neg_one_smul, neg_add_cancel] at h
       simp only [E, hx0, z0, map_zero, GlobalTheory.IndefiniteRowSideFullHecke.ThetaSourceAction.ipTh]
       simp
     · simp only [E]
@@ -286,8 +284,7 @@ theorem uniform_glue : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar
     | empty =>
       intro g hg hg1
       have h := (GlobalTheory.SmoothForms.RealPts.glue θ hθ V).1 g fun τ => hg1 τ (Finset.notMem_empty τ)
-      rw [GlobalTheory.PointAtPlace.eq_one_of_mem V g h hg]
-      exact hone
+      rwa [GlobalTheory.PointAtPlace.eq_one_of_mem V g h hg]
     | insert τ A hτ ih =>
       intro g hg hg1
       obtain ⟨ha, hs, ho⟩ := peel g τ

@@ -281,8 +281,7 @@ private theorem mem_fix (J : Subgroup (GL (Fin n) (w.adicCompletion K))) (u : LL
     u ∈ fixL μ w J ↔ u ∈ fixedVectors (rr μ w) J := by
   obtain ⟨-, hmem, -⟩ := UpperTheory.ConvolutionTheory.Tf.commPrj K n μ (J.map (AdelicGLn.localEmbedding w))
   constructor
-  · intro h k hk
-    exact (hmem u).1 h _ ⟨k, hk, rfl⟩
+  · exact fun h k hk => (hmem u).1 h _ ⟨k, hk, rfl⟩
   · intro h
     refine (hmem u).2 ?_
     rintro _ ⟨k, hk, rfl⟩
@@ -730,10 +729,8 @@ private theorem exists_mid (w : Pl K) (J : Subgroup (GL (Fin n) (w.adicCompletio
         (hcos _).2 rfl
       rw [Set.indicator_of_mem hm]
       rfl
-    · intro c _ hc
-      exact Set.indicator_of_notMem (fun h => hc ((hcos c).1 h)) _
-    · intro h
-      exact absurd (hfin.mem_toFinset.2 ⟨g, hg, rfl⟩) h
+    · exact fun c _ hc => Set.indicator_of_notMem (fun h => hc ((hcos c).1 h)) _
+    · exact fun h => absurd (hfin.mem_toFinset.2 ⟨g, hg, rfl⟩) h
   · rw [Set.indicator_of_notMem hg]
     refine Finset.sum_eq_zero fun c hc => Set.indicator_of_notMem (fun h => hg ?_) _
     obtain ⟨t, ht, rfl⟩ := hfin.mem_toFinset.1 hc

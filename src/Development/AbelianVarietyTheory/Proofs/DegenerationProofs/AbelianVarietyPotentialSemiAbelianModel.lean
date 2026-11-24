@@ -439,8 +439,7 @@ theorem exists_model_of_isogeny (K R K' : Type) [Field K] [CommRing R] [IsDomain
   have hgG : SmoothOfRelativeDimension g ((Over.pullback (spMap (algebraMap R K'))).obj G').hom := by
     haveI : IsIso e.hom.left := ⟨e.inv.left, by simp [← Over.comp_left], by simp [← Over.comp_left]⟩
     have h : SmoothOfRelativeDimension (0 + g) (e.hom.left ≫ ((Over.pullback (spMap (algebraMap K K'))).obj B).hom) := inferInstance
-    rw [zero_add, Over.w e.hom] at h
-    exact h
+    rwa [zero_add, Over.w e.hom] at h
   have hri' : (e.hom ≫ (Over.pullback (spMap (algebraMap K K'))).map r) ≫ ((Over.pullback (spMap (algebraMap K K'))).map i ≫ e.inv) = 𝟙 _ ^ m := by
     simp only [Category.assoc]
     rw [← Functor.map_comp_assoc, hri, pullback_map_id_pow, MonObj.pow_comp, MonObj.comp_pow]
@@ -473,9 +472,7 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
       (algebraMap R (FractionRing R)).comp (algebraMap W R) = b.comp (algebraMap W L) :=
     ⟨IsFractionRing.lift hWK, RingHom.ext fun x => (IsFractionRing.lift_algebraMap (K := L) hWK x).symm⟩
   letI : Algebra K (FractionRing R) := (b.comp (algebraMap K L)).toAlgebra
-  have hSH : SH R (FractionRing R) := by
-    show _ ∧ _ ∧ _ ∧ _
-    exact ⟨inferInstance, hhen, hac, inferInstance⟩
+  have hSH : SH R (FractionRing R) := ⟨inferInstance, hhen, hac, inferInstance⟩
   have hmodR : IsModel (L := FractionRing R) B ((Over.pullback (spMap (algebraMap W R))).obj G) :=
     isModel_pullback (algebraMap W R) b hbW rfl B G hmod
   have hsemiR : IsSemiAbelian ((Over.pullback (spMap (algebraMap W R))).obj G) :=

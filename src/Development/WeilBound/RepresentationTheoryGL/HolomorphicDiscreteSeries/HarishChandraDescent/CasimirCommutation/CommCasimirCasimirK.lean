@@ -93,7 +93,7 @@ theorem glRep_diag {E : Fin n → Fin n → Module.End ℂ M} (hE : IsGlRep E) (
   by_cases hca : c = a
   · subst hca
     rfl
-  · rw [if_neg hca, if_neg (Ne.symm hca), sub_zero] at h
+  · rw [ite_eq_right hca, ite_eq_right (Ne.symm hca), sub_zero] at h
     exact sub_eq_zero.mp h
 
 theorem sum_adj (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ M) :
@@ -119,10 +119,10 @@ theorem Qop_eq (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ M) 
     intro b
     split_ifs with h
     · subst h
-      simp only [adjSign, if_true, one_smul]
+      simp only [adjSign, ite_true, one_smul]
       abel
     · simp
-  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem comm_casimir_casimirK {E : Fin n → Fin n → Module.End ℂ M} (hE : IsGlRep E) (ε : Fin n → Bool) :
     Commute (casimirK ε E) (casimir E) := by
@@ -167,8 +167,7 @@ theorem real_of_eigen {A : Module.End ℂ M} (hA : ∀ x y : M, ⟪A x, y⟫_ℂ
     (hy : A y = α • y) (hy0 : y ≠ 0) : ((α.re : ℝ) : ℂ) = α := by
   have h := hA y y
   rw [hy, inner_smul_left, inner_smul_right] at h
-  have h2 := mul_right_cancel₀ (inner_self_ne_zero.2 hy0) h
-  exact Complex.conj_eq_iff_re.1 h2
+  exact Complex.conj_eq_iff_re.1 (mul_right_cancel₀ (inner_self_ne_zero.2 hy0) h)
 
 def Aop (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ M) : Option (Fin n) → Module.End ℂ M
   | none => casimirK ε E
@@ -255,8 +254,7 @@ theorem comp_proof : SqId → Comp := by
     | some c => exact comm_Qop ε μ _ (hKc c) (commute_E_casimir_of_isGlRep hE c c) fun a => glRep_diag hE a c
   let T : Option (Fin n) → Module.End ℂ F := fun o => (Aop ε E o).restrict (hstab o)
   have hTs : ∀ o, (T o).IsSymmetric := fun o u v => by
-    simp only [T, Submodule.coe_inner, LinearMap.restrict_coe_apply]
-    exact hsa o u v
+    simpa only [T, Submodule.coe_inner, LinearMap.restrict_coe_apply] using hsa o u v
   have hTc : Pairwise (Function.onFun Commute T) := fun o o' _ => by
     show T o * T o' = T o' * T o
     ext u
@@ -278,8 +276,7 @@ theorem comp_proof : SqId → Comp := by
     intro χ o
     have h := (Submodule.mem_iInf _).mp (hfmem χ) o
     rw [Module.End.mem_eigenspace_iff] at h
-    have h2 := congrArg Subtype.val h
-    simpa [T, LinearMap.restrict_coe_apply] using h2
+    simpa [T, LinearMap.restrict_coe_apply] using congrArg Subtype.val h
   have hne : ∀ χ ∈ s, c χ ≠ 0 := by
     intro χ hχ h
     exact (Finsupp.mem_support_iff.mp hχ) (Subtype.ext h)
@@ -307,8 +304,7 @@ theorem comp_proof : SqId → Comp := by
     have h2 := congrArg RCLike.re h
 
     rw [map_sum] at h2
-    simp only [inner_self_eq_norm_sq] at h2
-    exact h2
+    simpa only [inner_self_eq_norm_sq] using h2
   have hgood : ∀ χ ∈ s, Good ε E (fun a => (χ (some a)).re) (χ none).re (c χ) := by
     intro χ hχ
     refine ⟨hne χ hχ, ⟨F, hFd, hFK, (f χ).2⟩, fun a => ?_, ?_⟩
@@ -316,8 +312,7 @@ theorem comp_proof : SqId → Comp := by
       exact heig χ (some a)
     · rw [real_of_eigen (hsa _) (heig χ none) (hne χ hχ)]
       exact heig χ none
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hlt : ∀ χ ∈ s, S * ‖c χ‖ ^ 2 < qf E μ (c χ) := fun χ hχ => hcon _ _ _ (hgood χ hχ)
   have hsne : s.Nonempty := by
     rw [Finset.nonempty_iff_ne_empty]

@@ -51,8 +51,7 @@ lemma cca_bounds {G : Type*} [NormedAddCommGroup G] [NormedSpace ℂ G] [FiniteD
     refine (hκ.comp continuous_snd).continuousOn.smul ?_
     refine hF.comp (f := fun p : X × ℝ => p.1 + a p.2 • u)
       (continuous_fst.add ((ha.comp continuous_snd).smul continuous_const)).continuousOn ?_
-    intro p hp
-    exact hsub p.1 hp.1 p.2
+    exact fun p hp => hsub p.1 hp.1 p.2
   obtain ⟨B, hB⟩ := hK.exists_bound_of_continuousOn hc
   exact ⟨B, fun z hz θ hθ => hB (z, θ) ⟨hz, Set.uIoc_subset_uIcc hθ⟩⟩
 
@@ -193,8 +192,7 @@ theorem cca_contDiffOn_nat [FiniteDimensional ℂ X] [CompleteSpace E] {U : Set 
     intro F hF
     have hk : ContDiffOn ℂ k (fderiv ℂ F) U := by
       rw [contDiffOn_clm_apply]
-      intro u
-      exact ih (cca_differentiableOn_fderiv_apply hU hF u)
+      exact fun u => ih (cca_differentiableOn_fderiv_apply hU hF u)
     rw [Nat.cast_succ, contDiffOn_succ_iff_fderiv_of_isOpen hU]
     first
       | exact ⟨hF, fun h => absurd h (by simp), hk⟩

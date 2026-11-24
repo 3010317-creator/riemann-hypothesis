@@ -194,8 +194,7 @@ theorem isoCore : IsoCore := by
       have hA' : A = 0 := by
         rw [hA]
         simp
-      rw [hA']
-      exact hD0
+      rwa [hA']
     · have h1 : (1 : ℝ) ≤ (Fintype.card ι : ℝ) := by exact_mod_cast h0
       rw [hD]
       nlinarith
@@ -263,8 +262,7 @@ theorem isoCore : IsoCore := by
     nlinarith
 
   have hGs : gramOf H (fun i => s *ᵥ m i) * Γi = 1 := by
-    rw [gram_image H s hs m]
-    exact hG
+    rwa [gram_image H s hs m]
   have hpsd' : ∀ w, (∀ i, herm H w ((fun i => s *ᵥ m i) i) = 0) → 0 ≤ (herm H w w).re :=
     fun w hw => psd_image H s hHH hs m hpsd w hw
   have hv : ∀ j, herm H (s *ᵥ xo) ((fun i => s *ᵥ m i) j) = 0 := fun j => by

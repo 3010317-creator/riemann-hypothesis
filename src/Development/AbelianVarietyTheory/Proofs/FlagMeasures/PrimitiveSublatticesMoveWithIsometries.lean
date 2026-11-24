@@ -77,8 +77,7 @@ theorem discN_congr {V W : Type*} [AddCommGroup V] [Module K V] [Module R V] [Is
     ext y
     obtain ⟨z, rfl⟩ := e.surjective y
     constructor
-    · intro hy
-      exact ⟨z, (H z).1 hy, rfl⟩
+    · exact fun hy => ⟨z, (H z).1 hy, rfl⟩
     · rintro ⟨w, hw, hwz⟩
       have : e w = e z := hwz
       rw [← this]
@@ -95,8 +94,7 @@ theorem smul_mem_smul_iff (h : V →ₗ⋆[K] V →ₗ[K] K) (g : isom h) (L : S
   · rintro ⟨w, hw, hwx⟩
     have : w = x := (g : V ≃ₗ[K] V).injective hwx
     exact this ▸ hw
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
 
 theorem smul_mem_primSp (h : V →ₗ⋆[K] V →ₗ[K] K) (g : isom h) (L : Submodule R V)
     (U : Submodule K V) (j n : ℕ) : g • U ∈ primSp h (g • L) j n ↔ U ∈ primSp h L j n := by
@@ -120,8 +118,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
     constructor
     · intro hW
       refine ⟨g⁻¹ • W, ?_, smul_inv_smul g W⟩
-      rw [← smul_mem_primSp h g, smul_inv_smul]
-      exact hW
+      rwa [← smul_mem_primSp h g, smul_inv_smul]
     · rintro ⟨W', hW', rfl⟩
       exact (smul_mem_primSp h g L W' j n).2 hW'
   rw [hi]

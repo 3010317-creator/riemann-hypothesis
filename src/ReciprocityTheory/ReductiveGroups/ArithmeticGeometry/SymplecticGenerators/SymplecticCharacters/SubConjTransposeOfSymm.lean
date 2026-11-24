@@ -41,8 +41,7 @@ theorem re_pos_of_posDef {g : ℕ} {Y : Matrix (Fin g) (Fin g) ℝ} (hY : Y.PosD
       simp only [star_trivial] at this
       exact this.le
   have hxy : x ≠ 0 ∨ y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     apply hv
     funext i
     apply Complex.ext
@@ -86,8 +85,7 @@ theorem sp_keyH {g : ℕ} {γ : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ}
       ext i j
       rcases i with i | i <;> rcases j with j | j <;> simp [Matrix.J, Matrix.one_apply]
     have := congrArg (fun M => M.map (Int.castRingHom ℂ)) h1
-    rw [Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, hJ] at this
-    exact this
+    rwa [Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, hJ] at this
   rw [← Matrix.fromBlocks_toBlocks (cMat γ), Matrix.J, Matrix.fromBlocks_transpose,
     Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply] at h3
   obtain ⟨e11, e12, e21, e22⟩ := Matrix.fromBlocks_inj.mp h3
@@ -119,8 +117,7 @@ theorem sp_keyT {g : ℕ} {γ : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ}
       ext i j
       rcases i with i | i <;> rcases j with j | j <;> simp [Matrix.J, Matrix.one_apply]
     have := congrArg (fun M => M.map (Int.castRingHom ℂ)) h1
-    rw [Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, hJ] at this
-    exact this
+    rwa [Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, hJ] at this
   rw [← Matrix.fromBlocks_toBlocks (cMat γ), Matrix.J, Matrix.fromBlocks_transpose,
     Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply] at h3
   obtain ⟨e11, e12, e21, e22⟩ := Matrix.fromBlocks_inj.mp h3
@@ -223,8 +220,7 @@ theorem spAct_mem {g : ℕ} {γ : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ
     have hpos := re_pos_of_posDef hτ.2 hw
     have hre := congrArg Complex.re hq
     rw [Complex.ofReal_re] at hre
-    rw [hre]
-    exact hpos
+    rwa [hre]
 
 theorem spAct_holds : SpActStatement := fun _ _ hγ _ hτ => ⟨jAut_isUnit hγ hτ, spAct_mem hγ hτ⟩
 
@@ -243,8 +239,7 @@ theorem sp_A {g : ℕ} {γ : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ}
       ext i j
       rcases i with i | i <;> rcases j with j | j <;> simp [Matrix.J, Matrix.one_apply]
     have := congrArg (fun M => M.map (Int.castRingHom ℂ)) h1
-    rw [Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, hJ] at this
-    exact this
+    rwa [Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, hJ] at this
   rw [← Matrix.fromBlocks_toBlocks (cMat γ), Matrix.J, Matrix.fromBlocks_transpose,
     Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply] at h3
   obtain ⟨e11, _, e21, _⟩ := Matrix.fromBlocks_inj.mp h3

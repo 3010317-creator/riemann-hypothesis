@@ -59,7 +59,6 @@ private theorem one_lt_normV_inertia_quadratic_ramification {E : Type} [Field E]
   haveI : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
   haveI : w.asIdeal.IsMaximal := w.isMaximal
   letI : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
-  show 1 < Nat.card (𝓞 E ⧸ w.asIdeal)
   exact Finite.one_lt_card
 
 theorem degOf : DegOf := by
@@ -89,8 +88,7 @@ theorem degOf : DegOf := by
       have h2 := hφf.2 y hyA
       have e : (ρ * (φ ^ f)⁻¹) ((φ ^ f) y) - (φ ^ f) y
           = (σ y - y ^ normV w) - ((φ ^ f) y - y ^ normV w) := by
-        rw [AlgEquiv.mul_apply]
-        rw [show (φ ^ f)⁻¹ ((φ ^ f) y) = y from (φ ^ f).symm_apply_apply y]
+        rw [AlgEquiv.mul_apply, show (φ ^ f)⁻¹ ((φ ^ f) y) = y from (φ ^ f).symm_apply_apply y]
         rw [hρ, GlobalTheory.WeilRestrict.resG_apply]
         ring
       rw [e]
@@ -119,8 +117,7 @@ theorem degOf : DegOf := by
         rw [show (((x ^ (normV v ^ d) - x : 𝓞 M)) : M) = (x : M) ^ (normV v ^ d) - (x : M) by push_cast; ring,
           map_sub, map_pow]
         ring
-      rw [e, Valuation.map_neg]
-      exact hφd
+      rwa [e, Valuation.map_neg]
     haveI : w.asIdeal.IsMaximal := w.isMaximal
     letI : Field (𝓞 M ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
     have hR : Nat.card (𝓞 M ⧸ w.asIdeal) = normV v ^ f := hf

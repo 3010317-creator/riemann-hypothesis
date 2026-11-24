@@ -102,14 +102,12 @@ theorem stab_lat_le (Tf : FormsTiedSym D u Ch chOf) (hLG : LatLocGlob) (hAL : Ad
   have hw : Y.1 *ᵥ (κ.1 *ᵥ Z) ∈ latS (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
       (tensInt (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F) (intOE D.host.E) (intAd D.host.F)) (clsCrd D u D.R.m le_rfl ((D.fm u).til c)) := by
     apply (Km.y_lat _ _).2
-    rw [mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, one_mulVec]
-    exact hκZ
+    rwa [mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, one_mulVec]
   have e2 : Y.1 *ᵥ (κ.1 *ᵥ Z) = fun i => inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F) ((γ.1.1 *ᵥ x) i) := by
     rw [hZdef, mulVec_mulVec, mulVec_mulVec, ← Units.val_mul, ← Units.val_mul, ← hbc]
     funext i
     exact (RingHom.map_mulVec _ _ _ i).symm
-  rw [← e2]
-  exact hw
+  rwa [← e2]
 
 theorem stab_lat (Tf : FormsTiedSym D u Ch chOf) (hLG : LatLocGlob) (hAL : AdLocLat) (c : (D.fm u).clsP)
     (γ : UJ (sigD D : D.host.E →+* D.host.E) (gramN D D.R.m le_rfl))

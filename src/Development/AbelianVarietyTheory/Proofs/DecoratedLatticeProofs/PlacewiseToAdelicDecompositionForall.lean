@@ -64,20 +64,7 @@ variable {D : D7}
 
 theorem mem_congGrp {V : HSp D} {I : Ideal (AE D)} {g : GA D V} :
     g ∈ congGrp V I ↔ ∀ i j, mt V g i j - (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j ∈ I := by
-  unfold congGrp
-  rw [MonoidHom.mem_ker]
-  constructor
-  · intro h i j
-    have := congrArg (fun x : GL (Fin V.rank) (AE D ⧸ I) => x.1 i j) h
-    rw [← Ideal.Quotient.eq]
-    simp [Formalism.L2.Theta.mt, Matrix.one_apply] at this ⊢
-    exact this
-  · intro h
-    ext i j
-    have := h i j
-    rw [← Ideal.Quotient.eq] at this
-    simp [Formalism.L2.Theta.mt, Matrix.one_apply] at this ⊢
-    exact this
+  exact GlobalTheory.FinPlLoc.mem_congGrp I g
 
 theorem idAt_single_le {P : Pl D → Prop} {v : Pl D} (hv : P v) : idAt D (· = v) ≤ idAt D P := by
   intro a ha

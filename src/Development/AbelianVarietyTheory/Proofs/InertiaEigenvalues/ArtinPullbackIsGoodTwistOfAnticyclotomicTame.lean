@@ -166,7 +166,7 @@ theorem unramOutside_of_corr : ∀ (D : D7) (N : NData D.R D.host D.what₂) (ar
         ring
       rw [e4, Valuation.map_neg]
       simpa using b'
-    · push_neg at hPQ
+    · push Not at hPQ
       obtain ⟨B, hB⟩ := ReciprocityTheory.Gal.exists_isPlaceOver N.Om P
       exact GlobalTheory.ToricDistribution.Corr.unr hart hcorr hB (hine P hPQ.1 hPQ.2 B hB) _ hun
   show ((χ.locK P (k P) : ℂˣ) : ℂ) = 1
@@ -222,12 +222,10 @@ theorem isOpen_ker_pull {a : Recip D Ω} (ha : a.Good) {A : Type} [CommGroup A] 
       obtain ⟨σ, rfl⟩ := QuotientGroup.mk'_surjective _ g
       refine ⟨σ, ?_, rfl⟩
       have h1 : descend φ (toAb D.host.E Ω σ) = 1 := hg
-      rw [descend_toAb h] at h1
-      exact h1
+      rwa [descend_toAb h] at h1
     · rintro ⟨σ, hσ, rfl⟩
       show descend φ (toAb D.host.E Ω σ) = 1
-      rw [descend_toAb h]
-      exact hσ
+      rwa [descend_toAb h]
   have ho : IsOpen ((descend φ).ker : Set (Gab D.host.E Ω)) := by
     rw [e]
     exact QuotientGroup.isOpenMap_coe _ h
@@ -243,8 +241,7 @@ theorem pull_rat {a : Recip D Ω} (ha : a.Good) {A : Type} [CommGroup A] (φ : G
     Units.ext (ha.rat x)
   have h1 : a.sym (Units.map (incA D).toMonoidHom x) = 1 := by
     change a.art (Units.map a.κ.toMonoidHom (Units.map (incA D).toMonoidHom x)) = 1
-    rw [e]
-    exact hk
+    rwa [e]
   change descend φ (a.sym _) = 1
   rw [h1, map_one]
 

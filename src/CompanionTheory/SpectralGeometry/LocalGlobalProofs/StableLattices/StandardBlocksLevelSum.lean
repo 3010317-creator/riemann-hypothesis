@@ -54,8 +54,7 @@ theorem lt_card_iff {n : ℕ} {lev : Fin n → ℕ} (hm : Monotone lev) (k : ℕ
   · intro h
     have hs : Finset.Iic a ⊆ (univ.filter fun b => lev b < k) := by
       intro b hb
-      simp only [mem_filter, mem_univ, true_and]
-      exact lt_of_le_of_lt (hm (Finset.mem_Iic.1 hb)) h
+      simpa only [mem_filter, mem_univ, true_and] using lt_of_le_of_lt (hm (Finset.mem_Iic.1 hb)) h
     have := Finset.card_le_card hs
     rw [Fin.card_Iic] at this
     omega
@@ -82,8 +81,7 @@ theorem stdBlocks_clusters : ∀ (n M : ℕ) (lev : Fin n → ℕ) (h : ∑ i, s
   refine ⟨lev_stdBlocks lev h hm, fun f i => ?_⟩
   refine Finset.sum_bij (fun p _ => stdBlocks (sz lev M) h ⟨i, p⟩) ?_ ?_ ?_ ?_
   · intro p _
-    simp only [mem_filter, mem_univ, true_and]
-    exact lev_stdBlocks lev h hm i p
+    simpa only [mem_filter, mem_univ, true_and] using lev_stdBlocks lev h hm i p
   · intro p _ q _ hpq
     have := (stdBlocks (sz lev M) h).injective hpq
     simpa using this

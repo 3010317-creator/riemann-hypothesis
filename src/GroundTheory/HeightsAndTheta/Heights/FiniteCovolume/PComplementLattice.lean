@@ -106,8 +106,7 @@ theorem ComplementLattice.proof (h : HermitianForm F E W) [FiniteDimensional E W
       have hnx : (n : E) • π x ∈ P := by
         rw [memP, Submodule.coe_smul_of_tower, Nat.cast_smul_eq_nsmul]
         change n • π₀ x ∈ La
-        rw [hkey]
-        exact hzLa
+        rwa [hkey]
       have : π x = (n : E)⁻¹ • ((n : E) • π x) := by
         rw [smul_smul, inv_mul_cancel₀ hnE, one_smul]
       rw [this]
@@ -139,8 +138,7 @@ theorem ComplementLattice.proof (h : HermitianForm F E W) [FiniteDimensional E W
       have := hy' ⟨_, hmem⟩ hzLa
       rwa [hh'] at this
     have h2 := factorial_nsmul_mem_of_mem_dual hLa hdual
-    rw [nsmulAddMonoidHom_apply, memP, Submodule.coe_smul_of_tower, hN, ← smul_smul]
-    exact h2
+    rwa [nsmulAddMonoidHom_apply, memP, Submodule.coe_smul_of_tower, hN, ← smul_smul]
 
   have : IsAddTorsionFree (hypComplement h v₀ w₀) := isAddTorsionFree_of_module E (hypComplement h v₀ w₀)
   have : HasUniqueDiv (hypComplement h v₀ w₀) := HasUniqueDiv.of_isTorsionFree E _
@@ -163,8 +161,7 @@ theorem ComplementLattice.proof (h : HermitianForm F E W) [FiniteDimensional E W
       b.linearIndependent.map' f (LinearMap.ker_eq_bot.mpr hf)
     have hliQ : LinearIndependent ℚ (f ∘ b) := (LinearIndependent.iff_fractionRing ℤ ℚ).mp hliZ
     have := hliQ.fintype_card_le_finrank
-    rw [Fintype.card_fin, ← Module.finrank_mul_finrank ℚ E W] at this
-    exact this
+    rwa [Fintype.card_fin, ← Module.finrank_mul_finrank ℚ E W] at this
   have hidx : P.relIndex G ≤ N ^ finrank ℤ G := by
     rw [← AddSubgroup.relIndex_map_nsmul N G]
     refine AddSubgroup.relIndex_le_of_le_left hNG ?_

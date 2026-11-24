@@ -171,8 +171,7 @@ theorem exists_max_avoid (ρ : Representation ℂ G U) {u : U} (hu : u ≠ 0) :
     · intro h
       obtain ⟨a, ha, hx⟩ := (hmem u).1 h
       exact hc ha hx
-    · intro z hz x hx
-      exact (hmem x).2 ⟨z, hz, hx⟩
+    · exact fun z hz x hx => (hmem x).2 ⟨z, hz, hx⟩
   obtain ⟨T, -, hT⟩ := zorn_le_nonempty₀ {T : Subrepresentation ρ | u ∉ T.toSubmodule} hz ⊥ hbot
   exact ⟨T, hT.prop, fun T' hle hu' => le_antisymm (hT.le_of_ge hu' hle) hle⟩
 

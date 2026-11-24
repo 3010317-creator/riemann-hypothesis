@@ -277,8 +277,7 @@ theorem continuous_angle (D : D7) {θ : Ainf D.host.F ⊗[D.host.F] D.host.E →
 
 theorem coe_prod_zpow {ι : Type} [Fintype ι] (u : ι → Circle) (k : ι → ℤ) :
     ((∏ i, u i ^ k i : Circle) : ℂ) = ∏ i, (u i : ℂ) ^ k i := by
-  refine (map_prod Circle.coeHom _ _).trans (Finset.prod_congr rfl fun τ _ => ?_)
-  exact Circle.coe_zpow _ _
+  exact (map_prod Circle.coeHom _ _).trans (Finset.prod_congr rfl fun τ _ => (Circle.coe_zpow _ _))
 
 
 
@@ -425,13 +424,11 @@ theorem exists_conjugates : ∀ (D : D7) (Q : Par D) (χ₀ : (AE D)ˣ →* Circ
     exact hψ ⟨x, hx.2⟩ y ((congrArg _ h1).trans hy)
   choose χ hχ using key
   classical
-  refine ⟨fun σ => if σ = Q.c.F.val.toRingHom then χ₀ else χ σ, if_pos rfl, fun σ => ?_⟩
+  refine ⟨fun σ => if σ = Q.c.F.val.toRingHom then χ₀ else χ σ, ite_eq_left rfl, fun σ => ?_⟩
   by_cases h : σ = Q.c.F.val.toRingHom
   · subst h
-    simp only [if_true]
-    exact ⟨hH, hF, fun x hx => (hy x hx).imp fun y h => ⟨h, h⟩⟩
-  · simp only [if_neg h]
-    exact hχ σ
+    simpa only [ite_true] using ⟨hH, hF, fun x hx => (hy x hx).imp fun y h => ⟨h, h⟩⟩
+  · simpa only [ite_eq_right h] using hχ σ
 
 end GlobalTheory.HeckeConj
 end -- clump:auto

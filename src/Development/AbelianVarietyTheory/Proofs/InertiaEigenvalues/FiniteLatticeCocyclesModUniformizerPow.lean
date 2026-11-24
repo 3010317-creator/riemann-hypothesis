@@ -76,8 +76,7 @@ theorem cocycles_finite (hT : Formalism.GaloisCohomology.LocalTateDualityK) (l :
       (fun g h m => by rw [map_mul, hmul])
   have ha : ∀ (g : Formalism.GaloisCohomology.GK l K.1) (m : M), (rho g : M →ₗ[ZMod (l ^ (r + 1))] M) m = a (φ.symm g) m := fun _ _ => rfl
   have hrho : ReciprocityTheory.Gal.ContAction rho := by
-    refine continuous_prod_of_discrete_right.2 fun m => ?_
-    exact (hlc m).continuous.comp hφ.2
+    exact continuous_prod_of_discrete_right.2 fun m => (hlc m).continuous.comp hφ.2
   have hH := (_root_.GlobalTheory.finite_H1_H2_of_localTateDuality hT l K.1 hK (r + 1) M rho (Nat.succ_pos r) hrho).1
   have hZ := GlobalTheory.CocycleCount.card_cocycles_mul_invariants_discrete _ _ M rho hrho
   have hH1 : 0 < Nat.card (ReciprocityTheory.Gal.H1 rho) := Nat.card_pos
@@ -109,8 +108,7 @@ theorem dvd_and_finite (l : ℕ) [Fact l.Prime] (LL : Type) [Field LL] [Algebra 
       simp [Ideal.top_pow]
     exact one_ne_zero h1
   have hdvd : ϖ ∣ ((l : ℕ) : O) := by
-    rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
-    exact hnu
+    rwa [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
   have hd : ϖ ^ n ∣ ((l : ℕ) : O) ^ n := pow_dvd_pow_of_dvd hdvd n
   refine ⟨hd, ?_⟩
   have := hfin n

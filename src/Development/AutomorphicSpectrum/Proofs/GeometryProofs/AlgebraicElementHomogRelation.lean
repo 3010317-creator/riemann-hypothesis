@@ -245,8 +245,7 @@ theorem core {Ω' : Type} [Field Ω'] {y : (Σ k, ι k) → Ω} (hy : Birational
     simp only [Polynomial.eval_sub, Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C, hMe,
       hDe, mul_zero, add_zero, zero_sub, Polynomial.eval_zero, neg_eq_zero, map_mul] at h3
     have hGH : evalAt w H ≠ 0 := by
-      rw [evalAt_apply]
-      exact hG
+      rwa [evalAt_apply]
     exact hGH (mul_self_eq_zero.1 h3)
 
 theorem algebraic_form_poly : ∀ (K₀ : Type) [Fintype K₀] (J₀ : K₀ → Type) [∀ k, Fintype (J₀ k)] (Ω₀ Ω : Type)

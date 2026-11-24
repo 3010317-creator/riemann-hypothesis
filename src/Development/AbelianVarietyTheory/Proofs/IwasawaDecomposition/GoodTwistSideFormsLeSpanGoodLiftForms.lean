@@ -144,8 +144,7 @@ theorem projT_fix (In : RatIn D S) (i : T.Tw) (j : ℕ) (b : Bool) (z : FmT D T 
       readT D T i b ((psiUOf D.nd (NX.xiRed D) In.θ u : (↥D.LL0)ˣ) : ↥D.LL0) • z := by
     intro u
     have h := (Submodule.mem_iInf _).mp hz u
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at h
-    exact h
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at h
   simp only [projT, LinearMap.sum_apply, LinearMap.smul_apply, LinearEquiv.coe_coe, hu, smul_smul, ← map_mul]
   have hc : ∀ u : ↥(Formalism.IndefR.NX.U D.nd), cU D In.θ u * ((psiUOf D.nd (NX.xiRed D) In.θ u : (↥D.LL0)ˣ) : ↥D.LL0) =
       (Fintype.card ↥(Formalism.IndefR.NX.U D.nd) : ↥D.LL0)⁻¹ := by

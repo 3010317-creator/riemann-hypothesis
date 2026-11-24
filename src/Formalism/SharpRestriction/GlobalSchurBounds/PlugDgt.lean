@@ -135,15 +135,13 @@ theorem eventually_level_prime_coprime_stabiliser_of_design {𝒞 : FamClass} {C
   have hkeyR : ((2 * (Fm.D x i).R.f * (Fm.D x i).R.N (Fm.D x i).R.m + 1 : ℕ) : ℝ) <
       ((Fm.D x i).R.t : ℝ) ^ 5 := by
     have := Nat.cast_lt (α := ℝ) |>.mpr key
-    rw [Nat.cast_pow] at this
-    exact this
+    rwa [Nat.cast_pow] at this
   linarith
 
 theorem closed_eventually_levelPrimeCoprimeStabiliser (𝒞 : FamClass) (C0 : ℝ) :
     Closed (Des 𝒞 C0) fun Fm _ => ∃ x0 : ℝ, ∀ x, x0 ≤ x → ∀ (_ : Fm.x1 < x) (i : Fm.Ix x), WeightDegreeSizes.LevelPrimeCoprimeStabiliser (Fm.D x i) := by
   refine ⟨1, one_pos, fun eps _ _ => ⟨⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩, ?_⟩⟩
-  intro Fm CH hc _
-  exact eventually_level_prime_coprime_stabiliser_of_design hc
+  exact fun Fm CH hc _ => eventually_level_prime_coprime_stabiliser_of_design hc
 
 end Formalism.MainNotions
 

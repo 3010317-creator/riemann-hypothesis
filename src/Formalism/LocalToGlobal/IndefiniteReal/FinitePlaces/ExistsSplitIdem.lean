@@ -91,11 +91,9 @@ def single (v : HeightOneSpectrum (𝓞 F)) (t : v.adicCompletion F) : FiniteAde
     exact zero_mem _)
 
 theorem single_self (v : HeightOneSpectrum (𝓞 F)) (t : v.adicCompletion F) : single v t v = t := by
-  show Pi.single v t v = t
   exact Pi.single_eq_same v t
 
 theorem single_ne {v w : HeightOneSpectrum (𝓞 F)} (t : v.adicCompletion F) (h : w ≠ v) : single v t w = 0 := by
-  show Pi.single v t w = 0
   exact Pi.single_eq_of_ne h t
 
 theorem pairA_mul (x y : Ainf F) (α β : Af F) : pairA F x α * pairA F y β = pairA F (x * y) (α * β) := rfl
@@ -105,8 +103,7 @@ theorem algebraMap_AF (c : F) :
     algebraMap F (AF F) c = pairA F (algebraMap F (Ainf F) c) (algebraMap F (Af F) c) := rfl
 theorem pairA_eq_iff (x y : Ainf F) (α β : Af F) : pairA F x α = pairA F y β ↔ x = y ∧ α = β := by
   constructor
-  · intro h
-    exact ⟨congrArg Prod.fst h, congrArg Prod.snd h⟩
+  · exact fun h => ⟨congrArg Prod.fst h, congrArg Prod.snd h⟩
   · rintro ⟨rfl, rfl⟩
     rfl
 theorem fa_ext {x y : Af F} (h : ∀ w, x w = y w) : x = y := by

@@ -84,9 +84,7 @@ private theorem exists_compl_of_admissible {G V : Type} [Group G] [TopologicalSp
         refine ⟨⟨x, hxW⟩, ?_, rfl⟩
         show (⟨x, hxW⟩ : W.toSubmodule) ∈ fixed W.toRepresentation K
         rw [GlobalTheory.CompanionTheory.UnitSemisimple.mem_fixed_iff] at hx' ⊢
-        intro k hk
-        apply Subtype.ext
-        exact hx' k hk
+        exact fun k hk => Subtype.ext (hx' k hk)
     have hfd0 : FiniteDimensional ℂ (fixed W.toRepresentation K) := hW.2 K hKo hKc
     have hfd : FiniteDimensional ℂ (W.toSubmodule ⊓ fixed ρ K : Submodule ℂ V) := by
       rw [← hmap]
@@ -115,13 +113,11 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
   have hGL := hBZ k
   have hnz : ∀ A : Subrepresentation π, A ≠ ⊥ → ∃ v, v ∈ A.toSubmodule ∧ v ≠ 0 := by
     intro A hA
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hA
     apply Subrepresentation.ext
     show A.toSubmodule = ⊥
-    rw [Submodule.eq_bot_iff]
-    exact hcon
+    rwa [Submodule.eq_bot_iff]
   have key : ∀ A : Subrepresentation π, IsAtom A → A = ⊤ := by
     intro A hA
     by_contra hAt
@@ -141,8 +137,7 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
     have hc : IsCompl A'.toSubmodule A.toSubmodule := by
       constructor
       · rw [Submodule.disjoint_def]
-        intro x hx' hx
-        exact hdis x hx hx'
+        exact fun x hx' hx => hdis x hx hx'
       · rw [Submodule.codisjoint_iff_exists_add_eq]
         intro z
         obtain ⟨w, hw, hzw⟩ := hcod z
@@ -168,8 +163,7 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
     let p : π.IntertwiningMap A'.toRepresentation := ⟨P, fun g => LinearMap.ext fun v => hPeq g v⟩
     let ι : A.toRepresentation.IntertwiningMap π := ⟨A.toSubmodule.subtype, fun g => LinearMap.ext fun v => rfl⟩
     have hsurj : Function.Surjective p := by
-      intro y
-      exact ⟨y, Submodule.linearProjOfIsCompl_apply_left hc y⟩
+      exact fun y => ⟨y, Submodule.linearProjOfIsCompl_apply_left hc y⟩
     have hexact : Function.Exact ι p := by
       intro y
       constructor
@@ -182,21 +176,18 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
     obtain ⟨a, haA, ha0⟩ := hnz A hA.1
     have hA1 := hone A a haA ha0
     have hnt : ∃ v, v ∉ A.toSubmodule := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       apply hAt
       apply Subrepresentation.ext
       show A.toSubmodule = ⊤
-      rw [Submodule.eq_top_iff']
-      exact hcon
+      rwa [Submodule.eq_top_iff']
     obtain ⟨v, hv⟩ := hnt
     obtain ⟨w, hw, hzw⟩ := hcod v
     have hvw : v - w ≠ 0 := by
       intro h0
       apply hv
       rw [sub_eq_zero] at h0
-      rw [h0]
-      exact hw
+      rwa [h0]
     have hA2 := hone A' (v - w) hzw hvw
     have h2 : 1 + 1 ≤ jhMult ρ (jac e π) := by
       rw [hex]

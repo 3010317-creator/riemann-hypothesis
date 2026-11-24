@@ -52,8 +52,7 @@ theorem mv (n : ℕ) : MVStatement n := by
     by_contra hb
     exact hy (by simp [hz y hb])
   simp_rw [hc]
-  rw [← e1, ← e2]
-  exact h
+  rwa [← e1, ← e2]
 
 theorem mvInt (n : ℕ) : MVIntStatement n := by
   intro hn s
@@ -85,9 +84,7 @@ theorem mvInt (n : ℕ) : MVIntStatement n := by
   have hnn : 0 ≤ᵐ[volume.restrict (Metric.ball (0 : V n) 1)] fun z : V n => ‖z‖ ^ (-2 * s) :=
     Filter.Eventually.of_forall fun z => by positivity
   constructor
-  · intro h
-    exact ⟨hm, (hasFiniteIntegral_iff_ofReal hnn).2 h⟩
-  · intro h
-    exact (hasFiniteIntegral_iff_ofReal hnn).1 h.2
+  · exact fun h => ⟨hm, (hasFiniteIntegral_iff_ofReal hnn).2 h⟩
+  · exact fun h => (hasFiniteIntegral_iff_ofReal hnn).1 h.2
 
 end ReciprocityTheory.L2DbarEstimates

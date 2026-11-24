@@ -167,10 +167,10 @@ theorem exists_signs (ι : A → A) (hι : ∀ a, ι (ι a) = a) :
       constructor
       · rintro ⟨j, ⟨rfl, h⟩ | ⟨rfl, h⟩⟩
         · by_contra hc
-          simp only [e, hc, if_false] at h
+          simp only [e, hc, ite_false] at h
           split_ifs at h
         · by_contra hc
-          simp only [e, hc, if_false] at h
+          simp only [e, hc, ite_false] at h
           split_ifs at h
       · intro ha
         have hna := hI a ha
@@ -202,10 +202,8 @@ theorem exists_signs (ι : A → A) (hι : ∀ a, ι (ι a) = a) :
           · simp [sMeet, hc] at h
         exact ⟨(hneg _ _).2 h1.2, (hneg _ _).2 (h1.1 ▸ h1.2)⟩
     · rintro ⟨⟨j, ⟨rfl, h⟩ | ⟨rfl, h⟩⟩, h2⟩
-      · have h3 := (hpos _ _).1 h2
-        exact ⟨j, Or.inl ⟨rfl, by simp [sMeet, h, h3]⟩⟩
-      · have h3 := (hneg _ _).1 h2
-        exact ⟨j, Or.inr ⟨rfl, by simp [sMeet, h, h3]⟩⟩
+      · exact ⟨j, Or.inl ⟨rfl, by simp [sMeet, h, ((hpos _ _).1 h2)]⟩⟩
+      · exact ⟨j, Or.inr ⟨rfl, by simp [sMeet, h, ((hneg _ _).1 h2)]⟩⟩
   · intro e e' h a
     rintro ⟨j, ⟨rfl, h1⟩ | ⟨rfl, h1⟩⟩
     · exact ⟨j, Or.inl ⟨rfl, by rw [h j (by rw [h1]; decide), h1]⟩⟩
@@ -409,8 +407,7 @@ theorem exists_atoms [FiniteDimensional K V] (f : Module.End K V) (hs : Squarefr
     have hz0 : z = 0 := by
       rw [hWe] at hzW
       exact (Submodule.disjoint_def.1 hdis) z hzW (h3 hz)
-    rw [hz0, add_zero]
-    exact hy
+    rwa [hz0, add_zero]
 
 end Lin
 
@@ -461,8 +458,7 @@ theorem pairParam : PairParam := by
       have h2 : S J ≤ ⨆ j, ⨆ (_ : j ≠ a), L j :=
         iSup₂_le fun j hj => le_iSup₂_of_le (f := fun j (_ : j ≠ a) => L j) j (fun e => hc (e ▸ hj)) le_rfl
       exact hne a ((hind a).eq_bot_of_le (h1.trans (h.trans h2)))
-    · intro h
-      exact biSup_mono h
+    · exact fun h => biSup_mono h
   have hSinj : ∀ I J, S I = S J → I = J := fun I J h =>
     Set.Subset.antisymm ((hSle _ _).1 h.le) ((hSle _ _).1 h.ge)
   have hstab : ∀ I, img (nrm d) (S I) = S I := fun I => img_eq_of_invariant _ _ (hSinv I)

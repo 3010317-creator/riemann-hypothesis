@@ -70,11 +70,7 @@ theorem constantCoeff_powerSeriesEvalTwoGroups_zero (c : MvPowerSeries (Fin d �
 theorem mvPowerSeriesMap_evalTwoGroups (h : R →+* S) (c : MvPowerSeries (Fin d ⊕ Fin d) R) (u v : Fin d → MvPowerSeries τ R)
     (hu : ∀ i, constantCoeff (u i) = 0) (hv : ∀ i, constantCoeff (v i) = 0) :
     map h (at2 c u v) = at2 (map h c) (fun i => map h (u i)) (fun i => map h (v i)) := by
-  unfold at2
-  rw [map_subst (hasSubst_elim u v hu hv)]
-  congr 1
-  funext s
-  cases s <;> rfl
+  exact GlobalTheory.CobSymCoc.mvPowerSeriesMap_evalTwoGroups h c hu hv
 
 theorem cOp (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : ∀ i, constantCoeff (μ i) = 0)
     (u v : Fin d → MvPowerSeries τ R) (hu : ∀ i, constantCoeff (u i) = 0)

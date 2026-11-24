@@ -53,7 +53,7 @@ theorem ind_le_cover {f : τ × τ → ℝ} (hf : ∀ p, 0 ≤ f p) (S : Finset 
       linarith
     · have h1 : P'.indicator f p = f p := Set.indicator_of_mem h f
       linarith
-  · rw [Set.indicator_apply, if_neg hp]
+  · rw [Set.indicator_apply, ite_eq_right hp]
     exact add_nonneg hsum (hnn P')
 
 theorem amp_summable (hv : Summable (fun t => ‖X.vec t‖)) (Q : Set (τ × τ)) :
@@ -82,8 +82,7 @@ theorem pp_cover (k : ℕ) (hk : ∀ t t', X.s0 t t' ≤ k) :
   unfold RowsOther.PP at hp
   rcases (Set.mem_union _ _ _).1 hp with h | h
   · left
-    refine Set.mem_iUnion₂.2 ⟨X.s0 p.1 p.2, Finset.mem_Icc.2 ⟨h.2, hk p.1 p.2⟩, ?_⟩
-    exact ⟨h.1, rfl⟩
+    exact Set.mem_iUnion₂.2 ⟨X.s0 p.1 p.2, Finset.mem_Icc.2 ⟨h.2, hk p.1 p.2⟩, ⟨h.1, rfl⟩⟩
   · exact Or.inr h
 
 theorem loopsAmp_of_classes (A C : ℝ) (k r f : ℕ) (b g v Gam : ℝ) (Xi : ℕ → ℝ) (dd : ℝ)

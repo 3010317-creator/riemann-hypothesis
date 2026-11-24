@@ -146,8 +146,7 @@ theorem cutGL_mem_St_of_mem_prodLev : ∀ {D : D7} {n : ℕ} (β : GL (Fin n) (L
     have e : GlobalTheory.FunObj.inBasis rfl β w (GlobalTheory.UnitaryIdemCut.cutGL b hb x) = GlobalTheory.FunObj.inBasis rfl β w x := by
       simp only [GlobalTheory.FunObj.inBasis, MonoidHom.comp_apply]
       rw [hconj, hloc, e1]
-    rw [e]
-    exact hxw
+    rwa [e]
 
 end GlobalTheory.CutProdLev
 end -- clump:auto
@@ -188,7 +187,7 @@ open GlobalTheory.StdFrames
 theorem cpt_sg_eq_one_of_cP_mem {D : D7} {e : AE D} {P : Finset (Pl D.host.E)} (he : IsIdemSum e P)
     (w : Pl D.host.E) (hw : GlobalTheory.IdemSupport.cP w ∈ P) : cpt (D := D) w (sg D (toEAf D e)) = 1 := by
   have h1 : cpt (D := D) (GlobalTheory.IdemSupport.cP w) (1 - toEAf D e) = 0 := by
-    rw [map_sub, map_one, GlobalTheory.OffPartLattice.cpt_idemSum he, if_pos hw, sub_self]
+    rw [map_sub, map_one, GlobalTheory.OffPartLattice.cpt_idemSum he, ite_eq_left hw, sub_self]
   have h2 := cpt_sg_eq_zero h1
   rw [map_sub, map_one, map_sub, map_one] at h2
   exact (sub_eq_zero.mp h2).symm
@@ -196,7 +195,7 @@ theorem cpt_sg_eq_one_of_cP_mem {D : D7} {e : AE D} {P : Finset (Pl D.host.E)} (
 theorem cpt_sg_eq_zero_of_cP_notMem {D : D7} {e : AE D} {P : Finset (Pl D.host.E)} (he : IsIdemSum e P)
     (w : Pl D.host.E) (hw : GlobalTheory.IdemSupport.cP w ∉ P) : cpt (D := D) w (sg D (toEAf D e)) = 0 := by
   have h1 : cpt (D := D) (GlobalTheory.IdemSupport.cP w) (toEAf D e) = 0 := by
-    rw [GlobalTheory.OffPartLattice.cpt_idemSum he, if_neg hw]
+    rw [GlobalTheory.OffPartLattice.cpt_idemSum he, ite_eq_right hw]
   exact cpt_sg_eq_zero h1
 
 theorem cpt_add_cA_idemSum : ∀ {D : D7} {e : AE D} {P : Finset (Pl D.host.E)}, IsIdemSum e P → ∀ w : Pl D.host.E,
@@ -210,10 +209,10 @@ theorem cpt_add_cA_idemSum : ∀ {D : D7} {e : AE D} {P : Finset (Pl D.host.E)},
   · rw [hsplit]
     by_cases hw : w ∈ P
     · have hc : GlobalTheory.IdemSupport.cP w ∉ P := fun hc => GlobalTheory.IdemSumBranch.conjPrime_ne he hc hw rfl
-      rw [GlobalTheory.OffPartLattice.cpt_idemSum he, if_pos hw, cpt_sg_eq_zero_of_cP_notMem he w hc, add_zero]
+      rw [GlobalTheory.OffPartLattice.cpt_idemSum he, ite_eq_left hw, cpt_sg_eq_zero_of_cP_notMem he w hc, add_zero]
     · have hc : GlobalTheory.IdemSupport.cP w ∈ P := h.resolve_left hw
-      rw [GlobalTheory.OffPartLattice.cpt_idemSum he, if_neg hw, cpt_sg_eq_one_of_cP_mem he w hc, zero_add]
-  · rw [hsplit, GlobalTheory.OffPartLattice.cpt_idemSum he, if_neg h1, cpt_sg_eq_zero_of_cP_notMem he w h2, add_zero]
+      rw [GlobalTheory.OffPartLattice.cpt_idemSum he, ite_eq_right hw, cpt_sg_eq_one_of_cP_mem he w hc, zero_add]
+  · rw [hsplit, GlobalTheory.OffPartLattice.cpt_idemSum he, ite_eq_right h1, cpt_sg_eq_zero_of_cP_notMem he w h2, add_zero]
 
 end GlobalTheory.IdemPairCpt
 end -- clump:auto
@@ -291,7 +290,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
     rw [RingHom.map_mul, hcb]
     by_cases h1 : w ∈ locPl G t ∨ GlobalTheory.IdemSupport.cP w ∈ locPl G t
     · rw [(hca w).1 h1]; ring
-    · push_neg at h1; rw [(hca w).2 h1.1 h1.2]; ring
+    · push Not at h1; rw [(hca w).2 h1.1 h1.2]; ring
   have hfh : Lev.finE (G.V (.top (j + 1))) (((S.N.u (.top (j + 1)))⁻¹ * k * S.N.u (.top (j + 1)) : FinPt G (.top (j + 1))) :
       GA D (G.V (.top (j + 1)))) = (finG (G.V (.top (j + 1))) (S.N.u (.top (j + 1))))⁻¹ * finG (G.V (.top (j + 1))) k * finG (G.V (.top (j + 1))) (S.N.u (.top (j + 1))) := by
     have e0 : Lev.finE (G.V (.top (j + 1))) (((S.N.u (.top (j + 1)))⁻¹ * k * S.N.u (.top (j + 1)) : FinPt G (.top (j + 1))) :
@@ -312,8 +311,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
     unfold locPl at hwl
     rcases Finset.mem_union.1 hwl with h3 | h3
     · obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 h3
-      have h4 := G.pl.w_over v hv
-      exact h1 ((hw.symm.trans h4) ▸ hv)
+      exact h1 ((hw.symm.trans (G.pl.w_over v hv)) ▸ hv)
     · exact h2 t ht w h3 hw.symm
   have hub : b * toEAf D (eu + cA D eu) = toEAf D (eu + cA D eu) := GlobalTheory.StdFrames.cpt_ext fun w => by
     rw [RingHom.map_mul, hcb]
@@ -329,7 +327,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
         · exact hnot w h1 _ (GlobalTheory.IdemSupport.under_cP w)
         · exact hnot _ h1 _ rfl
       rw [(hca w).2 hw1 hw2]; ring
-    · push_neg at h1; rw [hu.2 h1.1 h1.2, mul_zero]
+    · push Not at h1; rw [hu.2 h1.1 h1.2, mul_zero]
   have hU : GlobalTheory.UnitaryIdemCut.cutGL b hb (finG (G.V (.top (j + 1))) (S.N.u (.top (j + 1)))) = finG (G.V (.top (j + 1))) (S.N.u (.top (j + 1))) := by
     apply Units.ext
     rw [GlobalTheory.UnitaryIdemCut.cutGL_val]
@@ -380,8 +378,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
     have h5 := keep _ (inv_mem hX) y hy
     generalize finG (G.V (.top (j + 1))) (S.N.u (.top (j + 1))) = Uu at h5 ⊢
     have e1 : (Uu⁻¹ * X * Uu)⁻¹ = Uu⁻¹ * X⁻¹ * Uu := by group
-    rw [e1]
-    exact h5
+    rwa [e1]
   have hT : Lev.finE (G.V (.top (j + 1))) g ∈ St βT := by
     rw [hcut]
     exact st _ hK
@@ -411,12 +408,12 @@ variable {D : D7}
 
 theorem halfInd_isSBHalf {S T : HSp D} (e : AE D) (Λ : AddSubgroup (WO S T)) : IsSBHalf e Λ (halfInd e Λ) := by
   refine ⟨fun x hx => ?_, 1, one_pos, fun u hu hu' x => ?_, fun x hx => ?_⟩
-  · by_contra h; exact hx (if_neg fun h' => h h'.2)
+  · by_contra h; exact hx (ite_eq_right fun h' => h h'.2)
   · rw [one_smul]
     have h1 : IsHalf e (x + u) ↔ IsHalf e x := forall₂_congr fun i j => by
       rw [Matrix.add_apply, mul_add, hu' i j, add_left_inj]
     exact halfInd_congr (and_congr (AddSubgroup.add_mem_cancel_right _ hu) h1)
-  · rw [one_smul]; by_contra h; exact hx (if_neg fun h' => h h'.1)
+  · rw [one_smul]; by_contra h; exact hx (ite_eq_right fun h' => h h'.1)
 
 theorem om_base_law {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}
     {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} (hW : IsWeilDatumO ψ S T χS χT om)
@@ -445,15 +442,7 @@ namespace GlobalTheory.VacMoveLow
 variable {D : D7}
 
 theorem compAt_fin {θ : InfFam D} {V : HSp D} {h : GA D V} (hh : h ∈ GfC V) (τ : D.what₂.Tau) :
-    compAt θ τ (Formalism.L2.Theta.mt V h) = 1 := by
-  have h1 : Formalism.UG.bc (infPart D) (matHom V h) = 1 := (GlobalTheory.UnitaryIdemCut.mem_GfC_iff V h).1 hh
-  have h2 := congrArg Units.val h1
-  ext i j
-  have h3 := congrFun (congrFun h2 i) j
-  simp only [compAt, Matrix.map_apply]
-  have h4 : infPart D (Formalism.L2.Theta.mt V h i j) = (1 : Matrix (Fin V.rank) (Fin V.rank) _) i j := h3
-  rw [h4, Matrix.one_apply, Matrix.one_apply]
-  split_ifs <;> simp
+    compAt θ τ (Formalism.L2.Theta.mt V h) = 1 := GlobalTheory.RealWeil.compAt_fin hh τ
 
 theorem actO_one_one {S T : HSp D} (u : WO S T) : actO S T 1 1 u = u := by
   simp [actO]
@@ -492,8 +481,7 @@ theorem exists_cut_hom (V : HSp D) (r : AF D.host.F)
   obtain ⟨κ, hκ⟩ := GlobalTheory.UnitaryIdemCut.exists_cutHA (AF D.host.F) D.sp.cm.sig V.gram r hb
   refine ⟨κ, fun g => ?_⟩
   have := congrArg Units.val (hκ g)
-  rw [GlobalTheory.UnitaryIdemCut.cutGL_val] at this
-  exact this
+  rwa [GlobalTheory.UnitaryIdemCut.cutGL_val] at this
 
 theorem actO_cut_half {S T : HSp D} {b e : AE D} (hbe : b * e = 0) {g : GA D T}
     {M : Matrix (Fin T.rank) (Fin T.rank) (AE D)}
@@ -837,15 +825,13 @@ theorem product_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     obtain ⟨f, hf⟩ := (hvec d₀ hd₀).1 j'
     obtain ⟨Tm, hTm⟩ := hf.1
     refine ⟨Tm, ?_⟩
-    rw [← ((hsupp d₀ hd₀).1 j').2.1]
-    exact hTm
+    rwa [← ((hsupp d₀ hd₀).1 j').2.1]
   have hmr : ∀ i : Fin D.R.m, ∃ Tm, IsPlaceModel W.ψ (symplO _ _) (heisO W.ψ _ _) e (stdLatO S (.chi i D.R.m)) 1
       (S.Z.vac (.chi i D.R.m)) Tm := fun i => by
     obtain ⟨f, hf⟩ := (hvec d₀ hd₀).2 i
     obtain ⟨Tm, hTm⟩ := hf.1
     refine ⟨Tm, ?_⟩
-    rw [← ((hsupp d₀ hd₀).2 i).2.1]
-    exact hTm
+    rwa [← ((hsupp d₀ hd₀).2 i).2.1]
   choose Tc hTc using hmc
   choose Tr hTr using hmr
   have hvc : ∀ d ∈ τ.support, ∀ j', S.Z.vec (d.1 j') = Tc j' (d.1 j').fn := fun d hd j' =>
@@ -931,8 +917,7 @@ theorem product_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
       ∑ d ∈ τ.support, τ d * ((∏ j', Tc j' (d.1 j').fn (w j')) * ∏ i, Tr i (d.2 i).fn (z i)) :=
     Finset.sum_congr rfl fun d hd => by simp only [hvc d hd, hvr d hd]; ring
   simp only [Finsupp.sum]
-  rw [hL, hR]
-  exact key
+  rwa [hL, hR]
 
 end GlobalTheory.ExpansionInvariance
 
@@ -980,12 +965,7 @@ namespace GlobalTheory.FockTranslate
 
 theorem compAt_fin {D : D7} (θ : InfFam D) (τ : D.what₂.Tau) {V : HSp D} (g : GA D V) (hg : g ∈ Formalism.L2.Theta.GfC V) :
     Formalism.IndefR.Datum.compAt θ τ (Formalism.L2.Theta.mt V g) = 1 := by
-  have h6 : (Formalism.L2.Theta.mt V g).map (Formalism.L2.Theta.infPart D) = 1 :=
-    congrArg Units.val (show Formalism.L2.Theta.infHom V g = 1 from hg)
-  unfold Formalism.IndefR.Datum.compAt
-  rw [show (Formalism.L2.Theta.mt V g).map (fun a => θ τ (Formalism.L2.Theta.infPart D a)) =
-    ((Formalism.L2.Theta.mt V g).map (Formalism.L2.Theta.infPart D)).map (θ τ) from (Matrix.map_map).symm, h6]
-  exact Matrix.map_one _ (θ τ).map_zero (θ τ).map_one
+  exact GlobalTheory.FiniteFock.compAt_mt_of_finite θ τ hg
 
 theorem fockComp_translate : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (W : G.Weil) (B : VertexFrames G) (t : T) (j : ℕ),
     j + 1 ≤ D.R.m → ∀ (f : WO (G.pS (.top t j : Pair T)) (G.pT (.top t j : Pair T)) → ℂ),
@@ -1105,7 +1085,7 @@ def colML (S : GridChoice W U) (t : T) (x : ∀ j, FinPt G (.top j)) :
       · have hne : (⟨j, h⟩ : Fin D.R.m) ≠ j₀ := fun e => hj (congrArg Fin.val e)
         simp only [Function.update_of_ne hne]
       · rfl
-    · simp only [dif_pos j₀.2, Fin.eta, Function.update_self, Submodule.coe_add]
+    · simp only [dite_eq_left j₀.2, Fin.eta, Function.update_self, Submodule.coe_add]
       exact GlobalTheory.TopZeroInv.kkVec_add S _ a.2 b.2 _ _
   map_update_smul' := by
     intro _ cc j₀ c a
@@ -1119,7 +1099,7 @@ def colML (S : GridChoice W U) (t : T) (x : ∀ j, FinPt G (.top j)) :
       · have hne : (⟨j, h⟩ : Fin D.R.m) ≠ j₀ := fun e => hj (congrArg Fin.val e)
         simp only [Function.update_of_ne hne]
       · rfl
-    · simp only [dif_pos j₀.2, Fin.eta, Function.update_self, Submodule.coe_smul]
+    · simp only [dite_eq_left j₀.2, Fin.eta, Function.update_self, Submodule.coe_smul]
       exact kkVec_smul S _ c _ _ _
 
 def rowML (S : GridChoice W U) (t : T) (y : ∀ i, FinPt G (.grid i D.R.m)) :
@@ -1144,7 +1124,7 @@ def rowML (S : GridChoice W U) (t : T) (y : ∀ i, FinPt G (.grid i D.R.m)) :
       · have hne : (⟨i, h⟩ : Fin D.R.m) ≠ i₀ := fun e => hi (congrArg Fin.val e)
         simp only [Function.update_of_ne hne]
       · rfl
-    · simp only [dif_pos i₀.2, Fin.eta, Function.update_self, Submodule.coe_add]
+    · simp only [dite_eq_left i₀.2, Fin.eta, Function.update_self, Submodule.coe_add]
       exact GlobalTheory.TopZeroInv.kkVec_add S _ a.2 b.2 _ _
   map_update_smul' := by
     intro _ rr i₀ c a
@@ -1158,7 +1138,7 @@ def rowML (S : GridChoice W U) (t : T) (y : ∀ i, FinPt G (.grid i D.R.m)) :
       · have hne : (⟨i, h⟩ : Fin D.R.m) ≠ i₀ := fun e => hi (congrArg Fin.val e)
         simp only [Function.update_of_ne hne]
       · rfl
-    · simp only [dif_pos i₀.2, Fin.eta, Function.update_self, Submodule.coe_smul]
+    · simp only [dite_eq_left i₀.2, Fin.eta, Function.update_self, Submodule.coe_smul]
       exact kkVec_smul S _ c _ _ _
 
 def pairRowL (S : GridChoice W U) (t : T) (y : ∀ i, FinPt G (.grid i D.R.m)) (u : VV ℂ (wt G (.top 0)))
@@ -1209,10 +1189,10 @@ theorem pairV_eq_of_prodFun_eq : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : C
     fun d i => if h : d ∈ τ.support then ⟨r d i, (hr d h i).1⟩ else 0
   let g' : δ → ∀ i : Fin D.R.m, ↥(GlobalTheory.RowVertexInv.thetaSub W.ψ (G.pS (.chi i D.R.m : Pair T)) (G.pT (.chi i D.R.m : Pair T))) :=
     fun d i => if h : d ∈ τ.support then ⟨r' d i, (hr d h i).2⟩ else 0
-  have ef : ∀ d ∈ τ.support, (fun j => (f d j : WO _ _ → ℂ)) = c d := fun d hd => funext fun j => by simp only [f, dif_pos hd]
-  have ef' : ∀ d ∈ τ.support, (fun j => (f' d j : WO _ _ → ℂ)) = c' d := fun d hd => funext fun j => by simp only [f', dif_pos hd]
-  have eg : ∀ d ∈ τ.support, (fun i => (g d i : WO _ _ → ℂ)) = r d := fun d hd => funext fun i => by simp only [g, dif_pos hd]
-  have eg' : ∀ d ∈ τ.support, (fun i => (g' d i : WO _ _ → ℂ)) = r' d := fun d hd => funext fun i => by simp only [g', dif_pos hd]
+  have ef : ∀ d ∈ τ.support, (fun j => (f d j : WO _ _ → ℂ)) = c d := fun d hd => funext fun j => by simp only [f, dite_eq_left hd]
+  have ef' : ∀ d ∈ τ.support, (fun j => (f' d j : WO _ _ → ℂ)) = c' d := fun d hd => funext fun j => by simp only [f', dite_eq_left hd]
+  have eg : ∀ d ∈ τ.support, (fun i => (g d i : WO _ _ → ℂ)) = r d := fun d hd => funext fun i => by simp only [g, dite_eq_left hd]
+  have eg' : ∀ d ∈ τ.support, (fun i => (g' d i : WO _ _ → ℂ)) = r' d := fun d hd => funext fun i => by simp only [g', dite_eq_left hd]
   have key := GlobalTheory.funProd_multilinear_sum_eq (pairML S t x y u v) τ f f' g g' (fun w z => by
     rw [Finsupp.sum, Finsupp.sum]
     have h1 := hprod w z
@@ -1231,8 +1211,7 @@ theorem pairV_eq_of_prodFun_eq : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : C
     rw [Finsupp.sum, Finsupp.sum, LinearMap.sum_apply, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun d hd => ?_
     rw [LinearMap.smul_apply, LinearMap.smul_apply, smul_eq_mul, pairML_apply, hF d hd, hH d hd]
-  rw [hL c r f g ef eg, hL c' r' f' g' ef' eg']
-  exact key
+  rwa [hL c r f g ef eg, hL c' r' f' g' ef' eg']
 
 end GlobalTheory.ExpansionInvariance
 

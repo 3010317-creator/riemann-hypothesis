@@ -208,8 +208,7 @@ theorem tail_le {ϖ ϖ' : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (hϖ'
     · obtain ⟨i, j, h1, h2⟩ := Function.not_injective_iff.1 hp
       rw [Matrix.det_zero_of_column_eq h2 (fun l => by simp [h1]), zero_mul, map_zero]
       exact zero_le
-  rw [hB, val_prod_zpow hϖ', WithZero.exp_le_exp, neg_le_neg_iff] at hle
-  exact hle
+  rwa [hB, val_prod_zpow hϖ', WithZero.exp_le_exp, neg_le_neg_iff] at hle
 
 end Local
 
@@ -269,8 +268,7 @@ theorem finite_inLab (hU : IsUnramInv ϖ σ q) {d : List ℤ} (h : Good n d) :
   refine (P.finite_cosets_in_doset (P.isCommensurated_integral_unitary_of_unramified hU n) t).subset ?_
   rintro x ⟨k₁, h₁, k₂, h₂, e⟩
   refine ⟨⟨k₁, h₁⟩, ⟨k₂, h₂⟩, Subtype.ext (Units.ext ?_)⟩
-  simp only [Subgroup.coe_mul, Units.val_mul, ht]
-  exact e
+  simpa only [Subgroup.coe_mul, Units.val_mul, ht] using e
 
 def cnt (σ : L →+* L) (n : ℕ) (ϖ : L) (d : List ℤ) (a : Fin (n / 2) → ℤ) : ℕ :=
   {x : GU σ n ⧸ KU σ n | Cell ϖ a x ∧ InLab ϖ d x}.ncard
@@ -289,17 +287,17 @@ theorem satU_labInd (hU : IsUnramInv ϖ σ q) {d : List ℤ} (h : Good n d) (α 
     simp only [Set.Finite.mem_toFinset]
     by_cases h1 : Cell ϖ a x
     · by_cases h2 : InLab ϖ d x
-      · rw [if_pos h1, if_pos (show x ∈ {x | Cell ϖ a x ∧ InLab ϖ d x} from ⟨h1, h2⟩)]
+      · rw [ite_eq_left h1, ite_eq_left (show x ∈ {x | Cell ϖ a x ∧ InLab ϖ d x} from ⟨h1, h2⟩)]
         unfold labInd
         exact Set.indicator_of_mem (f := (1 : GU σ n → ℂ)) (a := x.out) (by exact h2)
-      · rw [if_pos h1, if_neg (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h2 h.2)]
+      · rw [ite_eq_left h1, ite_eq_right (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h2 h.2)]
         unfold labInd
         exact Set.indicator_of_notMem (a := x.out) (by exact h2) _
-    · rw [if_neg h1, if_neg (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h1 h.1)]
+    · rw [ite_eq_right h1, ite_eq_right (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h1 h.1)]
   refine (finsum_congr fun x => @key x _).trans ?_
   rw [finsum_eq_sum_of_support_subset (s := hf.toFinset) _ (fun x hx => by
     by_contra h
-    exact hx (if_neg h)), Finset.sum_congr rfl fun x hx => if_pos hx, cnt, Set.ncard_eq_toFinset_card _ hf]
+    exact hx (ite_eq_right h)), Finset.sum_congr rfl fun x hx => ite_eq_left hx, cnt, Set.ncard_eq_toFinset_card _ hf]
   simp
 
 theorem finite_cnt (hU : IsUnramInv ϖ σ q) {d : List ℤ} (h : Good n d) : {a | cnt σ n ϖ d a ≠ 0}.Finite := by
@@ -424,8 +422,7 @@ theorem exists_antiJ_frame (hU : IsUnramInv ϖ σ q) (n : ℕ) :
   have hc : ∀ x, c (c x) = x := fun x => Subtype.ext (hσσ x)
   have hI : ∀ x ∈ IsLocalRing.maximalIdeal (v.adicCompletionIntegers K),
       c x ∈ IsLocalRing.maximalIdeal (v.adicCompletionIntegers K) := by
-    intro x hx hu
-    exact hx (by simpa [hc] using hu.map c)
+    exact fun x hx hu => hx (by simpa [hc] using hu.map c)
   have hω : ∃ ω, IsUnit (ω - c ω) := by
     refine ⟨⟨x, hx1⟩, ?_⟩
     rw [HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one]

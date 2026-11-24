@@ -71,18 +71,15 @@ theorem softMk (S : UniformizedDVR X.p O) (hS : S.SqP) (hD : D1num X) (h2 : 2 �
     rw [sgKS_powP] at h
     show SoftOK S.w _ _ (monomial (Finsupp.single ((topStart X x.1, true), 0) (X.p ^ segG X.TT x.1) +
       Finsupp.single ((topOdd X x.1 x.2, false), 0) ((X.seg C0 CE1 CE2 x.1).P X.p x.2)) 1) _
-    rw [mono_two]
-    exact h
+    rwa [mono_two]
   · have h := softKW S hS hD x.1 x.2.1 x.2.2
     show SoftOK S.w _ _ (monomial (Finsupp.single ((topOdd X x.1 x.2.1, true), x.2.2.succ) 1 +
       Finsupp.single ((topStart X x.1, true), 0) (X.p ^ (segDists X.TT x.1).get x.2.1)) 1) _
-    rw [mono_two, pow_one]
-    exact h
+    rwa [mono_two, pow_one]
   · have h := softKS S hS hD x.1 x.2
     show SoftOK S.w _ _ (monomial (Finsupp.single ((topStart X x.1, true), 0) (X.p ^ (segDists X.TT x.1).get x.2) +
       Finsupp.single ((topOdd X x.1 x.2, false), 0) 1) 1) _
-    rw [mono_two, pow_one]
-    exact h
+    rwa [mono_two, pow_one]
   · have h := softLoc S.w hD h2 c
     show SoftOK S.w _ _ (monomial (∑ j : Fin (numSeg X.TT),
       Finsupp.single ((topStart X j, true), 0) (X.p ^ segG X.TT j - 1)) 1) _
@@ -91,16 +88,14 @@ theorem softMk (S : UniformizedDVR X.p O) (hS : S.SqP) (hD : D1num X) (h2 : 2 �
         (X.p ^ segG X.TT j - 1)) (1 : KK O) : RHH O X) = sgLoc O X := by
       unfold sgLoc
       exact Finset.prod_congr rfl fun j _ => by rw [X_pow_eq_monomial]
-    rw [e]
-    exact h
+    rwa [e]
 
 theorem fMk_pol (C0 CE1 CE2 : ℝ) (a : IM X) :
     fMk O C0 CE1 CE2 X a ∈ Pol (KK O) (ι := X.TT × Bool) (X.m + 1) (dgMk C0 CE1 CE2 X a) := by
   rcases a with x | x | x | c
   · exact mem_Pol_iff.2 fun l => by
       have h := (mem_Pol_iff.1 (kS_pol (O := O) x.1 x.2) l).pow ((X.seg C0 CE1 CE2 x.1).P X.p x.2)
-      rw [smul_eq_mul] at h
-      exact h
+      rwa [smul_eq_mul] at h
   · exact kW_pol x.1 x.2.1 _
   · exact kS_pol x.1 x.2
   · exact loc_pol _
@@ -169,21 +164,20 @@ theorem dgMk_le (hD : D1num X) (hG : ∀ j, segG X.TT j ≤ X.G') (C0 CE1 CE2 : 
     by_cases hex : ∃ j0, (topStart X j0, true) = l
     · obtain ⟨j0, hj0⟩ := hex
       rw [Finset.sum_eq_single j0]
-      · rw [if_pos hj0, mul_one]
+      · rw [ite_eq_left hj0, mul_one]
         exact (Nat.sub_le _ _).trans (hpG j0)
       · intro j _ hj
-        rw [if_neg, mul_zero]
+        rw [ite_eq_right, mul_zero]
         intro h
         apply hj
         apply topStart_inj X
         rw [← hj0] at h
         exact (Prod.mk.inj h).1
-      · intro h
-        exact absurd (Finset.mem_univ j0) h
+      · exact fun h => absurd (Finset.mem_univ j0) h
     · rw [Finset.sum_eq_zero]
       · exact Nat.zero_le _
       · intro j _
-        rw [if_neg (fun h => hex ⟨j, h⟩), mul_zero]
+        rw [ite_eq_right (fun h => hex ⟨j, h⟩), mul_zero]
 
 theorem dgMk_Y (C0 CE1 CE2 : ℝ) (a : IM X) (j' : Fin (numSeg X.TT)) : dgMk C0 CE1 CE2 X a (topEnd X j', false) = 0 := by
   rcases a with x | x | x | x <;>
@@ -212,7 +206,7 @@ theorem bMk_eq (C0 CE1 CE2 : ℝ) (β : GlobalTheory X) (j : Fin (numSeg X.TT)) 
     simp [Finset.mul_sum, mul_add, Finset.sum_add_distrib, Fin.succ_ne_zero]
     try simp only [mul_comm, mul_left_comm]
     try abel
-  · simp only [hs, if_false, Finset.sum_const_zero, zero_add, add_zero]
+  · simp only [hs, ite_false, Finset.sum_const_zero, zero_add, add_zero]
     try simp only [mul_comm]
     try abel_nf
     try ring_nf

@@ -98,8 +98,7 @@ theorem add_eq_add_disj {A B : Set σ} (hAB : Disjoint A B) {a a' b b' : σ →�
   constructor
   · intro h
     have hx : ∀ x, a' x + b' x = a x + b x := fun x => by
-      have h1 := congrArg (fun f : σ →₀ ℕ => f x) h
-      simpa using h1
+      simpa using congrArg (fun f : σ →₀ ℕ => f x) h
     refine ⟨Finsupp.ext fun x => ?_, Finsupp.ext fun x => ?_⟩
     · by_cases hxA : x ∈ A
       · have := hx x
@@ -119,8 +118,7 @@ theorem expFact_add_disj {A B : Set σ} (hAB : Disjoint A B) {a b : σ →₀ �
   unfold expFact
   apply Finsupp.prod_add_index_of_disjoint
   rw [Finset.disjoint_left]
-  intro x hxa hxb
-  exact Set.disjoint_left.mp hAB (ha hxa) (hb hxb)
+  exact fun x hxa hxb => Set.disjoint_left.mp hAB (ha hxa) (hb hxb)
 
 theorem fock_mono_disj {A B : Set σ} (hAB : Disjoint A B) {a a' b b' : σ →₀ ℕ} (ha : (a.support : Set σ) ⊆ A)
     (ha' : (a'.support : Set σ) ⊆ A) (hb : (b.support : Set σ) ⊆ B) (hb' : (b'.support : Set σ) ⊆ B)
@@ -138,21 +136,21 @@ theorem fock_mono_disj {A B : Set σ} (hAB : Disjoint A B) {a a' b b' : σ →�
       rw [support_zero, Finset.sum_empty]
       split_ifs <;> simp
     · unfold fock
-      rw [support_monomial, if_neg hx, Finset.sum_singleton, coeff_monomial, coeff_monomial, if_pos rfl]
+      rw [support_monomial, ite_eq_right hx, Finset.sum_singleton, coeff_monomial, coeff_monomial, ite_eq_left rfl]
       by_cases huv : u = v
       · subst huv
-        rw [if_pos rfl, if_pos rfl]
-      · rw [if_neg (Ne.symm huv), if_neg huv, mul_zero, zero_mul]
+        rw [ite_eq_left rfl, ite_eq_left rfl]
+      · rw [ite_eq_right (Ne.symm huv), ite_eq_right huv, mul_zero, zero_mul]
   rw [monomial_mul, monomial_mul, hmono, hmono, hmono]
   have hiff : a + b = a' + b' ↔ a = a' ∧ b = b' := by
     rw [eq_comm, add_eq_add_disj hAB ha ha' hb hb', eq_comm, @eq_comm _ b']
   by_cases h1 : a = a' <;> by_cases h2 : b = b'
-  · rw [if_pos (hiff.mpr ⟨h1, h2⟩), if_pos h1, if_pos h2, expFact_add_disj hAB ha hb]
+  · rw [ite_eq_left (hiff.mpr ⟨h1, h2⟩), ite_eq_left h1, ite_eq_left h2, expFact_add_disj hAB ha hb]
     push_cast
     ring
-  · rw [if_neg (fun h => h2 (hiff.mp h).2), if_neg h2, mul_zero]
-  · rw [if_neg (fun h => h1 (hiff.mp h).1), if_neg h1, zero_mul]
-  · rw [if_neg (fun h => h1 (hiff.mp h).1), if_neg h1, zero_mul]
+  · rw [ite_eq_right (fun h => h2 (hiff.mp h).2), ite_eq_right h2, mul_zero]
+  · rw [ite_eq_right (fun h => h1 (hiff.mp h).1), ite_eq_right h1, zero_mul]
+  · rw [ite_eq_right (fun h => h1 (hiff.mp h).1), ite_eq_right h1, zero_mul]
 
 theorem fock_mul_disj {A B : Set σ} (hAB : Disjoint A B) {F1 G1 F2 G2 : MvPolynomial σ K}
     (hF1 : F1 ∈ supported K A) (hG1 : G1 ∈ supported K A) (hF2 : F2 ∈ supported K B) (hG2 : G2 ∈ supported K B) :
@@ -200,7 +198,7 @@ theorem fock_mul_disj {A B : Set σ} (hAB : Disjoint A B) {F1 G1 F2 G2 : MvPolyn
 theorem fock_one_one : fock (1 : MvPolynomial σ K) 1 = 1 := by
   classical
   unfold fock
-  rw [← C_1, support_C, if_neg one_ne_zero, Finset.sum_singleton, coeff_C, if_pos rfl]
+  rw [← C_1, support_C, ite_eq_right one_ne_zero, Finset.sum_singleton, coeff_C, ite_eq_left rfl]
   simp [expFact]
 
 theorem fock_prod_disj {J : Type} (A : J → Set σ) (hA : ∀ j j', j ≠ j' → Disjoint (A j) (A j')) (s : Finset J)
@@ -217,8 +215,7 @@ theorem fock_prod_disj {J : Type} (A : J → Set σ) (hA : ∀ j j', j ≠ j' �
       exact Subalgebra.prod_mem _ fun j' hj' => supported_mono (Set.subset_biUnion_of_mem hj') (hH j')
     have hdisj : Disjoint (A j) (⋃ j' ∈ s, A j') := by
       rw [Set.disjoint_iUnion₂_right]
-      intro j' hj'
-      exact hA j j' (fun h => hj (h ▸ hj'))
+      exact fun j' hj' => hA j j' (fun h => hj (h ▸ hj'))
     exact fock_mul_disj hdisj (hF j) (hG j) (hsupp F hF) (hsupp G hG)
 
 theorem aeval_mem_sub {τ : Type} (S : Subalgebra K (MvPolynomial σ K)) (f : τ → MvPolynomial σ K) (hf : ∀ v, f v ∈ S)
@@ -255,8 +252,7 @@ theorem segVars_disj (X : Loc) (j j' : Fin (numSeg X.TT)) (h : j ≠ j') : Disjo
   classical
   have hnodup : (evenTops X.TT).Nodup := Finset.sort_nodup _ _
   have hN : 2 ≤ numSeg X.TT := by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have := j.isLt
     have := j'.isLt
     exact h (Fin.ext (by omega))
@@ -299,8 +295,7 @@ theorem segVars_disj (X : Loc) (j j' : Fin (numSeg X.TT)) (h : j ≠ j') : Disjo
   have hsm : ∀ c : Fin (numSeg X.TT), segStart X.TT c ∈ X.TT ∧ Even (segStart X.TT c).val := by
     intro c
     have hm : segStart X.TT c ∈ evenTops X.TT := List.get_mem _ _
-    rw [evenTops, Finset.mem_sort, Finset.mem_filter] at hm
-    exact hm
+    rwa [evenTops, Finset.mem_sort, Finset.mem_filter] at hm
   have hodd : ∀ a b (i : Fin (segS X.TT a)) (i' : Fin (segS X.TT b)), topOdd X a i = topOdd X b i' → a = b := by
     intro a b i i' heq
     by_contra hab
@@ -309,8 +304,7 @@ theorem segVars_disj (X : Loc) (j j' : Fin (numSeg X.TT)) (h : j ≠ j') : Disjo
     have hsb := hseg b i'
     rw [hx] at hsa
     have hstart : segStart X.TT a ≠ segStart X.TT b := by
-      intro hs
-      exact hab ((List.Nodup.get_inj_iff hnodup).1 hs)
+      exact fun hs => hab ((List.Nodup.get_inj_iff hnodup).1 hs)
     have hna := next_min X.TT a (segStart X.TT b) (hsm b).1 (hsm b).2 (Ne.symm hstart)
     have hnb := next_min X.TT b (segStart X.TT a) (hsm a).1 (hsm a).2 hstart
     have hga := (segG_eq X.TT hN a).1

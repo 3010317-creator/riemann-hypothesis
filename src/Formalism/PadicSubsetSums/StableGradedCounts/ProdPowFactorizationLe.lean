@@ -152,8 +152,7 @@ theorem prime_power_order_count : PrimePowerOrderCount := by
       calc 2 ≤ l := hp.two_le
         _ = l ^ 1 := (pow_one l).symm
         _ ≤ _ := Nat.pow_le_pow_right hp.pos this
-    · intro l hl
-      exact Nat.prime_of_mem_primeFactors (Finset.mem_filter.1 hl).1
+    · exact fun l hl => Nat.prime_of_mem_primeFactors (Finset.mem_filter.1 hl).1
   · have e : ∀ l ∈ (g ^ δ - 1).primeFactors.filter (fun l => ¬ l ∣ A),
         l ^ padicValNat l (g ^ δ - 1) = l ^ B.factorization l := by
       intro l hl
@@ -175,7 +174,6 @@ theorem prime_power_order_count : PrimePowerOrderCount := by
       calc 2 ≤ l := hp.two_le
         _ = l ^ 1 := (pow_one l).symm
         _ ≤ _ := Nat.pow_le_pow_right hp.pos this
-    · intro l hl
-      exact Nat.prime_of_mem_primeFactors (Finset.mem_filter.1 hl).1
+    · exact fun l hl => Nat.prime_of_mem_primeFactors (Finset.mem_filter.1 hl).1
 
 end Formalism.IrreducibleCountingLemmas.GaloisIrreducibility

@@ -84,8 +84,7 @@ theorem isMultiHomog_chartMon (c : ∀ k, ι k) (e : K → ℕ) : IsMultiHomog (
   have he : (∑ k, e k • fun l : K => if l = k then (1 : ℕ) else 0) = e := by
     funext l
     simp [Finset.sum_apply]
-  rw [he] at h
-  exact h
+  rwa [he] at h
 
 theorem exists_chartMon {c : ∀ k, ι k} {v : MRingOver S ι} (hv : v ∈ KH.cellMon S (chart c).1) :
     ∃ e, v = chartMon c e := by
@@ -100,8 +99,7 @@ theorem exists_chartMon {c : ∀ k, ι k} {v : MRingOver S ι} (hv : v ∈ KH.ce
     · simp
     · intro l _ hl
       simp [hl]
-    · intro h
-      exact absurd (Finset.mem_univ k) h
+    · exact fun h => absurd (Finset.mem_univ k) h
   | one => exact ⟨0, (chartMon_zero c).symm⟩
   | mul f g _ _ hf hg =>
     obtain ⟨e, rfl⟩ := hf
@@ -252,12 +250,11 @@ theorem res_eq_of_pair {M : Type*} [AddCommGroup M] [Module (MRingOver S ι) M] 
     have : i = c k ∨ i = j := by rw [hIk] at hi; simpa using hi
     tauto
   · intro l _ hl
-    refine Finset.sum_eq_zero fun i hi => dif_neg fun h' => ?_
+    refine Finset.sum_eq_zero fun i hi => dite_eq_right fun h' => ?_
     have := h'.1 l
     rw [Function.update_self, ← Finset.card_pos, Finset.card_erase_of_mem hi, hother l hl] at this
     omega
-  · intro h'
-    exact absurd (Finset.mem_univ k) h'
+  · exact fun h' => absurd (Finset.mem_univ k) h'
 
 theorem cellRes_comp {M : Type} [AddCommGroup M] [Module (MRingOver S ι) M] {J P U : ∀ k, Finset (ι k)}
     (h₁ : ∀ k, J k ⊆ P k) (h₂ : ∀ k, P k ⊆ U k) (w : LocalizedModule (KH.cellMon S J) M) :

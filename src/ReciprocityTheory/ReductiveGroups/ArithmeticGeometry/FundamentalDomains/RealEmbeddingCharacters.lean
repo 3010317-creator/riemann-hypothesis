@@ -151,8 +151,7 @@ lemma restrict_inj {τ τ' : X.Ψ} (h : ∀ a : E, cc a = a → τ.1 a = τ'.1 a
       2 * σ a = σ (a + cc a) + σ ((a - cc a) * X.ξ0) / σ X.ξ0 := by
     intro σ a
     have e := congrArg σ (hdec a)
-    rw [map_mul, map_add (f := _), map_div₀, map_ofNat] at e
-    exact e
+    rwa [map_mul, map_add (f := _), map_div₀, map_ofNat] at e
   have hsq : τ.1 X.ξ0 ^ 2 = τ'.1 X.ξ0 ^ 2 := by
     rw [← map_pow, ← map_pow]
     apply h
@@ -240,9 +239,7 @@ lemma periods_span : Submodule.span ℝ (X.periods la : Set (X.Ψ → ℝ)) = �
     apply restrict_inj X
     intro a ha
     have hG : ∀ b : E, cc b = b → IsIntegral ℤ b → τ.1 b = τ'.1 b := by
-      intro b hb hbi
-      have h6 := DFunLike.congr_fun h (⟨⟨b, hb⟩, hbi⟩ : G)
-      exact h6
+      exact fun b hb hbi => DFunLike.congr_fun h (⟨⟨b, hb⟩, hbi⟩ : G)
     obtain ⟨x, y, hy, hxy⟩ := IsFractionRing.div_surjective (A := 𝓞 E) a
     set x' : E := algebraMap (𝓞 E) E x with hx'
     set y' : E := algebraMap (𝓞 E) E y with hy'

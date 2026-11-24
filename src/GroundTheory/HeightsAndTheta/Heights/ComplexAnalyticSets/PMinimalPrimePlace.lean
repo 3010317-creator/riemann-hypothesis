@@ -146,8 +146,7 @@ theorem isIntegral_mul_of_fracMap [IsDomain B] (π : A →+* B) (hπ : Function.
   refine ⟨Polynomial.X * G, Polynomial.monic_X.mul hG, ?_⟩
   have hz : e * Polynomial.aeval (e * x) G = 0 := by
     refine hek _ ?_
-    rw [fracMap_aeval, hGmap, map_mul, he1, one_mul, Polynomial.aeval_def]
-    exact hgx
+    rwa [fracMap_aeval, hGmap, map_mul, he1, one_mul, Polynomial.aeval_def]
   rw [Polynomial.aeval_def] at hz
   rw [Polynomial.eval₂_mul, Polynomial.eval₂_X]
   linear_combination x * hz
@@ -183,8 +182,7 @@ theorem exists_localization_ringEquiv {R S : Type*} [CommRing R] [CommRing S] (�
         rw [hc]
         exact v.2
       refine ⟨(a, ⟨c, hcP⟩), ?_⟩
-      simp only [halg, hc]
-      exact IsLocalization.mk'_spec _ _ _
+      simpa only [halg, hc] using IsLocalization.mk'_spec _ _ _
     · rw [halg, halg] at h
       obtain ⟨c', hc'⟩ := (IsLocalization.eq_iff_exists P'.primeCompl _).1 h
       obtain ⟨c0, hc0⟩ := hφ (c' : S)
@@ -273,8 +271,7 @@ theorem MinimalPrimePlace.proof : MinimalPrimePlace.Statement := by
   obtain ⟨P, hP⟩ := exists_maximal_ord_eq π (Ideal.Quotient.factor_surjective hle) hker P'
   refine ⟨P, fun f ↦ ?_⟩
   have h := hP (algebraMap (MvPolynomial (Fin n) ℂ) (curveLocalRing I q) f)
-  rw [hπalg] at h
-  exact h
+  rwa [hπalg] at h
 
 end
 

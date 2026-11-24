@@ -68,9 +68,7 @@ def locSp : Formalism.L2.SG.CntLocal.LocSp D Z.M where
   bc_form p := baseChangeAt_form Z.M p (Z.hcj p)
 
 theorem eq_of_latP {A B : LV D} (hA : A.FG) (hB : B.FG) (h : ∀ p, lattice₂ D Z.M p A = lattice₂ D Z.M p B) : A = B := by
-  apply eq_of_locP
-  intro P
-  exact (locEqC_holds D Z (P.under (𝓞 D.host.F)) A B hA hB).1 (h _) P rfl
+  exact eq_of_locP (fun P => (locEqC_holds D Z (P.under (𝓞 D.host.F)) A B hA hB).1 (h _) P rfl)
 
 theorem mem_of_bcP {Λ : LV D} (hΛ : Λ.FG) {x : (VS D).V} (h : ∀ p, baseChange₂ D p x ∈ lattice₂ D Z.M p Λ) : x ∈ Λ := by
   have e : Λ ⊔ Submodule.span (𝓞 D.host.E) {x} = Λ := by

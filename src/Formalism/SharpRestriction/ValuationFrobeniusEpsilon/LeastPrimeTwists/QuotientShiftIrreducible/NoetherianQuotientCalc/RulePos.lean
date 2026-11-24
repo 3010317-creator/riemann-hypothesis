@@ -105,8 +105,7 @@ theorem isNoetherianRing_of_std [IsLocalRing B] (𝒜 : Deg k → Submodule B R)
   have h1 : ∀ i, 𝒜 (e i) ≤ Subalgebra.toSubmodule T := by
     intro i
     rw [← hs i, Submodule.span_le]
-    intro x hx
-    exact Algebra.subset_adjoin (Set.mem_iUnion.2 ⟨i, hx⟩)
+    exact fun x hx => Algebra.subset_adjoin (Set.mem_iUnion.2 ⟨i, hx⟩)
   have h2 : ∀ (n : ℕ) (m : Deg k), 0 ≤ m → (∑ i, m i) = (n : ℤ) →
       𝒜 m ≤ Subalgebra.toSubmodule T := by
     intro n
@@ -136,18 +135,16 @@ theorem isNoetherianRing_of_std [IsLocalRing B] (𝒜 : Deg k → Submodule B R)
         · subst hj
           simp only [e, Pi.zero_apply, Pi.sub_apply, Pi.single_eq_same]
           omega
-        · simp only [e, Pi.zero_apply, Pi.sub_apply, Pi.single_eq_of_ne hj, sub_zero]
-          exact hm j
+        · simpa only [e, Pi.zero_apply, Pi.sub_apply, Pi.single_eq_of_ne hj, sub_zero] using hm j
       have hsum' : ∑ j, (m - e i) j = (n : ℤ) := by
         simp only [e, Pi.sub_apply, Finset.sum_sub_distrib, hsum, Finset.sum_pi_single',
-          Finset.mem_univ, if_true]
+          Finset.mem_univ, ite_true]
         push_cast
         ring
       have hg := h.gen (m - e i) i hm'
       rw [sub_add_cancel] at hg
       rw [hg, Submodule.mul_le]
-      intro a ha b hb
-      exact T.mul_mem (ih _ hm' hsum' ha) (h1 i hb)
+      exact fun a ha b hb => T.mul_mem (ih _ hm' hsum' ha) (h1 i hb)
   have h3 : T = ⊤ := by
     rw [eq_top_iff]
     intro x _
@@ -185,11 +182,10 @@ theorem devComp_smul {F : GMod B R k} (hF : F.IsGr 𝒜) [Decomposition F.gr] {d
   rw [hsum, decompose_sum, DFinsupp.finsetSum_apply, AddSubmonoidClass.coe_finsetSum]
   simp_rw [hterm]
   rw [Finset.sum_eq_single (m - d)]
-  · rw [if_pos (sub_add_cancel m d)]
+  · rw [ite_eq_left (sub_add_cancel m d)]
   · intro j _ hj
-    rw [if_neg]
-    intro hjd
-    exact hj (eq_sub_of_add_eq hjd)
+    rw [ite_eq_right]
+    exact fun hjd => hj (eq_sub_of_add_eq hjd)
   · intro hns
     rw [DFinsupp.notMem_support_iff] at hns
     rw [hns]
@@ -239,8 +235,7 @@ theorem exists_prime_ker [IsNoetherianRing R] {G : GMod B R k} (hG : G.IsGr 𝒜
   · rintro a b ⟨i, ha⟩ _ hab
     by_cases hax : a • x = 0
     · left
-      rw [LinearMap.mem_ker, LinearMap.toSpanSingleton_apply]
-      exact hax
+      rwa [LinearMap.mem_ker, LinearMap.toSpanSingleton_apply]
     · right
       have hle : LinearMap.ker (LinearMap.toSpanSingleton R G.M x) ≤
           LinearMap.ker (LinearMap.toSpanSingleton R G.M (a • x)) := by
@@ -250,8 +245,7 @@ theorem exists_prime_ker [IsNoetherianRing R] {G : GMod B R k} (hG : G.IsGr 𝒜
       have heq := eq_of_le_of_not_lt hle
         (hmax _ ⟨i + d, a • x, hG.smul_mem ha hx, hax, rfl⟩)
       rw [heq, LinearMap.mem_ker, LinearMap.toSpanSingleton_apply, smul_smul, mul_comm]
-      rw [LinearMap.mem_ker, LinearMap.toSpanSingleton_apply] at hab
-      exact hab
+      rwa [LinearMap.mem_ker, LinearMap.toSpanSingleton_apply] at hab
 
 end Comp
 
@@ -343,8 +337,7 @@ theorem step (hGr : RuleGr) (X : HidaSetting k) (F : X.Mod) (hF : F.IsGr X.𝒜)
           rw [zero_smul]
           exact (Submodule.Quotient.mk_eq_zero N).2 n.2
         have h2 := key _ 0 h1
-        rw [map_zero] at h2
-        exact h2
+        rwa [map_zero] at h2
     · intro m
       ext y
       exact Iff.rfl
@@ -380,11 +373,8 @@ theorem good_bot (X : HidaSetting k) (F : X.Mod) : Good X F ⊥ := by
     change (⊥ : Submodule X.R F.M) = Submodule.span X.R
       {x | x ∈ (⊥ : Submodule X.R F.M) ∧ ∃ m, x ∈ F.gr m}
     symm
-    apply Submodule.span_eq_bot.2
-    intro x hx
-    exact (Submodule.mem_bot _).1 hx.1
-  · intro i hi
-    exact absurd hi (Nat.not_lt_zero i)
+    exact Submodule.span_eq_bot.2 (fun x hx => (Submodule.mem_bot _).1 hx.1)
+  · exact fun i hi => absurd hi (Nat.not_lt_zero i)
 
 theorem good_step (X : HidaSetting k) (F : X.Mod) {N₀ N' : Submodule X.R F.M} (h : Good X F N₀)
     (hle : N₀ ≤ N') (hN' : F.IsHomSub N') {𝔮' : Ideal X.R} {d' : Deg k} (h1 : 𝔮'.IsPrime)
@@ -394,28 +384,27 @@ theorem good_step (X : HidaSetting k) (F : X.Mod) {N₀ N' : Submodule X.R F.M} 
   obtain ⟨t, N, 𝔮, d, hN0, rfl, hhom, hmono, hstep⟩ := h
   refine ⟨t + 1, fun i => if i ≤ t then N i else N', Function.update 𝔮 t 𝔮',
     Function.update d t d', ?_, ?_, ?_, ?_, ?_⟩
-  · simp only [Nat.zero_le, if_true]
-    exact hN0
+  · simpa only [Nat.zero_le, ite_true] using hN0
   · simp
   · intro i
     by_cases hi : i ≤ t
-    · simp only [if_pos hi]; exact hhom i
-    · simp only [if_neg hi]; exact hN'
+    · simp only [ite_eq_left hi]; exact hhom i
+    · simp only [ite_eq_right hi]; exact hN'
   · intro i
     by_cases hi : i + 1 ≤ t
-    · simp only [if_pos hi, if_pos (Nat.le_of_succ_le hi)]; exact hmono i
+    · simp only [ite_eq_left hi, ite_eq_left (Nat.le_of_succ_le hi)]; exact hmono i
     · by_cases hi' : i ≤ t
       · have hit : i = t := by omega
         subst hit
-        simp only [if_neg hi, if_pos hi']; exact hle
-      · simp only [if_neg hi, if_neg hi']; exact le_rfl
+        simp only [ite_eq_right hi, ite_eq_left hi']; exact hle
+      · simp only [ite_eq_right hi, ite_eq_right hi']; exact le_rfl
   · intro i hi
     by_cases hit : i = t
     · subst hit
-      simp only [le_refl, if_true, Nat.succ_le_iff, lt_irrefl, if_false, Function.update_self]
+      simp only [le_refl, ite_true, Nat.succ_le_iff, lt_irrefl, ite_false, Function.update_self]
       exact ⟨h1, h2, h3, h4⟩
     · have hlt : i < t := by omega
-      simp only [if_pos hlt.le, if_pos (Nat.succ_le_of_lt hlt), Function.update_of_ne hit]
+      simp only [ite_eq_left hlt.le, ite_eq_left (Nat.succ_le_of_lt hlt), Function.update_of_ne hit]
       exact hstep i hlt
 
 theorem ruleDev : RuleGr → RuleDev := by
@@ -432,8 +421,7 @@ theorem ruleDev : RuleGr → RuleDev := by
       exact hhom t
     obtain ⟨N', 𝔮, d, hlt, hN', h1, h2, h3, h4⟩ := step hGr X F hF N hNhom hne
     exact hmax N' (good_step X F hN hlt.le hN' h1 h2 h3 h4) hlt
-  rw [htop] at hN
-  exact hN
+  rwa [htop] at hN
 
 end Main
 
@@ -461,8 +449,7 @@ theorem ruleIrr : RuleIrr := by
   intro y hy
   rw [Submodule.mem_bot]
   refine Submodule.smul_induction_on (hm y hy) ?_ ?_
-  · intro a ha z _
-    exact Module.mem_annihilator.1 (hN ha) z
+  · exact fun a ha z _ => Module.mem_annihilator.1 (hN ha) z
   · intro x y hx hy
     rw [hx, hy, add_zero]
 
@@ -493,8 +480,7 @@ theorem rulePos : RulePos := by
   intro k X ts
   induction ts with
   | nil =>
-    intro F _ _ _
-    exact Eventually.of_forall fun m => Int.natCast_nonneg _
+    exact fun F _ _ _ => Eventually.of_forall fun m => Int.natCast_nonneg _
   | cons p ts ih =>
     obtain ⟨d, s⟩ := p
     intro F hv hF hA
@@ -509,8 +495,7 @@ theorem rulePos : RulePos := by
     have := ih (((GMod.self X.𝒜).quo 𝔮).quot σ) (fun p hp => hv p (List.mem_cons_of_mem _ hp))
       ((ruleGr k X _ g0).2.2 d σ hσ).1 (admissible_mono_ideal X.𝒜 hle' hAσ)
     filter_upwards [hev, this] with m a b
-    rw [a]
-    exact b
+    rwa [a]
 
 end Formalism.MainNotions.V.Pf.V2.Calc
 end -- clump:auto

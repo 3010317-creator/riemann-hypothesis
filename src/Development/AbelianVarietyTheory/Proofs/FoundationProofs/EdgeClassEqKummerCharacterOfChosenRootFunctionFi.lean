@@ -65,8 +65,7 @@ variable {F K Ω : Type} [Field F] [Field K] [Field Ω] [Algebra F K] [Algebra F
 theorem _root_.GlobalTheory.K4.TopSpec.res_mem_geo (g : Ω ≃ₐ[K] Ω) :
     AlgEquiv.restrictScalarsHom F g ∈ _root_.GlobalTheory.K4.geo F K Ω := by
   rw [_root_.GlobalTheory.K4.TopW.mem_geo]
-  intro z
-  exact g.commutes z
+  exact fun z => g.commutes z
 
 open Polynomial in
 variable {F K Ω : Type} [Field F] [Field K] [Field Ω] [Algebra F K] [Algebra F Ω] [Algebra K Ω]
@@ -196,8 +195,7 @@ theorem _root_.GlobalTheory.K4.isTopW_topW : ∀ (k K Ω F : Type) [Field k]
   have hadd : ∀ g ∈ (⊥ : IntermediateField K Ω).fixingSubgroup,
       ∀ h ∈ (⊥ : IntermediateField K Ω).fixingSubgroup, χ (g * h) = χ g + χ h := by
     intro g _ h _
-    simp only [χ, map_mul]
-    exact hhom σ _ (hmem g) _ (hmem h)
+    simpa only [χ, map_mul] using hhom σ _ (hmem g) _ (hmem h)
   obtain ⟨θ, hθ0, hθN, hθ⟩ :=
     _root_.GlobalTheory.kummer_generator_of_char K Ω N ζ hN hζ (fun g => hfix (AlgEquiv.restrictScalarsHom F g)) ⊥ χ hlc hadd
   obtain ⟨w, hw⟩ := IntermediateField.mem_bot.mp hθN

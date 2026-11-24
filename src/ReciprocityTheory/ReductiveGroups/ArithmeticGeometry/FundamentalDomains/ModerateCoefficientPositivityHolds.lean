@@ -110,8 +110,7 @@ theorem slice_bound {x : Frame X.Ψ r} (hx : x ∈ X.dom) {ξ : Fin r → E} (h�
     simp only [hfun, hs]
   have hsim : (fun τ => (s τ).im) = fun τ => ∑ j, b j * ω j τ := funext him
   have hdom : X.flow ξ s x ∈ X.dom := by
-    rw [AdmissibleHermitianColumns.flow_mem_dom_iff (X := X) hξ.2.1 x hx, hsim]
-    exact hb
+    rwa [AdmissibleHermitianColumns.flow_mem_dom_iff (X := X) hξ.2.1 x hx, hsim]
   have hbd : ∀ τ, |(s τ).re| ≤ Bω X ω := by
     intro τ
     rw [hre]
@@ -130,8 +129,7 @@ theorem slice_bound {x : Frame X.Ψ r} (hx : x ∈ X.dom) {ξ : Fin r → E} (h�
     · intro h
       apply hξ.2.2
       funext a
-      have ha := congrFun h a
-      simpa [Data.emb] using ha
+      simpa [Data.emb] using congrFun h a
   have hflowV : X.flowV (fun τ => Data.emb τ.1 ξ) s x = X.flow ξ s x := rfl
   have hN := (m3bNorm_holds (E := E) r X (fun τ => Data.emb τ.1 ξ) hisoV la x hx s
     (by rw [hflowV]; exact hdom)).2
@@ -180,15 +178,13 @@ theorem moderateCoefficientPositivity_holds : ModerateCoefficientPositivity (E :
   have hωp : ∀ j, ω j ∈ X.periods la := by
     intro j
     have : ω j ∈ Submodule.span ℤ (Set.range ω) := Submodule.subset_span ⟨j, rfl⟩
-    rw [hω] at this
-    exact this
+    rwa [hω] at this
   have hfreq : ∀ (ν : X.Ψ → ℝ) (ξ : Fin r → E) (x : Frame X.Ψ r),
       ¬ (∀ j, ∃ k : ℤ, 2 * ∑ τ, ν τ * ω j τ = k) → X.fj la ξ ν P x = 0 := by
     intro ν ξ x hj
     unfold Data.fj
-    rw [if_neg]
-    intro hall
-    exact hj fun j => hall _ (hωp j)
+    rw [ite_eq_right]
+    exact fun hall => hj fun j => hall _ (hωp j)
   have hsum : ∀ (ν : X.Ψ → ℝ) (k : Fin (Fintype.card X.Ψ) → ℤ), (∀ j, 2 * ∑ τ, ν τ * ω j τ = k j) →
       ∀ (b : Fin (Fintype.card X.Ψ) → ℝ), ∑ j, (k j : ℝ) * b j = 2 * ∑ τ, ν τ * ∑ j, b j * ω j τ := by
     intro ν k hk b
@@ -329,9 +325,9 @@ theorem moderateCoefficientPositivity_holds : ModerateCoefficientPositivity (E :
             intro τ; rw [hbt]; exact hq t τ
           simp only [hq']
           rw [Finset.prod_eq_single τ0 (fun τ _ hτ => by simp [hτ]) (fun h => absurd (Finset.mem_univ _) h)]
-          simp only [if_true]
+          simp only [ite_true]
           obtain ⟨hQ1, hQ2⟩ := hQ τ0
-          simp only [if_true] at hQ1 hQ2
+          simp only [ite_true] at hQ1 hQ2
           rw [max_eq_left (inv_le_one_of_one_le₀ hQ1 |>.trans hQ1)]
           calc (1 + X.c τ0 * m τ0 * t) ^ (X.spread la τ0 / 2) ≤ (1 + X.c τ0 * m τ0 * t) ^ (|w| / 2) :=
                 Real.rpow_le_rpow_of_exponent_le hQ1 (by simp only [w]; linarith [le_abs_self (X.spread la τ0)])
@@ -373,7 +369,7 @@ theorem moderateCoefficientPositivity_holds : ModerateCoefficientPositivity (E :
       have := fun τ => hκ 1 τ
       simp only [one_mul] at this
       simp only [this, he0_def, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-        if_true]
+        ite_true]
     rw [h2] at hsign
     linarith
   ·
@@ -419,8 +415,7 @@ theorem moderateCoefficientPositivity_holds : ModerateCoefficientPositivity (E :
       show (fun τ => ∑ j, b' j * ω j τ) ∈ AdmissibleHermitianColumns.admissibleImaginary X ξ x
       rw [mem_admissibleImaginary_iff X hx hξ]
       intro τ
-      rw [hqη]
-      exact hη0
+      rwa [hqη]
     have hind := ReciprocityTheory.L2DbarEstimates.Y.four_indep (Fintype.card X.Ψ) (Om X ξ x ω) (hfun X P ξ x ω) (Om_open_conn X ω hx).1
       (Om_open_conn X ω hx).2 (hfun_diff X ω P la hP hx hξ) (hfun_periodic X ω P la hP hx hξ hω)
       0 (zero_mem_Om X ω hx hξ) b' hb'Ω k
@@ -437,8 +432,7 @@ theorem moderateCoefficientPositivity_holds : ModerateCoefficientPositivity (E :
           _ = B := mul_one B
       have h0 : 0 ≤ X.c τ * |ρ| * X.maj x τ (Data.emb τ.1 ξ) := by
         have := hc τ; have := hm τ; simp only [m] at this; positivity
-      simp only [K]
-      exact pow_le_pow_left₀ (by linarith) (by linarith) 2
+      simpa only [K] using pow_le_pow_left₀ (by linarith) (by linarith) 2
     have hslice : ∀ y : Fin (Fintype.card X.Ψ) → ℝ, ‖hfun X P ξ x ω (fun k => (y k : ℂ) + (b' k : ℂ) * I)‖ ≤
         Cη * X.la1 x ^ (-A) / X.nfac la x := by
       intro y
@@ -458,8 +452,7 @@ theorem moderateCoefficientPositivity_holds : ModerateCoefficientPositivity (E :
           rw [hqη, hmax, div_eq_inv_mul]
           exact mul_le_mul_of_nonneg_left (hKρ τ ρ hρ) (inv_nonneg.mpr hη0.le))
         (by simp only [hqη]; exact le_refl _) y
-      rw [le_div_iff₀ hnx]
-      exact hsb
+      rwa [le_div_iff₀ hnx]
     have hbd := ReciprocityTheory.L2DbarEstimates.Y.four_bound (Fintype.card X.Ψ) (hfun X P ξ x ω) b' k _ hslice
     rw [hsum ν k hk b'] at hbd
     have hexp : -2 * Real.pi * (2 * ∑ τ, ν τ * ∑ j, b' j * ω j τ) =

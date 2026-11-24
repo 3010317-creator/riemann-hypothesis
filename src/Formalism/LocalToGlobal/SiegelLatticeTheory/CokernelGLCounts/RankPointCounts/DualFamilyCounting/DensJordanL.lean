@@ -49,8 +49,7 @@ theorem jl_latP_span (hA : Agree δ M p) (S : Set (VS D).V) :
     rintro _ ⟨x, hx, rfl⟩
     refine Submodule.span_induction
       (p := fun x _ => L.bc p x ∈ Submodule.span (M p).L.O (L.bc p '' S)) ?_ ?_ ?_ ?_ hx
-    · intro y hy
-      exact Submodule.subset_span ⟨y, hy, rfl⟩
+    · exact fun y hy => Submodule.subset_span ⟨y, hy, rfl⟩
     · rw [map_zero]
       exact zero_mem _
     · intro y z _ _ hy hz
@@ -140,8 +139,7 @@ theorem jl_unit_iff (t : 𝓞 D.host.F) :
   · intro hu ht
     obtain ⟨y, hy⟩ := isUnit_iff_exists_inv.mp hu
     have hy' : (D.s.atP p).ιF (t : D.host.F) * (y : (D.s.atP p).Fp) = 1 := by
-      have h := congrArg Subtype.val hy
-      simpa using h
+      simpa using congrArg Subtype.val hy
     have hne : (D.s.atP p).ιF (t : D.host.F) ≠ 0 := left_ne_zero_of_mul_eq_one hy'
     apply jl_not_inv_mem p t ht hne
     rw [inv_eq_of_mul_eq_one_right hy']

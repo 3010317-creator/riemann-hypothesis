@@ -222,8 +222,7 @@ theorem continuous_of_iota (i : N.Loc) {Y : Type} [TopologicalSpace Y] (u : Y �
     (Metric.tendsto_nhds.1 (hd.tendsto g) δ hδ).mono fun x hx => by simpa [dist_eq_norm] using hx
   filter_upwards [hcd] with x hx
   apply hk
-  rw [map_sub]
-  exact hx
+  rwa [map_sub]
 
 private theorem diagM_ss_local {Γ k : Type} [Group Γ] [Field k] :
     ∀ {t : ℕ} (χ : Fin t → Γ →* kˣ), IsSSRep (GlobalTheory.SSComplement.diagM χ).toHomUnits := by

@@ -96,8 +96,7 @@ theorem eventually_eq_zero [T2Space A] (h : ∃ U ∈ 𝓝 (0 : A), ∀ x : E, �
     filter_upwards [hs.eventually h1] with m hm ω hω he
     exact absurd he (hm ω hω)
   obtain ⟨m₀, hm₀⟩ := eventually_atTop.1 ((eventually_all_finite hfin).2 fun x _ => hev x)
-  refine ⟨m₀, fun m hm ω hω x hx => hm₀ m hm x ?_ ω hω hx⟩
-  exact ⟨(s ^ m, ω), ⟨Or.inr ⟨m, rfl⟩, hω⟩, hx.symm⟩
+  exact ⟨m₀, fun m hm ω hω x hx => hm₀ m hm x ⟨(s ^ m, ω), ⟨Or.inr ⟨m, rfl⟩, hω⟩, hx.symm⟩ ω hω hx⟩
 
 end Abstract
 
@@ -112,8 +111,7 @@ theorem tendsto_halfInf_pow (F : Type) [Field F] [NumberField F] :
       norm_num
     exact tendsto_pow_atTop_nhds_zero_of_norm_lt_one h
   have h2 : Tendsto (fun m : ℕ => (1 : FiniteAdeleRing (𝓞 F) F) ^ m) atTop (𝓝 1) := by
-    simp only [one_pow]
-    exact tendsto_const_nhds
+    simpa only [one_pow] using tendsto_const_nhds
   exact h1.prodMk_nhds h2
 
 theorem finite_and_eventually_eq_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (Ω : Set (AF F ⊗[F] E)), IsCompact Ω → {x : E | inclR (F := F) (AF F) x ∈ Ω}.Finite ∧ ∃ m₀ : ℕ, ∀ m, m₀ ≤ m → ∀ ω ∈ Ω, ∀ x : E, inclR (F := F) (AF F) x = (halfE F E).1 ^ m * ω → x = 0 := by
@@ -130,8 +128,7 @@ theorem finite_and_eventually_eq_zero : ∀ (F E : Type) [Field F] [NumberField 
   · have hc : Continuous (algebraMap (AF F) (AF F ⊗[F] E)) :=
       IsModuleTopology.continuous_of_linearMap (Algebra.linearMap (AF F) (AF F ⊗[F] E))
     have := (hc.tendsto _).comp (tendsto_halfInf_pow F)
-    refine this.congr fun m => ?_
-    exact map_pow (algebraMap (AF F) (AF F ⊗[F] E)) _ m
+    exact this.congr fun m => map_pow (algebraMap (AF F) (AF F ⊗[F] E)) _ m
   · have h0 : algebraMap (AF F) (AF F ⊗[F] E) (0, 1) * algebraMap (AF F) (AF F ⊗[F] E) (1, 0) = 0 := by
       refine (map_mul (algebraMap (AF F) (AF F ⊗[F] E)) _ _).symm.trans ?_
       refine (congrArg (algebraMap (AF F) (AF F ⊗[F] E)) ?_).trans (map_zero _)

@@ -76,8 +76,7 @@ theorem ker_isMultiHomogIdeal [DecidableEq K] {E : Type*} [Field E] (ψ : MRing 
   have hc : weightedHomogeneousComponent (blockWeight k) d g ∈ RingHom.ker (RegularityFunctionFieldNumber.specMap ψ ∅) := by
     rw [RingHom.mem_ker] at hg ⊢
     rw [specMap_component, hg, map_zero]
-  rw [← weightedDecomposition.decompose'_apply] at hc
-  exact hc
+  rwa [← weightedDecomposition.decompose'_apply] at hc
 
 end RegularityValuationCentre
 
@@ -183,14 +182,12 @@ theorem RegularityValuationCentre.proof : RegularityValuationCentre.Statement :=
     exact lt_irrefl 1
   · rw [hform _ 0 hC]
     have hCn : chartHom r (C n) = (n : funField P) := eval₂Hom_C _ _ _
-    rw [hCn]
-    exact hn
+    rwa [hCn]
   ·
     obtain ⟨u, w, a, hu, hw, hwW, e⟩ := LocRingFrac.proof K ι P _ hPp hWp hPW z hz
     have hzw : z * chartHom r w = chartHom r u :=
       Subtype.ext <| mul_right_cancel₀ (toFrac_prod_ne_zero j hjP a) <| by
-        rw [Subring.coe_mul, mul_assoc, chartHom_mul j r hr hw, chartHom_mul j r hr hu]
-        exact e
+        rwa [Subring.coe_mul, mul_assoc, chartHom_mul j r hr hw, chartHom_mul j r hr hu]
     have hvw : v (chartHom r w) = 1 :=
       le_antisymm (hψle w) (not_lt.mp fun h => hwW ((hform w a hw).mpr h))
     have h1 := congrArg v hzw

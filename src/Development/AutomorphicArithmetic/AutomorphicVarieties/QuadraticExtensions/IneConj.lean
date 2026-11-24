@@ -86,8 +86,6 @@ theorem UpperTheory.V.Two.ineConj :
   rintro N s ⟨A, hA, hs⟩
   have hA' : v • (v⁻¹ • A) = A := smul_inv_smul v A
   refine ⟨v⁻¹ • A, ?_, ?_⟩
-  · rw [← p2, hA']
-    exact hA
+  · rwa [← p2, hA']
   · apply p1
-    rw [hA']
-    exact hs
+    rwa [hA']

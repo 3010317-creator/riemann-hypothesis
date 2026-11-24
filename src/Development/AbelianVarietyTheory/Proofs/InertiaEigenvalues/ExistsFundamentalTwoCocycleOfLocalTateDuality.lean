@@ -80,8 +80,7 @@ theorem exists_fundamental_cocycle_loc (hT : Formalism.GaloisCohomology.LocalTat
   refine ⟨Φ.symm.surjective.compactSpace hΦ1, χZ.comp Φ.toMonoidHom, _, hχc.comp hΦ2,
     fun g => ?_, fun r => (hc r).transport Φ hΦ2 hΦ1, fun r hr => ?_⟩
   · have h1 := hχZ (Φ g)
-    rw [show Φ.symm (Φ g) = g from Φ.symm_apply_apply g, ← P.PD_χ K g] at h1
-    exact h1
+    rwa [show Φ.symm (Φ g) = g from Φ.symm_apply_apply g, ← P.PD_χ K g] at h1
   · have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     have hfin := (_root_.GlobalTheory.finite_H1_H2_of_localTateDuality hT l K.1 K.2 r (ZMod (l ^ r))
       (ReciprocityTheory.Gal.charRep (redChar χZ r)) hr

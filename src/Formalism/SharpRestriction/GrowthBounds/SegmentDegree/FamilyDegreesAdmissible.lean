@@ -126,8 +126,7 @@ theorem sum_eZ_val (e : Fin X.F.J → Fin r → ℕ) (j : Fin X.F.J) : X.eZ e (j
   congr 1
   apply Fin.ext
   have h1 : ((j.val : ℤ) % (X.F.J : ℤ)) = j.val := Int.emod_eq_of_lt (by omega) (by exact_mod_cast j.isLt)
-  simp only [h1, Int.toNat_natCast]
-  exact Nat.mod_eq_of_lt j.isLt
+  simpa only [h1, Int.toNat_natCast] using Nat.mod_eq_of_lt j.isLt
 
 theorem sum_late_mem {j x : ℤ} (hx : x ∈ X.toLate j) :
     x ∈ X.F.letters j ∧ ¬ X.F.IsW j x ∧ x ≤ X.F.fr j (r - 1) ∧ posOf n' x ∈ X.F.TT := by
@@ -141,10 +140,10 @@ theorem sum_bfam_late (la : Fin n' → Fin (r + K) → ℕ) (e : Fin X.F.J → F
     X.bfam p K la e (j.val : ℤ) x = X.setTau (j.val : ℤ) (X.nz p K la (j.val : ℤ)) (e j) x := by
   obtain ⟨h1, h2, h3, -⟩ := sum_late_mem hx
   unfold Dat.bfam Dat.setTau
-  rw [if_pos h1, if_neg h2, sum_eZ_val]
+  rw [ite_eq_left h1, ite_eq_right h2, sum_eZ_val]
   by_cases h : X.F.fr (j.val : ℤ) 0 ≤ x
-  · rw [if_pos h, if_pos ⟨h, h3⟩]
-  · rw [if_neg h, if_neg (fun hh => h hh.1)]
+  · rw [ite_eq_left h, ite_eq_left ⟨h, h3⟩]
+  · rw [ite_eq_right h, ite_eq_right (fun hh => h hh.1)]
 
 theorem family_degrees_admissible (hr : 0 < r) (hp : 0 < p) (hLL : ∀ j x, x ∈ X.F.LLset j → x ∈ X.toLate j)
     (la : Fin n' → Fin (r + K) → ℕ) (hla : la ∈ X.LA p K) (j : ℤ) :
@@ -173,8 +172,7 @@ theorem family_degrees_admissible (hr : 0 < r) (hp : 0 < p) (hLL : ∀ j x, x �
     exact_mod_cast hslt
   rw [hcast]
   constructor
-  · rw [sub_div, sub_lt_sub_iff_left, div_lt_iff₀ hPr]
-    exact hslt'
+  · rwa [sub_div, sub_lt_sub_iff_left, div_lt_iff₀ hPr]
   · exact div_le_div_of_nonneg_right (by have : (0 : ℝ) ≤ s := Nat.cast_nonneg _; linarith) hPr.le
 
 theorem first_sum_factor_bounds (hY : 1 ≤ X.Y) (ha : 32 * X.Y ≤ X.a) (hNs : 1 ≤ X.Ns) :

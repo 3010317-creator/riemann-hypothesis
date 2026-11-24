@@ -65,12 +65,10 @@ lemma alg_of (x : D) (p : C[X]) (n : ℕ) (hn : v (p.coeff n) ∉ Q) (hp : p.eva
     simp only [coeff_map, coeff_zero] at this
     apply hn
     rw [← Ideal.Quotient.eq_zero_iff_mem]
-    have h2 := congrArg Subtype.val this
-    simpa using h2
+    simpa using congrArg Subtype.val this
   · rw [aeval_def, eval₂_map]
     have : (algebraMap (phi v Q).range (D ⧸ Q)).comp (phi v Q).rangeRestrict = phi v Q := phi_comp v Q
-    rw [this, phi, ← Polynomial.hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
-    exact hp
+    rwa [this, phi, ← Polynomial.hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
 
 lemma of_alg (x : D) (h : IsAlgebraic (phi v Q).range (Ideal.Quotient.mk Q x)) :
     ∃ p : C[X], (∃ n, v (p.coeff n) ∉ Q) ∧ p.eval₂ v x ∈ Q := by
@@ -87,8 +85,7 @@ lemma of_alg (x : D) (h : IsAlgebraic (phi v Q).range (Ideal.Quotient.mk Q x)) :
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hall n)
   · rw [aeval_def, eval₂_map] at hq
     have : (algebraMap (phi v Q).range (D ⧸ Q)).comp (phi v Q).rangeRestrict = phi v Q := phi_comp v Q
-    rw [this, phi, ← Polynomial.hom_eval₂, Ideal.Quotient.eq_zero_iff_mem] at hq
-    exact hq
+    rwa [this, phi, ← Polynomial.hom_eval₂, Ideal.Quotient.eq_zero_iff_mem] at hq
 end
 
 end LateralTheory.E.PushPf
@@ -145,7 +142,7 @@ theorem Push_of : LateralTheory.E.AlgResPropsPf.Push := by
         simpa using this }
   have hv : ∀ c, v.hom c ∈ T := fun c => by
     refine alg_of v.hom Q (v.hom c) (X - Polynomial.C c) 1 ?_ ?_
-    · simp only [coeff_sub, coeff_X_one, coeff_C, one_ne_zero, if_false, sub_zero, map_one]
+    · simp only [coeff_sub, coeff_X_one, coeff_C, one_ne_zero, ite_false, sub_zero, map_one]
       exact fun h1 => hQ.ne_top ((Ideal.eq_top_iff_one Q).2 h1)
     · simp [Q.zero_mem]
   have hu : ∀ b, u.hom b ∈ T := fun b => by
@@ -153,8 +150,7 @@ theorem Push_of : LateralTheory.E.AlgResPropsPf.Push := by
     refine alg_of v.hom Q (u.hom b) (p.map g.hom) n ?_ ?_
     · rw [coeff_map, ← hw]; exact hn
     · have hc : v.hom.comp g.hom = u.hom.comp f.hom := by ext a; exact (hw a).symm
-      rw [eval₂_map, hc, ← Polynomial.hom_eval₂]
-      exact hp
+      rwa [eval₂_map, hc, ← Polynomial.hom_eval₂]
   exact of_alg v.hom Q d (gen f g u v h T hu hv d)
 
 end LateralTheory.E.PushPf

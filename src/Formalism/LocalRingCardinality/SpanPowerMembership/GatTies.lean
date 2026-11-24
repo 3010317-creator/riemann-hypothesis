@@ -222,23 +222,23 @@ theorem of_cls (h : H.cls p = .inertClass) : p ∉ H.small ∧ p ≠ H.q ∧ p �
     jacobiSym (-(H.d : ℤ)) p ≠ 1 ∧ H.psAt p ≠ 1 := by
   unfold Host.cls primeClass at h
   by_cases h1 : p ∈ H.small
-  · rw [if_pos h1] at h
+  · rw [ite_eq_left h1] at h
     cases h
-  rw [if_neg h1] at h
+  rw [ite_eq_right h1] at h
   by_cases h2 : p = H.q
-  · rw [if_pos h2] at h
+  · rw [ite_eq_left h2] at h
     cases h
-  rw [if_neg h2] at h
+  rw [ite_eq_right h2] at h
   by_cases h3 : p = H.d
-  · rw [if_pos h3] at h
+  · rw [ite_eq_left h3] at h
     cases h
-  rw [if_neg h3] at h
+  rw [ite_eq_right h3] at h
   by_cases h4 : jacobiSym (-(H.d : ℤ)) p = 1
-  · rw [if_pos h4] at h
+  · rw [ite_eq_left h4] at h
     cases h
-  rw [if_neg h4] at h
+  rw [ite_eq_right h4] at h
   by_cases h5 : H.psAt p = 1
-  · rw [if_pos h5] at h
+  · rw [ite_eq_left h5] at h
     cases h
   exact ⟨h1, h2, h3, h4, h5⟩
 
@@ -297,9 +297,7 @@ def inPsi (φ : Formalism.HC.Frame) : φ.MA →* ↥φ.Psi :=
   (MonoidHom.inr G0 φ.MA).codRestrict φ.Psi (fun _ => rfl)
 
 theorem inPsi_inj (φ : Formalism.HC.Frame) : Function.Injective (inPsi φ) := by
-  intro a b h
-  have h' := congrArg (fun x : ↥φ.Psi => (Subtype.val x).2) h
-  exact h'
+  exact fun a b h => congrArg (fun x : ↥φ.Psi => (Subtype.val x).2) h
 
 theorem order_spec (φ : Formalism.HC.Frame) (h : φ.MA) (h1 : Even (orderOf h)) :
     orderOf (inPsi φ h) = orderOf h ∧ 2 ≤ orderOf (inPsi φ h) ∧ Even (orderOf (inPsi φ h)) := by
@@ -372,8 +370,7 @@ theorem position_succ_eq_mul_frobenius (S : Served H p) (T : Set ↥(R.Psi)) {Ta
   rw [Equiv.trans_apply, Equiv.trans_apply, Equiv.apply_symm_apply, Equiv.apply_symm_apply,
     posPsi_step, Subgroup.coe_mul, mul_assoc, @frob_val R H p S.prime S.cls P _ _ σ hσ]
   congr 1
-  simp [gPsi, inPsi, Formalism.HC.Frame.cc, Prod.ext_iff]
-  exact ⟨⟨rfl, rfl⟩, rfl⟩
+  simpa [gPsi, inPsi, Formalism.HC.Frame.cc, Prod.ext_iff] using ⟨⟨rfl, rfl⟩, rfl⟩
 
 theorem served_of {T : ℕ} (h : GIdx H T p) : Served H p := by
   obtain ⟨h1, h2, h3, h4, _⟩ := h

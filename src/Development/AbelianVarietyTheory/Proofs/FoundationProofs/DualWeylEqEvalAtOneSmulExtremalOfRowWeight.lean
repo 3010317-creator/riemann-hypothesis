@@ -65,8 +65,7 @@ theorem rowDeg_dominated_of_mem_nabla {K : Type} [Field K] {N : ℕ} (la : Fin N
     obtain ⟨k, sz, hsz, I, hshape, rfl⟩ := hx
     intro m hm
     have h := bidetDominance K N N k sz hsz I m hm
-    rw [hshape] at h
-    exact h
+    rwa [hshape] at h
   | zero =>
     intro m hm
     simp at hm
@@ -76,8 +75,7 @@ theorem rowDeg_dominated_of_mem_nabla {K : Type} [Field K] {N : ℕ} (la : Fin N
     · exact hx m h
     · exact hy m h
   | smul c x _ hx =>
-    intro m hm
-    exact hx m (support_smul hm)
+    exact fun m hm => hx m (support_smul hm)
 
 theorem eq_evalAt_one_smul_extremal_of_rowWeight (K : Type) [Field K] [Infinite K] (N : ℕ) (la : Fin N → ℕ)
     (hla : Antitone la) (f : Pol N K) (hf : f ∈ nabla la K)
@@ -104,7 +102,6 @@ theorem eq_evalAt_one_smul_extremal_of_rowWeight (K : Type) [Field K] [Infinite 
     nlinarith
   have h1 : evalAt 1 f = c := by
     rw [hc, map_smul, evalAt_one_extremal, smul_eq_mul, mul_one]
-  rw [h1]
-  exact hc
+  rwa [h1]
 
 end GlobalTheory.DualWeyl

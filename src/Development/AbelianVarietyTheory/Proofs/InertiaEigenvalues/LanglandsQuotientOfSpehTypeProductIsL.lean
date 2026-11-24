@@ -103,8 +103,7 @@ theorem speh_quotient_isL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   have hM' : ∑ p, (Y p).1 = n := by
     rw [← hdn, ← finProdFinEquiv.sum_comp, Fintype.sum_prod_type]
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [Y, Equiv.symm_apply_apply]
-    exact hN i
+    simpa only [Y, Equiv.symm_apply_apply] using hN i
   let e1 : ∀ i : Fin d, (twist σ (detChar (Fin a) (absPow k (((d : ℂ) - 1) / 2 - (i : ℕ))))).Equiv
       (prodIrr (y i) (hN i)) :=
     fun i => (twistEquiv φ _).trans (prodIrrTwistEquiv _ hd _ (isSmoothChar_absPow _))
@@ -116,8 +115,7 @@ theorem speh_quotient_isL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   have hcast : ∀ i : ℕ, (((((d : ℝ) - 1) / 2 - i : ℝ)) : ℂ) = ((d : ℂ) - 1) / 2 - (i : ℕ) := fun i => by
     push_cast; ring
   have hL : ∀ p, IsLSeg (Γs p) (Y p).rep := fun p => by
-    simp only [Γs, Y, y, hcast]
-    exact isLSeg_nu (isLSeg_nu (hΔ _) _) _
+    simpa only [Γs, Y, y, hcast] using isLSeg_nu (isLSeg_nu (hΔ _) _) _
   have hord : ∀ p p' : Fin (d * m), p < p' → ¬ (Γs p).Precedes (Γs p') := by
     intro p p' hpp' hP
     obtain ⟨⟨i, j⟩, rfl⟩ := finProdFinEquiv.surjective p

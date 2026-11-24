@@ -82,8 +82,7 @@ lemma rank_bound {dim : (E →+* ℂ) → ℕ} (L I : Submodule ℤ (Vsp dim))
 
       rw [map_sum]; simpa [map_mul, map_intCast] using h2
     have h4 : ∑ j, ((m (j, s) : ℚ)) • (ω j : E) = 0 := by
-      have h5 := (map_eq_zero_iff σ σ.injective).mp h3
-      simpa [Rat.smul_def] using h5
+      simpa [Rat.smul_def] using (map_eq_zero_iff σ σ.injective).mp h3
     have h6 := Fintype.linearIndependent_iff.mp hω (fun j => (m (j, s) : ℚ)) h4 j
     exact_mod_cast h6
 
@@ -101,8 +100,7 @@ lemma rank_bound {dim : (E →+* ℂ) → ℕ} (L I : Submodule ℤ (Vsp dim))
         rw [← Finset.smul_sum, hc, smul_zero]
       simp only [y, Int.fract, sub_smul, Finset.sum_sub_distrib, h0, zero_sub]
       congr 1
-      refine Finset.sum_congr rfl fun q _ => ?_
-      exact (Int.cast_smul_eq_zsmul ℝ _ _).symm
+      exact Finset.sum_congr rfl fun q _ => (Int.cast_smul_eq_zsmul ℝ _ _).symm
     have hyn : ∀ k, ‖y k‖ ≤ ∑ q, ‖v q‖ := by
       intro k
       rw [hyeq]

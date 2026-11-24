@@ -59,14 +59,14 @@ private theorem wcomp_mul_homog (O : Type) [CommRing O] {σ X : Type} [AddCommGr
   · refine Finset.sum_congr rfl fun p hp => ?_
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = w
-    · rw [coeff_wcomp, if_pos]
+    · rw [coeff_wcomp, ite_eq_left]
       rw [← h, ← hp', map_add (f := _), h2, add_sub_cancel_right]
     · rw [he _ h2, mul_zero, mul_zero]
   · symm
     refine Finset.sum_eq_zero fun p hp => ?_
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = w
-    · rw [coeff_wcomp, if_neg, zero_mul]
+    · rw [coeff_wcomp, ite_eq_right, zero_mul]
       intro h1
       apply h
       rw [← hp', map_add (f := _), h1, h2, sub_add_cancel]
@@ -127,8 +127,7 @@ private theorem span_coeffs {O R X κ N : Type} [CommRing O] [CommRing R] [Algeb
     conv_lhs => rw [hsum]
 
     rw [map_sum]
-    simp only [key, Finset.sum_mul]
-    exact Finset.sum_comm
+    simpa only [key, Finset.sum_mul] using Finset.sum_comm
 
 end SlopeTestRemainingChoices
 
@@ -175,5 +174,4 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.kerA :
     exact hle hf
   · rintro n x ⟨f, hf, hfx⟩
     exact ⟨⟨f, M.aPart_le (n := n) hf⟩, hf, Subtype.ext hfx⟩
-  · intro n f hf
-    exact ⟨f, hf, rfl⟩
+  · exact fun n f hf => ⟨f, hf, rfl⟩

@@ -192,16 +192,13 @@ theorem exists_unit (x y z : ℕ) (hx : Nat.Coprime x (2 ^ (e + 2))) (hy : Nat.C
   have hm2 : m ≡ y [MOD q] := (hm12.of_dvd (dvd_mul_left _ _)).trans hn2
   have c1 : Nat.Coprime m (2 ^ (e + 2)) := by
     unfold Nat.Coprime
-    rw [hm1.gcd_eq]
-    exact hx
+    rwa [hm1.gcd_eq]
   have c2 : Nat.Coprime m q := by
     unfold Nat.Coprime
-    rw [hm2.gcd_eq]
-    exact hy
+    rwa [hm2.gcd_eq]
   have c3 : Nat.Coprime m d := by
     unfold Nat.Coprime
-    rw [hm3.gcd_eq]
-    exact hz
+    rwa [hm3.gcd_eq]
   have cN : Nat.Coprime m (2 ^ (e + 2) * q * d) := (c1.mul_right c2).mul_right c3
   refine ⟨ZMod.unitOfCoprime m cN, ?_, ?_, ?_⟩ <;> rw [ZMod.coe_unitOfCoprime, ZMod.val_natCast]
   · exact ((Nat.mod_modEq m _).of_dvd (two_dvd e q d)).trans hm1
@@ -251,7 +248,7 @@ theorem exists_art (g : FrobeniusOrbits.GG e) (x y z : ℕ) (v : (ZMod (2 ^ (e +
       rw [← hy]
       exact Units.ne_zero _
     have h1 := mt jacobiSym.eq_zero_iff_not_coprime.mpr h0
-    push_neg at h1
+    push Not at h1
     rwa [Int.gcd_natCast_natCast] at h1
   have hz' : Nat.Coprime z d := by
     haveI : NeZero d := ⟨hH.2.1.ne_zero⟩
@@ -259,7 +256,7 @@ theorem exists_art (g : FrobeniusOrbits.GG e) (x y z : ℕ) (v : (ZMod (2 ^ (e +
       rw [← hz]
       exact Units.ne_zero _
     have h1 := mt jacobiSym.eq_zero_iff_not_coprime.mpr h0
-    push_neg at h1
+    push Not at h1
     rwa [Int.gcd_natCast_natCast] at h1
   obtain ⟨u, h1, h2, h3⟩ := exists_unit e hH x y z hx' hy' hz'
   refine ⟨u, h1, h2, h3, Prod.ext (Prod.ext (Units.ext ?_) (Units.ext ?_)) ?_⟩

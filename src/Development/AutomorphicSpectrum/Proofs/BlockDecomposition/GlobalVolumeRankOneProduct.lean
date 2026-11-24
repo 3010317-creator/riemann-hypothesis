@@ -158,8 +158,7 @@ theorem arch_lb (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M a : ℕ) (J : Mat
   have hW' : IsOpen (eV.symm ⁻¹' W) := hW.preimage eV.symm.continuous
   have hx0W : eV x ∈ eV.symm ⁻¹' W := by
     show eV.symm (eV x) ∈ W
-    rw [Homeomorph.symm_apply_apply]
-    exact hxW
+    rwa [Homeomorph.symm_apply_apply]
   obtain ⟨c, hc0, hct, N', hN', hlb'⟩ :=
     PI.VolStabS.submLB_holds n m _ _ hμ' hν' f' hf' (eV x) (hsurj x hx) _ hW' hx0W
   have hfx0 : f' (eV x) = eH S0 := by
@@ -189,10 +188,8 @@ theorem arch_lb (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M a : ℕ) (J : Mat
     · rintro ⟨⟨s, hs, hsX⟩, h2⟩
       refine ⟨?_, h2⟩
       have : s = eH.symm (f' (eV X)) := Subtype.ext (hsX.trans (hG X).symm)
-      rw [← this]
-      exact hs
-  rw [e1, e2] at h
-  exact h
+      rwa [← this]
+  rwa [e1, e2] at h
 
 end Arch
 

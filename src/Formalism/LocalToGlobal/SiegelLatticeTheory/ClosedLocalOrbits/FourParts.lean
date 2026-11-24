@@ -114,7 +114,7 @@ theorem gval_eq_zero_of_inSF {T T' : E} (hT : star T = T) {F : LFlag S r T} {F' 
       exact Fin.snoc_last (α := fun _ => S.V) (p := G.fl.e) (x := G.fl.z)
     have hD1 : Dl F.fl F'.fl 1 = -T' := by
       simp only [Dl, leadMinorE]
-      simp only [Nat.le_refl, dif_pos, Matrix.det_unique]
+      simp only [Nat.le_refl, dite_eq_left, Matrix.det_unique]
       show S.hT (F.fl.fvec _) (F'.fl.fvec _) = -T'
       rw [hf F, hf F', hz, F.fl.z_norm]
     have hD0 : Dl F.fl F'.fl 0 = 1 := by
@@ -132,12 +132,11 @@ theorem gval_eq_zero_of_inSF {T T' : E} (hT : star T = T) {F : LFlag S r T} {F' 
         rw [Fin.snoc_castSucc, h0]
       simp only [Zhat, brS, hv]
       refine Fin.lastCases ?_ (fun b => ?_) a
-      · simp only [FlagG.fvec, Fin.snoc_last]
-        exact S.herm.eq_iff.1 (F.fl.z_orth ⟨0, hr⟩)
+      · simpa only [FlagG.fvec, Fin.snoc_last] using S.herm.eq_iff.1 (F.fl.z_orth ⟨0, hr⟩)
       · simp [FlagG.fvec, F.fl.e_iso]
     have hDl : ∀ l, 1 ≤ l → l ≤ r + 1 → Dl F.fl F'.fl l = 0 := by
       intro l hl1 hl2
-      simp only [Dl, leadMinorE, dif_pos hl2]
+      simp only [Dl, leadMinorE, dite_eq_left hl2]
       refine Matrix.det_eq_zero_of_column_eq_zero ⟨0, by omega⟩ (fun i => ?_)
       simp only [Matrix.submatrix_apply]
       have : (Fin.castLE hl2 ⟨0, by omega⟩ : Fin (r + 1)) = ⟨0, by omega⟩ := rfl
@@ -165,8 +164,7 @@ theorem isInS_mk (hI : InSFun Λ F P) (x : Carrier P) : IsInS Λ F P (mk Λ F P 
   · rintro ⟨F', ⟨h, hmk⟩, hin⟩
     have := const_of_mk (fun y : Carrier P => InSF F y.1) (fun a b hab => propext (hI a b hab)) hmk
     simpa [this] using hin
-  · intro h
-    exact ⟨x.1, rep_mk x, h⟩
+  · exact fun h => ⟨x.1, rep_mk x, h⟩
 
 theorem gt_eq_zero_of_isInS (hG : GFun Λ F P) (hT : star T = T) {t : TermQ Λ F P} (h : IsInS Λ F P t) :
     Gt Λ F P t = 0 := by
@@ -196,8 +194,7 @@ variable {D u u' F0 what₂}
 
 theorem G_eq_zero_of_termInS {t : Term D u u' F0 what₂} (hG : GFun t.lam (lf D F0) (PD D t.lam (lf D F0) u'))
     (h : termInS t) : t.G = 0 := by
-  refine gt_eq_zero_of_isInS (T := ((Tu D u : ℕ) : D.host.E)) hG ?_ h
-  exact star_natCast _
+  exact gt_eq_zero_of_isInS (T := ((Tu D u : ℕ) : D.host.E)) hG (star_natCast _) h
 
 end D7
 

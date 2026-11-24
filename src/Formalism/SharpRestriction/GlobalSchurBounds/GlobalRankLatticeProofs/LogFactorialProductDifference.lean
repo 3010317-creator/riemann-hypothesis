@@ -240,7 +240,7 @@ lemma up_num_le (n m : ℕ) (lam v : ℕ → ℝ) (Bd : ℝ) (hBd : 1 ≤ Bd)
         rw [up_sign_lo n c (by omega), up_sign_lo n a ha]
       have h2 : ((nBetween (n + 2) a c : ℕ) : ℝ) = 0 := by
         rw [up_nB_zero n a c (by omega) hc.2]; simp
-      rw [if_pos hcond, h2, hlamv a ha, hlamv c hc.2]
+      rw [ite_eq_left hcond, h2, hlamv a ha, hlamv c hc.2]
       ring
     · refine prod_le_pow_of_card_le_of_le _ _ Bd m ?_ hBd ?_
       · rw [Nat.card_Ico]; omega
@@ -419,11 +419,11 @@ theorem UpperPlace_holds : UpperPlace := by
   have hsa : ∀ i, i < n + 1 → rowPar (n + 2) v b i = v i := by
     intro i hi
     show (if i < n + 2 - 1 then v i else -b (i - (n + 2 - 1))) = v i
-    rw [e1, if_pos hi]
+    rw [e1, ite_eq_left hi]
   have hsb : ∀ i, n + 1 ≤ i → rowPar (n + 2) v b i = -b (i - (n + 1)) := by
     intro i hi
     show (if i < n + 2 - 1 then v i else -b (i - (n + 2 - 1))) = -b (i - (n + 1))
-    rw [e1, if_neg (show ¬ i < n + 1 by omega)]
+    rw [e1, ite_eq_right (show ¬ i < n + 1 by omega)]
   have hlup : ∀ a, a < n + 1 + (t + t) → rowPar (n + 2) v b a ≤ v 0 := by
     intro a ha
     rcases Nat.lt_or_ge a (n + 1) with h | h
@@ -493,8 +493,7 @@ theorem UpperPlace_holds : UpperPlace := by
   have hVvu : vandN v (n + 1) ≤ vandN u (n + 2) := by
     have h := up_vand_le (n + 1) u v (fun i hi => hint_r i (by omega))
       (fun i j h1 h2 => hu i j h1 (by omega)) hvdec
-    rw [show n + 1 + 1 = n + 2 by omega] at h
-    exact h
+    rwa [show n + 1 + 1 = n + 2 by omega] at h
   have hA1 : (1 : ℝ) ≤ ((n + 1 + t : ℕ) : ℝ) := by exact_mod_cast (show 1 ≤ n + 1 + t by omega)
   have hA2 : (1 : ℝ) ≤ (t : ℝ) := by exact_mod_cast ht1
   have hA3 : (1 : ℝ) ≤ ((n + 1 + (t + t) : ℕ) : ℝ) := by
@@ -660,8 +659,7 @@ theorem log_X_upper_arithmetic (f k m L CY lv l2v SL lg S5 S6 X : ℝ) (hf : 0 <
   have hm0 : 0 < m := by linarith
   have hL0 : 0 < L := by linarith
   have hCY : 0 ≤ CY := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have : 2 * CY * L < 0 := by nlinarith
     linarith
   have ht1 : f * ((m - 1) * k + m * (m - 1) / 2) * lv ≤ f * ((m - 1) * k + m * (m - 1) / 2) * L :=

@@ -71,7 +71,7 @@ theorem posM_blk_zero {j : ℕ} (Y : UnipotentBlockColumnIndex k j j → Ad E) (
     posM Subtype.val Y i c = 0 := by
   simp only [posM, Matrix.sum_apply, Matrix.single_apply]
   refine Finset.sum_eq_zero fun t _ => ?_
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨h1, h2⟩
   obtain ⟨t1, t2, t3⟩ := t.2
   rw [h1, h2] at *
@@ -96,8 +96,7 @@ theorem uu_mul {u u' : GA E k} (hu : UU 0 u) (hu' : UU 0 u') : UU 0 (u * u') := 
       rcases lt_or_gt_of_ne hl with h | h
       · rw [hu.1 i l h, zero_mul]
       · rw [hu'.1 l i h, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
 
 end UpperBlockProducts
 

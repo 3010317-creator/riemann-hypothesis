@@ -403,8 +403,8 @@ theorem costTwo_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Re
     intro p _
     rw [exTwo, GlobalTheory.CovHt.htEx, ← hd, ← hn]
     by_cases h2 : p = 2
-    · subst h2; simp only [if_true]; ring_nf
-    · simp only [h2, if_false]; ring
+    · subst h2; simp only [ite_true]; ring_nf
+    · simp only [h2, ite_false]; ring
   have ha0 : ∀ p : ℕ, p.Prime → 0 ≤ Real.log p / ((p : ℝ) - 1) := fun p hp => by
     have : (2 : ℝ) ≤ p := by exact_mod_cast hp.two_le
     exact div_nonneg (Real.log_natCast_nonneg p) (by linarith)
@@ -794,12 +794,7 @@ theorem primeFactors_sub (d : ℤ) (M : ℕ) :
   · exact Finset.mem_union_right _ (Nat.mem_primeFactors.2 ⟨hp, h, fun h' => h0 (by rw [h', mul_zero])⟩)
 
 theorem spread_nonneg {Ψ : Type} [Fintype Ψ] {N : ℕ} (hN : 0 < N) (u : Top.Wt Ψ N) : 0 ≤ Top.spread u := by
-  unfold Top.spread
-  refine Finset.sum_nonneg fun τ _ => ?_
-  have i0 : Fin N := ⟨0, hN⟩
-  have h1 := ciInf_le (Set.finite_range (fun i => u τ i)).bddBelow i0
-  have h2 := le_ciSup (Set.finite_range (fun i => u τ i)).bddAbove i0
-  linarith
+  exact GlobalTheory.CompanionTheory.Ar.Top.spread_nonneg hN u
 
 theorem errX_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
     (s : ℝ) (u : GlobalTheory.AllWt.Weight Dw) (g : ℝ) :

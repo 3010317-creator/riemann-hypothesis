@@ -272,8 +272,7 @@ theorem exists_adapted_pair (h : IsCMExt F E σ) {n : ℕ} {J : Matrix (Fin n) (
       funext k
       have := LinearMap.congr_fun h0 (Pi.single k 1)
       simpa [formL, form] using this
-    have h2 := Matrix.eq_zero_of_mulVec_eq_zero hdet h1
-    exact hx₀ (funext fun i => by simpa using congrFun h2 i)
+    exact hx₀ (funext fun i => by simpa using congrFun (Matrix.eq_zero_of_mulVec_eq_zero hdet h1) i)
   let S : Finset (HeightOneSpectrum (𝓞 E)) :=
     Finset.univ.image (fun v : P => splitPrime (τ v)) ∪ Finset.univ.image (fun v : P => splitPrime ((τ v).comp σ))
   obtain ⟨z₀, hz₀, hc0, hmax⟩ := exists_max_val L hlat.fg (formL (σ := σ) J x₀) hne S
@@ -361,9 +360,7 @@ private theorem full_of_self_dual {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (L : 
       Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
     let y : Fin n → E := fun i => σ (z i)
     have hy₀ : y ≠ 0 := by
-      intro hy
-      apply hz₀
-      exact funext fun i => σ.injective ((congrFun hy i).trans (map_zero σ).symm)
+      exact fun hy => hz₀ (funext fun i => σ.injective ((congrFun hy i).trans (map_zero σ).symm))
     have horth (x : Fin n → E) (hx : x ∈ L) : form σ J y x = 0 := by
       have hz' : z ⬝ᵥ Jᵀ *ᵥ x = 0 :=
         congrArg (fun f : Module.Dual E W => f ⟨x, Submodule.subset_span hx⟩)
@@ -433,8 +430,7 @@ theorem exists_plane {B : Base F E} (hB : B.IsGood σ) {ε : E} (hε : ε = 1 �
     apply Submodule.IsLattice.of_fg E
     apply Submodule.fg_of_fg_map_injective _ _ (hY.lat.fg.of_le (Submodule.map_comap_le _ _))
     intro u u' e
-    have he := congrArg (P *ᵥ ·) (show ι *ᵥ u = ι *ᵥ u' from e)
-    simpa [Matrix.mulVec_mulVec, hPι] using he
+    simpa [Matrix.mulVec_mulVec, hPι] using congrArg (P *ᵥ ·) (show ι *ᵥ u = ι *ᵥ u' from e)
   have hx0 : x ≠ 0 := by rintro rfl; simp [form] at hxy
   obtain ⟨𝔟, h𝔟⟩ := exists_ideal n Y.L hY.lat.toIsLattice x hx0
   set J₁ := ιᵀ * Y.J * ι.map σ with hJ₁
@@ -475,11 +471,11 @@ theorem exists_plane {B : Base F E} (hB : B.IsGood σ) {ε : E} (hε : ε = 1 �
   have hb₁ : ∀ v : B.P, ∃ β, IsSplitBasis (B.τ v) L₁ β := fun v => exists_isSplitBasis (B.τ v) L₁ hcm
   choose β₁ hβ₁ using hb₁
   let bas₁ : ∀ v : Pl F, GL (Fin n₁) (Fv F v) := fun v => if h : v ∈ B.P then β₁ ⟨v, h⟩ else 1
-  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dif_pos v.2]
+  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dite_eq_left v.2]
   choose β hβ using fun v : B.P => exists_basis (B.τ v) n n₁ Y.L x y ι (β₁ v) i₀ i₁ hn h01 h1n hFull hsplit
     (hP v).1 (hP v).2 (hβ₁ v)
   let bas : ∀ v : Pl F, GL (Fin n) (Fv F v) := fun v => if h : v ∈ B.P then β ⟨v, h⟩ else Y.bas v
-  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dif_pos v.2]
+  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dite_eq_left v.2]
   let Y₁ : Spc F E n₁ := ⟨J₁, L₁, θ₁, bas₁⟩
   let Y' : Spc F E n := ⟨Y.J, Y.L, θ, bas⟩
   refine ⟨Y', Y₁, ⟨x, y, ι, 𝔟⟩, ?_, ?_, ?_⟩

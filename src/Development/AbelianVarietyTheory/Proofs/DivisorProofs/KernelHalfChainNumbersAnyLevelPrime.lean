@@ -333,7 +333,7 @@ theorem exists_weights : ∀ (K : Type) [Field K] [NumberField K] [_root_.Number
     exact hw (by simp [hne])
   · intro ρ
     rw [← Finset.sum_mul, Finset.sum_ite_eq]
-    simp only [Finset.mem_univ, if_true]
+    simp only [Finset.mem_univ, ite_true]
     field_simp
 
 end GlobalTheory.PlaceWeights
@@ -454,8 +454,7 @@ theorem meanPeriodAt (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hcc : For
   have hr0 : 0 < D.host.rdE := by
     unfold Formalism.BasicNotions.Host.rdE
     exact Real.rpow_pos_of_pos (abs_pos.2 (by simpa using NumberField.discr_ne_zero D.host.E)) _
-  rw [Real.log_div (by positivity) hd0.ne', Real.log_div (by positivity) hr0.ne']
-  rw [neg_mul, hN]
+  rw [Real.log_div (by positivity) hd0.ne', Real.log_div (by positivity) hr0.ne', neg_mul, hN]
   ring
 
 theorem meanPeriod : GlobalTheory.IndefiniteRowSideFullHecke.MeanPeriodLogarithms.MeanPeriod :=
@@ -505,12 +504,10 @@ open GlobalTheory.ColNorms GlobalTheory.ColNorms.NumMean
 
 theorem exists_le_wtSum {α : Type} [Fintype α] (w f : α → ℝ) (h0 : ∀ a, 0 ≤ w a) (h1 : ∑ a, w a = 1) :
     ∃ a, w a ≠ 0 ∧ f a ≤ ∑ b, w b * f b := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have h2 : ∑ a, w a * (∑ b, w b * f b) < ∑ a, w a * f a := by
     obtain ⟨a, ha⟩ : ∃ a, w a ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       simp [h] at h1
     refine Finset.sum_lt_sum (fun b _ => ?_) ⟨a, Finset.mem_univ _, ?_⟩
     · by_cases hb : w b = 0
@@ -601,8 +598,7 @@ theorem factorBounds_of_weights {K : Type} [Field K] [NumberField K] [StarRing K
     obtain ⟨a, ha, hle⟩ := exists_le_wtSum (wt v) (fun a => lb a (i + 1)) (h0 v) (h1 v)
     have h2 := hS a i hi'
     rw [hup v a ha] at h2
-    simp only [Equiv.apply_symm_apply]
-    exact h2.mono hle (hpos i v)
+    simpa only [Equiv.apply_symm_apply] using h2.mono hle (hpos i v)
   · rw [hn, sum_filter_ge hm eJ (fun l => t l v), ht, ht]
     obtain ⟨a, ha, hle⟩ := exists_le_wtSum (wt v) (fun a => lb a (m - 1) + lb a m) (h0 v) (h1 v)
     have h2 := hC a
@@ -906,8 +902,7 @@ theorem kerSide_of_meansS {J Emb α : Type} [Fintype J] [Fintype Emb] [Fintype �
   · intro l
     have hl := (eJ l).2
     rw [nNn, sq]
-    refine ⟨by positivity, ?_⟩
-    exact mul_le_mul (N_le N hl.le) (N_le N hl) (by positivity) (by positivity)
+    exact ⟨by positivity, mul_le_mul (N_le N hl.le) (N_le N hl) (by positivity) (by positivity)⟩
   · intro l
     rw [card_RPl, nLa]
     refine (log_eight_leS CY N δ hS (eJ l).2).trans ?_

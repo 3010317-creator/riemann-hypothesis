@@ -23,8 +23,7 @@ private theorem norm_le_one_of_integral {p : ℕ} [Fact p.Prime] {y : ℂ_[p]}
 theorem norm_le_one_of_monic {p : ℕ} [Fact p.Prime] {f : Polynomial ℤ} (hf : f.Monic) {y : ℂ_[p]}
     (h : Polynomial.eval₂ (Int.castRingHom ℂ_[p]) y f = 0) : ‖y‖ ≤ 1 := by
   refine norm_le_one_of_integral ⟨f, hf, ?_⟩
-  rw [RingHom.ext_int (algebraMap ℤ ℂ_[p]) (Int.castRingHom ℂ_[p])]
-  exact h
+  rwa [RingHom.ext_int (algebraMap ℤ ℂ_[p]) (Int.castRingHom ℂ_[p])]
 
 theorem eig_norm_det_le_one {p : ℕ} [Fact p.Prime] {κ : Type*} [Fintype κ] [DecidableEq κ]
     (M : Matrix κ κ ℂ_[p]) (hM : ∀ i j, ‖M i j‖ ≤ 1) : ‖M.det‖ ≤ 1 := by
@@ -91,14 +90,13 @@ theorem eigenFrameDual : EigenFrameDual.{u, v} := by
       rfl
     have h1 : ∑ i, M.adjugate j₀ i * M i j = M.det * (if j₀ = j then 1 else 0) := by
       have h := congrFun (congrFun (Matrix.adjugate_mul M) j₀) j
-      rw [Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul] at h
-      exact h
+      rwa [Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul] at h
     simp only [hφ, mul_assoc]
     rw [← Finset.mul_sum, h1, ← mul_assoc, inv_mul_cancel₀ hM0, one_mul]
     by_cases hc : φ = τ₀
     · subst hc
       simp [j, j₀]
-    · rw [if_neg hc, if_neg]
+    · rw [ite_eq_right hc, ite_eq_right]
       intro hj
       apply hc
       have h2 : τ₀.toRatAlgHom = φ.toRatAlgHom := e.symm.injective hj

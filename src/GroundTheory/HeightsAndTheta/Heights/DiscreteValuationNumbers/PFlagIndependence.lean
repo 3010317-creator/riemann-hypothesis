@@ -47,10 +47,8 @@ theorem FlagIndependence.proof (hExp : PairNumberExpansionIndependence.Statement
       (Fin.append f f₂ i) (Fin.append g g₂ i) := by
     intro i
     refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-    · simp only [Fin.append_left]
-      exact hF1.vertical i
-    · simp only [Fin.append_right]
-      exact hF2.vertical i
+    · simpa only [Fin.append_left] using hF1.vertical i
+    · simpa only [Fin.append_right] using hF2.vertical i
   have hind : ∀ (A : MvPolynomial (Fin (N + N)) ℤ) As Bs, A.IsHomogeneous m →
       IsPairExpansion m A As → IsPairExpansion m A Bs →
       pairNum (pointIdeal O y) (Fin.append x u) (Fin.append x' u') (Fin.append f f₂)

@@ -178,8 +178,7 @@ theorem contDiff_emb (e : Fin n ⊕ Unit ≃ Fin (n + 1)) :
   have h2 := h1.add (contDiff_const (c := emb e (0 : Matrix (Fin n) (Fin n) ℂ)))
   have e1 : (fun h : Matrix (Fin n) (Fin n) ℂ => emb e h) = fun h => blk0L e h + emb e 0 :=
     funext fun h => embed_eq_block_embed_add e h
-  rw [e1]
-  exact h2
+  rwa [e1]
 
 theorem smooth_res {ε : Fin (n + 1) → Bool} {ε' : Fin n → Bool} {e : Fin n ⊕ Unit ≃ Fin (n + 1)} (hF : Fits ε ε' e)
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -220,10 +219,8 @@ theorem restriction_holds : Restrict := by
       show π (emb e (a * b)) = π (emb e a) ∘SL π (emb e b)
       rw [hmul]
       exact hπ.1.2 _ (hU a ha) _ (hU b hb)
-    · intro g hg v
-      exact hπ.2.1 _ (hU g hg) v
-    · intro v
-      exact (hπ.2.2 v).comp (continuous_emb' e).continuousOn (fun g hg => hU g hg)
+    · exact fun g hg v => hπ.2.1 _ (hU g hg) v
+    · exact fun v => (hπ.2.2 v).comp (continuous_emb' e).continuousOn (fun g hg => hU g hg)
   refine ⟨hres, ?_⟩
   have hmem : ∀ x : smD ε π, (x : H) ∈ smD ε' (res e π) := fun x =>
     (mem_smD_iff _ _ _).2 (smooth_res hF ((mem_smD_iff _ _ _).1 x.2))

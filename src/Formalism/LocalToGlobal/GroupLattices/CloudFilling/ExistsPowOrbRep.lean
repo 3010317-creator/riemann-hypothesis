@@ -75,7 +75,7 @@ private theorem orbRep_vOfH_eq_secPsi_tau1P (φ : Formalism.HC.Frame) (h t : φ.
       orbEquiv (zH φ h) (vOfH φ h t) :=
     ((orbEquiv (zH φ h)).apply_symm_apply _).symm
   have hz : ((zH φ h : φ.Psi) : φ.GG).1 = 1 := rfl
-  have hs : OrbSec.sec (zH φ h) (tau1P φ t) = secPsi φ (zH φ h) (tau1P φ t) := if_pos hz
+  have hs : OrbSec.sec (zH φ h) (tau1P φ t) = secPsi φ (zH φ h) (tau1P φ t) := ite_eq_left hz
   rw [orbRep_of_mk _ _ _ hv, hs]
 
 theorem bsH_eq_bsA (φ : Formalism.HC.Frame) (h t : φ.A) : bsH φ h t = Formalism.MainNotions.Inhab.bsA h t := by
@@ -95,8 +95,7 @@ theorem bsH_orb' (φ : Formalism.HC.Frame) (h t : φ.A) : ∃ i : ℕ, i < addOr
   obtain ⟨i, hi, he⟩ := exists_pow_orbRep (zH φ h) (tau1P φ t)
   refine ⟨i, by rwa [orderOf_zH] at hi, ?_⟩
   apply tau1P_injective' φ
-  rw [tau_add_nsmul, ← orbRep_vOfH]
-  exact he
+  rwa [tau_add_nsmul, ← orbRep_vOfH]
 
 theorem bsH_orb (φ : Formalism.HC.Frame) (h t : φ.A) : ∃ i : ℕ, bsH φ h t + i • h = t := by
   obtain ⟨i, -, hi⟩ := bsH_orb' φ h t

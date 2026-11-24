@@ -81,8 +81,7 @@ theorem toAfE_sgA (D : D7) (y : Formalism.MainNotions.StandardLatticesGL3.AE D) 
   apply (GlobalTheory.LFun.finAdEquiv D.host.F D.host.E).injective
   rw [GlobalTheory.DefU.ClassFin.finAdEquiv_sigR D.sp.cm.sig (D.host.conj : D.host.E ≃+* D.host.E)
     (fun x => Formalism.MainNotions.GlobalTheoryTheory.jnt_sig_eq_conj D x)]
-  simp only [toAfE, RingEquiv.trans_apply, RingEquiv.apply_symm_apply]
-  exact toFinE_sgA D y
+  simpa only [toAfE, RingEquiv.trans_apply, RingEquiv.apply_symm_apply] using toFinE_sgA D y
 
 theorem exists_isFinPt_of_gram_one : ∀ {D : D7} (WW : HSp D), WW.gram = 1 → ∀ {n : ℕ} (h : GA D n), WW.rank = n →
     ∃ g : GA D WW, GlobalTheory.BotFormula.IsFinPt WW g h := by
@@ -92,8 +91,7 @@ theorem exists_isFinPt_of_gram_one : ∀ {D : D7} (WW : HSp D), WW.gram = 1 → 
   have hh : Formalism.UG.cT (Formalism.MainNotions.StandardLatticesGL3.sgA D) (h.1 : Matrix (Fin WW.rank) (Fin WW.rank) (Formalism.MainNotions.StandardLatticesGL3.AE D)) * h.1 = 1 := by
     have h2 := h.2
     change Formalism.UG.cT _ (h.1 : Matrix (Fin WW.rank) (Fin WW.rank) (Formalism.MainNotions.StandardLatticesGL3.AE D)) * _ * _ = _ at h2
-    rw [Matrix.map_one _ (map_zero _) (map_one _), mul_one] at h2
-    exact h2
+    rwa [Matrix.map_one _ (map_zero _) (map_one _), mul_one] at h2
   have hx' : x' ∈ HR (Af D.host.F) D.sp.cm.sig WW.gram := by
     show Formalism.UG.cT (sigR (Af D.host.F) D.sp.cm.sig) (x' : Matrix (Fin WW.rank) (Fin WW.rank) _) *
       JR (Af D.host.F) WW.gram * (x' : Matrix (Fin WW.rank) (Fin WW.rank) _) = JR (Af D.host.F) WW.gram

@@ -68,8 +68,7 @@ theorem exists_reps {X : Type*} (r : X → X → Prop) (hr : Equivalence r) (A X
       Quotient.mk s (pick (Quotient.mk s x)) = Quotient.mk s x := by
     intro x hx
     have H : ∃ t ∈ X₀, Quotient.mk s t = Quotient.mk s x := ⟨x, hx, rfl⟩
-    simp only [pick, dif_pos H]
-    exact H.choose_spec
+    simpa only [pick, dite_eq_left H] using H.choose_spec
   refine ⟨hfin.toFinset.image (fun x => pick (Quotient.mk s x)), ?_, ?_⟩
   · intro t ht
     obtain ⟨x, hx, rfl⟩ := Finset.mem_image.mp ht
@@ -116,10 +115,8 @@ theorem stab_actV (hs : h.IsSymm) (S : VecSplit h h') (M : Submodule (𝓞 K) V)
   ext g
   rw [Subgroup.mem_subgroupOf]
   constructor
-  · intro e
-    exact ⟨SplitBAux.extOf_mem_isom hs S g.2, e⟩
-  · intro e
-    exact e.2
+  · exact fun e => ⟨SplitBAux.extOf_mem_isom hs S g.2, e⟩
+  · exact fun e => e.2
 
 theorem stab_actV' (T : Submodule (𝓞 K) V') :
     @MulAction.stabilizer _ _ _ (actV' h') T = (autSub h' T).subgroupOf (Formalism.HermitianLatticesTheory.isom h') := by
@@ -216,7 +213,6 @@ theorem cut_props (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsF
     (by change algebraMap (𝓞 K) K (algebraMap (𝓞 F) (𝓞 K) t) • S.x₀ ∈ _
         rw [algebraMap_smul]; exact hx)
   have h1 := hgood.2 ⟨𝔭, h𝔭⟩
-  rw [BrB.fibLoc_scale S L h𝔭.isPrime hg ht hc] at h1
-  exact h1
+  rwa [BrB.fibLoc_scale S L h𝔭.isPrime hg ht hc] at h1
 
 end Formalism.HermitianLattices.Ext.L3.LIOrb.OrbF

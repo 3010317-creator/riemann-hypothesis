@@ -148,13 +148,11 @@ theorem latticeMean_eq [MeasurableSpace E] [BorelSpace E] (μ : Measure E)
 theorem latticeMean_const_mul {𝕜 : Type*} [RCLike 𝕜] (c : 𝕜) (f : E → 𝕜) :
     latticeMean L (fun x => c * f x) = c * latticeMean L f := by
   borelize E
-  simp only [latticeMean_eq_integral]
-  exact integral_const_mul c f
+  simpa only [latticeMean_eq_integral] using integral_const_mul c f
 
 theorem latticeMean_nonneg {f : E → ℝ} (hf : ∀ x, 0 ≤ f x) : 0 ≤ latticeMean L f := by
   borelize E
-  simp only [latticeMean_eq_integral]
-  exact integral_nonneg hf
+  simpa only [latticeMean_eq_integral] using integral_nonneg hf
 
 theorem eq_zero_of_latticeMean_eq_zero {f : E → ℝ} (hc : Continuous f) (h0 : ∀ x, 0 ≤ f x)
     (hf : ∀ a ∈ L, ∀ x, f (x + a) = f x) (h : latticeMean L f = 0) : f = 0 := by
@@ -176,8 +174,7 @@ theorem eq_zero_of_latticeMean_eq_zero {f : E → ℝ} (hc : Continuous f) (h0 :
       have := hf (-a) (L.neg_mem ha) x
       simp only [Submodule.vadd_def, Set.mem_setOf_eq, vadd_eq_add, NegMemClass.coe_neg]
       rw [add_comm, this]
-    · rw [← Measure.restrict_apply hm]
-      exact h1
+    · rwa [← Measure.restrict_apply hm]
   exact (Continuous.ae_eq_iff_eq μ hc continuous_zero).1 h2
 
 theorem exists_forall_le_of_periodic {f : E → ℝ} (hc : Continuous f)

@@ -172,7 +172,7 @@ theorem exists_away (θ : InfFam D) (V : HSp D) (n : ℕ) (l : D.what₂.Tau →
     simp [evalPoly]
   · have hg0 : g (fun i j => finPart D ((0 : Mx D V.rank n) i j)) = 1 := by
       simp only [g]
-      rw [if_pos]
+      rw [ite_eq_left]
       exact (QuotientAddGroup.eq_zero_iff (N := W) _).2 fun i j => by simp
     show gAway V l s τ (fun τ => compAt θ τ 0) * g (fun i j => finPart D ((0 : Mx D V.rank n) i j)) ≠ 0
     rw [hg0, mul_one]
@@ -203,8 +203,7 @@ theorem exists_sec (θ : InfFam D) (hθ : IsInfFam θ) (τ : D.what₂.Tau) (m n
     · ext a' i'
       simp [Matrix.sum_apply, Matrix.single_apply]
       rw [Fintype.sum_eq_single a' (fun c hc => by simp [hc]), Fintype.sum_eq_single i' (fun c hc => by simp [hc])]
-      simp only [and_self, if_true]
-      exact Complex.re_add_im _
+      simpa only [and_self, ite_true] using Complex.re_add_im _
     · simp
   have hf : ∀ u, (S u).map (finPart D) = 0 := by
     intro u
@@ -217,9 +216,9 @@ theorem exists_sec (θ : InfFam D) (hθ : IsInfFam θ) (τ : D.what₂.Tau) (m n
   refine ⟨S, fun x u => ?_, fun x u τ' h => ?_, fun x u => ?_⟩
   · funext a i
     simp only [piT, Pi.add_apply]
-    rw [e, map_add (f := _), ← e, ← e, hc, if_pos rfl]
+    rw [e, map_add (f := _), ← e, ← e, hc, ite_eq_left rfl]
     rfl
-  · rw [e, map_add (f := _), ← e, ← e, hc, if_neg h, add_zero]
+  · rw [e, map_add (f := _), ← e, ← e, hc, ite_eq_right h, add_zero]
   · rw [ef, map_add (f := _), ← ef, ← ef, hf, add_zero]
 
 theorem cov {m n : ℕ} (fr : Matrix (Fin m) (Fin m) ℂ) (hfr : IsUnit fr.det) :
@@ -485,13 +484,13 @@ theorem lIcell_of (hAw : AwayAct) (hDA : DecompAway) (hU : UnipTau) (hAI : AwayI
     · right
       refine ⟨?_, ?_, ?_⟩
       · rw [abs_of_neg h]; ring
-      · simp [if_neg (not_lt.2 h.le)]
-      · simp [if_neg (not_lt.2 h.le)]
+      · simp [ite_eq_right (not_lt.2 h.le)]
+      · simp [ite_eq_right (not_lt.2 h.le)]
     · left
       refine ⟨?_, ?_, ?_⟩
       · rw [abs_of_pos h]
-      · simp [if_pos h]
-      · simp [if_pos h]
+      · simp [ite_eq_left h]
+      · simp [ite_eq_left h]
   have hS1 : sLd L (cLoc l τ) 1 1 = 1 := by
     have h := congrFun (hL 1 Ψ0 hΨ0a 1) 0
     rw [map_one, map_one, hphi 1] at h
@@ -568,8 +567,8 @@ theorem coeff_reP (p : MvPolynomial σ ℂ) (m : σ →₀ ℕ) : AddMonoidAlgeb
   unfold reP
   rw [coeff_sum]
   by_cases h : m ∈ p.support
-  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, if_neg hb]) (fun hm => absurd h hm), coeff_monomial, if_pos rfl]
-  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, if_neg (fun (e : b = m) => h (e ▸ hb))])]
+  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, ite_eq_right hb]) (fun hm => absurd h hm), coeff_monomial, ite_eq_left rfl]
+  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, ite_eq_right (fun (e : b = m) => h (e ▸ hb))])]
     have h0 : AddMonoidAlgebra.coeff p m = 0 := by simpa [mem_support_iff] using h
     simp [h0]
 
@@ -578,8 +577,8 @@ theorem coeff_imP (p : MvPolynomial σ ℂ) (m : σ →₀ ℕ) : AddMonoidAlgeb
   unfold imaginary
   rw [coeff_sum]
   by_cases h : m ∈ p.support
-  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, if_neg hb]) (fun hm => absurd h hm), coeff_monomial, if_pos rfl]
-  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, if_neg (fun (e : b = m) => h (e ▸ hb))])]
+  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, ite_eq_right hb]) (fun hm => absurd h hm), coeff_monomial, ite_eq_left rfl]
+  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, ite_eq_right (fun (e : b = m) => h (e ▸ hb))])]
     have h0 : AddMonoidAlgebra.coeff p m = 0 := by simpa [mem_support_iff] using h
     simp [h0]
 
@@ -637,10 +636,10 @@ theorem ofRe_toRe {m n : ℕ} (P : PX m n) : ofRe m n (toRe m n P) = P := by
     obtain ⟨a, i, b⟩ := k
     cases b
     · simp only [AlgHom.comp_apply, AlgHom.id_apply, toRe, ofRe, aeval_X, map_add (f := _), map_mul, aeval_C, algebraMap_eq,
-        Bool.false_eq_true, if_false, if_true]
+        Bool.false_eq_true, ite_false, ite_true]
       linear_combination (X (a, i, false) - X (a, i, true)) * hC + X (a, i, false) * hC2
     · simp only [AlgHom.comp_apply, AlgHom.id_apply, toRe, ofRe, aeval_X, map_sub, map_mul, aeval_C, algebraMap_eq,
-        Bool.false_eq_true, if_false, if_true]
+        Bool.false_eq_true, ite_false, ite_true]
       linear_combination -(X (a, i, false) - X (a, i, true)) * hC + X (a, i, true) * hC2
   exact congrArg (fun f => f P) this
 
@@ -793,8 +792,7 @@ theorem const_of_annS {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.wh
     have hp : psi0 θ V n l s τ (xL θ τ (fr * u)) = 1 := by
       unfold psi0
       rw [compAt_xL hθ, gAway_dirAt, finPart_xL hθ]
-      simp only [one_mul]
-      exact gaussian_at_zero_eq_one D V.rank n
+      simpa only [one_mul] using gaussian_at_zero_eq_one D V.rank n
     rw [hc, hinv, hinv, hp, mul_one] at e
     exact (mul_eq_zero.1 e).resolve_right (gs_ne_zero _ _)
   have hconst : ∀ u : Matrix (Fin V.rank) (Fin n) ℂ, evX Q u = evX Q 0 := by
@@ -888,8 +886,7 @@ theorem annS_stable : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.hos
     rw [hdec f hf, hkill1, hkill1, smul_zero, add_zero]
 
   have hkk : κ (κ.symm k) ∈ K D A.rank := by
-    rw [show κ (κ.symm k) = k from κ.apply_symm_apply k]
-    exact hk
+    rwa [show κ (κ.symm k) = k from κ.apply_symm_apply k]
   have hS : ∀ τ', s' τ' * compAt θ τ' (Formalism.L2.Theta.mt (dblSp A) (κ.symm k)) =
       compAt θ τ' (Formalism.L2.Theta.mt (dblSp A) (κ.symm k)) * s' τ' := fun τ' => (hcomm (κ.symm k) hkk τ').symm
   have hm1 : ∀ τ', compAt θ τ' (Formalism.L2.Theta.mt V 1) = 1 := by
@@ -913,8 +910,7 @@ theorem annS_stable : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.hos
   rw [← hmove] at e
   have hs0 : sch ψ₀ A V μ 𝓕 (0 : WO (dblSp A) V → ℂ) = 0 := by
     have := (GlobalTheory.StdUnn.sch_linear D ψ₀ hstd A V μ 𝓕 hμ f f hf hf 0).2.2.2
-    rw [zero_smul, zero_smul] at this
-    exact this
+    rwa [zero_smul, zero_smul] at this
   rw [hs0] at e
   show annS V l s θ τ X ((ω k) Φ).1 = 0
   rw [show ((ω k) Φ).1 = sch ψ₀ A V μ 𝓕 (omh (κ.symm k, 1) f) from htk]
@@ -1152,8 +1148,7 @@ theorem orbit_cont : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.host
   have hmemK : ∀ g : G D A.rank, g ∈ K D A.rank → κ.symm g ∈ K' := by
     intro g hg
     show κ (κ.symm g) ∈ K D A.rank
-    rw [κ.apply_symm_apply]
-    exact hg
+    rwa [κ.apply_symm_apply]
   let o : Set.Elem (((K D n : Subgroup (G D n)) : Set (G D n))) → Vf := fun g =>
     ⟨omh (κ.symm g.1, 1) f, Submodule.subset_span ⟨κ.symm g.1, hmemK g.1 g.2, rfl⟩⟩
   have hκs : Continuous (fun g : G D n => κ.symm g) := hcont.2
@@ -1169,8 +1164,7 @@ theorem orbit_cont : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.host
     congr 1
     apply Subtype.ext
     have := htr (κ.symm g.1) f hf Φ hfΦ.symm
-    rw [show κ (κ.symm g.1) = g.1 from κ.apply_symm_apply g.1] at this
-    exact this
+    rwa [show κ (κ.symm g.1) = g.1 from κ.apply_symm_apply g.1] at this
   rw [continuousOn_iff_continuous_domRestrict]
   have : (Set.domRestrict (K D n : Set (G D n)) fun g => Λ (ω g Φ)) = (Λ ∘ₗ Sv) ∘ o := funext heq
   rw [this]
@@ -1216,7 +1210,6 @@ theorem lIrho : LIrho := by
     simp [fP, evX]
   have htens0 : tens θ τ fr (0 : (Fin V.rank → Fin n → ℂ) → ℂ) (psi0 θ V n l s τ) = 0 := by
     funext x
-    show (0 : ℂ) * _ = 0
     exact zero_mul _
   have hphi0 : phiS θ τ fr (cLoc l τ) (psi0 θ V n l s τ) 0 = 0 := by
     apply Subtype.ext
@@ -1260,14 +1253,13 @@ theorem lIrho : LIrho := by
   let ρ0 : GR n → PX V.rank n → PX V.rank n := fun k P => if hk : InK (mR k) then (hexist k hk P).choose else P
   have hρ0 : ∀ (k : GR n) (hk : InK (mR k)) P, L k (fP (cLoc l τ) P) = fP (cLoc l τ) (ρ0 k P) := by
     intro k hk P
-    simp only [ρ0, dif_pos hk]
-    exact (hexist k hk P).choose_spec
+    simpa only [ρ0, dite_eq_left hk] using (hexist k hk P).choose_spec
   have hρlin : ∀ (k : GR n) (a : ℂ) (P Q : PX V.rank n), ρ0 k (a • P + Q) = a • ρ0 k P + ρ0 k Q := by
     intro k a P Q
     by_cases hk : InK (mR k)
     · apply fP_inj (cLoc l τ)
       rw [fP_add_smul, ← hρ0 k hk, ← hρ0 k hk, ← hρ0 k hk, hLlin k hk]
-    · simp only [ρ0, dif_neg hk]
+    · simp only [ρ0, dite_eq_right hk]
   have hρ00 : ∀ k : GR n, ρ0 k 0 = 0 := by
     intro k
     have := hρlin k 1 0 0
@@ -1396,8 +1388,7 @@ theorem cont_nbar : Continuous (nbar (n := n)) := by
 
 theorem cont_nbE : Continuous (nbE (n := n)) := by
   refine Continuous.subtype_mk ?_ _
-  refine Units.continuous_iff.mpr ⟨cont_nbar, ?_⟩
-  exact cont_nbar.comp continuous_neg
+  exact Units.continuous_iff.mpr ⟨cont_nbar, cont_nbar.comp continuous_neg⟩
 
 theorem lower_left_block_mul_lowering (g : GR n) (s : ℝ) :
     (mR (g * nbE s)).toBlocks₂₁ = (mR g).toBlocks₂₁ + (s : ℂ) • (mR g).toBlocks₂₂ := by
@@ -1451,8 +1442,7 @@ theorem dense_cell : Dense {g : GR n | ((mR g).toBlocks₂₁).det ≠ 0} := by
   filter_upwards [mem_nhdsWithin_of_mem_nhds (hZ.isOpen_compl.mem_nhds h0), self_mem_nhdsWithin] with s hs hs0
   show ((mR (g * nbE s)).toBlocks₂₁).det ≠ 0
   rw [lower_left_block_mul_lowering]
-  intro hdet
-  exact hs ⟨hdet, hs0⟩
+  exact fun hdet => hs ⟨hdet, hs0⟩
 
 theorem bigcell (g : GR n) (hγ : ((mR g).toBlocks₂₁).det ≠ 0) :
     ∃ (y h : GR n) (b : Matrix (Fin n) (Fin n) ℂ), (mR y).toBlocks₂₁ = 0 ∧ b.IsHermitian ∧ mR h = JJ n * nU b ∧
@@ -1524,8 +1514,7 @@ theorem mp_cU {U : Matrix (Fin n) (Fin n) ℂ} (hU : U ∈ unitaryGroup (Fin n) 
   refine ⟨hmeas, ?_⟩
   have h := MeasureTheory.Measure.map_linearMap_addHaar_eq_smul_addHaar (μ := (volume : Measure (Fin n → ℂ)))
     (f := L) (by rw [hdet]; exact one_ne_zero)
-  rw [hdet, inv_one, abs_one, ENNReal.ofReal_one, one_smul] at h
-  exact h
+  rwa [hdet, inv_one, abs_one, ENNReal.ofReal_one, one_smul] at h
 
 def rowF (c κ : ℝ) (b : Matrix (Fin n) (Fin n) ℂ) (v : Fin n → ℂ) : ℂ :=
   Complex.exp (-(c * ∑ i, ‖v i‖ ^ 2 : ℝ)) * Complex.exp (Complex.I * κ * ∑ i, ∑ j, b i j * star (v j) * v i)

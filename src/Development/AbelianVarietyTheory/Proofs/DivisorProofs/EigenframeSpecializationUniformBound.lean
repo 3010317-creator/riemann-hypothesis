@@ -126,8 +126,7 @@ theorem tendsto_of_inv_mulVec_span {α : Type} {l : Filter α} {N n : ℕ} (M : 
       rw [Matrix.det_one, Ring.inverse_eq_inv']
       exact continuousAt_inv₀ one_ne_zero
     have h1 := ((continuousAt_matrix_inv (1 : Matrix (Fin N) (Fin N) ℂ) h0).tendsto).comp hR
-    rw [inv_one] at h1
-    exact h1
+    rwa [inv_one] at h1
   have hRd : ∀ᶠ w in l, ((M w)⁻¹ * W).det ≠ 0 := by
     have h1 : Tendsto (fun w => ((M w)⁻¹ * W).det) l (𝓝 (1 : Matrix (Fin N) (Fin N) ℂ).det) :=
       ((Continuous.matrix_det continuous_id).tendsto (1 : Matrix (Fin N) (Fin N) ℂ)).comp hR
@@ -427,8 +426,7 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
       obtain ⟨w, hw⟩ := (hfive _ (hU 0 hmem0)).2.1 p
       refine ⟨(M 0)⁻¹ *ᵥ w, ?_⟩
       show e' _ (M 0 *ᵥ ((M 0)⁻¹ *ᵥ w)) = p
-      rw [mulVec_mulVec_inv (hMdet 0 hmem0)]
-      exact hw
+      rwa [mulVec_mulVec_inv (hMdet 0 hmem0)]
     obtain ⟨Tt, hT1, hT2, hTc⟩ := GlobalTheory.T.exists_toricTorsion_cubicalWeil_one_complexPoint E H Z.X Z.t _ g' N (exN 0) hN (hExpN 0 hmem0) hsurj (hsliceN 0 hmem0)
     obtain ⟨S, hSc, hS⟩ := GlobalTheory.T.torsion_count_through_exponential_lattice_kernel _ g' r₀ N (exN 0) (ζ' 0) Tt hN (hExpN 0 hmem0).1 hsurj hB0 hT1 hTc
     refine ⟨S, hSc, fun a a' ha => ?_⟩
@@ -442,11 +440,10 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
   have hsv : ∀ s : ℂ, ‖sv s‖ = ‖s‖ := fun s => pi_norm_const s
   have hdom : ∀ s : ℂ, s.re < 0 → sv s ∈ GlobalTheory.ShFam.Hor.logDom 1 1 := fun s hsr k => by
     show if (k : ℕ) < 1 then (sv s k).re < 0 else ‖sv s k‖ < 1
-    rw [if_pos k.isLt]
-    exact hsr
+    rwa [ite_eq_left k.isLt]
   have hlogExp : ∀ s : ℂ, GlobalTheory.ShFam.Hor.logExp 1 (sv s) = sv (Complex.exp s) := fun s => funext fun k => by
     show (if (k : ℕ) < 1 then Complex.exp (sv s k) else sv s k) = Complex.exp s
-    rw [if_pos k.isLt]
+    rw [ite_eq_left k.isLt]
   have hexpball : ∀ s : ℂ, s.re < 0 → sv (Complex.exp s) ∈ Metric.ball (0 : Fin 1 → ℂ) 1 := fun s hsr => by
     rw [mem_ball_zero_iff, hsv, Complex.norm_exp]
     exact Real.exp_lt_one_iff.mpr hsr
@@ -569,16 +566,14 @@ theorem exists_frame_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rw [D.apply_symm_apply] at h1
       have h2 : ((b.reindex e.symm).equivFun.symm.trans D.symm).toContinuousLinearEquiv (Pi.single j 1) =
           D.symm (f.vec (e j).1 (e j).2) := by simp [hb, Pi.single_apply]
-      rw [← hf, ContinuousLinearEquiv.coe_coe, h2]
-      exact h1
+      rwa [← hf, ContinuousLinearEquiv.coe_coe, h2]
     · exact ⟨0, fun h => absurd h hu⟩
   choose h hh using hh
   refine ⟨h, fun u hu => ⟨(hh u hu).1, ?_, fun ex hadd hex hd z => ?_⟩⟩
   · refine ((hh u hu).1.contDiffAt_map_inverse (n := 1)).continuousAt.comp (continuousAt_clm_apply.2 fun z => ?_)
     have : ∀ u, h u z = ∑ j, z j • h u (Pi.single j 1) := fun u => by
 
-      simp only [← map_smul, ← map_sum]
-      exact congrArg _ (pi_eq_sum_univ' z)
+      simpa only [← map_smul, ← map_sum] using congrArg _ (pi_eq_sum_univ' z)
     simp only [this]
     refine tendsto_finsetSum _ fun j _ => ContinuousAt.const_smul ?_ (z j)
     exact continuousAt_dir (e := e') (w := fun b => h b (Pi.single j 1))
@@ -756,7 +751,7 @@ theorem polyGrowth_spread_of_integral_monodromy : ∀ (g m : ℕ) (lam : ℂ →
             calc C ≤ max C 0 := le_max_left _ _
               _ = max C 0 * 1 := (mul_one _).symm
               _ ≤ max C 0 * B ^ (n + 1) := mul_le_mul_of_nonneg_left hBn hM
-      · push_neg at hsm
+      · push Not at hsm
         have hn0 : (0 : ℝ) ≤ 2 * Real.pi * n := by positivity
         have hcast : ((n + 1 : ℕ) : ℝ) = (n : ℝ) + 1 := by push_cast; ring
         rw [hcast] at hi
@@ -824,10 +819,8 @@ theorem int_coord_const (g m : ℕ) (U : Set ℂ) (hU : IsPreconnected U) (μ ν
         simp [Int.cast_smul_eq_zsmul]
     have hcz : ContinuousOn (fun s => n s j) U := by
       rw [continuousOn_pi] at hcont ⊢
-      intro i
-      exact (Int.isUniformEmbedding_coe_real.isEmbedding.continuousOn_iff).2 (hcont i)
-    intro s hs
-    exact hU.constant hcz hs hs₀
+      exact fun i => (Int.isUniformEmbedding_coe_real.isEmbedding.continuousOn_iff).2 (hcont i)
+    exact fun s hs => hU.constant hcz hs hs₀
   exact ⟨n s₀, fun s hs j => by rw [hnE s hs j, key j s hs]⟩
 
 theorem strip_growth : ∀ (g m : ℕ) (lam : ℂ → Fin m → Fin g → ℂ) (C : ℝ) (k : ℕ), ContinuousOn lam {s : ℂ | s.re < 0} → (∀ s : ℂ, s.re < 0 → LinearIndependent ℝ (lam s)) → (∀ s : ℂ, s.re < 0 → ∀ z : Fin g → ℂ, (∃ n : Fin m → ℤ, z = ∑ j, n j • lam (s + 2 * Real.pi * Complex.I) j) ↔ ∃ n : Fin m → ℤ, z = ∑ j, n j • lam s j) → (∀ s : ℂ, s.re < 0 → ‖Complex.exp s‖ ≤ 1 / 2 → |s.im| ≤ Real.pi → ‖lam s‖ ≤ C * (1 + ‖s‖) ^ k) → ∀ R : ℝ, ∃ C' : ℝ, ∀ s : ℂ, s.re < 0 → ‖Complex.exp s‖ ≤ 1 / 2 → |s.im| ≤ R → ‖lam s‖ ≤ C' * (1 + ‖s‖) ^ k := by
@@ -914,8 +907,7 @@ theorem _root_.GlobalTheory.T.exists_continuous_period_basis_along_arc : ∀ (E 
     intro w hw
     have h1 := hexp2 w hw
     rw [Complex.norm_exp] at h1
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have := Real.one_le_exp hc
     linarith
   have hub : ∀ w : ℂ, T₀ < w.im → eTwoPi w ∈ Metric.closedBall (0 : ℂ) (ρ₀ / 2) := fun w hw =>
@@ -1162,13 +1154,13 @@ theorem periods_le_of_mem_lattice : ∀ (E : Type) [Field E] [NumberField E] [Is
     intro τ i hτ
     rcases hτ with ⟨h1, h2⟩ | ⟨h1, h2⟩
     · obtain ⟨s, -, hs⟩ := hidx τ (N - (U.X k).p0) (by
-        rw [if_pos (((hX k).2 _).1 h1), (hX k).1, hN, Nat.add_sub_cancel])
+        rw [ite_eq_left (((hX k).2 _).1 h1), (hX k).1, hN, Nat.add_sub_cancel])
       exact ⟨s ⟨i, h2⟩, hs _⟩
     · have hcc : NumberField.ComplexEmbedding.conjugate (conjEmb τ) = τ := RingHom.ext fun a => by
         simp [conjEmb, NumberField.ComplexEmbedding.conjugate_coe_eq]
       have hne : ¬ τ (H.rt : E) = H.rt0 := fun h =>
         ((U.X k).cmType (conjEmb τ)).1 h1 (by rw [hcc]; exact ((hX k).2 τ).2 h)
-      obtain ⟨s, -, hs⟩ := hidx τ (U.X k).p0 (by rw [if_neg hne, (hX k).1])
+      obtain ⟨s, -, hs⟩ := hidx τ (U.X k).p0 (by rw [ite_eq_right hne, (hX k).1])
       exact ⟨s ⟨i, h2⟩, hs _⟩
   refine ⟨(∑ j, (|n b₀ j| : ℝ)) * C, Bx, ?_⟩
   filter_upwards [(tendsto_comap (f := Complex.im) (x := atTop)).eventually (eventually_gt_atTop T₁)]
@@ -1289,8 +1281,7 @@ theorem periods_le_pow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     · have e : perFr (U.X k) (xx w) v τ i = 0 := by
         unfold perFr
         rw [dite_eq_left hτ, dite_eq_right (by omega)]
-      rw [e, norm_zero]
-      exact hzero
+      rwa [e, norm_zero]
   · by_cases hc : conjEmb τ ∈ (U.X k).Ψ
     · by_cases h0 : (U.X k).p0 = 0
       · calc ‖perFr (U.X k) (xx w) v τ i‖ ≤ C₃ := hw3 h0 τ i hτ
@@ -1308,8 +1299,7 @@ theorem periods_le_pow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     · have e : perFr (U.X k) (xx w) v τ i = 0 := by
         unfold perFr
         rw [dite_eq_right hτ, dite_eq_right hc]
-      rw [e, norm_zero]
-      exact hzero
+      rwa [e, norm_zero]
 
 end GlobalTheory.ShFam.PerPoly
 end -- clump:auto

@@ -194,8 +194,7 @@ theorem exists_tanRel : Out.Laws → ∀ (E : Type) [Field E] [NumberField E] [I
     ((spMap_comp _ _).symm.trans ((congrArg spMap (RingHom.ext fun r => dualMapR_inl _ r)).trans (spMap_comp _ _))) ν
   refine ⟨g, fun x => ?_⟩
   have := hg (W.e x)
-  rw [show W.e.symm.toAddEquiv.toAddMonoidHom (W.e x) = x from W.e.symm_apply_apply x] at this
-  exact this
+  rwa [show W.e.symm.toAddEquiv.toAddMonoidHom (W.e x) = x from W.e.symm_apply_apply x] at this
 
 end GlobalTheory.ConstTan
 end -- clump:auto
@@ -825,8 +824,7 @@ theorem le_of_isLocalHom [IsLocalRing R] [IsLocalRing R'] (φ : R →+* R') [IsL
     (x : Sp R ⟶ Z) {U : Z.Opens} (h : ⊤ ≤ (spMap φ ≫ x) ⁻¹ᵁ U) : ⊤ ≤ x ⁻¹ᵁ U := by
   refine ((IsLocalRing.closedPoint_mem_iff (x ⁻¹ᵁ U)).1 ?_).ge
   have := h (x := IsLocalRing.closedPoint R') trivial
-  rw [← IsLocalRing.comap_closedPoint φ]
-  exact this
+  rwa [← IsLocalRing.comap_closedPoint φ]
 
 end Dual
 
@@ -1112,8 +1110,7 @@ theorem sumsAt_fderiv (H : IsPullback p q t (spMap κ)) (bF : F →+* ℂ) (φ :
     have hν : ⊤ ≤ (ν' ≫ φ) ⁻¹ᵁ U := by
       refine le_of_unit ((fstHom ℂ ℂ ℂ).toRingHom.comp (dualMapR (Γ.ev w).toRingHom)) (fun a ha => ?_) _ ?_
       · exact isUnit_iff_isUnit_fst.2 (Γ.unit w _ fun h => ha ((fst_dual _ a).trans h))
-      · rw [spMap_comp, Category.assoc, reassoc_of% h0]
-        exact hz
+      · rwa [spMap_comp, Category.assoc, reassoc_of% h0]
     refine ⟨snd (valR (ν' ≫ φ) U f), ?_, fun c hc => ?_⟩
     · rw [hS, ← a3, Category.assoc, valR_spMap _ _ _ hν, snd_dual]
       rfl

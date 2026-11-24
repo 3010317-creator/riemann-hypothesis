@@ -97,15 +97,14 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
   have hγ' : ∃ x ∈ iwU n w b, ∃ z ∈ iwU n w b,
       γ.1 = x.1 * (b * tdiag ϖ (wexp n l) * b⁻¹) * z.1 := by
     by_contra h
-    exact hγ (if_neg h)
+    exact hγ (ite_eq_right h)
   obtain ⟨x, hx, z, hz, e⟩ := hγ'
   obtain ⟨δ, hδ⟩ : ∃ δ : GLw n w, δ = b⁻¹ * γ.1 * b := ⟨_, rfl⟩
   have hγδ : γ.1 = b * δ * b⁻¹ := by rw [hδ]; group
   have hδd : dcos n w (tdiag ϖ (wexp n l)) δ ≠ 0 := by
     have h : ∃ x ∈ iwGL n w, ∃ z ∈ iwGL n w, δ = x * tdiag ϖ (wexp n l) * z :=
       ⟨_, (hW2 x).1 hx, _, (hW2 z).1 hz, by rw [hδ, e]; group⟩
-    simp only [dcos, if_pos h]
-    exact one_ne_zero
+    simpa only [dcos, ite_eq_left h] using one_ne_zero
   have hδU : δ ∈ UJ (cj w) (antiJ (w.adicCompletion E) n) :=
     (hW1 δ).1 (by rw [← hγδ]; exact γ.2)
   obtain ⟨m0, hm0, τ, ⟨hτ0, hτ1⟩, hmτ⟩ := hyp (wexp n l) hanti δ hδd
@@ -156,8 +155,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
   · have : b⁻¹ * (b * (m0 * GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s) * b⁻¹) * b =
         m0 * GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s := by group
     change b⁻¹ * (b * (m0 * GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s) * b⁻¹) * b ∈ iwGL n w
-    rw [this]
-    exact hm1
+    rwa [this]
   · change (b * (m0 * GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s) * b⁻¹)⁻¹ * γ.1 *
       (b * (m0 * GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) s) * b⁻¹) = _
     rw [hγδ]

@@ -175,8 +175,7 @@ theorem short_vector_sublattice (I : AutInst) (h1 : LatticeFinitelyGenerated) (h
       obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun (𝓞 I.E)).1 (show y ∈ P from hy)
       refine ⟨fun k => (c k : I.E), mem_integral_vectors I s.j _ fun k => ⟨c k, rfl⟩, ?_⟩
       rw [hlin, linearComb_apply, ← hc]
-      refine Finset.sum_congr rfl fun k _ => ?_
-      exact algebraMap_smul I.E (c k) (s.b k)
+      exact Finset.sum_congr rfl fun k _ => algebraMap_smul I.E (c k) (s.b k)
   have hmapB : Bp.map lin = s.B.toAddSubgroup := by
     refine AddSubgroup.map_comap_eq_self ?_
     intro u hu
@@ -313,7 +312,7 @@ theorem minkowski_submodule_short_vector (h1 : LatticeFinitelyGenerated) (h2 : E
     have := Finset.single_le_sum (f := cj) (fun j _ => hcj j) (Finset.mem_range.2 (Nat.lt_succ_of_le hjn))
     linarith
   have hcs : cj s.j = (h8m _ hd).choose * t8K I s.j ^ ((2 : ℝ) / ((2 * I.f * s.j : ℕ) : ℝ)) := by
-    simp only [cj, dif_pos hd]
+    simp only [cj, dite_eq_left hd]
   rw [← hcs]
   exact mul_le_mul_of_nonneg_right hle (sq_nonneg _)
 
@@ -381,8 +380,7 @@ theorem one_le_norm_embedding_alt (I : AutInst) (a : 𝓞 I.E) (ha : a ≠ 0) :
   have hsI : IsIntegral ℤ (star (a : I.E)) := IsIntegral.map I.cm.sig haI
   have hβI : IsIntegral ℤ β := haI.mul hsI
   have hγI : IsIntegral ℤ γ := by
-    rw [← isIntegral_algebraMap_iff (B := I.E), hγ]
-    exact hβI
+    rwa [← isIntegral_algebraMap_iff (B := I.E), hγ]
   have ha0 : (a : I.E) ≠ 0 := by simpa using ha
   have hβ0 : β ≠ 0 := mul_ne_zero ha0 (star_ne_zero.2 ha0)
   let g : 𝓞 I.F := ⟨γ, hγI⟩
@@ -558,12 +556,10 @@ namespace Formalism.L2.SG.Pf.Tau
 open Size Formalism.MainNotions.S
 
 theorem exists_ne_zero_mem_L (I : AutInst) (hn : 1 ≤ I.n) : ∃ l ∈ I.L, l ≠ 0 := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have h := I.L_span
   have h0 : Submodule.span I.E (I.L : Set (Fin I.n → I.E)) = ⊥ := by
-    rw [Submodule.span_eq_bot]
-    exact hcon
+    rwa [Submodule.span_eq_bot]
   rw [h0] at h
   haveI : Nonempty (Fin I.n) := ⟨⟨0, hn⟩⟩
   exact bot_ne_top h
@@ -592,16 +588,14 @@ theorem third_estimate_of_first_two (h0 : LatticeCommensurable) (h1 : LatticeFin
   · exact Fintype.card_pos_iff.mpr hne.to_subtype
   · exact hli.comp _ e.injective
   · exact hM.le
-  · intro a
-    exact htM (e a).2
+  · exact fun a => htM (e a).2
   · intro v hv
     have hr : Set.range (fun a => (e a : Fin I.n → I.E)) = t := by
       ext v
       constructor
       · rintro ⟨a, rfl⟩
         exact (e a).2
-      · intro hv
-        exact ⟨e.symm ⟨v, hv⟩, by simp⟩
+      · exact fun hv => ⟨e.symm ⟨v, hv⟩, by simp⟩
     rw [hr, hspan]
     exact Submodule.subset_span hv
 
@@ -797,8 +791,7 @@ variable {G : Type*} [Group G]
 theorem mult_mono (Γ : Subgroup G) {Ω Ω' : Set G} (h : Ω ⊆ Ω') (x : G) :
     FoldBound.mult Γ Ω x ≤ FoldBound.mult Γ Ω' x := by
   unfold FoldBound.mult
-  refine iSup_mono fun y => ?_
-  exact ENat.toENNReal_le.2 (Set.encard_le_encard fun γ hγ => h hγ)
+  exact iSup_mono fun y => ENat.toENNReal_le.2 (Set.encard_le_encard fun γ hγ => h hγ)
 
 theorem mult_union (Γ : Subgroup G) (Ω Ω' : Set G) (x : G) :
     FoldBound.mult Γ (Ω ∪ Ω') x ≤ FoldBound.mult Γ Ω x + FoldBound.mult Γ Ω' x := by
@@ -995,8 +988,7 @@ theorem mem_sset_of_closure (hS : SGroup X u) {y : X.B.I.GA}
     y.1 ∈ X.SinfU u ∧ y.2 ∈ SfinU X u := by
   have : y ∈ ((Subgroup.closure {y : X.B.I.GA | y.1 ∈ X.SinfU u ∧ y.2 ∈ SfinU X u} : Subgroup X.B.I.GA) :
       Set X.B.I.GA) := hy
-  rw [hS] at this
-  exact this
+  rwa [hS] at this
 
 theorem sinf_mul (hS : SGroup X u) {s t : X.B.I.Ginf} (hs : s ∈ X.SinfU u) (ht : t ∈ X.SinfU u) :
     s * t ∈ X.SinfU u := by
@@ -1429,7 +1421,7 @@ theorem normPow_holds (I : AutInst) : NormPow I := by
     push_cast
     have h4 : (0 : ℝ) ≤ 4 * (I.n : ℝ) ^ 2 := by positivity
     nlinarith
-  · push_neg at hq
+  · push Not at hq
     have h1 : normI I g = 1 := by
       unfold normI
       refine Finset.prod_eq_one fun v _ => opn_eq_one_of_definite hn (I.ε v) (fun a => ?_) (g v)
@@ -1483,8 +1475,7 @@ theorem size_subOfEq_le_pl {x x' : I.GA} (hlat : latSet I x' = latSet I x)
     intro v
     have h := (h5 I.n s.j (Y v) (Tau.cmat I x v s.b) 0 (c v) le_rfl fun w =>
       ⟨by rw [zero_mul]; positivity, hb v w⟩).2
-    rw [Tau.gramV_eq, Tau.gramV_eq, hcm]
-    exact h
+    rwa [Tau.gramV_eq, Tau.gramV_eq, hcm]
   have hP0 : 0 ≤ ∏ v, c v := Finset.prod_nonneg fun v _ => le_trans zero_le_one (hc v)
   have hprod : (∏ v, (gramV I x' v s.b).det.re) ≤ (∏ v, c v) ^ s.j * ∏ v, (gramV I x v s.b).det.re := by
     calc (∏ v, (gramV I x' v s.b).det.re) ≤ ∏ v, (c v ^ s.j * (gramV I x v s.b).det.re) :=

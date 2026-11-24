@@ -112,20 +112,17 @@ lemma sub_prW_X {z q : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z)
       · rw [Finset.sum_eq_single (esI k r a)]
         · simp only [Pi.star_apply, Pi.single_eq_same, star_one, one_mul]
           dsimp only [Hpk, eI, esI]
-          rw [if_pos ⟨ha, by omega⟩, one_mul]
+          rw [ite_eq_left ⟨ha, by omega⟩, one_mul]
         · intro j _ hj
           have hj' : (j : ℕ) ≠ 2 * r + k - a := fun h => hj (Fin.ext h)
           have hjl := j.isLt
           dsimp only [Hpk, eI]
           split_ifs <;> first | (exfalso; omega) | simp
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+        · exact fun h => absurd (Finset.mem_univ _) h
       · intro i _ hi
         simp [hi]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
-    rw [hc] at h
-    exact h
+      · exact fun h => absurd (Finset.mem_univ _) h
+    rwa [hc] at h
   have hwb : herm (Hpk k r) (wbPart k r q) z = 0 := by
     have h1 : herm (Hpk k r) (q - wbPart k r q) z = 0 :=
       herm_out_wb (fun i hi1 hi2 => by simp [wbPart, hi1, hi2]) hzw

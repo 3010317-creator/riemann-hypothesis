@@ -67,8 +67,7 @@ variable {F E : Type} [Field F] [Field E] [Algebra F E] (σ : E →ₐ[F] E)
 
 theorem quad_exists_not_mem (h2 : Module.finrank F E = 2) :
     ∃ a : E, a ∉ (algebraMap F E).range := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have htop : Submodule.span F ({1} : Set E) = ⊤ := by
     rw [eq_top_iff]
     intro x _
@@ -218,12 +217,10 @@ theorem quad_coord_eq (a b : R) :
   fin_cases i <;> simp
 
 theorem quad_coord_zero (a b : R) : (quadBasisR h2 hli R).repr (a ⊗ₜ[F] (1 : E) + b ⊗ₜ[F] θ) 0 = a := by
-  have h := congrFun (quad_coord_eq h2 hli R a b) 0
-  simpa using h
+  simpa using congrFun (quad_coord_eq h2 hli R a b) 0
 
 theorem quad_coord_one (a b : R) : (quadBasisR h2 hli R).repr (a ⊗ₜ[F] (1 : E) + b ⊗ₜ[F] θ) 1 = b := by
-  have h := congrFun (quad_coord_eq h2 hli R a b) 1
-  simpa using h
+  simpa using congrFun (quad_coord_eq h2 hli R a b) 1
 
 theorem quad_decomp (z : R ⊗[F] E) :
     z = ((quadBasisR h2 hli R).repr z 0) ⊗ₜ[F] (1 : E) + ((quadBasisR h2 hli R).repr z 1) ⊗ₜ[F] θ := by

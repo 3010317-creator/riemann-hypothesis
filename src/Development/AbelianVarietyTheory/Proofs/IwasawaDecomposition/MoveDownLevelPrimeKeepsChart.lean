@@ -195,10 +195,7 @@ variable {B : Base} {X : PreX B.toPre} (I : TC B X)
 theorem TC.pref_of_normalFor (u : B.Word) (a : I.ι) (j : ℕ) (hj : j + 1 = B.R.m) (b : (I.stp0 u a j).β) (p : (I.stp0 u a j).D b)
     (h : (I.stp0 u a j).NormalFor b (fun q' : (I.stp0 u a j).D b => cosetIn q') p) : I.pref u a j b p := by
   have hm := B.R.two_le_m
-  refine ⟨fun h0 => absurd hj (by omega), fun _ => h, ?_⟩
-  show ∀ h : j = B.R.m, _
-  intro hjm
-  exact absurd hjm (by omega)
+  exact ⟨fun h0 => absurd hj (by omega), fun _ => h, fun hjm => absurd hjm (by omega)⟩
 
 private theorem TC.cosetIn_rep_cl_dn_eq (hPr : (B.primes X).Ok) (u : B.Word) (a : I.ι) (i : ℕ) (v : (B.primes X).vT u)
     (c : (I.stp u a i).Cl) (f : Sp B.fields.E (B.R.N i) → Res v.1) :
@@ -219,8 +216,7 @@ private theorem TC.cosetIn_rep_cl_dn_eq (hPr : (B.primes X).Ok) (u : B.Word) (a 
           Y ∈ (ysAt B.R I.sel (I.tup a) (I.cst a) i).ys N → Y = ∅ := by
         intro Y N hY
         unfold ysAt at hY
-        rw [if_neg hi] at hY
-        exact hY
+        rwa [ite_eq_right hi] at hY
       have hp : p.1.2 = ∅ := hys _ _ p.2
       funext P
       unfold cosetIn

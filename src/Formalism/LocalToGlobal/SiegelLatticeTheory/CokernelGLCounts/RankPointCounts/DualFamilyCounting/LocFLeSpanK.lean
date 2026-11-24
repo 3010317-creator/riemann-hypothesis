@@ -77,8 +77,7 @@ theorem h_sum (horth : ∀ i j, i ≠ j → h (b i) (b j) = 0) (hdiag : ∀ i, h
   · rw [hdiag]
   · intro i _ hik
     rw [horth k i (Ne.symm hik), mul_zero]
-  · intro hk
-    exact absurd (Finset.mem_univ k) hk
+  · exact fun hk => absurd (Finset.mem_univ k) hk
 
 theorem locF_le_spanK (h𝔭 : 𝔭.IsPrime) :
     locF 𝔭 (Submodule.span (𝓞 K) (Set.range b)) ≤
@@ -89,8 +88,7 @@ theorem locF_le_spanK (h𝔭 : 𝔭.IsPrime) :
   have h1 : s • x ∈ Submodule.span K (Set.range b) :=
     Submodule.span_le_restrictScalars (𝓞 K) K _ hsx
   have h2 : (jK s)⁻¹ • (s • x) ∈ Submodule.span K (Set.range b) := Submodule.smul_mem _ _ h1
-  rw [← algebraMap_smul K s x, smul_smul, inv_mul_cancel₀ hs0, one_smul] at h2
-  exact h2
+  rwa [← algebraMap_smul K s x, smul_smul, inv_mul_cancel₀ hs0, one_smul] at h2
 
 variable (hbX : ∀ i, b i ∈ X) (hloc : locF 𝔭 (Submodule.span (𝓞 K) (Set.range b)) = locF 𝔭 L)
   (horth : ∀ i j, i ≠ j → h (b i) (b j) = 0)
@@ -170,8 +168,7 @@ theorem mem_locF_dualIn_iff (hF : IsFixF K F) (h𝔭 : 𝔭.IsMaximal) (hL : IsL
       star_jK_eq_of_mem_closure_prime_compl hF ht, smul_eq_mul, smul_eq_mul, ← mul_assoc, ← map_mul] at h1
     rw [HU.mem_SP_iff_locF]
     refine Exists.intro (t * s) ⟨Submonoid.mul_mem _ ht hs, ?_⟩
-    rw [Algebra.smul_def]
-    exact h1
+    rwa [Algebra.smul_def]
   · rintro ⟨hxX, hq⟩
     have hgx : ∀ y ∈ L, h y x ∈ HU.SP K 𝔭 := by
       intro y hy

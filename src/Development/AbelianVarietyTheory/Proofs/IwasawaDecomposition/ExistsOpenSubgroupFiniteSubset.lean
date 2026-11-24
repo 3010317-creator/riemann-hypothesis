@@ -116,8 +116,7 @@ theorem mem_GinfC_of_cong {D : D7} (V : HSp D) (k : GA D V)
     rw [e, hc, mul_smul]
     rfl
   rw [Pi.sub_apply, sub_eq_zero, Matrix.mulVec_single_one] at key
-  rw [Matrix.one_apply, ← Pi.single_apply]
-  exact key
+  rwa [Matrix.one_apply, ← Pi.single_apply]
 
 theorem exists_open_subgroup_finite_subset : ∀ (D : D7) (V : HSp D), ∀ N ∈ 𝓝 (1 : GA D V), ∃ U : Subgroup (GA D V), IsOpen (U : Set (GA D V)) ∧ ∀ k ∈ U, k ∈ GfC V → k ∈ N := by
   intro D V N hN
@@ -128,8 +127,7 @@ theorem exists_open_subgroup_finite_subset : ∀ (D : D7) (V : HSp D), ∀ N ∈
     rw [eq_top_iff, ← (Pi.basisFun D.host.E (Fin V.rank)).span_eq]
     apply Submodule.span_mono
     rintro _ ⟨a, rfl⟩
-    apply Submodule.subset_span
-    exact ⟨a, by simp⟩
+    exact Submodule.subset_span ⟨a, by simp⟩
   choose K hK1 hK2 hK3 _ using fun n : ℕ => hK _ n.factorial hL n.factorial_pos
   have hanti : Antitone fun n => (K n : Set (GA D V)) ∩ GfC V := by
     intro m n hmn k hk

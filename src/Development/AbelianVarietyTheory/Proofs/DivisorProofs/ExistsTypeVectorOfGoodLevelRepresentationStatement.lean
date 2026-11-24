@@ -895,22 +895,7 @@ theorem map_mem_radical {k k' : Type} [CommRing k] [CommRing k'] (e : k →+* k'
 
 theorem sum_character_eq_zero_iff {H V : Type} [Group H] [Fintype H] [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (τ : Representation ℂ H V) : ∑ h, τ.character h = 0 ↔ ∀ x : V, (∀ h, τ h x = x) → x = 0 := by
-  have hcard : (Nat.card H : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (Nat.card_pos (α := H)).ne'
-  haveI : Invertible (Nat.card H : ℂ) := invertibleOfNonzero hcard
-  have h := τ.card_inv_mul_sum_char_eq_finrank
-  constructor
-  · intro hs x hx
-    rw [hs, mul_zero] at h
-    have h0 : Module.finrank ℂ τ.invariants = 0 := by exact_mod_cast h.symm
-    have hb : τ.invariants = ⊥ := Submodule.finrank_eq_zero.1 h0
-    have hxm : x ∈ τ.invariants := (τ.mem_invariants x).2 hx
-    rw [hb] at hxm
-    exact (Submodule.mem_bot ℂ).1 hxm
-  · intro hx
-    have hb : τ.invariants = ⊥ :=
-      (Submodule.eq_bot_iff _).2 fun x hxm => hx x ((τ.mem_invariants x).1 hxm)
-    rw [hb, finrank_bot, Nat.cast_zero] at h
-    exact (mul_eq_zero.1 h).resolve_left (inv_ne_zero hcard)
+  exact GlobalTheory.GoodTypeGeneric.sum_character_eq_zero_iff τ
 
 theorem noFixed_iff_sum {k : Type} [Field k] {r a : ℕ} [Fintype (unipRadical k (blk2 (n := r) a))] {G V : Type} [Group G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (τ : Representation ℂ G V) (ι : GL (Fin r) k →* G) :
@@ -1045,7 +1030,7 @@ theorem sum_typeChar_radical {p : ℕ} [Fact p.Prime] {r : ℕ} (s : GlobalTheor
       rw [h1]
       unfold ext0
       by_cases hz : y⁻¹ * x * y ∈ blockTri (κ := ZMod p) (b₀ ∘ w)
-      · rw [dite_eq_left hz, if_pos ((hm _).2 hz), hch]
+      · rw [dite_eq_left hz, ite_eq_left ((hm _).2 hz), hch]
         refine Finset.prod_congr rfl fun c _ => ?_
         unfold cuspOn
         congr 1
@@ -1054,7 +1039,7 @@ theorem sum_typeChar_radical {p : ℕ} [Fact p.Prime] {r : ℕ} (s : GlobalTheor
         simp only [e, Equiv.trans_apply, cycEquiv_apply]
         rw [← conj_permGL_apply w, Equiv.apply_symm_apply, Equiv.apply_symm_apply]
         rfl
-      · rw [dite_eq_right hz, if_neg (mt (hm _).1 hz)]
+      · rw [dite_eq_right hz, ite_eq_right (mt (hm _).1 hz)]
   have hnf : GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.NoFixed (parInd (b₀ ∘ w) σ) (GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.radical (ZMod p) r a) := by
     by_contra hfix
     obtain ⟨J, hJ, hJa⟩ := GlobalTheory.GoodNoFixed.fixedVectorBlocks (ZMod p) r (b₀ ∘ w) _ σ hσ _ (parInd (b₀ ∘ w) σ)
@@ -1122,7 +1107,7 @@ theorem hypH_of_goodProj : GlobalTheory.Published.GreenCuspidal → ∀ {D : D7}
       ∑ c ∈ A, LevelCuspCharacters.cycLen (s ⟨0, w⟩).1 c ≠ a := by
     have hiv := (hs 0).2.2.2.1
     by_contra hne
-    push_neg at hne
+    push Not at hne
     by_cases h2 : 2 * a ≤ D.R.r
     · exact hiv ⟨a, h0, h2, hne⟩
     · refine hiv ⟨D.R.r - a, by omega, by omega, fun v => ?_⟩

@@ -82,8 +82,7 @@ theorem norm_natCast_prime {l : ℕ} [Fact (Nat.Prime l)] :
 theorem norm_map_le_one {l : ℕ} [Fact (Nat.Prime l)] {E : Type} [Field E]
     (c : E →+* PadicAlgCl l) (x : 𝓞 E) : ‖c (x : E)‖ ≤ 1 := by
   apply norm_le_one_of_isIntegral
-  have h0 := (NumberField.RingOfIntegers.isIntegral_coe x).map c.toIntAlgHom
-  simpa using h0
+  simpa using (NumberField.RingOfIntegers.isIntegral_coe x).map c.toIntAlgHom
 
 def smallIdeal {l : ℕ} [Fact (Nat.Prime l)] {E : Type} [Field E]
     (c : E →+* PadicAlgCl l) : Ideal (𝓞 E) where
@@ -118,8 +117,7 @@ theorem smallIdeal_isPrime {l : ℕ} [Fact (Nat.Prime l)] {E : Type} [Field E]
     simp
   · rw [mem_smallIdeal, mem_smallIdeal]
     rw [mem_smallIdeal] at hxy
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h1 := norm_map_le_one c x
     have h2 := norm_map_le_one c y
     have e : ((x * y : 𝓞 E) : E) = (x : E) * (y : E) := map_mul (algebraMap (𝓞 E) E) x y

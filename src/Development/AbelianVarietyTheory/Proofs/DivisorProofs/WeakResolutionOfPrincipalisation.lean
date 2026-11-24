@@ -149,12 +149,10 @@ theorem exists_linear_closedImmersion_two_le_ringKrullDim_stalk :
     rintro ⟨i, hi⟩; exact Fin.castSucc_ne_last i hi
   have n1 : ℓ₁ y ∉ chart F (N + 1) (Fin.last (N + 1)) := fun h => by
     have : y ∈ ℓ₁ ⁻¹ᵁ chart F (N + 1) (Fin.last (N + 1)) := h
-    rw [linearι_preimage_chart_of_notMem F h1 last1] at this
-    exact this
+    rwa [linearι_preimage_chart_of_notMem F h1 last1] at this
   have n2 (z : PSpace F (N + 1)) : ℓ₂ z ∉ chart F (N + 2) (Fin.last (N + 2)) := fun h => by
     have : z ∈ ℓ₂ ⁻¹ᵁ chart F (N + 2) (Fin.last (N + 2)) := h
-    rw [linearι_preimage_chart_of_notMem F h2 last2] at this
-    exact this
+    rwa [linearι_preimage_chart_of_notMem F h2 last2] at this
   have s1 : projSys.gen F (N + 1) ⤳ ℓ₁ y :=
     specializes_iff_mem_closure.2 ((ProjectiveSpectrum.le_iff_mem_closure _ _ _).1
       (show ⊥ ≤ (ℓ₁ y).asHomogeneousIdeal from bot_le))
@@ -209,8 +207,7 @@ theorem exists_preimage {X Y : Scheme.{0}} (s : X ⟶ Y) {U : Y.Opens} [IsIso (s
   obtain ⟨z, hz⟩ := (s ∣_ U).homeomorph.surjective ⟨y, hy⟩
   refine ⟨z.1, z.2, ?_⟩
   have := congrArg Subtype.val hz
-  rw [← morphismRestrict_base_coe]
-  exact this
+  rwa [← morphismRestrict_base_coe]
 
 theorem injOn {X Y : Scheme.{0}} (s : X ⟶ Y) {U : Y.Opens} [IsIso (s ∣_ U)] {a b : X}
     (ha : a ∈ s ⁻¹ᵁ U) (hb : b ∈ s ⁻¹ᵁ U) (h : s a = s b) : a = b := by

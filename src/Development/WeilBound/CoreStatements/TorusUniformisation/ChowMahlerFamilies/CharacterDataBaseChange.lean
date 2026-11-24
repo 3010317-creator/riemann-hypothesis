@@ -130,8 +130,7 @@ theorem sec_fst (Δ : AddSubgroup (V × Z)) (hΔ : ∀ a ∈ R, ∀ v ∈ Δ, a 
   obtain ⟨h3, h4⟩ := h' v z hvz
   have h5 : (σ v).1 = v := (h1 v).trans h4
   have h6 := h2 v h3
-  rw [← Prod.mk.eta (p := σ v), h5] at h6
-  exact h6
+  rwa [← Prod.mk.eta (p := σ v), h5] at h6
 
 theorem sec_snd (Δ : AddSubgroup (V × Z)) (hΔ : ∀ a ∈ R, ∀ v ∈ Δ, a • v ∈ Δ)
     {N : ℕ} (L : AddSubgroup Z) (hL : LocFree R N L) (h : ∀ z, (∃ v, (v, z) ∈ Δ) ↔ z ∈ L) :
@@ -142,8 +141,7 @@ theorem sec_snd (Δ : AddSubgroup (V × Z)) (hΔ : ∀ a ∈ R, ∀ v ∈ Δ, a 
   refine ⟨LinearMap.fst Ω V Z ∘ₗ σ, fun v z hvz => ?_⟩
   have h5 : (σ z).2 = z := h1 z
   have h6 := h2 z ((h z).1 ⟨v, hvz⟩)
-  rw [← Prod.mk.eta (p := σ z), h5] at h6
-  exact h6
+  rwa [← Prod.mk.eta (p := σ z), h5] at h6
 
 end Free
 
@@ -448,8 +446,7 @@ theorem PositivityTheory.Xgn.character_data_base_change : ∀ {o Ω : Type} [Com
     exact span_mono RC _ hD.M_le
   · obtain ⟨m, hm⟩ := hD.le_M
     refine ⟨m, fun x hx => span_mono RC _ hm ?_⟩
-    rw [span_mul, span_std RC R hR, map_pow, hpC]
-    exact hx
+    rwa [span_mul, span_std RC R hR, map_pow, hpC]
   · refine mem_span ⟨1, hD.one_mem, ?_⟩
     funext j
     simp [bcMap]

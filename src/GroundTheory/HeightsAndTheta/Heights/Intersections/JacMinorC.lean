@@ -33,7 +33,7 @@ theorem pderiv_facts_charZero {F : Type*} [Field F] [CharZero F] {σ : Type*} (p
   refine ⟨?_, ?_, ?_⟩
   · have : ¬ degreeOf j p < 1 := by omega
     rw [degreeOf_lt_iff one_pos] at this
-    push_neg at this
+    push Not at this
     obtain ⟨m, hm, hmj⟩ := this
     have hle : Finsupp.single j 1 ≤ m := Finsupp.single_le_iff.mpr hmj
     intro h0
@@ -115,8 +115,7 @@ theorem exists_jacobian_minor_not_mem_charZero {F : Type} [Field F] [CharZero F]
     have h0 : aeval ((↑) : u → A) q = 0 := by
       rw [← Ideal.Quotient.eq_zero_iff_mem, hmk', aeval_rename] at hQp
       have hfun : ((↑) : u → A) = xb ∘ g := funext fun y => (hg y).symm
-      rw [hfun]
-      exact hQp
+      rwa [hfun]
     rw [hub.1.eq_zero_of_aeval_eq_zero q h0, map_zero]
 
   have hrel : ∀ j, j ∉ Set.range g → ∃ Q : MvPolynomial σ F,
@@ -128,7 +127,7 @@ theorem exists_jacobian_minor_not_mem_charZero {F : Type} [Field F] [CharZero F]
       rw [AlgebraicIndependent.option_iff] at h
       exact h.2 (hub.isAlgebraic.isAlgebraic (xb j))
     rw [algebraicIndependent_iff] at hw
-    push_neg at hw
+    push Not at hw
     obtain ⟨p, hp0, hp⟩ := hw
     let h : Option u → σ := fun o => o.elim j g
     have hinj : Function.Injective h := by
@@ -144,8 +143,7 @@ theorem exists_jacobian_minor_not_mem_charZero {F : Type} [Field F] [CharZero F]
         cases o with
         | none => rfl
         | some y => exact hg y
-      rw [hfun]
-      exact hp0
+      rwa [hfun]
     · exact fun h0 => hp ((rename_injective h hinj) (h0.trans (map_zero _).symm))
     · intro i hi
       have := vars_rename h p (Finset.mem_coe.mp hi)
@@ -201,8 +199,7 @@ theorem exists_jacobian_minor_not_mem_charZero {F : Type} [Field F] [CharZero F]
       rw [hQd]
       exact Nat.find_min' hex ⟨Q', h1, h2, h3, rfl⟩
     have hpos : 0 < degreeOf j Q := by
-      by_contra h0
-      push_neg at h0
+      by_contra! h0
       apply hQ0
       apply hind Q _ hQp
       intro i hi
@@ -242,8 +239,7 @@ theorem exists_jacobian_minor_not_mem_charZero {F : Type} [Field F] [CharZero F]
   have hM' : M.submatrix a id = π.mapMatrix (Matrix.of fun i j => pderiv (b j) (G (a i))) := by
     ext i k
     rfl
-  rw [hM']
-  exact h1
+  rwa [hM']
 
 section Minors
 

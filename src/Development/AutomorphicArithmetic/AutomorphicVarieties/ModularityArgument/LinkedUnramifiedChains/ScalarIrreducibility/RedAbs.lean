@@ -265,8 +265,7 @@ private theorem exists_max_entry {B A K G : Type} [CommRing B] [CommRing A] [Alg
         calc ‖ξ (algebraMap B A b)‖ * ‖ξ x‖ ≤ 1 * m :=
               mul_le_mul (hB b) hx (norm_nonneg _) zero_le_one
           _ = m := one_mul m
-    intro g
-    exact key _ (hU ▸ Submodule.subset_span ⟨g, rfl⟩)
+    exact fun g => key _ (hU ▸ Submodule.subset_span ⟨g, rfl⟩)
   rcases U.eq_empty_or_nonempty with hE | hne
   · obtain ⟨g₀⟩ := ‹Nonempty G›
     exact ⟨g₀, bound _ (norm_nonneg _) (by simp [hE])⟩
@@ -537,13 +536,11 @@ private theorem one_gen {A B : Type} [CommRing A] [IsDomain A] [CommRing B] [IsD
     refine ⟨ξ, hξ, fun h0 => right_ne_zero_of_mul hy ?_⟩
     have h1 := congrArg ξ hd
     rw [map_mul, h0, zero_mul] at h1
-    rw [← hξ]
-    exact h1
+    rwa [← hξ]
   · have hsurj : Function.Surjective (aeval t : B[X] →ₐ[B] A) := by
       intro x
       have hx : x ∈ Algebra.adjoin B {t} := ht ▸ Algebra.mem_top
-      rw [Algebra.adjoin_singleton_eq_range_aeval] at hx
-      exact hx
+      rwa [Algebra.adjoin_singleton_eq_range_aeval] at hx
     have hbij : Function.Bijective (aeval t : B[X] →ₐ[B] A) :=
       ⟨transcendental_iff_injective.mp hta, hsurj⟩
     obtain ⟨p, rfl⟩ := hsurj a
@@ -619,16 +616,13 @@ theorem UpperTheory.Reformulated.B.Ra5.main_fin :
       rw [AlgHom.map_adjoin, Algebra.map_top, Subalgebra.range_val, Set.image_singleton]
       rfl
     have hinj₁ : Function.Injective (algebraMap B (Algebra.adjoin B ({t} : Set A))) := by
-      intro x x' hxx
-      exact hinj' (congrArg Subtype.val hxx)
+      exact fun x x' hxx => hinj' (congrArg Subtype.val hxx)
     obtain ⟨b, hb, h2⟩ := one_gen hinj₁ t₁ ht₁ b₁ hb₁
     refine ⟨b, hb, fun K _ _ y hy => ?_⟩
     obtain ⟨ξ₁, h3, h4⟩ := h2 K y hy
     obtain ⟨ξ, h5, h6⟩ := h K ξ₁ h4
     refine ⟨ξ, RingHom.ext fun x => ?_, h6⟩
-    have h7 := RingHom.congr_fun h5 (algebraMap B _ x)
-    have h8 := RingHom.congr_fun h3 x
-    exact h7.trans h8
+    exact (RingHom.congr_fun h5 (algebraMap B _ x)).trans (RingHom.congr_fun h3 x)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.MainFin =====
@@ -692,8 +686,7 @@ private theorem chev_prime (B A : Type) [CommRing B] [CommRing A] [Algebra B A] 
 
 private theorem gen_out {R : Type} [CommRing R] {s : Set R} {P : Ideal R} (h : ¬ Ideal.span s ≤ P) :
     ∃ x ∈ s, x ∉ P := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   exact h (Ideal.span_le.2 hc)
 
 set_option synthInstance.maxHeartbeats 200000 in
@@ -760,8 +753,7 @@ theorem UpperTheory.V.J.genPt :
     refine (Ideal.span_le.mpr ?_) hx
     rintro z ⟨hzP, k, hzk⟩
     exact RingHom.mem_ker.mpr ((hz k z hzk).mpr (RingHom.mem_ker.mp (hPξ0 hzP)))
-  · rw [hc', hcomp]
-    exact hGd
+  · rwa [hc', hcomp]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.ScalarIrreducibility.ChevPrime =====
@@ -1012,23 +1004,20 @@ private theorem min_of_localized {R : Type} [CommRing R] (Q : Ideal R) [Q.IsPrim
   have hPprime : P.IsPrime := hP.1
   have hdis : Disjoint (Q.primeCompl : Set R) (P : Set R) := by
     rw [Set.disjoint_left]
-    intro a ha haP
-    exact ha (hPQ haP)
+    exact fun a ha haP => ha (hPQ haP)
   set P' : Ideal (Localization.AtPrime Q) := P.map (algebraMap R (Localization.AtPrime Q)) with hP'
   have hcomap : Ideal.comap (algebraMap R (Localization.AtPrime Q)) P' = P :=
     IsLocalization.under_map_of_isPrime_disjoint Q.primeCompl (Localization.AtPrime Q) hPprime hdis
   have hass : P' ∈ associatedPrimes (Localization.AtPrime Q) (Localization.AtPrime Q) := by
     refine Module.associatedPrimes.mem_associatedPrimes_of_comap_mem_associatedPrimes_of_isLocalizedModule
       Q.primeCompl (Algebra.linearMap R (Localization.AtPrime Q)) P' ?_
-    rw [hcomap]
-    exact hP
+    rwa [hcomap]
   have hmin : P' ∈ (Ideal.map (algebraMap R (Localization.AtPrime Q)) (⊥ : Ideal R)).minimalPrimes := by
     rw [Ideal.map_bot]
     exact h P' hass
   rw [IsLocalization.minimalPrimes_map Q.primeCompl (Localization.AtPrime Q) (⊥ : Ideal R)] at hmin
   have key : Ideal.comap (algebraMap R (Localization.AtPrime Q)) P' ∈ (⊥ : Ideal R).minimalPrimes := hmin
-  rw [hcomap] at key
-  exact key
+  rwa [hcomap] at key
 
 theorem UpperTheory.V.J.unmix :
     ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O] (N N' : ℕ) (R : Type) [CommRing R]
@@ -1063,9 +1052,7 @@ theorem UpperTheory.V.J.unmix :
     rw [IsLocalization.AtPrime.ringKrullDim_eq_height Q (Localization.AtPrime Q),
       IsLocalization.AtPrime.ringKrullDim_eq_height q (Localization.AtPrime q)]
     exact_mod_cast hht
-  refine min_of_localized Q hP hPQ ?_
-  intro P' hP'
-  exact ass_min_of_surj φ hφ _ hx hkx hd hP'
+  exact min_of_localized Q hP hPQ (fun P' hP' => ass_min_of_surj φ hφ _ hx hkx hd hP')
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.ScalarIrreducibility.CmOfRegularLocal =====
@@ -1079,8 +1066,7 @@ private theorem flatAss_ann {A R : Type} [CommRing A] [CommRing R] [Algebra A R]
     (P : Ideal A) (a : A) (hmem : ∀ b, b ∈ P ↔ b * a = 0) (r : R) (h : a • r = 0) :
     r ∈ P.map (algebraMap A R) := by
   have h1 : ∑ _i : Fin 1, a • r = 0 := by
-    rw [Fin.sum_univ_one]
-    exact h
+    rwa [Fin.sum_univ_one]
   obtain ⟨l, c, y, hy, hc⟩ :=
     Module.Flat.isTrivialRelation_of_sum_smul_eq_zero (f := fun _ : Fin 1 => a)
       (x := fun _ : Fin 1 => r) h1
@@ -1091,8 +1077,7 @@ private theorem flatAss_ann {A R : Type} [CommRing A] [CommRing R] [Algebra A R]
   refine Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ ((hmem _).2 ?_))
   have h2 := hc j
   rw [Fin.sum_univ_one] at h2
-  rw [mul_comm]
-  exact h2
+  rwa [mul_comm]
 
 private theorem flatAss_annih {A R : Type} [CommRing A] [CommRing R] [Algebra A R] [Module.Flat A R]
     (P : Ideal A) (a : A) (hmem : ∀ b, b ∈ P ↔ b * a = 0) :
@@ -1103,8 +1088,7 @@ private theorem flatAss_annih {A R : Type} [CommRing A] [CommRing R] [Algebra A 
       congrArg Subtype.val (Module.mem_annihilator.1 hr
         ⟨algebraMap A R a, Ideal.mem_span_singleton_self _⟩)
     refine flatAss_ann P a hmem r ?_
-    rw [Algebra.smul_def, mul_comm]
-    exact h0
+    rwa [Algebra.smul_def, mul_comm]
   · refine Ideal.map_le_iff_le_comap.2 fun b hb => ?_
     rw [Ideal.mem_comap, Module.mem_annihilator]
     rintro ⟨n, hn⟩
@@ -1139,8 +1123,7 @@ private theorem flatAss_alg {A R : Type} [CommRing A] [CommRing R] [IsNoetherian
   obtain ⟨Q'', hle, hQ''p, hlies⟩ := Ideal.exists_ideal_le_liesOver_of_le Q' (hpP.trans hPc)
   have hge := hQ'm.2 ⟨hQ''p, bot_le⟩ hle
   have heq : Q'' = Q' := le_antisymm hle hge
-  rw [hlies.over, heq]
-  exact hPc
+  rwa [hlies.over, heq]
 
 open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.GalOfCusp IsLocalRing UpperTheory.V UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Base UpperTheory.V.Af UpperTheory.V.Pr UpperTheory.V.Alg UpperTheory.V.J
 
@@ -1174,8 +1157,7 @@ theorem UpperTheory.V.J.flatHt :
     rw [h0, add_zero]
   have hJQ : q.map (algebraMap A R) ≤ Q := hmin.1.2
   have hker : RingHom.ker (Ideal.Quotient.mk (q.map (algebraMap A R))) ≤ Q := by
-    rw [Ideal.mk_ker]
-    exact hJQ
+    rwa [Ideal.mk_ker]
   haveI : (Q.map (Ideal.Quotient.mk (q.map (algebraMap A R)))).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective hker
   rw [Ideal.height_eq_zero_iff]
@@ -1211,8 +1193,7 @@ private theorem ht_of_sum {h : ℕ∞} {N : ℕ} {D : WithBot ℕ∞} (hD : D = 
     (e : (h : WithBot ℕ∞) + D = (N + 1 : ℕ)) : h = N := by
   subst hD
   have e2 : ((h + 1 : ℕ∞) : WithBot ℕ∞) = (((N + 1 : ℕ) : ℕ∞) : WithBot ℕ∞) := by
-    rw [WithBot.coe_add, WithBot.coe_one, WithBot.coe_natCast]
-    exact e
+    rwa [WithBot.coe_add, WithBot.coe_one, WithBot.coe_natCast]
   have e3 : h + 1 = ((N + 1 : ℕ) : ℕ∞) := WithBot.coe_injective e2
   induction h using ENat.recTopCoe with
   | top =>
@@ -1244,16 +1225,14 @@ theorem UpperTheory.V.J.htLow :
   have hfh : Q.height = q.height := flatHt S.A L.R L.ι hfl q Q hQ him hmin
   have hlow : ((n * F.d + 1 : ℕ) : ℕ∞) ≤ Q.height := by
     apply le_of_add (b := N')
-    rw [Nat.add_comm, ← hN, ← hc]
-    exact h2
+    rwa [Nat.add_comm, ← hN, ← hc]
   refine ⟨hfh ▸ hlow, fun hle P hP hPq => ?_⟩
   have hu : Q.height + N' ≤ (Ideal.comap p Q).height := by
     rw [hc, hN, Nat.cast_add, add_comm (N' : ℕ∞)]
     exact add_le_add hle le_rfl
   refine flatAss S.A L.R L.ι hfl Q hQ (unmix L.O' N N' L.R p f hp hker Q hQ hu) P hP ?_
   change P ≤ L.im Q
-  rw [him]
-  exact hPq
+  rwa [him]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.ScalarIrreducibility.HtOfSum =====
@@ -1273,13 +1252,11 @@ private theorem int_of_norm {l : ℕ} [Fact l.Prime] (z : Qbar l) (hz : ‖z‖ 
   have hi : IsIntegral ℚ_[l] z := Algebra.IsIntegral.isIntegral z
   have hm : (minpoly ℚ_[l] z).Monic := minpoly.monic hi
   have h1 : spectralValue (minpoly ℚ_[l] z) ≤ 1 := by
-    rw [← PadicAlgCl.spectralNorm_eq l z] at hz
-    exact hz
+    rwa [← PadicAlgCl.spectralNorm_eq l z] at hz
   have h2 := (spectralValue_le_one_iff hm).1 h1
   have hl : minpoly ℚ_[l] z ∈ Polynomial.lifts (algebraMap ℤ_[l] ℚ_[l]) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, h2 n⟩, rfl⟩
+    exact fun n => ⟨⟨_, h2 n⟩, rfl⟩
   obtain ⟨f, hf, -, hfm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl hm
   refine ⟨f, hfm, ?_⟩
   rw [← Polynomial.aeval_map_algebraMap ℚ_[l], hf, minpoly.aeval]
@@ -1504,15 +1481,13 @@ theorem UpperTheory.V.J.redCrit :
     ∀ (A : Type) [CommRing A] [IsNoetherianRing A] (q : Ideal A), q.IsPrime → (∀ P ∈ associatedPrimes A A, P ≤ q → P ∈ minimalPrimes A) →
         (∀ P ∈ minimalPrimes A, P ≤ q → ∀ a ∈ P, ∃ s ∉ P, s * a = 0) → ∀ a : A, (∀ P : Ideal A, P.IsPrime → P ≤ q → a ∈ P) → ∃ s ∉ q, s * a = 0 := by
   intro A _ _ q hq h1 h2 a ha
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   let N : Submodule A A := Submodule.span A {a}
   have hann : ∀ x, x ∈ Module.annihilator A N ↔ x * a = 0 := by
     intro x
     rw [Module.mem_annihilator]
     constructor
-    · intro h
-      exact congrArg Subtype.val (h ⟨a, Submodule.mem_span_singleton_self a⟩)
+    · exact fun h => congrArg Subtype.val (h ⟨a, Submodule.mem_span_singleton_self a⟩)
     · intro h m
       obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp m.2
       apply Subtype.ext
@@ -1559,8 +1534,7 @@ private theorem exists_der (O T : Type) [CommRing O] [CommRing T] [IsLocalRing T
     constructor
     · intro h
       refine hmem a ((residue_eq_zero_iff a).1 ?_)
-      rw [← hg]
-      exact h
+      rwa [← hg]
     · rintro ⟨a', ha', h⟩
       rw [RingHom.mem_ker]
       show g (Ideal.Quotient.mk _ a) = 0
@@ -1796,10 +1770,8 @@ private theorem add_vanish {l : ℕ} [Fact l.Prime] {H : Type} [Group H] [Topolo
       { carrier := {x | ‖Multiplicative.toAdd x‖ < ε}
         one_mem' := by
           show ‖(0 : PadicAlgCl l)‖ < ε
-          rw [norm_zero]
-          exact hε
+          rwa [norm_zero]
         mul_mem' := fun {a b} ha hb => by
-          show ‖Multiplicative.toAdd a + Multiplicative.toAdd b‖ < ε
           exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt ha hb)
         inv_mem' := fun {a} ha => by
           show ‖-Multiplicative.toAdd a‖ < ε
@@ -1876,8 +1848,7 @@ theorem UpperTheory.V.J.tanBound :
       rw [Fintype.card_sigma, UpperTheory.V.Fr.Frame.d, Finset.mul_sum]
       refine Finset.sum_congr rfl (fun v _ => ?_)
       rw [Fintype.card_prod, Fintype.card_fin, Fintype.card_fin]
-    rw [hc] at key
-    exact key
+    rwa [hc] at key
   · intro D hD hz
     have hD' : ∀ x y, D (x * y) = ξ x • D y + ξ y • D x := hD
     refine Submodule.mem_inf.mpr ⟨hD, ?_⟩

@@ -67,15 +67,14 @@ theorem val_fact_sum_le {ι : Type} (s : Finset ι) (f : ι → ℕ) (L : ℕ) (
     rw [Finset.sum_insert ha] at hL
     have hL' : Nat.log p (∑ i ∈ s, f i) ≤ L := le_trans (Nat.log_mono_right (Nat.le_add_left _ _)) hL
     have ih' := ih hL'
-    rw [Finset.sum_insert ha, Finset.prod_insert ha, Finset.card_insert_eq_ite, if_neg ha]
+    rw [Finset.sum_insert ha, Finset.prod_insert ha, Finset.card_insert_eq_ite, ite_eq_right ha]
     generalize hT : ∑ i ∈ s, f i = T at *
     have hC : (f a + T).choose (f a) * (f a)! * T ! = (f a + T)! := by
       have h5 := Nat.choose_mul_factorial_mul_factorial (Nat.le_add_right (f a) T)
       rwa [Nat.add_sub_cancel_left] at h5
     have hv : padicValNat p ((f a + T).choose (f a)) ≤ L := by
       have h1 := Nat.factorization_choose_le_log (p := p) (n := f a + T) (k := f a)
-      rw [Nat.factorization_def _ hp.out] at h1
-      rw [← Nat.padicValNat_def] at h1
+      rw [Nat.factorization_def _ hp.out, ← Nat.padicValNat_def] at h1
       exact h1.trans hL
     have hc0 : (f a + T).choose (f a) ≠ 0 := (Nat.choose_pos (Nat.le_add_right _ _)).ne'
     have hpr : (∏ i ∈ s, (f i)!) ≠ 0 := Finset.prod_ne_zero_iff.mpr (fun i _ => Nat.factorial_ne_zero _)
@@ -126,8 +125,7 @@ theorem val_letters_le (μ : M.BVar N r G.T.t →₀ ℕ) (d : Fin (N + 1) → �
     have hd : d a = ∑ v ∈ Finset.univ.filter (fun v => letOf (r := r) G v = a), μ v := by rw [← hw a, weight_eq]
     have h6 := val_fact_sum_le p (Finset.univ.filter (fun v => letOf (r := r) G v = a)) μ L (by rw [← hd]; exact hL a)
     rw [hprod _ _ (fun _ _ => Nat.factorial_ne_zero _)] at h6
-    rw [hd]
-    exact h6
+    rwa [hd]
   calc ∑ a, padicValNat p (d a)!
       ≤ ∑ a, (∑ v ∈ Finset.univ.filter (fun v => letOf (r := r) G v = a), padicValNat p (μ v)! +
           (Finset.univ.filter (fun v => letOf (r := r) G v = a)).card * L) := Finset.sum_le_sum (fun a _ => hfib a)

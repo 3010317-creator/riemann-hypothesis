@@ -138,8 +138,7 @@ theorem exists_primitive_norm (hS : IsHermSemilocal S) (hd : ∀ x, h x x = 0 �
 
 theorem IsSD.exists_not_dv (hπ : IsUnif S π) (hM : IsSD S h W M) {y : V} (hy : y ∈ M)
     (hprim : ∀ c : K, c • y ∈ M → c ∈ S) : ∃ w ∈ M, ¬ Dv S π (h w y) := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hmem : π⁻¹ • y ∈ M := hM.dual _ (W.smul_mem _ (hM.le y hy)) (fun m hm => by
     rw [map_smul, smul_eq_mul, mul_comm]
     exact hcon m hm)
@@ -175,7 +174,7 @@ theorem IsASD.exists_unit_norm (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs 
   by_cases hex : ∃ w ∈ M, ¬ Dv S π (h w (l • ξ))
   · obtain ⟨w, hw, hn⟩ := hex
     exact Formalism.HermitianLattices.Ext.L3.U0.exists_unit_norm hS hπ hs hM.smul_mem hM.int hlM hw hn
-  · push_neg at hex
+  · push Not at hex
     exfalso
     have hmem : π⁻¹ • (l • ξ) ∈ M := hM.dual _ (W.smul_mem _ (W.smul_mem _ hξ))
       (by rw [map_smul, map_smul, hzξ, smul_zero, smul_zero])
@@ -215,8 +214,7 @@ theorem IsASD.decomp (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.IsSymm
     have h1 : h m y * π⁻¹ ∈ S := hall m hm
     have h2 : h m z * π⁻¹ ∈ S := by
       have h3 := Dv.star hS hπ (hM.z_rad m hm)
-      rw [star_apply_eq_apply_swap_of_isSymm' hs] at h3
-      exact h3
+      rwa [star_apply_eq_apply_swap_of_isSymm' hs] at h3
     have e : h m (π⁻¹ • (y - (h z y * (h z z)⁻¹) • z)) =
         h m y * π⁻¹ - (h z y * (h z z)⁻¹) * (h m z * π⁻¹) := by
       simp only [map_smul, map_sub, smul_eq_mul]
@@ -276,7 +274,7 @@ theorem IsASD.exists_norm (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.I
   by_cases hex : ∃ w ∈ M, ¬ Dv S π (h w y)
   · obtain ⟨w, hw, hn⟩ := hex
     exact exists_norm_of_not_dv hS hπ hs hM.smul_mem hM.int hy hw ha hu huf hyy hn
-  push_neg at hex
+  push Not at hex
   obtain ⟨n₀, hn₀, t, ht, hzn, hye⟩ := hM.decomp hS hπ hs hy hex
   have htu : IsUnitIn S t := isUnitIn_of_coprime hS hπ ht (fun d _ htd hπd => hprim d⁻¹ (by
     rw [hye, smul_add, smul_smul, smul_smul]
@@ -315,8 +313,7 @@ theorem IsASD.exists_norm (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.I
   have hyy0 : h y y ≠ 0 := fun h0 => hyyU.1 (by rw [h0, zero_mul])
   have hdv : Dv S π (h y w₀) := by
     have h1 := Dv.star hS hπ (hex w₀ hw₀)
-    rw [star_apply_eq_apply_swap_of_isSymm' hs] at h1
-    exact h1
+    rwa [star_apply_eq_apply_swap_of_isSymm' hs] at h1
   obtain ⟨c, hcdef⟩ : ∃ c : K, c = h y w₀ * (h y y)⁻¹ := ⟨_, rfl⟩
   have hcS : c ∈ S := by rw [hcdef]; exact mul_inv_mem_of_dv hπ hdv hyyU
   have hsc : star c = h w₀ y * (h y y)⁻¹ := by

@@ -45,8 +45,7 @@ theorem rc_isIntegral (v : HeightOneSpectrum (𝓞 F)) (x : E ⊗[F] v.adicCompl
     exact IsIntegral.map_of_comp_eq (Int.castRingHom (v.adicCompletionIntegers F))
       (Algebra.TensorProduct.includeLeftRingHom (R := F) (A := E) (B := v.adicCompletion F))
       (RingHom.ext_int _ _) ha
-  · show IsIntegral _ (algebraMap (v.adicCompletionIntegers F) (E ⊗[F] v.adicCompletion F) y)
-    exact isIntegral_algebraMap
+  · exact isIntegral_algebraMap
 
 theorem rc_idem_zero (v : HeightOneSpectrum (𝓞 F)) (f t : E ⊗[F] v.adicCompletion F)
     (c : v.adicCompletion F) (hc : Valued.v c < 1) (hf : f * f = f)

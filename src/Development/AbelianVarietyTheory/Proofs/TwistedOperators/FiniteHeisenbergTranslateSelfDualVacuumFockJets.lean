@@ -460,8 +460,7 @@ theorem core (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
     rw [GlobalTheory.FunObj.period, GlobalTheory.AdTh.Fock.norm_embedding_hostFormConstant_eq, div_eq_mul_inv]
   have hprod : ∀ k : FVar D T.rank S.rank →₀ ℕ,
       (k.prod fun v e => GlobalTheory.FunObj.period δ v.1 ^ e) = (δ * sc) ^ (k.sum fun _ n => n) := fun k => by
-    simp only [hper, Finsupp.prod, Finsupp.sum]
-    exact Finset.prod_pow_eq_pow_sum _ _ _
+    simpa only [hper, Finsupp.prod, Finsupp.sum] using Finset.prod_pow_eq_pow_sum _ _ _
   have hsc0 : sc ≠ 0 := by
     rw [hsc]
     refine inv_ne_zero ?_
@@ -562,8 +561,7 @@ theorem coreNeg (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
     have h3 := hj k
     rw [GlobalTheory.FockConj.pureTensorO_negSp_monomial ψ θ S T sS sT _ _ F hF.1 hθ k 0] at h3
     have h4 := congrArg (starRingEnd ℂ) h3
-    rw [Complex.conj_conj, map_mul, Complex.conj_conj] at h4
-    exact h4
+    rwa [Complex.conj_conj, map_mul, Complex.conj_conj] at h4
   obtain ⟨ζ, s, hζ, hs, hk⟩ := core ψ θ S T sS sT frS frT hS hT hcS hcT Ls Lt hLs hLt δ hδ Θ₀ hΘ _ _ hvac' hj2 n hn w
     (latO_negSp_le S T _ _ _ hw)
   refine ⟨ζ, s, hζ, hs, fun k => ?_⟩
@@ -622,8 +620,7 @@ theorem GlobalTheory.HeisTrans.main : ∀ {D : D7} {T : Type} {L : LevCh D T} {s
     refine ⟨ζ', s, hroot, hs, fun k => ?_⟩
     have := hk k
     rw [hU] at this
-    rw [hζ']
-    exact this
+    rwa [hζ']
   | chi i j =>
     obtain ⟨hi, rfl⟩ : i + 1 ≤ D.R.m ∧ j = D.R.m := hp
     obtain ⟨ζ, s, hζ, hs, hk⟩ := GlobalTheory.HeisTrans.coreNeg W.ψ W.θ _ _ _ _ (S.N.fr (.grid (i + 1) D.R.m))
@@ -634,8 +631,7 @@ theorem GlobalTheory.HeisTrans.main : ∀ {D : D7} {T : Type} {L : LevCh D T} {s
     refine ⟨ζ', s, hroot, hs, fun k => ?_⟩
     have := hk k
     rw [hU] at this
-    rw [hζ']
-    exact this
+    rwa [hζ']
   | mu _ i j => exact absurd hp (by simp [DefPair])
   | core i => exact absurd hp (by simp [DefPair])
 end -- clump:auto

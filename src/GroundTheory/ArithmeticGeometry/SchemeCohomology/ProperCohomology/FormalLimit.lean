@@ -41,8 +41,7 @@ lemma towerComp_apply_of_mem {x : ∀ n, E n} (hx : x ∈ towerLimit τ) (n k : 
   | zero => rfl
   | succ k ih =>
     change towerComp τ n k (τ (n + k) (x (n + k + 1))) = x n
-    rw [hx (n + k)]
-    exact ih
+    rwa [hx (n + k)]
 
 theorem towerLimit_eq_bot {c : ℕ} (hc : ∀ n, towerComp τ n c = 0) : towerLimit τ = ⊥ := by
   rw [eq_bot_iff]
@@ -100,8 +99,7 @@ theorem bijective_towerLimitMap (hinj : ∀ n, Function.Injective (ι n))
         simp only [LinearMap.comp_apply] at this
         rw [this, e.2 n]
       rw [towerLimit_eq_bot τQ hc] at hmem
-      intro n
-      exact congrFun ((Submodule.mem_bot A).1 hmem) n
+      exact fun n => congrFun ((Submodule.mem_bot A).1 hmem) n
     have hp : ∀ n, ∃ p, ι n p = e.1 n := fun n => by
       have : e.1 n ∈ LinearMap.range (ι n) := by
         rw [hex n]

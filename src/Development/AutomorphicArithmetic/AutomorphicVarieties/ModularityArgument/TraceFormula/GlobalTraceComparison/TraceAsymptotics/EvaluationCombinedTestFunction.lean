@@ -197,8 +197,7 @@ private theorem clSum_map (e : G ≃* G') (hc : Continuous e) (hc' : Continuous 
         refine ⟨e.symm g, e.injective ?_⟩
         simp [hθ])
       left_inv := fun c => by
-        refine Quot.inductionOn c fun x => ?_
-        exact congrArg (Quot.mk _) (e.symm_apply_apply x)
+        exact Quot.inductionOn c fun x => congrArg (Quot.mk _) (e.symm_apply_apply x)
       right_inv := fun c => by
         refine Quot.inductionOn c fun x => ?_
         exact congrArg (Quot.mk _) (e.apply_symm_apply x) }
@@ -299,8 +298,7 @@ private theorem domWeight_zero (l l' : DomWeight 0) : l = l' := by
   exact Subsingleton.elim _ _
 
 private theorem gl_zero_eq_one_alt (w : Pl E) (x : GLw 0 w) : x = 1 := by
-  apply Units.ext
-  exact Subsingleton.elim _ _
+  exact Units.ext (Subsingleton.elim _ _)
 
 private theorem hint_subsingleton {H : Type} [Group H] [Subsingleton H] (K : Subgroup H) (u : H → ℂ) :
     hint K u = u 1 := by
@@ -315,8 +313,7 @@ private theorem hint_subsingleton {H : Type} [Group H] [Subsingleton H] (K : Sub
     rw [Subsingleton.elim a b]⟩
   haveI : Unique (H ⧸ (rStab u ⊓ K)) := Unique.mk' _
   rw [finsum_unique]
-  simp only [Nat.cast_one, inv_one, one_mul]
-  exact congrArg u (Subsingleton.elim _ _)
+  simpa only [Nat.cast_one, inv_one, one_mul] using congrArg u (Subsingleton.elim _ _)
 
 private theorem blk_left (n : ℕ) (w : Pl E) (x : GLw 0 w) (g : GLw n w) (X : Matrix (Fin 0) (Fin n) (w.adicCompletion E)) :
     blk (Nat.zero_add n) w (x, g) X = g := by
@@ -384,9 +381,8 @@ theorem ends : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.Ends := by
     refine geomSt2_swap S l₁ l₂ Φ Φ' fun w hw' y => ?_
     rw [hΦ w hw', hΦ' w hw']
     by_cases hs : IsSplitAt w
-    · simp only [if_pos hs]
-      exact ctMu_swap b w _ _ _ _ _
-    · simp only [if_neg hs]
+    · simpa only [ite_eq_left hs] using ctMu_swap b w _ _ _ _ _
+    · simp only [ite_eq_right hs]
       have hm : y ∈ K2 0 b w ↔ (y.2, y.1) ∈ K2 b 0 w := by
         simp [K2, Subgroup.mem_prod, and_comm]
       simp only [Set.indicator, SetLike.mem_coe, hm, Pi.one_apply]

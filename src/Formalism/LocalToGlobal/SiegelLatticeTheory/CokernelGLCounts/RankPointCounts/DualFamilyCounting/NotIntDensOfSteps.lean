@@ -29,8 +29,7 @@ variable {M : Loc.Model F E} {V : Type} [AddCommGroup V] [Module E V]
 theorem algebraMap_mem_LO (c : F) (hc : c ∈ 𝒪[F]) : algebraMap F E c ∈ M.L.O := by
   rw [M.L.O_def]
   have h := isIntegral_algebraMap (R := 𝒪[F]) (A := E) (x := ⟨c, hc⟩)
-  rw [IsScalarTower.algebraMap_apply 𝒪[F] F E] at h
-  exact h
+  rwa [IsScalarTower.algebraMap_apply 𝒪[F] F E] at h
 
 theorem dens_eq_zero_of_not_mem (H : Loc.HermSp M V) (ϖ : 𝒪[F]) {abelian₂ : Submodule M.L.O V} (hSD : H.IsSelfDual abelian₂)
     {ι : Type} [Fintype ι] (G₀ : Matrix ι ι E) (a b : ι) (hab : G₀ a b ∉ M.L.O) : H.dens ϖ abelian₂ G₀ = 0 := by
@@ -73,8 +72,7 @@ def GaPlusIntMM : Prop :=
 
 theorem notIntDens_of (h1 : LocSelfDual) (hG : GaPlusIntMM) : NotIntDens := by
   intro D δ M hA L u u' hT F0 what₂ hR ϖ hϖ Z F' hz hZ hP hI
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   apply hI
   refine hG D δ M hA L u u' hT F0 what₂ hR Z F' hz hZ hP fun p a b => ?_
   by_contra hab
@@ -159,11 +157,11 @@ theorem flag_hT {T : D.host.E} (F : FlagG (VS D) D.R.rS T) (a b : Fin (D.R.rS + 
     | last => simp [FlagG.fvec, F.z_norm]
     | cast b =>
       simp only [FlagG.fvec, Fin.snoc_last, Fin.snoc_castSucc]
-      rw [if_neg (by simp [Fin.castSucc_ne_last])]
+      rw [ite_eq_right (by simp [Fin.castSucc_ne_last])]
       rw [← (VS D).herm.eq (F.e b) F.z, F.z_orth b, map_zero]
   | cast a =>
     simp only [FlagG.fvec, Fin.snoc_castSucc]
-    rw [if_neg (by simp [Fin.castSucc_ne_last])]
+    rw [ite_eq_right (by simp [Fin.castSucc_ne_last])]
     induction b using Fin.lastCases with
     | last => simp only [Fin.snoc_last]; exact F.z_orth a
     | cast b => simp only [Fin.snoc_castSucc]; exact F.e_iso a b
@@ -333,8 +331,7 @@ theorem gaPlusIntMM_of (hF : FrameBasisL) (hLG : LocGlobIntE) : GaPlusIntMM := b
   rw [e, ← (hA p).2.2.2.1]
   refine h_int_span (L.H p) (locFam L δ p F0 F') (fun a b => ?_) (hmem y hy) (hmem x hx)
   have := hInt p a b
-  rw [gaPlus_eq_gram L δ p F0 F'] at this
-  exact this
+  rwa [gaPlus_eq_gram L δ p F0 F'] at this
 
 theorem notIntDens_of_steps (h1 : LocSelfDual) (hF : FrameBasisL) (hLG : LocGlobIntE) : NotIntDens :=
   notIntDens_of h1 (gaPlusIntMM_of hF hLG)

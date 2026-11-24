@@ -123,8 +123,7 @@ theorem Frame.Jt_21 (fr : Frame I S) : fr.Jt.toBlocks₂₁ = 0 := by
 
 theorem Frame.Jt_blocks (fr : Frame I S) : fr.Jt = Matrix.fromBlocks fr.Jt.toBlocks₁₁ 0 0 fr.J' := by
   have h := (Matrix.fromBlocks_toBlocks fr.Jt).symm
-  rw [Frame.Jt_12, Frame.Jt_21, ← Frame.J'_eq] at h
-  exact h
+  rwa [Frame.Jt_12, Frame.Jt_21, ← Frame.J'_eq] at h
 
 theorem cT_mul' {m p q : Type} [Fintype p] (M : Matrix m p I.E) (N : Matrix p q I.E) :
     cT (starRingEnd I.E) (M * N) = cT (starRingEnd I.E) N * cT (starRingEnd I.E) M := by
@@ -202,11 +201,9 @@ theorem Frame.vec_ne_zero (fr : Frame I S) (x : Fin fr.k → I.E) (hx : x ≠ 0)
   intro h
   apply hx
   have hw : Sum.elim (0 : Fin fr.m → I.E) x = 0 := by
-    have h2 := congrArg (fun v => fr.Bi *ᵥ v) h
-    simpa [Matrix.mulVec_mulVec, fr.inv_mul] using h2
+    simpa [Matrix.mulVec_mulVec, fr.inv_mul] using congrArg (fun v => fr.Bi *ᵥ v) h
   funext b
-  have h3 := congrFun hw (Sum.inr b)
-  simpa using h3
+  simpa using congrFun hw (Sum.inr b)
 
 theorem frameGram : FrameGram := by
   intro I S fr hS

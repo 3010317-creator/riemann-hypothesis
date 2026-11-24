@@ -451,7 +451,7 @@ private theorem span_push {K K' : Type} [Field K] [Field K'] {n a : ℕ} (j : Po
     · have hE : Matrix.single p q (1 : PowerSeries K) ∈ Ev (PowerSeries K) (PowerSeries K) n a := by
         intro p' q'
         refine ⟨fun _ => trivial, fun e => ?_⟩
-        rw [Submodule.mem_bot, Matrix.single_apply, if_neg]
+        rw [Submodule.mem_bot, Matrix.single_apply, ite_eq_right]
         rintro ⟨rfl, rfl⟩
         exact e hpq
       obtain ⟨s, hs⟩ := h _ hE
@@ -636,8 +636,7 @@ theorem UpperTheory.V.Pa.Det.resExt :
     map_finite φ, ?_, ?_⟩
   · rw [PowerSeries.isUnit_iff_constantCoeff, hcc, isUnit_iff_ne_zero,
       map_ne_zero_iff _ φ.injective] at hψ
-    rw [PowerSeries.isUnit_iff_constantCoeff, isUnit_iff_ne_zero]
-    exact hψ
+    rwa [PowerSeries.isUnit_iff_constantCoeff, isUnit_iff_ne_zero]
   · rw [← Nat.card_congr (Equiv.ofBijective _ (bijective_residue_comp_powerSeries_C (GaloisField l D))),
       GaloisField.card l D hD]
   · rw [PowerSeries.map_X]
@@ -761,9 +760,7 @@ theorem UpperTheory.V.Pa.Det.splitEx :
     rw [IsScalarTower.algebraMap_eq (PowerSeries K) (FractionRing (PowerSeries K)) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))]
     exact (algebraMap (FractionRing (PowerSeries K)) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))).injective.comp (IsFractionRing.injective (PowerSeries K) (FractionRing (PowerSeries K)))
   have hj : Function.Injective (algebraMap (PowerSeries K) ↥(integralClosure (PowerSeries K) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K))))))) := by
-    intro x y h
-    apply hinjAE
-    exact congrArg Subtype.val h
+    exact fun x y h => hinjAE (congrArg Subtype.val h)
   haveI hcharA : CharP (PowerSeries K) l := charP_of_injective_ringHom (PowerSeries.C (R := K)).injective l
   haveI hcharB : CharP ↥(integralClosure (PowerSeries K) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))) l := charP_of_injective_ringHom hj l
   have hal : ∀ a, ∃ al : Fin n → ↥(integralClosure (PowerSeries K) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))), Function.Injective al ∧

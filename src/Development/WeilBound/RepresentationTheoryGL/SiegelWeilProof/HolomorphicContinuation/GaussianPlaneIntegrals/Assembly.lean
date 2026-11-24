@@ -395,7 +395,6 @@ theorem Tf_memVd (hS : Stable) (hA : Avg) {d : ℕ} {q : PV ι A B} (hq : q ∈ 
     Tf hA q ∈ Vd ι A B d := by
   rw [Vd, Submodule.mem_inf] at hq ⊢
   refine ⟨(mem_restrictTotalDegree _ _ _).mpr ((Tf_deg hA q).trans ((mem_restrictTotalDegree _ _ _).mp hq.1)), ?_⟩
-  show IsInv (Tf hA q)
   exact pair_inv (Tf_mem hS hA q)
 
 def Tlin (hS : Stable) (hA : Avg) (d : ℕ) : Vd ι A B d →ₗ[ℂ] Vd ι A B d where
@@ -433,8 +432,7 @@ theorem Mk_one : Mk (ι := ι) (A := A) (B := B) 1 = 1 := by
 theorem eval_Tf_inv (hE : Ext) (hA : Avg) {q : PV ι A B} (hq : IsInv q) (z : (ι × A) ⊕ (ι × B) → ℂ) :
     eval z (Tf hA q) = ∫ k, eval (act 1 (Mk (ι := ι) (A := A) (B := B) k) z) q ∂(Formalism.REAL.muK (fun _ : Fin (NN ι A B) => true)) := by
   rw [eval_Tf]
-  refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
-  exact ext_all hE hq _ z
+  exact integral_congr_ae (Filter.Eventually.of_forall fun k => (ext_all hE hq _ z))
 
 theorem Tlin_injective (hS : Stable) (hE : Ext) (hA : Avg) (hP : Pos) (d : ℕ) :
     Function.Injective (Tlin (ι := ι) (A := A) (B := B) hS hA d) := by

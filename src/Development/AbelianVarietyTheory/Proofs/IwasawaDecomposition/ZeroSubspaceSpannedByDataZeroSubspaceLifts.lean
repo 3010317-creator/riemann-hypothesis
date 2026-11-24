@@ -62,17 +62,7 @@ variable {K : Type} [Field K] [NumberField K] [StarRing K] {σ : K →+* ℂ} {M
 
 omit [NumberField K] [StarRing K] in
 theorem mulVec_map_injective {a b : ℕ} (Θ : Matrix (Fin a) (Fin b) K) (hΘ : Function.Injective Θ.mulVec) :
-    Function.Injective (Θ.map σ).mulVec := by
-  obtain ⟨g, hg⟩ := Θ.mulVecLin.exists_leftInverse_of_injective (LinearMap.ker_eq_bot.2 hΘ)
-  have hL : LinearMap.toMatrix' g * Θ = 1 := by
-    have := congrArg LinearMap.toMatrix' hg
-    rwa [LinearMap.toMatrix'_comp, ← Matrix.toLin'_apply', LinearMap.toMatrix'_toLin', LinearMap.toMatrix'_id] at this
-  have hL' : (LinearMap.toMatrix' g).map σ * Θ.map σ = 1 := by
-    rw [← Matrix.map_mul, hL, Matrix.map_one _ (map_zero σ) (map_one σ)]
-  intro x y hxy
-  have := congrArg (fun v => (LinearMap.toMatrix' g).map σ *ᵥ v) hxy
-  simp only [Matrix.mulVec_mulVec, hL', Matrix.one_mulVec] at this
-  exact this
+    Function.Injective (Θ.map σ).mulVec := Formalism.L2.DIV.map_inj σ Θ hΘ
 
 theorem orth_ker_inf_range {n d e : ℕ} (J : (Fin n → K) →ₛₗ[σ] M)
     (hsp : Submodule.span ℂ (Set.range fun k => J (Pi.single k 1)) = ⊤)
@@ -102,8 +92,7 @@ theorem orth_ker_inf_range {n d e : ℕ} (J : (Fin n → K) →ₛₗ[σ] M)
         rw [show Pr *ᵥ y = 0 from hy, Matrix.mulVec_zero, map_zero] at h0
         rw [← h0, map_zero]
       exact Submodule.mem_orthogonal_singleton_iff_inner_left.1 (hle2 hu)
-    intro a ha b hb
-    exact (Submodule.mem_orthogonal _ _).1 (hle hb) a ha
+    exact fun a ha b hb => (Submodule.mem_orthogonal _ _).1 (hle hb) a ha
   have hker : ∀ x, Pr *ᵥ (x - Zm *ᵥ (Pr *ᵥ x)) = 0 := by
     intro x
     rw [Matrix.mulVec_sub, Matrix.mulVec_mulVec, hP.1, Matrix.one_mulVec, sub_self]
@@ -161,8 +150,7 @@ theorem orth_ker_inf_range {n d e : ℕ} (J : (Fin n → K) →ₛₗ[σ] M)
       have h1 : inner ℂ b (a + b) = 0 := (Submodule.mem_orthogonal _ _).1 hv b (hNk hb)
       have h2 : inner ℂ b a = 0 := by rw [← inner_conj_symm, hSN a ha b hb, map_zero]
       rw [inner_add_right, h2, zero_add, inner_self_eq_zero] at h1
-      rw [h1, add_zero]
-      exact ha
+      rwa [h1, add_zero]
     · intro s hs
       rw [Submodule.mem_orthogonal]
       intro w hw

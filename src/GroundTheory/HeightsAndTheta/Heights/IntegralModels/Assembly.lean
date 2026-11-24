@@ -36,8 +36,7 @@ theorem BlowUpChart.comap_eq_maximalIdeal {A K : Type} [CommRing A] [IsDomain A]
   · rw [← hx, Ideal.span_le]
     rintro _ ⟨j, rfl⟩
     have hxi : algebraMap A K (x i) ≠ 0 := by
-      rw [map_ne_zero_iff _ (IsFractionRing.injective A K)]
-      exact hi
+      rwa [map_ne_zero_iff _ (IsFractionRing.injective A K)]
     have hmem : algebraMap A K (x j) / algebraMap A K (x i) ∈ blowUpChart A K x i :=
       Algebra.subset_adjoin ⟨j, rfl⟩
     have hfac : algebraMap A (blowUpChart A K x i) (x j) =
@@ -58,8 +57,7 @@ theorem BlowUpChart.equiv :
   · intro h A _ _ _ _ K _ _ _ n x hx hne
     obtain ⟨i, hi, hu, -⟩ := h A K n x hx hne
     have hne' : Ideal.span {algebraMap A (blowUpChart A K x i) (x i)} ≠ ⊤ := by
-      rw [Ne, Ideal.span_singleton_eq_top]
-      exact hu
+      rwa [Ne, Ideal.span_singleton_eq_top]
     obtain ⟨Q, hQ, hle⟩ := Ideal.exists_le_maximal _ hne'
     exact ⟨i, hi, hu, Q, hQ.isPrime, hle (Ideal.subset_span rfl),
       BlowUpChart.comap_eq_maximalIdeal hx hi Q hQ.isPrime (hle (Ideal.subset_span rfl))⟩
@@ -158,8 +156,7 @@ set_option maxSynthPendingDepth 1
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model
 
 theorem MertensUpper.Iic_eq_range (n : ℕ) : Finset.Iic n = Finset.range (n + 1) := by
-  ext m
-  simp
+  exact (Nat.range_succ_eq_Iic n).symm
 
 theorem MertensUpper.equiv :
     GroundTheory.Heights₂.Heights.Model.MertensUpper.Statement ↔
@@ -190,8 +187,7 @@ theorem KrullAkizuki.equiv :
     exact ⟨h₁ R hR K L, h₂ R hR K⟩
   · intro h
     refine ⟨fun R _ _ _ hR K _ _ _ L _ _ _ _ _ S => (h R K L hR).1 S, ?_⟩
-    intro R _ _ _ hR K _ _ _
-    exact (h R K K hR).2
+    exact fun R _ _ _ hR K _ _ _ => (h R K K hR).2
 
 end GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model
 end -- clump:auto
@@ -274,8 +270,7 @@ theorem SumCp.proof (hM : MertensUpper.Statement) : SumCp.Statement := by
     rw [← Finset.sum_filter_of_ne (p := fun p => p ∈ T)]
     · apply Finset.sum_le_sum_of_subset_of_nonneg
       · intro p hp; exact (Finset.mem_filter.mp hp).2
-      · intro p hp _
-        exact mul_nonneg (by positivity) (hlog p (hTprime p hp))
+      · exact fun p hp _ => mul_nonneg (by positivity) (hlog p (hTprime p hp))
     · intro p hp hne
       by_contra hpT
       apply hne

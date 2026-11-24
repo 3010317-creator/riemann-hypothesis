@@ -122,8 +122,7 @@ private theorem qht_proper (R : ℝ) : ∃ C : Set (GA E a), IsCompact C ∧
         (pow_le_pow_left₀ (height_pos _).le hγ.le N) hc.le) hp)
   refine ⟨δ⁻¹ * γ, t, ?_⟩
   have e' : ratGL E a δ * x = ratGL E a γ * (retractOne g : KernelIndexFullLattice.G1 E a).1 := e
-  rw [mul_assoc, ht, map_mul, mul_assoc, ← e', map_inv, inv_mul_cancel_left]
-  exact hx
+  rwa [mul_assoc, ht, map_mul, mul_assoc, ← e', map_inv, inv_mul_cancel_left]
 
 end UpperTheory.V.Lit.Geo
 

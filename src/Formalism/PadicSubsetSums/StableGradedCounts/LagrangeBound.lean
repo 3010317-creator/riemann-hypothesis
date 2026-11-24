@@ -59,26 +59,20 @@ theorem padicValIntShiftLe : DigitLemma := by
   have := Fact.mk hl
   have hl2 : (2:ℤ) ≤ (l:ℤ) := by exact_mod_cast hl.two_le
   have hla : 1 ≤ l ^ a := Nat.one_le_pow _ _ hl.pos
-  have hlr : 1 ≤ l ^ ρ := Nat.one_le_pow _ _ hl.pos
   have hNc : ((l ^ a - 1 : ℕ) : ℤ) = (l:ℤ) ^ a - 1 := by
     rw [Nat.cast_sub hla]; push_cast; rfl
   have hcN' : (c:ℤ) < (l:ℤ) ^ a - 1 := by rw [← hNc]; exact_mod_cast hcN
   have hc0' : (0:ℤ) < c := by exact_mod_cast hc0
   have hdvd' : ((l:ℤ) ^ a - 1) ∣ (c:ℤ) * ((l:ℤ) ^ ρ - 1) := by
-    have h1 := Int.natCast_dvd_natCast.mpr hdvd
-    rw [hNc] at h1
-    have h2 : ((c * (l ^ ρ - 1) : ℕ) : ℤ) = (c:ℤ) * ((l:ℤ) ^ ρ - 1) := by
-      rw [Nat.cast_mul, Nat.cast_sub hlr]; push_cast; rfl
-    rw [h2] at h1; exact h1
+    zify [hla, Nat.one_le_pow ρ l hl.pos] at hdvd
+    exact hdvd
   have hP : (2:ℤ) ≤ (l:ℤ) ^ ρ := by
     obtain ⟨r, rfl⟩ : ∃ r, ρ = r + 1 := ⟨ρ - 1, by omega⟩
     have : (1:ℤ) ≤ (l:ℤ) ^ r := one_le_pow₀ (by linarith)
     rw [pow_succ]; nlinarith
-  by_contra hv
-  push Not at hv
-  have hdx : (l:ℤ) ^ (ρ + 1) ∣ (c:ℤ) + m * ((l:ℤ) ^ a - 1) :=
+  by_contra! hv
+  obtain ⟨t, ht⟩ : (l:ℤ) ^ (ρ + 1) ∣ (c:ℤ) + m * ((l:ℤ) ^ a - 1) :=
     (padicValInt_dvd_iff (ρ + 1) _).2 (Or.inr (by omega))
-  obtain ⟨t, ht⟩ := hdx
   have hxN : ((l:ℤ) ^ a - 1) ∣ (l:ℤ) ^ (ρ + 1) * (t * ((l:ℤ) ^ ρ - 1)) := by
     have e : (l:ℤ) ^ (ρ + 1) * (t * ((l:ℤ) ^ ρ - 1))
         = (c:ℤ) * ((l:ℤ) ^ ρ - 1) + ((l:ℤ) ^ a - 1) * (m * ((l:ℤ) ^ ρ - 1)) := by
@@ -88,15 +82,12 @@ theorem padicValIntShiftLe : DigitLemma := by
     apply IsCoprime.pow_right
     obtain ⟨b, rfl⟩ : ∃ b, a = b + 1 := ⟨a - 1, by omega⟩
     exact ⟨-1, (l:ℤ) ^ b, by ring⟩
-  have hy : ((l:ℤ) ^ a - 1) ∣ t * ((l:ℤ) ^ ρ - 1) := by
-    exact hcop.dvd_of_dvd_mul_left hxN
+  have hy : ((l:ℤ) ^ a - 1) ∣ t * ((l:ℤ) ^ ρ - 1) := hcop.dvd_of_dvd_mul_left hxN
   have hm' := abs_lt.mp hm
   have hNpos : (0:ℤ) < (l:ℤ) ^ a - 1 := by linarith
   have hxlt : |(c:ℤ) + m * ((l:ℤ) ^ a - 1)| < (l:ℤ) * ((l:ℤ) ^ a - 1) := by
-    have u1 : 0 ≤ ((l:ℤ) - 1 - m) * ((l:ℤ) ^ a - 1) :=
-      mul_nonneg (by linarith) hNpos.le
-    have u2 : 0 ≤ (m + (l:ℤ) - 1) * ((l:ℤ) ^ a - 1) :=
-      mul_nonneg (by linarith) hNpos.le
+    have u1 : 0 ≤ ((l:ℤ) - 1 - m) * ((l:ℤ) ^ a - 1) := mul_nonneg (by linarith) hNpos.le
+    have u2 : 0 ≤ (m + (l:ℤ) - 1) * ((l:ℤ) ^ a - 1) := mul_nonneg (by linarith) hNpos.le
     rw [abs_lt]; constructor <;> nlinarith
   have htlt : (l:ℤ) ^ ρ * |t| < (l:ℤ) ^ a - 1 := by
     rw [ht, abs_mul, abs_of_pos (by positivity : (0:ℤ) < (l:ℤ) ^ (ρ + 1)), pow_succ] at hxlt
@@ -106,13 +97,10 @@ theorem padicValIntShiftLe : DigitLemma := by
     rw [abs_mul, abs_of_pos (by linarith : (0:ℤ) < (l:ℤ) ^ ρ - 1)]
     nlinarith [abs_nonneg t]
   have hy0 := Int.eq_zero_of_abs_lt_dvd hy hylt
-  have ht0 : t = 0 := by
-    rcases mul_eq_zero.mp hy0 with h | h
-    · exact h
-    · linarith
+  have ht0 : t = 0 := (mul_eq_zero.mp hy0).resolve_right (ne_of_gt (by linarith))
   rw [ht0, mul_zero] at ht
-  have hcd : ((l:ℤ) ^ a - 1) ∣ (c:ℤ) := ⟨-m, by linarith⟩
-  have hcz := Int.eq_zero_of_abs_lt_dvd hcd (by rw [abs_of_pos hc0']; exact hcN')
+  have hcz := Int.eq_zero_of_abs_lt_dvd (⟨-m, by linarith⟩ : ((l:ℤ) ^ a - 1) ∣ (c:ℤ))
+    (by rw [abs_of_pos hc0']; exact hcN')
   linarith
 
 end Formalism.IrreducibleCountingLemmas.WindowSums
@@ -168,8 +156,7 @@ theorem sumPadicValDifferencesLe : LagrangeBoundT := by
     · exact absurd h hnotL
   have hdv : ∀ z : ℤ, padicValInt l z ≠ 0 → (l : ℤ) ∣ z := by
     intro z hz
-    have h := (padicValInt_dvd_iff (p := l) 1 z).mpr (Or.inr (Nat.one_le_iff_ne_zero.mpr hz))
-    simpa using h
+    simpa using (padicValInt_dvd_iff (p := l) 1 z).mpr (Or.inr (Nat.one_le_iff_ne_zero.mpr hz))
   have hneg : ∀ z : ℤ, padicValInt l (-z) = padicValInt l z := fun z => by simp [padicValInt]
   have hpow : ∀ k : ℕ, ((l ^ k - 1 : ℕ) : ℤ) = (l : ℤ) ^ k - 1 := fun k => by
     rw [Nat.cast_sub (Nat.one_le_pow _ _ hl.pos)]
@@ -182,7 +169,7 @@ theorem sumPadicValDifferencesLe : LagrangeBoundT := by
     intro c' hc'
     by_cases hcc : c' = c
     · subst hcc
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       apply le_of_eq
       apply Finset.sum_eq_zero
       intro n' hn'
@@ -196,17 +183,16 @@ theorem sumPadicValDifferencesLe : LagrangeBoundT := by
         rw [hz] at h1
         have h2 := hsep 0 ((n : ℤ) - n') 0 (by rw [sub_zero, abs_lt]; constructor <;> omega) h1 (by simp)
         exact h ⟨rfl, by omega⟩
-    · rw [if_neg hcc]
+    · rw [ite_eq_right hcc]
       obtain ⟨ρ, hρ1, hρr, hρd⟩ := hdiv c hc c' hc' (Ne.symm hcc)
       apply sum_le_of_unique
       · intro n' hn'
         rw [Finset.mem_range] at hn'
-        rw [if_neg (fun h => hcc h.1)]
+        rw [ite_eq_right (fun h => hcc h.1)]
         refine le_trans ?_ hρr
         rcases lt_or_gt_of_ne hcc with hlt' | hgt
         · have hdN : (l ^ a - 1) ∣ (c - c') * (l ^ ρ - 1) := by
-            rw [← Int.natCast_dvd_natCast, Nat.cast_mul, hpow, hpow, Nat.cast_sub hlt'.le]
-            exact hρd
+            rwa [← Int.natCast_dvd_natCast, Nat.cast_mul, hpow, hpow, Nat.cast_sub hlt'.le]
           have hD := padicValIntShiftLe l a (c - c') ρ ((n : ℤ) - n') hl ha (by omega)
             (lt_of_le_of_lt (Nat.sub_le _ _) (hlt c hc)) hρ1 hdN
             (by rw [abs_lt]; constructor <;> omega)
@@ -214,8 +200,7 @@ theorem sumPadicValDifferencesLe : LagrangeBoundT := by
               ((c - c' : ℕ) : ℤ) + ((n : ℤ) - n') * ((l : ℤ) ^ a - 1) := by
             rw [Nat.cast_sub hlt'.le]
             ring
-          rw [hz]
-          exact hD
+          rwa [hz]
         · have hdN : (l ^ a - 1) ∣ (c' - c) * (l ^ ρ - 1) := by
             rw [← Int.natCast_dvd_natCast, Nat.cast_mul, hpow, hpow, Nat.cast_sub hgt.le]
             have e : ((c' : ℤ) - c) * ((l : ℤ) ^ ρ - 1) = -(((c : ℤ) - c') * ((l : ℤ) ^ ρ - 1)) := by ring
@@ -228,11 +213,10 @@ theorem sumPadicValDifferencesLe : LagrangeBoundT := by
               -(((c' - c : ℕ) : ℤ) + ((n' : ℤ) - n) * ((l : ℤ) ^ a - 1)) := by
             rw [Nat.cast_sub hgt.le]
             ring
-          rw [hz, hneg]
-          exact hD
+          rwa [hz, hneg]
       · intro i hi j hj hgi hgj
         rw [Finset.mem_range] at hi hj
-        rw [if_neg (fun h => hcc h.1)] at hgi hgj
+        rw [ite_eq_right (fun h => hcc h.1)] at hgi hgj
         have h1 := hdv _ hgi
         have h2 := hdv _ hgj
         have ez : ∀ k : ℕ, ((c : ℤ) + n * ((l : ℤ) ^ a - 1)) - ((c' : ℤ) + k * ((l : ℤ) ^ a - 1)) =
@@ -245,8 +229,8 @@ theorem sumPadicValDifferencesLe : LagrangeBoundT := by
         else padicValInt l (((c : ℤ) + n * ((l : ℤ) ^ a - 1)) - ((c' : ℤ) + n' * ((l : ℤ) ^ a - 1))))
       ≤ ∑ c' ∈ Cc, (if c' = c then 0 else r') := Finset.sum_le_sum hper
     _ = (Cc.card - 1) * r' := by
-      rw [← Finset.add_sum_erase Cc _ hc, if_pos rfl, zero_add,
-        Finset.sum_congr rfl (fun x hx => if_neg (Finset.ne_of_mem_erase hx)), Finset.sum_const,
+      rw [← Finset.add_sum_erase Cc _ hc, ite_eq_left rfl, zero_add,
+        Finset.sum_congr rfl (fun x hx => ite_eq_right (Finset.ne_of_mem_erase hx)), Finset.sum_const,
         smul_eq_mul, Finset.card_erase_of_mem hc]
 
 end Formalism.IrreducibleCountingLemmas.WindowSums

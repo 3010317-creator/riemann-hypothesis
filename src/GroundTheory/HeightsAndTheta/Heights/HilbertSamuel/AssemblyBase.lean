@@ -596,12 +596,10 @@ theorem BlockResolutionFormsIndependent.proof (hND : NonvanishingDense.Statement
   have ha' : ∀ x : d.R.X, F (blockPt d x) = 0 := by
     intro x
     have := ha x
-    simp only [hbf, eval_map_int_rat] at this
-    exact this
+    simpa only [hbf, eval_map_int_rat] using this
   have hli : LinearIndependent ℤ fun k => aeval d.y (f k) := by
     have := hb.2.1
-    simp only [hbf, SupBoundCount.aeval_map_int] at this
-    exact this
+    simpa only [hbf, SupBoundCount.aeval_map_int] using this
   have hFc : Continuous F :=
     continuous_finsetSum _ fun k _ => continuous_const.mul (continuous_eval _)
 
@@ -641,8 +639,7 @@ theorem BlockResolutionFormsIndependent.proof (hND : NonvanishingDense.Statement
     have hcl := hND K ι (mCoordIdeal d.y) (D + 1) g d.arith hgP hz
     have hsub : {z | z ∈ mcPts (mCoordIdeal d.y) ∧
         eval z (map (Int.castRingHom ℂ) g) ≠ 0} ⊆ {z | F z = 0} := by
-      intro z' hz'
-      exact hoff z' hz'.1 hz'.2
+      exact fun z' hz' => hoff z' hz'.1 hz'.2
     exact (isClosed_eq hFc continuous_const).closure_subset_iff.2 hsub hcl
   exact coeff_eq_zero hli (mcPts_nonempty d) hpts
 
@@ -907,8 +904,7 @@ theorem PolySandwich.coeff_shift (p : ℚ[X]) (c : ℚ) (E : ℕ) (hE : p.natDeg
     have h1 : (p.comp (X + C c)).leadingCoeff = p.leadingCoeff := by
       rw [leadingCoeff_comp (by rw [natDegree_X_add_C]; exact one_ne_zero), leadingCoeff_X_add_C, one_pow,
         mul_one]
-    rw [leadingCoeff, PolySandwich.natDegree_shift] at h1
-    exact h1
+    rwa [leadingCoeff, PolySandwich.natDegree_shift] at h1
 
 theorem PolySandwich.proof : PolySandwich.Statement := by
   intro D c p q hq hev
@@ -1052,18 +1048,16 @@ theorem proof : ProjFrameGenPtTransc.Statement := by
     by_cases hm : m ∈ q.support
     · have h1 := congrArg (AddMonoidAlgebra.coeff · (Finsupp.single () m)) hFΓ
       rw [coeff_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, Finset.sum_eq_single m] at h1
-      · rw [coeff_C_mul, coeff_X_pow, if_pos rfl, mul_one] at h1
+      · rw [coeff_C_mul, coeff_X_pow, ite_eq_left rfl, mul_one] at h1
         have h2 := (mul_eq_zero.1 h1).resolve_right (pow_ne_zero _ hX)
         rw [Ideal.Quotient.eq_zero_iff_mem] at h2
         have h3 := aeval_inl_eq_zero G h2
         rw [hg m] at h3
         exact Subtype.ext h3
       · intro n _ hn
-        rw [coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
-        intro h
-        exact hn (Finsupp.single_injective () h)
-      · intro h
-        exact absurd hm h
+        rw [coeff_C_mul, coeff_X_pow, ite_eq_right, mul_zero]
+        exact fun h => hn (Finsupp.single_injective () h)
+      · exact fun h => absurd hm h
     · exact Polynomial.notMem_support_iff.1 hm
   apply AddMonoidAlgebra.ext
   ext m
@@ -1189,8 +1183,7 @@ theorem ResolutionFormsIndependent.proof (hND : NonvanishingDense.Statement) :
     have hcl := hND Unit (GlobalTheory κ) (coordIdeal ℤ d.x) (D + 1) g d.arith hgP hz
     have hsub : {z' | z' ∈ mcPts (ι := GlobalTheory κ) (coordIdeal ℤ d.x) ∧
         eval z' (map (Int.castRingHom ℂ) g) ≠ 0} ⊆ {z' | F z' = 0} := by
-      intro z' hz'
-      exact hoff z' hz'.1 hz'.2
+      exact fun z' hz' => hoff z' hz'.1 hz'.2
     exact closure_minimal hsub (isClosed_eq hFc continuous_const) hcl
 
   have : IsProbabilityMeasure d.dV := d.vol.1
@@ -1256,8 +1249,7 @@ theorem segreMap_monomial_isMultiHomog (d : ((_ : Unit) × ((k : K) → ι k)) �
       ∑ v ∈ d.support, d v • (fun _ : K => (1 : ℕ)) := by
     ext j
     simp [Finsupp.weight_apply, Finsupp.sum, blockWeight, Finset.sum_apply]
-  rw [e]
-  exact this
+  rwa [e]
 
 theorem segreMap_weightedHomogeneousComponent [Nonempty K] (b : Unit → ℕ)
     (g : MRing (fun _ : Unit => ∀ k, ι k) F) :
@@ -1275,8 +1267,8 @@ theorem segreMap_weightedHomogeneousComponent [Nonempty K] (b : Unit → ℕ)
       · rintro rfl; rfl
       · intro h; funext u; cases u; exact congr_fun h (Classical.arbitrary K)
     by_cases h : b = Finsupp.weight (blockWeight (fun _ : Unit => ∀ k, ι k)) d
-    · rw [if_pos h, if_pos (key.mp h)]
-    · rw [if_neg h, if_neg (mt key.mpr h), map_zero]
+    · rw [ite_eq_left h, ite_eq_left (key.mp h)]
+    · rw [ite_eq_right h, ite_eq_right (mt key.mpr h), map_zero]
   | add p p' hp hp' => simp only [map_add (f := _), hp, hp']
 
 theorem SegrePrime.proof : SegrePrime.Statement := by
@@ -1340,10 +1332,10 @@ theorem proof : ShiftIntersectionPolynomial.Statement := by
   · rw [Polynomial.finsetSum_coeff, Finset.sum_eq_single (fun _ => 0)]
     · rw [Polynomial.coeff_C_mul_X_pow]
       have hc : (Finset.univ.filter fun j : Fin n => (fun _ : Fin n => (0 : Fin 2)) j = 0).card = n := by simp
-      rw [if_pos hc.symm]
+      rw [ite_eq_left hc.symm]
       rfl
     · intro s _ hs
-      rw [Polynomial.coeff_C_mul_X_pow, if_neg]
+      rw [Polynomial.coeff_C_mul_X_pow, ite_eq_right]
       intro hc
       apply hs
       have hu : (Finset.univ.filter fun j => s j = 0) = Finset.univ :=
@@ -1351,8 +1343,7 @@ theorem proof : ShiftIntersectionPolynomial.Statement := by
       funext j
       have := Finset.filter_eq_self.mp hu j (Finset.mem_univ j)
       exact this
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · intro q
     set Z := GroundTheory.Heights₂.Heights.HilbertSamuel.HermLine.zcomb A B (q : ℤ) 1 with hZ_def
     have hZ : IsSmoothHerm Z := ZCombLimit.isSmoothHerm_zcomb_int hA hB _ _
@@ -1369,7 +1360,7 @@ theorem proof : ShiftIntersectionPolynomial.Statement := by
         simpa [e] using h
     have key := ZCombLimit.eq_famExt_of_position (J := II K ι) (P := P) IsSmoothHerm e Z ![(q : ℝ), 1] he hZ hposition
       Finset.univ (fun _ => 0)
-    simp only [Finset.mem_univ, if_true] at key
+    simp only [Finset.mem_univ, ite_true] at key
     rw [key, famExt_apply, Polynomial.eval_finsetSum]
     refine Finset.sum_congr rfl fun s _ => ?_
     rw [prod_weights, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X]
@@ -1436,8 +1427,7 @@ theorem regularityLocalDimension_holds.proof (hF : LocRingFrac.Statement) (hL : 
     obtain ⟨n, z, hz, hyz⟩ :=
       hPw K ι P s _ a W xF u v b y hPp hP.2.1.2.1 hs hsP hW ht htW hxt hu hv huW hvW hyuv
     have e : y ^ n = x * ⟨z, hz⟩ := Subtype.ext (by simpa using hyz)
-    have hq1 := hq.1
-    exact hq1.mem_of_pow_mem n (e ▸ q.mul_mem_right _ (hq.2 (Ideal.mem_span_singleton_self x)))
+    exact (hq.1).mem_of_pow_mem n (e ▸ q.mul_mem_right _ (hq.2 (Ideal.mem_span_singleton_self x)))
   have h1 := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ _ hmin
   have h2 := Ideal.height_span_singleton_eq_one_of_mem_nonZeroDivisors (mem_nonZeroDivisors_of_ne_zero hx0) hxu
   have h3 := Ideal.height_mono hmin.1.2
@@ -1479,8 +1469,7 @@ theorem regularityDehomogenization_holds.proof (h₁ : GroundTheory.Heights₂.H
     exact fun h => htW (hPW h)
   have hyO : y ∈ locRing P W := by
     refine Subring.subset_closure ⟨s, t, a, htnz, htW, hs, ht, ?_⟩
-    rw [IsLocalization.eq_mk'_iff_mul_eq]
-    exact hy
+    rwa [IsLocalization.eq_mk'_iff_mul_eq]
   refine ⟨hyO, ?_⟩
   obtain ⟨_, _, _, hmax⟩ := h₂ K ι P W hP hWm hPW
   have : IsLocalHom (algebraMap (locRing P W) (coneLocRing P W hPW)) :=

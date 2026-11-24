@@ -104,8 +104,7 @@ theorem ofNat_prime_dvd_iff (p : Nat.Primes) (a : Supernatural) :
     simp [p.prop.factorization_self]
   rw [dvd_iff_le, le_def]
   constructor
-  · intro h
-    exact h1 ▸ h p
+  · exact fun h => h1 ▸ h p
   · intro h q
     by_cases hq : q = p
     · subst hq
@@ -267,8 +266,7 @@ theorem superRelIndex_eq_iSup [TotallyDisconnectedSpace G] {K H : Subgroup G} (h
       refine sup_le_sup_left (fun x hx => ?_) _
       have : (x : G) ∈ W := hUW hx
       have : x ∈ Subtype.val ⁻¹' W := this
-      rw [hWV] at this
-      exact this
+      rwa [hWV] at this
     have hne : ((K ⊔ (U : Subgroup G)).subgroupOf H).index ≠ 0 := relIndex_sup_ne_zero K H U
     show Supernatural.ofNat _ ≤ Supernatural.ofNat ((K ⊔ (U : Subgroup G)).subgroupOf H).index
     rw [← Supernatural.dvd_iff_le, Supernatural.ofNat_dvd_ofNat
@@ -366,9 +364,7 @@ omit [TotallyDisconnectedSpace G] in
 theorem not_dvd_superIndex_iff_map (H : Subgroup G) :
     ¬ Supernatural.ofNat p ∣ superIndex H ↔
       ∀ U : OpenNormalSubgroup G, ¬ p ∣ (H.map (QuotientGroup.mk' (U : Subgroup G))).index := by
-  have h := not_dvd_superIndex_iff (⟨p, hp.out⟩ : Nat.Primes) H
-  simp only [index_sup_eq_index_map] at h
-  exact h
+  simpa only [index_sup_eq_index_map] using not_dvd_superIndex_iff (⟨p, hp.out⟩ : Nat.Primes) H
 
 theorem isProSylow_iff {P : Subgroup G} (hP : IsClosed (P : Set G)) :
     IsProSylow p P ↔ ∀ U : OpenNormalSubgroup G,
@@ -552,8 +548,7 @@ theorem finite_of_isSimpleOrder {p : ℕ} (hp : p.Prime) (A : Rep.{u} (ULift.{u}
       exact ha₀ ((Submodule.mem_bot _).1 this)
     · have hall : ∀ a : A, a ∈ W := fun a => by
         have : a ∈ (⊤ : Subrepresentation A.ρ).toSubmodule := Submodule.mem_top
-        rw [← h] at this
-        exact this
+        rwa [← h] at this
       exact Finite.of_injective (fun x : A => (⟨x, hall x⟩ : W)) fun x y h => congrArg Subtype.val h
   · rw [not_nontrivial_iff_subsingleton] at hnt
     infer_instance
@@ -629,7 +624,7 @@ theorem summandFun_mul_left (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.ρ
     Subgroup.mul_mem_cancel_left _ (le_sup_left (a := H) (b := V) h.2)
   by_cases hx : x ∈ H ⊔ V
   · have hx' : (h : G) * x ∈ H ⊔ V := hmem.2 hx
-    simp only [summandFun, dif_pos hx, dif_pos hx']
+    simp only [summandFun, dite_eq_left hx, dite_eq_left hx']
     rw [← Module.End.mul_apply, ← map_mul]
     apply rho_eq_of_inv_mul_mem hfix
     have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
@@ -641,7 +636,7 @@ theorem summandFun_mul_left (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.ρ
     have := inv_mul_mem_symm (hsection ⟨x, hx⟩)
     simpa [mul_assoc] using this
   · have hx' : (h : G) * x ∉ H ⊔ V := fun h' => hx (hmem.1 h')
-    simp only [summandFun, dif_neg hx, dif_neg hx', map_zero]
+    simp only [summandFun, dite_eq_right hx, dite_eq_right hx', map_zero]
 
 omit [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] in
 theorem summandFun_mul_right (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.ρ h a = a) (a : A)
@@ -650,7 +645,7 @@ theorem summandFun_mul_right (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.�
     Subgroup.mul_mem_cancel_right _ (le_sup_left (a := H) (b := V) k'.2)
   by_cases hx : x ∈ H ⊔ V
   · have hx' : x * k' ∈ H ⊔ V := hmem.2 hx
-    simp only [summandFun, dif_pos hx, dif_pos hx']
+    simp only [summandFun, dite_eq_left hx, dite_eq_left hx']
     rw [← Module.End.mul_apply, ← map_mul]
     apply rho_eq_of_inv_mul_mem hfix
     have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
@@ -665,7 +660,7 @@ theorem summandFun_mul_right (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.�
       simpa using this
     simpa [mul_assoc] using h2
   · have hx' : x * k' ∉ H ⊔ V := fun h' => hx (hmem.1 h')
-    simp only [summandFun, dif_neg hx, dif_neg hx']
+    simp only [summandFun, dite_eq_right hx, dite_eq_right hx']
 
 omit [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] in
 theorem summandFun_mul_right_of_mem (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.ρ h a = a)
@@ -674,7 +669,7 @@ theorem summandFun_mul_right_of_mem (hfix : ∀ h : H, (h : G) ∈ V → ∀ a :
     Subgroup.mul_mem_cancel_right _ (le_sup_right (a := H) (b := V) hv)
   by_cases hx : x ∈ H ⊔ V
   · have hx' : x * v ∈ H ⊔ V := hmem.2 hx
-    simp only [summandFun, dif_pos hx, dif_pos hx']
+    simp only [summandFun, dite_eq_left hx, dite_eq_left hx']
     apply rho_eq_of_inv_mul_mem hfix
     have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
       have hex : ∃ g ∈ H, g⁻¹ * (y : G) ∈ V := by
@@ -687,13 +682,13 @@ theorem summandFun_mul_right_of_mem (hfix : ∀ h : H, (h : G) ∈ V → ∀ a :
       V.mul_mem (V.inv_mem hv) h1
     simpa [mul_assoc] using h2
   · have hx' : x * v ∉ H ⊔ V := fun h' => hx (hmem.1 h')
-    simp only [summandFun, dif_neg hx, dif_neg hx']
+    simp only [summandFun, dite_eq_right hx, dite_eq_right hx']
 
 omit [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] in
 theorem summandFun_one (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.ρ h a = a) (a : A) :
     summandFun H V a 1 = a := by
   have h1 : (1 : G) ∈ H ⊔ V := one_mem _
-  simp only [summandFun, dif_pos h1]
+  simp only [summandFun, dite_eq_left h1]
   rw [← rho_eq_of_inv_mul_mem hfix (h₁ := 1) ?_ a, map_one, Module.End.one_apply]
   have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
     have hex : ∃ g ∈ H, g⁻¹ * (y : G) ∈ V := by

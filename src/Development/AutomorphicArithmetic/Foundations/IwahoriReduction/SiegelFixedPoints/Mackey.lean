@@ -151,25 +151,25 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
     push_cast
     exact ⟨Int.ModEq.mul_left_cancel' hD', fun h => Int.ModEq.mul_left' h⟩
   rcases Nat.eq_zero_or_pos n with rfl | hn
-  · simp only [eisF, const0, if_true, dvd_zero, Nat.zero_div]
+  · simp only [eisF, const0, ite_true, dvd_zero, Nat.zero_div]
     have h1 : ¬ ((D * M : ℕ) : ℤ) ∣ (D:ℤ) * A := by
       push_cast
       rwa [mul_dvd_mul_iff_left hD']
-    rw [if_neg h1, if_neg hA]
+    rw [ite_eq_right h1, ite_eq_right hA]
     unfold frc
     push_cast
     rw [Int.mul_emod_mul_of_pos _ _ (by exact_mod_cast hD)]
     push_cast
     have : (D:ℚ) ≠ 0 := by exact_mod_cast hD.ne'
     field_simp
-  · simp only [eisF, coefPos, hn.ne', if_false, Nat.sub_self, pow_zero, one_mul]
+  · simp only [eisF, coefPos, hn.ne', ite_false, Nat.sub_self, pow_zero, one_mul]
     by_cases hDn : D ∣ n
-    · rw [if_pos hDn]
+    · rw [ite_eq_left hDn]
       obtain ⟨k, rfl⟩ := hDn
       have hk : k ≠ 0 := by
         rintro rfl
         simp at hn
-      rw [Nat.mul_div_cancel_left k hD, if_neg hk]
+      rw [Nat.mul_div_cancel_left k hD, ite_eq_right hk]
       have hsub : k.divisors ⊆ (D * k).divisors :=
         Nat.divisors_subset_of_dvd (Nat.mul_ne_zero hD.ne' hk) (dvd_mul_left k D)
       have hpow : ∀ t : ℤ, ζ' ^ ((D:ℤ) * t) = ζ ^ t := by
@@ -194,12 +194,10 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
       · intro x hx hxn
         have hx' : x ∣ D * k := Nat.dvd_of_mem_divisors hx
         have hnot : ¬ x ∣ k := fun h => hxn (Nat.mem_divisors.mpr ⟨h, hk⟩)
-        rw [if_neg, if_neg, sub_zero]
-        · intro h
-          exact hnot (hout x hx' (by simpa using key _ h))
-        · intro h
-          exact hnot (hout x hx' (key _ h))
-    · rw [if_neg hDn]
+        rw [ite_eq_right, ite_eq_right, sub_zero]
+        · exact fun h => hnot (hout x hx' (by simpa using key _ h))
+        · exact fun h => hnot (hout x hx' (key _ h))
+    · rw [ite_eq_right hDn]
       apply Finset.sum_eq_zero
       intro x hx
       have hx' : x ∣ n := Nat.dvd_of_mem_divisors hx
@@ -207,11 +205,9 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
         intro hdx
         rw [Int.natCast_dvd_natCast] at hdx
         exact hDn (hdx.trans (Nat.div_dvd_of_dvd hx'))
-      rw [if_neg, if_neg, sub_zero]
-      · intro h
-        exact hout (by simpa using key _ h)
-      · intro h
-        exact hout (key _ h)
+      rw [ite_eq_right, ite_eq_right, sub_zero]
+      · exact fun h => hout (by simpa using key _ h)
+      · exact fun h => hout (key _ h)
 
 private theorem smF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (c : ℤ) (D M : ℕ) (ζ' ζ : K) (hζ : ζ' ^ D = ζ) (A a : ℤ) (hD : 0 < D) (hA : ¬ (M:ℤ) ∣ A) (hcA : ¬ (M:ℤ) ∣ c * A) (n : ℕ) :
     smF c 1 (D * M) ζ' ((D:ℤ) * A) ((D:ℤ) * a) n = if D ∣ n then smF c 1 M ζ A a (n / D) else 0 := by
@@ -223,7 +219,7 @@ private theorem cmul_dilate_eq_ite_dvd {K : Type*} [Field K] (D : ℕ) (hD : 0 <
     cmul f' g' N = if D ∣ N then cmul f g (N / D) else 0 := by
   unfold cmul
   by_cases hN : D ∣ N
-  · rw [if_pos hN]
+  · rw [ite_eq_left hN]
     obtain ⟨K0, rfl⟩ := hN
     rw [Nat.mul_div_cancel_left K0 hD]
     have hsub : (Finset.range (K0 + 1)).image (fun k => D * k) ⊆ Finset.range (D * K0 + 1) := by
@@ -236,9 +232,8 @@ private theorem cmul_dilate_eq_ite_dvd {K : Type*} [Field K] (D : ℕ) (hD : 0 <
     · apply Finset.sum_congr rfl
       intro k hk
       have e : D * K0 - D * k = D * (K0 - k) := (Nat.mul_sub D K0 k).symm
-      rw [hf, hg, if_pos (dvd_mul_right D k), e, if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD, Nat.mul_div_cancel_left _ hD]
-    · intro x _ y _ hxy
-      exact Nat.eq_of_mul_eq_mul_left hD hxy
+      rw [hf, hg, ite_eq_left (dvd_mul_right D k), e, ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD, Nat.mul_div_cancel_left _ hD]
+    · exact fun x _ y _ hxy => Nat.eq_of_mul_eq_mul_left hD hxy
     · intro i hi hni
       rw [hf]
       split_ifs with hDi
@@ -251,7 +246,7 @@ private theorem cmul_dilate_eq_ite_dvd {K : Type*} [Field K] (D : ℕ) (hD : 0 <
         have := Nat.le_of_mul_le_mul_left h1 hD
         omega
       · simp
-  · rw [if_neg hN]
+  · rw [ite_eq_right hN]
     apply Finset.sum_eq_zero
     intro i hi
     have hi' : i ≤ N := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
@@ -274,13 +269,13 @@ private theorem coefQ_eq_of_mul_eq_nat {Ω : Type} [Field Ω] (L : ℕ) (hL : 0 
       rw [h]
       exact Nat.cast_nonneg _
     exact (mul_nonneg_iff_of_pos_right hL').mp h0
-  rw [if_pos ⟨hr, by rw [h]; simp⟩, h]
+  rw [ite_eq_left ⟨hr, by rw [h]; simp⟩, h]
   simp
 
 private theorem coefQ_eq_zero_of_not_nat {Ω : Type} [Field Ω] (L : ℕ) (F : ℕ → Ω) (r : ℚ) (h : ¬ ∃ N : ℕ, r * L = N) :
     coefQ L F r = 0 := by
   unfold coefQ
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨hr, hd⟩
   apply h
   have h1 : ((r * L).num : ℚ) = r * L := Rat.coe_int_num_of_den_eq_one hd
@@ -302,13 +297,13 @@ theorem UpperTheory.Kd.L.resc :
     rw [coefQ_eq_of_mul_eq_nat L hL _ r N hN, hc]
     by_cases hDN : D ∣ N
     · obtain ⟨K0, rfl⟩ := hDN
-      rw [if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD]
+      rw [ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD]
       refine (coefQ_eq_of_mul_eq_nat L hL _ _ K0 ?_).symm
       have hD' : (D:ℚ) ≠ 0 := by exact_mod_cast hD.ne'
       rw [div_mul_eq_mul_div, hN]
       push_cast
       field_simp
-    · rw [if_neg hDN, coefQ_eq_zero_of_not_nat]
+    · rw [ite_eq_right hDN, coefQ_eq_zero_of_not_nat]
       rintro ⟨m, hm⟩
       apply hDN
       refine ⟨m, ?_⟩
@@ -384,8 +379,7 @@ private theorem gal_sl_diag (X : Tower Ω ε) {D : ℕ} (hD : 0 < D) (s : Ω ≃
     have := X.exp_upper (toGQ !![(D : ℤ), 0; 0, 1]) (by rw [ent_diag hD]; simp) h (r / D)
     simp only [ent_diag hD] at this
     simp at this
-    rw [div_mul_cancel₀ _ hD', eOm_zero', one_mul] at this
-    exact this
+    rwa [div_mul_cancel₀ _ hD', eOm_zero', one_mul] at this
   rw [X.gal_exp, key, key, X.gal_exp]
 
 private theorem rescale_series (φ : HahnSeries ℚ Ω) {D : ℚ} (hD : 0 < D) :
@@ -393,9 +387,7 @@ private theorem rescale_series (φ : HahnSeries ℚ Ω) {D : ℚ} (hD : 0 < D) :
   refine ⟨⟨fun r => φ.coeff (r / D), ?_⟩, fun r => rfl⟩
   have h := φ.isPWO_support.image_of_monotone (f := fun r : ℚ => r * D)
     (fun a b hab => mul_le_mul_of_nonneg_right hab hD.le)
-  refine h.mono ?_
-  intro r hr
-  exact ⟨r / D, hr, div_mul_cancel₀ _ hD.ne'⟩
+  exact h.mono (fun r hr => ⟨r / D, hr, div_mul_cancel₀ _ hD.ne'⟩)
 
 private theorem diag_mul_T_pow_eq_T_pow_mul_mul_diag (D L : ℕ) (hD : 0 < D) :
     toGQ !![(D : ℤ), 0; 0, 1] * ofSL (ModularGroup.T ^ L) = ofSL (ModularGroup.T ^ (D * L)) * toGQ !![(D : ℤ), 0; 0, 1] := by
@@ -464,8 +456,7 @@ private theorem coefQ_cmul_mem (A : ValuationSubring Ω) {f g : ℕ → Ω} (hf 
 
 private theorem zt_pow [IsAlgClosed Ω] (ε : Ω →+* ℂ) {l : ℕ} (hl : l ≠ 0) (k : ℕ) : IsPrimitiveRoot (zt ε l k) (l ^ k) := by
   have h := isPrimitiveRoot_eOm ε (pow_ne_zero k hl)
-  rw [Nat.cast_pow] at h
-  exact h
+  rwa [Nat.cast_pow] at h
 
 end UpperTheory.Kd.L.One
 
@@ -626,8 +617,7 @@ theorem UpperTheory.Kd.L.one :
   rw [e1] at e0
   have hdet : en g 0 0 * en g 1 1 - en g 0 1 * en g 1 0 = 1 := by
     have := g.det_coe
-    rw [Matrix.det_fin_two] at this
-    exact this
+    rwa [Matrix.det_fin_two] at this
   have hZ : (N : ℤ) ^ 2 * (en g 0 0 * w1) * en g 1 1 - (N : ℤ) * en g 0 1 * ((N : ℤ) ^ 2 * w2) =
       (N : ℤ) ^ 3 + (l : ℤ) ^ (m + n) * ((N : ℤ) ^ 2 * en g 0 0 * (x.val : ℤ) * (topT l (m + n) N : ℤ) * en g 1 1 -
         (N : ℤ) ^ 3 * en g 0 1 * en g 0 0 * (topT l (m + n) N : ℤ)) := by
@@ -924,8 +914,7 @@ private lemma FF_eq (X : Tower Ω ε) {l : ℕ} [Fact l.Prime] {n m N : ℕ} [Ne
           ex l n w (gm r₀ * liftSL _ (p.1 * Tm (topMu l n m N) p.2)) := by
     symm
     refine Finset.prod_bij (fun p _ => p.1 * Tm (topMu l n m N) p.2) ?_ ?_ ?_ (fun _ _ => rfl)
-    · intro p hp'
-      exact Gs_mul_Tm (hR.1 (Finset.mem_product.1 hp').1) _
+    · exact fun p hp' => Gs_mul_Tm (hR.1 (Finset.mem_product.1 hp').1) _
     · intro p hp' q hq e
       obtain ⟨hp1, hp2⟩ := Finset.mem_product.1 hp'
       obtain ⟨hq1, hq2⟩ := Finset.mem_product.1 hq
@@ -1288,7 +1277,7 @@ theorem UpperTheory.Kd.L.mackey :
     rfl
   rw [hΦ]
   by_cases hr : r.den = 1
-  · simp only [hr, if_true]
+  · simp only [hr, ite_true]
     have hab : ∀ i ∈ I, CgA A l n ((l : Ω) ^ cc * ρ i.1 ((ψ i.1 i.2.1 i.2.2).coeff r))
         (s (ρ i.1 (ξ i.1 i.2.1 i.2.2 r)) - ρ i.1 (ξ i.1 i.2.1 i.2.2 r) +
           (l : Ω) ^ cc * ((N : Ω) ^ 3 * ρ i.1 (EE ε l (m + n) N x c d (gm i.2.1 * liftSL _ i.2.2) r) * (t.val : Ω))) := by
@@ -1296,8 +1285,7 @@ theorem UpperTheory.Kd.L.mackey :
       have h1 := (hξ i.1 i.2.1 i.2.2 (hIR i hi)).2 (σ i.1) (hσ _) (hσS _) t (hσt _) _ (hψ1 i.1 i.2.1 i.2.2) r
       have h2 := cgA_map (ρ i.1) h1
       rw [hσd] at h2
-      simp only [map_add (f := _), map_sub, map_mul, map_pow, map_natCast, conj_apply] at h2
-      exact h2
+      simpa only [map_add (f := _), map_sub, map_mul, map_pow, map_natCast, conj_apply] using h2
     have h3 := cgA_sum I mx _ _ hab
     have e1 : (l : Ω) ^ cc * ∑ i ∈ I, (mx i : Ω) * ρ i.1 ((ψ i.1 i.2.1 i.2.2).coeff r) =
         ∑ i ∈ I, (mx i : Ω) * ((l : Ω) ^ cc * ρ i.1 ((ψ i.1 i.2.1 i.2.2).coeff r)) := by
@@ -1317,7 +1305,7 @@ theorem UpperTheory.Kd.L.mackey :
     rw [map_mul, map_natCast, hmx]
     push_cast
     ring
-  · simp only [hr, if_false, map_zero, mul_zero, Finset.sum_const_zero, sub_zero, add_zero, zero_mul]
+  · simp only [hr, ite_false, map_zero, mul_zero, Finset.sum_const_zero, sub_zero, add_zero, zero_mul]
     exact ⟨0, zero_mem A, by ring⟩
 end -- clump:auto
 end -- clump:auto

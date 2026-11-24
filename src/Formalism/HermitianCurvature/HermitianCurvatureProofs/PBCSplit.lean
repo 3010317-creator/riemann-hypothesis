@@ -132,13 +132,12 @@ theorem GermData.phiG_bdd (hG : GermData Y U P Q hat) (κ : H → H → ℂ) :
   refine ⟨(∑ h ∈ Y, ∑ h' ∈ Y, ‖κ h h'‖) * B ^ f, fun x x' => ?_⟩
   unfold phiG
   by_cases hg : Good x ∧ Good x'
-  · simp only [if_pos hg]
+  · simp only [ite_eq_left hg]
     have hE := fun v h (hh : h ∈ Y) h' (hh' : h' ∈ Y) => entry_lemma_2 hG hB0 hB v hh hh' (hg.1 v) (hg.2 v)
     exact ⟨phi_bound Y κ U B hB0 x x' fun v h hh h' hh' => (hE v h hh h' hh').1,
       phi_bound Y κ P B hB0 x x' fun v h hh h' hh' => (hE v h hh h' hh').2.1,
       phi_bound Y κ Q B hB0 x x' fun v h hh h' hh' => (hE v h hh h' hh').2.2⟩
-  · simp only [if_neg hg, norm_zero]
-    exact ⟨hC, hC, hC⟩
+  · simpa only [ite_eq_right hg, norm_zero] using ⟨hC, hC, hC⟩
 
 theorem GermData.phiRG_bdd (hG : GermData Y U P Q hat) (κ : H → H → ℂ) :
     ∃ C : ℝ, ∀ x x' : crystallineComparison.V f, ‖phiRG Y κ U P Q x x'‖ ≤ C := by
@@ -153,8 +152,7 @@ theorem GermData.phiRG_bdd (hG : GermData Y U P Q hat) (κ : H → H → ℂ) :
   have c2 : ‖conj (phiG Y κ P x' x)‖ ≤ C := by rw [Complex.norm_conj]; exact b2
   calc _ ≤ ‖phiG Y κ U x x'‖ + ‖phiG Y κ P x x'‖ + ‖conj (phiG Y κ P x' x)‖ + ‖phiG Y κ Q x x'‖ := by
         refine (norm_add_le _ _).trans (add_le_add ?_ le_rfl)
-        refine (norm_sub_le _ _).trans (add_le_add ?_ le_rfl)
-        exact norm_sub_le _ _
+        exact (norm_sub_le _ _).trans (add_le_add (norm_sub_le _ _) le_rfl)
     _ ≤ 4 * C := by linarith
 
 variable (Λ : AddSubgroup (crystallineComparison.V f)) (LIM : (Λ → ℂ) → ℂ)
@@ -267,8 +265,7 @@ theorem limit_average_positive_definite (hG : GermData Y U P Q hat) (κ : H → 
       refine Finset.sum_congr rfl fun σ _ => ?_
       simp only [add_sub_cancel_left, Complex.star_def]
       ring
-    rw [Finset.sum_congr rfl e, Finset.sum_comm] at h
-    exact h
+    rwa [Finset.sum_congr rfl e, Finset.sum_comm] at h
   obtain ⟨CR, hCR⟩ := hG.phiRG_bdd κ
   have hb : ∀ σ σ' : crystallineComparison.V f, crystallineComparison.Bdd (fun x : Λ =>
       phiRG Y κ U P Q ((x : crystallineComparison.V f) + σ') ((x : crystallineComparison.V f) + σ) * c σ * conj (c σ')) := fun σ σ' =>

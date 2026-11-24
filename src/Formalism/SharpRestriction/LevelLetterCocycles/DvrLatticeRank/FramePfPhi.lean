@@ -70,9 +70,7 @@ theorem framepf_nBasis : ∃ β : Module.Basis (Fin Bs.r) (LetA O n) ↥(W.N T),
       have := congrArg (fun z : ↥(W.N T) => (z : W.DD T)) hg
       simpa [b'] using this.symm
     obtain ⟨a, -, hu⟩ := Bs.uniq 0 (W.N T).zero_mem
-    have e := (hu g h1).trans (hu 0 (by simp)).symm
-    intro k
-    exact congrFun e k
+    exact fun k => congrFun ((hu g h1).trans (hu 0 (by simp)).symm) k
   have hsp : ⊤ ≤ Submodule.span (LetA O n) (Set.range b') := by
     intro x _
     obtain ⟨a, ha, -⟩ := Bs.uniq x x.2

@@ -103,8 +103,7 @@ theorem neg_iff_nN {n : ℕ} (f : Fin n → ℚ) (hseg : ∀ i i' : Fin n, i < i
       intro x hx
       rw [Finset.mem_filter] at hx
       rw [Finset.mem_Ioi]
-      by_contra hle
-      push_neg at hle
+      by_contra! hle
       rcases hle.lt_or_eq with h | h
       · exact hn (hseg x i h hx.2)
       · rw [← h] at hn; exact hn hx.2
@@ -155,7 +154,7 @@ theorem gR_pos_block {m : ℕ} (u v : κ → σ) (pos : κ → Bool) (j : Fin m 
     gR u v pos P = ∑ k, X (u (j k)) * pderiv (v (j k)) P := by
   unfold gR
   rw [sum_range_emb j hj _ (fun c hc => ?_)]
-  · exact Finset.sum_congr rfl (fun k _ => by rw [if_pos (hin k)])
+  · exact Finset.sum_congr rfl (fun k _ => by rw [ite_eq_left (hin k)])
   · split_ifs
     · rw [pderiv_eq_zero_of_noVar (hB c hc), mul_zero]
     · rw [pderiv_eq_zero_of_noVar (hA c hc), mul_zero, neg_zero]
@@ -173,14 +172,14 @@ theorem sw_pos_block {m : ℕ} (e : σ →₀ ℕ) (w : κ → σ) (pos : κ →
     sw e w pos = ((∑ k, e (w (j k)) : ℕ) : ℤ) := by
   unfold sw
   rw [sum_range_emb j hj _ (fun c hc => by rw [hA c hc]; simp), Nat.cast_sum]
-  exact Finset.sum_congr rfl (fun k _ => by rw [if_pos (hin k)])
+  exact Finset.sum_congr rfl (fun k _ => by rw [ite_eq_left (hin k)])
 
 theorem sw_neg_block {m : ℕ} (e : σ →₀ ℕ) (w : κ → σ) (pos : κ → Bool) (j : Fin m → κ) (hj : Function.Injective j)
     (hA : ∀ c, c ∉ Set.range j → e (w c) = 0) (hin : ∀ k, pos (j k) = false) :
     sw e w pos = -((∑ k, e (w (j k)) : ℕ) : ℤ) := by
   unfold sw
   rw [sum_range_emb j hj _ (fun c hc => by rw [hA c hc]; simp), Nat.cast_sum, ← Finset.sum_neg_distrib]
-  exact Finset.sum_congr rfl (fun k _ => by rw [if_neg (by simp [hin k])])
+  exact Finset.sum_congr rfl (fun k _ => by rw [ite_eq_right (by simp [hin k])])
 
 theorem bRow_apply' {m n : ℕ} (ι : Fin m × Fin n → σ) (a b : Fin m) (P : MvPolynomial σ ℂ) :
     bRow ι a b P = ∑ k : Fin n, X (ι (a, k)) * pderiv (ι (b, k)) P := by
@@ -251,14 +250,12 @@ theorem blkHyp_pos (hM : MinHyp p q r s μ μ' P) {m n : ℕ} (iX : Fin m → Ix
     have hR := ker_of_hw hw1 (iX a) (iX b) (hmi a b hab)
     rw [leftOffDiagonalActionFormula p q r s _ _ hne, leftRootOperator_eq_signedPolarization _ _ hne (hs1 a b) P,
       gR_pos_block _ _ _ jX hj P (fun c hc => urow a c hc) (fun c hc => urow b c hc) (fun k => hlp a k)] at hR
-    rw [bRow_apply']
-    exact hR
+    rwa [bRow_apply']
   · have hne := ne_of_posC (hmj c d hcd)
     have hR := ker_of_hw hw2 (jX c) (jX d) (hmj c d hcd)
     rw [rightOffDiagonalActionFormula p q r s _ _ hne, rightRootOperator_eq_signedPolarization _ _ hne (hs2 c d) P,
       gR_pos_block _ _ _ iX hi P (fun a ha => ucol c a ha) (fun a ha => ucol d a ha) (fun i => hlp i c)] at hR
-    rw [bCol_apply']
-    exact hR
+    rwa [bCol_apply']
   · rw [hα i, rowv e he i, Nat.floor_natCast]
   · rw [hβ k, colv e he k, Nat.floor_natCast]
   · rw [hα i, Nat.floor_pos]
@@ -343,15 +340,13 @@ theorem blkHyp_neg (hM : MinHyp p q r s μ μ' P) {m n : ℕ} (iX : Fin m → Ix
     rw [leftOffDiagonalActionFormula p q r s _ _ hne, leftRootOperator_eq_signedPolarization _ _ hne (hs1 b a) P,
       gR_neg_block _ _ _ jX hj P (fun c hc => urow b c hc) (fun c hc => urow a c hc) (fun k => hlp b k),
       neg_eq_zero] at hR
-    rw [bRow_apply']
-    exact hR
+    rwa [bRow_apply']
   · have hne := ne_of_posC (hmj c d hcd)
     have hR := ker_of_hw hw2 (jX d) (jX c) (hmj c d hcd)
     rw [rightOffDiagonalActionFormula p q r s _ _ hne, rightRootOperator_eq_signedPolarization _ _ hne (hs2 d c) P,
       gR_neg_block _ _ _ iX hi P (fun a ha => ucol d a ha) (fun a ha => ucol c a ha) (fun i => hlp i d),
       neg_eq_zero] at hR
-    rw [bCol_apply']
-    exact hR
+    rwa [bCol_apply']
   · rw [hα i, rowv e he i, Nat.floor_natCast]
   · rw [hβ k, colv e he k, Nat.floor_natCast]
   · rw [hα i, Nat.floor_pos]
@@ -580,7 +575,7 @@ theorem leftRootDerivation_X (a b : Ix p q) (v : Ln p q r s) :
   rw [der1, der_sum_apply, Finset.sum_eq_single v.2]
   · obtain ⟨v1, v2⟩ := v
     by_cases h : linePos (a, v2) = true
-    · simp only [h, if_true, Derivation.smul_apply, pderiv_X, smul_eq_mul]
+    · simp only [h, ite_true, Derivation.smul_apply, pderiv_X, smul_eq_mul]
       by_cases hb : v1 = b
       · subst hb; simp
       · simp [hb]
@@ -602,7 +597,7 @@ theorem rightRootDerivation_X (c d : Ix r s) (v : Ln p q r s) :
   rw [der2, der_sum_apply, Finset.sum_eq_single v.1]
   · obtain ⟨v1, v2⟩ := v
     by_cases h : linePos (v1, c) = true
-    · simp only [h, if_true, Derivation.smul_apply, pderiv_X, smul_eq_mul]
+    · simp only [h, ite_true, Derivation.smul_apply, pderiv_X, smul_eq_mul]
       by_cases hb : v2 = d
       · subst hb; simp
       · simp [hb]
@@ -627,7 +622,7 @@ theorem leftRootOperator_eq_derivation (a b : Ix p q) (hab : a ≠ b) (hblk : �
   by_cases h : linePos (a, c) = true
   · simp [h, smul_eq_mul]
   · have hne : (a, c) ≠ (b, c) := fun e => hab (by simp at e; exact e)
-    simp only [h, if_false, Bool.false_eq_true, LinearMap.neg_apply, LinearMap.mulLeft_apply,
+    simp only [h, ite_false, Bool.false_eq_true, LinearMap.neg_apply, LinearMap.mulLeft_apply,
       Derivation.coeFn_coe, Derivation.neg_apply, Derivation.smul_apply, smul_eq_mul]
     rw [pderiv_mul, pderiv_X_of_ne hne.symm]
     ring
@@ -642,7 +637,7 @@ theorem rightRootOperator_eq_derivation (c d : Ix r s) (hcd : c ≠ d) (hblk : �
   by_cases h : linePos (a, c) = true
   · simp [h, smul_eq_mul]
   · have hne : (a, c) ≠ (a, d) := fun e => hcd (by simp at e; exact e)
-    simp only [h, if_false, Bool.false_eq_true, LinearMap.neg_apply, LinearMap.mulLeft_apply,
+    simp only [h, ite_false, Bool.false_eq_true, LinearMap.neg_apply, LinearMap.mulLeft_apply,
       Derivation.coeFn_coe, Derivation.neg_apply, Derivation.smul_apply, smul_eq_mul]
     rw [pderiv_mul, pderiv_X_of_ne hne.symm]
     ring
@@ -664,8 +659,7 @@ theorem leadT_der_rows (D : Derivation ℂ (Pol p q r s) (Pol p q r s)) (ρ : Fi
     rcases h (Fin.castLE hh.1 i) (by simp) with h0 | ⟨i₁, hi₁, hne, e, he⟩
     · left
       intro j
-      simp only [Matrix.submatrix_apply, varMat, Matrix.of_apply]
-      exact h0 _ (by simp)
+      simpa only [Matrix.submatrix_apply, varMat, Matrix.of_apply] using h0 _ (by simp)
     · right
       refine ⟨⟨i₁.val, hi₁⟩, ?_, e, ?_⟩
       · intro hc
@@ -691,8 +685,7 @@ theorem leadT_der_cols (D : Derivation ℂ (Pol p q r s) (Pol p q r s)) (ρ : Fi
     rcases h (Fin.castLE hh.2 j) (by simp) with h0 | ⟨j₁, hj₁, hne, e, he⟩
     · left
       intro i
-      simp only [Matrix.submatrix_apply, varMat, Matrix.of_apply]
-      exact h0 _ (by simp)
+      simpa only [Matrix.submatrix_apply, varMat, Matrix.of_apply] using h0 _ (by simp)
     · right
       refine ⟨⟨j₁.val, hj₁⟩, ?_, e, ?_⟩
       · intro hc
@@ -823,12 +816,10 @@ theorem vecRaise1 (a b c d : List ℤ) (x y : Ix p q) (hxy : posC x y) :
         omega
       · intro t
         refine leadingMinor_leftRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_leftRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
   | inr j =>
     cases y with
     | inl _ => exact hxy.elim
@@ -838,12 +829,10 @@ theorem vecRaise1 (a b c d : List ℤ) (x y : Ix p q) (hxy : posC x y) :
       apply hwVec_der
       · intro t
         refine leadingMinor_leftRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_leftRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro i₀ _ e
-        exact absurd e (by simp)
+        exact fun i₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_leftRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
         intro i₀ hi₀ e
@@ -877,12 +866,10 @@ theorem vecRaise2 (a b c d : List ℤ) (x y : Ix r s) (hxy : posC x y) :
         exact ⟨k, by omega, rfl⟩
       · intro t
         refine leadingMinor_rightRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
         intro j₀ hj₀ e
@@ -900,8 +887,7 @@ theorem vecRaise2 (a b c d : List ℤ) (x y : Ix r s) (hxy : posC x y) :
       apply hwVec_der
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
       · intro t
         refine leadingMinor_rightRootDerivation_neg _ _ hne _ _ t (fun _ => rfl) ?_
         intro j₀ hj₀ e
@@ -918,8 +904,7 @@ theorem vecRaise2 (a b c d : List ℤ) (x y : Ix r s) (hxy : posC x y) :
         exact ⟨l, by omega, rfl⟩
       · intro t
         refine leadingMinor_rightRootDerivation_pos _ _ hne _ _ t (fun _ => rfl) ?_
-        intro j₀ _ e
-        exact absurd e (by simp)
+        exact fun j₀ _ e => absurd e (by simp)
 
 end PI.FJMX
 end -- clump:auto
@@ -1377,7 +1362,7 @@ theorem eq_C_of_support {Q : MvPolynomial σ ℂ} (h : ∀ e ∈ Q.support, e = 
   rw [coeff_C]
   by_cases hm : m = 0
   · subst hm; simp
-  · rw [if_neg (Ne.symm hm)]
+  · rw [ite_eq_right (Ne.symm hm)]
     by_contra hc
     exact hm (h m (mem_support_iff.2 hc))
 

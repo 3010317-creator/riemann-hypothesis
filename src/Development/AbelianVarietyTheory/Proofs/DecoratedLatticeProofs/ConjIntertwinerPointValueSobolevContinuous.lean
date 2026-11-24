@@ -78,8 +78,7 @@ theorem reg_star {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (g : X
     rfl
   apply Lp.ext
   filter_upwards [e1, e2, e3, Lp.coeFn_star (X.B.R g φ)] with x a1 a2 a3 a4
-  rw [a1, a4, Pi.star_apply, a2]
-  exact a3
+  rwa [a1, a4, Pi.star_apply, a2]
 
 theorem iotaX_rat_iff {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D)
     (g : GA D (D.sp.Y 0)) : g ∈ GQ (D.sp.Y 0) ↔ iotaX X h g ∈ X.B.I.GFset := by
@@ -139,8 +138,7 @@ theorem conjMap_cont : GlobalTheory.Published.DiscreteSeriesClassification → �
       ContinuousLinearMap.comp_assoc]
   have hlev : ∀ k ∈ X.B.I.Kg g, ∀ w, X.B.R (1, k) (Φ w) = Φ w := by
     obtain ⟨A, -, rfl⟩ := hΦ
-    intro k hk w
-    exact congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
+    exact fun k hk w => congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
   obtain ⟨Ψ, hΨ⟩ := exists_conj_multilinear X M c Φ
   obtain ⟨N, hN1, hN2, hN3⟩ := GlobalTheory.TensRep.exists_mmap (ι := fun v x => X.B.I.ext v (T x)) hθ M h1 h2 h5 h6 h7 h8 h9
     (fun γ hγ v => h10 γ ((iotaX_rat_iff X h γ).1 hγ) v) hU Ψ

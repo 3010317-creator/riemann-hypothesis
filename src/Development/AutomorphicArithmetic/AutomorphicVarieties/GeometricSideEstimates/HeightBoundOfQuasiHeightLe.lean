@@ -69,8 +69,7 @@ private theorem chain_first {m : ℕ} {r : Fin (m + 1) → ℝ} {t s : ℝ} (hs0
       rw [← div_eq_mul_inv, div_le_iff₀ (hr _), ← div_eq_inv_mul, le_div_iff₀ (hr _)]
       exact h2) i.rev
   simp only [Fin.rev_last, Fin.rev_rev] at h1
-  rw [← div_eq_mul_inv, div_le_iff₀ (hr _), ← div_eq_inv_mul, le_div_iff₀ (hr _)] at h1
-  exact h1
+  rwa [← div_eq_mul_inv, div_le_iff₀ (hr _), ← div_eq_inv_mul, le_div_iff₀ (hr _)] at h1
 
 private theorem le_of_pow_le {x c : ℝ} {d : ℕ} (hd : d ≠ 0) (hc : 1 ≤ c) (h : x ^ d ≤ c) : x ≤ c := by
   rcases le_or_gt x 1 with h1 | h1
@@ -86,8 +85,7 @@ private theorem qht_le_height (g : KernelIndexFullLattice.G1 E a) (γ : GL (Fin 
     ⟨0, by rintro _ ⟨γ, rfl⟩; exact (height_pos _).le⟩ γ
   rw [retractOne_coe] at h1
   unfold qht
-  rw [retractOne_coe]
-  exact h1
+  rwa [retractOne_coe]
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 private theorem prod_bound {ω : Set (AdelicGLn.AdelicGL E a)} (hω : IsCompact ω) :

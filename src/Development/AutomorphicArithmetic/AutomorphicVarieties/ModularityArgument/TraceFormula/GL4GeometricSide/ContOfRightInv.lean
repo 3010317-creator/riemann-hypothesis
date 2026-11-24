@@ -126,12 +126,10 @@ private theorem hecke_ex (hM : HeckeMem) (π : CuspSub E n) (K : Subgroup (GL (F
     refine Subtype.ext <| Subtype.ext <| Subtype.ext <| funext fun x => ?_
   · change (r (a + b)).1.1.1 x = (r a).1.1.1 x + (r b).1.1.1 x
     rw [hr, hr, hr, heckeOp, heckeOp, heckeOp, ← integral_add (hint a x) (hint b x)]
-    refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
-    exact mul_add _ _ _
+    exact integral_congr_ae (Filter.Eventually.of_forall fun g => (mul_add _ _ _))
   · change (r (c • a)).1.1.1 x = c * (r a).1.1.1 x
     rw [hr, hr, heckeOp, heckeOp, ← integral_const_mul]
-    refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
-    exact mul_left_comm _ _ _
+    exact integral_congr_ae (Filter.Eventually.of_forall fun g => (mul_left_comm _ _ _))
 
 @[reducible] private def core (π : CuspSub E n) (K : Subgroup (GL (Fin n) (Af E))) (H : π.V →ₗ⋆[ℂ] π.V →ₗ[ℂ] ℂ)
     (hH : IsPet π H) : InnerProductSpace.Core ℂ (Fx π K) where

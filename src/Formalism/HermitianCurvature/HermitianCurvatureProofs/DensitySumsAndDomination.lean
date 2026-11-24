@@ -57,8 +57,7 @@ theorem psd_congr {α : Type} {Y : Finset α} {k k' : α → α → ℂ}
   unfold TB.PSDOn at *
   have e : (Matrix.of fun x y : Y => k x y) = Matrix.of fun x y : Y => k' x y := by
     ext x y
-    simp only [Matrix.of_apply]
-    exact h x x.2 y y.2
+    simpa only [Matrix.of_apply] using h x x.2 y y.2
   rwa [← e]
 
 theorem psd_smul {α : Type} {Y : Finset α} {k : α → α → ℂ} (c : ℝ) (hc : 0 ≤ c) (h : TB.PSDOn Y k) :
@@ -84,25 +83,24 @@ theorem domScaleTop : DomScaleTop := by
   · refine ⟨fun t ht => ?_, fun t ht t' ht' hl x hx y hy => ?_, fun S hS hSd => ?_⟩
     · refine psd_congr (k := fun h h' => (lam : ℂ) * (Th i s t h h' - TB.blk (D.Kr i) s t t h h'))
         (fun x _ y _ => ?_) (psd_smul lam hlam (h1 t ht))
-      simp only [TB.blk, hKr, if_pos hi]
+      simp only [TB.blk, hKr, ite_eq_left hi]
       ring
-    · simp only [if_pos hi]
+    · simp only [ite_eq_left hi]
       rw [h2 t ht t' ht' hl x hx y hy]
     · refine psd_congr
         (k := fun h h' => (lam : ℂ) * ((1 + (D.e i : ℂ)) * D.Kr (i - s) h h' - ∑ t ∈ S, Th i s t h h'))
         (fun x _ y _ => ?_) (psd_smul lam hlam (h3 S hS hSd))
       have he2 : D.e i = 0 := by rw [hi]; exact he
-      simp only [hKr, he', if_pos hi, if_neg hne]
+      simp only [hKr, he', ite_eq_left hi, ite_eq_right hne]
       rw [he2, ← Finset.mul_sum]
       push_cast
       ring
   · refine ⟨fun t ht => ?_, fun t ht t' ht' hl x hx y hy => ?_, fun S hS hSd => ?_⟩
     · refine psd_congr (fun x _ y _ => ?_) (h1 t ht)
-      simp only [TB.blk, hKr, if_neg hi]
-    · simp only [if_neg hi]
-      exact h2 t ht t' ht' hl x hx y hy
+      simp only [TB.blk, hKr, ite_eq_right hi]
+    · simpa only [ite_eq_right hi] using h2 t ht t' ht' hl x hx y hy
     · refine psd_congr (fun x _ y _ => ?_) (h3 S hS hSd)
-      simp only [hKr, he', if_neg hi, if_neg hne]
+      simp only [hKr, he', ite_eq_right hi, ite_eq_right hne]
 
 theorem recHypScaleTop : RecHypScaleTop := by
   intro hDS hSB E W _ D C₁ C₄ Θ jn H _ _ Vt c c' sd hsd he h hc1 hc2 hc3
@@ -125,13 +123,12 @@ theorem recHypScaleTop : RecHypScaleTop := by
     rw [h0]; simp
   · intro i h1 hi
     by_cases hit : i = D.r + 1
-    · simp only [scaleTop, hit, if_true]
+    · simp only [scaleTop, hit, ite_true]
       constructor
       · linarith
       · have : max sd 1 ≤ 2 := max_le hsd (by norm_num)
         linarith
-    · simp only [scaleTop, hit, if_false]
-      exact a9 i h1 hi
+    · simpa only [scaleTop, hit, ite_false] using a9 i h1 hi
   · intro T
     obtain ⟨Th, hTh⟩ := a10 T
     exact ⟨_, hDS E W D T Th _ hl0 he hTh⟩
@@ -248,8 +245,7 @@ theorem densSum : DensSum := by
   have hD : ∑ m ∈ Icc 2 (S.sup l + 2), (((m : ℕ) : ℝ) ^ n)⁻¹ ≤ 3 * ((2 : ℝ) ^ n)⁻¹ := by
     calc ∑ m ∈ Icc 2 (S.sup l + 2), (((m : ℕ) : ℝ) ^ n)⁻¹
         ≤ ∑ m ∈ Icc 2 (S.sup l + 2), 4 * ((2 : ℝ) ^ n)⁻¹ * (((m : ℕ) : ℝ) ^ 2)⁻¹ := by
-          refine Finset.sum_le_sum fun m hm => ?_
-          exact pow_bd m n (Finset.mem_Icc.mp hm).1 hn
+          exact Finset.sum_le_sum fun m hm => pow_bd m n (Finset.mem_Icc.mp hm).1 hn
       _ = 4 * ((2 : ℝ) ^ n)⁻¹ * ∑ m ∈ Icc 2 (S.sup l + 2), (((m : ℕ) : ℝ) ^ 2)⁻¹ := by
           rw [Finset.mul_sum]
       _ ≤ 4 * ((2 : ℝ) ^ n)⁻¹ * (3 / 4 - (((S.sup l : ℕ) : ℝ) + 2)⁻¹) :=
@@ -275,8 +271,7 @@ theorem densChain : DensChain := by
     rw [← Real.exp_sum, Real.exp_le_exp, ← Finset.mul_sum]
     linarith
   have hmain : sd ≤ Real.exp (12 * (f : ℝ) * ((2 : ℝ) ^ (k - 2 * r - 2))⁻¹) := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     obtain ⟨x, hx1, hx2⟩ := exists_between hc
     obtain ⟨S, hS⟩ := hsd x hx2
     linarith [hB S]

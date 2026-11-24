@@ -151,8 +151,7 @@ theorem poin_of (hL : LocStatement (E := E)) (hB : BallStatement (E := E)) (hF :
         (hP.1.comp (differentiable_lact γ.1).differentiableOn fun y hy => lactDom X γ.2 hy)
     · obtain ⟨ε, hε, u, hu, hub⟩ := hL r X x0 la W bb F P H x hx
       exact ⟨ε, hε, u, hu, fun γ y hy => (hterm γ y).le.trans (hub γ y hy)⟩
-  · intro x hx b hb
-    exact poin_rmul X la P hP.2 hx hb
+  · exact fun x hx b hb => poin_rmul X la P hP.2 hx hb
   · intro γ hγ x _
     exact poin_lact X la P hγ x
   · refine ⟨max C1 0 * (1 / c) ^ (1 / 2 : ℝ), fun x hx => ?_⟩
@@ -165,8 +164,7 @@ theorem poin_of (hL : LocStatement (E := E)) (hB : BallStatement (E := E)) (hF :
   · intro ρ hρ hρ1
     obtain ⟨C, hC⟩ := hB r X x0 la W bb F P H ρ hρ hρ1
     exact ⟨C, fun x hx hxo => (enorm_poin_le X la P x).trans (hC x hx hxo)⟩
-  · intro la' g hg x hx
-    exact poin_mul X la la' P g hg x hx
+  · exact fun la' g hg x hx => poin_mul X la la' P g hg x hx
 
 end
 

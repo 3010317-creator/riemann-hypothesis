@@ -73,8 +73,7 @@ theorem UpperTheory.V.AlgRepEndIrreducible.kCurve :
   refine ⟨fun t => ⟨NormedSpace.exp (t • Z), hm t⟩, Subtype.ext (by simp), ?_⟩
   open scoped Matrix.Norms.Operator in
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) Z 0
-  rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-  exact h
+  rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.WignerHighestWeights.KCurve =====
@@ -108,8 +107,7 @@ private theorem multi_deriv {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V
     HasDerivAt (fun t => μ (c t)) (∑ i, μ (Function.update (c 0) i (c' i))) 0 := by
   let ν : ContinuousMultilinearMap ℝ (fun _ : Fin q => V) ℂ := ⟨μ, multi_cont μ⟩
   have h := (ν.hasFDerivAt (c 0)).comp_hasDerivAt (0 : ℝ) (hasDerivAt_pi.2 hc)
-  rw [ContinuousMultilinearMap.linearDeriv_apply] at h
-  exact h
+  rwa [ContinuousMultilinearMap.linearDeriv_apply] at h
 
 private theorem hp_herm {E : Type} [Field E] {a : ℕ} (Y : Herm E a) : hp (toL Y.1) = Y := by
   apply Subtype.ext

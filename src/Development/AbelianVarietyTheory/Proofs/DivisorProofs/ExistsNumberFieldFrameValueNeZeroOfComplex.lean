@@ -102,10 +102,8 @@ theorem exists_poly_div_det_secZ (E : Type) [Field E] [NumberField E] [IsCMField
     refine (GlobalTheory.Frames.ChgBC.frChg_baseChange E H Dw l Xo c A S k u₀ u w z' _ _ hu hw).2 ?_
     have e : (fun τ => ((X τ).transpose).map k) = fun b => (Y b).transpose :=
       funext fun b => by rw [Matrix.transpose_map, hkX]
-    rw [e, Units.val_one, map_one]
-    exact hz'
-  rw [evR_frMap hWD F hF.1 k u (hT _ u) z' hm]
-  exact hk
+    rwa [e, Units.val_one, map_one]
+  rwa [evR_frMap hWD F hF.1 k u (hT _ u) z' hm]
 
 end GlobalTheory.FrameDenseZ
 
@@ -126,8 +124,7 @@ theorem exists_frame_evalFr_ne_zero {K : Type} [Field K] [Infinite K] {B : Type}
     mul_ne_zero hP (Finset.prod_ne_zero_iff.2 fun b _ => hD b)
   obtain ⟨v, hv⟩ : ∃ v : FrVar m → K,
       MvPolynomial.eval v (P * ∏ b, GlobalTheory.LamT.FieldPoly.blockDetPoly K m b) ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hQ (MvPolynomial.funext fun x => by simp only [h x, map_zero])
   let Y : ∀ b, Matrix (Fin (m b)) (Fin (m b)) K := fun b => Matrix.of fun i j => v ⟨b, (j, i)⟩
   have hY : ∀ R : MvPolynomial (FrVar m) K, evalFr R Y = MvPolynomial.eval v R := fun R => rfl

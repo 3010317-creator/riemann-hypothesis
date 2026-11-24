@@ -78,13 +78,11 @@ theorem sec_eq_scal_of_values (hT : Out.SecTwistSt) {E : Type} [Field E] [Number
     exact hne (by unfold valAt'; rw [dite_eq_right h])
   have hU' : ⊤ ≤ (ex z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j := by
     rw [← hz']
-    intro p hp'
-    exact Set.mem_iInter.1 (hU hp') (0 : Fin 1)
+    exact fun p hp' => Set.mem_iInter.1 (hU hp') (0 : Fin 1)
   have e := hv j z pt hz' hp hU'
   have e' := (congrArg (valAt' pt ((PPx x).U (fun _ => j))) (ha (fun _ => j))).trans (h1 a _ pt hp)
   have hat : a = t := mul_right_cancel₀ hne (e'.symm.trans e)
-  rw [← hat]
-  exact ha
+  rwa [← hat]
 
 theorem isCombAt_single_of_isTanAt {E : Type} [Field E] [NumberField E] [IsCMField E]
     {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {S : Type} [CommRing S]
@@ -128,7 +126,6 @@ theorem frBor_of_isThetaPt : Out.SecTwistSt → ∀ (E : Type) [Field E] [Number
         refine (hs' j z pt h1 h2 h3).trans ?_
         refine Eq.trans ?_ (congrArg (toC (t₀ : CAt σ) * ·) (hs j z pt h1 h2 h3).symm)
         ring)
-    refine Eq.trans ?_ (key i).symm
-    exact appLE_id_apply_self _ h _
+    exact Eq.trans (appLE_id_apply_self _ h _) (key i).symm
 
 end GlobalTheory

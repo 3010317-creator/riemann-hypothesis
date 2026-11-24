@@ -175,8 +175,7 @@ theorem exists_base : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [CharZero Ω] 
   refine ⟨T, hu.unit, hD, hF, ?_, ?_, ?_⟩
   · refine IsUnit.of_mul_eq_one ⟨_, Subring.subset_closure (Or.inr rfl)⟩ (Subtype.ext ?_)
     simp [h0]
-  · rw [← IsPrimitiveRoot.coe_units_iff]
-    exact hz
+  · rwa [← IsPrimitiveRoot.coe_units_iff]
   · rfl
 
 end GlobalTheory.CycAway

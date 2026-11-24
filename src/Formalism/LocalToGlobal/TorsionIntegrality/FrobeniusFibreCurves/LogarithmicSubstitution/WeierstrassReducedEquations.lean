@@ -21,8 +21,7 @@ theorem dz_ofNat (n : ℕ) [n.AtLeastTwo] : dz (OfNat.ofNat n : PowerSeries K) =
   rw [show (OfNat.ofNat n : PowerSeries K) = C (OfNat.ofNat n : K) from (map_ofNat C n).symm]
   exact PowerSeries.derivative_C
 
-theorem dz_one : dz (1 : PowerSeries K) = 0 := by
-  exact Derivation.map_one_eq_zero _
+theorem dz_one : dz (1 : PowerSeries K) = 0 := Derivation.map_one_eq_zero _
 
 theorem dz_C (a : K) : dz (C a : PowerSeries K) = 0 := PowerSeries.derivative_C
 
@@ -109,8 +108,7 @@ theorem invertedSecondDeriv : WSecond := by
     rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_derivative]
     simp
   have h1 : PowerSeries.coeff 1 w = 0 := by
-    have hc := congrArg (constantCoeff (R := K)) hE
-    simpa [e1, h0] using hc
+    simpa [e1, h0] using congrArg (constantCoeff (R := K)) hE
   refine ⟨h1, ?_⟩
   have hd : dz w ≠ 0 := by
     intro h

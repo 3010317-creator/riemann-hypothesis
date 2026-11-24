@@ -87,8 +87,7 @@ theorem exists_eigenform {G V : Type} [Group G] [TopologicalSpace G] [IsTopologi
     have := LinearMap.congr_fun (hm g⁻¹) x
     simpa [Representation.dual_apply, Module.Dual.transpose_apply] using this
   obtain ⟨x₀, hx₀⟩ : ∃ x, m x ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hm0 (LinearMap.ext fun x => by simpa using h x)
   refine ⟨ψ⁻¹, m ∘ₗ p.toLinearMap, fun h => hx₀ ?_, fun g v => ?_, fun h hh => ?_⟩
   · have := LinearMap.congr_fun h x₀.1
@@ -143,8 +142,7 @@ theorem isSubquotient_of_eigenform {n : ℕ} {V : Type} [AddCommGroup V] [Module
       exact (hl t x).trans e.symm⟩
   obtain ⟨f, hf⟩ := (GlobalTheory.SmGL.Model.evalOne_bijective (points (Fin n)) hπ ρ).2 φ
   have hne : ∃ v, f v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     refine hl0 (LinearMap.ext fun x => ?_)
     obtain ⟨v, rfl⟩ := Submodule.Quotient.mk_surjective _ x
     have h1 : φ (Submodule.Quotient.mk v) = (f v).1.1 1 := by rw [← hf]; rfl
@@ -196,16 +194,14 @@ theorem exists_isSubquotient_prinSeries {n : ℕ} {V : Type} [AddCommGroup V] [M
     rw [SmGL.UnramFixed.jacB_apply, map_smul, hl, smul_eq_mul, MonoidHom.mul_apply, Units.val_mul,
       MonoidHom.inv_apply]
     ring
-  rw [← hα] at key
-  exact key
+  rwa [← hα] at key
 
 theorem main : GlobalTheory.Published.BernsteinZelevinskyFiniteness → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (π : Irr k n), IsSpherical π.π → ∃ α : Fin n → ℂˣ, HasSatake π.π α := by
   intro hBZ k _ _ _ _ n π hs
   have hadm : IsAdmissible π.π := (hBZ k).1 (Fin n) π.V π.π π.smooth π.irr
   have hI : fixed π.π (iwahori k (Fin n)) ≠ ⊥ := by
     obtain ⟨v, hv, hv0⟩ := (Submodule.ne_bot_iff _).1 hs
-    refine (Submodule.ne_bot_iff _).2 ⟨v, fun h => ?_, hv0⟩
-    exact hv ⟨h.1, iwahori_le_KO k _ h.2⟩
+    exact (Submodule.ne_bot_iff _).2 ⟨v, fun h => (hv ⟨h.1, iwahori_le_KO k _ h.2⟩), hv0⟩
   obtain ⟨α, hα⟩ := exists_isSubquotient_prinSeries hadm π.irr hI
   exact ⟨α, π.irr, hs, hα⟩
 

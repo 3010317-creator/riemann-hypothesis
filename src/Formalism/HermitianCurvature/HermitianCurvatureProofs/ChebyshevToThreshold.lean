@@ -102,10 +102,8 @@ theorem intersection_of_local : Formalism.FourierDecayAlt.J.IntersectionOfLocal 
     unfold Formalism.FourierDecayAlt.S6.locAt
     rw [Set.mem_setOf_eq]
     refine ⟨1, fun h1 => hP.ne_top ((Ideal.eq_top_iff_one P).mpr h1), ?_⟩
-    rw [map_one, one_mul]
-    exact ht
-  · intro h
-    exact Jx10.inter_of_module E L hL1 t h
+    rwa [map_one, one_mul]
+  · exact fun h => Jx10.inter_of_module E L hL1 t h
 
 theorem lattice_of_local : Formalism.FourierDecayAlt.J.LatticeOfLocal := by
   intro E _ _ _ L hL Q _ pl M hcov hM
@@ -115,8 +113,7 @@ theorem lattice_of_local : Formalism.FourierDecayAlt.J.LatticeOfLocal := by
   constructor
   · intro h p
     rw [hM]
-    intro P _ hP
-    exact h P hP
+    exact fun P _ hP => h P hP
   · intro h P hP
     obtain ⟨p, hp⟩ := hcov P hP
     exact (hM p t).mp (h p) P hp hP

@@ -288,10 +288,8 @@ theorem inf_split (G₁ B₁ L₁ G₂ B₂ L₂ : Submodule O V) (hd : Disjoint
       (Submodule.mem_sup_left hg₂) hg.symm
     refine add_mem (Submodule.mem_sup_left (Submodule.mem_inf.mpr ⟨hl₁, ?_⟩))
       (Submodule.mem_sup_right (Submodule.mem_inf.mpr ⟨hl₂, ?_⟩))
-    · rw [e1]
-      exact hg₁
-    · rw [e2]
-      exact hg₂
+    · rwa [e1]
+    · rwa [e2]
   · exact sup_le (inf_le_inf le_sup_left le_sup_left) (inf_le_inf le_sup_right le_sup_right)
 
 end GlobalTheory.CongruenceLengthSum
@@ -403,7 +401,6 @@ theorem fg_inf_sup_of_isCompl (K V : Type) [Field K] [NumberField K] [AddCommGro
     congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left h ⟨x, hx⟩)
   have hpr : ∀ x ∈ U', p x = 0 := fun x hx => by
     have := (Submodule.linearProjOfIsCompl_apply_eq_zero_iff h).2 hx
-    show ((Submodule.linearProjOfIsCompl U U' h x : U) : V) = 0
     exact congrArg Subtype.val this
   have hsub : ∀ x, x - p x ∈ U' := fun x => by
     rw [← Submodule.linearProjOfIsCompl_apply_eq_zero_iff h]
@@ -418,8 +415,7 @@ theorem fg_inf_sup_of_isCompl (K V : Type) [Field K] [NumberField K] [AddCommGro
       refine ⟨a, ha, ?_⟩
       change p a = a + u
       have e1 : p (a + u) = a + u := hpl _ hxU
-      rw [map_add (f := _), hpr u hu, add_zero] at e1
-      exact e1
+      rwa [map_add (f := _), hpr u hu, add_zero] at e1
     · rintro ⟨a, ha, rfl⟩
       refine ⟨hpU a, ?_⟩
       refine Submodule.mem_sup.2 ⟨a, ha, p a - a, ?_, by abel⟩
@@ -489,8 +485,7 @@ theorem finiteLength_projection_quotient :
     intro v
     have hv : v ∈ G ⊔ B := hsup ▸ Submodule.mem_top
     obtain ⟨g, hg, b, hb, rfl⟩ := Submodule.mem_sup.mp hv
-    rw [map_add (f := _), hπfix g hg, hπzero b hb, add_zero, add_sub_cancel_left]
-    exact hb
+    rwa [map_add (f := _), hπfix g hg, hπzero b hb, add_zero, add_sub_cancel_left]
   have hmap : up = L.map π := by
     ext x
     constructor
@@ -499,8 +494,7 @@ theorem finiteLength_projection_quotient :
       refine ⟨l, hl, ?_⟩
       have h1 : π (l + b) = l + b := hπfix _ hxG
       have h2 : π b = 0 := hπzero b hb
-      rw [map_add (f := _), h2, add_zero] at h1
-      exact h1
+      rwa [map_add (f := _), h2, add_zero] at h1
     · rintro ⟨l, hl, rfl⟩
       refine ⟨hπG' l, ?_⟩
       have : π l = l - (l - π l) := by abel
@@ -515,8 +509,7 @@ theorem finiteLength_projection_quotient :
       obtain ⟨a, ha, hay⟩ := exists_nonZeroDivisor_smul_mem_of_span_eq_top_finlen (K := K) L hspan (y : V)
       refine ⟨⟨a, ha⟩, ?_⟩
       rw [Submonoid.smul_def, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
-      refine ⟨hay, ?_⟩
-      exact (G.restrictScalars O).smul_mem a y.2.1
+      exact ⟨hay, (G.restrictScalars O).smul_mem a y.2.1⟩
   exact Module.length_ne_top_iff.mpr (isFiniteLength_of_isTorsion htors)
 
 end GlobalTheory
@@ -598,7 +591,7 @@ theorem part_projector_mem_adjoin :
   obtain ⟨F, hF, -⟩ := NCov.exists_finset_pts hinj hS hsplit hint
   by_cases hA : ∃ ψ0 : Algebra.adjoin O S →ₐ[O] O, NCov.cls ψ0 = 𝔪
   swap
-  · push_neg at hA
+  · push Not at hA
     refine ⟨0, Subalgebra.zero_mem _, fun x hx => ?_, fun x _ => rfl⟩
     have : NCov.part (Algebra.adjoin O S) 𝔪 = ⊥ := by
       unfold NCov.part
@@ -630,8 +623,7 @@ theorem part_projector_mem_adjoin :
     rw [hfdef, map_prod, map_prod]
     refine Finset.prod_ne_zero_iff.2 fun φ _ => ?_
     have := hsout φ
-    rw [← hψ, hres] at this
-    exact this
+    rwa [← hψ, hres] at this
   have hfB : ∀ φ ∈ FB, IsLocalRing.residue O (φ f) = 0 := by
     intro φ hφ
     rw [hfdef, map_prod, map_prod]
@@ -919,8 +911,7 @@ private theorem exists_functional_comp_eq {K F : Type} [Field K] [Field F] (e : 
   have hf : f₁ = f₂ := by
     refine b.ext fun a => ?_
     have h := LinearMap.congr_fun hg (Basis.span hli a)
-    rw [Basis.constr_basis, LinearMap.comp_apply, Submodule.subtype_apply, Basis.span_apply] at h
-    exact h
+    rwa [Basis.constr_basis, LinearMap.comp_apply, Submodule.subtype_apply, Basis.span_apply] at h
   exact ⟨g, fun v => LinearMap.congr_fun hf v⟩
 
 open NumberField IsDedekindDomain Module in
@@ -931,16 +922,14 @@ private theorem exists_integral_inverse_coefficients {K : Type} [Field K] [Numbe
   classical
   by_cases hc : ∀ k, c k = 0
   · exact ⟨0, fun j k => ⟨0, by simp⟩, fun k => by simp [hc k]⟩
-  push_neg at hc
+  push Not at hc
   obtain ⟨k₀, hk₀⟩ := hc
   let I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K :=
     FractionalIdeal.spanFinset (𝓞 K) Finset.univ c
   have hIc : (I : Submodule (𝓞 K) K) = Submodule.span (𝓞 K) (Set.range c) := by
     change Submodule.span (𝓞 K) (c '' ((Finset.univ : Finset (Fin n)) : Set (Fin n))) = _
     rw [Finset.coe_univ, Set.image_univ]
-  have hI : I ≠ 0 := by
-    intro h
-    exact hk₀ ((FractionalIdeal.spanFinset_eq_zero.1 h) k₀ (Finset.mem_univ _))
+  have hI : I ≠ 0 := fun h => hk₀ ((FractionalIdeal.spanFinset_eq_zero.1 h) k₀ (Finset.mem_univ _))
   have h1 : (1 : K) ∈ (I : Submodule (𝓞 K) K) *
       ((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K) := by
     rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hI]
@@ -1149,8 +1138,7 @@ theorem projection_span_extend_scalars
         rw [Basis.span_apply]
       simp only [LinearMap.comp_apply]
       rw [h1, h2, Basis.constr_basis]
-    intro v
-    exact congrArg (fun g => g v) this
+    exact fun v => congrArg (fun g => g v) this
   have hqU : ∀ x ∈ Submodule.span F (iV '' (U : Set V)), q x = x := by
     intro x hx
     induction hx using Submodule.span_induction with
@@ -1324,8 +1312,7 @@ theorem lenUnit_span_eq_lenUW : ∀ (K : Type) [Field K] [NumberField K] (O : Ty
     refine LinearMap.injective_of_linearIndependent (Algebra.TensorProduct.basis (FractionRing O) b).span_eq ?_
     have hc : (Φ ∘ ⇑(Algebra.TensorProduct.basis (FractionRing O) b)) = fun a => iV (b a) :=
       funext fun i => by simp [hΦ]
-    rw [hc]
-    exact hli
+    rwa [hc]
   let Φs := Φ.restrictScalars O
   have key : ∀ A' : Submodule (𝓞 K) V,
       (GlobalTheory.spanBaseChange K O (FractionRing O) (atW w A')).map Φs =
@@ -1524,8 +1511,7 @@ theorem etaLoc_eq_loc (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : D.wh
 theorem zrat_loc {j : ℕ} {w : D.what₂.places.Pl} {i : D.nd.Loc} (h : i ∈ D.nd.locs j w)
     (hZ : ZRat D (D.what₂.muTw w) j) : ZRat D (D.nd.mu i) (D.nd.j i) := by
   obtain ⟨hj, hw⟩ := (D.nd.locs_mem j w i).1 h
-  rw [D.nd.mu_w i, hj, hw]
-  exact hZ
+  rwa [D.nd.mu_w i, hj, hw]
 
 theorem cast_mem_rationalFormSubspace_goodPart_iff {μ μ' : D.what₂.Tup} {j j' : ℕ} (hμ : μ = μ') (hj : j = j')
     (e : D.what₂.MtL μ j = D.what₂.MtL μ' j') (x : D.what₂.MtL μ j) :

@@ -659,13 +659,13 @@ theorem GlobalTheory.RefSum.primeSum_add_pair {S : Finset ℕ} {e : ℕ → ℝ}
     · obtain ⟨k, -, rfl⟩ := Finset.mem_image.1 hq
       exact hg k
   · rw [Finset.mem_union, not_or] at hq
-    simp only [h3 q hq.1, if_neg hq.2, add_zero]
+    simp only [h3 q hq.1, ite_eq_right hq.2, add_zero]
   · have a : ∑ q ∈ S ∪ Finset.univ.image g, e q * Real.log q = ∑ q ∈ S, e q * Real.log q :=
       (Finset.sum_subset Finset.subset_union_left fun q _ hq => by rw [h3 q hq, zero_mul]).symm
     have b : ∑ q ∈ S ∪ Finset.univ.image g, (if q ∈ Finset.univ.image g then (1 : ℝ) else 0) * Real.log q =
         ∑ q ∈ Finset.univ.image g, Real.log q := by
-      rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [if_neg hq, zero_mul]]
-      exact Finset.sum_congr rfl fun q hq => by rw [if_pos hq, one_mul]
+      rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [ite_eq_right hq, zero_mul]]
+      exact Finset.sum_congr rfl fun q hq => by rw [ite_eq_left hq, one_mul]
     have c : ∑ q ∈ Finset.univ.image g, Real.log (q : ℕ) ≤ ∑ k : Fin 2, Real.log (g k) :=
       Finset.sum_image_le_of_nonneg (f := fun q : ℕ => Real.log q) fun q _ => Real.log_natCast_nonneg q
     rw [Fin.sum_univ_two] at c
@@ -718,8 +718,7 @@ theorem vV_pos {K : Type} [Field K] [NumberField K] {p : ℕ} (hp : p ≠ 0) {la
   have h1 : la.valuation K (p : K) < 1 := by
     have := (la.valuation_lt_one_iff_mem (K := K) (p : 𝓞 K)).2 hla
     have e : ((p : 𝓞 K) : K) = (p : K) := map_natCast (algebraMap (𝓞 K) K) p
-    rw [← e]
-    exact this
+    rwa [← e]
   have h0 : la.valuation K (p : K) ≠ 0 := (Valuation.ne_zero_iff _).2 (Nat.cast_ne_zero.2 hp)
   have := (WithZero.log_lt_log h0 one_ne_zero).2 h1
   rw [WithZero.log_one] at this
@@ -810,8 +809,7 @@ theorem refExp_le_of_halfSplit (D : D7) (T : Core D) (hM : LawsM T) (j : ℕ) (h
     (wtZ a n) ⟨f, hcusp a n hDom hLast f hf⟩ m hmfin (hmle f hf) la.1 (-vLa la.1 ν) fun v hv => by
       have h := hmle f hf la.1 v hv
       rw [hmeq la.1 (Or.inl la.2)] at h
-      rw [Int.cast_neg]
-      exact h
+      rwa [Int.cast_neg]
   have ho' := hOv la.1 e ho
   refine (iInf₂_le w hw).trans ?_
   show nval S.V (vV S.V (g : S.Fr)).toNat (evI y (w : Rul (T.Q.Xo j) T.Q.c)) ≤ _
@@ -882,13 +880,13 @@ theorem GlobalTheory.RefSum.refCore_of_size_sumPt : _root_.GlobalTheory.CovTop.S
   · obtain ⟨k, -, rfl⟩ := Finset.mem_image.1 hq'
     refine (GlobalTheory.T.supLatticeReferenceExponent_thetaWeight_level_le_one _ p.T.toCore p.fw.laws.toLawsM (Fm.ex x hx ι).errX _ hI _ _ _ hD hL sum_le_nCol hr hJ k).trans
       (EReal.coe_le_coe_iff.2 ?_)
-    simp only [if_pos hq']
+    simp only [ite_eq_left hq']
     linarith [hP.2.1 ((Fm.D x ι).host.g k)]
   · haveI := Fact.mk hq
     have hne : ∀ k, q ≠ (Fm.D x ι).host.g k := fun k h => hq' (Finset.mem_image.2 ⟨k, Finset.mem_univ _, h.symm⟩)
     refine (GlobalTheory.T.baseLocusExponent_le_oscillation_nonTypePrime _ p.T.toCore p.fw.laws.toLawsM (Fm.ex x hx ι).errX _ hI _ _ _ hD hL sum_le_nCol hr hJ q hne _
       (hO q hne)).trans (EReal.coe_le_coe_iff.2 ?_)
-    simp only [if_neg hq', add_zero, le_refl]
+    simp only [ite_eq_right hq', add_zero, le_refl]
 end
 end -- clump:auto
 end -- clump:auto
@@ -925,8 +923,7 @@ theorem exists_overLa_under : ∀ (K K' : Type) [Field K] [NumberField K] [Field
   refine ⟨la, e' * r, ?_, ?_⟩
   ·
     show ((q : ℕ) : 𝓞 K) ∈ la'.asIdeal.under (𝓞 K)
-    rw [Ideal.under_def, Ideal.mem_comap, map_natCast]
-    exact hmem
+    rwa [Ideal.under_def, Ideal.mem_comap, map_natCast]
   · unfold OverLa vLa at h ⊢
     obtain ⟨he', hv⟩ := h
     refine ⟨Nat.mul_pos he' (Nat.pos_of_ne_zero hr0), fun a => ?_⟩
@@ -1017,8 +1014,7 @@ theorem pull_mem_latW : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore 
     simp only [Ranks.sigW]
     omega
   have h1 := GlobalTheory.CoverInt.pull_intAt_iff _ _ _ _ _ _ Y.d hpos hY.lev.1 (Or.inl ⟨hne, hL.levA⟩) a n _ hfs' _ hgs (levPull_of_pull Y hfs hp)
-  have h2 := _root_.GlobalTheory.IntCoefExt.intAt_rulBC_iff _ _ _ _ _ _ _ Y.hle a n _ hfs
-  exact h1.trans h2
+  exact h1.trans (_root_.GlobalTheory.IntCoefExt.intAt_rulBC_iff _ _ _ _ _ _ _ Y.hle a n _ hfs)
 
 end GlobalTheory.CovTop.PullLat
 end -- clump:auto
@@ -1076,8 +1072,7 @@ theorem refExp_vp_cover_le : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.to
   have hbc := ((GlobalTheory.FieldBC.rulBC_sec_val_linear _ _ _ _ (T.Q.Xo j) T.Q.c Y.c' Y.hle).1 a n f.1 hfs).1
   have hval : evI y₂ g = evI y f.1 :=
     (hv' a n _ hbc g (mem_sec_of_mem_cuspW_wtZ hg) hP').trans (hv a n f.1 hfs)
-  refine (iInf₂_le (⟨g, hg⟩ : Y.V (wtZ a n)) hgl).trans (le_of_eq ?_)
-  exact congrArg _ hval
+  exact (iInf₂_le (⟨g, hg⟩ : Y.V (wtZ a n)) hgl).trans (le_of_eq (congrArg _ hval))
 
 end GlobalTheory.RefSum
 
@@ -1182,11 +1177,10 @@ theorem primeSum_add (E : Type) [Field E] [NumberField E] {S B : Finset ℕ} {e 
     simp [h3 q hq.1, hq.2]
   · simp only [add_mul, Finset.sum_add_distrib]
     refine add_le_add ?_ ?_
-    · rw [← Finset.sum_subset Finset.subset_union_left fun q _ hq => by rw [h3 q hq, zero_mul]]
-      exact h4
-    · rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [if_neg hq, zero_mul]]
+    · rwa [← Finset.sum_subset Finset.subset_union_left fun q _ hq => by rw [h3 q hq, zero_mul]]
+    · rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [ite_eq_right hq, zero_mul]]
       rw [Finset.sum_congr rfl fun q hq => show (if q ∈ B then a * (different_vp E q : ℝ) + 1 else 0) * Real.log q =
-        a * ((different_vp E q : ℝ) * Real.log q) + Real.log q by rw [if_pos hq]; ring,
+        a * ((different_vp E q : ℝ) * Real.log q) + Real.log q by rw [ite_eq_left hq]; ring,
         Finset.sum_add_distrib, ← Finset.mul_sum]
       exact add_le_add (mul_le_mul_of_nonneg_left (sum_different_le E B hB) ha) le_rfl
 
@@ -1452,12 +1446,12 @@ theorem two_mul_sum_mult {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
     unfold Datum.mult
     rw [h3]
     by_cases h : τ (H.rt : E) = H.rt0
-    · rw [if_pos h, if_neg fun e => h2 (by linear_combination (h - e) / 2)]
+    · rw [ite_eq_left h, ite_eq_right fun e => h2 (by linear_combination (h - e) / 2)]
     · have : -τ (H.rt : E) = H.rt0 := by
         rcases sq_eq_sq_iff_eq_or_eq_neg.1 (hs.trans H.sqrt_neg_disc_sq.symm) with e | e
         · exact absurd e h
         · rw [e, neg_neg]
-      rw [if_neg h, if_pos this, add_comm]
+      rw [ite_eq_right h, ite_eq_left this, add_comm]
   have hinv : Function.Involutive (ComplexEmbedding.conjugate : (E →+* ℂ) → (E →+* ℂ)) := fun τ => star_star τ
   have e := Equiv.sum_comp hinv.toPerm Dw.mult
   rw [two_mul]

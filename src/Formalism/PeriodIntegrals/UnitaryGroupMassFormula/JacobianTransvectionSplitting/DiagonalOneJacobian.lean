@@ -92,10 +92,8 @@ theorem image_update_pi (i : ι) (a : F) (_ha : a ≠ 0) (s : ι → Set F) :
   · rintro ⟨x, hx, rfl⟩ j
     by_cases hj : j = i
     · subst hj
-      simp only [update_self]
-      exact ⟨x j, hx j, rfl⟩
-    · simp only [update_of_ne hj]
-      exact hx j
+      simpa only [update_self] using ⟨x j, hx j, rfl⟩
+    · simpa only [update_of_ne hj] using hx j
   · intro hy
     have hyi := hy i
     simp only [update_self, Set.mem_image] at hyi
@@ -129,7 +127,7 @@ theorem diagonal_one_jacobian : DiagOne := by
   set P : Measure (ι → F) := Measure.pi fun _ => μ with hP
   set m' : ℝ≥0 := distribHaarChar F (Units.mk0 a ha) with hm'
   have hmod : modF F a = (m' : ℝ≥0∞) := by
-    rw [modF, dif_neg ha, hm']
+    rw [modF, dite_eq_right ha, hm']
   set φ := scaleAt i a ha with hφ
   have himg : ∀ T : Set (ι → F), φ '' T = φ.symm ⁻¹' T := fun T => by
     rw [Set.image_eq_preimage_of_inverse (fun x => φ.symm_apply_apply x)

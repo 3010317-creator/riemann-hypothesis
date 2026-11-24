@@ -72,9 +72,9 @@ theorem vmstab_entry_zero {ε : Fin n → Bool} {k : Matrix (Fin n) (Fin n) ℂ}
   have h1 := congrFun (congrFun h a) b
   simp only [Formalism.REAL.Jm, Matrix.mul_diagonal, Matrix.diagonal_mul] at h1
   cases ha : ε a <;> cases hb : ε b <;> simp only [ha, hb, ne_eq, not_true_eq_false] at hab
-  · simp only [ha, hb, Bool.false_eq_true, if_false, if_true] at h1
+  · simp only [ha, hb, Bool.false_eq_true, ite_false, ite_true] at h1
     linear_combination h1 / 2
-  · simp only [ha, hb, Bool.false_eq_true, if_false, if_true] at h1
+  · simp only [ha, hb, Bool.false_eq_true, ite_false, ite_true] at h1
     linear_combination -h1 / 2
 
 theorem vmstab_inK_ct {ε : Fin n → Bool} {Y : Matrix (Fin n) (Fin n) ℂ} (h : Formalism.REAL.inK ε Y) : Yᴴ = -Y := by
@@ -88,13 +88,7 @@ theorem vmstab_inK_ct {ε : Fin n → Bool} {Y : Matrix (Fin n) (Fin n) ℂ} (h 
     _ = -Y := by rw [Matrix.neg_mul, Matrix.mul_assoc, hJ, Matrix.mul_one]
 
 theorem vmstab_inK_smul {ε : Fin n → Bool} {Y : Matrix (Fin n) (Fin n) ℂ} (h : Formalism.REAL.inK ε Y) (t : ℝ) :
-    Formalism.REAL.inK ε ((t : ℂ) • Y) := by
-  obtain ⟨hG, hc⟩ := h
-  refine ⟨?_, ?_⟩
-  · unfold Formalism.REAL.inG at hG ⊢
-    rw [Matrix.conjTranspose_smul, Matrix.smul_mul, Matrix.mul_smul, Complex.star_def, Complex.conj_ofReal,
-      ← smul_add, hG, smul_zero]
-  · rw [Matrix.smul_mul, Matrix.mul_smul, hc]
+    Formalism.REAL.inK ε ((t : ℂ) • Y) := Formalism.REAL.inK_smul_real ε h t
 
 theorem vmstab_mem_KC {ε : Fin n → Bool} {k : Matrix (Fin n) (Fin n) ℂ} (h : k ∈ Formalism.REAL.Kset ε) :
     k ∈ KC ε ∧ kᴴ ∈ KC ε := by

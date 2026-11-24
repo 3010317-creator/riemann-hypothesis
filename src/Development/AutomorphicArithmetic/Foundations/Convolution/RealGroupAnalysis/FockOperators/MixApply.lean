@@ -55,8 +55,7 @@ private theorem UpperTheory.ConvolutionTheory.R2.Fo.mix_apply {F : Type} [Field 
     mix g h i j = ((g i j).1, (h i j).2) := rfl
 
 private theorem UpperTheory.ConvolutionTheory.R2.Fo.mix_one {F : Type} [Field F] [NumberField F] : mix (1 : G1 F) 1 = 1 := by
-  refine Subtype.ext (Matrix.ext fun i j => ?_)
-  exact Prod.ext rfl rfl
+  exact Subtype.ext (Matrix.ext fun i j => (Prod.ext rfl rfl))
 
 private theorem UpperTheory.ConvolutionTheory.R2.Fo.mix_mul {F : Type} [Field F] [NumberField F] (g h g' h' : G1 F) :
     mix (g * g') (h * h') = mix g h * mix g' h' := by
@@ -82,5 +81,4 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.proj :
     exact continuous_const.prodMk (continuous_snd.comp h)
   · change mix g 1 * mix 1 g = g
     rw [← mix_mul, one_mul, mul_one]
-    refine Subtype.ext (Matrix.ext fun i j => ?_)
-    exact Prod.ext rfl rfl
+    exact Subtype.ext (Matrix.ext fun i j => (Prod.ext rfl rfl))

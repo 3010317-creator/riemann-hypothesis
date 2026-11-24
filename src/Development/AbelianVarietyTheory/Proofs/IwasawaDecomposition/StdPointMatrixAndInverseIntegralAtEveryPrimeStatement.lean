@@ -60,8 +60,7 @@ theorem ptOf_std_entries_intAtA : ∀ {B : Base} (n : ℕ) (g : GA B n) (p : Dec
   have hlat := hp.lat
   rw [hN] at hlat
   have hint : ∀ x : Fin n → AfE B.host.F B.host.E, x ∈ Formalism.L2.Herm.hatL (Formalism.L2.Col.stdLat B.host.E n) ↔ ∀ i, x i ∈ Formalism.L2.Herm.intAf B.host.F B.host.E := by
-    intro x
-    exact mem_latS_std x
+    exact fun x => mem_latS_std x
   have hone : ∀ a : AfE B.host.F B.host.E, a ∈ Formalism.L2.Herm.intAf B.host.F B.host.E → IntAtA (F := B.host.F) P a := by
     intro a ha
     refine ⟨1, ?_, ?_⟩
@@ -77,8 +76,7 @@ theorem ptOf_std_entries_intAtA : ∀ {B : Base} (n : ℕ) (g : GA B n) (p : Dec
   constructor
   · apply hone
     have hx : (g : Matrix (Fin n) (Fin n) (AfE B.host.F B.host.E)) *ᵥ Pi.single s 1 ∈ Formalism.L2.Herm.hatL (Formalism.L2.Col.stdLat B.host.E n) := by
-      rw [hlat]
-      rw [Matrix.mulVec_mulVec]
+      rw [hlat, Matrix.mulVec_mulVec]
       have h1 : ((g⁻¹ : GL (Fin n) (AfE B.host.F B.host.E)) : Matrix (Fin n) (Fin n) (AfE B.host.F B.host.E)) * (g : Matrix (Fin n) (Fin n) (AfE B.host.F B.host.E)) = 1 := by
         rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
       rw [h1, Matrix.one_mulVec]

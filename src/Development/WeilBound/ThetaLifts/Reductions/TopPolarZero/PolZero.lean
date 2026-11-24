@@ -164,7 +164,7 @@ theorem coefLine_of (hS : SWFull) (hX : BoxSec) (hW : DblW) (hH : HgtEx) (hT : H
     refine Eq.trans ?_ (congrArg _ this)
     rw [← integral_const_mul]
     refine integral_congr_ae (.of_forall fun y => ?_)
-    simp only [hv, if_neg (show ¬ a + a' < a' by omega), setAverage_eq, Complex.real_smul,
+    simp only [hv, ite_eq_right (show ¬ a + a' < a' by omega), setAverage_eq, Complex.real_smul,
       ← fun g => (((d2 Ψ s3 Ψ s3).2 g y.1 y.2 _ (he _ _)).1), integral_const_mul]
     ring
   rw [val _ (rp s t), val _ (rp 0 1), mul_left_comm lam] at key
@@ -394,15 +394,7 @@ def fA : Af F →+ AF F := AddMonoidHom.inr (Ainf F) (Af F)
 theorem fA_mul (x : Af F) (a : AF F) : fA F x * a = fA F (x * a.2) := Prod.ext (zero_mul _) rfl
 
 theorem cont_realAd : Continuous (realAd F) := by
-  refine Continuous.prodMk (Continuous.comp (g := (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm) (continuous_pi fun v => ?_)
-    (continuous_algebraMap ℝ _)) continuous_const
-  rcases v.isReal_or_isComplex with hv | hv
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal hv).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_fst).congr fun y =>
-      (congrFun (congrArg Prod.fst ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)) ⟨v, hv⟩).symm
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbedding v).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_snd).congr fun y =>
-      (congrFun (congrArg Prod.snd ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)) ⟨v, hv⟩).symm
+  exact PositivityTheory.ThKEst.ExponentialLineExistence.continuous_realAd
 
 theorem exists_arch_section (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w) :
     ∃ T : (InfinitePlace F → ℂ) → AE F E, Continuous T ∧ ∀ a, a = T (fun w => piInf (τ w) a) + fA F 1 • a := by
@@ -825,9 +817,9 @@ theorem exists_ext {ι : Type} (M : ι → Type) [∀ v, AddCommGroup (M v)] [�
       simp [c]
     · rw [Function.update_of_ne hvi]
       by_cases hv : (v : ι) ∈ S
-      · simp only [c, dif_pos hv]
+      · simp only [c, dite_eq_left hv]
         exact Function.update_of_ne (fun e => hvi (Subtype.ext (by rw [← e]))) _ _
-      · simp only [c, dif_neg hv]
+      · simp only [c, dite_eq_right hv]
   refine ⟨PiTensorProduct.lift
     { toFun := fun x => PiTensorProduct.tprod ℂ (c x)
       map_update_add' := fun x i y y' => by simp only [key]; exact (PiTensorProduct.tprod ℂ).map_update_add _ _ _ _
@@ -835,8 +827,8 @@ theorem exists_ext {ι : Type} (M : ι → Type) [∀ v, AddCommGroup (M v)] [�
   rw [PiTensorProduct.lift.tprod]
   refine congrArg (PiTensorProduct.tprod ℂ) (funext fun v => ?_)
   by_cases hv : (v : ι) ∈ S
-  · simp only [c, dif_pos hv]
-  · simp only [c, dif_neg hv, hu v hv]
+  · simp only [c, dite_eq_left hv]
+  · simp only [c, dite_eq_right hv, hu v hv]
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n d a a' : ℕ}
   {B : Base F E} {G : Geo σ a a'} {X : Chars F E} {om : Rep σ G.V G.W} {om' : Rep σ G.V' G.W}
@@ -878,15 +870,12 @@ theorem pm_add (hm : IsMatched B G X om om' R Rf) {Φ Φ' Ψ Ψ'} (c : ℂ) (h1 
   refine ⟨T₁ ∪ T₂, hT₁.trans Finset.subset_union_left, m + k, m' + k', Fin.append (c • f) g, Fin.append φ ψ, Fin.append (c • f') g',
     Fin.append φ' ψ', fun i => ?_, fun i => ?_, funext fun x => ?_, funext fun x => ?_, ?_⟩
   · refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-    · simp only [Fin.append_left, Pi.smul_apply]
-      exact ⟨Submodule.smul_mem _ _ (hf i).1, (hf i).2⟩
-    · simp only [Fin.append_right]
-      exact hg i
+    · simpa only [Fin.append_left, Pi.smul_apply] using ⟨Submodule.smul_mem _ _ (hf i).1, (hf i).2⟩
+    · simpa only [Fin.append_right] using hg i
   · refine Fin.addCases (fun i => ?_) (fun i => ?_) i
     · simp only [Fin.append_left, Pi.smul_apply]
       exact ⟨Submodule.smul_mem _ _ (hf' i).1, (hf' i).2⟩
-    · simp only [Fin.append_right]
-      exact hg' i
+    · simpa only [Fin.append_right] using hg' i
   · simp [Fin.sum_univ_add, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Finset.mul_sum, mul_assoc]
   · simp [Fin.sum_univ_add, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Finset.mul_sum, mul_assoc]
   · rw [Fin.sum_univ_add, Fin.sum_univ_add]
@@ -1037,8 +1026,7 @@ theorem theta_act (om : Rep σ X W) (Ψ : Fn F n d) (u g : UA σ X.J) (h x : UA 
 
 theorem theta_add {om : Rep σ X W} (hp : ∀ x, ∀ Ψ ∈ schA F (Fin n × Fin d), om x Ψ ∈ schA F _) {Φ Ψ : Fn F n d} (hΦ : Φ ∈ schA F _)
     (hΨ : Ψ ∈ schA F _) (g h) : theta om (Φ + Ψ) g h = theta om Φ g h + theta om Ψ g h := by
-  simp only [theta, map_add (f := _)]
-  exact thetaSum_add F (hp _ _ hΦ) (hp _ _ hΨ)
+  simpa only [theta, map_add (f := _)] using thetaSum_add F (hp _ _ hΦ) (hp _ _ hΨ)
 
 theorem theta_smul (om : Rep σ X W) (c : ℂ) (Φ : Fn F n d) (g h) : theta om (c • Φ) g h = c * theta om Φ g h := by
   simp only [theta, map_smul, thetaSum_smul]

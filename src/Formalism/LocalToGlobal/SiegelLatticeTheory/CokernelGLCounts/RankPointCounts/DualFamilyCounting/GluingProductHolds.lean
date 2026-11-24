@@ -114,8 +114,7 @@ theorem isJordanIn_perm {h : V →ₗ⋆[K] V →ₗ[K] K} {X : Submodule K V} {
   have hr : Set.range (b ∘ σ) = Set.range b := σ.surjective.range_comp b
   refine ⟨fun i => h1 _, ?_, fun i j hij => h3 _ _ (σ.injective.ne hij), fun i => h4 _,
     fun i => h5 _⟩
-  rw [hr]
-  exact h2
+  rwa [hr]
 
 theorem nondegOn_orth {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hnd : Nondeg h)
     {U : Submodule K V} (hUW : IsCompl U (orthK h U)) : NondegOn h (orthK h U) := by
@@ -222,8 +221,7 @@ abbrev latW (W : Submodule K V) (T : Submodule (𝓞 K) V) : Submodule (𝓞 K) 
 theorem map_latW {W : Submodule K V} {T : Submodule (𝓞 K) V} (hT : IsLatIn W T) :
     (latW W T).map (incO W) = T := by
   rw [Submodule.map_comap_eq, inf_eq_right]
-  intro x hx
-  exact ⟨⟨x, hT.2 ▸ Submodule.subset_span hx⟩, rfl⟩
+  exact fun x hx => ⟨⟨x, hT.2 ▸ Submodule.subset_span hx⟩, rfl⟩
 
 theorem incO_injective (W : Submodule K V) : Function.Injective (incO W) := Subtype.val_injective
 
@@ -289,11 +287,9 @@ theorem isJordanIn_res {h : V →ₗ⋆[K] V →ₗ[K] K} {W : Submodule K V} {T
         exact ⟨_, ⟨(finCongr (finrank_top K W)).symm i, rfl⟩, by simp⟩
     rw [map_incO_locF, locF_latW hT, Submodule.map_span, himg, hloc]
   · intro i j hij
-    simp only [resF_apply]
-    exact horth _ _ ((finCongr (finrank_top K W)).injective.ne hij)
+    simpa only [resF_apply] using horth _ _ ((finCongr (finrank_top K W)).injective.ne hij)
   · intro i
-    simp only [resF_apply]
-    exact hdiag _
+    simpa only [resF_apply] using hdiag _
 
 end Transport
 
@@ -485,8 +481,7 @@ theorem exists_norm_congr_pow {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {
       linarith
     obtain ⟨α, hα⟩ := Cell.exists_of_normRepCount_ne_zero (by exact_mod_cast hpos.ne')
     refine ⟨α, ?_⟩
-    rw [ThirdPropositionSlot.map_comap_eq_of_inert hK hF hP hc']
-    exact hα
+    rwa [ThirdPropositionSlot.map_comap_eq_of_inert hK hF hP hc']
   · have h3 := h2 hc'
     have hpos : (0 : ℝ) < (normRepCount K ((P * Formalism.HermitianLatticesTheory.conjIdeal (K := K) P) ^ k) 1 (ι c) : ℝ) := by
       rw [h3]
@@ -497,8 +492,7 @@ theorem exists_norm_congr_pow {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {
       linarith
     obtain ⟨α, hα⟩ := Cell.exists_of_normRepCount_ne_zero (by exact_mod_cast hpos.ne')
     refine ⟨α, ?_⟩
-    rw [ThirdPropositionSlot.extP_split hK hF hP hc']
-    exact hα
+    rwa [ThirdPropositionSlot.extP_split hK hF hP hc']
 
 end Formalism.L2.SG.Pf.TemperedBoundGL3
 end -- clump:auto
@@ -1022,15 +1016,13 @@ theorem rot2 (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.IsSymm) {ι : 
     by_cases hp0 : p = i₀
     · rw [hp0] at hpq ⊢
       by_cases hqj : q = j
-      · rw [hqj, hc0, hcj]
-        exact hYZ
+      · rwa [hqj, hc0, hcj]
       · rw [hc0, hck q (Ne.symm hpq) hqj]
         exact hYk q (Ne.symm hpq) hqj
     · by_cases hpj : p = j
       · rw [hpj] at hpq ⊢
         by_cases hq0 : q = i₀
-        · rw [hq0, hcj, hc0]
-          exact hZY
+        · rwa [hq0, hcj, hc0]
         · rw [hcj, hck q hq0 (Ne.symm hpq)]
           exact hZk q hq0 (Ne.symm hpq)
       · rw [hck p hp0 hpj]
@@ -1045,11 +1037,9 @@ theorem rot2 (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.IsSymm) {ι : 
   have units : ∀ i, IsUnitIn S (h (c i) (c i) * (π ^ e i)⁻¹) := by
     intro i
     by_cases hi0 : i = i₀
-    · rw [hi0, hc0]
-      exact hY
+    · rwa [hi0, hc0]
     · by_cases hij' : i = j
-      · rw [hij', hcj]
-        exact hZu
+      · rwa [hij', hcj]
       · rw [hck i hi0 hij']
         exact hu i
   have memb : ∀ x y : K, x ∈ S → y ∈ S → x • b i₀ + y • b j ∈ spanS S b := fun x y hx hy =>
@@ -1143,8 +1133,7 @@ theorem absorb (hS : IsHermSemilocal S) (hπ : IsUnif S π) (hs : h.IsSymm) {ι 
       ∀ v, v ∈ spanS S c ↔ v ∈ spanS S b := by
   intro T
   refine Finset.induction_on T ?_ ?_
-  · intro _ _ b ho hu
-    exact ⟨b, ho, hu, by simp, fun _ _ _ => rfl, rfl, fun _ => Iff.rfl⟩
+  · exact fun _ _ b ho hu => ⟨b, ho, hu, by simp, fun _ _ _ => rfl, rfl, fun _ => Iff.rfl⟩
   · intro a T haT ih hi₀ hlt b ho hu
     have hi₀T : i₀ ∉ T := fun hm => hi₀ (Finset.mem_insert_of_mem hm)
     have hai₀ : i₀ ≠ a := by
@@ -1331,11 +1320,11 @@ theorem rebaseAt_of (hS : IsHermSemilocal S) (hπ : IsUnif S π)
       rw [zero_mul]
       exact S.zero_mem
     · by_cases hi : e i = e i₀
-      · rw [if_pos hi, sub_self, zero_mul]
+      · rw [ite_eq_left hi, sub_self, zero_mul]
         show (0 : K) * π⁻¹ ∈ S
         rw [zero_mul]
         exact S.zero_mem
-      · rw [if_neg hi, star_zero, zero_mul, zero_mul, zero_sub, neg_mul]
+      · rw [ite_eq_right hi, star_zero, zero_mul, zero_mul, zero_sub, neg_mul]
         exact Dv.neg (hterm i hi)
   have hYu : IsUnitIn S (h (∑ i ∈ Finset.univ.filter (fun i => e i = e i₀), x i • b i)
       (∑ i ∈ Finset.univ.filter (fun i => e i = e i₀), x i • b i) * (π ^ e i₀)⁻¹) := by
@@ -1461,8 +1450,7 @@ theorem div_mem_locRing_of_mem_pow {P : Ideal (𝓞 K)} (hP : P.IsMaximal) {a a'
     refine Submonoid.subset_closure (And.intro ht fun t' ht' => ?_)
     rw [hfix] at ht'
     have ht'' : t' = ι t := IsFractionRing.injective (𝓞 K) K ht'
-    rw [ht'']
-    exact ht
+    rwa [ht'']
   refine ⟨ι t, hmem, ?_⟩
   rw [e]
   exact Submodule.mem_one.mpr ⟨_, rfl⟩
@@ -1534,8 +1522,7 @@ theorem unifVal_at {P : Ideal (𝓞 K)} (hP : P.IsMaximal) :
     have hsq : extP K (P.comap ι) * extP K (P.comap ι) = extP K (P.comap ι) * ⊤ := by
       rw [Ideal.mul_top]
       refine le_antisymm Ideal.mul_le_right ?_
-      rw [← sq]
-      exact hle
+      rwa [← sq]
     exact hIT (mul_left_cancel₀ hI0 hsq)
   obtain ⟨p0, hp0, hu⟩ := hex
   have hu' : κ (ι p0) * π⁻¹ ≠ 0 ∧ κ (ι p0) * π⁻¹ ∈ locRing P ∧
@@ -1570,8 +1557,7 @@ end Formalism.L2.SG.Pf.TemperedBoundGL3
 namespace Formalism.L2.SG.Pf.TemperedBoundGL3
 
 theorem uniformizer_valuation_holds : G3.UnifVal := by
-  intro K F _ _ _ _ _ _ hK hF P hP
-  exact unifVal_at hK hF hP
+  exact fun K F _ _ _ _ _ _ hK hF P hP => unifVal_at hK hF hP
 
 end Formalism.L2.SG.Pf.TemperedBoundGL3
 end -- clump:auto

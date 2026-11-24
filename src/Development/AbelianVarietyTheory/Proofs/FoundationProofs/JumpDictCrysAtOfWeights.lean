@@ -78,13 +78,7 @@ theorem embOver_true_ne (ρ ρ' : D.what₂.Tau) : embOver D ρ true ≠ embOver
   exact GlobalTheory.FrobDense.conj_ne D.host h1
 
 theorem sqrt_sq {R : Ranks} (H : Host R) : H.sqrtMinusD ^ 2 = -(H.d : H.E) := by
-  have h0 : (Complex.I * (Real.sqrt H.d : ℂ)) ^ 2 = -(H.d : ℂ) := by
-    rw [mul_pow, Complex.I_sq, ← Complex.ofReal_pow, Real.sq_sqrt (Nat.cast_nonneg _)]
-    simp
-  have h3 : H.φ₀ H.sqrtMinusD = Complex.I * (Real.sqrt H.d : ℂ) := H.φ₀_mem
-  apply H.φ₀.injective
-  rw [map_pow, h3, h0]
-  simp
+  exact GlobalTheory.FrobDense.sqrt_sq H
 
 theorem exists_embOver (φ : D.host.E →+* ℂ) : ∃ ρ b, φ = embOver D ρ b := by
   have key : ∀ ψ : D.host.E →+* ℂ, ψ D.host.sqrtMinusD = Complex.I * (Real.sqrt D.host.d : ℂ) →
@@ -263,9 +257,9 @@ theorem shift_embOver (ρ : D.what₂.Tau) (b : Bool) :
   have h2 : D.R.nV / 2 = u + v + 1 := by omega
   unfold shift
   cases b
-  · rw [if_pos ⟨ρ, rfl⟩, h2, hn]
+  · rw [ite_eq_left ⟨ρ, rfl⟩, h2, hn]
     simp
-  · rw [if_neg (fun ⟨ρ', h⟩ => embOver_true_ne D ρ ρ' h), h2, hn]
+  · rw [ite_eq_right (fun ⟨ρ', h⟩ => embOver_true_ne D ρ ρ' h), h2, hn]
     simp
 
 end GlobalTheory.JumpDictionaryFoundation

@@ -243,8 +243,7 @@ theorem pole_iff (i : ZMod n) (m : ℕ) :
     (∀ y ∈ phiStar W T i, W.Q ^ m • y ∈ W.Nl T i) ↔
       ∀ x ∈ W.Nl T (i - 1), W.Q ^ m • W.φD T x ∈ W.N T := by
   constructor
-  · intro H x hx
-    exact ((mem_Nl_iff W T i _).1 (H _ (Submodule.subset_span ⟨x, hx, rfl⟩))).1
+  · exact fun H x hx => ((mem_Nl_iff W T i _).1 (H _ (Submodule.subset_span ⟨x, hx, rfl⟩))).1
   · intro H y hy
     induction hy using Submodule.span_induction with
     | mem y hy =>
@@ -617,8 +616,7 @@ theorem coord_fixed (b : Module.Basis (Fin n) (LetA O f) ↥(W.N T)) (hb : ∀ k
       conv_lhs => rw [coe_eq_sum W b y, map_sum]
       refine Finset.sum_congr rfl fun m _ => ?_
       rw [γD_smulA, (hb m).2 δ hδ]
-    simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul]
-    exact h1.symm.trans hy
+    simpa only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul] using h1.symm.trans hy
   have h2 := congrFun (b.repr_sum_self fun m => W.γA δ (b.repr y m)) m
   rw [e] at h2
   exact h2.symm
@@ -782,12 +780,11 @@ theorem exists_inv {n : ℕ} (T : LocLat G Qp LL O) (b : Module.Basis (Fin n) (L
     have e1 : ∑ m, (∑ j, c k j * PA m j - if m = k then W.Q ^ h * (letE i : LetA O f) else 0) •
         (b m : W.DD T) = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ,
-        if_true, Finset.sum_smul, mul_smul]
+        ite_true, Finset.sum_smul, mul_smul]
       rw [← hc k, sub_eq_zero, Finset.sum_comm]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [hφ, Finset.smul_sum]
-    intro m
-    exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hli _ e1 m)
+    exact fun m => sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hli _ e1 m)
   refine ⟨Matrix.of fun j k => c k j i, ?_⟩
   refine Matrix.ext fun m k => ?_
   have e2 := congrFun (key k m) i
@@ -829,11 +826,9 @@ theorem frame_height : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW
     have e2 := ((HW l).W K 1 LL hA.2.2).q₀_def
     rw [(D.loc l).PD_p K, ← (q_multiplicative_holds l ↥(OL LL)).1] at e2
     refine PowerSeries.ext fun j => ?_
-    have e3 := congrArg (PowerSeries.coeff (j + 1)) e2
-    simpa only [PowerSeries.coeff_succ_X_mul] using e3
+    simpa only [PowerSeries.coeff_succ_X_mul] using congrArg (PowerSeries.coeff (j + 1)) e2
   refine ⟨Qm, ?_⟩
-  rw [← hq]
-  exact hQm
+  rwa [← hq]
 
 end GlobalTheory.WachPlace.FrameHeight
 
@@ -1029,7 +1024,7 @@ theorem mat_identity {S M M' : Type} [CommRing S] [AddCommGroup M] [Module S M] 
 
   simp only [hv, hv', hY, map_sum, map_smul, Finset.sum_apply', Finsupp.smul_apply,
   Module.Basis.repr_self, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true] at h
+  Finset.mem_univ, ite_true] at h
   simp only [Matrix.mul_apply]
   rw [Finset.sum_congr rfl (fun m _ => mul_comm (G' r m) (X m k)), ← h]
   exact Finset.sum_congr rfl fun m _ => mul_comm _ _
@@ -1203,8 +1198,7 @@ theorem ioE_φE [IsDomain O] (x : W.EE) : E.ioE (W.φE x) = φR (E.ioE x) := by
     rw [Submodule.span_zero_singleton, Submodule.mem_bot] at h1
     exact he₁ (congrArg Subtype.val h1)
   have hli : LinearIndependent O (fun _ : Unit => e₀) := by
-    rw [linearIndependent_unique_iff]
-    exact he₀
+    rwa [linearIndependent_unique_iff]
   let b₀ := Module.Basis.mk hli (by rw [← hsp, Set.range_const])
   have hb : Algebra.TensorProduct.basis RW' b₀ () = TensorProduct.tmul O (1 : RW') e₀ := by
     rw [Algebra.TensorProduct.basis_apply, Module.Basis.mk_apply]
@@ -1616,8 +1610,7 @@ theorem exists_positions {n t h R : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL L
     · exact mapMat_mul hA (hAb1 k) (hAa1 k.succ) (hAa1 k.castSucc) (hx.2.1 k).2 i
     · exact (mapMat_mul hA (hAE1 s) (hAB1 s) (hAa1 (rs s).castSucc) (hx.2.2 s).2.2.2.2.1.symm i).symm
     · have h0 := mapMat_mul hA (hAE1 s) (hAC1 s) (hAZ1 s) (hx.2.2 s).2.2.2.2.2.1.symm i
-      have hz := eq_zero_of_lrank _ ((hAZ3 s i).trans (by simp))
-      exact h0.symm.trans hz
+      exact h0.symm.trans (eq_zero_of_lrank _ ((hAZ3 s i).trans (by simp)))
     · exact mapMat_mul hA (hAB'1 s) (hAa1 (rs s).succ) (hAB1 s) (hx.2.2 s).2.2.2.2.2.2.1 i
     · exact (hAE3 s i).trans (hx.2.2 s).2.2.2.2.2.2.2.1
     · exact (hAC3 s i).trans (hx.2.2 s).2.2.2.2.2.2.2.2.1
@@ -1664,8 +1657,7 @@ theorem glue_orbits {ι X : Type} (σ : Equiv.Perm ι) (Rel : ι → X → X →
     rw [hj] at h3
     show Rel i (Function.extend (κ (r i)) (x (r i)) (fun _ => x₀) i)
       (Function.extend (κ (r (σ i))) (x (r (σ i))) (fun _ => x₀) (σ i))
-    rw [hrσ i, e1, e2]
-    exact h3
+    rwa [hrσ i, e1, e2]
   · have hι : IsEmpty ι := ⟨fun i => by obtain ⟨j, -⟩ := hmem i; exact hne ⟨x i j⟩⟩
     exact ⟨fun i => (hι.false i).elim, fun i => (hι.false i).elim⟩
 

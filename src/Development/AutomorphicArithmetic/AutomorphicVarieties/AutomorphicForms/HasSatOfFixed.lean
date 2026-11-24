@@ -58,8 +58,7 @@ private lemma sum_shift {H M : Type} [Group H] [AddCommMonoid M] (K : Subgroup H
       rfl
     have hk : (h * (q.out : H))⁻¹ * ((h • q : H ⧸ K).out : H) ∈ K := by
       apply QuotientGroup.eq.mp
-      rw [QuotientGroup.out_eq']
-      exact e
+      rwa [QuotientGroup.out_eq']
     have := hφ (h * (q.out : H)) _ hk
     rw [mul_inv_cancel_left] at this
     exact this.symm
@@ -137,9 +136,7 @@ private lemma core {G W V : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     exact_mod_cast Fintype.card_ne_zero
   rw [← hsum] at hne
   obtain ⟨i, hi, hne'⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne
-  refine ⟨A (x i), ?_, hAfix i hi⟩
-  intro h0
-  exact hne' (by rw [h0, map_zero])
+  exact ⟨A (x i), (fun h0 => hne' (by rw [h0, map_zero])), hAfix i hi⟩
 
 theorem UpperTheory.Reformulated.B.HasFixedVector.hasFixed :
     ∀ {F : Type} [inst : Field F] [inst_1 : NumberField F] {n : ℕ} {V : Type} [inst_2 : AddCommGroup V]

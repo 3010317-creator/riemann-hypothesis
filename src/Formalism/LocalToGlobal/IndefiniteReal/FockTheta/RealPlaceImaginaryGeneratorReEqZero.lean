@@ -63,13 +63,11 @@ theorem theta_add_smul {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {f g : WO 
 
 theorem theta_smul {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {g : WO S T → ℂ} (hg : IsThetaFunO ψ S T g) (c : ℂ) :
     IsThetaFunO ψ S T (c • g) := by
-  have h := theta_add_smul (theta_zero ψ S T) hg c
-  simpa using h
+  simpa using theta_add_smul (theta_zero ψ S T) hg c
 
 theorem theta_add {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {f g : WO S T → ℂ} (hf : IsThetaFunO ψ S T f)
     (hg : IsThetaFunO ψ S T g) : IsThetaFunO ψ S T (f + g) := by
-  have h := theta_add_smul hf hg 1
-  simpa using h
+  simpa using theta_add_smul hf hg 1
 
 theorem theta_function_linear_combination {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {f g : WO S T → ℂ} (hf : IsThetaFunO ψ S T f)
     (hg : IsThetaFunO ψ S T g) (a b : ℂ) : IsThetaFunO ψ S T (a • f + b • g) := theta_add (theta_smul hf a) (theta_smul hg b)

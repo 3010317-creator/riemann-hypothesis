@@ -82,9 +82,7 @@ theorem norm_le_card_of_heckeVec_eq_smul :
   set S := hfin.toFinset
   have hsupp : (Function.support fun q : G ⧸ K => h q.out • ρ q.out x) ⊆ S := by
     intro q hq
-    simp only [S, Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-    intro h0
-    exact hq (by simp [h0])
+    simpa only [S, Set.Finite.coe_toFinset, Set.mem_setOf_eq] using fun h0 => hq (by simp [h0])
   have hsum : heckeVec ρ K h x = ∑ q ∈ S, h q.out • ρ q.out x :=
     finsum_eq_sum_of_support_subset _ hsupp
   have key : c * Bf x x = ∑ q ∈ S, h q.out * Bf x (ρ q.out x) := by

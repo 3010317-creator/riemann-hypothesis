@@ -219,18 +219,15 @@ theorem grpObj_descends_to_large_subfield :
     (Over.homMk (hφ₁.lift (i ()) A₁.hom ((hi ()).2.trans hφ₁.w)) (hφ₁.lift_snd _ _ _))
     (Over.homMk (hφ₁.lift (e ()) (𝟙 _) ((he ()).2.trans (by simp))) (hφ₁.lift_snd _ _ _)) ?_ ?_ ?_
   · apply hφ₁.hom_ext
-    · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, hψ]
-      exact (hm ()).1
+    · simpa only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, hψ] using (hm ()).1
     · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_snd, hψw]
       rw [(isPullback_sq hψp).w, ← Category.assoc, Over.w]
   · apply hφ₁.hom_ext
-    · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, hψ]
-      exact (hi ()).1
+    · simpa only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, hψ] using (hi ()).1
     · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_snd, hψw]
       rw [← Category.assoc, Over.w]
   · apply hφ₁.hom_ext
-    · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, hψ]
-      exact (he ()).1
+    · simpa only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, hψ] using (he ()).1
     · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_snd, hψw]
       rw [← Category.assoc, Over.w]; simp
 

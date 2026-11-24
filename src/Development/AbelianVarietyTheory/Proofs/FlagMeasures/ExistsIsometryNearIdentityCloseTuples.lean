@@ -73,16 +73,14 @@ theorem mem_jac [IsNonarchimedeanLocalField F] (L : LocE F E) {ϖ : 𝒪[F]} (h�
     obtain ⟨p, hp, h⟩ := (L.O_def x).1 x.2
     refine ⟨p, hp, Subtype.ext ?_⟩
     change L.O.subtype _ = 0
-    rw [Polynomial.hom_eval₂]
-    exact h
+    rwa [Polynomial.hom_eval₂]
   rw [Ideal.jacobson, Ideal.mem_sInf]
   rintro m ⟨-, hm⟩
   have h := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' f hf m
   have h2 : ϖ ∈ m.comap f := by
     rw [IsLocalRing.eq_maximalIdeal h]; exact hϖ
   have h3 : p = f ϖ := Subtype.ext hp
-  rw [h3]
-  exact h2
+  rwa [h3]
 
 theorem exists_pow_denom [IsNonarchimedeanLocalField F] (L : LocE F E) {ϖ : 𝒪[F]}
     (hϖ : Irreducible ϖ) (x : E) : ∃ k : ℕ, algebraMap F E ϖ ^ k * x ∈ L.O := by
@@ -94,8 +92,7 @@ theorem exists_pow_denom [IsNonarchimedeanLocalField F] (L : LocE F E) {ϖ : �
   obtain ⟨k, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hd0 hϖ
   refine ⟨k, (L.O_def _).2 ?_⟩
   have h2 := hd.smul ((u⁻¹ : (𝒪[F])ˣ) : 𝒪[F])
-  rw [smul_smul, Units.inv_mul_cancel_left, Algebra.smul_def, map_pow] at h2
-  exact h2
+  rwa [smul_smul, Units.inv_mul_cancel_left, Algebra.smul_def, map_pow] at h2
 
 theorem one_add_onto {Λ : Submodule L.O (Fin n → E)} (hΛ : IsLat L Λ) (p : L.O)
     (hp : p ∈ Ideal.jacobson (⊥ : Ideal L.O)) (A : (Fin n → E) →ₗ[E] (Fin n → E))

@@ -143,8 +143,7 @@ theorem exists_frame (hc : ∀ x, c (c x) = x) {N r t : ℕ} {G Gi : Matrix (Fin
       simp only [Matrix.mul_assoc]
     have e4 : st c x * G * y = b * w := by
       rw [hw, ← Matrix.mul_assoc, hbi, Matrix.one_mul]
-    rw [e1, e2, e3, e4, sub_zero, ← Matrix.mul_assoc]
-    exact hq
+    rwa [e1, e2, e3, e4, sub_zero, ← Matrix.mul_assoc]
   have hLy' : L * y' = 1 := by
     rw [hy', Matrix.mul_sub, hLy, ← Matrix.mul_assoc, hLx, Matrix.zero_mul, sub_zero]
   set u₀ := Gi * st c L with hu₀
@@ -360,8 +359,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 variable {D : D7}
 
 theorem gram_herm (V : HSp D) : ∀ i j, D.sp.cm.sig (V.gram i j) = V.gram j i := by
-  intro i j
-  exact V.herm.eq _ _
+  exact fun i j => V.herm.eq _ _
 
 theorem frame_of_free {R : Type*} [CommRing R] (π : AE D →+* R) (c : R →+* R) (inc : D.host.E →+* R)
     (hc : ∀ x, c (c x) = x) (hπc : ∀ x, π (cA D x) = c (π x)) (hπi : ∀ x, π (incA D x) = inc x)
@@ -448,8 +446,7 @@ theorem congrOver_of_free (A : Type*) [CommRing A] [Algebra D.host.F A] (ev : AF
   have hci : ∀ x, c (inc x) = inc (D.sp.cm.sig x) := fun x => rfl
   obtain ⟨T, hT⟩ := frame_of_free π c inc hcc hπc hπi hci b₀ hb he hf h1 h4
   refine congrOver_of_frame (sgE D) A sgE_sgE ε hb (T := T) ?_
-  rw [← hsum_map inc] at hT
-  exact hT
+  rwa [← hsum_map inc] at hT
 
 theorem noFrame (_ : IdemEx) : NoFrame := by
   intro D t B W ⟨d⟩ b₀ hb hno
@@ -470,8 +467,7 @@ theorem noFrame (_ : IdemEx) : NoFrame := by
   have hcc : ∀ x, c (c x) = x := sgE_sgE
   have hstar : ∀ {m n : Type} (M : Matrix m n D.host.E), st c M = Mᴴ := fun M => by
     ext i j; rfl
-  have hGB : st c B.gram = B.gram := by
-    exact Matrix.ext fun i j => gram_herm B j i
+  have hGB : st c B.gram = B.gram := Matrix.ext fun i j => gram_herm B j i
   have hS : st c (fromCols (fromCols d.e d.e') d.i₀) * B.gram * fromCols (fromCols d.e d.e') d.i₀ =
       hsum t W.gram := by
     refine gram_sum hcc hGB ?_ ?_ ?_ ?_ ?_ ?_
@@ -502,8 +498,7 @@ theorem noFrame (_ : IdemEx) : NoFrame := by
     refine ⟨{v}, fun S hS e he z hz hh => hv ?_⟩
     refine congrOver_of_free _ (evFin D.host.F v) ε b₀ hb ?_ hz hh.1 hh.2.2.2
     have := he.2 v
-    rw [if_pos (hS (Finset.mem_singleton_self v))] at this
-    exact this
+    rwa [ite_eq_left (hS (Finset.mem_singleton_self v))] at this
   · push Not at h
     obtain ⟨w, hw⟩ := h
     refine ⟨∅, fun S _ e he z hz hh => hw ?_⟩

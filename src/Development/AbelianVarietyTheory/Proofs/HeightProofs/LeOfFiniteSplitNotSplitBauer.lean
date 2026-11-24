@@ -170,8 +170,7 @@ theorem not_forall_two_liesOver (K M : Type) [Field K] [NumberField K] [Field M]
   choose P P' hne hP hP' hN hN' using h
   have huniq : ∀ (Q : HeightOneSpectrum (𝓞 M)) (v w : HeightOneSpectrum (𝓞 K)),
       Q.asIdeal.LiesOver v.asIdeal → Q.asIdeal.LiesOver w.asIdeal → v = w := by
-    intro Q v w hv hw
-    exact HeightOneSpectrum.ext (hv.over.trans hw.over.symm)
+    exact fun Q v w hv hw => HeightOneSpectrum.ext (hv.over.trans hw.over.symm)
   let i : (Sᶜ : Set _) ⊕ (Sᶜ : Set _) → HeightOneSpectrum (𝓞 M) :=
     Sum.elim (fun v => P v.1 v.2) (fun v => P' v.1 v.2)
   have hi : Function.Injective i := by
@@ -273,9 +272,7 @@ theorem stabilizer_fixes_iff (K M N : Type) [Field K] [NumberField K] [Field M] 
   let j : MulAction.stabilizer (N ≃ₐ[M] N) P → MulAction.stabilizer (N ≃ₐ[K] N) P :=
     fun σ => ⟨σ.1.restrictScalars K, σ.2⟩
   have hj : Function.Injective j := by
-    intro a b e
-    apply Subtype.ext
-    exact AlgEquiv.restrictScalars_injective K (congrArg Subtype.val e)
+    exact fun a b e => Subtype.ext (AlgEquiv.restrictScalars_injective K (congrArg Subtype.val e))
   have hpos : 0 < Nat.card (MulAction.stabilizer (N ≃ₐ[M] N) P) := Nat.card_pos
   constructor
   · intro h

@@ -53,7 +53,7 @@ lemma logDeriv_wFactor {l z : ℂ} (h : z ≠ l) :
       linear_combination -h0
     have h3 : l - z ≠ 0 := sub_ne_zero.mpr (Ne.symm h)
     have he := Complex.exp_ne_zero (z / l + z ^ 2 / (2 * l ^ 2))
-    rw [if_neg hl, wFactor, sub_zero, div_eq_iff (mul_ne_zero h2 he)]
+    rw [ite_eq_right hl, wFactor, sub_zero, div_eq_iff (mul_ne_zero h2 he)]
     field_simp
     ring
 
@@ -91,25 +91,21 @@ theorem sigmaLogDeriv_of (h1 : SigmaProdLU) (h2 : SigmaSummable) (h3 : ZetaSumma
             - (if (l : ℂ) = 0 then 1 / z else 0) := by
       funext l
       exact logDeriv_wFactor (hne l)
-    rw [he]
-    exact this
+    rwa [he]
   have hlog : logDeriv P z = wZeta L z - 1 / z := by
     have := logDeriv_tprod_eq_tsum (s := Set.univ) isOpen_univ (Set.mem_univ z)
       (f := fun (l : L.lattice) (z : ℂ) => wFactor (l : ℂ) z) (fun l => wFactor_ne_zero (hne l))
       (fun l => (differentiable_wFactor _).differentiableOn) hs.summable
       (h1 L).multipliableLocallyUniformlyOn hPne
-    rw [hs.tsum_eq] at this
-    exact this
+    rwa [hs.tsum_eq] at this
   have hPderiv : HasDerivAt P ((wZeta L z - 1 / z) * P z) z := by
     have := hPdz.hasDerivAt
-    rw [← hlog, logDeriv_apply, div_mul_cancel₀ _ hPne]
-    exact this
+    rwa [← hlog, logDeriv_apply, div_mul_cancel₀ _ hPne]
   have := (hasDerivAt_id z).mul hPderiv
   have he : wZeta L z * wSigma L z = 1 * P z + id z * ((wZeta L z - 1 / z) * P z) := by
     simp only [wSigma, id, hP]
     field_simp
     ring
-  rw [he]
-  exact this
+  rwa [he]
 
 end Formalism.L2.Th1.F

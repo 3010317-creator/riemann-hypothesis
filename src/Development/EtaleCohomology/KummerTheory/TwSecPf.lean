@@ -96,13 +96,11 @@ theorem sepClosed_of_equiv {K L : Type} [Field K] [Field L] (e : K ≃+* L) [IsS
   refine IsSepClosed.of_exists_root _ fun p hm hirr hsep => ?_
   have hdeg : (p.map (e.symm : L →+* K)).degree ≠ 0 := by
     rw [Polynomial.degree_map]
-    intro h
-    exact hirr.not_isUnit (Polynomial.isUnit_iff_degree_eq_zero.2 h)
+    exact fun h => hirr.not_isUnit (Polynomial.isUnit_iff_degree_eq_zero.2 h)
   obtain ⟨x, hx⟩ := IsSepClosed.exists_root (p.map (e.symm : L →+* K)) hdeg (hsep.map)
   refine ⟨e x, ?_⟩
   have := hx.map (f := (e : K →+* L))
-  rw [map_symm_map] at this
-  exact this
+  rwa [map_symm_map] at this
 
 theorem SH_of_equiv {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) (h : SH A) : SH B := by
   obtain ⟨hA, hs⟩ := h

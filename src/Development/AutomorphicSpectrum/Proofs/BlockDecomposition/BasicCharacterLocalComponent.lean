@@ -63,13 +63,10 @@ theorem psiBasic : PositivityTheory.SiegelWeilFormula.Gunr.PsiBasic := by
   refine ⟨fun x y => ?_, ?_, ?_⟩
   · simp only [HeckeCharacterZeroLocus.SiegelWeilU.psiV, ← AddChar.map_add_eq_mul]
     congr 1
-    refine Prod.ext (add_zero _).symm ?_
-    exact Subtype.ext (Pi.single_add v x y)
+    exact Prod.ext (add_zero _).symm (Subtype.ext (Pi.single_add v x y))
   · have h0 : HeckeCharacterZeroLocus.SiegelWeilU.pairA F 0 (HeckeCharacterZeroLocus.SiegelWeilU.singleV F v 0) = 0 := by
-      refine Prod.ext rfl ?_
-      exact Subtype.ext (Pi.single_zero v)
-    simp only [HeckeCharacterZeroLocus.SiegelWeilU.psiV, h0]
-    exact AddChar.map_zero_eq_one ψ
+      exact Prod.ext rfl (Subtype.ext (Pi.single_zero v))
+    simpa only [HeckeCharacterZeroLocus.SiegelWeilU.psiV, h0] using AddChar.map_zero_eq_one ψ
   · exact hψ.1.comp (Continuous.prodMk continuous_const (continuous_singleV F v))
 
 end GlobalTheory.CompanionTheory.AdelicCharLocal

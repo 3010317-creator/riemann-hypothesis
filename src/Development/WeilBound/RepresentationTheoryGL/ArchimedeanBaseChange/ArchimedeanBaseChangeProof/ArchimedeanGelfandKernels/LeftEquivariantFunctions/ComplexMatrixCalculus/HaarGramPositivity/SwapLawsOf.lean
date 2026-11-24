@@ -84,18 +84,14 @@ theorem contDiff_entry (i : ι) (j : κ) : ContDiff ℝ ∞ (fun x : Matrix ι �
 theorem contDiffOn_matrix_iff {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
     (f : E → Matrix ι κ ℂ) : ContDiffOn ℝ ∞ f s ↔ ∀ i j, ContDiffOn ℝ ∞ (fun x => f x i j) s := by
   constructor
-  · intro h i j
-    exact contDiffOn_pi.mp (contDiffOn_pi.mp h i) j
-  · intro h
-    exact contDiffOn_pi.mpr fun i => contDiffOn_pi.mpr fun j => h i j
+  · exact fun h i j => contDiffOn_pi.mp (contDiffOn_pi.mp h i) j
+  · exact fun h => contDiffOn_pi.mpr fun i => contDiffOn_pi.mpr fun j => h i j
 
 theorem contDiff_matrix_iff {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : E → Matrix ι κ ℂ) : ContDiff ℝ ∞ f ↔ ∀ i j, ContDiff ℝ ∞ (fun x => f x i j) := by
   constructor
-  · intro h i j
-    exact contDiff_pi.mp (contDiff_pi.mp h i) j
-  · intro h
-    exact contDiff_pi.mpr fun i => contDiff_pi.mpr fun j => h i j
+  · exact fun h i j => contDiff_pi.mp (contDiff_pi.mp h i) j
+  · exact fun h => contDiff_pi.mpr fun i => contDiff_pi.mpr fun j => h i j
 
 theorem contDiff_det : ContDiff ℝ ∞ (fun x : Matrix ι ι ℂ => x.det) := by
   have e : (fun x : Matrix ι ι ℂ => x.det) =
@@ -158,7 +154,7 @@ theorem hasFDerivAt_inv_one :
   simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
     Pi.smul_apply, ContinuousLinearMap.coe_comp', Function.comp_apply, entL_apply, smul_eq_mul, inv_one,
     ContinuousLinearMap.zero_apply, Finset.sum_add_distrib] at h0X
-  simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_ite_eq'] at h0X
+  simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_ite_eq'] at h0X
   simp only [ContinuousLinearMap.neg_apply, ContinuousLinearMap.id_apply, Matrix.neg_apply]
   linear_combination h0X
 
@@ -192,22 +188,19 @@ theorem contDiffOn_mul {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {s 
     {f g : E → Matrix ι ι ℂ} (hf : ContDiffOn ℝ ∞ f s) (hg : ContDiffOn ℝ ∞ g s) : ContDiffOn ℝ ∞ (fun x => f x * g x) s := by
   rw [contDiffOn_matrix_iff] at hf hg ⊢
   intro i j
-  simp only [Matrix.mul_apply]
-  exact ContDiffOn.sum fun k _ => (hf i k).mul (hg k j)
+  simpa only [Matrix.mul_apply] using ContDiffOn.sum fun k _ => (hf i k).mul (hg k j)
 
 theorem contDiffOn_kron {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
     {f : E → Matrix ι ι ℂ} {g : E → Matrix κ κ ℂ} (hf : ContDiffOn ℝ ∞ f s) (hg : ContDiffOn ℝ ∞ g s) :
     ContDiffOn ℝ ∞ (fun x => f x ⊗ₖ g x) s := by
   rw [contDiffOn_matrix_iff] at hf hg ⊢
   rintro ⟨i, j⟩ ⟨k, l⟩
-  simp only [Matrix.kroneckerMap_apply]
-  exact (hf i k).mul (hg j l)
+  simpa only [Matrix.kroneckerMap_apply] using (hf i k).mul (hg j l)
 
 theorem contDiffOn_transpose {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
     {f : E → Matrix ι ι ℂ} (hf : ContDiffOn ℝ ∞ f s) : ContDiffOn ℝ ∞ (fun x => (f x)ᵀ) s := by
   rw [contDiffOn_matrix_iff] at hf ⊢
-  intro i j
-  exact hf j i
+  exact fun i j => hf j i
 
 theorem contDiff_conjTranspose : ContDiff ℝ ∞ (fun x : Matrix ι ι ℂ => xᴴ) := by
   rw [contDiff_matrix_iff]
@@ -318,8 +311,8 @@ theorem swap_cT (lam : Fin n → ℤ) : (swapJ lam)ᴴ = swapJ lam := by
   ext ⟨i, j⟩ ⟨k, l⟩
   simp only [Matrix.conjTranspose_apply, swapJ]
   by_cases h : k = j ∧ l = i
-  · rw [if_pos h, if_pos ⟨h.2.symm, h.1.symm⟩]; simp
-  · rw [if_neg h, if_neg fun h' => h ⟨h'.2.symm, h'.1.symm⟩]; simp
+  · rw [ite_eq_left h, ite_eq_left ⟨h.2.symm, h.1.symm⟩]; simp
+  · rw [ite_eq_right h, ite_eq_right fun h' => h ⟨h'.2.symm, h'.1.symm⟩]; simp
 
 theorem trace_kron_swap (lam : Fin n → ℤ) (A B : Matrix (Jd n lam) (Jd n lam) ℂ) :
     ((A ⊗ₖ B) * swapJ lam).trace = (A * B).trace := by

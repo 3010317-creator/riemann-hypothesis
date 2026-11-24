@@ -66,8 +66,7 @@ variable {O LL : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Fi
 def ball (ϖ : O) (n : ℕ) : Set LL := (fun o : O => algebraMap O LL (ϖ ^ n * o)) '' Set.univ
 
 theorem map_ne_zero_of_irreducible {ϖ : O} (hϖ : Irreducible ϖ) : algebraMap O LL ϖ ≠ 0 := by
-  intro h
-  exact hϖ.ne_zero (IsFractionRing.injective O LL (by simpa using h))
+  exact fun h => hϖ.ne_zero (IsFractionRing.injective O LL (by simpa using h))
 
 theorem ball_eq (ϖ : O) (n : ℕ) :
     (ball ϖ n : Set LL) = (fun x : LL => algebraMap O LL ϖ ^ n * x) '' Set.range (algebraMap O LL) := by
@@ -240,8 +239,7 @@ theorem t2_and_compact (h : GoodO (Qp := ℚ_[l]) LL O) :
     constructor
     · intro hx
       refine ⟨φ x, ?_, by simp⟩
-      rw [mem_closedBall_zero_iff]
-      exact hx
+      rwa [mem_closedBall_zero_iff]
     · rintro ⟨y, hy, rfl⟩
       rw [mem_closedBall_zero_iff] at hy
       simpa using hy

@@ -131,8 +131,7 @@ theorem exists_isUnit_of_forall_maximal {K A : Type} [Field K] [Infinite K] [Com
   by_contra hu
   obtain ⟨𝔪, hm, hle⟩ := exists_max_ideal_of_mem_nonunits (mem_nonunits_iff.2 hu)
   apply hc
-  simp only [Set.mem_iUnion]
-  exact ⟨_, Finset.mem_image.2 ⟨𝔪, by simpa using hm, rfl⟩, hle⟩
+  simpa only [Set.mem_iUnion] using ⟨_, Finset.mem_image.2 ⟨𝔪, by simpa using hm, rfl⟩, hle⟩
 
 theorem hilbert90_baseChange : ∀ (F E K : Type) [Field F] [CharZero F] [Field E] [Algebra F E] [FiniteDimensional F E] [Field K] [Algebra F K] (τ : E ≃ₐ[F] E) (m : ℕ), orderOf τ = m → ∀ x : K ⊗[F] E, ∏ i ∈ Finset.range m, (Algebra.TensorProduct.map (AlgHom.id K K) (τ : E →ₐ[F] E))^[i] x = 1 → ∃ z : (K ⊗[F] E)ˣ, x * Algebra.TensorProduct.map (AlgHom.id K K) (τ : E →ₐ[F] E) z = z := by
   intro F E K _ _ _ _ _ _ _ τ m hm x hx
@@ -180,8 +179,7 @@ theorem hilbert90_baseChange : ∀ (F E K : Type) [Field F] [CharZero F] [Field 
     rw [h1, hΘ]
     exact (add_right_cancel h2).symm
   obtain ⟨c, hc⟩ := exists_isUnit_of_forall_maximal Θ (fun 𝔪 h𝔪 => by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     letI : Field ((K ⊗[F] E) ⧸ 𝔪) := Ideal.Quotient.field 𝔪
     let ι : E →+* (K ⊗[F] E) ⧸ 𝔪 :=
       (Ideal.Quotient.mk 𝔪).comp Algebra.TensorProduct.includeRight.toRingHom
@@ -537,8 +535,7 @@ private theorem prod_univ_eq_prod_range_orderOf_of_generator {G β : Type} [Grou
     ∏ σ, f σ = ∏ i ∈ Finset.range (orderOf g), f (g ^ i) := by
   classical
   rw [← IsCyclic.image_range_orderOf hg, Finset.prod_image]
-  intro i hi j hj hij
-  exact pow_injOn_Iio_orderOf (by simpa using hi) (by simpa using hj) hij
+  exact fun i hi j hj hij => pow_injOn_Iio_orderOf (by simpa using hi) (by simpa using hj) hij
 
 open NumberField IsDedekindDomain Polynomial in
 open scoped WithZero TensorProduct in
@@ -703,9 +700,7 @@ theorem _root_.GlobalTheory.CNorm.np_of_cyclic_tower : ∀ (F M E : Type) [Field
       exact _root_.GlobalTheory.CNorm.TNorm.of_tower F M E ℝ x (hloc.2 _)
   obtain ⟨e₀, he₀⟩ := hME _ hxM h1
   obtain ⟨b, c, hc0, hxb⟩ := exists_eq_pow_finrank_mul_norm_of_norm_eq_cyclic F M E hcyc x hx0 e₀ he₀
-  have hNc : Algebra.norm F c ≠ 0 := by
-    intro h
-    exact hx0 (by rw [hxb, h, mul_zero])
+  have hNc : Algebra.norm F c ≠ 0 := fun h => hx0 (by rw [hxb, h, mul_zero])
   have hb0 : b ≠ 0 := by
     rintro rfl
     exact hx0 (by rw [hxb, zero_pow Module.finrank_pos.ne', zero_mul])
@@ -907,8 +902,7 @@ theorem IsKum.nonempty_tensor_equiv {p : ℕ} {F E : Type} [Field F] [Field E] [
   have hroot : AdjoinRoot.root g ^ p = algebraMap F (AdjoinRoot g) δ := by
     have := AdjoinRoot.eval₂_root g
     rw [hg, eval₂_sub, eval₂_X_pow, eval₂_C, sub_eq_zero] at this
-    rw [IsScalarTower.algebraMap_apply F L (AdjoinRoot g)]
-    exact this
+    rwa [IsScalarTower.algebraMap_apply F L (AdjoinRoot g)]
   let ψ : E →ₐ[F] AdjoinRoot g := pb.lift (AdjoinRoot.root g) (by
     rw [hgen, hmin]; simp [hroot])
   have hψ : ψ θ = AdjoinRoot.root g := (congrArg _ hgen.symm).trans (pb.lift_gen _ _)
@@ -968,8 +962,7 @@ theorem relIndex_eq_prime_of_generated {G : Type} [CommGroup G] {p : ℕ} (hp : 
     apply orderOf_eq_prime
     · rw [hc, ← QuotientGroup.mk_pow, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf]
       simpa using hxp
-    · rw [hc, Ne, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf]
-      exact hxK
+    · rwa [hc, Ne, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf]
   have hall : ∀ y : E ⧸ K.subgroupOf E, y ∈ Submonoid.powers c := by
     intro y
     obtain ⟨y, rfl⟩ := QuotientGroup.mk_surjective y
@@ -1348,7 +1341,7 @@ theorem sUnits_union_sup_finPow_eq_top :
   have hy : ∀ v ∈ T, v.valuation F ((a * x : Fˣ) : F) = 1 := by
     intro v hv
     have hx0 : v.valuation F (x : F) ≠ 0 := by simp
-    rw [Units.val_mul, map_mul, ha v (hTS v hv), if_pos hv, WithZero.exp_neg,
+    rw [Units.val_mul, map_mul, ha v (hTS v hv), ite_eq_left hv, WithZero.exp_neg,
       WithZero.exp_log hx0, inv_mul_cancel₀ hx0]
   have key : ∀ v ∈ T, ∃ w ∈ sUnits F S,
       w⁻¹ * (a * x) ∈ powSub p (algebraMap F (v.adicCompletion F)) ∧
@@ -1367,8 +1360,7 @@ theorem sUnits_union_sup_finPow_eq_top :
   have huU : ∏ v ∈ T, w v ∈ sUnits F (S ∪ T) := by
     refine prod_mem fun t ht => ?_
     rw [mem_sUnits]
-    intro v hv
-    exact (mem_sUnits F S _).1 (hwS t ht) v fun h => hv (Finset.mem_union_left _ h)
+    exact fun v hv => (mem_sUnits F S _).1 (hwS t ht) v fun h => hv (Finset.mem_union_left _ h)
   have hsq : (∏ v ∈ T, w v)⁻¹ * (a * x) ∈ finPow p F T := by
     simp only [finPow, Subgroup.mem_iInf]
     intro v hv
@@ -1561,8 +1553,7 @@ theorem np_of_finrank_prime_of_isPrimitiveRoot : ∀ (p : ℕ) (F E : Type) [Fie
   obtain ⟨y, hy⟩ := (mem_kNorm p (RingHom.id F) δ _).1 hx'
   obtain ⟨-, -, -, -, -, ⟨e⟩, -⟩ := kummer_galois p F E ζ δ θ σ hk
   refine ⟨e.symm y, ?_⟩
-  rw [Algebra.norm_eq_of_algEquiv]
-  exact hy
+  rwa [Algebra.norm_eq_of_algEquiv]
 
 end GlobalTheory.CNorm
 end -- clump:auto
@@ -1682,8 +1673,7 @@ theorem hasseNormPrinciple_cyclic_of_finrank (n : ℕ) : ∀ (F E : Type) [Field
       obtain ⟨i, rfl⟩ := hs a
       obtain ⟨j, rfl⟩ := hs b
       exact (Commute.zpow_zpow_self s j i).eq
-    rw [hc, mul_inv_cancel_right]
-    exact ha
+    rwa [hc, mul_inv_cancel_right]
   let M : IntermediateField F E := IntermediateField.fixedField H
   have : NumberField M := NumberField.of_module_finite F M
   have hME : Module.finrank M E = p :=

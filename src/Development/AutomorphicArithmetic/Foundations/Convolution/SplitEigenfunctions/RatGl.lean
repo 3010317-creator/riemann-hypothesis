@@ -210,8 +210,7 @@ private theorem measurable_al : Measurable (al : G1 E → IdeleGroup E) := by
         (isClosed_vle.preimage ((cont_F 1 0 w).prodMk (cont_F 1 1 w))).measurableSet
       exact Measurable.ite hS (cont_F 1 0 w).measurable (cont_F 1 1 w).measurable
   have h2 := measurable_comap_iff.2 hm
-  rw [hc, ← BorelSpace.measurable_eq] at h2
-  exact h2
+  rwa [hc, ← BorelSpace.measurable_eq] at h2
 
 private theorem e_nU (u : A E) (h : G1 E) (j : Fin 2) : (nU u * h) 1 j = h 1 j := by
   show ((nU u).1 * h.1) 1 j = h.1 1 j
@@ -254,8 +253,8 @@ private theorem pI_mD (t : (A E)ˣ) (h : G1 E) (v : InfinitePlace E) :
     exact mul_le_mul_iff_of_pos_left (norm_pos_iff.2 hs)
   unfold pI
   by_cases hc : ‖(h 1 1).1 v‖ ≤ ‖(h 1 0).1 v‖
-  · rw [if_pos hc, if_pos (key.2 hc), e']
-  · rw [if_neg hc, if_neg (fun x => hc (key.1 x)), e']
+  · rw [ite_eq_left hc, ite_eq_left (key.2 hc), e']
+  · rw [ite_eq_right hc, ite_eq_right (fun x => hc (key.1 x)), e']
 
 private theorem pF_mD (t : (A E)ˣ) (h : G1 E) (w : HeightOneSpectrum (𝓞 E)) :
     pF (mD t * h) w = ((t⁻¹ : (A E)ˣ) : A E).2 w * pF h w := by
@@ -270,12 +269,11 @@ private theorem pF_mD (t : (A E)ˣ) (h : G1 E) (w : HeightOneSpectrum (𝓞 E)) 
     · intro x
       have := mul_le_mul_right x (Valued.v (((t⁻¹ : (A E)ˣ) : A E).2 w))⁻¹
       simpa [inv_mul_cancel_left₀ hs'] using this
-    · intro x
-      exact mul_le_mul_right x _
+    · exact fun x => mul_le_mul_right x _
   unfold pF
   by_cases hc : Valued.v ((h 1 1).2 w) ≤ Valued.v ((h 1 0).2 w)
-  · rw [if_pos hc, if_pos (key.2 hc), e']
-  · rw [if_neg hc, if_neg (fun x => hc (key.1 x)), e']
+  · rw [ite_eq_left hc, ite_eq_left (key.2 hc), e']
+  · rw [ite_eq_right hc, ite_eq_right (fun x => hc (key.1 x)), e']
 
 private theorem al_mD (t : (A E)ˣ) (h : G1 E) : al (mD t * h) = t * al h := by
   apply Units.ext
@@ -290,8 +288,7 @@ end UpperTheory.ConvolutionTheory.RankTwoDescent.TorCoPf
 open UpperTheory.ConvolutionTheory.RankTwoDescent.TorCoPf in
 theorem UpperTheory.ConvolutionTheory.RankTwoDescent.torCo :
     TorCo := by
-  intro E _ _
-  exact ⟨al, measurable_al, al_nU, al_mD⟩
+  exact fun E _ _ => ⟨al, measurable_al, al_nU, al_mD⟩
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -413,8 +410,7 @@ theorem UpperTheory.exists_equiv_rowSelection_units_isotropicVectors :
     change D.act (gl (ratS E (σ r')))⁻¹ (rp ![0, c * r0, 0, 0]) = rp ξ
     rw [← hcr, gl_ratS_mul, D.act_mul, D.act_inv_act, hγ]
   refine ⟨Equiv.ofBijective (fun p => ⟨pt p, hmem p⟩) ⟨?_, ?_⟩, fun r s => hpt (r, s)⟩
-  · intro p p' h
-    exact hinj (congrArg Subtype.val h)
+  · exact fun p p' h => hinj (congrArg Subtype.val h)
   · rintro ⟨ξ, hξ⟩
     obtain ⟨p, hp⟩ := hsurj ξ hξ
     exact ⟨p, Subtype.ext hp⟩
@@ -494,8 +490,7 @@ theorem UpperTheory.exists_unipotentInvariant_set_unique_row_scaling :
     · exact (M.continuous_mD.comp continuous_subtype_val).subtype_mk _
     · intro a b hab
       have h1 : mD a.1 = mD b.1 := congrArg (·.1) hab
-      have h2 := congrArg (fun g : G1 E => g.1 0 0) h1
-      exact Subtype.ext (Units.ext (by simpa [mD] using h2))
+      exact Subtype.ext (Units.ext (by simpa [mD] using (congrArg (fun g : G1 E => g.1 0 0) h1)))
   obtain ⟨F, hF, huniq, -⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup Tq
   have hdiag : Function.Injective (IdeleGroup.diagonal E) := by
     intro a b hab
@@ -513,16 +508,13 @@ theorem UpperTheory.exists_unipotentInvariant_set_unique_row_scaling :
   rw [hTq] at hg'
   obtain ⟨s, rfl⟩ := hg'
   have hne : ((s⁻¹ : Eˣ) : E) • r.1 ≠ 0 := by
-    intro h0
-    exact r.2 ((smul_eq_zero.mp h0).resolve_left (Units.ne_zero _))
+    exact fun h0 => r.2 ((smul_eq_zero.mp h0).resolve_left (Units.ne_zero _))
   refine ⟨s⁻¹, ⟨⟨_, hne⟩, ?_, rfl⟩, ?_⟩
   · show α (ratS E (σ _) * x) ∈ F
-    rw [key s⁻¹ _ rfl, inv_inv]
-    exact hgF
+    rwa [key s⁻¹ _ rfl, inv_inv]
   · rintro t ⟨r', hr'T, hr'⟩
     have hin : IdeleGroup.diagonal E t⁻¹ * α (ratS E (σ r) * x) ∈ F := by
-      rw [← key t r' hr']
-      exact hr'T
+      rwa [← key t r' hr']
     have hmemt : IdeleGroup.diagonal E t⁻¹ ∈ Tq := by
       rw [hTq]
       exact ⟨_, rfl⟩
@@ -689,8 +681,7 @@ private theorem van (μ : Measure (G1 E)) [μ.IsHaarMeasure] {S : Set (G1 E)}
   have hswap := integral_integral_swap hInt
   have hl : ∫ b, ∫ x, F b x ∂(μ.restrict S) ∂ρ = ∫ x in S, f x ∂μ := by
     have h2 : ∀ b, ∫ x, F b x ∂(μ.restrict S) = ∫ x in S, f x ∂μ := fun b => by
-      simp only [hF]
-      exact moveInt μ hS b f hfI
+      simpa only [hF] using moveInt μ hS b f hfI
     simp only [h2, integral_const, probReal_univ, one_smul]
   have hr : ∫ x, ∫ b, F b x ∂ρ ∂(μ.restrict S) = 0 := by
     simp only [F, ρ, integral_const_mul, h0, mul_zero, integral_zero]
@@ -720,8 +711,7 @@ theorem UpperTheory.integral_tsum_rowSection_eq_zero_of_constantTerm_eq_zero :
     simp only [f, hcI]
   simp only [hsw] at hfin ⊢
   have hfinS : ∫⁻ x in S, ‖f x‖ₑ ∂N.μ ≠ ⊤ := by
-    rw [← hL (fun x => ‖f x‖ₑ) hf.enorm (fun ξ g => by simp only [hfI])]
-    exact hfin
+    rwa [← hL (fun x => ‖f x‖ₑ) hf.enorm (fun ξ g => by simp only [hfI])]
   let e : {r : Fin 2 → E // r ≠ 0} → G1 E → G1 E := fun r g => ratS E (σ r) * g
   have he : ∀ r, Measurable (e r) := fun r => measurable_const_mul _
   have hSS := M.sumSide (G1 E) {r : Fin 2 → E // r ≠ 0} (N.μ.restrict N.D) e he
@@ -782,8 +772,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.rank1 :
     have h2 := D.continuous_act' h1 (continuous_const (y := rp ξ))
     exact ((W.cont (ph)).comp (continuous_const (y := g) |>.prodMk h2))
   have hinj : Function.Injective fun s : ℚˣ => (![0, (s : ℚ), 0, 0] : Fin 4 → ℚ) := by
-    intro s s' h
-    exact Units.ext (by simpa using congrFun h 1)
+    exact fun s s' h => Units.ext (by simpa using congrFun h 1)
   have hsu : ∀ x, Summable fun s : ℚˣ => F x ![0, (s : ℚ), 0, 0] := fun x =>
     ((hb x).1.comp_injective hinj).of_norm
   set u : G1 E → ℂ := fun x => ∑' s : ℚˣ, F x ![0, (s : ℚ), 0, 0] with hu
@@ -837,8 +826,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.rank1 :
     rw [← e.tsum_eq (fun ξ => F x ξ.1), hs.tsum_prod]
     simp_rw [hind]
     rw [← tsum_subtype]
-    refine tsum_congr fun r => tsum_congr fun s => ?_
-    exact (hact x (σ r.1) _ _ (he r s)).symm
+    exact tsum_congr fun r => tsum_congr fun s => (hact x (σ r.1) _ _ (he r s)).symm
   have hbd : ∀ x, ∑' r, ‖Aa (ratS E (σ r) * x) * c x‖ₑ ≤ ENNReal.ofReal (B * ab a0 ^ 2) := by
     intro x
     obtain ⟨e, he⟩ := hSel x

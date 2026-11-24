@@ -180,8 +180,7 @@ theorem valHom_pt {C : Type} [CommRing C] [Algebra R C] (hU : IsAffineOpen U) (y
 theorem ringHom_ext_affPt {C : Type} [CommRing C] (hU : IsAffineOpen U) {a b : CechDR.Sec s U →+* C}
     (h : spMap a ≫ CechDR.affPt s ⟨U, hU⟩ = spMap b ≫ CechDR.affPt s ⟨U, hU⟩) : a = b := by
   have h1 : spMap a = spMap b := (cancel_mono hU.fromSpec).1 h
-  have h2 := Spec.map_injective h1
-  exact congrArg CommRingCat.Hom.hom h2
+  exact congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
 
 def diagPr (B : Type) [CommRing B] [Algebra R B] (x : Sp B ⟶ X) (hx : x ≫ s = spMap (algebraMap R B)) :
     (diagExt R B).thick x hx ⟶ Thick.triv B x hx where
@@ -232,8 +231,7 @@ theorem ev_idLift_sub_eq_sum : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s :
             have ha' : a.fst = 0 := ha
             have h0 := diagLift_sub_mem hJ _ _ hd a
             rwa [ha', map_zero, sub_zero] at h0
-        rw [hδ]
-        exact key
+        rwa [hδ]
       pt := by rw [Cris.spMap_comp, Category.assoc, p₂, e₂] }
   let a₁ : Thick.triv (CechDR.Sec s U) (CechDR.affPt s ⟨U, hU⟩) hx ⟶ Thick.triv T.B y₁ h₁ :=
     Thick.trivHom (valHom y₁ hy₁ h₁) p₁

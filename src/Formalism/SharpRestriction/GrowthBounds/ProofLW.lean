@@ -81,8 +81,7 @@ theorem nc_geom (p : ℕ) (hp : 2 ≤ p) :
     first
       | (field_simp; ring)
       | field_simp
-  rw [e1, e2]
-  exact this
+  rwa [e1, e2]
 
 theorem nc_geomc (p : ℕ) (hp : 2 ≤ p) (c : ℝ) :
     HasSum (fun e : ℕ => c / ((p : ℝ)) ^ (2 * e + 1)) (c * Formalism.MainNotions.FormalGroupSystem.gam p) := by
@@ -92,8 +91,7 @@ theorem nc_geomc (p : ℕ) (hp : 2 ≤ p) (c : ℝ) :
 theorem nc_abs_min_le (a b : ℝ) (hb : 0 ≤ b) : |min a b| ≤ |a| := by
   rcases le_total a b with h | h
   · rw [min_eq_left h]
-  · rw [min_eq_right h, abs_of_nonneg hb, abs_of_nonneg (hb.trans h)]
-    exact h
+  · rwa [min_eq_right h, abs_of_nonneg hb, abs_of_nonneg (hb.trans h)]
 
 theorem nc_summable_min (p : ℕ) (hp : 2 ≤ p) (y : ℝ) (z : ℕ → ℝ) (hz : ∀ e, 0 ≤ z e) :
     Summable fun e : ℕ => min (y / ((p : ℝ)) ^ (2 * e + 1)) (z e) := by
@@ -164,12 +162,12 @@ theorem nc_pos (p : ℕ) (hp : 2 ≤ p) (y yu : ℝ) (z zu : ℕ → ℝ) (ex ex
   have h3 : y / ((p : ℝ)) ^ (2 * e + 1) ≤ yu / ((p : ℝ)) ^ (2 * e + 1) := div_le_div_of_nonneg_right hy (hq e).le
   have h4 := hz e
   by_cases he : ex e
-  · rw [if_pos he]
+  · rw [ite_eq_left he]
     split_ifs
     · exact le_rfl
     · exact le_max_right _ _
   · have heu : ¬ exu e := fun h => he (hex e h)
-    rw [if_neg he, if_neg heu]
+    rw [ite_eq_right he, ite_eq_right heu]
     exact max_le (le_max_right _ _) (le_trans (by linarith) (le_max_left _ _))
 
 variable {n' k1 : ℕ}
@@ -196,8 +194,7 @@ theorem nc_gB_ge (p t : ℕ) (TT : Finset (Fin n')) (lam0 : Fin n' → Fin (k1 +
   have hB : ∑ s ∈ TT.filter (fun s => ¬ IsOddPos s), Formalism.MainNotions.FormalGroupSystem.gam p * ya s ≤
       ∑ s ∈ TT.filter (fun s => ¬ IsOddPos s), Formalism.MainNotions.FormalGroupSystem.gam p * (al TT lam0 s : ℝ) := by
     apply Finset.sum_le_sum
-    intro s hs
-    exact mul_le_mul_of_nonneg_left (h1 s (Finset.mem_filter.1 hs).1) hg0
+    exact fun s hs => mul_le_mul_of_nonneg_left (h1 s (Finset.mem_filter.1 hs).1) hg0
   rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib] at hA
   linarith
 
@@ -323,7 +320,7 @@ theorem lw_de (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotions.
     rw [nc_topsOn X Y hT hL u w hg t0 ht0, Finset.card_image_of_injective _ hinj]
   have hnP : (Formalism.MainNotions.G.nP D (D.what₂.places.resChar w) : ℝ) = ((D.gat u w hg).P.n' (Y.vOf u w hg t0) : ℕ) := by
     unfold Formalism.MainNotions.G.nP
-    rw [if_neg (nc_notSg hg), nc_n_eq X Y hT hL u w hg t0 ht0]
+    rw [ite_eq_right (nc_notSg hg), nc_n_eq X Y hT hL u w hg t0 ht0]
   unfold nc_De Formalism.MainNotions.G.dl Formalism.MainNotions.G.Nm
   rw [hNv, hnP]
   have hl0 : 0 ≤ Real.logb (D.what₂.places.resChar w) (2 * L.sc.a) := by linarith
@@ -354,15 +351,7 @@ theorem lw_eta_le (hS : Formalism.MainNotions.SizesAt L) : 2 * L.etaSz ≤ L.sc.
   linarith
 
 theorem lw_aT_le (t : D.host.TT) : (L.aT t : ℝ) ≤ 6 / 5 * L.sc.a := by
-  have h := (L.aT_win t).2
-  have ha := nc_a_ge (L := L)
-  have hk := nd_k_ge (D := D)
-  have hx : (1 : ℝ) ≤ L.sc.x ^ (Scale.A / 2) :=
-    Real.one_le_rpow (nd_x_ge (L := L)) (by unfold Scale.A; norm_num)
-  have h5 : (5 : ℝ) ≤ (D.R.k : ℝ) * L.sc.x ^ (Scale.A / 2) := by nlinarith
-  have h1 : L.sc.a / ((D.R.k : ℝ) * L.sc.x ^ (Scale.A / 2)) ≤ L.sc.a / 5 :=
-    div_le_div_of_nonneg_left (by linarith) (by norm_num) h5
-  linarith
+  exact Formalism.BasicNotions.SizeData₂.aT_le' L t
 
 theorem lw_size (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotions.G.LatInst D) (hS : Formalism.MainNotions.SizesAt L) (hT : GatTies D)
     (hL : Formalism.MainNotions.G.LatTied hT X Y) (u : D.what₂.Word) (w : D.what₂.places.Pl)
@@ -396,7 +385,7 @@ theorem lw_size (X : Formalism.MainNotions.G.Inst D L) (Y : Formalism.MainNotion
         exact lw_aT_le _
       linarith
     · unfold al
-      rw [if_neg hsT]
+      rw [ite_eq_right hsT]
       push_cast
       positivity
   · have h1 := nd_lsz_le (Y.Fl u w hg) (Y.vOf u w hg t0) s hm j hj1

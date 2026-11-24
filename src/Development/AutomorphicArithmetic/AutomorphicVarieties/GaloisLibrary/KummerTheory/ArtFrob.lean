@@ -94,8 +94,7 @@ private theorem place_between {A : ValuationSubring Ω} {v : HeightOneSpectrum (
       simp
     have h2 : (y : K) = 0 := (map_eq_zero_iff _ (algebraMap K Ω).injective).mp h1
     exact_mod_cast h2
-  · intro x
-    exact (hmem x).symm
+  · exact fun x => (hmem x).symm
   · refine ⟨Ideal.ext fun z => ?_⟩
     change z ∈ v.asIdeal ↔ algebraMap (𝓞 K) (𝓞 L) z ∈ (IsLocalRing.maximalIdeal A).comap f
     rw [hmem, hv]

@@ -29,8 +29,7 @@ private lemma ringHom_units_zpow_lemma {R S : Type*} [CommRing R] [Field S] (f :
     f ↑(u ^ k) = (f ↑u) ^ k := by
   have hk : ((Units.map (f : R →* S) (u ^ k) : Sˣ) : S) = ((Units.map (f : R →* S) u ^ k : Sˣ) : S) := by
     rw [map_zpow]
-  rw [Units.val_zpow_eq_zpow_val] at hk
-  exact hk
+  rwa [Units.val_zpow_eq_zpow_val] at hk
 
 theorem vtf_valU (p : Sp ℂ ⟶ Z) {V : Z.Opens} (h : ⊤ ≤ p ⁻¹ᵁ V) (u : Γ(Z, V)ˣ) (k : ℤ) :
     valAt' p V ((u ^ k : Γ(Z, V)ˣ) : Γ(Z, V)) = valAt' p V (u : Γ(Z, V)) ^ k := by
@@ -99,11 +98,9 @@ theorem vtf_chart (k : ℤ) (a : Over.mk x0 ⟶ A) (i : Fin 1 → L.ι) (h : ⊤
     have e : ((vtfQ A a).left ≫ (snd (Over.mk x0) A).left).base x = a.left.base x := by
       rw [vtfQ_snd]
     change ((vtfQ A a).left ≫ (snd (Over.mk x0) A).left).base x ∈ L.U (i 0)
-    rw [e]
-    exact hx
+    rwa [e]
   refine Set.mem_iInter.mpr fun k => ?_
-  rw [Fin.fin_one_eq_zero k]
-  exact hx'
+  rwa [Fin.fin_one_eq_zero k]
 
 theorem vtf_val_g {k : ℤ} (p : Sp ℂ ⟶ (Over.mk x0 ⊗ A).left) (i i' : Fin 1 → L.ι)
     (h : ⊤ ≤ p ⁻¹ᵁ ((LPow A L k (Over.mk x0)).U i ⊓ (LPow A L k (Over.mk x0)).U i')) :

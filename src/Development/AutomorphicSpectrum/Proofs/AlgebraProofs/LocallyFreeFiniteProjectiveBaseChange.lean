@@ -73,8 +73,7 @@ theorem exists_pow_cover {k : ℕ} (f c : Fin k → R) (h : ∑ l, c l * f l = 1
     rw [Ideal.eq_top_iff_one, ← h]
     exact Ideal.sum_mem _ fun l _ => Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨l, rfl⟩)
   have h2 := Ideal.span_pow_eq_top _ h1 n
-  rw [← Set.range_comp, Ideal.eq_top_iff_one, Ideal.mem_span_range_iff_exists_fun] at h2
-  exact h2
+  rwa [← Set.range_comp, Ideal.eq_top_iff_one, Ideal.mem_span_range_iff_exists_fun] at h2
 
 theorem exists_charts {r : ℕ} {L : Submodule R E} (h : LocFree R r L.toAddSubgroup) :
     ∃ (k : ℕ) (f c : Fin k → R) (B : Fin k → Module.Basis (Fin r) Ω E), ∑ l, c l * f l = 1 ∧
@@ -102,8 +101,7 @@ theorem exists_charts {r : ℕ} {L : Submodule R E} (h : LocFree R r L.toAddSubg
       have h2 : (∑ q, a q • b l q) = ∑ q, a q • (Module.Basis.mk (hli l) (hsp l).ge) q := by
         simp [Module.Basis.mk_apply]
       rw [h2, Module.Basis.repr_sum_self]
-    rw [this]
-    exact hn
+    rwa [this]
 
 theorem pow_smul_mem {L : Submodule R E} (f : R) {n m : ℕ} (hnm : n ≤ m) {e : E}
     (h : (f : Ω) ^ n • e ∈ L) : (f : Ω) ^ m • e ∈ L := by

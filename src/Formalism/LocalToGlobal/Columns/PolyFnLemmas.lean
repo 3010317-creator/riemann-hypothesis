@@ -83,9 +83,9 @@ theorem bigM_conjTranspose (g : ι → Matrix (Fin n) (Fin n) ℂ) : (bigM g)ᴴ
   simp only [bigM]
   by_cases h : x.1 = y.1 ∧ x.2.2 = y.2.2
   · have h' : y.1 = x.1 ∧ y.2.2 = x.2.2 := ⟨h.1.symm, h.2.symm⟩
-    rw [if_pos h', if_pos h, Matrix.conjTranspose_apply, h.1]
+    rw [ite_eq_left h', ite_eq_left h, Matrix.conjTranspose_apply, h.1]
   · have h' : ¬ (y.1 = x.1 ∧ y.2.2 = x.2.2) := fun h' => h ⟨h'.1.symm, h'.2.symm⟩
-    rw [if_neg h', if_neg h, star_zero]
+    rw [ite_eq_right h', ite_eq_right h, star_zero]
 
 theorem fockF_blockAct (g : ι → Matrix (Fin n) (Fin n) ℂ) (f h : MvPolynomial (ι × Fin n × Fin n) ℂ) :
     fockF (blockAct ℂ g f) h = fockF f (blockAct ℂ (fun τ => (g τ)ᴴ) h) := by
@@ -272,8 +272,7 @@ theorem evV_rhoVr (emb : ι → E →+* K) (J : Matrix (Fin n) (Fin n) E) (lam :
     simp only [invTrK, inside₂, embGL, atInf, embAt, Formalism.UG.bc, MonoidHom.coe_mk, OneHom.coe_mk, MonoidHom.pi_apply,
       transpose_apply, map_apply, RingHom.comp_apply, ← map_inv]
     rfl
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem evV_rhoVr_tr (emb : ι → E →+* K) (J : Matrix (Fin n) (Fin n) E) (lam : ι → DomWeight n) (s : K →+* ℂ)
     (γ : GL (Fin n) E) (F : VV K lam) (y y' : Frames (gramC J (embAt s emb)))
@@ -361,15 +360,13 @@ theorem frame_pos {G : ι → Matrix (Fin n) (Fin n) ℂ} (y : Frames G) (hy : y
 theorem gramC_one {E : Type} [Field E] (emb : ι → E →+* ℂ) :
     gramC (1 : Matrix (Fin n) (Fin n) E) emb = fun _ => 1 := by
   funext τ
-  simp only [gramC]
-  exact Matrix.map_one _ (map_zero _) (map_one _)
+  simpa only [gramC] using Matrix.map_one _ (map_zero _) (map_one _)
 
 theorem frame_std {E : Type} [Field E] (emb : ι → E →+* ℂ) (y : Frames (gramC (1 : Matrix (Fin n) (Fin n) E) emb))
     (hy : y.IsON) (τ : ι) :
     (y.1 τ)ᴴ * gramC (1 : Matrix (Fin n) (Fin n) E) emb τ * y.1 τ = 1 := by
   refine frame_pos y hy τ ?_
-  simp only [gramC_one]
-  exact Matrix.PosSemidef.one
+  simpa only [gramC_one] using Matrix.PosSemidef.one
 
 end Pos
 
@@ -469,8 +466,7 @@ theorem CSpan_le_span (s : K →+* ℂ) (lam : ι → DomWeight n) :
     intro τ
     have h := Submodule.mem_map_of_mem (f := (rename (R := ℂ) (Prod.mk τ : Fin n × Fin n → ι × Fin n × Fin n)).toLinearMap) (hf τ)
     unfold delSq Formalism.GradedWeylDivisibility.weyl at h
-    rw [Submodule.map_span, ← Set.range_comp] at h
-    exact h
+    rwa [Submodule.map_span, ← Set.range_comp] at h
   have h2 : Forms.ten f ∈ Submodule.span ℂ (∏ τ, S τ) := by
     rw [← Submodule.prod_span]
     exact prod_mem_prod_sub _ _ _ fun τ _ => h1 τ
@@ -569,8 +565,7 @@ theorem extV_ne_zero (lam : ι → DomWeight n) : extV K lam ≠ 0 := by
     intro τ
     unfold extremal Formalism.GradedWeylDivisibility.hw
     rw [Finset.prod_ne_zero_iff]
-    intro i _
-    exact pow_ne_zero _ (hmin _ _ _)
+    exact fun i _ => pow_ne_zero _ (hmin _ _ _)
   unfold extV
   intro h
   have h2 : (∏ τ, Formalism.GradedWeylDivisibility.blockEmb K (k := n) (n := n) τ (extremal K n (lam τ)) :
@@ -588,8 +583,7 @@ theorem evV_extV_ne_zero (emb : ι → E →+* K) (J : Matrix (Fin n) (Fin n) E)
     rw [Fintype.sum_unique] at hg
     cases i
     exact (smul_eq_zero.mp hg).resolve_right (extV_ne_zero lam)
-  have h := evV_linearIndependent emb J lam s o (fun _ : Unit => extV K lam) hli
-  exact h.ne_zero ()
+  exact (evV_linearIndependent emb J lam s o (fun _ : Unit => extV K lam) hli).ne_zero ()
 
 end Image3
 

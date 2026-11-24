@@ -64,11 +64,7 @@ theorem absNorm_pos (v : HeightOneSpectrum (𝓞 E)) : (0 : ℝ) < ((Ideal.absNo
   positivity
 
 theorem modF_mul (y y' : (Af E)ˣ) : modF (y * y') = modF y * modF y' := by
-  unfold modF
-  rw [← finprod_mul_distrib (GlobalTheory.CMVal.IdeleModule.modF_finite y) (GlobalTheory.CMVal.IdeleModule.modF_finite y')]
-  refine finprod_congr fun v => ?_
-  have : ((y * y' : (Af E)ˣ) : Af E) v = (y : Af E) v * (y' : Af E) v := rfl
-  rw [this, map_mul, WithZero.log_mul (coord_ne y v) (coord_ne y' v), zpow_add₀ (absNorm_pos v).ne']
+  exact GlobalTheory.CMVal.IdeleModule.modF_mul y y'
 
 theorem modF_pos (y : (Af E)ˣ) : 0 < modF y :=
   finprod_induction (fun x : ℝ => 0 < x) one_pos (fun _ _ => mul_pos) fun v => zpow_pos (absNorm_pos v) _

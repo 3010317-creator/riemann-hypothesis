@@ -182,8 +182,7 @@ theorem genDirichlet_eqOn_ball_inter {F Φ : ℂ → ℂ} {T r s : ℝ} (hr : 0 
       refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ ?_ ?_
       · exact (Complex.continuous_ofReal.tendsto _).mono_left nhdsWithin_le_nhds
       · filter_upwards [self_mem_nhdsWithin] with y hy
-        simp only [Set.mem_compl_iff, Set.mem_singleton_iff, Complex.ofReal_inj]
-        exact ne_of_gt hy
+        simpa only [Set.mem_compl_iff, Set.mem_singleton_iff, Complex.ofReal_inj] using ne_of_gt hy
     refine ht.frequently (Eventually.frequently ?_)
     have : Set.Ioo (T + r / 2) (T + r) ∈ 𝓝[>] (T + r / 2) := Ioo_mem_nhdsGT (by linarith)
     filter_upwards [this] with y hy
@@ -252,8 +251,7 @@ theorem genDirichlet_landau_step {ι : Type} (a l : ι → ℝ) (ha : ∀ i, 0 �
     have e1 : a j * Real.exp (-(l j) * (T + δ)) * Real.exp (2 * δ * l j)
         = a j * Real.exp (-(l j) * (T - δ)) := by
       rw [mul_assoc, ← Real.exp_add]; congr 2; ring
-    rw [e1] at h1
-    exact h1
+    rwa [e1] at h1
   have hsumT : Summable (fun i => a i * Real.exp (-(l i) * (T - δ))) := by
     refine summable_of_sum_le (fun i => mul_nonneg (ha i) (Real.exp_pos _).le)
       (c := (F ((T - δ : ℝ) : ℂ)).re) (fun S => ?_)
@@ -293,8 +291,7 @@ theorem genDirichlet_landau_step {ι : Type} (a l : ι → ℝ) (ha : ∀ i, 0 �
         constructor <;> linarith
       · show T - δ < (y : ℂ).re
         rw [Complex.ofReal_re]; exact hy
-    rw [hEq2 y hmem]
-    exact hs
+    rwa [hEq2 y hmem]
 
 theorem landau_hasSum_of_analyticAt (ι : Type) (a l : ι → ℝ) (x₀ x₁ : ℝ) (F : ℂ → ℂ)
     (ha : ∀ i, 0 ≤ a i) (hl : ∀ i, 0 ≤ l i) (hx : x₀ < x₁)

@@ -79,8 +79,7 @@ private lemma mem_span_X_of_sum_eq_zero {A : Type} [CommRing A] {d : ℕ} (p : F
     ext x; simp
   rw [hs, MvPolynomial.mem_ideal_span_X_image]
   intro m hm
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have : m = 0 := by
     ext i
     simpa using hne i (Set.mem_univ i)
@@ -112,13 +111,11 @@ private lemma main {A C : Type} [CommRing A] [CommRing C] {d : ℕ} [Algebra (Mv
         algebraMap (MvPolynomial (Fin d) A) C (MvPolynomial.X l)) := by
     intro r hr
     have hm := Ideal.mem_map_of_mem (algebraMap (MvPolynomial (Fin d) A) C) hr
-    rw [Ideal.map_span, ← Set.range_comp] at hm
-    exact hm
+    rwa [Ideal.map_span, ← Set.range_comp] at hm
   have hc : ∑ l, (MvPolynomial.X l : MvPolynomial (Fin d) A) • (a l - b l) = 0 := by
     simp only [Algebra.smul_def, mul_sub, Finset.sum_sub_distrib]
     rw [sub_eq_zero]
-    simp only [mul_comm (algebraMap (MvPolynomial (Fin d) A) C _)]
-    exact hb.symm
+    simpa only [mul_comm (algebraMap (MvPolynomial (Fin d) A) C _)] using hb.symm
   obtain ⟨k, α, y, hxy, hrel⟩ := Module.Flat.isTrivialRelation_of_sum_smul_eq_zero
     (R := MvPolynomial (Fin d) A) (M := C) (f := fun l => MvPolynomial.X l)
     (x := fun l => a l - b l) hc
@@ -274,8 +271,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.locMatUnique :
   have hAN'' : ⊤ ≤ (A.ι ≫ p) ⁻¹ᵁ (i ⁻¹ᵁ N'') := by
     intro y _
     have := hAz y
-    rw [← Category.assoc, Scheme.Hom.comp_apply] at this
-    exact this
+    rwa [← Category.assoc, Scheme.Hom.comp_apply] at this
   have hAN : ⊤ ≤ (A.ι ≫ p ≫ i) ⁻¹ᵁ N := fun y _ => hle (hAz y)
   have hAN' : ⊤ ≤ (A.ι ≫ p ≫ i) ⁻¹ᵁ N' := fun y _ => hle' (hAz y)
   refine ⟨A, hxA, ?_⟩

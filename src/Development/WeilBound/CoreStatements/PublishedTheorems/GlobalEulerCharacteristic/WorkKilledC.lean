@@ -270,11 +270,8 @@ theorem exists_field_of_cyclic (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield)
     ext w
     rw [MonoidHom.mem_ker, Subgroup.mem_subgroupOf]
     constructor
-    · intro h
-      have h' := congrArg Subtype.val h
-      exact (QuotientGroup.eq_one_iff _).1 h'
-    · intro h
-      exact Subtype.ext ((QuotientGroup.eq_one_iff _).2 h)
+    · exact fun h => (QuotientGroup.eq_one_iff _).1 (congrArg Subtype.val h)
+    · exact fun h => Subtype.ext ((QuotientGroup.eq_one_iff _).2 h)
   let e := (QuotientGroup.quotientMulEquivOfEq hk).symm.trans (QuotientGroup.quotientKerEquivOfSurjective φ hsurj)
   exact isCyclic_of_surjective e.symm.toMonoidHom e.symm.surjective
 

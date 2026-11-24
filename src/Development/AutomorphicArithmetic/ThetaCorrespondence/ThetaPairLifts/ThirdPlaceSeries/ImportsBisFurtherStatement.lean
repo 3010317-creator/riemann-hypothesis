@@ -135,15 +135,7 @@ theorem trivOutside_mul {L : Type} [Field L] [NumberField L] [IsCMField L] {n : 
 
 theorem trivOutside_inv {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
     {T : Set (HeightOneSpectrum (𝓞 (maximalRealSubfield L)))} {x : GA L n}
-    (hx : TrivOutside T x) : TrivOutside T x⁻¹ := by
-  intro w hw
-  have h1 : (((x⁻¹ : GA L n).1 : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) *
-      (x.1 : Matrix (Fin n) (Fin n) (AL L)) = 1 := by
-    rw [← Units.val_mul, ← Subgroup.coe_mul, inv_mul_cancel]
-    rfl
-  have h2 := congrArg (fun M => M.map (compAt L w)) h1
-  simp only [Matrix.map_mul, hx w hw, mul_one] at h2
-  rw [h2, Matrix.map_one _ (map_zero _) (map_one _)]
+    (hx : TrivOutside T x) : TrivOutside T x⁻¹ := GlobalTheory.SatInd.CosetFin.trivOutside_inv hx
 
 theorem rt_rt {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W]
     (a b : GAf L n) (f : GAf L n → W) (g : GAf L n) : NG.rt L n a (NG.rt L n b f) g = f (g * a * b) := rfl

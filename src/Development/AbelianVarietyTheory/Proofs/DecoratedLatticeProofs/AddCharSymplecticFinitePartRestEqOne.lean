@@ -98,7 +98,7 @@ theorem halfB_mem_locP {E : Type} [Field E] [NumberField E] [StarRing E] {a b : 
     y ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal M := by
   have h : ((c : E) ^ expS SS P)⁻¹ • y ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal M := (Submodule.mem_iInf _).1 hy P
   have he : expS SS P = 1 := by
-    unfold expS; rw [if_pos hP]
+    unfold expS; rw [ite_eq_left hP]
   have hc' : (c : E) ≠ 0 := Nat.cast_ne_zero.2 hc.ne'
   rw [he, zpow_one] at h
   have := nsmul_mem h c
@@ -130,7 +130,7 @@ theorem ybmem : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S
         Formalism.HermitianLatticesTheory.localization₂ Q.asIdeal (perO (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) N N') :=
       (Submodule.mem_iInf _).1 hx Q
     have he : expS SS Q = 0 := by
-      unfold expS; rw [if_neg fun h => hQ (Or.inl h), if_neg fun h => hQ (Or.inr h)]
+      unfold expS; rw [ite_eq_right fun h => hQ (Or.inl h), ite_eq_right fun h => hQ (Or.inr h)]
     rwa [he, zpow_zero, _root_.inv_one, one_smul] at h
   obtain ⟨d, hd0, hdx, hdQ⟩ := GlobalTheory.T.exists_denominator_avoiding_given_primes D.host.E S.rank T.rank _
     (fun Q => Q ∈ SS ∨ Formalism.L2.Col.conjPrime₂ Q ∈ SS) c hc x' hcx hloc
@@ -212,14 +212,7 @@ theorem finPart_finRat_sub {S T : HSp D} (M : Matrix (Fin T.rank) (Fin S.rank) D
   exact sub_eq_zero.2 ((GlobalTheory.LatVac.finPart_pair 1 (M i j)).trans (GlobalTheory.LatVac.finPart_incA (M i j)).symm)
 
 theorem infPart_of_idemSum {e : AE D} {SS : Finset (Formalism.L2.DIV.Pl D.host.E)} (hI : IsIdemSum e SS) :
-    infPart D e = 0 := by
-  obtain ⟨⟨es, hes, he⟩, -⟩ := hI
-  subst he
-  induction SS using Finset.induction_on with
-  | empty => rw [Finset.sum_empty, RingHom.map_zero]
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha, RingHom.map_add (f := _), GlobalTheory.SplitScalar.infPart_splitIdem (hes a (Finset.mem_insert_self a s)).1,
-      ih fun PP hPP => hes PP (Finset.mem_insert_of_mem hPP), add_zero]
+    infPart D e = 0 := GlobalTheory.PlaceDatum.infPart_idemSum hI
 
 theorem smul_rest_eq_zero {S T : HSp D} {e : AE D} (hee : e * e = e) (hinf : infPart D e = 0)
     (M : Matrix (Fin T.rank) (Fin S.rank) D.host.E) :

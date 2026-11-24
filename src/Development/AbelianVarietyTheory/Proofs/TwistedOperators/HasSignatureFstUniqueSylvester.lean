@@ -136,8 +136,7 @@ theorem fst_le_of_hasSignature {J : Matrix n n ℂ} {a b a' b' : ℕ}
     (h : Formalism.UG.HasSignature J a b) (h' : Formalism.UG.HasSignature J a' b') : a ≤ a' := by
   obtain ⟨e, P, hP⟩ := h
   obtain ⟨e', P', hP'⟩ := h'
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   set U := LinearMap.range (chg e P ∘ₗ inlMap a b)
   set N := LinearMap.range (chg e' P' ∘ₗ inrMap a' b')
   have hU : finrank ℂ U = a := by
@@ -157,8 +156,7 @@ theorem fst_le_of_hasSignature {J : Matrix n n ℂ} {a b a' b' : ℕ}
     omega
   obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hinf
   have h1 := pos_of_mem hP (Submodule.mem_inf.1 hx).1 hx0
-  have h2 := nonpos_of_mem hP' (Submodule.mem_inf.1 hx).2
-  exact lt_irrefl _ (lt_of_lt_of_le h1 h2)
+  exact lt_irrefl _ (lt_of_lt_of_le h1 (nonpos_of_mem hP' (Submodule.mem_inf.1 hx).2))
 
 theorem hasSignature_fst_unique : ∀ {n : ℕ} {J : Matrix (Fin n) (Fin n) ℂ} {a b a' b' : ℕ},
     Formalism.UG.HasSignature J a b → Formalism.UG.HasSignature J a' b' → a = a' :=

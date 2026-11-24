@@ -89,8 +89,7 @@ private theorem exists_dom {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     exact Finset.prod_le_prod_of_subset_of_one_le' (Finset.subset_univ _) (fun l _ _ => hc1 l)
   refine ⟨fun i => x ^ (i : ℕ), ?_, ?_⟩
   · intro i j hij
-    simp only [Units.val_pow_eq_pow_val, map_pow]
-    exact pow_le_pow_right₀ hx1 (le_of_lt hij)
+    simpa only [Units.val_pow_eq_pow_val, map_pow] using pow_le_pow_right₀ hx1 (le_of_lt hij)
   · intro i j hij
     simp only [Pi.mul_apply, Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow]
     have hle : (i : ℕ) + 1 ≤ (j : ℕ) := hij
@@ -188,8 +187,7 @@ theorem UpperTheory.Gal.Join.imStab :
     have hs2 : ∀ g ∈ K, ∃ h ∈ K, sg σ h = g := by
       intro g hg
       refine ⟨sg σ.symm g, (hσ _).mp ?_, hinv g⟩
-      rw [hinv]
-      exact hg
+      rwa [hinv]
     have hAe := hcomm (sg σ) A hA hs1 hs2 v
     have hev : e v = v := he.fix v hv
     unfold UpperTheory.Gal.LocD.jacA

@@ -124,7 +124,7 @@ theorem multT_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
   obtain ⟨hLU, -, hH⟩ := hops
   by_cases hsm : ∀ τ, s.M.sm τ ≠ ⊥
   swap
-  · push_neg at hsm
+  · push Not at hsm
     obtain ⟨τ, hτ⟩ := hsm
     refine Submodule.eq_top_iff'.2 fun u => ?_
     have h0 : PiTensorProduct.lift.symm (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = 0 := by
@@ -160,8 +160,7 @@ theorem multT_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
   let op : I → Module.End ℂ (Mult c.θ s.M (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L)) := fun t =>
     (heckeOn s.M t.1.2.2).restrict fun T hT => (hH _ _ _ t.2).1 T hT
   have hcomm : ∀ i j, Commute (op i) (op j) := fun i j => by
-    refine LinearMap.ext fun T => Subtype.ext ?_
-    exact (hH _ _ _ i.2).2.1 _ _ _ j.2 T T.2
+    exact LinearMap.ext fun T => Subtype.ext ((hH _ _ _ i.2).2.1 _ _ _ j.2 T T.2)
   have hadj : ∀ i, ∃ i', ∀ x y : Mult c.θ s.M (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L),
       ipM s.M s.ν s.fd (op i x : MMap s.M) y = ipM s.M s.ν s.fd x (op i' y : MMap s.M) := fun i => by
     obtain ⟨R', h', hip⟩ := (hH _ _ _ i.2).2.2
@@ -202,8 +201,7 @@ theorem multT_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
     obtain ⟨e, he⟩ := hsub x T hT
     refine Submodule.subset_span ⟨e, ?_⟩
     have : ((φ T : s.CC c) : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = PiTensorProduct.lift (T : MMap s.M) := rfl
-    rw [this, LinearEquiv.symm_apply_apply]
-    exact he
+    rwa [this, LinearEquiv.symm_apply_apply]
   · rw [φ.map_zero]; exact zero_mem _
   · intro a b ha hb; rw [φ.map_add]; exact add_mem ha hb
 

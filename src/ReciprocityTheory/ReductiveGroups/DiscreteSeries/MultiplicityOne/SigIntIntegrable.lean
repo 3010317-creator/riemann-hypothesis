@@ -23,8 +23,7 @@ theorem gv_closed : IsClosed (GV k r) := by
   unfold GV UH Hpk
   exact isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul continuous_id) continuous_const
 
-theorem cont_of : Continuous (fun g : Mt k r => (Matrix.of g : Mat k r)) := by
-  exact continuous_id
+theorem cont_of : Continuous (fun g : Mt k r => (Matrix.of g : Mat k r)) := continuous_id
 
 theorem gv_measurable : @MeasurableSet (Mt k r) _ (GV k r) := by
   exact (show IsClosed (X := Mt k r) (GV k r) from gv_closed).measurableSet
@@ -213,9 +212,9 @@ theorem psi_cont (z : Fin (2 * r + k + 1) → ℂ) : Continuous (fun m : Mat k r
       else (m *ᵥ z) (eI k r a)) := by
     refine continuous_finsetSum _ fun a _ => ?_
     by_cases h : (a : ℕ) + 1 < r
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       exact continuous_id.matrix_elem _ _
-    · simp only [dif_neg h]
+    · simp only [dite_eq_right h]
       show Continuous ((fun v : Fin (2 * r + k + 1) → ℂ => v (eI k r a)) ∘ fun m : Mat k r => m *ᵥ z)
       exact (continuous_apply (eI k r a)).comp (mulVec_cont z)
   exact Complex.continuous_exp.comp (continuous_const.mul (Complex.continuous_ofReal.comp

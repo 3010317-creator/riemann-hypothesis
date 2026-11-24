@@ -81,8 +81,7 @@ theorem exists_coefField {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDom
     rw [map_zero, Polynomial.hom_eval₂] at this
     have e : (algebraMap ℚ_[l] (Qbar l)).comp (algebraMap ℤ_[l] ℚ_[l]) = φ.comp (algebraMap ℤ_[l] O) :=
       RingHom.ext fun z => (hφ z).symm
-    rw [Polynomial.eval₂_map, e]
-    exact this
+    rwa [Polynomial.eval₂_map, e]
   have : Finite S := (s.finite_toSet.image φ).to_subtype
   have hfd : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] S) :=
     IntermediateField.finiteDimensional_adjoin hint
@@ -107,8 +106,7 @@ theorem exists_coefField {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDom
     rintro _ ⟨y, -, rfl⟩
     exact ⟨_, rfl⟩
   have heq : K = IntermediateField.adjoin ℚ_[l] S := le_antisymm hle hge
-  rw [heq]
-  exact hfd
+  rwa [heq]
 
 theorem coefField_range : ∀ {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N : NData R H what₂) (A : NAut N) (i : N.Loc), ∃ K : IntermediateField ℚ_[N.l i] (Qbar (N.l i)), (∀ z, z ∈ K ↔ ∃ x, A.iotaQ i x = z) ∧ FiniteDimensional ℚ_[N.l i] K ∧ ∀ x : FractionRing (N.O i), ‖A.iotaQ i x‖ ≤ 1 ↔ x ∈ (algebraMap (N.O i) (FractionRing (N.O i))).range := by
   intro R H what₂ N A i

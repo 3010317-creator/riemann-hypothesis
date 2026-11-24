@@ -120,8 +120,7 @@ lemma image_prim (q : ℕ) [NeZero q] :
 
 lemma inj_on (q : ℕ) [NeZero q] (s : Finset ℕ) (hs : s ⊆ range q) :
     Set.InjOn (fun a => μ q ^ a) s := by
-  intro i hi j hj h
-  exact (hμ q).pow_inj (mem_range.1 (hs hi)) (mem_range.1 (hs hj)) h
+  exact fun i hi j hj h => (hμ q).pow_inj (mem_range.1 (hs hi)) (mem_range.1 (hs hj)) h
 
 lemma C_prod_all (q : ℕ) [NeZero q] :
     ∏ a ∈ range q, (X - C (μ q ^ a)) = (X ^ q - 1 : ℂ[X]) := by
@@ -195,8 +194,7 @@ theorem cyclotomic_primitive_root_product_identities_of_adjoin_root : LateralThe
     rw [e]
     refine ((hu ζ).pow c).mul (isUnit_of_dvd_unit ?_ ζ.2.1)
     have hd := dvd_prod_of_mem (fun j => 1 - ζ.1 ^ (j + 1)) (mem_range.2 (show i < q - 1 by omega))
-    rw [unit_prod ζ] at hd
-    exact hd
+    rwa [unit_prod ζ] at hd
   refine ⟨hq1, ?_, ?_, ?_, ?_, ?_⟩
   · intro ζ a ha
     refine ⟨⟨ζ.1 ^ a, ζ.2.1, ?_⟩, rfl⟩

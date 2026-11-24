@@ -65,8 +65,7 @@ theorem blockOrd_std (p q : ℕ) :
   refine ⟨fun i => by simp, fun j => by simp, ?_⟩
   rintro (a | a) (b | b) hab
   · have hlt : a < b := hab
-    simp only [finSumFinEquiv_apply_left, Fin.lt_def, Fin.val_castAdd]
-    exact Fin.lt_def.mp hlt
+    simpa only [finSumFinEquiv_apply_left, Fin.lt_def, Fin.val_castAdd] using Fin.lt_def.mp hlt
   · simp [posC] at hab
   · simp [posC] at hab
   · have hlt : a < b := hab
@@ -212,8 +211,7 @@ theorem kset_gen : ∀ (p q : ℕ), 1 ≤ p + q → ∀ (T : GrpData p q), ∀ k
   have hsq2 : ((T.sq (T.expt X) : ℂˣ) : ℂ) ^ 2 = ((T.sq k : ℂˣ) : ℂ) ^ 2 := by
     rw [T.sq_sq, T.sq_sq, hcovX]
   rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq2 with h | h
-  · rw [← huniq _ hcovX (Units.ext h)]
-    exact hy
+  · rwa [← huniq _ hcovX (Units.ext h)]
   · have hk' : T.expt X * T.expt (torX (Pi.single a0 (2 * Real.pi))) = k := by
       apply huniq
       · rw [map_mul, hcov, mul_one, hcovX]

@@ -414,19 +414,18 @@ theorem cLoc_mem_UL : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
   intro E _ _ _ hU n w y
   by_cases hs : IsSplitAt w
   · unfold UL
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
     exact Subgroup.mem_top _
   · obtain ⟨-, -, hloc, -⟩ := (GlobalTheory.ConjAtPlace.main E hU w).2.2.2.1 hs
     have hu := GlobalTheory.DefU.ClassFin.cT_pFin y
     unfold UL
-    rw [if_neg hs]
+    rw [ite_eq_right hs]
     change cT (cj w) (cLoc w y).val * 1 * (cLoc w y).val = 1
     rw [mul_one]
     have key : cT (cj w) ((GeneralLinearGroup.map (pFin E) (y : GA E n)).val.map (pLoc E w)) =
         (cT (conjFin (GlobalTheory.DefU.ClassFin.cc E)) (GeneralLinearGroup.map (pFin E) (y : GA E n)).val).map (pLoc E w) := by
       refine Matrix.ext fun i j => ?_
-      simp only [cT, Matrix.map_apply, Matrix.transpose_apply]
-      exact (hloc _).symm
+      simpa only [cT, Matrix.map_apply, Matrix.transpose_apply] using (hloc _).symm
     calc cT (cj w) (cLoc w y).val * (cLoc w y).val =
         (cT (conjFin (GlobalTheory.DefU.ClassFin.cc E)) (GeneralLinearGroup.map (pFin E) (y : GA E n)).val *
           (GeneralLinearGroup.map (pFin E) (y : GA E n)).val).map (pLoc E w) := by
@@ -443,8 +442,7 @@ theorem valuation_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     fun v b => HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v b
   have e := h2 (algebraMap E _ a)
   rw [h1] at e
-  rw [← hv, ← hv]
-  exact e
+  rwa [← hv, ← hv]
 
 theorem section_conjSrc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (S : Set (Pl E)), IsSection S → (∀ w, w ∉ S → conjSrc (GlobalTheory.SplitPts.conjE E) w ∈ S) ∧ Function.Injective (conjSrc (GlobalTheory.SplitPts.conjE E)) := by
   intro E _ _ _ S hS
@@ -489,16 +487,15 @@ theorem cLoc_finPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
   have hfin : (⟨_, hUA⟩ : UA E n) ∈ finU (E := E) (n := n) := (MonoidHom.mem_ker).2 (Units.ext (by
     have := pInf_finGL (E := E) (ratF E n γ.1)
     exact congrArg Units.val this))
-  have e0 : toSub (UA E n) (finGL E n (ratF E n γ.1)) = ⟨_, hUA⟩ := dif_pos hUA
+  have e0 : toSub (UA E n) (finGL E n (ratF E n γ.1)) = ⟨_, hUA⟩ := dite_eq_left hUA
   have e1 : (finPt γ).1 = ⟨finGL E n (ratF E n γ.1), hUA⟩ := by
     unfold finPt
     rw [e0]
-    exact congrArg Subtype.val (dif_pos hfin)
+    exact congrArg Subtype.val (dite_eq_left hfin)
   rw [e1]
   have h2 := GlobalTheory.CuspRep.pFin_finGL (E := E) (a := n) (ratF E n γ.1)
   apply Units.ext
-  refine Matrix.ext fun i j => ?_
-  exact congrArg (fun g : GL (Fin n) (Af E) => pLoc E w (g.val i j)) h2
+  exact Matrix.ext fun i j => congrArg (fun g : GL (Fin n) (Af E) => pLoc E w (g.val i j)) h2
 
 end GlobalTheory.BCT.SuppFin
 
@@ -564,8 +561,7 @@ theorem finite_of_bounds (S : Set (Pl E)) (hS : IsSection S) (Γs : Set (UE E n)
   have hM : (Set.pi Set.univ fun _ : Fin n => Set.pi Set.univ fun _ : Fin n => X).Finite :=
     Set.Finite.pi fun _ => Set.Finite.pi fun _ => hX
   refine (hM.preimage (f := fun γ : UE E n => (γ.1.val : Fin n → Fin n → E)) ?_).subset ?_
-  · intro a _ b _ h
-    exact Subtype.ext (Units.ext h)
+  · exact fun a _ b _ h => Subtype.ext (Units.ext h)
   · intro γ hγ i _ j _
     exact ⟨γ, hγ, i, j, Or.inl rfl⟩
 
@@ -607,14 +603,14 @@ theorem GlobalTheory.BCT.SuppFin.suppFin : ∀ (E : Type) [Field E] [NumberField
       rw [hpt]
       refine ⟨_, ⟨⟨_, hUL w _⟩, subset_tsupport _ ?_, rfl⟩, rfl⟩
       have h0 := hnz γ hγ w hw
-      rwa [toSub, dif_pos (hUL w _)] at h0
+      rwa [toSub, dite_eq_left (hUL w _)] at h0
     obtain ⟨h1, h2⟩ := hN _ hmem i j
     rw [(hent w γ i j).1, hv] at h1
     rw [(hent w γ i j).2, hv] at h2
     exact ⟨h1, h2⟩
   · filter_upwards [hf.2, _root_.GlobalTheory.BCT.SuppFin.cLoc_mem_KGL_cofinite E n x.1] with w hfw hxw hw γ hγ i j
     have h0 := hnz γ hγ w hw
-    rw [hfw, toSub, dif_pos (hUL w _)] at h0
+    rw [hfw, toSub, dite_eq_left (hUL w _)] at h0
     have hy : cLoc w (x⁻¹ * finPt γ * x).1 ∈ GlobalTheory.LFun.KGL w (n := n) :=
       Subgroup.mem_subgroupOf.1 (Set.indicator_apply_ne_zero.1 h0).1
     have hg : GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) γ.1 ∈ GlobalTheory.LFun.KGL w (n := n) := by

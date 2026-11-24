@@ -124,8 +124,7 @@ theorem baseChange {k : ℕ} {S T : Type} [CommRing S] [CommRing T] (ψ : S →+
     rw [hev.2.1, Category.assoc]
   · have : spMap χ ≫ h.left ≫ (ev a).left = spMap χ ≫ h.left ≫ (ev b).left := hab
     rw [hh] at this
-    rw [spMap_comp, Category.assoc, Category.assoc]
-    exact this
+    rwa [spMap_comp, Category.assoc, Category.assoc]
 
 theorem eq_of_agree (hL : Laws) {k : ℕ} (hk : 0 < k) {S T : Type} [CommRing S] [CommRing T] (χ : S →+* T)
     (hχ : ∀ e, χ e = 1 → IsUnit e) {x0 : Sp S ⟶ Xo.X} {a b : ptO Xo x0 ⟶ Xo.univ.t.G} (ha : a ^ k = 1)
@@ -147,8 +146,7 @@ theorem exists_geometric (hL : Laws) {k : ℕ} (hk : 0 < k) (K : Type) [Field K]
         eq_of_agree Xo hL hk χ (fun e he => isUnit_iff_ne_zero.2 fun h0 => by simp [h0] at he)
           ((I.onto k hk _).2 ⟨_, rfl⟩) ((I.onto k hk _).2 ⟨_, rfl⟩) hab
       have h2 : I.ev k a = I.ev k (a - b) * I.ev k b := by rw [← I.add, sub_add_cancel]
-      rw [h2, mul_eq_right, I.ker k hk] at h1
-      exact h1
+      rwa [h2, mul_eq_right, I.ker k hk] at h1
   refine ⟨ev, hev, fun p hp => ?_⟩
   obtain ⟨a, ha⟩ := (I.onto k hk p).1 hp
   exact ⟨_, (h a).trans ha⟩

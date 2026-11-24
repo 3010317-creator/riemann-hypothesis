@@ -124,8 +124,7 @@ theorem invariant_factors_submodule : InvariantFactorsSubmodule := by
   have hn : n ≤ C.card := by
     have hli : LinearIndependent R (U.subtype ∘ b) :=
       b.linearIndependent.map' U.subtype (Submodule.ker_subtype U)
-    have h1 := hli.fintype_card_le_finrank
-    simpa [Module.finrank_fintype_fun_eq_card, Fintype.card_coe] using h1
+    simpa [Module.finrank_fintype_fun_eq_card, Fintype.card_coe] using hli.fintype_card_le_finrank
   have hm : ∀ i, ∃ x ∈ M', P.mkQ (π ^ E • x) = f (b i) := by
     intro i
     have h1 : f (b i) ∈ W := (b i).2
@@ -187,8 +186,7 @@ theorem inverse_shift : InvShift := by
     have hz' : π ^ e • z ∈ Submodule.span R (↑(C.image (fun c => π ^ e • c)) : Set X) := by
       refine Submodule.span_induction (p := fun z _ => π ^ e • z ∈
         Submodule.span R (↑(C.image (fun c => π ^ e • c)) : Set X)) ?_ ?_ ?_ ?_ hz
-      · intro c hc
-        exact Submodule.subset_span (Finset.mem_coe.mpr (Finset.mem_image_of_mem _ hc))
+      · exact fun c hc => Submodule.subset_span (Finset.mem_coe.mpr (Finset.mem_image_of_mem _ hc))
       · simp
       · intro a b _ _ ha hb
         rw [smul_add]
@@ -383,8 +381,7 @@ theorem core (D : Formalism.BasicNotions.D7) (G : GAtP p) (v0 : Fin G.P.nV) (e :
         _ = VV.card * S := by simp)
   refine ⟨?_, ?_⟩
   · intro x hx
-    refine sat_clause _ N G.M (G.M ⊓ V') hsat ⟨hx.1, ?_, hx.2⟩
-    exact Submodule.smul_le_right hx.1.2
+    exact sat_clause _ N G.M (G.M ⊓ V') hsat ⟨hx.1, Submodule.smul_le_right hx.1.2, hx.2⟩
   · have hcomap : Submodule.comap (G.M ⊓ V').subtype
         (N ⊓ (Ideal.span {(p : G.O) ^ (e + τ)}) • G.M ⊓ V') =
         Submodule.comap (G.M ⊓ V').subtype (N ⊓ (Ideal.span {(p : G.O) ^ (e + τ)}) • G.M) := by
@@ -485,8 +482,7 @@ theorem coreT (D : Formalism.BasicNotions.D7) (G : GAtP p) {T : Type} [Decidable
   rw [map_smul_id, map_smul_id]
   refine ⟨?_, ?_⟩
   · intro x hx
-    refine sat_clause _ NPf G.M (G.M ⊓ Vr) hsat ⟨hx.1, ?_, hx.2⟩
-    exact Submodule.smul_le_right hx.1.2
+    exact sat_clause _ NPf G.M (G.M ⊓ Vr) hsat ⟨hx.1, Submodule.smul_le_right hx.1.2, hx.2⟩
   · have hle : prodIdeal G (VVp.image vOf) m (fun v => SN (g v)) G.M ≤ NPf := by
       rw [hNPf]
       refine Submodule.span_le.2 ?_
@@ -512,8 +508,7 @@ theorem coreT (D : Formalism.BasicNotions.D7) (G : GAtP p) {T : Type} [Decidable
           obtain ⟨hv1, -⟩ := Finset.mem_sdiff.1 hv
           obtain ⟨t0, ht0, rfl⟩ := Finset.mem_image.1 hv1
           rw [hg t0 ht0]
-        · intro t0 ht0
-          exact hg t0 (Finset.mem_sdiff.1 ht0).1
+        · exact fun t0 ht0 => hg t0 (Finset.mem_sdiff.1 ht0).1
         · intro v _
           rfl
       · refine foldY_perm G m ?_ x
@@ -573,7 +568,7 @@ theorem stmt6G (D : Formalism.BasicNotions.D7) (L : SizeData₂ D) (X : Inst D L
   by_cases hE : Formalism.MainNotions.G.VV X K (aL L) (bL L) (D.what₂.places.resChar w) = ∅
   · have htau : tauP X K (aL L) (bL L) (D.what₂.places.resChar w) = 0 := by
       unfold tauP
-      rw [if_pos hE]
+      rw [ite_eq_left hE]
     have hio : ioP X K (aL L) (bL L) (D.what₂.places.resChar w) = 0 := by
       unfold ioP
       rw [dite_eq_right]
@@ -596,8 +591,7 @@ theorem stmt6G (D : Formalism.BasicNotions.D7) (L : SizeData₂ D) (X : Inst D L
           exact ⟨x, hx.1, by simp⟩
     rw [hNP, htau, hio]
     refine ⟨?_, 0, ?_, by simp⟩
-    · intro x hx
-      exact ⟨x, hx, by simp⟩
+    · exact fun x hx => ⟨x, hx, by simp⟩
     · have htop : Submodule.comap ((D.gat u w hg).M ⊓ Y.Vram u w hg).subtype
           ((D.gat u w hg).M ⊓ Y.Vram u w hg) = ⊤ := by
         ext x
@@ -622,7 +616,7 @@ theorem stmt6G (D : Formalism.BasicNotions.D7) (L : SizeData₂ D) (X : Inst D L
         ((X.ep (D.what₂.places.resChar w) + ∑ t0 ∈ Formalism.MainNotions.G.VV X K (aL L) (bL L) (D.what₂.places.resChar w),
           D.R.m * (⌈tv X K (aL L) (bL L) (D.what₂.places.resChar w) t0⌉₊ + Dp K L (D.what₂.places.resChar w) + 1) : ℕ) : ℝ) := by
       unfold tauP
-      rw [if_neg hE]
+      rw [ite_eq_right hE]
       push_cast
       rfl
     have hτ : ⌈tauP X K (aL L) (bL L) (D.what₂.places.resChar w)⌉.toNat =

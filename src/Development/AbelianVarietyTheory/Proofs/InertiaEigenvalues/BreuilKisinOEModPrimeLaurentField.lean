@@ -74,18 +74,12 @@ theorem evW_X_eq : bk.evW X = WittVector.teichmuller l (algebraMap (OCb l) (Cb l
   simp [BK.evW, bk.ev_X, inclW, WittVector.map_teichmuller]
 
 theorem l_dvd_of_not_isUnit (a : ℕ) [NeZero a] (x : Wq l a) (h : ¬ IsUnit x) : (l : Wq l a) ∣ x := by
-  by_cases h0 : x = 0
-  · exact h0 ▸ dvd_zero _
-  obtain ⟨m, b, hb, rfl⟩ := WittVector.exists_eq_pow_p_mul x h0
-  cases m with
-  | zero => exact absurd (by simpa using WittVector.isUnit_of_coeff_zero_ne_zero b hb) h
-  | succ m => exact Dvd.intro _ (by rw [pow_succ', mul_assoc])
+  exact GlobalTheory.BKReal.dvd_of_not_isUnit l a h
 
 theorem exists_unit (s : bk.S) (hs : ψ bk s ≠ 0) :
     ∃ (k : ℕ) (s₁ : bk.S), IsUnit s₁ ∧ ψ bk s = ψ bk X ^ k * ψ bk s₁ := by
   have hex : ∃ i, IsUnit (coeff i s) := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have hd : ∀ i, (l : Wq l bk.a) ∣ coeff i s := fun i => l_dvd_of_not_isUnit bk.a _ (hno i)
     choose c hc using hd
     have : s = (l : bk.S) * PowerSeries.mk c := by
@@ -102,14 +96,13 @@ theorem exists_unit (s : bk.S) (hs : ψ bk s ≠ 0) :
   let s₁ : bk.S := PowerSeries.mk fun i => coeff (i + k) s
   let s₂ : bk.S := PowerSeries.mk fun i => if i < k then c i else 0
   have hs₁ : IsUnit s₁ := by
-    rw [isUnit_iff_constantCoeff, ← coeff_zero_eq_constantCoeff_apply, coeff_mk, zero_add]
-    exact hk
+    rwa [isUnit_iff_constantCoeff, ← coeff_zero_eq_constantCoeff_apply, coeff_mk, zero_add]
   have hsplit : s = X ^ k * s₁ + (l : bk.S) * s₂ := by
     ext i
     rw [map_add (f := _), coeff_X_pow_mul', ← map_natCast (C (R := Wq l bk.a)), coeff_C_mul, coeff_mk, coeff_mk]
     by_cases hi : i < k
-    · rw [if_neg (by omega), if_pos hi, zero_add, hc i hi]
-    · rw [if_pos (by omega), if_neg hi, mul_zero, add_zero, Nat.sub_add_cancel (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_left hi, zero_add, hc i hi]
+    · rw [ite_eq_left (by omega), ite_eq_right hi, mul_zero, add_zero, Nat.sub_add_cancel (by omega)]
   refine ⟨k, s₁, hs₁, ?_⟩
   conv_lhs => rw [hsplit]
   rw [map_add (f := _), map_mul, map_mul, map_pow, map_natCast, CharP.cast_eq_zero, zero_mul, add_zero]
@@ -125,8 +118,7 @@ theorem GlobalTheory.BSP.oe_mod_l : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
   have hunit : IsUnit (bk.evW X) := by
     rw [evW_X_eq]
     apply WittVector.isUnit_of_coeff_zero_ne_zero
-    rw [WittVector.teichmuller_coeff_zero]
-    exact hf
+    rwa [WittVector.teichmuller_coeff_zero]
   have h1 : ∀ y : Cb l, y ∈ bk.OE.map (WittVector.constantCoeff (p := l) (R := Cb l)) ↔ ∃ (m : ℕ) (s : bk.S),
       algebraMap (OCb l) (Cb l) bk.flat ^ m * y = algebraMap (OCb l) (Cb l) ((bk.ev s).coeff 0) := by
     intro y

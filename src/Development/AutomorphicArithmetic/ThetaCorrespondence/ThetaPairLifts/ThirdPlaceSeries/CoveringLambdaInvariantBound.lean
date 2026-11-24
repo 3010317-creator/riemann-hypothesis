@@ -301,8 +301,7 @@ theorem tw_mem_span (hc : ∀ a : Fin n → K', c (∑ k, a k • ι (b k)) = a)
   | smul r x _ h1 =>
     have := Submodule.smul_mem _ (RingOfIntegers.mapRingHom (g : K' →+* K') r) h1
     rw [← algebraMap_smul K'] at this
-    rw [← algebraMap_smul K', tw_smul]
-    exact this
+    rwa [← algebraMap_smul K', tw_smul]
 
 theorem eq_sum_coord (hc : ∀ a : Fin n → K', c (∑ k, a k • ι (b k)) = a) (s : Set V) {x : V'}
     (hx : x ∈ Submodule.span (𝓞 K') (ι '' s)) : x = ∑ k, c x k • ι (b k) := by
@@ -336,8 +335,7 @@ theorem cnorm_cols (hG' : IsGram b' X' N') (φ : V →ₛₗ[algebraMap K K'] V'
 
   rw [← (hG' w).2, map_sum] at h
   simp only [map_smulₛₗ] at h
-  rw [normAt_sum] at h
-  exact h
+  rwa [normAt_sum] at h
 
 theorem normAt_gal (hG' : IsGram b' X' N') (hc : ∀ σ x, N ((starRingEnd ℂ).comp σ) x = N σ x)
     (φ : V →ₛₗ[algebraMap K K'] V') (ht : ∀ σ' x, N' σ' (φ x) = N (σ'.comp (algebraMap K K')) x) {j : ℕ}
@@ -677,8 +675,7 @@ theorem span_image_ne_bot
     {L : Submodule (𝓞 K) V} (h0 : L ≠ ⊥) : Submodule.span (𝓞 K') (ι '' (L : Set V)) ≠ ⊥ := by
   obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h0
   have h1 := (hli 1 (fun _ => x) (linearIndependent_unique_iff.2 hx0)).ne_zero 0
-  intro h
-  exact h1 (Submodule.span_eq_bot.1 h _ ⟨x, hx, rfl⟩)
+  exact fun h => h1 (Submodule.span_eq_bot.1 h _ ⟨x, hx, rfl⟩)
 
 end Two
 
@@ -855,8 +852,7 @@ theorem slopeMax_all_le (Cm : ℝ) (hG : GramAt p i) (hM : MeasAt p i Cm) :
       obtain ⟨h, e⟩ := h1 x
       rw [e]
       exact hcE σ ⟨x, h⟩)
-  rw [hAll]
-  exact key
+  rwa [hAll]
 
 theorem unitE_le {PP A M : ℝ} (hH : HostNum D L PP A M) (hW : WtNum p i PP) :
     unitE p ≤ L.sc.x ^ (A + 1) * L.sc.b := by

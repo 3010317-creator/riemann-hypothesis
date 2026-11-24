@@ -167,10 +167,10 @@ theorem isLevDatum_vec {S T : HSp D} {F : Frame S T} (hF : F.Good) {G : TypeDat 
     unfold Frame.datumFn at ht
     have a1 : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapAdj S T F.βS F.βT t) := by
       by_contra hc
-      exact left_ne_zero_of_mul ht (if_neg hc)
+      exact left_ne_zero_of_mul ht (ite_eq_right hc)
     have a2 : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapO S T F.βS F.βT t) := by
       by_contra hc
-      exact right_ne_zero_of_mul ht (if_neg hc)
+      exact right_ne_zero_of_mul ht (ite_eq_right hc)
     exact ⟨(GlobalTheory.T.mem_selfDualLattice_iff_integral_frameMatrices_half hF h hP a1.1).2 ⟨a1.2, a2.2⟩, a1.1⟩
   · intro u hu hue t
     obtain ⟨i1, i2⟩ := (GlobalTheory.T.mem_selfDualLattice_iff_integral_frameMatrices_half hF h hP hue).1 hu
@@ -192,13 +192,13 @@ theorem isLevDatum_vec {S T : HSp D} {F : Frame S T} (hF : F.Good) {G : TypeDat 
     rw [f1, f2]
     congr 1
     · by_cases hc : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapAdj S T F.βS F.βT t)
-      · rw [if_pos ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).2 hc.2⟩, if_pos hc]
+      · rw [ite_eq_left ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).2 hc.2⟩, ite_eq_left hc]
         exact GlobalTheory.PlaceDatum.omegaG_congr _ _ _ _ fun PP hPP => GlobalTheory.RefDatumLev.redM_add_nsmul PP hc.2 i1 _ (hN PP (Or.inl hPP))
-      · rw [if_neg hc, if_neg fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).1 h'.2⟩]
+      · rw [ite_eq_right hc, ite_eq_right fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).1 h'.2⟩]
     · by_cases hc : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapO S T F.βS F.βT t)
-      · rw [if_pos ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).2 hc.2⟩, if_pos hc]
+      · rw [ite_eq_left ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).2 hc.2⟩, ite_eq_left hc]
         exact hω _ _ fun PP hPP => GlobalTheory.RefDatumLev.redM_add_nsmul PP hc.2 i2 _ (hN PP (Or.inr hPP))
-      · rw [if_neg hc, if_neg fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).1 h'.2⟩]
+      · rw [ite_eq_right hc, ite_eq_right fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).1 h'.2⟩]
   · intro t
     unfold Frame.datumFn
     refine mul_mem ?_ ?_ <;> split_ifs
@@ -432,8 +432,7 @@ theorem exists_sum_evW (hti : TieIn T Rl.toRealDat κ v₀) (hnV : 8 * D.R.f * D
     rw [(hti.kap j τ).1 i]
     exact GlobalTheory.LiftWeight.kapTop_lastPos D j τ i hi
   have hn : 8 * D.R.f * D.R.r + 4 ≤ (κ j).n := by
-    rw [(hti.kap j (D.eTau.symm 1)).2.2]
-    exact hnV
+    rwa [(hti.kap j (D.eTau.symm 1)).2.2]
   obtain ⟨φ', hφ'm, rfl⟩ := hφ
   have hspan : Formalism.L2.Pj.holSub0 (T.U ((j : ℕ) + 1) T.σ₀).X (laU (T.U ((j : ℕ) + 1) T.σ₀) (wtA (κ j)) (κ j).n) ≤
       Submodule.span ℂ (rdU (T.U ((j : ℕ) + 1) T.σ₀) '' {f | f ∈ sec (T.Q.Xo ((j : ℕ) + 1)) T.Q.c (wtA (κ j)) (κ j).n ∧
@@ -566,8 +565,7 @@ theorem isLevDatum_vecBase {F : Face D A3.A} (hT : LawsJ T) (hcore : GlobalTheor
     · obtain ⟨x, hx⟩ := exists_isLocUnit (hB.de.split.isIdemAt hPP) h.unit
       have e := hx.eq (hB.de.res PP hPP)
       have := hδ x
-      rw [e] at this
-      exact this
+      rwa [e] at this
     · exact zero_mem _
 
 theorem ratBase_of_readsAs (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A} (hti : TieIn T Rl.toRealDat κ v₀)
@@ -609,8 +607,7 @@ theorem ratBase_of_readsAs (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A} (h
   have hω' : IsWeilDatumO Rl.ψ (Vc D j) (Wc D j) (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).1
       (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).2 (ρ.om i j b 1) := by
     have h1 := hω
-    rw [Base.IsWeil, mul_one, Base.mu, hBo.ψ, hBo.mu0, hBo.eta] at h1
-    exact h1
+    rwa [Base.IsWeil, mul_one, Base.mu, hBo.ψ, hBo.mu0, hBo.eta] at h1
 
   have hm : ∀ τ, (ρ.B i j b).w.p τ + (ρ.B i j b).w.q τ ≤ (Wc D j).rank := fun τ => by
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)

@@ -67,17 +67,15 @@ theorem UpperTheory.V.Fr.pr_mu :
     intro y y' h
     have h0 : u (y - y') = 0 := by rw [map_sub, h, sub_self]
     have h1 := hker _ h0
-    rw [Submodule.coe_sub, map_sub, sub_eq_zero] at h1
-    exact h1
+    rwa [Submodule.coe_sub, map_sub, sub_eq_zero] at h1
   have hmem : ∀ y : K, q y ∈ maximalIdeal C'' := by
     intro y
     rw [← res_eq_zero_iff O C'', res_map, res_eq_zero_iff]
     exact hKm y.2
   by_cases hu : ∀ y, u y = 0
   · refine ⟨0, ⟨fun a c => by simp, fun c => by simp⟩, fun y => ?_, fun c => ⟨0, by simp⟩⟩
-    show (0 : C'') = q y
     exact (hker y (hu y)).symm
-  · push_neg at hu
+  · push Not at hu
     obtain ⟨y0, hy0⟩ := hu
     have hsurj : Function.Surjective u := by
       intro c
@@ -112,8 +110,7 @@ theorem UpperTheory.V.Fr.pr_mu :
         rw [Algebra.smul_def]
         linear_combination hz
       have hres : res O C' b = algebraMap O (ResidueField O) o := by
-        rw [← AlgHom.commutes (res O C') o, ← sub_eq_zero, ← map_sub, res_eq_zero_iff]
-        exact ho
+        rwa [← AlgHom.commutes (res O C') o, ← sub_eq_zero, ← map_sub, res_eq_zero_iff]
       have hw := hwd (s (res O C'' (q b) * c)) (o • s c)
         (by rw [hs, res_map, hres, map_smul, hs, Algebra.smul_def])
       rw [hμ, hμ, hw, Submodule.coe_smul_of_tower, ← hby, map_mul]
@@ -123,8 +120,7 @@ theorem UpperTheory.V.Fr.pr_mu :
     · intro y
       rw [hμ]
       exact hwd _ _ (hs _)
-    · intro c
-      exact ⟨s c, rfl⟩
+    · exact fun c => ⟨s c, rfl⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.PrMu =====

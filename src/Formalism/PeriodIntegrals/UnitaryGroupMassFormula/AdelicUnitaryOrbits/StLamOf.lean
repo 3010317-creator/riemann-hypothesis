@@ -76,8 +76,7 @@ theorem glue_mul {S : Type} [CommRing S] {k : ℕ} (e : Fin k → S) (hid : ∀ 
   · intro j _ hji
     calc e i * X i * (e j * Y j) = (e i * e j) * (X i * Y j) := by ring
       _ = 0 := by rw [hor i j (Ne.symm hji), zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem norm_id {S : Type} [CommRing S] (B p q a b D Θ : S) (h : Θ ^ 2 = D) :
     (B - (p - q * Θ) * (a + b * Θ)) * (B - (p + q * Θ) * (a - b * Θ)) =
@@ -147,8 +146,7 @@ theorem core {R S : Type} [CommRing R] [CommRing S] (ι : R →+* S) (s : S →+
     rw [norm_one _ _ _ _ hΘ, ← map_pow, ← map_pow, ← map_mul, ← map_sub, hnorm i, map_one]
   refine ⟨∑ i, ι (e i) * (ι (p i) + ι (q i) * Θ), ?_, ?_⟩
   · rw [hsl, glue_mul _ hidS horS]
-    simp only [hn, mul_one]
-    exact hE1
+    simpa only [hn, mul_one] using hE1
   · rw [hsl]
     set w := ι a + ι b * Θ with hw
     have hz : ι Bt - (∑ i, ι (e i) * (ι (p i) - ι (q i) * Θ)) * w =
@@ -256,8 +254,7 @@ theorem quadGen : QuadGen := by
   haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hfin
   haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
   obtain ⟨e, he⟩ : ∃ e : E, e ∉ (algebraMap F E).range := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hle : Module.finrank F E ≤ 1 := by
       refine finrank_le_one (1 : E) fun w => ?_
       obtain ⟨c, hc⟩ := h w

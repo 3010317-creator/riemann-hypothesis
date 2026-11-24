@@ -456,8 +456,7 @@ theorem isFd_of_schurK {m : ℕ} {ε : Fin m → Bool} {K : Type} [NormedAddComm
   refine ⟨hi, ?_⟩
   have e2 : ⟪v', v⟫_ℂ * ⟪w, w'⟫_ℂ / ((κ⁻¹ : ℝ) : ℂ) = (κ : ℂ) * (⟪v', v⟫_ℂ * ⟪w, w'⟫_ℂ) := by
     push_cast; rw [div_inv_eq_mul]; ring
-  rw [e2]
-  exact he
+  rwa [e2]
 
 
 theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGermIndependentOfSystem) (hem : PositivityTheory.UnitaryDecomposition.X4.EmbSt) : MomentP → Analysis → BigProjP := by
@@ -518,8 +517,7 @@ theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGerm
       = (κ : ℂ) * starRingEnd ℂ ⟪w, σ (um y) w⟫_ℂ := by
     intro y
     have := conv_of ν (onU ε' σ) κ⁻¹ hUσ hFdσ w hw1 y
-    rw [inv_inv] at this
-    exact this
+    rwa [inv_inv] at this
   have hmom := hM n ε lam ε' mu B e H H' π σ ν hν hF hP hDSπ hDSσ (ContinuousLinearMap.adjoint i) w κ hIt hw1
     (by rw [ContinuousLinearMap.adjoint_adjoint, hiso, hw1]) hK.1 hwi hconv
     ⟨η, hη, by rw [ContinuousLinearMap.adjoint_adjoint]; exact hηi,
@@ -532,7 +530,7 @@ theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGerm
     simp only [hs, Matrix.one_apply]
     have h2 : ∀ i j : Fin n, ‖(if i = j then (1 : ℂ) else 0)‖ ^ 2 = if i = j then (1 : ℝ) else 0 := by
       intro i j; split_ifs <;> simp
-    simp only [h2, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const, Finset.card_univ,
+    simp only [h2, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const, Finset.card_univ,
       Fintype.card_fin, nsmul_eq_mul, mul_one]
     exact le_rfl
   have hgap' : GapAtLeast ε' mu (200 * ((n + 1 : ℕ) : ℝ) ^ 3) := by
@@ -665,8 +663,7 @@ theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGerm
           mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hx16 hA0) hC0
       _ = x ^ (1 + 67 * (n + 1) ^ 2 + 24 * (n + 1) ^ 3) := by rw [pow_add, pow_add, pow_one]
       _ ≤ x ^ (100 * (n + 1) ^ 3 * 2) := pow_le_pow_right₀ (by linarith) hnat
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hsq : ‖ContinuousLinearMap.adjoint i (π (um g₀) v)‖ ^ 2 < ((x ^ (100 * (n + 1) ^ 3))⁻¹) ^ 2 :=
     pow_lt_pow_left₀ hlt ht0 (by norm_num)
   have hp : 0 < 16 * x ^ (67 * (n + 1) ^ 2) * x ^ (24 * (n + 1) ^ 3) :=

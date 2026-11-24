@@ -81,8 +81,7 @@ theorem isMultiHomog_X_single [DecidableEq K] (p : Σ k, ι k) :
     · simp
     · intro b _ hb
       simp [Ne.symm hb]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · simp [h]
 
 
@@ -103,8 +102,7 @@ theorem aeval_mul_pow_of_block (y w : (Σ k, ι k) → Ω) (k₀ : K) (z : Ω)
     · exact hf m hm k₀
     · intro k _ hk
       rw [hf m hm k, hd k hk]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hzero : ∀ p : Σ k, ι k, p.1 ≠ k₀ → m p = 0 := by
     intro p hp
     have h1 := hf m hm p.1
@@ -163,13 +161,10 @@ theorem BlockImageArith.proof : BlockImageArith.Statement := by
       rintro ⟨k', i'⟩
       by_cases h : k' = k₀
       · subst h
-        simp only [w, ite_true]
-        exact hyF i'
-      · simp only [w, h, ite_false]
-        exact zero_mem _
+        simpa only [w, ite_true] using hyF i'
+      · simpa only [w, h, ite_false] using zero_mem _
     have hw : ∀ i, w ⟨k₀, i⟩ * x j₀ = y ⟨k₀, i⟩ := fun i ↦ by
-      simp only [w, ite_true]
-      exact div_mul_cancel₀ _ hj₀
+      simpa only [w, ite_true] using div_mul_cancel₀ _ hj₀
     obtain ⟨n, g', h', hg', hh', hh0, heq⟩ := hbir _ (X ⟨k, i⟩) (X ⟨k, c k⟩)
       (isMultiHomog_X_single ⟨k, i⟩) (isMultiHomog_X_single ⟨k, c k⟩)
       (by rw [aeval_X]; exact hc k)

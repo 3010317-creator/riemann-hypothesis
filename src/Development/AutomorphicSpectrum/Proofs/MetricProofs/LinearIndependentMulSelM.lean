@@ -82,8 +82,7 @@ theorem selM_transpose (S : Finset (Fin N)) (b : Fin S.card) :
 theorem linearIndependent_selM (S : Finset (Fin N)) : LinearIndependent ℂ (selM S)ᵀ := by
   have h := (Pi.basisFun ℂ (Fin N)).linearIndependent.comp _ (S.orderEmbOfFin rfl).injective
   have e : (selM S)ᵀ = (Pi.basisFun ℂ (Fin N)) ∘ (S.orderEmbOfFin rfl) := funext fun b => selM_transpose S b
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem linearIndependent_mul_selM {h : Matrix (Fin N) (Fin N) ℂ} (hd : h.det ≠ 0) (S : Finset (Fin N)) :
     LinearIndependent ℂ (h * selM S)ᵀ := by
@@ -94,8 +93,7 @@ theorem linearIndependent_mul_selM {h : Matrix (Fin N) (Fin N) ℂ} (hd : h.det 
     funext b
     ext a
     rfl
-  rw [e]
-  exact this
+  rwa [e]
 
 theorem minor_pos {G : Matrix (Fin N) (Fin N) ℂ} (hG : G.PosDef) (S : Finset (Fin N)) :
     0 < minorIJ G S S := by

@@ -460,8 +460,7 @@ theorem UpperTheory.exists_continuous_isGam_of_torus_cocycle :
       exact (algebraMap ℚ_[l] E).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
     refine isOfFinOrder_iff_pow_eq_one.2 ⟨2 * e - 1, by have := hD.e_pos; omega, ?_⟩
     apply Units.map_injective (f := (algebraMap ℤ_[l] E : ℤ_[l] →* E)) inj
-    rw [map_pow, map_one]
-    exact h1
+    rwa [map_pow, map_one]
   have hbot : H0dual ((cycA l l E).comp (MonoidHom.id (GQ l))) (resCoef E (chRep T.χ2)) = ⊥ := by
     rw [eq_bot_iff]
     intro f hf
@@ -617,8 +616,7 @@ theorem UpperTheory.exists_crystalline_triangular_lift_of_mem_finiteCocycles :
     simp only [div_eq_mul_inv, MonoidHom.mul_apply, Units.val_mul, Prod.smul_mk, smul_eq_mul]
     ext <;> simp only [] <;> ring
   have hc' : (fun g => ((c g).1, y g)) = c := funext fun g => by rw [← hc2 g]
-  rw [hT, hc']
-  exact hcT
+  rwa [hT, hc']
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.ExistsCrystallineTriangularLiftOfMemFiniteCocycl =====
@@ -766,11 +764,11 @@ theorem UpperTheory.exists_torus_coords_of_unipotent :
     have hg := hab g
     simp only [Tor.χ2_apply, Tor.adjointSuperdiagRep_apply, omg]
     rcases hc with ⟨e, -, rfl, rfl, rfl⟩ | ⟨e, -, rfl, rfl, rfl⟩
-    · simp only [e, if_true]
+    · simp only [e, ite_true]
       rw [hx, hy, hz]
       push_cast
       linear_combination (-(x g * ((t g 1 / t g 2 : Bˣ) : B) * y g')) * h2 - (h * x g' * y g') * hg
-    · simp only [e, hne, if_false]
+    · simp only [e, hne, ite_false]
       rw [hx, hy, hz]
       push_cast
       linear_combination (((t g 1 / t g 2 : Bˣ) : B) * x g * x g' - ((t g 0 / t g 2 : Bˣ) : B) * x g' * y g') * h2 - (h * x g' * y g') * hg
@@ -823,8 +821,7 @@ private theorem exp_onto {B : Type} [CommRing B] [Algebra ℚ B] :
         rw [mul_pow, ← pow_mul, pow_eq_zero_of_le (by omega : k + 1 ≤ 2 * (k / 2 + 1)) hn, zero_mul]
       obtain ⟨y, hy, hey⟩ := ih (k / 2) (by omega) _ hm
       refine ⟨n + y, nil_add hnil hy, ?_⟩
-      rw [exp_add_of_commute (Commute.all n y) hnil hy, hey]
-      exact h1
+      rwa [exp_add_of_commute (Commute.all n y) hnil hy, hey]
 
 private theorem cont_exp {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B] [Algebra ℚ B] [Algebra ℚ_[l] B]
     [TopologicalSpace B] [IsTopologicalRing B] [ContinuousSMul ℚ_[l] B] {X : Type} [TopologicalSpace X]
@@ -837,8 +834,7 @@ private theorem cont_exp {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B] [Algeb
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Algebra.smul_def, smul_pow]
   simp only [e]
-  refine continuous_finsetSum _ fun i _ => ?_
-  exact continuous_const.mul ((hf.pow i).smul continuous_const)
+  exact continuous_finsetSum _ fun i _ => continuous_const.mul ((hf.pow i).smul continuous_const)
 
 private theorem continuous_exp_nilpotent_pair {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B] [Algebra ℚ B] [Algebra ℚ_[l] B]
     [TopologicalSpace B] [IsTopologicalRing B] [ContinuousSMul ℚ_[l] B] {X : Type} [TopologicalSpace X]
@@ -867,10 +863,10 @@ private theorem tor_inv_apply_eq_ite_rev {G : Type} [Group G] {η : G →* ℤˣ
   have h := T.mul a a⁻¹
   split_ifs with ha
   · have h1 := h i
-    rw [mul_inv_cancel, T.t_one, if_pos ha] at h1
+    rw [mul_inv_cancel, T.t_one, ite_eq_left ha] at h1
     exact eq_inv_of_mul_eq_one_right h1.symm
   · have h1 := h i.rev
-    rw [mul_inv_cancel, T.t_one, if_neg ha, Fin.rev_rev] at h1
+    rw [mul_inv_cancel, T.t_one, ite_eq_right ha, Fin.rev_rev] at h1
     exact (mul_inv_eq_one.mp h1.symm).symm
 
 private theorem tor_ext {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} {B B' : Type} [CommRing B] [CommRing B']
@@ -912,8 +908,7 @@ private theorem tor_ext {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} {B B' : 
     exact ⟨fun g hg i => (key g i).1 (hI g hg i), fun i => (key σ i).1 (hs i)⟩
   have htop := Subgroup.topologicalClosure_minimal _ hle hS
   rw [frobDense σ hσ] at htop
-  intro i
-  exact (key g i).2 (htop (Subgroup.mem_top g) i)
+  exact fun i => (key g i).2 (htop (Subgroup.mem_top g) i)
 
 private theorem scal_cocycle {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} (hI : ∀ g ∈ Iq l, η g = 1)
     (hlc : IsLocallyConstant η) {σ : GQ l} (hσ : IsFrob σ) :
@@ -1000,9 +995,9 @@ theorem UpperTheory.exists_torus_lift_to_nilpotent_thickening :
   have ha : ∀ g h i, a (g * h) i = a g i + if η g = 1 then a h i else -a h i.rev := by
     intro g h i
     rcases Int.units_eq_one_or (η g) with h1 | h1
-    · simp only [a, hcm, hdm', h1, if_pos, Units.val_one, Int.cast_one, one_mul, add_smul]
+    · simp only [a, hcm, hdm', h1, ite_eq_left, Units.val_one, Int.cast_one, one_mul, add_smul]
       abel
-    · rw [if_neg (by rw [h1]; decide)]
+    · rw [ite_eq_right (by rw [h1]; decide)]
       simp only [a, hcm, hdm', h1, hs, hu, Units.val_neg, Units.val_one, Int.cast_neg, Int.cast_one,
         neg_one_mul, add_smul, neg_smul, smul_neg]
       abel
@@ -1032,11 +1027,11 @@ theorem UpperTheory.exists_torus_lift_to_nilpotent_thickening :
   have hX1 : ∀ g h i, η g = 1 → XU (g * h) i = XU g i * XU h i := by
     intro g h i h1
     apply Units.ext
-    rw [Units.val_mul, hXU, hXU, hXU, ha, if_pos h1,
+    rw [Units.val_mul, hXU, hXU, hXU, ha, ite_eq_left h1,
       exp_add_of_commute (Commute.all _ _) (han g i) (han h i)]
   have hX2 : ∀ g h i, ¬ η g = 1 → (XU (g * h) i : B) * XU h i.rev = XU g i := by
     intro g h i h1
-    rw [hXU, hXU, hXU, ha, if_neg h1,
+    rw [hXU, hXU, hXU, ha, ite_eq_right h1,
       ← exp_add_of_commute (Commute.all _ _) (nil_add (han g i) (han h i.rev).neg) (han h i.rev),
       neg_add_cancel_right]
   let T : Tor η B := ⟨fun g i => EU g i * XU g i, by
@@ -1074,8 +1069,7 @@ theorem UpperTheory.exists_torus_lift_to_nilpotent_thickening :
   have hπexp : ∀ g i, π (exp (a g i)) = 1 := by
     intro g i
     have h0 := hEnil _ ((isNilpotent_exp_sub_one (han g i)).map π)
-    rw [map_sub, map_one, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, map_one, sub_eq_zero] at h0
   have hG : T.Good π Ψ := by
     refine ⟨fun i => ?_, fun i => ?_, fun g hg i => ?_, fun g i => ?_⟩
     · have e1 : (fun g => (T.t g i : B)) =
@@ -1199,11 +1193,11 @@ theorem UpperTheory.exists_unipotent_from_torus_coords :
     · simp only [F, SemidirectProduct.mul_left]
       rcases Int.units_eq_one_or (η g) with he | he
       · rw [he, sgnAct_one, triGL_mul]
-        rw [Tor.adjointSuperdiagRep_apply, if_pos he] at hb
-        rw [Tor.adjointSuperdiagRep_apply, if_pos he, Tor.χ2_apply, he] at hc
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_left he] at hb
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_left he, Tor.χ2_apply, he] at hc
         apply triGL_congr
         · funext i
-          rw [T.mul, if_pos he]
+          rw [T.mul, ite_eq_left he]
         · rw [hb]; rfl
         · rw [hb]; rfl
         · rw [hc, hb, hab]
@@ -1211,11 +1205,11 @@ theorem UpperTheory.exists_unipotent_from_torus_coords :
           linear_combination ((β g).1 * ((T.t g 1 / T.t g 2 : Bˣ) : B) * (β g').2) * hh
       · have hne : η g ≠ 1 := by rw [he]; decide
         rw [he, sgnAct_neg_one, theta_triGL, triGL_mul]
-        rw [Tor.adjointSuperdiagRep_apply, if_neg hne] at hb
-        rw [Tor.adjointSuperdiagRep_apply, if_neg hne, Tor.χ2_apply, he] at hc
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_right hne] at hb
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_right hne, Tor.χ2_apply, he] at hc
         apply triGL_congr
         · funext i
-          rw [T.mul, if_neg hne]
+          rw [T.mul, ite_eq_right hne]
         · rw [hb]
           simp only [Prod.fst_add]
           ring
@@ -1228,8 +1222,7 @@ theorem UpperTheory.exists_unipotent_from_torus_coords :
           linear_combination (((T.t g 0 / T.t g 1 : Bˣ) : B) * ((T.t g 1 / T.t g 2 : Bˣ) : B) *
             (β g').1 * (β g').2 - ((T.t g 1 / T.t g 2 : Bˣ) : B) * (β g).1 * (β g').1) * hh
     · simp only [F, SemidirectProduct.mul_right, map_mul]
-  refine ⟨MonoidHom.mk' F hmul, ?_⟩
-  exact Tor.Coord.mk (fun g => rfl) (fun g => rfl)
+  exact ⟨MonoidHom.mk' F hmul, Tor.Coord.mk (fun g => rfl) (fun g => rfl)⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.ExistsUnipotentFromTorusCoords =====
@@ -1310,7 +1303,7 @@ theorem UpperTheory.mem_finiteCocycles_iff_restrict_subgroup_mem :
       (chRep (T.ch H hD.ηH 0 / T.ch H hD.ηH 1) g v.1, chRep (T.ch H hD.ηH 1 / T.ch H hD.ηH 2) g v.2) := by
     intro g v
     change T.M1 g v = _
-    rw [Tor.adjointSuperdiagRep_apply, if_pos (hD.ηH g g.2)]
+    rw [Tor.adjointSuperdiagRep_apply, ite_eq_left (hD.ηH g g.2)]
     rfl
   rw [z1fDesc (MonoidHom.id (GQ l)) T.M1 H β hβ, MonoidHom.id_comp]
   constructor
@@ -1360,7 +1353,7 @@ private theorem multiplicity_one_positive {l : ℕ} [Fact l.Prime] {E : Type} [F
     have hu : ∀ i, T.t g i = Units.map (algebraMap E B : E →* B) (Ψ g ^ wt1 i) := fun i =>
       Units.ext (hT.ine g hg' i)
     change T.M1 g x = ((cycA l l E g ^ (e : ℤ) : Eˣ) : E) • x
-    rw [zpow_natCast, ← hD.ΨH g g.2 hg', Tor.adjointSuperdiagRep_apply, if_pos (hD.ηH g g.2)]
+    rw [zpow_natCast, ← hD.ΨH g g.2 hg', Tor.adjointSuperdiagRep_apply, ite_eq_left (hD.ηH g g.2)]
     simp only [hu, w0, w1, w2, ← map_div]
     ext <;> simp [Algebra.smul_def]
   · let ε : GQ l →* Eˣ := (Units.map (Int.castRingHom E : ℤ →* E)).comp η
@@ -1633,8 +1626,7 @@ private theorem gamCr : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] 
     exact Submodule.neg_mem _ (diff z₀ (resH u H r1) cz₀ (fun g => cu.mat g)).1
   have cχ := T.continuous_χ2 hD.ηlc hT.cont hT.cont_inv
   have cρ : Continuous fun g => (ρ g : Matrix (Fin 3) (Fin 3) B) := by
-    simp only [hρ]
-    exact continuous_triM hch.cont cx cy cz
+    simpa only [hρ] using continuous_triM hch.cont cx cy cz
   have fac : ∀ g : H, GG.ofGL (ρ g) = GG.ofGL (nE ((z - z₀) g)) * u g := by
     intro g
     refine SemidirectProduct.ext (Units.ext ?_) (by simp [r1 g g.2])
@@ -1780,7 +1772,7 @@ theorem UpperTheory.V.Loc.triLift :
   have cu' : ∀ a b, Continuous fun g => (u' g).mat a b := hu'.cont
   have hD : TriDat D.η Ψ D.HL D.e := triDat D E (by
     have : (fun g => algebraMap O E (D.Ψ g)) = fun g => π' ((u' g).mat 0 0) := funext fun g => by
-      rw [red', if_pos rfl, ← hpow]
+      rw [red', ite_eq_left rfl, ← hpow]
       simp [wt1]
     rw [this]
     exact cπ'.comp (cu' 0 0))
@@ -1805,7 +1797,7 @@ theorem UpperTheory.V.Loc.triLift :
       ine := fun g hg i => by
         rw [d', triDiag D E B' π' hπ' u' hu' g hg i, IsScalarTower.algebraMap_apply O E B', ← hpow]
         rfl
-      red := fun g i => by rw [d', red', if_pos rfl] }
+      red := fun g i => by rw [d', red', ite_eq_left rfl] }
   have e1 : ∀ g, (β' g).1 = (u' g).mat 0 1 * ((T'.t g 1)⁻¹ : B'ˣ) := fun g => by
     rw [c'.mat]
     simp [triM]
@@ -1826,7 +1818,7 @@ theorem UpperTheory.V.Loc.triLift :
     rw [funext e3]
     exact ((cu' 0 2).mul (hT'.cont_inv 2)).sub ((continuous_const.mul c1).mul c2)
   have β0' : ∀ g, π' (β' g).1 = 0 := fun g => by
-    rw [e1, map_mul, red', if_neg (by decide), zero_mul]
+    rw [e1, map_mul, red', ite_eq_right (by decide), zero_mul]
   have fβ' : β' ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) T'.M1 := by
     obtain ⟨ρ, hρ, hcr⟩ := hu'.cr
     refine (UpperTheory.mem_finiteCocycles_iff_restrict_subgroup_mem hD π' hπ' T' hT' β' ⟨cβ', zβ'⟩).2 ?_

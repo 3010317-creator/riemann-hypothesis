@@ -94,8 +94,7 @@ theorem sigR_compFin {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F
 theorem compFin_cA (z : AE D) :
     sigR _ D.sp.cm.sig (compFin D.host.F D.host.E v z) = compFin D.host.F D.host.E v (cA D z) := by
 
-  have h := sigR_compFin D.sp.cm.sig v z
-  exact h
+  exact sigR_compFin D.sp.cm.sig v z
 
 private theorem idem_inl_eq_tensAt_one (D : D7) (v : FinPl D) :
     GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.idem D (.inl v) = GlobalTheory.EmbChart.tensAt D.host.E v 1 := by
@@ -142,8 +141,7 @@ theorem exists_emb {e : AE D} {PP : Formalism.L2.DIV.Pl D.host.E} (he : Formalis
     intro u
     by_cases hu : u = w
     · subst hu
-      rw [singleV, RestrictedProduct.single_eq_same]
-      exact hαw
+      rwa [singleV, RestrictedProduct.single_eq_same]
     · rw [singleV, RestrictedProduct.single_eq_of_ne _ _ hu]
       exact hαo u hu
   subst hα

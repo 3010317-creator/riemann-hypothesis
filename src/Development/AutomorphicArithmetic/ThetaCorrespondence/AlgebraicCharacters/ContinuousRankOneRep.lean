@@ -333,8 +333,7 @@ theorem UpperTheory.Lit.CharWD.chBasic :
       hcyc ⟨σ, Weil_le_Dec h σ.2⟩
     rw [h2, ← map_mul, mul_inv_cancel_left₀ (Units.ne_zero _), inv_zpow', neg_neg, map_zpow₀, map_natCast,
       alpha, zpow_mul, zpow_natCast, ← Nat.cast_pow, ← normV_eq_pow (hj.mem_placesOver h)] at key
-    have e := eigW _ _ H σ
-    exact (ι.injective (Multiset.mem_singleton.mp (e ▸ key))).symm
+    exact (ι.injective (Multiset.mem_singleton.mp ((eigW _ _ H σ) ▸ key))).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.AlgebraicCharacters.ChBasic =====
@@ -748,14 +747,12 @@ theorem UpperTheory.Lit.CharWD.exField :
   obtain ⟨t, ht, hts⟩ := isOpen_induced_iff.mp (hV'.preimage ha.cont)
   have h1t : (1 : G F Ω) ∈ t := by
     have : (1 : Ine (F := F) A) ∈ (fun σ : Ine (F := F) A => a (ineIncl h σ)) ⁻¹' V' := by simpa using h1
-    rw [← hts] at this
-    exact this
+    rwa [← hts] at this
   obtain ⟨U, hU, hσU, H⟩ := open_sub h σ hσ t ht h1t
   let F' := IntermediateField.fixedField U
   have hfix : F'.fixingSubgroup = U := InfiniteGalois.fixingSubgroup_fixedField ⟨U, U.isClosed_of_isOpen hU⟩
   haveI : FiniteDimensional F F' := by
-    rw [← InfiniteGalois.isOpen_iff_finite, hfix]
-    exact hU
+    rwa [← InfiniteGalois.isOpen_iff_finite, hfix]
   haveI nf : NumberField F' := NumberField.of_module_finite F F'
   haveI ac : IsAlgClosure F' Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) _⟩
   obtain ⟨w', h', hle⟩ := place_above (L := F') h

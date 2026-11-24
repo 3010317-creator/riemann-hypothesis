@@ -92,8 +92,7 @@ private lemma Jm_mp : MeasurePreserving (Jm (v := v)) (μ2 v) (μ2 v) := by
       (MeasurableEquiv.piCongrLeft (fun _ : Fin 2 => Kv v) (Equiv.swap (0 : Fin 2) 1)) := by
     funext c i
     fin_cases i <;> simp [Jm, MeasurableEquiv.piCongrLeft, Equiv.piCongrLeft_apply]
-  rw [hf]
-  exact h
+  rwa [hf]
 
 private lemma cols_col (c c' : Fin 2 → Kv v) : (fun i => cols c c' i 1) = c' := by
   funext i; fin_cases i <;> simp [cols]
@@ -128,8 +127,7 @@ private lemma slice_mem {a : M2 v → ℂ} (ha : a ∈ SB (M2 v)) (c : Fin 2 →
     refine continuous_matrix fun i j => ?_
     fin_cases i <;> fin_cases j <;> simp [cols] <;> fun_prop
   have hr : Continuous fun X : M2 v => (fun i => X i 1 : Fin 2 → Kv v) := by
-    refine continuous_pi fun i => ?_
-    exact (continuous_id.matrix_elem i 1)
+    exact continuous_pi fun i => (continuous_id.matrix_elem i 1)
   have he : IsClosedEmbedding fun c' : Fin 2 → Kv v => cols c c' :=
     Function.LeftInverse.isClosedEmbedding (f := fun X : M2 v => (fun i => X i 1 : Fin 2 → Kv v))
       (fun c' => cols_col c c') hr hc

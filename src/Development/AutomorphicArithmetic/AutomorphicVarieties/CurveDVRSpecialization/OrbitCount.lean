@@ -166,10 +166,8 @@ theorem UpperTheory.V.Pr.degEq :
       ext s
       unfold galOf upl
       constructor
-      · intro h x hx
-        exact h ⟨x, hx⟩
-      · intro h x
-        exact h x.1 x.2
+      · exact fun h x hx => h ⟨x, hx⟩
+      · exact fun h x => h x.1 x.2
     have hidx : (upl Ω L).index = Module.finrank ℚ (W.Lp L) := by
       rw [← hgal]
       exact (galEmbTop ℚ (W.Lp L) Ω).2.2
@@ -180,8 +178,7 @@ theorem UpperTheory.V.Pr.degEq :
     · intro v
       obtain ⟨γ, -, h⟩ := k.pl_conj v
       exact ⟨γ, h⟩
-    · intro g
-      exact k.pl_all (g • B) (val_smul g B l hL.atl)
+    · exact fun g => k.pl_all (g • B) (val_smul g B l hL.atl)
   · rintro ⟨ζ, hζ⟩
     obtain ⟨g, hg⟩ := k.mu a
     apply hg

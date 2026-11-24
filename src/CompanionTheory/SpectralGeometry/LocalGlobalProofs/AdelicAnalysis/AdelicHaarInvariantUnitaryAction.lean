@@ -322,7 +322,7 @@ lemma mem_of_unit_pivot {s : Finset ι} {k : ι}
         simp [hv, hx, hD]
         rw [mul_comm]; exact hui
       · have : A i i * ui = 1 := hui
-        simp only [hv, hx, if_true, hj, if_false, hD, Function.update_self,
+        simp only [hv, hx, ite_true, hj, ite_false, hD, Function.update_self,
           Matrix.one_apply, Ne.symm hj]
         linear_combination (-(ui * A i j)) * this
     · by_cases hj : j = k
@@ -333,7 +333,7 @@ lemma mem_of_unit_pivot {s : Finset ι} {k : ι}
       · have hDi : D i = 1 := by simp [hD, Function.update_of_ne hi]
         have hvx : (A i k + v i * A k k) = 0 := by
           have : A k k * ui = 1 := hui
-          simp only [hv, hi, if_false]
+          simp only [hv, hi, ite_false]
           linear_combination (-A i k) * this
         rw [hDi, hvx, zero_mul, add_zero, one_mul]
         rcases hij with h | h
@@ -350,8 +350,7 @@ lemma mem_of_unit_pivot {s : Finset ι} {k : ι}
     rw [hA4, Matrix.det_mul, Matrix.det_mul, Matrix.det_mul]
     exact (isUnit_det_of_mem hDm).mul
       (((isUnit_det_of_mem hCm).mul hA).mul (isUnit_det_of_mem hRm))
-  have h4 := ih A4 hdet hF4
-  exact mem_of_mul_left hCm (mem_of_mul_right hRm (mem_of_mul_left hDm h4))
+  exact mem_of_mul_left hCm (mem_of_mul_right hRm (mem_of_mul_left hDm (ih A4 hdet hF4)))
 
 lemma exists_unit_pivot (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + t * b))
     {s : Finset ι} {k : ι} {A : Matrix ι ι R} (hA : IsUnit A.det)
@@ -394,14 +393,13 @@ lemma exists_unit_pivot (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + 
         rcases hij with h | h
         · exact absurd (Finset.mem_insert_self _ _) h
         · exact h
-      rw [if_pos rfl, hwsum, hF i j (Or.inr hj), Finset.sum_eq_zero, mul_zero, add_zero]
+      rw [ite_eq_left rfl, hwsum, hF i j (Or.inr hj), Finset.sum_eq_zero, mul_zero, add_zero]
       intro l hl
       have hlj : l ≠ j := fun h => hj (h ▸ Finset.mem_insert_of_mem hl)
       rw [hF l j (Or.inr hj), Matrix.one_apply_ne hlj, mul_zero]
-    · rw [if_neg hi, add_zero]
+    · rw [ite_eq_right hi, add_zero]
       exact hF i j hij
-  · rw [rowOp_mul_apply, if_pos rfl, hwsum]
-    exact ht
+  · rwa [rowOp_mul_apply, ite_eq_left rfl, hwsum]
 
 lemma mem_of_fixed (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + t * b))
     (s : Finset ι) : ∀ A : Matrix ι ι R, IsUnit A.det → Fixed s A → A ∈ elem R ι := by
@@ -609,8 +607,7 @@ theorem map_mulVec_eq_of_transpose_mul_mul_eq :
       _ = scale B * 1 := (mul_one _).symm
   have h1 : scale g = 1 := (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 hsq
   have hmap := addEquivAddHaarChar_smul_map μ (mulVecEquiv g hg)
-  rw [← scale_of_isUnit hg, h1, one_smul] at hmap
-  exact hmap
+  rwa [← scale_of_isUnit hg, h1, one_smul] at hmap
 
 end GlobalTheory.CompanionTheory.Adelic.OrthHaar
 end -- clump:auto
@@ -691,8 +688,7 @@ theorem GlobalTheory.CompanionTheory.SW.HaarInv.actW_map_eq : ∀ (F E : Type) [
     intro X
     have := hconj X
     funext p
-    have hp := congrFun this p
-    simpa [e, tupEquiv, Φ, GlobalTheory.CompanionTheory.SW.TopK.coordHomeo] using hp
+    simpa [e, tupEquiv, Φ, GlobalTheory.CompanionTheory.SW.TopK.coordHomeo] using congrFun this p
   have hdet : IsUnit (B.map (algebraMap F (AF F))).det := by
     have : (B.map (algebraMap F (AF F))).det = algebraMap F (AF F) B.det := by
       rw [RingHom.map_det]

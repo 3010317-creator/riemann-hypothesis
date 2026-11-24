@@ -73,8 +73,7 @@ theorem isEmbedding_valGL : IsEmbedding (Units.val : GL (Fin m) k → Matrix (Fi
     have hd : A.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det A).1 hA).ne_zero
     rw [Ring.inverse_eq_inv']
     exact continuousAt_inv₀ hd
-  · intro u
-    exact (Matrix.coe_units_inv u).symm
+  · exact fun u => (Matrix.coe_units_inv u).symm
 
 theorem range_valGL :
     Set.range (Units.val : GL (Fin m) k → Matrix (Fin m) (Fin m) k) = {A | A.det ≠ 0} := by
@@ -143,12 +142,12 @@ theorem cutFun_mem (U : Set k) (hU : IsClopen U) (h0 : (0 : k) ∉ U) (ψ : SB (
     · have h2 : ∀ᶠ x' in 𝓝 x, (x'.val).det ∈ U :=
         hdet.continuousAt.preimage_mem_nhds (hU.isOpen.mem_nhds hx)
       filter_upwards [h2, h1 x] with x' hx' h'
-      simp only [cutFun, if_pos hx, if_pos hx', h']
+      simp only [cutFun, ite_eq_left hx, ite_eq_left hx', h']
     · have h2 : ∀ᶠ x' in 𝓝 x, (x'.val).det ∈ Uᶜ :=
         hdet.continuousAt.preimage_mem_nhds (hU.isClosed.isOpen_compl.mem_nhds hx)
       filter_upwards [h2] with x' hx'
       have hx'' : (x'.val).det ∉ U := hx'
-      simp only [cutFun, if_neg hx, if_neg hx'']
+      simp only [cutFun, ite_eq_right hx, ite_eq_right hx'']
   · have hK : IsCompact (tsupport ψ.1 ∩ (fun A : Matrix (Fin m) (Fin m) k => A.det) ⁻¹' U) :=
       ψ.2.2.isCompact.inter_right (hU.isClosed.preimage continuous_id.matrix_det)
     have hKr : tsupport ψ.1 ∩ (fun A : Matrix (Fin m) (Fin m) k => A.det) ⁻¹' U ⊆
@@ -201,8 +200,7 @@ theorem exists_clopen_local (C : Set k) (hC : IsCompact C) (h0 : (0 : k) ∉ C) 
   have hWn : (W : Set k) ∈ 𝓝 (0 : k) := (IsValuativeTopology.hasBasis_nhds_zero' k).mem_of_mem hγ
   have hWo : IsOpen (W : Set k) := AddSubgroup.isOpen_of_mem_nhds W hWn
   refine ⟨(W : Set k)ᶜ, ⟨hWo.isClosed_compl, (AddSubgroup.isClosed_of_isOpen W hWo).isOpen_compl⟩, ?_, ?_⟩
-  · intro c hc hcW
-    exact hsub hcW hc
+  · exact fun c hc hcW => hsub hcW hc
   · exact fun h => h W.zero_mem
 
 end Dist

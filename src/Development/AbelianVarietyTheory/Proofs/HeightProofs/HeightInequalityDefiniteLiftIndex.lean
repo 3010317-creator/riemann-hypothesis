@@ -163,7 +163,7 @@ theorem exists_nat_comb {ι : Type} [Finite ι] {Ω : ι → Type} [∀ Z, Field
     have h1 := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q (k : ℕ)) h0
     simp only [p, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply,
       Polynomial.coeff_zero] at h1
-    rw [Finset.sum_eq_single k (fun b _ hb => if_neg fun e => hb (Fin.ext e)) (by simp), if_pos rfl] at h1
+    rw [Finset.sum_eq_single k (fun b _ hb => ite_eq_right fun e => hb (Fin.ext e)) (by simp), ite_eq_left rfl] at h1
     exact hk h1
   have hfin : ∀ Z, {t : ℕ | (p Z).IsRoot (t : Ω Z)}.Finite := fun Z =>
     Set.Finite.preimage (f := fun t : ℕ => (t : Ω Z)) Nat.cast_injective.injOn (Polynomial.finite_setOf_isRoot (hp Z))
@@ -258,8 +258,7 @@ theorem htSup_dat (hgt : GenFromTest Xo c h) (hfn : FnNe Xo c fn) (hfg : FnFG Xo
     cases i <;> simp [exZ]
   · refine hmean _ _ fun σ => le_trans ?_ (hta2 σ)
     have h2 := log_sup_le (h := h) (yP := yP) hfn hfg hcx h2S h2B h2N σ
-    rw [huta2] at h2
-    exact h2
+    rwa [huta2] at h2
 
 theorem htI2be_dat {rU : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ rU) (xR : ℝ)
     (htie : NrmTieU h fn yP U xR wR uL etR uL)
@@ -271,8 +270,7 @@ theorem htI2be_dat {rU : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ rU) (xR :
   have h1 := hI2 σ hσ k x hx
   show -Real.log (Real.sqrt (∑ j, nrmC fn (yP Z) (wtZ uL.1 uL.2) (valC h uL.1 uL.2 (wR j) Z) P ^ 2)) ≤
     tableLineDegreeFive * DF + (0 : ℝ) / _ * _ + (0 : ℝ) * tableLineDegreeTwo
-  simp only [hw, zero_div, zero_mul, add_zero]
-  exact h1
+  simpa only [hw, zero_div, zero_mul, add_zero] using h1
 
 theorem lawBdd_dat (hcx : ValAtCx h yP)
     (huta2 : wtZ uta2.1 uta2.2 = (Dd + 4 : ℕ) • wtZ uL.1 uL.2 - wtZ uF.1 uF.2)
@@ -353,8 +351,7 @@ theorem heights_of_first (d : Data B.KO ι Ω WT A) (hd : d.AxH 𝒜) (hs : d.S1
       (G.del : ℝ) * Real.log G.del + 2 * ∑ k, (d.htOf hd hs).S k +
       8 / 3 * (WeightFamilies.dimY D j : ℝ) * ((WeightFamilies.dimY D j : ℝ) + 4) * G.del * Prw * wL.size +
       2 * ((WeightFamilies.dimY D j : ℝ) + 4) * ((WeightFamilies.dimY D j : ℝ) + 1) * G.del * (2 * Gc + 6 * PH) * wL.size := by
-    rw [hDr, hδr, hL', hG', hPH', hPrw'] at hineq
-    exact hineq
+    rwa [hDr, hδr, hL', hG', hPH', hPrw'] at hineq
   show 2 * ∑' la : HeightOneSpectrum (𝓞 B.KO),
         (((toHtData G Qf Gc PH Prw Pet).Ila la).toNat : ℝ) * Formalism.MainNotions.Gaps.HeightData.lN B.KO la ≤
       (G.del : ℝ) * Real.log G.del + 2 * ∑ k, WeightFamilies.meanLogSup B (G.th' k) +
@@ -426,8 +423,7 @@ theorem basis_descends_record {D : D7} {B : WeightFamilies.Prov D} {P : ModuliIn
     (fun Z => GlobalTheory.CurveRecord.map_Jid_eq X la G.N (Ω Z) (gF Z) G.w) _ (fun _ _ => rfl) θ g hg
     (fun k Z => E (tL G la k) Z) (fun k Z => ?_) h1 h2
   have := hE (G.th' k) Z
-  rw [lwZ_alg, lwZ_alg, rzMap_emb, rzMap_emb, hgF, hθ] at this
-  exact this
+  rwa [lwZ_alg, lwZ_alg, rzMap_emb, rzMap_emb, hgF, hθ] at this
 
 
 open ReciprocityTheory.ChartRestriction.G.T0 in
@@ -601,7 +597,7 @@ theorem pn_frBor (hd : Dom a n) (hg : g ∈ sec Xo c a n) {σ : c.F →+* ℂ}
   · have hσ' : Formalism.L2.PjFree.GoodEmb c ((starRingEnd ℂ).comp σ) := by
       have := Formalism.L2.PjFree.goodEmb_goodOf c σ
       unfold Formalism.L2.PjFree.goodOf at this
-      rwa [if_neg hσ] at this
+      rwa [ite_eq_right hσ] at this
     have hL := (_root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
     obtain ⟨z, hz⟩ := hL.bc _ _ (conjAlg σ) y
     obtain ⟨z', hz'⟩ := hL.bc _ _ (conjAlg σ) y'
@@ -698,8 +694,7 @@ theorem supC_le_iSup_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       change cabs (evR Xo c g z) * _ = 0
       rw [h3]
       exact mul_eq_zero_of_left (norm_zero (E := ℂ)) _
-    rw [h4]
-    exact hnn
+    rwa [h4]
 
 end GlobalTheory.HeightDefinite.Generic
 end -- clump:auto
@@ -746,8 +741,7 @@ theorem supPTGe_of_fnPin : ∀ (D : D7) (T : Core D) (h : LawsCore T) (j : ℕ) 
       F.1 hFc g hg h1 h0 sg).2
     change cutN T.C T.Ns j ka sg ⟨g, hg'⟩ ≤ _
     unfold cutN
-    rw [if_pos hj]
-    exact h4
+    rwa [ite_eq_left hj]
 
 theorem exists_frame {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
     {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ}
@@ -762,11 +756,11 @@ theorem exists_frame {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Rec
     (fun σ => Formalism.L2.PjFree.Unf.ofPj (U σ)) hU xR fn hx hfn
   have hg := goodEmb_goodOf c σ
   by_cases hσ : GoodEmb c σ
-  · have e : goodOf c σ = σ := if_pos hσ
+  · have e : goodOf c σ = σ := ite_eq_left hσ
     rw [e]
     obtain ⟨k, x, t, ht⟩ := (hU σ hσ).2.2.1 y
     exact ⟨k, x, fun a n hd f hf => h2 σ hσ k x t y ht a n hd f hf⟩
-  · have e : goodOf c σ = (starRingEnd ℂ).comp σ := if_neg hσ
+  · have e : goodOf c σ = (starRingEnd ℂ).comp σ := ite_eq_right hσ
     rw [e] at hg ⊢
     obtain ⟨y', hy'⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _
       (GlobalTheory.FrameNorm.conjAlg σ) y
@@ -1023,10 +1017,10 @@ theorem eq_of_wtZ_eq {Q : Par D} (hp : Q.PinHost) {w w' : WeightFamilies.Wt D j}
 theorem exists_wsize {Q : Par D} (hp : Q.PinHost) (w w' : WeightFamilies.Wt D j) :
     ∃ s : WTZ D.host.E → ℝ, s (wtZ (wtA w) w.n) = w.size ∧ s (wtZ (wtA w') w'.n) = w'.size := by
   classical
-  refine ⟨fun u => if u = wtZ (wtA w) w.n then w.size else w'.size, if_pos rfl, ?_⟩
+  refine ⟨fun u => if u = wtZ (wtA w) w.n then w.size else w'.size, ite_eq_left rfl, ?_⟩
   by_cases e : wtZ (wtA w') w'.n = wtZ (wtA w) w.n
-  · exact (if_pos e).trans (by rw [eq_of_wtZ_eq hp e])
-  · exact if_neg e
+  · exact (ite_eq_left e).trans (by rw [eq_of_wtZ_eq hp e])
+  · exact ite_eq_right e
 
 end Weights
 
@@ -1167,8 +1161,7 @@ theorem secondHeightLaw_of_regularUniformisation {rU : ℕ} {U : ∀ σ : c.F �
   · obtain ⟨hd, hc⟩ := cases' hA
     have h0 := ord_nonneg_of_regP h δ hreg hT hTQ hdL heC heI hd hc (heN Z)
     show 0 ≤ ordC (δ Z v) v ((1 * 1 : ℕ) • wtZ uL.1 uL.2) (valC h uL.1 uL.2 etR Z)
-    rw [← wt_et]
-    exact h0
+    rwa [← wt_et]
   · show 0 ≤ ordC (δ Z v) v ((2 : ℕ) • (wtZ uL.1 uL.2 - wtZ uL.1 uL.2)) (valC h 0 0 1 Z)
     have hz : frW (δ Z v) (0 : WTZ E) = 0 := by
       simp only [frW]
@@ -1179,8 +1172,7 @@ theorem secondHeightLaw_of_regularUniformisation {rU : ℕ} {U : ∀ σ : c.F �
     exact le_rfl
   · obtain ⟨hd, hc⟩ := cases' hA
     have h0 := ord_nonneg_of_regP h δ hreg hT hTQ hd2 h2C h2I hd hc (h2N Z)
-    rw [huta2] at h0
-    exact h0
+    rwa [huta2] at h0
 
 theorem exists_htI2et : ∃ Pet : ℝ, 1 ≤ Pet ∧
     (dat h δ fn yP Dd N uL uF uta2 wR jc np thpR etR ta2R nu wsize DF PN PP0' Gc PI4 Pet tableLineDegreeFive tableLineDegreeTwo Prw PO).HeightIntegralEstimateTrivialPlace :=
@@ -1278,8 +1270,7 @@ theorem heights_definite :
     · show (0 : ℝ) * _ ≤ 1 / 2
       norm_num
     · show Real.log (N + 1 : ℕ) + 1 / 2 ≤ Prw * (ws (wtZ (wtA wL) wL.n) - 1)
-      rw [hwL, ← hN]
-      exact hrw
+      rwa [hwL, ← hN]
   have hnu' : NumericalH1Condition T.Q.c (fun la => nus la / (ramOverZ la : ℝ)) PN' (ws (wtZ (wtA wL) wL.n)) := by
     refine ⟨hnu.1, hnu.2.1, hnu.2.2.trans ?_⟩
     rw [hwL]

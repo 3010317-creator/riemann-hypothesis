@@ -118,8 +118,7 @@ theorem exists_isPrime_locIn_eq {A B : Subalgebra S Ω} (hAB : A ≤ B) {e : Ω}
       rcases hp.mem_or_mem h2 with h3 | h3
       · exact absurd h3 (hpow M)
       · exact h3
-    · intro ha
-      exact ⟨0, a, ha, by simp⟩
+    · exact fun ha => ⟨0, a, ha, by simp⟩
   refine ⟨P, hPprime, ?_⟩
   rw [locIn_eq_of_le_powMulMem hAB he hB P hPprime heP, hcomap]
 
@@ -172,8 +171,7 @@ theorem span_graphGens_eq (Q : Kleiman.LineBundle S x) (n : ℤ) (s : Fin m → 
     have : x i ^ (-n) * s b = y := by
       rw [hyb, smul_eq_mul, zpow_neg, ← mul_assoc, inv_mul_cancel₀ (zpow_ne_zero n hi), one_mul]
     show x i ^ (-n) * s b ∈ Q.sub I
-    rw [this]
-    exact hy
+    rwa [this]
   · intro y hy
     have hy' : x i ^ n * y ∈ Submodule.span (Kleiman.chartRing S x I) (Set.range s) := by
       rw [hgen I]
@@ -253,8 +251,7 @@ theorem GraphModel.full : GraphModel.Statement := by
         exact Ideal.sum_mem _ fun b _ => P.mul_mem_left _ (h b)
       obtain ⟨hAB', hle⟩ := hB b
       have hP' : (P.comap (Subalgebra.inclusion hAB')).IsPrime := Ideal.comap_isPrime _ _
-      refine ⟨fun _ => i, fun _ => hi, _, hP', ?_⟩
-      exact locIn_eq_of_le_powMulMem hAB' (hw j b) hle P hP hb
+      exact ⟨fun _ => i, fun _ => hi, _, hP', locIn_eq_of_le_powMulMem hAB' (hw j b) hle P hP hb⟩
     · rintro ⟨c, hc, p, hp, rfl⟩
       obtain ⟨i, rfl⟩ : ∃ i : Fin (N + 1), c = fun _ => i := ⟨c (), funext fun u => rfl⟩
       have hi : x i ≠ 0 := hc ()
@@ -266,8 +263,7 @@ theorem GraphModel.full : GraphModel.Statement := by
         rw [Ideal.eq_top_iff_one]
         have h1 : (1 : chartRingOver S (IndefiniteRowSideFullHecke.Kleiman2.oneBlock x) (fun _ => i)) = ∑ b, ⟨_, hw b b⟩ := by
           apply Subtype.ext
-          simp only [Subalgebra.coe_one, AddSubmonoidClass.coe_finsetSum]
-          exact hsum.symm
+          simpa only [Subalgebra.coe_one, AddSubmonoidClass.coe_finsetSum] using hsum.symm
         rw [h1]
         exact Ideal.sum_mem _ fun b _ => h b
       have hsj : s j ≠ 0 := by

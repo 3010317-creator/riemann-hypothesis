@@ -89,8 +89,7 @@ theorem idelesLocalRes_eq_of_algHom (ι ι' : ℚ̄ →ₐ[K.1] AlgebraicClosure
     idelesLocalRes ι' n = idelesLocalRes ι n := by
   obtain ⟨g, hg⟩ := exists_eq_comp_of_normal ι ι'
   have : ι' = ι.comp (fixingSubgroupEquiv K.1 ((fixingSubgroupEquiv K.1).symm g) : ℚ̄ →ₐ[K.1] ℚ̄) := by
-    rw [MulEquiv.apply_symm_apply]
-    exact hg
+    rwa [MulEquiv.apply_symm_apply]
   rw [this, idelesLocalRes_comp]
 
 end Finite
@@ -171,8 +170,7 @@ theorem infIdelesLocalRes_eq_of_algHom (ι ι' : ℚ̄ →ₐ[K.1] AlgebraicClos
     infIdelesLocalRes ι' n = infIdelesLocalRes ι n := by
   obtain ⟨g, hg⟩ := exists_eq_comp_of_normal ι ι'
   have : ι' = ι.comp (fixingSubgroupEquiv K.1 ((fixingSubgroupEquiv K.1).symm g) : ℚ̄ →ₐ[K.1] ℚ̄) := by
-    rw [MulEquiv.apply_symm_apply]
-    exact hg
+    rwa [MulEquiv.apply_symm_apply]
   rw [this, infIdelesLocalRes_comp]
 
 end Infinite

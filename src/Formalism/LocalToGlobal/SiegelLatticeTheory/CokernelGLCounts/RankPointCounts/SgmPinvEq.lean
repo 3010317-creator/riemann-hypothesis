@@ -43,11 +43,11 @@ theorem Xinv_q (y : FreeE w → D.host.E) (q : FreeE w) :
     (Xmat w y)⁻¹ q.1.1 q.1.2 = cf w y q - y q := by
   have h := inv_diff (Xmat_upU w y) (Xmat_upU w (trunc w y (hgt w q))) q.2.1 (fun i j hij hh => by
     by_cases hb : i < j ∧ blkOf w.1 i.val = blkOf w.1 j.val
-    · simp only [Xmat, ne_of_lt hij, if_false, dif_pos hb, trunc]
-      rw [if_pos (show hgt w ⟨(i, j), hb⟩ < hgt w q from hh)]
-    · simp only [Xmat, ne_of_lt hij, if_false, dif_neg hb])
+    · simp only [Xmat, ne_of_lt hij, ite_false, dite_eq_left hb, trunc]
+      rw [ite_eq_left (show hgt w ⟨(i, j), hb⟩ < hgt w q from hh)]
+    · simp only [Xmat, ne_of_lt hij, ite_false, dite_eq_right hb])
   rw [Xmat_q, Xmat_q] at h
-  have h0 : trunc w y (hgt w q) q = 0 := by unfold trunc; rw [if_neg (lt_irrefl _)]
+  have h0 : trunc w y (hgt w q) q = 0 := by unfold trunc; rw [ite_eq_right (lt_irrefl _)]
   rw [h0] at h
   unfold cf
   linear_combination h
@@ -97,16 +97,14 @@ theorem condX_iff (y : FreeE w → D.host.E) :
       have e := hgt_qbar w q
       unfold hgt at e
       simp only [qbar, pinv_pinv] at h1 e
-      rw [e, Xmat_q] at h1
-      exact h1
+      rwa [e, Xmat_q] at h1
     refine ⟨hy, fun q => ?_⟩
     obtain ⟨-, -, h3⟩ := h (qbar w q).1.1 (qbar w q).1.2 (qbar w q).2.1 (qbar w q).2.2
     rw [condX_third w _ _ _ (qbar w q).2.2] at h3
     have e := hgt_qbar w q
     unfold hgt at e
     simp only [qbar, pinv_pinv] at h3 e
-    rw [e] at h3
-    exact h3
+    rwa [e] at h3
   · rintro ⟨hy, hE⟩ a c hac hs
     have hG := grD_inv (Xmat_upU w y) (Xmat_grD w y hy)
     set p : FreeE w := qbar w ⟨(a, c), hac, hs⟩ with hp

@@ -274,8 +274,7 @@ lemma exists_fixed : ∃ δ : g →ₗ[R] Module.End R (MvPolynomial ι R ⊗[R]
     intro n
     induction n with
     | zero =>
-      intro k x
-      exact eq_on_degLt _ _ fun α v h => absurd h (Nat.not_lt_zero _)
+      exact fun k x => eq_on_degLt _ _ fun α v h => absurd h (Nat.not_lt_zero _)
     | succ n ih =>
       intro k
       rw [show n + 1 + k = (n + k) + 1 by omega, hd, hd]
@@ -387,11 +386,11 @@ lemma defect_e (i : ι) (J : ι →₀ ℕ) (hJ : ∀ j ∈ J.support, i ≤ j) 
     suffices h : defect c δ (zv J v) (e j) (e i) = 0 by rw [h, smul_zero]
     rcases lt_trichotomy i j with h | rfl | h
     · rw [defect_apply, comm_high hce hf i J hJ _ fun k hk => by
-        rw [hce, if_neg (hk.trans_lt h).ne]]
+        rw [hce, ite_eq_right (hk.trans_lt h).ne]]
       abel
     · simp [defect_apply]
     · rw [defect_swap, defect_apply, comm_high hce hf j J (fun k hk => h.le.trans (hJ k hk)) _
-        fun k hk => by rw [hce, if_neg (hk.trans_lt h).ne]]
+        fun k hk => by rw [hce, ite_eq_right (hk.trans_lt h).ne]]
       abel
 
 omit hce hf [LinearOrder ι] in
@@ -550,8 +549,7 @@ theorem symProd_mem_UgF {p q k m : ℕ} (x : Fin m → Mat p q) (h : m ≤ k) :
   unfold symProd
   refine Submodule.smul_mem _ _ (Submodule.sum_mem _ fun σ _ => ?_)
   have hmem := prod_mem_UgF (k := k) (List.ofFn fun i => x (σ i)) (by rw [List.length_ofFn]; exact h)
-  rw [List.map_ofFn] at hmem
-  exact hmem
+  rwa [List.map_ofFn] at hmem
 
 theorem symU_mem_UgF {p q k : ℕ} (f : MvPolynomial (PIx p q) ℂ) (hf : f.IsHomogeneous k) :
     symU p q f ∈ UgF p q k := by
@@ -588,8 +586,7 @@ private lemma mkQ_tmul_prod_mem_indFlt_sup {p q : ℕ} {V : Type} [AddCommGroup 
         (TensorProduct.tmul ℂ (⟨_, hP⟩ : homog (PIx p q) l.length) v), LinearMap.mem_range_self _ _, ?_⟩
       simp only [LinearMap.comp_apply, LinearMap.rTensor_tmul, Submodule.subtype_apply]
     have hsum := Submodule.add_mem_sup (hc l v) hs
-    rw [sub_add_cancel] at hsum
-    exact hsum
+    rwa [sub_add_cancel] at hsum
 
 theorem indF_eq_sup (p q : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V]
     (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (hc : SymbolCongr act) (k : ℕ) :
@@ -793,12 +790,11 @@ private lemma sum_unitP_apply (x : Mat p q) (c d : Ix p q) :
     · intro ab _ hab
       have hne : ¬ (ab.1.1 = c ∧ ab.1.2 = d) := fun e => hab (Subtype.ext (Prod.ext e.1 e.2))
       simp [unitP, Eab, Matrix.single_apply_of_ne (h := hne)]
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
 
 private lemma isKC_sub_sum_unitP (x : Mat p q) : IsKC (x - ∑ ab : PIx p q, x ab.1.1 ab.1.2 • unitP ab) := by
   intro c d h
-  rw [Matrix.sub_apply, sum_unitP_apply, if_neg h, sub_self]
+  rw [Matrix.sub_apply, sum_unitP_apply, ite_eq_right h, sub_self]
 
 theorem mixed_mem (v : V) (l : List (Mat p q)) : ∀ a : List (PIx p q),
     cls act v (prodU (a.map unitP) * prodU l) -
@@ -852,8 +848,7 @@ theorem mixed_mem (v : V) (l : List (Mat p q)) : ∀ a : List (PIx p q),
       rwa [e] at h
     · have h := cls_mem_of_kc act v (a.map unitP) l hY
       have e : a.length + (l.length + 1) = a.length + (x :: l).length := by simp
-      rw [List.length_map, e] at h
-      exact h
+      rwa [List.length_map, e] at h
 
 end GlobalTheory.InducedPBW.Symbol
 
@@ -898,8 +893,7 @@ theorem pLin_unitP (ab : PIx p q) : pLin (unitP ab) = MvPolynomial.X ab := by
     have hne : ¬ (ab.1.1 = c.1.1 ∧ ab.1.2 = c.1.2) := fun hh =>
       hc (Subtype.ext (Prod.ext hh.1.symm hh.2.symm))
     simp [unitP, Eab, hne]
-  · intro hab
-    exact absurd (Finset.mem_univ ab) hab
+  · exact fun hab => absurd (Finset.mem_univ ab) hab
 
 theorem ug_comm (Y Z : Mat p q) :
     ugι p q (Y * Z - Z * Y) = ugι p q Y * ugι p q Z - ugι p q Z * ugι p q Y := by
@@ -1038,8 +1032,7 @@ theorem monomial_mem (h : SymbolCongr act) {Y : Mat p q} (hY : IsKC Y) (v : V)
   apply sub_inv_factorial_smul_sum_mem
   intro σ
   have hσ := list_mem act h hY v (List.ofFn fun i => (Finsupp.toMultiset α).toList.get (σ i))
-  rw [prod_ofFn_perm_map_X_eq_prod, toList_prod, List.length_ofFn] at hσ
-  exact hσ
+  rwa [prod_ofFn_perm_map_X_eq_prod, toList_prod, List.length_ofFn] at hσ
 
 theorem homog_mem (h : SymbolCongr act) {Y : Mat p q} (hY : IsKC Y) (v : V) (k : ℕ)
     (P : MvPolynomial (PIx p q) ℂ) (hP : P.IsHomogeneous k) :
@@ -1062,8 +1055,7 @@ theorem homog_mem (h : SymbolCongr act) {Y : Mat p q} (hY : IsKC Y) (v : V) (k :
     have hw := hP (MvPolynomial.mem_support_iff.mp hd)
     simpa [Multiset.length_toList, Finsupp.card_toMultiset, Finsupp.weight_apply, Finsupp.sum] using hw
   have hm := monomial_mem act h hY v d
-  rw [hk] at hm
-  exact hm
+  rwa [hk] at hm
 
 end GlobalTheory.InducedPBW.Equivariant
 
@@ -1191,10 +1183,8 @@ def coordP (ab : PIx p q) : Mat p q →ₗ[ℂ] ℂ := Matrix.entryLinearMap ℂ
 
 lemma isKC_iff (x : Mat p q) : (∀ j, coordP j x = 0) ↔ IsKC x := by
   constructor
-  · intro h a b hab
-    exact h ⟨(a, b), hab⟩
-  · intro h j
-    exact h j.1.1 j.1.2 j.2
+  · exact fun h a b hab => h ⟨(a, b), hab⟩
+  · exact fun h j => h j.1.1 j.1.2 j.2
 
 private lemma sameBlock_trans_twisted_operators {a b c : Ix p q} (h1 : sameBlock a b) (h2 : sameBlock b c) :
     sameBlock a c := by
@@ -1226,8 +1216,7 @@ lemma pLin_Eab (ab : PIx p q) : pLin (Eab ab.1.1 ab.1.2) = X ab := by
     have : ¬ (ab.1.1 = b.1.1 ∧ ab.1.2 = b.1.2) := fun h =>
       hb (Subtype.ext (Prod.ext h.1.symm h.2.symm))
     simp [Eab, Matrix.single_apply_of_ne (h := this)]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 lemma exists_list (α : PIx p q →₀ ℕ) : ∃ l : List (Mat p q), l.length = α.degree ∧
     (l.map pLin).prod = monomial α 1 := by
@@ -1348,11 +1337,10 @@ lemma eq_zero_of_mem {k : ℕ} {z : MvPolynomial (PIx p q) ℂ ⊗[ℂ] V} (h1 :
     have hm : (monomial α (1 : ℂ)) ∈ homogeneousSubmodule (PIx p q) ℂ α.degree :=
       (mem_homogeneousSubmodule _ _).mpr (isHomogeneous_monomial 1 rfl)
     simp only [SetLike.mem_coe, LinearMap.mem_ker, zv, TensorProduct.mk_apply,
-      LinearMap.rTensor_tmul, homogeneousComponent_of_mem hm, if_neg (Nat.ne_of_gt hα),
+      LinearMap.rTensor_tmul, homogeneousComponent_of_mem hm, ite_eq_right (Nat.ne_of_gt hα),
       TensorProduct.zero_tmul]
   have h3 := hkill h2
-  rw [LinearMap.mem_ker, hfix] at h3
-  exact h3
+  rwa [LinearMap.mem_ker, hfix] at h3
 
 theorem symmetrisation_injective (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (h : IsKLieAct act)
     (hs : SymbolCongr act) (k : ℕ) (z) (hz : z ∈ symTens p q V k)
@@ -1369,8 +1357,7 @@ theorem symmetrisation_injective (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (h
       rintro _ ⟨l, hl, rfl⟩
       have h4 := Submodule.add_mem _ (degLt_mono (show l.length ≤ k by omega) (hφ l v))
         (degLt_mono (show l.length + 1 ≤ k by omega) (prod_tmul_mem l v))
-      rw [sub_add_cancel] at h4
-      exact h4
+      rwa [sub_add_cancel] at h4
     exact hU hu
   have hlow : indFlt act k ≤ (degLt ℂ (PIx p q) V k).comap φ := by
     unfold indFlt
@@ -1400,8 +1387,7 @@ theorem symmetrisation_injective (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (h
     have h8 : φ ((indRel act).mkQ ((l.map (ugι p q)).prod ⊗ₜ[ℂ] v) -
         (indRel act).mkQ (symU p q (monomial α 1) ⊗ₜ[ℂ] v)) ∈ degLt ℂ (PIx p q) V k := hlow hc
     have key := Submodule.sub_mem _ h1 h8
-    rw [map_sub, sub_sub_sub_cancel_left] at key
-    exact key
+    rwa [map_sub, sub_sub_sub_cancel_left] at key
   have hzsym : φ ((indRel act).mkQ (LinearMap.rTensor V (symU p q) z)) - z ∈
       degLt ℂ (PIx p q) V k := by
     obtain ⟨w, rfl⟩ := LinearMap.mem_range.mp hz
@@ -1409,13 +1395,11 @@ theorem symmetrisation_injective (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (h
     induction w using TensorProduct.induction_on with
     | zero => simp
     | tmul P v =>
-      simp only [LinearMap.rTensor_tmul, Submodule.coe_subtype]
-      exact hsym P.1 P.2 v
+      simpa only [LinearMap.rTensor_tmul, Submodule.coe_subtype] using hsym P.1 P.2 v
     | add w w' hw hw' =>
       have h5 := Submodule.add_mem _ hw hw'
       simp only [map_add (f := _)]
-      rw [add_sub_add_comm]
-      exact h5
+      rwa [add_sub_add_comm]
   have hz0 : z ∈ degLt ℂ (PIx p q) V k := by
     have h7 : φ ((indRel act).mkQ (LinearMap.rTensor V (symU p q) z)) ∈ degLt ℂ (PIx p q) V k :=
       hlow hz'

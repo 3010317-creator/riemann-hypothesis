@@ -82,12 +82,10 @@ theorem exists_levelCochains_eq (m : ℕ) (x : (cochainsComplex (limitRep K)).X 
   have hker : ∀ g : K.1.fixingSubgroup, restrictHom (E := p.1) g = 1 → g ∈ U := by
     intro g hg
     have hg' : g ∈ p.1.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup := by
-      rw [← ker_restrictHom, MonoidHom.mem_ker]
-      exact hg
+      rwa [← ker_restrictHom, MonoidHom.mem_ker]
     rw [Subgroup.mem_subgroupOf] at hg'
     have : g ∈ Subtype.val ⁻¹' t := hE₀ (IntermediateField.fixingSubgroup_le hpE₀ hg')
-    rw [htU] at this
-    exact this
+    rwa [htU] at this
   have hval : ∀ g, ∃ z : IdeleGroup p.1.1, of p.1 z = Additive.toMul (f g) := by
     intro g
     have hmem : f g ∈ hfin.toFinset := by simp

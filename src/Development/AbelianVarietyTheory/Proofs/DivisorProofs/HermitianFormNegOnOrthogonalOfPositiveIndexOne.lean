@@ -107,8 +107,7 @@ theorem form_re_neg {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermiti
         simp [hv0]
       · have : hA.eigenvalues i ≤ 0 := not_lt.mp fun h => hi (hpos i h)
         nlinarith [Complex.normSq_nonneg (c i)]
-    · refine ⟨j, Finset.mem_univ j, ?_⟩
-      exact mul_neg_of_neg_of_pos hjneg (Complex.normSq_pos.mpr hj)
+    · exact ⟨j, Finset.mem_univ j, mul_neg_of_neg_of_pos hjneg (Complex.normSq_pos.mpr hj)⟩
   simpa using key
 
 end GlobalTheory.SignatureOneForms
@@ -125,8 +124,7 @@ theorem re_form_neg_of_orth_of_sigPosH_eq_one : ∀ {n : ℕ} (A : Matrix (Fin n
     have h := congrArg star hxy
     rw [star_zero] at h
     rw [← h, star_dotProduct, star_mulVec, hA.eq, ← dotProduct_mulVec]
-  by_contra hQ
-  push_neg at hQ
+  by_contra! hQ
   set a₀ := (star U *ᵥ x) i₀ with ha₀
   set b₀ := (star U *ᵥ y) i₀ with hb₀
   have hx0 : x ≠ 0 := by
@@ -155,8 +153,7 @@ theorem re_form_neg_of_orth_of_sigPosH_eq_one : ∀ {n : ℕ} (A : Matrix (Fin n
       · exact absurd h hQx
     have : a₀ • y = 0 := by
       have hw2 : b₀ • x - a₀ • y = 0 := hw ▸ hw'
-      rw [hb, zero_smul, zero_sub, neg_eq_zero] at hw2
-      exact hw2
+      rwa [hb, zero_smul, zero_sub, neg_eq_zero] at hw2
     exact hy ((smul_eq_zero.mp this).resolve_left ha)
   · have hneg := GlobalTheory.SignatureOneForms.form_re_neg hA hdet i₀ hpos w hw' hw0
     rw [hQw, Complex.add_re, Complex.re_ofReal_mul, Complex.re_ofReal_mul] at hneg

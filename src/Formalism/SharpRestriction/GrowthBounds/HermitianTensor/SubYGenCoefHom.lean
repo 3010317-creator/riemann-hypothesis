@@ -220,8 +220,7 @@ theorem subY_gen_coefHom (A : Type) [CommRing A] (r : ℕ) (w : Fin (r + 1 + 1) 
     intro i _
     have h := (CoefHom.ofC (σ := Fin (r + 1 + 1) × Fin (r + 1 + 1))
       (isWeightedHomogeneous_X A (colW r r) (i, j))).mul (CoefHom.ofX (A := A) (r := r) (a, midI r i))
-    rw [add_zero] at h
-    exact h
+    rwa [add_zero] at h
   · rw [subY_X_none _ _ _ _ hn]
     have hf : (fun j' : Fin r => colW (r + 1 + 1) (r + 1 + 1) (a, t) (midI r j')) = 0 := by
       funext j'
@@ -261,8 +260,7 @@ theorem subY_coefHom (A : Type) [CommRing A] (r : ℕ) (ν : Fin (r + 1 + 1) →
     funext j
     rw [← hw]
     simp [Finsupp.weight_apply, Finsupp.sum, Finset.sum_apply]
-  rw [hsum] at h
-  exact h
+  rwa [hsum] at h
 
 theorem subY_inv (A : Type) [CommRing A] (r : ℕ) (v : MvPolynomial (Fin (r + 1 + 1) × Fin (r + 1 + 1)) A)
     (hv : ∀ l j : Fin (r + 1 + 1), l < j → colAddGen A l j v = rename some v) (l j : Fin r) (hlj : l < j)
@@ -290,15 +288,15 @@ theorem subY_inv (A : Type) [CommRing A] (r : ℕ) (v : MvPolynomial (Fin (r + 1
     · rw [mAH_subY_mid]
       by_cases hj : j' = j
       · subst hj
-        rw [if_pos rfl, map_add (f := _), map_mul, hθn, hθs, hθs, mAH_subY_mid, mAH_subY_mid, Finset.mul_sum,
+        rw [ite_eq_left rfl, map_add (f := _), map_mul, hθn, hθs, hθs, mAH_subY_mid, mAH_subY_mid, Finset.mul_sum,
           ← Finset.sum_add_distrib]
         refine Finset.sum_congr rfl fun i _ => ?_
-        simp only [colAddGen_X, if_true, rename_X, map_add (f := _), map_mul]
+        simp only [colAddGen_X, ite_true, rename_X, map_add (f := _), map_mul]
         ring
-      · rw [if_neg (fun h => hj ((midI_inj r j' j).mp h)), hθs, mAH_subY_mid]
+      · rw [ite_eq_right (fun h => hj ((midI_inj r j' j).mp h)), hθs, mAH_subY_mid]
         refine Finset.sum_congr rfl fun i _ => ?_
-        simp only [colAddGen_X, if_neg hj, rename_X]
-    · rw [if_neg (midOf_none_ne hn j).symm, hθs, mAH_subY_none _ _ _ _ hn, mAH_subY_none _ _ _ _ hn]
+        simp only [colAddGen_X, ite_eq_right hj, rename_X]
+    · rw [ite_eq_right (midOf_none_ne hn j).symm, hθs, mAH_subY_none _ _ _ _ hn, mAH_subY_none _ _ _ _ hn]
   have h2 : Ψ.comp (subY A r) = θ.comp (rename some) := by
     apply MvPolynomial.algHom_ext
     intro w
@@ -308,9 +306,7 @@ theorem subY_inv (A : Type) [CommRing A] (r : ℕ) (v : MvPolynomial (Fin (r + 1
     have e2 := congrArg (fun F => F v) h2
     simp only [AlgHom.comp_apply] at e1 e2
     rw [e1, e2, hv _ _ (midI_lt r hlj)]
-  have h4 := congrArg (AddMonoidAlgebra.coeff · u) h3
-  simp only [Φ, Ψ, mAH_coeff] at h4
-  exact h4
+  simpa only [Φ, Ψ, mAH_coeff] using congrArg (AddMonoidAlgebra.coeff · u) h3
 
 theorem subCoeffP : SubCoeffP := by
   intro A _ r ν v hv u

@@ -175,9 +175,7 @@ theorem exists_reps : ∀ (D : D7) (N : ℕ) (𝔪 : Ideal (𝓞 D.host.E)), �
     refine ⟨c.out.1, ⟨Finset.mem_image_of_mem _ (Finset.mem_univ c), ?_⟩, ?_⟩
     · rw [congOne_inv_mul_iff c.out.2]
       have := Quotient.exact (Quotient.out_eq c)
-      intro i j
-      have h := (congRel D 𝔪 N).iseqv.symm this i j
-      exact h
+      exact fun i j => (congRel D 𝔪 N).iseqv.symm this i j
     · rintro r ⟨hr, hc⟩
       obtain ⟨c', -, rfl⟩ := Finset.mem_image.1 hr
       rw [congOne_inv_mul_iff c'.out.2] at hc

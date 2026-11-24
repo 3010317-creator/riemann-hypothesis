@@ -390,8 +390,7 @@ theorem GlobalTheory.AdForm.trans_stab : ∀ {B : Base} {X : PreX B.toPre} (I : 
         erw [h1, Matrix.one_mul])
     show rdS θ _ (rankN (I.rec7 l Z) j hj) (A.K j hj (A.chOf j e)).lev (A.K j hj (A.chOf j e)).y
       (fun c z => φ c.1 ⟨z.1, z.2⟩) ⟨w.1, w.2⟩ g0 = _
-    rw [hfun]
-    exact hval
+    rwa [hfun]
   have hemb : Formalism.L2.Forms.embT (I.rec7 l Z) = Formalism.L2.Col.embAt B.embLL B.fields.emb := by
     funext τ
     ext y
@@ -451,8 +450,7 @@ theorem GlobalTheory.AdForm.trans_stab : ∀ {B : Base} {X : PreX B.toPre} (I : 
     rw [hOff] at h1
     have hPQn : (fun x => ¬ ∃ i, x = (p i).v) = (· ∉ (Finset.univ.image fun i => (p i).v)) :=
       funext fun x => congrArg Not (congrFun hPQ x)
-    rw [hPQn] at h1
-    exact h1
+    rwa [hPQn] at h1
   have hcomm : ∀ g' ∈ c.support, g' * κ' = κ' * g' := fun g' hg' => hcm g' (hPQ ▸ hc g' hg') κ' hκ'at
   have hsuppF : ∀ g' ∈ c.support, g' ∈ GfC ((I.rec7 l Z).sp.X j) := fun g' hg' => hAtF (hPQ ▸ hc g' hg')
   have hPf : P ∈ GfC ((I.rec7 l Z).sp.X j) := hP0e' ▸ ((hA.U j hj _ P0.1).1 P0.2).1
@@ -664,8 +662,7 @@ theorem twS : TwS' := by
   have hram := _root_.GlobalTheory.AdForm.ram_iff_scalar_ram I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ hφ.1
   refine ⟨fun b y => ⟨hram.1 b y, fun i => hram.2.1 hφ b y i⟩, fun η => ?_⟩
   have h : j ≤ B.R.m ∧ RamT (I := I) (l := l) (u := u) (a := a) j φ := ⟨hj, hφ⟩
-  simp only [dif_pos h]
-  exact (key j hj φ hφ η).choose_spec
+  simpa only [dite_eq_left h] using (key j hj φ hφ η).choose_spec
 
 end GlobalTheory.AdForm.TwSProof
 
@@ -771,8 +768,7 @@ theorem colOf_readS_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I 
     have h := (hS t j hj ψ hψ).1 ((J t).ι j α) y
     change (if hj' : j ≤ B.R.m then (J t).A.rd (_root_.GlobalTheory.Fam.pk_z W).θ j hj' ((J t).ι j α) ψ y else 0) ∈ a.o.Ram j
     have hj2 : j ≤ B.R.m := hj
-    rw [dite_eq_left hj2]
-    exact h
+    rwa [dite_eq_left hj2]
   · intro j hj ψ hψ α y
     have hj' : j ≤ B.R.m := by change j + 2 ≤ B.R.m at hj; omega
     change (if h : j ≤ B.R.m then (J t).A.rd (_root_.GlobalTheory.Fam.pk_z W).θ j h ((J t).ι j α) (S t j (k.ε j) ψ) y else 0) =

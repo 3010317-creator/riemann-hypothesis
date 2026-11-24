@@ -63,8 +63,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
     (W : LocWach PD LL O v n)
 
 theorem unit_comp (w : (LetA O n)ˣ) (i : ZMod n) :
-    (w : LetA O n) i * ((w⁻¹ : (LetA O n)ˣ) : LetA O n) i = 1 := by
-  exact congrFun (Units.mul_inv w) i
+    (w : LetA O n) i * ((w⁻¹ : (LetA O n)ˣ) : LetA O n) i = 1 := congrFun (Units.mul_inv w) i
 
 theorem π_at (s' : ℕ) (π' : LetA O n) (w₁ : (LetA O n)ˣ) (hπ : π' = w₁ * (letπ : LetA O n) ^ s') (i : ZMod n) :
     π' i = (w₁ : LetA O n) i * PowerSeries.X ^ s' := by
@@ -97,7 +96,7 @@ theorem hlet_of [IsDomain O] (s' : ℕ) (hs : 1 ≤ s') (π' : LetA O n) (w₁ :
     intro m hm
     have h1 := congrArg (PowerSeries.coeff m) hc
     rw [π_at s' π' w₁ hπ c, mul_comm ((w₁ : LetA O n) c), mul_assoc, PowerSeries.coeff_X_pow_mul',
-      if_neg (by omega), map_smul, smul_eq_mul] at h1
+      ite_eq_right (by omega), map_smul, smul_eq_mul] at h1
     exact (mul_eq_zero.mp h1.symm).resolve_left ha
   obtain ⟨G', hG'⟩ := hdvd
   set g' : LetA O n := (letE c : LetA O n) * (fun _ => ((w₁⁻¹ : (LetA O n)ˣ) : LetA O n) c * G') with hg'

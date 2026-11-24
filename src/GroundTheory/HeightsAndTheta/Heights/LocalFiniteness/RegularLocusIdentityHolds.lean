@@ -203,15 +203,12 @@ theorem isCohenMacaulayLocalRing_of_minimalPrimes_sup_span {R : Type*} [CommRing
     · intro hx
       obtain ⟨b, hb, hba⟩ := Submonoid.mem_map.mp hx
       change Ideal.Quotient.mk J a ∉ W'
-      rw [← hba, hmem]
-      exact hb
-    · intro ha
-      exact Submonoid.mem_map.mpr ⟨a, fun h => ha ((hmem a).mpr h), rfl⟩
+      rwa [← hba, hmem]
+    · exact fun ha => Submonoid.mem_map.mpr ⟨a, fun h => ha ((hmem a).mpr h), rfl⟩
   have hloc : IsLocalization.AtPrime (Localization.AtPrime W ⧸ J.map (algebraMap R (Localization.AtPrime W)))
       W' := by
     have h := Vertical.SpecChart.isLocalization_quot W J
-    rw [hsub] at h
-    exact h
+    rwa [hsub] at h
   have : IsLocalRing (Localization.AtPrime W ⧸ J.map (algebraMap R (Localization.AtPrime W))) :=
     IsLocalization.AtPrime.isLocalRing _ W'
   have : IsDomain (Localization.AtPrime W ⧸ J.map (algebraMap R (Localization.AtPrime W))) :=
@@ -225,8 +222,7 @@ theorem isCohenMacaulayLocalRing_of_minimalPrimes_sup_span {R : Type*} [CommRing
     intro h
     apply hg0
     have h0 : x = algebraMap (R ⧸ J) (Localization.AtPrime W ⧸ J.map (algebraMap R (Localization.AtPrime W))) 0 := by
-      rw [map_zero]
-      exact h
+      rwa [map_zero]
     exact IsLocalization.injective (S := Localization.AtPrime W ⧸ J.map (algebraMap R (Localization.AtPrime W)))
       (M := W'.primeCompl) (Ideal.primeCompl_le_nonZeroDivisors W') h0
   have hxm : x ∈ IsLocalRing.maximalIdeal
@@ -243,8 +239,7 @@ theorem isCohenMacaulayLocalRing_of_minimalPrimes_sup_span {R : Type*} [CommRing
   refine { exists_isWeaklyRegular := ⟨[x], ?_, ?_, ?_⟩ }
   · intro r hr
     rw [List.mem_singleton] at hr
-    rw [hr]
-    exact hxm
+    rwa [hr]
   · rw [RingTheory.Sequence.isWeaklyRegular_singleton_iff]
     intro a b hab
     simp only [smul_eq_mul] at hab
@@ -289,11 +284,7 @@ theorem mem_zeroSet_iff_le_ker (J : Ideal (MvPolynomial (Fin n) ℂ)) (x : Fin n
   simp only [zeroSet, Set.mem_ofPred_eq, SetLike.le_def, RingHom.mem_ker]
 
 theorem isClosed_zeroSet (J : Ideal (MvPolynomial (Fin n) ℂ)) : IsClosed (zeroSet J) := by
-  have h : zeroSet J = ⋂ f ∈ J, {x : Fin n → ℂ | eval x f = 0} := by
-    ext x
-    simp [zeroSet]
-  rw [h]
-  exact isClosed_biInter fun f _ => isClosed_eq (MvPolynomial.continuous_eval f) continuous_const
+  exact GroundTheory.Heights₂.Heights.SheetSumMeasurable.isClosed_zeroSet J
 
 theorem exists_minimalPrime_mem_zeroSet {I : Ideal (MvPolynomial (Fin n) ℂ)} {x : Fin n → ℂ}
     (hx : x ∈ zeroSet I) : ∃ W ∈ I.minimalPrimes, x ∈ zeroSet W := by
@@ -344,8 +335,7 @@ theorem ringKrullDim_localRingAt_eq_one {I W : Ideal (MvPolynomial (Fin n) ℂ)}
     exact ringKrullDim_le_of_surjective (Ideal.Quotient.factor hle) (Ideal.Quotient.factor_surjective hle)
   have disj : Disjoint (m.primeCompl : Set (MvPolynomial (Fin n) ℂ)) W := by
     rw [Set.disjoint_left]
-    intro a ha haW
-    exact ha (hWm haW)
+    exact fun a ha haW => ha (hWm haW)
   have hWL : (W.map (algebraMap (MvPolynomial (Fin n) ℂ) L)).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint m.primeCompl L W hWp disj
   have hne : ¬ ringKrullDim (localRingAt W q) ≤ 0 := by
@@ -714,8 +704,7 @@ theorem length_slice_of_isCohenMacaulay (hCM : CMLengthParameters.Statement.{0})
     ext Q
     rw [Set.mem_singleton_iff]
     constructor
-    · intro hQ
-      exact le_antisymm (hQ.2 ⟨hP, bot_le⟩ (hall Q hQ.1.1)) (hall Q hQ.1.1)
+    · exact fun hQ => le_antisymm (hQ.2 ⟨hP, bot_le⟩ (hall Q hQ.1.1)) (hall Q hQ.1.1)
     · rintro rfl
       exact ⟨⟨hP, bot_le⟩, fun Q hQ _ => hall Q hQ.1⟩
 
@@ -839,8 +828,7 @@ theorem LocalizeQuotientStages.proof : LocalizeQuotientStages.Statement.{u} := b
       (Localization.AtPrime P) := by
     have := IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
       (Algebra.algebraMapSubmonoid Q m.primeCompl) (Localization.AtPrime P) P
-    rw [IsLocalization.AtPrime, hsub] at this
-    exact this
+    rwa [IsLocalization.AtPrime, hsub] at this
   let e := IsLocalization.algEquiv (Algebra.algebraMapSubmonoid Q W.primeCompl)
     (Localization.AtPrime P) T
   exact (length_self_eq_of_ringEquiv (A := Localization.AtPrime P) (C := T) e.toRingEquiv).trans
@@ -897,8 +885,7 @@ theorem IsRegularPointOf.exists_ball_chart {σ : Type} [Fintype σ] {Y : Set (σ
       have hgy : g y ∈ Y ∩ V := by rw [hYV]; exact ⟨y, hyO, rfl⟩
       refine ⟨hgy.1, ⟨hyN.2, hyN.1⟩, ?_⟩
       show A (g y) ∈ Metric.ball y₀ r
-      rw [hAg y hyO]
-      exact hyB
+      rwa [hAg y hyO]
 
 theorem eq_zero_on_chart_of_eventually_eq_zero {σ : Type} [Fintype σ] {Y V : Set (σ → ℂ)} {d : ℕ}
     {B : Set (Fin d → ℂ)} {g : (Fin d → ℂ) → σ → ℂ} (hBo : IsOpen B) (hBc : IsPreconnected B)

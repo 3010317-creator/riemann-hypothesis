@@ -248,8 +248,7 @@ theorem finLev_of [IsDomain O] (W : LocWach PD LL O v n) (hR : Formalism.MainNot
   set r := hdiv.mod f
   have hdeg : r.degree < (D : WithBot ℕ) := by
     have := HD.degree_lt
-    rw [hord] at this
-    exact this
+    rwa [hord] at this
   have heq : f = (P : PowerSeries O) * q + (r : PowerSeries O) := HD.eq_mul_add
   have hfG : f = Gall * (↑huu.unit⁻¹ * q) + (r : PowerSeries O) := by
     rw [heq, hGe, hGP, mul_assoc, ← mul_assoc uu, IsUnit.mul_val_inv, one_mul]
@@ -402,19 +401,19 @@ theorem crt_fam {ι : Type} [DecidableEq ι] (x₀ : LetA O n) (x : ι → LetA 
       fun i => if i = a then Formalism.MainNotions.ArcLiftingSetup.lA W ^ κ * t else R i * r, ?_, ?_⟩
     · intro i hi
       by_cases hia : i = a
-      · simp only [hia, if_true]; exact W.AΔ.mul_mem (lA_mem W κ) ht
-      · simp only [hia, if_false]
+      · simp only [hia, ite_true]; exact W.AΔ.mul_mem (lA_mem W κ) ht
+      · simp only [hia, ite_false]
         exact W.AΔ.mul_mem (hR i ((Finset.mem_insert.1 hi).resolve_left hia)) hr
     · rw [Finset.sum_insert ha]
       dsimp only
-      rw [if_pos rfl, Finset.erase_insert ha, Finset.prod_insert ha]
+      rw [ite_eq_left rfl, Finset.erase_insert ha, Finset.prod_insert ha]
       have hs : ∑ i ∈ s, x₀ * (∏ j ∈ (insert a s).erase i, x j) *
           (if i = a then Formalism.MainNotions.ArcLiftingSetup.lA W ^ κ * t else R i * r) =
           (∑ i ∈ s, x₀ * (∏ j ∈ s.erase i, x j) * R i) * r * x a := by
         rw [Finset.sum_mul, Finset.sum_mul]
         refine Finset.sum_congr rfl fun i hi => ?_
         have hia : i ≠ a := fun h => ha (h ▸ hi)
-        rw [if_neg hia, Finset.erase_insert_of_ne (Ne.symm hia),
+        rw [ite_eq_right hia, Finset.erase_insert_of_ne (Ne.symm hia),
           Finset.prod_insert (fun h => ha (Finset.mem_of_mem_erase h))]
         ring
       rw [hs, pow_add]
@@ -486,8 +485,7 @@ theorem span_le_card {R M : Type*} [CommRing R] [IsDomain R] [IsPrincipalIdealRi
       (Finsupp.basisSingleOne : Module.Basis (Fin g) R (Fin g →₀ R))
     simp only [Fintype.card_fin] at h1 h3
     omega
-  · intro i
-    exact (b i).2
+  · exact fun i => (b i).2
   · have hb : Submodule.span R (Set.range fun i => ((b i : _) : Fin g →₀ R)) =
         N.comap (Finsupp.linearCombination R v) := by
       have e : (Set.range fun i => ((b i : _) : Fin g →₀ R)) =
@@ -561,16 +559,14 @@ theorem gen_of_killer {R V : Type*} [CommRing R] [IsDomain R] [IsPrincipalIdealR
   obtain ⟨K, hIB⟩ : ∃ K, Isub.map Psub.mkQ ≤ B K := by
     refine ⟨S.sup Kf, ?_⟩
     rw [← hS, Submodule.span_le]
-    intro x hx
-    exact hBmono (Finset.le_sup (Finset.mem_coe.mp hx)) (hKf x (Finset.mem_coe.mp hx))
+    exact fun x hx => hBmono (Finset.le_sup (Finset.mem_coe.mp hx)) (hKf x (Finset.mem_coe.mp hx))
   have hN : Isub.map ((lR ^ K * t) • Psub.mkQ) ≤
       Submodule.span R (Set.range fun i => Psub.mkQ (v i)) := by
     intro y hy
     obtain ⟨f, hf, rfl⟩ := Submodule.mem_map.mp hy
     have h1 := hIB (Submodule.mem_map_of_mem hf)
     change (lR ^ K * t) • Psub.mkQ f ∈ W at h1
-    rw [LinearMap.smul_apply]
-    exact h1
+    rwa [LinearMap.smul_apply]
   obtain ⟨g₀, w, hg₀, hwN, hNw⟩ := span_le_card (fun i => Psub.mkQ (v i)) _ hN
   have hJ : ∀ i, ∃ f ∈ Isub, ((lR ^ K * t) • Psub.mkQ) f = w i :=
     fun i => Submodule.mem_map.mp (hwN i)
@@ -581,16 +577,14 @@ theorem gen_of_killer {R V : Type*} [CommRing R] [IsDomain R] [IsPrincipalIdealR
     rw [← hNw]; exact Submodule.mem_map_of_mem hf
   obtain ⟨o, ho⟩ := (Submodule.mem_span_range_iff_exists_fun (R := R)).mp hφf
   refine ⟨o, hsat K _ ?_ ?_⟩
-  · apply hIM
-    exact Isub.sub_mem hf (Isub.sum_mem fun i _ => Isub.smul_mem _ (hJI i))
+  · exact hIM (Isub.sub_mem hf (Isub.sum_mem fun i _ => Isub.smul_mem _ (hJI i)))
   · have h0 : ((lR ^ K * t) • Psub.mkQ) (f - ∑ i, o i • J i) = 0 := by
 
       rw [map_sub, map_sum]
       simp only [map_smul, hJw]
       rw [ho, sub_self]
     rw [LinearMap.smul_apply, ← map_smul] at h0
-    rw [← Submodule.Quotient.mk_eq_zero]
-    exact h0
+    rwa [← Submodule.Quotient.mk_eq_zero]
 
 end Formalism.MainNotions.UnusedSlot80.UGen
 end -- clump:auto
@@ -808,8 +802,7 @@ theorem killer_elem (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP W) (hK
       Finset.prod_eq_one fun s _ => by rw [show (-((H s : ℕ) : ℤ)).toNat = 0 by omega, pow_zero]
     have h2 : (∏ s ∈ Finset.range e, ps W s ^ (((H s : ℕ) : ℤ)).toNat) = Λ := by
       rw [hΛ, abelian₂]; exact Finset.prod_congr rfl fun s _ => by rw [Int.toNat_natCast]
-    rw [h1, h2, pow_one] at hf₁
-    exact hf₁
+    rwa [h1, h2, pow_one] at hf₁
   refine ⟨κc + (κc + K₁), fun s => ((PD.p : ℕ) : O) ^ κc * x' s, o', ?_⟩
   have hfin : lE W (κc + (κc + K₁)) * PPγ W e JS y -
       ∑ s ∈ Finset.range e, (((PD.p : ℕ) : O) ^ κc * x' s) • ιE (letE a * u s) -

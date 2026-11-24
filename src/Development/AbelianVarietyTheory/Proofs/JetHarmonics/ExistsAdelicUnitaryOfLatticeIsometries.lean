@@ -113,9 +113,7 @@ theorem exists_adelic_of_isometry : ∀ (D : D7) (V : HSp D) (H : ReciprocityThe
   · rw [(hlat u).2, hug, hg1, h1]
   · obtain ⟨w, hw, hgw⟩ := hg2 N hN a
     refine ⟨w, ?_, ?_⟩
-    · rw [← SetLike.mem_coe, h1]
-      exact hw
-    · rw [hug]
-      exact hgw
+    · rwa [← SetLike.mem_coe, h1]
+    · rwa [hug]
 
 end GlobalTheory.ShortMove

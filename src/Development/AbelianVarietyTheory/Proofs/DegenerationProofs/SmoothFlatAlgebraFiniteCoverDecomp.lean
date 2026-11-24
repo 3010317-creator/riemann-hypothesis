@@ -247,8 +247,7 @@ theorem main (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] (�
       Algebra.FiniteType.trans (inferInstance : Algebra.FiniteType R B) inferInstance
     exact Algebra.FiniteType.of_surjective A.rangeRestrict A.rangeRestrict_surjective
   · infer_instance
-  · intro a b h
-    exact hf (congrArg Subtype.val h)
+  · exact fun a b h => hf (congrArg Subtype.val h)
   · intro b'
     refine hind (fun b' => ∃ n b, algebraMap R S π ^ n * b' = φ b) (fun b => ⟨0, b, by simp⟩)
       (fun g _ b' h => ⟨1, g, by simpa using h⟩) ?_ ?_ b'
@@ -694,8 +693,7 @@ theorem core {R B B' S : Type} {n : ℕ} [CommRing R] [CommRing B] [CommRing B']
     · intro b
       obtain ⟨p, rfl⟩ := hq b
       exact ⟨j (gr σ p), hjW _ ⟨_, rfl⟩, hψg p⟩
-    · intro g hg b' hb'
-      exact ⟨_, hΔ g hg b' hb', rfl⟩
+    · exact fun g hg b' hb' => ⟨_, hΔ g hg b' hb', rfl⟩
     · intro x y hx hy
       show dd R B' S (x + y) ∈ _
       rw [dd_add]; exact Submodule.add_mem _ hx hy
@@ -1097,8 +1095,7 @@ theorem unit_or_dvd {π : R} {R' : Type} [CommRing R'] [Algebra R R'] (h : Unr �
   by_cases hx : IsUnit x
   · exact Or.inl hx
   · right
-    rw [← Ideal.mem_span_singleton, ← h.maximalIdeal_eq]
-    exact hx
+    rwa [← Ideal.mem_span_singleton, ← h.maximalIdeal_eq]
 
 theorem not_dvd_of_unit {π : R} {R' : Type} [CommRing R'] [Algebra R R'] (h : Unr π R') {x : R'} (hx : IsUnit x) :
     ¬ algebraMap R R' π ∣ x := by

@@ -109,10 +109,10 @@ theorem subst_mem_fg : ∀ {D : Formalism.BasicNotions.D7} {a b : ℕ} (τ : For
       unfold GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.subst
       rw [MvPolynomial.aeval_X]
       by_cases hv : v.1 = τ
-      · rw [if_pos hv]
+      · rw [ite_eq_left hv]
         refine Submodule.sum_mem _ fun l _ => Submodule.sum_mem _ fun m _ => Submodule.smul_mem _ _ ?_
         exact Submodule.subset_span (Set.mem_insert_of_mem _ ⟨(l, m), rfl⟩)
-      · rw [if_neg hv]
+      · rw [ite_eq_right hv]
         exact Submodule.subset_span (Set.mem_insert _ _)) P
   exact ⟨V, hV, fun g k => hV' (g, k)⟩
 
@@ -170,8 +170,7 @@ theorem sub_mem_of_path {Q Z : Type} [AddCommGroup Q] [Module ℂ Q] (E : Q →�
   have h4 : ∀ t, HasDerivAt (fun s => l (p s)) 0 t := fun t => by
     have h5 := key _ hm t
     have h6 : l (L (p t)) = 0 := (Submodule.mem_dualAnnihilator l).1 hl _ (hL _)
-    rw [← h6]
-    exact h5
+    rwa [← h6]
   rw [map_sub, sub_eq_zero]
   exact is_const_of_deriv_eq_zero (fun t => (h4 t).differentiableAt) (fun t => (h4 t).deriv) 1 0
 
@@ -417,8 +416,7 @@ theorem thO_inj {D : D7} {m d : ℕ} {Y : GlobalTheory.IndefiniteRowSideFullHeck
   obtain ⟨x, hx⟩ := exists_transpose_mul (Mo.co.e.symm w) hGH
   have h2 : GlobalTheory.TripleRead.ptO G (Equiv.refl _) x = Mo.co.e.symm w := hx
   have h1 := congrFun h x
-  simp only [GlobalTheory.TripleRead.thO, h2, Darboux.rho, LinearEquiv.apply_symm_apply] at h1
-  exact h1
+  simpa only [GlobalTheory.TripleRead.thO, h2, Darboux.rho, LinearEquiv.apply_symm_apply] using h1
 
 theorem eq_of_tens {F : Type} [Field F] [NumberField F] {κ : Type} {f f' : (κ → mixedEmbedding.mixedSpace F) → ℂ}
     {r : (κ → AF F) → ℂ} (hr : ∀ x z, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F) z → r (x + z) = r x) (h0 : r ≠ 0)
@@ -477,8 +475,7 @@ theorem commute_cart_frSgn (ε : Bool) {M : HSp D} (A : Fr M) (τ : D.what₂.Ta
       show (A.fr τ)⁻¹ * Formalism.REAL.Jm (fun a => xor false (A.ε τ a)) * A.fr τ = _
       simp only [Bool.false_xor]
       rfl
-    rw [e]
-    exact h'
+    rwa [e]
   · have h' : Commute x (A.cart τ) := by simpa using h
     have e' : Formalism.REAL.Jm (fun a => xor true (A.ε τ a)) = -Formalism.REAL.Jm (A.ε τ) := by
       ext a b

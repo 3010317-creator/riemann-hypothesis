@@ -361,8 +361,7 @@ lemma fact_dvd {Φ κ : Type} [Fintype Φ] [Fintype κ] (k : Φ ⊕ κ ⊕ Fin 2
   have e1 : A * C2 * sB.factorial = A * (sB.factorial * C2) := by ring
   have e2 : A * C2 * (Nat.multinomial univ k * Bf) = A * (Bf * C2) * Nat.multinomial univ k := by
     ring
-  rw [e1, e2]
-  exact h5
+  rwa [e1, e2]
 
 section Main
 
@@ -382,7 +381,7 @@ lemma sum_piece (p : ℕ) (Z Y : MvPowerSeries (Tp ⊕ Lw) K) (aA : Φ → K) (d
         ∑ k, MvPowerSeries.C (aB k) * topMonoS (dB k) * lowLin (b k) + Z +
         MvPowerSeries.C (p : K) * Y := by
   rw [Fintype.sum_sum_type, Fintype.sum_sum_type, Fin.sum_univ_two]
-  simp only [piece, Sum.elim_inl, Sum.elim_inr, if_true, one_ne_zero, if_false]
+  simp only [piece, Sum.elim_inl, Sum.elim_inr, ite_true, one_ne_zero, ite_false]
   ring
 
 def dTot (dA : Φ → Tp →₀ ℕ) (dB : κ → Tp →₀ ℕ) (k : Φ ⊕ κ ⊕ Fin 2 → ℕ) : Tp ⊕ Lw →₀ ℕ :=
@@ -406,7 +405,7 @@ lemma prod_piece (p : ℕ) (Z Y : MvPowerSeries (Tp ⊕ Lw) K) (aA : Φ → K) (
         (MvPowerSeries.monomial (dTot dA dB k) (cTot p aA aB k) *
           (Z ^ k (Sum.inr (Sum.inr 0)) * (Y ^ k (Sum.inr (Sum.inr 1)) * U))) := by
   rw [Fintype.prod_sum_type, Fintype.prod_sum_type, Fin.prod_univ_two]
-  simp only [piece, Sum.elim_inl, Sum.elim_inr, if_true, one_ne_zero, if_false]
+  simp only [piece, Sum.elim_inl, Sum.elim_inr, ite_true, one_ne_zero, ite_false]
   have hA : ∏ φ, (MvPowerSeries.C (aA φ) * topMonoS (Lw := Lw) (dA φ)) ^ k (Sum.inl φ) =
       MvPowerSeries.monomial (∑ φ, k (Sum.inl φ) • (dA φ).mapDomain Sum.inl)
         (∏ φ, aA φ ^ k (Sum.inl φ)) := by
@@ -495,8 +494,7 @@ lemma term_bound (h1 : JetPairingHasseIdentity) (h2 : HasseDerivIntegralHomogene
     simp [cTot, this]
   · intro τ
     have := hle (Sum.inl τ)
-    rw [jn_inl, dTot_inl] at this
-    exact this
+    rwa [jn_inl, dTot_inl] at this
   · have h3 := lowGe_mul (lowGe_pow hZlow (k (Sum.inr (Sum.inr 0))))
       (lowGe_zero (Y ^ k (Sum.inr (Sum.inr 1)) * U)) _ hv1
     have h4 := lowDeg_sub_le (jn e n) (dTot dA dB k)
@@ -549,8 +547,7 @@ theorem TermBound_of (h1 : JetPairingHasseIdentity) (h2 : HasseDerivIntegralHomo
   classical
   obtain ⟨U, hU, hgU⟩ := hg
   have hag : ETerm.Agree D h (∑ j, ETerm.piece p Z Y aA dA aB dB b j) := by
-    rw [ETerm.sum_piece]
-    exact hdec
+    rwa [ETerm.sum_piece]
   have hsupp : ∀ m ∈ (topMonoP e * lowPoly Q).support, m.degree = D := by
     intro m hm
     obtain ⟨n, hn, rfl⟩ := Finset.mem_image.1 (ETerm.support_topLow e Q hm)

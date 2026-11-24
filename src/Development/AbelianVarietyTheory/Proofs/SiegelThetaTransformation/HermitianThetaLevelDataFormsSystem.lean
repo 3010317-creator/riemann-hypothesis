@@ -267,7 +267,7 @@ theorem admissible_of_sum_translates_quadraticCharacter : ∀ (E : Type) [Field 
     · rw [add_sub_right_comm]
       generalize x - d = z
       by_cases hz : z ∈ tens Λ K
-      · rw [if_pos hz, if_pos (add_mem hz hR)]
+      · rw [ite_eq_left hz, ite_eq_left (add_mem hz hR)]
         have h1 := isIntegral_pair hΛ hy (mem_tens_mul H5 hz)
         have h2 := isIntegral_pair hΛ (mem_tens_mul H4 hz) hy
         have h3 := isIntegral_pair hΛ (mem_tens_mul H6 hy) hy
@@ -279,7 +279,7 @@ theorem admissible_of_sum_translates_quadraticCharacter : ∀ (E : Type) [Field 
           Matrix.mul_assoc]
         push_cast
         ring
-      · rw [if_neg hz, if_neg fun h => hz ((AddSubgroup.add_mem_cancel_right _ hR).1 h)]
+      · rw [ite_eq_right hz, ite_eq_right fun h => hz ((AddSubgroup.add_mem_cancel_right _ hR).1 h)]
     · rw [← exp_trace_add (t := (b * ccT (x + x - d)).trace) ((ni (2 * N')).mul hb),
         show ∀ w, x + w + (x + w) - d = x + x - d + w + w from fun w => by abel]
       generalize x + x - d = z
@@ -1223,9 +1223,7 @@ theorem tail_le (hs : IsSympl X bas) (hn : 4 * (Module.finrank ℚ E * r) + 4 �
   let c : {L' // L' ∈ 𝓛 ∧ L' ≠ L} → ℂ := fun i => (((f i : ℝ) ^ (-(n : ℝ) / 2) : ℝ) : ℂ)
   have hnorm : ∀ i, ‖c i‖ = (f i : ℝ) ^ (-(n : ℝ) / 2) := fun i =>
     Complex.norm_of_nonneg (Real.rpow_nonneg (Nat.cast_nonneg _) _)
-  have res := tail_sum_lt_one f _ n hρn h2 hc c fun i => (hnorm i).le
-  simp only [hnorm] at res
-  exact res
+  simpa only [hnorm] using tail_sum_lt_one f _ n hρn h2 hc c fun i => (hnorm i).le
 
 theorem norm_eq_one_of_ip {φ : TF n g} (hφ : IsSB φ) (h1 : SW.ip φ φ = 1) {c : ℂ}
     (h : SW.ip (c • φ) (c • φ) = 1) : ‖c‖ = 1 := by
@@ -1287,8 +1285,7 @@ theorem isSystem_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have htn := RecSys.norm_eq_one_of_ip hvac'.1 hvac'.2.1 hip
   have hl := hlam ⟨k, hkJ⟩
   refine ⟨?_, fun Λ hΛ => ?_⟩
-  · rw [norm_mul, hl, mul_one] at htn
-    exact htn
+  · rwa [norm_mul, hl, mul_one] at htn
   · rw [(T4 L hL Λ hΛ).2.2.2 γ hγ ⟨k, hkJ⟩ hred _ htn hrel, mul_inv_cancel_right₀ (Units.ne_zero _)]
 
 end GlobalTheory.SW

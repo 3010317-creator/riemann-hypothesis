@@ -100,14 +100,13 @@ private theorem exists_ext {ι A : Type*} {X : A → Type*} (wi : ι → A) (hw 
     (ψ : ∀ i, X (wi i)) (d : ∀ a, X a) :
     ∃ h : ∀ a, X a, (∀ i, h (wi i) = ψ i) ∧ ∀ a, a ∉ Set.range wi → h a = d a := by
   refine ⟨fun a => if ha : ∃ i, wi i = a then ha.choose_spec ▸ ψ ha.choose else d a, fun i => ?_,
-    fun a ha => dif_neg ha⟩
+    fun a ha => dite_eq_right ha⟩
   have key : ∀ j (hj : wi j = wi i), (hj ▸ ψ j : X (wi i)) = ψ i := by
     intro j hj
     obtain rfl := hw hj
     rfl
   have ha : ∃ j, wi j = wi i := ⟨i, rfl⟩
-  simp only [dif_pos ha]
-  exact key _ _
+  simpa only [dite_eq_left ha] using key _ _
 
 private theorem finprod_split {A M : Type*} [CommMonoid M] {r : ℕ} (wi : Fin r → A) (hw : Function.Injective wi)
     (X : A → M) (hX : (Function.mulSupport X).Finite) :
@@ -139,8 +138,7 @@ private theorem under_eq {v : Pl F} (w : PlacesOver E v) : w.1.under (𝓞 F) = 
 private theorem finite_under (S : Set (Pl F)) (hS : S.Finite) :
     {w : Pl E | w.under (𝓞 F) ∈ S}.Finite := by
   refine (hS.biUnion fun v _ => Set.finite_range (Subtype.val : PlacesOver E v → Pl E)).subset ?_
-  intro w hw
-  exact Set.mem_biUnion hw ⟨⟨w, liesOver_under w⟩, rfl⟩
+  exact fun w hw => Set.mem_biUnion hw ⟨⟨w, liesOver_under w⟩, rfl⟩
 
 private theorem iwCoset_zero (w : Pl E) :
     GM.iwCoset w (0 : Fin n → ℤ) = (GLnLocal.iwahori (w.adicCompletion E) n : Set (Gw n w)) := by
@@ -153,8 +151,7 @@ private theorem iwCoset_zero (w : Pl E) :
   · rintro ⟨a, ha, b, hb, rfl⟩
     rw [hd, mul_one]
     exact mul_mem ha hb
-  · intro hg
-    exact ⟨g, hg, 1, one_mem _, by rw [hd, mul_one, mul_one]⟩
+  · exact fun hg => ⟨g, hg, 1, one_mem _, by rw [hd, mul_one, mul_one]⟩
 
 private theorem iw_test (w : Pl E) :
     IsLocallyConstant (((GLnLocal.iwahori (w.adicCompletion E) n : Set (Gw n w))).indicator (1 : Gw n w → ℂ)) ∧
@@ -357,8 +354,7 @@ theorem UpperTheory.exists_pos_const_typed_test_function_bound :
       have hχ := T.triv (p i) (sp_split T (hpS i)).2 (T.mk' (p i))
       rw [((hF.test _ (hpS i)).2 u hu g').2, hχ]
       simp, hB i⟩) e heform
-  rw [hgt]
-  exact main
+  rwa [hgt]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.LyingOver.ExistsPosConstTypedTestFunctionBound =====
@@ -411,10 +407,8 @@ private theorem rho_typed (J : ∀ w : Pl K, Subgroup (Gw n w)) (χ : ∀ w : Pl
     have hg : g ∈ levOn P (fun _ => ⊥) := by
       intro v
       by_cases hv : v ∈ P
-      · simp only [hv, if_true]
-        exact Subgroup.mem_bot.2 (h1 v hv (Finset.notMem_empty v))
-      · simp only [hv, if_false]
-        exact h2 v hv
+      · simpa only [hv, ite_true] using Subgroup.mem_bot.2 (h1 v hv (Finset.notMem_empty v))
+      · simpa only [hv, ite_false] using h2 v hv
     simpa using ((UpperTheory.ConvolutionTheory.Tf.commPrj K n μ _).2.1 f).1 hfix g hg
   | insert a R ha ih =>
     intro g h0 h1 h2
@@ -523,12 +517,10 @@ private theorem at_place {σ : E ≃ₐ[F] E} {q : Pl F} {w₀ : PlacesOver E q}
         refine Finset.prod_congr rfl fun u _ => ?_
         rw [Set.indicator_of_mem (by exact hm u)]
         exact (Set.indicator_of_mem (s := (T.J u.1 : Set (Gw n u.1))) (hm u) fun y => conj (T.χ u.1 y)).symm
-      have h3 := congrArg (starRingEnd ℂ) h2
-      simpa using h3
+      simpa using congrArg (starRingEnd ℂ) h2
   · have hvL : v ∉ L.S := fun h => hvS (hF.S_eq ▸ h)
     have hu : x ∈ unitSet E n v := by
-      rw [← (L.off v hvL hvq).2.2.1]
-      exact hx
+      rwa [← (L.off v hvL hvq).2.2.1]
     have hoff : ∀ u : PlacesOver E v, T.J u.1 = GLnLocal.integralGL (u.1.adicCompletion E) n ∧ T.χ u.1 = 1 := fun u =>
       T.off u.1 (by rwa [under_over']) (by rwa [under_over'])
     refine easy (fun u => ?_) fun u => (hoff u).2
@@ -552,8 +544,7 @@ theorem UpperTheory.typed_vectors_le_fixed_of_fits_level :
     rwa [cmp_atFin'] at this
   have hfin : {w : Pl E | w.under (𝓞 F) ∈ insert q T.S}.Finite := by
     refine ((insert q T.S).finite_toSet.biUnion fun v _ => fin_above' (E := E) v).subset ?_
-    intro w hw
-    exact Set.mem_biUnion (x := w.under (𝓞 F)) hw rfl
+    exact fun w hw => Set.mem_biUnion (x := w.under (𝓞 F)) hw rfl
   set P : Finset (Pl E) := hfin.toFinset with hPdef
   have hP : ∀ w ∉ P, T.J w = GLnLocal.integralGL (w.adicCompletion E) n ∧ T.χ w = 1 := fun w hw => by
     have : w.under (𝓞 F) ∉ insert q T.S := fun h => hw (hfin.mem_toFinset.2 h)
@@ -660,8 +651,7 @@ private theorem core (Ty Fx V : Submodule ℂ H) (hTy : IsClosed (Ty : Set H)) (
   have hOFx : Oa * prj Fx = prj Fx * Oa := prj_comm hFx Oa hOa hOF
   have hVP : prj V * prj Ty = prj Ty * prj V := prj_comm hTy (prj V) (prj_adj V) hVT
   have hFP : prj Fx * prj Ty = prj Ty := by
-    refine ContinuousLinearMap.ext fun v => ?_
-    exact prj_self (hle (prj_mem hTy v))
+    exact ContinuousLinearMap.ext fun v => prj_self (hle (prj_mem hTy v))
   have hPF : prj Ty * prj Fx = prj Ty :=
     (prj_comm hFx (prj Ty) (prj_adj Ty) fun v _ => hle (prj_mem hTy v)).trans hFP
   have hAP : A * prj Ty = prj Ty * A := by
@@ -696,8 +686,7 @@ private theorem core (Ty Fx V : Submodule ℂ H) (hTy : IsClosed (Ty : Set H)) (
   rw [heq] at k1 k2
   refine ⟨k1, k2, ?_⟩
   have hAX : A * prj X = (x : ℂ) • prj X := by
-    refine ContinuousLinearMap.ext fun v => ?_
-    exact (mem_eigIn.1 (prj_mem hXc v)).2
+    exact ContinuousLinearMap.ext fun v => (mem_eigIn.1 (prj_mem hXc v)).2
   have hsX : star (prj X) = prj X := by
     rw [ContinuousLinearMap.star_eq_adjoint, prj_adj]
   have := congrArg star hAX

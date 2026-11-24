@@ -80,9 +80,9 @@ private theorem diag_cS_Pimg (j₀ : Fin (N + 1)) (x : Fin N → Ω) (b : Fin (D
   · rw [Pimg_self]
     by_cases hi : i = 0
     · subst hi
-      rw [if_pos rfl, diag_X]
+      rw [ite_eq_left rfl, diag_X]
       rfl
-    · rw [if_neg hi, map_neg, map_sum, mul_neg, Finset.mul_sum]
+    · rw [ite_eq_right hi, map_neg, map_sum, mul_neg, Finset.mul_sum]
       apply congrArg Neg.neg
       apply Finset.sum_congr rfl
       intro k hk
@@ -209,15 +209,12 @@ theorem comap_eq (hx1 : LeafSt.PlaceTrivialOrPositive 𝒜 d) (hx2 : LeafSt.Admi
   have hmem : w.comap (e : OmS (Ω c) d.D d.N →+* OmS (Ω c) d.D d.N) ∈ d.GoodP c (p.comap σ) := by
     obtain ⟨⟨⟨hfin, π, hπ⟩, hov⟩, a, ha, hwa⟩ := hw
     refine ⟨⟨⟨fun z hz => ?_, e.symm π, ?_⟩, fun y => ?_⟩, a, ha, ?_⟩
-    · show w (e z) ≠ ⊤
-      exact hfin _ ((map_ne_zero e).mpr hz)
+    · exact hfin _ ((map_ne_zero e).mpr hz)
     · show w (e (e.symm π)) = 1
-      rw [RingEquiv.apply_symm_apply]
-      exact hπ
+      rwa [RingEquiv.apply_symm_apply]
     · rw [hw', Ideal.mem_comap]
       exact hov (σ y)
-    · rw [hWres]
-      exact hwa
+    · rwa [hWres]
   rcases hx1 hd h c p hp w hw.1 with h0 | ⟨hadm, htriv, -⟩
   · obtain ⟨a, ha, hwa⟩ := hw.2
     exact absurd (h0 a ha) hwa
@@ -282,8 +279,7 @@ theorem HtGaussGen {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι]
     intro h0
     apply h2K
     apply (algebraMap K (Ω c)).injective
-    rw [map_ofNat, map_zero]
-    exact h0
+    rwa [map_ofNat, map_zero]
 
   have hsc : ∀ b, Submodule.IsPrincipal.generator p ∣
       BlockPoly.diag (BlockPoly.cb b (2 : K)) (Submodule.IsPrincipal.generator p) := by
@@ -308,8 +304,7 @@ theorem HtGaussGen {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι]
         (fun t => ReciprocityTheory.ChartRestriction.G.T0.GaussGen.lift_transl (d.jc c) (d.x c) a t))
   rw [hgen]
   unfold ReciprocityTheory.MultiplicativeHeights.IsMultiHomogeneous
-  intro s hs b
-  exact BlockPoly.multiHom_of_dvd hsc hsw htr s hs b
+  exact fun s hs b => BlockPoly.multiHom_of_dvd hsc hsw htr s hs b
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.GaussHeights.GaussGenericHeight.GaussGenericStatements.GaussGenericTheorem.HtGaussGen =====
@@ -328,7 +323,7 @@ theorem sImg_rel {Ω : Type} [Field Ω] {D N : ℕ} (jc : Fin (N + 1)) (b : Fin 
     ∑ j, sImg (D := D) jc (fun k => b (jc.succAbove k)) (i, j) *
       algebraMap Ω (OmS Ω D N) (b j) = 0 := by
   rw [Fin.sum_univ_succAbove _ jc]
-  simp only [sImg, GaussValuationUniqueness.sac_same, GaussValuationUniqueness.sac_succAbove, if_neg hi, hb, map_one,
+  simp only [sImg, GaussValuationUniqueness.sac_same, GaussValuationUniqueness.sac_succAbove, ite_eq_right hi, hb, map_one,
     mul_one]
 
   simp only [IsScalarTower.algebraMap_apply Ω (MvPolynomial (SVar D N) Ω) (OmS Ω D N),
@@ -427,7 +422,7 @@ theorem admissibleValuation_prime_subsingleton {K : Type} [Field K] [NumberField
     have hni := GaussValuationUniqueness.not_inj_of_trdeg (D := d.D) S j0 ρL
       (by have := hd.D_ge; omega) htr
     rw [injective_iff_map_eq_zero] at hni
-    push_neg at hni
+    push Not at hni
     obtain ⟨G, hG0, hG⟩ := hni
     obtain ⟨f, rfl⟩ := MvPolynomial.map_surjective
       (GaussValuationUniqueness.gK v hK) (GaussValuationUniqueness.gK_surj v hK) G
@@ -474,8 +469,7 @@ theorem admissibleValuation_prime_subsingleton {K : Type} [Field K] [NumberField
     obtain ⟨α, hα⟩ := GaussValuationUniqueness.exists_smul_of_line hline (hd.w_mem j c) (hd.w_mem _ c) hbase
     rw [hb_def]
     simp only
-    rw [GaussValuationUniqueness.ratio_eq_of hbase hα]
-    exact hα
+    rwa [GaussValuationUniqueness.ratio_eq_of hbase hα]
   have hb : b (d.jc c) = 1 := GaussValuationUniqueness.ratio_eq_of hbase (one_smul _ _).symm
   have hb0 : b j0 ≠ 0 := by
     intro h0

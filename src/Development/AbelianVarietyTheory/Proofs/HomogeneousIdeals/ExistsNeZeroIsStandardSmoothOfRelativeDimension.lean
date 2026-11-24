@@ -275,8 +275,7 @@ theorem isOpenMap_comap [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] (φ : A
   · have h1 : p (φ ((minpoly A a).coeff 0)) = 0 := by
       have h2 : p.toRingHom (eval₂ φ.toRingHom a (minpoly A a)) = 0 := by
         rw [show eval₂ φ.toRingHom a (minpoly A a) = 0 from minpoly.aeval A a, map_zero]
-      rw [hom_eval₂, show p.toRingHom a = 0 from hpa, eval₂_at_zero] at h2
-      exact h2
+      rwa [hom_eval₂, show p.toRingHom a = 0 from hpa, eval₂_at_zero] at h2
     rw [mem_setOf_eq, comap_apply, h1, norm_zero]
     positivity
   · rintro r ⟨hrK, hrW⟩
@@ -291,8 +290,7 @@ theorem isOpenMap_comap [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] (φ : A
     obtain ⟨q, hq⟩ := exists_comap_eq_of_isIntegral χ hχ (aevalTower r t) fun f hf => by
       obtain ⟨k, rfl⟩ := minpoly.isIntegrallyClosed_dvd hai (p := f) hf
       have : aevalTower r t (minpoly A a) = 0 := by
-        rw [IsRoot, eval_map] at ht
-        exact ht
+        rwa [IsRoot, eval_map] at ht
       rw [map_mul, this, zero_mul]
     have hqr : comap φ q = r := by
       ext x

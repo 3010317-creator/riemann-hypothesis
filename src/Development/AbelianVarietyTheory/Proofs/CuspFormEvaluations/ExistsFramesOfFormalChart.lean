@@ -138,25 +138,11 @@ theorem pt_law (hch : IsChartG t x0 d F act tg uvec x) (m : ℕ) {n : ℕ} (r : 
 
 theorem th_pt {T : Over X0} (a b c : T ⟶ t.G) (I : thK) :
     (lift a (lift b c)).left ≫ thφ t.G (x3 t.G) I = (psum t.G ![a, b, c] I.down).left := by
-  simp only [thφ, ← Over.comp_left]
-  refine congrArg Over.Hom.left ((psum_hom (preHom _) _ I.down).trans ?_)
-  refine congrArg (fun f => psum t.G f I.down) (funext fun i => ?_)
-  fin_cases i
-  · show lift a (lift b c) ≫ fst t.G (t.G ⊗ t.G) = a
-    exact lift_fst _ _
-  · show lift a (lift b c) ≫ (snd t.G (t.G ⊗ t.G) ≫ fst t.G t.G) = b
-    rw [lift_snd_assoc, lift_fst]
-  · show lift a (lift b c) ≫ (snd t.G (t.G ⊗ t.G) ≫ snd t.G t.G) = c
-    rw [lift_snd_assoc, lift_snd]
+  exact GlobalTheory.SecondPartialLaw.th_pt a b c I
 
 theorem jetPt_trunc (hch : IsChartG t x0 d F act tg uvec x) (m : ℕ) {n : ℕ} (i : Fin n) :
     homAt x0 (jetTrunc : Jet S (Fin n × Fin d) (m + 1) →ₐ[S] _) ≫ jptG t x0 d x (m + 1) i = jptG t x0 d x m i := by
-  have hc : (jetTrunc : Jet S (Fin n × Fin d) (m + 1) →ₐ[S] _).comp (jetCopy d (m + 1) i) =
-      (jetCopy d m i).comp (jetTrunc : Jet S (Fin 1 × Fin d) (m + 1) →ₐ[S] _) := by
-    apply jet_hom_ext
-    intro p
-    rfl
-  rw [jptG, jptG, ← Category.assoc, homAt_comp, hc, ← homAt_comp, Category.assoc, hch.trunc m]
+  exact GlobalTheory.SecondPartialLaw.jpt_trunc_ring hch m i
 
 abbrev threePts (m : ℕ) (i j k : Fin 3) : jOG x0 d m 3 ⟶ t.G ⊗ t.G ⊗ t.G :=
   lift (jptG t x0 d x m i) (lift (jptG t x0 d x m j) (jptG t x0 d x m k))
@@ -341,8 +327,7 @@ theorem exists_gen_lift [IsAffine Y] [IsAffine Z] (hL : L.IsLB) (p : Z ⟶ Y)
     exact (congrArg IsUnit (hu' y J hJ)).mpr (Units.isUnit _)
   have hun : ∀ j, IsUnit (u.f j) := fun j => Y.toRingedSpace.isUnit_of_isUnit_germ _ _ fun x hx => by
     have := (mem_nonzeroLocus_iff_isUnit u hx).1 (hn x)
-    rw [gs_eq (𝟙 Y) x _ hx] at this
-    exact this
+    rwa [gs_eq (𝟙 Y) x _ hx] at this
   refine ⟨⟨fun j => (hun j).unit⟩, fun i j => Units.ext (u.compat i j), corr_of_val hL fun y J hJ => ?_⟩
   rw [val_pull hJ, Category.id_comp]
   exact Units.ext ((gs_unit p y _ (hJ.mem φ p) _).symm.trans (hu' y J hJ))

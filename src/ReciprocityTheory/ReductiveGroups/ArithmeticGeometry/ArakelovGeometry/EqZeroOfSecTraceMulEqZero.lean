@@ -32,10 +32,10 @@ theorem hc_mul_homog {σ : Type*} {p : MvPolynomial σ ℤ} {a : ℕ} (hp : p.Is
 
   rw [Finset.mul_sum, map_sum, Finset.sum_eq_single b]
   · rw [MvPolynomial.homogeneousComponent_of_mem ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
-      (hp.mul (MvPolynomial.homogeneousComponent_isHomogeneous b q))), if_pos rfl]
+      (hp.mul (MvPolynomial.homogeneousComponent_isHomogeneous b q))), ite_eq_left rfl]
   · intro k _ hk
     rw [MvPolynomial.homogeneousComponent_of_mem ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
-      (hp.mul (MvPolynomial.homogeneousComponent_isHomogeneous k q))), if_neg (by omega)]
+      (hp.mul (MvPolynomial.homogeneousComponent_isHomogeneous k q))), ite_eq_right (by omega)]
   · intro hb
     rw [MvPolynomial.homogeneousComponent_eq_zero b q (by simp at hb; omega), mul_zero, map_zero]
 
@@ -105,13 +105,12 @@ theorem X_zero_pow_dvd_of_isHomogeneous_aeval (y : Fin (D + 1) → Ω) (hfree : 
         MvPolynomial (Fin (D + 1)) ℤ) ∈ coordIdeal ℤ y := by
       rw [coordIdeal, RingHom.mem_ker, coneMap_of_isHomogeneous_arakelov_geometry y _ hPh, hPy]
       simp
-    rw [hfree, Ideal.mem_bot] at hmem
-    exact hmem
+    rwa [hfree, Ideal.mem_bot] at hmem
   have hPeq := sub_eq_zero.mp hP0
   apply X_pow_dvd_of_le_degrees
   intro d hd
   have h1 : AddMonoidAlgebra.coeff (MvPolynomial.X 0 ^ m * H ⟨1, by omega⟩) (d + Finsupp.single ⟨1, by omega⟩ m) ≠ 0 := by
-    rw [← hPeq, MvPolynomial.X_pow_eq_monomial, MvPolynomial.coeff_monomial_mul', if_pos le_add_self,
+    rw [← hPeq, MvPolynomial.X_pow_eq_monomial, MvPolynomial.coeff_monomial_mul', ite_eq_left le_add_self,
       add_tsub_cancel_right, one_mul]
     exact MvPolynomial.mem_support_iff.mp hd
   rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.coeff_monomial_mul'] at h1
@@ -127,7 +126,7 @@ theorem mem_sec_of_charts (y : Fin (D + 1) → Ω) (hfree : coordIdeal ℤ y = �
   obtain ⟨G, hG⟩ := X_zero_pow_dvd_of_isHomogeneous_aeval y hfree u n m H hH hu
   have hG' : MvPolynomial.X 0 ^ m * MvPolynomial.homogeneousComponent n G = H 0 := by
     rw [← hc_mul_homog (MvPolynomial.isHomogeneous_X_pow (0 : Fin (D + 1)) m) G n, ← hG,
-      MvPolynomial.homogeneousComponent_of_mem ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr (hH 0)), if_pos rfl]
+      MvPolynomial.homogeneousComponent_of_mem ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr (hH 0)), ite_eq_left rfl]
   refine Submodule.mem_map.mpr ⟨MvPolynomial.homogeneousComponent n G,
     (MvPolynomial.mem_homogeneousSubmodule _ _).mpr (MvPolynomial.homogeneousComponent_isHomogeneous n G), ?_⟩
   show MvPolynomial.aeval y (MvPolynomial.homogeneousComponent n G) = u
@@ -223,8 +222,7 @@ theorem eq_zero_of_trace' [Fintype κ] (x : κ → Ω) (e : Fin (D + 1) → κ) 
       rw [pow_add, div_mul_div_comm]
     rw [e1]
     exact Subtype.ext (h0 l))
-  have h2 := congrArg Subtype.val ht
-  simpa [hx0] using h2
+  simpa [hx0] using congrArg Subtype.val ht
 
 end ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.TraceNormBounds
 end -- clump:auto
@@ -264,8 +262,7 @@ def secTrace (x : κ → Ω) (e : Fin (D + 1) → κ) (n : ℕ) (s : Ω) : Ω :=
 
 theorem exists_indep_sections (x : κ → Ω) (e : Fin (D + 1) → κ) (h : IsRatProjFrame x e) :
     ∃ (k : ℕ) (ε : Fin (projDeg x e) → Ω), (∀ l, ε l ∈ sec ℤ x k) ∧
-      LinearIndependent (fnField (x ∘ e)) ε := by
-  exact TraceNormBounds.exists_indep_sections' x e h
+      LinearIndependent (fnField (x ∘ e)) ε := TraceNormBounds.exists_indep_sections' x e h
 
 theorem secTrace_mem (x : κ → Ω) (e : Fin (D + 1) → κ) (h : IsProjFrame x e) (n : ℕ) {s : Ω}
     (hs : s ∈ sec ℤ x n) : secTrace x e n s ∈ sec ℤ (x ∘ e) n := by

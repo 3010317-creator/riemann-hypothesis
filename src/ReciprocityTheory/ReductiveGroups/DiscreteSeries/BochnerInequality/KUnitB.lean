@@ -143,8 +143,7 @@ theorem re_inner_casimirK_le (hA : IsGlRep A) (hU : IsKUnitary ε A) {S : Submod
   rw [Submodule.coe_inner, hTc] at key
   have e1 : ((⟨x, hx⟩ : S) : X) = x := rfl
   have e2 : ‖(⟨x, hx⟩ : S)‖ = ‖x‖ := rfl
-  rw [e1, e2] at key
-  exact key
+  rwa [e1, e2] at key
 
 theorem lift_khw (hU : IsKUnitary ε A) {Y : Type*} [AddCommGroup Y] [Module ℂ Y]
     {B : Fin n → Fin n → Module.End ℂ Y} (f : X →ₗ[ℂ] Y)
@@ -172,8 +171,7 @@ theorem lift_khw (hU : IsKUnitary ε A) {Y : Type*} [AddCommGroup Y] [Module ℂ
     obtain ⟨hzS, hfz⟩ := (hK z).1 hz
     exact (hK _).2 ⟨hS a b hab z hzS, by rw [hf a b hab, hfz, map_zero]⟩
   have key : ∀ d, d ∈ S → f d = 0 → (∀ z ∈ K, inner ℂ z d = 0) → d = 0 := by
-    intro d hdS hfd0 hdo
-    exact inner_self_eq_zero.mp (hdo d ((hK d).2 ⟨hdS, hfd0⟩))
+    exact fun d hdS hfd0 hdo => inner_self_eq_zero.mp (hdo d ((hK d).2 ⟨hdS, hfd0⟩))
   refine ⟨x, hxS, fun z hz hfz => hperp z ((hK z).2 ⟨hz, hfz⟩),
     ⟨fun a => ?_, fun a b hab he => ?_⟩, hfx⟩
   · apply sub_eq_zero.mp
