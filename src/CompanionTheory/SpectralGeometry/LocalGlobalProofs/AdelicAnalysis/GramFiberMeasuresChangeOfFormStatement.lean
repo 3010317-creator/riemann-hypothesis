@@ -77,9 +77,7 @@ theorem fibre_map_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     (GlobalTheory.CompanionTheory.SW.GramAlg.gram_algebra F E σ hcm M J hJ R n).2.2.2.2 J' g hg
   have hcont : ∀ h : GL (Fin M) (R ⊗[F] E),
       Continuous (actTup R h : (Fin n → Fin M → R ⊗[F] E) → (Fin n → Fin M → R ⊗[F] E)) := by
-    intro h
-    refine continuous_pi fun b => ?_
-    exact continuous_const.matrix_mulVec (continuous_apply b)
+    exact fun h => continuous_pi fun b => continuous_const.matrix_mulVec (continuous_apply b)
   let e : (Fin n → Fin M → R ⊗[F] E) ≃ₜ (Fin n → Fin M → R ⊗[F] E) :=
     { toFun := actTup R g
       invFun := actTup R g⁻¹
@@ -110,8 +108,7 @@ theorem fibre_map_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have hm'' : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily μ' (gramR R σ J') Subtype.val (l' ⁻¹' B) ν B m' := by
     have := hm'
     unfold IsGramFib at this
-    rw [hset'] at this
-    exact this
+    rwa [hset'] at this
   have hcompat : ∀ X, l (e X) = (Homeomorph.refl _) (l' X) := by
     intro X
     apply Subtype.ext

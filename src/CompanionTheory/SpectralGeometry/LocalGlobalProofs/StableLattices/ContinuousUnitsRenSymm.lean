@@ -141,8 +141,7 @@ lemma mem_inG {ε : Fin n → Bool} (r : Equiv.Perm (Fin n)) {X : Matrix (Fin n)
   ext i j; simp [ren]
 
 lemma continuous_ren (r : Equiv.Perm (Fin n)) : Continuous (ren r) := by
-  refine continuous_matrix fun i j => ?_
-  exact (continuous_apply_apply (r i) (r j))
+  exact continuous_matrix fun i j => (continuous_apply_apply (r i) (r j))
 
 lemma exp_ren (r : Equiv.Perm (Fin n)) (X : Matrix (Fin n) (Fin n) ℂ) :
     NormedSpace.exp (ren r X) = ren r (NormedSpace.exp X) := by
@@ -194,8 +193,7 @@ lemma wt_ren (hε : ε₁ = ε ∘ r) (hτ : ∀ g, τ' g = τ (ren r g)) {μ : 
   rw [hτ, ren_diag]
   have e : (∑ a, (μ ∘ r.symm) a * θ a) = ∑ a, μ a * (θ ∘ r) a :=
     (Fintype.sum_equiv r _ _ (fun a => by simp)).symm
-  rw [e]
-  exact h1
+  rwa [e]
 
 lemma root_ren (r : Equiv.Perm (Fin n)) (a b x : Fin n) :
     root (r a) (r b) x = root a b (r.symm x) := by
@@ -277,8 +275,7 @@ lemma kMod_ren (hε : ε₁ = ε ∘ r) (ho : Ord ε₁ r) (hτ : ∀ g, τ' g =
       refine (Fintype.sum_equiv r.symm _ _ (fun a => ?_))
       refine (Fintype.sum_equiv r.symm _ _ (fun b => ?_))
       simp [ren]
-    rw [e1, e2]
-    exact h
+    rwa [e1, e2]
   · have := hK.gl (r.symm a) (r.symm b) (r.symm c) (r.symm d)
     simpa using this
   · have := hK.unit (r.symm a) (r.symm b) x y
@@ -378,8 +375,7 @@ lemma sqIrr_ren (hε : ε₁ = ε ∘ r) (hτ : ∀ g, τ' g = τ (ren r g)) (h 
   have memU' : ∀ {g}, g ∈ Formalism.MainNotions.S.UJset (ε ∘ r) → ren r.symm g ∈ Formalism.MainNotions.S.UJset ε := fun {g} hg => by
     have h := mem_UJ r.symm (show g ∈ PI.UpqRep.UJset (ε ∘ r) from hg)
     have e : (ε ∘ r) ∘ r.symm = ε := by ext a; simp
-    rw [e] at h
-    exact h
+    rwa [e] at h
   refine ⟨hc, hn, ⟨⟨?_, fun a ha b hb => ?_⟩, fun g hg v => ?_, fun v => ?_⟩, fun S hS hst => ?_, fun v w => ?_⟩
   · rw [hτ, ren_one, h1]
   · rw [hτ, hτ, hτ, ren_mul, hm _ (memU ha) _ (memU hb)]
@@ -396,8 +392,7 @@ lemma sqIrr_ren (hε : ε₁ = ε ∘ r) (hτ : ∀ g, τ' g = τ (ren r g)) (h 
       show ⟪w, τ' _ v⟫_ℂ = ⟪w, τ _ v⟫_ℂ
       rw [hτ]
       congr 3
-    rw [this]
-    exact h2
+    rwa [this]
 
 end Rep
 

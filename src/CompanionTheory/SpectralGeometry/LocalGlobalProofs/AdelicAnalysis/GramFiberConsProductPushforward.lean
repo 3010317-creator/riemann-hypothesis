@@ -281,8 +281,7 @@ theorem fold : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
         ∂(Measure.pi fun _ => coordK R b lam) ∂lam := by
     have hGe : Measurable (fun p => G (e p)) := hGm.comp e.continuous.measurable
     rw [← hemap, lintegral_map hGm e.continuous.measurable, lintegral_prod _ hGe.aemeasurable]
-    refine lintegral_congr fun x => ?_
-    exact lintegral_prod _ (hGe.comp measurable_prodMk_left).aemeasurable
+    exact lintegral_congr fun x => lintegral_prod _ (hGe.comp measurable_prodMk_left).aemeasurable
   have hs0 : ∀ p, s0 R (e p : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) = p.1 :=
     fun p => corner_half_trace_of_cm_pure_tensor R σ hσ _ _ (he00 p)
   have hoff : ∀ x, x ∉ B₀ → ∫⁻ r, ∫⁻ S'', G (e (x, r, S'')) ∂(coordHerm R σ b lam n)

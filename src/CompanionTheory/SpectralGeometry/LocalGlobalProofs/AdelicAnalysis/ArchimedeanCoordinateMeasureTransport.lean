@@ -111,8 +111,7 @@ theorem map_swap_volume (ι κ : Type) [Fintype ι] [Fintype κ] :
     rw [hc] at h1
     simp only [Measure.smul_apply, vB] at h1
     simpa using h1
-  rw [hc1, one_smul] at hc
-  exact hc
+  rwa [hc1, one_smul] at hc
 
 theorem pi_smul_const {ι α : Type} [Fintype ι] [MeasurableSpace α] (ν : Measure α) [SigmaFinite ν]
     (c : ℝ≥0) :

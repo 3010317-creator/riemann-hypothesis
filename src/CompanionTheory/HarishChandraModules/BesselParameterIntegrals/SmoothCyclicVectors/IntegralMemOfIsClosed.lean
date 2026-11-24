@@ -339,41 +339,19 @@ theorem exists_approx (hG : IsMatGroup G) (h : RepOn G σ) (hiso : ∀ g ∈ G, 
     {w : H} (hw : IsSm G σ w) (hd : Dense (orbSpan G σ w : Set H)) {x : H} (hx : IsSm G σ x)
     {ι : Type} [Fintype ι] {W : ι → List (Mat n)} (hW : ∀ i, LieW G (W i)) {δ : ℝ} (hδ : 0 < δ) :
     ∃ y ∈ orbSpan G σ w, ∀ i, ‖dsW σ (W i) (x - y)‖ < δ := by
-  have hAdd {a b : H} (ha : IsSm G σ a) (hb : IsSm G σ b) (L : List (Mat n)) :
-      LieW G L → dsW σ L (a + b) = dsW σ L a + dsW σ L b := by
-    induction L with
-    | nil => intro _; rfl
-    | cons X L ih =>
-      intro hL
-      have hTail : LieW G L := fun Y hY => hL Y (List.mem_cons_of_mem _ hY)
-      have hX : ∀ t, ex X t ∈ G := hL X List.mem_cons_self
-      simp only [dsW_cons, ih hTail, ds, map_add]
-      exact deriv_fun_add ((ha.dsW h hTail).differentiableAt h hX)
-        ((hb.dsW h hTail).differentiableAt h hX)
-  have hSmul {v : H} (hv : IsSm G σ v) (c : ℂ) (L : List (Mat n)) :
-      LieW G L → dsW σ L (c • v) = c • dsW σ L v := by
-    induction L with
-    | nil => intro _; rfl
-    | cons X L ih =>
-      intro hL
-      have hTail : LieW G L := fun Y hY => hL Y (List.mem_cons_of_mem _ hY)
-      have hX : ∀ t, ex X t ∈ G := hL X List.mem_cons_self
-      simp only [dsW_cons, ih hTail, ds, map_smul]
-      exact deriv_fun_const_smul c ((hv.dsW h hTail).differentiableAt h hX)
   let J : H → ι → H := fun v i => dsW σ (W i) v
   let S₀ : Submodule ℂ (ι → H) :=
     { carrier := J '' orbSpan G σ w
       add_mem' := by
         rintro _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩
-        exact ⟨a + b, add_mem ha hb, funext fun i => hAdd (isSm_of_mem_orbSpan h hw ha)
-          (isSm_of_mem_orbSpan h hw hb) (W i) (hW i)⟩
+        exact ⟨a + b, add_mem ha hb, funext fun i => dsW_add h (isSm_of_mem_orbSpan h hw ha)
+          (isSm_of_mem_orbSpan h hw hb) (hW i)⟩
       zero_mem' := ⟨0, zero_mem _, funext fun i => by
-        have := hSmul IsSm.zero 0 (W i) (hW i)
-        simpa using this⟩
+        simpa using dsW_smul h IsSm.zero 0 (hW i)⟩
       smul_mem' := by
         rintro c _ ⟨a, ha, rfl⟩
         exact ⟨c • a, Submodule.smul_mem _ c ha, funext fun i =>
-          hSmul (isSm_of_mem_orbSpan h hw ha) c (W i) (hW i)⟩ }
+          dsW_smul h (isSm_of_mem_orbSpan h hw ha) c (hW i)⟩ }
   let S := S₀.topologicalClosure
   have hS : IsClosed (S : Set (ι → H)) := S₀.isClosed_topologicalClosure
   have hJc : ∀ v, IsSm G σ v → Continuous fun g : MG G hG => J (σ g.mat v) := fun v hv =>
@@ -405,9 +383,9 @@ theorem exists_approx (hG : IsMatGroup G) (h : RepOn G σ) (hiso : ∀ g ∈ G, 
           (integrable_smul hφ.continuous hc (hJc _ (hx.sub hys)))
         simp only [ContinuousLinearMap.proj_apply, Pi.smul_apply] at this
         rw [← this]
-        refine (norm_integral_dsW_le h hiso (hx.sub hys) hφ hc (hW i)).trans ?_
-        exact mul_le_mul_of_nonneg_right
-          (Finset.single_le_sum (fun j _ => hC0 j) (Finset.mem_univ i)) (norm_nonneg _)
+        exact (norm_integral_dsW_le h hiso (hx.sub hys) hφ hc (hW i)).trans
+          (mul_le_mul_of_nonneg_right
+            (Finset.single_le_sum (fun j _ => hC0 j) (Finset.mem_univ i)) (norm_nonneg _))
       rw [dist_eq_norm, lt_div_iff₀ (by positivity)] at hxy
       nlinarith [norm_nonneg (x - y)]
   have hJx : J x ∈ S := by
@@ -426,7 +404,7 @@ theorem exists_approx (hG : IsMatGroup G) (h : RepOn G σ) (hiso : ∀ g ∈ G, 
     have hφ0 : ∀ g, 0 ≤ φ g := fun g => (hr ⟨g, rfl⟩).1
     have hφ' : Continuous fun g : MG G hG => φ g.mat := hφ.continuous.comp MG.continuous_mat
     have hc' : HasCompactSupport fun g : MG G hG => φ g.mat :=
-      HasCompactSupport.intro (isCompact_supp hc) fun g hg => image_eq_zero_of_notMem_tsupport hg
+      hc.comp_isClosedEmbedding MG.isClosedEmbedding_mat
     set c : ℝ := ∫ g : MG G hG, φ g.mat ∂haar with hcdef
     have hcpos : 0 < c := hφ'.integral_pos_of_hasCompactSupport_nonneg_nonzero hc'
       (fun g => hφ0 _) (x := 1) (by rw [hφ1]; exact one_ne_zero)
@@ -445,20 +423,17 @@ theorem exists_approx (hG : IsMatGroup G) (h : RepOn G σ) (hiso : ∀ g ∈ G, 
       rw [norm_smul, Real.norm_of_nonneg (hφ0 _)]
       by_cases hg : g.mat ∈ tsupport φ
       · refine mul_le_mul_of_nonneg_left ?_ (hφ0 _)
-        have : dist (J (σ g.mat x)) (J x) < ε / 2 := hUs (hφU hg)
-        rw [dist_comm, dist_eq_norm] at this
-        exact this.le
+        rw [← dist_eq_norm, dist_comm]
+        exact le_of_lt (hUs (hφU hg))
       · rw [image_eq_zero_of_notMem_tsupport hg, zero_mul, zero_mul]
     rw [dist_eq_norm, e, norm_smul, Real.norm_of_nonneg (inv_nonneg.2 hcpos.le)]
     calc c⁻¹ * _ ≤ c⁻¹ * (c * (ε / 2)) := mul_le_mul_of_nonneg_left hle (inv_nonneg.2 hcpos.le)
-      _ = ε / 2 := by field_simp
-      _ < ε := by linarith
+      _ < ε := by rw [inv_mul_cancel_left₀ hcpos.ne']; linarith
   obtain ⟨_, ⟨y, hy, rfl⟩, hxy⟩ := Metric.mem_closure_iff.1
     (show J x ∈ closure (S₀ : Set (ι → H)) from hJx) δ hδ
   refine ⟨y, hy, fun i => ?_⟩
   rw [dsW_sub h hx (isSm_of_mem_orbSpan h hw hy) (hW i)]
-  rw [dist_eq_norm] at hxy
-  exact (norm_le_pi_norm (J x - J y) i).trans_lt hxy
+  exact (norm_le_pi_norm (J x - J y) i).trans_lt (by rwa [dist_eq_norm] at hxy)
 
 end CompanionTheory.D.Upq.Sm
 

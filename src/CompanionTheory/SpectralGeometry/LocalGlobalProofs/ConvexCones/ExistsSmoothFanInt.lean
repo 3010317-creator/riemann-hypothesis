@@ -478,9 +478,7 @@ theorem isTwG_starLab {O : Type} [CommRing O] (w0 : O) {lab w : InvFun O}
   have hiff : IsCentreRay w (Fin n → O) (fun a b => B (fun i => σ (a i)) fun i => σ (b i)) ↔
       IsCentreRay w (Fin n → O) B := by
     refine ⟨fun h => ?_, fwd σ hσ n B⟩
-    have h2 := fwd σ.symm hσ' n _ h
-    simp only [RingEquiv.apply_symm_apply] at h2
-    exact h2
+    simpa only [RingEquiv.apply_symm_apply] using fwd σ.symm hσ' n _ h
   rw [← GlobalTheory.LocM.InvFun.eval_pi, ← GlobalTheory.LocM.InvFun.eval_pi, starLab_eval, starLab_eval,
     GlobalTheory.LocM.InvFun.eval_pi, GlobalTheory.LocM.InvFun.eval_pi, hl σ hσ n B]
   by_cases hc : IsCentreRay w (Fin n → O) B
@@ -564,8 +562,7 @@ theorem exists_isTwG_simpLab_star : ∀ (O : Type) [CommRing O] [IsDedekindDomai
     · refine inRCone_trans (fun k => ?_) (hin j)
       refine Fin.cases ?_ (fun k => ?_) k
       · simpa using inRCone_self (Fin.cons β₀ fun j => δ (s' j) : Fin (m₂ + 1) → LinearMap.BilinForm ℤ X) 0
-      · simp only [Fin.cons_succ]
-        exact inRCone_trans hself (inRCone_face hfs (hγδ (s k)) (hg2 k))
+      · simpa only [Fin.cons_succ] using inRCone_trans hself (inRCone_face hfs (hγδ (s k)) (hg2 k))
 
 end GlobalTheory.CompanionTheory.Ar.Fan.TwistedStarLabelling
 end -- clump:auto

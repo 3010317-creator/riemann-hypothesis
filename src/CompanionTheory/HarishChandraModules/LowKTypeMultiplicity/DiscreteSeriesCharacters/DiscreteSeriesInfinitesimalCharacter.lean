@@ -181,8 +181,7 @@ theorem algCore_of (hF : FRel) (hB : BdFacts) (hCO : CO) (hZ : ZetaHW) (hW : WLe
   have h1 : (∑ A, ‖T c A‖ ^ 2 : ℝ) = 0 := by
     have h := congrArg (RCLike.re (K := ℂ)) h0
 
-    simp only [ip, map_sum, inner_self_eq_norm_sq, map_zero] at h
-    exact h
+    simpa only [ip, map_sum, inner_self_eq_norm_sq, map_zero] using h
   have h2 := (Finset.sum_eq_zero_iff_of_nonneg fun A _ => sq_nonneg _).1 h1 (A1 ε) (Finset.mem_univ _)
   have h3 : T c (A1 ε) = 0 := by simpa using h2
   simpa [T, hcv, sub_eq_zero] using h3
@@ -207,8 +206,7 @@ theorem dsInfCharCap_of (hC : AlgCoreSub) (hM : SmMod) (hQ : ActQ) (hSp : Spread
       exact hmin μ T' hT')
   have h := hSp n ε lam H σ S E hU hI hS v₀ h0 hcore ⟨v, (hS.mem v).2 hv⟩ Y
   have hq := hQ n ε H σ S E hS (Y + ((n : ℂ) - 1) / 2) ⟨v, (hS.mem v).2 hv⟩
-  rw [h] at hq
-  exact hq
+  rwa [h] at hq
 
 end CompanionTheory.D.DSIC
 end -- clump:auto
@@ -657,8 +655,7 @@ theorem co0 : CompanionTheory.D.DSIC.CapelliDeterminantBlockProduct := by
   intro n ε V _ _ E hE u v
   have h := block_mem ε E hE (Sum.elim (blk ε false) (blk ε true)) (blk_val ε false) (blk_val ε true) u v
   have h2 := qminor_equiv E hE (finSumFinEquiv.symm.trans (Equiv.ofBijective _ (blk_bijective ε))) u
-  rw [← h2]
-  exact h
+  rwa [← h2]
 
 end GlobalTheory.CompanionTheory.CapelliBlocks
 end -- clump:auto
@@ -768,8 +765,7 @@ theorem wt_false (ε : Fin n → Bool) (c : Fin n) (hc : ε c = false) :
       simp only [mem_filter, mem_univ, true_and] at ha
       refine ⟨⟨(a, c), ?_, hc⟩, ?_, rfl⟩
       · have := ha.2; rw [hc] at this; simpa using this
-      · simp only [A1, mem_filter, mem_univ, true_and]
-        exact ⟨ha.1, trivial⟩
+      · simpa only [A1, mem_filter, mem_univ, true_and] using ⟨ha.1, trivial⟩
   unfold wtA
   rw [h1, h2]; simp
 
@@ -793,8 +789,7 @@ theorem wt_true (ε : Fin n → Bool) (c : Fin n) (hc : ε c = true) :
       simp only [mem_filter, mem_univ, true_and] at ha
       refine ⟨⟨(c, a), hc, ?_⟩, ?_, rfl⟩
       · have := ha.2; rw [hc] at this; simpa using this
-      · simp only [A1, mem_filter, mem_univ, true_and]
-        exact ⟨ha.1, trivial⟩
+      · simpa only [A1, mem_filter, mem_univ, true_and] using ⟨ha.1, trivial⟩
   unfold wtA
   rw [h1, h2]; simp
 
@@ -1802,8 +1797,7 @@ theorem wlem_of_gfacts (hG : GFacts) : WLem := by
       have h4 := ht_add_root (wtA B) a b hab
       rw [← (hwt a b A B hgB).2] at h4
       exact absurd h3 (not_le.mpr h4)
-    rw [h2, add_zero] at h1
-    exact h1
+    rwa [h2, add_zero] at h1
 
 end GlobalTheory.CompanionTheory.DSICWLem
 end -- clump:auto

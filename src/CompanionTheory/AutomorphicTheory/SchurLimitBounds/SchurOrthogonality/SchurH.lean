@@ -416,9 +416,7 @@ theorem exists_map_iota (hP : IsCayley k r ε P) {μG : Measure (Formalism.Quant
     rw [hν, hE.map_comap]
     refine Measure.restrict_eq_self_of_ae_mem ?_
     rw [ae_iff]
-    refine measure_mono_null (fun x hx => ?_) hnull
-    intro hxS
-    exact hx (exists_iota_eq hP hxS)
+    exact measure_mono_null (fun x hx => (fun hxS => hx (exists_iota_eq hP hxS))) hnull
   have : SigmaFinite ν := SigmaFinite.of_map ν hE.measurable.aemeasurable (by rw [hmap]; exact hσ)
   have : ν.IsMulLeftInvariant := by
     refine ⟨fun g => ?_⟩
@@ -479,8 +477,7 @@ theorem isURepOn_of_ds {lam : Fin (2 * r + k + 1) → ℝ}
   refine ⟨⟨?_, fun a ha b hb => ?_⟩, fun x hx v => ?_, fun v => ?_⟩
   · simpa [inv_mul_P hP] using h1
   · have := hm _ (forth_mem hP ha) _ (forth_mem hP hb)
-    simp only [← forth_mul hP, back_forth hP] at this
-    exact this
+    simpa only [← forth_mul hP, back_forth hP] using this
   · have := hn _ (forth_mem hP hx) v
     simpa only [back_forth hP] using this
   · have := (hc v).comp (f := fun x => P * x * P⁻¹) (s := UH (Hpk k r))
@@ -518,8 +515,7 @@ theorem threeDimData_schurH : Formalism.FourierDecayAlt.ThreeDimData.SchurH := b
   have : (c • muG ε).IsHaarMeasure := Measure.IsHaarMeasure.smul _ hc0 hcT
   have hsq : SqInt (c • muG ε) (toURep hP σ hU) := fun v w => by
     have := hL v w
-    rw [e, (iota_measEmb hP).memLp_map_measure_iff] at this
-    exact this
+    rwa [e, (iota_measEmb hP).memLp_map_measure_iff] at this
   obtain ⟨d, hd, h⟩ := schur_orthogonality (toURep_irred hP σ hU hI) hsq
   refine ⟨d, hd, fun v w v' w' => ⟨(hL v w).integrable_mul (hL v' w').star, ?_⟩⟩
   rw [e, (iota_measEmb hP).integral_map]
@@ -548,12 +544,10 @@ theorem schur_inequiv {k r : ℕ} {ε ε' : Fin (2 * r + k + 1) → Bool} {lam l
   have : (c • muG ε).IsHaarMeasure := Measure.IsHaarMeasure.smul _ hc0 hcT
   have hsq : SqInt (c • muG ε) (toURep hP σ hU) := fun v w => by
     have := hL v w
-    rw [e, (iota_measEmb hP).memLp_map_measure_iff] at this
-    exact this
+    rwa [e, (iota_measEmb hP).memLp_map_measure_iff] at this
   have hsq' : SqInt (c • muG ε) (toURep hP σ' hU') := fun v w => by
     have := hL' v w
-    rw [e, (iota_measEmb hP).memLp_map_measure_iff] at this
-    exact this
+    rwa [e, (iota_measEmb hP).memLp_map_measure_iff] at this
   refine ⟨(hL v w).integrable_mul (hL' v' w').star, ?_⟩
   rw [e, (iota_measEmb hP).integral_map]
   refine pairing_eq_zero (toURep_irred hP σ hU hI) (toURep_irred hP σ' hU' hI') hsq hsq' ?_ v w v' w'

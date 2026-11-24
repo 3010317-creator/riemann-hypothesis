@@ -150,8 +150,7 @@ theorem cyc_le {v : V} {T : Submodule ℂ V} (hT : ∀ a b, ∀ x ∈ T, E a b x
     exact T.smul_mem r hx
   next p =>
     intro x hx
-    simp only [ev, FreeAlgebra.lift_ι_apply]
-    exact hT p.1 p.2 x hx
+    simpa only [ev, FreeAlgebra.lift_ι_apply] using hT p.1 p.2 x hx
   next a b ha hb =>
     intro x hx
     rw [map_mul, Module.End.mul_apply]
@@ -225,8 +224,7 @@ theorem orth_spread (hU : IsUnitary ε E) (J : Module.End ℂ V) (hJ : ∀ a b x
     have hs : ((Formalism.REAL.sgn ε d c : ℝ) : ℂ) ≠ 0 := by
       unfold Formalism.REAL.sgn; split_ifs <;> norm_num
     exact (mul_eq_zero.1 h1.symm).resolve_left hs
-  intro x hx m hm
-  exact hS hx m hm
+  exact fun x hx m hm => hS hx m hm
 
 end Unit
 
@@ -240,8 +238,7 @@ theorem exists_closed_stable {H : Type} [NormedAddCommGroup H] [InnerProductSpac
     have h1 : ⟪Cas E v, v⟫_ℂ = ⟪v, Cas E v⟫_ℂ := cas_symm hU v v
     rw [hc, inner_smul_left, inner_smul_right] at h1
     have hv : ⟪v, v⟫_ℂ ≠ 0 := inner_self_ne_zero.2 hv0
-    have h2 := mul_right_cancel₀ hv h1
-    exact (Complex.conj_eq_iff_re.1 h2).symm
+    exact (Complex.conj_eq_iff_re.1 (mul_right_cancel₀ hv h1)).symm
   obtain ⟨S, hSf, hSK, hvS⟩ := hF v
   let V : Submodule ℂ D := (S ⊓ LinearMap.ker (Cas E - c • 1)) ⊓ Cyc E v
   have hVf : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le (inf_le_left.trans inf_le_left)
@@ -285,8 +282,7 @@ theorem isDerivedOn_of_isKMod {H : Type} [NormedAddCommGroup H] [InnerProductSpa
     have h := hK.real X hX v
     have e : ((ReciprocityTheory.ChartRestriction.DS.actM E X v : D) : H) = ∑ a, ∑ b, X a b • ((E a b v : D) : H) := by
       simp [ReciprocityTheory.ChartRestriction.DS.actM]
-    rw [e]
-    exact h
+    rwa [e]
 
 section Sum
 
@@ -301,9 +297,7 @@ theorem toProd_prodMap (a b : Fin n) (x : sD D D') : toP (sE E E' a b x) = (E a 
 theorem toProd_injective₂ {x y : sD D D'} (h : toP x = toP y) : x = y := by
   have h1 : ((toP x).1 : H) = (toP y).1 := congrArg (fun p => (p.1 : H)) h
   have h2 : ((toP x).2 : H') = (toP y).2 := congrArg (fun p => (p.2 : H')) h
-  apply Subtype.ext
-  apply (WithLp.linearEquiv 2 ℂ (H × H')).injective
-  exact Prod.ext h1 h2
+  exact Subtype.ext ((WithLp.linearEquiv 2 ℂ (H × H')).injective (Prod.ext h1 h2))
 
 theorem isUnitary_sE (hU : IsUnitary ε E) (hU' : IsUnitary ε E') : IsUnitary ε (sE E E') := by
   intro a b x y
@@ -386,8 +380,7 @@ theorem core (hM : MultAlg) (hO : OrthCyc) {V : Type} [NormedAddCommGroup V] [In
     · rw [← hJ, hyK'.1 a, map_smul]
     · rw [← hJ, hyK'.2 a b hab he, map_zero]
   have horth := hO n ε V E (lowK ε lam) y (J y) hgl hKU hF hmult hJK hy
-  intro x hx
-  exact orth_spread hun J hJ horth x hx x hx
+  exact fun x hx => orth_spread hun J hJ horth x hx x hx
 
 theorem ds_unique (hM : MultAlg) (hE : KModExists) (hO : OrthCyc) (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ)
     (H H' : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [NormedAddCommGroup H'] [InnerProductSpace ℂ H']

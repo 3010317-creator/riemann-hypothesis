@@ -103,18 +103,15 @@ lemma fieldChar_eq_one_iff (b : F) :
     ring
 
 lemma zero_mem_Oh : (0 : A F) ∈ Oh F := by
-  intro v
-  exact (HeightOneSpectrum.adicCompletionIntegers F v).zero_mem
+  exact fun v => (HeightOneSpectrum.adicCompletionIntegers F v).zero_mem
 
 variable {F} in
 lemma add_mem_Oh {x y : A F} (hx : x ∈ Oh F) (hy : y ∈ Oh F) : x + y ∈ Oh F := by
-  intro v
-  exact add_mem (hx v) (hy v)
+  exact fun v => add_mem (hx v) (hy v)
 
 variable {F} in
 lemma sub_mem_Oh {x y : A F} (hx : x ∈ Oh F) (hy : y ∈ Oh F) : x - y ∈ Oh F := by
-  intro v
-  exact sub_mem (hx v) (hy v)
+  exact fun v => sub_mem (hx v) (hy v)
 
 lemma exists_rep (x : A F) : ∃ b : F, x - algebraMap F (A F) b ∈ Oh F := by
   obtain ⟨-, -, -, -, hOpen, hDense, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F

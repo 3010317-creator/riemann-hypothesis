@@ -141,8 +141,7 @@ theorem shuffle_mp {A B C D : Type} [MeasurableSpace A] [MeasurableSpace B] [Mea
   have h3 : MeasurePreserving (Prod.map Prod.swap id) ((b.prod c).prod d) ((c.prod b).prod d) :=
     (Measure.measurePreserving_swap).prod (MeasurePreserving.id d)
   have h4 := measurePreserving_prodAssoc c b d
-  have h5 := (MeasurePreserving.id a).prod (h4.comp (h3.comp h2))
-  exact h5.comp h1
+  exact ((MeasurePreserving.id a).prod (h4.comp (h3.comp h2))).comp h1
 
 theorem splitE_mp {R K : Type} [MeasurableSpace R] [MeasurableSpace K] (lam : Measure R) (κ : Measure K)
     [SigmaFinite lam] [SigmaFinite κ] (n : ℕ) :
@@ -298,8 +297,7 @@ theorem herm_split : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   · exact hermMat_zero_zero (σ := σ) R n _
   · exact hermMat_zero_succ (σ := σ) R n _ j
   · refine (hermMat_succ_succ (σ := σ) R n _ i j).trans ?_
-    have h := congrArg Subtype.val ((chart R hσ n).left_inv p.2.2)
-    exact congrFun (congrFun h i) j
+    exact congrFun (congrFun (congrArg Subtype.val ((chart R hσ n).left_inv p.2.2)) i) j
   · have hmp := splitE_mp lam (coordK R b lam) n
     have hmp2 : MeasurePreserving (C n).symm ((Measure.pi fun _ : Fin n => lam).prod
         (Measure.pi fun _ : Pairs n => coordK R b lam)) (((Measure.pi fun _ : Fin n => lam).prod

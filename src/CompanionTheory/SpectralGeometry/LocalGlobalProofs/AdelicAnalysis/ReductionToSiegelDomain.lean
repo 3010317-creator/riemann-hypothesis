@@ -88,8 +88,7 @@ def Adapted (A : FractionalIdeal (𝓞 F)⁰ F) (g : SL(2, F)) : Prop :=
 theorem integral_of_mem {A : FractionalIdeal (𝓞 F)⁰ F} (hA : A ≠ 0) {x y : F} (hx : x ∈ A)
     (hy : y ∈ A⁻¹) : ∃ z : 𝓞 F, (z : F) = x * y := by
   have h : x * y ∈ A * A⁻¹ := FractionalIdeal.mul_mem_mul hx hy
-  rw [mul_inv_cancel₀ hA, FractionalIdeal.mem_one_iff] at h
-  exact h
+  rwa [mul_inv_cancel₀ hA, FractionalIdeal.mem_one_iff] at h
 
 theorem exists_bezout {A : FractionalIdeal (𝓞 F)⁰ F} (hA : A ≠ 0) {p q : F}
     (h : A = FractionalIdeal.spanSingleton _ p + FractionalIdeal.spanSingleton _ q) :
@@ -242,8 +241,7 @@ theorem GlobalTheory.CompanionTheory.SW.Core.exists_finset_row_completion :
     if h : ∃ r, Adapted (A g) r then h.choose else 1
   have hr : ∀ g, (∃ r, Adapted (A g) r) → Adapted (A g) (r g) := by
     intro g h
-    simp only [r, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [r, dite_eq_left h] using h.choose_spec
   refine ⟨Finset.univ.image r, ∑ g, (Ideal.absNorm (J g : Ideal (𝓞 F)) : ℝ), ?_⟩
   intro c d hcd
   have hI : Ideal.span {c, d} ∈ (Ideal (𝓞 F))⁰ := by
@@ -625,8 +623,7 @@ theorem prod_sq_embedding {F : Type} [Field F] [NumberField F] (hF : IsTotallyRe
 theorem balanced_lower {ι : Type} [Fintype ι] (z : ι → ℝ) (hz : ∀ i, 0 < z i) (κ P : ℝ)
     (hκ : 0 < κ) (hbal : ∀ v w, κ * z w ≤ z v) (hprod : P ≤ ∏ i, z i) (w : ι) :
     κ * min 1 P ≤ z w := by
-  by_contra h
-  push Not at h
+  by_contra! h
   set q := z w / κ with hq
   have hqpos : 0 < q := div_pos (hz w) hκ
   have hqlt : q < min 1 P := by
@@ -675,8 +672,7 @@ theorem reduction : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
   have hy'eq : ∀ w, y' w = (τ w).im / N w := by
     intro w
     have := (him (r₁ * k₁) w).1
-    rw [h₁0', h₁1'] at this
-    exact this
+    rwa [h₁0', h₁1'] at this
   have hNpos : ∀ w, 0 < N w := by
     intro w
     have hnn : 0 ≤ N w := by positivity
@@ -689,8 +685,7 @@ theorem reduction : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
     intro w
     rw [← map_mul]
     have : (((u⁻¹ : (𝓞 F)ˣ) : 𝓞 F) : F) * ((u : 𝓞 F) : F) = 1 := by
-      have h := congrArg (fun x : 𝓞 F => (x : F)) (Units.inv_mul u)
-      simpa using h
+      simpa using congrArg (fun x : 𝓞 F => (x : F)) (Units.inv_mul u)
     rw [this, map_one]
   have hz : ∀ w, (mob ρ (r * k) τ w).im = ρ w ((u : 𝓞 F) : F) ^ 2 * y' w := by
     intro w
@@ -770,9 +765,7 @@ theorem reduction : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
       linarith
     rw [← sq_abs]
     exact pow_le_pow_left₀ (abs_nonneg _) h3 2
-  refine ⟨r, hr, k, hk, ?_, hbal'⟩
-  intro w
-  exact balanced_lower _ hzpos κ P hκ hbal' hprod w
+  exact ⟨r, hr, k, hk, fun w => balanced_lower _ hzpos κ P hκ hbal' hprod w, hbal'⟩
 
 end GlobalTheory.CompanionTheory.SW.Red
 end -- clump:auto

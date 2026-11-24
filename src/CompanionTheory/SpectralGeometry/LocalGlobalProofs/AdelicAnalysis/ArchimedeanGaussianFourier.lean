@@ -134,8 +134,7 @@ theorem simultaneous_normal_form_majorant :
     simp only [hAdef, transpose_mul, transpose_transpose, hS.eq, Matrix.mul_assoc]
   have hA : A.IsHermitian := by
     unfold IsHermitian
-    rw [conjTranspose_eq_transpose_of_trivial]
-    exact hAT
+    rwa [conjTranspose_eq_transpose_of_trivial]
   have hA2 : A * A = 1 := by
     calc A * A = Cᵀ * (S * (C * Cᵀ) * S) * C := by simp only [hAdef, Matrix.mul_assoc]
       _ = 1 := by rw [hCC, hSPS, hCPC]
@@ -485,12 +484,10 @@ theorem gauss_fourier : ∀ (F : Type) [Field F] [NumberField F], ∀ (ι : Type
       (f := fun w (x : ι → ℝ) => g1 (B.map (ρ w)) (P w) (σ w) x *
         Complex.exp (2 * (Real.pi : ℂ) * Complex.I * ((x ⬝ᵥ (B.map (ρ w) *ᵥ y w) : ℝ) : ℂ))),
       sqrt_norm_det B ρ hF hρ, Complex.ofReal_prod, ← Finset.prod_mul_distrib]
-    refine Finset.prod_congr rfl fun w _ => ?_
-    exact (hc w (σ w) (hσ w)).2.2.2 (y w)
+    exact Finset.prod_congr rfl fun w _ => (hc w (σ w) (hσ w)).2.2.2 (y w)
   have hcG : ∀ σ : InfinitePlace F → ℂ, (∀ w, 0 < (σ w).im) → cG B ρ P σ = ∏ w, c w (σ w) := by
     intro σ hσ
-    have h0 := hfou σ hσ 0
-    simpa [cG, g1] using h0
+    simpa [cG, g1] using hfou σ hσ 0
   have hσ' : ∀ w, 0 < (-(τ w)⁻¹).im := fun w => neg_inv_im_pos (hτ w)
   refine ⟨?_, ?_, ?_, ?_⟩
   · have : gauss B ρ P τ = fun x => ∏ w, g1 (B.map (ρ w)) (P w) (τ w) (x w) :=

@@ -67,8 +67,7 @@ theorem diagOp_snd (A : Module.End ℂ T) (B : Module.End ℂ V) (x : WithLp 2 (
 
 theorem sum_ext {x y : WithLp 2 (T × V)} (h1 : (WithLp.ofLp x).1 = (WithLp.ofLp y).1)
     (h2 : (WithLp.ofLp x).2 = (WithLp.ofLp y).2) : x = y := by
-  apply (WithLp.linearEquiv 2 ℂ (T × V)).injective
-  exact Prod.ext h1 h2
+  exact (WithLp.linearEquiv 2 ℂ (T × V)).injective (Prod.ext h1 h2)
 
 theorem diag_krel {n : ℕ} {ε : Fin n → Bool} {ET : Fin n → Fin n → Module.End ℂ T}
     {E : Fin n → Fin n → Module.End ℂ V} (h1 : KRel ε ET) (h2 : KRel ε E) :
@@ -101,13 +100,9 @@ theorem hwMap_of_lowSpan : LowSpan → HWMap := by
     constructor
     · rintro ⟨p, rfl⟩
       exact p.2.2
-    · intro hx
-      exact ⟨((WithLp.ofLp x).1, ⟨(WithLp.ofLp x).2, hx⟩), sum_ext rfl rfl⟩
+    · exact fun hx => ⟨((WithLp.ofLp x).1, ⟨(WithLp.ofLp x).2, hx⟩), sum_ext rfl rfl⟩
   let w0 : WithLp 2 (T × V) := WithLp.toLp 2 (t, v)
-  have hw0 : w0 ≠ 0 := by
-    intro h
-    apply ht
-    exact congrArg (fun x => (WithLp.ofLp x).1) h
+  have hw0 : w0 ≠ 0 := fun h => ht (congrArg (fun x => (WithLp.ofLp x).1) h)
   have hKR : KRel ε (fun a b => diagOp (ET a b) (E a b)) := diag_krel hRT hR
   have hKU : KUnit ε (fun a b => diagOp (ET a b) (E a b)) := diag_kunit hUT hU
   have hHW : KHighest ε (fun a b => diagOp (ET a b) (E a b)) μ w0 := by

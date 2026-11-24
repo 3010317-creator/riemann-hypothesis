@@ -109,8 +109,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (ρ : G → H →L[�
         simp only [smul_comm c] }
   refine ⟨L.mkContinuous (∫ x, ‖w x‖ ∂μ) fun u => ?_, fun u => rfl⟩
   refine (norm_integral_le_integral_norm _).trans (le_of_eq ?_)
-  simp only [norm_smul, hiso]
-  exact integral_mul_const _ _
+  simpa only [norm_smul, hiso] using integral_mul_const _ _
 
 theorem integral_mul_right_of_conj {w : G → ℝ} (hw : Continuous w) (hc : HasCompactSupport w) (h0 : 0 ≤ w)
     (h1 : w 1 ≠ 0) (k : G) (hk : ∀ x, w (k⁻¹ * x * k) = w x) (F : G → H) :
@@ -155,8 +154,7 @@ theorem exists_nhds_close (ρ : G → H →L[ℂ] H) (hρ : ∀ u, Continuous fu
   let A : G → (Y →L[ℂ] H) := fun x => (ρ x).comp Y.subtypeL - Y.subtypeL
   have hA : Continuous A := by
     rw [continuous_clm_apply]
-    intro y
-    exact (hρ y).sub continuous_const
+    exact fun y => (hρ y).sub continuous_const
   have hA1 : A 1 = 0 := by
     ext y
     simp [A, h1]

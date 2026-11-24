@@ -59,10 +59,8 @@ theorem rank_le_one_iff_dual (W : Type) [AddCommGroup W] [Module ℂ W] :
   · have h0 : Cardinal.aleph0 ≤ Module.rank ℂ W := not_lt.1 (fun h => hf (rank_lt_aleph0_iff.1 h))
     have h1 := rank_lt_rank_dual h0
     constructor
-    · intro h
-      exact absurd (h0.trans h) (not_le.2 Cardinal.one_lt_aleph0)
-    · intro h
-      exact absurd ((h0.trans h1.le).trans h) (not_le.2 Cardinal.one_lt_aleph0)
+    · exact fun h => absurd (h0.trans h) (not_le.2 Cardinal.one_lt_aleph0)
+    · exact fun h => absurd ((h0.trans h1.le).trans h) (not_le.2 Cardinal.one_lt_aleph0)
 
 theorem rank_twJacquet_le_one_iff {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ G V) (N : Subgroup G) (θ : N →* ℂˣ) :
@@ -83,8 +81,7 @@ theorem rank_twJacquet_le_one_iff {G V : Type} [Group G] [AddCommGroup V] [Modul
       | smul a x _ hx => rw [map_smul, hx, smul_zero]
     · intro h n v
       have := h _ (Submodule.subset_span ⟨n, v, rfl⟩)
-      rw [map_sub, map_smul, smul_eq_mul, sub_eq_zero] at this
-      exact this
+      rwa [map_sub, map_smul, smul_eq_mul, sub_eq_zero] at this
   rw [rank_le_one_iff_dual, hE, ← (Submodule.dualQuotEquivDualAnnihilator _).rank_eq]
 
 end CompanionTheory.rg.gu.whit

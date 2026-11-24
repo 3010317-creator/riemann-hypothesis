@@ -397,8 +397,7 @@ lemma mem_of_unit_pivot {s : Finset ι} {k : ι}
     rw [hA4, Matrix.det_mul, Matrix.det_mul, Matrix.det_mul]
     exact (isUnit_det_of_mem hDm).mul
       (((isUnit_det_of_mem hCm).mul hA).mul (isUnit_det_of_mem hRm))
-  have h4 := ih A4 hdet hF4
-  exact mem_of_mul_left hCm (mem_of_mul_right hRm (mem_of_mul_left hDm h4))
+  exact mem_of_mul_left hCm (mem_of_mul_right hRm (mem_of_mul_left hDm (ih A4 hdet hF4)))
 
 lemma exists_unit_pivot (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + t * b))
     {s : Finset ι} {k : ι} {A : Matrix ι ι R} (hA : IsUnit A.det)
@@ -447,8 +446,7 @@ lemma exists_unit_pivot (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + 
       rw [hF l j (Or.inr hj), Matrix.one_apply_ne hlj, mul_zero]
     · rw [ite_eq_right hi, add_zero]
       exact hF i j hij
-  · rw [rowOp_mul_apply, ite_eq_left rfl, hwsum]
-    exact ht
+  · rwa [rowOp_mul_apply, ite_eq_left rfl, hwsum]
 
 lemma mem_of_fixed (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + t * b))
     (s : Finset ι) : ∀ A : Matrix ι ι R, IsUnit A.det → Fixed s A → A ∈ elem R ι := by
@@ -656,8 +654,7 @@ theorem map_mulVec_eq_of_transpose_mul_mul_eq :
       _ = scale B * 1 := (mul_one _).symm
   have h1 : scale g = 1 := (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 hsq
   have hmap := addEquivAddHaarChar_smul_map μ (mulVecEquiv g hg)
-  rw [← scale_of_isUnit hg, h1, one_smul] at hmap
-  exact hmap
+  rwa [← scale_of_isUnit hg, h1, one_smul] at hmap
 
 end GlobalTheory.CompanionTheory.Adelic.OrthHaar
 end -- clump:auto
@@ -738,8 +735,7 @@ theorem GlobalTheory.CompanionTheory.SW.HaarInv.actW_map_eq : ∀ (F E : Type) [
     intro X
     have := hconj X
     funext p
-    have hp := congrFun this p
-    simpa [e, tupEquiv, Φ, GlobalTheory.CompanionTheory.SW.TopK.coordHomeo] using hp
+    simpa [e, tupEquiv, Φ, GlobalTheory.CompanionTheory.SW.TopK.coordHomeo] using congrFun this p
   have hdet : IsUnit (B.map (algebraMap F (AF F))).det := by
     have : (B.map (algebraMap F (AF F))).det = algebraMap F (AF F) B.det := by
       rw [RingHom.map_det]

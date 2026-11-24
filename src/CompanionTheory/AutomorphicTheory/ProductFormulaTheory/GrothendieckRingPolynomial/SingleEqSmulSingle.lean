@@ -173,16 +173,12 @@ theorem mulR_comm' [Fact (Comm k)] (a b : GrothGL k) : mulR a b = mulR b a := by
 theorem mulR_assoc' [Fact (Assoc k)] (a b c : GrothGL k) : mulR (mulR a b) c = mulR a (mulR b c) := by
   simp only [mulR_eq]
   refine bil_assoc _ (fun x y z => ?_) a b c
-  have h := (Fact.out : Assoc k) x y z
-  simp only [mulR_eq, sg_eq] at h
-  exact h
+  simpa only [mulR_eq, sg_eq] using (Fact.out : Assoc k) x y z
 
 theorem unit_mulR [Fact (One k)] (a : GrothGL k) : mulR (GrothGL.unit k) a = a := by
   rw [mulR_eq]
   refine bil_one _ _ (fun x => ?_) a
-  have h := (Fact.out : One k) x
-  simp only [mulR_eq, sg_eq] at h
-  exact h
+  simpa only [mulR_eq, sg_eq] using (Fact.out : One k) x
 
 end GrothendieckRing
 

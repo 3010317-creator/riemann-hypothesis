@@ -74,8 +74,7 @@ theorem sum_pick {R : Type} [AddCommGroup R] [Module ℂ R] (f : Fin n → Fin n
       intro hq
       obtain ⟨_, h1, h2⟩ := (hQ k).mp hq
       exact hk (Subtype.ext (Prod.ext h1 h2))
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [ite_eq_right hp]
     apply Finset.sum_eq_zero
     intro k _
@@ -105,10 +104,8 @@ theorem sq_zero (L A : ι → R) (hLL : ∀ i j, Commute (L i) (L j)) (hLA : ∀
   rw [key]
   rw [hS'] at hS
   have h2 : (2 : ℂ) • ∑ i, ∑ j, L i * L j * (A i * A j) = 0 := by
-    rw [two_smul]
-    exact hS
-  have h3 := congrArg (fun x => (2 : ℂ)⁻¹ • x) h2
-  simpa [smul_smul] using h3
+    rwa [two_smul]
+  simpa [smul_smul] using congrArg (fun x => (2 : ℂ)⁻¹ • x) h2
 
 
 omit [DecidableEq ι] [Algebra ℂ R] in
@@ -127,8 +124,7 @@ theorem commute_of_unitary_conjugate (T G : R) (L A : ι → R) (hTA : ∀ k, Co
       _ = T * (L k * A k) + L k * (G * A k) - (L k * T * A k + L k * A k * G) := by rw [hG, hT]
       _ = (T * L k - L k * T) * A k + L k * (G * A k - A k * G) := by noncomm_ring
   show (T + G) * _ = _ * (T + G)
-  rw [← sub_eq_zero, e]
-  exact h
+  rwa [← sub_eq_zero, e]
 
 theorem comm_ann (A C : ι → R) (q : ι → ι → ℂ) (hAA : ∀ i j, A i * A j + A j * A i = 0)
     (hAC : ∀ i j, A i * C j + C j * A i = if i = j then 1 else 0) (k : ι) :
@@ -153,8 +149,7 @@ theorem comm_ann (A C : ι → R) (q : ι → ι → ℂ) (hAA : ∀ i j, A i * 
   · simp [Finset.sum_neg_distrib]
   · intro i _ hik
     simp [Ne.symm hik]
-  · intro h
-    exact absurd (Finset.mem_univ k) h
+  · exact fun h => absurd (Finset.mem_univ k) h
 
 theorem comm_cre (A C : ι → R) (q : ι → ι → ℂ) (hCC : ∀ i j, C i * C j + C j * C i = 0)
     (hAC : ∀ i j, A i * C j + C j * A i = if i = j then 1 else 0) (k : ι) :
@@ -240,8 +235,7 @@ theorem bdFacts : CAR → BdFacts := by
       rw [h', i.2.1] at a
       exact absurd a (by decide)
     have h := hGl i.1.1 i.1.2 j.1.1 j.1.2
-    rw [ite_eq_right h1, ite_eq_right h2, sub_zero, sub_eq_zero] at h
-    exact h
+    rwa [ite_eq_right h1, ite_eq_right h2, sub_zero, sub_eq_zero] at h
   refine ⟨sq_zero (fun i : NC ε => (lift ε (E i.1.1 i.1.2) : Module.End ℂ (Ch ε V))) ann hLL
     (fun i j => lift_ann _ j) hAA, ?_⟩
   intro c d hcd

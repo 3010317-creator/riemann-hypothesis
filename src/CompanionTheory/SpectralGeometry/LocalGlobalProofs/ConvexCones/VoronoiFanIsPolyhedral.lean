@@ -270,8 +270,7 @@ theorem exists_finite_below_mod_two {X : Type} [AddCommGroup X] [Module.Finite �
     rw [dite_eq_left hex]
     exact hex.choose_spec
   refine ⟨pick (red y) v, Set.mem_iUnion.mpr ⟨red y, v, hvM, rfl⟩, hred y _ hpick.1, ?_⟩
-  rw [hpick.2]
-  exact hvle
+  rwa [hpick.2]
 
 theorem finite_isMin2 : ∀ (X : Type) [AddCommGroup X] [Module.Finite ℤ X] [Module.Free ℤ X] (m : ℕ)
     (P : Fin m → LinearMap.BilinForm ℤ X), (∀ i y z, P i y z = P i z y) → (∀ i y, 0 ≤ P i y y) →
@@ -326,8 +325,7 @@ theorem finite_isMin2 : ∀ (X : Type) [AddCommGroup X] [Module.Finite ℤ X] [M
       omega
     have hmin : ∑ i, t i * ((P i y y : ℤ) : ℝ) ≤ ∑ i, t i * ((P i y' y' : ℤ) : ℝ) := by
       have h1 := hy x
-      rw [← hx, hBapp, hBapp] at h1
-      exact h1
+      rwa [← hx, hBapp, hBapp] at h1
     have hd : ∀ i ∈ Finset.univ, 0 ≤ t i * (((P i y y : ℤ) : ℝ) - ((P i y' y' : ℤ) : ℝ)) := fun i _ =>
       mul_nonneg (ht0 i) (sub_nonneg.mpr (by exact_mod_cast hle' i))
     have hsum : ∑ i, t i * (((P i y y : ℤ) : ℝ) - ((P i y' y' : ℤ) : ℝ)) = 0 := by
@@ -509,8 +507,7 @@ theorem exists_rcone_cover_contact : ∀ (O : Type) [CommRing O] [IsDedekindDoma
   let f : X →+ X := e.symm.toLinearMap.toAddMonoidHom
   have hf : f ∈ S := fun i => Set.mem_iUnion.2 ⟨j, hmin j _ ⟨c, hc, hE⟩ (isPosDef_pullR e hpos) _ (isMin2_pullR e (hB.2 i))⟩
   refine ⟨(j, ⟨f, hf⟩), c, hc, LinearMap.ext₂ fun y z => ?_⟩
-  have h4 := LinearMap.congr_fun₂ hE (f y) (f z)
-  simpa [f, form, LinearMap.sum_apply] using h4
+  simpa [f, form, LinearMap.sum_apply] using LinearMap.congr_fun₂ hE (f y) (f z)
 
 end GlobalTheory.CompanionTheory.Ar.Fan
 end -- clump:auto
@@ -540,8 +537,7 @@ theorem free_int_of_projective (O : Type) [CommRing O] [IsDomain O] [CharZero O]
   have htf : Module.IsTorsionFree ℤ Y := by
     refine Module.IsTorsionFree.of_smul_eq_zero ?_
     intro n y h
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 : ((n : O)) • y = 0 := by rw [Int.cast_smul_eq_zsmul]; exact h
     have h2 : (n : O) • s y = 0 := by rw [← map_smul, h1, map_zero]
     have hy : s y ≠ 0 := fun h0 => hc.2 (hinj (by rw [h0, map_zero]))
@@ -653,8 +649,7 @@ theorem exists_indep_rep (v : ι → V) (n : ℕ) : ∀ (t : ι → ℝ), (∀ i
         rw [Finset.smul_sum]
         exact Finset.sum_congr rfl fun i _ => by rw [smul_smul, mul_comm]
       rw [h2, hf0, smul_zero]
-    · simp only [hi₀, ite_true]
-      exact mul_self_pos.mpr hfi₀
+    · simpa only [hi₀, ite_true] using mul_self_pos.mpr hfi₀
   have hP : (S.filter (fun i => 0 < g i)).Nonempty := ⟨i₀, by simp [hi₀, hgpos]⟩
   obtain ⟨j, hjP, hjmin⟩ := Finset.exists_min_image _ (fun i => t i / g i) hP
   have hjS : j ∈ S := (Finset.mem_filter.mp hjP).1
@@ -1182,11 +1177,9 @@ theorem isMin2_pullR_iff {r : X →ₗ[O] X₁} (hr : Function.Surjective r) (B 
   · intro h x
     obtain ⟨x, rfl⟩ := hr x
     have := h x
-    simp only [pullR_apply, e] at this
-    exact this
+    simpa only [pullR_apply, e] using this
   · intro h x
-    simp only [pullR_apply, e]
-    exact h (r x)
+    simpa only [pullR_apply, e] using h (r x)
 
 theorem pullR_mem_contact {r : X →ₗ[O] X₁} (hr : Function.Surjective r) {B : X₁ →ₗ[ℤ] X₁ →ₗ[ℤ] ℝ} {ι : Type} {a : ι → X}
     (h : B ∈ contact bar fun i => r (a i)) : pullR r B ∈ contact bar a :=
@@ -1261,8 +1254,7 @@ theorem exists_nat_comb_of_toReal_mem_rcone (X : Type) [AddCommGroup X] (m : ℕ
   let T : Fin (m + 1) → ℝ := Fin.snoc (α := fun _ => ℝ) t 1
   have hpt : ∀ y z : X, (β y z : ℝ) = ∑ i, t i * (γ i y z : ℝ) := by
     intro y z
-    have h := LinearMap.congr_fun (LinearMap.congr_fun ht y) z
-    simpa [toReal, LinearMap.sum_apply] using h
+    simpa [toReal, LinearMap.sum_apply] using LinearMap.congr_fun (LinearMap.congr_fun ht y) z
   have hT : (∀ i, 0 ≤ T i) ∧ (∀ a ∈ (∅ : Set (Fin (m + 1) → ℤ)), ∑ i, (a i : ℝ) * T i ≤ 0) ∧
       (∀ b ∈ Set.range vec, ∑ i, (b i : ℝ) * T i = 0) := by
     refine ⟨fun i => ?_, fun a ha => absurd ha (Set.notMem_empty a), ?_⟩
@@ -1279,11 +1271,9 @@ theorem exists_nat_comb_of_toReal_mem_rcone (X : Type) [AddCommGroup X] (m : ℕ
       linarith
   obtain ⟨c, hc0, hTc⟩ := (hreal T).1 hT
   have hlast : (1 : ℝ) = ∑ k, c k * (v k (Fin.last m) : ℝ) := by
-    have h := congrFun hTc (Fin.last m)
-    simpa [T, Finset.sum_apply] using h
+    simpa [T, Finset.sum_apply] using congrFun hTc (Fin.last m)
   have hex : ∃ k, 0 < v k (Fin.last m) := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     have : ∑ k, c k * (v k (Fin.last m) : ℝ) = 0 :=
       Finset.sum_eq_zero fun k _ => by
         have : v k (Fin.last m) = 0 := Nat.le_zero.1 (hno k)

@@ -100,9 +100,7 @@ theorem pt_bound {t u y : ℝ} (ht : 0 < t) (hy : t ≤ y) (hu : y ≤ u) (m : �
     rw [h3]
     have : 0 ≤ (u * (u + 1))⁻¹ := by positivity
     exact mul_le_mul_of_nonneg_right (by linarith) this
-  have h4 : (u ^ m)⁻¹ ≤ (y ^ m)⁻¹ := by
-    apply inv_anti₀ (by positivity)
-    exact pow_le_pow_left₀ hy0.le hu m
+  have h4 : (u ^ m)⁻¹ ≤ (y ^ m)⁻¹ := inv_anti₀ (by positivity) (pow_le_pow_left₀ hy0.le hu m)
   calc (u ^ (m + 2))⁻¹ = (u ^ m)⁻¹ * (u ^ 2)⁻¹ := by rw [pow_add, mul_inv]
     _ ≤ (y ^ m)⁻¹ * ((1 + 1 / t) * (u * (u + 1))⁻¹) :=
         mul_le_mul h4 h2 (by positivity) (by positivity)
@@ -131,8 +129,7 @@ theorem sum_int {t y : ℝ} (ht : 0 < t) (hy : t ≤ y) (m : ℕ) :
       rw [abs_neg, abs_of_nonneg (by positivity)]
     have e' : |(((n : ℤ)) : ℝ)| = (n : ℝ) := by simp
     rw [e, e']
-    apply inv_anti₀ (by positivity)
-    exact pow_le_pow_left₀ (by positivity) (by linarith) _
+    exact inv_anti₀ (by positivity) (pow_le_pow_left₀ (by positivity) (by linarith) _)
   have s1 : Summable (fun n : ℕ => ((|(((n : ℤ)) : ℝ)| + y) ^ (m + 2))⁻¹) :=
     Summable.of_nonneg_of_le (fun n => nn n) hp hs.summable
   have s2 : Summable (fun n : ℕ => ((|((-((n : ℤ) + 1) : ℤ) : ℝ)| + y) ^ (m + 2))⁻¹) :=
@@ -215,8 +212,7 @@ theorem sum_le_of_fibres {α ι : Type} [Fintype ι] (a : α → ℝ) (φ : α �
       refine Finset.sum_le_sum_of_subset_of_nonneg ?_ fun n _ _ => hG n
       intro n hn
       rw [Fintype.mem_piFinset]
-      intro w
-      exact Finset.mem_image_of_mem _ hn
+      exact fun w => Finset.mem_image_of_mem _ hn
     have s5 : ∑ n ∈ Fintype.piFinset (fun w => (T.image φ).image (fun n => n w)), ∏ w, g w (n w)
         ≤ ∏ w, ∑' k, g w k := by
       rw [← Finset.prod_univ_sum]
@@ -253,10 +249,8 @@ theorem fibre_card (F : Type) [Field F] [NumberField F] (ρ : InfinitePlace F �
         push_cast
         rw [map_sub]
         ring
-      rw [e2]
-      exact this
-    · intro a _ b _ hab
-      exact sub_left_injective hab
+      rwa [e2]
+    · exact fun a _ b _ hab => sub_left_injective hab
 
 theorem lattice_sum : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F →
     ∀ ρ : InfinitePlace F → (F →+* ℝ), (∀ w x, ((ρ w x : ℝ) : ℂ) = w.embedding x) →
@@ -305,8 +299,7 @@ theorem lattice_sum : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F 
   refine Finset.prod_le_prod₀ (fun w _ => ?_) fun w _ => ?_
   · exact tsum_nonneg fun k => by have := hy0 w; positivity
   · rw [tsum_mul_left, mul_assoc]
-    refine mul_le_mul_of_nonneg_left ?_ (by positivity)
-    exact (hint w).2
+    exact mul_le_mul_of_nonneg_left (hint w).2 (by positivity)
 
 end GlobalTheory.CompanionTheory.SW.LatSum
 end -- clump:auto
@@ -352,8 +345,7 @@ theorem exists_decomp (F : Type) [Field F] [NumberField F] :
       linear_combination -hr
     exact (hL _).2 ⟨-r, this.symm⟩
   refine ⟨F ⧸ L, Quotient.out, ?_, hsep, ?_, ?_⟩
-  · intro q q' h
-    exact hsep q q' ⟨0, by simp [h]⟩
+  · exact fun q q' h => hsep q q' ⟨0, by simp [h]⟩
   · rintro ⟨q, r⟩ ⟨q', r'⟩ h
     simp only at h
     have hq : q = q' := hsep q q' ⟨r' - r, by push_cast; linear_combination h⟩

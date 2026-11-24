@@ -142,15 +142,13 @@ theorem eig_int_A (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions
   set f : ℝ → H := fun t => σ (NormedSpace.exp ((t : ℂ) • X)) (w : H)
   have hf : ∀ t, HasDerivAt f ((Complex.I * c) • f t) t := fun t => by
     have := hasDerivAt_orbit hσ hD hX w t
-    rw [hXw, Submodule.coe_smul, map_smul] at this
-    exact this
+    rwa [hXw, Submodule.coe_smul, map_smul] at this
   set g : ℝ → H := fun t => Complex.exp (-(Complex.I * c) * t) • f t
   have hg : ∀ t, HasDerivAt g 0 t := fun t => by
     have h1 : HasDerivAt (fun t : ℝ => Complex.exp (-(Complex.I * c) * t))
         (Complex.exp (-(Complex.I * c) * t) * (-(Complex.I * c))) t := by
       have := ((hasDerivAt_id (t : ℂ)).const_mul (-(Complex.I * c))).cexp
-      have h2 := this.comp_ofReal (z := t)
-      simpa using h2
+      simpa using this.comp_ofReal (z := t)
     refine (h1.smul (hf t)).congr_deriv ?_
     rw [smul_smul, ← add_smul, mul_neg, add_neg_cancel, zero_smul]
   have hconst := is_const_of_deriv_eq_zero (fun t => (hg t).differentiableAt) (fun t => (hg t).deriv)

@@ -131,8 +131,7 @@ theorem L_one (U : URep k r) (Y : Mx k r) (x : M (one U)) (c : Unit) : L (one U)
 theorem casDS : CasDS := by
   intro hC k r ε μ U hk hU F
   constructor
-  · refine LinearMap.ext fun x => funext fun c => ?_
-    exact cas_smooth hC U hk hU (x c)
+  · exact LinearMap.ext fun x => funext fun c => cas_smooth hC U hk hU (x c)
   · refine LinearMap.ext fun x => funext fun c => ?_
     have h := cas_smooth hC U hk hU (x c)
     simp only [LinearMap.sum_apply, Module.End.mul_apply] at h

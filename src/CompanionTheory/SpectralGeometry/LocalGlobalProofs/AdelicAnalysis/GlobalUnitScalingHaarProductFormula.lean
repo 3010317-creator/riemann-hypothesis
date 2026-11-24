@@ -170,8 +170,7 @@ theorem unitProd_scalar : ∀ (F : Type) [Field F] [NumberField F] (a : F), a �
   · apply NNReal.coe_injective
     have e : ((∏ᶠ v : HeightOneSpectrum (𝓞 F), (‖algebraMap F (Fv F v) a‖₊)⁻¹ : ℝ≥0) : ℝ) =
         (∏ᶠ v : HeightOneSpectrum (𝓞 F), ‖algebraMap F (Fv F v) a‖)⁻¹ := by
-      rw [finprod_inv_distrib]
-      rw [NNReal.coe_inv]
+      rw [finprod_inv_distrib, NNReal.coe_inv]
       congr 1
       exact NNReal.toRealHom.map_finprod_of_injective NNReal.coe_injective _
     rw [NNReal.coe_mul, e, NNReal.coe_one, Real.coe_toNNReal _ (inv_pos.2 hA).le, ← mul_inv, hprod, inv_one]
@@ -185,8 +184,7 @@ theorem unitProd_scalar : ∀ (F : Type) [Field F] [NumberField F] (a : F), a �
     have e : ∏ w : InfinitePlace F, w a⁻¹ ^ w.mult = (∏ w : InfinitePlace F, w a ^ w.mult)⁻¹ := by
       rw [← Finset.prod_inv_distrib]
       exact Finset.prod_congr rfl fun w _ => by rw [map_inv₀, inv_pow]
-    rw [e] at h
-    exact h
+    rwa [e] at h
   · intro v μ hμ
     exact map_mul_left_finite v _ ((map_ne_zero _).2 ha) μ hμ
 

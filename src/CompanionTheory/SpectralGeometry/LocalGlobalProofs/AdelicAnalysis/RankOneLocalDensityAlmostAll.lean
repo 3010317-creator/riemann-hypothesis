@@ -106,8 +106,7 @@ theorem coordW_one_map_coords : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have hK : (coordK R b lam).map e = Measure.pi fun _ => lam := by
     have h := e.measurableEmbedding.map_comap (Measure.pi fun _ : Fin d => lam)
     rw [e.surjective.range_eq, Measure.restrict_univ] at h
-    rw [coordK, ← hce]
-    exact h
+    rwa [coordK, ← hce]
   have hK' : coordK R b lam = (Measure.pi fun _ : Fin d => lam).map e.symm := by
     rw [← hK, Measure.map_map e.symm.measurable e.measurable]
     simp
@@ -269,21 +268,18 @@ theorem local_mass {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
         have h3 : algebraMap F (Fv F v) (1 / 2) = (2 : Fv F v)⁻¹ := by
           rw [one_div, map_inv₀, map_ofNat]
         rw [h2, hform, h3] at h1
-        rw [hcdef]
-        exact h1
+        rwa [hcdef]
       constructor
       · rintro ⟨⟨T, ⟨z, hz, rfl⟩, hT⟩, hL⟩
         refine ⟨fun p => ?_, ?_⟩
         · rw [hcdef]; exact hL 0 p.1 p.2
         · have h1 : hermScal (Fv F v) σ z = g X := Subtype.ext (hT.trans hgX)
-          rw [← hinj (h1.trans hQ.symm)]
-          exact hz
+          rwa [← hinj (h1.trans hQ.symm)]
       · rintro ⟨hi, hq⟩
         refine ⟨⟨g X, ⟨_, hq, hQ⟩, hgX.symm⟩, fun a i k => ?_⟩
         obtain rfl : a = 0 := Subsingleton.elim _ _
         have := hi (i, k)
-        rw [hcdef] at this
-        exact this
+        rwa [hcdef] at this
     have hmass : coordW (Fv F v) b lam 1 M
         ((gramR (Fv F v) σ J ⁻¹' (Subtype.val '' (hermScal (Fv F v) σ '' C))) ∩ latV b v) =
         (D : ℝ≥0∞) * lam C := by
@@ -335,8 +331,7 @@ theorem density_standard_lattice : ∀ (F E : Type) [Field F] [NumberField F] [F
   have hv2' : Valued.v (2 : Fv F v) = 1 := by rwa [map_ofNat] at hv2
   have hdet : Valued.v (B.map (algebraMap F (Fv F v))).det = 1 := by
     have h1 := (algebraMap F (Fv F v)).map_det B
-    rw [h1] at hvd
-    exact hvd
+    rwa [h1] at hvd
   obtain ⟨D, hD1, hD⟩ := _root_.GlobalTheory.CompanionTheory.SW.GBall.density_near_value F v lam hlam hv2' (Fin M × Fin d)
     (B.map (algebraMap F (Fv F v))) (hBs.map _) (fun i j => hve i j) hdet M hcard h3 s hs hs0
   rw [local_mass σ hCM M J hJ d b v (B.map (algebraMap F (Fv F v))) (fun x y => hBt (Fv F v) x y)

@@ -113,8 +113,7 @@ theorem mem_span_iff (x : mixedSpace F) :
     refine ⟨a, ?_⟩
     rw [InfiniteAdeleRing.mixedEmbedding_eq_algebraMap_comp]
     apply (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm.injective
-    rw [RingEquiv.symm_apply_apply]
-    exact ha
+    rwa [RingEquiv.symm_apply_apply]
 
 theorem exists_isStdInf : ∃ laminf : Measure (Ainf F), IsStdInf laminf := by
   classical
@@ -150,8 +149,7 @@ theorem exists_isStdInf : ∃ laminf : Measure (Ainf F), IsStdInf laminf := by
   · have hF₀ := ZSpan.isAddFundamentalDomain (latticeBasis F) μ₁
     refine hF₀.preimage_of_equiv (f := e) hmp.quasiMeasurePreserving
       (e := fun g => ⟨e.symm g.1, (mem_span_iff F g.1).1 g.2⟩) ⟨?_, ?_⟩ ?_
-    · intro g h hgh
-      exact Subtype.ext (e.symm.injective (congrArg Subtype.val hgh))
+    · exact fun g h hgh => Subtype.ext (e.symm.injective (congrArg Subtype.val hgh))
     · rintro ⟨y, hy⟩
       refine ⟨⟨e y, (mem_span_iff F (e y)).2 (by
         change e.symm (e y) ∈ _

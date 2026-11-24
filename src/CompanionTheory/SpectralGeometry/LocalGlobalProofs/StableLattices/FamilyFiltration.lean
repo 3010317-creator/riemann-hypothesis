@@ -229,8 +229,7 @@ theorem energy_lower (z x y : ℂ) (s d e : ℝ) (hd : 0 < d) (he : 0 ≤ e) :
 theorem exists_small_of_lintegral (W : ℝ → ℝ)
     (hW : (∫⁻ t in Ioi (0 : ℝ), ENNReal.ofReal (W t)) < ⊤) (T₀ : ℝ) (hT₀ : 0 ≤ T₀)
     (ε : ℝ) (hε : 0 < ε) : ∃ T, T₀ ≤ T ∧ W T < ε := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have h1 : (∫⁻ _t in Ioi T₀, ENNReal.ofReal ε) ≤ ∫⁻ t in Ioi (0 : ℝ), ENNReal.ofReal (W t) := by
     calc (∫⁻ _t in Ioi T₀, ENNReal.ofReal ε)
         ≤ ∫⁻ t in Ioi T₀, ENNReal.ofReal (W t) :=
@@ -341,8 +340,7 @@ theorem odeB : CompanionTheory.RgExh.Dec.N.OdeB := by
     have := energy_lower z (ft t) (g t) s a (E t) ha (hEpos t)
     rw [← hadef] at this
     have e : 2 * a - a = a := by ring
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hderiv : ∀ t, 0 ≤ t → HasDerivAt (fun x => ‖f x‖ ^ 2 * E x) (D t) t := by
     intro t ht
     have h1 := (hf t ht).norm_sq
@@ -442,8 +440,7 @@ theorem odeB : CompanionTheory.RgExh.Dec.N.OdeB := by
         simp only [hx2]
         exact hVle t T ht hT)
       simp only [hFdn]
-      rw [hK]
-      exact h3
+      rwa [hK]
     have hFt : ‖Fz t‖ * Real.exp (a * t) = ‖f t‖ * Real.exp (-s * t) := by
       simp only [Fz]
       rw [norm_mul, hnexp]
@@ -713,8 +710,7 @@ theorem shift_mem (hc : IsCoefFam ε X c) (hA : Formalism.REAL.inG ε A) (μ : M
     rw [ae_all_iff]
     intro c'
     rw [ae_all_iff]
-    intro d
-    exact (Filter.eventually_all_finset _).2 fun i' _ => hu' i'
+    exact fun d => (Filter.eventually_all_finset _).2 fun i' _ => hu' i'
   filter_upwards [hall] with x hx
   let K : Matrix (Fin n) (Fin n) ℂ := S7.toM x * Y * (S7.toM x)⁻¹
   let h : ℝ → ℂ := ∑ c', ∑ d, K c' d • ∑ i' ∈ (l c' d).support, (l c' d i') • line c A (S7.toM x) i' u
@@ -783,8 +779,7 @@ theorem famFilt : CompanionTheory.RgExh.Dec.J.FamFilt := by
     filter_upwards [hu i] with x h
     exact lt_of_le_of_lt (wInt_anti hss _) h
   · exact ⟨s0, eq_top_iff.2 fun u _ => h0 u⟩
-  · intro Y k hY s u hu
-    exact shift_mem hc hG μ Y k hY s u hu
+  · exact fun Y k hY s u hu => shift_mem hc hG μ Y k hY s u hu
   · intro s s' hlt htop z u hu hv
     exact eig_bounds hc hG μ hlt (fun v => by
       have : v ∈ Nsub hc hG μ s := by rw [htop]; trivial

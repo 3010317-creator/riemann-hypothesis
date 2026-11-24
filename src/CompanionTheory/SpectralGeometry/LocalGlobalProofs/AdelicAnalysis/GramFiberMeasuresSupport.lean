@@ -123,8 +123,7 @@ theorem fib_rmul : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
         rw [hτ]
         exact key _ _ _ hg2)
       continuous_toFun := by
-        refine Topology.IsInducing.subtypeVal.continuous_iff.2 ?_
-        exact (hcj g).congr fun S => (hτ S).symm
+        exact Topology.IsInducing.subtypeVal.continuous_iff.2 ((hcj g).congr fun S => (hτ S).symm)
       continuous_invFun := (hcj g⁻¹).subtype_mk _ }
   let B : Set (HermR R σ n) := {S | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det}
   have hBo : IsOpen B := by
@@ -149,15 +148,13 @@ theorem fib_rmul : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       show IsUnit ((τ S : HermR R σ n) : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det
       rw [hτ]
       exact hdet _ _ hg hS
-    · intro hS'
-      exact ⟨τh.symm S', hdet _ _ hgi hS', τh.apply_symm_apply _⟩
+    · exact fun hS' => ⟨τh.symm S', hdet _ _ hgi hS', τh.apply_symm_apply _⟩
   have hU : G ⁻¹' B = {X | IsUnit (gramR R σ J X).det} := by
     ext X
     show IsUnit _ ↔ IsUnit _
     rw [hGe]
   have hfam : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily μ (gramR R σ J) Subtype.val (G ⁻¹' B) ν B m := by
-    rw [hU]
-    exact hm
+    rwa [hU]
   have hcomm : ∀ X, G (e X) = τh (G X) := by
     intro X
     apply Subtype.ext

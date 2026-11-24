@@ -62,9 +62,7 @@ theorem exists_sorted_list {α : Type} (S : Finset α) (h : α → ℕ) :
     · obtain ⟨m, hm, hmin⟩ := Finset.exists_min_image S h hne
       obtain ⟨l, hnd, hmem, hs⟩ := ih (S.erase m) (Finset.erase_ssubset hm)
       refine ⟨m :: l, ?_, ?_, ?_⟩
-      · refine List.nodup_cons.2 ⟨?_, hnd⟩
-        intro hml
-        exact (Finset.mem_erase.1 ((hmem m).1 hml)).1 rfl
+      · exact List.nodup_cons.2 ⟨fun hml => (Finset.mem_erase.1 ((hmem m).1 hml)).1 rfl, hnd⟩
       · intro i
         rw [List.mem_cons, hmem, Finset.mem_erase]
         constructor
@@ -76,8 +74,7 @@ theorem exists_sorted_list {α : Type} (S : Finset α) (h : α → ℕ) :
           · exact Or.inl him
           · exact Or.inr ⟨him, hi⟩
       · refine List.pairwise_cons.2 ⟨?_, hs⟩
-        intro b hb
-        exact hmin b (Finset.mem_of_mem_erase ((hmem b).1 hb))
+        exact fun b hb => hmin b (Finset.mem_of_mem_erase ((hmem b).1 hb))
 
 theorem adC_ne_zero_cases {n : ℕ} {p q : Fin n} {i k : Pos n} (h : adC p q i k ≠ 0) :
     (q = i.1.1 ∧ k.1 = (p, i.1.2)) ∨ (i.1.2 = p ∧ k.1 = (i.1.1, q)) := by

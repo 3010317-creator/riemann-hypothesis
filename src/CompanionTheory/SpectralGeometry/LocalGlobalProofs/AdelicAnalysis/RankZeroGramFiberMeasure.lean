@@ -94,9 +94,7 @@ theorem GlobalTheory.CompanionTheory.SW.GramEmpty.fibre_gram_zero : ∀ (F E : T
         Set.univ ×ˢ Set.univ := by simp
     rw [Set.image_univ_of_surjective, this, Measure.prod_prod, Measure.pi_of_empty, Measure.pi_of_empty]
     · simp
-    · intro y
-      exact ⟨0, Subsingleton.elim _ _⟩
+    · exact fun y => ⟨0, Subsingleton.elim _ _⟩
   refine fibre_eq_dirac_of_unique _ _ m _ hμ hν (fun φ hφ => ?_) S
   have := h2 φ hφ
-  rw [hU, Measure.restrict_univ] at this
-  exact this
+  rwa [hU, Measure.restrict_univ] at this

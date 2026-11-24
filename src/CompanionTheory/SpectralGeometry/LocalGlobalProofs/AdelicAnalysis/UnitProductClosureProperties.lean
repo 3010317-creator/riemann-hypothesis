@@ -59,8 +59,7 @@ variable {F : Type} [Field F] [NumberField F]
 theorem mulSupport_finite {a : ℝ≥0} {c : HeightOneSpectrum (𝓞 F) → ℝ≥0} (h : IsUnitProd a c) :
     (Function.mulSupport c).Finite := by
   have := h.1
-  rw [Filter.eventually_cofinite] at this
-  exact this
+  rwa [Filter.eventually_cofinite] at this
 
 theorem map_hom (f : ℝ≥0 →* ℝ≥0) {a : ℝ≥0} {c : HeightOneSpectrum (𝓞 F) → ℝ≥0}
     (h : IsUnitProd a c) : IsUnitProd (f a) (fun v => f (c v)) := by
@@ -69,9 +68,7 @@ theorem map_hom (f : ℝ≥0 →* ℝ≥0) {a : ℝ≥0} {c : HeightOneSpectrum 
   have hsub : Function.mulSupport (fun v => f (c v)) ⊆ (hfin.toFinset : Set _) := by
     intro v hv
     simp only [Function.mem_mulSupport] at hv
-    simp only [Set.Finite.coe_toFinset, Function.mem_mulSupport]
-    intro h1
-    exact hv (by simp [h1])
+    simpa only [Set.Finite.coe_toFinset, Function.mem_mulSupport] using fun h1 => hv (by simp [h1])
   rw [finprod_eq_prod_of_mulSupport_subset _ hsub, ← map_prod, ← map_mul,
     ← finprod_eq_prod_of_mulSupport_subset c (by simp), h.2, map_one]
 
@@ -116,8 +113,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (a b : ℝ≥0)
     fun n => map_hom (powMonoidHom n) h, (mulSupport_finite h).toFinset, fun S hS => ?_⟩
   · simpa only [div_eq_mul_inv] using mul h (inv k)
   · have hsub : Function.mulSupport c ⊆ (S : Set _) := by
-      intro v hv
-      exact hS ((mulSupport_finite h).mem_toFinset.2 hv)
+      exact fun v hv => hS ((mulSupport_finite h).mem_toFinset.2 hv)
     refine ⟨fun v hv => ?_, ?_⟩
     · by_contra hne
       exact hv (hsub hne)

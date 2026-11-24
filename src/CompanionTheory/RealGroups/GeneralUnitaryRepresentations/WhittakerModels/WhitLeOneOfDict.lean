@@ -89,17 +89,13 @@ theorem whitLeOne_of_dict
       have hu : (u : GL (Fin n) k) ∈ unipB k (Fin n) := (hU n).symm ▸ u.2
       have := h ⟨u, hu⟩ v
       simp only at this
-      rw [hC] at this
-      show ℓ (π u v) = GroundTheory.Automorphic.Whittaker.psiN (Circle.coeHom.compAddChar ψ) (u : GL (Fin n) k) * ℓ v
-      exact this
+      rwa [hC] at this
     · intro h u v
       have hu : (u : GL (Fin n) k) ∈ GroundTheory.Automorphic.Iwasawa.unipotent k n := (hU n) ▸ u.2
       have := h ⟨u, hu⟩ v
       simp only at this
       show ℓ (π u v) = ((whitChar ψ n u : ℂˣ) : ℂ) * ℓ v
-      rw [hC]
-      exact this
-  rw [heq]
-  exact key
+      rwa [hC]
+  rwa [heq]
 
 end CompanionTheory.rg.gu.whit

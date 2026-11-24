@@ -59,8 +59,7 @@ theorem eventually_eval_neg_of_coeff_neg (q : Polynomial ℝ) (D : ℕ) (hdeg : 
   have hnd : q.natDegree = D := Polynomial.natDegree_eq_of_le_of_coeff_ne_zero hdeg hc.ne
   rcases Nat.eq_zero_or_pos D with rfl | hD
   · refine Eventually.of_forall fun m => ?_
-    rw [Polynomial.eq_C_of_natDegree_eq_zero hnd, Polynomial.eval_C]
-    exact hc
+    rwa [Polynomial.eq_C_of_natDegree_eq_zero hnd, Polynomial.eval_C]
   · have hlc : q.leadingCoeff ≤ 0 := by
       rw [Polynomial.leadingCoeff, hnd]; exact hc.le
     have hdg : 0 < q.degree := by
@@ -92,8 +91,7 @@ theorem interNum_top_pos_of_isAmpleLB : ∀ (k : Type) [Field k] (X : Scheme.{0}
     push_cast at h1
     rw [h1, h2]
     rfl
-  by_contra hneg
-  push Not at hneg
+  by_contra! hneg
   have hcD : p.coeff D ≤ 0 := by
     rw [hcoeff]
     have : ((interNum k (structureModule X) fun _ : Fin D => A : ℤ) : ℝ) ≤ 0 := by exact_mod_cast hneg

@@ -219,9 +219,7 @@ theorem IsIrreducible.isEquivalent_of_mem_intertwiners (hπ : IsIrreducible (π 
     show U ((r : ℂ) • v) = T v
     simp only [U, smul_apply, map_smul, smul_smul]
     rw [← Complex.ofReal_mul, mul_inv_cancel₀ hrpos.ne', Complex.ofReal_one, one_smul]
-  refine ⟨⟨LinearIsometryEquiv.ofSurjective Ui hsurj, fun g v => ?_⟩⟩
-  show U (π g v) = σ g (U v)
-  exact (Submodule.smul_mem _ _ hT) g v
+  exact ⟨⟨LinearIsometryEquiv.ofSurjective Ui hsurj, fun g v => ((Submodule.smul_mem _ _ hT) g v)⟩⟩
 
 theorem IsIrreducible.eq_zero_of_not_isEquivalent (hπ : IsIrreducible (π := π)) (hσ : IsIrreducible (π := σ))
     (hne : ¬ π.IsEquivalent σ) {T : H →L[ℂ] K} (hT : T ∈ intertwiners (π := π) σ) : T = 0 := by

@@ -85,8 +85,7 @@ theorem tsum_integral_swap : ∀ (K X : Type) [Countable K] [MeasurableSpace X] 
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (measure_lt_top _ _)
   have hsn : Summable fun b => ∫ x, ‖T b x‖ ∂μ := by
     have h3 := ENNReal.summable_toReal hlin
-    refine h3.congr fun b => ?_
-    exact (integral_norm_eq_lintegral_enorm (hm b)).symm
+    exact h3.congr fun b => (integral_norm_eq_lintegral_enorm (hm b)).symm
   have hS := hasSum_integral_of_summable_integral_norm hint hsn
   refine ⟨?_, hS.summable, hS.tsum_eq.symm⟩
   refine Integrable.of_bound ?_ C (ae_of_all _ fun x => (norm_tsum_le_tsum_norm (hs x)).trans (hb x))
@@ -159,12 +158,10 @@ theorem hasSum_integral_cosets : ∀ (G Q : Type) [AddCommGroup G] [TopologicalS
     intro q
     have h1 : ∫ a in E q, g a ∂lf = ∫ a in E q, g (s q) ∂lf := by
       refine setIntegral_congr_fun (hEm q) fun y hy => ?_
-      have h2 := hper (s q) _ hy
-      simpa using h2
+      simpa using hper (s q) _ hy
     have h3 : lf (E q) = lf W := measure_preimage_add lf (-s q) W
     rw [h1, setIntegral_const, Measure.real, h3, Complex.real_smul]
-  simp only [hq] at hS
-  exact hS
+  simpa only [hq] using hS
 
 theorem cosets_of_multiples : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ), 0 < N → ∀ H : AddSubgroup F, (∀ b, b ∈ H ↔ ∃ r : 𝓞 F, b = (N : F) * (r : F)) → (∀ y : A F, ∃ q : F ⧸ H, y - algebraMap F (A F) q.out ∈ {x : A F | ∃ z ∈ Oh F, x = (N : A F) * z}) ∧ ∀ q q' : F ⧸ H, (∃ w ∈ {x : A F | ∃ z ∈ Oh F, x = (N : A F) * z}, ∃ w' ∈ {x : A F | ∃ z ∈ Oh F, x = (N : A F) * z}, algebraMap F (A F) q.out + w = algebraMap F (A F) q'.out + w') → q = q' := by
   intro F _ _ N hN H hH
@@ -259,8 +256,7 @@ theorem sum_places_eq_trace : ∀ (F : Type) [Field F] [NumberField F], IsTotall
   exact_mod_cast h3
 
 theorem Oh_mul_mem : ∀ (F : Type) [Field F] [NumberField F] (x y : A F), x ∈ Oh F → y ∈ Oh F → x * y ∈ Oh F := by
-  intro F _ _ x y hx hy v
-  exact mul_mem (hx v) (hy v)
+  exact fun F _ _ x y hx hy v => mul_mem (hx v) (hy v)
 
 theorem fourier_coeff_eis : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ ψ : AddChar (A F) ℂ, IsStdChar F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → 3 ≤ M → ∀ φ : (ι → A F) → ℂ, SB φ → Integrable (fstar ψ (hf F) (Bf B) (muF B lf) φ) lf → Integrable (fun x : InfinitePlace F → ℝ => cG B ρ P (fun w => (x w : ℂ) + Complex.I)) → ∀ β : F, β ≠ 0 → ∀ N : ℕ, 0 < N → (∃ r : 𝓞 F, (r : F) = (N : F) * β) → (∀ x ∈ Oh F, ∀ y : A F, fstar ψ (hf F) (Bf B) (muF B lf) φ (y + (N : A F) * x) = fstar ψ (hf F) (Bf B) (muF B lf) φ y) → ∀ D : Set (InfinitePlace F → ℝ), IsAddFundamentalDomain (latR ρ N) D volume → IntegrableOn (fun x : InfinitePlace F → ℝ => eis ψ lf B ρ P φ (fun w => (x w : ℂ) + Complex.I) * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ))) D volume ∧ ∫ x in D, eis ψ lf B ρ P φ (fun w => (x w : ℂ) + Complex.I) * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ)) = ((N : ℂ) ^ Module.finrank ℚ F * ∫ y, fstar ψ (hf F) (Bf B) (muF B lf) φ y * ψ (-(algebraMap F (A F) β) * y) ∂lf) * ∫ x : InfinitePlace F → ℝ, cG B ρ P (fun w => (x w : ℂ) + Complex.I) * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ)) := by
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ M B ρ P hQ hM φ hφ hΦ hc β hβ N hN hNβ hper D hD
@@ -372,8 +368,7 @@ theorem fourier_coeff_eis : ∀ (F : Type) [Field F] [NumberField F] [Measurable
     have h6 := hC (fun w => (x w : ℂ) + Complex.I) (fun w => by simp)
     simp only [hterm] at h6
     have h7 : wt M (fun w => (x w : ℂ) + Complex.I) = 1 := by simp [wt]
-    rw [h7, one_mul] at h6
-    exact h6
+    rwa [h7, one_mul] at h6
   have hDfin : volume D ≠ ⊤ := by rw [hvol]; exact ENNReal.ofReal_ne_top
   haveI : IsFiniteMeasure (volume.restrict D) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.2 hDfin⟩
@@ -420,8 +415,7 @@ theorem fourier_coeff_eis : ∀ (F : Type) [Field F] [NumberField F] [Measurable
 
     let eH : H ≃ latR ρ N := Equiv.ofBijective (fun h => ⟨j h, h.2⟩) (by
       constructor
-      · intro a b hab
-        exact Subtype.ext (hjinj (congrArg Subtype.val hab))
+      · exact fun a b hab => Subtype.ext (hjinj (congrArg Subtype.val hab))
       · rintro ⟨l, hl⟩
         obtain ⟨r, rfl⟩ := (hLmem l).1 hl
         exact ⟨⟨(N : F) * (r : F), (hHmem _).2 ⟨r, rfl⟩⟩, rfl⟩)

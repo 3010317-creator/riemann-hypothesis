@@ -161,8 +161,7 @@ theorem exists_trace (hc : IsLinCat N Hom) {P : Type} [DecidableEq P] {T : P →
       simp only [LinearMap.comp_apply, Module.Basis.constr_basis, Submodule.subtype_apply,
         Submodule.coe_smul, LinearMap.llcomp_apply', hθ]
       rw [← LinearMap.comp_assoc, h, LinearMap.smul_comp]
-    intro w
-    exact LinearMap.congr_fun this w
+    exact fun w => LinearMap.congr_fun this w
   · rw [LinearMap.trace_eq_matrix_trace ℂ b, Matrix.trace,
       Finset.sum_subtype (univ.filter fun k => par k = ν) (p := fun k => par k = ν) (by simp)]
     refine Finset.sum_congr rfl fun k _ => ?_
@@ -197,8 +196,7 @@ theorem dec_of_gen (hc : IsLinCat N Hom) {P : Type} {T : P → O} (hT : IsSimple
       · simp
     · push Not at hν
       have : f = 0 := congrArg Subtype.val (h0 ν hν ⟨f, hf⟩)
-      rw [this, LinearMap.zero_comp]
-      exact S0
+      rwa [this, LinearMap.zero_comp]
   have Sid : S LinearMap.id := by
     have : (LinearMap.id : N Z →ₗ[ℂ] N Z) = ∑ k, (q ∘ₗ io k) ∘ₗ (pr k ∘ₗ j) := by
       ext x

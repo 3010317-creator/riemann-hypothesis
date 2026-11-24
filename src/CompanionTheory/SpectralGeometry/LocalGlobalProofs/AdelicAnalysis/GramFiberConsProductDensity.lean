@@ -66,8 +66,7 @@ theorem measurable_vec {K : Type} [Zero K] [MeasurableSpace K] {M n : ℕ} (α :
     Measurable (fun p : (Fin n → K) × (Fin n → Fin M → K) => vec α p.1 p.2) := by
   refine measurable_pi_iff.2 fun i => measurable_pi_iff.2 fun j => ?_
   refine Fin.cases ?_ (fun i' => ?_) i
-  · simp only [vec, Fin.cons_zero]
-    exact measurable_const
+  · simpa only [vec, Fin.cons_zero] using measurable_const
   · refine Fin.cases ?_ (fun j' => ?_) j
     · simp only [vec, Fin.cons_succ, Fin.cons_zero]
       exact (measurable_pi_apply i').comp measurable_fst
@@ -112,8 +111,7 @@ theorem swap_through_fibres {Y C X H : Type} [MeasurableSpace Y] [MeasurableSpac
         exact lintegral_lintegral_swap (f := fun y v => f y c v) (hfc c).aemeasurable
     _ = ∫⁻ c, ∫⁻ S in W, ∫⁻ y, ∫⁻ v, f y c v ∂(m S) ∂μ₁ ∂ν ∂μc := by
         refine lintegral_congr fun c => ?_
-        rw [hfib _ (hfc c).lintegral_prod_left']
-        rw [restr]
+        rw [hfib _ (hfc c).lintegral_prod_left', restr]
         · refine lintegral_congr fun S => ?_
           haveI := hm S
           exact lintegral_lintegral_swap (f := fun v y => f y c v)

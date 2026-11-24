@@ -105,8 +105,7 @@ theorem fibAc_of_closed_fibres : ∀ {k : Type} [Field k] [IsAlgClosed k] {X T Z
   have he : e ≫ a = v := P1.w.trans (Category.comp_id _)
   let σ : X ⟶ Z := inv e ≫ u ≫ π
   have hσp : σ ≫ p = 𝟙 X := by
-    simp only [σ, Category.assoc]
-    exact IsIso.inv_hom_id e
+    simpa only [σ, Category.assoc] using IsIso.inv_hom_id e
   have hes : e ≫ σ = u ≫ π := by simp [σ]
   have hσq : σ ≫ q = a ≫ Spec.map (CommRingCat.ofHom χ) ≫ t := by
     rw [← cancel_epi e, ← Category.assoc e σ, hes, ← Category.assoc e a, he, Category.assoc u, Hy.w]
@@ -128,7 +127,6 @@ theorem fibAc_of_closed_fibres : ∀ {k : Type} [Field k] [IsAlgClosed k] {X T Z
   have hL₃ : (G.pull (u ≫ π)).IsLB := LB.isLB_pull hG _
   have c₁ := cechLBCongr v (fun i => u ⁻¹ᵁ D i) hL₁ hL₃ w₁ hw₁
   have c₂ := cechLBCongr v (fun i => u ⁻¹ᵁ D i) hL₂ hL₃ w₂ hw₂
-  have E := cechLBBaseChangeIso hM h' hI ≪≫ c₂ ≪≫ c₁.symm ≪≫ i₁
-  exact fun m => (hac m).of_iso E.symm
+  exact fun m => (hac m).of_iso (cechLBBaseChangeIso hM h' hI ≪≫ c₂ ≪≫ c₁.symm ≪≫ i₁).symm
 
 end GlobalTheory.CompanionTheory.PointSurjectivity

@@ -123,8 +123,7 @@ lemma summable_wt {c : ℝ} (hc : 0 < c) (n : ℕ) :
     have hx0 : 0 ≤ c * y / 4 := by positivity
     have hb := Real.pow_div_factorial_le_exp (c * y / 4) hx0 (n + 1)
     have hexp : Real.exp (-(c * y / 4)) ≤ ((n + 1).factorial : ℝ) / (c * y / 4) ^ (n + 1) := by
-      rw [Real.exp_neg, inv_le_comm₀ (Real.exp_pos _) (by positivity), inv_div]
-      exact hb
+      rwa [Real.exp_neg, inv_le_comm₀ (Real.exp_pos _) (by positivity), inv_div]
     have hswap : ((4 : ℝ) ^ n) ^ j = y ^ n := by rw [hy, ← pow_mul, ← pow_mul, mul_comm]
     rw [hswap]
     calc Real.exp (-(c * y / 4)) * y ^ n
@@ -455,8 +454,7 @@ theorem add_le_mul_pow_of_sq_le_of_le_mul {w T κ C₀ C' : ℝ} {n : ℕ} (hT :
     rw [div_eq_mul_inv, Real.sqrt_mul hT.le]
   have hsT : 0 < Real.sqrt T ^ n := pow_pos (Real.sqrt_pos.mpr hT) n
   have h1 : w * (Real.sqrt T ^ n)⁻¹ ≤ Real.sqrt κ⁻¹ ^ n := by
-    rw [← div_eq_mul_inv, div_le_iff₀ hsT, mul_comm (Real.sqrt κ⁻¹ ^ n), ← mul_pow, ← hs]
-    exact hw
+    rwa [← div_eq_mul_inv, div_le_iff₀ hsT, mul_comm (Real.sqrt κ⁻¹ ^ n), ← mul_pow, ← hs]
   have h2 : 0 ≤ w * (Real.sqrt T ^ n)⁻¹ := by positivity
   calc w * (C₀ * (C' * (Real.sqrt T ^ n)⁻¹)) = C₀ * C' * (w * (Real.sqrt T ^ n)⁻¹) := by ring
     _ ≤ C₀ * |C'| * (w * (Real.sqrt T ^ n)⁻¹) :=

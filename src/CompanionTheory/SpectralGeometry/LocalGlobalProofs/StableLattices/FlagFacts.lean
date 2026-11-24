@@ -107,8 +107,7 @@ theorem isProj (h : A * A * A = A) : LinearMap.IsProj (Vm A) (Matrix.toLin' (pM 
 
 theorem trace_pM (h : A * A * A = A) : Matrix.trace (pM A) = (rk A : ℂ) := by
   have := (isProj h).trace
-  rw [Matrix.trace_toLin'_eq] at this
-  exact this
+  rwa [Matrix.trace_toLin'_eq] at this
 
 theorem one_le_rk (h : IsGrad ε A) : 1 ≤ rk A := by
   obtain ⟨-, -, h3, hA⟩ := id h
@@ -152,8 +151,7 @@ theorem flagFacts : FlagFacts := by
     change Module.finrank ℂ (W A 1) = Module.finrank ℂ (W A 0) + rk A
     rw [h0, h1, finrank_bot, zero_add]
     rfl
-  · intro x hx y hy
-    exact isotropic h hx hy
+  · exact fun x hx y hy => isotropic h hx hy
   · have hj : (Matrix.trace ((1 / 2 : ℂ) • (A * A + A))).re = (rk A : ℝ) := by
       change (Matrix.trace (qM A)).re = _
       rw [trace_qM h, trace_pM h3]

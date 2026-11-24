@@ -89,8 +89,7 @@ theorem conj_facts [NumberField F] [NumberField E] {σ : E →ₐ[F] E} (h : IsC
     v.embedding.injective (by rw [hτ, hτ, star_star])
   refine ⟨hinv, ?_⟩
   have hne : ∃ x, σ x ≠ x := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     have hc : ¬ ComplexEmbedding.IsReal v.embedding :=
       InfinitePlace.isComplex_iff.mp (htc.isComplex v)
     apply hc
@@ -176,8 +175,7 @@ theorem half_trace_tmul [CharZero F] (h2 : Module.finrank F E = 2) (s : R) :
   have : s ⊗ₜ[F] (1 : E) = algebraMap R (R ⊗[F] E) s := by
     simp [Algebra.TensorProduct.algebraMap_apply]
   rw [this, Algebra.trace_algebraMap_of_basis (Algebra.TensorProduct.basis R B)]
-  simp only [Fintype.card_fin, two_nsmul]
-  exact half_add_self (F := F) R s
+  simpa only [Fintype.card_fin, two_nsmul] using half_add_self (F := F) R s
 
 end Alg
 
@@ -197,8 +195,7 @@ theorem hermMat_mem {σ : E →ₐ[F] E} (hinv : ∀ x, σ (σ x) = x) (n : ℕ)
     hermMat R σ n x ∈ HermR R σ n := by
   intro a b
   rcases lt_trichotomy a b with h | h | h
-  · simp only [hermMat, dite_eq_left h, dite_eq_right (not_lt_of_gt h)]
-    exact sigR_sigR R hinv _
+  · simpa only [hermMat, dite_eq_left h, dite_eq_right (not_lt_of_gt h)] using sigR_sigR R hinv _
   · subst h
     simp only [hermMat, lt_irrefl, dite_false]
     rw [sigR_tmul, map_one]
@@ -232,8 +229,7 @@ theorem hermCoord_isHomeomorph [IsTopologicalRing R] [CharZero F] {σ : E →ₐ
     have e : (fun r : R => r ⊗ₜ[F] (1 : E)) = ⇑(Algebra.linearMap R (R ⊗[F] E)) := by
       funext r
       simp [Algebra.linearMap_apply, Algebra.TensorProduct.algebraMap_apply]
-    rw [e]
-    exact this
+    rwa [e]
   let h : HermR R σ n ≃ₜ (Fin n → R) × ({p : Fin n × Fin n // p.1 < p.2} → R ⊗[F] E) :=
     { toFun := hermCoord R σ n
       invFun := fun x => ⟨hermMat R σ n x, hermMat_mem R hinv n x⟩

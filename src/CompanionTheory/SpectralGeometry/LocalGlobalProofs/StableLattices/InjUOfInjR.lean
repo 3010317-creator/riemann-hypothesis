@@ -213,8 +213,7 @@ theorem lF_single_omU : ∀ (n : ℕ) (ε : Fin n → Bool) (lev : Fin n → ℕ
     rw [CompanionTheory.D.LK.lift_apply]
     by_cases e : A = omU ε lev
     · subst e
-      rw [Pi.single_eq_same]
-      exact hE
+      rwa [Pi.single_eq_same]
     · rw [Pi.single_eq_of_ne e, map_zero]
       rfl
   have h2 : adL p q (Pi.single (omU ε lev) u : Cn n V) = 0 := by
@@ -610,10 +609,8 @@ theorem ip_cre (i : Pos n) (x z : Cn n V) : ip (cre i x) z = ip x (ann i z) := b
     simp
   · intro A hA
     simp
-  · intro A hA
-    exact Finset.insert_erase (by simpa using hA)
-  · intro A hA
-    exact Finset.erase_insert (by simpa using hA)
+  · exact fun A hA => Finset.insert_erase (by simpa using hA)
+  · exact fun A hA => Finset.erase_insert (by simpa using hA)
   · intro A hA
     have hA' : i ∈ A := by simpa using hA
     rw [sg_erase_self i hA', Finset.insert_erase hA']
@@ -646,13 +643,11 @@ theorem ip_smul_right (c : ℂ) (x z : Cn n V) : ip x (c • z) = c * ip x z := 
 
 theorem ip_sum_left {ι : Type} (s : Finset ι) (f : ι → Cn n V) (z : Cn n V) :
     ip (∑ a ∈ s, f a) z = ∑ a ∈ s, ip (f a) z := by
-  simp only [ip, Finset.sum_apply, sum_inner]
-  exact Finset.sum_comm
+  simpa only [ip, Finset.sum_apply, sum_inner] using Finset.sum_comm
 
 theorem ip_sum_right {ι : Type} (s : Finset ι) (x : Cn n V) (f : ι → Cn n V) :
     ip x (∑ a ∈ s, f a) = ∑ a ∈ s, ip x (f a) := by
-  simp only [ip, Finset.sum_apply, inner_sum]
-  exact Finset.sum_comm
+  simpa only [ip, Finset.sum_apply, inner_sum] using Finset.sum_comm
 
 theorem adC_conj (p q : Fin n) (i k : Pos n) : (starRingEnd ℂ) (adC p q i k) = adC p q i k := by
   unfold adC
@@ -768,14 +763,12 @@ theorem inU_of_adC {lev : Fin n → ℕ} {p q : Fin n} (hpq : lev p = lev q) {i 
   · show lev k.1.1 < lev k.1.2
     rw [c1.2]
     show lev p < lev i.1.2
-    rw [hpq, c1.1]
-    exact hi
+    rwa [hpq, c1.1]
   by_cases c2 : i.1.2 = p ∧ k.1 = (i.1.1, q)
   · show lev k.1.1 < lev k.1.2
     rw [c2.2]
     show lev i.1.1 < lev q
-    rw [← hpq, ← c2.1]
-    exact hi
+    rwa [← hpq, ← c2.1]
   · exact absurd (by simp [adC, c1, c2]) h
 
 theorem lF_ne {E : Fin n → Fin n → Module.End ℂ V} {p q : Fin n} {x : Cn n V} {A : Finset (Pos n)}

@@ -143,9 +143,7 @@ theorem startOf : StartOf := by
     rw [hp']
     exact lt_irrefl _
   have hμE : μ (I ⁻¹' {⊤}) = 0 := hnull μ hμ _ hE h0
-  have hae : ∀ᵐ x ∂μ, I x ≠ ⊤ := by
-    refine ae_iff.mpr (measure_mono_null (fun x hx => ?_) hμE)
-    exact not_not.mp hx
+  have hae : ∀ᵐ x ∂μ, I x ≠ ⊤ := ae_iff.mpr (measure_mono_null (fun x hx => (not_not.mp hx)) hμE)
   have hle : ∀ y : Formalism.REAL.UJ ε, lineInt ε (baseCoef σ D ξ u) A (-rhoA A) y ≤ I y := by
     intro y
     unfold lineInt

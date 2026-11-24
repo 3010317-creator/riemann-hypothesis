@@ -112,8 +112,7 @@ theorem coordK_preimage (hc : IsHomeomorph (cf (F := F) (E := E) R b)) (lam : Me
   haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have he : MeasurableEmbedding (cf (F := F) (E := E) R b) := hc.homeomorph.measurableEmbedding
   have := he.comap_apply (Measure.pi fun _ : Fin d => lam) (cf R b ⁻¹' T)
-  rw [Set.image_preimage_eq _ hc.surjective] at this
-  exact this
+  rwa [Set.image_preimage_eq _ hc.surjective] at this
 
 theorem map_coordW (hCM : IsCMExt F E σ) (hc : IsHomeomorph (cf (F := F) (E := E) R b))
     (lam : Measure R) (hlam : lam.IsAddHaarMeasure) (n M : ℕ) :
@@ -169,8 +168,7 @@ theorem BR_eq (hc : IsHomeomorph (cf (F := F) (E := E) R b)) {M n : ℕ}
     · intro c _ hca
       refine Finset.sum_eq_zero fun q _ => ?_
       rw [Matrix.blockDiagonal_apply_ne _ _ _ (Ne.symm hca), zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
   rw [hs]
   rfl
 
