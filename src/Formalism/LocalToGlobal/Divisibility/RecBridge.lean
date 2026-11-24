@@ -525,6 +525,10 @@ section Word
 
 open Formalism.BasicNotions
 
+/-- Per-word arithmetic interface of the divisibility bridge: lattice containment, an
+upper bound on the height of the nonzero bilinear map, and a slope/height inequality.
+The last two assertions require estimates in addition to any identification of the
+height function with its explicit formula. -/
 def WordFacts {D : D7} (L : SizeData₂ D) (C Cabs : ℝ) (u : D.what₂.Word) : Prop :=
   (D.div.Nu u).L.map ((D.div.Bk u).restrictScalars (𝓞 D.what₂.LL)) ≤ D.div.cc ∧
   (D.div.Bk u ≠ 0 → Formalism.HN.htMap (D.div.Nu u).b (D.div.Nu u).X D.div.RR.dualB D.div.RR.dualX (D.div.Bk u) ≤
@@ -532,6 +536,9 @@ def WordFacts {D : D7} (L : SizeData₂ D) (C Cabs : ℝ) (u : D.what₂.Word) :
   D.div.RR.muDual + D.div.h u - L.Fo ≤ L.MAIN u +
     C * (D.host.TT.card : ℝ) * L.sc.a * L.La + C * (D.R.m : ℝ) * (L.B0 + L.Nc) * L.sc.x ^ (Cabs * L.sc.eps)
 
+/-- Transport the three arithmetic clauses from coordinate lattices to the intrinsic
+lattices. `tHt`, `tMu`, `tH`, and `tFo` identify quantities; the inequalities are supplied
+by `c2`, `c3`, and `tR`, not by those identifications. -/
 theorem wordFacts_of {D : D7} (L : SizeData₂ D) (C Cabs : ℝ) (u : D.what₂.Word) {d n : ℕ}
     (Nc : Submodule (𝓞 D.what₂.LL) (Fin d → D.what₂.LL)) (Rc : Submodule (𝓞 D.what₂.LL) (Fin n → D.what₂.LL))
     (eN : (Fin d → D.what₂.LL) ≃ₗ[D.what₂.LL] (D.div.Nu u).V) (eR : (Fin n → D.what₂.LL) ≃ₗ[D.what₂.LL] D.div.RR.V)
@@ -557,6 +564,8 @@ section Clauses
 
 open Formalism.BasicNotions
 
+/-- Average the logarithms of positive squared operator norms using the pointwise
+majorants. The prescribed mean of the majorants fixes the resulting upper bound. -/
 theorem htMap_le_of_bound {K : Type} [Field K] [NumberField K] {a n : ℕ} (Xc : InfinitePlace K → Matrix (Fin a) (Fin a) ℂ)
     (XE : InfinitePlace K → Matrix (Fin n) (Fin n) ℂ) (B : (Fin a → K) →ₗ[K] Module.Dual K (Fin n → K)) (h k : ℝ)
     (hb : ∃ cu : InfinitePlace K → ℝ, (∀ v, 0 < cu v ∧
@@ -592,11 +601,14 @@ theorem wordFacts_of_clauses (L : SizeData₂ D) (C Cabs : ℝ) (u : D.what₂.W
     (tR : R.rhs ≤ L.MAIN u + C * (D.host.TT.card : ℝ) * L.sc.a * L.La +
       C * (D.R.m : ℝ) * (L.B0 + L.Nc) * L.sc.x ^ (Cabs * L.sc.eps)) :
     WordFacts L C Cabs u := by
+  have hIntegral := hcl.1
+  have hNormMajorants := hcl.2.1
+  have hSlope := hcl.2.2.1
   refine wordFacts_of L C Cabs u (NuC (wU u)) P.cols.RR eNu eRR hNu.lat hRR.lat
     (P.cols.col.B (wU u)) hBk (htLink P (wU u)) P.cols.muCC (meanLog P.cols.κ) R.hu (2 * FoOfR P) R.rhs
-    ?_ ?_ hcl.2.2.1 tHt tMu tH tFo tR
-  · rw [hNs]; exact hcl.1
-  · exact fun hne => htMap_le_of_bound _ _ _ _ _ hcl.2.1 (hPos hne)
+    ?_ ?_ hSlope tHt tMu tH tFo tR
+  · rw [hNs]; exact hIntegral
+  · exact fun hne => htMap_le_of_bound _ _ _ _ _ hNormMajorants (hPos hne)
 
 theorem wordFacts_of_face (L : SizeData₂ D) (C Cabs : ℝ) (u : D.what₂.Word) (P : IndefCoreR Df0 Df1 Dc Sp Nn)
     (wU : D.what₂.Word → Dc.Mem) (NuC : ∀ w, Submodule (𝓞 D.what₂.LL) (Fin (Dc.a w) → D.what₂.LL))
@@ -687,13 +699,18 @@ def Compl3 (L : SizeData₂ D) (Z : DivX D) (Csz C : ℝ) : Prop :=
 /-- Assembles the per-scale divisibility link `LinkDIV_at L C Cabs CH` from the per-word bounds
 `WordFacts`, the frame-number bound `FrameNumberBound`, the `g`-place and off-`g` energy bounds
 `adm11` (rewriting `∏ g ∈ L.gTypes, g = g 0 * g 1` via `prod_gTypes`), the complement count bound
-`adm13`, rationality of `Bu`, fullness of the common lattice `RR`, and `ZeroAbove`. -/
+`adm13`, rationality of `Bu`, fullness of the common lattice `RR`, and `ZeroAbove`.
+The equality `hh` transports `hH` and `h5` to the stored height. The two inequalities
+inside `WordFacts` are separate inputs and are not consequences of `hh`. -/
 theorem linkDIV_at_words (L : SizeData₂ D) (Z : DivX D) (Csz C Cabs CH : ℝ)
     (hh : ∀ u, D.div.h u = hExpl6 D L Z Csz u) (hW : ∀ u, WordFacts L C Cabs u) (h5 : Compl3 L Z Csz C)
     (hH : Formalism.MainNotions.LocalQuadraticParts.FrameNumberBound D L Z Csz CH) (h11 : Formalism.MainNotions.LocalQuadraticParts.adm11 D L C) (h13 : Formalism.MainNotions.LocalQuadraticParts.adm13 D)
     (hBR : D.BuRational) (hRR : D.RRFull) (hZ : L.ZeroAbove) : LinkDIV_at L C Cabs CH := by
   have hfun : D.div.h = hExpl6 D L Z Csz := funext hh
-  refine ⟨fun u => (hW u).1, ?_, hZ, ⟨hBR, h13⟩, hRR, fun u hu => (hW u).2.1 hu, fun u => (hW u).2.2, ?_, ?_⟩
+  have hIntegral := fun u => (hW u).1
+  have hMapHeight := fun u hu => (hW u).2.1 hu
+  have hSlope := fun u => (hW u).2.2
+  refine ⟨hIntegral, ?_, hZ, ⟨hBR, h13⟩, hRR, hMapHeight, hSlope, ?_, ?_⟩
   · rw [hfun]; exact hH
   · intro u j hj
     have h := (h11 u j hj).1

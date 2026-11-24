@@ -96,6 +96,9 @@ def FoOfR (P : IndefCoreR Df0 Df1 Dc Sp N) : ℝ :=
 def boundBR (P : IndefCoreR Df0 Df1 Dc Sp N) (LG E3 : ℝ) (E2 : Bs.J → ℝ) : ℝ :=
   (∑ j, N.l3 j) + 2 * FoOfR P + LG + (∑ j, (N.E1 j + E2 j)) + E3
 
+/-- Arithmetic input data for the local divisibility estimates. In particular, `nP` and
+`nKcb` bound the operator norms along the column chain; the local valuation, error and
+passage bounds provide independent inputs to the slope estimate. -/
 structure DivInputs0R {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
     (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ) where
 
@@ -181,6 +184,11 @@ structure DivInputsR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR D
   val2 : ∀ w, ∀ φ ∈ Nu, ∀ F ∈ Df1.Mt (P.cols.μ w),
     Dc.Pt u (P.cols.μ w) φ F = 0 ∨ sg w ≤ (vw w (Dc.Pt u (P.cols.μ w) φ F) : ℝ)
 
+/-- The local divisibility output separates four assertions: integral dual-lattice
+containment, positive pointwise squared-norm bounds with a prescribed mean logarithm,
+a slope inequality, and the change of lattice degree under the ideal shift.
+The height comparison in `wordFacts_of_clauses` uses the second assertion, not merely
+the definition of a height. -/
 def DivClausesR {Pl : Type} [Fintype Pl] [DecidableEq Pl] (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl)
     (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K)) (sg : HeightOneSpectrum (𝓞 K) → ℝ) : Prop :=
   (∀ φ ∈ shiftLat Nu sg, P.cols.col.B u φ ∈ Formalism.HN.dualLat P.cols.RR) ∧
@@ -254,6 +262,9 @@ theorem height_chain_atR {Df : DefSide Bs} {Dc : DefCols Df} {Sp : SPer Dc} [Non
   rw [e, h4]
   linarith [h2]
 
+/-- Proves the four local divisibility clauses. The nonzero-map case of the norm bound
+uses `height_chain_atR` and `HtNums.le_hu`; the slope bound uses `boundsMu`, the passage
+estimate, and `RecNums.divIneq`. Only the zero-map norm bound is immediate. -/
 theorem divClausesR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
     (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem) (Nu : Submodule (𝓞 K) (Fin (Dc.a u) → K))
     (sg : HeightOneSpectrum (𝓞 K) → ℝ) (I : DivInputsR P R u Nu sg) : DivClausesR P R u Nu sg := by
