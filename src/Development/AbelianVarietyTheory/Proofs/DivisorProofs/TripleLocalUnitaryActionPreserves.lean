@@ -1,12 +1,12 @@
 module
 
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinPartIdemMulMemIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzMemL2Statement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzMemL2
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIntegralPointsIndicatorIsVacuum
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -184,7 +184,7 @@ include hS in
 theorem nu_box_lt_top (μA : Measure (κ → AF F)) [μA.IsAddHaarMeasure] (y₀ : κ → Fv F v) :
     nu v r μA (box v y₀) < ⊤ := by
   rw [nu_box_eq, lintegral_nu_sq v r hS μA (sb_box v y₀).1.continuous]
-  have hL := GlobalTheory.T.adelic_schwartz_mem_L2 F κ μA inferInstance _ (hS _ (sb_box v y₀))
+  have hL := _root_.GlobalTheory.WeilM.schA_memLp_two F κ μA inferInstance _ (hS _ (sb_box v y₀))
   have := lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top two_ne_zero ENNReal.ofNat_ne_top hL.eLpNorm_lt_top
   simpa using this
 
@@ -281,24 +281,3 @@ theorem exists_r (v : Pl (F := F)) : ∃ r : (κ → AF F) → ℂ, (∀ x z, At
     exact hf
 
 end GlobalTheory.LocalUnitaryL2
-
-theorem GlobalTheory.LocalUnitaryL2.lintegral_eq : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
-    (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W), IsTriple B G X om om' →
-    ∀ v : Pl (F := F), ∀ h ∈ UAt σ G.W (evFin F v), ∀ φ ∈ SB (Fin a × Fin (a + a') → Fv F v),
-    ∀ φ₁ ∈ SB (Fin a × Fin (a + a') → Fv F v), Acts (evFin F v) (om (1, h)) φ φ₁ →
-    ∀ μ : @Measure (Fin a × Fin (a + a') → Fv F v) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
-      ∫⁻ x, ‖φ₁ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ := by
-  intro _ F E _ _ _ _ _ σ B a a' G X om om' hT v h _ φ hφ φ₁ hφ₁ hA μ hμ
-  letI : MeasurableSpace (Fin a × Fin (a + a') → AF F) := borel _
-  haveI : BorelSpace (Fin a × Fin (a + a') → AF F) := ⟨rfl⟩
-  letI : MeasurableSpace (Fin a × Fin (a + a') → Fv F v) := borel _
-  haveI : BorelSpace (Fin a × Fin (a + a') → Fv F v) := ⟨rfl⟩
-  haveI := hμ
-  obtain ⟨r, hr, hS, h0⟩ := GlobalTheory.LocalUnitaryL2.exists_r (κ := Fin a × Fin (a + a')) v
-  let μA : Measure (Fin a × Fin (a + a') → AF F) := Measure.addHaar
-  obtain ⟨c, hc0, hct, hc⟩ := GlobalTheory.LocalUnitaryL2.exists_const v r hr hS μA ⟨0, h0⟩ μ
-  have hU := hT.weil.1.1.unit μA inferInstance h (tens (evFin F v) φ r) (hS φ hφ)
-  have hAct : om (1, h) (tens (evFin F v) φ r) = tens (evFin F v) φ₁ r := hA r ⟨hr, hS φ hφ⟩
-  change ∫⁻ x, ‖om (1, h) (tens (evFin F v) φ r) x‖ₑ ^ 2 ∂μA = _ at hU
-  rw [hAct, hc φ₁ hφ₁, hc φ hφ] at hU
-  exact (ENNReal.mul_right_inj hc0 hct).1 hU

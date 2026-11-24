@@ -1,5 +1,6 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.OutsideSystemsBound
 public import Formalism.HermitianCurvature.StatementJ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,29 +49,6 @@ import Mathlib.Topology.Sheaves.Init
 open Finset NumberField Formalism.FourierDecayAlt Formalism.FourierDecayAlt.J
 
 namespace Formalism.FourierDecayAlt.P.Jx7
-
-section frames
-
-end frames
-
-section sizes
-open scoped nonZeroDivisors
-
-section Gl
-variable {ι : Type} [Fintype ι] (G : Sz.Glob ι) (C : ℝ) (de de' : ℕ → ℝ) (T T' : ℝ) (l : ℕ)
-
-end Gl
-
-end sizes
-
-section sums
-open scoped nonZeroDivisors
-
-end sums
-
-section positivity
-
-end positivity
 
 section main
 open scoped ComplexOrder
@@ -272,34 +250,12 @@ theorem t_ProductDomination : ProductDomination := by
 theorem t_ProductLemma' : ProductLemma := t_ProductLemma t_SchurProduct t_ProductDomination
 
 theorem t_DiagScale : DiagScale := by
-  intro α F k a hk
-  have h1 : TB.PSDOn F (fun x y => (a x : ℂ) * (a y : ℂ)) := by
-    unfold TB.PSDOn
-    apply Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
-    · ext x y; simp [Matrix.conjTranspose_apply, mul_comm]
-    · intro x
-      have : star x ⬝ᵥ (Matrix.of fun i j : F => (a i : ℂ) * (a j : ℂ)) *ᵥ x =
-          star (∑ i : F, (a i : ℂ) * x i) * ∑ i : F, (a i : ℂ) * x i := by
-        rw [star_sum, Finset.sum_mul_sum]
-        simp only [dotProduct, Matrix.mulVec, Matrix.of_apply, Pi.star_apply, Finset.mul_sum]
-        apply Finset.sum_congr rfl; intro i _
-        apply Finset.sum_congr rfl; intro j _
-        simp; ring
-      rw [this]; exact star_mul_self_nonneg _
-  exact psd_mul h1 hk
+  apply Formalism.FourierDecayAlt.P.Jx8.t_DiagScale <;> assumption
 
 end kernels
 
 end Formalism.FourierDecayAlt.P.Jx7
 
 namespace Formalism.FourierDecayAlt.P
-
-theorem schur_product : Formalism.FourierDecayAlt.J.SchurProduct := Jx7.t_SchurProduct
-
-theorem product_domination : Formalism.FourierDecayAlt.J.ProductDomination := Jx7.t_ProductDomination
-
-theorem diagonal_scaling : Formalism.FourierDecayAlt.J.DiagScale := Jx7.t_DiagScale
-
-theorem product_lemma : Formalism.FourierDecayAlt.J.ProductLemma := Jx7.t_ProductLemma'
 
 end Formalism.FourierDecayAlt.P

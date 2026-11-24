@@ -1,5 +1,6 @@
 module
 
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.TransversalSums.ContinuousBlkAtApply
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.AvgData
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.ColMatMulGlEmbMat
 import Mathlib.Algebra.Order.Floor.Extended
@@ -98,7 +99,7 @@ theorem glEmbMat_apply' (n : ℕ) (A : Matrix (Fin n) (Fin n) k) (i j : Fin (n +
     | last => simp [glEmbMat]
     | cast j => simp [glEmbMat, Fin.ext_iff]; omega
   | cast i => induction j using Fin.lastCases with
-    | last => simp [glEmbMat, Fin.ext_iff]
+    | last => simp [glEmbMat]
     | cast j => simp [glEmbMat]
 
 theorem blkAt_glEmb (n N : ℕ) (h : n ≤ N) (h' : n + 1 ≤ N) (g : GL (Fin n) k) :
@@ -158,9 +159,9 @@ theorem colEl_val (m N : ℕ) (h : m + 2 ≤ N) (x : Fin (m + 1) → k) (r c : F
     simp [hr, hc, hne, hc']
   · have hne : r ≠ c := fun e => hr (e ▸ hc)
     have hr' : ¬ (r : ℕ) < m + 1 := by omega
-    simp [hr, hc, hne, hr']
+    simp [hr, hne, hr']
   · have hr' : ¬ (r : ℕ) < m + 1 := by omega
-    simp [hr, hc, hr']
+    simp [hr, hr']
 
 theorem det_glEmbMat' (n : ℕ) (A : Matrix (Fin n) (Fin n) k) : (glEmbMat k n A).det = A.det := by
   rw [Matrix.det_succ_row _ (Fin.last n), Fin.sum_univ_castSucc]
@@ -178,7 +179,7 @@ theorem det_unip' (n : ℕ) (v : Multiplicative (Fin n → k)) :
     have hj : j ≠ Fin.last n := by
       rintro rfl
       exact absurd hij' (not_lt.2 (Fin.le_last i))
-    simp [colMat, hj, one_apply, hij'.ne']
+    simp [colMat, hj, hij'.ne']
   rw [e, Matrix.det_of_upperTriangular htri]
   refine Finset.prod_eq_one fun i _ => ?_
   induction i using Fin.lastCases with
@@ -314,21 +315,7 @@ theorem derUnip_succ_le (N n : ℕ) : derUnip k N (n + 1) ≤ derUnip k N n := b
   exact (mem_derUnip_iff N n u).2 ⟨h1, h2, fun i j hj => h3 i j (by omega)⟩
 
 theorem colEl_mem (m N : ℕ) (h : m + 2 ≤ N) (x : Fin (m + 1) → k) : colEl k m N h x ∈ derUnip k N (m + 1) := by
-  rw [mem_derUnip_iff]
-  refine ⟨fun i j hij => ?_, fun i => ?_, fun i j hj => ?_⟩
-  · have hij' : (j : ℕ) < i := hij
-    rw [colEl_val, if_neg (by rw [Fin.ext_iff]; omega)]
-    by_cases e1 : (i : ℕ) < m + 1
-    · rw [dite_eq_left e1, if_neg (by omega), add_zero]
-    · rw [dite_eq_right e1, add_zero]
-  · rw [colEl_val, if_pos rfl]
-    by_cases e1 : (i : ℕ) < m + 1
-    · rw [dite_eq_left e1, if_neg (by omega), add_zero]
-    · rw [dite_eq_right e1, add_zero]
-  · rw [colEl_val]
-    by_cases e1 : (i : ℕ) < m + 1
-    · rw [dite_eq_left e1, if_neg (show ¬ (j : ℕ) = m + 1 by omega), add_zero]
-    · rw [dite_eq_right e1, add_zero]
+  apply PositivityTheory.RgUd.Form.ColumnElementGluing.Glue.colEl_mem_derUnip' <;> assumption
 
 theorem lvlChar_apply (ψ : AddChar k Circle) (N n : ℕ) (u : derUnip k N n) :
     lvlChar k ψ N n u = Circle.toUnits (ψ (∑ p : Fin N × Fin N with (p.2 : ℕ) = p.1 + 1 ∧ n - 1 ≤ (p.1 : ℕ),

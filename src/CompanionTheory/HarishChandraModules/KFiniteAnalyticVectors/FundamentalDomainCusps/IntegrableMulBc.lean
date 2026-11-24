@@ -125,11 +125,6 @@ theorem integrable_mul_bc {φ : G → ℂ} (hφ : Integrable φ μ) {F : G → �
     (hM : ∀ y, ‖F y‖ ≤ M) : Integrable (fun y => φ y * F y) μ :=
   hφ.mul_bdd hF.aestronglyMeasurable (Eventually.of_forall hM)
 
-theorem reprod {φ : G → ℂ} (hφ : Integrable φ μ) (hi : ∀ w, ∫ y, φ y * φ (y⁻¹ * w) ∂μ = φ w) {F : G → ℂ}
-    (hF : Continuous F) {M : ℝ} (hM : ∀ y, ‖F y‖ ≤ M) :
-    ∫ y, φ y * ∫ z, φ z * F (y * z) ∂μ ∂μ = ∫ w, φ w * F w ∂μ :=
-  _root_.Bl.FirstLemmaL.goal1 hφ hi hF hM
-
 end
 
 theorem selTw : SelTw := by
@@ -183,7 +178,6 @@ theorem selTw : SelTw := by
   obtain ⟨c, hcc, hc⟩ := P.bd
   have hQc : Continuous Q := by
     refine continuous_iff_continuousAt.2 fun s₀ => tendsto_iff_norm_sub_tendsto_zero.2 ?_
-    have hI : ∀ s, Integrable (fun y => ‖φ y‖ * min 2 (|s - s₀| * c y)) μ → True := fun _ _ => trivial
     have hc0 : ∀ y, 0 ≤ c y := fun y => (abs_nonneg _).trans (hc 1 y)
     have hb : ∀ s y, ‖‖φ y‖ * min 2 (|s - s₀| * c y)‖ ≤ ‖φ y‖ * 2 := fun s y => by
       rw [norm_mul, norm_norm, Real.norm_of_nonneg (le_min zero_le_two (mul_nonneg (abs_nonneg _) (hc0 y)))]
@@ -209,7 +203,7 @@ theorem selTw : SelTw := by
   have hQi : ∀ s, Q s * Q s = Q s := fun s => ContinuousLinearMap.ext fun F => Subtype.ext
     (BoundedContinuousFunction.ext fun x => by
       show ∫ y, φ y * (q s F (x * y) * eI (s * (Ht (x * y) - Ht x))) ∂μ = q s F x
-      refine Eq.trans ?_ (reprod hφ hi ((kc s F).comp (continuous_const.prodMk continuous_id)) (kb s F x))
+      refine Eq.trans ?_ (_root_.Bl.FirstLemmaL.goal1 hφ hi ((kc s F).comp (continuous_const.prodMk continuous_id)) (kb s F x))
       refine integral_congr_ae (Eventually.of_forall fun y => ?_)
       simp only [q, k, Function.comp_apply]
       rw [← integral_mul_const]
