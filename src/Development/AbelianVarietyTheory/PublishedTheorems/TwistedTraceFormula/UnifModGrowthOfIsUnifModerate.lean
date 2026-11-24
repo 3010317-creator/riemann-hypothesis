@@ -55,6 +55,12 @@ namespace GlobalTheory.Published
 
 
 open GlobalTheory.Grow in
+/-- **Harish-Chandra rapid decay theorem for cusp forms**: any automorphic cusp form
+on an adelic reductive group decays faster than any inverse polynomial in the Siegel height function
+on any standard Siegel domain.
+
+Proposed reference:
+[Harish-Chandra, *Automorphic forms on semisimple Lie groups*][harishChandra1968lnm]. -/
 def CuspDecayBound : Prop :=
   ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), IsInfFam θ →
     ∀ (V : HSp D) (U : Subgroup (GA D V)), IsOpen (U : Set (GA D V)) → ∀ A N : ℕ,
