@@ -1193,7 +1193,7 @@ theorem UpperTheory.LiteratureTheorems.local_converse_gl_of_literature (O : _roo
 theorem UpperTheory.LiteratureTheorems.local_langlands_recT_exists_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : _root_.UpperTheory.Zero.LLC.RecTExists :=
   O.localLanglandsExists
 theorem UpperTheory.LiteratureTheorems.pair_u_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : _root_.UpperTheory.GalS.PairUAlt :=
-  _root_.UpperTheory.GalS.field_of_starFull_alt (_root_.UpperTheory.LiteratureTheorems.local_langlands_recT_exists_of_literature O) (_root_.UpperTheory.LiteratureTheorems.local_converse_gl_of_literature O) (PositivityTheory.Exh.langlandsExhaustionGL_of_seg (PositivityTheory.RgGu.segmentRepresentation)) O.galoisRepOfPolarizedPairLit
+  _root_.UpperTheory.GalS.pairU_of_star_alt O.galoisRepOfPolarizedPairLit
 theorem UpperTheory.LiteratureTheorems.cusp_forms_bounded_gl_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.CuspFormsBoundedGL :=
   _root_.RfCs.cuspidalSpectrumGL.2.2
 theorem UpperTheory.LiteratureTheorems.jacquet_shalika_rigidity_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.JacquetShalikaRigidity :=
