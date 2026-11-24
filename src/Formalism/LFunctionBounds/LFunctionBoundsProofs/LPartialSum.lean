@@ -62,7 +62,7 @@ lemma LFunctionPartialSum.norm_tail_le {q : ℕ} [NeZero q] (χ : DirichletChara
         (((i + 1 + (N + 1) : ℕ) : ℝ)) ^ (-s.re))) := by
     intro i
     simpa only [Nat.cast_add, Nat.cast_one, add_assoc, add_comm, add_left_comm] using
-      norm_dterm_le' χ hB hs (n := i + (N + 1)) (by omega)
+      norm_dterm_le' χ hB hs (n := i + (N + 1)) (by lia)
   have hf0 : ∀ i : ℕ, 0 ≤ B * (‖s‖ / s.re * ((((i + (N + 1) : ℕ) : ℝ)) ^ (-s.re) -
       (((i + 1 + (N + 1) : ℕ) : ℝ)) ^ (-s.re))) := by
     intro i
