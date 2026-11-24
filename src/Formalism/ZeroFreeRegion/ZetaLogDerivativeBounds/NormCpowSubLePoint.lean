@@ -59,8 +59,7 @@ namespace ComplexPowerDifferenceIntegral
 
 lemma cpow_sub_eq_integral' {x y : ℝ} (hx : 0 < x) (hxy : x ≤ y) {s : ℂ} (hs : s ≠ 0) :
     (x : ℂ) ^ (-s) - (y : ℂ) ^ (-s) = s * ∫ t in x..y, (t : ℂ) ^ (-s - 1) := by
-  have h0 : (0:ℝ) ∉ Set.uIcc x y := by
-    rw [Set.uIcc_of_le hxy]; intro h; exact absurd h.1 (not_le.mpr hx)
+  have h0 : (0:ℝ) ∉ Set.uIcc x y := Set.notMem_uIcc_of_lt hx (hx.trans_le hxy)
   have hr : (-s - 1) ≠ -1 := by intro h; apply hs; linear_combination -h
   have hs' : -s ≠ 0 := neg_ne_zero.mpr hs
   rw [integral_cpow (Or.inr ⟨hr, h0⟩)]
@@ -111,8 +110,7 @@ lemma d_eq {a : ℝ} (ha : 0 < a) (s : ℂ) :
   unfold eint
   by_cases hs1 : s = 1
   · subst hs1; simp
-  have h0 : (0:ℝ) ∉ Set.uIcc a (a + 1) := by
-    rw [Set.uIcc_of_le (by linarith)]; intro h; linarith [h.1]
+  have h0 : (0:ℝ) ∉ Set.uIcc a (a + 1) := Set.notMem_uIcc_of_lt ha (by linarith)
   have hr : -s ≠ -1 := by intro h; apply hs1; linear_combination -h
   have hint1 : IntervalIntegrable (fun x : ℝ => (x : ℂ) ^ (-s)) MeasureTheory.volume a (a + 1) :=
     intervalIntegral.intervalIntegrable_cpow (Or.inr h0)
