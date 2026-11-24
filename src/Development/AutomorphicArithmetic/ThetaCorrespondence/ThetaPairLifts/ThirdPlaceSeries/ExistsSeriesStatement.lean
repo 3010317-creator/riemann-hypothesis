@@ -677,8 +677,8 @@ theorem realBase_le_baseLat_of_fit_can (hr : p.PointConditions') (hm : RecTies p
       rw [← algebraMap_smul (FractionRing (ex.nch.Oe w)) o, ho]
       exact rd.map_smulₛₗ (a : D.what₂.LL) y
     exact e1 ▸ Submodule.smul_mem _ o hy
-theorem baseLe_of_cusp_decay_and_ray_class_field : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → _root_.GlobalTheory.BigOn.Exp.BaseUpperBound₂ :=
-  fun _ _ _ => _root_.GlobalTheory.BigOn.Exp.TwistConditions.of_forall fun _ _ _ _ _ hr hm _ hw _ _ _ _ _ hf hcan => _root_.GlobalTheory.BigOn.Exp.realBase_le_baseLat_of_fit_can hr hm.2.2 hw hf hcan
+theorem baseLe_holds : _root_.GlobalTheory.BigOn.Exp.BaseUpperBound₂ :=
+  _root_.GlobalTheory.BigOn.Exp.TwistConditions.of_forall fun _ _ _ _ _ hr hm _ hw _ _ _ _ _ hf hcan => _root_.GlobalTheory.BigOn.Exp.realBase_le_baseLat_of_fit_can hr hm.2.2 hw hf hcan
 end GlobalTheory.BigOn.Exp
 end
 end
