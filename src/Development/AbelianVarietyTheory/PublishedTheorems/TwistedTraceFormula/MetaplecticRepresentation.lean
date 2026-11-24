@@ -130,8 +130,7 @@ linear operators on `L²(ℝⁿ)` and `ω` to those on Schwartz functions, and a
 
 This is the Segal–Shale–Weil representation; see
 [G. B. Folland, *Harmonic analysis in phase space* (Chapter 4)][folland1989] and
-[A. Weil, *Sur certains groupes d'opérateurs unitaires*][weil1964]. It is proved in
-`GlobalTheory.metaplecticRepresentation_holds`. -/
+[A. Weil, *Sur certains groupes d'opérateurs unitaires*][weil1964]. -/
 def MetaplecticRepresentation : Prop :=
   ∀ (ι : Type) [Fintype ι] [DecidableEq ι],
     ∃ (G : Type) (_ : Group G) (_ : TopologicalSpace G) (_ : IsTopologicalGroup G)
