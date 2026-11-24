@@ -71,6 +71,12 @@ namespace GlobalTheory.Published
 open GlobalTheory.RallisIP
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (delta swSec sZero IsKFinVec ThetaClause)
 
+/-- **Rallis inner product formula for theta lifts**: the Petersson inner product of two
+theta lifts of automorphic cusp forms is equal to the special value of the doubled degree $L$-function
+evaluated at the first critical point.
+
+Proposed reference:
+[S. Rallis, *On the Howe duality conjecture*][rallis1984howe]. -/
 def RallisInnerProductConvergent : Prop :=
   ∀ (D : D7) (A B : HSp D), A.rank < B.rank → B.rank ≤ 2 * A.rank →
     (Formalism.MainNotions.SchurIrreducible.wittIdx B = 0 ∨ A.rank + Formalism.MainNotions.SchurIrreducible.wittIdx B < B.rank) →
