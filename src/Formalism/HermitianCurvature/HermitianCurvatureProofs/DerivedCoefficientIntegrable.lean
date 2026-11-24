@@ -968,13 +968,11 @@ private theorem le_constants_proof : Formalism.FourierDecayAlt.LE.Constants := b
   have e4 : C₂ * (((r:ℝ) + 1) * (N * ((r:ℝ) + 1) ^ 2)) ≤ C₂ * ((N:ℝ) * (N * ((r:ℝ) + 1) ^ 2)) :=
     mul_le_mul_of_nonneg_left e3 hC₂.le
   have e5 : 0 ≤ C₂ * ((N:ℝ) * ((r:ℝ) + 1) ^ 2) := by positivity
-  have e6 := mul_nonneg hC₂.le hN2Q
-  have e7 := mul_nonneg hC₂.le hkNQ
   refine ⟨?_, ?_, ?_⟩
-  · linarith
+  · linarith [mul_nonneg hC₂.le hN2Q, mul_nonneg hC₂.le hkNQ]
   · push_cast
-    linarith
-  · linarith
+    linarith [mul_nonneg hC₂.le hN2Q, mul_nonneg hC₂.le hkNQ]
+  · linarith [mul_nonneg hC₂.le hN2Q, mul_nonneg hC₂.le hkNQ]
 
 private theorem le_constSign_proof : Formalism.FourierDecayAlt.LE.ConstSign := by
   intro n lam α β h

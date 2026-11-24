@@ -548,9 +548,7 @@ theorem G_inv_le (Z : GramM D) (h : ∀ a b, IsIntegral ℤ (Z a b)) (hr : 1 ≤
       have hTP := mul_le_mul_of_nonneg_left (hy2.trans hyP) (by positivity : (0:ℝ) ≤ (T : ℝ) * T')
       have hTP' := mul_le_mul_of_nonneg_left hP1 (by positivity : (0:ℝ) ≤ (T : ℝ) * T')
       have hn0' : 0 ≤ (T : ℝ) * T' * ‖embS D τ (leadMinorE Z D.R.rS)‖ ^ 2 := by positivity
-      have hP_TT := le_mul_of_one_le_left (by positivity : (0 : ℝ) ≤ (max 1 ‖embS D τ (leadMinorE Z (D.R.rS + 1))‖) ^ 2 * (max 1 ‖embS D τ (leadMinorE Z D.R.rS)‖) ^ 2) hTT
-      have hnsq := sq_nonneg ‖embS D τ (leadMinorE Z (D.R.rS + 1))‖
-      refine max_le (by linarith) (abs_le.mpr ⟨by linarith, by linarith⟩)
+      refine max_le (by nlinarith) (abs_le.mpr ⟨by linarith [sq_nonneg ‖embS D τ (leadMinorE Z (D.R.rS + 1))‖], by nlinarith⟩)
     calc PP D (leadMinorE Z (D.R.rS + 1) * star (leadMinorE Z (D.R.rS + 1)) - ((T : D.host.E) * (T' : D.host.E)) * (leadMinorE Z D.R.rS * star (leadMinorE Z D.R.rS))) = ∏ τ, max 1 ‖embS D τ (leadMinorE Z (D.R.rS + 1) * star (leadMinorE Z (D.R.rS + 1)) - ((T : D.host.E) * (T' : D.host.E)) * (leadMinorE Z D.R.rS * star (leadMinorE Z D.R.rS)))‖ := rfl
       _ ≤ ∏ τ, ((2 * T * T') * ((max 1 ‖embS D τ (leadMinorE Z (D.R.rS + 1))‖) ^ 2 * (max 1 ‖embS D τ (leadMinorE Z D.R.rS)‖) ^ 2)) :=
           Finset.prod_le_prod₀ (fun τ _ => le_trans zero_le_one (le_max_left _ _)) (fun τ _ => hτ τ)
