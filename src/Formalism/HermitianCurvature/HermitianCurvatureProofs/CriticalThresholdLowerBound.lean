@@ -61,9 +61,6 @@ lemma prod_Ioc_shift (f : ℕ → ℝ) (p a b : ℕ) :
     ∏ j ∈ Ioc (a + p) (b + p), f j = ∏ j ∈ Ioc a b, f (j + p) := by
   first
   | (rw [← Finset.map_add_right_Ioc, Finset.prod_map]; rfl)
-  | (rw [← Finset.map_add_right_Ioc, Finset.prod_map]; simp [addRightEmbedding])
-  | (apply Finset.prod_nbij' (fun j => j - p) (fun j => j + p) <;> intro j hj <;>
-      simp only [Finset.mem_Ioc] at hj ⊢ <;> first | omega | (congr 1; omega))
 
 lemma Icc_one_eq (p : ℕ) : Icc 1 p = Ioc 0 p := by
   ext i
@@ -97,9 +94,7 @@ lemma vand_split (p q : ℕ) (x : ℕ → ℝ) :
     exact hs2
   rw [← Finset.prod_Ioc_consecutive _ (Nat.zero_le p) (Nat.le_add_right p q), h1, h2]
 
-lemma v_sub (c : Cfg) (i j : ℕ) : c.v i - c.v j = 4 * c.Del * ((j : ℝ) - (i : ℝ)) := by
-  unfold Cfg.v
-  ring
+alias v_sub := _root_.Formalism.FourierDecayAlt.P.Sz4.v_sub
 
 lemma v_nonneg (c : Cfg) (h : c.Ok) (i : ℕ) (hi : i + 1 ≤ c.k) : 0 ≤ c.v i := by
   have hki : (i : ℝ) + 1 ≤ (c.k : ℝ) := by exact_mod_cast hi
@@ -202,7 +197,6 @@ theorem vandLamLower : VandLamLower := by
           first
           | (rw [Finset.prod_const, Nat.card_Icc, Nat.add_sub_cancel]; done)
           | (rw [Finset.prod_const, Nat.card_Icc, Nat.add_sub_cancel]; rfl)
-          | (unfold Cfg.prodb; rw [Finset.prod_const, Nat.card_Icc, Nat.add_sub_cancel])
       _ ≤ ∏ i ∈ Icc 1 (c.k - 1), ∏ j ∈ Icc 1 c.m, (c.v i + c.b j) := by
           apply Finset.prod_le_prod₀
           · intro i _
@@ -295,8 +289,6 @@ lemma E_le : Real.exp (1/4) ≤ 1.3 := by
   have h1 : Real.exp (1/4) ^ 4 = Real.exp 1 := by
     first
     | (rw [← Real.exp_nat_mul]; norm_num)
-    | (rw [← Real.exp_nat_mul]; congr 1; norm_num)
-    | (rw [← Real.exp_nat_mul]; congr 1; push_cast; ring)
   have h2 := Real.exp_one_lt_d9
   have h3 : 0 < Real.exp (1/4) := Real.exp_pos _
   by_contra hc
@@ -503,11 +495,6 @@ lemma vand_head (q : ℕ) (x : ℕ → ℝ) :
   rw [Nat.add_comm q 1, vand_split 1 q x, vand_one]
   simp only [Finset.Icc_self, Finset.prod_singleton, one_mul]
 
-lemma vand_last (p : ℕ) (x : ℕ → ℝ) :
-    Vand (p + 1) x = Vand p x * ∏ i ∈ Icc 1 p, (x i - x (p + 1)) := by
-  rw [vand_split p 1 x, vand_one]
-  simp only [Finset.Icc_self, Finset.prod_singleton, mul_one, Nat.add_comm 1 p]
-
 lemma u_one (c : Cfg) (de : ℕ → ℝ) : c.u de 1 = c.a := by
   simp [Cfg.u]
 
@@ -516,7 +503,7 @@ lemma u_mid (c : Cfg) (de : ℕ → ℝ) (j : ℕ) (h1 : 1 ≤ j) (h2 : j + 2 �
   have h0 : j ≠ 0 := by omega
   have h1' : j + 1 ≠ 1 := by omega
   have h2' : j + 1 ≠ c.k := by omega
-  simp [Cfg.u, h0, h1', h2']
+  simp [Cfg.u, h0, h2']
 
 lemma u_last (c : Cfg) (de : ℕ → ℝ) (hk : 4 ≤ c.k) : c.u de c.k = c.ulast := by
   have h1' : c.k ≠ 1 := by omega
@@ -544,7 +531,6 @@ lemma mu_bound (c : Cfg) (h : c.Ok) (bb : ℝ) (hs : c.Small bb) :
     have hk' : (c.k:ℝ) ≠ 0 := hk.ne'
     first
     | (field_simp; done)
-    | (field_simp; ring)
   have e2 : Real.exp (2 * c.m * Real.log bb) = bb ^ (2 * c.m) := by
     rw [show (2 * (c.m:ℝ) * Real.log bb) = ((2 * c.m : ℕ) : ℝ) * Real.log bb by push_cast; ring]
     rw [← Real.log_pow, Real.exp_log (by positivity)]
@@ -561,9 +547,6 @@ lemma mu_bound (c : Cfg) (h : c.Ok) (bb : ℝ) (hs : c.Small bb) :
       _ = bb ^ (2 * c.m) := by
           first
           | (rw [Finset.prod_const, Nat.card_Icc, Nat.add_sub_cancel, pow_mul])
-          | (rw [Finset.prod_const, Nat.card_Icc, pow_mul])
-          | (rw [Finset.prod_const, Nat.card_Icc, pow_mul]; congr 1; omega)
-          | (simp [Finset.prod_const, pow_mul])
   have hpos : 0 < bb ^ (2 * c.m) := by positivity
   rw [e1, Real.exp_neg, e2]
   calc (bb ^ (2 * c.m))⁻¹ * c.prodb ≤ (bb ^ (2 * c.m))⁻¹ * bb ^ (2 * c.m) :=
@@ -730,7 +713,7 @@ lemma key_top (hTp : VandTop) (c : Cfg) (bb : ℝ) (de : ℕ → ℝ) (h : c.Ok)
   have hP2split : Vand (c.k - 1) (fun i => c.u de (i + 1)) =
       Vand (c.k - 2) (fun i => c.u de (i + 1)) * ∏ i ∈ Icc 1 (c.k - 2), (c.u de (i + 1) + c.bp) := by
     have hk2 : c.k - 1 = (c.k - 2) + 1 := by omega
-    rw [hk2, vand_last]
+    rw [hk2, _root_.Formalism.FourierDecayAlt.P.Sz4.vand_succ_top]
     congr 1
     apply Finset.prod_congr rfl
     intro i _
@@ -842,8 +825,6 @@ namespace Formalism.FourierDecayAlt.P
 
 theorem critical_threshold_words : Formalism.FourierDecayAlt.Sz.TcritWords := Sz5.tcritWords_of vandermondeWords
 
-theorem vandermonde_lambda_lower_bound : Formalism.FourierDecayAlt.Sz.VandLamLower := Sz5.vandLamLower
-
-theorem critical_threshold_lower_bound : Formalism.FourierDecayAlt.Sz.TcritLower := Sz5.tcritLower_of bracket_bound_alt vandermondeNonTop vandermondeTop edgeFactors vandermondeWords
+theorem critical_threshold_lower_bound : Formalism.FourierDecayAlt.Sz.TcritLower := Sz5.tcritLower_of _root_.Formalism.FourierDecayAlt.P.Sz2.bracketBound vandermondeNonTop vandermondeTop edgeFactors vandermondeWords
 
 end Formalism.FourierDecayAlt.P
