@@ -19,7 +19,7 @@ NOW = datetime.datetime(2026, 11, 23, 4, 12, 30, tzinfo=datetime.timezone.utc)
 # Where the stand-in's clock starts. Each change to a pull request moves it on by a second.
 T0 = datetime.datetime(2026, 11, 23, 3, 0, 0, tzinfo=datetime.timezone.utc)
 FIRST = "batch/2026-11-23-041230"
-QUEUED, BUILDING, BOT = batch.QUEUED, batch.BUILDING, batch.BOT
+QUEUED, BUILDING, INBOX, BOT = batch.QUEUED, batch.BUILDING, batch.INBOX, batch.BOT
 PRIORITY = batch.PRIORITY
 
 
@@ -871,10 +871,27 @@ class BuiltByHand(unittest.TestCase):
         gh = self.built()
         sync(gh)
         gh.label(14, remove=BUILDING, login="maintainer")
+        gh.label(14, add=INBOX)
         gh.writes = []
         sync(gh)
-        self.assertEqual(gh.pulls[14]["labels"], set())
+        self.assertEqual(gh.pulls[14]["labels"], {INBOX})
         self.assertEqual(gh.writes, [])
+
+    def test_what_it_contains_leaves_the_inbox(self):
+        gh = Fake()
+        queue(gh, 11)
+        gh.add_pull(14, "head14", labels={INBOX, "small"})
+        by_hand(gh, 11, 14)
+        log = sync(gh)
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[14]["labels"]), ({BUILDING}, {BUILDING, "small"}))
+        self.assertIn("#14 is being built: `inbox` removed", log)
+        self.assertNotIn("#11 is being built: `inbox` removed", log)
+        # Put back while it is being built, it comes off again.
+        gh.label(14, add=INBOX)
+        log = sync(gh)
+        self.assertEqual(gh.pulls[14]["labels"], {BUILDING, "small"})
+        self.assertIn("#14 is being built: `inbox` removed", log)
+        self.assertEqual(sync(gh), ["nothing to do"])
 
     def test_queued_while_it_is_being_built_it_goes_back_to_the_queue_later(self):
         gh = self.built()

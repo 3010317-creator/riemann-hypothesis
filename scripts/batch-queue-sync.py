@@ -32,8 +32,10 @@ holds the head commit of an open pull request, and this script labels its pull r
 `building` to say so. One that is labelled `batch queue` itself waits in the queue like any
 other pull request instead. What it contains is every open pull request whose head commit is in
 its branch, queued or not, into main or into another branch. They are labelled `building`, in
-place of `batch queue` for those that had it. This script records them in a comment of its own
-on the batch's pull request, and looks through the branch again when its head moves. A pull
+place of `batch queue` for those that had it, and `inbox` comes off them. The inbox workflow
+would take it off too, but it does not run for labels this workflow changes, so it would only
+notice at its next sweep. This script records them in a comment of its own on the batch's pull
+request, and looks through the branch again when its head moves. A pull
 request that has left the branch by then loses `building`, and so does everything in it once
 the batch is merged or closed. Those that had `batch queue` before get it back, unless the
 batch was merged.
@@ -76,6 +78,8 @@ import subprocess
 import sys
 
 QUEUED, BUILDING = "batch queue", "building"
+# The inbox workflow's label. A pull request that is `building` does not belong in the inbox.
+INBOX = "inbox"
 # A maintainer's label: pull requests that carry it go into a batch before the others.
 PRIORITY = "priority"
 PREFIX = "batch/"
@@ -546,7 +550,8 @@ def contains(gh, head, commit):
 
 
 def hold(gh, batch, pulls, held, log):
-    """Find what a batch assembled by hand contains, record it, and label it `building`.
+    """Find what a batch assembled by hand contains, record it, label it `building`, and take it
+    out of the inbox.
 
     It contains each open pull request whose head commit is in its branch, queued or not. When
     the branch's head has moved since the note was written, its commits are listed again, a
@@ -595,13 +600,14 @@ def hold(gh, batch, pulls, held, log):
         gh.write("PATCH", f"issues/comments/{batch['comment']['id']}", {"body": text})
     for key in sorted(found, key=int):
         pr = pulls.get(int(key))
-        if pr and QUEUED in pr["labels"]:
-            relabel(gh, pr, add=BUILDING, remove=QUEUED)
-        elif pr and key in new and BUILDING not in pr["labels"]:
-            relabel(gh, pr, add=BUILDING)
-        else:
+        if pr is None:
             continue
-        log.append(f"#{key} is in the batch #{number}: now `{BUILDING}`")
+        if QUEUED in pr["labels"] or (key in new and BUILDING not in pr["labels"]):
+            relabel(gh, pr, add=BUILDING, remove=QUEUED if QUEUED in pr["labels"] else None)
+            log.append(f"#{key} is in the batch #{number}: now `{BUILDING}`")
+        if BUILDING in pr["labels"] and INBOX in pr["labels"]:
+            relabel(gh, pr, remove=INBOX)
+            log.append(f"#{key} is being built: `{INBOX}` removed")
     return requeued
 
 
