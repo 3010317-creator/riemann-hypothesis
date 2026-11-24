@@ -291,6 +291,22 @@ theorem divIntegralR_of [_root_.NumberField.IsTotallyComplex K] (wf0 : Df0.WF) (
   exact P.cols.intoDual divIntoDualShift latticeGlue wf1 u Nu (shiftLat Nu sg) sg (shiftZ sg) val2
     (fun w => Int.floor_le_ceil _) hsh.1
 
+/-- A zero column map has positive norm majorants with any prescribed logarithmic mean.
+No column-chain, eigenvalue or local valuation bound is needed in this case. -/
+theorem divNormR_of_zero [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF)
+    (P : IndefCoreR Df0 Df1 Dc Sp N) (R : RecNums Bs.J Pl) (u : Dc.Mem)
+    (hz : P.cols.col.B u = 0) : DivNormR P R u := by
+  have : Nonempty Bs.Ix := nonempty_Ix wf0 P.base.pos
+  have hX := fun v => OperatorNormFrames.opNormAt_nonneg (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
+    (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u)
+  refine exists_cu _ (fun _ => R.hu - meanLog P.cols.κ) _ hX (fun v => Or.inl ?_) (le_of_eq ?_)
+  · rw [hz]; simp [Formalism.HN.opNormAt]
+  · have hn : (0 : ℝ) < (Fintype.card (InfinitePlace K) : ℝ) := by
+      have : 0 < Fintype.card (InfinitePlace K) := Fintype.card_pos
+      exact_mod_cast this
+    simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+    field_simp
+
 /-- The norm majorants use the arithmetic input before the local valuation estimate
 is adjoined. The zero-map case and the nonzero-map height argument remain distinct. -/
 theorem divNormR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype Pl] [DecidableEq Pl] (wf0 : Df0.WF) (wf1 : Df1.WF)
@@ -300,13 +316,7 @@ theorem divNormR_of [_root_.NumberField.IsTotallyComplex K] {Pl : Type} [Fintype
   have hX := fun v => OperatorNormFrames.opNormAt_nonneg (Pi.basisFun K (Fin (Dc.a u))) (Dc.Xc u) (Pi.basisFun K (Fin P.cols.D)).dualBasis
     (Formalism.HN.dualFrame P.cols.XE) v (P.cols.col.B u)
   by_cases hne : P.cols.col.B u = 0
-  · refine exists_cu _ (fun _ => R.hu - meanLog P.cols.κ) _ hX (fun v => Or.inl ?_) (le_of_eq ?_)
-    · rw [hne]; simp [Formalism.HN.opNormAt]
-    · have hn : (0 : ℝ) < (Fintype.card (InfinitePlace K) : ℝ) := by
-        have : 0 < Fintype.card (InfinitePlace K) := Fintype.card_pos
-        exact_mod_cast this
-      simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
-      field_simp
+  · exact divNormR_of_zero wf0 P R u hne
   · have nK := nK_of_cb I.cb (fun j v => ∑ l ∈ Finset.univ.filter (fun l => I.ch.lf l = j), I.hn.sz l v) I.nKcb
     obtain ⟨Hv, Hm⟩ := height_chain_atR wf1 P.cols u hne I.X0 I.base_matrix_det_unit I.ch I.hn.hPn I.hn.sz I.nP nK
     have h1 := I.hn.le_hu (∑ j, N.l6 j) I.eig6
