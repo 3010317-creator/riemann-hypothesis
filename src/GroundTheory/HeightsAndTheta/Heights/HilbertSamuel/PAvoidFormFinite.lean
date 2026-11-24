@@ -64,13 +64,18 @@ noncomputable section
 
 namespace AvoidFormFinite
 
-variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
+variable {K : Type} {ι : K → Type} [∀ k, Fintype (ι k)]
 
 def bdeg (m : (Σ k, ι k) →₀ ℕ) : K → ℕ := fun k => ∑ i, m ⟨k, i⟩
 
-omit [Fintype K] in
 theorem bdeg_add (m n : (Σ k, ι k) →₀ ℕ) : bdeg (m + n) = bdeg m + bdeg n :=
   funext fun _ => by simp [bdeg, Finset.sum_add_distrib]
+
+theorem bdeg_of_mem {s : MRingOver ℂ ι} {a : K → ℕ} (hs : IsMultiHomog s a) {m : (Σ k, ι k) →₀ ℕ}
+    (hm : m ∈ s.support) : bdeg m = a :=
+  funext (hs m hm)
+
+variable [Fintype K]
 
 open Classical in
 def wt (p : Σ k, ι k) : K → ℕ := fun k => if p.1 = k then 1 else 0
@@ -91,11 +96,6 @@ private theorem isMultiHomog_iff_weighted {s : MRingOver ℂ ι} {a : K → ℕ}
 theorem isMultiHomog_iff {s : MRingOver ℂ ι} {a : K → ℕ} :
     IsMultiHomog s a ↔ ∀ m, AddMonoidAlgebra.coeff s m ≠ 0 → bdeg m = a :=
   isMultiHomog_iff_weighted.trans (forall₂_congr fun m _ => by rw [weight_wt])
-
-omit [Fintype K] in
-theorem bdeg_of_mem {s : MRingOver ℂ ι} {a : K → ℕ} (hs : IsMultiHomog s a) {m : (Σ k, ι k) →₀ ℕ}
-    (hm : m ∈ s.support) : bdeg m = a :=
-  funext (hs m hm)
 
 theorem isMultiHomog_monomial (m : (Σ k, ι k) →₀ ℕ) (c : ℂ) :
     IsMultiHomog (monomial m c : MRingOver ℂ ι) (bdeg m) :=
