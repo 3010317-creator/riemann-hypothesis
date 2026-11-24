@@ -170,10 +170,8 @@ theorem mem_unipotentRadical_iff_leviProj {p : blockUpper F n β} :
     (p : GL (Fin n) F) ∈ unipotentRadical F n β ↔ leviProj F n β p = 1 := by
   constructor
   · rintro ⟨q, hq, hqp⟩
-    rw [← (Subtype.ext hqp : q = p)]
-    exact hq
-  · intro h
-    exact ⟨p, h, rfl⟩
+    rwa [← (Subtype.ext hqp : q = p)]
+  · exact fun h => ⟨p, h, rfl⟩
 
 theorem conj_mem_unipotentRadical {p u : GL (Fin n) F} (hp : p ∈ blockUpper F n β)
     (hu : u ∈ unipotentRadical F n β) : p * u * p⁻¹ ∈ unipotentRadical F n β := by

@@ -42,13 +42,11 @@ theorem normRangeInvariants_map :
     have he' := congrArg Subtype.val he
     change (z : A) = y at he'
     change A.ρ.norm m = y
-    rw [← he']
-    exact hm
+    rwa [← he']
   · rintro ⟨m, hm⟩
     have hm' := congrArg Subtype.val hm
     change A.ρ.norm m = y at hm'
-    refine ⟨⟨A.ρ.norm m, fun g => Representation.self_norm_apply A.ρ g m⟩, ⟨m, rfl⟩, Subtype.ext ?_⟩
-    exact hm'
+    exact ⟨⟨A.ρ.norm m, fun g => Representation.self_norm_apply A.ρ g m⟩, ⟨m, rfl⟩, Subtype.ext hm'⟩
 
 noncomputable def tateCohomologyZeroIsoHomology :
     tateCohomology A 0 ≅ (normHomCompSub A σ).homology :=
@@ -78,8 +76,7 @@ theorem augmentationKerNorm_map :
     obtain ⟨m, hm⟩ := hzm
     refine ⟨m, Subtype.ext ?_⟩
     change A.ρ σ m - m = y
-    rw [← he']
-    exact hm
+    rwa [← he']
   · rintro ⟨m, hm⟩
     have hm' := congrArg Subtype.val hm
     change A.ρ σ m - m = y at hm'

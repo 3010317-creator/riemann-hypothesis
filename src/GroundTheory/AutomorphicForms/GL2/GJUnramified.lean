@@ -122,8 +122,7 @@ theorem eq_of_bdd_digitSum_sub (m : ℕ) {a b : Fin m → 𝓀[F]}
             simpa [Bdd] using h0)
         rwa [pow_one] at this
       have := (IsLocalRing.residue_eq_zero_iff _).2 hmax
-      rw [map_sub, residue_residueLift, residue_residueLift, sub_eq_zero] at this
-      exact this
+      rwa [map_sub, residue_residueLift, residue_residueLift, sub_eq_zero] at this
     have htail : Bdd F m D := by
       rw [ha0, sub_self, zero_add] at h
       have := (bdd_zpow (F := F) (-1)).mul h
@@ -134,8 +133,7 @@ theorem eq_of_bdd_digitSum_sub (m : ℕ) {a b : Fin m → 𝓀[F]}
       ring
     have ht := ih htail
     funext t
-    refine Fin.cases ha0 (fun t => ?_) t
-    exact congrFun ht t
+    exact Fin.cases ha0 (fun t => (congrFun ht t)) t
 
 abbrev UpperPairs (n : ℕ) : Type := {p : Fin n × Fin n // p.1 < p.2}
 
@@ -346,8 +344,7 @@ theorem exists_normalGL {g : GL (Fin n) F} (hg : ∀ i j, g i j ∈ 𝒪[F]) :
   set h := u * torusPow F n L with hh
   have hhg : h = g * k₀⁻¹ := by rw [he, mul_inv_cancel_right]
   have hO : ∀ i j, h i j ∈ 𝒪[F] := fun i j => by
-    rw [hhg]
-    rw [Units.val_mul]
+    rw [hhg, Units.val_mul]
     exact mul_mem_of_forall_mem hg
       ((mem_integralGL_iff F n).1 ((integralGL F n).inv_mem hk₀)).1 i j
   have hdiag : ∀ i, h i i = ϖ ^ L i := fun i => by
@@ -479,8 +476,7 @@ theorem integralShell_eq (k : ℕ) :
     exact ⟨⟨l, hl⟩, c, _, hk, by simp [smul_eq_mul]⟩
   · rintro ⟨⟨l, hl⟩, c, k', hk', rfl⟩
     have := mul_mem_integralShell (normalGL_mem_integralShell l c) (integralGL F n).one_mem hk'
-    rw [one_mul, Finset.Nat.mem_antidiagonalTuple.1 hl] at this
-    exact this
+    rwa [one_mul, Finset.Nat.mem_antidiagonalTuple.1 hl] at this
 
 theorem isCompact_integralShell (k : ℕ) : IsCompact (integralShell F n k) := by
   rw [integralShell_eq]
@@ -1088,8 +1084,7 @@ theorem exists_zeta_rat_natDegree [π.IsIrreducible] (hπ : IsAdmissible π) (μ
   rw [qs_add, ← hcdef] at h1
   have hDx' : D.eval (qs F s * c) ≠ 0 := by
     rw [mul_comm]
-    rw [hD'def, eval_comp, eval_mul, eval_C, eval_X] at hDx
-    exact hDx
+    rwa [hD'def, eval_comp, eval_mul, eval_C, eval_X] at hDx
   have h2 := eq_div_of_mul_eq hDx' ((mul_comm _ _).trans h1)
   rw [zetaIntegral, h2]
   simp only [D', eval_mul, eval_comp, eval_C, eval_X, eval_pow]
@@ -1208,8 +1203,7 @@ theorem hasSum_prod_pow_real (m : ℕ) : ∀ {b : Fin m → ℝ}, (∀ i, 0 ≤ 
       show ∏ i, b i ^ (Fin.cons x.1 x.2 : Fin (m + 1) → ℕ) i = _
       rw [Fin.prod_univ_succ]
       simp only [Fin.cons_zero, Fin.cons_succ]
-    rw [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
-    exact hm
+    rwa [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
 
 theorem hasSum_prod_pow (m : ℕ) : ∀ {b : Fin m → ℂ}, (∀ i, ‖b i‖ < 1) →
     HasSum (fun l : Fin m → ℕ => ∏ i, b i ^ l i) (∏ i, (1 - b i)⁻¹) := by
@@ -1240,8 +1234,7 @@ theorem hasSum_prod_pow (m : ℕ) : ∀ {b : Fin m → ℂ}, (∀ i, ‖b i‖ <
       show ∏ i, b i ^ (Fin.cons x.1 x.2 : Fin (m + 1) → ℕ) i = _
       rw [Fin.prod_univ_succ]
       simp only [Fin.cons_zero, Fin.cons_succ]
-    rw [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
-    exact hm
+    rwa [← (Fin.consEquiv fun _ : Fin (m + 1) => ℕ).hasSum_iff, hfun, Fin.prod_univ_succ]
 
 theorem hasSum_sum_antidiagonalTuple {m : ℕ} {b : Fin m → ℂ} (h : ∀ i, ‖b i‖ < 1) :
     HasSum (fun k : ℕ => ∑ l ∈ Finset.Nat.antidiagonalTuple m k, ∏ i, b i ^ l i)
@@ -1425,8 +1418,7 @@ theorem zetaIntegral_sphericalCoeff [π.IsIrreducible] (hπ : IsAdmissible π)
       c * ∑ l ∈ Finset.Nat.antidiagonalTuple n m, ∏ i, ((z i : ℂ) * qs F s) ^ l i := funext hterm
   rw [hfun] at hsum
   rw [zetaIntegral]
-  have hgen := (hasSum_sum_antidiagonalTuple hzs).mul_left c
-  exact hsum.unique hgen
+  exact hsum.unique ((hasSum_sum_antidiagonalTuple hzs).mul_left c)
 
 theorem natDegree_prod_one_sub {m : ℕ} (z : Fin m → ℂˣ) :
     (∏ i, (1 - C (z i : ℂ) * X)).natDegree = m := by

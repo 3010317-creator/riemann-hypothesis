@@ -99,8 +99,7 @@ theorem good_pow (E0 : AA k d) (T : Module.End k (AA k d)) (hT : ∀ X, GoodE R 
   induction n with
   | zero =>
     intro X hX
-    rw [pow_zero]
-    exact hX
+    rwa [pow_zero]
   | succ n ih =>
     intro X hX
     rw [pow_succ]
@@ -111,8 +110,7 @@ theorem good_prod (E0 : AA k d) (L : List (Module.End k (AA k d)))
   induction L with
   | nil =>
     intro X hX
-    rw [List.prod_nil]
-    exact hX
+    rwa [List.prod_nil]
   | cons T L ih =>
     intro X hX
     rw [List.prod_cons]

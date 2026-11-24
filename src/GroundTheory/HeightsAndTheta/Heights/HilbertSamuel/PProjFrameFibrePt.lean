@@ -67,8 +67,7 @@ theorem aeval_inl_eq_zero {f : MRing (GlobalTheory κ)} (hf : f ∈ coordIdeal �
     aeval (fun p : Ix κ => G.x' (aV D p.2)) f = 0 := by
   have h : rename (fun p : Ix κ => aV D p.2) f ∈ graphP x e := by
     rw [graphP, graphIdeal, RingHom.mem_ker, graphMap_rename_inl, Ideal.Quotient.eq_zero_iff_mem.2 hf, map_zero]
-  rw [← G.genericFibre_ker_target, RingHom.mem_ker, aeval_rename] at h
-  exact h
+  rwa [← G.genericFibre_ker_target, RingHom.mem_ker, aeval_rename] at h
 
 theorem aeval_inl_mul_eq_zero {f : MRing (GlobalTheory κ)} (hf : f ∈ coordIdeal ℤ x) {R : Type*} [CommRing R]
     (φ : G.Φ' →+* R) (s : R) : aeval (fun p : Ix κ => φ (G.x' (aV D p.2)) * s) f = 0 := by
@@ -125,8 +124,7 @@ theorem ratio_isIntegral (hF : IsProjFrame x e) (i : κ) :
         (coneMap ℤ (x ∘ e) : MvPolynomial (Fin (D + 1)) ℤ →+* Polynomial Ω) :=
       RingHom.ext fun q => coneMap_rename x e q
     change (coneMap ℤ x : MRing (GlobalTheory κ) →ₐ[ℤ] Polynomial Ω).toRingHom F = 0
-    rw [hFdef, Polynomial.hom_eval₂, e1]
-    exact hp
+    rwa [hFdef, Polynomial.hom_eval₂, e1]
   have h0 := aeval_inl_mul_eq_zero G hF0 (RingHom.id G.Φ') (G.x' (aV D (e 0).2))⁻¹
   set t : Ix κ → G.Φ' := fun p => RingHom.id G.Φ' (G.x' (aV D p.2)) * (G.x' (aV D (e 0).2))⁻¹ with ht
   set cc : Fin (D + 1) → G.Φ := fun k => G.x ⟨(), k⟩ / G.x ⟨(), 0⟩ with hcc
@@ -141,8 +139,7 @@ theorem ratio_isIntegral (hF : IsProjFrame x e) (i : κ) :
       (aeval t : MRing (GlobalTheory κ) →ₐ[ℤ] G.Φ').toRingHom (X ⟨(), i⟩) := by
     simp [ht, div_eq_mul_inv]
   refine ⟨p.map (aeval cc : MvPolynomial (Fin (D + 1)) ℤ →ₐ[ℤ] G.Φ).toRingHom, hmon.map _, ?_⟩
-  rw [Polynomial.eval₂_map, ← e2, e3, ← Polynomial.hom_eval₂, ← hFdef]
-  exact h0
+  rwa [Polynomial.eval₂_map, ← e2, e3, ← Polynomial.hom_eval₂, ← hFdef]
 
 theorem aeval_scaled_eq_zero (hF : IsProjFrame x e) {F : MRing (Sum.elim (GlobalTheory κ) (GlobalTheory (Fin (D + 1))))}
     (hF' : F ∈ graphP x e) :

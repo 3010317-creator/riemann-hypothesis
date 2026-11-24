@@ -74,8 +74,7 @@ theorem mem_placesOver_iff {w : HeightOneSpectrum (𝓞 L)} :
   constructor
   · rintro ⟨v, hv, hwv⟩
     rwa [← liesOver_iff_eq_underPlace.1 hwv]
-  · intro h
-    exact ⟨_, h, inferInstance⟩
+  · exact fun h => ⟨_, h, inferInstance⟩
 
 theorem valuation_algebraMap_integer_le_one {w : HeightOneSpectrum (𝓞 L)} (hw : w ∉ placesOver S)
     (r : S.integer F) : w.valuation L (algebraMap F L r) ≤ 1 := by
@@ -289,8 +288,7 @@ theorem exists_of_mem_sUnitsMax {y : (maxUnramifiedOutside F Ω S)ˣ}
   have hmap : Units.map (IntermediateField.inclusion hL : L →* maxUnramifiedOutside F Ω S)
       (Units.mk0 _ hx0) = y := Units.ext rfl
   refine ⟨L, hf, hL, Units.mk0 _ hx0, ?_, hmap⟩
-  rw [← map_inclusion_mem_sUnitsMax_iff F Ω S hL, hmap]
-  exact hy
+  rwa [← map_inclusion_mem_sUnitsMax_iff F Ω S hL, hmap]
 
 end Max
 

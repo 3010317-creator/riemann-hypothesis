@@ -103,8 +103,7 @@ theorem TwistedDualGensSpan.proof : TwistedDualGensSpan.Statement := by
           Module.Basis.coord_apply, Module.Basis.repr_sum_self]
       have : f l0 ^ m * f l ^ n * β.coord q (b l r) = f l0 ^ m * a' q := by
         rw [← hc', map_smul, smul_eq_mul]; ring
-      rw [this]
-      exact hm
+      rwa [this]
     choose D hDA hD0 hDc using hden
     set d : Ω := ∏ p : Fin k × Fin N, D p.1 p.2 with hd
     have hd0 : d ≠ 0 := Finset.prod_ne_zero_iff.2 fun p _ => hD0 _ _
@@ -134,8 +133,7 @@ theorem TwistedDualGensSpan.proof : TwistedDualGensSpan.Statement := by
         rw [hrep, map_sum, Finset.mul_sum]
         refine Finset.sum_congr rfl fun r _ => ?_
         rw [map_smul, smul_eq_mul]; ring
-      rw [smul_eq_mul, this]
-      exact hn
+      rwa [smul_eq_mul, this]
     obtain ⟨u, -, hu⟩ := hφ.generate c hc (d • β.coord q) hψ
     have hmem : d • β.coord q ∈ Submodule.span Ω (Set.range φ) := by
       rw [hu]

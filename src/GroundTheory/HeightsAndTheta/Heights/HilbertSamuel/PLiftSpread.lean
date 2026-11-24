@@ -316,8 +316,7 @@ theorem val_faces (z : KH.CechC ℚ ι (MRingOver ℚ ι ⧸ KH.genIdeal y) 0)
         have h5 := Finset.card_pos.mpr h3
         omega
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ k0) h
+    · exact fun h => absurd (Finset.mem_univ k0) h
   have e0 : KH.cechD ℚ ι (MRingOver ℚ ι ⧸ KH.genIdeal y) 0 z I = 0 := by rw [hz]; rfl
   rw [key, hs1, hs2, one_smul, neg_one_smul, ← sub_eq_add_neg, sub_eq_zero] at e0
   have hT : ∀ t ∈ KH.cellMon ℚ I.1, aeval y t ≠ 0 := cellMon_ne hIy
@@ -521,8 +520,7 @@ theorem prod_mem_chartLat (y : (Σ k, ι k) → Ω) {σ : Type} (t : ℕ) (a : K
     (hx : ∀ j, x j ∈ chartLat y a 1) (f : Fin t → σ) : ∏ l, x (f l) ∈ chartLat y (t • a) 1 := by
   intro c hc
   have hW : ∀ j, x j * ∏ k, y ⟨k, c k⟩ ^ (-a k) ∈ chartRingZ y c := fun j => by
-    have h := hx j c hc
-    simpa only [Nat.cast_one, one_mul] using h
+    simpa only [Nat.cast_one, one_mul] using hx j c hc
   simp only [Nat.cast_one, one_mul]
   rw [prod_zpow_nsmul, ← Finset.prod_mul_distrib]
   exact Subalgebra.prod_mem _ fun l _ => hW (f l)

@@ -117,8 +117,7 @@ theorem wd {y : (Σ k, ι k) → Ω} {y' : (Σ k, ι k) → K'} (hle : mIdealOve
     rw [add_comm]; exact isMultiHomog_mul hf₂ hg
   have hp := isMultiHomog_sub (isMultiHomog_mul hf hg₂) h2
   have h0 := vanish hle hp (by rw [map_sub, map_mul, map_mul, h, sub_self])
-  rw [map_sub, map_mul, map_mul, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, map_mul, map_mul, sub_eq_zero] at h0
 
 
 variable (F) in
@@ -207,8 +206,7 @@ theorem ResidueMap.proof : ResidueMap.Statement := by
   intro F _ K _ ι _ Ω _ _ y K' _ _ y' hle
   classical
   refine ⟨locR hle, sigma hle, ?_, ?_, ?_⟩
-  · intro f g n hf hg hg'
-    exact frac_spec hle hf hg hg' _ rfl
+  · exact fun f g n hf hg hg' => frac_spec hle hf hg hg' _ rfl
   · intro k f g m hf hg hg'
     have hg'' : aeval y' (rename (fun i : ι k => (⟨k, i⟩ : Σ k, ι k)) g) ≠ 0 := by
       rwa [aeval_rename_block]

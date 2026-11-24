@@ -32,13 +32,11 @@ variable {F L Ω : Type u} [Field F] [Field L] [Field Ω] [Algebra F L] [Algebra
 
 include h in
 theorem mem_of_restrictScalars_eq {x : Ω} (hx : x ∈ E') : x ∈ E := by
-  rw [← h]
-  exact hx
+  rwa [← h]
 
 include h in
 theorem mem_of_restrictScalars_eq' {x : Ω} (hx : x ∈ E) : x ∈ E' := by
-  rw [← h] at hx
-  exact hx
+  rwa [← h] at hx
 
 def fieldEquivOfRestrictScalarsEq : E ≃ₐ[F] E' where
   toFun x := ⟨x.1, mem_of_restrictScalars_eq' h x.2⟩
@@ -72,8 +70,7 @@ theorem mem_fixingOfRestrictScalarsEq_iff (σ : Gal(E/F)) :
   change σ ∈ (embeddingOfRestrictScalarsEq h).fieldRange.fixingSubgroup ↔ _
   rw [IntermediateField.mem_fixingSubgroup_iff]
   constructor
-  · intro hσ x
-    exact hσ _ ⟨x, rfl⟩
+  · exact fun hσ x => hσ _ ⟨x, rfl⟩
   · rintro hσ _ ⟨x, rfl⟩
     exact hσ x
 

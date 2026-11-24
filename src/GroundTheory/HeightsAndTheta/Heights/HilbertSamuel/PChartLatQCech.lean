@@ -345,8 +345,7 @@ theorem exists_rep {T : Submonoid (MRingOver ℚ ι)} (hT : ∀ t ∈ T, aeval y
         have := hd k
         simp only [Pi.add_apply]
         omega
-      rw [hd']
-      exact hF
+      rwa [hd']
   · rw [val_mk hT, evQ_mk, hv]
     show s * _ / aeval y (cmq c e) = s
     rw [aeval_cmq]
@@ -464,8 +463,7 @@ theorem resFacesS {S : Type} [CommRing S] {M : Type} [AddCommGroup M] [Module (M
         have h5 := Finset.card_pos.mpr h3
         omega
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ k0) h
+    · exact fun h => absurd (Finset.mem_univ k0) h
   have e0 : KH.cechD S ι M 0 z I = 0 := by rw [hz]; rfl
   rw [key, hs1, hs2, one_smul, neg_one_smul, ← sub_eq_add_neg, sub_eq_zero] at e0
   obtain ⟨A1, hA1⟩ := J1
@@ -578,8 +576,7 @@ theorem val_chart_eq (hz : KH.cechD ℚ ι _ 0 v = 0) {c d : ∀ k, ι k}
       exact val_step hz (hmix U) (hmix (insert k0 U)) k0 (fun k hk => by simp [Finset.mem_insert, hk])
   have e1 : (fun k => if k ∈ (Finset.univ : Finset K) then d k else c k) = d := funext fun k => by simp
   have h := key Finset.univ
-  rw [e1] at h
-  exact h
+  rwa [e1] at h
 
 end Cocycle
 
@@ -620,11 +617,9 @@ theorem ChartLatQCech.proof : ChartLatQCech.Statement := by
     by_cases hJ : ∀ k, y ⟨k, cellChart J k⟩ ≠ 0
     · have eJ := eq_chartCell (cellChart_mem J)
       have h1 : val y _ (v.1 (chartCell (cellChart J))) = 0 := by
-        rw [← val_chart_eq hz hc0 hJ]
-        exact hv
+        rwa [← val_chart_eq hz hc0 hJ]
       have h2 := eq_zero_of_val (cellMon_aevalQ_ne (chartCell_good hJ)) (hloc _) h1
-      rw [← eJ] at h2
-      exact h2
+      rwa [← eJ] at h2
     · push Not at hJ
       obtain ⟨k, h0⟩ := hJ
       have := subsingleton_loc (S := ℚ) (y := y) (cellChart_mem J k) h0
@@ -638,8 +633,7 @@ theorem ChartLatQCech.proof : ChartLatQCech.Statement := by
       have h := val_mul_mem_chartRingQ hc (hloc (chartCell c))
       show val y _ (v.1 (chartCell c0)) * _ ∈ chartRingQ y c
       rw [val_chart_eq hz hc0 hc]
-      simp only [Nat.cast_one, one_mul]
-      exact h
+      simpa only [Nat.cast_one, one_mul] using h
     · intro hs
       have hex : ∀ J : KH.Cell K ι 0, (∀ k, y ⟨k, cellChart J k⟩ ≠ 0) →
           ∃ x ∈ KH.locPart ι (KH.quotPart ℚ (idealOver y ℚ)) (KH.cellMon ℚ J.1) b, val y _ x = s := by

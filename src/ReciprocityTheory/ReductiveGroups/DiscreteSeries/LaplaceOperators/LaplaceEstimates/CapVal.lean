@@ -221,10 +221,7 @@ lemma hasDerivAt_opC {g X : Matrix (Fin n) (Fin n) ℂ} (hg : inUJ ε g) (hX : i
       (opC σ ι g (actM E X * B)) 0 := by
   unfold opC
   apply HasDerivAt.fun_sum
-  intro i _
-  apply HasDerivAt.fun_sum
-  intro j _
-  exact (hasDerivAt_coef hσ hD hg hX _ _).smul_const _
+  exact fun i _ => HasDerivAt.fun_sum (fun j _ => (hasDerivAt_coef hσ hD hg hX _ _).smul_const _)
 
 lemma rdV_opC {F : Matrix (Fin n) (Fin n) ℂ → (W →L[ℂ] W)} {B : Module.End ℂ D}
     (hF : ∀ h, inUJ ε h → F h = opC σ ι h B) {g X : Matrix (Fin n) (Fin n) ℂ} (hg : inUJ ε g)
@@ -443,8 +440,7 @@ theorem capVal_main : CapValStatement := by
       rintro y ⟨g, hg, w, hw, rfl⟩
       have h0 := horth _ (inUJ_jAdj hg) ⟨w, hw⟩
       have h1 : ⟪σ g (w : H), (u : H)⟫_ℂ = 0 := by
-        rw [inner_sig_left hσ hg]
-        exact h0
+        rwa [inner_sig_left hσ hg]
       show innerSL ℂ (u : H) (σ g (w : H)) = 0
       rw [innerSL_apply_apply, ← inner_conj_symm, h1, map_zero]
     have hin : innerSL ℂ (u : H) (u : H) = 0 := hle huS
@@ -452,8 +448,7 @@ theorem capVal_main : CapValStatement := by
     have hu0 : u = 0 := by
       have : (u : H) = 0 := inner_self_eq_zero.mp hin
       exact_mod_cast this
-    rw [hu, sub_eq_zero] at hu0
-    exact hu0
+    rwa [hu, sub_eq_zero] at hu0
   have hB : genSub E V ≤ LinearMap.ker (C - P • (1 : Module.End ℂ D)) := by
     refine sInf_le ⟨?_, ?_⟩
     · intro x hx

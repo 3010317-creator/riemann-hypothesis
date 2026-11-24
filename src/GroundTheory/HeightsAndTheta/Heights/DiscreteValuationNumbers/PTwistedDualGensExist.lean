@@ -162,8 +162,7 @@ theorem TwistedDualGensExist.exists_dual_gens [IsNoetherianRing O] [Fintype τ] 
   · have : ψ ∈ TwistedDualGensExist.dualSub B c := hS ▸ Submodule.subset_span hψ
     exact this
   · have h : ψ' ∈ Submodule.span (chartRing O x c) (S : Set (Module.Dual Ω E)) := by
-      rw [hS]
-      exact hψ'
+      rwa [hS]
     obtain ⟨u, -, hu⟩ := Submodule.mem_span_finset.1 h
     exact ⟨fun ψ => u ψ, fun ψ => (u ψ).2, hu⟩
 
@@ -196,8 +195,7 @@ theorem TwistedDualGensExist.exists_twist [Fintype τ] {x : τ → Ω} (B : Char
     choose! m hm using hgen
     refine ⟨∑ v ∈ S, m v, fun _ v hv => ?_⟩
     have hv' : v ∈ Submodule.span (chartRing O x c') (S : Set E) := by
-      rw [hS]
-      exact hv
+      rwa [hS]
     clear hv
     induction hv' using Submodule.span_induction with
     | mem w hw =>
@@ -237,8 +235,7 @@ theorem TwistedDualGensExist.ratio_mem (y : (Σ k, ι k) → Ω) {c : ∀ k, ι 
     rw [segreVec, ← Finset.mul_prod_erase _ _ (Finset.mem_univ k)]
   have hP : ∏ k' ∈ Finset.univ.erase k, y ⟨k', c k'⟩ ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun k' _ => hy k'
-  rw [e1, e2, mul_div_mul_right _ _ hP] at h
-  exact h
+  rwa [e1, e2, mul_div_mul_right _ _ hP] at h
 
 theorem TwistedDualGensExist.proof : TwistedDualGensExist.Statement := by
   classical

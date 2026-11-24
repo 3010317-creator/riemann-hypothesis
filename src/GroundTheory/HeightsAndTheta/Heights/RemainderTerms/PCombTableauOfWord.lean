@@ -18,9 +18,7 @@ theorem CombTableauOfWord.proof (h1 : CombCellOfWordMem.Statement)
     simp only [latticeWords, mem_filter] at hw
     exact hw.2.1
   let f : Fin (youngCells lam).card → youngCells lam := fun t => ⟨cellOfWord w t, h1 m lam w hw t⟩
-  have hinj : Function.Injective f := by
-    intro s t hst
-    exact h2 m _ w (congrArg Subtype.val hst)
+  have hinj : Function.Injective f := fun s t hst => h2 m _ w (congrArg Subtype.val hst)
   have hbij : Function.Bijective f := by
     rw [Fintype.bijective_iff_injective_and_card]
     exact ⟨hinj, by simp⟩

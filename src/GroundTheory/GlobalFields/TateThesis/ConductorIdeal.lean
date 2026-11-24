@@ -86,8 +86,7 @@ theorem finprod_asIdeal_pow_dvd_iff {a : HeightOneSpectrum R → ℕ} (ha : (sup
     (∏ᶠ v : HeightOneSpectrum R, v.asIdeal ^ a v) ∣ I ↔
       ∀ v : HeightOneSpectrum R, a v ≤ multiplicity v.asIdeal I := by
   have hfa : HasFiniteMulSupport fun v : HeightOneSpectrum R ↦ v.asIdeal ^ a v := by
-    rw [HasFiniteMulSupport, mulSupport_asIdeal_pow]
-    exact ha
+    rwa [HasFiniteMulSupport, mulSupport_asIdeal_pow]
   constructor
   · intro h v
     have h1 : v.asIdeal ^ a v ∣ I := (finprod_mem_dvd v hfa).trans h
@@ -115,8 +114,7 @@ theorem asIdeal_dvd_finprod_iff {a : HeightOneSpectrum R → ℕ} (ha : (support
     (v : HeightOneSpectrum R) :
     v.asIdeal ∣ ∏ᶠ w : HeightOneSpectrum R, w.asIdeal ^ a w ↔ 1 ≤ a v := by
   have hfa : HasFiniteMulSupport fun v : HeightOneSpectrum R ↦ v.asIdeal ^ a v := by
-    rw [HasFiniteMulSupport, mulSupport_asIdeal_pow]
-    exact ha
+    rwa [HasFiniteMulSupport, mulSupport_asIdeal_pow]
   constructor
   · intro h
     classical
@@ -129,8 +127,7 @@ theorem asIdeal_dvd_finprod_iff {a : HeightOneSpectrum R → ℕ} (ha : (support
     subst heq
     rw [Set.Finite.mem_toFinset, mem_support] at hw
     omega
-  · intro h
-    exact (dvd_pow_self _ (by omega)).trans (finprod_mem_dvd v hfa)
+  · exact fun h => (dvd_pow_self _ (by omega)).trans (finprod_mem_dvd v hfa)
 
 end Ideals
 

@@ -154,8 +154,7 @@ theorem norm_x_sub_le_of_formalGroup (W : WeierstrassCurve C) (h1 : W.a₁ = 0) 
       max_eq_right (by linarith)]
   have h2n : ‖(2 : C)‖ ≤ 1 := by
     have h := IsUltrametricDist.norm_add_le_max (1 : C) 1
-    rw [one_add_one_eq_two, norm_one, max_self] at h
-    exact h
+    rwa [one_add_one_eq_two, norm_one, max_self] at h
   have h4n : ‖(4 : C)‖ ≤ 1 := by
     have h := IsUltrametricDist.norm_add_le_max (2 : C) 2
     rw [show (2 : C) + 2 = 4 by norm_num] at h
@@ -177,8 +176,7 @@ theorem norm_x_sub_le_of_formalGroup (W : WeierstrassCurve C) (h1 : W.a₁ = 0) 
       | field_simp
   have hs0 := norm_nonneg (px W A - px W B)
   have hq0 : 0 ≤ ‖xd‖ / ‖yd‖ := div_nonneg (norm_nonneg _) (norm_nonneg _)
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hsq : (‖xd‖ / ‖yd‖) ^ 2 < ‖px W A - px W B‖ ^ 2 := by
     nlinarith [mul_pos (sub_pos.2 hlt) (by linarith : 0 < ‖px W A - px W B‖ + ‖xd‖ / ‖yd‖)]
   nlinarith
@@ -569,8 +567,7 @@ theorem cubic_coeff_ind (p : ℂ_[l] → Prop) (T : Cubic ℂ_[l]) (h0 : p 0) (h
   · simpa [Cubic.coeff_eq_c] using hc
   · simpa [Cubic.coeff_eq_b] using hb
   · simpa [Cubic.coeff_eq_a] using ha
-  · rw [Cubic.coeff_eq_zero (by omega)]
-    exact h0
+  · rwa [Cubic.coeff_eq_zero (by omega)]
 
 theorem tor_two (h : GoodPair l g2 g3) (P : (shortW g2 g3).toAffine.Point) (hP0 : P ≠ 0)
     (h2 : P + P = 0) : px _ P ∈ MaximalUnramifiedExtension l ∧ py _ P ∈ MaximalUnramifiedExtension l := by
@@ -621,8 +618,7 @@ theorem tor_two (h : GoodPair l g2 g3) (P : (shortW g2 g3).toAffine.Point) (hP0 
           map_natCast]
         push_cast
         ring
-      rw [this]
-      exact hkap
+      rwa [this]
 
 end ReciprocityTheory.ChartRestriction.L1
 end -- clump:auto
@@ -649,8 +645,7 @@ variable {l : ℕ} [Fact l.Prime] {g2 g3 : ℂ_[l]}
 theorem tor_nsmul_fix {A : Type*} [AddGroup A] (P : A) (N n : ℕ) (hNP : N • P = 0)
     (hn : n ≡ 1 [MOD N]) : n • P = P := by
   have h1 : n ≡ 1 [MOD addOrderOf P] := hn.of_dvd (addOrderOf_dvd_of_nsmul_eq_zero hNP)
-  have h2 := nsmul_eq_nsmul_iff_modEq.mpr h1
-  simpa using h2
+  simpa using nsmul_eq_nsmul_iff_modEq.mpr h1
 
 theorem tor_norm_mult_lt (N : ℕ) (hN0 : 0 < N) : ‖((l ^ N.totient : ℕ) : ℂ_[l])‖ < 1 := by
   have hl : ‖(l : ℂ_[l])‖ < 1 := by

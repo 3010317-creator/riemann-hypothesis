@@ -81,10 +81,8 @@ theorem exists_kBasisIn {K : Type} [Field K] [NumberField K] {r : ℕ}
     constructor
     · rintro ⟨i, rfl⟩
       exact (e.symm i).2
-    · intro hy
-      exact ⟨e ⟨y, hy⟩, by simp⟩
-  rw [hr]
-  exact hx'
+    · exact fun hy => ⟨e ⟨y, hy⟩, by simp⟩
+  rwa [hr]
 
 theorem kBasisIn_bot_eq {K : Type} [Field K] [NumberField K] {r k : ℕ}
     (b : Fin k → Fin r → K) (hb : IsKBasisIn (⊥ : Submodule (𝓞 K) (Fin r → K)) b) : k = 0 := by
@@ -100,8 +98,7 @@ theorem latDeg_zero_fam {K : Type} [Field K] [NumberField K] {r : ℕ}
   have hB : B = ⊥ := by
     rw [eq_bot_iff]
     intro x hx
-    have h := hspan x hx
-    simpa [Set.range_eq_empty] using h
+    simpa [Set.range_eq_empty] using hspan x hx
   subst hB
   simp [latDeg, Set.range_eq_empty]
 
@@ -202,8 +199,7 @@ theorem latDeg_le_of_le {K : Type} [Field K] [NumberField K] {r k : ℕ}
     (b : Fin k → Fin r → K) (hCB : C ≤ B) (hB : B.FG) (hbC : IsKBasisIn C b)
     (hbB : IsKBasisIn B b) : latDeg H C b ≤ latDeg H B b := by
   have hSC : (Submodule.span (𝓞 K) (Set.range b)).toAddSubgroup ≤ C.toAddSubgroup := by
-    intro x hx
-    exact (Submodule.span_le.mpr (Set.range_subset_iff.mpr hbC.1)) hx
+    exact fun x hx => (Submodule.span_le.mpr (Set.range_subset_iff.mpr hbC.1)) hx
   have hCB' : C.toAddSubgroup ≤ B.toAddSubgroup := fun x hx => hCB hx
   have hmul := AddSubgroup.relIndex_mul_relIndex _ _ _ hSC hCB'
   have hne : (Submodule.span (𝓞 K) (Set.range b)).toAddSubgroup.relIndex B.toAddSubgroup ≠ 0 :=
@@ -258,8 +254,7 @@ theorem embMat_injective {K : Type} [Field K] [NumberField K] {r k : ℕ} (S : H
   have hA : Function.Injective (Matrix.toLin' A) := by
     intro x y hxy
     have hinj : Function.Injective A.mulVec := by
-      rw [Matrix.mulVec_injective_iff]
-      exact hli
+      rwa [Matrix.mulVec_injective_iff]
     exact hinj (by simpa [Matrix.toLin'_apply] using hxy)
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective (Matrix.toLin' A)
     (LinearMap.ker_eq_bot.mpr hA)

@@ -116,8 +116,7 @@ lemma isRegular_map_algebraMap_iff' {S M : Type*} [CommRing S] [Algebra R S] [Ad
   · intro h h'
     apply h
     apply Submodule.restrictScalars_injective R S M
-    rw [key, Submodule.restrictScalars_top]
-    exact h'
+    rwa [key, Submodule.restrictScalars_top]
   · intro h h'
     apply h
     rw [← key, ← h', Submodule.restrictScalars_top]
@@ -161,8 +160,7 @@ theorem depthGE_quotient_iff (I : Ideal R) [IsLocalRing (R ⧸ I)] (n : ℕ) :
       exact fun hu => hy' (hu.map _)
     · have hl : (rs.map (Function.surjInv hs)).map (Ideal.Quotient.mk I) = rs := by
         simp [Function.comp_def, Function.surjInv_eq hs]
-      rw [← key, hl]
-      exact hreg
+      rwa [← key, hl]
   · rintro ⟨rs, hlen, hmem, hreg⟩
     refine ⟨rs.map (Ideal.Quotient.mk I), by simp [hlen], ?_, (key rs).mpr hreg⟩
     intro x hx

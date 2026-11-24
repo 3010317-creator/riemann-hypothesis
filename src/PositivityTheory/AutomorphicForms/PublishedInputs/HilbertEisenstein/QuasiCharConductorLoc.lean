@@ -154,8 +154,7 @@ theorem quasiCharConductor_loc {ω : HChar F} {c : ℕ} {w : HeightOneSpectrum (
     ext n
     simp only [Set.mem_ofPred_eq]
     constructor
-    · intro hle x hx hv
-      exact MonoidHom.mem_ker.mp (hle ((mem_U_iff w n x).mpr ⟨hx, hv⟩))
+    · exact fun hle x hx hv => MonoidHom.mem_ker.mp (hle ((mem_U_iff w n x).mpr ⟨hx, hv⟩))
     · intro hP x hx
       obtain ⟨h1, h2⟩ := (mem_U_iff w n x).mp hx
       exact MonoidHom.mem_ker.mpr (hP x h1 h2)
@@ -202,7 +201,6 @@ theorem local_ramified_holds : LocRam := by
   · have h := shell_ne_zero χ ψ (continuous_localAdelicChar w) (localAdelicChar_ne_one w) hχ hr
     rw [hn, hcond] at h
     have e : -((c w : ℤ) + dd w) = -dd w - (c w : ℤ) := by ring
-    rw [e]
-    exact h
+    rwa [e]
 
 end UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein

@@ -78,8 +78,7 @@ variable {V : Set ℂ} {g : ℂ → ℝ} {G : ℂ → ℂ →L[ℝ] ℝ} {H : �
 
 lemma hasDerivAt_circleMap_radius (r θ : ℝ) :
     HasDerivAt (fun s : ℝ => circleMap 0 s θ) (circleMap 0 1 θ) r := by
-  have h := ((hasDerivAt_id r).ofReal_comp).mul_const (Complex.exp (θ * Complex.I))
-  simpa [circleMap] using h
+  simpa [circleMap] using ((hasDerivAt_id r).ofReal_comp).mul_const (Complex.exp (θ * Complex.I))
 
 lemma hasDerivAt_comp_radius {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     {φ : ℂ → F} {φ' : ℂ →L[ℝ] F} (r θ : ℝ) (h : HasFDerivAt φ φ' (circleMap 0 r θ)) :
@@ -414,8 +413,7 @@ theorem lap_nonneg_of_sub_mean (hg : ∀ x ∈ V, HasFDerivAt g (G x) x)
     (hR : closedBall (0:ℂ) R ⊆ V)
     (hsub : ∀ r ∈ Ioc (0:ℝ) R, g 0 ≤ Real.circleAverage g 0 r) :
     0 ≤ H 0 1 1 + H 0 Complex.I Complex.I := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   set c := H 0 1 1 + H 0 Complex.I Complex.I with hcdef
   have h0V : (0:ℂ) ∈ V := hR (mem_closedBall_self hR0.le)
   obtain ⟨δ, hδ, hball⟩ := Metric.continuousWithinAt_iff.mp (hHc 0 h0V) (-c/4) (by linarith)
@@ -830,8 +828,7 @@ lemma ii_sup' {ι : Type} [Fintype ι] [Nonempty ι] (f : ι → ℝ → ℝ) {a
   rw [e]
   refine Finset.sup'_induction _ _ (p := fun g => IntervalIntegrable g volume a b) ?_
     (fun j _ => hf j)
-  intro g hg h hh
-  exact ⟨hg.1.sup hh.1, hg.2.sup hh.2⟩
+  exact fun g hg h hh => ⟨hg.1.sup hh.1, hg.2.sup hh.2⟩
 
 end
 

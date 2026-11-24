@@ -68,8 +68,7 @@ variable {C : Type} [Field C] {v : Valuation C NNReal} {R : Type} [CommRing R] [
 theorem smul_cancel (hv : v.Integers R) {n : Type} {e : Matrix n n R} (he : e ≠ 0) {x y : R}
     (h : x • e = y • e) : x = y := by
   obtain ⟨i, j, hij⟩ : ∃ i j, e i j ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact he (Matrix.ext hc)
   have h1 := congrFun (congrFun h i) j
   simp only [Matrix.smul_apply, smul_eq_mul] at h1
@@ -104,12 +103,10 @@ theorem fermat (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap
       ZMod.pow_card, sub_self]
   obtain ⟨w, hw⟩ := Ideal.mem_span_singleton'.mp hz
   have hp0 : res hv (p : R) = 0 := by
-    rw [Ideal.Quotient.eq_zero_iff_mem]
-    exact hpv
+    rwa [Ideal.Quotient.eq_zero_iff_mem]
   have h0 : res hv (algebraMap ℤ_[p] R (z ^ p - z)) = 0 := by
     rw [← hw, map_mul, map_mul, map_natCast (algebraMap ℤ_[p] R), hp0, mul_zero]
-  rw [map_sub, map_sub, map_pow, map_pow, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, map_sub, map_pow, map_pow, sub_eq_zero] at h0
 
 theorem proj (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap R C (p : R)) < 1)
     [Algebra ℤ_[p] R] {n : Type} [Fintype n] [DecidableEq n] {ι : Type} [Fintype ι] [DecidableEq ι]
@@ -159,8 +156,7 @@ theorem proj (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap R
     rw [Matrix.smul_mul, heig, smul_smul]
   have hdecomp : ∀ M : Matrix n n R, M = ∑ j, M * εT j := fun M => by
     rw [← Finset.mul_sum, hsum, Matrix.mul_one]
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hP'0 : (∑ γ, (ψ i γ ^ (Fintype.card G - 1)) ^ p • (A γ).map (algebraMap ℤ_[p] R)) = 0 := by
     rw [hdecomp (∑ γ, (ψ i γ ^ (Fintype.card G - 1)) ^ p • (A γ).map (algebraMap ℤ_[p] R))]
     refine Finset.sum_eq_zero fun j _ => ?_
@@ -203,8 +199,7 @@ theorem proj (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap R
         rw [hz, zero_smul]
     · simp
   obtain ⟨a, b, hab⟩ : ∃ a b, εT i a b ∉ mI hv := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hi (idem_eq_zero hv (εT i) (by rw [horth, ite_eq_left rfl]) hc)
   haveI := charP p hv hpv
   have hfrob : res hv ((∑ γ, (ψ i γ ^ (Fintype.card G - 1)) ^ p •
@@ -221,9 +216,7 @@ theorem proj (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap R
     have h1 : IsUnit (res hv (Fintype.card G : R)) := hG.map (res hv)
     rw [h0] at h1
     exact not_isUnit_zero h1
-  have hres_e : res hv (εT i a b) ≠ 0 := by
-    intro h0
-    exact hab (Ideal.Quotient.eq_zero_iff_mem.mp h0)
+  have hres_e : res hv (εT i a b) ≠ 0 := fun h0 => hab (Ideal.Quotient.eq_zero_iff_mem.mp h0)
   rw [hP'0, hPi] at hfrob
   simp only [Matrix.zero_apply, map_zero, Matrix.smul_apply, smul_eq_mul, map_mul] at hfrob
   exact pow_ne_zero p (mul_ne_zero hres_n hres_e) hfrob.symm

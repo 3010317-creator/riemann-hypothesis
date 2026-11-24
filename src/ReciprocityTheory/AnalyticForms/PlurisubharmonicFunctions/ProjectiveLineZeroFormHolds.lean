@@ -146,8 +146,7 @@ theorem contDiff_insertNth_pair {D : ℕ} (j : Fin (D + 1)) :
     exact (contDiff_apply ℝ (fun _ => ℂ) i).comp contDiff_snd
 
 theorem uPair_contDiff {D : ℕ} (j : Fin (D + 1)) {u : (Fin (D + 1) → ℂ) → ℝ}
-    (hu : ContDiff ℝ 2 u) : ContDiff ℝ 2 (uPair j u) := by
-  exact hu.comp (contDiff_insertNth_pair j)
+    (hu : ContDiff ℝ 2 u) : ContDiff ℝ 2 (uPair j u) := hu.comp (contDiff_insertNth_pair j)
 
 theorem uPair_hasCompactSupport {D : ℕ} (j : Fin (D + 1)) {u : (Fin (D + 1) → ℂ) → ℝ}
     (hs : HasCompactSupport u) : HasCompactSupport (uPair j u) := by
@@ -255,8 +254,7 @@ theorem integral_log_coord_mul_fderiv {D : ℕ} (j : Fin (D + 1)) {g : (Fin (D +
     refine Filter.Eventually.of_forall fun z t _ => ?_
     have h1 : HasDerivAt (fun t : ℝ => z + t • x) x t := by
       simpa using ((hasDerivAt_id t).smul_const x).const_add z
-    have h2 := (hdiff (z + t • x)).hasFDerivAt.comp_hasDerivAt t h1
-    exact h2.const_mul (f z)
+    exact ((hdiff (z + t • x)).hasFDerivAt.comp_hasDerivAt t h1).const_mul (f z)
   obtain ⟨-, hder⟩ := hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (Metric.ball_mem_nhds (0 : ℝ) one_pos) hmeas hint hmeas' hbound hboundint hd
   have hc : HasDerivAt (fun t => ∫ z, F t z) 0 0 := by
@@ -617,8 +615,7 @@ theorem log_norm_integral_formula : PoincareLelongHyperplane := by
   have hf : (hypInclAt (n := n) 0) = hypIncl := funext hypInclAt_zero
   have h := log_norm_integral_at_coordinate n 0 U v φ hp
   unfold densHypAt at h
-  rw [hf] at h
-  exact h
+  rwa [hf] at h
 
 theorem log_norm_integral_formula_unit : PoincareLelongUnitPower := by
   intro n m U v φ u hp hu hu0

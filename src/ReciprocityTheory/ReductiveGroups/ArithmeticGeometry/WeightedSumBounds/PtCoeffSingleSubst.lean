@@ -98,10 +98,8 @@ theorem ptPsIsInt_iff (f : PowerSeries C) : PsIsInt v f ↔ f ∈ ptIntSer v Uni
       ext
       exact Finsupp.single_eq_same.symm
     have h1 := h (α ())
-    rw [hα]
-    exact h1
-  · intro h n
-    exact h (Finsupp.single () n)
+    rwa [hα]
+  · exact fun h n => h (Finsupp.single () n)
 
 theorem ptIntSer_X {σ : Type*} (s : σ) : (X s : MvPowerSeries σ C) ∈ ptIntSer v σ := by
   intro α
@@ -248,8 +246,7 @@ theorem pt_coeff_single_subst {σ τ : Type*} [Fintype σ]
   · refine Finset.sum_congr rfl fun s _ => ?_
     rw [Finsupp.prod_single_index (by simp)]
     simp only [pow_one, smul_eq_mul]
-  · intro s _ t _ hst
-    exact (Finsupp.single_left_inj one_ne_zero).mp hst
+  · exact fun s _ t _ hst => (Finsupp.single_left_inj one_ne_zero).mp hst
 
 theorem pt_coeff_single_X {σ : Type*} (s t : σ) :
     coeff (Finsupp.single s 1) (X t : MvPowerSeries σ R) = if s = t then 1 else 0 := by
@@ -258,8 +255,7 @@ theorem pt_coeff_single_X {σ : Type*} (s t : σ) :
   · subst h
     simp
   · rw [ite_eq_right h, ite_eq_right]
-    intro h'
-    exact h ((Finsupp.single_left_inj one_ne_zero).mp h')
+    exact fun h' => h ((Finsupp.single_left_inj one_ne_zero).mp h')
 
 theorem pt_hK_of_low {σ τ : Type*} {K : MvPowerSeries σ R}
     (hK : ∀ α : σ →₀ ℕ, α.degree ≤ 1 → coeff α K = 0) (A A' : σ → MvPowerSeries τ R) :

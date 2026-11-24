@@ -170,8 +170,7 @@ private lemma res_mul_inv_mul_of_eq {A : Scheme.{0}} {U V : A.Opens} (h : V ≤ 
 private lemma inv_eq_mul_inv_mul_inv_of_eq_mul_inv_mul {G : Type*} [CommGroup G] (x a b y : G) (h : x = a * b⁻¹ * y) :
     x⁻¹ = b * a⁻¹ * y⁻¹ := by
   rw [h]
-  simp only [mul_inv_rev, inv_inv]
-  exact mul_comm _ _
+  simpa only [mul_inv_rev, inv_inv] using mul_comm _ _
 
 theorem LBIso.symm {A B : LB X} (H : LBIso A B) : LBIso B A := by
   obtain ⟨w, hw⟩ := H
@@ -263,8 +262,7 @@ def toStk (z : Sp F) : F →+* (Sp F).presheaf.stalk z :=
 
 theorem top_le_iff_mem (x : Sp F ⟶ X) (U : X.Opens) (z : Sp F) : ⊤ ≤ x ⁻¹ᵁ U ↔ x z ∈ U := by
   constructor
-  · intro hle
-    exact hle (show z ∈ (⊤ : (Sp F).Opens) from trivial)
+  · exact fun hle => hle (show z ∈ (⊤ : (Sp F).Opens) from trivial)
   · intro hz w _
     have hwz : w = z := by
       first

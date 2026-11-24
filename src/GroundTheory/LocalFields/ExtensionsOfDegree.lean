@@ -151,8 +151,7 @@ theorem exists_adjoin_eq_of_norm_coeff_sub_lt (f : L[X]) (hm : f.Monic) (hirr : 
       rw [← hmin, isConjRoot_def.1 hx']
       exact minpoly.aeval L x'
     have hx'R : x' ∈ R := by
-      rw [hR, Multiset.mem_toFinset, mem_roots hfC, IsRoot, eval_map_algebraMap]
-      exact hx'root
+      rwa [hR, Multiset.mem_toFinset, mem_roots hfC, IsRoot, eval_map_algebraMap]
     rw [norm_sub_rev]
     exact ha.trans_le (hrle a haR x' hx'R hne)
 
@@ -163,8 +162,7 @@ theorem exists_adjoin_eq_of_norm_coeff_sub_lt (f : L[X]) (hm : f.Monic) (hirr : 
     simpa using h'
   have hα : aeval (y : Ω') f = 0 := by
     have := aeval_algebraMap_apply Ω' y f
-    rw [hy0, map_zero] at this
-    exact this
+    rwa [hy0, map_zero] at this
   refine ⟨(y : Ω'), hα, ?_⟩
   have hαint : IsIntegral L (y : Ω') := ⟨f, hm, by rwa [← aeval_def]⟩
   refine eq_of_le_of_finrank_le (adjoin_simple_le_iff.2 y.2) ?_

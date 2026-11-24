@@ -100,8 +100,7 @@ lemma symLe (L : LB G.left)
   have h2 : m.F.base y ∈ L.U (p.2 PUnit.unit) :=
     LB.wchart_le L (fun _ : PUnit => m.F) p.2 PUnit.unit hy.2
   have h3 : (GrpObj.inv (X := G)).left.base (m.F.base y) ∈ L.U (p.1 PUnit.unit PUnit.unit) := by
-    rw [← base_eq (inv_comm m) y]
-    exact h1
+    rwa [← base_eq (inv_comm m) y]
   exact (show m.F.base y ∈ LB.wchart L (fun _ : PUnit => (GrpObj.inv (X := G)).left)
       (fun _ => p.1 PUnit.unit PUnit.unit) ⊓ L.U (p.2 PUnit.unit) from
     ⟨memW_lemma_2 L (fun _ : PUnit => (GrpObj.inv (X := G)).left)
@@ -150,8 +149,7 @@ lemma symIso_isGen (L : LB G.left) (w₀ : LB.Iso L (L.pull (GrpObj.inv (X := G)
           (fun _ => p'.1 PUnit.unit PUnit.unit) PUnit.unit hz.2.1⟩
     have hmem1 : m.F.base ((GrpObj.inv (X := G')).left.base y) ∈
         L.U (p.1 PUnit.unit PUnit.unit) ⊓ L.U (p'.1 PUnit.unit PUnit.unit) := by
-      rw [base_eq (inv_comm m) y]
-      exact hmem3
+      rwa [base_eq (inv_comm m) y]
     refine (germ_pull_pull L m.F (GrpObj.inv (X := G')).left p.1 p'.1 y _ hmem1).trans
       ((gU_pullU_congr (inv_comm m) (L.U (p.1 PUnit.unit PUnit.unit) ⊓ L.U (p'.1 PUnit.unit PUnit.unit)) (L.g (p.1 PUnit.unit PUnit.unit) (p'.1 PUnit.unit PUnit.unit)) y hmem1 hmem3).trans
       ((congrArg (gU (O := (m.F ≫ (GrpObj.inv (X := G)).left) ⁻¹ᵁ (L.U (p.1 PUnit.unit PUnit.unit) ⊓ L.U (p'.1 PUnit.unit PUnit.unit))) y hmem3)
@@ -231,15 +229,13 @@ lemma sym_maps (L : RigLB G) (he : eSec G ≫ (GrpObj.inv (X := G)).left = 𝟙 
     LB.wchart_le L.L (fun _ : PUnit => m.F) (p.1 PUnit.unit PUnit.unit) PUnit.unit b2
   have b4 : (GrpObj.inv (X := G)).left.base ((eSec G).base (m.e.base y)) ∈
       L.L.U (p.1 PUnit.unit PUnit.unit PUnit.unit) := by
-    rw [← pt1 m y]
-    exact b3
+    rwa [← pt1 m y]
   have c1 : (eSec G').base y ∈ (L.L.pull m.F).U (p.2 PUnit.unit) :=
     LB.wchart_le (L.L.pull m.F) (fun _ : PUnit => eSec G') p.2 PUnit.unit hy.2
   have c2 : m.F.base ((eSec G').base y) ∈ L.L.U (p.2 PUnit.unit PUnit.unit) :=
     LB.wchart_le L.L (fun _ : PUnit => m.F) (p.2 PUnit.unit) PUnit.unit c1
   have c3 : (eSec G).base (m.e.base y) ∈ L.L.U (p.2 PUnit.unit PUnit.unit) := by
-    rw [← pt2 m y]
-    exact c2
+    rwa [← pt2 m y]
   have d0 : (eSec G).base (m.e.base y) ∈
       (L.L.pull (GrpObj.inv (X := G)).left).U (fun _ => p.1 PUnit.unit PUnit.unit PUnit.unit) ⊓
         L.L.U (p.2 PUnit.unit PUnit.unit) :=
@@ -252,8 +248,7 @@ lemma sym_maps (L : RigLB G) (he : eSec G ≫ (GrpObj.inv (X := G)).left = 𝟙 
     show m.F.base ((eSec G').base y) ∈
       (L.L.pull (GrpObj.inv (X := G)).left).U (fun _ => p.1 PUnit.unit PUnit.unit PUnit.unit) ⊓
         L.L.U (p.2 PUnit.unit PUnit.unit)
-    rw [pt2 m y]
-    exact d0
+    rwa [pt2 m y]
   have hz : m.e.base y ∈
       ((L.L.pull (GrpObj.inv (X := G)).left).pull (eSec G)).U
         (fun _ _ => p.1 PUnit.unit PUnit.unit PUnit.unit) ⊓

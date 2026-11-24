@@ -101,8 +101,7 @@ private theorem norm_fderiv_le_of_differentiableOn_ball_of_norm_le {F : Type*} [
     exact (hfa.comp w ((differentiableAt_id.smul_const v).const_add x)).differentiableWithinAt
   have hdc : DiffContOnCl ℂ (fun w : ℂ => f (x + w • v)) (ball 0 R) := by
     apply DifferentiableOn.diffContOnCl
-    rw [closure_ball _ hR.ne']
-    exact hgd
+    rwa [closure_ball _ hR.ne']
   have hcau := Complex.norm_deriv_le_of_forall_mem_sphere_norm_le hR hdc
     (fun z hz => hC _ (hmem z (le_of_eq (mem_sphere_zero_iff_norm.mp hz))))
   have hline : HasDerivAt (fun w : ℂ => x + w • v) ((1 : ℂ) • v) 0 :=
@@ -245,8 +244,7 @@ lemma fj_hbd (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ) (hP : X.IsBddSec la P) 
       ((_root_.ReciprocityTheory.ChartRestriction.G.FD.FourierCoefficientDomain.isOpen_dom X).mem_nhds hx0)
   obtain ⟨ρ, hρ, hball⟩ := Metric.mem_nhds_iff.mp hev
   refine ⟨ρ / 2, by positivity, 2 * C / X.nfac la x0, ?_, ?_⟩
-  · intro z hz
-    exact (hball (Metric.closedBall_subset_ball (by linarith) hz)).2
+  · exact fun z hz => (hball (Metric.closedBall_subset_ball (by linarith) hz)).2
   · intro t z hz
     have hz' := hball (Metric.closedBall_subset_ball (by linarith) hz)
     obtain ⟨hfd, hfn⟩ := FlowCoefficientBounds.flow_real X hξ hz'.2 t la

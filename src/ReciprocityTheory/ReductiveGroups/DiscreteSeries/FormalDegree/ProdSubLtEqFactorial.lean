@@ -179,10 +179,8 @@ theorem ratioV_eq_vand {μ : Fin n → ℝ} (hμ : StrictAnti μ) (s : Fin n) :
         ∏ b ∈ univ.filter (fun b : Fin n => s < b), (μ s + 1 - μ b) / (μ s - μ b) := by
     rw [Finset.prod_eq_single s]
     · exact Finset.prod_congr rfl (fun b _ => ite_eq_left rfl)
-    · intro a _ ha
-      exact Finset.prod_eq_one (fun b _ => ite_eq_right ha)
-    · intro h
-      exact absurd (Finset.mem_univ s) h
+    · exact fun a _ ha => Finset.prod_eq_one (fun b _ => ite_eq_right ha)
+    · exact fun h => absurd (Finset.mem_univ s) h
   have hB : (∏ a : Fin n, ∏ b ∈ univ.filter (fun b : Fin n => a < b),
           (if b = s then (μ s + 1 - μ a) / (μ s - μ a) else 1)) =
         ∏ a ∈ univ.filter (fun a : Fin n => a < s), (μ s + 1 - μ a) / (μ s - μ a) := by
@@ -222,10 +220,8 @@ theorem prod_sub_lt_eq_factorial (b : Fin n) :
   have h1 : ∏ a ∈ univ.filter (fun a : Fin n => a < b), (((b : ℕ) : ℝ) - ((a : ℕ) : ℝ)) =
       ∏ k ∈ range (b : ℕ), (((b : ℕ) : ℝ) - (k : ℝ)) := by
     apply Finset.prod_nbij (fun a : Fin n => (a : ℕ))
-    · intro a ha
-      exact Finset.mem_range.mpr (Finset.mem_filter.mp ha).2
-    · intro a _ a' _ h
-      exact Fin.ext h
+    · exact fun a ha => Finset.mem_range.mpr (Finset.mem_filter.mp ha).2
+    · exact fun a _ a' _ h => Fin.ext h
     · intro k hk
       have hk' : k < (b : ℕ) := Finset.mem_range.mp hk
       refine ⟨⟨k, lt_trans hk' b.isLt⟩, ?_, rfl⟩

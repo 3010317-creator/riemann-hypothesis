@@ -88,11 +88,9 @@ theorem span_emb_int (hD3 : IntegerApproximationCount (E := E)) :
     have hmem : f (fun τ : X.Ψ => τ.1 (α : E)) ∈ Submodule.map f (Submodule.span ℝ
         (Set.range fun α : 𝓞 E => fun τ : X.Ψ => τ.1 (α : E))) :=
       Submodule.mem_map_of_mem (Submodule.subset_span ⟨α, rfl⟩)
-    rw [hfW] at hmem
-    exact hmem
+    rwa [hfW] at hmem
   have hnorm : ‖(fun τ : X.Ψ => τ.1 (α : E)) - t • v‖ ≤ ρ := by
-    refine (pi_norm_le_iff_of_nonneg hρ0).mpr fun τ => ?_
-    exact hα τ
+    exact (pi_norm_le_iff_of_nonneg hρ0).mpr fun τ => hα τ
   have hle := g.le_opNorm ((fun τ : X.Ψ => τ.1 (α : E)) - t • v)
   have hg : g ((fun τ : X.Ψ => τ.1 (α : E)) - t • v) = -(‖g‖ * ρ + 1) := by
     show f ((fun τ : X.Ψ => τ.1 (α : E)) - t • v) = _
@@ -149,8 +147,7 @@ theorem smul_int_mem {α : E} (hα : IsIntegral ℤ α) {v : Fin r → E} (hv : 
   obtain ⟨γ, hγ⟩ : ∃ γ : 𝓞 E, (γ : E) = α := ⟨⟨_, hα⟩, rfl⟩
   have h := X.Λ.smul_mem γ hv
   rw [← algebraMap_smul E γ v] at h
-  rw [← hγ]
-  exact h
+  rwa [← hγ]
 
 noncomputable def single (a : Fin r) : (X.Ψ → ℂ) →ₗ[ℝ] (X.Ψ → Fin r → ℂ) where
   toFun s τ := Pi.single a (s τ)
@@ -230,8 +227,7 @@ theorem scal_closed (hD3 : IntegerApproximationCount (E := E)) {ξ : Fin r → E
         simp [M, Data.embV, Data.emb]
       rw [e]
       exact Submodule.subset_span ⟨_, hαμ, rfl⟩
-    intro v hv
-    exact hle hv
+    exact fun v hv => hle hv
   let T : (X.Ψ → ℂ) →ₗ[ℝ] (X.Ψ → Fin r → ℂ) :=
     { toFun := fun s τ => s τ • w τ
       map_add' := fun s s' => by funext τ; simp [add_smul]
@@ -270,8 +266,7 @@ theorem Iperp_le (hD3 : IntegerApproximationCount (E := E)) {ξ : Fin r → E} (
     funext b
     have := congrFun h0 b
     simp only [Pi.zero_apply] at this
-    have h2 := congrArg cc this
-    simpa using h2
+    simpa using congrArg cc this
   set d : E := (X.den : E) with hd
   have hcint : IsIntegral ℤ (d * herm X.Gm η ξ) := X.Λ_int η hηΛ ξ hξΛ
   have hc0 : d * herm X.Gm η ξ ≠ 0 := by

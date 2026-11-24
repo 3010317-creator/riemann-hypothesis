@@ -77,11 +77,9 @@ theorem slope_mem_sub (hW : CoeffSub K W) {x₁ x₂ y₁ y₂ : C} (hx₁ : x�
   have n2 := negY_mem_sub K W hW hx₂ hy₂
   obtain ⟨h1, h2, h3, h4, h6⟩ := hW
   have c2 : (2 : C) ∈ K := by
-    have h0 := natCast_mem K 2
-    simpa using h0
+    simpa using natCast_mem K 2
   have c3 : (3 : C) ∈ K := by
-    have h0 := natCast_mem K 3
-    simpa using h0
+    simpa using natCast_mem K 3
   unfold WeierstrassCurve.Affine.slope
   split_ifs
   · exact K.zero_mem
@@ -125,8 +123,7 @@ theorem addY_mem_sub (hW : CoeffSub K W) {x₁ x₂ y₁ s : C} (hx₁ : x₁ �
     | apply K.add_mem
     | apply K.mul_mem
     | apply K.neg_mem)
-  simp only [WeierstrassCurve.Affine.addY]
-  exact negY_mem_sub K W hW hX hN
+  simpa only [WeierstrassCurve.Affine.addY] using negY_mem_sub K W hW hX hN
 
 theorem inSub_neg (hW : CoeffSub K W) (P : W.toAffine.Point) (hP : InSub K P) : InSub K (-P) := by
   cases P with

@@ -164,8 +164,7 @@ theorem ker_eq_map {σ τ Φ Φ' : Type} [Field Φ] [Field Φ'] [Algebra Φ Φ']
     exact Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ hF)
   · rw [Ideal.map_le_iff_le_comap]
     intro F hF
-    rw [Ideal.mem_comap, RingHom.mem_ker, hcomp, ← RingHom.mem_ker, hφ]
-    exact hF
+    rwa [Ideal.mem_comap, RingHom.mem_ker, hcomp, ← RingHom.mem_ker, hφ]
 
 variable {W : Ideal (MRing ι')} [W.IsPrime] (hW : imageZ v W = imageZ v P')
 
@@ -204,8 +203,7 @@ theorem PFHoriz.proof : PFHoriz.Statement := by
   haveI : W.IsPrime := hW.2.1.1
   have h := hPF K ι K' ι' κ v W d (PFHoriz.genFibreOf G W hWP) J L L' N hκv hW (by rw [hWP]; exact hP)
     hJ hL hLL hN
-  rw [PFHoriz.fibreIdeal_genFibreOf hWP hκv G, hWP] at h
-  exact h
+  rwa [PFHoriz.fibreIdeal_genFibreOf hWP hκv G, hWP] at h
 
 end
 

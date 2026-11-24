@@ -58,8 +58,7 @@ theorem holoMap_id (A : FinHolAtlas e X) : HoloMap A A id :=
 theorem isAnalyticSubset_empty (A : FinHolAtlas e X) : A.IsAnalyticSubset ∅ := by
   intro x
   refine ⟨Set.univ, isOpen_univ, Set.mem_univ x, 1, fun _ _ => (1 : ℂ), ?_, ?_⟩
-  · intro i j
-    exact analyticOnNhd_const
+  · exact fun i j => analyticOnNhd_const
   · ext y
     simp
 

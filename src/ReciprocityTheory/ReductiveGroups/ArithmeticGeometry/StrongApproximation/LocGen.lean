@@ -169,8 +169,7 @@ theorem OFam.sub_proj_orth {r : ℕ} (F : OFam (σ := σ) (J := J) e f r) (x : �
       ring
     · intro j _ hjk
       rw [F.ho j k hjk, mul_zero]
-    · intro hk
-      exact absurd (Finset.mem_univ k) hk
+    · exact fun hk => absurd (Finset.mem_univ k) hk
 
 end
 
@@ -255,8 +254,7 @@ theorem OFam.extend {r : ℕ} (F : OFam (σ := σ) (J := J) e f r) (hns : ¬ F.S
     by_cases hyy : hf σ J (x - F.proj x) (x - F.proj x) = 0
     · have hy0 : x - F.proj x ≠ 0 := sub_ne_zero.mpr (Ne.symm hx)
       have hz' : ∃ z', hf σ J (x - F.proj x) z' ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         exact hy0 (nondeg hdet hcon)
       obtain ⟨z', hz'⟩ := hz'
       have hyproj : ∀ t, hf σ J (x - F.proj x) (F.proj t) = 0 := by
@@ -266,11 +264,9 @@ theorem OFam.extend {r : ℕ} (F : OFam (σ := σ) (J := J) e f r) (hns : ¬ F.S
         simp only [OFam.proj, hadd2, hsm2, hf_sum_right, hye, hyf, hya, mul_zero,
           Finset.sum_const_zero, add_zero]
       have hyz : hf σ J (x - F.proj x) (z' - F.proj z') ≠ 0 := by
-        rw [hsub2, hyproj, sub_zero]
-        exact hz'
+        rwa [hsub2, hyproj, sub_zero]
       by_cases hzz : hf σ J (z' - F.proj z') (z' - F.proj z') = 0
-      · by_contra hall
-        push Not at hall
+      · by_contra! hall
         apply hyz
         have e1 : (x + z') - F.proj (x + z') = (x - F.proj x) + (z' - F.proj z') := by
           rw [OFam.proj_add]
@@ -293,33 +289,26 @@ theorem OFam.extend {r : ℕ} (F : OFam (σ := σ) (J := J) e f r) (hns : ¬ F.S
   refine ⟨⟨Fin.snoc F.a (t - F.proj t), Fin.snoc F.inv (↑u⁻¹ : K), ?_, ?_, ?_, ?_⟩⟩
   · intro j
     refine Fin.lastCases ?_ (fun i => ?_) j
-    · simp only [Fin.snoc_last]
-      exact hwe
-    · simp only [Fin.snoc_castSucc]
-      exact F.ha_e i
+    · simpa only [Fin.snoc_last] using hwe
+    · simpa only [Fin.snoc_castSucc] using F.ha_e i
   · intro j
     refine Fin.lastCases ?_ (fun i => ?_) j
-    · simp only [Fin.snoc_last]
-      exact hwf
-    · simp only [Fin.snoc_castSucc]
-      exact F.ha_f i
+    · simpa only [Fin.snoc_last] using hwf
+    · simpa only [Fin.snoc_castSucc] using F.ha_f i
   · intro i j
     refine Fin.lastCases ?_ (fun i' => ?_) i <;> refine Fin.lastCases ?_ (fun j' => ?_) j <;>
       intro hij
     · exact absurd rfl hij
-    · simp only [Fin.snoc_last, Fin.snoc_castSucc]
-      exact hwa j'
+    · simpa only [Fin.snoc_last, Fin.snoc_castSucc] using hwa j'
     · simp only [Fin.snoc_last, Fin.snoc_castSucc]
       rw [hsym, hwa i', map_zero]
-    · simp only [Fin.snoc_castSucc]
-      exact F.ho i' j' (fun h => hij (by rw [h]))
+    · simpa only [Fin.snoc_castSucc] using F.ho i' j' (fun h => hij (by rw [h]))
   · intro j
     refine Fin.lastCases ?_ (fun i => ?_) j
     · simp only [Fin.snoc_last]
       rw [← hu]
       exact Units.inv_mul u
-    · simp only [Fin.snoc_castSucc]
-      exact F.hinv i
+    · simpa only [Fin.snoc_castSucc] using F.hinv i
 
 include hσ hJ he hff hef in
 theorem OFam.card_le [Nontrivial K] {r : ℕ} (F : OFam (σ := σ) (J := J) e f r) : r + 2 ≤ Fintype.card ι := by
@@ -352,8 +341,7 @@ theorem OFam.card_le [Nontrivial K] {r : ℕ} (F : OFam (σ := σ) (J := J) e f 
     simp only [Fin.sum_univ_succ, v, Fin.cons_zero, Fin.cons_succ] at hpair
     have hg0 : g 0 = 0 := by
       have h := hpair f
-      simp only [hef, hff, F.ha_f, mul_zero, Finset.sum_const_zero, add_zero, mul_one] at h
-      exact h
+      simpa only [hef, hff, F.ha_f, mul_zero, Finset.sum_const_zero, add_zero, mul_one] using h
     have hg1 : g (Fin.succ 0) = 0 := by
       have h := hpair e
       simp only [he, hfe, F.ha_e, mul_zero, Finset.sum_const_zero, add_zero, mul_one, zero_add] at h
@@ -370,13 +358,9 @@ theorem OFam.card_le [Nontrivial K] {r : ℕ} (F : OFam (σ := σ) (J := J) e f 
           _ = 0 := by rw [mul_comm (F.inv k), ← mul_assoc, h2, zero_mul]
       · intro j _ hjk
         rw [F.ho j k hjk, mul_zero]
-      · intro hk
-        exact absurd (Finset.mem_univ k) hk
-    intro i
-    refine Fin.cases hg0 (fun i' => ?_) i
-    exact Fin.cases hg1 (fun k => hgk k) i'
-  have hcard := hli.fintype_card_le_finrank
-  simpa [Module.finrank_fintype_fun_eq_card] using hcard
+      · exact fun hk => absurd (Finset.mem_univ k) hk
+    exact fun i => Fin.cases hg0 (fun i' => (Fin.cases hg1 (fun k => hgk k) i')) i
+  simpa [Module.finrank_fintype_fun_eq_card] using hli.fintype_card_le_finrank
 
 include hσ hJ he hff hef hdet hfix h2 hδ hσδ in
 theorem exists_spans [Nontrivial K] : ∃ r, ∃ F : OFam (σ := σ) (J := J) e f r, F.Spans := by
@@ -422,8 +406,7 @@ theorem norm_zero_of_not_unit {z : K} (hz : ¬ IsUnit z) : z * σ z = 0 := by
 theorem gp [IsReduced K] (h2 : IsUnit (2 : K)) {δ : K} (hδ : IsUnit δ) (hσδ : σ δ = -δ) {x y : K}
     (hxy : IsCoprime x y) :
     IsUnit x ∨ IsUnit (x + δ * y) ∨ IsUnit (x + (-1) * δ * y) := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨h1, h2', h3⟩ := hcon
   have e1 := norm_zero_of_not_unit hσ hfix h1
   have e2 := norm_zero_of_not_unit hσ hfix h2'
@@ -469,8 +452,7 @@ theorem stepA {K : Type*} [CommRing K] {σ : K →+* K}
     (h2 : IsUnit (2 : K)) {α β ω ν c : K} (hν : IsUnit ν) (hdef : ν = α * σ β + σ α * β + ω)
     (hnc : ¬ IsCoprime α β) :
     IsCoprime (α - ω + c * β) β ∨ IsCoprime (α + ω + c * β) β := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨h1, h1'⟩ := hcon
   obtain ⟨m0, hm0, ha0, hb0⟩ := exists_max_of_not_coprime hnc
   obtain ⟨m1, hm1, ha1, hb1⟩ := exists_max_of_not_coprime h1
@@ -854,8 +836,7 @@ theorem fix_all_good {r : ℕ} (F : OFam σ J e f r) (hF : F.Spans) {h : Matrix 
   clear_value γ
   have hyform : y = γ • e + f := by
     have := hspan y hya
-    rw [hye, one_smul, ← hγ] at this
-    exact this
+    rwa [hye, one_smul, ← hγ] at this
   have hγσ : γ + σ γ = 0 := by
     have h1 := hyy
     nth_rewrite 1 [hyform] at h1
@@ -1005,21 +986,17 @@ theorem max_ideals_le_two {k K : Type*} [Field k] [CommRing K] [Algebra k K]
     (h₂ : m₂.IsMaximal) : m₀ = m₁ ∨ m₀ = m₂ ∨ m₁ = m₂ := by
   classical
   haveI : FiniteDimensional k K := Module.finite_of_finrank_pos (by omega)
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨h01, h02, h12⟩ := hcon
   have hS : ∀ I J : Ideal K, I < J →
       Module.finrank k (I.restrictScalars k) < Module.finrank k (J.restrictScalars k) := by
     intro I J hIJ
     apply Submodule.finrank_lt_finrank_of_lt
     refine lt_of_le_of_ne (fun x hx => hIJ.le hx) ?_
-    intro h
-    exact hIJ.ne (Submodule.restrictScalars_injective k K K h)
+    exact fun h => hIJ.ne (Submodule.restrictScalars_injective k K K h)
   have a1 : m₀ < ⊤ := lt_top_iff_ne_top.mpr h₀.ne_top
   have a2 : m₀ ⊓ m₁ < m₀ := by
-    refine lt_of_le_of_ne inf_le_left ?_
-    intro h
-    exact h01 (h₀.eq_of_le h₁.ne_top (inf_eq_left.mp h))
+    exact lt_of_le_of_ne inf_le_left (fun h => h01 (h₀.eq_of_le h₁.ne_top (inf_eq_left.mp h)))
   have a3 : m₀ ⊓ m₁ ⊓ m₂ < m₀ ⊓ m₁ := by
     refine lt_of_le_of_ne inf_le_left ?_
     intro h
@@ -1030,8 +1007,7 @@ theorem max_ideals_le_two {k K : Type*} [Field k] [CommRing K] [Algebra k K]
   have b2 := hS _ _ a2
   have b3 := hS _ _ a3
   have htop : Module.finrank k ((⊤ : Ideal K).restrictScalars k) = 2 := by
-    rw [Submodule.restrictScalars_top, finrank_top]
-    exact hrank
+    rwa [Submodule.restrictScalars_top, finrank_top]
   omega
 
 theorem locGen : LocGenStatement := by
@@ -1048,8 +1024,7 @@ theorem locGen : LocGenStatement := by
   have h2i : (2 : K) * algebraMap k K 2⁻¹ = 1 := by
     rw [(map_ofNat (algebraMap k K) 2).symm, ← map_mul, mul_inv_cancel₀ h2, map_one]
   have hex : ∃ x : K, σ x ≠ x := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     have hsurj : Function.Surjective (Algebra.linearMap k K) := fun x => (hfix x).mp (hno x)
     have h1 := LinearMap.finrank_range_le (Algebra.linearMap k K)
     rw [LinearMap.range_eq_top.mpr hsurj, finrank_top, Module.finrank_self] at h1

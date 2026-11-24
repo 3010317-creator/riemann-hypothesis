@@ -98,8 +98,7 @@ theorem minor_unit {n r : ℕ} (hr : 1 ≤ r) {g : GL (Fin n) k} (hg : g ∈ KC 
       rw [hyx]
       simp only [hM, Matrix.submatrix_apply, map_sub, hf.eq_iff]
       split_ifs <;> simp [Matrix.GeneralLinearGroup.map]
-    rw [← this]
-    exact hy
+    rwa [← this]
   have hmk : M.map (Ideal.Quotient.mk I) = 1 := by
     ext i j
     rw [Matrix.map_apply, Matrix.one_apply]
@@ -119,13 +118,10 @@ theorem minor_unit {n r : ℕ} (hr : 1 ≤ r) {g : GL (Fin n) k} (hg : g ∈ KC 
   refine ⟨hunit.unit, ?_, ?_⟩
   · rw [IsUnit.unit_spec, RingHom.map_det]
     rfl
-  · rw [IsUnit.unit_spec]
-    exact hD
+  · rwa [IsUnit.unit_spec]
 
 theorem chk_unit (μ : kˣ →* ℂˣ) (u : 𝒪[k]ˣ) : chk μ (algebraMap 𝒪[k] k u) = ((res μ u : ℂˣ) : ℂ) := by
-  have h0 : algebraMap 𝒪[k] k u ≠ 0 := by
-    intro h
-    exact u.ne_zero (Subtype.val_injective (by simpa using h))
+  have h0 : algebraMap 𝒪[k] k u ≠ 0 := fun h => u.ne_zero (Subtype.val_injective (by simpa using h))
   rw [chk, dite_eq_right h0, show Units.mk0 _ h0 = unitIncl k u from Units.ext rfl]
   rfl
 

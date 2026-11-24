@@ -54,8 +54,7 @@ open scoped ContDiff
 variable {g : ℕ} {Y Y' : Scheme.{0}}
 
 theorem isHolFam_const (u : Sp ℂ ⟶ Y) : IsHolFam (g := g) (fun _ => u) := by
-  intro U f
-  exact ⟨isOpen_const, differentiableOn_const _⟩
+  exact fun U f => ⟨isOpen_const, differentiableOn_const _⟩
 
 def jetZero (m : ℕ) : Jet ℂ (Fin 1 × Fin g) m →ₐ[ℂ] Jet ℂ (Fin 1 × Fin g) m :=
   jetMap (fun _ => 0) fun _ => Ideal.zero_mem _

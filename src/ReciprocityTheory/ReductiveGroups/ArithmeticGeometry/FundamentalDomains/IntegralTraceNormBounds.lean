@@ -159,9 +159,7 @@ lemma norm_discr (β : E) (hβ : β ≠ 0)
     exact mul_ne_zero hD0 hN0 h0
   have hR : ((Matrix.of m).det : ℝ) =
       ((NumberField.discr E : ℤ) : ℝ) * ((Algebra.norm ℚ β : ℚ) : ℝ) := by
-    have h2 := congrArg (Rat.cast : ℚ → ℝ) hdet
-    simp only [Rat.cast_mul, Rat.cast_intCast] at h2
-    exact h2
+    simpa only [Rat.cast_mul, Rat.cast_intCast] using congrArg (Rat.cast : ℚ → ℝ) hdet
   unfold dE
   rw [← abs_mul, mul_comm, ← hR]
   exact_mod_cast Int.one_le_abs hZ
@@ -212,8 +210,7 @@ lemma norm_bd_ge (x : VS E) (hx : x ∈ span ℤ (Set.range (bd E))) (hx0 : x �
   have hn : (0 : ℝ) < Fintype.card (CP E) := by exact_mod_cast card_complexPlaces_pos
   have hd : 0 < dE E := dE_pos
   have hNinv : (dE E)⁻¹ ≤ |(Algebra.norm ℚ β : ℝ)| := by
-    rw [inv_eq_one_div, div_le_iff₀ hd]
-    exact hN
+    rwa [inv_eq_one_div, div_le_iff₀ hd]
   have hgm := Real.geom_mean_le_arith_mean_weighted (Finset.univ : Finset (CP E))
     (fun _ => 1 / (Fintype.card (CP E) : ℝ)) (fun w => ‖w.1.embedding β‖ ^ 2)
     (fun _ _ => by positivity)

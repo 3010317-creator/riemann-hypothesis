@@ -133,8 +133,7 @@ theorem sq_restr_mem {k : ℕ} (μ : Fin (k + 1) → ℤ) (f : sq_SSZ (k + 1) μ
   refine ⟨?_, ?_⟩
   · intro l j hlj a
     have h := hI l.castSucc j.castSucc (by simpa using hlj) a.castSucc
-    rw [sq_sum_le_castSucc, sq_sum_lt_castSucc] at h
-    exact h
+    rwa [sq_sum_le_castSucc, sq_sum_lt_castSucc] at h
   · rw [sq_mem_interl]
     intro i
     constructor
@@ -211,8 +210,7 @@ theorem sq_ext_sum {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.las
   rw [Fin.sum_univ_castSucc]
   induction t using Fin.lastCases with
   | last =>
-    simp only [sq_ext_cl, sq_ext_ll, Finset.sum_const_zero, zero_add]
-    exact Int.toNat_of_nonneg hμ
+    simpa only [sq_ext_cl, sq_ext_ll, Finset.sum_const_zero, zero_add] using Int.toNat_of_nonneg hμ
   | cast t =>
     simp only [sq_ext_cc, sq_ext_lc]
     have h := (hb t).2
@@ -243,8 +241,7 @@ theorem sq_ext_intl {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.la
       induction j using Fin.lastCases with
       | last => simp [sq_ext_cl]
       | cast j =>
-        simp only [sq_ext_cc]
-        exact hI l j (by simpa using hlj) a
+        simpa only [sq_ext_cc] using hI l j (by simpa using hlj) a
 
 theorem sq_rho_surj {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.last k)) :
     Function.Surjective (sq_rho μ) := by

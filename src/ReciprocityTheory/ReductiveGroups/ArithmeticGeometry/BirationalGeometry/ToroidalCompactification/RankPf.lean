@@ -127,11 +127,8 @@ theorem tan_iff {w : viaT tk (sp (R₀ := k) (DualNumber k)) ⟶ G'} {v : sp (R�
     rw [hid, Category.id_comp]
   rw [IsTan, ← rel_eq_iff hc h1 h2]
   constructor
-  · intro e
-    apply Over.OverMorphism.ext
-    exact e.trans e1.symm
-  · intro e
-    exact (congrArg (fun q => q.left) e).trans e1
+  · exact fun e => Over.OverMorphism.ext (e.trans e1.symm)
+  · exact fun e => (congrArg (fun q => q.left) e).trans e1
 
 include hc in
 theorem eig_iff (a : G' ⟶ G') (b : G ⟶ G) (hab : a.left ≫ F = F ≫ b.left) (s : k)
@@ -140,10 +137,8 @@ theorem eig_iff (a : G' ⟶ G') (b : G ⟶ G) (hab : a.left ≫ F = F ≫ b.left
     (w ≫ a).left = Geo.Tor.spMap (Geo.Tor.epsScale s) ≫ w.left ↔ v ≫ (Over.pullback g).map b = spMap (scaleD s) ≫ v := by
   rw [← rel_eq_iff hc (rel_act a b hab h) (rel_pre (spMap (scaleD s)) h)]
   constructor
-  · intro e
-    exact Over.OverMorphism.ext e
-  · intro e
-    exact congrArg (fun q => q.left) e
+  · exact fun e => Over.OverMorphism.ext e
+  · exact fun e => congrArg (fun q => q.left) e
 
 variable {n : ℕ} {x : ∀ m : ℕ, sp (R₀ := k) (JetR k (Fin n) m) ⟶ (Over.pullback g).obj G} (hx : IsUnivChart _ n x)
   {O : Type} [CommRing O] (act : Geo.Tor.OAct O G') (b : O → (G ⟶ G))

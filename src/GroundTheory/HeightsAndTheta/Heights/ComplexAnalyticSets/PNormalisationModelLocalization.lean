@@ -30,8 +30,7 @@ theorem disjoint_primeCompl (hq : q ∈ zeroSet J) :
     Disjoint ((RingHom.ker (eval q : MvPolynomial (Fin n) ℂ →+* ℂ)).primeCompl : Set (MvPolynomial (Fin n) ℂ))
       (J : Set (MvPolynomial (Fin n) ℂ)) := by
   rw [Set.disjoint_left]
-  intro f hf hfJ
-  exact hf (RingHom.mem_ker.2 (hq f hfJ))
+  exact fun f hf hfJ => hf (RingHom.mem_ker.2 (hq f hfJ))
 
 theorem isPrime_map (hJ : J.IsPrime) (hq : q ∈ zeroSet J) :
     (J.map (algebraMap (MvPolynomial (Fin n) ℂ) (Localization.AtPrime (RingHom.ker (eval q))))).IsPrime :=
@@ -68,11 +67,9 @@ variable (M : IndefiniteRowSideFullHecke.ComplexSets.NormalModel J)
 theorem rename_mem_iff (f : MvPolynomial (Fin n) ℂ) : rename Sum.inl f ∈ M.ideal ↔ f ∈ J := by
   constructor
   · intro h
-    rw [← M.comap_eq]
-    exact h
+    rwa [← M.comap_eq]
   · intro h
-    rw [← M.comap_eq] at h
-    exact h
+    rwa [← M.comap_eq] at h
 
 def num (i : Fin M.m) : MvPolynomial (Fin n) ℂ := (M.birational i).choose
 
@@ -285,8 +282,7 @@ theorem toFracModel_mem (hJ : J.IsPrime) (hq : q ∈ zeroSet J) (h : MvPolynomia
       obtain ⟨P, hPm, hP⟩ := M.integral i
       have h0 : toFracModel M q (P.eval₂ (rename Sum.inl : MvPolynomial (Fin n) ℂ →ₐ[ℂ] _).toRingHom
           (X (Sum.inr i))) = 0 := by
-        rw [← RingHom.mem_ker, ker_toFracModel hJ hq]
-        exact hP
+        rwa [← RingHom.mem_ker, ker_toFracModel hJ hq]
       rw [Polynomial.hom_eval₂] at h0
       have hc : (toFracModel M q).comp (rename Sum.inl : MvPolynomial (Fin n) ℂ →ₐ[ℂ] _).toRingHom =
           (algebraMap (curveLocalRing J q) (FractionRing (curveLocalRing J q))).comp
@@ -294,8 +290,7 @@ theorem toFracModel_mem (hJ : J.IsPrime) (hq : q ∈ zeroSet J) (h : MvPolynomia
         RingHom.ext (toFracModel_rename M)
       rw [hc] at h0
       refine ⟨P.map (algebraMap (MvPolynomial (Fin n) ℂ) (curveLocalRing J q)), hPm.map _, ?_⟩
-      rw [Polynomial.eval₂_map]
-      exact h0
+      rwa [Polynomial.eval₂_map]
   induction h using MvPolynomial.induction_on with
   | C c =>
     rw [← rename_C (R := ℂ) (Sum.inl : Fin n → Fin n ⊕ Fin M.m) c, toFracModel_rename]

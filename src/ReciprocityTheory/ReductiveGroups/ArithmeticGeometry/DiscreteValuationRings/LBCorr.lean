@@ -125,8 +125,7 @@ private lemma gen_corr_self (t : LB.Gen (LB.LinComb L φ ε)) : LB.Gen.Corr L φ
 
 lemma res_eq_of_res_eq {U V W : Y.Opens} (a : Γ(Y, U)ˣ) (b : Γ(Y, V)ˣ) (h1 : W ≤ U) (h2 : W ≤ V)
     (h : res (inf_le_left : U ⊓ V ≤ U) a = res (inf_le_right : U ⊓ V ≤ V) b) :
-    res h1 a = res h2 b := by
-  exact res_eq_res_of_le_of_res_eq h (le_inf h1 h2) h1 h2
+    res h1 a = res h2 b := res_eq_res_of_le_of_res_eq h (le_inf h1 h2) h1 h2
 
 lemma corr_symm {t : LB.Gen (LB.LinComb L φ ε)} {t' : LB.Gen (LB.LinComb L φ' ε')}
     (h : LB.Gen.Corr L φ ε φ' ε' t t') : LB.Gen.Corr L φ' ε' φ ε t' t := by
@@ -187,11 +186,9 @@ lemma corr_trans (hL : L.IsLB) {t : LB.Gen (LB.LinComb L φ ε)} {t₂ : LB.Gen 
     simp only [ρ]
     split_ifs with h₁ h₃
     · have := Set.mem_iInter.1 hy.1 h₁.choose
-      rw [h₁.choose_spec] at this
-      exact this
+      rwa [h₁.choose_spec] at this
     · have := Set.mem_iInter.1 hy.2 h₃.choose
-      rw [h₃.choose_spec] at this
-      exact this
+      rwa [h₃.choose_spec] at this
     · exact hρ₀ _
   · intro ρ₀
     have c2 : LB.Coh L φ₂ (ρ ρ₀ ∘ φ₂) := fun k₁ k₂ e => by simp only [Function.comp, e]
@@ -236,8 +233,7 @@ lemma corr_pullGen_comp {W : Scheme.{0}} (t : LB.Gen (LB.LinComb L φ ε)) (g : 
 
 lemma corr_one_of {t : LB.Gen (LB.LinComb L φ ε)} (h : ∀ j, LB.Coh L φ j → t.s j = 1) :
     LB.Gen.Corr L φ ε (K' := PEmpty) PEmpty.elim PEmpty.elim t (LB.oneGen L) := by
-  intro j j' hc _ _
-  exact (congrArg (res _) (h j hc)).trans ((map_one _).trans (map_one _).symm)
+  exact fun j j' hc _ _ => (congrArg (res _) (h j hc)).trans ((map_one _).trans (map_one _).symm)
 
 lemma shape_one_mul {U₁ O O' : Y.Opens} {V : Y.Opens} (h : O ≤ O') (h₀ : O' ≤ V) (h₁ : O' ≤ U₁) (hO : O ≤ U₁)
     (x : Γ(Y, U₁)ˣ) : res h (res h₀ (1 : Γ(Y, V)ˣ) * res h₁ x) = res hO x := by
@@ -320,7 +316,6 @@ theorem exists_normalized_to {X Y Z : Scheme.{0}} {L : LB X} (hL : L.IsLB) {K Kr
   have c4 := corr_trans hL (corr_pullGen_comp r p z)
     (corr_trans hL (corr_pullGen_of_eq r hr _ _ hzp) (corr_pullGen_id r))
   have c3 := corr_mulGen (corr_one_of (fun j hj => hv1 j hj)) c4
-  have c5 := corr_mulGen_one r
-  exact corr_trans hL c1 (corr_trans hL c2 (corr_trans hL c3 c5))
+  exact corr_trans hL c1 (corr_trans hL c2 (corr_trans hL c3 (corr_mulGen_one r)))
 
 end ReciprocityTheory.ChartRestriction.G.DVR

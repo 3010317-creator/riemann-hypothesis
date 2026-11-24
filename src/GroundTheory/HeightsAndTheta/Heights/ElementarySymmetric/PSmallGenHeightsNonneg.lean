@@ -171,24 +171,21 @@ theorem comap_killBlocksBelow_le_succ {V : Ideal (MRing ι)} (hVm : IsMultiHomog
     V.comap (killBlocksBelow j) ≤ V.comap (killBlocksBelow (j + 1)) := by
   intro f hf
   have h := le_comap_killBlocksBelow (j + 1) hVm hf
-  rw [Ideal.mem_comap, ← RingHom.comp_apply, killBlocksBelow_comp (Nat.le_succ j)] at h
-  exact h
+  rwa [Ideal.mem_comap, ← RingHom.comp_apply, killBlocksBelow_comp (Nat.le_succ j)] at h
 
 theorem X_mem_comap_killBlocksBelow_succ {V : Ideal (MRing ι)} {j : ℕ} (hj : j < Fintype.card K)
     (i : ι ((Fintype.equivFin K).symm ⟨j, hj⟩)) :
     (X ⟨(Fintype.equivFin K).symm ⟨j, hj⟩, i⟩ : MRing ι) ∈ V.comap (killBlocksBelow (j + 1)) := by
   rw [Ideal.mem_comap, killBlocksBelow_X, ite_eq_left]
   · exact zero_mem _
-  · simp only [Equiv.apply_symm_apply]
-    exact Nat.lt_succ_self j
+  · simpa only [Equiv.apply_symm_apply] using Nat.lt_succ_self j
 
 theorem X_mem_comap_killBlocksBelow_iff {V : Ideal (MRing ι)} {j : ℕ} (hj : j < Fintype.card K)
     (i : ι ((Fintype.equivFin K).symm ⟨j, hj⟩)) :
     (X ⟨(Fintype.equivFin K).symm ⟨j, hj⟩, i⟩ : MRing ι) ∈ V.comap (killBlocksBelow j) ↔
       (X ⟨(Fintype.equivFin K).symm ⟨j, hj⟩, i⟩ : MRing ι) ∈ V := by
   rw [Ideal.mem_comap, killBlocksBelow_X, ite_eq_right]
-  simp only [Equiv.apply_symm_apply]
-  exact lt_irrefl j
+  simpa only [Equiv.apply_symm_apply] using lt_irrefl j
 
 theorem chainIdeal_lt_succ_of_lt {V : Ideal (MRing ι)} (hV : IsMultiProjPrime V) {j : ℕ}
     (hj : j < Fintype.card K) : chainIdeal V j < chainIdeal V (j + 1) := by
@@ -301,8 +298,7 @@ theorem SmallGenHeightsNonneg.proof : SmallGenHeightsNonneg.Statement := by
     fin_cases i
     rfl
   have key : II K ι W 1 ![A] = recR (II K ι) W (Fin.elim0 : Fin 0 → HermLine ι) A (w j) := by
-    rw [← e]
-    exact hR
+    rwa [← e]
   rw [key, recR]
   have hsm : ∀ z ∈ mcPts W, ‖eval z (map (Int.castRingHom ℂ) (w j))‖ ≤ A.h z := fun z hz ↦
     hsmall j z ⟨hz.1, fun f hf ↦ hz.2 f (hPW hf)⟩

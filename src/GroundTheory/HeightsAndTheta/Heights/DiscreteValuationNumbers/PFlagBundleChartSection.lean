@@ -79,8 +79,7 @@ theorem chartMono_homog (M : ℕ) (c : ∀ k, ι k) (α : K → ℕ) :
     cases o with
     | none => simp [liftNat, blockWeight, Finset.sum_apply]
     | some k => simp [liftNat, blockWeight, Finset.sum_apply, Pi.single_apply]
-  rw [IsMultiHomog, chartMono, hw]
-  exact h
+  rwa [IsMultiHomog, chartMono, hw]
 
 theorem eval_chartMono (y : (Σ k, ι k) → Ω) (w : Module.Basis (Fin N) Ω E) (φ : Fin M → Module.Dual Ω E)
     (t : Fin N → Φ) (c : ∀ k, ι k) (α : K → ℕ) :
@@ -230,8 +229,7 @@ theorem bind₁_isMultiHomog (g : (Σ o, bundleIdx ι M o) → MRing (bundleIdx 
 
     rw [← hmd, Finsupp.weight_apply, Finsupp.sum, map_sum]
     simp only [map_nsmul]
-  rw [hΛ]
-  exact this
+  rwa [hΛ]
 
 theorem bind₁_scale (u : MRing (bundleIdx ι M) F) {q : MRing (bundleIdx ι M) F} {d : Option K → ℕ}
     (hq : IsMultiHomog q d) :
@@ -435,8 +433,7 @@ theorem FlagBundleChartSection.proof : FlagBundleChartSection.Statement := by
       have he : e = liftNat δ + blockWeight (bundleIdx ι M) ⟨none, l⟩ := by
         funext o
         cases o <;> simp [e, liftNat, blockWeight]
-      rw [he]
-      exact h
+      rwa [he]
     · have h := ((hRh l).mul (chartMono_homog (F := F) M c γ₂)).mul hfh
       have he : e = (liftNat fun _ => n₂) + liftNat γ₂ + dl := by
         funext o
@@ -451,8 +448,7 @@ theorem FlagBundleChartSection.proof : FlagBundleChartSection.Statement := by
           simp [liftNat, zetaDeg, liftDeg] at h0
           simp [e, liftNat, δ, γ₁, γ₂]
           omega
-      rw [he]
-      exact h
+      rwa [he]
   have hid : (∏ k, y ⟨k, c k⟩ ^ δ k) * chartPow y c a =
       (∏ k, y ⟨k, c k⟩ ^ β k) * segreVec y c ^ n₂ * (∏ k, y ⟨k, c k⟩ ^ γ₂ k) * chartPow y c (b i) := by
     rw [segreVec_pow, ← chartPow_natCast, ← chartPow_natCast, ← chartPow_natCast]

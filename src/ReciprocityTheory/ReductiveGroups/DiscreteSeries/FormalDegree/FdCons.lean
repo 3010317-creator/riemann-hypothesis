@@ -143,7 +143,6 @@ theorem fdc_big {ε : Fin n → Bool} {h : ℝ} (hh : thrStar ε + 1 < h) :
   linarith
 
 theorem one_le_q0_of_p_q_pos {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf ε) : 1 ≤ S7.q0 ε := by
-  show 1 ≤ min (pOf ε) (qOf ε)
   exact le_min hp hq
 
 theorem fdc_eight {ε : Fin n → Bool} {h : ℝ} (hh : thrStar ε + 1 < h) :
@@ -170,8 +169,7 @@ theorem fdc_hc_add {μ : Fin n → ℝ} {s : Fin n} (hμ : IsHCParam μ) (hs : S
     push_cast
     linarith
   · refine ⟨m, ?_⟩
-    rw [Pi.add_apply, Pi.single_eq_of_ne has, add_zero]
-    exact hm
+    rwa [Pi.add_apply, Pi.single_eq_of_ne has, add_zero]
 
 theorem fdc_model {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf ε) {μ : Fin n → ℝ} {h : ℝ}
     (hμ : IsHCParam μ) (hg : GapAtLeast ε μ h) (hh : thrStar ε + 1 < h) (T : KType ε (lowK ε μ)) :
@@ -596,8 +594,7 @@ theorem fdU_major {ε : Fin n → Bool} {lam : Fin n → ℝ} (hlam : Antitone l
   · have ab : PCoord ε := Classical.choice hN
     have hc := fdU_c_pos ab
     have h2 := fdU_exp_le_prod hc.le y
-    rw [← neg_mul]
-    exact h2
+    rwa [← neg_mul]
 
 theorem fdU_pointwise {ε : Fin n → Bool} {lam : Fin n → ℝ} (hlam : Antitone lam) (T : ℕ) (hT : 1 ≤ T)
     (y : PCoord ε → ℂ) :
@@ -835,8 +832,7 @@ theorem fdc_cd {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf ε) {la
       ⟨H', i1', i2', σ', w', hsm, fun z => ?_⟩, ?_⟩
     · rw [hform _ (exp_pmat_inUJ z), hΨ]
     · rw [hlink _ (exp_pmat_inUJ z), hΨ]
-    · rw [fdcD_eq hμ hg hh' ⟨H, i1, i2, σ, hDS, hd⟩]
-      exact hd
+    · rwa [fdcD_eq hμ hg hh' ⟨H, i1, i2, σ, hDS, hd⟩]
   choose H i1 i2 i3 σ T j hF hsm hd using key
   exact thmFD Lap.Base.b3 hp hq hlam hgap hh (fdcD ε) (fdc_step hp hq hh) H σ T j
     (Filter.Eventually.of_forall hF) (Filter.Eventually.of_forall hsm) (Filter.Eventually.of_forall hd)
@@ -874,8 +870,7 @@ theorem fdCons_muG (n : ℕ) (ε : Fin n → Bool) : ∃ c : ℝ, 0 < c ∧
   rw [hκ] at hcd
   delta Formalism.MainNotions.S.fdegOf at hcd ⊢
   rw [integral_smul_nnreal_measure, NNReal.smul_def, smul_eq_mul] at hcd
-  rw [hfd, ← hcd]
-  rw [div_mul_eq_div_div_swap, mul_comm (κ : ℝ), div_mul_cancel₀ _ hκpos.ne']
+  rw [hfd, ← hcd, div_mul_eq_div_div_swap, mul_comm (κ : ℝ), div_mul_cancel₀ _ hκpos.ne']
 
 end ReciprocityTheory.ChartRestriction.DS
 end -- clump:auto

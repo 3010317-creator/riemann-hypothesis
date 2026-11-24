@@ -44,11 +44,9 @@ theorem map_vcPoint {L L' : Type*} [Field L] [Algebra F L] [Field L'] [Algebra F
       VariableChange.map_baseChange C f
     constructor
     · have := map_vcX (C.baseChange L) (f : L →+* L') x
-      rw [hC] at this
-      exact this
+      rwa [hC] at this
     · have := map_vcY (C.baseChange L) (f : L →+* L') x y
-      rw [hC] at this
-      exact this
+      rwa [hC] at this
 
 theorem vcPoint_vcPoint_of_eq_inv {L : Type*} [Field L] {W W₂ : WeierstrassCurve L}
     (D D' : VariableChange L) (hD : D' = D⁻¹) (h₁ : D • W = W₂) (h₂ : D' • W₂ = W)
@@ -66,8 +64,7 @@ theorem vcPoint_vcPoint_of_eq_inv {L : Type*} [Field L] {W W₂ : WeierstrassCur
 theorem vcPoint_eq_zero_iff {L : Type*} [Field L] {W W₂ : WeierstrassCurve L} (D : VariableChange L)
     (h : D • W = W₂) {P : W.toAffine.Point} : vcPoint D h P = 0 ↔ P = 0 := by
   constructor
-  · intro e
-    exact vcPoint_injective D h (e.trans (vcPoint_zero D h).symm)
+  · exact fun e => vcPoint_injective D h (e.trans (vcPoint_zero D h).symm)
   · rintro rfl
     rfl
 
@@ -109,8 +106,7 @@ theorem inv_smul_eq_of_smul_eq (h : C • E = E') : C⁻¹ • E' = E := by
 theorem homComp_vcHom_vcHom (D : VariableChange F) (hD : D = C⁻¹) (h : C • E = E')
     (h' : D • E' = E) : homComp (vcHom D h') (vcHom C h) = homId := by
   apply Subtype.ext
-  rw [homComp_of_isGenPt _ _ (isGenPt_vcHom C h)]
-  rw [map_vcHom, map_genEval_genericPoint]
+  rw [homComp_of_isGenPt _ _ (isGenPt_vcHom C h), map_vcHom, map_genEval_genericPoint]
   have hD' : D.baseChange E.toAffine.FunctionField = (C.baseChange E.toAffine.FunctionField)⁻¹ := by
     subst hD
     exact map_inv (VariableChange.mapHom (algebraMap F E.toAffine.FunctionField)) C
@@ -208,8 +204,7 @@ theorem range_endConst_weierstrassCurve (L : PeriodPair) :
   · rintro ⟨f, rfl⟩
     obtain ⟨α, rfl⟩ := (latticeEndEquiv L).surjective f
     exact (endConst_latticeEndEquiv L α).symm ▸ α.2
-  · intro hz
-    exact ⟨latticeEndEquiv L ⟨z, hz⟩, endConst_latticeEndEquiv L ⟨z, hz⟩⟩
+  · exact fun hz => ⟨latticeEndEquiv L ⟨z, hz⟩, endConst_latticeEndEquiv L ⟨z, hz⟩⟩
 
 theorem endConst_injective : Function.Injective (endConst E) := by
   obtain ⟨L, C, hC⟩ := exists_variableChange_eq_weierstrassCurve E

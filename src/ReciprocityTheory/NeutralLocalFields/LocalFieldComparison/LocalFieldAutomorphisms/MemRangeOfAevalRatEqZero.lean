@@ -75,8 +75,7 @@ theorem mem_range_of_aeval_rat_eq_zero (ι : Ω →+* PadicAlgCl p) [IsAlgClosed
     congr 1
     exact RingHom.ext_rat _ _
   have hroot : ((g.map (algebraMap ℚ Ω)).map ι).IsRoot b := by
-    rw [hmap, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def]
-    exact hb
+    rwa [hmap, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def]
   exact Polynomial.Splits.mem_range_of_isRoot (IsAlgClosed.splits _) (Polynomial.map_ne_zero hg) hroot
 
 private theorem exists_root_norm_sub_pow_le_eval {K : Type*} [NormedField K] [IsAlgClosed K] (n : ℕ) :
@@ -221,8 +220,7 @@ theorem denseRange_of_isAlgClosed (ι : Ω →+* PadicAlgCl p) [IsAlgClosed Ω] 
     exact hβ)
   obtain ⟨y, hy⟩ := RingHom.mem_range.mp hβr
   refine ⟨y, ?_⟩
-  rw [dist_eq_norm, hy]
-  exact hβε
+  rwa [dist_eq_norm, hy]
 
 theorem finiteDimensional_Kloc (ι : Ω →+* PadicAlgCl p) : FiniteDimensional ℚ_[p] (Kloc F ι) := by
   classical

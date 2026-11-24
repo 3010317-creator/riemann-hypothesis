@@ -77,8 +77,7 @@ theorem ext_of_schDom {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSe
     apply le_bot_iff.mp
     have h0 := Scheme.Hom.le_ker_comp (pullback.lift (ι ≫ f) ι hj)
       (pullback.snd (pullback.diagonal s) (pullback.lift f g h))
-    rw [hji, (inferInstance : IsSchemeTheoreticallyDominant ι).1] at h0
-    exact h0
+    rwa [hji, (inferInstance : IsSchemeTheoreticallyDominant ι).1] at h0
   have hiso : IsIso (pullback.snd (pullback.diagonal s) (pullback.lift f g h)) :=
     IsClosedImmersion.isIso_iff_ker_eq_bot.mpr hker
   have hc := pullback.condition (f := pullback.diagonal s) (g := pullback.lift f g h)
@@ -184,8 +183,7 @@ theorem fix_torsion (hMul : Out.MulNSt) {F : Type} [Field F] [IsAlgClosed F] (P 
         have : toUnit (𝟙_ (Over (Spec (CommRingCat.of F)))) = 𝟙 _ := Subsingleton.elim _ _
         rw [this, Over.id_left, Category.id_comp]
       have := congrArg CommaMorphism.left (hσ q hq)
-      rw [← Category.assoc]
-      exact this
+      rwa [← Category.assoc]
     · show p.left ≫ pullback.lift _ _ hσm ≫ pullback.snd m e = p.left ≫ pullback.snd m e
       rw [pullback.lift_snd]
   have hxm : x.left ≫ m = T.hom ≫ e := by

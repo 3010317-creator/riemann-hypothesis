@@ -107,8 +107,7 @@ theorem differentiable_discr_cpow_mul_gamma_inv :
     Differentiable ℂ fun s : ℂ ↦ ((|(discr K : ℝ)| : ℝ) : ℂ) ^ (-(s / 2)) *
       (Gammaℝ s ^ nrRealPlaces K * Gammaℂ s ^ nrComplexPlaces K)⁻¹ := by
   have h := (1 : HeckeCharacter K).differentiable_cpow_mul_gammaFactor_inv
-  simp only [discrNormConductor_one, gammaFactor_one] at h
-  exact h
+  simpa only [discrNormConductor_one, gammaFactor_one] using h
 
 def normalizedDedekindZeta (s : ℂ) : ℂ :=
   ((|(discr K : ℝ)| : ℝ) : ℂ) ^ (-(s / 2)) *
@@ -263,8 +262,7 @@ theorem differentiableOn_continuedDedekindZeta :
     exact (((differentiable_discr_cpow_mul_gamma_inv K) z).mul
       (differentiableAt_completedDedekindZeta K hz.2 hz.1)).differentiableWithinAt
   · obtain ⟨L, hL⟩ := exists_tendsto_normalizedDedekindZeta_zero K
-    rw [continuedDedekindZeta, continuousAt_update_same, hL.limUnder_eq]
-    exact hL
+    rwa [continuedDedekindZeta, continuousAt_update_same, hL.limUnder_eq]
 
 theorem differentiableAt_continuedDedekindZeta {s : ℂ} (hs : s ≠ 1) :
     DifferentiableAt ℂ (continuedDedekindZeta K) s :=

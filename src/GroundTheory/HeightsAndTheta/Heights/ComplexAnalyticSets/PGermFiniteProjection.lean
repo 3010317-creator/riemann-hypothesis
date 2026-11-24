@@ -71,21 +71,18 @@ theorem eventually_eq_zero_of_lines {d : ℕ} {h : (Fin d → ℂ) → ℂ} {a :
   filter_upwards [Metric.ball_mem_nhds a hr] with y hy
   by_cases hv : y - a = 0
   · have hya : y = a := sub_eq_zero.1 hv
-    have h0 := (hl 0).self_of_nhds
-    simpa [hya] using h0
+    simpa [hya] using (hl 0).self_of_nhds
   have hvpos : 0 < ‖y - a‖ := norm_pos_iff.2 hv
   have hmaps : ∀ t ∈ Metric.ball (0 : ℂ) (r / ‖y - a‖), a + t • (y - a) ∈ Metric.ball a r := by
     intro t ht
     rw [Metric.mem_ball, dist_zero_right, lt_div_iff₀ hvpos] at ht
-    rw [Metric.mem_ball, dist_eq_norm, add_sub_cancel_left, norm_smul]
-    exact ht
+    rwa [Metric.mem_ball, dist_eq_norm, add_sub_cancel_left, norm_smul]
   have hg : AnalyticOnNhd ℂ (fun t : ℂ => h (a + t • (y - a))) (Metric.ball (0 : ℂ) (r / ‖y - a‖)) := by
     intro t ht
     have h1 : AnalyticAt ℂ (fun t : ℂ => a + t • (y - a)) t := by fun_prop
     exact AnalyticAt.comp (g := h) (f := fun s : ℂ => a + s • (y - a)) (han _ (hmaps t ht)) h1
   have h1 : (1 : ℂ) ∈ Metric.ball (0 : ℂ) (r / ‖y - a‖) := by
-    rw [Metric.mem_ball, dist_zero_right, norm_one, one_lt_div hvpos, ← dist_eq_norm]
-    exact hy
+    rwa [Metric.mem_ball, dist_zero_right, norm_one, one_lt_div hvpos, ← dist_eq_norm]
   have h0 : (0 : ℂ) ∈ Metric.ball (0 : ℂ) (r / ‖y - a‖) := Metric.mem_ball_self (div_pos hr hvpos)
   have hz := hg.eqOn_zero_of_preconnected_of_eventuallyEq_zero (convex_ball (0 : ℂ) _).isPreconnected h0
     (by filter_upwards [hl (y - a)] with t ht using ht) h1
@@ -153,8 +150,7 @@ theorem GermFiniteProjection.proof : GermFiniteProjection.Statement := by
   have htε : t ∈ Metric.ball (0 : ℂ) ε := by
     rw [Metric.mem_ball, dist_zero_right]
     have hb : ‖t • v‖ < ε * ‖v‖ := by
-      rw [Metric.mem_ball, dist_eq_norm, ht, add_sub_cancel_left] at hxb
-      exact hxb
+      rwa [Metric.mem_ball, dist_eq_norm, ht, add_sub_cancel_left] at hxb
     rw [norm_smul] at hb
     exact lt_of_mul_lt_mul_right hb hvpos.le
   exact hεv ⟨htε, ht0⟩ (by rw [← ht]; exact hxh hxX)

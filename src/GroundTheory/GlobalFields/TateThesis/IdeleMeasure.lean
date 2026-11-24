@@ -330,8 +330,7 @@ theorem map_mul_left_volume_complex {z : ℂ} (hz : z ≠ 0) :
     rfl
   have h := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure ℂ)
     (f := LinearMap.mulLeft ℝ z) (by rw [hdet]; positivity)
-  rw [hdet, abs_of_nonneg (by positivity)] at h
-  exact h
+  rwa [hdet, abs_of_nonneg (by positivity)] at h
 
 
 omit [NumberField K] in

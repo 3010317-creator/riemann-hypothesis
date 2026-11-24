@@ -255,8 +255,7 @@ theorem exists_sub_mem_cechBc (hSq : KH.CechDSqStatement) (hDeg : KH.CechDDegSta
   have hDb : KH.cechD S ι M n b = 0 := hbD
   refine ⟨w, ⟨hw, LinearMap.mem_ker.mpr (cechMap_injective hinj (n + 1) ?_)⟩, ?_⟩
   · rw [← KHTheoremS.cechD_cechMap, hwz, map_sub, hDz, hDb, sub_zero, map_zero]
-  · rw [hwz, sub_sub_cancel]
-    exact hb
+  · rwa [hwz, sub_sub_cancel]
 
 theorem lift_cocycle (hSq : KH.CechDSqStatement) (hDeg : KH.CechDDegStatement)
     (h𝓜' : KH.IsMGraded S ι 𝓜') (h𝓜 : KH.IsMGraded S ι 𝓜) (h𝓜'' : KH.IsMGraded S ι 𝓜'')
@@ -305,8 +304,7 @@ theorem exists_preimage_cocycle (h𝓜' : KH.IsMGraded S ι 𝓜') (h𝓜 : KH.I
   obtain ⟨hzC, hzD⟩ := hz
   obtain ⟨w, hw, rfl⟩ := cechMap_exact h𝓜' h𝓜 hg hinj hex hzC h0
   refine ⟨w, ⟨hw, LinearMap.mem_ker.mpr (cechMap_injective hinj (n + 1) ?_)⟩, rfl⟩
-  rw [← KHTheoremS.cechD_cechMap, map_zero]
-  exact hzD
+  rwa [← KHTheoremS.cechD_cechMap, map_zero]
 
 theorem finite_middle (hSq : KH.CechDSqStatement) (hDeg : KH.CechDDegStatement)
     (h𝓜' : KH.IsMGraded S ι 𝓜') (h𝓜 : KH.IsMGraded S ι 𝓜) (h𝓜'' : KH.IsMGraded S ι 𝓜'')
@@ -326,8 +324,7 @@ theorem finite_middle (hSq : KH.CechDSqStatement) (hDeg : KH.CechDDegStatement)
     refine ⟨Submodule.Quotient.mk ⟨z', hz'⟩, ?_⟩
     rw [hMap_mk, LinearMap.id_apply, Submodule.Quotient.eq]
     have := neg_mem hzz
-    rw [neg_sub] at this
-    exact this
+    rwa [neg_sub] at this
 
 def pairs (g : M' →ₗ[MRingOver S ι] M) (𝓜 : (K → ℤ) → Submodule S M) (𝓜' : (K → ℤ) → Submodule S M')
     (c : K → ℤ) (n : ℕ) : Submodule S (KH.CechC S ι M n × KH.CechC S ι M' (n + 1)) where

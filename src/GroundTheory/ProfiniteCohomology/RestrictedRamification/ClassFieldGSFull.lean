@@ -306,8 +306,7 @@ theorem charField_le : charField χ ≤ maxUnramifiedOutside K Ω S := by
     IntermediateField.mem_fixedField_iff]
   intro g hg
   have h1 : AlgEquiv.restrictNormalHom (maxUnramifiedOutside K Ω S) g = 1 := by
-    rw [← MonoidHom.mem_ker, IntermediateField.restrictNormalHom_ker]
-    exact hg
+    rwa [← MonoidHom.mem_ker, IntermediateField.restrictNormalHom_ker]
   have h2 : charAbs χ g = 1 := by rw [charAbs_apply, h1, map_one]
   exact (IntermediateField.mem_fixedField_iff _ _).1 hx g (MonoidHom.mem_ker.2 h2)
 
@@ -319,8 +318,7 @@ theorem charAb_eq_one_of_restrictAb
     (h : restrictAb (charField χ) (le_maximalAbelianExtension _) σ = 1) : charAb χ σ = 1 := by
   obtain ⟨g, rfl⟩ := AlgEquiv.restrictNormalHom_surjective (E := Ω) σ
   rw [restrictAb_restrictNormalHom] at h
-  rw [charAb_restrictNormalHom, charAbs_eq_one_iff]
-  exact h
+  rwa [charAb_restrictNormalHom, charAbs_eq_one_iff]
 
 theorem sIdeleSubgroupPos_le_ker :
     sIdeleSubgroupPos S ≤ (((charAb χ).comp (artinMap K Ω)).comp (IdeleClassGroup.mk K)).ker := by
@@ -457,8 +455,7 @@ theorem charToSIdelePosHom_surjective [IsAlgClosure K Ω] (hS : S.Finite) [NeZer
   have hcont : Continuous χS := by
     rw [hq.continuous_iff]
     have : (χS ∘ AlgEquiv.restrictNormalHom (maxUnramifiedOutside K Ω S)) = χΩ := funext hχS
-    rw [this]
-    exact hχΩc
+    rwa [this]
   refine ⟨⟨χS, hcont⟩, QuotientGroup.monoidHom_ext _ (MonoidHom.ext fun x ↦ ?_)⟩
   set σ := artinMap K Ω (IdeleClassGroup.mk K x)
   change charToSIdelePos _ (SIdeleClassGroupPos.mk S x) = ψ (SIdeleClassGroupPos.mk S x)
@@ -527,8 +524,7 @@ end Units
 theorem eq_one_of_sq_eq_one_of_odd {G : Type*} [Group G] {n : ℕ} (hn : Odd n) {z : G}
     (h2 : z ^ 2 = 1) (hz : z ^ n = 1) : z = 1 := by
   obtain ⟨k, rfl⟩ := hn
-  rw [pow_succ, pow_mul, h2, one_pow, one_mul] at hz
-  exact hz
+  rwa [pow_succ, pow_mul, h2, one_pow, one_mul] at hz
 
 variable {K : Type u} [Field K] [NumberField K] (S : Set (HeightOneSpectrum (𝓞 K))) (n : ℕ)
 

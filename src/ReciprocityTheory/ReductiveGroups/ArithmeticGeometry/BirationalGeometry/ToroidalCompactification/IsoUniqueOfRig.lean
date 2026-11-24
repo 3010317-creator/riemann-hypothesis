@@ -101,8 +101,7 @@ theorem iso_unique_of_rig (hG : Out.GlobalFnsSt) {S X₀ : Scheme.{0}} (A : Over
     have hx : x ∈ (⨆ j, M.U j) := by rw [hM.cover]; trivial
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hx₀
     obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
-    refine TopologicalSpace.Opens.mem_iSup.2 ⟨(fun _ => i, j), ?_⟩
-    exact ⟨Set.mem_iInter.2 fun _ => hi, hj⟩
+    exact TopologicalSpace.Opens.mem_iSup.2 ⟨(fun _ => i, j), ⟨Set.mem_iInter.2 fun _ => hi, hj⟩⟩
   obtain ⟨u, hu⟩ := exists_global_unit_of_compatible_of_iSup_eq (LB.div (M₀.pull φ) M).U hcov (fun q => w₁.s q / w₂.s q) fun q q' => by
     rw [map_div, map_div, g₁ q q', g₂ q q']
     exact mul_div_mul_left_eq_div _ _ _
@@ -127,8 +126,7 @@ theorem iso_unique_of_rig (hG : Out.GlobalFnsSt) {S X₀ : Scheme.{0}} (A : Over
       exact apply_default_eq_of_prod_eq_of_unique _ _ E
   have hc' : (eSec A).appTop.hom (u : Γ(A.left, ⊤)) = 1 := congrArg Units.val hc
   obtain ⟨v, hv⟩ := (hG S A hA).2 (u : Γ(A.left, ⊤))
-  have hw : eSec A ≫ A.hom = (𝟙_ (Over S)).hom := by
-    exact Over.w _
+  have hw : eSec A ≫ A.hom = (𝟙_ (Over S)).hom := Over.w _
   have key : (eSec A).appTop.hom (A.hom.appTop.hom v) = v := by
     have h3 : (eSec A).appTop.hom (A.hom.appTop.hom v) = (eSec A ≫ A.hom).appTop.hom v := by
       rfl

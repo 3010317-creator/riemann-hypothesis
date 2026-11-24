@@ -114,8 +114,7 @@ theorem exists_sheet (L : HermLine ι) (r : ℝ) (E : Set M.Xc) (hP : IsArithVar
     rw [hseg, map_smul]
     funext i
     refine Fin.cases ?_ (fun i => ?_) i
-    · simp only [Pi.smul_apply, smul_eq_mul, Fin.cons_zero]
-      exact inv_mul_cancel₀ h0
+    · simpa only [Pi.smul_apply, smul_eq_mul, Fin.cons_zero] using inv_mul_cancel₀ h0
     · simp only [Pi.smul_apply, smul_eq_mul, Fin.cons_succ]
       rw [← congrFun hq i, div_eq_inv_mul]
   · rw [← hy0]
@@ -167,8 +166,7 @@ theorem exists_sheet (L : HermLine ι) (r : ℝ) (E : Set M.Xc) (hP : IsArithVar
     have hdetinv : LinearMap.det ((Ce.symm : (Fin e → ℂ) →L[ℂ] (Fin e → ℂ)) :
         (Fin e → ℂ) →ₗ[ℂ] (Fin e → ℂ)) = (LinearMap.det (Df : (Fin e → ℂ) →ₗ[ℂ] (Fin e → ℂ)))⁻¹ := by
       have := ContinuousLinearEquiv.det_coe_symm Ce
-      rw [hCe'] at this
-      exact this
+      rwa [hCe'] at this
     have hloc : ReciprocityTheory.AnForm.maDens
         (fun (_ : Fin e) v => r * Real.log (L.h (modelLift M x ((M.atlas.chart j).symm v)))) u =
         locDens M.atlas (fun _ => modelPot M L r) j u := by

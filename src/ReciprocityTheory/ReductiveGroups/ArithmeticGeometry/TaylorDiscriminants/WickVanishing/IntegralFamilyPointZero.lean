@@ -97,19 +97,15 @@ theorem ig_ev {m n d : ℕ} {a : Fin m → Pt k n d} (hc : CZ a) (ha : ∀ j i, 
     {f : PS k m d} (hf : f ∈ Ig R k (Fin m × Fin d)) : ev a f ∈ Ig R k (Fin n × Fin d) := by
   unfold ev
   refine ig_subst (a := fun p : Fin m × Fin d => a p.1 p.2) ?_ ?_ hf
-  · intro p
-    exact ha p.1 p.2
-  · intro p
-    exact hc p.1 p.2
+  · exact fun p => ha p.1 p.2
+  · exact fun p => hc p.1 p.2
 
 theorem ig_liftX [Algebra ℚ k] {d : ℕ} {f : PS k 1 d} (hf : f ∈ Ig R k (Fin 1 × Fin d)) :
     liftX k f ∈ Ig R k (Fin d ⊕ Fin d) := by
   unfold liftX
   refine ig_subst ?_ ?_ hf
-  · intro p
-    exact ig_X _
-  · intro p
-    exact MvPowerSeries.constantCoeff_X _
+  · exact fun p => ig_X _
+  · exact fun p => MvPowerSeries.constantCoeff_X _
 
 theorem ig_of_intAA {σ : Type} {G : MvPowerSeries σ k} (hG : IntAA (R := R) k G) : G ∈ Ig R k σ := by
   unfold IntAA at hG
@@ -127,8 +123,7 @@ theorem cc_ev' {K : Type} [CommRing K] {m n d : ℕ} {a : Fin m → Pt K n d} (h
   · simp
   · intro e he
     obtain ⟨s, hs'⟩ : ∃ s, e s ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact he (Finsupp.ext h)
     rw [Finsupp.prod, map_prod, Finset.prod_eq_zero (i := s) (Finsupp.mem_support_iff.mpr hs'),
       smul_zero]

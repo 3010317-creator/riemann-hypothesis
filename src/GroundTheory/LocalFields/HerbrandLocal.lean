@@ -148,8 +148,7 @@ theorem exists_mem_units_eq (j : ℕ) (σ : Gal(L/K)) {u : 𝒪[L]ˣ} (hu : u �
   have hx : σ (unitVal u - 1) ∈ D.lat (D.k + j) := algEquiv_mem_normalLattice _ _ σ hu
   obtain ⟨w, hw, -⟩ := D.exists_unit (Nat.le_add_right _ j) hx
   refine ⟨w, ?_, ?_⟩
-  · rw [mem_units, hw, add_sub_cancel_left]
-    exact hx
+  · rwa [mem_units, hw, add_sub_cancel_left]
   · rw [hw, map_sub, map_one]
     ring
 
@@ -248,8 +247,7 @@ theorem filt_complete : FiltrationComplete D.filt.F := by
       rwa [sub_sub_sub_cancel_right])
   obtain ⟨w, hw, -⟩ := D.exists_unit le_rfl hz
   have hw0 : w ∈ D.units 0 := by
-    rw [mem_units, hw, add_sub_cancel_left]
-    exact hz
+    rwa [mem_units, hw, add_sub_cancel_left]
   refine ⟨⟨w, hw0⟩, fun N => ?_⟩
   obtain ⟨M, hM⟩ := hlim N
   refine ⟨M, fun n hn => D.div_mem_filt_iff.mpr ?_⟩

@@ -69,12 +69,8 @@ theorem bmul_mem {a b : Frame X.Ψ r} (ha : a ∈ Bor X.Ψ r) (hb : b ∈ Bor X.
   intro τ
   obtain ⟨ha1, ha2⟩ := ha τ
   obtain ⟨hb1, hb2⟩ := hb τ
-  have hA : Matrix.BlockTriangular (mat a τ) id := by
-    intro i j h
-    exact ha2 i j h
-  have hB : Matrix.BlockTriangular (mat b τ) id := by
-    intro i j h
-    exact hb2 i j h
+  have hA : Matrix.BlockTriangular (mat a τ) id := fun i j h => ha2 i j h
+  have hB : Matrix.BlockTriangular (mat b τ) id := fun i j h => hb2 i j h
   refine ⟨?_, fun i j h => hA.mul hB h⟩
   show (mat a τ * mat b τ).det ≠ 0
   rw [Matrix.det_mul]
@@ -84,14 +80,10 @@ theorem binv_mem {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : binv X b ∈ Bor X
   simp only [Bor, Set.mem_setOf_eq] at hb ⊢
   intro τ
   obtain ⟨hb1, hb2⟩ := hb τ
-  have hB : Matrix.BlockTriangular (mat b τ) id := by
-    intro i j h
-    exact hb2 i j h
+  have hB : Matrix.BlockTriangular (mat b τ) id := fun i j h => hb2 i j h
   haveI : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr hb1)
   have hI : Matrix.BlockTriangular (mat b τ)⁻¹ id := Matrix.blockTriangular_inv_of_blockTriangular hB
-  refine ⟨?_, fun i j h => hI h⟩
-  show ((mat b τ)⁻¹).det ≠ 0
-  exact (Matrix.isUnit_nonsing_inv_det _ (isUnit_iff_ne_zero.mpr hb1)).ne_zero
+  exact ⟨(Matrix.isUnit_nonsing_inv_det _ (isUnit_iff_ne_zero.mpr hb1)).ne_zero, fun i j h => hI h⟩
 
 theorem rmul_binv (x : Frame X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
     rmul (rmul x b) (binv X b) = x := by
@@ -136,9 +128,7 @@ theorem avoid_base (Xa : ArchInM X) (Fl : FlatM X Xa) (j j' : Fin Fl.δ) {γ : G
     refine Finset.prod_ne_zero_iff.mpr fun τ _ =>
       Finset.prod_ne_zero_iff.mpr fun i _ => zpow_ne_zero _ ?_
     obtain ⟨hd, ht⟩ := hc τ
-    have hT : Matrix.BlockTriangular (mat c τ) id := by
-      intro a e h
-      exact ht a e h
+    have hT : Matrix.BlockTriangular (mat c τ) id := fun a e h => ht a e h
     rw [Matrix.det_of_upperTriangular hT] at hd
     exact (Finset.prod_ne_zero_iff.mp hd) i (Finset.mem_univ _)
   have hzdom : cpt X x0 z ∈ X.dom := hball hz

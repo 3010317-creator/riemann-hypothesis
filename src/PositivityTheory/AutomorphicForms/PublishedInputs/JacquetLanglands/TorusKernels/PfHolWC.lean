@@ -169,9 +169,7 @@ theorem lift [IsTotallyReal F] (hH0 : H0) (hRel : HRel) (hH2a : H2a) (hH2d : H2d
     exact (hRel F k).2.2.1 _ _ _ hψ (hRel F k).2.2.2.2.1
   refine ⟨⟨ψ, hψS⟩, hhol, hne, ?_, ?_⟩
   · exact hH2e F k c ω _ hω h1 hhol (hH2a F k c hc ω χ hω hχ hS h1 f ψ hf hψ).2.2.2
-  · intro w
-    have hfix := (hH0 F k c ω _ hhol hne).2.1
-    exact (eig_iff hRel (haw w) hψ hfix (α w) (s w)).1 (heig w)
+  · exact fun w => (eig_iff hRel (haw w) hψ ((hH0 F k c ω _ hhol hne).2.1) (α w) (s w)).1 (heig w)
 
 theorem nu_nat_le {l : ℕ} [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (n : ℕ) : nu ι (n : ℂ) ≤ 1 := by
   induction n with
@@ -284,8 +282,7 @@ theorem UpperTheory.Esk.pf_HolWC : UpperTheory.Esk.Fin0 → UpperTheory.Esk.Form
     intro h
     have h0 : f0 = 0 := congrArg Subtype.val h
     rw [h0] at hrel0
-    apply hφ.ne
-    exact Subtype.ext ((hRel F _).2.1 _ _ _ hrel0 (hRel F _).2.2.2.2.1)
+    exact hφ.ne (Subtype.ext ((hRel F _).2.1 _ _ _ hrel0 (hRel F _).2.2.2.2.1))
   have hnz0 : ∀ w, nz D k₀ 0 w = (((normV w : ℝ) ^ ((k₀ : ℝ) / 2 - 1) : ℝ) : ℂ) := fun w => by simp [nz]
   have heig : ∀ w, (nz D k₀ 0 w • (Dat.Op (aw w)).restrict (hwM (fun _ => k₀) w)) ⟨f0, hf0M⟩ = lam w • ⟨f0, hf0M⟩ := by
     intro w
@@ -294,8 +291,7 @@ theorem UpperTheory.Esk.pf_HolWC : UpperTheory.Esk.Fin0 → UpperTheory.Esk.Form
     refine (eig_iff hRel (haw w) hrel0 hφfix _ _).2 ?_
     have := hφ.eig w
     simp only [hk, LinearMap.smul_apply] at this
-    rw [hnz0]
-    exact this
+    rwa [hnz0]
   have htr : ∀ (W : List (Pl F)) (r : ℕ), 1 ≤ r → (∀ j ∈ Finset.univ.image D.pl, r ≤ W.count j) →
       nu ι (LinearMap.trace ℂ ((mkDat c χ).M fun _ => k₀)
         (W.map fun w => nz D k₀ 0 w • (Dat.Op (aw w)).restrict (hwM (fun _ => k₀) w)).prod) ≤ 1 ∧
@@ -339,8 +335,7 @@ theorem UpperTheory.Esk.pf_HolWC : UpperTheory.Esk.Fin0 → UpperTheory.Esk.Form
   · intro w
     have := hφ'eig w
     simp only [nz] at this
-    simp only [hk, LinearMap.smul_apply]
-    exact smul_fix _ _ _ (hP w) _ _ this
+    simpa only [hk, LinearMap.smul_apply] using smul_fix _ _ _ (hP w) _ _ this
   · intro w
     have hprod : (∏ v, if D.pl v = w ∧ v ∈ S then (l : ℂ) ^ t else 1) =
         ∏ v, if D.pl v = w then (l : ℂ) ^ (if v ∈ S then t else 0) else 1 :=

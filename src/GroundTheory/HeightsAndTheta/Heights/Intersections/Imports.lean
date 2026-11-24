@@ -29,14 +29,12 @@ theorem ChartNormCount.proof (hSC : ChartSpecCount.Statement) (hNP : ChartNormPt
   obtain ⟨E, hE, hcount⟩ := hSC (MRing ι) G.Φ G.Φ' (aeval G.x : MRing ι →ₐ[ℤ] G.Φ).toRingHom _
     (fun q : Σ k : FibreBlock κ, ι' k.1 => G.x' ⟨q.1.1, q.2⟩ / G.x' ⟨q.1.1, j q.1⟩) G.gen hfin
   refine ⟨E, fun hm => hE ?_, fun w hw hEw => ?_⟩
-  · rw [← G.ker_x] at hm
-    exact hm
+  · rwa [← G.ker_x] at hm
   have hker : RingHom.ker (aeval G.x : MRing ι →ₐ[ℤ] G.Φ).toRingHom ≤
       RingHom.ker (eval₂Hom (Int.castRingHom ℂ) w) := by
     intro f hf
     have hf' : f ∈ imageZ v P' := by
-      rw [← G.ker_x]
-      exact hf
+      rwa [← G.ker_x]
     have h0 := hw.2 f hf'
     rw [RingHom.mem_ker, coe_eval₂Hom]
     rwa [eval_map] at h0
@@ -52,11 +50,9 @@ theorem ChartNormCount.proof (hSC : ChartSpecCount.Statement) (hNP : ChartNormPt
     intro z' hzw hz1
     have hw' : (fun p => z' (v p)) = w := funext hzw
     have hwz : (fun p => z' (v p)) ∈ mcPts (imageZ v P') := by
-      rw [hw']
-      exact hw
+      rwa [hw']
     have h := hNP K ι K' ι' κ v P' G j hv hmh hj z' hwz hz1
-    rw [hw'] at h
-    exact h
+    rwa [hw'] at h
   set Z := {y : (Σ k : FibreBlock κ, ι' k.1) → ℂ | ∀ F : MvPolynomial (Σ k : FibreBlock κ, ι' k.1) (MRing ι),
         eval₂ ((algebraMap G.Φ G.Φ').comp (aeval G.x : MRing ι →ₐ[ℤ] G.Φ).toRingHom)
           (fun q => G.x' ⟨q.1.1, q.2⟩ / G.x' ⟨q.1.1, j q.1⟩) F = 0 →
@@ -89,20 +85,15 @@ theorem ChartNormCount.proof (hSC : ChartSpecCount.Statement) (hNP : ChartNormPt
         simp only [z', dite_eq_left h, hc]
       have hz1 : ∀ k : FibreBlock κ, z' ⟨k.1, j k⟩ = 1 := by
         intro k
-        simp only [z', dite_eq_right k.2]
-        exact hy1 k
+        simpa only [z', dite_eq_right k.2] using hy1 k
       have hres : res z' = y := by
         funext q
         simp only [res, z', dite_eq_right q.1.2]
       refine ⟨z', ⟨(hiff z' hzw hz1).2 ?_, hzw, hz1⟩, hres⟩
       have : (fun q : Σ k : FibreBlock κ, ι' k.1 => z' ⟨q.1.1, q.2⟩) = y := hres
-      rw [this]
-      exact hy
+      rwa [this]
   refine ⟨Set.Finite.of_finite_image (himg ▸ hZfin) hinj, ?_, ?_⟩
-  · rw [← hinj.ncard_image, himg]
-    exact hZcard
-  · intro z' hz' hzw hz1 q hq
-    have hy := (hiff z' hzw hz1).1 hz'
-    exact hZne _ hy q (div_ne_zero hq (hj q.1))
+  · rwa [← hinj.ncard_image, himg]
+  · exact fun z' hz' hzw hz1 q hq => hZne _ ((hiff z' hzw hz1).1 hz') q (div_ne_zero hq (hj q.1))
 
 end GroundTheory.Heights₂.Heights.Inter

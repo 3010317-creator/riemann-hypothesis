@@ -73,8 +73,7 @@ theorem kStableOn_map_iff (φ : H₁ →ₗ[ℂ] H₂) (hφ : Function.Injective
   · intro h g hg v hv
     obtain ⟨w, hw, hwe⟩ := Submodule.mem_map.mp (h g hg (φ v) (Submodule.mem_map_of_mem hv))
     rw [← hint g hg v] at hwe
-    rw [← hφ hwe]
-    exact hw
+    rwa [← hφ hwe]
 
 theorem isWtOn_map_iff (φ : H₁ →ₗ[ℂ] H₂) (hφ : Function.Injective φ)
     (hint : ∀ g ∈ Formalism.REAL.Kset ε, ∀ x, φ (σ₁ g x) = σ₂ g (φ x)) (μ : Fin n → ℝ) (x : H₁) :
@@ -102,8 +101,7 @@ theorem isKTypeOf_map_iff (φ : H₁ →ₗ[ℂ] H₂) (hφ : Function.Injective
       have hle : S'.comap φ ≤ S := by
         intro x hx
         obtain ⟨w, hw, hwx⟩ := Submodule.mem_map.mp (hS' hx)
-        rw [← hφ hwx]
-        exact hw
+        rwa [← hφ hwx]
       have hS'eq : (S'.comap φ).map φ = S' := by
         refine le_antisymm (Submodule.map_comap_le _ _) fun y hy => ?_
         obtain ⟨w, -, rfl⟩ := Submodule.mem_map.mp (hS' hy)
@@ -163,7 +161,6 @@ variable {Ψ : Matrix (Fin n) (Fin n) ℂ → (T.V →L[ℂ] T.V)} {v₀ : T.V}
 theorem datumEmbedding_mem_Hlam (hP : IsPsiFor ε lam T Ψ) (v : T.V) : uniformisationL2 ε Ψ v₀ v ∈ Hlam ε Ψ v₀ := by
   have hD := datumEmbedding_mem_smooth hP v₀ v
   have hV : (⟨uniformisationL2 ε Ψ v₀ v, hD⟩ : smD ε (rreg ε)) ∈ datumV ε Ψ v₀ := by
-    show uniformisationL2 ε Ψ v₀ v ∈ Submodule.span ℂ (Set.range (uniformisationL2 ε Ψ v₀))
     exact Submodule.subset_span ⟨v, rfl⟩
   have hG : (⟨uniformisationL2 ε Ψ v₀ v, hD⟩ : smD ε (rreg ε)) ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ v₀) :=
     Submodule.mem_sInf.mpr fun U hU => hU.1 hV
@@ -269,8 +266,7 @@ theorem sigLam_lowK (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : 
   have hK := data_isKTypeOf hgap (rreg_isURepOn ε) (isDerivedOn_smE (rreg_isURepOn ε))
     (datumV_isKIrrHW hP hv₀) (datumV_casimir hP v₀) (datumV_kStable hP v₀)
   refine ⟨?_, fun S hS => ?_⟩
-  · rw [isKTypeOf_map_iff _ hinj hint, map_lowKSubLam, mir_lowK_eq]
-    exact hK
+  · rwa [isKTypeOf_map_iff _ hinj hint, map_lowKSubLam, mir_lowK_eq]
   · apply Submodule.map_injective_of_injective hinj
     rw [map_lowKSubLam]
     rw [isKTypeOf_map_iff _ hinj hint, mir_lowK_eq] at hS
@@ -319,7 +315,6 @@ theorem sigLam_kfin (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : 
     exact (kStableOn_map_iff _ hinj hint S).1 hSK k hk x hx
   have h := data_kfin_le hgap (rreg_isURepOn ε) (isDerivedOn_smE (rreg_isURepOn ε))
     (datumV_isKIrrHW hP hv₀) (datumV_casimir hP v₀) (datumV_kStable hP v₀) _ (map_subtype_le_closGen S) hf hK
-  intro x hx
-  exact h ⟨x, hx, rfl⟩
+  exact fun x hx => h ⟨x, hx, rfl⟩
 
 end ReciprocityTheory.ChartRestriction.DS

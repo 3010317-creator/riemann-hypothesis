@@ -310,8 +310,7 @@ theorem VarietyTangentGraphDense.proof_of_framePlaneGraph (hP : FramePlaneGraph.
   have hy₁S₀ : φ w₁ ∈ S₀ := by
     refine ⟨hy₁t, ?_⟩
     show e.symm (φ w₁) ∈ Ω
-    rw [← hψe, hψy₁]
-    exact hw₁
+    rwa [← hψe, hψy₁]
   set Ω' := interior (S₀ ∩ {y | DifferentiableAt ℂ ψ y}) with hΩ'def
   have hΩ' : IsOpen Ω' := isOpen_interior
   have hy₁Ω' : φ w₁ ∈ Ω' := mem_interior_iff_mem_nhds.2 (Filter.inter_mem (hS₀.mem_nhds hy₁S₀) hD)
@@ -355,8 +354,7 @@ theorem VarietyTangentGraphDense.proof_of_framePlaneGraph (hP : FramePlaneGraph.
       rw [hP₀, frameProjCLM_apply, hpg _ hψΩ]
       refine ⟨e.map_target hyt, ?_⟩
       show e (e.symm y) ∈ Ω'
-      rw [e.right_inv hyt]
-      exact hy
+      rwa [e.right_inv hyt]
   · intro j hj
     have hψd : HasFDerivAt ψ (fderiv ℂ ψ (φ w₁)) (φ w₁) := (hψc.differentiableAt one_ne_zero).hasFDerivAt
     have hgd' : HasFDerivAt g L (ψ (φ w₁)) := by
@@ -372,8 +370,7 @@ theorem VarietyTangentGraphDense.proof_of_framePlaneGraph (hP : FramePlaneGraph.
     rw [hfun]
     exact hcomp.fderiv
   · show dist (g (ψ (φ w₁))) z < ε
-    rw [hψy₁]
-    exact hz₁z
+    rwa [hψy₁]
 
 theorem VarietyTangentGraphDense.proof (hO : IndefiniteRowSideFullHecke.ComplexSets.ZeroSetOpenMass.Statement) :
     VarietyTangentGraphDense.Statement :=

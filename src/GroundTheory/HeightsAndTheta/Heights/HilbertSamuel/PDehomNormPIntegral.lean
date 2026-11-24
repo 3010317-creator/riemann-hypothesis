@@ -59,8 +59,7 @@ theorem isIntegral_of_le_range {R Ω : Type*} [CommRing R] [CommRing Ω] [Algebr
     exact hB _ (Q.coeff k).2
   obtain ⟨Q', hQ', -, hQ'm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl (hQm.map _)
   refine ⟨Q', hQ'm, ?_⟩
-  rw [← Polynomial.eval_map, hQ', Polynomial.eval_map]
-  exact hQ
+  rwa [← Polynomial.eval_map, hQ', Polynomial.eval_map]
 
 theorem coeff_mem_of_dehom_coeff_mem {Ω : Type} [Field Ω] [CharZero Ω] {D : ℕ} {l : Fin (D + 1) → Ω}
     (hgen : ∀ (d : ℕ) (F : MvPolynomial (Fin (D + 1)) ℚ), F.IsHomogeneous d → aeval l F = 0 → F = 0)

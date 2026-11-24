@@ -103,9 +103,7 @@ theorem minimalSubrepresentation_holds : SmoothRepMinimalSubrepresentation := by
   · have : Nontrivial S := Submodule.nontrivial_iff_ne_bot.mpr hS0
     have : Nontrivial (Fin d → ℂ) := e.toEquiv.nontrivial
     have hne : (⊥ : Subrepresentation ξ) ≠ ⊤ := by
-      intro h
-      have h' := congrArg Subrepresentation.toSubmodule h
-      exact bot_ne_top h'
+      exact fun h => bot_ne_top (congrArg Subrepresentation.toSubmodule h)
     have : Nontrivial (Subrepresentation ξ) := ⟨⟨⊥, ⊤, hne⟩⟩
     refine { eq_bot_or_eq_top := ?_ }
     intro W

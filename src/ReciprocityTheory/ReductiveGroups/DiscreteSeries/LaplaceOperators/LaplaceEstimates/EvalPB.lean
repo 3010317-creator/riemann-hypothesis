@@ -80,8 +80,7 @@ theorem isGlRep_reindex {n n' : ℕ} (E : Fin n' → Fin n' → Module.End ℂ M
     (he : Function.Injective e) (hE : IsGlRep E) : IsGlRep (fun a b => E (e a) (e b)) := by
   intro a b c d
   have := hE (e a) (e b) (e c) (e d)
-  simp only [he.eq_iff] at this
-  exact this
+  simpa only [he.eq_iff] using this
 
 theorem sum_beta_nnPlus (m : ℕ) (E : Fin (m + 1) → Fin (m + 1) → Module.End ℂ M) (hE : IsGlRep E)
     (Q : Matrix (Fin (m + 1)) (Fin (m + 1)) ℂ) (hQ : Q⁻¹ * Q = 1) (c₀ : ℂ) (j₀ : Fin (m + 1)) (om : ℂ) (v : M) :
@@ -175,8 +174,7 @@ theorem beta_formula (ε : Fin (2 * r + k + 1) → Bool) (P : Mat k r)
     have hx : g₀ *ᵥ Pi.single (⟨0, by omega⟩ : Fin (2 * r + k + 1)) 1 = xOne k r z := by
       have := (hg₀.2.1 ⟨0, by omega⟩).1
       unfold xOne
-      rw [ite_eq_right hr]
-      exact this
+      rwa [ite_eq_right hr]
     have hsg : ExponentialSlopeDerivatives.sg k r ⟨0, by omega⟩ = Fin.last (2 * r + k) := by
       apply Fin.ext; rw [ExponentialSlopeDerivatives.sg_val]; simp only [Fin.val_last]; split_ifs <;> omega
     have hst : star (Pi.single (⟨0, by omega⟩ : Fin (2 * r + k + 1)) (1 : ℂ) : Fin (2 * r + k + 1) → ℂ) =

@@ -555,8 +555,7 @@ theorem mem_integralFiniteMatrices {M : Matrix (Fin n) (Fin n) (FiniteAdeleRing 
   constructor
   · rintro ⟨N, rfl⟩ a b
     exact (N a b).2
-  · intro h
-    exact ⟨Matrix.of fun a b => ⟨M a b, h a b⟩, rfl⟩
+  · exact fun h => ⟨Matrix.of fun a b => ⟨M a b, h a b⟩, rfl⟩
 
 def integralFiniteGL : Subgroup (FiniteAdelicGL K n) :=
   (integralFiniteMatrices K n).toSubmonoid.units
@@ -581,8 +580,7 @@ theorem mem_integralFiniteGL_iff_forall {g : FiniteAdelicGL K n} :
   constructor
   · rintro ⟨h1, h2⟩ v
     exact ⟨fun a b => h1 a b v, fun a b => h2 a b v⟩
-  · intro h
-    exact ⟨fun a b v => (h v).1 a b, fun a b v => (h v).2 a b⟩
+  · exact fun h => ⟨fun a b v => (h v).1 a b, fun a b v => (h v).2 a b⟩
 
 theorem isOpen_integralFiniteMatrices :
     IsOpen (integralFiniteMatrices K n : Set (Matrix (Fin n) (Fin n) (FiniteAdeleRing (𝓞 K) K))) := by
@@ -693,14 +691,12 @@ theorem discreteTopology_rationalGL : DiscreteTopology (rationalGL K n) := by
       have h1 := h a b
       rw [← Matrix.sub_apply, hsub] at h1
       have h2 := hV _ h1
-      rw [Matrix.sub_apply, sub_eq_zero] at h2
-      exact h2
+      rwa [Matrix.sub_apply, sub_eq_zero] at h2
     subst hγ
     exact Subtype.ext (map_one _)
   · intro h a b
     have : (diagonal K n γ : AdelicGL K n) = 1 := congrArg Subtype.val h
-    rw [this, Units.val_one, sub_self]
-    exact hV0
+    rwa [this, Units.val_one, sub_self]
 
 theorem isClosed_rationalGL : IsClosed (rationalGL K n : Set (AdelicGL K n)) :=
   have := discreteTopology_rationalGL K n

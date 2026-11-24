@@ -161,8 +161,7 @@ theorem isForm_op (k : I → ℕ) {ι : Type} [Fintype ι] (a : ι → Gf) (ha :
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro x
     refine ⟨?_, fun z v => ?_⟩
-    · simp only [op_apply]
-      exact continuous_finsetSum _ fun i _ => (hf.hol (x * a i)).1
+    · simpa only [op_apply] using continuous_finsetSum _ fun i _ => (hf.hol (x * a i)).1
     · simp only [op_apply]
       exact holomorphic_on_half_plane_finset_sum Finset.univ (fun i t => f (Function.update z v t, x * a i))
         (fun i _ => (hf.hol (x * a i)).2 z v)
@@ -172,8 +171,7 @@ theorem isForm_op (k : I → ℕ) {ι : Type} [Fintype ι] (a : ι → Gf) (ha :
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [mul_assoc, hf.aut]
   · intro z x h
-    simp only [op_apply]
-    exact ha (fun y => f (z, y)) (fun y h' => hf.lev z y h') x h
+    simpa only [op_apply] using ha (fun y => f (z, y)) (fun y h' => hf.lev z y h') x h
   · obtain ⟨C, hC⟩ := hf.bdd
     refine ⟨Fintype.card ι * C, fun z x => ?_⟩
     have hn := nrm_nonneg k z

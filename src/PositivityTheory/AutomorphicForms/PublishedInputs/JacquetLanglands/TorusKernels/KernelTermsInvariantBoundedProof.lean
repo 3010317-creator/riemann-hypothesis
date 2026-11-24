@@ -148,8 +148,7 @@ theorem ee_mul_right (u : Gf) (h : D.H) : D.ee (u * h) = D.ee u * D.χ h := by
 
 theorem ee_inv_mul (h : D.H) (u : Gf) : D.ee ((h : Gf)⁻¹ * u) = (D.χ h : ℂ)⁻¹ * D.ee u := by
   have e := ee_mul_left D h⁻¹ u
-  rw [Subgroup.coe_inv, map_inv, Units.val_inv_eq_inv_val] at e
-  exact e
+  rwa [Subgroup.coe_inv, map_inv, Units.val_inv_eq_inv_val] at e
 
 theorem norm_ee_le (hx : D.Ax) (u : Gf) : ‖D.ee u‖ ≤ 1 := by
   unfold Dat.ee
@@ -299,8 +298,7 @@ theorem smul_eq (γ : PG F) (y : D.Om) : γ • y = ((D.j γ.out * D.rep y : Gf)
   have h1 : ((γ.out : GL (Fin 2) F) : PG F) = γ := QuotientGroup.out_eq' γ
   have h2 := D.mk_smulO γ.out (D.rep y)
   rw [h1] at h2
-  refine Eq.trans ?_ h2
-  exact congrArg (fun w : D.Om => γ • w) (QuotientGroup.out_eq' y).symm
+  exact Eq.trans (congrArg (fun w : D.Om => γ • w) (QuotientGroup.out_eq' y).symm) h2
 
 end KernelTermsInvariantLemmas
 
@@ -367,8 +365,7 @@ private theorem UpperTheory.Esk.exists_smul_eq_rep_mul_of_te_ne_zero {F I Gf ι 
   apply QuotientGroup.eq.2
   have e : (D.j γ.out * D.rep y)⁻¹ * (D.rep y * a i) = (D.rep y)⁻¹ * (D.j γ.out)⁻¹ * D.rep y * a i := by
     group
-  rw [e]
-  exact hm
+  rwa [e]
 
 private theorem UpperTheory.Esk.trace_ne_zero_and_sq_ne_four_det_of_smul {F I Gf ι : Type} [Field F] [Group Gf] [Fintype I] [Fintype ι]
     (D : UpperTheory.Esk.Dat F I Gf) (k : I → ℕ) (a : ι → Gf) (hH : D.Hyp k a) (γ : UpperTheory.Esk.PG F) (y : D.Om) (i : ι)

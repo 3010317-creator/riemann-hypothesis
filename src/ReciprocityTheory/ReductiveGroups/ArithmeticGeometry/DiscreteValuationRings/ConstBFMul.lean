@@ -84,16 +84,12 @@ theorem VGe.add {k : ℕ} {α : D.toPre.X}
   refine ⟨n + m, Fin.append a b, Fin.append σ τ, Fin.append σF τF, ?_, ?_, ?_⟩
   · intro i
     refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-    · simp only [Fin.append_left]
-      exact hσ i
-    · simp only [Fin.append_right]
-      exact hτ i
+    · simpa only [Fin.append_left] using hσ i
+    · simpa only [Fin.append_right] using hτ i
   · intro i
     refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-    · simp only [Fin.append_left]
-      exact ha i
-    · simp only [Fin.append_right]
-      exact hb i
+    · simpa only [Fin.append_left] using ha i
+    · simpa only [Fin.append_right] using hb i
   · intro j
     rw [hadd j, hs j, hs' j, Fin.sum_univ_add]
     simp only [Fin.append_left, Fin.append_right]

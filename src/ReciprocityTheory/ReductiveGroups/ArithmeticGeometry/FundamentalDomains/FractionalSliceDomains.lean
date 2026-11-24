@@ -122,8 +122,7 @@ theorem zero_mem_Om (hx : x ∈ X.dom) (hξ : X.IsIso ξ) : (0 : Fin n → ℝ) 
   show (fun τ => ∑ j, (0 : Fin n → ℝ) j * ω j τ) ∈ AdmissibleHermitianColumns.admissibleImaginary X ξ x
   simp only [AdmissibleHermitianColumns.admissibleImaginary, Set.mem_setOf_eq]
   intro τ i
-  have h := (hx τ).2 i
-  simpa [dmin] using h
+  simpa [dmin] using (hx τ).2 i
 
 theorem tube_dom (hx : x ∈ X.dom) (hξ : X.IsIso ξ) {u : Fin n → ℂ}
     (hu : u ∈ ReciprocityTheory.L2DbarEstimates.Y.tube n (Om X ξ x ω)) :
@@ -132,8 +131,7 @@ theorem tube_dom (hx : x ∈ X.dom) (hξ : X.IsIso ξ) {u : Fin n → ℂ}
   have e : (fun τ => (∑ j, u j * (ω j τ : ℂ)).im) = fun τ => ∑ j, (u j).im * ω j τ := by
     funext τ
     simp [Complex.im_sum, Complex.mul_im]
-  rw [e]
-  exact hu
+  rwa [e]
 
 theorem hfun_diff (P : Frame X.Ψ r → ℂ) (la : Wt X.Ψ r) (hP : X.IsSec la P) (hx : x ∈ X.dom)
     (hξ : X.IsIso ξ) :

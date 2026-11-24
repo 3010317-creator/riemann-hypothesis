@@ -62,9 +62,7 @@ lemma uqU_mem_Kset {k : ℕ} {g : Matrix (Fin k) (Fin k) ℂ} (hg : g ∈ Formal
   have h : gᴴ * Jm (fun _ : Fin k => true) * g = Jm (fun _ : Fin k => true) := hg
   rw [uqU_Jm_allTrue, Matrix.mul_one] at h
   refine ⟨?_, ?_⟩
-  · rw [Matrix.mem_unitaryGroup_iff']
-    rw [Matrix.star_eq_conjTranspose]
-    exact h
+  · rwa [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
   · rw [uqU_Jm_allTrue, Matrix.mul_one, Matrix.one_mul]
 
 theorem hcTypeU_unique {k : ℕ} {u : Fin k → ℝ} {H H' : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]

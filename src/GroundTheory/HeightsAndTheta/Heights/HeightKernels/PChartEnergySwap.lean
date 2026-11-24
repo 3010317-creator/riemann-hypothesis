@@ -149,16 +149,12 @@ theorem ChartEnergySwapInvariant.proof : ChartEnergySwapInvariant.Statement := b
       filter_upwards [hev] with y' hy'
       rw [logCoord_re y y' hy hy']
       by_cases hj : (j : ℕ) < k
-      · simp only [hΦ, hj, ite_true]
-        exact hermChartPot_swap M hM y' hy'
-      · simp only [hΦ, hj, ite_false]
-        exact hermChartPot_swap N hN y' hy'
+      · simpa only [hΦ, hj, ite_true] using hermChartPot_swap M hM y' hy'
+      · simpa only [hΦ, hj, ite_false] using hermChartPot_swap N hN y' hy'
     have hΦs : ∀ j, ContDiffAt ℝ 2 (Φ j) (chartInv y) := fun j => by
       by_cases hj : (j : ℕ) < k
-      · simp only [hΦ, hj, ite_true]
-        exact (contDiff_hermChartPot M hM).contDiffAt
-      · simp only [hΦ, hj, ite_false]
-        exact (contDiff_hermChartPot N hN).contDiffAt
+      · simpa only [hΦ, hj, ite_true] using (contDiff_hermChartPot M hM).contDiffAt
+      · simpa only [hΦ, hj, ite_false] using (contDiff_hermChartPot N hN).contDiffAt
     rw [maDensity_comp_holo _ Φ chartInv (logCoord y) y hΦs (contDiffAt_chartInv hy)
       (contDiffAt_logCoord hy) hΦ', det_fderiv_real ((contDiffAt_chartInv hy).differentiableAt (by norm_num)),
       abs_of_nonneg (Complex.normSq_nonneg _), hermChartPot_swap M hM y hy, hermChartPot_swap N hN y hy, hf,

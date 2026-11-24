@@ -80,8 +80,7 @@ theorem truncEval_unique {n : ℕ} (ψ : ℚ⟦X⟧ →ₐ[ℚ] S) (s : S) (hs :
     rw [map_sub, Polynomial.coeff_coe, coeff_trunc, ite_eq_left hm, sub_self]
   have h1 : ψ f = ψ (trunc n f : ℚ⟦X⟧) := by
     have := congrArg ψ hh
-    rw [map_sub, map_mul, map_pow, hψ, hs, zero_mul, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, map_mul, map_pow, hψ, hs, zero_mul, sub_eq_zero] at this
   rw [h1, truncEval_apply]
   exact congrArg (fun F : Polynomial ℚ →ₐ[ℚ] S => F (trunc n f)) hpoly
 
@@ -229,8 +228,7 @@ theorem log_subst_one_add_X_pow_sub_one (k : ℕ) :
         _ = (1 + X : ℚ⟦X⟧) ^ (k + 1) * (((k + 1 : ℕ) : ℚ⟦X⟧) * G) := by ring
   · have h0 : MvPowerSeries.constantCoeff ((1 + X) ^ k - 1 : ℚ⟦X⟧) = 0 := hg
     have := constantCoeff_subst_eq_zero h0 (log ℚ) constantCoeff_log
-    rw [map_mul, constantCoeff_log, mul_zero]
-    exact this
+    rwa [map_mul, constantCoeff_log, mul_zero]
 
 variable {B : Type*} [CommRing B] [Algebra ℚ B] {I : Ideal B} [IsAdicComplete I B]
 

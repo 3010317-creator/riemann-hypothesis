@@ -73,8 +73,7 @@ theorem fd_exists : ∃ D : Set (X.Ψ → ℝ), MeasurableSet D ∧
     IsAddFundamentalDomain (X.periods la) D volume ∧ 0 < volume D ∧ volume D < ⊤ := by
   refine ⟨ZSpan.fundamentalDomain (perB X la), ZSpan.fundamentalDomain_measurableSet _, ?_, ?_, ?_⟩
   · have h := ZSpan.isAddFundamentalDomain (perB X la) volume
-    rw [← perB_span X la]
-    exact h
+    rwa [← perB_span X la]
   · exact pos_iff_ne_zero.mpr (ZSpan.measure_fundamentalDomain_ne_zero _)
   · exact (ZSpan.fundamentalDomain_isBounded _).measure_lt_top
 
@@ -132,8 +131,7 @@ theorem flow_Zb_comm (hu : ∀ i k, herm X.Gm (u i) (u k) = 0) (s : X.Ψ → ℝ
     simp only [herm, map_sum, map_mul, emb_cc, map_zero] at h
     rw [← h, hW, hV]
     refine Finset.sum_congr rfl fun j _ => ?_
-    simp only [Finset.sum_mul]
-    exact Finset.sum_congr rfl fun l _ => by ring
+    simpa only [Finset.sum_mul] using Finset.sum_congr rfl fun l _ => by ring
   set α : ℂ := I * X.c τ * cR X s τ
   set γ : ℂ := I * X.c τ
   let A : Matrix (Fin r) (Fin r) ℂ := Matrix.of fun a j => α * V 0 a * W 0 j

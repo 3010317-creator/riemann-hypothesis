@@ -50,8 +50,7 @@ theorem denseRange_toClosureInCp : DenseRange (toClosureInCp E) := by
       exact ⟨y, y.2, rfl⟩
     · rintro ⟨y, hy, rfl⟩
       exact ⟨_, ⟨⟨y, hy⟩, rfl⟩, rfl⟩
-  rw [this]
-  exact hx
+  rwa [this]
 
 theorem isDenseInducing_toClosureInCp : IsDenseInducing (toClosureInCp E) :=
   (isometry_toClosureInCp E).isUniformInducing.isDenseInducing (denseRange_toClosureInCp E)
@@ -250,8 +249,7 @@ theorem extendToClosure_mul {a : PadicAlgCl p} (ha : a ∈ k) {x : ℂ_[p]}
     ⟨x, hx⟩ (isClosed_eq (he.comp hcont) (continuous_const.mul he)) fun y => ?_
   have : (⟨(a : ℂ_[p]) * (toClosureInCp E y : closureInCp E), hmem _⟩ : closureInCp E) =
       toClosureInCp E ⟨a * y, mul_mem (hkE ha) y.2⟩ := by
-    apply Subtype.ext
-    exact (UniformSpace.Completion.coe_mul a (y : PadicAlgCl p)).symm
+    exact Subtype.ext (UniformSpace.Completion.coe_mul a (y : PadicAlgCl p)).symm
   rw [this, extendOnClosure_toClosureInCp hadd hbound, extendOnClosure_toClosureInCp hadd hbound]
   change ((R (a * y) : PadicAlgCl p) : ℂ_[p]) = _
   rw [hmul a ha y y.2, UniformSpace.Completion.coe_mul]
@@ -283,8 +281,7 @@ theorem extendToClosure_smul (σ : Gal(PadicAlgCl p/K₀)) (hσ : ∀ y ∈ E, �
     ⟨x, hx⟩ (isClosed_eq (he.comp hcont) ((continuous_const_smul σ).comp he)) fun y => ?_
   have : (⟨σ • ((toClosureInCp E y : closureInCp E) : ℂ_[p]), hmem _⟩ : closureInCp E) =
       toClosureInCp E ⟨σ y, hσ y y.2⟩ := by
-    apply Subtype.ext
-    exact gal_smul_coe σ (y : PadicAlgCl p)
+    exact Subtype.ext (gal_smul_coe σ (y : PadicAlgCl p))
   rw [this, extendOnClosure_toClosureInCp hadd hbound, extendOnClosure_toClosureInCp hadd hbound]
   change ((R (σ y) : PadicAlgCl p) : ℂ_[p]) = _
   rw [hσR y y.2, gal_smul_coe]

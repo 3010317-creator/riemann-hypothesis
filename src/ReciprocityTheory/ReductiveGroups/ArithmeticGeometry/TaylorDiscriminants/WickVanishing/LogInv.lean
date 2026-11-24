@@ -67,9 +67,7 @@ theorem cc_pt {n : ℕ} (j : Fin n) (i : Fin d) : constantCoeff (pt k (n := n) d
 theorem cc_zero {n : ℕ} (i : Fin d) : constantCoeff ((0 : Pt k n d) i) = 0 := by
   simp
 
-theorem CZ.nil {n : ℕ} : CZ (![] : Fin 0 → Pt k n d) := by
-  intro j
-  exact j.elim0
+theorem CZ.nil {n : ℕ} : CZ (![] : Fin 0 → Pt k n d) := fun j => j.elim0
 
 theorem CZ.cons {m n : ℕ} {p : Pt k n d} {a : Fin m → Pt k n d} (hp : ∀ i, constantCoeff (p i) = 0) (ha : CZ a) :
     CZ (Matrix.vecCons p a) := by

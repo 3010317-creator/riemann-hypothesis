@@ -99,8 +99,7 @@ theorem LiftGraphFactor.proof (hExt : SectionNormSqExtension.Statement) : LiftGr
     have e : (fun k => ((1 : ℕ) : ℤ) * A.a k) = a • N.a := by
       funext k
       simp [A, fsLineZ]
-    rw [e]
-    exact hgen
+    rwa [e]
   obtain ⟨S, hSs, hSp, hSt, hSc, hSv, hSl⟩ :=
     hExt K ι Ω y A 1 r v (isSmoothHerm_fsLineZ _) (conj_fsLineZ _) hA1 hgen'
   let U0 : Set ((Σ k, ι k) → ℂ) := {w | ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0}
@@ -127,8 +126,7 @@ theorem LiftGraphFactor.proof (hExt : SectionNormSqExtension.Statement) : LiftGr
       have h := hv j c' hc'
       have e : ∀ k, -(((1 : ℕ) : ℤ) * (a • N.a) k) = -((a : ℤ) * N.a k) := fun k => by
         simp [Pi.smul_apply]
-      simp only [e] at h
-      exact h
+      simpa only [e] using h
 
     have key : ∀ j, secNormAt y N a (v j) (basePart₂ z) * N.h (basePart₂ z) ^ a =
         ‖PowerBlockMetric.val y A 1 (v j) (basePart₂ z)‖ * A.h (basePart₂ z) := by
@@ -191,8 +189,7 @@ theorem LiftGraphFactor.proof (hExt : SectionNormSqExtension.Statement) : LiftGr
       have h := ReciprocityTheory.AnForm.levi_comp (φ := fun w => Real.log (A.h w))
         (τ := ⇑(LiftGraphMetric.oldCLM (ι := ι) r)) (z := z) ξ
         ((LiftGraphMetric.oldCLM (ι := ι) r).analyticAt z) hAlog
-      rw [ContinuousLinearMap.fderiv] at h
-      exact h
+      rwa [ContinuousLinearMap.fderiv] at h
     have hev : (fun x : (Σ k, addIdx ι r k) → ℂ => Real.log (S (basePart₂ x) * A.h (basePart₂ x) ^ 2)) =ᶠ[𝓝 z]
         fun x => Real.log (S (basePart₂ x)) + (2 : ℝ) * Real.log (A.h (basePart₂ x)) := by
       filter_upwards [hUo.mem_nhds hz.1] with x hx'

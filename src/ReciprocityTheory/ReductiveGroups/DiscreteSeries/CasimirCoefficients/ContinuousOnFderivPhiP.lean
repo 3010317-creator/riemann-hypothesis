@@ -222,8 +222,7 @@ lemma continuousOn_GintD (T : KType ε Λ) (μ : Fin n → ℤ) :
       (continuous_toMK'.comp continuous_snd)
   refine ((hA.clm_apply hB.continuousOn).smul
     ((continuous_P T).comp continuous_snd).continuousOn).congr ?_
-  intro p hp
-  exact GintD_apply T μ p.2 (hp.1 p.2) H
+  exact fun p hp => GintD_apply T μ p.2 (hp.1 p.2) H
 
 lemma continuous_Gint (T : KType ε Λ) (μ : Fin n → ℤ) {x : Matrix (Fin n) (Fin n) ℂ}
     (hx : x ∈ Uset ε) : Continuous (Gint T μ x) := by

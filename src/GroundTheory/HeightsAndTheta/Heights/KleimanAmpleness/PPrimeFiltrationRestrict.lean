@@ -233,10 +233,8 @@ theorem restrictSub_mono (q0 : Ω) (K L : Chart (reducedPt hj ψ)) (h : K.1 ⊆ 
   · rintro _ ⟨q, hq, rfl⟩
     exact Submodule.subset_span ⟨q, Q.mono (liftChart hxy K) (liftChart hxy L) h q hq, rfl⟩
   · exact Submodule.zero_mem _
-  · intro a b _ _ ha hb
-    exact Submodule.add_mem _ ha hb
-  · intro a z _ hz
-    exact Submodule.smul_mem _ (chartIncl h a) hz
+  · exact fun a b _ _ ha hb => Submodule.add_mem _ ha hb
+  · exact fun a z _ hz => Submodule.smul_mem _ (chartIncl h a) hz
 
 def restrictBundle (hq0 : q0 ∈ Q.sub (singleChart hj)) (hc : (c0 : Ω) = q0 * q1) (hψ : ψ c0 ≠ 0)
     (hQ1 : Q.sub (singleChart hj) * Q1 = 1) (hq1 : q1 ∈ Q1) : LineBundle S (reducedPt hj ψ) where
@@ -378,8 +376,7 @@ theorem PrimeFiltration.Restrict.proof : PrimeFiltration.Restrict.Statement.{u, 
   obtain ⟨q0, hq0, q1, hq1, c0, hc, hψ⟩ := exists_generator_at hj ψ hQ1
   refine ⟨restrictBundle hj ψ hxy Q hq0 hc hψ hQ1 hq1, fun q => residueAt hj ψ (q / q0),
     fun I => ⟨?_, ?_, ?_, rfl⟩⟩
-  · intro q hq
-    exact Submodule.subset_span ⟨q, hq, rfl⟩
+  · exact fun q hq => Submodule.subset_span ⟨q, hq, rfl⟩
   · intro q hq q' hq'
     beta_reduce
     rw [add_div]

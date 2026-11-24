@@ -49,8 +49,7 @@ theorem exists_ringEquiv_closure_div_of_eq_C_mul_X_pow (θ : A →+* Polynomial 
       IsFractionRing.lift_algebraMap, IsFractionRing.lift_algebraMap]
     have hX : algebraMap (Polynomial D) M (Polynomial.X ^ n i) ≠ 0 := fun h =>
       pow_ne_zero _ Polynomial.X_ne_zero (hM (h.trans (map_zero _).symm))
-    simp only [g₁, g₂, RingHom.comp_apply, hf, hg, map_mul]
-    exact mul_div_mul_right _ _ hX
+    simpa only [g₁, g₂, RingHom.comp_apply, hf, hg, map_mul] using mul_div_mul_right _ _ hX
   have himg : (Subring.closure (Set.range fun i =>
         algebraMap A (FractionRing A) (f i) / algebraMap A (FractionRing A) (g i))).map ι₁ =
       (Subring.closure (Set.range fun i =>
@@ -102,8 +101,7 @@ theorem aeval_blowUpSubst_of_isMultiHomog (P : Ideal (MRing ι R)) (u : J → MR
     show Polynomial.eval 1 (aeval (blowUpSubst P u) F) = c
     rw [key]
     simp
-  rw [hσ]
-  exact key
+  rwa [hσ]
 
 theorem BlowUpLocRingIso.proof : BlowUpLocRingIso.Statement.{u} := by
   intro R _ K _ ι J P _ u Q _

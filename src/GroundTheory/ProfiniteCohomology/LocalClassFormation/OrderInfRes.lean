@@ -87,8 +87,7 @@ theorem range_galRestrictScalars : (galRestrictScalars K F M).range = galFixing 
   constructor
   · rintro ⟨τ, rfl⟩ x
     exact τ.commutes x
-  · intro h
-    exact ⟨AlgEquiv.ofRingEquiv (f := σ.toRingEquiv) h, AlgEquiv.ext fun _ => rfl⟩
+  · exact fun h => ⟨AlgEquiv.ofRingEquiv (f := σ.toRingEquiv) h, AlgEquiv.ext fun _ => rfl⟩
 
 noncomputable def galFixingEquiv : Gal(M/F) ≃* galFixing K F M :=
   (MonoidHom.ofInjective (galRestrictScalars_injective K F M)).trans
@@ -135,9 +134,7 @@ theorem unitsToInvariantsTower_bijective : Function.Bijective (unitsToInvariants
   constructor
   · intro x y h
     have h' := congrArg (fun v => ((Additive.toMul (α := Mˣ) v.1 : Mˣ) : M)) h
-    apply Additive.toMul.injective
-    apply Units.ext
-    exact (algebraMap F M).injective h'
+    exact Additive.toMul.injective (Units.ext ((algebraMap F M).injective h'))
   · intro v
     have hfix : ∀ τ : Gal(M/F), τ ((Additive.toMul (α := Mˣ) v.1 : Mˣ) : M) =
         ((Additive.toMul (α := Mˣ) v.1 : Mˣ) : M) := by
@@ -149,10 +146,7 @@ theorem unitsToInvariantsTower_bijective : Function.Bijective (unitsToInvariants
       rintro rfl
       rw [map_zero] at hy
       exact (Additive.toMul (α := Mˣ) v.1).ne_zero hy.symm
-    refine ⟨Additive.ofMul (Units.mk0 y hy0), Subtype.ext ?_⟩
-    apply Additive.toMul.injective
-    apply Units.ext
-    exact hy
+    exact ⟨Additive.ofMul (Units.mk0 y hy0), Subtype.ext (Additive.toMul.injective (Units.ext hy))⟩
 
 noncomputable def unitsInvariantsEquivTower :
     Additive Fˣ ≃ₗ[ULift.{u} ℤ]

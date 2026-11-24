@@ -39,8 +39,7 @@ theorem AdjoinIndepRelfinrank.proof : AdjoinIndepRelfinrank.Statement := by
     have hq0 : q = 0 := by
       apply ht'.eq_zero_of_aeval_eq_zero
 
-      rw [hq, map_sum]
-      rw [← hg]
+      rw [hq, map_sum, ← hg]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [map_mul, MvPolynomial.aeval_C, MvPolynomial.aeval_map_algebraMap, hp, Subalgebra.smul_def,
         Function.comp_apply, mul_comm]
@@ -92,8 +91,7 @@ theorem AdjoinIndepRelfinrank.proof : AdjoinIndepRelfinrank.Statement := by
     let v : _ → extendScalars hle' := fun j => ⟨algebraMap L' Ω (b j), by
       exact IntermediateField.algebraMap_mem (adjoin L' (A : Set Ω)) (b j)⟩
     have hv : LinearIndependent A v := by
-      apply LinearIndependent.of_comp (extendScalars hle').val.toLinearMap
-      exact hK
+      exact LinearIndependent.of_comp (extendScalars hle').val.toLinearMap hK
     have := hv.finite_of_isNoetherian
     exact Module.Finite.of_basis b
 end GroundTheory.Heights₂.Heights.Inter

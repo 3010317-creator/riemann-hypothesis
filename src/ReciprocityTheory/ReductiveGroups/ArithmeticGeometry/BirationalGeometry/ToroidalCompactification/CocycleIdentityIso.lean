@@ -80,8 +80,7 @@ theorem cocycle_identity_iso {L : LB X} (hL : L.IsLB) (p₁ p₂ q₁ q₂ : L.�
   exact mul_right_comm _ _ _
 
 theorem idIso_isGen {L : LB X} (hL : L.IsLB) : (idIso L).IsGen := by
-  intro i j
-  exact cocycle_identity_iso hL i.1 i.2 j.1 j.2
+  exact fun i j => cocycle_identity_iso hL i.1 i.2 j.1 j.2
 
 theorem idIso_maps {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] (L : RigLB G) :
     LB.Gen.Maps (LB.linCombIso (idIso L.L) (K := PUnit) (fun _ => eSec G) (fun _ => 1)) L.rig L.rig := fun p => L.rigGen p.1 p.2
@@ -174,8 +173,7 @@ private theorem res_eq_mul_res_of_gm_id_eq_mul {Y : Scheme.{0}} {V U₁ U₃ : Y
   rw [← gm_res (𝟙 Y) y h₁ hy a, ← gm_res (𝟙 Y) y h₃ hy c, ← map_mul] at key
   have hy' : (𝟙 Y) y ∈ V := hy
   simp only [gm, dite_eq_left hy', MonoidHom.comp_apply] at key
-  have key2 := congrArg Units.val key
-  exact key2
+  exact congrArg Units.val key
 
 theorem isoPullId_maps {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {L' L : RigLB G} {w : LB.Iso L'.L L.L}
     (hm : LB.Gen.Maps (LB.linCombIso w (K := PUnit) (fun _ => eSec G) (fun _ => 1)) L'.rig L.rig)
@@ -224,9 +222,7 @@ theorem gm_of_res_eq {Y : Scheme.{0}} {V U₁ U₂ U₃ U₄ : Y.Opens} {h₁ : 
     {h₄ : V ≤ U₄} {a : Γ(Y, U₁)ˣ} {b : Γ(Y, U₂)ˣ} {c : Γ(Y, U₃)ˣ} {d : Γ(Y, U₄)ˣ}
     (H : res h₁ a * res h₂ b = res h₃ c * res h₄ d) {y : Y} (hy : y ∈ V) :
     gm (𝟙 Y) y U₁ a * gm (𝟙 Y) y U₂ b = gm (𝟙 Y) y U₃ c * gm (𝟙 Y) y U₄ d := by
-  have key := congrArg (gm (𝟙 Y) y V) H
-  simp only [map_mul, gm_res (𝟙 Y) y _ hy] at key
-  exact key
+  simpa only [map_mul, gm_res (𝟙 Y) y _ hy] using congrArg (gm (𝟙 Y) y V) H
 
 theorem res_eq_of_gm {Y : Scheme.{0}} {V U₁ U₂ U₃ U₄ : Y.Opens} {h₁ : V ≤ U₁} {h₂ : V ≤ U₂} {h₃ : V ≤ U₃}
     {h₄ : V ≤ U₄} {a : Γ(Y, U₁)ˣ} {b : Γ(Y, U₂)ˣ} {c : Γ(Y, U₃)ˣ} {d : Γ(Y, U₄)ˣ}
@@ -239,8 +235,7 @@ theorem res_eq_of_gm {Y : Scheme.{0}} {V U₁ U₂ U₃ U₄ : Y.Opens} {h₁ : 
     ← map_mul, ← map_mul] at key
   have hy' : (𝟙 Y) y ∈ V := hy
   simp only [gm, dite_eq_left hy', MonoidHom.comp_apply] at key
-  have key2 := congrArg Units.val key
-  exact key2
+  exact congrArg Units.val key
 
 private theorem isoPullId_isGen_of_isGen {X : Scheme.{0}} {L' L : LB X} {w : LB.Iso L' L} (hw : w.IsGen)
     {F : X ⟶ X} (hF : F = 𝟙 X) : (isoPullId w hF).IsGen := by
@@ -340,8 +335,7 @@ theorem isPullUnif_of_uniq {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D
         (U.LG.L.pull (bc.hom.left ≫ pullback.fst G.hom (specOf (RingHom.id R)))).U jL ⊓ U'.LG.L.U jL' := hy.2
     have h4a' := mem_pull.1 h4'.1
     have h4a : (fstG I n G).left y ∈ U.LG.L.U (jL PUnit.unit) := by
-      rw [hbc] at h4a'
-      exact h4a'
+      rwa [hbc] at h4a'
     have h4y : (fstG I n G).left y ∈ U'.LG.L.U jL' := h4'.2
     have hyh4 : (fstG I n G).left y ∈ U.LG.L.U (jL PUnit.unit) ⊓ U'.LG.L.U jL' := ⟨h4a, h4y⟩
     have key := gm_of_res_eq ((hlev n).2.2 jM jM' jL' (jL PUnit.unit)) (y := y)

@@ -51,8 +51,7 @@ theorem isOpenEmbedding_val :
       constructor
       · rintro ⟨u, rfl⟩
         exact ((Matrix.isUnit_iff_isUnit_det _).1 u.isUnit).ne_zero
-      · intro h
-        exact ⟨((Matrix.isUnit_iff_isUnit_det A).2 (isUnit_iff_ne_zero.2 h)).unit, rfl⟩
+      · exact fun h => ⟨((Matrix.isUnit_iff_isUnit_det A).2 (isUnit_iff_ne_zero.2 h)).unit, rfl⟩
     rw [this]
     exact isOpen_compl_singleton.preimage (continuous_id.matrix_det)
 
@@ -71,8 +70,7 @@ theorem glChart_leftModulus (g : GL (Fin n) F) :
   ext
   rw [LinearEquiv.coe_det, Units.val_pow_eq_pow_val, Matrix.GeneralLinearGroup.val_det_apply]
   have := LinearMap.det_conj (LinearMap.mulLeft F (g : Matrix (Fin n) (Fin n) F)) (entries F n)
-  rw [det_mulLeft_matrix, Fintype.card_fin] at this
-  exact this
+  rwa [det_mulLeft_matrix, Fintype.card_fin] at this
 
 theorem glChart_rightModulus (g : GL (Fin n) F) :
     (glChart F n).rightModulus g = distribHaarChar F (Matrix.GeneralLinearGroup.det g) ^ n := by
@@ -81,8 +79,7 @@ theorem glChart_rightModulus (g : GL (Fin n) F) :
   ext
   rw [LinearEquiv.coe_det, Units.val_pow_eq_pow_val, Matrix.GeneralLinearGroup.val_det_apply]
   have := LinearMap.det_conj (LinearMap.mulRight F (g : Matrix (Fin n) (Fin n) F)) (entries F n)
-  rw [det_mulRight_matrix, Fintype.card_fin] at this
-  exact this
+  rwa [det_mulRight_matrix, Fintype.card_fin] at this
 
 theorem modularCharacter_GL : (modularCharacter : GL (Fin n) F →* ℝ≥0) = 1 := by
   ext g

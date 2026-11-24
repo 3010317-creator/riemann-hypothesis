@@ -153,8 +153,7 @@ theorem exists_finite_abelian_mem {y : Ω} (hy : y ∈ maximalAbelianExtension F
     obtain ⟨τ', rfl⟩ := AlgEquiv.restrictNormalHom_surjective (F := F) (K₁ := A) (E := Ω) τ
     have hc := hfix ⁅σ', τ'⁆ (Subgroup.mem_sup_right
       (Subgroup.commutator_mem_commutator (Subgroup.mem_top σ') (Subgroup.mem_top τ')))
-    rw [map_commutatorElement, commutatorElement_eq_one_iff_mul_comm] at hc
-    exact hc
+    rwa [map_commutatorElement, commutatorElement_eq_one_iff_mul_comm] at hc
   · rw [mem_fixedField_iff]
     intro g hg
     have hle : H ≤ MulAction.stabilizer (Ω ≃ₐ[F] Ω) y := by
@@ -202,8 +201,7 @@ theorem continuous_restrictAbPi : Continuous (restrictAbPi F Ω) :=
 
 theorem injective_restrictAbPi : Function.Injective (restrictAbPi F Ω) := by
   intro σ τ hστ
-  refine ext_restrictAb fun L _ _ => ?_
-  exact congrFun hστ ⟨L, inferInstance, inferInstance⟩
+  exact ext_restrictAb fun L _ _ => congrFun hστ ⟨L, inferInstance, inferInstance⟩
 
 theorem isClosedEmbedding_restrictAbPi : Topology.IsClosedEmbedding (restrictAbPi F Ω) := by
   have : ∀ L : finiteAbelianExtensions F Ω,
@@ -217,8 +215,7 @@ theorem continuous_iff_restrictAb {X : Type*} [TopologicalSpace X]
     Continuous f ↔ ∀ (L : IntermediateField F Ω) [FiniteDimensional F L] [IsAbelianGalois F L],
       Continuous fun x => restrictAb L (le_maximalAbelianExtension L) (f x) := by
   constructor
-  · intro hf L _ _
-    exact (continuous_restrictAb _ _).comp hf
+  · exact fun hf L _ _ => (continuous_restrictAb _ _).comp hf
   · intro h
     rw [isClosedEmbedding_restrictAbPi.isInducing.continuous_iff, continuous_pi_iff]
     intro L

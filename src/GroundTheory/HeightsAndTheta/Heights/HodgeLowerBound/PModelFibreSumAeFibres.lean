@@ -60,8 +60,7 @@ theorem analyticAt_segre_lift (x : M.Xc) (j : Fin M.atlas.n) {u : Fin e → ℂ}
   have hl := analyticAt_lift_chart M x j hu
   have hs : AnalyticAt ℂ (fun v => segre (modelLift M x ((M.atlas.chart j).symm v))) u := by
     refine analyticAt_pi_iff.mpr fun i => ?_
-    simp only [segre]
-    exact Finset.analyticAt_fun_prod _ fun k _ => analyticAt_pi_iff.mp hl _
+    simpa only [segre] using Finset.analyticAt_fun_prod _ fun k _ => analyticAt_pi_iff.mp hl _
   exact (LinearMap.toContinuousLinearMap Ψ).analyticAt _ |>.comp hs
 
 theorem analyticAt_modelQ (x : M.Xc) (j : Fin M.atlas.n) (hj : x ∈ (M.atlas.chart j).source)
@@ -123,8 +122,7 @@ theorem modelW_injOn : Set.InjOn (modelW M Ψ) {x | Ψ (segre (modelLift M x x))
     (Ψ (segre (modelLift M x x)) 0 * (Ψ (segre (modelLift M x' x')) 0)⁻¹)
     (by simp [show Ψ (segre (modelLift M x x)) 0 ≠ 0 from hx,
       show Ψ (segre (modelLift M x' x')) 0 ≠ 0 from hx']) h
-  rw [proj_lift] at this
-  exact this
+  rwa [proj_lift] at this
 
 theorem mem_fibre_data {y : Fin e → ℂ} {z : (Σ k, ι k) → ℂ} (hz : z ∈ mcPts P)
     (hΨz : Ψ (segre z) = Fin.cons 1 y) :
@@ -190,8 +188,7 @@ theorem image_bad_null {E : Set M.Xc}
         by_contra h
         exact hu.2.2 ⟨han j u hu.1 hu.2.1, h⟩
       have := abs_det_restrictScalars (fderiv ℂ (modelQ M Ψ ∘ (A.chart j).symm) u)
-      rw [h0, norm_zero, zero_pow two_ne_zero, abs_eq_zero] at this
-      exact this
+      rwa [h0, norm_zero, zero_pow two_ne_zero, abs_eq_zero] at this
 
 end ModelFibreSumAlmostEverywhere
 

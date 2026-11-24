@@ -110,8 +110,7 @@ theorem laplacian_line_eq_levi {φ : (J → ℂ) → ℝ} {z : J → ℂ} (hφ :
     rw [((L.hasFDerivAt).const_add z).fderiv]
     simp [hL]
   have hφ' : ContDiffAt ℝ 2 φ (z + L (fun _ => 0)) := by
-    rw [hτ0]
-    exact hφ
+    rwa [hτ0]
   rw [hcomp, ReciprocityTheory.AnForm.levi_comp _ hτ hφ', hτ0, hD] at h1
   linarith
 

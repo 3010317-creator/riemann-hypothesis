@@ -100,8 +100,7 @@ theorem rep_add {y : (Σ k, ι k) → Ω} {a : K → ℤ} {τ : ℕ} {s t : Ω} 
     linarith [hd k]
   · rw [map_add (f := _), map_mul, map_mul, map_mul, hy, hy']
     ring
-  · simp only [map_mul]
-    exact mul_ne_zero hz0 hz0'
+  · simpa only [map_mul] using mul_ne_zero hz0 hz0'
 
 end SmallSectionsSeparated
 
@@ -146,20 +145,17 @@ theorem SmallSectionsSeparated.proof (hG : GridSeparation.Statement) : SmallSect
     obtain ⟨dg, dh, hg, hh, hd, hy, hz⟩ := hgh s z
     refine ⟨dg, dh, (gh s z).1, (gh s z).2, hg, hh, hd, hy, hz, ?_⟩
     show val s z * _ = _
-    simp only [val]
-    exact div_mul_cancel₀ _ hz
+    simpa only [val] using div_mul_cancel₀ _ hz
   · intro s t _ _ hst
     have hu : ((s - t : chartLatNm y A.a τ) : Ω) ≠ 0 := by
-      intro h0
-      exact hst (sub_eq_zero.mp (Subtype.ext h0))
+      exact fun h0 => hst (sub_eq_zero.mp (Subtype.ext h0))
     obtain ⟨z, hzZ, dg, dh, g, h, hg, hh, hd, hy, hz, hb⟩ := hsep _ (s - t).2 hu
     refine ⟨⟨z, hzZ⟩, ?_⟩
     have hev : ev s ⟨z, hzZ⟩ - ev t ⟨z, hzZ⟩ = val (s - t) ⟨z, hzZ⟩ := by
       rw [← Pi.sub_apply, ← map_sub]
       rfl
     rw [hev, hval (s - t) ⟨z, hzZ⟩ g h ⟨dg, dh, hg, hh, hd, hy, hz⟩, norm_div]
-    rw [le_div_iff₀ (norm_pos_iff.mpr hz)]
-    exact hb
+    rwa [le_div_iff₀ (norm_pos_iff.mpr hz)]
 
 end
 

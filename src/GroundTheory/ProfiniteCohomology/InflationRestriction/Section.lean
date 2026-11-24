@@ -61,12 +61,10 @@ theorem sInter_mem_cosetSelectors (N : Subgroup G) (hN : IsClosed (N : Set G))
         exact ⟨t, ht, htx⟩
       · intro T
         exact ((hcS T.2).1.inter (isClosed_eq QuotientGroup.continuous_mk continuous_const)).isCompact
-      · intro T
-        exact (hcS T.2).1.inter (isClosed_eq QuotientGroup.continuous_mk continuous_const)
+      · exact fun T => (hcS T.2).1.inter (isClosed_eq QuotientGroup.continuous_mk continuous_const)
     obtain ⟨t, ht⟩ := hne'
     rw [Set.mem_iInter] at ht
-    refine ⟨t, Set.mem_sInter.2 fun T hT => (ht ⟨T, hT⟩).1, ?_⟩
-    exact (ht (Classical.arbitrary c)).2
+    exact ⟨t, Set.mem_sInter.2 fun T hT => (ht ⟨T, hT⟩).1, (ht (Classical.arbitrary c)).2⟩
   · intro t ht t' ht' h
     exact Subgroup.mem_iInf.2 fun T =>
       hKuniq T t (Set.mem_sInter.1 ht T T.2) t' (Set.mem_sInter.1 ht' T T.2) h
@@ -84,8 +82,7 @@ theorem exists_closed_transversal (N : Subgroup G) [N.Normal] (hN : IsClosed (N 
   suffices hK : ∀ x ∈ K, x = 1 by
     refine ⟨T, hTc, hKex, fun t ht t' ht' h => ?_⟩
     have := hK _ (hKuniq t ht t' ht' h)
-    rw [inv_mul_eq_one] at this
-    exact this
+    rwa [inv_mul_eq_one] at this
   intro x hxK
   by_contra hx1
 
@@ -114,8 +111,7 @@ theorem exists_closed_transversal (N : Subgroup G) [N.Normal] (hN : IsClosed (N 
       have h2 : ((t * k : G) : G ⧸ W) = (t : G ⧸ W) :=
         QuotientGroup.eq.mpr (by simpa using W.inv_mem (le_sup_left (b := (U : Subgroup G)) hkK))
       simp only [Set.mem_ofPred_eq] at htr ⊢
-      rw [h1, h2]
-      exact htr
+      rwa [h1, h2]
     · intro y
       obtain ⟨t, ht, hty⟩ := hKex y
       obtain ⟨w, hw⟩ := QuotientGroup.mk_out_eq_mul W t

@@ -66,9 +66,7 @@ theorem gns_extend (y₁ : ι → H₁) (y₂ : ι → H₂)
   have : CompleteSpace C₁ := hC₁.completeSpace_coe
   have : CompleteSpace C₂ := hC₂.completeSpace_coe
   have hn : ∀ f, ‖lcC y₂ C₂ h₂ ((LinearEquiv.refl ℂ (ι →₀ ℂ)) f)‖ = ‖lcC y₁ C₁ h₁ f‖ := by
-    intro f
-    show ‖(lcC y₂ C₂ h₂ f : H₂)‖ = ‖(lcC y₁ C₁ h₁ f : H₁)‖
-    exact norm_lc y₁ y₂ hI f
+    exact fun f => norm_lc y₁ y₂ hI f
   refine ⟨(LinearEquiv.refl ℂ (ι →₀ ℂ)).extendOfIsometry (lcC y₁ C₁ h₁) (lcC y₂ C₂ h₂)
     (dense_lcC y₁ C₁ h₁ hd₁) (dense_lcC y₂ C₂ h₂ hd₂) hn, ?_⟩
   intro f x hx

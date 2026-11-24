@@ -21,8 +21,6 @@ theorem VandermondeOfHomogeneous.proof : VandermondeOfHomogeneous.Statement := b
   intro σ R _ m v hv
   rw [← VandermondeOfHomogeneous.sum_card_Ioi m]
   unfold vandermondeOf
-  refine IsHomogeneous.prod _ _ _ fun i _ => ?_
-  refine IsHomogeneous.prod _ _ _ fun j _ => ?_
-  exact (hv i).sub (hv j)
+  exact IsHomogeneous.prod _ _ _ fun i _ => IsHomogeneous.prod _ _ _ fun j _ => (hv i).sub (hv j)
 
 end GroundTheory.Heights₂.Heights.RestTerms

@@ -65,8 +65,7 @@ theorem GeneralLinearCoordinates.proof : GeneralLinearCoordinates.Statement := b
       simp [e] at h1
       have h2 : x none * v none = 0 := by linear_combination h1
       exact (mul_eq_zero.mp h2).resolve_right hvt
-    rw [hL, hnone, zero_smul, add_zero] at hx
-    exact hx
+    rwa [hL, hnone, zero_smul, add_zero] at hx
   let A : (Option σ → ℂ) ≃L[ℂ] (Option σ → ℂ) :=
     (LinearEquiv.ofInjectiveEndo L hLinj).toContinuousLinearEquiv
   have hA : ∀ t : ℂ, A (pointWithLast 0 t) = t • v := by
@@ -98,7 +97,6 @@ theorem GeneralLinearCoordinates.proof : GeneralLinearCoordinates.Statement := b
       calc ‖t‖ * ‖v‖ < R * ‖v‖ := mul_lt_mul_of_pos_right ht hv0
         _ = r := div_mul_cancel₀ r hv0.ne'
     have hs : AnalyticAt ℂ (fun s : ℂ => s • v) t := analyticAt_id.smul analyticAt_const
-    show AnalyticAt ℂ (f ∘ fun s : ℂ => s • v) t
     exact AnalyticAt.comp (f := fun s : ℂ => s • v) (x := t) (hfr _ htv) hs
   have hnot : ¬ (∀ᶠ t in 𝓝 (0 : ℂ), f (t • v) = 0) := by
     intro h

@@ -60,11 +60,9 @@ variable {R : Type*} [CommRing R]
   (e : H ≃ₜ* G) (rho : Representation R G M) (rho' : Representation R H M)
   (hc : ∀ h m, rho (e h) m = rho' h m)
 
-theorem continuous_coe_iso : Continuous ((e : H →* G)) := by
-  exact e.continuous
+theorem continuous_coe_iso : Continuous ((e : H →* G)) := e.continuous
 
-theorem continuous_coe_iso_symm : Continuous ((e.symm : G →* H)) := by
-  exact e.symm.continuous
+theorem continuous_coe_iso_symm : Continuous ((e.symm : G →* H)) := e.symm.continuous
 
 include hc in
 theorem compat_symm : ∀ g m, (LinearMap.id (R := R) (M := M)) (rho' ((e.symm : G →* H) g) m) =

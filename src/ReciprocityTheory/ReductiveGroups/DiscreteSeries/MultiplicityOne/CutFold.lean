@@ -89,12 +89,10 @@ theorem cutFold {α β E : Type*} [MeasurableSpace α] [MeasurableSpace β] [Nor
   refine ⟨hint, ?_⟩
   have e1 : (∫ x, b x • ∫ s, φ (F s x) ∂ν ∂μ) = ∫ p, b p.2 • φ (F p.1 p.2) ∂(ν.prod μ) := by
     rw [integral_prod_symm _ hint]
-    refine integral_congr_ae (ae_of_all _ fun x => ?_)
-    exact (integral_smul (b x) fun s => φ (F s x)).symm
+    exact integral_congr_ae (ae_of_all _ fun x => (integral_smul (b x) fun s => φ (F s x)).symm)
   have hm : AEStronglyMeasurable (fun q : β × α => b (G q.1 q.2) • φ q.2)
       (Measure.map (fun p : β × α => (p.1, F p.1 p.2)) (ν.prod μ)) := by
-    rw [hΦ.map_eq]
-    exact hHm
+    rwa [hΦ.map_eq]
   have e2 : (∫ p, b p.2 • φ (F p.1 p.2) ∂(ν.prod μ)) =
       ∫ q, b (G q.1 q.2) • φ q.2 ∂(ν.prod μ) := by
     rw [integral_congr_ae hcomp]

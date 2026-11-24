@@ -51,8 +51,7 @@ theorem quotPart_eq_mk {c : K → ℤ} {m : MRingOver F ι ⧸ V} (hm : m ∈ KH
   · refine ⟨hc, ?_⟩
     have hm' : m ∈ Submodule.map (Ideal.Quotient.mkₐ F V).toLinearMap
         (Submodule.span F {p : MRingOver F ι | (∀ k, 0 ≤ c k) ∧ IsMultiHomog p (fun k => (c k).toNat)}) := by
-      rw [← Submodule.span_image]
-      exact hm
+      rwa [← Submodule.span_image]
     obtain ⟨p, hp, rfl⟩ := Submodule.mem_map.mp hm'
     refine ⟨p, ?_, rfl⟩
     clear hm h0 hm'
@@ -66,8 +65,7 @@ theorem quotPart_eq_mk {c : K → ℤ} {m : MRingOver F ι ⧸ V} (hm : m ∈ KH
     have e : {p : MRingOver F ι | (∀ k, 0 ≤ c k) ∧ IsMultiHomog p (fun k => (c k).toNat)} = ∅ :=
       Set.eq_empty_of_forall_notMem fun p hp => hc hp.1
     unfold KH.quotPart at hm
-    rw [e, Set.image_empty, Submodule.span_empty, Submodule.mem_bot] at hm
-    exact hm
+    rwa [e, Set.image_empty, Submodule.span_empty, Submodule.mem_bot] at hm
 
 theorem smul_quot (r : MRingOver F ι) (a : MRingOver F ι ⧸ V) : r • a = Ideal.Quotient.mk V r * a :=
   Algebra.smul_def r a
@@ -261,8 +259,7 @@ theorem res_eq_of_pair {M : Type*} [AddCommGroup M] [Module (MRingOver F ι) M] 
     have := h'.1 l
     rw [Function.update_self, ← Finset.card_pos, Finset.card_erase_of_mem hi, hother l hl] at this
     omega
-  · intro h'
-    exact absurd (Finset.mem_univ k) h'
+  · exact fun h' => absurd (Finset.mem_univ k) h'
 
 section Chain
 

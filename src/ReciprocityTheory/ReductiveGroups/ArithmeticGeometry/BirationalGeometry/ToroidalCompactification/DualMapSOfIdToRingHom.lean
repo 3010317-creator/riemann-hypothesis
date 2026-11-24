@@ -82,9 +82,7 @@ theorem dAway_ext {T : Type} [CommRing T] {χ₁ χ₂ : DualNumber (Localizatio
     simp only [RingHom.comp_apply, dAway_inl] at h1
     simpa using h1
   have heps : χ₁ (TrivSqZeroExt.inr 1) = χ₂ (TrivSqZeroExt.inr 1) := by
-    have h1 := RingHom.congr_fun h (TrivSqZeroExt.inr 1)
-    simp only [RingHom.comp_apply, dAway_eps] at h1
-    exact h1
+    simpa only [RingHom.comp_apply, dAway_eps] using RingHom.congr_fun h (TrivSqZeroExt.inr 1)
   refine RingHom.ext fun x => ?_
   have h1 := RingHom.congr_fun hinl x.fst
   have h2 := RingHom.congr_fun hinl x.snd
@@ -162,8 +160,7 @@ theorem glue_tan {n : ℕ} (s : Fin n → S) (hs : Ideal.span (Set.range s) = �
       ∀ k, spMap (dualMapS (Algebra.ofId S (Localization.Away (s k)))) ≫ v = w k := by
   have hs' : Ideal.span (Set.range (fun k => (TrivSqZeroExt.inl (s k) : DualNumber S))) = ⊤ := by
     have := congrArg (Ideal.map (TrivSqZeroExt.inlHom S S)) hs
-    rw [Ideal.map_span, Ideal.map_top, ← Set.range_comp] at this
-    exact this
+    rwa [Ideal.map_span, Ideal.map_top, ← Set.range_comp] at this
   let 𝒰 := (Scheme.affineOpenCoverOfSpanRangeEqTop (R := CommRingCat.of (DualNumber S)) _ hs').openCover
   let f : ∀ k, 𝒰.X k ⟶ G.left := fun k => Spec.map (CommRingCat.ofHom (toL (s k))) ≫ (w k).left
   have hf : ∀ k l, pullback.fst (𝒰.f k) (𝒰.f l) ≫ f k = pullback.snd (𝒰.f k) (𝒰.f l) ≫ f l := by
@@ -184,8 +181,7 @@ theorem glue_tan {n : ℕ} (s : Fin n → S) (hs : Ideal.span (Set.range s) = �
     have key : A.hom.comp (algebraMap (DualNumber S) (Ld (s k))) = B.hom.comp (algebraMap (DualNumber S) (Ld (s l))) :=
       congrArg CommRingCat.Hom.hom (Spec.map_injective e1)
     have hkey : (A.hom.comp (toL (s k))).comp (dAway (s k)) = (B.hom.comp (toL (s l))).comp (dAway (s l)) := by
-      rw [RingHom.comp_assoc, RingHom.comp_assoc, toL_comp, toL_comp]
-      exact key
+      rwa [RingHom.comp_assoc, RingHom.comp_assoc, toL_comp, toL_comp]
     have h := hc k l _ (A.hom.comp (toL (s k))) (B.hom.comp (toL (s l))) hkey
     show a ≫ pullback.fst (𝒰.f k) (𝒰.f l) ≫ Spec.map (CommRingCat.ofHom (toL (s k))) ≫ (w k).left =
       a ≫ pullback.snd (𝒰.f k) (𝒰.f l) ≫ Spec.map (CommRingCat.ofHom (toL (s l))) ≫ (w l).left

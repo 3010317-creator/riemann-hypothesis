@@ -161,8 +161,7 @@ theorem stdWt_injective (n : ℕ) : Function.Injective (stdWt n) := by
 theorem stdWt_card (Λ : Fin n → ℝ) (s : Fin n) :
     Nat.card {i : Fin n // Λ + stdWt n s = Λ + stdWt n i} = 1 := by
   rw [Nat.card_eq_one_iff_exists]
-  refine ⟨⟨s, rfl⟩, fun x => Subtype.ext ?_⟩
-  exact (stdWt_injective n (add_left_cancel x.2)).symm
+  exact ⟨⟨s, rfl⟩, fun x => Subtype.ext (stdWt_injective n (add_left_cancel x.2)).symm⟩
 
 theorem pieriStd_of_props (hcount : PieriCountStatement) (htens : TensHWStatement)
     (hsum : WeylSumStdStatement) (hdom : KTypeIntDomStatement) : PieriStdStatement := by
@@ -177,8 +176,7 @@ theorem pieriStd_of_props (hcount : PieriCountStatement) (htens : TensHWStatemen
     (KType.kHighest_w T) (KType.kSpan_eq_top T) (pieriSt_kRel_stdM ε) pieriSt_stdM_diag
   refine ⟨hc.2, fun s => ?_, hc.1⟩
   have h := (ht.2 (Λ + stdWt n s)).2
-  rw [stdWt_card Λ s] at h
-  exact h
+  rwa [stdWt_card Λ s] at h
 
 theorem pieriStd_of (hc : CompRedStatement) (hr : KRepRelStatement) : PieriStdStatement :=
   pieriStd_of_props (pieriCount_of hc hr) tensHW weylSumStd kTypeIntDom

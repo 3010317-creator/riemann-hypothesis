@@ -254,8 +254,7 @@ theorem short_basis (hD3 : IntegerApproximationCount (E := E)) (hep : 0 < ep0) :
     (Module.finrank_eq_card_basis bR).symm
   let bF := bR.reindex (Fintype.equivFinOfCardEq hcard)
   have hspanF : Submodule.span ℤ (Set.range bF) = Lat z ξ hξ := by
-    rw [Basis.range_reindex]
-    exact hspanR
+    rwa [Basis.range_reindex]
   let e := (stdOrthonormalBasis ℝ (VT (X := Y.toData) z ξ)).repr
   let b' := (bF.map (Bequiv z ξ)).map e.toLinearEquiv
   have hb'j : ∀ j, b' j = e (Bmap z ξ (bF j)) := fun j => by
@@ -395,8 +394,7 @@ variable [IsCMField E] {r : ℕ} (X : DataX E r)
 
 theorem exists_herm_ne (hr : 0 < r) : ∃ x ∈ X.L', ∃ y ∈ X.L', herm X.Gm x y ≠ 0 := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hcc_add : ∀ a b : E, cc (a + b) = cc a + cc b := fun a b => by
     unfold cc
     exact map_add _ a b
@@ -481,8 +479,7 @@ theorem trace_int (hr : 0 < r) (c : 𝓞 E) :
     rw [← hce, hc]
     simp
   have hJf0 : (J : FractionalIdeal (𝓞 E)⁰ E) ≠ 0 := by
-    rw [Ne, FractionalIdeal.coeIdeal_eq_zero]
-    exact hJ0
+    rwa [Ne, FractionalIdeal.coeIdeal_eq_zero]
   have hmemJf : ∀ c ∈ J, ((c : 𝓞 E) : E) ∈ (J : FractionalIdeal (𝓞 E)⁰ E) :=
     fun c hc => (FractionalIdeal.mem_coeIdeal _).mpr ⟨c, hc, rfl⟩
   have hinv : ∀ t ∈ (J : FractionalIdeal (𝓞 E)⁰ E)⁻¹, ∀ x ∈ X.L', t • x ∈ X.L' := by
@@ -550,8 +547,7 @@ theorem trace_int (hr : 0 < r) (c : 𝓞 E) :
       push_cast
       ring
     | zero =>
-      intro a
-      exact ⟨0, by simp⟩
+      exact fun a => ⟨0, by simp⟩
     | add c c' _ _ h1 h2 =>
       intro a
       obtain ⟨m1, hm1⟩ := h1 a
@@ -589,9 +585,7 @@ theorem two_le_normSq_mul_rootDisc (hr : 0 < r) : 2 ≤ (X.NC : ℝ) ^ 2 * X.k0 
     · have hc : ComplexEmbedding.conjugate σ ∈ X.Ψ := by
         by_contra h'
         exact hσ ((X.cmType σ).mpr h')
-      have h5 := X.ξ0_abs ⟨_, hc⟩
-      simp only [ComplexEmbedding.conjugate_coe_eq, Complex.norm_conj] at h5
-      exact h5
+      simpa only [ComplexEmbedding.conjugate_coe_eq, Complex.norm_conj] using X.ξ0_abs ⟨_, hc⟩
   have h2 := abs_norm_eq_pow habs
   have h3 : (1 : ℝ) ≤ |((Algebra.norm ℚ ((X.NC : E) ^ 2 * X.ξ0) : ℚ) : ℝ)| * dE E := by
     unfold dE
@@ -684,8 +678,7 @@ theorem noShortVectorLowerBound_holds : NoShortVectorLowerBound (E := E) := by
     have h1 := pow_le_pow_left₀ h0 hB 2
     have h2 : D ^ 2 * (4 * X.k0 ^ 2 * ep0) = (D * (2 * X.k0 * Real.sqrt ep0)) ^ 2 := by
       linear_combination (-(4 * D ^ 2 * X.k0 ^ 2)) * hsq
-    rw [h2]
-    exact h1
+    rwa [h2]
   have hx : 0 ≤ (X.NC : ℝ) ^ 2 * rdE E / ep0 :=
     div_nonneg (mul_nonneg (sq_nonneg _) hrd) hep.le
   have hM2 : frameIndexBound r (fdeg E) (dE E) (rdE E) X.NA X.NC ep0 ^ 2 =

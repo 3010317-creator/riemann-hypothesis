@@ -52,8 +52,7 @@ theorem exists_lt_norm_pow_sub_pow_lt {p : ℕ} [hp : Fact (Nat.Prime p)] {c : P
           dist_triangle_right _ _ _
       _ < ε / 2 + ε / 2 := add_lt_add h1 h2
       _ = ε := add_halves ε
-  rw [dist_eq_norm] at h3
-  exact h3
+  rwa [dist_eq_norm] at h3
 
 end GroundTheory.Variant₂.N1
 end -- clump:auto
@@ -133,8 +132,7 @@ theorem mem_unramifiedClosure_of_forall_approx {β : PadicAlgCl p}
     have e : σ β - β = σ (β - u) - (β - u) := by rw [map_sub, hσu]; ring
     rw [e]
     refine (norm_sub_le_max_of_ultrametric _ _).trans (max_le ?_ hbu)
-    rw [hnorm]
-    exact hbu
+    rwa [hnorm]
   by_contra hne
   have hpos : 0 < ‖σ β - β‖ := norm_pos_iff.2 (sub_ne_zero.2 hne)
   obtain ⟨m, hm⟩ := exists_pow_lt_of_lt_one hpos (norm_natCast_p_algCl_lt_one (p := p))
@@ -169,8 +167,7 @@ theorem exists_eq_of_pow_eq_self {ω : ℂ_[p]} {r : ℕ} (hr : 1 ≤ r) (h : ω
     eval_X, eval_C] at ha0
   have hxroot : x ^ n = 1 := by
     have := (mem_roots hmon.ne_zero).1 hx
-    rw [IsRoot, eval_sub, eval_pow, eval_X, eval_one, sub_eq_zero] at this
-    exact this
+    rwa [IsRoot, eval_sub, eval_pow, eval_X, eval_one, sub_eq_zero] at this
   exact ⟨x, mem_unramifiedClosure_of_pow_eq_one hnpos hcop hxroot, (sub_eq_zero.1 ha0).symm⟩
 
 section Approx
@@ -278,8 +275,7 @@ theorem exists_approx_of_pow_sub {z : ℂ_[p]} (hz : ‖z‖ ≤ 1) {r m : ℕ} 
     exact tendsto_nhds_unique h1 h2
   obtain ⟨v, hv, hvω⟩ := exists_eq_of_pow_eq_self hr hfix
   refine ⟨v, hv, ?_⟩
-  rw [hvω, ← norm_neg, neg_sub]
-  exact hωz
+  rwa [hvω, ← norm_neg, neg_sub]
 
 alias exists_lt_norm_pow_sub_lt := _root_.GroundTheory.Variant₂.N1.exists_lt_norm_pow_sub_pow_lt
 
@@ -300,8 +296,7 @@ theorem eventually_approx_pow {c : ℂ_[p]} (hc : ‖c‖ ≤ 1) (m : ℕ) :
   have hnear' : ‖(c' : ℂ_[p]) ^ p ^ k₁ - (c' : ℂ_[p]) ^ p ^ k₀‖ < δ := by
     have e : (c' : ℂ_[p]) ^ p ^ k₁ - (c' : ℂ_[p]) ^ p ^ k₀ = ((c' ^ p ^ k₁ - c' ^ p ^ k₀ : PadicAlgCl p) : ℂ_[p]) := by
       simp only [UniformSpace.Completion.coe_sub, PadicComplex.coe_eq, map_pow]
-    rw [e, PadicComplex.norm_extends]
-    exact hnear
+    rwa [e, PadicComplex.norm_extends]
   refine ⟨k₀, fun k hk => ?_⟩
   set r := k₁ - k₀
   have hr : 1 ≤ r := by omega

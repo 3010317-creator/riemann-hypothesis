@@ -108,8 +108,7 @@ theorem compRed_of (hR : KRepRelStatement) (hS : KRepStableStatement) (hP : KRep
     Formalism.REAL.kDecomp R.V n ε R.units ⊤ inferInstance hrel hunit (fun a b _ v _ => Submodule.mem_top)
   refine ⟨m, x, μ, fun i => ⟨(hx i).2.1, (hx i).2.2⟩, horth, htop, ?_, ?_, ?_⟩
   · exact finrank_eq_sum_of_orth _ horth htop
-  · intro i k v hv
-    exact (hS n ε R _).mpr (_root_.Formalism.REAL.compact_span_stable (x i)) k v hv
+  · exact fun i k v hv => (hS n ε R _).mpr (_root_.Formalism.REAL.compact_span_stable (x i)) k v hv
   · intro i
     obtain ⟨T, φ, h1, h2, h3⟩ := hP n ε R (μ i) (x i) (hx i).2.1 (hx i).2.2
     exact ⟨T, φ, φ.toLinearEquiv.finrank_eq, h1, h2, h3⟩
@@ -146,8 +145,7 @@ lemma hasDerivAt_mul_of_one {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] {f 
     (hf : HasDerivAt f a 0) (hg : HasDerivAt g b 0) (hf0 : f 0 = 1) (hg0 : g 0 = 1) :
     HasDerivAt (fun t => f t * g t) (a + b) 0 := by
   have h := hf.mul hg
-  rw [hf0, hg0, one_mul, mul_one] at h
-  exact h
+  rwa [hf0, hg0, one_mul, mul_one] at h
 
 theorem derivExists_of_split (h : DerivExistsAllPosStatement) (ε : Fin n → Bool)
     (p : Bool → ℕ) (emb : ∀ s, KG (fun _ : Fin (p s) => true) →* KG ε)
@@ -168,11 +166,7 @@ theorem derivExists_of_split (h : DerivExistsAllPosStatement) (ε : Fin n → Bo
   refine ⟨(dτs true).comp (blk true) + (dτs false).comp (blk false), fun X hX γ hγ => ?_⟩
   have hγeq : ∀ t, γ t = emb true (onepCurve _ (hblk true X hX) t) *
       emb false (onepCurve _ (hblk false X hX) t) := by
-    intro t
-    apply Subtype.ext
-    apply Subtype.ext
-    apply Units.ext
-    exact (hγ t).trans (hsplit X hX t).symm
+    exact fun t => Subtype.ext (Subtype.ext (Units.ext ((hγ t).trans (hsplit X hX t).symm)))
   have hd1 := hdτs true (blk true X) (hblk true X hX) (onepCurve _ (hblk true X hX))
     (toMK_onepCurve _ (hblk true X hX))
   have hd2 := hdτs false (blk false X) (hblk false X hX) (onepCurve _ (hblk false X hX))
@@ -501,8 +495,7 @@ theorem KRep.op_curve {ε : Fin n → Bool} (R : KRep ε)
     have key : R.op (γ s) * A * NormedSpace.exp (s • -A) +
         R.op (γ s) * (NormedSpace.exp (s • -A) * -A) = 0 := by
       rw [mul_assoc, (hcomm s).eq, mul_neg, mul_neg, add_neg_cancel]
-    rw [key] at this
-    exact this
+    rwa [key] at this
   have hconst : ∀ u : ℝ, R.op (γ u) * NormedSpace.exp (u • -A) = 1 := by
     intro u
     have := is_const_of_deriv_eq_zero (f := fun u => R.op (γ u) * NormedSpace.exp (u • -A))
@@ -518,8 +511,7 @@ theorem KRep.op_curve {ε : Fin n → Bool} (R : KRep ε)
       have key : NormedSpace.exp (s • -A) * -A * NormedSpace.exp (s • A) +
           NormedSpace.exp (s • -A) * (NormedSpace.exp (s • A) * A) = 0 := by
         rw [mul_assoc, neg_mul, mul_neg, hcF.eq, neg_add_cancel]
-      rw [key] at this
-      exact this
+      rwa [key] at this
     have := is_const_of_deriv_eq_zero
       (f := fun u : ℝ => NormedSpace.exp (u • -A) * NormedSpace.exp (u • A))
       (fun s => (hk s).differentiableAt) (fun s => (hk s).deriv) t 0
@@ -599,10 +591,8 @@ theorem KRep.stable_of_dτ_stable {ε : Fin n → Bool} (R : KRep ε) (W : Submo
 theorem kRepStable : KRepStableStatement := by
   intro n ε R W
   constructor
-  · intro h a b hab x hx
-    exact R.dτ_stable_of_stable W h a b hab x hx
-  · intro h
-    exact R.stable_of_dτ_stable W (fun a b hab x hx => h a b hab x hx)
+  · exact fun h a b hab x hx => R.dτ_stable_of_stable W h a b hab x hx
+  · exact fun h => R.stable_of_dτ_stable W (fun a b hab x hx => h a b hab x hx)
 
 end ReciprocityTheory.ChartRestriction.DS.HW
 end -- clump:auto

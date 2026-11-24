@@ -41,8 +41,7 @@ theorem mul_mem {b b' : K → ℤ} {s t : Ω} (hs : s ∈ chartLatQ y b 1) (ht :
     congr 1
     simp only [Pi.add_apply]
     ring
-  rw [heq]
-  exact h
+  rwa [heq]
 
 
 omit [∀ k, Fintype (ι k)] in
@@ -58,8 +57,7 @@ theorem pow_mem {e : K → ℤ} {σ : Ω} (hσ : σ ∈ chartLatQ y e 1) (n : �
       push_cast
       rw [add_smul, one_smul]
     rw [hb] at h
-    rw [pow_succ]
-    exact h
+    rwa [pow_succ]
 
 
 omit [∀ k, Fintype (ι k)] in
@@ -80,8 +78,7 @@ theorem pow_regular {c : ∀ k, ι k} {e : K → ℤ} {σ : Ω} (hσ : σ ∈ ch
       push_cast
       rw [add_smul, one_smul]
       abel
-    rw [hb, pow_succ, mul_assoc] at h
-    exact h
+    rwa [hb, pow_succ, mul_assoc] at h
 
 theorem finiteDimensional (hF : SectionLatticeFinite.Statement) (hy : ∀ k, ∃ i, y ⟨k, i⟩ ≠ 0) (b : K → ℤ) :
     FiniteDimensional ℚ (chartLatQ y b 1) := by
@@ -108,10 +105,8 @@ theorem mem_chartDivSec {c : ∀ k, ι k} (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) (b 
     LinearMap.mulLeft_apply]
   constructor
   · rintro ⟨t, ht, hts⟩
-    rw [← hts, mul_div_cancel_left₀ _ hm0]
-    exact ht
-  · intro h
-    exact ⟨_, h, mul_div_cancel₀ _ hm0⟩
+    rwa [← hts, mul_div_cancel_left₀ _ hm0]
+  · exact fun h => ⟨_, h, mul_div_cancel₀ _ hm0⟩
 
 theorem finrank_quot_add_le {c : ∀ k, ι k} (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) (b : K → ℤ)
     [FiniteDimensional ℚ (chartLatQ y b 1)] :
@@ -158,8 +153,7 @@ theorem finrank_quot_le {c : ∀ k, ι k} (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) {b 
     have h := mul_mem hτ hs
     rw [show d + (b - 1) = b + d - 1 by abel] at h
     show τ * (s : Ω) / _ ∈ _
-    rw [mul_div_assoc]
-    exact h
+    rwa [mul_div_assoc]
   have hinj : Function.Injective (Submodule.mapQ _ _ φ hle) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro x hx

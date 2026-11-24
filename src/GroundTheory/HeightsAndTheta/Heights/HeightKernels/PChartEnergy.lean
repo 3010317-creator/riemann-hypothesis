@@ -39,8 +39,7 @@ theorem exists_congr_eq_one {N : Matrix n n ℂ} (hN : N.PosDef) :
   · rw [det_mul, det_diagonal]
     refine mul_ne_zero (det_ne_zero_of_star_mul_self hU) (Finset.prod_ne_zero_iff.mpr fun j _ => ?_)
     have := Real.sqrt_pos.mpr (hμ j)
-    simp only [hd, ne_eq, Complex.ofReal_eq_zero, inv_eq_zero]
-    exact this.ne'
+    simpa only [hd, ne_eq, Complex.ofReal_eq_zero, inv_eq_zero] using this.ne'
   · have hstar : Uᴴ = star U := rfl
     rw [hN', conjTranspose_mul, diagonal_conjTranspose, hstar]
     calc diagonal (star d) * star U * (U * diagonal (fun j => (μ j : ℂ)) * star U) * (U * diagonal d)
@@ -80,8 +79,7 @@ theorem ChartEnergy.proof (hI : ChartEnergyLinearInvariant.Statement) (hD : Char
   have hVd : V.det ≠ 0 := det_ne_zero_of_star_mul_self hVV
   have hdiag : Vᴴ * M' * V = diagonal (fun j => (Λ j : ℂ)) := by
     have := hM'.1.conjStarAlgAut_star_eigenvectorUnitary
-    rw [Unitary.conjStarAlgAut_star_apply] at this
-    exact this
+    rwa [Unitary.conjStarAlgAut_star_apply] at this
   have hone : Vᴴ * 1 * V = 1 := by rw [Matrix.mul_one]; exact hVV
   have hterm : ∀ k, chartMixedEnergy M N k = chartMixedEnergy (diagonal fun j => (Λ j : ℂ)) 1 k := by
     intro k
@@ -95,8 +93,7 @@ theorem ChartEnergy.proof (hI : ChartEnergyLinearInvariant.Statement) (hD : Char
     rw [hM'def, det_congr, Complex.re_ofReal_mul]
   have hN're : 1 = Complex.normSq C.det * N.det.re := by
     have := congrArg Complex.re (det_congr C N)
-    rw [hCN, det_one, Complex.one_re, Complex.re_ofReal_mul] at this
-    exact this
+    rwa [hCN, det_one, Complex.one_re, Complex.re_ofReal_mul] at this
   have hprod : M'.det.re = ∏ j, Λ j := by
     rw [hM'.1.det_eq_prod_eigenvalues]
     change (∏ j, ((Λ j : ℝ) : ℂ)).re = _

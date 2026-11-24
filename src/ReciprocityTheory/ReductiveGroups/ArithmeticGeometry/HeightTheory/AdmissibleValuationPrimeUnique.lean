@@ -255,15 +255,12 @@ theorem comap_eq (hx1 : LeafSt.PlaceTrivialOrPositive 𝒜 d) (hx2 : LeafSt.Admi
   have hmem : w.comap (e : OmS (Ω c) d.D d.N →+* OmS (Ω c) d.D d.N) ∈ d.GoodP c (p.comap σ) := by
     obtain ⟨⟨⟨hfin, π, hπ⟩, hov⟩, a, ha, hwa⟩ := hw
     refine ⟨⟨⟨fun z hz => ?_, e.symm π, ?_⟩, fun y => ?_⟩, a, ha, ?_⟩
-    · show w (e z) ≠ ⊤
-      exact hfin _ ((map_ne_zero e).mpr hz)
+    · exact hfin _ ((map_ne_zero e).mpr hz)
     · show w (e (e.symm π)) = 1
-      rw [RingEquiv.apply_symm_apply]
-      exact hπ
+      rwa [RingEquiv.apply_symm_apply]
     · rw [hw', Ideal.mem_comap]
       exact hov (σ y)
-    · rw [hWres]
-      exact hwa
+    · rwa [hWres]
   rcases hx1 hd h c p hp w hw.1 with h0 | ⟨hadm, htriv, -⟩
   · obtain ⟨a, ha, hwa⟩ := hw.2
     exact absurd (h0 a ha) hwa
@@ -328,8 +325,7 @@ theorem HtGaussGen {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι]
     intro h0
     apply h2K
     apply (algebraMap K (Ω c)).injective
-    rw [map_ofNat, map_zero]
-    exact h0
+    rwa [map_ofNat, map_zero]
 
   have hsc : ∀ b, Submodule.IsPrincipal.generator p ∣
       BlockPoly.diag (BlockPoly.cb b (2 : K)) (Submodule.IsPrincipal.generator p) := by
@@ -354,8 +350,7 @@ theorem HtGaussGen {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι]
         (fun t => ReciprocityTheory.ChartRestriction.G.T0.GaussGen.lift_transl (d.jc c) (d.x c) a t))
   rw [hgen]
   unfold ReciprocityTheory.MultiplicativeHeights.IsMultiHomogeneous
-  intro s hs b
-  exact BlockPoly.multiHom_of_dvd hsc hsw htr s hs b
+  exact fun s hs b => BlockPoly.multiHom_of_dvd hsc hsw htr s hs b
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.GaussHeights.GaussGenericHeight.GaussGenericStatements.GaussGenericTheorem.HtGaussGen =====
@@ -520,8 +515,7 @@ theorem admissibleValuation_prime_subsingleton {K : Type} [Field K] [NumberField
     obtain ⟨α, hα⟩ := GaussValuationUniqueness.exists_smul_of_line hline (hd.w_mem j c) (hd.w_mem _ c) hbase
     rw [hb_def]
     simp only
-    rw [GaussValuationUniqueness.ratio_eq_of hbase hα]
-    exact hα
+    rwa [GaussValuationUniqueness.ratio_eq_of hbase hα]
   have hb : b (d.jc c) = 1 := GaussValuationUniqueness.ratio_eq_of hbase (one_smul _ _).symm
   have hb0 : b j0 ≠ 0 := by
     intro h0

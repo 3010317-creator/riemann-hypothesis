@@ -55,10 +55,8 @@ theorem adeleSingleS_apply_of_mem (a : (v : S) → v.1.adicCompletion K) (w : S)
   map_sum (RestrictedProduct.evalAddMonoidHom _ w.1) _ _]
   rw [Finset.sum_eq_single w]
   · exact finiteAdeleSingleAdd_apply_self w.1 (a w)
-  · intro u _ hu
-    exact finiteAdeleSingleAdd_apply_of_ne (fun h ↦ hu (Subtype.ext h).symm) _
-  · intro h
-    exact absurd (Finset.mem_univ w) h
+  · exact fun u _ hu => finiteAdeleSingleAdd_apply_of_ne (fun h ↦ hu (Subtype.ext h).symm) _
+  · exact fun h => absurd (Finset.mem_univ w) h
 
 theorem adeleSingleS_apply_of_notMem (a : (v : S) → v.1.adicCompletion K)
     {w : HeightOneSpectrum (𝓞 K)} (hw : w ∉ S) : adeleSingleS S a w = 0 := by
@@ -309,8 +307,7 @@ theorem mem_integralFiniteAdeles_iff_adeleAtS (x : FiniteAdeleRing (𝓞 K) K) :
     x ∈ integralFiniteAdeles (𝓞 K) K ↔ adeleAtS S x ∈ intS S ∧ x ∈ awayIntegral S := by
   rw [mem_integralFiniteAdeles]
   constructor
-  · intro h
-    exact ⟨fun v _ ↦ h v.1, fun v _ ↦ h v⟩
+  · exact fun h => ⟨fun v _ ↦ h v.1, fun v _ ↦ h v⟩
   · rintro ⟨h1, h2⟩ v
     by_cases hv : v ∈ S
     · exact h1 ⟨v, hv⟩ (Set.mem_univ _)

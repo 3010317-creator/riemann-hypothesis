@@ -113,8 +113,7 @@ theorem coe_field : ((s.field L hLK : OpenSubgroup G) : Subgroup G) =
   rfl
 
 theorem field_le : s.field L hLK ≤ K := by
-  intro x hx
-  exact frobeniusClosure_le K.isClosed s.mem (inf_le_left.trans hLK) hx
+  exact fun x hx => frobeniusClosure_le K.isClosed s.mem (inf_le_left.trans hLK) hx
 
 theorem elt_mem_field : s.elt ∈ ((s.field L hLK : OpenSubgroup G) : Subgroup G) :=
   mem_frobeniusClosure_self
@@ -142,8 +141,7 @@ omit [TotallyDisconnectedSpace G] in
 theorem exists_prime (K : OpenSubgroup G) :
     ∃ π : fixedModule A (K : Subgroup G), D.valuation K π = Multiplicative.ofAdd 1 := by
   have h := D.intCast_mem_range_val 1
-  rw [← D.range_valuation K, Int.cast_one] at h
-  exact h
+  rwa [← D.range_valuation K, Int.cast_one] at h
 
 section PrimeNorm
 

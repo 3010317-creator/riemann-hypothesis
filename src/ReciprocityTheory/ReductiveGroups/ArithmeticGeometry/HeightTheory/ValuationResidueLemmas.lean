@@ -106,8 +106,7 @@ theorem admissible_over_prime (hd : d.AxH 𝒜) (h : d.S1) (la : IsDedekindDomai
   let a : Fin (d.N + 1) → Ω c := fun j => ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c)
   have ha : ∀ j, d.w j c = a j • d.w (d.jc c) c := fun j => by
     obtain ⟨b, hb⟩ := hex j
-    rw [show a j = b from ValuationResidueLemmas.ratio_eq (hd.w_base c) hb]
-    exact hb
+    rwa [show a j = b from ValuationResidueLemmas.ratio_eq (hd.w_base c) hb]
   have ha_jc : a (d.jc c) = 1 := ValuationResidueLemmas.ratio_eq (hd.w_base c) (one_smul _ _).symm
   let f := algebraMap (Ω c) (OmS (Ω c) d.D d.N)
   obtain ⟨j0, -, hj0⟩ := Finset.univ.exists_min_image (fun j => w (f (a j))) Finset.univ_nonempty
@@ -295,8 +294,7 @@ theorem admissible_over_prime (hd : d.AxH 𝒜) (h : d.S1) (la : IsDedekindDomai
           ((algebraMap K (Ω c)).comp (algebraMap (𝓞 K) K)))
         (fun j => (u j : OmS (Ω c) d.D d.N)) P') := by
       rw [h0]
-      intro h
-      exact hα (h α)
+      exact fun h => hα (h α)
     let ψ : 𝓞 K →+* vRing w :=
       ((algebraMap (Ω c) (OmS (Ω c) d.D d.N)).comp
         ((algebraMap K (Ω c)).comp (algebraMap (𝓞 K) K))).codRestrict (vRing w) h1
@@ -333,8 +331,7 @@ theorem admissible_over_prime (hd : d.AxH 𝒜) (h : d.S1) (la : IsDedekindDomai
       rcases x with _ | ⟨i, k⟩
       · simp [q1, s, sImg, Fin.succAbove_cases_eq_insertNth, Fin.insertNth_apply_same]
       · simp [q1, s, sImg, Fin.succAbove_cases_eq_insertNth, Fin.insertNth_apply_succAbove]
-    intro P
-    exact DFunLike.congr_fun e P
+    exact fun P => DFunLike.congr_fun e P
   have hNorm : IsNormDiscrete (d.Wres c w) := by
     refine ⟨fun x hx => hNZ.1 _ ((map_ne_zero f).mpr hx), ?_⟩
     obtain ⟨π', hπ'⟩ := hNZ.2

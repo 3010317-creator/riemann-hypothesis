@@ -56,8 +56,7 @@ theorem map_pow_unitFiltrationUnits {n : ℕ}
     intro u
     have h := map_nsmul (logValBallHom p n hn) p (Additive.ofMul u)
     have h' := congrArg Subtype.val h
-    rw [← ofMul_pow] at h'
-    rw [coe_logValBallHom] at h'
+    rw [← ofMul_pow, coe_logValBallHom] at h'
     simpa [coe_logValBallHom, nsmul_eq_mul] using h'
   apply le_antisymm
   · rintro _ ⟨u, hu, rfl⟩
@@ -118,9 +117,7 @@ variable (p : ℕ) [hp : Fact p.Prime] [CharP 𝓀[K] p]
 
 omit hp in
 theorem not_dvd_card_residueField_sub_one : ¬ p ∣ Nat.card 𝓀[K] - 1 := by
-  intro h
-  apply natCast_card_residueField_sub_one_ne_zero K
-  exact (CharP.cast_eq_zero_iff 𝓀[K] p _).2 h
+  exact fun h => natCast_card_residueField_sub_one_ne_zero K ((CharP.cast_eq_zero_iff 𝓀[K] p _).2 h)
 
 theorem pow_card_sub_one_mem_unitFiltration (v : 𝒪[K]ˣ) :
     v ^ (Nat.card 𝓀[K] - 1) ∈ unitFiltration K 1 := by
@@ -195,8 +192,7 @@ theorem charP_residueField_of_valuativeExtension (F : Type*) [Field F] [Valuativ
   have hF : ¬ ((1 : F) ≤ᵥ (p : F)) := by
     intro h
     apply hq
-    rw [← ValuativeExtension.vle_iff_vle (A := ℚ_[p]) (B := F), map_one, map_natCast]
-    exact h
+    rwa [← ValuativeExtension.vle_iff_vle (A := ℚ_[p]) (B := F), map_one, map_natCast]
   have e : (((p : 𝒪[F]) : F)) = (p : F) := by push_cast; rfl
   rw [e, ← map_one (valuation F)]
   exact lt_of_not_ge fun h => hF ((Valuation.vle_iff_le (valuation F)).2 h)

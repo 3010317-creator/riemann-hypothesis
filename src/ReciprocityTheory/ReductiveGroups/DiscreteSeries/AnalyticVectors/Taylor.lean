@@ -95,12 +95,7 @@ theorem norm_orbit_sub_partial_le (hσ : IsURepOn (UJset ε) σ) (hD : IsDerived
           σ (NormedSpace.exp ((t₀ : ℂ) • X)) ((((actM E X) ^ m) v : D) : H)‖ ≤
       a (N + 1) * |t - t₀| ^ (N + 1) / ((N + 1).factorial : ℝ) := by
   rcases eq_or_ne t₀ t with rfl | htt
-  · have h0 : σ (NormedSpace.exp ((t₀ : ℂ) • X)) (v : H) - ∑ m ∈ range (N + 1),
-        (((t₀ - t₀) ^ m / (m.factorial : ℝ) : ℝ) : ℂ) •
-          σ (NormedSpace.exp ((t₀ : ℂ) • X)) ((((actM E X) ^ m) v : D) : H) = 0 := by
-      rw [Finset.sum_range_succ']
-      simp
-    rw [h0, norm_zero]
+  · rw [Finset.sum_range_succ']
     simp
   set R := σ (NormedSpace.exp ((t : ℂ) • X)) (v : H) - ∑ m ∈ range (N + 1),
         (((t - t₀) ^ m / (m.factorial : ℝ) : ℝ) : ℂ) •
@@ -117,8 +112,7 @@ theorem norm_orbit_sub_partial_le (hσ : IsURepOn (UJset ε) σ) (hD : IsDerived
         ((contDiff_dual_orbit hσ hD hX φ v k).contDiffAt) Set.left_mem_uIcc,
       ← iteratedDeriv_eq_iteratedFDeriv, hgd k v]
   have hf : ContDiffOn ℝ (N + 1) g (Set.uIcc t₀ t) := by
-    have := contDiff_dual_orbit hσ hD hX φ v (N + 1)
-    exact_mod_cast this.contDiffOn
+    exact_mod_cast (contDiff_dual_orbit hσ hD hX φ v (N + 1)).contDiffOn
   obtain ⟨x', -, heq⟩ := taylor_mean_remainder_lagrange_iteratedDeriv htt hf
   have hφsum : φ R = g t - taylorWithinEval g N (Set.uIcc t₀ t) t₀ t := by
 
@@ -128,21 +122,14 @@ theorem norm_orbit_sub_partial_le (hσ : IsURepOn (UJset ε) σ) (hD : IsDerived
     rw [Complex.coe_smul, φ.map_smul, hwithin k, smul_eq_mul, smul_eq_mul, div_eq_inv_mul]
   have hD1 : |iteratedDeriv (N + 1) g x'| ≤ a (N + 1) := by
     rw [hgd (N + 1) v]
-    calc |φ (σ (NormedSpace.exp ((x' : ℂ) • X)) ((((actM E X) ^ (N + 1)) v : D) : H))|
-        ≤ ‖φ‖ * ‖σ (NormedSpace.exp ((x' : ℂ) • X)) ((((actM E X) ^ (N + 1)) v : D) : H)‖ :=
-          φ.le_opNorm _
-      _ ≤ 1 * ‖((((actM E X) ^ (N + 1)) v : D) : H)‖ := by
-          rw [norm_orbit_apply hσ hX]
-          exact mul_le_mul_of_nonneg_right hφ1 (norm_nonneg _)
-      _ ≤ a (N + 1) := by rw [one_mul]; exact ha _
-  calc ‖R‖ = φ R := hφR.symm
-    _ = iteratedDeriv (N + 1) g x' * (t - t₀) ^ (N + 1) / ((N + 1).factorial : ℝ) := by
-        rw [hφsum, heq]
-    _ ≤ |iteratedDeriv (N + 1) g x' * (t - t₀) ^ (N + 1) / ((N + 1).factorial : ℝ)| :=
-        le_abs_self _
-    _ = |iteratedDeriv (N + 1) g x'| * |t - t₀| ^ (N + 1) / ((N + 1).factorial : ℝ) := by
-        rw [abs_div, abs_mul, abs_pow, Nat.abs_cast]
-    _ ≤ a (N + 1) * |t - t₀| ^ (N + 1) / ((N + 1).factorial : ℝ) := by gcongr
+    refine (φ.le_opNorm _).trans ?_
+    rw [norm_orbit_apply hσ hX]
+    exact (mul_le_of_le_one_left (norm_nonneg _) hφ1).trans (ha _)
+  refine hφR.symm.le.trans ?_
+  rw [hφsum, heq]
+  refine (le_abs_self _).trans ?_
+  rw [abs_div, abs_mul, abs_pow, Nat.abs_cast]
+  gcongr
 
 theorem hasSum_orbit_of_bound (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) (v : D) (a : ℕ → ℝ)

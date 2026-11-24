@@ -39,8 +39,7 @@ theorem quotPart_eq_mk {c : K → ℤ} {m : MRingOver S ι ⧸ V} (hm : m ∈ KH
   · refine ⟨hc, ?_⟩
     have hm' : m ∈ Submodule.map (Ideal.Quotient.mkₐ S V).toLinearMap
         (Submodule.span S {p : MRingOver S ι | (∀ k, 0 ≤ c k) ∧ IsMultiHomog p (fun k => (c k).toNat)}) := by
-      rw [← Submodule.span_image]
-      exact hm
+      rwa [← Submodule.span_image]
     obtain ⟨p, hp, rfl⟩ := Submodule.mem_map.mp hm'
     refine ⟨p, ?_, rfl⟩
     clear hm h0 hm'
@@ -54,8 +53,7 @@ theorem quotPart_eq_mk {c : K → ℤ} {m : MRingOver S ι ⧸ V} (hm : m ∈ KH
     have e : {p : MRingOver S ι | (∀ k, 0 ≤ c k) ∧ IsMultiHomog p (fun k => (c k).toNat)} = ∅ :=
       Set.eq_empty_of_forall_notMem fun p hp => hc hp.1
     unfold KH.quotPart at hm
-    rw [e, Set.image_empty, Submodule.span_empty, Submodule.mem_bot] at hm
-    exact hm
+    rwa [e, Set.image_empty, Submodule.span_empty, Submodule.mem_bot] at hm
 
 theorem quotPart_mul {c d : K → ℤ} {x y : MRingOver S ι ⧸ V} (hx : x ∈ KH.quotPart S V c)
     (hy : y ∈ KH.quotPart S V d) : x * y ∈ KH.quotPart S V (c + d) := by
@@ -342,8 +340,7 @@ theorem res_faces {M : Type} [AddCommGroup M] [Module (MRing ι) M] (z : KH.Cech
         have h5 := Finset.card_pos.mpr h3
         omega
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ k0) h
+    · exact fun h => absurd (Finset.mem_univ k0) h
   have e0 : KH.cechD ℤ ι M 0 z I = 0 := by rw [hz]; rfl
   rw [key, hs1, hs2, one_smul, neg_one_smul, ← sub_eq_add_neg, sub_eq_zero] at e0
   obtain ⟨A1, hA1⟩ := J1
@@ -490,8 +487,7 @@ theorem ZeroCocycleSection.proof : ZeroCocycleSection.Statement := by
       intro c hc
       obtain ⟨t, ht⟩ := exists_isRep hc (hloc (chartCell c))
       rw [val_chart_eq hz hloc hc0 hc hs ht]
-      simp only [Nat.cast_one, one_mul]
-      exact mem_chartRingZ_of_isRep hc ht
+      simpa only [Nat.cast_one, one_mul] using mem_chartRingZ_of_isRep hc ht
     refine ⟨s, hmem, funext fun J => ?_⟩
     by_cases hJ : ∀ k, y ⟨k, cellChart J k⟩ ≠ 0
     · have eJ := eq_chartCell (cellChart_mem J)

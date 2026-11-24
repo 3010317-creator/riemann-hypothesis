@@ -62,16 +62,14 @@ def LowU {n : ℕ} (N : Matrix (Fin n) (Fin n) ℂ) : Prop := (∀ i k : Fin n, 
 
 theorem LowU.det {n : ℕ} {N : Matrix (Fin n) (Fin n) ℂ} (h : LowU N) : N.det = 1 := by
   have hbt : N.BlockTriangular OrderDual.toDual := by
-    intro i j hij
-    exact h.1 i j (OrderDual.toDual_lt_toDual.mp hij)
+    exact fun i j hij => h.1 i j (OrderDual.toDual_lt_toDual.mp hij)
   rw [Matrix.det_of_lowerTriangular N hbt]
   simp [h.2]
 
 theorem LowU.inv {n : ℕ} {N : Matrix (Fin n) (Fin n) ℂ} (h : LowU N) : LowU N⁻¹ := by
   have hd : IsUnit N.det := by rw [h.det]; exact isUnit_one
   have hbt : N.BlockTriangular OrderDual.toDual := by
-    intro i j hij
-    exact h.1 i j (OrderDual.toDual_lt_toDual.mp hij)
+    exact fun i j hij => h.1 i j (OrderDual.toDual_lt_toDual.mp hij)
   letI : Invertible N := N.invertibleOfIsUnitDet hd
   have hinv : N⁻¹.BlockTriangular OrderDual.toDual := Matrix.blockTriangular_inv_of_blockTriangular hbt
   refine ⟨fun i k hik => hinv (OrderDual.toDual_lt_toDual.mpr hik), fun i => ?_⟩
@@ -184,12 +182,10 @@ private lemma Lm_mul_apply_eq_zero_of_lt {n : ℕ} (M : Matrix (Fin n) (Fin n) �
     symm
     apply Finset.sum_of_injOn (Fin.castLE i.isLt.le)
     · exact (Fin.castLE_injective _).injOn
-    · intro _ _
-      exact Finset.mem_coe.mpr (Finset.mem_univ _)
+    · exact fun _ _ => Finset.mem_coe.mpr (Finset.mem_univ _)
     · intro j _ hj
       rw [dite_eq_right]
-      intro hlt
-      exact hj ⟨⟨j.1, hlt⟩, Finset.mem_coe.mpr (Finset.mem_univ _), Fin.ext rfl⟩
+      exact fun hlt => hj ⟨⟨j.1, hlt⟩, Finset.mem_coe.mpr (Finset.mem_univ _), Fin.ext rfl⟩
     · intro j _
       split_ifs with h
       · rfl
@@ -206,13 +202,11 @@ theorem bF_mem {x : Frame X.Ψ r} (_hx : x ∈ X.dom) (hΔ : DeltaF X x0 x ≠ 0
   · show (Lm (Mx X x0 x τ) * Mx X x0 x τ).det ≠ 0
     rw [Matrix.det_mul, (Lm_lowU _).det, one_mul]
     exact hM (Fin.last r)
-  · show (Lm (Mx X x0 x τ) * Mx X x0 x τ) a c = 0
-    exact Lm_mul_apply_eq_zero_of_lt _ a c hca (hM a.castSucc)
+  · exact Lm_mul_apply_eq_zero_of_lt _ a c hca (hM a.castSucc)
 
 theorem nmat_zF (x : Frame X.Ψ r) : nmat X (zF X x0 x) = nF X x0 x := by
   refine nmat_eq_of X (zF X x0 x) (nF X x0 x) (fun τ => ?_) (fun τ a c h => ?_)
-  · show LowU ((Lm (Mx X x0 x τ))⁻¹)
-    exact (Lm_lowU _).inv
+  · exact (Lm_lowU _).inv
   · simp [zF]
 
 theorem split_eq (hx0 : IsOrth X x0) (x : Frame X.Ψ r) :

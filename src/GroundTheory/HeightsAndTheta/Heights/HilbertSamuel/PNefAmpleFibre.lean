@@ -101,8 +101,7 @@ theorem nefOnF_map_red (ℓ : ℕ) [Fact ℓ.Prime] (hGeo : GeoNumStatement ι) 
     refine ⟨Ideal.comap_isPrime _ W', isMultiHomogIdeal_comap _ hW'h, fun k => ?_⟩
     obtain ⟨i, hi⟩ := hW'r k
     refine ⟨i, ?_⟩
-    rw [hWdef, Ideal.mem_comap, map_X]
-    exact hi
+    rwa [hWdef, Ideal.mem_comap, map_X]
   have hPW : P ≤ W := Ideal.map_le_iff_le_comap.mp hle
   have hdim : ringKrullDim (MRing ι ⧸ W) = ((1 + Fintype.card K : ℕ) : WithBot ℕ∞) := by
     rw [← ringKrullDim_red ℓ hpW, hmap, hW'd]
@@ -110,8 +109,7 @@ theorem nefOnF_map_red (ℓ : ℕ) [Fact ℓ.Prime] (hGeo : GeoNumStatement ι) 
     intro h0
     have hg : Submodule.IsPrincipal.generator (W.comap (C : ℤ →+* MRing ι)) = 0 := Int.natAbs_eq_zero.mp h0
     have hmem : ((ℓ : ℕ) : ℤ) ∈ W.comap (C : ℤ →+* MRing ι) := by
-      rw [Ideal.mem_comap, map_natCast]
-      exact hpW
+      rwa [Ideal.mem_comap, map_natCast]
     rw [← Submodule.IsPrincipal.span_singleton_generator (W.comap (C : ℤ →+* MRing ι)), hg,
       Ideal.mem_span_singleton, zero_dvd_iff] at hmem
     exact (Fact.out : ℓ.Prime).ne_zero (by exact_mod_cast hmem)

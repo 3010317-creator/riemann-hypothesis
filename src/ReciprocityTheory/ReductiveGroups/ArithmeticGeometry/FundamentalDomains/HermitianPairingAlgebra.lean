@@ -58,14 +58,11 @@ variable {E : Type} [Field E] [NumberField E] [NumberField.IsCMField E]
 
 namespace HermitianPairingAlgebra
 
-lemma cc_cc (a : E) : cc (cc a) = a := by
-  exact IsCMField.complexConj_apply_apply E a
+lemma cc_cc (a : E) : cc (cc a) = a := IsCMField.complexConj_apply_apply E a
 
-lemma cc_mul (a b : E) : cc (a * b) = cc a * cc b := by
-  exact map_mul (IsCMField.complexConj E) a b
+lemma cc_mul (a b : E) : cc (a * b) = cc a * cc b := map_mul (IsCMField.complexConj E) a b
 
-lemma cc_add (a b : E) : cc (a + b) = cc a + cc b := by
-  exact map_add (IsCMField.complexConj E) a b
+lemma cc_add (a b : E) : cc (a + b) = cc a + cc b := map_add (IsCMField.complexConj E) a b
 
 lemma cc_sum {ι : Type*} (s : Finset ι) (f : ι → E) : cc (∑ i ∈ s, f i) = ∑ i ∈ s, cc (f i) := by
   exact map_sum (IsCMField.complexConj E) f s
@@ -127,8 +124,7 @@ theorem hermitian_lattice_pairing_duality : PerpQuotientSelfDual (E := E) := by
   · refine ⟨0, fun y hy => ?_⟩
     have hy0 : herm X.Gm y ξ = 0 := by
       have hm : pairL X.Gm ξ y ∈ X.L'.map (pairL X.Gm ξ) := Submodule.mem_map_of_mem hy
-      rw [hI, Submodule.mem_bot, pairL_apply] at hm
-      exact hm
+      rwa [hI, Submodule.mem_bot, pairL_apply] at hm
     rw [zero_mul, sub_zero, ← hsym x y]
     exact hintcc _ (hx y hy hy0)
   · let J : FractionalIdeal (𝓞 E)⁰ E :=

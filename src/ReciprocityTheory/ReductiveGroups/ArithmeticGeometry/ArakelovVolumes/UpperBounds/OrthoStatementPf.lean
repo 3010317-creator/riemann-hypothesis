@@ -69,9 +69,7 @@ theorem ortho_holds : OrthoStatement (E := E) := by
     have hM : (ReciprocityTheory.ChartRestriction.G.FD.mat (ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X x) τ).BlockTriangular id :=
       fun i j hij => (hBor τ).2 i j hij
     have hMi := Matrix.blockTriangular_inv_of_blockTriangular hM
-    refine ⟨?_, fun a c hca => hMi hca⟩
-    show ((ReciprocityTheory.ChartRestriction.G.FD.mat (ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X x) τ)⁻¹).det ≠ 0
-    exact (Matrix.isUnit_nonsing_inv_det _ hdet).ne_zero
+    exact ⟨(Matrix.isUnit_nonsing_inv_det _ hdet).ne_zero, fun a c hca => hMi hca⟩
   · funext τ
     have hdet : IsUnit (ReciprocityTheory.ChartRestriction.G.FD.mat (ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X x) τ).det :=
       isUnit_iff_ne_zero.mpr (hBor τ).1

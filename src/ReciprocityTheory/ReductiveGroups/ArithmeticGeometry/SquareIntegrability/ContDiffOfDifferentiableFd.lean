@@ -202,9 +202,7 @@ theorem iOf (hJ : JStatement) (hN : NStatement) : IStatement := by
   have hFspan := hspan hF
   rw [Finsupp.mem_span_image_iff_linearCombination] at hFspan
   obtain ⟨l, hl, hlF⟩ := hFspan
-  have hsub : l.support ⊆ K := by
-    have h := (Finsupp.mem_supported ℂ l).1 hl
-    exact Finset.coe_subset.1 h
+  have hsub : l.support ⊆ K := Finset.coe_subset.1 ((Finsupp.mem_supported ℂ l).1 hl)
   have hFsum : F = fun v => ∑ b ∈ K, l b * X.U P.q b (s0 X π s) v := by
     rw [← hlF, Finsupp.linearCombination_apply,
       Finsupp.sum_of_support_subset l hsub (fun b a => a • X.U P.q b (s0 X π s))
@@ -239,8 +237,7 @@ theorem iOf (hJ : JStatement) (hN : NStatement) : IStatement := by
     (fun b => ‖polyDeriv (P1 bs) dir (X.U P.q b (s0 X π s)) 0‖)
   have h1 : ‖polyDeriv (P1 bs) dir F 0‖ ^ 2 ≤ (∑ b ∈ K, ‖l b‖ ^ 2) *
       ∑ b ∈ K, ‖polyDeriv (P1 bs) dir (X.U P.q b (s0 X π s)) 0‖ ^ 2 := by
-    refine le_trans ?_ hcs
-    exact pow_le_pow_left₀ (norm_nonneg _) hnorm 2
+    exact le_trans (pow_le_pow_left₀ (norm_nonneg _) hnorm 2) hcs
   calc P.Jbound n * X.l2 1 s ^ n ≤ ‖polyDeriv (P1 bs) dir F 0‖ ^ 2 * X.l2 1 s ^ n :=
         mul_le_mul_of_nonneg_right hJF hLpos.le
     _ ≤ ((∑ b ∈ K, ‖l b‖ ^ 2) *

@@ -118,8 +118,7 @@ theorem isMaximal_comap_of_isMaximal_of_comap_eq {S' S : Type*} [CommRing S'] [C
     rw [Ideal.mem_comap, Ideal.mem_bot, Ideal.mem_comap]
     first
     | exact Ideal.Quotient.eq_zero_iff_mem
-  rw [← heq]
-  exact hbot
+  rwa [← heq]
 
 theorem exists_monic_aeval_mem_of_isMaximal {S : Type*} [CommRing S] [Algebra P S]
     [Algebra.FiniteType P S] (𝔑 : Ideal S) [𝔑.IsMaximal]
@@ -132,8 +131,7 @@ theorem exists_monic_aeval_mem_of_isMaximal {S : Type*} [CommRing S] [Algebra P 
   have key : Ideal.Quotient.mk 𝔑 (aeval x g) = aeval (Ideal.Quotient.mk 𝔑 x) g := by
     first
     | exact (Polynomial.aeval_algHom_apply (Ideal.Quotient.mkₐ P 𝔑) x g).symm
-  rw [key, Polynomial.aeval_def]
-  exact hgx
+  rwa [key, Polynomial.aeval_def]
 
 end ReciprocityTheory.CA
 end -- clump:auto
@@ -224,8 +222,7 @@ theorem exists_isWeaklyRegular_mvPolynomial {P : Type*} [CommRing P] [IsLocalRin
     · have hmap : rs.map (e.toRingEquiv : P → MvPolynomial (Fin 0) P) = rs.map MvPolynomial.C :=
         List.map_congr_left fun r _ => he r
       have := isWeaklyRegular_map_ringEquiv e.toRingEquiv hrs
-      rw [hmap] at this
-      exact this
+      rwa [hmap] at this
   | succ N ih =>
     let e : MvPolynomial (Fin (N + 1)) P ≃ₐ[P] Polynomial (MvPolynomial (Fin N) P) :=
       MvPolynomial.finSuccEquiv P N
@@ -241,15 +238,13 @@ theorem exists_isWeaklyRegular_mvPolynomial {P : Type*} [CommRing P] [IsLocalRin
       rw [hA, ← Ideal.comap_comap]
       show Ideal.comap _ (Ideal.comap (e.toRingEquiv : MvPolynomial (Fin (N + 1)) P →+* Polynomial (MvPolynomial (Fin N) P))
         (Ideal.map e.toRingEquiv 𝔑)) = _
-      rw [Ideal.comap_coe, Ideal.comap_map_of_bijective _ e.toRingEquiv.bijective]
-      exact h
+      rwa [Ideal.comap_coe, Ideal.comap_map_of_bijective _ e.toRingEquiv.bijective]
     let 𝔐 : Ideal (MvPolynomial (Fin N) P) := 𝔑'.comap (algebraMap (MvPolynomial (Fin N) P) (Polynomial (MvPolynomial (Fin N) P)))
     haveI : 𝔐.IsMaximal := isMaximal_comap_of_isMaximal_of_comap_eq (S' := MvPolynomial (Fin N) P) 𝔑' hc'
     have hc'' : 𝔐.comap MvPolynomial.C = maximalIdeal P := by
       show (𝔑'.comap (algebraMap (MvPolynomial (Fin N) P) (Polynomial (MvPolynomial (Fin N) P)))).comap
         (algebraMap P (MvPolynomial (Fin N) P)) = maximalIdeal P
-      rw [Ideal.comap_comap, ← IsScalarTower.algebraMap_eq]
-      exact hc'
+      rwa [Ideal.comap_comap, ← IsScalarTower.algebraMap_eq]
     obtain ⟨ss', hlen, hmem', hreg'⟩ := ih 𝔐 hc''
     obtain ⟨g, hg, hgN⟩ := exists_monic_aeval_mem_of_isMaximal 𝔑' hc' (Polynomial.X)
     rw [Polynomial.aeval_X_left_eq_map] at hgN
@@ -266,8 +261,7 @@ theorem exists_isWeaklyRegular_mvPolynomial {P : Type*} [CommRing P] [IsLocalRin
         · obtain ⟨s', hs', rfl⟩ := List.mem_map.1 h1
           exact Ideal.mem_comap.1 (hmem' s' hs')
         · rw [List.mem_singleton] at h1
-          rw [h1]
-          exact hgN
+          rwa [h1]
       obtain ⟨x, hx, rfl⟩ := (Ideal.mem_map_of_equiv e.toRingEquiv y).1 hy'
       simpa using hx
 
@@ -321,8 +315,7 @@ theorem height_eq_add_of_isCM_localization {S : Type*} [CommRing S] (𝔑 𝔔 :
     𝔑.height = 𝔔.height + (𝔑.map (Ideal.Quotient.mk 𝔔)).height := by
   have hdisj : Disjoint (𝔑.primeCompl : Set S) 𝔔 := by
     rw [Set.disjoint_left]
-    intro x hx hxQ
-    exact hx (hle hxQ)
+    exact fun x hx hxQ => hx (hle hxQ)
   haveI : (𝔔.map (algebraMap S (Localization.AtPrime 𝔑))).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint 𝔑.primeCompl _ 𝔔 ‹_› hdisj
   have h1 := h.height_add_ringKrullDim_quotient (𝔔.map (algebraMap S (Localization.AtPrime 𝔑)))

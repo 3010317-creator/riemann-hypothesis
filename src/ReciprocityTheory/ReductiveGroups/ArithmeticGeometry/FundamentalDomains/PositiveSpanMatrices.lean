@@ -292,8 +292,7 @@ lemma perp_of_ppos_zero {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (w : F
       X.gramPos x τ a b =
       Matrix.vecMul (Matrix.vecMul (fun b' => hermC τ.1 X.Gm w (col (mat x τ) (Fin.castLE X.p0_le b')))
         (X.gramPos x τ)⁻¹) (X.gramPos x τ) b := rfl
-  rw [e, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul _ hu, Matrix.vecMul_one] at h1
-  exact h1
+  rwa [e, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul _ hu, Matrix.vecMul_one] at h1
 
 end Ortho
 

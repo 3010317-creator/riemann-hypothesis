@@ -47,11 +47,9 @@ theorem infiniteEmbedding_mem_of_isOpen_of_isReal (H : Subgroup (IdeleGroup K))
     w.Completion →+* ℝ).toMonoidHom a
   have hr : 0 < (r : ℝ) := by
     change 0 < InfinitePlace.Completion.ringEquivRealOfIsReal hw (a : w.Completion)
-    rw [InfinitePlace.Completion.ringEquivRealOfIsReal_apply]
-    exact ha
+    rwa [InfinitePlace.Completion.ringEquivRealOfIsReal_apply]
   have hmem : r ∈ Hr := Subgroup.mem_of_isOpen_of_pos Hr hopen hr
-  rw [← realUnitsHom_surjective hw a]
-  exact hmem
+  rwa [← realUnitsHom_surjective hw a]
 
 theorem infiniteEmbedding_mem_of_isOpen_of_isComplex (H : Subgroup (IdeleGroup K))
     (hH : IsOpen (H : Set (IdeleGroup K))) {w : InfinitePlace K} (hw : w.IsComplex)
@@ -62,8 +60,7 @@ theorem infiniteEmbedding_mem_of_isOpen_of_isComplex (H : Subgroup (IdeleGroup K
   have hmem := Subgroup.mem_of_isOpen_complexUnits Hc hopen
     (Units.map (InfinitePlace.Completion.ringEquivComplexOfIsComplex hw :
       w.Completion →+* ℂ).toMonoidHom a)
-  rw [← complexUnitsHom_surjective hw a]
-  exact hmem
+  rwa [← complexUnitsHom_surjective hw a]
 
 theorem Modulus.exists_congruenceSubgroup_le (H : Subgroup (IdeleGroup K))
     (hH : IsOpen (H : Set (IdeleGroup K))) :

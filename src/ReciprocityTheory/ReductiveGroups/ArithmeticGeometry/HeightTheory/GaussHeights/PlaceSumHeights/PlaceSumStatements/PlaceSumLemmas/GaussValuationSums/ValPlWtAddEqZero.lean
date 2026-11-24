@@ -79,8 +79,7 @@ theorem valPl_log_lt {g : ℤᵐ⁰} (hg : g ≠ 0) : g < 1 ↔ log g < 0 := by
   rw [← not_le, ← not_le, ← log_le_log one_ne_zero hg, log_one]
 
 theorem valPl_mem_vRing {Φ : Type*} [Field Φ] (u : AddValuation Φ (WithTop ℤ)) (x : Φ) :
-    x ∈ vRing u ↔ 0 ≤ u x := by
-  exact Iff.rfl
+    x ∈ vRing u ↔ 0 ≤ u x := Iff.rfl
 
 theorem valPl_max_iff {Φ : Type*} [Field Φ] (V : ValuationSubring Φ)
     (u : AddValuation Φ (WithTop ℤ)) (hV : ∀ x, x ∈ V ↔ 0 ≤ u x) (y : V) :
@@ -360,9 +359,7 @@ theorem plOf_mem (Q : {Q : Ideal (integralClosure O L) // Q.IsMaximal}) :
   rfl
 
 theorem plOf_injective : Function.Injective (plOf O L) := by
-  intro Q Q' h
-  have hv := addv_inj h
-  exact Subtype.ext (congrArg HeightOneSpectrum.asIdeal hv)
+  exact fun Q Q' h => Subtype.ext (congrArg HeightOneSpectrum.asIdeal (addv_inj h))
 
 theorem plOf_nonneg {w : AddValuation L (WithTop ℤ)} (hw : w ∈ PlacesOver O L)
     (b : integralClosure O L) : 0 ≤ w (algebraMap (integralClosure O L) L b) := by
@@ -415,8 +412,7 @@ theorem plOf_e (Q : {Q : Ideal (integralClosure O L) // Q.IsMaximal}) {ϖ : O}
       Ideal.span {algebraMap O (integralClosure O L) ϖ} := by
     rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ, Ideal.map_span, Set.image_singleton]
   have hne : Ideal.map (algebraMap O (integralClosure O L)) (maximalIdeal O) ≠ ⊥ := by
-    rw [hmap, Ne, Ideal.span_singleton_eq_bot]
-    exact hb0
+    rwa [hmap, Ne, Ideal.span_singleton_eq_bot]
   rw [Ideal.IsDedekindDomain.ramificationIdx_eq_normalizedFactors_count (maximalIdeal O) Q.1 hne, hmap]
   rw [plOf, IsScalarTower.algebraMap_apply O (integralClosure O L) L, addv_alg _ hb0,
     HeightOneSpectrum.intValuation_if_neg _ hb0, log_exp, neg_neg]

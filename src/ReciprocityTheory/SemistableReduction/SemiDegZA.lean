@@ -173,8 +173,7 @@ theorem exists_adapted_majorant {K : Type} [Field K] [NumberField K] {r : ℕ} (
         _ = 1 := by rw [hYHY, hHH']
     refine ⟨?_, ?_⟩
     · have hD : D.PosDef := by
-        simp only [D, diagMet]
-        exact Matrix.posDef_diagonal_iff.2 fun i => by exact_mod_cast hpos i
+        simpa only [D, diagMet] using Matrix.posDef_diagonal_iff.2 fun i => by exact_mod_cast hpos i
       have hAu : IsUnit A := (Matrix.isUnit_iff_isUnit_det A).2
         (Matrix.isUnit_det_of_right_inverse e1)
       exact hD.conjTranspose_mul_mul_same (Matrix.mulVec_injective_of_isUnit hAu)
@@ -460,8 +459,7 @@ theorem mid_le_zero (hN : IntegralIndexStatement) (hA : AbsDetStatement) {K : Ty
             gcongr
             split_ifs with h
             · rw [hδmid σ a h.1 h.2]
-            · simp only [map_zero, norm_zero]
-              exact (hδ σ a).le
+            · simpa only [map_zero, norm_zero] using (hδ σ a).le
         _ = (∑ a : Fin r, ((δ σ a : ℝ) : ℂ) * ((‖(E *ᵥ v) a‖ ^ 2 : ℝ) : ℂ)).re := by
             rw [Complex.re_sum]
             refine Finset.sum_congr rfl fun a _ => ?_
@@ -473,9 +471,7 @@ theorem mid_le_zero (hN : IntegralIndexStatement) (hA : AbsDetStatement) {K : Ty
       ∑ σ : K →+* ℂ, Real.log (gramC (diagMet δ σ) σ c).det.re := by
     rw [← sum_log_norm_emb]
     refine Finset.sum_le_sum fun σ _ => Real.log_le_log ?_ (hσ σ)
-    apply norm_pos_iff.2
-    intro h0
-    exact hdet (σ.injective (by rw [h0, map_zero]))
+    exact norm_pos_iff.2 (fun h0 => hdet (σ.injective (by rw [h0, map_zero])))
   have hone : 1 ≤ (spanIdx C c : ℝ) :=
     Nat.one_le_cast.2 (Nat.one_le_iff_ne_zero.2 (spanIdx_ne_zero C c hCfg hc))
   have hidx' : 2 * Real.log (spanIdx C c : ℝ) ≤ Real.log |((Algebra.norm ℚ (hGram Sm c).det : ℚ) : ℝ)| := by
@@ -552,8 +548,7 @@ theorem pair_int {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermForm K 
       rw [this, mul_zero, mul_zero]
     · have : x a = 0 := hxc a (by have : (a : ℕ) ≠ j := fun e => ha (Fin.ext e); omega)
       rw [this, map_zero, zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ _) h'
+  · exact fun h' => absurd (Finset.mem_univ _) h'
 
 theorem mid_supp {K : Type} [Field K] [NumberField K] {r : ℕ} (m : ℕ)
     (Lp : Submodule (𝓞 K) (Fin r → K)) :
@@ -622,8 +617,7 @@ theorem cutSub_zero (K : Type) [Field K] [NumberField K] (r : ℕ) : cutSub K r 
 
 theorem cutSub_self (K : Type) [Field K] [NumberField K] (r : ℕ) : cutSub K r r = ⊤ := by
   rw [eq_top_iff]
-  intro x _ i hi
-  exact absurd i.isLt (by omega)
+  exact fun x _ i hi => absurd i.isLt (by omega)
 
 theorem flag_base {K : Type} [Field K] [NumberField K] {r : ℕ}
     (D : (K →+* ℂ) → Matrix (Fin r) (Fin r) ℂ) (Lp : Submodule (𝓞 K) (Fin r → K)) :
@@ -836,8 +830,7 @@ theorem kBasis_card {K : Type} [Field K] [NumberField K] {r k : ℕ}
     (hb : IsKBasisIn L b) : k = r := by
   have hspan : Submodule.span K (Set.range b) = ⊤ := by
     rw [eq_top_iff, ← hL.2, Submodule.span_le]
-    intro x hx
-    exact hb.2.2 x hx
+    exact fun x hx => hb.2.2 x hx
   have h := finrank_span_eq_card hb.2.1
   rw [hspan, finrank_top, Module.finrank_fin_fun, Fintype.card_fin] at h
   exact h.symm

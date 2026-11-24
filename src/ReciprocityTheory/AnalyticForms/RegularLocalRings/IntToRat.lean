@@ -134,10 +134,7 @@ lemma coheight_eQ_add_one_le (P : PrimeSpectrum (MvPolynomial σ ℤ)) (hP : ChZ
   let φ : MvPolynomial σ ℤ →+* MvPolynomial σ ℚ := MvPolynomial.map (Int.castRingHom ℚ)
   let g : PrimeSpectrum (MvPolynomial σ ℚ) → PrimeSpectrum (MvPolynomial σ ℤ) :=
     fun Q => ⟨Q.asIdeal.comap φ, inferInstance⟩
-  have hg : StrictMono g := by
-    intro a b hab
-    show a.asIdeal.comap φ < b.asIdeal.comap φ
-    exact comap_strictMono (show a.asIdeal < b.asIdeal from hab)
+  have hg : StrictMono g := fun a b hab => comap_strictMono (show a.asIdeal < b.asIdeal from hab)
   have hg0 : g (eQ P hP) = P := PrimeSpectrum.ext (comap_map_eq P.asIdeal hP)
   have hup : ∀ L : PrimeSpectrum (MvPolynomial σ ℚ), ∃ M, g L < M := by
     intro L
@@ -149,8 +146,7 @@ lemma coheight_eQ_add_one_le (P : PrimeSpectrum (MvPolynomial σ ℤ)) (hP : ChZ
     refine lt_of_le_of_ne hle ?_
     intro heq
     apply hnm
-    rw [heq]
-    exact hM
+    rwa [heq]
   have key : ∀ n : ℕ, (n : ℕ∞) ≤ Order.coheight (eQ P hP) →
       ((n + 1 : ℕ) : ℕ∞) ≤ Order.coheight P := by
     intro n hn
@@ -161,8 +157,7 @@ lemma coheight_eQ_add_one_le (P : PrimeSpectrum (MvPolynomial σ ℤ)) (hP : ChZ
     have hqh : q.head = P := by
       rw [RelSeries.head_snoc]
       show g p.head = P
-      rw [hph]
-      exact hg0
+      rwa [hph]
     have hql : q.length = n + 1 := by
       rw [← hpl]
       rfl
@@ -173,8 +168,7 @@ lemma coheight_eQ_add_one_le (P : PrimeSpectrum (MvPolynomial σ ℤ)) (hP : ChZ
       by_contra hne
       have h1 := key (Order.coheight P).toNat (by rw [h]; exact le_top)
       have h2 : (((Order.coheight P).toNat + 1 : ℕ) : ℕ∞) ≤ ((Order.coheight P).toNat : ℕ∞) := by
-        rw [ENat.coe_toNat hne]
-        exact h1
+        rwa [ENat.coe_toNat hne]
       have h3 := (Nat.cast_le (α := ℕ∞)).mp h2
       omega
     rw [htop]

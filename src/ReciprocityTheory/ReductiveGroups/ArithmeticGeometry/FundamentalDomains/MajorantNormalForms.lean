@@ -215,8 +215,7 @@ theorem hgram_posDef {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) :
     have h1 := Matrix.eq_zero_of_mulVec_eq_zero (hx τ).1 h0
     apply hv
     funext a
-    have h2 := congrFun h1 a
-    simpa using h2
+    simpa using congrFun h1 a
   have hpos := X.maj_pos hx τ hy0
   rw [maj_eq_lemma_4 X x τ] at hpos
   have him := Complex.conj_eq_iff_im.mp (Hf_conj_lemma_7 X x τ (∑ a, star (v a) • col (mat x τ) a)
@@ -247,8 +246,7 @@ theorem exists_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) :
       apply hLdet
       apply Matrix.det_eq_zero_of_row_eq_zero i
       intro j
-      have h1 := congrFun h0 j
-      simpa using h1
+      simpa using congrFun h0 j
     have hp := hH.dotProduct_mulVec_pos hx0
     have he : D i i = star (star (LDL.lowerInv hH i)) ⬝ᵥ (H *ᵥ star (LDL.lowerInv hH i)) := by
       rw [hDd]

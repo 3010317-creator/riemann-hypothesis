@@ -204,11 +204,9 @@ theorem subsingleton_tateZero_gr_iff (n : ℕ) :
     obtain ⟨x, rfl⟩ := S.grMk_surjective n q
     obtain ⟨y, hy, hxy⟩ := h x x.2 fun g => by
       have := hq g
-      rw [smul_grMk, grMk_eq_grMk_iff] at this
-      exact this
+      rwa [smul_grMk, grMk_eq_grMk_iff] at this
     refine ⟨S.grMk n ⟨y, hy⟩, ?_⟩
-    rw [tateNorm_grMk, eq_comm, grMk_eq_grMk_iff, coe_tateNorm_F]
-    exact hxy
+    rwa [tateNorm_grMk, eq_comm, grMk_eq_grMk_iff, coe_tateNorm_F]
 
 theorem subsingleton_tateNegOne_gr_iff (n : ℕ) :
     Subsingleton (TateNegOne G (S.gr n)) ↔
@@ -230,8 +228,7 @@ theorem subsingleton_tateNegOne_gr_iff (n : ℕ) :
     rw [tateNorm_grMk, grMk_eq_one_iff, coe_tateNorm_F] at hq
     obtain ⟨m, hm, hxm⟩ := h x x.2 hq
     refine ⟨fun g => S.grMk n ⟨m g, hm g⟩, ?_⟩
-    rw [augMap_grMk, eq_comm, grMk_eq_grMk_iff, coe_augMap_F]
-    exact hxm
+    rwa [augMap_grMk, eq_comm, grMk_eq_grMk_iff, coe_augMap_F]
 
 end StableFiltration
 

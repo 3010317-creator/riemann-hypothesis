@@ -138,8 +138,7 @@ theorem map_fourier_spanCols (e : H ≃ AddChar N C) (σ : H ≃ N) (Dm : Matrix
   · rintro ⟨k, rfl⟩
     refine ⟨_, ⟨σ k, rfl⟩, ?_⟩
     funext h
-    simp only [Matrix.submatrix_apply]
-    exact fourier_column_eq e σ Dm h (σ k)
+    simpa only [Matrix.submatrix_apply] using fourier_column_eq e σ Dm h (σ k)
 
 private theorem addChar_apply_ne_zero_dual_lattices (ψ : AddChar N C) (a : N) : ψ a ≠ 0 := by
   intro h0
@@ -183,8 +182,7 @@ theorem antipode_fourier (e : H ≃ AddChar N C) (he : ∀ h h', e (h + h') = e 
   · rw [mem_dualLat_iff_pairing_integral]
     intro f hf
     obtain ⟨r, hr⟩ := (mem_dualLat_iff_pairing_integral.1 hu) (fun x => f (-x)) (AA.antipode f hf)
-    refine ⟨r, hr.trans ?_⟩
-    exact Fintype.sum_equiv (Equiv.neg N) _ _ (fun a => by simp)
+    exact ⟨r, hr.trans (Fintype.sum_equiv (Equiv.neg N) _ _ (fun a => by simp))⟩
   · funext x
     simp only [fourier_apply']
     exact Fintype.sum_equiv (Equiv.neg N) _ _ (fun a => by simp [e_neg_apply e he])
@@ -349,8 +347,7 @@ private lemma det_sq (e : G ≃ AddChar G K) :
       (Fintype.card G : K) ^ Fintype.card G * (Equiv.Perm.sign (invPerm e) : K) := by
   have h := congrArg Matrix.det (transpose_mul_self e)
   rw [Matrix.det_mul, Matrix.det_transpose, Matrix.det_smul, Matrix.det_permutation] at h
-  rw [sq]
-  exact h
+  rwa [sq]
 
 end
 

@@ -73,10 +73,8 @@ theorem gauss_C_mem_iff (s : 𝓞 K) :
   · intro h
     have h' : (MvPolynomial.C s : ReciprocityTheory.ChartRestriction.G.T0.OT K D N) ∈
         Ideal.map (MvPolynomial.C : 𝓞 K →+* ReciprocityTheory.ChartRestriction.G.T0.OT K D N) la.asIdeal := h
-    have h0 := (MvPolynomial.mem_map_C_iff.mp h') 0
-    simpa using h0
-  · intro h
-    exact Ideal.mem_map_of_mem _ h
+    simpa using (MvPolynomial.mem_map_C_iff.mp h') 0
+  · exact fun h => Ideal.mem_map_of_mem _ h
 
 theorem gauss_unif : ∃ π ∈ la.asIdeal, π ≠ 0 ∧ ∃ s ∉ la.asIdeal,
     ∀ a ∈ la.asIdeal, ∃ b, s * a = π * b := by
@@ -153,8 +151,7 @@ theorem gauss_dvr : IsDiscreteValuationRing (Op D N la) := by
       (MvPolynomial.C π) ≠ 0 := by
     intro h0
     apply hπ0
-    have h1 := gauss_inj D N la (h0.trans (map_zero _).symm)
-    simpa using h1
+    simpa using gauss_inj D N la (h0.trans (map_zero _).symm)
   have hnf : ¬ IsField (ReciprocityTheory.ChartRestriction.G.T0.Op D N la) := by
     intro hF
     have hmem : algebraMap (ReciprocityTheory.ChartRestriction.G.T0.OT K D N) (ReciprocityTheory.ChartRestriction.G.T0.Op D N la)
@@ -177,8 +174,7 @@ theorem gauss_clear (p : KTp K D N) :
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors (𝓞 K))
     (p.support.image fun v => p.coeff v)
   have hint_r : ∀ v ∈ p.support, ∃ r : 𝓞 K, algebraMap (𝓞 K) K r = (b : 𝓞 K) • p.coeff v := by
-    intro v hv
-    exact RingHom.mem_rangeS.mp (hb _ (Finset.mem_image_of_mem _ hv))
+    exact fun v hv => RingHom.mem_rangeS.mp (hb _ (Finset.mem_image_of_mem _ hv))
   choose! g hg using hint_r
   refine ⟨∑ v ∈ p.support, MvPolynomial.monomial v (g v), b, nonZeroDivisors.coe_ne_zero b, ?_⟩
 

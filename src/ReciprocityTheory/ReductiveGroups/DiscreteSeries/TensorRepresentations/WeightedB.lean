@@ -83,8 +83,7 @@ theorem wd_hs_inv (g : Formalism.REAL.UJ ε) : S7.hs (Formalism.MainNotions.S.um
     rw [Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.conjTranspose_apply, norm_mul, norm_mul, norm_star]
     have h1 : ∀ a, ‖(if ε a = true then (1 : ℂ) else -1)‖ = 1 := fun a => by split_ifs <;> simp
     rw [h1, h1, one_mul, mul_one]
-  simp only [e]
-  exact Finset.sum_comm
+  simpa only [e] using Finset.sum_comm
 
 theorem wdF_add (f f' : Matrix (Fin n) (Fin n) ℂ → ℂ) : wdF ε (f + f') = wdF ε f + wdF ε f' := by
   funext g; simp [wdF, mul_add]
@@ -136,8 +135,7 @@ theorem wd_key (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0) (i : Fin n) (w :
         exact (hx l).add (hy l)
       zero_mem' := by
         intro l
-        simp only [map_zero, wdF_zero]
-        exact MemLp.zero
+        simpa only [map_zero, wdF_zero] using MemLp.zero
       smul_mem' := by
         intro c x hx l
         simp only [Set.mem_ofPred_eq, map_smul, wdF_smul] at *
@@ -150,16 +148,14 @@ theorem wd_key (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0) (i : Fin n) (w :
       funext g
       simp only [wdF]
       rw [wdCoef_eword w x l _ g.2]
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   have hstab : ∀ a b, ∀ v ∈ Q, smE ε (rreg ε) a b v ∈ Q := by
     intro a b v hv l
     show MemLp _ 2 _
     rw [wdWord_append]
     exact hv _
   have hle : genSub (smE ε (rreg ε)) (datumV ε Ψ v₀) ≤ Q := sInf_le ⟨hdat, hstab⟩
-  intro v hv
-  exact hle hv []
+  exact fun v hv => hle hv []
 
 theorem wd_psi_memLp (hP : IsPsiFor ε lam T Ψ)
     (hΨw : ∀ μ : Measure (S7.UJ ε), μ.IsHaarMeasure →
@@ -218,7 +214,6 @@ theorem wd_gen_datum (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ :
     simp only [Pi.star_apply, Function.comp_apply, wdF, wdCoef_apply, star_mul', RCLike.star_def,
       Complex.conj_ofReal]
     rw [wd_hs_inv, inner_conj_symm, wd_rreg_adj, inv_inv]
-  rw [e] at hinv
-  exact hinv
+  rwa [e] at hinv
 
 end ReciprocityTheory.ChartRestriction.DS

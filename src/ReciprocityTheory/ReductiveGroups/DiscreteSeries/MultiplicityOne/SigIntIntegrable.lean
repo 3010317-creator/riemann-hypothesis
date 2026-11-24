@@ -65,8 +65,7 @@ theorem gv_closed : IsClosed (GV k r) := by
   unfold GV UH Hpk
   exact isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul continuous_id) continuous_const
 
-theorem cont_of : Continuous (fun g : Mt k r => (Matrix.of g : Mat k r)) := by
-  exact continuous_id
+theorem cont_of : Continuous (fun g : Mt k r => (Matrix.of g : Mat k r)) := continuous_id
 
 theorem gv_measurable : @MeasurableSet (Mt k r) _ (GV k r) := by
   exact (show IsClosed (X := Mt k r) (GV k r) from gv_closed).measurableSet

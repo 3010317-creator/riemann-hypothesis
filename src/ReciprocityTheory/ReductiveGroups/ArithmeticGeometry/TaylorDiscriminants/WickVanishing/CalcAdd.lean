@@ -134,9 +134,7 @@ theorem addition_linear : AddLinSt := by
   have h1 := congrArg (ev b) hf
   rw [ev_add' b hb0, hA, hB 0, hB 1] at h1
   refine coeff_zero_of_scale (fun _ => 1) f ?_ n ?_
-  · rw [two_smul]
-    exact h1
-  · rw [← sum_degree]
-    exact hn
+  · rwa [two_smul]
+  · rwa [← sum_degree]
 
 end ReciprocityTheory.ChartRestriction.G.TB.WickVanishing

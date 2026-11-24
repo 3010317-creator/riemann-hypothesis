@@ -132,8 +132,7 @@ lemma contDiffOn_phiQ (μ : Fin n → ℤ) : ContDiffOn ℂ ω (_root_.Reciproci
   have hg : ContDiffOn ℂ ω (fun y : 𝕄 => lead ((i : ℕ) + 1) y) (OmegaSet n : Set 𝕄) :=
     (contDiff_lead _).contDiffOn
   rcases Int.eq_nat_or_neg (-(μ i - muNext μ i)) with ⟨k, hk | hk⟩
-  · simp only [hk, zpow_natCast]
-    exact hg.pow k
+  · simpa only [hk, zpow_natCast] using hg.pow k
   · simp only [hk, _root_.zpow_neg, zpow_natCast]
     exact (hg.pow k).inv fun y hy => pow_ne_zero _ (hne y hy)
 

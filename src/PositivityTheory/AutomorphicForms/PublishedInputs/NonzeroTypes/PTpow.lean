@@ -82,8 +82,7 @@ theorem finsum_rep_of_infinite {ι : Type} [Infinite ι] (g : ι → GL (Fin n) 
   · apply finsum_of_infinite_support
     have : Function.support (fun i => π (g i) v) = Set.univ := by
       ext i
-      simp only [Function.mem_support, Set.mem_univ, iff_true]
-      exact rep_apply_ne_zero π (g i) hv
+      simpa only [Function.mem_support, Set.mem_univ, iff_true] using rep_apply_ne_zero π (g i) hv
     rw [this]
     exact Set.infinite_univ
 
@@ -99,8 +98,7 @@ theorem zEl_val (ϖ : kˣ) : ((G.zEl ϖ : GL (Fin n) k) : Matrix (Fin n) (Fin n)
     rw [zEl, leviEmb_apply_same]
     simp [Grp.bl, Matrix.diagonal_apply, Matrix.scalar_apply, Units.coe_map, Matrix.diagonal_pow, Pi.pow_apply]
   · rw [zEl, leviEmb_apply_ne k G.e _ hab, Matrix.diagonal_apply_ne]
-    intro h
-    exact hab (by simpa using congrArg (fun t => (G.e.symm t).1) h)
+    exact fun h => hab (by simpa using congrArg (fun t => (G.e.symm t).1) h)
 
 theorem zEl_inv_val (ϖ : kˣ) : (((G.zEl ϖ)⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) =
     diagonal (fun i => ((ϖ : k) ^ (G.s - 1 - (G.bl i : ℕ)))⁻¹) := by
@@ -300,8 +298,7 @@ theorem tz_zero (ϖ : kˣ) (x : V) (hfix : ∀ h ∈ G.NO, π h x = x) : G.Tz π
   haveI := sub0 G ϖ
   haveI : Unique (↥G.NO ⧸ G.zN ϖ 0) := uniqueOfSubsingleton (QuotientGroup.mk 1)
   unfold Tz
-  rw [finsum_unique]
-  rw [pow_zero, map_one]
+  rw [finsum_unique, pow_zero, map_one]
   exact hfix _ (Subtype.prop _)
 
 theorem tz_succ {ϖ : kˣ} (hϖ : IsUnif ϖ) (x : V) (hfix : ∀ h ∈ G.NO, π h x = x) (m : ℕ)

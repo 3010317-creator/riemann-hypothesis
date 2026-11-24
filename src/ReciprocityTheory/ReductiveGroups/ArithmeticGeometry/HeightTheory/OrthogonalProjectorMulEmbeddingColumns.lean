@@ -125,8 +125,7 @@ theorem isUnit_det_embeddingGram (σ : K →+* ℂ) {b : Fin k → Fin r → K} 
     funext j
     exact sub_eq_zero.mp (h2 j)
   have hker : LinearMap.ker ((hBm σ b)ᴴ * hBm σ b).mulVecLin = ⊥ := by
-    rw [Matrix.ker_mulVecLin_conjTranspose_mul_self, LinearMap.ker_eq_bot]
-    exact hinj
+    rwa [Matrix.ker_mulVecLin_conjTranspose_mul_self, LinearMap.ker_eq_bot]
   have hinj2 : Function.Injective ((hBm σ b)ᴴ * hBm σ b).mulVec := LinearMap.ker_eq_bot.mp hker
   exact (Matrix.isUnit_iff_isUnit_det _).mp (Matrix.mulVec_injective_iff_isUnit.mp hinj2)
 
@@ -187,12 +186,10 @@ theorem orthogonalProjector_mulVec_ne_zero (σ : K →+* ℂ) {b : Fin k → Fin
   have hv : (fun i => σ (q i)) =
       (hBm σ b * ((hBm σ b)ᴴ * hBm σ b)⁻¹ * (hBm σ b)ᴴ) *ᵥ fun i => σ (q i) := by
     unfold hPm at h0
-    rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at h0
-    exact h0
+    rwa [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero] at h0
   have hv2 : (fun i => σ (q i)) =
       hBm σ b *ᵥ (((hBm σ b)ᴴ * hBm σ b)⁻¹ *ᵥ ((hBm σ b)ᴴ *ᵥ fun i => σ (q i))) := by
-    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]
-    exact hv
+    rwa [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]
   rw [hv2, embeddingColumns_mulVec]
   exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
 

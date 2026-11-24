@@ -33,22 +33,19 @@ theorem DegZeroLocQuot.proof : DegZeroLocQuot.Statement := by
     · intro c
       refine ⟨0, C c, 1, isWeightedHomogeneous_C _ c, isWeightedHomogeneous_one F _, ?_, ?_, ?_⟩
       · exact (Ideal.ne_top_iff_one P).mp (Ideal.IsPrime.ne_top inferInstance)
-      · intro W hW
-        exact (Ideal.ne_top_iff_one W).mp (h𝒲 W hW).ne_top
+      · exact fun W hW => (Ideal.ne_top_iff_one W).mp (h𝒲 W hW).ne_top
       · rw [map_one, div_one, hφ, RingHom.comp_apply,
           IsScalarTower.algebraMap_apply F (MRing ι F ⧸ P) (FractionRing (MRing ι F ⧸ P))]
         rfl
     · rintro y z - - ⟨b, f, g, hf, hg, hgP, hgW, rfl⟩ ⟨b', f', g', hf', hg', hgP', hgW', rfl⟩
       refine ⟨b + b', f * g' + g * f', g * g', (hf.mul hg').add (hg.mul hf'), hg.mul hg', ?_, ?_, ?_⟩
       · exact fun h => ((Ideal.IsPrime.mem_or_mem inferInstance h).elim hgP hgP')
-      · intro W hW h
-        exact ((h𝒲 W hW).mem_or_mem h).elim (hgW W hW) (hgW' W hW)
+      · exact fun W hW h => ((h𝒲 W hW).mem_or_mem h).elim (hgW W hW) (hgW' W hW)
       · rw [div_add_div _ _ (hne g hgP) (hne g' hgP'), map_add (f := _), map_mul, map_mul, map_mul]
     · rintro y z - - ⟨b, f, g, hf, hg, hgP, hgW, rfl⟩ ⟨b', f', g', hf', hg', hgP', hgW', rfl⟩
       refine ⟨b + b', f * f', g * g', hf.mul hf', hg.mul hg', ?_, ?_, ?_⟩
       · exact fun h => ((Ideal.IsPrime.mem_or_mem inferInstance h).elim hgP hgP')
-      · intro W hW h
-        exact ((h𝒲 W hW).mem_or_mem h).elim (hgW W hW) (hgW' W hW)
+      · exact fun W hW h => ((h𝒲 W hW).mem_or_mem h).elim (hgW W hW) (hgW' W hW)
       · rw [div_mul_div_comm, map_mul, map_mul]
   exact key
 

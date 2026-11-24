@@ -87,8 +87,7 @@ theorem gb_segre_injective : Function.Injective (segre (ι := GlobalTheory κ)) 
   intro z z' h
   funext p
   have := congrFun h (fun _ => p.2)
-  rw [gb_segre_apply, gb_segre_apply] at this
-  exact this
+  rwa [gb_segre_apply, gb_segre_apply] at this
 
 theorem gb_mcPts_eq (P : Ideal (MRing (GlobalTheory κ))) : mcPts P = pts P := by
   ext z
@@ -96,8 +95,7 @@ theorem gb_mcPts_eq (P : Ideal (MRing (GlobalTheory κ))) : mcPts P = pts P := b
   refine and_congr_left' ⟨fun h h0 => ?_, fun h k => ?_⟩
   · obtain ⟨i, hi⟩ := h ()
     exact hi (congrFun h0 _)
-  · by_contra hne
-    push Not at hne
+  · by_contra! hne
     exact h (funext fun p => hne p.2)
 
 theorem gb_fibre_eq (x : Ix κ → Ω) (e : Fin (D + 1) → Ix κ) (y : Fin D → ℂ) :
@@ -173,8 +171,7 @@ theorem gb_exists_scale {Δ : MvPolynomial (Fin (D + 1)) ℂ} (hΔ : Δ ≠ 0) :
     ∃ c : ℂ, c ≠ 0 ∧ ∃ y₀ : Fin D → ℂ, eval (c • (Fin.cons 1 y₀ : Fin (D + 1) → ℂ)) Δ ≠ 0 := by
   have h1 : Δ * X 0 ≠ 0 := mul_ne_zero hΔ (X_ne_zero _)
   obtain ⟨w, hw⟩ : ∃ w, eval w (Δ * X 0) ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     exact h1 (MvPolynomial.funext (fun w => by simpa using hne w))
   rw [eval_mul, eval_X] at hw
   have hw0 : w 0 ≠ 0 := right_ne_zero_of_mul hw
@@ -277,7 +274,6 @@ theorem gb_isGoodProj {x : Ix κ → Ω} {e : Fin (D + 1) → Ix κ} (hfr : IsPr
   rw [gbPsi_segre]
   rw [gb_mcPts_eq] at hz
   obtain ⟨k, hk⟩ := exists_proj_ne_zero hfr hz
-  intro h0
-  exact hk (congrFun h0 k)
+  exact fun h0 => hk (congrFun h0 k)
 
 end ReciprocityTheory.ChartRestriction.G.ArakelovGeometry

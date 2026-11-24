@@ -256,16 +256,14 @@ theorem dim_add_card_le {κ : K → K'} {v : (Σ k, ι k) → (Σ k', ι' k')} (
   by_cases hh : IsHorizontal W'
   · have hh' : IsHorizontal (imageZ v W') := by
       unfold IsHorizontal
-      rw [comap_C_imageZ]
-      exact hh
+      rwa [comap_C_imageZ]
     have hD := IntDomainDim.proof (MRing ι' ⧸ W') (algebraMap_injective_of_horizontal W' hh)
     have hC := IntDomainDim.proof (MRing ι ⧸ imageZ v W') (algebraMap_injective_of_horizontal _ hh')
     have ht := trdeg_add_card_le (S := ℤ) hv W' hW'.2.1 hW'.2.2 (algebraMap_injective_of_horizontal _ hh')
     have ht' : Cardinal.toENat (Algebra.trdeg ℤ (MRing ι ⧸ imageZ v W')) + Fintype.card (FibreBlock κ) ≤
         Cardinal.toENat (Algebra.trdeg ℤ (MRing ι' ⧸ W')) := by
       have := OrderHomClass.mono Cardinal.toENat ht
-      rw [map_add (f := _), Cardinal.toENat_nat] at this
-      exact this
+      rwa [map_add (f := _), Cardinal.toENat_nat] at this
     rw [hD, hC]
     have h2 : Cardinal.toENat (Algebra.trdeg ℤ (MRing ι ⧸ imageZ v W')) + 1 + Fintype.card (FibreBlock κ) ≤
         Cardinal.toENat (Algebra.trdeg ℤ (MRing ι' ⧸ W')) + 1 := by
@@ -300,8 +298,7 @@ theorem dim_add_card_le {κ : K → K'} {v : (Σ k, ι k) → (Σ k', ι' k')} (
     have hle : sC + Fintype.card (FibreBlock κ) ≤ sD := by exact_mod_cast ht
     have hDdim : ringKrullDim (MRing ι' ⧸ W') = sD := by rw [← ringKrullDim_red p hp', hsD1]
     have hCdim : ringKrullDim (MRing ι ⧸ imageZ v W') = sC := by
-      rw [← ringKrullDim_red p hp, ← imageVar_red p v hp']
-      exact hsC1
+      rwa [← ringKrullDim_red p hp, ← imageVar_red p v hp']
     rw [hDdim, hCdim]
     exact_mod_cast hle
 

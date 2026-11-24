@@ -209,8 +209,7 @@ theorem det_mem_integer_of_fintype {ι : Type*} [Fintype ι] [DecidableEq ι] {A
   exact Subring.zsmul_mem _ (Subring.prod_mem _ fun i _ => h _ _) _
 
 theorem ord_nonneg_of_mem {x : F} (hx : x ≠ 0) (h : x ∈ 𝒪[F]) : 0 ≤ LocalField.ord x := by
-  rw [← LocalField.mem_valBall_iff_le_ord hx, LocalField.mem_valBall_zero_iff]
-  exact h
+  rwa [← LocalField.mem_valBall_iff_le_ord hx, LocalField.mem_valBall_zero_iff]
 
 theorem ord_eq_zero_of_mul_eq_one {x y : F} (hxy : x * y = 1) (hx : x ∈ 𝒪[F]) (hy : y ∈ 𝒪[F]) :
     LocalField.ord x = 0 := by
@@ -708,8 +707,7 @@ theorem map_eq_one_of_mem_unipotentRadical (θ : levi F n β →* NNReal) (hθ :
     have : θ t * θ t⁻¹ = 1 := by rw [← map_mul, mul_inv_cancel, map_one]
     rw [h0, zero_mul] at this
     exact zero_ne_one this
-  rw [map_mul, map_mul, map_inv, mul_comm (θ t), mul_assoc, mul_inv_cancel₀ ht0, mul_one] at h
-  exact h
+  rwa [map_mul, map_mul, map_inv, mul_comm (θ t), mul_assoc, mul_inv_cancel₀ ht0, mul_one] at h
 
 theorem blockOrd_of_mem_unipotentRadical (b : Set.range β) {γ : Fin n → ℕ} {u : levi F n β}
     (hu : (u : GL (Fin n) F) ∈ unipotentRadical F n γ) : blockOrd F b u = 0 := by
@@ -739,16 +737,14 @@ theorem map_mul_right_eq_self_of_mem_unipotentRadical [MeasurableSpace (levi F n
       simp only [V, SetLike.mem_coe, Subgroup.mem_comap, MulEquiv.coe_toMonoidHom,
         MulAut.conj_apply, Set.mem_image]
       constructor
-      · intro hx
-        exact ⟨_, hx, by group⟩
+      · exact fun hx => ⟨_, hx, by group⟩
       · rintro ⟨y, hy, rfl⟩
         convert hy using 1
         group
     rw [this]
     exact isCompact_leviIntegral.image ((continuous_const.mul continuous_id).mul continuous_const)
   have huV : u ∈ V := by
-    simp only [V, Subgroup.mem_comap, MulEquiv.coe_toMonoidHom, MulAut.conj_apply]
-    exact ht
+    simpa only [V, Subgroup.mem_comap, MulEquiv.coe_toMonoidHom, MulAut.conj_apply] using ht
   have hmeas : Measurable (· * u : levi F n β → levi F n β) := measurable_mul_const u
   have hpre : (· * u) ⁻¹' (V : Set (levi F n β)) = V := by
     ext x

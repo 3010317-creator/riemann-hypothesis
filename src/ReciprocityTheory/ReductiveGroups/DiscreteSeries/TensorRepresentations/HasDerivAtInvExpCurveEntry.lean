@@ -164,8 +164,7 @@ theorem hasDerivAt_tensor_coef (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn 
         inner ℂ (η c) (σ (g * NormedSpace.exp ((t : ℂ) • X)) (f d : H)) := by
     funext t
     exact tensor_coef_expand dual σ η _ _
-  rw [e]
-  exact h
+  rwa [e]
 
 end Coef
 

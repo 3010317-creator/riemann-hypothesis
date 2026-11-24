@@ -66,8 +66,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {k : WithTop ℕ�
 
 theorem cd_mul {n : ℕ} (F G : E → Matrix (Fin n) (Fin n) ℂ) (hF : ∀ a b, ContDiff ℝ k fun v => F v a b)
     (hG : ∀ a b, ContDiff ℝ k fun v => G v a b) (a b : Fin n) : ContDiff ℝ k fun v => (F v * G v) a b := by
-  simp only [Matrix.mul_apply]
-  exact ContDiff.sum fun i _ => (hF a i).mul (hG i b)
+  simpa only [Matrix.mul_apply] using ContDiff.sum fun i _ => (hF a i).mul (hG i b)
 
 theorem cd_conjT {n : ℕ} (F : E → Matrix (Fin n) (Fin n) ℂ) (hF : ∀ a b, ContDiff ℝ k fun v => F v a b)
     (a b : Fin n) : ContDiff ℝ k fun v => (F v)ᴴ a b := by
@@ -77,8 +76,7 @@ theorem cd_conjT {n : ℕ} (F : E → Matrix (Fin n) (Fin n) ℂ) (hF : ∀ a b,
 theorem cd_det {n : ℕ} (F : E → Matrix (Fin n) (Fin n) ℂ) (hF : ∀ a b, ContDiff ℝ k fun v => F v a b) :
     ContDiff ℝ k fun v => (F v).det := by
   simp only [Matrix.det_apply']
-  refine ContDiff.sum fun σ _ => ?_
-  exact contDiff_const.mul (contDiff_prod fun i _ => hF (σ i) i)
+  exact ContDiff.sum fun σ _ => contDiff_const.mul (contDiff_prod fun i _ => hF (σ i) i)
 
 end CD
 
@@ -97,9 +95,7 @@ theorem cd_lin {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (c : ℂ) (a b : Fin n
 theorem cd_Gz (a b : Fin m) : ContDiff ℝ 2 fun v : Fin 1 → ℂ => Gz hm D Y (v 0) a b := by
   have hl : ∀ i j : Fin r, ContDiff ℝ 2 fun v : Fin 1 → ℂ => (1 + v 0 • Y) i j := by
     intro i j
-    have h := cd_lin Y 1 i j
-    simp only [one_mul] at h
-    exact h
+    simpa only [one_mul] using cd_lin Y 1 i j
   show ContDiff ℝ 2 fun v : Fin 1 → ℂ =>
     ((1 + v 0 • Y)ᴴ * Dc D * (1 + v 0 • Y) : Matrix (Fin r) (Fin r) ℂ) (Fin.castLE hm a) (Fin.castLE hm b)
   exact cd_mul (fun v : Fin 1 → ℂ => (1 + v 0 • Y)ᴴ * Dc D) (fun v => 1 + v 0 • Y)
@@ -113,8 +109,7 @@ theorem cd_Gnz (a b : Fin m) : ContDiff ℝ 2 fun v : Fin 1 → ℂ => Gnz hm D 
     have e : ∀ v : Fin 1 → ℂ, (1 + (-1 * v 0) • Ym hm Y) = 1 - v 0 • Ym hm Y := by
       intro v
       rw [neg_one_mul, neg_smul, ← sub_eq_add_neg]
-    simp only [e] at h
-    exact h
+    simpa only [e] using h
   show ContDiff ℝ 2 fun v : Fin 1 → ℂ =>
     ((1 - v 0 • Ym hm Y)ᴴ * (Gz hm D Y (v 0) * (1 - v 0 • Ym hm Y)) : Matrix (Fin m) (Fin m) ℂ) a b
   exact cd_mul (fun v : Fin 1 → ℂ => (1 - v 0 • Ym hm Y)ᴴ)
@@ -141,8 +136,7 @@ theorem fn_line (t : ℂ) (s : ℝ) :
     rw [map_add (f := _), map_one]
     congr 1
     ext i j
-    simp
-    exact mul_comm _ _
+    simpa using mul_comm _ _
   have hC : (Polynomial.evalRingHom (s : ℂ)).mapMatrix ((Dc D).map Polynomial.C) = Dc D := by
     ext i j
     by_cases h : i = j <;> simp [h]
@@ -202,8 +196,7 @@ theorem sum_castLE' {M : Type} [AddCommMonoid M] (g : Fin r → M) :
   refine Finset.sum_bij (fun j _ => Fin.castLE hm j) ?_ ?_ ?_ ?_
   · intro j _
     simp
-  · intro a _ b _ h
-    exact Fin.ext (by simpa using congrArg Fin.val h)
+  · exact fun a _ b _ h => Fin.ext (by simpa using congrArg Fin.val h)
   · intro k hk
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hk
     exact ⟨⟨k, hk⟩, Finset.mem_univ _, Fin.ext (by simp)⟩

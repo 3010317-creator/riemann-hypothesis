@@ -69,8 +69,7 @@ theorem approxB_jForm_smul_right (p : ℕ) {r : ℕ} (x y : Fin r → ℂ) (a : 
 
 theorem approxB_jForm_sum_right (p : ℕ) {r : ℕ} {α : Type*} (s : Finset α) (x : Fin r → ℂ)
     (f : α → Fin r → ℂ) : jForm p x (∑ j ∈ s, f j) = ∑ j ∈ s, jForm p x (f j) := by
-  simp only [jForm, Finset.sum_apply, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [jForm, Finset.sum_apply, Finset.mul_sum] using Finset.sum_comm
 
 theorem approxB_jForm_smul_left (p : ℕ) {r : ℕ} (x y : Fin r → ℂ) (a : ℂ) :
     jForm p (a • x) y = conj a * jForm p x y := by
@@ -169,8 +168,7 @@ theorem approxB_pad_ne {r p : ℕ} (x : ApproxPosIdx r p → ℂ) (hx : x ≠ 0)
   intro h
   apply hx
   funext k
-  have h1 := congr_fun h k.1
-  simpa [approxPadPos, k.2] using h1
+  simpa [approxPadPos, k.2] using congr_fun h k.1
 
 theorem approxB_pad_zero {r p : ℕ} (x : ApproxPosIdx r p → ℂ) (j : Fin r) (hj : p ≤ (j : ℕ)) :
     approxPadPos x j = 0 := by

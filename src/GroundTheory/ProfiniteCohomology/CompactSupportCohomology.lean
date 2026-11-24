@@ -111,8 +111,7 @@ theorem compactToGlobal_globalToLocal (n : ℕ) :
     compactToGlobal φ A Aᵥ a n ≫ globalToLocal φ A Aᵥ a n = 0 := by
   have h := mappingCoconeNat.homologyMap_fst_homologyMap_assoc (localRes φ A Aᵥ a) n
     (localCohomologyIso Aᵥ n).hom
-  rw [homologyMap_localRes_localCohomologyIso_hom, zero_comp] at h
-  exact h
+  rwa [homologyMap_localRes_localCohomologyIso_hom, zero_comp] at h
 
 theorem globalToLocal_localToCompact (n : ℕ) :
     globalToLocal φ A Aᵥ a n ≫ localToCompact φ A Aᵥ a n = 0 := by
@@ -246,8 +245,7 @@ theorem localToCompact_compactCohomologyMap (n : ℕ) :
     (mappingCoconeNat.homologyδ_naturality (cochainsMap g) (piMap fun v => cochainsMap (gᵥ v))
       (localRes_naturality φ g gᵥ hg) n)
   simp only [← Category.assoc] at h
-  rw [h2, Category.assoc] at h
-  exact h
+  rwa [h2, Category.assoc] at h
 
 end Functoriality
 

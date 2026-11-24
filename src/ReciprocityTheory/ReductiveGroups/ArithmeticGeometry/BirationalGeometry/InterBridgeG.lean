@@ -151,9 +151,7 @@ theorem exists_inj_cover {O : Set (Fin e → ℂ)} {Q : (Fin e → ℂ) → (Fin
     insert ∅ {b | b ∈ TopologicalSpace.countableBasis (Fin e → ℂ) ∧ b ⊆ O ∧ InjOn Q b}
   have hs : s.Countable := by
     apply Set.Countable.insert
-    apply (TopologicalSpace.countable_countableBasis (Fin e → ℂ)).mono
-    intro b hb
-    exact hb.1
+    exact (TopologicalSpace.countable_countableBasis (Fin e → ℂ)).mono (fun b hb => hb.1)
   have hmem : ∀ n, Set.enumerateCountable hs ∅ n ∈ s := Set.enumerateCountable_mem hs
     (Set.mem_insert _ _)
   refine ⟨Set.enumerateCountable hs ∅, fun n => ?_, fun n => ?_, fun n => ?_, ?_⟩
@@ -270,8 +268,7 @@ theorem area_open {O : Set (Fin e → ℂ)} (hO : IsOpen O) {Q : (Fin e → ℂ)
     (integral_tsum_of_summable_integral_norm (fun n => (hp n).1) hsumm).symm
   have hae : (fun y => ∑' n, fibSum (D n) Q h y) =ᵐ[volume] fibSum O Q h := by
     filter_upwards [hfin] with y hy
-    simp only [fibSum]
-    exact tsum_finsum_disjointed hDd hDU hy (fun u => h u / jacN Q u)
+    simpa only [fibSum] using tsum_finsum_disjointed hDd hDU hy (fun u => h u / jacN Q u)
   refine ⟨(integrable_tsum_of_summable (fun n => (hp n).1) hsumm).congr hae, ?_⟩
   rw [← integral_congr_ae hae, htsum]
   simp_rw [hn1]

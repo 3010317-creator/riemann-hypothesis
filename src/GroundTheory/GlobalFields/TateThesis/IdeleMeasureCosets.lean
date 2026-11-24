@@ -67,9 +67,7 @@ theorem hasSum_integral_ideleMeasure_of_invariant {E : Type*} [NormedAddCommGrou
     MeasurableSet.univ.prod (hSm c)
   have hTd : Pairwise (Function.onFun Disjoint
       fun c ↦ (Set.univ : Set (InfiniteAdeleRing K)ˣ) ×ˢ S c) := by
-    intro c d hcd
-    refine Set.disjoint_left.2 fun p hp hq ↦ hcd ?_
-    exact hp.2.symm.trans hq.2
+    exact fun c d hcd => Set.disjoint_left.2 fun p hp hq ↦ hcd (hp.2.symm.trans hq.2)
   have hTu : ⋃ c, (Set.univ : Set (InfiniteAdeleRing K)ˣ) ×ˢ S c = Set.univ := by
     refine Set.eq_univ_of_forall fun p ↦ Set.mem_iUnion.2 ⟨(p.2 : _ ⧸ W), trivial, rfl⟩
   have h := hasSum_integral_iUnion hT hTd hG.integrableOn

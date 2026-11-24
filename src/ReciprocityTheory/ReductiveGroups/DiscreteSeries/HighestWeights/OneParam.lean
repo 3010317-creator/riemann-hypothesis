@@ -176,8 +176,7 @@ theorem KType.op_curve {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε 
     show F 0 * NormedSpace.exp ((0 : ℝ) • (-A)) = 1
     rw [hF0, zero_smul, NormedSpace.exp_zero, one_mul]
   show F t = _
-  have hs : ((t : ℂ) • A) = t • A := by
-    exact Complex.coe_smul t A
+  have hs : ((t : ℂ) • A) = t • A := Complex.coe_smul t A
   rw [hs]
   have hc : Commute (t • (-A)) (t • A) := (((Commute.refl A).neg_left).smul_left t).smul_right t
   calc F t = F t * E t * NormedSpace.exp (t • A) := by

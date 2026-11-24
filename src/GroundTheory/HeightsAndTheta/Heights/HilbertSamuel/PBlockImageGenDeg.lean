@@ -55,8 +55,7 @@ theorem fwdDiff_iter_poly (q : Polynomial ℚ) {D : ℕ} (hq : q.natDegree ≤ D
   · rw [Polynomial.fwdDiff_iter_eq_zero_of_degree_lt h, Polynomial.coeff_eq_zero_of_natDegree_lt h]
     simp
   · subst h
-    rw [q.fwdDiff_iter_degree_eq_factorial]
-    rw [Pi.smul_apply, Pi.natCast_apply, smul_eq_mul]
+    rw [q.fwdDiff_iter_degree_eq_factorial, Pi.smul_apply, Pi.natCast_apply, smul_eq_mul]
     rfl
 
 def lineRestr {K : Type*} [DecidableEq K] (p : MvPolynomial K ℚ) (k₀ : K) (m : K → ℚ) : Polynomial ℚ :=
@@ -96,8 +95,7 @@ theorem eventualValue_eq {K : Type*} (f : (K → ℤ) → ℤ) (e : ℚ) (h : �
   unfold eventualValue
   rw [dite_eq_left hex]
   obtain ⟨m, hm1, hm2⟩ := (hex.choose_spec.and h).exists
-  rw [← hm1]
-  exact hm2
+  rwa [← hm1]
 
 end BlockImageGenDeg
 

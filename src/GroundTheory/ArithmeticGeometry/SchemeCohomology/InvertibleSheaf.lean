@@ -111,8 +111,7 @@ lemma sheaf_eq_of_locally {C : Type*} [Category.{u} C] {FC : C → C → Type*} 
   choose W i hx h using h
   refine F.eq_of_locally_eq' (U := fun x : V => W x.1 x.2) V (fun x => homOfLE (i _ _)) ?_ s t
     (fun x => h _ _)
-  intro x hxV
-  exact Opens.mem_iSup.2 ⟨⟨x, hxV⟩, hx _ _⟩
+  exact fun x hxV => Opens.mem_iSup.2 ⟨⟨x, hxV⟩, hx _ _⟩
 
 lemma sheaf_exists_glue {C : Type*} [Category.{u} C] {FC : C → C → Type*} {CC : C → Type u}
     [∀ X Y, FunLike (FC X Y) (CC X) (CC Y)] [ConcreteCategory.{u} C FC]
@@ -241,8 +240,7 @@ lemma IsBasisOn.restrict {P : PMod X} {U : X.Opens} {s : P.obj (op U)} (hs : IsB
     {V : X.Opens} (h : V ≤ U) : IsBasisOn P V (resM P h s) := by
   intro W i
   have := hs W (i.trans h)
-  simp only [resM_resM]
-  exact this
+  simpa only [resM_resM] using this
 
 lemma isBasisOn_one (U : X.Opens) :
     IsBasisOn ((preMod X).obj (𝟙_ X.Modules)) U (1 : ringOn X U) := by
@@ -274,8 +272,7 @@ lemma IsBasisOn.tmul {P Q : PMod X} {U : X.Opens} {s : P.obj (op U)} {t : Q.obj 
     funext r
     exact (hE r).symm
   have hb := E.bijective
-  rw [← this] at hb
-  exact hb
+  rwa [← this] at hb
 
 lemma IsBasisOn.map_iso {M N : X.Modules} (e : M ≅ N) {U : X.Opens}
     {s : ((preMod X).obj M).obj (op U)} (hs : IsBasisOn ((preMod X).obj M) U s) :

@@ -55,8 +55,7 @@ theorem eval_cross {y : (Σ k, ι k) → Ω} {a : K → ℤ} {τ : ℕ} {s : Ω}
     show g * h' - g' * h ∈ RingHom.ker (mConeMap y)
     rw [RingHom.mem_ker, ProjLine.mConeMap_eq_of_isMultiHomog y hm, h0, map_zero, zero_mul]
   have := hz.2 _ hmem
-  rw [map_sub, map_sub, map_mul, map_mul, map_mul, map_mul, sub_eq_zero] at this
-  exact this
+  rwa [map_sub, map_sub, map_mul, map_mul, map_mul, map_mul, sub_eq_zero] at this
 
 def IsSectionValue (y : (Σ k, ι k) → Ω) (a : K → ℤ) (τ : ℕ) (s : Ω) (z : (Σ k, ι k) → ℂ) (v : ℂ) : Prop :=
   ∃ (dg dh : K → ℕ) (g h : MRing ι), IsMultiHomog g dg ∧ IsMultiHomog h dh ∧
@@ -230,8 +229,7 @@ theorem SeparatedSmallCount.proof (hfin : SectionLatticeFinite.Statement) : Sepa
       rw [lp.coeFn_sub, Pi.sub_apply, hFz s (hmemW s hs), hFz t (hmemW t ht)] at this
       rw [map_sub, Pi.sub_apply]
       exact this
-    rw [hψ, div_le_iff₀ (pow_pos (hpos _) τ)] at h1
-    exact h1
+    rwa [hψ, div_le_iff₀ (pow_pos (hpos _) τ)] at h1
 
   have hinj : Set.InjOn F hS.toFinset := by
     intro s hs t ht hst

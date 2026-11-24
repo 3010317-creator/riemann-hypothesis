@@ -133,8 +133,7 @@ lemma branchLift_mem {z0 z : Fin n → ℂ} (h0 : z0 ∈ puncturedChart h (ball 
     have hn := norm_lt_one_of_mem hz (Fin.castLE h i)
     rw [← e, Complex.norm_exp] at hn
     exact Real.exp_lt_one_iff.1 hn
-  · simp only [branchLift, ite_eq_right (by omega : ¬ k.val < a)]
-    exact norm_lt_one_of_mem hz k
+  · simpa only [branchLift, ite_eq_right (by omega : ¬ k.val < a)] using norm_lt_one_of_mem hz k
 
 omit h in
 lemma analyticAt_branchLift {z0 : Fin n → ℂ} (h0 : ∀ k : Fin n, k.val < a → z0 k ≠ 0) :
@@ -146,8 +145,7 @@ lemma analyticAt_branchLift {z0 : Fin n → ℂ} (h0 : ∀ k : Fin n, k.val < a 
     · exact (analyticAt_eval k z0).div analyticAt_const (h0 k hk)
     · rw [div_self (h0 k hk)]
       exact Complex.one_mem_slitPlane
-  · simp only [branchLift, ite_eq_right hk]
-    exact analyticAt_eval k z0
+  · simpa only [branchLift, ite_eq_right hk] using analyticAt_eval k z0
 
 lemma isOpen_puncturedChart : IsOpen (puncturedChart h (ball (0 : Fin n → ℂ) 1)) := by
   have : puncturedChart h (ball (0 : Fin n → ℂ) 1) =
@@ -172,12 +170,10 @@ theorem LogCoverDescent.proof : LogCoverDescent.Statement := by
     symm
     refine eq_of_exp_eq hφ (branchLift_mem hz0 hz) fun k => ⟨fun hk => ?_, fun hk => ?_⟩
     · rw [exp_branchLift hk (h0 k hk) (ne_zero_of_mem hz k hk)]
-      simp only [logLift, ite_eq_left hk]
-      exact Complex.exp_log (ne_zero_of_mem hz k hk)
+      simpa only [logLift, ite_eq_left hk] using Complex.exp_log (ne_zero_of_mem hz k hk)
     · simp only [logLift, branchLift, ite_eq_right (by omega : ¬ k.val < a)]
   · refine eq_of_exp_eq hφ hw fun k => ⟨fun hk => ?_, fun hk => ?_⟩
-    · simp only [logLift, expCover, ite_eq_left hk]
-      exact Complex.exp_log (Complex.exp_ne_zero _)
+    · simpa only [logLift, expCover, ite_eq_left hk] using Complex.exp_log (Complex.exp_ne_zero _)
     · simp only [logLift, expCover, ite_eq_right (by omega : ¬ k.val < a)]
 
 end

@@ -94,8 +94,7 @@ theorem mem_ker_chartEval_iff (x : Cone n (AlgebraicClosure ℚ)) (c : (k : ι) 
   · intro h
     rw [h]
     rfl
-  · intro h
-    exact Subtype.ext (Subtype.ext h)
+  · exact fun h => Subtype.ext (Subtype.ext h)
 
 theorem aeval_blockScale_of_isWeightedHomogeneous {Ω : Type*} [Field Ω] [Algebra ℤ Ω] (t : ι → Ω) (w : Coord n → Ω)
     {g : MvPolynomial (Coord n) ℤ} {m : ι → ℕ} (hg : IsWeightedHomogeneous (coordDeg n) g m) :
@@ -157,9 +156,7 @@ theorem ker_chartEval (x : Cone n (AlgebraicClosure ℚ)) (c : (k : ι) → Fin 
           rw [← Finset.prod_mul_distrib]
           refine Finset.prod_congr rfl fun k _ ↦ ?_
           rw [← pow_add, Nat.add_sub_cancel' (hle m hm k)]
-        rw [map_mul, hmon, hpow]
-        rw [hy]
-        rw [hs]
+        rw [map_mul, hmon, hpow, hy, hs]
         ring
 
       rw [hF, map_sum]

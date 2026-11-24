@@ -74,8 +74,7 @@ namespace ReciprocityTheory.ChartRestriction.G.T0.DiscreteValuationPoint
 open IsLocalRing
 
 private theorem irreducible_mem_maximalIdeal {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
-    {ϖ : O} (hϖ : Irreducible ϖ) : ϖ ∈ maximalIdeal O := by
-  exact (IsLocalRing.mem_maximalIdeal ϖ).2 hϖ.1
+    {ϖ : O} (hϖ : Irreducible ϖ) : ϖ ∈ maximalIdeal O := (IsLocalRing.mem_maximalIdeal ϖ).2 hϖ.1
 
 private theorem algebraMap_ne_zero_of_flat' {O B : Type} [CommRing O] [IsDomain O] [CommRing B] [IsDomain B]
     [Algebra O B] [Module.Flat O B] {x : O} (hx : x ≠ 0) : algebraMap O B x ≠ 0 := by
@@ -173,8 +172,7 @@ private theorem exists_dedekind_embedding_of_finite {O T : Type} [CommRing O] [I
     (IsScalarTower.toAlgHom O T (FractionRing T)).codRestrict _ ?_, ?_⟩
   · intro t
     exact (Algebra.IsIntegral.isIntegral t).map (IsScalarTower.toAlgHom O T (FractionRing T))
-  · intro a b h
-    exact IsFractionRing.injective T (FractionRing T) (congrArg Subtype.val h)
+  · exact fun a b h => IsFractionRing.injective T (FractionRing T) (congrArg Subtype.val h)
 
 private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [IsAdicComplete (maximalIdeal O) O]
@@ -191,8 +189,7 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
   have hϖN : algebraMap O C ϖ ∈ N := by
     have hc : (N.comap (algebraMap O C)).IsMaximal := by
       exact Ideal.isMaximal_under_of_isIntegral_of_isMaximal N
-    rw [← Ideal.mem_comap, IsLocalRing.eq_maximalIdeal hc]
-    exact hϖm
+    rwa [← Ideal.mem_comap, IsLocalRing.eq_maximalIdeal hc]
   have hch : ∀ P : Ideal C, P.IsPrime → ⊥ ≤ P → P ≤ N → algebraMap O C ϖ ∈ P → P = N := by
     intro P hP _ hPN hϖP
     have hP0 : P ≠ ⊥ := fun h => hϖ0 (by rw [h] at hϖP; exact (Submodule.mem_bot C).1 hϖP)
@@ -214,13 +211,11 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
       apply hs
       · infer_instance
       · exact bot_le
-      · rw [Ideal.mem_comap, ← hϖV]
-        exact hϖP
+      · rwa [Ideal.mem_comap, ← hϖV]
       · intro h
         rw [Ideal.mem_comap] at h
         exact hP.ne_top (Ideal.eq_top_of_isUnit_mem _ h (IsLocalization.Away.algebraMap_isUnit s))
-    rw [← hQ]
-    rw [IsLocalization.map_under (Submonoid.powers s)]
+    rw [← hQ, IsLocalization.map_under (Submonoid.powers s)]
   have hdisj : Disjoint (Submonoid.powers s : Set C) (N : Set C) := by
     rw [Set.disjoint_left]
     rintro x ⟨n, rfl⟩ hx
@@ -245,8 +240,7 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
       obtain ⟨x, hxP, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP0'
       exact Ideal.comap_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
     have hm := IsLocalRing.eq_maximalIdeal (Ideal.IsPrime.isMaximal inferInstance hc)
-    rw [← Ideal.mem_comap, hm]
-    exact hϖm
+    rwa [← Ideal.mem_comap, hm]
   have hdvr : IsDiscreteValuationRing (Localization.Away s) := by
     haveI : IsDedekindDomain (Localization.Away s) := by
       exact IsLocalization.isDedekindDomain C (powers_le_nonZeroDivisors_of_noZeroDivisors hs0) _
@@ -308,8 +302,7 @@ private theorem exists_finite_domain_quotient_ne_zero {O B : Type} [CommRing O] 
       · intro x hx
         rw [Ideal.mem_comap, Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.2 hx, map_zero]
         exact P.zero_mem
-      · rw [Ideal.mem_comap, Ideal.mem_comap, ← hϖT]
-        exact hϖP
+      · rwa [Ideal.mem_comap, Ideal.mem_comap, ← hϖT]
       · intro h
         rw [Ideal.mem_comap, Ideal.mem_comap] at h
         exact hP.ne_top (Ideal.eq_top_of_isUnit_mem _ h (IsLocalization.Away.algebraMap_isUnit _))
@@ -321,9 +314,7 @@ private theorem exists_finite_domain_quotient_ne_zero {O B : Type} [CommRing O] 
     rintro x ⟨n, rfl⟩ hx
     dsimp only at hx
     rw [← map_pow] at hx
-    apply hsM
-    apply hMmax.isPrime.mem_of_pow_mem n
-    exact (Ideal.mem_quotient_iff_mem hqM).1 hx
+    exact hsM (hMmax.isPrime.mem_of_pow_mem n ((Ideal.mem_quotient_iff_mem hqM).1 hx))
   have hMq : (Ideal.map (Ideal.Quotient.mk q) M).IsPrime := by
     exact Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
       (by rw [Ideal.mk_ker]; exact hqM)
@@ -351,8 +342,7 @@ private theorem exists_finite_domain_quotient_ne_zero {O B : Type} [CommRing O] 
     apply heq
     apply Ideal.Quotient.eq_zero_iff_mem.1
     apply hTi
-    rw [map_zero]
-    exact h
+    rwa [map_zero]
 
 theorem exists_dvr_point_flat_algebra {O B : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [IsAdicComplete (maximalIdeal O) O] [CharZero O]
@@ -366,16 +356,14 @@ theorem exists_dvr_point_flat_algebra {O B : Type} [CommRing O] [IsDomain O] [Is
     intro a b h
     apply hTinj
     apply hψ
-    rw [ψ.commutes, ψ.commutes]
-    exact h
+    rwa [ψ.commutes, ψ.commutes]
   obtain ⟨V, indexVFirst, indexVSecond, indexVThird, indexVFourth, iV5, φ, hφ⟩ := exists_dvr_embedding_of_dedekind (O := O) (C := C) hCinj
   refine ⟨V, indexVFirst, indexVSecond, indexVThird, indexVFourth, iV5, (φ.comp ψ).comp g, ?_⟩
   intro h
   apply hge
   apply hψ
   apply hφ
-  rw [map_zero, map_zero]
-  exact h
+  rwa [map_zero, map_zero]
 
 end ReciprocityTheory.ChartRestriction.G.T0.DiscreteValuationPoint
 end -- clump:auto

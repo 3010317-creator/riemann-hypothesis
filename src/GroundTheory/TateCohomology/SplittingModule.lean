@@ -84,8 +84,7 @@ theorem pullbackSES_shortExact (hS : S.ShortExact) : (pullbackSES S β).ShortExa
   have hinj : Function.Injective S.f.hom := (Rep.mono_iff_injective _).1 hS.mono_f
   have hsurj : Function.Surjective S.g.hom := (Rep.epi_iff_surjective _).1 hS.epi_g
   refine shortExact_of_linear ?_ ?_ ?_
-  · intro a b hab
-    exact hinj (congrArg (fun p : pullbackRep S β => p.1.1) hab)
+  · exact fun a b hab => hinj (congrArg (fun p : pullbackRep S β => p.1.1) hab)
   · intro y
     obtain ⟨x, hx⟩ := hsurj (β.hom y)
     exact ⟨⟨(x, y), mem_pullbackSubmodule.2 hx⟩, rfl⟩
@@ -287,9 +286,7 @@ theorem map_H1π_augCocycle {H : Type u} [Group H] (φ : H →* G) {A : Rep.{u} 
     map φ (𝟙 (res φ A)) 1 (H1π A f) := by
   rw [H1π_comp_map_apply, H1π_comp_map_apply]
   congr 1
-  apply cocycles₁_ext
-  intro h
-  exact cocycleHom_augIdealSubOne f (φ h)
+  exact cocycles₁_ext (fun h => cocycleHom_augIdealSubOne f (φ h))
 
 noncomputable def splittingSESResHom {H : Type u} [Group H] (φ : H →* G) :
     (splittingSES M u).map (resFunctor φ) ⟶ (coindSES.obj M).map (resFunctor φ) where

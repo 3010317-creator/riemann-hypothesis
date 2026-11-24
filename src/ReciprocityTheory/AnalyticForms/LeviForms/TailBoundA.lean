@@ -249,30 +249,27 @@ theorem exists_levi_nonneg_chern_bound [CompactSpace X] (A : FinHolAtlas e X) (�
     ⟨∑ i ∈ t, |m i|, Finset.sum_nonneg fun i _ => abs_nonneg _, fun i hi =>
       (le_abs_self _).trans (Finset.single_le_sum (f := fun i => |m i|)
         (fun i _ => abs_nonneg _) hi)⟩
-  refine ⟨C, hC0, ?_⟩
-  intro ε hε x k y hy v
+  refine ⟨C, hC0, fun ε hε x k y hy v => ?_⟩
+  have hcd : ∀ (P : LocPot X), IsPotential A P → ∀ (c : Fin A.n) (w : Fin e → ℂ),
+      w ∈ (A.chart c).target ∩ (A.chart c).symm ⁻¹' P.U x →
+        ContDiffAt ℝ 2 (P.φ x ∘ (A.chart c).symm) w := by
+    intro P hP c w hw
+    have h := (hP.1 x c).contDiffAt
+      (((A.chart c).isOpen_inter_preimage_symm (P.isOpen_U x)).mem_nhds hw)
+    exact_mod_cast contDiffAt_infty.1 h 2
   have hU := ht (Set.mem_univ ((A.chart k).symm y))
   simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_preimage, exists_prop] at hU
   obtain ⟨i, hit, hqi⟩ := hU
-  have hq_src : (A.chart k).symm y ∈ (A.chart (j i)).source := hqi.1
   have hb_ball : A.chart (j i) ((A.chart k).symm y) ∈
       Metric.closedBall (A.chart (j i) i) (r i) := Metric.ball_subset_closedBall hqi.2
   have hb := hsub i hb_ball
   have hsb : (A.chart (j i)).symm (A.chart (j i) ((A.chart k).symm y)) = (A.chart k).symm y :=
-    (A.chart (j i)).left_inv hq_src
-  have hqΘi : (A.chart k).symm y ∈ Θ.U i := by
-    have h : (A.chart (j i)).symm (A.chart (j i) ((A.chart k).symm y)) ∈ Θ.U i := hb.2.1
-    rwa [hsb] at h
-  have hqLi : (A.chart k).symm y ∈ L.U i := by
-    have h : (A.chart (j i)).symm (A.chart (j i) ((A.chart k).symm y)) ∈ L.U i := hb.2.2
-    rwa [hsb] at h
-  have hqΘx : (A.chart k).symm y ∈ Θ.U x := hy.2.1
-  have hqLx : (A.chart k).symm y ∈ L.U x := hy.2.2
+    (A.chart (j i)).left_inv hqi.1
+  have hqΘi : (A.chart k).symm y ∈ Θ.U i := by simpa only [hsb] using hb.2.1
+  have hqLi : (A.chart k).symm y ∈ L.U i := by simpa only [hsb] using hb.2.2
   have hyT : y ∈ (A.chart k).target ∩ (A.chart k).symm ⁻¹' (A.chart (j i)).source :=
-    ⟨hy.1, hq_src⟩
+    ⟨hy.1, hqi.1⟩
   have hτ : AnalyticAt ℂ (A.chart (j i) ∘ (A.chart k).symm) y := A.holo k (j i) y hyT
-  have hOT : IsOpen ((A.chart k).target ∩ (A.chart k).symm ⁻¹' (A.chart (j i)).source) :=
-    (A.chart k).isOpen_inter_preimage_symm (A.chart (j i)).open_source
   have hchg : ∀ P : LocPot X, IsPotential A P → (A.chart k).symm y ∈ P.U x →
       levi (P.φ x ∘ (A.chart k).symm) y v =
         levi (P.φ x ∘ (A.chart (j i)).symm) (A.chart (j i) ((A.chart k).symm y))
@@ -280,46 +277,30 @@ theorem exists_levi_nonneg_chern_bound [CompactSpace X] (A : FinHolAtlas e X) (�
     intro P hP hqx
     have hev : (P.φ x ∘ (A.chart k).symm) =ᶠ[𝓝 y]
         (P.φ x ∘ (A.chart (j i)).symm) ∘ (A.chart (j i) ∘ (A.chart k).symm) := by
-      filter_upwards [hOT.mem_nhds hyT] with z hz
+      filter_upwards [((A.chart k).isOpen_inter_preimage_symm
+        (A.chart (j i)).open_source).mem_nhds hyT] with z hz
       simp only [Function.comp_apply, (A.chart (j i)).left_inv hz.2]
-    have hO : IsOpen ((A.chart (j i)).target ∩ (A.chart (j i)).symm ⁻¹' P.U x) :=
-      (A.chart (j i)).isOpen_inter_preimage_symm (P.isOpen_U x)
     have hm : (A.chart (j i) ∘ (A.chart k).symm) y ∈
         (A.chart (j i)).target ∩ (A.chart (j i)).symm ⁻¹' P.U x :=
-      ⟨(A.chart (j i)).map_source hq_src, by
+      ⟨(A.chart (j i)).map_source hqi.1, by
         simp only [Set.mem_preimage, Function.comp_apply, hsb]; exact hqx⟩
-    have hsm : ContDiffAt ℝ 2 (P.φ x ∘ (A.chart (j i)).symm)
-        ((A.chart (j i) ∘ (A.chart k).symm) y) := by
-      have h := (hP.1 x (j i)).contDiffAt (hO.mem_nhds hm)
-      exact_mod_cast contDiffAt_infty.1 h 2
-    exact (levi_congr hev v).trans (levi_comp v hτ hsm)
-  have eΘ := (hchg Θ hΘ hqΘx).trans
-    (base_change A Θ hΘ x i ((A.chart k).symm y) (j i) hq_src hqΘx hqΘi _)
-  have eL := (hchg L hL hqLx).trans
-    (base_change A L hL x i ((A.chart k).symm y) (j i) hq_src hqLx hqLi _)
+    exact (levi_congr hev v).trans (levi_comp v hτ (hcd P hP (j i) _ hm))
+  have eΘ := (hchg Θ hΘ hy.2.1).trans
+    (base_change A Θ hΘ x i ((A.chart k).symm y) (j i) hqi.1 hy.2.1 hqΘi _)
+  have eL := (hchg L hL hy.2.2).trans
+    (base_change A L hL x i ((A.chart k).symm y) (j i) hqi.1 hy.2.2 hqLi _)
   have hbd' := hbd i _ hb_ball (fderiv ℂ (A.chart (j i) ∘ (A.chart k).symm) y v)
   have hF0 : 0 ≤ levi (Θ.φ i ∘ (A.chart (j i)).symm) (A.chart (j i) ((A.chart k).symm y))
       (fderiv ℂ (A.chart (j i) ∘ (A.chart k).symm) y v) := by
     by_cases hw0 : fderiv ℂ (A.chart (j i) ∘ (A.chart k).symm) y v = 0
     · rw [hw0, levi_zero]
     · exact (hpos i (j i) _ ⟨hb.1, hb.2.1⟩ _ hw0).le
-  have hFk : ContDiffAt ℝ 2 (Θ.φ x ∘ (A.chart k).symm) y := by
-    have hO : IsOpen ((A.chart k).target ∩ (A.chart k).symm ⁻¹' Θ.U x) :=
-      (A.chart k).isOpen_inter_preimage_symm (Θ.isOpen_U x)
-    have h := (hΘ.1 x k).contDiffAt (hO.mem_nhds ⟨hy.1, hqΘx⟩)
-    exact_mod_cast contDiffAt_infty.1 h 2
-  have hLk : ContDiffAt ℝ 2 (L.φ x ∘ (A.chart k).symm) y := by
-    have hO : IsOpen ((A.chart k).target ∩ (A.chart k).symm ⁻¹' L.U x) :=
-      (A.chart k).isOpen_inter_preimage_symm (L.isOpen_U x)
-    have h := (hL.1 x k).contDiffAt (hO.mem_nhds ⟨hy.1, hqLx⟩)
-    exact_mod_cast contDiffAt_infty.1 h 2
-  have hlin := levi_lin (z := y) C ε hFk hLk v
+  have hlin := levi_lin (z := y) C ε (hcd Θ hΘ k y ⟨hy.1, hy.2.1⟩) (hcd L hL k y ⟨hy.1, hy.2.2⟩) v
   refine le_of_le_of_eq ?_ hlin.symm
   rw [eΘ, eL]
-  have h1 := hε (levi (L.φ i ∘ (A.chart (j i)).symm) (A.chart (j i) ((A.chart k).symm y))
-      (fderiv ℂ (A.chart (j i) ∘ (A.chart k).symm) y v))
-  have h2 := mul_le_mul_of_nonneg_right (hCm i hit) hF0
-  linarith
+  linarith [hε (levi (L.φ i ∘ (A.chart (j i)).symm) (A.chart (j i) ((A.chart k).symm y))
+      (fderiv ℂ (A.chart (j i) ∘ (A.chart k).symm) y v)),
+    mul_le_mul_of_nonneg_right (hCm i hit) hF0]
 
 end TailChernBound
 

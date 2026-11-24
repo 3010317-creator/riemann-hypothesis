@@ -34,8 +34,7 @@ theorem ideleNorm_finiteEmbedding (v' : HeightOneSpectrum (𝓞 K')) (a : (v'.ad
         finiteAdeleSingle_apply_self, finiteAdeleSingle_apply_self, LocalField.coe_normUnits]
       · intro w _ hw
         rw [finiteAdeleSingle_apply_of_ne (fun h ↦ hw (Subtype.ext h)), map_one]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · rw [finiteAdeleSingle_apply_of_ne hv]
       refine Finset.prod_eq_one fun w _ ↦ ?_
       have hw : w.1 ≠ v' := by

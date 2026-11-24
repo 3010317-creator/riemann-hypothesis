@@ -142,8 +142,7 @@ theorem blockW_ne_nil {l : List (Fin n × Fin n)} {m : Fin n × Fin n →₀ ℕ
     (ha : a ∈ l) (hm : m a ≠ 0) : blockW l m ≠ [] := by
   intro h
   have : a ∈ blockW l m := by
-    simp only [blockW, List.mem_flatMap, List.mem_replicate]
-    exact ⟨a, ha, hm, rfl⟩
+    simpa only [blockW, List.mem_flatMap, List.mem_replicate] using ⟨a, ha, hm, rfl⟩
   rw [h] at this
   simp at this
 
@@ -259,8 +258,7 @@ theorem canon_mem_nPlusU {m : Fin n × Fin n →₀ ℕ} (h : HasUpper m) : cano
   obtain ⟨a, ha, hm⟩ := h
   have hne := blockW_ne_nil (mem_upL.2 ha) hm
   rw [canon_eq_blocks, ← List.dropLast_append_getLast hne, word_append, word_singleton, ← mul_assoc]
-  refine Submodule.subset_span ⟨_, _, ?_, rfl⟩
-  exact mem_upL.1 (mem_of_mem_blockW (List.getLast_mem hne)).1
+  exact Submodule.subset_span ⟨_, _, mem_upL.1 (mem_of_mem_blockW (List.getLast_mem hne)).1, rfl⟩
 
 noncomputable def notUpper (m : Fin n × Fin n →₀ ℕ) : Fin n × Fin n →₀ ℕ :=
   m.filter fun a => ¬ IsUpper a
@@ -764,8 +762,7 @@ theorem toFinsupp_map_swap (w : List (Fin n × Fin n)) :
 theorem degree_transposeExp (m : Fin n × Fin n →₀ ℕ) :
     (transposeExp m).degree = m.degree := by
   have h1 := degree_toFinsupp ((expand m).map Prod.swap)
-  rw [toFinsupp_map_swap, toFinsupp_expand, List.length_map, length_expand] at h1
-  exact h1
+  rwa [toFinsupp_map_swap, toFinsupp_expand, List.length_map, length_expand] at h1
 
 theorem constantCoeff_rho_one_canon_monomial (m s : Fin n × Fin n →₀ ℕ) (h : m.degree = s.degree) :
     constantCoeff (rho 1 (canon m) (monomial s 1)) ≠ 0 ↔ transposeExp m = s := by
@@ -808,8 +805,7 @@ theorem coeff_eq_zero_of_rho_one (s : Finset (Fin n × Fin n →₀ ℕ)) (c : (
 
 theorem linearIndependent_canon : LinearIndependent ℂ (canon (n := n)) := by
   rw [linearIndependent_iff']
-  intro s c hs
-  exact coeff_eq_zero_of_rho_one s c (by rw [hs, map_zero])
+  exact fun s c hs => coeff_eq_zero_of_rho_one s c (by rw [hs, map_zero])
 
 noncomputable def pbw : Module.Basis (Fin n × Fin n →₀ ℕ) ℂ (U n) :=
   Module.Basis.mk linearIndependent_canon span_canon_eq_top.ge

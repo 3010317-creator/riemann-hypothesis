@@ -59,9 +59,7 @@ theorem G5.ptsIntegral_const {e : ℕ} (P : Ideal (MRing ι)) (φ : Fin e → ((
     split_ifs <;> ring
   · simp
 
-theorem G5.isSmoothHerm_constLine (c : ℝ) : IsSmoothHerm (constLine (ι := ι) c) := by
-  show ContDiffOn ℝ _ (fun _ => Real.exp (-c)) _
-  exact contDiffOn_const
+theorem G5.isSmoothHerm_constLine (c : ℝ) : IsSmoothHerm (constLine (ι := ι) c) := contDiffOn_const
 
 theorem G5.log_tensor_constLine (A : ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι) (c : ℝ) (z : (Σ k, ι k) → ℂ) (hz : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) :
     Real.log ((A.tensor (constLine c)).h z) = Real.log (A.h z) + -c := by

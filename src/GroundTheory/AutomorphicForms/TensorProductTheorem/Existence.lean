@@ -99,8 +99,7 @@ def genQuotMap : Representation.IntertwiningMap (genSubrep σ N).toRepresentatio
 include hσ in
 theorem isSmooth_genSubrep : IsSmooth (genSubrep σ N).toRepresentation := by
   intro u
-  refine Subgroup.isOpen_mono (H₁ := stabilizerOf σ (u : V)) (fun g hg => ?_) (hσ u)
-  exact Subtype.ext hg
+  exact Subgroup.isOpen_mono (H₁ := stabilizerOf σ (u : V)) (fun g hg => (Subtype.ext hg)) (hσ u)
 
 theorem isSmooth_genQuotRep : IsSmooth (genQuotRep hσ hKc hKo N) := by
   intro q
@@ -225,8 +224,7 @@ theorem isIrreducible_genQuotRep (hN0 : N ≠ ⊥)
     obtain ⟨u, rfl⟩ := Submodule.Quotient.mk_surjective _ q
     obtain ⟨u', hu', hu'u⟩ := hUY u.2
     have : u' = u := Subtype.ext hu'u
-    rw [← this]
-    exact hu'
+    rwa [← this]
 
 end Simple
 
@@ -387,8 +385,7 @@ theorem isSmooth_comp_singleHom [DecidableEq ι] (hρ : IsSmooth ρ) (v : ι) :
   intro u
   obtain ⟨B, hBc, hBo, -, -, hsub⟩ := exists_boxSubgroup_subset
     (fun v => isCompact_iff_compactSpace.2 (hKc v)) ((hρ u).mem_nhds (stabilizerOf ρ u).one_mem)
-  refine Subgroup.isOpen_mono (H₁ := B v) (fun k hk => ?_) (hBo v)
-  exact hsub (singleHom_mem_boxSubgroup hk)
+  exact Subgroup.isOpen_mono (H₁ := B v) (fun k hk => (hsub (singleHom_mem_boxSubgroup hk))) (hBo v)
 
 theorem exists_equiv_restrictedTensorRep (hρ : IsAdmissible ρ) (hirr : ρ.IsIrreducible)
     (hgel : ∀ᶠ v in cofinite, ∀ (W : Type u) [AddCommGroup W] [Module ℂ W]

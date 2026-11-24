@@ -162,8 +162,7 @@ theorem proof (h₁ : IncidenceGeneric.Statement) : ChartFirstGroupDvd.Statement
     simp [hτdef, linForm]
   set cK : Fin n → (FractionRing (MvPolynomial (Fin n) F ⧸ I)) := fun m => algebraMap F (FractionRing (MvPolynomial (Fin n) F ⧸ I)) (t m) / τ with hcK
   have homogComponent_comm_first_action : ∑ j, cK j * genPt I j = 1 := by
-    simp only [hcK, div_mul_eq_mul_div, ← Finset.sum_div, ← hτsum]
-    exact div_self hτ
+    simpa only [hcK, div_mul_eq_mul_div, ← Finset.sum_div, ← hτsum] using div_self hτ
   have hcKm : ∀ m, cK m = τ⁻¹ * algebraMap F (FractionRing (MvPolynomial (Fin n) F ⧸ I)) (t m) := fun m => by
     simp only [hcK]
     ring
@@ -175,8 +174,7 @@ theorem proof (h₁ : IncidenceGeneric.Statement) : ChartFirstGroupDvd.Statement
   have hdvd := dvd_sub_aeval θ σ (fun m => ⟨-C (chartX I t e (C (t m))), by simp only [hσ]; ring⟩)
     (map (algebraMap (MvPolynomial (Fin e × Fin n) F) (ChartInc I t e)) (firstGroup f))
   suffices h0 : aeval σ (map (algebraMap (MvPolynomial (Fin e × Fin n) F) (ChartInc I t e)) (firstGroup f)) = 0 by
-    rw [h0, sub_zero] at hdvd
-    exact hdvd
+    rwa [h0, sub_zero] at hdvd
   apply map_injective φ hφinj
   rw [map_zero]
   set ρ : MvPolynomial (Fin (e + 1) × Fin n) (FractionRing (MvPolynomial (Fin n) F ⧸ I)) →+* MvPolynomial (Fin n) (MvPolynomial (Fin e × Fin n) (FractionRing (MvPolynomial (Fin n) F ⧸ I))) :=
@@ -203,13 +201,11 @@ theorem proof (h₁ : IncidenceGeneric.Statement) : ChartFirstGroupDvd.Statement
       | zero =>
         simp [hρ0, hσ, hθ, hφX, hρC, genSubst]
         rw [hcKm]
-        simp only [map_mul, Finset.sum_mul]
-        exact Finset.sum_congr rfl fun l _ => by ring
+        simpa only [map_mul, Finset.sum_mul] using Finset.sum_congr rfl fun l _ => by ring
       | succ i =>
         simp [hρs, hρC, hφU, genSubst]
         rw [hcKm]
-        simp only [map_mul, Finset.sum_mul]
-        exact Finset.sum_congr rfl fun l _ => by ring
+        simpa only [map_mul, Finset.sum_mul] using Finset.sum_congr rfl fun l _ => by ring
   have := RingHom.congr_fun key f
   simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, hgen, map_zero] at this
   exact this

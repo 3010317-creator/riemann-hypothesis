@@ -237,8 +237,7 @@ private lemma inv_mat_apply_mem_bor {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
   haveI := (mat b τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.mpr d1)
   have ht : ((mat b τ)⁻¹).BlockTriangular id :=
     Matrix.blockTriangular_inv_of_blockTriangular (fun a c h => t1 a c h)
-  refine ⟨?_, fun a c h => ht h⟩
-  exact ((mat b τ).isUnit_nonsing_inv_det (isUnit_iff_ne_zero.mpr d1)).ne_zero
+  exact ⟨((mat b τ).isUnit_nonsing_inv_det (isUnit_iff_ne_zero.mpr d1)).ne_zero, fun a c h => ht h⟩
 
 private lemma rmul_rmul_assoc (x b b' : Frame X.Ψ r) : rmul (rmul x b) b' = rmul x (rmul b b') := by
   funext τ
@@ -282,12 +281,10 @@ theorem T_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) : cpt X x0 z ∈ T D FF ↔ z
     simp
   have hr : rmul (cpt X x0 z) (fun _ => (1 : Matrix (Fin r) (Fin r) ℂ) : Frame X.Ψ r) = cpt X x0 z := by
     funext τ
-    show mat (cpt X x0 z) τ * 1 = mat (cpt X x0 z) τ
     exact Matrix.mul_one _
   obtain ⟨hΔ, hzO, -⟩ := D.uniq z hz _ h1
   rw [hr] at hΔ hzO
-  simp only [T, Set.mem_setOf_eq, hzO]
-  exact ⟨fun h => h.2.2, fun h => ⟨hz, hΔ, h⟩⟩
+  simpa only [T, Set.mem_setOf_eq, hzO] using ⟨fun h => h.2.2, fun h => ⟨hz, hΔ, h⟩⟩
 
 theorem T_rmul_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
     rmul (cpt X x0 z) b ∈ T D FF ↔ z ∈ FF := by
@@ -325,8 +322,7 @@ theorem ae_unique (hFF : IsFundSet X x0 FF) :
         (rmul b (fun τ a c => (mat b'' τ)⁻¹ a c)) := by
       conv_lhs => rw [h3]
       rw [lact_inv_lact]
-    have h5 := X.Γ_free _ (X.Γ.inv_mem hδΓ) _ hz'O _ hB h4
-    exact inv_mul_eq_one.mp (inv_eq_one.mp h5)
+    exact inv_mul_eq_one.mp (inv_eq_one.mp (X.Γ_free _ (X.Γ.inv_mem hδΓ) _ hz'O _ hB h4))
   · rintro rfl
     rw [inv_mul_cancel, lact_one]
     exact (T_rmul_cpt D FF hz'O hb).2 hz'

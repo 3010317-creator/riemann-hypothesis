@@ -48,9 +48,7 @@ theorem unitsOneAdd_zero : unitsOneAdd p 0 = ⊤ := by
 
 theorem eq_one_of_forall_mem_unitsOneAdd {u : ℤ_[p]ˣ} (hu : ∀ k, u ∈ unitsOneAdd p k) : u = 1 := by
   by_contra hne
-  have h0 : (u : ℤ_[p]) - 1 ≠ 0 := by
-    intro h
-    exact hne (Units.ext (sub_eq_zero.mp h))
+  have h0 : (u : ℤ_[p]) - 1 ≠ 0 := fun h => hne (Units.ext (sub_eq_zero.mp h))
   have h := (PadicInt.mem_span_pow_iff_le_valuation _ h0 (((u : ℤ_[p]) - 1).valuation + 1)).1
     (Ideal.mem_span_singleton.2 (hu _))
   omega
@@ -123,8 +121,7 @@ theorem pow_prime_mem_iff {k : ℕ} (hk : 2 ≤ k) {u : ℤ_[p]ˣ} (hu : u ∈ u
     rw [pow_succ, mul_comm]
     exact mul_dvd_mul_left _ hx
   · change (p : ℤ_[p]) ^ (k + 2) ∣ _ ↔ (p : ℤ_[p]) ^ (k + 1) ∣ _
-    rw [hpow, dvd_add_right h]
-    rw [show (p : ℤ_[p]) ^ (k + 2) = p * p ^ (k + 1) by ring]
+    rw [hpow, dvd_add_right h, show (p : ℤ_[p]) ^ (k + 2) = p * p ^ (k + 1) by ring]
     exact mul_dvd_mul_iff_left hp0
 
 def levelQuot {k : ℕ} (u : unitsOneAdd p k) : ℤ_[p] :=
@@ -257,8 +254,7 @@ theorem exists_mul_inv_pow_mem {s : ℕ} (hs : 2 ≤ s) {a : ℤ_[p]ˣ} (ha : a 
     have e2 : b * (a ^ (j + p ^ (k - s) * r))⁻¹ = d * (c ^ r)⁻¹ := by
       simp only [d, c, pow_add, pow_mul, mul_inv_rev]
       group
-    rw [e2]
-    exact h
+    rwa [e2]
 
 theorem relIndex_unitsOneAdd_inf_succ {k : ℕ} (hk : 1 ≤ k) (R : Subgroup ℤ_[p]ˣ) {c : ℤ_[p]ˣ}
     (hcR : c ∈ R) (hc : c ∈ unitsOneAdd p k) (hc' : c ∉ unitsOneAdd p (k + 1)) :
@@ -275,8 +271,7 @@ theorem relIndex_unitsOneAdd_inf_succ {k : ℕ} (hk : 1 ≤ k) (R : Subgroup ℤ
   have hrange : φ.range = ⊤ := by
     have hne : φ ⟨c, hc, hcR⟩ ≠ 1 := by
       change levelHom p k hk _ ≠ 1
-      rw [Ne, levelHom_eq_one_iff]
-      exact hc'
+      rwa [Ne, levelHom_eq_one_iff]
     have hcard : Nat.card (Multiplicative (ZMod p)) = p := by
       rw [Nat.card_congr Multiplicative.toAdd, Nat.card_zmod]
     have := Subgroup.eq_bot_or_eq_top_of_prime_card φ.range (hp := ⟨by rw [hcard]; exact hp.out⟩)

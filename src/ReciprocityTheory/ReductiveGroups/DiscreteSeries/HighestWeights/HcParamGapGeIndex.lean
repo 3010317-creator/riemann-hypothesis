@@ -174,18 +174,9 @@ theorem lowK_int_dom (ε : Fin n → Bool) (lam : Fin n → ℝ) (hlam : IsHCPar
             rw [← Fin.card_Ico]
             exact Finset.card_union_le _ _
     have gap := hc_param_gap_ge_index lam hlam a b hab.le
-    have c1r : (((univ.filter fun c => a < c ∧ ε c = ε a).card : ℕ) : ℝ) ≤
-        ((univ.filter fun c => b < c ∧ ε c = ε b).card : ℕ) + (((b : ℕ) : ℝ) - (a : ℕ)) := by
-      have := c1
-      rw [← Nat.cast_le (α := ℝ)] at this
-      push_cast [Nat.cast_sub hab'] at this
-      linarith
-    have hcard₃ : (((univ.filter fun c => c < b ∧ ε c = ε b).card : ℕ) : ℝ) ≤
-        ((univ.filter fun c => c < a ∧ ε c = ε a).card : ℕ) + (((b : ℕ) : ℝ) - (a : ℕ)) := by
-      have := c2
-      rw [← Nat.cast_le (α := ℝ)] at this
-      push_cast [Nat.cast_sub hab'] at this
-      linarith
+    have c1r := (Nat.cast_le (α := ℝ)).2 c1
+    have c2r := (Nat.cast_le (α := ℝ)).2 c2
+    push_cast [Nat.cast_sub hab'] at c1r c2r
     rw [lowest_k_type_formula, lowest_k_type_formula]
     linarith
 

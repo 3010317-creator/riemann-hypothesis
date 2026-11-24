@@ -176,13 +176,11 @@ theorem cpt_mem_S (X : Data E r) {x0 : Frame X.Ψ r} (ho : IsOrth X x0) {FF : Se
     simp only at h
     rw [← ExtFPf.rmul_oneF X (cpt X x0 z)] at h
     rwa [← (cpt_inj X ho hb' (ExtFPf.oneF_mem X) h).1]
-  · intro hz
-    exact ⟨⟨z, ExtFPf.oneF X⟩, ⟨hz, ExtFPf.oneF_mem X⟩, ExtFPf.rmul_oneF X _⟩
+  · exact fun hz => ⟨⟨z, ExtFPf.oneF X⟩, ⟨hz, ExtFPf.oneF_mem X⟩, ExtFPf.rmul_oneF X _⟩
 
 theorem lact_rmul' (X : Data E r) (γ : GL (Fin r) E) (x b : Frame X.Ψ r) :
     lact γ (rmul x b) = rmul (lact γ x) b := by
   funext τ
-  show (γ : Matrix (Fin r) (Fin r) E).map τ.1 * mat (rmul x b) τ = mat (lact γ x) τ * mat b τ
   exact (Matrix.mul_assoc ((γ : Matrix (Fin r) (Fin r) E).map τ.1) (mat x τ) (mat b τ)).symm
 
 end

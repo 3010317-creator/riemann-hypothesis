@@ -100,10 +100,8 @@ private theorem P_ite_mul_eq_prod_triChar_mul {ι : Type} [Fintype ι] [Decidabl
     have hy : ∀ t, ((fun t => if t ∈ S then k t * b t else k t) t).det ≠ 0 := by
       intro t
       by_cases ht : t ∈ S
-      · simp only [ht, ite_true, Matrix.det_mul]
-        exact mul_ne_zero (hk t) (hb t)
-      · simp only [ht, ite_false]
-        exact hk t
+      · simpa only [ht, ite_true, Matrix.det_mul] using mul_ne_zero (hk t) (hb t)
+      · simpa only [ht, ite_false] using hk t
     have heq : (fun t => if t ∈ insert s S then k t * b t else k t) =
         Function.update (fun t => if t ∈ S then k t * b t else k t) s
           ((fun t => if t ∈ S then k t * b t else k t) s * b s) := by
@@ -118,9 +116,7 @@ theorem lemmaH_holds : LemmaHStatement := by
   intro ι _ _ p a P C R hP hC hR x hx hcol
   classical
   choose k b hk hbt hkb hdiag using fun s => exists_unitary_mul_upper (x s)
-  have hkdet : ∀ s, (k s).det ≠ 0 := by
-    intro s
-    exact (Matrix.UnitaryGroup.det_isUnit ⟨k s, hk s⟩).ne_zero
+  have hkdet : ∀ s, (k s).det ≠ 0 := fun s => (Matrix.UnitaryGroup.det_isUnit ⟨k s, hk s⟩).ne_zero
   have hbdet : ∀ s, (b s).det ≠ 0 := by
     intro s h
     apply hx s

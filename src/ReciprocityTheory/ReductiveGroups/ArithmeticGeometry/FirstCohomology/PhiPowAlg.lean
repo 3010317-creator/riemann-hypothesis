@@ -115,32 +115,25 @@ theorem phiPow_indep (h : IsCub θ) (k : ℕ) (a b : A) :
     intro i hi
     rw [Finset.mem_range] at hi
     have e := hv_term h k a ((b ^ k) ^ i) b (b ^ (k - 1 - i))
-    have e1 : (b ^ k) ^ i * b ^ k = (b ^ k) ^ (i + 1) := (pow_succ _ _).symm
     have e2 : b ^ (k - 1 - i) * b = b ^ (k - i) := by
       rw [← pow_succ]
       congr 1
       omega
     have e3 : k - 1 - i = k - (i + 1) := by omega
-    rw [e1, e2] at e
+    rw [← pow_succ (b ^ k) i, e2] at e
     rw [← e3]
     exact eq_mul_div_mul_mul_inv_of_mul_inv_mul_eq e
-  have tel : ∏ i ∈ Finset.range k,
-      (θ a ((b ^ k) ^ (i + 1)) (b ^ (k - (i + 1))) / θ a ((b ^ k) ^ i) (b ^ (k - i))) =
-      θ a ((b ^ k) ^ k) (b ^ (k - k)) / θ a ((b ^ k) ^ 0) (b ^ (k - 0)) :=
-    Finset.prod_range_div (fun j => θ a ((b ^ k) ^ j) (b ^ (k - j))) k
   have f1 : θ a ((b ^ k) ^ k) (b ^ (k - k)) = 1 := by
     rw [Nat.sub_self, pow_zero, ← cub_rot h 1 a, h.face]
   have f0 : θ a ((b ^ k) ^ 0) (b ^ (k - 0)) = 1 := by
     rw [pow_zero, cub_rot h a 1, h.face]
-  have refl : ∏ i ∈ Finset.range k, θ a (b ^ (k - 1 - i)) b = ∏ i ∈ Finset.range k, θ a (b ^ i) b :=
-    Finset.prod_range_reflect (fun j => θ a (b ^ j) b) k
   have cub : cubN θ k 1 b a = ∏ i ∈ Finset.range k, θ a (b ^ i) b := by
     simp only [cubN]
-    apply Finset.prod_congr rfl
-    intro i _
-    rw [one_mul, cub_rot h a (b ^ i) b]
+    exact Finset.prod_congr rfl fun i _ => by rw [one_mul, cub_rot h a (b ^ i) b]
   rw [Finset.prod_congr rfl hf, Finset.prod_mul_distrib, Finset.prod_mul_distrib,
-    Finset.prod_mul_distrib, Finset.prod_inv_distrib, tel, refl, cub, f1, f0]
+    Finset.prod_mul_distrib, Finset.prod_inv_distrib,
+    Finset.prod_range_div (fun j => θ a ((b ^ k) ^ j) (b ^ (k - j))) k,
+    Finset.prod_range_reflect (fun j => θ a (b ^ j) b) k, cub, f1, f0]
   apply Additive.ofMul.injective
   simp only [ofMul_mul, ofMul_inv, ofMul_div, ofMul_one]
   abel

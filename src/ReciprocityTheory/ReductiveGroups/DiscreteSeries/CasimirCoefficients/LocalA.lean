@@ -103,22 +103,18 @@ lemma lcA_exists_klog (ε : Fin n → Bool) : ∃ ℓ : Matrix (Fin n) (Fin n) �
   have hJu : IsUnit (Jm ε) := ⟨⟨Jm ε, Jm ε, hJJ, hJJ⟩, rfl⟩
   have hA : Tendsto (fun k => (L k)ᴴ) (𝓝 1) (𝓝 0) := by
     have h := hL1.star
-    rw [star_zero] at h
-    exact h
+    rwa [star_zero] at h
   have hB : Tendsto (fun k => -(L k)) (𝓝 1) (𝓝 0) := by
     have h := hL1.neg
-    rw [neg_zero] at h
-    exact h
+    rwa [neg_zero] at h
   have hC : Tendsto (fun k => Jm ε * L k * Jm ε) (𝓝 1) (𝓝 0) := by
     have h := (hL1.const_mul (Jm ε)).mul_const (Jm ε)
-    rw [mul_zero, zero_mul] at h
-    exact h
+    rwa [mul_zero, zero_mul] at h
   filter_upwards [hL2, hA.eventually hL3, hB.eventually hL3, hC.eventually hL3] with k h2 hA' hB' hC' hk
   have hk' : k ∈ Matrix.unitaryGroup (Fin n) ℂ ∧ k * Jm ε = Jm ε * k := hk
   have hkk : kᴴ * k = 1 := by
     have h := hk'.1
-    rw [Matrix.mem_unitaryGroup_iff'] at h
-    exact h
+    rwa [Matrix.mem_unitaryGroup_iff'] at h
   have e1 : NormedSpace.exp ((L k)ᴴ) = kᴴ := by rw [Matrix.exp_conjTranspose, h2]
   have e2 : NormedSpace.exp (-(L k)) = kᴴ := by
     rw [Matrix.exp_neg, h2]

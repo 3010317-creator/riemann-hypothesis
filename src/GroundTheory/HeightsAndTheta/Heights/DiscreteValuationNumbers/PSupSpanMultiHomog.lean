@@ -44,8 +44,6 @@ theorem SupSpanMultiHomog.proof : SupSpanMultiHomog.Statement := by
     Ideal.homogeneous_span _ _ (by
       rintro y rfl
       exact ⟨e, hx⟩)
-  have h := h1.sup h2
-  intro f hf b
-  exact weightedHomogeneousComponent_mem_of_mem R (blockWeight ι) h hf b
+  exact fun f hf b => weightedHomogeneousComponent_mem_of_mem R (blockWeight ι) (h1.sup h2) hf b
 
 end GroundTheory.Heights₂.Heights.NumbersDVR

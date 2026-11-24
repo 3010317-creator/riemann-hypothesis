@@ -71,8 +71,7 @@ theorem exists_polar (T : H →L[ℂ] H) :
     rw [DenseRange, Subtype.dense_iff, ← Set.range_comp]
     intro y hy
     change y ∈ ((LinearMap.range R.toLinearMap).topologicalClosure : Set H) at hy
-    rw [Submodule.topologicalClosure_coe, LinearMap.coe_range] at hy
-    exact hy
+    rwa [Submodule.topologicalClosure_coe, LinearMap.coe_range] at hy
   have hnorm : ∀ x, ‖T.toLinearMap x‖ ≤ 1 * ‖e x‖ := by
     intro x
     rw [one_mul, Submodule.coe_norm, he, norm_abs_apply]
@@ -375,8 +374,7 @@ theorem IsTraceClass.hasSum_trace {T : H →L[ℂ] H} (hT : IsTraceClass T) {ι 
     (b : HilbertBasis ι ℂ H) : HasSum (fun i => ⟪b i, T (b i)⟫_ℂ) (trace T) := by
   obtain ⟨A, B, hA, hB, rfl⟩ := hT.exists_comp
   have h1 := hasSum_inner_comp_comm b (stdHilbertBasis ℂ H) hA hB
-  rw [trace_comp_comm_of_isHilbertSchmidt hA hB]
-  exact h1
+  rwa [trace_comp_comm_of_isHilbertSchmidt hA hB]
 
 theorem tsum_enorm_inner_self_le {ι : Type*} (b : HilbertBasis ι ℂ H) (T : H →L[ℂ] H) :
     ∑' i, ‖⟪b i, T (b i)⟫_ℂ‖ₑ ≤ traceNorm T := by
@@ -391,8 +389,7 @@ theorem tsum_enorm_inner_self_le {ι : Type*} (b : HilbertBasis ι ℂ H) (T : H
 
 theorem IsTraceClass.summable_norm_inner {T : H →L[ℂ] H} (hT : IsTraceClass T) {ι : Type*}
     (b : HilbertBasis ι ℂ H) : Summable fun i => ‖⟪b i, T (b i)⟫_ℂ‖ := by
-  have h := ENNReal.summable_toReal ((tsum_enorm_inner_self_le b T).trans_lt hT).ne
-  simpa using h
+  simpa using ENNReal.summable_toReal ((tsum_enorm_inner_self_le b T).trans_lt hT).ne
 
 theorem enorm_trace_le (T : H →L[ℂ] H) : ‖trace T‖ₑ ≤ traceNorm T := by
   by_cases hT : IsTraceClass T

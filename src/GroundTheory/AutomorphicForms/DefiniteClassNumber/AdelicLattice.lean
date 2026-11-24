@@ -202,12 +202,10 @@ theorem denseRange_toFinAdele : DenseRange (toFinAdele K E ι) := by
       simp only [Φ, Function.comp_apply, Pi.map_apply, vecCoordsHomeomorph,
         Homeomorph.piCongrRight_apply, tensorCoordsHomeomorph_apply]
       have := vecCoords_toFinAdele b (vecOfCoords b K fun a => c a.1 a.2) (i, k)
-      rw [vecCoords_vecOfCoords] at this
-      exact this
+      rwa [vecCoords_vecOfCoords] at this
   have h1 : DenseRange (Φ ∘ toFinAdele K E ι) := by
     unfold DenseRange
-    rw [hrange]
-    exact hd
+    rwa [hrange]
   have h2 : toFinAdele K E ι = Φ.symm ∘ (Φ ∘ toFinAdele K E ι) := by
     funext x
     simp
@@ -575,8 +573,7 @@ theorem exists_int_smul_mem_adelicLattice [DecidableEq κ] (g : unitaryPoints K 
   obtain ⟨d, hd0, hd⟩ := exists_forall_mul_mem_of_mem_nhds hW0
   set r : ℕ := Ideal.absNorm (Ideal.span {d})
   have hr0 : r ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hd0
+    rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   obtain ⟨e, he⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {d}))
   refine ⟨r, by exact_mod_cast hr0, fun x hx => ?_⟩
   rw [mem_adelicLattice, toFinAdele_smul, mulVec_smul]

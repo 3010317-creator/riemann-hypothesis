@@ -86,14 +86,12 @@ theorem homog_X [DecidableEq K] (p : Σ k, ι k) : IsMultiHomog (X p : MRing ι)
     · simp
     · intro b _ hb
       rw [Finsupp.single_apply, ite_eq_right]
-      intro e
-      exact hb (eq_of_heq (Sigma.mk.inj_iff.mp e).2).symm
+      exact fun e => hb (eq_of_heq (Sigma.mk.inj_iff.mp e).2).symm
     · simp
   · rw [Pi.single_eq_of_ne h]
     refine Finset.sum_eq_zero fun j _ => ?_
     rw [Finsupp.single_apply, ite_eq_right]
-    intro e
-    exact h (congrArg Sigma.fst e).symm
+    exact fun e => h (congrArg Sigma.fst e).symm
 
 theorem homog_pow {f : MRing ι} {a : K → ℕ} (hf : IsMultiHomog f a) (n : ℕ) :
     IsMultiHomog (f ^ n) (n • a) := by
@@ -119,8 +117,7 @@ theorem homog_chartMon (c : ∀ k, ι k) (d : K → ℕ) : IsMultiHomog (chartMo
     ext k
     simp [Finset.sum_apply, Pi.single_apply]
   have := key Finset.univ
-  rw [e] at this
-  exact this
+  rwa [e] at this
 
 theorem aeval_chartMon (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) (d : K → ℕ) :
     aeval y (chartMon c d) = ∏ k, y ⟨k, c k⟩ ^ d k := by

@@ -35,8 +35,7 @@ lemma eq_one_of_forall_mem_fixed {T : Set L} (hT : adjoin K T = ⊤) {σ : Gal(L
       rw [MulAction.mem_stabilizer_iff, AlgEquiv.smul_def]
       exact h α hα
     have hf' := (Subgroup.zpowers_le.mpr hσ) hf
-    rw [MulAction.mem_stabilizer_iff, AlgEquiv.smul_def] at hf'
-    exact hf'
+    rwa [MulAction.mem_stabilizer_iff, AlgEquiv.smul_def] at hf'
   rw [hT] at hle
   ext x
   have hx := hle (IntermediateField.mem_top (x := x))
@@ -206,8 +205,7 @@ lemma adjoin_preimage_eq_top (S : Set Ω) :
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact hy
-  · intro hx
-    exact ⟨⟨x, subset_adjoin K S hx⟩, hx, rfl⟩
+  · exact fun hx => ⟨⟨x, subset_adjoin K S hx⟩, hx, rfl⟩
 
 
 
@@ -271,8 +269,7 @@ theorem kummerGroup_kummerField [IsSepClosed Ω] (Δ : Subgroup (UnitsModPow K n
         (adjoin_preimage_eq_top K Ω _) Δ (fun α hα => by
           obtain ⟨a, haΔ, ha⟩ := hTn α hα
           exact ⟨a, haΔ, (pow_eq_algebraMap_iff K n Ω _ α a).mpr ha⟩)
-      apply hle
-      exact mk_mem_kummerGroup.mpr ⟨⟨β, hβT⟩, (pow_eq_algebraMap_iff K n Ω _ _ _).mpr hβ⟩
+      exact hle (mk_mem_kummerGroup.mpr ⟨⟨β, hβT⟩, (pow_eq_algebraMap_iff K n Ω _ _ _).mpr hβ⟩)
   · intro y hy
     induction y using QuotientGroup.induction_on with
     | H b =>

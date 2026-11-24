@@ -98,8 +98,7 @@ theorem mem_localIdeal_iff {I : FractionalIdeal (𝓞 K)⁰ K} (hI : I ≠ 0)
       rw [valuedAdicCompletion_eq_valuation']
       exact (mem_iff_forall_valuation_le hI).1 hx v
     · simp only [map_zero, _root_.zero_le]
-    · intro a b _ _ ha hb
-      exact (Valuation.map_add _ a b).trans (max_le ha hb)
+    · exact fun a b _ _ ha hb => (Valuation.map_add _ a b).trans (max_le ha hb)
     · intro r a _ ha
       change Valued.v ((r : v.adicCompletion K) * a) ≤ _
       rw [map_mul]
@@ -135,8 +134,7 @@ theorem eventually_coe_mem_localIdeal {I : FractionalIdeal (𝓞 K)⁰ K} (hI : 
       (x : v.adicCompletion K) ∈ v.adicCompletionIntegers K :=
     (algebraMap K (FiniteAdeleRing (𝓞 K) K) x).2
   filter_upwards [h1, h2] with v hv1 hv2
-  rw [mem_localIdeal_iff hI, hv1, neg_zero, exp_zero]
-  exact hv2
+  rwa [mem_localIdeal_iff hI, hv1, neg_zero, exp_zero]
 
 namespace IdeleGroup
 

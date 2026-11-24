@@ -73,8 +73,7 @@ theorem exists_cocycle_map_f_eq_d (hS : S.ShortExact) {i : ℕ} (j : ℕ)
     have hd := ConcreteCategory.congr_hom ((cochainsComplex S.X₃).iCycles_d i j) x₃
     rw [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply] at hc
     rw [ConcreteCategory.comp_apply] at hd
-    rw [← hc, hx₂]
-    exact hd
+    rwa [← hc, hx₂]
   obtain ⟨x₁, hx₁⟩ := hex _ hz
   have hx₁' : (cochainsMap S.f).f j x₁ = (cochainsComplex S.X₂).d i j x₂ := hx₁
   refine ⟨(cochainsComplex S.X₁).cyclesMk x₁ (j + 1) (by simp)
@@ -83,8 +82,7 @@ theorem exists_cocycle_map_f_eq_d (hS : S.ShortExact) {i : ℕ} (j : ℕ)
       ((cochainsShortComplex_shortExact hS).d_eq_zero_of_f_eq_d_apply i j x₂ x₁ hx₁'
         (j + 1))) = x₁ :=
     (cochainsComplex S.X₁).i_cyclesMk _ _ _ _
-  rw [e]
-  exact hx₁'
+  rwa [e]
 
 end Connecting
 

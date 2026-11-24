@@ -134,8 +134,7 @@ theorem szt_hs_conj (hP : Formalism.MainNotions.S.IsCayleyU k r ε P) (g : Matri
   have hinv : P⁻¹ = Pᴴ := Matrix.inv_eq_left_inv e1
   have h := S7.decA_hs_conj (K := Pᴴ) (by rw [Matrix.conjTranspose_conjTranspose]; exact e1) g
   rw [Matrix.conjTranspose_conjTranspose] at h
-  rw [hinv]
-  exact h
+  rwa [hinv]
 
 end Cayley
 
@@ -143,7 +142,6 @@ theorem szt_gN_eq {k r : ℕ} (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k 
     Formalism.FourierDecayAlt.B.gN g = Real.sqrt (S7.hs g) := by
   unfold Formalism.FourierDecayAlt.B.gN S7.hs
   congr 1
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  exact Complex.normSq_eq_norm_sq _
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => Complex.normSq_eq_norm_sq _
 
 end ReciprocityTheory.ChartRestriction.DS

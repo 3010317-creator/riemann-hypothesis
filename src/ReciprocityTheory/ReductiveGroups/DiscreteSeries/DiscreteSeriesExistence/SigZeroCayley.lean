@@ -365,8 +365,7 @@ theorem exists_cayley_unitary (k r : ℕ) (hk : 1 ≤ k) :
         = ((C.submatrix π id)ᴴ * C.submatrix π id) * Formalism.QuantumDeterminants.Hpk k r *
             ((C.submatrix π id)ᴴ * C.submatrix π id) := by simp only [Matrix.mul_assoc]
       _ = Formalism.QuantumDeterminants.Hpk k r := by rw [hPsP, Matrix.one_mul, Matrix.mul_one]
-  · rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose]
-    exact hPP
+  · rwa [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose]
 
 section BlockSumPreservesCone
 
@@ -398,8 +397,7 @@ theorem szc_stab_iff (hU : U ∈ Formalism.REAL.Kset ε) (hV : V ∈ Formalism.R
         _ = g := by rw [hUV, Matrix.one_mul, Matrix.mul_one]
     have := h (V * g * U) (szc_Kset_mul (szc_Kset_mul hV hg) hU) v hv
     simpa only [e] using this
-  · intro h g hg v hv
-    exact h (U * g * V) (szc_Kset_mul (szc_Kset_mul hU hg) hV) v hv
+  · exact fun h g hg v hv => h (U * g * V) (szc_Kset_mul (szc_Kset_mul hU hg) hV) v hv
 
 theorem szc_conj_V (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJset ε) σ) (hU : U ∈ Formalism.REAL.Kset ε)
     (hV : V ∈ Formalism.REAL.Kset ε) (hVU : V * U = 1) {t : Matrix (Fin n) (Fin n) ℂ}
@@ -431,8 +429,7 @@ theorem szc_kType_conj (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.MainNo
   obtain ⟨hfd, hst, hirr, ⟨v, hvS, hv0, hvw⟩, hdom⟩ := hS
   have hst' := (szc_stab_iff hU hV hUV S).mp hst
   refine ⟨hfd, hst', ?_, ?_, ?_⟩
-  · intro S' hle hS'
-    exact hirr S' hle ((szc_stab_iff hU hV hUV S').mpr hS')
+  · exact fun S' hle hS' => hirr S' hle ((szc_stab_iff hU hV hUV S').mpr hS')
   · refine ⟨σ V v, hst' V hV v hvS, ?_, ?_⟩
     · intro h0
       apply hv0
@@ -516,8 +513,7 @@ theorem isDSHpk_of_isDS (hP : Formalism.MainNotions.S.IsCayleyU k r ε P) (hDS :
     intro g
     calc P * (P⁻¹ * g * P) * P⁻¹ = (P * P⁻¹) * g * (P * P⁻¹) := by simp only [Matrix.mul_assoc]
       _ = g := by rw [Matrix.mul_nonsing_inv P hdet, Matrix.one_mul, Matrix.mul_one]
-  simp only [key]
-  exact hDS
+  simpa only [key] using hDS
 
 theorem isURepOn_UH_of (hP : Formalism.MainNotions.S.IsCayleyU k r ε P) (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJset ε) σ) :
     Formalism.MainNotions.S.IsURepOn (Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r)) (fun g => σ (P * g * P⁻¹)) := by
@@ -546,8 +542,7 @@ theorem isURepOn_UH_of (hP : Formalism.MainNotions.S.IsCayleyU k r ε P) (hσ : 
     calc P * (a * b) * Pᴴ = P * a * (Pᴴ * P) * b * Pᴴ := by
           rw [hP1, Matrix.mul_one]; simp only [Matrix.mul_assoc]
       _ = P * a * Pᴴ * (P * b * Pᴴ) := by simp only [Matrix.mul_assoc]
-  · intro g hg v
-    exact hσ.2.1 _ (hmap g hg) v
+  · exact fun g hg v => hσ.2.1 _ (hmap g hg) v
   · intro v
     have hc : Continuous
         (fun g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ => P * g * P⁻¹) :=

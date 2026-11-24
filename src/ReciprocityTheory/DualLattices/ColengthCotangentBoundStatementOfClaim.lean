@@ -109,8 +109,7 @@ theorem colengthCotangentBound_of_claim (p : ℕ) [Fact p.Prime] (C : Type) [Fie
   let q := ((sqIdeal (augIdeal AA.carrier)).comap (augIdeal AA.carrier).subtype).mkQ
   have key : ∀ x z : augIdeal AA.carrier,
       ((x : N → C) - z) ∈ sqIdeal (augIdeal AA.carrier) → q x = q z := by
-    intro x z h
-    exact (Submodule.Quotient.eq _).mpr (by simpa [Submodule.mem_comap] using h)
+    exact fun x z h => (Submodule.Quotient.eq _).mpr (by simpa [Submodule.mem_comap] using h)
   let y : Fin n → OmAA AA.carrier := fun i => q ⟨g i, hg i⟩
   have hy : Submodule.span R (Set.range y) = ⊤ := by
     rw [eq_top_iff]
@@ -136,8 +135,7 @@ theorem colengthCotangentBound_of_claim (p : ℕ) [Fact p.Prime] (C : Type) [Fie
         augIdeal AA.carrier)) : N → C) = ∑ j, (if j < i then a j else 0) • g j := by
       rw [Submodule.coe_sum]
       rfl
-    rw [e2]
-    exact ha
+    rwa [e2]
   have hle := prod_le_of_gen hv hom y hy δ hrel
   rw [hcol lenN hlen]
   first

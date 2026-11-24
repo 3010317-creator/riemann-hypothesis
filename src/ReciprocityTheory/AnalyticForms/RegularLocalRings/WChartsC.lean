@@ -60,8 +60,7 @@ theorem sncAt_of_not_mem {Y : Scheme.{0}} (B : TopologicalSpace.Closeds Y) (y : 
     constructor
     · rintro ⟨i, rfl⟩
       exact (s.equivFin.symm i).2
-    · intro hz
-      exact ⟨s.equivFin ⟨z, hz⟩, by simp [r]⟩
+    · exact fun hz => ⟨s.equivFin ⟨z, hz⟩, by simp [r]⟩
   choose O hO t ht using fun i => TopCat.Presheaf.exists_germ_eq Y.presheaf (r i)
   let S : Set Y := (⋂ i, (O i : Set Y)) ∩ (B : Set Y)ᶜ
   have hSo : IsOpen S := (isOpen_iInter_of_finite fun i => (O i).2).inter B.2.isOpen_compl
@@ -73,8 +72,7 @@ theorem sncAt_of_not_mem {Y : Scheme.{0}} (B : TopologicalSpace.Closeds Y) (y : 
       funext i
       rw [TopCat.Presheaf.germ_res_apply]
       exact ht i
-    rw [this, hr]
-    exact hspan
+    rwa [this, hr]
   · rw [hs]
     exact hreg.spanFinrank_maximalIdeal
   · rw [Finset.prod_empty, Ideal.span_singleton_one, Scheme.IdealSheafData.vanishingIdeal_ideal]

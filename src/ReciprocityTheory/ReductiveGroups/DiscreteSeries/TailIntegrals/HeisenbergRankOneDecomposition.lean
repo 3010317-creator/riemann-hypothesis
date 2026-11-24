@@ -469,8 +469,7 @@ theorem ea_sum_ind {n : ℕ} (j : ℕ) (hj : j < n) : ∑ i : Fin n, (if i.val =
   · simp
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext h)
+    exact fun h => hb (Fin.ext h)
   · intro h; exact absurd (Finset.mem_univ _) h
 
 private theorem hpk_sq_lemma (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
@@ -838,8 +837,7 @@ theorem heisenberg_rankOne_decomposition_levi (hB2 : InductiveHeisenbergInputs) 
       zero_add] at h
     exact h
   have hs0 : p1.2 = 0 := by
-    have h := congrArg Complex.im hb0
-    simpa [hb] using h
+    simpa [hb] using congrArg Complex.im hb0
   have hp1 : p1 = ((0 : Fin (2 * r' + k + 1) → ℂ), (0 : ℝ)) := Prod.ext hy hs0
   rw [hp1, oneStep, ea_heis0_zero, ea_inv_one, Matrix.one_mul] at hgp
   have hmain : (heis0 k r' x)⁻¹ * w0 k r' c = κ * g := by

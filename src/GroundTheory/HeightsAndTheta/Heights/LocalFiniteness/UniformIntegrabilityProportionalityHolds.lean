@@ -152,8 +152,7 @@ theorem IsAdmissible.nrmv (h : HermNorm n) {Z : ProjCycle ℂ n} {v : Fin n → 
   exact W.mul_mem_left _ hmem'
 
 theorem AdmissibleAENrm.proof (h1 : AdmissibleAE.Statement) : AdmissibleAENrm.Statement := by
-  intro n h Z hrel
-  exact ae_restrict_of_ae ((h1 n Z hrel).mono fun v hv => hv.nrmv h)
+  exact fun n h Z hrel => ae_restrict_of_ae ((h1 n Z hrel).mono fun v hv => hv.nrmv h)
 
 end
 
@@ -595,8 +594,7 @@ theorem isRadical_map_dehom (i : (k : K) → ι k) {P' : Ideal (MvPolynomial (Σ
   have h1 : ratioMap i g ∈ (P'.map (algebraMap _ (ConeRing i))).radical :=
     ⟨n, by rw [← map_pow, heq]; exact Ideal.mem_map_of_mem _ hn⟩
   rw [← IsLocalization.map_radical (Submonoid.powers (coneUnit i)) (ConeRing i), hrad.radical, heq] at h1
-  rw [← comap_ratioMap_map i (P'.map (dehom i))]
-  exact h1
+  rwa [← comap_ratioMap_map i (P'.map (dehom i))]
 
 
 omit [Fintype K] in
@@ -646,8 +644,7 @@ theorem ChartConeLength.proof (hT : ConeRingLaurent.Statement) (hN : ChartDehomI
   have : W'.IsPrime := hW'min.1.1
   have hkerW' : RingHom.ker (segreDehom σ i) ≤ W' := le_trans (hIW ▸ hker _) hW'min.1.2
   have hW'Q : W' = Q.comap (segreDehom σ i) := by
-    rw [hQ, Ideal.comap_map_of_surjective _ hρ, eq_comm, sup_eq_left]
-    exact hkerW'
+    rwa [hQ, Ideal.comap_map_of_surjective _ hρ, eq_comm, sup_eq_left]
   have hQp : Q.IsPrime := hQ ▸ Ideal.map_isPrime_of_surjective hρ hkerW'
   have hQmin : Q ∈ ((W.map (MvPolynomial.map (Int.castRingHom ℂ))).map (dehom i)).minimalPrimes := by
     have hWyQ : (W.map (MvPolynomial.map (Int.castRingHom ℂ))).map (dehom i) ≤ Q := by
@@ -787,8 +784,7 @@ theorem ChartDehomIdeal.proof : ChartDehomIdeal.Statement := by
       have hle : J ≤ RingHom.ker (aeval (R := ℂ) y : MvPolynomial (Σ k, ι k) ℂ →+* ℂ) := by
         refine sup_le ?_ ?_
         · rw [hQ, Ideal.map_le_iff_le_comap]
-          intro f hf
-          exact hy.2 f hf
+          exact fun f hf => hy.2 f hf
         · rw [dehomIdeal, Ideal.span_le]
           rintro _ ⟨k, rfl⟩
           simp [RingHom.mem_ker, h1 k]
@@ -1042,8 +1038,7 @@ theorem exists_poly_of_linEval_eq_zero (J : Ideal (MvPolynomial (Fin n) ℂ)) [J
   refine ⟨g.coeff 0, hc, fun x hx hux => ?_⟩
   have hmem : Polynomial.eval₂ (pullback A).toRingHom (linForm u) g ∈ J := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, Polynomial.hom_eval₂]
-    rw [Polynomial.aeval_def] at hg
-    exact hg
+    rwa [Polynomial.aeval_def] at hg
   have h0 := hx _ hmem
   have hcomp : (eval x).comp (pullback A).toRingHom = eval (A *ᵥ x) :=
     RingHom.ext fun P => FibreBound.eval_pullback A x P

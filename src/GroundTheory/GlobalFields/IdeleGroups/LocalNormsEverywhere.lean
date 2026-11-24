@@ -42,8 +42,7 @@ theorem map_integerUnitsOver_eq_of_ramificationIdx_eq_one (v : HeightOneSpectrum
   refine ⟨Pi.mulSingle w y, mem_integerUnitsOver.2 fun w' ↦ ?_, ?_⟩
   · by_cases h : w' = w
     · subst h
-      rw [Pi.mulSingle_eq_same]
-      exact hy
+      rwa [Pi.mulSingle_eq_same]
     · rw [Pi.mulSingle_eq_of_ne h]
       exact one_mem _
   · rw [finiteLocalNorm_mulSingle]
@@ -70,8 +69,7 @@ theorem mem_range_ideleNorm_iff_forall (x : IdeleGroup K) :
   refine ⟨fun h ↦ ⟨h.1, h.2.1⟩, fun h ↦ ⟨h.1, h.2, ?_⟩⟩
   filter_upwards [eventually_finiteProj_mem (L := K) x, eventually_map_integerUnitsOver_eq L]
     with v hv hv'
-  rw [hv']
-  exact hv
+  rwa [hv']
 
 theorem mem_range_ideleNorm_of_forall (x : IdeleGroup K)
     (hfin : ∀ v, IdeleGroup.finiteProj v x ∈ (finiteLocalNorm L v).range)

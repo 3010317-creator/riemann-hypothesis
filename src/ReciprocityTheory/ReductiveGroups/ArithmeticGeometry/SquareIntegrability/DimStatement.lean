@@ -110,15 +110,13 @@ theorem Hf_sum_l {k : ℕ} (a : Fin k → ℂ) (v : Fin k → EuclideanSpace ℂ
     Hf (∑ i, a i • v i) w = ∑ i, a i * Hf (v i) w := by
   have h := map_sum (AddMonoidHom.mk' (fun x => Hf x w) (fun x x' => Hf_add_l x x' w))
     (fun i => a i • v i) Finset.univ
-  simp only [AddMonoidHom.mk'_apply, Hf_smul_l] at h
-  exact h
+  simpa only [AddMonoidHom.mk'_apply, Hf_smul_l] using h
 
 theorem Hf_sum_r {k : ℕ} (a : Fin k → ℂ) (v : EuclideanSpace ℂ ι) (w : Fin k → EuclideanSpace ℂ ι) :
     Hf v (∑ l, a l • w l) = ∑ l, (starRingEnd ℂ) (a l) * Hf v (w l) := by
   have h := map_sum (AddMonoidHom.mk' (fun x => Hf v x) (fun x x' => Hf_add_r v x x'))
     (fun i => a i • w i) Finset.univ
-  simp only [AddMonoidHom.mk'_apply, Hf_smul_r] at h
-  exact h
+  simpa only [AddMonoidHom.mk'_apply, Hf_smul_r] using h
 
 theorem Hf_zsmul_l (c : ℤ) (v w : EuclideanSpace ℂ ι) : (Hf (c • v) w).im = c * (Hf v w).im := by
   rw [← Int.cast_smul_eq_zsmul ℂ, Hf_smul_l]
@@ -155,8 +153,7 @@ def Bz : lat Y.b →ₗ[ℤ] lat Y.b →ₗ[ℤ] ℤ :=
       rw [smul_eq_mul, Int.cast_mul, nz_eq Y x.2 (c • y).2, nz_eq Y x.2 y.2, Submodule.coe_smul, Hf_zsmul_r])
 
 theorem Bz_apply (x y : lat Y.b) : ((Bz Y x y : ℤ) : ℝ) = (Hf (x : EuclideanSpace ℂ ι) y).im := by
-  simp only [Bz, LinearMap.mk₂_apply]
-  exact nz_eq Y x.2 y.2
+  simpa only [Bz, LinearMap.mk₂_apply] using nz_eq Y x.2 y.2
 
 theorem Bz_alt (x : lat Y.b) : Bz Y x x = 0 := by
   apply Int.cast_injective (α := ℝ)
@@ -201,12 +198,10 @@ theorem e_li : LinearIndependent ℂ e := by
     simp [Hf]
   have hre : ∀ l, ∑ i, (c i).re * (Hf (e i) (e l)).re = 0 := by
     intro l
-    have h := congrArg Complex.re (h0 (e l))
-    simpa [Complex.re_sum, Complex.mul_re, hS] using h
+    simpa [Complex.re_sum, Complex.mul_re, hS] using congrArg Complex.re (h0 (e l))
   have him : ∀ l, ∑ i, (c i).im * (Hf (e i) (e l)).re = 0 := by
     intro l
-    have h := congrArg Complex.im (h0 (e l))
-    simpa [Complex.im_sum, Complex.mul_im, hS] using h
+    simpa [Complex.im_sum, Complex.mul_im, hS] using congrArg Complex.im (h0 (e l))
   have hzero : ∀ r : Fin (Fintype.card ι) → ℝ, (∀ l, ∑ i, r i * (Hf (e i) (e l)).re = 0) →
       ∑ i, ((r i : ℂ)) • e i = 0 := by
     intro r hr
@@ -442,8 +437,7 @@ theorem av_int {k : ℕ} (Ψ : (Fin k → ℂ) → ℂ) (hc : Continuous Ψ) (w 
 
 theorem Av_add {k : ℕ} (Ψ Ψ' : (Fin k → ℂ) → ℂ) (hc : Continuous Ψ) (hc' : Continuous Ψ')
     (w : Fin k → ℂ) : DimB.Av (fun z => Ψ z + Ψ' z) w = DimB.Av Ψ w + DimB.Av Ψ' w := by
-  simp only [DimB.Av]
-  exact MeasureTheory.integral_add (av_int Ψ hc w) (av_int Ψ' hc' w)
+  simpa only [DimB.Av] using MeasureTheory.integral_add (av_int Ψ hc w) (av_int Ψ' hc' w)
 
 theorem Av_smul {k : ℕ} (Ψ : (Fin k → ℂ) → ℂ) (c : ℂ) (w : Fin k → ℂ) :
     DimB.Av (fun z => c * Ψ z) w = c * DimB.Av Ψ w := by
@@ -488,8 +482,7 @@ theorem T_inj (he : ∀ i, e i ∈ lat Y.b) (hf : ∀ j, f j ∈ lat Y.b) (q : �
     have hm' : (fun l => ((r l : ℕ) : ℤ)) = m := by
       funext l; simp only [r]; have := hm l; omega
     have := congrFun hT r
-    rw [T_apply, hm', Pi.zero_apply] at this
-    exact this
+    rwa [T_apply, hm', Pi.zero_apply] at this
   have h0 := DimB.four_zero (by omega : 0 < q) (hF Y e q F.1) (hF_diff Y e q F.1 F.2.1)
     (hF_per Y e hee he q F.1 F.2) (tau e f hee hef) _ (hF_qp Y e f hee hef hf q F.1 F.2) hall
   apply Subtype.ext

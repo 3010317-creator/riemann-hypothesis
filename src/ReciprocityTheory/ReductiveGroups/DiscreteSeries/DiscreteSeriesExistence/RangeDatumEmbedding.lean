@@ -79,11 +79,9 @@ theorem range_datumEmbedding (hP : IsPsiFor ε lam T Ψ) (v₀ : T.V) :
   ext x
   constructor
   · rintro ⟨v, rfl⟩
-    have hs : uniformisationL2 ε Ψ v₀ v ∈ smD ε (rreg ε) := by
-      exact datumEmbedding_mem_smooth hP v₀ v
+    have hs : uniformisationL2 ε Ψ v₀ v ∈ smD ε (rreg ε) := datumEmbedding_mem_smooth hP v₀ v
     simp only [lowKSubLam, Submodule.mem_comap, Submodule.mem_map]
-    refine ⟨⟨uniformisationL2 ε Ψ v₀ v, hs⟩, ?_, rfl⟩
-    exact Submodule.subset_span ⟨v, rfl⟩
+    exact ⟨⟨uniformisationL2 ε Ψ v₀ v, hs⟩, (Submodule.subset_span ⟨v, rfl⟩), rfl⟩
   · intro hx
     simp only [lowKSubLam, Submodule.mem_comap, Submodule.mem_map] at hx
     obtain ⟨y, hy, hyx⟩ := hx

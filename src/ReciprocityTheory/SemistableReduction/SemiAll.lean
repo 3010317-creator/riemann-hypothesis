@@ -129,8 +129,7 @@ theorem sc_col_inj {K : Type} [Field K] [NumberField K] {r : ℕ} {ι : Type} [F
     rw [← Matrix.map_mul, hWV, Matrix.map_one _ (map_zero σ) (map_one σ)]
   intro x y hxy
   have h2 := congrArg (fun z => (W.map σ) *ᵥ z) hxy
-  simp only [hV, Matrix.mulVec_mulVec, hWV', Matrix.one_mulVec] at h2
-  exact h2
+  simpa only [hV, Matrix.mulVec_mulVec, hWV', Matrix.one_mulVec] using h2
 
 theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < m)
     (H : Matrix (Fin r) (Fin r) ℂ) (hH : H.PosDef) (σ : K →+* ℂ) (N : Matrix (Fin r) (Fin r) K)
@@ -218,8 +217,7 @@ theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < 
         ⟨⟨0, hm⟩, Finset.mem_univ _⟩
       simpa using h
     have hPpos : 0 < P.det.re := by
-      have h := (Complex.lt_def.mp hP.det_pos).1
-      simpa using h
+      simpa using (Complex.lt_def.mp hP.det_pos).1
     rw [hdet, h1F, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
     exact lt_mul_of_one_lt_right hPpos hprod
   set Bm := embCols σ b with hBm
@@ -260,16 +258,14 @@ theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < 
     intro x y hxy
     have h0 : C' *ᵥ (x - y) = 0 := by rw [Matrix.mulVec_sub, hxy, sub_self]
     have h0' : Cm *ᵥ (x - y) - Bm *ᵥ (Y *ᵥ (x - y)) = 0 := by
-      rw [Matrix.mulVec_mulVec, ← Matrix.sub_mulVec]
-      exact h0
+      rwa [Matrix.mulVec_mulVec, ← Matrix.sub_mulVec]
     have h1 : embCols σ (Fin.append b c) *ᵥ Fin.append (-(Y *ᵥ (x - y))) (x - y) =
         embCols σ (Fin.append b c) *ᵥ Fin.append 0 0 := by
       rw [hE, hE, Matrix.mulVec_neg, Matrix.mulVec_zero, Matrix.mulVec_zero, add_zero, neg_add_eq_sub]
       exact h0'
     have h2 := hEinj h1
     funext j
-    have h3 := congrFun h2 (Fin.natAdd k j)
-    simpa [sub_eq_zero] using h3
+    simpa [sub_eq_zero] using congrFun h2 (Fin.natAdd k j)
   have hNB : Nσ * Bm = 0 := by
     rw [hNσ, hBm, ← sc_col_mul σ N b]
     ext a j
@@ -314,8 +310,7 @@ theorem sc_gram_lt {K : Type} [Field K] [NumberField K] {r k m : ℕ} (hm : 0 < 
     rw [hquot, hPq, Matrix.mul_sub C'ᴴ H K, Matrix.sub_mul]
     abel
   refine ⟨?_, ?_⟩
-  · have h := (Complex.lt_def.mp hPqpd.det_pos).1
-    simpa using h
+  · simpa using (Complex.lt_def.mp hPqpd.det_pos).1
   · rw [hsplit]
     exact detlt _ _ hPqpd hEpd
 
@@ -575,8 +570,7 @@ theorem wa_witt_ker {K : Type} [Field K] (r m : ℕ) (g : Fin r → K)
         exact hij h1.symm
       · rintro ⟨h1, h2⟩
         rcases h2 with h2 | h2 <;> omega
-    · intro h
-      exact absurd (Finset.mem_univ j) h
+    · exact fun h => absurd (Finset.mem_univ j) h
   · set p : Fin r := ⟨r - 1 - j, by omega⟩ with hp
     have hpv : (p : ℕ) = r - 1 - j := rfl
     have h := hv p
@@ -585,8 +579,7 @@ theorem wa_witt_ker {K : Type} [Field K] (r m : ℕ) (g : Fin r → K)
       have hc : (p : ℕ) + j + 1 = r ∧ ((p : ℕ) < m ∨ (j : ℕ) < m) := by
         rw [hpv]
         omega
-      rw [ite_eq_left hc, mul_one] at h
-      exact h
+      rwa [ite_eq_left hc, mul_one] at h
     · intro i _ hij
       have hi := i.isLt
       simp only [wittMat, Matrix.of_apply]
@@ -599,8 +592,7 @@ theorem wa_witt_ker {K : Type} [Field K] (r m : ℕ) (g : Fin r → K)
         ext
         rw [hpv] at h1
         omega
-    · intro h
-      exact absurd (Finset.mem_univ j) h
+    · exact fun h => absurd (Finset.mem_univ j) h
 
 theorem wittBasis_holds : WittBasisStatement := by
   intro K _ _ r S hdet
@@ -613,9 +605,7 @@ theorem wittBasis_holds : WittBasisStatement := by
       simpa [HermForm.h, Pi.single_apply, Matrix.vecMul, dotProduct] using h1
     have h2 : (fun a => S.c (x a)) = 0 := Matrix.eq_zero_of_vecMul_eq_zero hdet hrow
     funext a
-    have h3 := congrFun h2 a
-    simp only [Pi.zero_apply, map_eq_zero] at h3
-    exact h3
+    simpa only [Pi.zero_apply, map_eq_zero] using congrFun h2 a
   obtain ⟨m, bb, g, -, hm, hW, hg⟩ := wa_main S r ⊤ (by rw [finrank_top, Module.finrank_fin_fun]) hnd
   have hgmid : ∀ k : Fin r, m ≤ (k : ℕ) → (k : ℕ) + m < r → g k ≠ 0 := by
     intro k hk1 hk2 hgk
@@ -955,8 +945,7 @@ theorem sdd_append_li {k₀ k₁ : ℕ} (b₀ : Fin k₀ → Fin r → K) (c b�
   have h1' := Fintype.linearIndependent_iff.mp hb₁li _ h1
   have h0 : ∑ i, g (Fin.castAdd k₁ i) • b₀ i = 0 := by simpa [h1'] using hg
   have h0' := Fintype.linearIndependent_iff.mp hb₀li _ h0
-  intro i
-  exact Fin.addCases (fun i => h0' i) (fun j => h1' j) i
+  exact fun i => Fin.addCases (fun i => h0' i) (fun j => h1' j) i
 
 theorem sdd_append_span {k₀ k₁ : ℕ} (B : Submodule (𝓞 K) (Fin r → K)) (b₀ : Fin k₀ → Fin r → K)
     (c b₁ : Fin k₁ → Fin r → K) (hb₀ : IsKBasisIn (B ⊓ cutSub K r e) b₀) (hcB : ∀ j, c j ∈ B)
@@ -1101,8 +1090,7 @@ theorem sdd_gram_step {K : Type} [Field K] [NumberField K] {r e k₀ k₁ : ℕ}
     (((embM σ b₀)ᴴ * D * embM σ b₀)⁻¹ * ((embM σ b₀)ᴴ * D * embM σ c)) with hE
 
   have hq : quotGramC D σ b₀ c = Eᴴ * D * E := by
-    simp only [quotGramC, sdd_gramC_eq, sdd_gramX_eq]
-    exact sdd_schur _ _ _ hDpd.1 hG0.1 hu
+    simpa only [quotGramC, sdd_gramC_eq, sdd_gramX_eq] using sdd_schur _ _ _ hDpd.1 hG0.1 hu
 
   have hB1 : ∀ (l : Fin r) (j : Fin k₁),
       embM σ b₁ l j = if e ≤ (l : ℕ) then E l j else 0 := by
@@ -1143,8 +1131,7 @@ theorem gradedExt_holds (hB : LatDegBasisStatement) (hD : DegAddStatement) :
   have hk : k = k₀ + k₁ := sdd_card_eq B b (Fin.append b₀ c) hb hmem hli hsp
   subst hk
   have hpd : ∀ σ, (diagMet δ σ).PosDef := fun σ => by
-    simp only [diagMet]
-    exact posDef_diagonal_ofReal_of_pos (δ σ) (hδ σ)
+    simpa only [diagMet] using posDef_diagonal_ofReal_of_pos (δ σ) (hδ σ)
   have h1 : latDeg (diagMet δ) B b = latDeg (diagMet δ) B (Fin.append b₀ c) :=
     hB K r (k₀ + k₁) (diagMet δ) B b (Fin.append b₀ c) hpd hFG hb ⟨hmem, hli, hsp⟩
   have h2 := hD K r k₀ k₁ (diagMet δ) B b₀ c hpd hFG hb₀B hcB hli hsp
@@ -1161,8 +1148,7 @@ theorem gradedExt_holds (hB : LatDegBasisStatement) (hD : DegAddStatement) :
   linarith [h1, h2, h3]
 
 theorem absDet_holds : AbsDetStatement := by
-  intro n A C hA hC h
-  exact sdd_absDet A C hA hC h
+  exact fun n A C hA hC h => sdd_absDet A C hA hC h
 
 end ReciprocityTheory.MultiplicativeHeights
 end -- clump:auto

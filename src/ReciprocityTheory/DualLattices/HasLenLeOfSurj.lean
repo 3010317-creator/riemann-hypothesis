@@ -94,8 +94,7 @@ theorem hasLen_le_of_surj {C : Type} [Field C] {v : Valuation C NNReal} {R : Typ
     rw [hr, Submodule.span_image, hs, Submodule.map_top, LinearMap.range_eq_top]
     exact hπ.comp e.symm.surjective
   have key := prod_le_of_gen hv hx _ hy c (fun i => ⟨0, ?_⟩)
-  · rw [← hzc]
-    exact key
+  · rwa [← hzc]
   · simp only [Pi.zero_apply, ite_self, zero_smul, Finset.sum_const_zero]
     have h0 : c i • (Pi.single i 1 : (j : Fin m) → R ⧸ Ideal.span {c j}) = 0 := by
       ext j
@@ -136,8 +135,7 @@ lemma monX_zero_at (D : Lifts H U X) {α : Nb p g} (hα : α ≠ 0) : monX D α 
   have hj' : α j ≠ 0 := hj
   have h0 : xL D j 0 = 0 := LinearMap.mem_ker.mp (Submodule.mem_inf.mp (D.x_mem j)).2
   have hv : (α j).val ≠ 0 := by rwa [Ne, ZMod.val_eq_zero]
-  simp only [monX]
-  exact Finset.prod_eq_zero (Finset.mem_univ j) (by rw [h0, zero_pow hv])
+  simpa only [monX] using Finset.prod_eq_zero (Finset.mem_univ j) (by rw [h0, zero_pow hv])
 
 lemma monX_mem_aug (D : Lifts H U X) {α : Nb p g} (hα : α ≠ 0) :
     monX D α ∈ augIdeal H.AA.carrier :=
@@ -148,8 +146,7 @@ lemma monX_single (D : Lifts H U X) (k : Ix g) : monX D (Pi.single k 1) = xL D k
   · simp [ZMod.val_one]
   · intro j _ hj
     simp [Pi.single_eq_of_ne hj]
-  · intro h
-    exact absurd (Finset.mem_univ k) h
+  · exact fun h => absurd (Finset.mem_univ k) h
 
 lemma monX_zero (D : Lifts H U X) : monX D 0 = 1 := by
   rw [monX_eq]
@@ -195,8 +192,7 @@ lemma sub_lin_mem_sq (hv : v.Integers R) (D : Lifts H U X) (hdet : (valM D).det 
   classical
   have hfA : f ∈ Submodule.span R (Set.range fun α => monX D α) := by
     have h := (Submodule.mem_inf.mp hf).1
-    rw [hbasis] at h
-    exact h
+    rwa [hbasis] at h
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun R).mp hfA
   have hf0 : f 0 = 0 := LinearMap.mem_ker.mp (Submodule.mem_inf.mp hf).2
   have hval : f = (valM D) *ᵥ (fun α => algebraMap R C (c α)) := by
@@ -229,9 +225,7 @@ lemma sub_lin_mem_sq (hv : v.Integers R) (D : Lifts H U X) (hdet : (valM D).det 
         · rw [ite_eq_right hPα]
           have h0 : α = 0 := by
             by_contra h0
-            apply hPα
-            refine ⟨h0, fun k hk => hα ?_⟩
-            exact Finset.mem_image.mpr ⟨k, Finset.mem_univ k, hk.symm⟩
+            exact hPα ⟨h0, fun k hk => hα (Finset.mem_image.mpr ⟨k, Finset.mem_univ k, hk.symm⟩)⟩
           subst h0
           rw [monX_zero]
           funext y

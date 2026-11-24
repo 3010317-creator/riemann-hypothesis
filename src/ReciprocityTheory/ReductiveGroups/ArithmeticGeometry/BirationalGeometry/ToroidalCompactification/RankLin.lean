@@ -166,11 +166,9 @@ theorem finrank_eig_bc {n : ℕ} {O : Type} (L : O → (Fin n → V) →ₗ[V] (
     constructor
     · intro h b
       have hc : c ∈ ⨅ a ∈ F, LinearMap.ker (Lk a - algebraMap V k (χ a) • (LinearMap.id : (Fin n → k) →ₗ[k] (Fin n → k))) := by
-        simp only [Submodule.mem_iInf, LinearMap.mem_ker]
-        exact h
+        simpa only [Submodule.mem_iInf, LinearMap.mem_ker] using h
       exact hF b hc
-    · intro h a _
-      exact h a
+    · exact fun h a _ => h a
   have hker : LinearMap.ker B =
       (⨅ a, LinearMap.ker (L a - χ a • LinearMap.id) : Submodule V (Fin n → V)) := by
     ext c

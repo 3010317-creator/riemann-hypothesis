@@ -69,8 +69,7 @@ variable (hK : finrank ℚ K = 2) [_root_.NumberField.IsTotallyComplex K]
 include hK
 
 theorem exists_rat_eq_of_im_eq_zero {x : K} (hx : (σ x).im = 0) : ∃ q : ℚ, algebraMap ℚ K q = x := by
-  by_contra hq
-  push Not at hq
+  by_contra! hq
   have hind : LinearIndependent ℚ ![1, x] := by
     rw [LinearIndependent.pair_iff]
     intro s t hst
@@ -100,8 +99,7 @@ theorem exists_rat_eq_of_im_eq_zero {x : K} (hx : (σ x).im = 0) : ∃ q : ℚ, 
   exact InfinitePlace.isComplex_mk_iff.mp (IsTotallyComplex.isComplex _) hR
 
 theorem exists_ringOfIntegers_not_rat : ∃ θ : 𝓞 K, ∀ q : ℚ, algebraMap ℚ K q ≠ algebraMap (𝓞 K) K θ := by
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   have hsurj : ∀ x : K, ∃ q : ℚ, algebraMap ℚ K q = x := by
     intro x
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 K) x
@@ -375,8 +373,7 @@ theorem classGroup_mk_eq_iff (I J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
         apply FractionalIdeal.coeToSubmodule_injective
         show ((↑(I⁻¹ * J) : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) =
           ((FractionalIdeal.spanSingleton (𝓞 K)⁰ k : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K)
-        rw [FractionalIdeal.coe_spanSingleton]
-        exact hk
+        rwa [FractionalIdeal.coe_spanSingleton]
       calc (J : FractionalIdeal (𝓞 K)⁰ K)
           = (I : FractionalIdeal (𝓞 K)⁰ K) * ((I⁻¹ * J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
               FractionalIdeal (𝓞 K)⁰ K) := by

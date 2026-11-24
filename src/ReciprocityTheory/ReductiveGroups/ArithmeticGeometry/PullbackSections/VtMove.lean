@@ -186,8 +186,7 @@ theorem pow_rel {x : T ⟶ A} {x₀ : T₀ ⟶ G} (hx : x.left ≫ φ = τ ≫ x
 include hp hτ in
 theorem one_rel : (1 : T ⟶ A).left ≫ φ = τ ≫ (1 : T₀ ⟶ G).left := by
   have h := push_pow hp (1 : T ⟶ A) 0
-  rw [pow_zero, pow_zero, ← MonObj.comp_one (Uτ τ hτ)] at h
-  exact h
+  rwa [pow_zero, pow_zero, ← MonObj.comp_one (Uτ τ hτ)] at h
 
 include hp hτ in
 theorem pow_eq_one {x : T ⟶ A} {x₀ : T₀ ⟶ G} (hx : x.left ≫ φ = τ ≫ x₀.left) {n : ℕ} (h : x₀ ^ n = 1) : x ^ n = 1 := by
@@ -292,8 +291,7 @@ theorem twist_move (hL₁ : L₁.IsLB) (w : LB.Iso L₁ (L₀.pull φ))
   have t1 := hs Z (r ≫ ψA.left) z J₀ J hJ₀ hJ
   have t2 := _root_.ReciprocityTheory.ChartRestriction.G.PullbackSections.MixEnd.val_pmaps' w hc hαm r z J₀ J hJ₀ hJ
   have e3 : (r ≫ ψA.left) ≫ (snd T A).left = r ≫ mA.left := by rw [Category.assoc, e2]
-  rw [e1, t1, e3] at t0
-  rw [t2] at t0
+  rw [e1, t1, e3, t2] at t0
   rw [t0, hval Z r z J hJ]
   simp only [Fin.prod_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
   simp only [← _root_.mul_assoc, ← Units.val_mul]

@@ -143,8 +143,7 @@ theorem xModE_len {C : Type} [Field C] {v : Valuation C NNReal} [Algebra R C]
     obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ a
     obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ b
     rw [Submodule.mapQ_apply, Submodule.mapQ_apply, Submodule.Quotient.eq] at hab
-    rw [Submodule.Quotient.eq, Submodule.mem_comap, map_sub]
-    exact hab
+    rwa [Submodule.Quotient.eq, Submodule.mem_comap, map_sub]
   · intro z
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ z
     refine ⟨Submodule.Quotient.mk ⟨Sum.elim (z : Fin g → R) (0 : Fin g → R), by
@@ -185,8 +184,7 @@ theorem xModE_len {C : Type} [Field C] {v : Valuation C NNReal} [Algebra R C]
       · have hF := congrFun (fromRows_mulVec_comp_inl Ht Bt (εT i *ᵥ u)) k
         have hk := congrFun hwq k
         simp only [Function.comp_apply] at hF hk
-        rw [Pi.sub_apply, hF, Sum.elim_inl, Pi.zero_apply, sub_zero]
-        exact hk
+        rwa [Pi.sub_apply, hF, Sum.elim_inl, Pi.zero_apply, sub_zero]
       · have hF := congrFun (fromRows_mulVec_comp_inr Ht Bt (εT i *ᵥ u)) k
         simp only [Function.comp_apply] at hF
         rw [Pi.sub_apply, hF, Sum.elim_inr]

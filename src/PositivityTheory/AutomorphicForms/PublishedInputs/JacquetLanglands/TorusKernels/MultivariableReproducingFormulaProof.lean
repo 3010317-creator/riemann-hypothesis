@@ -200,8 +200,7 @@ theorem main (ha : B1a) (hb : B1b) (h3 : B3) (hK : KapInt) (I : Type) [Fintype I
     intro w j
     have := Equiv.piCongrLeft_apply_apply (fun _ : Fin (Fintype.card I) => P) σ w (σ.symm j)
     rw [Equiv.apply_symm_apply] at this
-    rw [MeasurableEquiv.coe_piCongrLeft]
-    exact this
+    rwa [MeasurableEquiv.coe_piCongrLeft]
   have hmp : MeasurePreserving φ (volume : Measure (X I)) (volume : Measure (X (Fin (Fintype.card I)))) :=
     measurePreserving_piCongrLeft (fun _ : Fin (Fintype.card I) => (volume : Measure P)) σ
   have hsep : SepHol fun w' : X (Fin (Fintype.card I)) => f fun i => w' (σ i) := by
@@ -216,8 +215,7 @@ theorem main (ha : B1a) (hb : B1b) (h3 : B3) (hK : KapInt) (I : Type) [Fintype I
     simp only [Function.update_apply]
     rw [heq]
   have hnrm : ∀ w' : X (Fin (Fintype.card I)), nrm (fun j => k (σ.symm j)) w' = nrm k fun i => w' (σ i) := by
-    intro w'
-    exact Fintype.prod_equiv σ.symm _ _ fun j => by simp
+    exact fun w' => Fintype.prod_equiv σ.symm _ _ fun j => by simp
   have hbd : ∀ w' : X (Fin (Fintype.card I)), ‖f fun i => w' (σ i)‖ * nrm (fun j => k (σ.symm j)) w' ≤ C := by
     intro w'; rw [hnrm]; exact hC _
   have hqq : ∀ w : X I, qq (fun j => k (σ.symm j)) (fun j => z (σ.symm j)) (φ w) = qq k z w := by

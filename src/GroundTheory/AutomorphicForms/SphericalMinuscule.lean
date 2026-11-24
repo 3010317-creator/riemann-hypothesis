@@ -63,8 +63,7 @@ theorem bdd_prod {ι : Type*} (s : Finset ι) {t : ι → ℤ} {f : ι → F} (h
     exact (h a (Finset.mem_insert_self a s)).mul (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
 
 theorem bdd_of_mem {x : F} (hx : x ∈ 𝒪[F]) : Bdd F 0 x := by
-  rw [Bdd, zpow_zero]
-  exact hx
+  rwa [Bdd, zpow_zero]
 
 theorem Bdd.mono {s t : ℤ} {x : F} (hx : Bdd F t x) (h : s ≤ t) : Bdd F s x :=
   hx.trans (zpow_le_zpow_right_of_le_one₀ valuation_uniformizer_pos
@@ -78,8 +77,7 @@ theorem le_of_bdd_zpow {s t : ℤ} (h : Bdd F t ((uniformizer F : F) ^ s)) : t �
     (valuation_uniformizer_lt_one F)] at h
 
 theorem mem_of_bdd {x : F} (h : Bdd F 0 x) : x ∈ 𝒪[F] := by
-  rw [Bdd, zpow_zero] at h
-  exact h
+  rwa [Bdd, zpow_zero] at h
 
 theorem det_mem_of_forall_mem {m : ℕ} {M : Matrix (Fin m) (Fin m) F} (hM : ∀ i j, M i j ∈ 𝒪[F]) :
     M.det ∈ 𝒪[F] := by
@@ -313,8 +311,7 @@ theorem ell_le_iwasawaExponent {ν : Fin n → ℤ} (hν : Cartan.IsDominant ν)
     fun m _ => tailSum_le_iwasawaExponent hν hg _
   refine ⟨Finset.sum_le_sum hle, fun he => ?_⟩
   have := (Finset.sum_eq_sum_iff_of_le hle).1 he
-  refine (eq_of_tailSum_eq fun m hm => ?_).symm
-  exact this ⟨m, Nat.lt_succ_of_le hm⟩ (Finset.mem_univ _)
+  exact (eq_of_tailSum_eq fun m hm => (this ⟨m, Nat.lt_succ_of_le hm⟩ (Finset.mem_univ _))).symm
 
 variable [MeasurableSpace (GL (Fin n) F)] [BorelSpace (GL (Fin n) F)]
   {μ : Measure (GL (Fin n) F)} [μ.IsHaarMeasure]
@@ -795,8 +792,7 @@ theorem exists_gMat {k : ℕ} {g : GL (Fin n) F} (hg : g ∈ minusculeSet F n k)
       simp only [Mt]
       split_ifs with hij
       · have := hM.1 i j
-        rw [hh, diag_mul_torusPow hu, hlS, lamS, ite_eq_right hij.2, zpow_zero, mul_one] at this
-        exact this
+        rwa [hh, diag_mul_torusPow hu, hlS, lamS, ite_eq_right hij.2, zpow_zero, mul_one] at this
       · rw [Matrix.one_apply]
         split_ifs
         · exact (𝒪[F]).one_mem

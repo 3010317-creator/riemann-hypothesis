@@ -159,8 +159,7 @@ theorem exists_rat_coboundary (z : cocycles (trivRep G ℤ) 2) :
   obtain ⟨w, hw, hwz⟩ := (cohomologyπ_two_eq_zero_iff_locallyConstant _ zq).1 hz
   refine ⟨fun g => w fun _ => g, hw.comp_continuous (continuous_pi fun _ => continuous_id), fun g h => ?_⟩
   have e := hwz ![g, h]
-  rw [cochainOf_cocycleι_cocyclesMapAlong, cochainOf_cocycleι_cocyclesULiftInt] at e
-  exact e
+  rwa [cochainOf_cocycleι_cocyclesMapAlong, cochainOf_cocycleι_cocyclesULiftInt] at e
 
 theorem gvChar_cohomologyMapAlong_eq_zero {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGroup H]
     (φ : G →* H) (hφ : Continuous φ) {A : Rep.{0} (ULift.{0} ℤ) H} [IsDiscreteRep A]
@@ -272,8 +271,7 @@ theorem decompHomS_eq_one_of_unramifiedDegree_eq_one
     decompHomS (v.adicCompletion K.1) S ι g = 1 := by
   have hfix : g ∈ (maximalUnramifiedExtension (v.adicCompletion K.1)
       (AlgebraicClosure (v.adicCompletion K.1))).fixingSubgroup := by
-    rw [← ker_unramifiedDegree]
-    exact hg
+    rwa [← ker_unramifiedDegree]
   apply AlgEquiv.ext
   intro y
   obtain ⟨N, hKN, hNG, hN, hyN⟩ := exists_galois_level S y.2
@@ -287,9 +285,7 @@ theorem decompHomS_eq_one_of_unramifiedDegree_eq_one
     compField_le_maximalUnramifiedExtension ι N he (ι_mem_compField ι N ⟨y, hyN⟩)
   have h1 := decompHom_apply (Kv := v.adicCompletion K.1) (ι.comp (maxUnramifiedOutside K.1 ℚ̄ S).val) g y
   have h2 : g (ι (y : ℚ̄)) = ι (y : ℚ̄) := hfix ⟨_, hmem⟩
-  apply Subtype.val_injective
-  apply ι.injective
-  exact h1.trans h2
+  exact Subtype.val_injective (ι.injective (h1.trans h2))
 
 
 
@@ -333,8 +329,7 @@ theorem eq_zero_of_decompHomS_of_unramifiedDegree
   have h2 := hχ _ (decompHomS_eq_one_of_unramifiedDegree_eq_one S ι hv _ h1)
   have hx : x = Additive.ofMul k + Additive.ofMul (k⁻¹ * Additive.toMul x) := by
     rw [← ofMul_mul, mul_inv_cancel_left, ofMul_toMul]
-  rw [hx, map_add (f := _), h2, add_zero]
-  exact hk
+  rwa [hx, map_add (f := _), h2, add_zero]
 
 theorem gvChar_decompHomS_eq_zero {A : Rep.{0} (ULift.{0} ℤ) (galUnramifiedOutside K.1 ℚ̄ S)} [IsDiscreteRep A]
     (y : cohomology A 2)

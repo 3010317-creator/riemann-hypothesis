@@ -87,11 +87,9 @@ theorem mem_span_mOrbit {ρ : Representation ℂ M V} [ρ.IsIrreducible] {v : V}
   · exfalso
     apply hv
     have := mem_mOrbitSpan_self ρ v
-    rw [h] at this
-    exact this
+    rwa [h] at this
   · have hx : x ∈ (⊤ : Subrepresentation ρ).toSubmodule := trivial
-    rw [← h] at hx
-    exact hx
+    rwa [← h] at hx
 
 theorem eq_zero_of_forall_apply' {ρ : Representation ℂ M V} [ρ.IsIrreducible] {v : V} (hv : v ≠ 0)
     {l : Dual ℂ V} (h : ∀ m, l (ρ m v) = 0) : l = 0 := by
@@ -145,8 +143,7 @@ theorem nonempty_equiv_of_matrixCoeff_eq' {ρ : Representation ℂ M V} {σ : Re
   have hsurj : Function.Surjective (mOrbitMap ρ v) := by
     intro x
     have hx := mem_span_mOrbit (ρ := ρ) hv x
-    rw [← Finsupp.range_linearCombination] at hx
-    exact hx
+    rwa [← Finsupp.range_linearCombination] at hx
   let e := LinearMap.quotKerEquivOfSurjective (mOrbitMap ρ v) hsurj
   let F : V →ₗ[ℂ] W := ((LinearMap.ker (mOrbitMap ρ v)).liftQ (mOrbitMap σ w) hker).comp
     e.symm.toLinearMap
@@ -257,8 +254,7 @@ theorem exists_eq_smul_of_commute [ρ.IsIrreducible] (he : IsWinProj ρ e)
     exact hx.2 (Subtype.ext hxY)
   · ext v
     have : v ∈ Y.toSubmodule := by rw [h]; trivial
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
 
 end Window
 
@@ -380,8 +376,7 @@ theorem isIrreducible_mGenQuotRep (he : IsWinProj ρ e) (hNe : N ≤ LinearMap.r
       have h1 := he.mem Y _ hY
       have h2 : e (ρ g u) ∈ N := hUN _ (hYU hY)
       have h3 : e (ρ g u) ∈ Y.toSubmodule ⊓ N := ⟨h1, h2⟩
-      rw [hYN, Submodule.mem_bot] at h3
-      exact h3
+      rwa [hYN, Submodule.mem_bot] at h3
     · have : q = 0 := hq
       rw [this]
       exact X.toSubmodule.zero_mem
@@ -394,8 +389,7 @@ theorem isIrreducible_mGenQuotRep (he : IsWinProj ρ e) (hNe : N ≤ LinearMap.r
     obtain ⟨u, rfl⟩ := Submodule.Quotient.mk_surjective _ q
     obtain ⟨u', hu', hu'u⟩ := hUY u.2
     have : u' = u := Subtype.ext hu'u
-    rw [← this]
-    exact hu'
+    rwa [← this]
 
 
 variable (ρ e N) in

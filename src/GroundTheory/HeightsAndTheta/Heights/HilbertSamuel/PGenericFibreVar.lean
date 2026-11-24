@@ -21,8 +21,7 @@ theorem GenericFibreVar.proof : GenericFibreVar.Statement := by
   have hchar : ∀ m : ℤ, (C m : MvPolynomial (Σ k, ι k) ℤ) ∈ mCoordIdeal y → m = 0 := by
     intro m hm
     have h1 : m ∈ (mCoordIdeal y).comap (C : ℤ →+* MRing ι) := hm
-    rw [show (mCoordIdeal y).comap (C : ℤ →+* MRing ι) = ⊥ from hhor, Ideal.mem_bot] at h1
-    exact h1
+    rwa [show (mCoordIdeal y).comap (C : ℤ →+* MRing ι) = ⊥ from hhor, Ideal.mem_bot] at h1
   obtain ⟨hqp, hcomap, hform⟩ := ReciprocityTheory.AnForm.R.extQ_spec (mCoordIdeal y) hchar
   have hq : ReciprocityTheory.AnForm.R.extQ (mCoordIdeal y) = KH.genIdeal y := rfl
   rw [← hq]
@@ -36,8 +35,7 @@ theorem GenericFibreVar.proof : GenericFibreVar.Statement := by
   · intro k
     obtain ⟨i, hi⟩ := hrel k
     refine ⟨i, fun hX => hi ?_⟩
-    rw [← hcomap, Ideal.mem_comap, map_X]
-    exact hX
+    rwa [← hcomap, Ideal.mem_comap, map_X]
   · refine GroundTheory.Heights₂.Heights.ObjectsChow.GenericFibreDim.eq_natCast_of_add_one_eq
       (D + Fintype.card K) _ ?_
     rw [hform, hdim, show D + 1 + Fintype.card K = (D + Fintype.card K) + 1 by omega]

@@ -53,8 +53,7 @@ theorem analyticAt_pullQ (hv : IsBlockMap κ v) (R : AnLogRes P' J' n)
   have hl := analyticAt_lift_chart R x j hu
   have hs : AnalyticAt ℂ (fun w => segre fun p => R.lift x ((R.A.chart j).symm w) (v p)) u := by
     refine analyticAt_pi_iff.mpr fun i => ?_
-    simp only [segre]
-    exact Finset.analyticAt_fun_prod _ fun k _ => analyticAt_pi_iff.mp hl _
+    simpa only [segre] using Finset.analyticAt_fun_prod _ fun k _ => analyticAt_pi_iff.mp hl _
   have hH : AnalyticAt ℂ (fun w => Ψ (segre fun p => R.lift x ((R.A.chart j).symm w) (v p))) u :=
     (LinearMap.toContinuousLinearMap Ψ).analyticAt _ |>.comp hs
   have hH0 : AnalyticAt ℂ (fun w => Ψ (segre fun p => R.lift x ((R.A.chart j).symm w) (v p)) 0) u :=
@@ -126,7 +125,6 @@ theorem pullbackBadImage_holds.proof : pullbackBadImage_holds.Statement := by
       have := analyticAt_pullQ hv R Ψ _ j hx hu.2.1
       rw [hcu] at this
       exact (this.differentiableAt.hasFDerivAt.restrictScalars ℝ).hasFDerivWithinAt
-    · intro u hu
-      exact det_restrictScalars_eq_zero _ hu.2.2
+    · exact fun u hu => det_restrictScalars_eq_zero _ hu.2.2
 
 end GroundTheory.Heights₂.Heights.Inter

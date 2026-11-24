@@ -189,8 +189,7 @@ theorem tateRightIso_tδ (B : Rep.{u} k G) (hEB : (E.map (tensorRight B)).ShortE
     (augSES_tensorLeft_shortExact E.X₂ B) (augSES_tensorLeft_shortExact E.X₃ B)
     (shortExact_tensorRight_tensor hE B (augIdeal k G) hEB)
     (shortExact_tensorRight_tensor hE B (Rep.leftRegular k G) hEB) hEB r
-  have e := congr(($key).hom z)
-  exact e
+  exact congr(($key).hom z)
 
 
 set_option backward.isDefEq.respectTransparency false in
@@ -204,8 +203,7 @@ theorem tateLeftIso_tδ (B : Rep.{u} k G) (hEB : (E.map (tensorRight B)).ShortEx
     (augSES_tensorRight_shortExact E.X₃ B)
     (shortExact_tensorLeft_tensorRight hE B (augIdeal k G) hEB)
     (shortExact_tensorLeft_tensorRight hE B (Rep.leftRegular k G) hEB) hEB r
-  have e := congr(($key).hom z)
-  exact e
+  exact congr(($key).hom z)
 
 
 set_option backward.isDefEq.respectTransparency false in
@@ -217,8 +215,7 @@ theorem augShiftδ_tδ (p : ℤ) (a : tateCohomology E.X₃ p) :
     (augSES_shortExact E.X₁) (augSES_shortExact E.X₂) (augSES_shortExact E.X₃)
     (shortExact_tensorLeft_of_flat hE (augIdeal k G))
     (shortExact_tensorLeft_of_flat hE (Rep.leftRegular k G)) hE p
-  have e := congr(($key).hom a)
-  exact e
+  exact congr(($key).hom a)
 
 
 set_option backward.isDefEq.respectTransparency false in
@@ -232,8 +229,7 @@ theorem tateLeftIso_tδ' (A : Rep.{u} k G) (hAE : (E.map (tensorLeft A)).ShortEx
     (shortExact_tensorLeft_tensor hE A (Rep.leftRegular k G) hAE) hAE
     (augSES_tensorRight_shortExact A E.X₁) (augSES_tensorRight_shortExact A E.X₂)
     (augSES_tensorRight_shortExact A E.X₃) r
-  have e := congr(($key).hom z)
-  exact (neg_eq_iff_eq_neg.mpr e).symm
+  exact (neg_eq_iff_eq_neg.mpr (congr(($key).hom z))).symm
 
 
 set_option backward.isDefEq.respectTransparency false in
@@ -247,8 +243,7 @@ theorem tateRightIso_tδ' (A : Rep.{u} k G) (hAE : (E.map (tensorLeft A)).ShortE
     (augSES_tensorLeft_shortExact A E.X₃)
     (shortExact_tensorLeft_tensorLeft hE A (augIdeal k G) hAE)
     (shortExact_tensorLeft_tensorLeft hE A (Rep.leftRegular k G) hAE) hAE r
-  have e := congr(($key).hom z)
-  exact e
+  exact congr(($key).hom z)
 
 end Anticomm
 
@@ -398,8 +393,7 @@ theorem tateIsoH_tδ_homologyπ {S : ShortComplex (Rep.{u} k G)} (hS : S.ShortEx
     (cocyclesMk (((tateComplex S.X₃).iCycles n).hom z) (tate_d_iCycles _ n z))
   have hd : ((tateComplex S.X₁).d (↑n + 1) (↑n + 1 + 1)).hom (iCocycles S.X₁ (n + 1) x) = 0 := by
     have := d_iCocycles x
-    rw [← inhomogeneousCochains.d_def] at this
-    exact this
+    rwa [← inhomogeneousCochains.d_def] at this
   have hy' : ((tateComplex.map S.g).f n).hom y = ((tateComplex S.X₃).iCycles n).hom z :=
     funext fun v => (hy v).trans (congrFun (iCocycles_mk _ _) v)
   have hx' : ((tateComplex.map S.f).f (↑n + 1)).hom (iCocycles S.X₁ (n + 1) x) =
@@ -411,15 +405,13 @@ theorem tateIsoH_tδ_homologyπ {S : ShortComplex (Rep.{u} k G)} (hS : S.ShortEx
       ((tateComplex S.X₁).homologyπ (n + 1)).hom
         (tateCyclesMk S.X₁ (n + 1) (iCocycles S.X₁ (n + 1) x) hd) := by
     have e := tδ_apply hS n _ hz y hy' (iCocycles S.X₁ (n + 1) x) hx' hd
-    rw [tateCyclesMk_iCycles] at e
-    exact e
+    rwa [tateCyclesMk_iCycles] at e
   have h4 := tateIsoH_homologyπ S.X₁ (n + 1)
     (tateCyclesMk S.X₁ (n + 1) (iCocycles S.X₁ (n + 1) x) hd)
   refine (congrArg (fun w => (tateIsoH S.X₁ (↑n + 1) (n + 1) (Nat.cast_succ n).symm).hom.hom w)
     h3).trans ?_
   refine (h4.trans ?_).trans h2.symm
   congr 1
-  apply cocycles_ext
-  exact (iCocycles_mk _ _).trans (iCycles_tateCyclesMk _ _ _ _)
+  exact cocycles_ext ((iCocycles_mk _ _).trans (iCycles_tateCyclesMk _ _ _ _))
 
 end GroundTheory.GroupCoh

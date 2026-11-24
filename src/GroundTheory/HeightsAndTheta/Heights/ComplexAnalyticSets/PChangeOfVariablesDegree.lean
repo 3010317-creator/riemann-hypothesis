@@ -473,29 +473,14 @@ theorem ChangeOfVariablesDegree.proof : ChangeOfVariablesDegree.Statement := by
       by_cases hx : x ∈ tsupport fun x => φ x - x
       · have hx' := hru hx
         rw [mem_closedBall_zero_iff] at hx'
-        have hf1 : f (φ x - R • e) = 0 := by
+        have key : ∀ y, ‖y - x‖ ≤ |C| → f (y - R • e) = 0 := by
+          intro y hy
           refine image_eq_zero_of_notMem_tsupport fun hmem => ?_
-          have h1 := hr hmem
-          rw [mem_closedBall_zero_iff] at h1
-          have h2 : ‖R • e‖ ≤ ‖φ x - R • e‖ + ‖φ x - x‖ + ‖x‖ := by
-            calc ‖R • e‖ = ‖-(φ x - R • e) + (φ x - x) + x‖ := by congr 1; abel
-              _ ≤ ‖-(φ x - R • e) + (φ x - x)‖ + ‖x‖ := norm_add_le _ _
-              _ ≤ ‖φ x - R • e‖ + ‖φ x - x‖ + ‖x‖ := by
-                gcongr; exact (norm_add_le _ _).trans (by rw [norm_neg])
-          rw [hRe] at h2
-          linarith [hC' x, le_abs_self r, le_abs_self ru, le_abs_self C]
-        have hf2 : f (x - R • e) = 0 := by
-          refine image_eq_zero_of_notMem_tsupport fun hmem => ?_
-          have h1 := hr hmem
-          rw [mem_closedBall_zero_iff] at h1
-          have h2 : ‖R • e‖ ≤ ‖x - R • e‖ + ‖x‖ := by
-            calc ‖R • e‖ = ‖-(x - R • e) + x‖ := by congr 1; abel
-              _ ≤ ‖-(x - R • e)‖ + ‖x‖ := norm_add_le _ _
-              _ = ‖x - R • e‖ + ‖x‖ := by rw [norm_neg]
-          rw [hRe] at h2
-          have := abs_nonneg C
-          linarith [le_abs_self r, le_abs_self ru]
-        rw [hf1, hf2, zero_mul]
+          have h2 := norm_sub_le y (y - R • e)
+          rw [sub_sub_cancel, hRe] at h2
+          linarith [mem_closedBall_zero_iff.mp (hr hmem), norm_le_norm_add_norm_sub' y x,
+            le_abs_self r, le_abs_self ru]
+        rw [key _ ((hC' x).trans (le_abs_self C)), key x (by simp), zero_mul]
       · rw [notMem_tsupport_iff_eventuallyEq] at hx
         have hev : φ =ᶠ[nhds x] id := hx.mono fun y hy => by simpa [sub_eq_zero] using hy
         have hfd : fderiv ℝ φ x = ContinuousLinearMap.id ℝ _ := by

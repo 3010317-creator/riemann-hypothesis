@@ -436,9 +436,7 @@ theorem hasCompactSupport_F0fun (hn : 0 < n) {κ : archGroup K n → ℂ} (hκc 
   have hxU : x ∈ finUSet U hU := by
     by_contra h0
     exact hne (by simp [F0fun, indicator, h0])
-  have hk : kbar κ (infPart K n x) ≠ 0 := by
-    intro h0
-    exact hne (by simp [F0fun, indicator, hxU, h0])
+  have hk : kbar κ (infPart K n x) ≠ 0 := fun h0 => hne (by simp [F0fun, indicator, hxU, h0])
   obtain ⟨s, hs⟩ : ∃ s, κ (infPart K n x * zInf K n s) ≠ 0 := by
     by_contra h0
     simp only [not_exists, ne_eq, not_not] at h0
@@ -507,11 +505,9 @@ theorem image_mul_centralSection_eq (hn : 0 < n) (E : Set (normOneGL (K := K) (n
       rw [coe_retractOne, hd, mul_inv_cancel_right]
     refine ⟨?_, ?_⟩
     · show retractOne _ ∈ E
-      rw [hr]
-      exact hx
+      rwa [hr]
     · show detModule K n _ ∈ posRealUnitInterval
-      rw [hd]
-      exact hs
+      rwa [hd]
   · rintro ⟨hE, hS⟩
     refine ⟨(retractOne g, detModule K n g), ⟨hE, hS⟩, ?_⟩
     show (retractOne g : AdelicGLn.AdelicGL K n) * centralSection K n (detModule K n g) = g
@@ -602,8 +598,7 @@ theorem exists_cc_integral_mul_eq_of_pos (hn : 0 < n) (μ : Measure (normOneGL (
       by_cases hh : h ∈ U'
       · rw [indicator_of_mem hh]
         have hh' : h ∈ Subtype.val '' (U : Set (AdelicGLn.integralFiniteGL K n)) := by
-          rw [← coe_openSubgroupOf U hU]
-          exact hh
+          rwa [← coe_openSubgroupOf U hU]
         obtain ⟨u, hu, rfl⟩ := hh'
         have hr : retractOne (infFinEquiv K n (a, (u : AdelicGLn.FiniteAdelicGL K n))) =
             archP K n a * finOne K n u := by
@@ -671,8 +666,7 @@ theorem exists_cc_integral_mul_eq_zero (μ : Measure (normOneGL (K := K) (n := 0
   have hμr : μ.real univ ≠ 0 := (ENNReal.toReal_pos hμ0 hμt).ne'
   set C : ℂ := ((ν.real univ / μ.real univ : ℝ) : ℂ) * κ default with hC
   refine ⟨⟨⟨fun _ => C, continuous_const⟩, ?_⟩, 1, one_pos, fun u _ x => rfl, fun Θ _ _ => ?_⟩
-  · show IsCompact (tsupport _)
-    exact isCompact_univ.of_isClosed_subset (isClosed_tsupport _) (subset_univ _)
+  · exact isCompact_univ.of_isClosed_subset (isClosed_tsupport _) (subset_univ _)
   · rw [integral_unique, integral_unique]
     have ha : archP K 0 (default : archGroup K 0) = default := Subsingleton.elim _ _
     simp only [CompactlySupportedContinuousMap.coe_mk, ContinuousMap.coe_mk, ha, Complex.real_smul,

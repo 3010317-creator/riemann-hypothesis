@@ -182,8 +182,7 @@ theorem primeHopfOrder_of_addEquiv (hU3 : PrimeHopfOrderStatement) (p : ℕ) [Fa
   · funext k
     have h := congrFun hxp (e.symm k)
     simp only [Pi.pow_apply] at h ⊢
-    rw [pbE_symm_apply]
-    exact h
+    rwa [pbE_symm_apply]
   · have key : ∀ F ∈ Submodule.span R {y | ∃ j : ℕ, 1 ≤ j ∧ j < p ∧ y = x ^ j},
         ∃ r : R, (pbE (C := C) (R := R) e).symm F - r • (pbE (C := C) (R := R) e).symm x ∈
           ReciprocityTheory.PGsh.L2.augIdeal AK.carrier * ReciprocityTheory.PGsh.L2.augIdeal AK.carrier := by
@@ -219,8 +218,7 @@ theorem primeHopfOrder_of_addEquiv (hU3 : PrimeHopfOrderStatement) (p : ℕ) [Fa
     intro f hf
     have hF : pbE (C := C) (R := R) e f ∈
         ReciprocityTheory.PGsh.L2.augIdeal (hopfPull e AK).carrier := by
-      rw [mem_augIdeal_pull, LinearEquiv.symm_apply_apply]
-      exact hf
+      rwa [mem_augIdeal_pull, LinearEquiv.symm_apply_apply]
     rw [haug] at hF
     obtain ⟨r, hr⟩ := key _ hF
     rw [LinearEquiv.symm_apply_apply] at hr

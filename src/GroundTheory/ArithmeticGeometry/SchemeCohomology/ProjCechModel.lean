@@ -247,9 +247,7 @@ theorem toSection_bijective {f u g : A} {e : ℕ} (hu : u ∈ 𝒜 1) (hg : g �
       have h' : locMap x.1 (nmem_of_mem x) z₀.val = 0 := by
         rw [hz₀, map_mul, hz' x, mul_zero]
       exact h.trans (h'.trans HomogeneousLocalization.val_zero.symm)
-    have hz0 : z₀ = 0 := by
-      apply hiso.1
-      exact h0.trans (map_zero _).symm
+    have hz0 : z₀ = 0 := hiso.1 (h0.trans (map_zero _).symm)
     have hcz : c * z.1 = 0 := by rw [← hz₀, hz0, HomogeneousLocalization.val_zero]
     apply Subtype.ext
     change z.1 = 0

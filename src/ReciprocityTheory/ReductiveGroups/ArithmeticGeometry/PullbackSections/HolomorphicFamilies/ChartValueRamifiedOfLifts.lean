@@ -109,8 +109,7 @@ theorem mem_Jv_pow {c : ℝ} (_hc : 0 ≤ c) : ∀ (m : ℕ) (x : T.Fr), x ∈ J
     intro x hx
     rw [pow_zero] at hx
     obtain ⟨r, rfl⟩ := Submodule.mem_one.mp hx
-    simp only [Nat.cast_zero, zero_mul, neg_zero, EReal.coe_zero]
-    exact nval_alg_nonneg T e r
+    simpa only [Nat.cast_zero, zero_mul, neg_zero, EReal.coe_zero] using nval_alg_nonneg T e r
   | succ m ih =>
     intro x hx
     rw [pow_succ] at hx
@@ -152,8 +151,7 @@ theorem two_pairMin_le {ι π : Type} [Fintype ι] [Fintype π] [DecidableEq π]
         · intro b _ hb
           have hb' : c l ≠ b := fun h => hb h.symm
           simp [hb']
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+        · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem sum_pairMin_le {T : Type} [Fintype T] (rr : T → ℕ) (n : ℕ) {π : Type} [Fintype π] [DecidableEq π]
     (c : T → π) (s : T → Bool) (a : T → ℕ → ℕ) (mo : Formalism.L2.Pj.Letter T rr n →₀ ℕ)

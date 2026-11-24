@@ -165,32 +165,25 @@ theorem cxHessian_add_re {φ : (Fin e → ℂ) → ℝ} {G : (Fin e → ℂ) →
     cxHessian (fun y' => φ y' + (G y').re + C) y = cxHessian φ y := by
   have hre2 : ContDiffAt ℝ 2 (fun y' => (G y').re) y :=
     Complex.reCLM.contDiff.contDiffAt.comp y (hG.contDiffAt.restrict_scalars ℝ)
-  have hφev : ∀ᶠ y' in 𝓝 y, DifferentiableAt ℝ φ y' :=
-    (hφ.eventually (by simp)).mono fun _ h => h.differentiableAt (by norm_num)
-  have hreev : ∀ᶠ y' in 𝓝 y, DifferentiableAt ℝ (fun y' => (G y').re) y' :=
-    (hre2.eventually (by simp)).mono fun _ h => h.differentiableAt (by norm_num)
   have heq : fderiv ℝ (fun y' => φ y' + (G y').re + C) =ᶠ[𝓝 y]
       fun y' => fderiv ℝ φ y' + fderiv ℝ (fun y' => (G y').re) y' := by
-    filter_upwards [hφev, hreev] with y' h1 h2
+    filter_upwards [hφ.eventually (by simp), hre2.eventually (by simp)] with y' h1 h2
     rw [fderiv_add_const]
-    exact (h1.hasFDerivAt.add h2.hasFDerivAt).fderiv
-  have hdφ : DifferentiableAt ℝ (fderiv ℝ φ) y :=
-    (hφ.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
-  have hdre : DifferentiableAt ℝ (fderiv ℝ (fun y' => (G y').re)) y :=
-    (hre2.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
+    exact ((h1.differentiableAt (by norm_num)).hasFDerivAt.add
+      (h2.differentiableAt (by norm_num)).hasFDerivAt).fderiv
+  have hdφ := (hφ.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
+  have hdre := (hre2.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
   have hsum : fderiv ℝ (fderiv ℝ (fun y' => φ y' + (G y').re + C)) y =
       fderiv ℝ (fderiv ℝ φ) y + fderiv ℝ (fderiv ℝ (fun y' => (G y').re)) y := by
     rw [heq.fderiv_eq]
     exact (hdφ.hasFDerivAt.add hdre.hasFDerivAt).fderiv
   have hH := hess_re hG
   have k1 : ∀ u v, fderiv ℝ (fderiv ℝ (fun y' => (G y').re)) y (Complex.I • u) (Complex.I • v) =
-      - fderiv ℝ (fderiv ℝ (fun y' => (G y').re)) y u v := by
-    intro u v
+      - fderiv ℝ (fderiv ℝ (fun y' => (G y').re)) y u v := fun u v => by
     rw [hH, hH]
     simp [map_smul, ← mul_assoc]
   have k2 : ∀ u v, fderiv ℝ (fderiv ℝ (fun y' => (G y').re)) y u (Complex.I • v) =
-      fderiv ℝ (fderiv ℝ (fun y' => (G y').re)) y (Complex.I • u) v := by
-    intro u v
+      fderiv ℝ (fderiv ℝ (fun y' => (G y').re)) y (Complex.I • u) v := fun u v => by
     rw [hH, hH]
     simp [map_smul]
   ext i j

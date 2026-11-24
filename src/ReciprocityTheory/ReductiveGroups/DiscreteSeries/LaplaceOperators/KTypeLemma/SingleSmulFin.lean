@@ -63,8 +63,7 @@ private lemma genSub_stable (E : Fin n → Fin n → Module.End ℂ M) (S : Subm
   exact Submodule.mem_sInf.2 fun T hT => hT.2 a b v (Submodule.mem_sInf.1 hv T hT)
 
 private lemma genSub_le_of (E : Fin n → Fin n → Module.End ℂ M) (S T : Submodule ℂ M) (hST : S ≤ T)
-    (hT : ∀ a b, ∀ v ∈ T, E a b v ∈ T) : genSub E S ≤ T := by
-  exact sInf_le ⟨hST, hT⟩
+    (hT : ∀ a b, ∀ v ∈ T, E a b v ∈ T) : genSub E S ≤ T := sInf_le ⟨hST, hT⟩
 
 private lemma single_smul_fin (c : Fin n) (r : ℂ) (x : M) :
     (Pi.single c (r • x) : Fin n → M) = r • Pi.single c x := by
@@ -96,8 +95,7 @@ private lemma gen_generic (E : Fin n → Fin n → Module.End ℂ M) (V : Submod
     intro a b m hm x
     have h2 : Submodule.span ℂ (Set.range fun y : Fin n => (Pi.single y m : Fin n → M)) ≤ G :=
       Submodule.span_le.2 (by rintro _ ⟨y, rfl⟩; exact hm y)
-    have h3 := G.add_mem (h2 (hT a b x m)) (genSub_stable T _ a b (hm x))
-    simpa using h3
+    simpa using G.add_mem (h2 (hT a b x m)) (genSub_stable T _ a b (hm x))
   have hle := genSub_le_of E V S hVS hSS
   rw [← Finset.univ_sum_single f]
   exact G.sum_mem fun c _ => hle (hf c) c

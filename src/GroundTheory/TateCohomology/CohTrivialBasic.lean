@@ -141,8 +141,7 @@ theorem CohTrivial.of_shortExact_X₃ {S : ShortComplex (Rep.{u} k G)} (hS : S.S
   have b : TateAcyclic (S.map (resFunctor H.subtype)).X₃ := by
     rw [ShortComplex.map_X₃]; exact h₃ H
   have c := TateAcyclic.of_shortExact_X₃ hS' a b
-  rw [ShortComplex.map_X₁] at c
-  exact c
+  rwa [ShortComplex.map_X₁] at c
 
 theorem CohTrivial.of_shortExact_X₁ {S : ShortComplex (Rep.{u} k G)} (hS : S.ShortExact)
     (h₂ : CohTrivial S.X₂) (h₁ : CohTrivial S.X₁) : CohTrivial S.X₃ := by
@@ -153,8 +152,7 @@ theorem CohTrivial.of_shortExact_X₁ {S : ShortComplex (Rep.{u} k G)} (hS : S.S
   have b : TateAcyclic (S.map (resFunctor H.subtype)).X₁ := by
     rw [ShortComplex.map_X₁]; exact h₁ H
   have c := TateAcyclic.of_shortExact_X₁ hS' a b
-  rw [ShortComplex.map_X₃] at c
-  exact c
+  rwa [ShortComplex.map_X₃] at c
 
 end ShortExact
 

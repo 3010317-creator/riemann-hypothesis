@@ -100,8 +100,7 @@ theorem fn_ext {V : X.Opens} {a b : Γ(X, V)} (h : ∀ x ∈ V, gs (𝟙 X) x V 
   apply TopCat.Presheaf.section_ext X.sheaf V a b
   intro x hx
   have e := h x hx
-  rw [gs_eq (𝟙 X) x V hx, gs_eq (𝟙 X) x V hx] at e
-  exact e
+  rwa [gs_eq (𝟙 X) x V hx, gs_eq (𝟙 X) x V hx] at e
 
 variable (L : LB X)
 
@@ -119,8 +118,7 @@ theorem exists_good (hL : L.IsLB) (z : Z) {K : Type} (ψ : K → (Z ⟶ X)) (j :
     dsimp only
     split_ifs with hk
     · have hm := hj hk.choose
-      rw [hk.choose_spec] at hm
-      exact hm
+      rwa [hk.choose_spec] at hm
     · exact (hcov _).choose_spec
   · intro k
     dsimp only
@@ -307,8 +305,7 @@ def genSec {M : LB Y} (t : LB.Gen M) (ht : t.IsGen) : LB.Sec M := ⟨fun i => (t
 
 theorem sval_genSec {φ : K → (Y ⟶ X)} {ε : K → ℤ} (t : LB.Gen (LB.LinComb L φ ε)) (ht : t.IsGen) (r : Z ⟶ Y) (z : Z)
     {J : (Z ⟶ X) → L.ι} (hJ : Good L z J) : sval (genSec t ht) r z J = (val t r z J).val := by
-  simp only [sval, val, genSec]
-  exact gs_unit r z _ (hJ.mem φ r) _
+  simpa only [sval, val, genSec] using gs_unit r z _ (hJ.mem φ r) _
 
 theorem sval_trans (hL : L.IsLB) {φ : K → (Y ⟶ X)} {ε : K → ℤ} (s : LB.Sec (LB.LinComb L φ ε)) (y : Y) (j : K → L.ι)
     (hy : y ∈ LB.wchart L φ j) : ∃ J, Good L y J ∧ gs (𝟙 Y) y (LB.wchart L φ j) (s.f j) =

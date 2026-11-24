@@ -129,9 +129,7 @@ theorem fixedToInvariants_norm (S : OpenSubgroup Gal(Ω/K)) (x : Abstract.fixedM
   refine Finset.sum_congr rfl fun c _ => ?_
   conv_lhs => rw [← QuotientGroup.out_eq' c]
   rw [Abstract.cosetSMul_mk]
-  apply Additive.toMul.injective
-  apply Units.ext
-  exact (coe_galUnitsHom_apply K Ω _ _).symm
+  exact Additive.toMul.injective (Units.ext (coe_galUnitsHom_apply K Ω _ _).symm)
 
 end Subgroups
 

@@ -86,8 +86,7 @@ theorem logNorm_oneLine (z : (Σ k, ι k) → ℂ) : logNorm (oneLine (ι := ι)
   simp [logNorm, oneLine, HermLine.ofWeight, Real.exp_neg]
 
 theorem isSmoothHerm_oneLine : IsSmoothHerm (oneLine (ι := ι)) := by
-  simp only [IsSmoothHerm, oneLine, HermLine.ofWeight]
-  exact contDiffOn_const
+  simpa only [IsSmoothHerm, oneLine, HermLine.ofWeight] using contDiffOn_const
 
 def HermLine.sqMetric (b : K → ℕ) : HermLine ι where
   a k := b k
@@ -111,8 +110,7 @@ theorem isSmoothHerm_sqMetric (b : K → ℕ) : IsSmoothHerm (HermLine.sqMetric 
       (fun z : (Σ k, ι k) → ℂ => ∑ i, ‖z ⟨k, i⟩‖ ^ 2) := by
     intro k
     apply ContDiff.sum
-    intro i _
-    exact (contDiff_norm_sq ℝ).comp (contDiff_apply ℝ (fun _ => ℂ) (⟨k, i⟩ : Σ k, ι k))
+    exact fun i _ => (contDiff_norm_sq ℝ).comp (contDiff_apply ℝ (fun _ => ℂ) (⟨k, i⟩ : Σ k, ι k))
   show ContDiffOn ℝ _ (fun z : (Σ k, ι k) → ℂ => ∏ k, Real.sqrt (∑ i, ‖z ⟨k, i⟩‖ ^ 2) ^ b k) _
   apply contDiffOn_prod
   intro k _
@@ -142,9 +140,7 @@ theorem locDens_congr_of_eqOn (R : AnLogRes P J e) {Φ Φ' : Fin e → LocPot R.
     ∀ j, ∀ y ∈ (R.A.chart j).target, locDens R.A Φ j y = locDens R.A Φ' j y := by
   intro j y hy
   unfold locDens
-  apply maDens_congr_fderiv
-  intro i
-  exact (germ_of_eqOn R (h i) j y hy).fderiv
+  exact maDens_congr_fderiv (fun i => (germ_of_eqOn R (h i) j y hy).fderiv)
 
 theorem potOf_cons {n : ℕ} (R : AnLogRes P J e) (C : HermLine ι) (L : Fin n → HermLine ι) :
     (fun j => potOf R ((Fin.cons C L : Fin (n + 1) → HermLine ι) j)) =

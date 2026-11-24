@@ -73,8 +73,7 @@ theorem eval_smul_of_isHomogeneous {n : ℕ} {c : MvPolynomial (Fin n) ℂ} {m :
   simp only [map_sum, Finset.mul_sum, eval_monomial]
   refine Finset.sum_congr rfl fun d hd => ?_
   have hdeg : ∑ i ∈ d.support, d i = m := by
-    have h1 := hc (mem_support_iff.mp hd)
-    simpa [Finsupp.weight_apply, Finsupp.sum] using h1
+    simpa [Finsupp.weight_apply, Finsupp.sum] using hc (mem_support_iff.mp hd)
   simp only [mul_pow, Finsupp.prod_mul]
   rw [show (d.prod fun _ e => t ^ e) = t ^ m by
     rw [Finsupp.prod, Finset.prod_pow_eq_pow_sum, hdeg]]

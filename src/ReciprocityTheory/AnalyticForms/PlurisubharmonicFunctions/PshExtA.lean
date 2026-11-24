@@ -198,29 +198,15 @@ theorem pert_submean {E : Finset ℂ} {c a : ℂ} {s ε δ : ℝ} (hs : 0 < s) (
     (continuousOn_const.mul hsumc).circleIntegrable'
   refine ⟨hsi.add hqi, ?_⟩
   unfold pert
-  rw [circleAverage_fun_add hsi hqi]
-  have h1 : circleAverage (fun ζ : ℂ => ε * ∑ f ∈ E, log ‖ζ - f‖) a s
-      = ε * ∑ f ∈ E, circleAverage (fun ζ : ℂ => log ‖ζ - f‖) a s := by
-    rw [show circleAverage (fun ζ : ℂ => ε * ∑ f ∈ E, log ‖ζ - f‖) a s
-      = ε * circleAverage (fun ζ : ℂ => ∑ f ∈ E, log ‖ζ - f‖) a s from cA_mul _ _ _ _]
-    rw [circleAverage_fun_sum hli]
-  have h2 : circleAverage (fun ζ : ℂ => δ * ‖ζ - c‖ ^ 2) a s = δ * (‖a - c‖ ^ 2 + s ^ 2) := by
-    rw [show circleAverage (fun ζ : ℂ => δ * ‖ζ - c‖ ^ 2) a s
-      = δ * circleAverage (fun ζ : ℂ => ‖ζ - c‖ ^ 2) a s from cA_mul _ _ _ _]
-    rw [circleAverage_norm_sub_sq a c hs.le]
-  rw [h1, h2]
+  rw [circleAverage_fun_add hsi hqi, cA_mul, cA_mul, circleAverage_fun_sum hli,
+    circleAverage_norm_sub_sq a c hs.le]
   have h3 : ∑ f ∈ E, log ‖a - f‖ ≤ ∑ f ∈ E, circleAverage (fun ζ : ℂ => log ‖ζ - f‖) a s := by
-    apply Finset.sum_le_sum
-    intro f hf
+    refine Finset.sum_le_sum fun f hf => ?_
     have haf : a - f ≠ 0 := sub_ne_zero.2 (fun h => haE (h ▸ hf))
     rw [circleAverage_log_norm_sub_const_eq_log_radius_add_posLog hs.ne']
-    have : log ‖a - f‖ = log s + log (s⁻¹ * ‖a - f‖) := by
-      rw [log_mul (inv_ne_zero hs.ne') (norm_ne_zero_iff.2 haf), log_inv]; ring
-    rw [this]
     have : log (s⁻¹ * ‖a - f‖) ≤ log⁺ (s⁻¹ * ‖a - f‖) := le_max_right _ _
-    linarith
-  have h4 := mul_le_mul_of_nonneg_left h3 hε
-  nlinarith
+    linarith [log_mul (inv_ne_zero hs.ne') (norm_ne_zero_iff.2 haf), log_inv s]
+  linarith [mul_le_mul_of_nonneg_left h3 hε]
 
 end
 

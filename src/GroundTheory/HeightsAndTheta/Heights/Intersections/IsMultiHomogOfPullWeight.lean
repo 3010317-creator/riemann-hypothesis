@@ -204,8 +204,7 @@ theorem exists_elim_homog {κ : K → K'} {v : (Σ k, ι k) → (Σ k', ι' k')}
   classical
   obtain ⟨r, a, ha0, hE⟩ := exists_elim hv hP' hQ hg hgP c hc
   obtain ⟨D, hD⟩ : ∃ D, weightedHomogeneousComponent (pullWeight v) D (a 0) ∉ imageZ v P' := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply ha0
     rw [← sum_weightedHomogeneousComponent (w := pullWeight v) (φ := a 0),
       finsum_eq_sum _ (weightedHomogeneousComponent_finsupp _)]
@@ -244,8 +243,7 @@ theorem eval_eq_zero {v : (Σ k, ι k) → (Σ k', ι' k')} {P' : Ideal (MRing �
       rw [map_pow, map_pow, map_X, eval_X]
       exact pow_ne_zero _ (hz k')
   rcases mul_eq_zero.mp h0 with h | h
-  · rw [map_rename, eval_rename] at h
-    exact h
+  · rwa [map_rename, eval_rename] at h
   · exact absurd (pow_eq_zero_iff'.mp h).1 hT
 end Elim
 
@@ -258,8 +256,7 @@ theorem PullbackEliminationOfVariable.proof : PullbackEliminationOfVariable.Stat
   intro K _ ι _ K' _ ι' _ κ v P' J' n hv hP' hQ hJ hJP
   obtain ⟨S, hS, rfl⟩ := hJ
   obtain ⟨g, hgS, hgP⟩ : ∃ g ∈ S, g ∉ P' := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hJP (Ideal.span_le.mpr h)
   obtain ⟨d, hg⟩ := hS g hgS
   have : P'.IsPrime := hP'.2.1.1

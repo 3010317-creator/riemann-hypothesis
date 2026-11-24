@@ -58,8 +58,7 @@ theorem continuous_algebraMap : Continuous (algebraMap K L) := by
   refine ⟨Units.mk0 (valuation K (a ^ n)) (by simp [ha0]), trivial, fun x hx => ?_⟩
   simp only [Set.mem_ofPred_eq, Units.val_mk0] at hx ⊢
   calc valuation L (algebraMap K L x) < valuation L (algebraMap K L (a ^ n)) := by
-        rw [← (valuation L).vlt_iff_lt, ValuativeExtension.vlt_iff_vlt, (valuation K).vlt_iff_lt]
-        exact hx
+        rwa [← (valuation L).vlt_iff_lt, ValuativeExtension.vlt_iff_vlt, (valuation K).vlt_iff_lt]
     _ = valuation L (algebraMap K L a) ^ n := by simp
     _ < γ := hn
 

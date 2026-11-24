@@ -38,8 +38,7 @@ theorem exists_height_le_of_isCompact {ω : Set (AdelicGLn.AdelicGL K n)} (hω :
     continuous_snd.comp (AdelicGLn.prodEquiv K n).continuous
   have hW : W ∈ 𝓝 (1 : AdelicGLn.AdelicGL K n) := by
     refine inter_mem (hcA.continuousAt.preimage_mem_nhds ?_) (hcF.continuousAt.preimage_mem_nhds ?_)
-    · rw [show archPart (1 : AdelicGLn.AdelicGL K n) = 1 by simp [archPart]]
-      exact hC₀
+    · rwa [show archPart (1 : AdelicGLn.AdelicGL K n) = 1 by simp [archPart]]
     · have : finPart (1 : AdelicGLn.AdelicGL K n) = 1 := by simp [finPart]
       rw [this]
       exact (AdelicGLn.isOpen_integralFiniteGL K n).mem_nhds (one_mem _)
@@ -148,8 +147,7 @@ theorem exists_height_le_normOne {ω : Set (AdelicGLn.AdelicGL K n)} (hω : IsCo
     have hk := Reduction.mem_normOneGL_iff_detModule.1 (Reduction.maxCompact_le_normOneGL hkk)
     rw [hxe, map_mul, map_mul, hk, mul_one] at h1
     have h2 := congrArg Subtype.val h1
-    rw [Positive.val_mul, detModule_diagUnits_posIdele, Positive.val_one] at h2
-    exact h2
+    rwa [Positive.val_mul, detModule_diagUnits_posIdele, Positive.val_one] at h2
   have hb0 : 0 < (Reduction.detModule K n b : ℝ) := (Reduction.detModule K n b).2
   have hPd : P ^ d ≤ c₀ := by
     have h1 := hM₂ b hb

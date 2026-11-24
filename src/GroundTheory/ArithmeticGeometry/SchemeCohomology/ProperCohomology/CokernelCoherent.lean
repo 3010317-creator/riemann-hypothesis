@@ -113,8 +113,7 @@ lemma surjective_cokernel_π_app [F.IsQuasicoherent] [G.IsQuasicoherent] {U : X.
   have h3 : Function.Surjective ((Rf.map (cokernel.π φ)).app ⊤) := by
     rw [h2]
     exact (bijective_app_of_iso (PreservesCokernel.iso Rf φ).symm ⊤).2.comp h1
-  rw [← fromSpec_image_top hU]
-  exact h3
+  rwa [← fromSpec_image_top hU]
 
 theorem isCoherent_cokernel [F.IsQuasicoherent] (hG : IsCoherent G) :
     IsCoherent (cokernel φ) := by

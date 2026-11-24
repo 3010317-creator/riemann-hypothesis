@@ -72,8 +72,7 @@ theorem length_le_ringKrullDim_quotient_colon {R : Type*} [CommRing R] [IsLocalR
       simp only [Submodule.mem_colon_singleton, Submodule.mem_bot]
       rw [smul_comm]
       constructor
-      · intro h
-        exact (hxreg.pow k) (show x ^ k • r • y₁ = x ^ k • 0 by rw [h, smul_zero])
+      · exact fun h => (hxreg.pow k) (show x ^ k • r • y₁ = x ^ k • 0 by rw [h, smul_zero])
       · intro h
         rw [h, smul_zero]
     rw [hcolon]
@@ -81,8 +80,7 @@ theorem length_le_ringKrullDim_quotient_colon {R : Type*} [CommRing R] [IsLocalR
     set I := Submodule.colon (⊥ : Submodule R M) {y₁} with hI
     set ybar : QuotSMulTop x M := Submodule.Quotient.mk y₁ with hybar
     have hybar0 : ybar ≠ 0 := by
-      rw [hybar, Ne, Submodule.Quotient.mk_eq_zero]
-      exact hy₁
+      rwa [hybar, Ne, Submodule.Quotient.mk_eq_zero]
     have hih := ih ybar hybar0 hmem' hrs
 
     have hle : I ⊔ Ideal.span {x} ≤ Submodule.colon (⊥ : Submodule R (QuotSMulTop x M)) {ybar} := by
@@ -124,8 +122,7 @@ theorem ringKrullDim_quotient_eq_of_mem_minimalPrimes {B : Type*} [CommRing B] [
   obtain ⟨rs, hm, hreg, hdim⟩ := IsCohenMacaulayLocalRing.exists_isWeaklyRegular (B := B)
   have hann : Module.annihilator B B = ⊥ := Module.annihilator_eq_bot.mpr inferInstance
   have hP' : P ∈ (Module.annihilator B B).minimalPrimes := by
-    rw [hann]
-    exact hP
+    rwa [hann]
   have hA := Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes B B hP'
   obtain ⟨hprime, y, hy⟩ := (isAssociatedPrime_iff.mp hA)
   have hy0 : y ≠ 0 := by

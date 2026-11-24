@@ -86,10 +86,8 @@ private theorem contDiff_adjugate' {m : ℕ} {k : WithTop ℕ∞} :
     refine contDiff_pi.2 fun a => contDiff_pi.2 fun b => ?_
     by_cases hab : a = j
     · subst hab
-      simp only [Matrix.updateRow_self]
-      exact contDiff_const
-    · simp only [Matrix.updateRow_ne hab]
-      exact contDiff_pi.1 (contDiff_pi.1 contDiff_id a) b
+      simpa only [Matrix.updateRow_self] using contDiff_const
+    · simpa only [Matrix.updateRow_ne hab] using contDiff_pi.1 (contDiff_pi.1 contDiff_id a) b
   exact contDiff_det_k_type.comp hrow
 
 private theorem contDiffOn_inv_det_ne_zero' {m : ℕ} {k : WithTop ℕ∞} :
@@ -109,8 +107,7 @@ private theorem contDiff_lead_k_type {k : WithTop ℕ∞} (i : ℕ) :
       contDiff_pi.2 fun a => contDiff_pi.2 fun b =>
         contDiff_pi.1 (contDiff_pi.1 contDiff_id (Fin.castLE h a)) (Fin.castLE h b)
     exact contDiff_det_k_type.comp hs
-  · simp only [lead, dite_eq_right h]
-    exact contDiff_const
+  · simpa only [lead, dite_eq_right h] using contDiff_const
 
 private theorem det_ne_zero_of_mem_omegaP {z : Matrix (Fin n) (Fin n) ℂ} (hz : z ∈ OmegaP n) : z.det ≠ 0 := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
@@ -195,8 +192,7 @@ theorem contDiffOn_powerDet (μ : Fin n → ℤ) : ContDiffOn ℂ ∞ (PhiP μ) 
   have hne : ∀ z ∈ OmegaP n, lead ((i : ℕ) + 1) z⁻¹ ≠ 0 := fun z hz =>
     (show ∀ j : Fin n, lead ((j : ℕ) + 1) z⁻¹ ≠ 0 from hz) i
   rcases Int.eq_nat_or_neg (-(μ i - muNext μ i)) with ⟨k, hk | hk⟩
-  · simp only [hk, zpow_natCast]
-    exact hg.pow k
+  · simpa only [hk, zpow_natCast] using hg.pow k
   · simp only [hk, _root_.zpow_neg, zpow_natCast]
     exact (hg.pow k).inv fun z hz => pow_ne_zero _ (hne z hz)
 
@@ -207,8 +203,7 @@ theorem leftHol_neg (X : Matrix (Fin n) (Fin n) ℂ) (F : Matrix (Fin n) (Fin n)
 theorem rightHol_powerDet_eq_neg_leftHol (μ : Fin n → ℤ) (X : Matrix (Fin n) (Fin n) ℂ) {z : Matrix (Fin n) (Fin n) ℂ}
     (hz : z ∈ OmegaP n) : Rhol X (PhiP μ) z = -Lhol X (PhiM μ) z⁻¹ := by
   have h := tb_hWord_phiP μ [X] z hz
-  rw [← leftHol_neg]
-  exact h
+  rwa [← leftHol_neg]
 
 theorem rightHol_powerDet_lower_eq_zero (μ : Fin n → ℤ) {a b : Fin n} (hab : b < a) {z : Matrix (Fin n) (Fin n) ℂ}
     (hz : z ∈ OmegaP n) : Rhol (Matrix.single a b 1) (PhiP μ) z = 0 := by

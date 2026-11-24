@@ -67,10 +67,8 @@ theorem diff_nmat (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
     Differentiable ℂ fun z : V (nd X) => nmat X z τ a b := by
   unfold nmat
   by_cases h : b < a
-  · simp only [h, dite_eq_left]
-    exact diff_coord _
-  · simp only [h, dite_eq_right, not_false_eq_true]
-    exact differentiable_const _
+  · simpa only [h, dite_eq_left] using diff_coord _
+  · simpa only [h, dite_eq_right, not_false_eq_true] using differentiable_const _
 
 theorem diff_cpt (X : Data E r) (x0 : Frame X.Ψ r) : Differentiable ℂ (cpt X x0) := by
   refine differentiable_pi.2 fun τ => differentiable_pi.2 fun a => differentiable_pi.2 fun b => ?_
@@ -79,8 +77,7 @@ theorem diff_cpt (X : Data E r) (x0 : Frame X.Ψ r) : Differentiable ℂ (cpt X 
   exact Differentiable.fun_sum fun c _ => (diff_nmat X τ c b).const_mul _
 
 theorem cont_nmatm (X : Data E r) (τ : X.Ψ) : Continuous fun w : V (nd X) => mat (nmat X w) τ := by
-  refine continuous_pi fun a => continuous_pi fun b => ?_
-  exact (diff_nmat X τ a b).continuous
+  exact continuous_pi fun a => continuous_pi fun b => (diff_nmat X τ a b).continuous
 
 def Jd (X : Data E r) : Matrix (Fin r) (Fin r) ℂ := Matrix.diagonal fun a : Fin r => ((sgn X.p0 (a : ℕ) : ℝ) : ℂ)
 
@@ -267,8 +264,7 @@ theorem subMean_holds : SubMeanStatement (E := E) := by
       _ ≤ _ := mul_le_mul_of_nonneg_left (lintegral_mono_set hmem) zero_le
   have hle : ‖P x‖ₑ ^ 2 ≤ (volume (Metric.ball (0 : V (nd X)) R))⁻¹ *
       ∫⁻ z in Metric.ball (0 : V (nd X)) R, ‖P (cpt X x z)‖ₑ ^ 2 := by
-    rw [← ENNReal.div_eq_inv_mul, ENNReal.le_div_iff_mul_le (Or.inl hvpos) (Or.inl hvtop)]
-    exact hmv
+    rwa [← ENNReal.div_eq_inv_mul, ENNReal.le_div_iff_mul_le (Or.inl hvpos) (Or.inl hvtop)]
   calc ‖P x‖ₑ ^ 2 ≤ (volume (Metric.ball (0 : V (nd X)) R))⁻¹ * (ENNReal.ofReal 4 *
         ∫⁻ w in Bset X x ρ, ‖P (cpt X x w)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (-phla X la (cpt X x w)))) :=
         hle.trans (mul_le_mul_of_nonneg_left hint zero_le)

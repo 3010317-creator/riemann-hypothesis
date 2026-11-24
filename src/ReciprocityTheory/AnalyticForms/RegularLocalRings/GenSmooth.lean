@@ -74,14 +74,12 @@ theorem gs_exists_rows_det_ne_zero {K : Type*} [Field K] {t r : ℕ} (M : Matrix
     have hc : M.mulVec (fun k => f (Pi.single k 1)) = 0 := by
       funext i
       have hi : M i ∈ LinearMap.ker f := hf (Submodule.subset_span ⟨i, rfl⟩)
-      rw [LinearMap.mem_ker, hfx] at hi
-      exact hi
+      rwa [LinearMap.mem_ker, hfx] at hi
     have hc0 := hM _ hc
     apply hf0
     apply (Pi.basisFun K (Fin r)).ext
     intro k
-    have hk := congrFun hc0 k
-    simpa using hk
+    simpa using congrFun hc0 k
 
   obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' K (fun i => M i)
   have hsp' : Submodule.span K (Set.range ((fun i => M i) ∘ a)) = ⊤ := hsp.trans hspan

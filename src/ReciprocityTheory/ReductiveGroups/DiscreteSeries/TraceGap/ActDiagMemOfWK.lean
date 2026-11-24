@@ -229,14 +229,10 @@ theorem adMat_exp_hasDeriv (X : Matrix (Fin n) (Fin n) ℂ) (x y : Fin n × Fin 
   by_cases hx : IsPhys ε x <;> by_cases hy : IsPhys ε y
   · simp only [hx, hy, ite_true, and_self]
     have h := (he x.1 y.1).fun_mul (he x.2 y.2).star
-    rw [h0, h0] at h
-    exact h
-  · simp only [hx, hy, ite_true, ite_false, and_false]
-    exact hasDerivAt_const _ _
-  · simp only [hx, ite_false, false_and]
-    exact hasDerivAt_const _ _
-  · simp only [hx, ite_false, false_and]
-    exact hasDerivAt_const _ _
+    rwa [h0, h0] at h
+  · simpa only [hx, hy, ite_true, ite_false, and_false] using hasDerivAt_const _ _
+  · simpa only [hx, ite_false, false_and] using hasDerivAt_const _ _
+  · simpa only [hx, ite_false, false_and] using hasDerivAt_const _ _
 
 theorem adPhys_exp_hasDeriv (X : Matrix (Fin n) (Fin n) ℂ) (w : Fin n × Fin n → ℂ) (x : Fin n × Fin n) :
     HasDerivAt (fun t : ℝ => adPhys ε (NormedSpace.exp ((t : ℂ) • X)) w x) (∑ y, adD ε X x y * w y) 0 := by
@@ -498,8 +494,7 @@ theorem diagE_mem_of_wK (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D
       ((((1 : ℂ) • diagE ε (eT E) cpT cmT a b - star (1 : ℂ) • diagE ε (eT E) cpT cmT b a) y) -
         Complex.I • (((Complex.I • diagE ε (eT E) cpT cmT a b - star Complex.I • diagE ε (eT E) cpT cmT b a)) y)) := by
     simp only [Complex.star_def, Complex.conj_I, map_one]
-    simp only [LinearMap.sub_apply, LinearMap.smul_apply, one_smul]
-    exact gen _ _
+    simpa only [LinearMap.sub_apply, LinearMap.smul_apply, one_smul] using gen _ _
   rw [key]
   exact Submodule.smul_mem _ _ (Submodule.sub_mem _ h1 (Submodule.smul_mem _ _ h2))
 

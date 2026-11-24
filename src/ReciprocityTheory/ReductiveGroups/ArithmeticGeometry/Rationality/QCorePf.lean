@@ -121,8 +121,7 @@ theorem exists_length_quotient_span_le (hL : QuotLocalStatement) {R F : Type} [C
 
   have hne : ∀ i, ∃ q, c i q ≠ 0 := by
     intro i
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hdet (Matrix.det_eq_zero_of_row_eq_zero i fun j => by simp [h])
 
   have hex : ∀ i, ∃ μ : ℤ, (∃ q, c i q ≠ 0 ∧ ordAt v (c i q) = μ) ∧
@@ -248,8 +247,7 @@ theorem local_len (hL : QuotLocalStatement) (P : Submodule K₁ U) (Mw : Submodu
   have hmemN : ∀ y : Mw, y ∈ N ↔ (y : U) ∈ P := by
     intro y
     constructor
-    · intro hy
-      exact hspanP _ (Submodule.mem_inf.mp (Submodule.mem_comap.mp hy)).1
+    · exact fun hy => hspanP _ (Submodule.mem_inf.mp (Submodule.mem_comap.mp hy)).1
     · intro hy
       exact Submodule.mem_comap.mpr (Submodule.mem_inf.mpr ⟨Submodule.subset_span hy, y.2⟩)
 
@@ -509,8 +507,7 @@ theorem average (la : HeightOneSpectrum (𝓞 K)) (L : ℕ∞) (D : K₁)
     have h1 : ((q.1.ramificationIdx (𝓞 K) * ℓ : ℕ) : ℕ∞) = n := by push_cast; exact hn1
     have h2 : q.1.ramificationIdx (𝓞 K) * ℓ = n := by exact_mod_cast h1
     have h3 : (q.1.ramificationIdx (𝓞 K) : ℝ) * ℓ = n := by exact_mod_cast h2
-    rw [h3]
-    exact hn2
+    rwa [h3]
   have hsum : ∑ q : S, (q.1.inertiaDeg (𝓞 K) : ℝ) * ((q.1.ramificationIdx (𝓞 K) : ℝ) * ℓ) ≤
       ∑ q : S, (q.1.inertiaDeg (𝓞 K) : ℝ) * ((ordAt (E.symm q).1 D : ℝ) + t (E.symm q).1 +
         ρ * ((q.1.ramificationIdx (𝓞 K) : ℝ) * B)) :=
@@ -568,8 +565,7 @@ theorem qcoreLocal : QCoreLocalStatement := by
         (s := fun i => s i w) (β := (w.asIdeal.ramificationIdx (𝓞 K) : ℝ) * be la)
         (hint := fun i m hm hne => hint la w hw i m hm hne)
       refine ⟨n, ?_, ?_⟩
-      · rw [← hLD K K₁ V M hM hspan W θ la w hw]
-        exact hn
+      · rwa [← hLD K K₁ V M hM hspan W θ la w hw]
       · simpa only using hnle)
   refine ⟨ℓ, hℓ, ?_⟩
   simpa only [nnFun] using hle
@@ -606,8 +602,7 @@ theorem quotCore_of_local (hL : QuotLocalStatement) : QuotCoreStatement := by
       · intro la hla
         rw [Set.Finite.coe_toFinset]
         exact Function.support_mul_subset_left _ _ hla
-    rw [hsum]
-    exact hglob
+    rwa [hsum]
 
 end ReciprocityTheory.ChartRestriction.G.FreeQuotientRank
 end -- clump:auto

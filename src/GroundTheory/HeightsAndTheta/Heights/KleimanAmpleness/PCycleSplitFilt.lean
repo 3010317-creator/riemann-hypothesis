@@ -151,8 +151,7 @@ theorem restrLen_of_irrelevant (pp : Ideal (Poly S N)) (hX : ∀ i, (X i : Poly 
     exact Submodule.subset_span ⟨1, h1, y, hy I, (one_smul Ω y).symm⟩
   have hs : Subsingleton (F.secs ⧸ ((F.twist (idealSys x pp)).secs).comap F.secs.subtype) := by
     rw [Submodule.Quotient.subsingleton_iff, eq_top_iff]
-    intro y _
-    exact hle y.2
+    exact fun y _ => hle y.2
   unfold restrLen
   rw [Module.length_eq_zero_iff.mpr hs]
   rfl
@@ -163,8 +162,7 @@ theorem ringKrullDim_quot_succ_le {G pp : Ideal (Poly S N)} [G.IsPrime] (hle : G
     (Ideal.Quotient.factor_surjective hle) (r := Ideal.Quotient.mk _ f) ?_ ?_
   · apply mem_nonZeroDivisors_of_ne_zero
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
-  · rw [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
-    exact hfp
+  · rwa [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
 
 theorem withBot_le_one_of_le_two {a : WithBot ℕ∞} (h2 : a ≤ 2)
     (hne : a ≠ ((1 + 1 : ℕ) : WithBot ℕ∞)) : a ≤ 1 := by
@@ -219,8 +217,7 @@ theorem CycleSplit.proof (hF : CycleSplit.Filt.Statement.{u, w}) (hCu : CycleSpl
     intro j
     obtain ⟨hjp, hjh, hJj⟩ := hpp j
     by_cases hsv : IsSubvar x (pp j) 1
-    · simp only [v, ite_eq_left hsv]
-      exact hCu S Ω N x M 𝔪 h𝔪 (pp j) hsv (hJm.trans hJj)
+    · simpa only [v, ite_eq_left hsv] using hCu S Ω N x M 𝔪 h𝔪 (pp j) hsv (hJm.trans hJj)
     · simp only [v, ite_eq_right hsv]
       by_cases hrel : ∃ i, (X i : Poly S N) ∉ pp j
       · refine hSm S Ω N x M 𝔪 h𝔪 (pp j) hjp hjh (hJle.trans hJj) (hJm.trans hJj) ?_
@@ -358,8 +355,7 @@ theorem CycleSplit.Filt.proof (hS : CycleSplit.Filt.Step.Statement.{u, w}) :
       obtain ⟨a, ha, y, hy, hay⟩ := Submodule.mem_sup.mp hf
       obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.mp hy
       have h1 : f - c * g l ∈ (Fl.step l.castSucc).comap J.mkQ := by
-        rw [Submodule.mem_comap, map_sub, hmkQ, ← hay, add_sub_cancel_right]
-        exact ha
+        rwa [Submodule.mem_comap, map_sub, hmkQ, ← hay, add_sub_cancel_right]
       have h2 := Submodule.add_mem_sup h1 (Ideal.mul_mem_left _ c (Ideal.mem_span_singleton_self (g l)))
       rwa [sub_add_cancel] at h2
     · intro hf

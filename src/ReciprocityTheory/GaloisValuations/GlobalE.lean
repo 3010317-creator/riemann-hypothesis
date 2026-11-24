@@ -153,8 +153,7 @@ private theorem mem_decompositionSubgroup_iff_galois_valuations {K : Type*} [Fie
   · intro h x
     have h' : σ • B = B := h
     have e := ValuationSubring.smul_mem_pointwise_smul_iff (g := σ) (S := B) (x := x)
-    rw [h'] at e
-    exact e
+    rwa [h'] at e
   · intro h
     show σ • B = B
     ext x
@@ -189,8 +188,7 @@ theorem decRes_surjective (h : Dec (F := F) A ≤ (resGal F L Ω).range) :
   obtain ⟨σ, hσ⟩ := MonoidHom.mem_range.mp (h τ.2)
   refine ⟨⟨σ, resGal_mem_Dec_iff.mp (by rw [hσ]; exact τ.2)⟩, ?_⟩
   apply Subtype.ext
-  rw [decRes_apply]
-  exact hσ
+  rwa [decRes_apply]
 
 theorem continuous_decRes [IsAlgClosure F Ω] : Continuous (decRes F L A) := by
   refine continuous_induced_rng.2 ?_

@@ -87,8 +87,7 @@ theorem ninv_diag (w : V (nd X)) (τ : X.Ψ) (a : Fin r) : Ring.inverse (mat (nm
         exact ninv_lower X w τ k a hlt
       rw [h0, mul_zero]
     · rw [nmat_lower X w τ hgt, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 def ninvF (w : V (nd X)) : Frame X.Ψ r := fun τ a c => Ring.inverse (mat (nmat X w) τ) a c
 
@@ -178,7 +177,6 @@ theorem kappa_statement_holds : KapGGStatement (E := E) := by
   have hcol : ∏ e : Ent X, b e.1 e.2.1.2 e.2.1.2 ≠ 0 :=
     Finset.prod_ne_zero_iff.mpr fun e _ => hd _ _
   rw [bchar_kap X b hd]
-  show LinearMap.det (Φ' : V (nd X) →ₗ[ℂ] V (nd X)) = _
   exact eq_div_of_mul_eq hcol (by rw [mul_comm, hdet, mul_one])
 
 end ReciprocityTheory.ChartRestriction.G.AR.Inst.KapPf

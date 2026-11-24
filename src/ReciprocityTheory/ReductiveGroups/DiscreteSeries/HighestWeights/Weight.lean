@@ -106,14 +106,12 @@ theorem wtw_eq_sum (w : List (Fin n × Fin n)) :
         · simp
         · intro b _ hb
           simp [hb]
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+        · exact fun h => absurd (Finset.mem_univ _) h
         · intro a _ ha
           apply Finset.sum_eq_zero
           intro b _
           simp [ha]
-        · intro h
-          exact absurd (Finset.mem_univ _) h
+        · exact fun h => absurd (Finset.mem_univ _) h
       have e : ∀ a b, (((c a b + if a = p.2 ∧ b = p.1 then 1 else 0 : ℕ)) : ℝ) • root a b =
           (c a b : ℝ) • root a b + (((if a = p.2 ∧ b = p.1 then 1 else 0 : ℕ)) : ℝ) • root a b :=
         fun a b => by rw [Nat.cast_add, add_smul]

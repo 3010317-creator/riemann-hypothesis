@@ -61,8 +61,7 @@ lemma pullQ_sq (AA : HopfOrder (C := C) R N) (AQ : HopfOrder (C := C) R (N ⧸ K
       (sqIdeal (augIdeal AA.carrier)).comap (pullQ (R := R) K) := by
     rw [sqIdeal, Submodule.span_le]
     rintro h ⟨f, hf, f', hf', rfl⟩
-    apply Submodule.subset_span
-    exact ⟨_, pullQ_aug K AA AQ hAQ hf, _, pullQ_aug K AA AQ hAQ hf', rfl⟩
+    exact Submodule.subset_span ⟨_, pullQ_aug K AA AQ hAQ hf, _, pullQ_aug K AA AQ hAQ hf', rfl⟩
   exact key hz
 
 lemma IK_mul_le (AA : HopfOrder (C := C) R N) (AQ : HopfOrder (C := C) R (N ⧸ K))
@@ -249,14 +248,12 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
     induction i using Fin.lastCases with
     | last => simpa only [Fin.snoc_last] using hyaug
     | cast i0 =>
-      simp only [Fin.snoc_castSucc]
-      exact pullQ_aug K AA AQ hAQ (hg1 i0)
+      simpa only [Fin.snoc_castSucc] using pullQ_aug K AA AQ hAQ (hg1 i0)
   · intro f hf
     have hrf : resK (R := R) K f ∈ augIdeal AK.carrier := by
       rw [mem_aug, hAK]
       refine ⟨Submodule.mem_map_of_mem ((mem_aug _ _).1 hf).1, ?_⟩
-      have h0 := ((mem_aug _ _).1 hf).2
-      simpa [resK, LinearMap.funLeft_apply] using h0
+      simpa [resK, LinearMap.funLeft_apply] using ((mem_aug _ _).1 hf).2
     obtain ⟨r0, hr0⟩ := hxKgen _ hrf
     have hgm : f - r0 • y0 ∈ augIdeal AA.carrier :=
       Submodule.sub_mem _ hf (Submodule.smul_mem _ _ hyaug)

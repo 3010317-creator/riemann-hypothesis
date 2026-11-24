@@ -83,8 +83,7 @@ theorem exists_isCompact_superset_vecDomain :
     (GroundTheory.Global.integralFiniteAdeles (𝓞 K) K : Set (FiniteAdeleRing (𝓞 K) K)),
     isCompact_univ_pi fun _ => (GroundTheory.Global.isCompact_closure_fundamentalSetInfinite K).prod
       (GroundTheory.Global.isCompact_integralFiniteAdeles K), ?_⟩
-  intro X hX p _
-  exact ⟨subset_closure (hX p (mem_univ p)).1, (hX p (mem_univ p)).2⟩
+  exact fun X hX p _ => ⟨subset_closure (hX p (mem_univ p)).1, (hX p (mem_univ p)).2⟩
 
 theorem isCompact_closure_vecDomain : IsCompact (closure (vecDomain K ι)) := by
   obtain ⟨C, hC, hDC⟩ := exists_isCompact_superset_vecDomain (K := K) (ι := ι)
@@ -142,8 +141,7 @@ theorem isAddFundamentalDomain_image_of_map_vecLattice (T : (ι → 𝔸[K]) ≃
     refine ⟨⟨T g, (hL g).1 g.2⟩, ?_, ?_⟩
     · rw [himg]
       change T.symm (T g + x) ∈ vecDomain K ι
-      rw [map_add (f := _), AddEquiv.symm_apply_apply]
-      exact hg
+      rwa [map_add (f := _), AddEquiv.symm_apply_apply]
     · intro g' hg'
       rw [himg] at hg'
       change T.symm (g' + x) ∈ vecDomain K ι at hg'

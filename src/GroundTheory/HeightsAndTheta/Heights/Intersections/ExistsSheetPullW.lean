@@ -44,8 +44,7 @@ theorem pullQ_eq_local (hv : IsBlockMap κ v) {x z : R.X} (hz : z ∈ R.U x) :
   have hpc : ∏ k, c (κ k) ≠ 0 := Finset.prod_ne_zero_iff.mpr fun k _ => hc (κ k)
   have hsm := segre_smul (fun k => c (κ k)) (fun p => R.lift x z (v p))
   funext i
-  simp only [pullQ, hpt, hsm, map_smul, Pi.smul_apply, smul_eq_mul]
-  exact mul_div_mul_left _ _ hpc
+  simpa only [pullQ, hpt, hsm, map_smul, Pi.smul_apply, smul_eq_mul] using mul_div_mul_left _ _ hpc
 
 theorem exists_sheet_pullW (hv : IsBlockMap κ v) (hP : IsArithVar (imageZ v P') (n + 1))
     (L : Fin n → HermLine ι) (L' : Fin n → HermLine ι') (A : HermLine ι) (A' : HermLine ι') (s : MRing ι)
@@ -107,8 +106,7 @@ theorem exists_sheet_pullW (hv : IsBlockMap κ v) (hP : IsArithVar (imageZ v P')
   have hsegl : AnalyticAt ℂ (fun w => Ψ (segre (fun p => R.lift x ((R.A.chart j).symm w) (v p)))) u := by
     have hs' : AnalyticAt ℂ (fun w => segre (fun p => R.lift x ((R.A.chart j).symm w) (v p))) u := by
       refine analyticAt_pi_iff.mpr fun i => ?_
-      simp only [segre]
-      exact Finset.analyticAt_fun_prod _ fun k _ => analyticAt_pi_iff.mp hl₀ _
+      simpa only [segre] using Finset.analyticAt_fun_prod _ fun k _ => analyticAt_pi_iff.mp hl₀ _
     exact (LinearMap.toContinuousLinearMap Ψ).analyticAt _ |>.comp hs'
   set ψ0 : (Fin n → ℂ) → ℂ := fun y' => Ψ (segre (γ₀ y')) 0 with hψ0
   have hψ0a : AnalyticAt ℂ ψ0 (Q u) :=
@@ -154,8 +152,7 @@ theorem exists_sheet_pullW (hv : IsBlockMap κ v) (hP : IsArithVar (imageZ v P')
     rw [hseg, map_smul]
     funext i
     refine Fin.cases ?_ (fun i => ?_) i
-    · simp only [Pi.smul_apply, smul_eq_mul, Fin.cons_zero]
-      exact inv_mul_cancel₀ h0
+    · simpa only [Pi.smul_apply, smul_eq_mul, Fin.cons_zero] using inv_mul_cancel₀ h0
     · simp only [Pi.smul_apply, smul_eq_mul, Fin.cons_succ]
       rw [← congrFun hq i, div_eq_inv_mul]
   · rw [← hy0]
@@ -218,8 +215,7 @@ theorem exists_sheet_pullW (hv : IsBlockMap κ v) (hP : IsArithVar (imageZ v P')
         (Fin n → ℂ) →ₗ[ℂ] (Fin n → ℂ)) =
           (LinearMap.det (Df : (Fin n → ℂ) →ₗ[ℂ] (Fin n → ℂ)))⁻¹ := by
       have := ContinuousLinearEquiv.det_coe_symm Ce
-      rw [hCe'] at this
-      exact this
+      rwa [hCe'] at this
     have hloc : ReciprocityTheory.AnForm.maDens
         (fun i w => pot L i (fun p => R.lift x ((R.A.chart j).symm w) (v p))) u =
           locDens R.A (fun i => potOf R (L' i)) j u := by

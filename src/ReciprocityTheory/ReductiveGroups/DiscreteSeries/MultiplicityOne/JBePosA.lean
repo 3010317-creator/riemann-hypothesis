@@ -140,7 +140,6 @@ theorem meas_lmul (a : Mat k r) : Measurable (lmulM (k := k) (r := r) a) := by
 
 theorem meas_conj (a : Mat k r) : Measurable (conjM (k := k) (r := r) a) := by
   apply Continuous.measurable
-  show Continuous fun x : Mat k r => a * x * a⁻¹
   exact (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
 
 theorem meas_rmul (a : Mat k r) : Measurable (rmulF a : Mt k r → Mt k r) := by

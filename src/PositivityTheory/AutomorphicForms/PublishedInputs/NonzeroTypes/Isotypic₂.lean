@@ -96,8 +96,7 @@ theorem orth_ne {χ χ' : Γ →* ℂˣ} (hc : χ ≠ χ') : ∑ g, (((χ g)⁻�
     apply hc
     refine MonoidHom.ext fun g => ?_
     have h2 : (χ⁻¹ * χ') g = 1 := Units.ext (by simpa [f] using congrArg (fun F : Γ →* ℂ => F g) h1)
-    rw [MonoidHom.mul_apply, MonoidHom.inv_apply, inv_mul_eq_one] at h2
-    exact h2
+    rwa [MonoidHom.mul_apply, MonoidHom.inv_apply, inv_mul_eq_one] at h2
   have := sum_hom_units_eq_zero f hf
   simpa [f] using this
 
@@ -160,8 +159,7 @@ theorem decomp [FiniteDimensional ℂ V] {ι : Type*} [Fintype ι] (R : Γ →* 
     · rw [mul_comm, mul_assoc, mul_inv_cancel₀ card_ne_zero', mul_one]
     · intro c _ hcb
       rw [orth_ne (fun h => hcb (hχ h).symm), mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ b) h
+    · exact fun h => absurd (Finset.mem_univ b) h
   have hfin : ∀ b, finrank ℂ (eigSub R (χ b)) = d b := fun b => by
     exact_mod_cast (finrank_eigSub R (χ b)).trans (htp b)
   refine ⟨hfin, ?_⟩
@@ -173,10 +171,8 @@ theorem decomp [FiniteDimensional ℂ V] {ι : Type*} [Fintype ι] (R : Γ →* 
 
     rw [hEv, map_sum, Finset.sum_eq_single b]
     · exact proj_self_of_mem R _ (proj_mem R _ _)
-    · intro c _ hcb
-      exact proj_ne_of_mem R (fun h => hcb (hχ h).symm) (proj_mem R _ _)
-    · intro h
-      exact absurd (Finset.mem_univ b) h
+    · exact fun c _ hcb => proj_ne_of_mem R (fun h => hcb (hχ h).symm) (proj_mem R _ _)
+    · exact fun h => absurd (Finset.mem_univ b) h
   have hEE : ∀ v, E (E v) = E v := fun v => by
     rw [hEv (E v)]
     simp_rw [hPP]
@@ -365,8 +361,7 @@ theorem key : ∀ (s : ℕ) {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteD
     have htr : ∀ g, LinearMap.trace ℂ V (Rg a ψ g) = ∑ b, (d b : ℂ) * (chig a ψ b g : ℂ) := by
       intro g
       obtain ⟨t, rfl⟩ := exists_elt a ψ g
-      simp only [Rg_elt, chig_elt]
-      exact trace_of_charpoly _ _ _ (hchar t)
+      simpa only [Rg_elt, chig_elt] using trace_of_charpoly _ _ _ (hchar t)
     obtain ⟨hfin, hsum⟩ := decomp (Rg a ψ) (chig a ψ) d hinj htr hdim
     have hU : ∀ σ, ∀ v ∈ eigSub (Rg a ψ) (chig a ψ 0), a.ρ σ v ∈ eigSub (Rg a ψ) (chig a ψ 0) :=
       fun σ v hv => stable a ψ 0 σ hv
@@ -375,8 +370,7 @@ theorem key : ∀ (s : ℕ) {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteD
       intro σ v hv
       refine Submodule.iSup_induction _ (motive := fun v => a.ρ σ v ∈ ⨆ b : Fin s, eigSub (Rg a ψ) (chig a ψ b.succ))
         hv ?_ ?_ ?_
-      · intro b x hx
-        exact Submodule.mem_iSup_of_mem b (stable a ψ _ σ hx)
+      · exact fun b x hx => Submodule.mem_iSup_of_mem b (stable a ψ _ σ hx)
       · simp
       · intro x y hx hy
         rw [map_add (f := _)]
@@ -384,8 +378,7 @@ theorem key : ∀ (s : ℕ) {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteD
     have hWker : ∀ v ∈ ⨆ b : Fin s, eigSub (Rg a ψ) (chig a ψ b.succ), proj (Rg a ψ) (chig a ψ 0) v = 0 := by
       intro v hv
       refine Submodule.iSup_induction _ (motive := fun v => proj (Rg a ψ) (chig a ψ 0) v = 0) hv ?_ ?_ ?_
-      · intro b x hx
-        exact proj_ne_of_mem _ (fun h => Fin.succ_ne_zero b (hinj h).symm) hx
+      · exact fun b x hx => proj_ne_of_mem _ (fun h => Fin.succ_ne_zero b (hinj h).symm) hx
       · simp
       · intro x y hx hy
         rw [map_add (f := _), hx, hy, add_zero]

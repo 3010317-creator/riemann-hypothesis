@@ -54,8 +54,7 @@ theorem le_hilbertClassField_iff (L : IntermediateField K Ω) [FiniteDimensional
     [IsAbelianGalois K L] :
     L ≤ hilbertClassField K Ω ↔ IsUnramifiedEverywhere K L := by
   constructor
-  · intro hle
-    exact (isUnramifiedEverywhere_hilbertClassField K Ω).of_le hle
+  · exact fun hle => (isUnramifiedEverywhere_hilbertClassField K Ω).of_le hle
   · intro h
     refine (range_ideleClassNorm_le_range_iff L (hilbertClassField K Ω)).1 ?_
     rw [range_ideleClassNorm_hilbertClassField]
@@ -63,8 +62,7 @@ theorem le_hilbertClassField_iff (L : IntermediateField K Ω) [FiniteDimensional
     rw [← ker_reciprocityMap, MonoidHom.mem_ker, reciprocityMap_mk]
     refine ideleSymbol_eq_one_of_isUnramifiedEverywhere K L h fun v ↦ ?_
     have hx' : x ∈ (Modulus.one : Modulus K).congruenceSubgroup := by
-      rw [Modulus.congruenceSubgroup_one]
-      exact hx
+      rwa [Modulus.congruenceSubgroup_one]
     have hv := ((Modulus.one : Modulus K).mem_congruenceSubgroup.1 hx').1 v
     rw [(Modulus.exponent_eq_zero_iff _ v).2 (Modulus.not_dvd_one_ideal v)] at hv
     exact HeightOneSpectrum.adicCompletionIntegers.mem_units_iff_valued_eq_one.2

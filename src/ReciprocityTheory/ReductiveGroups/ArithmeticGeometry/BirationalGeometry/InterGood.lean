@@ -169,8 +169,7 @@ theorem goodProjExists : GoodProjExistsStatement := by
   have hhom : IsMultiHomogIdeal P := hP.2.1.2.1
   choose t0 ht0 using hz.1
   have hs : segre z t0 ≠ 0 := by
-    simp only [segre]
-    exact Finset.prod_ne_zero_iff.mpr fun k _ => ht0 k
+    simpa only [segre] using Finset.prod_ne_zero_iff.mpr fun k _ => ht0 k
   have hsegA : ∀ c : ℂ, segre (scaleBlock k0 c z) = c • segre z := by
     intro c
     funext t
@@ -188,8 +187,7 @@ theorem goodProjExists : GoodProjExistsStatement := by
     have h5 := hA (scaleBlock k0 ((n : ℂ) + 1) z) hmem h0' t0
     have h7 : segre (scaleBlock k0 ((n : ℂ) + 1) z) t0 = ((n : ℂ) + 1) * segre z t0 := by
       rw [hsegA, Pi.smul_apply, smul_eq_mul]
-    rw [h7] at h5
-    exact h5
+    rwa [h7] at h5
   have hinf := Set.infinite_of_injective_forall_mem
     (s := {x | ((p t0).map ((algebraMap ℚ ℂ).comp MvPolynomial.constantCoeff)).IsRoot x})
     (f := fun n : ℕ => ((n : ℂ) + 1) * segre z t0)

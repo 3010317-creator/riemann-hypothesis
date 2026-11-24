@@ -203,8 +203,7 @@ theorem epunct_levi (hU : IsOpen U) {e : V n → ℝ} (he : ContDiffOn ℝ ∞ e
       fun w => ((Real.log (1 + Complex.normSq (g w)) : ℝ) : ℂ) := by
     funext w; simp [Fin.sum_univ_two]
   rw [e2] at hlse
-  simp only [mul_zero, add_zero, Complex.add_re]
-  exact add_nonneg (hel y hy.1 ξ) hlse
+  simpa only [mul_zero, add_zero, Complex.add_re] using add_nonneg (hel y hy.1 ξ) hlse
 
 theorem log_gap_pos {N : ℝ} (hN : 0 < N) : 0 < Real.log (1 + N) - Real.log N := by
   exact sub_pos.mpr (Real.log_lt_log hN (by linarith))

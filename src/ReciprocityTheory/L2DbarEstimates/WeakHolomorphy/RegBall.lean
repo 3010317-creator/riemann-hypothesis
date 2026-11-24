@@ -160,8 +160,7 @@ theorem mollify_mollify_swap {n : ℕ} {u : V n → ℂ} (hu : Integrable u) {s 
     refine Filter.Eventually.of_forall (fun p => ?_)
     rw [hFdef, norm_mul]
     gcongr
-    have h1 := hC (x - p.1)
-    simpa using h1
+    simpa using hC (x - p.1)
   calc ∫ w, (moll n s (x - w) : ℂ) * ∫ y, (moll n t (w - y) : ℂ) * u y
       = ∫ w, ∫ y, F (w, y) := by
         congr 1; funext w
@@ -204,8 +203,7 @@ private theorem integral_circleMap_smul_eq_two_pi_mul {n : ℕ} {a : ℝ} {h : V
     exact (h1.comp l h2).differentiableWithinAt
   have hdc : DiffContOnCl ℂ (fun l : ℂ => h (x + l • z)) (ball (0 : ℂ) 1) := by
     apply DifferentiableOn.diffContOnCl
-    rw [closure_ball (0 : ℂ) one_ne_zero]
-    exact hd
+    rwa [closure_ball (0 : ℂ) one_ne_zero]
   have hC := hdc.circleIntegral_sub_inv_smul (mem_ball_self one_pos)
   have e0 : h (x + (0 : ℂ) • z) = h x := by rw [zero_smul, add_zero]
   have key : Complex.I * ∫ θ in (0 : ℝ)..2 * Real.pi, h (x + circleMap 0 1 θ • z)
@@ -238,7 +236,6 @@ private theorem integral_comp_smul_of_norm_eq_one {n : ℕ} (c : ℂ) (hc : ‖c
       norm_map' := fun z => by
         show ‖c • z‖ = ‖z‖
         rw [norm_smul, hc, one_mul] }
-  show ∫ z, f (e z) = ∫ z, f z
   exact e.measurePreserving.integral_comp e.toHomeomorph.measurableEmbedding f
 
 private theorem moll_eq_zero_of_half_lt_norm {n : ℕ} {t : ℝ} (ht : 0 < t) {z : V n} (hz : t / 2 < ‖z‖) :

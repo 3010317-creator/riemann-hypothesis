@@ -126,8 +126,7 @@ theorem slm_cd_mul {f g : E → Matrix (Fin n) (Fin n) ℂ} (hf : ContDiffOn ℝ
     (hg : ContDiffOn ℝ k g s) : ContDiffOn ℝ k (fun x => f x * g x) s := by
   rw [slm_cd_iff] at hf hg ⊢
   intro i j
-  simp only [Matrix.mul_apply]
-  exact ContDiffOn.sum fun l _ => (hf i l).mul (hg l j)
+  simpa only [Matrix.mul_apply] using ContDiffOn.sum fun l _ => (hf i l).mul (hg l j)
 
 theorem slm_cd_conjT {f : E → Matrix (Fin n) (Fin n) ℂ} (hf : ContDiffOn ℝ k f s) :
     ContDiffOn ℝ k (fun x => (f x)ᴴ) s := by
@@ -140,8 +139,7 @@ theorem slm_cd_det {f : E → Matrix (Fin n) (Fin n) ℂ} (hf : ContDiffOn ℝ k
     ContDiffOn ℝ k (fun x => (f x).det) s := by
   rw [slm_cd_iff] at hf
   simp only [Matrix.det_apply']
-  refine ContDiffOn.sum fun σ _ => ?_
-  exact contDiffOn_const.mul (contDiffOn_prod fun i _ => hf _ _)
+  exact ContDiffOn.sum fun σ _ => contDiffOn_const.mul (contDiffOn_prod fun i _ => hf _ _)
 
 theorem slm_cd_adj {f : E → Matrix (Fin n) (Fin n) ℂ} (hf : ContDiffOn ℝ k f s) :
     ContDiffOn ℝ k (fun x => (f x).adjugate) s := by
@@ -153,10 +151,8 @@ theorem slm_cd_adj {f : E → Matrix (Fin n) (Fin n) ℂ} (hf : ContDiffOn ℝ k
   intro a b
   by_cases h : a = j
   · subst h
-    simp only [Matrix.updateRow_self]
-    exact contDiffOn_const
-  · simp only [Matrix.updateRow_ne h]
-    exact hf a b
+    simpa only [Matrix.updateRow_self] using contDiffOn_const
+  · simpa only [Matrix.updateRow_ne h] using hf a b
 
 theorem slm_cd_inv {f : E → Matrix (Fin n) (Fin n) ℂ} (hf : ContDiffOn ℝ k f s)
     (hd : ∀ x ∈ s, (f x).det ≠ 0) : ContDiffOn ℝ k (fun x => (f x)⁻¹) s := by
@@ -325,8 +321,7 @@ theorem slm_ret_cd (ε : Fin n → Bool) (g0 : Matrix (Fin n) (Fin n) ℂ) :
   have hX : ContDiffOn ℝ ∞ (slmX ε g0) (slmV ε g0) := (slm_X_cd ε g0).mono fun _ hg => hg.1
   have hM : ContDiffOn ℝ ∞ (fun g => 1 - slmX ε g0 g) (slmV ε g0) := contDiffOn_const.sub hX
   have hP : ContDiffOn ℝ ∞ (fun g => 1 + slmX ε g0 g) (slmV ε g0) := contDiffOn_const.add hX
-  have hI := slm_cd_inv hM fun g hg => hg.2
-  exact slm_cd_mul contDiffOn_const (slm_cd_mul hP hI)
+  exact slm_cd_mul contDiffOn_const (slm_cd_mul hP (slm_cd_inv hM fun g hg => hg.2))
 
 theorem slm_ret_inUJ {g0 : Matrix (Fin n) (Fin n) ℂ} (hg0 : Formalism.REAL.inUJ ε g0) :
     ∀ g ∈ slmV ε g0, Formalism.REAL.inUJ ε (slmRet ε g0 g) := fun g hg => slm_inUJ_mul hg0 (slm_cay_inUJ (skewAdjointPart_isSkewAdjoint ε _) hg.2)

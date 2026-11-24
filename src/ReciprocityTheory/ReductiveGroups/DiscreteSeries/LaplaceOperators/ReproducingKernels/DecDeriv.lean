@@ -294,9 +294,7 @@ theorem kerD_smooth {β : Matrix (Fin n) (Fin n) ℂ → ℂ} (hβ : ContDiff �
   refine ⟨?_, ?_⟩
   · exact ((hβ.fderiv_right (m := (⊤ : ℕ∞)) (by simp)).clm_apply
       (LinearMap.toContinuousLinearMap (LinearMap.mulLeft ℝ X)).contDiff).neg
-  · refine (hβc.fderiv ℝ).mono fun y hy => ?_
-    intro h0
-    exact hy (by simp [kerD, h0])
+  · exact (hβc.fderiv ℝ).mono fun y hy => fun h0 => hy (by simp [kerD, h0])
 
 variable {ε : Fin n → Bool}
 

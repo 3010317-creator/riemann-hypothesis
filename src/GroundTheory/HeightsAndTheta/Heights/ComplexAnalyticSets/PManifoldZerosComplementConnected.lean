@@ -99,8 +99,7 @@ theorem ManifoldZerosComplementConnected.isPreconnected_inter_ne_zero_of_complex
       · rintro ⟨hb, hw⟩
         refine ⟨hb, hrV (Metric.ball_subset_ball (min_le_left _ _) hb), ?_⟩
         by_cases hwz : w = z
-        · intro h0
-          exact hw ⟨hwz, fun h => h h0⟩
+        · exact fun h0 => hw ⟨hwz, fun h => h h0⟩
         · exact hr'φ w (Metric.ball_subset_ball (min_le_right _ _) hb) hwz
     rw [heq]
     exact ManifoldZerosComplementConnected.isPreconnected_ball_diff_countable
@@ -144,8 +143,7 @@ theorem ManifoldZerosComplementConnected.proof : ManifoldZerosComplementConnecte
     obtain ⟨-, d, A, O, V, g, hO, hV, hxV, hg, hAg, hRV⟩ := hreg x hx
     have hxO : A x ∈ O := by
       obtain ⟨y, hy, hgy⟩ : x ∈ g '' O := hRV ▸ ⟨hx, hxV⟩
-      rw [← hgy, hAg y hy]
-      exact hy
+      rwa [← hgy, hAg y hy]
     obtain ⟨ε, hε, hεO⟩ := Metric.isOpen_iff.mp hO (A x) hxO
     refine ⟨d, Metric.ball (A x) ε, V ∩ A ⁻¹' Metric.ball (A x) ε, g, Metric.isOpen_ball,
       convex_ball _ _, hV.inter (Metric.isOpen_ball.preimage A.continuous),
@@ -161,8 +159,7 @@ theorem ManifoldZerosComplementConnected.proof : ManifoldZerosComplementConnecte
       have hgy : g y ∈ R ∩ V := by rw [hRV]; exact ⟨y, hεO hy, rfl⟩
       refine ⟨hgy.1, hgy.2, ?_⟩
       show A (g y) ∈ Metric.ball (A x) ε
-      rw [hAg y (hεO hy)]
-      exact hy
+      rwa [hAg y (hεO hy)]
   have chartR : ∀ {d : ℕ} {B : Set (Fin d → ℂ)} {W : Set (σ → ℂ)} {g : (Fin d → ℂ) → σ → ℂ},
       R ∩ W = g '' B → ∀ y ∈ B, g y ∈ R := by
     intro d B W g hRW y hy

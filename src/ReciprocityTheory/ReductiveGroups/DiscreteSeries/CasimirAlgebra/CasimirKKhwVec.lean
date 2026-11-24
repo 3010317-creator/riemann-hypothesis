@@ -105,15 +105,6 @@ theorem sum_hwTerm (S : Fin n → Fin n → Prop) [DecidableRel S] (hrefl : ∀ 
     · by_cases hs : S a b <;> simp [hwTerm, h, h.ne, hs]
     · simp [hwTerm, hrefl]
     · by_cases hs : S a b <;> simp [hwTerm, h.ne', not_lt.2 h.le, hs]
-
-  have hL : ∑ a, ∑ b ∈ univ.filter (fun b => S a b), hwTerm μ a b =
-      ∑ a, μ a * μ a + ∑ a, ∑ b, ((if a < b ∧ S a b then μ a else 0) -
-        (if a < b ∧ S a b then μ b else 0)) := by
-    rw [← Finset.sum_add_distrib]
-    refine Finset.sum_congr rfl fun a _ => ?_
-    rw [Finset.sum_filter]
-    simp only [hpt a, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
-
   have hR : nsq (μ + r) - nsq r = ∑ a, μ a * μ a + ∑ a, ∑ b, ((if a < b ∧ S a b then μ a else 0) -
         (if b < a ∧ S a b then μ a else 0)) := by
     rw [← Finset.sum_add_distrib]
@@ -128,9 +119,10 @@ theorem sum_hwTerm (S : Fin n → Fin n → Prop) [DecidableRel S] (hrefl : ∀ 
       simp only [mul_ite, mul_one, mul_zero]
     rw [h2, Pi.add_apply]
     ring
-  rw [hL, hR]
+  rw [hR]
+  simp only [Finset.sum_filter, hpt, Finset.sum_add_distrib, Finset.sum_sub_distrib,
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   congr 1
-  simp only [Finset.sum_sub_distrib]
   congr 1
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_

@@ -83,8 +83,7 @@ def secOne (L : LB X) (s : LB.Sec L) : LB.Sec (LB.LinComb L (K := Fin 1) (fun _ 
   pull1 L (𝟙 X) s
 
 theorem plain_le (L : LB X) (i : L.ι) : L.U i ≤ (𝟙 X) ⁻¹ᵁ LB.wchart L (fun _ : Fin 1 => 𝟙 X) (fun _ => i) := by
-  intro y hy
-  exact Set.mem_iInter.mpr fun _ => hy
+  exact fun y hy => Set.mem_iInter.mpr fun _ => hy
 
 def plainOf (L : LB X) (σ : LB.Sec (LB.LinComb L (K := Fin 1) (fun _ => 𝟙 X) (fun _ => 1))) : LB.Sec L where
   f i := (Scheme.Hom.appLE (𝟙 X) _ _ (plain_le L i)).hom (σ.f (fun _ => i))
@@ -108,8 +107,7 @@ theorem gs_plainOf (L : LB X) (σ : LB.Sec (LB.LinComb L (K := Fin 1) (fun _ => 
   rw [Category.comp_id]
 
 theorem gs_resTop (r : Z ⟶ X) (z : Z) {U : X.Opens} (hz : r z ∈ U) (a : Γ(X, ⊤)) :
-    gs r z U (resG X (le_top : U ≤ ⊤) a) = gs r z ⊤ a := by
-  exact gs_res r z le_top hz a
+    gs r z U (resG X (le_top : U ≤ ⊤) a) = gs r z ⊤ a := gs_res r z le_top hz a
 
 theorem secOne_gen {S : Type} [CommRing S] (G : Over (Sp S)) (L : LB G.left) (θ : LB.Sec L)
     (hθ : ∀ σ : LB.Sec L, ∃! a : S, ∀ i, σ.f i = resG G.left le_top ((G.hom).appTop.hom (toΓ S a)) * θ.f i) :

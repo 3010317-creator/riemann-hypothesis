@@ -85,16 +85,14 @@ lemma polar_exp_Jconj (ε : Fin n → Bool) (A : Matrix (Fin n) (Fin n) ℂ) :
   have h := Matrix.exp_conj (Jm ε) A (polar_J_unit ε)
   rwa [polar_Jinv] at h
 
-lemma polar_sa {A : Matrix (Fin n) (Fin n) ℂ} (hA : Aᴴ = A) : IsSelfAdjoint A := by
-  exact hA
+lemma polar_sa {A : Matrix (Fin n) (Fin n) ℂ} (hA : Aᴴ = A) : IsSelfAdjoint A := hA
 
 lemma polar_exp_inj {A B : Matrix (Fin n) (Fin n) ℂ} (hA : Aᴴ = A) (hB : Bᴴ = B)
     (h : NormedSpace.exp A = NormedSpace.exp B) : A = B := by
   rw [← CFC.log_exp A (polar_sa hA), ← CFC.log_exp B (polar_sa hB), h]
 
 lemma polar_exp_herm {A : Matrix (Fin n) (Fin n) ℂ} (hA : Aᴴ = A) :
-    (NormedSpace.exp A)ᴴ = NormedSpace.exp A := by
-  exact Matrix.IsHermitian.exp hA
+    (NormedSpace.exp A)ᴴ = NormedSpace.exp A := Matrix.IsHermitian.exp hA
 
 lemma polar_exp_neg_mul (A : Matrix (Fin n) (Fin n) ℂ) :
     NormedSpace.exp (-A) * NormedSpace.exp A = 1 := by

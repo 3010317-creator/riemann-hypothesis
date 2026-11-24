@@ -71,8 +71,7 @@ def sig (v : InfinitePlace F) (x : F) : ℝ := UpperTheory.V.TR.pInf F (algebraM
 theorem abs_pInf (x : Ad F) (v : InfinitePlace F) : |UpperTheory.V.TR.pInf F x v| = ‖x.1 v‖ := by
   have h := (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal
     (IsTotallyReal.isReal v)).norm_map_of_map_zero (map_zero _) (x.1 v)
-  rw [Real.norm_eq_abs] at h
-  exact h
+  rwa [Real.norm_eq_abs] at h
 
 theorem abs_sig (v : InfinitePlace F) (x : F) : |sig v x| = v x := by
   rw [sig, abs_pInf]
@@ -330,8 +329,7 @@ theorem fin_part {e : HeightOneSpectrum (𝓞 F) → ℤ} (D : 𝓞 F)
     have hB : Valued.v (algebraMap F (w.adicCompletion F) (D1 : F) *
         (pLoc F w (pFin F ((a⁻¹ : Ideles F) : Ad F)) * pLoc F w (Mf' i j))) ≤ 1 := by
       have := hD1 _ hs w
-      rw [HeightOneSpectrum.mem_adicCompletionIntegers] at this
-      exact this
+      rwa [HeightOneSpectrum.mem_adicCompletionIntegers] at this
     have hc : ((D * D1 : 𝓞 F) : F) = (D : F) * (D1 : F) := by simp
     have key : algebraMap F (w.adicCompletion F) ((D * D1 : 𝓞 F) : F) *
         (pLoc F w (pFin F (v i)) * (pLoc F w (pFin F ((a⁻¹ : Ideles F) : Ad F)) * pLoc F w (Mf' i j))) =
@@ -588,8 +586,7 @@ theorem term_bound {D' : 𝓞 F} (hD'0 : D' ≠ 0) (m₁ : ℕ) {Ca B : ℝ} (hB
       h1.trans (mul_le_mul_of_nonneg_left h2 hND0)
     have e : ND * (P * ((t : ℝ)⁻¹ * B ^ n) * (1 + m') ^ n) = (ND * L ^ n * P) * (t : ℝ)⁻¹ := by
       rw [hLdef, mul_pow]; ring
-    rw [e, le_mul_inv_iff₀ ht0, one_mul] at h3
-    exact h3
+    rwa [e, le_mul_inv_iff₀ ht0, one_mul] at h3
 
   set Q := ∏ p, (1 + ρ p ^ 2) with hQ
   have hQ0 : 0 < Q := Finset.prod_pos fun p _ => by positivity
@@ -672,8 +669,7 @@ theorem core {Ψ : (Fin 2 → Ad F) → ℂ} {e : HeightOneSpectrum (𝓞 F) →
     · exact inv_nonneg.2 (pow_nonneg (Finset.prod_nonneg fun v _ => by positivity) _)
     · exact le_rfl
   have hG : Summable (fun ξ : Fin 2 → F => β (ξ 0) * β (ξ 1)) := by
-    have h := hsum.mul_of_nonneg hsum hβ0 hβ0
-    exact (finTwoArrowEquiv F).summable_iff.mpr h
+    exact (finTwoArrowEquiv F).summable_iff.mpr (hsum.mul_of_nonneg hsum hβ0 hβ0)
   set S := ∑' ξ : Fin 2 → F, β (ξ 0) * β (ξ 1) with hS
   have hS0 : 0 ≤ S := tsum_nonneg fun ξ => mul_nonneg (hβ0 _) (hβ0 _)
   set ND := |((Algebra.norm ℚ (D' : F) : ℚ) : ℝ)| with hND

@@ -53,8 +53,7 @@ theorem sheet_eventuallyEq {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (F
   have h1 : ∀ᶠ w in 𝓝 (A *ᵥ x), s' w ∈ V := hcont.preimage_mem_nhds (by rw [hsx']; exact hV)
   filter_upwards [h1, hU.mem_nhds hxU, hU'.mem_nhds hxU'] with w hwV hwU hwU'
   have h := hVs (s' w) ⟨(hsec' w hwU').2, hwV⟩ (by rw [(hsec' w hwU').1]; exact hwU)
-  rw [(hsec' w hwU').1] at h
-  exact h
+  rwa [(hsec' w hwU').1] at h
 
 theorem term_eq {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (Fin d) (Fin n) ℂ}
     (Φ : ℝ → ℝ → ℝ) (g : (Fin n → ℂ) → ℝ) (φ : Fin d → (Fin n → ℂ) → ℝ) {x : Fin n → ℂ}
@@ -180,8 +179,7 @@ theorem measurable_sheetSum {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (
         refine Set.indicator_of_notMem (fun (hmem : y ∈ U (e k) ∩ σ' k ⁻¹' E k) => hy ⟨hmem.1, ?_⟩) _
         have hσ'y : σ' k y = σ (e k) y := by simp [hσ', Set.piecewise_eq_of_mem _ _ _ hmem.1]
         have := hmem.2
-        simp only [Set.mem_preimage, hσ'y] at this
-        exact this
+        simpa only [Set.mem_preimage, hσ'y] using this
       rw [hfy]
       refine Finset.sum_eq_zero fun x hxF => Set.indicator_of_notMem (fun hxE => hy ?_) _
       obtain ⟨-, hAx⟩ := (hF x).1 hxF
@@ -208,8 +206,7 @@ theorem measurable_sheetSum {J : Ideal (MvPolynomial (Fin n) ℂ)} {A : Matrix (
     · obtain ⟨k0, hk0⟩ := hEcover x hx
       filter_upwards [eventually_gt_atTop k0] with N hN
       rw [Finset.sum_eq_single_of_mem k0 (Finset.mem_range.2 hN), Set.indicator_of_mem hk0]
-      intro k _ hk
-      exact Set.indicator_of_notMem (fun hxk => hk (hEdisj k k0 x hxk hk0)) _
+      exact fun k _ hk => Set.indicator_of_notMem (fun hxk => hk (hEdisj k k0 x hxk hk0)) _
     · have htx : t x = 0 := by rw [htdef, dite_eq_right hx]
       refine Eventually.of_forall fun N => ?_
       rw [htx]

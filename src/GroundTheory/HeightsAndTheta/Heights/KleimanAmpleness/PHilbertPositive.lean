@@ -115,8 +115,7 @@ theorem finrank_piece_eq_hilbFn (y : Fin (N + 1) → Ω) (n : ℕ) :
   have hr₂ : LinearMap.range f₂ = (coordGraded k y).piece (n : ℤ) := by
     apply le_antisymm
     · rintro _ ⟨⟨v, hv⟩, rfl⟩
-      refine Submodule.subset_span ⟨oneBlock (S := k) (N := N) v, n, hhom v hv, rfl, ?_⟩
-      exact (heval v).symm
+      exact Submodule.subset_span ⟨oneBlock (S := k) (N := N) v, n, hhom v hv, rfl, (heval v).symm⟩
     · refine Submodule.span_le.mpr ?_
       rintro _ ⟨g, e, hg, he, rfl⟩
       have he' : e = n := by exact_mod_cast he
@@ -165,8 +164,7 @@ theorem HilbertPositive.proof (hPos : ProjDegreePositive.Statement.{u})
     have e' : (n • fun _ : Unit => (1 : ℤ)) = fun _ : Unit => (n : ℤ) := by
       funext u
       simp
-    rw [e'] at this
-    exact this
+    rwa [e'] at this
   refine ⟨|C| * 2 ^ (e - 1), ?_⟩
   filter_upwards [eventually_ge_atTop (max a₀ 1)] with n hn
   have h := hC (fun _ => n) (fun _ => le_of_max_le_left hn)

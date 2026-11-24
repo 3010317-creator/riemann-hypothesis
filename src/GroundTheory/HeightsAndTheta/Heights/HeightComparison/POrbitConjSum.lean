@@ -241,8 +241,7 @@ theorem conjPt_eq_iff (x : Cone n (AlgebraicClosure ℚ)) (hx : BlockNonzero x)
           simp only [e]
           exact (mul_div_mul_left _ _ (ha p.1)).symm)
     have := congrFun (congrArg R h) p
-    rw [ratio, map_div₀, map_div₀]
-    exact this
+    rwa [ratio, map_div₀, map_div₀]
   · intro h
     refine Quot.sound ⟨fun k ↦ σ' (coordVec x k (c k)) / σ (coordVec x k (c k)),
       fun k ↦ div_ne_zero (hne σ' k) (hne σ k), funext fun p ↦ ?_⟩
@@ -270,8 +269,7 @@ theorem exists_conjPt_eq (x : Cone n (AlgebraicClosure ℚ)) (hx : BlockNonzero 
   have hsurj : Function.Surjective φ := by
     rintro ⟨a, ha⟩
     have ha' : a ∈ Algebra.adjoin ℚ (Set.range (ratio x c)) := by
-      rw [← IntermediateField.adjoin_toSubalgebra]
-      exact ha
+      rwa [← IntermediateField.adjoin_toSubalgebra]
     rw [← aeval_range] at ha'
     obtain ⟨F, hF⟩ := ha'
     exact ⟨F, Subtype.ext ((hφ F).trans hF)⟩
@@ -288,8 +286,7 @@ theorem exists_conjPt_eq (x : Cone n (AlgebraicClosure ℚ)) (hx : BlockNonzero 
         funext p
         simp [ratio, flatCone, coordVec]
       have h5 : aeval (fun p : Coord n ↦ flatCone x p / flatCone x ⟨p.1, c p.1⟩) P = 0 := by
-        rw [h2]
-        exact h1
+        rwa [h2]
       exact mul_eq_zero_of_right _ h5
     have h3 := hz.2 _ (mem_orbitIdeal_of_homog x (isWeightedHomogeneous_chartHomog c P) hx0)
     rw [eval_map_int, aeval_chartHomog c P z hz0] at h3
@@ -307,8 +304,7 @@ theorem exists_conjPt_eq (x : Cone n (AlgebraicClosure ℚ)) (hx : BlockNonzero 
       exact congrArg Subtype.val hF
     have hyP : aeval (ratio x c) P = 0 := by
       have := congrArg (aeval (ratio x c)) hP
-      rw [← algebraMap_int_eq, aeval_map_algebraMap, map_mul, aeval_C, hF', mul_zero] at this
-      exact this
+      rwa [← algebraMap_int_eq, aeval_map_algebraMap, map_mul, aeval_C, hF', mul_zero] at this
     have := congrArg (aeval r) hP
     rw [← algebraMap_int_eq, aeval_map_algebraMap, map_mul, aeval_C, hint P hyP] at this
     have hN' : algebraMap ℚ ℂ (N : ℚ) ≠ 0 := by simpa using hN
@@ -318,8 +314,7 @@ theorem exists_conjPt_eq (x : Cone n (AlgebraicClosure ℚ)) (hx : BlockNonzero 
     have := φR.liftOfSurjective_comp_apply hsurjR ⟨ψ.toRingHom, hker⟩ (X p)
     have e1 : φR (X p) = gen p := aeval_X gen p
     have e2 : ψ.toRingHom (X p) = r p := aeval_X r p
-    rw [e1, e2] at this
-    exact this
+    rwa [e1, e2] at this
   obtain ⟨σ, hσ⟩ : ∃ σ : coordField x →+* ℂ, σ.comp (algebraMap L (coordField x)) = τ := by
     have h := _root_.UpperTheory.Reformulated.B.CardEmbeddingsRestrict.card_embeddings_restrict (K := L) (L := coordField x) τ
     have hpos : 0 < (Finset.univ.filter fun σ : coordField x →+* ℂ ↦
@@ -398,8 +393,7 @@ theorem OrbitConjSum.proof : OrbitConjSum.Statement := by
       Fintype.card (projPts (ι := blockIdx n) (orbitIdeal x)) := by
     have h := hsum fun _ ↦ 1
     simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one] at h
-    rw [NumberField.Embeddings.card] at h
-    exact h
+    rwa [NumberField.Embeddings.card] at h
   rw [degC_eq_card_projPts, Nat.card_eq_fintype_card, finsum_eq_sum_of_fintype,
     Finset.sum_congr rfl fun q _ ↦ hG q, hdeg]
   rw [show ∑ σ : coordField x →+* ℂ, g (fun p ↦ σ (coordVec x p.1 p.2)) =

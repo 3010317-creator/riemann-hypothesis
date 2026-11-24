@@ -227,8 +227,7 @@ theorem exists_infinite_fibre {W : Set (Fin e → ℂ)} (hW : IsOpen W) (hne : W
     have hwker : fderiv ℂ H.symm p (0, κ) ∈
         LinearMap.ker (fderiv ℂ Q (H.symm p) : (Fin e → ℂ) →ₗ[ℂ] (Fin e → ℂ)) := by
       rw [hker]; exact hw1
-    rw [fderiv_comp p (hQ _ hW').differentiableAt han.differentiableAt]
-    exact hwker
+    rwa [fderiv_comp p (hQ _ hW').differentiableAt han.differentiableAt]
   obtain ⟨ε, hε, hball⟩ := Metric.eventually_nhds_iff_ball.mp hev
   set c0 := Φ u0
   set ι : K0 → R0 × K0 := fun k => (c0.1, c0.2 + k) with hιdef
@@ -250,8 +249,7 @@ theorem exists_infinite_fibre {W : Set (Fin e → ℂ)} (hW : IsOpen W) (hne : W
     have h0 : (fderiv ℂ (Q ∘ H.symm) (ι k)).comp (ContinuousLinearMap.inr ℂ R0 K0) = 0 := by
       ext1 κ
       simp [hkey _ hp han hW' hs κ]
-    rw [h0] at this
-    exact this
+    rwa [h0] at this
   have hconst : ∀ k ∈ Metric.ball (0 : K0) ε, Q (H.symm (ι k)) = Q (H.symm (ι 0)) := by
     intro k hk
     exact (convex_ball (0 : K0) ε).is_const_of_fderivWithin_eq_zero (𝕜 := ℂ)

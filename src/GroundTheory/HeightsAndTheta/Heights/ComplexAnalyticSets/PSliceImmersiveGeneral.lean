@@ -41,8 +41,7 @@ theorem dim_component_linForm {n d : ℕ} {J W : Ideal (MvPolynomial (Fin n) ℂ
     apply hu
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     have : Ideal.Quotient.mk J (linForm u) ∈ W' := Ideal.mem_map_of_mem _ huW
-    rw [h, Ideal.mem_bot] at this
-    exact this
+    rwa [h, Ideal.mem_bot] at this
   have hht : W'.height ≤ 1 := Ideal.map_height_le_one_of_mem_minimalPrimes hW
   have hquot : ringKrullDim (B ⧸ W') = ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ W) :=
     ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE hIW)
@@ -144,15 +143,13 @@ theorem SliceImmersiveGeneral.proof (hcrit : CriticalImageNull.Statement)
       have hchain : fderiv ℂ (sliceMap (γ b)) (Fin.tail s) =
           (fderiv ℂ (γ b).toFun (hyperplaneEmb d (Fin.tail s))).comp (hyperplaneEmb d) := by
         have h := fderiv_comp (Fin.tail s) hγd (hyperplaneEmb d).differentiableAt
-        rw [ContinuousLinearMap.fderiv] at h
-        exact h
+        rwa [ContinuousLinearMap.fderiv] at h
       have hvt := hyperplaneEmb_tail hv0
       have : Fin.tail v = 0 := hinj (by
         rw [hchain, ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply, hvt, hst, hv,
           map_zero, map_zero])
       rw [← hvt, this, map_zero]
-    rw [hne] at hyG
-    exact hyG
+    rwa [hne] at hyG
   have hpos := hmass n d W hW.1.1 hWd x (o ∩ interior N) (ho.inter isOpen_interior) ⟨hxo, hxN⟩ hxW
   exact hpos.ne' (measure_mono_null hsub (measure_iUnion_null hnull))
 

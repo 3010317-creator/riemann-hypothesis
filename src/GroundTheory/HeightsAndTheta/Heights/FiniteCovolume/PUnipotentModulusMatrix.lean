@@ -79,16 +79,14 @@ theorem unitary_of_hForm {M : Matrix ι ι ℂ}
     (hM : ∀ u z, hForm H (M *ᵥ u) (M *ᵥ z) = hForm H u z) : Mᴴ * H * M = H := by
   ext i j
   have := hM (Pi.single i 1) (Pi.single j 1)
-  rw [hForm_mulVec, hForm_single, hForm_single] at this
-  exact this
+  rwa [hForm_mulVec, hForm_single, hForm_single] at this
 
 theorem eq_zero_of_hForm {H : Matrix ι ι ℂ} (hd : IsUnit H.det) {u : ι → ℂ}
     (hu : ∀ z, hForm H u z = 0) : u = 0 := by
   have h1 : star u ᵥ* H = 0 := by
     ext j
     have := hu (Pi.single j 1)
-    rw [hForm, dotProduct_mulVec, dotProduct_single_one] at this
-    exact this
+    rwa [hForm, dotProduct_mulVec, dotProduct_single_one] at this
   have h2 : star u = 0 := by
     have := congrArg (fun r => r ᵥ* H⁻¹) h1
     simpa [vecMul_vecMul, mul_nonsing_inv H hd] using this

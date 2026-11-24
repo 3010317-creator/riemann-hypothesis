@@ -26,8 +26,7 @@ theorem DimX.ringKrullDim_localization_int (B : Type) [CommRing B] [IsDomain B]
   have hM : M ≤ nonZeroDivisors B := by
     rintro _ ⟨m, hm, rfl⟩
     apply mem_nonZeroDivisors_of_ne_zero
-    intro h
-    exact nonZeroDivisors.ne_zero hm (hinj (h.trans (map_zero _).symm))
+    exact fun h => nonZeroDivisors.ne_zero hm (hinj (h.trans (map_zero _).symm))
   have : IsLocalization M (ℚ ⊗[ℤ] B) := IsLocalization.tensorRight _ _
   have : IsDomain (ℚ ⊗[ℤ] B) := IsLocalization.isDomain_of_le_nonZeroDivisors _ hM
 

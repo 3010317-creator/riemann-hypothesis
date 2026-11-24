@@ -45,8 +45,7 @@ theorem galPointsHom_some_eq_self {σ : Gal(L/K)} {x y : L}
     galPointsHom K L W σ (.some x y h) = .some x y h := by
   obtain ⟨h', e⟩ := galPointsHom_some K L W σ h
   rw [e]
-  simp only [Affine.Point.some.injEq]
-  exact ⟨hx, hy⟩
+  simpa only [Affine.Point.some.injEq] using ⟨hx, hy⟩
 
 end Action
 
@@ -194,31 +193,27 @@ theorem nonsingular_aut {x y : Fd} (h : V.toAffine.Nonsingular x y) :
     V.toAffine.Nonsingular (τ x) (τ y) := by
   have h1 := (Affine.map_nonsingular (W := V.toAffine) (f := (τ : Fd →+* Fd)) τ.injective x y).mpr h
   have hV' : V.toAffine.map (τ : Fd →+* Fd) = V.toAffine := hV
-  rw [hV'] at h1
-  exact h1
+  rwa [hV'] at h1
 
 include hV in
 theorem negY_aut (x y : Fd) : V.toAffine.negY (τ x) (τ y) = τ (V.toAffine.negY x y) := by
   have h1 := Affine.map_negY (W' := V.toAffine) (τ : Fd →+* Fd) x y
   have hV' : V.toAffine.map (τ : Fd →+* Fd) = V.toAffine := hV
-  rw [hV'] at h1
-  exact h1
+  rwa [hV'] at h1
 
 include hV in
 theorem addX_aut (x₁ x₂ ℓ : Fd) :
     V.toAffine.addX (τ x₁) (τ x₂) (τ ℓ) = τ (V.toAffine.addX x₁ x₂ ℓ) := by
   have h1 := Affine.map_addX (W' := V.toAffine) (τ : Fd →+* Fd) (x₁ := x₁) (x₂ := x₂) (ℓ := ℓ)
   have hV' : V.toAffine.map (τ : Fd →+* Fd) = V.toAffine := hV
-  rw [hV'] at h1
-  exact h1
+  rwa [hV'] at h1
 
 include hV in
 theorem addY_aut (x₁ x₂ y₁ ℓ : Fd) :
     V.toAffine.addY (τ x₁) (τ x₂) (τ y₁) (τ ℓ) = τ (V.toAffine.addY x₁ x₂ y₁ ℓ) := by
   have h1 := Affine.map_addY (W' := V.toAffine) (τ : Fd →+* Fd) (x₁ := x₁) (x₂ := x₂) (y₁ := y₁) (ℓ := ℓ)
   have hV' : V.toAffine.map (τ : Fd →+* Fd) = V.toAffine := hV
-  rw [hV'] at h1
-  exact h1
+  rwa [hV'] at h1
 
 variable [DecidableEq Fd]
 
@@ -227,8 +222,7 @@ theorem slope_aut (x₁ x₂ y₁ y₂ : Fd) :
     V.toAffine.slope (τ x₁) (τ x₂) (τ y₁) (τ y₂) = τ (V.toAffine.slope x₁ x₂ y₁ y₂) := by
   have h1 := Affine.map_slope (W := V.toAffine) (τ : Fd →+* Fd) x₁ x₂ y₁ y₂
   have hV' : V.toAffine.map (τ : Fd →+* Fd) = V.toAffine := hV
-  rw [hV'] at h1
-  exact h1
+  rwa [hV'] at h1
 
 noncomputable def autPoint : V.toAffine.Point →+ V.toAffine.Point where
   toFun P := match P with
@@ -268,8 +262,7 @@ omit [DecidableEq L] in
 theorem galFFPoint_genericPoint (σ : L ≃ₐ[K] L) :
     galFFPoint W₀ σ (genericPoint (W₀.baseChange L)) = genericPoint (W₀.baseChange L) := by
   rw [genericPoint, galFFPoint, autPoint_some]
-  simp only [Affine.Point.some.injEq]
-  exact ⟨galFF_genX W₀ σ, galFF_genY W₀ σ⟩
+  simpa only [Affine.Point.some.injEq] using ⟨galFF_genX W₀ σ, galFF_genY W₀ σ⟩
 
 
 omit [W₀.IsElliptic] in
@@ -283,8 +276,7 @@ theorem galFFPoint_constPoint (σ : L ≃ₐ[K] L) (R : (W₀.baseChange L).toAf
   | some x y h =>
     change autPoint _ _ _ (Affine.Point.some _ _ _) = Affine.Point.some _ _ _
     rw [autPoint_some]
-    simp only [Affine.Point.some.injEq]
-    exact ⟨galFF_algebraMap W₀ σ x, galFF_algebraMap W₀ σ y⟩
+    simpa only [Affine.Point.some.injEq] using ⟨galFF_algebraMap W₀ σ x, galFF_algebraMap W₀ σ y⟩
 
 omit [DecidableEq L] in
 theorem map_galConj_genericPoint (σ : L ≃ₐ[K] L)

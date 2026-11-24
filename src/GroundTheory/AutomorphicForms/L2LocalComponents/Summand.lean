@@ -226,8 +226,7 @@ theorem inner_map_expG_eq_zero {ι : Type*} [Fintype ι] (bL : Module.Basis ι �
       exact hSd Y _ ih
   have := eq_zero_of_iteratedDeriv_eq_zero han hder 1
   simp only [hf, one_smul] at this
-  rw [hℓ] at this
-  exact this
+  rwa [hℓ] at this
 
 end IsExpLieAlgebra
 
@@ -334,8 +333,7 @@ theorem isInvariant_topologicalClosure_map {W : Submodule ℂ (cuspForms K n)}
     obtain ⟨P, hP, -, hPφ⟩ := exists_aeval_uActionCusp_laplacianU_eq_zero φ b ε B hε horth hsymm hinv hK
     refine ⟨P, hP, Subtype.ext ?_⟩
     have := aeval_uAction_cuspVecL μ (hW hφ) (laplacianU K n b) P
-    rw [hPφ, map_zero] at this
-    exact this
+    rwa [hPφ, map_zero] at this
 
   have hexp : ∀ v ∈ S, ∀ Z : archLie K n,
       archRepT μ ((isExpLieAlgebra K n).expG Z) v ∈ Y := by
@@ -374,8 +372,7 @@ theorem isInvariant_topologicalClosure_map {W : Submodule ℂ (cuspForms K n)}
   obtain ⟨a, f, rfl⟩ := exists_eq_archimedean_mul_finite g
   rw [UnitaryRep.map_mul_apply]
   have := harchY a _ (hfinY f v hv)
-  rw [archRepT_apply] at this
-  exact this
+  rwa [archRepT_apply] at this
 
 
 

@@ -87,15 +87,13 @@ theorem det_eq (g : GL (Fin 2) ℝ) : g.val.det = g 0 0 * g 1 1 - g 0 1 * g 1 0 
 theorem den_ne (g : GL (Fin 2) ℝ) {z : ℂ} (hz : z.im ≠ 0) : den g z ≠ 0 := by
   intro h
   have h1 : (g 1 0 : ℝ) * z.im = 0 := by
-    have him := congrArg Complex.im h
-    simpa [den] using him
+    simpa [den] using congrArg Complex.im h
   have hc : (g 1 0 : ℝ) = 0 := by
     rcases mul_eq_zero.mp h1 with h2 | h2
     · exact h2
     · exact absurd h2 hz
   have hd : (g 1 1 : ℝ) = 0 := by
-    have hre := congrArg Complex.re h
-    simpa [den, hc] using hre
+    simpa [den, hc] using congrArg Complex.re h
   apply g.det_ne_zero
   rw [det_eq, hc, hd]
   ring

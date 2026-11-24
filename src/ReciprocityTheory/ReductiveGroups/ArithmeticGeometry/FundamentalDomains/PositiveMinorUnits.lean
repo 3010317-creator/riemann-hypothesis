@@ -171,15 +171,13 @@ theorem mN_bounds (i : ℕ) (hi : i ≤ r) : 0 ≤ mN τ G x e i ∧ mN τ G x e
   · constructor
     · have h1 := mN_up (hG := hG) (p0 := p0) (hp0 := hp0) (x := x) (hsg := hsg) (e := e)
         (j := i) (hj := hi0) (i := 0) (hi := Nat.zero_le _)
-      rw [mN_zero] at h1
-      exact h1
+      rwa [mN_zero] at h1
     · exact mN_up (hG := hG) (p0 := p0) (hp0 := hp0) (x := x) (hsg := hsg) (e := e)
         (j := p0) (hj := le_rfl) (i := i) (hi := hi0)
   · constructor
     · have h1 := mN_down (hG := hG) (p0 := p0) (x := x) (hsg := hsg) (e := e)
         (i := i) (hi := hi0) (j := r) (hij := hi) (hj := le_rfl)
-      rw [mN_top (hG := hG) (p0 := p0) (x := x) (hx := hx) (hsg := hsg) (e := e) (he := he)] at h1
-      exact h1
+      rwa [mN_top (hG := hG) (p0 := p0) (x := x) (hx := hx) (hsg := hsg) (e := e) (he := he)] at h1
     · exact mN_down (hG := hG) (p0 := p0) (x := x) (hsg := hsg) (e := e)
         (i := p0) (hi := le_rfl) (j := i) (hij := hi0) (hj := hi)
 
@@ -207,8 +205,7 @@ theorem mN_pos (hne : e ≠ 0) : 0 < mN τ G x e p0 := by
       Complex.normSq_eq_zero.mp ((mul_eq_zero.mp hre.symm).resolve_right hd1)
     have hdv := dv_zero τ G (famN x (i + 1) h) e hA1 hA0 hy
     rw [dv, famN_succ, sub_eq_zero] at hdv
-    simp only [pN, dite_eq_left h, dite_eq_left (Nat.le_of_succ_le h)]
-    exact hdv
+    simpa only [pN, dite_eq_left h, dite_eq_left (Nat.le_of_succ_le h)] using hdv
   have hall : ∀ i, i ≤ r → pN τ G x e i = 0 := by
     intro i hi
     induction i with

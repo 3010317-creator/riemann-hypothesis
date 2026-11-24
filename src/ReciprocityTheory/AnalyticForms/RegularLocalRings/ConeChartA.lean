@@ -284,8 +284,7 @@ theorem isWeightedHomogeneous_blockWt {f : MvPolynomial (Σ k, ι k) ℂ} {dg : 
   have hs : d ∈ f.support := MvPolynomial.mem_support_iff.mpr hd
   rw [← hf d hs k]
   simp only [Finsupp.weight_apply, smul_eq_mul]
-  rw [Finsupp.sum_fintype _ _ (by simp)]
-  rw [Fintype.sum_sigma, Fintype.sum_eq_single k]
+  rw [Finsupp.sum_fintype _ _ (by simp), Fintype.sum_sigma, Fintype.sum_eq_single k]
   · simp [blockWt]
   · intro k' hk'
     simp [blockWt, hk']

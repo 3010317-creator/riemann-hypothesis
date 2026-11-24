@@ -33,8 +33,7 @@ theorem minusculeSet_eq (k : ℕ) :
     exact ⟨_, hk, by simp [smul_eq_mul]⟩
   · rintro ⟨⟨S, hS⟩, c, k', hk', rfl⟩
     have := mul_mem_minusculeSet (gMat_mem_minusculeSet S c) (integralGL F n).one_mem hk'
-    rw [one_mul, hS] at this
-    exact this
+    rwa [one_mul, hS] at this
 
 theorem isCompact_minusculeSet (k : ℕ) : IsCompact (minusculeSet F n k) := by
   rw [minusculeSet_eq]
@@ -162,8 +161,7 @@ theorem card_pairs (S : Finset (Fin n)) :
       rw [ite_eq_right fun h => (Finset.mem_filter.1 hb).2 h.1]
   rw [h0, add_zero, Finset.filter_mem_eq_inter, Finset.univ_inter]
   refine Finset.sum_congr rfl fun b hb => ?_
-  rw [Finset.card_filter]
-  rw [← Finset.sum_filter_add_sum_filter_not Finset.univ (fun a => b < a)]
+  rw [Finset.card_filter, ← Finset.sum_filter_add_sum_filter_not Finset.univ (fun a => b < a)]
   have h1 : ∑ a ∈ Finset.univ.filter (fun a => ¬ b < a),
       (if b ∈ S ∧ a ∉ S ∧ b < a then 1 else 0) = 0 :=
     Finset.sum_eq_zero fun a ha => by rw [ite_eq_right fun h => (Finset.mem_filter.1 ha).2 h.2.2]
@@ -204,8 +202,7 @@ theorem mem_centralSet {g : GL (Fin n) F} :
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa [smul_eq_mul] using hx
-  · intro h
-    exact ⟨_, h, by simp [smul_eq_mul]⟩
+  · exact fun h => ⟨_, h, by simp [smul_eq_mul]⟩
 
 
 variable (μ) in

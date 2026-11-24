@@ -155,9 +155,7 @@ theorem integerApproximationCount_holds : IntegerApproximationCount (E := E) := 
       exact Subtype.ext h
     rw [hZ, h] at hcoord
     rwa [norm_sub_rev] at hcoord
-  · have hnot : w.1.embedding ∉ X.Ψ := by
-      intro hm
-      exact ((X.cmType _).mp hm) (h ▸ τ.2)
+  · have hnot : w.1.embedding ∉ X.Ψ := fun hm => ((X.cmType _).mp hm) (h ▸ τ.2)
     have hZ : Z w = conj (w' τ) := by
       rw [hZw, dite_eq_right hnot]
       congr 2

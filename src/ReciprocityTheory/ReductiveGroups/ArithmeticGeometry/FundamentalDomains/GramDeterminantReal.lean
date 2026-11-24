@@ -143,8 +143,7 @@ theorem dv_zero {n : ℕ} (f : Fin (n + 1) → Fin r → ℂ) (e : Fin r → ℂ
     (fun a => yv τ G f e a.castSucc - yv τ G (fun a : Fin n => f a.castSucc) e a) ?_
   intro d
   have hd := dv_orth τ G f e hA hA' d
-  rw [h] at hd
-  exact hd
+  rwa [h] at hd
 
 end StepDef
 
@@ -226,8 +225,7 @@ theorem mt_eq {n : ℕ} (f : Fin n → Fin r → ℂ) (e : Fin r → ℂ) (hA : 
     intro a b
     have h3 := congrFun (congrFun (Matrix.conjTranspose_nonsing_inv (gramF τ G f)) b) a
     rw [hH, Matrix.conjTranspose_apply] at h3
-    rw [starRingEnd_apply]
-    exact h3
+    rwa [starRingEnd_apply]
   unfold mt yv
 
   simp only [Matrix.vecMul, dotProduct, map_sum, map_mul, hI, Finset.sum_mul]

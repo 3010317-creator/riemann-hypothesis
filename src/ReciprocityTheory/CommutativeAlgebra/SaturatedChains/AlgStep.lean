@@ -141,8 +141,7 @@ theorem height_add_one_le_height_comap_of_surjective {A S : Type*} [CommRing A] 
   have h1 := Order.height_le_height_apply_of_strictMono g hg
     ((⟨q, ‹_›⟩ : PrimeSpectrum S) : WithBot (PrimeSpectrum S))
   rw [Order.height_coe_withBot] at h1
-  rw [height_eq_order_height_lemma q, height_eq_order_height_lemma (q.comap φ)]
-  exact h1
+  rwa [height_eq_order_height_lemma q, height_eq_order_height_lemma (q.comap φ)]
 
 theorem height_le_height_comap_of_eval₂_surjective {R S : Type*} [CommRing R] [IsDomain R]
     [IsNoetherianRing R] [CommRing S] [IsDomain S] (f : R →+* S) (hf : Function.Injective f) (x : S)
@@ -155,8 +154,7 @@ theorem height_le_height_comap_of_eval₂_surjective {R S : Type*} [CommRing R] 
     have hmem : g ∈ RingHom.ker (eval₂RingHom f x) := by
       rw [RingHom.mem_ker]
       simpa using hg
-    rw [h, Ideal.mem_bot] at hmem
-    exact hmem
+    rwa [h, Ideal.mem_bot] at hmem
   have h3 := height_add_one_le_height_comap_of_surjective (eval₂RingHom f x) hgen hker q
   have h2 := height_le_height_comap_C_add_one (q.comap (eval₂RingHom f x))
   have hc : (q.comap (eval₂RingHom f x)).comap (C : R →+* R[X]) = q.comap f := by

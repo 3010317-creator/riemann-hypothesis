@@ -76,8 +76,7 @@ theorem aG_frame_nonneg (hd : d.AxH 𝒜) (h : d.S1) : 0 ≤ d.aG h d.wF hd.a4.c
   refine Finset.sum_nonneg fun c _ => ?_
   have hec : hd.a4.choose c ∈ 𝒜 c d.wF ∧ hd.a4.choose c ≠ 0 := hespec.1 c
   have hk : ∃ k, d.thp (hd.sel k) c ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     obtain ⟨q, hq, p, hp⟩ := hespec.2.2 (fun _ => 1)
     have e1 := hp c
     simp only [mul_one] at e1
@@ -104,8 +103,7 @@ theorem aG_frame_nonneg (hd : d.AxH 𝒜) (h : d.S1) : 0 ≤ d.aG h d.wF hd.a4.c
           WithTop.untopD 0 (d.Wres c w (ratio (Ω := Ω c) (d.thp (hd.sel k) c) (hd.a4.choose c))) := by
     intro p hp
     have e2 := d.nP_smul hd h c hec.1 hec.2 hr0 hp
-    rw [← hr] at e2
-    exact e2
+    rwa [← hr] at e2
   have hkey := d.key_degree hd h c _ hr0
   have hfe := x2.2.2.1 _ _ hec.1 hec.2
   have hfm := d.use₈ hd h c _ hr0
@@ -130,8 +128,7 @@ theorem aG_frame_nonneg (hd : d.AxH 𝒜) (h : d.S1) : 0 ≤ d.aG h d.wF hd.a4.c
       d.nP h c d.wF (d.thp (hd.sel k) c) p * (d.dg (d.gen p) : ℤ) :=
     finsum_nonneg fun p => finsum_nonneg fun hp =>
       mul_nonneg (d.nP_nonneg hd h c hp _ _ hord) (Nat.cast_nonneg _)
-  rw [eq1, hkey, add_zero] at hnn
-  exact hnn
+  rwa [eq1, hkey, add_zero] at hnn
 
 end Data
 

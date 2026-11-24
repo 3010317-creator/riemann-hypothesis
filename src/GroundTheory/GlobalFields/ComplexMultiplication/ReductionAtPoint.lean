@@ -129,13 +129,12 @@ theorem reduceFF_constMap (V : WeierstrassCurve 𝒪) [V.IsElliptic]
   cases c with
   | zero => exact (map_zero _).trans (map_zero _).symm
   | some X Y h =>
+    obtain ⟨h₁, e₁⟩ : ∃ h₁, constMap (V.baseChange K) (W.baseChange K).toAffine.FunctionField
+        (Point.some X Y h) = Point.some (algebraMap K (W.baseChange K).toAffine.FunctionField X)
+          (algebraMap K (W.baseChange K).toAffine.FunctionField Y) h₁ := ⟨_, rfl⟩
     by_cases hX : X ∈ Set.range (algebraMap 𝒪 K)
     · obtain ⟨x, rfl⟩ := hX
       obtain ⟨y, rfl⟩ := exists_y_of_equation K V h.1
-      obtain ⟨h₁, e₁⟩ : ∃ h₁, constMap (V.baseChange K) (W.baseChange K).toAffine.FunctionField
-          (Point.some _ _ h) = Point.some (algebraMap K (W.baseChange K).toAffine.FunctionField
-            (algebraMap 𝒪 K x)) (algebraMap K (W.baseChange K).toAffine.FunctionField
-              (algebraMap 𝒪 K y)) h₁ := ⟨_, rfl⟩
       have hx := RingHom.congr_fun hσ x
       have hy := RingHom.congr_fun hσ y
       simp only [RingHom.comp_apply] at hx hy
@@ -145,19 +144,13 @@ theorem reduceFF_constMap (V : WeierstrassCurve 𝒪) [V.IsElliptic]
       have e₄ := reducePoint_some_integral K V h
         (WeierstrassCurve.Affine.equation_iff_nonsingular.mp
           (equation_residue V (equation_of_map K V h.1)))
-      refine Eq.trans ?_ (congrArg (constMap (V.map (residue 𝒪))
-        (W.map (residue 𝒪)).toAffine.FunctionField) e₄).symm
+      refine Eq.trans ?_ (congrArg _ e₄).symm
       show _ = Point.some _ _ _
       simp only [Point.some.injEq, gaussResidue_residue_algebraMap]
       exact ⟨rfl, rfl⟩
     · have hX' := map_notMem_range K (W.baseChange K).toAffine.FunctionField
         (f := algebraMap 𝒪 (gaussRing W)) hσ hX
-      have e₄ := reducePoint_some_notMem K V h hX
-      refine Eq.trans ?_ (congrArg (constMap (V.map (residue 𝒪))
-        (W.map (residue 𝒪)).toAffine.FunctionField) e₄).symm
-      obtain ⟨h₁, e₁⟩ : ∃ h₁, constMap (V.baseChange K) (W.baseChange K).toAffine.FunctionField
-          (Point.some X Y h) = Point.some (algebraMap K (W.baseChange K).toAffine.FunctionField X)
-            (algebraMap K (W.baseChange K).toAffine.FunctionField Y) h₁ := ⟨_, rfl⟩
+      refine Eq.trans ?_ (congrArg _ (reducePoint_some_notMem K V h hX)).symm
       rw [e₁, map_zero]
       simp only [reduceFF, AddMonoidHom.comp_apply, AddEquiv.coe_toAddMonoidHom,
         reductionHom_apply]

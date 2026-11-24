@@ -90,8 +90,7 @@ theorem card_add_two_le [CharZero E] (ψ : MRing ι →+* E) (j : ∀ k, ι k) (
     · rw [hmem, specMap_X]
       simp [cS]
     · rw [hmem, specMap_X, hj, map_one, mul_one]
-      simp only [cS, ite_eq_right hk]
-      exact MvPolynomial.X_ne_zero k
+      simpa only [cS, ite_eq_right hk] using MvPolynomial.X_ne_zero k
 
   let Qt : Ideal (MRing ι) := RingHom.ker ((Int.castRingHom (ZMod 2)).comp MvPolynomial.constantCoeff)
   have hQt : Qt.IsPrime := RingHom.ker_isPrime _
@@ -175,8 +174,7 @@ theorem RegularityFunctionFieldNumber.proof : RegularityFunctionFieldNumber.Stat
     have hy' : (y : FractionRing (MRing ι ⧸ P)) * toFrac P u = toFrac P v := hy
     refine ⟨y, Subtype.ext ?_⟩
     have e : ((x : FractionRing (MRing ι ⧸ P)) * y) * toFrac P u = 1 * toFrac P u := by
-      rw [mul_assoc, hy', one_mul]
-      exact hx'
+      rwa [mul_assoc, hy', one_mul]
     exact mul_right_cancel₀ (hv0 u huP) e
   refine ⟨hF, ?_⟩
 
@@ -257,8 +255,7 @@ theorem RegularityFunctionFieldNumber.proof : RegularityFunctionFieldNumber.Stat
       have hu : IsUnit (n : D) := isUnit_iff_exists_inv.mpr ⟨algebraMap ℚ D (n : ℚ)⁻¹, by
         rw [← map_natCast (algebraMap ℚ D) n, ← map_mul, mul_inv_cancel₀ (Nat.cast_ne_zero.mpr hn0), map_one]⟩
       have hmem : (n : D) ∈ m := by
-        rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-        exact hn
+        rwa [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
       exact hm.ne_top (Ideal.eq_top_of_isUnit_mem _ hmem hu)
     let ψ : MRing ι →+* D ⧸ m := (Ideal.Quotient.mk m).comp (φ.codRestrict D hφD)
     have hψ : ∀ g, ψ g = Ideal.Quotient.mk m ⟨φ g, hφD g⟩ := fun g => rfl

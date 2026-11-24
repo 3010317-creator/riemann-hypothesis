@@ -621,8 +621,7 @@ theorem logHeight_le_torusHeight_subst {D N : ℕ} (f : KTp K D N) (hf : f ≠ 0
       rw [coeffIn_map φ φ.injective, hc]
     have hne : ReciprocityTheory.MultiplicativeHeights.coeffIn (Sum.inr 0) (∑ b, a b) (MvPolynomial.map φ (bilinearSubstitution f)) ≠ 0 := by
       rw [e1]
-      intro h0
-      exact hR0 (hinj (by rw [h0, map_zero]))
+      exact fun h0 => hR0 (hinj (by rw [h0, map_zero]))
     have := ReciprocityTheory.MultiplicativeHeights.Closed.torusCoeff _ (MvPolynomial.map φ (bilinearSubstitution f)) (Sum.inr 0) (∑ b, a b) hne
       (Or.inl fun k hk => by rw [coeffIn_map φ φ.injective, hc' k hk, map_zero])
     rwa [e1] at this
@@ -783,8 +782,7 @@ noncomputable def upB : ℝ :=
   d.PP0' * d.wsize d.wL + max 0 d.laW + Real.log (d.N + 1 : ℕ) + 1
 
 theorem lineSection_eq_ratio_smul (hd : d.AxH 𝒜) (c : ι) (j : Fin (d.N + 1)) :
-    d.w j c = d.affineCoord c j • d.w (d.jc c) c := by
-  exact d.w_eq_scalarRatio_smul hd c j
+    d.w j c = d.affineCoord c j • d.w (d.jc c) c := d.w_eq_scalarRatio_smul hd c j
 
 theorem lineSection_pow_ne_zero (hd : d.AxH 𝒜) (c : ι) (n : ℕ) : d.w (d.jc c) c ^ n ≠ 0 := by
   haveI := hd.graded c
@@ -859,8 +857,7 @@ theorem irreducible_factor_height_bound (hd : d.AxH 𝒜) (h : d.S1) (F : ι →
     intro h0
     apply hd.w_base c
     have e := d.lineSection_eq_ratio_smul hd c (d.jc c)
-    rw [h0, zero_smul] at e
-    exact e
+    rwa [h0, zero_smul] at e
   have hx0 : d.linearSubstitution c (MvPolynomial.X (Sum.inr 0)) ≠ 0 := by
     intro h0
     have e := congrArg (MvPolynomial.eval (fun p : Fin (d.D + 2) × Fin (d.N + 1) =>
@@ -884,8 +881,7 @@ theorem irreducible_factor_height_bound (hd : d.AxH 𝒜) (h : d.S1) (F : ι →
     have h1 := Ideal.height_add_one_le_of_lt_of_isPrime (lt_of_le_of_ne hle hne)
     have h2 := d.height_ker_scaledSubstitution_le_one hd c
     have h3 : (Ideal.span {F1}).height ≠ 0 := by
-      rw [Ne, Ideal.height_eq_zero_iff_eq_bot, Ideal.span_singleton_eq_bot]
-      exact hF1ne
+      rwa [Ne, Ideal.height_eq_zero_iff_eq_bot, Ideal.span_singleton_eq_bot]
     have h4 : 1 ≤ (Ideal.span {F1}).height := Order.one_le_iff_ne_zero.mpr h3
     have h5 : (1 : ℕ∞) + 1 ≤ 1 := le_trans (by gcongr) (h1.trans h2)
     exact absurd h5 (by norm_num)
@@ -911,8 +907,7 @@ theorem irreducible_factor_height_bound (hd : d.AxH 𝒜) (h : d.S1) (F : ι →
     simp [ReciprocityTheory.MultiplicativeHeights.h0, ReciprocityTheory.MultiplicativeHeights.gaussAbs, ReciprocityTheory.MultiplicativeHeights.blockSphereMean] at hpos
   have hh : ReciprocityTheory.MultiplicativeHeights.h0 (F c) ≤ m * hT F1 := by
     have e1 := logHeight_le_torusHeight_subst (F c) hFne _ hmh
-    rw [hG, hTX5_C_mul_X_pow_mul_pow κ hκ _ a m F1 hF1ne] at e1
-    exact e1
+    rwa [hG, hTX5_C_mul_X_pow_mul_pow κ hκ _ a m F1 hF1ne] at e1
   exact ⟨F1, m, deF, hm, hdeF, hmd, hirr, hx, hu, hh, hkey⟩
 
 end Data

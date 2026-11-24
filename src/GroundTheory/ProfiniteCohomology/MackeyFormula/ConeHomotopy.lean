@@ -119,7 +119,6 @@ theorem isIso_homologyMap_of_comm (Φ : mappingCoconeNat f ⟶ mappingCoconeNat 
       (homologyMap β m).hom ((homologyMap f m).hom z) := fun m z =>
     (hom_apply_hom_apply_eq_of_comp_eq (hsq m) z).symm
 
-  have e1 := fun m => (ShortComplex.moduleCat_exact_iff _).1 (homology_exact₁ f m)
   have e2 := fun m => (ShortComplex.moduleCat_exact_iff _).1 (homology_exact₂ f m)
   have e3 := fun m => (ShortComplex.moduleCat_exact_iff _).1 (homology_exact₃ f m)
   have e1' := fun m => (ShortComplex.moduleCat_exact_iff _).1 (homology_exact₁ f' m)
@@ -132,56 +131,35 @@ theorem isIso_homologyMap_of_comm (Φ : mappingCoconeNat f ⟶ mappingCoconeNat 
     ((ModuleCat.epi_iff_surjective _).2 ?_)
   · rw [injective_iff_map_eq_zero]
     intro x hx
+    have h1 : (homologyMap (fst f) n).hom x = 0 :=
+      (bα n).1 (by rw [← sfst, hx, map_zero, map_zero])
     cases n with
-    | zero =>
-      apply inj_fst0 f
-      rw [map_zero]
-      apply (bα 0).1
-      rw [← sfst, hx, map_zero, map_zero]
+    | zero => exact inj_fst0 f (by rw [h1, map_zero])
     | succ m =>
-      have h1 : (homologyMap (fst f) (m + 1)).hom x = 0 := by
-        apply (bα (m + 1)).1
-        rw [← sfst, hx, map_zero, map_zero]
       obtain ⟨y, rfl⟩ := e2 m x h1
-      have h2 : (homologyδ f' m).hom ((homologyMap β m).hom y) = 0 := by
-        rw [← sδ]
-        exact hx
+      have h2 := (sδ m y).symm.trans hx
       obtain ⟨z', hz'⟩ := e1' m _ h2
       obtain ⟨z, rfl⟩ := (bα m).2 z'
-      have h3 : (homologyMap f m).hom z = y := by
-        apply (bβ m).1
-        rw [← sf]
-        exact hz'
+      have h3 : (homologyMap f m).hom z = y := (bβ m).1 ((sf m z).symm.trans hz')
       change (homologyδ f m).hom y = 0
       rw [← h3]
       exact hom_apply_hom_apply_of_comp_eq (homologyMap_homologyδ f m) z
   · intro y'
+    obtain ⟨w, hw⟩ := (bα n).2 ((homologyMap (fst f') n).hom y')
+    have h1 : (homologyMap f n).hom w = 0 := by
+      apply (bβ n).1
+      rw [← sf, hw, map_zero]
+      exact hom_apply_hom_apply_of_comp_eq (homologyMap_fst_homologyMap f' n) y'
+    obtain ⟨x, rfl⟩ := e3 n w h1
     cases n with
-    | zero =>
-      obtain ⟨w, hw⟩ := (bα 0).2 ((homologyMap (fst f') 0).hom y')
-      have h1 : (homologyMap f 0).hom w = 0 := by
-        apply (bβ 0).1
-        rw [← sf, hw, map_zero]
-        exact hom_apply_hom_apply_of_comp_eq (homologyMap_fst_homologyMap f' 0) y'
-      obtain ⟨x, rfl⟩ := e3 0 w h1
-      refine ⟨x, inj_fst0 f' ?_⟩
-      rw [sfst]
-      exact hw
+    | zero => exact ⟨x, inj_fst0 f' ((sfst 0 x).trans hw)⟩
     | succ m =>
-      obtain ⟨w, hw⟩ := (bα (m + 1)).2 ((homologyMap (fst f') (m + 1)).hom y')
-      have h1 : (homologyMap f (m + 1)).hom w = 0 := by
-        apply (bβ (m + 1)).1
-        rw [← sf, hw, map_zero]
-        exact hom_apply_hom_apply_of_comp_eq (homologyMap_fst_homologyMap f' (m + 1)) y'
-      obtain ⟨x, rfl⟩ := e3 (m + 1) w h1
       have h2 : (homologyMap (fst f') (m + 1)).hom (y' - (homologyMap Φ (m + 1)).hom x) = 0 := by
         rw [map_sub, sfst, hw, sub_self]
       obtain ⟨u', hu'⟩ := e2' m _ h2
       obtain ⟨u, rfl⟩ := (bβ m).2 u'
       refine ⟨x + (homologyδ f m).hom u, ?_⟩
-      rw [map_add (f := _), sδ]
-      rw [show (homologyδ f' m).hom ((homologyMap β m).hom u) =
-        y' - (homologyMap Φ (m + 1)).hom x from hu']
+      rw [map_add (f := _), sδ, hu']
       abel
 
 theorem isIso_homologyMap_mapOfHomotopy (h : Homotopy (f ≫ β) (α ≫ f'))

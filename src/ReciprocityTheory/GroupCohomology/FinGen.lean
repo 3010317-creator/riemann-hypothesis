@@ -147,8 +147,7 @@ theorem isPrecomplete_pi {ι : Type*} [Fintype ι] [DecidableEq ι] (I : Ideal R
   choose l hl using hc
   refine ⟨l, fun n => ?_⟩
   rw [SModEq.sub_mem, key]
-  intro i
-  exact SModEq.sub_mem.1 (hl i n)
+  exact fun i => SModEq.sub_mem.1 (hl i n)
 
 end Aux2
 
@@ -301,8 +300,7 @@ theorem finGen_holds : FinGenStatement.{u} := by
     intro x
     simpa using hmem 1 x
   have hle : Ideal.span {t} • (⊤ : Submodule R (L.H n)) ≤ LinearMap.ker ((π 0).H n) := by
-    intro x hx
-    exact (hmt x).2 ((hmem1 x).1 hx)
+    exact fun x hx => (hmt x).2 ((hmem1 x).1 hx)
   let q := (Ideal.span {t} • (⊤ : Submodule R (L.H n))).liftQ ((π 0).H n) hle
   have hq : Injective q := by
     refine (injective_iff_map_eq_zero _).2 fun z hz => ?_

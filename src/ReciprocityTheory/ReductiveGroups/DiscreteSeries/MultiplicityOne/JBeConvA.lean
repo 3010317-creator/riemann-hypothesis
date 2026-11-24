@@ -162,8 +162,7 @@ theorem bc_pow_zero {A : ℝ} (hA : A ≠ 0) : bcPow A ((0 : Mat k r) : Mt k r) 
 theorem norm_power_product_lower_bound {a g b : Mat k r} (ha : IsUnit a) (hb : IsUnit b) (hg : g ≠ 0) {A : ℝ} (hA : 0 ≤ A) :
     bcPow A (g : Mt k r) * (bcPow A (a : Mt k r) * bcPow A (b : Mt k r)) ≤ bcPow A ((a * g * b : Mat k r) : Mt k r) := by
   have hagb : a * g * b ≠ 0 := by
-    intro h0
-    exact hg ((ha.mul_right_eq_zero).mp ((hb.mul_left_eq_zero).mp h0))
+    exact fun h0 => hg ((ha.mul_right_eq_zero).mp ((hb.mul_left_eq_zero).mp h0))
   have pa := bc_gN_pos_of_ne ha.ne_zero
   have pb := bc_gN_pos_of_ne hb.ne_zero
   have pg := bc_gN_pos_of_ne hg
@@ -243,8 +242,7 @@ theorem bc_lintegral_S_pow_AB (hM : UnitaryGroupStructuralFacts) {Wp Wq : Type} 
   by_contra hK
   rw [not_lt, top_le_iff] at hK
   have hK' : ∫⁻ p, f (Gb p) ∂(D.μW'.prod D.μN) = ⊤ := by
-    rw [hW]
-    exact hK
+    rwa [hW]
   have hGfin : ∫⁻ g, f g ∂D.μG < ⊤ := hGI k r D.μG A D.haarG le_rfl
   have hGne : ∫⁻ g, f g ∂D.μG ≠ 0 :=
     bc_lintegral_pow_ne_zero hGL D.haarG.ne_zero id measurable_id (bc_isHaarOn_ae_mem D.haarG) A
@@ -261,8 +259,7 @@ theorem bc_lintegral_S_pow_AB (hM : UnitaryGroupStructuralFacts) {Wp Wq : Type} 
     · have hz : ∀ p, f (sgs p (bigCell k r q.1 (D.μsec q.2))) = 0 := by
         intro p
         rw [hb0]
-        simp only [sgs, Matrix.mul_zero, Matrix.zero_mul]
-        exact bc_pow_zero hA
+        simpa only [sgs, Matrix.mul_zero, Matrix.zero_mul] using bc_pow_zero hA
       simp only [h, hz, lintegral_zero, mul_zero]
     · have hpos : f (bigCell k r q.1 (D.μsec q.2)) ≠ 0 :=
         (ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos (bc_gN_pos_of_ne hb0) _)).ne'

@@ -38,8 +38,7 @@ theorem fixedVectors_comp (K : Subgroup G) :
   constructor
   · rintro hv _ ⟨k, hk, rfl⟩
     exact hv k hk
-  · intro hv k hk
-    exact hv _ ⟨k, hk, rfl⟩
+  · exact fun hv k hk => hv _ ⟨k, hk, rfl⟩
 
 theorem isSmooth_comp_iff : IsSmooth (σ.comp e.toMulEquiv.toMonoidHom) ↔ IsSmooth σ := by
   refine forall_congr' fun v => ?_
@@ -64,8 +63,7 @@ theorem isAdmissible_comp_iff :
       rw [Subgroup.coe_comap]
       exact hKo.preimage e.continuous
     have := h _ hc ho
-    rw [fixedVectors_comp, map_comap_eq] at this
-    exact this
+    rwa [fixedVectors_comp, map_comap_eq] at this
   · rw [fixedVectors_comp]
     refine h _ ?_ ?_
     · rw [coe_map_eq_image]
@@ -259,11 +257,9 @@ theorem mem_blockUpper_iff_leviEquivPi {α' : Type*} [LinearOrder α'] (γ : Fin
       have hk : (fiberFin β a k).1 = i := by simp [k]
       have hl : (fiberFin β a l).1 = j := by simp [l]
       have hkl : restrictFun β γ a l < restrictFun β γ a k := by
-        simp only [restrictFun, hk, hl]
-        exact hij
+        simpa only [restrictFun, hk, hl] using hij
       have := h a hkl
-      rw [leviEquivPi_apply, hk, hl] at this
-      exact this
+      rwa [leviEquivPi_apply, hk, hl] at this
     · exact mem_levi.1 m.2 i j hb
 
 theorem mem_unipotentRadical_iff_leviEquivPi {α' : Type*} [LinearOrder α'] (γ : Fin n → α')
@@ -292,8 +288,7 @@ theorem mem_unipotentRadical_iff_leviEquivPi {α' : Type*} [LinearOrder α'] (γ
       have hk : (fiberFin β a k).1 = i := by simp [k]
       have hl : (fiberFin β a l).1 = j := by simp [l]
       have hkl : restrictFun β γ a k = restrictFun β γ a l := by
-        simp only [restrictFun, hk, hl]
-        exact hij
+        simpa only [restrictFun, hk, hl] using hij
       have := (h a).2 k l hkl
       rw [leviEquivPi_apply, hk, hl] at this
       rw [this]

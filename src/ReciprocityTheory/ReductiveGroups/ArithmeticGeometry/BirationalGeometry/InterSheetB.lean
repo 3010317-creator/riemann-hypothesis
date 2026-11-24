@@ -67,15 +67,13 @@ theorem coincide_null (hA : _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStateme
     (hG' : G' ∈ secSet P Ψ (ball c r)) (hne : G ≠ G') :
     volume {y | y ∈ ball c r ∧ G y = G' y} = 0 := by
   obtain ⟨y0, hy0⟩ : ∃ y0, G y0 ≠ G' y0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hne (funext hcon)
   have hy0b : y0 ∈ ball c r := by
     by_contra hb
     exact hy0 (by rw [hG.1 y0 hb, hG'.1 y0 hb])
   obtain ⟨i, hi⟩ : ∃ i, G y0 i ≠ G' y0 i := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hy0 (funext hcon)
   set f : (Fin e → ℂ) → ℂ := fun y => G y i - G' y i with hf
   have hdiff : DifferentiableOn ℂ f (ball c r) := by
@@ -106,8 +104,7 @@ theorem secSet_finite (hA : _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStateme
       by_cases h : G = G'
       · simp [h]
       · refine measure_mono_null ?_ (coincide_null hA (hFS hG) (hFS hG') h)
-        intro y hy
-        exact ⟨hy.2.1, hy.2.2⟩
+        exact fun y hy => ⟨hy.2.1, hy.2.2⟩
     refine measure_mono_null (fun y hy => ?_) hnull
     obtain ⟨hyb, hlt⟩ := hy
     by_contra hnot
@@ -177,8 +174,7 @@ theorem badSet_null (hA : _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStatement
       intro y hy
       simp only [S, Set.mem_iUnion] at hy
       obtain ⟨G, _, G', _, _, hyb, _⟩ := hy
-      rw [hempty] at hyb
-      exact hyb
+      rwa [hempty] at hyb
   have hcount : volume (⋃ d ∈ Dc, ⋃ q : ℚ, S d q) = 0 :=
     (measure_biUnion_null_iff hDc).2 fun d _ => measure_iUnion_null fun q => hS d q
   refine measure_mono_null ?_ hcount
@@ -190,11 +186,9 @@ theorem badSet_null (hA : _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStatement
     exact ⟨q, h1, h2⟩
   obtain ⟨d, hdD, hd⟩ := hDd.exists_mem_open isOpen_ball ⟨y, mem_ball_self hq0⟩
   have hdy : dist y d < q := by
-    rw [dist_comm]
-    exact hd
+    rwa [dist_comm]
   have hyB : y ∈ ball d (q : ℝ) := by
-    rw [mem_ball]
-    exact hdy
+    rwa [mem_ball]
   have hBsub : ball d (q : ℝ) ⊆ ball y ε := by
     intro y' hy'
     rw [mem_ball] at hy' ⊢
@@ -212,8 +206,7 @@ theorem badSet_null (hA : _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStatement
   · intro heq
     apply hne
     filter_upwards [isOpen_ball.mem_nhds hyB] with y' hy'
-    have h1 := congrFun heq y'
-    simpa [Set.indicator_of_mem hy'] using h1
+    simpa [Set.indicator_of_mem hy'] using congrFun heq y'
   · simp [Set.indicator_of_mem hyB, hγw, hγ'w]
 
 end ReciprocityTheory.ChartRestriction.G.Geo

@@ -74,8 +74,7 @@ theorem isMultiHomogIdeal_iff_isHomogeneous (I : Ideal (MRing ι F)) :
       weightedDecomposition.decompose'_apply F (blockWeight ι) f b
     rw [key]
     exact h f hf b
-  · intro h f hf b
-    exact weightedHomogeneousComponent_mem_of_mem F (blockWeight ι) h hf b
+  · exact fun h f hf b => weightedHomogeneousComponent_mem_of_mem F (blockWeight ι) h hf b
 
 
 omit [Fintype K] in
@@ -93,8 +92,7 @@ theorem weightedHomogeneousComponent_mul_X (f : MRing ι F) (b : K → ℕ) (v :
       (DirectSum.decompose (weightedHomogeneousSubmodule F (blockWeight ι)) φ c : MRing ι F) =
         weightedHomogeneousComponent (blockWeight ι) c φ :=
     fun φ c => weightedDecomposition.decompose'_apply F (blockWeight ι) φ c
-  rw [key, key] at h
-  exact h
+  rwa [key, key] at h
 
 theorem isMultiHomogIdeal_colon_X {I : Ideal (MRing ι F)} (hI : IsMultiHomogIdeal I)
     (v : Σ k, ι k) : IsMultiHomogIdeal (I.colon (Ideal.span {(X v : MRing ι F)})) := by
@@ -480,8 +478,7 @@ theorem mixedDiff_update_add {n : ℕ} (bs : Fin n → K → ℤ) (i : Fin n) (b
     (h : (K → ℤ) → ℤ) (m : K → ℤ) :
     mixedDiff (Function.update bs i (b + b')) h m =
       mixedDiff (Function.update bs i b) h m + mixedDiff (Function.update bs i b') h (m - b) := by
-  simp only [mixedDiff, ofFn_update]
-  exact foldr_diffStep_set_add h b b' _ i (by simp) m
+  simpa only [mixedDiff, ofFn_update] using foldr_diffStep_set_add h b b' _ i (by simp) m
 
 theorem tendsto_sub_const_atTop (b : K → ℤ) :
     Filter.Tendsto (fun m : K → ℤ => m - b) Filter.atTop Filter.atTop :=
@@ -535,8 +532,7 @@ theorem blockMonomial_isMultiHomog (i : ∀ k, ι k) (m : K → ℕ) :
   have hm : (∑ k, m k • blockWeight ι ⟨k, i k⟩) = m := by
     funext k'
     simp [blockWeight, Finset.sum_apply, Pi.single_apply]
-  rw [hm] at h
-  exact h
+  rwa [hm] at h
 
 
 omit [DecidableEq K] [∀ k, Fintype (ι k)] in
@@ -618,8 +614,7 @@ theorem IntNumBase.proof (h1 : MixedDiffConst.Statement.{u}) : IntNumBase.Statem
   let N : K → ℕ := fun k => (M0 k).toNat
   have hrankc : ∀ n, N ≤ n → (Module.finrank F (U n) : ℤ) = c := fun n hn => by
     rw [hrankU, ← ((GradedFinite.proof.{u}) F K ι P n).2]
-    refine hM0 _ fun k => ?_
-    exact (Int.self_le_toNat (M0 k)).trans (by exact_mod_cast hn k)
+    exact hM0 _ fun k => (Int.self_le_toNat (M0 k)).trans (by exact_mod_cast hn k)
   have hstab : ∀ m, U m ≤ U N := fun m => by
     have hN : U N = U (m ⊔ N) := by
       have := hfinU (m ⊔ N)
@@ -647,8 +642,7 @@ theorem IntNumBase.proof (h1 : MixedDiffConst.Statement.{u}) : IntNumBase.Statem
       have hgU : algebraMap A L (Ideal.Quotient.mk P g) / xm b ∈ E :=
         hstab b ((memU b _).mpr ⟨g, hg, rfl⟩)
       have hg0 : algebraMap A L (Ideal.Quotient.mk P g) ≠ 0 := by
-        rw [Ne, FaithfulSMul.algebraMap_eq_zero_iff, Ideal.Quotient.eq_zero_iff_mem]
-        exact hgP
+        rwa [Ne, FaithfulSMul.algebraMap_eq_zero_iff, Ideal.Quotient.eq_zero_iff_mem]
       have heq : algebraMap A L (Ideal.Quotient.mk P f) / algebraMap A L (Ideal.Quotient.mk P g) =
           algebraMap A L (Ideal.Quotient.mk P f) / xm b *
             (algebraMap A L (Ideal.Quotient.mk P g) / xm b)⁻¹ := by
@@ -1118,8 +1112,7 @@ theorem MultEqualsCoeff.proof (h1 : PrimeFiltration.Statement.{u})
           (relDim_nonneg_of_card_le (Q j) (h3 F K ι (Q j) ⟨hpr, hhom, hr⟩)) hlt
         exact (h2 F K ι (Q j) hhom hr d hd).2 n hdn bs
       · have ht : top (Q j) := ⟨hmin, hr, heq.trans hn⟩
-        simp only [val, ite_eq_left ht]
-        exact (h2 F K ι (Q j) hhom hr n (heq.trans hn)).1 bs
+        simpa only [val, ite_eq_left ht] using (h2 F K ι (Q j) hhom hr n (heq.trans hn)).1 bs
     · have hnt : ¬ top (Q j) := fun ht => hr ht.2.1
       simp only [val, ite_eq_right hnt]
       filter_upwards [foldr_diffStep_eventuallyEq
@@ -1304,8 +1297,7 @@ theorem component_mul_form {c : K → ℕ} {s : MRing ι F} (hs : IsMultiHomog s
     (mem_weightedHomogeneousSubmodule _ _ _ _).mpr hs
   have := DirectSum.coe_decompose_mul_add_of_right_mem
     (𝒜 := weightedHomogeneousSubmodule F (blockWeight ι)) (i := b) (a := t) hs'
-  rw [← weightedDecomposition.decompose'_apply, ← weightedDecomposition.decompose'_apply]
-  exact this
+  rwa [← weightedDecomposition.decompose'_apply, ← weightedDecomposition.decompose'_apply]
 
 omit [Fintype K] [DecidableEq K] in
 theorem mem_colon_iff {J : Ideal (MRing ι F)} {s f : MRing ι F} :
@@ -1337,8 +1329,7 @@ theorem exists_colon_isPrime [∀ k, Fintype (ι k)] {J : Ideal (MRing ι F)}
   have hcolon := isHomogeneous_of_multiHomog hmh
   have hprime : (J.colon (Ideal.span {s})).IsPrime := by
     refine hcolon.isPrime_of_homogeneous_mem_or_mem ?_ ?_
-    · rw [Ne, Ideal.eq_top_iff_one, mem_colon_iff, one_mul]
-      exact hsJ
+    · rwa [Ne, Ideal.eq_top_iff_one, mem_colon_iff, one_mul]
     · intro x y hx _ hxy
       by_cases hxP : x ∈ J.colon (Ideal.span {s})
       · exact Or.inl hxP
@@ -1494,8 +1485,7 @@ theorem ringKrullDim_mvPolynomial_le (F : Type u) [Field F] (σ : Type) [Finite 
     ringKrullDim (MvPolynomial σ F) ≤ Nat.card σ := by
   induction σ using Finite.induction_empty_option with
   | of_equiv e H =>
-    rw [← ringKrullDim_eq_of_ringEquiv (renameEquiv F e).toRingEquiv, ← Nat.card_congr e]
-    exact H
+    rwa [← ringKrullDim_eq_of_ringEquiv (renameEquiv F e).toRingEquiv, ← Nat.card_congr e]
   | h_empty =>
     simp [ringKrullDim_eq_zero_of_field]
   | h_option IH =>
@@ -1551,8 +1541,7 @@ theorem relDim_cases {I Q : Ideal (MRing ι F)} [hQ : Q.IsPrime] (hIQ : I ≤ Q)
       intro htop
       rw [htop, top_add] at h1
       exact absurd (h1.trans h3') (not_le.mpr (ENat.natCast_lt_top _))
-    have h4 := (ENat.add_one_le_iff hfin).1 h1
-    exact lt_of_lt_of_le (by exact_mod_cast h4) h2
+    exact lt_of_lt_of_le (by exact_mod_cast ((ENat.add_one_le_iff hfin).1 h1)) h2
 
 end Dim
 
@@ -1596,10 +1585,8 @@ theorem filtration (h1 : HilbExactDivide.Statement.{u}) (J : Ideal (MRing ι F))
   refine ⟨r + 1, Fin.cons (J.colon (Ideal.span {s})) Q', Fin.cons c c', ?_, ?_, ?_⟩
   · intro j
     refine Fin.cases ?_ (fun j => ?_) j
-    · simp only [Fin.cons_zero]
-      exact ⟨hQp, hQh, hJQ⟩
-    · simp only [Fin.cons_succ]
-      exact ⟨(hQ' j).1, (hQ' j).2.1, le_sup_left.trans (hQ' j).2.2⟩
+    · simpa only [Fin.cons_zero] using ⟨hQp, hQh, hJQ⟩
+    · simpa only [Fin.cons_succ] using ⟨(hQ' j).1, (hQ' j).2.1, le_sup_left.trans (hQ' j).2.2⟩
   · intro m
     rw [Fin.sum_univ_succ]
     simp only [Fin.cons_zero, Fin.cons_succ]
@@ -1685,8 +1672,7 @@ theorem RelevantPrimeDimGe.proof : RelevantPrimeDimGe.Statement.{u} := by
     intro β
     rw [Finsupp.weight_apply, Finsupp.sum_mapDomain_index (by simp) (by simp [add_smul])]
     funext k'
-    simp [Finsupp.sum, Finset.sum_apply, blockWeight, j, Pi.single_apply]
-    exact fun h => h.symm
+    simpa [Finsupp.sum, Finset.sum_apply, blockWeight, j, Pi.single_apply] using fun h => h.symm
   have hind : AlgebraicIndependent F x := by
     rw [algebraicIndependent_iff]
     intro G hG
@@ -1702,8 +1688,7 @@ theorem RelevantPrimeDimGe.proof : RelevantPrimeDimGe.Statement.{u} := by
     have hc : weightedHomogeneousComponent (blockWeight ι) (⇑α) (rename j G) =
         rename j (monomial α (AddMonoidAlgebra.coeff G α)) := by
 
-      rw [hsum, map_sum, rename_monomial]
-      rw [Finset.sum_eq_single α]
+      rw [hsum, map_sum, rename_monomial, Finset.sum_eq_single α]
       · rw [weightedHomogeneousComponent_of_mem (isWeightedHomogeneous_monomial _ _ _ (hw α)),
           ite_eq_left rfl]
       · intro β _ hβ

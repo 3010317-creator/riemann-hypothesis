@@ -113,8 +113,7 @@ theorem cross {y : (Σ k, ι k) → Ω} {a : K → ℤ} {n : ℕ} {s : Ω} {g h 
     rw [map_sub, map_mul, map_mul, hy, hy']
     ring
   have := vanish hz hF hFy
-  simp only [map_sub, map_mul, sub_eq_zero] at this
-  exact this
+  simpa only [map_sub, map_mul, sub_eq_zero] using this
 
 theorem exists_rep_at {y : (Σ k, ι k) → Ω} {a : K → ℤ} {n : ℕ} {s : Ω} (hs : s ∈ chartLat y a n)
     {z : (Σ k, ι k) → ℂ} (hz : z ∈ mcPts (mCoordIdeal y)) :
@@ -124,8 +123,7 @@ theorem exists_rep_at {y : (Σ k, ι k) → Ω} {a : K → ℤ} {n : ℕ} {s : �
   obtain ⟨N, δ, G, hG, hdeg, hGv⟩ := exists_chartForm y c hyc (fun k => (n : ℤ) * a k) (hs c hyc)
   refine ⟨(G, chartMon c N), ⟨δ, N, hG, homog_chartMon c N, fun k => ?_, ?_⟩, ?_⟩
   · linear_combination hdeg k
-  · rw [aeval_chartMon]
-    exact hGv
+  · rwa [aeval_chartMon]
   · rw [eval_chartMon]
     exact Finset.prod_ne_zero_iff.mpr fun k _ => pow_ne_zero _ (hc k)
 
@@ -300,14 +298,10 @@ open SectionPointValue in
 theorem SectionPointValue.proof : SectionPointValue.Statement := by
   intro K _ ι _ Ω _ y A hrel hA
   refine ⟨fun n => w y A n, fun n s => val_continuousOn hA s.2, ?_, ?_, ?_, ?_⟩
-  · intro n s dg dh g h z hg hh hd hy hz
-    exact val_spec s.2 hz ⟨dg, dh, hg, hh, hd, hy⟩
-  · intro n s z hz
-    exact secNormAt_eq s.2 hz
-  · intro n k s t st he z hz
-    exact val_mul s.2 t.2 st.2 he hz
-  · intro n r s
-    exact common_denom hrel (fun i => s i) fun i => (s i).2
+  · exact fun n s dg dh g h z hg hh hd hy hz => val_spec s.2 hz ⟨dg, dh, hg, hh, hd, hy⟩
+  · exact fun n s z hz => secNormAt_eq s.2 hz
+  · exact fun n k s t st he z hz => val_mul s.2 t.2 st.2 he hz
+  · exact fun n r s => common_denom hrel (fun i => s i) fun i => (s i).2
 
 end
 

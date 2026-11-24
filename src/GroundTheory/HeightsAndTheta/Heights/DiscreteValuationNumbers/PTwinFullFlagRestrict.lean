@@ -381,8 +381,7 @@ theorem frame_zero {s : ∀ k, ι k} {b : Fin N → resFibre O x Q B}
     have he : e ∈ Submodule.span (FractionRing (MRingOver (kap O) ι ⧸ Q)) (Set.range b) := hsp ▸ Submodule.mem_top
     obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 he
     exact ⟨a, fun q => ⟨1, by simp⟩, ha.symm⟩
-  · intro _
-    exact ⟨1, by simp⟩
+  · exact fun _ => ⟨1, by simp⟩
 
 theorem cover_rs (hPQ : redIdeal O (mcIdeal O x) ≤ Q) {s : ∀ k, ι k} (hs : mseg (genPt (kap O) Q) s ≠ 0)
     {k : ℕ} {f c : Fin k → Ω} (hf : ∀ l, f l ∈ chartRing O (mseg x) s) (hc : ∀ l, c l ∈ chartRing O (mseg x) s)
@@ -393,8 +392,7 @@ theorem cover_rs (hPQ : redIdeal O (mcIdeal O x) ≤ Q) {s : ∀ k, ι k} (hs : 
       rs_mul hPQ (chartRing_sub hPQ hs (hc l)).1 (chartRing_sub hPQ hs (hf l)).1
   rw [hsum, rs_one hPQ] at h
   refine ⟨h.symm, ?_⟩
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   simp [hne] at h
 
 
@@ -466,8 +464,7 @@ theorem exists_resFlag (hPQ : redIdeal O (mcIdeal O x) ≤ Q) (hrel : IsRelevant
   have hs₀ : mseg (genPt (kap O) Q) s₀ ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => by
     intro h
     apply hs₀' k
-    rw [← aeval_genPt_eq_zero_iff, aeval_X]
-    exact h
+    rwa [← aeval_genPt_eq_zero_iff, aeval_X]
 
   obtain ⟨k₀, f₀, c₀, hf₀, hc₀, hsum₀, hl₀⟩ := fl.frame s₀ (mseg_ne_zero hPQ hs₀)
   obtain ⟨-, l₀, hl₀0⟩ := cover_rs hPQ hs₀ hf₀ hc₀ hsum₀
@@ -485,8 +482,7 @@ theorem exists_resFlag (hPQ : redIdeal O (mcIdeal O x) ≤ Q) (hrel : IsRelevant
   have hb₀V : ∀ (q : Fin N) (j : Fin (N + 1)), (q : ℕ) < j → b₀ q ∈ fl.Vs j := by
     intro q j hqj
     have hle : q.succ ≤ j := by
-      rw [Fin.le_def, Fin.val_succ]
-      exact hqj
+      rwa [Fin.le_def, Fin.val_succ]
     have h1 : b₀ q = (b₀ q - (w₀ q * chartMon x s₀ (fl.deg q)) • fl.gen q) +
         (w₀ q * chartMon x s₀ (fl.deg q)) • fl.gen q := by abel
     rw [h1]
@@ -517,8 +513,7 @@ theorem exists_resFlag (hPQ : redIdeal O (mcIdeal O x) ≤ Q) (hrel : IsRelevant
       have hsupp : ∀ q : Fin N, ¬ ((q : ℕ) < j) → a q = 0 := by
         intro q hq
         have hm' : (m : V) ∈ Submodule.span Ω (bas '' lowSet j) := by
-          rw [hbas, ← hVs j]
-          exact hm
+          rwa [hbas, ← hVs j]
         rw [Module.Basis.mem_span_image] at hm'
         rw [← hrep, Module.Basis.equivFun_apply]
         by_contra hne

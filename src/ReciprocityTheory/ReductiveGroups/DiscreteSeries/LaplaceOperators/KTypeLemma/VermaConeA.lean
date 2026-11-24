@@ -69,8 +69,7 @@ theorem vc_genSub_stable (T : Fin n → Fin n → Module.End ℂ U) (S : Submodu
     (hv : v ∈ genSub T S) : T a b v ∈ genSub T S := by
   unfold genSub at hv ⊢
   rw [Submodule.mem_sInf] at hv ⊢
-  intro X hX
-  exact hX.2 a b v (hv X hX)
+  exact fun X hX => hX.2 a b v (hv X hX)
 
 theorem vc_genSub_le (T : Fin n → Fin n → Module.End ℂ U) (S X : Submodule ℂ U) (hSX : S ≤ X)
     (hX : ∀ a b, ∀ v ∈ X, T a b v ∈ X) : genSub T S ≤ X := by
@@ -260,10 +259,8 @@ theorem vc_sup_stable {G : Set U} {F : Submodule ℂ U} (X : Module.End ℂ U)
   have h : Submodule.span ℂ G ⊔ F ≤ (Submodule.span ℂ G ⊔ F).comap X := by
     refine sup_le ?_ ?_
     · rw [Submodule.span_le]
-      intro w hw
-      exact hG w hw
-    · intro y hy
-      exact Submodule.mem_sup_right (hF y hy)
+      exact fun w hw => hG w hw
+    · exact fun y hy => Submodule.mem_sup_right (hF y hy)
   exact h hx
 
 theorem vc_genSub_le_mon (T : Fin n → Fin n → Module.End ℂ U) (hT : IsGlRep T) (v : U)
@@ -271,20 +268,13 @@ theorem vc_genSub_le_mon (T : Fin n → Fin n → Module.End ℂ U) (hT : IsGlRe
     (hdiag : ∀ a, ∃ c : ℂ, T a a v = c • v) :
     genSub T (Submodule.span ℂ {v}) ≤ Submodule.span ℂ (vcMonAll T v) ⊔ F := by
   have hz : ∀ w, w ∈ vcMon T v 0 → w = v := fun w hw => hw
-  have hv0 : v ∈ vcMon T v 0 := by
-    show v ∈ ({v} : Set U)
-    exact Set.mem_singleton v
+  have hv0 : v ∈ vcMon T v 0 := Set.mem_singleton v
   have hs : ∀ k w, w ∈ vcMon T v (k + 1) → ∃ a b, a < b ∧ ∃ x ∈ vcMon T v k, w = T a b x :=
     fun k w hw => hw
   have hn : ∀ k a b, a < b → ∀ x ∈ vcMon T v k, T a b x ∈ vcMon T v (k + 1) := by
-    intro k a b hab x hx
-    show ∃ a' b', a' < b' ∧ ∃ y ∈ vcMon T v k, T a b x = T a' b' y
-    exact ⟨a, b, hab, x, hx, rfl⟩
+    exact fun k a b hab x hx => ⟨a, b, hab, x, hx, rfl⟩
   have hmon : ∀ k, ∀ w ∈ vcMon T v k, w ∈ Submodule.span ℂ (vcMonAll T v) ⊔ F := by
-    intro k w hw
-    refine Submodule.mem_sup_left (Submodule.subset_span ?_)
-    show w ∈ ⋃ k, vcMon T v k
-    exact Set.mem_iUnion.mpr ⟨k, hw⟩
+    exact fun k w hw => Submodule.mem_sup_left (Submodule.subset_span (Set.mem_iUnion.mpr ⟨k, hw⟩))
   have hup : ∀ c d, c < d → ∀ y ∈ Submodule.span ℂ (vcMonAll T v) ⊔ F,
       T c d y ∈ Submodule.span ℂ (vcMonAll T v) ⊔ F := by
     intro c d hcd

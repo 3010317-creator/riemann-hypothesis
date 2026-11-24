@@ -108,8 +108,7 @@ theorem isUnramifiedAt_of_pow_eq {n : ℕ} (a : Kˣ) {α : M} (hα : α ^ n = al
     apply hbv
     have : algebraMap (𝓞 K) (𝓞 M) b ∈ P :=
       hyb ▸ Ideal.pow_mem_of_mem P h n (Nat.pos_of_ne_zero hn)
-    rw [Ideal.LiesOver.over (P := P) (p := v.asIdeal), Ideal.under, Ideal.mem_comap]
-    exact this
+    rwa [Ideal.LiesOver.over (P := P) (p := v.asIdeal), Ideal.under, Ideal.mem_comap]
   have hfP : aeval y (derivative (minpoly (𝓞 K) y)) ∉ P := by
     intro h
     have : (n : 𝓞 M) * y ^ (n - 1) ∈ P := hder ▸ Ideal.mul_mem_right _ P h
@@ -118,8 +117,7 @@ theorem isUnramifiedAt_of_pow_eq {n : ℕ} (a : Kˣ) {α : M} (hα : α ^ n = al
     · exact hyP (Ideal.IsPrime.mem_of_pow_mem ‹_› _ h1)
   have hmem := aeval_derivative_mem_differentIdeal (𝓞 K) K M y hgen'
   rw [← not_dvd_differentIdeal_iff]
-  intro hdvd
-  exact hfP (Ideal.le_of_dvd hdvd hmem)
+  exact fun hdvd => hfP (Ideal.le_of_dvd hdvd hmem)
 
 theorem ramificationIdx_eq_one_of_pow_eq {n : ℕ} (a : Kˣ) {α : M}
     (hα : α ^ n = algebraMap K M a) (hgen : IntermediateField.adjoin K {α} = ⊤)

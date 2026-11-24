@@ -132,13 +132,11 @@ theorem log_relIndex_eq_sum (x x' : κ → Ω) (hle : sec ℤ x 1 ≤ sec ℤ x'
     refine relIndex_ne_zero_of_mul_mem ((hfgs x _).mul (hfgs x' _)) hM0 fun u hu => ?_
     rw [e2 j, ← mul_assoc] at hu
     have h := mul_mem_of_forall hM (sec ℤ x (n - (j + 1)) * sec ℤ x' j) u hu
-    rw [e1 j hj, mul_right_comm]
-    exact h
+    rwa [e1 j hj, mul_right_comm]
   have chain := (relIndex_chain (fun j => (sec ℤ x (n - j) * sec ℤ x' j).toAddSubgroup) n
     (fun j hj => hstep j hj) n le_rfl).1
   simp only [Nat.sub_zero, Nat.sub_self, sec_zero', mul_one, one_mul] at chain
   rw [chain, Nat.cast_prod, Real.log_prod]
-  intro j hj
-  exact Nat.cast_ne_zero.mpr (hne j (Finset.mem_range.mp hj))
+  exact fun j hj => Nat.cast_ne_zero.mpr (hne j (Finset.mem_range.mp hj))
 
 end ReciprocityTheory.ChartRestriction.G.ArakelovGeometry

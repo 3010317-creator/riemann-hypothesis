@@ -92,8 +92,7 @@ lemma lintegral_cylindrical (H : ℝ × (ℝ × ℝ) → ℝ≥0∞) (hH : Measu
     have hf : (fun x : E3 => (x 0, (x 1, x 2))) = Prod.map id MeasurableEquiv.finTwoArrow ∘
         (MeasurableEquiv.piFinSuccAbove (fun _ : Fin 3 => ℝ) 0) ∘ WithLp.ofLp := by
       funext x; rfl
-    rw [hf, Measure.volume_eq_prod]
-    exact this
+    rwa [hf, Measure.volume_eq_prod]
   rw [hΦ.lintegral_comp hH, Measure.volume_eq_prod, lintegral_prod _ hH.aemeasurable]
 
 lemma lintegral_plane_polar (K : ℝ × ℝ → ℝ≥0∞) :
@@ -291,8 +290,7 @@ lemma cone_eq (u : E3) (s : Set ℝ) :
     refine ⟨‖x‖, ⟨h0, h1⟩, ‖x‖⁻¹ • x, ⟨⟨‖x‖⁻¹ • x, ?_⟩, ?_, rfl⟩, ?_⟩
     · simp [norm_smul, h0.ne']
     · show inner ℝ (‖x‖⁻¹ • x) u ∈ s
-      rw [real_inner_smul_left, inv_mul_eq_div]
-      exact h2
+      rwa [real_inner_smul_left, inv_mul_eq_div]
     · exact smul_inv_smul₀ h0.ne' x
 
 lemma toSphere_univ_ne_zero : (volume : Measure E3).toSphere univ ≠ 0 :=
@@ -400,8 +398,7 @@ theorem moment1_inv (hI : Integrable (fun n : S2 => f (inner ℝ (n : E3) u)) sp
     rw [← L.inner_map_map (L.symm x) y, L.apply_symm_apply]
   have h := integral_sphere_isometry L.symm (fun x => f (inner ℝ x u) * inner ℝ x v)
     (integrable_mul_inner hI v)
-  simp only [key, hL] at h
-  exact h
+  simpa only [key, hL] using h
 
 theorem moment2_inv (hI : Integrable (fun n : S2 => f (inner ℝ (n : E3) u)) sphereMeasure)
     (L : E3 ≃ₗᵢ[ℝ] E3) (hL : L u = u) (v w : E3) :
@@ -414,8 +411,7 @@ theorem moment2_inv (hI : Integrable (fun n : S2 => f (inner ℝ (n : E3) u)) sp
     rw [← L.inner_map_map (L.symm x) y, L.apply_symm_apply]
   have h := integral_sphere_isometry L.symm (fun x => f (inner ℝ x u) * inner ℝ x v * inner ℝ x w)
     (integrable_mul_inner (integrable_mul_inner hI v) w)
-  simp only [key, hL] at h
-  exact h
+  simpa only [key, hL] using h
 
 theorem reflection_fix {a c : E3} (h : inner ℝ a c = 0) : (ℝ ∙ a)ᗮ.reflection c = c := by
   have hc : c ∈ (ℝ ∙ a)ᗮ := Submodule.mem_orthogonal_singleton_iff_inner_right.2 h
@@ -454,8 +450,7 @@ theorem moment2_swap (hI : Integrable (fun n : S2 => f (inner ℝ (n : E3) u)) s
   have hRu : (ℝ ∙ (a - c))ᗮ.reflection u = u := reflection_fix hdu
   have hRa : (ℝ ∙ (a - c))ᗮ.reflection a = c := Submodule.reflection_sub hac
   have h := moment2_inv hI ((ℝ ∙ (a - c))ᗮ.reflection) hRu a a
-  rw [hRa] at h
-  exact h
+  rwa [hRa] at h
 
 end moments
 
@@ -467,8 +462,7 @@ theorem exists_basis_zero_eq {u : E3} (hu : ‖u‖ = 1) :
   exact ⟨b, hb 0 rfl⟩
 
 private theorem integral_const_mul_sphereMeasure (c : ℝ) (g : S2 → ℝ) :
-    ∫ n, c * g n ∂sphereMeasure = c * ∫ n, g n ∂sphereMeasure := by
-  exact integral_const_mul c g
+    ∫ n, c * g n ∂sphereMeasure = c * ∫ n, g n ∂sphereMeasure := integral_const_mul c g
 
 theorem archimedes_thm : ArchimedesStatement := by
   unfold ArchimedesStatement

@@ -192,8 +192,7 @@ theorem image_le_closGen {Y : Type*} [AddCommGroup Y] [Module ℂ Y] (A : Fin n 
   intro x' hx'
   have h0 := congrArg (fun v : smD ε (rreg ε) => (v : L2 ε)) (hzero x' hx')
   simp only [hψ, LinearMap.comp_apply, projSm_coe, ZeroMemClass.coe_zero] at h0
-  rw [Submodule.starProjection_apply_eq_zero_iff, Submodule.orthogonal_orthogonal] at h0
-  exact h0
+  rwa [Submodule.starProjection_apply_eq_zero_iff, Submodule.orthogonal_orthogonal] at h0
 
 theorem quot_generic {Y : Type*} [AddCommGroup Y] [Module ℂ Y] (A : Fin n → Fin n → Module.End ℂ Y)
     (G X Z : Submodule ℂ Y) (lam' : Fin n → ℝ) (hgap : StdGap ε lam') (φ : Y →ₗ[ℂ] smD ε (rreg ε))
@@ -218,9 +217,7 @@ theorem quot_generic {Y : Type*} [AddCommGroup Y] [Module ℂ Y] (A : Fin n → 
   have hR := rreg_isURepOn ε
   have hDR := isDerivedOn_smE hR
 
-  have hφx : φ x ≠ 0 := by
-    intro h0
-    exact hxZ (hZφ x hx 0 Z.zero_mem (by rw [h0, map_zero]))
+  have hφx : φ x ≠ 0 := fun h0 => hxZ (hZφ x hx 0 Z.zero_mem (by rw [h0, map_zero]))
   obtain ⟨W, hWX, hW, hcas⟩ := hK3 φ hφ x hx hφx
   obtain ⟨ys, hysX, hline⟩ := hline
   have hys : φ ys ∈ W := by

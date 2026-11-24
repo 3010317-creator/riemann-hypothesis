@@ -130,8 +130,7 @@ theorem tendsto_norm_D {A s : ℝ} (hA : A ≠ 0) {l : Filter ℝ} (hl : Tendsto
     Tendsto (fun x => ‖D A s x‖) l atTop := by
   refine tendsto_atTop_mono (fun x => ?_) (hl.const_mul_atTop (abs_pos.2 hA))
   have h := Complex.abs_re_le_norm (D A s x)
-  rw [D_re, abs_mul] at h
-  exact h
+  rwa [D_re, abs_mul] at h
 
 theorem tendsto_inv_D {A s : ℝ} (hA : A ≠ 0) {l : Filter ℝ} (hl : Tendsto (fun x : ℝ => |x|) l atTop)
     (n : ℕ) : Tendsto (fun x => (D A s x ^ (n + 1))⁻¹) l (𝓝 0) := by

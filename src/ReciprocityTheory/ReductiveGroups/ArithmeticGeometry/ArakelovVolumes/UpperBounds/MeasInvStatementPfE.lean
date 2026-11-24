@@ -111,8 +111,7 @@ lemma keyU_injective (e : ι ≃ Fin (Fintype.card ι)) : Function.Injective (ke
   obtain ⟨h1, h2, h3⟩ := h
   have ha : (a : ℕ) = a' := by have := a.isLt; have := a'.isLt; omega
   apply Subtype.ext
-  simp only [Prod.mk.injEq]
-  exact ⟨e.injective h3, Fin.ext ha, Fin.ext h1⟩
+  simpa only [Prod.mk.injEq] using ⟨e.injective h3, Fin.ext ha, Fin.ext h1⟩
 
 private lemma toMatrix_entry_lemma (β : ι → Matrix (Fin r) (Fin r) ℂ) (i j : UpI ι r) :
     LinearMap.toMatrix' (Lβ β) i j =
@@ -213,8 +212,7 @@ lemma Lβ_diag (β : ι → Matrix (Fin r) (Fin r) ℂ) (hβ : ∀ τ, (β τ).B
     rcases lt_or_gt_of_ne hcb with h | h
     · rw [hβ τ h, zero_mul]
     · simp [Umat, h]
-  · intro h
-    exact absurd (Finset.mem_univ b) h
+  · exact fun h => absurd (Finset.mem_univ b) h
 
 lemma jacU_Lβ (β : ι → Matrix (Fin r) (Fin r) ℂ) (hβ : ∀ τ, (β τ).BlockTriangular id) (y : UpI ι r → ℂ) :
     jacU (Lβ β y) = jacβ β * jacU y := by
@@ -277,10 +275,8 @@ lemma continuous_jacU : Continuous (jacU (ι := ι) (r := r)) := by
   unfold jacU
   refine continuous_finsetProd _ fun i _ => ?_
   by_cases h : i.2.2 < i.2.1
-  · simp only [h, ↓reduceIte]
-    exact continuous_apply _
-  · simp only [h, ↓reduceIte]
-    exact continuous_const
+  · simpa only [h, ↓reduceIte] using continuous_apply _
+  · simpa only [h, ↓reduceIte] using continuous_const
 
 lemma measurable_normSq_jacU : Measurable fun y : UpI ι r → ℂ => ENNReal.ofReal (Complex.normSq (jacU y)) :=
   (ENNReal.continuous_ofReal.comp (Complex.continuous_normSq.comp continuous_jacU)).measurable

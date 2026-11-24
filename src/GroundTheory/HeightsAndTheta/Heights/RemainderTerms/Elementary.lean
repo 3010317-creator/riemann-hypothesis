@@ -65,8 +65,7 @@ theorem GeometricTail.intersectionNumber_baseChange : GeometricTail.Statement :=
       _ ≤ p ^ k := pow_le_pow_right₀ (by linarith) hk
   have hx0 : 0 ≤ x := by positivity
   have hx2 : x ≤ 1 / 2 := by
-    rw [hx]
-    rw [inv_le_comm₀ (by positivity) (by norm_num)]
+    rw [hx, inv_le_comm₀ (by positivity) (by norm_num)]
     linarith
   have hterm : ∀ n : ℕ, (p ^ ((n + 1) * k))⁻¹ = x * x ^ n := by
     intro n
@@ -161,8 +160,7 @@ theorem ChebyshevThetaBound.intersectionNumber_baseChange : ChebyshevThetaBound.
         exact_mod_cast primorial_le_four_pow n
     _ = n * Real.log 4 := by rw [Real.log_pow]
     _ ≤ x * Real.log 4 := by
-        apply mul_le_mul_of_nonneg_right (Nat.floor_le hx)
-        exact Real.log_nonneg (by norm_num)
+        exact mul_le_mul_of_nonneg_right (Nat.floor_le hx) (Real.log_nonneg (by norm_num))
 
 end
 

@@ -451,8 +451,7 @@ namespace PSymplGramMem
 
 lemma det_map_cast {n : ℕ} {P : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) ℤ}
     (hP : P ∈ symplecticGroup (Fin n) ℤ) : (P.map (Int.cast : ℤ → ℝ)).det = 1 := by
-  have h := SymplecticGroup.det_eq_one (SymplecticGroup.map_mem hP (Int.castRingHom ℝ))
-  simpa using h
+  simpa using SymplecticGroup.det_eq_one (SymplecticGroup.map_mem hP (Int.castRingHom ℝ))
 
 lemma gram_diag {l : Type*} [Fintype l] (P : Matrix l l ℤ) (G : Matrix l l ℝ) (x : l) :
     symplGram P G x x = qf G (intVec (P x)) := by
@@ -1007,8 +1006,7 @@ theorem SymplReduceConj.proof : SymplReduceConj.Statement := by
         simp only [symplReduce]
         ring
     _ = _ := by
-        simp only [Matrix.mul_apply, Matrix.transpose_apply, Finset.sum_mul]
-        exact Finset.sum_comm
+        simpa only [Matrix.mul_apply, Matrix.transpose_apply, Finset.sum_mul] using Finset.sum_comm
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto
@@ -1179,8 +1177,7 @@ theorem SymplReducePosDef.proof : SymplReducePosDef.Statement := by
       rw [hL, hR]
       field_simp
       ring
-    rw [← key]
-    exact h1
+    rwa [← key]
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto

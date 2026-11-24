@@ -73,8 +73,7 @@ theorem CechPartition.proof : CechPartition.Statement.{u, v, w} := by
   let wt : Fin n → Ω := fun i => ∑ k ∈ Finset.univ.filter (fun k => j k = i), (c k : Ω) * b k ^ e
   have hw : ∑ i ∈ U, wt i = 1 := by
     rw [Finset.sum_fiberwise_of_maps_to (fun k _ => hjU k)]
-    have h := congrArg Subtype.val hc
-    simpa [b'] using h
+    simpa [b'] using congrArg Subtype.val hc
   refine Cech.Partition.exact_of_partition M s hds wt hw ?_
   intro K i _ hiK
   simp only [wt, Finset.sum_smul]
@@ -356,8 +355,7 @@ theorem ZChartLocal.proof (hSmul : ZChartSmul.Statement.{u, v, w}) : ZChartLocal
       ring
     have e2 : J.1.card * m + (1 * n + (J.1.erase j).card * n) * c = J.1.card * (m + n * c) := by
       rw [← hcard]; ring
-    rw [e1, ← e2]
-    exact h2
+    rwa [e1, ← e2]
   · exact ⟨0, by rw [smul_zero]; exact Submodule.zero_mem _⟩
   · rintro y₁ y₂ - - ⟨e₁, h₁⟩ ⟨e₂, h₂⟩
     refine ⟨e₁ + e₂, ?_⟩
@@ -412,8 +410,7 @@ theorem ZChartSmul.proof : ZChartSmul.Statement.{u, v, w} := by
       rw [smul_smul, smul_smul, hxu]; ring_nf
     have e2 : J.1.card * (m + n) = J.1.card * m + (n + (J.1.erase j).card * n) := by
       rw [hk]; ring
-    rw [e1, e2]
-    exact h1
+    rwa [e1, e2]
   · rw [smul_zero]; exact Submodule.zero_mem _
   · intro b c _ _ hb hc; rw [smul_add]; exact Submodule.add_mem _ hb hc
   · intro s y _ hy; rw [smul_comm]; exact Submodule.smul_mem _ s hy

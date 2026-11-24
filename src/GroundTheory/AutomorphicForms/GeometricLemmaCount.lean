@@ -203,8 +203,7 @@ theorem avgOver_eq_zero_of_le {K K' : Subgroup G} {h : G → W}
     (hh : ∀ a : A, ∀ y, h ((a : G) * y) = θ a (h y)) (hKK' : K ≤ K') (hf : AvgFinite K h)
     (hK : K.relIndex K' ≠ 0) (hsupp : ∀ y ∈ K', h y ≠ 0 → ∃ a ∈ A, ∃ k ∈ K, y = a * k)
     (h0 : avgOver K h 1 = 0) : avgOver K' h 1 = 0 := by
-  rw [avgOver_eq_smul_avgOver_inf hKK' hf hK hsupp]
-  rw [avgOver_eq_zero_of_forall, smul_zero]
+  rw [avgOver_eq_smul_avgOver_inf hKK' hf hK hsupp, avgOver_eq_zero_of_forall, smul_zero]
   intro k hk
   rw [one_mul]
   have := avgOver_mul_left_eq θ hh hf ⟨k, (Subgroup.mem_inf.1 hk).2⟩ 1
@@ -270,8 +269,7 @@ theorem avgOver_map_conj (b : G) {K : Subgroup G} {f : G → W} (hf : AvgFinite 
     avgOver (K.map (MulAut.conj b).toMonoidHom) (fun y => f (b⁻¹ * y * b)) x =
       avgOver K f (b⁻¹ * x * b) := by
   have := avgOver_map_mulEquiv (MulAut.conj b) hf x
-  simp only [MulAut.conj_symm_apply] at this
-  exact this
+  simpa only [MulAut.conj_symm_apply] using this
 
 
 omit [AddCommGroup W] [Module ℂ W] in
@@ -288,8 +286,7 @@ theorem avgFinite_map_mulEquiv (φ : G ≃* G) {K : Subgroup G} {f : G → W} (h
       rw [map_mul]
       exact H _
   show (rightStab fun y => f (φ.symm y)).relIndex (K.map φ.toMonoidHom) ≠ 0
-  rw [hst, Subgroup.relIndex_map_map_of_injective _ _ φ.injective]
-  exact hf
+  rwa [hst, Subgroup.relIndex_map_map_of_injective _ _ φ.injective]
 
 end Conj
 

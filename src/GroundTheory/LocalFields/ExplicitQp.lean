@@ -219,8 +219,7 @@ omit [TopologicalSpace Ω] [IsValuativeTopology Ω] [Algebra.IsAlgebraic ℚ_[p]
 theorem valuation_sub_one_lt_one {n : ℕ} {ζ : Ω} (hζ : ζ ^ (p ^ n) = 1) :
     valuation Ω (ζ - 1) < 1 := by
   have hp1 : valuation Ω (p : Ω) < 1 := by
-    have h := valuation_algebraMap_lt_one_of_irreducible (L := Ω) (irreducible_natCast_integer p)
-    simpa using h
+    simpa using valuation_algebraMap_lt_one_of_irreducible (L := Ω) (irreducible_natCast_integer p)
   induction n generalizing ζ with
   | zero =>
     rw [pow_zero, pow_one] at hζ
@@ -285,8 +284,7 @@ theorem natCast_residueField_ne_zero {m : ℕ} (hm : m.Coprime p) : (m : 𝓀[�
   have hcp : ringChar 𝓀[ℚ_[p]] = p :=
     ((Nat.dvd_prime hp.out).1 hc).resolve_left CharP.ringChar_ne_one
   have hdvd : p ∣ m := by
-    rw [← hcp, ← CharP.cast_eq_zero_iff 𝓀[ℚ_[p]] (ringChar 𝓀[ℚ_[p]])]
-    exact h0
+    rwa [← hcp, ← CharP.cast_eq_zero_iff 𝓀[ℚ_[p]] (ringChar 𝓀[ℚ_[p]])]
   have h := Nat.Coprime.coprime_dvd_left hdvd hm
   rw [Nat.coprime_self] at h
   exact hp.out.one_lt.ne' h
@@ -417,8 +415,7 @@ theorem apply_of_pow_eq_one_of_coprime (x : ℚ_[p]ˣ) (u : ℤ_[p]ˣ) (r : ℤ)
   have hξ : (⟨ζ, hζur⟩ : maximalUnramifiedExtension ℚ_[p] Ω) ^ m = 1 :=
     Subtype.ext (by simpa using hζ)
   have c := AlgEquiv.restrictNormal_commutes σ (maximalUnramifiedExtension ℚ_[p] Ω) ⟨ζ, hζur⟩
-  rw [hres] at c
-  rw [frobenius_zpow_apply_of_pow_eq_one p hm r hξ] at c
+  rw [hres, frobenius_zpow_apply_of_pow_eq_one p hm r hξ] at c
   change ((⟨ζ, hζur⟩ ^ _ : maximalUnramifiedExtension ℚ_[p] Ω) : Ω) = σ ζ at c
   rw [← c, SubmonoidClass.coe_pow]
 

@@ -64,8 +64,7 @@ theorem qm_surj {m : ℕ} (hm : 0 < m) {x : ℂ} (h0 : 0 < ‖x‖) (h1 : ‖x�
   have hmR : (0 : ℝ) < m := by exact_mod_cast hm
   have him : 0 < (Function.Periodic.invQParam (m : ℝ) x).im := by
     rw [Function.Periodic.im_invQParam]
-    refine mul_pos_of_neg_of_neg ?_ hlog
-    exact div_neg_of_neg_of_pos (by linarith) (by positivity)
+    exact mul_pos_of_neg_of_neg (div_neg_of_neg_of_pos (by linarith) (by positivity)) hlog
   refine ⟨⟨_, him⟩, ?_⟩
   rw [qm_eq_qParam]
   exact Function.Periodic.qParam_right_inv hmR.ne' (norm_pos_iff.mp h0)
@@ -96,8 +95,7 @@ theorem IsMF.hasSum {k : ℤ} {f : ℍ → ℂ} (hf : IsMF k f) (τ : ℍ) :
   obtain ⟨g, hg⟩ := hf
   have hgf : (⇑g : ℍ → ℂ) = f := funext hg
   have h := ModularForm.hasSum_qExpansion (f := g) one_pos one_mem_strictPeriods_SL τ
-  rw [hgf, ← qm_one_eq] at h
-  exact h
+  rwa [hgf, ← qm_one_eq] at h
 
 theorem IsMF.conv {k : ℤ} {f : ℍ → ℂ} (hf : IsMF k f) : Conv (qExpansion 1 f) := by
   apply conv_of_hasSum

@@ -80,11 +80,9 @@ theorem segreFibresNef_of_map (hA : SegreLiftComap.Statement) (hB : SegreLiftPri
     have hPW : (mIdealOver O y).map (MvPolynomial.map φ) ≤ W'.comap (segreIncl ι F) :=
       hle.trans (Ideal.comap_mono hPW')
     have hdimW : relDim (W'.comap (segreIncl ι F)) = ((1 : ℕ) : WithBot (WithTop ℤ)) := by
-      rw [← hC F K ι _ hWp, ← heq]
-      exact hdim
+      rwa [← hC F K ι _ hWp, ← heq]
     have hpos := h _ hWp hPW hdimW
-    rw [heq, hN F K ι _ hWp β]
-    exact hpos
+    rwa [heq, hN F K ι _ hWp β]
 
 end GroundTheory.Heights₂.Heights.Kleiman.SectionsOverLocalization
 end -- clump:auto
@@ -261,8 +259,7 @@ theorem SegreLiftComap.proof : SegreLiftComap.Statement := by
         · simp only [RingHom.comp_apply, RingHom.coe_coe, segreLiftMap, aeval_X, segreLiftVal, hΦ]
           rw [hjmk, segreIncl, rename_X]
           rfl
-    intro f
-    exact RingHom.congr_fun this f
+    exact fun f => RingHom.congr_fun this f
   ext f
   rw [segreLift, RingHom.mem_ker]
   constructor
@@ -282,8 +279,7 @@ theorem SegreLiftComap.proof : SegreLiftComap.Statement := by
     have h2 : j a = 0 := (IsFractionRing.injective D L) (by rw [h1, map_zero])
     have h3 : a = 0 := hj (by rw [h2, map_zero])
     rw [ha, h3, map_zero, mul_zero]
-  · intro hf
-    exact (hπ f).mp (by rw [← hkey, hf, map_zero])
+  · exact fun hf => (hπ f).mp (by rw [← hkey, hf, map_zero])
 
 end
 
@@ -473,8 +469,7 @@ theorem segreLift_eq_mIdealOver (W : Ideal (MRing ι F)) [W.IsPrime] (hW : IsMul
   simp only [map_id_ideal] at hrel hle hlift
   have hc : (mIdealOver F (segreJoin (ModelGenericPoint.genPt W))).comap (segreIncl ι F) = W := by
     refine le_antisymm ?_ (hy.ge.trans hle)
-    have h := hlift W hy.le
-    exact (Ideal.comap_mono h).trans (comap_segreLift W).le
+    exact (Ideal.comap_mono (hlift W hy.le)).trans (comap_segreLift W).le
   calc segreLift ι F W
       = segreLift ι F ((mIdealOver F (segreJoin (ModelGenericPoint.genPt W))).comap (segreIncl ι F)) := by
         rw [hc]
@@ -506,16 +501,14 @@ theorem SegreLiftIntNum.proof_of_segreNum (hN : SegreNum.Statement) : SegreLiftI
     fin_cases j
     rfl
   rw [hfun, ModelGenericPoint.mIdealOver_genPt W hW.multiHomog] at h
-  rw [segreLift_eq_mIdealOver W hW]
-  exact h
+  rwa [segreLift_eq_mIdealOver W hW]
 
 theorem SegreNef.proof_of_lift (hC : SegreLiftRelDim.Statement) (hN : SegreLiftIntNum.Statement) :
     SegreNef.Statement := by
   intro F _ K _ _ ι _ Ω _ _ y _ β
   have h := segreFibresNef_of_map SegreLiftComap.proof (fun F _ K _ _ ι _ W hW => isMultiProjPrime_segreLift W hW)
     hC hN SegreFibreIdeal.proof F Ω F (RingHom.id F) K ι y β
-  rw [map_id_ideal, map_id_ideal] at h
-  exact h
+  rwa [map_id_ideal, map_id_ideal] at h
 
 theorem SegreNef.proof (hD : SegreDim.Statement) (hN : SegreNum.Statement) : SegreNef.Statement :=
   SegreNef.proof_of_lift (SegreLiftRelDim.proof_of_segreDim hD) (SegreLiftIntNum.proof_of_segreNum hN)

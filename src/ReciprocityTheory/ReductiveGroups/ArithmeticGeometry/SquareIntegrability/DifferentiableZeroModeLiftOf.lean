@@ -186,8 +186,7 @@ theorem diff_Tm (hβd : Differentiable ℂ β) (γ : Vsp X.dim) : Differentiable
   unfold Uh Uq
   apply Differentiable.const_mul
   apply Differentiable.mul
-  · apply Differentiable.cexp
-    exact ((diff_Hf γ).const_mul _).sub_const _
+  · exact Differentiable.cexp (((diff_Hf γ).const_mul _).sub_const _)
   · exact (differentiable_zeroModeLift_of hβd).comp (differentiable_id.sub_const γ)
 
 end Nsec
@@ -236,8 +235,7 @@ def colS (X : PT E) (I : Submodule ℤ (Vsp X.dim)) (q : ℕ) (β : EuclideanSpa
 theorem colS_mem (hβ : β ∈ (YB hI hP P.q).Sec P.q) : colS X I P.q β ∈ X.Sec P.q 1 := by
   refine ⟨(diff_sP hI hP hA hB0 hB hβ.1).comp (differentiable_apply 0), fun γ hγ v => ?_⟩
   have h := sP_shift hI hP P.q hβ ⟨γ 0, hγ 0⟩ (v 0)
-  simp only [colS, Pi.add_apply, Fin.prod_univ_one, HC, Fin.sum_univ_one]
-  exact h
+  simpa only [colS, Pi.add_apply, Fin.prod_univ_one, HC, Fin.sum_univ_one] using h
 
 end Ssec
 

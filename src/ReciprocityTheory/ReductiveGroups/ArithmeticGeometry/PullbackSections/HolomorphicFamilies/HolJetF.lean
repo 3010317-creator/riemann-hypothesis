@@ -106,8 +106,7 @@ theorem aeval_tan (ℓ : ι) (q : MvPolynomial ι K) :
       have hc : AddMonoidAlgebra.coeff (p * MvPolynomial.X i) (Finsupp.single i 1) =
           MvPolynomial.constantCoeff p := by
         have := MvPolynomial.coeff_mul_X (0 : ι →₀ ℕ) i p
-        rw [zero_add] at this
-        exact this
+        rwa [zero_add] at this
       rw [hc]
       ext <;> simp
     · have h' : ℓ ≠ i := Ne.symm h
@@ -139,29 +138,22 @@ private theorem mem_degLE_lemma_2 {ι : Type} [Fintype ι] [DecidableEq ι] (m :
 theorem jetTan_jetOf (ℓ : Fin 1 × Fin g) (θ : (Fin g → ℂ) → ℂ) :
     (jetTan ℓ : Jet ℂ (Fin 1 × Fin g) (0 + 1) →ₐ[ℂ] DualNumber ℂ) (jetOf (0 + 1) θ) =
       TrivSqZeroExt.inl (θ 0) + TrivSqZeroExt.inr (fderiv ℂ θ 0 (Pi.single ℓ.2 1)) := by
-  have h1 : (jetTan ℓ : Jet ℂ (Fin 1 × Fin g) (0 + 1) →ₐ[ℂ] DualNumber ℂ) (jetOf (0 + 1) θ) =
-      MvPolynomial.aeval (fun i => if i = ℓ then (DualNumber.eps : DualNumber ℂ) else 0)
-        (psTrunc (0 + 1) (tay θ 0)) := rfl
+  show MvPolynomial.aeval (fun i => if i = ℓ then (DualNumber.eps : DualNumber ℂ) else 0)
+    (psTrunc (0 + 1) (tay θ 0)) = _
   have hc : ∀ n, MvPowerSeries.coeff n (tay θ 0) = mD θ 0 (dirs n + 0) / fct n := fun n => rfl
-  have hb0 : ∀ i, (0 : Fin 1 × Fin g →₀ ℕ) i ≤ 0 + 1 := by simp
-  have hs0 : ((0 : Fin 1 × Fin g →₀ ℕ).sum fun _ k => k) ≤ 0 + 1 := by simp
   have h0 : MvPolynomial.constantCoeff (psTrunc (0 + 1) (tay θ 0)) = θ 0 := by
-    have hd0 : dirs (0 : Fin 1 × Fin g →₀ ℕ) = 0 := by simp [dirs]
-    have hf0 : fct (0 : Fin 1 × Fin g →₀ ℕ) = 1 := by simp [fct]
     have hm0 : mD θ 0 (0 : Multiset (Fin g → ℂ)) = θ 0 := by
-      unfold mD
+      unfold mD lD
       rw [Multiset.toList_zero]
-      unfold lD
       exact iteratedFDeriv_zero_apply _
     rw [MvPolynomial.constantCoeff_eq,
-      coeff_psTrunc_lemma (0 + 1) (tay θ 0) 0 (mem_degLE_lemma_2 (0 + 1) 0 hb0 hs0), hc,
-      hd0, add_zero, hf0, div_one, hm0]
+      coeff_psTrunc_lemma (0 + 1) (tay θ 0) 0 (mem_degLE_lemma_2 (0 + 1) 0 (by simp) (by simp)),
+      hc]
+    simp [dirs, fct, hm0]
   have hb1 : ∀ i, (Finsupp.single ℓ 1 : Fin 1 × Fin g →₀ ℕ) i ≤ 0 + 1 := by
     intro i
     rw [Finsupp.single_apply]
     split_ifs <;> omega
-  have hs1 : ((Finsupp.single ℓ 1 : Fin 1 × Fin g →₀ ℕ).sum fun _ k => k) ≤ 0 + 1 := by
-    simp [Finsupp.sum_single_index]
   have hd : dirs (Finsupp.single ℓ 1) = {(Pi.single ℓ.2 1 : Fin g → ℂ)} := by
     simp [dirs, Finsupp.toMultiset_single]
   have hf : fct (Finsupp.single ℓ 1) = 1 := by
@@ -170,17 +162,17 @@ theorem jetTan_jetOf (ℓ : Fin 1 × Fin g) (θ : (Fin g → ℂ) → ℂ) :
     rw [Finsupp.single_apply]
     split_ifs <;> simp
   have hm : mD θ 0 {(Pi.single ℓ.2 1 : Fin g → ℂ)} = fderiv ℂ θ 0 (Pi.single ℓ.2 1) := by
-    unfold mD
+    unfold mD lD
     rw [Multiset.toList_singleton]
-    unfold lD
     show iteratedFDeriv ℂ 1 θ 0 (fun i => [(Pi.single ℓ.2 1 : Fin g → ℂ)].get i) = _
     rw [iteratedFDeriv_one_apply]
     rfl
   have hl : AddMonoidAlgebra.coeff (psTrunc (0 + 1) (tay θ 0)) (Finsupp.single ℓ 1) =
       fderiv ℂ θ 0 (Pi.single ℓ.2 1) := by
     rw [coeff_psTrunc_lemma (0 + 1) (tay θ 0) (Finsupp.single ℓ 1)
-      (mem_degLE_lemma_2 (0 + 1) (Finsupp.single ℓ 1) hb1 hs1), hc, hd, add_zero, hf, div_one, hm]
-  rw [h1, aeval_tan, h0, hl]
+      (mem_degLE_lemma_2 (0 + 1) (Finsupp.single ℓ 1) hb1 (by simp [Finsupp.sum_single_index])),
+      hc, hd, add_zero, hf, div_one, hm]
+  rw [aeval_tan, h0, hl]
 
 theorem appLE_congr_hom {A : CommRingCat.{0}} {q q' : Spec A ⟶ Y} (hq : q = q') (U : Y.Opens) (h : ⊤ ≤ q ⁻¹ᵁ U)
     (h' : ⊤ ≤ q' ⁻¹ᵁ U) : q.appLE U ⊤ h = q'.appLE U ⊤ h' := by
@@ -213,8 +205,7 @@ theorem isLocalHom_jetTan (ℓ : Fin 1 × Fin g) :
       rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_C, ite_eq_left rfl]
       exact sub_self _
     obtain ⟨i, hi⟩ : ∃ i, m i ≠ 0 := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       exact hm0 (Finsupp.ext hne)
     exact ⟨i, Set.mem_univ _, hi⟩
   have hnil : IsNilpotent (Ideal.Quotient.mk (orig ℂ (Fin 1 × Fin g) ^ (0 + 1 + 1))

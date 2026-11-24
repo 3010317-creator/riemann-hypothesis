@@ -245,8 +245,7 @@ theorem SectionCount.Drop.Filt.proof (hK : SectionCount.Drop.Filt.Kernel.Stateme
       obtain ⟨a, ha, y, hy, hay⟩ := Submodule.mem_sup.mp hf
       obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.mp hy
       have h1 : f - c * g l ∈ (Fl.step l.castSucc).comap J.mkQ := by
-        rw [Submodule.mem_comap, map_sub, hmkQ, ← hay, add_sub_cancel_right]
-        exact ha
+        rwa [Submodule.mem_comap, map_sub, hmkQ, ← hay, add_sub_cancel_right]
       have h2 := Submodule.add_mem_sup h1 (Ideal.mul_mem_left _ c (Ideal.mem_span_singleton_self (g l)))
       rwa [sub_add_cancel] at h2
     · intro hf
@@ -306,8 +305,7 @@ theorem SectionCount.Drop.Filt.proof (hK : SectionCount.Drop.Filt.Kernel.Stateme
         (Ideal.Quotient.factor_surjective hq'q) (r := Ideal.Quotient.mk _ f) ?_ ?_
       · apply mem_nonZeroDivisors_of_ne_zero
         rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
-      · rw [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
-        exact hfq
+      · rwa [Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
     rw [hq.dim] at h2
     rw [hZ.dim] at h1
     have h3 := (add_le_add h2 (le_refl 1)).trans h1
@@ -321,15 +319,12 @@ theorem SectionCount.Drop.Filt.proof (hK : SectionCount.Drop.Filt.Kernel.Stateme
         (kept.filter fun l => eS l = d ∧ Fl.prime l = qq).card := by
     intro qq
     refine Finset.card_bij (fun a _ => emb a) ?_ ?_ ?_
-    · intro a ha
-      exact Finset.mem_filter.mpr ⟨(σ a).2, (Finset.mem_filter.mp ha).2⟩
-    · intro a _ a' _ h
-      exact σ.injective (Subtype.ext h)
+    · exact fun a ha => Finset.mem_filter.mpr ⟨(σ a).2, (Finset.mem_filter.mp ha).2⟩
+    · exact fun a _ a' _ h => σ.injective (Subtype.ext h)
     · intro l hl
       refine ⟨σ.symm ⟨l, (Finset.mem_filter.mp hl).1⟩, ?_, ?_⟩
       · refine Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩
-        simp only [emb, Equiv.apply_symm_apply]
-        exact (Finset.mem_filter.mp hl).2
+        simpa only [emb, Equiv.apply_symm_apply] using (Finset.mem_filter.mp hl).2
       · simp only [emb, Equiv.apply_symm_apply]
 
   have hβsecs : x j ^ b ∈ (twistSys k x (b : ℤ)).secs := by
@@ -340,8 +335,7 @@ theorem SectionCount.Drop.Filt.proof (hK : SectionCount.Drop.Filt.Kernel.Stateme
       (singleChart hxj) := by
     rw [SubSystem.twist_sub_eq_mul_of_line]
     change x j ^ b ∉ idealMod (primeOf (S := k) x) (singleChart hxj) * _
-    rw [idealMod_primeOf, Submodule.bot_mul, Submodule.mem_bot]
-    exact hβ
+    rwa [idealMod_primeOf, Submodule.bot_mul, Submodule.mem_bot]
   refine ⟨x j ^ b, hβsecs, ⟨singleChart hxj, hβnz⟩, kept.card, fun a => Fl.prime (emb a),
     fun a => eS (emb a), fun a => -((eK (emb a) : ℕ) : ℤ),
     fun a => ⟨heSv _ (hemb a), heS _ (hemb a), hann _⟩, fun qq => ?_, fun n i => ?_⟩
@@ -395,8 +389,7 @@ theorem SectionCount.Drop.Filt.proof (hK : SectionCount.Drop.Filt.Kernel.Stateme
       rw [hsum, Nat.cast_sum]
     suffices hmain : (Module.finrank k Fs.secs : ℤ) -
         Module.finrank k (Fs.twist (twistSys k x (-(b : ℤ)))).secs ≤ ((∑ l, T l : ℕ) : ℤ) by
-      rw [← hR] at hmain
-      exact hmain
+      rwa [← hR] at hmain
     by_cases hfd : Module.Finite k Fs.secs
     swap
     · rw [Module.finrank_of_not_finite hfd]
@@ -456,8 +449,7 @@ theorem SectionCount.Drop.Filt.proof (hK : SectionCount.Drop.Filt.Kernel.Stateme
         rwa [hJ0] at hy
       have hs := hV s s.2
       obtain ⟨t, ht, hst⟩ := hker.2 s hs
-      rw [hst, ← mul_assoc, inv_mul_cancel₀ hβ, one_mul]
-      exact ht
+      rwa [hst, ← mul_assoc, inv_mul_cancel₀ hβ, one_mul]
     let divβ : V 0 →ₗ[k] (Fs.twist (twistSys k x (-(b : ℤ)))).secs :=
       { toFun := fun s => ⟨(x j ^ b)⁻¹ * s, hV0 s⟩
         map_add' := fun s s' => Subtype.ext (mul_add _ _ _)

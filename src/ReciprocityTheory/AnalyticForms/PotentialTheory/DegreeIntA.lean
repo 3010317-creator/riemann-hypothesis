@@ -252,8 +252,7 @@ theorem dI_hasSum [MeasurableSpace X] [BorelSpace X] (A : FinHolAtlas e X) (P : 
     fun m => dI_mset _ (hE m)
   have hRd : Pairwise (Function.onFun Disjoint
       fun m => (A.chart j).target ∩ (A.chart j).symm ⁻¹' E m) := by
-    intro m m' hmm'
-    exact ((hd hmm').preimage _).mono Set.inter_subset_right Set.inter_subset_right
+    exact fun m m' hmm' => ((hd hmm').preimage _).mono Set.inter_subset_right Set.inter_subset_right
   have hsub : (⋃ m, (A.chart j).target ∩ (A.chart j).symm ⁻¹' E m) ⊆ (A.chart j).target :=
     Set.iUnion_subset fun m => Set.inter_subset_left
   have H := hasSum_integral_iUnion hR hRd ((hG j).mono_set hsub)
@@ -283,8 +282,7 @@ theorem dI_hasSum [MeasurableSpace X] [BorelSpace X] (A : FinHolAtlas e X) (P : 
       exact hyd.2 (Set.mem_iUnion.2 ⟨m, hyt, hm⟩)
     rw [hcov, Set.mem_compl_iff, not_not] at hnot
     exact ⟨_, ⟨hnot, (A.chart j).map_target hyt⟩, (A.chart j).right_inv hyt⟩
-  simp only [h1, h2]
-  exact H
+  simpa only [h1, h2] using H
 
 end
 

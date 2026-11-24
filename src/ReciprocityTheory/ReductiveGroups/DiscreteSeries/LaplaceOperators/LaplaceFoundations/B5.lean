@@ -466,29 +466,23 @@ theorem growth_a {k r : ℕ} {P : Mat k r} (hPP : P⁻¹ * P = 1) {C : ℝ} {m :
     rw [hPP, Matrix.one_mul, Matrix.mul_assoc, hPP, Matrix.mul_one]
   have hb : Real.sqrt (S7.hs (NormedSpace.exp Y - 1)) ≤ K1 * Real.sqrt a := by
     rw [hexp]
-    calc Real.sqrt (S7.hs (P⁻¹ * (P * NormedSpace.exp Y * P⁻¹ - 1) * P))
-        ≤ Real.sqrt (S7.hs (P⁻¹ * (P * NormedSpace.exp Y * P⁻¹ - 1))) * Real.sqrt (S7.hs P) :=
-          sqrt_hs_mul _ _
+    calc _ ≤ _ := sqrt_hs_mul _ _
       _ ≤ Real.sqrt (S7.hs P⁻¹) * Real.sqrt a * Real.sqrt (S7.hs P) := by
           rw [had]; exact mul_le_mul_of_nonneg_right (sqrt_hs_mul _ _) (Real.sqrt_nonneg _)
       _ = Real.sqrt (S7.hs P⁻¹) * Real.sqrt (S7.hs P) * Real.sqrt a := by ring
-      _ ≤ K1 * Real.sqrt a := mul_le_mul_of_nonneg_right hKK (Real.sqrt_nonneg _)
+      _ ≤ _ := mul_le_mul_of_nonneg_right hKK (Real.sqrt_nonneg _)
   have hsa0 : 0 ≤ Real.sqrt a := Real.sqrt_nonneg a
   have hb0 : 0 ≤ Real.sqrt (S7.hs (NormedSpace.exp Y - 1)) := Real.sqrt_nonneg _
   have hYb : Real.sqrt (S7.hs Y) ≤ C * K1 ^ (m + 1) * Real.sqrt a * (1 + Real.sqrt a) ^ m := by
-    calc Real.sqrt (S7.hs Y)
-        ≤ C * Real.sqrt (S7.hs (NormedSpace.exp Y - 1)) *
-          (1 + Real.sqrt (S7.hs (NormedSpace.exp Y - 1))) ^ m := hgr
+    calc _ ≤ _ := hgr
       _ ≤ C * (K1 * Real.sqrt a) * (K1 * (1 + Real.sqrt a)) ^ m := by
           gcongr
           nlinarith
-      _ = C * K1 ^ (m + 1) * Real.sqrt a * (1 + Real.sqrt a) ^ m := by rw [mul_pow, pow_succ]; ring
+      _ = _ := by rw [mul_pow, pow_succ]; ring
   have hY0 : 0 ≤ S7.hs Y := by unfold S7.hs; positivity
   rw [← Real.sq_sqrt hY0]
-  calc Real.sqrt (S7.hs Y) ^ 2 ≤ (C * K1 ^ (m + 1) * Real.sqrt a * (1 + Real.sqrt a) ^ m) ^ 2 :=
-        pow_le_pow_left₀ (Real.sqrt_nonneg _) hYb 2
-    _ = (C * K1 ^ (m + 1)) ^ 2 * a * (1 + Real.sqrt a) ^ (2 * m) := by
-        rw [mul_pow, mul_pow, Real.sq_sqrt ha0, ← pow_mul, mul_comm m 2, mul_pow]
+  refine (pow_le_pow_left₀ (Real.sqrt_nonneg _) hYb 2).trans_eq ?_
+  rw [mul_pow, mul_pow, Real.sq_sqrt ha0, ← pow_mul, mul_comm m 2, mul_pow]
 
 theorem final_ineq {A q s L : ℝ} (hA : 0 ≤ A) (hq : 0 ≤ q) (hs : 0 ≤ s) (hL : L ≤ A * min s (Real.sqrt s))
     (hq0 : q = 0 → s = 0) :

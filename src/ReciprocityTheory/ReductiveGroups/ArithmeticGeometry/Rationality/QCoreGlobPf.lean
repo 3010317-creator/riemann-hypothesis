@@ -135,16 +135,14 @@ theorem globalQuot_holds : GlobalQuotStatement := by
   have hdeg' : ∀ i, ∑ w ∈ T, s i w * logN w - ∑ σ : InfinitePlace K, (σ.mult : ℝ) * a i σ ≤ B i * n := by
     intro i
     have := hdeg i
-    rw [e2 i, div_le_iff₀ hnpos] at this
-    exact this
+    rwa [e2 i, div_le_iff₀ hnpos] at this
   have hdegS : ∑ i, ∑ w ∈ T, s i w * logN w - ∑ i, ∑ σ : InfinitePlace K, (σ.mult : ℝ) * a i σ ≤
       (∑ i, B i) * n := by
     rw [← Finset.sum_sub_distrib, Finset.sum_mul]
     exact Finset.sum_le_sum fun i _ => hdeg' i
   have hfin' : ∑ w ∈ T, β w * logN w ≤ Bfin * n := by
     have := hfin
-    rw [e3, div_le_iff₀ hnpos] at this
-    exact this
+    rwa [e3, div_le_iff₀ hnpos] at this
   have hfinρ : (ρ : ℝ) * ∑ w ∈ T, β w * logN w ≤ ρ * (Bfin * n) :=
     mul_le_mul_of_nonneg_left hfin' (Nat.cast_nonneg _)
 
@@ -236,8 +234,7 @@ theorem liesOver_iff_under (w : HeightOneSpectrum (𝓞 K₁)) (la : HeightOneSp
     LiesOver w la ↔ under (K := K) w = la := by
   unfold LiesOver
   constructor
-  · intro h
-    exact HeightOneSpectrum.ext h
+  · exact fun h => HeightOneSpectrum.ext h
   · intro h
     subst h
     rfl
@@ -270,8 +267,7 @@ theorem finsum_regroup (F : HeightOneSpectrum (𝓞 K₁) → ℝ) (hF : (Functi
       ext w; simp [liesOver_iff_under]
     · intro w hw
       rw [Finset.mem_coe, Finset.mem_subtype, Set.Finite.mem_toFinset, Function.mem_support]
-      intro h0
-      exact hw (by simp [h0])
+      exact fun h0 => hw (by simp [h0])
   have hsupp : (Function.support fun la : HeightOneSpectrum (𝓞 K) =>
       ∑ᶠ w : {w // LiesOver w la}, (w.1.asIdeal.inertiaDeg (𝓞 K) : ℝ) * F w.1) ⊆ T := by
     intro la hla

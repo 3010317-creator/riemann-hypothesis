@@ -93,8 +93,7 @@ theorem unip_idem_eq_zero {K : Type*} [Field K] [CharZero K] {r : ℕ} (E : Matr
   set f := Matrix.toLin' E with hfdef
   have hf : LinearMap.IsProj (LinearMap.range f) f := by
     constructor
-    · intro x
-      exact LinearMap.mem_range_self f x
+    · exact fun x => LinearMap.mem_range_self f x
     · intro x hx
       obtain ⟨y, rfl⟩ := hx
       simp only [hfdef, Matrix.toLin'_apply, Matrix.mulVec_mulVec, hE]
@@ -155,8 +154,7 @@ theorem unip_pow_card_eq_zero {K : Type*} [Field K] [CharZero K] {r : ℕ} (N : 
       | exact Polynomial.modByMonic_add_div P m
   have hPeq : aeval N P' = aeval N P := by
     have h := congrArg (aeval N) hdiv
-    rw [map_add (f := _), map_mul, hm0, zero_mul, add_zero] at h
-    exact h
+    rwa [map_add (f := _), map_mul, hm0, zero_mul, add_zero] at h
   have hP'deg : P'.natDegree ≤ r := by
     rw [hP']
     refine le_trans ?_ hmdeg
@@ -224,8 +222,7 @@ theorem unip_normSq_single {r : ℕ} (j : Fin r) : normSq (Pi.single j (1 : ℂ)
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 theorem unip_diag_sq_le {r : ℕ} (A : Matrix (Fin r) (Fin r) ℂ) (c : ℝ) (hc : 0 ≤ c)
     (hA : ∀ u, normSq (A *ᵥ u) ≤ c * normSq u) (n : ℕ) (i : Fin r) :

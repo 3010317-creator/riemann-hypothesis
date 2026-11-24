@@ -105,8 +105,7 @@ theorem volUSet_measurable {δ : ℝ}
   rw [hS]
   refine hGc.measurable ?_
   refine MeasurableSet.image_of_continuousOn_injOn hB hFc.continuousOn ?_
-  intro x hx y hy hxy
-  exact hinj (hBs hx) (hBs hy) (Matrix.of.symm.injective hxy)
+  exact fun x hx y hy hxy => hinj (hBs hx) (hBs hy) (Matrix.of.symm.injective hxy)
 
 theorem volU_image_eq (B : Set (UCo N)) (ρ : ℝ) :
     chartWR '' (B ×ˢ Metric.ball 0 ρ) = qrMap '' (volUSet B ×ˢ Metric.ball (volUOne N) ρ) := by
@@ -120,14 +119,12 @@ theorem volU_image_eq (B : Set (UCo N)) (ρ : ℝ) :
     have hk' : toM k = NormedSpace.exp (skMat x) := hk
     refine ⟨(k, t + volUOne N), ⟨⟨x, hx, hk'⟩, ?_⟩, ?_⟩
     · show dist (t + volUOne N) (volUOne N) < ρ
-      rw [dist_eq_norm, add_sub_cancel_right, ← dist_zero_right]
-      exact ht
+      rwa [dist_eq_norm, add_sub_cancel_right, ← dist_zero_right]
     · simp only [qrMap, chartWR, volU_upMat_add, hk']
   · rintro ⟨⟨k, t⟩, ⟨⟨x, hx, hk⟩, ht⟩, rfl⟩
     refine ⟨(x, t - volUOne N), ⟨hx, ?_⟩, ?_⟩
     · show dist (t - volUOne N) 0 < ρ
-      rw [dist_zero_right, ← dist_eq_norm]
-      exact ht
+      rwa [dist_zero_right, ← dist_eq_norm]
     · have ht' : upMat t = 1 + upMat (t - volUOne N) := by
         rw [← volU_upMat_add, sub_add_cancel]
       have hk' : toM k = NormedSpace.exp (skMat x) := hk

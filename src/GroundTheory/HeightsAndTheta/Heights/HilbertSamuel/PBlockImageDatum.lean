@@ -92,8 +92,7 @@ theorem blockMapC_mem (hB : IsBlockImage y k₀ M N x) {z : (Σ k, ι k) → ℂ
 theorem blockMapC_smul {J : Type} (M : Matrix J (ι k₀) ℤ) (c : K → ℂ) (z : (Σ k, ι k) → ℂ) :
     blockMapC k₀ M (fun p => c p.1 * z p) = fun j => c k₀ * blockMapC k₀ M z j := by
   funext j
-  simp only [blockMapC, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun i _ => by ring
+  simpa only [blockMapC, Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
 
 theorem sameOrbit_blockMapC (M : Matrix (Ix (Fin r)) (ι k₀) ℤ) {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') :
     SameOrbit (ι := GlobalTheory (Fin r)) (blockMapC k₀ M z) (blockMapC k₀ M z') := by
@@ -126,8 +125,7 @@ theorem sum_M_N (hB : IsBlockImage y k₀ M N x) (hx : LinearIndependent ℤ x) 
     rw [sub_eq_zero, hB.1 j]
     simp_rw [hB.2]
     push_cast
-    simp only [Finset.sum_mul, Finset.mul_sum, mul_assoc]
-    exact Finset.sum_comm
+    simpa only [Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
   exact sub_eq_zero.mp (hx' g key l)
 
 theorem N_injective (hB : IsBlockImage y k₀ M N x) (hx : LinearIndependent ℤ x) :
@@ -139,8 +137,7 @@ theorem N_injective (hB : IsBlockImage y k₀ M N x) (hx : LinearIndependent ℤ
   calc u j = ∑ l, ((∑ i, M j i * N i l : ℤ) : ℂ) * u l := by simp [sum_M_N hB hx]
     _ = ∑ i, (M j i : ℂ) * ∑ l, (N i l : ℂ) * u l := by
         push_cast
-        simp only [Finset.sum_mul, Finset.mul_sum, mul_assoc]
-        exact Finset.sum_comm
+        simpa only [Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
     _ = 0 := by simp [h1]
 
 

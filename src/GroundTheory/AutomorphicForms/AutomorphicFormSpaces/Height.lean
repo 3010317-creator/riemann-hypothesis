@@ -179,15 +179,13 @@ theorem one_le_heightConst : 1 ≤ heightConst K n :=
 
 theorem height_mul_le (g h : AdelicGLn.AdelicGL K n) :
     height (g * h) ≤ heightConst K n * height g * height h := by
-  classical
   set s := ((finite_mulSupport_locHeight_finAt g).union
     (finite_mulSupport_locHeight_finAt h)).union (finite_mulSupport_locHeight_finAt (g * h))
   have hfin : ∀ x : AdelicGLn.AdelicGL K n, x = g ∨ x = h ∨ x = g * h →
       ∏ᶠ v : HeightOneSpectrum (𝓞 K), locHeight (finAt v x) =
         ∏ v ∈ s.toFinset, locHeight (finAt v x) := by
     intro x hx
-    refine finprod_eq_prod_of_mulSupport_subset _ ?_
-    intro v hv
+    refine finprod_eq_prod_of_mulSupport_subset _ fun v hv => ?_
     simp only [Set.Finite.coe_toFinset, Set.mem_union]
     rcases hx with rfl | rfl | rfl
     · exact Or.inl (Or.inl hv)
@@ -210,17 +208,10 @@ theorem height_mul_le (g h : AdelicGLn.AdelicGL K n) :
     rw [← mul_pow, ← mul_pow, infAt_mul]
     exact pow_le_pow_left₀ (locHeight_pos _).le (locHeight_mul_le _ _) _
   unfold height
-  calc (∏ w : InfinitePlace K, locHeight (infAt w (g * h)) ^ w.mult) *
-        ∏ᶠ v : HeightOneSpectrum (𝓞 K), locHeight (finAt v (g * h))
-      ≤ (heightConst K n * (∏ w : InfinitePlace K, locHeight (infAt w g) ^ w.mult) *
-          ∏ w : InfinitePlace K, locHeight (infAt w h) ^ w.mult) *
-        ((∏ᶠ v : HeightOneSpectrum (𝓞 K), locHeight (finAt v g)) *
-          ∏ᶠ v : HeightOneSpectrum (𝓞 K), locHeight (finAt v h)) :=
-        mul_le_mul hi hf (le_trans zero_le_one (one_le_finprod_locHeight _))
-          (mul_nonneg (mul_nonneg (le_trans zero_le_one one_le_heightConst)
-            (le_trans zero_le_one (one_le_prod_locHeight g)))
-            (le_trans zero_le_one (one_le_prod_locHeight h)))
-    _ = _ := by ring
+  exact (mul_le_mul hi hf (le_trans zero_le_one (one_le_finprod_locHeight _))
+    (mul_nonneg (mul_nonneg (le_trans zero_le_one one_le_heightConst)
+      (le_trans zero_le_one (one_le_prod_locHeight g)))
+      (le_trans zero_le_one (one_le_prod_locHeight h)))).trans_eq (by ring)
 
 theorem locHeight_infAt_eq_one_of_mem_maxCompact {k : AdelicGLn.AdelicGL K n}
     (hk : k ∈ maxCompact) (w : InfinitePlace K) : locHeight (infAt w k) = 1 := by

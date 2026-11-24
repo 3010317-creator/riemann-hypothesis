@@ -148,8 +148,7 @@ lemma whiskerRight_zeroSieve_mem (φ : M ⟶ N)
   have h1 : (A.map f).subtype ∘ₗ fA = f ∘ₗ A.subtype := LinearMap.ext fun _ => rfl
   have h2 : (A.map f).subtype.rTensor (P.obj U) (fA.rTensor (P.obj U) y) =
       (A.map f).subtype.rTensor (P.obj U) 0 := by
-    rw [← LinearMap.rTensor_comp_apply, h1, LinearMap.rTensor_comp_apply, map_zero]
-    exact hx'
+    rwa [← LinearMap.rTensor_comp_apply, h1, LinearMap.rTensor_comp_apply, map_zero]
   obtain ⟨B, hB, hle, hB0⟩ := (hA.map f).exists_rTensor_fg_inclusion_eq h2
   rw [map_zero] at hB0
   obtain ⟨T, hT⟩ := hB
@@ -239,8 +238,7 @@ lemma W_toPresheaf_iff (φ : M ⟶ N) :
     refine J.superset_covering ?_ h
     intro W g hg
     have hg' : M.map g.op (x' - y') = 0 := hg
-    rw [map_sub, sub_eq_zero] at hg'
-    exact hg'
+    rwa [map_sub, sub_eq_zero] at hg'
 
 end
 

@@ -99,8 +99,7 @@ theorem comb_col {x0 : Frame X.Ψ r} (ho : X.IsOrtho x0) (τ : X.Ψ) (c : Fin r 
       if a = b then ((sgn X.p0 (a : ℕ) : ℝ) : ℂ) else 0 := by
     intro a
     have h := congrFun (congrFun (ho τ) a) b
-    rw [Matrix.diagonal_apply] at h
-    exact h
+    rwa [Matrix.diagonal_apply] at h
   simp [hab, mul_ite]
 
 theorem comb_comb {x0 : Frame X.Ψ r} (ho : X.IsOrtho x0) (τ : X.Ψ) (c d : Fin r → ℂ) :
@@ -135,8 +134,7 @@ theorem ortho_h {x : Frame X.Ψ r} (ho : X.IsOrtho x) (τ : X.Ψ) (a b : Fin r) 
     hermC τ.1 X.Gm (col (mat x τ) a) (col (mat x τ) b) =
       if a = b then ((sgn X.p0 (a : ℕ) : ℝ) : ℂ) else 0 := by
   have h := congrFun (congrFun (ho τ) a) b
-  rw [Matrix.diagonal_apply] at h
-  exact h
+  rwa [Matrix.diagonal_apply] at h
 
 theorem span_cols {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (w : Fin r → ℂ) :
     ∃ c : Fin r → ℂ, w = ∑ a, c a • col (mat x τ) a := by
@@ -362,10 +360,8 @@ private theorem sgn_eigen_perp_span_spec (n p : ℕ) (hp : p ≤ n) (d : Fin n �
     rw [Fin.sum_univ_add]
     simp only [FL, FR]
     by_cases hk : (k : ℕ) < p - 1
-    · simp only [dite_eq_left hk, zero_mul, Finset.sum_const_zero, add_zero]
-      exact gpA ⟨k, hk⟩
-    · simp only [dite_eq_right hk, zero_mul, Finset.sum_const_zero, zero_add]
-      exact gqA _
+    · simpa only [dite_eq_left hk, zero_mul, Finset.sum_const_zero, add_zero] using gpA ⟨k, hk⟩
+    · simpa only [dite_eq_right hk, zero_mul, Finset.sum_const_zero, zero_add] using gqA _
   · intro c h1 h2
     rw [Fin.sum_univ_add] at h1 h2
     simp only [sgL, sgR, mul_one, mul_neg_one, Finset.sum_neg_distrib] at h2

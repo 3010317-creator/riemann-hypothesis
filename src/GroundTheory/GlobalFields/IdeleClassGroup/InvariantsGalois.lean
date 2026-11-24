@@ -98,8 +98,7 @@ theorem restrictHom_surjective :
     rw [IntermediateField.mem_fixingSubgroup_iff]
     intro x hx
     have h1 := hσ' (algebraMap F.1 E.1 ⟨x, hx⟩)
-    rw [σ.commutes] at h1
-    exact h1
+    rwa [σ.commutes] at h1
   exact ⟨⟨σ', hmem⟩, AlgEquiv.ext fun x ↦ Subtype.ext (hσ' x)⟩
 
 theorem ker_restrictHom :
@@ -108,10 +107,8 @@ theorem ker_restrictHom :
   ext g
   rw [MonoidHom.mem_ker, Subgroup.mem_subgroupOf, IntermediateField.mem_fixingSubgroup_iff]
   constructor
-  · intro hg x hx
-    exact congrArg (fun σ : E.1 ≃ₐ[F.1] E.1 ↦ ((σ ⟨x, hx⟩ : E.1) : ℚ̄)) hg
-  · intro hg
-    exact AlgEquiv.ext fun x ↦ Subtype.ext (hg x x.2)
+  · exact fun hg x hx => congrArg (fun σ : E.1 ≃ₐ[F.1] E.1 ↦ ((σ ⟨x, hx⟩ : E.1) : ℚ̄)) hg
+  · exact fun hg => AlgEquiv.ext fun x ↦ Subtype.ext (hg x x.2)
 
 theorem isGalois_of_normal : IsGalois F.1 E.1 := by
   apply IsGalois.of_card_aut_eq_finrank
@@ -141,8 +138,7 @@ theorem mem_invariants_iff (c : IdeleClassGroup E.1) :
     c ∈ invariants (E.1 ≃ₐ[F.1] E.1) (IdeleClassGroup E.1) ↔
       of E c ∈ fixedModule IdeleClassLimit F.1.fixingSubgroup := by
   constructor
-  · intro hc g hg
-    exact (smul_of_of_normal ⟨g, hg⟩ c).trans (congrArg _ (hc _))
+  · exact fun hc g hg => (smul_of_of_normal ⟨g, hg⟩ c).trans (congrArg _ (hc _))
   · intro hc σ
     obtain ⟨g, rfl⟩ := restrictHom_surjective σ
     apply of_injective E

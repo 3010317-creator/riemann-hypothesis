@@ -103,9 +103,7 @@ theorem tfRdiag_smooth {ε : Fin n → Bool} {v : tfL2n ε} (hv : ∀ c, v c ∈
     Set.mem_iInter.2 hg, ?_, ?_⟩
   · exact (PiLp.continuousLinearEquiv 2 ℝ (fun _ : Fin n => L2 ε)).symm.contDiff.comp_contDiffOn
       (contDiffOn_pi.2 fun c => (hF c).mono (Set.iInter_subset _ c))
-  · intro g hgU hgJ
-    refine vectorL2_ext fun c => ?_
-    exact hEq c g (Set.mem_iInter.1 hgU c) hgJ
+  · exact fun g hgU hgJ => vectorL2_ext fun c => hEq c g (Set.mem_iInter.1 hgU c) hgJ
 
 theorem tfRdiag_hasDerivAt {ε : Fin n → Bool} {v : tfL2n ε} (hv : ∀ c, v c ∈ smD ε (rreg ε))
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) :
@@ -115,8 +113,7 @@ theorem tfRdiag_hasDerivAt {ε : Fin n → Bool} {v : tfL2n ε} (hv : ∀ c, v c
       (dS (rreg ε) X (v c)) 0 := by
     intro c
     have h := (isDerivedOn_smE (rreg_isURepOn ε)).deriv X hX ⟨v c, hv c⟩
-    rw [dS_eq_actM (isDerivedOn_smE (rreg_isURepOn ε)) hX ⟨v c, hv c⟩]
-    exact h
+    rwa [dS_eq_actM (isDerivedOn_smE (rreg_isURepOn ε)) hX ⟨v c, hv c⟩]
   have hp : HasDerivAt (fun t : ℝ => fun c => rreg ε (NormedSpace.exp ((t : ℂ) • X)) (v c))
       (fun c => dS (rreg ε) X (v c)) 0 := hasDerivAt_pi.2 hd
   exact (PiLp.continuousLinearEquiv 2 ℝ (fun _ : Fin n => L2 ε)).symm.hasFDerivAt.comp_hasDerivAt 0 hp
@@ -124,9 +121,7 @@ theorem tfRdiag_hasDerivAt {ε : Fin n → Bool} {v : tfL2n ε} (hv : ∀ c, v c
 theorem tfRdiag_dS {ε : Fin n → Bool} {v : tfL2n ε} (hv : ∀ c, v c ∈ smD ε (rreg ε))
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) (c : Fin n) :
     dS (tfRdiag ε) X v c = dS (rreg ε) X (v c) := by
-  have h := (tfRdiag_hasDerivAt hv hX).deriv
-  have h2 := congrArg (fun w : tfL2n ε => w c) h
-  exact h2
+  exact congrArg (fun w : tfL2n ε => w c) ((tfRdiag_hasDerivAt hv hX).deriv)
 
 theorem tfRdiag_smE {ε : Fin n → Bool} {v : tfL2n ε} (hv : ∀ c, v c ∈ smD ε (rreg ε)) (a b c : Fin n) :
     ((smE ε (tfRdiag ε) a b ⟨v, tfRdiag_smooth hv⟩ : smD ε (tfRdiag ε)) : tfL2n ε) c =

@@ -79,9 +79,7 @@ theorem isMultiHomog_one : IsMultiHomog (1 : MRing ι) (fun _ => 0) := by
 
 theorem metricChange : MetricChangeStatement := by
   intro K _ ι _ I hI P n L A u hu hP hL hA hsm
-  have hB : IsSmoothHerm (HermLine.ofWeight u hu) := by
-    show ContDiffOn ℝ _ (fun z => Real.exp (-u z)) _
-    exact hsm.neg.exp
+  have hB : IsSmoothHerm (HermLine.ofWeight u hu) := hsm.neg.exp
   have h1 : (1 : MRing ι) ∉ P := fun h => hP.2.1.1.ne_top ((Ideal.eq_top_iff_one P).2 h)
   have hlog : logNorm (HermLine.ofWeight u hu) 1 = u := funext (logNorm_ofWeight_one u hu)
   have hrec : recR I P L (HermLine.ofWeight u hu) 1 = -ptsIntegral P (pot L) u := by

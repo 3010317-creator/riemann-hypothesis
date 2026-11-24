@@ -219,11 +219,9 @@ theorem fh_coef (τ : KG (fun _ : Fin k => true) →* unitary (V →L[ℂ] V)) (
     rw [fhSig_toMK] at hP'
     simp only [Λ, F, ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.apply_apply, innerSL_apply_apply]
-    rw [eq_mul_inv_iff_mul_eq₀ (pow_ne_zero _ (fh_det_ne_zero hk))]
-    exact hP'
+    rwa [eq_mul_inv_iff_mul_eq₀ (pow_ne_zero _ (fh_det_ne_zero hk))]
   rw [heq] at h1
-  have h4 := h1.unique h3
-  exact h4
+  exact h1.unique h3
 
 end Coef2
 
@@ -325,8 +323,7 @@ theorem derivExists_allPos : DerivExistsAllPosStatement := by
   have hcurve : (fun t : ℝ => (τ (γ t)).val) = F ∘ fun t : ℝ => NormedSpace.exp (t • X) := by
     funext t
     rw [Function.comp_apply, ← Complex.coe_smul, ← hγ t, hF]
-  rw [hcurve]
-  exact hcomp
+  rwa [hcurve]
 
 theorem kType_of_hcTypeU {k : ℕ} {u : Fin k → ℝ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : Matrix (Fin k) (Fin k) ℂ → (H →L[ℂ] H)) (hπ : Formalism.MainNotions.S.IsHCTypeU k u π) :

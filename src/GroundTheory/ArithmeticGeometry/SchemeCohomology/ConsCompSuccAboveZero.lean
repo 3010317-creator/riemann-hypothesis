@@ -86,8 +86,7 @@ lemma d_apply (n : ℕ) (σ : Cochain P U n) (i : Fin (n + 2) → ι) :
 
 lemma d_d (n : ℕ) (σ : Cochain P U n) : d P U (n + 1) (d P U n σ) = 0 := by
   have := AlgebraicTopology.AlternatingCofaceMapComplex.d_squared (cechCosimplicial P U) n
-  have h2 := congrArg (fun f => f.hom σ) this
-  exact h2
+  exact congrArg (fun f => f.hom σ) this
 
 
 variable {P} in

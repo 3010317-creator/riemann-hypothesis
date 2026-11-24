@@ -124,15 +124,13 @@ theorem diagSub_isKIrrHW (φ : V₁ →ₗ[ℂ] V₂) {Λ : Fin n → ℝ} (hV�
         exact v.2
       obtain ⟨v', hv', hvv'⟩ := Submodule.mem_map.mp hvT
       have hv'v : v' = v := Subtype.ext hvv'
-      rw [← hv'v]
-      exact hv'
+      rwa [← hv'v]
   · obtain ⟨w, hwV, hw0, hK⟩ := hV₁.2.2.2
     obtain ⟨hwa, hwb⟩ := hK
     refine ⟨diagι φ ⟨w, hwV⟩, LinearMap.mem_range_self _ _, ?_, ?_⟩
     · intro h
       apply hw0
-      have h1 := congrArg (fun x => (toP x).1) h
-      simpa [diagι_apply, toPrimitive_ofPrimitive] using h1
+      simpa [diagι_apply, toPrimitive_ofPrimitive] using congrArg (fun x => (toP x).1) h
     · refine ⟨fun a => ?_, fun a b hab hε => ?_⟩
       · rw [sE_diagι φ hV₁.2.1 hcomm (a := a) (b := a) rfl, ← map_smul]
         congr 1

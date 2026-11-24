@@ -80,9 +80,7 @@ theorem map_invol_eq (HU : HaarUnique) {U : Set (Mat k r)} (hU : IsClosedSubgrou
   have hUm : MeasurableSet (show Set (Mt k r) from U) := hUc.measurableSet
   have h1 : (μ.map f) Uᶜ = 0 := by
     rw [Measure.map_apply hfm hUm.compl]
-    refine measure_mono_null (fun x hx => ?_) hμ.conc
-    intro hxU
-    exact hx (hfU x hxU)
+    exact measure_mono_null (fun x hx => (fun hxU => hx (hfU x hxU))) hμ.conc
   have h2 : ∀ a ∈ U, (μ.map f).map (lmulM a) = μ.map f := by
     intro a ha
     obtain ⟨b, hb, hab⟩ := hl a ha

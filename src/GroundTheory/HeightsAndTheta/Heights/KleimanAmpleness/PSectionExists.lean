@@ -105,8 +105,7 @@ theorem sectionExists_of_gap (hcount : SectionCount.Statement.{u, w})
     omega
   · have hm : ((D * n₁ : ℕ) : ℤ) * mQ - n₁ * E - (((D * n₁ : ℕ) : ℤ) * b - n₁ * E) =
         ((D * n₁ : ℕ) : ℤ) * mQ + -(((D * n₁ : ℕ) : ℤ) * b) := by ring
-    rw [hm]
-    exact hσ
+    rwa [hm]
 
 theorem SectionExists.proof (hcount : SectionCount.Statement.{u, w})
     (hpow : VeryAmplePow.Statement.{u, w}) (hlead : LeadingCoeffPos.Statement.{u, w}) :
@@ -127,8 +126,7 @@ theorem SectionExists.proof (hcount : SectionCount.Statement.{u, w})
   obtain ⟨Nb0, hNb0⟩ := exists_lineBundle_twistMul M q m
   have hvaQ : IsVeryAmple (twistMul M.toSubSystem ((j₀ + 1) * q) (((j₀ + 1 : ℕ) : ℤ) * m)) := by
     have := hpow k Ω N x Nb0 (j₀ + 1) (by rw [hNb0]; exact hva) (by omega)
-    rw [hNb0, pow_twistMul] at this
-    exact this
+    rwa [hNb0, pow_twistMul] at this
   exact sectionExists_of_gap hcount hlead hZ hM hs' (Nat.mul_pos (Nat.succ_pos _) hq1)
     (by push_cast; rw [hm]; ring) hvaQ hgap
 

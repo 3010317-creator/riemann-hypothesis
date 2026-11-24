@@ -98,8 +98,7 @@ theorem continuous_bilD_left (Ψ : 𝓢(V, ℂ)) (B : V →L[ℝ] X →L[ℝ] V)
     ((Ψ.smooth ⊤).continuous_iteratedFDeriv (natCast_le_infty m)).comp h1
   have h3 : Continuous fun v => (fun _ : Fin m => B v) := continuous_pi fun _ => B.continuous
   have h := (continuous_compCLM (V := V) (X := X) m).comp (h2.prodMk h3)
-  refine h.congr fun v => ?_
-  exact (bilD_eq Ψ B m v x).symm
+  exact h.congr fun v => (bilD_eq Ψ B m v x).symm
 
 theorem continuous_fderiv_bil_left (Ψ : 𝓢(V, ℂ)) (B : V →L[ℝ] X →L[ℝ] V) (x : X) :
     Continuous fun v => fderiv ℝ (fun x => Ψ (B v x)) x := by
@@ -236,8 +235,7 @@ theorem contDiffOn_integral_schwartz_bilin :
             κ a • (ftaylorSeries ℝ (fun x => Ψ (B (w a) x)) y m.succ).curryLeft := by
           ext v u
           simp [L, bilD, ftaylorSeries]
-        rw [e]
-        exact h2
+        rwa [e]
     · exact continuousOn_of_dominated (fun x _ => hmeas m x) (fun x hx => ae_of_all _ (hbd m x hx))
         (hint.const_mul (C m)) (ae_of_all _ fun a => by
           have hc1 : Continuous fun y => bilD Ψ B m (w a) y :=

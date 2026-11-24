@@ -100,8 +100,7 @@ theorem ModelOfBlockGen.proof : ModelOfBlockGen.Statement := by
       rw [Ideal.eq_top_iff_one]
       have h1 : (1 : A) = ∑ b, (⟨_, hw k b b⟩ : A) := by
         apply Subtype.ext
-        simp only [Subalgebra.coe_one, AddSubmonoidClass.coe_finsetSum]
-        exact (hsum k).symm
+        simpa only [Subalgebra.coe_one, AddSubmonoidClass.coe_finsetSum] using (hsum k).symm
       rw [h1]
       exact Ideal.sum_mem _ fun b _ => h b
     choose d hd using hd
@@ -126,8 +125,7 @@ theorem ModelOfBlockGen.proof : ModelOfBlockGen.Statement := by
       by_cases hk : k = k₀
       · subst k
         have h : (⟨_, hw k₀ (c k₀) (b k₀)⟩ : A) = ⟨_, hw k₀ j b₀⟩ := Subtype.ext (by simp [c, b])
-        rw [h]
-        exact hb₀
+        rwa [h]
       · have h : (⟨_, hw k (c k) (b k)⟩ : A) = ⟨_, hw k (d k) (d k)⟩ :=
           Subtype.ext (by simp [c, b, Function.update_of_ne hk])
         rw [h]

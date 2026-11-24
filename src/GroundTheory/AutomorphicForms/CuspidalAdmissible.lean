@@ -164,8 +164,7 @@ theorem gap_or_bounded (μ : Fin n → ℤ) {C : ℤ} (hC : 0 < C) :
   have hk : ∀ t : Fin n, ∃ k, β k = β j ∧ μ k < μ j₀ + ((t : ℕ) + 1 : ℤ) * C ∧
       μ j₀ + ((t : ℕ) + 1 : ℤ) * C < μ k + C := by
     intro t
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hA
     refine ⟨μ j₀ + ((t : ℕ) + 1 : ℤ) * C, β j, ⟨i, hij, ?_⟩, ⟨j₀, hj₀, ?_⟩, fun k hk hlt => hne k hk hlt⟩
     · have ht : ((t : ℕ) + 1 : ℤ) ≤ n := by have := t.2; omega
@@ -180,12 +179,10 @@ theorem gap_or_bounded (μ : Fin n → ℤ) {C : ℤ} (hC : 0 < C) :
     have h4 := hk2 t
     rw [hst] at h1 h2
     have hs : ((s : ℕ) : ℤ) < (t : ℕ) + 1 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       nlinarith
     have ht : ((t : ℕ) : ℤ) < (s : ℕ) + 1 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       nlinarith
     exact Fin.ext (by omega)
   obtain ⟨t, ht⟩ := (Finite.injective_iff_surjective.1 hinj) j₀
@@ -270,8 +267,7 @@ theorem exists_subgroupOf_congruenceSubgroup_subset {U : Set (levi F n β)}
     ∃ m, (((congruenceSubgroup F n m).subgroupOf (levi F n β) : Subgroup (levi F n β)) :
       Set (levi F n β)) ⊆ U := by
   have hU' : U ∈ comap (Subtype.val : levi F n β → GL (Fin n) F) (𝓝 (1 : GL (Fin n) F)) := by
-    rw [nhds_subtype] at hU
-    exact hU
+    rwa [nhds_subtype] at hU
   obtain ⟨m, -, hm⟩ :=
     ((hasBasis_nhds_one F n).comap (Subtype.val : levi F n β → GL (Fin n) F)).mem_iff.1 hU'
   exact ⟨m, by rw [Subgroup.coe_subgroupOf]; exact hm⟩

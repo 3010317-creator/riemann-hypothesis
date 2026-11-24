@@ -171,12 +171,10 @@ theorem exists_e_eq {d l : ℕ} [Fact l.Prime] (e : Om d →+* PadicAlgCl l)
     apply (algebraMap (Om d) ℂ).injective
     rw [Polynomial.hom_eval₂, map_zero]
     have : (algebraMap (Om d) ℂ).comp f₀ = algebraMap ℚ ℂ := Subsingleton.elim _ _
-    rw [this]
-    exact hpx
+    rwa [this]
   refine exists_of_ratRoot e f₀ ((r.comp e).comp f₀) hp ?_
   have := congrArg (r.comp e) h0
-  rw [Polynomial.hom_eval₂, map_zero] at this
-  exact this
+  rwa [Polynomial.hom_eval₂, map_zero] at this
 
 theorem norm_lt_of_res {l : ℕ} [Fact l.Prime] {r : PadicAlgCl l → PadicAlgCl l}
     (hr : ∀ z : PadicAlgCl l, ‖z‖ ≤ 1 → ‖r z - z‖ < 1) {z : PadicAlgCl l} (hz : ‖z‖ < 1) : ‖r z‖ < 1 := by
@@ -256,8 +254,7 @@ theorem locLift {d l : ℕ} [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (e : Om d �
     have : σ (σ⁻¹ • x) = x := σ.apply_symm_apply x
     rw [this]
   · intro x hx
-    rw [mem_nonunits_Aio]
-    rw [hn, map_sub, hσ]
+    rw [mem_nonunits_Aio, hn, map_sub, hσ]
     exact hρ _ (by rw [← hn]; exact (mem_Aio ι x).1 hx)
 
 end ReciprocityTheory.ChartRestriction.L1

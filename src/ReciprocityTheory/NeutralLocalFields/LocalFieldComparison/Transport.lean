@@ -78,8 +78,7 @@ theorem card_H0_comp_equiv (e : G ≃ₜ* G') (rho : Representation R G' M) :
     constructor
     · intro h g'
       simpa using h (e.symm g')
-    · intro h g
-      exact h _
+    · exact fun h g => h _
   unfold H0
   rw [hinv]
 
@@ -126,8 +125,7 @@ theorem card_H1_comp_equiv (e : G ≃ₜ* G') (rho : Representation R G' M) :
       apply φ.injective
       rw [show φ y = (w : G → M) from hyw]
       exact congrArg Subtype.val (fZ.apply_symm_apply w)
-    rw [h3]
-    exact hy
+    rwa [h3]
 
 theorem card_H2_comp_equiv (e : G ≃ₜ* G') (rho : Representation R G' M) :
     Nat.card (H2 (rho.comp (e : G →* G'))) = Nat.card (H2 rho) := by
@@ -190,8 +188,7 @@ theorem card_H2_comp_equiv (e : G ≃ₜ* G') (rho : Representation R G' M) :
       apply φ.injective
       rw [show φ y = (w : G × G → M) from hyw]
       exact congrArg Subtype.val (fZ.apply_symm_apply w)
-    rw [h3]
-    exact hy
+    rwa [h3]
 
 private theorem nonempty_Hn_comp_equiv (e : G ≃ₜ* G') (rho : Representation R G' M) (m : ℕ) :
     Nonempty (Hn (rho.comp (e : G →* G')) (m + 1) ≃ Hn rho (m + 1)) := by
@@ -272,8 +269,7 @@ private theorem nonempty_Hn_comp_equiv (e : G ≃ₜ* G') (rho : Representation 
       apply (φk (m + 1)).injective
       rw [show φk (m + 1) y = (w : (Fin (m + 1) → G) → M) from hyw]
       exact congrArg Subtype.val (fZ.apply_symm_apply w)
-    rw [h3]
-    exact hy
+    rwa [h3]
 
 theorem FinCd2.of_comp (e : G ≃ₜ* G') {rho : Representation R G' M} (h : FinCd2 (rho.comp (e : G →* G'))) :
     FinCd2 rho := by
@@ -294,35 +290,10 @@ theorem DualityFor.of_comp (e : G ≃ₜ* G') (χ : G' →* Rˣ) {rho : Represen
     (h : DualityFor (χ.comp (e : G →* G')) (rho.comp (e : G →* G')) (contAction_comp e hrho)) :
     DualityFor χ rho hrho := by
   obtain ⟨⟨h0⟩, h1, h2, h3, h4⟩ := h
-  refine ⟨⟨(equivH2OfIso e (charRep χ) (charRep (χ.comp (e : G →* G'))) (fun _ _ => rfl)).trans h0⟩,
-    ?_, ?_, ?_, ?_⟩
-  · exact bijective_of_iso
-      (equivH0OfIso e (rho.comp (MonoidHom.id G')) ((rho.comp (e : G →* G')).comp (MonoidHom.id G))
-        (fun _ _ => rfl))
-      (equivH2OfIso e _ _ (twDual_compat e χ rho))
-      (equivH2OfIso e ((charRep χ).comp (MonoidHom.id G'))
-        ((charRep (χ.comp (e : G →* G'))).comp (MonoidHom.id G)) (fun _ _ => rfl))
-      _ _ (cupZeroTwo_equiv e χ rho) h1
-  · exact bijective_of_iso
-      (equivH1OfIso e _ _ (twDual_compat e χ rho))
-      (equivH1OfIso e (rho.comp (MonoidHom.id G')) ((rho.comp (e : G →* G')).comp (MonoidHom.id G))
-        (fun _ _ => rfl))
-      (equivH2OfIso e ((charRep χ).comp (MonoidHom.id G'))
-        ((charRep (χ.comp (e : G →* G'))).comp (MonoidHom.id G)) (fun _ _ => rfl))
-      _ _ (cupOneOne_equivH1 e χ rho _ _) h2
-  · exact bijective_flip_of_iso
-      (equivH1OfIso e _ _ (twDual_compat e χ rho))
-      (equivH1OfIso e (rho.comp (MonoidHom.id G')) ((rho.comp (e : G →* G')).comp (MonoidHom.id G))
-        (fun _ _ => rfl))
-      (equivH2OfIso e ((charRep χ).comp (MonoidHom.id G'))
-        ((charRep (χ.comp (e : G →* G'))).comp (MonoidHom.id G)) (fun _ _ => rfl))
-      _ _ (cupOneOne_equivH1 e χ rho _ _) h3
-  · exact bijective_of_iso
-      (equivH2OfIso e (rho.comp (MonoidHom.id G')) ((rho.comp (e : G →* G')).comp (MonoidHom.id G))
-        (fun _ _ => rfl))
-      (equivH0OfIso e _ _ (twDual_compat e χ rho))
-      (equivH2OfIso e ((charRep χ).comp (MonoidHom.id G'))
-        ((charRep (χ.comp (e : G →* G'))).comp (MonoidHom.id G)) (fun _ _ => rfl))
-      _ _ (cupTwoZero_equiv e χ rho) h4
+  exact ⟨⟨(equivH2OfIso e (charRep χ) (charRep (χ.comp (e : G →* G'))) (fun _ _ => rfl)).trans h0⟩,
+    bijective_of_iso _ _ _ _ _ (cupZeroTwo_equiv e χ rho) h1,
+    bijective_of_iso _ _ _ _ _ (cupOneOne_equivH1 e χ rho _ _) h2,
+    bijective_flip_of_iso _ _ _ _ _ (cupOneOne_equivH1 e χ rho _ _) h3,
+    bijective_of_iso _ _ _ _ _ (cupTwoZero_equiv e χ rho) h4⟩
 
 end ReciprocityTheory.Neutral.Bridge

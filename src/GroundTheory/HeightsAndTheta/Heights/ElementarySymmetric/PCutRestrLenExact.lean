@@ -182,8 +182,7 @@ theorem proof (hSC : SurjectiveClosed.Statement.{u, w}) (hFS : FiniteSections.St
     refine SectionMulInj.proof k Ω N x pp hW.isPrime hW.homog hW.le Lc
       (Q.tensorProd (twistBundle k x (c : ℤ))) s hJp I y hy ?_
     rw [hsub, SubSystem.twist_sub_eq_mul_of_line]
-    rw [hsub, hFI] at hsy
-    exact hsy
+    rwa [hsub, hFI] at hsy
   have hC : ∀ I, ∀ y ∈ (F'.twist (idealSys x pp)).sub I, s * y ∈ (F.twist (idealSys x pp)).sub I := by
     intro I y hy
     rw [hsub] at hy
@@ -199,8 +198,7 @@ theorem proof (hSC : SurjectiveClosed.Statement.{u, w}) (hFS : FiniteSections.St
     obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.mp h1
     obtain ⟨q, hq, rfl⟩ := Submodule.mem_span_singleton_mul.mp hb
     refine ⟨q, hq, ?_⟩
-    rw [add_sub_cancel_right, hsub, hFI, ← mul_assoc]
-    exact ha
+    rwa [add_sub_cancel_right, hsub, hFI, ← mul_assoc]
 
   have hWV : ∀ z, z ∈ (F.twist (idealSys x pp)).secs → z ∈ (F.twist (idealSys x (pp ⊔ J))).secs := by
     intro z hz
@@ -292,8 +290,7 @@ theorem proof (hSC : SurjectiveClosed.Statement.{u, w}) (hFS : FiniteSections.St
 
   have hx : x ≠ 0 := by
     obtain ⟨i, hi⟩ := I₀.2.1
-    intro h0
-    exact (mem_support x).mp (I₀.2.2 hi) (by simp [h0])
+    exact fun h0 => (mem_support x).mp (I₀.2.2 hi) (by simp [h0])
   have hfin : Module.length k (H ⧸ A) ≠ ⊤ := by
     have : Module.Finite k H :=
       (hFS k Ω N x ((Q.tensorProd Lc).tensorProd (twistBundle k x (c : ℤ))) hx).1

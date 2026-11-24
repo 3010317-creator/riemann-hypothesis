@@ -156,18 +156,6 @@ theorem sum_zonalSpherical_gMat (z : Fin n → ℂˣ) (r : ℕ) (g : GL (Fin n) 
   have hint : ∀ g' : GL (Fin n) F,
       Integrable (fun x => ind x * sphericalFun (paramChar F z) (x * g')) μ :=
     fun g' => integrable_indicator_mul_sphericalFun z g'
-  have e1 : (∑ S ∈ P, ∑ c : Pairs S → 𝓀[F],
-      ∫ x, ind x * sphericalFun (paramChar F z) (x * (g * gMat S c)) ∂μ) =
-      ∫ x, ∑ S ∈ P, ∑ c : Pairs S → 𝓀[F],
-        ind x * sphericalFun (paramChar F z) (x * (g * gMat S c)) ∂μ := by
-    have e := integral_finsetSum (μ := μ) (f := fun S x => ∑ c : Pairs S → 𝓀[F],
-      ind x * sphericalFun (paramChar F z) (x * (g * gMat S c))) P
-      (fun S _ => MeasureTheory.integrable_finsetSum _ fun c _ => hint _)
-    rw [e]
-    refine Finset.sum_congr rfl fun S _ => ?_
-    have e' := integral_finsetSum (μ := μ) (f := fun c x =>
-      ind x * sphericalFun (paramChar F z) (x * (g * gMat S c))) Finset.univ (fun c _ => hint _)
-    rw [e']
   have e2 : ∀ x, ∑ S ∈ P, ∑ c : Pairs S → 𝓀[F],
       ind x * sphericalFun (paramChar F z) (x * (g * gMat S c)) =
       c₀ * evalAt z (satakeTransform μ (minusculeHecke μ r)) *
@@ -177,7 +165,9 @@ theorem sum_zonalSpherical_gMat (z : Fin n → ℂˣ) (r : ℕ) (g : GL (Fin n) 
     rw [sum_sphericalFun_gMat (μ := μ)]
     ring
   simp only [zonalSpherical, ← Finset.mul_sum]
-  rw [e1]
+  rw [Finset.sum_congr rfl fun S _ => (integral_finsetSum _ fun c _ => hint (g * gMat S c)).symm,
+    ← integral_finsetSum _ fun S _ =>
+      MeasureTheory.integrable_finsetSum _ fun c _ => hint (g * gMat S c)]
   simp_rw [e2]
   rw [integral_const_mul]
   ring

@@ -128,8 +128,7 @@ theorem rOm_sub (X Y : Matrix (Fin n) (Fin n) ℂ) : rOm (n := n) (X - Y) = rOm 
   refine LinearMap.ext fun F => Subtype.ext (funext fun z => ?_)
   simp only [LinearMap.sub_apply, Submodule.coe_sub, Pi.sub_apply, rOm_apply]
   by_cases hz : z ∈ OmegaP n
-  · simp only [Set.indicator_of_mem hz]
-    exact rightHol_sub X Y _ z
+  · simpa only [Set.indicator_of_mem hz] using rightHol_sub X Y _ z
   · simp only [Set.indicator_of_notMem hz, sub_zero]
 
 theorem rOm_zero : rOm (n := n) 0 = 0 := by
@@ -181,14 +180,12 @@ theorem mmSub_stable (μ : Fin n → ℤ) (a b : Fin n) : ∀ x ∈ mmSub μ, eO
   intro x hx
   simp only [mmSub, genSub] at hx ⊢
   rw [Submodule.mem_sInf] at hx ⊢
-  intro T hT
-  exact hT.2 a b x (hx T hT)
+  exact fun T hT => hT.2 a b x (hx T hT)
 
 theorem phiOm_mem (μ : Fin n → ℤ) : phiOm μ ∈ mmSub μ := by
   simp only [mmSub, genSub]
   rw [Submodule.mem_sInf]
-  intro T hT
-  exact hT.1 (Submodule.subset_span (Set.mem_singleton _))
+  exact fun T hT => hT.1 (Submodule.subset_span (Set.mem_singleton _))
 
 abbrev MMT (μ : Fin n → ℤ) : Type := ↥(mmSub μ)
 

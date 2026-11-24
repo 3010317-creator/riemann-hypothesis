@@ -75,8 +75,7 @@ def chartSlice {M : Type*} [TopologicalSpace M] {n : ℕ} (e : OpenPartialHomeom
 theorem isChart_chartSlice {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)
     (e : OpenPartialHomeomorph M (V n)) (he : IsChart n z e) (p : ℕ) (i : Fin p) :
     IsChart n (fun q : M × Fin p => z q.1) (chartSlice e i) := by
-  intro q hq
-  exact he hq.1
+  exact fun q hq => he hq.1
 
 theorem isLocalHomeomorph_comp_fst {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) :
     IsLocalHomeomorph (fun q : M × Fin p => z q.1) := by
@@ -117,8 +116,7 @@ theorem chart_prodFin_local {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M �
 theorem smooth_prodFin_iff {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) (F : M × Fin p → ℂ) :
     Smooth n (fun q : M × Fin p => z q.1) F ↔ ∀ i, Smooth n z (fun x => F (x, i)) := by
   constructor
-  · intro h i e he
-    exact h (chartSlice e i) (isChart_chartSlice n z e he p i)
+  · exact fun h i e he => h (chartSlice e i) (isChart_chartSlice n z e he p i)
   · intro h E hE y hy
     obtain ⟨e, i, he, hye, hev⟩ := chart_prodFin_local n z hz p E hE y hy
     have h1 : ContDiffAt ℝ ∞ ((fun x => F (x, i)) ∘ e.symm) y :=
@@ -128,8 +126,7 @@ theorem smooth_prodFin_iff {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M →
 theorem holo_prodFin_iff {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) (F : M × Fin p → ℂ) :
     Holo n (fun q : M × Fin p => z q.1) F ↔ ∀ i, Holo n z (fun x => F (x, i)) := by
   constructor
-  · intro h i e he
-    exact h (chartSlice e i) (isChart_chartSlice n z e he p i)
+  · exact fun h i e he => h (chartSlice e i) (isChart_chartSlice n z e he p i)
   · intro h E hE y hy
     obtain ⟨e, i, he, hye, hev⟩ := chart_prodFin_local n z hz p E hE y hy
     have h1 : DifferentiableAt ℂ ((fun x => F (x, i)) ∘ e.symm) y :=
@@ -193,8 +190,7 @@ theorem vol_prodFin_eq {M : Type*} [TopologicalSpace M] [SecondCountableTopology
 theorem lintegral_vol_prodFin {M : Type*} [TopologicalSpace M] [T2Space M] [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) (f : M × Fin p → ℝ≥0∞) (hf : Measurable f) :
     ∫⁻ q, f q ∂vol n (fun q : M × Fin p => z q.1) = ∑ i, ∫⁻ x, f (x, i) ∂vol n z := by
   rw [vol_prodFin_eq n z hz p, MeasureTheory.lintegral_finsetSum_measure]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact lintegral_map hf (measurable_id.prodMk measurable_const)
+  exact Finset.sum_congr rfl fun i _ => lintegral_map hf (measurable_id.prodMk measurable_const)
 
 def EtaleStein.prodFin {M : Type*} [TopologicalSpace M] [T2Space M] [SecondCountableTopology M]
     [MeasurableSpace M] [BorelSpace M] (n : ℕ) (X : EtaleStein n M) (p : ℕ) :

@@ -219,8 +219,7 @@ theorem ker_jetTruncate_pow_eq_bot_iff [Nontrivial R] (κ : Type) [Nonempty κ] 
   have hp : (MvPolynomial.X j : MvPolynomial κ R) ^ ((m + 1) * k) ∈
       MvPolynomial.idealOfVars κ R ^ (n + 1) := by
     apply Ideal.Quotient.eq_zero_iff_mem.mp
-    rw [map_pow]
-    exact hzpow
+    rwa [map_pow]
   rwa [MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mem_pow_idealOfVars_iff _ _ one_ne_zero,
     Finsupp.degree_single] at hp
 
@@ -259,9 +258,7 @@ theorem etale_ext [Algebra.FormallyUnramified (MvPolynomial (Fin n) R) S]
     (hs : ∀ j : Fin n, φ₁ (sX (R := R) (S := S) j) = φ₂ (sX (R := R) (S := S) j)) : φ₁ = φ₂ := by
   let ρ : MvPolynomial (Fin n) R →ₐ[R] A := φ₁.comp (IsScalarTower.toAlgHom R (MvPolynomial (Fin n) R) S)
   have hρ2 : φ₂.comp (IsScalarTower.toAlgHom R (MvPolynomial (Fin n) R) S) = ρ := by
-    apply MvPolynomial.algHom_ext
-    intro j
-    exact (hs j).symm
+    exact MvPolynomial.algHom_ext (fun j => (hs j).symm)
   let : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
   have : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
   let ψ₁ : S →ₐ[MvPolynomial (Fin n) R] A :=
@@ -300,8 +297,7 @@ theorem exists_lift_with_coordinates [Algebra.FormallySmooth (MvPolynomial (Fin 
   let φ := Algebra.FormallySmooth.liftOfSurjective ε' aug' haug hJ
   refine ⟨φ.restrictScalars R, ?_, ?_⟩
   · exact AlgHom.ext (Algebra.FormallySmooth.liftOfSurjective_apply ε' aug' haug hJ)
-  · intro j
-    exact (φ.commutes (MvPolynomial.X j)).trans (MvPolynomial.aeval_X b j)
+  · exact fun j => (φ.commutes (MvPolynomial.X j)).trans (MvPolynomial.aeval_X b j)
 
 /-- A formally smooth chart admits lifts along nilpotent augmentations to the base ring. -/
 theorem etale_exists [Algebra.FormallySmooth (MvPolynomial (Fin n) R) S]

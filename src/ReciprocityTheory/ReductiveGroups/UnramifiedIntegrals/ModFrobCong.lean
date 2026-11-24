@@ -148,8 +148,7 @@ theorem Cg.prod {p : ℕ} {α : Type*} (s : Finset α) (f g : α → PowerSeries
   classical
   induction s using Finset.induction_on with
   | empty =>
-    simp only [Finset.prod_empty]
-    exact Cg.refl (CoeffIn.one _)
+    simpa only [Finset.prod_empty] using Cg.refl (CoeffIn.one _)
   | insert a s ha ih =>
     rw [Finset.prod_insert ha, Finset.prod_insert ha]
     exact (h a (Finset.mem_insert_self a s)).mul (ih fun t ht => h t (Finset.mem_insert_of_mem ht))
@@ -240,8 +239,7 @@ theorem facSer_Cg_a {p : ℕ} (hp : p.Prime) :
       sub1 (zetaC ((p, 0, 1) : ℕ × ℕ × ℕ).2.2 ^ ((p, 0, 1) : ℕ × ℕ × ℕ).2.1)
         (((p, 0, 1) : ℕ × ℕ × ℕ).1 ^ 2) f = xp p (xp p f) := by
     intro f
-    simp only [sub1, pow_zero, PowerSeries.rescale_one, RingHom.id_apply]
-    exact ks_xp_xp hp0 f
+    simpa only [sub1, pow_zero, PowerSeries.rescale_one, RingHom.id_apply] using ks_xp_xp hp0 f
   have hfac : facSer p (p, 0, 1) = xp p (aC * xp p dC - xp p aC * dC) := by
     rw [facSer, hsub, hsub, xp_sub, xp_mul hp0, xp_mul hp0]
   rw [hfac]
@@ -258,8 +256,7 @@ theorem facSer_Cg_b {p : ℕ} (hp : p.Prime) (b : ℕ) :
       sub1 (zetaC ((1, b, p) : ℕ × ℕ × ℕ).2.2 ^ ((1, b, p) : ℕ × ℕ × ℕ).2.1)
         (((1, b, p) : ℕ × ℕ × ℕ).1 ^ 2) f = PowerSeries.rescale (zetaC p ^ b) f := by
     intro f
-    simp only [sub1, one_pow]
-    exact ks_xp_one _
+    simpa only [sub1, one_pow] using ks_xp_one _
   rw [facSer, hsub, hsub]
   have hd : Cg p (PowerSeries.rescale (zetaC p ^ b) dC) dC := Cg.rescale_map_int hp.pos b dZ
   have ha : Cg p (PowerSeries.rescale (zetaC p ^ b) aC) aC := Cg.rescale_map_int hp.pos b aZ
@@ -429,8 +426,7 @@ theorem kronFun_div {p : ℕ} (hp : p.Prime) :
     ext m
     simp only [xp, PowerSeries.coeff_mk, map_add (f := _)]
     split_ifs <;> simp
-  rw [← key, hsum, hk]
-  rw [PowerSeries.coeff_C_mul, PowerSeries.coeff_C_mul, PowerSeries.coeff_mk]
+  rw [← key, hsum, hk, PowerSeries.coeff_C_mul, PowerSeries.coeff_C_mul, PowerSeries.coeff_mk]
 
 theorem kronFun_poly {p : ℕ} (hp : p.Prime) :
     ∃ Q : Polynomial ℂ, (∀ i, Q.coeff i ∈ Rm p) ∧
@@ -738,8 +734,7 @@ theorem natCard_mem {E Ω : Type*} [Field E] [NumberField E] [Field Ω] [Algebra
       rw [Nat.card_eq_fintype_card]
       exact Nat.cast_card_eq_zero _
     · rw [Nat.card_eq_zero_of_infinite, Nat.cast_zero]
-  have h2 := (h _).mpr hmem
-  simpa using h2
+  simpa using (h _).mpr hmem
 
 theorem frobCong {d : ℕ} {L : PeriodPair} (hsf : Squarefree d) (hd : d % 4 = 3) (hL : HasCMBy d L)
     (x : Om d) (hx : (x : ℂ) = jInv L) (A : ValuationSubring (Om d)) (v : HeightOneSpectrum (𝓞 (KQ d)))

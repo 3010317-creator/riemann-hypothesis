@@ -199,8 +199,7 @@ theorem SegreFlagDegreeZero.proof (hModel : SegreFlagClosureModel.Statement) : S
       ∑ l, aeval (pairProjCoord y w φ φ' u) (G l) * genVal w u (φ l) := by
     intro u hu
     rw [hχgen, sub_eq_zero] at hu
-    simp only [hV' hHhom, hV' (hG _)]
-    exact hu
+    simpa only [hV' hHhom, hV' (hG _)] using hu
 
   have hval3 : ∀ u : Fin N → Φ, genVal w u χ = 0 → aeval (pairProjCoord y w φ φ' u) (∑ l, X ⟨some none, l⟩ * G l) =
       aeval (pairProjCoord y w φ φ' u) (X ⟨none, m⟩ * H) := fun u hu =>
@@ -216,8 +215,7 @@ theorem SegreFlagDegreeZero.proof (hModel : SegreFlagClosureModel.Statement) : S
     rw [map_mul, aeval_X]
     exact mul_ne_zero hu (hHne u)
   have hs₁ : genVal w (flagCoord w e t (k + 1)) (φ' m) ≠ 0 := by
-    intro h0
-    exact hm (hvanish (φ' m) (flag_eq_zero w e hli (φ' m) h0))
+    exact fun h0 => hm (hvanish (φ' m) (flag_eq_zero w e hli (φ' m) h0))
   have hout : ∀ u : Fin N → Φ, genVal w u χ = 0 → genVal w u (φ' m) ≠ 0 →
       (∑ l, X ⟨some none, l⟩ * G l) ∉ pointIdeal O (pairProjCoord y w φ φ' u) ∧
         X ⟨none, m⟩ * H ∉ pointIdeal O (pairProjCoord y w φ φ' u) := by
@@ -630,8 +628,7 @@ theorem proof : Statement := by
   have h2 := trdeg_add_eq O (MRing ι O ⧸ P) (A := MRing ι F ⧸ genFib P)
   rw [trdeg_eq_zero (R := O) (A := F), zero_add] at h1
   rw [trdeg_eq_zero (R := MRing ι O ⧸ P) (A := MRing ι F ⧸ genFib P), add_zero] at h2
-  rw [hB, h1, ← h2] at hle
-  exact hle
+  rwa [hB, h1, ← h2] at hle
 
 end PrimeDimLeTrdeg
 

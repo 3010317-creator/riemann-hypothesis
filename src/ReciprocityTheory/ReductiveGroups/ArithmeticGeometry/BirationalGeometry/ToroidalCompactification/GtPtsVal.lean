@@ -96,8 +96,7 @@ theorem exists_ratio {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) {K : Type} [Finty
   unfold gm res pullU
   have hm : r z ∈ L.wchart φ (fun k => J (r ≫ φ k)) := by
     unfold LB.wchart
-    simp
-    exact fun i => hJ (r ≫ φ i)
+    simpa using fun i => hJ (r ≫ φ i)
   rw [dite_eq_left hm, dite_eq_left (show r z ∈ (⊤ : Y.Opens) from trivial)]
   apply Units.ext
   simp only [MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe]

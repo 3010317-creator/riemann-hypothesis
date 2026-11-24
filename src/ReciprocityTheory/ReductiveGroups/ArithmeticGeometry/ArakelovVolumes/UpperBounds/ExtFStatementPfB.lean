@@ -112,10 +112,8 @@ private lemma continuous_cpt' : Continuous (cpt X x0) := by
       first
         | exact (EuclideanSpace.proj (𝕜 := ℂ) _).continuous
     · by_cases h' : a = b
-      · simp only [nmat, dite_eq_right h, ite_eq_left h']
-        exact continuous_const
-      · simp only [nmat, dite_eq_right h, ite_eq_right h']
-        exact continuous_const
+      · simpa only [nmat, dite_eq_right h, ite_eq_left h'] using continuous_const
+      · simpa only [nmat, dite_eq_right h, ite_eq_right h'] using continuous_const
   refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun b => ?_
   show Continuous fun z => ∑ k, mat x0 τ a k * mat (nmat X z) τ k b
   exact continuous_finsetSum _ fun k _ => continuous_const.mul (hn τ k b)
@@ -169,8 +167,7 @@ theorem Gf_meas (hF : DifferentiableOn ℂ F (OmF X x0)) : Measurable (Gf D la F
     apply Finset.measurable_prod
     intro τ _
     apply Finset.measurable_prod
-    intro i _
-    exact (((hd τ i.succ).measurable.div (hd τ i.castSucc).measurable).norm).pow_const _
+    exact fun i _ => (((hd τ i.succ).measurable.div (hd τ i.castSucc).measurable).norm).pow_const _
   have hp : ∀ x, X.pnorm la (P0 D la F) x = ‖P0 D la F x‖ * X.nfac la x := fun x => rfl
   unfold Gf
   simp only [hp]
@@ -188,8 +185,7 @@ private lemma one_mem_bor_upper_bounds {Ψ : Finset (E →+* ℂ)} :
   refine ⟨?_, fun a c hca => ?_⟩
   · show (1 : Matrix (Fin r) (Fin r) ℂ).det ≠ 0
     simp
-  · show (1 : Matrix (Fin r) (Fin r) ℂ) a c = 0
-    exact Matrix.one_apply_ne hca.ne'
+  · exact Matrix.one_apply_ne hca.ne'
 
 theorem Gf_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) :
     Gf D la F (cpt X x0 z) = ENNReal.ofReal (‖F z‖ ^ 2 * Real.exp (-phla X la (cpt X x0 z))) := by
@@ -240,8 +236,7 @@ theorem norm_poincareLift_sq_le {x : Frame X.Ψ r} (_hx : x ∈ X.dom) {m : ℝ}
     have := hm.le
     gcongr
   have h2 : 1 ≤ (m ^ 2)⁻¹ * X.nfac la x ^ 2 := by
-    rw [inv_mul_eq_div, one_le_div hm2]
-    exact h1
+    rwa [inv_mul_eq_div, one_le_div hm2]
   rw [mul_pow, ← mul_assoc, mul_comm ((m ^ 2)⁻¹), mul_assoc]
   exact le_mul_of_one_le_right (sq_nonneg _) h2
 

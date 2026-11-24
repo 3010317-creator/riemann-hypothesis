@@ -52,8 +52,7 @@ theorem eval_eq_of_aeval_eq {y : (Σ k, ι k) → Ω} {d : K → ℕ} {g g' : MR
     rw [map_sub, ProjLine.mConeMap_eq_of_isMultiHomog y hg, ProjLine.mConeMap_eq_of_isMultiHomog y hg', he,
       sub_self]
   have h0 := hz.2 _ hmem
-  rw [map_sub, map_sub, sub_eq_zero] at h0
-  exact h0
+  rwa [map_sub, map_sub, sub_eq_zero] at h0
 
 theorem bound_of_ptBoundOn (hLR : LocalRep.Statement) {y : (Σ k, ι k) → Ω} {M L : HermLine ι} {n : ℕ}
     {U : Set ((Σ k, ι k) → ℂ)} {c : ℝ} {f f' : Ω}
@@ -274,9 +273,7 @@ theorem fam_hermZpow {I : Ideal (MRing ι) → (m : ℕ) → (Fin m → HermLine
     simp [Lj, i.2]
   rw [← hD, hall (D + 1) le_rfl, h0]
 
-theorem constShift_a (A : HermLine ι) (t : ℝ) : (HermLine.constShift A t).a = A.a := by
-  show A.a + 0 = A.a
-  exact add_zero _
+theorem constShift_a (A : HermLine ι) (t : ℝ) : (HermLine.constShift A t).a = A.a := add_zero _
 
 theorem constShift_h (A : HermLine ι) (t : ℝ) (z : (Σ k, ι k) → ℂ) :
     (HermLine.constShift A t).h z = Real.exp (-t) * A.h z := by
@@ -315,10 +312,8 @@ theorem smallGen_constShift {P0 : Ideal (MRing ι)} {y : (Σ k, ι k) → Ω} {D
   refine ⟨h.normalForm_baseLattice_le_dualSpan_sup_line, semipos_constShift h.semipos t, ?_, ⟨q, w, ?_, ?_, fun j => ?_⟩⟩
   · rw [constShift_a]
     exact h.deg_pos
-  · rw [constShift_a]
-    exact hw
-  · rw [constShift_a]
-    exact hgen
+  · rwa [constShift_a]
+  · rwa [constShift_a]
   · intro dg dh g hh z hg hhh hd he hz
     rw [constShift_a] at hd
     have h1 := hsmall j dg dh g hh z hg hhh hd he hz
@@ -330,9 +325,7 @@ theorem smallGen_constShift {P0 : Ideal (MRing ι)} {y : (Σ k, ι k) → Ω} {D
     nlinarith
 
 theorem chartLat_le_nm (y : (Σ k, ι k) → Ω) (a : K → ℤ) (τ : ℕ) : chartLat y a τ ≤ chartLatNm y a τ := by
-  intro s hs c hc
-  have h1 := hs c hc
-  exact isIntegral_algebraMap (R := chartRingZ y c) (A := Ω) (x := ⟨_, h1⟩)
+  exact fun s hs c hc => isIntegral_algebraMap (R := chartRingZ y c) (A := Ω) (x := ⟨_, (hs c hc)⟩)
 
 end Mono
 

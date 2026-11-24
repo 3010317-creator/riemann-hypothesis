@@ -90,15 +90,13 @@ theorem false_of_forms_vanish (P : Ideal (MRing ι)) (hhom : IsMultiHomogIdeal P
         simp [g0, evQ_forms, segre_scaleBlock, h1, hV j]
     have := congrArg (evQ P _ hzc) hp
     rw [Polynomial.hom_eval₂, hcomp, evQ_segQ, segre_scaleBlock, map_zero] at this
-    rw [Polynomial.eval_map]
-    exact this
+    rwa [Polynomial.eval_map]
   have hinf : {x : ℂ | (p.map g0).IsRoot x}.Infinite := by
     refine Set.Infinite.mono ?_ (Set.finite_singleton (0 : ℂ)).infinite_compl
     intro x hx
     have hx0 : x ≠ 0 := hx
     have := key (x / segre z i1) (div_ne_zero hx0 hs)
-    rw [div_mul_cancel₀ x hs] at this
-    exact this
+    rwa [div_mul_cancel₀ x hs] at this
   exact (hpm.map g0).ne_zero (Polynomial.eq_zero_of_infinite_isRoot _ hinf)
 
 end SegreCoordGoodProj
@@ -157,8 +155,7 @@ theorem SegreCoordGoodProj.proof : SegreCoordGoodProj.Statement := by
     ring
   by_cases hs : V 0 = 0
   · refine SegreCoordGoodProj.false_of_forms_vanish P hhom k0 L hL hz fun j => ?_
-    refine Fin.cases hs (fun j => ?_) j
-    exact (hVs j).trans (by rw [hs, mul_zero])
+    exact Fin.cases hs (fun j => ((hVs j).trans (by rw [hs, mul_zero]))) j
   let g : Polynomial ℂ := (subst lam c0).map
     ((aeval (0 : Fin r' → ℂ) : MvPolynomial (Fin r') ℚ →ₐ[ℚ] ℂ) : MvPolynomial (Fin r') ℚ →+* ℂ)
   have hgD : g.coeff c0.totalDegree ≠ 0 := by
@@ -187,8 +184,7 @@ theorem SegreCoordGoodProj.proof : SegreCoordGoodProj.Statement := by
       exact Finset.sum_congr rfl fun t _ => by ring
     have h2 := eval₂_subst lam u c0
     rw [hu', hu0, h1] at h2
-    rw [Polynomial.eval_map]
-    exact h2
+    rwa [Polynomial.eval_map]
   have hg0 : g = 0 := Polynomial.eq_zero_of_infinite_isRoot g
     (Set.Infinite.mono (fun x hx => hroot x hx) (Set.finite_singleton (0 : ℂ)).infinite_compl)
   exact hgD (by rw [hg0, Polynomial.coeff_zero])

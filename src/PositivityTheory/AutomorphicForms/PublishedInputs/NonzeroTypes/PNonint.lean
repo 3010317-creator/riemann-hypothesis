@@ -74,12 +74,9 @@ theorem unip_entry {n : ℕ} (G : Grp k n) {Y : GL (Fin n) k} (hY : Y ∈ unipRa
   obtain ⟨P, hP, rfl⟩ := Subgroup.mem_map.1 hY
   have htri : ((P : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular (GlobalTheory.SmGL.blk G.e) := P.2
   have hdiag : ∀ a, GlobalTheory.SmGL.diagBlock k G.e a P = 1 := by
-    intro a
-    have h1 := congrFun (MonoidHom.mem_ker.1 hP) a
-    exact congrArg Units.val h1
+    exact fun a => congrArg Units.val (congrFun (MonoidHom.mem_ker.1 hP) a)
   constructor
-  · intro hlt
-    exact htri hlt
+  · exact fun hlt => htri hlt
   · intro heq
     obtain ⟨⟨a, x⟩, rfl⟩ := G.e.surjective i
     obtain ⟨⟨b, y⟩, rfl⟩ := G.e.surjective j
@@ -185,8 +182,7 @@ theorem det_submatrix_one_add {n : ℕ} (P : Fin n → Prop) [DecidablePred P] (
         Matrix {i // P i} {i // P i} k) := by
     ext i j
     simp [Matrix.one_apply, vecMulVec_apply, Subtype.ext_iff]
-  rw [e]
-  rw [vecMulVec_eq (ι := Unit), det_one_add_replicateCol_mul_replicateRow]
+  rw [e, vecMulVec_eq (ι := Unit), det_one_add_replicateCol_mul_replicateRow]
   simp [dotProduct]
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -500,7 +496,6 @@ theorem step_nonint {n : ℕ} (G : Grp k n) : G.NonIntegralProp := by
     rw [Δ_right G _ p _ hconj a, div_self hY0, mul_one, hzu]
     rfl
   refine ⟨J, hJmem, hcmem, ?_⟩
-  rw [hlamc, hlamJ]
-  exact hune
+  rwa [hlamc, hlamJ]
 
 end UpperTheory.TNZ.Grp

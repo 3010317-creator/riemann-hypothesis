@@ -33,8 +33,7 @@ theorem sub_fixedProj_mem_span (hρ : IsSmooth ρ) (hKc : IsCompact (K : Set G))
   have hu : u ∈ fixedVectors ρ N := fun n hn => hNu hn
   set c : ℂ := (Fintype.card (K ⧸ N.subgroupOf K) : ℂ)
   have hc : c ≠ 0 := by
-    simp only [c, ne_eq, Nat.cast_eq_zero]
-    exact Fintype.card_ne_zero
+    simpa only [c, ne_eq, Nat.cast_eq_zero] using Fintype.card_ne_zero
   set w : V := c⁻¹ • cosetSum ρ K N u
   have hw : w ∈ fixedVectors ρ K :=
     Submodule.smul_mem _ _ (cosetSum_mem_fixedVectors ρ hnorm hu)
@@ -53,8 +52,7 @@ theorem sub_fixedProj_mem_span (hρ : IsSmooth ρ) (hKc : IsCompact (K : Set G))
     exact sub_mem_coinvariantsKer k.2 u
   have heq : fixedProj ρ hρ hKc hKo u = ⟨w, hw⟩ :=
     (fixedProj_eq_iff hρ hKc hKo).2 (hle hspan)
-  rw [heq]
-  exact hspan
+  rwa [heq]
 
 theorem fixedProj_mem (hρ : IsSmooth ρ) (hKc : IsCompact (K : Set G))
     (hKo : IsOpen (K : Set G)) (X : Subrepresentation ρ) {x : V} (hx : x ∈ X.toSubmodule) :
@@ -167,8 +165,7 @@ theorem isIrreducible_of_forall (hρ : IsSmooth ρ) [Nontrivial V]
     constructor
     · intro hx
       have : x ∈ X.toSubmodule := hx
-      rw [hX] at this
-      exact this
+      rwa [hX] at this
     · intro hx
       have : x = 0 := hx
       rw [this]

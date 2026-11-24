@@ -203,15 +203,13 @@ theorem Lx_atEmb (σ : E ≃+* E) (τ : E →+* ℂ) (z : ℂ) :
     refine RingHom.ext fun y => ?_
     have := congrArg (fun f : E →+* ℂ => f (σ.symm y)) e'
     change w.embedding (σ (σ.symm y)) = τ (σ.symm y) at this
-    rw [RingEquiv.apply_symm_apply] at this
-    exact this
+    rwa [RingEquiv.apply_symm_apply] at this
   · rw [← InfinitePlace.mk_embedding w, ← InfinitePlace.mk_conjugate_eq]
     congr 1
     refine RingHom.ext fun y => ?_
     have := congrArg (fun f : E →+* ℂ => f (σ.symm y)) e'
     change starRingEnd ℂ (w.embedding (σ (σ.symm y))) = τ (σ.symm y) at this
-    rw [RingEquiv.apply_symm_apply] at this
-    exact this
+    rwa [RingEquiv.apply_symm_apply] at this
 
 theorem conjFin_symm_conjFin (c : E ≃+* E) (x : Af E) : conjFin c.symm (conjFin c x) = x := by
   have key : ∀ (v w : HeightOneSpectrum (𝓞 E)) (_ : w = v) (f : w.adicCompletion E → v.adicCompletion E),
@@ -453,8 +451,7 @@ theorem act_pull (o : Op E a) (φ : Sm E a) : act o (pull d a φ) = pull d a (ac
 theorem opMap_opMap_symm (o : Op E a) : opMap d (opMap d.symm o) = o := by
   cases o with
   | fin k =>
-    refine congrArg Op.fin (Units.ext (Matrix.ext fun i j => ?_))
-    exact d.c.apply_symm_apply _
+    exact congrArg Op.fin (Units.ext (Matrix.ext fun i j => (d.c.apply_symm_apply _)))
   | cpt k => exact congrArg Op.cpt (Subtype.ext (Matrix.ext fun i j => Lx_symm d.σ _))
   | lie X => exact congrArg Op.lie (funext fun i => funext fun j => Lx_symm d.σ _)
 

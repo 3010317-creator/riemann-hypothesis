@@ -58,8 +58,7 @@ namespace ReciprocityTheory.ChartRestriction.DS
 variable {n : ℕ}
 
 theorem toL2_mem_smD_of_isSmoothL2 {ε : Fin n → Bool} {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : IsSmoothL2 ε F) :
-    toL2 ε F ∈ smD ε (rreg ε) := by
-  exact (mem_smD_iff ε (rreg ε) (toL2 ε F)).2 (slm_smooth hF)
+    toL2 ε F ∈ smD ε (rreg ε) := (mem_smD_iff ε (rreg ε) (toL2 ε F)).2 (slm_smooth hF)
 
 private theorem cpart1_mem_inG (ε : Fin n → Bool) (Z : Matrix (Fin n) (Fin n) ℂ) :
     Formalism.REAL.inG ε (S7.cpart1 ε Z) := by
@@ -96,13 +95,11 @@ theorem rightDerivative_toL2 {ε : Fin n → Bool} {F : Matrix (Fin n) (Fin n) �
   · simp
   · intro d _ hd
     simp [Ne.symm hd]
-  · intro h
-    exact absurd (Finset.mem_univ b) h
+  · exact fun h => absurd (Finset.mem_univ b) h
   · intro c _ hc
     apply Finset.sum_eq_zero
     intro d _
     simp [Ne.symm hc]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 end ReciprocityTheory.ChartRestriction.DS

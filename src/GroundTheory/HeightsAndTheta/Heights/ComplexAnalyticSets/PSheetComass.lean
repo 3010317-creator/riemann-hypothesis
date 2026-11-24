@@ -66,8 +66,7 @@ theorem SheetComass.proof : SheetComass.Statement := by
   have hA : ∀ i, hessC (φ i ∘ s) (A *ᵥ x) = Bᴴ * hessC (φ i) x * B := fun i => by
     have h := ReciprocityTheory.AnForm.A.hessC_comp (φ i) s _ hsa (hφx i)
     rw [hsx] at h
-    rw [hBJ]
-    exact h
+    rwa [hBJ]
   have hle : ∀ k, ((fun _ : Fin d => (c : ℂ) • (Bᴴ * B)) k -
       (fun k => hessC (φ k ∘ s) (A *ᵥ x)) k).PosSemidef := fun k => by
     have e : (c : ℂ) • (Bᴴ * B) - Bᴴ * hessC (φ k) x * B =
@@ -75,15 +74,13 @@ theorem SheetComass.proof : SheetComass.Statement := by
       simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_neg, Matrix.neg_mul,
         Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one]
       abel
-    simp only [hA, e]
-    exact (hb k x hx).2.conjTranspose_mul_mul_same B
+    simpa only [hA, e] using (hb k x hx).2.conjTranspose_mul_mul_same B
   have hge : ∀ k, ((fun k => hessC (φ k ∘ s) (A *ᵥ x)) k +
       (fun _ : Fin d => (c : ℂ) • (Bᴴ * B)) k).PosSemidef := fun k => by
     have e : Bᴴ * hessC (φ k) x * B + (c : ℂ) • (Bᴴ * B) =
         Bᴴ * (hessC (φ k) x + (c : ℂ) • 1) * B := by
       simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one]
-    simp only [hA, e]
-    exact (hb k x hx).1.conjTranspose_mul_mul_same B
+    simpa only [hA, e] using (hb k x hx).1.conjTranspose_mul_mul_same B
   have key := ReciprocityTheory.AnForm.A.norm_mdisc_le_of_abs_le _ _ hle hge
   rw [ReciprocityTheory.AnForm.A.mdisc_const, Matrix.det_smul, Fintype.card_fin] at key
   have hconj : Bᴴ * B = (Jcᴴ * Jc).map (starRingEnd ℂ) := by

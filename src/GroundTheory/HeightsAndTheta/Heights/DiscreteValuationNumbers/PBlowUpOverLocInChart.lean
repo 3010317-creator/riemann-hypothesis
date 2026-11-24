@@ -168,8 +168,7 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
         simp only [Set.mem_setOf_eq, Subring.coe_add, add_mul] at ha hb ⊢
         exact Cr.add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, zero_mul]
-        exact Cr.zero_mem
+        simpa only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, zero_mul] using Cr.zero_mem
       smul_mem' := by
         intro c d hd
         simp only [Set.mem_setOf_eq, smul_eq_mul, Subring.coe_mul, mul_assoc] at hd ⊢
@@ -201,8 +200,7 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
       simpa [aL, x, Dinv, blowUpAtOne, div_eq_mul_inv] using h
   obtain ⟨aC, haC⟩ : ∃ aC : (Σ o, extIdx ι J o) → Cr, ∀ v, (aC v : L) = aL v := ⟨fun v => ⟨aL v, haL v⟩, fun _ => rfl⟩
   have hcst : ∀ r : R, ev (C r) ∈ Cr := fun r => by
-    have h := hgen 0 (C r) 1 (isWeightedHomogeneous_C _ _) (isWeightedHomogeneous_one _ _) h1W
-    simpa using h
+    simpa using hgen 0 (C r) 1 (isWeightedHomogeneous_C _ _) (isWeightedHomogeneous_one _ _) h1W
   obtain ⟨fC, hfCv⟩ : ∃ fC : R →+* Cr, ∀ r, (fC r : L) = ev (C r) :=
     ⟨(ev.comp C).codRestrict Cr hcst, fun _ => rfl⟩
   obtain ⟨ψ, hψ⟩ : ∃ ψ : MvPolynomial (Σ o, extIdx ι J o) R →+* MvPolynomial (Option K) Cr,
@@ -271,12 +269,10 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
     cases o with
     | none =>
       refine ⟨j, hXnot none j ?_⟩
-      simp only [aL, x, Dinv, blowUpAtOne, Option.elim]
-      exact mul_inv_cancel₀ hune
+      simpa only [aL, x, Dinv, blowUpAtOne, Option.elim] using mul_inv_cancel₀ hune
     | some k =>
       refine ⟨i k, hXnot (some k) (i k) ?_⟩
-      simp only [aL, x, Dinv, blowUpAtOne, Option.elim]
-      exact mul_inv_cancel₀ (hXne k)
+      simpa only [aL, x, Dinv, blowUpAtOne, Option.elim] using mul_inv_cancel₀ (hXne k)
   have hQb : blowUpOf P u ≤ Q := by
     intro F hF
     rw [memQ]
@@ -290,15 +286,13 @@ theorem BlowUpOverLocInChart.proof : BlowUpOverLocInChart.Statement.{u} := by
         show Polynomial.eval 1 (aeval (blowUpSubst P u) _) = 0
         rw [hFe, Polynomial.eval_zero]
       rw [hz, map_zero, zero_mul, ZeroMemClass.coe_zero]
-    rw [h0]
-    exact h0mem
+    rwa [h0]
   have hQW : Q.comap (liftForm (ι := ι) (J := J) (R := R)) ≤ W := by
     intro g hg
     rw [Ideal.mem_comap] at hg
     by_contra hgW
     obtain ⟨c, hc⟩ : ∃ c, weightedHomogeneousComponent (blockWeight ι) c g ∉ W := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       apply hgW
       rw [← sum_weightedHomogeneousComponent (blockWeight ι) g,
         finsum_eq_sum _ (weightedHomogeneousComponent_finsupp g)]

@@ -77,8 +77,7 @@ theorem no_line {K : Type} [Field K] [NumberField K] {r : ℕ} (L : Submodule (�
   classical
   obtain ⟨S, hS⟩ := hL
   obtain ⟨i, hi⟩ : ∃ i, x i ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hx (funext h)
   obtain ⟨⟨b, hb⟩, hbint⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors (𝓞 K))
     (S.biUnion fun v => Finset.univ.image v)
@@ -141,8 +140,7 @@ theorem detG_ne_zero {K : Type} [Field K] [NumberField K] {r : ℕ} (S : HermFor
     intro h
     apply hv0
     funext a
-    have h1 := congrArg S.c (congrFun h a)
-    simpa [S.c_invol] using h1
+    simpa [S.c_invol] using congrArg S.c (congrFun h a)
   have hzero : ∀ y, S.h (fun a => S.c (v a)) y = 0 := by
     intro y
     simp only [HermForm.h, S.c_invol]

@@ -59,8 +59,7 @@ theorem isAddFundamentalDomain_image_add (a : ι → 𝔸[K]) :
     constructor
     · rintro ⟨x, hx, rfl⟩
       simpa using hx
-    · intro hy
-      exact ⟨y - a, hy, by simp⟩
+    · exact fun hy => ⟨y - a, hy, by simp⟩
   refine IsAddFundamentalDomain.mk' ?_ fun x => ?_
   · rw [himg]
     exact (measurableSet_vecDomain.preimage (measurable_id.sub_const a)).nullMeasurableSet
@@ -68,12 +67,10 @@ theorem isAddFundamentalDomain_image_add (a : ι → 𝔸[K]) :
     refine ⟨g, ?_, fun g' hg' => huniq g' ?_⟩
     · rw [himg]
       change (g : ι → 𝔸[K]) + x - a ∈ vecDomain K ι
-      rw [add_sub_assoc]
-      exact hg
+      rwa [add_sub_assoc]
     · rw [himg] at hg'
       change (g' : ι → 𝔸[K]) + x - a ∈ vecDomain K ι at hg'
-      rw [add_sub_assoc] at hg'
-      exact hg'
+      rwa [add_sub_assoc] at hg'
 
 theorem setIntegral_comp_add (a : ι → 𝔸[K]) {h : (ι → 𝔸[K]) → ℂ}
     (hh : ∀ ξ ∈ vecLattice K ι, ∀ x, h (ξ + x) = h x) :
@@ -178,8 +175,7 @@ theorem vecCoeff_eq_zero_of_not_isDual {f : (ι → 𝔸[K]) → ℂ}
     · subst hj
       simp only [z, Pi.single_eq_same]
       exact fun v => GroundTheory.Global.coe_algebraMap_mem_adicCompletionIntegers v a
-    · simp only [z, Pi.single_eq_of_ne hj]
-      exact zero_mem _
+    · simpa only [z, Pi.single_eq_of_ne hj] using zero_mem _
   have h1 := vecCoeff_translate hper (fun j => GroundTheory.Global.finiteAdeleInr (z j)) ξ
   have h2 : (fun x => f (x + fun j => GroundTheory.Global.finiteAdeleInr (z j))) = f :=
     funext fun x => hfin x z hz

@@ -107,17 +107,7 @@ theorem isArithFrobAt_iff_decompositionToLocal (σ : MulAction.stabilizer Gal(L/
       exact h r
     have h3 : ringOfIntegersToInteger w r ^ q - x ^ q ∈ 𝓂[w.adicCompletion L] := by
       rw [← Ideal.Quotient.eq, map_pow, map_pow, Ideal.Quotient.eq.2 hr]
-    have : integerAlgEquiv (v.adicCompletion K) (w.adicCompletion L)
-        (decompositionToLocal v w σ) x - x ^ q =
-        (integerAlgEquiv (v.adicCompletion K) (w.adicCompletion L)
-          (decompositionToLocal v w σ) x - integerAlgEquiv (v.adicCompletion K)
-            (w.adicCompletion L) (decompositionToLocal v w σ) (ringOfIntegersToInteger w r)) +
-        (integerAlgEquiv (v.adicCompletion K) (w.adicCompletion L)
-          (decompositionToLocal v w σ) (ringOfIntegersToInteger w r) -
-            ringOfIntegersToInteger w r ^ q) + (ringOfIntegersToInteger w r ^ q - x ^ q) := by
-      ring
-    rw [this]
-    exact add_mem (add_mem h1 h2) h3
+    simpa only [sub_add_sub_cancel] using add_mem (add_mem h1 h2) h3
   · intro h r
     have := h (ringOfIntegersToInteger w r)
     rwa [integerAlgEquiv_ringOfIntegersToInteger, ← map_pow, ← map_sub,

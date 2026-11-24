@@ -95,14 +95,12 @@ theorem exists_diagonal_mul_mem_idelesOneMod (x : IdeleGroup K) :
       change ((a : K) : v.adicCompletion K) = algebraMap K (v.adicCompletion K) a
       rw [HeightOneSpectrum.algebraMap_adicCompletion]
       rfl
-    rw [map_mul, he]
-    exact h
+    rwa [map_mul, he]
   · have h := Set.mem_univ_pi.1 ha.2 ⟨w.1, Finset.mem_univ _⟩ w.2 hw
     have he : infiniteProj w.1 (diagonal K a) =
         Units.map (algebraMap K w.1.Completion).toMonoidHom a :=
       Units.ext rfl
-    rw [map_mul, he]
-    exact h
+    rwa [map_mul, he]
 
 def idelesOneModToCoprimeIdeals : 𝔪.idelesOneMod →* 𝔪.coprimeIdeals :=
   ((toFractionalIdeal (K := K)).comp 𝔪.idelesOneMod.subtype).codRestrict _

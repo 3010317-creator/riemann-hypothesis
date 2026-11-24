@@ -221,8 +221,7 @@ theorem mem_secs_iff (F : Kleiman.SubSystem S x Ω) (t : Ω) :
     t ∈ F.secs ↔ ∀ i (hi : x i ≠ 0), t ∈ F.sub (Kleiman.singleChart hi) := by
   rw [Kleiman.SubSystem.secs, Submodule.mem_iInf]
   constructor
-  · intro h i hi
-    exact h _
+  · exact fun h i hi => h _
   · intro h I
     obtain ⟨i, hi⟩ := I.2.1
     have hxi : x i ≠ 0 := (Kleiman.mem_support x).mp (I.2.2 hi)
@@ -251,8 +250,7 @@ theorem mem_sub_iff_graph (Q : Kleiman.LineBundle S x) (n : ℤ) (s : Fin m → 
       rintro _ ⟨b, rfl⟩
       have hb : s b ∈ (Q.twist (Kleiman.twistSys S x n)).sub I := by
         rw [← hgen I]; exact Submodule.subset_span ⟨b, rfl⟩
-      rw [htwist, Submodule.mem_smul_iff_inv_mul_mem hxn, ← zpow_neg] at hb
-      exact hb
+      rwa [htwist, Submodule.mem_smul_iff_inv_mul_mem hxn, ← zpow_neg] at hb
     · intro y hy
       have hy' : x i ^ n * y ∈ Submodule.span (Kleiman.chartRing S x I) (Set.range s) := by
         rw [hgen I, htwist]
@@ -302,10 +300,8 @@ theorem secs_eq_secOver (Q : Kleiman.LineBundle S x) (n : ℤ) (s : Fin m → Ω
   rw [mem_secs_iff, mem_secOver_graph_iff]
   simp only [graphDeg_inl, graphDeg_inr, neg_neg, zpow_neg, zpow_one]
   constructor
-  · intro h i j hi hj
-    exact (mem_sub_iff_graph Q n s hgen hi t).mp (h i hi) j hj
-  · intro h i hi
-    exact (mem_sub_iff_graph Q n s hgen hi t).mpr fun j hj => h i j hi hj
+  · exact fun h i j hi hj => (mem_sub_iff_graph Q n s hgen hi t).mp (h i hi) j hj
+  · exact fun h i hi => (mem_sub_iff_graph Q n s hgen hi t).mpr fun j hj => h i j hi hj
 
 theorem twist_secs_eq_secOver (Q : Kleiman.LineBundle S x) (n : ℤ) (s : Fin m → Ω)
     (hgen : IsGraphGen Q n s) (c : ℤ) :

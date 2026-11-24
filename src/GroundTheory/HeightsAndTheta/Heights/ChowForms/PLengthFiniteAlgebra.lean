@@ -26,8 +26,7 @@ theorem finite_maximalSpectrum [Module.Finite O B] : Finite (MaximalSpectrum B) 
   have := hfin.to_subtype
   refine Finite.of_injective (β := (maximalIdeal O).primesOver B)
     (fun P => ⟨P.asIdeal, P.isMaximal.isPrime, ⟨(comap_eq_maximalIdeal P.asIdeal).symm⟩⟩) ?_
-  intro P Q h
-  exact MaximalSpectrum.ext (congrArg Subtype.val h)
+  exact fun P Q h => MaximalSpectrum.ext (congrArg Subtype.val h)
 
 theorem length_eq_finsum_localization [IsNoetherianRing O] [Module.Finite O B] :
     Module.length O B =
@@ -103,10 +102,8 @@ theorem length_localization_quotient (I : Ideal B) (Q : Ideal (B ⧸ I)) [Q.IsMa
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
     constructor
     · rintro ⟨x, hx, hxy⟩
-      rw [← hxy]
-      exact hx
-    · intro hy
-      exact ⟨y, hy, rfl⟩
+      rwa [← hxy]
+    · exact fun hy => ⟨y, hy, rfl⟩
   have : IsLocalization Q.primeCompl
       (Localization.AtPrime (Q.comap (Ideal.Quotient.mk I)) ⧸
         I.map (algebraMap B (Localization.AtPrime (Q.comap (Ideal.Quotient.mk I))))) := by

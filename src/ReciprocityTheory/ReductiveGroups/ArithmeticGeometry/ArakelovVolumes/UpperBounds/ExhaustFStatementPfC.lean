@@ -86,8 +86,7 @@ theorem det_nM (z : V (nd X)) (τ : X.Ψ) : (nM X z τ).det = 1 := by
   rw [Matrix.det_of_lowerTriangular]
   · simp [nM_diag]
   · unfold Matrix.IsLowerTriangular Matrix.BlockTriangular
-    intro i j hij
-    exact nM_upper X z τ (OrderDual.toDual_lt_toDual.1 hij)
+    exact fun i j hij => nM_upper X z τ (OrderDual.toDual_lt_toDual.1 hij)
 
 theorem mat_cpt (x0 : Frame X.Ψ r) (z : V (nd X)) (τ : X.Ψ) :
     mat (cpt X x0 z) τ = mat x0 τ * nM X z τ := rfl
@@ -195,8 +194,7 @@ theorem mem_OmF_iff (x0 : Frame X.Ψ r) (ho : IsOrth X x0) (z : V (nd X)) : z �
     rw [hA]
     refine hP.mul_mul_conjTranspose_same ?_
     intro v w hvw
-    have h3 := congrArg (fun u => Matrix.vecMul u (n1 X z τ)ᵀ) hvw
-    simpa [Matrix.vecMul_vecMul, hC] using h3
+    simpa [Matrix.vecMul_vecMul, hC] using congrArg (fun u => Matrix.vecMul u (n1 X z τ)ᵀ) hvw
   · intro hA
     show cpt X x0 z ∈ X.dom
     refine mem_dom_of_gramPos (X := X) (fun τ => ⟨hdx τ, ?_⟩)

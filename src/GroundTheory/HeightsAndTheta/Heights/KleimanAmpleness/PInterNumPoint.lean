@@ -38,8 +38,7 @@ theorem interNumPoint_restrLen_eq_finrank (y : Fin (N + 1) → Ω) {j : Fin (N +
   have hsecs : (F.twist (idealSys y (primeOf (S := k) y))).secs = ⊥ := by
     refine eq_bot_iff.mpr fun z hz => ?_
     have h1 := (Submodule.mem_iInf _).mp hz (singleChart hyj)
-    rw [Submodule.restrictScalars_mem, hbot] at h1
-    exact h1
+    rwa [Submodule.restrictScalars_mem, hbot] at h1
   unfold restrLen
   rw [hsecs, Submodule.comap_bot, Submodule.ker_subtype,
     (Submodule.quotEquivOfEqBot (⊥ : Submodule k F.secs) rfl).length_eq, Module.length_eq_rank]
@@ -63,8 +62,7 @@ theorem InterNumPoint.proof (hHP : HilbertPoint.Statement.{u, w}) : InterNumPoin
   have hyj : y j ≠ 0 := by
     intro h
     apply hj
-    rw [mem_primeOf_of_isHomogeneous y (isHomogeneous_X k j), aeval_X]
-    exact h
+    rwa [mem_primeOf_of_isHomogeneous y (isHomogeneous_X k j), aeval_X]
   have hev : (fun _ : ℕ => (Module.finrank k (funField (k := k) y) : ℤ)) =ᶠ[atTop]
       interSum (primeOf (S := k) y) L := by
     filter_upwards [hdim, hsecs] with n hn hs

@@ -77,8 +77,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 theorem norm_one' {w : Pl F} {x : w.adicCompletion F} (h : Valued.v x = 1) : ‖x‖ = 1 := by
   have := (Valued.toNormedField.norm_le_one_iff (x := x)).2 h.le
-  have h2 := (Valued.toNormedField.one_le_norm_iff (x := x)).2 h.ge
-  exact le_antisymm this h2
+  exact le_antisymm this ((Valued.toNormedField.one_le_norm_iff (x := x)).2 h.ge)
 
 theorem fin_supp (y : (Af F)ˣ) : Function.HasFiniteMulSupport fun w : Pl F => ‖pLoc F w (y : Af F)‖ := by
   have h1 := Filter.eventually_cofinite.1 (y : Af F).2
@@ -180,8 +179,7 @@ theorem base (c : Pl F → ℕ) : IsReps c ([] : List (Pl F)) (fun _ : Unit => (
     simpa using hx
   · intro i
     simp [absF]
-  · intro i w hw
-    exact ⟨0, by simp⟩
+  · exact fun i w hw => ⟨0, by simp⟩
 
 theorem reindex {c : Pl F → ℕ} {W : List (Pl F)} {ι κ : Type} [Fintype ι] [Fintype κ] (e : κ ≃ ι) {a : ι → GF F}
     (h : IsReps c W a) : IsReps c W (a ∘ e) := by
@@ -387,8 +385,7 @@ variable [IsTotallyReal F]
 theorem absF_det_Kc {c : Pl F → ℕ} {k : GF F} (hk : k ∈ Kc c) : absF (Matrix.GeneralLinearGroup.det k) = 1 := by
   refine (Hm.absf F).2.2.1 _ fun w => ?_
   have h := valuation_det_congruence_subgroup_eq_one w (c w) (mem_local_congruence_of_mem_global hk w)
-  rw [Matrix.GeneralLinearGroup.val_det_apply, RingHom.map_det]
-  exact h
+  rwa [Matrix.GeneralLinearGroup.val_det_apply, RingHom.map_det]
 
 theorem prod_reAt {c : Pl F → ℕ} {W : List (Pl F)} {n : ℕ} {a : Fin n → GF F} (hR : IsReps c W a) {γ : GL (Fin 2) F}
     {x : GF F} {i : Fin n} {k : GF F} (hk : k ∈ Kc c) {z : (Af F)ˣ} (hrel : jF F γ * x * (k * zc F z) = x * a i) :
@@ -563,8 +560,7 @@ theorem loc (hU : GUnit) {c : Pl F → ℕ} (hc : ∀ v, c (D.pl v) = 1) {W : Li
   have hU1 : nu ι (D.em v Y) = 1 := (nu_eq_one_iff D v Y).2 hY
   have hνδ : nu ι M.det = nu ι (l : ℂ) ^ cnt := by
     have := congrArg (nu ι) hδU
-    rw [map_mul, hU1, mul_one, map_pow] at this
-    exact this
+    rwa [map_mul, hU1, mul_one, map_pow] at this
   have hνl : nu ι (l : ℂ) ≤ 1 := val_nat_le _ l
   have hδr : nu ι M.det ≤ nu ι (l : ℂ) ^ r := by
     rw [hνδ]; exact pow_le_pow_of_le_one zero_le hνl (hW v)

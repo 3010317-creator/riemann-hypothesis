@@ -120,8 +120,7 @@ theorem brIntegrable_of (hLA : LogAbsLocIntStatement) (R : AnLogRes P J e)
       obtain ⟨c, hc, hcz⟩ := R.compat ((R.A.chart j).symm y) x0 ((R.A.chart j).symm y)
         ⟨R.mem_U _, hy.2⟩
       rw [hcz]
-      have h1 := logNorm_bsmul A hAa hsa hc (R.lift x0 ((R.A.chart j).symm y))
-      exact h1
+      exact logNorm_bsmul A hAa hsa hc (R.lift x0 ((R.A.chart j).symm y))
     obtain ⟨δ, hδ, hball⟩ := Metric.isOpen_iff.mp hVo y0 hy0V
     have hBV : Metric.closedBall y0 (δ / 2) ⊆ V :=
       (Metric.closedBall_subset_ball (by linarith)).trans hball

@@ -138,10 +138,6 @@ lemma tele_alg (P Q : Matrix (Fin n) (Fin n) ℂ) (hQP : Q * P = 1) (T : Fin n �
     (a b : Fin n) :
     ∑ e, ∑ c', ∑ d', (P a c' * Q d' e) • ∑ c, ∑ d, (P e c * Q d b) • T c' d' c d =
       ∑ c, ∑ d, (P a c * Q d b) • ∑ e, T c e e d := by
-  have hq : ∀ d' c, ∑ e, Q d' e * P e c = if d' = c then 1 else 0 := by
-    intro d' c
-    have h := congrFun (congrFun hQP d') c
-    rwa [Matrix.mul_apply, Matrix.one_apply] at h
   simp only [Finset.smul_sum, smul_smul]
   calc ∑ e, ∑ c', ∑ d', ∑ c, ∑ d, (P a c' * Q d' e * (P e c * Q d b)) • T c' d' c d
       = ∑ c', ∑ d', ∑ c, ∑ d, ∑ e, (P a c' * Q d' e * (P e c * Q d b)) • T c' d' c d := by
@@ -155,22 +151,16 @@ lemma tele_alg (P Q : Matrix (Fin n) (Fin n) ℂ) (hQP : Q * P = 1) (T : Fin n �
     _ = ∑ c', ∑ d', ∑ c, if d' = c then ∑ d, (P a c' * Q d b) • T c' d' c d else 0 := by
         refine Finset.sum_congr rfl fun c' _ => Finset.sum_congr rfl fun d' _ =>
           Finset.sum_congr rfl fun c _ => ?_
-        have key : ∀ d, ∑ e, (P a c' * Q d' e * (P e c * Q d b)) • T c' d' c d =
-            (if d' = c then P a c' * Q d b else 0) • T c' d' c d := by
-          intro d
-          rw [← Finset.sum_smul]
-          congr 1
+        have key : ∀ d, ∑ e, P a c' * Q d' e * (P e c * Q d b) =
+            if d' = c then P a c' * Q d b else 0 := fun d => by
           calc ∑ e, P a c' * Q d' e * (P e c * Q d b) = (P a c' * Q d b) * ∑ e, Q d' e * P e c := by
                 rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun e _ => by ring
-            _ = _ := by rw [hq]; split_ifs <;> simp
-        simp only [key]
+            _ = _ := by rw [← Matrix.mul_apply, hQP, Matrix.one_apply]; split_ifs <;> simp
+        simp only [← Finset.sum_smul, key]
         split_ifs <;> simp
-    _ = ∑ c', ∑ d', ∑ d, (P a c' * Q d b) • T c' d' d' d := by
-        refine Finset.sum_congr rfl fun c' _ => Finset.sum_congr rfl fun d' _ => ?_
-        rw [Finset.sum_ite_eq]; simp
     _ = ∑ c, ∑ d, ∑ e, (P a c * Q d b) • T c e e d := by
-        refine Finset.sum_congr rfl fun c' _ => ?_
-        rw [Finset.sum_comm]
+        simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
+        exact Finset.sum_congr rfl fun c _ => Finset.sum_comm
 
 lemma gel_alg (P Q : Matrix (Fin n) (Fin n) ℂ) (hQP : Q * P = 1) (S : Fin n → Fin n → E) :
     ∑ a, ∑ c, ∑ d, (P a c * Q d a) • S c d = ∑ c, S c c := by

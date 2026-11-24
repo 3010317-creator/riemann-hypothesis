@@ -206,8 +206,7 @@ theorem Rel.smul : ∀ (n : ℕ) (X : DblData R) (r : R) {x : X.A n} {y : X.C n}
   intro n
   induction n with
   | zero =>
-    intro X r x y h₁
-    exact rel_zero.mpr (by rw [map_smul, map_smul, rel_zero.mp h₁])
+    exact fun X r x y h₁ => rel_zero.mpr (by rw [map_smul, map_smul, rel_zero.mp h₁])
   | succ n ih =>
     intro X r x y h₁
     obtain ⟨z, e, r₁⟩ := rel_succ.mp h₁
@@ -243,12 +242,10 @@ theorem bdC (n : ℕ) (X : DblData R) (hX : X.Good) (y₀ : X.C n) : Rel (n + 1)
   exact (stair_rel (n + 1) X 0 (X.dC n y₀)).1 (Stair.DblData.bdC n X.toStair hX.toStair y₀)
 
 theorem kerC : ∀ (n : ℕ) (X : DblData R), X.Good → ∀ y, Rel n X 0 y → y ∈ bdry X.dC n := by
-  intro n X hX y hy
-  exact Stair.DblData.kerC n X.toStair hX.toStair y ((stair_rel n X 0 y).2 hy)
+  exact fun n X hX y hy => Stair.DblData.kerC n X.toStair hX.toStair y ((stair_rel n X 0 y).2 hy)
 
 theorem kerA : ∀ (n : ℕ) (X : DblData R), X.Good → ∀ x, Rel n X x 0 → x ∈ bdry X.dA n := by
-  intro n X hX x hx
-  exact Stair.DblData.kerA n X.toStair hX.toStair x ((stair_rel n X x 0).2 hx)
+  exact fun n X hX x hx => Stair.DblData.kerA n X.toStair hX.toStair x ((stair_rel n X x 0).2 hx)
 
 end DblData
 
@@ -626,8 +623,7 @@ theorem DoubleCech.aug_inj (T : Kleiman.SubSystem F x Ω) (hrow : ∀ J, CellAug
   refine LinearMap.ker_eq_bot'.2 fun t ht => funext fun J => Subtype.ext ?_
   have h := congrFun (congrFun (congrArg Subtype.val ht) J) c₀
   change (if CellMeets y c₀.1 then (t J : Ω) else 0) = 0 at h
-  rw [ite_eq_left hc₀] at h
-  exact h
+  rwa [ite_eq_left hc₀] at h
 
 theorem DoubleCech.row_zero (hMI : ∀ J (I I' : ∀ k, Finset (ι k)), (∀ k, I k ⊆ I' k) → CellMeets y I' → M J I ≤ M J I')
     (hM : ∀ J I, ¬ CellMeets y I → M J I = ⊥)
@@ -690,8 +686,7 @@ theorem DoubleCech.col_zero (hMJ : ∀ (J J' : Kleiman.Chart x) I, J.1 ⊆ J'.1 
           exact congrFun (congrFun (congrArg Subtype.val (LinearMap.mem_ker.1 hs)) J) c
       · refine ⟨0, Submodule.zero_mem _, fun J => ?_⟩
         have h0 := DoubleCech.mem_dsub.1 s.2 J c
-        rw [hM J.1 c.1 h, Submodule.mem_bot] at h0
-        exact h0
+        rwa [hM J.1 c.1 h, Submodule.mem_bot] at h0
     choose b hb hbs using hex
     exact ⟨⟨b, mem_cellCOf.2 hb⟩, Subtype.ext (funext fun J => funext fun c => (hbs c J).symm)⟩
   · rintro _ ⟨b, rfl⟩
@@ -753,8 +748,7 @@ theorem DoubleCech.B_mono {B : (∀ k, Finset (ι k)) → Submodule F Ω}
   obtain ⟨b, hb, hbJ⟩ := (hcol I' hne' hm').2.1 (fun _ => m)
     (by rw [Kleiman.Cech.Cdeg, Submodule.mem_pi]; exact fun J _ => hall J.1)
     (Kleiman.Cech.d_zero_of_compat (fun _ => m) (fun _ _ _ => rfl))
-  rw [hbJ J₀]
-  exact hb
+  rwa [hbJ J₀]
 
 end Hyps
 

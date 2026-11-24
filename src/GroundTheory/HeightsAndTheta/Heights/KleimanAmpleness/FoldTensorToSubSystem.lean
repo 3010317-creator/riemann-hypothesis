@@ -46,8 +46,7 @@ theorem realises_foldTensor (hT : TensorRealises.Statement)
   | cons a l ih =>
     intro Q β hQ
     have h := ih (Q.tensor (L a)) (β + δ a) (hT F K ι Ω y k₀ N e hmod Q (L a) β (δ a) hQ (hL a))
-    rw [List.map_cons, List.sum_cons, ← add_assoc]
-    exact h
+    rwa [List.map_cons, List.sum_cons, ← add_assoc]
 
 theorem TensorRealise.proof (hT : TensorRealises.Statement) : TensorRealise.Statement := by
   intro F _ K _ _ ι _ Ω _ _ y k₀ N e x hx hmod n L δ hL T
@@ -61,8 +60,7 @@ theorem TensorRealise.proof (hT : TensorRealises.Statement) : TensorRealise.Stat
     refine Finset.sum_congr ?_ fun _ _ => rfl
     ext i
     simp
-  rw [hsum, zero_smul, zero_add] at h
-  exact h
+  rwa [hsum, zero_smul, zero_add] at h
 
 end
 

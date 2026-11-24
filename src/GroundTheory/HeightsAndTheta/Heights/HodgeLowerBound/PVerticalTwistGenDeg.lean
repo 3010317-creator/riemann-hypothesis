@@ -80,10 +80,8 @@ theorem map_mem_map_iff {W : Ideal (MRing ι)} (hW : W.IsPrime) (hh : IsHorizont
   · intro hx
     rw [← h]
     show algebraMap (MRing ι) (MRingOver ℚ ι) x ∈ Ideal.map (algebraMap (MRing ι) (MRingOver ℚ ι)) W
-    rw [hφ]
-    exact hx
-  · intro hx
-    exact Ideal.mem_map_of_mem _ hx
+    rwa [hφ]
+  · exact fun hx => Ideal.mem_map_of_mem _ hx
 
 theorem isMultiHomog_map [DecidableEq K] {x : MRing ι} {e : K → ℕ} (h : NumbersDVR.IsMultiHomog x e) :
     NumbersDVR.IsMultiHomog (MvPolynomial.map (Int.castRingHom ℚ) x) e := by
@@ -247,8 +245,7 @@ theorem VerticalTwistGenDeg.proof : VerticalTwistGenDeg.Statement := by
       by_contra h
       exact hS (Finset.eq_univ_iff_forall.2 fun i => not_not.1 (not_exists.1 h i))
     exact hB _ i (by simp [Finset.piecewise, hi])
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 end GroundTheory.Heights₂.Heights.LowerBoundFree
 end -- clump:auto

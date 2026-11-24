@@ -79,8 +79,7 @@ theorem volume_ball_half_le (La : Submodule ℤ V) [DiscreteTopology La] [IsZLat
       show ‖(g : V) - g₀‖ ≤ ρ
       rw [this]
       linarith [norm_sub_le ((g : V) + y) ((g₀ : V) + y)]
-    · intro g _ g' _ h
-      exact Subtype.ext (sub_left_injective h)
+    · exact fun g _ g' _ h => Subtype.ext (sub_left_injective h)
   calc volume S = ∫⁻ z, S.indicator 1 z := (lintegral_indicator_one hS).symm
     _ = ∑' g : La, ∫⁻ z in F, S.indicator 1 (g +ᵥ z) := fund.lintegral_eq_tsum'' _
     _ = ∫⁻ z in F, ∑' g : La, S.indicator 1 (g +ᵥ z) :=
@@ -146,8 +145,7 @@ theorem cube_le_unitBallVolume (R : ℕ) : (2 / Real.sqrt R) ^ R ≤ unitBallVol
   have h := ENNReal.toReal_mono measure_ball_lt_top.ne hvol
   rw [ENNReal.toReal_pow, ENNReal.toReal_ofReal (by positivity)] at h
   have h2 : 2 / Real.sqrt R = a + a := by rw [ha_def]; ring
-  rw [h2]
-  exact h
+  rwa [h2]
 
 theorem proof : MinkowskiCount.Statement :=
   ⟨fun _ _ _ _ _ _ La _ _ ρ hρ => log_count La ρ hρ, cube_le_unitBallVolume⟩

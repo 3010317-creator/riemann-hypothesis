@@ -63,8 +63,7 @@ theorem homog_X [DecidableEq K] (k : K) (i : ι k) :
     · simp
     · intro j _ hj
       rw [Finsupp.single_apply, ite_eq_right]
-      intro e
-      exact hj (sigma_mk_injective e).symm
+      exact fun e => hj (sigma_mk_injective e).symm
     · simp
   · have : ∀ j : ι k', (⟨k, i⟩ : Σ k, ι k) ≠ ⟨k', j⟩ := fun j e => h (congrArg Sigma.fst e).symm
     simp [h]
@@ -101,8 +100,7 @@ theorem mem_of_sum_mem {I : Ideal (MRing ι)} (hI : IsMultiHomogIdeal I) {β : T
     · intro b' hb' hne
       by_contra h'
       exact hne (hd hb' hb (funext fun k => (hh b' hb' m (mem_support_iff.mpr h') k).symm.trans (hdeg k)))
-    · intro h'
-      exact absurd hb h'
+    · exact fun h' => absurd hb h'
 
 end Forms
 
@@ -164,8 +162,7 @@ theorem mem_locRing_iff (hPW : P ≤ W) {x : FractionRing (MRing ι ⧸ P)} :
       rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
       exact fun h => hvW (hPW h)
     refine Subring.subset_closure ⟨u, v, a, hv', hvW, hu, hv, ?_⟩
-    rw [IsLocalization.eq_mk'_iff_mul_eq]
-    exact hx
+    rwa [IsLocalization.eq_mk'_iff_mul_eq]
 
 
 variable {P W} in

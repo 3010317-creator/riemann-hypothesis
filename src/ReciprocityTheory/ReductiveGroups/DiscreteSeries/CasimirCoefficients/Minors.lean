@@ -92,16 +92,14 @@ private lemma lowerTri_sub {i : ℕ} (hi : i ≤ n) {c : Matrix (Fin n) (Fin n) 
   intro a b hab
   have hab' : a < b := hab
   apply hc
-  rw [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
-  exact hab'
+  rwa [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
 
 private lemma upperTri_sub {i : ℕ} (hi : i ≤ n) {c' : Matrix (Fin n) (Fin n) ℂ} (hc' : IsUpperTri c') :
     (c'.submatrix (Fin.castLE hi) (Fin.castLE hi)).IsUpperTriangular := by
   intro a b hab
   have hab' : b < a := hab
   apply hc'
-  rw [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
-  exact hab'
+  rwa [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
 
 theorem lead_tri_mul {c z c' : Matrix (Fin n) (Fin n) ℂ} (hc : IsLowerTri c) (hc' : IsUpperTri c') (i : ℕ) (hi : i ≤ n) :
     lead i (c * z * c') =
@@ -113,8 +111,7 @@ theorem lead_tri_mul {c z c' : Matrix (Fin n) (Fin n) ℂ} (hc : IsLowerTri c) (
     refine Fintype.prod_of_injective (Fin.castLE hi) (Fin.castLE_injective hi) _ _ ?_ ?_
     · intro k hk
       rw [ite_eq_right]
-      intro hlt
-      exact hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
+      exact fun hlt => hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
     · intro a
       rw [ite_eq_left (by rw [Fin.coe_castLE]; exact a.2)]
   unfold lead

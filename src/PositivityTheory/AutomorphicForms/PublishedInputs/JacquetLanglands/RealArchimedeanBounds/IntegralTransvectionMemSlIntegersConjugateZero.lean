@@ -101,8 +101,7 @@ theorem integral_transvection_mem_slIntegers_conjugate_zero {g : GF F} :
     g ∈ K0 F ↔ (∀ i j, g.val i j ∈ Ohat F) ∧ ∀ i j, (g⁻¹ : GF F).val i j ∈ Ohat F := by
   simp only [K0, Kc, Subgroup.mem_iInf, Subgroup.mem_comap, mem_parahoricTimesPrincipalCongruence_iff, ← map_inv, mem_O]
   constructor
-  · intro h
-    exact ⟨fun i j w => (h w).1 i j, fun i j w => (h w).2.1 i j⟩
+  · exact fun h => ⟨fun i j w => (h w).1 i j, fun i j w => (h w).2.1 i j⟩
   · rintro ⟨h1, h2⟩ w
     exact ⟨fun i j => h1 i j w, fun i j => h2 i j w, mem_mP_zero (h1 1 0 w),
       mem_mP_zero (sub_mem (h1 1 1 w) (one_mem _))⟩
@@ -146,8 +145,7 @@ theorem k_prop {k : GF F} (hk : k ∈ K0 F) (w : Pl F) :
     exact le_antisymm (v_le (det_mem h1) w) (e1 ▸ mul_le_of_le_one_right' hd2)
   · have e : k.val 1 0 * (k⁻¹ : GF F).val 0 1 + k.val 1 1 * (k⁻¹ : GF F).val 1 1 = 1 := by
       have := congrFun (congrFun (Units.mul_inv k) 1) 1
-      rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply_eq] at this
-      exact this
+      rwa [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply_eq] at this
     have hv : Valued.v (pLoc F w (k.val 1 0) * pLoc F w ((k⁻¹ : GF F).val 0 1) +
         pLoc F w (k.val 1 1) * pLoc F w ((k⁻¹ : GF F).val 1 1)) = 1 := by
       rw [← map_mul, ← map_mul, ← map_add (f := _), e, map_one, map_one]
@@ -164,8 +162,7 @@ theorem int_iff (t : F) : IsIntegral ℤ t ↔ algebraMap F (Af F) t ∈ Ohat F 
   rw [mem_Ov]
   simp only [val_pLoc]
   constructor
-  · intro h w
-    exact HeightOneSpectrum.valuation_le_one w (⟨t, h⟩ : 𝓞 F)
+  · exact fun h w => HeightOneSpectrum.valuation_le_one w (⟨t, h⟩ : 𝓞 F)
   · intro h
     obtain ⟨r, rfl⟩ := HeightOneSpectrum.mem_integers_of_valuation_le_one F t h
     exact RingOfIntegers.isIntegral_coe r

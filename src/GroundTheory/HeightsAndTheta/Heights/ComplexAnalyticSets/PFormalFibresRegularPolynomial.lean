@@ -36,8 +36,7 @@ theorem FormalFibresRegularPolynomial.proof (hJ : JacobianPrimeDerivations.State
       refine Matrix.ext fun i j => ?_
       simp only [Matrix.of_apply, RingHom.mapMatrix_apply, Matrix.map_apply]
       exact hD' j (f i)
-    rw [hm, ← RingHom.map_det]
-    exact hdet
+    rwa [hm, ← RingHom.map_det]
   have hmem : ∀ i, algebraMap Bh L (algebraMap B Bh (f i)) ∈ maximalIdeal L := fun i =>
     (IsLocalization.AtPrime.to_map_mem_maximal_iff L P _).mpr (hfp i)
   have hreg := hQ L h _ hmem (hI Bh P h D' (fun i => algebraMap B Bh (f i)) hfp hdet')

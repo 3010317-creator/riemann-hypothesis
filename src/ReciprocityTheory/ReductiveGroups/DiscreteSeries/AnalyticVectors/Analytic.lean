@@ -131,21 +131,12 @@ theorem norm_actM_le {R d : ℝ} (hR0 : 0 ≤ R)
   have h3 : √(∑ a, ∑ b ∈ univ.filter (fun b => ε a ≠ ε b), ‖E a b x‖ ^ 2) ≤
       (R + √(max 0 (-d)) + √2 * k) * ‖x‖ := by
     calc _ ≤ √((y ^ 2 - d) * ‖x‖ ^ 2) := Real.sqrt_le_sqrt (hR k x hx)
-      _ ≤ √(max 0 (y ^ 2 - d)) * ‖x‖ := by
-          rw [← Real.sqrt_sq (norm_nonneg x), ← Real.sqrt_mul (le_max_left _ _),
-            Real.sqrt_sq (norm_nonneg x)]
-          exact Real.sqrt_le_sqrt (mul_le_mul_of_nonneg_right (le_max_right _ _) (by positivity))
-      _ ≤ (R + √(max 0 (-d)) + √2 * k) * ‖x‖ := by
-          refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg x)
-          have := sqrt_sub_le_add (d := d) hy0
-          rcases le_total 0 (y ^ 2 - d) with h | h
-          · rw [max_eq_right h]; linarith
-          · rw [max_eq_left h, Real.sqrt_zero]; positivity
-  calc ‖actM E X x‖ ≤ _ := h1
-    _ ≤ _ := h2
-    _ ≤ √(∑ a, ∑ b, ‖X a b‖ ^ 2) * ((R + √(max 0 (-d)) + √2 * k) * ‖x‖) :=
-        mul_le_mul_of_nonneg_left h3 (Real.sqrt_nonneg _)
-    _ = _ := by ring
+      _ = √(y ^ 2 - d) * ‖x‖ := by
+          rw [Real.sqrt_mul' _ (sq_nonneg _), Real.sqrt_sq (norm_nonneg x)]
+      _ ≤ (R + √(max 0 (-d)) + √2 * k) * ‖x‖ :=
+          mul_le_mul_of_nonneg_right (by linarith [sqrt_sub_le_add (d := d) hy0]) (norm_nonneg x)
+  refine h1.trans (h2.trans ((mul_le_mul_of_nonneg_left h3 (Real.sqrt_nonneg _)).trans_eq ?_))
+  ring
 
 theorem actM_pow_mem_layer (hE : IsGlRep E) (hV : IsKStableSub ε E V)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inP ε X) {k : ℕ} {x : M} (hx : x ∈ layer ε E V k)

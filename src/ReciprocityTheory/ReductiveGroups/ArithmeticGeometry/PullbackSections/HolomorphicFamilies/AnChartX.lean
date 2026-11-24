@@ -116,8 +116,7 @@ theorem basis_single (e' : Fin g ≃ Lt1 Dw) (v : Fin g → ℂ) :
     simp
   · funext ℓ
     have h1 := ha (e'.symm ℓ)
-    rw [key, Equiv.apply_symm_apply] at h1
-    exact h1
+    rwa [key, Equiv.apply_symm_apply] at h1
 
 def anAct (ty : Fin g → (E →+* ℂ)) (a : 𝓞 E) : Fin g → MvPowerSeries (Fin 1 × Fin g) ℂ :=
   fun k => MvPowerSeries.C (ty k (a : E)) * MvPowerSeries.X ((0 : Fin 1), k)
@@ -147,8 +146,7 @@ theorem jetSubstP_anAct (m : ℕ) (a : 𝓞 E) (b : Jet ℂ (Fin 1 × Fin g) m) 
         · simp [MvPowerSeries.coeff_C_mul, MvPowerSeries.coeff_X, MvPolynomial.C_mul_X_eq_monomial, hq]
         · intro e _ he
           simp [MvPowerSeries.coeff_C_mul, MvPowerSeries.coeff_X, ← hq, he]
-        · intro h
-          exact absurd hmem h
+        · exact fun h => absurd hmem h
       · rw [ite_eq_right hmem]
         apply Finset.sum_eq_zero
         intro e he

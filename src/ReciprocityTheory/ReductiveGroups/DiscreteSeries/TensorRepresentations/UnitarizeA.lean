@@ -92,8 +92,7 @@ theorem pr_eq_inner {a b : G → ℂ} (ha : MemLp a 2 μ) (hb : MemLp b 2 μ) :
 theorem pr_bound {a b : G → ℂ} (ha : MemLp a 2 μ) (hb : MemLp b 2 μ) :
     ‖pr μ a b‖ ≤ nrm μ a * nrm μ b := by
   rw [pr_eq_inner ha hb]
-  have h := norm_inner_le_norm (𝕜 := ℂ) (ha.toLp a) (hb.toLp b)
-  simpa only [nrm, Lp.norm_toLp] using h
+  simpa only [nrm, Lp.norm_toLp] using norm_inner_le_norm (𝕜 := ℂ) (ha.toLp a) (hb.toLp b)
 
 theorem pr_star (a b : G → ℂ) : star (pr μ a b) = pr μ b a := by
   unfold pr
@@ -280,8 +279,7 @@ private theorem negder_lemma {φ : ℝ → G} {a a' : G → ℂ}
     (hd : ∀ x t, HasDerivAt (fun s => a (x * φ s)) (a' (x * φ t)) t) :
     ∀ x t, HasDerivAt (fun s => a (x * φ (-s))) (-a' (x * φ (-t))) t := by
   intro x t
-  have h := (hd x (-t)).scomp t (hasDerivAt_id t).neg
-  simpa [Function.comp_def] using h
+  simpa [Function.comp_def] using (hd x (-t)).scomp t (hasDerivAt_id t).neg
 
 private theorem inv_lemma_2 {φ : ℝ → G} (hφ0 : φ 0 = 1) (hφa : ∀ s t, φ (s + t) = φ s * φ t) (s : ℝ) :
     (φ s)⁻¹ = φ (-s) := by
@@ -321,8 +319,7 @@ private theorem lin_lemma_3 {φ : ℝ → G} (hφc : Continuous φ) (hφ0 : φ 0
         rw [nrm_rt hb'L.neg.aestronglyMeasurable]
         unfold nrm
         rw [eLpNorm_neg]
-      rw [hn] at h
-      exact h
+      rwa [hn] at h
     rw [e3, norm_star, e2]
     calc _ ≤ (nrm μ b' * nrm μ a') * |s - 0| := intervalIntegral.norm_integral_le_of_norm_le_const hC
       _ ≤ t * (nrm μ a' * nrm μ b') := by

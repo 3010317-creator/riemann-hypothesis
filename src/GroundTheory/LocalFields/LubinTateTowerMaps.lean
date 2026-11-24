@@ -299,8 +299,7 @@ theorem algEquiv_ext_of_restrictAut {ι : Type*} {F : ι → IntermediateField K
   refine AlgEquiv.ext fun x => Subtype.ext ?_
   obtain ⟨n, hn⟩ := hE x x.2
   have := congrArg (fun τ : F n ≃ₐ[K] F n => ((τ ⟨x, hn⟩ : F n) : Ω)) (h n)
-  simp only [restrictAut_apply] at this
-  exact this
+  simpa only [restrictAut_apply] using this
 
 theorem exists_algEquiv_of_compatible {F : ℕ → IntermediateField K Ω} (hF : Monotone F)
     [∀ n, Normal K (F n)] {E : IntermediateField K Ω} [Algebra.IsAlgebraic K E]
@@ -444,8 +443,7 @@ theorem lubinTateChar_eq_of_apply (hf : IsLubinTateSeries π f) {n : ℕ} {E : I
   have h1 := lubinTateChar_spec hπ hf hE σ hl b hb
   rw [h l hl] at h1
   have h2 : b • l = a • l := (IdealPoint.ext h1).symm
-  rw [← hb, Ideal.Quotient.eq, ← hann, sub_smul, sub_eq_zero]
-  exact h2
+  rwa [← hb, Ideal.Quotient.eq, ← hann, sub_smul, sub_eq_zero]
 
 theorem lubinTateChar_reduce (hf : IsLubinTateSeries π f) {m n : ℕ} (hmn : m ≤ n)
     {E : IntermediateField K Ω} (hE : lubinTateField Ω hπ hf n ≤ E) (σ : E ≃ₐ[K] E) :
@@ -455,8 +453,7 @@ theorem lubinTateChar_reduce (hf : IsLubinTateSeries π f) {m n : ℕ} (hmn : m 
     (lubinTateChar hπ hf n hE σ : 𝒪[K] ⧸ Ideal.span {π ^ n})
   apply Units.ext
   rw [coe_unitsReduce π hmn _ a ha, lubinTateChar_eq_of_apply hπ hf _ σ a]
-  intro x hx
-  exact lubinTateChar_spec hπ hf hE σ (lubinTateTorsion_mono hπ hf hmn hx) a ha
+  exact fun x hx => lubinTateChar_spec hπ hf hE σ (lubinTateTorsion_mono hπ hf hmn hx) a ha
 
 theorem lubinTateGalEquiv_restrictAut (hf : IsLubinTateSeries π f) {m n : ℕ} (hmn : m ≤ n)
     (σ : lubinTateField Ω hπ hf n ≃ₐ[K] lubinTateField Ω hπ hf n) :

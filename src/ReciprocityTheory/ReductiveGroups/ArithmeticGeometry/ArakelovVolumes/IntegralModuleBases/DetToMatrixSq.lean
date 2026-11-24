@@ -144,11 +144,9 @@ theorem redGram_holds : RedGramStatement := by
     exact hmin _ (e.ne_zero i)
   refine ⟨e, fun i => ?_, fun x i => ?_⟩
   · have h1 := red_norm_sq_le _ hre m D hm hm' (by rw [det_gram_fB A B hAB e]; exact hD) i
-    rw [norm_fB_sq A B hAB] at h1
-    exact h1
+    rwa [norm_fB_sq A B hAB] at h1
   · have h1 := red_coeff_sq_le _ hre m hm hm' (fun l => ((e.repr x l : ℤ) : ℝ)) i
-    rw [← fB_expand B e x, norm_fB_sq A B hAB] at h1
-    exact h1
+    rwa [← fB_expand B e x, norm_fB_sq A B hAB] at h1
 
 end ReciprocityTheory.ChartRestriction.G.AR.IntegralModuleBases
 

@@ -92,8 +92,7 @@ theorem exists_ltSeries_lift {R S : Type*} [CommRing R] [CommRing S] [Algebra R 
     refine ⟨q'.snoc ⟨Q, hQ⟩ hlt', ?_, ?_⟩
     · show q'.length + 1 = n + 1
       rw [hq'len]
-    · rw [RelSeries.last_snoc]
-      exact hQc
+    · rwa [RelSeries.last_snoc]
 
 theorem le_ringKrullDim_of_isIntegral {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
     (hf : f.IsIntegral) (hinj : Function.Injective f) (n : ℕ)
@@ -138,8 +137,7 @@ theorem exists_gt_of_comap_int_eq_bot {σ A : Type*} [Finite σ] [CommRing A]
       have hx' : x ∈ p.comap (g.comp MvPolynomial.C) := by
         rw [Ideal.mem_comap]
         exact Ideal.Quotient.eq_zero_iff_mem.mp hx
-      rw [hb] at hx'
-      exact hx'
+      rwa [hb] at hx'
     letI := (f.comp MvPolynomial.C).toAlgebra
     haveI : Algebra.IsIntegral ℤ (A ⧸ p) := ⟨hint⟩
     have hZ : IsField ℤ := isField_of_isIntegral_of_isField hinj (Field.toIsField (A ⧸ p))

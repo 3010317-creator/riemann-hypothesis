@@ -71,8 +71,7 @@ theorem exists_lift_nil [Algebra.FormallySmooth R A] [Algebra.FinitePresentation
   let J : Ideal W := Ideal.span (Φ '' (s : Set (MvPolynomial (Fin n) R)))
   have hker : RingHom.ker f.toRingHom ≤ J.comap Φ := by
     rw [← hs, Ideal.span_le]
-    intro p hp
-    exact Ideal.mem_comap.mpr (Ideal.subset_span ⟨p, hp, rfl⟩)
+    exact fun p hp => Ideal.mem_comap.mpr (Ideal.subset_span ⟨p, hp, rfl⟩)
   have hJker : J ≤ RingHom.ker ρ := by
     rw [Ideal.span_le]
     rintro _ ⟨p, hp, rfl⟩
@@ -86,8 +85,7 @@ theorem exists_lift_nil [Algebra.FormallySmooth R A] [Algebra.FinitePresentation
     rw [h2, map_zero]
   have hJnil : IsNilpotent J := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical ⟨s.image Φ, by rw [Finset.coe_image]⟩]
-    intro a ha
-    exact mem_nilradical.mpr (hnil a (hJker ha))
+    exact fun a ha => mem_nilradical.mpr (hnil a (hJker ha))
   have hcond : ∀ a ∈ RingHom.ker f, ((Ideal.Quotient.mkₐ R J).comp Φ) a = 0 := by
     intro a ha
     rw [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem]
@@ -113,8 +111,7 @@ theorem exists_lift_nil [Algebra.FormallySmooth R A] [Algebra.FinitePresentation
       hmk.trans e2
     rw [Ideal.Quotient.eq] at h4
     have h5 := hJker h4
-    rw [RingHom.mem_ker, map_sub, sub_eq_zero] at h5
-    exact h5
+    rwa [RingHom.mem_ker, map_sub, sub_eq_zero] at h5
   rw [AlgHom.comp_apply, e3]
   exact congrArg (fun g' => g' p) hΦ
 

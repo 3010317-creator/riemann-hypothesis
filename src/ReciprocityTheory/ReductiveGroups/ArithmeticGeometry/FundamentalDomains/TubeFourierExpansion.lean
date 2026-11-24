@@ -69,34 +69,23 @@ lemma fourCoeff_shift (g : (Fin n → ℂ) → ℂ) (y0 : Fin n → ℝ) (k : Fi
     rw [mul_left_comm, ← Complex.exp_add]
     congr 2
     linear_combination (2 * (Real.pi : ℂ) * Sy) * Complex.I_sq
-  have key : ∀ x : Fin n → ℝ,
-      g ((fun j => (x j : ℂ) + (((0 : Fin n → ℝ) j : ℝ) : ℂ) * I) + fun j => (y0 j : ℂ) * I) *
-        cexp (-2 * Real.pi * I * ∑ j, (k j : ℂ) * ((x j : ℂ) + (((0 : Fin n → ℝ) j : ℝ) : ℂ) * I)) =
-      (Real.exp (-2 * Real.pi * ∑ j, (k j : ℝ) * y0 j) : ℂ) *
-        (g (fun j => (x j : ℂ) + (y0 j : ℂ) * I) *
-          cexp (-2 * Real.pi * I * ∑ j, (k j : ℂ) * ((x j : ℂ) + (y0 j : ℂ) * I))) := by
-    intro x
-    have hg : ((fun j => (x j : ℂ) + (((0 : Fin n → ℝ) j : ℝ) : ℂ) * I) + fun j => (y0 j : ℂ) * I) =
-        fun j => (x j : ℂ) + (y0 j : ℂ) * I := by
-      funext j; simp
-    have e1 : ∑ j, (k j : ℂ) * ((x j : ℂ) + (((0 : Fin n → ℝ) j : ℝ) : ℂ) * I) =
-        ∑ j, (k j : ℂ) * (x j : ℂ) := by simp
-    have e2 : ∑ j, (k j : ℂ) * ((x j : ℂ) + (y0 j : ℂ) * I) =
-        ∑ j, (k j : ℂ) * (x j : ℂ) + (∑ j, (k j : ℂ) * (y0 j : ℂ)) * I := by
-      rw [Finset.sum_mul, ← Finset.sum_add_distrib]
-      refine Finset.sum_congr rfl (fun j _ => ?_)
-      ring
-    have e3 : ((Real.exp (-2 * Real.pi * ∑ j, (k j : ℝ) * y0 j) : ℝ) : ℂ) =
-        cexp (-2 * Real.pi * ∑ j, (k j : ℂ) * (y0 j : ℂ)) := by
-      rw [Complex.ofReal_exp]
-      congr 1
-      push_cast
-      ring
-    rw [hg, e1, e2, e3]
-    exact hx _ _ _
+  have e3 : ((Real.exp (-2 * Real.pi * ∑ j, (k j : ℝ) * y0 j) : ℝ) : ℂ) =
+      cexp (-2 * Real.pi * ∑ j, (k j : ℂ) * (y0 j : ℂ)) := by
+    rw [Complex.ofReal_exp]
+    congr 1
+    push_cast
+    ring
   unfold fourCoeff
   rw [← MeasureTheory.integral_const_mul]
-  exact MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall key)
+  refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
+  have e2 : ∑ j, (k j : ℂ) * ((x j : ℂ) + (y0 j : ℂ) * I) =
+      ∑ j, (k j : ℂ) * (x j : ℂ) + (∑ j, (k j : ℂ) * (y0 j : ℂ)) * I := by
+    rw [Finset.sum_mul, ← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    ring
+  simp only [Pi.zero_apply, Complex.ofReal_zero, zero_mul, add_zero]
+  rw [e2, e3]
+  exact hx _ _ _
 
 lemma mul_sign_abs (a : ℤ) : (a : ℝ) * (a.sign : ℝ) = |(a : ℝ)| := by
   rcases lt_trichotomy a 0 with h | rfl | h

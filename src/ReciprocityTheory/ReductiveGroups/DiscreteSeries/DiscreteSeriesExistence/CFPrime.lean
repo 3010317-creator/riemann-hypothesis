@@ -167,8 +167,7 @@ theorem casimir_eq_casVal_of_no {ε : Fin n → Bool} {lam : Fin n → ℝ} (hmo
         simp only [Module.End.mul_apply] at e
         rw [← e, hxK.2 a b hab he, map_zero]
     have e := diagE_eT (M := M) (n := n) ε E
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have hp : dOp ε (eT E) cpT x = 0 := by
     apply tens_khw_vanish hmono hE hU hV hNo
       (t := (∑ c ∈ plusIdx ε, ((lowK ε lam c : ℝ) : ℂ)) + (-1))
@@ -218,8 +217,7 @@ theorem casimir_eq_casVal_of_no {ε : Fin n → Bool} {lam : Fin n → ℝ} (hmo
       2 * dot (rhoHol ε) (lam - rhoC ε + rhoHol ε) = casVal lam := by
     have := khw_real_identity ε (lam - rhoC ε)
     rw [sub_add_cancel] at this
-    rw [casVal]
-    exact this
+    rwa [casVal]
   have hC : casimir (eT E) x = ((casVal lam : ℝ) : ℂ) • x := by
     have h2 : casimir (eT E) x =
         ((nsq (lam - rhoC ε + rhoHol ε + rhoC ε) - nsq (rhoC ε) : ℝ) : ℂ) • x -
@@ -255,8 +253,7 @@ theorem casimir_eq_casVal_of_no {ε : Fin n → Bool} {lam : Fin n → ℝ} (hmo
     exact hv₀0 ((Submodule.mem_bot ℂ).mp hmem)
   · intro v hv
     have hmem : v ∈ V ⊓ LinearMap.ker (casimir E - ((casVal lam : ℝ) : ℂ) • 1) := by
-      rw [h]
-      exact hv
+      rwa [h]
     have hk := (Submodule.mem_inf.mp hmem).2
     rw [LinearMap.mem_ker, hTw] at hk
     exact sub_eq_zero.mp hk

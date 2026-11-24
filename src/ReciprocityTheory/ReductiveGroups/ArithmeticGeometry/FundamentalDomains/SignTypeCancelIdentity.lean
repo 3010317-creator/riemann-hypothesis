@@ -69,8 +69,7 @@ noncomputable section
 lemma dot_self {n : ℕ} (y : Fin n → ℂ) : star y ⬝ᵥ y = ((nsq y : ℝ) : ℂ) := by
   simp only [nsq, dotProduct, Pi.star_apply]
   push_cast
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact Complex.conj_mul' (y i)
+  exact Finset.sum_congr rfl fun i _ => Complex.conj_mul' (y i)
 
 lemma quad_AtA {n q : ℕ} (A : Matrix (Fin q) (Fin n) ℂ) (y : Fin n → ℂ) :
     star y ⬝ᵥ ((Aᵀ * A.map (starRingEnd ℂ)) *ᵥ y) = ((nsq (A.map (starRingEnd ℂ) *ᵥ y) : ℝ) : ℂ) := by
@@ -142,8 +141,7 @@ lemma bound_castLE {n : ℕ} (h : n ≤ X.p0) (Z : X.Coord) (τ : X.Ψ) (y : Fin
     intro c hc
     simp only [hz]
     rw [dite_eq_right]
-    intro hcn
-    exact hc ⟨⟨c, hcn⟩, Fin.ext rfl⟩
+    exact fun hcn => hc ⟨⟨c, hcn⟩, Fin.ext rfl⟩
   have hvec : ((Matrix.of fun (m : Fin (r - X.p0)) (b : Fin n) => Z τ m (Fin.castLE h b)).map (starRingEnd ℂ) *ᵥ y) =
       (Matrix.of (Z τ)).map (starRingEnd ℂ) *ᵥ z := by
     funext m

@@ -142,8 +142,7 @@ private theorem sum_fst_lemma {D N : ℕ} [DecidablePred (fun v : TVar D N => v.
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h1
-    exact absurd (Finset.mem_univ _) h1
+  · exact fun h1 => absurd (Finset.mem_univ _) h1
 
 private theorem scaleBlock_eq_C_pow_mul {D N : ℕ} (u : Kˣ) (q : KTp K D N) (m : ℕ)
     (hq : ∀ s ∈ q.support, ∑ j, s (1, j) = m) :
@@ -178,21 +177,18 @@ private theorem key_lemma_3 (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (r : Ω c) (hr
     · rintro p ⟨hp, hs⟩
       refine (hT p).mpr ⟨hp, fun h0 => hs ?_⟩
       simp [h0]
-    · intro p hp
-      exact ((hT p).mp hp).1
+    · exact fun p hp => ((hT p).mp hp).1
   have hsum : (∑ᶠ (p : Ideal (KTp K d.D d.N)) (_ : p ∈ d.HtOne), n p * (d.dg (d.gen p) : ℤ)) =
       ∑ p ∈ hfin.toFinset, n p * (d.dg (d.gen p) : ℤ) := by
     apply finsum_mem_eq_sum_of_subset
     · rintro p ⟨hp, hs⟩
       refine (hT p).mpr ⟨hp, fun h0 => hs ?_⟩
       simp [h0]
-    · intro p hp
-      exact ((hT p).mp hp).1
+    · exact fun p hp => ((hT p).mp hp).1
   rw [hsum]
   rw [hprod] at hN
   have hne : algebraMap (Ω c) (OmS (Ω c) d.D d.N) r ≠ 0 := by
-    intro h0
-    exact hr ((map_eq_zero_iff _ (algebraMap (Ω c) (OmS (Ω c) d.D d.N)).injective).mp h0)
+    exact fun h0 => hr ((map_eq_zero_iff _ (algebraMap (Ω c) (OmS (Ω c) d.D d.N)).injective).mp h0)
   have hX : (letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
       Algebra.norm (KTf K d.D d.N) (algebraMap (Ω c) (OmS (Ω c) d.D d.N) r)) ≠ 0 := by
     letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
@@ -255,8 +251,7 @@ theorem key_degree (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (r : Ω c) (hr : r ≠ 
     refine (hy _ hne).1.subset ?_
     rintro p ⟨hp, hsum⟩
     refine ⟨hp, ?_⟩
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hsum
     refine finsum_eq_zero_of_forall_eq_zero fun w => ?_
     by_cases hw : w ∈ d.GoodP c p
@@ -265,8 +260,7 @@ theorem key_degree (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (r : Ω c) (hr : r ≠ 
     · simp [finsum_eq_if, hw]
   intro p hp hn0 s hs
   have hex : ∃ w, w ∈ d.GoodP c p := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hn0
     refine finsum_eq_zero_of_forall_eq_zero fun w => ?_
     simp [finsum_eq_if, hne w]
@@ -308,9 +302,7 @@ theorem nP_smul (hd : d.AxH 𝒜) (h : d.S1) (c : ι) {G : WT} {f : A c} (hf : f
   rw [← finsum_mem_add_distrib (d.goodP_finite hd h c hp)]
   refine finsum_mem_congr rfl fun w hw => ?_
   have key := hd.ord_smul c _ (d.good_adm hd h c hp hw) (G := G) (f := f) a hf hf0 ha
-  have hva : (d.Wres c w) a ≠ ⊤ := by
-    intro htop
-    exact ha ((AddValuation.top_iff _).mp htop)
+  have hva : (d.Wres c w) a ≠ ⊤ := fun htop => ha ((AddValuation.top_iff _).mp htop)
   rw [← untopD_eq hva, ← WithTop.coe_add] at key
   rw [WithTop.coe_inj.mp key]
   ring
@@ -320,13 +312,11 @@ theorem use₈ (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (r : Ω c) (hr : r ≠ 0) :
       (_ : w ∈ d.GoodP c p), (d.fze h c w : ℤ) * WithTop.untopD 0 (d.Wres c w r)) ≠ 0}.Finite := by
   obtain ⟨-, hy⟩ := d.norm_by_places hd h c
   have hne : algebraMap (Ω c) (OmS (Ω c) d.D d.N) r ≠ 0 := by
-    intro h0
-    exact hr ((map_eq_zero_iff _ (algebraMap (Ω c) (OmS (Ω c) d.D d.N)).injective).mp h0)
+    exact fun h0 => hr ((map_eq_zero_iff _ (algebraMap (Ω c) (OmS (Ω c) d.D d.N)).injective).mp h0)
   refine (hy _ hne).1.subset ?_
   rintro p ⟨hp, hsum⟩
   refine ⟨hp, ?_⟩
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hsum
   refine finsum_eq_zero_of_forall_eq_zero fun w => ?_
   classical

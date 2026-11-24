@@ -204,8 +204,7 @@ lemma exists_fixedUnitary_sending_basis {k : ℕ} (hk : 1 ≤ k) (u : Fin (2 * 0
     ext i
     by_cases hi : i = iW k
     · subst hi
-      simp [hdW]
-      exact hμ1
+      simpa [hdW] using hμ1
     · simp [hdo i hi]
   have hDP : Matrix.diagonal d * Pk k = Pk k := by
     ext i j
@@ -274,8 +273,7 @@ lemma exists_fixedUnitary_sending_basis {k : ℕ} (hk : 1 ≤ k) (u : Fin (2 * 0
     · simp [bvec]
     · intro j _ hj
       simp [bvec, hj]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hvx : ∀ v, star v ⬝ᵥ x = star (v (iW k)) * μ := by
     intro v
     rw [hx]
@@ -284,8 +282,7 @@ lemma exists_fixedUnitary_sending_basis {k : ℕ} (hk : 1 ≤ k) (u : Fin (2 * 0
     · simp [bvec]
     · intro j _ hj
       simp [bvec, hj]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hxx : star x ⬝ᵥ x = 1 := by
     rw [hvx, hx]
     simpa [bvec, mul_comm] using hμ1

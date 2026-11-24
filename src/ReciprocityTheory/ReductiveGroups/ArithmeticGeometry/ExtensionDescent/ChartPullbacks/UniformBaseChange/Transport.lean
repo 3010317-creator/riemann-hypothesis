@@ -108,10 +108,8 @@ theorem glueU {J : Type} (V : X.Opens) (W : J → X.Opens) (hW : ∀ i, W i ≤ 
   have hst : s * t = 1 := by
     apply X.sheaf.eq_of_locally_eq' W V (fun i => homOfLE (hW i)) hc
     intro i
-    simp only [map_mul, map_one, hs, ht]
-    exact (u i).mul_inv
-  refine ⟨Units.mkOfMulEqOne (s : Γ(X, V)) t hst, fun i => Units.ext ?_⟩
-  exact hs i
+    simpa only [map_mul, map_one, hs, ht] using (u i).mul_inv
+  exact ⟨Units.mkOfMulEqOne (s : Γ(X, V)) t hst, fun i => Units.ext (hs i)⟩
 
 theorem gU_cocycle {L : LB X} (hL : L.IsLB) {i j k : L.ι} (x : X) (hi : x ∈ L.U i) (hj : x ∈ L.U j)
     (hk : x ∈ L.U k) :
@@ -175,8 +173,7 @@ lemma gU_cand (hA : A.IsLB) (w : LB.Iso A B) (hw : w.IsGen) (b : LB.Gen B) (hb :
 private theorem tr_lemma {G : Type*} [CommGroup G] (si sj wi wj d c a bb : G) (e1 : si = wi⁻¹ * bb)
     (e2 : sj = wj⁻¹ * bb) (h1 : wi = d * wj) (hd : d = c * a⁻¹) (h3 : c = 1) : si = a * sj := by
   subst e1 e2 h1 hd h3
-  simp only [one_mul, mul_inv_rev, inv_inv, mul_assoc]
-  exact mul_left_comm _ _ _
+  simpa only [one_mul, mul_inv_rev, inv_inv, mul_assoc] using mul_left_comm _ _ _
 
 private theorem tr_lemma_2 {G : Type*} [CommGroup G] (s w bb : G) (e : s = w⁻¹ * bb) : bb = w * s := by
   subst e
@@ -202,10 +199,8 @@ theorem exists_transport (hA : A.IsLB) (hB : B.IsLB) (w : LB.Iso A B) (hw : w.Is
     have e2 := trgerm_lemma w b j p (s j) (hs j p) x ⟨hx.2, hp⟩
     have h1 := gU_isGen hw x (le_divU p i ⟨hx.1, hp⟩) (le_divU p j ⟨hx.2, hp⟩)
     have hd := gU_div B A (pq p i) (pq p j) x (le_divU p i ⟨hx.1, hp⟩) (le_divU p j ⟨hx.2, hp⟩)
-    have h3 := gU_self hB x hp
-    exact tr_lemma _ _ _ _ _ _ _ _ e1 e2 h1 hd h3
-  · have e := trgerm_lemma w b q p (s q) (hs q p) x ⟨hx.2, hx.1⟩
-    exact tr_lemma_2 _ _ _ e
+    exact tr_lemma _ _ _ _ _ _ _ _ e1 e2 h1 hd (gU_self hB x hp)
+  · exact tr_lemma_2 _ _ _ (trgerm_lemma w b q p (s q) (hs q p) x ⟨hx.2, hx.1⟩)
 
 end Transport
 
@@ -257,8 +252,7 @@ theorem invIso_spec (hA : A.IsLB) (hB : B.IsLB) (w : LB.Iso A B) (hw : w.IsGen) 
     exact i1.trans ((inv_lemma' _ _ _ _ _ hg hd).trans (congrArg (_ * ·) i2.symm))
   · intro q p x hx
     have e := germOfMaps_lemma w a b hab p q x ⟨hx.2, hx.1⟩
-    have i1 := invgerm_lemma w q p x hx
-    exact (inv_lemma_2 _ _ _ e).trans (congrArg (· * _) i1.symm)
+    exact (inv_lemma_2 _ _ _ e).trans (congrArg (· * _) (invgerm_lemma w q p x hx).symm)
 
 end InvComp
 

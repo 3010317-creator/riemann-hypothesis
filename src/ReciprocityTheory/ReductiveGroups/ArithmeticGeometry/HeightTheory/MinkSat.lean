@@ -291,9 +291,7 @@ theorem quotGram_det_pos (σ : K →+* ℂ) {m : ℕ} {b : Fin k → Fin r → K
       rw [mulVec_mulVec, mulVec_sub, hzz, sub_self]
     set y := ((hBm σ b)ᴴ * hBm σ b)⁻¹ *ᵥ ((hBm σ b)ᴴ *ᵥ (hBm σ c *ᵥ (z - z'))) with hy
     have h1 : hBm σ c *ᵥ (z - z') - hBm σ b *ᵥ y = 0 := by
-      have h2 := h0
-      simp only [hPm, sub_mulVec, one_mulVec, ← mulVec_mulVec] at h2
-      exact h2
+      simpa only [hPm, sub_mulVec, one_mulVec, ← mulVec_mulVec] using h0
     have hl := linearIndependent_map_embedding σ hli
     have h3 : ∑ i, Fin.append (-y) (z - z') i • (fun l => σ (Fin.append b c i l)) = 0 := by
       rw [Fin.sum_univ_add]
@@ -329,8 +327,7 @@ namespace ReciprocityTheory.ChartRestriction.G.T0
 open Module Submodule Matrix
 
 theorem relIndex_nsmul_mem {E : Type*} [AddCommGroup E] (H L : AddSubgroup E) {x : E}
-    (hx : x ∈ L) : H.relIndex L • x ∈ H := by
-  exact AddSubgroup.nsmul_relIndex_mem H hx
+    (hx : x ∈ L) : H.relIndex L • x ∈ H := AddSubgroup.nsmul_relIndex_mem H hx
 
 theorem exists_ne_zero_mem_norm_sq_le_gram_det_div_relIndex {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {N : ℕ}
     (hN : 0 < N) (w : Fin N → E) (hw : LinearIndependent ℝ w) (Λ : AddSubgroup E)
@@ -745,8 +742,7 @@ theorem exists_small_saturating_vector (K : Type) [Field K] [NumberField K] (r k
     have hlog := Real.log_le_log hprod h
     rw [Real.log_prod (fun σ _ => (Real.rpow_pos_of_pos (hXpos σ) _).ne')] at hlog
     simp only [Real.log_rpow (hXpos _)] at hlog
-    rw [Finset.mul_sum]
-    exact hlog
+    rwa [Finset.mul_sum]
   have hIr : (0 : ℝ) < I := by exact_mod_cast Nat.pos_of_ne_zero hI0
   have hquot : ReciprocityTheory.MultiplicativeHeights.quotDeg (fun _ => (1 : Matrix (Fin r) (Fin r) ℂ)) (hStd K r) b c =
       Real.log I - 1 / 2 * Real.log P := by
@@ -778,8 +774,7 @@ theorem exists_small_saturating_vector (K : Type) [Field K] [NumberField K] (r k
       Real.log ((1 / (n : ℝ)) * ((N : ℝ) * (D ^ m * P / (I : ℝ) ^ 2) ^ (1 / (N : ℝ)))) := by
     apply Real.log_le_log hsum_pos
     apply mul_le_mul_of_nonneg_left _ (by positivity)
-    rw [hsumX]
-    exact hvb
+    rwa [hsumX]
   rw [hmean, hdeg, hquot]
   have hD1 : Real.log (D ^ (1 / (n : ℝ))) = 1 / (n : ℝ) * Real.log D := Real.log_rpow hdpos _
   rw [hD1]

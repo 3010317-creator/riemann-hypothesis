@@ -114,8 +114,7 @@ theorem eval_scaleP (p : ι → Prop) [DecidablePred p] (a : ℂ) (u : ι → �
   simp_rw [hc, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun m hm => ?_
-  rw [prod_scaleP]
-  rw [Finset.sum_eq_single (Finsupp.weight (indW p) m)]
+  rw [prod_scaleP, Finset.sum_eq_single (Finsupp.weight (indW p) m)]
   · simp only [ite_true]; ring
   · intro d _ hd; simp [Ne.symm hd]
   · intro h; exact absurd (Finset.mem_range.mpr (Nat.lt_succ_of_le (hD m hm))) h
@@ -126,8 +125,7 @@ theorem measurePreserving_mul_circleMap (θ : ℝ) :
   have e : (fun z : ℂ => circleMap 0 1 θ * z) = rotation (Circle.exp θ) := by
     funext z
     simp [rotation_apply, Circle.coe_exp, circleMap_zero]
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem measurePreserving_scaleP [Fintype ι] (p : ι → Prop) [DecidablePred p] (θ : ℝ) :
     MeasurePreserving (scaleP p (circleMap 0 1 θ)) volume volume := by
@@ -141,8 +139,7 @@ theorem measurePreserving_scaleP [Fintype ι] (p : ι → Prop) [DecidablePred p
       fun a x => (if p x then (fun z : ℂ => circleMap 0 1 θ * z) else id) (a x) := by
     funext u x
     by_cases h : p x <;> simp [scaleP, h]
-  rw [e]
-  exact this
+  rwa [e]
 
 theorem measurable_scaleP [Fintype ι] (p : ι → Prop) [DecidablePred p] :
     Measurable (Function.uncurry fun θ : ℝ => scaleP p (circleMap 0 1 θ) : ℝ × (ι → ℂ) → ι → ℂ) := by
@@ -300,8 +297,7 @@ theorem logPoly [Fintype ι] [DecidableEq ι] (r : ℝ) :
   · push Not at h0
     obtain ⟨x, hx⟩ := h0
     have hxN : x ∈ nonHomog g := by
-      simp only [nonHomog, Finset.mem_filter, Finset.mem_univ, true_and, not_exists]
-      exact hx
+      simpa only [nonHomog, Finset.mem_filter, Finset.mem_univ, true_and, not_exists] using hx
     obtain ⟨m0, hm0⟩ := MvPolynomial.support_nonempty.mpr hg
     set w := indW (· = x) with hw
     set d0 := Finsupp.weight w m0 with hd0

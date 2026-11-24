@@ -91,8 +91,7 @@ theorem CurveResidueDegree.proof : CurveResidueDegree.Statement := by
         show evL (algebraMap (MvPolynomial (Fin n) ℂ)
           (Localization.AtPrime (RingHom.ker (eval q : MvPolynomial (Fin n) ℂ →+* ℂ))) (X i)) = q i
         simp [evL, IsLocalization.lift_eq]
-      rw [he]
-      exact h2
+      rwa [he]
 
   have hint : ι.IsIntegral := by
     intro z
@@ -100,8 +99,7 @@ theorem CurveResidueDegree.proof : CurveResidueDegree.Statement := by
     have hb : IsIntegral (curveLocalRing I q) b := Algebra.IsIntegral.isIntegral b
     obtain ⟨p, hp, he⟩ := hb.map (Ideal.Quotient.mkₐ (curveLocalRing I q) P.asIdeal)
     refine ⟨p.map ε, hp.map ε, ?_⟩
-    rw [Polynomial.eval₂_map, ← hcomp]
-    exact he
+    rwa [Polynomial.eval₂_map, ← hcomp]
   have hsurj : Function.Surjective ι := (IsAlgClosed.ringHom_bijective_of_isIntegral ι hint).2
   have hπ : Function.Surjective π := fun y ↦ by
     obtain ⟨c, hc⟩ := hsurj y

@@ -79,8 +79,7 @@ theorem uniformisationL2_injective (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv�
     (dinj_continuousOn_of_smoothOnGV hP.2.2.1).comp_continuous hum hmem
   have hfc : ∀ v, Continuous (fun g : Formalism.REAL.UJ ε => jfun Ψ v₀ v (Formalism.MainNotions.S.umat g)) := by
     intro v
-    simp only [jfun]
-    exact continuous_const.inner (hΨu.clm_apply continuous_const)
+    simpa only [jfun] using continuous_const.inner (hΨu.clm_apply continuous_const)
   have hML : ∀ v, MemLp (fun g : Formalism.REAL.UJ ε => jfun Ψ v₀ v (Formalism.MainNotions.S.umat g)) 2
       (Formalism.REAL.muG ε) := by
     intro v
@@ -103,8 +102,7 @@ theorem uniformisationL2_injective (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv�
       have h5 := ((hfc v).ae_eq_iff_eq (Formalism.REAL.muG ε) continuous_zero).mp
         (hm.coeFn_toLp.symm.trans h)
       exact congrFun h5 g
-    · intro h
-      exact hm.coeFn_toLp.trans (Filter.Eventually.of_forall fun g => h g)
+    · exact fun h => hm.coeFn_toLp.trans (Filter.Eventually.of_forall fun g => h g)
   have hstab : ∀ (k : S7.KG ε) (v : T.V),
       (∀ g : Formalism.REAL.UJ ε, jfun Ψ v₀ v (Formalism.MainNotions.S.umat g) = 0) →
       ∀ g : Formalism.REAL.UJ ε, jfun Ψ v₀ (T.op k v) (Formalism.MainNotions.S.umat g) = 0 := by

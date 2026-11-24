@@ -190,14 +190,12 @@ lemma iB_hom [IsMonHom i] : IsMonHom (iB f X i) := by
     rw [_root_.mul_one] at h1
     have h3 : (1 ≫ iB f X i) * (1 : 𝟙_ (Over S') ⟶ (Over.pullback f).obj G) =
         (1 ≫ iB f X i) * (1 ≫ iB f X i) := by
-      rw [_root_.mul_one]
-      exact h1
+      rwa [_root_.mul_one]
     have h2 := (mul_left_cancel h3).symm
     have e : ∀ (M : Over S') [MonObj M], (1 : 𝟙_ (Over S') ⟶ M) = η[M] := by
       intro M _
       rw [Hom.one_def, toUnit_unit, Category.id_comp]
-    rw [← e, ← e]
-    exact h2
+    rwa [← e, ← e]
   · have h1 := key _ (fst (splitTorus S' X) (splitTorus S' X)) (snd (splitTorus S' X) (splitTorus S' X))
     rw [Hom.mul_def, Hom.mul_def, lift_fst_snd, Category.id_comp] at h1
     rw [h1]
@@ -273,8 +271,7 @@ lemma iB_isKernel (hk : IsPullback i (toUnit _) q η[B]) :
   have H : IsPullback (iB f X i).left (toUnit (splitTorus S' X)).left (qB f q).left
       η[(Over.pullback f).obj B].left := by
     refine IsPullback.of_right ?_ (by simpa using congrArg Over.Hom.left hw) (qB_sq f q)
-    rw [iB_h, hη]
-    exact s
+    rwa [iB_h, hη]
   exact IsPullback.of_map (F := Over.forget S') hw H
 
 end Maps

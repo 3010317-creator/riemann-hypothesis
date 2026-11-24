@@ -175,8 +175,7 @@ theorem Wm_mul (M : Matrix (Fin n) (Fin n) 𝒪[k]) (i j : Fin n) (hij : G.bl j 
     · intro l _ hl
       have : l.1 ≠ i := fun h => hl (Subtype.ext h)
       simp [Wm, l.2, Matrix.one_apply_ne' this]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   rw [Matrix.mul_apply, ← hs]
   erw [h1, h2]
   rw [rowv, Matrix.neg_vecMul, Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul _ hu, Matrix.vecMul_one]
@@ -256,7 +255,6 @@ theorem iwahori_of (hΔ : ∀ g ∈ G.JSet, ∀ a, ∃ u : 𝒪[k]ˣ, G.Δ a g =
 end Iwahori₂
 
 theorem step_iwahori : IwahoriDecompositionProp G := by
-  intro _ hcc hΔ _ _
-  exact Iwahori₂.iwahori_of G (hΔ hcc)
+  exact fun _ hcc hΔ _ _ => Iwahori₂.iwahori_of G (hΔ hcc)
 
 end UpperTheory.TNZ.Grp

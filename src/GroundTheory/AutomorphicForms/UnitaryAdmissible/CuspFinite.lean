@@ -70,8 +70,7 @@ theorem cuspRep_integrated_eq_smul (μ : Measure (normOneGL (K := K) (n := n))) 
       simp only at hz ⊢
       rw [hz, cuspQuot_mk]
     rw [h2, ← integral_mul_left_eq_self (fun z => F (y⁻¹ * z) * (φ : AdelicGLn.AdelicGL K n → ℂ) z) y]
-    simp only [Subgroup.coe_mul, inv_mul_cancel_left]
-    exact hΘ y
+    simpa only [Subgroup.coe_mul, inv_mul_cancel_left] using hΘ y
   have hR : (rightRegularRep Γ₁ μ).integrated μ (UnitaryRep.ccToL1 μ F)
       ((cuspToL2 μ φ : cuspidalL2 μ) : Lp ℂ 2 (quotientMeasure Γ₁ μ)) =
         c • ((cuspToL2 μ φ : cuspidalL2 μ) : Lp ℂ 2 (quotientMeasure Γ₁ μ)) := by
@@ -114,8 +113,7 @@ theorem finiteDimensional_of_eigen {ι : Type*} [Fintype ι]
     have e1 : ∀ x, ((sliceL g ⟨(φ : AdelicGLn.AdelicGL K n → ℂ), φ.2.1.isSmooth.1⟩ :
         (isExpLieAlgebra K n).smoothFuns (F := ℂ)) : archGroup K n → ℂ) x =
           (φ : AdelicGLn.AdelicGL K n → ℂ) (g * infEmb K n x) := fun x => rfl
-    simp only [e1, one_mul, map_one, mul_one] at h
-    exact h
+    simpa only [e1, one_mul, map_one, mul_one] using h
 
   have hcent : ∀ φ ∈ S, ∀ (y : AdelicGLn.AdelicGL K n) (a : archGroup K n),
       (φ : AdelicGLn.AdelicGL K n → ℂ) (y * infEmb K n a) =
@@ -141,8 +139,7 @@ theorem finiteDimensional_of_eigen {ι : Type*} [Fintype ι]
     intro φ hφ y
     have hfin : ∀ u ∈ U, ∀ z, (φ : AdelicGLn.AdelicGL K n → ℂ)
         (z * finEmb K n (u : AdelicGLn.FiniteAdelicGL K n)) = (φ : AdelicGLn.AdelicGL K n → ℂ) z := by
-      intro u hu z
-      exact congrFun (congrArg Subtype.val ((hS φ hφ).2.2 u hu)) z
+      exact fun u hu z => congrFun (congrArg Subtype.val ((hS φ hφ).2.2 u hu)) z
     rw [hint (fun x => (φ : AdelicGLn.AdelicGL K n → ℂ) ((y : AdelicGLn.AdelicGL K n) * x))
       (φ.2.1.continuous.comp (continuous_const.mul continuous_subtype_val))
       (fun u hu x => by

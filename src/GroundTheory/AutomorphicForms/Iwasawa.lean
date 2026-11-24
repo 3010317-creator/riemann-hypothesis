@@ -325,8 +325,7 @@ theorem exists_borel_mul_integralGL (g : GL (Fin n) F) :
           rw [Pi.sub_apply, Pi.smul_apply, Subring.smul_def, smul_eq_mul]
           rcases Nat.lt_or_eq_of_le hi with h | h
           · have hji : (⟨k, hk⟩ : Fin n) < i := by
-              rw [Fin.lt_def]
-              exact h
+              rwa [Fin.lt_def]
             rw [hx i (by omega), hvZ _ i hji, mul_zero, sub_zero]
           · obtain rfl : i = ⟨k, hk⟩ := Fin.ext h.symm
             rw [hvt, ← hr, sub_self]
@@ -340,8 +339,7 @@ theorem exists_borel_mul_integralGL (g : GL (Fin n) F) :
   have hBdet : B.det ≠ 0 := by
     rw [det_of_isUpperTriangular hBu, Finset.prod_ne_zero_iff]
     intro i _
-    simp only [B, of_apply, hvt]
-    exact ht0 i
+    simpa only [B, of_apply, hvt] using ht0 i
   let b : GL (Fin n) F := nonsingInvUnit B (isUnit_iff_ne_zero.mpr hBdet)
   have hb : (b : Matrix (Fin n) (Fin n) F) = B := rfl
   have hbL : mapSubmodule F n b (standardLattice F n) = L := by
@@ -427,8 +425,7 @@ theorem iwasawa_unique {u u' k k' : GL (Fin n) F} {l l' : Fin n → ℤ}
   · have := diagGL_mul_mul_inv_mem_unipotent F n
       ((unipotent F n).mul_mem ((unipotent F n).inv_mem hu) hu')
       (fun i => uniformizerUnit F ^ l i)⁻¹
-    rw [map_inv, inv_inv] at this
-    exact this
+    rwa [map_inv, inv_inv] at this
   · have : (torusPow F n l)⁻¹ * (u⁻¹ * u') * torusPow F n l =
         ((torusPow F n l)⁻¹ * (u'⁻¹ * u) * torusPow F n l)⁻¹ := by group
     rw [this, hx]

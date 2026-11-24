@@ -57,8 +57,7 @@ abbrev genFrac (p : Fin n × Fin n) : FractionRing (MvPolynomial (Fin n × Fin n
   algebraMap (MvPolynomial (Fin n × Fin n) F) _ (X p)
 
 theorem genFrac_ne_zero (p : Fin n × Fin n) : genFrac F n p ≠ 0 := by
-  simp only [genFrac, ne_eq, IsFractionRing.to_map_eq_zero_iff]
-  exact X_ne_zero p
+  simpa only [genFrac, ne_eq, IsFractionRing.to_map_eq_zero_iff] using X_ne_zero p
 
 def spec (p : Fin n × Fin n) : FractionRing (MvPolynomial (Fin n × Fin n) F) :=
   if (p.2 : ℕ) < p.1 then 0
@@ -133,8 +132,7 @@ theorem ratio_indep (F : Type) [Field F] {ι E : Type} [Field E] [Algebra F E] [
   let Kp := FractionRing (MvPolynomial ι F)
   let Xk : ι → Kp := fun i => algebraMap (MvPolynomial ι F) Kp (X i)
   have hXk : ∀ i, Xk i ≠ 0 := fun i => by
-    simp only [Xk, ne_eq, IsFractionRing.to_map_eq_zero_iff]
-    exact X_ne_zero i
+    simpa only [Xk, ne_eq, IsFractionRing.to_map_eq_zero_iff] using X_ne_zero i
   have hXind : AlgebraicIndependent F Xk :=
     (algebraicIndependent_X ι F).map' (f := IsScalarTower.toAlgHom F (MvPolynomial ι F) Kp)
       (IsFractionRing.injective _ _)
@@ -148,13 +146,11 @@ theorem ratio_indep (F : Type) [Field F] {ι E : Type} [Field E] [Algebra F E] [
     · simp only [c, d, h, ite_true, aeval_X]
     · simp only [c, h, ite_false, map_mul, aeval_X]
       rw [hdδ]
-      simp only [d, h, ite_false]
-      exact div_mul_cancel₀ _ (hXk _)
+      simpa only [d, h, ite_false] using div_mul_cancel₀ _ (hXk _)
   have hc : AlgebraicIndependent F c := by
     refine AlgebraicIndependent.of_comp (aeval d) ?_
     have : ⇑(aeval d) ∘ c = Xk := funext hdc
-    rw [this]
-    exact hXind
+    rwa [this]
   let χ : Kp →ₐ[F] Kp := IsFractionRing.liftAlgHom
     (g := (IsScalarTower.toAlgHom F (MvPolynomial ι F) Kp).comp (aeval c))
     ((IsFractionRing.injective (MvPolynomial ι F) Kp).comp (algebraicIndependent_iff_injective_aeval.1 hc))
@@ -175,13 +171,11 @@ theorem ratio_indep (F : Type) [Field F] {ι E : Type} [Field E] [Algebra F E] [
       simp only [c, h, ite_true, Xk]
     · simp only [d, h, ite_false, map_div₀]
       rw [hχX, hχX, hcδ]
-      simp only [c, h, ite_false, map_mul]
-      exact mul_div_cancel_right₀ _ (hXk _)
+      simpa only [c, h, ite_false, map_mul] using mul_div_cancel_right₀ _ (hXk _)
   have hd : AlgebraicIndependent F d := by
     refine AlgebraicIndependent.of_comp χ ?_
     have : ⇑χ ∘ d = Xk := funext hχ
-    rw [this]
-    exact hXind
+    rwa [this]
   let ψ : Kp →ₐ[F] E := IsFractionRing.liftAlgHom (g := aeval y) (algebraicIndependent_iff_injective_aeval.1 hy)
   have hψX : ∀ j, ψ (Xk j) = y j := fun j => by
     simp [ψ, Xk, IsFractionRing.lift_algebraMap]

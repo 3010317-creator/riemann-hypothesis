@@ -33,8 +33,7 @@ theorem card_smul_tateCohomology_zero (A : Rep.{u} R G) (x : tateCohomology A 0)
       A.ρ.invariants ⧸ normRangeInvariants A) = 0 := by
     rw [Submodule.Quotient.mk_eq_zero, mem_normRangeInvariants_iff]
     exact ⟨y, by rw [norm_apply_of_mem_invariants A y.2]; rfl⟩
-  rw [Submodule.Quotient.mk_smul] at h
-  exact h
+  rwa [Submodule.Quotient.mk_smul] at h
 
 private theorem card_smul_succ {n : ℤ}
     (h : ∀ (A : Rep.{u} R G) (x : tateCohomology A n), Fintype.card G • x = 0)
@@ -57,7 +56,6 @@ theorem card_smul_tateCohomology (A : Rep.{u} R G) (n : ℤ) (x : tateCohomology
   | succ n ih => exact card_smul_succ (fun A x => ih A x) A x
   | pred n ih =>
     refine card_smul_pred ?_ A x
-    rw [sub_add_cancel]
-    exact ih
+    rwa [sub_add_cancel]
 
 end GroundTheory.GroupCoh

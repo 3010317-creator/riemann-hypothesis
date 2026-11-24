@@ -150,8 +150,7 @@ lemma norm_posPart_le (p : ℕ) {r : ℕ} (u : Fin r → ℂ) : ‖euc (posPart 
   have hn : 0 ≤ negSq p u := Finset.sum_nonneg fun k _ => by split_ifs <;> positivity
   have ha := norm_nonneg (euc (posPart p u))
   have hb := norm_nonneg (euc u)
-  by_contra h
-  push Not at h
+  by_contra! h
   nlinarith
 
 lemma norm_negPart_le (p : ℕ) {r : ℕ} (u : Fin r → ℂ) : ‖euc (negPart p u)‖ ≤ ‖euc u‖ := by
@@ -161,8 +160,7 @@ lemma norm_negPart_le (p : ℕ) {r : ℕ} (u : Fin r → ℂ) : ‖euc (negPart 
   have hn : 0 ≤ posSq p u := Finset.sum_nonneg fun k _ => by split_ifs <;> positivity
   have ha := norm_nonneg (euc (negPart p u))
   have hb := norm_nonneg (euc u)
-  by_contra h
-  push Not at h
+  by_contra! h
   nlinarith
 
 lemma euc_zero {r : ℕ} : euc (0 : Fin r → ℂ) = 0 := by
@@ -172,14 +170,12 @@ lemma euc_sum {r : ℕ} {ι : Type*} (s : Finset ι) (f : ι → Fin r → ℂ) 
     euc (∑ j ∈ s, f j) = ∑ j ∈ s, euc (f j) := by
   classical
   refine Finset.induction_on s ?_ ?_
-  · simp only [Finset.sum_empty]
-    exact euc_zero
+  · simpa only [Finset.sum_empty] using euc_zero
   · intro a s ha ih
     rw [Finset.sum_insert ha, Finset.sum_insert ha, euc_add, ih]
 
 lemma euc_eq_zero {r : ℕ} {w : Fin r → ℂ} (h : euc w = 0) : w = 0 := by
-  have h' := congrArg WithLp.ofLp h
-  simpa [euc] using h'
+  simpa [euc] using congrArg WithLp.ofLp h
 
 lemma sum_norm_le_sqrt {r : ℕ} (w : Fin r → ℂ) : ∑ j, ‖w j‖ ≤ √(r : ℝ) * ‖euc w‖ := by
   have h := Real.sum_mul_le_sqrt_mul_sqrt Finset.univ (fun _ : Fin r => (1 : ℝ)) (fun j => ‖w j‖)
@@ -197,8 +193,7 @@ lemma norm_err_le {r p : ℕ} {μ R : ℝ} (X : Fin r → Fin r → ℂ)
       have h1 := hX j hj
       rw [normSq_eq_euc] at h1
       have ha := norm_nonneg (euc (X j - (R : ℂ) • (Pi.single j 1 : Fin r → ℂ)))
-      by_contra h
-      push Not at h
+      by_contra! h
       nlinarith
     · rw [hw j (not_lt.mp hj)]
       simp

@@ -118,14 +118,12 @@ theorem actM_single (E : Fin n → Fin n → Module.End ℂ M) (a b : Fin n) (c 
   · simp
   · intro j _ hj
     simp [Ne.symm hj]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
   · intro i _ hi
     apply Finset.sum_eq_zero
     intro j _
     simp [Ne.symm hi]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem actM_sub (E : Fin n → Fin n → Module.End ℂ M) (X Y : Matrix (Fin n) (Fin n) ℂ) :
     actM E (X - Y) = actM E X - actM E Y := by

@@ -103,8 +103,7 @@ theorem summable_exp_qf (Y : Matrix (Fin g) (Fin g) ℝ) (hY : Y.PosDef) (c : �
 theorem intVec_mem_span (k : Fin g → ℤ) :
     intVec k ∈ Submodule.span ℤ (Set.range (Pi.basisFun ℝ (Fin g))) := by
   rw [Module.Basis.mem_span_iff_repr_mem]
-  intro i
-  exact ⟨k i, by simp [intVec]⟩
+  exact fun i => ⟨k i, by simp [intVec]⟩
 
 theorem exists_int_of_mem_span {x : Fin g → ℝ}
     (hx : x ∈ Submodule.span ℤ (Set.range (Pi.basisFun ℝ (Fin g)))) (i : Fin g) :
@@ -152,8 +151,7 @@ theorem integral_cube_tsum (F : (Fin g → ℝ) → ℝ) (hF0 : ∀ x, 0 ≤ F x
       (fun γ => (ENNReal.measurable_ofReal.comp
         (hFc.measurable.comp (measurable_const_vadd γ))).aemeasurable)]
   refine setLIntegral_congr_fun (ZSpan.fundamentalDomain_measurableSet _) (fun u _ => ?_)
-  rw [ENNReal.ofReal_tsum_of_nonneg (fun k => hF0 _) (hs u)]
-  rw [← (latticeEquiv (g := g)).tsum_eq]
+  rw [ENNReal.ofReal_tsum_of_nonneg (fun k => hF0 _) (hs u), ← (latticeEquiv (g := g)).tsum_eq]
   rfl
 
 end

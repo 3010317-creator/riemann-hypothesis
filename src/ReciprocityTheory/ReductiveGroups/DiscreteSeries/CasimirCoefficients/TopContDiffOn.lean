@@ -147,8 +147,7 @@ theorem capelliC_ad (E : Fin n → Fin n → 𝒰) (hE : GlRelR E) (P Q : Matrix
   have hdet : ∀ c : Fin n → Fin n, ¬ Function.Injective c → (P.submatrix c id).det = 0 := by
     intro c hc
     obtain ⟨i, j, hij, hne⟩ : ∃ i j, c i = c j ∧ i ≠ j := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hc (fun i j hij => h i j hij)
     exact Matrix.det_zero_of_row_eq hne (by ext k; simp [hij])
   have hS : ∀ d : Fin n → Fin n,
@@ -505,10 +504,8 @@ theorem top_contDiffOn {U : Set (Matrix (Fin n) (Fin n) ℂ)} (hU : IsOpen U)
   unfold Formalism.QuantumDeterminants.Top
   by_cases hab : a = b
   · subst hab
-    simp only [↓reduceIte]
-    exact (hG.const_smul u).add h2
-  · simp only [hab, ↓reduceIte, zero_add]
-    exact h2
+    simpa only [↓reduceIte] using (hG.const_smul u).add h2
+  · simpa only [hab, ↓reduceIte, zero_add] using h2
 
 theorem foldr_local (ε : Fin n → Bool) (Lk : E →L[ℂ] E') {G : Matrix (Fin n) (Fin n) ℂ → E}
     {U W : Set (Matrix (Fin n) (Fin n) ℂ)} {m : Matrix (Fin n) (Fin n) ℂ} (hU : IsOpen U)
@@ -548,8 +545,7 @@ theorem qdet_local (ε : Fin n → Bool) (Lk : E →L[ℂ] E') {G : Matrix (Fin 
   congr 1
   have key := (foldr_local ε Lk hU hG hW hWU hf
     (List.ofFn fun k : Fin n => (u - ((k : ℕ) : ℂ), σ k, k))).2 g hg hgu
-  rw [List.map_ofFn, List.map_ofFn] at key
-  exact key
+  rwa [List.map_ofFn, List.map_ofFn] at key
 
 end CapG
 

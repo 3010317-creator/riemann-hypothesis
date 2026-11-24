@@ -321,8 +321,7 @@ theorem ringKrullDim_le_of_isIntegral_inj {A R : Type*} [CommRing A] [CommRing R
   rcases isEmpty_or_nonempty (PrimeSpectrum A) with hA | hA
   · rw [ringKrullDim, Order.krullDim_eq_bot]
     exact bot_le
-  rw [ringKrullDim, Order.krullDim_eq_iSup_length]
-  rw [WithBot.coe_iSup (OrderTop.bddAbove _)]
+  rw [ringKrullDim, Order.krullDim_eq_iSup_length, WithBot.coe_iSup (OrderTop.bddAbove _)]
   refine iSup_le fun l => ?_
   obtain ⟨P, -, hP, hPl⟩ := Ideal.exists_ideal_over_prime_of_isIntegral l.head.asIdeal (⊥ : Ideal R)
     (by rw [Ideal.under_def, ← RingHom.ker_eq_comap_bot, (RingHom.injective_iff_ker_eq_bot _).1 h]; exact bot_le)
@@ -341,11 +340,9 @@ theorem aeval_derivative_minpoly_ne_zero {R A : Type*} [CommRing R] [IsDomain R]
   have hdvd := minpoly.isIntegrallyClosed_dvd hx h0
   have hmon := minpoly.monic hx
   have hne : Polynomial.derivative (minpoly R x) ≠ 0 := by
-    intro hd
-    exact (minpoly.natDegree_pos hx).ne' (Polynomial.derivative_eq_zero.1 hd)
+    exact fun hd => (minpoly.natDegree_pos hx).ne' (Polynomial.derivative_eq_zero.1 hd)
   have h1 := Polynomial.degree_le_of_dvd hdvd hne
-  have h2 := Polynomial.degree_derivative_lt hmon.ne_zero
-  exact absurd h1 (not_le.2 h2)
+  exact absurd h1 (not_le.2 (Polynomial.degree_derivative_lt hmon.ne_zero))
 
 theorem exists_simple_root_data {n : ℕ} (p : Ideal (MvPolynomial (Fin n) ℂ)) [hp : p.IsPrime] :
     ∃ s : ℕ, (s : WithBot ℕ∞) ≤ ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ p) ∧

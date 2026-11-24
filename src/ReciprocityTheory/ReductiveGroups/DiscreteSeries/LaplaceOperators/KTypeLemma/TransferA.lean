@@ -73,12 +73,10 @@ lemma ta_curve_neg (X y : Matrix (Fin n) (Fin n) ℂ) :
   have e : (fun t : ℝ => NormedSpace.exp (-((t : ℂ) • X)) * y) =
       fun t : ℝ => NormedSpace.exp ((t : ℂ) • -X) * y := by
     simp only [smul_neg]
-  rw [e]
-  exact h
+  rwa [e]
 
 lemma ta_curve (g X : Matrix (Fin n) (Fin n) ℂ) :
-    HasDerivAt (fun t : ℝ => g * NormedSpace.exp ((t : ℂ) • X)) (g * X) 0 := by
-  exact (dga_exp X).const_mul g
+    HasDerivAt (fun t : ℝ => g * NormedSpace.exp ((t : ℂ) • X)) (g * X) 0 := (dga_exp X).const_mul g
 
 end CurveL
 
@@ -102,8 +100,7 @@ lemma ta_inG_cpart2 (ε : Fin n → Bool) (Z : Matrix (Fin n) (Fin n) ℂ) : inG
     conjTranspose_conjTranspose]
   simp only [smul_mul_assoc, mul_smul_comm, add_mul, mul_add, mul_assoc, _root_.ReciprocityTheory.ChartRestriction.DS.S7.Jm_mul_self, ta_Jm_Jm, mul_one]
   have h2 : star (1 / (2 * Complex.I)) = -(1 / (2 * Complex.I)) := by
-    rw [star_div₀, star_one, star_mul', Complex.star_def, Complex.conj_I]
-    rw [map_ofNat]
+    rw [star_div₀, star_one, star_mul', Complex.star_def, Complex.conj_I, map_ofNat]
     rw [mul_neg, div_neg]
   rw [h2]
   module

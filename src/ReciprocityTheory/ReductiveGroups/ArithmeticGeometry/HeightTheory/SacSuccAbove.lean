@@ -67,13 +67,10 @@ theorem ratio_self {Ω V : Type*} [Field Ω] [AddCommGroup V] [Module Ω V] {f :
   · exact absurd h1 hf
 
 theorem sac_self {β : Type*} {n : ℕ} (i : Fin (n + 1)) (x : β) (p : Fin n → β) :
-    Fin.succAboveCases (α := fun _ => β) i x p i = x := by
-  show Fin.insertNth (α := fun _ => β) i x p i = x
-  exact Fin.insertNth_apply_same _ _ _
+    Fin.succAboveCases (α := fun _ => β) i x p i = x := Fin.insertNth_apply_same _ _ _
 
 theorem sac_succAbove {β : Type*} {n : ℕ} (i : Fin (n + 1)) (x : β) (p : Fin n → β) (k : Fin n) :
     Fin.succAboveCases (α := fun _ => β) i x p (i.succAbove k) = p k := by
-  show Fin.insertNth (α := fun _ => β) i x p (i.succAbove k) = p k
   exact Fin.insertNth_apply_succAbove _ _ _ _
 
 noncomputable def tauPev {K : Type} [Field K] {D N : ℕ} (sg : K →+* ℂ) (pt : TVar D N → ℂ)
@@ -204,8 +201,7 @@ theorem emb_mem_ST (σ : OmS (Ω c) d.D d.N →+* ℂ) (hσ : σ.comp (d.KTtoS h
     have h2 := (d.sH c).commutes a
     rw [MvPolynomial.algebraMap_eq] at h2
     rw [h2, eval₂_C] at h1
-    rw [RingHom.comp_apply, RingHom.comp_apply, ← IsScalarTower.algebraMap_apply]
-    exact h1
+    rwa [RingHom.comp_apply, RingHom.comp_apply, ← IsScalarTower.algebraMap_apply]
   · have h2 := congrArg σ (d.sH_rel hd c i)
 
     rw [map_sum, map_zero] at h2
@@ -227,10 +223,8 @@ theorem emb_ext (σ₁ σ₂ : OmS (Ω c) d.D d.N →+* ℂ) (h₁ : σ₁.comp 
       rw [← d.KTtoS_alg h c, ← RingHom.comp_apply, h₁, ← h₂, RingHom.comp_apply]
     simp only [RingHom.comp_apply]
     rcases v with ⟨⟩ | ⟨i, k⟩
-    · have h0 := hs (0, d.jc c)
-      simpa [d.sH_eq, sHp, pImg, sac_self] using h0
-    · have h0 := hs (i, (d.jc c).succAbove k)
-      simpa [d.sH_eq, sHp, pImg, sac_succAbove] using h0
+    · simpa [d.sH_eq, sHp, pImg, sac_self] using hs (0, d.jc c)
+    · simpa [d.sH_eq, sHp, pImg, sac_succAbove] using hs (i, (d.jc c).succAbove k)
 
 include hd h hpt in
 theorem evalAtPoint_injective (P : Ω c →+* ℂ) (hP : P ∈ d.ST c sg (fun i j => pt (i.succ, j))) :
@@ -308,8 +302,7 @@ theorem fibre_core :
       (σ : OmS (Ω c) d.D d.N →+* ℂ).comp (d.KTtoS h c) = tauPev sg pt hpt :=
     fun σ => RingHom.ext fun z => σ.commutes z
   refine ⟨fun σ₁ σ₂ he => ?_, ?_⟩
-  · apply AlgHom.coe_ringHom_injective
-    exact d.emb_ext h c sg pt hpt _ _ (hcomm σ₁) (hcomm σ₂) he
+  · exact AlgHom.coe_ringHom_injective (d.emb_ext h c sg pt hpt _ _ (hcomm σ₁) (hcomm σ₂) he)
   · ext P
     constructor
     · rintro ⟨σ, rfl⟩

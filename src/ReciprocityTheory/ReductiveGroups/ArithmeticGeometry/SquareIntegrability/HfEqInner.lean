@@ -74,8 +74,7 @@ def mulc {dim : (E →+* ℂ) → ℕ} (c : (E →+* ℂ) → ℂ) (v : Vsp dim)
 theorem emb_sep {σ τ : E →+* ℂ} (h : σ ≠ τ) : ∃ α : 𝓞 E, σ (α : E) ≠ τ (α : E) := by
   by_contra hc
   push Not at hc
-  apply h
-  exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext fun x => hc x)
+  exact h (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext fun x => hc x))
 
 theorem mulc_mem {dim : (E →+* ℂ) → ℕ} (I : Submodule ℤ (Vsp dim))
     (hst : ∀ (α : 𝓞 E) x, x ∈ I → act α x ∈ I) (σ : E →+* ℂ) :
@@ -94,8 +93,7 @@ theorem mulc_mem {dim : (E →+* ℂ) → ℕ} (I : Submodule ℤ (Vsp dim))
       apply Submodule.span_le.2
       rintro _ ⟨x, hx, rfl⟩
       exact Submodule.subset_span (hst α x hx)
-    intro v hv
-    exact hle ⟨v, hv, rfl⟩
+    exact fun v hv => hle ⟨v, hv, rfl⟩
 
   have hα : ∀ τ : E →+* ℂ, ∃ α : 𝓞 E, τ ≠ σ → σ (α : E) ≠ τ (α : E) := by
     intro τ
@@ -133,8 +131,7 @@ theorem mulc_mem {dim : (E →+* ℂ) → ℕ} (I : Submodule ℤ (Vsp dim))
     · rw [ite_eq_left hj, hj, Finset.prod_eq_one, one_mul]
       intro τ hτ
       have hne := hα τ (Finset.ne_of_mem_erase hτ)
-      simp only [c]
-      exact mul_inv_cancel₀ (sub_ne_zero.2 hne)
+      simpa only [c] using mul_inv_cancel₀ (sub_ne_zero.2 hne)
     · rw [ite_eq_right hj, Finset.prod_eq_zero (i := j.1) (Finset.mem_erase.2 ⟨hj, Finset.mem_univ _⟩), zero_mul]
       simp [c]
   rw [this]

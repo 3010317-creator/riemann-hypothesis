@@ -87,7 +87,6 @@ theorem isIntV_tmat_inv {γ : Fin d → Fin d → PowerSeries C} (hγ : ∀ a, I
       zero_mem' := by simp
       neg_mem' := fun {a} ha => by simpa [AddValuation.map_neg] using ha }
   have hent : ∀ a b, tmat γ a b ∈ S := fun a b => by
-    show 0 ≤ v (tmat γ a b)
     exact (hγ a b).2 1
   let M' : Matrix (Fin d) (Fin d) S := fun a b => ⟨tmat γ a b, hent a b⟩
   have hM : tmat γ = S.subtype.mapMatrix M' := by
@@ -161,8 +160,7 @@ theorem vecMul_tmat_support {h : ℕ} (ty : Fin d → ZMod h) {γ : Fin d → Fi
       · have hb2 : ty b' = τ := not_not.mp hb'
         have h1 : tangent (γ b') c = 0 := ht b' c (by rw [hb2]; exact hc)
         simp [hx', tmat, h1]
-  have h3 := congrFun (eq_zero_of_vecMul_tmat hdet hz) b
-  simpa [hx', hb] using h3
+  simpa [hx', hb] using congrFun (eq_zero_of_vecMul_tmat hdet hz) b
 
 end
 

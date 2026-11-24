@@ -110,8 +110,7 @@ theorem m_over : G'.hom ≫ m.e = m.F ≫ G.hom := by
   have hl := congrArg (fun f => f.left) hs
   simp only [Over.comp_left, Over.id_left] at hl
   have h := congrArg (fun f => (lift (𝟙 G') (lift (𝟙 G') (𝟙 G')) : G' ⟶ G3 G').left ≫ f) key
-  simp only [← Category.assoc, hl, Category.id_comp] at h
-  exact h
+  simpa only [← Category.assoc, hl, Category.id_comp] using h
 
 def tb {T : Over S'} (y : T ⟶ G') : (Over.map m.e).obj T ⟶ G :=
   Over.homMk (y.left ≫ m.F) (by
@@ -276,8 +275,7 @@ lemma tb_inv {T : Over S'} (y : T ⟶ G') : tb m (y ≫ ι[G']) = tb m y ≫ ι[
   simp [padd, pzero]
 
 theorem inv_comm : (GrpObj.inv (X := G')).left ≫ m.F = m.F ≫ (GrpObj.inv (X := G)).left := by
-  have h := congrArg (fun f => f.left) (tb_inv m (𝟙 G'))
-  simpa [tb_left] using h
+  simpa [tb_left] using congrArg (fun f => f.left) (tb_inv m (𝟙 G'))
 
 end Geo
 

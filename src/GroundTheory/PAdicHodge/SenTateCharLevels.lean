@@ -40,8 +40,7 @@ theorem artinLevel_spec {n : ℕ} (h : artinImage K η n ≠ ⊥) :
     · have hlt : Nat.pred (artinLevel K η n) < artinLevel K η n := by omega
       have := Nat.notMem_of_lt_sInf hlt
       simp only [Set.mem_ofPred_eq, not_not] at this
-      rw [h0]
-      exact this
+      rwa [h0]
   · have hmem' : ¬ artinImage K η n ≤ unitsOneAdd p (artinLevel K η n + 1) := hmem
     exact IsConcreteLE.not_le_iff_exists.1 hmem'
 
@@ -112,8 +111,7 @@ theorem upperRamificationGroup_charTower_eq_map (hη : Continuous η) {k n : ℕ
     (E := PadicAlgCl p) g
   rw [restrictNormalHom_mem_upperRamificationGroup_iff_level hη hA h2]
   constructor
-  · intro h
-    exact ⟨σ, h, rfl⟩
+  · exact fun h => ⟨σ, h, rfl⟩
   · rintro ⟨σ', hσ', heq⟩
     have h1 : AlgEquiv.restrictNormalHom (charTower η k) (σ'⁻¹ * σ) = 1 := by
       rw [map_mul, map_inv, heq, inv_mul_cancel]
@@ -370,8 +368,7 @@ theorem nrm_sub_le_of_mem_unitsOneAdd (hη : Continuous η) (hA : ∀ n, artinIm
     ⟨_, Int.toNat_of_nonneg (Int.ceil_nonneg hψ0)⟩
   have hmem : AlgEquiv.restrictNormalHom (charTower η (k + 1)) σ ∈
       lowerRamificationGroup K (charTower η (k + 1)) (i : ℤ) := by
-    rw [hi]
-    exact hσN
+    rwa [hi]
   have h1 := nrm_sub_le_of_mem_lowerRamificationGroup (charTower η (k + 1)) hmem ⟨y, hy⟩
   refine h1.trans (mul_le_mul_of_nonneg_right ?_ (nrm_nonneg _))
   have hX := le_herbrandPsi_div_ramificationIndex hη hA hn' h2 hper hNk hN1 hNq

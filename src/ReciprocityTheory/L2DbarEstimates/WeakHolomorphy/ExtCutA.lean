@@ -197,8 +197,7 @@ lemma hasDerivAt_realLine_fderiv {Ω : Set (V n)} {F : V n → ℂ} (hΩ : IsOpe
   have hg' := hg.deriv hU
 
   have hder : HasDerivAt (deriv fun l : ℂ => F (z + l • e)) (complexLineSecondDeriv F z e) (((0 : ℝ) : ℂ) * μ) := by
-    have h1 := ((hg' 0 h0).differentiableAt (hU.mem_nhds h0)).hasDerivAt
-    simpa [complexLineSecondDeriv] using h1
+    simpa [complexLineSecondDeriv] using ((hg' 0 h0).differentiableAt (hU.mem_nhds h0)).hasDerivAt
   have hc : HasDerivAt (fun t : ℝ => (t : ℂ) * μ) μ 0 := by
     simpa using ((hasDerivAt_id (0 : ℝ)).ofReal_comp).mul_const μ
   have hcomp := hder.comp (0 : ℝ) hc
@@ -272,11 +271,9 @@ lemma measurable_mul_complexLineSecondDeriv {Ω : Set (V n)} {F : V n → ℂ} (
       ((1 / ((k : ℝ) + 1))⁻¹)
     exact hm
   · by_cases hz : χ z = 0
-    · simp only [hz, zero_mul]
-      exact tendsto_const_nhds
+    · simpa only [hz, zero_mul] using tendsto_const_nhds
     · have hd := hasDerivAt_realLine_fderiv hΩ hF (hχΩ z hz) e 1
-      have hs := (hd.tendsto_slope_zero.comp hu0).const_mul (χ z)
-      simpa using hs
+      simpa using (hd.tendsto_slope_zero.comp hu0).const_mul (χ z)
 
 end
 

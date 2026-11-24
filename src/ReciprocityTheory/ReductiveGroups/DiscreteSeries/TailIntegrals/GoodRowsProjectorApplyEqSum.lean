@@ -138,10 +138,8 @@ theorem mulVec_first_basis (M : Mat k (1 + r')) : M *ᵥ e0 k r' = fun i => M i 
   · simp
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext (by simp [h]))
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    exact fun h => hb (Fin.ext (by simp [h]))
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem mulVec_last_basis (M : Mat k (1 + r')) : M *ᵥ es0 k r' = fun i => M i ⟨2 * (1 + r') + k, by omega⟩ := by
   funext i
@@ -150,10 +148,8 @@ theorem mulVec_last_basis (M : Mat k (1 + r')) : M *ᵥ es0 k r' = fun i => M i 
   · simp
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext h)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+    exact fun h => hb (Fin.ext h)
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem levi_fixes_base_vector (g : Mat k r') : ιLev k 1 r' g *ᵥ e0 k r' = e0 k r' := by
   rw [mulVec_first_basis]
@@ -233,8 +229,7 @@ theorem rankOneMatrix_lift (c : ℂ) (v : Fin (2 * r' + k + 1) → ℂ) : w0 k r
       ext
       dsimp only
       omega
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · rw [dite_eq_right hp]
     apply Finset.sum_eq_zero
     intro j _

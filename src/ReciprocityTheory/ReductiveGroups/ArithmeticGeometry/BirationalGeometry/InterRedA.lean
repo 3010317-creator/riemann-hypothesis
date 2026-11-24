@@ -82,8 +82,7 @@ theorem isSectionOn_inv_one {P : Ideal (MRing ι)} (hP : P.IsPrime) {B : HermLin
       exact (MvPolynomial.mem_support_iff.1 hm) (by rw [MvPolynomial.coeff_one, ite_eq_right (Ne.symm h)])
     subst hm0
     simp
-  · intro h
-    exact hP.ne_top ((Ideal.eq_top_iff_one P).2 h)
+  · exact fun h => hP.ne_top ((Ideal.eq_top_iff_one P).2 h)
 
 theorem h_eq_of_sameOrbit {B : HermLine ι} (hB : B.a = 0) {z z' : (Σ k, ι k) → ℂ}
     (h : SameOrbit z z') : B.h z = B.h z' := by
@@ -126,11 +125,9 @@ theorem locDens_cons_congr {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHol
   intro i
   induction i using Fin.cases with
   | zero =>
-    simp only [Fin.cons_zero]
-    exact h j y hy
+    simpa only [Fin.cons_zero] using h j y hy
   | succ i =>
-    simp only [Fin.cons_succ]
-    exact Filter.EventuallyEq.rfl
+    simpa only [Fin.cons_succ] using Filter.EventuallyEq.rfl
 
 variable {P J : Ideal (MRing ι)} {e : ℕ}
 
@@ -140,8 +137,7 @@ theorem contDiffOn_lift (R : AnLogRes P J e) (x : R.X) (j : Fin R.A.n) :
   have hopen : IsOpen ((R.A.chart j).target ∩ (R.A.chart j).symm ⁻¹' R.U x) :=
     (R.A.chart j).isOpen_inter_preimage_symm (R.isOpen_U x)
   rw [contDiffOn_pi]
-  intro p
-  exact ((R.holo x p j).contDiffOn hopen.uniqueDiffOn).restrict_scalars ℝ
+  exact fun p => ((R.holo x p j).contDiffOn hopen.uniqueDiffOn).restrict_scalars ℝ
 
 theorem contDiffOn_potOf (R : AnLogRes P J e) {L : HermLine ι} (hL : IsSmoothHerm L) (x : R.X)
     (j : Fin R.A.n) :

@@ -187,8 +187,7 @@ theorem pl_chart (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ
     intro y hy hp
     exact locDens_cons_ofFun_eq_zero (A := A') v Φ j0 (by rw [hj0]; exact hy) (by rw [hj0]; exact hp)
   have hDK : ∀ y ∈ ψ.target, y ∉ ψ '' tsupport v → locDens A' Φv j0 y = 0 := by
-    intro y hy hyK
-    exact hD0 y hy fun hp => hyK ⟨_, hp, ψ.right_inv hy⟩
+    exact fun y hy hyK => hD0 y hy fun hp => hyK ⟨_, hp, ψ.right_inv hy⟩
 
   have hb : mInt A' Φv ℓ = mInt A' Φv (fun p => ρ p * ℓ p) := by
     apply mInt_congr
@@ -462,16 +461,14 @@ theorem mInt_sum_cont {e' : ℕ} {Y : Type} [TopologicalSpace Y] [T2Space Y] [Co
   classical
   induction s using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty]
-    exact mInt_zero_fun A Φ (fun _ => rfl)
+    simpa only [Finset.sum_empty] using mInt_zero_fun A Φ (fun _ => rfl)
   | insert j s hj ih =>
     have hcont : Continuous (fun p => ∑ j ∈ s, f j p) := continuous_finsetSum _ fun j _ => hf j
     have h := mIntLinear A Φ hΦ 1 (f j) (fun p => ∑ j ∈ s, f j p)
       (mIntegrableCont A Φ hΦ _ (hf j)) (mIntegrableCont A Φ hΦ _ hcont)
     simp only [one_mul] at h
     simp_rw [Finset.sum_insert hj]
-    rw [← ih]
-    exact h
+    rwa [← ih]
 
 theorem lhs_sum (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
     (hℓ : ∀ Φ' : Fin (e + 1) → LocPot X, (∀ i, IsPotential A (Φ' i)) →
@@ -534,7 +531,6 @@ theorem lhs_sum (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
         funext w
         simp [Finset.sum_insert hj]
       have hsum : ContDiffAt ℝ 2 ((fun p => ∑ i ∈ t, f i p) ∘ (A.chart j').symm) y := by
-        show ContDiffAt ℝ 2 (fun w => ∑ i ∈ t, (f i ∘ (A.chart j').symm) w) y
         exact ContDiffAt.sum fun i _ => hsmooth i
       rw [e2, key _ _ (hsmooth j) hsum]
   have hint : ∀ j, MIntegrable A (Fin.cons (LocPot.ofFun (f j)) Φ) (logNormSec L s) := fun j =>

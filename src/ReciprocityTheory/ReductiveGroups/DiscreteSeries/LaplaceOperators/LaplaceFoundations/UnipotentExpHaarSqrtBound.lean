@@ -69,8 +69,7 @@ theorem haar_of_equiv [MeasurableSpace A] [BorelSpace A] [MeasurableSpace E] [Bo
   have h := exp_chart_haar hF hst (Measure.map e' μ)
   have he := exp_chart_embedding (st := st) hF
   simp only [] at h
-  rw [Measure.map_map he.measurable e'.continuous.measurable] at h
-  exact h
+  rwa [Measure.map_map he.measurable e'.continuous.measurable] at h
 
 omit [FiniteDimensional ℝ A] in
 theorem growth_of_equiv (hF : IsFil F L) (U0 : E ≃ₗ[ℝ] A) : ∃ (C : ℝ) (M : ℕ), 0 ≤ C ∧ ∀ Y ∈ F 0,
@@ -163,8 +162,7 @@ theorem unipotent_exp_haar_sqrt_bound (k r : ℕ) :
       (inferInstance : MeasurableSpace (Mt k r))
       (inferInstance : BorelSpace (Mt k r)) _ _ isFilB isAdjB volume _ e
     rw [← Nset_eq] at h
-    rw [haarLie, one_smul]
-    exact h
+    rwa [haarLie, one_smul]
   · obtain ⟨C, M, hC, h⟩ := growth_of_equiv (isFilB (k := k) (r := r)) (unrealL (2 * r + k + 1))
     refine ⟨C, M, hC, fun Y hY => ?_⟩
     rw [lieOf_Nset_eq] at hY

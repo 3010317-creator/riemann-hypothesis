@@ -74,8 +74,7 @@ theorem TangentGraphLowerDensity.proof : TangentGraphLowerDensity.Statement := b
     simpa [hQdef, TangentGraphLowerDensity.outPart_apply] using h3.symm
   have hQd : HasFDerivAt (fun w => Q (g w)) (0 : (I₀ → ℂ) →L[ℂ] EuclideanSpace ℂ {j : Fin n // j ∉ I₀}) w₀ := by
     have h := Q.hasFDerivAt.comp w₀ hgd.hasFDerivAt
-    rw [hQ0] at h
-    exact h
+    rwa [hQ0] at h
 
   obtain ⟨η, hη, hθη⟩ : ∃ η : ℝ, 0 < η ∧ θ * (1 + η) ^ (2 * d) < 1 := by
     have hc : Continuous fun η : ℝ => θ * (1 + η) ^ (2 * d) := by fun_prop
@@ -155,8 +154,7 @@ theorem TangentGraphLowerDensity.proof : TangentGraphLowerDensity.Statement := b
     _ = μH[((2 * d : ℕ) : ℝ)] (Metric.ball x₀ s) := hball.symm
     _ ≤ μH[((2 * d : ℕ) : ℝ)] (P '' (S ∩ Metric.ball (g w₀) ρ)) := measure_mono hsub
     _ ≤ μH[((2 * d : ℕ) : ℝ)] (S ∩ Metric.ball (g w₀) ρ) := by
-        have h := hLip.hausdorffMeasure_image_le hd0 (S ∩ Metric.ball (g w₀) ρ)
-        simpa using h
+        simpa using hLip.hausdorffMeasure_image_le hd0 (S ∩ Metric.ball (g w₀) ρ)
 
 end
 

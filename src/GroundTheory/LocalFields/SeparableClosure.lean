@@ -82,8 +82,7 @@ theorem valuation_le_one_of_spectralNorm_le_one [ValuativeRel L] [ValuativeExten
   have hc := (spectralValue_le_one_iff (minpoly.monic hint)).mp h
   refine valuation_le_one_of_aeval_eq_zero (minpoly.monic hint) (fun n ↦ ?_) (minpoly.aeval K y)
   have h1 : ‖(minpoly K y).coeff n‖ ≤ ‖(1 : K)‖ := by rw [norm_one]; exact hc n
-  rw [normedField_norm_le_norm_iff, (valuation K).vle_iff_le, map_one] at h1
-  exact h1
+  rwa [normedField_norm_le_norm_iff, (valuation K).vle_iff_le, map_one] at h1
 
 theorem valuation_lt_one_iff_spectralNorm_lt_one [ValuativeRel L] [ValuativeExtension K L] (x : L) :
     valuation L x < 1 ↔ (letI := normedField K; spectralNorm K L x < 1) := by
@@ -142,8 +141,7 @@ theorem vle_iff_spectralNorm_le [ValuativeRel L] [ValuativeExtension K L] (x y :
   let := algebraicNormedField K L
   change x ≤ᵥ y ↔ ‖x‖ ≤ ‖y‖
   rcases eq_or_ne x 0 with rfl | hx
-  · simp only [norm_zero, norm_nonneg, iff_true]
-    exact ValuativeRel.zero_vle y
+  · simpa only [norm_zero, norm_nonneg, iff_true] using ValuativeRel.zero_vle y
   · rw [vle_iff_not_valuation_div_lt_one hx, valuation_lt_one_iff_spectralNorm_lt_one (K := K)]
     change ¬ ‖y / x‖ < 1 ↔ _
     rw [norm_div, div_lt_one (norm_pos_iff.mpr hx), not_lt]
@@ -257,8 +255,7 @@ theorem exists_algebraMap_valuation_lt (γ : (ValueGroupWithZero Ω)ˣ) :
   refine ⟨a ^ n, pow_ne_zero _ ha, ?_⟩
   rw [← hz, ← (valuation Ω).vlt_iff_lt, ← not_vle, vle_iff_spectralNorm_le (K := K), not_le]
   change ‖algebraMap K Ω (a ^ n)‖ < ‖z‖
-  rw [algebraicNormedField_norm_algebraMap K Ω, norm_pow]
-  exact hn
+  rwa [algebraicNormedField_norm_algebraMap K Ω, norm_pow]
 
 instance intermediateField_isValuativeTopology (E : IntermediateField K Ω) :
     IsValuativeTopology E := by
@@ -343,8 +340,7 @@ theorem continuous_algEquiv_of_isAlgebraic (σ : Ω ≃ₐ[K] Ω) : Continuous �
   intro γ _
   refine ⟨γ, trivial, fun x hx ↦ ?_⟩
   simp only [Set.mem_ofPred_eq] at hx ⊢
-  rw [valuation_algEquiv_apply_of_isAlgebraic]
-  exact hx
+  rwa [valuation_algEquiv_apply_of_isAlgebraic]
 
 end Finite
 

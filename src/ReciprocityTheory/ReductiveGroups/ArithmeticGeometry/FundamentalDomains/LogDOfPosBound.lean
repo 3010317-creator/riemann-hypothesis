@@ -189,8 +189,7 @@ private lemma sum_eq_add_sum_castLE_of_vanish_above {n : ℕ} (k : Fin n) (f : F
     omega
   calc ∑ j, f j = ∑ j ∈ insert k (Finset.univ.map e), f j := by
         refine (Finset.sum_subset (Finset.subset_univ _) fun j _ hj => hf j ?_).symm
-        by_contra hle
-        push Not at hle
+        by_contra! hle
         rcases lt_or_eq_of_le hle with hlt | heq
         · exact hj (Finset.mem_insert_of_mem
             (Finset.mem_map.mpr ⟨⟨(j : ℕ), hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩))
@@ -348,8 +347,7 @@ lemma pivot_pos {x : Frame X.Ψ r} (hx : x ∈ X.dom) (ho : X.IsOrtho x) {Z : X.
     unfold nsq Pv
     have := Finset.single_le_sum (f := fun j : Fin X.p0 => ‖v (Fin.castLE X.p0_le j)‖ ^ 2)
       (fun j _ => by positivity) (Finset.mem_univ (⟨k, hk⟩ : Fin X.p0))
-    simp only [hkk, hvk, norm_one, one_pow] at this
-    exact this
+    simpa only [hkk, hvk, norm_one, one_pow] using this
   have htn : ∀ m, t (nI X m) = 0 := fun m => ht0 _ (by
     rw [Fin.le_def]
     simp [nI]
@@ -403,8 +401,7 @@ lemma pivot_neg {x : Frame X.Ψ r} (hx : x ∈ X.dom) (ho : X.IsOrtho x) {Z : X.
     unfold nsq
     have := Finset.single_le_sum (f := fun j => ‖Nv X Z τ (v - t) j‖ ^ 2)
       (fun j _ => by positivity) (Finset.mem_univ m0)
-    simp only [hNm, norm_one, one_pow] at this
-    exact this
+    simpa only [hNm, norm_one, one_pow] using this
   have hn0 : nsq (0 : Fin X.p0 → ℂ) = 0 := by simp [nsq]
   rw [hsplit, Complex.sub_re, hre, hP0, hn0]
   nlinarith

@@ -43,8 +43,7 @@ theorem IsCellCompact.relIndex_ne_zero {K K' : Subgroup (GL (Fin n) F)} (hK : Is
       exact ⟨fun h => h.2, fun h => ⟨hK'.1 x.2, h⟩⟩
     rw [Subgroup.relIndex, this, ← Subgroup.relIndex]
     exact relIndex_ne_zero_of_isCompact_of_isOpen hK'.2.1 hU
-  intro h0
-  exact h1 (Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_of_le_left K' hUK))
+  exact fun h0 => h1 (Nat.eq_zero_of_zero_dvd (h0 ▸ Subgroup.relIndex_dvd_of_le_left K' hUK))
 
 theorem IsCellCompact.exists_le {K : Subgroup (GL (Fin n) F)} (hK : IsCellCompact γ K) :
     ∃ e : ℕ, K ≤ unipotentCompactG γ e := by
@@ -261,9 +260,7 @@ theorem cellJacquet_add {f g : parabolicIndSpace F n β σ} (hf : f ∈ supporte
   have hfg : CellSupp γ w σ (f + g) m (unipotentCompactG γ e) := by
     intro y hy hy0
     by_cases h : cellFun w σ f m y = 0
-    · refine hge y hy fun h' => hy0 ?_
-      show (f : GL (Fin n) F → W) _ + (g : GL (Fin n) F → W) _ = 0
-      exact (congrArg₂ (· + ·) h h').trans (add_zero 0)
+    · exact hge y hy fun h' => hy0 ((congrArg₂ (· + ·) h h').trans (add_zero 0))
     · exact hfe y hy h
   have hK := isCellCompact_unipotentCompactG (F := F) (γ := γ) e
   rw [cellJacquet_eq_cellEv σ hYo hCY (add_mem hf hg) hm hK hfg,
@@ -278,10 +275,7 @@ theorem cellJacquet_smul (c : ℂ) {f : parabolicIndSpace F n β σ} (hf : f ∈
     cellJacquet γ w σ (c • f) m = c • cellJacquet γ w σ f m := by
   obtain ⟨e, hfe⟩ := exists_cellSupp σ hYo hCY hf hm
   have hcf : CellSupp γ w σ (c • f) m (unipotentCompactG γ e) := by
-    intro y hy hy0
-    refine hfe y hy fun h => hy0 ?_
-    show c • (f : GL (Fin n) F → W) _ = 0
-    exact (congrArg (c • ·) h).trans (smul_zero c)
+    exact fun y hy hy0 => hfe y hy fun h => hy0 ((congrArg (c • ·) h).trans (smul_zero c))
   have hK := isCellCompact_unipotentCompactG (F := F) (γ := γ) e
   rw [cellJacquet_eq_cellEv σ hYo hCY (Submodule.smul_mem _ c hf) hm hK hcf,
     cellJacquet_eq_cellEv σ hYo hCY hf hm hK hfe]

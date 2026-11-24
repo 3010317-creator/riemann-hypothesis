@@ -109,8 +109,7 @@ theorem injective_subst (k₀ : K) :
   intro a b hab
   apply IsFractionRing.injective (MvPolynomial (K ⊕ Unit) ℚ) L
   have := congrArg η hab
-  rw [← AlgHom.comp_apply, ← AlgHom.comp_apply, hη] at this
-  exact this
+  rwa [← AlgHom.comp_apply, ← AlgHom.comp_apply, hη] at this
 
 theorem isAlgebraic_ratio {y : (Σ k, ι k) → Ω} (hP : IsArithVar (mCoordIdeal y) 1) (c : ∀ k, ι k)
     (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) (p : Σ k, ι k) : IsAlgebraic ℚ (y p / y ⟨p.1, c p.1⟩) := by

@@ -370,8 +370,7 @@ theorem mdisc_update_add (A : Fin D → Matrix (Fin D) (Fin D) ℂ) (k : Fin D)
     (B C : Matrix (Fin D) (Fin D) ℂ) :
     mdisc (Function.update A k (B + C)) =
       mdisc (Function.update A k B) + mdisc (Function.update A k C) := by
-  simp only [← mdiscML_apply]
-  exact mdiscML.map_update_add A k B C
+  simpa only [← mdiscML_apply] using mdiscML.map_update_add A k B C
 
 theorem mdisc_update_smul (A : Fin D → Matrix (Fin D) (Fin D) ℂ) (k : Fin D) (c : ℂ)
     (B : Matrix (Fin D) (Fin D) ℂ) :
@@ -538,8 +537,7 @@ theorem norm_mdisc_le_of_abs_le (A B : Fin D → Matrix (Fin D) (Fin D) ℂ)
         ((mdisc (T.piecewise (fun k => A k + B k) B)).re : ℂ) := by
       apply Complex.ext <;> simp [him]
     rw [hz, Complex.norm_of_nonneg hre]
-    rw [h2, Complex.re_ofReal_mul] at hmono
-    exact hmono
+    rwa [h2, Complex.re_ofReal_mul] at hmono
   rw [hexp]
   calc ‖∑ T : Finset (Fin D), (-1 : ℂ) ^ (D - T.card) * mdisc (T.piecewise (fun k => A k + B k) B)‖
       ≤ ∑ T : Finset (Fin D),

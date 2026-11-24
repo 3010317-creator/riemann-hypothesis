@@ -150,10 +150,8 @@ variable {F : Type*} [Field F] [NumberField F] (u : HeightOneSpectrum (𝓞 F))
 theorem integers_valued :
     (Valued.v : Valuation (u.adicCompletion F) ℤᵐ⁰).Integers 𝒪[u.adicCompletion F] := by
   refine ⟨Subtype.val_injective, ?_, ?_⟩
-  · intro y
-    exact (mem_valuationInteger_iff u (y : u.adicCompletion F)).1 y.2
-  · intro x hx
-    exact ⟨⟨x, (mem_valuationInteger_iff u x).2 hx⟩, rfl⟩
+  · exact fun y => (mem_valuationInteger_iff u (y : u.adicCompletion F)).1 y.2
+  · exact fun x hx => ⟨⟨x, (mem_valuationInteger_iff u x).2 hx⟩, rfl⟩
 
 theorem mem_maximalIdeal_iff_valued_lt_one (y : 𝒪[u.adicCompletion F]) :
     y ∈ 𝓂[u.adicCompletion F] ↔ Valued.v (y : u.adicCompletion F) < 1 := by
@@ -230,8 +228,7 @@ theorem ramificationIdx_mul_inertiaDeg_integer :
     { default := ⟨_, hmem⟩
       uniq := fun q ↦ Subtype.ext ((Set.ext_iff.1 hset q).1 q.2) }
   have h := Ideal.sum_ramification_inertia_eq_finrank 𝓂[v.adicCompletion K] 𝒪[w.adicCompletion L]
-  rw [Fintype.sum_unique, finrank_integer] at h
-  exact h
+  rwa [Fintype.sum_unique, finrank_integer] at h
 
 theorem ramificationIdx_integer :
     𝓂[w.adicCompletion L].ramificationIdx 𝒪[v.adicCompletion K] =

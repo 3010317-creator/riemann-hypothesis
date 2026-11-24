@@ -116,15 +116,13 @@ theorem natCast_notMem_sq_of_isUnramifiedAt {K : Type*} [Field K] [NumberField K
     rw [Ideal.map_span, Set.image_singleton]
     simp
   have hmap0 : Ideal.map (algebraMap ℤ (𝓞 K)) (Ideal.span {(l : ℤ)}) ≠ ⊥ := by
-    rw [hmap, Ne, Ideal.span_singleton_eq_bot]
-    exact hl0
+    rwa [hmap, Ne, Ideal.span_singleton_eq_bot]
   have hcount := Ideal.IsDedekindDomain.ramificationIdx_eq_normalizedFactors_count
     (Ideal.span {(l : ℤ)}) P hmap0
   rw [Ideal.ramificationIdx_eq_one_of_isUnramifiedAt] at hcount
 
   have hdvd : P ^ 2 ∣ Ideal.map (algebraMap ℤ (𝓞 K)) (Ideal.span {(l : ℤ)}) := by
-    rw [Ideal.dvd_iff_le, hmap, Ideal.span_le, Set.singleton_subset_iff]
-    exact hl2
+    rwa [Ideal.dvd_iff_le, hmap, Ideal.span_le, Set.singleton_subset_iff]
   have hP2 : P ^ 2 ≠ 0 := pow_ne_zero _ (by simpa using hP0)
   have hnf := (UniqueFactorizationMonoid.dvd_iff_normalizedFactors_le_normalizedFactors hP2
     (by simpa using hmap0)).mp hdvd
@@ -163,8 +161,7 @@ theorem cyclotomic_irreducible_of_isUnramifiedAt {K : Type*} [Field K] [NumberFi
       obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp (hE.mem hn)
       rw [← hc, smul_eq_mul, map_mul, map_natCast]
       exact P.mul_mem_left _ hlP
-    · rw [coeff_map, hc0, map_natCast]
-      exact hl2
+    · rwa [coeff_map, hc0, map_natCast]
   have hpos : 0 < ((cyclotomic l (𝓞 K)).comp (X + 1)).natDegree := by
     rw [← hg, hdeg, natDegree_comp, natDegree_cyclotomic, hX1d, mul_one, Nat.totient_prime hl]
     exact Nat.sub_pos_of_lt hl.one_lt

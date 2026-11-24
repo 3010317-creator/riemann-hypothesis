@@ -65,8 +65,7 @@ variable {M : Type*} [AddCommGroup M] [Module ℂ M] {E : Fin n → Fin n → Mo
 theorem generatedSubmodule_stable (a b : Fin n) {v : M} (hv : v ∈ genSub E V) : E a b v ∈ genSub E V := by
   unfold genSub at hv ⊢
   rw [Submodule.mem_sInf] at hv ⊢
-  intro T hT
-  exact hT.2 a b v (hv T hT)
+  exact fun T hT => hT.2 a b v (hv T hT)
 
 theorem le_generatedSubmodule : V ≤ genSub E V := le_sInf fun _ hT => hT.1
 
@@ -112,8 +111,7 @@ theorem finiteDimensional_pi_submodule (hV : FiniteDimensional ℂ V) :
     FiniteDimensional ℂ (Submodule.pi Set.univ fun _ : Fin n => V) := by
   let F : (Fin n → V) →ₗ[ℂ] (Fin n → M) := LinearMap.pi fun i => V.subtype ∘ₗ LinearMap.proj i
   have : Submodule.pi Set.univ (fun _ : Fin n => V) ≤ LinearMap.range F := by
-    intro f hf
-    exact ⟨fun i => ⟨f i, hf i (Set.mem_univ i)⟩, rfl⟩
+    exact fun f hf => ⟨fun i => ⟨f i, hf i (Set.mem_univ i)⟩, rfl⟩
   exact Submodule.finiteDimensional_of_le this
 
 end Gen
@@ -194,14 +192,12 @@ theorem lagrangeFactor_eval_ne_zero_of_injective {θ : Fin n → ℝ} (hθ : Fun
   rw [k3bP, Polynomial.eval_prod, Finset.prod_ne_zero_iff]
   intro t ht
   simp only [eval_sub, eval_X, eval_C, sub_ne_zero]
-  intro h
-  exact (Finset.ne_of_mem_erase ht) (hθ (Complex.ofReal_injective h)).symm
+  exact fun h => (Finset.ne_of_mem_erase ht) (hθ (Complex.ofReal_injective h)).symm
 
 theorem aeval_tensorAction_comm (hE : IsGlRep E) (p : ℂ[X]) (a b : Fin n) (f : Fin n → M) :
     aeval (eeV E) p (tensV E a b f) = tensV E a b (aeval (eeV E) p f) := by
   have h : eeV E * tensV E a b = tensV E a b * eeV E := by
-    refine LinearMap.ext fun g => ?_
-    exact (tensorAction_comm_euler hE a b g).symm
+    exact LinearMap.ext fun g => (tensorAction_comm_euler hE a b g).symm
   exact LinearMap.congr_fun (aeval_mul_commute h p) f
 
 theorem eigenTensorSpace_stable (hE : IsGlRep E) (a b : Fin n) {θ : ℝ} {f : Fin n → M}

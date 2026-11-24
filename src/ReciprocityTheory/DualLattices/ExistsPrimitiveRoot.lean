@@ -74,7 +74,6 @@ private lemma pow_p_pow_eq (f : ℕ → O) (hf : ∀ n, f (n + 1) ^ p = f n) (n 
 lemma untilt_eq_of_coeff (x : PreTilt O p) (f : ℕ → O) (hf : ∀ n, f (n + 1) ^ p = f n)
     (hx : ∀ n, Perfection.coeff (ModP O p) p n x = Ideal.Quotient.mk (span {(p : O)}) (f n)) :
     x.untilt = f 0 := by
-  show Perfection.teichmuller p (span {(p : O)}) x = f 0
   exact Perfection.teichmuller_spec fun n => ⟨f n, (hx n).symm, by rw [pow_p_pow_eq f hf n]⟩
 
 def ofRoots (f : ℕ → O) (hf : ∀ n, f (n + 1) ^ p = f n) : PreTilt O p :=
@@ -149,8 +148,7 @@ theorem exists_eps [CharZero C] (hv : v.Integers O) :
     | zero => exact hζ.pow_eq_one
     | succ m => exact hr _
   refine ⟨ofRoots f hf, ?_⟩
-  rw [untilt_symm_ofRoots]
-  exact hζ
+  rwa [untilt_symm_ofRoots]
 
 end Roots
 

@@ -79,8 +79,7 @@ theorem cell_zero (ho' : IsOrth X x1') (hb1 : b1 ∈ Bor X.Ψ r) :
   have hdom : x1' ∈ X.dom := IW.orth_mem_dom X x1' ho'
   have hO : (0 : V (nd X)) ∈ OmF X x1' := by
     show cpt X x1' 0 ∈ X.dom
-    rw [hx0]
-    exact hdom
+    rwa [hx0]
   have hu := (D.uniq 0 hO b1 hb1).1
   rw [hx0] at hu
   rw [h0]
@@ -142,8 +141,7 @@ private theorem eq_of_unipotent_lower_mul_eq_upper {n : ℕ} (A C B1 B2 N1 N2 : 
     exact e.symm
   ext a c
   have e := congrFun (congrFun hN1 a) c
-  rw [hsum, hPd, mul_one] at e
-  exact e
+  rwa [hsum, hPd, mul_one] at e
 
 theorem Φ_injOn (hx1 : rmul x1' b1 ∈ X.dom) :
     Set.InjOn (Φ X b1 D) {z | cpt X (rmul x1' b1) z ∈ ExtFPf.cell D} := by
@@ -170,8 +168,7 @@ theorem Φ_injOn (hx1 : rmul x1' b1 ∈ X.dom) :
   ext i
   obtain ⟨⟨τ, ⟨⟨a, c⟩, hac⟩⟩, rfl⟩ : ∃ e : Ent X, Fintype.equivFin (Ent X) e = i :=
     ⟨(Fintype.equivFin (Ent X)).symm i, (Fintype.equivFin (Ent X)).apply_symm_apply i⟩
-  have e := congrFun (congrFun (hN τ) a) c
-  simpa [mat, nmat, hac] using e
+  simpa [mat, nmat, hac] using congrFun (congrFun (hN τ) a) c
 
 end
 

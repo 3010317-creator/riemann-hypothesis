@@ -139,8 +139,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
     exact lt_of_lt_of_le (by norm_num : (0 : ℝ) < 1 / 2)
       (le_trans (hOψ x p hpx).le (Finset.single_le_sum (fun y _ => hψ0 y p) hx))
   refine ⟨fun k p => (∑ x ∈ t.filter (fun x => κ x = k), ψ x p) / ∑ x ∈ t, ψ x p, ?_, ?_, ?_, ?_⟩
-  · intro k p
-    exact div_nonneg (Finset.sum_nonneg fun x _ => hψ0 x p) (hS p).le
+  · exact fun k p => div_nonneg (Finset.sum_nonneg fun x _ => hψ0 x p) (hS p).le
   · intro p
     rw [← Finset.sum_div, Finset.sum_fiberwise]
     exact div_self (hS p).ne'
@@ -158,8 +157,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
       obtain ⟨x, hx, hpx⟩ := hp
       have hk : κ x = k := (Finset.mem_filter.mp hx).2
       have hsrc := (hψext x).1 hpx
-      rw [hk] at hsrc
-      exact hsrc
+      rwa [hk] at hsrc
   · intro k j
     have hsum : ∀ s : Finset X, ContDiffOn ℝ ∞
         (fun y => ∑ x ∈ s, ψ x ((e j).symm y)) (e j).target :=

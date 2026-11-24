@@ -47,12 +47,9 @@ theorem PolySublevel.equiv :
     set K := ‖(e : EuclideanSpace ℂ (Fin d) →L[ℂ] (Fin d → ℂ))‖
     have hK : 0 ≤ K := norm_nonneg _
     obtain ⟨C, α, hC, hα, hb⟩ := h d Q hQ ((K + 1) * R) (by positivity)
-    have hc := isAddLeftInvariant_eq_smul
-      ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e)
-      (volume : Measure (Fin d → ℂ))
-    set c := addHaarScalarFactor
-      ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e)
-      (volume : Measure (Fin d → ℂ))
+    obtain ⟨c, hc⟩ : ∃ c : NNReal,
+        ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e) =
+          c • (volume : Measure (Fin d → ℂ)) := ⟨_, isAddLeftInvariant_eq_smul _ _⟩
     refine ⟨((c : ℝ) + 1) * C, α, by positivity, hα, fun η hη hη1 => ?_⟩
     calc _ ≤ μH[((2 * d : ℕ) : ℝ)]
           (e ⁻¹' {x : Fin d → ℂ | x ∈ Metric.ball 0 ((K + 1) * R) ∧ ‖eval x Q‖ ≤ η}) := by
@@ -60,16 +57,12 @@ theorem PolySublevel.equiv :
           rintro x ⟨hx, hxη⟩
           refine ⟨?_, hxη⟩
           rw [mem_ball_zero_iff] at hx ⊢
-          calc ‖e x‖ = ‖(e : EuclideanSpace ℂ (Fin d) →L[ℂ] (Fin d → ℂ)) x‖ := rfl
-            _ ≤ K * ‖x‖ := ContinuousLinearMap.le_opNorm _ x
+          calc ‖e x‖ ≤ K * ‖x‖ := (e : EuclideanSpace ℂ (Fin d) →L[ℂ] (Fin d → ℂ)).le_opNorm x
             _ ≤ K * R := by gcongr
             _ < (K + 1) * R := by nlinarith
-      _ = ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e)
-          {x : Fin d → ℂ | x ∈ Metric.ball 0 ((K + 1) * R) ∧ ‖eval x Q‖ ≤ η} :=
-          (map_hausdorffMeasure_euclideanSpace_apply d _).symm
       _ = (c : ENNReal) *
           volume {x : Fin d → ℂ | x ∈ Metric.ball 0 ((K + 1) * R) ∧ ‖eval x Q‖ ≤ η} := by
-          rw [hc]; rfl
+          rw [← map_hausdorffMeasure_euclideanSpace_apply, hc]; rfl
       _ ≤ (c : ENNReal) * ENNReal.ofReal (C * η ^ α) := by gcongr; exact hb η hη hη1
       _ ≤ _ := nnreal_mul_ofReal_le c C η α
   · intro h d Q hQ R hR
@@ -77,18 +70,15 @@ theorem PolySublevel.equiv :
     set K := ‖(e.symm : (Fin d → ℂ) →L[ℂ] EuclideanSpace ℂ (Fin d))‖
     have hK : 0 ≤ K := norm_nonneg _
     obtain ⟨C, α, hC, hα, hb⟩ := h d Q hQ ((K + 1) * R) (by positivity)
-    have hc := isAddLeftInvariant_eq_smul (volume : Measure (Fin d → ℂ))
-      ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e)
-    set c := addHaarScalarFactor (volume : Measure (Fin d → ℂ))
-      ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e)
+    obtain ⟨c, hc⟩ : ∃ c : NNReal, (volume : Measure (Fin d → ℂ)) =
+        c • ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e) :=
+      ⟨_, isAddLeftInvariant_eq_smul _ _⟩
     refine ⟨((c : ℝ) + 1) * C, α, by positivity, hα, fun η hη hη1 => ?_⟩
-    calc _ = (c : ENNReal) * ((μH[((2 * d : ℕ) : ℝ)] : Measure (EuclideanSpace ℂ (Fin d))).map e)
-          {x : Fin d → ℂ | x ∈ Metric.ball 0 R ∧ ‖eval x Q‖ ≤ η} := by
+    calc _ = (c : ENNReal) * μH[((2 * d : ℕ) : ℝ)]
+          (e ⁻¹' {x : Fin d → ℂ | x ∈ Metric.ball 0 R ∧ ‖eval x Q‖ ≤ η}) := by
+          rw [← map_hausdorffMeasure_euclideanSpace_apply]
           conv_lhs => rw [hc]
           rfl
-      _ = (c : ENNReal) * μH[((2 * d : ℕ) : ℝ)]
-          (e ⁻¹' {x : Fin d → ℂ | x ∈ Metric.ball 0 R ∧ ‖eval x Q‖ ≤ η}) := by
-          rw [map_hausdorffMeasure_euclideanSpace_apply]
       _ ≤ (c : ENNReal) * μH[((2 * d : ℕ) : ℝ)]
           {x : EuclideanSpace ℂ (Fin d) | x ∈ Metric.ball 0 ((K + 1) * R) ∧
             ‖eval (fun i => x i) Q‖ ≤ η} := by

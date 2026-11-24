@@ -123,10 +123,8 @@ theorem proof (hLoc : LocalSectionLengthSum.Statement) : SectionLengthSum.Statem
   · intro P hP
     rw [Finset.mem_filter, Set.Finite.mem_toFinset] at hP
     exact hcomapmap P hP.1.1.1 hP.2
-  · intro Q _
-    exact hmapcomap Q
-  · intro P _
-    exact hlm P
+  · exact fun Q _ => hmapcomap Q
+  · exact fun P _ => hlm P
 
 end SectionLengthSum
 

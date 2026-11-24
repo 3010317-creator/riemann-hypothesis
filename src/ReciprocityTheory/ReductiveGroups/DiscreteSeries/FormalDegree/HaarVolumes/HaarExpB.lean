@@ -105,8 +105,7 @@ theorem le_of_eventually_up {ε δ : ℝ} (hε1 : ε < 1) (hq : QInv nu ε δ) (
     (s : Set V) (hs : s ⊆ ball 0 δ) : nu s ≤ M' * lam s := by
   have key := (Besicovitch.vitaliFamily nu).measure_le_of_frequently_le (M' • lam)
     (Measure.AbsolutelyContinuous.refl nu) s ?_
-  · rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at key
-    exact key
+  · rwa [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at key
   intro X hX
   have hXn : ‖X‖ < δ := by simpa using hs hX
   have ht : Tendsto (fun r : ℝ => closedBall X ((1 - ε) * r)) (𝓝[>] 0)
@@ -128,8 +127,7 @@ theorem le_of_eventually_down {ε δ : ℝ} (hε0 : 0 < ε) (hq : QInv nu ε δ)
     (s : Set V) (hs : s ⊆ ball 0 δ) : M' * lam s ≤ nu s := by
   have key := (Besicovitch.vitaliFamily lam).measure_le_of_frequently_le (ρ := M' • lam) nu
     (Measure.AbsolutelyContinuous.smul_left (Measure.AbsolutelyContinuous.refl lam) M') s ?_
-  · rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at key
-    exact key
+  · rwa [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at key
   intro X hX
   have hXn : ‖X‖ < δ := by simpa using hs hX
   have ht : Tendsto (fun r : ℝ => closedBall X ((1 + ε) * r)) (𝓝[>] 0)
@@ -168,10 +166,8 @@ theorem limsup_liminf_bounds {ε δ : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) (hδ 
     push Not at hcon
     have hsub : ball (0 : V) δ ⊆ {X | ¬ (Tendsto (fun r => nu (closedBall X r) / lam (closedBall X r))
         (𝓝[>] 0) (𝓝 (nu.rnDeriv lam X)) ∧ nu.rnDeriv lam X < ⊤)} := by
-      intro X hX h
-      exact absurd h.2 (not_lt.mpr (hcon X hX h.1))
-    have h0 := measure_mono_null hsub (ae_iff.mp hae)
-    exact (measure_ball_pos lam (0 : V) hδ).ne' h0
+      exact fun X hX h => absurd h.2 (not_lt.mpr (hcon X hX h.1))
+    exact (measure_ball_pos lam (0 : V) hδ).ne' (measure_mono_null hsub (ae_iff.mp hae))
   have hXn : ‖X‖ < δ := by simpa using hXm
   refine ⟨nu.rnDeriv lam X, hXfin.ne, ?_, ?_⟩
   · have hA0 : ENNReal.ofReal ((1 + ε) ^ finrank ℝ V) ≠ 0 := by
@@ -336,8 +332,7 @@ theorem logA_one : logA 𝔸 (1 : 𝔸) = 0 := by
 
 theorem hasStrict_logA : HasStrictFDerivAt (logA 𝔸) (ContinuousLinearMap.id ℝ 𝔸) (1 : 𝔸) := by
   have := (hasStrictFDerivAt_exp_zero_alt (𝔸 := 𝔸)).to_localInverse
-  rw [exp_zero] at this
-  exact this
+  rwa [exp_zero] at this
 
 theorem exp_cont : Continuous (exp : 𝔸 → 𝔸) :=
   let _ := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
@@ -410,13 +405,11 @@ theorem distortion {ε : ℝ} (hε : 0 < ε) : ∃ δ > 0, ∀ X Y : 𝔸, ‖X�
   have c1 : Tendsto (fun p : 𝔸 × 𝔸 => exp (-p.1) * exp (p.1 + p.2)) (𝓝 0) (𝓝 1) := by
     have : Continuous (fun p : 𝔸 × 𝔸 => exp (-p.1) * exp (p.1 + p.2)) :=
       (exp_cont.comp continuous_fst.neg).mul (exp_cont.comp (continuous_fst.add continuous_snd))
-    have h := this.tendsto 0
-    simpa [exp_zero] using h
+    simpa [exp_zero] using this.tendsto 0
   have c2 : Tendsto (fun p : 𝔸 × 𝔸 => exp p.1 * exp p.2) (𝓝 0) (𝓝 1) := by
     have : Continuous (fun p : 𝔸 × 𝔸 => exp p.1 * exp p.2) :=
       (exp_cont.comp continuous_fst).mul (exp_cont.comp continuous_snd)
-    have h := this.tendsto 0
-    simpa [exp_zero] using h
+    simpa [exp_zero] using this.tendsto 0
   obtain ⟨δ3, h3, H3⟩ := eventually_pair (c1.eventually exp_logA)
   obtain ⟨δ4, h4, H4⟩ := eventually_pair (c2.eventually exp_logA)
   obtain ⟨δ5, h5, H5⟩ := Metric.eventually_nhds_iff_ball.mp (logA_exp (𝔸 := 𝔸))
@@ -428,8 +421,7 @@ theorem distortion {ε : ℝ} (hε : 0 < ε) : ∃ δ > 0, ∀ X Y : 𝔸, ‖X�
     simpa [e] using this
   · have := H2 X Y hX.1.2 hY.1.2
     have e : F2 (X, (0 : 𝔸)) = X := by
-      simp only [F2, exp_zero, mul_one]
-      exact H5 X (by simpa using hX.2.2)
+      simpa only [F2, exp_zero, mul_one] using H5 X (by simpa using hX.2.2)
     simpa [e] using this
 
 end ReciprocityTheory.ChartRestriction.DS.HExp

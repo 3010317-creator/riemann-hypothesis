@@ -111,8 +111,7 @@ theorem bijective_dualToCartierDual {n : ℕ} [NeZero n] (hn : (n : F) ≠ 0)
     rwa [← ConcreteCategory.comp_apply, ← ConcreteCategory.comp_apply, e.inv_hom_id] at h
   have : Finite (cartierDual F Fsep (Rep.res ψ.toMonoidHom M)) := Finite.of_injective _ he
   refine Function.Injective.bijective_of_nat_card_le ?_ ?_
-  · intro f f' hff'
-    exact LinearMap.ext fun m => hρ (LinearMap.congr_fun hff' m)
+  · exact fun f f' hff' => LinearMap.ext fun m => hρ (LinearMap.congr_fun hff' m)
   · calc _ ≤ Nat.card (dualRep (galRootsOfUnity.{0} F Fsep n) (Rep.res ψ.toMonoidHom M)) :=
           Nat.card_le_card_of_injective _ he
       _ ≤ Nat.card M := card_dualRep_le hDv
@@ -205,10 +204,7 @@ theorem gsRootsToLocalUnits_injective (v : S) :
     AlgebraicClosure ((v : HeightOneSpectrum (𝓞 K.1)).adicCompletion K.1))) hab
   change ιs v _ = ιs v _ at h
   apply Additive.toMul.injective
-  apply Subtype.ext
-  apply Units.ext
-  apply Subtype.ext
-  exact (ιs v).toRingHom.injective h
+  exact Subtype.ext (Units.ext (Subtype.ext ((ιs v).toRingHom.injective h)))
 
 theorem gsLocalInvRootsQZ_eq_comp (v : S) :
     gsLocalInvRootsQZ S ιs n v =

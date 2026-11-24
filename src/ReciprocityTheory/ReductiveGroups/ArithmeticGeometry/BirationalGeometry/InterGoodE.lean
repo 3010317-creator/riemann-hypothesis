@@ -92,8 +92,7 @@ theorem intOver_trans {R : Type*} [CommRing R] [Algebra k R] {r : ℕ} (ℓ : Fi
       Cl.toSubsemiring hall
   have hxC : IsIntegral Cl x := by
     refine ⟨p.map g, hpm.map g, ?_⟩
-    rw [Polynomial.eval₂_map]
-    exact hp
+    rwa [Polynomial.eval₂_map]
   exact isIntegral_trans (R := MvPolynomial (Fin r) k) (A := Cl) x hxC
 
 def forms {R : Type*} [CommRing R] [Algebra k R] {τ : Type*} [Fintype τ] (v : τ → R) {r : ℕ}
@@ -139,8 +138,7 @@ theorem exists_linear_normalization [Infinite k] {R : Type*} [CommRing R] [Algeb
   by_cases hN : Fintype.card τ ≤ m
   · exact ⟨_, hN, hstart⟩
   · refine ⟨m, le_rfl, hdesc (Fintype.card τ - m) ?_⟩
-    rw [show m + (Fintype.card τ - m) = Fintype.card τ by omega]
-    exact hstart
+    rwa [show m + (Fintype.card τ - m) = Fintype.card τ by omega]
 
 end
 

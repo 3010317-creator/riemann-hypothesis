@@ -670,14 +670,12 @@ theorem exists_smul_of_bilinear (hρ : IsAdmissible ρ) [ρ.IsIrreducible] {K : 
     intro z u
     rw [← sub_eq_zero]
     refine hsep _ fun l => ?_
-    rw [Submodule.coe_sub, map_sub, sub_eq_zero]
-    rw [hTl, show S z (T u) = E (ρ z (T u)) from rfl, hEl]
+    rw [Submodule.coe_sub, map_sub, sub_eq_zero, hTl, show S z (T u) = E (ρ z (T u)) from rfl, hEl]
     have h1 : b (S z u) l = b (ρ z u) l := by
       show b (E (ρ z u)) l = b (ρ z u) l
       exact apply_fixedProj_of_invariant hρ.1 hKc hKo (f := b.flip l)
         (fun k hk w => hinvL l l.2 k hk w) _
-    rw [h1, hcomm u u.2 l l.2 z, hText u]
-    rw [contragredient_apply_apply, inv_inv]
+    rw [h1, hcomm u u.2 l l.2 z, hText u, contragredient_apply_apply, inv_inv]
 
   have hspan : ∀ x : U, x ≠ 0 → ∀ y : U, y ∈ Submodule.span ℂ (Set.range fun z => S z x) := by
     intro x hx y
@@ -1475,8 +1473,7 @@ theorem exists_blockFE (μ : Measure (GL (Fin m) F)) [μ.IsHaarMeasure] (hσ : I
     have h := congrArg (fun f : Module.Dual ℂ (fixedVectors σ 𝕂₀) => f ⟨v₀, hv₀⟩)
       (ef.apply_symm_apply φ)
     rw [hef, fixedContragredientEquiv_apply, restrictFixed_apply] at h
-    rw [hℓ₀def, hef, h]
-    exact hφ
+    rwa [hℓ₀def, hef, h]
   set K₀ : Set (GL (Fin m) F) := (congruenceSubgroup F m r₀ : Set (GL (Fin m) F))
   have he₀ : IsSchwartzBruhat (indGL K₀) := isSchwartzBruhat_indGL
     (isCompact_congruenceSubgroup F m r₀) (isOpen_congruenceSubgroup F m r₀)

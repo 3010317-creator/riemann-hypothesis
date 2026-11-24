@@ -247,8 +247,7 @@ theorem localFourier_localFourier {f : K → ℂ} (hf : f ∈ schwartzBruhat K) 
       rw [ite_eq_left ht, Set.indicator_of_mem (show x + z ∈ (valBall K N : Set K) from hxz)]
       have : f x = f (-z) := by
         have := hN (-z) (x + z) hxz
-        rw [show -z + (x + z) = x by ring] at this
-        exact this
+        rwa [show -z + (x + z) = x by ring] at this
       rw [this]
     · have ht : ¬ IsTrivialOn (ψ.mulShift (x + z)) (addCharConductor ψ - N) := by
         rw [isTrivialOn_mulShift_iff_mem hψ hψ1]
@@ -380,8 +379,7 @@ theorem range_units_val : Set.range (Units.val : Kˣ → K) = {0}ᶜ := by
   constructor
   · rintro ⟨u, rfl⟩
     exact u.ne_zero
-  · intro hx
-    exact ⟨Units.mk0 x hx, rfl⟩
+  · exact fun hx => ⟨Units.mk0 x hx, rfl⟩
 
 
 omit [MeasurableSpace K] [BorelSpace K] in
@@ -552,8 +550,7 @@ theorem multHaar_unitFiltrationUnits_zero :
     simp
   have hm := (measurableSet_valBall (K := K) 0).diff (measurableSet_valBall 1)
   have hsubset : (valBall K 1 : Set K) ⊆ valBall K 0 := by
-    intro x hx
-    exact mem_valBall_zero_iff.mpr (mem_valBall_one_iff.mp hx).le
+    exact fun x hx => mem_valBall_zero_iff.mpr (mem_valBall_one_iff.mp hx).le
   rw [setLIntegral_congr_fun hm hd, setLIntegral_const, one_mul,
     measure_sdiff hsubset (measurableSet_valBall 1).nullMeasurableSet
       (isCompact_valBall 1).measure_lt_top.ne,

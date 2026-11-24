@@ -86,9 +86,7 @@ theorem ext_glue (hU : IsOpen U) (g G : V n → ℂ) (hg : DifferentiableOn ℂ 
       Filter.inter_mem (isOpen_ball.mem_nhds hxy) (Filter.inter_mem (isOpen_ball.mem_nhds hxz) hev)
     obtain ⟨W, hWs, hWo, hxW⟩ := _root_.mem_nhds_iff.mp hs
     obtain ⟨t, htW, hgt⟩ := hgn W hWo (fun t ht => hsub y hy (hWs ht).1) ⟨x, hxW⟩
-    have h1 := hFeq y hy ⟨(hWs htW).1, hgt⟩
-    have h2 := hFeq z hz ⟨(hWs htW).2.1, hgt⟩
-    exact (hWs htW).2.2 (h1.trans h2.symm)
+    exact (hWs htW).2.2 ((hFeq y hy ⟨(hWs htW).1, hgt⟩).trans (hFeq z hz ⟨(hWs htW).2.1, hgt⟩).symm)
   refine ⟨fun y => if hy : y ∈ U then F y hy y else 0, ?_, ?_⟩
   · intro y hy
     have hnb : ball y (ρ y hy) ∈ 𝓝 y := isOpen_ball.mem_nhds (mem_ball_self (hρ y hy))

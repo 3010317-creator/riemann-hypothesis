@@ -156,8 +156,7 @@ theorem coe_norm_eq_prod_smul_norm (d : G →* Multiplicative ℤ̂) {K S J : Su
         have : ((φ ^ ν * (φ ^ (-(ν : ℤ)) * (k : G) * s⁻¹))⁻¹ * k : G) = s := by
           rw [zpow_neg, zpow_natCast]
           group
-        rw [this]
-        exact hs
+        rwa [this]
   rw [coe_norm, ← finprod_comp_equiv (Equiv.ofBijective F hF)]
   let _ := Fintype.ofFinite (Q ⧸ J.subgroupOf Q)
   rw [finprod_eq_prod_of_fintype, Fintype.prod_prod_type]
@@ -215,8 +214,7 @@ theorem coe_norm_field_eq {φ : G} (hφK : φ ∈ (K : Subgroup G))
     hfield_le ?_ ?_ (fun k hk => toAdd_deg_mem_multiples K hk) ?_ hφK hdφ a _
   · intro x hx
     have : D.deg x ∈ (frobeniusClosure D.deg L s.elt).map D.deg := ⟨x, hx, rfl⟩
-    rw [hmap] at this
-    exact this
+    rwa [hmap] at this
   · intro k _ hk
     have : D.deg k ∈ AddSubgroup.toSubgroup (multiples (s.deg * inertiaDegree D.deg K)) := hk
     rw [← hmap] at this
@@ -224,10 +222,8 @@ theorem coe_norm_field_eq {φ : G} (hφK : φ ∈ (K : Subgroup G))
     exact ⟨x, hx, hxk⟩
   · intro q hq
     constructor
-    · intro hqS
-      exact hfield_inf_ker.le ⟨hqS, hq.2⟩
-    · intro hqJ
-      exact le_frobeniusClosure hqJ
+    · exact fun hqS => hfield_inf_ker.le ⟨hqS, hq.2⟩
+    · exact fun hqJ => le_frobeniusClosure hqJ
 
 end ClassFieldData
 

@@ -421,13 +421,11 @@ theorem superdiagSum_single (i j : Fin n) (a : F) :
   · rw [Matrix.single_apply_same]
   · intro c _ hc
     rw [Matrix.single_apply_of_col_ne i i hc.symm, ite_self]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
   · intro r _ hr
     refine Finset.sum_eq_zero fun c _ => ?_
     rw [Matrix.single_apply_of_row_ne hr.symm, ite_self]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem psiN_rootElt (ψ₀ : AddChar F ℂ) {i j : Fin n} (h : i ≠ j) (a : F) :
     psiN ψ₀ (rootElt i j a) = if j.val = i.val + 1 then ψ₀ a else 1 := by

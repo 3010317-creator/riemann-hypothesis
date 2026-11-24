@@ -66,12 +66,10 @@ def sub (A : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ := A.subma
 theorem sub_apply (A : Matrix (Fin n) (Fin n) ℂ) (a b : Fin n) : sub A a b = A (Fin.rev a) (Fin.rev b) := rfl
 
 theorem sub_mul (A B : Matrix (Fin n) (Fin n) ℂ) : sub (A * B) = sub A * sub B := by
-  simp only [sub]
-  exact (Matrix.submatrix_mul_equiv _ _ _ _ _).symm
+  simpa only [sub] using (Matrix.submatrix_mul_equiv _ _ _ _ _).symm
 
 theorem sub_one : sub (1 : Matrix (Fin n) (Fin n) ℂ) = 1 := by
-  simp only [sub]
-  exact Matrix.submatrix_one_equiv _
+  simpa only [sub] using Matrix.submatrix_one_equiv _
 
 theorem sub_H (A : Matrix (Fin n) (Fin n) ℂ) : (sub A)ᴴ = sub Aᴴ := by
   simp [sub, Matrix.conjTranspose_submatrix]
@@ -114,8 +112,7 @@ theorem Pr_Pr : Pr n * Pr n = 1 := by
   ext i j
   simp [Pr, Matrix.one_apply]
 
-theorem Pr_inv : (Pr n)⁻¹ = Pr n := by
-  exact Matrix.inv_eq_left_inv Pr_Pr
+theorem Pr_inv : (Pr n)⁻¹ = Pr n := Matrix.inv_eq_left_inv Pr_Pr
 
 theorem exp_sub (A : Matrix (Fin n) (Fin n) ℂ) : NormedSpace.exp (sub A) = sub (NormedSpace.exp A) := by
   have hu : IsUnit (Pr n) := ⟨⟨Pr n, Pr n, Pr_Pr, Pr_Pr⟩, rfl⟩

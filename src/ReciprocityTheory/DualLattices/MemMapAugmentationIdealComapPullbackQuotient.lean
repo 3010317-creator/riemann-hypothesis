@@ -67,8 +67,7 @@ theorem pullbackQuotient_apply_out (K : AddSubgroup N) {h : N → C} (hinv : ∀
     pullQ (R := R) K (fun q => h q.out) = h := by
   funext x
   simp only [pullQ, LinearMap.funLeft_apply]
-  have e : (((QuotientAddGroup.mk x : N ⧸ K).out : N) : N ⧸ K) = (x : N ⧸ K) := by
-    exact Quotient.out_eq _
+  have e : (((QuotientAddGroup.mk x : N ⧸ K).out : N) : N ⧸ K) = (x : N ⧸ K) := Quotient.out_eq _
   have hk := QuotientAddGroup.eq.mp e
   calc h (QuotientAddGroup.mk x : N ⧸ K).out
       = h ((QuotientAddGroup.mk x : N ⧸ K).out + ((⟨_, hk⟩ : K) : N)) := (hinv _ _).symm
@@ -78,8 +77,7 @@ theorem mem_map_comap_pullbackQuotient (AA : HopfOrder (C := C) R N) (K : AddSub
     (hh : h ∈ AA.carrier) (hinv : ∀ x (k : K), h (x + k) = h x) :
     h ∈ (AA.carrier.comap (pullQ (R := R) K)).map (pullQ (R := R) K) := by
   refine Submodule.mem_map.mpr ⟨fun q => h q.out, ?_, pullbackQuotient_apply_out (R := R) K hinv⟩
-  rw [Submodule.mem_comap, pullbackQuotient_apply_out (R := R) K hinv]
-  exact hh
+  rwa [Submodule.mem_comap, pullbackQuotient_apply_out (R := R) K hinv]
 
 theorem mem_map_augmentationIdeal_comap_pullbackQuotient (AA : HopfOrder (C := C) R N) (K : AddSubgroup N) {h : N → C}
     (hh : h ∈ AA.carrier) (hinv : ∀ x (k : K), h (x + k) = h x) (h0 : h 0 = 0) :
@@ -87,8 +85,7 @@ theorem mem_map_augmentationIdeal_comap_pullbackQuotient (AA : HopfOrder (C := C
   refine Submodule.mem_map.mpr ⟨fun q => h q.out, ?_, pullbackQuotient_apply_out (R := R) K hinv⟩
   simp only [augIdeal, Submodule.mem_inf]
   refine ⟨?_, ?_⟩
-  · rw [Submodule.mem_comap, pullbackQuotient_apply_out (R := R) K hinv]
-    exact hh
+  · rwa [Submodule.mem_comap, pullbackQuotient_apply_out (R := R) K hinv]
   · have h1 := congrFun (pullbackQuotient_apply_out (R := R) K hinv) 0
     simp only [pullQ, LinearMap.funLeft_apply, QuotientAddGroup.mk_zero] at h1
     simp only [LinearMap.mem_ker, LinearMap.proj_apply]

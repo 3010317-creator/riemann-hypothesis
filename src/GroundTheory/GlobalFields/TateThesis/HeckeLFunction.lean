@@ -155,8 +155,7 @@ theorem eventually_mem_factoredIdeals {I : Ideal R} (hI : I ≠ ⊥) :
     ∀ᶠ S : Finset (HeightOneSpectrum R) in atTop, I ∈ factoredIdeals S := by
   have hfin := Ideal.finite_factors (I := I) (by simpa [Submodule.zero_eq_bot] using hI)
   refine Filter.eventually_atTop.2 ⟨hfin.toFinset, fun S hS ↦ ⟨hI, fun v hv ↦ hS ?_⟩⟩
-  rw [Set.Finite.mem_toFinset]
-  exact hv
+  rwa [Set.Finite.mem_toFinset]
 
 end Factored
 
@@ -238,8 +237,7 @@ theorem hasProd_euler (hsum : Summable fun I ↦ ‖g I‖) (h0 : g ⊥ = 0) :
   · subst hI
     have : ∀ S : Finset (HeightOneSpectrum R), (factoredIdeals S).indicator g ⊥ = g ⊥ :=
       fun S ↦ by rw [Set.indicator_of_notMem (by exact fun h ↦ h.1 rfl), h0]
-    simp only [this]
-    exact tendsto_const_nhds
+    simpa only [this] using tendsto_const_nhds
   · refine tendsto_const_nhds.congr' ?_
     filter_upwards [eventually_mem_factoredIdeals hI] with S hS
     rw [Set.indicator_of_mem hS]
@@ -268,8 +266,7 @@ theorem not_dvd_of_isCoprime {I 𝔪 : Ideal (𝓞 K)} (h : IsCoprime I 𝔪)
 theorem isCoprime_asIdeal_iff (v : HeightOneSpectrum (𝓞 K)) (𝔪 : Ideal (𝓞 K)) :
     IsCoprime v.asIdeal 𝔪 ↔ ¬ v.asIdeal ∣ 𝔪 := by
   constructor
-  · intro h hv
-    exact not_dvd_of_isCoprime h hv (dvd_refl _)
+  · exact fun h hv => not_dvd_of_isCoprime h hv (dvd_refl _)
   · intro h
     rw [Ideal.isCoprime_iff_sup_eq]
     exact v.isMaximal.out.2 _ (left_lt_sup.2 fun hle ↦ h (Ideal.dvd_iff_le.2 hle))

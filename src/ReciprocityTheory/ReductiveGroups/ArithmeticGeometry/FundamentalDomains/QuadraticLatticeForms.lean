@@ -118,12 +118,10 @@ theorem ip_self (u : X.Ψ → Fin r → ℂ) : ip X u u = ∑ τ, X.c τ * ∑ a
 theorem ip_pos {u : X.Ψ → Fin r → ℂ} (hu : u ≠ 0) : 0 < ip X u u := by
   rw [ip_self]
   obtain ⟨τ, hτ⟩ : ∃ τ, u τ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hu (funext h)
   obtain ⟨a, ha⟩ : ∃ a, u τ a ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hτ (funext h)
   apply Finset.sum_pos' (fun i _ => mul_nonneg (c_pos X i).le
     (Finset.sum_nonneg fun b _ => sq_nonneg _))
@@ -176,8 +174,7 @@ theorem Ly_injective (y : X.Ψ → Matrix (Fin r) (Fin r) ℂ) (hy : ∀ τ, (y 
   have h1 : (y τ)⁻¹ *ᵥ u τ = (y τ)⁻¹ *ᵥ u' τ := congrFun h τ
   have hu : IsUnit (y τ).det := isUnit_iff_ne_zero.mpr (hy τ)
   have h2 := congrArg (fun v => y τ *ᵥ v) h1
-  simp only [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hu, Matrix.one_mulVec] at h2
-  exact h2
+  simpa only [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hu, Matrix.one_mulVec] using h2
 
 theorem Ly_surjective (y : X.Ψ → Matrix (Fin r) (Fin r) ℂ) (hy : ∀ τ, (y τ).det ≠ 0) :
     Function.Surjective (Ly X y) := by
@@ -220,8 +217,7 @@ theorem Am_posDef (y : X.Ψ → Matrix (Fin r) (Fin r) ℂ) (hy : ∀ τ, (y τ)
     (g : Basis ι ℤ X.Λ) : (Am X y g).PosDef := by
   refine Matrix.PosDef.of_dotProduct_mulVec_pos ?_ fun x hx => ?_
   · ext i j
-    simp only [conjTranspose_apply, star_trivial, Am, of_apply]
-    exact ip_comm X _ _
+    simpa only [conjTranspose_apply, star_trivial, Am, of_apply] using ip_comm X _ _
   · rw [star_trivial, quad_eq]
     refine ip_pos X fun h0 => hx ?_
     have h1 : ∑ i, x i • X.embV (g i : Fin r → E) = 0 := Ly_injective X y hy (by rw [h0, map_zero])

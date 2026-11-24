@@ -182,8 +182,7 @@ theorem psEval_subst {σ τ : Type*} [Finite σ] [Finite τ] {g : σ → MvPower
   rw [eval₂_subst hsub (hasEval_of_mem_maximalIdeal ha)]
   congr 3
   funext s
-  apply Subtype.ext
-  exact (psEval_eq_eval₂ (g s) a ha).symm
+  exact Subtype.ext (psEval_eq_eval₂ (g s) a ha).symm
 
 end Local
 

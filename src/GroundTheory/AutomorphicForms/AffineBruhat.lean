@@ -56,8 +56,7 @@ theorem exists_mem_iwahori (M : Matrix (Fin n) (Fin n) F)
     Matrix.of fun i j => ⟨M i j, (Valuation.mem_integer_iff _ _).mpr (h1 i j)⟩
   let Ā := (IsLocalRing.residue 𝒪[F]).mapMatrix A
   have hup : Ā.IsUpperTriangular := by
-    intro i j hij
-    exact (residue_eq_zero_iff_valuation_lt_one F (A i j)).mpr (h2 i j hij)
+    exact fun i j hij => (residue_eq_zero_iff_valuation_lt_one F (A i j)).mpr (h2 i j hij)
   have hdiag : ∀ i, Ā i i ≠ 0 := fun i => (residue_ne_zero_iff_valuation_eq_one F (A i i)).mpr (h3 i)
   have hdetĀ : IsUnit Ā.det := by
     rw [det_of_isUpperTriangular hup, isUnit_iff_ne_zero]
@@ -193,8 +192,7 @@ theorem permGL_mul_diagPow_mul_inv (σ : Equiv.Perm (Fin n)) (a : Fin n → Mult
   · subst hij
     simp
   · rw [ite_eq_right hij, ite_eq_right]
-    intro h
-    exact hij (σ⁻¹.injective h)
+    exact fun h => hij (σ⁻¹.injective h)
 
 def affineWeylGL : ExtendedAffineWeyl n →* GL (Fin n) F :=
   SemidirectProduct.lift (diagPow F n) (permGL F) fun σ => by
@@ -266,9 +264,7 @@ theorem rowsReducedOn_step (h : GL (Fin n) F) (R : Finset (Fin n)) (hR : R ≠ F
     rw [h0, map_zero] at this
     exact hj ((Valuation.zero_iff _).mp (le_antisymm this zero_le))
   have hvP : 0 < valuation F (M r c₂) := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hP)
-  have hpc : ∀ i ∈ R, p i ≠ c₂ := by
-    intro i hi e
-    exact hP (e ▸ (hp i hi).2.2 r (fun e' => hr (e' ▸ hi)))
+  have hpc : ∀ i ∈ R, p i ≠ c₂ := fun i hi e => hP (e ▸ (hp i hi).2.2 r (fun e' => hr (e' ▸ hi)))
   have hRc : ∀ i ∈ R, M i c₂ = 0 := fun i hi => (hp i hi).2.1 c₂ (Ne.symm (hpc i hi))
   have hrp : ∀ i ∈ R, M r (p i) = 0 := fun i hi => (hp i hi).2.2 r (fun e => hr (e ▸ hi))
 
@@ -290,8 +286,7 @@ theorem rowsReducedOn_step (h : GL (Fin n) F) (R : Finset (Fin n)) (hR : R ≠ F
     have hi : i ≠ r := hri.ne'
     rw [hu_val i hi, div_lt_one₀ hvP]
     by_cases hiR : i ∈ R
-    · rw [hRc i hiR, map_zero]
-      exact hvP
+    · rwa [hRc i hiR, map_zero]
     · exact lt_of_le_of_ne (F1 i hiR c₂) fun e => absurd (F3 i hiR e) (not_le.mpr hri)
   have hur : u r = 0 := by simp [u]
   have huR : ∀ i ∈ R, u i = 0 := by
@@ -392,8 +387,7 @@ theorem rowsReducedOn_step (h : GL (Fin n) F) (R : Finset (Fin n)) (hR : R ≠ F
   rcases Finset.mem_insert.mp hi with rfl | hiR
   · rw [Function.update_self]
     refine ⟨?_, fun b hb => ?_, fun a ha => ?_⟩
-    · rw [hN, htc, mul_zero, add_zero, hM₁, hur, zero_mul, add_zero]
-      exact hP
+    · rwa [hN, htc, mul_zero, add_zero, hM₁, hur, zero_mul, add_zero]
     · rw [hN, hM₁, hM₁, hur, zero_mul, zero_mul, add_zero, add_zero]
       simp only [t, ite_eq_right hb]
       rw [mul_neg, mul_div_cancel₀ _ hP, add_neg_cancel]
@@ -593,8 +587,7 @@ theorem integralGL_eq_iUnion_doubleCoset_permGL :
     have hleft := (affineWeylGL_mem_integralGL_iff F n w).mp hwK
     have hw' : w = SemidirectProduct.inr w.right := SemidirectProduct.ext hleft rfl
     refine Set.mem_iUnion.mpr ⟨w.right, ?_⟩
-    rw [← affineWeylGL_inr, ← hw']
-    exact hw
+    rwa [← affineWeylGL_inr, ← hw']
   · intro hk
     obtain ⟨σ, hσ⟩ := Set.mem_iUnion.mp hk
     obtain ⟨x, hx, y, hy, rfl⟩ := mem_doubleCoset.mp hσ

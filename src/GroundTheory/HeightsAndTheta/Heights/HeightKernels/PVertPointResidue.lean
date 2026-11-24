@@ -28,8 +28,7 @@ theorem isMultiHomog_iff {g : MRing (fun _ : Unit => T)} {n : ℕ} :
     IsMultiHomog g (fun _ => n) ↔
       IsWeightedHomogeneous (blockWeight (ι := fun _ : Unit => T) ()) g n := by
   constructor
-  · intro h
-    exact isWeightedHomogeneous_of_isMultiHomog h ()
+  · exact fun h => isWeightedHomogeneous_of_isMultiHomog h ()
   · intro h m hm k
     cases k
     exact (weight_blockWeight (ι := fun _ : Unit => T) () m).symm.trans (h (mem_support_iff.mp hm))
@@ -52,8 +51,7 @@ omit [Fintype T] in
 theorem isWH_X_pow (c : T) (n : ℕ) :
     IsWeightedHomogeneous (blockWeight (ι := fun _ : Unit => T) ())
       (X ⟨(), c⟩ ^ n : MRing (fun _ : Unit => T)) n := by
-  have h := (isWH_X c).pow n
-  simpa using h
+  simpa using (isWH_X c).pow n
 
 omit [Fintype T] in
 theorem isWH_sub {f g : MRing (fun _ : Unit => T)} {n : ℕ}
@@ -123,8 +121,7 @@ theorem aeval_div {K' : Type} [Field K'] (y : (Σ _ : Unit, T) → K') (c : T)
     Finset.prod_subset (Finset.subset_univ m.support) (fun p _ hp => by
       rw [Finsupp.notMem_support_iff.mp hp, pow_zero])]
   have hden : ∏ p : (Σ _ : Unit, T), y ⟨(), c⟩ ^ m p = y ⟨(), c⟩ ^ n := by
-    rw [Finset.prod_pow_eq_pow_sum, Fintype.sum_sigma, Fintype.sum_unique]
-    rw [← hmd]
+    rw [Finset.prod_pow_eq_pow_sum, Fintype.sum_sigma, Fintype.sum_unique, ← hmd]
   simp_rw [div_pow]
   rw [Finset.prod_div_distrib, hden, div_eq_mul_inv]
 
@@ -346,8 +343,7 @@ theorem VertPointResidue.proof (hC : CurveCharts.Statement) : VertPointResidue.S
             field_simp at e1
             linear_combination e1
         have h4 : h * X ⟨(), c⟩ ^ n' ∈ W := by
-          have h5 := sub_mem (Ideal.mul_mem_right (X ⟨(), c⟩ ^ d ()) W hGW) (hPW hmem)
-          simpa using h5
+          simpa using sub_mem (Ideal.mul_mem_right (X ⟨(), c⟩ ^ d ()) W hGW) (hPW hmem)
         rcases hWp.mem_or_mem h4 with h3 | h3
         · exact hhW h3
         · exact hXc (hWp.mem_of_pow_mem _ h3)

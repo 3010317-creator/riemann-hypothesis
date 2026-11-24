@@ -67,8 +67,7 @@ theorem mem_inertiaGroup {Q : Ideal (𝓞 L)} {τ : L ≃ₐ[K] L} :
 
 theorem galRestrict_apply_eq_smul (τ : L ≃ₐ[K] L) (x : 𝓞 L) :
     galRestrict (𝓞 K) K L (𝓞 L) τ x = τ • x := by
-  apply RingOfIntegers.ext
-  exact algebraMap_galRestrict_apply (𝓞 K) τ x
+  exact RingOfIntegers.ext (algebraMap_galRestrict_apply (𝓞 K) τ x)
 
 theorem inertiaGroup_eq_inertia (Q : Ideal (𝓞 L)) :
     inertiaGroup K L Q = Q.toAddSubgroup.inertia (L ≃ₐ[K] L) := by
@@ -110,8 +109,7 @@ theorem isFrobAt_unique (hv : IsUnramifiedIn K v L) (τ τ' : L ≃ₐ[K] L) (h 
   have : Algebra.IsUnramifiedAt (𝓞 K) Q :=
     Ideal.ramificationIdx_eq_one_iff.mp (hv Q inferInstance inferInstance)
   have e := h.eq_of_isUnramifiedAt h' Q.primeCompl_le_nonZeroDivisors
-  apply (galRestrict (𝓞 K) K L (𝓞 L)).injective
-  exact AlgEquiv.ext fun x => DFunLike.congr_fun e x
+  exact (galRestrict (𝓞 K) K L (𝓞 L)).injective (AlgEquiv.ext fun x => DFunLike.congr_fun e x)
 
 variable [IsGalois K L]
 

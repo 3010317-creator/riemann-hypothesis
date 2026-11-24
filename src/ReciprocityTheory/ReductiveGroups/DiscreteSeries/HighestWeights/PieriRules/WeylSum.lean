@@ -139,9 +139,7 @@ theorem pieri_sum_finset {α : Type*} [DecidableEq α] (S : Finset α) (u : α �
 
 theorem pieri_sum_finset_neg {α : Type*} [DecidableEq α] (S : Finset α) (u : α → ℝ) (hu : Set.InjOn u S) :
     ∑ s ∈ S, ∏ b ∈ S.erase s, (u s - u b - 1) / (u s - u b) = #S := by
-  have h := sum_prod_sub_add_div_sub_eq_card S u hu (-1) (by norm_num)
-  simp only [← sub_eq_add_neg] at h
-  exact h
+  simpa only [← sub_eq_add_neg] using sum_prod_sub_add_div_sub_eq_card S u hu (-1) (by norm_num)
 
 lemma block_filter_eq_erase {n : ℕ} (ε : Fin n → Bool) (β : Bool) {s : Fin n} (hs : ε s = β) :
     univ.filter (fun b => b ≠ s ∧ ε b = ε s) = (univ.filter (fun b => ε b = β)).erase s := by

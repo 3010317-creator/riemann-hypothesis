@@ -115,8 +115,7 @@ theorem vtf_local (hol : IsHolFam e) (V : (pullback f u).Opens) (φ : Γ(pullbac
   obtain ⟨W, hW, huW, -⟩ := exists_isAffineOpen_mem_and_subset (x := u cpt) (U := ⊤) trivial
   have hfy : e z0 cpt ∈ f ⁻¹ᵁ W := by
     show f (e z0 cpt) ∈ W
-    rw [← Scheme.Hom.comp_apply, he]
-    exact huW
+    rwa [← Scheme.Hom.comp_apply, he]
   obtain ⟨U, hU, hyU, hUW⟩ := exists_isAffineOpen_mem_and_subset hfy
   have : IsAffine U := hU
   have : IsAffine W := hW
@@ -240,8 +239,7 @@ theorem vtf_local (hol : IsHolFam e) (V : (pullback f u).Opens) (φ : Γ(pullbac
           valAt' (pP z) ⊤ (h ^ n) := by
         rw [← hn]
         exact valAt'_res (pP z) ((pullback fU uW).basicOpen_le h) (hD z hz) _
-      rw [ra, rs] at e2
-      exact e2
+      rwa [ra, rs] at e2
     rw [e1, eq_mul_inv_iff_mul_eq₀ (by rw [hpow]; exact pow_ne_zero _ hne), e3]
   refine ⟨N, hN, ⟨h0U, ?_⟩, hVz, ?_⟩
   · exact (valAt'_ne_zero_iff (pP z0) ⊤ (vtf_top _) h cpt).2 hmem

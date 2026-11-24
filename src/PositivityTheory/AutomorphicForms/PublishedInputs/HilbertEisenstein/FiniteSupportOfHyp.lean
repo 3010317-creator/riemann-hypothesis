@@ -69,8 +69,7 @@ theorem finite_support_of_hyp {χ : HChar F} {c : HeightOneSpectrum (𝓞 F) →
   apply hw
   have h0 : (0 : ℕ) ∈ {n : ℕ | ∀ x : (w.adicCompletion F)ˣ, IsUnitAt w x →
       Valued.v ((x : w.adicCompletion F) - 1) ≤ WithZero.exp (-(n : ℤ)) → χ.loc w x = 1} := by
-    intro x hx _
-    exact key w x hx fun h => absurd h hwS
+    exact fun x hx _ => key w x hx fun h => absurd h hwS
   exact Nat.le_zero.mp ((H.cond w).2 h0)
 
 omit [IsTotallyReal F] in
@@ -162,8 +161,7 @@ theorem exists_den_row (c : HeightOneSpectrum (𝓞 F) → ℕ) (g : GA F 2) {C 
     have h2 := congrArg (fun v => pFin F (v i)) hrow
 
     simp only [Matrix.vecMul, dotProduct, coe_Mcol_apply', map_sum, map_mul] at h2
-    rw [← pFin_algebraMap]
-    exact h2
+    rwa [← pFin_algebraMap]
   apply exists_int_of_val
   intro w
 
@@ -200,8 +198,7 @@ theorem exists_elem_col (c : HeightOneSpectrum (𝓞 F) → ℕ) (hc : {w | c w 
     rfl
   obtain ⟨k, hkJ, hk0⟩ : ∃ k ∈ Cfr * Dfr, k ≠ 0 := by
     have hne : ((Cfr * Dfr : FractionalIdeal (𝓞 F)⁰ F) : Submodule (𝓞 F) F) ≠ ⊥ := by
-      rw [Ne, FractionalIdeal.coeToSubmodule_eq_bot]
-      exact hJ0
+      rwa [Ne, FractionalIdeal.coeToSubmodule_eq_bot]
     exact Submodule.exists_mem_ne_zero_of_ne_bot hne
   have hval : ∀ w : HeightOneSpectrum (𝓞 F), w.valuation F k ≤ WithZero.exp (-((c w : ℤ) + dd w)) := fun w => by
     have h1 := valuation_le_of_mem_fractionalIdeal w hkJ
@@ -255,8 +252,7 @@ theorem exists_den_col (c : HeightOneSpectrum (𝓞 F) → ℕ) (hc : {w | c w �
     have h2 := congrArg (fun v => pFin F (v i)) hcol
 
     simp only [Matrix.mulVec, dotProduct, coe_Mrow_apply', map_sum, map_mul] at h2
-    rw [← pFin_algebraMap]
-    exact h2
+    rwa [← pFin_algebraMap]
   apply exists_int_of_val
   intro w
   have e1 : algebraMap F (Af F) ((d : F) * (e : F) * ξ i) = ∑ j,

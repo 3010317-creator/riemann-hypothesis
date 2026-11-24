@@ -142,8 +142,7 @@ theorem _root_.GroundTheory.Global.FirstInequality.exists_place_mem_unitsPowIn_n
   filter_upwards [hev] with w hw
   rw [splitsCompletely_kummerExtension_iff]
   suffices key : xL ∈ unitsPowIn L p (w.adicCompletion L) by
-    intro c hc
-    exact mem_unitsPowIn.1 (radicalGroup_le key (unitsPow_le_unitsPowIn L p _) hc)
+    exact fun c hc => mem_unitsPowIn.1 (radicalGroup_le key (unitsPow_le_unitsPowIn L p _) hc)
   set v := below K w
   have hpv : (p : 𝓞 K) ∉ v.asIdeal := fun h ↦ hw (hpS v h)
   let ιK : Kˣ →* (w.adicCompletion L)ˣ := Units.map (algebraMap K (w.adicCompletion L) : K →* _)
@@ -263,8 +262,7 @@ theorem exists_localClass_eq (S T : Finset (HeightOneSpectrum (𝓞 K))) (hST : 
       exact h ⟨v, hv⟩
     · intro h v
       have := h v.1 v.2
-      rw [← ker_localClass] at this
-      exact this
+      rwa [← ker_localClass] at this
   let U : Subgroup ((v : T) → UnitsModPow (v.1.adicCompletion K) p) :=
     Subgroup.pi Set.univ fun v ↦ localUnitClasses v.1 p
   have hU : Nat.card U = p ^ T.card := by
@@ -287,11 +285,9 @@ theorem exists_localClass_eq (S T : Finset (HeightOneSpectrum (𝓞 K))) (hST : 
   have hf : (fun v : T ↦ (QuotientGroup.mk (z v.1) : UnitsModPow (v.1.adicCompletion K) p)) ∈
       ψ.range := by
     rw [heq, Subgroup.mem_pi]
-    intro v _
-    exact Subgroup.mem_map_of_mem _ (hz v.1 v.2)
+    exact fun v _ => Subgroup.mem_map_of_mem _ (hz v.1 v.2)
   obtain ⟨δ, hδ⟩ := hf
-  refine ⟨δ, δ.2, fun v hv ↦ ?_⟩
-  exact congrFun hδ ⟨v, hv⟩
+  exact ⟨δ, δ.2, fun v hv ↦ (congrFun hδ ⟨v, hv⟩)⟩
 
 universe u
 

@@ -192,8 +192,7 @@ variable [Fintype G]
 theorem charCocycle_cocycle (χ : Additive G →+ AddCircle (1 : ℚ)) (x y w : G) :
     charCocycle χ (x * y, w) + charCocycle χ (x, y) =
       charCocycle χ (y, w) + charCocycle χ (x, y * w) := by
-  have h := (mem_cocycles₂_iff _).1 (charCocycle_mem χ) x y w
-  exact h
+  exact (mem_cocycles₂_iff _).1 (charCocycle_mem χ) x y w
 
 theorem sum_charCocycle_cast (χ : Additive G →+ AddCircle (1 : ℚ)) (g : G) :
     ((∑ x, charCocycle χ (x, g) : ℤ) : ℚ) =
@@ -525,8 +524,7 @@ theorem cupCharClass_surjective (χ : Additive G →+ AddCircle (1 : ℚ)) (hχ 
     · obtain ⟨g, hgen, hg⟩ := exists_generator_sum_charCocycle χ hχ hm
       obtain ⟨a, ha, hmem⟩ := exists_sub_mem_coboundaries₂ χ g hgen hg z
       refine ⟨⟨a, ha⟩, ?_⟩
-      rw [cupCharClass_apply_charCocycle, H2π_eq_iff]
-      exact hmem
+      rwa [cupCharClass_apply_charCocycle, H2π_eq_iff]
 
 end Cyclic
 

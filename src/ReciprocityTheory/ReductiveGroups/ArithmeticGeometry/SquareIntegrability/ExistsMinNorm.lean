@@ -64,8 +64,7 @@ lemma finite_sep {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDi
     have hx' : x ∈ Metric.closedBall (0 : V) R := by
       rw [mem_closedBall_zero_iff]; exact hx.2
     have := hcov hx'
-    simp only [Set.mem_iUnion, Metric.mem_ball, exists_prop] at this
-    exact this
+    simpa only [Set.mem_iUnion, Metric.mem_ball, exists_prop] using this
   choose! f hf hfx using hT
   refine Set.Finite.of_finite_image (f := f) (htfin.subset ?_) ?_
   · rintro _ ⟨x, hx, rfl⟩
@@ -86,8 +85,7 @@ lemma finite_sep {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDi
 lemma sep_of_group {V : Type} [NormedAddCommGroup V] (G : AddSubgroup V)
     (hG : ∀ g ∈ G, g ≠ 0 → 1 ≤ ‖g‖) (S : Set V) (hS : S ⊆ G) :
     ∀ x ∈ S, ∀ y ∈ S, x ≠ y → 1 ≤ ‖x - y‖ := by
-  intro x hx y hy hne
-  exact hG (x - y) (G.sub_mem (hS hx) (hS hy)) (sub_ne_zero.mpr hne)
+  exact fun x hx y hy hne => hG (x - y) (G.sub_mem (hS hx) (hS hy)) (sub_ne_zero.mpr hne)
 
 lemma exists_closest {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
     (G : AddSubgroup V) (hG : ∀ g ∈ G, g ≠ 0 → 1 ≤ ‖g‖) (p : V) :

@@ -146,7 +146,6 @@ theorem continuous_resolvent {X : Type*} [TopologicalSpace X] {A : X → E →L[
     have h := NormedRing.inverse_continuousAt (isUnit_shifted (A x) hε).unit
     rw [IsUnit.unit_spec] at h
     exact ContinuousAt.comp (g := Ring.inverse) (f := fun x => shifted (A x) ε) h hT.continuousAt
-  show Continuous fun x => (ε : ℂ) • Ring.inverse (shifted (A x) ε)
   exact hI.const_smul (ε : ℂ)
 
 end KernelProjMeasurable
@@ -164,8 +163,7 @@ theorem KernelProjMeasurable.proof : KernelProjMeasurable.Statement := by
     (f := fun j x => KernelProjMeasurable.resolvent (A x) (1 / ((j : ℝ) + 1)))
     (fun j => (KernelProjMeasurable.continuous_resolvent hA (by positivity)).measurable) ?_
   rw [tendsto_pi_nhds]
-  intro x
-  exact KernelProjMeasurable.tendsto_resolvent (A x)
+  exact fun x => KernelProjMeasurable.tendsto_resolvent (A x)
 
 end
 

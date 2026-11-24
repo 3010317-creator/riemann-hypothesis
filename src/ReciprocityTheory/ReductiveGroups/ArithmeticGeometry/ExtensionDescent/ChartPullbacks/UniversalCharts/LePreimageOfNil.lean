@@ -123,10 +123,7 @@ theorem pt_injective (C : Chart G) {P : Type} [CommRing P] [Algebra R₀ P] {h h
   have h1 : (pt C h).left = (pt C h').left := by rw [H]
   rw [pt_left, pt_left] at h1
   have h2 := (cancel_mono C.hU.fromSpec).mp h1
-  have h3 := Spec.map_injective h2
-  apply AlgHom.ext
-  intro a
-  exact congrArg (fun f => f.hom a) h3
+  exact AlgHom.ext (fun a => congrArg (fun f => f.hom a) (Spec.map_injective h2))
 
 theorem chart_eq (C : Chart G) {P : Type} [CommRing P] (x : Spec (CommRingCat.of P) ⟶ G.left)
     (hx : ⊤ ≤ x ⁻¹ᵁ C.U) :
@@ -167,7 +164,6 @@ theorem le_preimage_of_nil (C : Chart G) {P P₀ : Type} [CommRing P] [Algebra R
     ⟨(PrimeSpectrum.asIdeal p).map q.toRingHom, Ideal.map_isPrime_of_surjective hq hker⟩
   have hp₀ : (Spec.map (CommRingCat.ofHom q.toRingHom)).base p₀ = p := by
     apply PrimeSpectrum.ext
-    show Ideal.comap q.toRingHom (Ideal.map q.toRingHom (PrimeSpectrum.asIdeal p)) = PrimeSpectrum.asIdeal p
     exact (Ideal.comap_map_of_surjective' q.toRingHom hq _).trans (sup_eq_left.mpr hker)
   have e : Spec.map (CommRingCat.ofHom q.toRingHom) ≫ x.left =
       Spec.map (CommRingCat.ofHom h₀.toRingHom) ≫ C.hU.fromSpec := by
@@ -181,10 +177,8 @@ theorem le_preimage_of_nil (C : Chart G) {P P₀ : Type} [CommRing P] [Algebra R
   have h2 : x.left.base ((Spec.map (CommRingCat.ofHom q.toRingHom)).base p₀) ∈ C.U := by
     have h4 : x.left.base ((Spec.map (CommRingCat.ofHom q.toRingHom)).base p₀) =
         C.hU.fromSpec.base ((Spec.map (CommRingCat.ofHom h₀.toRingHom)).base p₀) := h3
-    rw [h4]
-    exact hmem
-  rw [← hp₀]
-  exact h2
+    rwa [h4]
+  rwa [← hp₀]
 
 end Chart
 

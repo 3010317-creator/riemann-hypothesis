@@ -106,17 +106,14 @@ lemma Zs_IR {dim : (E →+* ℂ) → ℕ} {L I : Submodule ℤ (Vsp dim)}
 
 lemma prj_rsmul {dim : (E →+* ℂ) → ℕ} (σ : E →+* ℂ) (r : ℝ) (x : Vsp dim) :
     prj σ (r • x) = r • prj σ x := by
-  simp only [prj]
-  exact LinearMap.map_smul_of_tower _ r x
+  simpa only [prj] using LinearMap.map_smul_of_tower _ r x
 
 private lemma prj_add_lemma_6 {dim : (E →+* ℂ) → ℕ} (σ : E →+* ℂ) (x y : Vsp dim) :
     prj σ (x + y) = prj σ x + prj σ y := by
-  simp only [prj]
-  exact map_add _ x y
+  simpa only [prj] using map_add _ x y
 
 private lemma prj_zero_lemma_7 {dim : (E →+* ℂ) → ℕ} (σ : E →+* ℂ) : prj σ (0 : Vsp dim) = 0 := by
-  simp only [prj]
-  exact map_zero _
+  simpa only [prj] using map_zero _
 
 lemma prj_mem_of_span {dim : (E →+* ℂ) → ℕ} (σ : E →+* ℂ) (W : Submodule ℂ (Vsp dim))
     (S : Set (Vsp dim)) (hS : ∀ y ∈ S, prj σ y ∈ W) {a : Vsp dim}

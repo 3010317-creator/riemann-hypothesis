@@ -105,8 +105,7 @@ theorem rel_zero {K F C Pt : Type} [Field K] [Field F] [Algebra K F] [IsGalois K
       have h1 := congrArg g (ha'rel x)
 
       rw [map_sum, map_zero] at h1
-      simp only [map_mul, ← heq] at h1
-      exact h1
+      simpa only [map_mul, ← heq] using h1
     have hdiff : ∀ y, ∑ j ∈ s.erase i0, (g (a' j) - a' j) * v (b j) y = 0 := by
       intro y
       rw [Finset.sum_erase]
@@ -153,16 +152,14 @@ private theorem exists_finset_linearIndependent_restrict {F Pt : Type} [Field F]
     exact hsum (funext h)
   have hcS : c ∈ Ker S := by
     change Fintype.linearCombination F (fun i (y : S) => w i y) c = 0
-    rw [Fintype.linearCombination_apply]
-    exact hc
+    rwa [Fintype.linearCombination_apply]
   have hle : Ker (insert y S) ≤ Ker S := by
     intro d hd
     change Fintype.linearCombination F (fun i (z : (insert y S : Finset Pt)) => w i z) d = 0 at hd
     change Fintype.linearCombination F (fun i (z : S) => w i z) d = 0
     rw [Fintype.linearCombination_apply] at hd ⊢
     funext z
-    have h3 := congrFun hd ⟨z, Finset.mem_insert_of_mem z.2⟩
-    simpa [Finset.sum_apply] using h3
+    simpa [Finset.sum_apply] using congrFun hd ⟨z, Finset.mem_insert_of_mem z.2⟩
   have hnot : c ∉ Ker (insert y S) := by
     intro hc'
     change Fintype.linearCombination F (fun i (z : (insert y S : Finset Pt)) => w i z) c = 0 at hc'
@@ -181,14 +178,12 @@ theorem indepDescent_holds : IndepDescentSt := by
     rw [Fintype.linearIndependent_iff]
     intro a ha i
     refine rel_zero v act hbij heq hinj b hb Finset.univ a (fun y => ?_) i (Finset.mem_univ i)
-    have h1 := congrFun ha y
-    simpa [Finset.sum_apply] using h1
+    simpa [Finset.sum_apply] using congrFun ha y
   obtain ⟨S, hS⟩ := exists_finset_linearIndependent_restrict (fun i => v (b i)) hwF
   let : Algebra F ℂ := ι.toAlgebra
   have hC : LinearIndependent ℂ (fun i => algebraMap F ℂ ∘ (fun (y : S) => v (b i) y)) :=
     linearIndependent_algebraMap_comp_iff.mpr hS
-  apply LinearIndependent.of_comp (LinearMap.funLeft ℂ ℂ (fun y : S => (y : Pt)))
-  exact hC
+  exact LinearIndependent.of_comp (LinearMap.funLeft ℂ ℂ (fun y : S => (y : Pt))) hC
 
 end ReciprocityTheory.ChartRestriction.G.TB
 end -- clump:auto

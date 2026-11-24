@@ -145,7 +145,6 @@ theorem dom_iff {O₀ O : Type} [CommRing O₀] [CommRing O] {β₀ : O₀ →+*
   have hk2 : k ≫ t₁.G.hom = g ≫ t₁.G.hom := m₁.cart.1.lift_snd _ _ _
   have hk3 : k ≫ m₂.φ = g₂ ≫ Y.m.φ := hc T k gg g₂ hk1 h₀ h₁
   have hkg : k = g := m₂.cart.1.hom_ext (by rw [hk3, h2]) hk2
-  rw [← hkg]
-  exact hk1
+  rwa [← hkg]
 
 end ReciprocityTheory.ChartRestriction.G.Geo.Tor

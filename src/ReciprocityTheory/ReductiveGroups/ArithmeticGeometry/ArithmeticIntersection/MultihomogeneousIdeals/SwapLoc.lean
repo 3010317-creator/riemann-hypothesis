@@ -71,8 +71,7 @@ theorem length_localizedModule_quot_eq {R T : Type*} [CommRing R] [CommRing T] [
     intro y
     obtain ⟨r, s, hs, h⟩ := hsurj y
     refine ⟨IsLocalization.mk' (Localization S) r ⟨s, hs⟩, ?_⟩
-    rw [IsLocalization.lift_mk'_spec]
-    rw [h, mul_comm]
+    rw [IsLocalization.lift_mk'_spec, h, mul_comm]
   letI : Algebra (Localization S) T := φ.toAlgebra
   haveI : IsScalarTower R (Localization S) T := IsScalarTower.of_algebraMap_eq (fun r => (hφ r).symm)
   set I := V ⊔ Ideal.span {x}
@@ -167,8 +166,7 @@ theorem isLocData_atPrime_quot {R : Type*} [CommRing R] (V Z : Ideal R) [Z.IsPri
       apply m.2
       rw [← ht]
       exact (hmem t).2 htZ
-    · rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul, ht]
-      exact hm
+    · rwa [← Ideal.Quotient.eq_zero_iff_mem, map_mul, ht]
   · rw [halg, Ideal.Quotient.eq_zero_iff_mem.2 hv, map_zero]
 
 section LocData
@@ -177,8 +175,7 @@ variable {R T : Type*} [CommRing R] [CommRing T] [Algebra R T] {S : Submonoid R}
 
 theorem IsLocData.not_mem_of_isPrime (h : IsLocData R T S V) {P : Ideal T} [hP : P.IsPrime]
     {s : R} (hs : s ∈ S) : algebraMap R T s ∉ P := by
-  intro hmem
-  exact hP.ne_top (Ideal.eq_top_of_isUnit_mem _ hmem (h.1 s hs))
+  exact fun hmem => hP.ne_top (Ideal.eq_top_of_isUnit_mem _ hmem (h.1 s hs))
 
 theorem IsLocData.atPrime (h : IsLocData R T S V) (P : Ideal T) [hP : P.IsPrime] :
     IsLocData R (Localization.AtPrime P) (P.comap (algebraMap R T)).primeCompl V := by
@@ -228,10 +225,8 @@ theorem IsLocData.quot (h : IsLocData R T S V) (P : Ideal T) :
     refine ⟨r, s, hs, ?_⟩
     rw [← Ideal.Quotient.mk_algebraMap, ← Ideal.Quotient.mk_algebraMap, hrs, map_mul]
   · refine ⟨1, S.one_mem, ?_⟩
-    rw [one_mul, Ideal.mem_comap, ← Ideal.Quotient.eq_zero_iff_mem, Ideal.Quotient.mk_algebraMap]
-    exact hr
-  · rw [← Ideal.Quotient.mk_algebraMap, Ideal.Quotient.eq_zero_iff_mem]
-    exact hv
+    rwa [one_mul, Ideal.mem_comap, ← Ideal.Quotient.eq_zero_iff_mem, Ideal.Quotient.mk_algebraMap]
+  · rwa [← Ideal.Quotient.mk_algebraMap, Ideal.Quotient.eq_zero_iff_mem]
 
 theorem IsLocData.le_of_comap_le (h : IsLocData R T S V) {P P' : Ideal T} [hP' : P'.IsPrime]
     (hle : P.comap (algebraMap R T) ≤ P'.comap (algebraMap R T)) : P ≤ P' := by

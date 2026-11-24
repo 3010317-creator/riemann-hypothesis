@@ -73,8 +73,7 @@ theorem elimCol_mul_apply (h : Matrix (Fin n) (Fin n) F) (a i l : Fin n) :
     · rw [ite_eq_left ⟨rfl, hi⟩]
     · intro k _ hk
       rw [ite_eq_right (fun h => hk h.1), zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
   · refine Finset.sum_eq_zero fun k _ => ?_
     rw [ite_eq_right (fun h => hi h.2), zero_mul]
 
@@ -149,10 +148,8 @@ theorem exists_mul_mem_blockUpper (K : Subgroup (GL (Fin n) F))
         have h2 : (h : GL (Fin n) F) a j = 0 := hz j hjs a hja
         change (h : Matrix (Fin n) (Fin n) F) i j - _ = 0 at *
         split_ifs
-        · rw [show (h : Matrix (Fin n) (Fin n) F) a j = 0 from h2, mul_zero, sub_zero]
-          exact h1
-        · rw [sub_zero]
-          exact h1
+        · rwa [show (h : Matrix (Fin n) (Fin n) F) a j = 0 from h2, mul_zero, sub_zero]
+        · rwa [sub_zero]
   obtain ⟨q, hq, hz⟩ := key Finset.univ
   refine ⟨q, hq, ?_⟩
   rw [mem_blockUpper]
@@ -257,8 +254,7 @@ theorem valuation_elimCol_le {m : ℕ} (hm : 1 ≤ m) {h : GL (Fin n) F}
     rw [one_apply_ne hia, sub_zero] at h1
     have hdiag := ((mem_iwahori_iff F n).1
       (congruenceSubgroup_one_le_iwahori F n (congruenceSubgroup_antitone F n hm hh))).2.2 a
-    rw [map_div₀, hdiag, div_one]
-    exact h1
+    rwa [map_div₀, hdiag, div_one]
   · rw [map_zero]
     exact zero_le
 

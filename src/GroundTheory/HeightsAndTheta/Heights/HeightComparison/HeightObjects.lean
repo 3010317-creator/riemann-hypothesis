@@ -165,8 +165,7 @@ theorem isSmoothHerm_toGeo (A : Heights.HermLine n) : Geo.IsSmoothHerm A.toGeo :
   have hm : ContDiffOn ℝ ∞ (fun w : Coord n → ℂ ↦ A.metric (unflatCone w))
       {w | ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0} :=
     A.metric_smooth.comp hu.contDiffOn fun w hw ↦ (blockNonzero_unflatCone_iff w).mpr hw
-  refine hm.congr fun w hw ↦ ?_
-  exact A.toGeo_h_of_blockNonzero ((blockNonzero_unflatCone_iff w).mpr hw)
+  exact hm.congr fun w hw ↦ (A.toGeo_h_of_blockNonzero ((blockNonzero_unflatCone_iff w).mpr hw))
 
 end HermLine
 
@@ -236,8 +235,7 @@ theorem chartMonomial_notMem_orbitIdeal (x : Cone n (AlgebraicClosure ℚ))
     (c : (k : ι) → Fin (n k + 1)) (hc : ∀ k, x k (c k) ≠ 0) (d : ι → ℕ) :
     chartMonomial c d ∉ orbitIdeal x := by
   intro h
-  rw [orbitIdeal, Geo.mCoordIdeal, RingHom.mem_ker] at h
-  rw [chartMonomial, map_prod] at h
+  rw [orbitIdeal, Geo.mCoordIdeal, RingHom.mem_ker, chartMonomial, map_prod] at h
   refine (Finset.prod_ne_zero_iff.mpr fun k _ ↦ ?_) h
   rw [map_pow, Geo.mConeMap, aeval_X]
   exact pow_ne_zero _ (mul_ne_zero (C_ne_zero.mpr (hc k)) (X_ne_zero _))

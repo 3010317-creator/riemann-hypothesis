@@ -67,8 +67,7 @@ private theorem analyticAt_cons_right {D : ℕ} (t : ℂ) (w : Fin D → ℂ) :
   rw [analyticAt_pi_iff]
   intro i
   refine Fin.cases ?_ (fun j => ?_) i
-  · simp only [Fin.cons_zero]
-    exact analyticAt_const
+  · simpa only [Fin.cons_zero] using analyticAt_const
   · simp only [Fin.cons_succ]
     exact (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin D => ℂ) j).analyticAt w
 
@@ -127,8 +126,7 @@ private theorem nz_ball : ∀ (D : ℕ) (c : Fin D → ℂ) (r : ℝ) (f : (Fin 
     have h1 : {z | z ∈ ball c r ∧ f z = 0} = ∅ := by
       ext z
       simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
-      intro _ hz
-      exact hz₀ (Subsingleton.elim z z₀ ▸ hz)
+      exact fun _ hz => hz₀ (Subsingleton.elim z z₀ ▸ hz)
     rw [h1, measure_empty]
   | succ D ih =>
     intro c r f hf hne
@@ -164,8 +162,7 @@ private theorem nz_ball : ∀ (D : ℕ) (c : Fin D → ℂ) (r : ℝ) (f : (Fin 
             {t | t ∈ ball (c 0) r ∧ f (Fin.cons t w) = 0} := by
           ext t
           simp only [Set.mem_ofPred_eq, cons_mem_ball hr, hwb, and_true]
-        rw [hset]
-        exact h2
+        rwa [hset]
       · have hset : {t | (Fin.cons t w : Fin (D + 1) → ℂ) ∈ ball c r ∧ f (Fin.cons t w) = 0} = ∅ := by
           ext t
           simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, cons_mem_ball hr]

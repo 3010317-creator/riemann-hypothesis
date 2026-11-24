@@ -172,8 +172,7 @@ theorem kType_twist {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
     have hf : HasDerivAt (fun t : ℝ => d (γ t)) ((c : ℂ) * X.trace) 0 := by
       have hz := hasDerivAt_zpow c ((toMK (γ 0)).det) (Or.inl (twist_det_ne _))
       have hc := hz.comp (0 : ℝ) hf0
-      rw [hdet0, _root_.one_zpow, mul_one] at hc
-      exact hc
+      rwa [hdet0, _root_.one_zpow, mul_one] at hc
     have hτ0 : ((T.τ (γ 0) : unitary (T.V →L[ℂ] T.V)) : T.V →L[ℂ] T.V) = 1 := by
       rw [hγ0, map_one, OneMemClass.coe_one]
     have hd0 : d (γ 0) = 1 := by
@@ -181,8 +180,7 @@ theorem kType_twist {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
       rw [hdet0, _root_.one_zpow]
     have hsm := hf.smul hg
     simp only [hτ0, hd0, one_smul] at hsm
-    rw [← hdτ] at hsm
-    exact hsm
+    rwa [← hdτ] at hsm
   · intro a
     rw [hdτ, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply,
       T.w_wt a, Matrix.trace_single_eq_same, mul_one]

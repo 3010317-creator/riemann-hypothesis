@@ -127,9 +127,7 @@ theorem chart_extend {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)
     intro w hw
     by_cases hwt : w ∈ e.target
     · rw [Set.indicator_of_mem hwt, Function.comp_apply]
-      apply image_eq_zero_of_notMem_tsupport
-      intro hmem
-      exact hw ⟨e.symm w, hmem, e.right_inv hwt⟩
+      exact image_eq_zero_of_notMem_tsupport (fun hmem => hw ⟨e.symm w, hmem, e.right_inv hwt⟩)
     · exact Set.indicator_of_notMem hwt _
   have hin : ∀ y ∈ e.target, e.target.indicator (h ∘ e.symm) =ᶠ[𝓝 y] h ∘ e.symm := fun y hy =>
     Filter.eventually_of_mem (e.open_target.mem_nhds hy) fun w hw => Set.indicator_of_mem hw _
@@ -232,8 +230,7 @@ theorem exists_chart_decomp {M : Type*} [TopologicalSpace M] [T2Space M] (n : �
   refine ⟨N, e, fun i x => (χ i x : ℂ) * g x, he, fun i => Ck.mul n z 1 _ _ (Smooth.ck n z 1 _ (hχs i)) hg,
     fun i => hc.mul_left, fun i => ?_, ?_⟩
   · refine (tsupport_mul_subset_left (f := fun x => (χ i x : ℂ)) (g := g)).trans ?_
-    refine (tsupport_comp_subset Complex.ofReal_zero (χ i)).trans ?_
-    exact (hχsub i).trans inter_subset_left
+    exact (tsupport_comp_subset Complex.ofReal_zero (χ i)).trans ((hχsub i).trans inter_subset_left)
   · funext x
     by_cases hx : x ∈ tsupport g
     · rw [← Finset.sum_mul, ← Complex.ofReal_sum, hχ1 x hx]; simp

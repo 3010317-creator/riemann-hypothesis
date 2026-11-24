@@ -79,8 +79,7 @@ private theorem exists_fraction_of_mem_closure_range {A B R F : Type*}
   · apply (map_ne_zero_iff i hi).1
     rw [map_mul i]
     exact mul_ne_zero hwv ((map_ne_zero_iff i hi).2 hsu)
-  · simp only [map_mul j, map_mul g]
-    exact mul_eq_mul_of_eqs h1 hu hv'
+  · simpa only [map_mul j, map_mul g] using mul_eq_mul_of_eqs h1 hu hv'
 
 end Abstract
 

@@ -21,20 +21,11 @@ theorem TrdegBaseAlgebraic.proof : TrdegBaseAlgebraic.Statement := by
   obtain ⟨A, hA⟩ : ∃ A : Subalgebra F Ω, A = Algebra.adjoin F (Set.range z) := ⟨_, rfl⟩
   obtain ⟨B, hB⟩ : ∃ B : Subalgebra K Ω, B = Algebra.adjoin K (Set.range z) := ⟨_, rfl⟩
   rw [← hA, ← hB]
-  have hAB : ∀ w ∈ A, w ∈ B := by
-    intro w hw
-    rw [hA] at hw
-    rw [hB]
-    induction hw using Algebra.adjoin_induction with
-    | mem w hw => exact Algebra.subset_adjoin hw
-    | algebraMap c =>
-      rw [IsScalarTower.algebraMap_apply F K Ω c]
-      exact Subalgebra.algebraMap_mem _ _
-    | add u v _ _ hu hv => exact Subalgebra.add_mem _ hu hv
-    | mul u v _ _ hu hv => exact Subalgebra.mul_mem _ hu hv
-
+  have hAB : A ≤ B.restrictScalars F := by
+    rw [hA, hB]
+    exact Algebra.adjoin_le Algebra.subset_adjoin
   let i : A →+* B :=
-    { toFun := fun a => ⟨a, hAB a a.2⟩
+    { toFun := fun a => ⟨a, hAB a.2⟩
       map_one' := rfl
       map_mul' := fun _ _ => rfl
       map_zero' := rfl
@@ -52,9 +43,8 @@ theorem TrdegBaseAlgebraic.proof : TrdegBaseAlgebraic.Statement := by
       obtain ⟨a, rfl⟩ := hr
       exact Algebra.subset_adjoin ⟨a, rfl⟩
     | algebraMap c =>
-      have : i (algebraMap F A c) = algebraMap K B (algebraMap F K c) := by
-        apply Subtype.ext
-        exact (IsScalarTower.algebraMap_apply F K Ω c)
+      have : i (algebraMap F A c) = algebraMap K B (algebraMap F K c) :=
+        Subtype.ext (IsScalarTower.algebraMap_apply F K Ω c)
       rw [this]
       exact C.algebraMap_mem _
     | add r s _ _ hr hs =>
@@ -69,11 +59,8 @@ theorem TrdegBaseAlgebraic.proof : TrdegBaseAlgebraic.Statement := by
       map_mul' := fun _ _ => rfl
       map_zero' := rfl
       map_add' := fun _ _ => rfl }
-  have hf : Function.Injective f := by
-    intro a b hab
-    apply Subtype.ext
-    apply Subtype.ext
-    exact congrArg (fun c : C => ((c : B) : Ω)) hab
+  have hf : Function.Injective f :=
+    fun a b hab => Subtype.ext (Subtype.ext (congrArg (fun c : C => ((c : B) : Ω)) hab))
   have key : ∀ (w : Ω), w ∈ Algebra.adjoin K (Set.range z) →
       ∀ (hw : w ∈ B), IsAlgebraic C (⟨w, hw⟩ : B) := by
     intro w hw'
@@ -82,19 +69,13 @@ theorem TrdegBaseAlgebraic.proof : TrdegBaseAlgebraic.Statement := by
       intro hw
       obtain ⟨m, rfl⟩ := hw'
       have hzA : z m ∈ A := hA ▸ Algebra.subset_adjoin ⟨m, rfl⟩
-      have h1 : IsAlgebraic (Algebra.adjoin F (Set.range ((↑) : t → A))) (⟨z m, hzA⟩ : A) :=
-        ht.isAlgebraic.isAlgebraic _
-      exact h1.ringHom_of_comp_eq f i hf (RingHom.ext fun _ => rfl)
+      exact (ht.isAlgebraic.isAlgebraic ⟨z m, hzA⟩).ringHom_of_comp_eq f i hf
+        (RingHom.ext fun _ => rfl)
     | algebraMap k =>
-      intro hw
-      exact (hKF.isAlgebraic k).ringHom_of_comp_eq ((algebraMap K C).comp (algebraMap F K))
+      exact fun _ => (hKF.isAlgebraic k).ringHom_of_comp_eq ((algebraMap K C).comp (algebraMap F K))
         (algebraMap K B) (RingHom.injective _) (RingHom.ext fun _ => rfl)
-    | add u v hu' hv' hu hv =>
-      intro hw
-      exact (hu (hB ▸ hu')).add (hv (hB ▸ hv'))
-    | mul u v hu' hv' hu hv =>
-      intro hw
-      exact (hu (hB ▸ hu')).mul (hv (hB ▸ hv'))
+    | add u v hu' hv' hu hv => exact fun _ => (hu (hB ▸ hu')).add (hv (hB ▸ hv'))
+    | mul u v hu' hv' hu hv => exact fun _ => (hu (hB ▸ hu')).mul (hv (hB ▸ hv'))
   have alg : Algebra.IsAlgebraic C B := ⟨fun b => key b.1 (hB ▸ b.2) b.2⟩
   calc Algebra.trdeg K B ≤ #(Set.range x) := Algebra.IsAlgebraic.trdeg_le_cardinalMk K (Set.range x)
     _ ≤ #t := Cardinal.mk_range_le

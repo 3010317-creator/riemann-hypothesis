@@ -65,8 +65,7 @@ theorem span_eq (c : K → ℤ) :
       have hc := nonneg_of_isWeightedHomogeneous hp h0
       refine ⟨hc, (isMultiHomog_iff p _).2 ?_⟩
       have hcc : (fun k => (((c k).toNat : ℕ) : ℤ)) = c := funext fun k => Int.toNat_of_nonneg (hc k)
-      rw [hcc]
-      exact hp
+      rwa [hcc]
 
 theorem quotPart_eq (V : Ideal (MRingOver S ι)) (c : K → ℤ) :
     KH.quotPart S V c =
@@ -120,8 +119,7 @@ theorem QuotPartGraded.proof : QuotPartGraded.Statement := by
         rwa [weightedHomogeneousComponent_eq_self (hp c hc).1] at hcomp
       · intro d hd hdc
         exact IsWeightedHomogeneous.weightedHomogeneousComponent_ne c (hp d hd).1 (Ne.symm hdc)
-      · intro h
-        exact absurd hc h
+      · exact fun h => absurd hc h
     · have htop := (DirectSum.Decomposition.isInternal
         (weightedHomogeneousSubmodule S (QuotPartGraded.blockWeight ι))).submodule_iSup_eq_top
       rw [show KH.quotPart S V = fun c => (weightedHomogeneousSubmodule S (QuotPartGraded.blockWeight ι) c).map
@@ -133,8 +131,7 @@ theorem QuotPartGraded.proof : QuotPartGraded.Statement := by
     obtain ⟨q, hq', rfl⟩ := Submodule.mem_map.1 hm
     refine Submodule.mem_map.2 ⟨p * q, ?_, ?_⟩
     · have := ((QuotPartGraded.isMultiHomog_iff p a).1 hp).mul hq'
-      rw [mem_weightedHomogeneousSubmodule, add_comm]
-      exact this
+      rwa [mem_weightedHomogeneousSubmodule, add_comm]
     · simp only [AlgHom.toLinearMap_apply, Ideal.Quotient.mkₐ_eq_mk]
       rfl
 

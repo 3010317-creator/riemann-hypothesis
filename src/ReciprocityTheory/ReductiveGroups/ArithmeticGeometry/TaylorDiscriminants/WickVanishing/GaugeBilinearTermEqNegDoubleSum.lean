@@ -114,8 +114,7 @@ theorem coeff_ev_zero_left (h : PS k 2 d) (x : Fin 1 × Fin d →₀ ℕ) :
       have h1 := congrArg (fun g => g ((0 : Fin 2), i)) hm
       rw [Finsupp.embDomain_notin_range _ _ _ (hnr i), Finsupp.single_eq_same] at h1
       exact zero_ne_one h1
-  · show X ((0 : Fin 1), i) = killCompl (eZ d) (X ((1 : Fin 2), i))
-    exact (killCompl_X (e := eZ d) ((0 : Fin 1), i)).symm
+  · exact (killCompl_X (e := eZ d) ((0 : Fin 1), i)).symm
 
 theorem coeff_ev_zero_right (h : PS k 2 d) (x : Fin 1 × Fin d →₀ ℕ) :
     coeff x (ev (n := 1) ![pt k d 0, 0] h) = coeff (embDomain (eXv d) x) h := by
@@ -126,8 +125,7 @@ theorem coeff_ev_zero_right (h : PS k 2 d) (x : Fin 1 × Fin d →₀ ℕ) :
   apply coeff_subst_killCompl (eXv d) h
   rintro ⟨b, i⟩
   fin_cases b
-  · show X ((0 : Fin 1), i) = killCompl (eXv d) (X ((0 : Fin 2), i))
-    exact (killCompl_X (e := eXv d) ((0 : Fin 1), i)).symm
+  · exact (killCompl_X (e := eXv d) ((0 : Fin 1), i)).symm
   · show (0 : PS k 1 d) = killCompl (eXv d) (X ((1 : Fin 2), i))
     ext m
     rw [coeff_killCompl, coeff_X, ite_eq_right]
@@ -229,8 +227,7 @@ theorem coeff_ev_swap' (h : PS k 2 d) (m : Fin 2 × Fin d →₀ ℕ) :
     conv_lhs => rw [← swE_swE t]
     rw [embDomain_swE_apply, embDomain_swE_apply]
   have := coeff_ev_swap h (embDomain (swE d) m)
-  rw [hm] at this
-  exact this
+  rwa [hm] at this
 
 theorem coeff_swap_sub_low (h : PS k 2 d) (h0 : ev (n := 1) ![0, pt k d 0] h = 0)
     (h1 : ev (n := 1) ![pt k d 0, 0] h = 0) (m : Fin 2 × Fin d →₀ ℕ) (hm : m.degree < 2) :

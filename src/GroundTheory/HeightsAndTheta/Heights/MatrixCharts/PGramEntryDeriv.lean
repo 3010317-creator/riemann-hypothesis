@@ -60,9 +60,7 @@ theorem GramEntryDeriv.proof : GramEntryDeriv.Statement := by
       ∑ t, ∑ s, star (F q s j) * ((Z q s t : ℝ) : ℂ) * F q t l := by
     intro q
     simp [Matrix.mul_apply, Finset.sum_mul]
-  have hfun : (fun q => ((F q)ᴴ * (Z q).map (fun x : ℝ => (x : ℂ)) * F q) j l) =
-      fun q => ∑ t, ∑ s, star (F q s j) * ((Z q s t : ℝ) : ℂ) * F q t l := funext hent
-  rw [hfun, hent p]
+  simp only [hent]
   have hterm : ∀ t s : Fin g,
       DifferentiableAt ℝ (fun q => star (F q s j) * ((Z q s t : ℝ) : ℂ) * F q t l) p ∧
       ‖star (F p s j) * ((Z p s t : ℝ) : ℂ) * F p t l‖ ≤ a ^ 2 * e ∧
@@ -77,8 +75,8 @@ theorem GramEntryDeriv.proof : GramEntryDeriv.Statement := by
     obtain ⟨hv, hv'⟩ := comp_linearIsometry Complex.ofRealLI
       (fun x : ℝ => (x : ℂ)) (fun x => rfl) hd2
     obtain ⟨hdiff, hbound⟩ := triple hu hv hd3
-    have hnu : ‖star (F p s j)‖ ≤ a := by rw [norm_star]; exact hn1
-    have hnv : ‖((Z p s t : ℝ) : ℂ)‖ ≤ e := by rw [Complex.norm_real, Real.norm_eq_abs]; exact hn2
+    have hnu : ‖star (F p s j)‖ ≤ a := (norm_star _).le.trans hn1
+    have hnv : ‖((Z p s t : ℝ) : ℂ)‖ ≤ e := (Complex.norm_real _).le.trans hn2
     have hDu : ‖fderiv ℝ (fun q => star (F q s j)) p‖ ≤ a := hu'.le.trans hD1
     have hDv : ‖fderiv ℝ (fun q => ((Z q s t : ℝ) : ℂ)) p‖ ≤ e' := hv'.le.trans hD2
     refine ⟨hdiff, ?_, ?_⟩
@@ -95,19 +93,14 @@ theorem GramEntryDeriv.proof : GramEntryDeriv.Statement := by
       (∑ t, ∑ s, fderiv ℝ (fun q => star (F q s j) * ((Z q s t : ℝ) : ℂ) * F q t l) p) p :=
     HasFDerivAt.fun_sum fun t _ => HasFDerivAt.fun_sum fun s _ => (hterm t s).1.hasFDerivAt
   refine ⟨hH.differentiableAt, ?_, ?_⟩
-  · calc ‖∑ t, ∑ s, star (F p s j) * ((Z p s t : ℝ) : ℂ) * F p t l‖
-          ≤ ∑ t : Fin g, ∑ s : Fin g, ‖star (F p s j) * ((Z p s t : ℝ) : ℂ) * F p t l‖ :=
-            (norm_sum_le _ _).trans (Finset.sum_le_sum fun t _ => norm_sum_le _ _)
-      _ ≤ ∑ t : Fin g, ∑ s : Fin g, a ^ 2 * e :=
-            Finset.sum_le_sum fun t _ => Finset.sum_le_sum fun s _ => (hterm t s).2.1
-      _ = (g : ℝ) ^ 2 * a ^ 2 * e := by simp [Finset.sum_const]; ring
+  · refine (norm_sum_le _ _).trans ((Finset.sum_le_sum fun t _ => (norm_sum_le _ _).trans
+      (Finset.sum_le_sum fun s _ => (hterm t s).2.1)).trans_eq ?_)
+    simp [Finset.sum_const]
+    ring
   · rw [hH.fderiv]
-    calc ‖∑ t, ∑ s, fderiv ℝ (fun q => star (F q s j) * ((Z q s t : ℝ) : ℂ) * F q t l) p‖
-          ≤ ∑ t : Fin g, ∑ s : Fin g,
-              ‖fderiv ℝ (fun q => star (F q s j) * ((Z q s t : ℝ) : ℂ) * F q t l) p‖ :=
-            (norm_sum_le _ _).trans (Finset.sum_le_sum fun t _ => norm_sum_le _ _)
-      _ ≤ ∑ t : Fin g, ∑ s : Fin g, (2 * a ^ 2 * e + a ^ 2 * e') :=
-            Finset.sum_le_sum fun t _ => Finset.sum_le_sum fun s _ => (hterm t s).2.2
-      _ = (g : ℝ) ^ 2 * (2 * a ^ 2 * e + a ^ 2 * e') := by simp [Finset.sum_const]; ring
+    refine (norm_sum_le _ _).trans ((Finset.sum_le_sum fun t _ => (norm_sum_le _ _).trans
+      (Finset.sum_le_sum fun s _ => (hterm t s).2.2)).trans_eq ?_)
+    simp [Finset.sum_const]
+    ring
 
 end GroundTheory.Heights₂.Heights

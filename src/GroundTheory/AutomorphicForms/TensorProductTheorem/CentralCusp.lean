@@ -207,8 +207,7 @@ theorem hasDerivAt_apply_mul_expG (φ : cuspForms K n) (X : (isExpLieAlgebra K n
   have e : (fun x => f (t + (x - t))) = f := by
     funext x
     simp only [add_sub_cancel]
-  rw [e] at h3
-  exact h3
+  rwa [e] at h3
 
 def expPath (X : (isExpLieAlgebra K n).lieSubalgebra) (t : ℝ) : AdelicGLn.AdelicGL K n :=
   infEmb K n ((isExpLieAlgebra K n).expG (t • (isExpLieAlgebra K n).ofLie X))
@@ -272,8 +271,7 @@ theorem integral_ρ_add_eq_zero (X : (isExpLieAlgebra K n).lieSubalgebra) {φ ψ
       (rightMulHomeomorph Γ₁ (toOne (expPath X t))).measurableEmbedding
       (fun q => starRingEnd ℂ (quotTr φ 1 q) * quotTr ψ 1 q)
   rw [hconst] at key
-  have h0 := key.2.unique (hasDerivAt_const (0 : ℝ) _)
-  simpa only [expPath_zero] using h0
+  simpa only [expPath_zero] using key.2.unique (hasDerivAt_const (0 : ℝ) _)
 
 theorem petersson_inner_lieAlgebra_skewAdjoint (X : (isExpLieAlgebra K n).lieSubalgebra) {φ ψ : cuspForms K n}
     (hφ : φ ∈ centralCuspForms K n) (hψ : ψ ∈ centralCuspForms K n) :
@@ -295,9 +293,7 @@ theorem petersson_inner_lieAlgebra_skewAdjoint (X : (isExpLieAlgebra K n).lieSub
   have e2 := petersson_inner_eq_integral_quotient μ φ ((gkModuleCusp K n).ρ X ψ)
   refine (congrArg₂ (· + ·) e1 e2).trans ?_
   rw [← integral_add (hI _ _) (hI _ _)]
-  have h := integral_ρ_add_eq_zero μ X hφ hψ
-  simp only [quotTr_one] at h
-  exact h
+  simpa only [quotTr_one] using integral_ρ_add_eq_zero μ X hφ hψ
 
 end AutomorphicForm
 

@@ -77,8 +77,7 @@ theorem map_primeCompl_renC (z : σ → ℂ) :
     change x ∈ RingHom.ker _
     change _ ∈ RingHom.ker _ at hy
     rw [RingHom.mem_ker] at hy ⊢
-    rw [← key x]
-    exact hy
+    rwa [← key x]
   · intro hy
     refine ⟨(renR σ).symm y, ?_, key' y⟩
     intro hx
@@ -86,8 +85,7 @@ theorem map_primeCompl_renC (z : σ → ℂ) :
     change y ∈ RingHom.ker _
     change _ ∈ RingHom.ker _ at hx
     rw [RingHom.mem_ker] at hx ⊢
-    rw [← key' y, key]
-    exact hx
+    rwa [← key' y, key]
 
 def locPtEquiv (z : σ → ℂ) : Localization.AtPrime (ptIdealOf z) ≃+* locPt (renPt z) :=
   IsLocalization.ringEquivOfRingEquiv (Localization.AtPrime (ptIdealOf z)) (locPt (renPt z))
@@ -129,13 +127,11 @@ theorem finrank_cotangentSpace_eq_of_ringEquiv {A B : Type*} [CommRing A] [CommR
   let g' : B →ₐ[ℤ] A := f.symm.toRingHom.toIntAlgHom
   have hmax : ∀ x : A, f x ∈ maximalIdeal B ↔ x ∈ maximalIdeal A := by
     intro x
-    simp only [mem_maximalIdeal, mem_nonunits_iff]
-    exact not_congr (isUnit_map_iff f x)
+    simpa only [mem_maximalIdeal, mem_nonunits_iff] using not_congr (isUnit_map_iff f x)
   have hA : maximalIdeal A ≤ (maximalIdeal B).comap g := fun x hx => (hmax x).2 hx
   have hB : maximalIdeal B ≤ (maximalIdeal A).comap g' := fun y hy => by
     show f.symm y ∈ maximalIdeal A
-    rw [← hmax, f.apply_symm_apply]
-    exact hy
+    rwa [← hmax, f.apply_symm_apply]
   let j₁ := Ideal.mapCotangent (maximalIdeal A) (maximalIdeal B) g hA
   let j₂ := Ideal.mapCotangent (maximalIdeal B) (maximalIdeal A) g' hB
   let j : CotangentSpace A ≃+ CotangentSpace B :=
@@ -172,12 +168,9 @@ theorem finrank_cotangentSpace_eq_of_ringEquiv {A B : Type*} [CommRing A] [CommR
     have hj : ∀ m, j m = j₁ m := fun _ => rfl
     rw [hj, hj, e1, e2, Ideal.mapCotangent_toCotangent, Ideal.mapCotangent_toCotangent, e3]
     congr 1
-    apply Subtype.ext
-    show f (a * (x : A)) = f a * f x
-    exact map_mul f a x
+    exact Subtype.ext (map_mul f a x)
   have h2 := congrArg Cardinal.toNat (lift_rank_eq_of_equiv_equiv (⇑i) j i.bijective hc)
-  rw [Cardinal.toNat_lift, Cardinal.toNat_lift] at h2
-  exact h2
+  rwa [Cardinal.toNat_lift, Cardinal.toNat_lift] at h2
 
 end
 

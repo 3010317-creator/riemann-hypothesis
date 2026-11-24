@@ -47,8 +47,7 @@ theorem TwistedDualGensExpress.proof : TwistedDualGensExpress.Statement := by
       rw [hψ, LinearMap.smul_apply, hsv, smul_eq_mul, mul_comm s, ← mul_assoc,
         ← Finset.prod_mul_distrib, Finset.prod_eq_one (fun k _ => by
           rw [zpow_neg, inv_mul_cancel₀ (zpow_ne_zero _ (hy k))]), one_mul]
-    rw [this]
-    exact hs
+    rwa [this]
   obtain ⟨k0, f, cc, hf, hcc, hsum, hb⟩ := B.frame c hc
   choose b hli hsp hiff using hb
   have hbq : ∀ l q, ∃ n : ℕ, f l ≠ 0 → ∃ e : ℕ, f l ^ e * (w ^ n * ψ (b l q)) ∈ A := by
@@ -63,8 +62,7 @@ theorem TwistedDualGensExpress.proof : TwistedDualGensExpress.Statement := by
     refine ⟨n, fun _ => ⟨e, ?_⟩⟩
     have h := hψA _ hn
     rw [map_smul, map_smul, smul_eq_mul, smul_eq_mul] at h
-    rw [show f l ^ e * (w ^ n * ψ (b l q)) = w ^ n * (f l ^ e * ψ (b l q)) by ring]
-    exact h
+    rwa [show f l ^ e * (w ^ n * ψ (b l q)) = w ^ n * (f l ^ e * ψ (b l q)) by ring]
   choose nb hnb using hbq
   set n := Finset.univ.sup (fun p : Fin k0 × Fin N => nb p.1 p.2) with hn
   have hle : ∀ l q, nb l q ≤ n := fun l q =>
@@ -92,8 +90,7 @@ theorem TwistedDualGensExpress.proof : TwistedDualGensExpress.Statement := by
       refine Finset.sum_congr rfl fun q _ => ?_
       rw [map_smul, smul_eq_mul]
       ring
-    rw [smul_eq_mul, this]
-    exact he
+    rwa [smul_eq_mul, this]
   obtain ⟨u, hu, hsum'⟩ := hφ.generate c hc (w ^ n • ψ) hmain
   refine ⟨n, u, hu, ?_⟩
   have hY : (∏ k, y ⟨k, c k⟩ ^ a' k) * ∏ k, y ⟨k, c k⟩ ^ (-a' k) = 1 := by

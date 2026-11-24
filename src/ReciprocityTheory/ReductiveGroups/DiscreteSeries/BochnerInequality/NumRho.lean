@@ -200,25 +200,16 @@ theorem two_dot_rhoC_rhoN_le (ε : Fin n → Bool) :
     have hN : |2 * rhoN ε a| ≤ ((univ.filter fun c => ε c ≠ ε a).card : ℝ) := by
       rw [hr]
       exact abs_le.mpr ⟨by linarith, by linarith⟩
-    have he : (2 * rhoC ε a) * (2 * rhoN ε a) ≤ |2 * rhoC ε a| * |2 * rhoN ε a| := by
-      rw [← abs_mul]
-      exact le_abs_self _
+    have he : (2 * rhoC ε a) * (2 * rhoN ε a) ≤ |2 * rhoC ε a| * |2 * rhoN ε a| :=
+      (le_abs_self _).trans_eq (abs_mul _ _)
     have hm : |2 * rhoC ε a| * |2 * rhoN ε a| ≤
         (n : ℝ) * ((univ.filter fun c => ε c ≠ ε a).card : ℝ) :=
       mul_le_mul hC hN (abs_nonneg _) (Nat.cast_nonneg n)
-    have h4 : (2 * rhoC ε a) * (2 * rhoN ε a) = 4 * (rhoC ε a * rhoN ε a) := by ring
-    have h5 : (n : ℝ) / 2 * ((univ.filter fun c => ε c ≠ ε a).card : ℝ) =
-        ((n : ℝ) * ((univ.filter fun c => ε c ≠ ε a).card : ℝ)) / 2 := by ring
     linarith
   rw [dot, Finset.mul_sum]
-  calc ∑ a, 2 * (rhoC ε a * rhoN ε a)
-      ≤ ∑ a, (n : ℝ) / 2 * ((univ.filter fun c => ε c ≠ ε a).card : ℝ) :=
-        Finset.sum_le_sum (fun a _ => key a)
-    _ = (n : ℝ) / 2 * ∑ a, ((univ.filter fun c => ε c ≠ ε a).card : ℝ) := by
-        rw [Finset.mul_sum]
-    _ = (n : ℝ) * (pOf ε : ℝ) * (qOf ε : ℝ) := by
-        rw [numRho_sum_opp]
-        ring
+  refine (Finset.sum_le_sum fun a _ => key a).trans_eq ?_
+  rw [← Finset.mul_sum, numRho_sum_opp]
+  ring
 
 theorem nsq_root {a b : Fin n} (hab : a ≠ b) : nsq (root a b) = 2 := by
   rw [nsq, numRho_dot_root_left]

@@ -285,8 +285,7 @@ theorem approxB_split {K : Type} [Field K] [NumberField K] {r p : ℕ} (hp : p �
   have hApos : ∀ k' : ApproxPosIdx r p, S.h (l k'.1) (∑ k : ApproxPosIdx r p, g k.1 • l k.1) = 0 := by
     intro k'
     have := congrArg (S.h (l k'.1)) hsplit
-    rw [approxB_h_add_right, hBorth, add_zero, approxB_h_zero_right] at this
-    exact this
+    rwa [approxB_h_add_right, hBorth, add_zero, approxB_h_zero_right] at this
   have hg1 := hinj (fun k => g k.1) hApos
   have hA0 : ∑ k : ApproxPosIdx r p, g k.1 • l k.1 = 0 :=
     Finset.sum_eq_zero fun k _ => by rw [show g k.1 = 0 from congrFun hg1 k, zero_smul]
@@ -774,8 +773,7 @@ theorem bwp_eval_smul_of_isHomogeneous {σ : Type*} {φ : MvPolynomial σ ℂ} {
   rw [MvPolynomial.eval_eq, MvPolynomial.eval_eq, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m hm => ?_
   have hdeg : ∑ i ∈ m.support, m i = d := by
-    have h := hφ (MvPolynomial.mem_support_iff.mp hm)
-    simpa [Finsupp.weight_apply, Finsupp.sum] using h
+    simpa [Finsupp.weight_apply, Finsupp.sum] using hφ (MvPolynomial.mem_support_iff.mp hm)
   simp_rw [Pi.smul_apply, smul_eq_mul, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum,
     hdeg]
   ring
@@ -808,8 +806,7 @@ theorem bwp_finite_det_line {p : ℕ} (z v : Fin p × Fin p → ℂ) (hz : (bwpM
     simpa using h0.symm
   refine (bwp_finite_eval_eq_zero hΛ0).subset fun t ht => ?_
   simp only [Set.mem_setOf_eq] at ht ⊢
-  rw [hΛ]
-  exact ht
+  rwa [hΛ]
 
 theorem bwp_finite_det_id_line {p : ℕ} (z : Fin p × Fin p → ℂ) :
     {s : ℂ | (bwpMat (z + s • bwpId p)).det = 0}.Finite := by
@@ -840,8 +837,7 @@ theorem bwp_exists_bound_unitary {p : ℕ} (P : Matrix (Fin p) (Fin p) ℂ → �
     rw [Metric.isBounded_iff_subset_closedBall 0]
     refine ⟨1, fun y hy => ?_⟩
     have hU : Matrix.of y ∈ Matrix.unitaryGroup (Fin p) ℂ := by
-      rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
-      exact hy
+      rwa [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]
     rw [Metric.mem_closedBall, dist_zero_right]
     refine (pi_norm_le_iff_of_nonneg zero_le_one).mpr fun i =>
       (pi_norm_le_iff_of_nonneg zero_le_one).mpr fun j => ?_
@@ -855,8 +851,7 @@ theorem bwp_exists_bound_unitary {p : ℕ} (P : Matrix (Fin p) (Fin p) ℂ → �
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn (DifferentiableOn.continuousOn hP |>.mono hsub)
   refine ⟨C, fun U hU => ?_⟩
   have hU' : U ∈ S := by
-    rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose] at hU
-    exact hU
+    rwa [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose] at hU
   exact hC U hU'
 
 theorem bwp_line_poly (hH : LemmaHStatement) (hO : OnePolyGrowthStatement) {p : ℕ} (a : Fin p → ℕ)

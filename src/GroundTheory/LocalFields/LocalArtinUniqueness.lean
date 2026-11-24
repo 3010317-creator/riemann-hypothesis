@@ -124,8 +124,7 @@ theorem eq_localArtinMap_of
       ∀ x ∈ (normUnits K L).range,
         restrictAb L (le_maximalAbelianExtension L) (localArtinMap K Ω x) = 1 := by
     intro L _ _ x hx
-    rw [← MonoidHom.comp_apply, ← MonoidHom.mem_ker, ker_restrictAb_localArtinMap]
-    exact hx
+    rwa [← MonoidHom.comp_apply, ← MonoidHom.mem_ker, ker_restrictAb_localArtinMap]
   have hur : ∀ (y : Ω) (hy : y ∈ maximalUnramifiedExtension K Ω),
       ((ψ π ⟨y, maximalUnramifiedExtension_le_maximalAbelianExtension hy⟩ :
         maximalAbelianExtension K Ω) : Ω) =
@@ -168,8 +167,7 @@ theorem eq_localArtinMap_of
       have h1 : (ψ π).symm (localArtinMap K Ω π ⟨y, h₂ hy⟩) = ⟨y, h₂ hy⟩ :=
         (AlgEquiv.symm_apply_eq _).2 (Subtype.ext h).symm
       rw [AlgEquiv.aut_inv, h1]
-  rw [← inv_mul_eq_one]
-  exact hτ1
+  rwa [← inv_mul_eq_one]
 
 end Uniqueness
 

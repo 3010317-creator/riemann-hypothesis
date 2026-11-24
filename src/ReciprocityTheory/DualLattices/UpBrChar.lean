@@ -139,8 +139,7 @@ lemma char_step (hv : v.Integers R) {g N : ℕ} (M : Matrix (Fin g) (Fin N) R) (
   have hAdet : A.det ≠ 0 := by
     refine det_ne_of_span A c hc fun w => ?_
     have h1 := hspan s (Nat.le_of_succ_le hs1) w
-    rw [← hι] at h1
-    exact h1
+    rwa [← hι] at h1
   have hlam : ∀ b, ∃ l : Fin s → R, ∀ a : Fin s, M (Fin.castLE (Nat.le_of_succ_le hs1) a) b =
       ∑ i, l i * M (Fin.castLE (Nat.le_of_succ_le hs1) a) (ι i) := by
     intro b
@@ -171,8 +170,7 @@ lemma char_step (hv : v.Integers R) {g N : ℕ} (M : Matrix (Fin g) (Fin N) R) (
     | cast a =>
       simpa [hT, Finset.sum_apply, Pi.single_apply, hcast, Fin.castSucc_ne_last] using hl b a
   have hex : ∃ b, μ b ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     have hle : omTr M (s + 1) hs1 ≤ Submodule.span R (Set.range fun i => T (ι i)) := by
       rw [omTr, Submodule.span_le]
       rintro _ ⟨b, rfl⟩
@@ -288,8 +286,7 @@ theorem char_len (hv : v.Integers R) {g N : ℕ} (M : Matrix (Fin g) (Fin N) R) 
       (ι (Fin.castLE hs b))).mulVecLin = omTr M s hs := by
     rw [Matrix.range_mulVecLin, ← hι]
     rfl
-  rw [hr] at h
-  exact h
+  rwa [hr] at h
 
 end Char
 

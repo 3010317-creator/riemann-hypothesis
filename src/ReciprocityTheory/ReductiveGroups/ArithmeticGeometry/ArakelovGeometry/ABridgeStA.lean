@@ -83,8 +83,7 @@ theorem secFun_smul {b : MvPolynomial J ℚ} {n : ℕ}
   have hmap : map (algebraMap ℚ ℂ) (map (Int.castRingHom ℚ) f) = map (Int.castRingHom ℂ) f := by
     rw [map_map]
     congr 1
-  simp only [secFun, hmap]
-  exact eval_smul_of_homog (hf.map _) c z
+  simpa only [secFun, hmap] using eval_smul_of_homog (hf.map _) c z
 
 theorem continuous_secFun (b : MvPolynomial J ℚ) : Continuous (secFun b) := by
   unfold secFun

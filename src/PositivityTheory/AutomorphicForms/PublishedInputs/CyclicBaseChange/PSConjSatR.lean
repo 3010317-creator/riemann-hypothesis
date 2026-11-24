@@ -104,8 +104,7 @@ theorem Tj_comp {L1 L2 : Type} [Field L1] [Field L2] (κ : L1 →+* L2) (hκ : F
       have e2 : Matrix.GeneralLinearGroup.map (RingEquiv.ofBijective κ hκ).symm.toRingHom
           (glEquiv (n := n) κ hκ g) = g := (glEquiv (n := n) κ hκ).symm_apply_apply g
       rwa [e1, e2] at this
-    · intro h
-      exact inS_map κ (fun x hx => (hO x).1 hx) h
+    · exact fun h => inS_map κ (fun x hx => (hO x).1 hx) h
   rw [Function.comp_apply, Tj_eq, Tj_eq]
   by_cases hg : InS O1 ϖ j g
   · rw [Set.indicator_of_mem (show glEquiv (n := n) κ hκ g ∈ {g | InS O2 (κ ϖ) j g} from key.2 hg),
@@ -151,8 +150,7 @@ theorem hasSatGL_comp {w1 w2 : HeightOneSpectrum (𝓞 E)} (κ : w1.adicCompleti
     refine ⟨h0, hx, hs.2.2.1, fun ϖ hϖ j hj => ?_⟩
     have hϖ2 : Formalism.UG.IsUnifV E w2 (κ ϖ) := by
       unfold Formalism.UG.IsUnifV at hϖ ⊢
-      rw [hv]
-      exact hϖ
+      rwa [hv]
     have hh := GlobalTheory.LFun.heckeVec_comp_symm (ρ := ρ.comp (glEquiv (n := n) κ hκ).toMonoidHom) (x := x)
       (glEquiv (n := n) κ hκ) hK (h' := Formalism.UG.Tj ℂ n (Formalism.UG.Ov E w2) (κ ϖ) j) (GlobalTheory.LFun.Tj_mem_hecke hϖ2 j).1 hx
     rw [hρ, Tj_comp κ hκ hO ϖ j] at hh
@@ -267,10 +265,7 @@ theorem tT_bij {s : Ad M ≃+* Ad M} {P P' : UpperTheory.V.TR.CuspSub M n} (h : 
       φ'.1.1 (Matrix.GeneralLinearGroup.map s.toRingHom (Matrix.GeneralLinearGroup.map s.symm.toRingHom g)) at this
     rwa [map_map_symm] at this
   · obtain ⟨φ, hφ, e⟩ := h.bwd ψ.1 ψ.2
-    refine ⟨⟨φ, hφ⟩, ?_⟩
-    apply Subtype.ext
-    apply Subtype.ext
-    exact e.symm
+    exact ⟨⟨φ, hφ⟩, Subtype.ext (Subtype.ext e.symm)⟩
 
 theorem hasSat_conj (c : M ≃+* M) (s : Ad M ≃+* Ad M) (hs : ∀ x, (s x).2 = conjFin c x.2)
     {P P' : UpperTheory.V.TR.CuspSub M n} (h : Rel s P P') (v : HeightOneSpectrum (𝓞 M)) (B : Multiset ℂˣ)

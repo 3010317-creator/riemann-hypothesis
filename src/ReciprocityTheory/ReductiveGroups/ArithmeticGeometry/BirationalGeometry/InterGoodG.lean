@@ -103,8 +103,7 @@ theorem succ_le_ringKrullDim_of_algebraicIndependent {σ : Type} [Finite σ]
       refine ⟨fun b => ?_⟩
       obtain ⟨p, hpm, hp⟩ := hint b
       refine IsIntegral.isAlgebraic ⟨p.map g', hpm.map g', ?_⟩
-      rw [Polynomial.eval₂_map, hg']
-      exact hp
+      rwa [Polynomial.eval₂_map, hg']
     have h1 := hx.cardinalMk_le_trdeg
     have h2 := Algebra.IsAlgebraic.trdeg_le_cardinalMk ℚ (Set.range (g ∘ X))
     have h3 := Cardinal.mk_range_le (f := g ∘ X)
@@ -213,8 +212,7 @@ theorem algebraicIndependent_sumElim (P : Ideal (MRing ι)) (hP : P.IsPrime) (hH
   rw [algebraicIndependent_iff]
   intro H hH0
   have hmem : aeval (R := ℚ) yt H ∈ qIdeal P := by
-    rw [← Ideal.Quotient.eq_zero_iff_mem, ← hev]
-    exact hH0
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, ← hev]
   have key : ∀ δ, weightedHomogeneousComponent (sWt k0 r) δ H = 0 := by
     intro δ
     have hHd : IsWeightedHomogeneous (sWt k0 r) (weightedHomogeneousComponent (sWt k0 r) δ H) δ :=
@@ -223,8 +221,7 @@ theorem algebraicIndependent_sumElim (P : Ideal (MRing ι)) (hP : P.IsPrime) (hH
       (qIdeal_isHomogeneous P hhom) hmem δ
     rw [component_aeval (sWt k0 r) yt hhomY H δ] at hcomp
     have h0 : aeval (Sum.elim (forms (segQ P) L) b) (weightedHomogeneousComponent (sWt k0 r) δ H) = 0 := by
-      rw [hev, Ideal.Quotient.eq_zero_iff_mem]
-      exact hcomp
+      rwa [hev, Ideal.Quotient.eq_zero_iff_mem]
     by_contra hne
     obtain ⟨n0, hn0⟩ := Finset.nonempty_of_ne_empty (mt MvPolynomial.support_eq_empty.mp hne)
     rw [aeval_sumElim_factor k0 hHd hn0] at h0

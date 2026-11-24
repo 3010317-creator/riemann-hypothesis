@@ -81,8 +81,7 @@ theorem isClosed_of_isAnalyticSubset (A : FinHolAtlas e X) {S : Set X}
     have hxt : A.chart j x ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' W := by
       refine ⟨(A.chart j).map_source hj, ?_⟩
       show (A.chart j).symm (A.chart j x) ∈ W
-      rw [(A.chart j).left_inv hj]
-      exact hxW
+      rwa [(A.chart j).left_inv hj]
     have h1 : ContinuousAt (f i ∘ (A.chart j).symm) (A.chart j x) := (hf i j _ hxt).continuousAt
     have h3 := h1.comp ((A.chart j).continuousAt hj)
     refine h3.congr ?_
@@ -113,8 +112,7 @@ theorem degree_sheet_chart_data {A : FinHolAtlas e X} {B : FinHolAtlas e Y} {h :
   have hWsrc : ∀ y ∈ (B.chart j) '' W, (B.chart j).symm y ∈ W ∧ y ∈ (B.chart j).target := by
     rintro y ⟨w, hw, rfl⟩
     refine ⟨?_, (B.chart j).map_source (hWj hw)⟩
-    rw [(B.chart j).left_inv (hWj hw)]
-    exact hw
+    rwa [(B.chart j).left_inv (hWj hw)]
   have hsrc : ∀ y ∈ (B.chart j) '' W, h ((B.chart j).symm y) ∈ (A.chart k).source :=
     fun y hy => hVk (hbij.mapsTo (hWsrc y hy).1)
   refine ⟨?_, ?_, ?_, ?_, hsrc⟩

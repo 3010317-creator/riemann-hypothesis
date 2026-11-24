@@ -82,9 +82,7 @@ theorem ChartVelLift.proof (hP : ProjHoloLocal.Statement) : ChartVelLift.Stateme
 
   set L : ℂ → Fin D.n → ℂ := fun σ => y + σ • v with hL
   have hLd : ∀ σ, HasDerivAt L v σ := fun σ => by
-    have h := ((hasDerivAt_id σ).smul_const v).const_add y
-    simp only [id, one_smul] at h
-    exact h
+    simpa only [id, one_smul] using ((hasDerivAt_id σ).smul_const v).const_add y
   have hL0 : L 0 = y := by simp [hL]
   set T : Set ℂ := L ⁻¹' V with hT
   have hTo : IsOpen T := hVo.preimage (continuous_const.add (continuous_id.smul continuous_const))
@@ -127,8 +125,7 @@ theorem ChartVelLift.proof (hP : ProjHoloLocal.Statement) : ChartVelLift.Stateme
     have h1 : fderiv ℂ F (γ 0) (deriv γ 0) = v := by
       refine (hFz.comp_hasDerivAt (0 : ℂ) hγw).unique ((hLd 0).congr_of_eventuallyEq ?_)
       filter_upwards [hTn, hWγ, hline] with σ hσ hσW hσl
-      rw [Function.comp_apply, ← (hF (γ σ) ⟨hσW, (hγmem σ hσ).1⟩).2]
-      exact hσl
+      rwa [Function.comp_apply, ← (hF (γ σ) ⟨hσW, (hγmem σ hσ).1⟩).2]
 
     set δ : ℂ → (Σ k, ι k) → ℂ := fun σ => torusSmul (fun k => Complex.exp (σ * c k)) (γ 0) with hδ
     have hδ0 : δ 0 = γ 0 := by

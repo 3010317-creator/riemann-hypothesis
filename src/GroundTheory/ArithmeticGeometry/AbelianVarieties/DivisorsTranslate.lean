@@ -36,8 +36,7 @@ theorem map_constPoint (ψ : W.toAffine.FunctionField →ₐ[F] W.toAffine.Funct
   have h := Point.map_map (W' := W) (Algebra.ofId F W.toAffine.FunctionField) ψ R
   have e : ψ.comp (Algebra.ofId F W.toAffine.FunctionField) = Algebra.ofId F _ :=
     Subsingleton.elim _ _
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 omit [DecidableEq F] in
 theorem map_genericPoint_eq (ψ : W.toAffine.FunctionField →ₐ[F] W.toAffine.FunctionField)
@@ -56,8 +55,7 @@ theorem algHom_ext_gen {L : Type*} [Field L] [Algebra F L]
       rintro z (rfl | rfl)
       · exact hx
       · exact hy)
-  refine AlgHom.ext fun z => ?_
-  exact DFunLike.congr_fun key ⟨z, IntermediateField.mem_top⟩
+  exact AlgHom.ext fun z => DFunLike.congr_fun key ⟨z, IntermediateField.mem_top⟩
 
 variable [W.IsElliptic]
 
@@ -90,15 +88,13 @@ theorem constPoint_ne_genericPoint (R : W.toAffine.Point) : constPoint W R ≠ g
   | some x y h =>
     obtain ⟨h', e⟩ := constPoint_some W h
     rw [e, genericPoint, Ne, Point.some.injEq]
-    intro hxy
-    exact transcendental_genX W (hxy.1 ▸ isAlgebraic_algebraMap x)
+    exact fun hxy => transcendental_genX W (hxy.1 ▸ isAlgebraic_algebraMap x)
 
 theorem genericPoint_add_constPoint_ne_zero (R : W.toAffine.Point) :
     genericPoint W + constPoint W R ≠ 0 := by
   intro h
   apply constPoint_ne_genericPoint W (-R)
-  rw [map_neg, eq_comm, ← add_eq_zero_iff_eq_neg]
-  exact h
+  rwa [map_neg, eq_comm, ← add_eq_zero_iff_eq_neg]
 
 theorem exists_translate_eq (R : W.toAffine.Point) :
     ∃ h : (W.baseChange W.toAffine.FunctionField).toAffine.Nonsingular
@@ -137,8 +133,7 @@ theorem transcendental_xOf_translate [IsAlgClosed F] (R : W.toAffine.Point) :
     rw [e]
     obtain ⟨h'', e''⟩ := constPoint_some W hcd
     rw [e'']
-    simp only [Point.some.injEq]
-    exact ⟨hc.symm, hd.symm⟩
+    simpa only [Point.some.injEq] using ⟨hc.symm, hd.symm⟩
   apply constPoint_ne_genericPoint W (.some c d hcd - R)
   rw [map_sub, ← hS, add_sub_cancel_right]
 
@@ -308,17 +303,8 @@ theorem valuationInfty_translate_genY_sub_lt {xR yR : F} (hR : W.toAffine.Nonsin
       (ι W.a₁ * ι xR + ι W.a₃ + 2 * ι yR) * genY_sq_add W
   have hx2 : valuationInfty W (genX W) ≤ exp 5 := by
     rw [valuationInfty_genX, exp_le_exp]; norm_num
-  have hM : valuationInfty W ((ι (W.a₁ * yR - 2 * W.a₂ * xR - W.a₄ - 3 * xR ^ 2) * genX W +
-        ι (-W.a₁ ^ 2 * xR ^ 2 - 2 * W.a₁ * W.a₃ * xR - 4 * W.a₁ * xR * yR + W.a₂ * xR ^ 2 -
-          W.a₃ ^ 2 - 3 * W.a₃ * yR - W.a₆ + 2 * xR ^ 3 - 3 * yR ^ 2)) * genY W +
-      ι (W.a₁ ^ 2 * yR - W.a₁ * W.a₂ * xR - W.a₁ * W.a₄ + W.a₂ * W.a₃ + 2 * W.a₂ * yR +
-        3 * W.a₃ * xR + 6 * xR * yR) * genX W ^ 2 +
-      ι (-2 * W.a₁ ^ 2 * xR * yR + 3 * W.a₁ * W.a₂ * xR ^ 2 + 2 * W.a₁ * W.a₄ * xR -
-        W.a₁ * W.a₆ + 2 * W.a₁ * xR ^ 3 - 2 * W.a₁ * yR ^ 2 + 2 * W.a₂ * xR * yR + W.a₃ * W.a₄ -
-        3 * W.a₃ * xR ^ 2 + 3 * W.a₄ * yR - 3 * xR ^ 2 * yR) * genX W +
-      ι (W.a₁ ^ 2 * xR ^ 2 * yR - W.a₁ * W.a₂ * xR ^ 3 + 2 * W.a₁ * W.a₆ * xR - W.a₁ * xR ^ 4 +
-        2 * W.a₁ * xR * yR ^ 2 - W.a₂ * xR ^ 2 * yR + W.a₃ * W.a₆ + W.a₃ * xR ^ 3 +
-        3 * W.a₆ * yR + yR ^ 3)) ≤ exp 5 := by
+  have hM : valuationInfty W (D ^ 3 * (vv - ι yR)) ≤ exp 5 := by
+    rw [hid2]
     refine Valuation.map_add_le _ (Valuation.map_add_le _ (Valuation.map_add_le _ ?_ ?_) ?_) ?_
     · rw [Valuation.map_mul, valuationInfty_genY]
       have h1 : valuationInfty W (ι (W.a₁ * yR - 2 * W.a₂ * xR - W.a₄ - 3 * xR ^ 2) * genX W +
@@ -332,11 +318,8 @@ theorem valuationInfty_translate_genY_sub_lt {xR yR : F} (hR : W.toAffine.Nonsin
       rw [Valuation.map_pow, valuationInfty_genX, ← exp_nsmul, exp_le_exp]; norm_num
     · exact valuationInfty_const_mul_le W _ hx2
     · exact (valuationInfty_const_le W _).trans (by rw [← exp_zero, exp_le_exp]; norm_num)
-  have hv := congrArg (valuationInfty W) hid2
-  rw [Valuation.map_mul, Valuation.map_pow, valuationInfty_genX_sub_const] at hv
-  rw [← hv] at hM
-  by_contra hge
-  rw [not_lt] at hge
+  rw [Valuation.map_mul, Valuation.map_pow, valuationInfty_genX_sub_const] at hM
+  by_contra! hge
   have : exp 2 ^ 3 ≤ exp 2 ^ 3 * valuationInfty W (vv - ι yR) := le_mul_of_one_le_right' hge
   have h6 : (exp 2 : ℤᵐ⁰) ^ 3 = exp 6 := by rw [← exp_nsmul]; norm_num
   rw [h6] at this

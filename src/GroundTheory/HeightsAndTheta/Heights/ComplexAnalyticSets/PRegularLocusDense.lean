@@ -203,8 +203,7 @@ theorem RegularLocusDense.proof (hIFT : AnalyticImplicitChart.Statement) : Regul
         ext v
         simp
     have hk := hkill _ hmem
-    rw [hchain, ContinuousLinearMap.comp_assoc, hAD c hcO, ContinuousLinearMap.comp_id] at hk
-    exact hk
+    rwa [hchain, ContinuousLinearMap.comp_assoc, hAD c hcO, ContinuousLinearMap.comp_id] at hk
 
   have hvan : ∀ i, ∀ᶠ y in 𝓝 (A a), f i (g y) = 0 := by
     intro i
@@ -235,7 +234,6 @@ theorem RegularLocusDense.proof (hIFT : AnalyticImplicitChart.Statement) : Regul
       exact hz.1
     refine ⟨⟨hgX, hgB⟩, hgyV, ?_⟩
     show A (g y) ∈ O'
-    rw [hAg y hyO]
-    exact hy
+    rwa [hAg y hyO]
 
 end GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets

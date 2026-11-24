@@ -73,8 +73,7 @@ theorem PtsSumMeasurableWeight.aestronglyMeasurable_fibreSum_of_lifts
   set f : ℕ → (Fin e → ℂ) → ℝ := fun m => (S m).indicator (fun y => F (dens m y)) with hfdef
   have hfm : ∀ m, Measurable (f m) := fun m => (hF.comp (hdm m)).indicator (hSm m)
   have hf0 : ∀ m y, y ∉ S m → f m y = 0 := fun m y hm => by
-    simp only [hfdef]
-    exact Set.indicator_of_notMem hm _
+    simpa only [hfdef] using Set.indicator_of_notMem hm _
   refine aestronglyMeasurable_of_tendsto_ae atTop (f := fun N y => ∑ m ∈ Finset.range N, f m y)
     (fun N => (Finset.measurable_sum _ fun m _ => hfm m).aestronglyMeasurable) ?_
   filter_upwards [hind] with y hy
@@ -85,8 +84,7 @@ theorem PtsSumMeasurableWeight.aestronglyMeasurable_fibreSum_of_lifts
     rw [← hσB m y hm.1] at hsh
     have hex : ∃ γ', IsSheet P Ψ y (σ m y) γ' := ⟨_, hsh⟩
     have hfv : f m y = F (dens m y) := by
-      simp only [hfdef]
-      exact Set.indicator_of_mem hm _
+      simpa only [hfdef] using Set.indicator_of_mem hm _
     rw [hfv, hdens m y hm.1]
     unfold sheetDensity
     rw [dite_eq_left hex]
@@ -315,8 +313,7 @@ theorem PtsBddConv.proof (hAbs : Inter.PtsAbsIntegrable.Statement) : PtsBddConv.
       by_cases hγ : ∃ γ, IsSheet P Ψ y w γ
       · simp only [sheetDensity, dite_eq_left hγ]
         exact (hlim _ (hpt y w hγ).1 (hoff y hy w hγ)).mul_const _
-      · simp only [sheetDensity, dite_eq_right hγ]
-        exact tendsto_const_nhds
+      · simpa only [sheetDensity, dite_eq_right hγ] using tendsto_const_nhds
     have hbound := hB.const_mul (C * r⁻¹ ^ e)
 
     have hg₀ : ∀ z ∈ mcPts P, z ∉ N → |g₀ z| ≤ C := fun z hz hzN =>
@@ -333,8 +330,7 @@ theorem PtsBddConv.proof (hAbs : Inter.PtsAbsIntegrable.Statement) : PtsBddConv.
     have hu : Tendsto u atTop (𝓝[>] 0) := by
       refine tendsto_nhdsWithin_iff.mpr ⟨?_, Eventually.of_forall hupos⟩
       have h := tendsto_one_div_add_atTop_nhds_zero_nat.const_mul (s₀ / 2)
-      rw [mul_zero] at h
-      exact h
+      rwa [mul_zero] at h
     have hmeas₀ := aestronglyMeasurable_of_tendsto_ae atTop (fun n => hmeas (u n) (hupos n) (hult n))
       (by filter_upwards [hlimpt] with y hy using hy.comp hu)
     refine ⟨hbound.mono' hmeas₀ ?_, ?_⟩
@@ -347,10 +343,8 @@ theorem PtsBddConv.proof (hAbs : Inter.PtsAbsIntegrable.Statement) : PtsBddConv.
   refine ⟨fun Ψ hΨ => (key Ψ hΨ).1, ?_⟩
   unfold ptsIntegral
   by_cases hΨ : ∃ Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ), IsGoodProj P Ψ
-  · simp only [dite_eq_left hΨ]
-    exact (key _ hΨ.choose_spec).2
-  · simp only [dite_eq_right hΨ]
-    exact tendsto_const_nhds
+  · simpa only [dite_eq_left hΨ] using (key _ hΨ.choose_spec).2
+  · simpa only [dite_eq_right hΨ] using tendsto_const_nhds
 
 end GroundTheory.Heights₂.Heights.LowerBoundFree
 end -- clump:auto

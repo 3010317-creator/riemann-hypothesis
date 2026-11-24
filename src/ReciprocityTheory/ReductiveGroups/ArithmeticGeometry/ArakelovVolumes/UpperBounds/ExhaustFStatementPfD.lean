@@ -70,8 +70,7 @@ theorem cd_nM (τ : X.Ψ) (a b : Fin r) : ContDiff ℂ ∞ fun z : V (nd X) => n
   · simp only [dite_eq_left h]
     first
       | fun_prop
-  · simp only [dite_eq_right h]
-    exact contDiff_const
+  · simpa only [dite_eq_right h] using contDiff_const
 
 theorem unipotentFrame_inv_eq_adjugate (z : V (nd X)) (τ : X.Ψ) : (n1 X z τ)⁻¹ = (n1 X z τ).adjugate := by
   have hdet : (n1 X z τ).det = 1 := by
@@ -90,10 +89,8 @@ private lemma cd_adj_lemma_2 {𝕜 : Type*} [NontriviallyNormedField 𝕜] [Norm
   simp only [Matrix.adjugate_apply]
   refine _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.ExhD.contDiff_det_of fun a b => ?_
   by_cases hab : a = j
-  · simp only [Matrix.updateRow_apply, hab, ite_true]
-    exact contDiff_const
-  · simp only [Matrix.updateRow_apply, hab, ite_false]
-    exact h a b
+  · simpa only [Matrix.updateRow_apply, hab, ite_true] using contDiff_const
+  · simpa only [Matrix.updateRow_apply, hab, ite_false] using h a b
 
 theorem cd_Zt (τ : X.Ψ) (a : Fin X.p0) (m : Fin (r - X.p0)) :
     ContDiff ℂ ∞ fun z : V (nd X) => Zt X z τ a m := by
@@ -103,11 +100,8 @@ theorem cd_Zt (τ : X.Ψ) (a : Fin X.p0) (m : Fin (r - X.p0)) :
     simp only [Zt, Matrix.transpose_apply, Matrix.mul_apply, unipotentFrame_inv_eq_adjugate]
   rw [hfun]
   refine ContDiff.sum fun k _ => ContDiff.mul ?_ ?_
-  · show ContDiff ℂ ∞ fun z : V (nd X) => nM X z τ (qI X m) (Fin.castLE X.p0_le k)
-    exact cd_nM X τ _ _
-  · refine cd_adj_lemma_2 (M := fun z : V (nd X) => n1 X z τ) (fun i j => ?_) k a
-    show ContDiff ℂ ∞ fun z : V (nd X) => nM X z τ (Fin.castLE X.p0_le i) (Fin.castLE X.p0_le j)
-    exact cd_nM X τ _ _
+  · exact cd_nM X τ _ _
+  · exact cd_adj_lemma_2 (M := fun z : V (nd X) => n1 X z τ) (fun i j => (cd_nM X τ _ _)) k a
 
 theorem cd_Am_entry (τ : X.Ψ) (a c : Fin X.p0) :
     ContDiff ℝ ∞ fun z : V (nd X) => Am X z τ a c := by
@@ -147,8 +141,7 @@ theorem isOpen_OmF (x0 : Frame X.Ψ r) : IsOpen (OmF X x0) := by
     refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun b => ?_
     have hfun : (fun z : V (nd X) => cpt X x0 z τ a b) = fun z => ∑ k, x0 τ a k * nM X z τ k b := by
       funext z
-      have h := congrFun (congrFun (mat_cpt X x0 z τ) a) b
-      simpa [mat, Matrix.mul_apply] using h
+      simpa [mat, Matrix.mul_apply] using congrFun (congrFun (mat_cpt X x0 z τ) a) b
     rw [hfun]
     exact continuous_finsetSum _ fun k _ => continuous_const.mul (cd_nM X τ k b).continuous
   have hmat : ∀ τ : X.Ψ, Continuous fun x : Frame X.Ψ r => mat x τ := fun τ =>

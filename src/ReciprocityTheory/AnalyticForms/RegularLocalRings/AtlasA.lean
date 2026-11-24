@@ -93,8 +93,7 @@ theorem AlgRes.analyticAt_coord_symm (R : AlgRes (ι := ι) P D e)
     analyticAt_eval_of_pi hga (F l)
   have hqa : AnalyticAt ℂ (fun w' => eval (g w') q) w := analyticAt_eval_of_pi hga q
   have hq0' : eval (g w) q ≠ 0 := by
-    rw [← hgc w hw]
-    exact hq0
+    rwa [← hgc w hw]
   have hA : AnalyticAt ℂ (fun w' => eval (fun l => eval (g w') (F l) / eval (g w') q) h) w :=
     analyticAt_eval_of_pi (f := fun w' l => eval (g w') (F l) / eval (g w') q)
       (fun l => (hFa l).div hqa hq0') h
@@ -129,8 +128,7 @@ theorem AlgRes.analyticOnNhd_comp_symm (R : AlgRes (ι := ι) P D e)
     exact (hf _ h1).symm
   refine AnalyticAt.congr ?_ hev
   rw [analyticAt_pi_iff]
-  intro l
-  exact R.analyticAt_coord_symm hsi hg hgc j (r l) hw (hSj hwS')
+  exact fun l => R.analyticAt_coord_symm hsi hg hgc j (r l) hw (hSj hwS')
 
 theorem AlgRes.exists_goodChart (R : AlgRes (ι := ι) P D e) (i : Fin R.n) (x : R.M) (hx : x ∈ R.src i)
     (r : Fin e → MvPolynomial (Fin (R.amb i)) ℂ)
@@ -150,8 +148,7 @@ theorem AlgRes.exists_goodChart (R : AlgRes (ι := ι) P D e) (i : Fin R.n) (x :
   have hzero : ∀ y ∈ R.src i, R.coord i y ∈ zeroSet (R.ideal i) := by
     intro y hy
     have : R.coord i y ∈ R.coord i '' R.src i := ⟨y, hy, rfl⟩
-    rw [R.image i] at this
-    exact this
+    rwa [R.image i] at this
   have hex : ∀ w ∈ V, ∃ y ∈ R.src i, R.coord i y = g w := by
     intro w hw
     have h1 : g w ∈ zeroSet (R.ideal i) := (hbij.mapsTo hw).2
@@ -164,8 +161,7 @@ theorem AlgRes.exists_goodChart (R : AlgRes (ι := ι) P D e) (i : Fin R.n) (x :
   have hinv : ∀ w ∈ V, inv w ∈ R.src i ∧ R.coord i (inv w) = g w := by
     intro w hw
     have h := hex w hw
-    simp only [inv, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [inv, dite_eq_left h] using h.choose_spec
   have hback : ∀ y ∈ R.src i, R.coord i y ∈ U → g (evalFam r (R.coord i y)) = R.coord i y := by
     intro y hy hyU
     obtain ⟨w, hw, hgw⟩ := hbij.surjOn ⟨hyU, hzero y hy⟩
@@ -180,8 +176,7 @@ theorem AlgRes.exists_goodChart (R : AlgRes (ι := ι) P D e) (i : Fin R.n) (x :
     rw [h2]
     refine ⟨(hbij.mapsTo hw).1, ?_⟩
     show evalFam r (g w) ∈ V
-    rw [hrg w hw]
-    exact hw
+    rwa [hrg w hw]
   have hcinv : ContinuousOn inv V := by
     rw [continuousOn_iff_continuous_domRestrict]
     let f : V → R.src i := fun w => ⟨inv w, (hinv w w.2).1⟩
@@ -214,8 +209,7 @@ theorem AlgRes.exists_goodChart (R : AlgRes (ι := ι) P D e) (i : Fin R.n) (x :
     obtain ⟨w, hw, hgw⟩ := hbij.surjOn ⟨hpU, hzero x hx⟩
     refine ⟨hx, hpU, ?_⟩
     show evalFam r (R.coord i x) ∈ V
-    rw [← hgw, hrg w hw]
-    exact hw
+    rwa [← hgw, hrg w hw]
   refine ⟨ψ0.restrOpen O hO, ⟨i, fun y hy => hy.1.1, ⟨r, fun y _ => rfl⟩, g,
     hg.mono fun w hw => hw.1, fun w hw => (hinv w hw.1).2⟩, ⟨hxS, hxO⟩,
     fun y hy => ⟨hy.2, hy.1.1⟩, fun y _ => rfl⟩

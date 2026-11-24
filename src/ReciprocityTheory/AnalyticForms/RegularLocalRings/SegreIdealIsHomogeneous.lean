@@ -104,7 +104,6 @@ theorem quot_gradedAlgebra (hI : I.IsHomogeneous (homogeneousSubmodule σ ℂ)) 
         rwa [LinearMap.mem_ker, GradedAlgebra.proj_apply] at this
       rw [DirectSum.decompose_sub, DFinsupp.sub_apply, Submodule.coe_sub, hgi, sub_zero,
         DirectSum.decompose_of_mem_same _ hf] at hcomp
-      show Ideal.Quotient.mk I f = 0
       exact Ideal.Quotient.eq_zero_iff_mem.mpr hcomp
     · have htop : (⨆ i, homogeneousSubmodule σ ℂ i) = ⊤ :=
         (DirectSum.Decomposition.isInternal (homogeneousSubmodule σ ℂ)).submodule_iSup_eq_top
@@ -247,8 +246,7 @@ theorem chartOpen_cover {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMult
     (x : projX P hP) : ∃ p, x ∈ (chartOpen hP p).1 := by
   classical
   letI := segreGraded hP
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hall : ∀ p, segreW P p ∈ x.asHomogeneousIdeal := by
     intro p
     by_contra h
@@ -281,8 +279,7 @@ theorem chartOpen_cover {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMult
     apply key
     rw [MvPolynomial.mem_ideal_span_X_image]
     intro m hm
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hm0 : m = 0 := Finsupp.ext fun p => hne p (Set.mem_univ p)
     have hw := ((mem_homogeneousSubmodule i f).mp hf) (MvPolynomial.mem_support_iff.mp hm)
     rw [hm0, map_zero] at hw

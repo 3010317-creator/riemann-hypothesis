@@ -72,8 +72,7 @@ theorem fibre_finite {n d : ℕ} (I : Ideal (MvPolynomial (Fin n) ℂ)) (A : Mat
     obtain ⟨f, hfm, hf⟩ :=
       Algebra.IsIntegral.isIntegral (R := MvPolynomial (Fin d) ℂ) (Ideal.Quotient.mk I (X i))
     refine ⟨f, hfm, ?_⟩
-    rw [← Ideal.Quotient.eq_zero_iff_mem, Polynomial.hom_eval₂]
-    exact hf
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, Polynomial.hom_eval₂]
   choose f hfm hfI using key
   refine (Set.Finite.pi (t := fun i => {z : ℂ | z ∈ ((f i).map (eval y)).roots})
     (fun i => Multiset.finite_toSet _)).subset ?_
@@ -82,8 +81,7 @@ theorem fibre_finite {n d : ℕ} (I : Ideal (MvPolynomial (Fin n) ℂ)) (A : Mat
   intro i
   have h0 := hx _ (hfI i)
   rw [Polynomial.hom_eval₂, eval_comp_pullback, hAx, eval_X] at h0
-  rw [Polynomial.mem_roots ((hfm i).map _).ne_zero, Polynomial.IsRoot, Polynomial.eval_map]
-  exact h0
+  rwa [Polynomial.mem_roots ((hfm i).map _).ne_zero, Polynomial.IsRoot, Polynomial.eval_map]
 
 theorem proof (hF : HolomorphicFibreInfinite.Statement) : BranchOffHypersurface.Statement := by
   intro n k J b U φ hJ hdim hb hU hne hφd hφi hφJ

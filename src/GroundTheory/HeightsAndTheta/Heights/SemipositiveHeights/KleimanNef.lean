@@ -87,8 +87,7 @@ theorem charOf_mem (W : Ideal (MRing ι)) : ((charOf W : ℕ) : MRing ι) ∈ W 
       ((charOf W : ℕ) : ℤ) := Int.dvd_natAbs.mpr dvd_rfl
   have hmem : ((charOf W : ℕ) : ℤ) ∈ W.comap (C : ℤ →+* MRing ι) :=
     Ideal.mem_of_dvd _ hdvd hg
-  rw [Ideal.mem_comap, map_natCast] at hmem
-  exact hmem
+  rwa [Ideal.mem_comap, map_natCast] at hmem
 
 end KleimanNef
 
@@ -117,13 +116,11 @@ theorem KleimanNef.proof (hF : KH.KleimanNefFStatement) : KH.KleimanNefIntersect
       refine ⟨Ideal.comap_isPrime _ W', isMultiHomogIdeal_comap _ hW'h, fun k => ?_⟩
       obtain ⟨i, hi⟩ := hW'r k
       refine ⟨i, ?_⟩
-      rw [hWdef, Ideal.mem_comap, map_X]
-      exact hi
+      rwa [hWdef, Ideal.mem_comap, map_X]
     have hdimW : ringKrullDim (MRing ι ⧸ W) = ((1 + Fintype.card K : ℕ) : WithBot ℕ∞) := by
       rw [← ringKrullDim_red p hpW, hmap, hW'.2]
     have hWp : IsProjVarF (W.map (red p)) 1 := by
-      rw [hmap]
-      exact hW'
+      rwa [hmap]
     have h := hnef j W hWm hVW hdimW
     rw [hGeo W 1 _ hWm hpW hWp, hmap] at h
     convert h using 2
@@ -131,8 +128,7 @@ theorem KleimanNef.proof (hF : KH.KleimanNefFStatement) : KH.KleimanNefIntersect
     fin_cases i
     rfl
   have h := hF (ZMod p) K ι I (V.map (red p)) n a hI hproj hnefF
-  rw [hGeo V n a hV hpV hproj]
-  exact h
+  rwa [hGeo V n a hV hpV hproj]
 
 end
 

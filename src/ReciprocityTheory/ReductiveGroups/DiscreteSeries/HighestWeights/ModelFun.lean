@@ -184,8 +184,7 @@ lemma hwmf_line (ε : Fin n → Bool) (m : Fin n → ℤ) (x W : Matrix (Fin n) 
       rw [Matrix.mul_add, Matrix.mul_one, Matrix.mul_smul]
     rw [hfun]
     have h := ((hasDerivAt_id' (0 : ℂ)).smul_const (x * W)).const_add x
-    rw [one_smul] at h
-    exact h
+    rwa [one_smul] at h
   have hd : HasFDerivAt (f0 ε m) (fderiv ℂ (f0 ε m) x) (x * (1 + (0 : ℂ) • W)) := by
     rw [zero_smul, add_zero, Matrix.mul_one]
     exact (differentiable_highest_weight_fn ε m x).hasFDerivAt

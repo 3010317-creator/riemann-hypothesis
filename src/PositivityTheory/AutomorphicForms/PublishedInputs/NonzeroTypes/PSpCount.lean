@@ -195,8 +195,7 @@ theorem eq_zero_of_eval {A B : Type} [Fintype A] [Fintype B] [LinearOrder B] {m 
     intro w hw
     have h := congrArg (fun F' : smoothPart (ind (relParab k g) τ) => F'.1.1 1) (mem_eS.1 hF w hw)
     change F.1.1 (1 * w) = η w • F.1.1 1 at h
-    rw [one_mul, h1, smul_zero] at h
-    exact h
+    rwa [one_mul, h1, smul_zero] at h
   apply Subtype.ext
   apply Subtype.ext
   funext x
@@ -219,8 +218,7 @@ theorem rank_eS_le {A B : Type} [Fintype A] [Fintype B] [LinearOrder B] {m : A �
   have hd : ((F - F' : ↥(eS (leviK k m) η (smInd (relParab k g) τ))) : smoothPart (ind (relParab k g) τ)) = 0 := by
     apply eq_zero_of_eval g τ η _ (F - F').2
     change F.1.1.1 1 - F'.1.1.1 1 = 0
-    rw [sub_eq_zero]
-    exact h
+    rwa [sub_eq_zero]
   exact sub_eq_zero.1 (Subtype.ext hd)
 
 variable {n : ℕ}
@@ -362,8 +360,7 @@ theorem cell_char (c : Fin n → kˣ →* ℂˣ)
   have key : ((c i0 (unitIncl k w) : ℂˣ) : ℂ) • F.1.1 1 = ((G.μ a0 (unitIncl k w) : ℂˣ) : ℂ) • F.1.1 1 := by
     have h2 : F.1.1 t = cellRep G c bb f g ⟨t, htP⟩ (F.1.1 1) := by
       have h2' := F.1.2 ⟨t, htP⟩ 1
-      rw [mul_one] at h2'
-      exact h2'
+      rwa [mul_one] at h2'
     rw [cellRep_apply, hproj, hd1, Units.val_one, one_smul] at h2
     rw [← hEta, ← hE1, h2, ← hv, relJac_mk, hd2, inv_one, Units.val_one, one_smul]
     change _ = Submodule.Quotient.mk (ofChar (torusChar c)

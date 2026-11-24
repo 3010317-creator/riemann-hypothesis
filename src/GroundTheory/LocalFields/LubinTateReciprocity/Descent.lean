@@ -505,8 +505,7 @@ theorem residue_completedFrobenius (x : 𝔹) :
   rw [pow_one] at hr
   set σ := completedFrobenius K Ω
   have h1 : residue 𝔹 x = residue 𝔹 (algebraMap 𝒪[𝔼] 𝔹 r) := by
-    rw [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-    exact hr
+    rwa [← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
   have h2 : residue 𝔹 (σ x) = residue 𝔹 (σ (algebraMap 𝒪[𝔼] 𝔹 r)) := by
     rw [← sub_eq_zero, ← map_sub, residue_eq_zero_iff, ← map_sub]
     rw [mem_maximalIdeal, mem_nonunits_iff] at hr ⊢
@@ -780,8 +779,7 @@ theorem adjoinRoot_ringHom_ext {R S : Type*} [CommRing R] [CommRing S] {p : Poly
     (hroot : f (AdjoinRoot.root p) = g (AdjoinRoot.root p)) : f = g := by
   apply Ideal.Quotient.ringHom_ext
   apply Polynomial.ringHom_ext
-  · intro r
-    exact hof r
+  · exact fun r => hof r
   · exact hroot
 
 end Maps
@@ -906,8 +904,7 @@ theorem exists_adjoinRoot_twist (p : Polynomial R) (ψ : R →+* R) (hψ : p.map
       τ (AdjoinRoot.root p) = AdjoinRoot.mk p g := by
   refine ⟨AdjoinRoot.lift ((AdjoinRoot.of p).comp ψ) (AdjoinRoot.mk p g) ?_,
     fun c => AdjoinRoot.lift_of _, AdjoinRoot.lift_root _⟩
-  rw [← Polynomial.eval₂_map, hψ, eval₂_of_mk, AdjoinRoot.mk_eq_zero]
-  exact hg
+  rwa [← Polynomial.eval₂_map, hψ, eval₂_of_mk, AdjoinRoot.mk_eq_zero]
 
 theorem exists_adjoinRoot_lift {S : Type*} [CommRing S] (p : Polynomial R) (jc : R →+* S) (x : S)
     (hx : p.eval₂ jc x = 0) :
@@ -1119,8 +1116,7 @@ theorem exists_fixed_root_ltEisenstein (σ : Ω ≃ₐ[K] Ω)
         rw [hjof]
         exact hτ _ (hL.le_maximalUnramifiedExtension (c : L).2)
       · change τ (j _) = j _
-        rw [hjroot]
-        exact hτl
+        rwa [hjroot]
     change ((τ : Ω →+* Ω).comp j) y = j y
     rw [hτj]
 

@@ -77,8 +77,7 @@ theorem ringKrullDim_quotient_map_le (I : Ideal (MRing ι R)) :
       simp only [PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe] at h ⊢
       exact Ideal.map_le_iff_le_comap.mp h⟩
   refine Order.krullDim_le_of_strictMono f (Monotone.strictMono_of_injective ?_ ?_)
-  · intro Q₁ Q₂ h
-    exact Ideal.comap_mono (f := algebraMap (MRing ι R) (MRing ι R')) h
+  · exact fun Q₁ Q₂ h => Ideal.comap_mono (f := algebraMap (MRing ι R) (MRing ι R')) h
   · intro Q₁ Q₂ h
     apply Subtype.ext
     apply PrimeSpectrum.localization_comap_injective (MRing ι R') (M₀.map (C (σ := Σ k, ι k)))
@@ -296,8 +295,7 @@ theorem FibreDegreeSum.intNum_eq_cycEval (K : Type) [Fintype K] [DecidableEq K] 
         obtain ⟨i, hi⟩ := hP.2.1.2.2 k
         refine ⟨i, fun h ↦ hi ?_⟩
         have h' : φ (X ⟨k, i⟩) ∈ P' := by
-          rw [show φ (X ⟨k, i⟩) = X ⟨k, i⟩ from map_X _ _]
-          exact h
+          rwa [show φ (X ⟨k, i⟩) = X ⟨k, i⟩ from map_X _ _]
         have h'' : (X ⟨k, i⟩ : MRing ι ℤ) ∈ P'.comap φ := h'
         rw [hP'comap] at h''
         exact h'' }

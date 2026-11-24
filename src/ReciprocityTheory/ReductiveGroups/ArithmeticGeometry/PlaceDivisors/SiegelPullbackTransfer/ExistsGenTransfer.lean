@@ -124,8 +124,7 @@ theorem exists_gen_transfer {L L' : LB X} (e : L'.ι → L.ι) (hU : ∀ j, L'.U
   have hm : y ∈ L.U (e i) ⊓ L.U (e j) := ⟨hU i hy.1, hU j hy.2⟩
   have key := congrArg (gU y hm) (ht (e i) (e j))
   simp only [map_mul, gU_res] at key ⊢
-  rw [hg i j y hy]
-  exact key
+  rwa [hg i j y hy]
 
 private theorem pull_le_lemma_5 (L : LB X) (a : Y ⟶ X) (i j : PUnit.{1} → L.ι) :
     (L.pull a).U i ⊓ (L.pull a).U j ≤ a ⁻¹ᵁ (L.U (i PUnit.unit) ⊓ L.U (j PUnit.unit)) :=
@@ -181,17 +180,14 @@ theorem gen_pull_pull (L : LB X) (a : Y ⟶ X) (b : Z ⟶ Y) (c : Y' ⟶ X) (d :
       z ∈ ((L.pull c).pull d).U j → z ∈ ((L.pull a).pull b).U j := by
     intro j z hz
     rw [mem_pull_pull_lemma_2 L c d j z] at hz
-    rw [mem_pull_pull_lemma_2 L a b j z]
-    rw [base_eq hbd z]
-    exact hz
+    rwa [mem_pull_pull_lemma_2 L a b j z, base_eq hbd z]
   refine exists_gen_transfer (L := (L.pull a).pull b) (L' := (L.pull c).pull d) (fun j => j)
     (fun j z hz => hmem j z hz) ?_ h
   intro i j y hy
   have h1 : y ∈ (d ≫ c) ⁻¹ᵁ (L.U (i PUnit.unit PUnit.unit) ⊓ L.U (j PUnit.unit PUnit.unit)) :=
     ⟨(mem_pull_pull_lemma_2 L c d i y).1 hy.1, (mem_pull_pull_lemma_2 L c d j y).1 hy.2⟩
   have h2 : y ∈ (b ≫ a) ⁻¹ᵁ (L.U (i PUnit.unit PUnit.unit) ⊓ L.U (j PUnit.unit PUnit.unit)) := by
-    rw [hbd]
-    exact h1
+    rwa [hbd]
   exact (germ_pull_pull L c d i j y hy h1).trans
     ((gU_pullU_congr hbd.symm _ _ y h1 h2).trans (germ_pull_pull L a b i j y _ h2).symm)
 
@@ -211,16 +207,12 @@ private theorem germ_cocycle_lemma_3 {L : LB X} (hL : L.IsLB) (i j k : L.ι) (y 
     (hij : y ∈ L.U i ⊓ L.U j) (hjk : y ∈ L.U j ⊓ L.U k) (hik : y ∈ L.U i ⊓ L.U k) :
     gU y hij (L.g i j) * gU y hjk (L.g j k) = gU y hik (L.g i k) := by
   have hm : y ∈ L.U i ⊓ L.U j ⊓ L.U k := ⟨⟨hij.1, hij.2⟩, hjk.2⟩
-  have key := congrArg (gU y hm) (hL.cocycle i j k)
-  simp only [map_mul, gU_res] at key
-  exact key
+  simpa only [map_mul, gU_res] using congrArg (gU y hm) (hL.cocycle i j k)
 
 private theorem germ_self_lemma_4 {L : LB X} (hL : L.IsLB) (i : L.ι) (y : X) (h : y ∈ L.U i ⊓ L.U i) :
     gU y h (L.g i i) = 1 := by
   have hi : y ∈ L.U i := h.1
-  have key := congrArg (gU y hi) (hL.g_self i)
-  simp only [map_one, gU_res] at key
-  exact key
+  simpa only [map_one, gU_res] using congrArg (gU y hi) (hL.g_self i)
 
 private theorem alg_lemma_8 {G : Type*} [CommGroup G] (ab aa' a'b' ab' b'b bb' : G)
     (h1 : aa' * a'b' = ab') (h2 : ab' * b'b = ab) (h3 : bb' * b'b = 1) :

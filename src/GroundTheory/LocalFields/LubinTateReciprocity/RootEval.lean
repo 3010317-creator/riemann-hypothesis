@@ -117,8 +117,7 @@ theorem repr_mem_of_mem_map (hP : P.Monic) (J : Ideal B) {z : AdjoinRoot P}
     (hz : z ∈ J.map (AdjoinRoot.of P)) (i : Fin (AdjoinRoot.powerBasis' hP).dim) :
     (AdjoinRoot.powerBasis' hP).basis.repr z i ∈ J := by
   have hz' : z ∈ J • (⊤ : Submodule B (AdjoinRoot P)) := by
-    rw [Ideal.smul_top_eq_map]
-    exact hz
+    rwa [Ideal.smul_top_eq_map]
   refine Submodule.smul_induction_on hz' (fun a ha m _ => ?_) (fun x y hx hy => ?_)
   · rw [map_smul, Finsupp.smul_apply, smul_eq_mul]
     exact J.mul_mem_right _ ha
@@ -158,8 +157,7 @@ theorem eq_zero_of_of_mul_eq_zero (hP : P.Monic) {b : B} (hb : ∀ c : B, b * c 
     {z : AdjoinRoot P} (h : AdjoinRoot.of P b * z = 0) : z = 0 := by
   set pb := AdjoinRoot.powerBasis' hP
   have h' : b • z = 0 := by
-    rw [Algebra.smul_def]
-    exact h
+    rwa [Algebra.smul_def]
   apply pb.basis.repr.injective
   ext i
   have := congrArg (fun w => pb.basis.repr w i) h'

@@ -135,33 +135,18 @@ theorem DeSlotAdd.proof (hE : ResExistsStatement) : DeSlotAdd.Statement := by
     intro t t' C C' ht hC' ht'
     have hfin : {W | W ∈ divSupp P t ∧ IsHorizontal W}.Finite :=
       (divSupp_finite P t).subset fun W hW => hW.1
-    have hpt : ∀ W ∈ {W | W ∈ divSupp P t ∧ IsHorizontal W},
-        (multAt (P ⊔ Ideal.span {t}) W : ℝ) *
-            ptsIntegral W (pot (Function.update L j (M.tensor N))) (logNorm C' t') =
-          (multAt (P ⊔ Ideal.span {t}) W : ℝ) *
-              ptsIntegral W (pot (Function.update L j M)) (logNorm C' t') +
-            (multAt (P ⊔ Ideal.span {t}) W : ℝ) *
-              ptsIntegral W (pot (Function.update L j N)) (logNorm C' t') := by
-      intro W hW
-      rw [← mul_add]
-      congr 1
-      have hWa : IsArithVar W (n + 1) := (divSuppArith K ι P (n + 1) C t W hP ht hW.1).1 hW.2
-      by_cases hsW : t' ∈ W
-      · have h0 : ∀ z ∈ mcPts W, logNorm C' t' z = 0 := by
-          intro z hz
-          simp [logNorm, hz.2 t' hsW]
-        rw [ptsIntegral_eq_zero_of_vanish W _ h0, ptsIntegral_eq_zero_of_vanish W _ h0,
-          ptsIntegral_eq_zero_of_vanish W _ h0, add_zero]
-      · obtain ⟨a, ha, hta, -⟩ := ht'
-        exact ptsIntegral_update_tensor hE hWa j hL hM hN hC' ⟨a, ha, hta, hsW⟩
-    show ∑ᶠ W ∈ {W | W ∈ divSupp P t ∧ IsHorizontal W}, (multAt (P ⊔ Ideal.span {t}) W : ℝ) *
-          ptsIntegral W (pot (Function.update L j (M.tensor N))) (logNorm C' t') =
-        ∑ᶠ W ∈ {W | W ∈ divSupp P t ∧ IsHorizontal W}, (multAt (P ⊔ Ideal.span {t}) W : ℝ) *
-            ptsIntegral W (pot (Function.update L j M)) (logNorm C' t') +
-          ∑ᶠ W ∈ {W | W ∈ divSupp P t ∧ IsHorizontal W}, (multAt (P ⊔ Ideal.span {t}) W : ℝ) *
-            ptsIntegral W (pot (Function.update L j N)) (logNorm C' t')
-    rw [← finsum_mem_add_distrib hfin]
-    exact finsum_mem_congr rfl hpt
+    refine (finsum_mem_congr rfl fun W hW => ?_).trans (finsum_mem_add_distrib hfin)
+    rw [← mul_add]
+    congr 1
+    have hWa : IsArithVar W (n + 1) := (divSuppArith K ι P (n + 1) C t W hP ht hW.1).1 hW.2
+    by_cases hsW : t' ∈ W
+    · have h0 : ∀ z ∈ mcPts W, logNorm C' t' z = 0 := by
+        intro z hz
+        simp [logNorm, hz.2 t' hsW]
+      rw [ptsIntegral_eq_zero_of_vanish W _ h0, ptsIntegral_eq_zero_of_vanish W _ h0,
+        ptsIntegral_eq_zero_of_vanish W _ h0, add_zero]
+    · obtain ⟨a, ha, hta, -⟩ := ht'
+      exact ptsIntegral_update_tensor hE hWa j hL hM hN hC' ⟨a, ha, hta, hsW⟩
   unfold De
   rw [hW s s' A A' hs hA' hs', hW s' s A' A hs' hA hs, hZ A' A s hA' hA hs, hZ A A' s' hA hA' hs']
   ring

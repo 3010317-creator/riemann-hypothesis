@@ -70,8 +70,7 @@ private theorem toSphere_univ_ne_zero_of_pos {n : ℕ} (hn : 0 < n) :
   exact_mod_cast (Module.finrank_pos (R := ℝ) (M := EuclideanSpace ℂ (Fin n))).ne'
 
 private theorem toSphere_univ_ne_top' {n : ℕ} :
-    (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere Set.univ ≠ ⊤ := by
-  exact measure_ne_top _ _
+    (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere Set.univ ≠ ⊤ := measure_ne_top _ _
 
 theorem isProbabilityMeasure_sphereProb {n : ℕ} (hn : 0 < n) :
     IsProbabilityMeasure (sphereProb n) := by
@@ -94,8 +93,7 @@ private theorem Ioo_smul_image_preimage_sphere_eq_preimage {n : ℕ}
   simp only [Set.mem_preimage, Set.mem_smul, Set.mem_image]
   constructor
   · rintro ⟨r, hr, _, ⟨z, hz, rfl⟩, rfl⟩
-    refine ⟨r, hr, _, ⟨⟨A z, by simp⟩, hz, rfl⟩, ?_⟩
-    exact (map_smul A r (z : EuclideanSpace ℂ (Fin n))).symm
+    exact ⟨r, hr, _, ⟨⟨A z, by simp⟩, hz, rfl⟩, (map_smul A r (z : EuclideanSpace ℂ (Fin n))).symm⟩
   · rintro ⟨r, hr, _, ⟨w, hw, rfl⟩, hx⟩
     refine ⟨r, hr, _, ⟨⟨A.symm w, by simp⟩, ?_, rfl⟩, ?_⟩
     · have hw' : (⟨A (A.symm (w : EuclideanSpace ℂ (Fin n))), by simp⟩ : UnitSphereC n) = w :=
@@ -223,7 +221,6 @@ theorem norm_blockPoint_le {B n : ℕ} (z : BlockSphere B n) (p : Fin B × Fin n
     Finset.single_le_sum (f := fun i => ‖WithLp.ofLp ((z p.1 : UnitSphereC n) :
       EuclideanSpace ℂ (Fin n)) i‖ ^ 2) (fun i _ => by positivity) (Finset.mem_univ _)
   have h4 := Real.sqrt_le_sqrt h3
-  rw [← h2, Real.sqrt_sq (norm_nonneg _)] at h4
-  exact h4
+  rwa [← h2, Real.sqrt_sq (norm_nonneg _)] at h4
 
 end ReciprocityTheory.MultiplicativeHeights

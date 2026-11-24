@@ -244,7 +244,6 @@ theorem orbN_pos (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r Wp Wp)
       hmul _ (hmul _ hb.1 _ ha.1) _ hx
     have h1 := hGL k r _ hg
     rw [Function.mem_support]
-    show gN (Matrix.of (Gm (a, b) x) : Mat k r) ^ (-AB k r) ≠ 0
     exact (Real.rpow_pos_of_pos (by linarith) _).ne'
   have hA : D.μW {y : Mt k r | (Matrix.of y : Mat k r) ∈ UWset k r D.z} ≠ 0 := by
     intro h0

@@ -66,10 +66,8 @@ theorem eig_coords (y : FrPt Xo c S) (τ : E →+* ℂ) (n : TanM y.x Xo.univ.t.
   obtain ⟨a, ha, huniq⟩ := y.basis τ _ hw hE
   refine ⟨a, ?_, fun a' h' => huniq a' ((combAt_iff (y.u τ) (y.tan τ) a' hw).2 ?_)⟩
   · have h1 := (combAt_iff (y.u τ) (y.tan τ) a hw).1 ha
-    rw [tvOf_tv] at h1
-    exact h1
-  · rw [tvOf_tv]
-    exact h'
+    rwa [tvOf_tv] at h1
+  · rwa [tvOf_tv]
 
 theorem eig_comb {x : Sp S ⟶ Xo.X} (τ : E →+* ℂ) {m : ℕ} (v : Fin m → TanM x Xo.univ.t.G)
     (hv : ∀ i, IsEigV (actR (x0 := x) (S := S) Xo.univ.t.act) (embK c τ) (v i)) (a : Fin m → S) :

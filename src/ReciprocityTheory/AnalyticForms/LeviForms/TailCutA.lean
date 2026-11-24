@@ -75,8 +75,7 @@ theorem continuousAt_of_holoOn {e : ℕ} {X : Type} [TopologicalSpace X] (A : Fi
   have hmem : (A.chart j) y ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' U := by
     refine ⟨(A.chart j).map_source hj, ?_⟩
     show (A.chart j).symm ((A.chart j) y) ∈ U
-    rw [(A.chart j).left_inv hj]
-    exact hy
+    rwa [(A.chart j).left_inv hj]
   exact (hg j _ hmem).continuousAt
 
 theorem continuousAt_of_smoothOn {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X)
@@ -87,8 +86,7 @@ theorem continuousAt_of_smoothOn {e : ℕ} {X : Type} [TopologicalSpace X] (A : 
   have hmem : (A.chart j) y ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' U := by
     refine ⟨(A.chart j).map_source hj, ?_⟩
     show (A.chart j).symm ((A.chart j) y) ∈ U
-    rw [(A.chart j).left_inv hj]
-    exact hy
+    rwa [(A.chart j).left_inv hj]
   exact (hg j).continuousOn.continuousAt (((A.chart j).isOpen_inter_preimage_symm hU).mem_nhds hmem)
 
 theorem bdry_iff {e : ℕ} {X : Type} [TopologicalSpace X] {A : FinHolAtlas e X} {L : LocPot X}
@@ -140,8 +138,7 @@ theorem interior_bdry_eq_empty {e : ℕ} {X : Type} [TopologicalSpace X] {A : Fi
     refine (hT.eventually (hOo.mem_nhds hw0)).and (Filter.eventually_all.2 fun i => ?_)
     by_cases h0 : ψ y i = 0
     · filter_upwards [self_mem_nhdsWithin] with t ht
-      rw [h0, zero_add]
-      exact ht
+      rwa [h0, zero_add]
     · have hc : Continuous (fun t : ℂ => ψ y i + t) := by fun_prop
       have h2 : ∀ᶠ t in 𝓝 (0 : ℂ), ψ y i + t ≠ 0 :=
         hc.continuousAt.eventually_ne (by simpa using h0)

@@ -136,8 +136,7 @@ theorem holomorphic_periodicity_extension : HolomorphicPeriodicityExtension (E :
       have h1 : DifferentiableOn ℂ (fun z => G (X.flowV e (Function.update s' τ0 z) x)) V :=
         hG.comp (d4l4_diff_flow X e x s' τ0).differentiableOn (fun z hz => hmaps z hz)
       have hsum : Differentiable ℂ (fun z : ℂ => ∑ τ, m τ * Function.update s' τ0 z τ) := by
-        intro z
-        exact DifferentiableAt.fun_sum fun τ _ => ((hu τ) z).const_mul (m τ)
+        exact fun z => DifferentiableAt.fun_sum fun τ _ => ((hu τ) z).const_mul (m τ)
       have h2 : Differentiable ℂ (fun z : ℂ =>
           cexp (4 * Real.pi * I * ∑ τ, m τ * Function.update s' τ0 z τ) * G x) :=
         ((hsum.const_mul (4 * Real.pi * I)).cexp).mul_const (G x)
@@ -163,7 +162,6 @@ theorem holomorphic_periodicity_extension : HolomorphicPeriodicityExtension (E :
       exact ht.frequently (Filter.Eventually.frequently (Filter.Eventually.of_forall hzero_real))
     have h0V : (0 : ℂ) ∈ V := by simp [hVdef]
     have hEq := han.eqOn_zero_of_preconnected_of_frequently_eq_zero hVc.isPreconnected h0V hfreq
-    have h4 := hEq (hcond τ0)
-    simpa using h4
+    simpa using hEq (hcond τ0)
 
 end ReciprocityTheory.ChartRestriction.G.FD

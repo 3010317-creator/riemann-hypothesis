@@ -78,8 +78,7 @@ theorem mem_maxUnramifiedOutside_of_mem_invariantsGsKernel (a : unitsInvariantsG
       exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg y y.2
     have := a.2 ⟨⟨g, hK⟩, hN⟩
     exact congrArg (fun z : Additive ℚ̄ˣ => ((Additive.toMul z : ℚ̄ˣ) : ℚ̄)) this
-  rw [InfiniteGalois.fixedField_fixingSubgroup KS'] at h
-  exact h
+  rwa [InfiniteGalois.fixedField_fixingSubgroup KS'] at h
 
 def invariantsGsKernelFun : unitsInvariantsGsKernel K S →+ Additive (maxUnramifiedOutside K.1 ℚ̄ S)ˣ where
   toFun a := Additive.ofMul (Units.mk0
@@ -108,8 +107,7 @@ theorem invariantsGsKernelFun_bijective : Function.Bijective (invariantsGsKernel
       have hσ : gsRestrict K S σ.1 = 1 := MonoidHom.mem_ker.mp σ.2
       have hy := congrArg (fun τ : galUnramifiedOutside K.1 ℚ̄ S =>
         (τ (Additive.toMul y).val : ℚ̄)) hσ
-      rw [gsRestrict_apply] at hy
-      exact hy
+      rwa [gsRestrict_apply] at hy
     · apply Additive.toMul.injective
       apply Units.ext
       apply Subtype.ext
@@ -154,9 +152,7 @@ theorem cohomologyMapAlong_invariantsGsKernelMor_comp_gsBrauerInfl (n : ℕ) :
   rw [gsBrauerInfl, ← cohomologyMapAlong_comp, cohomologyInfl]
   refine cohomologyMapAlong_congr _ _ _ _ (MonoidHom.ext fun σ => gsQuotientEquiv_gsRestrict K S σ)
     (fun a => ?_) n
-  apply Additive.toMul.injective
-  apply Units.ext
-  exact coe_invariantsGsKernelFun K S a
+  exact Additive.toMul.injective (Units.ext (coe_invariantsGsKernelFun K S a))
 
 
 
@@ -177,8 +173,7 @@ theorem eq_zero_of_h3_gsUnits (ℓ : ℕ) (hℓ : ℓ.Prime)
     refine (congrArg (fun z => ℓ ^ k • z) hx0).trans ?_
     refine (map_nsmul (cohomologyULiftIntAddEquiv (galUnits K.1 (maxUnramifiedOutside K.1 ℚ̄ S)) 3)
       (ℓ ^ k) x).symm.trans ?_
-    refine (congrArg _ hx).trans ?_
-    exact (map_zero _).trans (map_zero _).symm
+    exact (congrArg _ hx).trans ((map_zero _).trans (map_zero _).symm)
   have hinf : (cohomologyInfl (unitsLimitRep K) (gsKernel K S) 3).hom x0 = 0 := by
     have : Subsingleton (cohomology (unitsLimitRep K) 3) := subsingleton_cohomology_three_unitsLimitRep K
     exact Subsingleton.elim _ _

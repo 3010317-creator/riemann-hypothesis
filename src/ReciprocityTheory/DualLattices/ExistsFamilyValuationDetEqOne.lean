@@ -147,8 +147,7 @@ private theorem hopfOrder_norm_fun_mem (AA : HopfOrder (C := C) R N) (K : AddSub
 private theorem valuation_sub_eq_one_of_eq_one_of_lt_one {a b : C} (ha : v a = 1) (hb : v b < 1) :
     v (a - b) = 1 := by
   have h : v (-b) < v a := by
-    rw [Valuation.map_neg, ha]
-    exact hb
+    rwa [Valuation.map_neg, ha]
   rw [sub_eq_add_neg, v.map_add_eq_of_lt_left h, ha]
 
 private theorem nnreal_pow_lt_one_of_lt_one_of_ne_zero {a : NNReal} (hlt : a < 1) {m : ℕ} (hm : m ≠ 0) :
@@ -156,8 +155,7 @@ private theorem nnreal_pow_lt_one_of_lt_one_of_ne_zero {a : NNReal} (hlt : a < 1
   have h0 : (0 : NNReal) ≤ a := by positivity
   obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hm
   rw [pow_succ]
-  refine lt_of_le_of_lt (mul_le_of_le_one_left h0 ?_) hlt
-  exact pow_le_one₀ h0 hlt.le
+  exact lt_of_le_of_lt (mul_le_of_le_one_left h0 (pow_le_one₀ h0 hlt.le)) hlt
 
 theorem exists_family_valuation_det_eq_one (hv : v.Integers R) (AA : HopfOrder (C := C) R N) (K : AddSubgroup N)
     [DecidablePred (· ∈ K)] (β : Matrix K K C) (hβ : IsUnit β.det)
@@ -194,8 +192,7 @@ theorem exists_family_valuation_det_eq_one (hv : v.Integers R) (AA : HopfOrder (
     by_cases hGx : v (h3mm K β G x).det = 1
     · refine ⟨G, hG, fun z hz => ?_⟩
       rcases Finset.mem_insert.mp hz with hzx | hz
-      · rw [hzx]
-        exact hGx
+      · rwa [hzx]
       · exact hS z hz
     obtain ⟨n, hn_def⟩ : ∃ n : N → C,
         n = fun y => ∏ k : K, (h3mm K β G (y + k)).det := ⟨_, rfl⟩
@@ -260,8 +257,7 @@ theorem exists_family_valuation_det_eq_one (hv : v.Integers R) (AA : HopfOrder (
       rw [ha0, zero_smul, zero_add, Matrix.det_smul, map_mul, map_pow, hgx, hb1, one_pow,
         mul_one]
     · have hb0 : b z = 0 := by
-        simp only [hb_def]
-        exact Finset.prod_eq_zero hz (sub_self _)
+        simpa only [hb_def] using Finset.prod_eq_zero hz (sub_self _)
       have ha1 : v (a z) = 1 := by
         simp only [ha_def]
         rw [Valuation.map_sub_swap]

@@ -43,10 +43,7 @@ noncomputable def toGerms (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
 
 lemma toGerms_injective (F : TopCat.Sheaf AddCommGrpCat.{u} X) (W : (Opens X)ᵒᵖ) :
     Function.Injective ((toGerms F).app W) := by
-  intro s t h
-  apply TopCat.Presheaf.section_ext F W.unop s t
-  intro x hx
-  exact congrFun h ⟨x, hx⟩
+  exact fun s t h => TopCat.Presheaf.section_ext F W.unop s t (fun x hx => congrFun h ⟨x, hx⟩)
 
 noncomputable def toGermSheaf (F : TopCat.Sheaf AddCommGrpCat.{u} X) : F ⟶ germSheaf F :=
   ObjectProperty.homMk (toGerms F)

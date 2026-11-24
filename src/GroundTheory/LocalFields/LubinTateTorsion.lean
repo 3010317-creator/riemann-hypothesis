@@ -178,8 +178,7 @@ theorem exists_card_residueField_eq (hπ : Irreducible π) :
     have := Fintype.ofFinite 𝓀[K]
     rw [Nat.card_eq_fintype_card]
     exact FiniteField.cast_card_eq_zero 𝓀[K]
-  rw [hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at h
-  exact h
+  rwa [hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at h
 
 theorem aeval_derivative_ltPoly_ne_zero (hπ : Irreducible π) {z : L} (hz : valuation L z < 1) :
     aeval z (derivative ((ltPoly π).map (algebraMap 𝒪[K] K))) ≠ 0 := by
@@ -374,8 +373,7 @@ theorem card_lubinTateTorsion_ltPoly (n : ℕ) :
   refine Nat.card_congr (Equiv.ofBijective (fun x => ⟨x.1.val, ?_⟩) ⟨?_, ?_⟩)
   · rw [mem_rootSet' (p := p)]
     exact ⟨Polynomial.map_ne_zero hp0, (mem_lubinTateTorsion_ltPoly_iff n x.1).mp x.2⟩
-  · intro x y h
-    exact Subtype.ext (IdealPoint.ext (by simpa using congrArg Subtype.val h))
+  · exact fun x y h => Subtype.ext (IdealPoint.ext (by simpa using congrArg Subtype.val h))
   · rintro ⟨z, hz⟩
     rw [mem_rootSet' (p := p)] at hz
     refine ⟨⟨IdealPoint.mk z (valuation_lt_one_of_aeval_ltPolyIter_eq_zero hπ n hz.2), ?_⟩, rfl⟩
@@ -486,8 +484,7 @@ theorem aeval_ltEisenstein_eq_zero {L : Type*} [Field L] [Algebra K L] {n : ℕ}
   set μ := aeval z ((ltPolyIter π n).map (algebraMap 𝒪[K] K))
   rw [ltPolyIter_succ, Polynomial.map_comp, aeval_comp, aeval_ltPoly] at h1
   have h2 : μ * (algebraMap K L (π : K) + μ ^ (Nat.card 𝓀[K] - 1)) = 0 := by
-    rw [mul_add, ← pow_succ', Nat.sub_add_cancel hq.le, mul_comm]
-    exact h1
+    rwa [mul_add, ← pow_succ', Nat.sub_add_cancel hq.le, mul_comm]
   have h3 := (mul_eq_zero.mp h2).resolve_left h0
   rw [ltEisenstein, Polynomial.map_add (f := _), map_C, Polynomial.map_pow, map_add (f := _), aeval_C, map_pow]
   exact h3

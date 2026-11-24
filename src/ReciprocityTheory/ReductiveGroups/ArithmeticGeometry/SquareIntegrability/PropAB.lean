@@ -735,8 +735,7 @@ theorem gN_tendsto (z : ℂ) : Tendsto (fun N => gN N z) atTop (𝓝 0) := by
     unfold expN
     exact h.comp (tendsto_add_atTop_nat 1)
   have h3 := (tendsto_const_nhds (x := cexp z)).sub h2
-  rw [sub_self] at h3
-  exact h3
+  rwa [sub_self] at h3
 
 theorem ell_norm_le (q : ℕ) (a v : EuclideanSpace ℂ ι) : ‖ellL q a v‖ ≤ q * Real.pi * (‖a‖ * ‖v‖) := by
   unfold ellL
@@ -816,8 +815,7 @@ theorem tail_tendsto {q c : ℕ} (hq : 1 ≤ q) (a : EuclideanSpace ℂ ι) {F G
     simpa only [zero_mul] using this
   have := tendsto_integral_of_dominated_convergence B (fun N => (hcont N).aestronglyMeasurable) hBi
     (fun N => Filter.Eventually.of_forall (hbound N)) (Filter.Eventually.of_forall hlim)
-  rw [integral_zero] at this
-  exact this
+  rwa [integral_zero] at this
 
 theorem gaussianInner_jet' {q c : ℕ} (hq : 1 ≤ q) (a : EuclideanSpace ℂ ι) {F G : EuclideanSpace ℂ ι → ℂ}
     (hF : F ∈ paPoly c) (hG : G ∈ paPoly c) :
@@ -840,8 +838,7 @@ theorem gaussianInner_jet' {q c : ℕ} (hq : 1 ≤ q) (a : EuclideanSpace ℂ ι
   have hev : (fun N => paIP q (fun v => gN N (ellL q a v) * Pf q a F v) G) =ᶠ[atTop]
       (fun _ => paIP q (paU q a F) G - paIP q (paJet c (paU q a F)) G) :=
     Filter.eventually_atTop.2 ⟨c, fun N hN => (hD N hN).symm⟩
-  have h0 := tendsto_nhds_unique (hT.congr' hev) tendsto_const_nhds
-  exact sub_eq_zero.1 h0.symm
+  exact sub_eq_zero.1 (tendsto_nhds_unique (hT.congr' hev) tendsto_const_nhds).symm
 
 end
 
@@ -1266,8 +1263,7 @@ theorem comp_smul_paT_mem_paPoly {c : ℕ} (t : ℝ) {F : EuclideanSpace ℂ ι 
       rw [Finsupp.sum_equivMapDomain]
       exact (Finset.mem_filter.1 (Finset.mem_coe.1 hα)).2
     refine paPF_mem_paPoly (p := MvPolynomial.monomial _ 1) ?_
-    rw [MvPolynomial.totalDegree_monomial _ one_ne_zero]
-    exact hd
+    rwa [MvPolynomial.totalDegree_monomial _ one_ne_zero]
   | zero => exact (paPoly _).zero_mem
   | add x y _ _ hx hy => exact (paPoly _).add_mem hx hy
   | smul a x _ hx => exact (paPoly _).smul_mem a hx
@@ -1433,8 +1429,7 @@ theorem paD_jet (c : ℕ) (H : EuclideanSpace ℂ ι → ℂ) {α : ι →₀ �
     rw [paD_mono, ite_eq_left rfl, div_mul_cancel₀ _ hf]
   · intro β _ hβ
     rw [paD_mono, ite_eq_right (Ne.symm hβ), mul_zero]
-  · intro h
-    exact absurd hα h
+  · exact fun h => absurd hα h
 
 private theorem paIP_sum_smul_paMono_left {q c : ℕ} (hq : 1 ≤ q) {G : EuclideanSpace ℂ ι → ℂ}
     (hG : G ∈ paPoly c) (f : (ι →₀ ℕ) → ℂ) (s : Finset (ι →₀ ℕ)) (hs : s ⊆ paS c) :

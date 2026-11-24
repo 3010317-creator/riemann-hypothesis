@@ -63,8 +63,7 @@ theorem ringKrullDim_le_of_isIntegral' {R S : Type*} [CommRing R] [CommRing S] [
     [Algebra.IsIntegral R S] : ringKrullDim S ≤ ringKrullDim R := by
   unfold ringKrullDim
   refine Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap R S)) ?_
-  intro P Q hPQ
-  exact Ideal.IsIntegral.comap_lt_comap (I := P.asIdeal) (J := Q.asIdeal) hPQ
+  exact fun P Q hPQ => Ideal.IsIntegral.comap_lt_comap (I := P.asIdeal) (J := Q.asIdeal) hPQ
 
 section Arith
 
@@ -187,8 +186,7 @@ theorem ringKrullDim_quot_of_frame (v : J → Ω) (e : Fin (D + 1) → J) (hf : 
     intro a b hab
     apply coneMap_injective_of_frame v e hf
     have := congrArg ((coneMap ℤ v).range.val : (coneMap ℤ v).range →+* Polynomial Ω) hab
-    rw [← RingHom.comp_apply, ← RingHom.comp_apply, hvalf] at this
-    exact this
+    rwa [← RingHom.comp_apply, ← RingHom.comp_apply, hvalf] at this
   have hint : f.IsIntegral := fun s => by
     obtain ⟨q, hq⟩ := s.2
     apply isIntegralElem_of_comp f ((coneMap ℤ v).range.val : (coneMap ℤ v).range →+* Polynomial Ω)

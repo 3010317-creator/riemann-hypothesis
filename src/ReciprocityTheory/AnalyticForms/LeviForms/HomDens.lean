@@ -125,15 +125,13 @@ theorem contDiff_detGram (N : ℕ) (hd : Fin N → ℝ) (m : ℕ) (hm : m ≤ N)
     | zero => intro a b; simp only [pow_zero]; exact contDiff_const
     | succ k ih =>
       intro a b
-      simp only [pow_succ, Matrix.mul_apply]
-      exact ContDiff.sum fun l _ => (ih a l).mul (hZ l b)
+      simpa only [pow_succ, Matrix.mul_apply] using ContDiff.sum fun l _ => (ih a l).mul (hZ l b)
   have hA : ∀ a b, ContDiff ℝ 2 (fun z : Pairs N → ℂ => cellMat N z a b) := by
     intro a b
     simp only [cellMat_eq, Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul]
     exact ContDiff.sum fun k _ => contDiff_const.mul (hP k a b)
   have hS : ∀ a b, ContDiff ℝ 2 (fun z : Pairs N → ℂ => star (cellMat N z a b)) := fun a b => by
-    have h := Complex.conjCLE.contDiff.comp (hA a b)
-    exact h
+    exact Complex.conjCLE.contDiff.comp (hA a b)
   have hM : ∀ a b, ContDiff ℝ 2 (fun z : Pairs N → ℂ =>
       ((cellMat N z)ᴴ * Matrix.diagonal (fun k => (hd k : ℂ)) * cellMat N z) a b) := by
     intro a b

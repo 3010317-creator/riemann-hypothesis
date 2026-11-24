@@ -110,15 +110,13 @@ theorem MixedTwistShift.proof (hH : SnapperHyperplane.Statement.{u, w}) (hS : Sn
       restrLen qq (((tensorSub Ls T).twist M.toSubSystem).twist (twistSys k x ((c : ℤ) + d))) : ℤ) : ℚ) =
         subsetDiff n f 1 ((c : ℤ) + d) := by
     filter_upwards [hT1.eventually (hev 1)] with c hc
-    simp only [hA]
-    exact hsum 1 _ hc
+    simpa only [hA] using hsum 1 _ hc
   split_ifs with hW
   ·
     have hI : ∀ᶠ c : ℕ in atTop, (interSum qq Ls c : ℚ) = subsetDiff n f 0 (c : ℤ) := by
       filter_upwards [tendsto_natCast_atTop_atTop.eventually (hev 0)] with c hc
       rw [interSum]
-      simp only [hB]
-      exact hsum 0 _ hc
+      simpa only [hB] using hsum 0 _ hc
     obtain ⟨c₀, hc₀⟩ := hI.exists_forall_of_atTop
     have hκ : ∀ᶠ c : ℕ in atTop, interSum qq Ls c = interSum qq Ls c₀ := by
       filter_upwards [eventually_ge_atTop c₀] with c hc

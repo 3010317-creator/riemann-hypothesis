@@ -238,8 +238,7 @@ theorem cst_regular [IsDomain V] (p : X ⟶ Sp V) [Flat p] (x : X) {a : V} (ha :
     (mem_nonZeroDivisors_of_ne_zero ha)
   intro s s' hss
   apply hreg
-  simp only [Algebra.smul_def, RingHom.algebraMap_toAlgebra, hφe]
-  exact hss
+  simpa only [Algebra.smul_def, RingHom.algebraMap_toAlgebra, hφe] using hss
 
 theorem exists_div [IsDomain V] (p : X ⟶ Sp V) [Flat p] {a : V} (ha : a ≠ 0) (W : X.Opens) (f : Γ(X, W))
     (h : ∀ x ∈ W, cst p x a ∣ gs (𝟙 X) x W f) : ∃ g : Γ(X, W), f = constFn p W a * g := by
@@ -269,17 +268,14 @@ theorem exists_div [IsDomain V] (p : X ⟶ Sp V) [Flat p] {a : V} (ha : a ≠ 0)
     apply TopCat.Presheaf.section_ext X.sheaf V
     intro y hy
     have e1 := TopCat.Presheaf.germ_res_apply X.presheaf i y hy (constFn p U a)
-    have e2 := hcst y hy
-    have e3 := hcst (U := U) y (i.le hy)
-    exact e1.trans (e3.trans e2.symm)
+    exact e1.trans ((hcst (U := U) y (i.le hy)).trans (hcst y hy).symm)
   have hcancel : ∀ (U : X.Opens) (s t : Γ(X, U)), constFn p U a * s = constFn p U a * t → s = t := by
     intro U s t hst
     apply TopCat.Presheaf.section_ext X.sheaf U s t
     intro x hx
     apply cst_regular p x ha
     have e := congrArg (X.presheaf.germ U x hx).hom hst
-    rw [map_mul, map_mul, hcst x hx] at e
-    exact e
+    rwa [map_mul, map_mul, hcst x hx] at e
   have hloc : ∀ y : W, ∃ (U : X.Opens) (_ : (y : X) ∈ U) (iU : U ⟶ W) (g : Γ(X, U)),
       (X.presheaf.map iU.op).hom f = constFn p U a * g := by
     rintro ⟨x, hx⟩
@@ -346,8 +342,7 @@ private theorem constFn_mul_left_cancel_of_flat [IsDomain V] (p : X ⟶ Sp V) [F
   have hcst : (X.presheaf.germ U x hx).hom (constFn p U a) = cst p x a := by
     rw [← hgs, gs_constFn p U (𝟙 X) x hx a, Category.id_comp]
   have e := congrArg (X.presheaf.germ U x hx).hom hst
-  rw [map_mul, map_mul, hcst] at e
-  exact e
+  rwa [map_mul, map_mul, hcst] at e
 
 theorem exists_div_sec [IsDomain V] (p : X ⟶ Sp V) [Flat p] {a : V} (ha : a ≠ 0) {M : LB X} (s : LB.Sec M)
     (h : ∀ j, ∀ x ∈ M.U j, cst p x a ∣ gs (𝟙 X) x (M.U j) (s.f j)) :

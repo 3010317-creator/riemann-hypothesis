@@ -166,8 +166,7 @@ theorem untilt_epsilon : PreTilt.untilt (epsilon p) = 1 := by
 
 theorem untilt_frobeniusEquiv_symm_epsilon_ne_one : PreTilt.untilt (φi (epsilon p)) ≠ 1 := by
   rw [epsilon, AInf.frobeniusEquiv_symm_ofCompatible, IsPerfectoidField.untilt_ofCompatible]
-  intro h
-  exact rootSeq_one_ne_one (congrArg Subtype.val h)
+  exact fun h => rootSeq_one_ne_one (congrArg Subtype.val h)
 
 
 variable (p) in

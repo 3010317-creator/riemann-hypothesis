@@ -72,9 +72,7 @@ theorem ae_eval_ne_zero_of_ne_zero_fin : ∀ (m : ℕ) (f : MvPolynomial (Fin m)
     intro f hf
     set P := MvPolynomial.finSuccEquiv ℂ m f with hPdef
     have hP : P ≠ 0 := by
-      intro h
-      apply hf
-      exact (MvPolynomial.finSuccEquiv ℂ m).injective (by rw [← hPdef, h, map_zero])
+      exact fun h => hf ((MvPolynomial.finSuccEquiv ℂ m).injective (by rw [← hPdef, h, map_zero]))
     obtain ⟨k, hk⟩ : ∃ k, P.coeff k ≠ 0 := by
       by_contra h
       push Not at h
@@ -101,8 +99,7 @@ theorem ae_eval_ne_zero_of_ne_zero_fin : ∀ (m : ℕ) (f : MvPolynomial (Fin m)
       filter_upwards [hnull] with y hy
       have hc : (e.symm (y, s) : Fin (m + 1) → ℂ) = Fin.cons y s := by
         simp [e, MeasurableEquiv.piFinSuccAbove_symm_apply]
-      rw [hc, MvPolynomial.eval_eq_eval_mv_eval']
-      exact hy
+      rwa [hc, MvPolynomial.eval_eq_eval_mv_eval']
     have := he.quasiMeasurePreserving.ae key
     filter_upwards [this] with x hx
     simpa using hx
@@ -245,8 +242,7 @@ theorem ae_toSphere (B n : ℕ) (a : Fin B → ℕ) (F : MvPolynomial (Fin B × 
     intro h
     have h2 := measure_mono_null (Set.subset_univ (Set.Iio (⟨1, by norm_num⟩ : Set.Ioi (0 : ℝ)))) h
     have h3 := Measure.volumeIoiPow_apply_Iio (Module.finrank ℝ E - 1) ⟨1, by norm_num⟩
-    rw [show ρ (Set.Iio ⟨1, by norm_num⟩) = _ from h3] at h2
-    rw [ENNReal.ofReal_eq_zero] at h2
+    rw [show ρ (Set.Iio ⟨1, by norm_num⟩) = _ from h3, ENNReal.ofReal_eq_zero] at h2
     have h4 : (0 : ℝ) < (1 : ℝ) ^ (Module.finrank ℝ E - 1 + 1) / ((Module.finrank ℝ E - 1 : ℕ) + 1) := by
       positivity
     exact absurd h2 (not_le.2 h4)

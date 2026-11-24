@@ -187,8 +187,7 @@ theorem det_map_C_add_X_sq_smul {n : Type*} [Fintype n] [DecidableEq n] (A : Mat
   have h := congrArg Matrix.det hmap
   have e1 : (Ideal.Quotient.mk (Ideal.span {(X : ℂ[X]) ^ 2})) (A.map C + (X ^ 2 : ℂ[X]) • M).det =
       (Ideal.Quotient.mk (Ideal.span {(X : ℂ[X]) ^ 2})) (A.map C).det := by
-    rw [RingHom.map_det, RingHom.map_det]
-    exact h
+    rwa [RingHom.map_det, RingHom.map_det]
   rw [Ideal.Quotient.eq, Ideal.mem_span_singleton] at e1
   obtain ⟨r, hr⟩ := e1
   refine ⟨r, ?_⟩
@@ -233,8 +232,7 @@ theorem coeff2_det_of {n : Type*} [Fintype n] [DecidableEq n] (P : Matrix n n �
       congr 1
       funext a
       rw [← map_mul, mul_inv_cancel₀ (hd a), map_one]
-    rw [mul_add, mul_one, Matrix.mul_smul, hK, ← mul_assoc, hone, one_mul, ← hD]
-    exact hP
+    rwa [mul_add, mul_one, Matrix.mul_smul, hK, ← mul_assoc, hone, one_mul, ← hD]
   have hdet : P.det = C (∏ a, d a) * (1 + ((X : ℂ[X]) ^ 2) • K).det := by
     conv_lhs => rw [hfac]
     rw [Matrix.det_mul, Matrix.det_diagonal, map_prod]
