@@ -180,16 +180,6 @@ private theorem span_of_scaled_dual {K : Type} [Field K] [NumberField K] [StarRi
   rw [algebraMap_smul K]
   exact Submodule.subset_span (hdual _ hmem)
 
-private theorem full_matLat {K : Type} [Field K] [NumberField K] {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) K) (hA : Function.Surjective A.mulVec)
-    (M : Submodule (𝓞 K) (Fin n → K)) (hM : Submodule.IsFullLattice K M) :
-    Submodule.IsFullLattice K (matLat A M) := by
-  refine { toIsLattice := Submodule.IsLattice.of_fg K (hM.fg.map _), span_eq_top := ?_ }
-  rw [matLat, Submodule.map_coe]
-  change Submodule.span K (A.mulVecLin '' (M : Set _)) = ⊤
-  rw [Submodule.span_image, hM.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
-  exact hA
-
 private theorem full_Lam {K : Type} [Field K] [NumberField K] [StarRing K]
     {G : Type} [Group G] [Fintype G] {Pl0 : Type} {B : BlockDat K G Pl0}
     {ℓ : Lvl K G} {Z : Submodule K B.S.Forms} {v0 : InfinitePlace K}
@@ -201,7 +191,7 @@ private theorem full_Lam {K : Type} [Field K] [NumberField K] [StarRing K]
   have hMt : Submodule.IsFullLattice K (B.Mt ℓ) :=
     { toIsLattice := hLat
       span_eq_top := span_of_scaled_dual _ _ hLat.fg hc (B.Mt_dual hv0 h hX) }
-  exact full_matLat (B.Pq ℓ Z) (B.Pq_surj hv0 h hX) (B.Mt ℓ) hMt
+  exact Formalism.L2.DIV.matLat_full (B.Pq ℓ Z) (B.Pq_surj hv0 h hX) (B.Mt ℓ) hMt
 
 private theorem rr_span_eq_top (P : RowSideFamily ex) {s : ℕ} (hOk : P.A3.fam3.Ok3 s)
     (hF : ColFacts P.S1 P.C) :
@@ -215,7 +205,7 @@ private theorem rr_span_eq_top (P : RowSideFamily ex) {s : ℕ} (hOk : P.A3.fam3
     have hL : Submodule.IsFullLattice D.what₂.LL (side.abelian₂ t) :=
       full_Lam (ℓ := P.A3.fam3.F.lvl P.Ps P.ψs)
         hOk.ok2.conj (hOk.ok2.what₂ t) hOk.ok2.irr
-    exact (full_matLat (P.S1.ι t) (hF.bij t).2 _ hL).span_eq_top
+    exact (Formalism.L2.DIV.matLat_full (P.S1.ι t) (hF.bij t).2 _ hL).span_eq_top
   rw [eq_top_iff]
   intro x _
   -- A common denominator puts the vector in the local lattice at every prime.

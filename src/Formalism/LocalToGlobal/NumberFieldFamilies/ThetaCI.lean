@@ -78,11 +78,6 @@ end Gen
 
 variable {D : D7}
 
-theorem star_delta (D : D7) : star D.host.sqrtMinusD = -D.host.sqrtMinusD := by
-  apply D.host.φ₀.injective
-  have h : D.host.φ₀ D.host.sqrtMinusD = Complex.I * (Real.sqrt D.host.d : ℂ) := D.host.φ₀_mem
-  rw [emb_star, map_neg, h, map_mul, Complex.conj_I, Complex.conj_ofReal, neg_mul]
-
 theorem sqrt_d_pos (D : D7) : 0 < Real.sqrt D.host.d :=
   Real.sqrt_pos.2 (Nat.cast_pos.2 (Nat.pos_of_ne_zero D.host.hyp.2.1.ne_zero))
 
@@ -98,7 +93,7 @@ theorem decompE (x : D.host.E) : ∃ a b : D.host.F,
   obtain ⟨a, ha⟩ := (D.sp.cm.fixed ((x + star x) / 2)).1 (by
     rw [star_div₀, star_add, star_star, add_comm]; simp)
   obtain ⟨b, hb⟩ := (D.sp.cm.fixed ((x - star x) / (2 * D.host.sqrtMinusD))).1 (by
-    rw [star_div₀, star_sub, star_star, star_mul', star_delta]
+    rw [star_div₀, star_sub, star_star, star_mul', Formalism.L2.Fam.ThC.sd_star]
     have : star (2 : D.host.E) = 2 := by simp
     rw [this]
     field_simp
@@ -217,7 +212,6 @@ theorem inf_surj (z : D.what₂.Tau → ℂ) : ∃ y : Ainf D.host.F ⊗[D.host.
   conv_rhs => rw [← Complex.re_add_im (z τ)]
   push_cast
   field_simp
-
 
 variable (D) in
 def cmpAt (τ : D.what₂.Tau) : AE D →+* ℂ := (th0 D τ).comp (infPart D)

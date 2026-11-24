@@ -88,12 +88,6 @@ private theorem ge_mono_lemma_5 {w w' : ℝ} {a : C} (h : w' ≤ w) (ha : V.Ge w
   show (w' : WithTop ℝ) ≤ V.v a
   exact le_trans (WithTop.coe_le_coe.mpr h) ha
 
-private theorem ge_mul_lemma_6 {w w' : ℝ} {a b : C} (ha : V.Ge w a) (hb : V.Ge w' b) :
-    V.Ge (w + w') (a * b) := by
-  show ((w + w' : ℝ) : WithTop ℝ) ≤ V.v (a * b)
-  rw [AddValuation.map_mul, WithTop.coe_add]
-  exact add_le_add ha hb
-
 private theorem ge_tele_lemma_7 {s : ℕ → C} {w : ℝ} {a : ℕ} (h : ∀ m ≥ a, V.Ge w (s (m + 1) - s m)) :
     ∀ b ≥ a, V.Ge w (s b - s a) := by
   intro b (hb : a ≤ b)
@@ -176,9 +170,9 @@ theorem Tends.mul {s t : ℕ → C} {x y : C} (hs : Tends V s x) (ht : Tends V t
   have k5 := abs_nonneg Ky
   have k6 := abs_nonneg w
   refine ge_sub_lemma_4 (ge_add_lemma_2 ?_ ?_) ?_
-  · exact ge_mono_lemma_5 (by linarith) (ge_mul_lemma_6 hKx a2)
-  · exact ge_mono_lemma_5 (by linarith) (ge_mul_lemma_6 a1 hKy)
-  · exact ge_mono_lemma_5 (by linarith) (ge_mul_lemma_6 a1 a2)
+  · exact ge_mono_lemma_5 (by linarith) (Formalism.L2.FormalSeriesBounds.VF.Ge.mul hKx a2)
+  · exact ge_mono_lemma_5 (by linarith) (Formalism.L2.FormalSeriesBounds.VF.Ge.mul a1 hKy)
+  · exact ge_mono_lemma_5 (by linarith) (Formalism.L2.FormalSeriesBounds.VF.Ge.mul a1 a2)
 
 theorem Tends.sum {ι : Type} (S : Finset ι) {s : ι → ℕ → C} {x : ι → C}
     (h : ∀ i ∈ S, Tends V (s i) (x i)) : Tends V (fun n => ∑ i ∈ S, s i n) (∑ i ∈ S, x i) := by
