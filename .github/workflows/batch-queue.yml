@@ -12,6 +12,12 @@ name: batch queue
 # closed without being merged, its pull requests stay queued, and the next run starts a new
 # batch with them.
 #
+# Queued pull requests go in by number, except that those labelled `priority` go first, so that
+# a large pull request is not the one left out when it conflicts with smaller ones. The order
+# counts when a batch is started or rebuilt. After that, a newly queued pull request goes on top
+# of what is already there, and one that was left out stays out, `priority` or not. To start
+# again in order, close the batch's pull request.
+#
 # Commenting `-batch` takes a pull request out of the queue again: it withdraws the recorded
 # commit and removes the `batch queue` label, and nothing else. Commits already merged into a
 # batch stay there, and no batch is rebuilt, so a build that is under way is never disturbed.
