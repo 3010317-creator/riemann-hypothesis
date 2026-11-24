@@ -103,6 +103,11 @@ namespace GlobalTheory.Published
 
 open SiegelOneVector
 
+/-- **Weil's convergence theorem for the Siegel–Weil formula**: the Eisenstein series associated
+with a single Schwartz–Bruhat function on the adelic symplectic group converges absolutely when the quadratic dimension exceeds rank plus one.
+
+Proposed reference:
+[A. Weil, *Sur la formule de Siegel dans la th\'eorie des groupes classiques*][weil1965siegel]. -/
 def WeilSiegelOneVector : Prop :=
   ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E), IsCMExt F E σ →
