@@ -217,7 +217,13 @@ def info_message_tests(ci):
         (library / "Broken.trace").write_text("{")
         (library / "List.trace").write_text("[]")
         found = ci.info_messages(project, ["A.Noisy", "Quiet", "Odd", "Broken", "List", "Missing", "A.Noisy"])
-        assert found == [{"module": "A.Noisy", "message": "src/A/Noisy.lean:3:0: value : Nat"}], found
+        assert found == {"count": 1, "modules": 1,
+                         "messages": [{"module": "A.Noisy", "message": "src/A/Noisy.lean:3:0: value : Nat"}]}, found
+        # Everything is counted; only the first messages are kept, each cut to 2000 characters.
+        trace("Loud.trace", [{"level": "info", "message": str(i) * 3000} for i in range(5)])
+        found = ci.info_messages(project, ["A.Noisy", "Loud"], keep=3)
+        assert (found["count"], found["modules"], len(found["messages"])) == (6, 2, 3), found
+        assert [len(row["message"]) for row in found["messages"]] == [33, 2000, 2000]
         (library / "Linked.trace").symlink_to(library / "A/Noisy.trace")
         for modules in (["Linked"], ["A..Noisy"], ["../Escape"]):
             try:
@@ -407,19 +413,24 @@ roots = ["Base", "Stable", "Main"]
         assert ci.load_map(reused / "outputs.jsonl") == mapping
         assert "Built Base" not in (reused / "build.log").read_text()
         assert "Unpacked Base" in (reused / "build.log").read_text(), "read-only cache mode must still reuse prior PR artifacts"
-        assert json.loads((reused / "info-messages.json").read_text()) == []
+        assert json.loads((reused / "info-messages.json").read_text())["new"]["count"] == 0
         # A #check is reported apart from the build's exit code, also once its module comes from a cache.
         (root / "src/Main.lean").write_text("import Base\nimport Stable\ndef answer : Nat := value + 1\n#check answer\n")
         commit()
         noisy, noisy_receipt = build("noisy")
-        assert noisy_receipt["build_exit_code"] == 0
+        assert noisy_receipt["build_exit_code"] == 0 and noisy_receipt["info_messages"] == 1
         info = json.loads((noisy / "info-messages.json").read_text())
-        assert [row["module"] for row in info] == ["Main"] and "answer : Nat" in info[0]["message"], info
+        assert info["inherited"]["count"] == 0 and info["new"]["modules"] == 1, info
+        assert [row["module"] for row in info["new"]["messages"]] == ["Main"], info
+        assert "answer : Nat" in info["new"]["messages"][0]["message"], info
+        # Taken from a known map, the same module is reported as inherited, not counted against the build.
         for archive in (noisy / "artifacts").iterdir():
             shutil.copyfile(archive, cache / "artifacts" / archive.name)
-        replayed, _ = build("noisy-replayed", ["--cache-map", str(noisy / "outputs.jsonl")])
+        replayed, replayed_receipt = build("noisy-replayed", ["--cache-map", str(noisy / "outputs.jsonl")])
         assert "Unpacked Main" in (replayed / "build.log").read_text()
-        assert json.loads((replayed / "info-messages.json").read_text()) == info
+        assert replayed_receipt["info_messages"] == 0
+        replayed_info = json.loads((replayed / "info-messages.json").read_text())
+        assert replayed_info == {"new": {"count": 0, "modules": 0, "messages": []}, "inherited": info["new"]}, replayed_info
         (root / "src/Main.lean").write_text("import Base\nimport Stable\ndef answer : Nat := value + 1\n")
         commit()
         # Changed options must not retain old input hashes, even with warm archives available.

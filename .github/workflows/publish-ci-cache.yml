@@ -158,3 +158,33 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           R2_ACCOUNT_TOKEN: ${{ secrets.R2_ACCOUNT_TOKEN }}
         run: python3 scripts/ci-github.py promote-main --event-file "$GITHUB_EVENT_PATH"
+
+  # Batches are built outside GitHub; this is where a merge that added info messages shows.
+  info-messages-on-main:
+    needs: promote-main
+    if: github.event_name == 'push' && github.repository == 'leanprover-community/riemann-hypothesis'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Fail if the build behind this commit added info messages
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.error, urllib.request
+          url = f"https://rh-cache.taucetiproject.org/ci/revisions/{os.environ['SHA']}.json"
+          try:
+              with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'RiemannHypothesisCache/1.0'}), timeout=60) as response:
+                  record = json.load(response)
+          except urllib.error.HTTPError as error:
+              if error.code != 404:
+                  raise
+              print('No published build of this commit; nothing to check.')
+              raise SystemExit(0)
+          count = record.get('receipt', {}).get('info_messages', 0)
+          if count:
+              print(f'::error::The build merged here added {count} info messages. After `lake exe cache get`, '
+                    '`lake build --no-build` prints them as `info:` lines.')
+              raise SystemExit(1)
+          PY

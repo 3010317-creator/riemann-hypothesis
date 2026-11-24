@@ -154,7 +154,7 @@ class Publication(unittest.TestCase):
         self.store.put(self.base_key, self.payloads["Base"], content_type="opaque", metadata={})
         self.store.writes.clear()
 
-    def staging(self, names=("Base", "Changed"), exit_code=0, label="staging"):
+    def staging(self, names=("Base", "Changed"), exit_code=0, label="staging", info_messages=None):
         staging = self.root / label
         (staging / "artifacts").mkdir(parents=True)
         entries, rows, artifacts = {}, {}, []
@@ -172,6 +172,8 @@ class Publication(unittest.TestCase):
                    "map_sha256": ci.sha256(contents), "artifacts": artifacts,
                    "module_manifest_sha256": ci.sha256(manifest), "module_manifest_bytes": len(manifest),
                    "cache_map_sha256": []}
+        if info_messages is not None:
+            receipt["info_messages"] = info_messages
         (staging / "outputs.jsonl").write_bytes(contents)
         (staging / "module-manifest.jsonl.gz").write_bytes(manifest)
         (staging / "receipt.json").write_bytes(ci.canonical(receipt))
@@ -231,6 +233,23 @@ class Publication(unittest.TestCase):
         self.assertEqual(index["candidate_tree"], "9" * 40)
         with self.assertRaisesRegex(ValueError, "Main build inputs differ"):
             ci.promote(self.store, self.main_identity("7" * 40), self.identity["candidate_head"])
+
+    def test_build_that_added_info_messages_is_published_but_not_reusable(self):
+        staging, expected = self.staging(info_messages=2)
+        ci.publish(self.prepare(staging, expected), self.store)
+        record = ci.decode_json(self.store.get("ci/revisions/" + self.identity["candidate_head"] + ".json").data)
+        self.assertEqual(record["receipt"]["info_messages"], 2)
+        self.assertIsNone(self.store.get("ci/inputs/" + expected["input_fingerprint"] + ".json"))
+        clean, expected = self.staging(info_messages=0, label="clean")
+        ci.publish(self.prepare(clean, expected), self.store)
+        self.assertIsNotNone(self.store.get("ci/inputs/" + expected["input_fingerprint"] + ".json"))
+        for value in (-1, "2", True, None):
+            bad, expected = self.staging(label=f"bad-{value}")
+            receipt = ci.decode_json((bad / "receipt.json").read_bytes())
+            receipt["info_messages"] = value
+            (bad / "receipt.json").write_bytes(ci.canonical(receipt))
+            with self.assertRaisesRegex(ValueError, "Invalid info message count"):
+                self.prepare(bad, expected)
 
     def test_partial_retry_union_full_upgrade_and_no_partial_regression(self):
         for label, names in [("partial-a", ("Base", "Changed")), ("partial-b", ("Base", "Other"))]:

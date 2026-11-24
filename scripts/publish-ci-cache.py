@@ -273,8 +273,11 @@ def snapshot(staging: Path, expected: dict, base: bytes, temporary: Path, base_m
     receipt = decode_json(regular_bytes(staging / "receipt.json"))
     identity = identity_fields(receipt)
     permitted = {"schema", *IDENTITY, "input_fingerprint", "base_map_sha256", "build_exit_code", "map_sha256", "artifacts", "module_manifest_sha256", "module_manifest_bytes"}
-    if set(receipt) - {"cache_map_sha256"} != permitted:
+    # info_messages is optional: receipts written before ci-build.py counted them lack it.
+    if set(receipt) - {"cache_map_sha256", "info_messages"} != permitted:
         raise ValueError("Receipt fields do not match the CI staging protocol")
+    if "info_messages" in receipt and (type(receipt["info_messages"]) is not int or receipt["info_messages"] < 0):
+        raise ValueError("Invalid info message count")
     additional_maps = receipt.get("cache_map_sha256", [])
     if (not isinstance(additional_maps, list) or len(additional_maps) > 100
             or any(not isinstance(item, str) or not SHA256.fullmatch(item) for item in additional_maps)):
@@ -511,7 +514,8 @@ def update_index(store, revision: str, record: dict):
 
 def update_input_index(store, record: dict):
     """Retain one complete build for equivalent source/config across revisions."""
-    if record["build_exit_code"] != 0:
+    # A build that added info messages must not be reused: its rerun would skip the check.
+    if record["build_exit_code"] != 0 or record["receipt"].get("info_messages", 0):
         return
     key = f"ci/inputs/{record['input_fingerprint']}.json"
     for _ in range(8):

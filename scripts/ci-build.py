@@ -684,8 +684,8 @@ def module_traces(project, incomplete=False):
         yield name, module, dep_hash
 
 
-def info_messages(project, modules):
-    """Info-level entries in the saved Lake logs of `modules`.
+def info_messages(project, modules, keep=200):
+    """Count the info-level entries in the saved Lake logs of `modules`, keeping the first `keep`.
 
     These are the output of commands such as `#check`, `#print` and `#eval` without a
     `#guard_msgs`, `trace_state`, and `Try this` suggestions (for example `ring` falling back
@@ -694,7 +694,7 @@ def info_messages(project, modules):
     of them (#137). A missing or unreadable trace is skipped; the build reports those modules.
     """
     library = project / ".lake/build/lib/lean"
-    found = []
+    count, noisy, kept = 0, 0, []
     for name in sorted(set(modules)):
         if not MODULE.fullmatch(name):
             raise ValueError("unsafe compiled module name")
@@ -709,10 +709,11 @@ def info_messages(project, modules):
             log = json.loads(path.read_text()).get("log")
         except (json.JSONDecodeError, UnicodeError, AttributeError):
             continue
-        for entry in log if isinstance(log, list) else []:
-            if isinstance(entry, dict) and entry.get("level") == "info" and isinstance(entry.get("message"), str):
-                found.append({"module": name, "message": entry["message"]})
-    return found
+        found = [entry["message"] for entry in (log if isinstance(log, list) else [])
+                 if isinstance(entry, dict) and entry.get("level") == "info" and isinstance(entry.get("message"), str)]
+        count, noisy = count + len(found), noisy + bool(found)
+        kept += [{"module": name, "message": message[:2000]} for message in found[:max(0, keep - len(kept))]]
+    return {"count": count, "modules": noisy, "messages": kept}
 
 
 def recover_completed_map(project, cache, toolchain, work, destination, known_hashes=None, existing=None, known_mappings=None):
@@ -1022,12 +1023,16 @@ def main():
             recover_completed_map(project, cache, toolchain, work, mapping_file, base_hashes, mapping, known_mappings)
             mapping = load_map(mapping_file)
         modules = collect_mapped_modules(project, cache, mapping, incomplete=bool(build_exit_code))
-        # Reported apart from build_exit_code: the cache of a noisy build is still valid, and
-        # the workflow fails on these after uploading it.
-        info = info_messages(project, [name for name, _, _ in modules])
+        # Reported apart from build_exit_code: the cache of a noisy build is still valid. Only
+        # modules whose inputs no known map (main's caches) had are counted against this build.
+        inherited = {name for name, dep_hash, _ in modules if dep_hash in known_mappings}
+        info = {"new": info_messages(project, {name for name, _, _ in modules} - inherited),
+                "inherited": info_messages(project, inherited, keep=20)}
         (output / "info-messages.json").write_text(json.dumps(info, indent=2) + "\n")
-        if info:
-            print(f"{len(info)} info messages in {len({row['module'] for row in info})} modules", flush=True)
+        for kind, report in info.items():
+            if report["count"]:
+                print(f"{report['count']} info messages in {report['modules']} {kind} modules "
+                      f"(listed in {output / 'info-messages.json'})", flush=True)
         artifacts = []
         paths = [safe_file(cache, "artifacts/" + name) for name in sorted(set(mapping.values()))]
         new_paths = [path for path in paths if path.name not in base_hashes]
@@ -1051,7 +1056,8 @@ def main():
         receipt = {"schema": 1, **provenance, "base_map_sha256": base_map_sha,
                    "cache_map_sha256": [sha256(path) for path in args.cache_map],
                    "input_fingerprint": hashlib.sha256(json.dumps(inputs, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
-                   "build_exit_code": build_exit_code, "map_sha256": sha256(output / "outputs.jsonl"), "artifacts": artifacts}
+                   "build_exit_code": build_exit_code, "map_sha256": sha256(output / "outputs.jsonl"), "artifacts": artifacts,
+                   "info_messages": info["new"]["count"]}
         header = {"schema": 1, **inputs, "map_sha256": receipt["map_sha256"],
                   "input_fingerprint": receipt["input_fingerprint"], "modules": len(modules)}
         manifest = output / "module-manifest.jsonl.gz"
@@ -1073,7 +1079,8 @@ def main():
             (work / "handoff-audit.json").write_text(json.dumps(audit, sort_keys=True, indent=2) + "\n")
         (output / "receipt.json").write_text(json.dumps(receipt, sort_keys=True, indent=2) + "\n")
         workspace.checkpoint("staged" if build_exit_code == 0 else "failed", build_exit_code)
-        print(json.dumps({"build_exit_code": build_exit_code, "mapped_modules": len(mapping), "delta_artifacts": len(artifacts)}))
+        print(json.dumps({"build_exit_code": build_exit_code, "mapped_modules": len(mapping), "delta_artifacts": len(artifacts),
+                          "info_messages": info["new"]["count"]}))
         return build_exit_code
 
 
