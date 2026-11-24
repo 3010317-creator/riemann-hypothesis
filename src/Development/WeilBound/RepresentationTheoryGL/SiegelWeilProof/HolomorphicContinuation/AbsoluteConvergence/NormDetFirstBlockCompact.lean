@@ -37,7 +37,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.AbsoluteConvergence.SphericalSectionContinuousNeZero
 
 @[expose] public section
 
@@ -58,6 +57,9 @@ theorem projected_block_lower_sum (M N : M2 n) : (M * N).toBlocks₂₁ = M.toBl
 theorem lowerDiagonalBlockAsGL (M N : M2 n) : (M * N).toBlocks₂₂ = M.toBlocks₂₁ * N.toBlocks₁₂ + M.toBlocks₂₂ * N.toBlocks₂₂ := by
   rw [← fromBlocks_toBlocks M, ← fromBlocks_toBlocks N, fromBlocks_multiply]
   simp
+
+theorem mR_mul (g h : GR n) : mR (g * h) = mR g * mR h := by
+  simp [mR]
 
 theorem k_blocks {k : GR n} (hk : k ∈ KR n) :
     (mR k).toBlocks₂₁ = -(mR k).toBlocks₁₂ ∧ (mR k).toBlocks₂₂ = (mR k).toBlocks₁₁ := by
