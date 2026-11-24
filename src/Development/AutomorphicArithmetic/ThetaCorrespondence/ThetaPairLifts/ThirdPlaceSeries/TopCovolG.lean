@@ -1740,7 +1740,7 @@ theorem topCovolG_alt_alt : _root_.SelfIntersectionVolumeEstimates.VolumeEstimat
   intro hSB hX hP hGD hQ hD
   have hK := hX.ks
   have hN := hX.lie
-  have gram := _root_.GlobalTheory.CovTop.covering_gram_matrix_of_local_traces_alt hP
+  have gram := _root_.GlobalTheory.CovTop.covering_gram_matrix_of_local_traces_alt
   have size := _root_.GlobalTheory.CovTop.SizeRows.size_alt_bis
   have meas := _root_.GlobalTheory.CovTop.MeasRd.covering_measure_reduction_alt hP
   have anc := _root_.GlobalTheory.CovTop.anchor_holds_alt
