@@ -1,9 +1,8 @@
 module
 
-public import Mathlib
-public import CompanionTheory.AutomorphicTheory.PieriRules.PieriDegreeBounds.Imports
-public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CapelliEigenvalues.Smooth
+import Mathlib.Algebra.Order.Star.Real
 
 @[expose] public section
 

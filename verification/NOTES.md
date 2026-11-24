@@ -28,15 +28,15 @@ The manual `mirror` job in CI downloads the archive again, compares it with comm
 byte for byte, and prints that list. The sections below on size, the static scan and the build
 describe the original 175,187 files, not the current tree.
 
-`lakefile.toml` is the original with two additions:
+`lakefile.toml` started as the original with two additions:
 
 - three lines at the top, which set `platformIndependent = true` for the build cache;
 - a marked block at the end, which registers the `Challenge` library, the `cache` executable and
   the cache server.
 
-CI checks that the original file sits unchanged between the two. Neither addition makes Lake
-treat an existing build as out of date; that was tested on a small Lean `v4.33.1` project, not
-on this one.
+Later pull requests have changed the original part between them too, so the `mirror` job no
+longer compares it with the archive. Neither addition makes Lake treat an existing build as out
+of date; that was tested on a small Lean `v4.33.1` project, not on this one.
 
 The build cache is described in [CACHE.md](CACHE.md). The steps in the README's "Checking it" do
 not use it.
@@ -293,8 +293,8 @@ So the solution's statement and its three constants match the challenge's, and t
 accept the bridge. The bridge and the solution needed no change for `v4.36.0`. `#print axioms`
 on the bridge's theorems gives `propext`, `Classical.choice` and `Quot.sound`. The challenge
 export is 356,115,533 bytes, with sha256
-`0977ecc3ea2a1abd7b9b3356a4643574dd65c3b4c8a98ca25b18f5629efe0218`, which CI checks; the
-placeholder's solution export is 426,481,210 bytes.
+`0977ecc3ea2a1abd7b9b3356a4643574dd65c3b4c8a98ca25b18f5629efe0218`, which CI checked until #185
+changed the pins (see below); the placeholder's solution export is 426,481,210 bytes.
 
 The `formal-conjectures` job in CI repeats the rehearsal. It runs when something it reads
 changes: `comparator/`, `src/Statements.lean`, the first setup's `src/Challenge.lean` and
@@ -325,6 +325,14 @@ makes `challenge.export` the way the README makes it, and checks its checksum. O
 Mathlib `v4.36.0` that is sha256
 `ccaa35047adcb2b493ad0ca36abfdd02633b56f5afad009d027b4570ee0f2194`, first measured on our
 machine.
+
+#185 moved the pins to Lean `v4.37.0-rc1` and Mathlib `31ce06ea`, which changes both exports.
+CI now checks sha256 `bb37c4bb518fe68a13f12aa3929dd62dfecb663f0c063ad8c338e39601f28a60` for
+`challenge.export` and `d08f9a601253ac28f09d7a64f674fd4227e665d573eae437a582f41f0ecb262c` for
+`fc-challenge.export`. Both were computed by this job on the merge of #185
+([run 45130338483](https://github.com/leanprover-community/riemann-hypothesis/actions/runs/45130338483)),
+which failed because it still checked the `v4.36.0` values. They have not yet been reproduced
+outside CI.
 
 **On a real build, on the earlier pins.** Before #66, ishaan2006 ran the same steps against a
 build of the published archive on Lean `v4.33.1`, and reported the results on the pull request
@@ -435,21 +443,24 @@ swapped inside the export was rejected by every kernel.
 ## Checkers
 
 `lake comparator --paranoid` adds five checkers to Lean's kernel: Lean paranoid, nanoda,
-con-leche, con-ron and lean4lean. Three of them cannot check this project, for reasons that
-have nothing to do with whether the proof is right, and `lake comparator` counts any non-zero
-exit from a checker as a rejection. So the configs in `comparator/` name only Lean paranoid and
-nanoda.
+con-leche, con-ron and lean4lean. Three of them, as bundled with Lean `v4.36.0`, cannot check
+this project, for reasons that have nothing to do with whether the proof is right, and
+`lake comparator` counts any non-zero exit from a checker as a rejection. So the configs in
+`comparator/` name only Lean paranoid and nanoda.
 
-- **con-leche and con-ron** refuse a mutual inductive block that has a reflexive member. The
-  submission has one in the proof's dependencies:
+- **con-leche and con-ron**, as bundled with Lean `v4.36.0`, refuse a mutual inductive block
+  that has a reflexive member. The submission has one in the proof's dependencies:
   `FunctorialResolution.EmbeddedResolution.PrincipalizationCertificate`, declared mutually with
   `OrderCertificate`, has a constructor argument `hcert : ∀ z hz, PrincipalizationCertificate …`,
-  a function into the type being defined. An independent run (Andrew Sutherland, on the Lean Zulip) reports
-  that both exit 2 on the real export, in `--verified` and `--trusted` modes, with
+  a function into the type being defined. An independent run (Andrew Sutherland, on the Lean Zulip) reported
+  that both bundled binaries exit 2 on the real export, in `--verified` and `--trusted` modes, with
   `in-process model of …PrincipalizationCertificate: reflexive member`. We reproduced this on
   a small project with a mutual reflexive pair: both exit 2 with the same message, which makes
   `lake comparator` exit 1, while Lean's kernel, Lean paranoid and nanoda accept. They did
-  accept the Mathlib-sized smoke test above, and a non-mutual reflexive inductive.
+  accept the Mathlib-sized smoke test above, and a non-mutual reflexive inductive. Built from
+  `master` on GitHub, both accept the full export: Andrew Sutherland's page
+  (<https://math.mit.edu/~drew/grh/>) has con-leche `cd2eceab` accepting all 1,468,418
+  declarations in `--verified` mode, and con-ron `3f22699b` accepting them under `--compare`.
 - **lean4lean** from Lean 4.36 rejects every export made by Lean 4.33.1 with
   `unknown constant 'Decidable.intro'`, because 4.36 redefined `Decidable` in the core library.
 

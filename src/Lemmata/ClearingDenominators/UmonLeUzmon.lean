@@ -1,64 +1,8 @@
 module
 
-public import Mathlib
 public import Formalism.SharpRestriction.GrowthBounds.ObjPol
-public import Formalism.LocalRingCardinality.Params
-public import Formalism.LocalRingCardinality.DataSpaces
-public import Formalism.LocalRingCardinality.DataCoeff
-public import Formalism.LocalRingCardinality.DataArith
-public import Formalism.LocalRingCardinality.DataKernels
-public import Formalism.LocalRingCardinality.DataRows
-public import Formalism.SharpRestriction.CuspSpanNormBounds.DataS
-public import Formalism.SharpRestriction.GrowthBounds.DataG
-public import Formalism.LocalRingCardinality.DataCD
-public import Formalism.FrobeniusOrbits.DiscrMaximalRealCyclotomic
-public import Formalism.FrobeniusOrbits.HostOrbitsPlaces
-public import Formalism.FrobeniusOrbits.HostDiffSupport
-public import Formalism.FrobeniusOrbits.HostThickExists
-public import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.ConjEMemHostFIff
-public import Formalism.CoboundaryTransfers.Statement
-public import Formalism.DegreeFormula.FlagDegFormula
-public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.FrameTransport
-public import Formalism.SharpRestriction.GrowthBounds.UnramifiedQuadraticSetting
-public import Formalism.SharpRestriction.GrowthBounds.DataGChain
-public import Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.RealCyclotomicSubfield
-public import Formalism.LocalRingCardinality.DataLevel
-public import Formalism.SatakeDualWeyl.Statement
-public import Formalism.FormalDegreeBessel.StatementG
-public import Formalism.FrobeniusOrbits.Statement
-public import Formalism.FormalDegreeBessel.StatementDS
-public import Formalism.SharpRestriction.CuspSpanNormBounds.Point
-public import Formalism.TameInertiaTowers.CentralOrderTwo.OrderOfThreeUnitsTwoPow
-public import Formalism.TameInertiaTowers.CentralOrderTwo.TwoAdic
-public import Formalism.TameInertiaTowers.CentralOrderTwo.MemDecompositionSubgroupIff
-public import Formalism.TameInertiaTowers.CentralOrderTwo.NegOneNeOneUnitsZmodFour
-public import Formalism.TameInertiaTowers.CentralOrderTwo.Groups
-public import Formalism.TameInertiaTowers.CentralOrderTwo.NormalOrderTwoCentral
-public import Formalism.TameInertiaTowers.CentralOrderTwo.Galois
-public import Formalism.TameInertiaTowers.CentralOrderTwo.ConjEqInvOfPowEqOne
-public import Formalism.FormalDegreeBessel.StatementBF
-public import Formalism.FormalDegreeBessel.StatementWR
-public import Formalism.RealPlaceAnalysis.StatementE
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactCasimirHighestWeight
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.IsCompactInvariantCompactSpan
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.IsCompactInvariantOrthogonalInf
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.FirstSlotSliceSlotMixedCasimirZero
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.IndefiniteUnitaryPreservesForm
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CartanInvolutionConjTransposeMul
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ComplexifiedDerivativeCommutator
-public import Formalism.RealPlaceAnalysis.StatementU
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.MemUnitaryGroupIffMulConjTranspose
-public import Formalism.RealPlaceAnalysis.StatementA
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.QuadraticInequalityBoundHolds
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.SumOfSquaresIdentityHolds
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CasKHW
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.HWDiag
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.TrPowSumFilterZero
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.QuantumDetHighestWeightHolds
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ShiftedGeneratorEqIteSmulAdd
-public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.GeneratorCommutatorQuantumDet
-public import Formalism.RealPlaceAnalysis.SmoothOnG
-public import Formalism.RealPlaceAnalysis.StatementC
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.TypeStar
 
 @[expose] public section
 
@@ -75,10 +19,8 @@ private lemma umon_le_uzmon {n : ℕ} {K V : Type*} [Field K] [AddCommGroup V] [
   simp only [Formalism.MainNotions.G.UZgens, Set.mem_ofPred_eq]
   by_cases h : a = b
   · subst h
-    refine Or.inr ⟨a, 1, ?_⟩
-    simp [Formalism.MainNotions.G.binomE]
-  · refine Or.inl ⟨a, b, 1, h, ?_⟩
-    simp [Formalism.MainNotions.G.divPowE]
+    exact Or.inr ⟨a, 1, by simp [Formalism.MainNotions.G.binomE]⟩
+  · exact Or.inl ⟨a, b, 1, h, by simp [Formalism.MainNotions.G.divPowE]⟩
 
 private lemma clear_den {O K V : Type*} [CommRing O] [IsDomain O] [Field K] [Algebra O K]
     [IsFractionRing O K] [AddCommGroup V] [Module K V] [Module O V] [IsScalarTower O K V]
@@ -93,10 +35,8 @@ private lemma clear_den {O K V : Type*} [CommRing O] [IsDomain O] [Field K] [Alg
     refine ⟨a * b, mul_ne_zero ha hb, ?_⟩
     rw [smul_add]
     apply D.add_mem
-    · rw [mul_comm a b, mul_smul]
-      exact D.smul_mem b hax
-    · rw [mul_smul]
-      exact D.smul_mem a hbz
+    · simpa [mul_comm a b, mul_smul] using D.smul_mem b hax
+    · simpa [mul_smul] using D.smul_mem a hbz
   | smul c x _ hx =>
     obtain ⟨o, ho, hox⟩ := hx
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective O c
