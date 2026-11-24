@@ -35,14 +35,8 @@ private lemma exists_simultaneous_eigenvector {n : ℕ} {X : Type u_1} [NormedAd
     let f : Module.End ℂ T := (A a a).restrict (fun v hv => hinv a v hv)
     obtain ⟨l, hl⟩ := Module.End.exists_eigenvalue f
     obtain ⟨⟨v, hvT⟩, hv⟩ := hl.exists_hasEigenvector
-    have hv1 : A a a v = l • v := by
-      have := Module.End.mem_eigenspace_iff.mp hv.1
-      exact congrArg Subtype.val this
-    have hv0 : v ≠ 0 := by
-      intro h0
-      apply hv.2
-      ext
-      exact h0
+    have hv1 : A a a v = l • v := congrArg Subtype.val hv.apply_eq_smul
+    have hv0 : v ≠ 0 := mt (Submodule.mk_eq_zero T hvT).mpr hv.2
     let T' : Submodule ℂ X := T ⊓ Module.End.eigenspace (A a a) l
     have hvT' : v ∈ T' := Submodule.mem_inf.mpr ⟨hvT, Module.End.mem_eigenspace_iff.mpr hv1⟩
     have hT' : T' ≠ ⊥ := (Submodule.ne_bot_iff _).mpr ⟨v, hvT', hv0⟩
