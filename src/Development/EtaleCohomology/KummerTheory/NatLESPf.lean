@@ -12,21 +12,22 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex Pretriangul
 namespace LateralTheory.KummerTheory.NatLESPf
 open LateralTheory.KummerTheory.BockCut
 
-private theorem natLESAt_of_derDictAt (R : Type) [CommRing R] (K : Cx R) [HasDerivedCategory (Shv R)]
-    (hD : DerDictAt R K) : NatLESAt R K := by
-  obtain ⟨e, he⟩ := hD
-  let F := preadditiveCoyoneda.obj (op (DerivedCategory.Q.obj K))
-  have hpost : ∀ {X Y : Shv R} (φ : X ⟶ Y) (n : ℤ) (x : HK R K X n),
-      e Y n (HK.post R K φ n x) = (F.shift n).map ((DerivedCategory.singleFunctor (Shv R) 0).map φ) (e X n x) := by
-    intro X Y φ n x
-    exact he φ n x
-  let d : ∀ (S : ShortComplex (Shv R)), S.ShortExact → ∀ n : ℤ, HK R K S.X₃ n →+ HK R K S.X₁ (n + 1) :=
+private theorem hasNaturalLES_of_hom {C : Type*} [Category C] [Abelian C] [HasDerivedCategory C]
+    (A : DerivedCategory C) (H : C → ℤ → Type*) [∀ X n, AddCommGroup (H X n)]
+    (post : ∀ {X Y : C}, (X ⟶ Y) → (n : ℤ) → H X n →+ H Y n)
+    (e : ∀ (X : C) (n : ℤ), H X n ≃+ (A ⟶ ((DerivedCategory.singleFunctor C 0).obj X)⟦n⟧))
+    (he : ∀ {X Y : C} (φ : X ⟶ Y) (n : ℤ) (x : H X n),
+      e Y n (post φ n x) = e X n x ≫ ((DerivedCategory.singleFunctor C 0).map φ)⟦n⟧') :
+    HasNaturalLES H post := by
+  let F := preadditiveCoyoneda.obj (op A)
+  have hpost : ∀ {X Y : C} (φ : X ⟶ Y) (n : ℤ) (x : H X n),
+      e Y n (post φ n x) = (F.shift n).map ((DerivedCategory.singleFunctor C 0).map φ) (e X n x) := he
+  let d : ∀ (S : ShortComplex C), S.ShortExact → ∀ n : ℤ, H S.X₃ n →+ H S.X₁ (n + 1) :=
     fun S hS n => (e S.X₁ (n + 1)).symm.toAddMonoidHom.comp
       ((F.homologySequenceδ hS.singleTriangle n (n + 1) rfl).hom.comp (e S.X₃ n).toAddMonoidHom)
-  have hd : ∀ (S : ShortComplex (Shv R)) (hS : S.ShortExact) (n : ℤ) (x : HK R K S.X₃ n),
-      e S.X₁ (n + 1) (d S hS n x) = F.homologySequenceδ hS.singleTriangle n (n + 1) rfl (e S.X₃ n x) := by
-    intro S hS n x
-    exact AddEquiv.apply_symm_apply _ _
+  have hd : ∀ (S : ShortComplex C) (hS : S.ShortExact) (n : ℤ) (x : H S.X₃ n),
+      e S.X₁ (n + 1) (d S hS n x) = F.homologySequenceδ hS.singleTriangle n (n + 1) rfl (e S.X₃ n x) :=
+    fun S _ n _ => (e S.X₁ (n + 1)).apply_symm_apply _
   refine ⟨d, fun S hS n => ⟨?_, ?_, ?_⟩, ?_⟩
   · have := F.homologySequence_exact₂ _ hS.singleTriangle_distinguished n
     rw [ShortComplex.ab_exact_iff_function_exact] at this
@@ -49,6 +50,7 @@ private theorem natLESAt_of_derDictAt (R : Type) [CommRing R] (K : Cx R) [HasDer
 theorem NatLES_of (hD : DerDict) : NatLES := by
   intro R _ K
   let := HasDerivedCategory.standard (Shv R)
-  exact natLESAt_of_derDictAt R K (hD R K)
+  obtain ⟨e, he⟩ := hD R K
+  exact hasNaturalLES_of_hom (DerivedCategory.Q.obj K) (HK R K) (HK.post R K) e he
 
 end LateralTheory.KummerTheory.NatLESPf
