@@ -80,7 +80,10 @@ theorem map_haar_quotient (g : X.B.I.Ginf) (S R : Set X.B.I.Ginf)
     · intro r hr
       set z := g⁻¹ * r * g with hz
       have hcz : cj z = r := by simp only [hcj, hz]; group
-      have hzS : z ∈ S := (hRset z).1 (hcz ▸ hr)
+      have hzS : z ∈ S := by
+        apply (hRset z).1
+        change cj z ∈ R
+        simpa only [hcz] using hr
       have hcomp : (fun y => r * y) ∘ cj = cj ∘ (fun y => z * y) := by
         funext y; simp only [Function.comp, hcj, hz]; group
       rw [hμR, Measure.map_map (measurable_const_mul r) hcjm, hcomp,
