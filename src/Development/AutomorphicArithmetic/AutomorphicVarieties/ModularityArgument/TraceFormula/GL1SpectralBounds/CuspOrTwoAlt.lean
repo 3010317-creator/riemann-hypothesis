@@ -59,21 +59,9 @@ def NotTwo : Prop := ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFiel
   ¬ ∀ᶠ w : HeightOneSpectrum (𝓞 E) in Filter.cofinite, ∃ (σ : SmIrr (GL (Fin N) (w.adicCompletion E))) (B : Multiset ℂˣ),
     IsLocCompGL V w σ ∧ GlobalTheory.LFun.HasSatGL w σ.ρ B ∧ (CG.mk π).HasSat w B
 
-def CsdDisc : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ), 1 ≤ n → ∀ π : CuspSub E n,
-  GlobalTheory.ContraPair.DualIsConj π → IsDiscrete π.V
-
-def OnePre : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ), 1 ≤ n → ∀ π : CuspSub E n,
-  (CG.mk π).IsRegAlg → IsDiscrete π.V → ∃ D : Pre E n, One D π ∧ D.Reg
-
-def OneSat : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ), 1 ≤ n → ∀ (π : CuspSub E n) (D : Pre E n),
-  One D π → ∀ w B, (CG.mk π).HasSat w B ↔ D.Sat w B
-
 def CsdSat : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ), 1 ≤ n → ∀ π : CuspSub E n,
   GlobalTheory.ContraPair.DualIsConj π → ∀ᶠ w : HeightOneSpectrum (𝓞 E) in Filter.cofinite, ∃ B, (CG.mk π).HasSat w B ∧
     ∀ u, ConjPl w u → (CG.mk π).HasSat u (B.map (·⁻¹))
-
-def OnlyOne : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ), 1 ≤ n → ∀ (π : CuspSub E n)
-  (D D' : Pre E n) (e : Fin D.c ≃ Fin D'.c), D.Reg → One D' π → (∀ i w, D.cls i w = D'.cls (e i) w) → One D π
 
 end UpperTheory.V.Z.Tf.GOne
 

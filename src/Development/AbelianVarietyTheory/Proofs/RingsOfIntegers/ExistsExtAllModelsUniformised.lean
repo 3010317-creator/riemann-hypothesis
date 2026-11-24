@@ -44,10 +44,6 @@ section Val
 variable {V K' : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [Field K'] [Algebra V K']
   [IsFractionRing V K']
 
-alias vV_pow := _root_.GlobalTheory.PlaceExtField.vV_pow
-
-alias vV_pos := _root_.GlobalTheory.PlaceExtField.vV_pos
-
 end Val
 
 end Valuation

@@ -1016,10 +1016,6 @@ section -- clump:auto
 
 namespace GlobalTheory.ExistsPrimeMem
 
-theorem exists_prime_mem {A : Type} [inst : CommRing A] (P : Ideal A) (hP : Ideal.IsPrime P) :
-    ∀ (n : ℕ), n ≠ (0 : ℕ) → (↑n : A) ∈ P → ∃ (ℓ : ℕ), Nat.Prime ℓ ∧ (↑ℓ : A) ∈ P := by
-  apply GlobalTheory.PlaceInt.LocBasis.exists_prime_mem <;> assumption
-
 end GlobalTheory.ExistsPrimeMem
 end -- clump:auto
 end -- clump:auto

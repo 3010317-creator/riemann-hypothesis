@@ -308,10 +308,6 @@ end Formalism.HermitianLatticeCounting.P.S4aux
 
 namespace Formalism.HermitianLatticeCounting.P
 
-alias orbit_count_formula := _root_.Formalism.HermitianLatticeCounting.P.S4aux.orbit_count_formula
-alias weighted_cauchy_schwarz := _root_.Formalism.HermitianLatticeCounting.P.S4aux.weighted_cauchy_schwarz
-alias fourth_reduction_identity := _root_.Formalism.HermitianLatticeCounting.P.S4aux.fourth_reduction_identity
-
 end Formalism.HermitianLatticeCounting.P
 end -- clump:auto
 end -- clump:auto

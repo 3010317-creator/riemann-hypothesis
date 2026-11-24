@@ -860,17 +860,6 @@ structure Comp (A A' : Type) [AddCommGroup A] [Module O A] [AddCommGroup A'] [Mo
   sum_p : ∀ x, ∑ a, b a • inc (p a x) = x
   p_inc : ∀ a c x, p a (c • inc x) = b.repr c a • x
 
-def Comp.self : Comp b O O' where
-  inc := (algebraMap O O').toAddMonoidHom
-  p a := (b.coord a).toAddMonoidHom
-  sum_p x := by
-    conv_rhs => rw [← b.sum_repr x]
-    refine Finset.sum_congr rfl fun a _ => ?_
-    simp [Algebra.smul_def, mul_comm]
-  p_inc a c x := by
-    have : c • (algebraMap O O').toAddMonoidHom x = x • c := by simp [Algebra.smul_def, mul_comm]
-    rw [this]; simp [mul_comm]
-
 variable {b} {A A' : Type} [AddCommGroup A] [Module O A] [AddCommGroup A'] [Module O' A']
 
 namespace Comp

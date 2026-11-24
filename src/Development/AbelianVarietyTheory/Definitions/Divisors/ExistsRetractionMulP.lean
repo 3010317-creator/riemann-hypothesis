@@ -113,19 +113,6 @@ theorem exists_retraction_mulP {p : ℕ} {O : Type} [CommRing O] (G : _root_.Glo
   ext φ
   exact LinearMap.congr_fun (LinearMap.congr_fun hσ φ) a
 
-def QuotTower.full {p : ℕ} {O : Type} [CommRing O] (G : _root_.GlobalTheory.PDivGroup p O) : QuotTower G where
-  B m := G.A m
-  j m := G.mulP m
-  ρ m := (exists_retraction_mulP G m).choose
-  r m := G.res m
-  s _ := BialgHom.id O _
-  ρ_j m := (exists_retraction_mulP G m).choose_spec
-  r_surjective := G.res_surjective
-  j_r m b := by rw [G.mulP_res, G.res_mulP]
-  j_s _ _ := rfl
-  tors_le m := by
-    rw [← kerIdeal_comp_of_surjective _ (G.res_surjective m), G.mulP_comp_res]
-
 theorem QuotTower.map_res_kerIdeal {p : ℕ} {O : Type} [CommRing O] {G : _root_.GlobalTheory.PDivGroup p O}
     (T : QuotTower G) (m : ℕ) :
     Ideal.map (G.res (m + 1) : G.A (m + 2) →ₐ[O] G.A (m + 1)) (kerIdeal (T.j (m + 1))) =

@@ -1256,8 +1256,6 @@ section -- clump:auto
 
 namespace UpperTheory.V.Pa
 
-theorem s4 : S4 := selmer_cocycles_limit_and_descent_properties
-
 end UpperTheory.V.Pa
 end -- clump:auto
 end -- clump:auto

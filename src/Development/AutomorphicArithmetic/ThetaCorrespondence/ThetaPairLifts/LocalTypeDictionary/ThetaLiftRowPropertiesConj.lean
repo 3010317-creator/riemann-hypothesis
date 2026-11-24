@@ -1284,7 +1284,6 @@ end
 end ThetaProjectionIdempotent
 section
 open GlobalTheory.RowClaim
-alias _root_.GlobalTheory.Adopt.twisted_period_identity := _root_.ThetaProjectionIdempotent.CompanionTheory.Member.twisted_period_identity_local
 end
 end
 

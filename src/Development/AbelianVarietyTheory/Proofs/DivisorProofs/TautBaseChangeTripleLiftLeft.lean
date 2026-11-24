@@ -98,15 +98,6 @@ theorem cart : IsGrpPullback (Bp T N) T.B (fC N) (pullback.fst T.B.hom (fC N)) :
 
 abbrev cm : CubeMap (Bp T N) T.B := cubeMapOf (cart T N)
 
-theorem pullSt : ∃ (hL : (T.M.L.pull (cm T N).F).IsLB) (hr : ((cm T N).rigPull T.M.L T.M.rig).IsGen),
-    (∃ c' : CubicalStr (Bp T N) ((cm T N).rigLB T.M hL hr), (cm T N).IsPullCubical c' T.cub) ∧
-      (T.M.IsSymmetric → ((cm T N).rigLB T.M hL hr).IsSymmetric) :=
-  proved_CubePullSt _ _ T.B (Bp T N) (cm T N) T.M T.cub
-
-abbrev Mp : RigLB (Bp T N) := (cm T N).rigLB T.M (pullSt T N).fst (pullSt T N).snd.fst
-
-abbrev cubP : CubicalStr (Bp T N) (Mp T N) := CubePf.cubical (cm T N) T.M T.cub _ _
-
 end Base
 
 section Pts

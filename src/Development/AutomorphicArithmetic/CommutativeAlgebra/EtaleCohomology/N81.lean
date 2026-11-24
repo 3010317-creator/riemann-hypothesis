@@ -502,8 +502,6 @@ section -- clump:auto
 
 namespace LateralTheory.E.CompositionGoal
 
-alias goal_of := _root_.LateralTheory.E.TruncationIsoComparison.Comp_of
-
 end LateralTheory.E.CompositionGoal
 end -- clump:auto
 end -- clump:auto

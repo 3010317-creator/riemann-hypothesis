@@ -77,8 +77,6 @@ variable {a : GeoAll W u} {t : W.P.T} (J : QJ a t)
 
 abbrev QJ.G (i : Fin J.r) := a.Q (J.pl i) ⟨t, J.mem i⟩
 
-abbrev QJ.Ch (j : ℕ) : Type := ∀ i, (J.E i).Ch j
-
 structure QJ.Reads : Prop where
   is : J.A.Is
   inj : Function.Injective J.pl

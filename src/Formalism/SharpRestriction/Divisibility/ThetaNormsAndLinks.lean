@@ -260,28 +260,6 @@ def ContentAt (C : ℝ) : Prop :=
             C * ((Λ.nn : ℝ) + 1) * thl l (Λ.nn + 1) * (∑ a, w a) +
             T * addl C l (Λ.nn + 1) Λ.nn d l1) / T)
 
-def CartierFrobeniusFormLocal : Prop :=
-  ∀ (χ : Λ.Chart) (g : Fin 2), ∃ (c : ℕ → Λ.CoG g → Λ.CoG g → 𝓞_ℂ_[l])
-      (c' : ℕ → Λ.CoG g → ∀ a : ZMod d, Fin (Λ.rk (1 - g) a) → 𝓞_ℂ_[l]),
-    ∀ (x : Λ.CoG g) (i : ℕ) (a : ZMod d),
-      (∀ k, (l : ℂ_[l]) * Λ.alC χ g x.1 x.2 (i + 1) a k =
-        ∑ s ∈ Finset.range (i + 1), ∑ y : Λ.CoG g,
-          ((c s x y : 𝓞_ℂ_[l]) : ℂ_[l]) ^ (l ^ (i - s)) * Λ.alC χ g y.1 y.2 (i - s) a k) ∧
-      (∀ k, (l : ℂ_[l]) * Λ.beP χ g x.1 x.2 (i + 1) a k =
-        (∑ s ∈ Finset.range (i + 1), ∑ y : Λ.CoG g,
-          ((c s x y : 𝓞_ℂ_[l]) : ℂ_[l]) ^ (l ^ (i - s)) * Λ.beP χ g y.1 y.2 (i - s) a k) +
-          ((c' i x a k : 𝓞_ℂ_[l]) : ℂ_[l]))
-
-def GoodC (χ : Λ.Chart) (g : Fin 2) (a : ZMod d) {N : ℕ} (e : Fin N ↪ Fin (Λ.rk g a)) : Prop :=
-  ∀ c a'' k, Λ.alC χ g a (e c) 1 a'' k = 0
-
-def RankOneLocalSpread : Prop :=
-  ∀ (χ : Λ.Chart) (g : Fin 2) (a : ZMod d), Λ.big g a → Λ.big g (a + 2) →
-    ∀ (N : ℕ) (e : Fin N ↪ Fin (Λ.rk g a)), Λ.GoodC χ g a e →
-      ∃ (N' : ℕ) (ρ : Fin N' ↪ Fin N) (κ : Fin N' ↪ Fin (Λ.rk g (a + 2))), N ≤ N' + Λ.j' ∧
-        ‖(Matrix.of fun s t : Fin N' =>
-          (l : ℂ_[l]) * Λ.alC χ g a (e (ρ s)) 2 (a + 2) (κ t)).det‖ = 1
-
 end LocD
 
 def PtCl (D : Formalism.BasicNotions.D7) (Y : ModuliIntegralCharts.Prov D) (w : Y.Dat) (l : ℕ) [Fact l.Prime] : Type :=
@@ -321,10 +299,6 @@ structure Loc (D : Formalism.BasicNotions.D7) (X : DivX D) (Y : ModuliIntegralCh
       2 * D.R.f * (loc i y).rh
 
 variable (D : Formalism.BasicNotions.D7) (X : DivX D) (Y : ModuliIntegralCharts.Prov D) (Lc : Loc D X Y)
-
-def adm1 : Prop := ∀ i y, (Lc.loc i y).CartierFrobeniusFormLocal ∧ (Lc.loc i y).RankOneLocalSpread
-
-def Conclusion5 (C : ℝ) : Prop := ∀ i y, (Lc.loc i y).ContentAt C
 
 section Family
 
@@ -469,72 +443,15 @@ def ConjugationNormInvariance : Prop :=
 
 
 
-def wJ (j : ℕ) : ℝ := ∑ ρ : D.what₂.Tau, DV.wSz D j ρ
-
-def wMax : ℝ := (SizeData₂.lifts D).fold max 0 (wJ D)
-
-def onBoundJ (L : SizeData₂ D) (C : ℝ) : ℝ :=
-  C * (L.sc.L * Real.log (D.R.k : ℝ) * (D.R.m : ℝ) * wMax D +
-    (D.R.f : ℝ) * (D.R.m : ℝ) * L.sc.b * Real.log L.sc.x)
-
 
 
 structure ThetaDenominatorData where
 
   dat : ∀ i j b, Set (D.nexp.Dat i j b)
 
-def OffG (w : D.what₂.places.Pl) : Prop := ∀ i0 : Fin 2, ¬ LiftErrorLocal.Over D i0 w
-
-def GGAt (CH : NChoice D) (w : D.what₂.places.Pl) : Prop := ∀ j ∈ LiftErrorLocal.lifts D, ∀ b : Bool,
-  ∀ B1 B2 : Submodule (D.ntw.O (CH.twI w)) (D.nexp.Fm (CH.twI w) j b),
-    B1.FG → B2 ≤ B1 → LiftErrorLocal.spK B2 = LiftErrorLocal.spK B1 → LiftErrorLocal.GStab B1 → LiftErrorLocal.GStab B2 →
-    LiftErrorLocal.delq D * LiftErrorLocal.lenQ (D.ntw.l (CH.twI w)) (LiftErrorLocal.psiPart B1) (LiftErrorLocal.psiPart B2) ≤
-      LiftErrorLocal.lenQ (D.ntw.l (CH.twI w)) B1 B2 + (LiftErrorLocal.rkK B1 : ℝ) * LiftErrorLocal.vU D (CH.twI w)
-
-def SHAt (CH : NChoice D) (w : D.what₂.places.Pl) : Prop := ∀ j ∈ LiftErrorLocal.lifts D, ∀ b : Bool,
-  (LiftErrorLocal.rkK (D.nexp.Bsup (CH.twI w) j b) : ℝ) / LiftErrorLocal.delq D ≤
-                 2 * (Module.finrank (FractionRing (D.ntw.O (CH.twI w))) (IntegralHeckeForms.Fm0 D.nexp (CH.twI w) j b) : ℝ) ∧
-    Module.finrank (FractionRing (D.ntw.O (CH.twI w))) (IntegralHeckeForms.V0 D.nexp (CH.twI w) j b) = D.what₂.D0 ∧
-    (Module.finrank (FractionRing (D.ntw.O (CH.twI w))) (IntegralHeckeForms.Fm0 D.nexp (CH.twI w) j b) : ℝ) ≤ 2 * D.what₂.D0 ∧
-    (D.nexp.Bsup (CH.twI w) j b).map (IntegralHeckeForms.AO D.nexp (CH.twI w) j b) ≤ D.nexp.Bsup (CH.twI w) j b
-
-def SHbAt (CH : NChoice D) (w : D.what₂.places.Pl) : Prop := ∀ j ∈ LiftErrorLocal.lifts D, ∀ b : Bool,
-  LiftErrorLocal.rkK (IntegralHeckeForms.Mall D.nexp (CH.twI w) j b) =
-                 Module.finrank (FractionRing (D.ntw.O (CH.twI w))) (IntegralHeckeForms.Fm0 D.nexp (CH.twI w) j b) ∧
-    LiftErrorLocal.rkK (LiftErrorLocal.Mj D (CH.twI w) j b) = D.what₂.D0
-
-def ShareAtTypePrimes (CH : NChoice D) : Prop := ∀ (i0 : Fin 2) w, LiftErrorLocal.Over D i0 w → TwistedAt D w → SHAt D CH w
-
 section Run
 
 variable {D} {CH : NChoice D} (X : LiftErrorLocal.Loc D CH)
-
-def UAt (w : D.what₂.places.Pl) : Prop := ∀ j ∈ LiftErrorLocal.lifts D, ∀ b : Bool,
-  IntegralHeckeForms.eThPMt D.nexp (CH.twI w) j b (CH.k' w) (CH.Q w) (X.psiW w b) ≤ LiftErrorLocal.twistV0Submodule D CH w j b ∧
-    (D.what₂.Ij (D.what₂.muTw w) j (LiftErrorLocal.plS CH w b) : ℝ) ≤
-      (D.what₂.places.ramIdx (LiftErrorLocal.plS CH w b) : ℝ) * X.IsgTw w j b
-
-def LKAt (w : D.what₂.places.Pl) : Prop := ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (b : Bool),
-  (D.nexp.Bsup (CH.twI w) j b).FG ∧ LiftErrorLocal.GStab (D.nexp.Bsup (CH.twI w) j b) ∧
-    X.ThN w j h1 h2 b ≤ D.nexp.Bsup (CH.twI w) j b
-
-def DepAt (L : SizeData₂ D) (T : ThetaDenominatorData D) (er : ℕ → ℕ → ℝ) (w : D.what₂.places.Pl) : Prop :=
-  ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (b : Bool), ∃ c : D.ntw.O (CH.twI w), c ≠ 0 ∧
-    (∀ x ∈ LiftErrorLocal.psiPart (LiftErrorLocal.GSpan (X.ThN w j h1 h2 b)),
-      ∃ z ∈ IntegralHeckeForms.Th D.nexp (CH.twI w) j b (T.dat (CH.twI w) j b),
-        ((Nat.card D.nexp.U : ℕ) : D.ntw.O (CH.twI w)) • x = c • z) ∧
-    ((X.W j h1 h2).eLa X.TO (X.run j).nus (X.laK (LiftErrorLocal.plS CH w b)) : ℝ) /
-        (eWL X.B.KO (X.laK (LiftErrorLocal.plS CH w b)) : ℝ) -
-      LiftErrorLocal.vDv (D.ntw.O (CH.twI w)) (D.ntw.l (CH.twI w)) c ≤ L.F j w + er j (D.what₂.places.resChar w)
-
-def WBAt : Prop := ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (i0 : Fin 2) la, X.laOver i0 la →
-  ∀ F ∈ X.WWB j la (X.run j).wL (X.run j).n1 (X.run j).n2, ∃ s : 𝓞 X.B.KO, s ∉ la.asIdeal ∧
-    s • F ∈ (X.W j h1 h2).WWc (X.run j).S.sW (X.run j).wL
-
-def DomRun (L : SizeData₂ D) (CP : ℝ) : Prop := ∀ j (_h1 : 1 ≤ j) (_h2 : j ≤ D.R.m), WeightAlgebra.DomAt D L j (X.run j).nW CP
-
-def AdmRun (L : SizeData₂ D) (H : WeightAlgebra.KHyp) (C2 A2 CR CT CRd : ℝ) : Prop :=
-  DomRun X L H.C1 → LiftErrorLocal.ArchimedeanSignatureMatching D L X H C2 A2 CR CT ∧ LiftErrorLocal.LemmaBWeightBound D X CRd ∧ WBAt X ∧ LiftErrorLocal.adm11 D L X H C2 A2 CR CT CRd
 
 end Run
 
@@ -547,35 +464,9 @@ structure ONObj (CH : NChoice D) (Xd : DivX D) where
   c6' : CartierLocalBounds.Loc D Xd X'.P6
   T : ThetaDenominatorData D
 
-def TwistedPlacesCover : Prop := Formalism.MainNotions.N.LocsCoverTw D
-
 section AdmON
 
 variable {D} (L : SizeData₂ D) {CH : NChoice D} {Xd : DivX D} (O : ONObj D CH Xd)
-
-def admA (CA : ℝ) : Prop := LiftErrorLocal.ConjugationNormInvariance D L O.X CA
-
-def unitBoundAtTwistedPlaces : Prop := ∀ w, TwistedAt D w → UAt O.X w
-
-def OffTypePrimeConditions : Prop := ∀ w, OffG D w → TwistedAt D w → GGAt D CH w ∧ SHAt D CH w ∧ SHbAt D CH w ∧
-  (D.what₂.places.resChar w ≠ D.host.pde → LKAt O.X w) ∧ (D.what₂.places.resChar w = D.host.pde → LKAt O.X' w)
-
-def OrbitContentCond (C6 : ℝ) : Prop := CartierLocalBounds.Conclusion5 D Xd O.X.P6 O.c6 C6 ∧ CartierLocalBounds.Conclusion5 D Xd O.X'.P6 O.c6' C6
-
-def DepthFromContent (C6 Cd : ℝ) : Prop := OrbitContentCond O C6 →
-  ∃ er : ℕ → ℕ → ℝ, (∀ j l, 0 ≤ er j l) ∧
-    (∀ j ∈ SizeData₂.lifts D, ∀ S : Finset ℕ, ∑ l ∈ S, Real.log (l : ℝ) * er j l ≤ onBoundJ D L Cd) ∧
-    (∀ w, OffG D w → TwistedAt D w → D.what₂.places.resChar w ≠ D.host.pde → DepAt O.X L O.T er w) ∧
-    ∀ w, OffG D w → TwistedAt D w → D.what₂.places.resChar w = D.host.pde → DepAt O.X' L O.T er w
-
-def TypePrimeSizeConds (Cs : ℝ) : Prop :=
-  1 ≤ Real.log L.sc.x ∧
-    ((O.X.TO : ℝ) + (D.R.f : ℝ) * (D.R.nV : ℝ) ^ 2) * (Real.log (D.host.g 0 : ℝ) + Real.log (D.host.g 1 : ℝ)) ≤
-      onBoundJ D L Cs
-
-def AdmON (H : WeightAlgebra.KHyp) (C2 A2 CR CT CRd C6 Cd Cs CA : ℝ) : Prop :=
-  L.FDef ∧ AdmRun O.X L H C2 A2 CR CT CRd ∧ AdmRun O.X' L H C2 A2 CR CT CRd ∧ admA L O CA ∧ unitBoundAtTwistedPlaces O ∧
-    OffTypePrimeConditions O ∧ OrbitContentCond O C6 ∧ DepthFromContent L O C6 Cd ∧ TypePrimeSizeConds L O Cs ∧ TwistedPlacesCover D ∧ ShareAtTypePrimes D CH
 
 end AdmON
 
@@ -816,69 +707,7 @@ section Conclusion₂
 
 variable (D : D7) (L : SizeData₂ D) {nch : NChoice D} (X : LiftErrorLocal.Loc D nch)
 
-def Conclusion1 : Prop := (∀ d i, (X.gx d i).INT) ∧ ∀ N i, (X.cmx N i).INT
-
 def Conclusion2 : Prop := (∀ d (i : Fin 2), LiftErrorLocal.HTb (X.P6.loc d (D.host.g i))) ∧ ∀ N i, LiftErrorLocal.HTb (X.cm N i)
-
-def CoveringRadiusFunction (CRd : ℝ) : Prop := ∀ d (i : Fin 2), LiftErrorLocal.PhiB (X.P6.loc d (D.host.g i)) CRd
-
-def Conclusion5 (C : NChoice D) : Prop := ∀ i0 w, LiftErrorLocal.Over D i0 w → ∀ j ∈ LiftErrorLocal.lifts D, ∀ b : Bool,
-  ∀ B1 B2 : Submodule (D.ntw.O (C.twI w)) (D.nexp.Fm (C.twI w) j b),
-    B1.FG → B2 ≤ B1 → LiftErrorLocal.spK B2 = LiftErrorLocal.spK B1 → LiftErrorLocal.GStab B1 → LiftErrorLocal.GStab B2 →
-    LiftErrorLocal.delq D * LiftErrorLocal.lenQ (D.ntw.l (C.twI w)) (LiftErrorLocal.psiPart B1) (LiftErrorLocal.psiPart B2) ≤
-      LiftErrorLocal.lenQ (D.ntw.l (C.twI w)) B1 B2 + (LiftErrorLocal.rkK B1 : ℝ) * LiftErrorLocal.vU D (C.twI w)
-
-def Conclusion6 (C : NChoice D) : Prop := ∀ i0 w, LiftErrorLocal.Over D i0 w → ∀ j ∈ LiftErrorLocal.lifts D, ∀ b : Bool,
-  (LiftErrorLocal.rkK (D.nexp.Bsup (C.twI w) j b) : ℝ) / LiftErrorLocal.delq D ≤
-                 2 * (Module.finrank (FractionRing (D.ntw.O (C.twI w))) (IntegralHeckeForms.Fm0 D.nexp (C.twI w) j b) : ℝ) ∧
-    Module.finrank (FractionRing (D.ntw.O (C.twI w))) (IntegralHeckeForms.V0 D.nexp (C.twI w) j b) = D.what₂.D0 ∧
-    (Module.finrank (FractionRing (D.ntw.O (C.twI w))) (IntegralHeckeForms.Fm0 D.nexp (C.twI w) j b) : ℝ) ≤ 2 * D.what₂.D0 ∧
-    (D.nexp.Bsup (C.twI w) j b).map (IntegralHeckeForms.AO D.nexp (C.twI w) j b) ≤ D.nexp.Bsup (C.twI w) j b
-
-def ShareLatticeRanks (C : NChoice D) : Prop := ∀ i0 w, LiftErrorLocal.Over D i0 w → ∀ j ∈ LiftErrorLocal.lifts D, ∀ b : Bool,
-  LiftErrorLocal.rkK (IntegralHeckeForms.Mall D.nexp (C.twI w) j b) =
-                 Module.finrank (FractionRing (D.ntw.O (C.twI w))) (IntegralHeckeForms.Fm0 D.nexp (C.twI w) j b) ∧
-    LiftErrorLocal.rkK (LiftErrorLocal.Mj D (C.twI w) j b) = D.what₂.D0
-
-def GGEveryPlace (C : NChoice D) : Prop := ∀ w, PDVN.GGAt D C w
-
-def ShareEveryPlace (C : NChoice D) : Prop := ∀ w, PDVN.SHAt D C w
-
-def ShareRankEveryPlace (C : NChoice D) : Prop := ∀ w, PDVN.SHbAt D C w
-
-def ScaledGeneratorsInSup : Prop := ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m),
-  (X.W j h1 h2).WWc (X.run j).S.sW (X.run j).wL ≤ X.B.Mlat j (X.run j).wL ∧
-  (X.W j h1 h2).Thc (X.run j).S.sF (X.run j).wF ≤ X.B.Mlat j (X.run j).wF ∧
-  (X.W j h1 h2).Thc (X.run j).S.s0 ((X.W j h1 h2).wF0 (X.run j).wL (X.run j).wF) ≤
-    X.B.Mlat j ((X.W j h1 h2).wF0 (X.run j).wL (X.run j).wF) ∧
-  (X.W j h1 h2).Thc (X.run j).S.sK (X.run j).ka ≤ X.B.Mlat j (X.run j).ka
-
-def LinkLatticesEveryPlace : Prop := ∀ w, PDVN.LKAt X w
-
-def LinkConditions : Prop :=
-  (∀ i0 w, LiftErrorLocal.Over D i0 w → ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m),
-    (∀ b : Bool, (D.nexp.Bsup (nch.twI w) j b).FG ∧ LiftErrorLocal.GStab (D.nexp.Bsup (nch.twI w) j b) ∧
-      X.ThN w j h1 h2 b ≤ D.nexp.Bsup (nch.twI w) j b ∧
-      IntegralHeckeForms.InclAt D.nexp (nch.twI w) j b (X.I.E.Dat0 (nch.twI w) j b) (nch.k' w) ∅ 1) ∧
-    ∃ c : Bool → D.ntw.O (nch.twI w), (∀ b, c b ≠ 0) ∧
-      (∑ b : Bool, LiftErrorLocal.vDv (D.ntw.O (nch.twI w)) (D.ntw.l (nch.twI w)) (c b)) = (LiftErrorLocal.Dpm D j : ℝ) ∧
-      ∀ b, ∀ x ∈ LiftErrorLocal.psiPart (LiftErrorLocal.GSpan (X.ThN w j h1 h2 b)), ∃ z ∈ X.Th0 w j b,
-        ((Nat.card D.nexp.U : ℕ) : D.ntw.O (nch.twI w)) • x = c b • z) ∧
-  ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (i0 : Fin 2) la, X.laOver i0 la →
-    ∀ F ∈ X.WWB j la (X.run j).wL (X.run j).n1 (X.run j).n2, ∃ s : 𝓞 X.B.KO, s ∉ la.asIdeal ∧
-      s • F ∈ (X.W j h1 h2).WWc (X.run j).S.sW (X.run j).wL
-
-def RunConditions (H : WeightAlgebra.KHyp) (C2 A2 CR CT CRd : ℝ) : Prop := ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m),
-  (X.run j).nW = (X.run j).n1 + (X.run j).n2 ∧
-  (∀ i0, X.RangeB CRd i0 (X.run j).wL (X.run j).n1 (X.run j).n2 ∧ 2 * WeightAlgebra.DF (X.run j).ka + 2 < D.host.g i0 ∧
-    X.cB CRd i0 j (WeightAlgebra.DF (X.run j).wL) (X.run j).nW ≤ WeightAlgebra.cc D L H.Cc H.Ac H.CRc (X.run j).wL ∧
-    ∀ la, X.laOver i0 la →
-      (X.run j).nus la = (eWL X.B.KO la : ℝ) * (WeightAlgebra.DF (X.run j).wL : ℝ) / ((D.host.g i0 : ℝ) - 1)) ∧
-  ((∀ i0 la, X.laOver i0 la → ∀ y : (X.W j h1 h2).Pt la,
-      (X.W j h1 h2).depth (X.run j).S.sW (X.run j).wL la y ≤
-        (((X.run j).nus la + WeightAlgebra.cc D L H.Cc H.Ac H.CRc (X.run j).wL * (X.W j h1 h2).phiC la y : ℝ) : EReal)) →
-    WeightAlgebra.Hyp L (X.W j h1 h2) H C2 A2 CR 0 CT (X.run j).S (X.run j).ka (X.run j).wL (X.run j).wF X.TO
-      (X.run j).nP (X.run j).nW (X.run j).h0 (X.run j).nus)
 
 end Conclusion₂
 
@@ -898,15 +727,6 @@ def admitted (H : WeightAlgebra.KHyp) (C2 A2 CR CT CRd : ℝ) : Prop :=
     (AdditiveCharacterIntegrality D X ∧ ScalingIntegrality D X ∧ CrudeIntegrality D X ∧ ThetaLevelPrimeIntegrality D X) ∧
     (MLatticeCond D X ∧ admT4 D X ∧ NormDecompositionCond D X Z ∧ ThetaKGroupStable D X Z ∧ ThetaKEquivariantData D X Z ∧ WeightGeneratorsInLattice D X) ∧
     (RunColumnChoices D X ∧ ScalarSizeConditions D L X H C2 A2 CR CT CRd ∧ FurtherSizeConditions D L X H C2 A2 CR ∧ GlobalScalarBounds D L X H ∧ RegularityOffTypePrimes D L X H)
-
-def AtEveryPlace : Prop := GGEveryPlace D nch ∧ ShareEveryPlace D nch ∧ ShareRankEveryPlace D nch ∧ LinkLatticesEveryPlace D X
-
-def Conclusion₂ (H : WeightAlgebra.KHyp) (C2 A2 CR CT CRd : ℝ) : Prop :=
-  Conclusion1 D X ∧ Conclusion2 D X ∧ CoveringRadiusFunction D X CRd ∧ Conclusion5 D nch ∧ Conclusion6 D nch ∧ ShareLatticeRanks D nch ∧ ScaledGeneratorsInSup D X ∧ LinkConditions D X ∧
-    RunConditions D L X H C2 A2 CR CT CRd ∧ AtEveryPlace D X
-
-def Stmt (H : WeightAlgebra.KHyp) (C2 A2 CR CT CRd : ℝ) : Prop :=
-  2 ≤ CRd → admitted D L X Z H C2 A2 CR CT CRd → Conclusion₂ D L X H C2 A2 CR CT CRd
 
 end Stmt
 

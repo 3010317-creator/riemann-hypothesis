@@ -124,15 +124,6 @@ def Mv.sideA {cf : CharFrame D} {jE : D.host.E →+* Qb} (A : SideA D cf jE) : S
       (locPol := (A.au.locPol)))
     (chiT := (A.chiT))
 
-def Mv.cg {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : SideA D cf jE} (x : CGTrue hL D A.wdT) : CGTrue hL m.D (m.sideA A).wdT := @_root_.GlobalTheory.HeightCounting.CGTrue.mk (_) (_) (_)
-    (e := (x.e))
-    (surj := (x.surj))
-    (zero := (x.zero))
-    (loc := (x.loc))
-    (tw := (x.tw))
-    (inf := (x.inf))
-    (csd := (x.csd))
-theorem Mv.au {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : SideA D cf jE} (x : AUTrue hL D A.wdT A.au) : AUTrue hL m.D (m.sideA A).wdT (m.sideA A).au := (x)
 theorem Mv.row {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : SideA D cf jE} {rep} (x : RowTrue hL D rep (fun σ w ↦ (A.wdT.e w) (A.row.locR σ w)) A.row.satR) : RowTrue hL m.D rep (fun σ w ↦ ((m.sideA A).wdT.e w) ((m.sideA A).row.locR σ w)) (m.sideA A).row.satR := (x)
 
 section

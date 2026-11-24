@@ -162,11 +162,6 @@ structure CMData (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E
   deg2 : Module.finrank F E = 2
   fixed : ∀ a : E, star a = a ↔ a ∈ (algebraMap F E).range
 
-def CMData.sig {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E]
-    [Algebra F E] (hc : CMData F E) : E →ₐ[F] E :=
-  { starRingEnd E with
-    commutes' := fun a => (hc.fixed (algebraMap F E a)).2 ⟨a, rfl⟩ }
-
 structure HSpace (E : Type) [Field E] [NumberField E] [StarRing E] where
   V : Type
   [acg : AddCommGroup V]

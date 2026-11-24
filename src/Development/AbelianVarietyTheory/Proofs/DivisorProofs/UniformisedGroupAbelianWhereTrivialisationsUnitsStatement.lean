@@ -923,12 +923,6 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.TorsionTransfer
 
-theorem pow_left_congr {S X : Scheme.{0}} {G : Over S} [GrpObj G] {a b : X ⟶ S} (h : a = b)
-    (x : Over.mk a ⟶ G) (x' : Over.mk b ⟶ G) (hx : x.left = x'.left) (m : ℕ) :
-    (x ^ m).left = (x' ^ m).left := by
-  subst h
-  rw [Over.OverMorphism.ext hx]
-
 private theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C]
     (f : A →+* B) (g : B →+* C) : spMap g ≫ spMap f = spMap (g.comp f) :=
   (Spec.map_comp (CommRingCat.ofHom f) (CommRingCat.ofHom g)).symm

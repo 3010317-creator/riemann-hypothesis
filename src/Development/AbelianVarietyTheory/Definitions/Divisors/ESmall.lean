@@ -159,8 +159,6 @@ def NumAt (PP C : ℝ) : Prop :=
 
 end Point
 
-def NumPt : Prop := Lifts fun Fm x _ ι p i PP C => (i : ℕ) + 1 < (Fm.D x ι).R.m → NumAt p i PP C
-
 end GlobalTheory.RefSum
 
 end

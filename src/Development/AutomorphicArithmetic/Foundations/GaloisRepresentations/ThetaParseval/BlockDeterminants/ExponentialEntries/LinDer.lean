@@ -185,13 +185,6 @@ theorem eval_series_mul (D : Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial 
   linear_combination (eval z (((D : MvPolynomial σ ℂ →ₗ[ℂ] MvPolynomial σ ℂ) ^ i) P) *
     eval z (((D : MvPolynomial σ ℂ →ₗ[ℂ] MvPolynomial σ ℂ) ^ j) Q)) * inv_fact_choose i j
 
-theorem der_sum_apply {ι : Type} (s : Finset ι) (g : ι → Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial σ ℂ))
-    (f : MvPolynomial σ ℂ) : (∑ i ∈ s, g i) f = ∑ i ∈ s, g i f := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih => simp [Finset.sum_insert ha, ih]
-
 def linDer (T : Matrix σ σ ℂ) : Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial σ ℂ) :=
   ∑ l, ∑ l', (C (T l l') * X l : MvPolynomial σ ℂ) • pderiv l'
 

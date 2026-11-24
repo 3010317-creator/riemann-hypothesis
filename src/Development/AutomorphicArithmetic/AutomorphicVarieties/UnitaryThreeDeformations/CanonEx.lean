@@ -168,10 +168,6 @@ section -- clump:auto
 
 open Matrix IsLocalRing ReciprocityTheory.Gal UpperTheory.V.U3 UpperTheory.V.Alg UpperTheory.V.UnitaryThreeInertia
 
-private theorem unit_of_res {R : Type} [CommRing R] [IsLocalRing R] {x : R} (h : IsUnit (residue R x)) :
-    IsUnit x :=
-  (residue_ne_zero_iff_isUnit x).1 h.ne_zero
-
 alias UpperTheory.V.UnitaryThreeInertia.exists_canon := _root_.UpperTheory.Reformulated.B.Qf19.exists_canon
 end -- clump:auto
 end -- clump:auto

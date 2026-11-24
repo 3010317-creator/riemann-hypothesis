@@ -74,9 +74,6 @@ def IsPosHerm (l : Module.Dual (𝓞 E) X → Module.Dual (𝓞 E) X → 𝓞 E)
 
 def pairing (B : X → X → ℝ) {n : ℕ} (x x' : Fin n → X) : ℝ := (∑ i, B (x i) (x' i)) / 2
 
-def phiC (B : X → X → ℝ) : EReal :=
-  sInf {t : EReal | ∃ (n : ℕ) (x x' : Fin n → X), IsPosHerm E (outer E x x') ∧ t = (pairing B x x' : ℝ)}
-
 end PhiC
 
 end GlobalTheory.IndefiniteRowSideFullHecke.PairingFromOuterAgreement

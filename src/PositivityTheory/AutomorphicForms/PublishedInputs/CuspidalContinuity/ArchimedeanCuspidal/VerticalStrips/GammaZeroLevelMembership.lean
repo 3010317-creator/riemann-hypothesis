@@ -80,8 +80,6 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchim
 
 def dt (r r' : Fin 2 → F) : F := r 0 * r' 1 - r 1 * r' 0
 
-def m2 (ψ : AddChar F Circle) : Measure (Fin 2 → F) := Measure.pi fun _ => selfDualMeasure ψ
-
 def upm (ϖ : Fˣ) (b : F) : GL (Fin 2) F := uni2 b * dg2 ϖ 1
 
 def Reps (ϖ : Fˣ) (B : Finset F) : Prop :=

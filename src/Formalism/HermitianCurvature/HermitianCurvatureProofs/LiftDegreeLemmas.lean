@@ -66,9 +66,6 @@ variable {S : Type} {Bs : B.RealPlaceData k ρ Wp Wq} {ε : ℝ}
 
 theorem nv_zero : NV (S := S) Bs ε 0 := fun _ => JCx2.mn_nice_zero
 
-theorem nv_add {x y : Wd.Ix S → B.Mat k ρ → (Wq →L[ℂ] Wp)} (hx : NV Bs ε x) (hy : NV Bs ε y) : NV Bs ε (x + y) :=
-  fun e => JCx2.mn_nice_add (hx e) (hy e)
-
 theorem nv_smul (c : ℂ) {x : Wd.Ix S → B.Mat k ρ → (Wq →L[ℂ] Wp)} (hx : NV Bs ε x) : NV Bs ε (c • x) :=
   fun e => JCx2.mn_nice_smul c (hx e)
 
@@ -91,13 +88,6 @@ section forms
 
 variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] {P : M.Par}
-
-theorem nv_common {α S : Type} {k ρ : ℕ} {Bs : B.RealPlaceData k ρ Wp Wq} (Y : Finset α)
-    (u : α → Wd.Ix S → B.Mat k ρ → (Wq →L[ℂ] Wp)) (h : ∀ a ∈ Y, ∃ ε, 0 < ε ∧ NV Bs ε (u a)) :
-    ∃ ε, 0 < ε ∧ ∀ a ∈ Y, NV Bs ε (u a) := by
-  obtain ⟨ε, hε, hall⟩ := common_eps (ι := Y) (fun a ε => NV Bs ε (u a)) (fun a ε ε' h h0 h' => nv_mono h h')
-    (fun a => h a a.2)
-  exact ⟨ε, hε, fun a ha => hall ⟨a, ha⟩⟩
 
 theorem slv_nv (p : KB.Pl P Wp Wq) {F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)} (hF : KB.CptCoef p.T.base F) (j : ℕ)
     (hj : j ≤ P.r) (w : List C.Letter) (a : C.LPt) (ha : D.IsLocPt a j) :

@@ -72,8 +72,6 @@ theorem Datum.EF_swap (x y : D.La) : D.EF y x = - D.EF x y := by
   simp only [map_add (f := _), LinearMap.add_apply, D.alt, zero_add, add_zero] at h
   linarith
 
-def Datum.Kq : Subfield D.F := (IntermediateField.adjoin ℚ {(D.ω : D.F)}).toSubfield
-
 section Places
 
 variable {F : Type} [Field F] [NumberField F] (Kq : Subfield F) (u : Kq →+* ℚ_[p])

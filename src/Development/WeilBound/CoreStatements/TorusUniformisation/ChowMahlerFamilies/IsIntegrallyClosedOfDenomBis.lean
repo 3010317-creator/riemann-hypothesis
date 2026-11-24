@@ -323,19 +323,6 @@ theorem qhom_surj {E : Type} [Field E] [NumberField E] (N n : ℕ) : Function.Su
   choose z hz using fun i => Ideal.Quotient.mk_surjective (Multiplicative.toAdd t i)
   exact ⟨Multiplicative.ofAdd z, congrArg Multiplicative.ofAdd (funext hz)⟩
 
-theorem qhom_eq_one {E : Type} [Field E] [NumberField E] (N n : ℕ) (y : Fin N → 𝓞 E) :
-    qhom N n (Multiplicative.ofAdd y) = 1 ↔ ∃ y', y = n • y' := by
-  have : qhom N n (Multiplicative.ofAdd y) = 1 ↔ ∀ i, Ideal.Quotient.mk (Ideal.span {(n : 𝓞 E)}) (y i) = 0 :=
-    ⟨fun h i => congrFun (congrArg Multiplicative.toAdd h) i, fun h => congrArg Multiplicative.ofAdd (funext h)⟩
-  rw [this]
-  simp only [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
-  constructor
-  · intro h
-    choose y' hy' using h
-    exact ⟨y', funext fun i => by rw [hy' i]; simp⟩
-  · rintro ⟨y', rfl⟩ i
-    exact ⟨y' i, by simp⟩
-
 
 open PositivityTheory.HtPt.Htat in
 theorem exists_coords {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (D : Datum H) {S : Scheme.{0}}
