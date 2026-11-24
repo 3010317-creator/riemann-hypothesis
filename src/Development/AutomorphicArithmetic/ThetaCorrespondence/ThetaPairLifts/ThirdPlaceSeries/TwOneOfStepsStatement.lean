@@ -393,7 +393,7 @@ section
 open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
 
 theorem _root_.GlobalTheory.T.twisted_conj_coef_at' : _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwConj.CoefficientCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.coefAt_of_twAdm_alt | exact _root_.GlobalTheory.BigOn.Exp.TwConj.coefAt_of_twAdm_alt | (intros; apply _root_.GlobalTheory.BigOn.Exp.TwConj.coefAt_of_twAdm_alt <;> assumption)
+  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.coefAt_of_twAdm_alt
 end
 end -- clump:auto
 end -- clump:auto
@@ -529,7 +529,7 @@ theorem _root_.GlobalTheory.T.conjTwist_function_eq_sum_evaluations_alt : Global
   ∀ Φ Φ' : GA (Fm.D x i) (Wc (Fm.D x i) j) → ℂ, GlobalTheory.ConjTwist.ConjFun (p.O j) (p.κ j) τ 1 Φ Φ' →
     ∃ (n : ℕ) (b : Fin n → ℂ) (g : Fin n → NX.FmK p.Sx ((j : ℕ) + 1)),
       Φ = ∑ k, b k • evW p.nexp p.v₀ j (g k).val ∧ ∑ k, τ (b k) • evW p.nexp p.v₀ j (g k).val = Φ' := by
-  first | exact @_root_.GlobalTheory.ConjExpandRational.exists_evW_expansion_of_conjFun | exact _root_.GlobalTheory.ConjExpandRational.exists_evW_expansion_of_conjFun | (intros; apply _root_.GlobalTheory.ConjExpandRational.exists_evW_expansion_of_conjFun <;> assumption)
+  first | exact @_root_.GlobalTheory.ConjExpandRational.exists_evW_expansion_of_conjFun
 end
 end
 end -- clump:auto
@@ -644,7 +644,7 @@ section
 open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
 
 theorem _root_.GlobalTheory.T.twisted_conj_fix_at' : GlobalTheory.Published.RayClassFieldSt → _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwConj.FixedPointCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.fixAt_holds_alt | exact _root_.GlobalTheory.BigOn.Exp.TwConj.fixAt_holds_alt | (intros; apply _root_.GlobalTheory.BigOn.Exp.TwConj.fixAt_holds_alt <;> assumption)
+  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.fixAt_holds_alt
 end
 end -- clump:auto
 end -- clump:auto
@@ -1249,7 +1249,7 @@ section
 open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
 
 theorem _root_.GlobalTheory.T.twisted_conj_tuple_at' : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwistCharacter → _root_.GlobalTheory.BigOn.Exp.TwConj.TupleCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.tupAt_alt | exact _root_.GlobalTheory.BigOn.Exp.TwConj.tupAt_alt | (intros; apply _root_.GlobalTheory.BigOn.Exp.TwConj.tupAt_alt <;> assumption)
+  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.tupAt_alt
 end
 end -- clump:auto
 end -- clump:auto
@@ -1331,7 +1331,7 @@ section
 open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
 
 theorem _root_.GlobalTheory.T.conjTw_of_discrete_series_and_casselman_wallach : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → GlobalTheory.SerStd.SeriesRatS → _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwistCharacter → _root_.GlobalTheory.BigOn.Exp.ConjugateTwist := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.conj_tw_of_prints | exact _root_.GlobalTheory.BigOn.Exp.TwConj.conj_tw_of_prints | (intros; apply _root_.GlobalTheory.BigOn.Exp.TwConj.conj_tw_of_prints <;> assumption)
+  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.conj_tw_of_prints
 end
 end -- clump:auto
 end -- clump:auto

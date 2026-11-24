@@ -314,7 +314,7 @@ theorem residue_exists (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [Alge
     (Ideal.Quotient.mk Q c)
   refine ⟨a, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, ← ha]
-  simp [Ideal.Quotient.algebraMap_eq]
+  simp
 
 section Dedekind
 variable {A : Type} [CommRing A] [IsDedekindDomain A]
@@ -322,21 +322,13 @@ variable {A : Type} [CommRing A] [IsDedekindDomain A]
 theorem pow_le_span_sup {Q : Ideal A} [Q.IsPrime] (hQ : Q ≠ ⊥) {π : A} (hπ : π ∈ Q)
     (hπ2 : π ∉ Q ^ 2) : ∀ m : ℕ, Q ^ m ≤ Ideal.span {π ^ m} ⊔ Q ^ (m + 1) := by
   first
-  | exact @_root_.GlobalTheory.SpanPowerSupremum.pow_le_span_pow_sup
-  | exact _root_.GlobalTheory.SpanPowerSupremum.pow_le_span_pow_sup
   | (apply _root_.GlobalTheory.SpanPowerSupremum.pow_le_span_pow_sup <;> assumption)
-  | (intros; apply _root_.GlobalTheory.SpanPowerSupremum.pow_le_span_pow_sup <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.SpanPowerSupremum.pow_le_span_pow_sup <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.SpanPowerSupremum.pow_le_span_pow_sup ..)
 
 theorem pow_not_mem {Q : Ideal A} [Q.IsPrime] (hQ : Q ≠ ⊥) {π : A} (hπ : π ∈ Q)
     (hπ2 : π ∉ Q ^ 2) (m : ℕ) : π ^ m ∉ Q ^ (m + 1) := by
   first
-  | exact @_root_.GlobalTheory.AlgebraicIntegerNormBound.main
-  | exact _root_.GlobalTheory.AlgebraicIntegerNormBound.main
   | (apply _root_.GlobalTheory.AlgebraicIntegerNormBound.main <;> assumption)
-  | (intros; apply _root_.GlobalTheory.AlgebraicIntegerNormBound.main <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.AlgebraicIntegerNormBound.main <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.AlgebraicIntegerNormBound.main ..)
 
 end Dedekind
@@ -480,11 +472,7 @@ theorem exists_approx (hπ : π ∈ Q) (hres : ∀ c : A, ∃ a : k, c - algebra
     (hsup : ∀ m : ℕ, Q ^ m ≤ Ideal.span {π ^ m} ⊔ Q ^ (m + 1)) :
     ∀ (m : ℕ) (u : A), ∃ p : k[X], u - aeval π p ∈ Q ^ m := by
   first
-  | exact @_root_.GlobalTheory.IntegralNormBound.target
-  | exact _root_.GlobalTheory.IntegralNormBound.target
   | (apply _root_.GlobalTheory.IntegralNormBound.target <;> assumption)
-  | (intros; apply _root_.GlobalTheory.IntegralNormBound.target <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.IntegralNormBound.target <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.IntegralNormBound.target ..)
 
 end Existence
@@ -843,7 +831,7 @@ def boundedIn {n : ℕ} (b : Module.Basis (Fin n) k[X] A) (D : Ideal A) (d : ℕ
 def coeffMap {n : ℕ} (b : Module.Basis (Fin n) k[X] A) (D : Ideal A) (d : ℕ) :
     boundedIn b D d →ₗ[k] (Fin n → Fin (d + 1) → k) where
   toFun f i j := (b.repr (f : A) i).coeff j
-  map_add' f g := by ext i j; simp [coeff_add]
+  map_add' f g := by ext i j; simp
   map_smul' c f := by ext i j; simp [repr_smul_const, coeff_C_mul]
 
 theorem coeffMap_injective {n : ℕ} (b : Module.Basis (Fin n) k[X] A) (D : Ideal A) (d : ℕ) :
@@ -1083,7 +1071,7 @@ theorem hasseJet_vanishing_mem_pow (k A : Type) [Field k] [IsAlgClosed k] [CommR
     have := hL 1 hN1 1 1
     rw [Finset.sum_range_succ, Finset.sum_range_one] at this
     norm_num [h01] at this
-    first | exact this | linear_combination -this
+    first | exact this
   have hvan : ∀ j, ∀ u ∈ Q ^ j, ∀ l < N, l < j → Δ l u = 0 := by
     intro j
     induction j with

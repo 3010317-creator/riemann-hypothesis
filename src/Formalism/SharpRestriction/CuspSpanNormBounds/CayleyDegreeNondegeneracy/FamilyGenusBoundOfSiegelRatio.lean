@@ -394,7 +394,7 @@ theorem exists_small_mem_fractional_ideal (K : Type) [Field K] [NumberField K] [
   have hS : (∏ w, f w ^ w.mult) = NNReal.sqrt ‖discr K‖₊ := by
     apply NNReal.eq
     rw [NNReal.coe_prod, Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs, ← rootDiscr_pow_eq_sqrt_discr K]
-    simp only [hmult, f, NNReal.coe_pow, NNReal.sq_sqrt, Real.coe_toNNReal _ hr0, Finset.prod_const,
+    simp only [hmult, f, NNReal.sq_sqrt, Real.coe_toNNReal _ hr0, Finset.prod_const,
       Finset.card_univ, hcard]
   have hbound : minkowskiBound K I < MeasureTheory.volume (convexBodyLT K f) := by
     rw [convexBodyLT_volume, hS]
@@ -496,7 +496,7 @@ theorem lagrange_identity_orthCompanion (hspan : Submodule.span K (Set.range e) 
     h (orthCompanion h e x) v * star (h (orthCompanion h e x) v') = h x x * h v' v - h x v * h v' x := by
   rw [orthCompanion_inner_apply, orthCompanion_inner_apply, inner_eq_coords_orthonormal_pair h e hspan ho x x, inner_eq_coords_orthonormal_pair h e hspan ho v' v,
     inner_eq_coords_orthonormal_pair h e hspan ho x v, inner_eq_coords_orthonormal_pair h e hspan ho v' x]
-  simp only [star_add, star_mul', star_neg, star_star]
+  simp only [star_add, star_mul', star_neg]
   ring
 
 theorem inner_self_ne_zero_of_orthonormal (hcm : ∀ (φ : K →+* ℂ) (a : K), φ (star a) = starRingEnd ℂ (φ a))
@@ -1224,9 +1224,9 @@ theorem covolume_trace_lattice (hK : IsCMUnram K) (h : V →ₗ⋆[K] V →ₗ[K
     simp only [v, A, hι, LinearMap.map_smulₛₗ, LinearMap.smul_apply, map_smul, smul_eq_mul, starRingEnd_apply,
       he, Matrix.of_apply]
     split_ifs with hii
-    · simp [hii]
+    · simp
       exact congrArg _ (mul_comm _ _)
-    · simp [hii]
+    · simp
   have hdetG : (Matrix.gram ℝ v).det = A.det * A.det := by
     rw [hG, Matrix.det_blockDiagonal, Fin.prod_univ_two]
   have hA0 : A.det ≠ 0 := by

@@ -700,7 +700,7 @@ theorem REder_X (K : Type) [CommRing K] (k : ℕ) (a b : Fin k) (i j : Fin k) :
   by_cases h : i = b
   · subst h
     simp [Pi.single_apply, mul_ite]
-  · simp [Pi.single_apply, h]
+  · simp [h]
 
 end PI.RL.W
 end -- clump:auto
@@ -740,7 +740,7 @@ theorem keyCov : KeyCov := by
       rw [Matrix.updateRow_self, if_pos rfl]
       by_cases hj : j = Fin.last m
       · subst hj; simp
-      · simp [Pi.single_apply, hj]
+      · simp [hj]
     · rw [Matrix.updateRow_ne hic, hG, REder_X, if_neg hic]
   simp_rw [hrow]
   have hz : ∀ (M : Matrix (Fin (m + 1)) (Fin (m + 1)) (MvPolynomial (Fin (m + 1) × Fin (m + 1)) K))
@@ -763,7 +763,7 @@ theorem keyCov : KeyCov := by
     intro j
     split_ifs <;> rfl
   · intro h; exact absurd (Finset.mem_univ b) h
-  simp only [hbc, if_false, if_true, eq_self_iff_true, ite_true, ite_false]
+  simp only [hbc, if_false, if_true]
   by_cases hab : a = b
   · subst hab
     rw [if_pos rfl, if_neg hbc, sub_zero]
@@ -1178,7 +1178,7 @@ theorem RE_eq_rowDiv (K : Type) [CommRing K] (k : ℕ) (a b : Fin k) (f : MvPoly
     RE K k a b f = rowDiv K a b 1 f := by
   unfold rowDiv
   induction f using MvPolynomial.induction_on with
-  | C r => rw [RE_C]; simp [rowGen, Polynomial.algebraMap_apply, MvPolynomial.algebraMap_eq, Polynomial.coeff_C]
+  | C r => rw [RE_C]; simp [rowGen, Polynomial.algebraMap_apply, MvPolynomial.algebraMap_eq]
   | add p q hp hq => rw [RE_add, map_add (f := _), Polynomial.coeff_add, hp, hq]
   | mul_X p v hp =>
     rw [RE_mul, map_mul, Polynomial.mul_coeff_one, rowGen_coeff_zero, rowGen_coeff_zero, hp, RE_X]
