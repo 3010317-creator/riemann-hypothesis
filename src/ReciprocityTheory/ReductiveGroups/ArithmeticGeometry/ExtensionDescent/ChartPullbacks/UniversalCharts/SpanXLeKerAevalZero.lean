@@ -172,9 +172,11 @@ variable {R : Type} [CommRing R] {n : ℕ} {S : Type} [CommRing S] [Algebra R S]
 variable (R) in
 abbrev sX (j : Fin n) : S := algebraMap (MvPolynomial (Fin n) R) S (MvPolynomial.X j)
 
-variable [Algebra.FormallyEtale (MvPolynomial (Fin n) R) S] (ε : S →ₐ[R] R)
-
-theorem etale_ext {A : Type} [CommRing A] [Algebra R A] (aug : A →ₐ[R] R)
+/-- Over a formally unramified chart, two lifts across a map with nilpotent kernel
+are equal if they agree on the coordinates and after reduction. -/
+theorem etale_ext [Algebra.FormallyUnramified (MvPolynomial (Fin n) R) S]
+    {A B : Type} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
+    (ε : S →ₐ[R] B) (aug : A →ₐ[R] B)
     (hJ : IsNilpotent (RingHom.ker aug)) (φ₁ φ₂ : S →ₐ[R] A) (h1 : aug.comp φ₁ = ε) (h2 : aug.comp φ₂ = ε)
     (hs : ∀ j : Fin n, φ₁ (sX (R := R) (S := S) j) = φ₂ (sX (R := R) (S := S) j)) : φ₁ = φ₂ := by
   let ρ : MvPolynomial (Fin n) R →ₐ[R] A := φ₁.comp (IsScalarTower.toAlgHom R (MvPolynomial (Fin n) R) S)
@@ -182,71 +184,53 @@ theorem etale_ext {A : Type} [CommRing A] [Algebra R A] (aug : A →ₐ[R] R)
     apply MvPolynomial.algHom_ext
     intro j
     exact (hs j).symm
-  letI : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
+  let : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
   let ψ₁ : S →ₐ[MvPolynomial (Fin n) R] A :=
     { φ₁.toRingHom with commutes' := fun p => rfl }
   let ψ₂ : S →ₐ[MvPolynomial (Fin n) R] A :=
     { φ₂.toRingHom with commutes' := fun p => AlgHom.congr_fun hρ2 p }
-  have : ψ₁ = ψ₂ := by
-    apply Algebra.FormallyUnramified.lift_unique (RingHom.ker aug) hJ
-    ext x
-    simp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk]
-    rw [Ideal.Quotient.eq, RingHom.mem_ker, map_sub, sub_eq_zero]
-    exact (AlgHom.congr_fun h1 x).trans (AlgHom.congr_fun h2 x).symm
-  ext x
-  exact AlgHom.congr_fun this x
+  have hψ : ψ₁ = ψ₂ :=
+    Algebra.FormallyUnramified.ext' aug.toRingHom hJ ψ₁ ψ₂
+      (fun x => (AlgHom.congr_fun h1 x).trans (AlgHom.congr_fun h2 x).symm)
+  exact AlgHom.ext fun x => AlgHom.congr_fun hψ x
 
-theorem etale_exists {A : Type} [CommRing A] [Algebra R A] (aug : A →ₐ[R] R)
+/-- Over a formally smooth chart, a lift of the coordinates along a surjection
+with nilpotent kernel extends to a lift of the whole chart. -/
+theorem exists_lift_with_coordinates [Algebra.FormallySmooth (MvPolynomial (Fin n) R) S]
+    {A B : Type} [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
+    (ε : S →ₐ[R] B) (aug : A →ₐ[R] B) (haug : Function.Surjective aug)
     (hJ : IsNilpotent (RingHom.ker aug)) (b : Fin n → A) (hb : ∀ j, aug (b j) = ε (sX (R := R) j)) :
     ∃ φ : S →ₐ[R] A, aug.comp φ = ε ∧ ∀ j, φ (sX (R := R) j) = b j := by
   let ρ : MvPolynomial (Fin n) R →ₐ[R] A := MvPolynomial.aeval b
-  letI : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
-  let J := RingHom.ker aug
-  let mk : A →ₐ[MvPolynomial (Fin n) R] A ⧸ J := Ideal.Quotient.mkₐ _ J
-  have hmkR : ∀ a : A, mk a = Ideal.Quotient.mk J (algebraMap R A (aug a)) := by
-    intro a
-    show Ideal.Quotient.mk J a = Ideal.Quotient.mk J (algebraMap R A (aug a))
-    rw [Ideal.Quotient.eq, RingHom.mem_ker, map_sub, AlgHom.commutes, Algebra.algebraMap_self,
-      RingHom.id_apply, sub_self]
-  let f₀r : S →+* A ⧸ J := (Ideal.Quotient.mk J).comp ((algebraMap R A).comp ε.toRingHom)
-  have hf₀ : ∀ p : MvPolynomial (Fin n) R, f₀r (algebraMap _ S p) = algebraMap _ (A ⧸ J) p := by
-    have : f₀r.comp (algebraMap (MvPolynomial (Fin n) R) S) = algebraMap (MvPolynomial (Fin n) R) (A ⧸ J) := by
-      apply MvPolynomial.ringHom_ext
-      · intro r
-        show Ideal.Quotient.mk J (algebraMap R A (ε (algebraMap (MvPolynomial (Fin n) R) S (MvPolynomial.C r)))) =
-          Ideal.Quotient.mk J (ρ (MvPolynomial.C r))
-        rw [MvPolynomial.aeval_C, show algebraMap (MvPolynomial (Fin n) R) S (MvPolynomial.C r) = algebraMap R S r from
-          (IsScalarTower.algebraMap_apply R (MvPolynomial (Fin n) R) S r).symm, AlgHom.commutes,
-          Algebra.algebraMap_self, RingHom.id_apply]
-      · intro j
-        show Ideal.Quotient.mk J (algebraMap R A (ε (sX (R := R) j))) = Ideal.Quotient.mk J (ρ (MvPolynomial.X j))
-        rw [MvPolynomial.aeval_X, Ideal.Quotient.eq, RingHom.mem_ker, map_sub, AlgHom.commutes,
-          Algebra.algebraMap_self, RingHom.id_apply, hb, sub_self]
-    exact fun p => RingHom.congr_fun this p
-  let f₀ : S →ₐ[MvPolynomial (Fin n) R] A ⧸ J := { f₀r with commutes' := hf₀ }
-  have hmk : Function.Surjective mk := Ideal.Quotient.mk_surjective
-  have hker : IsNilpotent (RingHom.ker (mk : A →+* A ⧸ J)) := by
-    have : RingHom.ker (mk : A →+* A ⧸ J) = J := Ideal.mk_ker
-    rw [this]
-    exact hJ
-  let φ' := Algebra.FormallySmooth.liftOfSurjective f₀ mk hmk hker
-  have hφ' : mk.comp φ' = f₀ := Algebra.FormallySmooth.comp_liftOfSurjective f₀ mk hmk hker
-  refine ⟨φ'.restrictScalars R, ?_, ?_⟩
-  · ext x
-    have e1 := AlgHom.congr_fun hφ' x
-    simp only [AlgHom.comp_apply] at e1
-    rw [hmkR] at e1
-    have e2 : (Ideal.Quotient.mk J) (algebraMap R A (aug (φ' x))) = (Ideal.Quotient.mk J) (algebraMap R A (ε x)) := e1
-    rw [Ideal.Quotient.eq, RingHom.mem_ker, map_sub, AlgHom.commutes, AlgHom.commutes, Algebra.algebraMap_self,
-      RingHom.id_apply, RingHom.id_apply, sub_eq_zero] at e2
-    exact e2
+  let σ : MvPolynomial (Fin n) R →ₐ[R] B :=
+    ε.comp (IsScalarTower.toAlgHom R (MvPolynomial (Fin n) R) S)
+  have hcompat : aug.comp ρ = σ := by
+    apply MvPolynomial.algHom_ext
+    intro j
+    change aug (MvPolynomial.aeval b (MvPolynomial.X j)) = ε (sX R j)
+    rw [MvPolynomial.aeval_X]
+    exact hb j
+  let : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) A :=
+    IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
+  let : Algebra (MvPolynomial (Fin n) R) B := σ.toRingHom.toAlgebra
+  let aug' : A →ₐ[MvPolynomial (Fin n) R] B :=
+    { aug.toRingHom with commutes' := AlgHom.congr_fun hcompat }
+  let ε' : S →ₐ[MvPolynomial (Fin n) R] B :=
+    { ε.toRingHom with commutes' := fun _ => rfl }
+  let φ := Algebra.FormallySmooth.liftOfSurjective ε' aug' haug hJ
+  refine ⟨φ.restrictScalars R, ?_, ?_⟩
+  · exact AlgHom.ext (Algebra.FormallySmooth.liftOfSurjective_apply ε' aug' haug hJ)
   · intro j
-    show φ' (algebraMap (MvPolynomial (Fin n) R) S (MvPolynomial.X j)) = b j
-    rw [AlgHom.commutes]
-    show ρ (MvPolynomial.X j) = b j
-    exact MvPolynomial.aeval_X b j
+    exact (φ.commutes (MvPolynomial.X j)).trans (MvPolynomial.aeval_X b j)
+
+/-- A formally smooth chart admits lifts along nilpotent augmentations to the base ring. -/
+theorem etale_exists [Algebra.FormallySmooth (MvPolynomial (Fin n) R) S]
+    (ε : S →ₐ[R] R) {A : Type} [CommRing A] [Algebra R A] (aug : A →ₐ[R] R)
+    (hJ : IsNilpotent (RingHom.ker aug)) (b : Fin n → A) (hb : ∀ j, aug (b j) = ε (sX (R := R) j)) :
+    ∃ φ : S →ₐ[R] A, aug.comp φ = ε ∧ ∀ j, φ (sX (R := R) j) = b j :=
+  exists_lift_with_coordinates ε aug (fun r => ⟨algebraMap R A r, by simp⟩) hJ b hb
 
 end Etale
 
