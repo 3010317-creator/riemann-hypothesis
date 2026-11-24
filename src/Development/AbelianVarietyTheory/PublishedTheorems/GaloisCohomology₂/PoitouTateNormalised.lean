@@ -57,6 +57,12 @@ that the local invariant maps be compatible under conjugation.
 Proposed reference: as for `PoitouTateDuality`,
 [J. S. Milne, *Arithmetic Duality Theorems* (Chapter I, Theorem 4.10, pp. 56–57)][milne2006].
 This reference is a reader's proposal and has not been checked by a mathematician. -/
+/-- **Poitou–Tate 9-term exact sequence**: the global duality theorem in Galois cohomology
+for a finite Galois module $M$ over a global number field, relating the global cohomology
+groups $H^i(G_S, M)$ to the local groups $\prod_{v \in S} H^i(G_v, M)$ and the dual module $M^\vee$.
+
+Proposed reference:
+[J. Tate, *Duality theorems in Galois cohomology over number fields*][tate1962]. -/
 def PoitouTateNormalised : Prop :=
   ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     (l : ℕ) [Fact l.Prime] (r : ℕ), (l ≠ 2 ∨ IsTotallyComplex F) → 0 < r →
