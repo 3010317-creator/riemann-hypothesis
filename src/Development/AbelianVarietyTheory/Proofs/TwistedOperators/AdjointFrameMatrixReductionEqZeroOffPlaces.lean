@@ -49,7 +49,6 @@ open scoped TensorProduct InnerProductSpace
 open GlobalTheory.LiftRows
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.IndefiniteRowSideFullHecke.TwistedLevelValues GlobalTheory.AdelicScalar
-open Formalism.L2.DIV (kP Pl LevelP)
 open Classical
 
 namespace GlobalTheory.AdjRedOff

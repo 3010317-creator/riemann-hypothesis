@@ -59,7 +59,6 @@ namespace GlobalTheory.Ker.LevMove
 
 section General
 
-open Formalism.MainNotions.StandardLattice (latHat intAf)
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
 
@@ -135,7 +134,6 @@ namespace GlobalTheory.Ker.LevMove
 
 section Core
 
-open Formalism.MainNotions.StandardLattice (latHat intAf)
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
 

@@ -145,7 +145,6 @@ namespace GlobalTheory.FlipRun
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 
-open GlobalTheory.ChiGrid GlobalTheory.FunObj
 
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
 
