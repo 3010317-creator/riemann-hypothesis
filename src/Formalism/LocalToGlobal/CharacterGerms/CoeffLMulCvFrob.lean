@@ -1,50 +1,12 @@
 module
 
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.LinearFormDegree.InvFun
 public import Formalism.LocalToGlobal.CharacterGerms.RankMaximalOfNondegenerate
 public import Formalism.LocalToGlobal.CharacterGerms.RankMaximalOfNondegenerateOfUnitSeriesIntegral
 public import Formalism.LocalToGlobal.CharacterGerms.ConstantZeroDoubleMultiplicationPair
 public import Formalism.LocalToGlobal.CharacterGerms.GermEvalOneStandardPointSelf
 public import Formalism.LocalToGlobal.CharacterGerms.MaximalOfValuationGeOne
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -66,37 +28,13 @@ variable {C : Type} [Field C] [CharZero C] {V : VF C}
 theorem intS_cv {γ : PowerSeries C} (h : ∀ n, V.Ge 0 (PowerSeries.coeff n γ)) : IntS V γ := by
   intro μ
   have hμ : μ = Finsupp.single () (μ ()) := by
-    ext u
+    ext
     simp
   rw [hμ]
   exact h (μ ())
 
 theorem degree_one {σ : Type} {ν : σ →₀ ℕ} (h : ν.degree = 1) : ∃ s, ν = Finsupp.single s 1 := by
-  classical
-  have hsum : ν.degree = ∑ t ∈ ν.support, ν t := rfl
-  obtain ⟨s, hs⟩ : ∃ s, ν s ≠ 0 := by
-    by_contra hall
-    push_neg at hall
-    have h0 : ν = 0 := Finsupp.ext hall
-    rw [h0] at h
-    simp at h
-  have hmem : s ∈ ν.support := Finsupp.mem_support_iff.mpr hs
-  have htot := Finset.add_sum_erase ν.support (fun t => ν t) hmem
-  rw [← hsum, h] at htot
-  have hs1 : ν s = 1 := by omega
-  have hrest0 : ∑ t ∈ ν.support.erase s, ν t = 0 := by omega
-  have hrest : ∀ t, t ≠ s → ν t = 0 := by
-    intro t ht
-    by_cases htm : t ∈ ν.support
-    · exact (Finset.sum_eq_zero_iff.mp hrest0) t (Finset.mem_erase.mpr ⟨ht, htm⟩)
-    · by_contra hne
-      exact htm (Finsupp.mem_support_iff.mpr hne)
-  refine ⟨s, ?_⟩
-  ext t
-  by_cases ht : t = s
-  · subst ht
-    simp [hs1]
-  · rw [Finsupp.single_apply, if_neg (Ne.symm ht), hrest t ht]
+  apply ReciprocityTheory.ChartRestriction.G.LF.InvFun.eq_single_of_degree_eq_one <;> assumption
 
 theorem divisible_small {σ : Type} {l : ℕ} (μ : σ →₀ ℕ) (hdiv : ∀ s, l ∣ μ s)
     (hdeg : μ.degree < 2 * l) : μ = 0 ∨ ∃ s, μ = Finsupp.single s l := by

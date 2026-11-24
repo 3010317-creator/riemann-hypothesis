@@ -1,5 +1,6 @@
 module
 
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PBlockResolutionSupBound
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsBlockResolutionImageSup
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsChartSup
 import Mathlib.Algebra.Order.Floor.Extended
@@ -114,7 +115,6 @@ theorem lintegral_chart_le {X : Type*} [TopologicalSpace X] [MeasurableSpace X] 
 variable {D : ℕ} {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} [∀ k, Fintype (ι k)]
   {Ω : Type} [Field Ω] [CharZero Ω]
 
-
 omit [DecidableEq K] [∀ k, Fintype (ι k)] in
 theorem isOpen_blockNonzero : IsOpen {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
   simp only [Set.ofPred_forall, Set.ofPred_exists]
@@ -124,28 +124,7 @@ theorem isOpen_blockNonzero : IsOpen {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z
 theorem eval_torus {f : MRingOver ℂ ι} {k₀ : K} {n : ℕ} (hf : IsMultiHomog f (blockDeg k₀ n))
     (c : K → ℂ) (z : (Σ k, ι k) → ℂ) :
     eval (fun p => c p.1 * z p) f = c k₀ ^ n * eval z f := by
-  rw [eval_eq', eval_eq', Finset.mul_sum]
-  refine Finset.sum_congr rfl fun m hm => ?_
-  have hdeg := hf m hm
-  have hc : ∏ p : (Σ k, ι k), c p.1 ^ m p = c k₀ ^ n := by
-    rw [Fintype.prod_sigma]
-    simp_rw [Finset.prod_pow_eq_pow_sum, hdeg]
-    rw [Fintype.prod_eq_single k₀ fun k hk => by simp [blockDeg, hk]]
-    simp [blockDeg]
-  simp_rw [mul_pow, Finset.prod_mul_distrib, hc]
-  ring
-
-theorem normRatio_torus {f : MRingOver ℂ ι} {k₀ : K} {n : ℕ} (hf : IsMultiHomog f (blockDeg k₀ n))
-    (A : HermLine ι) (hA : A.a = unitDeg k₀) {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') :
-    ‖eval z f‖ / A.h z ^ n = ‖eval z' f‖ / A.h z' ^ n := by
-  obtain ⟨c, hc, rfl⟩ := h
-  rw [eval_torus hf, A.smul c z' hc, hA]
-  have hprod : ∏ k, ‖c k‖ ^ unitDeg k₀ k = ‖c k₀‖ := by
-    rw [Fintype.prod_eq_single k₀ fun k hk => by simp [unitDeg, hk]]
-    simp [unitDeg]
-  rw [hprod, norm_mul, norm_pow, mul_pow]
-  have : ‖c k₀‖ ^ n ≠ 0 := pow_ne_zero _ (norm_ne_zero_iff.2 (hc k₀))
-  rw [mul_div_mul_left _ _ this]
+  apply _root_.GroundTheory.Heights₂.Heights.HilbertSamuel.BlockResolutionSupBound.eval_torus <;> assumption
 
 theorem lift_blockNonzero (d : HSMBlockDatum D K ι Ω) {x y : d.R.X} (hy : y ∈ d.R.U x) :
     ∀ k, ∃ i, d.R.lift x y ⟨k, i⟩ ≠ 0 :=
@@ -155,7 +134,7 @@ theorem ratio_blockPt_eq (d : HSMBlockDatum D K ι Ω) {n : ℕ} {f : MRingOver 
     (hf : IsMultiHomog f (blockDeg d.k₀ n)) {x y : d.R.X} (hy : y ∈ d.R.U x) :
     ‖eval (blockPt d y) f‖ / d.A.h (blockPt d y) ^ n =
       ‖eval (d.R.lift x y) f‖ / d.A.h (d.R.lift x y) ^ n :=
-  normRatio_torus hf d.A d.deg (d.R.compat y x y ⟨d.R.mem_U y, hy⟩)
+  GroundTheory.Heights₂.Heights.HilbertSamuel.BlockResolutionSupBound.normRatio_torus hf d.A d.deg (d.R.compat y x y ⟨d.R.mem_U y, hy⟩)
 
 theorem continuous_ratio (d : HSMBlockDatum D K ι Ω) {n : ℕ} {f : MRingOver ℂ ι}
     (hf : IsMultiHomog f (blockDeg d.k₀ n)) :
@@ -253,7 +232,6 @@ theorem local_bound (hC : ChartSupBound.Statement) (d : HSMBlockDatum D K ι Ω)
   exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 h2
 
 end BlockResolutionImageSup
-
 
 open BlockResolutionImageSup in
 theorem BlockResolutionImageSup.proof (hC : ChartSupBound.Statement) : BlockResolutionImageSup.Statement := by

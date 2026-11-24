@@ -197,7 +197,7 @@ theorem harish_chandra_first_clause (hD : ForIrr fun _ ε H _ _ σ => Dense {v :
       have := ((((hasDerivAt_id (0 : ℝ)).ofReal_comp.mul_const X.trace).div_const 2).const_mul (j : ℂ)).cexp
       simpa using this
     have h := hc.fun_smul (hder.deriv _ (hex X hX).1 v)
-    simp only [(hex X hX).2, ContinuousLinearMap.smul_apply]
+    simp only [(hex X hX).2, _root_.smul_apply]
     convert h using 1
     rw [hL, twLC_apply, exp_zero_smul, hσ.1.1]
     simp
@@ -232,7 +232,7 @@ theorem harish_chandra_first_clause (hD : ForIrr fun _ ε H _ _ σ => Dense {v :
         fun a b h => Subtype.ext (hio (congrArg (Subtype.val : S → πU.H) h)), hv, fun X hX w hw => ?_⟩
       have key : ∀ Y ∈ upq p q, IsKC Y → act Y w ∈ S.comap io := fun Y hY hYK => by
         refine deriv_memC S.closed_of_finiteDimensional (hd Y hY w) fun t => ?_
-        rw [(hex Y hY).2, ContinuousLinearMap.smul_apply]
+        rw [(hex Y hY).2, _root_.smul_apply]
         refine S.smul_mem _ (hSK _ (exp_mem_Kset ⟨?_, ?_⟩) _ hw)
         · have h : (rx Y)ᴴ * Jm (epq p q) + Jm (epq p q) * rx Y = 0 := (hex Y hY).1
           show _ = (0 : Matrix _ _ ℂ)
@@ -262,9 +262,6 @@ theorem harish_chandra_first_clause (hD : ForIrr fun _ ε H _ _ σ => Dense {v :
     have hkM : ∀ v, Formalism.MainNotions.S.IsKFin (epq p q) σ (io' v) := fun v => (hkf _).1 ((hran _).1 ⟨v, rfl⟩)
     let φ : M.V →ₗ[ℂ] smD (epq p q) σ := io'.codRestrict _ fun v => hsm _ (hkM v)
     have hφi : Function.Injective φ := fun a b h => hinj (congrArg Subtype.val h)
-    have hφs : ∀ w ∈ KF (epq p q) σ, ∃ v, φ v = w := fun w hw => by
-      obtain ⟨v, hv⟩ := (hran _).2 ((hkf _).2 hw)
-      exact ⟨v, Subtype.ext hv⟩
     have hφ : ∀ Z v, φ (M.act Z v) = L Z (φ v) := by
       have key : ∀ Y ∈ upq p q, ∀ v, φ (M.act Y v) = L Y (φ v) := fun Y hY v =>
         Subtype.ext ((hdM Y hY v).unique (hd Y hY (φ v)))

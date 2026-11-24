@@ -5,54 +5,9 @@ import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCycli
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.KTypeCount
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOnePOf
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.SchwartzBilinear.DoubleSumReduceSecond
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 public import Mathlib.Analysis.InnerProductSpace.Spectrum
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 public import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Finiteness.Lattice
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -181,9 +136,16 @@ theorem exists_poly {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] 
       (mem_insert_of_mem (mem_image_of_mem _ (mem_univ i)))
     simp [this]
 
-theorem vanK_of (hC : COK) (hP : WtProj) (hM : WtMajor) : VanK := by
-  intro n ε lam V _ _ E hl hE hU hF hmin B j z hB hz hwt hb
-  set τ := lowK ε lam + (2 : ℝ) • rhoC ε with hτ
+theorem exists_boundary_of_weight_obstruction (hC : COK) (hP : WtProj) (hM : WtMajor)
+    {n : ℕ} (ε : Fin n → Bool) {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
+    (E : Fin n → Fin n → Module.End ℂ V) (hE : KRel ε E) (hU : KUnit ε E)
+    (hF : LocFin ε E) (B : Finset (Pos n)) (j : ℕ) (τ : Fin n → ℝ) (z : Cn n V)
+    (hz : Sup ε B j z) (hwt : Wt (allT n) E τ z) (hb : bd ε E z = 0)
+    (hObstruct : ∀ A, z A ≠ 0 → ∀ (ν : Fin n → ℝ) (y : V), y ≠ 0 → KHighest ε E ν y →
+      (∀ c d, c < d → ε c = ε d → ν d ≤ ν c) →
+      (∀ w : Equiv.Perm (Fin n), (∀ c, ε (w c) = ε c) → PI.UpqRep.CDom ε ((τ - wt A) ∘ w) ν) →
+      nsq (τ - wt B - rhoC ε) = nsq (ν + rhoC ε) → False) :
+    ∃ t : Cn n V, Sup ε B (j + 1) t ∧ Wt (allT n) E τ t ∧ bd ε E t = z := by
   have hzw : ∀ A, IsWeight E (τ - wt A) (z A) := fun A c => by
     have := congrFun (hwt c) A
     rw [Ft_apply, filter_all, Pi.smul_apply] at this
@@ -227,26 +189,33 @@ theorem vanK_of (hC : COK) (hP : WtProj) (hM : WtMajor) : VanK := by
           Module.End.mul_apply, hzw A c]
         simp only [map_smul, map_sub, smul_add, smul_sub, Pi.sub_apply, smul_comm ((τ c - wt A c : ℝ) : ℂ)])
       (hq (z A) (Submodule.mem_iSup_of_mem A (hmem _)) _ rfl)
-    have hA1 := (hz A hA).1
-    refine absurd (hmin ν y hy0 hy) (not_le.2 (K_type_count n ε lam ν B (A.filter (cpt ε)) hl hB
-      (fun i hi => (mem_filter.1 (hA1.symm ▸ hi :)).2) (fun i hi => (mem_filter.1 hi).2) hd (fun w hw' => ?_) ?_))
-    · convert hc w hw' using 2
-      funext c
-      simp only [Pi.sub_apply, wt_split (ε := ε) A, hA1, hτ]
-      ring
-    · have h1 : nsq (τ - wt B - rhoC ε) = nsq (ν + rhoC ε) := by
-        have := Complex.ofReal_injective hs
-        linarith
-      rw [← h1]
-      congr 1
-      rw [hτ, two_smul]
-      abel
+    have hnorm : nsq (τ - wt B - rhoC ε) = nsq (ν + rhoC ε) := by
+      have hs' := Complex.ofReal_injective hs
+      linarith
+    exact hObstruct A hA ν y hy0 hy hd hc hnorm
   have h1 : bd ε E (-lift n (Polynomial.aeval (CasK ε E) q) w) = z := by
     rw [map_neg, ← lift_bd _ E E fun i hi x => hcq _ _ hi x]
     exact (eq_neg_of_add_eq_zero_left h0).symm
   obtain ⟨t, ht1, ht2, ht3⟩ := hP n (allT n) ε V E hE hU (fun x => ⟨S x, hS x, hSt x, hmem x⟩) (bd ε E)
     (differential_commutes_weight_operator n _ ε V E (fun _ _ _ => rfl) hE) τ _ (h1.symm ▸ hwt)
   exact ⟨t, sup_of_supp hw fun A h => ht3 A (by simp [h]), ht1, ht2.trans h1⟩
+
+theorem vanK_of (hC : COK) (hP : WtProj) (hM : WtMajor) : VanK := by
+  intro n ε lam V _ _ E hl hE hU hF hmin B j z hB hz hwt hb
+  set τ := lowK ε lam + (2 : ℝ) • rhoC ε with hτ
+  apply exists_boundary_of_weight_obstruction hC hP hM ε E hE hU hF B j τ z hz hwt hb
+  intro A hA ν y hy0 hy hd hc hnorm
+  have hA1 := (hz A hA).1
+  refine absurd (hmin ν y hy0 hy) (not_le.2 (K_type_count n ε lam ν B (A.filter (cpt ε)) hl hB
+    (fun i hi => (mem_filter.1 (hA1.symm ▸ hi :)).2) (fun i hi => (mem_filter.1 hi).2) hd (fun w hw' => ?_) ?_))
+  · convert hc w hw' using 2
+    funext c
+    simp only [Pi.sub_apply, wt_split (ε := ε) A, hA1, hτ]
+    ring
+  · rw [← hnorm]
+    congr 1
+    rw [hτ, two_smul]
+    abel
 
 theorem inj_of (hV : VanK) (hP : WtProj) (hS : BdSq) : Inj := by
   intro n ε lam V _ _ E hl hgl hU hF hmin u y hu hy hb

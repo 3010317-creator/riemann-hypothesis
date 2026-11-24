@@ -1,47 +1,7 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.RealPlaceEmbeddings
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -85,15 +45,6 @@ theorem coe_expand (f : Basis ι ℤ X.Λ) (v : X.Λ) :
     | (conv_lhs => rw [← f.sum_repr v]
        rw [Submodule.coe_sum]
        rfl)
-    | (conv_lhs => rw [← f.sum_repr v]
-       rw [Submodule.coe_sum]
-       exact Finset.sum_congr rfl fun i _ => Submodule.coe_smul_of_tower _ _)
-    | (conv_lhs => rw [← f.sum_repr v]
-       push_cast
-       rfl)
-    | (have e := congrArg (fun w : X.Λ => (w : Fin r → E)) (f.sum_repr v)
-       simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower] at e
-       exact e.symm)
 
 variable (f f' : Basis ι ℤ X.Λ)
 
@@ -103,10 +54,6 @@ noncomputable def phi : (Fin r → E) →ₗ[ℚ] (Fin r → E) :=
 theorem phi_f (i : ι) : phi X f f' (f i : Fin r → E) = f' i := by
   first
     | (rw [← RealPlaceEmbeddings.qb_apply X f i]; unfold phi; rw [Basis.constr_basis])
-    | (rw [← RealPlaceEmbeddings.qb_apply (X := X) f i]; unfold phi; rw [Basis.constr_basis])
-    | (have e := (RealPlaceEmbeddings.qb X f).constr_basis ℚ (fun j => (f' j : Fin r → E)) i
-       rw [RealPlaceEmbeddings.qb_apply] at e
-       exact e)
 
 theorem phi_zsum (n : ι → ℤ) :
     phi X f f' (∑ i, n i • (f i : Fin r → E)) = ∑ i, n i • (f' i : Fin r → E) := by
@@ -129,8 +76,6 @@ theorem phi_phi (x : Fin r → E) : phi X f' f (phi X f f' x) = x := by
 theorem smul_coe (ω : 𝓞 E) (v : X.Λ) : ((ω • v : X.Λ) : Fin r → E) = (ω : E) • (v : Fin r → E) := by
   first
     | rfl
-    | (rw [Submodule.coe_smul]; rfl)
-    | (rw [Submodule.coe_smul, Algebra.smul_def]; rfl)
 
 variable {f f'}
 

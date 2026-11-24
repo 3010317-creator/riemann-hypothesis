@@ -3,52 +3,8 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.BlockDegOfScale
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.HeightIntegralEstimates
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.HtDefs
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.GoodPrimesProperties
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.KTFiniteDimensional
 
@@ -85,14 +41,6 @@ private theorem tauFG_sH_X (c : ι) (b : Fin (d.D + 1)) (u : Kˣ) (v : TVar d.D 
     rfl
   have hTC : ∀ a : Ω c, tauPG (Ω := Ω c) (D := d.D) (N := d.N) b u (C a) = C a :=
     fun a => (tauPG (Ω := Ω c) (D := d.D) (N := d.N) b u).commutes a
-  have hconst : ∀ r : K, tauFG (Ω := Ω c) (D := d.D) (N := d.N) b u
-      (algebraMap K (OmS (Ω c) d.D d.N) r) = algebraMap K (OmS (Ω c) d.D d.N) r := by
-    intro r
-    rw [hKC]
-    unfold tauFG
-    rw [IsFractionRing.ringEquivOfRingEquiv_algebraMap]
-    congr 1
-    exact hTC _
   have hTin : ∀ w : SVar d.D d.N, IsBaseBlockVar b w →
       tauPG (Ω := Ω c) (D := d.D) (N := d.N) b u (X w) = C (algebraMap K (Ω c) u) * X w := by
     intro w hw
@@ -185,24 +133,6 @@ theorem tauFG_KTtoS (h : d.S1) (c : ι) (b : Fin (d.D + 1)) (u : Kˣ) (z : KTf K
     rw [IsFractionRing.ringEquivOfRingEquiv_algebraMap]
     congr 1
     exact hTC _
-  have hTin : ∀ w : SVar d.D d.N, IsBaseBlockVar b w →
-      tauPG (Ω := Ω c) (D := d.D) (N := d.N) b u (X w) = C (algebraMap K (Ω c) u) * X w := by
-    intro w hw
-    show (aeval (R := Ω c) (S₁ := MvPolynomial (SVar d.D d.N) (Ω c)) _) (X w) = _
-    rw [aeval_X]
-    try dsimp only
-    rw [if_pos hw]
-    rfl
-  have hTout : ∀ w : SVar d.D d.N, ¬ IsBaseBlockVar b w →
-      tauPG (Ω := Ω c) (D := d.D) (N := d.N) b u (X w) = X w := by
-    intro w hw
-    show (aeval (R := Ω c) (S₁ := MvPolynomial (SVar d.D d.N) (Ω c)) _) (X w) = _
-    rw [aeval_X]
-    try dsimp only
-    rw [if_neg hw]
-  have hsX : ∀ w : TVar d.D d.N, d.sH c (X w) = sImg (d.jc c) (d.x c) w := fun w => by
-    show aeval (sImg (d.jc c) (d.x c)) (X w) = _
-    exact aeval_X _ _
   have hsC : d.sH c (C (u : K)) = algebraMap K _ (u : K) := (d.sH c).commutes _
   have hX : ∀ v : TVar d.D d.N, tauFG (Ω := Ω c) b u (d.sH c (X v)) = d.sH c (sigP b u (X v)) :=
     fun v => tauFG_sH_X d c b u v
@@ -389,7 +319,7 @@ theorem sigF_fZ (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (b : Fin (d.D + 1)) (u : K
   rw [map_mul, sigF_norm_w0rat d hd h c b u, sigF_cMM d hd h c b u]
   show _ = _ * (Algebra.norm (KTf K d.D d.N) (d.rationalBaseRow c) * d.cMM h c)
   split_ifs with hb
-  · simp only [zpow_zero, map_one, mul_one, zpow_natCast]
+  · simp only [zpow_zero, map_one, zpow_natCast]
     ring
   · simp only [one_pow, map_one, one_mul]
     ring
