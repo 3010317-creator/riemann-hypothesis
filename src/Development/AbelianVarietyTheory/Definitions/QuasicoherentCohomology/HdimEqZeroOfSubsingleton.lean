@@ -449,9 +449,6 @@ namespace GlobalTheory
 
 variable {X : Scheme.{u}}
 
--- Use the site Abelian instance that occurs in `Sheaf.H'`.
-attribute [-instance] TopCat.Sheaf.instAbelian
-
 instance hasSheafify_topCat (T : TopCat.{u}) :
     HasSheafify (Opens.grothendieckTopology T) AddCommGrpCat.{u} := inferInstance
 
