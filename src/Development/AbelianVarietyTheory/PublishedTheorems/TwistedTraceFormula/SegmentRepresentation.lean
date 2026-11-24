@@ -54,6 +54,12 @@ def consecBlocks (l d : ℕ) : (Σ _ : Fin l, Fin d) ≃ Fin (l * d) :=
 
 theorem consecBlocks_val (l d : ℕ) (a : Fin l) (j : Fin d) : (consecBlocks l d ⟨a, j⟩ : ℕ) = j + d * a := rfl
 
+/-- **Zelevinsky classification of segment representations**: for any cuspidal representation
+`\rho` of `GL_m(k)` and segment `\Delta = \{\rho, \rho \nu, \dots, \rho \nu^{r-1}\}`, the induced
+representation contains a unique irreducible quotient `Q(\Delta)` (essentially square-integrable representation).
+
+Proposed reference:
+[A. V. Zelevinsky, *Representations of finite classical groups: a Hopf algebra approach*][zelevinsky1981hopf]. -/
 def SegmentRepresentation : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (d l : ℕ), 0 < d → 0 < l → ∀ σ : IrrRep (GL (Fin d) k), IsCuspidal σ.ρ →
