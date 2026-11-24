@@ -584,8 +584,9 @@ instance isDenseSubsite_overEquivalence_inverse :
 def restrictAbIso (F : X.Modules) :
     (sheafCongrAb ((Opens.grothendieckTopology X.toTopCat).over U)
       (Opens.grothendieckTopology U.toScheme.toTopCat) U.overEquivalence).functor.obj
-      ((modulesAb F).over U) ≅ modulesAb (F.restrict U.ι) :=
-  (SheafOfModules.toSheaf _).mapIso ((Scheme.Modules.overFunctorEquiv U).app F)
+      ((modulesAb F).over U) ≅ modulesAb (F.restrict U.ι) := by
+  with_unfolding_all
+    apply (SheafOfModules.toSheaf _).mapIso ((Scheme.Modules.overFunctorEquiv U).app F)
 
 variable [HasExt.{w'} (Sheaf (Opens.grothendieckTopology X.toTopCat) AddCommGrpCat.{u})]
   [HasExt.{w'} (Sheaf ((Opens.grothendieckTopology X.toTopCat).over U) AddCommGrpCat.{u})]
