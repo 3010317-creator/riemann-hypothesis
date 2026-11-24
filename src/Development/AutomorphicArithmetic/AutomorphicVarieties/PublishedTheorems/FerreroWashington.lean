@@ -63,6 +63,11 @@ Iwasawa's structure theory, to the boundedness of the `l`-ranks of their class g
 ([L. C. Washington, *Introduction to Cyclotomic Fields* (Proposition 13.23)][washington1997]). So
 this statement is a consequence of the theorem after that standard step, not a literal case of it.
 This reference is a reader's proposal and has not been checked by a mathematician. -/
+/-- **Ferrero–Washington theorem on Iwasawa mu-invariants**: the Iwasawa $\mu$-invariant
+vanishes for the cyclotomic $\mathbb{Z}_p$-extension of any abelian number field.
+
+Proposed reference:
+[B. Ferrero and L. C. Washington, *The Iwasawa invariant $\mu_p$ vanishes for abelian number fields*][ferreroWashington1979annals]. -/
 def FerreroWashington : Prop :=
   ∀ (l : ℕ) [Fact l.Prime] (K : Type) [Field K] [NumberField K] [IsAbelianGalois ℚ K],
     (∃ ζ : K, IsPrimitiveRoot ζ (if l = 2 then 4 else l)) →
