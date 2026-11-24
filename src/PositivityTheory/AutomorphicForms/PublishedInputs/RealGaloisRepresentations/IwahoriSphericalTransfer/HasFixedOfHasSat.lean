@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatake
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RecOfRecLiteral
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitary
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFixedIff
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSteinberg
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms2.ExistsSteinberg
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.HasSatOfFixed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

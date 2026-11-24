@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQu
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdditiveSwapOfTrivAxes
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftLeftFst
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AdjointEndomorphismsCubeLBOfDenseFibres
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors2.CrystallinePull2SumCup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

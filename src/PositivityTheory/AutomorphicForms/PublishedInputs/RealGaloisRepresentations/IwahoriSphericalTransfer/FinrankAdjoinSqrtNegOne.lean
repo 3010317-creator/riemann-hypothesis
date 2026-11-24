@@ -44,7 +44,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms2.HasExponentZeroIff
 import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal
 

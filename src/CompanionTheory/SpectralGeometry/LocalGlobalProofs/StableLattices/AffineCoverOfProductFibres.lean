@@ -43,7 +43,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import CompanionTheory.AutomorphicTheory.TemperedLocalSpectra.ObstructionLifting.H1StructureDimLe
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FibAc
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors2.IsAdditiveOfUniversal
 
 @[expose] public section
 

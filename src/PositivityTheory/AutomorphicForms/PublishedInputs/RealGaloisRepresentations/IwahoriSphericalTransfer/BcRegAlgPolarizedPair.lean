@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ContinuousAdeleNorm
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology2.ContinuousAdeleNorm
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -41,7 +41,7 @@ import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsNotCongPow
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LocalPrimeGaloisActionPeriodT
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms2.HasExponentZeroIff
 import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs
 import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.Newform
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SemisimpleLevels.AbW

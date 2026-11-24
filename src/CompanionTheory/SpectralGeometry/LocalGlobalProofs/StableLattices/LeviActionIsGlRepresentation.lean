@@ -45,8 +45,8 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
-import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology2.BaseChangeDefiniteUnitary
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology2.IsNormalisedOfIsDiscrete
 import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
 
 @[expose] public section

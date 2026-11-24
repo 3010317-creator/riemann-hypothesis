@@ -38,7 +38,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DiscreteSeriesUpqUniqueOfClassification
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms2.DiscreteSeriesUpqUniqueOfClassification
 
 @[expose] public section
 
