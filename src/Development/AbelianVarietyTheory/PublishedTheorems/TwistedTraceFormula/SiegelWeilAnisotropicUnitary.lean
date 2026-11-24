@@ -129,6 +129,12 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.ThetaMean
 
+/-- **Kudla–Rallis regularized Siegel–Weil formula**: the regularized theta integral for
+an anisotropic unitary dual pair coincides with the residue or special value of a Siegel
+Eisenstein series at the critical point.
+
+Proposed reference:
+[S. S. Kudla and S. Rallis, *A regularized Siegel-Weil formula: the first term identity*][kudlaRallis1994]. -/
 def SiegelWeilAnisotropicUnitary : Prop :=
   ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D), 1 ≤ A.rank → 1 ≤ B.rank → IsAniso B →
   ∀ (χB : (AE D)ˣ →* Circle) (ω : GA D (dblSp A) × GA D B →* Module.End ℂ (WO (dblSp A) B → ℂ)),
