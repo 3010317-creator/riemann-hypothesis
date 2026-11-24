@@ -224,8 +224,7 @@ theorem unimod : PositivityTheory.RgBcC.Unimod := by
     intro g
     have e1 := Measure.isMulLeftInvariant_eq_smul (Measure.map (· * g) μ) μ
     have e2 := Measure.modularCharacterFun_eq_haarScalarFactor μ g
-    rw [← e2] at e1
-    exact e1
+    rwa [← e2] at e1
   have hχ : ∀ g : PositivityTheory.RgTw.G n, Measure.modularCharacter g = 1 := by
     refine char_eq_one Measure.modularCharacter ?_
     intro z hz

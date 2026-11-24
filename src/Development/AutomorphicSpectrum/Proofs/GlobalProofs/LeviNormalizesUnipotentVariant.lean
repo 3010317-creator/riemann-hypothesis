@@ -78,18 +78,15 @@ theorem uPart_le_levi_general (X Y : Matrix (Fin n) (Fin r) E) (T : Finset (Fin 
   intro k hk
   constructor
   · apply mem_frameStab_initCols
-    intro i hi
-    exact hfix _ (Submodule.mem_sup_left (Submodule.subset_span ⟨i, ⟨k, hk, hi⟩, rfl⟩))
+    exact fun i hi => hfix _ (Submodule.mem_sup_left (Submodule.subset_span ⟨i, ⟨k, hk, hi⟩, rfl⟩))
   · apply mem_frameStab_initCols
-    intro i hi
-    exact hfix _ (Submodule.mem_sup_right (Submodule.subset_span ⟨i, ⟨k, hk, hi⟩, rfl⟩))
+    exact fun i hi => hfix _ (Submodule.mem_sup_right (Submodule.subset_span ⟨i, ⟨k, hk, hi⟩, rfl⟩))
 
 end General
 
 theorem uPart_le_levi : ∀ (D : D7) (V : HSp D) (m : ℕ) (X Y : Matrix (Fin V.rank) (Fin m) D.host.E) (T : Finset (Fin m)),
     uPart D.sp.cm.sig V.gram X Y T ≤ levi D.sp.cm.sig V.gram X Y T := by
-  intro D V m X Y T
-  exact uPart_le_levi_general X Y T
+  exact fun D V m X Y T => uPart_le_levi_general X Y T
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UCore
 end

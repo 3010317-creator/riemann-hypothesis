@@ -104,10 +104,7 @@ theorem exists_section_of_isFinite (R : Type) [CommRing R] [IsDomain R] [IsInteg
     ext a; exact hθ₀ a
   have hψθ : ψ ≫ θ = 𝟙 _ := by
     ext r
-    apply hinj
-    have h6 := congrArg (fun g => g.hom r) hφψ
-    have h7 := hθ₀ (ψ.hom r)
-    exact h7.trans h6
+    exact hinj ((hθ₀ (ψ.hom r)).trans (congrArg (fun g => g.hom r) hφψ))
   have hfθ : f.appTop ≫ θ = (Scheme.ΓSpecIso (CommRingCat.of R)).hom := by
     rw [← cancel_epi (Scheme.ΓSpecIso (CommRingCat.of R)).inv, Iso.inv_hom_id, ← hψθ]
     simp [ψ]

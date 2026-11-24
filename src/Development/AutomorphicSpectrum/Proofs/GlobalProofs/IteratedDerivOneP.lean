@@ -160,8 +160,7 @@ theorem exists_small_log : ∀ (D : D7) (θ : GlobalTheory.Mem.Th.InfF D), IsInf
   · refine Filter.iInter_mem.2 fun τ => Filter.iInter_mem.2 fun i => Filter.iInter_mem.2 fun j => ?_
     refine IsOpen.mem_nhds ?_ ?_
     · exact isOpen_lt (((hcont τ).sub continuous_const).matrix_elem i j).norm continuous_const
-    · simp only [Set.mem_ofPred_eq, hone, sub_self, Matrix.zero_apply, norm_zero]
-      exact hε0
+    · simpa only [Set.mem_ofPred_eq, hone, sub_self, Matrix.zero_apply, norm_zero] using hε0
   · intro r hr hrinf
     simp only [Set.mem_iInter, Set.mem_ofPred_eq] at hr
     have hclose : GlobalTheory.CuspGeo.CloseR θ V r ε := ⟨hrinf, fun τ i j => (hr τ i j).le⟩
@@ -556,8 +555,7 @@ theorem finiteDimensional_of_compact_coercive :
     (f := (T : S.topologicalClosure →ₗ[ℂ] H)) hT 1
   have hball : IsCompact (Metric.closedBall (0 : S.topologicalClosure) 1) := by
     refine (hemb.isCompact_preimage hK).of_isClosed_subset Metric.isClosed_closedBall ?_
-    intro x hx
-    exact subset_closure ⟨x, hx, rfl⟩
+    exact fun x hx => subset_closure ⟨x, hx, rfl⟩
   have : FiniteDimensional ℂ S.topologicalClosure :=
     FiniteDimensional.of_isCompact_closedBall₀ ℂ zero_lt_one hball
   exact Submodule.finiteDimensional_of_le S.le_topologicalClosure

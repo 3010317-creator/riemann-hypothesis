@@ -267,8 +267,7 @@ theorem ratio_reg {X' : Scheme.{0}} {ξ' : Spec (CommRingCat.of Ω') ⟶ X'} (hv
     refine Finset.prod_congr rfl fun k' hk => ?_
     rw [h2 k' fun ⟨k, hk'⟩ => by simp [← hk'] at hk]
   simp only [] at hr
-  rw [e1, e2, e3, hval c'' d' h1, hdv, mul_div_mul_right _ _ hB, ← map_div₀] at hr
-  exact hr
+  rwa [e1, e2, e3, hval c'' d' h1, hdv, mul_div_mul_right _ _ hB, ← map_div₀] at hr
 
 theorem monomial_pull (hv : AI.I1.IsBlockMap κ v) (hy : ∀ q, y' (v q) = i (y q)) (a : K → ℤ) {c' : ∀ k', J' k'}
     {d : ∀ k, J k} (hd : ∀ k, v ⟨k, d k⟩ = ⟨κ k, c' (κ k)⟩) :
@@ -456,9 +455,7 @@ theorem stalkSpecializes_bijective {x y : X} (e : y = x) (h : y ⤳ x) :
   exact Function.bijective_id
 
 theorem genMap_bijective {ξ : Spec (CommRingCat.of Ω₁) ⟶ X} (hg : IsCptGen ξ) (p : Cpt ξ) (e : genPt ξ = p.1) :
-    Function.Bijective (genMap ξ p) := by
-  have h := hg.bij.comp (stalkSpecializes_bijective e p.2)
-  exact h
+    Function.Bijective (genMap ξ p) := hg.bij.comp (stalkSpecializes_bijective e p.2)
 
 theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
     spMap (g.comp f) = spMap g ≫ spMap f := by
@@ -604,8 +601,7 @@ section Eig
 
 theorem hom_ext_of_pullback {S S' : Scheme.{0}} {G' : Over S'} {G : Over S} {f : S' ⟶ S} {φ : G'.left ⟶ G.left}
     (hc : IsPullback φ G'.hom G.hom f) {T : Over S'} {a b : T ⟶ G'} (h : a.left ≫ φ = b.left ≫ φ) : a = b := by
-  apply Over.OverMorphism.ext
-  exact hc.hom_ext h (by simp)
+  exact Over.OverMorphism.ext (hc.hom_ext h (by simp))
 
 variable {Ω Ω' E F O : Type} [Field Ω] [Field Ω'] [AddCommGroup E] [Module Ω E] [AddCommGroup F] [Module Ω' F]
   [CommRing O]
@@ -707,7 +703,6 @@ theorem flag_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   intro xdeg e hR r
   refine isDegOn_pull hd A'.tie.gen A.tie.cover hv hy (fun p' hp => ?_) _ (hR r)
   have := gr_gen_pull hd hj (hb₀ _) (Fl.sub (HodgeCpt.rootIdx D r).1) p' hp (HodgeCpt.rootIdx D r).2
-  rw [← hV] at this
-  exact this
+  rwa [← hV] at this
 
 end GlobalTheory.CompanionTheory.Ar.FlagPull

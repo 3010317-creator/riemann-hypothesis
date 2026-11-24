@@ -127,8 +127,7 @@ theorem rule_of_conj [Invertible (2 : R)] {C : TestClass R} {ψ : AddChar R ℂ}
     rw [Matrix.GeneralLinearGroup.val_det_apply, Matrix.GeneralLinearGroup.val_det_apply, ht', Matrix.mul_assoc,
       Matrix.det_comm' h2 h1, Matrix.mul_assoc, h1, Matrix.mul_one]
   simp only [LinearMap.comp_apply] at key
-  rw [e1, e2, edet] at key
-  exact key
+  rwa [e1, e2, edet] at key
 
 private theorem fromBlocks_transpose_dbl_map_eq_dbl {J : Matrix β β E} {ey fx : Matrix β ν E} {m1 m2 : Matrix ν β E}
     (h1e : m1 * ey = 1) (h1f : m1 * fx = 0) (h2e : m2 * ey = 0) (h2f : m2 * fx = 1)

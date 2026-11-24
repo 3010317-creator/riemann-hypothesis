@@ -123,8 +123,7 @@ theorem ideal_eq_of_restrictIdeal_eq {Y : Scheme.{u}} (A B : Y.IdealSheafData)
   have : IsAffine (Scheme.Opens.toScheme (V : Y.Opens)) := V.2
   have e : (⊤ : (Scheme.Opens.toScheme (V : Y.Opens)).Opens) ≤
       Scheme.Opens.ι (V : Y.Opens) ⁻¹ᵁ (V : Y.Opens) := by
-    intro x _
-    exact x.2
+    exact fun x _ => x.2
   have h' : A.comap (Scheme.Opens.ι (V : Y.Opens)) = B.comap (Scheme.Opens.ι (V : Y.Opens)) := by
     simpa only [restrictIdeal_eq_comap_ι] using h
   have hA := AlgebraicGeometry.Scheme.IdealSheafData.comap_ideal_eq_map_appLE A
@@ -256,8 +255,7 @@ private theorem ideal_eq_top_of_one_eq_zero {Y : Scheme.{u}} (I : Y.IdealSheafDa
       (Opposite.op ((Opens.map I.subschemeι.base).obj (U : Y.Opens))))) = 0) :
     I.ideal U = ⊤ := by
   have happ : (CommRingCat.Hom.hom (I.subschemeι.app (U : Y.Opens))) 1 = 0 := by
-    rw [map_one]
-    exact h1
+    rwa [map_one]
   rw [Scheme.IdealSheafData.subschemeι_app, CommRingCat.hom_comp, RingHom.comp_apply,
     CommRingCat.hom_ofHom] at happ
   have h2 := congrArg (CommRingCat.Hom.hom (I.subschemeObjIso U).hom) happ
@@ -363,25 +361,21 @@ private theorem exists_etaleChart_of_hasStrictNormalCrossingsWith {X : Scheme.{u
   have hH0 : ∀ t : Fin m, av 0 = some t → restrictIdeal H U = c.coordIdeal {t} := by
     intro t ht
     have h := hsome 0 hlt0 t ht
-    rw [List.getElem_cons_zero] at h
-    exact h
+    rwa [List.getElem_cons_zero] at h
   have hHn : av 0 = none → restrictIdeal H U = ⊤ := by
     intro ht
     have h := hnone 0 hlt0 ht
-    rw [List.getElem_cons_zero] at h
-    exact h
+    rwa [List.getElem_cons_zero] at h
   have hD0 : ∀ t : Fin m, av (i + 1) = some t → restrictIdeal D U = c.coordIdeal {t} := by
     intro t ht
     have h := hsome (i + 1) hlti t ht
     simp only [List.getElem_cons_succ] at h
-    rw [hEi] at h
-    exact h
+    rwa [hEi] at h
   have hDn : av (i + 1) = none → restrictIdeal D U = ⊤ := by
     intro ht
     have h := hnone (i + 1) hlti ht
     simp only [List.getElem_cons_succ] at h
-    rw [hEi] at h
-    exact h
+    rwa [hEi] at h
   obtain ⟨V, hVaff, hyV, hVle⟩ := AlgebraicGeometry.exists_isAffineOpen_mem_and_subset hyU
   refine ⟨V, hyV, hVaff, m, c.restrict hVle, S,
     restrictIdeal_eq_restrict_coordIdeal_of_le hVle c Z S hZ, ?_⟩
@@ -439,8 +433,7 @@ private theorem exists_restrictIdeal_eq_of_notMem_support {X X₁ : Scheme.{u}} 
         q.base z ∉ (Z.comap H.subschemeι).support := by
     intro z hz hmem
     have h1 : z ∈ ((Z.comap H.subschemeι).comap q).support := by
-      rw [AlgebraicGeometry.Scheme.IdealSheafData.support_comap]
-      exact hmem
+      rwa [AlgebraicGeometry.Scheme.IdealSheafData.support_comap]
     rw [hZcomap, AlgebraicGeometry.Scheme.IdealSheafData.support_comap] at h1
     have h2 : (Blowup.strictTransform π Z H).subschemeι.base z ∈ (Z.comap π).support := h1
     rw [AlgebraicGeometry.Scheme.IdealSheafData.support_comap] at h2
@@ -583,8 +576,7 @@ private theorem exists_restrictIdeal_eq_of_mem_preimage {X X₁ : Scheme.{u}} {k
       Z H hs hZ hH'
     have hx0 : x ∈ (Blowup.strictTransform π Z H).subschemeι ⁻¹ᵁ
         (blowupChartOfIsBlowup π c S hπ hZ s hs).domain := hmem
-    rw [hbot] at hx0
-    exact hx0
+    rwa [hbot] at hx0
   obtain ⟨V, hVle, hVaff, hxV⟩ :=
     (blowupChartOfIsBlowup π c S hπ hZ s hs).exists_isAffineOpen_mem_le_domain
       ((Blowup.strictTransform π Z H).subschemeι.base x) hmem

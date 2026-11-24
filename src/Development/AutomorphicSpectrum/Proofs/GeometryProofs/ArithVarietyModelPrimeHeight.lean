@@ -130,9 +130,7 @@ theorem lieBC {S : Scheme.{0}} {G : Over S} [GrpObj G] {A B : Type} [CommRing A]
       | smul s n h => exact Submodule.smul_mem _ s h
       | add a b ha hb => exact Submodule.add_mem _ ha hb
     exact key e
-  · intro l
-    refine ⟨hbc.lift ((Algebra.linearMap A B).comp l), fun e => ?_⟩
-    exact hbc.lift_eq _ e
+  · exact fun l => ⟨hbc.lift ((Algebra.linearMap A B).comp l), fun e => (hbc.lift_eq _ e)⟩
 
 theorem isHT_transfer {R : Type} [CommRing R] [IsDomain R] {T : Type} [CommGroup T] {Γ₁ Γ₂ : QFGroup R T}
     {S : Scheme.{0}} {G : Over S} [GrpObj G] {x : Sp R ⟶ S} {N : ℕ} {i₁ : Γ₁.G.left ⟶ G.left}
@@ -159,8 +157,7 @@ theorem isHT_transfer {R : Type} [CommRing R] [IsDomain R] {T : Type} [CommGroup
     · rw [Category.assoc, Over.w ψ, v₁]
     · rw [Category.assoc, hψ, v₂]
     · refine (TorIso.valAt_comp _ _ s).symm.trans ?_
-      rw [Category.assoc, e₁, Category.comp_id]
-      exact v₃
+      rwa [Category.assoc, e₁, Category.comp_id]
 
 theorem pts_bc {R B Ω : Type} [CommRing R] [IsDomain R] [CommRing B] [IsDomain B] [Field Ω] {T : Type} [CommGroup T]
     {Γ : QFGroup R T} {Γ' : QFGroup B T} {φ : R →+* B} {F : Γ'.G.left ⟶ Γ.G.left} (hF : Γ'.IsBaseChange Γ φ F)
@@ -399,8 +396,7 @@ section -- clump:auto
 
 theorem UpperTheory.Reformulated.B.DualIntegralLattice.aux2 :
     ∀ (E : Type) [inst : Field E] [inst_1 : NumberField E], (Algebra.traceForm ℚ E).Nondegenerate := by
-  intro E _ _
-  exact traceForm_nondegenerate ℚ E
+  exact fun E _ _ => traceForm_nondegenerate ℚ E
 
 noncomputable def UpperTheory.Reformulated.B.DualIntegralLattice.dualInt :
     (E : Type) →
@@ -461,8 +457,7 @@ private theorem key1 {S : Type} [CommRing S] [IsDomain S] [CharZero S] {ι : Typ
 
     simp only [map_sum, Finset.mul_sum, Int.cast_sum]
     rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => ?_
-    exact term i j
+    exact Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => term i j
   choose z hz using hx
   have hpR : ((p : ZMod (p ^ R))) ^ R = 0 := by
     exact_mod_cast ZMod.natCast_self (p ^ R)
@@ -834,13 +829,11 @@ theorem gam_key {V : Type} [AddCommGroup V] [Module Ω V] {r N : ℕ} (Rs Rt : S
   intro l
   have hv : Matrix.vecMul (F • (is a - it a)) G = y := by
     funext j
-    simp only [Matrix.vecMul, dotProduct]
-    exact key j
+    simpa only [Matrix.vecMul, dotProduct] using key j
   have hv2 : F • (is a - it a) = Matrix.vecMul y C := by
     rw [← hv, Matrix.vecMul_vecMul, hGC, Matrix.vecMul_one]
   rw [hv2]
-  simp only [Matrix.vecMul, dotProduct]
-  exact Rt.sum_mem fun j _ => Rt.mul_mem (hy j) (hC j l)
+  simpa only [Matrix.vecMul, dotProduct] using Rt.sum_mem fun j _ => Rt.mul_mem (hy j) (hC j l)
 
 theorem del_key {V : Type} [AddCommGroup V] [Module Ω V] {s N : ℕ} (Rs Rt : Subalgebra o Ω)
     {w f Q : Ω} (hf : f ∈ Rt) (hstd : ∀ a ∈ Rs, ∃ m : ℕ, f ^ m * a ∈ Rt)

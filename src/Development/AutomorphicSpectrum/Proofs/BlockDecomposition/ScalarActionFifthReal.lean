@@ -91,12 +91,10 @@ theorem qdetNext : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E : Fin (m
       simp
     · intro σ _ hσ
       obtain ⟨k, hk⟩ : ∃ k, σ k ≠ k := by
-        by_contra hne
-        push Not at hne
+        by_contra! hne
         exact hσ (Equiv.ext hne)
       rw [hc1 σ, Finset.prod_eq_zero (mem_univ k) (ite_eq_right hk), zero_smul, mul_zero]
-    · intro h1
-      exact absurd (mem_univ _) h1
+    · exact fun h1 => absurd (mem_univ _) h1
   · simp only
     rw [Finset.sum_eq_single (1 : Equiv.Perm (Fin (m + 1)))]
     · rw [hc0 1]
@@ -107,8 +105,7 @@ theorem qdetNext : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E : Fin (m
       simp only [Algebra.algebraMap_eq_smul_one, ← sum_smul]
     · intro σ _ hσ
       obtain ⟨k₀, hk₀⟩ : ∃ k, σ k ≠ k := by
-        by_contra hne
-        push Not at hne
+        by_contra! hne
         exact hσ (Equiv.ext hne)
       rw [hc0 σ]
       have hz : ∀ k, (∏ j, (if j = k then (1 : ℂ) else (if σ j = j then (1 : ℂ) else 0))) = 0 := by
@@ -121,8 +118,7 @@ theorem qdetNext : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E : Fin (m
           have h2 : σ (σ k) ≠ σ k := fun e => hk (σ.injective e)
           simp [hk, h2]
       simp [hz]
-    · intro h1
-      exact absurd (mem_univ _) h1
+    · exact fun h1 => absurd (mem_univ _) h1
   · unfold Formalism.REAL.qdet Formalism.REAL.qminor
     rw [Finset.sum_congr rfl fun σ _ => by rw [hc σ u]]
     simp_rw [mul_sum, mul_smul_comm]
@@ -266,8 +262,7 @@ theorem split2 {A : Type} [CommRing A] [IsLocalRing A] {κ : Type} [DecidableEq 
           · subst hb
             simp [ha]
           · simp [hb]
-        rw [this]
-        exact e2
+        rwa [this]
     · have hfu : IsUnit (f.eval x) := isUnit_of_mul_isUnit_left h2
       obtain ⟨g1, rfl⟩ := hroot g (hfu.mul_right_eq_zero.1 hz)
       have hg1 : g1.Monic := hlm.of_mul_monic_left hg
@@ -310,8 +305,7 @@ theorem splitLocal : ∀ (A : Type) [CommRing A] [IsLocalRing A] (κ : Type) [De
     refine ⟨fun a => if a ∈ S1 then j else π0 a, fun a ha => ?_, fun i hi => ?_⟩
     · by_cases haS : a ∈ S1
       · simp [haS]
-      · simp only [haS, ite_false]
-        exact mem_insert_of_mem (h1 a (Finset.mem_sdiff.2 ⟨ha, haS⟩))
+      · simpa only [haS, ite_false] using mem_insert_of_mem (h1 a (Finset.mem_sdiff.2 ⟨ha, haS⟩))
     · rcases Finset.mem_insert.1 hi with rfl | hiJ
       · have : S.filter (fun a => (if a ∈ S1 then i else π0 a) = i) = S1 := by
           ext a
@@ -321,10 +315,8 @@ theorem splitLocal : ∀ (A : Type) [CommRing A] [IsLocalRing A] (κ : Type) [De
             by_contra hn
             simp only [hn, ite_false] at hq
             exact hj (hq ▸ h1 a (Finset.mem_sdiff.2 ⟨haS, hn⟩))
-          · intro ha
-            exact ⟨hs ha, by simp [ha]⟩
-        rw [this]
-        exact e1
+          · exact fun ha => ⟨hs ha, by simp [ha]⟩
+        rwa [this]
       · have hne : j ≠ i := fun e => hj (e ▸ hiJ)
         have : S.filter (fun a => (if a ∈ S1 then j else π0 a) = i) = (S \ S1).filter (fun a => π0 a = i) := by
           ext a
@@ -350,8 +342,7 @@ theorem polyTopLocal {n : ℕ} (L : Fin n → ℝ) (hL : StrictAnti L) (lev : Fi
     rw [← map_sub]
     refine IsUnit.map ψ (isUnit_iff_ne_zero.2 ?_)
     rw [sub_ne_zero]
-    intro h
-    exact hab (hL.injective (Complex.ofReal_injective h))
+    exact fun h => hab (hL.injective (Complex.ofReal_injective h))
   obtain ⟨π, hπ, hQ⟩ := splitLocal A (Fin n) (fun a => ψ (L a : ℂ)) _ Q univ hu (fun j hj => (hm j hj).1) hp
   obtain ⟨π', hπ', hQ'⟩ := splitLocal A (Fin n) (fun a => ψ (L a : ℂ)) _ Q' univ hu (fun j hj => (hm' j hj).1) hp'
   have hnot : ∀ (ρ : Fin n → ℕ), (∀ a ∈ (univ : Finset (Fin n)), ρ a ∈ univ.image lev) → ∀ j, j ∉ univ.image lev →
@@ -367,8 +358,7 @@ theorem polyTopLocal {n : ℕ} (L : Fin n → ℝ) (hL : StrictAnti L) (lev : Fi
     intro ρ P hρ hP hPe j
     by_cases hj : j ∈ univ.image lev
     · have := (hP j hj).2
-      rw [hPe j hj, natDegree_prod_lin] at this
-      exact this
+      rwa [hPe j hj, natDegree_prod_lin] at this
     · rw [hnot ρ hρ j hj, hblk0 j hj]
   have hc := hcard π Q hπ hm hQ
   have hc' := hcard π' Q' hπ' hm' hQ'
@@ -437,8 +427,7 @@ theorem polyTop {n : ℕ} (L : Fin n → ℝ) (hL : StrictAnti L) (lev : Fin n �
   have h3 : (∏ a ∈ blk lev j, (X + C ((φ.comp (algebraMap ℂ B)) (L a : ℂ))) : A[X]) =
       (∏ a ∈ blk lev j, (X + C (algebraMap ℂ B (L a : ℂ)))).map φ := by
     rw [Polynomial.map_prod]; simp [Polynomial.map_add (f := _)]
-  rw [h3, coeff_map] at h2
-  exact h2
+  rwa [h3, coeff_map] at h2
 
 theorem coeffs_zero {V : Type*} [AddCommGroup V] [Module ℂ V] (N : ℕ) (d : ℕ → V)
     (h : ∀ Y : ℂ, ∑ i ∈ range N, Y ^ i • d i = 0) : ∀ i ∈ range N, d i = 0 := by

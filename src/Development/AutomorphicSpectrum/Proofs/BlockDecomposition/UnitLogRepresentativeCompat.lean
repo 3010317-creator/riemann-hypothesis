@@ -242,8 +242,7 @@ theorem rU_sub_mem (v : ∀ T : Q.FullSubcategory, T.obj.Bˣ)
 theorem map_sub_mem {T T' : Thick (smFun X q)} (f : T ⟶ T') (e : T.Bˣ) (he : (e : T.B) - 1 ∈ T.J) :
     ((Units.map f.φ.toMonoidHom e : T'.Bˣ) : T'.B) - 1 ∈ T'.J := by
   have h := f.hle he
-  rw [Ideal.mem_comap, map_sub, map_one] at h
-  exact h
+  rwa [Ideal.mem_comap, map_sub, map_one] at h
 
 theorem plog_map_unit {T T' : Thick (smFun X q)} (f : T ⟶ T') (s : ℕ) (e : T.Bˣ) (he : (e : T.B) - 1 ∈ T.J) :
     plogK T'.δ s (((Units.map f.φ.toMonoidHom e : T'.Bˣ) : T'.B) - 1) = f.φ (plogK T.δ s ((e : T.B) - 1)) := by

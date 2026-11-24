@@ -63,9 +63,7 @@ theorem mem_maximal_iff_not_inv_mem {K : Type} [Field K] (R : Subring K) [IsLoca
     refine ⟨fun x => ?_⟩
     obtain ⟨p, hp, h⟩ : IsIntegral R (x : K) := x.2
     refine ⟨p, hp, ?_⟩
-    apply Subtype.ext
-    have key := Polynomial.hom_eval₂ p f (integralClosure R K).toSubring.subtype x
-    exact key.trans h
+    exact Subtype.ext ((Polynomial.hom_eval₂ p f (integralClosure R K).toSubring.subtype x).trans h)
   have hm : (P.comap (algebraMap R (integralClosure R K).toSubring)).IsMaximal :=
     letI := hP
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal P
@@ -91,7 +89,6 @@ theorem mem_maximal_iff_not_inv_mem {K : Type} [Field K] (R : Subring K) [IsLoca
     rw [this]
     exact Subtype.coe_prop _
   · rintro ⟨hne, hinv⟩
-    refine IsUnit.of_mul_eq_one (⟨(t : K)⁻¹, hinv⟩ : R) ?_
-    exact Subtype.ext (mul_inv_cancel₀ hne)
+    exact IsUnit.of_mul_eq_one (⟨(t : K)⁻¹, hinv⟩ : R) (Subtype.ext (mul_inv_cancel₀ hne))
 
 end GlobalTheory.CompanionTheory.IntegralClosureLocal

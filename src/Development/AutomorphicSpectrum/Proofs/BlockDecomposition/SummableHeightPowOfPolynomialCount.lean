@@ -111,8 +111,7 @@ theorem summable_rpow_neg_of_polynomial_count :
       intro q hq
       have hq' : K q = k := (Finset.mem_filter.mp (Finset.mem_coe.mp hq)).2
       have := hupp q
-      rw [hq'] at this
-      exact this
+      rwa [hq'] at this
     have hcard2 : ((u.filter fun q => K q = k : Finset Q).card : ℝ) ≤ C * ((2:ℝ) ^ (k + 1)) ^ c := by
       refine le_trans ?_ hcard
       have := Set.ncard_le_ncard hsub hfin
@@ -122,8 +121,7 @@ theorem summable_rpow_neg_of_polynomial_count :
       intro q hq
       have hq' : K q = k := (Finset.mem_filter.mp hq).2
       have := hterm q
-      rw [hq'] at this
-      exact this
+      rwa [hq'] at this
     have hb0 : (0:ℝ) ≤ ((2:ℝ) ^ (k : ℝ)) ^ (-s) := by positivity
     calc ∑ q ∈ u with K q = k, h q ^ (-s)
         ≤ ((u.filter fun q => K q = k : Finset Q).card : ℝ) * ((2:ℝ) ^ (k : ℝ)) ^ (-s) := by

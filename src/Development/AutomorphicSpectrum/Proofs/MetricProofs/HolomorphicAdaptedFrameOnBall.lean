@@ -245,8 +245,7 @@ theorem Fm_single (τ : Ψ) (y x : Fin (j + j') → ℂ) :
   · simp
   · intro b _ hb
     simp [Pi.single_eq_of_ne hb]
-  · intro h
-    exact absurd (Finset.mem_univ τ) h
+  · exact fun h => absurd (Finset.mem_univ τ) h
 
 theorem xi_block {A : Ψ → Matrix (Fin (j + j')) (Sg j j') ℂ} (hA : C.IsAdapted R A) (τ : Ψ)
     (x y : Fin j' → ℂ) :
@@ -458,8 +457,7 @@ theorem perExt_differentiableOn {E : Type} [Field E] [NumberField E] [IsCMField 
     funext t
     exact Module.Basis.constr_apply_fintype ℝ C.bas _ y
   rw [h]
-  refine DifferentiableOn.fun_sum fun k _ => ?_
-  exact (F.hol.2 (C.lam k)).const_smul (C.bas.equivFun y k)
+  exact DifferentiableOn.fun_sum fun k _ => (F.hol.2 (C.lam k)).const_smul (C.bas.equivFun y k)
 
 theorem pPart_differentiableOn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (Ψ : Type) [Fintype Ψ] (j j' n g : ℕ) (Λ : Type) [AddCommGroup Λ] [Module (𝓞 E) Λ] (F : UnivFam E Ψ j j' n g Λ) (C : LatEmb F) (τ : Ψ) (y : Fin (j + j') → ℂ), DifferentiableOn ℂ (fun t => C.pPart (F.R t) τ y) (ballDom F.q) := by
   intro E _ _ _ Ψ _ j j' n g Λ _ _ F C τ y
@@ -823,8 +821,7 @@ theorem chart_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (�
     (ReciprocityTheory.AnForm.Osgood.osgood n _ Pf hUo hPd) hP0
   have hG₀d : DifferentiableOn ℂ G₀ (ballDom F.q) := hG₀a.differentiableOn
   refine ⟨fun t => ballPt F.q (Wm t), fun t => 2 * G₀ t - ((Fintype.card Ψ * j' * Real.log (2 * C.c) : ℝ) : ℂ), ?_, ?_, ?_, ?_⟩
-  · refine differentiableOn_pi.2 fun k => ?_
-    exact (differentiableOn_pi.1 (hWd _ _)) _
+  · exact differentiableOn_pi.2 fun k => (differentiableOn_pi.1 (hWd _ _)) _
   · exact (hG₀d.const_mul 2).sub_const _
   · intro t ht A hA
     have hb0 : ∀ τ, ballMat F.q 0 τ = 0 := fun τ => by ext a b; simp [ballMat]
@@ -833,8 +830,7 @@ theorem chart_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (�
       rw [hb0, Matrix.transpose_zero]
       exact huniq t ht τ _ _ (hpt t ht τ).1
         (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Chart.point_graph_gram E Ψ j j' n g Λ F C (F.R t) A A₀ τ _ (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Chart.sgU_blocks j j') (hgA t A hA τ) hA (hunit τ) rfl).1
-    simp only [moebBall]
-    exact congrArg (ballPt F.q) this
+    simpa only [moebBall] using congrArg (ballPt F.q) this
   · intro t ht
     have hre : (G₀ t).re = ∑ τ, Real.log ‖(Ym t τ).det‖ := by
       have h1 : ‖Pf t‖ = Real.exp (G₀ t).re := by rw [← hG₀ t ht, Complex.norm_exp]

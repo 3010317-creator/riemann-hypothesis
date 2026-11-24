@@ -221,11 +221,9 @@ theorem isCuspidal_of_sum_char : ∀ (K : Type) [Field K] [Fintype K] [Decidable
     have hx : (pm (K := K) σ)⁻¹ * u * pm (K := K) σ ∈ unip K b := by
       apply hun
       have : pm (K := K) σ * ((pm (K := K) σ)⁻¹ * u * pm (K := K) σ) * (pm (K := K) σ)⁻¹ = u := by group
-      rw [this]
-      exact hu
+      rwa [this]
     have hh : u * pm (K := K) σ = pm (K := K) σ * ((pm (K := K) σ)⁻¹ * u * pm (K := K) σ) := by group
     rw [← Module.End.mul_apply, ← map_mul, hh, map_mul, Module.End.mul_apply, hv _ hx])
-  have h3 := congrArg (τ.ρ (pm (K := K) σ)⁻¹) hw
-  simpa [← Module.End.mul_apply, ← map_mul] using h3
+  simpa [← Module.End.mul_apply, ← map_mul] using congrArg (τ.ρ (pm (K := K) σ)⁻¹) hw
 
 end GlobalTheory.CompanionTheory.TyFin.CuspIff

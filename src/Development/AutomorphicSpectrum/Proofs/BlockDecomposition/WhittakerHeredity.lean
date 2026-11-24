@@ -153,8 +153,7 @@ theorem exists_adjacent_blk_lt_or_cell_eq_open : ∀ (k : Type) [Field k] [Valua
     have hB := blk_comp_wOpen_antitone d hd
     have hU := Tuple.unique_monotone (f := fun q => OrderDual.toDual (blk (stdBlocks d hd) q))
       (σ := w) (τ := wOpen d hd) (monotone_toDual_comp_iff.mpr hA) (monotone_toDual_comp_iff.mpr hB)
-    refine cell_eq_of_blk_eq k d hd w (wOpen d hd) fun p => ?_
-    exact OrderDual.toDual_inj.mp (congrFun hU p)
+    exact cell_eq_of_blk_eq k d hd w (wOpen d hd) fun p => OrderDual.toDual_inj.mp (congrFun hU p)
 
 end GlobalTheory.CompanionTheory.Rodier
 end -- clump:auto
@@ -318,8 +317,7 @@ theorem cells_cover_height :
   · obtain ⟨w, hw⟩ := GroundTheory.Automorphic.Parabolic.exists_permGL_mem_doubleCoset
       (F := k) (β := blkNat d hd) (γ := idxNat) g
     refine ⟨w, ?_⟩
-    rw [cell_eq_doubleCoset]
-    exact hw
+    rwa [cell_eq_doubleCoset]
   · rw [cell_eq_doubleCoset] at hg
     exact GroundTheory.Automorphic.Parabolic.cellHeight_of_mem_doubleCoset hg
   · rw [cell_eq_doubleCoset]
@@ -333,8 +331,7 @@ theorem cells_cover_height :
     rw [cell_eq_doubleCoset, cell_eq_doubleCoset, DoubleCoset.doubleCoset_eq_of_mem hmem]
 
 theorem cells_main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (h N : ℕ) (d : Fin h → ℕ) (hd : ∑ a, d a = N), (∀ g : GL (Fin N) k, ∃ w, g ∈ cell k d hd w) ∧ ∃ ht : GL (Fin N) k → ℕ, (∀ w, ∀ g ∈ cell k d hd w, ht g = ht (pm k w)) ∧ (∀ w, closure (cell k d hd w) ⊆ cell k d hd w ∪ {x | ht x < ht (pm k w)}) ∧ ∀ w, cell k d hd w ≠ cell k d hd (wOpen d hd) → ht (pm k w) < ht (pm k (wOpen d hd)) := by
-  intro k _ _ _ _ h N d hd
-  exact cells_cover_height k d hd
+  exact fun k _ _ _ _ h N d hd => cells_cover_height k d hd
 
 end GlobalTheory.CompanionTheory.Rodier.CellOrder
 end -- clump:auto
@@ -535,8 +532,7 @@ theorem kill_cell (ψ : AddChar k Circle) (hψ : Continuous ψ) (hψ1 : ψ ≠ 1
     have e2 := parInd_law (stdBlocks d hd) ρ f' ⟨_, unipRad_le_parab k _ hrad⟩ (pm k w)
     rw [hq] at e2
     simp only [map_one, Units.val_one, one_smul, Module.End.one_apply, inv_mul_cancel_right] at e2
-    rw [e2] at e1
-    rw [hθu] at e1
+    rw [e2, hθu] at e1
     have hne : ((Circle.toUnits (ψ t) : ℂˣ) : ℂ) ≠ 1 := fun e => ht (Circle.ext (by simpa using e))
     have h0 : (((Circle.toUnits (ψ t) : ℂˣ) : ℂ) - 1) • f'.1.1 (pm k w) = 0 := by
       rw [sub_smul, one_smul, ← e1, sub_self]
@@ -662,8 +658,7 @@ theorem whitHeredity : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     intro y
     obtain ⟨f, rfl⟩ := Submodule.Quotient.mk_surjective _ y
     obtain ⟨f₀, h0, h1⟩ := _root_.GlobalTheory.CompanionTheory.Rodier.exists_open_congr k ψ hψ hψ1 h N d hd (piTensor π) f
-    refine ⟨⟨f₀, h0⟩, ?_⟩
-    exact ((Submodule.Quotient.eq T).2 (by simpa [neg_sub] using T.neg_mem h1))
+    exact ⟨⟨f₀, h0⟩, ((Submodule.Quotient.eq T).2 (by simpa [neg_sub] using T.neg_mem h1))⟩
   have hb : Function.Surjective b := by
     intro y
     obtain ⟨w, rfl⟩ := Submodule.Quotient.mk_surjective _ y

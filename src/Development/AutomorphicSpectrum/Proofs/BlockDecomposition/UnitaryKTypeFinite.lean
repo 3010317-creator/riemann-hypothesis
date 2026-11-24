@@ -516,8 +516,7 @@ theorem isAdmissible_of_unitary_irreducible : ∀ {n : ℕ} {G : Set (Matrix (Fi
         rfl
       rw [← hw', ← map_sub, hiso]
       exact S.starProjection_inner_eq_zero u _ (hS _ hks w hw)
-    have h := hΘ k hk _ (S.orthogonalProjectionOnto u).2
-    simpa [T, hP] using h
+    simpa [T, hP] using hΘ k hk _ (S.orthogonalProjectionOnto u).2
   rintro _ ⟨v, hv, rfl⟩
   have hv' : v = ((⟨v, hv⟩ : S) : H) := rfl
   rw [hv', ← b.sum_repr ⟨v, hv⟩]
@@ -566,8 +565,7 @@ theorem finite_setOf_det_line_eq_zero {A B : Matrix (Fin n) (Fin n) ℂ} (hA : I
     rw [this]
     congr 1
     ext i j
-    simp
-    exact mul_comm _ _
+    simpa using mul_comm _ _
   have hP : P ≠ 0 := by
     intro h
     have := hev 0
@@ -618,8 +616,7 @@ theorem isLinRed_blkG (e : Fin a × ι ≃ Fin n) : GlobalTheory.LinRed.IsLinRed
   · rintro _ ⟨M, hM, rfl⟩ _ ⟨N, hN, rfl⟩
     exact ⟨M * N, IsUnit.mul hM hN, blk_mul e M N⟩
   · rintro _ ⟨M, hM, rfl⟩
-    refine ⟨M⁻¹, ?_, (blk_inv e hM).symm⟩
-    exact (Matrix.isUnit_nonsing_inv_iff).2 hM
+    exact ⟨M⁻¹, (Matrix.isUnit_nonsing_inv_iff).2 hM, (blk_inv e hM).symm⟩
   · rintro _ ⟨M, hM, rfl⟩
     refine ⟨Mᴴ, ?_, blk_conjTranspose e M⟩
     have : IsUnit (star M) := IsUnit.star hM
@@ -1167,8 +1164,7 @@ theorem entryMul_pow_mem {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n)
     have h0 : entryMul h (fun t => t ^ 0) X = X := by
       ext i j
       simp [entryMul]
-    rw [h0]
-    exact hX
+    rwa [h0]
   | succ k ih =>
     have hs : entryMul h (fun t => t ^ (k + 1)) X =
         Matrix.diagonal (fun i => (h i : ℂ)) * entryMul h (fun t => t ^ k) X -
@@ -1255,8 +1251,7 @@ theorem exists_proj_sup {E : Type*} [AddCommGroup E] [Module ℝ E] (𝔨 𝔟 :
   have hsum : ∀ Z, ((s (P Z)).1 : E) + ((s (P Z)).2 : E) = (P Z : E) := by
     intro Z
     have h2 := LinearMap.congr_fun hs (P Z)
-    have h3 := congrArg Subtype.val h2
-    simpa [f] using h3
+    simpa [f] using congrArg Subtype.val h2
   refine ⟨𝔨.subtype ∘ₗ LinearMap.fst ℝ 𝔨 𝔟 ∘ₗ s ∘ₗ P, 𝔟.subtype ∘ₗ LinearMap.snd ℝ 𝔨 𝔟 ∘ₗ s ∘ₗ P,
     fun Z => (s (P Z)).1.2, fun Z => (s (P Z)).2.2, fun Z hZ => ?_⟩
   have hid : ∀ W (hW : W ∈ LinearMap.range f), P W = ⟨W, hW⟩ := fun W hW =>
@@ -1271,8 +1266,7 @@ theorem exists_proj_sup {E : Type*} [AddCommGroup E] [Module ℝ E] (𝔨 𝔟 :
   have h2 : P (Z - (P Z : E)) = P Z - P (P Z : E) := map_sub _ _ _
   have h3 : P (P Z : E) = P Z := hid _ (P Z).2
   rw [h3, sub_self] at h2
-  have h4 := congrArg Subtype.val (h1.symm.trans h2)
-  simpa using h4
+  simpa using congrArg Subtype.val (h1.symm.trans h2)
 
 theorem eventually_exp_mul_exp {G : Set A} (hmul : ∀ g ∈ G, ∀ h ∈ G, g * h ∈ G)
     {𝔤 𝔨 𝔟 : Submodule ℝ A} (h𝔤 : ∀ X, X ∈ 𝔤 ↔ ∀ t : ℝ, NormedSpace.exp (t • X) ∈ G)
@@ -1451,8 +1445,7 @@ theorem alg {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)) (hs : 
   have hb' : ∀ P ∈ 𝔥, ∀ Q ∈ 𝔥, P * Q - Q * P ∈ 𝔥 := fun P hP Q hQ => by
     have := hb _ ((mem P).1 hP) _ ((mem Q).1 hQ)
     rw [mulc, mulc] at this
-    rw [mem, Matrix.mul_sub, Matrix.sub_mul]
-    exact this
+    rwa [mem, Matrix.mul_sub, Matrix.sub_mul]
   have hreg' : ∀ Y ∈ 𝔥, Yᴴ = Y → Matrix.diagonal (fun i => (h i : ℂ)) * Y = Y * Matrix.diagonal (fun i => (h i : ℂ)) → Y.IsDiag := by
     intro Y hY hYs hc
     have := hreg _ ((mem Y).1 hY) (by simp [Matrix.conjTranspose_mul, hYs, Matrix.mul_assoc]) (by rw [mulc, mulc, hc])
@@ -1579,8 +1572,7 @@ theorem isURepOn_blkRep (e : Fin a × ι ≃ Fin n) {σ : GL (Fin a) (ι → ℂ
     Formalism.MainNotions.S.IsURepOn (blkG e) (blkRep e σ) := by
   refine ⟨⟨?_, ?_⟩, fun g _ v => hσ.norm_apply _ v, fun v =>
     (hσ.continuous_apply v).comp_continuousOn (continuousOn_toGL_unblk e)⟩
-  · have h := blkRep_blk e σ 1
-    simpa using h
+  · simpa using blkRep_blk e σ 1
   · intro g hg h hh
     obtain ⟨u, rfl⟩ := exists_gl_of_mem e hg
     obtain ⟨v, rfl⟩ := exists_gl_of_mem e hh
@@ -1661,8 +1653,7 @@ theorem finiteDimensional_isoPart_gl [CompleteSpace H] {σ : GL (Fin a) (ι → 
       refine ⟨T, rfl, fun k w hw => ?_⟩
       rw [← hrep]
       exact hT _ (blk_mem_maxCpt e k) w hw
-  rw [heq]
-  exact hfin
+  rwa [heq]
 
 theorem admissible_GL_Cinf : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : GL (Fin a) (Cinf E) →* (H →L[ℂ] H)), IsUnitaryRep σ → IsTopIrreducible σ → ∀ (W : Type) [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (ρ : Representation ℂ (Kinf E a) W), FiniteDimensional ℂ ↥(⨆ (T : W →ₗ[ℂ] H) (_ : ∀ k w, T (ρ k w) = σ (Unitary.toUnits k) (T w)), LinearMap.range T : Submodule ℂ H) := by
   intro E _ _ _ a H _ _ _ σ hσ hi W _ _ _ ρ

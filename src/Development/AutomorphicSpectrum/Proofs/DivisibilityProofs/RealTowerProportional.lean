@@ -160,8 +160,7 @@ theorem degree_mapDomain_some {J : Type} (m : J →₀ ℕ) : (m.mapDomain some)
 theorem geoFun_monomial {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel Ψ N) (m : Option (Ψ × Fin N) →₀ ℕ) :
     M.geoFun (monomial m 1) = M.geoMono m := by
   have := (MvPolynomial.basisMonomials (Option (Ψ × Fin N)) ℝ).constr_basis ℝ M.geoMono m
-  rw [MvPolynomial.coe_basisMonomials] at this
-  exact this
+  rwa [MvPolynomial.coe_basisMonomials] at this
 
 theorem geoFun_monomial_of_ne {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel Ψ N) (m : Option (Ψ × Fin N) →₀ ℕ)
     (h : m.degree ≠ dimFl Ψ N) : M.geoFun (monomial m 1) = 0 := by
@@ -223,8 +222,7 @@ theorem rootTower_proportional_of_unif : PB.Proportional → PB.Inputs → ∀ I
   obtain ⟨Φd, hΦd⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Top.degFl_Sh_Tot_linear Ψ N).1
   refine ⟨fun c => ?_, fun B c F => ?_, fun B B' c => ?_⟩
   · obtain ⟨κ, hκ, hv, -⟩ := hvol c
-    rw [hv]
-    exact hκ
+    rwa [hv]
   · obtain ⟨κ, -, hv, h⟩ := hvol c
     rw [hv]
     have hL : (T.M B c).geoFun ∘ₗ (rename (R := ℝ) (Option.some : Ψ × Fin N → Option (Ψ × Fin N))).toLinearMap
@@ -247,8 +245,7 @@ theorem rootTower_proportional_of_unif : PB.Proportional → PB.Inputs → ∀ I
     have h2 := LinearMap.congr_fun hL F
     simp only [LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.smul_apply, AlgHom.toLinearMap_apply,
       hΦd, smul_eq_mul, LinearMap.zero_apply] at h2
-    simp only [toA]
-    exact sub_eq_zero.mp h2
+    simpa only [toA] using sub_eq_zero.mp h2
   · have hnR : (0 : ℝ) < (R.n c : ℝ) := by exact_mod_cast RealTie_n_pos (R.tie 0 c)
     have hL : (T.M B c).geoFun - (T.M B' c).geoFun = 0 := by
       apply lin_eq_zero

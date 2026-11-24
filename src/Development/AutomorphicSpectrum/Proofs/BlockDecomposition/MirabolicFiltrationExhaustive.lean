@@ -97,12 +97,9 @@ theorem continuous_colMat (n : ℕ) : Continuous (colMat k n) := by
   by_cases hj : j = Fin.last n
   · simp only [ite_eq_left hj]
     rcases Fin.eq_castSucc_or_eq_last i with ⟨i, rfl⟩ | rfl
-    · simp only [Fin.lastCases_castSucc]
-      exact continuous_apply i
-    · simp only [Fin.lastCases_last]
-      exact continuous_const
-  · simp only [ite_eq_right hj]
-    exact continuous_const
+    · simpa only [Fin.lastCases_castSucc] using continuous_apply i
+    · simpa only [Fin.lastCases_last] using continuous_const
+  · simpa only [ite_eq_right hj] using continuous_const
 
 theorem continuous_unipMir (n : ℕ) :
     Continuous (fun v : Fin n → k => unipMir (k := k) n (Multiplicative.ofAdd v)) := by

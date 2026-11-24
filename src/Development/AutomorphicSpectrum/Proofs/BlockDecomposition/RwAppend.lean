@@ -103,13 +103,11 @@ theorem cls_of_ae {f : Mat n → V} {x : Lp V 2 μ} (h : (fun y : G n => f y.val
     MemLp (fun y : G n => f y.val) 2 μ ∧ cls μ f = x := by
   have hm : MemLp (fun y : G n => f y.val) 2 μ := (memLp_congr_ae h).2 (Lp.memLp x)
   refine ⟨hm, ?_⟩
-  simp only [cls, dite_eq_left hm]
-  exact Lp.ext (hm.coeFn_toLp.trans h)
+  simpa only [cls, dite_eq_left hm] using Lp.ext (hm.coeFn_toLp.trans h)
 
 theorem coe_cls {f : Mat n → V} (h : MemLp (fun y : G n => f y.val) 2 μ) :
     (cls μ f : G n → V) =ᵐ[μ] fun y => f y.val := by
-  simp only [cls, dite_eq_left h]
-  exact h.coeFn_toLp
+  simpa only [cls, dite_eq_left h] using h.coeFn_toLp
 
 end Mol
 

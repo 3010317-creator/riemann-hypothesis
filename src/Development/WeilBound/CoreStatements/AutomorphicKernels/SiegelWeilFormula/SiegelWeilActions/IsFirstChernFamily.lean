@@ -73,8 +73,7 @@ theorem latHaar : LatHaar := by
     · intro g g' h
       have h2 : φ (φ.symm (g : V)) = φ (φ.symm (g' : V)) := congrArg (fun x : Γ => φ (x : V)) h
       exact Subtype.ext (by simpa using h2)
-    · intro g
-      exact ⟨⟨φ g, (hΓ g).2 g.2⟩, Subtype.ext (by simp [e])⟩
+    · exact fun g => ⟨⟨φ g, (hΓ g).2 g.2⟩, Subtype.ext (by simp [e])⟩
   have hef : ∀ g : Γ, Function.Semiconj φ (e g +ᵥ ·) (g +ᵥ ·) := by
     intro g x
     show φ ((e g : V) + x) = (g : V) + φ x
@@ -88,8 +87,7 @@ theorem latHaar : LatHaar := by
   rw [hc, Measure.coe_nnreal_smul_apply] at hνs
   have h1 : ((Measure.addHaarScalarFactor (μ.map φ) μ : NNReal) : ENNReal) = 1 := by
     have h3 : ((Measure.addHaarScalarFactor (μ.map φ) μ : NNReal) : ENNReal) * μ s = 1 * μ s := by
-      rw [one_mul]
-      exact hνs
+      rwa [one_mul]
     exact (ENNReal.mul_left_inj hs0 hstop).1 h3
   have h2 : Measure.addHaarScalarFactor (μ.map φ) μ = 1 := by exact_mod_cast h1
   rw [hc, h2, one_smul]

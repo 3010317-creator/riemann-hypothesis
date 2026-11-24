@@ -86,8 +86,7 @@ theorem mem_glSub_iff (k : GL (Fin n) (Af E)) :
   · intro h
     refine ⟨fun i j v => GlobalTheory.DualDivU.entry_mem _ (h v) i j, fun i j v => ?_⟩
     have := GlobalTheory.DualDivU.entry_mem _ (Subgroup.inv_mem _ (h v)) i j
-    rw [← map_inv] at this
-    exact this
+    rwa [← map_inv] at this
 
 theorem exists_finset_of_isOpen (L : Set (GL (Fin n) (Af E))) (hL : IsOpen L) (h1 : 1 ∈ L) :
     ∃ T : Finset (HeightOneSpectrum (𝓞 E)), ∀ k : GL (Fin n) (Af E),
@@ -363,16 +362,14 @@ theorem isSimple_toR {V : Submodule ℂ (Sm E N)} (hV : IsDiscrete V) :
   · rw [eq_bot_iff]
     intro x hx
     have : x ∈ toR V hV.stable := hx
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · have hle : b.restrictScalars ℂ ≤ V := fun x hx => hb.le hx
     rcases hV.irred _ hle (fun o x hx => b.smul_mem (opOf o) hx) with h | h
     · exact (Submodule.restrictScalars_eq_bot_iff ℂ _ _).1 h
     · refine absurd ?_ hb.ne
       refine le_antisymm hb.le fun x hx => ?_
       have : x ∈ V := hx
-      rw [← h] at this
-      exact this
+      rwa [← h] at this
 
 theorem linearIndependent_of_not_iso {ι : Type*} (V : ι → Submodule ℂ (Sm E N)) (hV : ∀ i, IsDiscrete (V i))
     (hne : ∀ i j, Nonempty (toR (V i) (hV i).stable ≃ₗ[OpAlg E N] toR (V j) (hV j).stable) → i = j)

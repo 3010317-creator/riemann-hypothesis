@@ -95,12 +95,9 @@ theorem unitConds_of_homeo : ∀ {G G' : Type} [Group G] [TopologicalSpace G] [G
     refine ⟨e.symm t', ?_, e.symm k', ?_, ?_⟩
     · show e.symm t' * d = d * θ (e.symm t')
       apply e.injective
-      rw [map_mul, map_mul, hθ, e.apply_symm_apply]
-      exact ht'
-    · rw [hK, e.apply_symm_apply]
-      exact hk'
+      rwa [map_mul, map_mul, hθ, e.apply_symm_apply]
+    · rwa [hK, e.apply_symm_apply]
     · apply e.injective
-      rw [map_mul, e.apply_symm_apply, e.apply_symm_apply]
-      exact hyt
+      rwa [map_mul, e.apply_symm_apply, e.apply_symm_apply]
 
 end GlobalTheory.CompanionTheory.UnitTransport

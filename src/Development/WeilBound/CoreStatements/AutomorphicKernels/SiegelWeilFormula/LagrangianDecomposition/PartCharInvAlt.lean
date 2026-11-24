@@ -221,8 +221,7 @@ theorem norm_iteratedFDeriv_B_le (β : (κ'' → W) → ℝ) (hβ : ContDiff ℝ
   have hL : ‖L‖ ≤ 1 := by
     refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun y => ?_
     rw [one_mul]
-    refine (pi_norm_le_iff_of_nonneg (norm_nonneg y)).2 fun j => ?_
-    exact norm_le_pi_norm y (Sum.inr j)
+    exact (pi_norm_le_iff_of_nonneg (norm_nonneg y)).2 fun j => norm_le_pi_norm y (Sum.inr j)
   have e : (fun y : κ' ⊕ κ'' → W => (β (y ∘ Sum.inr) : ℂ)) = ⇑Complex.ofRealLI ∘ (β ∘ ⇑L) := rfl
   have hβL : ContDiff ℝ ∞ (β ∘ ⇑L) := hβ.comp L.contDiff
   rw [e, Complex.ofRealLI.norm_iteratedFDeriv_comp_left hβL.contDiffAt (by exact_mod_cast le_top),
@@ -549,8 +548,7 @@ theorem kills_linear_mul {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [
       _ ≤ (C : ℝ) * (t * ∑ m ∈ s, B m) := by gcongr
       _ = t * ((C : ℝ) * ∑ m ∈ s, B m) := by ring
   have h0 : ‖T g‖ ≤ 0 := by
-    by_contra hpos
-    push Not at hpos
+    by_contra! hpos
     have hD : 0 < 2 * ((C : ℝ) * ∑ m ∈ s, B m + 1) := by positivity
     have ht := key (min 1 (‖T g‖ / (2 * ((C : ℝ) * ∑ m ∈ s, B m + 1))))
       (lt_min one_pos (div_pos hpos hD)) (min_le_left _ _)
@@ -641,8 +639,7 @@ theorem sb_slice {X : Type} [TopologicalSpace X] [Zero X] [T2Space X] {κ' κ'' 
     hg.2.isCompact.image (continuous_pi fun i => continuous_apply _)
   refine HasCompactSupport.intro' hK hK.isClosed fun z hz => ?_
   by_contra hne
-  apply hz
-  exact ⟨Sum.elim z 0, subset_tsupport _ hne, rfl⟩
+  exact hz ⟨Sum.elim z 0, subset_tsupport _ hne, rfl⟩
 
 end PositivityTheory.SiegelWeilFormula.Ald.PCI
 
@@ -717,8 +714,7 @@ theorem partCharInv_of (hfin : FinPart) : PartCharInv := by
             · exact congrFun hv j
           rw [SchwartzMap.sub_apply, hf₁, hfs, hv, hf₀, mul_one]
           rw [← hv', sub_self])
-      rw [map_sub, sub_eq_zero] at h
-      exact h
+      rwa [map_sub, sub_eq_zero] at h
     let a : ((κ' ⊕ κ'' → Af F) → ℂ) →ₗ[ℂ] ℂ :=
       { toFun := fun h => l (pureA F f₁ h)
         map_add' := fun h h' => by
@@ -739,8 +735,7 @@ theorem partCharInv_of (hfin : FinPart) : PartCharInv := by
         funext x
         simp [pureA, GlobalTheory.CharInvForm.dot_pairA_fin, Function.comp_def, mul_left_comm]) (g - g₁) (sub_mem hg hg₁) (fun z' => by
           simp only [Pi.sub_apply, hg₁def, Sum.elim_comp_inl, Sum.elim_comp_inr, hθf0, mul_one, sub_self])
-      rw [map_sub, sub_eq_zero] at h
-      exact h
+      rwa [map_sub, sub_eq_zero] at h
     calc l (pureA F f g) = T f := hT f
       _ = T f₁ := hA
       _ = l (pureA F f₁ g) := (hT f₁).symm
@@ -841,9 +836,7 @@ theorem finPart : FinPart := by
     rw [Finset.sum_ite_eq]
     split_ifs with hx
     · exact (hout x).symm
-    · apply image_eq_zero_of_notMem_tsupport
-      intro hxs
-      exact hx (hfin.mem_toFinset.mpr ⟨x, hxs, rfl⟩)
+    · exact image_eq_zero_of_notMem_tsupport (fun hxs => hx (hfin.mem_toFinset.mpr ⟨x, hxs, rfl⟩))
 
   have hterm : ∀ q : (κ' ⊕ κ'' → Af F) ⧸ P, g q.out * a (GlobalTheory.CharForm.cosetInd P q) = 0 := by
     intro q

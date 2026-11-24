@@ -126,9 +126,7 @@ private lemma spectrum_nonempty_of_countable_rank {V : Type} [AddCommGroup V] [_
       Finset.prod_ne_zero_iff.mpr fun j hj => sub_ne_zero.mpr (Finset.ne_of_mem_erase hj).symm
     exact (mul_ne_zero hmi h2) h1.symm
   have hnu : ¬ IsUnit (aeval T p) := by
-    intro hu
-    have hinj := ((Module.End.isUnit_iff _).mp hu).injective
-    exact hv (hinj (by rw [hp, map_zero]))
+    exact fun hu => hv ((((Module.End.isUnit_iff _).mp hu).injective) (by rw [hp, map_zero]))
   have hprod := (IsAlgClosed.splits p).eq_prod_roots
   have lead_ne := leadingCoeff_ne_zero.mpr hp0
   have lead_unit : IsUnit (algebraMap ℂ (Module.End ℂ V) p.leadingCoeff) :=
@@ -196,8 +194,7 @@ theorem UpperTheory.Reformulated.B.DYhd6.main :
       have hfe : ⇑(algebraMap ℂ (Module.End ℂ V) a - T) = ⇑e := by
         funext x
         simp [T, e, Module.algebraMap_end_apply]
-      rw [hfe]
-      exact hb
+      rwa [hfe]
     · refine ⟨a, fun x => ?_⟩
       have : a • x - d x = 0 := congrArg (fun g : V →ₗ[B] V => g x) h0
       exact (sub_eq_zero.mp this).symm

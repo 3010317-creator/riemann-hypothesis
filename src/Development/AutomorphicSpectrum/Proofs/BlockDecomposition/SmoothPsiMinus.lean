@@ -205,8 +205,7 @@ theorem UpperTheory.Reformulated.B.DYhc8.laurent_T_neg_one_mul_T_one :
           ((1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) -
             UpperTheory.Reformulated.B.DYhc8.colMat k n ((Multiplicative.toAdd : Multiplicative (Fin n → k) → Fin n → k) v)) =
         (1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) := by
-  intro k _ n v
-  exact one_add_mul_one_sub k n _
+  exact fun k _ n v => one_add_mul_one_sub k n _
 
 theorem UpperTheory.Reformulated.B.DYhc8.aux11 :
     ∀ (k : Type) [inst : Field k] (n : ℕ) (v : Multiplicative (Fin n → k)),
@@ -215,8 +214,7 @@ theorem UpperTheory.Reformulated.B.DYhc8.aux11 :
           ((1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) +
             UpperTheory.Reformulated.B.DYhc8.colMat k n ((Multiplicative.toAdd : Multiplicative (Fin n → k) → Fin n → k) v)) =
         (1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) := by
-  intro k _ n v
-  exact one_sub_mul_one_add k n _
+  exact fun k _ n v => one_sub_mul_one_add k n _
 
 theorem UpperTheory.Reformulated.B.DYhc8.aux12 :
     ∀ (k : Type) [inst : Field k] (n : ℕ),
@@ -227,8 +225,7 @@ theorem UpperTheory.Reformulated.B.DYhc8.aux12 :
             UpperTheory.Reformulated.B.DYhc8.colMat k n
               ((Multiplicative.toAdd : Multiplicative (Fin n → k) → Fin n → k) (1 : Multiplicative (Fin n → k)))) =
         (1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) := by
-  intro k _ n
-  exact one_add_mul_one_sub k n _
+  exact fun k _ n => one_add_mul_one_sub k n _
 
 theorem UpperTheory.Reformulated.B.DYhc8.algebra_smulCommClass_complex :
     ∀ (k : Type) [inst : Field k] (n : ℕ),
@@ -239,8 +236,7 @@ theorem UpperTheory.Reformulated.B.DYhc8.algebra_smulCommClass_complex :
             UpperTheory.Reformulated.B.DYhc8.colMat k n
               ((Multiplicative.toAdd : Multiplicative (Fin n → k) → Fin n → k) (1 : Multiplicative (Fin n → k)))) =
         (1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) := by
-  intro k _ n
-  exact one_sub_mul_one_add k n _
+  exact fun k _ n => one_sub_mul_one_add k n _
 
 theorem UpperTheory.Reformulated.B.DYhc8.zero_contDiffOn_supported :
     ∀ (k : Type) [inst : Field k] (n : ℕ),
@@ -268,8 +264,7 @@ theorem UpperTheory.Reformulated.B.DYhc8.sign_action_map_comm :
           ((1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) -
             UpperTheory.Reformulated.B.DYhc8.colMat k n ((Multiplicative.toAdd : Multiplicative (Fin n → k) → Fin n → k) (v * w))) =
         (1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) := by
-  intro k _ n v w
-  exact one_add_mul_one_sub k n _
+  exact fun k _ n v w => one_add_mul_one_sub k n _
 
 theorem UpperTheory.Reformulated.B.DYhc8.column_matrix_mul_inverse :
     ∀ (k : Type) [inst : Field k] (n : ℕ) (v w : Multiplicative (Fin n → k)),
@@ -278,8 +273,7 @@ theorem UpperTheory.Reformulated.B.DYhc8.column_matrix_mul_inverse :
           ((1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) +
             UpperTheory.Reformulated.B.DYhc8.colMat k n ((Multiplicative.toAdd : Multiplicative (Fin n → k) → Fin n → k) (v * w))) =
         (1 : Matrix (Fin (n + (1 : ℕ))) (Fin (n + (1 : ℕ))) k) := by
-  intro k _ n v w
-  exact one_sub_mul_one_add k n _
+  exact fun k _ n v w => one_sub_mul_one_add k n _
 
 theorem UpperTheory.Reformulated.B.DYhc8.complex_normed_instance_compat :
     ∀ (k : Type) [inst : Field k] (n : ℕ) (v w : Multiplicative (Fin n → k)),

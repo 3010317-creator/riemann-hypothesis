@@ -150,8 +150,7 @@ theorem pow_not_memZ {V : Ideal (MRing ι)} (hV : V.IsPrime) {f : MRing ι} (hf 
 
 theorem divCycle_oneZ (V W : Ideal (MRing ι)) : divCycle V 1 W = 0 := by
   rw [divCycle_applyZ, ite_eq_right]
-  intro h
-  exact h.1.1.1.ne_top ((Ideal.eq_top_iff_one _).2 (mem_of_mem_divSuppZ h))
+  exact fun h => h.1.1.1.ne_top ((Ideal.eq_top_iff_one _).2 (mem_of_mem_divSuppZ h))
 
 theorem divCycle_powZ {V : Ideal (MRing ι)} (hV : V.IsPrime) {f : MRing ι} (hf : f ∉ V) (n : ℕ)
     (W : Ideal (MRing ι)) : divCycle V (f ^ n) W = n * divCycle V f W := by
@@ -469,8 +468,7 @@ theorem exists_forms {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (�
     congr 1
     omega
   have eg : aeval y (h * ∏ k, (X ⟨k, c k⟩ : MRing ι) ^ (-a k).toNat) ≠ 0 := by
-    simp only [map_mul, map_prod, map_pow, aeval_X]
-    exact mul_ne_zero h0 (hn _)
+    simpa only [map_mul, map_prod, map_pow, aeval_X] using mul_ne_zero h0 (hn _)
   have ef : aeval y (g * ∏ k, (X ⟨k, c k⟩ : MRing ι) ^ (a k).toNat) =
       u * aeval y (h * ∏ k, (X ⟨k, c k⟩ : MRing ι) ^ (-a k).toNat) := by
     simp only [map_mul, map_prod, map_pow, aeval_X, e, ← e2]
@@ -648,8 +646,7 @@ theorem vertClose_none (hi : i.comp o₀.g = o.g) (hv : IsBlockMap κ v) (hv₀ 
   · have := congrFun hb k
     rw [hx, hx'] at this
     show _ = pullDeg κ (o.Re.line none t).a k - pullDeg κ₀ (o₀.Re.line none t).a k
-    rw [o.Re.line_deg, o₀.Re.line_deg, o.ref_none.1, o₀.ref_none.1]
-    exact this
+    rwa [o.Re.line_deg, o₀.Re.line_deg, o.ref_none.1, o₀.ref_none.1]
   · have z₁ := LineUnit.pull_mem_mcPts (RingHom.id _) hv hy hz
     have z₀ := LineUnit.pull_mem_mcPts i hv₀ hy₀ hz
     have e₁ := line_h_of_phT o.Re hJ h0 h1 (fun x => (Fx.ph_none x).2 t) z₁
@@ -723,8 +720,7 @@ theorem vertClose_some (hi : i.comp o₀.g = o.g) (hv : IsBlockMap κ v) (hv₀ 
       rw [e1, prod_pullDeg hv₀.1, prod_pullDeg hv.1, map_mul, map_prod]
       simp only [map_zpow₀, eM, eR]
       rw [div_mul_div_comm, mul_comm, mul_comm (o.e _)]
-    rw [e, inv_div]
-    exact w
+    rwa [e, inv_div]
   · show pullDeg κ (o.Re.line (some (τ, j)) t).a = -∑ k ∈ Finset.Iic j, pullDeg κ (M.x t (τ, k)).a
     rw [o.Re.line_deg, o.fund_deg, pullDeg_neg_sum hv.1]
     simp only [M.x_deg]

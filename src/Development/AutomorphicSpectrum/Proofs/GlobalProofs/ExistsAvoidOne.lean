@@ -115,16 +115,14 @@ theorem mul_sub_mul_add_ne_zero (f : Polynomial ℤ) (hf : 0 < f.natDegree) (c :
 
 theorem exists_nat_eval_mul_ne_zero (P : Polynomial ℤ) (hP : P ≠ 0) (a : ℤ) (ha : a ≠ 0) :
     ∃ t : ℕ, P.eval (a * (t : ℤ)) ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   apply hP
   apply Polynomial.eq_zero_of_infinite_isRoot
   apply Set.infinite_of_injective_forall_mem (f := fun t : ℕ => a * (t : ℤ))
   · intro x y hxy
     have h2 : (x : ℤ) = (y : ℤ) := mul_left_cancel₀ ha hxy
     exact_mod_cast h2
-  · intro t
-    exact h t
+  · exact fun t => h t
 
 theorem exists_prime_gt_dvd_eval_of_natDegree_pos (f : Polynomial ℤ) (hf : 0 < f.natDegree) (N : ℕ) :
     ∃ (p : ℕ) (m : ℤ), Nat.Prime p ∧ N < p ∧ (p : ℤ) ∣ Polynomial.eval m f := by
@@ -132,8 +130,7 @@ theorem exists_prime_gt_dvd_eval_of_natDegree_pos (f : Polynomial ℤ) (hf : 0 <
   · obtain ⟨p, hNp, hp⟩ := Nat.exists_infinite_primes (N + 1)
     refine ⟨p, p, hp, by omega, ?_⟩
     have h1 := Polynomial.sub_dvd_eval_sub (p : ℤ) 0 f
-    rw [hc, sub_zero, sub_zero] at h1
-    exact h1
+    rwa [hc, sub_zero, sub_zero] at h1
   · have hM0 : ((N.factorial : ℕ) : ℤ) ≠ 0 := by exact_mod_cast (Nat.factorial_pos N).ne'
     have hcM : f.eval 0 * (N.factorial : ℤ) ≠ 0 := mul_ne_zero hc hM0
     obtain ⟨t, ht⟩ := exists_nat_eval_mul_ne_zero _ (mul_sub_mul_add_ne_zero f hf (f.eval 0)) _ hcM
@@ -170,8 +167,7 @@ theorem exists_prime_gt_dvd_eval_of_natDegree_pos (f : Polynomial ℤ) (hf : 0 <
         (1 + (N.factorial : ℤ) * ((t : ℤ) * k)) :=
       Int.ofNat_dvd_left.mpr (Nat.minFac_dvd _)
     refine ⟨_, f.eval 0 * (N.factorial : ℤ) * (t : ℤ), hp, ?_, ?_⟩
-    · by_contra hle
-      push Not at hle
+    · by_contra! hle
       have hpN : ((1 + (N.factorial : ℤ) * ((t : ℤ) * k)).natAbs.minFac) ∣ N.factorial :=
         Nat.dvd_factorial hp.pos hle
       have hpN' : ((((1 + (N.factorial : ℤ) * ((t : ℤ) * k)).natAbs.minFac : ℕ)) : ℤ) ∣
@@ -343,16 +339,14 @@ lemma mult_differentiable {l : ℕ} (hl : l.Prime) : Differentiable ℂ (mult l)
   exact ((differentiableAt_const _).sub differentiableAt_id).const_cpow (Or.inl h0)
 
 lemma efac_differentiable {l : ℕ} (hl : l.Prime) (h : ℕ) : Differentiable ℂ (efac l h) := by
-  intro s
-  exact (((mult_differentiable hl) s).pow h).sub (differentiableAt_const _)
+  exact fun s => (((mult_differentiable hl) s).pow h).sub (differentiableAt_const _)
 
 lemma wsum_differentiable {G : Type} {T : G → ℂ → ℂ} {l : ℕ} (hl : l.Prime)
     (hT : ∀ c, Differentiable ℂ (T c)) (τ : Equiv.Perm G) (h : ℕ) (c : G) :
     Differentiable ℂ (wsum T l τ h c) := by
   intro s
   unfold wsum
-  refine DifferentiableAt.fun_sum fun e _ => ?_
-  exact (((mult_differentiable hl) s).pow e).mul (hT _ s)
+  exact DifferentiableAt.fun_sum fun e _ => (((mult_differentiable hl) s).pow e).mul (hT _ s)
 
 lemma norm_mult_lt_one {l : ℕ} (hl : l.Prime) {s : ℂ} (hs : 1 < s.re) : ‖mult l s‖ < 1 := by
   unfold mult
@@ -524,8 +518,7 @@ theorem continuation_of_two_relations :
   · intro c s hs
     have hs1 : s ≠ 1 := hs
     have hor : efac l (orderOf τ) s ≠ 0 ∨ efac l' (orderOf τ') s ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact no_common_zero hl hl' hne hh hh' hs1 hcon.1 hcon.2
     exact (glue_differentiableAt hEd hEd' (hWd c) (hWd' c) (hcross c) hor).differentiableWithinAt
   · intro c s hs
@@ -623,8 +616,7 @@ theorem classWeight_relation (F : Type) [Field F] [NumberField F] (𝔣 𝔠 A B
       rw [ite_eq_right]
       intro hle
       exact hx ⟨⟨x.1, x.2, hle⟩, rfl⟩
-    · rw [hf3]
-      exact h2
+    · rwa [hf3]
   have h4 := (h3.mul_left ((Ideal.absNorm 𝔠 : ℕ) : ℂ)).sub hB.hasSum
   have hf5 : (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B} =>
       (classWeight (Ideal.absNorm 𝔠) 𝔠 I.1 : ℂ) * ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) =
@@ -680,8 +672,7 @@ theorem classSummable : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal 
   intro F _ _ _ 𝔣 𝔞 𝔟 J _ r y v _ s hs
   have h := (ReciprocityTheory.Cheb.summable_absNorm_rpow_ideal F hs).subtype
     (fun I : Ideal (𝓞 F) => CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I 𝔞)
-  refine Summable.of_norm (h.congr fun I => ?_)
-  exact (norm_natCast_cpow_neg _ hs).symm
+  exact Summable.of_norm (h.congr fun I => (norm_natCast_cpow_neg _ hs).symm)
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
 end -- clump:auto
@@ -792,8 +783,7 @@ theorem exists_avoid_one (𝔣 𝔞 : Ideal (𝓞 F)) (h𝔣 : 𝔣 ≠ ⊥) (h�
     refine _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.classTwist_entire _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.abelContinuation F 𝔣 𝔞 𝔟 𝔠 J r' y v' hP hpr hl fun j i hmem => ?_
     have hle : 𝔠 * 𝔟 ≤ 𝔠 := Ideal.mul_le_left
     refine hav (v' j i) ?_ (hle hmem)
-    simp only [Finset.mem_biUnion, Finset.mem_image, Finset.mem_univ, true_and]
-    exact ⟨j, i, rfl⟩
+    simpa only [Finset.mem_biUnion, Finset.mem_image, Finset.mem_univ, true_and] using ⟨j, i, rfl⟩
 
 theorem exists_avoid (𝔣 : Ideal (𝓞 F)) (h𝔣 : 𝔣 ≠ ⊥) (S : Finset (Ideal (𝓞 F))) (hS : ∀ a ∈ S, CoprimeTo F 𝔣 a) :
     ∃ W : Finset (𝓞 F), (∀ x ∈ W, x ≠ 0) ∧
@@ -874,8 +864,7 @@ theorem siegelKlingen : GlobalTheory.Published.SiegelKlingen := by
       funext I
       rw [← hind I, Finset.sum_mul]
       exact Finset.sum_congr rfl fun c _ => by ring
-    rw [he]
-    exact h1
+    rwa [he]
   · choose q hq using fun c : S => (hZ c).2 k hk
     refine ⟨∑ c : S, ε c.1 * q c, ?_⟩
     simp only [hq]

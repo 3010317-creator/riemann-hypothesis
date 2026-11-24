@@ -239,8 +239,7 @@ theorem ev_X (x : Mat C N) (q : Fin N × Fin N) : ev x (MvPolynomial.X q) = x q.
   simp [ev]
 
 theorem mem_img (ρ : Γ →* GL (Fin N) C) (h : Γ) : ((ρ h : GL (Fin N) C) : Mat C N) ∈ (img ρ ⊤ : Set (Mat C N)) := by
-  simp only [img, SetLike.mem_coe, Submonoid.mem_map]
-  exact ⟨h, by simp, rfl⟩
+  simpa only [img, SetLike.mem_coe, Submonoid.mem_map] using ⟨h, by simp, rfl⟩
 
 theorem img_cases (ρ : Γ →* GL (Fin N) C) {x : Mat C N} (hx : x ∈ (img ρ ⊤ : Set (Mat C N))) :
     ∃ h : Γ, ((ρ h : GL (Fin N) C) : Mat C N) = x := by
@@ -315,8 +314,7 @@ theorem lie_keeps (hC : Chain) (ρ : Γ →* GL (Fin N) C) (W : Submodule C (Fin
     intro x hx
     obtain ⟨h, rfl⟩ := img_cases ρ hx
     rw [hev, ev_X]
-    simp only [lamL, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply]
-    exact hℓ _ (hW h v hv)
+    simpa only [lamL, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply] using hℓ _ (hW h v hv)
   have h0 := hY f' hf'
   rw [hd] at h0
   simpa [dAt, lamL, ev, MvPolynomial.pderiv_X, Fintype.sum_unique, Pi.single_apply, Prod.ext_iff, Fin.fin_one_eq_zero] using h0
@@ -868,8 +866,7 @@ lemma lac_key [CharZero C] {e : Fin n → C} (hL : IsLac e) {i j k l : Fin n} (h
     · have := hL {i, l} {k, j} (by simp) (by simp)
         (by simp [Finset.disjoint_left]; exact ⟨⟨hki.symm, hij⟩, hkl.symm, hlj⟩)
       apply this
-      rw [Finset.card_pair hil, Finset.sum_pair hil, Finset.card_pair hkj, Finset.sum_pair hkj]
-      rw [h']
+      rw [Finset.card_pair hil, Finset.sum_pair hil, Finset.card_pair hkj, Finset.sum_pair hkj, h']
 end
 
 end LateralTheory.DivDb.GradePf
@@ -1014,8 +1011,7 @@ theorem Proj_of : Proj := by
       simp only [hb, eval_sub, eval_finsetSum, evb e he, eval_one]
       simp
 
-    rw [map_sub, map_one, map_sum, sub_eq_zero] at h
-    exact h
+    rwa [map_sub, map_one, map_sum, sub_eq_zero] at h
   · intro h0
     have h1 : minpoly C X ∣ b i := (minpoly.dvd_iff).2 h0
     rw [minpoly_eq X e he hD hr] at h1

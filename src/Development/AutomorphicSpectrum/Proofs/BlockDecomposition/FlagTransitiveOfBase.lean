@@ -311,8 +311,7 @@ theorem isMaxEven_pullLat (H : IsHerm c h) {p : V ≃ₗ[R] V} (hp : ∀ a b, h 
     ext z
     rw [mem_pullLat]
     constructor
-    · intro hz
-      exact ⟨p z, hz, by simp⟩
+    · exact fun hz => ⟨p z, hz, by simp⟩
     · rintro ⟨t, ht, rfl⟩
       simpa using ht
   refine ⟨⟨?_, ?_⟩, ⟨?_, ?_⟩, ?_⟩
@@ -349,8 +348,7 @@ theorem isMaxEven_resLat (hR : IsHermRing c 𝔬) (H : IsHerm c h) {x y : V} (hy
   have hEq : resLat 𝔬 (perp H x y) L = L.map ((projP H hy).restrictScalars 𝔬) := by
     ext m
     constructor
-    · intro hm
-      exact ⟨m, hm, projP_coe H hy m⟩
+    · exact fun hm => ⟨m, hm, projP_coe H hy m⟩
     · rintro ⟨t, ht, rfl⟩
       exact hprojL t ht
   refine ⟨⟨?_, ?_⟩, ⟨fun s hs t ht => hL.2.1.1 _ hs _ ht, fun s hs => hL.2.1.2 _ hs⟩, ?_⟩
@@ -641,8 +639,7 @@ theorem good_all (hR : IsHermRing c 𝔬) (hB : HasBase c 𝔬) (k : ℕ∞) :
     intro r
     cases r with
     | succ r =>
-      intro x y hf L L' hL hL'
-      exact flag_step hR H P hperp x y hf hL hL'
+      exact fun x y hf L L' hL hL' => flag_step hR H P hperp x y hf hL hL'
     | zero =>
       intro x y hf L L' hL hL'
       by_cases hn : ∀ s t, h s s = 0 → h s t ≠ 1
@@ -654,8 +651,7 @@ theorem good_all (hR : IsHermRing c 𝔬) (hB : HasBase c 𝔬) (k : ℕ∞) :
         have hc2 : c two = two := by
           have : c two * 2 = 1 := by
             have := congrArg c htwo
-            rw [map_mul, map_one, map_ofNat] at this
-            exact this
+            rwa [map_mul, map_one, map_ofNat] at this
           calc c two = c two * (2 * two) := by rw [mul_comm 2 two, htwo, mul_one]
             _ = (c two * 2) * two := by ring
             _ = two := by rw [this, one_mul]

@@ -104,8 +104,7 @@ theorem T_last {h : ℕ} (L : List α) (E : Fin (h + 1) → List α) (hE : E (Fi
     rw [T_nil, T_nil]
     have hiff : (∀ i, E i = []) ↔ ∀ i : Fin h, E i.castSucc = [] := by
       constructor
-      · intro H i
-        exact H _
+      · exact fun H i => H _
       · intro H i
         induction i using Fin.lastCases with
         | last => exact hE
@@ -122,8 +121,7 @@ theorem T_last {h : ℕ} (L : List α) (E : Fin (h + 1) → List α) (hE : E (Fi
     refine Finset.sum_congr rfl fun i _ => ?_
     have hne : Fin.castSucc i ≠ Fin.last h := (Fin.castSucc_lt_last i).ne
     have hE' : Function.update E i.castSucc (E i.castSucc).tail (Fin.last h) = [] := by
-      rw [Function.update_of_ne (Ne.symm hne)]
-      exact hE
+      rwa [Function.update_of_ne (Ne.symm hne)]
     rw [ih _ hE']
     have hf : (fun j : Fin h => Function.update E i.castSucc (E i.castSucc).tail j.castSucc) =
         Function.update (fun j : Fin h => E j.castSucc) i (E i.castSucc).tail := by
@@ -322,8 +320,7 @@ theorem T_step {h : ℕ} (Γ : Fin (h + 1) → Segment k) (hc : IsCanon Γ) (R :
       have hle := hp.length_le
       have hil : i ≠ Fin.last h := fun e => hΓ (by rw [e])
       have hle2 := (hc1 i (Fin.last h) (hlt i hil)).2 hf
-      apply hΓ
-      exact Segment.ext_first hf (by omega)
+      exact hΓ (Segment.ext_first hf (by omega))
   · rw [ite_eq_right (fun e => hf (Option.some.inj e)), ite_eq_right (fun e => hf (by rw [e]))]
 
 theorem canon_castSucc {h : ℕ} {Γ : Fin (h + 1) → Segment k} (hc : IsCanon Γ) :
@@ -351,8 +348,7 @@ theorem T_canon {h : ℕ} (Γ : Fin h → Segment k) (hc : IsCanon Γ) :
       · intro a ha
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha ⊢
         exact ⟨Fin.castSucc_le_castSucc_iff.mpr ha.1, ha.2⟩
-      · intro a _ b _ hab
-        exact Fin.castSucc_injective _ hab
+      · exact fun a _ b _ hab => Fin.castSucc_injective _ hab
       · intro b hb
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb
         have hbl : b ≠ Fin.last h := by
@@ -361,8 +357,7 @@ theorem T_canon {h : ℕ} (Γ : Fin h → Segment k) (hc : IsCanon Γ) :
           exact absurd hb.1 (not_le.mpr (Fin.castSucc_lt_last i))
         refine ⟨b.castPred hbl, ?_, Fin.castSucc_castPred b hbl⟩
         simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [← Fin.castSucc_le_castSucc_iff, Fin.castSucc_castPred]
-        exact hb
+        rwa [← Fin.castSucc_le_castSucc_iff, Fin.castSucc_castPred]
     · congr 1
       ext j
       simp [Fin.le_last]
@@ -411,8 +406,7 @@ theorem run_lemma {h : ℕ} (Γ : Fin h → Segment k) (hc : IsCanon Γ) (hh : 0
   have key : ∀ i : Fin h, Γ i = Γ last ↔ Nat.find hex ≤ i.val := by
     intro i
     constructor
-    · intro hi
-      exact Nat.find_min' hex ⟨i.2, hi⟩
+    · exact fun hi => Nat.find_min' hex ⟨i.2, hi⟩
     · intro hi
       rcases lt_or_eq_of_le hi with hlt | heq
       · rcases lt_or_eq_of_le (show i.val ≤ h - 1 by omega) with hlt2 | heq2
@@ -440,8 +434,7 @@ theorem count_append {α : Type*} {p q : ℕ} (Γ' : Fin p → α) (Γ'' : Fin q
       have h0 := hj.1
       simp only [Fin.le_def, Fin.coe_castAdd] at h0 ⊢
       omega
-    · intro a _ b _ h
-      exact Fin.ext (by simpa using congrArg Fin.val h)
+    · exact fun a _ b _ h => Fin.ext (by simpa using congrArg Fin.val h)
     · intro b
       refine Fin.addCases (fun b hb => ?_) (fun b hb => ?_) b
       · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.append_left] at hb
@@ -465,8 +458,7 @@ theorem count_append {α : Type*} {p q : ℕ} (Γ' : Fin p → α) (Γ'' : Fin q
       have h0 := hj.1
       simp only [Fin.le_def, Fin.coe_natAdd] at h0 ⊢
       omega
-    · intro a _ b _ h
-      exact Fin.ext (by simpa using congrArg Fin.val h)
+    · exact fun a _ b _ h => Fin.ext (by simpa using congrArg Fin.val h)
     · intro b
       refine Fin.addCases (fun b hb => ?_) (fun b hb => ?_) b
       · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.append_left, Fin.append_right] at hb

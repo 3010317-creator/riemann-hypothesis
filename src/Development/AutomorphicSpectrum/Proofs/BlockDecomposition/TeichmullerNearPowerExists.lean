@@ -62,8 +62,7 @@ theorem exists_thB_wB {l : ℕ} [Fact l.Prime] (y : ℂ_[l]) (hy : ‖y‖ ≤ 1
   refine ⟨a, ?_⟩
   have h := GroundTheory.PAdicHodge.IsPerfectoidField.thetaBDeRhamPlusField_wittToBDeRhamPlus
     (K := ℂ_[l]) l a
-  rw [ha] at h
-  exact h
+  rwa [ha] at h
 
 theorem near_tch_pow {l : ℕ} [Fact l.Prime] (S : Subring (Formalism.Per6.BdRp l)) (hS : ∀ a, wB l a ∈ S)
     (ϖ : Formalism.Per6.BdRp l) (hϖ : thB l ϖ ≠ 0) (x : Tl l) (hx : ‖thB l (tch l x)‖ < 1) :
@@ -79,8 +78,7 @@ theorem near_tch_pow {l : ℕ} [Fact l.Prime] (S : Subring (Formalism.Per6.BdRp 
       _ = ‖c‖ ^ N := mul_one _
       _ ≤ ‖thB l ϖ‖ := hN.le
   have hy : ‖c ^ (N + 1) / thB l ϖ‖ ≤ 1 := by
-    rw [norm_div, norm_pow, div_le_one hpos]
-    exact hle
+    rwa [norm_div, norm_pow, div_le_one hpos]
   obtain ⟨a, ha⟩ := exists_thB_wB _ hy
   refine ⟨wB l a, hS a, ?_⟩
   rw [pow_one, FB, pow_one, RingHom.mem_ker, map_sub, map_pow, map_mul, ha, ← hc]

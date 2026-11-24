@@ -139,8 +139,7 @@ theorem exists_basic (hT : CoordTie ℤ ξ x) (hc : x c ≠ 0) {p : Cpt ξ} (hp 
     have h1 : a * genMap ξ p t = 1 := by
       rw [← hval p hpU, ← map_mul, ht, map_one]
     have ha0 : a ≠ 0 := left_ne_zero_of_mul_eq_one h1
-    refine ⟨ha0, mem_regAt_iff.2 ⟨_, hval p hpU⟩, mem_regAt_iff.2 ⟨t, ?_⟩⟩
-    exact eq_inv_of_mul_eq_one_right h1
+    exact ⟨ha0, mem_regAt_iff.2 ⟨_, hval p hpU⟩, mem_regAt_iff.2 ⟨t, eq_inv_of_mul_eq_one_right h1⟩⟩
   · intro q hq hu
     obtain ⟨h0, -, hi⟩ := hu
     obtain ⟨t, ht⟩ := mem_regAt_iff.1 hi
@@ -173,15 +172,13 @@ theorem exists_cover (hT : CoordTie ℤ ξ x) (hc : x c ≠ 0) (Q : X.Opens → 
       constructor
       · rintro ⟨l, rfl⟩
         exact (e.symm l).2
-      · intro hy
-        exact ⟨e ⟨y, hy⟩, by simp⟩
+      · exact fun hy => ⟨e ⟨y, hy⟩, by simp⟩
     rw [hr, hs]
     trivial
   obtain ⟨g, hg⟩ := Ideal.mem_span_range_iff_exists_fun.1 h1
   refine ⟨s.card, fun l => (((e.symm l : s) : A) : Ω), fun l => (g l : Ω), fun l => ((e.symm l : s) : A).2,
     fun l => (g l).2, ?_, fun l => hsT (e.symm l).2⟩
-  have h2 := congrArg (Subtype.val) hg
-  simpa using h2
+  simpa using congrArg (Subtype.val) hg
 
 theorem exists_unitAt (hT : CoordTie ℤ ξ x) {k : ℕ} {f g : Fin k → Ω} (hf : ∀ l, f l ∈ chartRing ℤ x c)
     (hg : ∀ l, g l ∈ chartRing ℤ x c) (hsum : ∑ l, g l * f l = 1) {p : Cpt ξ} (hp : InChart ξ x c p) :

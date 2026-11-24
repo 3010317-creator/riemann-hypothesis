@@ -160,8 +160,7 @@ theorem expand (Z : CptOver Y U) {F : Type} [Field F] {y : Sp F ⟶ Xo.XF c}
     rw [e] at hw₁
     have e' := LieModel.ValAt.unique Z.gen hw₁ hv₁
     subst e'
-    rw [← SameVec.unique_left hw₂ hv₂]
-    exact hw'
+    rwa [← SameVec.unique_left hw₂ hv₂]
   refine ⟨Matrix.of A, hcomb, frame_det hf₀ hf hcomb, ?_⟩
   rw [hdet]
   exact val_det h hA
@@ -186,8 +185,7 @@ theorem genPt_specializes {X X' : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp Ω
     change ξ' ≫ π = Spec.map (CommRingCat.ofHom (RingHom.id Ω)) ≫ ξ
     rw [CommRingCat.ofHom_id, Spec.map_id, Category.id_comp, hd]
   have := hq.map π.continuous
-  rw [RegAtDom.map_genPt hdom] at this
-  exact this
+  rwa [RegAtDom.map_genPt hdom] at this
 
 theorem point_compare : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (Φ : CFn Xo c) (b₁ v₁ : Fin D.p → Z.V) (b₂ v₂ : Fin D.q → Z.V) (X' : Scheme.{0}) (π : X' ⟶ Y.X) (ξ' : Sp Z.Ω ⟶ X') (y' : Sp ℂ ⟶ X') (yy : Sp ℂ ⟶ Xo.XF c) (v vz : Vecs yy D.p) (w wz : Vecs yy D.q) (α κ : Z.Ω) (r : ℂ), ξ' ≫ π = Z.ξ₀ ≫ Y.j → IsCptGen ξ' → yy ≫ Y.j = y' ≫ π → IsUnitAn τ σ Φ → IsFramed Set.univ τ σ yy v w → IsFramed Set.univ τ σ yy vz wz → (∀ i, ∃ v', Z.M.ValAt (yy ≫ Y.j) (b₁ i) v' ∧ SameVec Y yy (v i) v') → (∀ j, ∃ w', Z.M.ValAt (yy ≫ Y.j) (b₂ j) w' ∧ SameVec Y yy (w j) w') → (∀ i, ∃ v', Z.M.ValAt (yy ≫ Y.j) (v₁ i) v' ∧ SameVec Y yy (vz i) v') → (∀ j, ∃ w', Z.M.ValAt (yy ≫ Y.j) (v₂ j) w' ∧ SameVec Y yy (wz j) w') → (∀ q : Cpt (Z.ξ₀ ≫ Y.j), q.1 = centre (yy ≫ Y.j) → (Z.eig τ).IsFrameAt v₁ q ∧ (Z.eig (ComplexEmbedding.conjugate τ)).IsFrameAt v₂ q) → (∀ i, b₁ i ∈ eigSp Z.ρ (Z.inc.comp (tauIn c τ))) → (∀ j, b₂ j ∈ eigSp Z.ρ (Z.inc.comp (tauIn c (ComplexEmbedding.conjugate τ)))) → α ≠ 0 → κ ≠ 0 → exteriorPower.ιMulti Z.Ω D.p v₁ = α • exteriorPower.ιMulti Z.Ω D.p b₁ → exteriorPower.ιMulti Z.Ω D.q v₂ = κ • exteriorPower.ιMulti Z.Ω D.q b₂ → ValAt ξ' y' (α / κ) r → Φ yy v w = Φ yy vz wz * r := by
   intro E _ _ _ H D l Xo c O _ β Y U Z τ σ Φ b₁ v₁ b₂ v₂ X' π ξ' y' yy v vz w wz α κ r hξ hgen hyy hΦ hf hfz hb₁ hb₂
@@ -212,8 +210,7 @@ theorem point_compare : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   rw [e] at hm
   have hdet : r * A.det = B.det := LieTangent.valAt_unique hgen hm hB'
   have hc := hΦ.chg yy vz wz v w A B hfz hf hA hB
-  rw [← hdet] at hc
-  rw [← _root_.mul_assoc] at hc
+  rw [← hdet, ← _root_.mul_assoc] at hc
   exact mul_right_cancel₀ hA0 hc
 
 end GlobalTheory.CompanionTheory.Ar.Flat.PointCompare

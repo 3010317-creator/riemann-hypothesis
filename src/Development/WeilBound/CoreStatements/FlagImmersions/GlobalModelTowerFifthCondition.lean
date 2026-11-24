@@ -316,8 +316,7 @@ theorem exists_ratio (y : (Σ k, ι k) → Ω) (hS : IsMultiHomogIdeal (mCoordId
       rw [← map_aeval_int π w f, h0, map_zero]
   obtain ⟨v, hv0, dg, dh, g, h, hg, hh, hd, hgy, hhz, hgz⟩ := H L z hz
   refine ⟨aeval w h, aeval w g, ?_, ?_, ?_⟩
-  · rw [map_aeval_int]
-    exact hhz
+  · rwa [map_aeval_int]
   · rw [map_aeval_int]
     show aeval z g ≠ 0
     rw [hgz]
@@ -350,8 +349,7 @@ theorem chart_mem (y : (Σ k, ι k) → Ω) (hS : IsMultiHomogIdeal (mCoordIdeal
       by_contra h0
       apply natCast_notMem S M hM n h0
       have h1 : Ideal.Quotient.mk M (n : satQ S) = 0 := by
-        rw [map_natCast]
-        exact hn
+        rwa [map_natCast]
       exact Ideal.Quotient.eq_zero_iff_mem.mp h1
     obtain ⟨b, e, hb, he, hbe⟩ := exists_ratio y hS H c hc hx (satQ S ⧸ M) (Ideal.Quotient.mk M)
     exact ⟨b, e, fun h => hb (Ideal.Quotient.eq_zero_iff_mem.mpr h),
@@ -863,8 +861,7 @@ theorem aeval_aff_ne_zero {y : (Σ k, ι k) → Ω} {c : ∀ k, ι k} (hc : ∀ 
   refine GlobalTheory.CompanionTheory.Ar.LocVal.mem_mCoordIdeal_of_aeval_eq_zero y ha ?_
   have e : (fun p : Σ k, ι k => y ⟨p.1, c p.1⟩ * aff y c p) = y := funext fun p => mul_div_cancel₀ _ (hc p.1)
   have h1 := aeval_scale ha (fun k => y ⟨k, c k⟩) (aff y c)
-  rw [e, h0, mul_zero] at h1
-  exact h1
+  rwa [e, h0, mul_zero] at h1
 
 theorem exists_eval {y : (Σ k, ι k) → Ω} {c : ∀ k, ι k} {L : Type} [Field L] {w : (Σ k, ι k) → L}
     (hw : w ∈ ptsOver L (mCoordIdeal y)) (hwc : ∀ k, w ⟨k, c k⟩ ≠ 0) :
@@ -1147,8 +1144,7 @@ theorem rel_iff (e : ∀ k, ι k ≃ Fin (n k + 1)) (P : Ideal (MRing ι)) (z z'
     have := congrFun h (sig e p)
     have h1 : ∀ y : mcPts P, ((ptsEquiv e P y : mcPts (P.map (ren e))) : Coord n → ℂ) (sig e p) = y.1 p :=
       fun y => congrArg y.1 ((sig e).symm_apply_apply p)
-    rw [h1, h1] at this
-    exact this
+    rwa [h1, h1] at this
 
 def projEquiv (e : ∀ k, ι k ≃ Fin (n k + 1)) (P : Ideal (MRing ι)) :
     projPts P ≃ projPts (P.map (ren e)) :=
@@ -1526,8 +1522,7 @@ theorem proj_inl_mem {K₁ K₂ : Type} [Fintype K₁] [Fintype K₂] {ι₁ : K
     change mConeMap (joinVec y₁ y₂) (rename (joinInl ι₁ ι₂) f) = 0
     rw [key, hf', map_zero]
   have h := hz.2 _ hmem
-  rw [aeval_rename] at h
-  exact h
+  rwa [aeval_rename] at h
 
 variable {Ψ : Type} [Fintype Ψ] {N : ℕ}
 
@@ -1554,8 +1549,7 @@ theorem rootHt_le (R : RootModel Ψ N) (t : ℝ) (mu : Wt Ψ N) (s D : ℝ) (L :
   refine add_le_add (le_of_eq ?_) ?_
   · simp [RootModel.coef, l1, Fintype.sum_prod_type]
   · have hk : (1 : ℝ) ≤ R.kA := by exact_mod_cast R.kA_pos
-    simp only [RootModel.coef, abs_div, Nat.abs_cast]
-    exact div_le_self (abs_nonneg _) hk
+    simpa only [RootModel.coef, abs_div, Nat.abs_cast] using div_le_self (abs_nonneg _) hk
 
 theorem line_smooth (R : RootModel Ψ N) (t : ℝ) : ∀ j, IsSmoothHerm (R.line t j)
   | some r => R.x_smooth t r

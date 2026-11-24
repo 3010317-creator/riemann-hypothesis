@@ -263,8 +263,7 @@ theorem epsPart_mul {v v' : epsAt x ⟶ G} (hv : IsTanAt G x v) (hv' : IsTanAt G
     have hm : IsLocalRing.closedPoint (DualNumber ℂ) ∈ (spMap q ≫ F) ⁻¹ᵁ U :=
       eQ ▸ h (show IsLocalRing.closedPoint (DualNumber ℂ) ∈ (⊤ : (Sp (DualNumber ℂ)).Opens) from trivial)
     have hm2 : (spMap q) (IsLocalRing.closedPoint (DualNumber ℂ)) ∈ F ⁻¹ᵁ U := hm
-    rw [spMap, Spec_closedPoint] at hm2
-    exact hm2
+    rwa [spMap, Spec_closedPoint] at hm2
   rw [epsPart_comp q F U hF f _ eQ h, epsPart_comp r1 F U hF f _ e1 h1, epsPart_comp r2 F U hF f _ e2 h2, q_snd]
 
 theorem top_le_of_fst {Y : Scheme.{0}} (v : Sp (DualNumber ℂ) ⟶ Y) (y0 : Sp ℂ ⟶ Y)
@@ -273,8 +272,7 @@ theorem top_le_of_fst {Y : Scheme.{0}} (v : Sp (DualNumber ℂ) ⟶ Y) (y0 : Sp 
   subst hv
   have hm : (spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom) (IsLocalRing.closedPoint ℂ) ∈ v ⁻¹ᵁ U :=
     hU (show IsLocalRing.closedPoint ℂ ∈ (⊤ : (Sp ℂ).Opens) from trivial)
-  rw [spMap, Spec_closedPoint] at hm
-  exact hm
+  rwa [spMap, Spec_closedPoint] at hm
 
 def rhoTy {E : Type} [Field E] [NumberField E] {g : ℕ} (ty : Fin g → (E →+* ℂ)) :
     𝓞 E →+* Module.End ℂ (Fin g → ℂ) where
@@ -314,8 +312,7 @@ theorem lie_model_with_cm_action : ∀ (E : Type) [Field E] [NumberField E] [IsC
       hv.trans (congrArg Over.Hom.left ex0).symm
     have hU : ⊤ ≤ (FU.ex i P 0).left ⁻¹ᵁ U := by
       rw [← he0 _ ht]
-      intro p _
-      exact h trivial
+      exact fun p _ => h trivial
     have h1 := top_le_of_fst _ _ (he0 _ (htan w)) U hU
     have h2 := top_le_of_fst _ _ (he0 _ (htan w')) U hU
     have := epsPart_mul (FU.u i P) (htan w) (htan w') U h h1 h2 f

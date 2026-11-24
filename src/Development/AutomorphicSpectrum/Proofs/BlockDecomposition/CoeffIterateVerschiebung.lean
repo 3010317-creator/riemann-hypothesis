@@ -127,8 +127,7 @@ theorem acr_ext {ι : Type} [Fintype ι] (e : ι → A.A) (he : CompleteOrthogon
     rw [← map_sum, sum_teich A e he, map_one]
   calc x = (∑ i, A.toAcr n (WittVector.teichmuller l (e i))) * x := by rw [hs, one_mul]
     _ = (∑ i, A.toAcr n (WittVector.teichmuller l (e i))) * y := by
-      simp only [Finset.sum_mul]
-      exact Finset.sum_congr rfl fun i _ => h i
+      simpa only [Finset.sum_mul] using Finset.sum_congr rfl fun i _ => h i
     _ = y := by rw [hs, one_mul]
 
 theorem exists_cast : ∃ c : ZMod (l ^ n) →+* A.Acr n, ∀ a, c a = (a.val : A.Acr n) := by
@@ -158,8 +157,7 @@ theorem exists_isLcA (f : LocallyConstant (SU A) (ZMod (l ^ n))) : ∃ x, IsLcA 
       calc e' * e b = e' * e a * e b := by rw [h3]
         _ = 0 := by rw [mul_assoc, he.ortho hb.symm, mul_zero]
     rw [← mul_assoc, ← map_mul, ← map_mul, h4, WittVector.teichmuller_zero, map_zero, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ a) h
+  · exact fun h => absurd (Finset.mem_univ a) h
 
 theorem isLcA_unique {f : LocallyConstant (SU A) (ZMod (l ^ n))} {x y : A.Acr n}
     (hx : IsLcA A n f x) (hy : IsLcA A n f y) : x = y := by
@@ -242,7 +240,6 @@ theorem lcSpec_of_lcIdem : CrystallineSemistableComparison.E.LcIdem → Crystall
   · rw [← mul_assoc, ← map_mul, ← map_mul, (he.idem a).eq]
   · intro b _ hb
     rw [← mul_assoc, ← map_mul, ← map_mul, he.ortho hb.symm, WittVector.teichmuller_zero, map_zero, zero_mul]
-  · intro h'
-    exact absurd (Finset.mem_univ a) h'
+  · exact fun h' => absurd (Finset.mem_univ a) h'
 
 end GlobalTheory.CompanionTheory.LcSp

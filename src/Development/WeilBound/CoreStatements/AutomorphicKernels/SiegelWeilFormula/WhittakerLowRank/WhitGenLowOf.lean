@@ -192,8 +192,7 @@ theorem GlobalTheory.CompanionTheory.SDPadic.exists_selfDual : ∀ (V : Type) [A
     exact_mod_cast e1.symm
   refine ⟨μ, hμ, fun Φ hΦ hΦc hint z => ?_⟩
   have hmono : Monotone (fun n => (D n : Set V)) := by
-    intro m n hmn y hy
-    exact (hD n y).2 fun x hx => (hD m y).1 hy x (hanti hmn hx)
+    exact fun m n hmn y hy => (hD n y).2 fun x hx => (hD m y).1 hy x (hanti hmn hx)
   have hU : (⋃ n, (D n : Set V)) = Set.univ := by
     ext x; simpa using hDall x
   have hg : Integrable (fun y => (∫ x, Φ x * χ x y ∂μ) * χ y z) μ := by
@@ -355,8 +354,7 @@ theorem exists_of_bilin (ψ : AddChar (Fv F v) ℂ) (hψ : Continuous ψ) (hu : 
     exact WithZero.exp_ne_zero (hcv.symm.trans (map_zero _))
   have hstd : GlobalTheory.JR.IsStdChar (ψ.mulShift c) := by
     constructor
-    · intro x hx
-      exact (hc c).2 hcv.le x (Valued.toNormedField.norm_le_one_iff.1 hx)
+    · exact fun x hx => (hc c).2 hcv.le x (Valued.toNormedField.norm_le_one_iff.1 hx)
     · obtain ⟨t, ht⟩ := HeightOneSpectrum.valuedAdicCompletion_surjective F v (WithZero.exp 1)
       have h1 : ¬ ∀ s : Fv F v, Valued.v s ≤ (1 : WithZero (Multiplicative ℤ)) → ψ (c * t * s) = 1 := by
         rw [hc, map_mul, hcv, ht, ← WithZero.exp_add, WithZero.exp_le_exp]
@@ -634,8 +632,7 @@ theorem selfDual_transport {V W : Type} [AddCommGroup V] [TopologicalSpace V] [M
   have h2 : g (-f z) = -z := by
     change f.symm (-f z) = -z
     simp
-  rw [h2] at this
-  exact this
+  rwa [h2] at this
 
 theorem selfDual_euclid {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℝ W]
     [FiniteDimensional ℝ W] [MeasurableSpace W] [BorelSpace W] (S : W →ₗ[ℝ] W)
@@ -671,8 +668,7 @@ theorem selfDual_euclid {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℝ
     simp [hc0.ne']
   have hi3 : Integrable (𝓕 Φ) := by
     have h1 : Integrable (𝓕 Φ) (Measure.map S volume) := hm.integrable_map_iff.mpr hi2
-    rw [hmap, integrable_smul_measure hne' ENNReal.ofReal_ne_top] at h1
-    exact h1
+    rwa [hmap, integrable_smul_measure hne' ENNReal.ofReal_ne_top] at h1
   have hinv := congrFun (hΦ.fourierInv_fourier_eq hΦi hi3) (-z)
   rw [Real.fourierInv_eq_fourier_neg, neg_neg, Real.fourier_eq'] at hinv
   have h3 := hm.integral_map (μ := volume)
@@ -697,8 +693,7 @@ theorem exists_selfDual : ∀ (V : Type) [AddCommGroup V] [TopologicalSpace V] [
   let B : Matrix (Fin N) (Fin N) ℝ := (-2 * Real.pi)⁻¹ • A
   have hpi : (-2 * Real.pi) ≠ 0 := by have := Real.pi_pos; intro h; linarith
   have hB : B.det ≠ 0 := by
-    simp only [B, Matrix.det_smul]
-    exact mul_ne_zero (pow_ne_zero _ (inv_ne_zero hpi)) hd
+    simpa only [B, Matrix.det_smul] using mul_ne_zero (pow_ne_zero _ (inv_ne_zero hpi)) hd
   have hBs : B.IsSymm := hA.smul _
   let S : EuclideanSpace ℝ (Fin N) →ₗ[ℝ] EuclideanSpace ℝ (Fin N) :=
     (p.symm.toLinearEquiv : (Fin N → ℝ) →ₗ[ℝ] _) ∘ₗ Matrix.toLin' B ∘ₗ
@@ -713,8 +708,7 @@ theorem exists_selfDual : ∀ (V : Type) [AddCommGroup V] [TopologicalSpace V] [
     rw [hin, hin, hSa, hSa, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hBs.eq]
   have hdS : LinearMap.det S ≠ 0 := by
     simp only [S]
-    rw [LinearMap.det_conj, LinearMap.det_toLin']
-    exact hB
+    rwa [LinearMap.det_conj, LinearMap.det_toLin']
   obtain ⟨ν, hν⟩ := selfDual_euclid S hS hdS
   let f : V ≃+ EuclideanSpace ℝ (Fin N) := e.trans p.symm.toLinearEquiv.toAddEquiv
   have := selfDual_transport f (p.symm.continuous.comp he) (he'.comp p.continuous) ν _ hν
@@ -922,8 +916,7 @@ theorem trace_nondeg [Algebra.IsSeparable F E] (z : R ⊗[F] E)
     · have h2 : Algebra.trace F E (b j * b' j) = 1 := by
         have := LinearMap.BilinForm.apply_dualBasis_right hB (Algebra.traceForm_isSymm F) b j j
         simpa [B, b', Algebra.traceForm_apply] using this
-      rw [h2, map_one, mul_one] at h1
-      exact h1
+      rwa [h2, map_one, mul_one] at h1
     · intro i _ hij
       have h2 : Algebra.trace F E (b i * b' j) = 0 := by
         have := LinearMap.BilinForm.apply_dualBasis_right hB (Algebra.traceForm_isSymm F) b i j

@@ -161,8 +161,7 @@ theorem regularAt_const [Finite T] [IsIntegrallyClosed R] (Γ : QFGroup R T) (hE
   have hgU : g ∈ U := by
     show g ∉ Z
     simp only [Z, Set.mem_iUnion, Set.mem_setOf_eq, not_exists]
-    intro t ht hg
-    exact ht (specializes_iff_mem_closure.2 hg)
+    exact fun t ht hg => ht (specializes_iff_mem_closure.2 hg)
   have hPU : ∀ t, P t ∈ U → P t ⤳ g := by
     intro t ht
     by_contra hn
@@ -189,8 +188,7 @@ theorem btOrder_top_eq_top_of_etale : ∀ (R : Type) [CommRing R] [IsDomain R] [
     (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T), Etale Γ.G.hom → Γ.btOrder ⊤ = ⊤ := by
   intro R _ _ _ T _ _ Γ hE
   refine eq_top_iff.2 fun f _ => Algebra.subset_adjoin ?_
-  intro t g _
-  exact regularAt_const Γ hE (fun h => f (t * h)) g
+  exact fun t g _ => regularAt_const Γ hE (fun h => f (t * h)) g
 
 end GlobalTheory.CompanionTheory.Ar.BT.EtaleTop
 end -- clump:auto

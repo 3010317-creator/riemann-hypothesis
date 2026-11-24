@@ -259,9 +259,7 @@ theorem isEmbedded_of_isSncModel : ∀ (K : Type) [Fintype K] (ι : K → Type) 
     obtain ⟨p, x, hx, h⟩ := hsurj z hz
     obtain ⟨i, rfl⟩ := E.symm.surjective p
     exact ⟨i, x, hx, h⟩
-  · intro i j x hx x' hx' h
-    exact hinj _ _ x hx x' hx' h
-  · intro i x hx p' hp'
-    exact hinv _ x hx p' hp'
+  · exact fun i j x hx x' hx' h => hinj _ _ x hx x' hx' h
+  · exact fun i x hx p' hp' => hinv _ x hx p' hp'
 
 end GlobalTheory.CompanionTheory.Ar.Cmp.SncRes

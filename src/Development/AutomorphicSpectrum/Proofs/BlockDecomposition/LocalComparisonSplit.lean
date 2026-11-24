@@ -119,8 +119,7 @@ theorem exists_compact_reps_of_finite_doubleCosets :
     refine ⟨h⁻¹, inv_mem hh, Quotient.out q * k⁻¹, ?_, ?_⟩
     · refine Set.mem_biUnion (x := q) ?_ ⟨k⁻¹, inv_mem hk, rfl⟩
       refine ⟨k⁻¹, inv_mem hk, ?_⟩
-      rw [MonoidHom.id_apply, hd, hconj]
-      exact hx
+      rwa [MonoidHom.id_apply, hd, hconj]
     · rw [hd, inv_mul_cancel_left]
 
 end GlobalTheory.CompanionTheory.OrbitalCount
@@ -157,8 +156,7 @@ theorem finsum_comp_eq {P D : Type} (g : P → D) (f : D → ℂ) (S : Finset D)
       Finset.mem_coe]
     constructor
     · exact fun h => h.2
-    · intro h
-      exact ⟨h ▸ hQ, h⟩
+    · exact fun h => ⟨h ▸ hQ, h⟩
   rw [hfil, Finset.sum_congr rfl (g := fun _ => f Q)]
   · rw [Finset.sum_const, nsmul_eq_mul, Nat.card_eq_card_finite_toFinset (hfin Q hQ)]
   · intro p hp
@@ -175,8 +173,7 @@ theorem abstract_sum {D D₁ P : Type} (π : D → D₁) (Ψ : D₁ → P → D)
     intro q Q hne
     ext p
     simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false]
-    intro h
-    exact hne (h ▸ hπ q p)
+    exact fun h => hne (h ▸ hπ q p)
   have hinner : ∀ q, c q * ∑ᶠ p, f (Ψ q p) = ∑ Q ∈ hf.toFinset,
       if π Q = q then (c (π Q) * (Nat.card (Ψ (π Q) ⁻¹' {Q}) : ℂ)) * f Q else 0 := by
     intro q
@@ -202,8 +199,7 @@ theorem abstract_sum {D D₁ P : Type} (π : D → D₁) (Ψ : D₁ → P → D)
     rw [hinner q]
     refine Finset.sum_eq_zero fun Q hQ => ?_
     rw [ite_eq_right]
-    intro h
-    exact hnot (by simpa using ⟨Q, by simpa using hQ, h⟩)
+    exact fun h => hnot (by simpa using ⟨Q, by simpa using hQ, h⟩)
   have hsuppL : Function.support
       (fun Q => (c (π Q) * (Nat.card (Ψ (π Q) ⁻¹' {Q}) : ℂ)) * f Q) ⊆ (hf.toFinset : Set D) := by
     intro Q hQ
@@ -213,8 +209,7 @@ theorem abstract_sum {D D₁ P : Type} (π : D → D₁) (Ψ : D₁ → P → D)
   simp_rw [hinner]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun Q hQ => ?_
-  rw [Finset.sum_ite_eq]
-  rw [ite_eq_left (Finset.mem_image_of_mem π hQ)]
+  rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_image_of_mem π hQ)]
 
 variable {H : Type} [Group H]
 
@@ -227,10 +222,8 @@ theorem mem_cj {G : Type} [Group G] {L : Subgroup G} {x g : G} :
   · rintro ⟨l, hl, rfl⟩
     have : x⁻¹ * (MulAut.conj x).toMonoidHom l * x = l := by
       simp [MulAut.conj_apply, mul_assoc]
-    rw [this]
-    exact hl
-  · intro h
-    exact ⟨_, h, by simp [MulAut.conj_apply, mul_assoc]⟩
+    rwa [this]
+  · exact fun h => ⟨_, h, by simp [MulAut.conj_apply, mul_assoc]⟩
 
 abbrev dg : H →* H × H := (MonoidHom.id H).prod (MonoidHom.id H)
 
@@ -278,8 +271,7 @@ theorem cj_mul_right {L : Subgroup H} {l : H} (hl : l ∈ L) (x : H) : cj L (x *
     have := L.mul_mem (L.mul_mem hl h) (L.inv_mem hl)
     have e2 : l * (l⁻¹ * (x⁻¹ * g * x) * l) * l⁻¹ = x⁻¹ * g * x := by group
     rwa [e2] at this
-  · intro h
-    exact L.mul_mem (L.mul_mem (L.inv_mem hl) h) hl
+  · exact fun h => L.mul_mem (L.mul_mem (L.inv_mem hl) h) hl
 
 theorem cj_mul_left (L : Subgroup H) (t x : H) : cj L (t * x) = cj (cj L x) t := by
   ext g
@@ -400,12 +392,10 @@ theorem fiber_eq_orbit (hΔ : ∀ g, g ∈ Δ ↔ g.1 = g.2 ∧ g.1 ∈ Z)
       rw [mem_cj]
       have : x⁻¹ * t⁻¹ * x = l := by
         have : t⁻¹ * x = x * l := by
-          rw [inv_mul_eq_iff_eq_mul, ← mul_assoc]
-          exact e1'
+          rwa [inv_mul_eq_iff_eq_mul, ← mul_assoc]
         rw [mul_assoc, this]
         group
-      rw [this]
-      exact hl
+      rwa [this]
     refine ⟨⟨t⁻¹, Subgroup.mem_inf.2 ⟨Z.inv_mem ht, hb⟩⟩, ?_⟩
     change (QuotientGroup.mk (t⁻¹ * h) : H ⧸ L) = p
     have hq : (QuotientGroup.mk (t⁻¹ * h) : H ⧸ L) = QuotientGroup.mk p.out := by
@@ -578,7 +568,6 @@ theorem cptPart_diag : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologi
     simpa using this
   · rintro ⟨t, ⟨ht, hc⟩, rfl⟩
     have hcont : Continuous ((MonoidHom.id H).prod (MonoidHom.id H)) := by
-      show Continuous fun x : H => (x, x)
       exact continuous_id.prodMk continuous_id
     exact ⟨Subgroup.mem_map_of_mem _ ht, isCompact_closure_zpowers_image _ hcont t hc⟩
 
@@ -614,8 +603,7 @@ theorem conv_isHecke : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologi
   have hnz : ∀ y, (hint K fun z => f₁ z * f₂ (z⁻¹ * y)) ≠ 0 →
       ∃ z, f₁ z ≠ 0 ∧ f₂ (z⁻¹ * y) ≠ 0 := by
     intro y hy
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hy
     rw [hlev y]
     have hz : ∀ p : H ⧸ L, f₁ p.out * f₂ ((p.out)⁻¹ * y) = 0 := by
@@ -1121,8 +1109,7 @@ theorem fv_split (S : Set (Pl E)) (hS : IsSection S) (w : Pl E) (hw : w ∈ S) (
     fv S φ₁ φ₂ _ y = φ₁ w (evw ⟨w, rfl⟩ y) * φ₂ w (evw ⟨w, rfl⟩ (thv a b _ y)) := by
   unfold fv
   have key : ∀ u : Above (w.under (𝓞 (maximalRealSubfield E))), u.1 ∈ S → u = ⟨w, rfl⟩ := by
-    intro u hu
-    exact Subtype.ext ((hS w).unique ⟨hu, u.2⟩ ⟨hw, rfl⟩)
+    exact fun u hu => Subtype.ext ((hS w).unique ⟨hu, u.2⟩ ⟨hw, rfl⟩)
   rw [finprod_eq_single _ (⟨w, rfl⟩ : Above (w.under (𝓞 (maximalRealSubfield E))))]
   · rw [finprod_eq_if, ite_eq_left hw, ite_eq_left hs]
   · intro u hu
@@ -1181,8 +1168,7 @@ theorem locCompareSplit : LocCompareSplit := by
   rw [ht, seen_split φ₁ φ₂ w hs, th_split a b w hs]
   have hsc := _root_.GlobalTheory.CompanionTheory.SplitConvF.splitConv_of_finite _ (sgP a b w) (K2 a b w) hc hi hk hKo hKc (e y).1 (e y).2 (φ₁ w) (φ₂ w) L hLo hLK hLs hH₁ hH₂
     (by rw [hN]; exact hG) (by rw [hN]; exact hF)
-  rw [hN] at hsc
-  exact hsc
+  rwa [hN] at hsc
 
 end GlobalTheory.CompanionTheory.LcSplit
 

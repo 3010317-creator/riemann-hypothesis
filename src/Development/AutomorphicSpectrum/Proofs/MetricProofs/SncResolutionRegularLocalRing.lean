@@ -152,8 +152,7 @@ theorem ker_le_chart (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (�
     (ReciprocityTheory.AnForm.R.chartIdeal (pC (mCoordIdeal y)) c)
     (fun k => Ideal.mem_sup_right (Ideal.subset_span ⟨k, rfl⟩)) g
   have hH : H ∈ mCoordIdeal y := by
-    rw [mCoordIdeal, RingHom.mem_ker]
-    rw [ha, hg]
+    rw [mCoordIdeal, RingHom.mem_ker, ha, hg]
     simp
   have hHC : map (Int.castRingHom ℂ) H ∈ ReciprocityTheory.AnForm.R.chartIdeal (pC (mCoordIdeal y)) c :=
     Ideal.mem_sup_left (Ideal.subset_span ⟨H, hH, rfl⟩)
@@ -263,8 +262,7 @@ theorem exists_unique_lift (σ : Type) (Ω : Type) [Field Ω] [CharZero Ω] (C :
         have h3 : π (X none) * π (rename some F) = 1 := by
           refine Subtype.ext ?_
           show aeval π₀ (X none) * aeval π₀ (rename some F) = 1
-          rw [aeval_X, aeval_rename]
-          exact ha
+          rwa [aeval_X, aeval_rename]
         have h4 : Φ' (π (X none)) * aeval t F = 1 := by
           have : Φ' (π (rename some F)) = aeval t F := DFunLike.congr_fun h2 F
           rw [← this, ← map_mul, h3, map_one]
@@ -438,8 +436,7 @@ theorem card_le_finrank_jacSpanAt (K : Type) [Fintype K] (ι : K → Type) [∀ 
   have hadj : ∀ s ∈ Algebra.adjoin ℚ (Set.range fun q : Σ k, ι k => y q / y ⟨q.1, p q.1⟩),
       ∃ F : MvPolynomial (Σ k, ι k) ℚ, aeval (fun q : Σ k, ι k => y q / y ⟨q.1, p q.1⟩) F = s := by
     intro s hs
-    rw [Algebra.adjoin_range_eq_range_aeval] at hs
-    exact hs
+    rwa [Algebra.adjoin_range_eq_range_aeval] at hs
   choose F hF using fun l => hadj (f l) (hf l)
   choose A hA using fun l => hadj (a l) (ha l)
   obtain ⟨l, hl⟩ : ∃ l, eval w (map (algebraMap ℚ ℂ) (F l)) ≠ 0 := by

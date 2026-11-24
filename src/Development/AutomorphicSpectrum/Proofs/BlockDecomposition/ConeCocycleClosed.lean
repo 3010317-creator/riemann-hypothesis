@@ -110,8 +110,7 @@ theorem map_zK (Λ : CLiftK g D) (s : ℕ) (σ : ComposableArrows C 2) {c : C} (
 theorem mem_J (Λ : CLiftK g D) (σ : ComposableArrows C 2) {c : C} (ρ : σ.obj (Fin.last 2) ⟶ c) :
     ((Units.map (g.map ρ).φ.toMonoidHom (Λ.r σ) : (g.obj c).Bˣ) : (g.obj c).B) - 1 ∈ (g.obj c).J := by
   have := (g.map ρ).hle (_root_.GlobalTheory.CompanionTheory.ConeUnit.r_sub_one Λ σ)
-  rw [Ideal.mem_comap, map_sub, map_one] at this
-  exact this
+  rwa [Ideal.mem_comap, map_sub, map_one] at this
 
 theorem map_id_unit {c : C} (ρ : c ⟶ c) (h : ρ = 𝟙 c) (u : (g.obj c).Bˣ) :
     Units.map (g.map ρ).φ.toMonoidHom u = u := by
@@ -166,7 +165,6 @@ theorem main : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} {q : X ⟶
     rw [this, pow_zero, pow_one, show (-1 : ℤ) ^ 2 = 1 by norm_num, one_smul, one_smul, neg_one_smul, neg_one_smul]
     calc a + -b + c + -d = (a + c) - (d + b) := by abel
       _ = 0 := by rw [h, sub_self]
-  refine fin _ _ _ _ ?_
-  exact add_eq (B := (g.obj (τ.obj (Fin.last 3))).B) h0 h2 h3 h1 p.symm
+  exact fin _ _ _ _ (add_eq (B := (g.obj (τ.obj (Fin.last 3))).B) h0 h2 h3 h1 p.symm)
 
 end GlobalTheory.CompanionTheory.ConeZcoc

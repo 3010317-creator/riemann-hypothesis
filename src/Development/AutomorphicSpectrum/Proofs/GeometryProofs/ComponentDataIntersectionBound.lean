@@ -301,8 +301,7 @@ theorem replaceTail_linearIndependent (hb : LinearIndependent Ω b)
   have h0 := Fintype.linearIndependent_iff.1 hb _ h1
   have hdet : (blk hj C).det ≠ 0 := by rw [det_blk]; exact one_ne_zero
   have := Matrix.eq_zero_of_mulVec_eq_zero hdet (funext h0)
-  intro i
-  exact congrFun this i
+  exact fun i => congrFun this i
 
 theorem span_replaceTail (A : Subring Ω) (hC : ∀ a k, C a k ∈ A)
     (hx : ∀ k, x k = b (tailIdx hj k) + ∑ a, C a k • b (headIdx hj a)) :
@@ -406,8 +405,7 @@ theorem quotNormSq_eq_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     rw [hb', replaceTail_head]
     have : b (headIdx hj a) ∈ Hd.F τ := by
       rw [← hF]; exact Submodule.subset_span ⟨a, rfl⟩
-    rw [Or.F_eq] at this
-    exact this
+    rwa [Or.F_eq] at this
   have htail : ∀ k, Or.i τ (b' (tailIdx hj k)) = s k := fun k => by
     rw [hb', replaceTail_tail, hx]
   have horth : ∀ a k, G' (headIdx hj a) (tailIdx hj k) = 0 := fun a k =>
@@ -459,8 +457,7 @@ theorem gramAt_eq_hodge : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     intro p q
     have h0 : ∑ p, (hS.choose p q - (cf q p : Ω)) • (Dc.h τ).b hex.choose p = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib]
-      rw [← hS.choose_spec q, sub_eq_zero]
-      rw [← hcf q]
+      rw [← hS.choose_spec q, sub_eq_zero, ← hcf q]
       rfl
     exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hsib.1 _ h0 p)
   choose s hs using fun p q => RingHom.mem_range.1 (cf q p).2
@@ -625,8 +622,7 @@ theorem phMu_eq (Or : CptOrigin Y S₀ Dc Hd) {z : Spec (CommRingCat.of ℂ) ⟶
   have hcw : (∏ k, ‖cv k‖ ^ Hd.aMu k) * ∏ k, ‖w₀ ⟨k, d.c k⟩‖ ^ Hd.aMu k = ∏ k, ‖w ⟨k, d.c k⟩‖ ^ Hd.aMu k := by
     rw [← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun k _ => ?_
-    rw [← mul_zpow, ← norm_mul]
-    rw [hwk ⟨k, d.c k⟩]
+    rw [← mul_zpow, ← norm_mul, hwk ⟨k, d.c k⟩]
   have hfin : (muLine Hd).h w = (‖valAt Dc.y d.u w‖ * ∏ k, ‖w ⟨k, d.c k⟩‖ ^ Hd.aMu k) *
       ∏ τ, Real.sqrt (Γ₁ τ).det.re := by
     rw [hh, hF, ← hcw]

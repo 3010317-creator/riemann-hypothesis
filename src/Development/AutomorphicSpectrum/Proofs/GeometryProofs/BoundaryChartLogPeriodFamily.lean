@@ -386,12 +386,10 @@ theorem isRiem_of_chart {Xo : Moduli D l} {σ : KA l →+* ℂ} {n a : ℕ} (C :
   · intro hG i j
     have h1 := key.1 (_root_.GlobalTheory.CompanionTheory.Ar.GramConj.isHodgeGram_conj _ _ _ _ _ _ _ _ _ hx (fun _ => rfl) hG) i j
     have h2 : (starRingEnd ℂ) (Γ i j) = _ := h1.trans (hform' i j)
-    have h3 := congrArg (starRingEnd ℂ) h2
-    simpa only [Complex.conj_conj] using h3
+    simpa only [Complex.conj_conj] using congrArg (starRingEnd ℂ) h2
   · intro hE
     have h1 : Fl.IsHodgeGram C.t.G C.t.PP.L (spMap (conjPts C.ψ (star z))) v' (Γ.map (starRingEnd ℂ)) := by
-      refine key.2 fun i j => ?_
-      exact (congrArg (starRingEnd ℂ) (hE i j)).trans (hform' i j).symm
+      exact key.2 fun i j => (congrArg (starRingEnd ℂ) (hE i j)).trans (hform' i j).symm
     have h2 := _root_.GlobalTheory.CompanionTheory.Ar.GramConj.isHodgeGram_conj _ _ _ _ _ _ _ _ _ hx' hback h1
     have h3 : (Γ.map (starRingEnd ℂ)).map (starRingEnd ℂ) = Γ := by
       ext i j
@@ -471,8 +469,7 @@ theorem exists_log_periods_of_root : ∀ (E : Type) [Field E] [NumberField E] [I
           rw [smul_smul, inv_mul_cancel₀ hρc', _root_.one_smul]
           exact (hQ' _ (punct_subset_ball (hU _ (huU k))) _).1 (hsU _ (huU k)))))
       have h0 : s 0 ∈ e.per 0 := by simpa using hcl
-      rw [← hΓ₀'] at h0
-      exact h0
+      rwa [← hΓ₀'] at h0
     · rw [hΓ₀']
       exact _root_.GlobalTheory.CompanionTheory.Ar.Flat.span_per_eq_top C.R C.t.G C.g n C.M _ C.ψ e hsemi 0 h0ρ
     · intro N hN
@@ -538,8 +535,7 @@ theorem exists_logPeriods_famExp_isRiem : ∀ (E : Type) [Field E] [NumberField 
   · have h := hriem (star z) (star_mem_punct.2 hz)
     rw [hLH]
     refine isRiem_of_chart C _ _ ?_
-    rw [star_real_smul]
-    exact h
+    rwa [star_real_smul]
 
 end GlobalTheory.CompanionTheory.Ar.Flat.Conj
 end -- clump:auto

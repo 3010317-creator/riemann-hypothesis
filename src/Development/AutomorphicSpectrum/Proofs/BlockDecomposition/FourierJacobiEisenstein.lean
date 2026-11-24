@@ -311,10 +311,8 @@ theorem fold_abs {X ι : Type} [MeasurableSpace X] [Countable ι] (μ : Measure 
     have hsum : Summable fun i => ∫ x in S, ‖c i x * Z (y, x) * a i y‖ ∂μ := by
       have h : ∀ i, ∫ x in S, ‖c i x * Z (y, x) * a i y‖ ∂μ = (∫ x in S, ‖Z (y, x)‖ ∂μ) * ‖a i y‖ := by
         intro i
-        simp only [norm_mul, hc1, one_mul]
-        exact integral_mul_const _ _
-      simp only [h]
-      exact (ha y).mul_left _
+        simpa only [norm_mul, hc1, one_mul] using integral_mul_const _ _
+      simpa only [h] using (ha y).mul_left _
     have h1 := integral_tsum_of_summable_integral_norm hint hsum
     calc ∑' i, (∫ x in S, c i x * Z (y, x) ∂μ) * a i y
         = ∑' i, ∫ x in S, c i x * Z (y, x) * a i y ∂μ :=
@@ -626,8 +624,7 @@ theorem map_eq_of_fundamentalDomain (L : AddSubgroup G) [Countable L] (ν : Meas
   have hc : Measure.addHaarScalarFactor (ν.map T) ν = 1 := by
     have h5 : ν.map T F = ν F := h3.trans h4
     rw [e, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h5
-    have h6 := (ENNReal.mul_eq_right h0 hT0).1 h5
-    simpa using h6
+    simpa using (ENNReal.mul_eq_right h0 hT0).1 h5
   have hm : ν.map T = ν := by rw [e, hc, one_smul]
   refine ⟨hm, ?_⟩
   rwa [hm] at hF3
@@ -1011,8 +1008,7 @@ theorem exists_chv_ne_one (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsCharAF D.hos
           rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hu, Matrix.one_mul]
       _ = 0 := by rw [h0, Matrix.mul_zero]
   obtain ⟨i, j, hij⟩ : ∃ i j, (b₀.1 * ζ) i j ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hB (Matrix.ext hc)
   obtain ⟨c, hc⟩ : ∃ c : AE D, c = algebraMap (AF D.host.F) (AE D)
       (algebraMap D.host.F (AF D.host.F) (1 / 2) * t) * incA D ((b₀.1 * ζ) i j)⁻¹ := ⟨_, rfl⟩
@@ -1027,8 +1023,7 @@ theorem exists_chv_ne_one (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsCharAF D.hos
   show ψ (trA (Matrix.trace (pr b₀ _ (rt ζ)))) ≠ 1
   haveI : Nontrivial (AF D.host.F) :=
     nontrivial_of_ne t 0 (fun h => ht (by rw [h, AddChar.map_zero_eq_one]))
-  rw [key, trA_algebraMap_half]
-  exact ht
+  rwa [key, trA_algebraMap_half]
 
 theorem integral_chv_rt_eq_zero {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddChar (AF D.host.F) ℂ)
     (hψ : IsCharAF D.host.F ψ) (b₀ : HermE D ρ) (hdet : b₀.1.det ≠ 0)

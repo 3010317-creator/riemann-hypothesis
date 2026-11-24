@@ -193,8 +193,7 @@ theorem coe_congruenceSubgroup (k : Type) [Field k] [ValuativeRel k] [Topologica
     exact h2 i j
   · intro hg
     have hgH : g ∈ H := by
-      rw [← SetLike.mem_coe, hH]
-      exact hg
+      rwa [← SetLike.mem_coe, hH]
     refine ⟨(mem_integralGL_iff k N).2 ⟨hint g hgH, hint _ (H.inv_mem hgH)⟩, fun i j => ?_⟩
     have := hg i j
     rwa [map_pow] at this
@@ -253,8 +252,7 @@ theorem exists_decomp (t : kˣ) (ht : valuation k (t : k) < 1) :
   · apply Units.ext
     have h1 : (⟨t, hti⟩ : 𝒪[k]) = GroundTheory.Automorphic.GLnLocal.uniformizer k ^ n * ((e⁻¹ : 𝒪[k]ˣ) : 𝒪[k]) := by
       rw [← he, mul_assoc, Units.mul_inv, mul_one]
-    have h2 := congrArg Subtype.val h1
-    simpa using h2
+    simpa using congrArg Subtype.val h1
 
 theorem diagT_mem_integralGL {N : ℕ} (f : Fin N → kˣ) (hf : ∀ i, valuation k (f i : k) = 1) :
     diagT k (Fin N) f ∈ integralGL k N := by
@@ -501,8 +499,7 @@ theorem step {ϖ : k} (h0 : ϖ ≠ 0) (h1 : valuation k ϖ < 1)
       ext g
       simp [Subgroup.mem_subgroupOf]
     rw [Subgroup.relIndex, hsub, Subgroup.index_ker, MonoidHom.range_eq_top.2 hsurj]
-    simp only [Subgroup.card_top]
-    exact Nat.card_congr Multiplicative.toAdd
+    simpa only [Subgroup.card_top] using Nat.card_congr Multiplicative.toAdd
 
 theorem chainS {ϖ : k} (h0 : ϖ ≠ 0) (h1 : valuation k ϖ < 1)
     (hu : ∀ x : k, valuation k x < 1 → valuation k x ≤ valuation k ϖ)
@@ -755,8 +752,7 @@ theorem measure_doubleCoset {Q : Type*} [Group Q] [TopologicalSpace Q] [IsTopolo
         (((((Quotient.out c' : B) : Q) * s)⁻¹ * q))⁻¹) * s⁻¹ = _
       group
     have := QuotientGroup.eq.2 hw
-    rw [QuotientGroup.out_eq', QuotientGroup.out_eq'] at this
-    exact this
+    rwa [QuotientGroup.out_eq', QuotientGroup.out_eq'] at this
   have hopen : ∀ c, MeasurableSet (T c) := fun c =>
     (hB.preimage (continuous_const.mul continuous_id)).measurableSet
   have hT : ∀ c, μ (T c) = μ (B : Set Q) := fun c => measure_preimage_mul μ _ _

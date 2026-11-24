@@ -143,15 +143,13 @@ theorem isStepRows_singleton_low {N j : ℕ} (i : Fin N) (hi : (i : ℕ) = 0) (h
     (hr : N - j ≤ (r : ℕ)) : IsStepRows N j i {r} := by
   refine ⟨by rw [stepCols_eq_singleton_of_zero i hi (by omega) hN]; simp, ?_⟩
   rw [ite_eq_left (by omega), Finset.singleton_subset_iff]
-  simp only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and]
-  exact hr
+  simpa only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and] using hr
 
 theorem isStepRows_om {N j : ℕ} (i : Fin N) (hi : (i : ℕ) = j) (r : Fin N)
     (hr : (r : ℕ) < N - j) : IsStepRows N j i {r} := by
   refine ⟨by rw [stepCols_om i hi]; simp, ?_⟩
   rw [ite_eq_right (by omega), Finset.singleton_subset_iff]
-  simp only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and]
-  exact hr
+  simpa only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and] using hr
 
 section Reg
 
@@ -353,8 +351,7 @@ theorem detW_reg (hz : zb ∈ mcPts (mCoordIdeal M.x)) (hF₁ : M.IsFrame F₁) 
     have e : detFac j i ((F₁.T τ)⁻¹ * F₂.T τ) = minorIJ ((F₁.T τ)⁻¹ * F₂.T τ) (wIdx N j) (wIdx N j) := by
       unfold detFac
       rw [ite_eq_left (by omega), ite_eq_right (by omega), mul_one]
-    rw [← e]
-    exact h
+    rwa [← e]
 
 end Model2
 
@@ -449,8 +446,7 @@ theorem change_regular : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fi
             omega
           rw [eo, minor_empty, mul_one]
         · rw [mul_one]
-      rw [← e]
-      exact h
+      rwa [← e]
 
 end GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.FrameReg
 end -- clump:auto
@@ -1592,8 +1588,7 @@ theorem minor_one (S : Finset (Fin N)) : minorIJ (1 : Matrix (Fin N) (Fin N) ℂ
 
 theorem exists_minor_ne (hj : j ≤ N) (i : Fin N) {h : Matrix (Fin N) (Fin N) ℂ} (hd : h.det ≠ 0) :
     ∃ I, minorIJ h I (stepCols N j i) ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have e := (_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main ℂ N j i hj).1 h⁻¹ h (stepCols N j i) (stepCols N j i)
   rw [Matrix.nonsing_inv_mul _ hd.isUnit, minor_one, Finset.sum_eq_zero fun I _ => by rw [hc I, mul_zero]] at e
   exact one_ne_zero e

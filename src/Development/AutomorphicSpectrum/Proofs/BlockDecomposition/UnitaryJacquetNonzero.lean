@@ -144,8 +144,7 @@ theorem form_heckeVec_dosetInd {G V : Type} [Group G] [AddCommGroup V] [Module �
         simp
       rw [Set.indicator_of_mem (show c ∈ {c : G ⧸ K | c.out ∈ D} from h), h1, one_smul, hterm _ h]
     · have h1 : dosetInd ℂ K g c.out = 0 := by
-        simp only [dosetInd]
-        exact Set.indicator_of_notMem h _
+        simpa only [dosetInd] using Set.indicator_of_notMem h _
       rw [Set.indicator_of_notMem (show c ∉ {c : G ⧸ K | c.out ∈ D} from h), h1, zero_smul, map_zero]
   have hc : Nat.card {c : G ⧸ K // c.out ∈ D} = hfin.toFinset.card := by
     rw [← Set.ncard_eq_toFinset_card _ hfin]
@@ -157,8 +156,7 @@ theorem sphCompare : PositivityTheory.SphericalProduct.SphCompare := by
   intro L _ _ ϖ σ q n hU V _ _ ρ α v₀ hv l hl g
   have hK := Formalism.UG.P.isCommensurated_integral_unitary_of_unramified hU n
   have e := congrArg l (hv.2.2 _ (Formalism.UG.Final.DosetIndMem _ (KU σ n) ℂ g))
-  rw [map_smul, smul_eq_mul, form_heckeVec_dosetInd hK ρ hv.2.1 l hl g] at e
-  exact e
+  rwa [map_smul, smul_eq_mul, form_heckeVec_dosetInd hK ρ hv.2.1 l hl g] at e
 
 end GlobalTheory.CompanionTheory.SphComp
 
@@ -305,8 +303,7 @@ private lemma entry_bound {L : Type} [Field L] [Valued L (WithZero (Multiplicati
     · exact hi
     · exact hi.le
   · intro hlt
-    rw [ite_eq_right (by omega)] at hi
-    exact hi
+    rwa [ite_eq_right (by omega)] at hi
 
 end UpperTheory.Reformulated.B.IwahoriEntryBound.Helpers
 
@@ -499,8 +496,7 @@ theorem minor_diag {M : Matrix (Fin n) (Fin n) L} (hM : IwEnt M) (hd : ∀ i, Va
 
 theorem minor_perm {M : Matrix (Fin n) (Fin n) L} (hM : IwEnt M) (f h : ι → Fin n)
     (h1 : Valued.v (M.submatrix f h).det = 1) : ∃ s : Equiv.Perm ι, ∀ x, f (s x) ≤ h x := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have : Valued.v (M.submatrix f h).det < 1 := by
     rw [Matrix.det_apply]
     refine Valuation.map_sum_lt _ one_ne_zero fun s _ => ?_
@@ -727,8 +723,7 @@ theorem cell_triang : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
     have e := congrFun (congrFun hmat a) c
     rw [perm_mul hW, Matrix.mul_apply, Matrix.mul_apply] at e
     simp only [perm_mul hW'] at e
-    rw [← e]
-    rw [Finset.sum_eq_single c]
+    rw [← e, Finset.sum_eq_single c]
     · intro y _ hy
       rw [hD y c hy, mul_zero]
     · simp
@@ -756,8 +751,7 @@ private theorem mem_map_conj_iff_inv_mul_mul_mem {G : Type*} [Group G] (I : Subg
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa [MulAut.conj_apply, mul_assoc] using hx
-  · intro h
-    exact ⟨t⁻¹ * y * t, h, by simp [MulAut.conj_apply, mul_assoc]⟩
+  · exact fun h => ⟨t⁻¹ * y * t, h, by simp [MulAut.conj_apply, mul_assoc]⟩
 
 theorem reps_of_quotient_with_property (G : Type) [Group G] (I : Subgroup G) (t : G) (P : G → Prop)
     (hP1 : P 1)
@@ -785,8 +779,7 @@ theorem reps_of_quotient_with_property (G : Type) [Group G] (I : Subgroup G) (t 
       rw [hmem]
       have hy' : u⁻¹ * (i : G) = y := by rw [hi, inv_mul_cancel_left]
       show t⁻¹ * (u⁻¹ * (i : G)) * t ∈ I
-      rw [hy']
-      exact hty
+      rwa [hy']
   choose f hfP hfmk hf1 using key
   refine ⟨Finset.univ.image (fun c => (f c : G)), ?_, ?_, ?_⟩
   · exact Finset.mem_image.2 ⟨QuotientGroup.mk 1, Finset.mem_univ _, by rw [hf1 _ rfl]; simp⟩
@@ -959,8 +952,7 @@ theorem functional_eq_zero_of_late_iterates :
     | succ k ih =>
       rcases Nat.eq_zero_or_pos (j₀ - k) with h0 | hpos
       · have e1 : j₀ - (k + 1) = j₀ - k := by omega
-        rw [e1]
-        exact ih
+        rwa [e1]
       · have e : j₀ - k = (j₀ - (k + 1)) + 1 := by omega
         have e2 : (A ^ (j₀ - k)) v = A ((A ^ (j₀ - (k + 1))) v) := by
           rw [e, pow_succ', Module.End.mul_apply]
@@ -1056,9 +1048,7 @@ theorem exists_words (K : Subgroup G) (t : G) (R : Finset G) (h1 : (1 : G) ∈ R
       ∀ (ψ : G → ℂ) (g : G), (aOp R t)^[j] ψ g = (W.map fun w => ψ (g * w)).sum := by
   induction j with
   | zero =>
-    refine ⟨{1}, by simp, ?_, fun ψ g => by simp⟩
-    intro w hw
-    exact ⟨1, one_mem K, by simpa using hw⟩
+    exact ⟨{1}, by simp, (fun w hw => ⟨1, one_mem K, by simpa using hw⟩), fun ψ g => by simp⟩
   | succ j ih =>
     obtain ⟨W, hW0, hWK, hWf⟩ := ih
     refine ⟨W.bind fun w => R.val.map fun r => w * r * t, ?_, ?_, ?_⟩
@@ -1185,8 +1175,7 @@ theorem multiset_sum_eq_hAct (K : Subgroup G) (s : G) (M : Multiset G) (hM0 : M 
       have h := hconst _ hy
       rw [QuotientGroup.out_eq'] at h
       refine Multiset.mem_toFinset.2 (Multiset.count_pos.1 ?_)
-      rw [h]
-      exact hpos
+      rwa [h]
   have hact : hAct K (dosetInd ℂ K s) ψ 1 = ∑ y ∈ M'.toFinset, ψ y.out := by
     unfold hAct
     rw [finsum_eq_sum_of_support_subset (s := M'.toFinset)]
@@ -1290,8 +1279,7 @@ theorem isOpen_iwU {σ : L →+* L} {n : ℕ} (hσv : ∀ x, Valued.v (σ x) = V
     constructor
     · rintro ⟨h1, h2⟩ i j
       exact ⟨h1 i j, h2 i j⟩
-    · intro h
-      exact ⟨fun i j => (h i j).1, fun i j => (h i j).2⟩
+    · exact fun h => ⟨fun i j => (h i j).1, fun i j => (h i j).2⟩
   rw [hset]
   refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
   refine (hle.preimage (hc i j)).inter ?_
@@ -1486,8 +1474,7 @@ theorem aOp_inj (q : ℕ) (hq : (q : ℂ) ≠ 0) {m : ℕ} (α : Fin m → ℂ) 
   classical
   by_contra hne
   obtain ⟨g, hg⟩ : ∃ g, φ g ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne (funext h)
   have hdec : ∀ b w i : GU σ n, IsBorelU b → i ∈ IwU σ n → φ (b * w * i) = chiDeltaU q α b * φ w :=
     fun b w i hb hi => by rw [hI _ _ hi, hB _ _ hb]
@@ -1671,8 +1658,7 @@ theorem GlobalTheory.CompanionTheory.KAvg.kInvForm : PositivityTheory.SphericalP
       map_add' := fun x y => avg_add ρ K (hfi x) (hfi y)
       map_smul' := fun c x => avg_smul ρ K (hfi x) c }
   obtain ⟨f, hf⟩ : ∃ f : Module.Dual ℂ V, f v₀ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne ((Module.forall_dual_apply_eq_zero_iff ℂ v₀).mp h)
   have hfix : ∀ l ∈ K, ρ l v₀ = v₀ := by
     intro l hl
@@ -1724,8 +1710,7 @@ theorem jacNeU : JacNeU := by
     have hker : twKer ρ D.N 1 = jacU ρ := twKer_eq_jacSub D _ hN ρ
     have hproj0 : D.proj ρ v₀ = 0 := by
       refine (Submodule.Quotient.mk_eq_zero _).2 ?_
-      rw [hker]
-      exact hjac
+      rwa [hker]
     have hJK : ∀ x ∈ D.J, x ∈ KU σ n := fun x hx => hIK (hJ ▸ hx)
     have hfixJ : v₀ ∈ fixed ρ D.J :=
       GlobalTheory.LGrp.mem_fixed.2 fun x hx => GlobalTheory.LGrp.mem_fixed.1 hfixK x (hJK x hx)

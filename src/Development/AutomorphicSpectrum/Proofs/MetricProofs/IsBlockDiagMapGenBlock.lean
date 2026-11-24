@@ -72,8 +72,7 @@ theorem isMultiHomog_rename_base {σ : Type} (blk : σ → Option K) {d' : NonPl
   beta_reduce
   by_cases h : ∀ p, blk p ≠ some k
   · rw [dite_eq_left h, ← hg m' hm' ⟨k, h⟩]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact Finsupp.mapDomain_apply_of_injective hinj m' ⟨⟨k, h⟩, i⟩
+    exact Finset.sum_congr rfl fun i _ => Finsupp.mapDomain_apply_of_injective hinj m' ⟨⟨k, h⟩, i⟩
   · rw [dite_eq_right h]
     refine Finset.sum_eq_zero fun i _ => Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨⟨⟨k', hk'⟩, b⟩, e⟩
@@ -135,8 +134,7 @@ theorem minorIJ_block_zero {R : Type} [CommRing R] {j : ℕ} {i : Fin N} {h : Ma
   · have hsub : ¬ I ⊆ if (i : ℕ) + 1 ≤ j then wIdx N j else omIdx N j := fun hs => hnot ⟨e, hs⟩
     obtain ⟨a, haI, haB⟩ := Finset.not_subset.mp hsub
     have hr : a ∈ Set.range (I.orderEmbOfFin e) := by
-      rw [Finset.range_orderEmbOfFin]
-      exact haI
+      rwa [Finset.range_orderEmbOfFin]
     obtain ⟨r, rfl⟩ := hr
     unfold minorIJ
     rw [dite_eq_left e]

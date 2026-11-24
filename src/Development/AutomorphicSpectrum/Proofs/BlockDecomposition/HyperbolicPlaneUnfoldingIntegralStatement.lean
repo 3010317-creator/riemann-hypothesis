@@ -141,8 +141,7 @@ theorem consA_mem (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin M) (Fin M) E
     have h0 : c 0 = 0 := by
       have := congrFun hc 0
       simpa [Finset.sum_apply, consA_zero, consA_succ, htail] using this
-    intro k
-    exact Fin.cases h0 htail k
+    exact fun k => Fin.cases h0 htail k
   · ext i j
     refine Fin.cases ?_ (fun i => ?_) i <;> refine Fin.cases ?_ (fun j => ?_) j
     · simp [gramE, consA_zero, hE_cons, hz, BlockAlg.hE_zero_left]
@@ -440,8 +439,7 @@ theorem exists_partner [CharZero E] (σ : E →ₐ[F] E) (hσ : ∀ e, σ (σ e)
     (hxx : hE σ K x x = 0) : ∃ y, hE σ K x y = 1 ∧ hE σ K y y = 0 := by
   have hherm := hE_herm σ hσ K hK.1
   have hex : ∃ y₀, hE σ K x y₀ ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     have hv : Matrix.vecMul (fun i => σ (x i)) K = 0 := by
       funext j
       have := hall (Pi.single j 1)
@@ -451,8 +449,7 @@ theorem exists_partner [CharZero E] (σ : E →ₐ[F] E) (hσ : ∀ e, σ (σ e)
       exact (Matrix.vecMul_injective_of_isUnit hu) (by simpa using hv)
     apply hx0
     funext i
-    have h := congrArg σ (congrFun hz i)
-    simpa [hσ] using h
+    simpa [hσ] using congrArg σ (congrFun hz i)
   obtain ⟨y₀, hy₀⟩ := hex
   obtain ⟨y₁, hxy₁⟩ : ∃ y₁, hE σ K x y₁ = 1 :=
     ⟨(hE σ K x y₀)⁻¹ • y₀, by rw [hE_smul_right]; exact inv_mul_cancel₀ hy₀⟩
@@ -706,8 +703,7 @@ theorem eq_one_of_isFundamentalDomain :
           (C n).indicator 1 := by
         funext u
         exact hind _ _ _ _ (hmem n u)
-      rw [e', lintegral_indicator_one (hCm n), lintegral_indicator_one (hCm (n + 1))] at e
-      exact e
+      rwa [e', lintegral_indicator_one (hCm n), lintegral_indicator_one (hCm (n + 1))] at e
     have hconst : ∀ n, (μ₁.restrict 𝓕₁) (C n) = (μ₁.restrict 𝓕₁) (C 0) := by
       intro n
       induction n using Int.induction_on with
@@ -812,8 +808,7 @@ theorem exists_borel_section_ker :
       (D' := (Subtype.val : π.ker → P) ⁻¹' K) (.of_forall fun m => ?_)) hKc'.measure_lt_top
   obtain ⟨γ, hγ, hπγ, hmem⟩ := hK m m.2
   have hγk : γ ∈ π.ker := hπγ
-  refine ⟨⟨⟨γ, hγk⟩, Subgroup.mem_subgroupOf.2 hγ⟩, ?_⟩
-  exact hmem
+  exact ⟨⟨⟨γ, hγk⟩, Subgroup.mem_subgroupOf.2 hγ⟩, hmem⟩
 
 end GlobalTheory.CompanionTheory.SplitExtLat
 end -- clump:auto
@@ -938,8 +933,7 @@ theorem conj_haar_character :
       intro x y h
       apply Subtype.ext
       apply Subtype.ext
-      simp only [Subtype.mk.injEq] at h
-      exact h
+      simpa only [Subtype.mk.injEq] using h
     exact hinj.countable
   haveI : MeasurableConstSMul (Γ.subgroupOf π.ker) π.ker :=
     ⟨fun c => by
@@ -970,9 +964,7 @@ theorem conj_haar_character :
       · intro s t hst
         have h1 := congrArg (fun x : Γ.subgroupOf π.ker => ((x : π.ker) : P)) hst
         simp only [he, mul_left_inj, mul_right_inj] at h1
-        apply Subtype.ext
-        apply Subtype.ext
-        exact h1
+        exact Subtype.ext (Subtype.ext h1)
       · intro t
         obtain ⟨s, hs⟩ : ∃ s : Γ.subgroupOf π.ker,
             ((s : π.ker) : P) = ι γ * ((t : π.ker) : P) * (ι γ)⁻¹ := by
@@ -1049,8 +1041,7 @@ theorem aedisjoint_smul_image_prod : ∀ (P G₁ : Type) [Group P] [TopologicalS
     refine ⟨⟨z.2, hz, ?_⟩, ?_⟩
     · dsimp only
       rw [hγπ, Subgroup.smul_def, smul_eq_mul]
-    · rw [← hzx, hπx]
-      exact hz'
+    · rwa [← hzx, hπx]
   by_cases hg : g = 1
   · have hγk : (γ : P) ∈ π.ker := MonoidHom.mem_ker.2 (congrArg Subtype.val hg)
     suffices hempty : γ • (f '' (D ×ˢ 𝓕₁)) ∩ f '' (D ×ˢ 𝓕₁) = ∅ by
@@ -1356,8 +1347,7 @@ theorem meanP : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
   have hUP : ∃ U' ∈ 𝓝 (1 : stabilizer₂ (AF F) σ J), ∀ γ ∈ ratP (AF F) σ J, γ ∈ U' → γ = 1 := by
     refine ⟨Subtype.val ⁻¹' U, continuous_subtype_val.continuousAt.preimage_mem_nhds hU, ?_⟩
     intro γ hγ hγU
-    refine Subtype.ext (hU1 _ hγU ?_)
-    exact (mem_HFinIn_iff _ σ _ _).1 hγ
+    exact Subtype.ext (hU1 _ hγU ((mem_HFinIn_iff _ σ _ _).1 hγ))
   obtain ⟨ν, 𝓕N, μP, 𝓕P, hν, h𝓕N, hν0, hνf, hμP, h𝓕P, hPf, hform⟩ :=
     _root_.GlobalTheory.CompanionTheory.SplitExtLat.exists_haar_fundamentalDomain (stabilizer₂ (AF F) σ J) (HA (AF F) σ J) ι π hιc hπc hπι (ratP (AF F) σ J) Γ₁
       hUP hι1 hπ1 μ₁ 𝓕₁ h𝓕₁ hfin hK
@@ -1442,8 +1432,7 @@ theorem meanP : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
         (hlsurj Y) (fun γ hγ => hlrat Y γ (Subgroup.mem_subgroupOf.1 hγ)) _ (hslice _)
     · intro Y
       refine Measurable.aemeasurable (Measurable.tsum fun a => ?_)
-      refine (hslice _).comp ?_
-      exact (measurable_const.add ((hlc Y).measurable.comp measurable_inv))
+      exact (hslice _).comp (measurable_const.add ((hlc Y).measurable.comp measurable_inv))
   have hfm : Measurable fun p : stabilizer₂ (AF F) σ J =>
       phiA σ J n Φ ((p : HA (AF F) σ (hypOne J)) * g) := by
     refine Measurable.tsum fun X => hΦ.comp ?_

@@ -134,9 +134,7 @@ theorem kill (r : ℤ) (m : ℕ) (y : ∀ p q, K.X p q) (hy : y ∈ K.T (m + 1))
           simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply]
           abel
         refine ⟨w + (-1 : ℤ) ^ e • K.sgl e q v, add_mem hwT (?_), fun p q' h => ?_, fun p q' => ?_, fun p q' hp => ?_⟩
-        · refine (K.T m).smul_of_tower_mem _ ?_
-          intro a b hab
-          exact K.sgl_ne v (by omega)
+        · exact (K.T m).smul_of_tower_mem _ (fun a b hab => K.sgl_ne v (by omega))
         · simp only [Pi.add_apply, Pi.smul_apply]
           rw [hw0 p q' (by omega), K.sgl_ne v (Or.inl (by omega))]
           simp

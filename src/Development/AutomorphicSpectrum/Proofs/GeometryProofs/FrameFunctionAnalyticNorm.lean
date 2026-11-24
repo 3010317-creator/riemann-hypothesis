@@ -118,8 +118,7 @@ theorem isComb_one {S : Scheme.{0}} {R : Type} [CommRing R] {G : Over S} [GrpObj
   · by_cases h : i = j
     · have h1 : epsMul (1 : R) = RingHom.id _ := by ext z <;> simp [epsMul]
       simp [h, Matrix.one_apply, h1, spMap]
-    · simp only [h, Matrix.one_apply, ite_false]
-      exact (epsMul_zero_comp (hv j)).symm
+    · simpa only [h, Matrix.one_apply, ite_false] using (epsMul_zero_comp (hv j)).symm
   · induction n with
     | zero => exact i.elim0
     | succ n ih =>
@@ -510,8 +509,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.SmoothChart.exists_polydisc_chart :
   have hrange : Set.range x ⊆ Set.range hV.fromSpec := by
     rw [hV.range_fromSpec]
     rintro _ ⟨p, rfl⟩
-    rw [Subsingleton.elim p (IsLocalRing.closedPoint ℂ)]
-    exact hξ
+    rwa [Subsingleton.elim p (IsLocalRing.closedPoint ℂ)]
   let y := IsOpenImmersion.lift hV.fromSpec x hrange
   have hy : y ≫ hV.fromSpec = x := IsOpenImmersion.lift_fac _ _ _
   let ψ₀ : Γ(X, X.basicOpen f) →+* ℂ := (Spec.preimage y).hom
@@ -527,8 +525,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.SmoothChart.exists_polydisc_chart :
   have hσ : ψ₀.comp (algebraMap K Γ(X, X.basicOpen f)) = σ := by
     have h := hcomp ψ₀
     rw [hψ₀, hxs] at h
-    have h' := Spec.map_injective h
-    exact (congrArg CommRingCat.Hom.hom h').symm
+    exact (congrArg CommRingCat.Hom.hom (Spec.map_injective h)).symm
   obtain ⟨Ψ, hol, h0, hbase, hvan⟩ := _root_.GlobalTheory.CompanionTheory.ChartRing.exists_polydisc_chart K Γ(X, X.basicOpen f) d σ ψ₀ hσ
   refine ⟨X.basicOpen f, hV, Ψ, (X.basicOpen_le f).trans hV₁W, hol, ?_, ?_, hvan⟩
   · rw [h0]; exact hψ₀
@@ -659,8 +656,7 @@ theorem exists_near {X : Scheme.{0}} {V : X.Opens} (hV : IsAffineOpen V) {d : �
     (hpW : p ∈ W) {ε : ℝ} (hε : 0 < ε) :
     ∃ z ∈ ball (0 : Fin d → ℂ) 1, z ∈ ball (0 : Fin d → ℂ) ε ∧ ⊤ ≤ (spMap (ψ z) ≫ hV.fromSpec) ⁻¹ᵁ W := by
   obtain ⟨g, hg, hpg⟩ := hV.exists_basicOpen_le (V := W) ⟨p, hpW⟩ hpV
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hz : ∀ z ∈ ball (0 : Fin d → ℂ) 1, z ∈ ball (0 : Fin d → ℂ) ε → ψ z g = 0 := by
     intro z h₁ h₂
     by_contra hne

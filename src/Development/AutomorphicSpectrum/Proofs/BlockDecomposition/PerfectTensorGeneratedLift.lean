@@ -64,8 +64,7 @@ theorem pq_baseChange : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A](S :
   have hT : Pf p (B ⊗[A] K) := _root_.GlobalTheory.CompanionTheory.PerfectRing.pf_tensor p A B K hA hQ.pf hK
   obtain ⟨-, hred, -, -, -⟩ := pf_facts p _ hT
   have hpS : (p : S₁) = 0 := by
-    have h := congrArg κ hK.char
-    simpa using h
+    simpa using congrArg κ hK.char
   have addT : ∀ (k : ℕ) (a b : B ⊗[A] K), (a + b) ^ p ^ k = a ^ p ^ k + b ^ p ^ k := by
     intro k a b
     obtain ⟨F, hF⟩ := GlobalTheory.CompanionTheory.Frobenius.exists_ringHom_pow_prime_pow p (B ⊗[A] K) hT.char k
@@ -101,8 +100,7 @@ theorem pq_baseChange : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A](S :
         (hQ'.ker (j s)).2 ⟨0, by simpa using Ideal.mem_map_of_mem j hs⟩
       obtain ⟨ψ, hψ, -⟩ := pq_lift p S B T' (i : S →+* B) I (i'.comp j) hQ hQ'.pf hφ
       have hψs : ∀ s, ψ (i s) = i' (j s) := fun s => by
-        have h := RingHom.congr_fun hψ s
-        simpa using h
+        simpa using RingHom.congr_fun hψ s
       letI : Algebra A T' := ((i'.comp κ).comp (algebraMap A K)).toAlgebra
       have hal : ∀ a, algebraMap A T' a = i' (κ (algebraMap A K a)) := fun a => rfl
       let ψA : B →ₐ[A] T' :=

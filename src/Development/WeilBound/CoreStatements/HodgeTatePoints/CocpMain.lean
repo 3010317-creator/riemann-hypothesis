@@ -146,8 +146,7 @@ theorem dy_y_local (h : PS R 1 d) (i : Fin d) :
   · intro k _ hk
     show _ * pderiv (R := R) ((1 : Fin 2), i) (X ((1 : Fin 2), k)) = 0
     rw [pderiv_X_of_ne (by simp [hk]), mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 theorem cc_ptPow {n p : ℕ} (hp : p ≠ 0) (j : Fin n) (i : Fin d) :
     constantCoeff (ptPow R d p j i : PS R n d) = 0 := by
@@ -853,8 +852,7 @@ theorem top_coeff_eq (hp : 1 ≤ p) (b : Fin (p + 1) → B) (v : B)
     · simp
     · intro i _ hi
       rw [ite_eq_right]
-      intro h'
-      exact hi (Fin.ext (by simpa using h'.symm))
+      exact fun h' => hi (Fin.ext (by simpa using h'.symm))
     · simp
   rw [e₁] at hc
   simp only [Polynomial.coeff_sub, Polynomial.coeff_add, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow,
@@ -1031,8 +1029,7 @@ theorem pderiv_eq_zero_of_jet_pow_sub : ∀ (k : Type) [Field k] (p : ℕ) [Fact
     rw [map_add (f := _), Finsupp.degree_single]; omega
   have hz := coeff_eq_zero_of_mem_span_X_pow_of_degree_lt (e.degree + 1 + 1) _ hmem (e + Finsupp.single q 1) hdeg
   have hbd : ∀ i, (e + Finsupp.single q 1 : Fin 1 × Fin d →₀ ℕ) i ≤ (e + Finsupp.single q 1).degree := by
-    intro i
-    exact Finsupp.le_degree i _
+    exact fun i => Finsupp.le_degree i _
   have hin : e + Finsupp.single q 1 ∈ degLE (e.degree + 1) := by
     simp only [degLE, Finset.mem_filter, Finset.mem_image, Finset.mem_univ, true_and]
     constructor
@@ -1115,8 +1112,7 @@ theorem cocycle_p : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.1 this
     refine ⟨j, fun s' _ => ?_⟩
     have e : s' = s := Subsingleton.elim (α := Sp k) _ _
-    rw [e]
-    exact hj
+    rwa [e]
   have hU : ∀ m, ⊤ ≤ xkZ t.G x (g.x m) ⁻¹ᵁ (pullback.fst t.G.hom x ⁻¹ᵁ t.PP.L.U j₀) := by
     intro m q _
     have e : (homAt x (jetAug : Jet k (Fin 1 × Fin d) m →ₐ[k] k) ≫ g.x m).left = (1 : overAt x k ⟶ t.G).left :=
@@ -1151,8 +1147,7 @@ theorem cocycle_p : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
         rw [← hv hr']
         exact congrArg (fun q => q.hom (C.s fun _ => j₀).val) (Scheme.Hom.map_appLE (rQ t.G x p (g.x m)) hr (homOfLE h).op))
       exact toΓ_inj _ ((hF1 m).symm.trans h2))
-  rw [trY_pa, trY_pb] at main
-  exact main
+  rwa [trY_pa, trY_pb] at main
 
 theorem tanpf_inj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X0 : Scheme.{0}) (t : SAB H X0) (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [Fact p.Prime] [CharP k p] (x : Sp k ⟶ X0) (d : ℕ) (g : GermAt t x d), TanPF t x p → ConjInj g.B p :=
   PositivityTheory.HtPt.Ce.tanpf_inj_of cocycle_p

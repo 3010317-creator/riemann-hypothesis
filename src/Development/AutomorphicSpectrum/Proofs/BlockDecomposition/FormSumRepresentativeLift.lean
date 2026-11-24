@@ -109,11 +109,9 @@ theorem rep_finset_sum {A : C ⥤ CommAlgCat.{0} R} {a b : IdF A} {j : ℕ} {ι 
   classical
   induction t using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty]
-    exact rep_zero fun s => Ideal.zero_mem _
+    simpa only [Finset.sum_empty] using rep_zero fun s => Ideal.zero_mem _
   | insert i t hi ih =>
-    simp only [Finset.sum_insert hi]
-    exact rep_add (h i) ih
+    simpa only [Finset.sum_insert hi] using rep_add (h i) ih
 
 theorem rep_collapse_one {Fil : ℤ → IdF Φ.A} (hF : IsFil Φ Fil) (E : Frame Φ d) (σ : ∀ T : C, E.D ⟶ T)
     (hc : E.GrConst Fil) (m : ℕ) (r : ℤ) (hr : r = m) (J : Fin m → Fin d) (w : Φ.A.obj E.D)
@@ -164,8 +162,7 @@ theorem rep_collapse : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.{0} C]
     intro I
     rw [form_sum_zsmul]
     exact Finset.sum_congr rfl fun i _ => (form_zsmul E σ I.1 _ _ u).symm
-  simp only [e, sub_self]
-  exact Ideal.zero_mem _
+  simpa only [e, sub_self] using Ideal.zero_mem _
 
 end Collapse
 

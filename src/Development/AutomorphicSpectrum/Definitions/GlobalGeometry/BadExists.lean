@@ -63,8 +63,6 @@ theorem pi_pt_ne (o : RootOrigin Y' S RM Fx) (x : o.Re.R.X) :
   obtain ⟨hnz, -⟩ := o.Re.R.mem x x (o.Re.R.mem_U x)
   obtain ⟨i, hi⟩ := hnz o.k₀
   apply hi
-  have h := congrFun ha (o.ix.symm i)
-  simp only [Equiv.apply_symm_apply, zero_smul, Pi.zero_apply] at h
-  exact h
+  simpa only [Equiv.apply_symm_apply, zero_smul, Pi.zero_apply] using congrFun ha (o.ix.symm i)
 
 end GlobalTheory.CompanionTheory.Ar.TowerOriginModel

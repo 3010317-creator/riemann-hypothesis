@@ -113,8 +113,7 @@ theorem hadamard_lemma : ∀ (n : ℕ) (f : (Fin n → ℝ) → ℂ), ContDiff �
       HasDerivAt (fun s : ℝ => f (s • x)) (fderiv ℝ f (s • x) x) s := by
     intro s _
     have := (hd (s • x)).hasFDerivAt.comp_hasDerivAt s ((hasDerivAt_id s).smul_const x)
-    rw [one_smul] at this
-    exact this
+    rwa [one_smul] at this
   have hcv : ∀ v : Fin n → ℝ, Continuous (fun s : ℝ => fderiv ℝ f (s • x) v) := fun v =>
     (hD v).continuous.comp (continuous_id.smul continuous_const)
   have hftc := intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv
@@ -170,8 +169,7 @@ theorem exists_comb : ∀ (n : ℕ), ∃ S : SchwartzMap (Fin n → ℝ) ℂ →
     have := SchwartzMap.one_add_le_sup_seminorm_apply (𝕜 := ℂ) (m := (2 * n, 0)) (k := 2 * n)
       (n := 0) le_rfl le_rfl f x
     rw [norm_iteratedFDeriv_zero] at this
-    rw [← div_eq_mul_inv, le_div_iff₀ (by positivity), mul_comm]
-    exact this
+    rwa [← div_eq_mul_inv, le_div_iff₀ (by positivity), mul_comm]
   have hs : ∀ f : SchwartzMap (Fin n → ℝ) ℂ,
       Summable fun m : Fin n → ℤ => ‖f (fun i => (m i : ℝ))‖ := fun f =>
     Summable.of_nonneg_of_le (fun _ => norm_nonneg _) (fun m => hb f _)
@@ -378,8 +376,7 @@ theorem eq_mul_comb : ∀ (n : ℕ) (T : SchwartzMap (Fin n → ℝ) ℂ →L[�
     have hgs : tsupport (g : (Fin n → ℝ) → ℂ) ⊆ Metric.ball 0 1 := by
       have hsub : Function.support (g : (Fin n → ℝ) → ℂ) ⊆
           (fun x => x + c) ⁻¹' tsupport (f : (Fin n → ℝ) → ℂ) := by
-        intro x hx
-        exact subset_tsupport _ (by rwa [Function.mem_support, hg] at hx)
+        exact fun x hx => subset_tsupport _ (by rwa [Function.mem_support, hg] at hx)
       refine (closure_minimal hsub ((isClosed_tsupport _).preimage (by fun_prop))).trans ?_
       intro x hx
       have := hf hx

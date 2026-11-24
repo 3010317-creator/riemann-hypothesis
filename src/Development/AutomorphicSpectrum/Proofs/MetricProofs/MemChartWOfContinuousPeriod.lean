@@ -228,15 +228,13 @@ theorem extend_mem (h : IsChart L bas A T0 B c ρ) (x : Λ) (t : (Fin n → ℂ)
       tauAt L.a_le T0 B (ws m) *ᵥ (fun k => ((vCo bas x k : ℤ) : ℂ))) atTop
       (𝓝 (((A 0)ᵀ)⁻¹ *ᵥ t 0)) := hq.congr fun m => by
     have := inv_period h hdet (ws m) (hws_mem m) (hzs_ball m) x
-    rw [hP _ (hws_mem m)] at this
-    exact this
+    rwa [hP _ (hws_mem m)] at this
   obtain ⟨u, v, hv, -, hev⟩ := _root_.GlobalTheory.CompanionTheory.PeriodLimitSeq.limit_seq g (∑ j, B j) (T0 0) (fun m => T0 (zs m))
     (fun m => tauAt L.a_le T0 B (ws m)) tm c (fun _ => uCo bas x) (fun _ => vCo bas x) _ h.c_pos
     (T_tendsto h hzs_lim) him hdec hYm (lower_at_centre h) hy'
   obtain ⟨m, hm⟩ := hev.exists
   have hvx : vCo bas x = v := hm.2
-  rw [chartW, LinearMap.mem_ker, LinearMap.comp_apply, hvx, Matrix.mulVecLin_apply]
-  exact hv
+  rwa [chartW, LinearMap.mem_ker, LinearMap.comp_apply, hvx, Matrix.mulVecLin_apply]
 
 theorem limit_mem (h : IsChart L bas A T0 B c ρ) (ws : ℕ → Fin n → ℂ) (x : ℕ → Λ) (p : Fin g → ℂ)
     (hws : ∀ k, ws k ∈ logCover L.a_le)

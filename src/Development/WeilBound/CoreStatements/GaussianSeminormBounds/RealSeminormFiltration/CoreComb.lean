@@ -419,8 +419,7 @@ theorem top_idx {N : ℕ} (f g : Fin N → ℚ) (i : Fin N) (hdom : ∀ i', i' <
   have hpos : 0 < (i : ℕ) := Nat.pos_of_ne_zero hne
   have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) i.isLt
   have h0 : (⟨0, hN⟩ : Fin N) < i := by
-    rw [Fin.lt_def]
-    exact hpos
+    rwa [Fin.lt_def]
   have e1 := hdom _ h0
   have e2 := hg' ⟨0, hN⟩ (ne_of_lt h0)
   have e3 := hf _ h0
@@ -486,16 +485,12 @@ theorem extreme {r s : ℕ} {ν La : Ix r s → ℚ} (hD : Dom ν) :
     obtain ⟨ea, eb, eo⟩ := cw_root hne hR
     have h0 : (i : ℕ) = 0 := by
       refine top_idx (fun k => La (.inl k)) (fun k => ν (.inl k)) i ?_ eb ?_ hi
-      · intro i' hi'
-        exact hD (.inl i') (.inl i) hi'
-      · intro i' hi'
-        exact eo _ Sum.inl_ne_inr (fun e => hi' (Sum.inl_injective e))
+      · exact fun i' hi' => hD (.inl i') (.inl i) hi'
+      · exact fun i' hi' => eo _ Sum.inl_ne_inr (fun e => hi' (Sum.inl_injective e))
     have h1 : (j : ℕ) + 1 = s := by
       refine bot_idx (fun k => La (.inr k)) (fun k => ν (.inr k)) j ?_ ea ?_ hj
-      · intro j' hj'
-        exact hD (.inr j) (.inr j') hj'
-      · intro j' hj'
-        exact eo _ (fun e => hj' (Sum.inr_injective e)) Sum.inr_ne_inl
+      · exact fun j' hj' => hD (.inr j) (.inr j') hj'
+      · exact fun j' hj' => eo _ (fun e => hj' (Sum.inr_injective e)) Sum.inr_ne_inl
     have h0' : ((i : ℕ) : ℚ) = 0 := by exact_mod_cast h0
     have h1' : ((j : ℕ) : ℚ) + 1 = s := by exact_mod_cast h1
     simp only [rho2]
@@ -505,16 +500,12 @@ theorem extreme {r s : ℕ} {ν La : Ix r s → ℚ} (hD : Dom ν) :
     obtain ⟨ea, eb, eo⟩ := cw_root hne hR
     have h0 : (j : ℕ) = 0 := by
       refine top_idx (fun k => La (.inr k)) (fun k => ν (.inr k)) j ?_ eb ?_ hj
-      · intro j' hj'
-        exact hD (.inr j') (.inr j) hj'
-      · intro j' hj'
-        exact eo _ Sum.inr_ne_inl (fun e => hj' (Sum.inr_injective e))
+      · exact fun j' hj' => hD (.inr j') (.inr j) hj'
+      · exact fun j' hj' => eo _ Sum.inr_ne_inl (fun e => hj' (Sum.inr_injective e))
     have h1 : (i : ℕ) + 1 = r := by
       refine bot_idx (fun k => La (.inl k)) (fun k => ν (.inl k)) i ?_ ea ?_ hi
-      · intro i' hi'
-        exact hD (.inl i) (.inl i') hi'
-      · intro i' hi'
-        exact eo _ (fun e => hi' (Sum.inl_injective e)) Sum.inl_ne_inr
+      · exact fun i' hi' => hD (.inl i) (.inl i') hi'
+      · exact fun i' hi' => eo _ (fun e => hi' (Sum.inl_injective e)) Sum.inl_ne_inr
     have h0' : ((j : ℕ) : ℚ) = 0 := by exact_mod_cast h0
     have h1' : ((i : ℕ) : ℚ) + 1 = r := by exact_mod_cast h1
     simp only [rho2]
@@ -551,13 +542,11 @@ theorem comb_pos {p q r s n m : ℕ} (hp : p ≤ r) (hq : q ≤ s) (hn : 0 < n) 
       show (if (k : ℕ) < p then (n : ℚ) else 0) + cPair p q - cPair p q = _
       ring
     have hk : p ≤ (k : ℕ) := by
-      by_contra hk
-      push Not at hk
+      by_contra! hk
       rw [sa, ite_eq_left hk, abs_pos_down hn] at hBeq
       norm_num at hBeq
     have hl : (l' : ℕ) < q := by
-      by_contra hl
-      push Not at hl
+      by_contra! hl
       have h5 : ν (Sum.inr l') + cPair p q ≤ 0 := hS.2.1 l' hl
       have e : ν (Sum.inr l') = (if (l' : ℕ) < q then (m : ℚ) else 0) - cPair p q + 1 := eb
       rw [ite_eq_right (not_lt.mpr hl)] at e
@@ -582,13 +571,11 @@ theorem comb_pos {p q r s n m : ℕ} (hp : p ≤ r) (hq : q ≤ s) (hn : 0 < n) 
       show (if (l : ℕ) < q then (m : ℚ) else 0) - cPair p q + cPair p q = _
       ring
     have hl : q ≤ (l : ℕ) := by
-      by_contra hl
-      push Not at hl
+      by_contra! hl
       rw [sa, ite_eq_left hl, abs_pos_down hm] at hBeq
       norm_num at hBeq
     have hk : (k' : ℕ) < p := by
-      by_contra hk
-      push Not at hk
+      by_contra! hk
       have h5 : ν (Sum.inl k') - cPair p q ≤ 0 := hS.1 k' hk
       have e : ν (Sum.inl k') = (if (k' : ℕ) < p then (n : ℚ) else 0) + cPair p q + 1 := eb
       rw [ite_eq_right (not_lt.mpr hk)] at e
@@ -645,8 +632,7 @@ theorem comb_neg {p q r s n m : ℕ} (hq : q ≤ r) (hp : p ≤ s) (hn : 0 < n) 
       rw [sb, ite_eq_left hl, abs_neg_up hm] at hAeq
       norm_num at hAeq
     have hk : r ≤ (k : ℕ) + q := by
-      by_contra hk
-      push Not at hk
+      by_contra! hk
       have h5 : 0 ≤ ν (Sum.inl k) - cPair p q := hS.2.2.1 k hk
       have e : ν (Sum.inl k) = (if r ≤ (k : ℕ) + q then -(n : ℚ) else 0) + cPair p q - 1 := ea
       rw [ite_eq_right (not_le.mpr hk)] at e
@@ -679,8 +665,7 @@ theorem comb_neg {p q r s n m : ℕ} (hq : q ≤ r) (hp : p ≤ s) (hn : 0 < n) 
       rw [sb, ite_eq_left hk, abs_neg_up hn] at hAeq
       norm_num at hAeq
     have hl : s ≤ (l : ℕ) + p := by
-      by_contra hl
-      push Not at hl
+      by_contra! hl
       have h5 : 0 ≤ ν (Sum.inr l) + cPair p q := hS.2.2.2 l hl
       have e : ν (Sum.inr l) = (if s ≤ (l : ℕ) + p then -(m : ℚ) else 0) - cPair p q - 1 := ea
       rw [ite_eq_right (not_le.mpr hl)] at e

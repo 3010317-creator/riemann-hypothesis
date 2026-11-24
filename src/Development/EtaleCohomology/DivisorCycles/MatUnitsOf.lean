@@ -184,8 +184,7 @@ theorem MatUnits_of : MatrixUnits₂ := by
     · simp only [ite_eq_left h]; exact (pairE i j h).1
     · simp only [ite_eq_right h]; exact A.zero_mem
   · intro i
-    simp only [ite_eq_left (heq.refl i)]
-    exact (hXY i).2.2.2.2.1
+    simpa only [ite_eq_left (heq.refl i)] using (hXY i).2.2.2.2.1
   · intro i j
     by_cases h : rel A p i j
     · simp only [ite_eq_left h]; exact (pairE i j h).2.2.1
@@ -195,8 +194,7 @@ theorem MatUnits_of : MatrixUnits₂ := by
       by_contra h
       simp only [ite_eq_right h] at hne
       exact hne rfl
-    simp only [ite_eq_left (heq.symm h)]
-    exact pr_ne hp (pairE j i (heq.symm h))
+    simpa only [ite_eq_left (heq.symm h)] using pr_ne hp (pairE j i (heq.symm h))
   · intro i j k h1 h2
     have hij : rel A p i j := by
       by_contra h

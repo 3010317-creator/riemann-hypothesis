@@ -98,16 +98,14 @@ theorem eq_zero_of_exp_mul_eq_one {c : ℂ} (h : ∀ t : ℝ, Complex.exp (c * t
   have h1 := h0.cexp
   have h2 : (fun t : ℝ => Complex.exp (c * t)) = fun _ => 1 := funext h
   rw [h2] at h1
-  have h3 := h1.unique (hasDerivAt_const (0 : ℝ) (1 : ℂ))
-  simpa using h3
+  simpa using h1.unique (hasDerivAt_const (0 : ℝ) (1 : ℂ))
 
 theorem total_trace_eq_zero {E : Type} [Field E] [NumberField E] [IsCMField E] {N : ℕ}
     {V : Submodule ℂ (Sm E N)} {m : (E →+* ℂ) → Multiset ℂ} (hV : IsDiscrete V)
     (hm : ∀ τ, HasInfCharGL V τ (m τ)) : ∑ τ, (m τ).sum = 0 := by
   obtain ⟨φ, hφ, hφ0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hV.ne_bot
   obtain ⟨g, hg⟩ : ∃ g, φ.1 g ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hφ0 (Subtype.ext (funext hcon))
   have hlie : lie E N (oneL E N) φ = (∑ τ, (m τ).sum) • φ := by
     rw [GlobalTheory.CompanionTheory.ClozelLie.lie_oneL_eq_sum_Eop, LinearMap.sum_apply, Finset.sum_smul]

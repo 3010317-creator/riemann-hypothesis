@@ -82,8 +82,7 @@ theorem geoNum_polar {σ : Type} [Fintype σ] (n : ℕ) (V : Ideal (MRing ι)) (
   | zero =>
     have h : ∀ a a' : Fin 0 → K → ℤ, geoNum 0 V a = geoNum 0 V a' := fun a a' => by
       rw [Subsingleton.elim a a']
-    simp only [Fintype.sum_unique, Finset.univ_eq_empty, Finset.prod_empty, one_mul]
-    exact h _ _
+    simpa only [Fintype.sum_unique, Finset.univ_eq_empty, Finset.prod_empty, one_mul] using h _ _
   | succ n ih =>
     by_cases hV : IsRelevant V
     · rw [← (Fin.snocEquiv (fun _ => σ)).sum_comp, Fintype.sum_prod_type]
@@ -240,7 +239,6 @@ theorem flLines_polys : Inputs → ∀ (II : IntersectionSystem), IsFullIntersec
         ptsIntegral (PFl Ψ N) (pot fun r => yLineFl Ψ N (w r)) (fun _ => 1) =
           ∑ᶠ V ∈ S, m V * (geoNum _ V (fun r => yDeg Ψ N (w r)) : ℝ) :=
       fun w => hD _ fun _ => hsm _
-    simp only [ex, ey]
-    exact h1
+    simpa only [ex, ey] using h1
 
 end GlobalTheory.CompanionTheory.Ar.PB

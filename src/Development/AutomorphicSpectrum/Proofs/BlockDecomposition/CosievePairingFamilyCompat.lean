@@ -162,8 +162,7 @@ theorem toH_surjective (n : ℕ) : Function.Surjective (toH E n) := by
   rw [map_sum]
   simp only [toH, DirectSum.toModule_lof]
   have hx' : (Dsum E).d n (∑ i ∈ DFinsupp.support x, (inj E i).f n ((prj E i).f n x)) = 0 := by
-    rw [hx_eq]
-    exact hx
+    rwa [hx_eq]
   rw [Finset.sum_congr rfl fun i _ ↦ CrystallineSemistableComparison.CechClassBoundaries.mapH_cls' (inj E i) _ (hc i) (hci i), ← hsum _ hx']
   exact (CrystallineSemistableComparison.CechClassBoundaries.cls_eq _ _ _ _).2 (by rw [hx_eq, sub_self]; exact zero_mem _)
 
@@ -264,8 +263,7 @@ theorem inc_d (i : I) (m : ℕ) (y : (P i).cech.X m) :
 
 theorem cochain_ext {m : ℕ} {z : (sumPM P).cech.X m} (h : ∀ i, pr P i m z = 0) : z = 0 := by
   funext t
-  refine DFinsupp.ext fun i => ?_
-  exact congrFun (h i) t
+  exact DFinsupp.ext fun i => congrFun (h i) t
 
 theorem pr_aug (i : I) (x : (sumPM P).M ∅) :
     pr P i 0 ((sumPM P).aug x) = (P i).aug (DirectSum.component K I (fun j => (P j).M ∅) i x) := by
@@ -311,8 +309,7 @@ theorem sum_ex [Fintype ι] (h : ∀ i, (P i).Ex) : (sumPM P).Ex := by
     have h0 : (P i).aug (DirectSum.component K I (fun j => (P j).M ∅) i x) = 0 := by
       rw [← pr_aug, hx, map_zero]
     have h1 := (h i).2.1 _ h0
-    rw [one_smul] at h1
-    exact h1
+    rwa [one_smul] at h1
   · obtain ⟨F, hF⟩ := decomp P y
     have hc : ∀ i, (P i).cech.d 0 (pr P i 0 y) = 0 := fun i => by
       rw [← pr_d]
@@ -1086,8 +1083,7 @@ theorem kun_iff_mv {P Q T : ℕ → Cx.{1} K} (pr : ∀ {a a' c : ℕ}, a + a' =
     refine Eq.trans ?_ step
     refine congrArg e ?_
     rw [rep_cls]
-    refine Eq.trans (congrArg e₁.symm r1) ?_
-    exact (LinearEquiv.symm_apply_eq _).2 e1.symm
+    exact Eq.trans (congrArg e₁.symm r1) ((LinearEquiv.symm_apply_eq _).2 e1.symm)
   · rintro ⟨E, hE⟩
     refine ⟨(e₁.trans r.symm).trans E, ?_⟩
     rintro ⟨a, i, a', j, ha, h⟩ x y hx hy hz
@@ -1111,8 +1107,7 @@ theorem kun_iff_mv {P Q T : ℕ → Cx.{1} K} (pr : ∀ {a a' c : ℕ}, a + a' =
       simp only [sec_bas]
       rfl
     have := LinearMap.congr_fun hL ((P a).cls x hx)
-    rw [prodR_cls (pr ha) h x hx y hy hz] at this
-    exact this
+    rwa [prodR_cls (pr ha) h x hx y hy hz] at this
 
 end GlobalTheory.CompanionTheory.KunGlue.Glue
 
@@ -1128,8 +1123,7 @@ theorem GlobalTheory.CompanionTheory.KunGlue.kun_glue : MVBij → ∀ {K : Type}
     simp only [gmap]
     rw [(pr S u.ha).leib, (rep (P u.a) u.i u.β).2]
     simp
-  · intro u S S' hS m n h x
-    exact hnat hS u.ha _ _ x
+  · exact fun u S S' hS m n h x => hnat hS u.ha _ _ x
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

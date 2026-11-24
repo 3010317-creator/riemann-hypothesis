@@ -309,18 +309,14 @@ theorem exists_germ (Y : Model Xo c β) {U : Set (Xo.XF c)} (Z : CptOver Y U) {R
       (Scheme.stalkClosedPointTo (y ≫ Y.j)).hom.comp θ' = θF := by
   have h : genPt (Z.ξ₀ ≫ Y.j) ⤳ centre (y ≫ Y.j) := by
     have h1 : genPt Z.ξ₀ ⤳ y (IsLocalRing.closedPoint F) := (Z.closure _).1 (hU ⟨_, rfl⟩)
-    have h2 := h1.map Y.j.continuous
-    simp only [genPt, centre, Scheme.Hom.comp_apply]
-    exact h2
+    simpa only [genPt, centre, Scheme.Hom.comp_apply] using h1.map Y.j.continuous
   have hqr : centre (y ≫ Y.j) ∈ x.opensRange := by
     rw [← hθ]
     change (spMap θF ≫ x) (IsLocalRing.closedPoint F) ∈ Set.range x
-    simp only [Scheme.Hom.comp_apply]
-    exact ⟨_, rfl⟩
+    simpa only [Scheme.Hom.comp_apply] using ⟨_, rfl⟩
   have hqx : (Y.X.fromSpecStalk (centre (y ≫ Y.j)))
       (IsLocalRing.closedPoint (Y.X.presheaf.stalk (centre (y ≫ Y.j)))) ∈ x.opensRange := by
-    rw [Scheme.fromSpecStalk_closedPoint]
-    exact hqr
+    rwa [Scheme.fromSpecStalk_closedPoint]
   obtain ⟨θ', hθ'⟩ := exists_lift (A := Y.X.presheaf.stalk (centre (y ≫ Y.j))) x _ hqx
   refine ⟨h, θ', hθ', ?_, ?_⟩
   · have h1 : spMap ((genMap (Z.ξ₀ ≫ Y.j) ⟨centre (y ≫ Y.j), h⟩).comp θ') ≫ x = spMap φ₂ ≫ x := by
@@ -478,9 +474,7 @@ theorem exists_away_lift {X : Scheme.{0}} {S R : Type} [CommRing S] [CommRing R]
   have e : spMap (ι.comp θ₀) ≫ x = spMap θ ≫ x := by
     rw [← GlobalTheory.Frames.ChgBC.spMap_comp_ring, Category.assoc, hθ₀, hℓ, ← Category.assoc,
       GlobalTheory.Frames.ChgBC.spMap_comp_ring, hι, h]
-  have e' := (cancel_mono x).1 e
-  have e'' := Spec.map_injective e'
-  exact congrArg CommRingCat.Hom.hom e''
+  exact congrArg CommRingCat.Hom.hom (Spec.map_injective ((cancel_mono x).1 e))
 
 theorem exists_kill {S : Type} [CommRing S] (q : Ideal S) [q.IsPrime] (g₀ : S)
     (ι : Localization.Away g₀ →+* Localization.AtPrime q)
@@ -553,8 +547,7 @@ theorem exists_spread {S : Type} [CommRing S] (q : Ideal S) [hq : q.IsPrime] (g�
     rw [map_mul, map_zero, hρa] at this
     exact (hs'.mul_right_eq_zero).1 this
   · have h1 : IsUnit (ρ d * ρ (algebraMap S _ (m : S))) := by
-      rw [← map_mul, ht, hρa]
-      exact ht'
+      rwa [← map_mul, ht, hρa]
     exact isUnit_of_mul_isUnit_left h1
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}
@@ -745,8 +738,7 @@ theorem spread_family (Y : Model Xo c β) {S : Type} [CommRing S] [Algebra c.F S
         (fun j => sg i (ee j).1 (ee j).2) V :=
       (comb_total_iff _ (fun τ k => spMap (Formalism.L2.Pj.dualMap φT) ≫ z.u τ k) hT ee (sg i) σ (hsg0 i) V).2
         (by rw [hsgσ]; exact hVc)
-    have hVtan := isTanAt_of_comb hBT.1 c1
-    exact congrFun ((hBT.2 V hVtan).unique c1 c2) j
+    exact congrFun ((hBT.2 V (isTanAt_of_comb hBT.1 c1)).unique c1 c2) j
   let M : Matrix (Fin (D.mult σ)) (Fin (D.mult σ)) (Localization.Away g₀) :=
     fun i k => a i (ee.symm ⟨σ, k⟩)
   have hM : ∀ i k, ι (M i k) = C i k := by
@@ -770,34 +762,29 @@ theorem spread_family (Y : Model Xo c β) {S : Type} [CommRing S] [Algebra c.F S
       congr 1
       ext i k
       exact hM i k
-    rw [h1]
-    exact hC
+    rwa [h1]
   · intro B _ ρ hZ hd
     have hρ0 : ∀ i j, (ee j).1 ≠ σ → ρ (a i j) = 0 := by
-      intro i j h
-      exact hZ (a i j) (Finset.mem_image.2 ⟨(i, j), Finset.mem_univ _, by simp [h]⟩)
+      exact fun i j h => hZ (a i j) (Finset.mem_image.2 ⟨(i, j), Finset.mem_univ _, by simp [h]⟩)
     have hBB := GlobalTheory.Frames.tanBasis_baseChange E H D l Xo S B (ρ.comp φ₀) z.x n _ hB
     refine ⟨M.map ρ, ?_, fun i => ⟨spMap (Formalism.L2.Pj.dualMap ρ) ≫ V₀ i, ?_, ?_⟩⟩
     · have h1 : (M.map ρ).det = ρ M.det := by
         rw [RingHom.map_det]
         rfl
-      rw [h1]
-      exact hd
+      rwa [h1]
     · have h1 := Tied.pull ρ (hV₀ i)
       have hy : spMap ρ ≫ spMap φ₀ ≫ zPt z = spMap (ρ.comp φ₀) ≫ zPt z := by
         rw [← Category.assoc, GlobalTheory.Frames.ChgBC.spMap_comp_ring]
       have hv' : spMap (Formalism.L2.Pj.dualMap ρ) ≫ spMap (Formalism.L2.Pj.dualMap θ₀) ≫ (e i).left =
           spMap (Formalism.L2.Pj.dualMap (ρ.comp θ₀)) ≫ (e i).left := by
         rw [← Category.assoc, GlobalTheory.Frames.ChgBC.spMap_comp_ring, dualMap_comp]
-      rw [hy, hv'] at h1
-      exact h1
+      rwa [hy, hv'] at h1
     · let A : ∀ τ : E →+* ℂ, Fin (D.mult τ) → B := fun τ k => ρ (a i (ee.symm ⟨τ, k⟩))
       have hA0 : ∀ τ, τ ≠ σ → A τ = 0 := by
         intro τ h
         funext k
         refine hρ0 i _ ?_
-        rw [ee.apply_symm_apply]
-        exact h
+        rwa [ee.apply_symm_apply]
       have hx : spMap (ρ.comp φ₀) ≫ z.x = spMap ρ ≫ spMap φ₀ ≫ z.x := by
         rw [← Category.assoc, GlobalTheory.Frames.ChgBC.spMap_comp_ring]
       have c1 : Formalism.L2.Pj.IsCombAt (spMap (ρ.comp φ₀) ≫ z.x)
@@ -1064,8 +1051,7 @@ theorem exists_ringHom {X : Scheme.{0}} {A B : Type} [CommRing A] [CommRing B] (
 
 theorem ringHom_ext {X : Scheme.{0}} {A B : Type} [CommRing A] [CommRing B] (x : Sp A ⟶ X) [IsOpenImmersion x]
     {a b : A →+* B} (h : spMap a ≫ x = spMap b ≫ x) : a = b := by
-  have h2 := Spec.map_injective ((cancel_mono x).1 h)
-  exact congrArg (fun g => g.hom) h2
+  exact congrArg (fun g => g.hom) (Spec.map_injective ((cancel_mono x).1 h))
 
 theorem exists_frac {X : Scheme.{0}} {R : Type} [CommRing R] (x : Sp R ⟶ X) [IsOpenImmersion x] (P : X)
     (hP : P ∈ x.opensRange) (θ : R →+* X.presheaf.stalk P) (hθ : spMap θ ≫ x = X.fromSpecStalk P)
@@ -1098,8 +1084,7 @@ theorem exists_frac {X : Scheme.{0}} {R : Type} [CommRing R] (x : Sp R ⟶ X) [I
   refine ⟨φ' r, φ' s, ?_, ?_⟩
   · rw [hgs]
     exact IsLocalization.map_units (X.presheaf.stalk P) (M := (hU.primeIdealOf ⟨P, hP⟩).asIdeal.primeCompl) s
-  · rw [hgs, hgs]
-    exact hrs
+  · rwa [hgs, hgs]
 
 end GlobalTheory.CompanionTheory.Ar.LocFn.Spread
 
@@ -1111,8 +1096,7 @@ theorem exists_chart_spread : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCo
   haveI := Fintype.ofFinite ι
   obtain ⟨R₁, _, x₁, hx₁, F, _, _, MF, n, b, hP⟩ := LieVB.exists_chart G P
   have hP' : (X.fromSpecStalk P) (IsLocalRing.closedPoint (X.presheaf.stalk P)) ∈ x₁.opensRange := by
-    rw [Scheme.fromSpecStalk_closedPoint]
-    exact hP
+    rwa [Scheme.fromSpecStalk_closedPoint]
   obtain ⟨θ₁, hθ₁⟩ := LieVB.exists_lift (A := X.presheaf.stalk P) x₁ (X.fromSpecStalk P) hP'
   obtain ⟨Fs, _, _, ⟨Ms⟩⟩ := lieModel_exists X G (X.presheaf.stalk P) (X.fromSpecStalk P)
   obtain ⟨β, B, hB, hβ⟩ := LieVB.basis_tr (A := X.presheaf.stalk P) θ₁ x₁ (X.fromSpecStalk P) hθ₁ MF Ms b
@@ -1277,16 +1261,14 @@ theorem exists_localData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   · intro i
     refine ⟨(V₁ i).left, ?_, ?_⟩
     · have := hV₁ i
-      rw [show spMap (Formalism.L2.Pj.dualMap θs) ≫ (e₁ i).left = _ from hcε (Sum.inl i)] at this
-      exact this
+      rwa [show spMap (Formalism.L2.Pj.dualMap θs) ≫ (e₁ i).left = _ from hcε (Sum.inl i)] at this
     · rw [← hy1]
       have := (FrameEig.isComb_iff (M₁ i) u₁ (V₁ i)).1 (hM₁ i)
       simpa only [hu₁] using this
   · intro i
     refine ⟨(V₂ i).left, ?_, ?_⟩
     · have := hV₂ i
-      rw [show spMap (Formalism.L2.Pj.dualMap θs) ≫ (e₂ i).left = _ from hcε (Sum.inr i)] at this
-      exact this
+      rwa [show spMap (Formalism.L2.Pj.dualMap θs) ≫ (e₂ i).left = _ from hcε (Sum.inr i)] at this
     · rw [← hy1]
       have := (FrameEig.isComb_iff (M₂ i) u₂ (V₂ i)).1 (hM₂ i)
       simpa only [hu₂] using this
@@ -1315,15 +1297,13 @@ theorem exists_regular_near : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hmemU : zPt z (⟨q, hqp⟩ : PrimeSpectrum p.R) ∈ U := by
     obtain ⟨t⟩ : Nonempty (Sp k) := ⟨IsLocalRing.closedPoint k⟩
     have h := hy₃ ⟨t, rfl⟩
-    rw [hy₀, Scheme.Hom.comp_apply, spMap_field_pt] at h
-    exact h
+    rwa [hy₀, Scheme.Hom.comp_apply, spMap_field_pt] at h
   have hcen : centre (spMap (algebraMap p.R (Localization.AtPrime q)) ≫ zPt z) ∈ U := by
     have key : ∀ t : Sp (Localization.AtPrime q), (spMap (algebraMap p.R (Localization.AtPrime q)) ≫ zPt z) t =
         zPt z ((spMap (algebraMap p.R (Localization.AtPrime q))) t) := fun t => by rw [Scheme.Hom.comp_apply]
     have e : centre (spMap (algebraMap p.R (Localization.AtPrime q)) ≫ zPt z) = zPt z (⟨q, hqp⟩ : PrimeSpectrum p.R) :=
       (key _).trans (congrArg (zPt z) (spMap_local_pt q))
-    rw [e]
-    exact hmemU
+    rwa [e]
   have hWo : IsOpen ((zPt z) ⁻¹' U : Set (PrimeSpectrum p.R)) := hU.isOpen.preimage (zPt z).continuous
   obtain ⟨_, ⟨gU, rfl⟩, hgU, hsub⟩ := PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open
     (show (⟨q, hqp⟩ : PrimeSpectrum p.R) ∈ ((zPt z) ⁻¹' U : Set (PrimeSpectrum p.R)) from hmemU) hWo
@@ -1433,8 +1413,7 @@ theorem glue_rel (R : Type) [CommRing R] [IsReduced R]
       have : a * g' - a' * g ∈ RingHom.ker ψ := key
       rwa [Ideal.ker_algebraMap_residueField] at this
     have : a * g' - a' * g = 0 := by
-      rw [nilradical_eq_zero] at hz
-      exact hz
+      rwa [nilradical_eq_zero] at hz
     exact sub_eq_zero.1 this
   have htop : Ideal.span {g | ∃ a, P g a} = ⊤ := by
     by_contra hne
@@ -1530,8 +1509,7 @@ theorem range_fpt_subset_iff {S : Type} [CommRing S] [Algebra c.F S] (z : Formal
     rw [← key t]
     exact h ⟨t, rfl⟩
   · rintro h _ ⟨t, rfl⟩
-    rw [key t]
-    exact h
+    rwa [key t]
 
 theorem kerPt_residue {R : Type} [CommRing R] (q : PrimeSpectrum R) :
     kerPt (algebraMap R q.asIdeal.ResidueField) = q :=
@@ -1545,8 +1523,7 @@ theorem eq_zero_of_fields {R : Type} [CommRing R] [IsReduced R] (x : R)
     haveI : I.IsPrime := hI
     have : x ∈ RingHom.ker (algebraMap R I.ResidueField) := h _ _
     rwa [Ideal.ker_algebraMap_residueField] at this
-  rw [nilradical_eq_zero] at hz
-  exact hz
+  rwa [nilradical_eq_zero] at hz
 
 theorem pointRule {U : Set (Xo.XF c)} {τ : E →+* ℂ} {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β}
     {Z : CptOver Y U} {φ : FrameFn Xo c} (hτ : τ (H.rt : E) = H.rt0) (hU : IsClopen U) (hl : IsLineFn U τ φ)
@@ -1614,8 +1591,7 @@ theorem conj_mult {τ : E →+* ℂ} (hτ : τ (H.rt : E) = H.rt0) : D.mult (Com
     intro h
     have h1 : (starRingEnd ℂ) H.rt0 = H.rt0 := by
       have : (ComplexEmbedding.conjugate τ) (H.rt : E) = (starRingEnd ℂ) (τ (H.rt : E)) := rfl
-      rw [this, hτ] at h
-      exact h
+      rwa [this, hτ] at h
     have h2 : H.rt0.im = 0 := Complex.conj_eq_iff_im.1 h1
     have h3 := H.sqrt_neg_disc_sq
     have h5 : H.rt0.re ^ 2 = -(H.d : ℝ) := by
@@ -1819,8 +1795,7 @@ theorem exists_flat_rule : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       linear_combination (Formalism.L2.Pj.wchar (Formalism.L2.Pj.ex D a n) t * f p y) * h2 - (f p y * s p y) * h3
     · show f q z * s' q z = g (f p y * s' p y)
       have a1 : f q z = g (f p y) := hf.1 p q g y z h
-      have a2 := hnat' p q g y z h
-      exact (congrArg₂ (· * ·) a1 a2).trans (map_mul g _ _).symm
+      exact (congrArg₂ (· * ·) a1 (hnat' p q g y z h)).trans (map_mul g _ _).symm
     · show f p y' * s' p y' = Formalism.L2.Pj.wchar (Formalism.L2.Pj.ex D a n) t * (f p y * s' p y)
       have h1 := hf.2 p t y y' h
       have h2 := hwt' p t y y' h

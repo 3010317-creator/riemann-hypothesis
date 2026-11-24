@@ -364,8 +364,7 @@ theorem isPiece_chart {S : Finset (Fin D.n)} {a : Fin D.nCharts} {t₀ : Fin D.n
     have hg : AnalyticAt ℂ (D.chart a).γ (t₀ + (ε : ℂ) • y) :=
       (D.chart a).analytic _ (hmem y hy)
     exact hg.comp_of_eq ha rfl
-  · intro y hy
-    exact (D.chart a).mem _ (hmem y hy)
+  · exact fun y hy => (D.chart a).mem _ (hmem y hy)
   · intro y hy y' hy' c hc hyy
     have h1 := (D.chart a).injective _ (hmem y hy) _ (hmem y' hy') c hc hyy
     have hε0 : (ε : ℂ) ≠ 0 := by exact_mod_cast hε.ne'
@@ -402,8 +401,7 @@ private theorem coordDiv_update_lemma_5 {e : ℕ} (T : Finset (Fin e)) (i : Fin 
     · exact h ▸ hi'
     · rw [Function.update_of_ne h] at h0
       norm_num at h0
-  · intro hi
-    exact ⟨i, hi, by simp⟩
+  · exact fun hi => ⟨i, hi, by simp⟩
 
 private theorem update_mem_ball_lemma_6 {e : ℕ} (i : Fin e) :
     Function.update (fun _ : Fin e => (1/2 : ℂ)) i 0 ∈ Metric.ball (0 : Fin e → ℂ) 1 := by
@@ -433,8 +431,7 @@ private theorem isPiece_of_adapted_lemma_7 (hA : Adapted M P S) (j : Fin P.N)
     ext i
     have h2 := key _ (update_mem_ball_lemma_6 i)
     rwa [coordDiv_update_lemma_5, coordDiv_update_lemma_5] at h2
-  rw [hST]
-  exact hg
+  rwa [hST]
 
 theorem exists_piece (hA : Adapted M P S) (hF : FromSnc M P) (j : Fin P.N) :
     ∃ g, IsPiece D (S j) g ∧ ∀ y ∈ (P.chart j).target, (P.chart j).symm y = M.proj (g y) := by
@@ -581,7 +578,6 @@ theorem adapted_charts_regularization : ∀ (K : Type) [Fintype K] (J : K → Ty
       exact neg_nonneg.2 (Real.log_nonpos (by positivity) (pow_le_one₀ (norm_nonneg _) hi))
     · have h0 : β k x = 0 := by
         rw [hβ]
-        show (P.chart k).source.indicator (b k ∘ P.chart k) x = 0
         exact Set.indicator_of_notMem hxs _
       rw [h0, zero_mul]
   have key : ∀ j, ∃ F : (Fin D.n → ℂ) → ℝ, ∃ Cj : ℝ,
@@ -647,8 +643,7 @@ theorem adapted_charts_regularization : ∀ (K : Type) [Fintype K] (J : K → Ty
   · intro j
     refine ⟨hFs j, fun y hy => (hFb j y hy).trans ((le_abs_self _).trans ?_)⟩
     exact Finset.single_le_sum (f := fun j => |Cb j|) (fun i _ => abs_nonneg _) (Finset.mem_univ j)
-  · intro j y hy
-    exact hFr j y hy
+  · exact fun j y hy => hFr j y hy
 
 end LevelTowerAlt
 end -- clump:auto
@@ -696,8 +691,7 @@ theorem isPsh_aff {U : Set (Fin n → ℂ)} {φ : (Fin n → ℂ) → ℝ} (h : 
   refine ⟨usc_comp h.1 (by fun_prop), fun z w hd => ?_⟩
   have e : ∀ ζ : ℂ, t₀ + c • (z + ζ • w) = t₀ + c • z + ζ • (c • w) := fun ζ => by
     rw [smul_add, smul_comm c ζ, add_assoc]
-  simp only [e]
-  exact h.2 _ _ fun ζ hζ => e ζ ▸ hd ζ hζ
+  simpa only [e] using h.2 _ _ fun ζ hζ => e ζ ▸ hd ζ hζ
 
 theorem isPsh_star {U : Set (Fin n → ℂ)} {φ : (Fin n → ℂ) → ℝ} (h : IsPsh U φ) :
     IsPsh (star ⁻¹' U) fun t => φ (star t) := by
@@ -802,8 +796,7 @@ theorem piece {F : (Fin n → ℂ) → ℝ} (hO : IsOpen {t | t ∈ ball (0 : Fi
       obtain ⟨h1, h2⟩ := hpsh.2 z w hd
       refine ⟨(circleIntegrable_congr hs).1 h1, ?_⟩
       have hz : z ∈ ball 0 1 \ coordDiv S := by simpa using hd 0 (by simp)
-      rw [← Real.circleAverage_congr_sphere hs, ← heq hz]
-      exact h2
+      rwa [← Real.circleAverage_congr_sphere hs, ← heq hz]
   refine ⟨(hFs.comp hσ.contDiffOn hmap).congr fun t ht => (heq ht).symm,
     hpsh', C + |Q|, n * Real.log (1 / ε ^ 2), by positivity,
     fun t ht ρ hρ => ?_⟩
@@ -834,8 +827,7 @@ theorem piece {F : (Fin n → ℂ) → ℝ} (hO : IsOpen {t | t ∈ ball (0 : Fi
           have h3 : 0 < ‖s i‖ := hε.trans_le h2
           exact Real.log_le_log (by positivity)
             (one_div_le_one_div_of_le (by positivity) (pow_le_pow_left₀ hε.le h2 2))
-      · rw [ite_eq_right hi, ite_eq_right fun h => hi ((hS i).1 h).1, add_zero]
-        exact hl0
+      · rwa [ite_eq_right hi, ite_eq_right fun h => hi ((hS i).1 h).1, add_zero]
     rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
       Finset.sum_ite_mem, Finset.univ_inter] at this
     unfold SncChart.logR
@@ -934,8 +926,7 @@ theorem margin_tendsto (C : ℝ) :
   have h0 : Tendsto (fun t : ℝ => t) (𝓝[>] 0) (𝓝 0) := tendsto_id.mono_left nhdsWithin_le_nhds
   have h1 : Tendsto (fun t : ℝ => Real.log (Real.log t⁻¹) / Real.log t⁻¹) (𝓝[>] 0) (𝓝 0) :=
     Real.isLittleO_log_id_atTop.tendsto_div_nhds_zero.comp (Real.tendsto_log_atTop.comp tendsto_inv_nhdsGT_zero)
-  have h2 := h0.max ((h1.const_mul C).add (h0.const_mul C))
-  simpa [mul_div_assoc] using h2
+  simpa [mul_div_assoc] using h0.max ((h1.const_mul C).add (h0.const_mul C))
 
 variable {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {II : IntersectionSystem} {Ψ : Type} [Fintype Ψ]
   {Ω : Type} [Field Ω] [Algebra ℚ Ω] {W : Ψ → Type} [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)]

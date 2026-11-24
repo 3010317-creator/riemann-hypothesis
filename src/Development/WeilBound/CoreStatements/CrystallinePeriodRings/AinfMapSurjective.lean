@@ -148,8 +148,7 @@ theorem oD_coe (z : ℤ_[l]) : oD l (algebraMap ℚ_[l] (Om l) (z : ℚ_[l])) = 
 
 theorem isCrisDR_iff (f : Per6.Bcris l →+* Per6.BdR l) : Per6.IsCrisDR l f ↔ f = ιCD l := by
   constructor
-  · intro h
-    exact bcris_hom_ext fun x => (h x).trans ((ιCD_cB x).trans (cD_apply x)).symm
+  · exact fun h => bcris_hom_ext fun x => (h x).trans ((ιCD_cB x).trans (cD_apply x)).symm
   · rintro rfl x
     exact (ιCD_cB x).trans (cD_apply x)
 
@@ -168,12 +167,10 @@ theorem isLog_iff (ε : OCb l) (y : Per6.BdRp l) : Per6.IsLog l ε y ↔
     have h2 := h 2
     simp only [Finset.Ico_self, Finset.sum_empty, sub_zero, pow_one] at h1
     have h3 : y - muBdR l (Per6.tiltMap l ε) ∈ RingHom.ker (Per6.θD l) := by
-      have h4 := Ideal.pow_le_self two_ne_zero h2
-      simpa using h4
+      simpa using Ideal.pow_le_self two_ne_zero h2
     have h5 : Per6.θD l (muBdR l (Per6.tiltMap l ε)) = 0 := by
       rw [RingHom.mem_ker] at h1 h3
-      rw [map_sub, h1, zero_sub, neg_eq_zero] at h3
-      exact h3
+      rwa [map_sub, h1, zero_sub, neg_eq_zero] at h3
     have hε : PreTilt.untilt (Per6.tiltMap l ε) = 1 := by
       rw [← e, map_sub, map_one, θD_aD, frob_ainfMap_teich, WittVector.fontaineTheta_teichmuller,
         sub_eq_zero] at h5

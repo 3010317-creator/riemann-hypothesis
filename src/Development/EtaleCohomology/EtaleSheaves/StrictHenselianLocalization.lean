@@ -74,8 +74,7 @@ theorem key {B : Scheme.{0}} (U : B.Etale) (x : U.left) (Ω : Type) [Field Ω]
     have hq : q.asIdeal = ⊥ := Ideal.eq_bot_of_prime _
     rw [← Spec.map_preimage (l j)]
     show y ∉ Ideal.comap (Spec.preimage (l j)).hom q.asIdeal
-    rw [hq, Ideal.mem_comap, Ideal.mem_bot]
-    exact hy
+    rwa [hq, Ideal.mem_comap, Ideal.mem_bot]
   have : Etale (V j).hom := (V j).prop
   let U' : B.Etale := MorphismProperty.Over.mk ⊤ (O.ι ≫ e j ≫ (V j).hom) (by
     show Etale (O.ι ≫ e j ≫ (V j).hom); infer_instance)
@@ -118,8 +117,7 @@ theorem key {B : Scheme.{0}} (U : B.Etale) (x : U.left) (Ω : Type) [Field Ω]
   have hp : (Spec.map (CommRingCat.ofHom (D.map f3).hom) ≫ Spec.map (CommRingCat.ofHom (D.map f1).hom)).base p ∈
       Set.range O.ι.base := by
     rw [hfac]; exact ⟨_, rfl⟩
-  rw [Scheme.Opens.range_ι] at hp
-  exact hp
+  rwa [Scheme.Opens.range_ι] at hp
 
 theorem LeafSHLoc_of : LeafSHLoc := by
   intro B U x Ω _ _ s J _ _ D c hc V a l e t hP

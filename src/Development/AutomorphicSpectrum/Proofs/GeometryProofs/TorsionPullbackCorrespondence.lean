@@ -80,9 +80,7 @@ theorem tors_push {S S' U : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [
   · intro g
     have hg : g.left ≫ G.hom = a ≫ f := Over.w g
     refine ⟨Over.homMk (h.1.lift g.left a hg) (h.1.lift_snd _ _ _), ?_⟩
-    apply Over.OverMorphism.ext
-    show (h.1.lift g.left a hg) ≫ φ = g.left
-    exact h.1.lift_fst _ _ _
+    exact Over.OverMorphism.ext (h.1.lift_fst _ _ _)
 
 theorem tors_iff {R : Type} [CommRing R] [IsDomain R] {T : Type} [CommGroup T] (Γ : BT.QFGroup R T) {X : Scheme.{0}}
     {x : Sp R ⟶ X} {G : Over X} [GrpObj G] {G₀ : Over (Sp R)} [GrpObj G₀] {ψ : G₀.left ⟶ G.left} (N : ℕ)
@@ -96,8 +94,7 @@ theorem tors_iff {R : Type} [CommRing R] [IsDomain R] {T : Type} [CommGroup T] (
     exact Over.w y
   have pushY : ∀ (Y : Over (Sp R)), ∃ π : (Over.mk (Y.hom ≫ 𝟙 _) ⟶ G₀) →* (Over.mk (Y.hom ≫ x) ⟶ G),
       Function.Bijective π ∧ ∀ g, (π g).left = g.left ≫ ψ := by
-    intro Y
-    exact tors_push h (Y.hom ≫ 𝟙 _) (Y.hom ≫ x) (by simp)
+    exact fun Y => tors_push h (Y.hom ≫ 𝟙 _) (Y.hom ≫ x) (by simp)
   have w1 : ∀ (Y : Over (Sp R)) (g : Over.mk (Y.hom ≫ 𝟙 _) ⟶ G₀), g.left ≫ G₀.hom = Y.hom := by
     intro Y g
     have := Over.w g

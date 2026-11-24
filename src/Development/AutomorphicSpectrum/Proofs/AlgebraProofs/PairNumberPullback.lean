@@ -246,16 +246,12 @@ theorem cycEval_expand [Fintype K] [∀ k, Fintype (ι k)] (ϖ : O) (P : Ideal (
   have hg := DivCycleFiniteSupport.proof O K ι P g
   set S : Finset (Ideal (MRing ι O)) := hf.toFinset ∪ hg.toFinset with hS
   have hSf : ∀ W, divCycle P f W ≠ 0 → W ∈ S := fun W hW => by
-    simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Function.mem_support]
-    exact Or.inl hW
+    simpa only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Function.mem_support] using Or.inl hW
   have hSg : ∀ W, divCycle P g W ≠ 0 → W ∈ S := fun W hW => by
-    simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Function.mem_support]
-    exact Or.inr hW
+    simpa only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Function.mem_support] using Or.inr hW
   have key : ∀ (n Z : Ideal (MRing ι O) → ℤ), (∀ W, Z W ≠ 0 → W ∈ S) →
       cycEval n Z = ∑ W ∈ S, Z W * n W := by
-    intro n Z hZ
-    refine finsum_eq_sum_of_support_subset _ fun W hW => ?_
-    exact hZ W (left_ne_zero_of_mul hW)
+    exact fun n Z hZ => finsum_eq_sum_of_support_subset _ fun W hW => hZ W (left_ne_zero_of_mul hW)
   have hSr : ∀ W, ratDiv P f g W ≠ 0 → W ∈ S := fun W hW => by
     by_contra hn
     apply hW
@@ -434,8 +430,7 @@ theorem modelDeg_eq_one {y : (Σ k, ι k) → Ω} {y' : (Σ k, ι' k) → Ω}
   change Module.finrank (fnField O y)
     (IntermediateField.adjoin (fnField O y) (fnField O (joinCoord y y') : Set Ω)) = 1
   rw [h, IntermediateField.finrank_eq_one_iff, IntermediateField.adjoin_eq_bot_iff]
-  intro a ha
-  exact IntermediateField.mem_bot.mpr ⟨⟨a, ha⟩, rfl⟩
+  exact fun a ha => IntermediateField.mem_bot.mpr ⟨⟨a, ha⟩, rfl⟩
 
 variable [∀ k, Fintype (ι k)] [∀ k, Fintype (ι' k)]
 
@@ -477,8 +472,7 @@ theorem vertEval_push {ϖ : O} (hϖ : Irreducible ϖ) {y : (Σ k, ι k) → Ω} 
       vertEval ϖ (pointIdeal O y) f l := by
   rw [joinCoords_eq_joinCoord] at hj ⊢
   have h := _root_.GlobalTheory.CompanionTheory.Relay.field_extension_intersection_invariance O Ω K ι y ϖ hϖ d hy Ω K' ι' y' hj b f hf hfP l hl
-  rw [modelDeg_eq_one hF, Nat.cast_one, one_mul] at h
-  exact h
+  rwa [modelDeg_eq_one hF, Nat.cast_one, one_mul] at h
 
 end Fields
 

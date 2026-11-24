@@ -180,8 +180,7 @@ theorem val_one_sub_pow_le {K : Type} [Field K] (v : Valuation K NNReal) {x : K}
     (i : ℕ) : v (1 - x ^ i) ≤ v (1 - x) := by
   have h : 1 - x ^ i = (1 - x) * ∑ j ∈ Finset.range i, x ^ j := (mul_neg_geom_sum x i).symm
   rw [h, map_mul]
-  refine mul_le_of_le_one_right' ?_
-  exact v.map_sum_le (fun j _ => by rw [map_pow, hx, one_pow])
+  exact mul_le_of_le_one_right' (v.map_sum_le (fun j _ => by rw [map_pow, hx, one_pow]))
 
 theorem val_eq_one_of_pow_eq_one {K : Type} [Field K] (v : Valuation K NNReal) {x : K} {n : ℕ}
     (hn : n ≠ 0) (hx : x ^ n = 1) : v x = 1 := by
@@ -386,8 +385,7 @@ theorem rank_one_sum : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
       set G : C := ∑ a, algebraMap R C (χ⁻¹ a) * ψ a with hG
       have hW : ∀ h : F, ∑ a, algebraMap R C (χ⁻¹ a) * ψ (a * h) = algebraMap R C (χ h) * G := by
         intro h
-        have e := wsum_eq χ (fun a => ψ a) (wsum_zero_of_ne hv hχ _) h
-        simpa [wsum, G] using e
+        simpa [wsum, G] using wsum_eq χ (fun a => ψ a) (wsum_zero_of_ne hv hχ _) h
       have hFt : ∀ t : C, fourier (R := R) (fun h a : F => ψ (h * a)) (fun a => t * algebraMap R C (χ⁻¹ a)) = fun h => t * G * algebraMap R C (χ h) := by
         intro t
         funext h
@@ -423,8 +421,7 @@ theorem rank_one_sum : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
         obtain ⟨s', hs'⟩ : ∃ s' : R, algebraMap R C s' = t * G * algebraMap R C (χ 1) := AD.le_int hm 1
         rw [map_one, map_one, mul_one] at hs'
         have hx : s' ∈ xIdeal AD.carrier χ := by
-          rw [mem_xIdeal, hs']
-          exact hm
+          rwa [mem_xIdeal, hs']
         rw [hcD] at hx
         obtain ⟨k, rfl⟩ := Ideal.mem_span_singleton'.mp hx
         rw [← map_mul, ← hs', map_mul, map_mul]
@@ -567,11 +564,9 @@ theorem rank_one_sum : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
           obtain ⟨i, rfl⟩ := indices.surjective j
           fin_cases i
           · change (fun x => B x (indices 0)) ∈ A.carrier
-            rw [col_zero]
-            exact one_mem
+            rwa [col_zero]
           · change (fun x => B x (indices 1)) ∈ A.carrier
-            rw [col_one]
-            exact vec_mem
+            rwa [col_one]
         · rw [show B = _ from rfl, Matrix.det_submatrix_equiv_self]
           simp [M, Matrix.det_fin_two]
       have hN := hasColen_of_span AA c hc
@@ -734,8 +729,7 @@ lemma mono_mem (AA : HopfOrder (C := C) R F) (σ : MulChar F R) {p f : ℕ} (hp 
     rw [Pi.pow_apply, MulChar.pow_apply' _ (pow_ne_zero _ hp), ← map_pow (algebraMap R C), mul_pow,
       ← pow_mul,
       mul_comm (e n)]
-  rw [hfun]
-  exact hmem
+  rwa [hfun]
 
 end
 

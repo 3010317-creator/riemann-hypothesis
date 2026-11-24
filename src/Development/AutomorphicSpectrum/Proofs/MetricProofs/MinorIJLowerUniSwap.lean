@@ -62,12 +62,10 @@ theorem det_of_key {m : ℕ} (A : Matrix (Fin m) (Fin m) ℂ) (f : Fin m → ℕ
       apply hσ
       have hsum : ∑ i, f (σ i) = ∑ i, f i := Equiv.sum_comp σ f
       have heq := (Finset.sum_eq_sum_iff_of_le (fun i _ => hne i)).mp hsum.symm
-      refine Equiv.ext (fun i => ?_)
-      exact (hf (heq i (Finset.mem_univ i)).symm : σ i = i)
+      exact Equiv.ext (fun i => (hf (heq i (Finset.mem_univ i)).symm : σ i = i))
     have hz : ∏ j, A (σ j) j = 0 := Finset.prod_eq_zero (Finset.mem_univ i) (h _ _ hi)
     rw [hz, smul_zero]
-  · intro h1
-    exact absurd (Finset.mem_univ 1) h1
+  · exact fun h1 => absurd (Finset.mem_univ 1) h1
 
 private theorem minor_col_lemma {N : ℕ} (X : Matrix (Fin N) (Fin N) ℂ) (hX : IsLowerUni X)
     (S I : Finset (Fin N)) (a b : Fin N) (hb : b ∈ S) (hIS : I.erase a = S.erase b)
@@ -99,18 +97,15 @@ private theorem minor_col_lemma {N : ℕ} (X : Matrix (Fin N) (Fin N) ℂ) (hX :
   have hdetT : (X.submatrix ((S.erase b).orderEmbOfFin hT) ((S.erase b).orderEmbOfFin hT)).det = 1 := by
     rw [det_of_key _ (fun i => (((S.erase b).orderEmbOfFin hT i : Fin N) : ℕ)) ?_ ?_]
     · exact Finset.prod_eq_one (fun i _ => hX.1 _)
-    · intro i j hij
-      exact ((S.erase b).orderEmbOfFin hT).injective (Fin.ext hij)
-    · intro i j hij
-      exact hX.2 _ _ hij
+    · exact fun i j hij => ((S.erase b).orderEmbOfFin hT).injective (Fin.ext hij)
+    · exact fun i j hij => hX.2 _ _ hij
   rw [Matrix.det_succ_column _ q, Finset.sum_eq_single p]
   · have e1 : (X.submatrix (I.orderEmbOfFin hI) (S.orderEmbOfFin hS)) p q = X a b := by
       rw [Matrix.submatrix_apply, hp, hq]
     rw [e1, Matrix.submatrix_submatrix, hg, hg', hdetT, mul_one]
   · intro i _ hi
     rw [Matrix.submatrix_apply, hq, hcol' i hi, mul_zero, zero_mul]
-  · intro h1
-    exact absurd (Finset.mem_univ p) h1
+  · exact fun h1 => absurd (Finset.mem_univ p) h1
 
 theorem exists_sign {N : ℕ} (S : Finset (Fin N)) (a b : Fin N) (ha : a ∉ S) (hb : b ∈ S) :
     ∃ c : ℂ, c ≠ 0 ∧ ∀ X : Matrix (Fin N) (Fin N) ℂ, IsLowerUni X → (∀ d ∈ S, d ≠ b → X d b = 0) →
@@ -127,8 +122,7 @@ theorem exists_sign {N : ℕ} (S : Finset (Fin N)) (a b : Fin N) (ha : a ∉ S) 
     exact h1
   obtain ⟨q, hq⟩ : ∃ q, S.orderEmbOfFin rfl q = b := by
     have h1 : b ∈ Set.range (S.orderEmbOfFin rfl) := by
-      rw [Finset.range_orderEmbOfFin]
-      exact hb
+      rwa [Finset.range_orderEmbOfFin]
     exact h1
   refine ⟨(-1) ^ ((p : ℕ) + (q : ℕ)), pow_ne_zero _ (neg_ne_zero.mpr one_ne_zero), fun X hX hcol => ?_⟩
   rw [minorIJ, dite_eq_left hcard]

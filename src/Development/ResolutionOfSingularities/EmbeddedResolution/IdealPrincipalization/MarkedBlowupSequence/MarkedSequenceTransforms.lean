@@ -71,8 +71,7 @@ theorem inStrictNormalCrossingPosition_comap_iso {k : Type u} [Field k] {X Y : S
     obtain ⟨U, hxU, m, c, a, hinj, hnone, hsome⟩ := h.2 (e.hom.base x)
     refine ⟨(TopologicalSpace.Opens.map e.hom.base).obj U, hxU, m,
       EtaleChart.ofIso q e c, a, ?_, ?_, ?_⟩
-    · intro i hi j hj t hti htj
-      exact hinj i (by simpa using hi) j (by simpa using hj) t hti htj
+    · exact fun i hi j hj t hti htj => hinj i (by simpa using hi) j (by simpa using hj) t hti htj
     · intro i hi ha
       have hi' : i < L.length := by simpa using hi
       simp only [List.getElem_map]

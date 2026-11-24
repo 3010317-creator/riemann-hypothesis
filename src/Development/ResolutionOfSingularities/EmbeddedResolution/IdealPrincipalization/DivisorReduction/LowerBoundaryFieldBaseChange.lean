@@ -78,8 +78,7 @@ private theorem isClosed_setOf_connectedComponent_subset {X : Type u} [Topologic
   simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hx ⊢
   intro hsub
   apply hx
-  rw [connectedComponent_eq hy]
-  exact hsub
+  rwa [connectedComponent_eq hy]
 
 theorem lowerBoundaryWithoutBlowup_baseChange_sameNontrivialBoundary (T : MarkedIdealWithBoundary.{u}) (j : ℕ)
     (hj : j < T.boundary.length) (K : Type u) [Field K] [CharZero K] (f : T.base →+* K)
@@ -106,8 +105,7 @@ theorem preimageSupportEqComponentsInOrderLocus_of_isAdmissible (T : MarkedIdeal
   have hqc : AlgebraicGeometry.QuasiCompact
       ((boundaryComponentsInOrderLocusOpens T j hj h).ι ≫ (T.boundary.get ⟨j, hj⟩).subschemeι) := by
     constructor
-    intro V _ _
-    exact TopologicalSpace.NoetherianSpace.isCompact _
+    exact fun V _ _ => TopologicalSpace.NoetherianSpace.isCompact _
   have hclosed : IsClosed (boundaryComponentsInOrderLocus T j hj) :=
     isClosed_setOf_connectedComponent_subset
       (fun x => Blowup.isOpen_connectedComponent_of_noetherianSpace _ x) _

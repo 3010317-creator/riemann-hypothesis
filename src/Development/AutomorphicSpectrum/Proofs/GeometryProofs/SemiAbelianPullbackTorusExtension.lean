@@ -156,8 +156,7 @@ theorem sat_of_inj_mod : ∀ (R P E : Type) [CommRing R] [IsDomain R] [IsDiscret
   · intro a y ha hy
     obtain ⟨n, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible ha hπ
     have h1 : π ^ n • ((u : R) • y) ∈ LinearMap.range f := by
-      rw [smul_smul, mul_comm]
-      exact hy
+      rwa [smul_smul, mul_comm]
     have h2 := pow_step f hπ hf n _ h1
     have h3 := Submodule.smul_mem _ ((u⁻¹ : Rˣ) : R) h2
     rwa [smul_smul, Units.inv_mul, one_smul] at h3
@@ -210,8 +209,7 @@ theorem killsOver_pow (u : splitTorus S X ⟶ G) [IsMonHom u] (Y : AddSubgroup X
     have hc : c.comp (IsLocalRing.residue R) = Ideal.Quotient.mk _ := by
       ext x; rfl
     have key := killsOver_comp u Y _ c h
-    rw [← Category.assoc, spMap_comp_eq, hc] at key
-    exact key
+    rwa [← Category.assoc, spMap_comp_eq, hc] at key
   | succ n ih =>
     have hJ : IsLocalRing.maximalIdeal R ^ (n + 1 + 1) ≠ ⊤ := by
       intro e
@@ -237,8 +235,7 @@ theorem killsOver_pow (u : splitTorus S X ⟶ G) [IsMonHom u] (Y : AddSubgroup X
     have hc : c.comp (Ideal.Quotient.mk _) = (Ideal.Quotient.mk I).comp (Ideal.Quotient.mk _) := by
       ext x; rfl
     have key := killsOver_comp u Y _ c ih
-    rw [← Category.assoc, spMap_comp_eq, hc, ← spMap_comp_eq, Category.assoc] at key
-    exact key
+    rwa [← Category.assoc, spMap_comp_eq, hc, ← spMap_comp_eq, Category.assoc] at key
 
 theorem diff_injective_mod_pi : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [Field K] [Algebra R K] [IsFractionRing R K] (S : Scheme.{0}) (b : Sp R ⟶ S) (G : Over S) [GrpObj G] [IsSeparated G.hom] (X : Type) [AddCommGroup X] [Module.Finite ℤ X] (u : splitTorus S X ⟶ G) [IsMonHom u], (∀ (A : Type) [CommRing A] (g : K →+* A) (t : Over.mk (spMap g ≫ spMap (algebraMap R K) ≫ b) ⟶ splitTorus S X), t ≫ u = 1 → t = 1) → ∀ M : LieModel (splitTorus S X) (spMap (IsLocalRing.residue R) ≫ b) (X →+ IsLocalRing.ResidueField R), IsCocharLie M → ∀ δ, M.pt δ ≫ u = 1 → δ = 0 := by
   intro R K _ _ _ _ _ _ S b G _ _ X _ _ u _ hK M hM δ hδ

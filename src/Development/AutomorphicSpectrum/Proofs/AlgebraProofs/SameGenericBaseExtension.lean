@@ -164,14 +164,12 @@ variable [Fintype K₁] [Fintype K₂] [∀ k, Fintype (ι₁ k)] [∀ k, Fintyp
 theorem mseg_eq (e : K₁ ≃ K₂) (σ : (Σ k, ι₁ k) ≃ (Σ k, ι₂ k)) (y : (Σ k, ι₂ k) → Ω)
     {s₁ : ∀ k, ι₁ k} {s₂ : ∀ k, ι₂ k} (hs : ∀ k, σ ⟨k, s₁ k⟩ = ⟨e k, s₂ (e k)⟩) :
     mseg y s₂ = mseg (y ∘ σ) s₁ := by
-  simp only [mseg, Function.comp, hs]
-  exact (Equiv.prod_comp e (fun k => y ⟨k, s₂ k⟩)).symm
+  simpa only [mseg, Function.comp, hs] using (Equiv.prod_comp e (fun k => y ⟨k, s₂ k⟩)).symm
 
 theorem mon_eq (e : K₁ ≃ K₂) (σ : (Σ k, ι₁ k) ≃ (Σ k, ι₂ k)) (y : (Σ k, ι₂ k) → Ω)
     {s₁ : ∀ k, ι₁ k} {s₂ : ∀ k, ι₂ k} (hs : ∀ k, σ ⟨k, s₁ k⟩ = ⟨e k, s₂ (e k)⟩) (a : K₂ → ℤ) :
     ∏ k, y ⟨k, s₂ k⟩ ^ a k = ∏ k, (y ∘ σ) ⟨k, s₁ k⟩ ^ (a ∘ e) k := by
-  simp only [Function.comp, hs]
-  exact (Equiv.prod_comp e (fun k => y ⟨k, s₂ k⟩ ^ a k)).symm
+  simpa only [Function.comp, hs] using (Equiv.prod_comp e (fun k => y ⟨k, s₂ k⟩ ^ a k)).symm
 
 theorem chartRing_eq (O : Type) [CommRing O] [Algebra O Ω] (e : K₁ ≃ K₂)
     (σ : (Σ k, ι₁ k) ≃ (Σ k, ι₂ k)) (hσ : ∀ v, (σ v).1 = e v.1) (y : (Σ k, ι₂ k) → Ω)
@@ -212,8 +210,7 @@ theorem PositivityTheory.Xgn.t_relabel_bundle : ∀ (O : Type) [CommRing O] (Ω 
     rw [down_unique e σ (hd s₂) h]
   · have hs' : segreVec (y ∘ σ) (d s) ≠ 0 := by
       show mseg (y ∘ σ) (d s) ≠ 0
-      rw [← hm]
-      exact hs
+      rwa [← hm]
     refine (h.graded (d s) hs' i).trans ?_
     have hc' : chartRing O (segreVec y) s = chartRing O (segreVec (y ∘ σ)) (d s) := hc s
     unfold degLat

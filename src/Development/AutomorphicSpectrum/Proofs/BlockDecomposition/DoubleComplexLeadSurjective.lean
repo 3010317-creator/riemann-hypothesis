@@ -66,8 +66,7 @@ theorem extend_step {R : Type} [CommRing R] (K : DCx.{w} R) (n b : ℕ) (x : ∀
     obtain ⟨y, hy⟩ := CrystallineSemistableComparison.Cx.mem_B_succ.mp (hB (r + 1) (by omega))
     have hy' : K.dv b r y = K.D x b (r + 1) := hy
     refine ⟨x - K.sgl b r (((-1 : ℤ) ^ b) • y), sub_mem hx ?_, ?_, ?_⟩
-    · intro p q hpq
-      exact K.sgl_ne _ (by omega)
+    · exact fun p q hpq => K.sgl_ne _ (by omega)
     · intro p r' hp
       simp only [Pi.sub_apply]
       rw [K.sgl_ne _ (Or.inl (by omega)), sub_zero]
@@ -145,8 +144,7 @@ theorem leadE_surjective {R : Type} [CommRing R] (K : DCx.{w} R) (a j : ℕ)
   have hZ : (⟨x, hx⟩ : K.T (a + j)) ∈ K.tot.Z (a + j) := LinearMap.mem_ker.2 (Subtype.ext hD0)
   have hxy : x j a = y := (hag j a (by omega)).trans (K.sgl_self j a y)
   have hzf : (⟨⟨x, hx⟩, hZ⟩ : K.tot.Z (a + j)) ∈ Zf K (a + j) j := by
-    intro p q hp
-    exact (hag p q (by omega)).trans (K.sgl_ne y (Or.inl (by omega)))
+    exact fun p q hp => (hag p q (by omega)).trans (K.sgl_ne y (Or.inl (by omega)))
   refine ⟨⟨⟨⟨x, hx⟩, hZ⟩, hzf⟩, ?_⟩
   rw [leadE_eq]
   apply hcls

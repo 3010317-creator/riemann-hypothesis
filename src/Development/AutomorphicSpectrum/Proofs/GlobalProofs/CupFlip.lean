@@ -441,8 +441,7 @@ theorem descent {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
       rw [hψ', map_add (f := _), map_sub, map_nsmul, nsmul_eq_mul, ZMod.natCast_zmod_val] at h2
       exact h2)
   refine ⟨fun g => (f g : Q), hf.comp _, fun g => (f g).2, fun g h => ?_⟩
-  have h1 := congrArg (Subtype.val) (hfe g h)
-  simpa only [AddSubgroup.coe_add, AddSubgroup.coe_sub, hsm] using h1
+  simpa only [AddSubgroup.coe_add, AddSubgroup.coe_sub, hsm] using congrArg (Subtype.val) (hfe g h)
 
 section Coeff
 

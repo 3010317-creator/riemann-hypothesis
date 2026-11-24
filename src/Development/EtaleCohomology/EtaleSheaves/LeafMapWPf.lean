@@ -71,8 +71,7 @@ theorem arrow_eq {n : ℕ} {X : Scheme.{0}} (x : Sx (PB (bsumOf V W)) n X) {i j 
   have e := ((pv V W x).map f).2
   rw [cond] at e
   have e2 := congrArg (wb (a := a)) e
-  rw [wb_mulVec] at e2
-  exact e2
+  rwa [wb_mulVec] at e2
 
 def gfun {n : ℕ} {X : Scheme.{0}} (x : Sx (PB (bsumOf V W)) n X) (hx : AllSec V W x) :
     Fin (n + 1) ⥤ Um b (Scheme.Γ.obj (op X)) where
@@ -161,8 +160,7 @@ theorem gX_nat_X (n : SimplexCategoryᵒᵖ) {X Y : Scheme.{0}ᵒᵖ} (k : X ⟶
     apply Prod.ext
     · show (show GL (Fin b) _ from (pw W (pe V W (((PB (bsumOf V W)).obj (op (SimplexCategory.mk n.unop.len))).map k.unop.op x.1))).map f) = _
       rw [pe_res, pw_res]; rfl
-    · apply Units.ext
-      exact pvm_res V W k.unop x.1 f
+    · exact Units.ext (pvm_res V W k.unop x.1 f)
 
 theorem gX_nat_n {n m : SimplexCategoryᵒᵖ} (θ : n ⟶ m) (X : Scheme.{0}ᵒᵖ) (x : ((U2 V W).obj n).obj X) :
     gX V W m X ((((U2 V W).map θ).app X) x) = (((PGL b).map θ).app X) (gX V W n X x) := by
@@ -174,8 +172,7 @@ theorem gX_nat_n {n m : SimplexCategoryᵒᵖ} (θ : n ⟶ m) (X : Scheme.{0}ᵒ
     apply Prod.ext
     · show (show GL (Fin b) _ from (pw W (pe V W ((((PB (bsumOf V W)).map θ.unop.op).app (op X.unop)) x.1))).map f) = _
       rw [pe_simp, pw_simp]; rfl
-    · apply Units.ext
-      exact (pvm_simp V W θ.unop x.1 f).trans rfl
+    · exact Units.ext ((pvm_simp V W θ.unop x.1 f).trans rfl)
 
 def gmap : U2 V W ⟶ PGL b where
   app n :=

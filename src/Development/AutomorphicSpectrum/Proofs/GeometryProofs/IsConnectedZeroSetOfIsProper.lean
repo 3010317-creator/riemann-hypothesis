@@ -77,8 +77,7 @@ theorem mem_range_of_isIntegral {O Ω : Type} [CommRing O] [IsDomain O] [IsInteg
   have e' : ι (algebraMap O (FractionRing O) x / algebraMap O (FractionRing O) y) = a := by
     rw [map_div₀, ι.commutes, ι.commutes, ← e, mul_div_cancel_right₀ _ hy']
   have hi : IsIntegral O (algebraMap O (FractionRing O) x / algebraMap O (FractionRing O) y) := by
-    rw [← isIntegral_algHom_iff ι ι.toRingHom.injective, e']
-    exact ha
+    rwa [← isIntegral_algHom_iff ι ι.toRingHom.injective, e']
   obtain ⟨o, ho⟩ := IsIntegrallyClosed.isIntegral_iff.1 hi
   exact ⟨o, by rw [← e', ← ho, ι.commutes]⟩
 
@@ -169,8 +168,7 @@ theorem PositivityTheory.Xgn.zero_set_special_fibre_connected : ∀ (X : Scheme.
     · intro h
       apply PrimeSpectrum.ext
       refine ((IsLocalRing.maximalIdeal.isMaximal O).eq_of_le P.isPrime.ne_top ?_).symm
-      rw [hmax, Ideal.span_singleton_le_iff_mem]
-      exact h
+      rwa [hmax, Ideal.span_singleton_le_iff_mem]
     · rintro rfl
       change ϖ ∈ IsLocalRing.maximalIdeal O
       rw [hmax]
@@ -183,8 +181,7 @@ theorem PositivityTheory.Xgn.zero_set_special_fibre_connected : ∀ (X : Scheme.
   ext q
   constructor
   · rintro ⟨h, hq⟩
-    refine ⟨⟨q, (hU q).2 h⟩, ?_, rfl⟩
-    exact (key q h).1 hq
+    exact ⟨⟨q, (hU q).2 h⟩, (key q h).1 hq, rfl⟩
   · rintro ⟨z, hz, rfl⟩
     exact ⟨(hU _).1 z.2, (key _ _).2 hz⟩
 end -- clump:auto

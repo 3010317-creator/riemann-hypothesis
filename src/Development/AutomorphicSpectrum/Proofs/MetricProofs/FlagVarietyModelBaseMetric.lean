@@ -295,10 +295,8 @@ theorem good (x : (Σ k, baseIdx (FlIdx Ψ N) (blk Ψ N) k) → ℚ) (Q : Ideal 
   have r0 : RegAt x Q (0 : ℚ) := by simpa using regAt_int x hQ 0
   refine ⟨fun k => isEmptyElim k, fun q I => ?_, fun p _ => ⟨one_ne_zero, ?_, ?_⟩⟩
   · by_cases e : I = im q.2
-    · simp only [frame, coef, ite_eq_left e]
-      exact ⟨r1, r1⟩
-    · simp only [frame, coef, ite_eq_right e]
-      exact ⟨r0, r0⟩
+    · simpa only [frame, coef, ite_eq_left e] using ⟨r1, r1⟩
+    · simpa only [frame, coef, ite_eq_right e] using ⟨r0, r0⟩
   · simpa [frame] using r1
   · simpa [frame] using r1
 
@@ -453,9 +451,7 @@ theorem induced (zb) (p : Ψ × Fin N) : (model Ψ N).IsInducedAt (frame Ψ N) z
       simp
   · intro hp
     have hnp : ¬ IsProperStep N N p.2 := blk_none.1 hp
-    have hp2 : ¬ ((p.2 : ℕ) + 1 < N) := by
-      intro h'
-      exact hnp ⟨by omega, by omega⟩
+    have hp2 : ¬ ((p.2 : ℕ) + 1 < N) := fun h' => hnp ⟨by omega, by omega⟩
     have hv : valAt (model Ψ N).x ((frame Ψ N).υ p) (basePart (model Ψ N).blk z) = 1 := v1
     have hA : (yLineFl Ψ N p).h z = 1 := by
       show refNorm _ z = 1

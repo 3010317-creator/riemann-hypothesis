@@ -210,8 +210,7 @@ theorem adapted_frame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
 
       simp only [colFrame, map_sum, map_smul]
       rfl
-    rw [h]
-    exact hfr
+    rwa [h]
   have hE := hO.2.2.2.1
   have hpull := FlagPull.pull_isFrameAt hO.1 hE p' hp hfrV
   rw [← hV (.inl τ), colFrame_semi hE.1] at hpull
@@ -667,27 +666,20 @@ theorem mul_submatrix_castLE {Φ : Type*} [CommRing Φ] {n r a : ℕ} (ha : a �
   refine Finset.sum_subset (Finset.subset_univ _) ?_
   intro k _ hk
   have hka : a ≤ k.val := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     exact hk (Finset.mem_map.2 ⟨⟨k.val, hlt⟩, Finset.mem_univ _, by ext; simp⟩)
   have : U k (Fin.castLE ha y) = 0 := by
     apply hU
     show Fin.castLE ha y < k
     rw [Fin.lt_def]
-    simp only [Fin.val_castLE]
-    exact lt_of_lt_of_le y.isLt hka
+    simpa only [Fin.val_castLE] using lt_of_lt_of_le y.isLt hka
   rw [this, mul_zero]
 
 theorem det_castLE_triangular {Φ : Type*} [CommRing Φ] {r a : ℕ} (ha : a ≤ r)
     (U : Matrix (Fin r) (Fin r) Φ) (hU : U.BlockTriangular id) :
     (U.submatrix (Fin.castLE ha) (Fin.castLE ha)).det =
       ∏ l : Fin a, U (Fin.castLE ha l) (Fin.castLE ha l) := by
-  have : (U.submatrix (Fin.castLE ha) (Fin.castLE ha)).BlockTriangular id := by
-    intro x y hxy
-    apply hU
-    show Fin.castLE ha y < Fin.castLE ha x
-    show y.val < x.val
-    exact hxy
+  have : (U.submatrix (Fin.castLE ha) (Fin.castLE ha)).BlockTriangular id := fun x y hxy => hU hxy
   rw [Matrix.det_of_upperTriangular this]
   rfl
 
@@ -750,8 +742,7 @@ theorem unit_minor : ∀ (Φ : Type) [Field Φ] (R : Subring Φ) (n r : ℕ) (Fm
   refine ⟨hwR, ?_, hw0⟩
   have : w⁻¹ = ρ := by
     rw [← mul_one w⁻¹, ← hone, inv_mul_cancel_left₀ hw0]
-  rw [this]
-  exact hρR
+  rwa [this]
 
 end GlobalTheory.CompanionTheory.Metric.UnitMinor
 end -- clump:auto
@@ -797,8 +788,7 @@ theorem stepOf_eq_left (τ τ' : Ψ) (i : Fin (p + q)) (a : Fin (rk Ψ p q (.inl
     · rintro ⟨rfl, h2⟩
       exact Sigma.ext rfl (heq_of_eq (Fin.ext h2))
   · constructor
-    · intro e
-      exact absurd (Sigma.mk.inj_iff.mp e).1 Sum.inr_ne_inl
+    · exact fun e => absurd (Sigma.mk.inj_iff.mp e).1 Sum.inr_ne_inl
     · rintro ⟨-, h2⟩
       have ha : (a : ℕ) < p := a.2
       exfalso
@@ -810,8 +800,7 @@ theorem stepOf_eq_right (τ τ' : Ψ) (i : Fin (p + q)) (a : Fin (rk Ψ p q (.in
   dsimp only
   split_ifs with hi
   · constructor
-    · intro e
-      exact absurd (Sigma.mk.inj_iff.mp e).1 Sum.inl_ne_inr
+    · exact fun e => absurd (Sigma.mk.inj_iff.mp e).1 Sum.inl_ne_inr
     · rintro ⟨-, h2⟩
       exfalso
       omega
@@ -966,8 +955,7 @@ theorem dy_flag : ∀ (Ψ : Type) [Fintype Ψ] (p q : ℕ) (Ω : Type) [Field Ω
         · rintro (h1 | ⟨h1, -⟩)
           · exact h1
           · exact absurd h1 Sum.inr_ne_inl
-        · intro h1
-          exact Or.inl h1
+        · exact fun h1 => Or.inl h1
       refine ⟨fun hc' => ?_, fun hn => ?_⟩
       · rw [dy_right h, ite_eq_left (hc.1 hc')]
       · rw [dy_right h, ite_eq_right (fun h' => hn (hc.2 h'))]
@@ -1030,8 +1018,7 @@ theorem step_monomial : ∀ (Ψ : Type) [Fintype Ψ] (p q : ℕ) (Ω : Type) [Fi
     · rw [dite_eq_left hp0]
       have hne : stepOf Ψ p q (τ, i) ≠ ⟨.inl τ, ⟨p - 1, by show _ < p; omega⟩⟩ := by
         rw [hso]
-        intro he
-        exact Sum.inr_ne_inl (congrArg Sigma.fst he)
+        exact fun he => Sum.inr_ne_inl (congrArg Sigma.fst he)
       rw [Fintype.prod_eq_mul _ _ hne, hval, hval, ite_eq_left (Or.inl rfl),
         ite_eq_left (Or.inr ⟨rfl, show p - 1 + 1 = p by omega, h1⟩), hso]
       · rw [div_eq_mul_inv, mul_inv]
@@ -1076,8 +1063,7 @@ theorem prod_Iic_eq_prod_castLE {Φ : Type} [CommMonoid Φ] {N : ℕ} (G : Fin N
     have := l.2
     simp only [Finset.mem_Iic, Fin.le_def, Fin.val_castLE]
     omega
-  · intro a _ b _ hab
-    exact Fin.castLE_injective hn hab
+  · exact fun a _ b _ hab => Fin.castLE_injective hn hab
   · intro b hb
     have hb' : (b : ℕ) ≤ (i : ℕ) := Fin.le_def.mp (Finset.mem_Iic.mp hb)
     refine ⟨⟨(b : ℕ), by omega⟩, Finset.mem_univ _, ?_⟩

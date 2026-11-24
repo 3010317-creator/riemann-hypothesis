@@ -160,8 +160,7 @@ theorem contDiffAt_det {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] {�
     [DecidableEq ι] {m : WithTop ℕ∞} {M : X → Matrix ι ι ℝ} {x : X}
     (h : ∀ i j, ContDiffAt ℝ m (fun y => M y i j) x) : ContDiffAt ℝ m (fun y => (M y).det) x := by
   simp only [Matrix.det_apply]
-  refine ContDiffAt.sum fun σ _ => ?_
-  exact (contDiffAt_prod fun i _ => h _ _).const_smul _
+  exact ContDiffAt.sum fun σ _ => (contDiffAt_prod fun i _ => h _ _).const_smul _
 
 theorem contDiffAt_inv {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] {ι : Type*} [Fintype ι]
     [DecidableEq ι] {m : WithTop ℕ∞} {M : X → Matrix ι ι ℝ} {x : X}
@@ -191,8 +190,7 @@ theorem exists_section {n a : ℕ} (h : a ≤ n) {u₀ : Fin n → ℂ} (hu : u�
       have hq : ContDiffAt ℝ ∞ (fun u : Fin n → ℂ => u k / u₀ k) u₀ :=
         ((contDiff_apply ℝ (fun _ => ℂ) k).div_const _).contDiffAt
       exact (((Complex.contDiffAt_log hs).restrict_scalars ℝ).comp u₀ hq).add contDiffAt_const
-    · simp only [ite_eq_right hk]
-      exact (contDiff_apply ℝ (fun _ => ℂ) k).contDiffAt
+    · simpa only [ite_eq_right hk] using (contDiff_apply ℝ (fun _ => ℂ) k).contDiffAt
   · have hP : ∀ᶠ u in 𝓝 u₀, u ∈ Flat.punct n a 1 := (isOpen_punct n a 1).mem_nhds hu
     have hS : ∀ᶠ u in 𝓝 u₀, ∀ k : Fin n, k.val < a → u k / u₀ k ∈ Complex.slitPlane := by
       refine eventually_all.2 fun k => ?_
@@ -217,12 +215,10 @@ theorem exists_section {n a : ℕ} (h : a ≤ n) {u₀ : Fin n → ℂ} (hu : u�
       have h1 := hlt (Fin.castLE h i)
       rw [← hexp _ hi, Complex.norm_exp] at h1
       exact absurd (Real.one_le_exp (not_lt.1 hc)) (not_le.2 h1)
-    · simp only [ite_eq_right (not_lt.2 hk)]
-      exact hlt k
+    · simpa only [ite_eq_right (not_lt.2 hk)] using hlt k
     · funext k
       by_cases hk : k.val < a
-      · simp only [expCover, ite_eq_left hk]
-        exact hexp k hk
+      · simpa only [expCover, ite_eq_left hk] using hexp k hk
       · simp only [expCover, ite_eq_right hk]
 
 theorem exists_basis {n a : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.LogPeriods n a g Λ) :
@@ -308,8 +304,7 @@ theorem contDiffAt_H {n a : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.LogPeri
   refine (ContDiffAt.comp u₀ hF hσ).congr_of_eventuallyEq ?_
   filter_upwards [hev] with u hu'
   have h1 := (hall _ hu'.1).2 k l
-  rw [hu'.2] at h1
-  exact h1
+  rwa [hu'.2] at h1
 
 theorem periodGram_contDiffAt : ∀ (n a₀ g r : ℕ) (Λ : Type) [AddCommGroup Λ] (L : Flat.LogPeriods n a₀ g Λ)
     (U : Fin r → (Fin n → ℂ) → Fin g → ℂ), (∀ k, DifferentiableOn ℂ (U k) (Metric.ball 0 1)) →

@@ -125,8 +125,7 @@ theorem isHolTo_pull {X : Scheme.{0}} {B : Set V} {y : V → (Sp ℂ ⟶ X)} (hy
   refine ⟨by rw [hset]; exact hφ.continuousOn.isOpen_inter_preimage hW (hy U f).1, ?_⟩
   refine DifferentiableOn.comp (g := fun b => valAt' (y b) U f) (t := {b ∈ B | ⊤ ≤ y b ⁻¹ᵁ U})
     (hy U f).2 (hφ.mono fun w hw => hw.1) ?_
-  intro w hw
-  exact ⟨hm hw.1, hw.2⟩
+  exact fun w hw => ⟨hm hw.1, hw.2⟩
 
 end Hol
 
@@ -214,13 +213,10 @@ theorem expCover_mem_punct (h : a ≤ n) {w : Fin n → ℂ} (hw : w ∈ logCove
       have hcast : Fin.castLE h ⟨k.val, hk⟩ = k := Fin.ext rfl
       rw [hcast] at hre
       simp only [expCover, ite_eq_left hk]
-      rw [Complex.norm_exp]
-      rw [← Real.exp_zero]
+      rw [Complex.norm_exp, ← Real.exp_zero]
       exact Real.exp_lt_exp.2 hre
-    · simp only [expCover, ite_eq_right hk]
-      exact hw.2 k (not_lt.mp hk)
-  · simp only [expCover, ite_eq_left hi]
-    exact Complex.exp_ne_zero _
+    · simpa only [expCover, ite_eq_right hk] using hw.2 k (not_lt.mp hk)
+  · simpa only [expCover, ite_eq_left hi] using Complex.exp_ne_zero _
 
 theorem exists_seq_punct : ∃ u : ℕ → (Fin n → ℂ), Tendsto u atTop (𝓝 0) ∧ ∀ k, u k ∈ punct n a 1 := by
   let c : ℕ → ℝ := fun k => 1 / ((k : ℝ) + 1) / 2
@@ -234,14 +230,12 @@ theorem exists_seq_punct : ∃ u : ℕ → (Fin n → ℂ), Tendsto u atTop (�
     linarith
   have hct : Tendsto c atTop (𝓝 0) := by
     have h := (tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ)).div_const 2
-    rw [zero_div] at h
-    exact h
+    rwa [zero_div] at h
   refine ⟨fun k _ => (c k : ℂ), ?_, fun k => ⟨?_, fun i _ => ?_⟩⟩
   · rw [tendsto_pi_nhds]
     intro i
     have h := (Complex.continuous_ofReal.tendsto 0).comp hct
-    rw [Complex.ofReal_zero] at h
-    exact h
+    rwa [Complex.ofReal_zero] at h
   · rw [mem_ball_zero_iff, pi_norm_lt_iff one_pos]
     intro i
     rw [Complex.norm_real, Real.norm_of_nonneg (hc0 k).le]
@@ -265,8 +259,7 @@ theorem exists_additive_sections {n g : ℕ} (Γ₀ : Submodule ℤ (Fin g → �
   have hsub : ∀ j, Metric.ball (0 : Fin n → ℂ) ρ ⊆ Metric.ball 0 (εs j) := fun j =>
     Metric.ball_subset_ball (hρ j (Finset.mem_univ j))
   refine ⟨ρ, hρ0, hρc, fun x b => ∑ j, ((bs.repr x j : ℤ) : ℂ) • ss j b, ?_, ?_, ?_, ?_⟩
-  · intro x
-    exact DifferentiableOn.fun_sum fun j _ => ((hd j).mono (hsub j)).fun_const_smul _
+  · exact fun x => DifferentiableOn.fun_sum fun j _ => ((hd j).mono (hsub j)).fun_const_smul _
   · intro x
     have hx : (x : Fin g → ℂ) = ∑ j, (bs.repr x j) • ((bs j : Γ₀) : Fin g → ℂ) := by
       have h := congrArg Γ₀.subtype (bs.sum_repr x)
@@ -276,8 +269,7 @@ theorem exists_additive_sections {n g : ℕ} (Γ₀ : Submodule ℤ (Fin g → �
       exact h.symm
     simp only [h0]
     rw [hx]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    exact Int.cast_smul_eq_zsmul ℂ _ _
+    exact Finset.sum_congr rfl fun j _ => Int.cast_smul_eq_zsmul ℂ _ _
   · intro x y b
     simp only [map_add (f := _), Finsupp.add_apply, Int.cast_add, add_smul, Finset.sum_add_distrib]
   · intro x b hb
@@ -401,8 +393,7 @@ theorem exists_logPeriods_famExp : ∀ (E : Type) [Field E] [NumberField E] [IsC
           rw [smul_smul, inv_mul_cancel₀ hρc', _root_.one_smul]
           exact (hQ' _ (punct_subset_ball (hU _ (huU k))) _).1 (hsU _ (huU k)))))
       have h0 : s 0 ∈ e.per 0 := by simpa using hcl
-      rw [← hΓ₀'] at h0
-      exact h0
+      rwa [← hΓ₀'] at h0
     · rw [hΓ₀']
       exact _root_.GlobalTheory.CompanionTheory.Ar.Flat.span_per_eq_top C.R C.t.G C.g n C.M _ C.ψ e hsemi 0 h0ρ
     · intro N hN

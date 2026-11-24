@@ -92,8 +92,7 @@ theorem genUseLoc : GenUseLoc := by
   have : Nonempty (ι ⁻¹ᵁ Proj.basicOpen _ f) := ⟨⟨x, hx⟩⟩
   refine ⟨X.presheaf.germ _ x hx (ι.app _ (Proj.awayToSection _ f (HomogeneousLocalization.Away.mk _ ((mem_homogeneousSubmodule _ _).mpr hf) 1 g hg'))), ?_⟩
   rw [Scheme.algebraMap_germ_eq_germToFunctionField, eq_div_iff hne]
-  rw [pow_one] at key
-  exact key
+  rwa [pow_one] at key
 
 theorem genUseRangeOf_pos {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] (p : X ⟶ S k) (N : ℕ) (ι : X ⟶ PN k N)
     (v : Fin (N + 1) → X.functionField) (hG : Gen p ι v) (n : ℕ) (hn : 0 < n) (f g : MvPolynomial (Fin (N + 1)) k)
@@ -178,8 +177,7 @@ theorem genUseRangeTo : GenUseRangeTo := by
   · rw [smul_eq_mul, mul_comm]; exact ((mem_homogeneousSubmodule _ _).mp hfm).pow m
   rw [← ha]
   erw [Scheme.Hom.germ_stalkMap_apply]
-  rw [eval₂_pow, eq_div_iff (pow_ne_zero _ hfne)]
-  exact key
+  rwa [eval₂_pow, eq_div_iff (pow_ne_zero _ hfne)]
 
 theorem GenUse_of (hB : GenUseBack) : GenUse := by
   have hT := genUseRangeTo

@@ -110,10 +110,8 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   let c : K → ℂ := fun k => if h : ∀ p, M.blk p ≠ some k then c₀ ⟨k, h⟩ else 1
   have hc : ∀ k, c k ≠ 0 := fun k => by
     by_cases h : ∀ p, M.blk p ≠ some k
-    · simp only [c, dite_eq_left h]
-      exact hc₀ _
-    · simp only [c, dite_eq_right h]
-      exact one_ne_zero
+    · simpa only [c, dite_eq_left h] using hc₀ _
+    · simpa only [c, dite_eq_right h] using one_ne_zero
   let z' : (Σ k, ιk k) → ℂ := fun p => c (κ p.1) * z p
   have hz' : z' ∈ mcPts (mCoordIdeal (y ∘ v)) :=
     mcPts_smul (CoordinateConeArithVar.isMultiHomogIdeal _) (fun k => c (κ k)) (fun k => hc _) hz

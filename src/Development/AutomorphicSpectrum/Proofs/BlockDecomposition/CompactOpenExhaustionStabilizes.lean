@@ -158,8 +158,7 @@ theorem baire_double_coset : ∀ {G : Type} [Group G] [TopologicalSpace G] [IsTo
           _ = p' * p₂ * x * (n₂ * m) := by group
       · show p'⁻¹ * (p' * x * m) * m⁻¹ ∈ V₁
         have : p'⁻¹ * (p' * x * m) * m⁻¹ = x := by group
-        rw [this]
-        exact hxV₁
+        rwa [this]
     obtain ⟨i, hi⟩ := (hKc.inter_right hT).elim_directed_cover O hOo
       (by
         rintro g ⟨_, hgS, hgC⟩
@@ -177,7 +176,6 @@ theorem baire_double_coset : ∀ {G : Type} [Group G] [TopologicalSpace G] [IsTo
       rwa [inv_mul_cancel_left] at this
     obtain ⟨p₂, hp₂, n₂, hn₂, e⟩ := hOA i ⟨hi ⟨hc, hcS, hcC⟩, hcC⟩
     exact ⟨q * p₂, P.mul_mem hq hp₂, n₂, hn₂, by rw [e]; simp only [mul_assoc]⟩
-  · refine ⟨0, fun g hgS hgC => ?_⟩
-    exact absurd ⟨g, hgS, hgC⟩ hne
+  · exact ⟨0, fun g hgS hgC => (absurd ⟨g, hgS, hgC⟩ hne)⟩
 
 end GlobalTheory.CompanionTheory.BaireCoset

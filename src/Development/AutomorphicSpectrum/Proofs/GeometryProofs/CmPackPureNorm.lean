@@ -126,8 +126,7 @@ theorem UpperTheory.Reformulated.B.ExistsCoordinate.exists_coord :
                 E) := by
   intro E _ _ _ H y hy
   have hsq : (H.rt : E) * (H.rt : E) = -(H.d : E) := by
-    have h := congrArg (fun z : NumberField.RingOfIntegers E => (z : E)) H.rt_sq
-    simpa [sq] using h
+    simpa [sq] using congrArg (fun z : NumberField.RingOfIntegers E => (z : E)) H.rt_sq
   induction hy using Algebra.adjoin_induction with
   | mem x hx => exact ⟨0, 1, by rw [Set.mem_singleton_iff.mp hx]; simp⟩
   | algebraMap r => exact ⟨r, 0, by simp⟩
@@ -410,8 +409,7 @@ theorem exists_int_mul (H : Host E) (x : Kf H) :
   have hu : (u.den : E) * (u : E) = u.num := by exact_mod_cast Rat.den_mul_eq_num u
   have hv : (v.den : E) * (v : E) = v.num := by exact_mod_cast Rat.den_mul_eq_num v
   have h := two_weight_eq_one_add_root H
-  rw [hx]
-  rw [coe_int_add_mul]
+  rw [hx, coe_int_add_mul]
   push_cast
   linear_combination ((v.num : E) * u.den) * h - (v.den : E) * hu - (u.den : E) * (H.rt : E) * hv
 
@@ -508,8 +506,7 @@ theorem int_of_mem_dual {c x : E}
     simpa using hz.symm
   obtain ⟨r, hr⟩ := Submodule.mem_one.mp ((Submodule.mem_div_iff_forall_mul_mem.mp h1) _ h2)
   refine ⟨r, ?_⟩
-  rw [hx, _root_.mul_comm]
-  exact hr
+  rwa [hx, _root_.mul_comm]
 
 theorem mem_dual_of_int {c : E}
     (hc : ∀ x ∈ differentIdeal ℤ (𝓞 E), ∃ r : 𝓞 E, (r : E) = c * x) (a : 𝓞 E) :
@@ -609,8 +606,7 @@ theorem trace_dual_mem (H : Host E) {f : ℕ} (B : Module.Basis (Fin f) (Kf H) E
   have hx : (n : E) * a = ∑ i, cK i • B i := by
     have h1 := congrArg (algebraMap (𝓞 E) E) hc
 
-    rw [map_sum, map_nsmul] at h1
-    rw [nsmul_eq_mul] at h1
+    rw [map_sum, map_nsmul, nsmul_eq_mul] at h1
     refine h1.symm.trans (Finset.sum_congr rfl fun i _ => ?_)
     rw [Subalgebra.smul_def, smul_eq_mul, map_mul, Algebra.smul_def, hB]
     rfl
@@ -924,8 +920,7 @@ theorem eigSub_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     have h2 : ‖j δ‖⁻¹ = ⨆ k, ‖j (σ (b' k))‖ := by
       field_simp
       linarith
-    rw [h2]
-    exact h1
+    rwa [h2]
 
 end GlobalTheory.CompanionTheory.Ar.Fl.EigSubLat
 end -- clump:auto
@@ -974,8 +969,7 @@ theorem isComb_iff {n : ℕ} (c : Fin n → R) (v : Fin n → (epsAt x ⟶ G)) (
     apply Over.OverMorphism.ext
     rw [hu i]
     rfl
-  · intro hw
-    exact ⟨_, fun i => rfl, hw⟩
+  · exact fun hw => ⟨_, fun i => rfl, hw⟩
 
 theorem prod_pt {E : Type} [AddCommGroup E] [Module R E] (M : LieModel G x E) :
     ∀ {n : ℕ} (c : Fin n → R) (z : Fin n → E),
@@ -1053,8 +1047,7 @@ theorem bcTan_comb {n : ℕ} (c : Fin n → V) (w : Fin n → (epsAt (𝟙 (Sp V
       (List.ofFn fun i => LieTangent.epsScale _ (VK (c i)) ≫ bcTan VK h (w i)).prod := by
   induction n with
   | zero =>
-    simp only [List.ofFn_zero, List.prod_nil]
-    exact bcTan_one VK h
+    simpa only [List.ofFn_zero, List.prod_nil] using bcTan_one VK h
   | succ n ih =>
     simp only [List.ofFn_succ, List.prod_cons]
     rw [bcTan_mul, bcTan_scale, ih (fun i => c i.succ) (fun i => w i.succ)]
@@ -1330,8 +1323,7 @@ theorem lie_model_extends_over_dvr : ∀ (E : Type) [Field E] [NumberField E] [I
     have hs := BaseChangeTangents.eq_bcTan_left (algebraMap V K) m'.cart rfl (uV k) s hs2
     apply Over.OverMorphism.ext
     simp only [P]
-    rw [BaseChangeTangents.push_left, ← hs]
-    exact hs1
+    rwa [BaseChangeTangents.push_left, ← hs]
   have hPsum : ∀ {N : ℕ} (cc : Fin N → V) (w : Fin N → (epsAt (𝟙 (Sp V)) ⟶ T.G)) (z : Fin N → U),
       (∀ k, P (w k) = M.pt (z k)) →
         P (List.ofFn fun i => LieTangent.epsScale (𝟙 (Sp V)) (cc i) ≫ w i).prod =
@@ -1364,8 +1356,7 @@ theorem lie_model_extends_over_dvr : ∀ (E : Type) [Field E] [NumberField E] [I
         fun k => (isTanAt_iff_epsScale_zero_comp_eq_one _ _ _).mp (huVt k)
       simp only [h0, List.ofFn_const, List.prod_replicate, one_pow]
     have hcc := (huniq cc hc1).trans (huniq _ hc0).symm
-    have hk := congrFun hcc (e.symm i)
-    simpa [cc] using hk
+    simpa [cc] using congrFun hcc (e.symm i)
   have hliK : LinearIndependent K u := LinearIndependent.localization K (nonZeroDivisors V) hliV
   refine ⟨hliK, ?_⟩
   let σV : 𝓞 E →+* V := (σ.comp (algebraMap (𝓞 E) E)).codRestrict V (fun a => hσ a)
@@ -1754,8 +1745,7 @@ theorem intFrames_fin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     exact ⟨fun h => ⟨⟨a, h⟩, rfl⟩, by rintro ⟨t, rfl⟩; exact t.2⟩
   · have := hl3
     simp only [RingHom.comp_apply] at this
-    rw [hconj] at this
-    exact this
+    rwa [hconj] at this
   · intro a
     rw [hv]
     exact s2 a

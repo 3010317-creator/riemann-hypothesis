@@ -93,8 +93,7 @@ theorem isUnit_det_of_mat (x : GF D n) {g : Matrix (Fin (n + n)) (Fin (n + n)) D
     (h : mat (x : G D n) = g.map (incA D)) : IsUnit g.det := by
   obtain ⟨g', hg', -, hg'm⟩ := GlobalTheory.CompanionTheory.RatPtsUnn.clause1 (x : G D n) x.2
   have hgg : g = g' := Matrix.map_injective (_root_.GlobalTheory.Ker.Grp.incA_inj D) (h.symm.trans hg'm)
-  rw [hgg]
-  exact hg'
+  rwa [hgg]
 
 theorem cosetCell_rmulEquiv : ∀ {D : D7} {n : ℕ} (q : Cosets (P D n) (GF D n)) (γ : GF D n) (b : Matrix (Fin n) (Fin n) D.host.E), mat (γ : G D n) = blk4 1 (b.map (incA D)) 0 1 → cosetCell (rmulEquiv (P D n) (GF D n) γ q) = cosetCell q := by
   intro D n q γ b h
@@ -138,7 +137,6 @@ theorem cosetCell_rmulEquiv : ∀ {D : D7} {n : ℕ} (q : Cosets (P D n) (GF D n
   constructor
   · intro h0
     rw [h0, Matrix.mulVec_zero]
-  · intro h0
-    exact hinj _ h0
+  · exact fun h0 => hinj _ h0
 
 end GlobalTheory.CompanionTheory.SwUnf

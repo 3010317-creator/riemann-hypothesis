@@ -66,8 +66,7 @@ theorem exists_pow_mul_le_one (v : HeightOneSpectrum (𝓞 F)) (a : Fv F v)
     rw [Valued.mem_nhds]
     refine ⟨1, fun y hy => ?_⟩
     have hy' : Valued.v (y - x) < 1 := by simpa using hy
-    have h := Valuation.map_add_lt Valued.v hy' hx
-    simpa using h
+    simpa using Valuation.map_add_lt Valued.v hy' hx
   have h2 : Tendsto (fun m : ℕ => a ^ m) atTop (𝓝 0) := Valued.tendsto_zero_pow_of_v_lt_one ha
   have hUo : ∀ m : ℕ, IsOpen {s : Fv F v | Valued.v (a ^ m * s) < 1} := fun m =>
     (continuous_const.mul continuous_id).isOpen_preimage _ h1
@@ -139,8 +138,7 @@ theorem GlobalTheory.CompanionTheory.Mass.MeanV.exists_common_denominator :
       Finset.prod_le_one' fun v _ => hpl w (p v) (m v)
     have hmain : w.valuation F ((p w : F) ^ m w) * w.valuation F x ≤ 1 := by
       have h := hm w hw _ (hxK w hw)
-      rw [← map_pow, ← map_mul, h3, map_mul] at h
-      exact h
+      rwa [← map_pow, ← map_mul, h3, map_mul] at h
     calc w.valuation F ((p w : F) ^ m w) * (∏ v ∈ T.erase w, w.valuation F ((p v : F) ^ m v)) *
           w.valuation F x
         = (∏ v ∈ T.erase w, w.valuation F ((p v : F) ^ m v)) *

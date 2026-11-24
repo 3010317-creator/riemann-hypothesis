@@ -121,8 +121,7 @@ theorem step_comp : ∀ {S : Type} [CommRing S] (ϖ : S), ϖ ∈ (⊥ : Ideal S)
         have h6 := hsd i0 hi2
         rw [h6] at ht
         linear_combination -ht
-      have h7 := hcancel _ h5
-      exact IsUnit.of_mul_eq_one t (by linear_combination h7)
+      exact IsUnit.of_mul_eq_one t (by linear_combination (hcancel _ h5))
     let R : Polynomial S := ∑ i ∈ Finset.range (Q.natDegree + 1),
       Polynomial.C (s i) * Polynomial.X ^ i
     have hRc : ∀ j, j ≤ Q.natDegree → R.coeff j = s j := by
@@ -219,8 +218,7 @@ theorem step_comp : ∀ {S : Type} [CommRing S] (ϖ : S), ϖ ∈ (⊥ : Ideal S)
       rw [← pow_add]
       exact pow_dvd_pow _ (by omega)
     · have h10 : Q.coeff 0 ∣ c ^ Q.natDegree := by
-        have h11 := hc1 Q.natDegree hd le_rfl
-        simpa [hQ.coeff_natDegree] using h11
+        simpa [hQ.coeff_natDegree] using hc1 Q.natDegree hd le_rfl
       rw [mul_pow]
       exact dvd_mul_of_dvd_left (dvd_trans hn0 h10) _
 

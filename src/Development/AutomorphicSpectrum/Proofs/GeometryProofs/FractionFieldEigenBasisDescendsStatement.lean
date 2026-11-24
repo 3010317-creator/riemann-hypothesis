@@ -109,8 +109,7 @@ theorem exists_integral_leftInverse {V K : Type} [CommRing V] [IsDomain V]
     have h1 : φ (c • x) ∈ W := hx
     rw [map_smul, ← algebraMap_smul K c (φ x)] at h1
     have h2 := W.smul_mem (algebraMap V K c)⁻¹ h1
-    rw [smul_smul, inv_mul_cancel₀ hc', one_smul] at h2
-    exact h2
+    rwa [smul_smul, inv_mul_cancel₀ hc', one_smul] at h2
   obtain ⟨r, hr⟩ := exists_retraction N hNsat
   have hbmem : ∀ i', b i' ∈ stdLat V K g ⊓ W.restrictScalars V := by
     intro i'
@@ -128,16 +127,12 @@ theorem exists_integral_leftInverse {V K : Type} [CommRing V] [IsDomain V]
     rw [hφβ]
     exact (Submodule.mem_inf.1 (hbmem i')).2
   have hinj : Function.Injective fun r : V => r • (1 : K) := by
-    intro x y hxy
-    exact IsFractionRing.injective V K (by simpa [Algebra.smul_def] using hxy)
+    exact fun x y hxy => IsFractionRing.injective V K (by simpa [Algebra.smul_def] using hxy)
   have hbV : LinearIndependent V b := hb.restrict_scalars hinj
   have hψ : ∀ y : N, (φ ∘ₗ N.subtype) y ∈ Submodule.span V (Set.range b) := by
     intro y
     rw [hsp]
-    refine Submodule.mem_inf.2 ⟨?_, y.2⟩
-    show ∀ k, φ y k ∈ (algebraMap V K).range
-    intro k
-    exact RingHom.mem_range.2 ⟨(y : Fin g → V) k, rfl⟩
+    exact Submodule.mem_inf.2 ⟨(fun k => RingHom.mem_range.2 ⟨(y : Fin g → V) k, rfl⟩), y.2⟩
   let ψ : N →ₗ[V] Submodule.span V (Set.range b) :=
     LinearMap.codRestrict _ (φ ∘ₗ N.subtype) hψ
   let F : Fin n → (Fin g → V) →ₗ[V] V := fun i =>
@@ -319,8 +314,7 @@ theorem eigSub_baseChange : ∀ (E : Type) [Field E] [NumberField E] (K C V A : 
   · rw [Submodule.span_le]
     rintro _ ⟨i', rfl⟩
     refine Submodule.mem_inf.2 ⟨?_, ?_⟩
-    · show ∀ k, j (b i' k) ∈ (algebraMap A C).range
-      exact hbA i'
+    · exact hbA i'
     · show (fun k => j (b i' k)) ∈ HT.eigSp ρC (j.comp σ)
       rw [← hspanC]
       exact Submodule.subset_span ⟨i', rfl⟩

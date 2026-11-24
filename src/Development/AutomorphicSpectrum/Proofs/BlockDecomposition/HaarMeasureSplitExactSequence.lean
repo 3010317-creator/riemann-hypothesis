@@ -135,11 +135,9 @@ theorem measure_preimage_inter_eq {π : A →+ A'} (hπ : Measurable π) {s : A'
   have hνP : ν ≤ P := by
     have h0 := Measure.le_sum (fun γ : Γ' => Measure.map (fun y : A' => (γ : A') + y) ν) 0
     simp only [AddSubgroup.coe_zero, zero_add, Measure.map_id'] at h0
-    rw [hPsum]
-    exact h0
+    rwa [hPsum]
   have hνac : ν ≪ lam' := by
-    intro t ht
-    exact le_antisymm ((Measure.le_iff'.1 hνP t).trans (hPac ht).le) zero_le
+    exact fun t ht => le_antisymm ((Measure.le_iff'.1 hνP t).trans (hPac ht).le) zero_le
   have claim : ∀ T : Set A', MeasurableSet T → (∀ γ ∈ Γ', ∀ x, γ + x ∈ T ↔ x ∈ T) →
       lam (π ⁻¹' T ∩ 𝓖) = P (T ∩ M) := by
     intro T hT hTinv

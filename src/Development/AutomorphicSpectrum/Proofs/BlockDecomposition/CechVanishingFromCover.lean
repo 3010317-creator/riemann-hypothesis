@@ -190,8 +190,7 @@ theorem van_Wc {ι : Type} [DecidableEq ι] {U : ι → ObjectProperty C} (hU : 
     ∀ (S : Finset ι) (j : ℕ), D A.card j → Van F (Wc U A S) j := by
   induction A using Finset.induction_on with
   | empty =>
-    intro S j _
-    exact van_empty (fun T hT => by simpa using hT.1) j
+    exact fun S j _ => van_empty (fun T hT => by simpa using hT.1) j
   | insert a A ha ih =>
     intro S j hj
     rw [Finset.card_insert_of_notMem ha] at hj
@@ -246,11 +245,8 @@ theorem vanishing_of_cover : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.
   refine ⟨fun h j hj => key (fun _ j => j < s) (fun j => j < s) ?_ (fun S hS j hE => h S hS j hE) j hj,
     fun h j => key (fun _ _ => True) (fun _ => True) ?_ (fun S hS j _ => h S hS j) j trivial,
     fun h j hj => key (fun n j => s + n ≤ j) (fun j => j > s) ?_ (fun S hS j hE => h S hS j hE) j hj⟩
-  · intro n j hj
-    exact ⟨hj, hj, fun i hi => by omega⟩
-  · intro n j _
-    exact ⟨trivial, trivial, fun _ _ => trivial⟩
-  · intro n j hj
-    exact ⟨by omega, by omega, fun i hi => by omega⟩
+  · exact fun n j hj => ⟨hj, hj, fun i hi => by omega⟩
+  · exact fun n j _ => ⟨trivial, trivial, fun _ _ => trivial⟩
+  · exact fun n j hj => ⟨by omega, by omega, fun i hi => by omega⟩
 
 end GlobalTheory.CompanionTheory.CosieveMV

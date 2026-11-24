@@ -106,8 +106,7 @@ theorem stalk_loc {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCa
   have hbij : Function.Bijective (x.stalkMap p).hom := by
     refine ⟨Function.Injective.of_comp (f := ψ) ?_, fun b => ?_⟩
     · have := hξ.inj ⟨x p, hq⟩
-      rw [← hc] at this
-      exact this
+      rwa [← hc] at this
     · obtain ⟨⟨a, s⟩, hb⟩ := IsLocalization.surj p.asIdeal.primeCompl b
       obtain ⟨a', ha'⟩ := hca a
       obtain ⟨s', hs'⟩ := hca s
@@ -177,8 +176,7 @@ theorem lift_sec {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsSeparated G.hom] {R
   have e2 : y = y' ≫ pullback.fst _ _ := (pullback.lift_fst _ _ _).symm
   refine (valAt_congr e1 W hyW (e1 ▸ hyW) f).trans ((valAt_comp _ _ _ _ _).trans ?_)
   refine Eq.trans ?_ ((valAt_congr e2 ⊤ le_top le_top s).trans (valAt_comp _ _ _ _ _)).symm
-  refine (congrArg (valAt y' _ _) hf).trans ?_
-  exact valAt_res y' _ ⊤ le_top _ le_top _
+  exact (congrArg (valAt y' _ _) hf).trans (valAt_res y' _ ⊤ le_top _ le_top _)
 
 theorem exists_denom {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G] [Smooth G.hom]
     {R O : Type} [CommRing R] [CommRing O] [Algebra R O] (S : Submonoid R) [IsLocalization S O]

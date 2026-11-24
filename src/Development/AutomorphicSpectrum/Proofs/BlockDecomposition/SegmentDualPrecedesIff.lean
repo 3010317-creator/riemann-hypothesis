@@ -118,10 +118,8 @@ theorem linked_segDual {Δ Δ' : Segment k} (h : Δ.Linked Δ') : (segDual Δ).L
   have hi := dualCl_injective hc hn hd
   refine ⟨⟨segDual Γ, ?_⟩, ?_, ?_⟩
   · rw [carrier_segDual hc hn, carrier_segDual hc hn, carrier_segDual hc hn, hΓ, Set.image_union]
-  · rw [carrier_segDual hc hn, carrier_segDual hc hn, Set.image_subset_image_iff hi]
-    exact h1
-  · rw [carrier_segDual hc hn, carrier_segDual hc hn, Set.image_subset_image_iff hi]
-    exact h2
+  · rwa [carrier_segDual hc hn, carrier_segDual hc hn, Set.image_subset_image_iff hi]
+  · rwa [carrier_segDual hc hn, carrier_segDual hc hn, Set.image_subset_image_iff hi]
 
 theorem precedes_segDual {Δ Δ' : Segment k} (h : Δ'.Precedes Δ) : (segDual Δ).Precedes (segDual Δ') := by
   obtain ⟨hl, j, hj, hf⟩ := h

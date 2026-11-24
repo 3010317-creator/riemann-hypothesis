@@ -321,8 +321,7 @@ theorem eq_linForm (k₀ : K) (hK : ∀ a : K, a = k₀) {f : MRingOver F ι}
     by_cases hb : b = a
     · subst hb; simp [ha]
     · rw [h0 b hb, Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hb (sigma_mk_injective h).symm
+      exact fun h => hb (sigma_mk_injective h).symm
   ext m
   rw [linForm_apply, coeff_sum]
   simp only [MvPolynomial.coeff_smul, coeff_X', smul_eq_mul, mul_ite, mul_one, mul_zero]
@@ -332,8 +331,7 @@ theorem eq_linForm (k₀ : K) (hK : ∀ a : K, a = k₀) {f : MRingOver F ι}
     · simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro h
-      exact hb (Finsupp.single_left_injective one_ne_zero h)
+      exact fun h => hb (Finsupp.single_left_injective one_ne_zero h)
     · simp
   · rw [notMem_support_iff.1 hm]
     symm
@@ -391,8 +389,7 @@ theorem ptDeg_eq_one [DecidableEq (Σ k, ι k)] (k₀ : K) (hK : ∀ a : K, a = 
 theorem exists_single_notMem [DecidableEq (Σ k, ι k)] (U : Submodule F ((Σ k, ι k) → F))
     (hd : 0 < Module.finrank F (((Σ k, ι k) → F) ⧸ U)) :
     ∃ q : Σ k, ι k, (Pi.single q (1 : F) : (Σ k, ι k) → F) ∉ U := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have htop : U = ⊤ := by
     refine (Submodule.eq_top_iff').2 fun c => ?_
     rw [eq_sum_single c]
@@ -674,8 +671,7 @@ theorem isArithVar_pPart (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (K 
       refine flag_mem_of_le ℚ (genMatFr ℚ Ψ N (j k).1) _ (hL _) (j k).2 (fun a b ha hb => ?_) _
       obtain ⟨k', hk'⟩ := hj.down k ((j k).1, a) rfl ha
       have h := hT k' b (by rw [hk']; exact hb)
-      rw [hk'] at h
-      exact h
+      rwa [hk'] at h
     exact isAlgebraic_algebraMap (⟨_, hm⟩ : IntermediateField.adjoin ℚ (Set.range t))
   exact CoordConeArithVar.full K (PIdx j) (ΩFl Ψ N) (yPart j) c (cellDim j) t ‹_› hc hind hmem halg
 
@@ -828,8 +824,7 @@ theorem ptsIntegral_bot (II : IntersectionSystem) (hII : IsIntersectionSystem II
   have hlog : Real.log ((2 : ℕ) : ℝ) ≠ 0 := (Real.log_pos (by norm_num)).ne'
   have h3 : Real.log ((2 : ℕ) : ℝ) * 1 =
       Real.log ((2 : ℕ) : ℝ) * ptsIntegral (⊥ : Ideal (MRing ι)) (pot fun _ : Fin n => L) (fun _ => 1) := by
-    rw [mul_one]
-    exact h2
+    rwa [mul_one]
   exact (mul_left_cancel₀ hlog h3).symm
 
 end Proj
@@ -850,8 +845,7 @@ theorem pPart_eq_bot (τ : Ψ) (h : 0 < N - 1) (k₀ : K) (hk : ∀ a : K, a = k
     have hAB : A = B := by
       refine Subtype.ext (funext fun x => ?_)
       have hx : x = ⟨0, Nat.succ_pos _⟩ := Fin.ext (by have := x.2; simp [j] at this ⊢)
-      rw [hx]
-      exact h3
+      rwa [hx]
     rw [hAB]
   have hy : ∀ p, yPart j p = algebraMap (MvPolynomial (Ψ × Fin N × Fin N) ℚ) (ΩFl Ψ N) (X (emb p)) := by
     intro p
@@ -900,8 +894,7 @@ theorem ptsIntegral_first : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : �
     obtain ⟨k, hk'⟩ := hj.down k₀ ((j k₀).1, ⟨0, h⟩) rfl (Nat.zero_le _)
     funext a
     rw [hk k] at hk'
-    rw [hk a]
-    exact hk'
+    rwa [hk a]
   have hN : N - 1 + 1 = N := by omega
   rw [pPart_eq_bot τ h k₀ hk]
   refine ptsIntegral_bot II hII.1 k₀ hk (n := N - 1)
@@ -955,8 +948,7 @@ theorem imageZ_drop [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ :
   show mConeMap (yPart j) (rename (dropV j k₀) f) = 0 ↔ _
   rw [key]
   constructor
-  · intro h
-    exact rename_injective _ Subtype.val_injective (by rw [h, map_zero])
+  · exact fun h => rename_injective _ Subtype.val_injective (by rw [h, map_zero])
   · intro h
     have h' : mConeMap (yPart (dropJ j k₀)) f = 0 := h
     rw [h', map_zero]
@@ -1058,7 +1050,6 @@ theorem coeff_rhoM_gapDelta (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) 
       exact Prod.ext (e.injective h1) h2)
   haveI : WellFoundedGT (Ψ × Fin N) := Finite.to_wellFoundedGT
   have hv : ∀ τ : Ψ, StrictMono (fun s : Fin N => (τ, s)) := fun τ s t hst => by
-    show toLex (e τ, s) < toLex (e τ, t)
     exact Prod.Lex.toLex_lt_toLex.mpr (Or.inr ⟨rfl, hst⟩)
   have key := CoeffDelta.degree_prod_monic (MonomialOrder.lex : MonomialOrder (Ψ × Fin N))
     Finset.univ
@@ -1068,8 +1059,7 @@ theorem coeff_rhoM_gapDelta (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) 
       CoeffDelta.degree_prod_monic _ _ _ _ fun b hb =>
         CoeffDelta.lex_sum_Ico (fun s => (τ, s)) (hv τ) (Finset.mem_Ioi.mp hb))
   have h2 := key.2
-  rw [MonomialOrder.leadingCoeff, key.1, rhoM_eq_sum] at h2
-  exact h2
+  rwa [MonomialOrder.leadingCoeff, key.1, rhoM_eq_sum] at h2
 
 end GlobalTheory.CompanionTheory.Ar.Top.FlDeg
 end -- clump:auto
@@ -1343,9 +1333,7 @@ theorem fsHerm_smooth {K : Type} [Fintype K] (ι : K → Type) [∀ k, Fintype (
   rw [← sq_rpow_half (Real.sqrt_nonneg _), Real.sq_sqrt h0]
 
 theorem constLine_smooth {K : Type} [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] :
-    IsSmoothHerm (constLine ι) := by
-  show ContDiffOn ℝ _ (fun _ => Real.exp (-(-1))) _
-  exact contDiffOn_const
+    IsSmoothHerm (constLine ι) := contDiffOn_const
 
 theorem ptsIntegral_neg_one {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] (P : Ideal (MRing ι)) {e : ℕ}
     (φ : Fin e → ((Σ k, ι k) → ℂ) → ℝ) :
@@ -1439,8 +1427,7 @@ theorem isPull_unit [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ :
     have h2 : (fun k' : {k // k ≠ k₀} => if k'.1 = k.1 then (1 : ℤ) else 0) = fun k' => if k' = k then 1 else 0 := by
       funext k'
       simp [Subtype.ext_iff]
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
 
 theorem isPull_const [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ : K) :
     IsPullHerm (Subtype.val : {k // k ≠ k₀} → K) (dropV j k₀) (constLine (PIdx (dropJ j k₀))) (constLine (PIdx j)) := by
@@ -1630,8 +1617,7 @@ theorem tower (hIn : PB.Inputs) (II : IntersectionSystem) (hII : IsFullIntersect
           Fin.append (fun i => unitLine j (w₀ i).1) (fun _ : Fin (N - 1 - ((j k₀).2 : ℕ)) => unitLine j k₀) := by
         funext i
         refine Fin.addCases (fun i => ?_) (fun i => ?_) i <;> simp
-      rw [hfun]
-      exact hs
+      rwa [hfun]
 
 theorem alg_const (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (D : ℕ)
     (a : (Fin D → Ψ × Fin N) → ℝ) (c : ℝ) (w₀ : Fin D → Ψ × Fin N)
@@ -1657,8 +1643,7 @@ theorem degFl_vand (hIn : PB.Inputs) (II : IntersectionSystem) (hII : IsFullInte
   obtain ⟨d, hd⟩ : ∃ d, d + 1 = antisymDegree Ψ N := ⟨antisymDegree Ψ N - 1, by omega⟩
   have harith : IsArithVar (mCoordIdeal (yFl Ψ N)) (d + 2) := by
     have := _root_.GlobalTheory.CompanionTheory.Ar.PB.pFl_isArithVar Ψ N hN
-    rw [← hd] at this
-    exact this
+    rwa [← hd] at this
   have hdim : d + 1 = 0 + Fintype.card Ψ * (N.choose 2 + (N - N).choose 2) := by
     simpa [antisymDegree] using hd
   obtain ⟨FA, -⟩ := PositivityTheory.Xgp.t_c_fl_an _ _ _ (yFl Ψ N) Ψ N N M 0 d BM harith hdim hbd

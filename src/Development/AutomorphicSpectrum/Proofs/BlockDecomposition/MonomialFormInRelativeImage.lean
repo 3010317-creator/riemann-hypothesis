@@ -85,10 +85,8 @@ theorem sub_oneE_mem_cone {n d : ℕ} {S : Finset (Fin d)} {g : Gam n d}
       rw [Finset.sum_eq_single k]
       · simp [oneE]
       · intro b _ hb
-        simp only [oneE]
-        exact Pi.single_eq_of_ne (fun h => hb (Sum.inr_injective h)) _
-      · intro h
-        exact absurd (Finset.mem_univ k) h
+        simpa only [oneE] using Pi.single_eq_of_ne (fun h => hb (Sum.inr_injective h)) _
+      · exact fun h => absurd (Finset.mem_univ k) h
     show 0 ≤ ∑ j, (g - oneE (Sum.inr k) : Gam n d) (Sum.inr j)
     simp only [Pi.sub_apply, Finset.sum_sub_distrib]
     rw [hs]
@@ -99,8 +97,7 @@ theorem monomial_mem_exceptional_ideal {K : Type} [Field K] {n d : ℕ} (S : Fin
     (hg : g ∈ (cone S : AddSubmonoid (Gam n d))) (ht : 1 ≤ tdeg g) : mon K g hg ∈ I0 n K S := by
   have hex : ∃ k, (S = ∅ ∨ k ∈ S) ∧ (k ∈ S ∨ 1 ≤ g (Sum.inr k)) := by
     by_cases hS : S = ∅
-    · by_contra hno
-      push Not at hno
+    · by_contra! hno
       have hsum : ∑ j, g (Sum.inr j) ≤ 0 := Finset.sum_nonpos fun j _ => by
         have := (hno j (Or.inl hS)).2
         omega
@@ -189,8 +186,7 @@ theorem tdeg_sub (g g' : Gam n d) : tdeg (g - g') = tdeg g - tdeg g' := by
   simp [tdeg, Finset.sum_sub_distrib]
 
 theorem tdeg_sum {a : ℕ} (w : Fin a → Gam n d) : tdeg (∑ i, w i) = ∑ i, tdeg (w i) := by
-  simp only [tdeg, Finset.sum_apply]
-  exact Finset.sum_comm
+  simpa only [tdeg, Finset.sum_apply] using Finset.sum_comm
 
 theorem tdeg_oneE_inl (l : Fin n) : tdeg (oneE (Sum.inl l) : Gam n d) = 0 := by
   simp [tdeg, oneE]
@@ -279,8 +275,7 @@ theorem case_empty {a : ℕ} (g : Gam n d) (D : {D : Finset (E n d) // D.card = 
       rcases hi : enumD D i with l | j
       · exact tdeg_oneE_inl l
       · exact absurd hi (h i j)
-    simp only [h0, Finset.sum_const_zero, sub_zero]
-    exact hg.2
+    simpa only [h0, Finset.sum_const_zero, sub_zero] using hg.2
 
 theorem term_chart {S : Finset (Fin d)} {k : Fin d} (hk : k ∈ S) {a : ℕ} (g : Gam n d) (D : Finset (E n d))
     (hg : good g D) (hT : Tset g D ⊆ S) (f : Fin a → E n d) (hf : ∀ i, f i ∈ D ∨ f i = Sum.inr k) :

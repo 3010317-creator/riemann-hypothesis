@@ -466,8 +466,7 @@ theorem finite_contributing : ∀ (F : Type) [Field F] [NumberField F], IsTotall
     have hn : ‖(algebraMap F (NumberField.InfiniteAdeleRing F) x) w‖ = w x := by
       rw [NumberField.InfiniteAdeleRing.algebraMap_apply, NumberField.InfinitePlace.Completion.norm_coe]
       simp
-    rw [← hn]
-    exact hb
+    rwa [← hn]
   have hφ : ∀ φ : F →+* ℂ, ‖φ x‖ ≤ ∑ w, ‖C w‖ := by
     intro φ
     calc ‖φ x‖ = NumberField.InfinitePlace.mk φ x := (NumberField.InfinitePlace.apply φ x).symm
@@ -557,8 +556,7 @@ theorem pure_term : ∀ (F : Type) [Field F] [NumberField F] (θ : ℝ →+* Ain
       rw [hz]
       simp
   · rw [ite_eq_right ht, ite_eq_right]
-    intro h
-    exact ht fun v hv => (key v hv).1 (h v fun hs => hv (hST hs))
+    exact fun h => ht fun v hv => (key v hv).1 (h v fun hs => hv (hST hs))
 
 end GlobalTheory.CompanionTheory.BasePsi
 end -- clump:auto

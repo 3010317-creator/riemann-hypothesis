@@ -107,8 +107,7 @@ theorem toKO_injective (n : ℕ) : Function.Injective (toKO i hi n) := by
   intro k k' h
   have h' := congrArg (fun x : KO (w.adicCompletion E) (Fin n) =>
     ((x : GL (Fin n) (w.adicCompletion E)) : Matrix (Fin n) (Fin n) (w.adicCompletion E))) h
-  refine Units.ext (Matrix.ext fun a b => PadicInt.ext (i.injective ?_))
-  exact congrFun (congrFun h' a) b
+  exact Units.ext (Matrix.ext fun a b => PadicInt.ext (i.injective (congrFun (congrFun h' a) b)))
 
 theorem toKO_surjective (n : ℕ) : Function.Surjective (toKO i hi n) := by
   intro m
@@ -135,12 +134,10 @@ theorem ker_redKO (n : ℕ) :
   obtain ⟨k, rfl⟩ := toKO_surjective i hi n m
   rw [redKO_toKO, coe_toKO]
   constructor
-  · intro hk
-    exact map_mem_KOne i hi k hk
+  · exact fun hk => map_mem_KOne i hi k hk
   · intro hm
     obtain ⟨k', hk', he⟩ := exists_of_mem_KOne i hi hm
     have : k' = k := toKO_injective i hi n (Subtype.ext he)
-    rw [← this]
-    exact hk'
+    rwa [← this]
 
 end DiscreteGroups.sglob.DzIso

@@ -198,7 +198,6 @@ theorem measurable_purePr : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   unfold purePr
   refine Measurable.indicator ?_ hset
   refine (hΨinf.comp hpi.measurable).mul ?_
-  refine Finset.measurable_prod _ fun v _ => ?_
-  exact (hΨ v).comp ((hpv v).comp hpf).measurable
+  exact Finset.measurable_prod _ fun v _ => (hΨ v).comp ((hpv v).comp hpf).measurable
 
 end GlobalTheory.CompanionTheory.WeilSiegel.HypStep.PrimMeas

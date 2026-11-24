@@ -79,8 +79,7 @@ theorem cpt_chart_piece {e : ℕ} {X : Type} [TopologicalSpace X] [MeasurableSpa
   have h1 : ((volume.restrict T).withDensity fun y => ENNReal.ofReal (w y)) (T ∩ O) = 0 := by
     rw [withDensity_apply _ (hTm.inter hO)]
     refine (setLIntegral_congr_fun (g := fun _ => 0) (hTm.inter hO) ?_).trans (by simp)
-    intro y hy
-    exact ENNReal.ofReal_of_nonpos (hw0 y hy)
+    exact fun y hy => ENNReal.ofReal_of_nonpos (hw0 y hy)
   have h2 : ((volume.restrict T).withDensity fun y => ENNReal.ofReal (w y)) Tᶜ = 0 :=
     withDensity_absolutelyContinuous _ _ (by
       rw [Measure.restrict_apply hTm.compl]; simp)
@@ -127,8 +126,7 @@ def cptW (A : FinHolAtlas e X) (P : ChartPartition A) (Φ : Fin e → LocPot X) 
 theorem cptSet_symm_mem (A : FinHolAtlas e X) (P : ChartPartition A) (K : Set X) (j : Fin A.n)
     {y : Fin e → ℂ} (hy : y ∈ cptSet A P K j) : (A.chart j).symm y ∈ K := by
   obtain ⟨x, ⟨hxK, hxs⟩, rfl⟩ := hy
-  rw [(A.chart j).left_inv (P.tsupport_subset j hxs)]
-  exact hxK
+  rwa [(A.chart j).left_inv (P.tsupport_subset j hxs)]
 
 theorem cptSet_subset_target (A : FinHolAtlas e X) (P : ChartPartition A) (K : Set X) (j : Fin A.n) :
     cptSet A P K j ⊆ (A.chart j).target := by
@@ -142,8 +140,7 @@ theorem cptSet_compact [CompactSpace X] (A : FinHolAtlas e X) (P : ChartPartitio
 
 theorem cptSet_subset (A : FinHolAtlas e X) (P : ChartPartition A) {K U : Set X} (hKU : K ⊆ U)
     (j : Fin A.n) : cptSet A P K j ⊆ (A.chart j).target ∩ (A.chart j).symm ⁻¹' U := by
-  intro y hy
-  exact ⟨cptSet_subset_target A P K j hy, hKU (cptSet_symm_mem A P K j hy)⟩
+  exact fun y hy => ⟨cptSet_subset_target A P K j hy, hKU (cptSet_symm_mem A P K j hy)⟩
 
 theorem cptW_continuousOn (A : FinHolAtlas e X) (P : ChartPartition A) (Φ : Fin e → LocPot X)
     {K U : Set X} (hKU : K ⊆ U) (j : Fin A.n)
@@ -336,10 +333,8 @@ theorem cpt_chart_tendsto [CompactSpace X] (A : FinHolAtlas e X) (P : ChartParti
     have l1 : Tendsto (fun t => E.indicator (gT t) ((A.chart j).symm y)) (𝓝[>] 0)
         (𝓝 (E.indicator g ((A.chart j).symm y))) := by
       by_cases hxE : (A.chart j).symm y ∈ E
-      · simp only [Set.indicator_of_mem hxE]
-        exact hgU.tendsto_at hx
-      · simp only [Set.indicator_of_notMem hxE]
-        exact tendsto_const_nhds
+      · simpa only [Set.indicator_of_mem hxE] using hgU.tendsto_at hx
+      · simpa only [Set.indicator_of_notMem hxE] using tendsto_const_nhds
     have l2 : Tendsto (fun t => locDens A (ΦT t) j y) (𝓝[>] 0) (𝓝 (locDens A Φ j y)) :=
       hld.tendsto_at hy
     exact l1.mul (((l2.const_mul _)).max tendsto_const_nhds)

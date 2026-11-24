@@ -86,9 +86,7 @@ def dg (u : Matrix (Fin M) (Fin M) A) : Matrix (Fin (M + 2)) (Fin (M + 2)) A :=
     (Fin.cons (Fin.cons 0 (Fin.cons 1 fun _ => 0)) fun i => Fin.cons 0 (Fin.cons 0 (u i))))
 
 theorem finset_fin_two_eq_cases {p : Fin (M + 2) → Prop} (h0 : p 0) (h1 : p 1) (h2 : ∀ i : Fin M, p i.succ.succ)
-    (i : Fin (M + 2)) : p i := by
-  refine Fin.cases h0 (fun i => ?_) i
-  exact Fin.cases h1 h2 i
+    (i : Fin (M + 2)) : p i := Fin.cases h0 (fun i => (Fin.cases h1 h2 i)) i
 
 theorem mat_ext2 {P Q : Matrix (Fin (M + 2)) (Fin (M + 2)) A}
     (h00 : P 0 0 = Q 0 0) (h01 : P 0 1 = Q 0 1) (h10 : P 1 0 = Q 1 0) (h11 : P 1 1 = Q 1 1)
@@ -315,8 +313,7 @@ theorem nM_mul (s : A →+* A) (J : Matrix (Fin M) (Fin M) A) (w w' : Fin M → 
 theorem s_rowv (hs : ∀ x, s (s x) = x) (hJ : ∀ i j, s (J j i) = J i j) (w : Fin M → A) (i : Fin M) :
     s (rowv s J w i) = ∑ b, J i b * w b := by
 
-  simp only [rowv, map_sum, map_mul, hs]
-  exact Finset.sum_congr rfl fun b _ => by rw [hJ, mul_comm]
+  simpa only [rowv, map_sum, map_mul, hs] using Finset.sum_congr rfl fun b _ => by rw [hJ, mul_comm]
 
 theorem nM_unitary (hs : ∀ x, s (s x) = x) (hJ : ∀ i j, s (J j i) = J i j) (w : Fin M → A) (z : A)
     (hz : z + s z + hv s J w w = 0) : cT s (nM s J w z) * hypOne J * nM s J w z = hypOne J := by
@@ -505,8 +502,7 @@ theorem colE_iff (h : HA R σ (hypOne J)) :
     change (((HA.mat R σ (hypOne J) h : GL _ _) : Matrix (Fin (M + 2)) (Fin (M + 2)) (R ⊗[F] E)) *ᵥ
       (Fin.cons 1 fun _ => 0 : Fin (M + 2) → R ⊗[F] E)) i =
       (Fin.cons 1 fun _ => 0 : Fin (M + 2) → R ⊗[F] E) i at this
-    rw [mulVec_first, first_eq_one] at this
-    exact this
+    rwa [mulVec_first, first_eq_one] at this
   · intro c
     funext a i
     change (((HA.mat R σ (hypOne J) h : GL _ _) : Matrix (Fin (M + 2)) (Fin (M + 2)) (R ⊗[F] E)) *ᵥ
@@ -646,8 +642,7 @@ theorem piR_rat (hinj : Function.Injective (inclR (F := F) (E := E) R)) {p : sta
     apply hinj
     have h := toMatrix_col R σ J p i
     rw [hm] at h
-    rw [incl_one_entry]
-    exact h
+    rwa [incl_one_entry]
   have hS : (g : GL (Fin (M + 2)) E) ∈ stabG (σ : E →+* E) J := ⟨g.2, hc⟩
   refine (mem_HFinIn_iff R σ J _).2 ⟨piG _ _ ⟨_, hS⟩, piG_mem _, Units.ext ?_⟩
   change (blk ((g : GL (Fin (M + 2)) E) : Matrix (Fin (M + 2)) (Fin (M + 2)) E)).map (inclR R) = blk (matP R σ J p)
@@ -960,8 +955,7 @@ theorem lift_hz {w : Fin M → E} {z : E} (hz : z + σ z + hv (σ : E →+* E) J
   have h := congrArg (inclR (F := F) (E := E) R) hz
   rw [map_add (f := _), map_add (f := _), hv_map (inclR R) (s := (σ : E →+* E)) (s' := sigR R σ)
     (fun x => (sigR_incl R σ x).symm), map_zero] at h
-  rw [sigR_incl]
-  exact h
+  rwa [sigR_incl]
 
 theorem exists_move_w [CharZero E] (hσ : ∀ x, σ (σ x) = x) (hJ : ∀ i j, σ (J j i) = J i j)
     {C : Set (R ⊗[F] E)} (hCc : ∀ a, ∃ α : E, a - inclR R α ∈ C)
@@ -1083,8 +1077,7 @@ theorem exists_left_inv {k : ℕ} (hdet : J.det ≠ 0) (Y : Fin k → Fin M → 
   have hu : IsUnit J.det := isUnit_iff_ne_zero.2 hdet
   rw [Matrix.mulVec_mulVec, Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hu, Matrix.mul_one,
     LinearMap.toMatrix'_mulVec]
-  have h := LinearMap.congr_fun hg (Pi.single j 1)
-  simpa [Fintype.linearCombination_apply_single] using h
+  simpa [Fintype.linearCombination_apply_single] using LinearMap.congr_fun hg (Pi.single j 1)
 
 theorem exists_ker_top [CharZero E] (hσ : ∀ x, σ (σ x) = x) (hJ : ∀ i j, σ (J j i) = J i j)
     {k : ℕ} {Y : Fin k → Fin M → E} {C : Matrix (Fin k) (Fin M) E}
@@ -1171,8 +1164,7 @@ theorem stab_structure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   · intro m hm
     choose c hc using fun j => topRow_rat hm (Y j)
     exact ⟨fun _ => c, by funext _ j; exact (hc j).symm⟩
-  · intro m a
-    exact actW_ker (AF F) σ J m a _
+  · exact fun m a => actW_ker (AF F) σ J m a _
 
 end GlobalTheory.CompanionTheory.WeilSiegel.HypStep.Unf.Struct
 end -- clump:auto

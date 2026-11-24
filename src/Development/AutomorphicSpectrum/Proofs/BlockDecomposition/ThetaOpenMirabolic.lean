@@ -70,12 +70,10 @@ theorem thetaA_apply (ψ : AddChar k Circle) {n : ℕ} (a : Fin n → k) (u : Mi
   obtain ⟨w, hw⟩ : ((u : Mir k n) : GL (Fin (n + 1)) k) ∈ MirU k n := Subgroup.mem_subgroupOf.1 u.2
   have key : (unipEquiv k n).symm ((Subgroup.subgroupOfEquivOfLe (MirU_le_Mir k n)) u) = w := by
     rw [MulEquiv.symm_apply_eq]
-    apply Subtype.ext
-    exact hw.symm
+    exact Subtype.ext hw.symm
   have hcol : lastCol k u = w.toAdd := by
     funext i
-    simp only [lastCol, ← hw]
-    exact unip_apply_castSucc_last k n w i
+    simpa only [lastCol, ← hw] using unip_apply_castSucc_last k n w i
   show Circle.toUnits (ψ (a ⬝ᵥ ((unipEquiv k n).symm
     ((Subgroup.subgroupOfEquivOfLe (MirU_le_Mir k n)) u)).toAdd)) = _
   rw [key, hcol]

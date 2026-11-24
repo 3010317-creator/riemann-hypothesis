@@ -77,8 +77,7 @@ theorem exists_smInd_bump {G W : Type} [Group G] [TopologicalSpace G] [IsTopolog
   let pick : G → H := fun x => if h : S x then h.choose else 1
   have pick_spec : ∀ x, S x → ((pick x : H) : G)⁻¹ * x ∈ K := by
     intro x h
-    simp only [pick, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [pick, dite_eq_left h] using h.choose_spec
   let F : G → W := fun x => if S x then σ (pick x) v else 0
   have F_pos : ∀ x, S x → F x = σ (pick x) v := fun x h => ite_eq_left h
   have F_neg : ∀ x, ¬ S x → F x = 0 := fun x h => ite_eq_right h
@@ -128,8 +127,7 @@ theorem exists_smInd_bump {G W : Type} [Group G] [TopologicalSpace G] [IsTopolog
     show F κ = v
     rw [F_pos κ hS]
     refine hv _ ?_
-    have h3 := K.mul_mem hκ (K.inv_mem (pick_spec κ hS))
-    simpa using h3
+    simpa using K.mul_mem hκ (K.inv_mem (pick_spec κ hS))
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -152,8 +150,7 @@ theorem eq_one_of_mem_parab_of_mem_lower {α n : Type} {m : α → Type} [Fintyp
     by_cases e' : i = j
     · subst e'; simp
     · rw [Matrix.one_apply_ne e', Matrix.one_apply_ne]
-      intro h'
-      exact e' (by simpa using e.injective h')
+      exact fun h' => e' (by simpa using e.injective h')
   · rw [mem_parab_iff.1 h1 a b i j hab, Units.val_one, hne a i b j hab.ne']
 
 theorem exists_parab_mul_lower {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) {m : ℕ} (hm : 1 ≤ m)
@@ -174,8 +171,7 @@ theorem exists_parab_mul_lower {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a 
     by_cases e' : i = j
     · subst e'; simp
     · rw [Matrix.one_apply_ne e', Matrix.one_apply_ne]
-      intro h'
-      exact e' (by simpa using (stdBlocks d hd).injective h')
+      exact fun h' => e' (by simpa using (stdBlocks d hd).injective h')
 
 theorem exists_level (ψ : AddChar k Circle) (hψ : Continuous ψ) {h N : ℕ} (d : Fin h → ℕ)
     (hd : ∑ a, d a = N) {W : Type} [AddCommGroup W] [Module ℂ W]
@@ -203,12 +199,10 @@ theorem exists_level (ψ : AddChar k Circle) (hψ : Continuous ψ) {h N : ℕ} (
   obtain ⟨m, -, hm⟩ := (hasBasis_nhds_one k N).mem_iff.1 ((hU.inter hU₂).mem_nhds ⟨h1, h1₂⟩)
   refine ⟨m + 1, by omega, fun c hc => ?_, fun l hl hlK => ?_⟩
   · have h2 : c ∈ Subtype.val ⁻¹' U := (hm (congruenceSubgroup_antitone k N (Nat.le_succ m) hc)).1
-    rw [hUe] at h2
-    exact h2
+    rwa [hUe] at h2
   · have h2 : (⟨l, hl⟩ : unipB k (Fin N)) ∈ Subtype.val ⁻¹' U₂ :=
       (hm (congruenceSubgroup_antitone k N (Nat.le_succ m) hlK)).2
-    rw [hUe₂] at h2
-    exact h2
+    rwa [hUe₂] at h2
 
 theorem exists_openFns_bump : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ψ : AddChar k Circle), Continuous ψ → ∀ (h N : ℕ) (d : Fin h → ℕ) (hd : ∑ a, d a = N) {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (Levi k fun a => Fin (d a)) W), IsSmooth ρ → ∀ v : W, ∃ L₀ : Subgroup (GL (Fin N) k), L₀ ≤ unipU k d hd ∧ IsCompact (L₀ : Set (GL (Fin N) k)) ∧ (∃ O : Set (GL (Fin N) k), IsOpen O ∧ O ∩ (unipU k d hd : Set (GL (Fin N) k)) = L₀) ∧ (∀ (l : GL (Fin N) k) (hl : l ∈ unipB k (Fin N)), l ∈ L₀ → whitChar ψ N ⟨l, hl⟩ = 1) ∧ ∃ f ∈ openFns d hd ρ, (∀ u ∈ L₀, f.1.1 (pm k (wOpen d hd) * u) = v) ∧ ∀ u ∈ unipU k d hd, u ∉ L₀ → f.1.1 (pm k (wOpen d hd) * u) = 0 := by
   intro k _ _ _ _ ψ hψ h N d hd W _ _ ρ hρ v
@@ -239,13 +233,11 @@ theorem exists_openFns_bump : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
         ((fun g => w⁻¹ * g * w) '' (K : Set (GL (Fin N) k))) ∩ (unipU k d hd : Set _) := by
       ext u
       constructor
-      · intro hu
-        exact ⟨⟨_, ((memL u).1 hu).2, by group⟩, ((memL u).1 hu).1⟩
+      · exact fun hu => ⟨⟨_, ((memL u).1 hu).2, by group⟩, ((memL u).1 hu).1⟩
       · rintro ⟨⟨x, hx, rfl⟩, hu⟩
         refine (memL _).2 ⟨hu, ?_⟩
         have : w * (w⁻¹ * x * w) * w⁻¹ = x := by group
-        rw [this]
-        exact hx
+        rwa [this]
     rw [hset]
     exact (hKc.image hcont).inter_right hI3
   · ext u
@@ -268,8 +260,7 @@ theorem exists_openFns_bump : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
     group
   · intro u hu
     have := hval _ ((memL u).1 hu).2
-    rw [hf]
-    exact this
+    rwa [hf]
   · intro u hu huL
     rw [hf]
     by_contra hne

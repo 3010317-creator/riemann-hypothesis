@@ -165,8 +165,7 @@ theorem orth_biSup (E : HermitianBundle.{0} K) {F : Submodule (𝓞 K) E.carrier
   rw [hfv, inner_sum]
   refine Finset.sum_eq_zero fun b hb => ?_
   have h1 := h b hb σ x hx _ (μ b).2
-  rw [← FibreSpace.inner_equiv E.metric σ] at h1
-  exact h1
+  rwa [← FibreSpace.inner_equiv E.metric σ] at h1
 
 theorem degree_rank_biSup (E : HermitianBundle.{0} K) {I : Type}
     (F : I → Submodule (𝓞 K) E.carrier) (h : ∀ a b, a ≠ b → OrthAt E (F a) (F b)) (S : Finset I) :

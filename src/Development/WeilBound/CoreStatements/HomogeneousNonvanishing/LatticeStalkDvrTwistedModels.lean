@@ -132,8 +132,7 @@ theorem isHTFormOver_move (hψ : IsGrpPullback G₀ G x ψ) (hψ' : IsGrpPullbac
         have b := Over.w v
         dsimp at a b
         rw [Category.assoc, Category.assoc, a, hκ, ← Category.assoc (Over.Hom.left v), b]
-        simp only [Category.comp_id]
-        exact spec_dualMap_comp k
+        simpa only [Category.comp_id] using spec_dualMap_comp k
     rw [← hM₀' e, ← Category.assoc, key, Category.assoc, e₂, hv']
   · obtain ⟨s, hs, hsv⟩ := hHT
     refine ⟨s, hs, fun e => ?_⟩
@@ -232,8 +231,7 @@ theorem fullTorsion_of_common_fibre (h : IsGrpPullback G₀ G ξ φ) (h' : IsGrp
   have hy : y ≫ G₀.hom = 𝟙 _ := h.1.lift_snd _ _ _
   have hay : a.left = spMap i ≫ y := by
     apply h.1.hom_ext
-    · rw [Category.assoc, h.1.lift_fst]
-      exact hx
+    · rwa [Category.assoc, h.1.lift_fst]
     · rw [Category.assoc, hy, Category.comp_id]
       exact Over.w a
   refine ⟨Over.homMk (y ≫ φ') ?_, ?_⟩

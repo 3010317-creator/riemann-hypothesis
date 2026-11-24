@@ -173,8 +173,7 @@ theorem qC_sigX_unip : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
         (twKer τ.ρ (MirUin k (i + 1)) 1).mkQ a := by
       rw [Submodule.mkQ_apply, Submodule.mkQ_apply, Submodule.Quotient.eq]
       unfold twKer
-      apply Submodule.subset_span
-      exact ⟨⟨_, h1⟩, a, by simp⟩
+      exact Submodule.subset_span ⟨⟨_, h1⟩, a, by simp⟩
     rw [e]
     exact congrArg (fun x => TensorProduct.tmul ℂ x b) hq
 
@@ -412,8 +411,7 @@ theorem one_ePG (I T : ℕ) (x : Bool) (a b : Two (Fin (I + 1)) (Fin T) x) :
   by_cases hab : a = b
   · subst hab; simp
   · rw [Matrix.one_apply_ne hab, Matrix.one_apply_ne]
-    intro e
-    exact hab (by simpa using (ePG I T).injective e)
+    exact fun e => hab (by simpa using (ePG I T).injective e)
 
 
 variable (k) in
@@ -504,8 +502,7 @@ theorem dEmb_mul_sEmb : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   have e2 : glEmb k _ A * unip k ((i + 1) + t + 1) (Multiplicative.ofAdd w) =
       unip k ((i + 1) + t + 1) (Multiplicative.ofAdd v) * glEmb k _ A := by
     have := glEmb_mul_unip' k _ A (Multiplicative.ofAdd w)
-    rw [toAdd_ofAdd, e3] at this
-    exact this
+    rwa [toAdd_ofAdd, e3] at this
   show unip k ((i + 1) + t + 1) (Multiplicative.ofAdd v) * glEmb k _ A =
     glEmb k _ A * unip k ((i + 1) + t + 1) (Multiplicative.ofAdd a) * unip k ((i + 1) + t + 1) (Multiplicative.ofAdd b)
   rw [mul_assoc, e1, e2]
@@ -606,9 +603,7 @@ theorem pointwise {i t : ℕ} (ψ : AddChar k Circle) {τ : MRep k (i + 1)} {σ 
   have e2 := eval_mul f u (dEmb k i t (((((gpProj k (i + 1) t h).2 : Mir k t) : GL (Fin (t + 1)) k)⁻¹ : GL (Fin (t + 1)) k).val *ᵥ d) * y)
   refine (congrArg (qC τ σ) e1).trans ?_
   rw [qC_sigX_levi τ σ h η hη2]
-  refine congrArg _ (congrArg _ ?_)
-  refine (congrArg (qC τ σ) e2).trans ?_
-  exact qC_sigX_unip τ σ u hu1 hu2 _
+  exact congrArg _ (congrArg _ ((congrArg (qC τ σ) e2).trans (qC_sigX_unip τ σ u hu1 hu2 _)))
 
 theorem last_inv {t : ℕ} (p : Mir k t) (d : Fin (t + 1) → k) :
     (((p : GL (Fin (t + 1)) k)⁻¹ : GL (Fin (t + 1)) k).val *ᵥ d) (Fin.last t) = d (Fin.last t) :=

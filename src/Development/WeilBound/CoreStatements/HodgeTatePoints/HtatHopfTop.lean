@@ -151,8 +151,7 @@ theorem translates_cover : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrall
     have h1 : (Γ.pt s ≫ τ).left = (toUnit (genPt R) ≫ η[Γ.G]).left := by
       rw [hτpt, Hom.one_def]
     rw [Over.comp_left, Over.comp_left] at h1
-    have h2 := congrArg (fun h => h x) h1
-    simpa using h2
+    simpa using congrArg (fun h => h x) h1
   have hw : (η[Γ.G]).left ≫ Γ.G.hom = 𝟙 _ := Over.w _
   haveI : UniversallyClosed ((η[Γ.G]).left ≫ Γ.G.hom) := by rw [hw]; infer_instance
   haveI : UniversallyClosed (η[Γ.G]).left :=
@@ -190,8 +189,7 @@ theorem QFGroup.btSet_eq_of_le (R : Type) [CommRing R] [IsDomain R] [IsIntegrall
     (hU : Γ.IsFinOpenSub U) (hU' : Γ.IsFinOpenSub U') (hle : U' ≤ U) :
     Γ.btSet U = Γ.btSet U' := by
   apply Set.Subset.antisymm
-  · intro f hf t g hg
-    exact hf t g (hle hg)
+  · exact fun f hf t g hg => hf t g (hle hg)
   · intro f hf s g hg
     have hcover := Transl.translates_cover R T Γ U U' hU hU' hle g hg
     obtain ⟨σ, t, hσ, hmem⟩ := hcover

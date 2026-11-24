@@ -96,8 +96,7 @@ theorem isTorsionAlong_baseChange : ∀ (R : Type) [CommRing R] [IsDomain R] (T 
       (Over.homMk (z.left ≫ F) (lift1 Y z) : Y' ⟶ Γ.G)
       (by show (y.left ≫ F) ≫ i = (z.left ≫ F) ≫ i; rw [Category.assoc, Category.assoc]; exact h)
     have e2 : y.left ≫ F = z.left ≫ F := congrArg (fun m => m.left) e
-    apply Over.OverMorphism.ext
-    exact hB.cart.hom_ext e2 ((Over.w y).trans (Over.w z).symm)
+    exact Over.OverMorphism.ext (hB.cart.hom_ext e2 ((Over.w y).trans (Over.w z).symm))
   · intro Y g
     let Y' : Over (Spec (CommRingCat.of R)) := Over.mk (Y.hom ≫ Spec.map (CommRingCat.ofHom φ))
     let g₁ : Over.mk (Y'.hom ≫ x) ⟶ G := Over.homMk g.left ((Over.w g).trans (hassoc Y.hom))
@@ -106,12 +105,10 @@ theorem isTorsionAlong_baseChange : ∀ (R : Type) [CommRing R] [IsDomain R] (T 
     · rintro ⟨y', hy'⟩
       refine ⟨Over.homMk (hB.cart.lift y'.left Y.hom (Over.w y')) (hB.cart.lift_snd _ _ _), ?_⟩
       show hB.cart.lift y'.left Y.hom (Over.w y') ≫ F ≫ i = g.left
-      rw [← Category.assoc, hB.cart.lift_fst]
-      exact hy'
+      rwa [← Category.assoc, hB.cart.lift_fst]
     · rintro ⟨y, hy⟩
       refine ⟨(Over.homMk (y.left ≫ F) (lift1 Y y) : Y' ⟶ Γ.G), ?_⟩
       show (y.left ≫ F) ≫ i = g.left
-      rw [Category.assoc]
-      exact hy
+      rwa [Category.assoc]
 
 end GlobalTheory.CompanionTheory.Ar.TorBC

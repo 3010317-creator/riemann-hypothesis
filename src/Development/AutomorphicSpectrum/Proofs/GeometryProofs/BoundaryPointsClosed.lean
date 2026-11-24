@@ -73,9 +73,7 @@ theorem boundary_closed_torus_conj : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω]
       unfold CoordsAt at h' ⊢
       refine ⟨fun k => ?_, fun k i hu => ?_⟩
       · obtain ⟨i, hi⟩ := h'.1 k
-        refine ⟨i, isUnit_iff_ne_zero.2 ?_⟩
-        show c k * w ⟨k, i⟩ ≠ 0
-        exact mul_ne_zero (hc k) (isUnit_iff_ne_zero.1 hi)
+        exact ⟨i, isUnit_iff_ne_zero.2 (mul_ne_zero (hc k) (isUnit_iff_ne_zero.1 hi))⟩
       · have hu' : IsUnit (w ⟨k, i⟩) := by
           refine isUnit_iff_ne_zero.2 fun h0 => isUnit_iff_ne_zero.1 hu ?_
           show c k * w ⟨k, i⟩ = 0
@@ -93,8 +91,7 @@ theorem boundary_closed_torus_conj : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω]
     have hzc := GlobalTheory.CompanionTheory.Ar.HodgeLine.coordsAt_conj hzw
     have hcz : centre (GlobalTheory.CompanionTheory.Ar.HodgeLine.cj z) = centre z := GlobalTheory.CompanionTheory.Ar.HodgeLine.centre_cj z
     have hz' : GlobalTheory.CompanionTheory.Ar.genPt ξ ⤳ centre (GlobalTheory.CompanionTheory.Ar.HodgeLine.cj z) := by
-      rw [hcz]
-      exact hz
+      rwa [hcz]
     have hT' : centre (GlobalTheory.CompanionTheory.Ar.HodgeLine.cj z) ∉ T := by
       rw [hcz]
       exact (hbd z w hzw).1 hw2

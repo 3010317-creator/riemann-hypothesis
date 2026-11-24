@@ -175,8 +175,7 @@ theorem cone_anti {m : ℕ} {l : Fin m → ℤ} (h : Cone l) : Antitone l := by
     intro d
     induction d with
     | zero =>
-      intro i j e
-      exact le_of_eq (congrArg l (Fin.ext e))
+      exact fun i j e => le_of_eq (congrArg l (Fin.ext e))
     | succ d ih =>
       intro i j e
       have hlt : (i : ℕ) + d < m := by have := j.2; omega
@@ -345,8 +344,7 @@ theorem entT_eq (n : ℕ) (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (a : ℕ) {J 
     entT n w ϖ a c x s y = ∑ j, c j * tm n w ϖ a (x j) s y := by
   unfold entT tm
   by_cases h : admitted n a s
-  · simp only [dite_eq_left h, dd]
-    exact Finset.sum_congr rfl fun j _ => by ring
+  · simpa only [dite_eq_left h, dd] using Finset.sum_congr rfl fun j _ => by ring
   · simp [dite_eq_right h]
 
 theorem entT_hecke (n : ℕ) (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (a : ℕ) {J : Type} [Fintype J] (c : J → ℂ)
@@ -481,8 +479,7 @@ theorem lconv_comb (hFU : FUMul) (hU : Unr E) {w : Pl E} (hw : ¬ IsSplitAt w) {
   have s3 : ∀ j j', hint (KL n w) (fun z => fU n w b ϖ (lOf (x j)) z * fU n w b ϖ (lOf (x' j')) (z⁻¹ * y)) =
       alpha n w b * fU n w b ϖ (lOf (x j + x' j')) y := fun j j' => by
     have := congrFun (hFU E hU w hw n b hb ϖ hϖ _ _ (hx j).2 (hx' j').2) y
-    rw [lOf_add]
-    exact this
+    rwa [lOf_add]
   rw [s1, s2]
   simp only [s3]
   rw [Fintype.sum_prod_type]
@@ -510,13 +507,11 @@ theorem pow_claim (hFU : FUMul) (hD : DcosMul) (hU : Unr E) {w : Pl E} (hw : ¬ 
         isHecke_sum fun j => isHecke_const_mul _ (fU_hecke hw b ϖ _ hc)
       funext y
       have := conv_unit (f := fun γ => ∑ j, c j * fU n w b ϖ (lOf (x j)) γ) hle hidx (fun k hk z => (hq.2 k hk z).2) y
-      rw [pow_zero, one_mul]
-      exact this
+      rwa [pow_zero, one_mul]
     · funext y
       have := conv_unit (iwahori_pair_le_maximal a (n - a) w) (iwahori_pair_index_ne_zero a (n - a) w)
         (fun k hk z => ((entT_hecke n w ϖ a c x s).2 k hk z).2) y
-      rw [pow_zero, one_mul]
-      exact this
+      rwa [pow_zero, one_mul]
   | succ k ih =>
     obtain ⟨J', _, c', x', hx', e1, e2⟩ := ih
     refine ⟨J × J', inferInstance, fun p => c p.1 * c' p.2, fun p => x p.1 + x' p.2, fun p => ⟨?_, ?_⟩, ?_, fun s => ?_⟩

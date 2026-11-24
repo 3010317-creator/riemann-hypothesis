@@ -219,8 +219,7 @@ lemma prod_Icc_num {M : Type} [CommMonoid M] {p f : ℕ} (hp : 0 < p) (g : ℕ �
     have := num_lt d
     rw [Finset.mem_Icc]
     omega
-  · intro a _ b _ h
-    exact num_inj h
+  · exact fun a _ b _ h => num_inj h
   · intro m hm
     rw [Finset.mem_Icc] at hm
     obtain ⟨d, hd⟩ := num_surj (p := p) (f := f) (show m < p ^ f by omega)
@@ -302,8 +301,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.fundamental_ideal_frobenius_va
       · rintro (rfl | ⟨m, ⟨hm1, hm2⟩, rfl⟩)
         · refine ⟨fun _ => ⟨0, hp⟩, ?_⟩
           funext a
-          simp only [Pi.one_apply]
-          exact Finset.prod_eq_one (fun n _ => pow_zero _)
+          simpa only [Pi.one_apply] using Finset.prod_eq_one (fun n _ => pow_zero _)
         · obtain ⟨d, rfl⟩ := num_surj (p := p) (f := f) (show m < p ^ f by omega)
           have h0 : num d ≠ 0 := by omega
           refine ⟨d, ?_⟩
@@ -320,8 +318,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.fundamental_ideal_frobenius_va
     rw [huniq, prod_Icc_num hp (fun m => v (algebraMap R C (c' m)))
       (fun d => ∏ n : Fin f, v (algebraMap R C (c n)) ^ (d n : ℕ)) ?_ ?_]
     · exact prod_digit_sq p f (fun n => v (algebraMap R C (c n)))
-    · intro d hd
-      exact Finset.prod_eq_one (fun n _ => by rw [digits_zero hp hd n, pow_zero])
+    · exact fun d hd => Finset.prod_eq_one (fun n _ => by rw [digits_zero hp hd n, pow_zero])
     · intro d hd
       simp only [hc'd d hd, map_prod, map_pow]
 end -- clump:auto
@@ -606,17 +603,14 @@ theorem triang_strong (C : Type) [Field C] (v : Valuation C NNReal) (R : Type) [
               · simp [hlow j h, hu0 i j h]
               · subst h
                 simp [hud, hc])
-            have h4 := Submodule.add_mem _ h3 (Submodule.smul_mem _ c (hcol i))
-            simpa using h4
+            simpa using Submodule.add_mem _ h3 (Submodule.smul_mem _ c (hcol i))
           · exact ih l hl fun j hj => by omega
-      intro l hl
-      exact hind n l hl fun j hj => by omega
+      exact fun l hl => hind n l hl fun j hj => by omega
   have hdet : X.det = ∏ i, d i := by
     rw [Matrix.det_of_lowerTriangular X (fun j i h => hu0 i j h)]
     exact Finset.prod_congr rfl fun i _ => hud i
   have := Smith.hasLen_coker_det hv X
-  rw [hrange, hdet, map_prod, map_prod] at this
-  exact this
+  rwa [hrange, hdet, map_prod, map_prod] at this
 
 end PositivityTheory.HtPt.Rb
 end -- clump:auto
@@ -823,8 +817,7 @@ theorem aflatT : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
     have h1 : ((AA.carrier ⊔ pFun R p N).comap ι).FG :=
       Submodule.fg_of_fg_map_injective ι hι (by rw [Submodule.map_comap_eq_self hle]; exact hfg)
     have h2 := comap_fg_of_valuationRing R _ _ Φ _ h1
-    rw [← Submodule.comap_comp, ← hΦ] at h2
-    exact h2
+    rwa [← Submodule.comap_comp, ← hΦ] at h2
   · let Φ : (Fin n × Fin f → R) →ₗ[R] linFun (C := C) R p N :=
       (Phi C p f b σ).codRestrict _ (Phi_mem_linFun hinj hσ)
     let θ : (Fin n × Fin f → R) →ₗ[R] AFQuot p AA.carrier := Submodule.mkQ _ ∘ₗ Φ
@@ -1153,9 +1146,7 @@ theorem flagStatement_holds : FlagStatement := by
       rw [← hSc i]
       have hle := _root_.GlobalTheory.CompanionTheory.Relay.non_fundamental_eigen_le_square_augmentation p C v R hv hp F f hf (S i) (hSF i) χ hχ
       haveI : Subsingleton (OmType (S i).carrier χ) := by
-        refine Submodule.Quotient.subsingleton_iff.2 (eq_top_iff.2 ?_)
-        intro x _
-        exact hle x.2
+        exact Submodule.Quotient.subsingleton_iff.2 (eq_top_iff.2 (fun x _ => hle x.2))
       exact hasLen_subsingleton v R _
     have h1 := _root_.GlobalTheory.CompanionTheory.Relay.stable_hopf_order_basis_lengths p C v R hv hp F f hf N AA hFS n b χ (fun _ => 1) (L χ) hsub (hL χ)
     exact le_antisymm (hasLen_le_one' hv (hL χ)) (by simpa using h1)

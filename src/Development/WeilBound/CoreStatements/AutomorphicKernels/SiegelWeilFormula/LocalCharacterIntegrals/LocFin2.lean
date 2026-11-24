@@ -293,8 +293,7 @@ theorem exists_scale (σ : E →ₐ[F] E) (n : ℕ) (ν : Measure (HermR (Fv F v
   have hk := Measure.isAddLeftInvariant_eq_smul (ν.map (scH σ n ht)) ν
   have := congrArg (fun μ : Measure (HermR (Fv F v) σ n) => μ A) hk
   simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at this
-  rw [← Measure.map_apply (continuous_scH σ ht).measurable hA]
-  exact this
+  rwa [← Measure.map_apply (continuous_scH σ ht).measurable hA]
 
 end PositivityTheory.SiegelWeilFormula.SwLocFin.LatticeCovolumeGrowth
 
@@ -761,8 +760,7 @@ theorem exists_entry_ge {p q : ℕ} {x : Fin p → Fin q → Fv F v ⊗[F] E} (h
     rw [pi_norm_lt_iff h]
     intro i
     rw [pi_norm_lt_iff h]
-    intro j
-    exact hne i j
+    exact fun j => hne i j
   exact lt_irrefl _ h'
 
 section Inv
@@ -1188,8 +1186,7 @@ theorem setP_eq (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (Λ : Set 
   · rintro ⟨S, hS, hSY⟩ b hb
     have h1 := hS b hb
     show psiV F ψ v (trPair (Fv F v) b.1 (gramR (Fv F v) σ J Y - T.1)) = 1
-    rw [← hSY]
-    exact h1
+    rwa [← hSY]
 
 end PositivityTheory.SiegelWeilFormula.SwLocFin.DualA
 

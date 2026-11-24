@@ -147,7 +147,6 @@ theorem cosetFn_zero_val (t : ℕ) {c : k} (hc : c ≠ 0) (a : Fin t → k) :
     cosetFn t hc a (0 : Z) = 0 := by
   apply Subtype.ext
   funext v
-  show (cosetSet t c a).indicator (fun _ => (0 : Z)) v = 0
   exact congrFun (Set.indicator_zero Z (cosetSet t c a)) v
 
 theorem cosetFn_add_val (t : ℕ) {c : k} (hc : c ≠ 0) (a : Fin t → k) (z w : Z) :
@@ -471,8 +470,7 @@ theorem finite_image_of_rightInvariant {G X : Type} [Group G] [TopologicalSpace 
     (S : Subgroup G) (hS : IsOpen (S : Set G)) {K : Set G} (hK : IsCompact K) (F : G → X)
     (hF : ∀ g, ∀ s ∈ S, F (g * s) = F g) : (F '' K).Finite := by
   have hcover : K ⊆ ⋃ g : K, (fun x => (g : G) * x) '' (S : Set G) := by
-    intro x hx
-    exact Set.mem_iUnion.2 ⟨⟨x, hx⟩, 1, S.one_mem, mul_one x⟩
+    exact fun x hx => Set.mem_iUnion.2 ⟨⟨x, hx⟩, 1, S.one_mem, mul_one x⟩
   obtain ⟨T, hT⟩ := hK.elim_finite_subcover (fun g : K => (fun x => (g : G) * x) '' (S : Set G))
     (fun g => (Homeomorph.mulLeft (g : G)).isOpenMap _ hS) hcover
   apply (T.finite_toSet.image (fun g : K => F g)).subset
@@ -756,8 +754,7 @@ theorem smInt_sum_coset : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
         ∑ a ∈ B, (cosetSet t c a).indicator (fun _ => z a) := by
       funext v
       rw [Finset.sum_apply]
-    rw [e]
-    exact h
+    rwa [e]
   refine Finset.induction_on A ?_ ?_
   · have h := GlobalTheory.CompanionTheory.Rodier.SmIntEl.smInt_indicator μ (∅ : Set (Fin t → k)) (0 : Z)
     simpa using h
@@ -880,8 +877,7 @@ theorem exists_coset_reps (t : ℕ) (c : k) (S : Finset (Fin t → k)) :
     · refine ⟨A, ?_, huniq⟩
       intro s hs
       rcases Finset.mem_insert.1 hs with hsx | hsS
-      · rw [hsx]
-        exact hex
+      · rwa [hsx]
       · exact hcov s hsS
     · push Not at hex
       refine ⟨insert x A, ?_, ?_⟩
@@ -930,10 +926,8 @@ theorem eq_sum_coset_indicators : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
       exact hval a v hva
     · intro b hb hba
       rw [Set.indicator_of_notMem]
-      intro hvb
-      exact hba (hAuniq b hb a ha (cosetSet_trans_decomp (cosetSet_symm_decomp hvb) hva))
-    · intro haA
-      exact absurd ha haA
+      exact fun hvb => hba (hAuniq b hb a ha (cosetSet_trans_decomp (cosetSet_symm_decomp hvb) hva))
+    · exact fun haA => absurd ha haA
   · push Not at hv
     rw [Finset.sum_eq_zero]
     · by_contra hne
@@ -941,8 +935,7 @@ theorem eq_sum_coset_indicators : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
       obtain ⟨s, hsS, hvs'⟩ := Set.mem_iUnion₂.1 (hS hvs)
       obtain ⟨a, ha, hsa⟩ := hAcov s (Finset.mem_image_of_mem _ hsS)
       exact hv a ha (cosetSet_trans_decomp hvs' hsa)
-    · intro a ha
-      exact Set.indicator_of_notMem (hv a ha) _
+    · exact fun a ha => Set.indicator_of_notMem (hv a ha) _
 
 end GlobalTheory.CompanionTheory.BZPsiPG.FibKer
 end -- clump:auto
@@ -1104,8 +1097,7 @@ theorem GlobalTheory.CompanionTheory.BZPsiPG.FibKer.isSmooth_topRep : ∀ (k : T
       have hg' : τ (uM k i g.toAdd) a = a := hg
       show LinearMap.rTensor W (τ (uM k i g.toAdd)) (a ⊗ₜ[ℂ] b) = a ⊗ₜ[ℂ] b
       rw [LinearMap.rTensor_tmul, hg']
-    refine Subgroup.isOpen_mono hle ?_
-    exact (hτ a).preimage hU
+    exact Subgroup.isOpen_mono hle ((hτ a).preimage hU)
   | add x y hx hy =>
     exact Subgroup.isOpen_mono (stabSub_add_le _ x y) (by rw [Subgroup.coe_inf]; exact hx.inter hy)
 end -- clump:auto
@@ -1131,8 +1123,7 @@ theorem sum_reps_eq_sum_out {H V : Type} [Group H] [AddCommGroup V] (K : Subgrou
     ∑ t ∈ T, f t = ∑ q : H ⧸ K, f q.out := by
   refine Finset.sum_bij (fun t _ => (QuotientGroup.mk t : H ⧸ K)) (fun _ _ => Finset.mem_univ _)
     ?_ ?_ ?_
-  · intro a ha b hb hab
-    exact (hT b).unique ⟨ha, QuotientGroup.eq.1 hab⟩ ⟨hb, by simp⟩
+  · exact fun a ha b hb hab => (hT b).unique ⟨ha, QuotientGroup.eq.1 hab⟩ ⟨hb, by simp⟩
   · intro q _
     obtain ⟨t, ⟨ht, hx⟩, -⟩ := hT q.out
     refine ⟨t, ht, ?_⟩
@@ -1275,8 +1266,7 @@ theorem exists_sum_eq_zero_abs (n : ℕ) {X Y : Type} [AddCommGroup X] [Module �
       have h2 := hF κ hκ (l : Multiplicative (Fin n → k)) x
       rw [h1] at h2
       exact h2.symm) hT
-  refine Eq.trans (Finset.sum_congr rfl fun l _ => ?_) key
-  exact hF κ hκ _ x
+  exact Eq.trans (Finset.sum_congr rfl fun l _ => (hF κ hκ _ x)) key
 
 theorem mem_twKer_fibAct (i t : ℕ) {Z : Type} [AddCommGroup Z] [Module ℂ Z]
     (ρ₀ : Representation ℂ (Multiplicative (Fin i → k)) Z)

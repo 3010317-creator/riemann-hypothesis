@@ -148,13 +148,11 @@ theorem filtration_of_cellEnumeration {k : ℕ} (w : Fin k → Equiv.Perm (Fin n
   have hdiff : cellUnion C ((j : ℕ) + 1) \ C j = cellUnion C j := by
     rw [cellUnion_succ j, union_sdiff_right, (disjoint_cellUnion hdisj j).symm.sdiff_eq_left]
   refine ⟨⟨gradedJacquetMap γ (w j) σ hYo hCY hYQ, fun m => ?_⟩, ?_, fun x => ?_⟩
-  · refine LinearMap.ext fun x => ?_
-    exact gradedJacquetMap_jacquetRep σ hYo hCY hYQ m x
+  · exact LinearMap.ext fun x => gradedJacquetMap_jacquetRep σ hYo hCY hYQ m x
   · exact gradedJacquetMap_surjective σ hYo hCY hYQ (cellJacquetMap_surjective hYo hCY hYP hYQ hσ)
   · have := gradedJacquetMap_eq_zero_iff σ hYo hCY hYQ
       (fun f hf h0 => exists_sub_mem_ker_of_cellJacquet_eq_zero σ hσ hYo hCY hYQ hf h0) x
-    rw [hdiff] at this
-    exact this
+    rwa [hdiff] at this
 
 theorem normalized_piece {W : Type} [AddCommGroup W] [Module ℂ W]
     (σ : Representation ℂ (levi F n β) W) (w : Equiv.Perm (Fin n))
@@ -171,8 +169,7 @@ theorem normalized_piece {W : Type} [AddCommGroup W] [Module ℂ W]
     · intro h
       apply indTwistHom_injective σ w
       apply indCongrHom_injective σ w
-      rw [map_zero, map_zero]
-      exact h
+      rwa [map_zero, map_zero]
     · intro h
       show (indCongrHom σ w) ((indTwistHom σ w) (Ψ₀ x)) = 0
       rw [h, map_zero, map_zero]
@@ -737,8 +734,7 @@ namespace GlobalTheory.CompanionTheory.Twist
 theorem exists_nat_labelling_blk : ∀ {α : Type} [Fintype α] [LinearOrder α] {N : ℕ} (m : α → Type) [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)] (e : (Σ i, m i) ≃ Fin N), ∃ β : Fin N → ℕ, ∀ x y, β x < β y ↔ blk e x < blk e y := by
   intro α _ _ N m _ _ e
   let o := (Fintype.orderIsoFinOfCardEq α rfl).symm
-  refine ⟨fun x => (o (blk e x)).val, fun x y => ?_⟩
-  exact Fin.lt_def.symm.trans (OrderIso.lt_iff_lt o)
+  exact ⟨fun x => (o (blk e x)).val, fun x y => (Fin.lt_def.symm.trans (OrderIso.lt_iff_lt o))⟩
 
 end GlobalTheory.CompanionTheory.Twist
 end -- clump:auto
@@ -771,8 +767,7 @@ theorem subQuot_of_filtration : ∀ {G H : Type} [Group G] [Group H] (ψ : H →
       exact hV i (ψ h) hv'⟩
   have memS : ∀ (i : ℕ) (v : V), v ∈ (S i).toSubmodule ↔ e v ∈ Vf i := fun _ _ => Iff.rfl
   refine ⟨fun t => S t, ?_, ?_, ?_, ?_⟩
-  · intro a b hab v hv
-    exact hm (Fin.le_def.1 hab) hv
+  · exact fun a b hab v hv => hm (Fin.le_def.1 hab) hv
   · apply Subrepresentation.toSubmodule_injective
     ext v
     show e v ∈ Vf 0 ↔ v = 0
@@ -949,12 +944,10 @@ theorem mem_parab_reindex (e : (Σ i, m i) ≃ n) (ι : n ≃ Fin N) (g : GL n k
     have h2 := @h (ι.symm i) (ι.symm j) (by simpa [blk] using hij)
     have e1 := glReindex_apply ι g (ι.symm i) (ι.symm j)
     simp only [Equiv.apply_symm_apply] at e1
-    rw [e1]
-    exact h2
+    rwa [e1]
   · intro h i j hij
     have h2 := @h (ι i) (ι j) (by simpa [blk] using hij)
-    rw [glReindex_apply] at h2
-    exact h2
+    rwa [glReindex_apply] at h2
 
 private theorem leviProj_glReindex (e : (Σ i, m i) ≃ n) (ι : n ≃ Fin N) (g : GL n k)
     (h : g ∈ parab k e) (h' : glReindex ι g ∈ parab k (e.trans ι)) :
@@ -974,15 +967,13 @@ theorem mem_unipRad_reindex (e : (Σ i, m i) ≃ n) (ι : n ≃ Fin N) (g : GL n
   constructor
   · rintro ⟨⟨p, hp'⟩, hp, rfl⟩
     refine ⟨⟨glReindex ι p, (mem_parab_reindex e ι p).1 hp'⟩, ?_, rfl⟩
-    rw [leviProj_glReindex e ι p hp']
-    exact hp
+    rwa [leviProj_glReindex e ι p hp']
   · rintro ⟨⟨p, hp'⟩, hp, hpg⟩
     simp only [Subgroup.coe_subtype] at hpg
     subst hpg
     have hg : g ∈ parab k e := (mem_parab_reindex e ι g).2 hp'
     refine ⟨⟨g, hg⟩, ?_, rfl⟩
-    rw [leviProj_glReindex e ι g hg hp'] at hp
-    exact hp
+    rwa [leviProj_glReindex e ι g hg hp'] at hp
 
 theorem leviProj_reindex (e : (Σ i, m i) ≃ n) (ι : n ≃ Fin N) (p : parab k e) :
     leviProj k (e.trans ι) ⟨glReindex ι p, (mem_parab_reindex (k := k) e ι p.1).1 p.2⟩ = leviProj k e p := by
@@ -1061,9 +1052,7 @@ open DoubleCoset (doubleCoset)
 namespace GlobalTheory.CompanionTheory.SmoothBridge
 
 theorem isSmooth_comp {G H : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Group H] [TopologicalSpace H] [IsTopologicalGroup H] (ψ : H →* G) (hψ : Continuous ψ) {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ G W) (hρ : GlobalTheory.PRep.IsSmooth ρ) : GroundTheory.Automorphic.IsSmooth (ρ.comp ψ) := by
-  intro v
-  have h := (hρ v).preimage hψ
-  exact h
+  exact fun v => (hρ v).preimage hψ
 
 end GlobalTheory.CompanionTheory.SmoothBridge
 end -- clump:auto
@@ -1479,16 +1468,13 @@ theorem leviEquiv : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
   have hent : ∀ (g : Levi k m) (a : α) (i j : m a),
       ((leviEmb k e g : GL (Fin N) k) : Matrix (Fin N) (Fin N) k) (e ⟨a, i⟩) (e ⟨a, j⟩) =
         ((g a : GL (m a) k) : Matrix (m a) (m a) k) i j := by
-    intro g a i j
-    exact leviEmb_apply_same k e g a i j
+    exact fun g a i j => leviEmb_apply_same k e g a i j
   have hmem : ∀ g : Levi k m, leviEmb k e g ∈ levi k N β := by
     intro g
     simp only [levi, Subgroup.mem_inf, GroundTheory.Automorphic.Iwasawa.mem_blockUpper]
     constructor
-    · intro i j h
-      exact hzE g i j ((hβ j i).1 h).ne'
-    · intro i j h
-      exact hzE g i j ((hβ i j).1 (OrderDual.toDual_lt_toDual.1 h)).ne
+    · exact fun i j h => hzE g i j ((hβ j i).1 h).ne'
+    · exact fun i j h => hzE g i j ((hβ i j).1 (OrderDual.toDual_lt_toDual.1 h)).ne
   have hkey : ∀ x : GL (Fin N) k, x ∈ levi k N β →
       Matrix.blockDiagonal' (Matrix.blockDiag' ((x : Matrix (Fin N) (Fin N) k).submatrix e e)) =
         (x : Matrix (Fin N) (Fin N) k).submatrix e e := by
@@ -1525,8 +1511,7 @@ theorem leviEquiv : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
     refine funext fun a => ?_
     apply Units.ext
     ext i j
-    simp only [ψ, Matrix.blockDiag'_apply, Matrix.submatrix_apply]
-    exact hent g a i j
+    simpa only [ψ, Matrix.blockDiag'_apply, Matrix.submatrix_apply] using hent g a i j
   · intro x
     apply Subtype.ext
     apply Units.ext
@@ -1541,9 +1526,7 @@ theorem leviEquiv : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
     · have h' : blk e (e ⟨a, i'⟩) ≠ blk e (e ⟨b, j'⟩) := by simpa [blk] using hab
       dsimp only
       rw [hzE _ _ _ h', hz _ x.2 _ _ h']
-  · intro g h
-    apply Subtype.ext
-    exact map_mul (leviEmb k e) g h
+  · exact fun g h => Subtype.ext (map_mul (leviEmb k e) g h)
   · exact hLE.subtype_mk hmem
   · change Continuous ψ
     refine continuous_pi fun a => ?_

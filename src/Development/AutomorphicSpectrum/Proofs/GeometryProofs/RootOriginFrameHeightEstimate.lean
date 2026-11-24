@@ -91,8 +91,7 @@ theorem padicValInt_discr_mul_count_eq :
   have hnd : ¬ p ∣ (discr E).natAbs / p ^ (discr E).natAbs.factorization p :=
     Nat.not_dvd_ordCompl hp.out hd
   have h := ReciprocityTheory.ChartRestriction.G.PullbackSections.Pf.diffExp E p _ _ hp.out hnd hdecomp P hP hpP
-  rw [h]
-  rw [padicValInt, Nat.padicValNat_def]
+  rw [h, padicValInt, Nat.padicValNat_def]
 
 end GlobalTheory.CompanionTheory.Different
 end -- clump:auto
@@ -175,8 +174,7 @@ private theorem eq_pow_count_normalizedFactors_of_uniformizer {R : Type} [CommRi
     (π : R) (hπ : π ∈ P) (hπ2 : π ∉ P ^ 2) (x : R) (hx : x ≠ 0) :
     μ x = μ π ^ (normalizedFactors (Ideal.span {x})).count P := by
   have hspan : ∀ y : R, y ≠ 0 → Ideal.span {y} ≠ 0 := fun y hy => by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hy
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   have hadd : ∀ y z : R, y ≠ 0 → z ≠ 0 → (normalizedFactors (Ideal.span {y * z})).count P =
       (normalizedFactors (Ideal.span {y})).count P + (normalizedFactors (Ideal.span {z})).count P := by
     intro y z hy hz
@@ -187,17 +185,14 @@ private theorem eq_pow_count_normalizedFactors_of_uniformizer {R : Type} [CommRi
     apply Ideal.count_normalizedFactors_eq
     · rw [pow_zero, Ideal.one_eq_top]
       exact le_top
-    · rw [zero_add, pow_one, Ideal.span_singleton_le_iff_mem]
-      exact hy
+    · rwa [zero_add, pow_one, Ideal.span_singleton_le_iff_mem]
   have hπ0 : π ≠ 0 := by
     rintro rfl
     exact hπ2 (zero_mem _)
   have hπ1 : (normalizedFactors (Ideal.span {π})).count P = 1 := by
     apply Ideal.count_normalizedFactors_eq
-    · rw [pow_one, Ideal.span_singleton_le_iff_mem]
-      exact hπ
-    · rw [Ideal.span_singleton_le_iff_mem]
-      exact hπ2
+    · rwa [pow_one, Ideal.span_singleton_le_iff_mem]
+    · rwa [Ideal.span_singleton_le_iff_mem]
   obtain ⟨A, hA⟩ : P ∣ Ideal.span {π} :=
     Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem P).2 hπ)
   have hAP : ¬A ≤ P := by

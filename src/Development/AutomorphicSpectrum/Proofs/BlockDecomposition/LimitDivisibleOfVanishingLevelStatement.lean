@@ -63,8 +63,7 @@ theorem rho_lim {W : Type} [CommRing W] {l : ℕ} {S S' : Sys.{1} W} (L : LSeq l
   | zero => exact L.ρ_self b _
   | succ d ih =>
     have h' := L.ρ_succ (b + d) b (Nat.le_add_right _ _) (x.1 (b + d + 1))
-    rw [x.2 (b + d), ih (Nat.le_add_right _ _)] at h'
-    exact h'
+    rwa [x.2 (b + d), ih (Nat.le_add_right _ _)] at h'
 
 theorem lim_eq_pow_smul : ∀ (W : Type) [CommRing W] (l : ℕ) (S S' : Sys.{1} W) (_ : LSeq l S S'),
     (∀ n, IsArtinian W (S.M n)) → ∀ n (x : S.lim), x.1 n = 0 → ∃ y : S.lim, x = ((l : W) ^ n) • y := by
@@ -88,8 +87,7 @@ theorem lim_eq_pow_smul : ∀ (W : Type) [CommRing W] (l : ℕ) (S S' : Sys.{1} 
     have h1 := L.ν_ρ a (n + a) (Nat.le_add_left _ _) (z.1 (n + a))
     have h2 : L.ν a (n + a) (z.1 a) = x.1 (n + a) := by
       have h3 : L.ν a (n + a) (z.1 a - y a) = 0 := hz a
-      rw [map_sub, hy a, sub_eq_zero] at h3
-      exact h3
+      rwa [map_sub, hy a, sub_eq_zero] at h3
     rw [rho_lim L z a (n + a) (Nat.le_add_left _ _), h2, Nat.add_sub_cancel] at h1
     exact h1.symm
   refine ⟨z, Subtype.ext (funext fun c => ?_)⟩

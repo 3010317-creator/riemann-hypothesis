@@ -293,16 +293,14 @@ theorem monic_relations_along_block : ∀ (W Q : Type) [AddCommGroup W] [Module 
     have e2 : x ((List.ofFn fun i => Rr i (u + sh i)).prod F) =
         (List.ofFn fun i => Rr i (u + sh i)).prod (x F) :=
       LinearMap.congr_fun (hSB x hx u).eq F
-    rw [map_sub, map_sub, sub_eq_zero, e1, e2]
-    exact h1
+    rwa [map_sub, map_sub, sub_eq_zero, e1, e2]
   have hBs : ∀ u : ℂ, ∃ s : ℂ, ∀ F ∈ W₀,
       (List.ofFn fun i => Rr i (u + sh i)).prod F - s • F ∈ I := by
     intro u
     obtain ⟨s, hs'⟩ := hs (u + ((N : ℂ) - 1) / 2)
     refine ⟨s, fun F hF => ?_⟩
     have := I.neg_mem (hDB u F (hW0 hF))
-    rw [hs' F hF, neg_sub] at this
-    exact this
+    rwa [hs' F hF, neg_sub] at this
   choose a ha1 haspan hform using fun i : Fin c =>
     GlobalTheory.CompanionTheory.CTFin.QdetCoeff.qdet_shift_coeff (Module.End ℂ W) (n i)
       (fun p q : Fin (n i) => Xf (GlobalTheory.SmGL.stdBlocks n h ⟨i, p⟩) (GlobalTheory.SmGL.stdBlocks n h ⟨i, q⟩)) 0

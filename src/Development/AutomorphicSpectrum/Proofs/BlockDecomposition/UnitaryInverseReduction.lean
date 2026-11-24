@@ -646,8 +646,7 @@ theorem shell_disjoint {X : Type} {H : ℕ → Set X} (hmono : Monotone H) :
   have key : ∀ i j, i < j → Disjoint (shell H i) (shell H j) := by
     intro i j hij
     rw [Set.disjoint_left]
-    intro x hi hj
-    exact ((mem_shell_iff hmono j x).1 hj).2 i hij ((mem_shell_iff hmono i x).1 hi).1
+    exact fun x hi hj => ((mem_shell_iff hmono j x).1 hj).2 i hij ((mem_shell_iff hmono i x).1 hi).1
   intro i j hij
   rcases Nat.lt_or_gt_of_ne hij with h | h
   · exact key i j h
@@ -1531,9 +1530,7 @@ theorem spherical_even (h : IsUnramInv ϖ σ q) (k : Fin (n / 2)) (hk : ¬ k.val
       using WithZero.recZeroCoe with
     | zero => exact ⟨0, zero_le'⟩
     | coe a =>
-      refine ⟨(Multiplicative.toAdd a).toNat, WithZero.coe_le_coe.2 ?_⟩
-      show Multiplicative.toAdd a ≤ ((Multiplicative.toAdd a).toNat : ℤ)
-      exact Int.self_le_toNat _
+      exact ⟨(Multiplicative.toAdd a).toNat, WithZero.coe_le_coe.2 (Int.self_le_toNat _)⟩
   have hshape : ∀ u : cellU y, ∀ i j, ¬ (i = lo k ∧ j = (lo k).rev) →
       ((((u : GU σ n)) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i j = (1 : Matrix (Fin n) (Fin n) L) i j :=
     fun u => (_root_.GlobalTheory.cellU_rankOne_shape L σ n k hk hn y hy u).1 u.2

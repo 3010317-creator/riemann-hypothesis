@@ -155,8 +155,7 @@ private theorem inputLevelData_reductions_eq_of_dim_lt (B : PrincipalizationRule
       obtain ⟨M', rfl⟩ : ∃ M', M = M' + 1 := ⟨M - 1, by omega⟩
       have h0 : ∀ S : MarkedIdealWithBoundary.{u}, S.krullDimSucc < T.krullDimSucc →
           (B.inputLevelData m').maxOrderRed S = (B.inputLevelData M').maxOrderRed S := by
-        intro S hS
-        exact absurd (lt_of_lt_of_le hS hT) (Nat.not_lt_zero _)
+        exact fun S hS => absurd (lt_of_lt_of_le hS hT) (Nat.not_lt_zero _)
       exact ⟨nextLevel_maxOrderReduction_congr B (B.inputLevelData m') (B.inputLevelData M') T h0,
         nextLevel_orderReduction_congr B (B.inputLevelData m') (B.inputLevelData M') T h0⟩
   | succ d ih =>
@@ -165,8 +164,7 @@ private theorem inputLevelData_reductions_eq_of_dim_lt (B : PrincipalizationRule
       obtain ⟨M', rfl⟩ : ∃ M', M = M' + 1 := ⟨M - 1, by omega⟩
       have h0 : ∀ S : MarkedIdealWithBoundary.{u}, S.krullDimSucc < T.krullDimSucc →
           (B.inputLevelData m').maxOrderRed S = (B.inputLevelData M').maxOrderRed S := by
-        intro S hS
-        exact (ih S (by omega) m' M' (by omega) (by omega)).1
+        exact fun S hS => (ih S (by omega) m' M' (by omega) (by omega)).1
       exact ⟨nextLevel_maxOrderReduction_congr B (B.inputLevelData m') (B.inputLevelData M') T h0,
         nextLevel_orderReduction_congr B (B.inputLevelData m') (B.inputLevelData M') T h0⟩
 
@@ -560,8 +558,7 @@ private theorem markedBlowupSeq_lastIdeal_eq_top (B : PrincipalizationRules.{u})
   intro x hx
   have hx' : x ∈ FunctorialResolution.EmbeddedResolution.orderAtLeastLocus (B.markedBlowupSeq k X p I E).lastIdeal 1 :=
     (mem_orderAtLeastLocus_one_iff (B.markedBlowupSeq k X p I E).lastIdeal x).mpr hx
-  rw [h1] at hx'
-  exact hx'
+  rwa [h1] at hx'
 
 theorem isFunctorialPrincipalization_principalization (B : PrincipalizationRules.{u}) (hB : B.ReducesInductivelyOnDimension)
     (hrad : SmoothSubschemeIdealIsRadical.{u}) (hemb : CommutesWithClosedImmersion.{u} B) :

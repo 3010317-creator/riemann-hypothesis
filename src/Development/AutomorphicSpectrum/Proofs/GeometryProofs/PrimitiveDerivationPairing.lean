@@ -133,8 +133,7 @@ theorem exists_pow_eq_zero_of_isNilpotent
       rwa [← pow_mul, ← pow_succ] at this
   refine ⟨f ^ (p ^ m), hmem m, Nat.find_min hex (m := m) (by omega), ?_⟩
   rw [← pow_mul, ← pow_succ]
-  rw [hm] at hspec
-  exact hspec
+  rwa [hm] at hspec
 
 theorem exists_frobenius_fixed_or_killed :
     ∀ (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [Fact p.Prime] [CharP k p]
@@ -188,8 +187,7 @@ theorem exists_frobenius_fixed_or_killed :
           apply hx
           have : g * a = f := by simpa using ha
           rw [← this, map_mul, hxg, zero_mul]
-      have hrank := Submodule.finrank_lt_finrank_of_lt hlt
-      exact ih _ (hn ▸ hrank) g hgV hg0 rfl
+      exact ih _ (hn ▸ (Submodule.finrank_lt_finrank_of_lt hlt)) g hgV hg0 rfl
   exact key _ f₀ hf₀V hf₀ rfl
 
 end GlobalTheory.CompanionTheory.HopfFrob
@@ -751,17 +749,14 @@ theorem powers_indep_of_primitive :
       rcases Nat.lt_or_gt_of_ne hne with h' | h'
       · rw [(convPow_pow y f hf hy1 hyf m).1 i h', mul_zero]
       · rw [hgt i h' (Finset.mem_range.mp hi), zero_mul]
-    · intro h'
-      exact absurd (Finset.mem_range.mpr hm) h'
+    · exact fun h' => absurd (Finset.mem_range.mpr hm) h'
   have hall : ∀ n, ∀ i < p, p - 1 - i < n → c i = 0 := by
     intro n
     induction n with
     | zero => intro i _ h; omega
     | succ n ih =>
-      intro i hi hn
-      exact key i hi (fun j hij hj => ih j hj (by omega))
-  intro i hi
-  exact hall p i hi (by omega)
+      exact fun i hi hn => key i hi (fun j hij hj => ih j hj (by omega))
+  exact fun i hi => hall p i hi (by omega)
 
 end GlobalTheory.CompanionTheory.HopfPrim
 end -- clump:auto
@@ -811,15 +806,13 @@ theorem exists_isUnit_mem_of_forall_point :
     exact ht (hx t this)
   have hne := Subspace.biUnion_ne_univ_of_top_notMem (k := k) (s := s) htop
   obtain ⟨w, hw⟩ : ∃ w : U, w ∉ ⋃ p ∈ s, (p : Set U) := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hne (Set.eq_univ_of_forall hcon)
   refine ⟨w, w.2, ?_⟩
   by_contra hnu
   obtain ⟨m, hm, hwm⟩ := exists_max_ideal_of_mem_nonunits (show (w : R) ∈ nonunits R from hnu)
   apply hw
-  simp only [Set.mem_iUnion]
-  exact ⟨f m, (Set.Finite.mem_toFinset hfin).mpr ⟨m, hm, rfl⟩, hwm⟩
+  simpa only [Set.mem_iUnion] using ⟨f m, (Set.Finite.mem_toFinset hfin).mpr ⟨m, hm, rfl⟩, hwm⟩
 
 end GlobalTheory.CompanionTheory.FiniteAlgebraUnit
 end -- clump:auto
@@ -1215,8 +1208,7 @@ theorem norm_index_count_bound (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [h
       (∀ v ∈ W, ∀ f g : B, v (f * g) = v f * Coalgebra.counit (R := k) g + Coalgebra.counit (R := k) f * v g) →
       (∀ v ∈ W, ∀ f ∈ P, v f = 0) →
       p ^ (Module.finrank k P + Module.finrank k W) ∣ Module.finrank k B := by
-    intro B _ _ _ _ hB
-    exact ih _ (hn ▸ hB) B rfl
+    exact fun B _ _ _ _ hB => ih _ (hn ▸ hB) B rfl
   by_cases hP0 : P = ⊥
   · by_cases hW0 : W = ⊥
     · simp [hP0, hW0]

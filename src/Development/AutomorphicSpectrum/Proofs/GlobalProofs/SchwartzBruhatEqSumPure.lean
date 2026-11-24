@@ -122,8 +122,7 @@ theorem eq_sum_cosets {φ : V → ℂ} (hφ : HasCompactSupport φ) (L : AddSubg
     obtain ⟨a, ha, hxa⟩ := Set.mem_iUnion₂.1 (ht hmem)
     apply hx
     refine Finset.mem_image.2 ⟨a, ha, ?_⟩
-    rw [QuotientAddGroup.eq, neg_add_eq_sub]
-    exact hxa
+    rwa [QuotientAddGroup.eq, neg_add_eq_sub]
 
 end Group
 

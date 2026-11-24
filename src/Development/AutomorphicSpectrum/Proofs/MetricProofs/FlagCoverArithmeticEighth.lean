@@ -117,8 +117,7 @@ theorem exists_value_family {A : Type} [Finite A] {x : (Σ k, ι k) → Ω} {b :
   · rintro t t' ⟨c, hc, rfl⟩ ht a
     rw [eval_smul_homog (h a) (d a) (hh a) c t]
     exact mul_ne_zero (Finset.prod_ne_zero_iff.2 fun k _ => pow_ne_zero _ (hc k)) (ht a)
-  · intro a t ht
-    exact (analyticAt_eval _ t).div (analyticAt_eval _ t) (ht a)
+  · exact fun a t ht => (analyticAt_eval _ t).div (analyticAt_eval _ t) (ht a)
   · intro a t ht
     exact ⟨⟨d a, g a, h a, hg a, hh a, ValRing.aeval_ne_zero_of_notMem hb (hh a) (hn a), heq a, ht a, rfl⟩,
       d a, g a, h a, hg a, hh a, notMem_of_eval_ne_zero (hh a) (ht a), heq a⟩
@@ -162,14 +161,11 @@ theorem exists_normalised (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M
     (basePart M.blk z ⟨⟨k, h⟩, F.c ⟨k, h⟩⟩)⁻¹ else 1
   refine ⟨fun p => c p.1 * z p, ⟨c, fun k => ?_, rfl⟩, fun k => ?_⟩
   · by_cases h : ∀ q, M.blk q ≠ some k
-    · simp only [c, dite_eq_left h]
-      exact inv_ne_zero (hc ⟨k, h⟩)
-    · simp only [c, dite_eq_right h]
-      exact one_ne_zero
+    · simpa only [c, dite_eq_left h] using inv_ne_zero (hc ⟨k, h⟩)
+    · simpa only [c, dite_eq_right h] using one_ne_zero
   · obtain ⟨k, h⟩ := k
     show c k * basePart M.blk z ⟨⟨k, h⟩, F.c ⟨k, h⟩⟩ = 1
-    simp only [c, dite_eq_left h]
-    exact inv_mul_cancel₀ (hc ⟨k, h⟩)
+    simpa only [c, dite_eq_left h] using inv_mul_cancel₀ (hc ⟨k, h⟩)
 
 theorem good_open (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) {b : (Σ k, baseIdx ι M.blk k) → ℂ}
     (hb : b ∈ mcPts (mCoordIdeal M.x)) (hF : M.GoodAt F (mCoordIdeal b)) :
@@ -263,8 +259,7 @@ theorem minor_analytic {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {n 
     refine Finset.analyticAt_fun_sum _ fun σ _ => analyticAt_const.fun_mul
       (Finset.analyticAt_fun_prod _ fun a _ => ?_)
     exact h _ _
-  · simp only [dite_eq_right e]
-    exact analyticAt_const
+  · simpa only [dite_eq_right e] using analyticAt_const
 
 theorem flag_transfer (N j : ℕ) (i : Fin N) (hj : j ≤ N) {κ κ' : Type} [Fintype κ] [Fintype κ']
     (u : κ → Finset (Fin N) → ℂ) (u' : Finset (Fin N) → κ → ℂ) (uu : κ' → Finset (Fin N) → ℂ)
@@ -457,8 +452,7 @@ theorem lift_inverse : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
       · simp only [ite_eq_left hst]
         exact (minor_analytic _ _ _ _ fun a b => aT _).fun_mul
           (Finset.analyticAt_fun_sum _ fun m _ => (aV _).fun_mul (aw _))
-      · simp only [ite_eq_right hst]
-        exact analyticAt_const
+      · simpa only [ite_eq_right hst] using analyticAt_const
     · have h' : ∀ p, M'.blk p ≠ some k' := fun p e => h ⟨p, e⟩
       refine ⟨fun w m => S w ⟨⟨k', h'⟩, m⟩, fun m w hw => analyticAt_pi_iff.1 (hSa w hw) ⟨⟨k', h'⟩, m⟩,
         fun z'' hz'' w hw hI => ?_⟩

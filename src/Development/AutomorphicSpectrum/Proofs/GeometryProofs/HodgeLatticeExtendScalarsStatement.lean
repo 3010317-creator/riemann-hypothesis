@@ -492,8 +492,7 @@ theorem exists_eval : ∀ (E : Type) [Field E] [NumberField E] (Ω Vs : Type) [F
   have tied : Tied ℓ ψ ρ ρC := by
     intro a x x' e
     rw [← hevC x (hcomb x), ← hC2 _ _ (stL _ _ (hcomb x))]
-    simp only [e]
-    exact hevC x' _
+    simpa only [e] using hevC x' _
   have isEv : IsEval ℓ ψ ρH ρHC HLy ev := by
     refine ⟨hH2, ?_, ?_⟩
     · intro h x e
@@ -510,8 +509,7 @@ theorem exists_eval : ∀ (E : Type) [Field E] [NumberField E] (Ω Vs : Type) [F
     constructor
     · rintro ⟨y, hyV, rfl⟩
       exact ((hHV y).1 hyV).1
-    · intro hx'
-      exact ⟨(x, 0), (hHV _).2 ⟨hx', fun i => by simp⟩, rfl⟩
+    · exact fun hx' => ⟨(x, 0), (hHV _).2 ⟨hx', fun i => by simp⟩, rfl⟩
   · intro f
     rw [hHV]
     constructor
@@ -534,8 +532,7 @@ theorem exists_eval : ∀ (E : Type) [Field E] [NumberField E] (Ω Vs : Type) [F
     have hspan : Submodule.span Ω (Set.range fun q : Fin N × Module.Free.ChooseBasisIndex ℤ (𝓞 E) =>
         ρH (RingOfIntegers.basis E q.2) (t q.1)) = ⊤ := by
       have := hx.1.2.1
-      rw [hx.1.2.2, Submodule.span_span_of_tower] at this
-      exact this
+      rwa [hx.1.2.2, Submodule.span_span_of_tower] at this
     let T : Module.Basis (Fin N × Module.Free.ChooseBasisIndex ℤ (𝓞 E)) Ω (Vs × Module.Dual Ω Vs) :=
       Module.Basis.mk hx.1.1 hspan.ge
     have hTc : ∀ q, T q = ρH (RingOfIntegers.basis E q.2) (t q.1) := fun q => by simp [T]

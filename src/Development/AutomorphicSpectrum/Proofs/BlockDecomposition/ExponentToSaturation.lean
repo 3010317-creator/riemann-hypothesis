@@ -243,8 +243,7 @@ theorem isUnramChar_of_isCusp_of_isSpherical [CharZero k] (x : IrrGL (k := k)) (
   have hadm : IsAdmissible x.rep := (hBZ k).1 (Fin x.1) x.2.rep.V x.rep x.2.rep.smooth x.2.rep.irr
   have hI : fixed x.rep (iwahori k (Fin x.1)) ≠ ⊥ := by
     obtain ⟨v, hv, hv0⟩ := (Submodule.ne_bot_iff _).1 hs
-    refine (Submodule.ne_bot_iff _).2 ⟨v, fun h => ?_, hv0⟩
-    exact hv ⟨h.1, iwahori_le_KO k _ h.2⟩
+    exact (Submodule.ne_bot_iff _).2 ⟨v, fun h => (hv ⟨h.1, iwahori_le_KO k _ h.2⟩), hv0⟩
   obtain ⟨α, hα⟩ := GlobalTheory.SatakeExists.exists_isSubquotient_prinSeries hadm x.2.rep.irr hI
   have hχ : ∀ i, IsSmoothChar (unrChar k (α i)) := fun i => isSmoothChar_of_isUnram (isUnram_unrChar k (α i))
   have h1 := GlobalTheory.T.supercuspidalSupport_of_principalSeries_subquotient k x.1 (fun i => unrChar k (α i)) hχ x.2.rep hα
@@ -343,8 +342,7 @@ theorem isL_single_unrChar [CharZero k] (x : IrrGL (k := k)) (α : Fin x.1 → �
     rw [← hord.1, Multiset.map_map, Multiset.map_map]
     simp only [Function.comp_def, hlen]
     exact e1
-  rw [← hm]
-  exact hL
+  rwa [← hm]
 
 end GlobalTheory.CompanionTheory.OneSat
 
@@ -593,8 +591,7 @@ theorem stdBridge : PositivityTheory.Rg.BcB.F.Tail.PExp.StdBridge := by
       exact smul_mk_eq_smul_mk_of_submodule_eq hK.symm _ _ _ _ key
     rw [Module.End.mem_maxGenEigenspace]
     refine ⟨1, ?_⟩
-    rw [pow_one, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero]
-    exact heq
+    rwa [pow_one, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero]
 
 end GlobalTheory.CompanionTheory.StandardBlocks
 

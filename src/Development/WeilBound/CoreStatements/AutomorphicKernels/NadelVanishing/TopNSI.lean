@@ -264,8 +264,7 @@ theorem isOpen_kltLocus_lcLocus : GlobalTheory.Published.Principalisation → �
     intro h
     obtain ⟨x⟩ := (inferInstance : Nonempty X)
     have : x ∈ ((⊤ : Closeds X) : Set X) := trivial
-    rw [← h] at this
-    exact this
+    rwa [← h] at this
   obtain ⟨Y, hY, s, hs, K, B, hres, -⟩ := _root_.GlobalTheory.LogResExist.exists_logRes hP k X p n hp hdim η m G hη.ne_zero ⊥ hZ
   haveI := hres.smooth
   haveI : Smooth (s ≫ p) := hres.smooth.smooth

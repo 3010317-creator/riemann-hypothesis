@@ -269,8 +269,7 @@ theorem mem_of_eb (S : Subalgebra ℂ (UD d)) (h : ∀ i p q, eb d i p q ∈ S) 
     rw [AlgHom.id_apply, ← mi_ι]
     exact this _
   | add y z hy hz =>
-    simp only [map_add (f := _)]
-    exact add_mem hy hz
+    simpa only [map_add (f := _)] using add_mem hy hz
 
 theorem center_UD_le : Subalgebra.center ℂ (UD d) ≤
     Algebra.adjoin ℂ (⋃ i, Set.range fun u : ℂ => mi d i (qdet (eu (d i)) u)) := by
@@ -462,8 +461,7 @@ theorem invLev_kpWord {lev : Fin n → ℕ} {b : FreeAlgebra ℂ (Bool × Fin n 
     GlobalTheory.CompanionTheory.PairMult.InvLev lev (kpWord b) := by
   intro W _ _ X1 X2 hL p q hpq
   have h := hb W X1 X2 (isLevPairA_of_lRel hL) p q hpq
-  rw [evLv_eq] at h
-  exact h
+  rwa [evLv_eq] at h
 
 theorem exists_rho {M : ℕ} {d : Fin M → ℕ} (e : (Σ i, Fin (d i)) ≃ Fin n) {lev : Fin n → ℕ}
     (he : ∀ i p, lev (e ⟨i, p⟩) = (i : ℕ)) {W : Type} [AddCommGroup W] [Module ℂ W]

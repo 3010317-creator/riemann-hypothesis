@@ -184,8 +184,7 @@ theorem snc_on_basicOpen {Ω : Type} [Field Ω] [CharZero Ω] {Z : Scheme.{0}} (
   let ψ := (valMap ζ (Z.basicOpen v) hD).hom
   have hψ : ∀ x, ψ x ∈ S := fun x => by
     have : ψ x ∈ Set.range ψ := ⟨x, rfl⟩
-    rw [show Set.range ψ = (S : Set Ω) from hr] at this
-    exact this
+    rwa [show Set.range ψ = (S : Set Ω) from hr] at this
   let φ : Γ(Z, Z.basicOpen v) ≃+* S := RingEquiv.ofBijective (ψ.codRestrict S hψ) (by
     refine ⟨fun a b hab => valMap_injective ζ hD (congrArg Subtype.val hab), fun s => ?_⟩
     have hs : (s : Ω) ∈ Set.range ψ := by
@@ -256,8 +255,7 @@ theorem sncChart_of_coords (Ω : Type) [Field Ω] [CharZero Ω] (Z : Scheme.{0})
     have : valR ζ W w ∈ Set.range (valMap ζ W h).hom := by
       rw [valR_eq _ _ h]
       exact ⟨w, rfl⟩
-    rw [hA] at this
-    exact this
+    rwa [hA] at this
   refine ⟨m, fun l => valR ζ W (u l), fun l => valR ζ W (c l), fun l => hv _, fun l => hv _, ?_,
     fun l hf S hS => ?_⟩
   · simp only [valR_eq _ _ h]

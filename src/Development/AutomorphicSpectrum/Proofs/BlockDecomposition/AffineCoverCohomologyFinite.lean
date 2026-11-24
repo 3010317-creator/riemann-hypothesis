@@ -107,8 +107,7 @@ theorem sec_rel {W : X.Opens} {s : ∀ α, κ α → Γ(X, W ⊓ U α)} (hs : s 
   have hV : V ≤ W ⊓ U α ⊓ U β := le_inf h₁ (h₂.trans inf_le_right)
   have := congrArg (rs hV) (hs α β k)
 
-  simp only [map_sum, map_mul, rs_rs _ _ h₁, rs_rs _ _ h₂, rs_rs _ _ h₃] at this
-  exact this
+  simpa only [map_sum, map_mul, rs_rs _ _ h₁, rs_rs _ _ h₂, rs_rs _ _ h₃] using this
 
 instance secModule (W : X.Opens) : Module Γ(X, W) (secGroup g W) where
   smul a s := ⟨fun α k => rs inf_le_left a * s.1 α k, fun α β k => by
@@ -171,8 +170,7 @@ theorem isSheaf_secPresheaf : (secPresheaf g).IsSheaf := by
     have := congrArg (rs (le_inf (inf_le_inf inf_le_left inf_le_left)
       (inf_le_left.trans inf_le_right) :
         (W j ⊓ U α) ⊓ (W l ⊓ U α) ≤ W j ⊓ W l ⊓ U α)) e
-    rw [rs_rs _ _ (inf_le_left), rs_rs _ _ (inf_le_right)] at this
-    exact this
+    rwa [rs_rs _ _ (inf_le_left), rs_rs _ _ (inf_le_right)] at this
   choose b hb using H
   refine ⟨⟨b, fun α β k => ?_⟩, fun j => Subtype.ext (funext fun α => funext fun k => hb α k j), fun t ht => ?_⟩
   · refine GlobalTheory.LB.fun_ext_of_cover (fun j => W j ⊓ U α ⊓ U β)
@@ -310,8 +308,7 @@ theorem isQuasicoherent_toMod (hc : Coc g) (haff : ∀ α, IsAffineOpen (U α)) 
     have h1 := congrFun ((coordEquiv hc α hD).map_smul (rs hD f ^ e) (show secGroup g (X.basicOpen f) from m)) k
     refine Eq.trans ?_ h1.symm
     have h2 := ha k
-    rw [Algebra.smul_def, map_pow] at h2
-    exact h2
+    rwa [Algebra.smul_def, map_pow] at h2
   · intro α f m hm
     have hD : X.basicOpen f ≤ U α := X.basicOpen_le f
     have := (haff α).isLocalization_basicOpen f
@@ -409,8 +406,7 @@ theorem finite_H_of_cochain (K : Cx.{w} O) (T : ∀ n, K.X n ≃+ Cochain P U n)
   have hσ : d P U p (T p x) = 0 := by
     rw [← hd]
     exact (congrArg (T (p + 1)) hx).trans (map_zero _)
-  refine ⟨cls (T p x) hσ, ?_⟩
-  exact (hΨ _ hσ).trans (congrArg _ (Subtype.ext ((T p).symm_apply_apply x)))
+  exact ⟨cls (T p x) hσ, (hΨ _ hσ).trans (congrArg _ (Subtype.ext ((T p).symm_apply_apply x)))⟩
 
 end Transfer
 

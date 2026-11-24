@@ -117,8 +117,7 @@ theorem kunneth_open (A B : Over (Sp R)) (U : A.left.affineOpens) (V : B.left.af
       have m2 : spMap κ.toRingHom ≫ Spec.map (CommRingCat.ofHom Algebra.TensorProduct.includeLeftRingHom) =
           spMap (secPull A.hom (A ⊗ B).hom ⟨(⟨_, hV⟩, U), inf_le_left⟩) := by
         rw [← l, spMap_comp]
-      rw [← Category.assoc, m2]
-      exact s1
+      rwa [← Category.assoc, m2]
     · have s1 := secPull_affPt (φ := (snd A B).left) B.hom (A ⊗ B).hom ⟨(⟨_, hV⟩, V), inf_le_right⟩
       have l : κ.toRingHom.comp (Algebra.TensorProduct.includeRight : Sb →ₐ[R] Sa ⊗[R] Sb).toRingHom = secPull B.hom (A ⊗ B).hom ⟨(⟨_, hV⟩, V), inf_le_right⟩ :=
         RingHom.ext fun x ↦ by
@@ -241,8 +240,7 @@ theorem primitive_structure_sheaf_cohomology_class
     (by rw [lift_fst, one_def]; exact isPullO_through_unit _ _ c)
     (by rw [lift_snd]; exact isPullO_over_id _ c) (by simp)
   have z := hAx _ z1 z2
-  rw [sub_sub, sub_eq_zero] at z
-  exact z
+  rwa [sub_sub, sub_eq_zero] at z
 end Over
 end GlobalTheory.CompanionTheory.HopfSys
 
@@ -497,8 +495,7 @@ theorem exists_unit_mem (hR : IsField R) : ∃ a₀, η[A].left ⁻¹ᵁ (S.u a�
   have h1 : η[A].left default ∈ ⨆ a, (S.u a).1 := by rw [S.cover]; trivial
   obtain ⟨a₀, ha⟩ := TopologicalSpace.Opens.mem_iSup.1 h1
   refine ⟨a₀, top_le_iff.1 fun x _ ↦ ?_⟩
-  rw [Subsingleton.elim x default]
-  exact ha
+  rwa [Subsingleton.elim x default]
 
 theorem appLE_chain {X Y Z : Scheme.{0}} (ψ : X ⟶ Y) (φ : Y ⟶ Z) (χ : X ⟶ Z) (hχ : ψ ≫ φ = χ) {U : Z.Opens}
     {V : Y.Opens} {W : X.Opens} (e1 : V ≤ φ ⁻¹ᵁ U) (e2 : W ≤ ψ ⁻¹ᵁ V) (e3 : W ≤ χ ⁻¹ᵁ U) (x : Γ(Z, U)) :

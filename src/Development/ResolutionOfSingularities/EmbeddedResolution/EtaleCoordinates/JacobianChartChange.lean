@@ -79,8 +79,7 @@ private theorem notMem_support_of_restrictIdeal_eq_top_of_mem {Y : Scheme.{u}} (
     {U : Y.Opens} (h : restrictIdeal I U = ⊤) {y : Y} (hyU : y ∈ U) : y ∉ I.support := by
   intro hy
   have h1 : (⟨y, hyU⟩ : ↥U) ∈ (I.comap U.ι).support := by
-    rw [AlgebraicGeometry.Scheme.IdealSheafData.support_comap]
-    exact hy
+    rwa [AlgebraicGeometry.Scheme.IdealSheafData.support_comap]
   rw [← restrictIdeal_eq_comap_ι, h, AlgebraicGeometry.Scheme.IdealSheafData.support_top] at h1
   have h2 : (⟨y, hyU⟩ : ↥U) ∈ ((⊥ : TopologicalSpace.Closeds ↥U) : Set ↥U) := h1
   simp at h2
@@ -101,11 +100,9 @@ private theorem exists_isUnit_mul_of_span_singleton_eq {R : Type*} [CommRing R] 
   have hcancel : ∀ w : R, w * y = 0 → w = 0 := (mem_nonZeroDivisors_iff.mp hy).2
   have h1 : b * u - 1 = 0 := hcancel _ hsub
   have h2 : b * u = 1 := by
-    rw [sub_eq_zero] at h1
-    exact h1
+    rwa [sub_eq_zero] at h1
   have h3 : u * b = 1 := by
-    rw [mul_comm]
-    exact h2
+    rwa [mul_comm]
   exact ⟨u, ⟨⟨u, b, h3, h2⟩, rfl⟩, hu.symm⟩
 
 private theorem repr_sum_smul_apply {ι₀ : Type*} [Fintype ι₀]
@@ -212,32 +209,22 @@ theorem exists_etaleChart_restrict_coord_eq_of_jacobianDet_notMem
   obtain ⟨g, hgd⟩ : ∃ g : Γ(X, V),
       g = (EtaleCoordinates.basisKaehler k (ULift.{u} (Fin n)) Γ(X, V)).det
         fun i : ULift.{u} (Fin n) => KaehlerDifferential.D k Γ(X, V) (w i) := ⟨_, rfl⟩
-  have hg : g ∉ (hV.primeIdealOf ⟨x, hx⟩).asIdeal := by
-    rw [hgd]
-    exact hg0
+  have hg : g ∉ (hV.primeIdealOf ⟨x, hx⟩).asIdeal := by rwa [hgd]
   have hle : X.basicOpen g ≤ V := X.basicOpen_le g
   have hVg : IsAffineOpen (X.basicOpen g) := hV.basicOpen g
   have hxg : x ∈ X.basicOpen g := mem_basicOpen_of_notMem_primeIdealOf hV hx g hg
   let instk' : Algebra k Γ(X, X.basicOpen g) := sectionsAlgebra k p (X.basicOpen g)
   let instAlg : Algebra Γ(X, V) Γ(X, X.basicOpen g) :=
     (X.presheaf.map (homOfLE hle).op).hom.toAlgebra
-  have halg : ∀ z : Γ(X, V),
-      algebraMap Γ(X, V) Γ(X, X.basicOpen g) z =
-        (X.presheaf.map (homOfLE hle).op).hom z := fun _ => rfl
   have instScalarTower : IsScalarTower k Γ(X, V) Γ(X, X.basicOpen g) :=
-    IsScalarTower.of_algebraMap_eq fun a => by
-      rw [halg]
-      exact (FunctorialResolution.EmbeddedResolution.sectionsAlgebraMap_restrict_apply k p hle a).symm
+    IsScalarTower.of_algebraMap_eq fun a =>
+      (FunctorialResolution.EmbeddedResolution.sectionsAlgebraMap_restrict_apply k p hle a).symm
   have instLoc : IsLocalization (Submonoid.powers g) Γ(X, X.basicOpen g) :=
     hV.isLocalization_basicOpen g
-  have hunit : IsUnit (algebraMap Γ(X, V) Γ(X, X.basicOpen g)
-      ((EtaleCoordinates.basisKaehler k (ULift.{u} (Fin n)) Γ(X, V)).det
-        fun i : ULift.{u} (Fin n) => KaehlerDifferential.D k Γ(X, V) (w i))) := by
-    rw [← hgd]
-    exact IsLocalization.map_units (M := Submonoid.powers g) Γ(X, X.basicOpen g)
-      ⟨g, Submonoid.mem_powers g⟩
   obtain ⟨e, he⟩ := exists_basis_isUnit_det_of_isLocalization (k := k)
-    (S' := Γ(X, X.basicOpen g)) (Submonoid.powers g) w hunit
+    (S' := Γ(X, X.basicOpen g)) (Submonoid.powers g) w
+    (hgd ▸ IsLocalization.map_units (M := Submonoid.powers g) Γ(X, X.basicOpen g)
+      ⟨g, Submonoid.mem_powers g⟩)
   have instFS : Algebra.FormallySmooth k Γ(X, X.basicOpen g) :=
     formallySmooth_of_etaleChart (algebraMap_sectionsAlgebra k p (X.basicOpen g)) hVg
       (c.restrict hle)
@@ -252,20 +239,14 @@ theorem exists_etaleChart_restrict_coord_eq_of_jacobianDet_notMem
       (fun i : ULift.{u} (Fin n) =>
         algebraMap Γ(X, V) Γ(X, X.basicOpen g) (w i))).toRingHom,
       fun a => ?_, fun i => ?_, ?_⟩
-    · show MvPolynomial.aeval
-        (fun i : ULift.{u} (Fin n) => algebraMap Γ(X, V) Γ(X, X.basicOpen g) (w i))
-        (MvPolynomial.C a) = sectionsAlgebraMap k p (X.basicOpen g) a
-      rw [MvPolynomial.aeval_C, algebraMap_sectionsAlgebra k p (X.basicOpen g)]
-    · show MvPolynomial.aeval
-        (fun i : ULift.{u} (Fin n) => algebraMap Γ(X, V) Γ(X, X.basicOpen g) (w i))
-        (MvPolynomial.X i) = algebraMap Γ(X, V) Γ(X, X.basicOpen g) (w i)
-      rw [MvPolynomial.aeval_X]
+    · simp [algebraMap_sectionsAlgebra k p (X.basicOpen g)]
+    · simp
     · exact EtaleCoordinates.formallyEtale_aeval_of_isUnit_det e
         (fun i : ULift.{u} (Fin n) => algebraMap Γ(X, V) Γ(X, X.basicOpen g) (w i)) he
   obtain ⟨c', hc'⟩ := exists_etaleChart_coord_eq p hVg
     (fun i : ULift.{u} (Fin n) => algebraMap Γ(X, V) Γ(X, X.basicOpen g) (w i)) f hfC hfX
     (ringHom_etale_of_formallyEtale p hVg f hfC hfEtale)
-  exact ⟨X.basicOpen g, hVg, hle, hxg, c', fun j => (hc' j).trans (halg _)⟩
+  exact ⟨X.basicOpen g, hVg, hle, hxg, c', hc'⟩
 
 def chartPartialDeriv (hV : IsAffineOpen V) (c : EtaleChart p V n) (j : Fin n)
     (f : Γ(X, V)) : Γ(X, V) :=
@@ -426,8 +407,7 @@ theorem exists_etaleChart_update_coord_of_partialDeriv_notMem
   have hdet : ((EtaleCoordinates.basisKaehler k (ULift.{u} (Fin n)) Γ(X, V)).det
       fun i : ULift.{u} (Fin n) => KaehlerDifferential.D k Γ(X, V) (w i)) ∉
         (hV.primeIdealOf ⟨x, hx⟩).asIdeal := by
-    rw [hwupd, det_update_eq_repr]
-    exact hpd
+    rwa [hwupd, det_update_eq_repr]
   obtain ⟨V', hV'aff, hle, hxV', c', hc'⟩ :=
     exists_etaleChart_restrict_coord_eq_of_jacobianDet_notMem hV c hx w hdet
   refine ⟨V', hV'aff, hle, hxV', c', ?_, fun j hjne => ?_⟩
@@ -597,8 +577,7 @@ private theorem map_chartPartialDeriv_restrict (hV : IsAffineOpen V) (c : EtaleC
       = (EtaleCoordinates.basisKaehler k (ULift.{u} (Fin n)) Γ(X, W)).repr
         (KaehlerDifferential.D k Γ(X, W) ((X.presheaf.map (homOfLE hWV).op).hom f))
         (ULift.up j) := rfl
-  rw [hl, hr, ← halg]
-  exact key
+  rwa [hl, hr, ← halg]
 
 private theorem map_mem_primeIdealOf_of_mem_of_le {V₁ W₁ : X.Opens} (hV₁ : IsAffineOpen V₁)
     (hW₁ : IsAffineOpen W₁) (hle : W₁ ≤ V₁) {y : X} (hyV : y ∈ V₁) (hyW : y ∈ W₁)
@@ -725,13 +704,10 @@ theorem exists_unlabeled_index_partialDeriv_notMem_primeIdealOf
     by_cases hlab : ∃ l : ℕ, l < N.length ∧ γ l = some i
     · exact Ideal.mul_mem_right _ _ (hlabel i hlab)
     · refine Ideal.mul_mem_left _ _ ?_
-      have hunlab : ∀ l : ℕ, l < N.length → γ l ≠ some i := by
-        intro l hl hcon2
-        exact hlab ⟨l, hl, hcon2⟩
+      have hunlab : ∀ l : ℕ, l < N.length → γ l ≠ some i := fun l hl hcon2 => hlab ⟨l, hl, hcon2⟩
       have h1 := hall i hunlab
       have h2 := map_mem_primeIdealOf_of_mem_of_le hV hWaff hWV hx hxW _ h1
-      rw [map_chartPartialDeriv_restrict hV c hWaff hWV i g] at h2
-      exact h2
+      rwa [map_chartPartialDeriv_restrict hV c hWaff hWV i g] at h2
   have hgt : chartPartialDeriv hWaff (c₂.restrict hWU) t
       ((X.presheaf.map (homOfLE hWV).op).hom g)
       = u * 1 + (c₂.restrict hWU).coord t *

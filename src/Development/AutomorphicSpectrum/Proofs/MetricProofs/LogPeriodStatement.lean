@@ -184,8 +184,7 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
     · rw [hUo a b ha, hC'blk a b hab]
   · intro c
     have hp : ∏ i, U i i ≠ 0 := by
-      rw [← Matrix.det_of_upperTriangular hUtri, hdetU]
-      exact hdet
+      rwa [← Matrix.det_of_upperTriangular hUtri, hdetU]
     exact Finset.prod_ne_zero_iff.mp hp c (Finset.mem_univ c)
   · change C = Matrix.transvection ca cb s * Matrix.transvection cb ca t * U
     rw [hU, hC', Matrix.mul_assoc (Matrix.transvection ca cb s), ← Matrix.mul_assoc (Matrix.transvection cb ca t),
@@ -396,8 +395,7 @@ theorem quot_vanish : ∀ (N j : ℕ) (i : Fin N) (h₁ h₂ : Matrix (Fin N) (F
   let e := S.orderEmbOfFin rfl
   obtain ⟨t, ht⟩ : ∃ t, e t = c := by
     have h2 : c ∈ Set.range e := by
-      rw [Finset.range_orderEmbOfFin]
-      exact hc
+      rwa [Finset.range_orderEmbOfFin]
     exact h2
   let D : Matrix (Fin S.card) (Fin S.card) ℂ := C.submatrix e e
   have hD : D.det ≠ 0 := by
@@ -439,8 +437,7 @@ theorem quot_vanish : ∀ (N j : ℕ) (i : Fin N) (h₁ h₂ : Matrix (Fin N) (F
       · subst ha
         simp [f, D, v, Matrix.updateRow_self]
       · simp [f, D, Matrix.updateRow_ne ha, Function.update_of_ne ha]
-    rw [e2]
-    exact h2
+    rwa [e2]
   have hcr : Dᵀ.cramer v = 0 := by
     funext u
     rw [Matrix.cramer_transpose_apply]
@@ -451,8 +448,7 @@ theorem quot_vanish : ∀ (N j : ℕ) (i : Fin N) (h₁ h₂ : Matrix (Fin N) (F
     have := congrFun h3 t
     simpa using this.symm
   have h5 : v t = 0 := (mul_eq_zero.1 h4).resolve_left hD
-  rw [← ht]
-  exact h5
+  rwa [← ht]
 
 end GlobalTheory.CompanionTheory.Ar.PB.PlVanish
 end -- clump:auto
@@ -501,8 +497,7 @@ theorem snd_mem {k₀ : K} {P' : Ideal (MRing (fun o : Option K => ι (o.getD k�
   · rw [← hI] at hf
     have h0 := hz.2 _ hf
     have h1 : eval z (map (Int.castRingHom ℂ) (rename (v₁ k₀) f)) = 0 := h0
-    rw [eval_rename_block] at h1
-    exact h1
+    rwa [eval_rename_block] at h1
 
 theorem snd_fst_ne {k₀ k : K} (hk : k ≠ k₀) (z : (Σ o : Option K, ι (o.getD k₀)) → ℂ) (m : ι k) :
     sndPt k₀ z ⟨k, m⟩ = fstPt k₀ z ⟨k, m⟩ := by

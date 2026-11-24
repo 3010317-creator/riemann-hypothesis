@@ -374,8 +374,7 @@ theorem one_bij (hL : OneLow) (hR : OneRes) {R : Type} [CommRing R] {ι : Type} 
       obtain ⟨x, hx⟩ := hup m (ψ (m + 1) y) h0
       refine ⟨φ m x, ?_⟩
       change (A.coh a).cech.d m (φ m x) = _
-      rw [hd]
-      rw [show P.cech.d m x = ψ (m + 1) y from hx.trans (one_smul R _), hφψ, one_smul]
+      rw [hd, show P.cech.d m x = ψ (m + 1) y from hx.trans (one_smul R _), hφψ, one_smul]
   obtain ⟨hz, -⟩ := hR R ι A a hD hO hres
   obtain ⟨-, hin', hex'⟩ := hL R ι A a hD hO
   by_cases hn : n = a
@@ -479,8 +478,7 @@ theorem chart_presentation_kernel (c : BChart q i π d V) (k : Fin d) (D : Y.Ope
     RingHom.ker (MvPolynomial.eval₂Hom (π.appLE V D hle).hom fun j => rs hu (c.u k j)) =
       Ideal.span (insert (MvPolynomial.X k - 1) (Set.range fun j => MvPolynomial.C (c.t j) - MvPolynomial.C (c.t k) * MvPolynomial.X j)) := by
   subst e
-  simp only [rs_self]
-  exact ⟨c.surj k, c.rel k⟩
+  simpa only [rs_self] using ⟨c.surj k, c.rel k⟩
 
 theorem chart_pres (c : BChart q i π d V) (k : Fin d) :
     Function.Surjective (MvPolynomial.eval₂Hom (π.appLE V (({k} : Finset (Fin d)).inf c.C)
@@ -654,8 +652,7 @@ theorem chart_exists (K : Type) [Field K] (W Z Y : Scheme.{0}) (q : Z ⟶ Spec (
       (secPull q π (inf_le_pre c hk)).toRingHom (b {k} hk).toRingEquiv (fun a => hb2 {k} hk a)
       (fun j => (b {k} hk).symm (rs (inf_le_C c (Finset.mem_singleton_self k)) (c.u k j)))
       (fun j => rs (inf_le_C c (Finset.mem_singleton_self k)) (c.u k j)) (fun j => AlgEquiv.apply_symm_apply _ _) p
-    refine Iff.trans ?_ (Eq.congr_left hp)
-    exact (map_eq_zero_iff _ (b {k} hk).injective).symm
+    exact Iff.trans (map_eq_zero_iff _ (b {k} hk).injective).symm (Eq.congr_left hp)
   · intro S k hk
     letI : Algebra (R {k}) (R S) := (res (Finset.singleton_subset_iff.2 hk)).toRingHom.toAlgebra
     have hk1 : ({k} : Finset (Fin d)).Nonempty := Finset.singleton_nonempty k

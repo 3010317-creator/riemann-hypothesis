@@ -109,8 +109,7 @@ theorem blk_val_det {E : Type} [Field E] [NumberField E] [IsCMField E] {n a b : 
       (Matrix.fromBlocks m.1.val (m.1.val * X) 0 m.2.val)) :=
     (Matrix.isUnit_iff_isUnit_det _).2 (hdet ▸ h1.mul h2)
   simp only [blk]
-  rw [dite_eq_left hu, IsUnit.unit_spec]
-  exact hdet
+  rwa [dite_eq_left hu, IsUnit.unit_spec]
 
 theorem ordL_blk_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n a b : ℕ) (h : a + b = n) (w : Pl E)
     (m : GLw a w × GLw b w) (X : Matrix (Fin a) (Fin b) (w.adicCompletion E)),
@@ -346,8 +345,7 @@ theorem mem_max_iff (x : w.adicCompletionIntegers E) :
       have : (x : w.adicCompletion E) * (y : w.adicCompletion E) = 1 := congrArg Subtype.val hy
       rw [this, map_one]
     have h2 : Valued.v (y : w.adicCompletion E) ≤ 1 := y.2
-    have h3 := lt_of_le_of_lt (mul_le_of_le_one_right' h2) hx
-    exact absurd h1 (ne_of_lt h3)
+    exact absurd h1 (ne_of_lt (lt_of_le_of_lt (mul_le_of_le_one_right' h2) hx))
 
 def posR {a i : ℕ} (hi : i ≤ a) (r : Fin i) : Fin a := Fin.castLE hi r
 
@@ -359,8 +357,7 @@ theorem corner_mem {ϖ : w.adicCompletion E} {a b i j : ℕ} (hi : i ≤ a)
   have h := W.2 (posR hi p.1) (posS p.2)
   have hc : ((posR hi p.1 : Fin a) : ℕ) < i ∧ j ≤ ((posS p.2 : Fin b) : ℕ) :=
     ⟨p.1.2, Nat.le_add_right _ _⟩
-  rw [ite_eq_left hc] at h
-  exact h
+  rwa [ite_eq_left hc] at h
 
 def cornerMap (ϖ : w.adicCompletion E) (a b i j : ℕ) (hi : i ≤ a) :
     latD ϖ a b i j →+
@@ -392,8 +389,7 @@ theorem ker_cornerMap {ϖ : w.adicCompletion E} (h : IsUnifV E w ϖ) (a b i j : 
     have hWp : ∀ p : Fin i × Fin (b - j), Valued.v (ϖ * W.1 (posR hi p.1) (posS p.2)) < 1 := by
       intro p
       have := congrFun hW p
-      rw [cornerMap_apply, Pi.zero_apply, IsLocalRing.residue_eq_zero_iff, mem_max_iff] at this
-      exact this
+      rwa [cornerMap_apply, Pi.zero_apply, IsLocalRing.residue_eq_zero_iff, mem_max_iff] at this
     by_cases hc : (r : ℕ) < i ∧ j ≤ (s : ℕ)
     · have := hWp (⟨r, hc.1⟩, ⟨s - j, by have := s.2; omega⟩)
       have hr : posR hi ⟨(r : ℕ), hc.1⟩ = r := Fin.ext rfl
@@ -402,8 +398,7 @@ theorem ker_cornerMap {ϖ : w.adicCompletion E} (h : IsUnifV E w ϖ) (a b i j : 
       simp only [hr, hs] at this
       exact le_one_of_unif_mul h this
     · have := W.2 r s
-      rw [ite_eq_right hc] at this
-      exact this
+      rwa [ite_eq_right hc] at this
   · intro hW
     funext p
     rw [cornerMap_apply, Pi.zero_apply, IsLocalRing.residue_eq_zero_iff, mem_max_iff]
@@ -427,8 +422,7 @@ theorem cornerMap_surjective {ϖ : w.adicCompletion E} (h : IsUnifV E w ϖ) (a b
       rw [mul_inv_cancel_left₀ h0]
       exact (x _).2
     · rw [ite_eq_right hc]
-      simp only [M, dite_eq_right hc]
-      exact (Ov E w).zero_mem
+      simpa only [M, dite_eq_right hc] using (Ov E w).zero_mem
   refine ⟨⟨M, hM⟩, ?_⟩
   funext p
   rw [cornerMap_apply, ← hx p]
@@ -528,8 +522,7 @@ theorem heckeVec_finset_sum {ι : Type} (ρ : Representation ℂ G V) (K : Subgr
   rw [finsum_congr e, finsum_sum_comm]
   · refine Finset.sum_congr rfl fun p _ => ?_
     rw [smul_finsum]
-  · intro p hp
-    exact (hf p hp).subset fun c hc h0 => hc (by simp [h0])
+  · exact fun p hp => (hf p hp).subset fun c hc h0 => hc (by simp [h0])
 
 theorem biInv_out {K : Subgroup G} {h : G → ℂ} (hh : IsBiInv K h) (g : G) :
     h ((g : G ⧸ K).out) = h g := by
@@ -628,8 +621,7 @@ theorem isInt_mul {r s t : Type} [Fintype s] {M : Matrix r s (w.adicCompletion E
 theorem isInt_of_GLint {n : ℕ} {g : GL (Fin n) (w.adicCompletion E)} (hg : g ∈ GLint (Fin n) (Ov E w)) :
     IsInt w g.val := by
   obtain ⟨f, rfl⟩ := hg
-  intro i j
-  exact (f.val i j).2
+  exact fun i j => (f.val i j).2
 
 theorem isInt_sandwich {r s : ℕ} {u : GL (Fin r) (w.adicCompletion E)} {v : GL (Fin s) (w.adicCompletion E)}
     (hu : u ∈ GLint (Fin r) (Ov E w)) (hv : v ∈ GLint (Fin s) (Ov E w))
@@ -644,8 +636,7 @@ theorem isInt_sandwich {r s : ℕ} {u : GL (Fin r) (w.adicCompletion E)} {v : GL
           = ((u⁻¹).val * u.val) * M * (v.val * (v⁻¹).val) := by simp only [Matrix.mul_assoc]
         _ = M := by rw [h1, h2, Matrix.one_mul, Matrix.mul_one]
     rwa [e] at key
-  · intro h
-    exact isInt_mul (isInt_mul (isInt_of_GLint hu) h) (isInt_of_GLint hv)
+  · exact fun h => isInt_mul (isInt_mul (isInt_of_GLint hu) h) (isInt_of_GLint hv)
 
 def phi {a b : ℕ} {L : Type} [Field L] (p : GL (Fin a) L) (q : GL (Fin b) L) :
     Matrix (Fin a) (Fin b) L ≃+ Matrix (Fin a) (Fin b) L where
@@ -675,8 +666,7 @@ theorem relIndex_of_equiv {A B : Type} [AddGroup A] [AddGroup B] (φ : A ≃+ B)
     constructor
     · rintro ⟨X, hX, rfl⟩
       exact (h X).1 hX
-    · intro hY
-      exact ⟨φ.symm Y, (h _).2 (by simpa using hY), by simp⟩
+    · exact fun hY => ⟨φ.symm Y, (h _).2 (by simpa using hY), by simp⟩
   rw [← key H H' hH, ← key K K' hK]
   exact (AddSubgroup.relIndex_map_map_of_injective _ _ φ.injective).symm
 
@@ -698,17 +688,13 @@ theorem diag_iff_latD {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ) {a b : �
     simp only [diagJ, Matrix.diagonal_mul, Matrix.mul_diagonal, Matrix.smul_apply, smul_eq_mul] at a1 a2
     by_cases hr : (r : ℕ) < i <;> by_cases hs : (s : ℕ) < j
     · rw [ite_eq_right (by omega)]
-      rw [ite_eq_left hs, hc] at a2
-      exact a2
+      rwa [ite_eq_left hs, hc] at a2
     · rw [ite_eq_left ⟨hr, by omega⟩]
-      rw [ite_eq_left hr] at a1
-      exact a1
+      rwa [ite_eq_left hr] at a1
     · rw [ite_eq_right (by omega)]
-      rw [ite_eq_right hr, one_mul] at a1
-      exact a1
+      rwa [ite_eq_right hr, one_mul] at a1
     · rw [ite_eq_right (by omega)]
-      rw [ite_eq_right hr, one_mul] at a1
-      exact a1
+      rwa [ite_eq_right hr, one_mul] at a1
   · intro h
     refine ⟨fun r s => ?_, fun r s => ?_⟩
     · have a := h r s
@@ -791,10 +777,8 @@ theorem latM_relIndex : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   obtain ⟨k₂, hk₂, q, hq, e₂⟩ := Set.mem_of_indicator_ne_zero h₂
   refine relIndex_of_equiv (phi p q) _ _ _ _ (fun X => ?_) (mem_latM_iff hϖ hk₁ hp hk₂ hq e₁ e₂)
   constructor
-  · intro h
-    exact (isInt_sandwich hp (inv_mem hq) X).2 h
-  · intro h
-    exact (isInt_sandwich hp (inv_mem hq) X).1 h
+  · exact fun h => (isInt_sandwich hp (inv_mem hq) X).2 h
+  · exact fun h => (isInt_sandwich hp (inv_mem hq) X).1 h
 
 end GlobalTheory.CompanionTheory.CtS.Tr
 end -- clump:auto
@@ -910,8 +894,7 @@ theorem mem_intMat_iff {E : Type} [Field E] [NumberField E] [IsCMField E] (a b :
     | one => exact isInt_zero w _ _
     | mul x y _ _ hx hy => exact IsInt.add hx hy
     | inv x _ hx => exact IsInt.neg hx
-  · intro hX
-    exact Subgroup.subset_closure fun i j => hX i j
+  · exact fun hX => Subgroup.subset_closure fun i j => hX i j
 
 theorem hint_indicator_lattice : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (a b : ℕ) (w : Pl E) (Λ : AddSubgroup (Matrix (Fin a) (Fin b) (w.adicCompletion E))), intSub a b w ≤ Λ → hint (intMat a b w) (fun X => if Multiplicative.toAdd X ∈ Λ then (1 : ℂ) else 0) = (((intSub a b w).relIndex Λ : ℕ) : ℂ) := by
   intro E _ _ _ a b w Λ h
@@ -1077,8 +1060,7 @@ theorem esymm_map_mul_unit (B : Multiset ℂˣ) (z : ℂˣ) (j : ℕ) :
       (z : ℂ) ^ j * (B.map fun b : ℂˣ => (b : ℂ)).esymm j := by
   have h := Multiset.pow_smul_esymm (z : ℂ) j (B.map fun b : ℂˣ => (b : ℂ))
   simp only [smul_eq_mul, Multiset.map_map, Function.comp_def] at h
-  simp only [Multiset.map_map, Function.comp_def, Units.val_mul, mul_comm _ (z : ℂ)]
-  exact h.symm
+  simpa only [Multiset.map_map, Function.comp_def, Units.val_mul, mul_comm _ (z : ℂ)] using h.symm
 
 theorem esymm_eq_zero_of_card_lt (s : Multiset ℂ) {k : ℕ} (h : s.card < k) : s.esymm k = 0 := by
   simp [Multiset.esymm, Multiset.powersetCard_eq_empty k h]
@@ -1210,8 +1192,7 @@ theorem hint_lat (E : Type) [Field E] [NumberField E] [IsCMField E] (a b : ℕ) 
       if IsInt w (m.1.val * Multiplicative.toAdd X) ∧ IsInt w (ϖ • (Multiplicative.toAdd X * (m.2⁻¹).val)) then (1 : ℂ) else 0) =
       fun X => if Multiplicative.toAdd X ∈ latM ϖ m then (1 : ℂ) else 0 :=
     funext fun X => if_congr Iff.rfl rfl rfl
-  rw [e2]
-  exact this
+  rwa [e2]
 
 theorem coef_eq (q : ℕ) (hq : q ≠ 0) (c : ℂˣ) (a b i j : ℕ) (hj : j ≤ b) :
     (c : ℂ) ^ (i * b + j * a) * ((q : ℂ) ^ (-((i : ℂ) * b - (j : ℂ) * a) / 2) * (q : ℂ) ^ (i * (b - j))) = coef q c a b i j := by
@@ -1235,8 +1216,7 @@ theorem ct_eq (E : Type) [Field E] [NumberField E] [IsCMField E] (n a b : ℕ) (
   rw [GlobalTheory.T.constant_term_hecke_formula E n a b h w _ ϖ hw hϖ k m]
   by_cases hP : ∃ p ∈ pairs a b k, Tj ℂ a (Ov E w) ϖ p.1 m.1 ≠ 0 ∧ Tj ℂ b (Ov E w) ϖ p.2 m.2 ≠ 0
   · obtain ⟨⟨i, j⟩, hp, h1, h2⟩ := hP
-    obtain ⟨hij, hi, hj⟩ : i + j = k ∧ i ≤ a ∧ j ≤ b := by
-      exact mem_pairs.1 hp
+    obtain ⟨hij, hi, hj⟩ : i + j = k ∧ i ≤ a ∧ j ≤ b := mem_pairs.1 hp
     simp only at h1 h2
     have c1 := GlobalTheory.T.hecke_indicator_formula E w a i ϖ hϖ hi m.1
     have c2 := GlobalTheory.T.hecke_indicator_formula E w b j ϖ hϖ hj m.2
@@ -1264,8 +1244,7 @@ theorem ct_eq (E : Type) [Field E] [NumberField E] [IsCMField E] (n a b : ℕ) (
       coef_eq _ (qV_ne_zero w) c a b i j hj, Finset.sum_eq_single_of_mem (⟨i, j⟩ : ℕ × ℕ) hp]
     · simp [u1, u2]
     · rintro ⟨i', j'⟩ hp' hne
-      obtain ⟨hij', hi', hj'⟩ : i' + j' = k ∧ i' ≤ a ∧ j' ≤ b := by
-        exact mem_pairs.1 hp'
+      obtain ⟨hij', hi', hj'⟩ : i' + j' = k ∧ i' ≤ a ∧ j' ≤ b := mem_pairs.1 hp'
       have : i' ≠ i := fun e => hne (by subst e; congr; omega)
       have u : Tj ℂ a (Ov E w) ϖ i' m.1 = 0 := by
         rw [GlobalTheory.T.hecke_indicator_formula E w a i' ϖ hϖ hi' m.1, ite_eq_right]
@@ -1303,8 +1282,7 @@ theorem ctSat : CtSat := by
     funext fun m => ct_eq E n a b h w c ϖ hw hϖ k hk m
   rw [hF, GlobalTheory.T.hecke_vector_linear_combination E a b w ϖ hϖ, GlobalTheory.T.satake_eigenvalue_pair_decomposition _ n a b c Ba Bb (qV_ne_zero w) h hs.2.1 hs.2.2.1 k hk, Finset.sum_smul]
   refine Finset.sum_congr rfl fun p hp => ?_
-  obtain ⟨-, hi, hj⟩ : p.1 + p.2 = k ∧ p.1 ≤ a ∧ p.2 ≤ b := by
-    exact mem_pairs.1 hp
+  obtain ⟨-, hi, hj⟩ : p.1 + p.2 = k ∧ p.1 ≤ a ∧ p.2 ≤ b := mem_pairs.1 hp
   rw [hs.2.2.2 ϖ hϖ p.1 hi p.2 hj, smul_smul]
 
 end GlobalTheory.CompanionTheory.CtS

@@ -111,10 +111,8 @@ theorem hasLen_transport (e : X ≃ₗ[F] Y) {M : Submodule R (Y → C)} {M' : S
   · intro hg
     have : (g.1 ∘ (e.symm : Y →ₗ[F] X)) ∘ e ∈ sqIdeal (augIdeal M') :=
       sq_pull (e : X →ₗ[F] Y) h1 hg
-    rw [c1] at this
-    exact this
-  · intro hg
-    exact sq_pull (e.symm : Y →ₗ[F] X) h2 hg
+    rwa [c1] at this
+  · exact fun hg => sq_pull (e.symm : Y →ₗ[F] X) h2 hg
 
 end Pull
 

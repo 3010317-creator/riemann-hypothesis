@@ -70,8 +70,7 @@ private theorem eq_specMap_comp_of_apply_eq {X : Scheme.{0}} {B K Ω : Type} [Co
       Set.range e ⊆ Set.range hW.fromSpec := by
     intro Y e z hz he
     rintro _ ⟨z', rfl⟩
-    rw [hW.range_fromSpec, hz z']
-    exact he
+    rwa [hW.range_fromSpec, hz z']
   have hyW := hrange y a (fun z' => hpt Ω z' a) (by rw [hab]; exact hbW)
   have hsW := hrange s b (fun z' => hpt K z' b) hbW
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (IsOpenImmersion.lift hW.fromSpec y hyW)
@@ -96,8 +95,7 @@ private theorem eq_specMap_comp_of_apply_eq {X : Scheme.{0}} {B K Ω : Type} [Co
     have hmem : x ∈ PrimeSpectrum.asIdeal ((Spec.map σ) b) := by
       rw [Spec.map_apply]
       change σ.hom x ∈ b'.asIdeal
-      rw [hb, Ideal.mem_bot]
-      exact hx
+      rwa [hb, Ideal.mem_bot]
     rw [← e, Spec.map_apply] at hmem
     change ψ.hom x ∈ a'.asIdeal at hmem
     rwa [ha, Ideal.mem_bot] at hmem

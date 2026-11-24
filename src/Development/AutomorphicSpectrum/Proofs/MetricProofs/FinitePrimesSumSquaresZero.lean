@@ -64,8 +64,7 @@ theorem exists_eq_add_mul_of_mem_adjoin {E : Type*} [Field E] [Algebra ℚ E] (x
   have hint : IsIntegral ℚ x :=
     ⟨Polynomial.X ^ 2 - Polynomial.C c, Polynomial.monic_X_pow_sub_C c two_ne_zero, by simp [hx]⟩
   have hy' : y ∈ Algebra.adjoin ℚ {x} := by
-    rw [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hint.isAlgebraic]
-    exact hy
+    rwa [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hint.isAlgebraic]
   refine Algebra.adjoin_induction (fun z hz => ?_) (fun r => ?_) (fun u v _ _ hu hv => ?_)
     (fun u v _ _ hu hv => ?_) hy'
   · exact ⟨0, 1, by rw [Set.mem_singleton_iff.mp hz]; simp⟩
@@ -91,8 +90,7 @@ theorem not_sq_eq_of_prime {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hpq : p �
     padicValRat.self hq.one_lt, padicValRat.of_nat, padicValNat.eq_zero_of_not_dvd] at h1
   · push_cast at h1
     omega
-  · intro hd
-    exact hpq ((Nat.prime_dvd_prime_iff_eq hq hp).mp hd).symm
+  · exact fun hd => hpq ((Nat.prime_dvd_prime_iff_eq hq hp).mp hd).symm
 
 theorem false_of_sq_eq {E : Type*} [Field E] [CharZero E] [Algebra ℚ E] {p q : ℕ} (hp : p.Prime)
     (hq : q.Prime) (hpq : p ≠ q) (x : E) (hx : x ^ 2 = -(q : E)) (a b : ℚ)

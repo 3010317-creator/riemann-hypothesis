@@ -222,8 +222,7 @@ theorem mem_mulLat_iff {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω V] {
   · rintro ⟨u, hu, huv⟩
     rw [← huv]
     simpa [inv_smul_smul₀ hw] using hu
-  · intro h
-    exact ⟨w⁻¹ • v, h, by simp [smul_inv_smul₀ hw]⟩
+  · exact fun h => ⟨w⁻¹ • v, h, by simp [smul_inv_smul₀ hw]⟩
 
 theorem smul_mem_stdLat {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Subalgebra o Ω)
     (ι : Type) {a : Ω} (ha : a ∈ R) {v : ι → Ω} (hv : v ∈ stdLat R ι) : a • v ∈ stdLat R ι := by
@@ -301,12 +300,10 @@ theorem glue_gamdel : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (
     constructor
     · rintro ⟨h1, h2⟩
       have h3 : i (w • a) ∈ GlobalTheory.CompanionTheory.Ar.Num.mulLat w (GlobalTheory.CompanionTheory.Ar.Num.stdLat R (Fin n)) := by
-        rw [hmem, map_smul, inv_smul_smul₀ hw]
-        exact h2
+        rwa [hmem, map_smul, inv_smul_smul₀ hw]
       have h4 := hexW _ h1 h3
       rwa [hmem, inv_smul_smul₀ hw] at h4
-    · intro ha
-      exact ⟨hW w hwR a ha, hiW a ha⟩
+    · exact fun ha => ⟨hW w hwR a ha, hiW a ha⟩
   · intro b
     constructor
     · rintro ⟨c, hc⟩
@@ -339,8 +336,7 @@ theorem glue_gamdel : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (
     constructor
     · rintro ⟨h1, h2⟩
       have h3 : q (w • b) ∈ GlobalTheory.CompanionTheory.Ar.Num.mulLat w om := by
-        rw [hmem, map_smul, inv_smul_smul₀ hw]
-        exact h2
+        rwa [hmem, map_smul, inv_smul_smul₀ hw]
       obtain ⟨a0, ha0, h4⟩ := (hexS _ h1).1 h3
       rw [hmem, smul_sub, inv_smul_smul₀ hw] at h4
       refine ⟨w⁻¹ • a0, (PositivityTheory.HtPt.Gamdel.mem_graphLat _ _ _ _ _ _).2 ⟨?_, ?_⟩⟩
@@ -356,8 +352,7 @@ theorem glue_gamdel : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (
         exact AddSubgroup.add_mem _ (hS w hwR _ h2) (hiW _ h1)
       refine ⟨hwb, ?_⟩
       have h3 : w • b - i (w • a) ∈ GlobalTheory.CompanionTheory.Ar.Num.mulLat w (GlobalTheory.CompanionTheory.Ar.Num.stdLat R (Fin n)) := by
-        rw [hmem, map_smul, ← smul_sub, inv_smul_smul₀ hw]
-        exact h2
+        rwa [hmem, map_smul, ← smul_sub, inv_smul_smul₀ hw]
       have h4 := (hexS _ hwb).2 ⟨w • a, h1, h3⟩
       rwa [hmem, map_smul, inv_smul_smul₀ hw] at h4
 
@@ -462,8 +457,7 @@ theorem glue_split : ∀ (E : Type) [Field E] [NumberField E] (p : ℕ), p.Prime
   refine ⟨ε, hε1, ?_, ?_, ?_, PositivityTheory.HtPt.Gsplit.coprime_different E p hp hd⟩
   · intro w' hw' hpw' hne
     have hle : w * J ≤ w' := by
-      rw [← hJ, Ideal.span_singleton_le_iff_mem]
-      exact hpw'
+      rwa [← hJ, Ideal.span_singleton_le_iff_mem]
     rcases hw'.mul_le.mp hle with h | h
     · exact absurd (hmax.eq_of_le hw'.ne_top h).symm hne
     · exact h hε
@@ -627,8 +621,7 @@ theorem orbit_abstract {p : ℕ} (hp : p.Prime) (hd : ¬ (p : ℤ) ∣ NumberFie
       have hm : lf (a + b) - (lf a + lf b) ∈ w₀ := by
         rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_add (f := _), hlf, hlf, hlf, sub_self]
       have := hz _ hm
-      rw [mul_sub, map_sub, sub_eq_zero, mul_add, map_add (f := _)] at this
-      exact this
+      rwa [mul_sub, map_sub, sub_eq_zero, mul_add, map_add (f := _)] at this
   have hsc : ∀ a, sc a = Ideal.Quotient.mk _ (ε * lf a) := fun a => rfl
   let Sg : Type := {t : T // RingHom.ker (r t) = w₀}
   let f : Sg → Sg := fun τ => ⟨φ τ.1, (hker τ.1).trans τ.2⟩
@@ -656,8 +649,7 @@ theorem orbit_abstract {p : ℕ} (hp : p.Prime) (hd : ¬ (p : ℤ) ∣ NumberFie
     have hu' : u' ∈ w₀ := Ideal.Quotient.eq_zero_iff_mem.1 hu
     rw [hsc, ← map_mul]
     have := hz _ (w₀.mul_mem_right (lf a) hu')
-    rw [show u' * (ε * lf a) = ε * (u' * lf a) by ring]
-    exact this
+    rwa [show u' * (ε * lf a) = ε * (u' * lf a) by ring]
 
 end Abstract
 
@@ -752,15 +744,13 @@ theorem orbit_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       (by rw [Ideal.mem_comap, map_natCast]; exact hpm') s a u' v' hu1 hv1
     rw [Ideal.mem_comap, map_sub, map_pow, hu2, hv2] at hn
     have h2 := (IsLocalRing.residue_eq_zero_iff _).2 hn
-    rw [map_sub, map_pow, sub_eq_zero] at h2
-    exact h2
+    rwa [map_sub, map_pow, sub_eq_zero] at h2
   obtain ⟨Sg, i1, e, φ', F, i2, i3, i4, pq, sc, σ, a1, a2, a3, a4, a5, a6, a7⟩ :=
     orbit_abstract hp hdisc t₀ φ (fun t => (IsLocalRing.residue O).comp (g t)) hpk hF
   refine ⟨Sg, i1, e, φ', F, i2, i3, i4, pq, sc, z - 1, σ, ⟨a1, a2, a3, a4, ?_, ?_, ⟨hp0, ⟨u, hu, huw⟩, hnu⟩, ?_⟩, a7⟩
   · intro τ a
     exact ⟨g (e τ) a, hg _ _, a5 τ a⟩
-  · intro t ht
-    exact a6 t fun a => ht a (g t a) (hg t a)
+  · exact fun t ht => a6 t fun a => ht a (g t a) (hg t a)
   · unfold HT.IsCp
     rw [ite_eq_right hp2]
     exact ⟨ζ, hζ, by rw [map_sub, map_one, hz]⟩

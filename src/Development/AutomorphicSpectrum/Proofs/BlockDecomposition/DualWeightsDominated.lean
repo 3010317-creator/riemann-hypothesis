@@ -114,8 +114,7 @@ theorem exists_top_add (φ : (Fin n → ℤ) →+ ℤ) (f g : LP n) (hf : f ≠ 
       · rw [ite_eq_left rfl]
       · intro y _ hne
         rw [ite_eq_right]
-        intro he
-        exact hne (add_left_cancel he)
+        exact fun he => hne (add_left_cancel he)
       · intro h
         rw [Finsupp.notMem_support_iff.1 h]
         simp
@@ -207,8 +206,7 @@ theorem bd_altL (w m : Fin n → ℤ) (hw : Antitone w) (hm : Antitone m) :
   unfold altL
   refine Bd.sum _ _ fun σ _ => ?_
   refine Bd.smul _ ((bd_single _ _ _).mono ?_)
-  simp only [phw_apply]
-  exact Monovary.sum_mul_comp_perm_le_sum_mul (Antitone.monovary hw hm)
+  simpa only [phw_apply] using Monovary.sum_mul_comp_perm_le_sum_mul (Antitone.monovary hw hm)
 
 theorem phw_single_sub (w : Fin n → ℤ) (a b : Fin n) :
     phw w (Pi.single a 1 - Pi.single b 1) = w a - w b := by
@@ -523,8 +521,7 @@ theorem exists_weight {χ : (Fin n → Circle) → ℂ} {v : E.V}
         · simp only [Pi.mulSingle_eq_same]; exact continuous_id'
         · simpa [Pi.mulSingle_eq_of_ne h] using continuous_const
       refine Units.continuous_iff.2 ⟨?_, ?_⟩
-      · show Continuous fun z => χ (Pi.mulSingle a z)
-        exact hcont.comp hs
+      · exact hcont.comp hs
       have : (fun z => (((f z)⁻¹ : ℂˣ) : ℂ)) = fun z => χ (Pi.mulSingle a z⁻¹) := by
         funext z; rw [← map_inv]; rfl
       rw [this]; exact hcont.comp (hs.comp continuous_inv)

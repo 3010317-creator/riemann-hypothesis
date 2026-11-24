@@ -72,8 +72,7 @@ theorem exists_finset_separating {K : Type} (A : Submodule ℂ (K → ℂ)) [Fin
         have hlt : B' < B := by
           refine lt_of_le_of_ne inf_le_left (fun h => hκ0 ?_)
           have hmem : c0 ∈ B' := by
-            rw [h]
-            exact hc0B
+            rwa [h]
           exact LinearMap.mem_ker.mp (Submodule.mem_inf.mp hmem).2
         have hrk : Module.finrank ℂ B' < n := by
           have := Submodule.finrank_lt_finrank_of_lt hlt
@@ -83,9 +82,7 @@ theorem exists_finset_separating {K : Type} (A : Submodule ℂ (K → ℂ)) [Fin
         refine Submodule.mem_inf.mpr ⟨hc, LinearMap.mem_ker.mpr ?_⟩
         exact hvan κ0 (Finset.mem_insert_self κ0 S')
   obtain ⟨S, hS⟩ := key _ ⊤ rfl
-  refine ⟨S, fun c hc hvan => ?_⟩
-  have h0 := hS ⟨c, hc⟩ Submodule.mem_top hvan
-  exact congrArg Subtype.val h0
+  exact ⟨S, fun c hc hvan => (congrArg Subtype.val (hS ⟨c, hc⟩ Submodule.mem_top hvan))⟩
 
 theorem finiteDimensional_coeffSpan {K W : Type} [Group K] [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
     (ρ : Representation ℂ K W) : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := by

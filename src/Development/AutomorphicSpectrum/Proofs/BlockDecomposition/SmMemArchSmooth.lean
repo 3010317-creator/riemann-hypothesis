@@ -122,7 +122,6 @@ theorem sm_mem_archSmooth (φ : Sm E a) : φ.1 ∈ AutomorphicForm.archSmooth E 
       chart φ.1 g ∘ fun Y => L (F Y) :=
     funext fun Y => archSlice_eq E a φ.1 g _
   change ContDiff ℝ ∞ (fun Y : archLie E a => archSlice φ.1 g (g' * (isExpLieAlgebra E a).expG Y))
-  rw [e]
-  exact hc
+  rwa [e]
 
 end GlobalTheory.CompanionTheory.ArchSmooth

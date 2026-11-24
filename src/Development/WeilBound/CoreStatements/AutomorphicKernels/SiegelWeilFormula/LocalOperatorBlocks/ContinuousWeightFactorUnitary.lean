@@ -55,8 +55,7 @@ namespace PositivityTheory.SiegelWeilFormula.KLI
 variable {m n : ℕ}
 
 theorem mR_injective : Function.Injective (mR : GR n → M2 n) := by
-  intro x y h
-  exact Subtype.ext (Units.ext h)
+  exact fun x y h => Subtype.ext (Units.ext h)
 
 theorem mR_mul (x y : GR n) : mR (x * y) = mR x * mR y := rfl
 
@@ -321,8 +320,7 @@ theorem det_poly (C D : Matrix (Fin n) (Fin n) ℂ) :
   ring
 
 theorem exists_real_ne {p : Polynomial ℂ} (hp : p ≠ 0) : ∃ k : ℕ, p.eval (k : ℂ) ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   apply hp
   apply Polynomial.eq_zero_of_infinite_isRoot
   refine Set.Infinite.mono (fun x hx => ?_) (Set.infinite_range_of_injective (Nat.cast_injective (R := ℂ)))
@@ -395,8 +393,7 @@ theorem nbG_cont : Continuous (nbG (n := n)) := by
     Continuous.matrix_fromBlocks continuous_const continuous_const
       ((Complex.continuous_ofReal.comp continuous_neg).smul continuous_const) continuous_const
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨h1, ?_⟩) _
-  refine h2.congr fun t => ?_
-  exact (nbG_inv_val t).symm
+  exact h2.congr fun t => (nbG_inv_val t).symm
 
 theorem nbG_zero : nbG (n := n) 0 = 1 := by
   apply mR_injective

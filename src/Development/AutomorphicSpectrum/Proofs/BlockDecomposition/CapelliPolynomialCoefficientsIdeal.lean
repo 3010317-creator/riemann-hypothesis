@@ -215,8 +215,7 @@ theorem monic_relations_to_blocks : ∀ (V : Type) [AddCommGroup V] [Module ℂ 
     have key := aeval_sub_aeval_mem (R (u + c₁) * S (u + c₂)) (D u) Wn I
       (hpres (mul_mem (hRmem _) (hSmem _))) (hD u)
       (fun F hF => by rw [(hRS _ _).eq]; exact hDβ u F hF) p F (hW0 hF)
-    rw [hp0 F hF, sub_zero] at key
-    exact key
+    rwa [hp0 F hF, sub_zero] at key
   have hcoef := _root_.GlobalTheory.CompanionTheory.IntFac.isIntegral_coeff_of_shifted_product (Algebra.adjoin ℂ s ⧸ Y) P Q c₁ c₂ hPm hQm hβ
   refine ⟨fun u => ?_, fun u => ?_⟩
   · have hint : IsIntegral ℂ (π ⟨R u, hRmem u⟩) := by

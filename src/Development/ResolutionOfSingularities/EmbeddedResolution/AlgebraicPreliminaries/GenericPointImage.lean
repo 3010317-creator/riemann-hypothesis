@@ -105,8 +105,7 @@ theorem isGenericPoint_preimage_of_isInducing {f : Y → X} (hf : Topology.IsInd
     IsGenericPoint y (f ⁻¹' T) := by
   have h2 : closure ({y} : Set Y) = f ⁻¹' closure (f '' ({y} : Set Y)) :=
     hf.closure_eq_preimage_closure_image _
-  rw [Set.image_singleton, hy, IsGenericPoint.def h] at h2
-  exact h2
+  rwa [Set.image_singleton, hy, IsGenericPoint.def h] at h2
 
 theorem isGenericPoint_image_of_isClosedEmbedding {f : Y → X}
     (hf : Topology.IsClosedEmbedding f) {y : Y} {T : Set Y} (h : IsGenericPoint y T) :
@@ -121,8 +120,7 @@ theorem isGenericPoint_image_of_isClosedEmbedding {f : Y → X}
   · have h2 : f '' closure ({y} : Set Y) ⊆ closure (f '' ({y} : Set Y)) :=
       image_closure_subset_closure_image hf.continuous
     rw [Set.image_singleton] at h2
-    rw [← IsGenericPoint.def h]
-    exact h2
+    rwa [← IsGenericPoint.def h]
 
 theorem closure_image_genericPoint {f : X → Y} (hcont : Continuous f) {S : Set X} {ξ : X}
     (hξ : IsGenericPoint ξ S) : closure (f '' S) = closure ({f ξ} : Set Y) := by
@@ -130,8 +128,7 @@ theorem closure_image_genericPoint {f : X → Y} (hcont : Continuous f) {S : Set
   · refine closure_minimal ?_ isClosed_closure
     have hsub := image_closure_subset_closure_image (f := f) (s := ({ξ} : Set X)) hcont
     rw [Set.image_singleton] at hsub
-    rw [← hξ]
-    exact hsub
+    rwa [← hξ]
   · refine closure_mono ?_
     refine Set.singleton_subset_iff.2 ⟨ξ, ?_, rfl⟩
     rw [← hξ]

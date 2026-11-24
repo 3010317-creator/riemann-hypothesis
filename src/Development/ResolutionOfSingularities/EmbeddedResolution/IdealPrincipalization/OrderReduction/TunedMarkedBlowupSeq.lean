@@ -166,8 +166,7 @@ theorem orderAt_ideal_length_le (hstar : MaxContactCoverProperties.{u}) (S : Mar
     ∀ x : ↥(s.obj s.length), orderAt (s.ideal s.length) x ≤ (S.mult : ℕ∞) := by
   have h := hstar.orderAt_level_le S hV hO s.toMarkedSequenceOfBlowups s.length
     (le_of_eq (MarkedBlowupSequenceData.toMarkedSequence_length s).symm)
-  intro x
-  exact h x
+  exact fun x => h x
 
 theorem maxOrderEq_ideal_length_of_nonempty (hstar : MaxContactCoverProperties.{u}) (S : MarkedIdealWithBoundary.{u}) (hV : S.IsAdmissible)
     (hO : ∀ x : ↥S.scheme, orderAt S.ideal x ≤ (S.mult : ℕ∞))
@@ -290,11 +289,9 @@ theorem length_eq_zero_of_orderAtLeastLocus_eq_empty (hstar : MaxContactCoverPro
     balancedTunedSheaf_eq_top_of_orderAtLeastLocus_eq_empty S.base (s.proj s.length ≫ S.structMap)
       (s.ideal s.length) hm hempty
   have hjb : j < (MaxContactCoverData.derivedTriple S s hft extra ndrop).boundary.length := by
-    rw [MaxContactCoverData.derivedTriple_boundary S s hft extra ndrop]
-    exact hj
+    rwa [MaxContactCoverData.derivedTriple_boundary S s hft extra ndrop]
   have h1 : (MaxContactCoverData.derivedTriple S s hft extra ndrop).ideal = ⊤ := by
-    rw [ideal_derivedTriple S s hft extra ndrop]
-    exact htuned
+    rwa [ideal_derivedTriple S s hft extra ndrop]
   have hcs : orderAtLeastLocus (MaxContactCoverData.derivedTriple S s hft extra ndrop).ideal
       (MaxContactCoverData.derivedTriple S s hft extra ndrop).mult = ∅ := by
     rw [h1, MaxContactCoverData.derivedTriple_mult S s hft extra ndrop]

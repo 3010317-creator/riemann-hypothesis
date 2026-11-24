@@ -696,8 +696,7 @@ theorem colW {R : Subring Ω} {F : FrameD n J₀ Ω p q} (hF : FrameIds A x₀ m
     have e1 : ¬ p ≤ (r.2 : ℕ) + 1 := by show ¬ p ≤ 0 + 1; omega
     have e2 : ¬ (r.2 : ℕ) + 1 = p + q := by show ¬ 0 + 1 = p + q; omega
     rw [twist_prod, detFac_eq, ite_eq_right e1, ite_eq_right e2, dite_eq_right (fun e => e1 e.2), dite_eq_right (fun e => e2 e.2), hw] at h
-    simp only [mul_one, one_smul] at h
-    exact h
+    simpa only [mul_one, one_smul] using h
   · have hp1 : p = 1 := by omega
     obtain ⟨v, h0, hvR, hvi, e⟩ := detW hF hR τ (m := m)
     let t : StepIx Ψ p q := ⟨.inl τ, ⟨p - 1, by show p - 1 < p; omega⟩⟩
@@ -803,8 +802,7 @@ theorem inO_injective {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
     (τ : CMType H) : Function.Injective (inO A τ) := by
   classical
   intro a b h
-  have h2 := congrArg (fun z : EE A => z.2 τ) h
-  simpa [inO] using h2
+  simpa [inO] using congrArg (fun z : EE A => z.2 τ) h
 
 theorem isFrameAt_of_goodAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] [CharZero Ω] (K₀ : Type) [Fintype K₀] (J₀ : K₀ → Type) [∀ k, Fintype (J₀ k)] (x₀ : (Σ k, J₀ k) → Ω) (𝔐 : HodgeCpt Y S x₀) (bW : WBases 𝔐) (bO : OmBases 𝔐) (n m : CMType H ⊕ CMType H → ℕ) (φ : ∀ s, Fin (n s) → Module.Dual Ω (EE 𝔐)), FormsOK 𝔐 bW bO m φ → CoordTie ℤ 𝔐.ξ (seg (xb (p := D.p) (q := D.q) (aOf 𝔐 bW bO φ) x₀)) → ∀ h : ModelOK (aOf 𝔐 bW bO φ) x₀ m, ∀ (q : Cpt 𝔐.ξ) (F : FrameData (idx (p := D.p) (q := D.q) J₀ n) (CMType H) (D.p + D.q) Ω (blkF (CMType H) D.p D.q K₀)), (model (aOf 𝔐 bW bO φ) x₀ m h).IsFrame F → (model (aOf 𝔐 bW bO φ) x₀ m h).GoodAt F (ptIdeal 𝔐.ξ (xb (p := D.p) (q := D.q) (aOf 𝔐 bW bO φ) x₀) q) → ∀ τ, (𝔐.V (.inl τ)).IsFrameAt (colFrame (fun a => (bW τ a : 𝔐.Li)) (wBlock (F.T τ))) q ∧ (omBundle 𝔐 τ).IsFrameAt (colFrame (bO τ) (omBlock (F.T τ))) q := by
   intro E _ _ _ H D l Xo c Y S Ω _ _ K₀ _ J₀ _ x₀ 𝔐 bW bO n m φ hforms htie h q F hF hG τ
@@ -828,8 +826,7 @@ theorem isFrameAt_of_goodAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     have hfr := hf q (Set.mem_univ _) hU
     rcases hT with h0 | hT
     · have : colFrame (cc 𝔐 bW bO s) T = b := funext fun a => absurd a.2 (by omega)
-      rw [this]
-      exact hfr
+      rwa [this]
     · exact frame_of_cols (htw s) hc hfr (hbas s).1 ((hbas s).2.trans hb.symm) hT
   constructor
   · have h1 := key (.inl τ) (wBlock (F.T τ)) (by
@@ -844,8 +841,7 @@ theorem isFrameAt_of_goodAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rw [map_sum]
       exact Finset.sum_congr rfl fun a _ => map_smul _ _ _
     refine frame_unmap (inW_injective 𝔐) ?_
-    rw [e]
-    exact h1
+    rwa [e]
   · have h1 := key (.inr τ) (omBlock (F.T τ)) (by
       rcases Nat.eq_zero_or_pos D.q with h0 | hq
       · exact .inl h0
@@ -858,7 +854,6 @@ theorem isFrameAt_of_goodAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rw [map_sum]
       exact Finset.sum_congr rfl fun a _ => map_smul _ _ _
     refine frame_unmap (inO_injective 𝔐 τ) ?_
-    rw [e]
-    exact h1
+    rwa [e]
 
 end GlobalTheory.CompanionTheory.Ar.PB.FMX.FrameAt

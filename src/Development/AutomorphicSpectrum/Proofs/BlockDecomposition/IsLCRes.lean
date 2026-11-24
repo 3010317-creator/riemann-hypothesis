@@ -142,8 +142,7 @@ theorem isLC_res {U V : Scheme.{0}} {ζ : Prim q Γ(U, ⊤)}
   delta CrystallineSemistableComparison.E.IsLC at hx ⊢
   intro W h a ha
   rw [← res_comp, hx W (h ≫ g) a ?_, primRes_comp]
-  intro w
-  exact ha w
+  exact fun w => ha w
 
 theorem kapSpec : LcCover → RepRoot → KapSpec := by
   intro hL hR q i U ζ f
@@ -153,8 +152,7 @@ theorem kapSpec : LcCover → RepRoot → KapSpec := by
     have hex : ∃ κ : LocallyConstant U' (ZMod q) →+ Sec (tw q i) U', ∀ f'', IsLC i ζ' f'' (κ f'') := by
       choose c hc using fun f'' : LocallyConstant U' (ZMod q) => isLC_exists hL hR (i := i) ζ' f''
       refine ⟨{ toFun := c, map_zero' := ?_, map_add' := fun a b => ?_ }, hc⟩
-      · have h := isLC_unique hL (hc (0 + 0)) (isLC_add hL hR (hc 0) (hc 0))
-        simpa using h
+      · simpa using isLC_unique hL (hc (0 + 0)) (isLC_add hL hR (hc 0) (hc 0))
       · exact isLC_unique hL (hc (a + b)) (isLC_add hL hR (hc a) (hc b))
     delta CrystallineSemistableComparison.E.kap
     exact GlobalTheory.EtC.pick_spec hex f'

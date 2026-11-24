@@ -167,8 +167,7 @@ theorem exists_factor (ρ : 𝓞 E →+* Module.End Ω V) (σ : 𝓞 E →+* Ω)
       rw [this, map_zero]
     rw [hh, eval₂_mul_noncomm _ _ fun k => commute_scal σ _ _] at e2
     simpa [eval₂_sub] using e2
-  · intro v hv
-    exact eval₂_apply_of_eigen ρ σ w hv h
+  · exact fun v hv => eval₂_apply_of_eigen ρ σ w hv h
 
 theorem exists_product (ρ : 𝓞 E →+* Module.End Ω V) (σ : 𝓞 E →+* Ω) (W : Finset (𝓞 E)) :
     ∃ T ∈ opRing ρ σ, ∃ x : 𝓞 E, x ≠ 0 ∧ (∀ w ∈ W, (ρ w - scal V σ w) * T = 0) ∧
@@ -253,8 +252,7 @@ theorem exists_pow_mul_mem (U : X.Opens) (hU : IsAffineOpen U) (hall : ∀ x ∈
     intro q hq r
     have : X.presheaf.germ U q.1 hq ≫ X.presheaf.stalkSpecializes q.2 = X.presheaf.germ U (genPt ξ) hg :=
       TopCat.Presheaf.germ_stalkSpecializes _ _ _
-    have e2 := congrArg (fun g => g ≫ Scheme.stalkClosedPointTo ξ) this
-    exact congrArg (fun g => g.hom r) e2
+    exact congrArg (fun g => g.hom r) (congrArg (fun g => g ≫ Scheme.stalkClosedPointTo ξ) this)
   let I : Ideal Γ(X, U) :=
     { carrier := {r | ∃ r', φ r * f = φ r'}
       add_mem' := by
@@ -292,8 +290,7 @@ theorem exists_pow_mul_mem (U : X.Opens) (hU : IsAffineOpen U) (hall : ∀ x ∈
     have h2 : genMap ξ q (algebraMap Γ(X, U) (X.presheaf.stalk (hU.fromSpec y)) t) = φ t := key q hy _
     have h3 : genMap ξ q (algebraMap Γ(X, U) (X.presheaf.stalk (hU.fromSpec y)) r) = φ r := key q hy _
     rw [h2, h3] at h1
-    rw [mul_comm]
-    exact h1
+    rwa [mul_comm]
   obtain ⟨k, r', hk⟩ := hrad
   refine ⟨k, fun q hq => ⟨(X.presheaf.germ U q.1 hq).hom r', ?_⟩⟩
   rw [key q hq, ← hk]

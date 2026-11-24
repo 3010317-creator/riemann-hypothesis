@@ -121,10 +121,8 @@ theorem coordsAt_pull (hd : GlobalTheory.CompanionTheory.Ar.Dominates ξ' ξ f i
       exact hval s2
     obtain ⟨r, h1, h2⟩ := aux (v ⟨k, e⟩) (hv.2.2.1 ⟨k, e⟩)
     refine ⟨r, ?_, ?_⟩
-    · rw [map_div₀, ← hy, ← hy, hdv k]
-      exact h1
-    · rw [hdv k]
-      exact h2
+    · rwa [map_div₀, ← hy, ← hy, hdv k]
+    · rwa [hdv k]
   have hyd : ∀ k, y ⟨k, d k⟩ ≠ 0 := fun k h0 => by
     have h1 := (hw.2 (κ k) (c' (κ k)) (hc' _)).1
     rw [← hdv k, hy, h0, map_zero] at h1
@@ -168,8 +166,7 @@ theorem coordsAt_pull (hd : GlobalTheory.CompanionTheory.Ar.Dominates ξ' ξ f i
       have e3 : y ⟨k, e2⟩ / y ⟨k, e⟩ = y ⟨k, e2⟩ / y ⟨k, d k⟩ * (y ⟨k, e⟩ / y ⟨k, d k⟩)⁻¹ := by
         have := hyd k
         field_simp
-      rw [e3]
-      exact h5
+      rwa [e3]
     · show w (v ⟨k, e2⟩) = r2 * re⁻¹ * w (v ⟨k, e⟩)
       rw [h4, h2]
       field_simp

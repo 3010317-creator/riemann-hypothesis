@@ -58,12 +58,9 @@ theorem prod_filter_le_rev {M : Type*} [CommMonoid M] (h : ℕ) (f : Fin h → M
     exact Fin.rev_le_rev.mpr ha
   · intro a ha
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha ⊢
-    rw [← Fin.rev_le_rev, Fin.rev_rev]
-    exact ha
-  · intro a _
-    exact Fin.rev_rev a
-  · intro a _
-    exact Fin.rev_rev a
+    rwa [← Fin.rev_le_rev, Fin.rev_rev]
+  · exact fun a _ => Fin.rev_rev a
+  · exact fun a _ => Fin.rev_rev a
   · intro a _
     rfl
 

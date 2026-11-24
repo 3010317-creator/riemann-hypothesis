@@ -90,11 +90,8 @@ theorem eigenvectors_sum_zero_eq_zero {ι κ A : Type} [DecidableEq ι] [AddComm
     intro v hv hsum a ha
     by_cases hall : ∀ b ∈ s, b = a
     · have h1 : ∑ i ∈ s, v i = v a := by
-        apply Finset.sum_eq_single_of_mem a ha
-        intro b hb hba
-        exact absurd (hall b hb) hba
-      rw [← h1]
-      exact hsum
+        exact Finset.sum_eq_single_of_mem a ha (fun b hb hba => absurd (hall b hb) hba)
+      rwa [← h1]
     · push Not at hall
       obtain ⟨b, hb, hba⟩ := hall
       have hfb : f b ≠ f a := fun h => hba (hf h)
@@ -115,8 +112,7 @@ theorem eigenvectors_sum_zero_eq_zero {ι κ A : Type} [DecidableEq ι] [AddComm
       have hw_sum : ∑ i ∈ s.erase a, (f i k - f a k) • v i = 0 := by
         have h4 := Finset.sum_erase_add s (fun i => (f i k - f a k) • v i) ha
         simp only [sub_self, zero_smul, add_zero] at h4
-        rw [h4]
-        exact h2
+        rwa [h4]
       have hw0 := ih (s.erase a) (Finset.erase_ssubset ha)
         (fun i => (f i k - f a k) • v i) hw_eig hw_sum
       have hz : ∀ i ∈ s, f i k ≠ f a k → v i = 0 := by
@@ -1321,8 +1317,7 @@ theorem perp_stable (M : Matrix ι ι ℂ) (R : Submodule ℂ (ι → ℂ)) (h :
     {k : ι → ℂ} (hk : k ∈ perp R) : M *ᵥ k ∈ perp R := by
   intro r hr
   have := hk _ (h r hr)
-  rw [star_mulVec, conjTranspose_conjTranspose, ← dotProduct_mulVec] at this
-  exact this
+  rwa [star_mulVec, conjTranspose_conjTranspose, ← dotProduct_mulVec] at this
 
 end Perp
 

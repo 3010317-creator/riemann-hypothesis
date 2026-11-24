@@ -72,13 +72,11 @@ theorem eisBL_of (hH : SiegelEisensteinSeries.EisHalf) (hM : SiegelMult) (hF : O
   have hHv : ∀ s' : ℂ, max t₀ t₁ < s'.re → ∀ x, (H s').1 x = A s' * (v s').1 x := by
     intro s' hs' x
     have h1 := hHs s' (lt_of_le_of_lt (le_max_right _ _) hs') x
-    have h2 := (hv s' (lt_of_le_of_lt (le_max_left _ _) hs') x).mul_left (A s')
-    exact h1.unique h2
+    exact h1.unique ((hv s' (lt_of_le_of_lt (le_max_left _ _) hs') x).mul_left (A s'))
   let Ehat : ℂ → G2 σ Y → ℂ := fun s' x => if max t₀ t₁ < s'.re then (v s').1 x else (H s').1 x / A s'
   refine ⟨Ehat, ⟨max t₀ t₁, ?_, ?_⟩, ?_⟩
   · intro s' hs' x
-    simp only [Ehat, ite_eq_left hs']
-    exact hv s' (lt_of_le_of_lt (le_max_left _ _) hs') x
+    simpa only [Ehat, ite_eq_left hs'] using hv s' (lt_of_le_of_lt (le_max_left _ _) hs') x
   · intro x
     have hd : DifferentiableOn ℂ (fun s' => evAt x (v s')) {s' : ℂ | t₀ < s'.re} :=
       hvh (evAt x) (isGrowForm_evAt x)

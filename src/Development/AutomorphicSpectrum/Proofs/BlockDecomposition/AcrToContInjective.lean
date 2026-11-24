@@ -90,8 +90,7 @@ theorem coi_fiber {R I J : Type} [CommRing R] [Fintype I] [Fintype J] [Decidable
       refine Finset.sum_congr rfl fun i hi => ?_
       rw [Finset.sum_eq_single i]
       · exact he.idem i
-      · intro j _ hji
-        exact he.ortho hji.symm
+      · exact fun j _ hji => he.ortho hji.symm
       · intro h; exact absurd hi h
     · refine Finset.sum_eq_zero fun i hi => Finset.sum_eq_zero fun j hj => he.ortho ?_
       rintro rfl
@@ -315,8 +314,7 @@ theorem mem_span_of_pow_mem (hφ : ∀ x, φ x = x ^ l) (hb : Function.Bijective
   | zero => simpa using h
   | succ N ih =>
     refine ih (mem_span_of_frob_mem φ hb ?_)
-    rw [hφ, hφ, ← pow_mul, ← pow_mul, ← pow_succ]
-    exact h
+    rwa [hφ, hφ, ← pow_mul, ← pow_mul, ← pow_succ]
 
 theorem sub_pow_of_frob (hφ : ∀ x, φ x = x ^ l) (a b : R) (N : ℕ) :
     (a - b) ^ l ^ N = a ^ l ^ N - b ^ l ^ N := by
@@ -571,8 +569,7 @@ theorem map_exists (A t : PAlg l) (φ : A ⟶ t) (e : ∀ m : ℕ, ZMod (l ^ m) 
     rw [this]
     exact tends_const _
   have hcomm : ψ.comp (A.cont ℤ_[l]).s = t.s := RingHom.ext fun y => by
-    have h := hconst (A.s y)
-    exact h.trans (RingHom.congr_fun (Hom.comm φ) y)
+    exact (hconst (A.s y)).trans (RingHom.congr_fun (Hom.comm φ) y)
   refine ⟨⟨ψ, hcomm⟩, Hom.ext (RingHom.ext hconst), fun m c => ?_⟩
   refine (hψ _).unique fun k => ⟨m, fun n hn => ?_⟩
   beta_reduce
@@ -610,8 +607,7 @@ theorem map_unique {A t : PAlg l} (ψ ψ' : A.cont ℤ_[l] ⟶ t)
   have h3 := map_mem_span ψ hfg
   have h4 := map_mem_span ψ' hfg
   have := sub_mem h3 h4
-  rw [map_sub, map_sub, hg, sub_sub_sub_cancel_right] at this
-  exact this
+  rwa [map_sub, map_sub, hg, sub_sub_sub_cancel_right] at this
 
 theorem map_existsUnique : ∀ {l : ℕ} [Fact l.Prime] (A t : PAlg l) (φ : A ⟶ t) (e : ∀ m : ℕ, ZMod (l ^ m) → t.A), (∀ m, CompleteOrthogonalIdempotents (e m)) →
   (∀ (m n : ℕ) (h : m ≤ n) (c : ZMod (l ^ m)), e m c = ∑ c' with ZMod.castHom (pow_dvd_pow l h) (ZMod (l ^ m)) c' = c, e n c') →
@@ -821,8 +817,7 @@ theorem zero_of_simple [CompactSpace X] (hmul : ∀ V W, E (V ⊓ W) = E V * E W
       rw [h, h0, map_zero, mul_zero]
   obtain ⟨V, hV, h⟩ := key
   have hT : V = ⊤ := SetLike.coe_injective (Set.eq_univ_of_univ_subset hV)
-  rw [hT, htop, one_mul] at h
-  exact h
+  rwa [hT, htop, one_mul] at h
 
 theorem exists_of_lc [CompactSpace X] (hcompl : ∀ V, E V + E Vᶜ = 1) (hj : ∀ z b, ev z (j b) = b)
     (h1 : ∀ z (V : Clopens X), z ∈ V → ev z (E V) = 1) (I : Ideal R) (f : X → B) (hf : IsLocallyConstant f)
@@ -886,8 +881,7 @@ theorem acr_top (D : PAlg l) (n : ℕ) (S : Subring (D.Acr n)) (h1 : ∀ a, D.cr
     (h2 : ∀ g, D.toAcr n (WittVector.teichmuller l g) ∈ S) (x : D.Acr n) : x ∈ S := by
   have hW : ∀ w : D.W, D.toAcr n w ∈ S := fun w => by
     obtain ⟨t, ht, r, rfl⟩ := witt_mem D (S.comap (D.toAcr n)) h2 n w
-    rw [map_add (f := _), map_mul, map_pow, map_natCast, D.pow_l_acr, zero_mul, add_zero]
-    exact ht
+    rwa [map_add (f := _), map_mul, map_pow, map_natCast, D.pow_l_acr, zero_mul, add_zero]
   obtain ⟨z, rfl⟩ := (RL.tens D n).1 x
   induction z using TensorProduct.inductionOn with
   | tmul a w =>
@@ -915,8 +909,7 @@ theorem EE_compl (e : Γ → (D ⟶ A)) (ind : Clopens Γ → D.A)
         exact h hz
       rw [h1 z V hz, h0 z _ hz', map_one, WittVector.teichmuller_zero, add_zero]
     · have hz' : z ∈ Vᶜ := by
-        rw [← SetLike.mem_coe, Clopens.coe_compl]
-        exact hz
+        rwa [← SetLike.mem_coe, Clopens.coe_compl]
       rw [h0 z V hz, h1 z _ hz', map_one, WittVector.teichmuller_zero, zero_add]
   rw [EE, EE, ← map_add (f := _), key, map_one]
 

@@ -220,8 +220,7 @@ theorem nM_rowMix_le (v : HeightOneSpectrum (𝓞 F)) {n M : ℕ} (C1 : ℝ)
     ext c i
     erw [Matrix.mul_apply]
     rfl
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem jtR_conj_inv' (v : HeightOneSpectrum (𝓞 F)) (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M n : ℕ}
     (J : Matrix (Fin M) (Fin M) E) (ψR : Fv F v → ℂ) (μv : Measure (Fin n → Fin M → Fv F v ⊗[F] E))
@@ -697,8 +696,7 @@ theorem avg_zero {H V : Type*} [TopologicalSpace H] [MeasurableSpace H] [OpensMe
     have h1 : Integrable (fun p : V × H => (1 : ℂ) * f p.2) ((m.restrict U).prod (ν.restrict S)) :=
       (integrable_const (1 : ℂ)).mul_prod hf
     refine h1.mono ?_ ?_
-    · refine (hf.aestronglyMeasurable.comp_snd).mul ?_
-      exact hχc.aestronglyMeasurable
+    · exact (hf.aestronglyMeasurable.comp_snd).mul hχc.aestronglyMeasurable
     · refine Filter.Eventually.of_forall fun p => ?_
       show ‖f p.2 * χ p.2 p.1‖ ≤ ‖(1 : ℂ) * f p.2‖
       rw [one_mul, norm_mul]
@@ -1114,8 +1112,7 @@ theorem shellP_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
       (1 + x) * (1 + x' x) = 1 ∧ (1 + x' x) * (1 + x) = 1 := by
     intro x hx
     have hs := Classical.choose_spec (hinv x (hrle x hx).2.1)
-    simp only [x', dite_eq_left hx]
-    exact ⟨hs.1, hs.2.1⟩
+    simpa only [x', dite_eq_left hx] using ⟨hs.1, hs.2.1⟩
   let φ : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E) → HermR (Fv F v) σ n → HermR (Fv F v) σ n := fun x b =>
     if hx : nM v x ≤ r then conjE h.cm (1 + x) (1 + x' x) (hx'1 x hx).1 (hx'1 x hx).2 b else b
   set S := {b : HermR (Fv F v) σ n | R < nM v b.1 ∧ nM v b.1 ≤ q * R} with hSdef
@@ -1177,8 +1174,7 @@ theorem shellP_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
       exact mul_le_mul_of_nonneg_left hb.1.le hCν.le
     obtain ⟨x₀, hx₀, hne⟩ := hnt b.1 hbpos r hC
     exact setIntegral_char_eq_zero m U hUm (chi ψ T b) (chi_add ψ T b) (x₀ := x₀) hx₀ hne
-  · intro b x
-    exact (_root_.PositivityTheory.SiegelWeilFormula.SwLocFin.norm_psiV' h.chr _).le
+  · exact fun b x => (_root_.PositivityTheory.SiegelWeilFormula.SwLocFin.norm_psiV' h.chr _).le
 
 end Shell
 

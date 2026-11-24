@@ -79,8 +79,7 @@ theorem upT_spec {A : Matrix (Fin N) (Fin N) ℂ} (h : ∀ b, (cutRows A b).det 
         ((1 : Matrix (Fin N) (Fin N) ℂ) *ᵥ ((cutRows A b)⁻¹ *ᵥ Pi.single b 1)) a := by
       generalize (cutRows A b)⁻¹ *ᵥ Pi.single b 1 = w
       simp only [Matrix.mulVec, dotProduct, cutRows, Matrix.of_apply, ite_eq_right (not_le.2 hba)]
-    rw [e1, Matrix.one_mulVec, Pi.single_eq_of_ne hba.ne'] at k1
-    exact k1
+    rwa [e1, Matrix.one_mulVec, Pi.single_eq_of_ne hba.ne'] at k1
   · intro hab
     have e1 : (cutRows A b *ᵥ ((cutRows A b)⁻¹ *ᵥ Pi.single b 1)) a = (A * upT A) a b := by
       simp only [Matrix.mul_apply, upT, Matrix.of_apply]
@@ -208,8 +207,7 @@ theorem flagImm_of : RankLem → FlagImm := by
     let X := (T τ t)⁻¹ * (((gm τ t)⁻¹ * dM (gm τ) t v) * T τ t + dM (T τ) t v)
     have hX : X.BlockTriangular id := by
       refine (Matrix.blockTriangular_inv_of_blockTriangular (hTt t ht τ)).mul (((hv τ).mul (hTt t ht τ)).add ?_)
-      intro a b hab
-      exact dM_zero v (hWn.mono fun z hz => hTt z hz τ hab)
+      exact fun a b hab => dM_zero v (hWn.mono fun z hz => hTt z hz τ hab)
     have e2 : L τ t * X = dM (L τ) t v := by
       have e3 : gm τ t₀ * (L τ t * X) = gm τ t₀ * dM (L τ) t v := by
         rw [e1, ← Matrix.mul_assoc, hgL]

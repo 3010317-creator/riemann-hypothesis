@@ -100,8 +100,7 @@ theorem Pw_commute {T : Fin n → Fin n → A} {u : A} (h : ∀ a b, Commute u (
     · exact Commute.one_right u
     · exact Commute.zero_right u
   | succ m ih =>
-    simp only [Pw]
-    exact Commute.sum_right _ _ _ fun c _ => (h a c).mul_right (ih c b)
+    simpa only [Pw] using Commute.sum_right _ _ _ fun c _ => (h a c).mul_right (ih c b)
 
 theorem Pw_bracket {T : Fin n → Fin n → A}
     (hT : ∀ a b c d, T a b * T c d - T c d * T a b = (if b = c then T a d else 0) - (if d = a then T c b else 0))
@@ -532,8 +531,7 @@ theorem gel_eq (s : Bool) (m : ℕ) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f
   have e : (Gl n V s m (res hf)).1 g = ∑ c, (Pw (Tc (DA n V) s) m c c (res hf)).1 g := by
     simp [Gl, LinearMap.sum_apply, Finset.sum_apply]
   rw [e]
-  simp only [gel, Finset.sum_apply]
-  exact Finset.sum_congr rfl fun c _ => Epow_eq s m c c hf hg
+  simpa only [gel, Finset.sum_apply] using Finset.sum_congr rfl fun c _ => Epow_eq s m c c hf hg
 
 theorem mul_mem_GLs {x g : Mat n} (hx : x ∈ GLs n) (hg : g ∈ GLs n) : x * g ∈ GLs n := by
   simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
@@ -584,8 +582,7 @@ theorem postE_apply (L : V →L[ℂ] V) (h : Sm n V) {g : Mat n} (hg : g ∈ GLs
 theorem Gl_commute {u : Module.End ℂ (Sm n V)} (h : ∀ X, Commute u (DA n V X)) (s : Bool) (m : ℕ) :
     Commute u (Gl n V s m) := by
   refine Commute.sum_right _ _ _ fun c _ => Pw_commute (fun a b => ?_) m c c
-  simp only [Tc, TX]
-  exact ((h _).add_right ((h _).smul_right _)).smul_right _
+  simpa only [Tc, TX] using ((h _).add_right ((h _).smul_right _)).smul_right _
 
 theorem DA_Gl_commute (X : Mat n) (s : Bool) (m : ℕ) : Commute (DA n V X) (Gl n V s m) :=
   D_commute_trPw DA_bracket (fun r X => DA_smul r X) s m X

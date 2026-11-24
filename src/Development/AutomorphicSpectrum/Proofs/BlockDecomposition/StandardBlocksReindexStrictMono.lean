@@ -55,10 +55,8 @@ namespace GlobalTheory.CompanionTheory.StdCompat
 theorem sum_castLE_eq_sum_filter {s : ℕ} (f : Fin s → ℕ) (c : Fin s) :
     ∑ b : Fin (c : ℕ), f (Fin.castLE c.2.le b) = ∑ j ∈ Finset.univ.filter (· < c), f j := by
   refine Finset.sum_bij (fun b _ => Fin.castLE c.2.le b) ?_ ?_ ?_ ?_
-  · intro b _
-    exact Finset.mem_filter.2 ⟨Finset.mem_univ _, b.2⟩
-  · intro x _ y _ h
-    exact Fin.castLE_injective _ h
+  · exact fun b _ => Finset.mem_filter.2 ⟨Finset.mem_univ _, b.2⟩
+  · exact fun x _ y _ h => Fin.castLE_injective _ h
   · intro j hj
     have hj' : (j : ℕ) < c := (Finset.mem_filter.1 hj).2
     exact ⟨⟨j, hj'⟩, Finset.mem_univ _, Fin.ext rfl⟩
@@ -93,7 +91,6 @@ theorem stdBlocks_drop_empty : ∀ {r r' N : ℕ} (d : Fin r → ℕ) (hd : ∑ 
   have h3 := sum_castLE_eq_sum_filter (fun a => d (o a)) a
   have h4 := sum_castLE_eq_sum_filter d (o a)
   have h5 := partial_sum_drop_empty d o ho hr a
-  rw [h1, h2]
-  rw [h3, h4, h5]
+  rw [h1, h2, h3, h4, h5]
 
 end GlobalTheory.CompanionTheory.StdCompat

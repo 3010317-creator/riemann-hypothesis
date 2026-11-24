@@ -180,8 +180,7 @@ theorem pair_split {j k : ℕ} (x : Fin (j + k) → R) :
     · rw [ite_eq_left h, ite_eq_left]
       exact ⟨show (a : ℕ) < (b : ℕ) from h, iff_of_true a.isLt b.isLt⟩
     · rw [ite_eq_right h, ite_eq_right]
-      intro h'
-      exact h (show (a : ℕ) < (b : ℕ) from h'.1)
+      exact fun h' => h (show (a : ℕ) < (b : ℕ) from h'.1)
   · refine Finset.prod_congr rfl fun a _ => ?_
     rw [Fin.prod_univ_add]
     have h2 : ∀ b : Fin j, ¬ ((Fin.natAdd j a) < (Fin.castAdd k b) ∧
@@ -255,8 +254,7 @@ theorem degFl_permExp (N : ℕ) :
     have h2 := (σ τ i).isLt
     simp only [Equiv.Perm.coe_one, id]
     omega
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 end GlobalTheory.CompanionTheory.Ar.Top.TestRest
 
@@ -563,9 +561,7 @@ theorem test_height_bound_slope_flat : ∀ II : IntersectionSystem, ∀ (Ψ : Ty
   have hR := _root_.GlobalTheory.CompanionTheory.Ar.Top.testRest_bound Ψ N T.j T.bad frob B₀ Q hj1 hjN hB4 hdec
   have hAb := _root_.GlobalTheory.CompanionTheory.Ar.Top.flat_85_bound II Ψ N T hh frob C' rd Lval B₀ A₀ b₀ hprop hI9 hPF hB128 hbad hId
   have hSL' := hSL B₀ hB128 hB4 hbad
-  have hvol : 0 < T.volT := by
-    show 0 < ∑ c, T.vol c
-    exact Finset.sum_pos (fun c _ => hprop.1 c) Finset.univ_nonempty
+  have hvol : 0 < T.volT := Finset.sum_pos (fun c _ => hprop.1 c) Finset.univ_nonempty
   have hcard : 1 ≤ Fintype.card Ψ := Fintype.card_pos
   have hf : (1:ℝ) ≤ (Fintype.card Ψ : ℝ) := by exact_mod_cast hcard
   have hN1 : N + 1 ≤ B₀ := by nlinarith

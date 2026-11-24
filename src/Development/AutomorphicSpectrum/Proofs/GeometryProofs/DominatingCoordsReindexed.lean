@@ -99,8 +99,7 @@ theorem coordsAt_blkV : ∀ (X X₀ : Scheme.{0}) (Ω Ω₀ : Type) [Field Ω] [
       exact hh.trans (congrArg ξ₀ (hpt _ _))
     have e2 : h (GlobalTheory.CompanionTheory.Ar.centre z) = GlobalTheory.CompanionTheory.Ar.centre (z ≫ h) :=
       (Scheme.Hom.comp_apply z h _).symm
-    rw [← e1, ← e2]
-    exact h2
+    rwa [← e1, ← e2]
   unfold GlobalTheory.CompanionTheory.Ar.CoordsAt at hw ⊢
   obtain ⟨hw1, hw2⟩ := hw
   refine ⟨fun k => ?_, fun k c hc => ?_⟩
@@ -153,8 +152,7 @@ theorem coordsAt_blkV : ∀ (X X₀ : Scheme.{0}) (Ω Ω₀ : Type) [Field Ω] [
       ↑hunit.unit⁻¹
     have hsci : sci * sc = 1 := by
       have hinv := hunit.unit.inv_mul
-      rw [IsUnit.unit_spec] at hinv
-      exact hinv
+      rwa [IsUnit.unit_spec] at hinv
     have hgsci : GlobalTheory.CompanionTheory.Ar.genMap ξ₀ ⟨GlobalTheory.CompanionTheory.Ar.centre (z ≫ h), hsp⟩ sci *
         (y₀ ⟨k, c⟩ / y₀ ⟨k, c' k⟩) = 1 := by
       rw [← hsc, ← map_mul, hsci, map_one]
@@ -169,7 +167,6 @@ theorem coordsAt_blkV : ∀ (X X₀ : Scheme.{0}) (Ω Ω₀ : Type) [Field Ω] [
     rw [hy, hy, ← map_div₀] at hr
     have hrr := valAt_unique_lemma ξ z hr hex'
     refine ⟨r, ?_, hwr⟩
-    rw [hrr]
-    exact hex
+    rwa [hrr]
 
 end GlobalTheory.CompanionTheory.Ar.Chg

@@ -122,8 +122,7 @@ theorem exists_form [Algebra ℚ Ω] (x : Fin (N + 1) → Ω) {c : Fin (N + 1)} 
   | algebraMap r =>
     refine ⟨r.den, 0, MvPolynomial.C r.num, r.den_nz, MvPolynomial.isHomogeneous_C _ _, ?_⟩
     have hd : (r.den : Ω) ≠ 0 := Nat.cast_ne_zero.2 r.den_nz
-    rw [eq_ratCast (algebraMap ℚ Ω) r, Rat.cast_def]
-    rw [ratEval_C]
+    rw [eq_ratCast (algebraMap ℚ Ω) r, Rat.cast_def, ratEval_C]
     field_simp
   | add a b _ _ ha hb =>
     obtain ⟨m₁, d₁, H₁, hm₁, hH₁, hv₁⟩ := ha
@@ -483,8 +482,7 @@ theorem differentials_basis_invAdj : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω]
   have hzz : ∀ i, algebraMap A (Mdl.invAdj A g) (z i) = z' i := fun i =>
     Subtype.ext ((hinc (z i)).trans (hz i).symm)
   have key := GlobalTheory.CompanionTheory.Ar.SncRes.coords_of_formallyEtale (S := ↥(Mdl.invAdj A g)) z hli hsp
-  simp only [hzz] at key
-  exact key
+  simpa only [hzz] using key
 
 end GlobalTheory.CompanionTheory.Ar.SncBase.Mdl
 end -- clump:auto
@@ -793,8 +791,7 @@ theorem isSncModel_of_chart_patches : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (
       exact ⟨p, ⟨a, b⟩, d, f⟩)
     (fun p hp => h4 _ p hp.1 hp.2)
   beta_reduce
-  rw [range_ratios_unit x c]
-  exact key
+  rwa [range_ratios_unit x c]
 
 end GlobalTheory.CompanionTheory.Ar.SncBase.Mdl
 end -- clump:auto
@@ -1044,8 +1041,7 @@ theorem exists_isSncModel_of_patches : ∀ (Ω : Type) [Field Ω] [CharZero Ω] 
     exact ⟨p, hp, hc, hs, fun z n hz => patchClause hT hz q hq p hl⟩
   · intro c p hp hc
     constructor
-    · intro hpB g hg
-      exact not_unitAt_of_mem_span hT.gen hpB hc hg
+    · exact fun hpB g hg => not_unitAt_of_mem_span hT.gen hpB hc hg
     · intro hall
       by_contra hn
       obtain ⟨G, hG, hu⟩ := hsep c p hp hc hn

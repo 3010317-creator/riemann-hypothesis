@@ -151,8 +151,7 @@ theorem exists_linear_snd : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (C : Ty
     have key3 := congrArg TrivSqZeroExt.snd key''
     rw [TrivSqZeroExt.snd_add, TrivSqZeroExt.snd_add, one_snd G y W h0 h1 s, add_zero] at key3
     show (secVal (B := DualNumber C) (M.pt (l + l')).left W (h (l + l')) s).snd = _
-    rw [secVal_congr e W (h (l + l')) hvw s]
-    exact key3
+    rwa [secVal_congr e W (h (l + l')) hvw s]
   · intro c l
     have e := M.smul c l
     have h2 : ⊤ ≤ (spMap (GlobalTheory.CompanionTheory.Ar.epsMul c) ≫ (M.pt l).left) ⁻¹ᵁ W := e ▸ h (c • l)
@@ -239,10 +238,8 @@ theorem torsion_of_pullback : ∀ (X X' : Scheme.{0}) (Ω Ω' : Type) [Field Ω]
   · intro a a' c c' e e'
     apply lerp
     rw [map_mul, map_mul, rel a c e, rel a' c' e']
-  · intro a a' c e e'
-    exact Pinj ((rel a c e).trans (rel a' c e').symm)
-  · intro a c c' e e'
-    exact Qinj ((rel a c e).symm.trans (rel a c' e'))
+  · exact fun a a' c e e' => Pinj ((rel a c e).trans (rel a' c e').symm)
+  · exact fun a c c' e e' => Qinj ((rel a c e).symm.trans (rel a c' e'))
 
 end GlobalTheory.CompanionTheory.Ar.TorsPull
 end -- clump:auto
@@ -470,12 +467,9 @@ theorem exists_units_map_eq {Ω Ω' : Type} [Field Ω] [Field Ω'] (i : Ω →+*
     ⟨Units.map (i : Ω →* Ω') u.1, by
       have h1 : (u : Ωˣ) ^ m = 1 := by
         have := congrArg Subtype.val (pow_card_eq_one' (x := u))
-        rw [Subgroup.coe_pow, Subgroup.coe_one] at this
-        exact this
+        rwa [Subgroup.coe_pow, Subgroup.coe_one] at this
       rw [mem_rootsOfUnity, ← map_pow, h1, map_one]⟩
-  have hf : Function.Injective f := by
-    intro a b hab
-    exact Subtype.ext (hinj (congrArg Subtype.val hab))
+  have hf : Function.Injective f := fun a b hab => Subtype.ext (hinj (congrArg Subtype.val hab))
   have hbij := hf.bijective_of_nat_card_le (card_rootsOfUnity Ω' m)
   obtain ⟨u, hu⟩ := hbij.2 ⟨v, by rw [mem_rootsOfUnity]; exact hv⟩
   exact ⟨u.1, congrArg Subtype.val hu⟩
@@ -536,8 +530,7 @@ theorem chars_descend : ∀ (Ω Ω' : Type) [Field Ω] [Field Ω'] (i : Ω →+*
         have := emul x 1 1 hx (one_pow n) (one_pow n)
         simpa using this
       have := congrArg Subtype.val (pow_card_eq_one' (x := (⟨e x g, hmem⟩ : rootsOfUnity n Ω)))
-      rw [Subgroup.coe_pow, Subgroup.coe_one] at this
-      exact this
+      rwa [Subgroup.coe_pow, Subgroup.coe_one] at this
     have hAm : ∀ a : A, a ^ n = 1 → a ^ m = 1 := by
       intro a ha
       obtain ⟨c, hc, hac⟩ := hAC a ha
@@ -765,8 +758,7 @@ theorem ht_pull {X X' : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω'] {ξ :
       have := congrArg (fun g : X' ⟶ G.left => g q'.1) e₁
       simpa using this
     show φ ((η[G']).left q'.1) ∈ W
-    rw [e₂]
-    exact hη
+    rwa [e₂]
   refine ⟨?_, φ ⁻¹ᵁ W, φ.app W s, hη', ?_, ?_⟩
   · rw [hom, Lat.pull_apply _ hd]
     exact Submodule.subset_span ⟨w, hwω, rfl⟩

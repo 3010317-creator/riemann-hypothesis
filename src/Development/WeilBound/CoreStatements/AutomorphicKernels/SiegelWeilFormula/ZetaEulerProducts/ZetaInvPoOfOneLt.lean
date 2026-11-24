@@ -231,8 +231,7 @@ theorem zetaE_grouped {s : ℂ} (hs : 1 < s.re) :
   have hex : ∀ P : HeightOneSpectrum (𝓞 E), ∃ v : HeightOneSpectrum (𝓞 F), P ∈ fib F E v := by
     intro P
     refine ⟨⟨P.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E)), inferInstance, ?_⟩, ?_⟩
-    · intro h
-      exact P.ne_bot (Ideal.eq_bot_of_comap_eq_bot h)
+    · exact fun h => P.ne_bot (Ideal.eq_bot_of_comap_eq_bot h)
     · rw [mem_fib]
       exact ⟨rfl⟩
   have huniq : ∀ (P : HeightOneSpectrum (𝓞 E)) (v w : HeightOneSpectrum (𝓞 F)),
@@ -250,8 +249,7 @@ theorem zetaE_grouped {s : ℂ} (hs : 1 < s.re) :
         exact Sigma.subtype_ext (huniq P _ _ (hπ P) hP) rfl
       right_inv := fun P => rfl }
   obtain ⟨h, -⟩ := zeta_euler E hs
-  have h' := (e.hasProd_iff).2 h
-  exact h'.sigma (fun v => Finset.hasProd (fib F E v) _)
+  exact ((e.hasProd_iff).2 h).sigma (fun v => Finset.hasProd (fib F E v) _)
 
 end PositivityTheory.Lord
 end -- clump:auto
@@ -501,8 +499,7 @@ theorem zeta_zo_nonpos (K : Type) [Field K] [NumberField K] (j : ℤ) (hj : j �
     obtain ⟨u, hu, hu0, hGu⟩ := hG
     refine ⟨fun s => ((|(discr K : ℝ)| : ℝ) : ℂ) ^ (-(s / 2)) * u s * F s, (hb0.1.mul hu).mul hFa, ?_, ?_⟩
     · refine mul_ne_zero (mul_ne_zero hb0.2 hu0) ?_
-      rw [hFdef, Function.update_apply, ite_eq_left rfl]
-      exact hL0
+      rwa [hFdef, Function.update_apply, ite_eq_left rfl]
     · filter_upwards [self_mem_nhdsWithin, hGu] with s hs hGs
       rw [completed_zeta_continued_eq K hs, hGs]
       have hFs : F s = s * completedDedekindZeta K s := by
@@ -567,8 +564,7 @@ theorem lOrd_even (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (S : Finset (HeightO
       (fun v => 1 - (Ideal.absNorm v.asIdeal : ℂ) ^ (-s)) _ S S (Finset.Subset.refl S) (zeta_euler F hs).1
       (fun v _ => by simpa using factor_ne_zero _ (_root_.PositivityTheory.Lord.two_le_absNorm' F v) 1 s (by simp) hs0)
       (fun v _ => by simp [eSp_zpow, hj])
-    rw [Finset.sdiff_self, Finset.prod_empty, mul_one] at key
-    exact key
+    rwa [Finset.sdiff_self, Finset.prod_empty, mul_one] at key
   · by_cases hj1 : 1 ≤ j
     · have hj0 : j ≠ 0 := by omega
       have hre : 1 < (j : ℂ).re := by
@@ -658,8 +654,7 @@ theorem lOrd_odd (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (S : Finset (HeightOn
           hv (Finset.mem_union_right _ ((badSet_finite F E).mem_toFinset.2 hb))
         rw [local_factor F E h2 v hvb s, mul_comm (1 - _) (1 - _), mul_assoc, mul_inv_cancel₀ (hneF v s hs0),
           mul_one])
-    simp only [hesp]
-    exact key
+    simpa only [hesp] using key
   · have hZg : ∀ v : HeightOneSpectrum (𝓞 F), ZO (fun s => (∏ P ∈ fib F E v,
         (1 - (Ideal.absNorm P.asIdeal : ℂ) ^ (-s))) * (1 - (Ideal.absNorm v.asIdeal : ℂ) ^ (-s))⁻¹) (j : ℂ) 0 := by
       intro v
@@ -670,19 +665,16 @@ theorem lOrd_odd (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (S : Finset (HeightOn
       have h3 : ZO (fun s => (1 - (Ideal.absNorm v.asIdeal : ℂ) ^ (-s))⁻¹) (j : ℂ) 0 :=
         ZO.of_analytic ((hfacF v j).inv (hneFj v)) (inv_ne_zero (hneFj v))
       have := h1.mul h3
-      simp only [Finset.sum_const_zero, add_zero] at this
-      exact this
+      simpa only [Finset.sum_const_zero, add_zero] using this
     have hPg : PO (fun s => ∏ v ∈ T, ((∏ P ∈ fib F E v, (1 - (Ideal.absNorm P.asIdeal : ℂ) ^ (-s))) *
         (1 - (Ideal.absNorm v.asIdeal : ℂ) ^ (-s))⁻¹)⁻¹) (j : ℂ) 0 := by
       have := PO.prod T (fun v s => ((∏ P ∈ fib F E v, (1 - (Ideal.absNorm P.asIdeal : ℂ) ^ (-s))) *
         (1 - (Ideal.absNorm v.asIdeal : ℂ) ^ (-s))⁻¹)⁻¹) (fun _ => 0) (fun v _ => (hZg v).inv)
-      simp only [Finset.sum_const_zero] at this
-      exact this
+      simpa only [Finset.sum_const_zero] using this
     have hPf : PO (fun s => ∏ v ∈ T \ S, (1 - eSp E v * (Ideal.absNorm v.asIdeal : ℂ) ^ (-s))) (j : ℂ) 0 := by
       have := PO.prod (T \ S) (fun v s => 1 - eSp E v * (Ideal.absNorm v.asIdeal : ℂ) ^ (-s)) (fun _ => 0)
         (fun v _ => PO.of_analytic (hfac v j))
-      simp only [Finset.sum_const_zero] at this
-      exact this
+      simpa only [Finset.sum_const_zero] using this
     by_cases hj1 : 1 ≤ j
     · rw [ite_eq_left hj1]
       by_cases hj1' : j = 1

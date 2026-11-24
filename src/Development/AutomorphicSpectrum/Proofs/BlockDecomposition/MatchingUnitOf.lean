@@ -134,8 +134,7 @@ theorem lone_toSub {w : Pl E} (hU : UL n w = ⊤) (y : GLw n w) :
   by_cases hy : y ∈ GlobalTheory.LFun.KGL w (n := n)
   · have : toSub (UL n w) y ∈ (KL n w : Set (UL n w)) := by
       show toSub (UL n w) y ∈ KL n w
-      rw [KL, Subgroup.mem_subgroupOf, val_toSub hU]
-      exact hy
+      rwa [KL, Subgroup.mem_subgroupOf, val_toSub hU]
     rw [ite_eq_left hy, Set.indicator_of_mem this]
     rfl
   · have : toSub (UL n w) y ∉ (KL n w : Set (UL n w)) := by
@@ -265,8 +264,7 @@ theorem matchLMUnitOf : PositivityTheory.Rg.BcB.F.MLM.MatchLMUnitOf := by
           (ctMu (Nat.add_sub_cancel' ha) w (d.μ w) (lone (KL n w)))) :=
       hS E n a ha w hw (d.μ w) hμ (lone (KL n w)) (isHecke_lone_KL hE) 1 le_rfl
     obtain ⟨hH, -, hU'⟩ := hId E a (n - a) w (K2 a (n - a) w) (isOpen_levelSubgroup' a (n - a) w) le_rfl
-    rw [hc, (hU' _ hH).1, lpow_lone_one] at h
-    exact h
+    rwa [hc, (hU' _ hH).1, lpow_lone_one] at h
   · rw [ite_eq_right hw]
     exact hI E hE w hw n a ha
 

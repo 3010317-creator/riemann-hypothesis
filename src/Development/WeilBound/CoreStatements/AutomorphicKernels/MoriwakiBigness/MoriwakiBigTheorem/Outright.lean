@@ -456,8 +456,7 @@ theorem tendsto_finrank_veryAmple {F : Type} [Field F] {K : Type} [Fintype K] [D
   obtain ⟨-, P, hdeg, hc, hev⟩ := PositivityTheory.HtPt.Ktw.a37 F Ω N _ (d + 1) Q hsub hvaQ
   have hsec : ∀ n : ℕ, (Q.toSubSystem.pow n).secs = secOver F y (n • ν) := fun n => by
     have h := PositivityTheory.HtPt.Ktw.a66 F K ι Ω y k₀ N e _ rfl hmod Q ν hQ n 0
-    rw [Kleiman.twistMul, Kleiman.SubSystem.twist_twistSys_zero, zero_smul, add_zero] at h
-    exact h
+    rwa [Kleiman.twistMul, Kleiman.SubSystem.twist_twistSys_zero, zero_smul, add_zero] at h
   have hfac : ((d + 1).factorial : ℝ) ≠ 0 := by exact_mod_cast (Nat.factorial_pos _).ne'
   have hlim : (P.coeff (d + 1) : ℝ) =
       (NumbersDVR.intNum F (mIdealOver F y) (fun _ : Fin (d + 1) => ν) : ℝ) / ((d + 1).factorial : ℝ) := by
@@ -529,8 +528,7 @@ theorem eventually_le_of_growth {D : ℕ} {f u : ℕ → ℝ} {X : ℝ} {p : ℕ
     simp only [Function.comp, div_pow]
     field_simp
   have h2' : u (τ / p + 1) / (τ : ℝ) ^ D < X / (p : ℝ) ^ D + ε := by
-    rw [← e]
-    exact h2
+    rwa [← e]
   exact (div_le_div_of_nonneg_right h3 (by positivity)).trans h2'.le
 
 theorem eventually_ge_of_growth {d : ℕ} {f v : ℕ → ℝ} {X C C₁ : ℝ} {p : ℕ} (hp : 1 ≤ p)
@@ -801,8 +799,7 @@ theorem lower_of_veryAmple (hS : GroundTheory.Heights₂.Heights.IndefiniteRowSi
       ((p • pullDeg (K₁ := Unit) a) + (m : ℤ) • baseDeg (Sum.inl () : Unit ⊕ K) -
         m • baseDeg (Sum.inl () : Unit ⊕ K)))) : ℝ)) hp (fun n hn => ?_) ?_
   · have h := hC n hn
-    rw [div_mul_eq_mul_div]
-    exact h
+    rwa [div_mul_eq_mul_div]
   · filter_upwards [hC₁] with τ hτ
     have hsec : ∀ n : ℕ, secOver F (Kleiman.SectionsOverLocalization.segreJoin y) (n •
         ((p • pullDeg (K₁ := Unit) a) + (m : ℤ) • baseDeg (Sum.inl () : Unit ⊕ K) -
@@ -923,8 +920,7 @@ theorem tendsto_finrank_nef (hK : GroundTheory.Heights₂.Heights.IndefiniteRowS
     intro p m q hpq
     have h := f.map_smul_univ (fun _ => (m : ℤ)) (fun _ => (q : ℤ) • β + e)
     simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin, RingHom.id_apply, smul_eq_mul] at h
-    rw [hν hpq]
-    exact h
+    rwa [hν hpq]
   have hX : ∀ {p m q : ℕ}, 1 ≤ q → 1 ≤ m → p = q * m →
       (NumbersDVR.intNum F (mIdealOver F (Kleiman.SectionsOverLocalization.segreJoin y))
         (fun _ : Fin (d + 1) => (p • β) + (m : ℤ) • e) : ℝ) / ((d + 1).factorial : ℝ) / (p : ℝ) ^ (d + 1) =
@@ -954,8 +950,7 @@ theorem tendsto_finrank_nef (hK : GroundTheory.Heights₂.Heights.IndefiniteRowS
       have h := f.map_smul_univ (fun _ => (m : ℤ))
         (Fin.snoc (α := fun _ => Unit ⊕ K → ℤ) (fun _ : Fin d => (q : ℤ) • β + e) e)
       simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at h
-      rw [hs]
-      exact h
+      rwa [hs]
     have hY : (((NumbersDVR.intNum F (mIdealOver F (Kleiman.SectionsOverLocalization.segreJoin y))
             (fun _ : Fin (d + 1) => (p • β) + (m : ℤ) • e) : ℝ) -
           ((d + 1 : ℕ) : ℝ) * (NumbersDVR.intNum F (mIdealOver F (Kleiman.SectionsOverLocalization.segreJoin y))
@@ -1067,8 +1062,7 @@ theorem ShiftSectionsRankB.of_degreeGeneric (hDG : GroundTheory.Heights₂.Heigh
     rw [hconst]
     exact tendsto_const_nhds
   · have hsN : IsSemipositiveRel P0 (mCoordIdeal y) N := by
-      have h := SemiposTwist.proof K ι P0 (mCoordIdeal y) A 1 q hs
-      simpa [hN] using h
+      simpa [hN] using SemiposTwist.proof K ι P0 (mCoordIdeal y) A 1 q hs
     have hNef : NefOnGenericDeg (mCoordIdeal y) N.a :=
       nefOnGenericDeg_of_semipos NefOnGenericOfSemipos.proof hDG hP0 hsN
     set a := N.a with ha
@@ -1095,8 +1089,7 @@ theorem ShiftSectionsRankB.of_degreeGeneric (hDG : GroundTheory.Heights₂.Heigh
       obtain ⟨C, hC⟩ := shiftSectionBound K ι Ω y (d + 1) a M (by omega) hV hB
       refine ⟨C, hC.mono fun n hn => ?_⟩
       have h := hn.2
-      rw [Nat.add_sub_cancel, chartLatQ_eq_secOver, chartLatQ_eq_secOver] at h
-      exact h
+      rwa [Nat.add_sub_cancel, chartLatQ_eq_secOver, chartLatQ_eq_secOver] at h
     have hlim := tendsto_finrank_nef hK hS hnz hdim hnef hfd hsh
     set F : ℝ := ((d + 1).factorial : ℝ) with hF
     have hfac : F ≠ 0 := by rw [hF]; exact_mod_cast (Nat.factorial_pos _).ne'
@@ -1277,8 +1270,7 @@ theorem generatesOver_segreJoin_twist {S : Type} [CommRing S] {K : Type} [Fintyp
     rw [e1, e3, ← zpow_add₀ (hc k)]
     congr 1
     ring
-  rw [hprod] at hsum
-  exact hsum
+  rwa [hprod] at hsum
 
 theorem generated_of_nef (F : Type) [Field F] (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type)
     [∀ k, Fintype (ι k)] (Ω : Type) [Field Ω] [Algebra F Ω] (y : (Σ k, ι k) → Ω) (d : ℕ) (α : K → ℤ)

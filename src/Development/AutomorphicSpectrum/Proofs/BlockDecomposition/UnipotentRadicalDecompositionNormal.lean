@@ -92,8 +92,7 @@ theorem conj_mem_parabLower {n : GL (Fin N) k} (hn : n ∈ unipB k (Fin N)) :
   rw [conj_perm_entry]
   apply ((GlobalTheory.SmGL.mem_unipB k).mp hn).1
   apply lt_of_blk_lt d hd
-  rw [hp, hq, GlobalTheory.SmGL.blk_apply, GlobalTheory.SmGL.blk_apply]
-  exact hab
+  rwa [hp, hq, GlobalTheory.SmGL.blk_apply, GlobalTheory.SmGL.blk_apply]
 
 theorem exists_mul {n : GL (Fin N) k} (hn : n ∈ unipB k (Fin N)) :
     ∃ a ∈ unipL k d hd, ∃ u ∈ unipU k d hd, n = a * u := by
@@ -146,8 +145,7 @@ theorem exists_mul {n : GL (Fin N) k} (hn : n ∈ unipB k (Fin N)) :
       rw [show P⁻¹ * v * P = (P⁻¹ * L * P)⁻¹ * n by rw [hv']; group]
       exact Subgroup.mul_mem _ (Subgroup.inv_mem _ haB) hn
     · show P * (P⁻¹ * v * P) * P⁻¹ ∈ unipRadLower k e
-      rw [show P * (P⁻¹ * v * P) * P⁻¹ = v by group]
-      exact hv
+      rwa [show P * (P⁻¹ * v * P) * P⁻¹ = v by group]
   · rw [show P⁻¹ * L * P * (P⁻¹ * v * P) = P⁻¹ * (L * v) * P by group, ← hcv']
     group
 

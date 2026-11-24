@@ -112,14 +112,10 @@ theorem solve_unitriangular (J : Ideal R) (T V : Fin n → Fin n → Set R)
     induction d with
     | zero =>
       refine ⟨1, 1, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-      · intro i j h
-        exact Matrix.one_apply_ne (ne_of_gt h)
-      · intro i
-        exact Matrix.one_apply_eq i
-      · intro i j h
-        exact Matrix.one_apply_ne (ne_of_gt h)
-      · intro i
-        exact Matrix.one_apply_eq i
+      · exact fun i j h => Matrix.one_apply_ne (ne_of_gt h)
+      · exact fun i => Matrix.one_apply_eq i
+      · exact fun i j h => Matrix.one_apply_ne (ne_of_gt h)
+      · exact fun i => Matrix.one_apply_eq i
       · intro i j h h2
         have : i.val < j.val := h
         omega
@@ -266,10 +262,8 @@ theorem solve_unitriangular (J : Ideal R) (T V : Fin n → Fin n → Set R)
             · rw [hr', hw', ite_eq_right h1, ite_eq_right h2]
   obtain ⟨r, w, hrl, hrd, hwl, hwd, hin, -, -, -, hp⟩ := key n
   refine ⟨r, w, hrl, hrd, ?_, hwl, hwd, ?_, ?_⟩
-  · intro i j h
-    exact (hin i j h (by omega)).1
-  · intro i j h
-    exact (hin i j h (by omega)).2
+  · exact fun i j h => (hin i j h (by omega)).1
+  · exact fun i j h => (hin i j h (by omega)).2
   · ext i j
     exact (hp i j (by omega)).symm
 
@@ -368,8 +362,7 @@ theorem double_coset_cover : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscr
       (if i < j then (lam i - lam j).toNat else 0) := by
     intro i j
     by_cases h : i < j
-    · simp only [Tf, ite_eq_left h]
-      exact Finset.card_image_le.trans (hcard _)
+    · simpa only [Tf, ite_eq_left h] using Finset.card_image_le.trans (hcard _)
     · simp [Tf, ite_eq_right h]
   refine ⟨S.image f, ?_, ?_⟩
   · calc (S.image f).card ≤ S.card := Finset.card_image_le
@@ -515,8 +508,7 @@ theorem entries_of_mem_ker {N m : ℕ} {A : GL (Fin N) 𝒪[k]}
   rw [MonoidHom.mem_ker] at hA
   have h := congrArg (fun u : GL (Fin N) (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m}) => u.val i j) hA
   simp only [Matrix.GeneralLinearGroup.map_apply, Units.val_one] at h
-  rw [← Ideal.Quotient.eq]
-  rw [h]
+  rw [← Ideal.Quotient.eq, h]
   by_cases e : i = j
   · subst e
     simp
@@ -562,16 +554,14 @@ theorem exists_mem_Km {N m : ℕ} (hm : 1 ≤ m) (B : Matrix (Fin N) (Fin N) �
     rw [SetLike.mem_coe, MonoidHom.mem_ker]
     apply Units.ext
     ext i j
-    have h := congrFun (congrFun hmap i) j
-    simpa [G, Matrix.GeneralLinearGroup.map_apply] using h
+    simpa [G, Matrix.GeneralLinearGroup.map_apply] using congrFun (congrFun hmap i) j
   · rfl
 
 theorem conj_mem_Km {N m : ℕ} {p b : GL (Fin N) k} (hp : p ∈ KO k (Fin N)) (hb : b ∈ Zls.Km k N m) :
     p * b * p⁻¹ ∈ Zls.Km k N m := by
   obtain ⟨P, rfl⟩ := hp
   obtain ⟨A, hA, rfl⟩ := hb
-  refine ⟨P * A * P⁻¹, ?_, by simp⟩
-  exact (MonoidHom.normal_ker _).conj_mem A hA P
+  exact ⟨P * A * P⁻¹, (MonoidHom.normal_ker _).conj_mem A hA P, by simp⟩
 
 theorem diagPow_val (N : ℕ) (lam : Fin N → ℤ) :
     ((Zls.diagPow k N lam : GL (Fin N) k) : Matrix (Fin N) (Fin N) k) =
@@ -605,10 +595,8 @@ theorem exists_cover (N m : ℕ) (hm : 1 ≤ m) (lam : Fin N → ℤ) (hlam : An
   refine ⟨f M, Finset.mem_image_of_mem f hM, b, hb, ?_⟩
   apply Units.ext
   have hf : (f M).val = M := by
-    simp only [f, dite_eq_left hex]
-    exact hex.choose_spec
-  rw [Units.val_mul (f M) b, hf]
-  exact hXv
+    simpa only [f, dite_eq_left hex] using hex.choose_spec
+  rwa [Units.val_mul (f M) b, hf]
 
 theorem measure_translated_doubleCoset_le : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N : ℕ) [MeasurableSpace (AdGL k N)] [BorelSpace (AdGL k N)] (μ : MeasureTheory.Measure (AdGL k N)), μ.IsHaarMeasure → ∀ m : ℕ, 1 ≤ m → ∀ (p1 p2 : GL (Fin N) k), p1 ∈ KO k (Fin N) → p2 ∈ KO k (Fin N) → ∀ g : Fin (N - 1) → ℕ, μ ((QuotientGroup.mk : GL (Fin N) k → AdGL k N) '' {h | ∃ x ∈ Zls.Km k N m, ∃ y ∈ Zls.Km k N m, h = p1 * x * Zls.diagPow k N (Zls.lamOf g) * y * p2}) ≤ (Nat.card 𝓀[k] : ENNReal) ^ (∑ j : Fin (N - 1), g j * (((j : ℕ) + 1) * (N - ((j : ℕ) + 1)))) * μ ((QuotientGroup.mk : GL (Fin N) k → AdGL k N) '' (Zls.Km k N m : Set (GL (Fin N) k))) := by
   intro k _ _ _ _ N _ _ μ hμ m hm p1 p2 hp1 hp2 g

@@ -230,8 +230,7 @@ theorem adapted_triangular (L Li : Type) [Field L] [AddCommGroup Li] [Module L L
     calc b i = ∑ k, C i k • ∑ m, w m k • W m :=
           (hCb i).trans (Finset.sum_congr rfl fun k _ => by rw [hgW k])
       _ = ∑ m, (∑ k, C i k * w m k) • W m := by
-          simp only [Finset.smul_sum, Finset.sum_smul, smul_smul]
-          exact Finset.sum_comm
+          simpa only [Finset.smul_sum, Finset.sum_smul, smul_smul] using Finset.sum_comm
       _ = _ := rfl
   · show ∑ k, C i k * w m k = 0
     refine Finset.sum_eq_zero fun k _ => ?_
@@ -462,8 +461,7 @@ theorem generic_lu_decomposition_exists (n : ℕ) : ∀ (K L : Type) [Field K] [
       simp [u']
     have hp : M 0 0 ≠ 0 := by
       have hne : A 0 0 ≠ 0 ∨ ∃ j, A 0 (Fin.succ j) ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         apply hA
         apply Matrix.det_eq_zero_of_row_eq_zero 0
         intro j
@@ -495,8 +493,7 @@ theorem generic_lu : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] (n : ℕ
     AlgebraicIndependent K (fun q : {lk : Fin n × Fin n // lk.2 < lk.1} => u q.1.1 q.1.2) →
     ∃ v w : Matrix (Fin n) (Fin n) L, A.map (algebraMap K L) * u = v * w ∧ (∀ k, v k k = 1) ∧
       (∀ l k, l < k → v l k = 0) ∧ (∀ l k, k < l → w l k = 0) ∧ ∀ k, w k k ≠ 0 := by
-  intro K L _ _ _ n
-  exact generic_lu_decomposition_exists n K L
+  exact fun K L _ _ _ n => generic_lu_decomposition_exists n K L
 
 end GlobalTheory.CompanionTheory.GenericLU
 end -- clump:auto
@@ -579,9 +576,7 @@ theorem adjoin_entries_eq (K L : Type) [Field K] [Field L] [Algebra K L] (n : �
     (h : A.map (algebraMap K L) * u = v * w) :
     IntermediateField.adjoin K (Set.range fun p : Fin n × Fin n => u p.1 p.2) =
       IntermediateField.adjoin K (Set.range fun p : Fin n × Fin n => v p.1 p.2) := by
-  have hwT : w.BlockTriangular id := by
-    intro l k hkl
-    exact hw0 l k hkl
+  have hwT : w.BlockTriangular id := fun l k hkl => hw0 l k hkl
   have hdetw : w.det ≠ 0 := by
     rw [Matrix.det_of_upperTriangular hwT]
     exact Finset.prod_ne_zero_iff.2 fun k _ => hwd k
@@ -597,8 +592,7 @@ theorem adjoin_entries_eq (K L : Type) [Field K] [Field L] [Algebra K L] (n : �
       rcases lt_or_gt_of_ne hlk with hlt | hgt
       · rw [hw0 k l hlt, zero_mul]
       · rw [hwiT hgt, mul_zero]
-    · intro hk'
-      exact absurd (Finset.mem_univ k) hk'
+    · exact fun hk' => absurd (Finset.mem_univ k) hk'
   have hBA : A⁻¹ * A = 1 := Matrix.nonsing_inv_mul A (isUnit_iff_ne_zero.2 hA)
   have hBAm : A⁻¹.map (algebraMap K L) * A.map (algebraMap K L) = 1 := by
     rw [← Matrix.map_mul, hBA, Matrix.map_one _ (map_zero _) (map_one _)]
@@ -750,8 +744,7 @@ theorem pt_eq_u_iff (Y : Model Xo c β) {R : Type} [CommRing R] [Algebra c.F R] 
     (N.pt e).left = y.u τ i ↔ Small.tanY Y y τ i = (M₁.pt e).left := by
   subst hp
   have := hN e (Small.tanF Y y τ i) (Small.tanF_hom Y y τ i)
-  rw [Small.tanF_φ] at this
-  exact this
+  rwa [Small.tanF_φ] at this
 
 end Model
 
@@ -782,13 +775,11 @@ theorem exists_change {K V : Type} [Field K] [AddCommGroup V] [Module K V] {r : 
     ext k m
     have e1 : ∑ m, (∑ j, P k j * Q j m) • c m = c k := by
       rw [← hP k]
-      simp only [← hQ, Finset.smul_sum, Finset.sum_smul, smul_smul]
-      exact Finset.sum_comm
+      simpa only [← hQ, Finset.smul_sum, Finset.sum_smul, smul_smul] using Finset.sum_comm
     have e2 : ∑ m, ((∑ j, P k j * Q j m) - (1 : Matrix (Fin r) (Fin r) K) k m) • c m = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, e1, Matrix.one_apply, ite_smul, one_smul, zero_smul,
         Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
-    have e3 := Fintype.linearIndependent_iff.1 hc _ e2 m
-    simpa [Matrix.mul_apply, sub_eq_zero] using e3
+    simpa [Matrix.mul_apply, sub_eq_zero] using Fintype.linearIndependent_iff.1 hc _ e2 m
   refine ⟨Matrix.of P, ?_, fun k => (hP k).symm⟩
   intro h0
   have := congrArg Matrix.det hPQ
@@ -907,8 +898,7 @@ theorem indep_of_basis {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S)
     rw [← hu, comb_iff N]
     simp [add_smul, Finset.sum_add_distrib, hg]
   have h3 := (y.basis τ _ (y.tan τ k) (y.eig τ k)).unique h2 h1
-  have h4 := congrFun h3 k
-  simpa using h4
+  simpa using congrFun h3 k
 
 theorem frBor_of_comb {S : Type} [CommRing S] [Algebra c.F S] (y z : FrPt Xo c S) (hx : z.x = y.x)
     (h : ∀ τ i, ∃ cf : Fin (Dw.mult τ) → S, IsUnit (cf i) ∧ (∀ j, i < j → cf j = 0) ∧ IsCombAt y.x (y.u τ) cf (z.u τ i)) :
@@ -1155,8 +1145,7 @@ theorem read_core (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (h : Gen
   obtain ⟨y₃, h₃⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hS E H Dw l Xo c _ _ φA (genFr h Z)
   have hk : φ.comp (algebraMap (kap Z) (Om Z)) = Or.𝔐.fn.comp ψ.toRingHom := RingHom.ext hφk
   have hbase : spMap φ ≫ (genFr h Z).x = Fr.y₀.x := by
-    rw [hgx, ← Category.assoc, spc, hk, ← hy₀]
-    exact hx
+    rwa [hgx, ← Category.assoc, spc, hk, ← hy₀]
   have hx₃ : y₃.x = Fr.y₀.x := h₃.1.trans hbase
   have hcoef : ∀ s (i j : Fin (Dw.mult (Small.labelC s))), φ (genCoef Z (Small.labelC s) i j) = v s j i := by
     intro s i j
@@ -1192,8 +1181,7 @@ theorem read_core (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (h : Gen
     rw [h1, h2]
     rfl
   · refine hφd.trans ?_
-    rw [hTr, ← adjoin_all_eq_strict v hv1 hv0]
-    exact hvd
+    rwa [hTr, ← adjoin_all_eq_strict v hv1 hv0]
 
 end Read
 

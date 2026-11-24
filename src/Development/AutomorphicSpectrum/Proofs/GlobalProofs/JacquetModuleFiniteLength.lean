@@ -74,7 +74,6 @@ theorem eq_iff_of_lt_iff {ι A B : Type} [LinearOrder A] [LinearOrder B] {f : ι
 theorem mem_blockUpper_iff (e : (Σ a, m a) ≃ Fin N) {β : Fin N → ℕ}
     (hβ : ∀ i j, β i < β j ↔ blk e i < blk e j) (g : GL (Fin N) k) :
     g ∈ GroundTheory.Automorphic.Iwasawa.blockUpper k N β ↔ g ∈ parab k e := by
-  show (g : Matrix (Fin N) (Fin N) k).BlockTriangular β ↔ (g : Matrix (Fin N) (Fin N) k).BlockTriangular (blk e)
   exact ⟨fun h i j hij => h ((hβ j i).2 hij), fun h i j hij => h ((hβ j i).1 hij)⟩
 
 theorem mem_unipotentRadical_iff (e : (Σ a, m a) ≃ Fin N) {β : Fin N → ℕ}
@@ -163,7 +162,6 @@ theorem jacquetFiniteLength : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
   refine GroundTheory.Automorphic.Parabolic.hasFiniteLength_jacquetRep ?_ ?_ β
   · intro v
     have hcont : Continuous (Units.mapEquiv (Matrix.reindexAlgEquiv k k ψ).toMulEquiv) := by
-      show Continuous (Units.map (Matrix.reindexAlgEquiv k k ψ).toMulEquiv.toMonoidHom)
       exact Units.continuous_map (continuous_id.matrix_reindex ψ ψ)
     have hset : (GroundTheory.Automorphic.stabilizerOf
         (π.comp (Units.mapEquiv (Matrix.reindexAlgEquiv k k ψ).toMulEquiv).toMonoidHom) v :

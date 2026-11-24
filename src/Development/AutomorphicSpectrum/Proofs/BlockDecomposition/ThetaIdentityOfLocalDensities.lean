@@ -78,8 +78,7 @@ theorem aniso_one {J : Matrix (Fin 1) (Fin 1) E} (hJ : IsHermND σ J) (x : Fin 1
       · exact absurd h2 hd
     · exact h1
   funext i
-  rw [Subsingleton.elim i 0]
-  exact h0
+  rwa [Subsingleton.elim i 0]
 
 theorem exists_len (hcm : IsCMExt F E σ) {J : Matrix (Fin 1) (Fin 1) E} (hJ : IsHermND σ J)
     {X : Fin 1 → Fin 1 → E} (hX : X ≠ 0) : ∃ β : F, β ≠ 0 ∧ X ∈ sph σ J β := by
@@ -276,11 +275,8 @@ theorem exists_of_fib_ne {R : Type} [CommRing R] [Algebra F R] [TopologicalSpace
     {m : HermR R σ 1 → Measure (Fin 1 → Fin 1 → R ⊗[F] E)} (h : IsGramFib R σ J 1 μ ν m) (s : HermR R σ 1)
     {U : Set (Fin 1 → Fin 1 → R ⊗[F] E)} (hU : m s U ≠ 0) :
     ∃ X ∈ U, gramR R σ J X = (s : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) := by
-  by_contra hc
-  push Not at hc
-  refine hU (measure_mono_null (fun X hX => ?_) (h.1 s))
-  intro h2
-  exact hc X hX h2.1
+  by_contra! hc
+  exact hU (measure_mono_null (fun X hX => (fun h2 => hc X hX h2.1)) (h.1 s))
 
 theorem meas_mul (hcm : IsCMExt F E σ) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R]
     [BorelSpace R] (hR : IsLocR R) (y : R ⊗[F] E) :
@@ -311,8 +307,7 @@ theorem isNm_inf {x : (AF F ⊗[F] E)ˣ} {n : (AF F)ˣ} (h : IsNm σ x n) :
   have h1 := congrArg (pI (F := F) (E := E)) h
   rw [map_mul] at h1
   have h2 : pI (sigR (AF F) σ (x : AF F ⊗[F] E)) = sigR (Ainf F) σ (pI (x : AF F ⊗[F] E)) := map_sigR (fstA F) _
-  rw [h2] at h1
-  exact h1
+  rwa [h2] at h1
 
 theorem isNm_v (v : HeightOneSpectrum (𝓞 F)) {x : (AF F ⊗[F] E)ˣ} {n : (AF F)ˣ} (h : IsNm σ x n) :
     (n : AF F).2 v ⊗ₜ[F] (1 : E) = sigR (Fv F v) σ (xV v x) * xV v x := by
@@ -320,8 +315,7 @@ theorem isNm_v (v : HeightOneSpectrum (𝓞 F)) {x : (AF F ⊗[F] E)ˣ} {n : (AF
   rw [map_mul] at h1
   have h2 : pV v (sigR (AF F) σ (x : AF F ⊗[F] E)) = sigR (Fv F v) σ (pV v (x : AF F ⊗[F] E)) :=
     map_sigR ((evalV F v).comp (sndA F)) _
-  rw [h2] at h1
-  exact h1
+  rwa [h2] at h1
 
 theorem projInf_mul (x : (AF F ⊗[F] E)ˣ) (X : Fin 1 → Fin 1 → AF F ⊗[F] E) :
     projInf (fun a i => (x : AF F ⊗[F] E) * X a i) = fun a i => (xI x : Ainf F ⊗[F] E) * projInf X a i := by
@@ -395,8 +389,7 @@ theorem eventually_preimage (hcm : IsCMExt F E σ) (x : (AF F ⊗[F] E)ˣ) :
       rw [e1, ← mul_assoc, ← map_mul, Units.inv_mul, map_one, one_mul]
     rw [e]
     exact IntE.mul g1 g3 (h a i)
-  · intro h a i
-    exact IntE.mul g1 g2 (h a i)
+  · exact fun h a i => IntE.mul g1 g2 (h a i)
 
 theorem term_eq (hS : Scal) (hcm : IsCMExt F E σ) (hJ : IsHermND σ J) {li : Measure (Ainf F)} (hli : IsStdInf li)
     {lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)} (hlam : ∀ v, IsStdV v (lam v))
@@ -443,8 +436,7 @@ theorem term_eq (hS : Scal) (hcm : IsCMExt F E σ) (hJ : IsHermND σ J) {li : Me
   have hcof : ∀ᶠ v in cofinite, A' v = latV b v := by
     filter_upwards [eventually_preimage (b := b) hcm x, S.finite_toSet.eventually_cofinite_notMem] with v h1 h2
     have h3 : v ∉ S := by simpa using h2
-    simp only [A', hAo v h3]
-    exact h1
+    simpa only [A', hAo v h3] using h1
   have hφinf : Measurable fun Y : Fin 1 → Fin 1 → Ainf F ⊗[F] E =>
       ENNReal.ofReal (φ (fun a i => (xI x : Ainf F ⊗[F] E) * Y a i)) := by
     have : BorelSpace (Ainf F) := ⟨rfl⟩
@@ -618,8 +610,7 @@ theorem thetaId : Scal → LocR → ThetaId := by
   refine ⟨fun x n hxn => ?_, fun H hH a ha => ?_⟩
   · rw [mean, thetaMeas_ne hcm hJ, Measure.restrict_sum_of_countable, lintegral_sum_measure, th,
       ← ENNReal.tsum_mul_left, ← (unitsEquivNeZero (G₀ := F)).tsum_eq]
-    refine tsum_congr fun t => ?_
-    exact term_eq hS hcm hJ hli hlam hmi hm hL ht hxn t (hκ t t.ne_zero)
+    exact tsum_congr fun t => term_eq hS hcm hJ hli hlam hmi hm hL ht hxn t (hκ t t.ne_zero)
   · by_contra h0
     exact ha (mem_H hcm hJ hmi hm hL ht hH a h0)
 

@@ -95,8 +95,7 @@ theorem nonvanishing_dense : NonvanishingDense.Statement := by
   have hf' : MvPolynomial.map (Int.castRingHom ℚ) f ∉ P' := by
     intro h
     apply hfP
-    rw [← hcomap]
-    exact h
+    rwa [← hcomap]
   have hzero : ∀ z : (Σ k, ι k) → ℂ, (∀ g ∈ P', aeval z g = 0) ↔ (∀ g ∈ P, eval z (MvPolynomial.map (Int.castRingHom ℂ) g) = 0) := by
     intro z
     constructor
@@ -122,8 +121,7 @@ theorem nonvanishing_dense : NonvanishingDense.Statement := by
   refine closure_mono ?_ (hO.inter_closure ⟨hz.1, hcl⟩)
   rintro w ⟨hw1, hw2, hw3⟩
   refine ⟨⟨hw1, (hzero w).1 hw2⟩, ?_⟩
-  rw [← NonvanishingDense.aeval_map_rat]
-  exact hw3
+  rwa [← NonvanishingDense.aeval_map_rat]
 
 open HolomorphicMinorCharts in
 theorem r_onto : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (P J : Ideal (MRing ι)) (e : ℕ) (R : AnLogRes P J e), IsArithVar P (e + 1) → ∀ z ∈ mcPts P, ∃ x, SameOrbit (R.lift x x) z := by

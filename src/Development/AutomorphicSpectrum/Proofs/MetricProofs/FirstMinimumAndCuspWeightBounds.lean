@@ -97,8 +97,7 @@ theorem hermite_gram_minkowski {n : ℕ} (hn : 1 ≤ n) (G : Matrix (Fin n) (Fin
       have := congrArg (fun w : EuclideanSpace ℝ (Fin n) => w k) hc
       simpa [a, Matrix.mulVec, dotProduct, mul_comm] using this
     have := Matrix.eq_zero_of_mulVec_eq_zero hdB hz
-    intro i
-    exact congrFun this i
+    exact fun i => congrFun this i
   have hne : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   have hcard : Fintype.card (Fin n) = Module.finrank ℝ (EuclideanSpace ℝ (Fin n)) := by simp
   let bb : Module.Basis (Fin n) ℝ (EuclideanSpace ℝ (Fin n)) := basisOfLinearIndependentOfCardEqFinrank hli hcard
@@ -196,8 +195,7 @@ theorem exists_pos_le_sqrt_normSq : ∃ c : ℝ, 0 < c ∧ ∀ v : Λ, v ≠ 0 �
     linarith
   refine ⟨1 / S, by positivity, fun v hv => ?_⟩
   obtain ⟨i, hi⟩ : ∃ i, R.form v (e i) ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     apply hv
     apply R.unimod.1
     rw [map_zero]
@@ -330,8 +328,7 @@ theorem neg_log_covolume_le {σ : Ψ → (𝓞 E →+* ℂ)} {m : ℕ} (hσ : Is
     rwa [h4] at h2)
   rw [hdet, Real.sqrt_sq hpos.le] at hmink
   have hcast : (n : ℝ) = 2 * f * r := by rw [hn]; push_cast; ring
-  rw [hcast] at hmink
-  rw [hn] at hmink
+  rw [hcast, hn] at hmink
   have := GroundTheory.Heights₂.Heights.LowerBound.CuspWeightBound.proof f m r rd R.lam1 (R.nz σ I) _
     { one_le_f := hf1
       one_le_j' := hm1
@@ -393,7 +390,6 @@ theorem cuspW_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (g : �
   · refine max_le hb0 ?_
     by_cases hne : {x | ∃ I, R.IsCusp I ∧ x = -Real.log (R.nz σ I)}.Nonempty
     · exact csSup_le hne hterm
-    · rw [Set.not_nonempty_iff_eq_empty.1 hne, Real.sSup_empty]
-      exact hb0
+    · rwa [Set.not_nonempty_iff_eq_empty.1 hne, Real.sSup_empty]
 
 end GlobalTheory.CompanionTheory.Ar.Cusp

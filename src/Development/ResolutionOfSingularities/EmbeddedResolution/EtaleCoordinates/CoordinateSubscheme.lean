@@ -211,8 +211,7 @@ theorem etale_quotientMap {P A : Type u} [CommRing P] [CommRing A] {f : P →+* 
         rw [Ideal.mem_comap, RingHom.mem_ker]
         show (1 : P ⧸ I) ⊗ₜ[P] (f x) = 0
         rw [hcomm, Ideal.Quotient.eq_zero_iff_mem.mpr hx, TensorProduct.zero_tmul]
-      intro a ha
-      exact RingHom.mem_ker.mp (hle ha)
+      exact fun a ha => RingHom.mem_ker.mp (hle ha)
     exact ⟨Ideal.Quotient.lift (Ideal.map f I)
       (Algebra.TensorProduct.includeRight : A →ₐ[P] ((P ⧸ I) ⊗[P] A)).toRingHom hzero,
       fun _ => rfl⟩
@@ -234,7 +233,6 @@ theorem etale_quotientMap {P A : Type u} [CommRing P] [CommRing A] {f : P →+* 
   have hbc : Algebra.Etale (P ⧸ I) ((P ⧸ I) ⊗[P] A) := inferInstance
   have hfe : Algebra.FormallyEtale (P ⧸ I) ((P ⧸ I) ⊗[P] A) := hbc.formallyEtale
   have hfp : Algebra.FinitePresentation (P ⧸ I) ((P ⧸ I) ⊗[P] A) := hbc.finitePresentation
-  show Algebra.Etale (P ⧸ I) (A ⧸ Ideal.map f I)
   exact ⟨Algebra.FormallyEtale.of_equiv e, hfp.equiv e⟩
 
 private theorem setCoordsZero_renameCompl (k : Type u) [Field k] (m : ℕ) (S : Finset (Fin m))
@@ -295,8 +293,7 @@ theorem etale_quotientMk_comp_renameCompl (k : Type u) [Field k] (m : ℕ) (S : 
       simp only [RingHom.comp_apply, Ideal.quotientMap_mk]
   rw [hcomp]
   apply RingHom.Etale.stableUnderComposition
-  · apply RingHom.Etale.of_bijective
-    exact bijective_quotientMk_comp_renameCompl k m S
+  · exact RingHom.Etale.of_bijective (bijective_quotientMk_comp_renameCompl k m S)
   · exact etale_quotientMap hf (mvPolynomialCoordIdeal k m S)
 
 def EtaleChart.restrictCompat {X : Scheme.{u}} {k : Type u} [Field k]
@@ -365,8 +362,7 @@ private theorem bijective_commRingCatIso_inv {A B : CommRingCat.{u}} (e : A ≅ 
   · intro x y hxy
     have h := congrArg e.hom.hom hxy
     rwa [commRingCatIso_hom_inv_apply, commRingCatIso_hom_inv_apply] at h
-  · intro x
-    exact ⟨e.hom.hom x, commRingCatIso_inv_hom_apply e x⟩
+  · exact fun x => ⟨e.hom.hom x, commRingCatIso_inv_hom_apply e x⟩
 
 private theorem iso_hom_appTop_inv_appTop_apply {A B : Scheme.{u}} (e : A ≅ B) (x : Γ(A, ⊤)) :
     (e.hom.appTop).hom ((e.inv.appTop).hom x) = x := by
@@ -420,8 +416,7 @@ private theorem affineSpaceGlobalSectionsHom_C (K : Type u) [Field K] (n : ℕ) 
 
 private theorem etale_specMap_of_etale {R T : CommRingCat.{u}} (φ : R ⟶ T) (hφ : φ.hom.Etale) :
     Etale (Spec.map φ) := by
-  rw [AlgebraicGeometry.HasRingHomProperty.Spec_iff (P := @Etale)]
-  exact hφ
+  rwa [AlgebraicGeometry.HasRingHomProperty.Spec_iff (P := @Etale)]
 
 private theorem etale_homOfVector_of_appTop_etale {Wsch : Scheme.{u}} [IsAffine Wsch]
     {K : Type u} [Field K]

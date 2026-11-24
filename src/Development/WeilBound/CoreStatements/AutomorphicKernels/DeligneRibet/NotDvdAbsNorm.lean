@@ -278,8 +278,7 @@ theorem exists_degOne_prime_in_rayClass : ∀ (F : Type) [Field F] [NumberField 
   have e2 : (𝔞 : FractionalIdeal (𝓞 F)⁰ F) * FractionalIdeal.spanSingleton (𝓞 F)⁰ (x : F) =
       (v.asIdeal : FractionalIdeal (𝓞 F)⁰ F) := by
     have h := congrArg Units.val e1
-    rw [Units.val_mul, hJ, coe_toPrincipalIdeal] at h
-    exact h
+    rwa [Units.val_mul, hJ, coe_toPrincipalIdeal] at h
   have hα : FractionalIdeal.spanSingleton (𝓞 F)⁰ ((α : 𝓞 F) : F) =
       FractionalIdeal.spanSingleton (𝓞 F)⁰ (x : F) * FractionalIdeal.spanSingleton (𝓞 F)⁰ ((β : 𝓞 F) : F) := by
     rw [FractionalIdeal.spanSingleton_mul_spanSingleton, hx]
@@ -880,8 +879,7 @@ theorem classTwist_value_int : ∀ (F : Type) [Field F] [NumberField F] [IsTotal
       have hfun : (fun t => ∑ j, Tc j t) = ∑ j, Tc j := by
         funext t
         simp [Finset.sum_apply]
-      rw [hfun]
-      exact hsd
+      rwa [hfun]
   have heq := eqOn_compl_one hT hRd (fun s hs => hRs s hs)
   have hint : ∀ j, ∃ (qj : ℚ) (K : ℕ) (z : ℤ), Tc j (-((k - 1 : ℕ) : ℂ)) = qj ∧ (l : ℚ) ^ K * qj = z := by
     intro j
@@ -945,8 +943,7 @@ theorem rayRel_mono_powMod_anti (F : Type) [Field F] [NumberField F] :
   refine ⟨?_, ?_⟩
   · rintro 𝔣 𝔣' I J hle ⟨a, b, ha, hb, ha1, hb1, hσ, h⟩
     exact ⟨a, b, ha, hb, hle ha1, hle hb1, hσ, h⟩
-  · intro l n m hnm
-    exact Ideal.span_singleton_le_span_singleton.mpr (pow_dvd_pow _ hnm)
+  · exact fun l n m hnm => Ideal.span_singleton_le_span_singleton.mpr (pow_dvd_pow _ hnm)
 
 end GlobalTheory.CompanionTheory.RayFacts
 end -- clump:auto
@@ -1043,8 +1040,7 @@ theorem smoothed_of
     intro c
     have h := hσ (τ c)
     have e : σ (τ c) = c := Equiv.ofBijective_apply_symm_apply σ σbij c
-    rw [e] at h
-    exact h
+    rwa [e] at h
   refine ⟨τ, hτ, ?_⟩
   intro k hk c
   have hd1 : Differentiable ℂ (fun s : ℂ => ((Ideal.absNorm 𝔠 : ℕ) : ℂ) ^ (-s)) :=
@@ -1108,8 +1104,7 @@ theorem smoothed_of
         push_cast [Nat.cast_sub hk]
         ring
       rw [he, Complex.cpow_natCast, ← pow_succ', Nat.sub_add_cancel hk]
-    rw [← hpow]
-    exact hq
+    rwa [← hpow]
   · exact top_le_iff.1 ((hb c).ge.trans (sup_le_sup_left hfl _))
 
 end PositivityTheory.PfDR.h_smooth
@@ -1224,8 +1219,7 @@ theorem isRayL_sum {F : Type} [Field F] [NumberField F] {𝔣 : Ideal (𝓞 F)} 
       funext I
       rw [← hind I, Finset.sum_mul]
       exact Finset.sum_congr rfl fun c _ => by ring
-    rw [he]
-    exact h1
+    rwa [he]
 
 theorem value_eq {F : Type} [Field F] [NumberField F] {𝔣 : Ideal (𝓞 F)} {S : Finset (Ideal (𝓞 F))}
     (hS : ∀ a ∈ S, CoprimeTo F 𝔣 a) (hd : ∀ a ∈ S, ∀ b ∈ S, RayRel F 𝔣 a b → a = b)

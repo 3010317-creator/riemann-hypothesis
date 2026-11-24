@@ -203,8 +203,7 @@ theorem descend [T2Space X] (r : X → G → X) (h1 : ∀ x, r x 1 = x)
     obtain ⟨g, hg, hcg⟩ := Set.mem_iUnion₂.1 (ht (hcK x))
     refine ⟨(j (y x), c x), ⟨⟨y x, Set.mem_iUnion₂.2 ⟨g, hg, subset_tsupport _ ?_⟩, rfl⟩, hcK x⟩,
       (hx x).symm⟩
-    rw [← show H (c x) = H g from hcg]
-    exact h0
+    rwa [← show H (c x) = H g from hcg]
 
 theorem sb_induced : ∀ (G X Y W : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [TopologicalSpace X] [T2Space X] [TopologicalSpace Y] [AddCommGroup W] [Module ℂ W] (r : X → G → X), (∀ x, r x 1 = x) → (∀ x g h, r x (g * h) = r (r x g) h) → Continuous (fun p : X × G => r p.1 p.2) → ∀ (j : Y → X), IsClosedEmbedding j → ∀ (P : Subgroup G) (K : Set G), IsCompact K → (∀ x, ∃ y, ∃ c ∈ K, x = r (j y) c) → ∀ (s : Y → P → Y), (∀ y (p : P), r (j y) p = j (s y p)) → (∀ y y' g, r (j y) g = j y' → g ∈ P) → ∀ (χ : G →* ℂˣ), IsSmoothChar χ → ∀ (σ : Representation ℂ P W) (ev : W ≃ₗ[ℂ] SB Y), (∀ (p : P) w y, (ev (σ p w)).1 y = (χ p : ℂ) * (ev w).1 (s y p)) → ∃ E : SB X ≃ₗ[ℂ] smoothPart (ind P σ), ∀ Φ g y, (ev ((E Φ).1.1 g)).1 y = (χ g : ℂ) * Φ.1 (r (j y) g) := by
   intro G X Y W _ _ _ _ _ _ _ _ r h1 hm hc j hj P K hK hs s hsP hP χ hχ σ ev hev
@@ -355,10 +354,8 @@ theorem isClosedEmbedding_topEmbR (e : c ⊕ d ≃ b) {κ : ℕ} :
     (Continuous.subtype_mk (continuous_matrix fun i l => ?_) _)
     (continuous_subtype_val.matrix_submatrix _ _) ?_, ?_⟩
   · obtain ⟨i | i, rfl⟩ := e.surjective i
-    · simp only [topR_inl]
-      exact continuous_subtype_val.matrix_elem _ _
-    · simp only [topR_inr]
-      exact continuous_const
+    · simpa only [topR_inl] using continuous_subtype_val.matrix_elem _ _
+    · simpa only [topR_inr] using continuous_const
   · convert IsEmbedding.subtypeVal (p := fun y : Matrix c a k => y.rank ∈ ({κ} : Set ℕ)) using 1
     funext y
     ext i l

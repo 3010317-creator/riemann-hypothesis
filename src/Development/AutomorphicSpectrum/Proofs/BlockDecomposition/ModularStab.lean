@@ -183,8 +183,7 @@ theorem skewPart_split {d e : AE D} (he : cA D e = -e) (hde : d * e = 1) (x : Mx
   rw [skewPart, skewPart, adj_smul, he, neg_smul, sub_neg_eq_add, ← smul_add, smul_smul, smul_smul, h, smul_add,
     smul_sub]
   have := half_smul_add x
-  rw [sub_add_add_cancel]
-  exact this
+  rwa [sub_add_add_cancel]
 
 set_option synthInstance.maxHeartbeats 400000 in
 theorem continuous_skewPart : Continuous (skewPartHom D n) := by
@@ -349,8 +348,7 @@ theorem measurePreserving_shear {A C : Type*} [AddCommGroup A] [MeasurableSpace 
       Prod.swap ∘ (fun p : C × A => (b₀ + p.1, f p.1 + p.2)) ∘ Prod.swap := by
     funext p
     exact Prod.ext (add_comm _ _) (add_comm _ _)
-  rw [hfun]
-  exact h2
+  rwa [hfun]
 
 theorem haar_of_shear {A C G : Type*} [AddCommGroup A] [TopologicalSpace A] [IsTopologicalAddGroup A]
     [MeasurableSpace A] [BorelSpace A] [SecondCountableTopology A] [LocallyCompactSpace A]
@@ -485,7 +483,6 @@ theorem exists_coord : ∀ (D : D7) (B W : HSp D) (t : ℕ) (d : HypDec B W t) [
   have q3 : SecondCountableTopology (skewA D t) :=
     inferInstanceAs (SecondCountableTopology ((skewA D t : Set (Mx D t t))))
   have hcl : IsClosed ((skewA D t : Set (Mx D t t))) := by
-    show IsClosed {c : Mx D t t | GlobalTheory.MixModel.adj c = -c}
     exact isClosed_eq GlobalTheory.MixModel.continuous_adj continuous_neg
   have : LocallyCompactSpace (skewA D t) := hcl.locallyCompactSpace
   refine ⟨coordHomeo d, hc, ?_⟩
@@ -1055,8 +1052,7 @@ theorem lintegral_mul_right_of_modular_law : ∀ (G : Type) [Group G] [Topologic
     congr 1
     rw [← lintegral_const_mul' M _ hMtop]
     refine lintegral_congr fun k => ?_
-    simp only [mul_assoc]
-    exact hin (↑k) (↑k * g)
+    simpa only [mul_assoc] using hin (↑k) (↑k * g)
   have hB : ∫⁻ h, E.indicator (1 : G → ℝ≥0∞) (h * g⁻¹) * s h ∂μ = c * (M * ∫⁻ k : K, s ↑k ∂κ) := by
     have hmB : Measurable fun h : G => E.indicator (1 : G → ℝ≥0∞) (h * g⁻¹) * s h :=
       ((measurable_one.indicator hEm).comp (measurable_mul_const g⁻¹)).mul hs
@@ -1064,8 +1060,7 @@ theorem lintegral_mul_right_of_modular_law : ∀ (G : Type) [Group G] [Topologic
     congr 1
     rw [← lintegral_const_mul' M _ hMtop]
     refine lintegral_congr fun k => ?_
-    simp only [mul_assoc]
-    exact hin (↑k * g⁻¹) ↑k
+    simpa only [mul_assoc] using hin (↑k * g⁻¹) ↑k
   have hI : ∫⁻ h, E.indicator (1 : G → ℝ≥0∞) h * s (h * g) ∂μ =
       ∫⁻ h, E.indicator (1 : G → ℝ≥0∞) (h * g⁻¹) * s h ∂μ := by
     rw [← lintegral_mul_right_eq_self (fun h => E.indicator (1 : G → ℝ≥0∞) (h * g⁻¹) * s h) g]

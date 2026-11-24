@@ -95,8 +95,7 @@ theorem exists_row {R M I : Type} [CommRing R] [IsDomain R] [AddCommGroup M] [Mo
     | none => exact ho h0
     | some m => exact ho (this m)
   refine ⟨c none, fun m => - c (some m), hn, ?_⟩
-  simp only [neg_smul, Finset.sum_neg_distrib]
-  exact eq_neg_of_add_eq_zero_left hsum
+  simpa only [neg_smul, Finset.sum_neg_distrib] using eq_neg_of_add_eq_zero_left hsum
 
 theorem lifts_change {p q g : ℕ} (T T' : (Fin g → ℂ) → (Fin g → ℂ)) (V : Fin p → Fin g → ℂ) (W : Fin q → Fin g → ℂ)
     (π π₀ : Fin p ⊕ Fin q → Fin g → ℂ) (S S₀ Tm : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ)
@@ -389,8 +388,7 @@ theorem ratio_at {U : Set (Xo.XF c)} {τ : E →+* ℂ} {φ φ₀ : FrameFn Xo c
     (j : k →+* ℂ) (hj : j.comp β₀ = algebraMap c.F ℂ) : j (φ k y₀ v₀ w₀) = a * j (φ₀ k y₀ v₀ w₀) := by
   obtain ⟨v', w', hfr, hv', hw'⟩ := hb ℂ j
   have hfr' : IsFramed U τ (algebraMap c.F ℂ) (spMap j ≫ y₀) v' w' := by
-    rw [← hj]
-    exact hfr
+    rwa [← hj]
   have e := ha _ v' w' hfr'
   rw [hφ.nat k ℂ j β₀ y₀ v₀ w₀ _ v' w' h₀ rfl hv' hw',
     hφ₀.nat k ℂ j β₀ y₀ v₀ w₀ _ v' w' h₀ rfl hv' hw'] at e

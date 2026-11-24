@@ -85,8 +85,7 @@ theorem analyticAt_comp_of_holo_in_charts (e n : ℕ) (X : Type) [TopologicalSpa
     apply hf k
     refine ⟨(A.chart k).map_source hk, ?_⟩
     show (A.chart k).symm (A.chart k (bp w₀)) ∈ W
-    rw [(A.chart k).left_inv hk]
-    exact hwW
+    rwa [(A.chart k).left_inv hk]
   have h3 := h2.comp h1
   refine h3.congr ?_
   have hev : ∀ᶠ w in 𝓝 w₀, bp w ∈ (A.chart k).source :=
@@ -153,8 +152,7 @@ theorem analyticAt_flagAt_entry {Ψ : Type} [DecidableEq Ψ] {N d : ℕ} (H : Ψ
     by_cases e : cb = t ∧ ca = s
     · simpa only [Matrix.single_apply, ite_eq_left e] using h0
     · simpa only [Matrix.single_apply, ite_eq_right e] using analyticAt_const
-  · simp only [ite_eq_right h]
-    exact hHt _ _ _
+  · simpa only [ite_eq_right h] using hHt _ _ _
 
 theorem sameOrbit_basePart {K : Type} {ι : K → Type} {σ : Type} (blk : σ → Option K) {z z' : (Σ k, ι k) → ℂ}
     (h : SameOrbit z z') : SameOrbit (basePart blk z) (basePart blk z') := by

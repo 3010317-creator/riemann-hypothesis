@@ -123,8 +123,7 @@ theorem frame_at_of_smooth [IsCommMonObj G] (hs : Smooth G.hom) (M : LieModel G 
   have hst : ∀ q : Cpt ξ, q.1 ∈ s ⁻¹ᵁ W → Set.range (X.fromSpecStalk q.1) ⊆ (s ⁻¹ᵁ W : Set X) := by
     intro q hq
     rw [Scheme.range_fromSpecStalk]
-    intro y hy
-    exact Specializes.mem_open hy (s ⁻¹ᵁ W).isOpen hq
+    exact fun y hy => Specializes.mem_open hy (s ⁻¹ᵁ W).isOpen hq
   have hbase : ∀ (q : Cpt ξ) (εq : Γ(G.left, W) →+* X.presheaf.stalk q.1),
       IsUnitIn (B := Γ(G.left, W)) (T := X.presheaf.stalk q.1) hW.fromSpec (X.fromSpecStalk q.1) εq →
       IsUnitIn (B := Γ(G.left, W)) hW.fromSpec ξ ((genMap ξ q).comp εq) :=
@@ -308,13 +307,11 @@ theorem finrank_eigSp (Z : CptOver Y U) (τ : E →+* ℂ) :
         have h2 : Z.M.pt (Z.inc (tauIn c τ a) • e) = Z.M.pt e ≫ Y.t.act.act a := by
           rw [← Z.act a e]
           exact congrArg Z.M.pt h.symm
-        rw [h2, Over.comp_left] at h1
-        exact h1
+        rwa [h2, Over.comp_left] at h1
       · intro h
         refine Z.M.inj (Over.OverMorphism.ext ?_)
         rw [Z.act a e, Over.comp_left]
-        refine h.trans ?_
-        exact (Z.M.smul (Z.inc (tauIn c τ a)) e).symm
+        exact h.trans (Z.M.smul (Z.inc (tauIn c τ a)) e).symm
     refine L1.trans ?_
     rw [← e₂ e, ← e₃ e]
     simp only [Category.assoc] at T1 T2 ⊢
@@ -324,8 +321,7 @@ theorem finrank_eigSp (Z : CptOver Y U) (τ : E →+* ℂ) :
     constructor
     · rintro ⟨e, he, rfl⟩
       exact (hmem e).1 he
-    · intro hy
-      exact ⟨ψ.symm y, (hmem _).2 (by simpa using hy), by simp⟩
+    · exact fun hy => ⟨ψ.symm y, (hmem _).2 (by simpa using hy), by simp⟩
   rw [← Formalism.L2.Pj.gfp_finrank hx0 hx τ, ← hmap, LinearEquiv.finrank_map_eq]
 
 end Rank
@@ -370,12 +366,9 @@ theorem isVBOn_eig_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     intro s t h
     ext x
     have h1 := congrArg (fun m : E →+* Z.Ω => m x) h
-    have h2 := Z.inc.injective h1
-    exact congrArg (fun z : c.F => (z : ℂ)) h2
+    exact congrArg (fun z : c.F => (z : ℂ)) (Z.inc.injective h1)
   have hσ : Function.Injective σ := by
-    intro s t h
-    refine hφ (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) ?_)
-    exact h
+    exact fun s t h => hφ (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) h)
   have hcard : Fintype.card (E →+* ℂ) = Module.finrank ℚ E := Embeddings.card E ℂ
   have hVB : Z.M.lat.IsVBOn Z.genFib (Module.finrank Z.Ω Z.V) ⊤ := fun p _ => by
     obtain ⟨W, h, b, hb, hf⟩ := lat_isVB_of_smooth Y.t.semi.smooth Z.M p (Set.mem_univ _)
@@ -407,13 +400,11 @@ theorem isVBOn_eig_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   refine ⟨?_, ?_, ?_, ?_⟩
   · have h := hV τ
     have hr : Module.finrank Z.Ω (eigSp Z.ρ (σ τ)) = D.p := (finrank_eigSp Z τ).trans (ite_eq_left hτ)
-    rw [hr] at h
-    exact h
+    rwa [hr] at h
   · have h := hV (ComplexEmbedding.conjugate τ)
     have hr : Module.finrank Z.Ω (eigSp Z.ρ (σ (ComplexEmbedding.conjugate τ))) = D.q :=
       (finrank_eigSp Z _).trans (ite_eq_right hne)
-    rw [hr] at h
-    exact h
+    rwa [hr] at h
   · intro x hx
     choose W hW b hb hfr' using fun s => hV s x hx
     have hfx : ∀ s, (Z.M.lat.inter (eigSp Z.ρ (σ s))).IsFrameAt (b s) x := fun s => hfr' s x hx (hW s)

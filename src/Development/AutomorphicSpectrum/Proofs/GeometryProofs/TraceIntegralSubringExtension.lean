@@ -285,16 +285,14 @@ theorem repr_aeval {F S : Type*} [Field F] [CommRing S] [Algebra F S] (pb : Powe
     rw [← pb.basis_eq_pow k]
     exact pb.basis.repr_self k
 
-  rw [aeval_eq_sum_range' hr, map_sum, Finsupp.finsetSum_apply]
-  rw [Finset.sum_eq_single (i : ℕ)]
+  rw [aeval_eq_sum_range' hr, map_sum, Finsupp.finsetSum_apply, Finset.sum_eq_single (i : ℕ)]
   · rw [map_smul, Finsupp.smul_apply, hrep i]
     simp
   · intro b hb hbi
     rw [map_smul, Finsupp.smul_apply, hrep ⟨b, Finset.mem_range.1 hb⟩]
     have hne : (⟨b, Finset.mem_range.1 hb⟩ : Fin pb.dim) ≠ i := fun h => hbi (congrArg Fin.val h)
     simp [hne]
-  · intro h
-    exact (h (Finset.mem_range.2 i.2)).elim
+  · exact fun h => (h (Finset.mem_range.2 i.2)).elim
 
 theorem leftMulMatrix_gen {F S : Type*} [Field F] [CommRing S] [Algebra F S]
     (pb : PowerBasis F S) :
@@ -366,8 +364,7 @@ theorem isAlgebraic_of_root {C : Type*} [Field C] (ψ : C[X]) (hψ : ψ ≠ 0)
   obtain ⟨q, rfl⟩ := mem_lifts _ |>.1 hl
   have h : IsAlgebraic (Subalgebra.algebraicClosure ℤ C) ρ := by
     refine ⟨q, fun h0 => hψ (by rw [h0, Polynomial.map_zero]), ?_⟩
-    rw [aeval_def, ← eval_map]
-    exact hρ
+    rwa [aeval_def, ← eval_map]
   exact h.restrictScalars ℤ
 
 theorem exists_spec {K L : Type} [Field K] [Field L] [CharZero K] [Algebra K L]
@@ -412,8 +409,7 @@ theorem exists_spec {K L : Type} [Field K] [Field L] [CharZero K] [Algebra K L]
   have hxm := Finset.mem_insert_self x B₀
   have hT : Algebra.trace K L x = ((aeval (powMat pb.dim m') (Q x hxm)).trace : A') := by
     have h := trace_aeval_powMat_map A'.subtype pb.dim hm' (Q x hxm)
-    rw [hm'map, hQ x hxm, ← trace_aeval_gen pb, ← hP x] at h
-    exact h
+    rwa [hm'map, hQ x hxm, ← trace_aeval_gen pb, ← hP x] at h
   have hTm : Algebra.trace K L x ∈ A' := hT ▸ Subtype.mem _
   have hAm : ∀ a : A', algebraMap K L a ∈ f.range := fun a =>
     ⟨Polynomial.C a, by simp [f]⟩

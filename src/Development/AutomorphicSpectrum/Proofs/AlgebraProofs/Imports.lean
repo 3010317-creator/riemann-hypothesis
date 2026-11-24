@@ -135,9 +135,7 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Sub
   have hπ : Function.Surjective π := by
     rintro ⟨_, x, hx, rfl⟩
     exact ⟨⟨x, hx⟩, rfl⟩
-  have hj : Function.Injective j := by
-    intro a b hab
-    exact Subtype.ext (hi (congrArg Subtype.val hab))
+  have hj : Function.Injective j := fun a b hab => Subtype.ext (hi (congrArg Subtype.val hab))
   obtain ⟨s, hs⟩ := Module.projective_lifting_property π LinearMap.id hπ
   have hmem : ∀ x : M, (LinearMap.id - s ∘ₗ π : M →ₗ[R] M) x ∈ LinearMap.range j := by
     intro x
@@ -227,8 +225,7 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Sub
     (LinearMap.range_inl (R := Ω) (M := E) (M₂ := E₂)) Δ r r₂ hΔ (by rw [hCeq]; exact hC)
   have he : (LinearMap.inl Ω E E₂).toAddMonoidHom = AddMonoidHom.inl E E₂ := by
     ext x <;> simp
-  rw [he] at h
-  exact h
+  rwa [he] at h
 
 end GlobalTheory.CompanionTheory.Ar.Num.LocFreeSchanuel
 end -- clump:auto

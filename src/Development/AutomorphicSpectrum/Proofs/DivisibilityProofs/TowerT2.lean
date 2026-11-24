@@ -557,10 +557,8 @@ theorem gdet_bump (k : ℕ) (hk : 1 ≤ k) (U : ℝ) (hU : 0 < U) (v : Fin N →
   have hwM : ∀ a, Maj (w a) U (1 / U) := by
     intro a
     by_cases h : a < N
-    · simp only [hw, dite_eq_left h]
-      exact hv _
-    · simp only [hw, dite_eq_right h]
-      exact Maj.zero hU.le (by positivity)
+    · simpa only [hw, dite_eq_left h] using hv _
+    · simpa only [hw, dite_eq_right h] using Maj.zero hU.le (by positivity)
   refine ⟨∑ c : Fin N, C ((((N - 1 - (c : ℕ) + k).factorial : ℕ) : ℝ)⁻¹ * (((N - 1 - (c : ℕ)).factorial : ℕ) : ℝ)) *
       (rr w (N - 1 - (c : ℕ) + k) N).coeff (N - 1 - (c : ℕ)), ?_, ?_⟩
   · have hk0 : (0 : ℝ) ≤ k / U := by positivity
@@ -695,8 +693,7 @@ theorem maj_rho (u : Wt Ψ N) (τ' : Ψ) (i : Fin N) (g : ℝ) (hg : 0 < g)
       refine maj_lin _ _ _ _ hA le_rfl ?_
       have h1 := hsep b hab.ne
       simp only [w, ite_eq_right hb', ite_true, add_zero, abs_neg, abs_one]
-      rw [abs_sub_comm, mul_one_div, one_le_div hg]
-      exact h1
+      rwa [abs_sub_comm, mul_one_div, one_le_div hg]
     · by_cases hb' : (τ, b) = (τ', i)
       · obtain ⟨rfl, rfl⟩ := Prod.mk.inj hb'
         have : vv u (τ, b) τ b - vv u (τ, b) τ a =
@@ -706,8 +703,7 @@ theorem maj_rho (u : Wt Ψ N) (τ' : Ψ) (i : Fin N) (g : ℝ) (hg : 0 < g)
         refine maj_lin _ _ _ _ hA le_rfl ?_
         have h1 := hsep a hab.ne'
         simp only [w, ite_eq_right ha, ite_true, zero_add, abs_one]
-        rw [mul_one_div, one_le_div hg]
-        exact h1
+        rwa [mul_one_div, one_le_div hg]
       · have : vv u (τ', i) τ b - vv u (τ', i) τ a =
             Polynomial.C (u τ b - u τ a) + Polynomial.C 0 * Polynomial.X := by
           simp only [vv, ite_eq_right ha, ite_eq_right hb', map_sub, map_zero]; ring
@@ -1160,8 +1156,7 @@ theorem delta_card_filter_lt {N j : ℕ} (hj : j ≤ N) :
     constructor
     · rintro ⟨i, hi, rfl⟩
       exact hi
-    · intro ha
-      exact ⟨⟨a, lt_of_lt_of_le ha hj⟩, ha, rfl⟩
+    · exact fun ha => ⟨⟨a, lt_of_lt_of_le ha hj⟩, ha, rfl⟩
   rw [← Finset.card_map Fin.valEmbedding, h, Finset.card_range]
 
 theorem delta_card_filter_ge {N j : ℕ} (hj : j ≤ N) :
@@ -1459,8 +1454,7 @@ theorem label_term_lower {A b K C' abelian₂ n j s t a : ℝ} (hn : 0 < n) (hK 
 theorem linRoot_isHomogeneous {Ψ : Type} [Fintype Ψ] {N : ℕ} (u : Wt Ψ N) :
     (linRoot u : RP Ψ N).IsHomogeneous 1 := by
   unfold linRoot
-  refine IsHomogeneous.neg ?_
-  exact IsHomogeneous.sum _ _ _ fun x _ => isHomogeneous_C_mul_X _ _
+  exact IsHomogeneous.neg (IsHomogeneous.sum _ _ _ fun x _ => isHomogeneous_C_mul_X _ _)
 
 theorem spread_nonneg {Ψ : Type} [Fintype Ψ] {N : ℕ} (hN : 0 < N) (u : Wt Ψ N) : 0 ≤ spread u := by
   haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
@@ -1570,8 +1564,7 @@ theorem tower_T2_of_inputs : ∀ II : IntersectionSystem, ∀ (Ψ : Type) [Finty
       T.volT * -((K + C' + 2) * E * (abelian₂ * l1 u + Sp)) := by
     simp only [RootTower.bracket, hE, hSp, hLamDef]
     ring
-  rw [hgoal]
-  exact hfin
+  rwa [hgoal]
 
 end GlobalTheory.CompanionTheory.Ar.Top
 end -- clump:auto

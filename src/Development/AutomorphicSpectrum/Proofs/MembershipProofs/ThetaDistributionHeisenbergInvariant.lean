@@ -176,8 +176,7 @@ theorem UpperTheory.Reformulated.B.AdelicCharacterNormOne.norm_eq_one :
     refine (InfiniteAdeleRing.denseRange_algebraMap F).induction_on x
       (isClosed_eq (hψ.comp hi).norm continuous_const) fun a => ?_
     have h := congrArg norm (htriv a)
-    rw [hsplit (algebraMap F _ a), AddChar.map_add_eq_mul, norm_mul, hfin, mul_one, norm_one] at h
-    exact h
+    rwa [hsplit (algebraMap F _ a), AddChar.map_add_eq_mul, norm_mul, hfin, mul_one, norm_one] at h
   intro x
   rw [hsplit x, AddChar.map_add_eq_mul, norm_mul, hfin, hinf, mul_one]
 end -- clump:auto
@@ -424,8 +423,7 @@ private theorem compact_int [LocallyCompactSpace (FiniteAdeleRing R K)] :
     simp only
     rw [← mul_assoc, ← map_mul, inv_mul_cancel₀ hb0, map_one, one_mul]
   have := isCompact_range hemb.continuous
-  rw [RestrictedProduct.range_structureMap] at this
-  exact this
+  rwa [RestrictedProduct.range_structureMap] at this
 
 private theorem finite_approx (y : FiniteAdeleRing R K) :
     ∃ a : K, ∀ v, (y - algebraMap K (FiniteAdeleRing R K) a) v ∈ v.adicCompletionIntegers K := by
@@ -516,8 +514,7 @@ private theorem infinite_cover : ∃ B : Set (InfiniteAdeleRing F), IsCompact B 
     simp only [Set.mem_preimage, mem_closedBall_zero_iff]
     rcases v.isReal_or_isComplex with hv | hv
     · have h3 := ((norm_le_pi_norm (e z).1 ⟨v, hv⟩).trans (norm_fst_le _)).trans h1
-      rw [← InfinitePlace.Completion.extensionEmbeddingOfIsReal_apply hv, Complex.norm_real]
-      exact h3
+      rwa [← InfinitePlace.Completion.extensionEmbeddingOfIsReal_apply hv, Complex.norm_real]
     · exact ((norm_le_pi_norm (e z).2 ⟨v, hv⟩).trans (norm_snd_le _)).trans h1
 
 private theorem exists_small_inf (v : InfinitePlace F) (U : Set v.Completion)

@@ -87,8 +87,7 @@ theorem valuation_uniformizerUnit :
       exact hlt.ne
     have h := (GLnLocal.mem_maximalIdeal_pow_iff k).1 hy
     rw [pow_one] at h
-    rw [← hϖ]
-    exact h
+    rwa [← hϖ]
 
 theorem ord_zpow' (x : kˣ) (m : ℤ) : ord k (x ^ m) = m * ord k x := by
   let o : kˣ →* Multiplicative ℤ := MonoidHom.mk' (fun x => .ofAdd (ord k x)) fun x y => by

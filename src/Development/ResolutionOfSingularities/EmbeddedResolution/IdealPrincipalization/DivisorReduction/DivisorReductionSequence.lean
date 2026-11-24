@@ -396,8 +396,7 @@ theorem isPushforwardBlowupSeq_ambientBlowupSequence {S X : Scheme.{u}} (ι : S 
     IsPushforwardBlowupSeq ι s.toSequenceOfBlowups (ambientBlowupSequence ι s hres hno hcen).toSequenceOfBlowups := by
   refine ⟨rfl, ⟨fun i _ => embeddingIntoAmbientBlowupSequence ι s hres hno hcen i,
     fun i _ => isClosedImmersion_embeddingIntoAmbientBlowupSequence ι s hres hno hcen i, ?_, ?_, ?_, ?_⟩⟩
-  · show (s.isoZero.hom ≫ ι) ≫ 𝟙 X = s.isoZero.hom ≫ ι
-    exact Category.comp_id _
+  · exact Category.comp_id _
   · intro i hi
     show embeddingIntoAmbientBlowupSequence ι s hres hno hcen (i + 1) ≫
         (ambientBlowupSequence ι s hres hno hcen).toSequenceOfBlowups.transitionMapSucc i =
@@ -457,8 +456,7 @@ theorem isBlowupAlongIdealSheaf_prependMap {X : Scheme.{u}} (Z : X.IdealSheafDat
   cases i with
   | zero =>
       have h := hZ.iso_hom_comp d.isoZero
-      rw [Category.comp_id] at h
-      exact h
+      rwa [Category.comp_id] at h
   | succ n =>
       exact d.isBlowup n (by omega)
 
@@ -530,8 +528,7 @@ theorem containedComponentsIdeal_eq_top_of_not_isOpen (T : MarkedIdealWithBounda
     (h : ¬ IsOpen {x : ↥(T.boundary.get ⟨j, hj⟩).subscheme |
       connectedComponent x ⊆
         ⇑(T.boundary.get ⟨j, hj⟩).subschemeι ⁻¹' orderAtLeastLocus T.ideal T.mult}) :
-    containedComponentsIdeal T j hj = ⊤ := by
-  exact dite_eq_right h
+    containedComponentsIdeal T j hj = ⊤ := dite_eq_right h
 
 noncomputable def restrictToBoundaryDivisor (T : MarkedIdealWithBoundary.{u}) (j : ℕ) (hj : j < T.boundary.length)
     (I₀ : T.scheme.IdealSheafData) (E₀ : List T.scheme.IdealSheafData) : MarkedIdealWithBoundary.{u} :=

@@ -206,8 +206,7 @@ theorem lowC_central_contract : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   obtain ⟨hK, hlow⟩ := hg
   have hgint : ∀ i j, ValuativeRel.valuation k ((g : Matrix (Fin n) (Fin n) k) i j) ≤ 1 := by
     obtain ⟨h, -, rfl⟩ := Subgroup.mem_map.mp hK
-    intro i j
-    exact (h i j).2
+    exact fun i j => (h i j).2
   have h0W : (0 : k) ∈ W := mem_of_mem_nhds hW
   have hdiag : leviEmb k e (blockScalar hc0 (GlobalTheory.DepthZeroJac.expo s 1)) =
       GlobalTheory.DepthZeroJac.dia e hc0 (GlobalTheory.DepthZeroJac.expo s 1) := by
@@ -281,12 +280,10 @@ theorem exists_fixed_mk_eq_of_commute : ∀ {G V : Type} [Group G] [TopologicalS
     fun m z => rfl
   have hfixI : ∀ v ∈ fixed π I, ∀ g ∈ I, π g v = v := by
     intro v hv g hg
-    have h := hv ⟨g, hg⟩
-    simpa using h
+    simpa using hv ⟨g, hg⟩
   have hy' : ∀ d ∈ M₀, jacquet π N s hs d y = y := by
     intro d hd
-    have h := hy ⟨d, hd⟩
-    simpa using h
+    simpa using hy ⟨d, hd⟩
   have hmul : ∀ (a b : G) (z : V), π a (π b z) = π (a * b) z := fun a b z =>
     (LinearMap.congr_fun (map_mul π a b) z).symm
   have hconj : ∀ (g h : G) (z : V), π g (π h z) = π h (π (h⁻¹ * g * h) z) := by

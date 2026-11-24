@@ -88,8 +88,7 @@ theorem redCoord_eq_iff {d : ℕ} (bs : Module.Basis (Fin d) F E) (v : HeightOne
         intro k
         rw [hz k]
         exact (t k).2
-      rw [← hS] at hzR
-      exact hzR
+      rwa [← hS] at hzR
     refine ⟨⟨z, hzS⟩, ?_⟩
     apply Subtype.ext
     show z * algebraMap (Fv F v) (Fv F v ⊗[F] E) ϖ = (x : Fv F v ⊗[F] E) - y
@@ -127,8 +126,7 @@ theorem redCoord_surjective {d : ℕ} (bs : Module.Basis (Fin d) F E) (v : Heigh
       intro k
       rw [hz k]
       exact (t k).2
-    rw [← hS] at hzR
-    exact hzR
+    rwa [← hS] at hzR
   refine ⟨⟨z, hzS⟩, ?_⟩
   funext k
   simp only [redCoord]

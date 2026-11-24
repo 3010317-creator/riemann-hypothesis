@@ -967,8 +967,7 @@ theorem fibre_param_continuous : ∀ (V H Y P : Type) [TopologicalSpace V] [T2Sp
   have hsupp : ∀ z : P × H, (∫ v, ψ (z.1, v) ∂(fam z.2)) ≠ 0 →
       ∃ v, ψ (z.1, v) ≠ 0 ∧ q v = z.2 := by
     intro z hz
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     apply hz
     have h1 : f ⁻¹' {ι z.2} ∩ U ∈ ae (fam z.2) := mem_ae_iff.2 (h.1 z.2)
     have h2 : (fun v => ψ (z.1, v)) =ᵐ[fam z.2] 0 := by
@@ -1138,10 +1137,8 @@ theorem stage_three {δ : Measure D} {ν₃ : Measure H₃} {f₃ : D → Y₃} 
   · intro z hz
     obtain ⟨v, hv, -⟩ := c3 z hz
     exact (hψt _ (ht _ hv)).1
-  · intro z
-    exact integral_nonneg fun v => hψ0 _
-  · intro x a s Z
-    exact lintegral_ofReal_fibre hm₃ hc hs hU (fun p => hψ0 _) (x, a, s) Z
+  · exact fun z => integral_nonneg fun v => hψ0 _
+  · exact fun x a s Z => lintegral_ofReal_fibre hm₃ hc hs hU (fun p => hψ0 _) (x, a, s) Z
 
 theorem stage_two (α : Measure A) [IsLocallyFiniteMeasure α] [AddCommGroup H₃]
     [IsTopologicalAddGroup H₃] {q₁ : V₁ → H₁} (hq₁ : Continuous q₁) {Q : H₁ × P × A → H₃}
@@ -1166,8 +1163,7 @@ theorem stage_two (α : Measure A) [IsLocallyFiniteMeasure α] [AddCommGroup H�
     obtain ⟨p, hp, rfl⟩ := c3 hy
     rw [tsupport_comp_eq_preimage] at hp
     exact hθt _ hp
-  · intro y
-    exact integral_nonneg fun a => hθ0 _
+  · exact fun y => integral_nonneg fun a => hθ0 _
   · intro x s Z
     have hI : Integrable (fun a => (θ ∘ E) ((x, s, Z), a)) α :=
       (hc.comp (by fun_prop)).integrable_of_hasCompactSupport (slice_compact hs _)
@@ -1325,8 +1321,7 @@ theorem stages_compose_disintegration [AddCommGroup H₃] [IsTopologicalAddGroup
   refine ⟨by rw [funext key]; exact hL, fun f hf => ?_⟩
   simp only [key]
   rw [← disint_base ρ hU₁ hq₁ hι₁ hf₁ hm₁ hξc hξz hL hf]
-  refine lintegral_congr fun x => ?_
-  exact disint_inner α ρ hU₃ hq₃ hι₃ hf₃ hm₃ hq₁ hQ hψc hψz hθc hθ hξ hf x
+  exact lintegral_congr fun x => disint_inner α ρ hU₃ hq₃ hι₃ hf₃ hm₃ hq₁ hQ hψc hψz hθc hθ hξ hf x
 
 end Stages
 
@@ -1530,8 +1525,7 @@ theorem stages_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     refine Subtype.ext (Matrix.ext fun i j => ?_)
     show sigR R σ (a 0 i) * 0 + sigR R σ 0 * a 0 j - 0 * (sigR R σ (a 0 i) * a 0 j) = 0
     simp
-  simp only [hes, Prod.fst_zero, Prod.snd_zero, hQ0, sub_zero] at hfin
-  exact hfin
+  simpa only [hes, Prod.fst_zero, Prod.snd_zero, hQ0, sub_zero] using hfin
 
 end GlobalTheory.CompanionTheory.WeilSiegel.HypStage.StagesZero
 end -- clump:auto
@@ -1684,8 +1678,7 @@ theorem stages_zero_unit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   · intro φ hφ hs hsup h0
     exact ⟨(hm.2.2 φ hφ hs (hsup.trans fun X hX => hLI X hX)).1 0 (mem_univ _),
       _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStage.StagesZero.stages_zero F E σ hCM M J hJ R hR n d b lam hlam m m₁ m' hm hm₁ hm' φ hφ hs hsup h0⟩
-  · intro x a Y hx h
-    exact hx (by simpa [chartS] using h)
+  · exact fun x a Y hx h => hx (by simpa [chartS] using h)
 
 end GlobalTheory.CompanionTheory.WeilSiegel.HypStage.StageExt
 end -- clump:auto

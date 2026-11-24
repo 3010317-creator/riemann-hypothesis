@@ -173,8 +173,7 @@ theorem toH_rhoH (S : GermSys t ξ M) {𝓗 : HodgeLat M.lat ρ H.bar r} (hG : S
   have h2 := LinearMap.congr_fun ((_root_.GlobalTheory.CompanionTheory.Ar.Conj.Iso.rho_pairing _ _ _ _ _ _ _ _ (S.iso p)).2.2.2.2.1 a) (vmap (genMap ξ p) y)
   have h3 := hG.1 a (transH (S.φ p) (S.ψ p) (S.lam p) (vmap (genMap ξ p) y))
   have e1 := congrArg (fun z => toVec Ω d (transH (S.φ p) (S.ψ p) (S.lam p) z)) h1
-  have e2 := congrArg (toVec Ω d) h2.symm
-  exact (e1.trans e2).trans h3.symm
+  exact (e1.trans (congrArg (toVec Ω d) h2.symm)).trans h3.symm
 
 end Germ
 

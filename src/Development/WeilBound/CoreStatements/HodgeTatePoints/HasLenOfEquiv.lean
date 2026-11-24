@@ -97,14 +97,12 @@ lemma free_of_fg (hv : v.Integers R) {Y : Type} (A : Submodule R (Y → C)) (hA 
     intro m hm
     obtain ⟨⟨r, hr⟩, h⟩ := (Submodule.mem_torsion_iff m).1 hm
     have hr0 : algebraMap R C r ≠ 0 := by
-      intro h0
-      exact nonZeroDivisors.ne_zero hr (hv.hom_inj (by simpa using h0))
+      exact fun h0 => nonZeroDivisors.ne_zero hr (hv.hom_inj (by simpa using h0))
     rw [Submodule.mem_bot]
     apply Subtype.ext
     funext y
     have h1 : algebraMap R C r * (m : Y → C) y = 0 := by
-      have h2 := congrArg (fun z : A => (z : Y → C) y) h
-      simpa [Algebra.smul_def] using h2
+      simpa [Algebra.smul_def] using congrArg (fun z : A => (z : Y → C) y) h
     simpa using (mul_eq_zero.1 h1).resolve_left hr0
   exact Module.free_of_flat_of_isLocalRing
 
@@ -167,8 +165,7 @@ lemma exists_hasLen (hv : v.Integers R) {Y : Type} (A B : Submodule R (Y → C))
   have hKfg : K.FG := by
     apply Submodule.fg_of_fg_map_injective A.subtype A.injective_subtype
     rw [hK, Submodule.map_comap_subtype]
-    have h5 := fg_inf_comap hv A hA LinearMap.id B hB
-    simpa using h5
+    simpa using fg_inf_comap hv A hA LinearMap.id B hB
   let b := Module.finBasis R A
   let e := b.equivFun
   obtain ⟨s, hs⟩ := hKfg.map (e : A →ₗ[R] (Fin (Module.finrank R A) → R))
@@ -274,7 +271,6 @@ lemma inf_addFun_fg (hv : v.Integers R) (p : ℕ) {N : Type} [AddCommGroup N] [F
     (fun f => ?_)
   rw [Submodule.mem_inf, Submodule.mem_inf, Submodule.mem_comap, Submodule.mem_pi]
   refine and_congr_right fun _ => ⟨fun h q _ => h q.1 q.2, fun h => ?_⟩
-  show ∀ x y : N, f (x + y) - f x - f y ∈ pInt R p
   exact fun x y => h (x, y) (Set.mem_univ _)
 
 lemma aug_fg (hv : v.Integers R) {N : Type} [AddCommGroup N]
@@ -364,8 +360,7 @@ private theorem exists_smul_augIdeal_mem_sqIdeal_of_isLat {C : Type} [Field C] {
         ring
       · intro b _ hb
         simp [Ne.symm hb]
-      · intro h
-        exact absurd (Finset.mem_erase.2 ⟨hy, Finset.mem_univ y⟩) h
+      · exact fun h => absurd (Finset.mem_erase.2 ⟨hy, Finset.mem_univ y⟩) h
   rw [heq]
   exact Submodule.sum_mem _ (fun x hx => Submodule.smul_mem _ _ (Submodule.subset_span
     ⟨δ x, hδaug x (Finset.ne_of_mem_erase hx), δ x, hδaug x (Finset.ne_of_mem_erase hx), rfl⟩))

@@ -107,8 +107,7 @@ private theorem transportSuccAboveToCompl_eq_some {m : ℕ} (S : Finset (Fin m))
     simp at h
   · have h' : complOrderEmbPreimage m S s = some u := by
       unfold transportSuccAboveToCompl at h
-      rw [hs] at h
-      exact h
+      rwa [hs] at h
     rw [complOrderEmb_of_complOrderEmbPreimage_eq_some m S s u h']
 
 private theorem transportSuccAboveToCompl_eq_none {m : ℕ} (S : Finset (Fin m)) (j : ℕ)
@@ -119,8 +118,7 @@ private theorem transportSuccAboveToCompl_eq_none {m : ℕ} (S : Finset (Fin m))
   · refine Or.inr ⟨s, rfl, ?_⟩
     have h' : complOrderEmbPreimage m S s = none := by
       unfold transportSuccAboveToCompl at h
-      rw [hs] at h
-      exact h
+      rwa [hs] at h
     exact mem_of_complOrderEmbPreimage_eq_none m S s h'
 
 theorem inStrictNormalCrossingPosition_of_forall_etaleChart {Y : Scheme.{u}} {k : Type u} [Field k]
@@ -193,8 +191,7 @@ theorem exists_etaleChart_comap_subschemeι_eraseIdx {X : Scheme.{u}} {k : Type 
           (E[natSuccAbove j i]'(hlen i hi)).comap (E[j]'hj).subschemeι := by
       intro i hi
       have hi' : i < (E.eraseIdx j).length := by
-        rw [List.length_map] at hi
-        exact hi
+        rwa [List.length_map] at hi
       have he : (E.eraseIdx j)[i]'hi' = E[natSuccAbove j i]'(hlen i hi) :=
         getElem_eraseIdx_natSuccAbove E j i hi' (hlen i hi)
       rw [List.getElem_map]

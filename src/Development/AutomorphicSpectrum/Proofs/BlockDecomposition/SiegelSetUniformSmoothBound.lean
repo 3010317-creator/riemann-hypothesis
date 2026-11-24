@@ -222,8 +222,7 @@ theorem norm_le_of_entries {X : Matrix (Fin n) (Fin n) ℂ} {r : ℝ} (hr : 0 �
             rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ hr]
             exact h i j
       _ = (n : ℝ≥0) * r.toNNReal := by simp
-  have key' := NNReal.coe_le_coe.mpr key
-  simpa [Real.coe_toNNReal _ hr] using key'
+  simpa [Real.coe_toNNReal _ hr] using NNReal.coe_le_coe.mpr key
 
 theorem expMap_zero (h : IsCMExt F E σ) (τ : EmbOver E w) :
     expMap (jA (J.map τ.1)) (secA σ J τ) 0 = 1 := by
@@ -281,8 +280,7 @@ theorem one_place (h : IsCMExt F E σ) (hJ : IsHermND σ J) (τ : EmbOver E w) :
   have hZ : ‖Z‖ ≤ C₁ * δ := by
     have := norm_le_of_entries (mul_nonneg (abs_nonneg C₀) h0) fun i j =>
       (hB i j).trans (mul_le_mul_of_nonneg_right (le_abs_self C₀) h0)
-    rw [hC₁, mul_assoc]
-    exact this
+    rwa [hC₁, mul_assoc]
   have hyZ : yOf Z = y := archMat_injective h τ (by rw [hy2, ← hE])
   have hball : ∀ t ∈ Set.Icc (0 : ℝ) 1, t • Z ∈ Metric.closedBall (0 : LieL (J.map τ.1)) (C₁ * δ₁) := fun t ht => by
     rw [mem_closedBall_zero_iff, norm_smul, Real.norm_of_nonneg ht.1]
@@ -294,8 +292,7 @@ theorem one_place (h : IsCMExt F E σ) (hJ : IsHermND σ J) (τ : EmbOver E w) :
   · rw [mul_assoc]
     exact mul_le_mul_of_nonneg_left hZ hK₀
   · have := hc i (yOf (t • Z)) ⟨_, hball t ht, rfl⟩
-    rw [← hy1] at this
-    exact this
+    rwa [← hy1] at this
 
 end OnePlace
 
@@ -321,7 +318,6 @@ theorem pt_proj {u : GAd σ J} (hu : u ∈ infPts σ J) : pt (fun w => projArch 
   · rw [pt, proj_ofInf, mem_infPts_iff_forall.mp hu v]
 
 theorem continuous_pt : Continuous (pt : (∀ w, GArch σ J w) → GAd σ J) := by
-  show Continuous fun a => ofInf σ J (embArchPi σ J a)
   exact (continuous_ofInf σ J).comp (continuous_embArchPi σ J)
 
 

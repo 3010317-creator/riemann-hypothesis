@@ -131,12 +131,9 @@ theorem IsPrefix.refl (s : MarkedBlowupSequenceData p I m E) : s.IsPrefix s := b
   refine ⟨le_rfl, fun _ _ => rfl, ?_, ?_, ?_, ?_, ?_⟩
   · intro i hi
     simp
-  · intro i hi
-    exact (comap_eqToHom_self _ _).symm
-  · intro i hi
-    exact (map_comap_eqToHom_self _ _).symm
-  · intro i hi
-    exact (comap_eqToHom_self _ _).symm
+  · exact fun i hi => (comap_eqToHom_self _ _).symm
+  · exact fun i hi => (map_comap_eqToHom_self _ _).symm
+  · exact fun i hi => (comap_eqToHom_self _ _).symm
   · intro i hi
     simp
 
@@ -324,10 +321,8 @@ theorem nonMonomialOrderReductionIter_eq_of_not_continues (f : ℕ) (h : ¬ NonM
   | base => rfl
   | succ n hn ih =>
     have hn' : ¬ NonMonomialOrderReductionContinues T (nonMonomialOrderReductionIter hinv T rc n) := by
-      rw [ih]
-      exact h
-    rw [nonMonomialOrderReductionIter_succ_of_not_continues hinv T rc n hn']
-    exact ih
+      rwa [ih]
+    rwa [nonMonomialOrderReductionIter_succ_of_not_continues hinv T rc n hn']
 
 theorem nonMonomialOrderReduction_eq :
     nonMonomialOrderReduction hinv T rc =
@@ -361,10 +356,8 @@ theorem companionIdealReductionIter_eq_of_not_continues
   | base => rfl
   | succ n hn ih =>
     have hn' : ¬ CompanionIdealReductionContinues T (companionIdealReductionIter hinv T rc s₀ n) := by
-      rw [ih]
-      exact h
-    rw [companionIdealReductionIter_succ_of_not_continues hinv T rc s₀ n hn']
-    exact ih
+      rwa [ih]
+    rwa [companionIdealReductionIter_succ_of_not_continues hinv T rc s₀ n hn']
 
 theorem companionIdealReduction_eq :
     companionIdealReduction hinv T rc =

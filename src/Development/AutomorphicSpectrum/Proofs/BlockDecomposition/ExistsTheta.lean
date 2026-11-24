@@ -106,8 +106,7 @@ theorem poly_monomial (S : Finset (Fin d)) (k : E n d → ℕ) :
     poly n K S (∏ e, MvPolynomial.X e ^ k e) =
       mon K (∑ e, k e • oneE e) ((cone S).sum_mem fun e _ => (cone S).nsmul_mem (oneE_mem S e) (k e)) := by
   rw [map_prod]
-  simp only [map_pow, poly_X, mon_pow]
-  exact mon_prod _ _ _
+  simpa only [map_pow, poly_X, mon_pow] using mon_prod _ _ _
 
 theorem poly_tau_pow (S : Finset (Fin d)) (N : ℕ) :
     ∃ (g : Gam n d) (hg : g ∈ (cone S : AddSubmonoid (Gam n d))), (∀ e, g e = N) ∧
@@ -187,10 +186,8 @@ theorem eq_zero_of_mul {T : Finset (Fin d)} (θ' : R0 K n d T →ₐ[K] C.R T)
     intro z' hz'
     have hw : f.lTensor (Aa C) (hb.equiv.symm z') = 0 := by
       apply hb.equiv.injective
-      rw [map_zero, key, LinearEquiv.apply_symm_apply]
-      exact hz'
-    have h3 := hl (hw.trans (map_zero _).symm)
-    exact hb.equiv.symm.map_eq_zero_iff.1 h3
+      rwa [map_zero, key, LinearEquiv.apply_symm_apply]
+    exact hb.equiv.symm.map_eq_zero_iff.1 (hl (hw.trans (map_zero _).symm))
   exact main z hz
 
 theorem theta_unique {S T : Finset (Fin d)} (θ₁ θ₂ : R0 K n d S →ₐ[K] C.R T)
@@ -256,8 +253,7 @@ theorem theta_empty : ∀ {K : Type} [Field K] {n d : ℕ} {A : Type} [CommRing 
     LinearEquiv.ofBijective (Algebra.linearMap (Aa C) (Rb C ∅)) (toR_empty_bijective C)
   refine (IsBaseChange.iff_of_equiv_comm (f := Algebra.linearMap (Bp K n d) (Aa C)) eM eN ?_).mp
     (IsBaseChange.linearMap (Bp K n d) (Aa C))
-  refine LinearMap.ext fun b => ?_
-  exact hθ b
+  exact LinearMap.ext fun b => hθ b
 
 end GlobalTheory.CompanionTheory.SurjectionOntoH4.ThetaEmpty
 end -- clump:auto
@@ -314,8 +310,7 @@ theorem baseChange_loc {B A P P' Q Q' : Type} [CommRing B] [CommRing A] [CommRin
     have e : Algebra.algebraMapSubmonoid Q (Submonoid.powers c) = Submonoid.powers (t₁ c) := by
       simp only [Algebra.algebraMapSubmonoid, Submonoid.map_powers]
       rfl
-    rw [e]
-    exact hQ
+    rwa [e]
   have p3 : Algebra.IsPushout P Q P' Q' := (Algebra.isLocalization_iff_isPushout (Submonoid.powers c) P').1 hQ'
   have p4 : Algebra.IsPushout P P' Q Q' := p3.symm
   have p5 : Algebra.IsPushout B P' A Q' := (Algebra.IsPushout.comp_iff B P A Q).2 p4
@@ -462,8 +457,7 @@ theorem multilinear_mem_of_span {R ι M N : Type*} [CommRing R] [Fintype ι] [De
             exact h1 j (Finset.mem_insert_of_mem hj)
           · by_cases hji : j = i
             · subst hji
-              rw [Function.update_self]
-              exact hx
+              rwa [Function.update_self]
             · rw [Function.update_of_ne hji]
               exact h2 j (by simp [hji, hj])
         | zero =>
@@ -743,8 +737,7 @@ theorem isBaseChange_relOm {K P Q R₀ R : Type} [CommRing K] [CommRing P] [Comm
   have hfun : (fun x : relOm K I₀ a => omMap θ a (x : Om K R₀ a)) =
       fun x : relOm K I₀ a => GlobalTheory.exteriorPowerMapOver R a (KaehlerDifferential.map K K R₀ R) (x : Om K R₀ a) :=
     funext fun x => (he _).symm
-  rw [hfun] at h3
-  exact h3
+  rwa [hfun] at h3
 
 end RelBC
 
@@ -923,8 +916,7 @@ theorem theta_one {K : Type} [Field K] {n d : ℕ} {A : Type} [CommRing A] [Alge
     have e : θ.comp (poly n K {k}) = (toR C {k}).comp (phi C) := by
       apply MvPolynomial.algHom_ext
       rintro (l | j)
-      · have h1 := hθw (Sum.inl l)
-        simpa [poly_X, phi, w, wv] using h1
+      · simpa [poly_X, phi, w, wv] using hθw (Sum.inl l)
       · have h1 := hθw (Sum.inr k)
         have h2 : wv k (Sum.inr k) = (oneE (Sum.inr k) : Gam n d) := by simp [wv]
         rw [mon_congr _ (oneE_mem {k} _) h2] at h1
@@ -1032,8 +1024,7 @@ theorem tdeg_cS (k : Fin d) (S : Finset (Fin d)) : tdeg (cS k S : Gam n d) = 0 :
   unfold cS tdeg
   simp only [Finset.sum_apply]
   rw [Finset.sum_comm]
-  refine Finset.sum_eq_zero fun j _ => ?_
-  exact ChartBij.tdeg_ratE k j
+  exact Finset.sum_eq_zero fun j _ => ChartBij.tdeg_ratE k j
 
 theorem cS_mem (k : Fin d) (S : Finset (Fin d)) : (cS k S : Gam n d) ∈ (cone {k} : AddSubmonoid (Gam n d)) :=
   AddSubmonoid.sum_mem _ fun j _ => ratE_mem (Finset.mem_singleton_self k) j
@@ -1183,8 +1174,7 @@ theorem omMap_incl_injective : ∀ {K : Type} [Field K] {n d : ℕ} (S : Finset 
     | smul c x _ hx =>
       rw [omMap_smul, hx, map_smul]
       exact algebraMap_smul (Lr K n d) c _
-  intro x y hxy
-  exact hinj (by rw [← heq, ← heq, hxy])
+  exact fun x y hxy => hinj (by rw [← heq, ← heq, hxy])
 
 end GlobalTheory.CompanionTheory.SurjectionOntoH4.OmlInj
 end -- clump:auto
@@ -1306,8 +1296,7 @@ theorem mem_span_iff (S : Finset ι) (w : W) :
     w ∈ Submodule.span K (b '' {l | good' l ∧ T l ⊆ S}) ↔ Sup b good' T S w := by
   rw [Module.Basis.mem_span_image]
   constructor
-  · intro h l hl
-    exact h (Finsupp.mem_support_iff.2 hl)
+  · exact fun h l hl => h (Finsupp.mem_support_iff.2 hl)
   · intro h l hl
     rw [Finset.mem_coe, Finsupp.mem_support_iff] at hl
     exact h l hl
@@ -1694,8 +1683,7 @@ theorem exists_basis_dl : ∀ {K : Type} [Field K] {n d : ℕ},
       have e2 : φ ((PolyBij.polyEquiv K).symm a) = incl (K := K) hle a := by
         change incl (K := K) hle (poly n K ∅ _) = _
         rw [hpe]
-      rw [map_pow, e1, e2, ← map_pow]
-      exact ha
+      rwa [map_pow, e1, e2, ← map_pow]
     · intro x y hxy
       have hxy' : φ x = φ y := hxy
       exact ⟨1, by rw [hinj hxy']⟩

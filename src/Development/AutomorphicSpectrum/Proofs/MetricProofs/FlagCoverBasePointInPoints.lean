@@ -129,8 +129,7 @@ theorem isMultiHomog_rename_block (hb : IsBlockMap κ v) {f : MRing ι} {b : K �
   · obtain ⟨k, rfl⟩ := hk
     rw [hb.1.extend_apply, Finset.sum_eq_single k]
     · simpa using hf m₀ hm₀ k
-    · intro k₂ _ hne
-      exact Finset.sum_eq_zero fun i _ => ite_eq_right (hb.1.ne hne)
+    · exact fun k₂ _ hne => Finset.sum_eq_zero fun i _ => ite_eq_right (hb.1.ne hne)
     · simp
   · rw [Function.extend_apply' _ _ _ hk]
     exact Finset.sum_eq_zero fun k _ => Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hk ⟨k, h⟩
@@ -145,8 +144,7 @@ theorem comp_mem_mcPts {Ω Ω' : Type} [Field Ω] [Field Ω'] (hv : IsBlockMap �
     subst hk
     exact ⟨i, by simpa [hp] using hi'⟩
   · have h1 : rename v f ∈ mCoordIdeal x' := by
-      rw [rename_mem_iff hv, show x' ∘ v = φ ∘ x from funext hx, mCoordIdeal_comp]
-      exact hf
+      rwa [rename_mem_iff hv, show x' ∘ v = φ ∘ x from funext hx, mCoordIdeal_comp]
     rw [← eval_rename_eq]
     exact hz.2 _ h1
 

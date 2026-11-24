@@ -333,8 +333,7 @@ theorem kill_list {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
     refine ⟨L₁ ++ [(mm, s)], fun p hp => ?_, fun x hx => ?_⟩
     · rcases List.mem_append.1 hp with h | h
       · exact hL₁ p h
-      · rw [List.mem_singleton.1 h]
-        exact hs
+      · rwa [List.mem_singleton.1 h]
     · obtain ⟨p, hp, q, hq, hpq⟩ := Submodule.exists_add_mem_mem_orthogonal (K := L) x
       have hqS : q ∈ S := by
         have : q = x - p := by rw [hpq]; abel
@@ -413,8 +412,7 @@ theorem etr_cycle (E : Fin n → Fin n → Module.End ℂ V) (hE : GlRel E) (m j
       · rw [evK_etr]
         exact hN V E hG x) V E (k_of_glRel hE) ∅ j z hz (ref_all z) hb
   refine ⟨w, hw1, ?_⟩
-  rw [evK_etr, evd_wt E τ z hw b, hv τ] at hw2
-  exact hw2
+  rwa [evK_etr, evd_wt E τ z hw b, hv τ] at hw2
 
 end
 
@@ -859,8 +857,7 @@ theorem wt_frC {B : Finset (Lt n)} (E1 E2 : Fin n → Fin n → Module.End ℂ V
       (((τ - wtL B) c : ℝ) : ℂ) • y (kpart S) at h1
     rw [Finset.filter_true_of_mem (fun _ _ => rfl), Pi.sub_apply, Complex.ofReal_sub, sub_smul, eq_sub_iff_add_eq,
       add_assoc, ← add_smul, ← Complex.ofReal_add] at h1
-    rw [wtL_split, h]
-    exact h1
+    rwa [wtL_split, h]
   · simp
 
 end Chains

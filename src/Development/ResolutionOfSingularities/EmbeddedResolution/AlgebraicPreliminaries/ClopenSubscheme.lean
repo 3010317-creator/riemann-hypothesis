@@ -74,12 +74,10 @@ private theorem exists_iso_subscheme_vanishingIdeal_of_coe_eq {X : Scheme} [IsRe
     rw [← hZsupp]
     exact Scheme.IdealSheafData.vanishingIdeal_support
   have hsupp : (Scheme.IdealSheafData.vanishingIdeal Z).support = Z := by
-    rw [hvan, Scheme.IdealSheafData.support_radical]
-    exact hZsupp
+    rwa [hvan, Scheme.IdealSheafData.support_radical]
   have hrange :
       Set.range ⇑(Scheme.IdealSheafData.vanishingIdeal Z).subschemeι = (C : Set X) := by
-    rw [Scheme.IdealSheafData.range_subschemeι, hsupp]
-    exact hZ
+    rwa [Scheme.IdealSheafData.range_subschemeι, hsupp]
   have hle : Scheme.Hom.ker C.ι ≤
       Scheme.Hom.ker (Scheme.IdealSheafData.vanishingIdeal Z).subschemeι := by
     rw [Scheme.IdealSheafData.ker_subschemeι, hvan]
@@ -101,8 +99,7 @@ private theorem exists_iso_subscheme_vanishingIdeal_of_coe_eq {X : Scheme} [IsRe
       exact Set.mem_range_self y
     obtain ⟨x, hx⟩ := hy
     refine ⟨x, hinj ?_⟩
-    rw [hφbase x]
-    exact hx
+    rwa [hφbase x]
   have : IsPreimmersion (φ ≫ C.ι) := by rw [hφ]; infer_instance
   have : IsPreimmersion φ := IsPreimmersion.of_comp φ C.ι
   have : IsClosedImmersion φ :=

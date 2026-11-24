@@ -98,14 +98,12 @@ private theorem exists_toMK_eq_of_mem_Kset {g : Matrix (Fin n) (Fin n) ℂ} (hg 
     show g.conjTranspose * Jm ε * g = Jm ε
     rw [Matrix.mul_assoc, ← hc, ← Matrix.mul_assoc, h1, Matrix.one_mul]
   have hr : g ∈ Set.range (fun y : S7.UJ ε => S7.toM y) := by
-    rw [S7.range_toM ε]
-    exact hU
+    rwa [S7.range_toM ε]
   obtain ⟨y, hy⟩ := hr
   have hy' : S7.toM y = g := hy
   refine ⟨⟨y, ?_⟩, hy'⟩
   show S7.toM y ∈ Kset ε
-  rw [hy']
-  exact hg
+  rwa [hy']
 
 private theorem toMK_mem_Kset' (k : S7.KG ε) : S7.toMK k ∈ Formalism.REAL.Kset ε := k.2
 
@@ -137,8 +135,7 @@ theorem isKTypeOf_range (hP : IsPsiFor ε lam T Ψ)
     rw [hAapp, hAapp, rightRegular_datumEmbedding hP]
   have hAinj : Function.Injective (datumEmbeddingToL2 hP T.w) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro v hv
-    exact eq_zero_of_datumEmbedding_eq_zero hP hw hv
+    exact fun v hv => eq_zero_of_datumEmbedding_eq_zero hP hw hv
   obtain ⟨_, _, _, ⟨x, hxV, hx0, hxw⟩, hdom⟩ := hD
   refine ⟨inferInstance, ?_, ?_, ?_, ?_⟩
   · intro g hg y hy

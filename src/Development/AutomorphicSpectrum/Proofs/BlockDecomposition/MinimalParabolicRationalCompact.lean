@@ -164,8 +164,7 @@ theorem exists_isCompact_trHom_centralizer (hH : IsUnit H.det) {m : Type} [Finit
       ext : 1
       rw [← invTr_diagGL, trHom_invTr, diagGL_val, resHom_baseMap, hM]
       rfl
-    rw [map_mul, map_inv, e]
-    exact hγC
+    rwa [map_mul, map_inv, e]
 
 section Orbit
 
@@ -447,8 +446,7 @@ theorem exists_isCompact_of_centralizer_height : ∀ (F E : Type) [Field F] [Num
       funext p
       simp [GlobalTheory.CompanionTheory.RedCov.Bridge.cvec]
     have h := hh g hg v hv
-    rw [GlobalTheory.CompanionTheory.RedCov.Bridge.hgt_eq] at h
-    exact h
+    rwa [GlobalTheory.CompanionTheory.RedCov.Bridge.hgt_eq] at h
   obtain ⟨C, hC, hred⟩ := Centralizer.exists_isCompact_rational_centralizer J hu S' G₀ hU hS hε hh'
   have hA := Centralizer.isCompact_mem_unitary_trHom J hu hC
   have hΩ' : IsCompact ((matHom (AF F) (GroundTheory.Automorphic.conj F E).toAlgHom J) ⁻¹' {w : GL (Fin n) (AF F ⊗[F] E) |
@@ -471,8 +469,7 @@ theorem exists_isCompact_of_centralizer_height : ∀ (F E : Type) [Field F] [Num
   refine ⟨δ, hδ, hδL, hm, ?_, ?_⟩
   · exact hU ⟨_, hm, rfl⟩
   · show GroundTheory.Automorphic.Anisotropic.trHom _ _ (matHom (AF F) (GroundTheory.Automorphic.conj F E).toAlgHom J (δ⁻¹ * g)) ∈ C
-    rw [e]
-    exact hmC
+    rwa [e]
 
 end GlobalTheory.CompanionTheory.ParCocompact
 
@@ -688,8 +685,7 @@ theorem min_le_of_one_le_mul_sq {D t : ℝ} (hD : 0 < D) (ht : 0 ≤ t) (h : 1 �
       refine h.trans (mul_le_mul_of_nonneg_left ?_ hD.le)
       nlinarith
     refine (min_le_right _ _).trans ?_
-    rw [inv_le_iff_one_le_mul₀ hD, mul_comm]
-    exact h3
+    rwa [inv_le_iff_one_le_mul₀ hD, mul_comm]
 
 theorem exists_pos_le_hgt_of_forms : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (M : Type) [Finite M] (H : M → Matrix (Fin n) (Fin n) E) (L : Set (GAd σ J)), (∀ ξ : Fin n → E, (∀ j, hE σ (H j) ξ ξ = 0) → ξ = 0) → (∀ g ∈ L, ∀ j, ∃ s : GroundTheory.Global.IdeleGroup F, 1 ≤ (GroundTheory.Global.IdeleGroup.ideleModule F s : ℝ) ∧ ∀ ξ : Fin n → E, hR (AF F) σ (H j) ((matHom _ σ J g⁻¹).1 *ᵥ ratV F ξ) ((matHom _ σ J g⁻¹).1 *ᵥ ratV F ξ) = algebraMap (AF F) (AF F ⊗[F] E) (s : AF F) * inclR (F := F) (AF F) (hE σ (H j) ξ ξ)) → ∃ ε : ℝ, 0 < ε ∧ ∀ g ∈ L, ∀ ξ : Fin n → E, ξ ≠ 0 → ε ≤ hgt σ J g ξ := by
   intro F E _ _ _ _ _ σ hCM n J _ M _ H L hzero hL
@@ -704,8 +700,7 @@ theorem exists_pos_le_hgt_of_forms : ∀ (F E : Type) [Field F] [NumberField F] 
   have hD : 0 < 1 + ∑ j, C j := by linarith
   refine ⟨min 1 (1 + ∑ j, C j)⁻¹, lt_min one_pos (inv_pos.2 hD), fun g hg ξ hξ => ?_⟩
   obtain ⟨j, hj⟩ : ∃ j, hE (conj F E).toAlgHom (H j) ξ ξ ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     exact hξ (hzero ξ hno)
   obtain ⟨s, hs, he⟩ := hL g hg j
   have h1 := one_le_mul_hgt_sq J (H j) (hCb j) g hξ s hs hj (he ξ)

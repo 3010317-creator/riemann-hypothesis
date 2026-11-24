@@ -344,8 +344,7 @@ theorem exists_isRatio : ∀ (X : Scheme.{0}) (Ω Ω₀ : Type) [Field Ω] [Fiel
   have hψ : ∀ w ∈ mcPts (mCoordIdeal y), ∀ t, IsCmp i y₀ y bk bx a a₀ e e₀ w t → ψ w = t := by
     intro w hm t ht
     have h : ∃ t, IsCmp i y₀ y bk bx a a₀ e e₀ w t := ⟨t, ht⟩
-    simp only [ψ, dite_eq_left h]
-    exact isCmp_unique hT hy hm h.choose_spec ht
+    simpa only [ψ, dite_eq_left h] using isCmp_unique hT hy hm h.choose_spec ht
   refine ⟨fun w => ‖ψ w‖, fun w hm => ?_, fun w hm => ?_, fun w hm s hs => ?_, fun w hm => ?_, ?_⟩
   · obtain ⟨t, ht⟩ := hex w hm
     simpa [hψ w hm t ht] using ht.ne_zero
@@ -773,8 +772,7 @@ theorem normPull_of_stalks : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       rw [hfr'.2]
       exact Submodule.subset_span ⟨k, rfl⟩
   · have hm := FlagPull.map_mem_flagStep hsl (Fl₀.b s) a hb
-    rw [map_sub, hsl, hfl, ← hbase] at hm
-    exact hm
+    rwa [map_sub, hsl, hfl, ← hbase] at hm
 
 end GlobalTheory.CompanionTheory.Ar.Chg
 end -- clump:auto
@@ -831,8 +829,7 @@ theorem isDegreeOff_one_of_bijective {e : ℕ} {X Y : Type} [TopologicalSpace X]
       ext z
       simp [hbij.1.eq_iff]
     rw [hfib, Set.ncard_singleton]
-  · intro j k y hy _ hk
-    exact det_ne_zero_of_injective hπ hbij.1 j k hy hk
+  · exact fun j k y hy _ hk => det_ne_zero_of_injective hπ hbij.1 j k hy hk
 
 theorem holoMap_comp_isDegreeOff : ∀ (e d : ℕ) (X Y Z : Type) [TopologicalSpace X] [T2Space X] [TopologicalSpace Y] [CompactSpace Y] [T2Space Y] [TopologicalSpace Z] (A : FinHolAtlas e X) (B : FinHolAtlas e Y) (C : FinHolAtlas e Z) (π : Y → X) (h : Z → Y) (br : Set Y), HoloMap B A π → Function.Bijective π → HoloMap C B h → IsDegreeOff B C h d br → HoloMap C A (π ∘ h) ∧ IsDegreeOff A C (π ∘ h) d (π '' br) := by
   intro e d X Y Z _ _ _ _ _ _ A B C π h br hπ hbij hh hd
@@ -848,8 +845,7 @@ theorem holoMap_comp_isDegreeOff : ∀ (e d : ℕ) (X Y Z : Type) [TopologicalSp
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa [hgl] using hy
-    · intro hx
-      exact ⟨g x, hx, hgr x⟩
+    · exact fun hx => ⟨g x, hx, hgr x⟩
   let E : Y ≃ₜ X :=
     { toFun := π, invFun := g, left_inv := hgl, right_inv := hgr,
       continuous_toFun := hπ.1, continuous_invFun := hg.1 }
@@ -863,10 +859,8 @@ theorem holoMap_comp_isDegreeOff : ∀ (e d : ℕ) (X Y Z : Type) [TopologicalSp
     simpa using Set.ext_iff.1 hS (g y)
   · change interior (E '' br) = ∅
     rw [← E.image_interior, hint, Set.image_empty]
-  · rw [hpre]
-    exact hpan
-  · rw [hpre]
-    exact hpint
+  · rwa [hpre]
+  · rwa [hpre]
   · intro x hx
     have hgx : g x ∉ br := fun hb => hx ⟨g x, hb, hgr x⟩
     have hset : (π ∘ h) ⁻¹' {x} = h ⁻¹' {g x} := by
@@ -899,8 +893,7 @@ theorem holoMap_comp_isDegreeOff : ∀ (e d : ℕ) (X Y Z : Type) [TopologicalSp
       rw [hQdef]
       exact (B.chart l).map_source hl
     have hk' : π ((B.chart l).symm (Q y)) ∈ (A.chart k).source := by
-      rw [hu]
-      exact hk
+      rwa [hu]
     have hPa : AnalyticAt ℂ P (Q y) := by
       rw [hPdef]
       exact hπ.2 l k _ ⟨hQt, hk'⟩
@@ -944,8 +937,7 @@ theorem PositivityTheory.Xgp.t_line_conj : ∀ (K : Type) [Fintype K] (ι : K �
     obtain ⟨i, hi⟩ := hz k
     exact ⟨i, by simpa using hi⟩
   refine ⟨⟨A.a, fun z => Real.sqrt (A.h z * A.h fun p => starRingEnd ℂ (z p)), ?_, ?_⟩, rfl, ?_, ?_, ?_⟩
-  · intro z hz
-    exact Real.sqrt_pos.2 (mul_pos (A.pos z hz) (A.pos _ (hne z hz)))
+  · exact fun z hz => Real.sqrt_pos.2 (mul_pos (A.pos z hz) (A.pos _ (hne z hz)))
   · intro c z hc
     have h1 := A.smul (fun k => starRingEnd ℂ (c k)) (fun p => starRingEnd ℂ (z p)) (fun k => by simpa using hc k)
     simp only [RCLike.norm_conj] at h1
@@ -954,11 +946,9 @@ theorem PositivityTheory.Xgp.t_line_conj : ∀ (K : Type) [Fintype K] (ι : K �
     have h0 : 0 ≤ ∏ k, ‖c k‖ ^ A.a k := Finset.prod_nonneg fun k _ => zpow_nonneg (norm_nonneg _) _
     rw [mul_mul_mul_comm, Real.sqrt_mul (mul_nonneg h0 h0), Real.sqrt_mul_self h0]
   · have hc : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun z : (Σ k, ι k) → ℂ => fun p => starRingEnd ℂ (z p)) := by
-      refine contDiff_pi.2 fun p => ?_
-      exact Complex.conjCLE.contDiff.comp (contDiff_apply ℝ (fun _ => ℂ) p)
+      exact contDiff_pi.2 fun p => Complex.conjCLE.contDiff.comp (contDiff_apply ℝ (fun _ => ℂ) p)
     refine ContDiffOn.sqrt (ContDiffOn.mul hA (hA.comp hc.contDiffOn fun z hz => hne z hz)) ?_
-    intro z hz
-    exact (mul_pos (A.pos z hz) (A.pos _ (hne z hz))).ne'
+    exact fun z hz => (mul_pos (A.pos z hz) (A.pos _ (hne z hz))).ne'
   · intro z
     simp only [Complex.conj_conj, mul_comm]
   · intro z hz
@@ -1076,8 +1066,7 @@ theorem smooth_ratio {P Jd : Ideal (MRing J)} {D : ℕ} (R : AnLogRes P Jd D) {a
     refine (hsc.eventually ((R.isOpen_U x₀).mem_nhds (hx₀ ▸ R.mem_U _))).and
       (hγ.continuousAt.eventually (hV.mem_nhds ?_))
     show R.lift x₀ ((R.A.chart j).symm t) ∈ V
-    rw [hγt]
-    exact hzV
+    rwa [hγt]
   have hne : F (R.lift x₀ ((R.A.chart j).symm t)) ≠ 0 := by
     rw [hγt]
     exact (hFφ _ ⟨hzV, hm₀⟩).1

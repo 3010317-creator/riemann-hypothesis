@@ -434,8 +434,7 @@ theorem decay_step {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
           rw [hsum, pow_succ]
           field_simp
       _ ≤ _ := by
-          refine mul_le_mul_of_nonneg_right ?_ hRe.le
-          exact le_add_of_nonneg_left (by positivity)
+          exact mul_le_mul_of_nonneg_right (le_add_of_nonneg_left (by positivity)) hRe.le
 
 theorem rapid_decrease : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin r) E), IsWittFrame σ J X Y → ∀ (K : Subgroup (GAd σ J)) (Ω : Set (GAd σ J)) (c : ℝ), IsCompact (K : Set (GAd σ J)) → IsCompact Ω → Ω ⊆ minParOne σ J X → 0 < c → ∀ φ : GAd σ J → ℂ, IsSmoothModerate σ J φ → IsCuspidal σ J φ → ∀ N : ℕ, ∃ C : ℝ, ∀ g ∈ siegelSet σ J X Y Ω c K, ‖φ g‖ * (height σ J g : ℝ) ^ N ≤ C := by
   intro F E _ _ _ _ _ σ h n J hJ r X Y hW K Ω c hK hΩ hΩP hc φ hs hcu N
@@ -612,8 +611,7 @@ theorem exists_scale_le {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) {n : ℕ} {J
     have h1 : (matHom _ σ J (ratEmb σ J γ₀ * p * a) * bc (inclR (F := F) (AF F)) M).1 i k =
         ((matHom _ σ J (ratEmb σ J γ₀ * p * a)).1 *ᵥ ξ) i := by
       rw [Units.val_mul, Matrix.mul_apply]
-      refine Finset.sum_congr rfl fun j _ => congrArg _ ?_
-      exact congrArg (inclR (F := F) (AF F)) (hM j)
+      exact Finset.sum_congr rfl fun j _ => congrArg _ (congrArg (inclR (F := F) (AF F)) (hM j))
     have h2 : (matHom _ σ J (ratEmb σ J γ₀ * p * a)).1 *ᵥ ξ =
         (s.1 * b.1) • fun j => inclR (F := F) (AF F) ((γ₀.1.1 *ᵥ x) j) := by
       rw [map_mul, map_mul, Units.val_mul, Units.val_mul, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hA,
@@ -694,9 +692,7 @@ theorem height_le_pow : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   obtain ⟨B, hB0, hB⟩ := exists_prod_le hσ hW hc
   have hc' : 0 < min 1 c ^ r := pow_pos (lt_min one_pos hc) _
   obtain ⟨Ch, Ah, hCh⟩ := @GlobalTheory.TorusHeight.height_torus_le F E _ _ _ _ _ σ hσ n J r X Y _ hc'
-  have hR₂0 : 0 ≤ R₂ := by
-    have h1 := hR₂ ⟨1, one_mem K, rfl⟩
-    exact (NNReal.coe_nonneg _).trans h1
+  have hR₂0 : 0 ≤ R₂ := (NNReal.coe_nonneg _).trans (hR₂ ⟨1, one_mem K, rfl⟩)
   set R₁' := max R₁ 0 with hR₁'
   set Ch' := max Ch 0 with hCh'
   have hR₁0 : 0 ≤ R₁' := le_max_right _ _
@@ -1105,8 +1101,7 @@ theorem isCompact_mat (K : Set (Matrix (Fin n) (Fin n) (AF F ⊗[F] E))) (hK : I
         rw [map_inv]
         exact MulOpposite.op_injective e
       exact e' ▸ hy
-  rw [e]
-  exact h2
+  rwa [e]
 
 end Ad
 

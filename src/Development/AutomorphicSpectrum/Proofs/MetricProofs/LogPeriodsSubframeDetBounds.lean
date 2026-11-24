@@ -79,8 +79,7 @@ theorem frame_compact_nhd {g k : ℕ} (M₀ : Matrix (Fin g) (Fin k) ℂ) (h : M
     simp
   have hpos : 0 < ((M₀ᵀ * M₀.map star).det).re := by
     have := GlobalTheory.re_det_pos_of_posDef (subframe_gram_posDef M₀ h)
-    rw [hP] at this
-    exact this
+    rwa [hP] at this
   have hU : IsOpen {M : Matrix (Fin g) (Fin k) ℂ | 0 < ((Mᵀ * M.map star).det).re} :=
     isOpen_lt continuous_const subframe_continuous_det
   haveI : LocallyCompactSpace (Matrix (Fin g) (Fin k) ℂ) :=
@@ -111,8 +110,7 @@ theorem chartRadius_le_log_sum {n a : ℕ} (h : a ≤ n) (z : Fin n → ℂ) (h1
     refine Finset.sum_bij (fun j _ => Fin.castLE h j) ?_ ?_ ?_ ?_
     · intro j _
       simp
-    · intro j _ j' _ e
-      exact Fin.castLE_injective h e
+    · exact fun j _ j' _ e => Fin.castLE_injective h e
     · intro i hi
       have hi' : i.val < a := by simpa using hi
       exact ⟨⟨i.val, hi'⟩, Finset.mem_univ _, by ext; simp⟩

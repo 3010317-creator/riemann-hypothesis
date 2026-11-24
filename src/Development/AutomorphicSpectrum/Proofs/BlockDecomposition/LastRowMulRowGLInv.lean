@@ -83,8 +83,7 @@ theorem lastEnt_eq (r : Fin k → R) (l : Fin k) (hl : (l : ℕ) + 1 = k) : last
   · simp [hl]
   · intro b _ hb
     rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext (by omega))
+    exact fun h => hb (Fin.ext (by omega))
   · simp
 
 theorem rowM_mul_rowM (r t : Fin k → R) (l : Fin k) (hl : (l : ℕ) + 1 = k) (i c : Fin k) :
@@ -133,8 +132,7 @@ theorem rowM_mul_rowI (h : IsUnit (lastEnt r)) : rowM r * rowM (rowI r) = 1 := b
       by_cases hc : (c : ℕ) + 1 = k
       · have hcl : c = i := Fin.ext (by omega)
         subst hcl
-        simp only [ite_eq_left hl, rowI, e, Matrix.one_apply, ite_true]
-        exact hu
+        simpa only [ite_eq_left hl, rowI, e, Matrix.one_apply, ite_true] using hu
       · have hcl : i ≠ c := fun h => hc (h ▸ hl)
         simp only [ite_eq_left hl, ite_eq_right hc, rowI, e, Matrix.one_apply, ite_eq_right hcl]
         linear_combination (- r c) * hu
@@ -204,8 +202,7 @@ theorem lastRow_mul_rowGL_inv (A : GL (Fin k) R) (h : IsUnit (lastEnt r)) (hA : 
     · rw [ite_eq_left hi]
     · intro b _ hb
       rw [ite_eq_right]
-      intro h
-      exact hb (Fin.ext (by omega))
+      exact fun h => hb (Fin.ext (by omega))
     · simp
   have e2 : (A * (rowGL r)⁻¹).val i j = (rowM r * rowM (rowI r)) i j := by
     rw [Units.val_mul, rowGL_inv_val h, Matrix.mul_apply, Matrix.mul_apply]

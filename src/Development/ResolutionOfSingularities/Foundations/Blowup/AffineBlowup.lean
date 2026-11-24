@@ -134,8 +134,7 @@ theorem exists_mem_range_affineBlowupChart (I : Ideal R) (x : ↥(affineBlowup I
         Set ↥(AlgebraicGeometry.Proj (reesGrading I))) :=
     congrArg (fun U : (affineBlowup I).Opens => (U : Set ↥(affineBlowup I)))
       (opensRange_affineBlowupChart_eq_basicOpen I a)
-  rw [hs]
-  exact ha
+  rwa [hs]
 
 noncomputable def affineBlowupAffineOpenCover (I : Ideal R) : (affineBlowup I).AffineOpenCover where
   I₀ := ↥I

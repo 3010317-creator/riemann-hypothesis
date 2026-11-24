@@ -194,8 +194,7 @@ theorem boundary_eq_map_comap_pullbackMapAtLength [AlgebraicGeometry.Flat g]
 private theorem smooth_comp_eqToHom {X Y Y' : Scheme.{u}} (f : X ⟶ Y) (h : Y = Y')
     (hf : AlgebraicGeometry.Smooth f) : AlgebraicGeometry.Smooth (f ≫ eqToHom h) := by
   subst h
-  simp only [eqToHom_refl, Category.comp_id]
-  exact hf
+  simpa only [eqToHom_refl, Category.comp_id] using hf
 
 private theorem smooth_lastMap {X' X : Scheme.{u}} {g : X' ⟶ X}
     [AlgebraicGeometry.Smooth g] {t : SequenceOfBlowups X'} {s : SequenceOfBlowups X}
@@ -212,8 +211,7 @@ private theorem surjective_comp_eqToHom {X Y Z : Scheme.{u}} (f : X ⟶ Y)
     (hf : AlgebraicGeometry.Surjective f) (h : Y = Z) :
     AlgebraicGeometry.Surjective (f ≫ eqToHom h) := by
   subst h
-  rw [eqToHom_refl, Category.comp_id]
-  exact hf
+  rwa [eqToHom_refl, Category.comp_id]
 
 private theorem surjective_lastMap {X' X : Scheme.{u}} {g : X' ⟶ X}
     [AlgebraicGeometry.Surjective g] {t : SequenceOfBlowups X'} {s : SequenceOfBlowups X}
@@ -257,8 +255,7 @@ theorem tunedIdealAtLength_comap_pullbackMapAtLength [AlgebraicGeometry.Smooth g
   have := smooth_pullbackMapAtLength S g s t D
   have : AlgebraicGeometry.LocallyOfFiniteType
       (pullbackMapAtLength S g s t D ≫ (s.proj s.length ≫ S.structMap)) := by
-    rw [hmor]
-    exact hftT
+    rwa [hmor]
   rw [tunedIdealAtLength_eq_balancedTunedSheaf, tunedIdealAtLength_eq_balancedTunedSheaf,
     ← balancedTunedSheaf_comap S.base (s.proj s.length ≫ S.structMap) (pullbackMapAtLength S g s t D)
       (s.ideal s.length) S.mult]
@@ -398,8 +395,7 @@ theorem nonempty_strictPullback_appendLowerDimReduction [AlgebraicGeometry.Smoot
     isOrderBoundedByMult_derivedTriple hstar S hV hm hO s hftS extra keep hVc
   have hD1 := isBalanced_derivedTriple hstar S hV hm hO s hftS extra keep hVc
   have hjb1 : j < (MaxContactCoverData.derivedTriple S s hftS extra keep).boundary.length := by
-    rw [hb1]
-    exact hj
+    rwa [hb1]
   have hO2' := isOrderBoundedByMult_derivedTriple hstar (pullbackTriple S g) hV' hm' hO' t hftT
       (extra.map fun E : (s.obj s.length).IdealSheafData => E.comap D.lastMap) keep hVc'
   have hD2' := isBalanced_derivedTriple hstar (pullbackTriple S g) hV' hm' hO' t hftT

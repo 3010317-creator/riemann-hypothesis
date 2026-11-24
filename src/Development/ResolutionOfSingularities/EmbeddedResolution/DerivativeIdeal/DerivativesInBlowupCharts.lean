@@ -68,10 +68,7 @@ theorem partialDeriv_map_of_mem
     partialDeriv k ι S₁ i (φ f)
       = coord k ι S₁ s * φ (partialDeriv k ι S i f) := by
   let _ : Algebra S S₁ := φ.toRingHom.toAlgebra
-  have : IsScalarTower k S S₁ := by
-    refine IsScalarTower.of_algebraMap_eq fun x => ?_
-    show algebraMap k S₁ x = φ (algebraMap k S x)
-    exact (φ.commutes x).symm
+  have : IsScalarTower k S S₁ := IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
   have hsmul : ∀ (a : S) (z : S₁), a • z = φ a * z := fun _ _ => rfl
   let L₁ : S →ₗ[k] S₁ := (partialDeriv k ι S₁ i).toLinearMap.comp φ.toLinearMap
   let L₂ : S →ₗ[k] S₁ :=
@@ -202,27 +199,19 @@ theorem coord_mul_partialDeriv_map_eq_map_sum
     { toFun := fun x => coord k ι S₁ s * partialDeriv k ι S₁ s (φ x)
       map_add' := by
         intro x y
-        show coord k ι S₁ s * partialDeriv k ι S₁ s (φ (x + y))
-          = coord k ι S₁ s * partialDeriv k ι S₁ s (φ x)
-            + coord k ι S₁ s * partialDeriv k ι S₁ s (φ y)
         rw [map_add (f := _), map_add (f := _), mul_add]
       map_smul' := by
         intro c x
-        show coord k ι S₁ s * partialDeriv k ι S₁ s (φ (c • x))
-          = c • (coord k ι S₁ s * partialDeriv k ι S₁ s (φ x))
+        dsimp only [RingHom.id_apply]
         rw [map_smul, Derivation.map_smul, mul_smul_comm] }
   let L₂ : S →ₗ[k] S₁ :=
     { toFun := fun x => φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i x)
       map_add' := by
         intro x y
-        show φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i (x + y))
-          = φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i x)
-            + φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i y)
         rw [hsum_add, map_add (f := _)]
       map_smul' := by
         intro c x
-        show φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i (c • x))
-          = c • φ (∑ i ∈ T, coord k ι S i * partialDeriv k ι S i x)
+        dsimp only [RingHom.id_apply]
         rw [hsum_smul, map_smul] }
   have hleib1 : ∀ a b : S, L₁ (a * b) = a • L₁ b + b • L₁ a := by
     intro a b
@@ -248,24 +237,9 @@ theorem coord_mul_partialDeriv_map_eq_map_sum
           = if i = j then coord k ι S j else 0 := by
         intro i _
         rw [partialDeriv_coord]
-        by_cases h : i = j
-        · subst h
-          simp
-        · simp [h]
+        by_cases h : i = j <;> simp [h]
       rw [Finset.sum_congr rfl hterm]
-      by_cases hj : j ∈ T
-      · rw [Finset.sum_eq_single j]
-        · simp [hj]
-        · intro i _ hij
-          rw [ite_eq_right hij]
-        · intro h
-          exact absurd hj h
-      · rw [ite_eq_right hj]
-        refine Finset.sum_eq_zero fun i hi => ?_
-        have hij : i ≠ j := by
-          rintro rfl
-          exact hj hi
-        rw [ite_eq_right hij]
+      simp
     rw [hsum]
     by_cases hjs : j = s
     · subst hjs
@@ -474,8 +448,7 @@ theorem map_derivIdealIterate_le_span_pow_mul [Fintype ι]
     induction r with
     | zero =>
         intro _
-        rw [derivIdealIterate_zero k J, derivIdealIterate_zero k J₁, Nat.sub_zero]
-        exact hJ
+        rwa [derivIdealIterate_zero k J, derivIdealIterate_zero k J₁, Nat.sub_zero]
     | succ r ih =>
         intro hr
         have hrm : r ≤ m := Nat.le_of_succ_le hr
@@ -484,8 +457,7 @@ theorem map_derivIdealIterate_le_span_pow_mul [Fintype ι]
           (derivIdealIterate k r J) (derivIdealIterate k r J₁) (m - r) h1 (ih hrm)
         have hmm : m - r - 1 = m - (r + 1) := by omega
         rw [hmm] at hstep
-        rw [derivIdealIterate_succ k r J, derivIdealIterate_succ k r J₁]
-        exact hstep
+        rwa [derivIdealIterate_succ k r J, derivIdealIterate_succ k r J₁]
   exact key j hj
 
 end EtaleCoordinates

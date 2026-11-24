@@ -202,16 +202,14 @@ theorem inStrictNormalCrossingPosition_moveToFront {X : Scheme.{u}} {k : Type u}
     (hj : j < E.length) (hE : InStrictNormalCrossingPosition p E) :
     InStrictNormalCrossingPosition p (moveToFront E j) := by
   refine ⟨?_, ?_⟩
-  · intro D hD
-    exact hE.1 D (mem_of_mem_moveToFront E j hj D hD)
+  · exact fun D hD => hE.1 D (mem_of_mem_moveToFront E j hj D hD)
   · intro x
     obtain ⟨U, hxU, m, c, a, h1, h2, h3⟩ := hE.2 x
     have hlen : (moveToFront E j).length = E.length := length_moveToFront E j hj
     have hlt : ∀ i, i < (moveToFront E j).length → indexBeforeMoveToFront j i < E.length := by
       intro i hi
       refine indexBeforeMoveToFront_lt_length E j hj i ?_
-      rw [hlen] at hi
-      exact hi
+      rwa [hlen] at hi
     have hEq : ∀ i, ∀ h : i < (moveToFront E j).length,
         ((moveToFront E j)[i]'h) = E[indexBeforeMoveToFront j i]'(hlt i h) :=
       fun i h => getElem_moveToFront E j hj i h

@@ -78,8 +78,7 @@ theorem loc_mul_loc_conj {μ : HChar E} {e : InfinitePlace E → ℤ} (h : Globa
     (x : ((GlobalTheory.ThetaSatake.cw w).adicCompletion E)ˣ) :
     μ.loc (GlobalTheory.ThetaSatake.cw w) x * μ.loc w (Units.map (conjLoc (IsCMField.complexConj E).toRingEquiv w).toMonoidHom x) = 1 := by
   have h1 := GlobalTheory.BCT.MuProps.mu_mul_conj h (Neutral.B1.localIdele E _ x)
-  rw [GlobalTheory.PolChar.ideleConj_eq, GlobalTheory.ThetaPull.conjAd_localIdele] at h1
-  exact h1
+  rwa [GlobalTheory.PolChar.ideleConj_eq, GlobalTheory.ThetaPull.conjAd_localIdele] at h1
 
 theorem isUnitAt_conj (w : HeightOneSpectrum (𝓞 E)) (x : ((GlobalTheory.ThetaSatake.cw w).adicCompletion E)ˣ)
     (hx : IsUnitAt (GlobalTheory.ThetaSatake.cw w) x) :
@@ -105,8 +104,7 @@ theorem GlobalTheory.CompanionTheory.MuLocal.muLoc_holds : PositivityTheory.Rg.B
     have hc := loc_mul_loc_conj hμ w
     refine ⟨fun x hx => ?_, ?_⟩
     · have h2 := hc x
-      rw [hun _ (isUnitAt_conj w x hx), mul_one] at h2
-      exact h2
+      rwa [hun _ (isUnitAt_conj w x hx), mul_one] at h2
     · have h2 := hc (atFin (GlobalTheory.ThetaSatake.cw w) (unif (GlobalTheory.ThetaSatake.cw w)))
       rw [μ.val_eq hun _ (isUnifAt_conj w _ (unif_spec _))] at h2
       exact eq_inv_of_mul_eq_one_left h2

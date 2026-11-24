@@ -261,8 +261,7 @@ theorem exists_tF_ne (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) {h : Matr
     (hh : ct σ h = h) (h0 : h ≠ 0) : ∃ k ∈ hermF σ r, (tF h k : F) ≠ 0 := by
   classical
   obtain ⟨i, j, hij⟩ : ∃ i j, h i j ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h0 (Matrix.ext hc)
   obtain ⟨z, hz⟩ := Algebra.trace_surjective F E 1
   let s : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (AlgHom.ext hσ) (AlgHom.ext hσ)
@@ -398,8 +397,7 @@ theorem trace_rat (M : Matrix (Fin r) (Fin r) D.host.E) :
 
 theorem uL_rat (m h : Matrix (Fin r) (Fin r) D.host.E) :
     uL m (rat h) = algebraMap D.host.F (AF D.host.F) (tF m h) := by
-  rw [uL_apply]
-  rw [← rat_mul, trace_rat, GlobalTheory.CompanionTheory.ThetaInv.halfTr_incA, tF]
+  rw [uL_apply, ← rat_mul, trace_rat, GlobalTheory.CompanionTheory.ThetaInv.halfTr_incA, tF]
 
 theorem algebraMap_smul_rat (c : D.host.F) (M : Matrix (Fin r) (Fin r) D.host.E) :
     algebraMap D.host.F (AF D.host.F) c • (rat M : Mx D r r) = rat (c • M) :=
@@ -493,8 +491,7 @@ theorem continuous_smul_const (z : AE D) : Continuous fun a : AF D.host.F => a �
 theorem continuous_smul_rat (M : Matrix (Fin r) (Fin r) D.host.E) :
     Continuous fun a : AF D.host.F => a • (rat M : Mx D r r) := by
   refine continuous_matrix fun k l => ?_
-  simp only [Matrix.smul_apply]
-  exact continuous_smul_const _
+  simpa only [Matrix.smul_apply] using continuous_smul_const _
 
 theorem pairing_comb {n : ℕ} (m : Fin n → Matrix (Fin r) (Fin r) D.host.E) (v : Fin n → AF D.host.F)
     (x : Mx D r r) :
@@ -607,8 +604,7 @@ theorem coords : ∀ (D : D7) (r : ℕ) (lam : Measure (hermA D r)) (𝓖 : Set 
   obtain ⟨n, e, e', he, he', hd, hrec, hrec'⟩ := exists_dual (F := D.host.F) D.sp.cm.sig (fun x => star_star x) r
   refine ⟨n, cEquiv e e' he' hd hrec', fun x i => uL (e' i) x, fun w => ∑ i, w i • (rat (e i) : Mx D r r),
     continuous_pi fun i => continuous_uL (e' i), continuous_comb e, fun x hx => sum_uL_smul e e' hrec hx, ?_, ?_⟩
-  · intro v x
-    exact pairing_comb e' v x
+  · exact fun v x => pairing_comb e' v x
   · refine isTamagawa_map h _ ?_ ?_
     · intro w
       show ∑ i, algebraMap D.host.F (AF D.host.F) (w i) • (rat (e' i) : Mx D r r) ∈ ratMx D r r
@@ -699,8 +695,7 @@ theorem tendsto_invInf : Filter.Tendsto (invInf F) Filter.atTop (nhds 0) := by
     rw [tendsto_zero_iff_norm_tendsto_zero]
     have e : ∀ n : ℕ, ‖((n : w.Completion) + 1)⁻¹‖ = 1 / ((n : ℝ) + 1) := fun n => by
       rw [norm_inv, norm_natCast_add_one, one_div]
-    simp only [e]
-    exact tendsto_one_div_add_atTop_nhds_zero_nat
+    simpa only [e] using tendsto_one_div_add_atTop_nhds_zero_nat
   exact key
 
 def seqA (F : Type) [Field F] [NumberField F] (n : ℕ) : AF F := pairA F (invInf F n) 0
@@ -980,9 +975,7 @@ theorem isStd_stdChar : IsStd (stdChar F) := by
   refine ⟨continuous_subtype_val.comp continuous_adelicChar, fun x => ?_, fun a ha => ?_⟩
   · show (adelicChar F (algebraMap F (AF F) x) : ℂ) = 1
     rw [adelicChar_algebraMap]; rfl
-  · have h0 : evI F ((0, 1) : AF F) = 0 := by
-      show InfiniteAdeleRing.ringEquiv_mixedSpace F (0 : InfiniteAdeleRing F) = 0
-      exact map_zero _
+  · have h0 : evI F ((0, 1) : AF F) = 0 := map_zero _
     have h2 : a.2 = 0 := by
       have := congrArg Prod.snd (ha ((0, 1) : AF F) h0)
       have e : (1 : FiniteAdeleRing (𝓞 F) F) * a.2 = 0 := this
@@ -1103,8 +1096,7 @@ theorem fourier_mem_schA_std (F : Type) [Field F] [NumberField F] (ψ : AddChar 
     exact (hpureE f φ hφ).1
   intro Φ hΦ
   have h := hT_schA Φ hΦ
-  rw [show T Φ = ft ψ μ Φ from ftE_eq ψ μ (hint Φ hΦ)] at h
-  exact h
+  rwa [show T Φ = ft ψ μ Φ from ftE_eq ψ μ (hint Φ hΦ)] at h
 
 theorem dilate_mem_schA {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] {a : F} (ha : a ≠ 0)
     {Φ : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) : (fun y => Φ (algebraMap F (AF F) a • y)) ∈ schA F κ := by
@@ -1199,8 +1191,7 @@ theorem GlobalTheory.SWLit.tamagawa_eq_map_pi : ∀ (F : Type) [Field F] [Number
   have hr1 : r = 1 := by
     rw [hr, Measure.smul_apply, hD'1] at h1
     simpa using h1
-  rw [hr1, one_smul] at hr
-  exact hr
+  rwa [hr1, one_smul] at hr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamagawaAdelicHaarEqMapProductMeasure =====
@@ -1252,8 +1243,7 @@ theorem Bd_neg_left (u x : Fin N → R) : Bd R a (-u) x = -Bd R a u x := by
   exact Finset.sum_congr rfl fun l _ => by ring
 
 theorem Bd_comm (u x : Fin N → R) : Bd R a u x = Bd R a x u := by
-  simp only [Bd]
-  exact Finset.sum_congr rfl fun l _ => by ring
+  simpa only [Bd] using Finset.sum_congr rfl fun l _ => by ring
 
 theorem Bd_self (x : Fin N → R) : Bd R a x x = 2 * qd R a x := by
   simp only [Bd, qd, Finset.mul_sum]
@@ -1515,8 +1505,7 @@ theorem pair_abs {X Y : Type} [MeasurableSpace X] [MeasurableSpace Y] (μ : Meas
       exact (hm1.mul hm2).mul hm3
     · refine Filter.Eventually.of_forall ?_
       rintro ⟨z, v⟩
-      simp only [Function.uncurry_apply_pair, norm_mul, hen, mul_one]
-      exact le_of_eq (mul_comm _ _)
+      simpa only [Function.uncurry_apply_pair, norm_mul, hen, mul_one] using le_of_eq (mul_comm _ _)
   have h2 : Integrable (Function.uncurry fun (v : X) (y : Y) => φ y * k v y * H v) (μ.prod ν) := by
     refine Integrable.mono (hHi.mul_prod hφ) ?_ ?_
     · have hm1 : AEStronglyMeasurable (fun p : X × Y => φ p.2) (μ.prod ν) :=
@@ -1528,8 +1517,7 @@ theorem pair_abs {X Y : Type} [MeasurableSpace X] [MeasurableSpace Y] (μ : Meas
       exact (hm1.mul hm2).mul hm3
     · refine Filter.Eventually.of_forall ?_
       rintro ⟨v, y⟩
-      simp only [Function.uncurry_apply_pair, norm_mul, hkn, mul_one]
-      exact le_of_eq (mul_comm _ _)
+      simpa only [Function.uncurry_apply_pair, norm_mul, hkn, mul_one] using le_of_eq (mul_comm _ _)
   calc ∫ z, (∫ v, (∫ y, φ y * k v y ∂ν) * e v z ∂μ) * Φ z ∂μ
       = ∫ z, ∫ v, (∫ y, φ y * k v y ∂ν) * e v z * Φ z ∂μ ∂μ := by
         congr 1; funext z
@@ -1799,8 +1787,7 @@ theorem W_eq_zero_of_obstruction (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.
       rw [hec k, one_mul]
     · refine hcl (fun k => -e k) (fun k => (hermA D r).neg_mem (he k)) ?_ fun k => ?_
       · have h3 := het.neg
-        rw [neg_zero] at h3
-        exact h3
+        rwa [neg_zero] at h3
       · rw [compAt_neg', hec k]
         simp
   have key := vanish_generic D.host.F D.sp.cm.totReal ψ hψ (Fin n) (lam.map c.symm) hTam _ μ φ g

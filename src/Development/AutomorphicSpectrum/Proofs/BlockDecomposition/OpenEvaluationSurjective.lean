@@ -378,11 +378,9 @@ theorem exists_parab_mul : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
       Fin.ext (by rw [Fin.val_castSucc, GlobalTheory.CompanionTheory.LeibPhi.blockIndex_false_val, ePG_false_castSucc_val])
     show ((h : Mir k ((i + 1) + (t + 1))) : GL (Fin ((i + 1) + (t + 1) + 1)) k).val
       (Fin.castSucc (eGP (i + 1) t ⟨true, u⟩)) (Fin.castSucc (eGP (i + 1) t ⟨false, v⟩)) = 0
-    rw [e3, e4]
-    exact h0
+    rwa [e3, e4]
   · have e5 := congrArg (rGL k hn) e2
-    rw [rGL_rGL, map_mul] at e5
-    exact e5
+    rwa [rGL_rGL, map_mul] at e5
 
 end GlobalTheory.CompanionTheory.BZPhiPG.OntoO.Proj
 end -- clump:auto
@@ -600,8 +598,7 @@ theorem continuousAt_rowInv : ContinuousAt (fun x : GL (Fin (n + 1)) k => rowInv
         rw [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.invRow_one]; exact one_ne_zero)
   refine continuousAt_pi.2 fun j => ?_
   by_cases hj : j = Fin.last n
-  · simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, ite_eq_left hj]
-    exact hl
+  · simpa only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, ite_eq_left hj] using hl
   · simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, ite_eq_right hj]
     exact (((continuous_apply j).comp hv).continuousAt.neg).mul hl
 
@@ -655,8 +652,7 @@ theorem exists_nhd {V : Set (GL (Fin (n + 1)) k)} (hV : V ∈ 𝓝 (1 : GL (Fin 
   refine ⟨hx, hUV ?_⟩
   show Units.embedProduct (Matrix (Fin (n + 1)) (Fin (n + 1)) k)
     (GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.lastRowGL (GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.invRow x) hx * x) ∈ U
-  rw [hψ x hx]
-  exact hxU
+  rwa [hψ x hx]
 
 end Top
 
@@ -756,8 +752,7 @@ theorem mem_of_bumps {G W : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     apply Subtype.ext
     funext g
     exact hval g
-  rw [e]
-  exact hmem
+  rwa [e]
 
 end GlobalTheory.CompanionTheory.BZPhiPG.OntoO
 
@@ -1156,8 +1151,7 @@ theorem bump_abs [MeasurableSpace D] (μ : MeasureTheory.Measure D) (H : Subgrou
       exact (hdich d).resolve_left hd
   have hvol : (μ E).toReal ≠ 0 := by
     refine vol E (tsupport φ) (hl.isOpen_fiber _) ⟨d₀, h0⟩ hc fun d hd => subset_tsupport _ ?_
-    rw [Function.mem_support, show φ d = v₀ from hd]
-    exact hv0
+    rwa [Function.mem_support, show φ d = v₀ from hd]
   have hval : e B 1 = (((μ E).toReal : ℝ) : ℂ) • v := by
     rw [e_def, map_one, Units.val_one, one_smul]
     show q (GlobalTheory.CompanionTheory.Rodier.smInt μ φ) = _

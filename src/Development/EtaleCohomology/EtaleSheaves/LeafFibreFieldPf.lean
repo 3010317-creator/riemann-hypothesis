@@ -92,8 +92,7 @@ theorem alg_part (k K : Type) [Field k] [Field K] [Algebra k K] (S : Finset K)
       ext y; simp only [Set.mem_image, Set.mem_setOf_eq, Subtype.exists, exists_and_right,
         exists_eq_right, hT', Finset.coe_erase, Set.mem_diff, Set.mem_singleton_iff, ← hTB]
       tauto
-    rw [himg, ← IntermediateField.transcendental_adjoin_iff] at htr
-    exact htr
+    rwa [himg, ← IntermediateField.transcendental_adjoin_iff] at htr
   ·
     set L := IntermediateField.adjoin F {a} with hL
     have hBT : (B : Set K) = (T : Set K) := hTB.symm
@@ -135,9 +134,7 @@ theorem alg_part (k K : Type) [Field k] [Field K] [Algebra k K] (S : Finset K)
             exact h1 }
       have hle : IntermediateField.adjoin k (S : Set K) ≤ M := by
         rw [IntermediateField.adjoin_le_iff]
-        intro y hy
-        show y ∈ (IntermediateField.adjoin L (S : Set K) : Set K)
-        exact IntermediateField.subset_adjoin L _ hy
+        exact fun y hy => IntermediateField.subset_adjoin L _ hy
       exact (hle hx : x ∈ (IntermediateField.adjoin L (S : Set K) : Set K))
     rw [htop] at hfd
     exact LinearEquiv.finiteDimensional (IntermediateField.topEquiv (F := L) (E := K)).toLinearEquiv

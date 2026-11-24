@@ -185,8 +185,7 @@ theorem frameWt_div_le_div_ratio : ∀ (r : ℕ) (c : ℝ), 0 < c → ∃ K : �
       · have : 0 ≤ e * t b := (mul_pos he0 (hpos b)).le
         nlinarith
     rcases γ with _ | a | a
-    · simp only [frameWt, one_mul]
-      exact ⟨hsq.trans heT, hsq.trans heT⟩
+    · simpa only [frameWt, one_mul] using ⟨hsq.trans heT, hsq.trans heT⟩
     · have ha : s < a := by
         by_contra hn
         simp [frameLev, not_lt.1 hn] at h
@@ -221,8 +220,7 @@ theorem frameWt_div_le_div_ratio : ∀ (r : ℕ) (c : ℝ), 0 < c → ∃ K : �
   have hK : (e ^ 4)⁻¹ / ratio t s = T / (e ^ 4 * t s) := by
     rw [hrat]
     field_simp
-  rw [hK, div_le_div_iff₀ hwa (by positivity)]
-  exact key
+  rwa [hK, div_le_div_iff₀ hwa (by positivity)]
 
 end GlobalTheory.CompanionTheory.RapidDecay
 

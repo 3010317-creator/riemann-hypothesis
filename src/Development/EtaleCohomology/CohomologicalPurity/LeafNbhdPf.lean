@@ -79,11 +79,9 @@ theorem chart_of_data (hS : LeafSec) {d : ℕ} {A T : Type} [CommRing A] [CommRi
     have hker : I.map ((algebraMap T (Localization.Away t)).comp ι) ≤ RingHom.ker μB := by
       rw [Ideal.map_le_iff_le_comap]
       intro b hb
-      rw [Ideal.mem_comap, RingHom.mem_ker, hμB, Ideal.Quotient.eq_zero_iff_mem]
-      exact hb
+      rwa [Ideal.mem_comap, RingHom.mem_ker, hμB, Ideal.Quotient.eq_zero_iff_mem]
     have := hker (Ideal.mem_comap.mp ha)
-    rw [RingHom.mem_ker, hμB, Ideal.Quotient.eq_zero_iff_mem] at this
-    exact this
+    rwa [RingHom.mem_ker, hμB, Ideal.Quotient.eq_zero_iff_mem] at this
   · intro z
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective z
     obtain ⟨⟨s, ⟨_, n, rfl⟩⟩, hbn⟩ := IsLocalization.surj (Submonoid.powers t) b

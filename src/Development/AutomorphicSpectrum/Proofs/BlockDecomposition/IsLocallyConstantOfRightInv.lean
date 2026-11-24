@@ -67,8 +67,7 @@ theorem isLocallyConstant_of_rightInv {X : Type} {V : Subgroup B} (hV : IsOpen (
   have h2 := hf _ hz y
   rw [mul_inv_cancel_left] at h2
   show f z ∈ s
-  rw [h2]
-  exact hy
+  rwa [h2]
 
 variable [SecondCountableTopology B] [MeasurableSpace B] [BorelSpace B]
 
@@ -77,9 +76,7 @@ theorem setIntegral_subgroup (β : Measure B) [β.IsHaarMeasure] (K U : Subgroup
     ∫ y in (K : Set B), f y ∂β = (β.real K : ℂ) * avg (fun k : K => f k) := by
   set u : K → ℂ := fun k => f k with hu
   set R := rStab u with hR
-  have hUR : U.subgroupOf K ≤ R := by
-    intro k hk x
-    exact hf k hk x
+  have hUR : U.subgroupOf K ≤ R := fun k hk x => hf k hk x
   haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   have hRo : IsOpen (R : Set K) :=
     Subgroup.isOpen_mono hUR (hU.preimage continuous_subtype_val)
@@ -123,8 +120,7 @@ theorem setIntegral_subgroup (β : Measure B) [β.IsHaarMeasure] (K U : Subgroup
     constructor
     · rintro ⟨t, ht⟩
       have h1 := hR'K ht
-      have h2 := K.mul_mem (t.out).2 h1
-      simpa using h2
+      simpa using K.mul_mem (t.out).2 h1
     · intro hy
       refine ⟨((⟨y, hy⟩ : K) : K ⧸ R), ?_⟩
       set t : K ⧸ R := ((⟨y, hy⟩ : K) : K ⧸ R) with ht
@@ -138,8 +134,7 @@ theorem setIntegral_subgroup (β : Measure B) [β.IsHaarMeasure] (K U : Subgroup
     have hint : ∀ t, IntegrableOn g (A t) β := by
       intro t
       refine (integrableOn_const (C := c t) (by rw [hAmeas t]; exact hfin)).congr_fun ?_ (hAm t)
-      intro y hy
-      exact (hg t y hy).symm
+      exact fun y hy => (hg t y hy).symm
     rw [← hAU, integral_iUnion_fintype hAm hAd hint, Finset.mul_sum]
     refine Finset.sum_congr rfl fun t _ => ?_
     rw [setIntegral_congr_fun (hAm t) (fun y hy => hg t y hy), setIntegral_const, Measure.real, Measure.real,
@@ -222,8 +217,7 @@ theorem tsum_rr (Γ' K : Subgroup B)
           rw [← hxe]; simp [MulAut.conj_apply]
         rw [this]
         have e6 : o⁻¹ * (o * x * o⁻¹) * o = x := by group
-        rw [e6]
-        exact hx
+        rwa [e6]
     simp only [rr, e2, e4]
     by_cases hm : (γ : B) ∈ D
     · rw [ite_eq_left hm, Set.indicator_of_mem (show (γ : B) ∈ (D : Set B) from hm)]
@@ -373,8 +367,7 @@ theorem core (hQ : QIndep) {G A B : Type} [Group G] [MeasurableSpace G] [Measura
       have h1 : (e ((a : G) * (b : G)⁻¹)).2 = 1 := by
         have h2 : (e (a : G)).2 = (e (b : G)).2 := congrArg Subtype.val hab
         simp [map_mul, map_inv, Prod.snd_mul, Prod.snd_inv, h2]
-      have h3 := hinj _ (Γ.mul_mem a.2 (Γ.inv_mem b.2)) h1
-      exact Subtype.ext (mul_inv_eq_one.1 h3)
+      exact Subtype.ext (mul_inv_eq_one.1 (hinj _ (Γ.mul_mem a.2 (Γ.inv_mem b.2)) h1))
     · rintro ⟨y, hy⟩
       rw [← hΓ] at hy
       obtain ⟨γ, hγ, rfl⟩ := hy

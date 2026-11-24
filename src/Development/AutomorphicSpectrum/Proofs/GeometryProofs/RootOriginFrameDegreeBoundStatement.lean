@@ -154,8 +154,7 @@ theorem chart_point : ∀ (X : AlgebraicGeometry.Scheme.{0}) (Ω : Type) [Field 
     obtain ⟨b, hb, hb'⟩ := hCS _ (hC t)
     have : b = e' t := Subtype.ext hb'
     show evT (e' t) ∈ _
-    rw [← this]
-    exact hb
+    rwa [← this]
 
   obtain ⟨g, hg⟩ : ∃ g : Γ(X, U) →+* T.V, (algebraMap T.V T.Fr).comp g = ev := by
     have hι : Function.Injective (algebraMap T.V T.Fr) := IsFractionRing.injective T.V T.Fr
@@ -306,8 +305,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.complete_dvr_lie_model_lattice
     intro a j
     obtain ⟨h1, s, hs1, hs2⟩ := hR a
     have := hsc (hw j) s
-    rw [hs1, hs2] at this
-    exact this
+    rwa [hs1, hs2] at this
   have hv : ∀ i, M.ValAt (FinRd.Roots.gen T zV) (b i)
       (MC.pt (∑ j, evT ⟨Tm i j, hT i j⟩ • w j)) := by
     intro i
@@ -318,8 +316,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.complete_dvr_lie_model_lattice
   · rw [Submodule.span_le]
     rintro w' ⟨h', x, hx, hxv⟩
     have hx' : x ∈ Submodule.span (regAt ξ ⟨centre zV, h⟩) (Set.range b) := by
-      rw [← hF2]
-      exact hx
+      rwa [← hF2]
     obtain ⟨cf, hcf⟩ := (Submodule.mem_span_range_iff_exists_fun _).mp hx'
     choose s hs using fun i => RingHom.mem_range.mp (cf i).2
     have key : M.ValAt (FinRd.Roots.gen T zV) x
@@ -329,8 +326,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.complete_dvr_lie_model_lattice
       refine hsum _ _ _ (hzero hxv) fun i _ => ?_
       have := hsc (hv i) (ConcreteCategory.hom (X.presheaf.stalkSpecializes c) (s i))
       rw [LieTangent.genMap_specializes ⟨centre zV, h⟩ hz c, hK, hs i] at this
-      rw [Subring.smul_def]
-      exact this
+      rwa [Subring.smul_def]
     have hw' := MC.inj (LieModel.ValAt.unique hX hxv key)
     rw [hw']
     refine Submodule.sum_mem _ fun i _ => ?_
@@ -678,8 +674,7 @@ theorem isUnit_int_of_inFibre_rf {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : S
       rw [← hgp, ← map_mul, ← hu, Units.inv_mul, map_one]
     refine ⟨right_ne_zero_of_mul_eq_one hmul, RingHom.mem_range.mpr ⟨_, hgp⟩, RingHom.mem_range.mpr ⟨(↑u⁻¹ : X.presheaf.stalk (GlobalTheory.CompanionTheory.Ar.centre z)), ?_⟩⟩
     exact eq_inv_of_mul_eq_one_left hmul
-  · intro hu
-    exact hnd (by simpa using hu.map (Scheme.stalkClosedPointTo z).hom)
+  · exact fun hu => hnd (by simpa using hu.map (Scheme.stalkClosedPointTo z).hom)
 
 theorem fib_eq_lieEig_rf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (A : Subring RM.Ω) (p : ℕ) [Fact p.Prime] (z : (Σ k, RM.ι k) → PadicAlgCl p) (ev : A →+* PadicAlgCl p), z ∈ Small.algPts p (mCoordIdeal RM.y) → (∀ x : A, Small.HasVal RM.y 0 (x : RM.Ω) z (ev x)) → FinRd.GoodRing Fr A → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ) (y : IntFr Xo c T io) (evT : A →+* T.Fr) (zT : letI := io.toAlgebra; FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), FinRd.IsIntPt Fr A ev la T io e y evT zT t → ∀ (zV : Spec (CommRingCat.of T.V) ⟶ Or.𝔐.X), FinRd.Roots.ReadsPt Or.𝔐.ξ A T evT zV → p ∉ SS → ¬ (p : ℤ) ∣ discr E → ∀ (EC : Type) [AddCommGroup EC] [Module T.Fr EC] [Module T.V EC] [IsScalarTower T.V T.Fr EC] (MC : LieModel Or.𝔐.t.G (FinRd.Roots.gen T zV) EC) (ρC : 𝓞 E →+* Module.End T.Fr EC), MC.IsActOf Or.𝔐.t.act.act ρC → ∀ (s : CMType H ⊕ CMType H) (σ : 𝓞 E →+* T.V), (∀ a, GlobalTheory.CompanionTheory.Ar.ValAt Or.𝔐.ξ zV (Or.𝔐.emb s a) (σ a)) → Or.𝔐.M.fibAt (Or.𝔐.V s) zV MC = FinRd.Roots.lieEig Or MC ρC σ := by
   intro E _ _ _ H Dw l Xo c O _ β Y SS RM Sys Fx Or Fr A p _ z ev hz hval hgood la T io e y evT zT t hint zV hread
@@ -937,8 +932,7 @@ theorem realVal_lt_one_iff {x : K} : realVal V K x < 1 ↔ valV V x < 1 := by
 
 theorem realVal_integers : (realVal V K).Integers V := by
   refine ⟨IsFractionRing.injective V K, ?_, ?_⟩
-  · intro x
-    exact (realVal_le_one_iff (V := V)).2 (valV_algebraMap_le_one x)
+  · exact fun x => (realVal_le_one_iff (V := V)).2 (valV_algebraMap_le_one x)
   · intro x hx
     exact IsDiscreteValuationRing.exists_lift_of_le_one ((realVal_le_one_iff (V := V)).1 hx)
 
@@ -1392,10 +1386,8 @@ theorem compare : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     have h1 := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Roots.fib_eq_lieEig_rf E H Dw l Xo c O β Y SS RM Sys Fx Or Fr A p z ev hz hval hA la T io e y evT zT t hI zV hR hpS hd
       EC MC ρC hact s σ hσ
     refine ⟨1, 1, fun w hw => ?_, fun w hw => ?_, hle1, hle1⟩
-    · rw [one_smul, h1]
-      exact hw
-    · rw [one_smul, ← h1]
-      exact hw
+    · rwa [one_smul, h1]
+    · rwa [one_smul, ← h1]
 
 theorem diag_bound : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (A : Subring RM.Ω) (p : ℕ) [Fact p.Prime] (z : (Σ k, RM.ι k) → PadicAlgCl p) (ev : A →+* PadicAlgCl p), z ∈ Small.algPts p (mCoordIdeal RM.y) → (∀ x : A, Small.HasVal RM.y 0 (x : RM.Ω) z (ev x)) → FinRd.GoodRing Fr A → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ) (y : IntFr Xo c T io) (evT : A →+* T.Fr) (zT : letI := io.toAlgebra; FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), FinRd.IsIntPt Fr A ev la T io e y evT zT t → ∀ (zV : Spec (CommRingCat.of T.V) ⟶ Or.𝔐.X), FinRd.Roots.ReadsPt Or.𝔐.ξ A T evT zV → Or.𝔐.OmVB → 0 < Dw.p + Dw.q →
     (∀ p' : ℕ, p'.Prime → (p' : ℤ) ∣ discr E → p' ∈ SS) →

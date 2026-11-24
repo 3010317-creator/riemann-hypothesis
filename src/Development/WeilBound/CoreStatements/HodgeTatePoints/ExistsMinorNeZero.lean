@@ -68,8 +68,7 @@ theorem minor_mul_upper {B : Type} [CommRing B] {N i : ℕ} (hi : i ≤ N) (g U 
     · rfl
     · intro k _ hk
       have hki : i ≤ (k : ℕ) := by
-        by_contra hlt
-        push Not at hlt
+        by_contra! hlt
         exact hk (Finset.mem_map.2 ⟨⟨k, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
       have hlt : Fin.castLE hi b < k := by
         rw [Fin.lt_def, Fin.coe_castLE]
@@ -78,8 +77,7 @@ theorem minor_mul_upper {B : Type} [CommRing B] {N i : ℕ} (hi : i ≤ N) (g U 
   have hT : (U.submatrix (Fin.castLE hi) (Fin.castLE hi)).IsUpperTriangular := by
     intro a b hab
     have hab' : Fin.castLE hi b < Fin.castLE hi a := by
-      rw [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
-      exact hab
+      rwa [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
     exact hU _ _ hab'
   rw [h, Matrix.det_mul, Matrix.det_of_upperTriangular hT]
   rfl
@@ -152,8 +150,7 @@ theorem abel_sum : ∀ (N : ℕ) (lam x : Fin N → ℝ), (∀ i j, i ≤ j → 
       omega
     have htot : ∑ l ∈ Finset.range (n + 1), x' l = 0 := by
       rw [← Fin.sum_univ_eq_sum_range x' (n + 1)]
-      simp only [hx']
-      exact hsum
+      simpa only [hx'] using hsum
     have hprod : ∑ l ∈ Finset.range (n + 1), lam' l * x' l = ∑ l, lam l * x l := by
       rw [← Fin.sum_univ_eq_sum_range (fun k => lam' k * x' k) (n + 1)]
       simp only [hx', hlam']
@@ -169,7 +166,6 @@ theorem abel_sum : ∀ (N : ℕ) (lam x : Fin N → ℝ), (∀ i j, i ≤ j → 
       rw [hsx i (by omega)]
       exact hx i (by omega)
     have key := abel_nat lam' x' n hl' hx''
-    rw [htot, hprod, mul_zero] at key
-    exact key
+    rwa [htot, hprod, mul_zero] at key
 
 end PositivityTheory.HtPt.Gf

@@ -374,7 +374,6 @@ theorem IdemConj_of : IdemConj := by
     show (∑ k, α k) * p j = q (f j) * ∑ k, α k
     rw [h1, h2]
   · rintro i ⟨a, ha, h⟩
-    show f i = i
     exact hfix i ((hQd i i).2 (key A p q hp hpc hq hqc hA i i a ha h))
 
 end LateralTheory.DivDb.ConjugateIdempotents
@@ -1394,8 +1393,7 @@ lemma zT_orth (hp : Sys p) {T T' : Finset (Fin n)} (hd : Disjoint T T') : zT p T
 
 lemma decomp (hp : Sys p) (a : Mat C N) : a = ∑ i, ∑ j, p i * a * p j := by
   conv_lhs => rw [← one_mul a, ← mul_one (1 * a), ← sum_p hp]
-  simp [Finset.sum_mul, Finset.mul_sum, mul_assoc]
-  exact Finset.sum_comm
+  simpa [Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
 
 variable {A : Subalgebra C (Mat C N)}
 

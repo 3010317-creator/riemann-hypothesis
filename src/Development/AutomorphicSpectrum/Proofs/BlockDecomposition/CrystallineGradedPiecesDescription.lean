@@ -172,9 +172,7 @@ theorem filtration_element_mod_next_level (r : ℕ) {z : A.Acr0} (hz : z ∈ A.F
 theorem divided_power_multiple_next_level_iff (r : ℕ) (w : A.W) :
     algebraMap A.W A.Acr0 w * A.dxi0 r ∈ A.Fil0 (r + 1) ↔ w ∈ Ideal.span {A.xi} := by
   have hinj : Function.Injective (algebraMap A.W A.Acr0) := by
-    intro x y h
-    apply A.algebraMap_WL_injective
-    exact congrArg Subtype.val h
+    exact fun x y h => A.algebraMap_WL_injective (congrArg Subtype.val h)
   constructor
   · intro h
     obtain ⟨N, v, hv⟩ := filtration_element_power_multiple_xi A (r + 1) h

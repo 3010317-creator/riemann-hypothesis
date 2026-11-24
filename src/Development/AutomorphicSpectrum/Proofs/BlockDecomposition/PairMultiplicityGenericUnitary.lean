@@ -433,16 +433,14 @@ theorem sum_Mt {M : Type*} [AddCommMonoid M] [Module ℂ M] (s : Bool) (p q : Fi
     ∑ m, Mt s p q l m • f m = ∑ k : Pos n, adC p q l.2 k • f ((s == l.1), k) := by
   rw [Fintype.sum_prod_type, Finset.sum_eq_single (s == l.1)]
   · simp [Mt]
-  · intro b _ hb
-    exact Finset.sum_eq_zero fun k _ => by simp [Mt, hb]
+  · exact fun b _ hb => Finset.sum_eq_zero fun k _ => by simp [Mt, hb]
   · simp
 
 theorem sum_Sq {M : Type*} [AddCommMonoid M] [Module ℂ M] (l1 l2 : Lt n) (f : Lt n → M) :
     ∑ m, Sq l1 l2 m • f m = ∑ k : Pos n, GlobalTheory.CompanionTheory.RgCOBlock.LeviBd.tc l1.2 l2.2 k • f ((l1.1 == l2.1), k) := by
   rw [Fintype.sum_prod_type, Finset.sum_eq_single (l1.1 == l2.1)]
   · simp [Sq]
-  · intro b _ hb
-    exact Finset.sum_eq_zero fun k _ => by simp [Sq, hb]
+  · exact fun b _ hb => Finset.sum_eq_zero fun k _ => by simp [Sq, hb]
   · simp
 
 theorem adLq_eq (s : Bool) (p q : Fin n) :
@@ -547,8 +545,7 @@ theorem coef_zero {lev : Fin n → ℕ} (hm : Monotone lev) {s : Bool} {p q : Fi
     have i2 : c = (a == (s == b)) := by rw [hc]; cases s <;> cases a <;> cases b <;> rfl
     have i3 : c = ((s == a) == b) := by rw [hc]; cases s <;> cases a <;> cases b <;> rfl
     simp only [Mt, Sq, i1.symm, i2.symm, i3.symm, ite_true]
-    simp only [mul_comm (adC p q j _), mul_comm (adC p q i _)]
-    exact hD
+    simpa only [mul_comm (adC p q j _), mul_comm (adC p q i _)] using hD
   · have i2 : ¬c = (a == (s == b)) := fun e => hc (by rw [e]; cases s <;> cases a <;> cases b <;> rfl)
     have i3 : ¬c = ((s == a) == b) := fun e => hc (by rw [e]; cases s <;> cases a <;> cases b <;> rfl)
     simp [Mt, Sq, hc, i2, i3]
@@ -650,8 +647,7 @@ theorem annq_eq_zero {P : Lt n → Prop} {x : Cq n V} (hx : SuppQ P x) {i : Lt n
   exact hi (hx _ (annq_ne h).2 i (mem_insert_self _ _))
 
 theorem annq_supp {P : Lt n → Prop} {x : Cq n V} (hx : SuppQ P x) (i : Lt n) : SuppQ P (annq i x) := by
-  intro A h j hj
-  exact hx _ (annq_ne h).2 j (mem_insert_of_mem hj)
+  exact fun A h j hj => hx _ (annq_ne h).2 j (mem_insert_of_mem hj)
 
 theorem lFq_bd (hP : PairRel E1 E2) {lev : Fin n → ℕ} (hm : Monotone lev) {x : Cq n V} (hx : SuppQ (inUL lev) x)
     (s : Bool) {p q : Fin n} (hpq : lev p = lev q) :
@@ -696,8 +692,7 @@ theorem mt_id {lev : Fin n → ℕ} (hm : Monotone lev) {s t : Bool} {p q r v : 
   by_cases hc : w = ((s == t) == u)
   · have i1 : w = (s == (t == u)) := by rw [hc]; cases s <;> cases t <;> cases u <;> rfl
     have i2 : w = (t == (s == u)) := by rw [hc]; cases s <;> cases t <;> cases u <;> rfl
-    simp only [Mt, i1.symm, i2.symm, hc.symm, ite_true]
-    exact hM
+    simpa only [Mt, i1.symm, i2.symm, hc.symm, ite_true] using hM
   · have i1 : ¬w = (s == (t == u)) := fun e => hc (by rw [e]; cases s <;> cases t <;> cases u <;> rfl)
     have i2 : ¬w = (t == (s == u)) := fun e => hc (by rw [e]; cases s <;> cases t <;> cases u <;> rfl)
     simp [Mt, hc, i1, i2]
@@ -770,8 +765,7 @@ theorem cre_ann_ne (i k : Lt n) (x : Cq n V) (A : Finset (Lt n))
 theorem lFq_ne (s : Bool) (p q : Fin n) (x : Cq n V) (A : Finset (Lt n)) (h : lFq E1 E2 s p q x A ≠ 0) :
     x A ≠ 0 ∨ ∃ (t : Bool) (i k : Pos n), adC p q i k ≠ 0 ∧
       (creq ((s == t), k) * annq (t, i) : Module.End ℂ (Cq n V)) x A ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   obtain ⟨h0, h1⟩ := hc
   apply h
   have hs : adLq s p q x A = 0 := by
@@ -1073,8 +1067,7 @@ theorem freeR (n : ℕ) : ∃ (W : Type) (_ : AddCommGroup W) (_ : Module ℂ W)
         rw [hRs, hLs]
         simp only [LinearMap.add_apply, LinearMap.sub_apply]
         abel
-      rw [e4]
-      exact e3
+      rwa [e4]
   · rintro ⟨s, p⟩ k t ht
     have e1 := rT_low Fil (d p) (fun l z hz => ?_) (hF.d_zero p) k t ht
     have e2 := lT_low Fil (d p) (fun l z hz => ?_) (hF.d_zero p) k t ht
@@ -1728,8 +1721,7 @@ theorem single_one_supp {P : Lt n → Prop} {i : Lt n} (hi : P i) (y : V) : Supp
   intro A hA l hl
   by_cases h : A = {i}
   · subst h
-    rw [mem_singleton.1 hl]
-    exact hi
+    rwa [mem_singleton.1 hl]
   · exact absurd (by simp [Pi.single_apply, h]) hA
 
 theorem gl_of_inj {T : V →ₗ[ℂ] W} (hT : Function.Injective T) {E : Fin n → Fin n → Module.End ℂ V}
@@ -1802,9 +1794,7 @@ theorem shift_step (hR : LeviRel) {lev : Fin n → ℕ} (hlev : Monotone lev) {a
     by_cases h : x A = 0
     · simp [lift_apply, x', h]
     · simp [lift_apply, x', h, Function.surjInv_eq hπ]
-  have hne : ∀ A, x' A ≠ 0 → x A ≠ 0 := by
-    intro A hA0 h0
-    exact hA0 (by simp [x', h0])
+  have hne : ∀ A, x' A ≠ 0 → x A ≠ 0 := fun A hA0 h0 => hA0 (by simp [x', h0])
   have hx'D : DegQ (j + 1) x' := fun A h => hx A (hne A h)
   have hx'S : SuppQ S x' := fun A h => hxS A (hne A h)
   have hz0 : liftq n π (bdq F1 F2 x') = 0 := by rw [hm.bd, hx'π, hxb]
@@ -1825,9 +1815,7 @@ theorem shift_step (hR : LeviRel) {lev : Fin n → ℕ} (hlev : Monotone lev) {a
 
   let z' : Cq n (LinearMap.ker π) := fun A => ⟨bdq F1 F2 x' A, congrFun hz0 A⟩
   have hz' : liftq n (LinearMap.ker π).subtype z' = bdq F1 F2 x' := rfl
-  have hne' : ∀ A, z' A ≠ 0 → bdq F1 F2 x' A ≠ 0 := by
-    intro A hA0 h0
-    exact hA0 (Subtype.ext h0)
+  have hne' : ∀ A, z' A ≠ 0 → bdq F1 F2 x' A ≠ 0 := fun A hA0 h0 => hA0 (Subtype.ext h0)
   have hzD : DegQ j z' := fun A h => bd_deg F1 F2 hx'D A (hne' A h)
   have hzS : SuppQ S z' := fun A h => bd_supp F1 F2 (cq_closed hS) hx'S A (hne' A h)
   have hzc : bdq G1 G2 z' = 0 := by

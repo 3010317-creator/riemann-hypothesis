@@ -118,8 +118,7 @@ theorem sum {ι : Type*} (s : Finset ι) {f g : ι → (Fin D → ℂ) → ℝ} 
   revert h
   refine Finset.induction_on s ?_ ?_
   · intro _
-    simp only [Finset.sum_empty]
-    exact refl' _
+    simpa only [Finset.sum_empty] using refl' _
   · intro a s ha ih h
     simp only [Finset.sum_insert ha]
     exact (h a (Finset.mem_insert_self a s)).add (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
@@ -352,8 +351,7 @@ theorem KA (n : ℕ) (c : σ → ℝ) (hc : c a₀ = 0) {z : Fin (d + 2) → ℂ
     (fun w => rfl)
   · by_cases ha : a = a₀
     · subst ha
-      simp only [hc, zero_mul]
-      exact PH.refl' _
+      simpa only [hc, zero_mul] using PH.refl' _
     · exact ((M0 Q n a hz).trans (Ya0 Q n a ha hz)).smul _
   · rw [Fintype.sum_option]
     simp [AnSq.pull0]
@@ -376,8 +374,7 @@ theorem K1 (n : ℕ) {z : Fin (d + 2) → ℂ} (hz : Fin.tail (Fin.tail z) ∈ Q
     (g := fun a z' => (if a = a₀ then 0 else (ε a : ℝ)) * (SY.potH a).φ (Q.ΦY n (lin Fin.succ z)) (Q.ΦY n (lin Fin.succ z')))
     Finset.univ fun a _ => by
       by_cases ha : a = a₀
-      · simp only [ha, ite_true, zero_mul]
-        exact PH.refl' _
+      · simpa only [ha, ite_true, zero_mul] using PH.refl' _
       · simp only [ha, ite_false]
         exact ((M0 Q n a hz).trans ((Ya0 Q n a ha hz).trans (Ya1 Q n a ha hz).symm)).smul _
   refine (((M1 Q n hz).smul (ε a₀ : ℝ)).add hs |>.trans (Y1 Q n hz |>.congr' (fun w => ?_) (fun w => rfl))).congr'

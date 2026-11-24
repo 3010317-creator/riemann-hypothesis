@@ -204,8 +204,7 @@ theorem continuous_nb {D : D7} {p : ℕ} {nb : hermA D p → G D p} (hnb : IsNMa
   have hv : Continuous fun b : hermA D p => (b.1 : Mx D p p) := continuous_subtype_val
   have hm : ∀ b, (AdelicU.matHom _ D.sp.cm.sig (Jst D p) (nb b)).1 = blk4 1 b.1 0 1 := hnb
   constructor
-  · refine (continuous_unipotent_block_family hv).congr fun b => ?_
-    exact (hm b).symm
+  · exact (continuous_unipotent_block_family hv).congr fun b => (hm b).symm
   · refine (continuous_unipotent_block_family hv.neg).congr fun b => ?_
     symm
     refine Units.inv_eq_of_mul_eq_one_right ?_
@@ -392,8 +391,7 @@ theorem lowC_mul_nb {nb : hermA D p → G D p} (hnb : IsNMap nb) (g : G D p) (y 
   have hm : mat (g * nb y) = mat g * blk4 1 y.1 0 1 := by
     rw [← hnb y]; rfl
   ext i j
-  simp only [lowC, Matrix.submatrix_apply, hm]
-  exact mul_nBlock_inl _ _ _ _
+  simpa only [lowC, Matrix.submatrix_apply, hm] using mul_nBlock_inl _ _ _ _
 
 theorem lowD_mul_nb {nb : hermA D p → G D p} (hnb : IsNMap nb) (g : G D p) (y : hermA D p) :
     lowD (g * nb y) = lowC g * y.1 + lowD g := by
@@ -679,8 +677,7 @@ theorem unit_of_basis {R A ι : Type*} [CommRing R] [TopologicalSpace R] [IsTopo
       {z : A | IsUnit (1 - e + e * z)} := by
     refine ContinuousOn.smul (hi.comp hN.continuousOn ?_) (hy.comp hc).continuousOn
     intro z hz
-    rw [hset] at hz
-    exact hz
+    rwa [hset] at hz
   refine h2.congr fun z hz => ?_
   refine inverse_eq hz ?_
   have h3 : IsUnit (1 - f + f * N z) := by
@@ -715,10 +712,8 @@ theorem unit_of_retract {A T : Type*} [CommRing A] [TopologicalSpace A] [IsTopol
   refine ⟨hset' ▸ ho.preimage hp, ?_⟩
   have h2 : ContinuousOn (fun a : A => 1 - f + s (Ring.inverse (p a))) {a : A | IsUnit (1 - f + f * a)} := by
     refine continuousOn_const.add (hs.comp_continuousOn (hi.comp hp.continuousOn ?_))
-    intro a ha
-    exact (hset a).1 ha
-  refine h2.congr fun a ha => ?_
-  exact inverse_eq ha (key a _ (Ring.mul_inverse_cancel _ ((hset a).1 ha)))
+    exact fun a ha => (hset a).1 ha
+  exact h2.congr fun a ha => inverse_eq ha (key a _ (Ring.mul_inverse_cancel _ ((hset a).1 ha)))
 
 theorem unit_pi {ι : Type*} [Fintype ι] {K : ι → Type*} [∀ i, Field (K i)] [∀ i, TopologicalSpace (K i)]
     [∀ i, ContinuousInv₀ (K i)] [∀ i, T1Space (K i)] :
@@ -879,8 +874,7 @@ theorem unit_AE {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) :
   have hf : sS S (1 : RS S) * sS S 1 = sS S 1 := by rw [← sS_mul, one_mul]
   have h := unit_of_basis (Algebra.TensorProduct.basis (AF D.host.F) (Module.finBasis D.host.F D.host.E))
     (sS S 1) hf (unit_AF S).1 (unit_AF S).2
-  rw [← idem_eq he] at h
-  exact h
+  rwa [← idem_eq he] at h
 
 end GlobalTheory.CompanionTheory.CellTop
 end -- clump:auto
@@ -943,8 +937,7 @@ theorem tau_formula {e : AE D} (hee : e * e = e) {g : G D p} {x : hermS D p e} (
     Ring.inverse (1 - e + e * (cB g).det) • (((1 - e) • (1 : Mx D p p) + e • cB g).adjugate * (e • dB g)) = x.1.1 := by
   have hu' : IsUnit (1 - e + e * (cB g).det) := by
     have := hu
-    rw [cell_eq hee] at this
-    exact this
+    rwa [cell_eq hee] at this
   exact mix_solve hee hu' x.2 h.2
 
 theorem continuousOn_tau {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) (hee : e * e = e) (hce : cA D e = e) :
@@ -954,8 +947,7 @@ theorem continuousOn_tau {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) (hee :
   have h1 : ContinuousOn (fun g : G D p => Ring.inverse (1 - e + e * (cB g).det)) (cell e) := by
     refine (unit_AE he).2.comp hd.continuousOn ?_
     intro g hg
-    rw [cell_eq hee] at hg
-    exact hg
+    rwa [cell_eq hee] at hg
   have h2 : Continuous fun g : G D p => ((1 - e) • (1 : Mx D p p) + e • cB g).adjugate * (e • dB g) := by
     refine Continuous.matrix_mul (Continuous.matrix_adjugate ?_) (continuous_dB.const_smul e)
     exact continuous_const.add (continuous_cB.const_smul e)
@@ -984,8 +976,7 @@ theorem cellAlg : IdemEx → CellAlg := by
     · intro y x hx
       have h := (isB_mul_nb hnb y (tau e x)).2 (hex x hx)
       exact ⟨hcell h, tau_eq h⟩
-  · intro g hg u hu
-    exact hcell ((isB_mul_right_iff he hu (tau e g)).2 (hex g hg))
+  · exact fun g hg u hu => hcell ((isB_mul_right_iff he hu (tau e g)).2 (hex g hg))
   · intro g hg
     have h := hex g hg
     change (e • cB g) * _ = _

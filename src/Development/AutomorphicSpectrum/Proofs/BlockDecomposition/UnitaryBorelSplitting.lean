@@ -76,9 +76,7 @@ theorem borelSplitU : PositivityTheory.SphericalProduct.BorelSplitU := by
     fun i j h => hoff i j (ne_of_gt h)
   have htiT := Formalism.UG.P.spherical_upper_inv _ htT
   refine ⟨t, t⁻¹ * b, hoff, ⟨?_, ?_⟩, by group⟩
-  · refine (Formalism.UG.P.spherical_upper_iff _).2 ?_
-    show ((((t : GL (Fin n) L))⁻¹ * (b : GL (Fin n) L) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L).BlockTriangular id
-    exact Formalism.UG.P.spherical_upper_mul _ _ htiT hbT
+  · exact (Formalism.UG.P.spherical_upper_iff _).2 (Formalism.UG.P.spherical_upper_mul _ _ htiT hbT)
   · intro i
     show ((((t : GL (Fin n) L))⁻¹ * (b : GL (Fin n) L) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i i = 1
     have h1 : ((((t : GL (Fin n) L))⁻¹ * (t : GL (Fin n) L) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i i = 1 := by

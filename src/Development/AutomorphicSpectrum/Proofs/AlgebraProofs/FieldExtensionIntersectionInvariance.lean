@@ -154,8 +154,7 @@ theorem Rep.mul (hp : ∀ W ∈ 𝒲, W.IsPrime) {z z' : L} {F G F' G' : MRing �
   obtain ⟨b', hF', hG'⟩ := h'.hom
   refine ⟨⟨b + b', IsWeightedHomogeneous.mul hF hF', IsWeightedHomogeneous.mul hG hG'⟩, ?_, ?_, ?_⟩
   · rw [map_mul]; exact mul_ne_zero h.ne h'.ne
-  · intro W hW hm
-    exact ((hp W hW).mem_or_mem hm).elim (h.avoid W hW) (h'.avoid W hW)
+  · exact fun W hW hm => ((hp W hW).mem_or_mem hm).elim (h.avoid W hW) (h'.avoid W hW)
   · rw [h.eq, h'.eq, map_mul, map_mul, div_mul_div_comm]
 
 omit [Fintype K] [∀ k, Fintype (ι k)] in
@@ -709,8 +708,7 @@ theorem Setup.exists_centre (S : Setup φ P 𝒲) (V : ValuationSubring L) (hV :
       apply Subtype.ext
       rw [hχ, dehom, eval₂Hom_X']
       exact div_self (hc k)
-    simp only [ρ, RingHom.comp_apply, h1, map_one]
-    exact one_ne_zero
+    simpa only [ρ, RingHom.comp_apply, h1, map_one] using one_ne_zero
   · refine le_of_forms S.mp.multiHomog fun F b hF h => (hyform F b hF).mpr ?_
     have h0 : χ F = 0 := by
       apply Subtype.ext
@@ -733,8 +731,7 @@ theorem Setup.exists_centre (S : Setup φ P 𝒲) (V : ValuationSubring L) (hV :
     refine ⟨Subtype.mem _, ?_⟩
     have hu : IsLocalRing.residue V (↑hgu.unit⁻¹ : V) ≠ 0 :=
       (IsLocalRing.residue_ne_zero_iff_isUnit _).mpr (Units.isUnit _)
-    simp only [ρ, RingHom.comp_apply, mul_eq_zero]
-    exact ⟨Or.inl, fun h => h.resolve_right hu⟩
+    simpa only [ρ, RingHom.comp_apply, mul_eq_zero] using ⟨Or.inl, fun h => h.resolve_right hu⟩
 
 omit [∀ k, Fintype (ι k)] in
 theorem Setup.frac (S : Setup φ P 𝒲) {W : Ideal (MRing ι R)} (hW : W ∈ 𝒲)
@@ -1226,8 +1223,7 @@ theorem mem_special (hϖ : Irreducible ϖ) {K₁ : Type} [Fintype K₁] [Decidab
     {W : Ideal (MRing ι O)} (hW : (C ϖ : MRing ι O) ∈ W) (F : MRing ι O) :
     MvPolynomial.map (IsLocalRing.residue O) F ∈ specialIdeal W ↔ F ∈ W := by
   refine mem_map_iff_of_ker_le (MvPolynomial.map_surjective _ IsLocalRing.residue_surjective) ?_ F
-  rw [ker_map_residue_eq_span hϖ, Ideal.span_le, Set.singleton_subset_iff]
-  exact hW
+  rwa [ker_map_residue_eq_span hϖ, Ideal.span_le, Set.singleton_subset_iff]
 
 omit [Fintype K] [Fintype K'] [∀ k, Fintype (ι' k)] [IsDomain O] [IsDiscreteValuationRing O] in
 theorem C_mem_comap (W : Ideal (MRing ι' O)) :

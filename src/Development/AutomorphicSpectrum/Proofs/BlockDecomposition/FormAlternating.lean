@@ -81,8 +81,7 @@ theorem term_term (F : C ⥤ ModuleCat.{w} R) {p m n : ℕ} (s : ComposableArrow
       (F.map b).hom ((F.map a).hom x) = (F.map (a ≫ b)).hom x := by
     intro X Y Z a b x
     rw [F.map_comp]; rfl
-  refine (key _ _ _).trans ?_
-  exact congrArg (fun φ => (F.map φ).hom (f ((hg.comp hg').functor ⋙ s))) e
+  exact (key _ _ _).trans (congrArg (fun φ => (F.map φ).hom (f ((hg.comp hg').functor ⋙ s))) e)
 
 theorem term_id (F : C ⥤ ModuleCat.{w} R) {n : ℕ} (s : ComposableArrows C n) (f : Cn F n) :
     term F s f id monotone_id = f s := by
@@ -765,8 +764,7 @@ theorem rep_swap (hF : IsFil Φ Fil) (σ : ∀ T : C, E.D ⟶ T) (hc : E.GrConst
   rw [cp_add_left] at key
   have e : ∀ X Y : Co Φ.A (j + 1), Y - (-1 : ℤ) • X = X + Y := by
     intro X Y; rw [neg_one_zsmul]; abel
-  rw [e, form_eq, form_eq]
-  exact key
+  rwa [e, form_eq, form_eq]
 
 theorem rep_perm (hF : IsFil Φ Fil) (σ : ∀ T : C, E.D ⟶ T) (hc : E.GrConst Fil) {j q : ℕ}
     {x : Φ.A.obj E.D} (hx : x ∈ (Fil q).S E.D) (π : Equiv.Perm (Fin j)) :
@@ -797,8 +795,7 @@ theorem rep_perm (hF : IsFil Φ Fil) (σ : ∀ T : C, E.D ⟶ T) (hc : E.GrConst
       rw [smul_smul] at this
       have e : I ∘ ⇑(y * z) = (I ∘ y) ∘ z := by
         funext i; simp
-      rw [e, Equiv.Perm.sign_mul, Units.val_mul, mul_comm]
-      exact this
+      rwa [e, Equiv.Perm.sign_mul, Units.val_mul, mul_comm]
 
 theorem rep_sq (hF : IsFil Φ Fil) (σ : ∀ T : C, E.D ⟶ T) (hc : E.GrConst Fil) {j q : ℕ}
     {x : Φ.A.obj E.D} (hx : x ∈ (Fil q).S E.D) (I : Fin (j + 1) → Fin d) (k : Fin j) (hk : I k.castSucc = I k.succ)

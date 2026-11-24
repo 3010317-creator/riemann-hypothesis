@@ -107,8 +107,7 @@ theorem oldPart_mem_mcPts {p : ℕ} {Q : Ideal (MRing ι)} {u : (Σ o, Tb ι o) 
   have h1 := hu.2 (inc f) (Ideal.mem_sup_left (Ideal.mem_map_of_mem _ hf))
   have h2 := eval_inc (basePart₂ u) (fun j => u ⟨none, j⟩) f
   rw [hg] at h2
-  rw [← h2]
-  exact h1
+  rwa [← h2]
 
 theorem exists_segre_eq_embL [Nonempty K] {p : ℕ} {Q : Ideal (MRing ι)} (hQ : IsMultiHomogIdeal Q)
     {u : (Σ o, Tb ι o) → ℂ} (hu : u ∈ mcPts (twist p Q)) {v : Fin 2 → ℂ} {c : ℂ} (hc : c ≠ 0)
@@ -190,13 +189,11 @@ theorem fibre_twist : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Finty
   · obtain ⟨z, hz, hs⟩ := exists_segre_eq_embL hQ hu hc h
     refine Or.inl ⟨segre z, ⟨z, hz, rfl, ?_⟩, hs.symm⟩
     show Ψ (embL (vPlus p) (segre z)) = _
-    rw [← hs]
-    exact hΨ
+    rwa [← hs]
   · obtain ⟨z, hz, hs⟩ := exists_segre_eq_embL hQ hu hc h
     refine Or.inr ⟨segre z, ⟨z, hz, rfl, ?_⟩, hs.symm⟩
     show Ψ (embL (vMinus p) (segre z)) = _
-    rw [← hs]
-    exact hΨ
+    rwa [← hs]
 
 end GlobalTheory.CompanionTheory.Ar.Tw.Fib
 end -- clump:auto
@@ -550,12 +547,10 @@ def quotA (p : ℕ) (W : Ideal (MRing ι)) : (MRing (Tb ι) ⧸ twist p W) →+*
   Ideal.Quotient.lift _ (toA p W) fun _ ha => twist_le_ker_toA p W ha
 
 theorem quotA_mk (p : ℕ) (W : Ideal (MRing ι)) (f : MRing (Tb ι)) :
-    quotA p W (Ideal.Quotient.mk _ f) = toA p W f := by
-  exact Ideal.Quotient.lift_mk _ _ _
+    quotA p W (Ideal.Quotient.mk _ f) = toA p W f := Ideal.Quotient.lift_mk _ _ _
 
 theorem baseD_mk (p : ℕ) (W : Ideal (MRing ι)) (f : MRing ι) :
-    baseD p W (Ideal.Quotient.mk _ f) = Ideal.Quotient.mk _ (inc f) := by
-  exact Ideal.Quotient.lift_mk _ _ _
+    baseD p W (Ideal.Quotient.mk _ f) = Ideal.Quotient.mk _ (inc f) := Ideal.Quotient.lift_mk _ _ _
 
 theorem baseP_C (p : ℕ) (W : Ideal (MRing ι)) (a : MRing ι ⧸ W) :
     baseP p W (Polynomial.C a) = baseD p W a := by
@@ -616,8 +611,7 @@ theorem baseMap_isIntegralElem_X (p : ℕ) (W : Ideal (MRing ι)) (q : Σ o, Tb 
     fin_cases j
     · exact baseMap_isIntegralElem_xN p W
     · have h := RingHom.isIntegralElem_map (baseP p W) (x := Polynomial.X)
-      rw [baseP_X] at h
-      exact h
+      rwa [baseP_X] at h
   | some k =>
     have h : Ideal.Quotient.mk (twist p W) (X ⟨some k, j⟩ : MRing (Tb ι)) =
         baseP p W (Polynomial.C (Ideal.Quotient.mk W (X ⟨k, j⟩))) := by
@@ -805,8 +799,7 @@ theorem twLine_vPlus (p : ℕ) (hp : p ≠ 0) (A : HermLine ι) (z : (Σ k, ι k
   have hv : vPlus p 1 ≠ 0 := by simp [vPlus]
   have ho : basePart₂ (glue z (vPlus p)) = z := rfl
   rw [twH, ite_eq_left (glue_block hz hv), chi_vPlus p hp, ho]
-  simp only [one_mul, sub_self, zero_mul, add_zero]
-  exact Real.exp_log (A.pos z hz)
+  simpa only [one_mul, sub_self, zero_mul, add_zero] using Real.exp_log (A.pos z hz)
 
 theorem twLine_vMinus (p : ℕ) (hp : p ≠ 0) (A : HermLine ι) (z : (Σ k, ι k) → ℂ)
     (hz : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) : (twLine p A).h (glue z (vMinus p)) = (conjLine A).h z := by
@@ -870,8 +863,7 @@ theorem oldPart_mem {p : ℕ} {Q : Ideal (MRing ι)} {u : (Σ o, Tb ι o) → �
   refine ⟨oldPart_ne hu.1, fun f hf => ?_⟩
   have h1 : inc f ∈ twist p Q := Ideal.mem_sup_left (Ideal.mem_map_of_mem _ hf)
   have h2 := hu.2 _ h1
-  rw [← glue_oldPart u, eval_inc] at h2
-  exact h2
+  rwa [← glue_oldPart u, eval_inc] at h2
 
 theorem quad_eq_zero {p : ℕ} {Q : Ideal (MRing ι)} {u : (Σ o, Tb ι o) → ℂ}
     (hu : u ∈ mcPts (twist p Q)) :
@@ -936,16 +928,13 @@ theorem sheet_of_twist_sheet {p e : ℕ} (hp : p ≠ 0) {Q : Ideal (MRing ι)} (
     rw [h1, h0, map_zero] at hΨ0
     have := congrFun hΨ0 0
     simp at this
-  have hw : w ≠ 0 := by
-    intro h0
-    exact hne (by rw [h0, map_zero])
+  have hw : w ≠ 0 := fun h0 => hne (by rw [h0, map_zero])
   obtain ⟨i, hi⟩ := Function.ne_iff.mp hw
   have hi' : w i ≠ 0 := hi
   have hseg : ∀ j : Fin 2, segre (basePart₂ (γ' y)) i * γ' y ⟨none, j⟩ = w i * v j := by
     intro j
     have := congrFun h1 (joinIdx i j)
-    rw [segre_split, embL_apply] at this
-    exact this
+    rwa [segre_split, embL_apply] at this
   have hm : segre (basePart₂ (γ' y)) i ≠ 0 := by
     intro h0
     have := hseg 1
@@ -1010,18 +999,15 @@ theorem sheet_of_twist_sheet {p e : ℕ} (hp : p ≠ 0) {Q : Ideal (MRing ι)} (
     · refine differentiableAt_pi.mpr fun q => ?_
       have hc : DifferentiableAt ℂ (c q.1) y' := by
         by_cases hk : q.1 = k0
-        · simp only [c, hk, ite_true]
-          exact differentiableAt_pi.mp hd _
-        · simp only [c, hk, ite_false]
-          exact differentiableAt_const _
+        · simpa only [c, hk, ite_true] using differentiableAt_pi.mp hd _
+        · simpa only [c, hk, ite_false] using differentiableAt_const _
       exact hc.mul (differentiableAt_pi.mp hd _)
     · refine mcPts_smul hQ (fun k => c k y') (fun k => ?_) (oldPart_mem hm')
       by_cases hk : k = k0
       · simpa [c, hk] using second_ne_zero hp hm'
       · simp [c, hk]
     · show Ψ (embL v (segre (γ y'))) = _
-      rw [hkey y' hl]
-      exact hΨ'
+      rwa [hkey y' hl]
 
 theorem density_twist : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (p : ℕ) (Q : Ideal (MRing ι)) (e : ℕ) (Ψ : (((o : Option K) → Tb ι o) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)) (L' : Fin e → HermLine (Tb ι)) (A' : HermLine (Tb ι)) (L : Fin e → HermLine ι) (A : HermLine ι) (s : MRing ι) (v : Fin 2 → ℂ), p ≠ 0 → IsArithVar Q (e + 1) → IsArithVar (twist p Q) (e + 1) → IsGoodProj (twist p Q) Ψ → (∀ j, IsSmoothHerm (L' j)) → IsSmoothHerm A' → IsSectionOn (twist p Q) A' (inc s) → (v = vPlus p ∨ v = vMinus p) → (∀ j, ∀ z ∈ mcPts Q, (L' j).h (glue z v) = (L j).h z) → (∀ z ∈ mcPts Q, A'.h (glue z v) = A.h z) → ∀ᵐ y, ∀ w, sheetDensity (twist p Q) Ψ (pot L') (logNorm A' (inc s)) y (embL v w) = sheetDensity Q (pj v Ψ) (pot L) (logNorm A s) y w := by
   intro K _ ι _ p Q e Ψ L' A' L A s v hp hQ hT hΨ hL' hA' hs hv hLh hAh
@@ -1191,8 +1177,7 @@ theorem exists_root_field {D : Type} [CommRing D] [IsDomain D] (p : ℕ)
     intro r hr
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := D) r
     have hb0 : algebraMap D F b ≠ 0 := by
-      intro h0
-      exact nonZeroDivisors.ne_zero hb (hinjF (by simpa using h0))
+      exact fun h0 => nonZeroDivisors.ne_zero hb (hinjF (by simpa using h0))
     have h1 : algebraMap D F (a ^ 2 + (p : D) * b ^ 2) = 0 := by
       simp only [map_add (f := _), map_mul, map_pow, map_natCast]
       have e : algebraMap D F a ^ 2 + (p : F) * algebraMap D F b ^ 2 =
@@ -1514,8 +1499,7 @@ theorem twist_integral (hI : PtsIntegrableStatement) (hD : PtsIndepStatement)
   have good : ∀ v : Fin 2 → ℂ, v 0 ^ 2 + (p : ℂ) * v 1 ^ 2 = 0 → v 1 ≠ 0 → IsGoodProj Q (pj v Ψ) := by
     intro v hv hv1 z hz
     have := hΨ _ (glue_mem_mcPts hz hv hv1)
-    rw [segre_glue] at this
-    exact this
+    rwa [segre_glue] at this
   have v1p : vPlus p 1 = 1 := by simp [vPlus]
   have v1m : vMinus p 1 = 1 := by simp [vMinus]
   have gp := good _ (vPlus_root p) (by rw [v1p]; exact one_ne_zero)

@@ -328,10 +328,8 @@ theorem mem_sol {σ : R →+* R} {ϖ : R} (hσ : σ ϖ = ϖ) {m n : ℕ} (S : Ma
     y ∈ sol σ ϖ S T k ↔ gb σ ϖ S k y = red ϖ k T := by
   constructor
   · rintro ⟨x, hx, rfl⟩
-    rw [gb_red hσ]
-    exact hx
-  · intro h
-    exact ⟨_, h, Function.surjInv_eq _ _⟩
+    rwa [gb_red hσ]
+  · exact fun h => ⟨_, h, Function.surjInv_eq _ _⟩
 
 theorem gr_herm {σ : R →+* R} (hinv : ∀ a, σ (σ a) = a) {m n : ℕ} {S : Matrix (Fin m) (Fin m) R}
     (hS : cT σ S = S) (x : Matrix (Fin m) (Fin n) R) : cT σ (gr σ S x) = gr σ S x := by
@@ -393,8 +391,7 @@ theorem dens_step {σ : R →+* R} {ϖ : R} (hfin : ∀ k, Finite (R ⧸ lev ϖ 
   rw [hH, hH, div_eq_div_iff (by exact_mod_cast (hM k).ne') (by exact_mod_cast (hM (k + 1)).ne')]
   have key : solCount σ ϖ S T k * Nat.card (hermSub σ ϖ n k) * Nat.card (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ (k + 1)))
       = solCount σ ϖ S T (k + 1) * Nat.card (hermSub σ ϖ n (k + 1)) * Nat.card (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k)) := by
-    rw [← h2]
-    rw [solCount_eq σ ϖ S T k]
+    rw [← h2, solCount_eq σ ϖ S T k]
     calc _ = (Nat.card (sol σ ϖ S T k) * Nat.card (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ (k + 1)))) * Nat.card (hermSub σ ϖ n k) := by ring
       _ = _ := by rw [← h1]; ring
   exact_mod_cast key
@@ -462,7 +459,6 @@ theorem tsum_eq_zero_of_shift {G : Type} [AddCommGroup G] (H : Set G)
   have key : ∑' B : H, f B.1 = f B₀ * ∑' B : H, f B.1 := by
     calc ∑' B : H, f B.1 = ∑' B : H, f (e B).1 := (e.tsum_eq (fun B : H => f B.1)).symm
       _ = ∑' B : H, f B₀ * f B.1 := tsum_congr fun B => by
-          show f (B₀ + B.1) = _
           exact hf _ _
       _ = f B₀ * ∑' B : H, f B.1 := tsum_mul_left
   have hzero : (f B₀ - 1) * ∑' B : H, f B.1 = 0 := by
@@ -506,8 +502,7 @@ theorem red_eq_zero_of_trivial {σ : R →+* R} {ϖ : R} {q : ℕ} {ε : ℤ}
   apply GlobalTheory.CompanionTheory.SiegLoc.trace_nondeg hR hψ k (y i j)
   intro t
   have hyji : σ (y i j) = y j i := by
-    have hentry := congrFun (congrFun hy j) i
-    simpa [PositivityTheory.PfSWUS.Loc.cT] using hentry
+    simpa [PositivityTheory.PfSWUS.Loc.cT] using congrFun (congrFun hy j) i
   have hb : PositivityTheory.PfSWUS.Loc.cT σ (Matrix.single j i t + Matrix.single i j (σ t)) =
       Matrix.single j i t + Matrix.single i j (σ t) := by
     rw [GlobalTheory.CompanionTheory.SiegLoc.HermOrth.cT_add', GlobalTheory.CompanionTheory.SiegLoc.HermOrth.cT_single', GlobalTheory.CompanionTheory.SiegLoc.HermOrth.cT_single',
@@ -515,8 +510,7 @@ theorem red_eq_zero_of_trivial {σ : R →+* R} {ϖ : R} {q : ℕ} {ε : ℤ}
   have htr := h _ hb
   rw [Matrix.add_mul, Matrix.trace_add, GlobalTheory.CompanionTheory.SiegLoc.HermOrth.trace_single_mul',
     GlobalTheory.CompanionTheory.SiegLoc.HermOrth.trace_single_mul'] at htr
-  rw [map_mul σ, hyji]
-  exact htr
+  rwa [map_mul σ, hyji]
 
 theorem orth_hermMod (R : Type) [CommRing R] (σ : R →+* R) (ϖ : R) (q : ℕ) (ε : ℤ)
     (hR : IsUnrQuad R σ ϖ q ε) [∀ k, Fintype (R ⧸ lev ϖ k)]
@@ -616,14 +610,12 @@ theorem image_sol (σ : R →+* R) (ϖ : R) (h : σ ϖ = ϖ) (k : ℕ) {m n : �
   constructor
   · rintro ⟨x, hx, rfl⟩
     show cT (barσ σ ϖ h k) (red ϖ k x) * red ϖ k S * red ϖ k x = red ϖ k T
-    rw [← red_gram σ ϖ h]
-    exact hx
+    rwa [← red_gram σ ϖ h]
   · intro hy
     obtain ⟨x, rfl⟩ := red_surj ϖ k y
     refine ⟨x, ?_, rfl⟩
     show red ϖ k (cT σ x * S * x) = red ϖ k T
-    rw [red_gram σ ϖ h]
-    exact hy
+    rwa [red_gram σ ϖ h]
 
 theorem gram_sub_mem (σ : R →+* R) (ϖ : R) (hinv : ∀ a, σ (σ a) = a) (h : σ ϖ = ϖ) (k : ℕ) {m n : ℕ}
     (S : Matrix (Fin m) (Fin m) R) (T : Matrix (Fin n) (Fin n) R) (hS : cT σ S = S) (hT : cT σ T = T)
@@ -785,8 +777,7 @@ theorem densAt_succ {σ : R →+* R} {ϖ : R} {q : ℕ} {ε : ℤ} (hU : IsUnrQu
     rw [Matrix.mul_smul, Matrix.mul_adjugate, smul_smul, hc]
   have h2 : cT σ (c • T.adjugate) * T = ϖ ^ 0 • (1 : Matrix (Fin n) (Fin n) R) := by
     have := congrArg (cT σ) h1
-    rw [cT_mul, hTc, cT_smul σ (ϖ ^ 0), cT_one, map_pow, hσ] at this
-    exact this
+    rwa [cT_mul, hTc, cT_smul σ (ϖ ^ 0), cT_one, map_pow, hσ] at this
   obtain ⟨t, ht⟩ : ∃ t, t + σ t = 1 := by
     obtain ⟨u, hu, -⟩ := hU.basis
     obtain ⟨w, hw⟩ := hu.exists_right_inv
@@ -916,8 +907,7 @@ theorem unrPoly : PositivityTheory.PfSWUS.Loc.UnrFormula → PositivityTheory.Si
   have hPQ : P = Q := Polynomial.eq_of_infinite_eval_eq P Q
     (Set.infinite_of_injective_forall_mem hinj fun j => hval (n + j) (by omega))
   have := congrArg (Polynomial.eval t) hPQ
-  rw [hP, hQ] at this
-  exact this
+  rwa [hP, hQ] at this
 
 end GlobalTheory.CompanionTheory.SiegLoc.UnimodSeries
 

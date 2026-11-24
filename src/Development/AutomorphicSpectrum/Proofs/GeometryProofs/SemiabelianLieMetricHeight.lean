@@ -285,8 +285,7 @@ theorem limit {S : Scheme.{0}} {W : S.Opens} (hW : IsAffineOpen W) (F : Ultrafil
     have r : ∀ s : Γ(S, W), ev _ z hz (algebraMap Γ(S, W) Γ(S, S.basicOpen d) s) = ev W z h s :=
       fun s => ev_res (S.basicOpen_le d) z hz s
     rw [map_mul, r, r, ev_res, map_pow] at e
-    rw [eq_div_iff (pow_ne_zero n hne)]
-    exact e
+    rwa [eq_div_iff (pow_ne_zero n hne)]
   have hne : a d ≠ 0 := by
     rw [← hg']
     exact (mem_basicOpen_iff z₀ hc d).1 hd
@@ -299,8 +298,7 @@ theorem limit {S : Scheme.{0}} {W : S.Opens} (hW : IsAffineOpen W) (F : Ultrafil
   obtain ⟨hz, e⟩ := key z h h2
   refine ⟨hz, ?_⟩
   show evalAt U f z hz ∈ V
-  rw [e, ← hval _ z h, ← hval _ z h]
-  exact h1
+  rwa [e, ← hval _ z h, ← hval _ z h]
 
 section Chart
 
@@ -384,8 +382,7 @@ theorem chart [Finite κ] (hall : ∀ q : X, genPt ξ ⤳ q) (tie : CoordTie ℤ
   filter_upwards [hc] with i hi h
   obtain ⟨r, hr, hr'⟩ := hC _ hi
   have hv : ValAt ξ (p i) e (ev U (p i) h t) := ⟨hall _, _, he h, rfl⟩
-  rw [ArchB.val_unique tie.gen hv hr]
-  exact hr'
+  rwa [ArchB.val_unique tie.gen hv hr]
 
 end Chart
 
@@ -762,8 +759,7 @@ theorem PositivityTheory.Xgn.exists_integral_closed_subscheme_of_irreducible : �
   haveI : IsReduced I.subscheme := IntegralClosedSubscheme.reduced_sub Zc
   haveI : IrreducibleSpace I.subscheme := by
     haveI : IrreducibleSpace (Set.range I.subschemeι) := by
-      rw [← isIrreducible_iff_irreducibleSpace, hrange]
-      exact hirr
+      rwa [← isIrreducible_iff_irreducibleSpace, hrange]
     exact I.subschemeι.isEmbedding.toHomeomorph.irreducibleSpace_iff.mpr this
   haveI : IsIntegral I.subscheme := isIntegral_of_irreducibleSpace_of_isReduced _
   refine ⟨I.subscheme, inferInstance, I.subschemeι, inferInstance, hrange, ?_⟩
@@ -771,8 +767,7 @@ theorem PositivityTheory.Xgn.exists_integral_closed_subscheme_of_irreducible : �
   have hsub : Set.range x ⊆ Zc := by
     rintro _ ⟨y, rfl⟩
     have hy : y = IsLocalRing.closedPoint k := Subsingleton.elim _ _
-    rw [hy]
-    exact hx
+    rwa [hy]
   refine ⟨IsClosedImmersion.lift I.subschemeι x ?_, IsClosedImmersion.lift_fac _ _ _⟩
   rw [Scheme.IdealSheafData.ker_subschemeι]
   exact IntegralClosedSubscheme.le_ker Zc x hsub
@@ -824,8 +819,7 @@ theorem core_gram_posDef {V : Type} [AddCommGroup V] [Module ℂ V] (core : Inne
   have hG : (Matrix.gram ℂ v) = Matrix.of fun a b => core.inner (v a) (v b) := by
     ext i j
     rfl
-  rw [hG] at hp
-  exact hp
+  rwa [hG] at hp
 
 theorem cochar_indep {Xc : Type} [AddCommGroup Xc] [Module.Free ℤ Xc] [Module.Finite ℤ Xc] {r : ℕ}
     (β : Fin r → (Xc →+ ℤ)) (hβ : LinearIndependent ℤ β) :
@@ -853,9 +847,7 @@ theorem exists_diff {S : Scheme.{0}} {T G : Over S} [GrpObj T] [GrpObj G] (u : T
     intro e
     have h1 := (LieEx.isTanAt_iff x T _).1 (M.tan e)
     refine (LieEx.isTanAt_iff x G _).2 ?_
-    refine (Category.assoc _ _ _).symm.trans ?_
-    refine (h1 =≫ u).trans ?_
-    exact MonObj.one_comp u
+    exact (Category.assoc _ _ _).symm.trans ((h1 =≫ u).trans (MonObj.one_comp u))
   choose A hA using fun e => N.onto _ (ht e)
   refine ⟨{ toFun := A, map_add' := fun e e' => N.inj ?_, map_smul' := fun c e => N.inj ?_ }, hA⟩
   · rw [N.add, hA, hA, hA, M.add, MonObj.mul_comp]
@@ -894,8 +886,7 @@ theorem gramAt_posDef_of_diff_injective : ∀ (X : Scheme.{0}) (Ω : Type) [Fiel
       core.inner ((A ∘ fun a => (Int.castAddHom ℂ).comp (β a)) a) ((A ∘ fun a => (Int.castAddHom ℂ).comp (β a)) b) := by
     ext a c
     simp only [RootHt.gramAt, Matrix.of_apply, hcore, hv', Function.comp_apply]
-  rw [hm]
-  exact key
+  rwa [hm]
 
 end GlobalTheory.CompanionTheory.Ar.TorusUnif.GramPos
 end -- clump:auto
@@ -1007,8 +998,7 @@ theorem killsOver_of_residue [IsSeparated G.hom] {u : splitTorus S X ⟶ G} [IsM
     have he : e.comp (Ideal.Quotient.mk (m ^ (n + 1))) = (Ideal.Quotient.mk I).comp q := by
       ext a; rfl
     have := killsOver_comp e ih
-    rw [← Category.assoc, spMap_comp_spMap, he, ← spMap_comp_spMap, Category.assoc] at this
-    exact this
+    rwa [← Category.assoc, spMap_comp_spMap, he, ← spMap_comp_spMap, Category.assoc] at this
 
 theorem lie_injective : ∀ (Z : Scheme.{0}) [IsIntegral Z] [IsLocallyNoetherian Z] (G : Over Z) [GrpObj G] [IsSeparated G.hom] (X : Type) [AddCommGroup X] [Module.Finite ℤ X] (u : splitTorus Z X ⟶ G) [IsMonHom u] (U : Z.Opens), (U : Set Z).Nonempty → (∀ (k : Type) [Field k] (x : Sp k ⟶ Z), ⊤ ≤ x ⁻¹ᵁ U → ∀ (A : Type) [CommRing A] (g : k →+* A) (t : Over.mk (spMap g ≫ x) ⟶ splitTorus Z X), t ≫ u = 1 → t = 1) → ∀ (k : Type) [Field k] (x : Sp k ⟶ Z) (M : LieModel (splitTorus Z X) x (X →+ k)), IsCocharLie M → ∀ δ, M.pt δ ≫ u = 1 → δ = 0 := by
   intro Z _ _ G _ _ X _ _ u _ U hU hinj k _ x M hM δ hδ
@@ -1129,8 +1119,7 @@ theorem half [Module.Free ℤ X] [Module.Finite ℤ X]
     have := hφ y.toAdd
     rw [ofAdd_toAdd] at this
     simp [this]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem of_inj {a b : X} (h : AddMonoidAlgebra.of k X (Multiplicative.ofAdd a) =
     AddMonoidAlgebra.of k X (Multiplicative.ofAdd b)) : a = b := by
@@ -1261,8 +1250,7 @@ theorem ker_iff {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : TorusExte
   letI := T.grpB
   letI := T.addCommGroup
   constructor
-  · intro hp
-    exact ⟨T.isKernel.lift p (toUnit _) hp, T.isKernel.lift_fst _ _ _⟩
+  · exact fun hp => ⟨T.isKernel.lift p (toUnit _) hp, T.isKernel.lift_fst _ _ _⟩
   · rintro ⟨t, rfl⟩
     rw [Category.assoc, T.isKernel.w, ← Category.assoc, Hom.one_def]
     congr 1
@@ -1270,8 +1258,7 @@ theorem ker_iff {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : TorusExte
 
 theorem left_cancel {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} {f : S' ⟶ S} {φ : G'.left ⟶ G.left}
     (h : IsPullback φ G'.hom G.hom f) {W : Over S'} {p q : W ⟶ G'} (e : p.left ≫ φ = q.left ≫ φ) : p = q := by
-  apply Over.OverMorphism.ext
-  exact h.hom_ext e ((Over.w p).trans (Over.w q).symm)
+  exact Over.OverMorphism.ext (h.hom_ext e ((Over.w p).trans (Over.w q).symm))
 
 end PositivityTheory.Xgn.TorusUniformizationCompare
 
@@ -1514,8 +1501,7 @@ theorem exists_bounds (X : Type) [TopologicalSpace X] (K : Set X) (m : Type) [Fi
     simp
   · obtain ⟨v, hv1, hwv⟩ := exists_sum_norm_sq_eq_one_and_eq_sqrt_smul w hspos
     have hvT : v ∈ T := by
-      rw [hT]
-      exact hv1
+      rwa [hT]
     have hq : (star w ⬝ᵥ (H x *ᵥ w)).re =
         (∑ k, ‖w k‖ ^ 2) * (star v ⬝ᵥ (H x *ᵥ v)).re := by
       conv_lhs => rw [hwv]
@@ -1829,8 +1815,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
   obtain ⟨hlo, hhi⟩ := hb zc zX hzX Mz hMz v hv w
   have hΓ : ∀ a b, RootHt.gramAt h zX v a b = (B.metric.form σ).inner ((1 : GroundTheory.Heights₂.Heights.ComplexAt σ) ⊗ₜ[𝓞 L] ε a)
       ((1 : GroundTheory.Heights₂.Heights.ComplexAt σ) ⊗ₜ[𝓞 L] ε b) := by
-    intro a b
-    exact (hF σ (ε a) (ε b) (v a) (v b) rfl rfl).symm
+    exact fun a b => (hF σ (ε a) (ε b) (v a) (v b) rfl rfl).symm
   rw [_root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.sqAt_sum_eq_gram L B σ r ε _ hΓ w]
   exact ⟨hlo, hhi⟩
 

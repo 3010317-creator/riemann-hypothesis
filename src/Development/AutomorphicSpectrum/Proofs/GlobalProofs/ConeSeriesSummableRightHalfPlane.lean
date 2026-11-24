@@ -105,9 +105,7 @@ theorem coneTerm_summable : ∀ (ι : Type) [Fintype ι] (r : ℕ) (a : ι → F
     intro j
     rw [hSdef, mul_add, mul_one, Finset.mul_sum]
     apply add_le_add (hcb j)
-    apply Finset.sum_le_sum
-    intro i _
-    exact mul_le_mul_of_nonneg_right (hca j i) (Nat.cast_nonneg _)
+    exact Finset.sum_le_sum (fun i _ => mul_le_mul_of_nonneg_right (hca j i) (Nat.cast_nonneg _))
   have hLpos : ∀ j, 0 < b j + ∑ i, a j i * (m i : ℝ) := fun j => lt_of_lt_of_le (mul_pos hc0 hS0) (hL j)
   have hv1 : S ^ (-s.re) ≤ 1 := Real.rpow_le_one_of_one_le_of_nonpos hS1 (by linarith)
   have hv0 : 0 ≤ S ^ (-s.re) := Real.rpow_nonneg hS0.le _

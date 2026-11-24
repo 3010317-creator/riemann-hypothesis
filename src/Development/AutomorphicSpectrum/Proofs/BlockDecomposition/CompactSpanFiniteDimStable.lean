@@ -59,8 +59,7 @@ theorem exists_skew_curve {E : Type} [Field E] [NumberField E] {a : ℕ} (S : Ma
   refine ⟨fun t => (Matrix.isUnit_exp (t • S)).unit, Units.ext (by simp), ?_, fun hS t => ?_⟩
   · open scoped Matrix.Norms.Operator in
     have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) S (0 : ℝ)
-    rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-    exact h
+    rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
   · rw [IsUnit.unit_spec, Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose, ← Matrix.exp_conjTranspose,
       Matrix.conjTranspose_smul, hS, star_trivial, smul_neg,
       ← Matrix.exp_add_of_commute _ _ (Commute.refl (t • S)).neg_left, neg_add_cancel, NormedSpace.exp_zero]
@@ -88,8 +87,7 @@ theorem liB_skew_mem_span : ∀ (E : Type) [Field E] [NumberField E] [_root_.Num
   have hS : S.conjTranspose = -S := by
     ext i j w
     have h := congrFun (congrFun hZ i) j
-    have h2 := congrFun (congrArg Prod.snd h) ⟨w, IsTotallyComplex.isComplex w⟩
-    exact h2
+    exact congrFun (congrArg Prod.snd h) ⟨w, IsTotallyComplex.isComplex w⟩
   obtain ⟨c, h0, hc, hu⟩ := exists_skew_curve S
   let W' : Submodule ℂ (GA E a → ℂ) := W.map (Sm E a).subtype
   have hW' : FiniteDimensional ℂ W' := inferInstance

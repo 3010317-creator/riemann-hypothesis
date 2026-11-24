@@ -80,8 +80,7 @@ theorem hasDerivAt_scalarCurve :
     have d : HasDerivAt (fun s : ℝ => Complex.exp (s : ℂ)) 1 0 := by
       simpa using (Complex.hasDerivAt_exp ((0 : ℝ) : ℂ)).comp_ofReal
     have o : oneL E a i i w = 1 := by simp [oneL, toL]
-    rw [e, o]
-    exact d
+    rwa [e, o]
   · have e : (fun s : ℝ => toL (scalarCurve E a s).val i j w) = fun _ : ℝ => 0 := by
       funext s
       simp [scalarCurve, toL, Matrix.scalar_apply, h]
@@ -110,8 +109,7 @@ theorem eigen_along_splitCentre : ∀ (E : Type) [Field E] [NumberField E] [_roo
     have e : GlobalTheory.UnitaryBC.splitCentre E a x =
         GlobalTheory.UnitaryBC.splitCentre E a u * infGL E a (scalarCurve E a (x - u)) := by
       have := GlobalTheory.CuspRep.CuspidalL2GL.splitCentre_add (E := E) (a := a) u (x - u)
-      rw [add_sub_cancel] at this
-      exact this
+      rwa [add_sub_cancel] at this
     simp only [hf, e, mul_assoc]
   have hP : ∀ u : ℝ, HasDerivAt (fun v : ℝ => Complex.exp (-c * v) * f v)
       (Complex.exp (-c * u) * (-c) * f u + Complex.exp (-c * u) * (c * f u)) u := by

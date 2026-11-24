@@ -69,8 +69,7 @@ theorem valR_mem_adjoin_of_affine {Ω : Type} [Field Ω] [CharZero Ω] {X : Sche
   let z : Sp Ω := IsLocalRing.closedPoint Ω
   obtain ⟨b, hbO, hxb⟩ := hW₀.exists_basicOpen_le (V := O) ⟨ξ z, hO trivial⟩ (h₀ trivial)
   have hD : ⊤ ≤ ξ ⁻¹ᵁ X.basicOpen b := fun y _ => by
-    rw [Subsingleton.elim y z]
-    exact hxb
+    rwa [Subsingleton.elim y z]
   have hloc := hW₀.isLocalization_basicOpen b
   obtain ⟨⟨a, ⟨_, n, rfl⟩⟩, h⟩ := IsLocalization.surj (Submonoid.powers b)
     ((X.presheaf.map (homOfLE hbO).op).hom t)
@@ -81,8 +80,7 @@ theorem valR_mem_adjoin_of_affine {Ω : Type} [Field Ω] [CharZero Ω] {X : Sche
   rw [valR_mul ξ _ hD, valR_res ξ hbO hD, hres, hres, valR_pow ξ _ h₀] at hv
   have hunit : valR ξ W₀ b ≠ 0 := ((le_preimage_basicOpen_iff ξ h₀ b).1 hD).ne_zero
   have e : valR ξ O t = valR ξ W₀ a / valR ξ W₀ b ^ n := by
-    rw [eq_div_iff (pow_ne_zero n hunit)]
-    exact hv
+    rwa [eq_div_iff (pow_ne_zero n hunit)]
   rw [e]
   exact div_mem (hmem a) (pow_mem (hmem b) n)
 
@@ -107,8 +105,7 @@ theorem valR_mem_adjoin_of_modification : ∀ (Ω : Type) [Field Ω] [CharZero �
   have hyr : y ≫ ((f ⁻¹ᵁ U).ι ≫ f) = ξ := by rw [← Category.assoc, hy, hζ]
   have hV : ⊤ ≤ y ⁻¹ᵁ ((f ⁻¹ᵁ U).ι ⁻¹ᵁ W') := fun z hz => by
     have : z ∈ ζ ⁻¹ᵁ W' := h' hz
-    rw [← hy] at this
-    exact this
+    rwa [← hy] at this
   have e1 : valR ζ W' s = valR y _ (((f ⁻¹ᵁ U).ι.app W').hom s) := by
     conv_lhs => rw [← hy]
     exact valR_comp y _ W' s

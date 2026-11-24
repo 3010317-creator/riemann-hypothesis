@@ -323,8 +323,7 @@ theorem jm_row : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] 
     by_contra e
     exact hj (h0 j e)
   have hdeg : ∑ a, ((sub W c i).get a).1 = N := by
-    rw [hget]
-    exact hsum
+    rwa [hget]
   have hcongr : ∀ {r : ℕ} (x y : Fin r → IrrGL (k := k)) (hx : ∑ a, (x a).1 = N) (hy : ∑ a, (y a).1 = N),
       x = y → jm x hx π = jm y hy π := by
     intro r x y hx hy e
@@ -600,8 +599,7 @@ theorem GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr : ∀ {k : Type} [Fiel
         exact _root_.GlobalTheory.CompanionTheory.FineProd.CellMulti.jhMult_cell_eq_zero hA x (fun j => W.get j) (fun j => hW _ (List.get_mem _ _)) b.1 (hr b) (hc b) j i i' hii h1 h2
       · push Not at hm
         have hex : ∀ j, ∃ i, b.1 i j ≠ 0 := fun j => by
-          by_contra hne
-          push Not at hne
+          by_contra! hne
           have := hc b j
           rw [Finset.sum_eq_zero fun i _ => hne i] at this
           exact (hpos j).ne this
@@ -619,8 +617,7 @@ theorem GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr : ∀ {k : Type} [Fiel
           · exact hzero i j hij
         have hcS : c ∉ S := fun hcS => hb ⟨c, hcS, hbc⟩
         have hex2 : ∃ i, sub W c i ≠ decWord (Γ i) := by
-          by_contra hne
-          push Not at hne
+          by_contra! hne
           exact hcS (Finset.mem_filter.2 ⟨Finset.mem_univ _, hne⟩)
         obtain ⟨i, hi⟩ := hex2
         rw [_root_.GlobalTheory.CompanionTheory.FineProdCell.jhMult_cell_colour x W b.1 (hr b) (hc b) c (fun i j => by rw [hbc]; rfl)]

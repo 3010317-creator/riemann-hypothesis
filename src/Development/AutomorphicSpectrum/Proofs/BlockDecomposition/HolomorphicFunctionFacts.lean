@@ -104,8 +104,7 @@ theorem contDiffOn_dir (Y : Matrix (Fin n) (Fin n) ℂ) {F : Matrix (Fin n) (Fin
 
 theorem lop_mem {Y : Matrix (Fin n) (Fin n) ℂ} {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : F ∈ OmF n) :
     lop Y F ∈ OmF n := by
-  refine ⟨?_, fun z hz => lop_off hz⟩
-  exact (contDiffOn_dir Y hF.1).neg.congr fun z hz => lop_on hz
+  exact ⟨(contDiffOn_dir Y hF.1).neg.congr fun z hz => lop_on hz, fun z hz => lop_off hz⟩
 
 theorem lop_lop {X Y : Matrix (Fin n) (Fin n) ℂ} {F : Matrix (Fin n) (Fin n) ℂ → ℂ}
     {z : Matrix (Fin n) (Fin n) ℂ} (hF : ContDiffOn ℂ ⊤ F (OmegaSet n)) (hz : z ∈ OmegaSet n) :
@@ -297,8 +296,7 @@ theorem contDiffOn_PhiM (μ : Fin n → ℤ) : ContDiffOn ℂ ⊤ (PhiM μ) (Ome
   have h : ContDiffAt ℂ ⊤ (PhiM μ) z := by
     have : PhiM μ = fun z => ∏ i : Fin n, lead ((i : ℕ) + 1) z ^ (-(μ i - muNext μ i)) := rfl
     rw [this]
-    refine contDiffAt_prod fun i _ => ?_
-    exact contDiffAt_lead_zpow _ _ (hz i)
+    exact contDiffAt_prod fun i _ => contDiffAt_lead_zpow _ _ (hz i)
   exact h.contDiffWithinAt
 
 theorem PhiO_mem (μ : Fin n → ℤ) : PhiO μ ∈ OmF n :=
@@ -322,8 +320,7 @@ theorem PhiO_weight (μ : Fin n → ℤ) (a : Fin n) :
   · have hg : HasDerivAt (fun s : ℂ => (1 + s) ^ (-μ a) * PhiM μ z)
         (-(μ a : ℂ) * PhiM μ z) 0 := by
       have h0 := hasDerivAt_zpow (𝕜 := ℂ) (-μ a) (1 + 0) (Or.inl (by simp))
-      have h1 := (h0.comp_const_add 1 0).mul_const (PhiM μ z)
-      simpa using h1
+      simpa using (h0.comp_const_add 1 0).mul_const (PhiM μ z)
     have he : ∀ᶠ s in nhds (0 : ℂ), PhiO μ (z + s • (Matrix.single a a 1 * z)) =
         (1 + s) ^ (-μ a) * PhiM μ z := by
       have h1 : ∀ᶠ s in nhds (0 : ℂ), 1 + s ≠ 0 := by

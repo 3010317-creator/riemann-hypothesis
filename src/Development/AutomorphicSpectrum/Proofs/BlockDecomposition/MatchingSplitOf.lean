@@ -71,12 +71,10 @@ theorem matchSplitOf : MatchSplitOf := by
     | zero => rfl
     | succ j ih =>
       have h := hCt E n a ha w hw μ hμ f _ hf (isHecke_lpow_KL hf j)
-      rw [ih] at h
-      exact h
+      rwa [ih] at h
   obtain ⟨j, rfl⟩ : ∃ j, k = j + 1 := ⟨k - 1, by omega⟩
   have h := hM3 E n a ha w hw μ (KL n w) (isLevel_KL n w) _ (isHecke_lpow_KL hf (j + 1))
-  rw [hc (j + 1)] at h
-  exact h
+  rwa [hc (j + 1)] at h
 
 end GlobalTheory.CompanionTheory.MatchPowers
 

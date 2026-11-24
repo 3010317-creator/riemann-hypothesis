@@ -186,8 +186,7 @@ lemma dual_mem {ι : Type} [Fintype ι] (c : ι → Z →L[ℝ] ℂ) (hsep : ∀
   let T : Z →ₗ[ℝ] (ι → ℂ) := LinearMap.pi fun k => (c k : Z →ₗ[ℝ] ℂ)
   have hT : LinearMap.ker T = ⊥ := by
     rw [LinearMap.ker_eq_bot']
-    intro z hz
-    exact hsep z fun k => congrFun hz k
+    exact fun z hz => hsep z fun k => congrFun hz k
   obtain ⟨S, hS⟩ := T.exists_leftInverse_of_injective hT
   let φ : (ι → ℂ) →ₗ[ℝ] ℝ := (ℓ : Z →ₗ[ℝ] ℝ) ∘ₗ S
   have hφ : ∀ z, ℓ z = ∑ k, ((c k z).re * φ (Pi.single k 1) + (c k z).im * φ (Pi.single k Complex.I)) := by
@@ -335,9 +334,7 @@ theorem eucTotal : EucTotal := by
   intro Z _ _ _ _ _ lam _ ι _ c hsep A hc hconj g gc gpos C a ha hg w wc hw hint
   obtain ⟨B, hB⟩ := hw
   have hB0 : 0 ≤ B := (norm_nonneg _).trans (hB 0)
-  have hC0 : 0 ≤ C := by
-    have h0 := (gpos 0).trans_le (hg 0)
-    exact ((mul_pos_iff_of_pos_right (Real.exp_pos _)).1 h0).le
+  have hC0 : 0 ≤ C := ((mul_pos_iff_of_pos_right (Real.exp_pos _)).1 ((gpos 0).trans_le (hg 0))).le
   have hK : 0 ≤ B * C := mul_nonneg hB0 hC0
   have hmom : ∀ (ℓ : Z →L[ℝ] ℝ) (n : ℕ), ∫ z, (ℓ z) ^ n • (w z * (g z : ℂ)) ∂lam = 0 := by
     intro ℓ n
@@ -490,8 +487,7 @@ theorem total_of_split {G Z Y : Type} [AddCommGroup G] [TopologicalSpace G] [IsT
         refine integral_congr_ae (Eventually.of_forall fun y => ?_)
         simp only
         ring
-    intro z
-    exact congrFun hw z
+    exact fun z => congrFun hw z
   funext x
   have h0 := eq_zero_of_orth_SB ν (fun y => v ((e x).1, y)) (hvc.comp (Continuous.prodMk_right _))
     (fun k hk => hkey k hk (e x).1)
@@ -1210,8 +1206,7 @@ theorem exists_eval_points {X : Type*} (W : Submodule ℂ (X → ℂ)) [FiniteDi
       have h3 : ev (x (e ⟨φ, hφ⟩)) = φ := by
         show ev (pt (e.symm (e ⟨φ, hφ⟩))) = φ
         rw [Equiv.symm_apply_apply, hpt]
-      rw [h3] at h2
-      exact h2
+      rwa [h3] at h2
     refine Subtype.ext (funext fun y => ?_)
     have hy : ev y ∈ Submodule.span ℂ (s : Set (Module.Dual ℂ W)) :=
       hspan ▸ Submodule.subset_span ⟨y, rfl⟩
@@ -1363,11 +1358,9 @@ theorem continuous_rowJ : Continuous fun w : Mx D r p × Mx D s p => rowJ w.1 w.
   refine continuous_matrix fun i j => ?_
   induction i using Fin.addCases with
   | left a =>
-    simp only [rowJ, Fin.addCases_left]
-    exact continuous_fst.matrix_elem a j
+    simpa only [rowJ, Fin.addCases_left] using continuous_fst.matrix_elem a j
   | right b =>
-    simp only [rowJ, Fin.addCases_right]
-    exact continuous_snd.matrix_elem b j
+    simpa only [rowJ, Fin.addCases_right] using continuous_snd.matrix_elem b j
 
 theorem continuous_th_one {ρ : ℕ} {ψ : AddChar (AF D.host.F) ℂ} {χ : (AE D)ˣ →* Circle} {θ : InfFam D} {b₀ : HermE D ρ}
     {μ : Measure (Mx D ρ p)} {Ω : G D p → Mx D ρ p → ℂ} (hΩ : IsTh ψ χ θ b₀ μ Ω) : Continuous (Ω 1) :=
@@ -1480,8 +1473,7 @@ theorem weil_fock_mem (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.F)
     GlobalTheory.T.isFockVector_of_schrodinger_mem_fockSpace D ψ₀ hstd θ hθ A V μ 𝓕 hμ μ' hsk s' s hstd' hs l habs f hf (hfΦ ▸ hΦ)
   obtain ⟨hth, N, hN⟩ := hfock
   have hk' : κ (κ.symm k) ∈ K D A.rank := by
-    rw [show κ (κ.symm k) = k from κ.apply_symm_apply k]
-    exact hk
+    rwa [show κ (κ.symm k) = k from κ.apply_symm_apply k]
   have hfock' : IsFockVec ψ₀ θ (dblSp A) V s' s (omh (κ.symm k, 1) f) :=
     ⟨hdat.om_pres _ f hth, N,
       GlobalTheory.T.weilRep_preserves_fockDegree_of_commute_cartan D ψ₀ θ (dblSp A) V 1 χ⁻¹ omh s' s hdat hθ (κ.symm k) (hcomm _ hk') N f hth hN⟩
@@ -1499,8 +1491,7 @@ theorem weilKFin : WeilKFin := by
     refine Submodule.span_le.mpr ?_
     rintro _ ⟨Ψ, ⟨k, hk, rfl⟩, rfl⟩
     exact weil_fock_mem D n V ψ hψ χ hχ hr θ hθ μ 𝓕 hμ ω hω l hl s hs Φ hΦ k hk
-  · intro k hk
-    exact ⟨ω k Φ, Submodule.subset_span ⟨k, hk, rfl⟩, rfl⟩
+  · exact fun k hk => ⟨ω k Φ, Submodule.subset_span ⟨k, hk, rfl⟩, rfl⟩
 
 end GlobalTheory.CompanionTheory.ThTot
 
@@ -1597,9 +1588,7 @@ theorem core (h0 : ZeroTotal) (h1 : OneTotal) (hS : StepTotal) (hH : HeckeEta) (
         exact ⟨χ₁, a, b, fun h' => absurd h' h⟩
     have hχ' : IsHeckeChar D (χ * χ₁⁻¹) := by
       refine ⟨?_, fun x => ?_⟩
-      · have c1 := hχ.1
-        have c2 := hχ₁.1
-        exact c1.mul c2.inv
+      · exact (hχ.1).mul (hχ₁.1).inv
       · have a1 := hχ.2 x
         have a2 := hχ₁.2 x
         rw [MonoidHom.mul_apply, MonoidHom.inv_apply, a1, a2, inv_one, mul_one]

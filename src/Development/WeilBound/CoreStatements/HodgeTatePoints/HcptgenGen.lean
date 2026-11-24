@@ -105,8 +105,7 @@ theorem eq_of_specializes_of_fst {X : Scheme.{0}} {O F Ω₀ : Type} [CommRing O
     (IsLocalRing.closedPoint Ω₀) hy'
   have hzz : z' ⤳ z := by
     rw [← hemb.isInducing.specializes_iff, specializes_prod]
-    simp only [hz, hz', hz₂, hz₂']
-    exact ⟨hyy, specializes_rfl⟩
+    simpa only [hz, hz', hz₂, hz₂'] using ⟨hyy, specializes_rfl⟩
   have sq : IsPullback (pullback.snd (pullback.fst s (spMap β)) ξ₀)
       (pullback.fst (pullback.fst s (spMap β)) ξ₀ ≫ pullback.snd s (spMap β)) (spMap g₀) (spMap β) := by
     rw [← hs]
@@ -123,8 +122,7 @@ theorem eq_of_specializes_of_fst {X : Scheme.{0}} {O F Ω₀ : Type} [CommRing O
     Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := Ω₀) p'.asIdeal hcm
   have heq : p' = p := PrimeSpectrum.ext (hmax.eq_of_le p.isPrime.ne_top hle)
   have hzeq : z' = z := by
-    have h := congrArg e.inv heq
-    simpa [p, p'] using h
+    simpa [p, p'] using congrArg e.inv heq
   rw [← hz, ← hz', hzeq]
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}

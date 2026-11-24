@@ -95,10 +95,8 @@ theorem idx_sup {N F G : Submodule R M} (h : N ≤ F) (hd : Disjoint F G) :
       have hg0 : g = 0 := by
         have := hd.le_bot ⟨hgF, hg⟩
         simpa using this
-      rw [← hng, hg0, add_zero]
-      exact hn
-    · intro hn
-      exact Submodule.mem_sup_left hn
+      rwa [← hng, hg0, add_zero]
+    · exact fun hn => Submodule.mem_sup_left hn
   rw [← hker]
   exact (Nat.card_congr (φ.quotKerEquivOfSurjective hsurj).toEquiv).symm
 

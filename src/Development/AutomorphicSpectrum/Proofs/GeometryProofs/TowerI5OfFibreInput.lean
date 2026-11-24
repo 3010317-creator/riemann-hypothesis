@@ -558,8 +558,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Ht.lineHt_bounded_of_genUnit : ∀ (K : 
       _ = (Module.finrank ℚ L : ℝ) * C := by
           rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, NumberField.Embeddings.card]
   have hm : |(Module.finrank ℚ L : ℝ)⁻¹ * S| ≤ C := by
-    rw [abs_mul, abs_of_pos (inv_pos.2 hd), inv_mul_le_iff₀ hd]
-    exact hSb
+    rwa [abs_mul, abs_of_pos (inv_pos.2 hd), inv_mul_le_iff₀ hd]
   have hT : |(k : ℝ) * lineHt A L w| ≤ c + C := by
     have := abs_sub_abs_le_abs_sub ((k : ℝ) * lineHt A L w) ((Module.finrank ℚ L : ℝ)⁻¹ * S)
     linarith
@@ -1256,8 +1255,7 @@ theorem refLower_of_fibre (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (j k : ℕ) 
     have := mul_le_mul hCCm hl2 hl1 hCm0
     linarith
   have hsl : E.slopeMax ≤ (m : EReal) := by
-    rw [hm, hyy]
-    exact hSl
+    rwa [hm, hyy]
   have hent : ∀ τ i, |mu τ i| ≤ 2 := fun τ i => (abs_entry_le mu τ i).trans hmu
   have hlow := _root_.GlobalTheory.CompanionTheory.Ar.LowerAny.lamDeg_lower L' E Ψ j k A mu 2 m Cf (fun τ a b hab => hd τ a b hab) hent hm0 hsl hfl
   have hup := lamDeg_le A (fun r => lineHt (R.x 1 r) L w) C hC0 hW hS mu hent
@@ -1324,8 +1322,7 @@ theorem ptsOver_of_map {F E : Type} [Field F] [Field E] (f : F →+* E) {P : Ide
   · have e := h2 p hp
     rw [MvPolynomial.aeval_def, ← show f.comp (algebraMap _ F) = algebraMap _ E from Subsingleton.elim _ _] at e
     have e2 : f (MvPolynomial.eval₂ (algebraMap _ F) z p) = 0 := by
-      rw [MvPolynomial.eval₂_comp_left]
-      exact e
+      rwa [MvPolynomial.eval₂_comp_left]
     rw [MvPolynomial.aeval_def]
     exact f.injective (e2.trans (map_zero f).symm)
 
@@ -1423,8 +1420,7 @@ theorem transfer [DecidableEq Ψ] (M R : RootModel Ψ N) (i : R.Ω →+* M.Ω) (
     show z (GlobalTheory.CompanionTheory.Ar.Cmp.joinInl M.ι R.ι p) = _
     rw [congrFun hzw p]
     rfl
-  rw [heq] at key
-  exact key
+  rwa [heq] at key
 
 theorem point_bound [DecidableEq Ψ] {II : IntersectionSystem} (hII : IsIntersectionSystem II) (M R : RootModel Ψ N)
     (i : R.Ω →+* M.Ω) (u : Option (Ψ × Fin N) → M.Ω) {C C₁ G t s b l : ℝ} (mu : Wt Ψ N)

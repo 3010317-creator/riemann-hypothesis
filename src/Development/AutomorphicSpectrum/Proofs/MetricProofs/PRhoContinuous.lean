@@ -61,10 +61,8 @@ theorem continuous_upV {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype 
     Continuous (upV v) := by
   refine continuous_pi fun q => ?_
   by_cases hq : ∃ q', v q' = q
-  · simp only [upV, dite_eq_left hq]
-    exact continuous_apply _
-  · simp only [upV, dite_eq_right hq]
-    exact continuous_const
+  · simpa only [upV, dite_eq_left hq] using continuous_apply _
+  · simpa only [upV, dite_eq_right hq] using continuous_const
 
 theorem pSgn_ne_zero {Ψ : Type} {N j : ℕ} (hj : j ≤ N) (keep : Ψ × Fin N → Prop) (q : PIdx j keep) :
     pSgn (stepCols N j (pStep j keep q.1.1.1 q.1.1.2.2)) q.1.1.2.1 q.1.1.2.2 ≠ 0 := by
@@ -112,8 +110,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
       (hbase hz) (hgood z hz) cU.continuousWithinAt (pStep j keep q.1.1.1 q.1.1.2.2) k (h q.1.1.1)⁻¹ J
     cases e' : M.blk (q.1.1.1, pStep j keep q.1.1.1 q.1.1.2.2) with
     | none =>
-      simp only [pRead, e', Option.elim_none]
-      exact continuousWithinAt_const
+      simpa only [pRead, e', Option.elim_none] using continuousWithinAt_const
     | some k =>
       simp only [pRead, e', Option.elim_some]
       have hd := mul_ne_zero (pSgn_ne_zero M.j_le keep q) (hz₄ _ k hk e')

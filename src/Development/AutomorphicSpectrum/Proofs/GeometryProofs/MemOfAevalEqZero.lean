@@ -106,15 +106,13 @@ theorem homog_X [DecidableEq K] (p : Σ k, ι k) : IsMultiHomog (X p : MRing ι)
     · simp
     · intro i _ hi
       rw [Finsupp.single_apply, ite_eq_right]
-      intro h
-      exact hi (sigma_mk_injective h).symm
+      exact fun h => hi (sigma_mk_injective h).symm
     · simp
   · rw [Pi.single_eq_of_ne hk]
     apply Finset.sum_eq_zero
     intro i _
     rw [Finsupp.single_apply, ite_eq_right]
-    intro h
-    exact hk (congrArg Sigma.fst h).symm
+    exact fun h => hk (congrArg Sigma.fst h).symm
 
 def cMon (c : ∀ k, ι k) (m : K → ℕ) : MRing ι := ∏ k, X ⟨k, c k⟩ ^ m k
 
@@ -140,8 +138,7 @@ theorem homog_cMon (c : ∀ k, ι k) (m : K → ℕ) : IsMultiHomog (cMon c m) m
   have e : (∑ k ∈ Finset.univ, m k • Pi.single k 1 : K → ℕ) = m := by
     ext k'
     simp [Finset.sum_apply, Pi.single_apply]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem aeval_cMon (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) (m : K → ℕ) :
     aeval y (cMon c m) = ∏ k, y ⟨k, c k⟩ ^ m k := by
@@ -195,8 +192,7 @@ theorem mem_of_aeval_eq_zero {y : (Σ k, ι k) → Ω} {h : MRing ι} {d : K →
   simp
 
 theorem aeval_ne_zero {y : (Σ k, ι k) → Ω} {h : MRing ι} {d : K → ℕ} (hh : IsMultiHomog h d)
-    (hn : h ∉ mCoordIdeal y) : aeval y h ≠ 0 := by
-  exact fun h0 => hn (mem_of_aeval_eq_zero hh h0)
+    (hn : h ∉ mCoordIdeal y) : aeval y h ≠ 0 := fun h0 => hn (mem_of_aeval_eq_zero hh h0)
 
 theorem chart_form {y : (Σ k, ι k) → Ω} {c : ∀ k, ι k} (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) {r : Ω}
     (hr : r ∈ chartRingZ y c) :

@@ -151,15 +151,13 @@ theorem gr_eq (R : Subring Ω) {b b₀ : Fin r → E} (hb : LinearIndependent Ω
             omega)
           simp [h0]
       have e2 : c i • b i = (c i : Ω) • b i := rfl
-      rw [e2, add_sub_cancel_right]
-      exact this
+      rwa [e2, add_sub_cancel_right]
     have h3 : ((c i : Ω) * t - u) • b₀ i ∈ flagStep Ω b₀ i := by
       have := Submodule.sub_mem _ (Submodule.sub_mem _ hu h2) (Submodule.smul_mem _ (c i : Ω) ht)
       convert this using 1
       rw [sub_smul, smul_sub, mul_smul]
       abel
-    have h4 := eq_zero_of_smul_mem hb₀ i h3
-    exact Submodule.mem_span_singleton.2 ⟨c i, sub_eq_zero.1 h4⟩
+    exact Submodule.mem_span_singleton.2 ⟨c i, sub_eq_zero.1 (eq_zero_of_smul_mem hb₀ i h3)⟩
   · refine Submodule.span_mono ?_
     rintro _ rfl
     exact ⟨b i, Submodule.subset_span ⟨i, rfl⟩, ht⟩
@@ -183,8 +181,7 @@ theorem Lat.IsFlagVBOn.isVBOn_gr_inter : ∀ (X : Scheme.{0}) (Ω : Type) [Field
     have hr : Set.range (fun _ : Fin 1 => t) = {t} := Set.range_const
     refine ⟨U, hU, fun _ => t, ?_, fun q hq hqU => ⟨?_, ?_⟩⟩
     · rw [hr, eq_top_iff]
-      intro x _
-      exact Submodule.mem_span_singleton.2 ⟨x / t, by simp [ht0]⟩
+      exact fun x _ => Submodule.mem_span_singleton.2 ⟨x / t, by simp [ht0]⟩
     · exact linearIndependent_unique_iff.2 ht0
     · rw [hr]
       unfold Lat.gr

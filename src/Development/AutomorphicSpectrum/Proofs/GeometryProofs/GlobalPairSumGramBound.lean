@@ -274,8 +274,7 @@ def push (hφ : IsGrpPullback G' G f φ) {T : Over S'} (x : T ⟶ G') : Over.mk 
 
 theorem push_mul (hφ : IsGrpPullback G' G f φ) {T : Over S'} (x y : T ⟶ G') :
     push hφ (x * y) = push hφ x * push hφ y := by
-  apply Over.OverMorphism.ext
-  exact (hφ.2 T x y (push hφ x) (push hφ y) rfl rfl).symm
+  exact Over.OverMorphism.ext (hφ.2 T x y (push hφ x) (push hφ y) rfl rfl).symm
 
 theorem push_one (hφ : IsGrpPullback G' G f φ) (T : Over S') :
     push hφ (1 : T ⟶ G') = 1 := by
@@ -398,8 +397,7 @@ theorem interior_range {E : Type} [Field E] [NumberField E] [IsCMField E] {H : H
   have e : (x ≫ pullback.fst _ _) q = (z ≫ 𝔐.f) q := by rw [hx]
   simp only [Scheme.Hom.comp_apply] at e
   have : x q ∈ pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) ⁻¹' abLocus Y.t.G := by
-    rw [Set.mem_preimage, e, hq]
-    exact hab
+    rwa [Set.mem_preimage, e, hq]
   rwa [Y.ab_gen] at this
 
 theorem dualMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
@@ -651,8 +649,7 @@ theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberFi
       have e : (⟨centre (p' 0), hall _⟩ : Cpt 𝔐.ξ) = ⟨centre (p 0), hall _⟩ := Subtype.ext (by
         show centre (p' 0) = centre (p 0)
         rw [hcen, star_zero])
-      rw [e]
-      exact hfr0
+      rwa [e]
     obtain ⟨g, Λ, _, L', ρ₁, U', h1, h2, h3, h4, h5⟩ := core 𝔐 a b N bb n a₀ p' _ hpq' hs' ha hhol' hτ' hint' (hall _) hfr0'
     obtain ⟨L, hL⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ConjPeriods.exists_conj_periodGram n a₀ g N Λ L' U' (_root_.GlobalTheory.CompanionTheory.Ar.Flat.MonodromyBij.T_bijective n a₀ g Λ L')
     refine fin g Λ _ L ρ₁ (fun k u' => star (U' k (star u'))) h1 h2 (fun k => diffOn_star' (h3 k)) ?_ fun u hu z hz => ?_

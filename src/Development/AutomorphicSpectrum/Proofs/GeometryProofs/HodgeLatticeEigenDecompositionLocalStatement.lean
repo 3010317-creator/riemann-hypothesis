@@ -141,8 +141,7 @@ theorem exists_frame {g p : ℕ} (ℓ : Fin g → V) (hℓ : LinearIndependent K
     have hx : (⟨x, hxL⟩ : L) ∈ LinearMap.range f := ⟨⟨x, hxL⟩, Subtype.ext (heW x hxW)⟩
     have e1 : x = (((⟨⟨x, hxL⟩, hx⟩ : LinearMap.range f) : L) : V) := rfl
     rw [e1, ← c₁.sum_repr ⟨⟨x, hxL⟩, hx⟩, AddSubmonoidClass.coe_finsetSum, AddSubmonoidClass.coe_finsetSum]
-    refine Submodule.sum_mem _ fun i _ => ?_
-    exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
+    exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
   have hA : Submodule.span A (Set.range v₁) = L ⊓ W.restrictScalars A :=
     le_antisymm (Submodule.span_le.2 (by rintro _ ⟨i, rfl⟩; exact hle i)) hge
   have hK : Submodule.span K (Set.range v₁) = W := by
@@ -157,8 +156,7 @@ theorem exists_frame {g p : ℕ} (ℓ : Fin g → V) (hℓ : LinearIndependent K
         | mem y h =>
           obtain ⟨i, rfl⟩ := h
           have h6 : e (ℓ i) ∈ L ⊓ W.restrictScalars A := ⟨hL _ (Submodule.subset_span ⟨i, rfl⟩), he _⟩
-          have h7 := hge h6
-          exact Submodule.span_subset_span A K _ h7
+          exact Submodule.span_subset_span A K _ (hge h6)
         | zero => simp
         | add a b _ _ ha hb => rw [map_add (f := _)]; exact Submodule.add_mem _ ha hb
         | smul r a _ ha => rw [map_smul]; exact Submodule.smul_mem _ _ ha
@@ -188,8 +186,7 @@ theorem comp_eigProj {bar : 𝓞 E ≃+* 𝓞 E} (hinr : ∀ a f, ρH a (0, f) =
     intro k z
     have h1 := HT.LatBasic.mem_eigSp.1 h (bar (RingOfIntegers.basis E k))
     rw [hinr, hb, ← hσ] at h1
-    have h2 := congrArg Prod.snd h1
-    exact LinearMap.congr_fun h2 z
+    exact LinearMap.congr_fun (congrArg Prod.snd h1) z
   have h2 : ∑ k, σ' (HT.dualInt E k) * σ' ((RingOfIntegers.basis E k : 𝓞 E) : E) = 1 := by
 
     rw [← map_one σ', ← HT.LatBasic.sum_dualInt_mul, map_sum]
@@ -268,12 +265,10 @@ theorem adapted_frames : ∀ (E : Type) [Field E] [NumberField E] (Ω Vs : Type)
     (HT.LatBasic.eigProj_mem ρ σ') (fun x hx => HT.LatBasic.eigProj_of_mem hx) (hLs σ' hσ') hq
   have hm₁ : ∀ i, b₁ i ∈ Submodule.span R' (Set.range ℓ) ∧ b₁ i ∈ HT.eigSp ρ σ := fun i => by
     have h : b₁ i ∈ Submodule.span R' (Set.range b₁) := Submodule.subset_span ⟨i, rfl⟩
-    rw [hs₁] at h
-    exact h
+    rwa [hs₁] at h
   have hm₂ : ∀ j, b₂ j ∈ Submodule.span R' (Set.range ℓ) ∧ b₂ j ∈ HT.eigSp ρ σ' := fun j => by
     have h : b₂ j ∈ Submodule.span R' (Set.range b₂) := Submodule.subset_span ⟨j, rfl⟩
-    rw [hs₂] at h
-    exact h
+    rwa [hs₂] at h
   have hw : Submodule.span Ω (Set.range b₂) = HT.eigSp ρ σ' := by
     refine Submodule.eq_of_le_of_finrank_eq ?_ (by rw [finrank_span_eq_card hb₂, hq, Fintype.card_fin])
     rw [Submodule.span_le]
@@ -393,8 +388,7 @@ theorem adapted_frames : ∀ (E : Type) [Field E] [NumberField E] (Ω Vs : Type)
     exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 (HodgeDeterminantLattice.linearIndependent_eigProj σ hfree) _ h3 k)
   have hAB : Matrix.of A * Matrix.of B = 1 := by
     ext i k
-    have h1 := congrFun (congrFun key i) k
-    simpa [Matrix.mul_apply, Matrix.one_apply, AΩ, BΩ, apply_ite] using h1
+    simpa [Matrix.mul_apply, Matrix.one_apply, AΩ, BΩ, apply_ite] using congrFun (congrFun key i) k
   refine ⟨b₁, b₂, u, Matrix.of A, hb₁, hs₁, hb₂, hs₂, ⟨hueig, hu1, fun j => ?_⟩, huHL,
     Matrix.isUnit_det_of_right_inverse hAB, hA⟩
   rw [hur]

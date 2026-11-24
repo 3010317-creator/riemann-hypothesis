@@ -251,8 +251,7 @@ theorem densEq_of_C (hB : PositivityTheory.PfSWUS.HMass.SchwartzDensInf) (hC : S
   · have := hd v (c v) (e v) (hc0 v) (he0 v) (e3 v ▸ (hμv v).1) (e4 v ▸ (hνv v).1) (Φv v)
       (hpure.1 v).1.continuous (hpure.1 v).2
     rwa [← e3 v, ← e4 v] at this
-  · simp only [hgv]
-    exact r1
+  · simpa only [hgv] using r1
   · intro Λ hΛ
     rw [hθ, hI, tprod_congr hgv, integral_smul_nnreal_measure]
     simp only [integral_smul_nnreal_measure]
@@ -285,8 +284,7 @@ theorem swMeasC_succ (hB : BaseOne) (hI : IsomC) (hS : ScaleC) (hSt : StepC) (hN
   intro F E _ _ _ _ _ σ hσ n
   induction n with
   | zero =>
-    intro J hJ _ T hT hd
-    exact hB F E σ hσ J hJ T hT hd
+    exact fun J hJ _ T hT hd => hB F E σ hσ J hJ T hT hd
   | succ n ih =>
     intro J hJ ha T hT hd
     obtain ⟨t, x, ht, hx⟩ := GlobalTheory.CompanionTheory.SW.HermRep.exists_repr F E σ hσ (n + 1) T ⟨hT, hd⟩
@@ -552,8 +550,7 @@ theorem mul_mem_nnRealSet {a b : ℂ} (ha : a ∈ nnRealSet) (hb : b ∈ nnRealS
   obtain ⟨hb1, hb2⟩ := hb
   refine ⟨?_, ?_⟩
   · simp [Complex.mul_im, ha1, hb1]
-  · simp only [Complex.mul_re, ha1, hb1, mul_zero, sub_zero]
-    exact mul_nonneg ha2 hb2
+  · simpa only [Complex.mul_re, ha1, hb1, mul_zero, sub_zero] using mul_nonneg ha2 hb2
 
 theorem one_mem_nnRealSet : (1 : ℂ) ∈ nnRealSet := ⟨by simp, by simp⟩
 
@@ -675,8 +672,7 @@ theorem notRepC_of (hE1 : PositivityTheory.PfSWUS.HMass.OneVecBinary) (hM : Mass
   have hS1 : {X : Fin 1 → Fin (M + 1) → E | gramE σ J X = T1} = ∅ := by
     ext X
     simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-    intro hX
-    exact hne (X 0) (congrFun (congrFun hX 0) 0)
+    exact fun hX => hne (X 0) (congrFun (congrFun hX 0) 0)
   have hS : {X : Fin (M + 1) → Fin (M + 1) → E | gramE σ J X = blockOne (algebraMap F E t) T} = ∅ := by
     ext X
     simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]

@@ -91,8 +91,7 @@ theorem isClosedImmersion_torsion_lift {X : Scheme.{0}} (G : Over X) [GrpObj G] 
       simpa [ψ, u, g₀] using i'fst
     have h2 : ψ ≫ u ^ N = ψ ≫ 1 := by rw [MonObj.comp_pow, h1, h0, MonObj.comp_one]
     have h3 : i' ≫ (u ^ N).left = i' ≫ (1 : PO ⟶ G).left := congrArg (fun m => m.left) h2
-    rw [hfdef, hgdef]
-    exact h3
+    rwa [hfdef, hgdef]
   let b : Γ.G.left ⟶ pullback (pullback.diagonal G.hom) (pullback.lift f g hfg) :=
     pullback.lift (i' ≫ f) i' (by
       apply pullback.hom_ext
@@ -111,8 +110,7 @@ theorem isClosedImmersion_torsion_lift {X : Scheme.{0}} (G : Over X) [GrpObj G] 
     have h2 : φ ≫ u ^ N = φ ≫ 1 := by
       apply Over.OverMorphism.ext
       change jq ≫ (u ^ N).left = jq ≫ (1 : PO ⟶ G).left
-      rw [← hfdef, ← hgdef]
-      exact jqeq
+      rwa [← hfdef, ← hgdef]
     rw [← h1, ← MonObj.comp_pow, h2, MonObj.comp_one]
   obtain ⟨y, hy⟩ := (h.kernel Qs g').1 hg'
   have hyl : y.left ≫ i = jq ≫ pullback.fst G.hom x := hy

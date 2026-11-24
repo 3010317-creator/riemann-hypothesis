@@ -260,8 +260,7 @@ theorem mem_harm1_iff (g : Pol p q r s) : g ∈ harm1 p q r s ↔
     | zero => exact minusPart_zero _
     | add x y _ _ hx hy => rw [mp_add_right, hx, hy, add_zero]
     | smul c x _ hx => rw [mp_smul_right, hx, smul_zero]
-  · intro h
-    exact Submodule.subset_span ⟨fun _ => h, fun h' => absurd h' Bool.false_ne_true⟩
+  · exact fun h => Submodule.subset_span ⟨fun _ => h, fun h' => absurd h' Bool.false_ne_true⟩
 
 private theorem minusPart_fockAct2_eq_zero_iff_lowOp (g : Pol p q r s) :
     (∀ Y : Mat r s, IsPC Y → minusPart (fockAct2 p q r s Y) g = 0) ↔
@@ -269,8 +268,7 @@ private theorem minusPart_fockAct2_eq_zero_iff_lowOp (g : Pol p q r s) :
   constructor
   · intro h c d hcd
     have h1 := h (Eab c d) (isPC_Eab hcd)
-    rw [minusPart_second_action_Eab hcd, neg_eq_zero] at h1
-    exact h1
+    rwa [minusPart_second_action_Eab hcd, neg_eq_zero] at h1
   · intro h Y hY
     rw [PI.FockOneDegW.minus2_eq Y hY, neg_eq_zero]
     refine Finset.sum_eq_zero (fun c _ => Finset.sum_eq_zero (fun d _ => ?_))
@@ -293,8 +291,7 @@ private theorem mem_jHarm_iff' (g : Pol p q r s) : g ∈ jHarm p q r s ↔
     | smul c x _ hx =>
       exact ⟨fun Z hZ => by rw [mp_smul_right, hx.1 Z hZ, smul_zero],
         fun Y hY => by rw [mp_smul_right, hx.2 Y hY, smul_zero]⟩
-  · intro h
-    exact Submodule.subset_span ⟨h.1, h.2⟩
+  · exact fun h => Submodule.subset_span ⟨h.1, h.2⟩
 
 theorem mem_jHarm_iff (g : Pol p q r s) : g ∈ jHarm p q r s ↔ g ∈ harm1 p q r s ∧
     ∀ c d : Ix r s, ¬ sameBlock c d → PI.FockOneDegW.lowOp (p := p) (q := q) c d g = 0 := by
@@ -305,8 +302,7 @@ private theorem minusPart_apply_eq_zero_of_commutator {σ : Type} (T A B : Modul
     (h : T * A - A * T = B) {x : MvPolynomial σ ℂ} (hA : minusPart A x = 0) (hB : minusPart B x = 0) :
     minusPart A (T x) = 0 := by
   have h1 := mp_comm T A B hT h x
-  rw [hA, hB, map_zero, zero_sub, neg_eq_zero] at h1
-  exact h1
+  rwa [hA, hB, map_zero, zero_sub, neg_eq_zero] at h1
 
 theorem harmonic_stable_first_action : KSt (units (fockAct1 p q r s)) (harm1 p q r s) := by
   unfold KSt units
@@ -445,14 +441,12 @@ private theorem Eab_commutator (a b c d : Ix r s) :
     split_ifs with h
     · subst h
       simp only [Eab, Matrix.single_mul_single_same, mul_one]
-    · simp only [Eab]
-      exact Matrix.single_mul_single_of_ne _ _ _ _ h _
+    · simpa only [Eab] using Matrix.single_mul_single_of_ne _ _ _ _ h _
   have e2 : Eab c d * Eab a b = if d = a then Eab c b else 0 := by
     split_ifs with h
     · subst h
       simp only [Eab, Matrix.single_mul_single_same, mul_one]
-    · simp only [Eab]
-      exact Matrix.single_mul_single_of_ne _ _ _ _ h _
+    · simpa only [Eab] using Matrix.single_mul_single_of_ne _ _ _ _ h _
   rw [e1, e2]
 
 theorem low_comm {a b c d : Ix r s} (hab : sameBlock a b) (hcd : ¬ sameBlock c d) (g : Pol p q r s) :

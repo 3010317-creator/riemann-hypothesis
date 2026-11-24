@@ -176,8 +176,7 @@ theorem exists_notMem_span {F M : Type} [Field F] [AddCommGroup M] [Module F M] 
     {r k : ℕ} (q : Fin r → M) (w : Fin (k + 1) → M) (hw : LinearIndependent F w) :
     ∃ l, w l ∉ Submodule.span F (q '' {a : Fin r | (a : ℕ) < k}) := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   let q' : Fin k → M := fun j => if hj : (j : ℕ) < r then q ⟨j, hj⟩ else 0
   have hS : Submodule.span F (q '' {a : Fin r | (a : ℕ) < k}) ≤ Submodule.span F (Set.range q') := by
     apply Submodule.span_le.mpr
@@ -194,16 +193,14 @@ theorem exists_notMem_span {F M : Type} [Field F] [AddCommGroup M] [Module F M] 
   have h3 := Submodule.finrank_mono hW
   have h4 : Module.finrank F (Submodule.span F (Set.range q')) ≤ k := by
     have := finrank_range_le_card (R := F) q'
-    rw [Fintype.card_fin] at this
-    exact this
+    rwa [Fintype.card_fin] at this
   omega
 
 theorem flagStep_of_le {E : Type} [AddCommGroup E] [Module K E] {r : ℕ} (b : Fin r → E) {i : ℕ} (h : r ≤ i) :
     flagStep K b i = flagStep K b r := by
   have hs : {a : Fin r | (a : ℕ) < i} = {a : Fin r | (a : ℕ) < r} := by
     ext a
-    simp only [Set.mem_setOf_eq]
-    exact ⟨fun _ => a.2, fun _ => lt_of_lt_of_le a.2 h⟩
+    simpa only [Set.mem_setOf_eq] using ⟨fun _ => a.2, fun _ => lt_of_lt_of_le a.2 h⟩
   show Submodule.span K (b '' {a : Fin r | (a : ℕ) < i}) = Submodule.span K (b '' {a : Fin r | (a : ℕ) < r})
   rw [hs]
 
@@ -267,8 +264,7 @@ theorem exists_cols {r : ℕ} (g : Fin r → Fin r → K)
       · exact hind.congr heq.symm
       · rw [heq.image_eq]
         show (fun i => residue R (p' kk i)) ∉ _
-        rw [hnew]
-        exact hl
+        rwa [hnew]
     refine ⟨p', hon, ?_⟩
     intro i hi
     rcases Nat.lt_or_eq_of_le hi with hi' | rfl
@@ -301,8 +297,7 @@ theorem exists_cols {r : ℕ} (g : Fin r → Fin r → K)
         · have hakk : a = kk := Fin.ext hak
           have hD := hspan l
           show (fun j => (p' a j : K)) ∈ flagStep K g (k + 1)
-          rw [hakk, hnew]
-          exact hD
+          rwa [hakk, hnew]
       have hrg : g '' {a : Fin r | (a : ℕ) < k + 1} =
           Set.range (fun j : Fin (k + 1) => g ⟨j, lt_of_lt_of_le j.2 hk1⟩) := by
         ext x
@@ -315,8 +310,7 @@ theorem exists_cols {r : ℕ} (g : Fin r → Fin r → K)
         have hc := finrank_range_le_card (R := K) (fun j : Fin (k + 1) => g ⟨j, lt_of_lt_of_le j.2 hk1⟩)
         rw [Fintype.card_fin] at hc
         show Module.finrank K (Submodule.span K (g '' {a : Fin r | (a : ℕ) < k + 1})) ≤ k + 1
-        rw [hrg]
-        exact hc
+        rwa [hrg]
       have hrp : (fun a j => (p' a j : K)) '' {a : Fin r | (a : ℕ) < k + 1} =
           Set.range (fun j : Fin (k + 1) => fun i => (p' ⟨j, lt_of_lt_of_le j.2 hk1⟩ i : K)) := by
         ext x
@@ -337,8 +331,7 @@ theorem exists_cols {r : ℕ} (g : Fin r → Fin r → K)
         show Module.finrank K (Submodule.span K ((fun a j => (p' a j : K)) '' {a : Fin r | (a : ℕ) < k + 1})) = k + 1
         rw [hrp, finrank_span_eq_card hindK, Fintype.card_fin]
       apply Submodule.eq_of_le_of_finrank_le hle
-      rw [hp_eq]
-      exact hg_le
+      rwa [hp_eq]
 
 theorem exists_adapted : ∀ (K : Type) [Field K] (R : Subring K) [IsLocalRing R] (r : ℕ) (g : Fin r → Fin r → K),
     (∀ k : Fin r, ∃ D Ee : Fin ((k : ℕ) + 1) → Fin r → K, (∀ l i, D l i ∈ R) ∧ (∀ l i, Ee l i ∈ R) ∧
@@ -356,8 +349,7 @@ theorem exists_adapted : ∀ (K : Type) [Field K] (R : Subring K) [IsLocalRing R
       (((Matrix.of fun i a => p a i).det : R) : K) :=
     (RingHom.map_det R.subtype _).symm
   refine ⟨R.subtype.mapMatrix (Matrix.of fun i a => p a i), ?_, ?_, ?_, ?_⟩
-  · intro a b
-    exact (p b a).2
+  · exact fun a b => (p b a).2
   · rw [hdet, ← hu]
     exact_mod_cast u.ne_zero
   · rw [hdet, ← hu]
@@ -497,8 +489,7 @@ theorem split_of_regular_ratios (K : Type) [Field K] (R : Subring K) (n r : ℕ)
     show Q i l ∈ R
     rw [hBQ, Matrix.mul_apply]
     exact Subring.sum_mem _ fun j _ => Subring.mul_mem _ (hB i j) (hPR j l)
-  · intro l i
-    exact hA (J l) i
+  · exact fun l i => hA (J l) i
   · intro l l'
     change (A * Q) (J l) l' = _
     rw [hAQ]

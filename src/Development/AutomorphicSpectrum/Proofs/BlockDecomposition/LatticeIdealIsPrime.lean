@@ -107,8 +107,7 @@ theorem dvd_of_mem_IB {m : ℕ} (hyp : Lat.Hyp f ξ l m) {a : W} (ha : f a ∈ L
   obtain ⟨b, hb⟩ := ha
   have hm : 0 < m := hyp.one_le
   refine hyp.gr 0 hm a b ?_
-  rw [pow_zero, mul_one, zero_add, pow_one]
-  exact hb
+  rwa [pow_zero, mul_one, zero_add, pow_one]
 
 end
 

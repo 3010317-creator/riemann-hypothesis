@@ -101,8 +101,7 @@ theorem fg_inf_restrictScalars_of_integers (C : Type) [Field C] (v : Valuation C
     rintro ⟨x, hx⟩ ⟨⟨a, ha⟩, h⟩
     have h1 : a • x = 0 := congrArg Subtype.val h
     have ha0 : algebraMap O C a ≠ 0 := by
-      intro h0
-      exact nonZeroDivisors.ne_zero ha (hinj (by simpa using h0))
+      exact fun h0 => nonZeroDivisors.ne_zero ha (hinj (by simpa using h0))
     rw [← algebraMap_smul C a x] at h1
     have : x = 0 := (smul_eq_zero.1 h1).resolve_left ha0
     simp [this]
@@ -432,8 +431,7 @@ theorem span_om' (hred : D.ReducesTo φ P ι) (hκ : κ' ∣ (p : O) ^ R) :
     rw [Submodule.span_le]
     rintro _ ⟨x, hx, rfl⟩
     obtain ⟨x', hx', e⟩ := h hx
-    rw [← (Subtype.ext e : x' = x)]
-    exact hx'
+    rwa [← (Subtype.ext e : x' = x)]
   · rw [HTPoint.om', Submodule.map_le_iff_le_comap]
     conv_lhs => rw [P.free.2.2]
     rw [Submodule.span_le]
@@ -467,8 +465,7 @@ theorem transfer_mul [NumberField E] (hAK : Function.Injective (algebraMap A K))
       div_mul_cancel₀ _ ((map_ne_zero σ).2 hb0)])
   have h2 := congrArg (fun t => algebraMap O C (φ t)) h1
   simp only [map_mul, hφ a α hα, hφ b β hβ] at h2
-  rw [map_div₀, ← mul_div_assoc, eq_div_iff ((map_ne_zero σ').2 hb0)]
-  exact h2
+  rwa [map_div₀, ← mul_div_assoc, eq_div_iff ((map_ne_zero σ').2 hb0)]
 
 theorem generatesDiff_map (hAK : Function.Injective (algebraMap A K)) {σ : E →+* K}
     {σ' : E →+* C} (hσ : ∀ a : 𝓞 E, σ (a : E) ∈ (algebraMap A K).range)
@@ -677,8 +674,7 @@ theorem red_omHT_bc : ∀ (A K : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
       have hn : algebraMap O C κ' * a ≠ 0 := mul_ne_zero P.κ_ne ha
       have := (Submodule.span C (latIn (P.omHT σ') (P.Ωsp σ') : Set (P.Ωsp σ'))).smul_mem
         (algebraMap O C κ' * a)⁻¹ hm'
-      rw [smul_smul, inv_mul_cancel₀ hn, one_smul] at this
-      exact this
+      rwa [smul_smul, inv_mul_cancel₀ hn, one_smul] at this
     rw [← finrank_baseChange_flat (O := O), ← LinearMap.finrank_range_of_inj hinj, hrange,
       ← finrank_lattice _ hfull]
     have e : (latIn (P.omHT σ') (P.Ωsp σ')).map ((P.Ωsp σ').subtype.restrictScalars O) =

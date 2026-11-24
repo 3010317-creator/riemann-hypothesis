@@ -124,9 +124,7 @@ theorem gram_det_ne_zero_local_basis_cofinite : ∀ (E : Type) [Field E] [Number
     intro ℓ hℓ
     simp only [Set.mem_setOf_eq] at hℓ ⊢
     by_contra hlt
-    apply hℓ
-    refine ⟨he, n, fun hd => hlt ?_, hsp⟩
-    exact Nat.le_of_dvd hn hd
+    exact hℓ ⟨he, n, fun hd => hlt (Nat.le_of_dvd hn hd), hsp⟩
 
 end PositivityTheory.Xgf
 end -- clump:auto
@@ -208,8 +206,7 @@ theorem local_basis_gram_det_log (D : Datum H) (p q : ℕ) (x : Fin p ⊕ Fin q 
     have hb1 : ‖j (b : E)‖ ≤ 1 :=
       (_root_.GlobalTheory.CompanionTheory.Relay.padic_integral_iff_denominator E ℓ (b : E)).mpr ⟨1, b, Nat.Prime.not_dvd_one ℓ.prop, by simp⟩ j
     have hm : ‖j (a : E)‖ * ‖j (sesq D y z)‖ ≤ 1 := by
-      rw [← norm_mul, ← map_mul, hb]
-      exact hb1
+      rwa [← norm_mul, ← map_mul, hb]
     calc ‖j (sesq D y z)‖ = ‖j (a : E)‖⁻¹ * (‖j (a : E)‖ * ‖j (sesq D y z)‖) := by
           field_simp
       _ ≤ ‖j (a : E)‖⁻¹ * 1 := mul_le_mul_of_nonneg_left hm (inv_nonneg.mpr hja.le)

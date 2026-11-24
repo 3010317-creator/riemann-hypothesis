@@ -164,8 +164,7 @@ theorem hodgeGram_det_log_bounds : ∀ (E : Type) [Field E] [NumberField E] [IsC
   obtain ⟨hz1, hz2⟩ := hz
   have hw1 : (ρ : ℂ)⁻¹ • z ∈ Metric.ball (0 : Fin n → ℂ) ρ' := by
     rw [mem_ball_zero_iff] at hz1 ⊢
-    rw [norm_smul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hρ.le, inv_mul_lt_iff₀ hρ]
-    exact hz1
+    rwa [norm_smul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hρ.le, inv_mul_lt_iff₀ hρ]
   have hw2 : ∀ i : Fin n, i.val < a → ((ρ : ℂ)⁻¹ • z) i ≠ 0 := fun i hi =>
     mul_ne_zero (inv_ne_zero hρc) (hz2 i hi)
   have hwz : (ρ : ℂ) • (ρ : ℂ)⁻¹ • z = z := smul_inv_smul₀ hρc z
@@ -311,8 +310,7 @@ theorem exists_eq_coord_mul_of_vanishing {f : (ι → ℂ) → ℂ}
     have h2 : HasFDerivAt f (fderiv ℂ f (L s z)) (z + ((s : ℂ) - 1) • z i • e) :=
       (hf.differentiableAt (hU.mem_nhds (hLU s hs hz))).hasFDerivAt
     have h3 := (h2.comp_hasDerivAt (s : ℂ) h1).comp_ofReal
-    rw [map_smul, smul_eq_mul] at h3
-    exact h3
+    rwa [map_smul, smul_eq_mul] at h3
   · exact ContinuousOn.intervalIntegrable_of_Icc zero_le_one (continuousOn_const.mul hc)
 
 end
@@ -938,8 +936,7 @@ theorem isFramed_congr {U : Set (Xo.XF c)} {τ : E →+* ℂ} {F : Type} [Field 
   subst h
   have e₁ : v = v' := funext fun i => Over.OverMorphism.ext (hv i)
   have e₂ : w = w' := funext fun i => Over.OverMorphism.ext (hw i)
-  rw [← e₁, ← e₂]
-  exact hf
+  rwa [← e₁, ← e₂]
 
 theorem cfn_congr (Φ : CFn Xo c) {y y' : Sp ℂ ⟶ Xo.XF c} (h : y = y') {v : Vecs y D.p} {w : Vecs y D.q}
     {v' : Vecs y' D.p} {w' : Vecs y' D.q}
@@ -1027,8 +1024,7 @@ theorem exists_unit_extension_of_bdryChart : ∀ (E : Type) [Field E] [NumberFie
   have hρ : (σ.comp (IntermediateField.inclusion c.le).toRingHom) (baseKA l).ρ = H.rt0 := by
     have e : (IntermediateField.inclusion c.le).toRingHom (baseKA l).ρ = tauIn c τ H.rt :=
       Subtype.ext hτ.symm
-    rw [RingHom.comp_apply, e]
-    exact hσ
+    rwa [RingHom.comp_apply, e]
   obtain ⟨ρ₁, K₁, N₁, hρ₁, hρ₁', b₁⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.hodgeGram_det_log_bounds E H D l Xo _ n a C hpq hρ D.p u₁ h1
   obtain ⟨ρ₂, K₂, N₂, hρ₂, hρ₂', b₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.hodgeGram_det_log_bounds E H D l Xo _ n a C hpq hρ D.q u₂ h2
   have hρ0 : 0 < min ρ₁ ρ₂ := lt_min hρ₁ hρ₂
@@ -1157,8 +1153,7 @@ theorem exists_tied_chart {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
   let ψ : (Fin n → ℂ) → (Γ(Z, U) →+* ℂ) := fun z =>
     if h : ⊤ ≤ y ((ρ : ℂ) • z) ⁻¹ᵁ U then evalHom _ U h else evalHom _ U h0
   have hψ : ∀ z ∈ Metric.ball (0 : Fin n → ℂ) 1, spMap (ψ z) ≫ hU.fromSpec = y ((ρ : ℂ) • z) := fun z hz => by
-    simp only [ψ, dite_eq_left (hB (hin z hz)).2]
-    exact spMap_evalHom _ _ _ _
+    simpa only [ψ, dite_eq_left (hB (hin z hz)).2] using spMap_evalHom _ _ _ _
   obtain ⟨tV, ⟨q⟩⟩ := exists_sab (pullback.snd hU.fromSpec j₀) To
   obtain ⟨m₂, e₂⟩ := GlobalTheory.ObjMaps.exists_sab_comp n₂ q
   obtain ⟨q₁, e₁⟩ : ∃ q₁ : SABMap tV T (pullback.fst hU.fromSpec j₀ ≫ hU.fromSpec), q₁.φ = q.φ ≫ n₁.φ := by
@@ -1194,8 +1189,7 @@ theorem exists_lift_of_centre_mem {X : Scheme.{0}} (W : X.Opens) (w : Sp ℂ ⟶
   have hr : Set.range w ⊆ Set.range W.ι := by
     rintro _ ⟨p, rfl⟩
     have e : p = IsLocalRing.closedPoint ℂ := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
-    rw [Scheme.Opens.range_ι, e]
-    exact h
+    rwa [Scheme.Opens.range_ι, e]
   exact ⟨IsOpenImmersion.lift W.ι w hr, IsOpenImmersion.lift_fac _ _ _⟩
 
 theorem exists_model_chart (Y : Model Xo c β) (σ : c.F →+* ℂ) {X' : Scheme.{0}} (π : X' ⟶ Y.X) (s' : X' ⟶ Sp c.F)
@@ -1301,8 +1295,7 @@ theorem indep_of_frame {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G]
       rw [hv']
       exact (hcomb _ _ _ _).2 (by simp [Pi.single_apply, add_smul, Finset.sum_add_distrib, hc])
     obtain ⟨c0, -, hun⟩ := (hv.2 (v i) (hv.1 i))
-    have e := congrFun ((hun _ c1).trans (hun _ c2).symm) i
-    simpa using e
+    simpa using congrFun ((hun _ c1).trans (hun _ c2).symm) i
   have hbas := (hb hs g (Pi.basisFun R (Fin g))).1
   let L : (Fin g → ℂ) →ₗ[ℂ] E' := Fintype.linearCombination ℂ (fun k => j (Pi.basisFun R (Fin g) k))
   have hL : ∀ x : Fin g → R, L (fun k => ψ (x k)) = j x := by
@@ -1314,8 +1307,7 @@ theorem indep_of_frame {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G]
     rfl
   refine LinearIndependent.of_comp L ?_
   have : L ∘ (fun i b => ψ (u i b)) = fun i => j (u i) := funext fun i => hL (u i)
-  rw [this]
-  exact hind
+  rwa [this]
 
 theorem exists_vec (Y : Model Xo c β) {σ' : KA l →+* ℂ} {n a : ℕ} (C : BdryChart Xo σ' n a) (k' : C.V ⟶ Xo.XF c)
     (φ₀ : C.tV.G.left ⟶ Y.oF.t.G.left) {f : Sp C.R ⟶ Y.X} (mR : SABMap C.t Y.t f)

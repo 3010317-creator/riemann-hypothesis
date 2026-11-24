@@ -243,8 +243,7 @@ theorem chain_partial (hstep : type_of% @_root_.PositivityTheory.HtPt.Rc.step) (
   rw [h5] at h4
   have h7 : a ≤ ∏ i ∈ Finset.range (min j n), s i :=
     le_of_mul_le_mul_right (h4.trans (mul_le_mul_right h1 _)) (pos_iff_ne_zero.2 hb0)
-  rw [← le_antisymm h7 h2]
-  exact ha
+  rwa [← le_antisymm h7 h2]
 
 end
 

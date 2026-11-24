@@ -256,8 +256,7 @@ theorem val_axis (act : 𝓞 E → Fin d → MvPowerSeries (Fin 1 × Fin d) S) (
       exact (psJet_ev_ax d m (ad a) b).symm.trans ((congrArg (psJet m) hb).trans (psJet_one m)))
   have p₃ : gm (homAt x0 (axJ (S := S) d m b)).left y ⊤ (unitΓ u) = 1 := by
     rw [FrRatio.gm_map, hU, unitΓ_one, map_one]
-  rw [p₁, p₂, p₃, _root_.mul_one, _root_.mul_one] at E
-  exact E
+  rwa [p₁, p₂, p₃, _root_.mul_one, _root_.mul_one] at E
 
 theorem lift_true (hz : ∀ m, homAt x0 (jetAug : Jet S (Fin 1 × Fin d) m →ₐ[S] S) ≫ x m = 1) (m : ℕ) :
     (homAt x0 (axJ (S := S) d m true)).left ≫
@@ -582,8 +581,7 @@ theorem unit_one_on_axes : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       (fun z JM hJ => val_pull_one wB (qq Q) (lift 1 (gB.x m)).left (cB m).1 _ (homAt (𝟙 (Sp k)) (sub1 Qs m)).left
         (by rw [lift_qq, MonObj.one_comp, hQ m, ← Over.comp_left, comp_lift, MonObj.comp_one]) hJ)
       (fun z JL JM => adjoint_product_first_axis t x _ a (fun ψ => wv w ψ z JL JM))
-    rw [← left_first_axis_lift, Scheme.Hom.comp_appTop] at e
-    exact e
+    rwa [← left_first_axis_lift, Scheme.Hom.comp_appTop] at e
   · refine eq_one_of_jets H hs t p x g (fun m => (fibPt t x (g.x m)).left) (fun _ => rfl) _ fun m => ?_
     have e := tr_one hLB hMB hT (lift (fibPt t x (g.x m)) 1).left
       (fun z JL hJ => val_pull_one wL (sqMap t x) (lift (g.x m) 1).left (cL m).2 _ (𝟙 _)
@@ -591,8 +589,7 @@ theorem unit_one_on_axes : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       (fun z JM hJ => val_pull_one wB (qq Q) (lift (gB.x m) 1).left (cB m).2 _ (homAt (𝟙 (Sp k)) (sub1 Qs m)).left
         (by rw [lift_qq, MonObj.one_comp, hQ m, ← Over.comp_left, comp_lift, MonObj.comp_one]) hJ)
       (fun z JL JM => adjoint_product_second_axis t x _ a (fun ψ => wv w ψ z JL JM))
-    rw [← left_second_axis_lift, Scheme.Hom.comp_appTop] at e
-    exact e
+    rwa [← left_second_axis_lift, Scheme.Hom.comp_appTop] at e
 
 end GlobalTheory.CompanionTheory.Ar.Flat.FrGauge.UAxis
 end -- clump:auto

@@ -396,8 +396,7 @@ theorem eq_algebraMap_eSF
   · rw [RingHom.map_sub, he.1 w, compInf_eSF, sub_self]
   · refine (RingHom.map_sub _ _ _).trans ?_
     rw [he.2 v]
-    refine sub_eq_zero.2 ?_
-    exact (compFin_eSF S v).symm
+    exact sub_eq_zero.2 (compFin_eSF S v).symm
 
 theorem exists_open_mul_eq_idem :
     (∀ (D : D7) (a : AE D), (∀ w, compInf D.host.F D.host.E w a = 0) → (∀ v, cv D v a = 0) → a = 0) →
@@ -419,8 +418,7 @@ theorem exists_open_mul_eq_idem :
     refine (isOpen_iInter_of_finite fun w => ?_).inter (isOpen_biInter_finset fun v _ => ?_)
     · exact isOpen_ne_fun ((cI w).comp hn) continuous_const
     · exact isOpen_ne_fun ((cF v).comp hn) continuous_const
-  · simp only [Set.mem_setOf_eq, map_one]
-    exact ⟨fun _ => one_ne_zero, fun _ _ => one_ne_zero⟩
+  · simpa only [Set.mem_setOf_eq, map_one] using ⟨fun _ => one_ne_zero, fun _ _ => one_ne_zero⟩
   · rintro x ⟨h1, h2⟩
     obtain ⟨c, hxc⟩ := exists_mul_eq_norm (R := AF D.host.F) x
     obtain ⟨m, hm⟩ := exists_mul_eq_eSF S _ h1 h2
@@ -614,8 +612,7 @@ theorem frame_completes : ∀ (D : D7) (r t : ℕ) (V : HSp D) (b₀ : HermE D r
   obtain ⟨N, h1, h2, h3, h4⟩ := complete_frame (cA D) cA_cA (G := gA V) (Gi := giA V) (adj_gA V) hGi
     hB he hse hh hsh (x := x) (v := v) (L := L₂) hx hv hxx hq h21 h22
   refine ⟨N, h1, ?_, h3, h4⟩
-  rw [gam_map]
-  exact h2
+  rwa [gam_map]
 
 end GlobalTheory.CompanionTheory.FrameComplete
 end -- clump:auto
@@ -671,8 +668,7 @@ theorem isOpen_free_frame_pairs {R : Type*} [CommRing R] [TopologicalSpace R] [I
       have h : Continuous fun z : Matrix (Fin a) (Fin r) R × Matrix (Fin a) (Fin t) R => e * z.2 i j :=
         Continuous.mul continuous_const (continuous_snd.matrix_elem i j)
       simpa [Z] using h
-  have hCc : Continuous C := by
-    exact (continuous_const.matrix_mul hZc).add continuous_const
+  have hCc : Continuous C := (continuous_const.matrix_mul hZc).add continuous_const
   have hd : Continuous fun z => (C z).det := hCc.matrix_det
   have hnhds : (fun z => (C z).det) ⁻¹' U ∈ 𝓝 z₀ := by
     refine (hU.preimage hd).mem_nhds ?_

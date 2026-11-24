@@ -124,8 +124,7 @@ theorem triv_of_compatible_mod (R : Type) [CommRing R] (X : Scheme.{0}) (s : X �
     (fun a => pull_le M π (j a) (hj a)) (fun a => (π.app (V a)).hom (y a))
     (fun a => IsUnit.of_mul_eq_one ((π.app (V a)).hom (z a)) ?_) fun a b x ha hb => ?_
   · have h := app_eq_zero_of_mem_ext s J (V a) (hyz a)
-    rw [map_sub, map_mul, map_one, sub_eq_zero] at h
-    exact h
+    rwa [map_sub, map_mul, map_one, sub_eq_zero] at h
   · have hab : (𝟙 _ : pullback s (spMap (Ideal.Quotient.mk J)) ⟶ _) x ∈ π ⁻¹ᵁ (V a ⊓ V b) :=
       ⟨ha, hb⟩
     have h := congrArg (gr (𝟙 _) x (π ⁻¹ᵁ (V a ⊓ V b)) hab)
@@ -216,8 +215,7 @@ theorem cocycle_on {α : ∀ a b, Γ(Y, V a ⊓ V b)}
       rs Y (le₁₃ V a b d) (α a d))
     (a b d : A) (W : Y.Opens) (ha : W ≤ V a) (hb : W ≤ V b) (hd : W ≤ V d) :
     rs Y (le_inf ha hb) (α a b) + rs Y (le_inf hb hd) (α b d) = rs Y (le_inf ha hd) (α a d) := by
-  have h := congrArg (rs Y (le_inf (le_inf ha hb) hd)) (hα a b d)
-  simpa only [map_add (f := _), rs_rs] using h
+  simpa only [map_add (f := _), rs_rs] using congrArg (rs Y (le_inf (le_inf ha hb) hd)) (hα a b d)
 
 def IsPot (α : ∀ a b, Γ(Y, V a ⊓ V b)) (U : Y.Opens) (p : ∀ a, Γ(Y, U ⊓ V a)) : Prop :=
   ∀ a b (W : Y.Opens) (h : W ≤ U) (ha : W ≤ V a) (hb : W ≤ V b),
@@ -289,8 +287,7 @@ theorem diffF_comp (T T' T'' : Y.affineOpens) (h : T'.1 ≤ T.1) (h' : T''.1 ≤
   have e1 := congrArg (rs Y (inf_le_inf_right (V a) h')) (diffF_spec hV hP T T' h a)
   have e2 := diffF_spec hV hP T' T'' h' a
   simp only [map_sub, rs_rs] at e1
-  rw [map_add (f := _), rs_rs, e2]
-  rw [show rs Y _ (diffF hV hP T T' h) = _ from e1]
+  rw [map_add (f := _), rs_rs, e2, show rs Y _ (diffF hV hP T T' h) = _ from e1]
   abel
 
 def diffZ : CatCoh.Z1 (OAff s) :=

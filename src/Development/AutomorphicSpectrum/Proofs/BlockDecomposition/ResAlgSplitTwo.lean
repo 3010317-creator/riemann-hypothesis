@@ -96,8 +96,7 @@ theorem add_right (v u w : V) : B.h v (u + w) = B.h v u + B.h v w := by
 theorem smul_right (a : E) (v w : V) : B.h v (a • w) = τ a * B.h v w := by
   rw [B.symm (a • w) v, B.smul_left, map_mul, ← B.symm]
 
-theorem self_fixed (hτ : ∀ a, τ (τ a) = a) (v : V) : τ (B.h v v) = B.h v v := by
-  exact (B.symm v v).symm
+theorem self_fixed (hτ : ∀ a, τ (τ a) = a) (v : V) : τ (B.h v v) = B.h v v := (B.symm v v).symm
 
 def perp (w : V) : Submodule E V where
   carrier := {v | B.h v w = 0}
@@ -115,8 +114,7 @@ noncomputable def coef {w : V} (hw : IsUnit (B.h w w)) (z : V) : E := B.h z w * 
 
 theorem coef_spec {w : V} (hw : IsUnit (B.h w w)) (z : V) : B.h (z - B.coef hw z • w) w = 0 := by
   have hu : ((hw.unit⁻¹ : Eˣ) : E) * B.h w w = 1 := by
-    have h1 := hw.unit.inv_mul
-    simpa using h1
+    simpa using hw.unit.inv_mul
   have hc : B.coef hw z * B.h w w = B.h z w := by
     unfold coef
     rw [mul_assoc, hu, mul_one]

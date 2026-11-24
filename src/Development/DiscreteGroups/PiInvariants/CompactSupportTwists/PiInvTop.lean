@@ -162,8 +162,7 @@ theorem piClosureInv : PiClosureInv := by
       rw [h2, h3]
       show (ψ i).1 (x.1 * z.1) * u i (lg x.1 + lg z.1) = (ψ i).1 (x.1 * z.1) * u i (lg (x.1 * z.1))
       rw [lg_mul]
-    rw [← hTF]
-    exact hFi
+    rwa [← hTF]
   let J : ι → (Lp ℂ 2 D.ν →L[ℂ] Hs (ι := ι) D) := fun i =>
     (PiLp.continuousLinearEquiv 2 ℂ (fun _ : ι => Lp ℂ 2 D.ν)).symm.toContinuousLinearMap.comp
       (ContinuousLinearMap.single ℂ (fun _ : ι => Lp ℂ 2 D.ν) i)
@@ -184,8 +183,7 @@ theorem piClosureInv : PiClosureInv := by
     · subst hij
       obtain ⟨φ, hφ, v, hv, hvs, e⟩ := hh
       refine ⟨φ, hφ, v, hv, hvs, ?_⟩
-      rw [hJj, Pi.single_eq_same]
-      exact e
+      rwa [hJj, Pi.single_eq_same]
     · refine ⟨0, Submodule.zero_mem _, 0, continuous_const, HasCompactSupport.zero, ?_⟩
       rw [hJj, Pi.single_eq_of_ne hij]
       filter_upwards [Lp.coeFn_zero ℂ 2 D.ν] with x hx
@@ -264,8 +262,7 @@ theorem pair_zero (hr : X.μ.IsMulRightInvariant) (hb : KerBasic) (hl2 : KernelL
     have hrt := lint_rt X hr (g := fun y => ‖f y‖ₑ ^ (2:ℝ)) (fun γ y => by simp only [hinv γ y]) z
     simp only [Pi.mul_apply] at hol
     rw [hrt] at hol
-    rw [eh, ef]
-    exact hol
+    rwa [eh, ef]
   have hφint : ∫⁻ z, ‖φ z‖ₑ ∂X.μ < ⊤ := (hφ.1.integrable_of_hasCompactSupport hφ.2).2
   have hfin : ∫⁻ p, ‖Function.uncurry Fc p‖ₑ ∂(X.ν.prod X.μ) < ⊤ := by
     rw [lintegral_prod_symm _ hFm.enorm]
@@ -277,12 +274,10 @@ theorem pair_zero (hr : X.μ.IsMulRightInvariant) (hb : KerBasic) (hl2 : KernelL
   have hFi : Integrable (Function.uncurry Fc) (X.ν.prod X.μ) := ⟨hFm, hfin⟩
   refine ⟨?_, ?_⟩
   · refine hFi.integral_prod_left.congr (Filter.Eventually.of_forall fun x => ?_)
-    simp only [hFc, Function.uncurry_apply_pair]
-    exact integral_const_mul _ _
+    simpa only [hFc, Function.uncurry_apply_pair] using integral_const_mul _ _
   · calc ∫ x, starRingEnd ℂ (h x) * ∫ z, φ z * f (x * z) ∂X.μ ∂X.ν = ∫ x, ∫ z, Fc x z ∂X.μ ∂X.ν := by
           refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
-          simp only [hFc]
-          exact (integral_const_mul _ _).symm
+          simpa only [hFc] using (integral_const_mul _ _).symm
       _ = ∫ z, ∫ x, Fc x z ∂X.ν ∂X.μ := integral_integral_swap hFi
       _ = ∫ z, φ z * ∫ x, starRingEnd ℂ (h x) * f (x * z) ∂X.ν ∂X.μ := by
           refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)

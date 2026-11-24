@@ -180,8 +180,7 @@ theorem MirUin_step (ψ : AddChar k Circle) {m n : ℕ} (hnm : n ≤ m) (u : Mir
   rw [mirChar_eq k ψ m u w hw.symm, derCharM_apply]
   congr 2
   have hw' : ((u : Mir k (m + 1)) : GL (Fin (m + 2)) k) = unip k (m + 1) w := hw.symm
-  rw [hw']
-  rw [Finset.sum_eq_single (Fin.castSucc (Fin.last m), Fin.last (m + 1))]
+  rw [hw', Finset.sum_eq_single (Fin.castSucc (Fin.last m), Fin.last (m + 1))]
   · exact unip_apply_castSucc_last k (m + 1) w (Fin.last m)
   · intro p hp hne
     have hc := (Finset.mem_filter.1 hp).2.1
@@ -189,8 +188,7 @@ theorem MirUin_step (ψ : AddChar k Circle) {m n : ℕ} (hnm : n ≤ m) (u : Mir
     have h2 : p.2 ≠ Fin.last (m + 1) := fun e => hne (Prod.ext (Fin.ext (by
       rw [e] at hc; simp at hc ⊢; omega)) e)
     simp [unip, colMat, h12, h2]
-  · intro h
-    exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ _, by simp, by simpa using hnm⟩) h
+  · exact fun h => absurd (Finset.mem_filter.2 ⟨Finset.mem_univ _, by simp, by simpa using hnm⟩) h
 
 end H1
 
@@ -285,8 +283,7 @@ theorem derUnipM_decomp {m n : ℕ} (hnm : n ≤ m) (u : derUnipM k (m + 1) n) :
   have hXl : ∀ j, X (Fin.last (m + 1)) j = if j = Fin.last (m + 1) then 1 else 0 := by
     intro j
     have := congrFun hM j
-    simp only [eLast, Pi.single_apply] at this
-    exact this
+    simpa only [eLast, Pi.single_apply] using this
   let a₀ : GL (Fin (m + 1)) k := mirabolicProjection k (m + 1) (u : Mir k (m + 1))
   have hval : (a₀ : Matrix (Fin (m + 1)) (Fin (m + 1)) k) = blockMat k (m + 1) X := rfl
   have ha₀M : a₀ ∈ Mir k m := by

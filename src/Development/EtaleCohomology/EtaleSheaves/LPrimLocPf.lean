@@ -73,8 +73,7 @@ theorem prim_isPrim {B : Type} [CommRing B] [IsDomain B] (φ : A →+* B) (ζ : 
   haveI : NeZero (q : B) := ⟨hq.ne_zero⟩
   rw [← Polynomial.isRoot_cyclotomic_iff]
   have h := (Prim.map φ ζ).2.2
-  rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic] at h
-  exact h
+  rwa [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic] at h
 
 theorem unit_sub (ζ : Prim q A) {j : ℕ} (hj0 : 0 < j) (hjq : j < q) : IsUnit (ζ.1 ^ j - 1) := by
   by_contra h
@@ -184,8 +183,7 @@ theorem loc_of_span {U : Scheme.{0}} (s : Set Γ(U, ⊤)) (hs : Ideal.span s = �
     unfold TopologicalSpace.IsOpenCover
     have h := iSup_basicOpen_of_span_eq_top ⊤ s hs
     show ⨆ f : s, U.basicOpen f.1 = ⊤
-    rw [iSup_subtype]
-    exact h
+    rwa [iSup_subtype]
   let 𝒰 := U.openCoverOfIsOpenCover O hO
   let S : Sieve U := {
     arrows := fun V g => ∃ f ∈ s, IsUnit (g.appTop.hom f)
@@ -202,8 +200,7 @@ theorem loc_of_span {U : Scheme.{0}} (s : Set Γ(U, ⊤)) (hs : Ideal.span s = �
         U.presheaf.map (homOfLE (U.basicOpen_le i.1)).op ≫ U.presheaf.map (homOfLE hle).op := by
       rw [← Functor.map_comp]; rfl
     show IsUnit ((O i).ι.appTop.hom i.1)
-    rw [Scheme.Opens.ι_appTop, e]
-    exact this
+    rwa [Scheme.Opens.ι_appTop, e]
   refine ⟨S, Scheme.etaleTopology.superset_covering hgen
     (Scheme.zariskiTopology_le_etaleTopology _ (Scheme.mem_grothendieckTopology_iff.2 ⟨𝒰, Sieve.le_generate _⟩)), ?_⟩
   rintro V g ⟨f, hf, hu⟩

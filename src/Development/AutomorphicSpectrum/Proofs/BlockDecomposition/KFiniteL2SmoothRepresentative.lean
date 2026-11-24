@@ -245,8 +245,7 @@ theorem zalg_comm_rt_curve : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
       lie E a (toL ((c s).val * Matrix.of X * ((c s)⁻¹).val)) := by
     intro s X
     change rt E a (infGL E a (c s)) * lie E a X * Q s = _
-    rw [hconj (c s) X, mul_assoc]
-    rw [show rt E a (infGL E a (c s)) * Q s = 1 from hRQ s, mul_one]
+    rw [hconj (c s) X, mul_assoc, show rt E a (infGL E a (c s)) * Q s = 1 from hRQ s, mul_one]
   have hG : ∀ B ∈ Set.range (lie E a), HD (fun s => R s * B * Q s)
       (fun s => R s * (lie E a Y * B - B * lie E a Y) * Q s) := by
     rintro _ ⟨X, rfl⟩
@@ -649,11 +648,9 @@ theorem exists_compact_of_mul_mem_tsupport : ∀ (E : Type) [Field E] [NumberFie
     obtain ⟨b, hb⟩ := hβ.support hm
     refine ⟨(b, u), ⟨?_, ?_⟩, ?_⟩
     · change toL b.val ∈ tsupport β
-      rw [hb]
-      exact hm
+      rwa [hb]
     · change toL u.val ∈ N
-      rw [hu]
-      exact hx
+      rwa [hu]
     · change toL (b * u⁻¹).val = y
       have e : (b * u⁻¹).val = Matrix.of y := by
         rw [Units.val_mul, hb]
@@ -1043,8 +1040,7 @@ theorem exists_typeSpace : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
     induction hv using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨k, rfl⟩ := hx
-      refine ⟨hI.1.2 _ _ hFH, fun u hu => ?_⟩
-      exact (hcomm u k F).trans (congrArg (π k) hu.2)
+      exact ⟨hI.1.2 _ _ hFH, fun u hu => ((hcomm u k F).trans (congrArg (π k) hu.2))⟩
     | zero => exact ⟨H.zero_mem, fun _ _ => map_zero _⟩
     | add x y _ _ hx hy =>
       exact ⟨H.add_mem hx.1 hy.1, fun u hu => by rw [map_add (f := _), hx.2 u hu, hy.2 u hu]⟩
@@ -1358,8 +1354,7 @@ theorem Zalg_comm_cptRep {z : Module.End ℂ (Sm E a)} (hz : z ∈ Zalg E a) (k 
     z * cptRep E a k = cptRep E a k * z := by
   obtain ⟨c, Y, h0, h1, hd, hi⟩ := _root_.GlobalTheory.CompanionTheory.SmoothRep.KCurve.exists_curve E a k
   have h := _root_.GlobalTheory.CompanionTheory.SmoothRep.Flow.zalg_comm_rt_curve E a (_root_.GlobalTheory.CompanionTheory.SmoothRep.rt_infGL_mul_lie E a) z hz (_root_.GlobalTheory.CompanionTheory.SmoothRep.Zalg_comm_lie E a z hz) c Y h0 hd hi
-  rw [h1] at h
-  exact h
+  rwa [h1] at h
 
 
 omit μ in
@@ -1562,9 +1557,7 @@ theorem smooth_rep (H : Submodule ℂ (L2 (latticeGL E a) μ)) (hH : H ≤ L2cus
       simp only [Module.End.mul_apply, e] at h1
       have h2 := congrFun (congrArg Subtype.val h1) x
       rw [e' _ (hloc _)] at h2
-      refine h2.trans ?_
-      have h3 := congrFun (e' _ (hloc G)) (x * infGL E a (Unitary.toUnits k))
-      exact h3
+      exact h2.trans (congrFun (e' _ (hloc G)) (x * infGL E a (Unitary.toUnits k)))
     have e2 : z ⟨_, cv_mem_Sm μ hUo hUc hβ (hloc G.1)⟩ = ⟨_, cv_mem_Sm μ hUo hUc h' (hloc G.1)⟩ :=
       Subtype.ext (e' _ (hloc G.1))
     beta_reduce
