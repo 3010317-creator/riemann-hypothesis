@@ -63,9 +63,6 @@ import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHeckeCharTrivOnRealSubfieldInfinityType
 
--- `IsCO.toIsLocalRing` has an undetermined coefficient ring `O`, so every `IsLocalRing` search
--- enumerates all `CommRing ?O` instances and times out.
-attribute [-instance] UpperTheory.V.Alg.IsCO.toIsLocalRing
 -- `rulesCommRing` is a high-priority instance on a Pi-type abbrev; it makes searches for
 -- `CommRing ?R` with unknown `R` explode.
 attribute [-instance] Formalism.L2.Pj.rulesCommRing

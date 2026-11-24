@@ -115,8 +115,6 @@ import Mathlib.Algebra.Order.Star.Int
 -- `rulesCommRing` is a high-priority instance on a Pi-type abbrev; it makes searches for
 -- `CommRing ?R` with unknown `R` explode.
 attribute [-instance] Formalism.L2.Pj.rulesCommRing
--- This instance has an undetermined parameter and makes valuation-related searches time out.
-attribute [-instance] UpperTheory.V.Alg.IsCO.toIsLocalRing
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.BlockConjugateRankThreeRep, Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PowCong, Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusPowResDegPlaceNorm, Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.MapTraceEqSumRootsOfCharpolyMap, Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.CrystallineBaseChange.FrobEx, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.BrCardP, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TConjK, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.VConjP, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.WinSat, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.FrobeniusTraceCountBoundOfCmEigensystemCount
