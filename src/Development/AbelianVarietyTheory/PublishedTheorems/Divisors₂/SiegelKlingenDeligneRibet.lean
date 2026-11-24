@@ -91,6 +91,13 @@ def DeligneRibet : Prop :=
         IsRayValue (powMod F l n) ε k r → IsRayValue (powMod F l n) (translate 𝔠 ε) k r' →
           InZl l (r - (Ideal.absNorm 𝔠 : ℚ) ^ k * r')
 
+/-- **Deligne--Ribet Theorem on $p$-Adic $L$-Functions for Totally Real Fields**.
+
+For any totally real number field $F$ and any prime $l$, there exists a $p$-adic $L$-function
+interpolating the values of the complex abelian $L$-functions $L(1 - k, \varepsilon)$ at negative integers
+$1 - k \le 0$, which are rational numbers by the Siegel--Klingen rationality theorem.
+
+Reference: [deligneRibet1980]. -/
 def SiegelKlingenDeligneRibet : Prop := SiegelKlingen ∧ DeligneRibet
 
 end GlobalTheory.Published
