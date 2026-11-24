@@ -44,7 +44,13 @@ jobs:
           HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           git init -q pr
-          git -C pr fetch -q --no-tags --filter=blob:none "https://github.com/$GITHUB_REPOSITORY" "$BASE" "$HEAD"
+          # Just after a push from a fork, GitHub can refuse to serve the new head by its id ("not
+          # our ref") for a little while, so try a few times before giving up.
+          for attempt in 1 2 3 4 5 6; do
+            git -C pr fetch -q --no-tags --filter=blob:none "https://github.com/$GITHUB_REPOSITORY" "$BASE" "$HEAD" && break
+            [ "$attempt" -lt 6 ] || exit 1
+            sleep 10
+          done
           git -C pr diff -z --name-only --no-renames "$BASE...$HEAD" > changed
 
           lake='' challenge='' ci='' docs=''
