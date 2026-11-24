@@ -560,51 +560,8 @@ theorem nu_eq {ν : (AE D)ˣ →* Circle} {e : AE D} {S : Finset (Pl D.host.E)} 
     (hl : ∀ x, Formalism.L2.Pj.FinUnit x → (∃ y ∈ intAE D, finPart D (x : AE D) - 1 = n • y) → ν x = 1) {k : ℕ}
     {N N' Z : Matrix (Fin k) (Fin k) (EAf D)} (hN : IsIntM N) (hZ : IsIntM Z)
     (h : ∀ i j, N' i j = N i j + ((n * c : ℕ) : EAf D) * Z i j) {x x' : (AE D)ˣ} (hx : IsUnitDet e N x)
-    (hx' : IsUnitDet e N' x') : ν x = ν x' := by
-  obtain ⟨a1, a2, a3⟩ := hx
-  obtain ⟨b1, b2, b3⟩ := hx'
-  have hE := toEAf_mem he
-  obtain ⟨hd, hd', z, hz⟩ := det_cong_int hN hZ h
-  have hzv : N'.det = N.det + (n : EAf D) * (c : EAf D) * (z : EAf D) := by
-    have := congrArg Subtype.val hz
-    rw [← Nat.cast_mul, ← coe_nat (OO) (n * c)]
-    exact this
-  have hX : toEAf D (x : AE D) ∈ OO := by
-    rw [a2]
-    exact add_mem (sub_mem (one_mem _) hE) (mul_mem hE hd)
-  have hX' : toEAf D (x' : AE D) ∈ OO := by
-    rw [b2]
-    exact add_mem (sub_mem (one_mem _) hE) (mul_mem hE hd')
-  have hm : toEAf D (x : AE D) * toEAf D ((x⁻¹ : (AE D)ˣ) : AE D) = 1 := by
-    rw [← RingHom.map_mul, Units.mul_inv, RingHom.map_one]
-  have hinv : infPart D ((x⁻¹ : (AE D)ˣ) : AE D) = 1 := by
-    have := congrArg (infPart D) (Units.mul_inv x)
-    rwa [RingHom.map_mul, a1, one_mul, RingHom.map_one] at this
-  have hinv' : ((x' * x⁻¹ : (AE D)ˣ) : AE D) = (x' : AE D) * ((x⁻¹ : (AE D)ˣ) : AE D) := rfl
-  have hinv2 : (((x' * x⁻¹)⁻¹ : (AE D)ˣ) : AE D) = (x : AE D) * ((x'⁻¹ : (AE D)ˣ) : AE D) := by
-    rw [_root_.mul_inv_rev, inv_inv]
-    rfl
-  have hr : Formalism.L2.Pj.FinUnit (x' * x⁻¹) := by
-    refine ⟨?_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf ?_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf ?_⟩
-    · rw [hinv', RingHom.map_mul, b1, hinv, one_mul]
-    · rw [hinv', RingHom.map_mul]
-      exact mul_mem hX' a3
-    · rw [hinv2, RingHom.map_mul]
-      exact mul_mem hX b3
-  obtain ⟨w, -, hw⟩ := toEAf_surj (toEAf D e * ((c : EAf D) * (z : EAf D)) * toEAf D ((x⁻¹ : (AE D)ˣ) : AE D))
-  have hwI : toEAf D w ∈ OO := by
-    rw [hw]
-    exact mul_mem (mul_mem hE (mul_mem (natCast_mem _ _) z.2)) a3
-  have key : finPart D ((x' * x⁻¹ : (AE D)ˣ) : AE D) - 1 = n • finPart D w := by
-    have e1 : finPart D (((x' * x⁻¹ : (AE D)ˣ) : AE D) - 1) = finPart D (n • w) :=
-      finPart_eq_of_toEAf (by
-        rw [RingHom.map_sub, RingHom.map_one, hinv', RingHom.map_mul, hom_nsmul, hw, nsmul_eq_mul]
-        exact ring_id a2 b2 hzv hm)
-    rw [RingHom.map_sub, RingHom.map_one, hom_nsmul] at e1
-    exact e1
-  have h1 := hl _ hr ⟨_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf hwI, key⟩
-  rw [map_mul, map_inv] at h1
-  exact (mul_inv_eq_one.1 h1).symm
+    (hx' : IsUnitDet e N' x') : ν x = ν x' :=
+  _root_.StandardFirstTheta.GlobalTheory.CompanionTheory.StdFstTheta.nu_eq he hl hN hZ h hx hx'
 
 end
 

@@ -104,23 +104,11 @@ theorem mono (k : ℕ) (u u' ρ : ℕ → ℝ) (h : I.Interlaces k u u' ρ) :
 theorem val_congr (P : Par) (π : Ty P) (a b : Fin (P.k - 1)) (h : a = b) :
     ((π a : Fin _) : ℕ) = ((π b : Fin _) : ℕ) := by subst h; rfl
 
-theorem lo_int (P : Par) (hP : P.OK) (i : ℕ) (hi : i ∈ Icc 1 (P.k - 1)) : ∃ n : ℤ, P.lo i - P.u 1 - 1 / 2 = n := by
-  have h := Finset.mem_Icc.1 hi
-  obtain ⟨a, ha⟩ := hP.int_u (i + 1) (Finset.mem_Icc.2 ⟨by omega, by omega⟩)
-  obtain ⟨b, hb⟩ := hP.int_u' (i + 1) (Finset.mem_Icc.2 ⟨by omega, by omega⟩)
-  unfold Par.lo
-  rcases max_choice (P.u (i + 1)) (P.u' (i + 1)) with h | h
-  · exact ⟨a, by rw [h]; linarith⟩
-  · exact ⟨b, by rw [h]; linarith⟩
+theorem lo_int (P : Par) (hP : P.OK) (i : ℕ) (hi : i ∈ Icc 1 (P.k - 1)) : ∃ n : ℤ, P.lo i - P.u 1 - 1 / 2 = n :=
+  _root_.Formalism.FourierDecayAlt.P.Mx4.lo_int P hP i hi
 
-theorem hi_int (P : Par) (hP : P.OK) (i : ℕ) (hi : i ∈ Icc 1 (P.k - 1)) : ∃ n : ℤ, P.hi i - P.u 1 + 1 / 2 = n := by
-  have h := Finset.mem_Icc.1 hi
-  obtain ⟨a, ha⟩ := hP.int_u i (Finset.mem_Icc.2 ⟨by omega, by omega⟩)
-  obtain ⟨b, hb⟩ := hP.int_u' i (Finset.mem_Icc.2 ⟨by omega, by omega⟩)
-  unfold Par.hi
-  rcases min_choice (P.u i) (P.u' i) with h | h
-  · exact ⟨a, by rw [h]; linarith⟩
-  · exact ⟨b, by rw [h]; linarith⟩
+theorem hi_int (P : Par) (hP : P.OK) (i : ℕ) (hi : i ∈ Icc 1 (P.k - 1)) : ∃ n : ℤ, P.hi i - P.u 1 + 1 / 2 = n :=
+  _root_.Formalism.FourierDecayAlt.P.Mx4.hi_int P hP i hi
 
 theorem floor_of_int (x : ℝ) (h0 : 0 ≤ x) (z : ℤ) (hz : x = z) : ((⌊x⌋₊ : ℕ) : ℝ) = x := by
   have hz0 : 0 ≤ z := by have : (0 : ℝ) ≤ (z : ℝ) := hz ▸ h0; exact_mod_cast this
