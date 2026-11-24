@@ -721,7 +721,7 @@ theorem binomDecay_of_dec {p : ℕ} {f : ℕ → ℚ} (h : Dec p (1 / 4) 0 f) : 
   · refine Or.inr (le_trans (le_of_eq ?_) h1)
     ring
 
-theorem binomial_decay_unit_factor (p : ℕ) [hp : Fact p.Prime] (_h5 : 5 ≤ p) (t : ℕ) :
+theorem binomial_decay_unit_factor (p : ℕ) [hp : Fact p.Prime] (t : ℕ) :
     BinomDecay p (fun n => cUnit (p ^ (t + 1)) n) := by
   have := hDec_of hp.out (hdU_proved hp.out) ⟨t, 0, true, false⟩ (by simpa using Nat.pos_of_ne_zero (pow_ne_zero _ hp.out.ne_zero))
   rw [mah_unitFn_tf] at this
@@ -841,7 +841,7 @@ open Formalism.MainNotions.G Formalism.MainNotions.tableLineDegreeFive
 theorem coarse_units_lemma (D : Formalism.BasicNotions.D7) : Formalism.MainNotions.tableLineDegreeFive.adm22 D := by
   intro p _ h5 t
   exact ⟨F2.coarse_unit_product_prime_power p t, F2.padic_log_unit_factor_series p (fun s f h => F1.plog_prod p s f h) t, F3.padic_val_harmonic_lower_bound p t, F3.power_sum_polynomial_exists,
-    F3.padic_val_harmonic_term_bound p h5 t, F4.binomial_decay_unit_factor p h5 t, F4.binomial_decay_unit_factor_inv p h5 t, F4.binomial_decay_second_factor p h5 t, F5.binomial_basis_approximation p⟩
+    F3.padic_val_harmonic_term_bound p h5 t, F4.binomial_decay_unit_factor p t, F4.binomial_decay_unit_factor_inv p h5 t, F4.binomial_decay_second_factor p h5 t, F5.binomial_basis_approximation p⟩
 
 end Formalism.MainNotions.G.Joints
 
