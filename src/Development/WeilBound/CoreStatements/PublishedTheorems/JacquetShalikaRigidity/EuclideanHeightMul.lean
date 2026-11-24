@@ -58,7 +58,6 @@ namespace PositivityTheory.AdelicQuotientData
 
 namespace EuclideanHeightMul
 
-open GroundTheory.Automorphic
 
 variable {E : Type} [Field E] [NumberField E] {k : ℕ}
 
@@ -133,7 +132,6 @@ end EuclideanHeightMul
 
 namespace EuclideanHeightMul
 
-open GroundTheory.Automorphic
 
 variable {E : Type} [Field E] [NumberField E] {k : ℕ}
 
