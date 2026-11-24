@@ -256,11 +256,6 @@ theorem norm_zeta₀_sub_one_le {s : ℂ} (hs : 0 < s.re) :
   rw [zeta₀_eq hs, sub_sub_cancel_left, norm_neg, norm_mul, div_eq_mul_one_div]
   exact mul_le_mul_of_nonneg_left (norm_fractInt_le hs) (norm_nonneg s)
 
-theorem norm_zeta_sub_le :
-    ∀ s : ℂ, 0 < s.re → s ≠ 1 → ‖riemannZeta s - s / (s - 1)‖ ≤ ‖s‖ / s.re := by
-  intro s hs hs1
-  rw [zeta_eq hs hs1, sub_sub_cancel_left, norm_neg, norm_mul, div_eq_mul_one_div]
-  exact mul_le_mul_of_nonneg_left (norm_fractInt_le hs) (norm_nonneg s)
 
 end GlobalTheory.ZetaHalfPlane
 end -- clump:auto
