@@ -10,7 +10,7 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestD
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviIrreducibleTensorDecomposition
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
-public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.WhittakerCuspidal.WhitCuspOfSegCuspGeneric
+public import CompanionTheory.RealGroups.GeneralUnitaryRepresentations.WhittakerModels.WhitCuspOfSegCuspGeneric
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -223,7 +223,7 @@ theorem base (hc : Continuous ψ) (h1 : ψ ≠ 1) (Y : Representation ℂ (GL (F
     | add x y hx hy => rw [map_add, map_add]; exact Submodule.add_mem _ hx hy
 
   have hrk : Module.rank ℂ (B ⧸ K) ≤ 1 :=
-    PositivityTheory.rg.gu.whit.whitRankIrr k ψ hc h1 t B β (σ 1).rep.smooth (σ 1).rep.irr
+    CompanionTheory.rg.gu.whit.whitRankIrr k ψ hc h1 t B β (σ 1).rep.smooth (σ 1).rep.irr
   by_cases htop : K = ⊤
   ·
     have hall : ∀ v : V, v ∈ twKer Y (rightUnip k n t) (rightWhit k ψ n t) := by
