@@ -343,6 +343,12 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.GLDoubling
 
+/-- **Li's unramified doubling method formula for $GL_n$**: the local doubling integral
+evaluated on standard unramified spherical data produces the normalized unramified standard
+$L$-factor $L(s, \pi \times \pi')$.
+
+Proposed reference:
+[J.-S. Li, *Nonexistence of negative eigenvalues of a local automorphic Laplacian*][li1992]. -/
 def UnramifiedDoublingGL : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k]
     (n : ℕ) [MeasurableSpace (GL (Fin n) k)] [BorelSpace (GL (Fin n) k)]
