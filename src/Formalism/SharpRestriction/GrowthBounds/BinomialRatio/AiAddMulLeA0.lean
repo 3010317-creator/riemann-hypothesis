@@ -51,7 +51,7 @@ namespace Formalism.MainNotions.ColumnSystems.Pf
 
 open Formalism.MainNotions.G
 
-theorem coarse_ratio_small {Al Ai Pl Pi bl bi b' be k p : ℝ} (hAl : 0 ≤ Al) (hb : 0 < b') (_hbe0 : 0 ≤ be) (hbe : be ≤ 1 / 12)
+theorem coarse_ratio_small {Al Ai Pl Pi bl bi b' be k p : ℝ} (hAl : 0 ≤ Al) (hb : 0 < b') (hbe : be ≤ 1 / 12)
     (hPi : 0 < Pi) (hp : 0 < p) (hP : p * Pi ≤ Pl) (h1 : Al * Pl ≤ bl) (h2 : bl ≤ b' * (1 + be))
     (h3 : bi - k * Pi < Ai * Pi) (h4 : b' * (1 - be) ≤ bi) : Al ≤ 2 * (Ai + k) / p := by
   rw [le_div_iff₀ hp]
@@ -173,7 +173,7 @@ theorem partial_width_le_cap [NeZero X.m] (hH : 1 ≤ H) (h : Std C0 Cde CE1 CE2
           exact Nat.pow_le_pow_right (by have := h.p5; omega) (by omega)
         have hPP' : (X.p : ℝ) * ((X.p ^ (segG X.TT j - (segDists X.TT j).get i) : ℕ) : ℝ) ≤
             ((X.p ^ (segG X.TT j - (segDists X.TT j).get l) : ℕ) : ℝ) := by exact_mod_cast hPP
-        have := coarse_ratio_small (k := X.k) (Nat.cast_nonneg _) h.bpos h.be0 hbe12 (h.levels j i).1 hp0 hPP' (hcb l).1
+        have := coarse_ratio_small (k := X.k) (Nat.cast_nonneg _) h.bpos hbe12 (h.levels j i).1 hp0 hPP' (hcb l).1
           (h.winB _ (pos_mem X.TT j l).1).2 (hcb i).2 (h.winB _ (pos_mem X.TT j i).1).1
         linarith
     · rw [if_neg hl]
