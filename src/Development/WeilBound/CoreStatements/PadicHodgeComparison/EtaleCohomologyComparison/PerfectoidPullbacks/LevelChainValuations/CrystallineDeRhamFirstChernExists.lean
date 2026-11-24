@@ -1372,9 +1372,9 @@ theorem rho_ex_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x
 
 theorem rho_add_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x y f g,
     rhoK S hS hC a j m x f → rhoK S hS hC a j m y g → rhoK S hS hC a j m (x + y) (f + g) := by
-  intro M a hM j m x y f g hρ₁ hρ₂
-  obtain ⟨_, s₀, h⟩ := hρ₁
-  obtain ⟨_, s₀', h'⟩ := hρ₂
+  intro M a hM j m x y f g hf hg
+  obtain ⟨s₀, h⟩ := rhoK_witness S hS hC hf
+  obtain ⟨s₀', h'⟩ := rhoK_witness S hS hC hg
   exact ⟨hM, max s₀ s₀', fun s hs => _root_.GlobalTheory.CompanionTheory.KapRho.rho_add (chK S hS hC M m s) _ _ f g
     (h s (le_trans (le_max_left _ _) hs)) (h' s (le_trans (le_max_right _ _) hs))⟩
 
