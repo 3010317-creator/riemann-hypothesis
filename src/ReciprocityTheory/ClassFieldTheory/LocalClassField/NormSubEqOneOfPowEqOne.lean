@@ -80,7 +80,11 @@ scoped instance charP_kbar : CharP (kbar p) p := by
   have h3 : r = p := ((Nat.dvd_prime Fact.out).1 h2).resolve_left (CharP.char_ne_one (kbar p) r)
   exact h3 ▸ hr
 
-theorem finite_resK (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (hK : FiniteDimensional ℚ_[p] K) :
+theorem norm_sub_le_max_PadicAlgCl (x y : PadicAlgCl p) : ‖x - y‖ ≤ max ‖x‖ ‖y‖ := by
+  rw [sub_eq_add_neg, ← norm_neg y]
+  exact IsUltrametricDist.norm_add_le_max _ _
+
+theorem finite_resK(K : IntermediateField ℚ_[p] (PadicAlgCl p)) (hK : FiniteDimensional ℚ_[p] K) :
     Finite (resK p K) := by
   have : ProperSpace K := FiniteDimensional.proper ℚ_[p] K
   have hc : IsCompact (Metric.closedBall (0 : K) 1) := isCompact_closedBall 0 1
@@ -98,7 +102,7 @@ theorem finite_resK (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (hK : FiniteD
     have hy1 : ‖(y : PadicAlgCl p)‖ ≤ 1 := by
       have h1 : (y : PadicAlgCl p) = (x : PadicAlgCl p) - ((x : PadicAlgCl p) - (y : PadicAlgCl p)) := by ring
       rw [h1]
-      exact (_root_.Bl.FirstBlockLemmaD.goal1 _ _).trans (max_le (norm_le_one x) hxy'.le)
+      exact (norm_sub_le_max_PadicAlgCl _ _).trans (max_le (norm_le_one x) hxy'.le)
     refine ⟨y, hy, ?_⟩
     have hg : g y = res ⟨(y : PadicAlgCl p), mem_Obar_iff.2 hy1⟩ := dif_pos hy1
     rw [hg]
@@ -132,7 +136,41 @@ theorem not_dvd_qK_pow_sub_one (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (h
     rwa [Nat.sub_sub_self h2] at this
   exact (Fact.out : p.Prime).one_lt.ne' (Nat.dvd_one.1 h3)
 
-alias norm_eq_one_of_pow := _root_.Bl.FirstBlockLemmaC.goal1
+theorem norm_eq_one_of_pow {m : ℕ} (hm0 : m ≠ 0) {ξ : PadicAlgCl p} (hξ : ξ ^ m = 1) :
+    ‖ξ‖ = 1 := by
+  have h := congrArg norm hξ
+  rw [norm_pow, norm_one] at h
+  exact (pow_eq_one_iff_of_nonneg (norm_nonneg ξ) hm0).1 h
+
+theorem norm_sub_one_eq_one_of_pow {m : ℕ} (hm : ¬ p ∣ m) {x : PadicAlgCl p} (hx : x ^ m = 1)
+    (hx1 : x ≠ 1) : ‖x - 1‖ = 1 := by
+  have hm0 : m ≠ 0 := by rintro rfl; exact hm (dvd_zero p)
+  have hxn := norm_eq_one_of_pow hm0 hx
+  have hle : ‖x - 1‖ ≤ 1 :=
+    (norm_sub_le_max_PadicAlgCl x 1).trans (max_le hxn.le norm_one.le)
+  refine le_antisymm hle (not_lt.1 fun hlt => ?_)
+  have hgeom : (∑ i ∈ Finset.range m, x ^ i) = 0 := by
+    have := geom_sum_mul x m
+    rw [hx, sub_self] at this
+    exact (mul_eq_zero.1 this).resolve_right (sub_ne_zero.2 hx1)
+  have hpow : ∀ i : ℕ, ‖x ^ i - 1‖ ≤ ‖x - 1‖ := by
+    intro i
+    induction i with
+    | zero => simp
+    | succ i ih =>
+      have : x ^ (i + 1) - 1 = x * (x ^ i - 1) + (x - 1) := by ring
+      rw [this]
+      refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ le_rfl)
+      rw [norm_mul, hxn, one_mul]; exact ih
+  have hmeq : ((m : ℕ) : PadicAlgCl p) = -∑ i ∈ Finset.range m, (x ^ i - 1) := by
+    rw [Finset.sum_sub_distrib, hgeom]; simp
+  have hmlt : ‖((m : ℕ) : PadicAlgCl p)‖ < 1 := by
+    rw [hmeq, norm_neg]
+    exact lt_of_le_of_lt (IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (norm_nonneg _)
+      (fun i _ => hpow i)) hlt
+  have hcast : ((m : ℕ) : PadicAlgCl p) = algebraMap ℚ_[p] (PadicAlgCl p) (m : ℚ_[p]) := by simp
+  rw [hcast, PadicAlgCl.norm_extends] at hmlt
+  exact hm (Padic.norm_natCast_lt_one_iff.1 hmlt)
 
 theorem norm_sub_eq_one_of_pow_eq_one {m : ℕ} (hm : ¬ p ∣ m) {ζ ξ : PadicAlgCl p} (hζ : ζ ^ m = 1)
     (hξ : ξ ^ m = 1) (h : ζ ≠ ξ) : ‖ζ - ξ‖ = 1 := by
@@ -141,7 +179,7 @@ theorem norm_sub_eq_one_of_pow_eq_one {m : ℕ} (hm : ¬ p ∣ m) {ζ ξ : Padic
     rintro rfl; rw [zero_pow hm0] at hξ; exact zero_ne_one hξ
   have h1 : ζ - ξ = ξ * (ζ / ξ - 1) := by field_simp
   rw [h1, norm_mul, norm_eq_one_of_pow hm0 hξ, one_mul]
-  apply _root_.Bl.PadicNatCastNorm.goal1 hm
+  apply norm_sub_one_eq_one_of_pow hm
   · rw [div_pow, hζ, hξ, div_one]
   · intro h2; exact h ((div_eq_one_iff_eq hξ0).1 h2)
 
