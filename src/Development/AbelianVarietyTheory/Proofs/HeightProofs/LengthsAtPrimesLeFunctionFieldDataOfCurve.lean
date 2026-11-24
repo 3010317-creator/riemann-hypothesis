@@ -81,8 +81,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.KTFinit
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.OpIsDVR
 
 attribute [-instance]
-  LieRinehartAlgebra.toIsScalarTower
-  LieAlgebra.toModule RightPreLieAlgebra.toModule LeftPreLieAlgebra.toModule
   NormedAlgebra.toAlgebra NormedSpace.toModule
   Submodule.normedSpace Submodule.seminormedAddCommGroup
   Submodule.normedAddCommGroup SubalgebraClass.toNormedAlgebra
@@ -96,7 +94,6 @@ attribute [-instance]
   Algebra.TensorProduct.instNonUnitalSemiring Algebra.TensorProduct.instNonUnitalRing
   AddMonoidAlgebra.instHopfAlgebra AddMonoidAlgebra.instHopfAlgebraStruct
   GradedMonoid.GradeZero.mulAction GradedMonoid.GradeZero.smul
-  PositiveLinearMap.instContinuousLinearMapClassComplexOfLinearMapClassOfOrderHomClass
   NonUnitalAlgHom.instContinuousLinearMapClassOfNonUnitalAlgHomClass
   instNonUnitalAlgHomClassOfNonUnitalAlgEquivClass
 attribute [local instance high]
