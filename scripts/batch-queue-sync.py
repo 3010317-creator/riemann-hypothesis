@@ -69,11 +69,15 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import importlib.util
 import json
 from pathlib import Path
 import re
-import subprocess
 import sys
+
+_REST_SPEC = importlib.util.spec_from_file_location("rh_github_rest", Path(__file__).with_name("github-rest.py"))
+_rest = importlib.util.module_from_spec(_REST_SPEC)
+_REST_SPEC.loader.exec_module(_rest)
 
 QUEUED, BUILDING = "batch queue", "building"
 # A maintainer's label: pull requests that carry it go into a batch before the others.
@@ -82,8 +86,8 @@ PREFIX = "batch/"
 # The name `start` gives a batch branch. Any other `batch/...` branch is not this script's.
 OWN_BATCH = re.compile(r"batch/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}(?:-[0-9]+)?")
 BOT = "github-actions[bot]"
-# Stop early when fewer requests than this are left for the hour, so other workflows keep working.
-RESERVE = 150
+# Stop early when fewer requests than this are left for the hour (see `github-rest.py`).
+RESERVE = _rest.RESERVE
 # What was read from a pull request is remembered only once the pull request has been quiet for
 # this long. GitHub's update times are whole seconds, so two changes in one second look like one.
 SETTLE = datetime.timedelta(seconds=120)
@@ -108,70 +112,16 @@ ADDED = re.compile(r"Add #(\d+) to the batch\n\nMerged at ([0-9a-f]{40})\.")
 UPDATED = "Bring #{number} up to date\n\nMerged at {sha}."
 
 
-class Refused(Exception):
-    """GitHub would not do something this script cannot work around."""
+Refused = _rest.Refused
+quoted = _rest.quoted
 
 
-class GitHub:
-    """The repository's REST API through `gh`. With `dry_run`, writes are printed, not sent."""
-
-    def __init__(self, repo, dry_run=False):
-        self.repo, self.dry_run = repo, dry_run
-        self.calls, self.remaining = 0, None
-
-    def call(self, method, path, payload=None):
-        """One request. Returns (HTTP status, decoded body or None)."""
-        args = ["gh", "api", "--include", "--method", method, f"repos/{self.repo}/{path}".rstrip("/")]
-        data = None
-        if payload is not None:
-            args += ["--input", "-"]
-            data = json.dumps(payload).encode()
-        done = subprocess.run(args, input=data, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        head, _, body = done.stdout.decode("utf-8", "replace").replace("\r\n", "\n").partition("\n\n")
-        try:
-            status = int(head.split()[1])
-        except (IndexError, ValueError):
-            sys.stderr.write(done.stderr.decode("utf-8", "replace"))
-            raise RuntimeError(f"no answer from GitHub for {method} {path}") from None
-        self.calls += 1
-        for line in head.splitlines()[1:]:
-            name, _, value = line.partition(":")
-            if name.strip().lower() == "x-ratelimit-remaining" and value.strip().isdigit():
-                self.remaining = int(value)
-        return status, (json.loads(body) if body.strip() else None)
-
-    def get(self, path):
-        status, data = self.call("GET", path)
-        if status != 200:
-            raise RuntimeError(f"GET {path} answered {status}")
-        return data
-
-    def pages(self, path):
-        """Every item of a paginated list."""
-        items, page = [], 1
-        while True:
-            batch = self.get(f"{path}{'&' if '?' in path else '?'}per_page=100&page={page}")
-            items += batch
-            if len(batch) < 100:
-                return items
-            page += 1
-
-    def write(self, method, path, payload=None):
-        if self.dry_run:
-            print(f"would {method} {path} {json.dumps(payload) if payload else ''}".rstrip())
-            return 0, None
-        return self.call(method, path, payload)
-
-    def short(self):
-        """Whether the hour's allowance is nearly used up."""
-        return self.remaining is not None and self.remaining < RESERVE
+class GitHub(_rest.GitHub):
+    """The repository's REST API through `gh` (see `github-rest.py`), with a clock that the tests
+    can set."""
 
     def now(self):
         return datetime.datetime.now(datetime.timezone.utc)
-
-
-def quoted(label):
-    return label.replace(" ", "%20")
 
 
 def open_pulls(gh):

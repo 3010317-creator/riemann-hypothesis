@@ -468,6 +468,19 @@ class Gh(unittest.TestCase):
             self.answering(body, code=1).pull(1)
         self.assertIn("bad", str(caught.exception))
 
+    def test_a_body_that_is_not_json_still_gives_the_status(self):
+        gh = self.answering(b"HTTP/2.0 502 Bad Gateway\r\n\r\n<html>oops</html>", code=1)
+        self.assertEqual(gh.call("GET", "labels/inbox"), (502, None))
+
+    def test_graphql_without_data_raises(self):
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(RuntimeError):
+            self.answering(json.dumps({"data": None}).encode()).pull(1)
+
+    def test_a_label_write_refused_by_the_rate_limit_stops_the_run(self):
+        gh = self.answering(b"HTTP/2.0 403 Forbidden\r\n\r\n{\"message\": \"API rate limit exceeded\"}", code=1)
+        with self.assertRaises(inbox.Refused):
+            gh.label(7, True)
+
 
 if __name__ == "__main__":
     unittest.main()

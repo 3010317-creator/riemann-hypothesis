@@ -34,10 +34,13 @@ from __future__ import annotations
 
 import argparse
 import datetime
-import json
+import importlib.util
 from pathlib import Path
-import subprocess
 import sys
+
+_REST_SPEC = importlib.util.spec_from_file_location("rh_github_rest", Path(__file__).with_name("github-rest.py"))
+_rest = importlib.util.module_from_spec(_REST_SPEC)
+_REST_SPEC.loader.exec_module(_rest)
 
 INBOX = "inbox"
 # Handed back to the author. Taking it off hands the pull request back to the maintainers.
@@ -91,54 +94,17 @@ ONE = """query($owner: String!, $name: String!, $number: Int!) {
 }""" % FIELDS
 
 
-class Refused(Exception):
-    """Something is wrong with the repository that this script should not paper over."""
+Refused = _rest.Refused
 
 
-class GitHub:
-    """GitHub's API through `gh`. With `dry_run`, label changes are printed, not sent."""
+class GitHub(_rest.GitHub):
+    """GitHub's API through `gh` (see `github-rest.py`), with the queries this script reads pull
+    requests with. With `dry_run`, label changes are printed, not sent."""
 
     def __init__(self, repo, dry_run=False):
-        self.repo, self.dry_run = repo, dry_run
-        self.owner, _, self.name = repo.partition("/")
-        self.calls, self.remaining, self.access, self.failed = 0, None, {}, False
-
-    def run(self, args, payload=None):
-        data = json.dumps(payload).encode() if payload is not None else None
-        done = subprocess.run(["gh", "api", *args], input=data, stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE)
-        self.calls += 1
-        return done
-
-    def call(self, method, path, payload=None):
-        """One REST request. Returns (HTTP status, decoded body or None)."""
-        args = ["--include", "--method", method, f"repos/{self.repo}/{path}"]
-        if payload is not None:
-            args += ["--input", "-"]
-        done = self.run(args, payload)
-        head, _, body = done.stdout.decode("utf-8", "replace").replace("\r\n", "\n").partition("\n\n")
-        try:
-            status = int(head.split()[1])
-        except (IndexError, ValueError):
-            sys.stderr.write(done.stderr.decode("utf-8", "replace"))
-            raise RuntimeError(f"no answer from GitHub for {method} {path}") from None
-        for line in head.splitlines()[1:]:
-            name, _, value = line.partition(":")
-            if name.strip().lower() == "x-ratelimit-remaining" and value.strip().isdigit():
-                self.remaining = int(value)
-        return status, (json.loads(body) if body.strip() else None)
-
-    def graphql(self, query, **variables):
-        done = self.run(["graphql", "--input", "-"], {"query": query, "variables": variables})
-        try:
-            answer = json.loads(done.stdout)
-        except json.JSONDecodeError:
-            answer = None
-        if not isinstance(answer, dict) or answer.get("errors") or done.returncode != 0:
-            sys.stderr.write(done.stderr.decode("utf-8", "replace"))
-            found = (answer or {}).get("errors") if isinstance(answer, dict) else None
-            raise RuntimeError(f"GraphQL query failed: {json.dumps(found) if found else 'no answer'}")
-        return answer["data"]
+        super().__init__(repo, dry_run)
+        # Whether each responder has triage access or more, by login.
+        self.access = {}
 
     def pulls(self):
         """Every open pull request."""
@@ -175,11 +141,9 @@ class GitHub:
                                       or found.get("permission") in ("admin", "write"))
         return self.access[login]
 
-    def label_exists(self):
-        status, _ = self.call("GET", f"labels/{INBOX}")
-        if status not in (200, 404):
-            raise RuntimeError(f"GET labels/{INBOX} answered {status}")
-        return status == 200
+    def label_exists(self, name=INBOX):
+        """Whether the `inbox` label exists. `sync` decides what a missing one means."""
+        return super().label_exists(name)
 
     def label(self, number, add):
         verb = "add" if add else "remove"
@@ -187,9 +151,9 @@ class GitHub:
             print(f"would {verb} {INBOX} on #{number}")
             return
         if add:
-            status, _ = self.call("POST", f"issues/{number}/labels", {"labels": [INBOX]})
+            status, _ = self.write("POST", f"issues/{number}/labels", {"labels": [INBOX]})
         else:
-            status, _ = self.call("DELETE", f"issues/{number}/labels/{INBOX}")
+            status, _ = self.write("DELETE", f"issues/{number}/labels/{INBOX}")
         # Taking off a label that someone else has just taken off answers 404.
         if status not in (200, 201) and not (status == 404 and not add):
             raise RuntimeError(f"could not {verb} {INBOX} on #{number}: {status}")
@@ -377,7 +341,7 @@ def main():
     except (Refused, RuntimeError) as error:
         log, failure = [str(error)], 1
     left = f"; {gh.remaining} REST requests left this hour" if gh.remaining is not None else ""
-    log.append(f"{gh.calls} requests to GitHub{left}")
+    log.append(f"{gh.calls + gh.queries} requests to GitHub{left}")
     text = "".join(f"- {line}\n" for line in log)
     sys.stdout.write(text)
     if args.summary:
