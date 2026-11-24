@@ -113,13 +113,13 @@ theorem deg_eq [_root_.NumberField.IsTotallyComplex K] [StarRing K] {n : ℕ} {b
   rw [GlobalTheory.AllWt.deg, GlobalTheory.AllWt.slope, GlobalTheory.AllWt.slope_sq_eq hG hL]
   by_cases h0 : L = ⊥
   · subst h0
-    simp [Formalism.BranchingDeterminantCap.OrthogonalSumAlt.rkK_bot, Formalism.BranchingDeterminantCap.OrthogonalSumAlt.deg_bot b X hX]
-  · have hr : Formalism.HN.rkK L ≠ 0 := fun h => h0 (Formalism.BranchingDeterminantCap.OrthogonalSumAlt.eq_bot_of_rkK b h)
+    simp [Formalism.BranchingDeterminantCap.ms_rkK_bot, Formalism.BranchingDeterminantCap.OrthogonalSumAlt.deg_bot b X hX]
+  · have hr : Formalism.HN.rkK L ≠ 0 := (Formalism.BranchingDeterminantCap.ms_rkK_pos b h0).ne'
     have hrk := (Formalism.HN.plLat K V (Fin n) b X hX L hL).2.1
     have hs : Formalism.HN.slope (Formalism.HermitianLatticesTheory.realize b X) L =
         Formalism.HN.deg (Formalism.HermitianLatticesTheory.realize b X) L / (Formalism.HN.rk (Formalism.HermitianLatticesTheory.realize b X) L : ℝ) := rfl
     have hn : (Module.finrank ℚ K : ℝ) ≠ 0 := by
-      exact_mod_cast (Formalism.BranchingDeterminantCap.OrthogonalSumAlt.finrank_pos' (K := K)).ne'
+      exact_mod_cast Module.finrank_pos.ne'
     have hr' : (Formalism.HN.rkK L : ℝ) ≠ 0 := by exact_mod_cast hr
     rw [Formalism.HN.muDef, hs, hrk]
     push_cast
@@ -145,7 +145,7 @@ theorem sum_finset [_root_.NumberField.IsTotallyComplex K] [StarRing K] {n : ℕ
   have hX : ∀ v, IsUnit (X v).det := fun v => (hG v).1
   induction s using Finset.induction_on with
   | empty =>
-    simp [Formalism.BranchingDeterminantCap.OrthogonalSumAlt.rkK_bot, Formalism.BranchingDeterminantCap.OrthogonalSumAlt.deg_bot b X hX, Submodule.fg_bot]
+    simp [Formalism.BranchingDeterminantCap.ms_rkK_bot, Formalism.BranchingDeterminantCap.OrthogonalSumAlt.deg_bot b X hX, Submodule.fg_bot]
   | insert a s ha ih =>
     obtain ⟨ihfg, ihrk, ihdeg⟩ := ih
     rw [Finset.iSup_insert]
@@ -172,9 +172,9 @@ theorem sum_finset [_root_.NumberField.IsTotallyComplex K] [StarRing K] {n : ℕ
       le_sup_left le_sup_right).1
     rw [hinf, (Formalism.HN.plLat K V (Fin n) b X hX _ hfg).2.1, (Formalism.HN.plLat K V (Fin n) b X hX _ (hM a)).2.1,
       (Formalism.HN.plLat K V (Fin n) b X hX _ ihfg).2.1,
-      (Formalism.HN.plLat K V (Fin n) b X hX _ Submodule.fg_bot).2.1, Formalism.BranchingDeterminantCap.OrthogonalSumAlt.rkK_bot, mul_zero, add_zero,
+      (Formalism.HN.plLat K V (Fin n) b X hX _ Submodule.fg_bot).2.1, Formalism.BranchingDeterminantCap.ms_rkK_bot, mul_zero, add_zero,
       ← mul_add] at hrk
-    have hrk' := Nat.eq_of_mul_eq_mul_left (Formalism.BranchingDeterminantCap.OrthogonalSumAlt.finrank_pos' (K := K)) hrk
+    have hrk' := Nat.eq_of_mul_eq_mul_left Module.finrank_pos hrk
     refine ⟨hfg, ?_, ?_⟩
     · rw [hrk', Finset.sum_insert ha, ihrk]
     · rw [hdeg, Finset.sum_insert ha, ihdeg]
