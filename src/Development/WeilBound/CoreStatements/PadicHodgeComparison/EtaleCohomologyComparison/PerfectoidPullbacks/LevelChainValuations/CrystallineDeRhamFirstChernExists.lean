@@ -1404,8 +1404,8 @@ theorem rho_fil_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m 
 
 theorem rho_firstChern_formula : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ m x f c, rhoK S hS hC a 2 m x f → (dat Amp).c1H a x →
     IsFirstChernDeRham _ (lineK a.1) c → ∀ φ, f φ = algebraMap K (S.L m).B (φ c) := by
-  intro M a hM m x f c hρ₁ hx hc φ
-  obtain ⟨_, s₀, h⟩ := hρ₁
+  intro M a hM m x f c hf hx hc φ
+  obtain ⟨s₀, h⟩ := rhoK_witness S hS hC hf
   obtain ⟨U⟩ := cov_sm_pf M hM
   obtain ⟨s₁, hg⟩ := chK_good S hS hC M hM m
   have hU : ∀ α, U.d α + (m + 1) ≤ max (max s₀ s₁) (Finset.univ.sup U.d + (m + 1)) := fun α => by
