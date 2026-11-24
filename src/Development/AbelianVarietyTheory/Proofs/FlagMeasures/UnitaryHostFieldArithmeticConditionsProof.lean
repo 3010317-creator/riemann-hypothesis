@@ -50,6 +50,8 @@ open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNo
 
 namespace GlobalTheory.TypeAsm.HostArith
 
+attribute [local instance] Formalism.BasicNotions.Host.cmStar
+
 variable (D : D7)
 
 theorem places : GlobalTheory.DegVol.IsPlaces (embS D) := by
@@ -131,6 +133,8 @@ end GlobalTheory.TypeAsm.HostArith
 
 namespace GlobalTheory.TypeAsm.HostArith
 
+attribute [local instance] Formalism.BasicNotions.Host.cmStar
+
 variable (D : D7)
 
 theorem finrank_O : Module.finrank (𝓞 D.host.F) (𝓞 D.host.E) = 2 := by
@@ -208,6 +212,8 @@ theorem two_le_gS : 2 ≤ gS D := by
 end GlobalTheory.TypeAsm.HostArith
 
 namespace GlobalTheory.TypeAsm
+
+attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem hostC : HostC := by
   intro D large₂ hStd

@@ -55,11 +55,15 @@ namespace PI.UnitaryDimensionFormula.NormCutK
 
 section NCongS
 
+attribute [local instance] Formalism.BasicNotions.Host.cmStar
+
 variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
 
 end NCongS
 
 section K2iff
+
+attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} (TR : TypedRed X)
 
