@@ -50,6 +50,13 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 namespace GlobalTheory.LocalPair
 
+/-- A nondegenerate pairing valued in `ZMod n` forces the source to be killed by `n`. -/
+theorem nsmul_eq_zero_of_nondegenerate_pairing {n : ℕ} {X Y : Type}
+    [AddCommGroup X] [AddCommGroup Y] (P : X →+ Y →+ ZMod n)
+    (h : ∀ x, (∀ y, P x y = 0) → x = 0) (x : X) : n • x = 0 := by
+  refine h _ fun y => ?_
+  rw [map_nsmul, AddMonoidHom.nsmul_apply, nsmul_eq_mul, ZMod.natCast_self, zero_mul]
+
 theorem exists_dual_equiv {n : ℕ} [NeZero n] {M : Type} [AddCommGroup M] [Module (ZMod n) M] [Finite M]
     {M' : Type} [AddCommGroup M'] [Module (ZMod n) M'] [Finite M'] (P : M →+ M' →+ ZMod n)
     (h1 : ∀ x, (∀ y, P x y = 0) → x = 0) (h2 : ∀ y, (∀ x, P x y = 0) → y = 0) :
@@ -86,10 +93,10 @@ theorem dual_equivariant {n : ℕ} {Λ D : Type} [CommRing Λ] [Group D]
 theorem local_pair : LocalFiniteness → LocalTateDuality → LocalEulerChar → ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (n : ℕ) (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)), IsPlaceOver A v → ∀ (Λ : Type) [CommRing Λ] (W : Type) [AddCommGroup W] [Module Λ W] [TopologicalSpace W] [DiscreteTopology W] [Finite W] (W' : Type) [AddCommGroup W'] [Module Λ W'] [TopologicalSpace W'] [DiscreteTopology W'] [Finite W'] (ρ : Representation Λ (Dec (F := F) A) W) (ρ' : Representation Λ (Dec (F := F) A) W') (P : W →+ W' →+ ZMod (l ^ n)), 0 < n → ContAction ρ → ContAction ρ' → (∀ x, (∀ y, P x y = 0) → x = 0) → (∀ y, (∀ x, P x y = 0) → y = 0) → (∀ g x y, P (ρ g x) (ρ' g y) = ((cycMod F Ω l n g.1 : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) * P x y) → (∀ y : Z1 ρ', (∀ x : Z1 ρ, CupB (fun g : Dec (F := F) A => ((cycMod F Ω l n g.1 : (ZMod (l ^ n))ˣ) : ZMod (l ^ n))) (fun g m => ρ' g m) P x.1 y.1) ↔ Cob ρ' y.1) ∧ (((l : ℕ) : 𝓞 F) ∉ v.asIdeal → Nat.card (H1 ρ) = Nat.card (H0 ρ) * Nat.card (H0 ρ')) := by
   intro hLF hLD hLE F Ω _ _ _ _ _ l _ n A v hA Λ _ W _ _ _ _ _ W' _ _ _ _ _ ρ ρ' P hn hρ hρ' h1 h2 hP
   have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  have : Module (ZMod (l ^ n)) W := AddCommGroup.zmodModule fun x => h1 _ fun y => by
-    rw [map_nsmul, AddMonoidHom.nsmul_apply, nsmul_eq_mul, ZMod.natCast_self, zero_mul]
-  have : Module (ZMod (l ^ n)) W' := AddCommGroup.zmodModule fun y => h2 _ fun x => by
-    rw [map_nsmul, nsmul_eq_mul, ZMod.natCast_self, zero_mul]
+  have : Module (ZMod (l ^ n)) W :=
+    AddCommGroup.zmodModule (nsmul_eq_zero_of_nondegenerate_pairing P h1)
+  have : Module (ZMod (l ^ n)) W' :=
+    AddCommGroup.zmodModule (nsmul_eq_zero_of_nondegenerate_pairing P.flip h2)
   let χ := (cycMod F Ω l n).comp (Dec (F := F) A).subtype
   refine ⟨fun y => ⟨fun H => ?_, ?_⟩, fun hv => ?_⟩
   · obtain ⟨e, he⟩ := exists_dual_equiv P.flip h2 h1
