@@ -329,8 +329,6 @@ end Gen
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem p_starConj (D : D7) : StarConj D.host.E := D.sp.cm.cmUnram.2.1
 
 theorem p_posX (D : D7) (T : ℕ) (hT : 0 < T) (F : LFlag (D.sp.Y 0) D.R.rS (T : D.host.E)) : PosX F :=
@@ -384,8 +382,6 @@ theorem radical_positive_each_embedding (Λ : Submodule (𝓞 E) S.V) {T T' : E}
 end Gen2
 
 section D7b
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem p_rankV (D : D7) : finrank D.host.E (hS D).V = D.R.k + 2 * D.R.rS + 1 := by
   rw [(hS D).rank_eq, D.sp.Y_rank 0 (Nat.zero_le _)]
@@ -1268,8 +1264,6 @@ namespace Formalism.MainNotions.LatticeGluingRadicals
 
 open Formalism.BasicNotions Formalism.MainNotions.S.Lat NumberField Module
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem lemma_two_norm_identities (D : D7) (u : D.what₂.Word) (T' : ℕ) (Λ : VanishingOnXAndXPlusGluing.LatS D) (F : VanishingOnXAndXPlusGluing.FlS D (Tu D u))
     (F' : VanishingOnXAndXPlusGluing.FlS D T') (hF : FixedHyp D Λ F) (hPr : PrimeHyp D u T') (hT : IsTerm Λ (gS D) F F') :
     (∀ τ : D.host.E →+* ℂ, ∀ y ∈ Ylift Λ F F', ∀ y' ∈ Ylift' Λ F F', ∀ al al' : D.host.E,
@@ -1315,8 +1309,6 @@ noncomputable section
 namespace Formalism.MainNotions.LatticeGluingRadicals
 
 open Formalism.BasicNotions Formalism.MainNotions.S.Lat NumberField Module
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem lemma_one_det_index_le_gram (D : D7) (Λ : VanishingOnXAndXPlusGluing.LatS D) (g : ℕ) {T T' : ℕ} (F : VanishingOnXAndXPlusGluing.FlS D T) (F' : VanishingOnXAndXPlusGluing.FlS D T')
     (h : VanishingOnXAndXPlusGluing.Lem1 D Λ g F F') :
@@ -2867,8 +2859,6 @@ end C
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem radical_setting_second_of (D : D7) (Λ : VanishingOnXAndXPlusGluing.LatS D) (g : ℕ) {T T' : ℕ} (F : VanishingOnXAndXPlusGluing.FlS D T)
     (F' F'' : VanishingOnXAndXPlusGluing.FlS D T') (β : (hS D).V ≃ₗ[D.host.E] (hS D).V)
     (W : Submodule D.host.E (hS D).V)
@@ -2907,8 +2897,6 @@ noncomputable section
 namespace Formalism.MainNotions.LatticeGluingRadicals
 
 open Formalism.BasicNotions Formalism.MainNotions.S.Lat NumberField Module IsDedekindDomain
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem d_isComplex (D : D7) (w : InfinitePlace D.host.E) : w.IsComplex := by
   have := D.host.isCMField_hostE
@@ -4780,8 +4768,6 @@ end Main
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem e_gS_pos (D : D7) : 0 < gS D :=
   Nat.mul_pos (D.host.g_prime 0).pos (D.host.g_prime 1).pos
 
@@ -5143,8 +5129,6 @@ theorem i_gluing (Λ : Submodule (𝓞 E) S.V) (hΛ : Submodule.IsFullLattice E 
 end I
 
 section D7
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem i_stGlue (D : D7) : Formalism.MainNotions.S.UnitaryVolumeMass.stGlue D :=
   fun Λ hΛ hu U hU => i_gluing Λ (a_full Λ hΛ hu) hu U hU
@@ -5812,8 +5796,6 @@ end Gen
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 def g_DetIndex (D : D7) : Prop := g_DetIndexG (hS D)
 
 def g_GlueDet (D : D7) : Prop :=
@@ -5905,8 +5887,6 @@ theorem g_starInt : g_StarInt E := by
 end Fin
 
 section D7
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem g_detIndex (D : D7) : g_DetIndex D := g_detIndexG g_starInt
 
@@ -6521,8 +6501,6 @@ end H4
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem h_a2det (D : D7) (u : D.what₂.Word) (T' : ℕ) (Λ : Submodule (𝓞 D.host.E) (hS D).V)
     (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' F'' : LFlag (D.sp.Y 0) D.R.rS ((T' : ℕ) : D.host.E))
     (β : (hS D).V ≃ₗ[D.host.E] (hS D).V)
@@ -6580,8 +6558,6 @@ end H5
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem h_existsW (D : D7) (T : ℕ) (F : LFlag (D.sp.Y 0) D.R.rS ((T : ℕ) : D.host.E)) (hT : 0 < T) :
     ∃ W : Submodule D.host.E (hS D).V, WHyp D F W :=
   h_existsW_gen F (by exact_mod_cast hT.ne') D.R.k (p_rankV D)
@@ -6597,8 +6573,6 @@ noncomputable section
 namespace Formalism.MainNotions.LatticeGluingRadicals
 
 open Formalism.BasicNotions Formalism.MainNotions.S.Lat NumberField Module
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem lattice_lemma_two (D : D7) : VanishingOnXAndXPlusGluing.Conclusion2 D := by
   intro u T' Λ F F' hF hPr hT
@@ -7833,8 +7807,6 @@ end J9
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem j_finrank (D : D7) : finrank ℚ D.host.E = 2 * D.R.f := by
   have h1 : Module.finrank ℚ D.host.E = 4 * D.R.ord :=
     D.host.finrank_cmField
@@ -7891,8 +7863,6 @@ noncomputable section
 namespace Formalism.MainNotions.LatticeGluingRadicals
 
 open Formalism.BasicNotions Formalism.MainNotions.S.Lat NumberField Module
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 def ThmADeg (D : D7) : Prop :=
   ∀ (u : D.what₂.Word) (T' : ℕ) (Λ : VanishingOnXAndXPlusGluing.LatS D) (F : VanishingOnXAndXPlusGluing.FlS D (Tu D u)) (F' F'' : VanishingOnXAndXPlusGluing.FlS D T')
@@ -9022,8 +8992,6 @@ namespace Formalism.MainNotions.LatticeGluingRadicals
 
 open Formalism.BasicNotions Formalism.MainNotions.S.Lat NumberField Module
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem lemma_one_det_index_le_gram_div (D : D7) (Λ : VanishingOnXAndXPlusGluing.LatS D) (g : ℕ) {T T' : ℕ} (F : VanishingOnXAndXPlusGluing.FlS D T) (F' : VanishingOnXAndXPlusGluing.FlS D T')
     (h : VanishingOnXAndXPlusGluing.Lem1 D Λ g F F') (Nr : ℕ) (hNr : 0 < Nr) (hc : iIdx Λ g F F' * Nr ≤ Nat.card (gB Λ g F F')) :
     latDet (hS D) (La Λ g F F') * (iIdx Λ g F F' : ℝ) ^ 2 ≤ G0 Λ g F F' / (Nr : ℝ) := by
@@ -9155,8 +9123,6 @@ noncomputable section
 namespace Formalism.MainNotions.LatticeGluingRadicals
 
 open Formalism.BasicNotions Formalism.MainNotions.S.Lat NumberField Module
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem z_ThmADeg (D : D7) : ThmADeg D :=
   fun u T' Λ F F' F'' β hF hPr hT' hT'' hP hs hnd => k_thmA_deg D u T' Λ F F' F'' β hF hPr hT' hT'' hP hs hnd

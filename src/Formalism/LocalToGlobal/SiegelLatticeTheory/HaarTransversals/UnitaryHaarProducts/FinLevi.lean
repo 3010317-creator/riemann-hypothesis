@@ -14,8 +14,6 @@ open Matrix
 
 namespace Formalism.L2.SG.Pf.FinLeviPf
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 open Formalism.L2.SG Formalism.L2.SG.PoincareInHH Formalism.L2.SG.Pf
 
 section Form

@@ -49,8 +49,6 @@ open scoped TensorProduct InnerProductSpace
 
 namespace GlobalTheory.IndefiniteRowSideFullHecke.ThetaSourceAction
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 abbrev Mat (n : ℕ) : Type := Matrix (Fin n) (Fin n) ℂ
 
 structure IsUnitLieAct {n : ℕ} (L : Set (Mat n)) {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]

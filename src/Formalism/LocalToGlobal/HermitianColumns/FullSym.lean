@@ -13,8 +13,6 @@ open scoped TensorProduct
 
 namespace Formalism.L2.Herm
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 structure SymmetricHermitianColumns (D : D7) extends HermColsCh D where
 
   dt : unitaryOneFiniteAdeles D.sp.cm →* D.Dt
