@@ -75,6 +75,12 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.Eis
 
+/-- **Piatetski-Shapiro–Rallis doubling method**: provides an integral representation for
+$L$-functions of classical groups by integrating a cusp form on $G 	imes G$ against an
+Eisenstein series on the doubled group, yielding the basic identity and meromorphic continuation.
+
+Proposed reference:
+[I. Piatetski-Shapiro and S. Rallis, *$L$-functions for the classical groups* (pp. 1–52)][piatetskiShapiroRallis1987]. -/
 def DoublingMethod : Prop :=
   ∀ (D : D7) (V : HSp D), 0 < V.rank → ∀ a : GL (Fin V.rank) (AE D), IsMaj V a →
     HasIwasawa D.sp.cm.sig (dblSp V).gram (Khat V a) →
