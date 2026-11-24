@@ -1,6 +1,5 @@
 module
 
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRk
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankSB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducedScalarIrreducible
@@ -166,47 +165,3 @@ theorem detTw_mem_indScal {a n : ℕ} (ν : kˣ →* ℂˣ) {f : GL (Fin (a + n)
     ring
 
 end GlobalTheory.FullRankCoinv.IndTwist
-
-namespace GlobalTheory.FullRankCoinv
-
-open IndTwist
-
-theorem indSp_irreducible : GlobalTheory.FunPr.Hypotheses₂ → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (n d : ℕ) (ν : kˣ →* ℂˣ), n ≤ d → GlobalTheory.SmGL.IsSmoothChar ν → GlobalTheory.SmGL.IsUnitaryChar ν →
-    ∀ N : Submodule ℂ (GL (Fin d) k → ℂ), N ≤ GlobalTheory.FullRankCoinv.indSp k n d ν →
-      (∀ f ∈ N, ∀ h₀ : GL (Fin d) k, (fun h => f (h * h₀)) ∈ N) → N = ⊥ ∨ N = GlobalTheory.FullRankCoinv.indSp k n d ν := by
-  intro P k _ _ _ _ n d ν hn hνs hνu N hN hinv
-  obtain ⟨a, rfl⟩ : ∃ a, d = a + n := ⟨d - n, by omega⟩
-  have hu : IsUnitaryChar ν⁻¹ := fun g => by
-    rw [MonoidHom.inv_apply, Units.val_inv_eq_inv_val, norm_inv, hνu g, inv_one]
-  set s : ℂ := (n : ℂ) / 2
-  let M : Submodule ℂ (GL (Fin (a + n)) k → ℂ) := N.comap (detTw (a + n) (-s))
-  have hMle : M ≤ GlobalTheory.RankFibre.indScal ν ν⁻¹ a n := fun g hg => by
-    have := detTw_mem_indScal ν (hN hg)
-    rwa [detTw_detTw_neg] at this
-  have hMinv : ∀ g ∈ M, ∀ h : GL (Fin (a + n)) k, (fun x => g (x * h)) ∈ M := fun g hg h => by
-    show detTw (a + n) (-s) (fun x => g (x * h)) ∈ N
-    have e : detTw (a + n) (-s) (fun x => g (x * h)) =
-        apow (gdet h) s • (fun x => detTw (a + n) (-s) g (x * h)) := by
-      rw [detTw_translate, smul_smul, ← apow_add]; simp
-    rw [e]
-    exact N.smul_mem _ (hinv _ hg h)
-  have hmemM : ∀ f ∈ N, detTw (a + n) s f ∈ M := fun f hf => by
-    show detTw (a + n) (-s) (detTw (a + n) s f) ∈ N
-    rwa [detTw_neg_detTw]
-  rcases GlobalTheory.RankFibre.indScal_irreducible P.bernsteinUnitaryProductIrreducible k a n ν ν⁻¹ hνs hνu hνs.inv hu
-    M hMle hMinv with h | h
-  · left
-    refine (Submodule.eq_bot_iff N).2 fun f hf => ?_
-    have h0 : detTw (a + n) s f = 0 := by
-      have := hmemM f hf
-      rw [h] at this
-      exact (Submodule.mem_bot ℂ).1 this
-    rw [← detTw_neg_detTw (a + n) s f, h0, map_zero]
-  · right
-    refine le_antisymm hN fun f hf => ?_
-    have := h (detTw_mem_indScal ν hf)
-    have h' : detTw (a + n) (-s) (detTw (a + n) s f) ∈ N := this
-    rwa [detTw_neg_detTw] at h'
-
-end GlobalTheory.FullRankCoinv
