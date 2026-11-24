@@ -837,7 +837,6 @@ private theorem sr_abs {R A K M W ι ι' : Type} [CommRing R] [CommRing A] [Alge
   refine (iSup_le fun j => ?_ : ⨆ j, Z j ≤ _) (hOZ _ (hle y.2))
   obtain ⟨μ, hμ⟩ := h2 j
   exact fun F hF => Submodule.mem_iSup_of_mem μ (Module.End.mem_eigenspace_iff.2 (hμ F hF))
-attribute [local instance 2000] UpperTheory.V.W.coefLocal
 attribute [-instance] GlobalTheory.AdmLoc.modFun
 
 theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.sphRed_alt :
@@ -1046,7 +1045,6 @@ open UpperTheory.V.HV (Coef)
 open scoped TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-attribute [local instance 2000] UpperTheory.V.W.coefLocal
 open UpperTheory.V.Hi.LvR
 private theorem hida_lq_lc {l : ℕ} [Fact l.Prime] {F : W.GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] {n : ℕ}
     (r : Resid F O n) : IsLocallyConstant fun g : F.G₀ => r.Dbar.chi (MonoidAlgebra.single g 1) := by
