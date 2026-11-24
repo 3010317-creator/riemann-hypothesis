@@ -19,7 +19,7 @@ namespace WittTilt
 open _root_.WittVector Laurent ACris
 
 variable {K : Type*} [NontriviallyNormedField K] [IsUltrametricDist K]
-variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p] [CharZero K]
+variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p]
 
 local notation "𝒪" => normInteger K
 local notation "𝔸" => Localization.Away (p : AInf K p)
@@ -49,17 +49,6 @@ theorem gn_p_pow_mul (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (N : ℕ) (z : 𝔸) :
     gn K p ρ ((p : 𝔸) ^ N * z) = ρ ^ N * gn K p ρ z := by
   rw [gn_mul hρ0 hρ1, gn_pow hρ0 hρ1, gn_natCast_p hρ0]
 
-theorem gn_sub_le_of_mem (hp0 : ‖(p : K)‖ ≤ ρ) (hρ1 : ρ < 1) {c₁ c₂ : ACrisZero K p} {N : ℕ}
-    (h : algebraMap _ (ACris K p) c₁ - algebraMap _ (ACris K p) c₂ ∈
-      Ideal.span {(p : ACris K p) ^ N}) :
-    gn K p ρ ((c₁ : 𝔸) - c₂) ≤ ρ ^ N := by
-  have hρ0 : 0 < ρ := norm_p_pos.trans_le hp0
-  obtain ⟨z, hz⟩ := exists_eq_pow_mul_of_mem h
-  have e : (c₁ : 𝔸) - c₂ = (p : 𝔸) ^ N * z := by
-    rw [← Subalgebra.coe_sub, hz]; simp
-  rw [e, gn_p_pow_mul hρ0 hρ1]
-  exact mul_le_of_le_one_right (pow_nonneg hρ0.le N) (gn_acrisZero_le_one hp0 hρ0 hρ1 z.2)
-
 theorem gn_eq_of_gn_sub_lt (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {z w : 𝔸}
     (h : gn K p ρ (z - w) < gn K p ρ z) : gn K p ρ w = gn K p ρ z := by
   apply le_antisymm
@@ -71,6 +60,19 @@ theorem gn_eq_of_gn_sub_lt (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {z w : 𝔸}
     rcases le_max_iff.1 this with h1 | h1
     · exact absurd h1 (not_le.2 h)
     · exact h1
+
+variable [CharZero K]
+
+theorem gn_sub_le_of_mem (hp0 : ‖(p : K)‖ ≤ ρ) (hρ1 : ρ < 1) {c₁ c₂ : ACrisZero K p} {N : ℕ}
+    (h : algebraMap _ (ACris K p) c₁ - algebraMap _ (ACris K p) c₂ ∈
+      Ideal.span {(p : ACris K p) ^ N}) :
+    gn K p ρ ((c₁ : 𝔸) - c₂) ≤ ρ ^ N := by
+  have hρ0 : 0 < ρ := norm_p_pos.trans_le hp0
+  obtain ⟨z, hz⟩ := exists_eq_pow_mul_of_mem h
+  have e : (c₁ : 𝔸) - c₂ = (p : 𝔸) ^ N * z := by
+    rw [← Subalgebra.coe_sub, hz]; simp
+  rw [e, gn_p_pow_mul hρ0 hρ1]
+  exact mul_le_of_le_one_right (pow_nonneg hρ0.le N) (gn_acrisZero_le_one hp0 hρ0 hρ1 z.2)
 
 theorem le_gn_of_ker_eq_span {ξ : AInf K p} (hξ : RingHom.ker θ = Ideal.span {ξ}) :
     ‖(p : K)‖ ≤ gn K p ‖(p : K)‖ (algebraMap (AInf K p) 𝔸 ξ) := by

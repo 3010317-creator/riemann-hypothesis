@@ -261,7 +261,7 @@ end ExtendComp
 section Quot
 
 variable {K : Type*} [NontriviallyNormedField K] [IsUltrametricDist K]
-variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p] [CharZero K]
+variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p]
 
 local notation "𝔸" => Localization.Away (p : AInf K p)
 local notation "θ" => fontaineTheta (normInteger K) p
@@ -282,18 +282,6 @@ theorem kerAway_pow (m : ℕ) :
 theorem mk_eq_zero_iff (m : ℕ) (a : 𝔸) :
     Ideal.Quotient.mk (kerAway K p ^ m) a = 0 ↔ algebraMap (AInf K p) 𝔸 (xiGen K p ^ m) ∣ a := by
   rw [Ideal.Quotient.eq_zero_iff_mem, kerAway_pow, Ideal.mem_span_singleton]
-
-theorem algebraMap_dvd_iff (m : ℕ) (w : AInf K p) :
-    algebraMap (AInf K p) 𝔸 (xiGen K p ^ m) ∣ algebraMap (AInf K p) 𝔸 w ↔
-      w ∈ Ideal.span {xiGen K p ^ m} := by
-  constructor
-  · intro h
-    obtain ⟨s, hs⟩ := IsPerfectoidField.exists_p_pow_mul_mem_of_dvd h
-    exact IsPerfectoidField.mem_span_xi_pow_of_p_pow_mul_mem ker_eq_span_xiGen hs
-  · intro h
-    obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton.1 h
-    rw [map_mul]
-    exact dvd_mul_right _ _
 
 variable (K p) in
 def latticeQ (m : ℕ) : Subring (𝔸 ⧸ kerAway K p ^ m) :=
@@ -341,6 +329,20 @@ theorem pow_mul_mem_latticeQ (m : ℕ) :
   show Ideal.Quotient.mk _ (algebraMap (AInf K p) 𝔸 (↑hu.unit⁻¹ * w)) = _
   rw [hcalc, map_mul, map_pow, map_natCast, map_add (f := _), hz, add_zero]
 
+variable [CharZero K]
+
+theorem algebraMap_dvd_iff (m : ℕ) (w : AInf K p) :
+    algebraMap (AInf K p) 𝔸 (xiGen K p ^ m) ∣ algebraMap (AInf K p) 𝔸 w ↔
+      w ∈ Ideal.span {xiGen K p ^ m} := by
+  constructor
+  · intro h
+    obtain ⟨s, hs⟩ := IsPerfectoidField.exists_p_pow_mul_mem_of_dvd h
+    exact IsPerfectoidField.mem_span_xi_pow_of_p_pow_mul_mem ker_eq_span_xiGen hs
+  · intro h
+    obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton.1 h
+    rw [map_mul]
+    exact dvd_mul_right _ _
+
 variable (K p) in
 instance isAdicComplete_latticeQ (m : ℕ) :
     IsAdicComplete (Ideal.span {(p : latticeQ K p m)}) (latticeQ K p m) := by
@@ -378,7 +380,7 @@ end Quot
 section Iota
 
 variable {K : Type*} [NontriviallyNormedField K] [IsUltrametricDist K]
-variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p] [CharZero K]
+variable {p : ℕ} [hp : Fact p.Prime] [IsPerfectoidField K p]
 
 local notation "𝔸" => Localization.Away (p : AInf K p)
 
@@ -396,6 +398,20 @@ theorem span_p_le_comap_iotaZero (m : ℕ) :
   rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.mem_comap, map_natCast]
   exact Ideal.mem_span_singleton_self _
 
+def acrisQFactor {m n : ℕ} (hle : m ≤ n) : acrisQ K p n →+* acrisQ K p m :=
+  ((Ideal.Quotient.factorPow (kerAway K p) hle).comp (acrisQ K p n).subtype).codRestrict
+    (acrisQ K p m) fun s => by
+      obtain ⟨y, hy, hys⟩ := s.2
+      rw [RingHom.comp_apply, Subring.subtype_apply, ← hys]
+      exact ⟨y, hy, rfl⟩
+
+theorem acrisQFactor_comp_iotaZero {m n : ℕ} (hle : m ≤ n) :
+    (acrisQFactor hle).comp (iotaZero K p n) = iotaZero K p m := by
+  ext y
+  rfl
+
+variable [CharZero K]
+
 variable (K p) in
 def embedding₂ (m : ℕ) : ACris (K := K) (p := p) →+* acrisQ K p m :=
   AdicCompletion.extendRingHom (Ideal.span {(p : ACrisZero K p)})
@@ -410,18 +426,6 @@ theorem iotaQ_of (m : ℕ) (y : ACrisZero (K := K) (p := p)) :
   congrArg (acrisQ K p m).subtype
     (AdicCompletion.extendRingHom_of (Ideal.span {(p : ACrisZero K p)})
       (Ideal.span {(p : acrisQ K p m)}) (iotaZero K p m) (span_p_le_comap_iotaZero m) y)
-
-def acrisQFactor {m n : ℕ} (hle : m ≤ n) : acrisQ K p n →+* acrisQ K p m :=
-  ((Ideal.Quotient.factorPow (kerAway K p) hle).comp (acrisQ K p n).subtype).codRestrict
-    (acrisQ K p m) fun s => by
-      obtain ⟨y, hy, hys⟩ := s.2
-      rw [RingHom.comp_apply, Subring.subtype_apply, ← hys]
-      exact ⟨y, hy, rfl⟩
-
-theorem acrisQFactor_comp_iotaZero {m n : ℕ} (hle : m ≤ n) :
-    (acrisQFactor hle).comp (iotaZero K p n) = iotaZero K p m := by
-  ext y
-  rfl
 
 theorem iotaQ_compat {m n : ℕ} (hle : m ≤ n) :
     (Ideal.Quotient.factorPow (kerAway K p) hle).comp (iotaQ K p n) = iotaQ K p m := by
