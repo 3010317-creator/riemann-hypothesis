@@ -657,7 +657,7 @@ private theorem pt_zero_symm {N : ℕ} [NeZero N] {χ : DirichletCharacter ℂ N
     · exact h
     · exact absurd h hg
   rw [DirichletCharacter.LFunction_eq_completed_div_gammaFactor χ⁻¹ (1 - ρ) (Or.inl hρ1),
-    (_root_.PI.EF.isPrimitive_inv hχ).completedLFunction_one_sub ρ, inv_inv, hc]
+    hχ.inv.completedLFunction_one_sub ρ, inv_inv, hc]
   simp
 
 private theorem pt_rpow_le {u v r k : ℝ} (hu0 : 0 < u) (hv : v = Real.log u) (hv0 : 0 ≤ v) (hr : r ≤ 1 - k) :
