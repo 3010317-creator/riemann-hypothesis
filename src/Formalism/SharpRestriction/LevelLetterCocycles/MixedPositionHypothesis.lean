@@ -1,6 +1,6 @@
 module
 
-import Mathlib
+import Mathlib.Algebra.Category.ModuleCat.Descent
 public import Formalism.SharpRestriction.LevelLetterCocycles.LamPS
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalFormOfThreeInputs
 
