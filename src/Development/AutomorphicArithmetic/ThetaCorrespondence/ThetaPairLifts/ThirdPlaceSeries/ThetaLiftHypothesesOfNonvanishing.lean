@@ -1536,8 +1536,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 namespace GlobalTheory.Mem.LiteralAutomorphy
 theorem localLanglandsGL_and_purity_at_member_alt : _root_.GlobalTheory.Mem.LiteralAutomorphy.LocalRepresentationTheoryHypothesesAlt → _root_.GlobalTheory.Mem.LiteralAutomorphy.GlobalAutomorphicGaloisHypotheses' → _root_.UpperTheory.Zero.LLC.RecTExists ∧ _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt := by
   intro L A
-  have hL : _root_.UpperTheory.Zero.LLC.RecTExists :=
-    _root_.GlobalTheory.T.recTExists_of_published_inputs L.llc L.conv L.dzi L.brauer L.chev A.art L.exh L.multi L.cos L.zel L.geo L.bz
+  have hL : _root_.UpperTheory.Zero.LLC.RecTExists := L.llc
   refine ⟨hL, ?_⟩
   have hG : GlobalTheory.GLq.Green := GlobalTheory.GreenBridge.green_of_regular L.green
   exact
@@ -1552,7 +1551,7 @@ theorem localLanglandsGL_and_purity_at_member_alt : _root_.GlobalTheory.Mem.Lite
       rayF := A.ray
       rayA := GlobalTheory.Published.GlobalArtinReciprocity.rayCharacterArtin A.art
       bc := _root_.UpperTheory.BaseChangeIdentities.bridge A.bc L.bern
-      gen := _root_.PositivityTheory.Gud.generic_unitary_dual_GL trivial L.sq L.gen L.multi L.cos
+      gen := _root_.PositivityTheory.Gud.Fin.genericUnitaryDualGL_holds
       std := L.cos
       cheb := GlobalTheory.Published.cheb_holds
       howe := GlobalTheory.Hk3.howeUnram_holds }
