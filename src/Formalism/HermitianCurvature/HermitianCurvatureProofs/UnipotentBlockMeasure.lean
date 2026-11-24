@@ -460,16 +460,6 @@ open Finset
 section
 variable {ι V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [CompleteSpace V]
 
-theorem summable_pairs (a : ι → V) (ha : Summable (fun i => ‖a i‖)) :
-    Summable (fun p : ι × ι => (inner ℂ (a p.1) (a p.2) : ℂ)) := by
-  have hprod : Summable (fun p : ι × ι => ‖a p.1‖ * ‖a p.2‖) :=
-    Summable.mul_of_nonneg (f := fun i => ‖a i‖) (g := fun i => ‖a i‖) ha ha
-      (fun i => norm_nonneg (a i)) (fun i => norm_nonneg (a i))
-  have hb : Summable (fun p : ι × ι => ‖(inner ℂ (a p.1) (a p.2) : ℂ)‖) :=
-    Summable.of_nonneg_of_le (fun p => norm_nonneg _)
-      (fun p => norm_inner_le_norm (𝕜 := ℂ) (a p.1) (a p.2)) hprod
-  exact hb.of_norm
-
 theorem normsq_tsum (a : ι → V) (ha : Summable (fun i => ‖a i‖)) :
     ‖∑' i, a i‖ ^ 2 = ∑' p : ι × ι, (inner ℂ (a p.1) (a p.2) : ℂ).re := by
   apply Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.norm_sq_tsum <;> assumption
